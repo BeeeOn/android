@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">IntelligentHomeAnywhere</string>
+    <string name="app_id">1411635335720288</string>
+    <!-- Titles -->
+    <string name="title_activity_locaction_screen">Locactions</string>
+    <string name="title_activity_data_of_locacion_screen">Devices</string>
+    <string name="title_activity_notification">Notification</string>
+    <string name="title_activity_add_sensor">Add Sensor</string>
+    <string name="title_activity_sensor_detail">Sensor Detail</string>
+    <!-- Buttons -->
+    <string name="login_demo">Demo</string>
+    <string name="login_login">Login</string>
+    <string name="notification_ingore">Ignore</string>
+    <string name="notification_add">Add</string>
+    <!-- Labels -->
+    <string name="login_app_name">Intelligent\nHome\nAnywhere</string>
+    <string name="login_or_use">or use</string>
+    <string name="notification_notification">Notification</string>
+    <string name="notification_new_sensor">New sensor found at your home</string>
+    <string name="addsensor_add_sensor">Add sensor</string>
+    <string name="addsensor_or">or</string>
+    <string name="sensordetail_last_value">Last value:\u0020</string>
+    <string name="sensordetail_refresh_time">Refresh inteval: </string>
+    <string name="sensordetail_battery_state">Battery state</string>
+    <string name="sensor_open">Open</string>
+    <string name="sensor_close">Close</string>
+    <!-- RadioButtons -->
+    <string name="login_radio_facebook">Facebook account</string>
+    <string name="login_radio_google">Google account</string>
+    <string name="login_radio_mojeid">MojeID</string>
+    <!-- Hints -->
+    <string name="login_user_name_hint">Login/email</string>
+    <string name="login_password_hint">Password</string>
+    <string name="addsensor_sensor_name_hint">Name of new sensor</string>
+    <string name="addsensor_new_location_hint">New location</string>
+    <!-- Toasts -->
+    <string name="toast_changeto">\u0020changed to:\u0020</string>
+    <string name="toast_new_sensor_added">New sensor was added</string>
+    <string name="toast_need_sensor_name">Write name of sensor please</string>
+    <string name="toast_bad_password">Wrong name or password</string>
+    <!-- Others -->
+    <string name="action_settings">Settings</string>
+    <string name="title_activity_login_facebook">facebook</string>
+
+</resources>

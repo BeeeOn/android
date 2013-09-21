@@ -1,0 +1,106 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:background="@color/blue"
+    tools:context=".LoginActivity" >
+
+    <Button
+        android:id="@+id/login_login"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/login_demo"
+        android:layout_alignBottom="@+id/login_demo"
+        android:layout_toLeftOf="@+id/login_demo"
+        android:onClick="LoginMethod"
+        android:text="@string/login_login" />
+
+    <Button
+        android:id="@+id/login_demo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginBottom="32dp"
+        android:layout_marginRight="29dp"
+        android:onClick="DemoMethod"
+        android:text="@string/login_demo" />
+
+    <TextView
+        android:id="@+id/login_app_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="16dp"
+        android:text="@string/login_app_name"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <EditText
+        android:id="@+id/login_user_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/login_app_name"
+        android:layout_marginTop="16dp"
+        android:inputType="textEmailAddress|textPersonName|textNoSuggestions"
+        android:ems="10"
+        android:hint="@string/login_user_name_hint" >
+
+        <requestFocus />
+    </EditText>
+
+    <EditText
+        android:id="@+id/login_password"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/login_user_name"
+        android:layout_below="@+id/login_user_name"
+        android:layout_marginTop="24dp"
+        android:ems="10"
+        android:hint="@string/login_password_hint"
+        android:inputType="textPassword" />
+
+    <TextView
+        android:id="@+id/login_or_use"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/login_password"
+        android:layout_below="@+id/login_password"
+        android:layout_marginTop="14dp"
+        android:text="@string/login_or_use"
+        android:textAppearance="?android:attr/textAppearanceSmall" />
+
+    <RadioGroup
+        android:id="@+id/login_radioGroup"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/login_or_use"
+        android:layout_below="@+id/login_or_use" >
+
+        <RadioButton
+            android:id="@+id/login_radio_facebook"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:checked="true"
+            android:text="@string/login_radio_facebook" />
+
+        <RadioButton
+            android:id="@+id/login_radio_google"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/login_radio_google" />
+
+        <RadioButton
+            android:id="@+id/login_radio_mojeid"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/login_radio_mojeid" />
+
+    </RadioGroup>
+
+</RelativeLayout>

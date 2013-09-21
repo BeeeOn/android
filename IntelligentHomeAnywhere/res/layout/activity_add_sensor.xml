@@ -1,0 +1,71 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:background="@color/blue"
+    tools:context=".AddSensorActivity" >
+
+    <EditText
+        android:id="@+id/addsensor_sensor_name_hint"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/addsensor_add_sensor"
+        android:layout_marginTop="19dp"
+        android:ems="10"
+        android:inputType="textNoSuggestions"
+        android:hint="@string/addsensor_sensor_name_hint" >
+
+        <requestFocus />
+    </EditText>
+
+    <Spinner
+        android:id="@+id/spinner_choose_location"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/addsensor_sensor_name_hint"
+        android:layout_below="@+id/addsensor_sensor_name_hint"
+        android:layout_marginTop="14dp" />
+
+    <EditText
+        android:id="@+id/addsensor_new_location_hint"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/addsensor_or"
+        android:layout_marginTop="30dp"
+        android:hint="@string/addsensor_new_location_hint"
+        android:inputType="textNoSuggestions"
+        android:ems="10" />
+
+    <TextView
+        android:id="@+id/addsensor_add_sensor"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:text="@string/addsensor_add_sensor"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
+
+    <Button
+        android:id="@+id/addsensor_add"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="52dp"
+        android:onClick="AddSensorMethod"
+        android:text="@string/notification_add" />
+
+    <TextView
+        android:id="@+id/addsensor_or"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/addsensor_new_location_hint"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="26dp"
+        android:text="@string/addsensor_or"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+</RelativeLayout>
