@@ -9,26 +9,7 @@
     android:background="@color/blue"
     tools:context=".LoginActivity" >
 
-    <Button
-        android:id="@+id/login_login"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/login_demo"
-        android:layout_alignBottom="@+id/login_demo"
-        android:layout_toLeftOf="@+id/login_demo"
-        android:onClick="LoginMethod"
-        android:text="@string/login_login" />
-
-    <Button
-        android:id="@+id/login_demo"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
-        android:layout_marginBottom="32dp"
-        android:layout_marginRight="29dp"
-        android:onClick="DemoMethod"
-        android:text="@string/login_demo" />
+    
 
     <TextView
         android:id="@+id/login_app_name"
@@ -102,5 +83,14 @@
             android:text="@string/login_radio_mojeid" />
 
     </RadioGroup>
+
+    <Button
+        android:id="@+id/login_login"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/login_radioGroup"
+        android:layout_toRightOf="@+id/login_user_name"
+        android:onClick="LoginMethod"
+        android:text="@string/login_login" />
 
 </RelativeLayout>

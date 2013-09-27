@@ -27,4 +27,10 @@ public interface Adapter {
 	
 	public void SetLog(String log);
 	public String GetLog();
+	
+	public void SetType(int type);
+	public int GetType();
+	
+	public void SetInvolveTime(String time);
+	public String GetInvolveTime();
 }

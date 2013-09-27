@@ -150,6 +150,7 @@ public class XmlParser {
 				device.SetInit(isInitialized(parser.getAttributeValue(null, "initialized")));
 				device.SetType(Integer.parseInt((parser.getAttributeValue(null, "type")).substring(2),16));
 				if(!device.GetInit()){
+					device.SetInvolveTime(parser.getAttributeValue(null, "involved"));
 					nextEndTag(parser);
 					nextEndTag(parser);
 				}else {

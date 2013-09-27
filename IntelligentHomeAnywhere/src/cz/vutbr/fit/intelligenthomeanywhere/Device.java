@@ -15,7 +15,8 @@ public class Device implements Adapter{
 	private String _address;
 	private int _quality;
 	private String _Log;
-	public DeviceDestiny deviceDestiny; 
+	private String _involveTime;
+	public DeviceDestiny deviceDestiny;
 	
 	Device(){
 		_location = null;
@@ -28,6 +29,7 @@ public class Device implements Adapter{
 		_Log = null;
 		deviceDestiny = null;
 		_type = 0;
+		_involveTime = null;
 	};
 	
 	public String toString(){
@@ -112,5 +114,13 @@ public class Device implements Adapter{
 		String result = "0x";
 		result += Integer.toHexString(_type);
 		return result;
+	}
+
+
+	public void SetInvolveTime(String time) {
+		_involveTime = time;
+	}
+	public String GetInvolveTime() {
+		return _involveTime;
 	}
 }

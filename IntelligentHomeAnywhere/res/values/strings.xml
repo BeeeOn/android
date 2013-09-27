@@ -9,11 +9,17 @@
     <string name="title_activity_notification">Notification</string>
     <string name="title_activity_add_sensor">Add Sensor</string>
     <string name="title_activity_sensor_detail">Sensor Detail</string>
+    <string name="title_activity_add_adapter">Add Adapter</string>
+    <string name="title_activity_registration">Registration</string>
+    <string name="title_activity_login_facebook">facebook</string>
     <!-- Buttons -->
-    <string name="login_demo">Demo</string>
+    <string name="splash_demo">Demo</string>
     <string name="login_login">Login</string>
     <string name="notification_ingore">Ignore</string>
     <string name="notification_add">Add</string>
+    <string name="change_location_name_button">Change</string>
+    <string name="registration_button">Registration</string>
+    <string name="splash_refresh">Refresh</string>
     <!-- Labels -->
     <string name="login_app_name">Intelligent\nHome\nAnywhere</string>
     <string name="login_or_use">or use</string>
@@ -26,6 +32,15 @@
     <string name="sensordetail_battery_state">Battery state</string>
     <string name="sensor_open">Open</string>
     <string name="sensor_close">Close</string>
+    <string name="update_needed">Please update application</string>
+    <string name="addsensor_type">Type of sensor:</string>
+    <string name="addsensor_involved_time">Activated at:</string>
+    <string name="change_location_name_label">New name</string>
+    <string name="addadapter_add_adapter">Add adapter</string>
+    <string name="registration_label">New account</string>
+    <string name="registration_serial_number">For adapter with serial number:</string>
+    <string name="splash_no_connection">No connection, check and turn on your internet connection and press refresh, or run Demo</string>
+    <string name="splash_no_adapter">There is not adapter to connect, please turn adapter on, or run Demo</string>
     <!-- RadioButtons -->
     <string name="login_radio_facebook">Facebook account</string>
     <string name="login_radio_google">Google account</string>
@@ -35,13 +50,42 @@
     <string name="login_password_hint">Password</string>
     <string name="addsensor_sensor_name_hint">Name of new sensor</string>
     <string name="addsensor_new_location_hint">New location</string>
+    <string name="change_location_name_edittext_hint">New name of location</string>
+    <string name="change_device_name_edittext_hint">New name of sensor</string>
+    <string name="addadapter_ser_num_hint">Input of serial number</string>
+    <string name="registration_password_repeat_hint">Repeat password</string>
     <!-- Toasts -->
     <string name="toast_changeto">\u0020changed to:\u0020</string>
     <string name="toast_new_sensor_added">New sensor was added</string>
     <string name="toast_need_sensor_name">Write name of sensor please</string>
     <string name="toast_bad_password">Wrong name or password</string>
+    <string name="toast_connecting_to_server">Connecting to server &#8230;</string>
     <!-- Others -->
     <string name="action_settings">Settings</string>
-    <string name="title_activity_login_facebook">facebook</string>
+    <string name="addadapter_qrcode_desc">Get QR code</string>
+    <!-- Units -->
+    <string name="temperature_C">°C</string>
+    <string name="humidity_percent">%</string>
+    <string name="pressure_Pa">hPa</string>
+    <string name="illumination_lux">lux</string>
+    <string name="noise_dB">dB</string>
+    <string name="emission_ppm">ppm</string>
+    <!-- Type of sensors -->
+    <string name="temperature">thermal sensor</string>
+    <string name="humidity">hzgrometer</string>
+    <string name="pressure">barometer</string>
+    <string name="switch_s">switch sensor</string>
+    <string name="switch_c">switch controller</string>
+    <string name="illumination">lighting sensor</string>
+    <string name="noise">sound level meter</string>
+    <string name="emission">emission meter</string>
+    <string name="unknown">unknown device type</string>
+    <!-- Arrays -->
+    <string-array name="registration_spinner">
+        <item>Facebook</item>
+        <item>Google</item>
+        <item>MojeID</item>
+    </string-array>
+
 
 </resources>

@@ -42,6 +42,9 @@ public class XmlCreator {
 					serializer.startTag(null, "device");
 					serializer.attribute(null, "initialized", (d.GetInit() ? "1" : "0"));
 					serializer.attribute(null, "type", d.GetStringType());
+					if(!d.GetInit())
+						serializer.attribute(null, "involved", d.GetInvolveTime());
+					
 						serializer.startTag(null, "location");
 						serializer.text((d.GetLocation() != null) ? d.GetLocation() : "");
 						serializer.endTag(null, "location");

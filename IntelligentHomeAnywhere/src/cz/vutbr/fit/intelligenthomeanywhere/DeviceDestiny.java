@@ -15,9 +15,4 @@ public interface DeviceDestiny{
 	
 	public String toString();
 	
-	/**
-	 * Method return name of class in lowercase
-	 * @return name of class that implements this interface
-	 */
-	//public String GetClassName();
 }

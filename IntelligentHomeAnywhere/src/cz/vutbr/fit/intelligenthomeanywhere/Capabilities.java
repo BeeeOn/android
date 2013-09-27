@@ -12,12 +12,18 @@ public class Capabilities {
 	private String _id;
 	private String _version;
 	private boolean _newInit;
+	private boolean _newLocationName;
+	private boolean _newDeviceName;
+	private String _newDeviceNameLabel;
 	
 	Capabilities() {
 		devices = new ArrayList<Device>();
 		_id = null;
 		_version = null;
 		_newInit = false;
+		_newLocationName = false;
+		_newDeviceName = false;
+		_newDeviceNameLabel = null;
 	}
 	
 	public String toString(){
@@ -135,11 +141,63 @@ public class Capabilities {
 	}
 	
 	/**
+	 * Check if has been change name of location buttons
+	 * @return true if si new name of location in otherwise return false
+	 */
+	public boolean isNewLocationName(){
+		if(_newLocationName){
+			_newLocationName = false;
+			return true;
+		}
+		return false;
+	}
+	public void SetNewLocationName(){
+		_newLocationName = true;
+	}
+	
+	/**
+	 * Check if has been change name of sensor
+	 * @return true if change has been done, otherwise false
+	 */
+	public boolean isNewDeviceName(){
+		if(_newDeviceName){
+			_newDeviceName = false;
+			return true;
+		}
+		return false;
+	}
+	public void SetNewDeviceName(String newName){
+		_newDeviceNameLabel = newName;
+		_newDeviceName = true;
+	}
+	public String GetNewDeviceName(){
+		String result = _newDeviceNameLabel;
+		_newDeviceNameLabel = null;
+		return result;
+	}
+	
+	/**
 	 * Return object as xml file
 	 * @return created xml string
 	 */
 	public String GetXml(){
 		XmlCreator xmlcreator = new XmlCreator(this);
 		return xmlcreator.Create();
+	}
+	
+	/**
+	 * Method for search all adapters by location
+	 * @param name of location
+	 * @return arraylist with all adapters with needed location
+	 */
+	public ArrayList<Device> GetDevicesByLocation(String name){
+		ArrayList<Device> result = new ArrayList<Device>();
+		
+		for(Device d : devices){
+			if(d.GetLocation().equals(name))
+				result.add(d);
+		}
+		
+		return result;
 	}
 }

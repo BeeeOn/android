@@ -9,37 +9,6 @@
     android:background="@color/blue"
     tools:context=".AddSensorActivity" >
 
-    <EditText
-        android:id="@+id/addsensor_sensor_name_hint"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/addsensor_add_sensor"
-        android:layout_marginTop="19dp"
-        android:ems="10"
-        android:inputType="textNoSuggestions"
-        android:hint="@string/addsensor_sensor_name_hint" >
-
-        <requestFocus />
-    </EditText>
-
-    <Spinner
-        android:id="@+id/spinner_choose_location"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/addsensor_sensor_name_hint"
-        android:layout_below="@+id/addsensor_sensor_name_hint"
-        android:layout_marginTop="14dp" />
-
-    <EditText
-        android:id="@+id/addsensor_new_location_hint"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/addsensor_or"
-        android:layout_marginTop="30dp"
-        android:hint="@string/addsensor_new_location_hint"
-        android:inputType="textNoSuggestions"
-        android:ems="10" />
-
     <TextView
         android:id="@+id/addsensor_add_sensor"
         android:layout_width="wrap_content"
@@ -52,20 +21,70 @@
         android:id="@+id/addsensor_add"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
         android:layout_alignParentBottom="true"
-        android:layout_marginBottom="52dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="30dp"
         android:onClick="AddSensorMethod"
         android:text="@string/notification_add" />
+
+    <EditText
+        android:id="@+id/addsensor_new_location_hint"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/addsensor_add"
+        android:layout_alignLeft="@+id/spinner_choose_location"
+        android:layout_marginBottom="16dp"
+        android:ems="10"
+        android:hint="@string/addsensor_new_location_hint"
+        android:inputType="textNoSuggestions" />
 
     <TextView
         android:id="@+id/addsensor_or"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_above="@+id/addsensor_new_location_hint"
         android:layout_alignLeft="@+id/addsensor_new_location_hint"
-        android:layout_centerVertical="true"
-        android:layout_marginLeft="26dp"
+        android:layout_marginBottom="22dp"
+        android:layout_marginLeft="27dp"
         android:text="@string/addsensor_or"
         android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <Spinner
+        android:id="@+id/spinner_choose_location"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/addsensor_or"
+        android:layout_alignLeft="@+id/addsensor_sensor_name_hint"
+        android:layout_marginBottom="26dp" />
+
+    <EditText
+        android:id="@+id/addsensor_sensor_name_hint"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/spinner_choose_location"
+        android:layout_alignLeft="@+id/addsensor_add_sensor"
+        android:layout_marginBottom="19dp"
+        android:ems="10"
+        android:hint="@string/addsensor_sensor_name_hint"
+        android:inputType="textNoSuggestions" />
+
+    <TextView
+        android:id="@+id/addsensor_involved_time"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignRight="@+id/addsensor_type"
+        android:layout_below="@+id/addsensor_type"
+        android:layout_marginTop="17dp"
+        android:text="@string/addsensor_involved_time"
+        android:textAppearance="?android:attr/textAppearanceSmall" />
+
+    <TextView
+        android:id="@+id/addsensor_type"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/addsensor_add_sensor"
+        android:layout_marginTop="14dp"
+        android:text="@string/addsensor_type"
+        android:textAppearance="?android:attr/textAppearanceSmall" />
 
 </RelativeLayout>
