@@ -43,11 +43,10 @@ public class LocactionScreenActivity extends Activity {
 			}
 		}
 
-		XmlParser xmlparser = new XmlParser(GETFROMSERVER);
-		xmlparser.Parse();
-		_capabilities = xmlparser.GetResult();
+		_capabilities = XmlDeviceParser.fromFile(GETFROMSERVER);
 		if(_capabilities == null)
 			return;
+		
 		Log.i("parsedXML",_capabilities.toString());
 		Constants.SetCapabilities(_capabilities);
 		Constants.setContext(this.getApplicationContext());

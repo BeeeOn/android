@@ -57,31 +57,29 @@ public class XmlCreator {
 						serializer.text(Integer.toString(d.GetRefresh()));
 						serializer.endTag(null, "refresh");
 						
-						serializer.startTag(null, "status");
-							serializer.startTag(null, "battery");
-							serializer.text(Integer.toString(d.GetBattery()));
-							serializer.endTag(null, "battery");
+						serializer.startTag(null, "battery");
+						serializer.text(Integer.toString(d.GetBattery()));
+						serializer.endTag(null, "battery");
+						
+						serializer.startTag(null, "network");
+							serializer.startTag(null, "address");
+							serializer.text(d.GetAddress());
+							serializer.endTag(null, "address");
 							
-							serializer.startTag(null, "network");
-								serializer.startTag(null, "address");
-								serializer.text(d.GetAddress());
-								serializer.endTag(null, "address");
-								
-								serializer.startTag(null, "quality");
-								serializer.text(Integer.toString(d.GetQuality()));
-								serializer.endTag(null, "quality");
-							serializer.endTag(null, "network");
+							serializer.startTag(null, "quality");
+							serializer.text(Integer.toString(d.GetQuality()));
+							serializer.endTag(null, "quality");
+						serializer.endTag(null, "network");
+						
+						serializer.startTag(null, "value");
+						serializer.text(d.deviceDestiny.GetValue());
+						serializer.endTag(null, "value");
 							
-							serializer.startTag(null, "value");
-							serializer.text(d.deviceDestiny.GetValue());
-							serializer.endTag(null, "value");
-								
-							serializer.startTag(null, "logging");
-							serializer.attribute(null, "enabled", (d.deviceDestiny.GetLog() ? "1" : "0"));
-							if(d.deviceDestiny.GetLog())
-								serializer.text(d.GetLog());
-							serializer.endTag(null, "logging");
-						serializer.endTag(null, "status");
+						serializer.startTag(null, "logging");
+						serializer.attribute(null, "enabled", (d.deviceDestiny.GetLog() ? "1" : "0"));
+						if(d.deviceDestiny.GetLog())
+							serializer.text(d.GetLog());
+						serializer.endTag(null, "logging");
 					serializer.endTag(null, "device");
 				}
 				serializer.endTag(null, "capabilities");

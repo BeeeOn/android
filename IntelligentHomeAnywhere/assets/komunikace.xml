@@ -6,197 +6,169 @@
 			<location>Obývací pokoj</location>
 			<name>Teplota na okne</name>
 			<refresh>5</refresh>
-			<status>
-				<battery>100</battery>
-				<network>
-					<address>100:00:FF:000:FFF</address>
-					<quality>52</quality>
-				</network>
-				<value>30</value>
-				<logging enabled="1">sensor0.log</logging>
-			</status>
+			<battery>100</battery>
+			<network>
+				<address>100:00:FF:000:FFF</address>
+				<quality>52</quality>
+			</network>
+			<value>30</value>
+			<logging enabled="1">sensor0.log</logging>
 		</device>
 		<device initialized="1" type="0x00">
 			<location>Obývací pokoj</location>
 			<name>Teplota u dverí</name>
 			<refresh>12</refresh>
-			<status>
-				<battery>70</battery>
-				<network>
-					<address>120:00:FF:000:FFE</address>
-					<quality>52</quality>
-				</network>
-				<value>120</value>
-				<logging enabled="0"></logging>
-			</status>
+			<battery>70</battery>
+			<network>
+				<address>120:00:FF:000:FFE</address>
+				<quality>52</quality>
+			</network>
+			<value>120</value>
+			<logging enabled="0"></logging>
 		</device>
 		<device initialized="1" type="0x03"> <!-- switch (open/close) -->
 			<location>Obývací pokoj</location>
 			<name>Okno</name>
 			<refresh>12</refresh>
-			<status>
-				<battery>70</battery>
-				<network>
-					<address>130:00:FF:000:FFE</address>
-					<quality>25</quality>
-				</network>
-				<value>OFF</value>
-				<logging enabled="0"></logging>
-			</status>
+			<battery>70</battery>
+			<network>
+				<address>130:00:FF:000:FFE</address>
+				<quality>25</quality>
+			</network>
+			<value>OFF</value>
+			<logging enabled="0"></logging>
 		</device>
 		<device initialized="1" type="0x03">
 			<location>Obývací pokoj</location>
 			<name>Balkón</name>
 			<refresh>12</refresh>
-			<status>
-				<battery>70</battery>
-				<network>
-					<address>140:00:FF:000:FFE</address>
-					<quality>25</quality>
-				</network>
-				<value>ON</value>
-				<logging enabled="0"></logging>
-			</status>
+			<battery>70</battery>
+			<network>
+				<address>140:00:FF:000:FFE</address>
+				<quality>25</quality>
+			</network>
+			<value>ON</value>
+			<logging enabled="0"></logging>
 		</device>
 		<device initialized="1" type="0x06"> <!-- noise (dB) -->
 			<location>Ložnice</location>
 			<name>Postel</name>
 			<refresh>12</refresh>
-			<status>
-				<battery>100</battery>
-				<network>
-					<address>200:00:FF:000:FFE</address>
-					<quality>25</quality>
-				</network>
-				<value>30</value>
-				<logging enabled="0"></logging>
-			</status>
+			<battery>100</battery>
+			<network>
+				<address>200:00:FF:000:FFE</address>
+				<quality>25</quality>
+			</network>
+			<value>30</value>
+			<logging enabled="0"></logging>
 		</device>
 		<device initialized="1" type="0x05"> <!-- illumination (lx) -->
 			<location>Ložnice</location>
 			<name>Psací stůl</name>
 			<refresh>12</refresh>
-			<status>
-				<battery>100</battery>
-				<network>
-					<address>200:00:FF:000:FFE</address>
-					<quality>25</quality>
-				</network>
-				<value>15</value>
-				<logging enabled="0"></logging>
-			</status>
+			<battery>100</battery>
+			<network>
+				<address>200:00:FF:000:FFE</address>
+				<quality>25</quality>
+			</network>
+			<value>15</value>
+			<logging enabled="0"></logging>
 		</device>
 		<device initialized="0" type="0x07" involved="2013-08-28 10:03:56"> <!-- emission (ppm) -->
 			<location></location>
 			<name></name>
 			<refresh>12</refresh>
-			<status>
-				<battery>100</battery>
-				<network>
-					<address>200:00:FF:000:FFE</address>
-					<quality>25</quality>
-				</network>
-				<value>430</value>
-				<logging enabled="0"></logging>
-			</status>
+			<battery>100</battery>
+			<network>
+				<address>200:00:FF:000:FFE</address>
+				<quality>25</quality>
+			</network>
+			<value>430</value>
+			<logging enabled="0"></logging>
 		</device>
 		<device initialized="1" type="0x04"> <!-- switch (On/Off) -->
 			<location>Obývací pokoj</location>
 			<name>Ventilátor</name>
 			<refresh>12</refresh>
-			<status>
-				<battery>70</battery>
-				<network>
-					<address>150:00:FF:000:FFE</address>
-					<quality>25</quality>
-				</network>
-				<value>ON</value>
-				<logging enabled="0"></logging>
-			</status>
+			<battery>70</battery>
+			<network>
+				<address>150:00:FF:000:FFE</address>
+				<quality>25</quality>
+			</network>
+			<value>ON</value>
+			<logging enabled="0"></logging>
 		</device>
 		<device initialized="1" type="0x04">
 			<location>Obývací pokoj</location>
 			<name>Počítač</name>
 			<refresh>12</refresh>
-			<status>
-				<battery>0</battery>
-				<network>
-					<address>160:00:FF:000:FFE</address>
-					<quality>25</quality>
-				</network>
-				<value>OFF</value>
-				<logging enabled="0"></logging>
-			</status>
+			<battery>0</battery>
+			<network>
+				<address>160:00:FF:000:FFE</address>
+				<quality>25</quality>
+			</network>
+			<value>OFF</value>
+			<logging enabled="0"></logging>
 		</device>
 		<device initialized="1" type="0x04">
 			<location>Obývací pokoj</location>
 			<name>Lampa u TV</name>
 			<refresh>12</refresh>
-			<status>
-				<battery>100</battery>
-				<network>
-					<address>170:00:FF:000:FFE</address>
-					<quality>25</quality>
-				</network>
-				<value>ON</value>
-				<logging enabled="0"></logging>
-			</status>
+			<battery>100</battery>
+			<network>
+				<address>170:00:FF:000:FFE</address>
+				<quality>25</quality>
+			</network>
+			<value>ON</value>
+			<logging enabled="0"></logging>
 		</device>
 		<device initialized="1" type="0x04">
 			<location>Obývací pokoj</location>
 			<name>Televízor</name>
 			<refresh>12</refresh>
-			<status>
-				<battery>100</battery>
-				<network>
-					<address>180:00:FF:000:FFE</address>
-					<quality>25</quality>
-				</network>
-				<value>ON</value>
-				<logging enabled="0"></logging>
-			</status>
+			<battery>100</battery>
+			<network>
+				<address>180:00:FF:000:FFE</address>
+				<quality>25</quality>
+			</network>
+			<value>ON</value>
+			<logging enabled="0"></logging>
 		</device>
 		<device initialized="1" type="0x04">
 			<location>Kuchyň</location>
 			<name>Sporák</name>
 			<refresh>12</refresh>
-			<status>
-				<battery>100</battery>
-				<network>
-					<address>200:00:FF:000:FFE</address>
-					<quality>25</quality>
-				</network>
-				<value>ON</value>
-				<logging enabled="0"></logging>
-			</status>
+			<battery>100</battery>
+			<network>
+				<address>200:00:FF:000:FFE</address>
+				<quality>25</quality>
+			</network>
+			<value>ON</value>
+			<logging enabled="0"></logging>
 		</device>
 		<device initialized="1" type="0x01"> <!-- humidity (%r) -->
 			<location>WC</location>
 			<name>Osvěžovač</name>
 			<refresh>12</refresh>
-			<status>
-				<battery>100</battery>
-				<network>
-					<address>200:00:FF:000:FFE</address>
-					<quality>25</quality>
-				</network>
-				<value>20</value>
-				<logging enabled="0"></logging>
-			</status>
+			<battery>100</battery>
+			<network>
+				<address>200:00:FF:000:FFE</address>
+				<quality>25</quality>
+			</network>
+			<value>20</value>
+			<logging enabled="0"></logging>
 		</device>
 		<device initialized="1" type="0x02"> <!-- pressure (hPa) -->
 			<location>WC</location>
 			<name>Tlakoměr</name>
 			<refresh>12</refresh>
-			<status>
-				<battery>100</battery>
-				<network>
-					<address>200:00:FF:000:FFE</address>
-					<quality>25</quality>
-				</network>
-				<value>1058</value>
-				<logging enabled="0"></logging>
-			</status>
+			<battery>100</battery>
+			<network>
+				<address>200:00:FF:000:FFE</address>
+				<quality>25</quality>
+			</network>
+			<value>1058</value>
+			<logging enabled="0"></logging>
 		</device>
 	</capabilities>
 </adapter>
