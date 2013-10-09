@@ -103,7 +103,7 @@ public class SplashActivity extends Activity {
 	public void DemoMethod(View v){
 		if(!checkDemoData())
 			this.finish();
-		Intent intent = new Intent(this, LocactionScreenActivity.class);
+		Intent intent = new Intent(this, LocationScreenActivity.class);
 		intent.putExtra(Constants.LOGIN, Constants.LOGIN_DEMO);
     	startActivity(intent);
     	this.finish();

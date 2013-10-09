@@ -17,7 +17,7 @@ import android.widget.LinearLayout;
  * @author ThinkDeep
  *
  */
-public class LocactionScreenActivity extends Activity {
+public class LocationScreenActivity extends Activity {
 
 	private Capabilities _capabilities;
 	

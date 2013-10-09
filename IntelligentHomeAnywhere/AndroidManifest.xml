@@ -28,7 +28,7 @@
             
         </activity>
         <activity
-            android:name="cz.vutbr.fit.intelligenthomeanywhere.LocactionScreenActivity"
+            android:name="cz.vutbr.fit.intelligenthomeanywhere.LocationScreenActivity"
             android:label="@string/title_activity_locaction_screen" >
         </activity>
         <activity

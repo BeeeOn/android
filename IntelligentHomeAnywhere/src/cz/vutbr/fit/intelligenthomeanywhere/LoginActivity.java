@@ -65,7 +65,7 @@ public class LoginActivity extends Activity {
 		}
 		
 		if(access){
-			Intent intent = new Intent(this, LocactionScreenActivity.class);
+			Intent intent = new Intent(this, LocationScreenActivity.class);
 			intent.putExtra(Constants.LOGIN, Constants.LOGIN_COMM);
 			startActivity(intent);
 		}else{
