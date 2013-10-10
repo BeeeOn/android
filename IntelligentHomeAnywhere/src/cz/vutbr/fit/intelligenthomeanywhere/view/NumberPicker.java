@@ -16,9 +16,6 @@
 
 package cz.vutbr.fit.intelligenthomeanywhere.view;
 
-import cz.vutbr.fit.intelligenthomeanywhere.R;
-import cz.vutbr.fit.intelligenthomeanywhere.R.id;
-import cz.vutbr.fit.intelligenthomeanywhere.R.layout;
 import android.content.Context;
 import android.os.Handler;
 import android.text.InputFilter;
@@ -31,9 +28,10 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnFocusChangeListener;
 import android.view.View.OnLongClickListener;
-import android.widget.TextView;
-import android.widget.LinearLayout;
 import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.TextView;
+import cz.vutbr.fit.intelligenthomeanywhere.R;
 
 //import com.example.R;
 

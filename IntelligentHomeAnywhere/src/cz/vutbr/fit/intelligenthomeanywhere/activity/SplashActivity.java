@@ -5,12 +5,6 @@ import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-import cz.vutbr.fit.intelligenthomeanywhere.Constants;
-import cz.vutbr.fit.intelligenthomeanywhere.R;
-import cz.vutbr.fit.intelligenthomeanywhere.R.id;
-import cz.vutbr.fit.intelligenthomeanywhere.R.layout;
-import cz.vutbr.fit.intelligenthomeanywhere.R.string;
-
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -26,6 +20,8 @@ import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
+import cz.vutbr.fit.intelligenthomeanywhere.Constants;
+import cz.vutbr.fit.intelligenthomeanywhere.R;
 
 public class SplashActivity extends Activity {
 

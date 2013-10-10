@@ -4,11 +4,12 @@ import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.StringWriter;
+
 import org.xmlpull.v1.XmlSerializer;
 
+import android.util.Xml;
 import cz.vutbr.fit.intelligenthomeanywhere.adapter.Capabilities;
 import cz.vutbr.fit.intelligenthomeanywhere.adapter.device.Device;
-import android.util.Xml;
 
 /**
  * Class for creating xml file from _capabilities object

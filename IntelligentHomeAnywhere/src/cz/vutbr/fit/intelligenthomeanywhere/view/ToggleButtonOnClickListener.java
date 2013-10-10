@@ -1,14 +1,13 @@
 package cz.vutbr.fit.intelligenthomeanywhere.view;
 
-import cz.vutbr.fit.intelligenthomeanywhere.Constants;
-import cz.vutbr.fit.intelligenthomeanywhere.R;
-import cz.vutbr.fit.intelligenthomeanywhere.R.string;
-import cz.vutbr.fit.intelligenthomeanywhere.adapter.Adapter;
-import cz.vutbr.fit.intelligenthomeanywhere.adapter.device.Device;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Toast;
 import android.widget.ToggleButton;
+import cz.vutbr.fit.intelligenthomeanywhere.Constants;
+import cz.vutbr.fit.intelligenthomeanywhere.R;
+import cz.vutbr.fit.intelligenthomeanywhere.adapter.Adapter;
+import cz.vutbr.fit.intelligenthomeanywhere.adapter.device.Device;
 
 public class ToggleButtonOnClickListener implements OnClickListener{
 

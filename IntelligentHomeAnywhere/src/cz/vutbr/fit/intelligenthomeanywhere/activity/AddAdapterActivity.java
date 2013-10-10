@@ -1,10 +1,5 @@
 package cz.vutbr.fit.intelligenthomeanywhere.activity;
 
-import cz.vutbr.fit.intelligenthomeanywhere.Constants;
-import cz.vutbr.fit.intelligenthomeanywhere.R;
-import cz.vutbr.fit.intelligenthomeanywhere.R.id;
-import cz.vutbr.fit.intelligenthomeanywhere.R.layout;
-import cz.vutbr.fit.intelligenthomeanywhere.R.menu;
 import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
@@ -13,6 +8,8 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.widget.EditText;
+import cz.vutbr.fit.intelligenthomeanywhere.Constants;
+import cz.vutbr.fit.intelligenthomeanywhere.R;
 
 public class AddAdapterActivity extends Activity {
 

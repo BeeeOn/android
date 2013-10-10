@@ -2,19 +2,6 @@ package cz.vutbr.fit.intelligenthomeanywhere.activity;
 
 import java.util.ArrayList;
 
-import cz.vutbr.fit.intelligenthomeanywhere.Constants;
-import cz.vutbr.fit.intelligenthomeanywhere.R;
-import cz.vutbr.fit.intelligenthomeanywhere.R.color;
-import cz.vutbr.fit.intelligenthomeanywhere.R.dimen;
-import cz.vutbr.fit.intelligenthomeanywhere.R.drawable;
-import cz.vutbr.fit.intelligenthomeanywhere.R.id;
-import cz.vutbr.fit.intelligenthomeanywhere.R.layout;
-import cz.vutbr.fit.intelligenthomeanywhere.R.menu;
-import cz.vutbr.fit.intelligenthomeanywhere.R.string;
-import cz.vutbr.fit.intelligenthomeanywhere.adapter.Adapter;
-import cz.vutbr.fit.intelligenthomeanywhere.adapter.Capabilities;
-import cz.vutbr.fit.intelligenthomeanywhere.adapter.device.Device;
-import cz.vutbr.fit.intelligenthomeanywhere.view.ToggleButtonOnClickListener;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -26,6 +13,12 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.ToggleButton;
+import cz.vutbr.fit.intelligenthomeanywhere.Constants;
+import cz.vutbr.fit.intelligenthomeanywhere.R;
+import cz.vutbr.fit.intelligenthomeanywhere.adapter.Adapter;
+import cz.vutbr.fit.intelligenthomeanywhere.adapter.Capabilities;
+import cz.vutbr.fit.intelligenthomeanywhere.adapter.device.Device;
+import cz.vutbr.fit.intelligenthomeanywhere.view.ToggleButtonOnClickListener;
 
 public class DataOfLocationScreenActivity extends Activity {
 

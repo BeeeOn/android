@@ -2,15 +2,6 @@ package cz.vutbr.fit.intelligenthomeanywhere.activity;
 
 import java.util.List;
 
-import cz.vutbr.fit.intelligenthomeanywhere.Constants;
-import cz.vutbr.fit.intelligenthomeanywhere.R;
-import cz.vutbr.fit.intelligenthomeanywhere.R.id;
-import cz.vutbr.fit.intelligenthomeanywhere.R.layout;
-import cz.vutbr.fit.intelligenthomeanywhere.R.menu;
-import cz.vutbr.fit.intelligenthomeanywhere.R.string;
-import cz.vutbr.fit.intelligenthomeanywhere.adapter.Adapter;
-import cz.vutbr.fit.intelligenthomeanywhere.adapter.device.Device;
-
 import android.app.Activity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -20,6 +11,10 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
+import cz.vutbr.fit.intelligenthomeanywhere.Constants;
+import cz.vutbr.fit.intelligenthomeanywhere.R;
+import cz.vutbr.fit.intelligenthomeanywhere.adapter.Adapter;
+import cz.vutbr.fit.intelligenthomeanywhere.adapter.device.Device;
 
 public class AddSensorActivity extends Activity {
 

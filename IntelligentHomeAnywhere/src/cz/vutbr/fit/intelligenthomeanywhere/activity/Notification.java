@@ -1,12 +1,11 @@
 package cz.vutbr.fit.intelligenthomeanywhere.activity;
 
-import cz.vutbr.fit.intelligenthomeanywhere.R;
-import cz.vutbr.fit.intelligenthomeanywhere.R.layout;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
+import cz.vutbr.fit.intelligenthomeanywhere.R;
 
 public class Notification extends Activity {
 

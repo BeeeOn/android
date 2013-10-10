@@ -16,13 +16,12 @@
 
 package cz.vutbr.fit.intelligenthomeanywhere.view;
 
-import cz.vutbr.fit.intelligenthomeanywhere.R;
-import cz.vutbr.fit.intelligenthomeanywhere.R.id;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.widget.ImageButton;
+import cz.vutbr.fit.intelligenthomeanywhere.R;
 
 //import com.example.R;
 

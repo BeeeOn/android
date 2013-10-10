@@ -13,7 +13,16 @@ import org.xmlpull.v1.XmlPullParserException;
 import android.util.Log;
 import android.util.Xml;
 import cz.vutbr.fit.intelligenthomeanywhere.adapter.Capabilities;
-import cz.vutbr.fit.intelligenthomeanywhere.adapter.device.*;
+import cz.vutbr.fit.intelligenthomeanywhere.adapter.device.Device;
+import cz.vutbr.fit.intelligenthomeanywhere.adapter.device.Emission;
+import cz.vutbr.fit.intelligenthomeanywhere.adapter.device.Humidity;
+import cz.vutbr.fit.intelligenthomeanywhere.adapter.device.Illumination;
+import cz.vutbr.fit.intelligenthomeanywhere.adapter.device.Noise;
+import cz.vutbr.fit.intelligenthomeanywhere.adapter.device.Pressure;
+import cz.vutbr.fit.intelligenthomeanywhere.adapter.device.Switch_c;
+import cz.vutbr.fit.intelligenthomeanywhere.adapter.device.Switch_s;
+import cz.vutbr.fit.intelligenthomeanywhere.adapter.device.Temperature;
+import cz.vutbr.fit.intelligenthomeanywhere.adapter.device.UnknownDeviceType;
 
 /**
  * Class for parsing xml file for device

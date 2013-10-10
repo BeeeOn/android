@@ -25,13 +25,6 @@ import com.jjoe64.graphview.LineGraphView;
 
 import cz.vutbr.fit.intelligenthomeanywhere.Constants;
 import cz.vutbr.fit.intelligenthomeanywhere.R;
-import cz.vutbr.fit.intelligenthomeanywhere.R.color;
-import cz.vutbr.fit.intelligenthomeanywhere.R.dimen;
-import cz.vutbr.fit.intelligenthomeanywhere.R.drawable;
-import cz.vutbr.fit.intelligenthomeanywhere.R.id;
-import cz.vutbr.fit.intelligenthomeanywhere.R.layout;
-import cz.vutbr.fit.intelligenthomeanywhere.R.menu;
-import cz.vutbr.fit.intelligenthomeanywhere.R.string;
 import cz.vutbr.fit.intelligenthomeanywhere.adapter.Adapter;
 import cz.vutbr.fit.intelligenthomeanywhere.adapter.device.Device;
 import cz.vutbr.fit.intelligenthomeanywhere.view.NumberPicker;
