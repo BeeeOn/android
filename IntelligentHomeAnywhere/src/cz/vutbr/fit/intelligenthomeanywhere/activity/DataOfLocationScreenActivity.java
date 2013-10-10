@@ -34,7 +34,7 @@ public class DataOfLocationScreenActivity extends Activity {
 		
 		Bundle bundle = this.getIntent().getExtras();
 		if(bundle != null){
-			_capabilities = Constants.GetCapabilities();
+			_capabilities = Constants.getCapabilities();
 			_clicked = bundle.getString(Constants.LOCATION_CLICKED);
 			Log.i("clicked ->",_clicked);
 		}else
@@ -51,7 +51,7 @@ public class DataOfLocationScreenActivity extends Activity {
 		txtvwTitleLocation.setLayoutParams(titleLocationParams);
 		mainlayout.addView(txtvwTitleLocation);
 		
-		ArrayList<String> names = _capabilities.GetNameByLocation(_clicked);
+		ArrayList<String> names = _capabilities.getNameByLocation(_clicked);
 		if(names != null){
 			int ID = Constants.IDLE;
 			LinearLayout temperatureLayout = null;
@@ -65,7 +65,7 @@ public class DataOfLocationScreenActivity extends Activity {
 			LinearLayout unknownLayout = null;
 			for(String name : names){
 				
-				Adapter device = _capabilities.GetDeviceByName(name);
+				Adapter device = _capabilities.getDeviceByName(name);
 				
 				RelativeLayout devicelayout = new RelativeLayout(this);
 				devicelayout.setPadding(5, 10, 10, 10);
@@ -101,7 +101,7 @@ public class DataOfLocationScreenActivity extends Activity {
 				rightObjectParams.setMargins(0, 8, 0, 0);
 				rightObjectParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
 				TextView txtview = new TextView(this);
-				switch(((Device)device).GetType()){
+				switch(((Device)device).getType()){
 					case 0: // temperature
 						if(temperatureLayout == null){
 							temperatureLayout = setLayout(temperatureLayout, ID);
@@ -110,7 +110,7 @@ public class DataOfLocationScreenActivity extends Activity {
 						if(temperatureLayout != null && temperatureLayout.getChildCount() > 0){
 							temperatureLayout.addView(getSplitter());
 						}
-						txtview.setText(((Device) device).deviceDestiny.GetValue() + " " + getString(R.string.temperature_C) );
+						txtview.setText(((Device) device).deviceDestiny.getValue() + " " + getString(R.string.temperature_C) );
 						txtview.setLayoutParams(rightObjectParams);
 						devicelayout.addView(txtview);
 						temperatureLayout.addView(devicelayout);
@@ -123,7 +123,7 @@ public class DataOfLocationScreenActivity extends Activity {
 						if(humidityLayout != null && humidityLayout.getChildCount() > 0){
 							humidityLayout.addView(getSplitter());
 						}
-						txtview.setText(((Device) device).deviceDestiny.GetValue() + " " + getString(R.string.humidity_percent));
+						txtview.setText(((Device) device).deviceDestiny.getValue() + " " + getString(R.string.humidity_percent));
 						txtview.setLayoutParams(rightObjectParams);
 						devicelayout.addView(txtview);
 						humidityLayout.addView(devicelayout);
@@ -136,7 +136,7 @@ public class DataOfLocationScreenActivity extends Activity {
 						if(pressureLayout != null && pressureLayout.getChildCount() > 0){
 							pressureLayout.addView(getSplitter());
 						}
-						txtview.setText(((Device) device).deviceDestiny.GetValue() + " " + getString(R.string.pressure_Pa));
+						txtview.setText(((Device) device).deviceDestiny.getValue() + " " + getString(R.string.pressure_Pa));
 						txtview.setLayoutParams(rightObjectParams);
 						devicelayout.addView(txtview);
 						pressureLayout.addView(devicelayout);
@@ -149,8 +149,8 @@ public class DataOfLocationScreenActivity extends Activity {
 						if(switchSensorLayout != null && switchSensorLayout.getChildCount() > 0){
 							switchSensorLayout.addView(getSplitter());
 						}
-						txtview.setText(Constants.isOpen(((Device) device).deviceDestiny.GetValue()));
-						txtview.setTextColor(Constants.isOn(((Device) device).deviceDestiny.GetValue()));
+						txtview.setText(Constants.isOpen(((Device) device).deviceDestiny.getValue()));
+						txtview.setTextColor(Constants.isOn(((Device) device).deviceDestiny.getValue()));
 						txtview.setLayoutParams(rightObjectParams);
 						devicelayout.addView(txtview);
 						switchSensorLayout.addView(devicelayout);
@@ -160,8 +160,8 @@ public class DataOfLocationScreenActivity extends Activity {
 						ToggleButton toggle = new ToggleButton(this);
 						toggle.setTextOff("OFF");
 						toggle.setTextOn("ON");
-						toggle.setChecked((((Device)device).deviceDestiny.GetValue().equals("ON") ? true : false));
-						toggle.setOnClickListener(new ToggleButtonOnClickListener(device.GetName()));
+						toggle.setChecked((((Device)device).deviceDestiny.getValue().equals("ON") ? true : false));
+						toggle.setOnClickListener(new ToggleButtonOnClickListener(device.getName()));
 						if(switchControlLayout == null){
 							switchControlLayout = setLayout(switchControlLayout, ID);
 						}
@@ -181,7 +181,7 @@ public class DataOfLocationScreenActivity extends Activity {
 						if(illuminationLayout != null && illuminationLayout.getChildCount() > 0){
 							illuminationLayout.addView(getSplitter());
 						}
-						txtview.setText(((Device) device).deviceDestiny.GetValue() + " " + getString(R.string.illumination_lux));
+						txtview.setText(((Device) device).deviceDestiny.getValue() + " " + getString(R.string.illumination_lux));
 						txtview.setLayoutParams(rightObjectParams);
 						devicelayout.addView(txtview);
 						illuminationLayout.addView(devicelayout);
@@ -194,7 +194,7 @@ public class DataOfLocationScreenActivity extends Activity {
 						if(noiseLayout != null && noiseLayout.getChildCount() > 0){
 							noiseLayout.addView(getSplitter());
 						}
-						txtview.setText(((Device) device).deviceDestiny.GetValue() + " " + getString(R.string.noise_dB));
+						txtview.setText(((Device) device).deviceDestiny.getValue() + " " + getString(R.string.noise_dB));
 						txtview.setLayoutParams(rightObjectParams);
 						devicelayout.addView(txtview);
 						noiseLayout.addView(devicelayout);
@@ -207,7 +207,7 @@ public class DataOfLocationScreenActivity extends Activity {
 						if(emissionLayout != null && emissionLayout.getChildCount() > 0){
 							emissionLayout.addView(getSplitter());
 						}
-						txtview.setText(((Device) device).deviceDestiny.GetValue() + " " + getString(R.string.emission_ppm));
+						txtview.setText(((Device) device).deviceDestiny.getValue() + " " + getString(R.string.emission_ppm));
 						txtview.setLayoutParams(rightObjectParams);
 						devicelayout.addView(txtview);
 						emissionLayout.addView(devicelayout);
@@ -250,8 +250,8 @@ public class DataOfLocationScreenActivity extends Activity {
 	public void onResume(){
 		super.onResume();
 		
-		if(Constants.GetCapabilities().isNewDeviceName()){
-			((TextView)((RelativeLayout)_pressed).getChildAt(0)).setText(Constants.GetCapabilities().GetNewDeviceName());
+		if(Constants.getCapabilities().isNewDeviceName()){
+			((TextView)((RelativeLayout)_pressed).getChildAt(0)).setText(Constants.getCapabilities().getNewDeviceName());
 		}
 		
 	}

@@ -31,12 +31,12 @@ public class ChangeDeviceNameActivity extends Activity {
 	 * @param v
 	 */
 	public void changeMethod(View v){
-		Device device = (Device)Constants.GetCapabilities().GetDeviceByName(_oldName);
+		Device device = (Device)Constants.getCapabilities().getDeviceByName(_oldName);
 		EditText enewDevice = (EditText)findViewById(R.id.change_device_name_edittext);
 		String snewDevice = enewDevice.getText().toString();
-		device.SetName(snewDevice);
+		device.setName(snewDevice);
 		
-		Constants.GetCapabilities().SetNewDeviceName(snewDevice);
+		Constants.getCapabilities().setNewDeviceName(snewDevice);
 		this.finish();
 	}
 	

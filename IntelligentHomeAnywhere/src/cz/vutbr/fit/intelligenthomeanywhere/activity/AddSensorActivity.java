@@ -23,19 +23,19 @@ public class AddSensorActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_add_sensor);
 		
-		List<String> ListLocation = Constants.GetCapabilities().getLocations(true);
+		List<String> ListLocation = Constants.getCapabilities().getLocations(true);
 		
 		Spinner spinner = (Spinner)findViewById(R.id.spinner_choose_location);
         ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, ListLocation);
         dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(dataAdapter);
         
-        Device device = (Device)Constants.GetCapabilities().GetNewOne();
+        Device device = (Device)Constants.getCapabilities().getNewOne();
         TextView type = (TextView)findViewById(R.id.addsensor_type);
-        type.setText(type.getText() + " " + Constants.GetNameOfType(device.GetType()));
+        type.setText(type.getText() + " " + Constants.GetNameOfType(device.getType()));
         
         TextView time = (TextView)findViewById(R.id.addsensor_involved_time);
-        time.setText(time.getText() + " " + device.GetInvolveTime());
+        time.setText(time.getText() + " " + device.getInvolveTime());
 		
 	}
 
@@ -50,8 +50,8 @@ public class AddSensorActivity extends Activity {
 	 * Method that add new name and location of new sensor
 	 * @param v
 	 */
-	public void AddSensorMethod(View v){
-		Adapter newadapter = Constants.GetCapabilities().GetNewOne();
+	public void addSensorMethod(View v){
+		Adapter newadapter = Constants.getCapabilities().getNewOne();
 		if(newadapter != null){
 			EditText name = (EditText)findViewById(R.id.addsensor_sensor_name_hint);
 			EditText elocation = (EditText)findViewById(R.id.addsensor_new_location_hint);
@@ -66,11 +66,11 @@ public class AddSensorActivity extends Activity {
 				Toast.makeText(this.getApplicationContext(), getString(R.string.toast_need_sensor_name), Toast.LENGTH_LONG).show();
 				return;
 			}
-			newadapter.SetInit(true);
-			newadapter.SetName(name.getText().toString());
-			newadapter.SetLocation(location);
+			newadapter.setInit(true);
+			newadapter.setName(name.getText().toString());
+			newadapter.setLocation(location);
 
-			Constants.GetCapabilities().SetNewInit();
+			Constants.getCapabilities().setNewInit();
 			Toast.makeText(this.getApplicationContext(), getString(R.string.toast_new_sensor_added), Toast.LENGTH_LONG).show();
 			this.finish();
 		}

@@ -31,13 +31,13 @@ public class ChangeLocationNameActivity extends Activity {
 	 * @param v
 	 */
 	public void changeMethod(View v){
-		ArrayList<Device> devices = Constants.GetCapabilities().GetDevicesByLocation(_oldLocation);
+		ArrayList<Device> devices = Constants.getCapabilities().getDevicesByLocation(_oldLocation);
 		EditText enewLocation = (EditText)findViewById(R.id.change_location_name_edittext);
 		String snewLocation = enewLocation.getText().toString();
 		for(Device d : devices){
-			d.SetLocation(snewLocation);
+			d.setLocation(snewLocation);
 		}
-		Constants.GetCapabilities().SetNewLocationName();
+		Constants.getCapabilities().setNewLocationName();
 		this.finish();
 	}
 }

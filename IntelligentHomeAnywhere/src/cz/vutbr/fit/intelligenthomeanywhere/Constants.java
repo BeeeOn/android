@@ -63,10 +63,10 @@ public final class Constants {
 	 * Set up main data object
 	 * @param capabilities
 	 */
-	public static void SetCapabilities(Capabilities capabilities){
+	public static void setCapabilities(Capabilities capabilities){
 		_capabilities = capabilities;
 	}
-	public static Capabilities GetCapabilities(){
+	public static Capabilities getCapabilities(){
 		return _capabilities;
 	}
 	

@@ -102,7 +102,7 @@ public class SplashActivity extends Activity {
 	 * Open Demo - onClick
 	 * @param v
 	 */
-	public void DemoMethod(View v){
+	public void demoMethod(View v){
 		if(!checkDemoData())
 			this.finish();
 		Intent intent = new Intent(this, LocationScreenActivity.class);

@@ -126,7 +126,7 @@ public class XmlDeviceParser {
 	    parser.require(XmlPullParser.START_TAG, ns, ADAPTER_ROOT);
 	    
 	    String id = parser.getAttributeValue(null, ADAPTER_ID);
-	    adapter.SetId(id);
+	    adapter.setId(id);
 	    
 	    while (parser.next() != XmlPullParser.END_TAG) {
 	        if (parser.getEventType() != XmlPullParser.START_TAG)
@@ -137,7 +137,7 @@ public class XmlDeviceParser {
 	        	adapter.devices = readCapabilities();
 	        } else if (el.equalsIgnoreCase(ADAPTER_VERSION)) {
 	    		String version = readText(ADAPTER_VERSION);
-	    		adapter.SetVersion(version);
+	    		adapter.setVersion(version);
 	    	} else
 	            skip();
 	    }
@@ -186,13 +186,13 @@ public class XmlDeviceParser {
 		// Initialized
     	String initialized_ = parser.getAttributeValue(null, DEVICE_INITIALIZED);    	
     	if (initialized_ != null)
-    		device.SetInit(Integer.parseInt(initialized_) != 0);
+    		device.setInit(Integer.parseInt(initialized_) != 0);
 
     	// If not initialized yet, check involved attribute
-    	if (!device.GetInit()) {
+    	if (!device.getInit()) {
     		String involved_ = parser.getAttributeValue(null, DEVICE_INVOLVED);
     		if (involved_ != null)
-    			device.SetInvolveTime(involved_);
+    			device.setInvolveTime(involved_);
     	}
     	
     	// Type
@@ -202,7 +202,7 @@ public class XmlDeviceParser {
     	if (type_ != null)
     		type = Integer.decode(type_);
     	
-    	device.SetType(type);
+    	device.setType(type);
     	
     	switch (type) {
     	case TYPE_EMMISION:
@@ -234,7 +234,7 @@ public class XmlDeviceParser {
     		break;
     	}
     	
-    	Log.d(TAG, String.format("Got %s %s device", device.GetInit() ? "initialized" : "uninitialized", device.deviceDestiny.getClass().getSimpleName()));
+    	Log.d(TAG, String.format("Got %s %s device", device.getInit() ? "initialized" : "uninitialized", device.deviceDestiny.getClass().getSimpleName()));
 
     	String location_ = null;
         String name_ = null;
@@ -286,23 +286,23 @@ public class XmlDeviceParser {
 	    }
 		
 		if (location_ != null)
-			device.SetLocation(location_);		
+			device.setLocation(location_);		
 		if (name_ != null)
-			device.SetName(name_);
+			device.setName(name_);
 		if (refresh_ != null)
-			device.SetRefresh(Integer.parseInt(refresh_));
+			device.setRefresh(Integer.parseInt(refresh_));
 		if (battery_ != null)
-			device.SetBattery(Integer.parseInt(battery_));
+			device.setBattery(Integer.parseInt(battery_));
 		if (value_ != null)
-			device.deviceDestiny.SetValue(value_);
+			device.deviceDestiny.setValue(value_);
 		if (address_ != null)
-			device.SetAddress(address_);
+			device.setAddress(address_);
 		if (quality_ != null)
-			device.SetQuality(Integer.parseInt(quality_));
+			device.setQuality(Integer.parseInt(quality_));
 		if (logging_ != null)
-			device.deviceDestiny.SetLog(Integer.parseInt(logging_) != 0);
+			device.deviceDestiny.setLog(Integer.parseInt(logging_) != 0);
 		if (logfile_ != null)
-			device.SetLog(logfile_);
+			device.setLog(logfile_);
 		
 		parser.require(XmlPullParser.END_TAG, ns, DEVICE_ROOT);
     	

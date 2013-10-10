@@ -21,7 +21,7 @@ public class Notification extends Activity {
 	 * Method that close this notification - onClick
 	 * @param v
 	 */
-	public void IgnoreMethod(View v){
+	public void ignoreMethod(View v){
 		this.finish();
 	}
 	
@@ -29,7 +29,7 @@ public class Notification extends Activity {
 	 * Method that open activity for adding new device - onClick
 	 * @param v
 	 */
-	public void AddMethod(View v){
+	public void addMethod(View v){
 		Intent intent = new Intent(this,AddSensorActivity.class);
 		startActivity(intent);
 		this.finish();

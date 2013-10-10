@@ -12,17 +12,17 @@ public class Temperature implements DeviceDestiny{
 	
 	public Temperature(){}
 	
-	public void SetValue(String value){
+	public void setValue(String value){
 		_value = Integer.parseInt(value);
 	}
-	public String GetValue(){
+	public String getValue(){
 		return Integer.toString(_value);
 	}
 	
-	public void SetLog(boolean log){
+	public void setLog(boolean log){
 		_Log = log;
 	}
-	public boolean GetLog(){
+	public boolean getLog(){
 		return _Log;
 	}
 	

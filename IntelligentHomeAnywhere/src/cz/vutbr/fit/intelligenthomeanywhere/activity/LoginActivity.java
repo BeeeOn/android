@@ -42,7 +42,7 @@ public class LoginActivity extends Activity {
 	 * Check user login info, and open app - onClick
 	 * @param v
 	 */
-	public void LoginMethod(View v){
+	public void loginMethod(View v){
 		boolean access = false;
 		
 		String name = ((EditText)findViewById(R.id.login_user_name)).getText().toString();

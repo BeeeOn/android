@@ -4,33 +4,33 @@ public interface Adapter {
 
 	public String toString();
 	
-	public void SetInit(boolean init);
-	public boolean GetInit();
+	public void setInit(boolean init);
+	public boolean getInit();
 	
-	public void SetLocation(String location);
-	public String GetLocation();
+	public void setLocation(String location);
+	public String getLocation();
 	
-	public void SetName(String name);
-	public String GetName();
+	public void setName(String name);
+	public String getName();
 	
-	public void SetRefresh(int refresh);
-	public int GetRefresh();
+	public void setRefresh(int refresh);
+	public int getRefresh();
 	
-	public void SetBattery(int battery);
-	public int GetBattery();
+	public void setBattery(int battery);
+	public int getBattery();
 	
-	public void SetAddress(String address);
-	public String GetAddress();
+	public void setAddress(String address);
+	public String getAddress();
 	
-	public void SetQuality(int quality);
-	public int GetQuality();
+	public void setQuality(int quality);
+	public int getQuality();
 	
-	public void SetLog(String log);
-	public String GetLog();
+	public void setLog(String log);
+	public String getLog();
 	
-	public void SetType(int type);
-	public int GetType();
+	public void setType(int type);
+	public int getType();
 	
-	public void SetInvolveTime(String time);
-	public String GetInvolveTime();
+	public void setInvolveTime(String time);
+	public String getInvolveTime();
 }

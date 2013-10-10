@@ -90,7 +90,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/login_radioGroup"
         android:layout_toRightOf="@+id/login_user_name"
-        android:onClick="LoginMethod"
+        android:onClick="loginMethod"
         android:text="@string/login_login" />
 
 </RelativeLayout>

@@ -21,8 +21,8 @@ public class ToggleButtonOnClickListener implements OnClickListener{
 	public void onClick(View v) {
 		ToggleButton clicked = (ToggleButton)v;
 		Toast.makeText(v.getContext(), _name + v.getContext().getString(R.string.toast_changeto) + clicked.getText(), Toast.LENGTH_SHORT).show();
-		Adapter device = Constants.GetCapabilities().GetDeviceByName(_name);
-		((Device)device).deviceDestiny.SetValue(clicked.getText().toString());
+		Adapter device = Constants.getCapabilities().getDeviceByName(_name);
+		((Device)device).deviceDestiny.setValue(clicked.getText().toString());
 		//TODO: createXml and send to server
 	}
 

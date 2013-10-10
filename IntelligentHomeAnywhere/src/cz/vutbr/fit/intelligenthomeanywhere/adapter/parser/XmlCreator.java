@@ -28,61 +28,61 @@ public class XmlCreator {
 	 * Method for creating xml file (string)
 	 * @return String contains xml file
 	 */
-	public String Create(){
+	public String create(){
 		XmlSerializer serializer = Xml.newSerializer();
 		StringWriter writer = new StringWriter();
 		try{
 			serializer.setOutput(writer);
 			serializer.startDocument("UTF-8", null);
 			serializer.startTag(null, "adapter");
-			serializer.attribute(null,"id",_capabilities.GetId());
+			serializer.attribute(null,"id",_capabilities.getId());
 				serializer.startTag(null, "version");
-				serializer.text(_capabilities.GetVersion());
+				serializer.text(_capabilities.getVersion());
 				serializer.endTag(null, "version");
 			
 				serializer.startTag(null, "capabilities");
 					
 				for(Device d : _capabilities.devices){
 					serializer.startTag(null, "device");
-					serializer.attribute(null, "initialized", (d.GetInit() ? "1" : "0"));
-					serializer.attribute(null, "type", d.GetStringType());
-					if(!d.GetInit())
-						serializer.attribute(null, "involved", d.GetInvolveTime());
+					serializer.attribute(null, "initialized", (d.getInit() ? "1" : "0"));
+					serializer.attribute(null, "type", d.getStringType());
+					if(!d.getInit())
+						serializer.attribute(null, "involved", d.getInvolveTime());
 					
 						serializer.startTag(null, "location");
-						serializer.text((d.GetLocation() != null) ? d.GetLocation() : "");
+						serializer.text((d.getLocation() != null) ? d.getLocation() : "");
 						serializer.endTag(null, "location");
 						
 						serializer.startTag(null, "name");
-						serializer.text((d.GetName() != null) ? d.GetName() : "");
+						serializer.text((d.getName() != null) ? d.getName() : "");
 						serializer.endTag(null, "name");
 						
 						serializer.startTag(null, "refresh");
-						serializer.text(Integer.toString(d.GetRefresh()));
+						serializer.text(Integer.toString(d.getRefresh()));
 						serializer.endTag(null, "refresh");
 						
 						serializer.startTag(null, "battery");
-						serializer.text(Integer.toString(d.GetBattery()));
+						serializer.text(Integer.toString(d.getBattery()));
 						serializer.endTag(null, "battery");
 						
 						serializer.startTag(null, "network");
 							serializer.startTag(null, "address");
-							serializer.text(d.GetAddress());
+							serializer.text(d.getAddress());
 							serializer.endTag(null, "address");
 							
 							serializer.startTag(null, "quality");
-							serializer.text(Integer.toString(d.GetQuality()));
+							serializer.text(Integer.toString(d.getQuality()));
 							serializer.endTag(null, "quality");
 						serializer.endTag(null, "network");
 						
 						serializer.startTag(null, "value");
-						serializer.text(d.deviceDestiny.GetValue());
+						serializer.text(d.deviceDestiny.getValue());
 						serializer.endTag(null, "value");
 							
 						serializer.startTag(null, "logging");
-						serializer.attribute(null, "enabled", (d.deviceDestiny.GetLog() ? "1" : "0"));
-						if(d.deviceDestiny.GetLog())
-							serializer.text(d.GetLog());
+						serializer.attribute(null, "enabled", (d.deviceDestiny.getLog() ? "1" : "0"));
+						if(d.deviceDestiny.getLog())
+							serializer.text(d.getLog());
 						serializer.endTag(null, "logging");
 					serializer.endTag(null, "device");
 				}
@@ -101,9 +101,9 @@ public class XmlCreator {
 	 * @param filename name of new writing xml file
 	 * @param dir is path to the file
 	 */
-	public void SaveXml(String dir, String filename){
+	public void saveXml(String dir, String filename){
 		try{
-			byte[] buffer = this.Create().getBytes("UTF-8");
+			byte[] buffer = this.create().getBytes("UTF-8");
 			File file = new File(dir,filename);
 			DataOutputStream out = new DataOutputStream(new FileOutputStream(file));
 			out.flush();

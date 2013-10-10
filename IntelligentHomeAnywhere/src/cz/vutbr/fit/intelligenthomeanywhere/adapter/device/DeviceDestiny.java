@@ -7,11 +7,11 @@ package cz.vutbr.fit.intelligenthomeanywhere.adapter.device;
  */
 public interface DeviceDestiny{
 	
-	public String GetValue();
-	public void SetValue(String value);
+	public String getValue();
+	public void setValue(String value);
 	
-	public void SetLog(boolean bool);
-	public boolean GetLog();
+	public void setLog(boolean bool);
+	public boolean getLog();
 	
 	public String toString();
 	

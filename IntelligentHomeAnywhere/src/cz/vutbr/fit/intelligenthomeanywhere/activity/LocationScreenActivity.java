@@ -54,7 +54,7 @@ public class LocationScreenActivity extends Activity {
 			return;
 		
 		Log.i("parsedXML",_capabilities.toString());
-		Constants.SetCapabilities(_capabilities);
+		Constants.setCapabilities(_capabilities);
 		Constants.setContext(this.getApplicationContext());
 		
 		if(_capabilities.isNewOne()){
@@ -88,14 +88,14 @@ public class LocationScreenActivity extends Activity {
 		super.onResume();
 		final int ID = Constants.BUTTON_ID;
 		//DEBUG: maybe saving on SDCard even after calling sever as a cache
-		XmlCreator xmlcreator = new XmlCreator(Constants.GetCapabilities());
-		xmlcreator.SaveXml(Environment.getExternalStorageDirectory().toString() + "/IHA/","komunikace.xml");
+		XmlCreator xmlcreator = new XmlCreator(Constants.getCapabilities());
+		xmlcreator.saveXml(Environment.getExternalStorageDirectory().toString() + "/IHA/","komunikace.xml");
 		
 		Log.i("onResume",this.getLocalClassName());
 		
-		if(Constants.GetCapabilities().isNewInit()){
+		if(Constants.getCapabilities().isNewInit()){
 			ArrayList<String> Old = GetLocationsFromButtons(ID);
-			ArrayList<String> New = Constants.GetCapabilities().getLocations(false);
+			ArrayList<String> New = Constants.getCapabilities().getLocations(false);
 			Log.d("Old",Old.toString());
 			Log.d("New", New.toString());
 			if(Old.size() != New.size()){
@@ -104,9 +104,9 @@ public class LocationScreenActivity extends Activity {
 				addLocationButton(New.get(0), ID + Old.size() + 1, 5);
 			}
 		}
-		if(Constants.GetCapabilities().isNewLocationName()){
+		if(Constants.getCapabilities().isNewLocationName()){
 			ArrayList<String> Old = GetLocationsFromButtons(ID);
-			ArrayList<String> New = Constants.GetCapabilities().getLocations(false);
+			ArrayList<String> New = Constants.getCapabilities().getLocations(false);
 			Log.d("Old",Old.toString());
 			Log.d("New", New.toString());
 			ArrayList<String> diff = GetDiffOfLocatins(Old, New);

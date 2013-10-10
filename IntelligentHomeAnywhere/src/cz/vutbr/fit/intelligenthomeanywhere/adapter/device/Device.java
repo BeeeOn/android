@@ -50,79 +50,79 @@ public class Device implements Adapter{
 		return result;
 	}
 	
-	public void SetLocation(String location){
+	public void setLocation(String location){
 		_location = location;
 	}
-	public String GetLocation(){
+	public String getLocation(){
 		return _location;
 	}
 	
-	public void SetInit(boolean init){
+	public void setInit(boolean init){
 		_initialized = init;
 	}
-	public boolean GetInit(){
+	public boolean getInit(){
 		return _initialized;
 	}
 	
-	public void SetName(String name){
+	public void setName(String name){
 		_name = name;
 	}
-	public String GetName(){
+	public String getName(){
 		return _name;
 	}
 	
-	public void SetRefresh(int refresh){
+	public void setRefresh(int refresh){
 		_refreshTime = refresh;
 	}
-	public int GetRefresh(){
+	public int getRefresh(){
 		return _refreshTime;
 	}
 	
-	public void SetBattery(int battery){
+	public void setBattery(int battery){
 		_battery = battery;
 	}
-	public int GetBattery(){
+	public int getBattery(){
 		return _battery;
 	}
 	
-	public void SetAddress(String address){
+	public void setAddress(String address){
 		_address = address;
 	}
-	public String GetAddress(){
+	public String getAddress(){
 		return _address;
 	}
 	
-	public void SetQuality(int quality){
+	public void setQuality(int quality){
 		_quality = quality;
 	}
-	public int GetQuality(){
+	public int getQuality(){
 		return _quality;
 	}
 
-	public void SetLog(String log){
+	public void setLog(String log){
 		_Log = log;
 	}
-	public String GetLog(){
+	public String getLog(){
 		return _Log;
 	}
 
-	public void SetType(int type){
+	public void setType(int type){
 		_type = type;
 	}
-	public int GetType(){
+	public int getType(){
 		return _type;
 	}
-	public String GetStringType(){
+	public String getStringType(){
 		String result = "0x";
 		result += Integer.toHexString(_type);
 		return result;
 	}
 
 
-	public void SetInvolveTime(String time) {
+	public void setInvolveTime(String time) {
 		_involveTime = time;
 	}
-	public String GetInvolveTime() {
+	public String getInvolveTime() {
 		return _involveTime;
 	}
 }

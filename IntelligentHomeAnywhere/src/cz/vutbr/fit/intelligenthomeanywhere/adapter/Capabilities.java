@@ -49,28 +49,28 @@ public class Capabilities {
 	 * @param location name of group of devices
 	 * @return list with string with name of device
 	 */
-	public ArrayList<String> GetNameByLocation(String location){
+	public ArrayList<String> getNameByLocation(String location){
 		ArrayList<String> result = new ArrayList<String>();
 		
 		for(Device d : devices){
-			if(d.GetLocation() != null && d.GetLocation().equals(location))
-				result.add(d.GetName());
+			if(d.getLocation() != null && d.getLocation().equals(location))
+				result.add(d.getName());
 		}
 		
 		return result;
 	}
 	
-	public void SetId(String ID){
+	public void setId(String ID){
 		_id = ID;
 	}
-	public String GetId(){
+	public String getId(){
 		return _id;
 	}
 	
-	public void SetVersion(String Version){
+	public void setVersion(String Version){
 		_version = Version;
 	}
-	public String GetVersion(){
+	public String getVersion(){
 		return _version;
 	}
 	
@@ -80,7 +80,7 @@ public class Capabilities {
 	 */
 	public boolean isNewOne(){
 		for(Device d : devices)
-			if(!d.GetInit())
+			if(!d.getInit())
 				return true;
 		return false;
 	}
@@ -89,9 +89,9 @@ public class Capabilities {
 	 * Method return uninitialized adapter (new sensor in home)
 	 * @return new adapter or null
 	 */
-	public Adapter GetNewOne(){
+	public Adapter getNewOne(){
 		for(Device d : devices)
-			if(!d.GetInit())
+			if(!d.getInit())
 				return d;
 		return null;
 	}
@@ -101,9 +101,9 @@ public class Capabilities {
 	 * @param name of adapter (sensor/actuator)
 	 * @return Adapter with found sensor/actuator or null
 	 */
-	public Adapter GetDeviceByName(String name){
+	public Adapter getDeviceByName(String name){
 		for(Device d : devices)
-			if(d.GetName() != null && d.GetName().equals(name))
+			if(d.getName() != null && d.getName().equals(name))
 				return d;
 		return null;
 	}
@@ -117,11 +117,11 @@ public class Capabilities {
 		ArrayList<String> locations = new ArrayList<String>();
 		
 		for(Device d : devices){
-			if(!locations.contains(d.GetLocation())){
+			if(!locations.contains(d.getLocation())){
 				if(notnull)
-					if(d.GetLocation() == null)
+					if(d.getLocation() == null)
 						continue;
-				locations.add(d.GetLocation());
+				locations.add(d.getLocation());
 			}
 		}
 		
@@ -139,7 +139,7 @@ public class Capabilities {
 		}
 		return _newInit;
 	}
-	public void SetNewInit(){
+	public void setNewInit(){
 		_newInit = true;
 	}
 	
@@ -154,7 +154,7 @@ public class Capabilities {
 		}
 		return false;
 	}
-	public void SetNewLocationName(){
+	public void setNewLocationName(){
 		_newLocationName = true;
 	}
 	
@@ -169,11 +169,11 @@ public class Capabilities {
 		}
 		return false;
 	}
-	public void SetNewDeviceName(String newName){
+	public void setNewDeviceName(String newName){
 		_newDeviceNameLabel = newName;
 		_newDeviceName = true;
 	}
-	public String GetNewDeviceName(){
+	public String getNewDeviceName(){
 		String result = _newDeviceNameLabel;
 		_newDeviceNameLabel = null;
 		return result;
@@ -183,9 +183,9 @@ public class Capabilities {
 	 * Return object as xml file
 	 * @return created xml string
 	 */
-	public String GetXml(){
+	public String getXml(){
 		XmlCreator xmlcreator = new XmlCreator(this);
-		return xmlcreator.Create();
+		return xmlcreator.create();
 	}
 	
 	/**
@@ -193,11 +193,11 @@ public class Capabilities {
 	 * @param name of location
 	 * @return arraylist with all adapters with needed location
 	 */
-	public ArrayList<Device> GetDevicesByLocation(String name){
+	public ArrayList<Device> getDevicesByLocation(String name){
 		ArrayList<Device> result = new ArrayList<Device>();
 		
 		for(Device d : devices){
-			if(d.GetLocation().equals(name))
+			if(d.getLocation().equals(name))
 				result.add(d);
 		}
 		
