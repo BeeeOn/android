@@ -3,6 +3,7 @@ package cz.vutbr.fit.intelligenthomeanywhere;
 import android.content.Context;
 import android.graphics.Color;
 import android.os.Environment;
+import cz.vutbr.fit.intelligenthomeanywhere.adapter.Capabilities;
 
 /**
  * Class for all constants
@@ -62,10 +63,10 @@ public final class Constants {
 	 * Set up main data object
 	 * @param capabilities
 	 */
-	public static void SetCapabilities(Capabilities capabilities){
+	public static void setCapabilities(Capabilities capabilities){
 		_capabilities = capabilities;
 	}
-	public static Capabilities GetCapabilities(){
+	public static Capabilities getCapabilities(){
 		return _capabilities;
 	}
 	

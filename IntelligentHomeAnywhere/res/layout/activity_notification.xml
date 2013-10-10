@@ -36,14 +36,14 @@
 	        android:id="@+id/notification_ingore"
 	        android:layout_width="80dp"
 	        android:layout_height="wrap_content"
-	        android:onClick="IgnoreMethod"
+	        android:onClick="ignoreMethod"
 	        android:text="@string/notification_ingore" />
 	
 	    <Button
 	        android:id="@+id/notification_add"
 	        android:layout_width="80dp"
 	        android:layout_height="wrap_content"
-	        android:onClick="AddMethod"
+	        android:onClick="addMethod"
 	        android:text="@string/notification_add" />
 	    
 	</LinearLayout>
