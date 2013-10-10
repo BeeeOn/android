@@ -46,7 +46,7 @@ import cz.vutbr.fit.intelligenthomeanywhere.R;
 public class NumberPicker extends LinearLayout implements OnClickListener,
         OnFocusChangeListener, OnLongClickListener {
 
-    //private static final String TAG = "NumberPicker";
+    //private static final String TAG = NumberPicker.class.getSimpleName();
     private static final int DEFAULT_MAX = 200;
     private static final int DEFAULT_MIN = 0;
 
