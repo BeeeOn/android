@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioGroup;
 import android.widget.Toast;
@@ -23,6 +25,50 @@ public class LoginActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_login);
+		initButtons();
+	}
+	
+	/**
+	 * Initialize listeners
+	 */
+	private void initButtons() {
+		// Login button - check user login info, and open app
+		((Button)findViewById(R.id.login_login)).setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				boolean access = false;
+				
+				String name = ((EditText)findViewById(R.id.login_user_name)).getText().toString();
+				String password = ((EditText)findViewById(R.id.login_password)).getText().toString();
+				
+				if(name == null || name.length() < 1 || password == null || password.length() < 1){ // check social networks
+					RadioGroup radioGroup = (RadioGroup)findViewById(R.id.login_radioGroup);
+					int checked = radioGroup.getCheckedRadioButtonId();
+					switch(checked){
+						case R.id.login_radio_facebook:
+							access = getFacebokAccessFromServer();
+							break;
+						case R.id.login_radio_google:
+							access = getGoogleAccessFromServer();
+							break;
+						case R.id.login_radio_mojeid:
+							access = getMojeIDAccessFromServer();
+							break;
+					}
+				}else{ // check name and password
+					access = getNameAccessFromServer(name, password);
+				}
+				
+				if(access){
+					Intent intent = new Intent(LoginActivity.this, LocationScreenActivity.class);
+					intent.putExtra(Constants.LOGIN, Constants.LOGIN_COMM);
+					startActivity(intent);
+				}else{
+					Toast.makeText(v.getContext(), "Not Implemented yet", Toast.LENGTH_LONG).show();
+					//Toast.makeText(v.getContext(), getString(R.string.toast_bad_password), Toast.LENGTH_LONG).show();
+				}
+			}
+		});
 	}
 
     @Override
@@ -38,44 +84,6 @@ public class LoginActivity extends Activity {
 		return true;
 	}*/
 
-	/**
-	 * Check user login info, and open app - onClick
-	 * @param v
-	 */
-	public void loginMethod(View v){
-		boolean access = false;
-		
-		String name = ((EditText)findViewById(R.id.login_user_name)).getText().toString();
-		String password = ((EditText)findViewById(R.id.login_password)).getText().toString();
-		
-		if(name == null || name.length() < 1 || password == null || password.length() < 1){ // check social networks
-			RadioGroup radioGroup = (RadioGroup)findViewById(R.id.login_radioGroup);
-			int checked = radioGroup.getCheckedRadioButtonId();
-			switch(checked){
-				case R.id.login_radio_facebook:
-					access = getFacebokAccessFromServer();
-					break;
-				case R.id.login_radio_google:
-					access = getGoogleAccessFromServer();
-					break;
-				case R.id.login_radio_mojeid:
-					access = getMojeIDAccessFromServer();
-					break;
-			}
-		}else{ // check name and password
-			access = getNameAccessFromServer(name, password);
-		}
-		
-		if(access){
-			Intent intent = new Intent(this, LocationScreenActivity.class);
-			intent.putExtra(Constants.LOGIN, Constants.LOGIN_COMM);
-			startActivity(intent);
-		}else{
-			Toast.makeText(v.getContext(), "Not Implemented yet", Toast.LENGTH_LONG).show();
-			//Toast.makeText(v.getContext(), getString(R.string.toast_bad_password), Toast.LENGTH_LONG).show();
-		}
-	}
-	
 	/**
 	 * Check for access from server
 	 * @param name username to access

@@ -15,6 +15,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.ProgressBar;
@@ -31,6 +32,7 @@ public class SplashActivity extends Activity {
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		
 		setContentView(R.layout.activity_splash);
+		initButtons();
 		
 		Bundle bundle = getIntent().getExtras();
 		int switcher = 0;
@@ -89,6 +91,34 @@ public class SplashActivity extends Activity {
 	}
 	
 	/**
+	 * Initialize listeners
+	 */
+	private void initButtons() {
+		// Demo button - open demo
+		((Button)findViewById(R.id.splash_demo)).setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				if (checkDemoData()) {
+					Intent intent = new Intent(SplashActivity.this, LocationScreenActivity.class);
+					intent.putExtra(Constants.LOGIN, Constants.LOGIN_DEMO);
+		    		startActivity(intent);
+				}
+		    	SplashActivity.this.finish();
+			}
+		});
+		
+		// Refresh button - try to refresh splash
+		((Button)findViewById(R.id.splash_refresh)).setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				Intent intent = new Intent(SplashActivity.this, SplashActivity.class);
+				startActivity(intent);
+				SplashActivity.this.finish();
+			}
+		});
+	}
+	
+	/**
 	 * Check if is internet connection On or Off
 	 * @return true if On, otherwise Off
 	 */
@@ -96,19 +126,6 @@ public class SplashActivity extends Activity {
 	    ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
 	    NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
 	    return activeNetworkInfo != null && activeNetworkInfo.isConnected();
-	}
-	
-	/**
-	 * Open Demo - onClick
-	 * @param v
-	 */
-	public void demoMethod(View v){
-		if(!checkDemoData())
-			this.finish();
-		Intent intent = new Intent(this, LocationScreenActivity.class);
-		intent.putExtra(Constants.LOGIN, Constants.LOGIN_DEMO);
-    	startActivity(intent);
-    	this.finish();
 	}
 	
 	/**
@@ -157,16 +174,6 @@ public class SplashActivity extends Activity {
 			}
 		}
 		return true;
-	}
-	
-	/**
-	 * Try to refresh splash - onClick
-	 * @param v
-	 */
-	public void refreshMethod(View v){
-		Intent intent = new Intent(this,SplashActivity.class);
-		startActivity(intent);
-		this.finish();
 	}
 	
 	/**
