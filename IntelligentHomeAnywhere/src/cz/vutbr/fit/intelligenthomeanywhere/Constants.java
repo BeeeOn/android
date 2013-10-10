@@ -1,5 +1,6 @@
 package cz.vutbr.fit.intelligenthomeanywhere;
 
+import cz.vutbr.fit.intelligenthomeanywhere.adapter.Capabilities;
 import android.content.Context;
 import android.graphics.Color;
 import android.os.Environment;
