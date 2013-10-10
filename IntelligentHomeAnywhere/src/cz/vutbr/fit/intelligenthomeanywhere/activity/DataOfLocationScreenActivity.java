@@ -13,6 +13,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.ToggleButton;
+import cz.vutbr.fit.intelligenthomeanywhere.Compatibility;
 import cz.vutbr.fit.intelligenthomeanywhere.Constants;
 import cz.vutbr.fit.intelligenthomeanywhere.R;
 import cz.vutbr.fit.intelligenthomeanywhere.adapter.Adapter;
@@ -275,8 +276,9 @@ public class DataOfLocationScreenActivity extends Activity {
 		params.setMargins(10, 5, 10, 0);
 		devicelayout.setLayoutParams(params);
 		devicelayout.setId(ID);
-		//XXX: setBackground from API 16
-		devicelayout.setBackgroundDrawable(getResources().getDrawable(R.drawable.shape));
+
+		Compatibility.setBackground(devicelayout, getResources().getDrawable(R.drawable.shape));
+
 		return devicelayout;
 	}
 

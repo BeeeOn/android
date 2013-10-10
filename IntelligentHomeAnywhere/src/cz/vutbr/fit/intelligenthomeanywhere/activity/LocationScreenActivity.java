@@ -11,6 +11,7 @@ import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import cz.vutbr.fit.intelligenthomeanywhere.Compatibility;
 import cz.vutbr.fit.intelligenthomeanywhere.Constants;
 import cz.vutbr.fit.intelligenthomeanywhere.R;
 import cz.vutbr.fit.intelligenthomeanywhere.adapter.Capabilities;
@@ -166,8 +167,9 @@ public class LocationScreenActivity extends Activity {
 				return false;
 			}
 		});
-		//XXX: setBackground from API 16
-		button.setBackgroundDrawable(getResources().getDrawable(R.drawable.shape));
+
+		Compatibility.setBackground(button, getResources().getDrawable(R.drawable.shape));
+		
 		mylayout.addView(button);
 		return true;
 	}

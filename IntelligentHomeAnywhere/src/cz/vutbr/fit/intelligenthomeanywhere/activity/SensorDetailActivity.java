@@ -23,6 +23,7 @@ import com.jjoe64.graphview.GraphView.GraphViewData;
 import com.jjoe64.graphview.GraphViewSeries;
 import com.jjoe64.graphview.LineGraphView;
 
+import cz.vutbr.fit.intelligenthomeanywhere.Compatibility;
 import cz.vutbr.fit.intelligenthomeanywhere.Constants;
 import cz.vutbr.fit.intelligenthomeanywhere.R;
 import cz.vutbr.fit.intelligenthomeanywhere.adapter.Adapter;
@@ -197,8 +198,8 @@ public class SensorDetailActivity extends Activity {
 		LinearLayout batteryLayout = new LinearLayout(this);
 		batteryLayout.setOrientation(LinearLayout.VERTICAL);
 		batteryLayout.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT,LayoutParams.WRAP_CONTENT));
-		//XXX setbackground from API 16
-		batteryLayout.setBackgroundDrawable(getResources().getDrawable(R.drawable.shape));
+
+		Compatibility.setBackground(batteryLayout, getResources().getDrawable(R.drawable.shape));
 		
 		TextView batteryState = new TextView(this);
 		batteryState.setText(getString(R.string.sensordetail_battery_state));
