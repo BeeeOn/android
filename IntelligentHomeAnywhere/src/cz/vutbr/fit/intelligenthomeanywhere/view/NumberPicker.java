@@ -16,6 +16,8 @@
 
 package cz.vutbr.fit.intelligenthomeanywhere.view;
 
+import java.util.Locale;
+
 import android.content.Context;
 import android.os.Handler;
 import android.text.InputFilter;
@@ -338,9 +340,9 @@ public class NumberPicker extends LinearLayout implements OnClickListener,
             String result = String.valueOf(dest.subSequence(0, dstart))
                     + filtered
                     + dest.subSequence(dend, dest.length());
-            String str = String.valueOf(result).toLowerCase();
+            String str = String.valueOf(result).toLowerCase(Locale.US);
             for (String val : mDisplayedValues) {
-                val = val.toLowerCase();
+                val = val.toLowerCase(Locale.US);
                 if (val.startsWith(str)) {
                     return filtered;
                 }
@@ -400,8 +402,8 @@ public class NumberPicker extends LinearLayout implements OnClickListener,
             for (int i = 0; i < mDisplayedValues.length; i++) {
 
                 /* Don't force the user to type in jan when ja will do */
-                str = str.toLowerCase();
-                if (mDisplayedValues[i].toLowerCase().startsWith(str)) {
+                str = str.toLowerCase(Locale.US);
+                if (mDisplayedValues[i].toLowerCase(Locale.US).startsWith(str)) {
                     return mStart + i;
                 }
             }
