@@ -3,7 +3,7 @@ package cz.vutbr.fit.intelligenthomeanywhere;
 import android.content.Context;
 import android.graphics.Color;
 import android.os.Environment;
-import cz.vutbr.fit.intelligenthomeanywhere.adapter.Capabilities;
+import cz.vutbr.fit.intelligenthomeanywhere.adapter.Adapter;
 
 /**
  * Class for all constants
@@ -24,7 +24,7 @@ public final class Constants {
 	public static final String LOGIN_COMM = "LOGIN_COMM";
 	public static final String DEMO_COMMUNICATION = Environment.getExternalStorageDirectory().toString() + "/IHA/komunikace.xml";
 	public static final String DEMO_LOGFILE = Environment.getExternalStorageDirectory().toString() + "/IHA/sensor0.log";
-	private static Capabilities _capabilities;
+	private static Adapter _adapter;
 	private static Context _context;
 	
 	public static final int ADAPTER_OFFLINE = 0;
@@ -61,13 +61,13 @@ public final class Constants {
 	
 	/**
 	 * Set up main data object
-	 * @param capabilities
+	 * @param adapter
 	 */
-	public static void setCapabilities(Capabilities capabilities){
-		_capabilities = capabilities;
+	public static void setAdapter(Adapter adapter){
+		_adapter = adapter;
 	}
-	public static Capabilities getCapabilities(){
-		return _capabilities;
+	public static Adapter getAdapter(){
+		return _adapter;
 	}
 	
 	/**
@@ -78,31 +78,4 @@ public final class Constants {
 		_context = context;
 	}
 	
-	/**
-	 * Giving name of sensor type
-	 * @param type of wanted sensor
-	 * @return String with name of sensor
-	 */
-	public static String GetNameOfType(int type){
-		switch(type){
-		case 0:
-			return _context.getString(R.string.temperature);
-		case 1:
-			return _context.getString(R.string.humidity);
-		case 2:
-			return _context.getString(R.string.pressure);
-		case 3:
-			return _context.getString(R.string.switch_s);
-		case 4:
-			return _context.getString(R.string.switch_c);
-		case 5:
-			return _context.getString(R.string.illumination);
-		case 6:
-			return _context.getString(R.string.noise);
-		case 7:
-			return _context.getString(R.string.emission);
-		default:
-			return _context.getString(R.string.unknown);
-		}
-	}
 }

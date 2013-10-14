@@ -9,7 +9,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import cz.vutbr.fit.intelligenthomeanywhere.Constants;
 import cz.vutbr.fit.intelligenthomeanywhere.R;
-import cz.vutbr.fit.intelligenthomeanywhere.adapter.device.Device;
+import cz.vutbr.fit.intelligenthomeanywhere.adapter.device.BaseDevice;
 
 public class ChangeDeviceNameActivity extends Activity {
 
@@ -37,12 +37,12 @@ public class ChangeDeviceNameActivity extends Activity {
 		((Button)findViewById(R.id.change_device_name_button)).setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				Device device = (Device)Constants.getCapabilities().getDeviceByName(_oldName);
+				BaseDevice device = Constants.getAdapter().getDeviceByName(_oldName);
 				EditText enewDevice = (EditText)findViewById(R.id.change_device_name_edittext);
 				String snewDevice = enewDevice.getText().toString();
 				device.setName(snewDevice);
 				
-				Constants.getCapabilities().setNewDeviceName(snewDevice);
+				Constants.getAdapter().setNewDeviceName(snewDevice);
 				ChangeDeviceNameActivity.this.finish();
 			}
 		});

@@ -12,17 +12,17 @@ import org.xmlpull.v1.XmlPullParserException;
 
 import android.util.Log;
 import android.util.Xml;
-import cz.vutbr.fit.intelligenthomeanywhere.adapter.Capabilities;
-import cz.vutbr.fit.intelligenthomeanywhere.adapter.device.Device;
-import cz.vutbr.fit.intelligenthomeanywhere.adapter.device.Emission;
-import cz.vutbr.fit.intelligenthomeanywhere.adapter.device.Humidity;
-import cz.vutbr.fit.intelligenthomeanywhere.adapter.device.Illumination;
-import cz.vutbr.fit.intelligenthomeanywhere.adapter.device.Noise;
-import cz.vutbr.fit.intelligenthomeanywhere.adapter.device.Pressure;
-import cz.vutbr.fit.intelligenthomeanywhere.adapter.device.Switch_c;
-import cz.vutbr.fit.intelligenthomeanywhere.adapter.device.Switch_s;
-import cz.vutbr.fit.intelligenthomeanywhere.adapter.device.Temperature;
-import cz.vutbr.fit.intelligenthomeanywhere.adapter.device.UnknownDeviceType;
+import cz.vutbr.fit.intelligenthomeanywhere.adapter.Adapter;
+import cz.vutbr.fit.intelligenthomeanywhere.adapter.device.BaseDevice;
+import cz.vutbr.fit.intelligenthomeanywhere.adapter.device.EmissionDevice;
+import cz.vutbr.fit.intelligenthomeanywhere.adapter.device.HumidityDevice;
+import cz.vutbr.fit.intelligenthomeanywhere.adapter.device.IlluminationDevice;
+import cz.vutbr.fit.intelligenthomeanywhere.adapter.device.NoiseDevice;
+import cz.vutbr.fit.intelligenthomeanywhere.adapter.device.PressureDevice;
+import cz.vutbr.fit.intelligenthomeanywhere.adapter.device.StateDevice;
+import cz.vutbr.fit.intelligenthomeanywhere.adapter.device.SwitchDevice;
+import cz.vutbr.fit.intelligenthomeanywhere.adapter.device.TemperatureDevice;
+import cz.vutbr.fit.intelligenthomeanywhere.adapter.device.UnknownDevice;
 
 /**
  * Class for parsing xml file for device
@@ -58,10 +58,11 @@ public class XmlDeviceParser {
 	public static final String DEVICE_LOGGING_ENABLED = "enabled";
 	
 	// Device types constants
+	public static final int TYPE_UNKNOWN = -1;
 	public static final int TYPE_TEMPERATURE = 0;
 	public static final int TYPE_HUMIDITY = 1;
 	public static final int TYPE_PRESSURE = 2;
-	public static final int TYPE_SENSOR = 3;
+	public static final int TYPE_STATE = 3;
 	public static final int TYPE_SWITCH = 4;
 	public static final int TYPE_ILLUMINATION = 5;
 	public static final int TYPE_NOISE = 6;
@@ -72,11 +73,11 @@ public class XmlDeviceParser {
     /**
      * Factory for parsing adapter from file.
      * @param filename - path to file
-     * @return Capabilities object
+     * @return Adapter object
      */
-	public static Capabilities fromFile(String filename) {
+	public static Adapter fromFile(String filename) {
 		Log.i(TAG, String.format("Parsing data from file '%s'", filename));
-		Capabilities adapter = null;
+		Adapter adapter = null;
 		
 		File file = new File(filename);
 		InputStream in = null;
@@ -112,14 +113,14 @@ public class XmlDeviceParser {
     }
 	
     /**
-     * Parses inputstream into Capabilities object.
+     * Parses inputstream into Adapter object.
      * @param input - input stream
-     * @return Capabilities
+     * @return Adapter
      * @throws XmlPullParserException
      * @throws IOException
      */
-	public Capabilities parse(InputStream input) throws XmlPullParserException, IOException {
-	    Capabilities adapter = new Capabilities();
+	public Adapter parse(InputStream input) throws XmlPullParserException, IOException {
+	    Adapter adapter = new Adapter();
 		
 		parser.setInput(input, null);
 	    parser.nextTag();
@@ -147,12 +148,12 @@ public class XmlDeviceParser {
 	
 	/**
 	 * Read capabilities.
-	 * @return ArrayList<Device>
+	 * @return ArrayList<BaseDevice>
 	 * @throws XmlPullParserException
 	 * @throws IOException
 	 */
-	private ArrayList<Device> readCapabilities() throws XmlPullParserException, IOException {				
-		ArrayList<Device> devices = new ArrayList<Device>();
+	private ArrayList<BaseDevice> readCapabilities() throws XmlPullParserException, IOException {				
+		ArrayList<BaseDevice> devices = new ArrayList<BaseDevice>();
 
 		parser.require(XmlPullParser.START_TAG, ns, ADAPTER_CAPABILITIES);
 		while (parser.next() != XmlPullParser.END_TAG) {
@@ -160,7 +161,7 @@ public class XmlDeviceParser {
 	            continue;
 
 	        if (parser.getName().equalsIgnoreCase(DEVICE_ROOT)) {
-	        	Device device = readDevice();
+	        	BaseDevice device = readDevice();
 	        	if (device != null)
 	        		devices.add(device);
 	        } else {
@@ -174,67 +175,65 @@ public class XmlDeviceParser {
 
 	/**
 	 * Read triggers.
-	 * @return Device
+	 * @return BaseDevice
 	 * @throws XmlPullParserException
 	 * @throws IOException
 	 */
-	private Device readDevice() throws XmlPullParserException, IOException {		
-		Device device = new Device();
+	private BaseDevice readDevice() throws XmlPullParserException, IOException {		
+		BaseDevice device;
 
 		parser.require(XmlPullParser.START_TAG, ns, DEVICE_ROOT);
 		
-		// Initialized
-    	String initialized_ = parser.getAttributeValue(null, DEVICE_INITIALIZED);    	
-    	if (initialized_ != null)
-    		device.setInit(Integer.parseInt(initialized_) != 0);
-
-    	// If not initialized yet, check involved attribute
-    	if (!device.getInit()) {
-    		String involved_ = parser.getAttributeValue(null, DEVICE_INVOLVED);
-    		if (involved_ != null)
-    			device.setInvolveTime(involved_);
-    	}
-    	
     	// Type
     	String type_ = parser.getAttributeValue(null, DEVICE_TYPE);
     	
     	int type = -1;
     	if (type_ != null)
-    		type = Integer.decode(type_);
-    	
-    	device.setType(type);
+    		type = Integer.decode(type_);    	
     	
     	switch (type) {
     	case TYPE_EMMISION:
-    		device.deviceDestiny = new Emission();
+    		device = new EmissionDevice();
     		break;
     	case TYPE_HUMIDITY:
-    		device.deviceDestiny = new Humidity();
+    		device = new HumidityDevice();
     		break;
     	case TYPE_ILLUMINATION:
-    		device.deviceDestiny = new Illumination();
+    		device = new IlluminationDevice();
     		break;
     	case TYPE_NOISE:
-    		device.deviceDestiny = new Noise();
+    		device = new NoiseDevice();
     		break;
     	case TYPE_PRESSURE:
-    		device.deviceDestiny = new Pressure();
+    		device = new PressureDevice();
     		break;
-    	case TYPE_SENSOR:
-    		device.deviceDestiny = new Switch_s();
+    	case TYPE_STATE:
+    		device = new StateDevice();
     		break;
     	case TYPE_SWITCH:
-    		device.deviceDestiny = new Switch_c();
+    		device = new SwitchDevice();
     		break;
     	case TYPE_TEMPERATURE:
-    		device.deviceDestiny = new Temperature();
+    		device = new TemperatureDevice();
     		break;
     	default:
-    		device.deviceDestiny = new UnknownDeviceType();
+    		device = new UnknownDevice();
     		break;
     	}
     	
-    	Log.d(TAG, String.format("Got %s %s device", device.getInit() ? "initialized" : "uninitialized", device.deviceDestiny.getClass().getSimpleName()));
+		// Initialized
+    	String initialized_ = parser.getAttributeValue(null, DEVICE_INITIALIZED);    	
+    	if (initialized_ != null)
+    		device.setInitialized(Integer.parseInt(initialized_) != 0);
+
+    	// If not initialized yet, check involved attribute
+    	if (!device.isInitialized()) {
+    		String involved_ = parser.getAttributeValue(null, DEVICE_INVOLVED);
+    		if (involved_ != null)
+    			device.setInvolveTime(involved_);
+    	}
+    	
+    	Log.d(TAG, String.format("Got %s %s device", device.isInitialized() ? "initialized" : "uninitialized", device.getClass().getSimpleName()));
 
     	String location_ = null;
         String name_ = null;
@@ -294,13 +293,13 @@ public class XmlDeviceParser {
 		if (battery_ != null)
 			device.setBattery(Integer.parseInt(battery_));
 		if (value_ != null)
-			device.deviceDestiny.setValue(value_);
+			device.setValue(value_);
 		if (address_ != null)
 			device.setAddress(address_);
 		if (quality_ != null)
 			device.setQuality(Integer.parseInt(quality_));
 		if (logging_ != null)
-			device.deviceDestiny.setLog(Integer.parseInt(logging_) != 0);
+			device.setLogging(Integer.parseInt(logging_) != 0);
 		if (logfile_ != null)
 			device.setLog(logfile_);
 		

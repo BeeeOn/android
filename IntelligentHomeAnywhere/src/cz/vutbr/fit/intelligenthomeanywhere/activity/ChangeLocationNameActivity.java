@@ -11,7 +11,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import cz.vutbr.fit.intelligenthomeanywhere.Constants;
 import cz.vutbr.fit.intelligenthomeanywhere.R;
-import cz.vutbr.fit.intelligenthomeanywhere.adapter.device.Device;
+import cz.vutbr.fit.intelligenthomeanywhere.adapter.device.BaseDevice;
 
 public class ChangeLocationNameActivity extends Activity {
 	private String _oldLocation = null;
@@ -37,13 +37,13 @@ public class ChangeLocationNameActivity extends Activity {
 		((Button)findViewById(R.id.change_location_name_button)).setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				ArrayList<Device> devices = Constants.getCapabilities().getDevicesByLocation(_oldLocation);
+				ArrayList<BaseDevice> devices = Constants.getAdapter().getDevicesByLocation(_oldLocation);
 				EditText enewLocation = (EditText)findViewById(R.id.change_location_name_edittext);
 				String snewLocation = enewLocation.getText().toString();
-				for(Device d : devices){
+				for(BaseDevice d : devices){
 					d.setLocation(snewLocation);
 				}
-				Constants.getCapabilities().setNewLocationName();
+				Constants.getAdapter().setNewLocationName();
 				ChangeLocationNameActivity.this.finish();
 			}
 		});

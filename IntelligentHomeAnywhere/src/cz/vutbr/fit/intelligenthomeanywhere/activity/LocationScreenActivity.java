@@ -14,7 +14,7 @@ import android.widget.LinearLayout;
 import cz.vutbr.fit.intelligenthomeanywhere.Compatibility;
 import cz.vutbr.fit.intelligenthomeanywhere.Constants;
 import cz.vutbr.fit.intelligenthomeanywhere.R;
-import cz.vutbr.fit.intelligenthomeanywhere.adapter.Capabilities;
+import cz.vutbr.fit.intelligenthomeanywhere.adapter.Adapter;
 import cz.vutbr.fit.intelligenthomeanywhere.adapter.parser.XmlCreator;
 import cz.vutbr.fit.intelligenthomeanywhere.adapter.parser.XmlDeviceParser;
 
@@ -25,7 +25,7 @@ import cz.vutbr.fit.intelligenthomeanywhere.adapter.parser.XmlDeviceParser;
  */
 public class LocationScreenActivity extends Activity {
 
-	private Capabilities _capabilities;
+	private Adapter _adapter;
 	
 	/**
 	 * Call xml parser to file on sdcard
@@ -49,20 +49,20 @@ public class LocationScreenActivity extends Activity {
 			}
 		}
 
-		_capabilities = XmlDeviceParser.fromFile(GETFROMSERVER);
-		if(_capabilities == null)
+		_adapter = XmlDeviceParser.fromFile(GETFROMSERVER);
+		if(_adapter == null)
 			return;
 		
-		Log.i("parsedXML",_capabilities.toString());
-		Constants.setCapabilities(_capabilities);
+		Log.i("parsedXML",_adapter.toString());
+		Constants.setAdapter(_adapter);
 		Constants.setContext(this.getApplicationContext());
 		
-		if(_capabilities.isNewOne()){
+		if(_adapter.isNewOne()){
 			Intent intent = new Intent(this,Notification.class);
 			startActivity(intent);
 		}
 		
-		ArrayList<String> locations = _capabilities.getLocations(false);
+		ArrayList<String> locations = _adapter.getLocations(false);
 		Log.d("lokace",locations.toString());
 		
 		int marginTop = 5;
@@ -88,14 +88,14 @@ public class LocationScreenActivity extends Activity {
 		super.onResume();
 		final int ID = Constants.BUTTON_ID;
 		//DEBUG: maybe saving on SDCard even after calling sever as a cache
-		XmlCreator xmlcreator = new XmlCreator(Constants.getCapabilities());
+		XmlCreator xmlcreator = new XmlCreator(Constants.getAdapter());
 		xmlcreator.saveXml(Environment.getExternalStorageDirectory().toString() + "/IHA/","komunikace.xml");
 		
 		Log.i("onResume",this.getLocalClassName());
 		
-		if(Constants.getCapabilities().isNewInit()){
+		if(Constants.getAdapter().isNewInit()){
 			ArrayList<String> Old = GetLocationsFromButtons(ID);
-			ArrayList<String> New = Constants.getCapabilities().getLocations(false);
+			ArrayList<String> New = Constants.getAdapter().getLocations(false);
 			Log.d("Old",Old.toString());
 			Log.d("New", New.toString());
 			if(Old.size() != New.size()){
@@ -104,9 +104,9 @@ public class LocationScreenActivity extends Activity {
 				addLocationButton(New.get(0), ID + Old.size() + 1, 5);
 			}
 		}
-		if(Constants.getCapabilities().isNewLocationName()){
+		if(Constants.getAdapter().isNewLocationName()){
 			ArrayList<String> Old = GetLocationsFromButtons(ID);
-			ArrayList<String> New = Constants.getCapabilities().getLocations(false);
+			ArrayList<String> New = Constants.getAdapter().getLocations(false);
 			Log.d("Old",Old.toString());
 			Log.d("New", New.toString());
 			ArrayList<String> diff = GetDiffOfLocatins(Old, New);
