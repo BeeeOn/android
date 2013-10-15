@@ -1,6 +1,21 @@
 package cz.vutbr.fit.intelligenthomeanywhere.activity;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
+
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import android.accounts.Account;
 import android.accounts.AccountManager;
@@ -34,8 +49,7 @@ import com.google.android.gms.common.GooglePlayServicesUtil;
 public class LoginActivity extends Activity {
 	
 	private static final int USER_RECOVERABLE_AUTH = 5;
-	String token = null;
-	TextView txtToken;
+	private static final String TAG = "LOGIN";
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -45,14 +59,24 @@ public class LoginActivity extends Activity {
 		// Get btn for login
 		ImageButton btnGoogle = (ImageButton) findViewById(R.id.login_app_btn_google);
 		ImageButton btnMojeID = (ImageButton) findViewById(R.id.login_app_btn_mojeid);
-		txtToken = (TextView) findViewById(R.id.txtToken);
-		
+
 		// Set onClickListener
 		btnGoogle.setOnClickListener(new OnClickListener(){
 
 			@Override
 			public void onClick(View v) {
-				getGoogleAccessFromServer();
+				try {
+					getGoogleAccessFromServer(v);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (ExecutionException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (TimeoutException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
 			
 		});
@@ -86,32 +110,7 @@ public class LoginActivity extends Activity {
 	 */
 	public void loginMethod(View v){
 		boolean access = false;
-		/*
-		String name = ((EditText)findViewById(R.id.login_user_name)).getText().toString();
-		String password = ((EditText)findViewById(R.id.login_password)).getText().toString();
-		
-		if(name == null || name.length() < 1 || password == null || password.length() < 1){ // check social networks
-			RadioGroup radioGroup = (RadioGroup)findViewById(R.id.login_radioGroup);
-			int checked = radioGroup.getCheckedRadioButtonId();
-			switch(checked){
-				case R.id.login_radio_facebook:
-					access = getFacebokAccessFromServer();
-					break;
-				case R.id.login_radio_google:
-					access = getGoogleAccessFromServer();
-					break;
-				case R.id.login_radio_mojeid:
-					access = getMojeIDAccessFromServer();
-					break;
-			}
-		}else{ // check name and password
-			access = getNameAccessFromServer(name, password);
-		}
-		*/
-		
-		
-		
-		
+
 		if(access){
 			Intent intent = new Intent(this, LocationScreenActivity.class);
 			intent.putExtra(Constants.LOGIN, Constants.LOGIN_COMM);
@@ -148,36 +147,20 @@ public class LoginActivity extends Activity {
 	/**
 	 * 
 	 * @return
+	 * @throws TimeoutException 
+	 * @throws ExecutionException 
+	 * @throws InterruptedException 
 	 */
-	private boolean getGoogleAccessFromServer(){
+	private boolean getGoogleAccessFromServer(View v) throws InterruptedException, ExecutionException, TimeoutException{
 		//TODO: get access via google
 		
 		if(GooglePlayServicesUtil.isGooglePlayServicesAvailable(getBaseContext()) == ConnectionResult.SUCCESS) {
 			// On this device is Google Play, we can proceed
 			String[] Accounts = this.getAccountNames();
 			if(Accounts.length == 1) {
-				// Only one account on device
-				String mScope =  "oauth2:https://www.googleapis.com/auth/userinfo.profile";
-				
-				
+				// Get acces token
 				new GetAuthToken(this, Accounts[0]).execute();
-				
-				/*try {
-					 token = GoogleAuthUtil.getToken(this, Accounts[0].toString(), mScope);
-				} catch (UserRecoverableAuthException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (GoogleAuthException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}*/
-				//Log.i("AUTH", token);
-
 			}
-			
 		}
 		else {
 			// Google Play is missing
@@ -192,7 +175,7 @@ public class LoginActivity extends Activity {
 	    String[] names = new String[accounts.length];
 	    for (int i = 0; i < names.length; i++) {
 	        names[i] = accounts[i].name;
-	        Log.i("ACCOUNT", accounts[i].name);
+	        //Log.i(TAG, accounts[i].name);
 	    }
 	    return names;
 	}
@@ -209,13 +192,16 @@ public class LoginActivity extends Activity {
 	}
 	
 	class GetAuthToken extends AsyncTask<Void, Void, String> {
-
+		private static final String TAG = "AUTH";
 		private LoginActivity mActivity;
 		private String mEmail;
+		private String token;
+		private String userName;
+		
 		
 		public GetAuthToken(LoginActivity mActivity, String mEmail) {
-		this.mActivity = mActivity;
-		this.mEmail = mEmail;
+			this.mActivity = mActivity;
+			this.mEmail = mEmail;
 		}
 		
 		@Override
@@ -225,13 +211,13 @@ public class LoginActivity extends Activity {
 		@Override
 		protected String doInBackground(Void... params) {
 		try {
-		Log.i("MainActivity", mEmail);
-		String token = GoogleAuthUtil.getToken(mActivity, mEmail,"oauth2:https://www.googleapis.com/auth/userinfo.profile");
-		Log.i("MainActivity", token);
+			//Log.i(TAG, mEmail);
+			token = GoogleAuthUtil.getToken(mActivity, mEmail,"oauth2:https://www.googleapis.com/auth/userinfo.profile");
+			//Log.i(TAG, token);
 		return token;
 		
 		} catch (UserRecoverableAuthException userRecoverableException) {
-		mActivity.startActivityForResult(userRecoverableException.getIntent(),USER_RECOVERABLE_AUTH);
+			mActivity.startActivityForResult(userRecoverableException.getIntent(),USER_RECOVERABLE_AUTH);
 		} catch (Exception e) {
 		e.printStackTrace();
 		}
@@ -239,10 +225,92 @@ public class LoginActivity extends Activity {
 		}
 		
 		@Override
-		protected void onPostExecute(String result) {
-		if (result != null) {}
-			txtToken.setText(result);
+		protected void onPostExecute(final String result) {
+			super.onPostExecute(result);
+			if (result != null) {
+				Thread fetchName = new Thread(new Runnable(){
+				    @Override
+				    public void run() {
+				        try {
+				        	fetchNameFromProfileServer(result);
+				        } catch (Exception e) {
+				            e.printStackTrace();
+				        }
+				    }
+				});
+				// Fetch user name and surname
+				fetchName.start(); 
+				// Wait for user name
+				try {
+					synchronized(this) {
+						this.wait();
+					}
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				// Log - Token and Name
+				Log.i(TAG, "Token: "+result);
+				Log.i(TAG, "User name: "+this.userName);
+				Toast.makeText(mActivity.getBaseContext(), "Welcome "+this.userName, Toast.LENGTH_LONG).show();
+				Intent intent = new Intent(mActivity, LocationScreenActivity.class);
+				intent.putExtra(Constants.LOGIN, Constants.LOGIN_DEMO);
+				//intent.putExtra(name, value);
+		    	startActivity(intent);
+		    	mActivity.finish();
+		    	Log.i(TAG, "FINISH");
+			}
+			
 		}
+		
+		/****************************************************************************************/
+		/* Prevzato z SDK - EXTRAS - SAMPLE - AUTH  											*/
+		/****************************************************************************************/
+		
+		private void fetchNameFromProfileServer(String token) throws IOException, JSONException {
+			
+			URL url = new URL("https://www.googleapis.com/oauth2/v1/userinfo?access_token=" + token);
+	        HttpURLConnection con = (HttpURLConnection) url.openConnection();
+	        int sc = con.getResponseCode();
+	        if (sc == 200) {
+	          InputStream is = con.getInputStream();
+	          String name = getName(readResponse(is));
+	          Log.i("MAinActivity","Hello " + name + "!");
+	          this.userName = name;
+	          is.close();
+	          synchronized(this) {
+	        	  this.notify();
+	          }
+	          return;
+	        } else if (sc == 401) {
+	            GoogleAuthUtil.invalidateToken(mActivity, token);
+	            return;
+	        } else {
+	          return;
+	        }
+	    }
+		
+		/**
+	     * Reads the response from the input stream and returns it as a string.
+	     */
+	    private  String readResponse(InputStream is) throws IOException {
+	        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+	        byte[] data = new byte[2048];
+	        int len = 0;
+	        while ((len = is.read(data, 0, data.length)) >= 0) {
+	            bos.write(data, 0, len);
+	        }
+	        return new String(bos.toByteArray(), "UTF-8");
+	    }
+
+	    /**
+	     * Parses the response and returns the first name of the user.
+	     * @throws JSONException if the response is not JSON or if first name does not exist in response
+	     */
+	    private String getName(String jsonResponse) throws JSONException {
+	      JSONObject profile = new JSONObject(jsonResponse);
+	      return profile.getString("name");
+	    }
 		
 		}
 }

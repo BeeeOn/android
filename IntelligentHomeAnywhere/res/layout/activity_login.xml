@@ -51,12 +51,4 @@
         android:scaleType="fitXY"
         android:src="@drawable/ic_mojeid" />
 
-    <TextView
-        android:id="@+id/txtToken"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignRight="@+id/login_app_btn_google"
-        android:layout_centerVertical="true"
-        android:text="TextView" />
-
 </RelativeLayout>
