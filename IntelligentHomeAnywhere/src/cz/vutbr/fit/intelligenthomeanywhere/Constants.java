@@ -24,8 +24,8 @@ public final class Constants {
 	public static final String LOGIN_COMM = "LOGIN_COMM";
 	public static final String DEMO_COMMUNICATION = Environment.getExternalStorageDirectory().toString() + "/IHA/komunikace.xml";
 	public static final String DEMO_LOGFILE = Environment.getExternalStorageDirectory().toString() + "/IHA/sensor0.log";
-	private static Adapter _adapter;
-	private static Context _context;
+	private static Adapter mAdapter;
+	private static Context mContext;
 	
 	public static final int ADAPTER_OFFLINE = 0;
 	public static final int ADAPTER_NOT_REGISTERED = 1;
@@ -44,8 +44,8 @@ public final class Constants {
 	 */
 	public static final String isOpen(String _switch){
 		if(_switch.equals("ON"))
-			return _context.getResources().getString(R.string.sensor_open);
-		else return _context.getResources().getString(R.string.sensor_close);
+			return mContext.getResources().getString(R.string.sensor_open);
+		else return mContext.getResources().getString(R.string.sensor_close);
 	}
 	
 	/**
@@ -64,10 +64,10 @@ public final class Constants {
 	 * @param adapter
 	 */
 	public static void setAdapter(Adapter adapter){
-		_adapter = adapter;
+		mAdapter = adapter;
 	}
 	public static Adapter getAdapter(){
-		return _adapter;
+		return mAdapter;
 	}
 	
 	/**
@@ -75,7 +75,7 @@ public final class Constants {
 	 * @param context of aplication
 	 */
 	public static void setContext(Context context){
-		_context = context;
+		mContext = context;
 	}
 	
 }

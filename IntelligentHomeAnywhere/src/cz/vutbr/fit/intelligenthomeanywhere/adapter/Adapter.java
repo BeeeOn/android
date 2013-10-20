@@ -12,28 +12,28 @@ import cz.vutbr.fit.intelligenthomeanywhere.adapter.parser.XmlCreator;
  */
 public class Adapter {
 	public ArrayList<BaseDevice> devices;
-	private String _id;
-	private String _version;
-	private boolean _newInit;
-	private boolean _newLocationName;
-	private boolean _newDeviceName;
-	private String _newDeviceNameLabel;
+	private String mId;
+	private String mVersion;
+	private boolean mNewInit;
+	private boolean mNewLocationName;
+	private boolean mNewDeviceName;
+	private String mNewDeviceNameLabel;
 	
 	public Adapter() {
 		devices = new ArrayList<BaseDevice>();
-		_id = null;
-		_version = null;
-		_newInit = false;
-		_newLocationName = false;
-		_newDeviceName = false;
-		_newDeviceNameLabel = null;
+		mId = null;
+		mVersion = null;
+		mNewInit = false;
+		mNewLocationName = false;
+		mNewDeviceName = false;
+		mNewDeviceNameLabel = null;
 	}
 	
 	public String toString(){
 		String result = "";
 		
-		result += "ID is " + _id + "\n";
-		result += "VERSION is " + _version + "\n";
+		result += "ID is " + mId + "\n";
+		result += "VERSION is " + mVersion + "\n";
 		result += "___start of sensors___\n";
 		
 		for(BaseDevice dev : devices){
@@ -61,17 +61,17 @@ public class Adapter {
 	}
 	
 	public void setId(String ID){
-		_id = ID;
+		mId = ID;
 	}
 	public String getId(){
-		return _id;
+		return mId;
 	}
 	
 	public void setVersion(String Version){
-		_version = Version;
+		mVersion = Version;
 	}
 	public String getVersion(){
-		return _version;
+		return mVersion;
 	}
 	
 	/**
@@ -133,14 +133,14 @@ public class Adapter {
 	 * @return true if there is new initialized device
 	 */
 	public boolean isNewInit(){
-		if(_newInit){
-			_newInit = false;
+		if(mNewInit){
+			mNewInit = false;
 			return true;
 		}
-		return _newInit;
+		return mNewInit;
 	}
 	public void setNewInit(){
-		_newInit = true;
+		mNewInit = true;
 	}
 	
 	/**
@@ -148,14 +148,14 @@ public class Adapter {
 	 * @return true if si new name of location in otherwise return false
 	 */
 	public boolean isNewLocationName(){
-		if(_newLocationName){
-			_newLocationName = false;
+		if(mNewLocationName){
+			mNewLocationName = false;
 			return true;
 		}
 		return false;
 	}
 	public void setNewLocationName(){
-		_newLocationName = true;
+		mNewLocationName = true;
 	}
 	
 	/**
@@ -163,19 +163,19 @@ public class Adapter {
 	 * @return true if change has been done, otherwise false
 	 */
 	public boolean isNewDeviceName(){
-		if(_newDeviceName){
-			_newDeviceName = false;
+		if(mNewDeviceName){
+			mNewDeviceName = false;
 			return true;
 		}
 		return false;
 	}
 	public void setNewDeviceName(String newName){
-		_newDeviceNameLabel = newName;
-		_newDeviceName = true;
+		mNewDeviceNameLabel = newName;
+		mNewDeviceName = true;
 	}
 	public String getNewDeviceName(){
-		String result = _newDeviceNameLabel;
-		_newDeviceNameLabel = null;
+		String result = mNewDeviceNameLabel;
+		mNewDeviceNameLabel = null;
 		return result;
 	}
 	

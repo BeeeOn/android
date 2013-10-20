@@ -8,17 +8,17 @@ package cz.vutbr.fit.intelligenthomeanywhere.adapter.device;
  *
  */
 public abstract class BaseDevice {
-	protected boolean _initialized;
-	protected String _location;
-	protected String _name;
-	protected int _refreshTime;	
-	protected int _battery;
-	protected String _log;
-	protected boolean _logging;
-	protected String _involveTime;
-	protected String _value;
+	protected boolean mInitialized;
+	protected String mLocation;
+	protected String mName;
+	protected int mRefreshTime;	
+	protected int mBattery;
+	protected String mLog;
+	protected boolean mLogging;
+	protected String mInvolveTime;
+	protected String mValue;
 	
-	protected NetworkState _network = new NetworkState();
+	protected NetworkState mNetwork = new NetworkState();
 			
 	/**
 	 * Class constructor
@@ -34,91 +34,91 @@ public abstract class BaseDevice {
 	public abstract int getTypeString();
 	
 	public int getRefresh() {
-		return _refreshTime;
+		return mRefreshTime;
 	}
 		
 	public void setRefresh(int time) {
-		_refreshTime = time;
+		mRefreshTime = time;
 	}
 	
 	public String getName() {
-		return _name;
+		return mName;
 	}
 		
 	public void setName(String name) {		
-		_name = name;
+		mName = name;
 	}
 	
 	public String getLocation() {
-		return _location;
+		return mLocation;
 	}
 	
 	public void setLocation(String location) {		
-		_location = location;
+		mLocation = location;
 	}
 	
 	public boolean isLogging() {
-		return _logging;
+		return mLogging;
 	}
 
 	public void setLogging(boolean logging) {
-		_logging = logging;
+		mLogging = logging;
 	}
 
 	public String getValue() {
-		return _value;
+		return mValue;
 	}
 
 	public void setValue(String value) {
-		_value = value;
+		mValue = value;
 	}
 	
 	public boolean isInitialized() {
-		return _initialized;
+		return mInitialized;
 	}
 	
 	public void setInitialized(boolean initialized) {
-		_initialized = initialized;
+		mInitialized = initialized;
 	}
 	
 	public int getBattery() {
-		return _battery;
+		return mBattery;
 	}
 
 	public void setBattery(int battery) {
-		_battery = battery;
+		mBattery = battery;
 	}
 
 	public String getInvolveTime() {
-		return _involveTime;
+		return mInvolveTime;
 	}
 
 	public void setInvolveTime(String involved_) {
-		_involveTime = involved_;		
+		mInvolveTime = involved_;		
 	}
 
 	public String getAddress() {
-		return _network.address;
+		return mNetwork.address;
 	}
 
 	public void setAddress(String address) {
-		_network.address = address;
+		mNetwork.address = address;
 	}
 
 	public int getQuality() {
-		return _network.quality;
+		return mNetwork.quality;
 	}
 
 	public void setQuality(int quality) {
-		_network.quality = quality;
+		mNetwork.quality = quality;
 	}
 	
 	public String getLog() {
-		return _log;
+		return mLog;
 	}
 	
 	public void setLog(String log) {
-		_log = log;
+		mLog = log;
 	}
 	
 	public String getStringType(){

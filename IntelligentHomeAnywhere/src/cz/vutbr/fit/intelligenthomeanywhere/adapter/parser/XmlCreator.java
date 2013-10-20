@@ -12,16 +12,16 @@ import cz.vutbr.fit.intelligenthomeanywhere.adapter.Adapter;
 import cz.vutbr.fit.intelligenthomeanywhere.adapter.device.BaseDevice;
 
 /**
- * Class for creating xml file from _adapter object
+ * Class for creating xml file from Adapter object
  * @author ThinkDeep
  *
  */
 public class XmlCreator {
 
-	private Adapter _adapter;
+	private Adapter mAdapter;
 	
 	public XmlCreator(Adapter cap){
-		_adapter = cap;
+		mAdapter = cap;
 	}
 	
 	/**
@@ -35,14 +35,14 @@ public class XmlCreator {
 			serializer.setOutput(writer);
 			serializer.startDocument("UTF-8", null);
 			serializer.startTag(null, "adapter");
-			serializer.attribute(null,"id",_adapter.getId());
+			serializer.attribute(null,"id",mAdapter.getId());
 				serializer.startTag(null, "version");
-				serializer.text(_adapter.getVersion());
+				serializer.text(mAdapter.getVersion());
 				serializer.endTag(null, "version");
 			
 				serializer.startTag(null, "capabilities");
 					
-				for(BaseDevice d : _adapter.devices){
+				for(BaseDevice d : mAdapter.devices){
 					serializer.startTag(null, "device");
 					serializer.attribute(null, "initialized", (d.isInitialized() ? "1" : "0"));
 					serializer.attribute(null, "type", d.getStringType());

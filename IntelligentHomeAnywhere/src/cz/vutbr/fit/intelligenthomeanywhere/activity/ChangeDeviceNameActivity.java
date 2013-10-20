@@ -13,7 +13,7 @@ import cz.vutbr.fit.intelligenthomeanywhere.adapter.device.BaseDevice;
 
 public class ChangeDeviceNameActivity extends Activity {
 
-	private String _oldName = null;
+	private String mOldName = null;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -25,7 +25,7 @@ public class ChangeDeviceNameActivity extends Activity {
 		
 		Bundle bundle = this.getIntent().getExtras();
 		if(bundle != null){
-			_oldName = bundle.getString(Constants.DEVICE_LONG_PRESS);
+			mOldName = bundle.getString(Constants.DEVICE_LONG_PRESS);
 		}
 	}
 	
@@ -37,7 +37,7 @@ public class ChangeDeviceNameActivity extends Activity {
 		((Button)findViewById(R.id.change_device_name_button)).setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				BaseDevice device = Constants.getAdapter().getDeviceByName(_oldName);
+				BaseDevice device = Constants.getAdapter().getDeviceByName(mOldName);
 				EditText enewDevice = (EditText)findViewById(R.id.change_device_name_edittext);
 				String snewDevice = enewDevice.getText().toString();
 				device.setName(snewDevice);

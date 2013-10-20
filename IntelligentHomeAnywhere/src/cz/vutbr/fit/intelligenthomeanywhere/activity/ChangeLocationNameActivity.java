@@ -14,7 +14,7 @@ import cz.vutbr.fit.intelligenthomeanywhere.R;
 import cz.vutbr.fit.intelligenthomeanywhere.adapter.device.BaseDevice;
 
 public class ChangeLocationNameActivity extends Activity {
-	private String _oldLocation = null;
+	private String mOldLocation = null;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -25,7 +25,7 @@ public class ChangeLocationNameActivity extends Activity {
 		
 		Bundle bundle = this.getIntent().getExtras();
 		if(bundle != null){
-			_oldLocation = bundle.getString(Constants.LOCATION_LONG_PRESS);
+			mOldLocation = bundle.getString(Constants.LOCATION_LONG_PRESS);
 		}		
 	}
 	
@@ -37,7 +37,7 @@ public class ChangeLocationNameActivity extends Activity {
 		((Button)findViewById(R.id.change_location_name_button)).setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				ArrayList<BaseDevice> devices = Constants.getAdapter().getDevicesByLocation(_oldLocation);
+				ArrayList<BaseDevice> devices = Constants.getAdapter().getDevicesByLocation(mOldLocation);
 				EditText enewLocation = (EditText)findViewById(R.id.change_location_name_edittext);
 				String snewLocation = enewLocation.getText().toString();
 				for(BaseDevice d : devices){

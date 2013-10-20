@@ -68,7 +68,7 @@ public class XmlDeviceParser {
 	public static final int TYPE_NOISE = 6;
 	public static final int TYPE_EMMISION = 7;
 
-    private XmlPullParser parser;
+    private XmlPullParser mParser;
     
     /**
      * Factory for parsing adapter from file.
@@ -108,8 +108,8 @@ public class XmlDeviceParser {
 	 * @throws XmlPullParserException
 	 */
     public XmlDeviceParser(boolean namespaces) throws XmlPullParserException {
-    	this.parser = Xml.newPullParser();
-    	this.parser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, namespaces);
+    	this.mParser = Xml.newPullParser();
+    	this.mParser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, namespaces);
     }
 	
     /**
@@ -122,18 +122,18 @@ public class XmlDeviceParser {
 	public Adapter parse(InputStream input) throws XmlPullParserException, IOException {
 	    Adapter adapter = new Adapter();
 		
-		parser.setInput(input, null);
-	    parser.nextTag();
-	    parser.require(XmlPullParser.START_TAG, ns, ADAPTER_ROOT);
+		mParser.setInput(input, null);
+	    mParser.nextTag();
+	    mParser.require(XmlPullParser.START_TAG, ns, ADAPTER_ROOT);
 	    
-	    String id = parser.getAttributeValue(null, ADAPTER_ID);
+	    String id = mParser.getAttributeValue(null, ADAPTER_ID);
 	    adapter.setId(id);
 	    
-	    while (parser.next() != XmlPullParser.END_TAG) {
-	        if (parser.getEventType() != XmlPullParser.START_TAG)
+	    while (mParser.next() != XmlPullParser.END_TAG) {
+	        if (mParser.getEventType() != XmlPullParser.START_TAG)
 	            continue;
 
-	        String el = parser.getName();
+	        String el = mParser.getName();
 	        if (el.equalsIgnoreCase(ADAPTER_CAPABILITIES)) {
 	        	adapter.devices = readCapabilities();
 	        } else if (el.equalsIgnoreCase(ADAPTER_VERSION)) {
@@ -155,12 +155,12 @@ public class XmlDeviceParser {
 	private ArrayList<BaseDevice> readCapabilities() throws XmlPullParserException, IOException {				
 		ArrayList<BaseDevice> devices = new ArrayList<BaseDevice>();
 
-		parser.require(XmlPullParser.START_TAG, ns, ADAPTER_CAPABILITIES);
-		while (parser.next() != XmlPullParser.END_TAG) {
-			if (parser.getEventType() != XmlPullParser.START_TAG)
+		mParser.require(XmlPullParser.START_TAG, ns, ADAPTER_CAPABILITIES);
+		while (mParser.next() != XmlPullParser.END_TAG) {
+			if (mParser.getEventType() != XmlPullParser.START_TAG)
 	            continue;
 
-	        if (parser.getName().equalsIgnoreCase(DEVICE_ROOT)) {
+	        if (mParser.getName().equalsIgnoreCase(DEVICE_ROOT)) {
 	        	BaseDevice device = readDevice();
 	        	if (device != null)
 	        		devices.add(device);
@@ -168,7 +168,7 @@ public class XmlDeviceParser {
 	        	skip();
 	        }
 	    }
-		parser.require(XmlPullParser.END_TAG, ns, ADAPTER_CAPABILITIES);	
+		mParser.require(XmlPullParser.END_TAG, ns, ADAPTER_CAPABILITIES);	
 
 		return devices;
 	}
@@ -182,10 +182,10 @@ public class XmlDeviceParser {
 	private BaseDevice readDevice() throws XmlPullParserException, IOException {		
 		BaseDevice device;
 
-		parser.require(XmlPullParser.START_TAG, ns, DEVICE_ROOT);
+		mParser.require(XmlPullParser.START_TAG, ns, DEVICE_ROOT);
 		
     	// Type
-    	String type_ = parser.getAttributeValue(null, DEVICE_TYPE);
+    	String type_ = mParser.getAttributeValue(null, DEVICE_TYPE);
     	
     	int type = -1;
     	if (type_ != null)
@@ -222,13 +222,13 @@ public class XmlDeviceParser {
     	}
     	
 		// Initialized
-    	String initialized_ = parser.getAttributeValue(null, DEVICE_INITIALIZED);    	
+    	String initialized_ = mParser.getAttributeValue(null, DEVICE_INITIALIZED);    	
     	if (initialized_ != null)
     		device.setInitialized(Integer.parseInt(initialized_) != 0);
 
     	// If not initialized yet, check involved attribute
     	if (!device.isInitialized()) {
-    		String involved_ = parser.getAttributeValue(null, DEVICE_INVOLVED);
+    		String involved_ = mParser.getAttributeValue(null, DEVICE_INVOLVED);
     		if (involved_ != null)
     			device.setInvolveTime(involved_);
     	}
@@ -245,11 +245,11 @@ public class XmlDeviceParser {
         String logging_ = null;
         String logfile_ = null;
         
-		while (parser.next() != XmlPullParser.END_TAG) {
-	        if (parser.getEventType() != XmlPullParser.START_TAG)
+		while (mParser.next() != XmlPullParser.END_TAG) {
+	        if (mParser.getEventType() != XmlPullParser.START_TAG)
 	            continue;	        
 	        
-	        String el = parser.getName();
+	        String el = mParser.getName();
 	        if (el.equals(DEVICE_LOCATION)) {
 	            location_ = readText(DEVICE_LOCATION);
 	        } else if (el.equals(DEVICE_NAME)) {
@@ -261,12 +261,12 @@ public class XmlDeviceParser {
 	        } else if (el.equals(DEVICE_VALUE)) {
 	        	value_ = readText(DEVICE_VALUE);
 	        } else if (el.equals(DEVICE_NETWORK)) {	        	
-	        	parser.require(XmlPullParser.START_TAG, ns, DEVICE_NETWORK);	        	
-	        	while (parser.next() != XmlPullParser.END_TAG) {
-        			if (parser.getEventType() != XmlPullParser.START_TAG)
+	        	mParser.require(XmlPullParser.START_TAG, ns, DEVICE_NETWORK);	        	
+	        	while (mParser.next() != XmlPullParser.END_TAG) {
+        			if (mParser.getEventType() != XmlPullParser.START_TAG)
         	            continue;
         			
-        			String el2 = parser.getName();        			
+        			String el2 = mParser.getName();        			
         			if (el2.equalsIgnoreCase(DEVICE_NETWORK_ADDRESS)) {
 	        			address_ = readText(DEVICE_NETWORK_ADDRESS);
         			} else if (el2.equalsIgnoreCase(DEVICE_NETWORK_QUALITY)) {
@@ -275,9 +275,9 @@ public class XmlDeviceParser {
         				skip();
         			}
         		}	        	
-	        	parser.require(XmlPullParser.END_TAG, ns, DEVICE_NETWORK);
+	        	mParser.require(XmlPullParser.END_TAG, ns, DEVICE_NETWORK);
 	        } else if (el.equals(DEVICE_LOGGING)) {
-	        	logging_ = parser.getAttributeValue(null, DEVICE_LOGGING_ENABLED);
+	        	logging_ = mParser.getAttributeValue(null, DEVICE_LOGGING_ENABLED);
 	        	logfile_ = readText(DEVICE_LOGGING);
 	        } else {
 	            skip();
@@ -303,7 +303,7 @@ public class XmlDeviceParser {
 		if (logfile_ != null)
 			device.setLog(logfile_);
 		
-		parser.require(XmlPullParser.END_TAG, ns, DEVICE_ROOT);
+		mParser.require(XmlPullParser.END_TAG, ns, DEVICE_ROOT);
     	
 		return device;
 	}
@@ -314,13 +314,13 @@ public class XmlDeviceParser {
 	 * @throws IOException
 	 */
 	private void skip() throws XmlPullParserException, IOException {
-	    Log.d(TAG, "Skipping unknown child '" + parser.getName() + "'");
-		if (parser.getEventType() != XmlPullParser.START_TAG) {
+	    Log.d(TAG, "Skipping unknown child '" + mParser.getName() + "'");
+		if (mParser.getEventType() != XmlPullParser.START_TAG) {
 	        throw new IllegalStateException();
 	    }
 	    int depth = 1;
 	    while (depth != 0) {
-	        switch (parser.next()) {
+	        switch (mParser.next()) {
 	        case XmlPullParser.END_TAG:
 	            depth--;
 	            break;
@@ -339,15 +339,15 @@ public class XmlDeviceParser {
 	 * @throws XmlPullParserException
 	 */
 	private String readText(String tag) throws IOException, XmlPullParserException {
-	    parser.require(XmlPullParser.START_TAG, ns, tag);
+	    mParser.require(XmlPullParser.START_TAG, ns, tag);
 		
 		String result = "";
-	    if (parser.next() == XmlPullParser.TEXT) {
-	        result = parser.getText();
-	        parser.nextTag();
+	    if (mParser.next() == XmlPullParser.TEXT) {
+	        result = mParser.getText();
+	        mParser.nextTag();
 	    }
 	    
-	    parser.require(XmlPullParser.END_TAG, ns, tag);
+	    mParser.require(XmlPullParser.END_TAG, ns, tag);
 	    return result;
 	}
 

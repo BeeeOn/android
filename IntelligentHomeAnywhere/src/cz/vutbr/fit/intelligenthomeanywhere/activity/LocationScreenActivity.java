@@ -25,7 +25,7 @@ import cz.vutbr.fit.intelligenthomeanywhere.adapter.parser.XmlDeviceParser;
  */
 public class LocationScreenActivity extends Activity {
 
-	private Adapter _adapter;
+	private Adapter mAdapter;
 	
 	/**
 	 * Call xml parser to file on sdcard
@@ -49,20 +49,20 @@ public class LocationScreenActivity extends Activity {
 			}
 		}
 
-		_adapter = XmlDeviceParser.fromFile(GETFROMSERVER);
-		if(_adapter == null)
+		mAdapter = XmlDeviceParser.fromFile(GETFROMSERVER);
+		if(mAdapter == null)
 			return;
 		
-		Log.i("parsedXML",_adapter.toString());
-		Constants.setAdapter(_adapter);
+		Log.i("parsedXML",mAdapter.toString());
+		Constants.setAdapter(mAdapter);
 		Constants.setContext(this.getApplicationContext());
 		
-		if(_adapter.isNewOne()){
+		if(mAdapter.isNewOne()){
 			Intent intent = new Intent(this,Notification.class);
 			startActivity(intent);
 		}
 		
-		ArrayList<String> locations = _adapter.getLocations(false);
+		ArrayList<String> locations = mAdapter.getLocations(false);
 		Log.d("lokace",locations.toString());
 		
 		int marginTop = 5;

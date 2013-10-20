@@ -22,9 +22,9 @@ import cz.vutbr.fit.intelligenthomeanywhere.view.ToggleButtonOnClickListener;
 
 public class DataOfLocationScreenActivity extends Activity {
 
-	private Adapter _adapter;
-	private String _clicked;
-	private View _pressed = null;
+	private Adapter mAdapter;
+	private String mClicked;
+	private View mPressed = null;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -33,9 +33,9 @@ public class DataOfLocationScreenActivity extends Activity {
 		
 		Bundle bundle = this.getIntent().getExtras();
 		if(bundle != null){
-			_adapter = Constants.getAdapter();
-			_clicked = bundle.getString(Constants.LOCATION_CLICKED);
-			Log.i("clicked ->",_clicked);
+			mAdapter = Constants.getAdapter();
+			mClicked = bundle.getString(Constants.LOCATION_CLICKED);
+			Log.i("clicked ->",mClicked);
 		}else
 			this.finish();
 		
@@ -43,14 +43,14 @@ public class DataOfLocationScreenActivity extends Activity {
 		mainlayout.setOrientation(LinearLayout.VERTICAL);
 		
 		TextView txtvwTitleLocation = new TextView(this);
-		txtvwTitleLocation.setText(_clicked);
+		txtvwTitleLocation.setText(mClicked);
 		txtvwTitleLocation.setTextSize(getResources().getDimension(R.dimen.textsize));
 		LinearLayout.LayoutParams titleLocationParams = new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT,LayoutParams.WRAP_CONTENT);
 		titleLocationParams.setMargins(15, 10, 0, 10);
 		txtvwTitleLocation.setLayoutParams(titleLocationParams);
 		mainlayout.addView(txtvwTitleLocation);
 		
-		ArrayList<String> names = _adapter.getNameByLocation(_clicked);
+		ArrayList<String> names = mAdapter.getNameByLocation(mClicked);
 		if(names != null){
 			int ID = Constants.IDLE;
 			LinearLayout temperatureLayout = null;
@@ -64,7 +64,7 @@ public class DataOfLocationScreenActivity extends Activity {
 			LinearLayout unknownLayout = null;
 			for(String name : names){
 				
-				BaseDevice device = _adapter.getDeviceByName(name);
+				BaseDevice device = mAdapter.getDeviceByName(name);
 				
 				RelativeLayout devicelayout = new RelativeLayout(this);
 				devicelayout.setPadding(5, 10, 10, 10);
@@ -80,7 +80,7 @@ public class DataOfLocationScreenActivity extends Activity {
 				devicelayout.setOnLongClickListener(new View.OnLongClickListener() {
 					@Override
 					public boolean onLongClick(View v) {
-						_pressed = v;
+						mPressed = v;
 						Intent intent = new Intent(getBaseContext(), ChangeDeviceNameActivity.class);
 						intent.putExtra(Constants.DEVICE_LONG_PRESS, ((TextView)((RelativeLayout)v).getChildAt(0)).getText());
 						startActivity(intent);
@@ -250,7 +250,7 @@ public class DataOfLocationScreenActivity extends Activity {
 		super.onResume();
 		
 		if(Constants.getAdapter().isNewDeviceName()){
-			((TextView)((RelativeLayout)_pressed).getChildAt(0)).setText(Constants.getAdapter().getNewDeviceName());
+			((TextView)((RelativeLayout)mPressed).getChildAt(0)).setText(Constants.getAdapter().getNewDeviceName());
 		}
 		
 	}
