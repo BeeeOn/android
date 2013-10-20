@@ -39,22 +39,22 @@ public final class Constants {
 		
 	/**
 	 * Return state of sensors
-	 * @param _switch string param with ON or OFF
+	 * @param value string param with ON or OFF
 	 * @return String Open or Close
 	 */
-	public static final String isOpen(String _switch){
-		if(_switch.equals("ON"))
+	public static final String isOpen(String value){
+		if(value.equals("ON"))
 			return mContext.getResources().getString(R.string.sensor_open);
 		else return mContext.getResources().getString(R.string.sensor_close);
 	}
 	
 	/**
 	 * Return color by state
-	 * @param _switch string param with ON or OFF
+	 * @param value string param with ON or OFF
 	 * @return int with color GREEN or RED
 	 */
-	public static final int isOn(String _switch){
-		if(_switch.equals("ON"))
+	public static final int isOn(String value){
+		if(value.equals("ON"))
 			return Color.GREEN;
 		else return Color.RED;
 	}
