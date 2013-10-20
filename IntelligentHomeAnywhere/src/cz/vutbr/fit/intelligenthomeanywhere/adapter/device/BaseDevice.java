@@ -30,9 +30,31 @@ public abstract class BaseDevice {
 		public String address; 
 	}
 	
+	/**
+	 * Get numeric identifier representing type of this device
+	 * @return
+	 */
 	public abstract int getType();
-	public abstract int getTypeString();
 	
+	/**
+	 * Get resource for human readable string representing type of this device
+	 * @return
+	 */
+	public abstract int getTypeStringResource();
+	
+	/**
+	 * Get resource for unit string of this device
+	 * @return
+	 */
+	public abstract int getUnitStringResource();
+	
+	/**
+	 * Get resource for icon representing type of this device
+	 * @return
+	 */
+	public abstract int getTypeIconResource();
+	
+
 	public int getRefresh() {
 		return mRefreshTime;
 	}
@@ -119,10 +141,6 @@ public abstract class BaseDevice {
 	
 	public void setLog(String log) {
 		mLog = log;
-	}
-	
-	public String getStringType(){
-		return "0x" + Integer.toHexString(getType()); 
 	}
 
 	public boolean saveSettings() {

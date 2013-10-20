@@ -35,7 +35,7 @@ public class XmlCreator {
 			serializer.setOutput(writer);
 			serializer.startDocument("UTF-8", null);
 			serializer.startTag(null, "adapter");
-			serializer.attribute(null,"id",mAdapter.getId());
+			serializer.attribute(null,"id", mAdapter.getId());
 				serializer.startTag(null, "version");
 				serializer.text(mAdapter.getVersion());
 				serializer.endTag(null, "version");
@@ -45,7 +45,7 @@ public class XmlCreator {
 				for(BaseDevice d : mAdapter.devices){
 					serializer.startTag(null, "device");
 					serializer.attribute(null, "initialized", (d.isInitialized() ? "1" : "0"));
-					serializer.attribute(null, "type", d.getStringType());
+					serializer.attribute(null, "type", "0x" + Integer.toHexString(d.getType()));
 					if(!d.isInitialized())
 						serializer.attribute(null, "involved", d.getInvolveTime());
 					

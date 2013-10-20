@@ -34,7 +34,7 @@ public class AddSensorActivity extends Activity {
         
         BaseDevice device = Constants.getAdapter().getNewOne();
         TextView type = (TextView)findViewById(R.id.addsensor_type);
-        type.setText(type.getText() + " " + getApplicationContext().getString(device.getTypeString()));
+        type.setText(type.getText() + " " + getApplicationContext().getString(device.getTypeStringResource()));
         
         TextView time = (TextView)findViewById(R.id.addsensor_involved_time);
         time.setText(time.getText() + " " + device.getInvolveTime());

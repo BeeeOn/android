@@ -11,7 +11,19 @@ public class NoiseDevice extends BaseDevice {
 	}
 	
 	@Override
-	public int getTypeString() {
+	public int getTypeStringResource() {
 		return R.string.noise;
 	}
+	
+	@Override
+	public int getTypeIconResource() {
+		// TODO return icon resource
+		return 0;
+	}
+
+	@Override
+	public int getUnitStringResource() {
+		return R.string.noise_dB;
+	}
+
 }

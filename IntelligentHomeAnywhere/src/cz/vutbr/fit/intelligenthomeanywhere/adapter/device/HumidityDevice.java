@@ -11,7 +11,19 @@ public class HumidityDevice extends BaseDevice {
 	}
 	
 	@Override
-	public int getTypeString() {
+	public int getTypeStringResource() {
 		return R.string.humidity;
 	}
+	
+	@Override
+	public int getTypeIconResource() {
+		// TODO return icon resource
+		return 0;
+	}
+
+	@Override
+	public int getUnitStringResource() {
+		return R.string.humidity_percent;
+	}
+
 }

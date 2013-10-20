@@ -11,7 +11,19 @@ public class UnknownDevice extends BaseDevice {
 	}
 	
 	@Override
-	public int getTypeString() {
+	public int getTypeStringResource() {
 		return R.string.unknown;
 	}
+	
+	@Override
+	public int getTypeIconResource() {
+		// TODO return icon resource
+		return 0;
+	}
+
+	@Override
+	public int getUnitStringResource() {
+		return 0; // TODO: get unknown "???" unit?
+	}
+
 }

@@ -109,7 +109,7 @@ public class DataOfLocationScreenActivity extends Activity {
 						if(temperatureLayout != null && temperatureLayout.getChildCount() > 0){
 							temperatureLayout.addView(getSplitter());
 						}
-						txtview.setText(device.getValue() + " " + getString(R.string.temperature_C) );
+						txtview.setText(device.getValue() + " " + getString(device.getUnitStringResource()) );
 						txtview.setLayoutParams(rightObjectParams);
 						devicelayout.addView(txtview);
 						temperatureLayout.addView(devicelayout);
@@ -122,7 +122,7 @@ public class DataOfLocationScreenActivity extends Activity {
 						if(humidityLayout != null && humidityLayout.getChildCount() > 0){
 							humidityLayout.addView(getSplitter());
 						}
-						txtview.setText(device.getValue() + " " + getString(R.string.humidity_percent));
+						txtview.setText(device.getValue() + " " + getString(device.getUnitStringResource()));
 						txtview.setLayoutParams(rightObjectParams);
 						devicelayout.addView(txtview);
 						humidityLayout.addView(devicelayout);
@@ -135,7 +135,7 @@ public class DataOfLocationScreenActivity extends Activity {
 						if(pressureLayout != null && pressureLayout.getChildCount() > 0){
 							pressureLayout.addView(getSplitter());
 						}
-						txtview.setText(device.getValue() + " " + getString(R.string.pressure_Pa));
+						txtview.setText(device.getValue() + " " + getString(device.getUnitStringResource()));
 						txtview.setLayoutParams(rightObjectParams);
 						devicelayout.addView(txtview);
 						pressureLayout.addView(devicelayout);
@@ -180,7 +180,7 @@ public class DataOfLocationScreenActivity extends Activity {
 						if(illuminationLayout != null && illuminationLayout.getChildCount() > 0){
 							illuminationLayout.addView(getSplitter());
 						}
-						txtview.setText(device.getValue() + " " + getString(R.string.illumination_lux));
+						txtview.setText(device.getValue() + " " + getString(device.getUnitStringResource()));
 						txtview.setLayoutParams(rightObjectParams);
 						devicelayout.addView(txtview);
 						illuminationLayout.addView(devicelayout);
@@ -193,7 +193,7 @@ public class DataOfLocationScreenActivity extends Activity {
 						if(noiseLayout != null && noiseLayout.getChildCount() > 0){
 							noiseLayout.addView(getSplitter());
 						}
-						txtview.setText(device.getValue() + " " + getString(R.string.noise_dB));
+						txtview.setText(device.getValue() + " " + getString(device.getUnitStringResource()));
 						txtview.setLayoutParams(rightObjectParams);
 						devicelayout.addView(txtview);
 						noiseLayout.addView(devicelayout);
@@ -206,7 +206,7 @@ public class DataOfLocationScreenActivity extends Activity {
 						if(emissionLayout != null && emissionLayout.getChildCount() > 0){
 							emissionLayout.addView(getSplitter());
 						}
-						txtview.setText(device.getValue() + " " + getString(R.string.emission_ppm));
+						txtview.setText(device.getValue() + " " + getString(device.getUnitStringResource()));
 						txtview.setLayoutParams(rightObjectParams);
 						devicelayout.addView(txtview);
 						emissionLayout.addView(devicelayout);

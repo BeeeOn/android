@@ -107,8 +107,11 @@ public class SensorDetailActivity extends Activity {
 			case 7:
 				//type = Constants.DEVICE_TYPE_TEMP;
 
+				int unitResource = device.getUnitStringResource();
+				String unit = (unitResource > 0) ? " " + getString(unitResource) : "";
+				
 				TextView lastValueLabel = new TextView(this);
-				lastValueLabel.setText(getString(R.string.sensordetail_last_value) + device.getValue() + " " + GetRightGeneralUnit(device.getType()));
+				lastValueLabel.setText(getString(R.string.sensordetail_last_value) + device.getValue() + unit);
 				lastValueLabel.setTextSize(getResources().getDimension(R.dimen.textsizesmaller));
 				LinearLayout.LayoutParams lastValueParams = new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
 				lastValueParams.setMargins(15, 10, 0, 0);
@@ -321,31 +324,4 @@ public class SensorDetailActivity extends Activity {
 		}
 	}
 
-	/**
-	 * Returns unit by type of sensor
-	 * @param type of sensor
-	 * @return unit
-	 */
-	private String GetRightGeneralUnit(int type){
-		switch(type){
-			case 0:
-				return getString(R.string.temperature_C);
-			case 1:
-				return getString(R.string.humidity_percent);
-			case 2:
-				return getString(R.string.pressure_Pa);
-			case 3:
-				return "";
-			case 4:
-				return "";
-			case 5:
-				return getString(R.string.illumination_lux);
-			case 6:
-				return getString(R.string.noise_dB);
-			case 7:
-				return getString(R.string.emission_ppm);
-			default:
-				return "";
-		}
-	}
 }
