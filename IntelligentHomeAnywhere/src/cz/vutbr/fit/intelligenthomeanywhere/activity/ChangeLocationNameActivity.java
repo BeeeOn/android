@@ -1,6 +1,6 @@
 package cz.vutbr.fit.intelligenthomeanywhere.activity;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -37,7 +37,7 @@ public class ChangeLocationNameActivity extends Activity {
 		((Button)findViewById(R.id.change_location_name_button)).setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				ArrayList<BaseDevice> devices = Constants.getAdapter().getDevicesByLocation(mOldLocation);
+				List<BaseDevice> devices = Constants.getAdapter().getDevicesByLocation(mOldLocation);
 				EditText enewLocation = (EditText)findViewById(R.id.change_location_name_edittext);
 				String snewLocation = enewLocation.getText().toString();
 				for(BaseDevice d : devices){

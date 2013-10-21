@@ -1,6 +1,7 @@
 package cz.vutbr.fit.intelligenthomeanywhere.activity;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -62,7 +63,7 @@ public class LocationScreenActivity extends Activity {
 			startActivity(intent);
 		}
 		
-		ArrayList<String> locations = mAdapter.getLocations(false);
+		List<String> locations = mAdapter.getLocations(false);
 		Log.d("lokace",locations.toString());
 		
 		int marginTop = 5;
@@ -94,8 +95,8 @@ public class LocationScreenActivity extends Activity {
 		Log.i("onResume",this.getLocalClassName());
 		
 		if(Constants.getAdapter().isNewInit()){
-			ArrayList<String> Old = GetLocationsFromButtons(ID);
-			ArrayList<String> New = Constants.getAdapter().getLocations(false);
+			List<String> Old = GetLocationsFromButtons(ID);
+			List<String> New = Constants.getAdapter().getLocations(false);
 			Log.d("Old",Old.toString());
 			Log.d("New", New.toString());
 			if(Old.size() != New.size()){
@@ -105,11 +106,11 @@ public class LocationScreenActivity extends Activity {
 			}
 		}
 		if(Constants.getAdapter().isNewLocationName()){
-			ArrayList<String> Old = GetLocationsFromButtons(ID);
-			ArrayList<String> New = Constants.getAdapter().getLocations(false);
+			List<String> Old = GetLocationsFromButtons(ID);
+			List<String> New = Constants.getAdapter().getLocations(false);
 			Log.d("Old",Old.toString());
 			Log.d("New", New.toString());
-			ArrayList<String> diff = GetDiffOfLocatins(Old, New);
+			List<String> diff = GetDiffOfLocatins(Old, New);
 			Log.i("before",diff.get(0));
 			Log.i("after",diff.get(1));
 			try{
@@ -179,8 +180,8 @@ public class LocationScreenActivity extends Activity {
 	 * @param ID number of start id (end with first null)
 	 * @return arraylist with location names
 	 */
-	private ArrayList<String> GetLocationsFromButtons(int ID){
-		ArrayList<String> result = new ArrayList<String>();
+	private List<String> GetLocationsFromButtons(int ID){
+		List<String> result = new ArrayList<String>();
 		try{
 			for(int i = ID; i > 0; i++)
 				result.add(((Button)findViewById(i)).getText().toString());
@@ -196,8 +197,8 @@ public class LocationScreenActivity extends Activity {
 	 * @param New second list
 	 * @return pair of different items in list
 	 */
-	private ArrayList<String> GetDiffOfLocatins(ArrayList<String> Old, ArrayList<String> New){
-		ArrayList<String> result = new ArrayList<String>();
+	private List<String> GetDiffOfLocatins(List<String> Old, List<String> New){
+		List<String> result = new ArrayList<String>();
 		final int oSize = Old.size();
 		for(int x = oSize-1; x >= 0; x--){
 			final int nSize = New.size();

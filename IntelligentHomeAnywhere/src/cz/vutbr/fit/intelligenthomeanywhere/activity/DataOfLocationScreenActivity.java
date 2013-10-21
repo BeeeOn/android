@@ -1,6 +1,6 @@
 package cz.vutbr.fit.intelligenthomeanywhere.activity;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -50,7 +50,7 @@ public class DataOfLocationScreenActivity extends Activity {
 		txtvwTitleLocation.setLayoutParams(titleLocationParams);
 		mainlayout.addView(txtvwTitleLocation);
 		
-		ArrayList<String> names = mAdapter.getNameByLocation(mClicked);
+		List<String> names = mAdapter.getNameByLocation(mClicked);
 		if(names != null){
 			int ID = Constants.IDLE;
 			LinearLayout temperatureLayout = null;

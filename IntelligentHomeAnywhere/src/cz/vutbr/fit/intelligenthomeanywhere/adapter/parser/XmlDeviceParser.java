@@ -6,6 +6,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.List;
 
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
@@ -152,8 +153,8 @@ public class XmlDeviceParser {
 	 * @throws XmlPullParserException
 	 * @throws IOException
 	 */
-	private ArrayList<BaseDevice> readCapabilities() throws XmlPullParserException, IOException {				
-		ArrayList<BaseDevice> devices = new ArrayList<BaseDevice>();
+	private List<BaseDevice> readCapabilities() throws XmlPullParserException, IOException {				
+		List<BaseDevice> devices = new ArrayList<BaseDevice>();
 
 		mParser.require(XmlPullParser.START_TAG, ns, ADAPTER_CAPABILITIES);
 		while (mParser.next() != XmlPullParser.END_TAG) {

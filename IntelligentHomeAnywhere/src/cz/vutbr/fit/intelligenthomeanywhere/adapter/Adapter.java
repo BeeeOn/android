@@ -1,6 +1,7 @@
 package cz.vutbr.fit.intelligenthomeanywhere.adapter;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import cz.vutbr.fit.intelligenthomeanywhere.adapter.device.BaseDevice;
 import cz.vutbr.fit.intelligenthomeanywhere.adapter.parser.XmlCreator;
@@ -11,7 +12,7 @@ import cz.vutbr.fit.intelligenthomeanywhere.adapter.parser.XmlCreator;
  *
  */
 public class Adapter {
-	public ArrayList<BaseDevice> devices;
+	public List<BaseDevice> devices;
 	private String mId;
 	private String mVersion;
 	private boolean mNewInit;
@@ -49,8 +50,8 @@ public class Adapter {
 	 * @param location name of group of devices
 	 * @return list with string with name of device
 	 */
-	public ArrayList<String> getNameByLocation(String location){
-		ArrayList<String> result = new ArrayList<String>();
+	public List<String> getNameByLocation(String location){
+		List<String> result = new ArrayList<String>();
 		
 		for(BaseDevice d : devices){
 			if(d.getLocation() != null && d.getLocation().equals(location))
@@ -113,8 +114,8 @@ public class Adapter {
 	 * @param notnull determines if it can return null value, or if it exclude
 	 * @return arraylist of strings with unique locations
 	 */
-	public ArrayList<String> getLocations(boolean notnull){
-		ArrayList<String> locations = new ArrayList<String>();
+	public List<String> getLocations(boolean notnull){
+		List<String> locations = new ArrayList<String>();
 		
 		for(BaseDevice d : devices){
 			if(!locations.contains(d.getLocation())){
@@ -193,8 +194,8 @@ public class Adapter {
 	 * @param name of location
 	 * @return arraylist with all adapters with needed location
 	 */
-	public ArrayList<BaseDevice> getDevicesByLocation(String name){
-		ArrayList<BaseDevice> result = new ArrayList<BaseDevice>();
+	public List<BaseDevice> getDevicesByLocation(String name){
+		List<BaseDevice> result = new ArrayList<BaseDevice>();
 		
 		for(BaseDevice d : devices){
 			if(d.getLocation().equals(name))
