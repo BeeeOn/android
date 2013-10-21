@@ -18,6 +18,8 @@ import cz.vutbr.fit.intelligenthomeanywhere.Constants;
 import cz.vutbr.fit.intelligenthomeanywhere.R;
 import cz.vutbr.fit.intelligenthomeanywhere.adapter.Adapter;
 import cz.vutbr.fit.intelligenthomeanywhere.adapter.device.BaseDevice;
+import cz.vutbr.fit.intelligenthomeanywhere.adapter.device.StateDevice;
+import cz.vutbr.fit.intelligenthomeanywhere.adapter.device.SwitchDevice;
 import cz.vutbr.fit.intelligenthomeanywhere.view.ToggleButtonOnClickListener;
 
 public class DataOfLocationScreenActivity extends Activity {
@@ -148,8 +150,8 @@ public class DataOfLocationScreenActivity extends Activity {
 						if(switchSensorLayout != null && switchSensorLayout.getChildCount() > 0){
 							switchSensorLayout.addView(getSplitter());
 						}
-						txtview.setText(Constants.isOpen(device.getValue()));
-						txtview.setTextColor(Constants.isOn(device.getValue()));
+						txtview.setText(getString(((StateDevice)device).getStateStringResource()));
+						txtview.setTextColor(((StateDevice)device).getColorByState());
 						txtview.setLayoutParams(rightObjectParams);
 						devicelayout.addView(txtview);
 						switchSensorLayout.addView(devicelayout);
@@ -157,9 +159,9 @@ public class DataOfLocationScreenActivity extends Activity {
 					case 4: // controll switch
 						txtvwLabelParams.setMargins(0, 20, 0, 0);
 						ToggleButton toggle = new ToggleButton(this);
-						toggle.setTextOff("OFF");
-						toggle.setTextOn("ON");
-						toggle.setChecked(device.getValue().equals("ON") ? true : false);
+						toggle.setTextOff("OFF"); // FIXME: use string resources
+						toggle.setTextOn("ON"); // FIXME: use string resources
+						toggle.setChecked(((SwitchDevice)device).isActive());
 						toggle.setOnClickListener(new ToggleButtonOnClickListener(device.getName()));
 						if(switchControlLayout == null){
 							switchControlLayout = setLayout(switchControlLayout, ID);
