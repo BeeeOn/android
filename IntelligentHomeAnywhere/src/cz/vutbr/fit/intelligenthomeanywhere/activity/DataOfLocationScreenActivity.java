@@ -103,7 +103,7 @@ public class DataOfLocationScreenActivity extends Activity {
 				rightObjectParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
 				TextView txtview = new TextView(this);
 				switch(device.getType()){
-					case 0: // temperature
+					case Constants.TYPE_TEMPERATURE:
 						if(temperatureLayout == null){
 							temperatureLayout = setLayout(temperatureLayout, ID);
 							ID++;
@@ -116,7 +116,7 @@ public class DataOfLocationScreenActivity extends Activity {
 						devicelayout.addView(txtview);
 						temperatureLayout.addView(devicelayout);
 						break;
-					case 1: // humidity
+					case Constants.TYPE_HUMIDITY:
 						if(humidityLayout == null){
 							humidityLayout = setLayout(humidityLayout, ID);
 							ID++;
@@ -129,7 +129,7 @@ public class DataOfLocationScreenActivity extends Activity {
 						devicelayout.addView(txtview);
 						humidityLayout.addView(devicelayout);
 						break;
-					case 2: // pressure
+					case Constants.TYPE_PRESSURE:
 						if(pressureLayout == null){
 							pressureLayout = setLayout(pressureLayout, ID);
 							ID++;
@@ -142,7 +142,7 @@ public class DataOfLocationScreenActivity extends Activity {
 						devicelayout.addView(txtview);
 						pressureLayout.addView(devicelayout);
 						break;
-					case 3: // sensor switch
+					case Constants.TYPE_STATE:
 						if(switchSensorLayout == null){
 							switchSensorLayout = setLayout(switchSensorLayout, ID);
 							ID++;
@@ -156,7 +156,7 @@ public class DataOfLocationScreenActivity extends Activity {
 						devicelayout.addView(txtview);
 						switchSensorLayout.addView(devicelayout);
 						break;
-					case 4: // controll switch
+					case Constants.TYPE_SWITCH:
 						txtvwLabelParams.setMargins(0, 20, 0, 0);
 						ToggleButton toggle = new ToggleButton(this);
 						toggle.setTextOff("OFF"); // FIXME: use string resources
@@ -174,7 +174,7 @@ public class DataOfLocationScreenActivity extends Activity {
 						devicelayout.addView(toggle);
 						switchControlLayout.addView(devicelayout);
 						break;
-					case 5: // illumination
+					case Constants.TYPE_ILLUMINATION:
 						if(illuminationLayout == null){
 							illuminationLayout = setLayout(illuminationLayout, ID);
 							ID++;
@@ -187,7 +187,7 @@ public class DataOfLocationScreenActivity extends Activity {
 						devicelayout.addView(txtview);
 						illuminationLayout.addView(devicelayout);
 						break;
-					case 6: // noise
+					case Constants.TYPE_NOISE:
 						if(noiseLayout == null){
 							noiseLayout = setLayout(noiseLayout, ID);
 							ID++;
@@ -200,7 +200,7 @@ public class DataOfLocationScreenActivity extends Activity {
 						devicelayout.addView(txtview);
 						noiseLayout.addView(devicelayout);
 						break;
-					case 7: // emission
+					case Constants.TYPE_EMMISION:
 						if(emissionLayout == null){
 							emissionLayout = setLayout(emissionLayout, ID);
 							ID++;

@@ -99,12 +99,12 @@ public class SensorDetailActivity extends Activity {
 		}
 		
 		switch(device.getType()){
-			case 0:
-			case 1:
-			case 2:
-			case 5:
-			case 6:
-			case 7:
+			case Constants.TYPE_TEMPERATURE:
+			case Constants.TYPE_HUMIDITY:
+			case Constants.TYPE_PRESSURE:
+			case Constants.TYPE_ILLUMINATION:
+			case Constants.TYPE_NOISE:
+			case Constants.TYPE_EMMISION:
 				//type = Constants.DEVICE_TYPE_TEMP;
 
 				int unitResource = device.getUnitStringResource();
@@ -119,10 +119,10 @@ public class SensorDetailActivity extends Activity {
 				mainlayout.addView(lastValueLabel);
 				
 				break;
-			case 3:
+			case Constants.TYPE_STATE:
 				
 				break;
-			case 4:
+			case Constants.TYPE_SWITCH:
 				
 				break;
 			default:
