@@ -6,14 +6,8 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
-import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -26,19 +20,16 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.RadioGroup;
-import android.widget.TextView;
 import android.widget.Toast;
-import cz.vutbr.fit.intelligenthomeanywhere.Constants;
-import cz.vutbr.fit.intelligenthomeanywhere.R;
 
-import com.google.android.gms.auth.GoogleAuthException;
 import com.google.android.gms.auth.GoogleAuthUtil;
 import com.google.android.gms.auth.UserRecoverableAuthException;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
+
+import cz.vutbr.fit.intelligenthomeanywhere.Constants;
+import cz.vutbr.fit.intelligenthomeanywhere.R;
 //import com.facebook.Session;
 
 /**
@@ -78,7 +69,6 @@ public class LoginActivity extends Activity {
 					e.printStackTrace();
 				}
 			}
-			
 		});
 		btnMojeID.setOnClickListener(new OnClickListener(){
 
@@ -86,9 +76,7 @@ public class LoginActivity extends Activity {
 			public void onClick(View v) {
 				getMojeIDAccessFromServer(v);
 			}
-			
 		});
-		
 	}
 
     @Override
@@ -96,13 +84,6 @@ public class LoginActivity extends Activity {
         super.onActivityResult(requestCode, resultCode, data);
         //Session.getActiveSession().onActivityResult(this, requestCode, resultCode, data);
     }
-	
-	/*@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.login, menu);
-		return true;
-	}*/
 
 	/**
 	 * Check user login info, and open app - onClick
@@ -120,30 +101,7 @@ public class LoginActivity extends Activity {
 			//Toast.makeText(v.getContext(), getString(R.string.toast_bad_password), Toast.LENGTH_LONG).show();
 		}
 	}
-	
-	/**
-	 * Check for access from server
-	 * @param name username to access
-	 * @param password
-	 * @return true if access granted, else false
-	 */
-	private boolean getNameAccessFromServer(String name, String password){
-		//TODO: get access from server for name and password
-		return false;
-	}
-	
-	/**
-	 * 
-	 * @return
-	 */
-	private boolean getFacebokAccessFromServer(){
-		//TODO: get access via facebook
-		//Intent intent = new Intent(this, LoginFacebookActivity.class);
-		//startActivity(intent);
-		
-		return false;
-	}
-	
+
 	/**
 	 * 
 	 * @return
@@ -180,7 +138,6 @@ public class LoginActivity extends Activity {
 	    return names;
 	}
 	
-	
 	/**
 	 * 
 	 * @return
@@ -195,9 +152,8 @@ public class LoginActivity extends Activity {
 		private static final String TAG = "AUTH";
 		private LoginActivity mActivity;
 		private String mEmail;
-		private String token;
-		private String userName;
-		
+		private String mToken;
+		private String mUserName;
 		
 		public GetAuthToken(LoginActivity mActivity, String mEmail) {
 			this.mActivity = mActivity;
@@ -212,9 +168,9 @@ public class LoginActivity extends Activity {
 		protected String doInBackground(Void... params) {
 		try {
 			//Log.i(TAG, mEmail);
-			token = GoogleAuthUtil.getToken(mActivity, mEmail,"oauth2:https://www.googleapis.com/auth/userinfo.profile");
+			mToken = GoogleAuthUtil.getToken(mActivity, mEmail,"oauth2:https://www.googleapis.com/auth/userinfo.profile");
 			//Log.i(TAG, token);
-		return token;
+		return mToken;
 		
 		} catch (UserRecoverableAuthException userRecoverableException) {
 			mActivity.startActivityForResult(userRecoverableException.getIntent(),USER_RECOVERABLE_AUTH);
@@ -251,8 +207,8 @@ public class LoginActivity extends Activity {
 				}
 				// Log - Token and Name
 				Log.i(TAG, "Token: "+result);
-				Log.i(TAG, "User name: "+this.userName);
-				Toast.makeText(mActivity.getBaseContext(), "Welcome "+this.userName, Toast.LENGTH_LONG).show();
+				Log.i(TAG, "User name: "+this.mUserName);
+				Toast.makeText(mActivity.getBaseContext(), "Welcome "+this.mUserName, Toast.LENGTH_LONG).show();
 				Intent intent = new Intent(mActivity, LocationScreenActivity.class);
 				intent.putExtra(Constants.LOGIN, Constants.LOGIN_DEMO);
 				//intent.putExtra(name, value);
@@ -260,7 +216,6 @@ public class LoginActivity extends Activity {
 		    	mActivity.finish();
 		    	Log.i(TAG, "FINISH");
 			}
-			
 		}
 		
 		/****************************************************************************************/
@@ -276,7 +231,7 @@ public class LoginActivity extends Activity {
 	          InputStream is = con.getInputStream();
 	          String name = getName(readResponse(is));
 	          Log.i("MAinActivity","Hello " + name + "!");
-	          this.userName = name;
+	          this.mUserName = name;
 	          is.close();
 	          synchronized(this) {
 	        	  this.notify();
@@ -311,6 +266,5 @@ public class LoginActivity extends Activity {
 	      JSONObject profile = new JSONObject(jsonResponse);
 	      return profile.getString("name");
 	    }
-		
-		}
+	}
 }
