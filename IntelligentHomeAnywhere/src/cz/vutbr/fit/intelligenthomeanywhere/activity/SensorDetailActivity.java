@@ -26,8 +26,7 @@ import com.jjoe64.graphview.LineGraphView;
 import cz.vutbr.fit.intelligenthomeanywhere.Compatibility;
 import cz.vutbr.fit.intelligenthomeanywhere.Constants;
 import cz.vutbr.fit.intelligenthomeanywhere.R;
-import cz.vutbr.fit.intelligenthomeanywhere.adapter.Adapter;
-import cz.vutbr.fit.intelligenthomeanywhere.adapter.device.Device;
+import cz.vutbr.fit.intelligenthomeanywhere.adapter.device.BaseDevice;
 import cz.vutbr.fit.intelligenthomeanywhere.view.NumberPicker;
 import cz.vutbr.fit.intelligenthomeanywhere.view.NumberPicker.OnChangedListener;
 
@@ -41,7 +40,7 @@ public class SensorDetailActivity extends Activity {
 		setContentView(R.layout.activity_sensor_detail_screen);
 		
 		String name = this.getIntent().getExtras().getString(Constants.DEVICE_CLICKED);
-		Adapter device = Constants.getCapabilities().getDeviceByName(name);
+		BaseDevice device = Constants.getAdapter().getDeviceByName(name);
 		Log.i("Click on",device.getName());
 		
 		LinearLayout mainlayout = (LinearLayout) findViewById(R.id.sensordetail_scroll);
@@ -65,7 +64,7 @@ public class SensorDetailActivity extends Activity {
 		txtvwNameLabel.setLayoutParams(txtvwLocationParams);
 		mainlayout.addView(txtvwNameLabel);
 		
-		if(((Device)device).deviceDestiny.getLog()){
+		if(device.isLogging()){
 			//TODO: call to server for file with name device.GetLog(); 
 			List<String[]> LogFile = LogLoader(Constants.DEMO_LOGFILE);
 			if(LogFile != null){
@@ -99,17 +98,20 @@ public class SensorDetailActivity extends Activity {
 			mainlayout.addView(view);
 		}
 		
-		switch(((Device)device).getType()){
-			case 0:
-			case 1:
-			case 2:
-			case 5:
-			case 6:
-			case 7:
+		switch(device.getType()){
+			case Constants.TYPE_TEMPERATURE:
+			case Constants.TYPE_HUMIDITY:
+			case Constants.TYPE_PRESSURE:
+			case Constants.TYPE_ILLUMINATION:
+			case Constants.TYPE_NOISE:
+			case Constants.TYPE_EMMISION:
 				//type = Constants.DEVICE_TYPE_TEMP;
 
+				int unitResource = device.getUnitStringResource();
+				String unit = (unitResource > 0) ? " " + getString(unitResource) : "";
+				
 				TextView lastValueLabel = new TextView(this);
-				lastValueLabel.setText(getString(R.string.sensordetail_last_value) + ((Device)device).deviceDestiny.getValue() + " " + GetRightGeneralUnit(((Device)device).getType()));
+				lastValueLabel.setText(getString(R.string.sensordetail_last_value) + device.getValue() + unit);
 				lastValueLabel.setTextSize(getResources().getDimension(R.dimen.textsizesmaller));
 				LinearLayout.LayoutParams lastValueParams = new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
 				lastValueParams.setMargins(15, 10, 0, 0);
@@ -117,10 +119,10 @@ public class SensorDetailActivity extends Activity {
 				mainlayout.addView(lastValueLabel);
 				
 				break;
-			case 3:
+			case Constants.TYPE_STATE:
 				
 				break;
-			case 4:
+			case Constants.TYPE_SWITCH:
 				
 				break;
 			default:
@@ -237,7 +239,7 @@ public class SensorDetailActivity extends Activity {
 		/*switch(type){
 			case Constants.DEVICE_TYPE_TEMP:*/
 				TextView name = (TextView)findViewById(Constants.NAMELABEL_ID);
-				Adapter device = Constants.getCapabilities().getDeviceByName(name.getText().toString());
+				BaseDevice device = Constants.getAdapter().getDeviceByName(name.getText().toString());
 				device.setRefresh(GetRightTimeValueInSecs());
 		//}
 	}
@@ -322,31 +324,4 @@ public class SensorDetailActivity extends Activity {
 		}
 	}
 
-	/**
-	 * Returns unit by type of sensor
-	 * @param type of sensor
-	 * @return unit
-	 */
-	private String GetRightGeneralUnit(int type){
-		switch(type){
-			case 0:
-				return getString(R.string.temperature_C);
-			case 1:
-				return getString(R.string.humidity_percent);
-			case 2:
-				return getString(R.string.pressure_Pa);
-			case 3:
-				return "";
-			case 4:
-				return "";
-			case 5:
-				return getString(R.string.illumination_lux);
-			case 6:
-				return getString(R.string.noise_dB);
-			case 7:
-				return getString(R.string.emission_ppm);
-			default:
-				return "";
-		}
-	}
 }
