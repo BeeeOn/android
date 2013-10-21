@@ -36,6 +36,17 @@ public final class Constants {
 	public static final int NUMBERPICKER_ID = 666;
 	public static final int NUMBERPICKER_IDII = 999;
 	public static final int NAMELABEL_ID = 777;
+	
+	// Device types
+	public static final int TYPE_UNKNOWN = -1;
+	public static final int TYPE_TEMPERATURE = 0;
+	public static final int TYPE_HUMIDITY = 1;
+	public static final int TYPE_PRESSURE = 2;
+	public static final int TYPE_STATE = 3;
+	public static final int TYPE_SWITCH = 4;
+	public static final int TYPE_ILLUMINATION = 5;
+	public static final int TYPE_NOISE = 6;
+	public static final int TYPE_EMMISION = 7;
 		
 	/**
 	 * Set up main adapter object

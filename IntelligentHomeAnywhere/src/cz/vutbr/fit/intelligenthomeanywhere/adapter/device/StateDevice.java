@@ -1,8 +1,8 @@
 package cz.vutbr.fit.intelligenthomeanywhere.adapter.device;
 
 import android.graphics.Color;
+import cz.vutbr.fit.intelligenthomeanywhere.Constants;
 import cz.vutbr.fit.intelligenthomeanywhere.R;
-import cz.vutbr.fit.intelligenthomeanywhere.adapter.parser.XmlDeviceParser;
 
 public class StateDevice extends BaseDevice {
 
@@ -11,7 +11,7 @@ public class StateDevice extends BaseDevice {
 	
 	@Override
 	public int getType() {
-		return XmlDeviceParser.TYPE_STATE;
+		return Constants.TYPE_STATE;
 	}
 	
 	@Override

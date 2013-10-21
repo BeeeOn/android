@@ -13,6 +13,7 @@ import org.xmlpull.v1.XmlPullParserException;
 
 import android.util.Log;
 import android.util.Xml;
+import cz.vutbr.fit.intelligenthomeanywhere.Constants;
 import cz.vutbr.fit.intelligenthomeanywhere.adapter.Adapter;
 import cz.vutbr.fit.intelligenthomeanywhere.adapter.device.BaseDevice;
 import cz.vutbr.fit.intelligenthomeanywhere.adapter.device.EmissionDevice;
@@ -58,17 +59,6 @@ public class XmlDeviceParser {
 	public static final String DEVICE_LOGGING = "logging";
 	public static final String DEVICE_LOGGING_ENABLED = "enabled";
 	
-	// Device types constants
-	public static final int TYPE_UNKNOWN = -1;
-	public static final int TYPE_TEMPERATURE = 0;
-	public static final int TYPE_HUMIDITY = 1;
-	public static final int TYPE_PRESSURE = 2;
-	public static final int TYPE_STATE = 3;
-	public static final int TYPE_SWITCH = 4;
-	public static final int TYPE_ILLUMINATION = 5;
-	public static final int TYPE_NOISE = 6;
-	public static final int TYPE_EMMISION = 7;
-
     private XmlPullParser mParser;
     
     /**
@@ -193,28 +183,28 @@ public class XmlDeviceParser {
     		type = Integer.decode(type_);    	
     	
     	switch (type) {
-    	case TYPE_EMMISION:
+    	case Constants.TYPE_EMMISION:
     		device = new EmissionDevice();
     		break;
-    	case TYPE_HUMIDITY:
+    	case Constants.TYPE_HUMIDITY:
     		device = new HumidityDevice();
     		break;
-    	case TYPE_ILLUMINATION:
+    	case Constants.TYPE_ILLUMINATION:
     		device = new IlluminationDevice();
     		break;
-    	case TYPE_NOISE:
+    	case Constants.TYPE_NOISE:
     		device = new NoiseDevice();
     		break;
-    	case TYPE_PRESSURE:
+    	case Constants.TYPE_PRESSURE:
     		device = new PressureDevice();
     		break;
-    	case TYPE_STATE:
+    	case Constants.TYPE_STATE:
     		device = new StateDevice();
     		break;
-    	case TYPE_SWITCH:
+    	case Constants.TYPE_SWITCH:
     		device = new SwitchDevice();
     		break;
-    	case TYPE_TEMPERATURE:
+    	case Constants.TYPE_TEMPERATURE:
     		device = new TemperatureDevice();
     		break;
     	default:
