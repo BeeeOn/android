@@ -1,6 +1,7 @@
 package cz.vutbr.fit.intelligenthomeanywhere.activity;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -14,7 +15,7 @@ import android.widget.LinearLayout;
 import cz.vutbr.fit.intelligenthomeanywhere.Compatibility;
 import cz.vutbr.fit.intelligenthomeanywhere.Constants;
 import cz.vutbr.fit.intelligenthomeanywhere.R;
-import cz.vutbr.fit.intelligenthomeanywhere.adapter.Capabilities;
+import cz.vutbr.fit.intelligenthomeanywhere.adapter.Adapter;
 import cz.vutbr.fit.intelligenthomeanywhere.adapter.parser.XmlCreator;
 import cz.vutbr.fit.intelligenthomeanywhere.adapter.parser.XmlDeviceParser;
 
@@ -25,7 +26,7 @@ import cz.vutbr.fit.intelligenthomeanywhere.adapter.parser.XmlDeviceParser;
  */
 public class LocationScreenActivity extends Activity {
 
-	private Capabilities _capabilities;
+	private Adapter mAdapter;
 	
 	/**
 	 * Call xml parser to file on sdcard
@@ -49,20 +50,20 @@ public class LocationScreenActivity extends Activity {
 			}
 		}
 
-		_capabilities = XmlDeviceParser.fromFile(GETFROMSERVER);
-		if(_capabilities == null)
+		mAdapter = XmlDeviceParser.fromFile(GETFROMSERVER);
+		if(mAdapter == null)
 			return;
 		
-		Log.i("parsedXML",_capabilities.toString());
-		Constants.setCapabilities(_capabilities);
+		Log.i("parsedXML",mAdapter.toString());
+		Constants.setAdapter(mAdapter);
 		Constants.setContext(this.getApplicationContext());
 		
-		if(_capabilities.isNewOne()){
+		if(mAdapter.isNewOne()){
 			Intent intent = new Intent(this,Notification.class);
 			startActivity(intent);
 		}
 		
-		ArrayList<String> locations = _capabilities.getLocations(false);
+		List<String> locations = mAdapter.getLocations(false);
 		Log.d("lokace",locations.toString());
 		
 		int marginTop = 5;
@@ -88,14 +89,14 @@ public class LocationScreenActivity extends Activity {
 		super.onResume();
 		final int ID = Constants.BUTTON_ID;
 		//DEBUG: maybe saving on SDCard even after calling sever as a cache
-		XmlCreator xmlcreator = new XmlCreator(Constants.getCapabilities());
+		XmlCreator xmlcreator = new XmlCreator(Constants.getAdapter());
 		xmlcreator.saveXml(Environment.getExternalStorageDirectory().toString() + "/IHA/","komunikace.xml");
 		
 		Log.i("onResume",this.getLocalClassName());
 		
-		if(Constants.getCapabilities().isNewInit()){
-			ArrayList<String> Old = GetLocationsFromButtons(ID);
-			ArrayList<String> New = Constants.getCapabilities().getLocations(false);
+		if(Constants.getAdapter().isNewInit()){
+			List<String> Old = GetLocationsFromButtons(ID);
+			List<String> New = Constants.getAdapter().getLocations(false);
 			Log.d("Old",Old.toString());
 			Log.d("New", New.toString());
 			if(Old.size() != New.size()){
@@ -104,12 +105,12 @@ public class LocationScreenActivity extends Activity {
 				addLocationButton(New.get(0), ID + Old.size() + 1, 5);
 			}
 		}
-		if(Constants.getCapabilities().isNewLocationName()){
-			ArrayList<String> Old = GetLocationsFromButtons(ID);
-			ArrayList<String> New = Constants.getCapabilities().getLocations(false);
+		if(Constants.getAdapter().isNewLocationName()){
+			List<String> Old = GetLocationsFromButtons(ID);
+			List<String> New = Constants.getAdapter().getLocations(false);
 			Log.d("Old",Old.toString());
 			Log.d("New", New.toString());
-			ArrayList<String> diff = GetDiffOfLocatins(Old, New);
+			List<String> diff = GetDiffOfLocatins(Old, New);
 			Log.i("before",diff.get(0));
 			Log.i("after",diff.get(1));
 			try{
@@ -179,8 +180,8 @@ public class LocationScreenActivity extends Activity {
 	 * @param ID number of start id (end with first null)
 	 * @return arraylist with location names
 	 */
-	private ArrayList<String> GetLocationsFromButtons(int ID){
-		ArrayList<String> result = new ArrayList<String>();
+	private List<String> GetLocationsFromButtons(int ID){
+		List<String> result = new ArrayList<String>();
 		try{
 			for(int i = ID; i > 0; i++)
 				result.add(((Button)findViewById(i)).getText().toString());
@@ -196,8 +197,8 @@ public class LocationScreenActivity extends Activity {
 	 * @param New second list
 	 * @return pair of different items in list
 	 */
-	private ArrayList<String> GetDiffOfLocatins(ArrayList<String> Old, ArrayList<String> New){
-		ArrayList<String> result = new ArrayList<String>();
+	private List<String> GetDiffOfLocatins(List<String> Old, List<String> New){
+		List<String> result = new ArrayList<String>();
 		final int oSize = Old.size();
 		for(int x = oSize-1; x >= 0; x--){
 			final int nSize = New.size();

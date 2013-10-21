@@ -4,14 +4,14 @@
     <string name="app_name">IntelligentHomeAnywhere</string>
     <string name="app_id">1411635335720288</string>
     <!-- Titles -->
-    <string name="title_activity_locaction_screen">Locactions</string>
+    <string name="title_activity_locaction_screen">Locations</string>
     <string name="title_activity_data_of_locacion_screen">Devices</string>
     <string name="title_activity_notification">Notification</string>
     <string name="title_activity_add_sensor">Add Sensor</string>
     <string name="title_activity_sensor_detail">Sensor Detail</string>
     <string name="title_activity_add_adapter">Add Adapter</string>
     <string name="title_activity_registration">Registration</string>
-    <string name="title_activity_login_facebook">facebook</string>
+    <string name="title_activity_login_facebook">Facebook</string>
     <!-- Buttons -->
     <string name="splash_demo">Demo</string>
     <string name="login_login">Login</string>

@@ -8,7 +8,7 @@ import cz.vutbr.fit.intelligenthomeanywhere.R;
 
 public class LoginFacebookActivity extends FragmentActivity {
 
-	private MainFragment mainFragment;
+	private MainFragment mMainFragment;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -16,14 +16,14 @@ public class LoginFacebookActivity extends FragmentActivity {
 
 		if (savedInstanceState == null) {
 	        // Add the fragment on initial activity setup
-	        mainFragment = new MainFragment();
+	        mMainFragment = new MainFragment();
 	        getSupportFragmentManager()
 	        .beginTransaction()
-	        .add(android.R.id.content, mainFragment)
+	        .add(android.R.id.content, mMainFragment)
 	        .commit();
 	    } else {
 	        // Or set the fragment from restored state info
-	        mainFragment = (MainFragment) getSupportFragmentManager()
+	        mMainFragment = (MainFragment) getSupportFragmentManager()
 	        .findFragmentById(android.R.id.content);
 	    }
 

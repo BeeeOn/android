@@ -25,7 +25,6 @@
         android:layout_alignParentRight="true"
         android:layout_marginBottom="30dp"
         android:layout_marginRight="30dp"
-        android:onClick="demoMethod"
 		android:visibility="gone"
         android:text="@string/splash_demo" />
 
@@ -48,7 +47,6 @@
         android:layout_alignBaseline="@+id/splash_demo"
         android:layout_alignBottom="@+id/splash_demo"
         android:layout_toLeftOf="@+id/splash_demo"
-        android:onClick="refreshMethod"
 		android:visibility="gone"
         android:text="@string/splash_refresh" />
 

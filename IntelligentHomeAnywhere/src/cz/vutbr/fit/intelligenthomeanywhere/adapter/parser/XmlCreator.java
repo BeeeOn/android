@@ -8,20 +8,20 @@ import java.io.StringWriter;
 import org.xmlpull.v1.XmlSerializer;
 
 import android.util.Xml;
-import cz.vutbr.fit.intelligenthomeanywhere.adapter.Capabilities;
-import cz.vutbr.fit.intelligenthomeanywhere.adapter.device.Device;
+import cz.vutbr.fit.intelligenthomeanywhere.adapter.Adapter;
+import cz.vutbr.fit.intelligenthomeanywhere.adapter.device.BaseDevice;
 
 /**
- * Class for creating xml file from _capabilities object
+ * Class for creating xml file from Adapter object
  * @author ThinkDeep
  *
  */
 public class XmlCreator {
 
-	private Capabilities _capabilities;
+	private Adapter mAdapter;
 	
-	public XmlCreator(Capabilities cap){
-		_capabilities = cap;
+	public XmlCreator(Adapter cap){
+		mAdapter = cap;
 	}
 	
 	/**
@@ -35,18 +35,18 @@ public class XmlCreator {
 			serializer.setOutput(writer);
 			serializer.startDocument("UTF-8", null);
 			serializer.startTag(null, "adapter");
-			serializer.attribute(null,"id",_capabilities.getId());
+			serializer.attribute(null,"id", mAdapter.getId());
 				serializer.startTag(null, "version");
-				serializer.text(_capabilities.getVersion());
+				serializer.text(mAdapter.getVersion());
 				serializer.endTag(null, "version");
 			
 				serializer.startTag(null, "capabilities");
 					
-				for(Device d : _capabilities.devices){
+				for(BaseDevice d : mAdapter.devices){
 					serializer.startTag(null, "device");
-					serializer.attribute(null, "initialized", (d.getInit() ? "1" : "0"));
-					serializer.attribute(null, "type", d.getStringType());
-					if(!d.getInit())
+					serializer.attribute(null, "initialized", (d.isInitialized() ? "1" : "0"));
+					serializer.attribute(null, "type", "0x" + Integer.toHexString(d.getType()));
+					if(!d.isInitialized())
 						serializer.attribute(null, "involved", d.getInvolveTime());
 					
 						serializer.startTag(null, "location");
@@ -76,12 +76,12 @@ public class XmlCreator {
 						serializer.endTag(null, "network");
 						
 						serializer.startTag(null, "value");
-						serializer.text(d.deviceDestiny.getValue());
+						serializer.text(d.getValue());
 						serializer.endTag(null, "value");
 							
 						serializer.startTag(null, "logging");
-						serializer.attribute(null, "enabled", (d.deviceDestiny.getLog() ? "1" : "0"));
-						if(d.deviceDestiny.getLog())
+						serializer.attribute(null, "enabled", (d.isLogging() ? "1" : "0"));
+						if(d.isLogging())
 							serializer.text(d.getLog());
 						serializer.endTag(null, "logging");
 					serializer.endTag(null, "device");
