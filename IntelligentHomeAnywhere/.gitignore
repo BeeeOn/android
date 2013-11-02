@@ -1,3 +1,7 @@
 /bin/
 /gen/
-/doc/
+/doc/javadoc
+/doc/html
+/doc/latex
+*.list
+*.BackupManager

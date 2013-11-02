@@ -30,6 +30,11 @@ import cz.vutbr.fit.intelligenthomeanywhere.adapter.device.BaseDevice;
 import cz.vutbr.fit.intelligenthomeanywhere.view.NumberPicker;
 import cz.vutbr.fit.intelligenthomeanywhere.view.NumberPicker.OnChangedListener;
 
+/**
+ * Class that handle screen with detail of some sensor
+ * @author ThinkDeep
+ *
+ */
 public class SensorDetailActivity extends Activity {
 
 	//private int type = 0;
@@ -91,7 +96,7 @@ public class SensorDetailActivity extends Activity {
 				mainlayout.addView(graph);
 			}
 		}else{
-			//DEBUG: this should be used diffrend
+			//DEBUG: this should be used different
 			View view = new View(this);
 			LinearLayout.LayoutParams viewParams = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, 250);
 			view.setLayoutParams(viewParams);
@@ -111,7 +116,7 @@ public class SensorDetailActivity extends Activity {
 				String unit = (unitResource > 0) ? " " + getString(unitResource) : "";
 				
 				TextView lastValueLabel = new TextView(this);
-				lastValueLabel.setText(getString(R.string.sensordetail_last_value) + device.getValue() + unit);
+				lastValueLabel.setText(getString(R.string.sensordetail_last_value) + device.getStringValue() + unit);
 				lastValueLabel.setTextSize(getResources().getDimension(R.dimen.textsizesmaller));
 				LinearLayout.LayoutParams lastValueParams = new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
 				lastValueParams.setMargins(15, 10, 0, 0);
@@ -250,7 +255,7 @@ public class SensorDetailActivity extends Activity {
 	 * @return first letter of time unit (s - seconds, m - minutes, h - hours)
 	 */
 	private String GetRightTimeUnit(int timeInSecs){
-		if(timeInSecs >= 99){ // minuts
+		if(timeInSecs >= 99){ // minutes
 			if(timeInSecs >= 99*60){ // hours
 				return "h";
 			}else{
@@ -261,7 +266,7 @@ public class SensorDetailActivity extends Activity {
 	}
 
 	/**
-	 * Method for calculate current time to secs
+	 * Method for calculate current time to seconds
 	 * @return refresh time in seconds
 	 */
 	private int GetRightTimeValueInSecs(){
@@ -287,7 +292,7 @@ public class SensorDetailActivity extends Activity {
 	 */
 	private int GetRightTimeValue(int timeInSecs){
 		int result = 0;
-		if(timeInSecs >= 99){ // minuts
+		if(timeInSecs >= 99){ // minutes
 			if(timeInSecs >= 99*60){ // hours
 				result = (timeInSecs/60)/60;
 				if(result > 99)

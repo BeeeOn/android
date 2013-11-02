@@ -22,6 +22,11 @@ import cz.vutbr.fit.intelligenthomeanywhere.adapter.device.StateDevice;
 import cz.vutbr.fit.intelligenthomeanywhere.adapter.device.SwitchDevice;
 import cz.vutbr.fit.intelligenthomeanywhere.view.ToggleButtonOnClickListener;
 
+/**
+ * Class that handle screen with location data
+ * @author ThinkDeep
+ *
+ */
 public class DataOfLocationScreenActivity extends Activity {
 
 	private Adapter mAdapter;
@@ -111,7 +116,7 @@ public class DataOfLocationScreenActivity extends Activity {
 						if(temperatureLayout != null && temperatureLayout.getChildCount() > 0){
 							temperatureLayout.addView(getSplitter());
 						}
-						txtview.setText(device.getValue() + " " + getString(device.getUnitStringResource()) );
+						txtview.setText(device.getStringValue() + " " + getString(device.getUnitStringResource()) );
 						txtview.setLayoutParams(rightObjectParams);
 						devicelayout.addView(txtview);
 						temperatureLayout.addView(devicelayout);
@@ -124,7 +129,7 @@ public class DataOfLocationScreenActivity extends Activity {
 						if(humidityLayout != null && humidityLayout.getChildCount() > 0){
 							humidityLayout.addView(getSplitter());
 						}
-						txtview.setText(device.getValue() + " " + getString(device.getUnitStringResource()));
+						txtview.setText(device.getStringValue() + " " + getString(device.getUnitStringResource()));
 						txtview.setLayoutParams(rightObjectParams);
 						devicelayout.addView(txtview);
 						humidityLayout.addView(devicelayout);
@@ -137,7 +142,7 @@ public class DataOfLocationScreenActivity extends Activity {
 						if(pressureLayout != null && pressureLayout.getChildCount() > 0){
 							pressureLayout.addView(getSplitter());
 						}
-						txtview.setText(device.getValue() + " " + getString(device.getUnitStringResource()));
+						txtview.setText(device.getStringValue() + " " + getString(device.getUnitStringResource()));
 						txtview.setLayoutParams(rightObjectParams);
 						devicelayout.addView(txtview);
 						pressureLayout.addView(devicelayout);
@@ -182,7 +187,7 @@ public class DataOfLocationScreenActivity extends Activity {
 						if(illuminationLayout != null && illuminationLayout.getChildCount() > 0){
 							illuminationLayout.addView(getSplitter());
 						}
-						txtview.setText(device.getValue() + " " + getString(device.getUnitStringResource()));
+						txtview.setText(device.getStringValue() + " " + getString(device.getUnitStringResource()));
 						txtview.setLayoutParams(rightObjectParams);
 						devicelayout.addView(txtview);
 						illuminationLayout.addView(devicelayout);
@@ -195,7 +200,7 @@ public class DataOfLocationScreenActivity extends Activity {
 						if(noiseLayout != null && noiseLayout.getChildCount() > 0){
 							noiseLayout.addView(getSplitter());
 						}
-						txtview.setText(device.getValue() + " " + getString(device.getUnitStringResource()));
+						txtview.setText(device.getStringValue() + " " + getString(device.getUnitStringResource()));
 						txtview.setLayoutParams(rightObjectParams);
 						devicelayout.addView(txtview);
 						noiseLayout.addView(devicelayout);
@@ -208,7 +213,7 @@ public class DataOfLocationScreenActivity extends Activity {
 						if(emissionLayout != null && emissionLayout.getChildCount() > 0){
 							emissionLayout.addView(getSplitter());
 						}
-						txtview.setText(device.getValue() + " " + getString(device.getUnitStringResource()));
+						txtview.setText(device.getStringValue() + " " + getString(device.getUnitStringResource()));
 						txtview.setLayoutParams(rightObjectParams);
 						devicelayout.addView(txtview);
 						emissionLayout.addView(devicelayout);
@@ -248,6 +253,9 @@ public class DataOfLocationScreenActivity extends Activity {
 			this.finish();
 	}
 
+	/**
+	 * Add new device to the GUI
+	 */
 	public void onResume(){
 		super.onResume();
 		

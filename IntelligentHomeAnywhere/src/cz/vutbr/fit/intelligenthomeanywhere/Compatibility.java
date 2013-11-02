@@ -6,7 +6,7 @@ import android.os.Build;
 import android.view.View;
 
 /**
- * Methods for fixing various compatibility issues
+ * @brief Methods for fixing various compatibility issues
  * @author Robyer
  *
  */

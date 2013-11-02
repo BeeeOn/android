@@ -13,6 +13,10 @@ import android.widget.EditText;
 import cz.vutbr.fit.intelligenthomeanywhere.Constants;
 import cz.vutbr.fit.intelligenthomeanywhere.R;
 
+/**
+ * Class that handle adding new adapter to system
+ * @author ThinkDeep
+ */
 public class AddAdapterActivity extends Activity {
 
 	@Override

@@ -15,7 +15,7 @@ import cz.vutbr.fit.intelligenthomeanywhere.R;
 //import com.facebook.Session;
 
 /**
- * First logining class, controls first activity
+ * First sign in class, controls first activity
  * @author ThinkDeep
  *
  */
@@ -86,7 +86,7 @@ public class LoginActivity extends Activity {
 
 	/**
 	 * Check for access from server
-	 * @param name username to access
+	 * @param name UserName to access
 	 * @param password
 	 * @return true if access granted, else false
 	 */
@@ -96,7 +96,7 @@ public class LoginActivity extends Activity {
 	}
 	
 	/**
-	 * 
+	 * TODO: remove?
 	 * @return
 	 */
 	private boolean getFacebokAccessFromServer(){
@@ -108,7 +108,7 @@ public class LoginActivity extends Activity {
 	}
 	
 	/**
-	 * 
+	 * TODO: remove?
 	 * @return
 	 */
 	private boolean getGoogleAccessFromServer(){
@@ -117,7 +117,7 @@ public class LoginActivity extends Activity {
 	}
 	
 	/**
-	 * 
+	 * TODO: remove?
 	 * @return
 	 */
 	private boolean getMojeIDAccessFromServer(){

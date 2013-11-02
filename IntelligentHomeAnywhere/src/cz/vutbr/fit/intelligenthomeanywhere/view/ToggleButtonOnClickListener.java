@@ -1,3 +1,6 @@
+/**
+ * @brief Package for non-standard controllers and views
+ */
 package cz.vutbr.fit.intelligenthomeanywhere.view;
 
 import android.view.View;
@@ -8,10 +11,19 @@ import cz.vutbr.fit.intelligenthomeanywhere.Constants;
 import cz.vutbr.fit.intelligenthomeanywhere.R;
 import cz.vutbr.fit.intelligenthomeanywhere.adapter.device.BaseDevice;
 
+/**
+ * @brief Class for listener of ToggleButtons
+ * @author ThinkDeep
+ *
+ */
 public class ToggleButtonOnClickListener implements OnClickListener{
 
 	private String mName;
 	
+	/**
+	 * Constructor
+	 * @param name
+	 */
 	public ToggleButtonOnClickListener(String name) {
 		mName = name;
 	}

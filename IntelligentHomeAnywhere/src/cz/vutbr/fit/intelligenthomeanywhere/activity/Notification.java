@@ -9,6 +9,11 @@ import android.view.Window;
 import android.widget.Button;
 import cz.vutbr.fit.intelligenthomeanywhere.R;
 
+/**
+ * Class that handle notification for user
+ * @author ThinkDeep
+ *
+ */
 public class Notification extends Activity {
 
 	@Override

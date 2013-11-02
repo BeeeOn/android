@@ -3,9 +3,19 @@ package cz.vutbr.fit.intelligenthomeanywhere.adapter.device;
 import android.graphics.Color;
 import cz.vutbr.fit.intelligenthomeanywhere.Constants;
 import cz.vutbr.fit.intelligenthomeanywhere.R;
-
+/**
+ * Class that extends BaseDevice for State sensor
+ * @author ThinkDeep
+ *
+ */
 public class StateDevice extends BaseDevice {
 
+	private String mValue;
+	
+	public void setValue(String value){
+		mValue = value;
+	}
+	
 	public static final String STATE_ON = "ON";
 	public static final String STATE_OFF = "OFF";
 	
@@ -28,6 +38,27 @@ public class StateDevice extends BaseDevice {
 	@Override
 	public int getUnitStringResource() {
 		return 0; // TODO: or "open"/"closed" depending on actual value?
+	}
+	
+
+	@Override
+	public int getRawIntValue() {
+		return 0;
+	}
+
+	@Override
+	public float getRawFloatValue() {
+		return 0;
+	}
+
+	@Override
+	public void setValue(int value) {
+		Integer.toString(value);
+	}
+	
+	@Override
+	public String getStringValue() {
+		return mValue;
 	}
 	
 	/**

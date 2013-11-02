@@ -13,6 +13,10 @@ import cz.vutbr.fit.intelligenthomeanywhere.Constants;
 import cz.vutbr.fit.intelligenthomeanywhere.R;
 import cz.vutbr.fit.intelligenthomeanywhere.adapter.device.BaseDevice;
 
+/**
+ * Class that handle screen to changing name of location
+ * @author ThinkDeep
+ */
 public class ChangeLocationNameActivity extends Activity {
 	private String mOldLocation = null;
 

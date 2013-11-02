@@ -2,15 +2,31 @@ package cz.vutbr.fit.intelligenthomeanywhere.adapter.device;
 
 import cz.vutbr.fit.intelligenthomeanywhere.Constants;
 import cz.vutbr.fit.intelligenthomeanywhere.R;
-
+/**
+ * Class that extends BaseDevice for switch sensor
+ * @author ThinkDeep
+ *
+ */
 public class SwitchDevice extends BaseDevice {
 
+	private String mValue;
+	
+	@Override
+	public void setValue(String value){
+		mValue = value;
+	}
+	
 	public static final String STATE_ON = "ON";
 	public static final String STATE_OFF = "OFF";
 	
 	@Override
 	public int getType() {
 		return Constants.TYPE_SWITCH;
+	}
+	
+	@Override
+	public String getStringValue() {
+		return mValue;
 	}
 	
 	@Override
@@ -27,6 +43,21 @@ public class SwitchDevice extends BaseDevice {
 	@Override
 	public int getUnitStringResource() {
 		return 0; // TODO: or "on"/"off" depending on actual value?
+	}
+	
+	@Override
+	public int getRawIntValue() {
+		return 0;
+	}
+
+	@Override
+	public float getRawFloatValue() {
+		return 0;
+	}
+	
+	@Override
+	public void setValue(int value) {
+		Integer.toString(value);
 	}
 	
 	/**
