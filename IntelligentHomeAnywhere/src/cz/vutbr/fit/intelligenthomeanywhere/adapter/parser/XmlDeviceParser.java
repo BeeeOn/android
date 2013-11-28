@@ -27,7 +27,7 @@ import cz.vutbr.fit.intelligenthomeanywhere.adapter.device.TemperatureDevice;
 import cz.vutbr.fit.intelligenthomeanywhere.adapter.device.UnknownDevice;
 
 /**
- * Class for parsing xml file for device
+ * Class for parsing XML file for device
  * @author Robyer
  */
 public class XmlDeviceParser {
@@ -95,7 +95,7 @@ public class XmlDeviceParser {
 	
 	/**
 	 * Class constructor.
-	 * @param namespaces - use namespaces
+	 * @param namespaces - use NameSpaces
 	 * @throws XmlPullParserException
 	 */
     public XmlDeviceParser(boolean namespaces) throws XmlPullParserException {
@@ -104,7 +104,7 @@ public class XmlDeviceParser {
     }
 	
     /**
-     * Parses inputstream into Adapter object.
+     * Parses InputStream into Adapter object.
      * @param input - input stream
      * @return Adapter
      * @throws XmlPullParserException
@@ -300,7 +300,7 @@ public class XmlDeviceParser {
 	}
 	
 	/**
-	 * Skips whole element and subelements.
+	 * Skips whole element and sub-elements.
 	 * @throws XmlPullParserException
 	 * @throws IOException
 	 */

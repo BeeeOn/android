@@ -1,3 +1,7 @@
+/**
+ * @brief Package for manipulation with XML and parsers
+ */
+
 package cz.vutbr.fit.intelligenthomeanywhere.adapter.parser;
 
 import java.io.DataOutputStream;
@@ -12,7 +16,7 @@ import cz.vutbr.fit.intelligenthomeanywhere.adapter.Adapter;
 import cz.vutbr.fit.intelligenthomeanywhere.adapter.device.BaseDevice;
 
 /**
- * Class for creating xml file from Adapter object
+ * Class for creating XML file from Adapter object
  * @author ThinkDeep
  *
  */
@@ -25,8 +29,8 @@ public class XmlCreator {
 	}
 	
 	/**
-	 * Method for creating xml file (string)
-	 * @return String contains xml file
+	 * Method for creating XML file (string)
+	 * @return String contains XML file
 	 */
 	public String create(){
 		XmlSerializer serializer = Xml.newSerializer();
@@ -76,7 +80,7 @@ public class XmlCreator {
 						serializer.endTag(null, "network");
 						
 						serializer.startTag(null, "value");
-						serializer.text(d.getValue());
+						serializer.text(d.getStringValue());
 						serializer.endTag(null, "value");
 							
 						serializer.startTag(null, "logging");
@@ -97,8 +101,8 @@ public class XmlCreator {
 	}
 	
 	/**
-	 * Method saving xml file with filename on a phone to dir folder
-	 * @param filename name of new writing xml file
+	 * Method saving XML file with filename on a phone to folder
+	 * @param filename name of new writing XML file
 	 * @param dir is path to the file
 	 */
 	public void saveXml(String dir, String filename){

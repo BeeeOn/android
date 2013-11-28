@@ -33,8 +33,9 @@ import cz.vutbr.fit.intelligenthomeanywhere.R;
 //import com.facebook.Session;
 
 /**
- * First logining class, controls first activity
+ * First sign in class, controls first activity
  * @author ThinkDeep
+ * @author Leopold Podmolík
  *
  */
 public class LoginActivity extends Activity {
@@ -87,7 +88,11 @@ public class LoginActivity extends Activity {
 
 	/**
 	 * Check user login info, and open app - onClick
-	 * @param v
+	 * Check for access from server
+	 * @param v 
+	 * @param name UserName to access
+	 * @param password
+	 * @return true if access granted, else false
 	 */
 	public void loginMethod(View v){
 		boolean access = false;
@@ -103,7 +108,7 @@ public class LoginActivity extends Activity {
 	}
 
 	/**
-	 * 
+	 * TODO: remove?
 	 * @return
 	 * @throws TimeoutException 
 	 * @throws ExecutionException 
@@ -137,9 +142,18 @@ public class LoginActivity extends Activity {
 	    }
 	    return names;
 	}
+	/**
+	 * TODO: remove?
+	 * @return
+	 */
+	private boolean getGoogleAccessFromServer(){
+		//TODO: get access via google
+		return false;
+
+	}
 	
 	/**
-	 * 
+	 * TODO: remove?
 	 * @return
 	 */
 	private boolean getMojeIDAccessFromServer(View v){

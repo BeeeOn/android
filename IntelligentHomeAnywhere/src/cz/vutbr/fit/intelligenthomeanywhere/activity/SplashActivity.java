@@ -1,3 +1,6 @@
+/**
+ * @brief Package for android GUI sources (activities)
+ */
 package cz.vutbr.fit.intelligenthomeanywhere.activity;
 
 import java.io.File;
@@ -24,6 +27,11 @@ import android.widget.Toast;
 import cz.vutbr.fit.intelligenthomeanywhere.Constants;
 import cz.vutbr.fit.intelligenthomeanywhere.R;
 
+/**
+ * Class that handle long processes via GUI
+ * @author ThinkDeep
+ *
+ */
 public class SplashActivity extends Activity {
 
 	@Override
@@ -37,7 +45,7 @@ public class SplashActivity extends Activity {
 		Bundle bundle = getIntent().getExtras();
 		int switcher = 0;
 		if(bundle != null)
-			switcher =bundle.getInt(Constants.SPLASH); 
+			switcher = bundle.getInt(Constants.SPLASH); 
 		switch(switcher){
 			case 0:
 				//TODO: call to server for init info
@@ -119,7 +127,7 @@ public class SplashActivity extends Activity {
 	}
 	
 	/**
-	 * Check if is internet connection On or Off
+	 * Check if is Internet connection On or Off
 	 * @return true if On, otherwise Off
 	 */
 	private boolean isNetworkAvailable() {
@@ -129,8 +137,8 @@ public class SplashActivity extends Activity {
 	}
 	
 	/**
-	 * Check for demodata on sdcard of phone
-	 * @return true if everythink OK
+	 * Check for demo data on SDcard of phone
+	 * @return true if everything is OK
 	 */
 	private boolean checkDemoData(){
 		String path = Environment.getExternalStorageDirectory().toString() + "/IHA/";

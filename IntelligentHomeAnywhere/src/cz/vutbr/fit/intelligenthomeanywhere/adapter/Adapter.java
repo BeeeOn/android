@@ -1,3 +1,6 @@
+/**
+ * @brief Package for adapter manipulation
+ */
 package cz.vutbr.fit.intelligenthomeanywhere.adapter;
 
 import java.util.ArrayList;
@@ -7,11 +10,14 @@ import cz.vutbr.fit.intelligenthomeanywhere.adapter.device.BaseDevice;
 import cz.vutbr.fit.intelligenthomeanywhere.adapter.parser.XmlCreator;
 
 /**
- * Class for parsed data from xml file of adapters
+ * @brief Class for parsed data from XML file of adapters
  * @author ThinkDeep
  *
  */
 public class Adapter {
+	/**
+	 * List of devices
+	 */
 	public List<BaseDevice> devices;
 	private String mId;
 	private String mVersion;
@@ -30,6 +36,9 @@ public class Adapter {
 		mNewDeviceNameLabel = null;
 	}
 	
+	/**
+	 * Debug method
+	 */
 	public String toString(){
 		String result = "";
 		
@@ -61,16 +70,34 @@ public class Adapter {
 		return result;
 	}
 	
+	/**
+	 * Setting id of adapter
+	 * @param ID
+	 */
 	public void setId(String ID){
 		mId = ID;
 	}
+	
+	/**
+	 * Returning id of adapter
+	 * @return id
+	 */
 	public String getId(){
 		return mId;
 	}
 	
+	/**
+	 * Setting version of protocol
+	 * @param Version
+	 */
 	public void setVersion(String Version){
 		mVersion = Version;
 	}
+	
+	/**
+	 * Returning version of protocol
+	 * @return version
+	 */
 	public String getVersion(){
 		return mVersion;
 	}
@@ -110,9 +137,9 @@ public class Adapter {
 	}
 	
 	/**
-	 * Method for getting list of locations (first occurence)
+	 * Method for getting list of locations (first occurrence)
 	 * @param notnull determines if it can return null value, or if it exclude
-	 * @return arraylist of strings with unique locations
+	 * @return ArayList of strings with unique locations
 	 */
 	public List<String> getLocations(boolean notnull){
 		List<String> locations = new ArrayList<String>();
@@ -140,13 +167,17 @@ public class Adapter {
 		}
 		return mNewInit;
 	}
+	
+	/**
+	 * Setting flag that there is new initialization
+	 */
 	public void setNewInit(){
 		mNewInit = true;
 	}
 	
 	/**
 	 * Check if has been change name of location buttons
-	 * @return true if si new name of location in otherwise return false
+	 * @return true if is new name of location in otherwise return false
 	 */
 	public boolean isNewLocationName(){
 		if(mNewLocationName){
@@ -170,10 +201,20 @@ public class Adapter {
 		}
 		return false;
 	}
+	
+	/**
+	 * Setting device name
+	 * @param newName
+	 */
 	public void setNewDeviceName(String newName){
 		mNewDeviceNameLabel = newName;
 		mNewDeviceName = true;
 	}
+	
+	/**
+	 * Returning device name
+	 * @return device name
+	 */
 	public String getNewDeviceName(){
 		String result = mNewDeviceNameLabel;
 		mNewDeviceNameLabel = null;
@@ -181,8 +222,8 @@ public class Adapter {
 	}
 	
 	/**
-	 * Return object as xml file
-	 * @return created xml string
+	 * Return object as XML file
+	 * @return created XML string
 	 */
 	public String getXml(){
 		XmlCreator xmlcreator = new XmlCreator(this);
@@ -192,7 +233,7 @@ public class Adapter {
 	/**
 	 * Method for search all adapters by location
 	 * @param name of location
-	 * @return arraylist with all adapters with needed location
+	 * @return ArrayList with all adapters with needed location
 	 */
 	public List<BaseDevice> getDevicesByLocation(String name){
 		List<BaseDevice> result = new ArrayList<BaseDevice>();

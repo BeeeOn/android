@@ -17,6 +17,10 @@ import cz.vutbr.fit.intelligenthomeanywhere.Constants;
 import cz.vutbr.fit.intelligenthomeanywhere.R;
 import cz.vutbr.fit.intelligenthomeanywhere.adapter.device.BaseDevice;
 
+/**
+ * Class that handle adding new sensor to the system
+ * @author ThinkDeep
+ */
 public class AddSensorActivity extends Activity {
 
 	@Override

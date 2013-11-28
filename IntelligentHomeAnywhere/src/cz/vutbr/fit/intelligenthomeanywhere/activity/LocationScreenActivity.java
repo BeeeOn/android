@@ -29,7 +29,7 @@ public class LocationScreenActivity extends Activity {
 	private Adapter mAdapter;
 	
 	/**
-	 * Call xml parser to file on sdcard
+	 * Call XML parser to file on SDcard
 	 */
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -85,6 +85,9 @@ public class LocationScreenActivity extends Activity {
 		return true;
 	}
 
+	/**
+	 * Repaint GUI
+	 */
 	public void onResume(){
 		super.onResume();
 		final int ID = Constants.BUTTON_ID;
@@ -125,7 +128,7 @@ public class LocationScreenActivity extends Activity {
 	}
 	
 	/**
-	 * Draw a button to gui
+	 * Draw a button to GUI
 	 * @param s specific location name
 	 * @param ID id of button
 	 * @param marginTop margin of the button
@@ -178,7 +181,7 @@ public class LocationScreenActivity extends Activity {
 	/**
 	 * Return list of location names of buttons
 	 * @param ID number of start id (end with first null)
-	 * @return arraylist with location names
+	 * @return ArrayList with location names
 	 */
 	private List<String> GetLocationsFromButtons(int ID){
 		List<String> result = new ArrayList<String>();
@@ -219,7 +222,7 @@ public class LocationScreenActivity extends Activity {
 	 * Method return button with specific name (label) and ID
 	 * @param name label of the searching button for
 	 * @param ID start of ID, ID has to be less or equal to searching for
-	 * @return button with specific properities
+	 * @return button with specific properties
 	 */
 	private Button GetButtonByName(String name, int ID){
 		Button result = null;

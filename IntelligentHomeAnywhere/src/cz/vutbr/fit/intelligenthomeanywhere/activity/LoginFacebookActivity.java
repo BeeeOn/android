@@ -5,7 +5,6 @@ import android.support.v4.app.FragmentActivity;
 import android.view.Menu;
 import cz.vutbr.fit.intelligenthomeanywhere.R;
 
-
 public class LoginFacebookActivity extends FragmentActivity {
 
 	private MainFragment mMainFragment;
