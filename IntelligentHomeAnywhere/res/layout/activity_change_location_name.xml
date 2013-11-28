@@ -38,7 +38,6 @@
 	        android:id="@+id/change_location_name_button"
 	        android:layout_width="wrap_content"
 	        android:layout_height="wrap_content"
-	        android:onClick="changeMethod"
 	        android:text="@string/change_location_name_button" />
 	    
 	</LinearLayout>

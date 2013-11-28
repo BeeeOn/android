@@ -9,8 +9,6 @@
     android:background="@color/blue"
     tools:context=".LoginActivity" >
 
-    
-
     <TextView
         android:id="@+id/login_app_name"
         android:layout_width="wrap_content"
@@ -21,76 +19,36 @@
         android:text="@string/login_app_name"
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
-    <EditText
-        android:id="@+id/login_user_name"
+    <TextView
+        android:id="@+id/login_app_sign_in"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
+        android:layout_alignLeft="@+id/login_app_name"
         android:layout_below="@+id/login_app_name"
         android:layout_marginTop="16dp"
-        android:inputType="textEmailAddress|textPersonName|textNoSuggestions"
-        android:ems="10"
-        android:hint="@string/login_user_name_hint" >
+        android:text="@string/login_app_sign_in" />
 
-        <requestFocus />
-    </EditText>
-
-    <EditText
-        android:id="@+id/login_password"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/login_user_name"
-        android:layout_below="@+id/login_user_name"
+    <ImageButton
+        android:id="@+id/login_app_btn_google"
+        android:layout_width="70dp"
+        android:layout_height="64dp"
+        android:layout_alignLeft="@+id/login_app_sign_in"
+        android:layout_below="@+id/login_app_sign_in"
+        android:layout_marginLeft="29dp"
         android:layout_marginTop="24dp"
-        android:ems="10"
-        android:hint="@string/login_password_hint"
-        android:inputType="textPassword" />
+        android:background="@null"
+        android:scaleType="fitXY"
+        android:src="@drawable/ic_google_ac" android:contentDescription="TODO"/>
 
-    <TextView
-        android:id="@+id/login_or_use"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/login_password"
-        android:layout_below="@+id/login_password"
-        android:layout_marginTop="14dp"
-        android:text="@string/login_or_use"
-        android:textAppearance="?android:attr/textAppearanceSmall" />
-
-    <RadioGroup
-        android:id="@+id/login_radioGroup"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/login_or_use"
-        android:layout_below="@+id/login_or_use" >
-
-        <RadioButton
-            android:id="@+id/login_radio_facebook"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:checked="true"
-            android:text="@string/login_radio_facebook" />
-
-        <RadioButton
-            android:id="@+id/login_radio_google"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/login_radio_google" />
-
-        <RadioButton
-            android:id="@+id/login_radio_mojeid"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/login_radio_mojeid" />
-
-    </RadioGroup>
-
-    <Button
-        android:id="@+id/login_login"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/login_radioGroup"
-        android:layout_toRightOf="@+id/login_user_name"
-        android:onClick="LoginMethod"
-        android:text="@string/login_login" />
+    <ImageButton
+        android:id="@+id/login_app_btn_mojeid"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        android:layout_alignBottom="@+id/login_app_btn_google"
+        android:layout_alignRight="@+id/login_app_name"
+        android:layout_alignTop="@+id/login_app_btn_google"
+        android:background="@null"
+        android:scaleType="fitXY"
+        android:src="@drawable/ic_mojeid" />
 
 </RelativeLayout>

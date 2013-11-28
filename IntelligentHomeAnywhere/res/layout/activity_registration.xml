@@ -90,7 +90,6 @@
         android:layout_below="@+id/registration_spinner"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="10dp"
-        android:onClick="registrationMethod"
         android:text="@string/registration_button" />
 
 </RelativeLayout>
