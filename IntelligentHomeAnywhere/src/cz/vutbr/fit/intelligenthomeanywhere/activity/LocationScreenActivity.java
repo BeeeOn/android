@@ -10,14 +10,15 @@ import android.os.Environment;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
+import android.view.ViewGroup.LayoutParams;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import cz.vutbr.fit.intelligenthomeanywhere.Compatibility;
 import cz.vutbr.fit.intelligenthomeanywhere.Constants;
-import cz.vutbr.fit.intelligenthomeanywhere.R;
 import cz.vutbr.fit.intelligenthomeanywhere.adapter.Adapter;
 import cz.vutbr.fit.intelligenthomeanywhere.adapter.parser.XmlCreator;
 import cz.vutbr.fit.intelligenthomeanywhere.adapter.parser.XmlDeviceParser;
+import cz.vutbr.fit.intelligenthomeanywhere.R;
 
 /**
  * Activity class for choosing location
@@ -88,6 +89,7 @@ public class LocationScreenActivity extends Activity {
 	/**
 	 * Repaint GUI
 	 */
+	@Override
 	public void onResume(){
 		super.onResume();
 		final int ID = Constants.BUTTON_ID;
@@ -145,7 +147,7 @@ public class LocationScreenActivity extends Activity {
 		LinearLayout mylayout = (LinearLayout)findViewById(R.id.location_scroll);
 		mylayout.setOrientation(LinearLayout.VERTICAL);
 		
-		LinearLayout.LayoutParams params_btn = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,LinearLayout.LayoutParams.WRAP_CONTENT);
+		LinearLayout.LayoutParams params_btn = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT,LayoutParams.WRAP_CONTENT);
 		params_btn.setMargins(0, marginTop, 0, 0);
 		button.setLayoutParams(params_btn);
 		button.setOnClickListener(new View.OnClickListener() {

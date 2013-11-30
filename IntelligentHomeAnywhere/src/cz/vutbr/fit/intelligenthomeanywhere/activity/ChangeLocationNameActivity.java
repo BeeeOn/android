@@ -10,8 +10,8 @@ import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
 import cz.vutbr.fit.intelligenthomeanywhere.Constants;
-import cz.vutbr.fit.intelligenthomeanywhere.R;
 import cz.vutbr.fit.intelligenthomeanywhere.adapter.device.BaseDevice;
+import cz.vutbr.fit.intelligenthomeanywhere.R;
 
 /**
  * Class that handle screen to changing name of location

@@ -25,10 +25,10 @@ import com.jjoe64.graphview.LineGraphView;
 
 import cz.vutbr.fit.intelligenthomeanywhere.Compatibility;
 import cz.vutbr.fit.intelligenthomeanywhere.Constants;
-import cz.vutbr.fit.intelligenthomeanywhere.R;
 import cz.vutbr.fit.intelligenthomeanywhere.adapter.device.BaseDevice;
 import cz.vutbr.fit.intelligenthomeanywhere.view.NumberPicker;
 import cz.vutbr.fit.intelligenthomeanywhere.view.NumberPicker.OnChangedListener;
+import cz.vutbr.fit.intelligenthomeanywhere.R;
 
 /**
  * Class that handle screen with detail of some sensor
@@ -57,7 +57,7 @@ public class SensorDetailActivity extends Activity {
 		TextView txtvwLocationLabel = new TextView(this);
 		txtvwLocationLabel.setText(device.getLocation());
 		txtvwLocationLabel.setTextSize(getResources().getDimension(R.dimen.textsize));
-		LinearLayout.LayoutParams txtvwLocationParams = new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+		LinearLayout.LayoutParams txtvwLocationParams = new LinearLayout.LayoutParams(android.view.ViewGroup.LayoutParams.WRAP_CONTENT, android.view.ViewGroup.LayoutParams.WRAP_CONTENT);
 		txtvwLocationParams.setMargins(15, 10, 0, 10);
 		txtvwLocationLabel.setLayoutParams(txtvwLocationParams);
 		mainlayout.addView(txtvwLocationLabel);
@@ -90,7 +90,7 @@ public class SensorDetailActivity extends Activity {
 
 				((LineGraphView) graph).setDrawBackground(true);
 				((LineGraphView) graph).setBackgroundColor(getResources().getColor(R.color.darkblue));
-				LinearLayout.LayoutParams graphParams = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT,300);
+				LinearLayout.LayoutParams graphParams = new LinearLayout.LayoutParams(android.view.ViewGroup.LayoutParams.MATCH_PARENT,300);
 				graphParams.setMargins(10, 0, 10, 0);
 				graph.setLayoutParams(graphParams);
 				mainlayout.addView(graph);
@@ -98,7 +98,7 @@ public class SensorDetailActivity extends Activity {
 		}else{
 			//DEBUG: this should be used different
 			View view = new View(this);
-			LinearLayout.LayoutParams viewParams = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, 250);
+			LinearLayout.LayoutParams viewParams = new LinearLayout.LayoutParams(android.view.ViewGroup.LayoutParams.MATCH_PARENT, 250);
 			view.setLayoutParams(viewParams);
 			mainlayout.addView(view);
 		}
@@ -118,7 +118,7 @@ public class SensorDetailActivity extends Activity {
 				TextView lastValueLabel = new TextView(this);
 				lastValueLabel.setText(getString(R.string.sensordetail_last_value) + device.getStringValue() + unit);
 				lastValueLabel.setTextSize(getResources().getDimension(R.dimen.textsizesmaller));
-				LinearLayout.LayoutParams lastValueParams = new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+				LinearLayout.LayoutParams lastValueParams = new LinearLayout.LayoutParams(android.view.ViewGroup.LayoutParams.WRAP_CONTENT, android.view.ViewGroup.LayoutParams.WRAP_CONTENT);
 				lastValueParams.setMargins(15, 10, 0, 0);
 				lastValueLabel.setLayoutParams(lastValueParams);
 				mainlayout.addView(lastValueLabel);
@@ -140,18 +140,18 @@ public class SensorDetailActivity extends Activity {
 		TextView refreshTimeLabel = new TextView(this);
 		refreshTimeLabel.setText(getString(R.string.sensordetail_refresh_time));
 		refreshTimeLabel.setTextSize(getResources().getDimension(R.dimen.textsizesmaller));
-		LinearLayout.LayoutParams refreshTimeParams = new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT,LayoutParams.WRAP_CONTENT);
+		LinearLayout.LayoutParams refreshTimeParams = new LinearLayout.LayoutParams(android.view.ViewGroup.LayoutParams.WRAP_CONTENT,android.view.ViewGroup.LayoutParams.WRAP_CONTENT);
 		refreshTimeParams.gravity = Gravity.CENTER_VERTICAL;
 		refreshTimeLabel.setLayoutParams(refreshTimeParams);
 		
-		LinearLayout.LayoutParams refreshLayoutParams = new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+		LinearLayout.LayoutParams refreshLayoutParams = new LinearLayout.LayoutParams(android.view.ViewGroup.LayoutParams.WRAP_CONTENT, android.view.ViewGroup.LayoutParams.WRAP_CONTENT);
 		refreshLayoutParams.setMargins(15, 0, 0, 0);
 		refreshLayout.setLayoutParams(refreshLayoutParams);
 		refreshLayout.addView(refreshTimeLabel);
 		
 		NumberPicker numberPicker = new NumberPicker(this);
 		numberPicker.setId(Constants.NUMBERPICKER_IDII);
-		LinearLayout.LayoutParams numberPickerParams = new LinearLayout.LayoutParams(80, LayoutParams.WRAP_CONTENT);
+		LinearLayout.LayoutParams numberPickerParams = new LinearLayout.LayoutParams(80, android.view.ViewGroup.LayoutParams.WRAP_CONTENT);
 		numberPickerParams.setMargins(25, 0, 0, 0);
 		numberPicker.setLayoutParams(numberPickerParams);
 		numberPicker.setRange(-1, 100);
@@ -195,7 +195,7 @@ public class SensorDetailActivity extends Activity {
 		timeUnitLabel.setId(ID);
 		timeUnitLabel.setText(GetRightTimeUnit(device.getRefresh()));
 		timeUnitLabel.setTextSize(getResources().getDimension(R.dimen.textsize));
-		LinearLayout.LayoutParams tULparams = new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT,LayoutParams.WRAP_CONTENT);
+		LinearLayout.LayoutParams tULparams = new LinearLayout.LayoutParams(android.view.ViewGroup.LayoutParams.WRAP_CONTENT,android.view.ViewGroup.LayoutParams.WRAP_CONTENT);
 		tULparams.gravity = Gravity.CENTER_VERTICAL;
 		timeUnitLabel.setLayoutParams(tULparams);
 		refreshLayout.addView(timeUnitLabel);
@@ -204,7 +204,7 @@ public class SensorDetailActivity extends Activity {
 
 		LinearLayout batteryLayout = new LinearLayout(this);
 		batteryLayout.setOrientation(LinearLayout.VERTICAL);
-		batteryLayout.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT,LayoutParams.WRAP_CONTENT));
+		batteryLayout.setLayoutParams(new LinearLayout.LayoutParams(android.view.ViewGroup.LayoutParams.MATCH_PARENT,android.view.ViewGroup.LayoutParams.WRAP_CONTENT));
 
 		Compatibility.setBackground(batteryLayout, getResources().getDrawable(R.drawable.shape));
 		
@@ -212,7 +212,7 @@ public class SensorDetailActivity extends Activity {
 		batteryState.setText(getString(R.string.sensordetail_battery_state));
 		batteryState.setTextSize(getResources().getDimension(R.dimen.textsizesmaller));
 		batteryState.setGravity(Gravity.CENTER_HORIZONTAL);
-		LinearLayout.LayoutParams batteryStateParams = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT,LayoutParams.MATCH_PARENT);
+		LinearLayout.LayoutParams batteryStateParams = new LinearLayout.LayoutParams(android.view.ViewGroup.LayoutParams.MATCH_PARENT,android.view.ViewGroup.LayoutParams.MATCH_PARENT);
 		batteryStateParams.setMargins(0, 5, 0, 0);
 		batteryState.setLayoutParams(batteryStateParams);
 		batteryLayout.addView(batteryState);
@@ -220,7 +220,7 @@ public class SensorDetailActivity extends Activity {
 		ProgressBar progressBar = new ProgressBar(this,null,android.R.attr.progressBarStyleHorizontal);
 		progressBar.setProgress(device.getBattery());
 
-		LinearLayout.LayoutParams progressBarParams = new LinearLayout.LayoutParams(300, LayoutParams.WRAP_CONTENT);
+		LinearLayout.LayoutParams progressBarParams = new LinearLayout.LayoutParams(300, android.view.ViewGroup.LayoutParams.WRAP_CONTENT);
 		progressBarParams.gravity = Gravity.CENTER_HORIZONTAL;
 		progressBarParams.setMargins(0, 5, 0, 5);
 		progressBar.setLayoutParams(progressBarParams);

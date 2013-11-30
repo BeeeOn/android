@@ -12,6 +12,7 @@ public class StateDevice extends BaseDevice {
 
 	private String mValue;
 	
+	@Override
 	public void setValue(String value){
 		mValue = value;
 	}

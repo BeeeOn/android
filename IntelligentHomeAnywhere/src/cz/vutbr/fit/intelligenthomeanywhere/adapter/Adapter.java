@@ -39,6 +39,7 @@ public class Adapter {
 	/**
 	 * Debug method
 	 */
+	@Override
 	public String toString(){
 		String result = "";
 		

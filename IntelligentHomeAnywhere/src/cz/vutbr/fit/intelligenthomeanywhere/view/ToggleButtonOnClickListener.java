@@ -8,8 +8,8 @@ import android.view.View.OnClickListener;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 import cz.vutbr.fit.intelligenthomeanywhere.Constants;
-import cz.vutbr.fit.intelligenthomeanywhere.R;
 import cz.vutbr.fit.intelligenthomeanywhere.adapter.device.BaseDevice;
+import cz.vutbr.fit.intelligenthomeanywhere.R;
 
 /**
  * @brief Class for listener of ToggleButtons

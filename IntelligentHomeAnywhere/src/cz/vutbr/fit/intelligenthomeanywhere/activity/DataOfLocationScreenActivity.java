@@ -15,12 +15,12 @@ import android.widget.TextView;
 import android.widget.ToggleButton;
 import cz.vutbr.fit.intelligenthomeanywhere.Compatibility;
 import cz.vutbr.fit.intelligenthomeanywhere.Constants;
-import cz.vutbr.fit.intelligenthomeanywhere.R;
 import cz.vutbr.fit.intelligenthomeanywhere.adapter.Adapter;
 import cz.vutbr.fit.intelligenthomeanywhere.adapter.device.BaseDevice;
 import cz.vutbr.fit.intelligenthomeanywhere.adapter.device.StateDevice;
 import cz.vutbr.fit.intelligenthomeanywhere.adapter.device.SwitchDevice;
 import cz.vutbr.fit.intelligenthomeanywhere.view.ToggleButtonOnClickListener;
+import cz.vutbr.fit.intelligenthomeanywhere.R;
 
 /**
  * Class that handle screen with location data
@@ -256,6 +256,7 @@ public class DataOfLocationScreenActivity extends Activity {
 	/**
 	 * Add new device to the GUI
 	 */
+	@Override
 	public void onResume(){
 		super.onResume();
 		
