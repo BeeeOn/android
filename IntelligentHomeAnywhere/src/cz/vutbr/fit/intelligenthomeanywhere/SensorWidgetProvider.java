@@ -23,10 +23,10 @@ public class SensorWidgetProvider extends AppWidgetProvider {
 	public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
 
 		// Get all ids
-		ComponentName thisWidget = new ComponentName(context, SensorWidgetProvider.class);
-		int[] allWidgetIds = appWidgetManager.getAppWidgetIds(thisWidget);
+		//ComponentName thisWidget = new ComponentName(context, SensorWidgetProvider.class);
+		//int[] allWidgetIds = appWidgetManager.getAppWidgetIds(thisWidget);
 		
-		for (int widgetId : allWidgetIds) {
+		for (int widgetId : appWidgetIds) {
 			RemoteViews remoteViews = new RemoteViews(context.getPackageName(), R.layout.widget_sensor);
 			
 			// TODO: use real data
@@ -55,11 +55,10 @@ public class SensorWidgetProvider extends AppWidgetProvider {
 			
 			// Register an onClickListener
 			Intent intent = new Intent(context, SensorWidgetProvider.class);
-
 			intent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
-			intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, appWidgetIds);
+			intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, new int[]{widgetId});
 
-			PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+			PendingIntent pendingIntent = PendingIntent.getBroadcast(context, widgetId, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 			remoteViews.setOnClickPendingIntent(R.id.layout, pendingIntent);
 			appWidgetManager.updateAppWidget(widgetId, remoteViews);
 		}
