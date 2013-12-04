@@ -20,7 +20,7 @@
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/app_id" >
-		</meta-data>
+        </meta-data>
         <activity
             android:name="cz.vutbr.fit.intelligenthomeanywhere.activity.LoginActivity"
             android:label="@string/app_name"
@@ -52,18 +52,20 @@
             android:label="@string/title_activity_login_facebook" >
         </activity>
         <activity
-        	android:name="cz.vutbr.fit.intelligenthomeanywhere.activity.ChangeLocationNameActivity"
+            android:name="cz.vutbr.fit.intelligenthomeanywhere.activity.ChangeLocationNameActivity"
             android:theme="@android:style/Theme.Dialog" >
         </activity>
-        <activity			android:name="cz.vutbr.fit.intelligenthomeanywhere.activity.ChangeDeviceNameActivity"
+        <activity
+            android:name="cz.vutbr.fit.intelligenthomeanywhere.activity.ChangeDeviceNameActivity"
             android:theme="@android:style/Theme.Dialog" >
         </activity>
-        <activity			android:name="cz.vutbr.fit.intelligenthomeanywhere.activity.AddAdapterActivity"
+        <activity
+            android:name="cz.vutbr.fit.intelligenthomeanywhere.activity.AddAdapterActivity"
             android:label="@string/title_activity_add_adapter"
             android:screenOrientation="portrait" >
         </activity>
         <activity
-        	android:name="cz.vutbr.fit.intelligenthomeanywhere.activity.RegistrationActivity"
+            android:name="cz.vutbr.fit.intelligenthomeanywhere.activity.RegistrationActivity"
             android:label="@string/title_activity_registration"
             android:screenOrientation="portrait" >
         </activity>
@@ -72,9 +74,20 @@
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <receiver
+            android:name="cz.vutbr.fit.intelligenthomeanywhere.SensorWidgetProvider"
+            android:icon="@drawable/ic_launcher"
+            android:label="@string/widget_sensor_title" >
+            <intent-filter>
+                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+
+            <meta-data android:name="android.appwidget.provider" android:resource="@xml/widget_sensor" />
+        </receiver>
     </application>
 
 </manifest>

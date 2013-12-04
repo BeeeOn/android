@@ -86,6 +86,10 @@
         <item>Google</item>
         <item>MojeID</item>
     </string-array>
-
+    <!-- Widgets -->
+    <string name="widget_sensor_title">Sensor detail</string>
+    <!-- Placeholders -->
+	<string name="placeholder_icon">Icon</string>
+	<string name="placeholder_none">"???"</string>
 
 </resources>
