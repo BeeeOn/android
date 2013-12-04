@@ -12,8 +12,8 @@ import android.util.Log;
 import android.widget.RemoteViews;
 import cz.vutbr.fit.intelligenthomeanywhere.adapter.device.BaseDevice;
 import cz.vutbr.fit.intelligenthomeanywhere.adapter.device.HumidityDevice;
+import cz.vutbr.fit.intelligenthomeanywhere.adapter.device.PressureDevice;
 import cz.vutbr.fit.intelligenthomeanywhere.adapter.device.TemperatureDevice;
-import cz.vutbr.fit.intelligenthomeanywhere.adapter.device.UnknownDevice;
 
 public class SensorWidgetProvider extends AppWidgetProvider {
 
@@ -31,13 +31,28 @@ public class SensorWidgetProvider extends AppWidgetProvider {
 			
 			// TODO: use real data
 			BaseDevice device = null;
-			device.setName("Random sensor");
-			device.setValue(new Random().nextInt(35 + 15) - 15);			
+			switch (new Random().nextInt(3)) {
+			case 0:				
+				device = new TemperatureDevice();
+				device.setName("Teplota v kuchyni");
+				device.setValue(new Random().nextInt(35 + 15) - 15);
+				break;
+			case 1:				
+				device = new HumidityDevice();
+				device.setName("Vlhkost v koupelně");
+				device.setValue(new Random().nextInt(50) + 50);
+				break;
+			case 2:
+				device = new PressureDevice();
+				device.setName("Tlak venku");
+				device.setValue(new Random().nextInt(300) + 699);
+				break;
+			}
 
 			remoteViews.setImageViewResource(R.id.icon, device.getTypeIconResource());
 			remoteViews.setTextViewText(R.id.name, device.getName());
-			remoteViews.setTextViewText(R.id.value, device.getStringValue()); // TODO: value with unit
-
+			remoteViews.setTextViewText(R.id.value, device.getStringValueUnit(context));
+			
 			// Register an onClickListener
 			Intent intent = new Intent(context, SensorWidgetProvider.class);
 
