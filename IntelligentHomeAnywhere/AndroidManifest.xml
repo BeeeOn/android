@@ -21,6 +21,7 @@
             android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/app_id" >
         </meta-data>
+
         <activity
             android:name="cz.vutbr.fit.intelligenthomeanywhere.activity.LoginActivity"
             android:label="@string/app_name"
@@ -78,16 +79,25 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <receiver
             android:name="cz.vutbr.fit.intelligenthomeanywhere.SensorWidgetProvider"
             android:icon="@drawable/ic_launcher"
             android:label="@string/widget_sensor_title" >
             <intent-filter>
-                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
             </intent-filter>
 
-            <meta-data android:name="android.appwidget.provider" android:resource="@xml/widget_sensor" />
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/widget_sensor" />
         </receiver>
+
+        <service
+            android:name="cz.vutbr.fit.intelligenthomeanywhere.WidgetUpdateService"
+            android:enabled="true"
+            android:exported="false" >
+        </service>
     </application>
 
 </manifest>

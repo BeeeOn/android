@@ -1,0 +1,96 @@
+package cz.vutbr.fit.intelligenthomeanywhere;
+
+import java.util.Random;
+
+import android.app.Service;
+import android.appwidget.AppWidgetManager;
+import android.content.ComponentName;
+import android.content.Context;
+import android.content.Intent;
+import android.os.IBinder;
+import android.os.PowerManager;
+import android.util.Log;
+import cz.vutbr.fit.intelligenthomeanywhere.adapter.device.BaseDevice;
+import cz.vutbr.fit.intelligenthomeanywhere.adapter.device.HumidityDevice;
+import cz.vutbr.fit.intelligenthomeanywhere.adapter.device.PressureDevice;
+import cz.vutbr.fit.intelligenthomeanywhere.adapter.device.TemperatureDevice;
+
+public class WidgetUpdateService extends Service {
+
+	private static final String TAG = WidgetUpdateService.class.getSimpleName();
+	
+    @Override
+    public int onStartCommand(final Intent intent, int flags, int startId) {
+    	super.onStartCommand(intent, flags, startId);
+    	
+    	// Don't update when screen is off
+	    PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
+	    if (!pm.isScreenOn()) {
+	    	Log.d(TAG, "Screen is off, exiting...");
+	    	stopSelf();
+	        return START_NOT_STICKY;
+	    }
+    	
+    	// Start new thread for processing
+    	new Thread(new Runnable() {	
+
+			@Override
+			public void run() {
+				handleIntent(intent);  			
+    			stopSelf();
+			}
+
+    	}).start();
+    	
+        return START_NOT_STICKY;
+    }
+    
+	@Override
+	public IBinder onBind(Intent intent) {
+		return null; // we don't use binding
+	}
+	
+	protected void handleIntent(Intent intent) {		
+		Log.d(TAG, "handleIntent()");
+		
+		// Get ids from intent
+		//int[] widgetIds = intent.getIntArrayExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS);
+		
+		// Get all ids
+		ComponentName thisWidget = new ComponentName(this, SensorWidgetProvider.class);
+		AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(this);
+		int[] allWidgetIds = appWidgetManager.getAppWidgetIds(thisWidget);
+		
+		for (int widgetId : allWidgetIds) {
+
+			// TODO: update only widgets that need updating now
+			/*long lastUpdate = ... // get from widget somehow
+			if (lastUpdate + UPDATE_FREQUENCY_SEC * 1000 < SystemClock.elapsedRealtime()) {
+				
+			}*/
+			
+	    	BaseDevice device = null;
+			switch (new Random().nextInt(3)) {
+			case 0:				
+				device = new TemperatureDevice();
+				device.setName("Teplota v kuchyni");
+				device.setValue(new Random().nextInt(35 + 15) - 15);
+				break;
+			case 1:				
+				device = new HumidityDevice();
+				device.setName("Vlhkost v koupelně");
+				device.setValue(new Random().nextInt(50) + 50);
+				break;
+			case 2:
+				device = new PressureDevice();
+				device.setName("Tlak venku");
+				device.setValue(new Random().nextInt(300) + 699);
+				break;
+			}
+	    	
+	        SensorWidgetProvider widget = new SensorWidgetProvider();
+	        widget.updateWidget(this, widgetId, device);
+		}
+	}
+	
+}
