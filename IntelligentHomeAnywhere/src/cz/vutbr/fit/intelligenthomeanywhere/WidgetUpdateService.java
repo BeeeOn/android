@@ -2,6 +2,8 @@ package cz.vutbr.fit.intelligenthomeanywhere;
 
 import java.util.Random;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.app.Service;
 import android.appwidget.AppWidgetManager;
 import android.content.ComponentName;
@@ -9,6 +11,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.IBinder;
 import android.os.PowerManager;
+import android.os.SystemClock;
 import android.util.Log;
 import cz.vutbr.fit.intelligenthomeanywhere.adapter.device.BaseDevice;
 import cz.vutbr.fit.intelligenthomeanywhere.adapter.device.HumidityDevice;
@@ -19,9 +22,56 @@ public class WidgetUpdateService extends Service {
 
 	private static final String TAG = WidgetUpdateService.class.getSimpleName();
 	
+	public static final String EXTRA_SINGLE_UPDATE = "ManualUpdate";	
+
+	public static int UPDATE_FREQUENCY_SEC = 5;
+	
+	public static void startUpdating(Context context) { 
+		final Intent service = getUpdateIntent(context);
+		
+		context.startService(service);
+
+		// variant 1 - automatically repeat alarm
+		// setRepeatingAlarm(context, UPDATE_FREQUENCY_SEC);
+	}
+	
+	public static void stopUpdating(Context context) {
+    	final PendingIntent service = getUpdatePendingIntent(context);
+    	final AlarmManager m = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+    	
+    	m.cancel(service);
+	}
+	
+	public static void setAlarm(Context context, long secs, boolean repeating) {
+		final PendingIntent service = getUpdatePendingIntent(context);
+		final AlarmManager m = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+		
+		if (repeating) {
+			m.setRepeating(AlarmManager.ELAPSED_REALTIME, SystemClock.elapsedRealtime(), secs * 1000, service);
+		} else {
+			m.set(AlarmManager.ELAPSED_REALTIME, SystemClock.elapsedRealtime() + secs * 1000, service);	
+		}
+	}
+
+	public static Intent getUpdateIntent(Context context) {
+		return new Intent(context, WidgetUpdateService.class);
+	}
+	
+	public static PendingIntent getUpdatePendingIntent(Context context) {
+		final Intent intent = getUpdateIntent(context);
+		return PendingIntent.getService(context, 0, intent, PendingIntent.FLAG_CANCEL_CURRENT);
+	}
+	
     @Override
     public int onStartCommand(final Intent intent, int flags, int startId) {
     	super.onStartCommand(intent, flags, startId);
+    	
+    	Log.d(TAG, "onStartCommand(), startId = " + startId);
+    	
+    	if (!intent.getBooleanExtra(EXTRA_SINGLE_UPDATE, false)) {
+    		// variant 2 - manually repeat alarm
+	    	setAlarm(this, UPDATE_FREQUENCY_SEC, false);
+    	}
     	
     	// Don't update when screen is off
 	    PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
@@ -36,7 +86,7 @@ public class WidgetUpdateService extends Service {
 
 			@Override
 			public void run() {
-				handleIntent(intent);  			
+				updateWidgets(intent);  			
     			stopSelf();
 			}
 
@@ -50,18 +100,19 @@ public class WidgetUpdateService extends Service {
 		return null; // we don't use binding
 	}
 	
-	protected void handleIntent(Intent intent) {		
-		Log.d(TAG, "handleIntent()");
-		
+	protected void updateWidgets(Intent intent) {		
 		// Get ids from intent
-		//int[] widgetIds = intent.getIntArrayExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS);
+		int[] widgetIds = intent.getIntArrayExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS);
+		if (widgetIds == null || widgetIds.length == 0) {
+			// If there are no ids, get ids of all widgets
+			ComponentName thisWidget = new ComponentName(this, SensorWidgetProvider.class);
+			AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(this);
+			widgetIds = appWidgetManager.getAppWidgetIds(thisWidget);	
+		}
 		
-		// Get all ids
-		ComponentName thisWidget = new ComponentName(this, SensorWidgetProvider.class);
-		AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(this);
-		int[] allWidgetIds = appWidgetManager.getAppWidgetIds(thisWidget);
+		Log.d(TAG, "Updating " + widgetIds.length + " widgets");
 		
-		for (int widgetId : allWidgetIds) {
+		for (int widgetId : widgetIds) {
 
 			// TODO: update only widgets that need updating now
 			/*long lastUpdate = ... // get from widget somehow
