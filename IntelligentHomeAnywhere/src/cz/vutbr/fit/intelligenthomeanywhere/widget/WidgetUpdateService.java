@@ -9,10 +9,12 @@ import android.appwidget.AppWidgetManager;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.IBinder;
 import android.os.PowerManager;
 import android.os.SystemClock;
 import android.util.Log;
+import cz.vutbr.fit.intelligenthomeanywhere.Constants;
 import cz.vutbr.fit.intelligenthomeanywhere.adapter.device.BaseDevice;
 import cz.vutbr.fit.intelligenthomeanywhere.adapter.device.HumidityDevice;
 import cz.vutbr.fit.intelligenthomeanywhere.adapter.device.PressureDevice;
@@ -21,11 +23,11 @@ import cz.vutbr.fit.intelligenthomeanywhere.adapter.device.TemperatureDevice;
 public class WidgetUpdateService extends Service {
 
 	private static final String TAG = WidgetUpdateService.class.getSimpleName();
-	
-	// TODO: use value with complete namespace and/or put into some Constants class?
-	public static final String EXTRA_FORCE_UPDATE = "forceUpdate";	
 
-	public static int UPDATE_FREQUENCY_SEC = 5;
+	private static final String EXTRA_FORCE_UPDATE = "cz.vutbr.fit.intelligenthomeanywhere.forceUpdate";
+	
+	private static final int UPDATE_INTERVAL_DEFAULT = 5; // in seconds
+	private static final int UPDATE_INTERVAL_MIN = 1; // in seconds
 	
 
 	/** Helpers for managing service updating **/
@@ -34,27 +36,18 @@ public class WidgetUpdateService extends Service {
 		final Intent service = getUpdateIntent(context);
 		service.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, appWidgetIds);
 		context.startService(service);
-
-		// variant 1 - automatically repeat alarm
-		// setAlarm(context, UPDATE_FREQUENCY_SEC, true);
 	}
 	
 	public static void stopUpdating(Context context) {
     	final PendingIntent service = getUpdatePendingIntent(context);
     	final AlarmManager m = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-    	
     	m.cancel(service);
 	}
 	
-	public static void setAlarm(Context context, long secs, boolean repeating) {
+	public static void setAlarm(Context context, long triggerAtMillis) {
 		final PendingIntent service = getUpdatePendingIntent(context);
 		final AlarmManager m = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-		
-		if (repeating) {
-			m.setRepeating(AlarmManager.ELAPSED_REALTIME, SystemClock.elapsedRealtime(), secs * 1000, service);
-		} else {
-			m.set(AlarmManager.ELAPSED_REALTIME, SystemClock.elapsedRealtime() + secs * 1000, service);	
-		}
+		m.set(AlarmManager.ELAPSED_REALTIME, triggerAtMillis, service);	
 	}
 	
 
@@ -66,6 +59,7 @@ public class WidgetUpdateService extends Service {
 	
 	public static PendingIntent getUpdatePendingIntent(Context context) {
 		final Intent intent = getUpdateIntent(context);
+		
 		return PendingIntent.getService(context, 0, intent, PendingIntent.FLAG_CANCEL_CURRENT); // or FLAG_UPDATE_CURRENT?
 	}
 	
@@ -73,11 +67,13 @@ public class WidgetUpdateService extends Service {
 		Intent intent = new Intent(context, WidgetUpdateService.class);
 		intent.putExtra(WidgetUpdateService.EXTRA_FORCE_UPDATE, true);
 		intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, new int[]{widgetId});
+		
 		return intent;
 	}
 	
 	public static PendingIntent getForceUpdatePendingIntent(Context context, int widgetId) {
 		final Intent intent = getForceUpdateIntent(context, widgetId);
+		
 		return PendingIntent.getService(context, widgetId, intent, PendingIntent.FLAG_CANCEL_CURRENT); // or FLAG_UPDATE_CURRENT?
 	}
 
@@ -91,8 +87,8 @@ public class WidgetUpdateService extends Service {
     	Log.d(TAG, "onStartCommand(), startId = " + startId);
     	
     	if (!intent.getBooleanExtra(EXTRA_FORCE_UPDATE, false)) {
-    		// variant 2 - manually repeat alarm
-	    	setAlarm(this, UPDATE_FREQUENCY_SEC, false);
+    		// set alarm for next update
+	    	setAlarm(this, calcNextUpdate());
     	}
     	
     	// don't update when screen is off
@@ -122,27 +118,27 @@ public class WidgetUpdateService extends Service {
 		return null; // we don't use binding
 	}
 	
-	protected void updateWidgets(Intent intent) {		
+	private void updateWidgets(Intent intent) {		
 		// get ids from intent
 		int[] widgetIds = intent.getIntArrayExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS);
 		if (widgetIds == null || widgetIds.length == 0) {
 			// if there are no ids, get ids of all widgets
-			ComponentName thisWidget = new ComponentName(this, SensorWidgetProvider.class);
-			AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(this);
-			widgetIds = appWidgetManager.getAppWidgetIds(thisWidget);	
+			widgetIds = getAllWidgetIds();
 		}
 		
 		Log.d(TAG, "Updating " + widgetIds.length + " widgets");
 		
-		for (int widgetId : widgetIds) {
+		SensorWidgetProvider widgetProvider = new SensorWidgetProvider();
+		long now = SystemClock.elapsedRealtime();
 
-			// TODO: update only widgets that need updating now
-			/*long lastUpdate = ... // get from widget somehow
-			if (lastUpdate + UPDATE_FREQUENCY_SEC * 1000 < SystemClock.elapsedRealtime()) {
-				
-			}*/
+		for (int widgetId : widgetIds) {
+			// don't update widgets until their interval elapsed (or will be <1000ms from now) or we have forced update			
+			if (!intent.getBooleanExtra(EXTRA_FORCE_UPDATE, false)
+					&& (getNextWidgetUpdate(widgetId) - now) > 1000)
+				continue;
 			
-	    	BaseDevice device = null;
+			// TODO: get correct widget data, not random
+			BaseDevice device = null;
 			switch (new Random().nextInt(3)) {
 			case 0:				
 				device = new TemperatureDevice();
@@ -161,9 +157,53 @@ public class WidgetUpdateService extends Service {
 				break;
 			}
 	    	
-	        SensorWidgetProvider widget = new SensorWidgetProvider();
-	        widget.updateWidget(this, widgetId, device);
+			// save last update time
+			SensorWidgetProvider.getSettings(this, widgetId)
+				.edit()
+				.putLong(Constants.WIDGET_PREF_LAST_UPDATE, now)
+				.commit();
+			
+			// update widget		        
+	        widgetProvider.updateWidget(this, widgetId, device);				
 		}
+	}
+	
+	private long calcNextUpdate() {
+		int minInterval = 0;
+		long nextUpdate = 0;
+
+		int[] allWidgetIds = getAllWidgetIds();
+		for (int i = 0; i < allWidgetIds.length; i++) {
+			int widgetId = allWidgetIds[i];
+			int widgetInterval = SensorWidgetProvider.getSettings(this, widgetId).getInt(Constants.WIDGET_PREF_INTERVAL, UPDATE_INTERVAL_DEFAULT);
+			long widgetNextUpdate = getNextWidgetUpdate(widgetId);
+			
+			if (i == 0) {
+				minInterval = widgetInterval;
+				nextUpdate = widgetNextUpdate;
+			} else {
+				minInterval = Math.min(minInterval, widgetInterval);
+				nextUpdate = Math.min(nextUpdate, widgetNextUpdate);
+			}			
+		}
+		
+		minInterval = Math.max(minInterval, UPDATE_INTERVAL_MIN);
+		return Math.max(nextUpdate, SystemClock.elapsedRealtime() + minInterval * 1000);
+	}
+	
+	private int[] getAllWidgetIds() {
+		ComponentName thisWidget = new ComponentName(this, SensorWidgetProvider.class);
+		AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(this);
+
+		return appWidgetManager.getAppWidgetIds(thisWidget);	
+	}
+	
+	private long getNextWidgetUpdate(int widgetId) {
+		SharedPreferences settings = SensorWidgetProvider.getSettings(this, widgetId);
+		int interval = settings.getInt(Constants.WIDGET_PREF_INTERVAL, UPDATE_INTERVAL_DEFAULT);
+		long lastUpdate = settings.getLong(Constants.WIDGET_PREF_LAST_UPDATE, 0);
+
+		return lastUpdate + interval * 1000;
 	}
 	
 }
