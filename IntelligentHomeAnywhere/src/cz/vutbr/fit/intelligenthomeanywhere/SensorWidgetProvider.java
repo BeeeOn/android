@@ -6,6 +6,7 @@ import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
@@ -18,9 +19,10 @@ public class SensorWidgetProvider extends AppWidgetProvider {
 
 	@Override
 	public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
-		// new widget has been instantiated, the requested update interval having lapsed, or the system booting
+		// new widget has been instantiated or the system booting
 		Log.d(TAG, "onUpdate()");
 
+		// start own service for periodic widget updating
 		WidgetUpdateService.startUpdating(context, appWidgetIds);
 	}
 
@@ -30,7 +32,10 @@ public class SensorWidgetProvider extends AppWidgetProvider {
 		Log.d(TAG, "onDeleted()");
 		super.onDeleted(context, appWidgetIds);
 		
-		// TODO: delete widget settings?
+		// delete removed widgets settings
+		for (int widgetId : appWidgetIds) {
+			getSettings(context, widgetId).edit().clear().commit();
+		}
     }
 
     @Override
@@ -39,16 +44,10 @@ public class SensorWidgetProvider extends AppWidgetProvider {
     	Log.d(TAG, "onDisabled()");
     	super.onDisabled(context);
 
+    	// stop updating service as there are no widgets anymore
     	WidgetUpdateService.stopUpdating(context);
     }
 
-    @Override
-    public void onEnabled(Context context) {
-    	// first widget is created
-    	Log.d(TAG, "onEnabled()");
-        super.onEnabled(context);
-    }
-    
     @Override
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     public void onAppWidgetOptionsChanged(Context context,
@@ -63,19 +62,25 @@ public class SensorWidgetProvider extends AppWidgetProvider {
     	int min_height = newOptions.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_HEIGHT);
     	int max_height = newOptions.getInt(AppWidgetManager.OPTION_APPWIDGET_MAX_HEIGHT);    	
 
-    	String layout;
+    	int layout;
+    	String name;
     	if (min_width >= 110) {
     		// width of 2 or more cells
-    		layout = "widget_sensor.xml";
+    		layout = R.layout.widget_sensor;
+    		name = "widget_sensor.xml";
     	} else {
     		// width of 1 cell
-    		layout = "widget_sensor_small.xml";
+    		layout = R.layout.widget_sensor_small;
+    		name = "widget_sensor_small.xml";
     	}
     	
-    	Log.d(TAG, "[" + min_width + "-" + max_width + "] x [" + min_height + "-" + max_height + "] -> " + layout);
+    	Log.d(TAG, "[" + min_width + "-" + max_width + "] x [" + min_height + "-" + max_height + "] -> " + name);
     	
-    	// TODO: keep layout filename in widget settings
-
+    	// save layout resource to widget settings 
+        SharedPreferences.Editor editor = getSettings(context, appWidgetId).edit();
+        editor.putInt(Constants.WIDGET_PREF_LAYOUT, layout);
+        editor.commit();
+        
     	// force update widget
     	context.startService(WidgetUpdateService.getForceUpdateIntent(context, appWidgetId));
     }
@@ -87,12 +92,18 @@ public class SensorWidgetProvider extends AppWidgetProvider {
 
 		super.onReceive(context, intent);
 	}
+	
+	public static SharedPreferences getSettings(Context context, int widgetId) {
+		return context.getSharedPreferences(String.format(Constants.WIDGET_PREF_FILENAME, widgetId), 0);
+	}
     
     public void updateWidget(Context context, int widgetId, BaseDevice device) {
     	//Log.d(TAG, "updateWidget()");
     	AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
         
-        RemoteViews remoteViews = new RemoteViews(context.getPackageName(), R.layout.widget_sensor);
+    	// set layout resource from settings
+    	int layout = getSettings(context, widgetId).getInt(Constants.WIDGET_PREF_LAYOUT, R.layout.widget_sensor);
+        RemoteViews remoteViews = new RemoteViews(context.getPackageName(), layout);
         
         remoteViews.setImageViewResource(R.id.icon, device.getTypeIconResource());
 		remoteViews.setTextViewText(R.id.name, device.getName());
