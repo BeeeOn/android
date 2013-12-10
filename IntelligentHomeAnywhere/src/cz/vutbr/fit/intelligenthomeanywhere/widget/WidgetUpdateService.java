@@ -1,4 +1,4 @@
-package cz.vutbr.fit.intelligenthomeanywhere;
+package cz.vutbr.fit.intelligenthomeanywhere.widget;
 
 import java.util.Random;
 

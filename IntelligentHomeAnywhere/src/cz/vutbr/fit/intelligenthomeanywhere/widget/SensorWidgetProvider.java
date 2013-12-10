@@ -1,4 +1,4 @@
-package cz.vutbr.fit.intelligenthomeanywhere;
+package cz.vutbr.fit.intelligenthomeanywhere.widget;
 
 import android.annotation.TargetApi;
 import android.app.PendingIntent;
@@ -11,6 +11,9 @@ import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.RemoteViews;
+import cz.vutbr.fit.intelligenthomeanywhere.Compatibility;
+import cz.vutbr.fit.intelligenthomeanywhere.Constants;
+import cz.vutbr.fit.intelligenthomeanywhere.R;
 import cz.vutbr.fit.intelligenthomeanywhere.adapter.device.BaseDevice;
 
 public class SensorWidgetProvider extends AppWidgetProvider {

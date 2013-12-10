@@ -81,7 +81,7 @@
         </activity>
 
         <receiver
-            android:name="cz.vutbr.fit.intelligenthomeanywhere.SensorWidgetProvider"
+            android:name="cz.vutbr.fit.intelligenthomeanywhere.widget.SensorWidgetProvider"
             android:icon="@drawable/ic_launcher"
             android:label="@string/widget_sensor_title" >
             <intent-filter>
@@ -94,7 +94,7 @@
         </receiver>
 
         <service
-            android:name="cz.vutbr.fit.intelligenthomeanywhere.WidgetUpdateService"
+            android:name="cz.vutbr.fit.intelligenthomeanywhere.widget.WidgetUpdateService"
             android:enabled="true"
             android:exported="false" >
         </service>
