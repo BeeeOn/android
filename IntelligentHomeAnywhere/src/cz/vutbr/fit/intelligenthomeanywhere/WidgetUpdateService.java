@@ -22,17 +22,21 @@ public class WidgetUpdateService extends Service {
 
 	private static final String TAG = WidgetUpdateService.class.getSimpleName();
 	
-	public static final String EXTRA_SINGLE_UPDATE = "ManualUpdate";	
+	// TODO: use value with complete namespace and/or put into some Constants class?
+	public static final String EXTRA_FORCE_UPDATE = "forceUpdate";	
 
 	public static int UPDATE_FREQUENCY_SEC = 5;
 	
-	public static void startUpdating(Context context) { 
+
+	/** Helpers for managing service updating **/
+	
+	public static void startUpdating(Context context, int[] appWidgetIds) { 
 		final Intent service = getUpdateIntent(context);
-		
+		service.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, appWidgetIds);
 		context.startService(service);
 
 		// variant 1 - automatically repeat alarm
-		// setRepeatingAlarm(context, UPDATE_FREQUENCY_SEC);
+		// setAlarm(context, UPDATE_FREQUENCY_SEC, true);
 	}
 	
 	public static void stopUpdating(Context context) {
@@ -52,6 +56,9 @@ public class WidgetUpdateService extends Service {
 			m.set(AlarmManager.ELAPSED_REALTIME, SystemClock.elapsedRealtime() + secs * 1000, service);	
 		}
 	}
+	
+
+	/** Intent factories **/	
 
 	public static Intent getUpdateIntent(Context context) {
 		return new Intent(context, WidgetUpdateService.class);
@@ -59,21 +66,36 @@ public class WidgetUpdateService extends Service {
 	
 	public static PendingIntent getUpdatePendingIntent(Context context) {
 		final Intent intent = getUpdateIntent(context);
-		return PendingIntent.getService(context, 0, intent, PendingIntent.FLAG_CANCEL_CURRENT);
+		return PendingIntent.getService(context, 0, intent, PendingIntent.FLAG_CANCEL_CURRENT); // or FLAG_UPDATE_CURRENT?
 	}
 	
+	public static Intent getForceUpdateIntent(Context context, int widgetId) {
+		Intent intent = new Intent(context, WidgetUpdateService.class);
+		intent.putExtra(WidgetUpdateService.EXTRA_FORCE_UPDATE, true);
+		intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, new int[]{widgetId});
+		return intent;
+	}
+	
+	public static PendingIntent getForceUpdatePendingIntent(Context context, int widgetId) {
+		final Intent intent = getForceUpdateIntent(context, widgetId);
+		return PendingIntent.getService(context, widgetId, intent, PendingIntent.FLAG_CANCEL_CURRENT); // or FLAG_UPDATE_CURRENT?
+	}
+
+	
+	/** Service override methods **/
+
     @Override
     public int onStartCommand(final Intent intent, int flags, int startId) {
     	super.onStartCommand(intent, flags, startId);
     	
     	Log.d(TAG, "onStartCommand(), startId = " + startId);
     	
-    	if (!intent.getBooleanExtra(EXTRA_SINGLE_UPDATE, false)) {
+    	if (!intent.getBooleanExtra(EXTRA_FORCE_UPDATE, false)) {
     		// variant 2 - manually repeat alarm
 	    	setAlarm(this, UPDATE_FREQUENCY_SEC, false);
     	}
     	
-    	// Don't update when screen is off
+    	// don't update when screen is off
 	    PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
 	    if (!pm.isScreenOn()) {
 	    	Log.d(TAG, "Screen is off, exiting...");
@@ -81,7 +103,7 @@ public class WidgetUpdateService extends Service {
 	        return START_NOT_STICKY;
 	    }
     	
-    	// Start new thread for processing
+    	// start new thread for processing
     	new Thread(new Runnable() {	
 
 			@Override
@@ -101,10 +123,10 @@ public class WidgetUpdateService extends Service {
 	}
 	
 	protected void updateWidgets(Intent intent) {		
-		// Get ids from intent
+		// get ids from intent
 		int[] widgetIds = intent.getIntArrayExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS);
 		if (widgetIds == null || widgetIds.length == 0) {
-			// If there are no ids, get ids of all widgets
+			// if there are no ids, get ids of all widgets
 			ComponentName thisWidget = new ComponentName(this, SensorWidgetProvider.class);
 			AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(this);
 			widgetIds = appWidgetManager.getAppWidgetIds(thisWidget);	
