@@ -5,6 +5,7 @@ import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
@@ -60,17 +61,32 @@ public class SensorWidgetProvider extends AppWidgetProvider {
     	int min_width = newOptions.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_WIDTH);
     	int max_width = newOptions.getInt(AppWidgetManager.OPTION_APPWIDGET_MAX_WIDTH);
     	int min_height = newOptions.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_HEIGHT);
-    	int max_height = newOptions.getInt(AppWidgetManager.OPTION_APPWIDGET_MAX_HEIGHT);
-    	Log.d(TAG, "[" + min_width + "-" + max_width + "] x [" + min_height + "-" + max_height + "]");
+    	int max_height = newOptions.getInt(AppWidgetManager.OPTION_APPWIDGET_MAX_HEIGHT);    	
 
-    	// workaround for Galaxy S3 and similar on 4.1.2
-    	// http://stackoverflow.com/questions/17396045/how-to-catch-widget-size-changes-on-devices-where-onappwidgetoptionschanged-not
+    	String layout;
+    	if (min_width >= 110) {
+    		// width of 2 or more cells
+    		layout = "widget_sensor.xml";
+    	} else {
+    		// width of 1 cell
+    		layout = "widget_sensor_small.xml";
+    	}
     	
-    	// TODO: determine proper layout based on widget size and keep his name in widget settings
+    	Log.d(TAG, "[" + min_width + "-" + max_width + "] x [" + min_height + "-" + max_height + "] -> " + layout);
+    	
+    	// TODO: keep layout filename in widget settings
 
     	// force update widget
     	context.startService(WidgetUpdateService.getForceUpdateIntent(context, appWidgetId));
-    } 
+    }
+    
+	@Override
+	public void onReceive(Context context, Intent intent) {
+	    // handle TouchWiz resizing
+		Compatibility.handleTouchWizResizing(this, context, intent);
+
+		super.onReceive(context, intent);
+	}
     
     public void updateWidget(Context context, int widgetId, BaseDevice device) {
     	//Log.d(TAG, "updateWidget()");
