@@ -90,6 +90,6 @@
     <string name="widget_sensor_title">Sensor detail</string>
     <!-- Placeholders -->
 	<string name="placeholder_icon">Icon</string>
-	<string name="placeholder_none">"???"</string>
+	<string name="placeholder_none">Loading</string>
 
 </resources>
