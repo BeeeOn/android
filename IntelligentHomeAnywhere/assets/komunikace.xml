@@ -8,7 +8,7 @@
 			<refresh>5</refresh>
 			<battery>100</battery>
 			<network>
-				<address>100:00:FF:000:FFF</address>
+				<address>100:00:FF:000:001</address>
 				<quality>52</quality>
 			</network>
 			<value>30</value>
@@ -20,7 +20,7 @@
 			<refresh>12</refresh>
 			<battery>70</battery>
 			<network>
-				<address>120:00:FF:000:FFE</address>
+				<address>120:00:FF:000:002</address>
 				<quality>52</quality>
 			</network>
 			<value>120</value>
@@ -32,7 +32,7 @@
 			<refresh>12</refresh>
 			<battery>70</battery>
 			<network>
-				<address>130:00:FF:000:FFE</address>
+				<address>130:00:FF:000:003</address>
 				<quality>25</quality>
 			</network>
 			<value>OFF</value>
@@ -44,7 +44,7 @@
 			<refresh>12</refresh>
 			<battery>70</battery>
 			<network>
-				<address>140:00:FF:000:FFE</address>
+				<address>140:00:FF:000:004</address>
 				<quality>25</quality>
 			</network>
 			<value>ON</value>
@@ -56,7 +56,7 @@
 			<refresh>12</refresh>
 			<battery>100</battery>
 			<network>
-				<address>200:00:FF:000:FFE</address>
+				<address>200:00:FF:000:005</address>
 				<quality>25</quality>
 			</network>
 			<value>30</value>
@@ -68,7 +68,7 @@
 			<refresh>12</refresh>
 			<battery>100</battery>
 			<network>
-				<address>200:00:FF:000:FFE</address>
+				<address>200:00:FF:000:006</address>
 				<quality>25</quality>
 			</network>
 			<value>15</value>
@@ -80,7 +80,7 @@
 			<refresh>12</refresh>
 			<battery>100</battery>
 			<network>
-				<address>200:00:FF:000:FFE</address>
+				<address>200:00:FF:000:007</address>
 				<quality>25</quality>
 			</network>
 			<value>430</value>
@@ -92,7 +92,7 @@
 			<refresh>12</refresh>
 			<battery>70</battery>
 			<network>
-				<address>150:00:FF:000:FFE</address>
+				<address>150:00:FF:000:008</address>
 				<quality>25</quality>
 			</network>
 			<value>ON</value>
@@ -104,7 +104,7 @@
 			<refresh>12</refresh>
 			<battery>0</battery>
 			<network>
-				<address>160:00:FF:000:FFE</address>
+				<address>160:00:FF:000:009</address>
 				<quality>25</quality>
 			</network>
 			<value>OFF</value>
@@ -116,7 +116,7 @@
 			<refresh>12</refresh>
 			<battery>100</battery>
 			<network>
-				<address>170:00:FF:000:FFE</address>
+				<address>170:00:FF:000:00A</address>
 				<quality>25</quality>
 			</network>
 			<value>ON</value>
@@ -128,7 +128,7 @@
 			<refresh>12</refresh>
 			<battery>100</battery>
 			<network>
-				<address>180:00:FF:000:FFE</address>
+				<address>180:00:FF:000:00B</address>
 				<quality>25</quality>
 			</network>
 			<value>ON</value>
@@ -140,7 +140,7 @@
 			<refresh>12</refresh>
 			<battery>100</battery>
 			<network>
-				<address>200:00:FF:000:FFE</address>
+				<address>200:00:FF:000:00C</address>
 				<quality>25</quality>
 			</network>
 			<value>ON</value>
@@ -152,7 +152,7 @@
 			<refresh>12</refresh>
 			<battery>100</battery>
 			<network>
-				<address>200:00:FF:000:FFE</address>
+				<address>200:00:FF:000:00D</address>
 				<quality>25</quality>
 			</network>
 			<value>20</value>
@@ -164,7 +164,7 @@
 			<refresh>12</refresh>
 			<battery>100</battery>
 			<network>
-				<address>200:00:FF:000:FFE</address>
+				<address>200:00:FF:000:00E</address>
 				<quality>25</quality>
 			</network>
 			<value>1058</value>
