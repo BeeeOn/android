@@ -151,6 +151,8 @@ public final class Constants {
 	public static final String WIDGET_PREF_LAYOUT = "layout";
 	public static final String WIDGET_PREF_INTERVAL = "interval";
 	public static final String WIDGET_PREF_LAST_UPDATE = "lastUpdate";
+	public static final String WIDGET_PREF_INITIALIZED = "initialized";
+	public static final String WIDGET_PREF_DEVICE = "device";
 		
 	/**
 	 * Set up main adapter object

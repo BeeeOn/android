@@ -79,7 +79,14 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
+        <activity
+            android:name="cz.vutbr.fit.intelligenthomeanywhere.activity.WidgetConfigurationActivity"
+            android:label="@string/title_activity_widget_configuration" >
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
+            </intent-filter>
+        </activity>
+        
         <receiver
             android:name="cz.vutbr.fit.intelligenthomeanywhere.widget.SensorWidgetProvider"
             android:icon="@drawable/ic_launcher"

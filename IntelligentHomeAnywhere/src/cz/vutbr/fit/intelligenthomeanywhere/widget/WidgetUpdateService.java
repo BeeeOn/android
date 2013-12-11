@@ -15,10 +15,10 @@ import android.os.PowerManager;
 import android.os.SystemClock;
 import android.util.Log;
 import cz.vutbr.fit.intelligenthomeanywhere.Constants;
+import cz.vutbr.fit.intelligenthomeanywhere.adapter.Adapter;
 import cz.vutbr.fit.intelligenthomeanywhere.adapter.device.BaseDevice;
-import cz.vutbr.fit.intelligenthomeanywhere.adapter.device.HumidityDevice;
-import cz.vutbr.fit.intelligenthomeanywhere.adapter.device.PressureDevice;
-import cz.vutbr.fit.intelligenthomeanywhere.adapter.device.TemperatureDevice;
+import cz.vutbr.fit.intelligenthomeanywhere.adapter.device.UnknownDevice;
+import cz.vutbr.fit.intelligenthomeanywhere.adapter.parser.XmlDeviceParser;
 
 public class WidgetUpdateService extends Service {
 
@@ -26,9 +26,8 @@ public class WidgetUpdateService extends Service {
 
 	private static final String EXTRA_FORCE_UPDATE = "cz.vutbr.fit.intelligenthomeanywhere.forceUpdate";
 	
-	private static final int UPDATE_INTERVAL_DEFAULT = 5; // in seconds
-	private static final int UPDATE_INTERVAL_MIN = 1; // in seconds
-	
+	public static final int UPDATE_INTERVAL_DEFAULT = 5; // in seconds
+	public static final int UPDATE_INTERVAL_MIN = 1; // in seconds
 
 	/** Helpers for managing service updating **/
 	
@@ -42,6 +41,7 @@ public class WidgetUpdateService extends Service {
     	final PendingIntent service = getUpdatePendingIntent(context);
     	final AlarmManager m = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
     	m.cancel(service);
+    	context.stopService(getUpdateIntent(context));
 	}
 	
 	public static void setAlarm(Context context, long triggerAtMillis) {
@@ -88,7 +88,9 @@ public class WidgetUpdateService extends Service {
     	
     	if (!intent.getBooleanExtra(EXTRA_FORCE_UPDATE, false)) {
     		// set alarm for next update
-	    	setAlarm(this, calcNextUpdate());
+    		long nextUpdate = calcNextUpdate();
+    		if (nextUpdate > 0)
+    			setAlarm(this, nextUpdate);
     	}
     	
     	// don't update when screen is off
@@ -126,39 +128,34 @@ public class WidgetUpdateService extends Service {
 			widgetIds = getAllWidgetIds();
 		}
 		
-		Log.d(TAG, "Updating " + widgetIds.length + " widgets");
-		
 		SensorWidgetProvider widgetProvider = new SensorWidgetProvider();
 		long now = SystemClock.elapsedRealtime();
 
 		for (int widgetId : widgetIds) {
+			SharedPreferences settings = SensorWidgetProvider.getSettings(this, widgetId);
+			int interval = settings.getInt(Constants.WIDGET_PREF_INTERVAL, UPDATE_INTERVAL_DEFAULT);
+			long lastUpdate = settings.getLong(Constants.WIDGET_PREF_LAST_UPDATE, 0);
+			
+			// ignore uninitialized widgets
+			if (!settings.getBoolean(Constants.WIDGET_PREF_INITIALIZED, false)) {
+				Log.v(TAG, "Ignoring widget " + widgetId + " (not initialized)");
+				continue;
+			}
+			
 			// don't update widgets until their interval elapsed (or will be <1000ms from now) or we have forced update			
 			if (!intent.getBooleanExtra(EXTRA_FORCE_UPDATE, false)
-					&& (getNextWidgetUpdate(widgetId) - now) > 1000)
+					&& ((lastUpdate + interval * 1000) - now > 1000)) {
+				Log.v(TAG, "Ignoring widget " + widgetId + " (not elapsed)");
 				continue;
-			
-			// TODO: get correct widget data, not random
-			BaseDevice device = null;
-			switch (new Random().nextInt(3)) {
-			case 0:				
-				device = new TemperatureDevice();
-				device.setName("Teplota v kuchyni");
-				device.setValue(new Random().nextInt(35 + 15) - 15);
-				break;
-			case 1:				
-				device = new HumidityDevice();
-				device.setName("Vlhkost v koupelně");
-				device.setValue(new Random().nextInt(50) + 50);
-				break;
-			case 2:
-				device = new PressureDevice();
-				device.setName("Tlak venku");
-				device.setValue(new Random().nextInt(300) + 699);
-				break;
 			}
+			
+			Log.v(TAG, "Updating widget " + widgetId);
+			
+			String deviceId = settings.getString(Constants.WIDGET_PREF_DEVICE, "");
+			BaseDevice device = getDevice(deviceId);
 	    	
 			// save last update time
-			SensorWidgetProvider.getSettings(this, widgetId)
+			settings
 				.edit()
 				.putLong(Constants.WIDGET_PREF_LAST_UPDATE, now)
 				.commit();
@@ -171,16 +168,24 @@ public class WidgetUpdateService extends Service {
 	private long calcNextUpdate() {
 		int minInterval = 0;
 		long nextUpdate = 0;
+		long now = SystemClock.elapsedRealtime();
+		boolean first = true;
 
-		int[] allWidgetIds = getAllWidgetIds();
-		for (int i = 0; i < allWidgetIds.length; i++) {
-			int widgetId = allWidgetIds[i];
-			int widgetInterval = SensorWidgetProvider.getSettings(this, widgetId).getInt(Constants.WIDGET_PREF_INTERVAL, UPDATE_INTERVAL_DEFAULT);
-			long widgetNextUpdate = getNextWidgetUpdate(widgetId);
+		for (int widgetId : getAllWidgetIds()) {			
+			SharedPreferences settings = SensorWidgetProvider.getSettings(this, widgetId);
+			if (!settings.getBoolean(Constants.WIDGET_PREF_INITIALIZED, false)) {
+				// widget is not added yet (probably only configuration activity is showed)
+				continue;
+			}
 			
-			if (i == 0) {
+			int widgetInterval = settings.getInt(Constants.WIDGET_PREF_INTERVAL, UPDATE_INTERVAL_DEFAULT);
+			long widgetLastUpdate = settings.getLong(Constants.WIDGET_PREF_LAST_UPDATE, 0);
+			long widgetNextUpdate = widgetLastUpdate > 0 ? widgetLastUpdate + widgetInterval * 1000 : now; 
+			
+			if (first) {
 				minInterval = widgetInterval;
 				nextUpdate = widgetNextUpdate;
+				first = false;
 			} else {
 				minInterval = Math.min(minInterval, widgetInterval);
 				nextUpdate = Math.min(nextUpdate, widgetNextUpdate);
@@ -188,7 +193,7 @@ public class WidgetUpdateService extends Service {
 		}
 		
 		minInterval = Math.max(minInterval, UPDATE_INTERVAL_MIN);
-		return Math.max(nextUpdate, SystemClock.elapsedRealtime() + minInterval * 1000);
+		return first ? 0 : Math.max(nextUpdate, SystemClock.elapsedRealtime() + minInterval * 1000);
 	}
 	
 	private int[] getAllWidgetIds() {
@@ -197,13 +202,23 @@ public class WidgetUpdateService extends Service {
 
 		return appWidgetManager.getAppWidgetIds(thisWidget);	
 	}
-	
-	private long getNextWidgetUpdate(int widgetId) {
-		SharedPreferences settings = SensorWidgetProvider.getSettings(this, widgetId);
-		int interval = settings.getInt(Constants.WIDGET_PREF_INTERVAL, UPDATE_INTERVAL_DEFAULT);
-		long lastUpdate = settings.getLong(Constants.WIDGET_PREF_LAST_UPDATE, 0);
 
-		return lastUpdate + interval * 1000;
+	private BaseDevice getDevice(String deviceId) {		
+		// TODO: rewrite better with use of proper class for working with such data
+		Adapter mAdapter = XmlDeviceParser.fromFile(Constants.DEMO_COMMUNICATION);
+		
+		if (mAdapter != null) {
+			for (BaseDevice device : mAdapter.devices) {
+				if (device.getAddress().equals(deviceId)) {
+					// TODO: remove this random value checking
+					int i = new Random().nextInt(100);
+					device.setValue(i);
+					return device;
+				}
+			}
+		}
+
+		return new UnknownDevice();
 	}
-	
+
 }

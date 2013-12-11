@@ -280,4 +280,9 @@ public abstract class BaseDevice {
 		return true;
 	}
 
+	@Override
+	public String toString() {
+		return String.format("%s (%s)", mName, mLocation);
+	}
+
 }

@@ -12,6 +12,7 @@
     <string name="title_activity_add_adapter">Add Adapter</string>
     <string name="title_activity_registration">Registration</string>
     <string name="title_activity_login_facebook">Facebook</string>
+    <string name="title_activity_widget_configuration">Widget Configuration</string>
     <!-- Buttons -->
     <string name="splash_demo">Demo</string>
     <string name="login_login">Login</string>
@@ -91,5 +92,8 @@
     <!-- Placeholders -->
 	<string name="placeholder_icon">Icon</string>
 	<string name="placeholder_none">Loading</string>
+	<!-- WidgetConfigurationActivity -->
+	<string name="widget_configuration_sensor">Sensor to be shown:</string>
+	<string name="widget_configuration_interval">Update interval (sec.):</string>
 
 </resources>

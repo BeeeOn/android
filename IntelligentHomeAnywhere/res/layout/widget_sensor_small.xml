@@ -7,15 +7,27 @@
   android:id="@+id/layout"
   android:orientation="vertical">
 
+    <TextView
+      android:id="@+id/name"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_gravity="center"
+      android:gravity="center_horizontal"
+      android:paddingTop="2dp"
+      android:paddingLeft="1dp"
+      android:paddingRight="1dp"
+      android:textSize="12sp"
+      android:singleLine="true"
+      android:ellipsize="marquee"
+      android:textColor="@color/black"
+      android:text="@string/placeholder_none" />     
+    
     <ImageView
       android:id="@+id/icon"
-      android:layout_width="match_parent"
+      android:layout_width="wrap_content"
       android:layout_height="0dp"
       android:layout_gravity="center_horizontal|top"      
-      android:paddingTop="4dp"
-      android:paddingLeft="2dp"
-      android:paddingRight="2dp"
-      android:paddingBottom="2dp"
+      android:padding="2dp"
       android:layout_weight="1"
       android:src="@drawable/ic_launcher"
       android:contentDescription="@string/placeholder_icon" />
@@ -26,8 +38,10 @@
       android:layout_height="wrap_content"
       android:layout_gravity="center"
       android:gravity="center_horizontal"
-      android:paddingBottom="6dp"
-      android:textSize="14sp"
+      android:paddingBottom="4dp"
+      android:textSize="13sp"
+      android:singleLine="true"
+      android:ellipsize="marquee"
       android:textColor="@color/black"
       android:text="@string/placeholder_none" />               
 </LinearLayout>
