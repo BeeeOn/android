@@ -71,6 +71,11 @@ public class XmlDeviceParser {
 		Adapter adapter = null;
 		
 		File file = new File(filename);
+		if (!file.exists() || !file.canRead()) {
+			Log.w(TAG, String.format("File '%s' doesn't exists or is not readable", filename));
+			return adapter;
+		}
+				
 		InputStream in = null;
 		try {
 			in = new BufferedInputStream(new FileInputStream(file));
