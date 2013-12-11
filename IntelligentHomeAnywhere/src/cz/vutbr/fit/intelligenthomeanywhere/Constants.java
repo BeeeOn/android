@@ -143,6 +143,16 @@ public final class Constants {
 	 * Type of device: emmision meter type
 	 */
 	public static final int TYPE_EMMISION = 7;
+	
+	/**
+	 * Widget's shared preferences
+	 */	
+	public static final String WIDGET_PREF_FILENAME = "widget_%d";	
+	public static final String WIDGET_PREF_LAYOUT = "layout";
+	public static final String WIDGET_PREF_INTERVAL = "interval";
+	public static final String WIDGET_PREF_LAST_UPDATE = "lastUpdate";
+	public static final String WIDGET_PREF_INITIALIZED = "initialized";
+	public static final String WIDGET_PREF_DEVICE = "device";
 		
 	/**
 	 * Set up main adapter object

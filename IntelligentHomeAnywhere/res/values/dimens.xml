@@ -5,4 +5,7 @@
     <dimen name="activity_vertical_margin">16dp</dimen>
 	<dimen name="textsize">15sp</dimen>
 	<dimen name="textsizesmaller">11sp</dimen>
+	
+	<!--  Widget margins -->
+	<dimen name="widget_margin">8dp</dimen>
 </resources>

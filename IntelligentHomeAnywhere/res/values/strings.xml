@@ -12,6 +12,7 @@
     <string name="title_activity_add_adapter">Add Adapter</string>
     <string name="title_activity_registration">Registration</string>
     <string name="title_activity_login_facebook">Facebook</string>
+    <string name="title_activity_widget_configuration">Widget Configuration</string>
     <!-- Buttons -->
     <string name="splash_demo">Demo</string>
     <string name="login_login">Login</string>
@@ -87,7 +88,7 @@
         <item>Google</item>
         <item>MojeID</item>
     </string-array>
-        <string name="login_app_sign_in">Select the account for sign in</string>
+    <string name="login_app_sign_in">Select the account for sign in</string>
 
         
     <!-- GOOGLE -->
@@ -117,5 +118,14 @@
     <string name="auth_client_needs_update_title" msgid="6488605506794595966">"Aplikace vyžaduje aktualizaci Služeb Google Play."</string>
     <string name="auth_client_play_services_err_notification_msg" msgid="3635065018897986478">"Chyba služeb Google Play"</string>
     <string name="auth_client_requested_by_msg" msgid="6304135633531965756">"Požadováno aplikací "</string>
+
+    <!-- Widgets -->
+    <string name="widget_sensor_title">Sensor detail</string>
+    <!-- Placeholders -->
+	<string name="placeholder_icon">Icon</string>
+	<string name="placeholder_none">Loading</string>
+	<!-- WidgetConfigurationActivity -->
+	<string name="widget_configuration_sensor">Sensor to be shown:</string>
+	<string name="widget_configuration_interval">Update interval (sec.):</string>
 
 </resources>

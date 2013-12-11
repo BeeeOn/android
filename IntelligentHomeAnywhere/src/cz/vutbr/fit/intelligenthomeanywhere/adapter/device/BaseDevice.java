@@ -3,6 +3,8 @@
  */
 package cz.vutbr.fit.intelligenthomeanywhere.adapter.device;
 
+import android.content.Context;
+
 /**
  * @brief Abstract class for all devices
  * @author Robyer
@@ -88,6 +90,18 @@ public abstract class BaseDevice {
 	 * @param value
 	 */
 	public abstract void setValue(int value);
+	
+	/**
+	 * Get value with unit as string
+	 * @param context
+	 * @return
+	 */
+	public String getStringValueUnit(Context context) {
+		int unitRes = getUnitStringResource();
+		String unit = unitRes > 0 ? context.getResources().getString(unitRes) : "";
+		
+		return String.format("%s %s", this.getStringValue(), unit);
+	}
 	
 	/**
 	 * Get refresh time
@@ -264,6 +278,11 @@ public abstract class BaseDevice {
 	public boolean saveSettings() {
 		// TODO: save settings to server
 		return true;
+	}
+
+	@Override
+	public String toString() {
+		return String.format("%s (%s)", mName, mLocation);
 	}
 
 }
