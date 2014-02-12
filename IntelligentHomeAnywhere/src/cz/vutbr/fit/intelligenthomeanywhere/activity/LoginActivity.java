@@ -8,12 +8,14 @@ import android.accounts.AccountManager;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
 import com.google.android.gms.auth.GoogleAuthUtil;
+import com.google.android.gms.common.AccountPicker;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 
@@ -29,8 +31,9 @@ import cz.vutbr.fit.intelligenthomeanywhere.R;
 public class LoginActivity extends Activity {
 	
 	public static final int USER_RECOVERABLE_AUTH = 5;
+	private static final int GET_GOOGLE_ACCOUNT = 6;
 	private static final String TAG = "LOGIN";
-	
+	private String acEmail;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -70,7 +73,17 @@ public class LoginActivity extends Activity {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        //Session.getActiveSession().onActivityResult(this, requestCode, resultCode, data);
+        
+        if (requestCode == USER_RECOVERABLE_AUTH && resultCode == RESULT_OK) {
+        	new GetGoogleAuth(this, this.acEmail).execute();
+        }
+        
+        
+        if (requestCode == GET_GOOGLE_ACCOUNT && resultCode == RESULT_OK) {
+        	this.acEmail = data.getStringExtra(AccountManager.KEY_ACCOUNT_NAME);
+        	// Get acces token
+			new GetGoogleAuth(this, this.acEmail).execute();
+        }
     }
 	
 	/**
@@ -82,18 +95,29 @@ public class LoginActivity extends Activity {
 	 */
 	private boolean getGoogleAccessFromServer(View v) throws InterruptedException, ExecutionException, TimeoutException{
 		//TODO: get access via google
-		
+		Log.d(TAG, "BEG: Google access func");
 		if(GooglePlayServicesUtil.isGooglePlayServicesAvailable(getBaseContext()) == ConnectionResult.SUCCESS) {
 			// On this device is Google Play, we can proceed
+			Log.d(TAG, "On this device is Google Play, we can proceed");
 			String[] Accounts = this.getAccountNames();
 			if(Accounts.length == 1) {
+				Log.d(TAG, "On this device is one account");
+				this.acEmail = Accounts[0];
 				// Get acces token
-				new GetGoogleAuth(this, Accounts[0]).execute();
+				new GetGoogleAuth(this, this.acEmail).execute();
+			}
+			else {
+				Log.d(TAG, "On this device are more accounts");
+				Intent intent = AccountPicker.newChooseAccountIntent(null, null, new String[]{"com.google"}, false, null, null, null, null);
+				startActivityForResult(intent, GET_GOOGLE_ACCOUNT);
+				
 			}
 		}
 		else {
 			// Google Play is missing
-		}	
+			Log.d(TAG, "Google Play is missing");
+		}
+		Log.d(TAG, "END: Google access func");
 		return false;
 	}
 	
@@ -117,4 +141,6 @@ public class LoginActivity extends Activity {
 		Toast.makeText(v.getContext(), "Not Implemented yet", Toast.LENGTH_LONG).show();
 		return false;
 	}
+	
+
 }
