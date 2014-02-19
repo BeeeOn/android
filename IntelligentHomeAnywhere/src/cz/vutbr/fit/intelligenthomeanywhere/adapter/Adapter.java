@@ -21,6 +21,8 @@ public class Adapter {
 	public List<BaseDevice> devices;
 	private String mId;
 	private String mVersion;
+	private String mName;
+	private String mRole;
 	private boolean mNewInit;
 	private boolean mNewLocationName;
 	private boolean mNewDeviceName;
@@ -53,6 +55,38 @@ public class Adapter {
 		}
 		
 		return result;
+	}
+	
+	/**
+	 * Set name of adapter
+	 * @param name
+	 */
+	public void setName(String name){
+		mName = name;
+	}
+	
+	/**
+	 * Get name of adapter
+	 * @return
+	 */
+	public String getName(){
+		return mName;
+	}
+	
+	/**
+	 * Set role of actual user of adapter
+	 * @param role
+	 */
+	public void setRole(String role){
+		mRole = role;
+	}
+	
+	/**
+	 * Get role of actual user of adapter
+	 * @return
+	 */
+	public String getRole(){
+		return mRole;
 	}
 	
 	/**

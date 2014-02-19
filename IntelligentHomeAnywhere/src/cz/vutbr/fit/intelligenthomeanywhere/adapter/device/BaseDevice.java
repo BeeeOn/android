@@ -16,9 +16,10 @@ public abstract class BaseDevice {
 	protected String mName;
 	protected int mRefreshTime;	
 	protected int mBattery;
-	protected String mLog;
+//	protected String mLog;
 	protected boolean mLogging;
 	protected String mInvolveTime;
+	protected char mVisibility;
 	//protected String mValue;
 	
 	protected NetworkState mNetwork = new NetworkState();
@@ -176,6 +177,22 @@ public abstract class BaseDevice {
 	}*/
 	
 	/**
+	 * Get visibility of device
+	 * @return visibility
+	 */
+	public char getVisibility(){
+		return mVisibility;
+	}
+	
+	/**
+	 * Set visibility of device
+	 * @param visibility
+	 */
+	public void setVisibility(char visibility){
+		mVisibility = visibility;
+	}
+	
+	/**
 	 * Returning flag if device has been initialized yet
 	 * @return
 	 */
@@ -259,17 +276,17 @@ public abstract class BaseDevice {
 	 * Get name/path to logging file
 	 * @return log name
 	 */
-	public String getLog() {
-		return mLog;
-	}
+//	public String getLog() {
+//		return mLog;
+//	}
 	
 	/**
 	 * Setting log name (possibly not used - handle via server, when logging flag is set)
 	 * @param log
 	 */
-	public void setLog(String log) {
-		mLog = log;
-	}
+//	public void setLog(String log) {
+//		mLog = log;
+//	}
 
 	/**
 	 * Send to server

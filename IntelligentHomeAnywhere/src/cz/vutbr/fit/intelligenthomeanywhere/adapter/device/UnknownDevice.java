@@ -39,7 +39,7 @@ public class UnknownDevice extends BaseDevice {
 
 	@Override
 	public int getRawIntValue() {
-		return 0;
+		return Integer.MAX_VALUE;
 	}
 
 	@Override

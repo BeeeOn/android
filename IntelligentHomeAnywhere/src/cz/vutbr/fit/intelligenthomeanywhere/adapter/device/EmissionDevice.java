@@ -9,7 +9,7 @@ import cz.vutbr.fit.intelligenthomeanywhere.R;
  */
 public class EmissionDevice extends BaseDevice {
 
-	private int mValue;
+	private int mValue = Integer.MAX_VALUE;
 	
 	@Override
 	public int getType() {

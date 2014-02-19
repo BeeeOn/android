@@ -296,8 +296,6 @@ public class XmlDeviceParser {
 			device.setQuality(Integer.parseInt(quality_));
 		if (logging_ != null)
 			device.setLogging(Integer.parseInt(logging_) != 0);
-		if (logfile_ != null)
-			device.setLog(logfile_);
 		
 		mParser.require(XmlPullParser.END_TAG, ns, DEVICE_ROOT);
     	

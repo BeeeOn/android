@@ -9,7 +9,7 @@ import cz.vutbr.fit.intelligenthomeanywhere.R;
  */
 public class TemperatureDevice extends BaseDevice {
 
-	private int mValue;
+	private int mValue = Integer.MAX_VALUE;
 	
 	@Override
 	public void setValue(int value){
