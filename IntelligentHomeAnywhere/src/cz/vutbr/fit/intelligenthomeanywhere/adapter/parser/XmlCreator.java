@@ -878,8 +878,8 @@ public class XmlCreator {
 							
 						serializer.startTag(null, "logging");
 						serializer.attribute(null, "enabled", (d.isLogging() ? "1" : "0"));
-						if(d.isLogging())
-//							serializer.text(d.getLog());
+/*						if(d.isLogging())
+							serializer.text(d.getLog());*/
 						serializer.endTag(null, "logging");
 					serializer.endTag(null, "device");
 				}
