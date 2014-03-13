@@ -2,9 +2,7 @@
 <projectDescription>
 	<name>IntelligentHomeAnywhere</name>
 	<comment></comment>
-	<projects>
-		<project>google-play-services_lib</project>
-	</projects>
+	<projects></projects>
 	<buildSpec>
 		<buildCommand>
 			<name>com.android.ide.eclipse.adt.ResourceManagerBuilder</name>

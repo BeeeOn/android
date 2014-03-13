@@ -1,0 +1,7 @@
+bin/*
+gen/*
+doc/javadoc
+doc/html
+doc/latex
+.metadata/*
+.settings/*
