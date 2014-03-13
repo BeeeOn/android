@@ -1,0 +1,7 @@
+bin
+gen
+doc
+!doc/IntelligentHomeAnywhere.doxyfile
+!doc/makefile
+.metadata
+.settings
