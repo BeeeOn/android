@@ -57,8 +57,8 @@ public class DataOfLocationScreenActivity extends Activity {
 		txtvwTitleLocation.setLayoutParams(titleLocationParams);
 		mainlayout.addView(txtvwTitleLocation);
 		
-		List<String> names = mAdapter.getNameByLocation(mClicked);
-		if(names != null){
+		List<BaseDevice> devices = mAdapter.getDevicesByLocation(mClicked);
+		if (devices != null) {
 			int ID = Constants.IDLE;
 			LinearLayout temperatureLayout = null;
 			LinearLayout humidityLayout = null;
@@ -69,9 +69,7 @@ public class DataOfLocationScreenActivity extends Activity {
 			LinearLayout noiseLayout = null;
 			LinearLayout emissionLayout = null;
 			LinearLayout unknownLayout = null;
-			for(String name : names){
-				
-				BaseDevice device = mAdapter.getDeviceByName(name);
+			for (final BaseDevice device : devices) {
 				
 				RelativeLayout devicelayout = new RelativeLayout(this);
 				devicelayout.setPadding(5, 10, 10, 10);
@@ -80,7 +78,7 @@ public class DataOfLocationScreenActivity extends Activity {
 					@Override
 					public void onClick(View v) {
 						Intent intent = new Intent(v.getContext(),SensorDetailActivity.class);
-						intent.putExtra(Constants.DEVICE_CLICKED, ((TextView)((RelativeLayout)v).getChildAt(0)).getText());
+						intent.putExtra(Constants.DEVICE_CLICKED, device.getId());
 						startActivity(intent);
 					}
 				});
@@ -89,13 +87,13 @@ public class DataOfLocationScreenActivity extends Activity {
 					public boolean onLongClick(View v) {
 						mPressed = v;
 						Intent intent = new Intent(getBaseContext(), ChangeDeviceNameActivity.class);
-						intent.putExtra(Constants.DEVICE_LONG_PRESS, ((TextView)((RelativeLayout)v).getChildAt(0)).getText());
+						intent.putExtra(Constants.DEVICE_LONG_PRESS, device.getId());
 						startActivity(intent);
 						return false;
 					}
 				});
 				TextView txtvwLabelName = new TextView(this);
-				txtvwLabelName.setText(name);
+				txtvwLabelName.setText(device.getName());
 				//txtvwLabelName.setId(Constants.DEVICENAMELABEL_ID);
 				txtvwLabelName.setTextSize(getResources().getDimension(R.dimen.textsizesmaller));
 				RelativeLayout.LayoutParams txtvwLabelParams = new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT,LayoutParams.WRAP_CONTENT);
@@ -116,7 +114,7 @@ public class DataOfLocationScreenActivity extends Activity {
 						if(temperatureLayout != null && temperatureLayout.getChildCount() > 0){
 							temperatureLayout.addView(getSplitter());
 						}
-						txtview.setText(device.getStringValue() + " " + getString(device.getUnitStringResource()) );
+						txtview.setText(device.getStringValue() + " " + getString(device.getUnitStringResource()));
 						txtview.setLayoutParams(rightObjectParams);
 						devicelayout.addView(txtview);
 						temperatureLayout.addView(devicelayout);
@@ -167,7 +165,7 @@ public class DataOfLocationScreenActivity extends Activity {
 						toggle.setTextOff("OFF"); // FIXME: use string resources
 						toggle.setTextOn("ON"); // FIXME: use string resources
 						toggle.setChecked(((SwitchDevice)device).isActive());
-						toggle.setOnClickListener(new ToggleButtonOnClickListener(device.getName()));
+						toggle.setOnClickListener(new ToggleButtonOnClickListener((SwitchDevice)device));
 						if(switchControlLayout == null){
 							switchControlLayout = setLayout(switchControlLayout, ID);
 						}

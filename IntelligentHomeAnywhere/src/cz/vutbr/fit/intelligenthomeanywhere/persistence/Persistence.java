@@ -2,6 +2,7 @@ package cz.vutbr.fit.intelligenthomeanywhere.persistence;
 
 import java.util.ArrayList;
 
+import android.content.Context;
 import cz.vutbr.fit.intelligenthomeanywhere.NotImplementedException;
 import cz.vutbr.fit.intelligenthomeanywhere.User;
 import cz.vutbr.fit.intelligenthomeanywhere.adapter.Adapter;
@@ -10,8 +11,10 @@ import cz.vutbr.fit.intelligenthomeanywhere.widget.WidgetData;
 
 public class Persistence {
 
-	public Persistence() {
-		// TODO Auto-generated constructor stub
+	Context mContext;
+	
+	public Persistence(Context context) {
+		mContext = context;
 	}
 	
 	public void saveLastUser(User user) {

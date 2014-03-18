@@ -121,6 +121,14 @@ public abstract class BaseDevice {
 	}
 	
 	/**
+	 * Get unique identifier of device
+	 * @return id
+	 */
+	public String getId() {
+		return mNetwork.address;
+	}
+	
+	/**
 	 * Get name of device
 	 * @return name
 	 */

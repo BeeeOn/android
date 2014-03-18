@@ -90,22 +90,6 @@ public class Adapter {
 	}
 	
 	/**
-	 * Method for getting names of some location
-	 * @param location name of group of devices
-	 * @return list with string with name of device
-	 */
-	public List<String> getNameByLocation(String location){
-		List<String> result = new ArrayList<String>();
-		
-		for(BaseDevice d : devices){
-			if(d.getLocation() != null && d.getLocation().equals(location))
-				result.add(d.getName());
-		}
-		
-		return result;
-	}
-	
-	/**
 	 * Setting id of adapter
 	 * @param ID
 	 */
@@ -160,13 +144,13 @@ public class Adapter {
 	}
 	
 	/**
-	 * Method search for actuator or sensor by name
-	 * @param name of adapter (sensor/actuator)
-	 * @return BaseDevice with found sensor/actuator or null
+	 * Find and return device by given id
+	 * @param id of device
+	 * @return BaseDeviceor null
 	 */
-	public BaseDevice getDeviceByName(String name){
-		for(BaseDevice d : devices)
-			if(d.getName() != null && d.getName().equals(name))
+	public BaseDevice getDeviceById(String id){
+		for (BaseDevice d : devices)
+			if (d.getId() != null && d.getId().equals(id))
 				return d;
 		return null;
 	}
