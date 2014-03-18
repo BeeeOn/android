@@ -31,6 +31,8 @@ public final class Controller {
 	
 	private User mUser;
 	
+	private Adapter mAdapter;	// FIXME: this should be removed when there will be support for multiple adapters through whole application 
+	
 	public static Controller getInstance(Context context) {
 		if (mController == null)
 			mController = new Controller(context);
@@ -79,6 +81,16 @@ public final class Controller {
 		return mUser != null;
 	}
 	
+	public Adapter getAdapter() {
+		// FIXME: this should be removed when there will be support for multiple adapters through whole application
+		if (mAdapter == null) {
+			String filename = mContext.getExternalFilesDir(null).getPath() + Constants.DEMO_FILENAME;
+			mAdapter = XmlDeviceParser.fromFile(filename);
+		}
+		
+		return mAdapter;
+	}
+	
 	public ArrayList<Adapter> getAdapters() {
 		throw new NotImplementedException();
 	}
@@ -109,8 +121,8 @@ public final class Controller {
 		return getDevice(id, false);
 	}
 	
-	public BaseDevice getDevice(String id, boolean forceupdate) {
-		Adapter mAdapter = XmlDeviceParser.fromFile(Constants.DEMO_COMMUNICATION);
+	public BaseDevice getDevice(String id, boolean forceUpdate) {
+		Adapter mAdapter = getAdapter();
 		
 		if (mAdapter != null) {
 			for (BaseDevice device : mAdapter.devices) {

@@ -14,7 +14,6 @@ import android.view.Gravity;
 import android.view.Menu;
 import android.view.View;
 import android.widget.LinearLayout;
-import android.widget.LinearLayout.LayoutParams;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -25,10 +24,10 @@ import com.jjoe64.graphview.LineGraphView;
 
 import cz.vutbr.fit.intelligenthomeanywhere.Compatibility;
 import cz.vutbr.fit.intelligenthomeanywhere.Constants;
+import cz.vutbr.fit.intelligenthomeanywhere.R;
 import cz.vutbr.fit.intelligenthomeanywhere.adapter.device.BaseDevice;
 import cz.vutbr.fit.intelligenthomeanywhere.view.NumberPicker;
 import cz.vutbr.fit.intelligenthomeanywhere.view.NumberPicker.OnChangedListener;
-import cz.vutbr.fit.intelligenthomeanywhere.R;
 
 /**
  * Class that handle screen with detail of some sensor
@@ -81,12 +80,13 @@ public class SensorDetailActivity extends Activity {
 		mainlayout.addView(txtvwNameLabel);
 		
 		if(mDevice.isLogging()){
-			//TODO: call to server for file with name device.GetLog(); 
-			List<String[]> LogFile = LogLoader(Constants.DEMO_LOGFILE);
-			if(LogFile != null){
+			//TODO: call to server for file with name device.GetLog();
+			String filename = getExternalFilesDir(null).getPath() + Constants.DEMO_LOG_FILENAME;
+			List<String[]> LogFile = LogLoader(filename);
+			if (LogFile != null) {
 				GraphViewData[] data = new GraphViewData[LogFile.size()];
 				int i = 0;
-				for(String[] s : LogFile){
+				for (String[] s : LogFile) {
 					data[i] = new GraphViewData(i+1,Integer.parseInt(s[2]));
 					i++;
 				}
@@ -106,7 +106,7 @@ public class SensorDetailActivity extends Activity {
 				graph.setLayoutParams(graphParams);
 				mainlayout.addView(graph);
 			}
-		}else{
+		} else {
 			//DEBUG: this should be used different
 			View view = new View(this);
 			LinearLayout.LayoutParams viewParams = new LinearLayout.LayoutParams(android.view.ViewGroup.LayoutParams.MATCH_PARENT, 250);
@@ -114,7 +114,7 @@ public class SensorDetailActivity extends Activity {
 			mainlayout.addView(view);
 		}
 		
-		switch(mDevice.getType()){
+		switch (mDevice.getType()) {
 			case Constants.TYPE_TEMPERATURE:
 			case Constants.TYPE_HUMIDITY:
 			case Constants.TYPE_PRESSURE:

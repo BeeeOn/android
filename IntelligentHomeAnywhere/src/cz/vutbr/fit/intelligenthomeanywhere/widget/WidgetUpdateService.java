@@ -1,7 +1,5 @@
 package cz.vutbr.fit.intelligenthomeanywhere.widget;
 
-import java.util.Random;
-
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.app.Service;
@@ -15,10 +13,7 @@ import android.os.PowerManager;
 import android.os.SystemClock;
 import android.util.Log;
 import cz.vutbr.fit.intelligenthomeanywhere.Constants;
-import cz.vutbr.fit.intelligenthomeanywhere.adapter.Adapter;
 import cz.vutbr.fit.intelligenthomeanywhere.adapter.device.BaseDevice;
-import cz.vutbr.fit.intelligenthomeanywhere.adapter.device.UnknownDevice;
-import cz.vutbr.fit.intelligenthomeanywhere.adapter.parser.XmlDeviceParser;
 import cz.vutbr.fit.intelligenthomeanywhere.controller.Controller;
 
 public class WidgetUpdateService extends Service {

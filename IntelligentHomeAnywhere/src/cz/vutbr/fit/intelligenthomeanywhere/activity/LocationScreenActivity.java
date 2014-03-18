@@ -6,7 +6,6 @@ import java.util.List;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Environment;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
@@ -15,10 +14,10 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import cz.vutbr.fit.intelligenthomeanywhere.Compatibility;
 import cz.vutbr.fit.intelligenthomeanywhere.Constants;
+import cz.vutbr.fit.intelligenthomeanywhere.R;
 import cz.vutbr.fit.intelligenthomeanywhere.adapter.Adapter;
 import cz.vutbr.fit.intelligenthomeanywhere.adapter.parser.XmlCreator;
 import cz.vutbr.fit.intelligenthomeanywhere.adapter.parser.XmlDeviceParser;
-import cz.vutbr.fit.intelligenthomeanywhere.R;
 
 /**
  * Activity class for choosing location
@@ -41,7 +40,7 @@ public class LocationScreenActivity extends Activity {
 		Bundle bundle = this.getIntent().getExtras();
 		if(bundle != null){
 			if(bundle.getString(Constants.LOGIN).equals(Constants.LOGIN_DEMO)){
-				GETFROMSERVER = Constants.DEMO_COMMUNICATION;
+				GETFROMSERVER = getExternalFilesDir(null).getPath() + Constants.DEMO_FILENAME;
 			}else if(bundle.getString(Constants.LOGIN).equals(Constants.LOGIN_COMM)){
 				//TODO: calling to server for xml file
 				//TODO: setting up timed calling to server
@@ -95,7 +94,7 @@ public class LocationScreenActivity extends Activity {
 		final int ID = Constants.BUTTON_ID;
 		//DEBUG: maybe saving on SDCard even after calling sever as a cache
 		XmlCreator xmlcreator = new XmlCreator(Constants.getAdapter());
-		xmlcreator.saveXml(Environment.getExternalStorageDirectory().toString() + "/IHA/","komunikace.xml");
+		xmlcreator.saveXml(getExternalFilesDir(null).getPath(), Constants.DEMO_FILENAME);
 		
 		Log.i("onResume",this.getLocalClassName());
 		

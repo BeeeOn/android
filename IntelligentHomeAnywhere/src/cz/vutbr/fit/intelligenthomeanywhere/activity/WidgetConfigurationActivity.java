@@ -17,7 +17,7 @@ import cz.vutbr.fit.intelligenthomeanywhere.Constants;
 import cz.vutbr.fit.intelligenthomeanywhere.R;
 import cz.vutbr.fit.intelligenthomeanywhere.adapter.Adapter;
 import cz.vutbr.fit.intelligenthomeanywhere.adapter.device.BaseDevice;
-import cz.vutbr.fit.intelligenthomeanywhere.adapter.parser.XmlDeviceParser;
+import cz.vutbr.fit.intelligenthomeanywhere.controller.Controller;
 import cz.vutbr.fit.intelligenthomeanywhere.widget.SensorWidgetProvider;
 import cz.vutbr.fit.intelligenthomeanywhere.widget.WidgetUpdateService;
 
@@ -51,8 +51,7 @@ public class WidgetConfigurationActivity extends Activity {
         resultValue.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, mAppWidgetId);
         setResult(RESULT_CANCELED, resultValue);
 
-        // TODO: rewrite better with use of proper class for working with such data
-        mAdapter = XmlDeviceParser.fromFile(Constants.DEMO_COMMUNICATION);
+        mAdapter = Controller.getInstance(this).getAdapter();
         if (mAdapter == null || mAdapter.devices.size() == 0) {
         	// TODO: use string from resources
         	Toast.makeText(this, "No sensors available.\nTry to run application first.", Toast.LENGTH_LONG).show();
