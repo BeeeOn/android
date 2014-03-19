@@ -10,8 +10,9 @@ import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
 import cz.vutbr.fit.intelligenthomeanywhere.Constants;
-import cz.vutbr.fit.intelligenthomeanywhere.adapter.device.BaseDevice;
 import cz.vutbr.fit.intelligenthomeanywhere.R;
+import cz.vutbr.fit.intelligenthomeanywhere.adapter.device.BaseDevice;
+import cz.vutbr.fit.intelligenthomeanywhere.controller.Controller;
 
 /**
  * Class that handle screen to changing name of location
@@ -19,11 +20,16 @@ import cz.vutbr.fit.intelligenthomeanywhere.R;
  */
 public class ChangeLocationNameActivity extends Activity {
 	private String mOldLocation = null;
+	
+	private Controller mController;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
+		
+		mController = Controller.getInstance(this);
+		
 		setContentView(R.layout.activity_change_location_name);
 		initButtons();
 		
@@ -41,13 +47,13 @@ public class ChangeLocationNameActivity extends Activity {
 		((Button)findViewById(R.id.change_location_name_button)).setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				List<BaseDevice> devices = Constants.getAdapter().getDevicesByLocation(mOldLocation);
+				List<BaseDevice> devices = mController.getAdapter().getDevicesByLocation(mOldLocation);
 				EditText enewLocation = (EditText)findViewById(R.id.change_location_name_edittext);
 				String snewLocation = enewLocation.getText().toString();
 				for(BaseDevice d : devices){
 					d.setLocation(snewLocation);
 				}
-				Constants.getAdapter().setNewLocationName();
+				mController.getAdapter().setNewLocationName();
 				ChangeLocationNameActivity.this.finish();
 			}
 		});

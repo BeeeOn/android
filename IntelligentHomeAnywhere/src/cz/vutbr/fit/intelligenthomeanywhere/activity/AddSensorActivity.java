@@ -13,9 +13,9 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
-import cz.vutbr.fit.intelligenthomeanywhere.Constants;
-import cz.vutbr.fit.intelligenthomeanywhere.adapter.device.BaseDevice;
 import cz.vutbr.fit.intelligenthomeanywhere.R;
+import cz.vutbr.fit.intelligenthomeanywhere.adapter.device.BaseDevice;
+import cz.vutbr.fit.intelligenthomeanywhere.controller.Controller;
 
 /**
  * Class that handle adding new sensor to the system
@@ -23,20 +23,25 @@ import cz.vutbr.fit.intelligenthomeanywhere.R;
  */
 public class AddSensorActivity extends Activity {
 
+	Controller mController;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_add_sensor);
+		
+		mController = Controller.getInstance(this);
+		
 		initButtons();
 		
-		List<String> ListLocation = Constants.getAdapter().getLocations(true);
+		List<String> ListLocation = mController.getAdapter().getLocations(true);
 		
 		Spinner spinner = (Spinner)findViewById(R.id.spinner_choose_location);
         ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, ListLocation);
         dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(dataAdapter);
         
-        BaseDevice device = Constants.getAdapter().getNewOne();
+        BaseDevice device = mController.getAdapter().getNewOne();
         TextView type = (TextView)findViewById(R.id.addsensor_type);
         type.setText(type.getText() + " " + getApplicationContext().getString(device.getTypeStringResource()));
         
@@ -53,7 +58,7 @@ public class AddSensorActivity extends Activity {
 		((Button)findViewById(R.id.addsensor_add)).setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				BaseDevice newdevice = Constants.getAdapter().getNewOne();
+				BaseDevice newdevice = mController.getAdapter().getNewOne();
 				if(newdevice != null){
 					EditText name = (EditText)findViewById(R.id.addsensor_sensor_name_hint);
 					EditText elocation = (EditText)findViewById(R.id.addsensor_new_location_hint);
@@ -72,7 +77,7 @@ public class AddSensorActivity extends Activity {
 					newdevice.setName(name.getText().toString());
 					newdevice.setLocation(location);
 
-					Constants.getAdapter().setNewInit();
+					mController.getAdapter().setNewInit();
 					Toast.makeText(getApplicationContext(), getString(R.string.toast_new_sensor_added), Toast.LENGTH_LONG).show();
 					AddSensorActivity.this.finish();
 				}

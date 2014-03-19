@@ -9,25 +9,30 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 import cz.vutbr.fit.intelligenthomeanywhere.Constants;
-import cz.vutbr.fit.intelligenthomeanywhere.adapter.device.BaseDevice;
 import cz.vutbr.fit.intelligenthomeanywhere.R;
+import cz.vutbr.fit.intelligenthomeanywhere.adapter.device.BaseDevice;
+import cz.vutbr.fit.intelligenthomeanywhere.controller.Controller;
 
 public class ChangeDeviceNameActivity extends Activity {
 
 	private BaseDevice mDevice = null;
+	
+	private Controller mController;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 
+		mController = Controller.getInstance(this);
+		
 		setContentView(R.layout.activity_change_device_name);
 		initButtons();
 		
 		Bundle bundle = this.getIntent().getExtras();
 		if(bundle != null){
 			String id = bundle.getString(Constants.DEVICE_LONG_PRESS);
-			mDevice = Constants.getAdapter().getDeviceById(id);
+			mDevice = mController.getAdapter().getDeviceById(id);
 		} else {
 			Toast.makeText(this, "Error: Given no device id.", Toast.LENGTH_LONG).show();
 			finish();
@@ -46,7 +51,7 @@ public class ChangeDeviceNameActivity extends Activity {
 				String snewDevice = enewDevice.getText().toString();
 				mDevice.setName(snewDevice);
 				
-				Constants.getAdapter().setNewDeviceName(snewDevice);
+				mController.getAdapter().setNewDeviceName(snewDevice);
 				ChangeDeviceNameActivity.this.finish();
 			}
 		});

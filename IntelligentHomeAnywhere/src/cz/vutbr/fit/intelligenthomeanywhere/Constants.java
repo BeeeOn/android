@@ -10,16 +10,12 @@
  */
 package cz.vutbr.fit.intelligenthomeanywhere;
 
-import android.content.Context;
-import cz.vutbr.fit.intelligenthomeanywhere.adapter.Adapter;
 
 /**
  * @brief Class for all constants
  * @author ThinkDeep
  */
 public final class Constants {
-	private static Adapter mAdapter;
-	private static Context mContext;
 	
 	/**
 	 * Footing for pass from LocationScreenActivity to DataOfLocationScreenActivity
@@ -154,48 +150,5 @@ public final class Constants {
 	public static final String WIDGET_PREF_LAST_UPDATE = "lastUpdate";
 	public static final String WIDGET_PREF_INITIALIZED = "initialized";
 	public static final String WIDGET_PREF_DEVICE = "device";
-		
-	/**
-	 * Set up main adapter object
-	 * @param adapter object
-	 */
-	public static void setAdapter(Adapter adapter){
-		mAdapter = adapter;
-	}
-	/**
-	 * Returning actual adapter
-	 * @return Adapter object
-	 */
-	public static Adapter getAdapter(){
-		// FIXME: get Adapter if doesn't exists
-		// e.g. because our application process get killed by Android
-		// and then is started again (but without initializing this) 
-		/*if (mAdapter == NULL)
-			mAdapter = ... */
-		
-		return mAdapter;
-	}
-	
-	/**
-	 * Set up context of application
-	 * @param context of application
-	 */
-	public static void setContext(Context context){
-		mContext = context;
-	}
-	
-	/**
-	 * Returning actual context
-	 * @return Context object
-	 */
-	public static Context getContext() {
-		// FIXME: get Context if doesn't exists
-		// e.g. because our application process get killed by Android
-		// and then is started again (but without initializing this) 
-		/*if (mContext == NULL)
-			mContext = ... */
-			
-		return mContext;
-	}
 	
 }

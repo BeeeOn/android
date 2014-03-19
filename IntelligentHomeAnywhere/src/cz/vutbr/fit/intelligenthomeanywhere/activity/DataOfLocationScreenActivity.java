@@ -15,12 +15,13 @@ import android.widget.TextView;
 import android.widget.ToggleButton;
 import cz.vutbr.fit.intelligenthomeanywhere.Compatibility;
 import cz.vutbr.fit.intelligenthomeanywhere.Constants;
+import cz.vutbr.fit.intelligenthomeanywhere.R;
 import cz.vutbr.fit.intelligenthomeanywhere.adapter.Adapter;
 import cz.vutbr.fit.intelligenthomeanywhere.adapter.device.BaseDevice;
 import cz.vutbr.fit.intelligenthomeanywhere.adapter.device.StateDevice;
 import cz.vutbr.fit.intelligenthomeanywhere.adapter.device.SwitchDevice;
+import cz.vutbr.fit.intelligenthomeanywhere.controller.Controller;
 import cz.vutbr.fit.intelligenthomeanywhere.view.ToggleButtonOnClickListener;
-import cz.vutbr.fit.intelligenthomeanywhere.R;
 
 /**
  * Class that handle screen with location data
@@ -33,14 +34,18 @@ public class DataOfLocationScreenActivity extends Activity {
 	private String mClicked;
 	private View mPressed = null;
 	
+	private Controller mController;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_data_of_locacion_screen);
 		
+		mController = Controller.getInstance(this);
+		
 		Bundle bundle = this.getIntent().getExtras();
 		if(bundle != null){
-			mAdapter = Constants.getAdapter();
+			mAdapter = mController.getAdapter();
 			mClicked = bundle.getString(Constants.LOCATION_CLICKED);
 			Log.i("clicked ->",mClicked);
 		}else
@@ -258,10 +263,11 @@ public class DataOfLocationScreenActivity extends Activity {
 	public void onResume(){
 		super.onResume();
 		
-		if(Constants.getAdapter().isNewDeviceName()){
-			((TextView)((RelativeLayout)mPressed).getChildAt(0)).setText(Constants.getAdapter().getNewDeviceName());
-		}
+		mController = Controller.getInstance(this);
 		
+		if (mController.getAdapter().isNewDeviceName()) {
+			((TextView)((RelativeLayout)mPressed).getChildAt(0)).setText(mController.getAdapter().getNewDeviceName());
+		}
 	}
 	
 	@Override
