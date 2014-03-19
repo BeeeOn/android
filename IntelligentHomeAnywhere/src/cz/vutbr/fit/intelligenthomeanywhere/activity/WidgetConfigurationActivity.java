@@ -153,7 +153,7 @@ public class WidgetConfigurationActivity extends Activity {
 		int interval = Integer.parseInt(i);
 		interval = Math.max(interval, WidgetUpdateService.UPDATE_INTERVAL_MIN);
 		
-		editor.putString(Constants.WIDGET_PREF_DEVICE, device.getAddress());	
+		editor.putString(Constants.WIDGET_PREF_DEVICE, device.getId());	
 		editor.putInt(Constants.WIDGET_PREF_INTERVAL, interval);
 		editor.putBoolean(Constants.WIDGET_PREF_INITIALIZED, true);
         editor.commit();
