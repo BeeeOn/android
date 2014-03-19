@@ -9,6 +9,7 @@ import java.util.List;
 import cz.vutbr.fit.intelligenthomeanywhere.User;
 import cz.vutbr.fit.intelligenthomeanywhere.adapter.device.BaseDevice;
 import cz.vutbr.fit.intelligenthomeanywhere.adapter.parser.XmlCreator;
+import cz.vutbr.fit.intelligenthomeanywhere.listing.SimpleListing;
 
 /**
  * @brief Class for parsed data from XML file of adapters
@@ -19,7 +20,7 @@ public class Adapter {
 	/**
 	 * List of devices
 	 */
-	public List<BaseDevice> devices;
+	public SimpleListing devices;
 	private String mId;
 	private String mVersion;
 	private String mName;
@@ -30,7 +31,7 @@ public class Adapter {
 	private String mNewDeviceNameLabel;
 	
 	public Adapter() {
-		devices = new ArrayList<BaseDevice>();
+		devices = new SimpleListing();
 		mId = null;
 		mVersion = null;
 		mNewInit = false;
@@ -50,7 +51,7 @@ public class Adapter {
 		result += "VERSION is " + mVersion + "\n";
 		result += "___start of sensors___\n";
 		
-		for(BaseDevice dev : devices){
+		for(BaseDevice dev : devices.getDevices()){
 			result += dev.toString();
 			result += "__\n";
 		}
@@ -127,7 +128,7 @@ public class Adapter {
 	 * @return true if there is new, otherwise false
 	 */
 	public boolean isNewOne(){
-		for(BaseDevice d : devices)
+		for(BaseDevice d : devices.getDevices())
 			if(!d.isInitialized())
 				return true;
 		return false;
@@ -138,7 +139,7 @@ public class Adapter {
 	 * @return new adapter or null
 	 */
 	public BaseDevice getNewOne(){
-		for(BaseDevice d : devices)
+		for(BaseDevice d : devices.getDevices())
 			if(!d.isInitialized())
 				return d;
 		return null;
@@ -150,7 +151,7 @@ public class Adapter {
 	 * @return BaseDeviceor null
 	 */
 	public BaseDevice getDeviceById(String id){
-		for (BaseDevice d : devices)
+		for (BaseDevice d : devices.getDevices())
 			if (d.getId() != null && d.getId().equals(id))
 				return d;
 		return null;
@@ -164,7 +165,7 @@ public class Adapter {
 	public List<String> getLocations(boolean notnull){
 		List<String> locations = new ArrayList<String>();
 		
-		for(BaseDevice d : devices){
+		for(BaseDevice d : devices.getDevices()){
 			if(!locations.contains(d.getLocation())){
 				if(notnull)
 					if(d.getLocation() == null)
@@ -258,7 +259,7 @@ public class Adapter {
 	public List<BaseDevice> getDevicesByLocation(String name){
 		List<BaseDevice> result = new ArrayList<BaseDevice>();
 		
-		for(BaseDevice d : devices){
+		for(BaseDevice d : devices.getDevices()){
 			if(d.getLocation().equals(name))
 				result.add(d);
 		}

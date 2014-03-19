@@ -16,6 +16,7 @@ import cz.vutbr.fit.intelligenthomeanywhere.adapter.device.BaseDevice;
 import cz.vutbr.fit.intelligenthomeanywhere.adapter.device.DeviceLog;
 import cz.vutbr.fit.intelligenthomeanywhere.adapter.device.UnknownDevice;
 import cz.vutbr.fit.intelligenthomeanywhere.adapter.parser.XmlDeviceParser;
+import cz.vutbr.fit.intelligenthomeanywhere.listing.FavoritesListing;
 import cz.vutbr.fit.intelligenthomeanywhere.network.Network;
 import cz.vutbr.fit.intelligenthomeanywhere.persistence.Persistence;
 
@@ -125,7 +126,7 @@ public final class Controller {
 		Adapter mAdapter = getAdapter();
 		
 		if (mAdapter != null) {
-			for (BaseDevice device : mAdapter.devices) {
+			for (BaseDevice device : mAdapter.devices.getDevices()) {
 				if (device.getAddress().equals(id)) {
 					// TODO: remove this random value checking
 					int i = new Random().nextInt(100);
@@ -162,15 +163,19 @@ public final class Controller {
 	}
 
 	
-	public boolean addView(View view) {
+	public boolean addCustomList(FavoritesListing list) {
 		throw new NotImplementedException();
 	}
 	
-	public boolean delView(View view) {
+	public boolean deleteCustomList(FavoritesListing list) {
 		throw new NotImplementedException();
 	}
 	
-	public boolean saveView(View view) {
+	public boolean saveCustomList(FavoritesListing list) {
+		throw new NotImplementedException();
+	}
+	
+	public FavoritesListing getCustomList(String id) {
 		throw new NotImplementedException();
 	}
 

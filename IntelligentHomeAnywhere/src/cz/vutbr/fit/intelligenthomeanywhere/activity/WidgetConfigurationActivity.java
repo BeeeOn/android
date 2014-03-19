@@ -52,7 +52,7 @@ public class WidgetConfigurationActivity extends Activity {
         setResult(RESULT_CANCELED, resultValue);
 
         mAdapter = Controller.getInstance(this).getAdapter();
-        if (mAdapter == null || mAdapter.devices.size() == 0) {
+        if (mAdapter == null || mAdapter.devices.getDevices().size() == 0) {
         	// TODO: use string from resources
         	Toast.makeText(this, "No sensors available.\nTry to run application first.", Toast.LENGTH_LONG).show();
         	finish();
@@ -104,20 +104,20 @@ public class WidgetConfigurationActivity extends Activity {
 
 	private void initSpinner() {
         Spinner s = (Spinner)findViewById(R.id.sensor);
-        ArrayAdapter<?> arrayAdapter = new ArrayAdapter<BaseDevice>(this, android.R.layout.simple_spinner_dropdown_item, mAdapter.devices);
+        ArrayAdapter<?> arrayAdapter = new ArrayAdapter<BaseDevice>(this, android.R.layout.simple_spinner_dropdown_item, mAdapter.devices.getDevices());
         s.setAdapter(arrayAdapter);
 	}
 	
 	private void loadSettings() {
 		SharedPreferences settings = SensorWidgetProvider.getSettings(WidgetConfigurationActivity.this, mAppWidgetId);
 		
-		String address = settings.getString(Constants.WIDGET_PREF_DEVICE, "");
-		if (address != "") {
+		String id = settings.getString(Constants.WIDGET_PREF_DEVICE, "");
+		if (id != "") {
 			Spinner s = (Spinner)findViewById(R.id.sensor);
 
-			for (int i = 0; i < mAdapter.devices.size(); i++) {
-				BaseDevice device = mAdapter.devices.get(i);
-				if (device.getAddress().equals(address)) {
+			for (int i = 0; i < s.getCount(); i++) {
+				BaseDevice device = (BaseDevice)s.getItemAtPosition(i);
+				if (device.getId().equals(id)) {
 					s.setSelection(i);
 					break;
 				}

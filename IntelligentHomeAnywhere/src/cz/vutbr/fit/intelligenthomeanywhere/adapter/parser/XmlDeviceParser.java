@@ -25,6 +25,7 @@ import cz.vutbr.fit.intelligenthomeanywhere.adapter.device.StateDevice;
 import cz.vutbr.fit.intelligenthomeanywhere.adapter.device.SwitchDevice;
 import cz.vutbr.fit.intelligenthomeanywhere.adapter.device.TemperatureDevice;
 import cz.vutbr.fit.intelligenthomeanywhere.adapter.device.UnknownDevice;
+import cz.vutbr.fit.intelligenthomeanywhere.listing.SimpleListing;
 
 /**
  * Class for parsing XML file for device
@@ -93,7 +94,7 @@ public class XmlDeviceParser {
 		}
 
 		if (adapter != null)
-			Log.i(TAG, String.format("Got adapter with %d devices", adapter.devices.size()));
+			Log.i(TAG, String.format("Got adapter with %d devices", adapter.devices.getDevices().size()));
 
 		return adapter;
 	}
@@ -148,7 +149,7 @@ public class XmlDeviceParser {
 	 * @throws XmlPullParserException
 	 * @throws IOException
 	 */
-	private List<BaseDevice> readCapabilities() throws XmlPullParserException, IOException {				
+	private SimpleListing readCapabilities() throws XmlPullParserException, IOException {				
 		List<BaseDevice> devices = new ArrayList<BaseDevice>();
 
 		mParser.require(XmlPullParser.START_TAG, ns, ADAPTER_CAPABILITIES);
@@ -166,7 +167,7 @@ public class XmlDeviceParser {
 	    }
 		mParser.require(XmlPullParser.END_TAG, ns, ADAPTER_CAPABILITIES);	
 
-		return devices;
+		return new SimpleListing(devices);
 	}
 
 	/**
