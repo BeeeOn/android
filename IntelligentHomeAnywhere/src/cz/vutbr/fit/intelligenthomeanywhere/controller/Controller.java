@@ -3,19 +3,17 @@
  */
 package cz.vutbr.fit.intelligenthomeanywhere.controller;
 
-import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 import android.content.Context;
-import android.view.View;
-import cz.vutbr.fit.intelligenthomeanywhere.Constants;
 import cz.vutbr.fit.intelligenthomeanywhere.NotImplementedException;
 import cz.vutbr.fit.intelligenthomeanywhere.User;
 import cz.vutbr.fit.intelligenthomeanywhere.adapter.Adapter;
 import cz.vutbr.fit.intelligenthomeanywhere.adapter.device.BaseDevice;
 import cz.vutbr.fit.intelligenthomeanywhere.adapter.device.DeviceLog;
-import cz.vutbr.fit.intelligenthomeanywhere.adapter.device.UnknownDevice;
-import cz.vutbr.fit.intelligenthomeanywhere.adapter.parser.XmlDeviceParser;
+import cz.vutbr.fit.intelligenthomeanywhere.household.DemoHousehold;
+import cz.vutbr.fit.intelligenthomeanywhere.household.Household;
 import cz.vutbr.fit.intelligenthomeanywhere.listing.FavoritesListing;
 import cz.vutbr.fit.intelligenthomeanywhere.network.Network;
 import cz.vutbr.fit.intelligenthomeanywhere.persistence.Persistence;
@@ -24,15 +22,15 @@ public final class Controller {
 	
 	private static Controller mController;
 	
-	private Context mContext;
+	private final Context mContext;
 	
-	private Persistence mPersistence;
+	private final Persistence mPersistence;
 	
-	private Network mNetwork;
+	private final Network mNetwork;
 	
-	private User mUser;
+	private final Household mHousehold;
 	
-	private Adapter mAdapter;	// FIXME: this should be removed when there will be support for multiple adapters through whole application 
+	public static final boolean demoMode = true;
 	
 	public static Controller getInstance(Context context) {
 		if (mController == null)
@@ -43,8 +41,10 @@ public final class Controller {
 
 	public Controller(Context context) {
 		mContext = context;
-		mPersistence = new Persistence(context);
+
+		mPersistence = new Persistence(mContext);
 		mNetwork = new Network();
+		mHousehold = demoMode ? new DemoHousehold(mContext) : new Household();
 	}
 
 	
@@ -62,9 +62,9 @@ public final class Controller {
 			return false; // TODO: throw proper exception
 
 		// TODO: catch and throw proper exception
-		mUser = mNetwork.signIn(userId);
-		if (mUser != null) {
-			mPersistence.saveLastUser(mUser);
+		mHousehold.user = mNetwork.signIn(userId);
+		if (mHousehold.user != null) {
+			mPersistence.saveLastUser(mHousehold.user);
 			return true;
 		}
 		
@@ -72,48 +72,54 @@ public final class Controller {
 	}
 	
 	public boolean logout() {
-		mUser = null;
+		mHousehold.user = null;
 		mPersistence.saveLastUser(null);
 		
 		return true;
 	}
 	
 	public boolean isLoggedIn() {
-		return mUser != null;
+		return mHousehold.user != null;
 	}
 	
 	public Adapter getAdapter() {
-		// FIXME: this should be removed when there will be support for multiple adapters through whole application
-		if (mAdapter == null) {
-			String filename = mContext.getExternalFilesDir(null).getPath() + Constants.DEMO_FILENAME;
-			mAdapter = XmlDeviceParser.fromFile(filename);
+		// FIXME: this method should be removed when there will be support for multiple adapters through whole application
+		
+		if (mHousehold.adapters == null) {
+			// TODO: load adapters from network
+			throw new NotImplementedException();
 		}
 		
-		return mAdapter;
+		return mHousehold.adapters.get(0);
 	}
 	
-	public ArrayList<Adapter> getAdapters() {
-		throw new NotImplementedException();
+	public List<Adapter> getAdapters() {
+		if (mHousehold.adapters == null) {
+			// TODO: load adapters from network
+			throw new NotImplementedException();
+		}
+		
+		return mHousehold.adapters;
 	}
 	
 	public DeviceLog getDeviceLog(String id) {
 		throw new NotImplementedException();
 	}
 
-	public ArrayList<String> getRooms(String adapterId) {
+	public List<String> getRooms(String adapterId) {
 		throw new NotImplementedException();
 	}
 	
-	public ArrayList<BaseDevice> getRoom(String roomId) {
+	public List<BaseDevice> getRoom(String roomId) {
 		throw new NotImplementedException();
 	}
 
 	
-	public ArrayList<String> getLists() {
+	public List<String> getLists() {
 		throw new NotImplementedException();
 	}
 	
-	public ArrayList<BaseDevice> getList(String listId) {
+	public List<BaseDevice> getList(String listId) {
 		throw new NotImplementedException();
 	}
 
@@ -123,22 +129,24 @@ public final class Controller {
 	}
 	
 	public BaseDevice getDevice(String id, boolean forceUpdate) {
-		Adapter mAdapter = getAdapter();
+		BaseDevice device = null;
 		
-		if (mAdapter != null) {
-			for (BaseDevice device : mAdapter.devices.getDevices()) {
-				if (device.getAddress().equals(id)) {
-					// TODO: remove this random value checking
-					int i = new Random().nextInt(100);
-					device.setValue(i);
-					return device;
-				}
-			}
+		for (Adapter adapter : mHousehold.adapters) {
+			device = adapter.devices.getById(id);
+			if (device != null)
+				break;
 		}
 
-		return new UnknownDevice();
-
-		//throw new NotImplementedException();
+		boolean needsUpdate = true;
+		// TODO: something like: needsUpdate = forceUpdate || !mPersistence->getDevice(device)
+		
+		if (device != null && needsUpdate) {
+			// TODO: load actual value from network
+			int i = new Random().nextInt(100);
+			device.setValue(i);
+		}
+		
+		return device;
 	}
 	
 	public BaseDevice saveDevice(BaseDevice device) {
