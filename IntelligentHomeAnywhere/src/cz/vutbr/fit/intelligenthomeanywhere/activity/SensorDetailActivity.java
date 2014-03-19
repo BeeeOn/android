@@ -16,6 +16,7 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.GraphView.GraphViewData;
@@ -26,6 +27,7 @@ import cz.vutbr.fit.intelligenthomeanywhere.Compatibility;
 import cz.vutbr.fit.intelligenthomeanywhere.Constants;
 import cz.vutbr.fit.intelligenthomeanywhere.R;
 import cz.vutbr.fit.intelligenthomeanywhere.adapter.device.BaseDevice;
+import cz.vutbr.fit.intelligenthomeanywhere.controller.Controller;
 import cz.vutbr.fit.intelligenthomeanywhere.view.NumberPicker;
 import cz.vutbr.fit.intelligenthomeanywhere.view.NumberPicker.OnChangedListener;
 
@@ -38,8 +40,6 @@ public class SensorDetailActivity extends Activity {
 
 	//private int type = 0;
 	
-	private String mId;
-	
 	private BaseDevice mDevice;
 	
 	@Override
@@ -47,17 +47,20 @@ public class SensorDetailActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_sensor_detail_screen);
 		
-		mId = this.getIntent().getExtras().getString(Constants.DEVICE_CLICKED);
-		mDevice = Constants.getAdapter().getDeviceById(mId);
+		String id = this.getIntent().getExtras().getString(Constants.DEVICE_CLICKED);
+		mDevice = Controller.getInstance(this).getDevice(id);
 		
 		if (mDevice == null) {
-			Log.e("SensorDetailActivity", String.format("Device with id '%s' wasn't found", mId));
+			Log.e("SensorDetailActivity", String.format("Device with id '%s' wasn't found", id));
+			Toast.makeText(this, "This device wasn't found", Toast.LENGTH_LONG).show();
 			finish();
-			return;
+		} else {
+			Log.i("Click on", mDevice.getName());
+			initLayout();
 		}
-		
-		Log.i("Click on",mDevice.getName());
-		
+	}
+	
+	private void initLayout() {
 		LinearLayout mainlayout = (LinearLayout) findViewById(R.id.sensordetail_scroll);
 		mainlayout.setFocusable(true);
 		mainlayout.setFocusableInTouchMode(true);

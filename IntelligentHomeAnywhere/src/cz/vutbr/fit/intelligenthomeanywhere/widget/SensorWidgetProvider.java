@@ -14,6 +14,7 @@ import android.widget.RemoteViews;
 import cz.vutbr.fit.intelligenthomeanywhere.Compatibility;
 import cz.vutbr.fit.intelligenthomeanywhere.Constants;
 import cz.vutbr.fit.intelligenthomeanywhere.R;
+import cz.vutbr.fit.intelligenthomeanywhere.activity.SensorDetailActivity;
 import cz.vutbr.fit.intelligenthomeanywhere.activity.WidgetConfigurationActivity;
 import cz.vutbr.fit.intelligenthomeanywhere.adapter.device.BaseDevice;
 
@@ -109,37 +110,42 @@ public class SensorWidgetProvider extends AppWidgetProvider {
     	int layout = getSettings(context, widgetId).getInt(Constants.WIDGET_PREF_LAYOUT, R.layout.widget_sensor);
         RemoteViews remoteViews = new RemoteViews(context.getPackageName(), layout);
         
-        int icon = device.getTypeIconResource();
-        if (icon == 0) {
-        	icon = R.drawable.ic_launcher;
+        if (device != null) {
+	        int icon = device.getTypeIconResource();
+	        if (icon == 0) {
+	        	icon = R.drawable.ic_launcher;
+	        }
+	        
+	        remoteViews.setImageViewResource(R.id.icon, icon);
+			remoteViews.setTextViewText(R.id.name, device.getName());
+			remoteViews.setTextViewText(R.id.value, device.getStringValueUnit(context));
+        } else {
+        	// device doesn't exists - was removed or something
+			remoteViews.setTextViewText(R.id.name, "NOT EXISTS"); // TODO: use string from resources
+			remoteViews.setTextViewText(R.id.value, "");
         }
-        
-        remoteViews.setImageViewResource(R.id.icon, icon);
-		remoteViews.setTextViewText(R.id.name, device.getName());
-		remoteViews.setTextViewText(R.id.value, device.getStringValueUnit(context));
 		
 		// register an onClickListener
 		PendingIntent pendingIntent;
+		Intent intent;
 
 		// force update on click to icon
 		pendingIntent = WidgetUpdateService.getForceUpdatePendingIntent(context, widgetId);
 		remoteViews.setOnClickPendingIntent(R.id.icon, pendingIntent);
 		
 		// open configuration on click elsewhere
-		Intent intent = new Intent(context, WidgetConfigurationActivity.class);
+		intent = new Intent(context, WidgetConfigurationActivity.class);
 		intent.setAction(AppWidgetManager.ACTION_APPWIDGET_CONFIGURE);
 		intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 		intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, widgetId);
 		pendingIntent = PendingIntent.getActivity(context, widgetId, intent, PendingIntent.FLAG_CANCEL_CURRENT);
 		remoteViews.setOnClickPendingIntent(R.id.layout, pendingIntent);
 		
-		/* TODO: this will crash as application is not ready for this
 		// open detail activity on click
-		Intent intent = new Intent(context, SensorDetailActivity.class);
-		intent.putExtra(Constants.DEVICE_CLICKED, device.getAddress());
+		intent = new Intent(context, SensorDetailActivity.class);
+		intent.putExtra(Constants.DEVICE_CLICKED, device.getId());
 		pendingIntent = PendingIntent.getActivity(context, widgetId, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-		remoteViews.setOnClickPendingIntent(R.id.layout, pendingIntent);
-		*/
+		remoteViews.setOnClickPendingIntent(R.id.name, pendingIntent);
 
 		// request widget redraw
 		appWidgetManager.updateAppWidget(widgetId, remoteViews);
