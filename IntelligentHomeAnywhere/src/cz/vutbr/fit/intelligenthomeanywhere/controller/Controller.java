@@ -51,7 +51,7 @@ public final class Controller {
 		User lastUser = mPersistence.loadLastUser();
 		
 		if (lastUser != null)
-			return login(lastUser.email);
+			return login(lastUser.getEmail());
 		
 		return false; // TODO: throw proper exception
 	}

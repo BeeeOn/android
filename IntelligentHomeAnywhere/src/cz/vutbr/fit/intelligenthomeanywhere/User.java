@@ -5,20 +5,48 @@ package cz.vutbr.fit.intelligenthomeanywhere;
  */
 public class User {
 
-	public String name;
+	private final String mName;
 	
-	public String email;
+	private final String mEmail;
 	
-	public Role role = Role.Guest;
+	private final Role mRole;
 	
-	public User(String name, String email, Role role) {
-		this.name = name;
-		this.email = email;
-		this.role = role;
+	public User(final String name, final String email, final Role role) {
+		mName = name;
+		mEmail = email;
+		mRole = role;
 	}
 
 	public enum Role {
-		Guest, User, Admin, Superadmin
+		Guest,		// can only read adapter and devices' data
+		User,		// = guest + can switch state of switch devices
+		Admin,		// = user + can change devices' settings (rename, logging, refresh,...) 
+		Superuser;	// = admin + can change whole adapter's settings (devices, users,...)
+		
+		public static Role fromString(final String role) {
+			if (role.equalsIgnoreCase("superuser")) {
+				return Superuser;
+			}
+			if (role.equalsIgnoreCase("admin")) {
+				return Admin;
+			}
+			if (role.equalsIgnoreCase("user")) {
+				return User;
+			}
+			return Guest;
+		}
 	};
+	
+	public String getName() {
+		return mName;
+	}
+	
+	public String getEmail() {
+		return mEmail;
+	}
+	
+	public Role getRole() {
+		return mRole;
+	}
 
 }

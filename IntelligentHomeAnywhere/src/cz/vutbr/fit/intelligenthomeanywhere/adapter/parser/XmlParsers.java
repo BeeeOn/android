@@ -14,6 +14,7 @@ import org.xmlpull.v1.XmlPullParserException;
 import android.util.Log;
 import android.util.Xml;
 import cz.vutbr.fit.intelligenthomeanywhere.Constants;
+import cz.vutbr.fit.intelligenthomeanywhere.User;
 import cz.vutbr.fit.intelligenthomeanywhere.adapter.Adapter;
 import cz.vutbr.fit.intelligenthomeanywhere.adapter.device.BaseDevice;
 import cz.vutbr.fit.intelligenthomeanywhere.adapter.device.EmissionDevice;
@@ -200,7 +201,7 @@ public class XmlParsers {
 			Adapter adapter = new Adapter();
 			adapter.setId(mParser.getAttributeValue(ns, ID));
 			adapter.setName(mParser.getAttributeValue(ns, NAME));
-			adapter.setRole(mParser.getAttributeValue(ns, ROLE));
+			adapter.setRole(User.Role.fromString(mParser.getAttributeValue(ns, ROLE)));
 			result.add(adapter);
 			
 			mParser.nextTag();

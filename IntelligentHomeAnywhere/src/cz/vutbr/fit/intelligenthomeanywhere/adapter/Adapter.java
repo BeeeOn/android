@@ -6,6 +6,7 @@ package cz.vutbr.fit.intelligenthomeanywhere.adapter;
 import java.util.ArrayList;
 import java.util.List;
 
+import cz.vutbr.fit.intelligenthomeanywhere.User;
 import cz.vutbr.fit.intelligenthomeanywhere.adapter.device.BaseDevice;
 import cz.vutbr.fit.intelligenthomeanywhere.adapter.parser.XmlCreator;
 
@@ -22,7 +23,7 @@ public class Adapter {
 	private String mId;
 	private String mVersion;
 	private String mName;
-	private String mRole;
+	private User.Role mRole;
 	private boolean mNewInit;
 	private boolean mNewLocationName;
 	private boolean mNewDeviceName;
@@ -77,7 +78,7 @@ public class Adapter {
 	 * Set role of actual user of adapter
 	 * @param role
 	 */
-	public void setRole(String role){
+	public void setRole(User.Role role){
 		mRole = role;
 	}
 	
@@ -85,7 +86,7 @@ public class Adapter {
 	 * Get role of actual user of adapter
 	 * @return
 	 */
-	public String getRole(){
+	public User.Role getRole(){
 		return mRole;
 	}
 	
