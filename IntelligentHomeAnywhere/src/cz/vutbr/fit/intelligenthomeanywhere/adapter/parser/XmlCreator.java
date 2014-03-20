@@ -35,6 +35,11 @@ public class XmlCreator {
 	public static final String INIT_ID = "0";
 	public static final String STATE = "state";
 	public static final String HEX = "0x";
+	public static final String VERSION = "version";
+	/**
+	 * Version of communication protocol for google/android device 
+	 */
+	public static final String GVER = "1.0";
 	// states
 	public static final String SIGNIN = "signin";
 	public static final String SIGNUP = "signup";
@@ -57,6 +62,7 @@ public class XmlCreator {
 	// end of states
 	public static final String USER = "user";
 	public static final String EMAIL = "email";
+	public static final String GTOKEN = "gtoken";
 	public static final String SERIAL = "serialnumber";
 	public static final String NEXT = "next";
 	public static final String ADAPTER = "adapter";
@@ -98,9 +104,10 @@ public class XmlCreator {
 	/**
 	 * Method create XML for signIn message
 	 * @param email of user
+	 * @param gtoken token from google
 	 * @return XML message
 	 */
-	public String createSignIn(String email){
+	public String createSignIn(String email, String gtoken){
 		XmlSerializer serializer = Xml.newSerializer();
 		StringWriter writer = new StringWriter();
 		try{
@@ -110,8 +117,10 @@ public class XmlCreator {
 			serializer.startTag(ns, COM_ROOT);
 			serializer.attribute(ns, ID, INIT_ID);
 			serializer.attribute(ns, STATE, SIGNIN);
+			serializer.attribute(ns, VERSION, GVER);
 				serializer.startTag(ns, USER);
 				serializer.attribute(ns, EMAIL, email);
+				serializer.attribute(ns, GTOKEN, gtoken);
 				serializer.endTag(ns, USER);
 			serializer.endTag(ns, COM_ROOT);
 			serializer.endDocument();
@@ -126,11 +135,12 @@ public class XmlCreator {
 	 * Method create XML for singUp message
 	 * @param email of user
 	 * @param id is 0 if is NOT signed in, non-zero otherwise 
+	 * @param gtoken token from google
 	 * @param serialNumber of new adapter
 	 * @param next if id is non-zero and user is signed in, that TRUE is using new Adapter, old otherwise
 	 * @return XML message
 	 */
-	public String createSignUp(String email, String id, String serialNumber, boolean next){
+	public String createSignUp(String email, String id, String gtoken, String serialNumber, boolean next){
 		XmlSerializer serializer = Xml.newSerializer();
 		StringWriter writer = new StringWriter();
 		try{
@@ -140,6 +150,7 @@ public class XmlCreator {
 			serializer.startTag(ns, COM_ROOT);
 			serializer.attribute(ns, ID, id);
 			serializer.attribute(ns, STATE, SIGNUP);
+			serializer.attribute(ns, VERSION, GVER);
 				serializer.startTag(ns, SERIAL);
 					serializer.text(serialNumber);
 				serializer.endTag(ns, SERIAL);
@@ -147,6 +158,7 @@ public class XmlCreator {
 				if(id.equals(INIT_ID)){
 					serializer.startTag(ns, USER);
 					serializer.attribute(ns, EMAIL, email);
+					serializer.attribute(ns, GTOKEN, gtoken);
 					serializer.endTag(ns, USER);
 				}else{
 					serializer.startTag(ns, NEXT);
@@ -166,12 +178,13 @@ public class XmlCreator {
 	 * Method create XML for singUp message
 	 * @param email of user
 	 * @param id is 0 if is NOT signed in, non-zero otherwise 
+	 * @param gtoken token from google
 	 * @param serialNumber of new adapter
 	 * @param next if id is non-zero and user is signed in, that TRUE is using new Adapter, old otherwise
 	 * @return XML message
 	 */
-	public String createSignUp(String email, int id, int serialNumber, boolean next){
-		return createSignUp(email, Integer.toString(id), Integer.toString(serialNumber), next);
+	public String createSignUp(String email, int id, String gtoken, int serialNumber, boolean next){
+		return createSignUp(email, Integer.toString(id), gtoken, Integer.toString(serialNumber), next);
 	}
 	
 	/**
@@ -190,6 +203,7 @@ public class XmlCreator {
 			serializer.startTag(ns, COM_ROOT);
 			serializer.attribute(ns, ID, id);
 			serializer.attribute(ns, STATE, INIT);
+			serializer.attribute(ns, VERSION, GVER);
 				
 				serializer.startTag(ns, ADAPTER);
 				serializer.attribute(ns, ID, adapterId);
@@ -231,6 +245,7 @@ public class XmlCreator {
 			serializer.startTag(ns, COM_ROOT);
 			serializer.attribute(ns, ID, id);
 			serializer.attribute(ns, STATE, REINIT);
+			serializer.attribute(ns, VERSION, GVER);
 				
 				serializer.startTag(ns, ADAPTER);
 				serializer.attribute(ns, OLDID, adapterIdOld);
@@ -274,6 +289,7 @@ public class XmlCreator {
 			serializer.startTag(ns, COM_ROOT);
 			serializer.attribute(ns, ID, id);
 			serializer.attribute(ns, STATE, LOGNAME);
+			serializer.attribute(ns, VERSION, GVER);
 			serializer.attribute(ns, FROM, from);
 			serializer.attribute(ns, TO, to);
 			
@@ -337,6 +353,7 @@ public class XmlCreator {
 			serializer.startTag(ns, COM_ROOT);
 			serializer.attribute(ns, ID, id);
 			serializer.attribute(ns, STATE, DELCONACCOUNT);
+			serializer.attribute(ns, VERSION, GVER);
 			
 			for(String userEmail : userEmails){
 				serializer.startTag(ns, USER);
@@ -378,6 +395,7 @@ public class XmlCreator {
 			serializer.startTag(ns, COM_ROOT);
 			serializer.attribute(ns, ID, id);
 			serializer.attribute(ns, STATE, GETCONACCOUNT);
+			serializer.attribute(ns, VERSION, GVER);
 			serializer.endTag(ns, COM_ROOT);
 			serializer.endDocument();
 			
@@ -413,6 +431,7 @@ public class XmlCreator {
 			serializer.startTag(ns, COM_ROOT);
 			serializer.attribute(ns, ID, id);
 			serializer.attribute(ns, STATE, (ADD)?ADDCONACCOUNT:CHANGECONACCOUNT);
+			serializer.attribute(ns, VERSION, GVER);
 			
 			for(Entry<String, String> user : users.entrySet()){
 				serializer.startTag(ns, USER);
@@ -466,7 +485,8 @@ public class XmlCreator {
 			serializer.startTag(ns, COM_ROOT);
 			serializer.attribute(ns, ID, id);
 			serializer.attribute(ns, STATE, TRUE);
-			serializer.attribute(ns, ADDITIONALINFO, additionalInfo);	
+			serializer.attribute(ns, VERSION, GVER);
+			serializer.attribute(ns, ADDITIONALINFO, additionalInfo);
 			serializer.endTag(ns, COM_ROOT);
 			serializer.endDocument();
 			
@@ -506,6 +526,7 @@ public class XmlCreator {
 			serializer.startTag(ns, COM_ROOT);
 			serializer.attribute(ns, ID, id);
 			serializer.attribute(ns, STATE, FALSE);
+			serializer.attribute(ns, VERSION, GVER);
 			serializer.attribute(ns, ADDITIONALINFO, additionalInfo);
 				
 			if(XMLedSubMessage != null)
@@ -554,6 +575,7 @@ public class XmlCreator {
 			serializer.startTag(ns, COM_ROOT);
 			serializer.attribute(ns, ID, id);
 			serializer.attribute(ns, STATE, PARTIAL);
+			serializer.attribute(ns, VERSION, GVER);
 			
 			for(BaseDevice device : devices){
 				serializer.startTag(ns, DEVICE);
@@ -564,6 +586,7 @@ public class XmlCreator {
 				
 				if(device.getLocation() != null){
 					serializer.startTag(ns, LOCATION);
+					serializer.attribute(ns, TYPE, device.getLocationType()+"");
 					serializer.text(device.getLocation());
 					serializer.endTag(ns, LOCATION);
 				}
@@ -630,6 +653,7 @@ public class XmlCreator {
 			serializer.startTag(ns, COM_ROOT);
 			serializer.attribute(ns, ID, id);
 			serializer.attribute(ns, STATE, GETADAPTERS);
+			serializer.attribute(ns, VERSION, GVER);
 			
 			serializer.endTag(ns, COM_ROOT);
 			serializer.endDocument();
@@ -665,6 +689,7 @@ public class XmlCreator {
 			serializer.startTag(ns, COM_ROOT);
 			serializer.attribute(ns, ID, id);
 			serializer.attribute(ns, STATE, UPDATE);
+			serializer.attribute(ns, VERSION, GVER);
 			
 			for(String deviceId : devicesId){
 				serializer.startTag(ns, DEVICE);
@@ -708,6 +733,7 @@ public class XmlCreator {
 			serializer.startTag(ns, COM_ROOT);
 			serializer.attribute(ns, ID, id);
 			serializer.attribute(ns, STATE, ADDVIEW);
+			serializer.attribute(ns, VERSION, GVER);
 			serializer.attribute(ns, NAME, viewName);
 			
 			for(String deviceId : devicesId){
@@ -752,6 +778,7 @@ public class XmlCreator {
 			serializer.startTag(ns, COM_ROOT);
 			serializer.attribute(ns, ID, id);
 			serializer.attribute(ns, STATE, DELVIEW);
+			serializer.attribute(ns, VERSION, GVER);
 			serializer.attribute(ns, NAME, viewName);
 			
 			serializer.endTag(ns, COM_ROOT);
@@ -790,6 +817,7 @@ public class XmlCreator {
 			serializer.startTag(ns, COM_ROOT);
 			serializer.attribute(ns, ID, id);
 			serializer.attribute(ns, STATE, UPDATEVIEW);
+			serializer.attribute(ns, VERSION, GVER);
 			serializer.attribute(ns, NAME, viewName);
 			
 			for(Entry<String, String> device : devices.entrySet()){

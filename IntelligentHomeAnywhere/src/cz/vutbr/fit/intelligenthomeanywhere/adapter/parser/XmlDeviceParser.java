@@ -30,6 +30,7 @@ import cz.vutbr.fit.intelligenthomeanywhere.adapter.device.UnknownDevice;
  * Class for parsing XML file for device
  * @author Robyer
  */
+@Deprecated
 public class XmlDeviceParser {
 	private static final String TAG = XmlDeviceParser.class.getSimpleName();
     private static final String ns = null; // We don't use namespaces
@@ -281,7 +282,7 @@ public class XmlDeviceParser {
 	    }
 		
 		if (location_ != null)
-			device.setLocation(location_);		
+			device.setLocation(location_);
 		if (name_ != null)
 			device.setName(name_);
 		if (refresh_ != null)

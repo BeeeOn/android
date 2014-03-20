@@ -2,7 +2,9 @@
 <projectDescription>
 	<name>IHA-test</name>
 	<comment></comment>
-	<projects></projects>
+	<projects>
+		<project>IntelligentHomeAnywhere</project>
+	</projects>
 	<buildSpec>
 		<buildCommand>
 			<name>com.android.ide.eclipse.adt.ResourceManagerBuilder</name>

@@ -43,6 +43,8 @@ public class XmlParsers {
 	public static final String INIT_ID = "0";
 	public static final String STATE = "state";
 	public static final String TAG = "XmlParser";
+	public static final String VERSION = "version";
+	public static final String CAPABILITIES = "capabilities";
 	
 	// states
 	public static final String READY = "ready";
@@ -51,7 +53,7 @@ public class XmlParsers {
 	public static final String XML = "xml";
 	public static final String PARTIAL = "partial";
 	public static final String CONTENT = "content";
-	public static final String CONACCOUNTLIST = "conacountlist";
+	public static final String CONACCOUNTLIST = "conaccountlist";
 	public static final String TRUE = "true";
 	public static final String FALSE = "false";
 	//extra states
@@ -69,6 +71,7 @@ public class XmlParsers {
 	//
 	public static final String DEVICE = "device";
 	public static final String INITIALIZED = "initialized";
+	public static final String INVOLVED = "involved";
 	public static final String VISIBILITY = "visibility";
 	public static final String TYPE = "type";
 	public static final String LOCATION = "location";
@@ -78,17 +81,30 @@ public class XmlParsers {
 	public static final String QUALITY = "quality";
 	public static final String VALUE = "value";
 	public static final String LOGGING = "logging";
-	public static final String ENABLED = "endabled";
+	public static final String ENABLED = "enabled";
 	public static final String INIT_1 = "1";
 	public static final String INIT_0 = "0";
 
 	
-	
+	/**
+	 * Method parse message (XML) in communication version 1.0 and XML adapter version 1.0.0
+	 * @param xmlInput string with XML contains communication tag as root
+	 * @param namespace false
+	 * @return HashMap with one element where
+	 * 			Key is state of communication
+	 * 			Value is HashMap with one element where
+	 * 				Key is sessionID
+	 * 				Value is Object containing data according to state
+	 * @throws XmlPullParserException
+	 * @throws IOException
+	 */
 	public static HashMap<String, HashMap<Integer, Object>> parseCommunication(String xmlInput, boolean namespace) throws XmlPullParserException, IOException{
 		mParser = Xml.newPullParser();
 		mParser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, namespace);
 		
 		HashMap<String, HashMap<Integer, Object>> outerResult = new HashMap<String, HashMap<Integer, Object>>();
+		
+		@SuppressWarnings("rawtypes")
 		HashMap innerResult = null;
 		String state = null;
 		int id = 0;
@@ -101,7 +117,6 @@ public class XmlParsers {
 		state = mParser.getAttributeValue(ns, STATE);
 		id = Integer.parseInt(mParser.getAttributeValue(ns, ID));
 		
-		
 		switch(getStateEnum(state)){
 		case eCONACCOUNTLIST:
 			innerResult = new HashMap<Integer, HashMap<String, String>>();
@@ -112,7 +127,7 @@ public class XmlParsers {
 			innerResult.put(id, parseContent());
 			break;
 		case eFALSE:
-			innerResult = new HashMap<Integer, HashMap<String, String>>();
+			innerResult = new HashMap<Integer, HashMap<String, HashMap<String, String>>>();
 			innerResult.put(id, parseFalse(mParser.getAttributeValue(ns, ADDITIONALINFO)));
 			break;
 		case eNOTREGA:
@@ -133,7 +148,8 @@ public class XmlParsers {
 			innerResult.put(id, mParser.getAttributeValue(ns, ADDITIONALINFO));
 			break;
 		case eXML:
-			//TODO
+			innerResult = new HashMap<Integer, Adapter>();
+			innerResult.put(id, parseXml(mParser.getAttributeValue(ns, ROLE)));
 			break;
 		case eUNKNOWN: // never gonna happen :D
 			break;
@@ -144,41 +160,78 @@ public class XmlParsers {
 		return outerResult;
 	}
 	
+	/**
+	 * Method parse inner part of XML message (using parsePartial())
+	 * @param role authority of current user for this adapter
+	 * @return Adapter object
+	 * @throws XmlPullParserException
+	 * @throws IOException
+	 */
+	private static Adapter parseXml(String role) throws XmlPullParserException, IOException{
+		Adapter result = new Adapter();
+		mParser.nextTag();
+		mParser.require(XmlPullParser.START_TAG, ns, ADAPTER);
+		
+		result.setId(mParser.getAttributeValue(ns, ID));
+		mParser.nextTag();
+		mParser.require(XmlPullParser.START_TAG, ns, VERSION);
+		
+			result.setVersion(readText(VERSION));
+			result.setRole(role);
+			mParser.nextTag();
+			mParser.require(XmlPullParser.START_TAG, ns, CAPABILITIES);
+			result.devices = parsePartial();
+		
+		return result;
+	}
+	
+	/**
+	 * Method parse inner part of Partial message (set of device's tag)
+	 * @return List of devices
+	 * @throws XmlPullParserException
+	 * @throws IOException
+	 */
 	private static ArrayList<BaseDevice> parsePartial() throws XmlPullParserException, IOException{
 		mParser.nextTag();
 		mParser.require(XmlPullParser.START_TAG, ns, DEVICE);
 		
 		ArrayList<BaseDevice> result = new ArrayList<BaseDevice>();
-		do{
+		
+		do{	
 			BaseDevice device = getDeviceByType(mParser.getAttributeValue(ns, TYPE));
 			device.setAddress(mParser.getAttributeValue(ns, ID));
 			device.setInitialized((mParser.getAttributeValue(ns, INITIALIZED).equals(INIT_1))?true:false);
+			if(!device.isInitialized()){
+				device.setInvolveTime(mParser.getAttributeValue(ns, INVOLVED));
+			}
 			device.setVisibility(mParser.getAttributeValue(ns, VISIBILITY).toLowerCase().charAt(0));
 			
 			String nameTag = null;
 			
-			//TODO: check this!!
+
 			while(mParser.nextTag() != XmlPullParser.END_TAG && !(nameTag = mParser.getName()).equals(DEVICE)){
-				if(nameTag.equals(LOCATION))
-					device.setLocation(mParser.getText());
+				if(nameTag.equals(LOCATION)){
+					device.setLocationType(Integer.parseInt(mParser.getAttributeValue(ns, TYPE)));
+					device.setLocation(readText(LOCATION));
+				}
 				else if(nameTag.equals(NAME))
-					device.setName(mParser.getText());
+					device.setName(readText(NAME));
 				else if(nameTag.equals(REFRESH))
-					device.setRefresh(Integer.parseInt(mParser.getText()));
+					device.setRefresh(Integer.parseInt(readText(REFRESH)));
 				else if(nameTag.equals(BATTERY))
-					device.setBattery(Integer.parseInt(mParser.getText()));
+					device.setBattery(Integer.parseInt(readText(BATTERY)));
 				else if(nameTag.equals(QUALITY))
-					device.setQuality(Integer.parseInt(mParser.getText()));
+					device.setQuality(Integer.parseInt(readText(QUALITY)));
 				else if(nameTag.equals(VALUE))
-					device.setValue(mParser.getText());
+					device.setValue(readText(VALUE));
 				else if(nameTag.equals(LOGGING)){
 					device.setLogging((mParser.getAttributeValue(ns, ENABLED).equals(INIT_1))?true:false);
 				}
 			}
 			
 			result.add(device);
+			mParser.nextTag();
 			
-			//TODO: check this!!
 		}while(mParser.nextTag() != XmlPullParser.END_TAG && !mParser.getName().equals(COM_ROOT));
 		
 		return result;
@@ -205,8 +258,7 @@ public class XmlParsers {
 			
 			mParser.nextTag();
 			
-			//TODO: check this!!
-		}while(mParser.nextTag() != XmlPullParser.END_TAG && !mParser.getName().equals(COM_ROOT));
+		}while(mParser.nextTag() != XmlPullParser.END_TAG && mParser.getName().equals(COM_ROOT));
 		
 		return result;
 	}
@@ -223,11 +275,11 @@ public class XmlParsers {
 		
 		ArrayList<String> result = new ArrayList<String>();
 		do{
+
+			String omg = readText(ROW);
 			
-			result.add(mParser.getText());
-			mParser.nextTag();
-			
-			//TODO: check this!!
+			result.add(omg);
+
 		}while(mParser.nextTag() != XmlPullParser.END_TAG && !mParser.getName().equals(COM_ROOT));
 		
 		return result;
@@ -249,7 +301,6 @@ public class XmlParsers {
 			result.put(keyEmail, mParser.getAttributeValue(ns, ROLE));
 			mParser.nextTag();
 			
-			//TODO: check this!!
 		}while(mParser.nextTag() != XmlPullParser.END_TAG && !mParser.getName().equals(COM_ROOT));
 		
 		return result;
@@ -266,7 +317,7 @@ public class XmlParsers {
 	 * @throws XmlPullParserException
 	 * @throws IOException
 	 */
-	private static HashMap<String, String> parseFalse(String additionalInfo) throws XmlPullParserException, IOException{
+	private static HashMap<String, HashMap<String, String>> parseFalse(String additionalInfo) throws XmlPullParserException, IOException{
 		mParser.nextTag();
 		boolean unknownFlag = false;
 		int unknownCounter = 0;
@@ -275,7 +326,8 @@ public class XmlParsers {
 		else
 			unknownFlag = true;
 		
-		HashMap<String, String> result = new HashMap<String, String>();
+		HashMap<String, HashMap<String, String>> result = new HashMap<String, HashMap<String, String>>();
+		HashMap<String, String> data = new HashMap<String, String>();
 		do{
 			String keyEmail = null;
 			String valueRole = null;
@@ -284,16 +336,16 @@ public class XmlParsers {
 				valueRole = mParser.getAttributeValue(ns, ROLE);
 			if(!unknownFlag){
 				keyEmail = mParser.getAttributeValue(ns, EMAIL);
-				result.put(keyEmail, valueRole);
+				data.put(keyEmail, valueRole);
 				mParser.nextTag();
 			}else{
 				keyEmail = mParser.getName() + "#" + Integer.toString(unknownCounter);
-				result.put(keyEmail, null);
+				data.put(keyEmail, null);
 				skip();
 			}
 
-			//TODO: check this!!
 		}while(mParser.nextTag() != XmlPullParser.END_TAG && !mParser.getName().equals(COM_ROOT));
+		result.put(additionalInfo, data);
 		
 		return result;
 	}
@@ -355,7 +407,8 @@ public class XmlParsers {
 	 * @return emtpy object
 	 */
 	public static BaseDevice getDeviceByType(String sType){
-		int iType = Integer.parseInt(sType, 16);
+		
+		int iType = Integer.parseInt(sType.replaceAll("0x", ""), 16);
 		
 		switch(iType){
 			case Constants.TYPE_EMMISION:
@@ -388,6 +441,26 @@ public class XmlParsers {
 		eREADY, eNOTREGA, eNOTREGB,
 		eXML, ePARTIAL, eCONTENT, eCONACCOUNTLIST,
 		eTRUE, eFALSE, eUNKNOWN
+	}
+	
+	/**
+	 * Read text value of some element.
+	 * @param tag
+	 * @return value of element
+	 * @throws IOException
+	 * @throws XmlPullParserException
+	 */
+	private static String readText(String tag) throws IOException, XmlPullParserException {
+	    mParser.require(XmlPullParser.START_TAG, ns, tag);
+		
+		String result = "";
+	    if (mParser.next() == XmlPullParser.TEXT) {
+	        result = mParser.getText();
+	        mParser.nextTag();
+	    }
+	    
+	    mParser.require(XmlPullParser.END_TAG, ns, tag);
+	    return result;
 	}
 	
 }

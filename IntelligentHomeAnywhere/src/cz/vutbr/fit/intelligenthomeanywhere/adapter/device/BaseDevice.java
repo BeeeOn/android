@@ -13,6 +13,7 @@ import android.content.Context;
 public abstract class BaseDevice {
 	protected boolean mInitialized;
 	protected String mLocation;
+	protected int mLocationType;
 	protected String mName;
 	protected int mRefreshTime;	
 	protected int mBattery;
@@ -118,6 +119,22 @@ public abstract class BaseDevice {
 	 */
 	public void setRefresh(int time) {
 		mRefreshTime = time;
+	}
+	
+	/**
+	 * Setter the location type
+	 * @param type
+	 */
+	public void setLocationType(int type){
+		mLocationType = type;
+	}
+	
+	/**
+	 * Get type of location
+	 * @return
+	 */
+	public int getLocationType(){
+		return mLocationType;
 	}
 	
 	/**
@@ -300,6 +317,26 @@ public abstract class BaseDevice {
 	@Override
 	public String toString() {
 		return String.format("%s (%s)", mName, mLocation);
+	}
+	
+	/**
+	 * Debug method
+	 * @param notuse
+	 * @return
+	 */
+	public String toString(boolean notuse){
+		String result = "";
+		
+		result += "Name: " + mName + "\n";
+		result += "Location: " + mLocation + "\n";
+		result += "Location type: " + mLocationType + "\n";
+		result += "Visibility: " + mVisibility + "\n";
+		result += "Initialized: " + mInitialized + "\n";
+		result += "Battery: " + mBattery + "\n";
+		result += "Logging: " + mLogging + "\n";
+		result += "Value: " + getStringValue() + "\n";
+		
+		return result;
 	}
 
 }
