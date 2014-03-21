@@ -7,7 +7,7 @@ public abstract class CustomizedListing extends SimpleListing {
 	
 	private String mName;
 	
-	private String mIcon; // TODO: use better type
+	private String mIcon; // FIXME: use better type
 	
 	public CustomizedListing(final String id) {
 		mId = id;

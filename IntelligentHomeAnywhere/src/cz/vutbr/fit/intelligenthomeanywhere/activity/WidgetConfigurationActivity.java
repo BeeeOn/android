@@ -1,5 +1,8 @@
 package cz.vutbr.fit.intelligenthomeanywhere.activity;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import android.app.Activity;
 import android.appwidget.AppWidgetManager;
 import android.content.Intent;
@@ -26,7 +29,8 @@ public class WidgetConfigurationActivity extends Activity {
 	private static final String TAG = WidgetConfigurationActivity.class.getSimpleName();
 
 	private int mAppWidgetId = 0;
-	private Adapter mAdapter;
+	
+	private List<BaseDevice> mDevices = new ArrayList<BaseDevice>();
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -51,9 +55,15 @@ public class WidgetConfigurationActivity extends Activity {
         resultValue.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, mAppWidgetId);
         setResult(RESULT_CANCELED, resultValue);
 
-        mAdapter = Controller.getInstance(this).getAdapter();
-        if (mAdapter == null || mAdapter.devices.getDevices().size() == 0) {
-        	// TODO: use string from resources
+        // prepare list with all sensors to use in spinner
+        for (Adapter adapter : Controller.getInstance(this).getAdapters()) {
+        	for (BaseDevice device : adapter.devices.getDevices().values()) {
+        		mDevices.add(device);
+        	}
+        }
+        
+        if (mDevices.isEmpty()) {
+        	// FIXME: use string from resources
         	Toast.makeText(this, "No sensors available.\nTry to run application first.", Toast.LENGTH_LONG).show();
         	finish();
         	return;
@@ -104,7 +114,7 @@ public class WidgetConfigurationActivity extends Activity {
 
 	private void initSpinner() {
         Spinner s = (Spinner)findViewById(R.id.sensor);
-        ArrayAdapter<?> arrayAdapter = new ArrayAdapter<BaseDevice>(this, android.R.layout.simple_spinner_dropdown_item, mAdapter.devices.getDevices());
+        ArrayAdapter<?> arrayAdapter = new ArrayAdapter<BaseDevice>(this, android.R.layout.simple_spinner_dropdown_item, mDevices);
         s.setAdapter(arrayAdapter);
 	}
 	
@@ -137,7 +147,7 @@ public class WidgetConfigurationActivity extends Activity {
 		Spinner spinner = (Spinner)findViewById(R.id.sensor);
 		BaseDevice device = (BaseDevice)spinner.getSelectedItem();
 		if (device == null) {
-			// TODO: use string from resources
+			// FIXME: use string from resources
 			Toast.makeText(this, "Select sensor from list", Toast.LENGTH_LONG).show();
 			return false;
 		}
@@ -145,7 +155,7 @@ public class WidgetConfigurationActivity extends Activity {
 		EditText edit = (EditText)findViewById(R.id.interval);
 		String i = edit.getText().toString();
 		if (i == null || i.length() == 0) {
-			// TODO: use string from resources
+			// FIXME: use string from resources
 			Toast.makeText(this, "Set update interval", Toast.LENGTH_LONG).show();
 			return false;
 		}

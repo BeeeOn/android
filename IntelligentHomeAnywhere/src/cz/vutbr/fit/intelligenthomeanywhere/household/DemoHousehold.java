@@ -1,7 +1,6 @@
 package cz.vutbr.fit.intelligenthomeanywhere.household;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import android.content.Context;
 import cz.vutbr.fit.intelligenthomeanywhere.Constants;
@@ -44,19 +43,17 @@ public final class DemoHousehold extends Household {
 		// Prepare demo listings
 		this.favoritesListings = new ArrayList<FavoritesListing>();
 		
-		FavoritesListing list = new FavoritesListing("demoFavorites", "My favorites");
+		FavoritesListing list = new FavoritesListing("demoFavorites");
+		list.setName("My favorites");
 		list.setIcon("favorites");
 		
 		// Add some devices to this listing
-		List<BaseDevice> devices = new ArrayList<BaseDevice>();
-
-		List<BaseDevice> adapterDevices = this.adapters.get(0).devices.getDevices();
-		devices.add(adapterDevices.get(3));
-		devices.add(adapterDevices.get(4));
-		devices.add(adapterDevices.get(7));
+		BaseDevice[] devices = (BaseDevice[])this.adapters.get(0).devices.getDevices().values().toArray();
 		
-		list.setDevices(devices);
-
+		list.addDevice(devices[3]);
+		list.addDevice(devices[4]);
+		list.addDevice(devices[7]);
+		
 		this.favoritesListings.add(list);
 	}
 	

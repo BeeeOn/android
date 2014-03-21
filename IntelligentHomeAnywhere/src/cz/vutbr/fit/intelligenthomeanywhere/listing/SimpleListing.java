@@ -1,36 +1,69 @@
 package cz.vutbr.fit.intelligenthomeanywhere.listing;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 
 import cz.vutbr.fit.intelligenthomeanywhere.adapter.device.BaseDevice;
 
 public class SimpleListing {
 
-	private List<BaseDevice> mDevices = new ArrayList<BaseDevice>();
+	private final Map<String, BaseDevice> mDevices = new HashMap<String, BaseDevice>();
 	
-	public SimpleListing() {}
-	
-	public SimpleListing(List<BaseDevice> devices) {
-		mDevices = devices;
-	}
-	
-	public void setDevices(final List<BaseDevice> devices) {
-		mDevices = devices;
-	}
-	
-	public List<BaseDevice> getDevices() {
+	/**
+	 * Return all devices.
+	 * @return map with devices (or empty map).
+	 */
+	public Map<String, BaseDevice> getDevices() {
 		return mDevices;
 	}
-	
-	public BaseDevice getById(String id) {
-		for (BaseDevice device : mDevices) {
-			if (device.getId().equals(id)) {
-				return device;
-			}
+
+	/**
+	 * Copies all devices to this listing.
+	 * @param devices
+	 */
+	public void setDevices(final Map<String, BaseDevice> devices) {
+		mDevices.clear();
+		mDevices.putAll(devices);
+	}
+
+	/**
+	 * Add all devices to this listing.
+	 * @param devices
+	 */
+	public void setDevices(final Collection<BaseDevice> devices) {
+		mDevices.clear();
+
+		for (BaseDevice device : devices) {
+			mDevices.put(device.getId(), device);
 		}
-		
-		return null;
+	}
+
+	/**
+	 * Add device to this listing.
+	 * @param device
+	 * @return
+	 */
+	public void addDevice(final BaseDevice device) {
+		mDevices.put(device.getId(), device);
+	}
+	
+	/**
+	 * Remove device with specified id from this listing.
+	 * @param id
+	 * @return
+	 */
+	public void removeDevice(final String id) {
+		mDevices.remove(id);
+	}
+	
+	/**
+	 * Return device with specified id.
+	 * @param id
+	 * @return device or null if no device with this id is found.
+	 */
+	public BaseDevice getById(final String id) {
+		return mDevices.get(id);
 	}
 	
 }
