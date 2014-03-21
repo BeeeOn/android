@@ -15,6 +15,7 @@ import cz.vutbr.fit.intelligenthomeanywhere.adapter.device.DeviceLog;
 import cz.vutbr.fit.intelligenthomeanywhere.household.DemoHousehold;
 import cz.vutbr.fit.intelligenthomeanywhere.household.Household;
 import cz.vutbr.fit.intelligenthomeanywhere.listing.FavoritesListing;
+import cz.vutbr.fit.intelligenthomeanywhere.listing.RoomListing;
 import cz.vutbr.fit.intelligenthomeanywhere.network.Network;
 import cz.vutbr.fit.intelligenthomeanywhere.persistence.Persistence;
 
@@ -47,6 +48,8 @@ public final class Controller {
 		mHousehold = demoMode ? new DemoHousehold(mContext) : new Household();
 	}
 
+	
+	/** Communication methods ***********************************************/
 	
 	public boolean login() {
 		User lastUser = mPersistence.loadLastUser();
@@ -82,16 +85,8 @@ public final class Controller {
 		return mHousehold.user != null;
 	}
 	
-	public Adapter getAdapter() {
-		// FIXME: this method should be removed when there will be support for multiple adapters through whole application
-		
-		if (mHousehold.adapters == null) {
-			// TODO: load adapters from network
-			throw new NotImplementedException();
-		}
-		
-		return mHousehold.adapters.get(0);
-	}
+	
+	/** Adapter methods *****************************************************/
 	
 	public List<Adapter> getAdapters() {
 		if (mHousehold.adapters == null) {
@@ -102,27 +97,54 @@ public final class Controller {
 		return mHousehold.adapters;
 	}
 	
-	public DeviceLog getDeviceLog(String id) {
+	public Adapter getAdapter(String adapterId) {
+		for (Adapter a : getAdapters()) {
+			if (a.getId().equals(adapterId))
+				return a;
+		}
+		
+		return null;
+	}
+
+	@Deprecated
+	public Adapter getAdapter() {
+		// FIXME: this method should be removed when there will be support for multiple adapters through whole application
+		return getAdapters().get(0);
+	}
+
+	public boolean registerAdapter(String id) {
 		throw new NotImplementedException();
 	}
 
-	public List<String> getRooms(String adapterId) {
+	public boolean unregisterAdapter(String id) {
+		throw new NotImplementedException();
+	}
+
+
+	/** Room methods ********************************************************/
+	
+	public List<RoomListing> getRooms() {
 		throw new NotImplementedException();
 	}
 	
-	public List<BaseDevice> getRoom(String roomId) {
+	public RoomListing getRoom(String roomId) {
+		throw new NotImplementedException();
+	}
+	
+	public boolean addRoom(RoomListing room) {
+		throw new NotImplementedException();
+	}
+	
+	public boolean deleteRoom(RoomListing room) {
+		throw new NotImplementedException();
+	}
+	
+	public boolean saveRoom(RoomListing room) {
 		throw new NotImplementedException();
 	}
 
 	
-	public List<String> getLists() {
-		throw new NotImplementedException();
-	}
-	
-	public List<BaseDevice> getList(String listId) {
-		throw new NotImplementedException();
-	}
-
+	/** Devices methods *****************************************************/
 	
 	public BaseDevice getDevice(String id) {
 		return getDevice(id, false);
@@ -149,11 +171,29 @@ public final class Controller {
 		return device;
 	}
 	
-	public BaseDevice saveDevice(BaseDevice device) {
+	public boolean hideDevice(BaseDevice device) {
+		throw new NotImplementedException();
+	}
+	
+	public boolean unhideDevice(BaseDevice device) {
+		throw new NotImplementedException();
+	}
+	
+	public boolean saveDevice(BaseDevice device) {
+		throw new NotImplementedException();
+	}
+	
+	public DeviceLog getDeviceLog(String id) {
 		throw new NotImplementedException();
 	}
 
 	
+	/** User methods ********************************************************/
+
+	public User getUser(String id) {
+		throw new NotImplementedException();
+	}
+
 	public boolean addUser(User user) {
 		throw new NotImplementedException();
 	}
@@ -166,11 +206,13 @@ public final class Controller {
 		throw new NotImplementedException();
 	}
 	
-	public User getUser(String id) {
+	
+	/** Favorites lists methods *********************************************/
+	
+	public FavoritesListing getCustomList(String id) {
 		throw new NotImplementedException();
 	}
 
-	
 	public boolean addCustomList(FavoritesListing list) {
 		throw new NotImplementedException();
 	}
@@ -180,19 +222,6 @@ public final class Controller {
 	}
 	
 	public boolean saveCustomList(FavoritesListing list) {
-		throw new NotImplementedException();
-	}
-	
-	public FavoritesListing getCustomList(String id) {
-		throw new NotImplementedException();
-	}
-
-	
-	public boolean registerAdapter(String id) {
-		throw new NotImplementedException();
-	}
-	
-	public boolean unregisterAdapter(String id) {
 		throw new NotImplementedException();
 	}
 
