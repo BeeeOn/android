@@ -240,7 +240,6 @@ public class XmlDeviceParser {
         String address_ = null;
         String quality_ = null;
         String logging_ = null;
-        String logfile_ = null;
         
 		while (mParser.next() != XmlPullParser.END_TAG) {
 	        if (mParser.getEventType() != XmlPullParser.START_TAG)
@@ -275,7 +274,6 @@ public class XmlDeviceParser {
 	        	mParser.require(XmlPullParser.END_TAG, ns, DEVICE_NETWORK);
 	        } else if (el.equals(DEVICE_LOGGING)) {
 	        	logging_ = mParser.getAttributeValue(null, DEVICE_LOGGING_ENABLED);
-	        	logfile_ = readText(DEVICE_LOGGING);
 	        } else {
 	            skip();
 	        }
