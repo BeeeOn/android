@@ -1,15 +1,15 @@
 package cz.vutbr.fit.intelligenthomeanywhere.listing;
 
 
-public class RoomListing extends CustomizedListing {
+public class LocationListing extends CustomizedListing {
 
 	// private Adapter mAdapter; // TODO: might this be useful here?
 	
-	public RoomListing(final String id) {
+	public LocationListing(final String id) {
 		super(id);
 	}
 	
-	public RoomListing(final String id, final String name) {
+	public LocationListing(final String id, final String name) {
 		super(id, name);
 	}
 	

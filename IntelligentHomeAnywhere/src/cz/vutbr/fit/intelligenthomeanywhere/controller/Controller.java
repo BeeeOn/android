@@ -15,7 +15,7 @@ import cz.vutbr.fit.intelligenthomeanywhere.adapter.device.DeviceLog;
 import cz.vutbr.fit.intelligenthomeanywhere.household.DemoHousehold;
 import cz.vutbr.fit.intelligenthomeanywhere.household.Household;
 import cz.vutbr.fit.intelligenthomeanywhere.listing.FavoritesListing;
-import cz.vutbr.fit.intelligenthomeanywhere.listing.RoomListing;
+import cz.vutbr.fit.intelligenthomeanywhere.listing.LocationListing;
 import cz.vutbr.fit.intelligenthomeanywhere.network.Network;
 import cz.vutbr.fit.intelligenthomeanywhere.persistence.Persistence;
 
@@ -121,25 +121,25 @@ public final class Controller {
 	}
 
 
-	/** Room methods ********************************************************/
+	/** Location methods ****************************************************/
 	
-	public List<RoomListing> getRooms() {
+	public List<LocationListing> getLocations() {
 		throw new NotImplementedException();
 	}
 	
-	public RoomListing getRoom(String roomId) {
+	public LocationListing getLocation(String roomId) {
 		throw new NotImplementedException();
 	}
 	
-	public boolean addRoom(RoomListing room) {
+	public boolean addLocation(LocationListing room) {
 		throw new NotImplementedException();
 	}
 	
-	public boolean deleteRoom(RoomListing room) {
+	public boolean deleteLocation(LocationListing room) {
 		throw new NotImplementedException();
 	}
 	
-	public boolean saveRoom(RoomListing room) {
+	public boolean saveLocation(LocationListing room) {
 		throw new NotImplementedException();
 	}
 
