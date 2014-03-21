@@ -7,6 +7,7 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Locale;
 
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
@@ -206,7 +207,7 @@ public class XmlParsers {
 			if(!device.isInitialized()){
 				device.setInvolveTime(mParser.getAttributeValue(ns, INVOLVED));
 			}
-			device.setVisibility(mParser.getAttributeValue(ns, VISIBILITY).toLowerCase().charAt(0));
+			device.setVisibility(mParser.getAttributeValue(ns, VISIBILITY).toLowerCase(Locale.US).charAt(0));
 			
 			String nameTag = null;
 			
