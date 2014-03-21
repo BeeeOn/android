@@ -56,7 +56,7 @@ public class LocationScreenActivity extends Activity {
 		if(mAdapter == null)
 			return;
 		
-		Log.i("parsedXML",mAdapter.toString());
+		Log.i("parsedXML",mAdapter.toDebugString());
 		mController.setAdapter(mAdapter);
 		mController.setContext(this.getApplicationContext());*/
 		

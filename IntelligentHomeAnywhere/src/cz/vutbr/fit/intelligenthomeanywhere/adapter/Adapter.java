@@ -35,8 +35,7 @@ public class Adapter {
 	/**
 	 * Debug method
 	 */
-	@Override
-	public String toString(){
+	public String toDebugString() {
 		String result = "";
 		
 		result += "ID is " + mId + "\n";
@@ -46,7 +45,7 @@ public class Adapter {
 		result += "___start of sensors___\n";
 		
 		for(BaseDevice dev : devices.getDevices().values()){
-			result += dev.toString(false);
+			result += dev.toDebugString();
 			result += "__\n";
 		}
 		

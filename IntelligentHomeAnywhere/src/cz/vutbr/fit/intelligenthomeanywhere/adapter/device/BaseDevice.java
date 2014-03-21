@@ -293,10 +293,9 @@ public abstract class BaseDevice {
 	
 	/**
 	 * Debug method
-	 * @param notuse
 	 * @return
 	 */
-	public String toString(boolean notuse){
+	public String toDebugString() {
 		String result = "";
 		
 		result += "Name: " + mName + "\n";
