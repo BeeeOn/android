@@ -49,10 +49,12 @@ public class Adapter {
 		
 		result += "ID is " + mId + "\n";
 		result += "VERSION is " + mVersion + "\n";
+		result += "Name is " + mName + "\n";
+		result += "Role is " + mRole + "\n";
 		result += "___start of sensors___\n";
 		
 		for(BaseDevice dev : devices.getDevices()){
-			result += dev.toString();
+			result += dev.toString(false);
 			result += "__\n";
 		}
 		

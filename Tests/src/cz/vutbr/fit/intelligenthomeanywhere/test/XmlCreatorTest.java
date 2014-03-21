@@ -27,7 +27,9 @@ public class XmlCreatorTest extends TestCase {
 	
 	private static String TAG = "XmlCreatorTest";
 	private static String EMAIL = "testmail@domain.com";
-	private static int ID = 42;
+	private static String GTOKEN = "9845658";
+	private static int ID = 425644;
+	private static String GVERSION = "1.0";
 	//FIXME: length of serial???
 	private static int SERIAL = 555645792;
 	private static int ADAPTERID = SERIAL;
@@ -40,72 +42,74 @@ public class XmlCreatorTest extends TestCase {
 	private static String VIEWNAME = "custom_name";
 	
 	//messages
-	private static String SIGNIN_1 = "<?xml version='1.0' encoding='UTF-8' ?><communication id=\"0\" state=\"signin\"><user email=\"";
+	private static String SIGNIN_1 = "<?xml version='1.0' encoding='UTF-8' ?><communication id=\"0\" state=\"signin\" version=\""+GVERSION+"\"><user email=\"";
+	private static String SINGIN_1_2 = "\" gtoken=\"";
 	private static String SIGNIN_2 = "\" /></communication>";
 	private static String SIGNUP_1 = "<?xml version='1.0' encoding='UTF-8' ?><communication id=\"";
-	private static String SIGNUP_2 = "\" state=\"signup\"><serialnumber>";
+	private static String SIGNUP_2 = "\" state=\"signup\" version=\""+GVERSION+"\"><serialnumber>";
 	private static String SIGNUP_3_USER_OLD = "</serialnumber><next adapter=\"old\" /></communication>";
 	private static String SIGNUP_3_USER_NEW = "</serialnumber><next adapter=\"new\" /></communication>";
 	private static String SIGNUP_3_EMAIL_1 = "</serialnumber><user email=\"";
+	private static String SIGNUP_3_EMAIL_1_2 = SINGIN_1_2;
 	private static String SIGNUP_3_EMAIL_2 =  SIGNIN_2;
 	private static String INIT_1 = SIGNUP_1;
-	private static String INIT_2 = "\" state=\"init\"><adapter id=\"";
+	private static String INIT_2 = "\" state=\"init\" version=\""+GVERSION+"\"><adapter id=\"";
 	private static String INIT_3 = SIGNIN_2;
 	private static String REINIT_1 = SIGNUP_1;
-	private static String REINIT_2 = "\" state=\"reinit\"><adapter oldid=\"";
+	private static String REINIT_2 = "\" state=\"reinit\" version=\""+GVERSION+"\"><adapter oldid=\"";
 	private static String REINIT_3 = "\" newid=\"";
 	private static String REINIT_4 = SIGNIN_2;
 	private static String LOGNAME_1 = SIGNUP_1;
-	private static String LOGNAME_2 = "\" state=\"logname\" from=\"";
+	private static String LOGNAME_2 = "\" state=\"logname\" version=\""+GVERSION+"\" from=\"";
 	private static String LOGNAME_3 = "\" to=\"";
 	private static String LOGNAME_4 = "\"><device id=\"";
 	private static String LOGNAME_5 = SIGNIN_2;
 	private static String ADDCONACCOUNT_1 = SIGNUP_1;
-	private static String ADDCONACCOUNT_2 = "\" state=\"addconaccount\"><user email=\"";
+	private static String ADDCONACCOUNT_2 = "\" state=\"addconaccount\" version=\""+GVERSION+"\"><user email=\"";
 	private static String ADDCONACCOUNT_2_2 = "\" /><user email=\"";
 	private static String ADDCONACCOUNT_3 = "\" role=\"";
 	private static String ADDCONACCOUNT_4 = SIGNIN_2;
 	private static String DELCONACCOUNT_1 = SIGNUP_1;
-	private static String DELCONACCOUNT_2 = "\" state=\"delconaccount\"><user email=\"";
+	private static String DELCONACCOUNT_2 = "\" state=\"delconaccount\" version=\""+GVERSION+"\"><user email=\"";
 	private static String DELCONACCOUNT_2_2 = "\" /><user email=\"";
 	private static String DELCONACCOUNT_3 = SIGNIN_2;
 	private static String GETCONACCOUNT_1 = SIGNUP_1;
-	private static String GETCONACCOUNT_2 = "\" state=\"getconaccount\" />";
+	private static String GETCONACCOUNT_2 = "\" state=\"getconaccount\" version=\""+GVERSION+"\" />";
 	private static String CHANGECONACCOUNT_1 = SIGNUP_1;
-	private static String CHANGECONACCOUNT_2 = "\" state=\"changeconaccount\"><user email=\"";
+	private static String CHANGECONACCOUNT_2 = "\" state=\"changeconaccount\" version=\""+GVERSION+"\"><user email=\"";
 	private static String CHANGECONACCOUNT_2_2 = ADDCONACCOUNT_2_2;
 	private static String CHANGECONACCOUNT_3 = ADDCONACCOUNT_3;
 	private static String CHANGECONACCOUNT_4 = SIGNIN_2;
 	private static String TRUE_1 = SIGNUP_1;
-	private static String TRUE_2 = "\" state=\"true\" additionalinfo=\"";
+	private static String TRUE_2 = "\" state=\"true\" version=\""+GVERSION+"\" additionalinfo=\"";
 	private static String TRUE_3 = "\" />";
 	private static String FALSE_1 = SIGNUP_1;
-	private static String FALSE_2 = "\" state=\"false\" additionalinfo=\"";
+	private static String FALSE_2 = "\" state=\"false\" version=\""+GVERSION+"\" additionalinfo=\"";
 	private static String FALSE_3 = "\">";
 	private static String FALSE_4 = "</communication>";
 	private static String GETADAPTERS_1 = SIGNUP_1;
-	private static String GETADAPTERS_2 = "\" state=\"getadapters\" />";
+	private static String GETADAPTERS_2 = "\" state=\"getadapters\" version=\""+GVERSION+"\" />";
 	private static String UPDATE_1 = SIGNUP_1;
-	private static String UPDATE_2 = "\" state=\"update\"><device id=\"";
+	private static String UPDATE_2 = "\" state=\"update\" version=\""+GVERSION+"\"><device id=\"";
 	private static String UPDATE_2_2 = "\" /><device id=\"";
 	private static String Update_3 = SIGNIN_2;
 	private static String ADDVIEW_1 = SIGNUP_1;
-	private static String ADDVIEW_2 = "\" state=\"addview\" name=\"";
+	private static String ADDVIEW_2 = "\" state=\"addview\" version=\""+GVERSION+"\" name=\"";
 	private static String ADDVIEW_3 = "\"><device id=\"";
 	private static String ADDVIEW_3_3 = "\" /><device id=\"";
 	private static String ADDVIEW_4 = SIGNIN_2;
 	private static String DELVIEW_1 = SIGNUP_1;
-	private static String DELVIEW_2 = "\" state=\"delview\" name=\"";
+	private static String DELVIEW_2 = "\" state=\"delview\" version=\""+GVERSION+"\" name=\"";
 	private static String DELVIEW_3 = TRUE_3;
 	private static String UPDATEVIEW_1 = SIGNUP_1;
-	private static String UPDATEVIEW_2 = "\" state=\"updateview\" name=\"";
+	private static String UPDATEVIEW_2 = "\" state=\"updateview\" version=\""+GVERSION+"\" name=\"";
 	private static String UPDATEVIEW_3 = "\"><device id=\"";
 	private static String UPDATEVIEW_4 = "\" action=\"";
 	private static String UPDATEVIEW_4_2 = "\" /><device id=\"";
 	private static String UPDATEVIEW_5 = SIGNIN_2;
 	
-	private static String PARTIAL_ALL = "<?xml version='1.0' encoding='UTF-8' ?><communication id=\"42\" state=\"partial\">"
-			+ "<device initialized=\"1\" type=\"0x7\" id=\"120:07:ff:000:ffeem\" visibility=\"i\"><location>obyvak</location><logging endabled=\"0\" /></device>"
+	private static String PARTIAL_ALL = "<?xml version='1.0' encoding='UTF-8' ?><communication id=\""+ID+"\" state=\"partial\" version=\""+GVERSION+"\">"
+			+ "<device initialized=\"1\" type=\"0x7\" id=\"120:07:ff:000:ffeem\" visibility=\"i\"><location type=\"1\">obyvak</location><logging endabled=\"0\" /></device>"
 			+ "<device initialized=\"1\" type=\"0x1\" id=\"120:07:ff:000:ffehu\" visibility=\"x\"><name>vlhkomer</name><logging endabled=\"0\" /></device>"
 			+ "<device initialized=\"1\" type=\"0x5\" id=\"120:07:ff:000:ffeil\" visibility=\"x\"><refresh>5</refresh><logging endabled=\"0\" /></device>"
 			+ "<device initialized=\"1\" type=\"0x4\" id=\"120:07:ff:000:ffesw\" visibility=\"i\"><logging endabled=\"0\" /></device>"
@@ -126,8 +130,8 @@ public class XmlCreatorTest extends TestCase {
 	}
 
 	public void testSignIn(){
-		String result = mCreator.createSignIn(EMAIL);
-		String goal = SIGNIN_1+EMAIL+SIGNIN_2;
+		String result = mCreator.createSignIn(EMAIL, GTOKEN);
+		String goal = SIGNIN_1+EMAIL+SINGIN_1_2+GTOKEN+SIGNIN_2;
 		
 		Log.i(TAG, "SignInTest1");
 		Log.d(TAG, result);
@@ -137,7 +141,7 @@ public class XmlCreatorTest extends TestCase {
 	}
 	
 	public void testSignUp(){
-		String result = mCreator.createSignUp(EMAIL, ID, SERIAL, false);
+		String result = mCreator.createSignUp(EMAIL, ID, GTOKEN, SERIAL, false);
 		String goal = SIGNUP_1+ID+SIGNUP_2+SERIAL+SIGNUP_3_USER_OLD;
 		
 		Log.i(TAG, "SignUpTest1");
@@ -146,7 +150,7 @@ public class XmlCreatorTest extends TestCase {
 			Log.e(TAG, goal);
 		assertTrue("SignUpTest1: messages are not equal",result.equals(goal));
 		
-		result = mCreator.createSignUp(EMAIL, ID, SERIAL, true);
+		result = mCreator.createSignUp(EMAIL, ID, GTOKEN, SERIAL, true);
 		goal = SIGNUP_1+ID+SIGNUP_2+SERIAL+SIGNUP_3_USER_NEW;
 		
 		Log.i(TAG, "SignUpTest2");
@@ -155,8 +159,8 @@ public class XmlCreatorTest extends TestCase {
 			Log.e(TAG, goal);
 		assertTrue("SignUpTest2: messages are not equal",result.equals(goal));
 		
-		result = mCreator.createSignUp(EMAIL, 0, SERIAL, false);
-		goal = SIGNUP_1+0+SIGNUP_2+SERIAL+SIGNUP_3_EMAIL_1+EMAIL+SIGNUP_3_EMAIL_2;
+		result = mCreator.createSignUp(EMAIL, 0, GTOKEN, SERIAL, false);
+		goal = SIGNUP_1+0+SIGNUP_2+SERIAL+SIGNUP_3_EMAIL_1+EMAIL+SIGNUP_3_EMAIL_1_2+GTOKEN+SIGNUP_3_EMAIL_2;
 		
 		Log.i(TAG, "SignUpTest3");
 		Log.d(TAG, result);
@@ -353,6 +357,7 @@ public class XmlCreatorTest extends TestCase {
 		em.setAddress(DEVICEID+"em");
 		em.setVisibility('i');
 		em.setLocation("obyvak");
+		em.setLocationType(1);
 		devices.add(em);
 		
 		HumidityDevice hu = new HumidityDevice();
