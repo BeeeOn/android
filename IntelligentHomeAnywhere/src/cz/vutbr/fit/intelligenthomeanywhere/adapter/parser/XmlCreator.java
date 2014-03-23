@@ -63,6 +63,7 @@ public class XmlCreator {
 	public static final String USER = "user";
 	public static final String EMAIL = "email";
 	public static final String GTOKEN = "gtoken";
+	public static final String MODE = "mode";
 	public static final String SERIAL = "serialnumber";
 	public static final String NEXT = "next";
 	public static final String ADAPTER = "adapter";
@@ -75,6 +76,9 @@ public class XmlCreator {
 	public static final String FROM = "from";
 	public static final String TO = "to";
 	public static final String ACTION = "action";
+	public static final String QUIET = "q";
+	public static final String NORMAL = "n";
+	public static final String ICON = "icon";
 	
 	//partial
 	public static final String DEVICE = "device";
@@ -107,7 +111,7 @@ public class XmlCreator {
 	 * @param gtoken token from google
 	 * @return XML message
 	 */
-	public String createSignIn(String email, String gtoken){
+	public String createSignIn(String email, String gtoken, boolean quiet){
 		XmlSerializer serializer = Xml.newSerializer();
 		StringWriter writer = new StringWriter();
 		try{
@@ -118,6 +122,7 @@ public class XmlCreator {
 			serializer.attribute(ns, ID, INIT_ID);
 			serializer.attribute(ns, STATE, SIGNIN);
 			serializer.attribute(ns, VERSION, GVER);
+			serializer.attribute(ns, MODE, (quiet) ? QUIET : NORMAL);
 				serializer.startTag(ns, USER);
 				serializer.attribute(ns, EMAIL, email);
 				serializer.attribute(ns, GTOKEN, gtoken);
@@ -723,7 +728,7 @@ public class XmlCreator {
 	 * @param devicesId list of devices id
 	 * @return addView message
 	 */
-	public String createAddView(String id, String viewName, ArrayList<String>devicesId){
+	public String createAddView(String id, String viewName, int iconNum, ArrayList<String>devicesId){
 		XmlSerializer serializer = Xml.newSerializer();
 		StringWriter writer = new StringWriter();
 		try{
@@ -735,6 +740,7 @@ public class XmlCreator {
 			serializer.attribute(ns, STATE, ADDVIEW);
 			serializer.attribute(ns, VERSION, GVER);
 			serializer.attribute(ns, NAME, viewName);
+			serializer.attribute(ns, ICON, Integer.toString(iconNum));
 			
 			for(String deviceId : devicesId){
 				serializer.startTag(ns, DEVICE);
@@ -758,8 +764,8 @@ public class XmlCreator {
 	 * @param devicesId list of devices id
 	 * @return addView message
 	 */
-	public String createAddView(int id, String viewName, ArrayList<String>devicesId){
-		return createAddView(Integer.toString(id), viewName, devicesId);
+	public String createAddView(int id, String viewName, int iconNum, ArrayList<String>devicesId){
+		return createAddView(Integer.toString(id), viewName, iconNum, devicesId);
 	}
 	
 	/**
@@ -807,7 +813,7 @@ public class XmlCreator {
 	 * @param devices hashMap with device id as key, and action as value
 	 * @return UpdateValue message
 	 */
-	public String createUpdateView(String id, String viewName, HashMap<String, String> devices){
+	public String createUpdateView(String id, String viewName, int iconNum, HashMap<String, String> devices){
 		XmlSerializer serializer = Xml.newSerializer();
 		StringWriter writer = new StringWriter();
 		try{
@@ -819,6 +825,7 @@ public class XmlCreator {
 			serializer.attribute(ns, STATE, UPDATEVIEW);
 			serializer.attribute(ns, VERSION, GVER);
 			serializer.attribute(ns, NAME, viewName);
+			serializer.attribute(ns, ICON, Integer.toString(iconNum));
 			
 			for(Entry<String, String> device : devices.entrySet()){
 				serializer.startTag(ns, DEVICE);
@@ -843,8 +850,8 @@ public class XmlCreator {
 	 * @param devices hashMap with device id as key, and action as value
 	 * @return UpdateValue message
 	 */
-	public String createUpdateView(int id, String viewName, HashMap<String, String> devices){
-		return createUpdateView(Integer.toString(id), viewName, devices);
+	public String createUpdateView(int id, String viewName, int iconNum, HashMap<String, String> devices){
+		return createUpdateView(Integer.toString(id), viewName, iconNum, devices);
 	}
 	
 	

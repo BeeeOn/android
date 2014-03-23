@@ -324,7 +324,7 @@ public abstract class BaseDevice {
 	 * @param notuse
 	 * @return
 	 */
-	public String toString(boolean notuse){
+	public String debugString(boolean notuse){
 		String result = "";
 		
 		result += "Name: " + mName + "\n";
