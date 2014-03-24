@@ -34,8 +34,13 @@ public final class Controller {
 	public static final boolean demoMode = true;
 	
 	public static Controller getInstance(Context context) {
-		if (mController == null)
-			mController = new Controller(context);
+		if (mController == null) {
+			synchronized(Controller.class) {
+				if (mController == null) {
+					mController = new Controller(context);
+				}
+			}
+		}
 		
 		return mController;
 	}
