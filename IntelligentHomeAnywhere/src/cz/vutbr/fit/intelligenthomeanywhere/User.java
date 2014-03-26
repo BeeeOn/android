@@ -11,10 +11,13 @@ public class User {
 	
 	private final Role mRole;
 	
-	public User(final String name, final String email, final Role role) {
+	private final Gender mGender;
+	
+	public User(final String name, final String email, final Role role, final Gender gender) {
 		mName = name;
 		mEmail = email;
 		mRole = role;
+		mGender = gender;
 	}
 
 	public enum Role {
@@ -35,7 +38,13 @@ public class User {
 			}
 			return Guest;
 		}
-	};
+	}
+	
+	public enum Gender {
+		Unknown,
+		Male,
+		Female
+	}
 	
 	public String getName() {
 		return mName;
@@ -47,6 +56,21 @@ public class User {
 	
 	public Role getRole() {
 		return mRole;
+	}
+	
+	public Gender getGender() {
+		return mGender;
+	}
+
+	public String toDebugString(){
+		String result = "";
+
+		result += "Email: " + mEmail + "\n";
+		result += "Role: " + mRole + "\n";
+		result += "Name: " + mName + "\n";
+		result += "Gender: " + mGender + "\n";
+		
+		return result;
 	}
 
 }

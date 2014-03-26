@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import android.content.Context;
 import cz.vutbr.fit.intelligenthomeanywhere.Constants;
 import cz.vutbr.fit.intelligenthomeanywhere.User;
+import cz.vutbr.fit.intelligenthomeanywhere.User.Gender;
 import cz.vutbr.fit.intelligenthomeanywhere.User.Role;
 import cz.vutbr.fit.intelligenthomeanywhere.adapter.Adapter;
 import cz.vutbr.fit.intelligenthomeanywhere.adapter.device.BaseDevice;
@@ -26,7 +27,7 @@ public final class DemoHousehold extends Household {
 	
 	private void prepareUser() {
 		// Prepare demo user
-		this.user = new User("John Doe", "john@doe.com", Role.Superuser);
+		this.user = new User("John Doe", "john@doe.com", Role.Superuser, Gender.Male);
 	}
 	
 	private void prepareAdapters() {

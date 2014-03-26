@@ -28,6 +28,7 @@ public class XmlCreatorTest extends TestCase {
 	private static String TAG = "XmlCreatorTest";
 	private static String EMAIL = "testmail@domain.com";
 	private static String GTOKEN = "9845658";
+	private static String MODE = "n";
 	private static int ID = 425644;
 	private static String GVERSION = "1.0";
 	//FIXME: length of serial???
@@ -42,15 +43,15 @@ public class XmlCreatorTest extends TestCase {
 	private static String VIEWNAME = "custom_name";
 	
 	//messages
-	private static String SIGNIN_1 = "<?xml version='1.0' encoding='UTF-8' ?><communication id=\"0\" state=\"signin\" version=\""+GVERSION+"\"><user email=\"";
-	private static String SINGIN_1_2 = "\" gtoken=\"";
+	private static String SIGNIN_1 = "<?xml version='1.0' encoding='UTF-8' ?><communication id=\"0\" state=\"signin\" version=\""+GVERSION+"\" mode=\""+MODE+"\"><user email=\"";
+	private static String SIGNIN_1_2 = "\" gtoken=\"";
 	private static String SIGNIN_2 = "\" /></communication>";
 	private static String SIGNUP_1 = "<?xml version='1.0' encoding='UTF-8' ?><communication id=\"";
 	private static String SIGNUP_2 = "\" state=\"signup\" version=\""+GVERSION+"\"><serialnumber>";
 	private static String SIGNUP_3_USER_OLD = "</serialnumber><next adapter=\"old\" /></communication>";
 	private static String SIGNUP_3_USER_NEW = "</serialnumber><next adapter=\"new\" /></communication>";
 	private static String SIGNUP_3_EMAIL_1 = "</serialnumber><user email=\"";
-	private static String SIGNUP_3_EMAIL_1_2 = SINGIN_1_2;
+	private static String SIGNUP_3_EMAIL_1_2 = SIGNIN_1_2;
 	private static String SIGNUP_3_EMAIL_2 =  SIGNIN_2;
 	private static String INIT_1 = SIGNUP_1;
 	private static String INIT_2 = "\" state=\"init\" version=\""+GVERSION+"\"><adapter id=\"";
@@ -95,6 +96,7 @@ public class XmlCreatorTest extends TestCase {
 	private static String Update_3 = SIGNIN_2;
 	private static String ADDVIEW_1 = SIGNUP_1;
 	private static String ADDVIEW_2 = "\" state=\"addview\" version=\""+GVERSION+"\" name=\"";
+	private static String ADDVIEW_2_1 = "\" icon=\"";
 	private static String ADDVIEW_3 = "\"><device id=\"";
 	private static String ADDVIEW_3_3 = "\" /><device id=\"";
 	private static String ADDVIEW_4 = SIGNIN_2;
@@ -103,7 +105,8 @@ public class XmlCreatorTest extends TestCase {
 	private static String DELVIEW_3 = TRUE_3;
 	private static String UPDATEVIEW_1 = SIGNUP_1;
 	private static String UPDATEVIEW_2 = "\" state=\"updateview\" version=\""+GVERSION+"\" name=\"";
-	private static String UPDATEVIEW_3 = "\"><device id=\"";
+	private static String UPDATEVIEW_2_1 = ADDVIEW_2_1;
+	private static String UPDATEVIEW_3 = ADDVIEW_3;//"\"><device id=\"";
 	private static String UPDATEVIEW_4 = "\" action=\"";
 	private static String UPDATEVIEW_4_2 = "\" /><device id=\"";
 	private static String UPDATEVIEW_5 = SIGNIN_2;
@@ -130,8 +133,8 @@ public class XmlCreatorTest extends TestCase {
 	}
 
 	public void testSignIn(){
-		String result = mCreator.createSignIn(EMAIL, GTOKEN);
-		String goal = SIGNIN_1+EMAIL+SINGIN_1_2+GTOKEN+SIGNIN_2;
+		String result = mCreator.createSignIn(EMAIL, GTOKEN, false);
+		String goal = SIGNIN_1+EMAIL+SIGNIN_1_2+GTOKEN+SIGNIN_2;
 		
 		Log.i(TAG, "SignInTest1");
 		Log.d(TAG, result);
@@ -312,8 +315,8 @@ public class XmlCreatorTest extends TestCase {
 		devices.add(DEVICEID);
 		devices.add(DEVICEID);
 		
-		String result = mCreator.createAddView(ID, VIEWNAME, devices);
-		String goal = ADDVIEW_1+ID+ADDVIEW_2+VIEWNAME+ADDVIEW_3+devices.get(0)+ADDVIEW_3_3+devices.get(1)+ADDVIEW_4;
+		String result = mCreator.createAddView(ID, VIEWNAME, 1, devices);
+		String goal = ADDVIEW_1+ID+ADDVIEW_2+VIEWNAME+ADDVIEW_2_1+1+ADDVIEW_3+devices.get(0)+ADDVIEW_3_3+devices.get(1)+ADDVIEW_4;
 		
 		Log.i(TAG, "AddViewTest1");
 		Log.d(TAG, result);
@@ -338,8 +341,8 @@ public class XmlCreatorTest extends TestCase {
 		devices.put(DEVICEID, "remove");
 		devices.put(DEVICEID+"x", "add");
 		
-		String result = mCreator.createUpdateView(ID, VIEWNAME, devices);
-		String goal = UPDATEVIEW_1+ID+UPDATEVIEW_2+VIEWNAME+UPDATEVIEW_3+DEVICEID+"x"+UPDATEVIEW_4+devices.get(DEVICEID+"x")+UPDATEVIEW_4_2+DEVICEID+UPDATEVIEW_4
+		String result = mCreator.createUpdateView(ID, VIEWNAME, 0, devices);
+		String goal = UPDATEVIEW_1+ID+UPDATEVIEW_2+VIEWNAME+UPDATEVIEW_2_1+0+UPDATEVIEW_3+DEVICEID+"x"+UPDATEVIEW_4+devices.get(DEVICEID+"x")+UPDATEVIEW_4_2+DEVICEID+UPDATEVIEW_4
 				+devices.get(DEVICEID)+UPDATEVIEW_5;
 		
 		Log.i(TAG, "UpdateViewTest1");
