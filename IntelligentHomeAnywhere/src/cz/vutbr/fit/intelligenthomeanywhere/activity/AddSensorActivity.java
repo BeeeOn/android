@@ -34,7 +34,7 @@ public class AddSensorActivity extends Activity {
 		
 		initButtons();
 		
-		List<String> ListLocation = mController.getAdapter().getLocations(true);
+		List<String> ListLocation = mController.getAdapter().getLocations();
 		
 		Spinner spinner = (Spinner)findViewById(R.id.spinner_choose_location);
         ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, ListLocation);

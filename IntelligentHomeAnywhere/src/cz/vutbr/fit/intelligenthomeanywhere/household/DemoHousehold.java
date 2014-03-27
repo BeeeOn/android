@@ -49,7 +49,7 @@ public final class DemoHousehold extends Household {
 		list.setIcon("favorites");
 		
 		// Add some devices to this listing
-		BaseDevice[] devices = (BaseDevice[])this.adapters.get(0).devices.getDevices().values().toArray();
+		BaseDevice[] devices = (BaseDevice[])this.adapters.get(0).getDevices().values().toArray();
 		
 		list.addDevice(devices[3]);
 		list.addDevice(devices[4]);

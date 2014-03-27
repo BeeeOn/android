@@ -94,7 +94,7 @@ public class XmlDeviceParser {
 		}
 
 		if (adapter != null)
-			Log.i(TAG, String.format("Got adapter with %d devices", adapter.devices.getDevices().size()));
+			Log.i(TAG, String.format("Got adapter with %d devices", adapter.getDevices().size()));
 
 		return adapter;
 	}
@@ -132,7 +132,7 @@ public class XmlDeviceParser {
 
 	        String el = mParser.getName();
 	        if (el.equalsIgnoreCase(ADAPTER_CAPABILITIES)) {
-	        	adapter.devices.setDevices(readCapabilities());
+	        	adapter.setDevices(readCapabilities());
 	        } else if (el.equalsIgnoreCase(ADAPTER_VERSION)) {
 	    		String version = readText(ADAPTER_VERSION);
 	    		adapter.setVersion(version);

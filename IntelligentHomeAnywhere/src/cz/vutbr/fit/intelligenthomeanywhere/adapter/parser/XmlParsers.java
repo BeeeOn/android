@@ -283,7 +283,7 @@ public class XmlParsers {
 			result.setRole(Role.fromString(role));
 			mParser.nextTag();
 			mParser.require(XmlPullParser.START_TAG, ns, CAPABILITIES);
-			result.devices.setDevices(parsePartial());
+			result.setDevices(parsePartial());
 		
 		return result;
 	}

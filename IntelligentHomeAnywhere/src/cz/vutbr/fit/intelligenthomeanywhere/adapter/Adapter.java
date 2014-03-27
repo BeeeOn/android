@@ -3,8 +3,8 @@
  */
 package cz.vutbr.fit.intelligenthomeanywhere.adapter;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import cz.vutbr.fit.intelligenthomeanywhere.User;
 import cz.vutbr.fit.intelligenthomeanywhere.adapter.device.BaseDevice;
@@ -20,7 +20,7 @@ public class Adapter {
 	/**
 	 * List of devices
 	 */
-	public final SimpleListing devices = new SimpleListing();
+	private final SimpleListing mDevices = new SimpleListing();
 	private String mId;
 	private String mVersion;
 	private String mName;
@@ -44,7 +44,7 @@ public class Adapter {
 		result += "Role is " + mRole + "\n";
 		result += "___start of sensors___\n";
 		
-		for(BaseDevice dev : devices.getDevices().values()){
+		for(BaseDevice dev : mDevices.getDevices().values()){
 			result += dev.toDebugString();
 			result += "__\n";
 		}
@@ -121,7 +121,7 @@ public class Adapter {
 	 * @return true if there is new, otherwise false
 	 */
 	public boolean isNewOne(){
-		for(BaseDevice d : devices.getDevices().values())
+		for(BaseDevice d : mDevices.getDevices().values())
 			if(!d.isInitialized())
 				return true;
 		return false;
@@ -132,7 +132,7 @@ public class Adapter {
 	 * @return new adapter or null
 	 */
 	public BaseDevice getNewOne(){
-		for(BaseDevice d : devices.getDevices().values())
+		for(BaseDevice d : mDevices.getDevices().values())
 			if(!d.isInitialized())
 				return d;
 		return null;
@@ -141,33 +141,34 @@ public class Adapter {
 	/**
 	 * Find and return device by given id
 	 * @param id of device
-	 * @return BaseDeviceor null
+	 * @return BaseDevice or null
 	 */
 	public BaseDevice getDeviceById(String id){
-		for (BaseDevice d : devices.getDevices().values())
-			if (d.getId() != null && d.getId().equals(id))
-				return d;
-		return null;
+		return mDevices.getById(id);
 	}
 	
 	/**
-	 * Method for getting list of locations (first occurrence)
-	 * @param notnull determines if it can return null value, or if it exclude
-	 * @return ArayList of strings with unique locations
+	 * Return map with all devices;
+	 * @return map with all devices (or empty map)
 	 */
-	public List<String> getLocations(boolean notnull){
-		List<String> locations = new ArrayList<String>();
-		
-		for(BaseDevice d : devices.getDevices().values()){
-			if(!locations.contains(d.getLocation())){
-				if(notnull)
-					if(d.getLocation() == null)
-						continue;
-				locations.add(d.getLocation());
-			}
-		}
-		
-		return locations;
+	public Map<String, BaseDevice> getDevices() {
+		return mDevices.getDevices();
+	}
+	
+	/**
+	 * Set devices that belongs to this adapter.
+	 * @param devices
+	 */
+	public void setDevices(List<BaseDevice> devices) {
+		mDevices.setDevices(devices);
+	}
+	
+	/**
+	 * Return list of location names.
+	 * @return list with locations (or empty list).
+	 */
+	public List<String> getLocations(){
+		return mDevices.getLocations();
 	}
 	
 	/**
@@ -249,14 +250,7 @@ public class Adapter {
 	 * @param name of location
 	 * @return ArrayList with all adapters with needed location
 	 */
-	public List<BaseDevice> getDevicesByLocation(String name){
-		List<BaseDevice> result = new ArrayList<BaseDevice>();
-		
-		for(BaseDevice d : devices.getDevices().values()){
-			if(d.getLocation().equals(name))
-				result.add(d);
-		}
-		
-		return result;
+	public List<BaseDevice> getDevicesByLocation(String location){
+		return mDevices.getByLocation(location);
 	}
 }

@@ -158,8 +158,8 @@ public final class Controller {
 	public BaseDevice getDevice(String id, boolean forceUpdate) {
 		BaseDevice device = null;
 		
-		for (Adapter adapter : mHousehold.adapters) {
-			device = adapter.devices.getById(id);
+		for (Adapter adapter : getAdapters()) {
+			device = adapter.getDeviceById(id);
 			if (device != null)
 				break;
 		}

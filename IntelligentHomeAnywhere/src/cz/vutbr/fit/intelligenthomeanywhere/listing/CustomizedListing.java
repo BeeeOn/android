@@ -40,5 +40,10 @@ public abstract class CustomizedListing extends SimpleListing {
 	public String getIcon() {
 		return mIcon;
 	}
+	
+	@Override
+	public String toString() {
+		return mName;
+	}
 
 }

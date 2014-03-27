@@ -1,7 +1,9 @@
 package cz.vutbr.fit.intelligenthomeanywhere.listing;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import cz.vutbr.fit.intelligenthomeanywhere.adapter.device.BaseDevice;
@@ -9,6 +11,8 @@ import cz.vutbr.fit.intelligenthomeanywhere.adapter.device.BaseDevice;
 public class SimpleListing {
 
 	private final Map<String, BaseDevice> mDevices = new HashMap<String, BaseDevice>();
+	private final Map<String, BaseDevice> mUninitializedDevices = new HashMap<String, BaseDevice>();
+	private final Map<String, String> mLocations = new HashMap<String, String>();
 	
 	/**
 	 * Return all devices.
@@ -17,44 +21,74 @@ public class SimpleListing {
 	public Map<String, BaseDevice> getDevices() {
 		return mDevices;
 	}
-
+	
 	/**
-	 * Copies all devices to this listing.
-	 * @param devices
+	 * Return all uninitialized devices.
+	 * @return map with devices (or empty map).
 	 */
-	public void setDevices(final Map<String, BaseDevice> devices) {
-		mDevices.clear();
-		mDevices.putAll(devices);
+	public Map<String, BaseDevice> getUninitializedDevices() {
+		return mUninitializedDevices;
+	}
+	
+	/**
+	 * Return list of location names.
+	 * @return list with locations (or empty list).
+	 */
+	public List<String> getLocations() {
+		List<String> locations = new ArrayList<String>();
+		
+		for (String location : mLocations.values()) {
+			locations.add(location);
+		}
+		
+		return locations;
 	}
 
 	/**
 	 * Add all devices to this listing.
+	 * Also updates uninitialized and locations maps.
+	 * @param devices
+	 */
+	public void setDevices(final Map<String, BaseDevice> devices) {
+		setDevices(devices.values());
+	}
+
+	/**
+	 * Add all devices to this listing.
+	 * Also updates uninitialized and locations maps.
 	 * @param devices
 	 */
 	public void setDevices(final Collection<BaseDevice> devices) {
-		mDevices.clear();
+		clearDevices();
 
 		for (BaseDevice device : devices) {
-			mDevices.put(device.getId(), device);
+			addDevice(device);
 		}
 	}
 
 	/**
 	 * Add device to this listing.
+	 * Also updates uninitialized and locations maps.
 	 * @param device
 	 * @return
 	 */
 	public void addDevice(final BaseDevice device) {
 		mDevices.put(device.getId(), device);
+		
+		if (!device.isInitialized())
+			mUninitializedDevices.put(device.getId(), device);
+		
+		if (!mLocations.containsValue(device.getLocation()))
+			mLocations.put(device.getLocation(), device.getLocation());
 	}
 	
 	/**
-	 * Remove device with specified id from this listing.
-	 * @param id
-	 * @return
+	 * Clears all devices, uninitialized devices and locations maps.
 	 */
-	public void removeDevice(final String id) {
-		mDevices.remove(id);
+	private void clearDevices() {
+		mDevices.clear();
+		mUninitializedDevices.clear();
+		mLocations.clear();
 	}
 	
 	/**
@@ -64,6 +98,25 @@ public class SimpleListing {
 	 */
 	public BaseDevice getById(final String id) {
 		return mDevices.get(id);
+	}
+	
+	/**
+	 * Return list of devices in specified location.
+	 * @param location
+	 * @return list with devices (or empty list)
+	 */
+	public List<BaseDevice> getByLocation(final String location) {
+		List<BaseDevice> devices = new ArrayList<BaseDevice>();
+		
+		if (mLocations.containsValue(location)) {
+			for (BaseDevice device : mDevices.values()) {
+				if (device.getLocation().equals(location)) {
+					devices.add(device);
+				}
+			}
+		}
+		
+		return devices;
 	}
 	
 }

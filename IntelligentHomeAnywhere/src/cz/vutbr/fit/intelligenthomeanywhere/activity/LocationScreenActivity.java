@@ -65,7 +65,7 @@ public class LocationScreenActivity extends Activity {
 			startActivity(intent);
 		}
 		
-		List<String> locations = mController.getAdapter().getLocations(false);
+		List<String> locations = mController.getAdapter().getLocations();
 		Log.d("lokace",locations.toString());
 		
 		int marginTop = 5;
@@ -105,7 +105,7 @@ public class LocationScreenActivity extends Activity {
 		
 		if(mController.getAdapter().isNewInit()){
 			List<String> Old = GetLocationsFromButtons(ID);
-			List<String> New = mController.getAdapter().getLocations(false);
+			List<String> New = mController.getAdapter().getLocations();
 			Log.d("Old",Old.toString());
 			Log.d("New", New.toString());
 			if(Old.size() != New.size()){
@@ -116,7 +116,7 @@ public class LocationScreenActivity extends Activity {
 		}
 		if(mController.getAdapter().isNewLocationName()){
 			List<String> Old = GetLocationsFromButtons(ID);
-			List<String> New = mController.getAdapter().getLocations(false);
+			List<String> New = mController.getAdapter().getLocations();
 			Log.d("Old",Old.toString());
 			Log.d("New", New.toString());
 			List<String> diff = GetDiffOfLocatins(Old, New);
