@@ -8,7 +8,6 @@ import cz.vutbr.fit.intelligenthomeanywhere.User;
 import cz.vutbr.fit.intelligenthomeanywhere.User.Gender;
 import cz.vutbr.fit.intelligenthomeanywhere.User.Role;
 import cz.vutbr.fit.intelligenthomeanywhere.adapter.Adapter;
-import cz.vutbr.fit.intelligenthomeanywhere.adapter.device.BaseDevice;
 import cz.vutbr.fit.intelligenthomeanywhere.adapter.parser.XmlDeviceParser;
 import cz.vutbr.fit.intelligenthomeanywhere.listing.FavoritesListing;
 

@@ -113,12 +113,6 @@ public final class Controller {
 		return null;
 	}
 
-	@Deprecated
-	public Adapter getAdapter() {
-		// FIXME: this method should be removed when there will be support for multiple adapters through whole application
-		return getAdapters().get(0);
-	}
-
 	public boolean registerAdapter(String id) {
 		throw new NotImplementedException();
 	}
@@ -212,6 +206,16 @@ public final class Controller {
 		
 		for (Adapter adapter : getAdapters()) {
 			list.addAll(adapter.getUninitializedDevices());
+		}
+		
+		return list;
+	}
+	
+	public List<BaseDevice> getDevicesByLocation(String location) {
+		List<BaseDevice> list = new ArrayList<BaseDevice>();
+		
+		for (Adapter adapter : getAdapters()) {
+			list.addAll(adapter.getDevicesByLocation(location));
 		}
 		
 		return list;

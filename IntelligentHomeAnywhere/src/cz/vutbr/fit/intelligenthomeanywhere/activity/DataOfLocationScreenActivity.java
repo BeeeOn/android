@@ -20,7 +20,6 @@ import android.widget.ToggleButton;
 import cz.vutbr.fit.intelligenthomeanywhere.Compatibility;
 import cz.vutbr.fit.intelligenthomeanywhere.Constants;
 import cz.vutbr.fit.intelligenthomeanywhere.R;
-import cz.vutbr.fit.intelligenthomeanywhere.adapter.Adapter;
 import cz.vutbr.fit.intelligenthomeanywhere.adapter.device.BaseDevice;
 import cz.vutbr.fit.intelligenthomeanywhere.adapter.device.BaseDevice.SaveDevice;
 import cz.vutbr.fit.intelligenthomeanywhere.adapter.device.StateDevice;
@@ -36,10 +35,8 @@ import cz.vutbr.fit.intelligenthomeanywhere.view.ToggleButtonOnClickListener;
  */
 public class DataOfLocationScreenActivity extends Activity {
 
-	private Adapter mAdapter;
-	
 	private Controller mController;
-	
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -53,7 +50,6 @@ public class DataOfLocationScreenActivity extends Activity {
 		
 		mController = Controller.getInstance(this);
 
-		mAdapter = mController.getAdapter();
 		String location = bundle.getString(Constants.LOCATION_CLICKED);
 		Log.i("clicked ->",location);
 		
@@ -68,7 +64,7 @@ public class DataOfLocationScreenActivity extends Activity {
 		txtvwTitleLocation.setLayoutParams(titleLocationParams);
 		mainlayout.addView(txtvwTitleLocation);
 		
-		List<BaseDevice> devices = mAdapter.getDevicesByLocation(location);
+		List<BaseDevice> devices = mController.getDevicesByLocation(location);
 		if (devices != null) {
 			int ID = Constants.IDLE;
 			LinearLayout temperatureLayout = null;
