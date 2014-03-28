@@ -54,14 +54,6 @@
             android:label="@string/title_activity_login_facebook" >
         </activity>
         <activity
-            android:name="cz.vutbr.fit.intelligenthomeanywhere.activity.ChangeLocationNameActivity"
-            android:theme="@android:style/Theme.Dialog" >
-        </activity>
-        <activity
-            android:name="cz.vutbr.fit.intelligenthomeanywhere.activity.ChangeDeviceNameActivity"
-            android:theme="@android:style/Theme.Dialog" >
-        </activity>
-        <activity
             android:name="cz.vutbr.fit.intelligenthomeanywhere.activity.AddAdapterActivity"
             android:label="@string/title_activity_add_adapter"
             android:screenOrientation="portrait" >

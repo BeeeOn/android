@@ -3,21 +3,26 @@ package cz.vutbr.fit.intelligenthomeanywhere.activity;
 import java.util.List;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup.LayoutParams;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.ToggleButton;
 import cz.vutbr.fit.intelligenthomeanywhere.Compatibility;
 import cz.vutbr.fit.intelligenthomeanywhere.Constants;
 import cz.vutbr.fit.intelligenthomeanywhere.R;
 import cz.vutbr.fit.intelligenthomeanywhere.adapter.Adapter;
 import cz.vutbr.fit.intelligenthomeanywhere.adapter.device.BaseDevice;
+import cz.vutbr.fit.intelligenthomeanywhere.adapter.device.BaseDevice.SaveDevice;
 import cz.vutbr.fit.intelligenthomeanywhere.adapter.device.StateDevice;
 import cz.vutbr.fit.intelligenthomeanywhere.adapter.device.SwitchDevice;
 import cz.vutbr.fit.intelligenthomeanywhere.controller.Controller;
@@ -26,14 +31,12 @@ import cz.vutbr.fit.intelligenthomeanywhere.view.ToggleButtonOnClickListener;
 /**
  * Class that handle screen with location data
  * @author ThinkDeep
+ * @author Robyer
  *
  */
 public class DataOfLocationScreenActivity extends Activity {
 
-	private static final int REQUEST_RENAME = 1;
-	
 	private Adapter mAdapter;
-	private String mClicked;
 	
 	private Controller mController;
 	
@@ -42,28 +45,30 @@ public class DataOfLocationScreenActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_data_of_locacion_screen);
 		
-		mController = Controller.getInstance(this);
-		
 		Bundle bundle = this.getIntent().getExtras();
-		if(bundle != null){
-			mAdapter = mController.getAdapter();
-			mClicked = bundle.getString(Constants.LOCATION_CLICKED);
-			Log.i("clicked ->",mClicked);
-		}else
+		if (bundle == null) {
 			this.finish();
+			return;
+		}
+		
+		mController = Controller.getInstance(this);
+
+		mAdapter = mController.getAdapter();
+		String location = bundle.getString(Constants.LOCATION_CLICKED);
+		Log.i("clicked ->",location);
 		
 		LinearLayout mainlayout = (LinearLayout)findViewById(R.id.dataoflocation_scroll);
 		mainlayout.setOrientation(LinearLayout.VERTICAL);
 		
 		TextView txtvwTitleLocation = new TextView(this);
-		txtvwTitleLocation.setText(mClicked);
+		txtvwTitleLocation.setText(location);
 		txtvwTitleLocation.setTextSize(getResources().getDimension(R.dimen.textsize));
 		LinearLayout.LayoutParams titleLocationParams = new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT,LayoutParams.WRAP_CONTENT);
 		titleLocationParams.setMargins(15, 10, 0, 10);
 		txtvwTitleLocation.setLayoutParams(titleLocationParams);
 		mainlayout.addView(txtvwTitleLocation);
 		
-		List<BaseDevice> devices = mAdapter.getDevicesByLocation(mClicked);
+		List<BaseDevice> devices = mAdapter.getDevicesByLocation(location);
 		if (devices != null) {
 			int ID = Constants.IDLE;
 			LinearLayout temperatureLayout = null;
@@ -80,6 +85,16 @@ public class DataOfLocationScreenActivity extends Activity {
 				RelativeLayout devicelayout = new RelativeLayout(this);
 				devicelayout.setPadding(5, 10, 10, 10);
 				devicelayout.setLayoutParams(new RelativeLayout.LayoutParams(LayoutParams.MATCH_PARENT,LayoutParams.WRAP_CONTENT));
+				
+				final TextView txtvwLabelName = new TextView(this);
+				txtvwLabelName.setText(device.getName());
+				//txtvwLabelName.setId(Constants.DEVICENAMELABEL_ID);
+				txtvwLabelName.setTextSize(getResources().getDimension(R.dimen.textsizesmaller));
+				RelativeLayout.LayoutParams txtvwLabelParams = new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT,LayoutParams.WRAP_CONTENT);
+				txtvwLabelParams.setMargins(0, 5, 0, 0);
+				txtvwLabelName.setLayoutParams(txtvwLabelParams);
+				devicelayout.addView(txtvwLabelName);
+				
 				devicelayout.setOnClickListener(new View.OnClickListener(){
 					@Override
 					public void onClick(View v) {
@@ -91,20 +106,11 @@ public class DataOfLocationScreenActivity extends Activity {
 				devicelayout.setOnLongClickListener(new View.OnLongClickListener() {
 					@Override
 					public boolean onLongClick(View v) {
-						Intent intent = new Intent(DataOfLocationScreenActivity.this, ChangeDeviceNameActivity.class);
-						intent.putExtra(ChangeDeviceNameActivity.DEVICE_ID, device.getId());
-						startActivityForResult(intent, REQUEST_RENAME);
+						renameDevice(device, txtvwLabelName);
+
 						return true;
 					}
 				});
-				TextView txtvwLabelName = new TextView(this);
-				txtvwLabelName.setText(device.getName());
-				//txtvwLabelName.setId(Constants.DEVICENAMELABEL_ID);
-				txtvwLabelName.setTextSize(getResources().getDimension(R.dimen.textsizesmaller));
-				RelativeLayout.LayoutParams txtvwLabelParams = new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT,LayoutParams.WRAP_CONTENT);
-				txtvwLabelParams.setMargins(0, 5, 0, 0);
-				txtvwLabelName.setLayoutParams(txtvwLabelParams);
-				devicelayout.addView(txtvwLabelName);
 				
 				RelativeLayout.LayoutParams rightObjectParams = new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
 				rightObjectParams.setMargins(0, 8, 0, 0);
@@ -256,24 +262,44 @@ public class DataOfLocationScreenActivity extends Activity {
 			this.finish();
 	}
 
-	@Override
-	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		super.onActivityResult(requestCode, resultCode, data);
-
-		//mController = Controller.getInstance(this);
-
-		if (requestCode == REQUEST_RENAME) {
-			// Finish device rename
-			if (resultCode == RESULT_OK) {
-				String deviceId = data.getStringExtra(ChangeDeviceNameActivity.DEVICE_ID);
-				String newName = data.getStringExtra(ChangeDeviceNameActivity.NEW_NAME);
-				
-				// FIXME: redraw device's name in list
-				//((TextView)((RelativeLayout)mPressed).getChildAt(0)).setText(newName);
-			}
-		}		
+	protected void renameDevice(final BaseDevice device, final TextView view) {
+		AlertDialog.Builder builder = new AlertDialog.Builder(DataOfLocationScreenActivity.this);
+		
+		// TODO: use better layout than just single EditText
+		final EditText edit = new EditText(DataOfLocationScreenActivity.this);
+		edit.setText(device.getName());
+		edit.selectAll();
+		// TODO: show keyboard automatically
+		
+		builder.setCancelable(false)
+			.setView(edit)
+			.setTitle("Rename device")
+			.setNegativeButton("Cancel", null)
+			.setPositiveButton("Rename", new DialogInterface.OnClickListener() {
+			
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+					String newName = edit.getText().toString(); 
+					device.setName(newName);
+					
+					// TODO: show loading while saving new name to server
+					boolean saved = mController.saveDevice(device, SaveDevice.SAVE_NAME);
+					
+					String message = saved
+							? String.format("Device was renamed to '%s'", device.getName())
+							: "Device wasn't renamed due to error";
+							
+					Toast.makeText(DataOfLocationScreenActivity.this, message, Toast.LENGTH_LONG).show();
+					
+					// Redraw item in list
+					view.setText(newName);
+				}
+			});
+		
+		AlertDialog dialog = builder.create();
+		dialog.show();
 	}
-	
+
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
