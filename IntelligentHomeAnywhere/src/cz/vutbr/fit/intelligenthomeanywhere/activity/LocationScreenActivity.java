@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import cz.vutbr.fit.intelligenthomeanywhere.Compatibility;
 import cz.vutbr.fit.intelligenthomeanywhere.Constants;
 import cz.vutbr.fit.intelligenthomeanywhere.adapter.Adapter;
@@ -28,7 +29,7 @@ import cz.vutbr.fit.intelligenthomeanywhere.R;
 public class LocationScreenActivity extends Activity {
 
 	private Adapter mAdapter;
-	
+	private ListView drawerListView;
 	/**
 	 * Call XML parser to file on SDcard
 	 */
@@ -144,8 +145,9 @@ public class LocationScreenActivity extends Activity {
 		if(s == null || s.length() < 1)
 			return false;
 		
-		LinearLayout mylayout = (LinearLayout)findViewById(R.id.location_scroll);
-		mylayout.setOrientation(LinearLayout.VERTICAL);
+		//LinearLayout mylayout = (LinearLayout)findViewById(R.id.location_scroll);
+		//mylayout.setOrientation(LinearLayout.VERTICAL);
+		drawerListView = (ListView) findViewById(R.id.left_drawer);
 		
 		LinearLayout.LayoutParams params_btn = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT,LayoutParams.WRAP_CONTENT);
 		params_btn.setMargins(0, marginTop, 0, 0);
@@ -176,7 +178,7 @@ public class LocationScreenActivity extends Activity {
 
 		Compatibility.setBackground(button, getResources().getDrawable(R.drawable.shape));
 		
-		mylayout.addView(button);
+		//mylayout.addView(button);
 		return true;
 	}
 	

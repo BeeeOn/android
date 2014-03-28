@@ -40,8 +40,8 @@ public class LoginActivity extends Activity {
 		setContentView(R.layout.activity_login);
 		
 		// Get btn for login
-		ImageButton btnGoogle = (ImageButton) findViewById(R.id.login_app_btn_google);
-		ImageButton btnMojeID = (ImageButton) findViewById(R.id.login_app_btn_mojeid);
+		ImageButton btnGoogle = (ImageButton) findViewById(R.id.login_btn_google);
+		ImageButton btnMojeID = (ImageButton) findViewById(R.id.login_btn_mojeid);
 
 		// Set onClickListener
 		btnGoogle.setOnClickListener(new OnClickListener(){

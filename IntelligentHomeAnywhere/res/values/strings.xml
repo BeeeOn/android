@@ -88,7 +88,15 @@
         <item>Google</item>
         <item>MojeID</item>
     </string-array>
-    <string name="login_app_sign_in">Select the account for sign in</string>
+    <string-array name="items">
+        <item>Item 1</item>
+        <item>Item 2</item>
+        <item>Item 3</item>
+        <item>Item 4</item>
+        <item>Item 5</item>
+        <item>Item 6</item>
+    </string-array>
+    <string name="log_sc_or">or</string>
 
         
     <!-- GOOGLE -->
@@ -127,5 +135,6 @@
 	<!-- WidgetConfigurationActivity -->
 	<string name="widget_configuration_sensor">Sensor to be shown:</string>
 	<string name="widget_configuration_interval">Update interval (sec.):</string>
+	<string name="login_txt_remember_me">Remember Me</string>
 
 </resources>
