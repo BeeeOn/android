@@ -47,7 +47,7 @@ public final class Controller {
 		return mController;
 	}
 
-	public Controller(Context context) {
+	private Controller(Context context) {
 		mContext = context;
 
 		mPersistence = new Persistence(mContext);
