@@ -274,6 +274,7 @@ public class XmlDeviceParser {
 	        	mParser.require(XmlPullParser.END_TAG, ns, DEVICE_NETWORK);
 	        } else if (el.equals(DEVICE_LOGGING)) {
 	        	logging_ = mParser.getAttributeValue(null, DEVICE_LOGGING_ENABLED);
+	        	readText(DEVICE_LOGGING);
 	        } else {
 	            skip();
 	        }
