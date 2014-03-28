@@ -30,9 +30,10 @@ import cz.vutbr.fit.intelligenthomeanywhere.view.ToggleButtonOnClickListener;
  */
 public class DataOfLocationScreenActivity extends Activity {
 
+	private static final int REQUEST_RENAME = 1;
+	
 	private Adapter mAdapter;
 	private String mClicked;
-	private View mPressed = null;
 	
 	private Controller mController;
 	
@@ -90,11 +91,10 @@ public class DataOfLocationScreenActivity extends Activity {
 				devicelayout.setOnLongClickListener(new View.OnLongClickListener() {
 					@Override
 					public boolean onLongClick(View v) {
-						mPressed = v;
-						Intent intent = new Intent(getBaseContext(), ChangeDeviceNameActivity.class);
-						intent.putExtra(Constants.DEVICE_LONG_PRESS, device.getId());
-						startActivity(intent);
-						return false;
+						Intent intent = new Intent(DataOfLocationScreenActivity.this, ChangeDeviceNameActivity.class);
+						intent.putExtra(ChangeDeviceNameActivity.DEVICE_ID, device.getId());
+						startActivityForResult(intent, REQUEST_RENAME);
+						return true;
 					}
 				});
 				TextView txtvwLabelName = new TextView(this);
@@ -256,18 +256,22 @@ public class DataOfLocationScreenActivity extends Activity {
 			this.finish();
 	}
 
-	/**
-	 * Add new device to the GUI
-	 */
 	@Override
-	public void onResume(){
-		super.onResume();
-		
-		mController = Controller.getInstance(this);
-		
-		if (mController.getAdapter().isNewDeviceName()) {
-			((TextView)((RelativeLayout)mPressed).getChildAt(0)).setText(mController.getAdapter().getNewDeviceName());
-		}
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+
+		//mController = Controller.getInstance(this);
+
+		if (requestCode == REQUEST_RENAME) {
+			// Finish device rename
+			if (resultCode == RESULT_OK) {
+				String deviceId = data.getStringExtra(ChangeDeviceNameActivity.DEVICE_ID);
+				String newName = data.getStringExtra(ChangeDeviceNameActivity.NEW_NAME);
+				
+				// FIXME: redraw device's name in list
+				//((TextView)((RelativeLayout)mPressed).getChildAt(0)).setText(newName);
+			}
+		}		
 	}
 	
 	@Override

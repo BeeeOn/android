@@ -3,6 +3,7 @@
  */
 package cz.vutbr.fit.intelligenthomeanywhere.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
@@ -11,6 +12,7 @@ import cz.vutbr.fit.intelligenthomeanywhere.NotImplementedException;
 import cz.vutbr.fit.intelligenthomeanywhere.User;
 import cz.vutbr.fit.intelligenthomeanywhere.adapter.Adapter;
 import cz.vutbr.fit.intelligenthomeanywhere.adapter.device.BaseDevice;
+import cz.vutbr.fit.intelligenthomeanywhere.adapter.device.BaseDevice.SaveDevice;
 import cz.vutbr.fit.intelligenthomeanywhere.adapter.device.DeviceLog;
 import cz.vutbr.fit.intelligenthomeanywhere.household.DemoHousehold;
 import cz.vutbr.fit.intelligenthomeanywhere.household.Household;
@@ -20,7 +22,7 @@ import cz.vutbr.fit.intelligenthomeanywhere.network.Network;
 import cz.vutbr.fit.intelligenthomeanywhere.persistence.Persistence;
 
 public final class Controller {
-	
+
 	private static Controller mController;
 	
 	private final Context mContext;
@@ -129,23 +131,44 @@ public final class Controller {
 	/** Location methods ****************************************************/
 	
 	public List<LocationListing> getLocations() {
+		List<LocationListing> listings = new ArrayList<LocationListing>();
+		
+		for (Adapter adapter : getAdapters()) {
+			for (String location : adapter.getLocations()) {
+				listings.add(new LocationListing(location, location));
+			}
+		}
+		
+		return listings;
+	}
+	
+	public LocationListing getLocation(String id) {
 		throw new NotImplementedException();
 	}
 	
-	public LocationListing getLocation(String roomId) {
+	public boolean addLocation(LocationListing location) {
 		throw new NotImplementedException();
 	}
 	
-	public boolean addLocation(LocationListing room) {
+	public boolean deleteLocation(LocationListing location) {
 		throw new NotImplementedException();
 	}
 	
-	public boolean deleteLocation(LocationListing room) {
+	public boolean saveLocation(LocationListing location) {
 		throw new NotImplementedException();
 	}
 	
-	public boolean saveLocation(LocationListing room) {
-		throw new NotImplementedException();
+	public boolean renameLocation(String location, String newName) {
+		// TODO: Use rather saveLocation() method
+	
+		for (Adapter adapter : getAdapters()) {
+			for (BaseDevice device : adapter.getDevicesByLocation(location)) {
+				device.setLocation(newName);
+				// TODO: Save to server (somehow effectively)
+			}
+		}
+		
+		return true;
 	}
 
 	
@@ -183,9 +206,37 @@ public final class Controller {
 	public boolean unhideDevice(BaseDevice device) {
 		throw new NotImplementedException();
 	}
+
+	public List<BaseDevice> getUninitializedDevices() {
+		List<BaseDevice> list = new ArrayList<BaseDevice>();
+		
+		for (Adapter adapter : getAdapters()) {
+			list.addAll(adapter.getUninitializedDevices());
+		}
+		
+		return list;
+	}
 	
+	/**
+	 * Save specified setting of device to server.
+	 * 
+	 * @param device
+	 * @param what type of settings to save
+	 * @return true on success, false otherwise
+	 */
+	public boolean saveDevice(BaseDevice device, SaveDevice what) {
+		return true;
+		
+		//throw new NotImplementedException();
+	}
+	
+	/** Save all settings of device to server.
+	 * 
+	 * @param device
+	 * @return true on success, false otherwise
+	 */
 	public boolean saveDevice(BaseDevice device) {
-		throw new NotImplementedException();
+		return saveDevice(device, SaveDevice.SAVE_ALL);
 	}
 	
 	public DeviceLog getDeviceLog(String id) {
@@ -214,8 +265,22 @@ public final class Controller {
 	
 	/** Favorites lists methods *********************************************/
 	
+	public List<FavoritesListing> getCustomLists() {
+		if (mHousehold.favoritesListings == null) {
+			// TODO: load favorites from network
+			throw new NotImplementedException();
+		}
+		
+		return mHousehold.favoritesListings;
+	}
+	
 	public FavoritesListing getCustomList(String id) {
-		throw new NotImplementedException();
+		for (FavoritesListing l : getCustomLists()) {
+			if (l.getId().equals(id))
+				return l;
+		}
+		
+		return null;
 	}
 
 	public boolean addCustomList(FavoritesListing list) {

@@ -28,16 +28,6 @@ public final class Constants {
 	public static final String DEVICE_CLICKED = "DEVICE_CLICKED";
 	
 	/**
-	 * Footing for pass from LocationScreenActivity to ChangeLocationNameActivity
-	 */
-	public static final String LOCATION_LONG_PRESS = "LOCATION_LONG_PRESS";
-	
-	/**
-	 * Footing for pass from DataOfLocationScreenActivity to ChangeDeviceNameActivity
-	 */
-	public static final String DEVICE_LONG_PRESS = "DEVICE_LONG_PRESS"; 
-	
-	/**
 	 * Footing for pass from AddAdapterActivity to RegistrationActivity
 	 */
 	public static final String ADAPTER_SERIAL_NUMBER = "ADAPTER_SERIAL_NUMBER";

@@ -1,6 +1,5 @@
 package cz.vutbr.fit.intelligenthomeanywhere.activity;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import android.app.Activity;
@@ -15,8 +14,9 @@ import android.widget.LinearLayout;
 import cz.vutbr.fit.intelligenthomeanywhere.Compatibility;
 import cz.vutbr.fit.intelligenthomeanywhere.Constants;
 import cz.vutbr.fit.intelligenthomeanywhere.R;
-import cz.vutbr.fit.intelligenthomeanywhere.adapter.parser.XmlCreator;
+import cz.vutbr.fit.intelligenthomeanywhere.adapter.device.BaseDevice;
 import cz.vutbr.fit.intelligenthomeanywhere.controller.Controller;
+import cz.vutbr.fit.intelligenthomeanywhere.listing.LocationListing;
 
 /**
  * Activity class for choosing location
@@ -25,6 +25,9 @@ import cz.vutbr.fit.intelligenthomeanywhere.controller.Controller;
  */
 public class LocationScreenActivity extends Activity {
 
+	private static final int REQUEST_RENAME = 1;
+	private static final int REQUEST_CHANGE_LOCATION = 2;
+	
 	private Controller mController;
 	
 	/**
@@ -37,41 +40,19 @@ public class LocationScreenActivity extends Activity {
 		
 		mController = Controller.getInstance(this);
 		
-		// TODO: do something with this
-		/*String GETFROMSERVER = null;
-		Bundle bundle = this.getIntent().getExtras();
-		if(bundle != null){
-			if(bundle.getString(Constants.LOGIN).equals(Constants.LOGIN_DEMO)){
-				GETFROMSERVER = getExternalFilesDir(null).getPath() + Constants.DEMO_FILENAME;
-			}else if(bundle.getString(Constants.LOGIN).equals(Constants.LOGIN_COMM)){
-				//TODO: calling to server for xml file
-				//TODO: setting up timed calling to server
-				Log.d("TODO","here");
-				this.finish();
-				return;
-			}
-		}
-
-		mAdapter = XmlDeviceParser.fromFile(GETFROMSERVER);
-		if(mAdapter == null)
-			return;
-		
-		Log.i("parsedXML",mAdapter.toDebugString());
-		mController.setAdapter(mAdapter);
-		mController.setContext(this.getApplicationContext());*/
-		
-		if(mController.getAdapter().isNewOne()){
-			Intent intent = new Intent(this,Notification.class);
-			startActivity(intent);
+		List<BaseDevice> devices = mController.getUninitializedDevices();
+		if (devices.size() > 0) {
+			Intent intent = new Intent(this, Notification.class);
+			startActivity(intent); // TODO: shoudln't this be startActivityForResult()?
 		}
 		
-		List<String> locations = mController.getAdapter().getLocations();
+		List<LocationListing> locations = mController.getLocations();
 		Log.d("lokace",locations.toString());
 		
 		int marginTop = 5;
 		int ID = Constants.BUTTON_ID;
-		for(String s : locations){
-			if(addLocationButton(s, ID, marginTop))
+		for(LocationListing location : locations) {
+			if (addLocationButton(location.getName(), ID, marginTop))
 				ID++;
 		}
 		if(locations.size() == 1){
@@ -87,10 +68,39 @@ public class LocationScreenActivity extends Activity {
 		return true;
 	}
 
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+
+		//mController = Controller.getInstance(this);
+
+		if (requestCode == REQUEST_CHANGE_LOCATION) {
+			// Finish location change
+			if (resultCode == RESULT_OK) {
+				String location = data.getStringExtra(ChangeLocationNameActivity.LOCATION_NAME);
+				String newName = data.getStringExtra(ChangeLocationNameActivity.NEW_NAME);
+				
+				// FIXME: redraw location's name in list
+				//((TextView)((RelativeLayout)mPressed).getChildAt(0)).setText(newName);
+			}
+		}
+
+		if (requestCode == REQUEST_RENAME) {
+			// Finish device rename
+			if (resultCode == RESULT_OK) {
+				String deviceId = data.getStringExtra(ChangeDeviceNameActivity.DEVICE_ID);
+				String newName = data.getStringExtra(ChangeDeviceNameActivity.NEW_NAME);
+				
+				// FIXME: redraw device's name in list
+				//((TextView)((RelativeLayout)mPressed).getChildAt(0)).setText(newName);
+			}
+		}
+	}
+	
 	/**
 	 * Repaint GUI
 	 */
-	@Override
+	/*@Override
 	public void onResume(){
 		super.onResume();
 		final int ID = Constants.BUTTON_ID;
@@ -131,7 +141,7 @@ public class LocationScreenActivity extends Activity {
 			}
 			
 		}
-	}
+	}*/
 	
 	/**
 	 * Draw a button to GUI
@@ -172,7 +182,7 @@ public class LocationScreenActivity extends Activity {
 				Log.i("longClick",longPress.getText().toString());
 				
 				Intent intent = new Intent(getBaseContext(), ChangeLocationNameActivity.class);
-				intent.putExtra(Constants.LOCATION_LONG_PRESS, longPress.getText().toString());
+				intent.putExtra(ChangeLocationNameActivity.LOCATION_NAME, longPress.getText().toString());
 				startActivity(intent);
 				return false;
 			}
@@ -189,7 +199,7 @@ public class LocationScreenActivity extends Activity {
 	 * @param ID number of start id (end with first null)
 	 * @return ArrayList with location names
 	 */
-	private List<String> GetLocationsFromButtons(int ID){
+	/*private List<String> GetLocationsFromButtons(int ID){
 		List<String> result = new ArrayList<String>();
 		try{
 			for(int i = ID; i > 0; i++)
@@ -198,7 +208,7 @@ public class LocationScreenActivity extends Activity {
 			//e.printStackTrace();
 		}
 		return result;
-	}
+	}*/
 	
 	/**
 	 * Method find two different items in two lists
@@ -206,7 +216,7 @@ public class LocationScreenActivity extends Activity {
 	 * @param New second list
 	 * @return pair of different items in list
 	 */
-	private List<String> GetDiffOfLocatins(List<String> Old, List<String> New){
+	/*private List<String> GetDiffOfLocatins(List<String> Old, List<String> New){
 		List<String> result = new ArrayList<String>();
 		final int oSize = Old.size();
 		for(int x = oSize-1; x >= 0; x--){
@@ -222,7 +232,7 @@ public class LocationScreenActivity extends Activity {
 		result.add(Old.get(0));
 		result.add(New.get(0));
 		return result;
-	}
+	}*/
 	
 	/**
 	 * Method return button with specific name (label) and ID
@@ -230,7 +240,7 @@ public class LocationScreenActivity extends Activity {
 	 * @param ID start of ID, ID has to be less or equal to searching for
 	 * @return button with specific properties
 	 */
-	private Button GetButtonByName(String name, int ID){
+	/*private Button GetButtonByName(String name, int ID){
 		Button result = null;
 		try{
 			for(int i = ID; i > 0; i++){
@@ -243,5 +253,5 @@ public class LocationScreenActivity extends Activity {
 			result = null;
 		}
 		return result;
-	}
+	}*/
 }

@@ -3,6 +3,7 @@
  */
 package cz.vutbr.fit.intelligenthomeanywhere.adapter;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -25,10 +26,6 @@ public class Adapter {
 	private String mVersion;
 	private String mName;
 	private User.Role mRole;
-	private boolean mNewInit = false;
-	private boolean mNewLocationName = false;
-	private boolean mNewDeviceName = false;
-	private String mNewDeviceNameLabel;
 	
 	public Adapter() {}
 	
@@ -117,28 +114,6 @@ public class Adapter {
 	}
 	
 	/**
-	 * Method checked if is there new device in network
-	 * @return true if there is new, otherwise false
-	 */
-	public boolean isNewOne(){
-		for(BaseDevice d : mDevices.getDevices().values())
-			if(!d.isInitialized())
-				return true;
-		return false;
-	}
-	
-	/**
-	 * Method return uninitialized adapter (new sensor in home)
-	 * @return new adapter or null
-	 */
-	public BaseDevice getNewOne(){
-		for(BaseDevice d : mDevices.getDevices().values())
-			if(!d.isInitialized())
-				return d;
-		return null;
-	}
-	
-	/**
 	 * Find and return device by given id
 	 * @param id of device
 	 * @return BaseDevice or null
@@ -172,71 +147,6 @@ public class Adapter {
 	}
 	
 	/**
-	 * Check if has been initialized new device, and set it to false
-	 * @return true if there is new initialized device
-	 */
-	public boolean isNewInit(){
-		if(mNewInit){
-			mNewInit = false;
-			return true;
-		}
-		return mNewInit;
-	}
-	
-	/**
-	 * Setting flag that there is new initialization
-	 */
-	public void setNewInit(){
-		mNewInit = true;
-	}
-	
-	/**
-	 * Check if has been change name of location buttons
-	 * @return true if is new name of location in otherwise return false
-	 */
-	public boolean isNewLocationName(){
-		if(mNewLocationName){
-			mNewLocationName = false;
-			return true;
-		}
-		return false;
-	}
-	public void setNewLocationName(){
-		mNewLocationName = true;
-	}
-	
-	/**
-	 * Check if has been change name of sensor
-	 * @return true if change has been done, otherwise false
-	 */
-	public boolean isNewDeviceName(){
-		if(mNewDeviceName){
-			mNewDeviceName = false;
-			return true;
-		}
-		return false;
-	}
-	
-	/**
-	 * Setting device name
-	 * @param newName
-	 */
-	public void setNewDeviceName(String newName){
-		mNewDeviceNameLabel = newName;
-		mNewDeviceName = true;
-	}
-	
-	/**
-	 * Returning device name
-	 * @return device name
-	 */
-	public String getNewDeviceName(){
-		String result = mNewDeviceNameLabel;
-		mNewDeviceNameLabel = null;
-		return result;
-	}
-	
-	/**
 	 * Return object as XML file
 	 * @return created XML string
 	 */
@@ -253,4 +163,9 @@ public class Adapter {
 	public List<BaseDevice> getDevicesByLocation(String location){
 		return mDevices.getByLocation(location);
 	}
+	
+	public List<BaseDevice> getUninitializedDevices() {
+		return new ArrayList<BaseDevice>(mDevices.getUninitializedDevices().values());
+	}
+	
 }
