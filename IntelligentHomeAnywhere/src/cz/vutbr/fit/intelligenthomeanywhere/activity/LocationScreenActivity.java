@@ -3,6 +3,8 @@ package cz.vutbr.fit.intelligenthomeanywhere.activity;
 import java.util.List;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -21,6 +23,7 @@ import cz.vutbr.fit.intelligenthomeanywhere.listing.LocationListing;
 /**
  * Activity class for choosing location
  * @author ThinkDeep
+ * @author Robyer
  *
  */
 public class LocationScreenActivity extends Activity {
@@ -40,11 +43,7 @@ public class LocationScreenActivity extends Activity {
 		
 		mController = Controller.getInstance(this);
 		
-		List<BaseDevice> devices = mController.getUninitializedDevices();
-		if (devices.size() > 0) {
-			Intent intent = new Intent(this, Notification.class);
-			startActivity(intent); // TODO: shoudln't this be startActivityForResult()?
-		}
+		checkUninitializedDevices();
 		
 		List<LocationListing> locations = mController.getLocations();
 		Log.d("lokace",locations.toString());
@@ -94,6 +93,33 @@ public class LocationScreenActivity extends Activity {
 				// FIXME: redraw device's name in list
 				//((TextView)((RelativeLayout)mPressed).getChildAt(0)).setText(newName);
 			}
+		}
+	}
+	
+	/**
+	 * Checks if there are any uninitialized devices and if so, shows dialog to ask user for adding them.
+	 */
+	private void checkUninitializedDevices() {
+		List<BaseDevice> devices = mController.getUninitializedDevices();
+		if (devices.size() > 0) {
+			AlertDialog.Builder builder = new AlertDialog.Builder(this);
+			
+			builder.setCancelable(false)
+				.setTitle(R.string.notification_title)
+				.setMessage(getResources().getQuantityString(R.plurals.notification_new_sensors, devices.size(), devices.size()))
+				.setNeutralButton(R.string.notification_ingore, null)
+				.setPositiveButton(R.string.notification_add, new DialogInterface.OnClickListener() {
+				
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						// Open activity for adding new device
+						Intent intent = new Intent(LocationScreenActivity.this, AddSensorActivity.class);
+						startActivity(intent);
+					}
+				});
+			
+			AlertDialog dialog = builder.create();
+			dialog.show();
 		}
 	}
 	
