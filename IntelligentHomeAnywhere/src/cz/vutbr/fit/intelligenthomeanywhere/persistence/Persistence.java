@@ -9,10 +9,19 @@ import cz.vutbr.fit.intelligenthomeanywhere.adapter.Adapter;
 import cz.vutbr.fit.intelligenthomeanywhere.adapter.device.BaseDevice;
 import cz.vutbr.fit.intelligenthomeanywhere.widget.WidgetData;
 
+/**
+ * Persistence service that handles caching data on this device.
+ * 
+ * @author Robyer
+ */
 public class Persistence {
 
-	Context mContext;
+	private final Context mContext;
 	
+	/**
+	 * Constructor.
+	 * @param context
+	 */
 	public Persistence(Context context) {
 		mContext = context;
 	}

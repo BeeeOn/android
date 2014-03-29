@@ -11,11 +11,19 @@ import cz.vutbr.fit.intelligenthomeanywhere.adapter.Adapter;
 import cz.vutbr.fit.intelligenthomeanywhere.adapter.parser.XmlDeviceParser;
 import cz.vutbr.fit.intelligenthomeanywhere.listing.FavoritesListing;
 
-
+/**
+ * Represents demo household with adapters and devices loaded from local assets file.
+ * 
+ * @author Robyer
+ */
 public final class DemoHousehold extends Household {
 	
 	private final Context mContext;
 	
+	/**
+	 * Constructor.
+	 * @param context
+	 */
 	public DemoHousehold(Context context) {
 		mContext = context;
 		
@@ -24,13 +32,18 @@ public final class DemoHousehold extends Household {
 		prepareListings();
 	}
 	
+	/**
+	 * Prepare logged in user.
+	 */
 	private void prepareUser() {
-		// Prepare demo user
+		// TODO: role belongs to adapter so it has no meaning here
 		this.user = new User("John Doe", "john@doe.com", Role.Superuser, Gender.Male);
 	}
 	
+	/**
+	 * Prepare demo adapters.
+	 */
 	private void prepareAdapters() {
-		// Prepare demo adapters
 		this.adapters = new ArrayList<Adapter>();
 		
 		String filename = mContext.getExternalFilesDir(null).getPath() + Constants.DEMO_FILENAME;
@@ -39,8 +52,10 @@ public final class DemoHousehold extends Household {
 		this.adapters.add(adapter);
 	}
 	
+	/**
+	 * Prepare demo custom lists.
+	 */
 	private void prepareListings() {
-		// Prepare demo listings
 		this.favoritesListings = new ArrayList<FavoritesListing>();
 		
 		FavoritesListing list = new FavoritesListing("demoFavorites");
