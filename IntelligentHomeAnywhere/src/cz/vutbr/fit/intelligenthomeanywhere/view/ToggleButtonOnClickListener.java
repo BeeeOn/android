@@ -7,9 +7,8 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Toast;
 import android.widget.ToggleButton;
-import cz.vutbr.fit.intelligenthomeanywhere.Constants;
-import cz.vutbr.fit.intelligenthomeanywhere.adapter.device.BaseDevice;
 import cz.vutbr.fit.intelligenthomeanywhere.R;
+import cz.vutbr.fit.intelligenthomeanywhere.adapter.device.SwitchDevice;
 
 /**
  * @brief Class for listener of ToggleButtons
@@ -18,22 +17,21 @@ import cz.vutbr.fit.intelligenthomeanywhere.R;
  */
 public class ToggleButtonOnClickListener implements OnClickListener{
 
-	private String mName;
+	private SwitchDevice mDevice;
 	
 	/**
 	 * Constructor
-	 * @param name
+	 * @param device
 	 */
-	public ToggleButtonOnClickListener(String name) {
-		mName = name;
+	public ToggleButtonOnClickListener(SwitchDevice device) {
+		mDevice = device;
 	}
 	
 	@Override
 	public void onClick(View v) {
 		ToggleButton clicked = (ToggleButton)v;
-		Toast.makeText(v.getContext(), mName + v.getContext().getString(R.string.toast_changeto) + clicked.getText(), Toast.LENGTH_SHORT).show();
-		BaseDevice device = Constants.getAdapter().getDeviceByName(mName);
-		device.setValue(clicked.getText().toString());
+		Toast.makeText(v.getContext(), mDevice.getName() + v.getContext().getString(R.string.toast_changeto) + clicked.getText(), Toast.LENGTH_SHORT).show();
+		mDevice.setValue(clicked.getText().toString());
 		//TODO: createXml and send to server
 	}
 

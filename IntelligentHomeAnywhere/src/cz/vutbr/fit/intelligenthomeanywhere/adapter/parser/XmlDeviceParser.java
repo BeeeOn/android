@@ -94,7 +94,7 @@ public class XmlDeviceParser {
 		}
 
 		if (adapter != null)
-			Log.i(TAG, String.format("Got adapter with %d devices", adapter.devices.size()));
+			Log.i(TAG, String.format("Got adapter with %d devices", adapter.getDevices().size()));
 
 		return adapter;
 	}
@@ -132,7 +132,7 @@ public class XmlDeviceParser {
 
 	        String el = mParser.getName();
 	        if (el.equalsIgnoreCase(ADAPTER_CAPABILITIES)) {
-	        	adapter.devices = readCapabilities();
+	        	adapter.setDevices(readCapabilities());
 	        } else if (el.equalsIgnoreCase(ADAPTER_VERSION)) {
 	    		String version = readText(ADAPTER_VERSION);
 	    		adapter.setVersion(version);
@@ -240,7 +240,6 @@ public class XmlDeviceParser {
         String address_ = null;
         String quality_ = null;
         String logging_ = null;
-        String logfile_ = null;
         
 		while (mParser.next() != XmlPullParser.END_TAG) {
 	        if (mParser.getEventType() != XmlPullParser.START_TAG)
@@ -275,7 +274,7 @@ public class XmlDeviceParser {
 	        	mParser.require(XmlPullParser.END_TAG, ns, DEVICE_NETWORK);
 	        } else if (el.equals(DEVICE_LOGGING)) {
 	        	logging_ = mParser.getAttributeValue(null, DEVICE_LOGGING_ENABLED);
-	        	logfile_ = readText(DEVICE_LOGGING);
+	        	readText(DEVICE_LOGGING);
 	        } else {
 	            skip();
 	        }

@@ -10,17 +10,12 @@
  */
 package cz.vutbr.fit.intelligenthomeanywhere;
 
-import android.content.Context;
-import android.os.Environment;
-import cz.vutbr.fit.intelligenthomeanywhere.adapter.Adapter;
 
 /**
  * @brief Class for all constants
  * @author ThinkDeep
  */
 public final class Constants {
-	private static Adapter mAdapter;
-	private static Context mContext;
 	
 	/**
 	 * Footing for pass from LocationScreenActivity to DataOfLocationScreenActivity
@@ -31,16 +26,6 @@ public final class Constants {
 	 * Footing for pass from DataOfLocationScreenActivity to SensorDetailActivity
 	 */
 	public static final String DEVICE_CLICKED = "DEVICE_CLICKED";
-	
-	/**
-	 * Footing for pass from LocationScreenActivity to ChangeLocationNameActivity
-	 */
-	public static final String LOCATION_LONG_PRESS = "LOCATION_LONG_PRESS";
-	
-	/**
-	 * Footing for pass from DataOfLocationScreenActivity to ChangeDeviceNameActivity
-	 */
-	public static final String DEVICE_LONG_PRESS = "DEVICE_LONG_PRESS"; 
 	
 	/**
 	 * Footing for pass from AddAdapterActivity to RegistrationActivity
@@ -78,14 +63,16 @@ public final class Constants {
 	public static final String LOGIN_COMM = "LOGIN_COMM";
 	
 	/**
-	 * Path to demo file with prepared household sensors
+	 * Filename of file with prepared household sensors
 	 */
-	public static final String DEMO_COMMUNICATION = Environment.getExternalStorageDirectory().toString() + "/IHA/komunikace.xml";
+	public static final String DEMO_FILENAME = "komunikace.xml";
+	public static final String DEMO_ASSETNAME = "komunikace.xml";
 	
 	/**
-	 * Path to demo file with prepared household log info from one sensor
+	 * Filename of demo file with prepared household log info from one sensor
 	 */
-	public static final String DEMO_LOGFILE = Environment.getExternalStorageDirectory().toString() + "/IHA/sensor0.log";	
+	public static final String DEMO_LOG_FILENAME = "sensor0.log";
+	public static final String DEMO_LOG_ASSETNAME = "sensor0.log";
 	
 	//TODO: maybe will not used or/and make comments
 	public static final int ADAPTER_OFFLINE = 0;
@@ -153,48 +140,5 @@ public final class Constants {
 	public static final String WIDGET_PREF_LAST_UPDATE = "lastUpdate";
 	public static final String WIDGET_PREF_INITIALIZED = "initialized";
 	public static final String WIDGET_PREF_DEVICE = "device";
-		
-	/**
-	 * Set up main adapter object
-	 * @param adapter object
-	 */
-	public static void setAdapter(Adapter adapter){
-		mAdapter = adapter;
-	}
-	/**
-	 * Returning actual adapter
-	 * @return Adapter object
-	 */
-	public static Adapter getAdapter(){
-		// FIXME: get Adapter if doesn't exists
-		// e.g. because our application process get killed by Android
-		// and then is started again (but without initializing this) 
-		/*if (mAdapter == NULL)
-			mAdapter = ... */
-		
-		return mAdapter;
-	}
-	
-	/**
-	 * Set up context of application
-	 * @param context of application
-	 */
-	public static void setContext(Context context){
-		mContext = context;
-	}
-	
-	/**
-	 * Returning actual context
-	 * @return Context object
-	 */
-	public static Context getContext() {
-		// FIXME: get Context if doesn't exists
-		// e.g. because our application process get killed by Android
-		// and then is started again (but without initializing this) 
-		/*if (mContext == NULL)
-			mContext = ... */
-			
-		return mContext;
-	}
 	
 }

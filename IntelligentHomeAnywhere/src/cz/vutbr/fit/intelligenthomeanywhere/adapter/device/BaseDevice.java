@@ -8,7 +8,6 @@ import android.content.Context;
 /**
  * @brief Abstract class for all devices
  * @author Robyer
- *
  */
 public abstract class BaseDevice {
 	protected boolean mInitialized;
@@ -17,11 +16,9 @@ public abstract class BaseDevice {
 	protected String mName;
 	protected int mRefreshTime;	
 	protected int mBattery;
-//	protected String mLog;
 	protected boolean mLogging;
 	protected String mInvolveTime;
 	protected char mVisibility;
-	//protected String mValue;
 	
 	protected NetworkState mNetwork = new NetworkState();
 			
@@ -36,6 +33,19 @@ public abstract class BaseDevice {
 	public final class NetworkState {
 		public int quality;
 		public String address; 
+	}
+	
+	/**
+	 * Represents settings of device which could be saved to server.
+	 */
+	public enum SaveDevice {
+		SAVE_ALL,			// save all settings
+		SAVE_NAME,			// rename device
+		SAVE_LOCATION,		// change location
+		SAVE_VISIBILITY,	// change visibility
+		SAVE_LOGGING,		// change logging on server
+		SAVE_REFRESH,		// change refresh interval
+		SAVE_TYPE,			// change device's icon, etc.
 	}
 	
 	/**
@@ -122,6 +132,14 @@ public abstract class BaseDevice {
 	}
 	
 	/**
+	 * Get unique identifier of device
+	 * @return id
+	 */
+	public String getId() {
+		return mNetwork.address;
+	}
+
+	/**
 	 * Setter the location type
 	 * @param type
 	 */
@@ -184,14 +202,6 @@ public abstract class BaseDevice {
 	public void setLogging(boolean logging) {
 		mLogging = logging;
 	}
-
-	/*public String getValue() {
-		return mValue;
-	}
-
-	public void setValue(String value) {
-		mValue = value;
-	}*/
 	
 	/**
 	 * Get visibility of device
@@ -288,31 +298,6 @@ public abstract class BaseDevice {
 	public void setQuality(int quality) {
 		mNetwork.quality = quality;
 	}
-	
-	/**
-	 * Get name/path to logging file
-	 * @return log name
-	 */
-//	public String getLog() {
-//		return mLog;
-//	}
-	
-	/**
-	 * Setting log name (possibly not used - handle via server, when logging flag is set)
-	 * @param log
-	 */
-//	public void setLog(String log) {
-//		mLog = log;
-//	}
-
-	/**
-	 * Send to server
-	 * @return
-	 */
-	public boolean saveSettings() {
-		// TODO: save settings to server
-		return true;
-	}
 
 	@Override
 	public String toString() {
@@ -321,10 +306,9 @@ public abstract class BaseDevice {
 	
 	/**
 	 * Debug method
-	 * @param notuse
 	 * @return
 	 */
-	public String debugString(boolean notuse){
+	public String toDebugString() {
 		String result = "";
 		
 		result += "Name: " + mName + "\n";

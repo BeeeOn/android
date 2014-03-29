@@ -16,6 +16,8 @@ import android.annotation.SuppressLint;
 import android.util.Log;
 import android.util.Xml;
 import cz.vutbr.fit.intelligenthomeanywhere.Constants;
+import cz.vutbr.fit.intelligenthomeanywhere.User;
+import cz.vutbr.fit.intelligenthomeanywhere.User.Role;
 import cz.vutbr.fit.intelligenthomeanywhere.adapter.Adapter;
 import cz.vutbr.fit.intelligenthomeanywhere.adapter.device.BaseDevice;
 import cz.vutbr.fit.intelligenthomeanywhere.adapter.device.EmissionDevice;
@@ -219,7 +221,7 @@ public class XmlParsers {
 		
 		switch(getStateEnum(state)){
 		case eCONACCOUNTLIST:
-			// HashMap<String, UserData>
+			// HashMap<String, User>
 			result.data = parseConAccountList();
 			break;
 		case eCONTENT:
@@ -278,10 +280,10 @@ public class XmlParsers {
 			if(!result.getVersion().equals(XML_VER))
 				throw new XmlVerMisException(mXmlVerMisExcMessage + "Expected: " + XML_VER + " but got: " + result.getVersion());
 			
-			result.setRole(role);
+			result.setRole(Role.fromString(role));
 			mParser.nextTag();
 			mParser.require(XmlPullParser.START_TAG, ns, CAPABILITIES);
-			result.devices = parsePartial();
+			result.setDevices(parsePartial());
 		
 		return result;
 	}
@@ -354,7 +356,7 @@ public class XmlParsers {
 			Adapter adapter = new Adapter();
 			adapter.setId(mParser.getAttributeValue(ns, ID));
 			adapter.setName(mParser.getAttributeValue(ns, NAME));
-			adapter.setRole(mParser.getAttributeValue(ns, ROLE));
+			adapter.setRole(User.Role.fromString(mParser.getAttributeValue(ns, ROLE)));
 			result.add(adapter);
 			
 			mParser.nextTag();
@@ -431,31 +433,30 @@ public class XmlParsers {
 	
 	/**
 	 * Method parse inner part of ConAccountList message
-	 * @return HashMap with email as key and UserData object as value
+	 * @return HashMap with email as key and User object as value
 	 * @throws XmlPullParserException
 	 * @throws IOException
 	 */
-	private static HashMap<String, UserData> parseConAccountList() throws XmlPullParserException, IOException{
+	private static HashMap<String, User> parseConAccountList() throws XmlPullParserException, IOException{
 		mParser.nextTag();
 		mParser.require(XmlPullParser.START_TAG, ns, USER);
 		
-		HashMap<String, UserData> result = new HashMap<String, UserData>();
-		do{
-			UserData user_data_tmp = new UserData();
-			String keyEmail = mParser.getAttributeValue(ns, EMAIL);
-			
-			user_data_tmp.setEmail(keyEmail);
-			user_data_tmp.setRole(mParser.getAttributeValue(ns, ROLE));
-			user_data_tmp.setName(mParser.getAttributeValue(ns, NAME));
-			user_data_tmp.setSurname(mParser.getAttributeValue(ns, SURNAME));
-			String gender = mParser.getAttributeValue(ns, GENDER);
-			if(gender != null)
-				user_data_tmp.setGender((gender.equals(POSITIVEONE)) ? true : false);
-			
-			result.put(keyEmail, user_data_tmp);
+		HashMap<String, User> result = new HashMap<String, User>();
+		do {
+			String email = mParser.getAttributeValue(ns, EMAIL);
+			String name = String.format("%s %s",
+					mParser.getAttributeValue(ns, NAME),
+					mParser.getAttributeValue(ns, SURNAME));
+
+			User.Role role = User.Role.fromString(mParser.getAttributeValue(ns, ROLE));
+			User.Gender gender = mParser.getAttributeValue(ns, GENDER).equals(POSITIVEONE)
+					? User.Gender.Male
+					: User.Gender.Female;
+
+			result.put(email, new User(name, email, role, gender));
 			mParser.nextTag();
 			
-		}while(mParser.nextTag() != XmlPullParser.END_TAG && !mParser.getName().equals(COM_ROOT));
+		} while(mParser.nextTag() != XmlPullParser.END_TAG && !mParser.getName().equals(COM_ROOT));
 		
 		return result;
 	}

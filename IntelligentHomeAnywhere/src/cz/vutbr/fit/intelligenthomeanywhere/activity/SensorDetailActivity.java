@@ -14,9 +14,9 @@ import android.view.Gravity;
 import android.view.Menu;
 import android.view.View;
 import android.widget.LinearLayout;
-import android.widget.LinearLayout.LayoutParams;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.GraphView.GraphViewData;
@@ -25,10 +25,11 @@ import com.jjoe64.graphview.LineGraphView;
 
 import cz.vutbr.fit.intelligenthomeanywhere.Compatibility;
 import cz.vutbr.fit.intelligenthomeanywhere.Constants;
+import cz.vutbr.fit.intelligenthomeanywhere.R;
 import cz.vutbr.fit.intelligenthomeanywhere.adapter.device.BaseDevice;
+import cz.vutbr.fit.intelligenthomeanywhere.controller.Controller;
 import cz.vutbr.fit.intelligenthomeanywhere.view.NumberPicker;
 import cz.vutbr.fit.intelligenthomeanywhere.view.NumberPicker.OnChangedListener;
-import cz.vutbr.fit.intelligenthomeanywhere.R;
 
 /**
  * Class that handle screen with detail of some sensor
@@ -39,15 +40,27 @@ public class SensorDetailActivity extends Activity {
 
 	//private int type = 0;
 	
+	private BaseDevice mDevice;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_sensor_detail_screen);
 		
-		String name = this.getIntent().getExtras().getString(Constants.DEVICE_CLICKED);
-		BaseDevice device = Constants.getAdapter().getDeviceByName(name);
-		Log.i("Click on",device.getName());
+		String id = this.getIntent().getExtras().getString(Constants.DEVICE_CLICKED);
+		mDevice = Controller.getInstance(this).getDevice(id);
 		
+		if (mDevice == null) {
+			Log.e("SensorDetailActivity", String.format("Device with id '%s' wasn't found", id));
+			Toast.makeText(this, "This device wasn't found", Toast.LENGTH_LONG).show();
+			finish();
+		} else {
+			Log.i("Click on", mDevice.getName());
+			initLayout();
+		}
+	}
+	
+	private void initLayout() {
 		LinearLayout mainlayout = (LinearLayout) findViewById(R.id.sensordetail_scroll);
 		mainlayout.setFocusable(true);
 		mainlayout.setFocusableInTouchMode(true);
@@ -55,7 +68,7 @@ public class SensorDetailActivity extends Activity {
 		mainlayout.setOrientation(LinearLayout.VERTICAL);
 		
 		TextView txtvwLocationLabel = new TextView(this);
-		txtvwLocationLabel.setText(device.getLocation());
+		txtvwLocationLabel.setText(mDevice.getLocation());
 		txtvwLocationLabel.setTextSize(getResources().getDimension(R.dimen.textsize));
 		LinearLayout.LayoutParams txtvwLocationParams = new LinearLayout.LayoutParams(android.view.ViewGroup.LayoutParams.WRAP_CONTENT, android.view.ViewGroup.LayoutParams.WRAP_CONTENT);
 		txtvwLocationParams.setMargins(15, 10, 0, 10);
@@ -64,18 +77,19 @@ public class SensorDetailActivity extends Activity {
 		
 		TextView txtvwNameLabel = new TextView(this);
 		txtvwNameLabel.setId(Constants.NAMELABEL_ID);
-		txtvwNameLabel.setText(name);
+		txtvwNameLabel.setText(mDevice.getName());
 		txtvwNameLabel.setTextSize(getResources().getDimension(R.dimen.textsize));
 		txtvwNameLabel.setLayoutParams(txtvwLocationParams);
 		mainlayout.addView(txtvwNameLabel);
 		
-		if(device.isLogging()){
-			//TODO: call to server for file with name device.GetLog(); 
-			List<String[]> LogFile = LogLoader(Constants.DEMO_LOGFILE);
-			if(LogFile != null){
+		if(mDevice.isLogging()){
+			//TODO: call to server for file with name device.GetLog();
+			String filename = getExternalFilesDir(null).getPath() + Constants.DEMO_LOG_FILENAME;
+			List<String[]> LogFile = LogLoader(filename);
+			if (LogFile != null) {
 				GraphViewData[] data = new GraphViewData[LogFile.size()];
 				int i = 0;
-				for(String[] s : LogFile){
+				for (String[] s : LogFile) {
 					data[i] = new GraphViewData(i+1,Integer.parseInt(s[2]));
 					i++;
 				}
@@ -95,7 +109,7 @@ public class SensorDetailActivity extends Activity {
 				graph.setLayoutParams(graphParams);
 				mainlayout.addView(graph);
 			}
-		}else{
+		} else {
 			//DEBUG: this should be used different
 			View view = new View(this);
 			LinearLayout.LayoutParams viewParams = new LinearLayout.LayoutParams(android.view.ViewGroup.LayoutParams.MATCH_PARENT, 250);
@@ -103,7 +117,7 @@ public class SensorDetailActivity extends Activity {
 			mainlayout.addView(view);
 		}
 		
-		switch(device.getType()){
+		switch (mDevice.getType()) {
 			case Constants.TYPE_TEMPERATURE:
 			case Constants.TYPE_HUMIDITY:
 			case Constants.TYPE_PRESSURE:
@@ -112,11 +126,11 @@ public class SensorDetailActivity extends Activity {
 			case Constants.TYPE_EMMISION:
 				//type = Constants.DEVICE_TYPE_TEMP;
 
-				int unitResource = device.getUnitStringResource();
+				int unitResource = mDevice.getUnitStringResource();
 				String unit = (unitResource > 0) ? " " + getString(unitResource) : "";
 				
 				TextView lastValueLabel = new TextView(this);
-				lastValueLabel.setText(getString(R.string.sensordetail_last_value) + device.getStringValue() + unit);
+				lastValueLabel.setText(getString(R.string.sensordetail_last_value) + mDevice.getStringValue() + unit);
 				lastValueLabel.setTextSize(getResources().getDimension(R.dimen.textsizesmaller));
 				LinearLayout.LayoutParams lastValueParams = new LinearLayout.LayoutParams(android.view.ViewGroup.LayoutParams.WRAP_CONTENT, android.view.ViewGroup.LayoutParams.WRAP_CONTENT);
 				lastValueParams.setMargins(15, 10, 0, 0);
@@ -155,7 +169,7 @@ public class SensorDetailActivity extends Activity {
 		numberPickerParams.setMargins(25, 0, 0, 0);
 		numberPicker.setLayoutParams(numberPickerParams);
 		numberPicker.setRange(-1, 100);
-		numberPicker.setCurrent(GetRightTimeValue(device.getRefresh()));
+		numberPicker.setCurrent(GetRightTimeValue(mDevice.getRefresh()));
 		numberPicker.setOnChangeListener(new OnChangedListener(){
 			@Override
 			public void onChanged(NumberPicker picker, int oldVal,int newVal) {
@@ -193,7 +207,7 @@ public class SensorDetailActivity extends Activity {
 		TextView timeUnitLabel = new TextView(this);
 		int ID = Constants.NUMBERPICKER_ID;
 		timeUnitLabel.setId(ID);
-		timeUnitLabel.setText(GetRightTimeUnit(device.getRefresh()));
+		timeUnitLabel.setText(GetRightTimeUnit(mDevice.getRefresh()));
 		timeUnitLabel.setTextSize(getResources().getDimension(R.dimen.textsize));
 		LinearLayout.LayoutParams tULparams = new LinearLayout.LayoutParams(android.view.ViewGroup.LayoutParams.WRAP_CONTENT,android.view.ViewGroup.LayoutParams.WRAP_CONTENT);
 		tULparams.gravity = Gravity.CENTER_VERTICAL;
@@ -218,7 +232,7 @@ public class SensorDetailActivity extends Activity {
 		batteryLayout.addView(batteryState);
 		
 		ProgressBar progressBar = new ProgressBar(this,null,android.R.attr.progressBarStyleHorizontal);
-		progressBar.setProgress(device.getBattery());
+		progressBar.setProgress(mDevice.getBattery());
 
 		LinearLayout.LayoutParams progressBarParams = new LinearLayout.LayoutParams(300, android.view.ViewGroup.LayoutParams.WRAP_CONTENT);
 		progressBarParams.gravity = Gravity.CENTER_HORIZONTAL;
@@ -243,9 +257,7 @@ public class SensorDetailActivity extends Activity {
 		
 		/*switch(type){
 			case Constants.DEVICE_TYPE_TEMP:*/
-				TextView name = (TextView)findViewById(Constants.NAMELABEL_ID);
-				BaseDevice device = Constants.getAdapter().getDeviceByName(name.getText().toString());
-				device.setRefresh(GetRightTimeValueInSecs());
+				mDevice.setRefresh(GetRightTimeValueInSecs());
 		//}
 	}
 	

@@ -16,16 +16,19 @@
     <!-- Buttons -->
     <string name="splash_demo">Demo</string>
     <string name="login_login">Login</string>
-    <string name="notification_ingore">Ignore</string>
-    <string name="notification_add">Add</string>
-    <string name="change_location_name_button">Change</string>
     <string name="registration_button">Registration</string>
     <string name="splash_refresh">Refresh</string>
+    <!-- New sensor dialog -->
+    <string name="notification_title">New sensors</string>
+    <plurals name="notification_new_sensors">
+        <item quantity="one">One uninitialized sensor found at your home.</item>
+        <item quantity="other">%d uninitialized sensors found at your home.</item>
+    </plurals>
+    <string name="notification_ingore">Ignore</string>
+    <string name="notification_add">Add</string>
     <!-- Labels -->
     <string name="login_app_name">Intelligent Home Anywhere</string>
     <string name="login_or_use">or use</string>
-    <string name="notification_notification">Notification</string>
-    <string name="notification_new_sensor">New sensor found at your home</string>
     <string name="addsensor_add_sensor">Add sensor</string>
     <string name="addsensor_or">or</string>
     <string name="sensordetail_last_value">Last value:\u0020</string>
@@ -36,7 +39,6 @@
     <string name="update_needed">Please update application</string>
     <string name="addsensor_type">Type of sensor:</string>
     <string name="addsensor_involved_time">Activated at:</string>
-    <string name="change_location_name_label">New name</string>
     <string name="addadapter_add_adapter">Add adapter</string>
     <string name="registration_label">New account</string>
     <string name="registration_serial_number">For adapter with serial number:</string>
@@ -51,8 +53,6 @@
     <string name="login_password_hint">Password</string>
     <string name="addsensor_sensor_name_hint">Name of new sensor</string>
     <string name="addsensor_new_location_hint">New location</string>
-    <string name="change_location_name_edittext_hint">New name of location</string>
-    <string name="change_device_name_edittext_hint">New name of sensor</string>
     <string name="addadapter_ser_num_hint">Input of serial number</string>
     <string name="registration_password_repeat_hint">Repeat password</string>
     <!-- Toasts -->

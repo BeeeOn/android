@@ -41,10 +41,6 @@
             android:label="@string/title_activity_data_of_locacion_screen" >
         </activity>
         <activity
-            android:name="cz.vutbr.fit.intelligenthomeanywhere.activity.Notification"
-            android:theme="@android:style/Theme.Dialog" >
-        </activity>
-        <activity
             android:name="cz.vutbr.fit.intelligenthomeanywhere.activity.AddSensorActivity"
             android:label="@string/title_activity_add_sensor"
             android:screenOrientation="portrait" >
@@ -56,14 +52,6 @@
         <activity
             android:name="cz.vutbr.fit.intelligenthomeanywhere.activity.LoginFacebookActivity"
             android:label="@string/title_activity_login_facebook" >
-        </activity>
-        <activity
-            android:name="cz.vutbr.fit.intelligenthomeanywhere.activity.ChangeLocationNameActivity"
-            android:theme="@android:style/Theme.Dialog" >
-        </activity>
-        <activity
-            android:name="cz.vutbr.fit.intelligenthomeanywhere.activity.ChangeDeviceNameActivity"
-            android:theme="@android:style/Theme.Dialog" >
         </activity>
         <activity
             android:name="cz.vutbr.fit.intelligenthomeanywhere.activity.AddAdapterActivity"

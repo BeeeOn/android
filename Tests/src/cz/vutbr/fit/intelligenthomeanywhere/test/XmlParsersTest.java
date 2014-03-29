@@ -9,12 +9,12 @@ import java.util.Map;
 
 import junit.framework.TestCase;
 import android.util.Log;
+import cz.vutbr.fit.intelligenthomeanywhere.User;
 import cz.vutbr.fit.intelligenthomeanywhere.adapter.Adapter;
 import cz.vutbr.fit.intelligenthomeanywhere.adapter.device.BaseDevice;
 import cz.vutbr.fit.intelligenthomeanywhere.adapter.parser.ContentRow;
 import cz.vutbr.fit.intelligenthomeanywhere.adapter.parser.FalseAnswer;
 import cz.vutbr.fit.intelligenthomeanywhere.adapter.parser.ParsedMessage;
-import cz.vutbr.fit.intelligenthomeanywhere.adapter.parser.UserData;
 import cz.vutbr.fit.intelligenthomeanywhere.adapter.parser.XmlParsers;
 
 /**
@@ -198,10 +198,10 @@ public class XmlParsersTest extends TestCase {
 			assertTrue("ConAccountListTest1: bad state", result.getState().equals(state));
 			Log.d(TAG, "Communication id: " + result.getSessionId());
 			
-			HashMap<String, UserData> users =  (HashMap<String, UserData>) result.data;
-			for(Map.Entry<String, UserData> user : users.entrySet()){
+			HashMap<String, User> users =  (HashMap<String, User>) result.data;
+			for(Map.Entry<String, User> user : users.entrySet()){
 				//Log.d(TAG, "ConAccountList: email: " + user.getKey());
-				Log.d(TAG, "ConAccountList: userdata: " + user.getValue().debugString());
+				Log.d(TAG, "ConAccountList: userdata: " + user.getValue().toDebugString());
 			}
 		
 		} catch (Exception e) {
@@ -507,7 +507,7 @@ public class XmlParsersTest extends TestCase {
 			ArrayList<BaseDevice> devices = (ArrayList<BaseDevice>) result.data;
 			
 			for(BaseDevice device : devices){
-				Log.d(TAG, "Partial: " + device.debugString(false));
+				Log.d(TAG, "Partial: " + device.toDebugString());
 			}
 		
 		} catch (Exception e) {
@@ -577,7 +577,7 @@ public class XmlParsersTest extends TestCase {
 			Log.d(TAG, "Communication id: " + result.getSessionId());
 			
 			Adapter adapter = (Adapter) result.data;
-			Log.d(TAG, "Xml: "+adapter.debugString());
+			Log.d(TAG, "Xml: "+adapter.toDebugString());
 		
 		} catch (Exception e) {
 			e.printStackTrace();

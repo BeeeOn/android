@@ -1,7 +1,5 @@
 package cz.vutbr.fit.intelligenthomeanywhere.widget;
 
-import java.util.Random;
-
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.app.Service;
@@ -15,10 +13,8 @@ import android.os.PowerManager;
 import android.os.SystemClock;
 import android.util.Log;
 import cz.vutbr.fit.intelligenthomeanywhere.Constants;
-import cz.vutbr.fit.intelligenthomeanywhere.adapter.Adapter;
 import cz.vutbr.fit.intelligenthomeanywhere.adapter.device.BaseDevice;
-import cz.vutbr.fit.intelligenthomeanywhere.adapter.device.UnknownDevice;
-import cz.vutbr.fit.intelligenthomeanywhere.adapter.parser.XmlDeviceParser;
+import cz.vutbr.fit.intelligenthomeanywhere.controller.Controller;
 
 public class WidgetUpdateService extends Service {
 
@@ -152,7 +148,7 @@ public class WidgetUpdateService extends Service {
 			Log.v(TAG, "Updating widget " + widgetId);
 			
 			String deviceId = settings.getString(Constants.WIDGET_PREF_DEVICE, "");
-			BaseDevice device = getDevice(deviceId);
+			BaseDevice device = Controller.getInstance(this).getDevice(deviceId);
 	    	
 			// save last update time
 			settings
@@ -201,24 +197,6 @@ public class WidgetUpdateService extends Service {
 		AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(this);
 
 		return appWidgetManager.getAppWidgetIds(thisWidget);	
-	}
-
-	private BaseDevice getDevice(String deviceId) {		
-		// TODO: rewrite better with use of proper class for working with such data
-		Adapter mAdapter = XmlDeviceParser.fromFile(Constants.DEMO_COMMUNICATION);
-		
-		if (mAdapter != null) {
-			for (BaseDevice device : mAdapter.devices) {
-				if (device.getAddress().equals(deviceId)) {
-					// TODO: remove this random value checking
-					int i = new Random().nextInt(100);
-					device.setValue(i);
-					return device;
-				}
-			}
-		}
-
-		return new UnknownDevice();
 	}
 
 }
