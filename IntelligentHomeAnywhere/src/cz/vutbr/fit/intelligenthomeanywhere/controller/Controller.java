@@ -37,7 +37,7 @@ public final class Controller {
 	/** Network service for communication with server */
 	private final Network mNetwork;
 	
-	/** Household object holds all adapters, lists and users which belongs to logged user */
+	/** Household object holds logged in user and all adapters and lists which belongs to him */
 	private final Household mHousehold;
 	
 	/** Switch for using demo mode (with example adapter, without server) */
