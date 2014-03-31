@@ -5,9 +5,12 @@ package cz.vutbr.fit.intelligenthomeanywhere.adapter;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
+import cz.vutbr.fit.intelligenthomeanywhere.User;
 import cz.vutbr.fit.intelligenthomeanywhere.adapter.device.BaseDevice;
 import cz.vutbr.fit.intelligenthomeanywhere.adapter.parser.XmlCreator;
+import cz.vutbr.fit.intelligenthomeanywhere.listing.SimpleListing;
 
 /**
  * @brief Class for parsed data from XML file of adapters
@@ -18,30 +21,18 @@ public class Adapter {
 	/**
 	 * List of devices
 	 */
-	public List<BaseDevice> devices;
+	private final SimpleListing mDevices = new SimpleListing();
 	private String mId;
 	private String mVersion;
 	private String mName;
-	private String mRole;
-	private boolean mNewInit;
-	private boolean mNewLocationName;
-	private boolean mNewDeviceName;
-	private String mNewDeviceNameLabel;
+	private User.Role mRole;
 	
-	public Adapter() {
-		devices = new ArrayList<BaseDevice>();
-		mId = null;
-		mVersion = null;
-		mNewInit = false;
-		mNewLocationName = false;
-		mNewDeviceName = false;
-		mNewDeviceNameLabel = null;
-	}
+	public Adapter() {}
 	
 	/**
 	 * Debug method
 	 */
-	public String debugString(){
+	public String toDebugString() {
 		String result = "";
 		
 		result += "ID is " + mId + "\n";
@@ -50,8 +41,8 @@ public class Adapter {
 		result += "Role is " + mRole + "\n";
 		result += "___start of sensors___\n";
 		
-		for(BaseDevice dev : devices){
-			result += dev.debugString(false);
+		for(BaseDevice dev : mDevices.getDevices().values()){
+			result += dev.toDebugString();
 			result += "__\n";
 		}
 		
@@ -78,7 +69,7 @@ public class Adapter {
 	 * Set role of actual user of adapter
 	 * @param role
 	 */
-	public void setRole(String role){
+	public void setRole(User.Role role){
 		mRole = role;
 	}
 	
@@ -86,24 +77,8 @@ public class Adapter {
 	 * Get role of actual user of adapter
 	 * @return
 	 */
-	public String getRole(){
+	public User.Role getRole(){
 		return mRole;
-	}
-	
-	/**
-	 * Method for getting names of some location
-	 * @param location name of group of devices
-	 * @return list with string with name of device
-	 */
-	public List<String> getNameByLocation(String location){
-		List<String> result = new ArrayList<String>();
-		
-		for(BaseDevice d : devices){
-			if(d.getLocation() != null && d.getLocation().equals(location))
-				result.add(d.getName());
-		}
-		
-		return result;
 	}
 	
 	/**
@@ -139,122 +114,36 @@ public class Adapter {
 	}
 	
 	/**
-	 * Method checked if is there new device in network
-	 * @return true if there is new, otherwise false
+	 * Find and return device by given id
+	 * @param id of device
+	 * @return BaseDevice or null
 	 */
-	public boolean isNewOne(){
-		for(BaseDevice d : devices)
-			if(!d.isInitialized())
-				return true;
-		return false;
+	public BaseDevice getDeviceById(String id){
+		return mDevices.getById(id);
 	}
 	
 	/**
-	 * Method return uninitialized adapter (new sensor in home)
-	 * @return new adapter or null
+	 * Return map with all devices;
+	 * @return map with all devices (or empty map)
 	 */
-	public BaseDevice getNewOne(){
-		for(BaseDevice d : devices)
-			if(!d.isInitialized())
-				return d;
-		return null;
+	public Map<String, BaseDevice> getDevices() {
+		return mDevices.getDevices();
 	}
 	
 	/**
-	 * Method search for actuator or sensor by name
-	 * @param name of adapter (sensor/actuator)
-	 * @return BaseDevice with found sensor/actuator or null
+	 * Set devices that belongs to this adapter.
+	 * @param devices
 	 */
-	public BaseDevice getDeviceByName(String name){
-		for(BaseDevice d : devices)
-			if(d.getName() != null && d.getName().equals(name))
-				return d;
-		return null;
+	public void setDevices(List<BaseDevice> devices) {
+		mDevices.setDevices(devices);
 	}
 	
 	/**
-	 * Method for getting list of locations (first occurrence)
-	 * @param notnull determines if it can return null value, or if it exclude
-	 * @return ArayList of strings with unique locations
+	 * Return list of location names.
+	 * @return list with locations (or empty list).
 	 */
-	public List<String> getLocations(boolean notnull){
-		List<String> locations = new ArrayList<String>();
-		
-		for(BaseDevice d : devices){
-			if(!locations.contains(d.getLocation())){
-				if(notnull)
-					if(d.getLocation() == null)
-						continue;
-				locations.add(d.getLocation());
-			}
-		}
-		
-		return locations;
-	}
-	
-	/**
-	 * Check if has been initialized new device, and set it to false
-	 * @return true if there is new initialized device
-	 */
-	public boolean isNewInit(){
-		if(mNewInit){
-			mNewInit = false;
-			return true;
-		}
-		return mNewInit;
-	}
-	
-	/**
-	 * Setting flag that there is new initialization
-	 */
-	public void setNewInit(){
-		mNewInit = true;
-	}
-	
-	/**
-	 * Check if has been change name of location buttons
-	 * @return true if is new name of location in otherwise return false
-	 */
-	public boolean isNewLocationName(){
-		if(mNewLocationName){
-			mNewLocationName = false;
-			return true;
-		}
-		return false;
-	}
-	public void setNewLocationName(){
-		mNewLocationName = true;
-	}
-	
-	/**
-	 * Check if has been change name of sensor
-	 * @return true if change has been done, otherwise false
-	 */
-	public boolean isNewDeviceName(){
-		if(mNewDeviceName){
-			mNewDeviceName = false;
-			return true;
-		}
-		return false;
-	}
-	
-	/**
-	 * Setting device name
-	 * @param newName
-	 */
-	public void setNewDeviceName(String newName){
-		mNewDeviceNameLabel = newName;
-		mNewDeviceName = true;
-	}
-	
-	/**
-	 * Returning device name
-	 * @return device name
-	 */
-	public String getNewDeviceName(){
-		String result = mNewDeviceNameLabel;
-		mNewDeviceNameLabel = null;
-		return result;
+	public List<String> getLocations(){
+		return mDevices.getLocations();
 	}
 	
 	/**
@@ -271,14 +160,12 @@ public class Adapter {
 	 * @param name of location
 	 * @return ArrayList with all adapters with needed location
 	 */
-	public List<BaseDevice> getDevicesByLocation(String name){
-		List<BaseDevice> result = new ArrayList<BaseDevice>();
-		
-		for(BaseDevice d : devices){
-			if(d.getLocation().equals(name))
-				result.add(d);
-		}
-		
-		return result;
+	public List<BaseDevice> getDevicesByLocation(String location){
+		return mDevices.getByLocation(location);
 	}
+	
+	public List<BaseDevice> getUninitializedDevices() {
+		return new ArrayList<BaseDevice>(mDevices.getUninitializedDevices().values());
+	}
+	
 }

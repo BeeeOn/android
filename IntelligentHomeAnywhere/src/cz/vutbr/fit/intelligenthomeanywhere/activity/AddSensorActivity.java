@@ -13,9 +13,10 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
-import cz.vutbr.fit.intelligenthomeanywhere.Constants;
-import cz.vutbr.fit.intelligenthomeanywhere.adapter.device.BaseDevice;
 import cz.vutbr.fit.intelligenthomeanywhere.R;
+import cz.vutbr.fit.intelligenthomeanywhere.adapter.device.BaseDevice;
+import cz.vutbr.fit.intelligenthomeanywhere.controller.Controller;
+import cz.vutbr.fit.intelligenthomeanywhere.listing.LocationListing;
 
 /**
  * Class that handle adding new sensor to the system
@@ -23,26 +24,40 @@ import cz.vutbr.fit.intelligenthomeanywhere.R;
  */
 public class AddSensorActivity extends Activity {
 
+	private Controller mController;
+	
+	private BaseDevice mNewDevice;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_add_sensor);
+		
+		mController = Controller.getInstance(this);
+	
+		List<BaseDevice> devices = mController.getUninitializedDevices();
+		if (devices.size() > 0) {
+			mNewDevice = devices.get(0);
+		} else {
+			Toast.makeText(this, "There are no uninitialized devices.", Toast.LENGTH_LONG).show();
+			finish();	
+		}
+		
 		initButtons();
-		
-		List<String> ListLocation = Constants.getAdapter().getLocations(true);
-		
+		initViews();
+	}
+	
+	private void initViews() {
 		Spinner spinner = (Spinner)findViewById(R.id.spinner_choose_location);
-        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, ListLocation);
+        ArrayAdapter<?> dataAdapter = new ArrayAdapter<LocationListing>(this, android.R.layout.simple_spinner_item, mController.getLocations());
         dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(dataAdapter);
         
-        BaseDevice device = Constants.getAdapter().getNewOne();
         TextView type = (TextView)findViewById(R.id.addsensor_type);
-        type.setText(type.getText() + " " + getApplicationContext().getString(device.getTypeStringResource()));
+        type.setText(type.getText() + " " + getString(mNewDevice.getTypeStringResource()));
         
         TextView time = (TextView)findViewById(R.id.addsensor_involved_time);
-        time.setText(time.getText() + " " + device.getInvolveTime());
-		
+        time.setText(time.getText() + " " + mNewDevice.getInvolveTime());	
 	}
 	
 	/**
@@ -53,8 +68,7 @@ public class AddSensorActivity extends Activity {
 		((Button)findViewById(R.id.addsensor_add)).setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				BaseDevice newdevice = Constants.getAdapter().getNewOne();
-				if(newdevice != null){
+				if (mNewDevice != null) {
 					EditText name = (EditText)findViewById(R.id.addsensor_sensor_name_hint);
 					EditText elocation = (EditText)findViewById(R.id.addsensor_new_location_hint);
 					String location;
@@ -68,11 +82,13 @@ public class AddSensorActivity extends Activity {
 						Toast.makeText(getApplicationContext(), getString(R.string.toast_need_sensor_name), Toast.LENGTH_LONG).show();
 						return;
 					}
-					newdevice.setInitialized(true);
-					newdevice.setName(name.getText().toString());
-					newdevice.setLocation(location);
-
-					Constants.getAdapter().setNewInit();
+					
+					mNewDevice.setInitialized(true);
+					mNewDevice.setName(name.getText().toString());
+					mNewDevice.setLocation(location);
+					// TODO: show loading while saving device
+					mController.saveDevice(mNewDevice);
+					
 					Toast.makeText(getApplicationContext(), getString(R.string.toast_new_sensor_added), Toast.LENGTH_LONG).show();
 					AddSensorActivity.this.finish();
 				}

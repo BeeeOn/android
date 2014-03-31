@@ -3,62 +3,69 @@ package cz.vutbr.fit.intelligenthomeanywhere.activity;
 import java.util.List;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup.LayoutParams;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.ToggleButton;
 import cz.vutbr.fit.intelligenthomeanywhere.Compatibility;
 import cz.vutbr.fit.intelligenthomeanywhere.Constants;
-import cz.vutbr.fit.intelligenthomeanywhere.adapter.Adapter;
+import cz.vutbr.fit.intelligenthomeanywhere.R;
 import cz.vutbr.fit.intelligenthomeanywhere.adapter.device.BaseDevice;
+import cz.vutbr.fit.intelligenthomeanywhere.adapter.device.BaseDevice.SaveDevice;
 import cz.vutbr.fit.intelligenthomeanywhere.adapter.device.StateDevice;
 import cz.vutbr.fit.intelligenthomeanywhere.adapter.device.SwitchDevice;
+import cz.vutbr.fit.intelligenthomeanywhere.controller.Controller;
 import cz.vutbr.fit.intelligenthomeanywhere.view.ToggleButtonOnClickListener;
-import cz.vutbr.fit.intelligenthomeanywhere.R;
 
 /**
  * Class that handle screen with location data
  * @author ThinkDeep
+ * @author Robyer
  *
  */
 public class DataOfLocationScreenActivity extends Activity {
 
-	private Adapter mAdapter;
-	private String mClicked;
-	private View mPressed = null;
-	
+	private Controller mController;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_data_of_locacion_screen);
 		
 		Bundle bundle = this.getIntent().getExtras();
-		if(bundle != null){
-			mAdapter = Constants.getAdapter();
-			mClicked = bundle.getString(Constants.LOCATION_CLICKED);
-			Log.i("clicked ->",mClicked);
-		}else
+		if (bundle == null) {
 			this.finish();
+			return;
+		}
+		
+		mController = Controller.getInstance(this);
+
+		String location = bundle.getString(Constants.LOCATION_CLICKED);
+		Log.i("clicked ->",location);
 		
 		LinearLayout mainlayout = (LinearLayout)findViewById(R.id.dataoflocation_scroll);
 		mainlayout.setOrientation(LinearLayout.VERTICAL);
 		
 		TextView txtvwTitleLocation = new TextView(this);
-		txtvwTitleLocation.setText(mClicked);
+		txtvwTitleLocation.setText(location);
 		txtvwTitleLocation.setTextSize(getResources().getDimension(R.dimen.textsize));
 		LinearLayout.LayoutParams titleLocationParams = new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT,LayoutParams.WRAP_CONTENT);
 		titleLocationParams.setMargins(15, 10, 0, 10);
 		txtvwTitleLocation.setLayoutParams(titleLocationParams);
 		mainlayout.addView(txtvwTitleLocation);
 		
-		List<String> names = mAdapter.getNameByLocation(mClicked);
-		if(names != null){
+		List<BaseDevice> devices = mController.getDevicesByLocation(location);
+		if (devices != null) {
 			int ID = Constants.IDLE;
 			LinearLayout temperatureLayout = null;
 			LinearLayout humidityLayout = null;
@@ -69,39 +76,37 @@ public class DataOfLocationScreenActivity extends Activity {
 			LinearLayout noiseLayout = null;
 			LinearLayout emissionLayout = null;
 			LinearLayout unknownLayout = null;
-			for(String name : names){
-				
-				BaseDevice device = mAdapter.getDeviceByName(name);
+			for (final BaseDevice device : devices) {
 				
 				RelativeLayout devicelayout = new RelativeLayout(this);
 				devicelayout.setPadding(5, 10, 10, 10);
 				devicelayout.setLayoutParams(new RelativeLayout.LayoutParams(LayoutParams.MATCH_PARENT,LayoutParams.WRAP_CONTENT));
-				devicelayout.setOnClickListener(new View.OnClickListener(){
-					@Override
-					public void onClick(View v) {
-						Intent intent = new Intent(v.getContext(),SensorDetailActivity.class);
-						intent.putExtra(Constants.DEVICE_CLICKED, ((TextView)((RelativeLayout)v).getChildAt(0)).getText());
-						startActivity(intent);
-					}
-				});
-				devicelayout.setOnLongClickListener(new View.OnLongClickListener() {
-					@Override
-					public boolean onLongClick(View v) {
-						mPressed = v;
-						Intent intent = new Intent(getBaseContext(), ChangeDeviceNameActivity.class);
-						intent.putExtra(Constants.DEVICE_LONG_PRESS, ((TextView)((RelativeLayout)v).getChildAt(0)).getText());
-						startActivity(intent);
-						return false;
-					}
-				});
-				TextView txtvwLabelName = new TextView(this);
-				txtvwLabelName.setText(name);
+				
+				final TextView txtvwLabelName = new TextView(this);
+				txtvwLabelName.setText(device.getName());
 				//txtvwLabelName.setId(Constants.DEVICENAMELABEL_ID);
 				txtvwLabelName.setTextSize(getResources().getDimension(R.dimen.textsizesmaller));
 				RelativeLayout.LayoutParams txtvwLabelParams = new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT,LayoutParams.WRAP_CONTENT);
 				txtvwLabelParams.setMargins(0, 5, 0, 0);
 				txtvwLabelName.setLayoutParams(txtvwLabelParams);
 				devicelayout.addView(txtvwLabelName);
+				
+				devicelayout.setOnClickListener(new View.OnClickListener(){
+					@Override
+					public void onClick(View v) {
+						Intent intent = new Intent(v.getContext(),SensorDetailActivity.class);
+						intent.putExtra(Constants.DEVICE_CLICKED, device.getId());
+						startActivity(intent);
+					}
+				});
+				devicelayout.setOnLongClickListener(new View.OnLongClickListener() {
+					@Override
+					public boolean onLongClick(View v) {
+						renameDevice(device, txtvwLabelName);
+
+						return true;
+					}
+				});
 				
 				RelativeLayout.LayoutParams rightObjectParams = new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
 				rightObjectParams.setMargins(0, 8, 0, 0);
@@ -116,7 +121,7 @@ public class DataOfLocationScreenActivity extends Activity {
 						if(temperatureLayout != null && temperatureLayout.getChildCount() > 0){
 							temperatureLayout.addView(getSplitter());
 						}
-						txtview.setText(device.getStringValue() + " " + getString(device.getUnitStringResource()) );
+						txtview.setText(device.getStringValue() + " " + getString(device.getUnitStringResource()));
 						txtview.setLayoutParams(rightObjectParams);
 						devicelayout.addView(txtview);
 						temperatureLayout.addView(devicelayout);
@@ -167,7 +172,7 @@ public class DataOfLocationScreenActivity extends Activity {
 						toggle.setTextOff("OFF"); // FIXME: use string resources
 						toggle.setTextOn("ON"); // FIXME: use string resources
 						toggle.setChecked(((SwitchDevice)device).isActive());
-						toggle.setOnClickListener(new ToggleButtonOnClickListener(device.getName()));
+						toggle.setOnClickListener(new ToggleButtonOnClickListener((SwitchDevice)device));
 						if(switchControlLayout == null){
 							switchControlLayout = setLayout(switchControlLayout, ID);
 						}
@@ -253,19 +258,44 @@ public class DataOfLocationScreenActivity extends Activity {
 			this.finish();
 	}
 
-	/**
-	 * Add new device to the GUI
-	 */
-	@Override
-	public void onResume(){
-		super.onResume();
+	protected void renameDevice(final BaseDevice device, final TextView view) {
+		AlertDialog.Builder builder = new AlertDialog.Builder(DataOfLocationScreenActivity.this);
 		
-		if(Constants.getAdapter().isNewDeviceName()){
-			((TextView)((RelativeLayout)mPressed).getChildAt(0)).setText(Constants.getAdapter().getNewDeviceName());
-		}
+		// TODO: use better layout than just single EditText
+		final EditText edit = new EditText(DataOfLocationScreenActivity.this);
+		edit.setText(device.getName());
+		edit.selectAll();
+		// TODO: show keyboard automatically
 		
+		builder.setCancelable(false)
+			.setView(edit)
+			.setTitle("Rename device")
+			.setNegativeButton("Cancel", null)
+			.setPositiveButton("Rename", new DialogInterface.OnClickListener() {
+			
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+					String newName = edit.getText().toString(); 
+					device.setName(newName);
+					
+					// TODO: show loading while saving new name to server
+					boolean saved = mController.saveDevice(device, SaveDevice.SAVE_NAME);
+					
+					String message = saved
+							? String.format("Device was renamed to '%s'", device.getName())
+							: "Device wasn't renamed due to error";
+							
+					Toast.makeText(DataOfLocationScreenActivity.this, message, Toast.LENGTH_LONG).show();
+					
+					// Redraw item in list
+					view.setText(newName);
+				}
+			});
+		
+		AlertDialog dialog = builder.create();
+		dialog.show();
 	}
-	
+
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
