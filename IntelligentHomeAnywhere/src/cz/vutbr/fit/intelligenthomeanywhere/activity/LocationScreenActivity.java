@@ -148,7 +148,7 @@ public class LocationScreenActivity extends Activity {
 		
 		LinearLayout mylayout = (LinearLayout)findViewById(R.id.location_scroll);
 		mylayout.setOrientation(LinearLayout.VERTICAL);
-		drawerListView = (ListView) findViewById(R.id.left_drawer);
+		//drawerListView = (ListView) findViewById(R.id.left_drawer);
 		
 		LinearLayout.LayoutParams params_btn = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT,LayoutParams.WRAP_CONTENT);
 		params_btn.setMargins(0, marginTop, 0, 0);
