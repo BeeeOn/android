@@ -23,8 +23,6 @@ import cz.vutbr.fit.intelligenthomeanywhere.adapter.parser.XmlCreator;
  */
 public class XmlCreatorTest extends TestCase {
 	
-	private XmlCreator mCreator;
-	
 	private static String TAG = "XmlCreatorTest";
 	private static String EMAIL = "testmail@domain.com";
 	private static String GTOKEN = "9845658";
@@ -129,11 +127,10 @@ public class XmlCreatorTest extends TestCase {
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
-		mCreator = new XmlCreator(null);
 	}
 
 	public void testSignIn(){
-		String result = mCreator.createSignIn(EMAIL, GTOKEN, false);
+		String result = XmlCreator.createSignIn(EMAIL, GTOKEN, false);
 		String goal = SIGNIN_1+EMAIL+SIGNIN_1_2+GTOKEN+SIGNIN_2;
 		
 		Log.i(TAG, "SignInTest1");
@@ -144,7 +141,7 @@ public class XmlCreatorTest extends TestCase {
 	}
 	
 	public void testSignUp(){
-		String result = mCreator.createSignUp(EMAIL, ID, GTOKEN, SERIAL, false);
+		String result = XmlCreator.createSignUp(EMAIL, ID, GTOKEN, SERIAL, false);
 		String goal = SIGNUP_1+ID+SIGNUP_2+SERIAL+SIGNUP_3_USER_OLD;
 		
 		Log.i(TAG, "SignUpTest1");
@@ -153,7 +150,7 @@ public class XmlCreatorTest extends TestCase {
 			Log.e(TAG, goal);
 		assertTrue("SignUpTest1: messages are not equal",result.equals(goal));
 		
-		result = mCreator.createSignUp(EMAIL, ID, GTOKEN, SERIAL, true);
+		result = XmlCreator.createSignUp(EMAIL, ID, GTOKEN, SERIAL, true);
 		goal = SIGNUP_1+ID+SIGNUP_2+SERIAL+SIGNUP_3_USER_NEW;
 		
 		Log.i(TAG, "SignUpTest2");
@@ -162,7 +159,7 @@ public class XmlCreatorTest extends TestCase {
 			Log.e(TAG, goal);
 		assertTrue("SignUpTest2: messages are not equal",result.equals(goal));
 		
-		result = mCreator.createSignUp(EMAIL, 0, GTOKEN, SERIAL, false);
+		result = XmlCreator.createSignUp(EMAIL, 0, GTOKEN, SERIAL, false);
 		goal = SIGNUP_1+0+SIGNUP_2+SERIAL+SIGNUP_3_EMAIL_1+EMAIL+SIGNUP_3_EMAIL_1_2+GTOKEN+SIGNUP_3_EMAIL_2;
 		
 		Log.i(TAG, "SignUpTest3");
@@ -173,7 +170,7 @@ public class XmlCreatorTest extends TestCase {
 	}
 	
 	public void testInit(){
-		String result = mCreator.createInit(ID, ADAPTERID);
+		String result = XmlCreator.createInit(ID, ADAPTERID);
 		String goal = INIT_1+ID+INIT_2+ADAPTERID+INIT_3; 
 		
 		Log.i(TAG, "InitTest1");
@@ -184,7 +181,7 @@ public class XmlCreatorTest extends TestCase {
 	}
 	
 	public void testReInit(){
-		String result = mCreator.createReInit(ID,ADAPTERIDOLD,ADAPTERID);
+		String result = XmlCreator.createReInit(ID,ADAPTERIDOLD,ADAPTERID);
 		String goal = REINIT_1+ID+REINIT_2+ADAPTERIDOLD+REINIT_3+ADAPTERID+REINIT_4;
 		
 		Log.i(TAG, "ReInitTest1");
@@ -195,7 +192,7 @@ public class XmlCreatorTest extends TestCase {
 	}
 	
 	public void testLogName(){
-		String result = mCreator.createLogName(ID, DEVICEID, FROM, TO);
+		String result = XmlCreator.createLogName(ID, DEVICEID, FROM, TO);
 		String goal = LOGNAME_1+ID+LOGNAME_2+FROM+LOGNAME_3+TO+LOGNAME_4+DEVICEID+LOGNAME_5;
 		
 		Log.i(TAG, "LogNameTest1");
@@ -210,7 +207,7 @@ public class XmlCreatorTest extends TestCase {
 		users.put(EMAIL+"x", "admin");
 		users.put(EMAIL, "user");
 		
-		String result = mCreator.createAddConAccount(ID, users);
+		String result = XmlCreator.createAddConAccount(ID, users);
 		String goal = ADDCONACCOUNT_1+ID+ADDCONACCOUNT_2+EMAIL+"x"+ADDCONACCOUNT_3+users.get(EMAIL+"x")+ADDCONACCOUNT_2_2+EMAIL+ADDCONACCOUNT_3+users.get(EMAIL)+ADDCONACCOUNT_4;
 		
 		Log.i(TAG, "AddConAccountTest1");
@@ -225,7 +222,7 @@ public class XmlCreatorTest extends TestCase {
 		users.add(EMAIL);
 		users.add(EMAIL+"x");
 		
-		String result = mCreator.createDelConAccount(ID, users);
+		String result = XmlCreator.createDelConAccount(ID, users);
 		String goal = DELCONACCOUNT_1+ID+DELCONACCOUNT_2+users.get(0)+DELCONACCOUNT_2_2+users.get(1)+DELCONACCOUNT_3;
 		
 		Log.i(TAG, "DelConAccountTest1");
@@ -236,7 +233,7 @@ public class XmlCreatorTest extends TestCase {
 	}
 	
 	public void testGetConAccount(){
-		String result = mCreator.createGetConAccount(ID);
+		String result = XmlCreator.createGetConAccount(ID);
 		String goal = GETCONACCOUNT_1+ID+GETCONACCOUNT_2;
 		
 		Log.i(TAG, "GetConAccountTest1");
@@ -251,7 +248,7 @@ public class XmlCreatorTest extends TestCase {
 		users.put(EMAIL+"x", "admin");
 		users.put(EMAIL, "user");
 		
-		String result = mCreator.createChangeConAccount(ID, users);
+		String result = XmlCreator.createChangeConAccount(ID, users);
 		String goal = CHANGECONACCOUNT_1+ID+CHANGECONACCOUNT_2+EMAIL+"x"+CHANGECONACCOUNT_3+users.get(EMAIL+"x")+CHANGECONACCOUNT_2_2+EMAIL+
 				CHANGECONACCOUNT_3+users.get(EMAIL)+CHANGECONACCOUNT_4;
 		
@@ -263,7 +260,7 @@ public class XmlCreatorTest extends TestCase {
 	}
 	
 	public void testTRUE(){
-		String result = mCreator.createTRUE(ID, ADDITIONALINFO);
+		String result = XmlCreator.createTRUE(ID, ADDITIONALINFO);
 		String goal = TRUE_1+ID+TRUE_2+ADDITIONALINFO+TRUE_3;
 		
 		Log.i(TAG, "TRUETest1");
@@ -274,7 +271,7 @@ public class XmlCreatorTest extends TestCase {
 	}
 	
 	public void testFALSE(){
-		String result = mCreator.createFALSE(ID, ADDITIONALINFO, XML);
+		String result = XmlCreator.createFALSE(ID, ADDITIONALINFO, XML);
 		String goal = FALSE_1+ID+FALSE_2+ADDITIONALINFO+FALSE_3+XML+FALSE_4;
 		
 		Log.i(TAG, "FALSETest1");
@@ -285,7 +282,7 @@ public class XmlCreatorTest extends TestCase {
 	}
 	
 	public void testGetAdapters(){
-		String result = mCreator.createGetAdapters(ID);
+		String result = XmlCreator.createGetAdapters(ID);
 		String goal = GETADAPTERS_1+ID+GETADAPTERS_2;
 		
 		Log.i(TAG, "GetAdaptersTest1");
@@ -300,7 +297,7 @@ public class XmlCreatorTest extends TestCase {
 		devices.add(DEVICEID);
 		devices.add(DEVICEID);
 		
-		String result = mCreator.createUpdate(ID, devices);
+		String result = XmlCreator.createUpdate(ID, devices);
 		String goal = UPDATE_1+ID+UPDATE_2+devices.get(0)+UPDATE_2_2+devices.get(1)+Update_3;
 		
 		Log.i(TAG, "UpdateTest1");
@@ -315,7 +312,7 @@ public class XmlCreatorTest extends TestCase {
 		devices.add(DEVICEID);
 		devices.add(DEVICEID);
 		
-		String result = mCreator.createAddView(ID, VIEWNAME, 1, devices);
+		String result = XmlCreator.createAddView(ID, VIEWNAME, 1, devices);
 		String goal = ADDVIEW_1+ID+ADDVIEW_2+VIEWNAME+ADDVIEW_2_1+1+ADDVIEW_3+devices.get(0)+ADDVIEW_3_3+devices.get(1)+ADDVIEW_4;
 		
 		Log.i(TAG, "AddViewTest1");
@@ -326,7 +323,7 @@ public class XmlCreatorTest extends TestCase {
 	}
 	
 	public void testDelView(){
-		String result = mCreator.createDelView(ID, VIEWNAME);
+		String result = XmlCreator.createDelView(ID, VIEWNAME);
 		String goal = DELVIEW_1+ID+DELVIEW_2+VIEWNAME+DELVIEW_3;
 		
 		Log.i(TAG, "DelViewTest1");
@@ -341,7 +338,7 @@ public class XmlCreatorTest extends TestCase {
 		devices.put(DEVICEID, "remove");
 		devices.put(DEVICEID+"x", "add");
 		
-		String result = mCreator.createUpdateView(ID, VIEWNAME, 0, devices);
+		String result = XmlCreator.createUpdateView(ID, VIEWNAME, 0, devices);
 		String goal = UPDATEVIEW_1+ID+UPDATEVIEW_2+VIEWNAME+UPDATEVIEW_2_1+0+UPDATEVIEW_3+DEVICEID+"x"+UPDATEVIEW_4+devices.get(DEVICEID+"x")+UPDATEVIEW_4_2+DEVICEID+UPDATEVIEW_4
 				+devices.get(DEVICEID)+UPDATEVIEW_5;
 		
@@ -400,7 +397,7 @@ public class XmlCreatorTest extends TestCase {
 		devices.add(pr);
 		
 		
-		String result = mCreator.createPartial(ID, devices);
+		String result = XmlCreator.createPartial(ID, devices);
 		String goal = PARTIAL_ALL;
 		
 		Log.i(TAG, "PartialTest1");

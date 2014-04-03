@@ -1,26 +1,31 @@
 /**
  * 
  */
-package cz.vutbr.fit.intelligenthomeanywhere.adapter.parser;
+package cz.vutbr.fit.intelligenthomeanywhere.exception;
 
 /**
- * CommunicationVersionMismatchException
+ * XmlVersionMismatchException
  * @author ThinkDeep
  *
  */
-public class ComVerMisException extends Exception {
+public class XmlVerMisException extends Exception {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 7259307611261716830L;
 
 	/**
 	 * Constructor
 	 */
-	public ComVerMisException() {
+	public XmlVerMisException() {
 		// TODO Auto-generated constructor stub
 	}
 
 	/**
 	 * @param detailMessage
 	 */
-	public ComVerMisException(String detailMessage) {
+	public XmlVerMisException(String detailMessage) {
 		super(detailMessage);
 		// TODO Auto-generated constructor stub
 	}
@@ -28,7 +33,7 @@ public class ComVerMisException extends Exception {
 	/**
 	 * @param throwable
 	 */
-	public ComVerMisException(Throwable throwable) {
+	public XmlVerMisException(Throwable throwable) {
 		super(throwable);
 		// TODO Auto-generated constructor stub
 	}
@@ -37,7 +42,7 @@ public class ComVerMisException extends Exception {
 	 * @param detailMessage
 	 * @param throwable
 	 */
-	public ComVerMisException(String detailMessage, Throwable throwable) {
+	public XmlVerMisException(String detailMessage, Throwable throwable) {
 		super(detailMessage, throwable);
 		// TODO Auto-generated constructor stub
 	}

@@ -29,6 +29,8 @@ import cz.vutbr.fit.intelligenthomeanywhere.adapter.device.StateDevice;
 import cz.vutbr.fit.intelligenthomeanywhere.adapter.device.SwitchDevice;
 import cz.vutbr.fit.intelligenthomeanywhere.adapter.device.TemperatureDevice;
 import cz.vutbr.fit.intelligenthomeanywhere.adapter.device.UnknownDevice;
+import cz.vutbr.fit.intelligenthomeanywhere.exception.ComVerMisException;
+import cz.vutbr.fit.intelligenthomeanywhere.exception.XmlVerMisException;
 
 /**
  * @author ThinkDeep
@@ -265,7 +267,7 @@ public class XmlParsers {
 	 * @return Adapter object
 	 * @throws XmlPullParserException
 	 * @throws IOException
-	 * @throws XmlVerMisException means Xml version mismatch exception
+	 * @throws XmlVerMisException means XML version mismatch exception
 	 */
 	private static Adapter parseXml(String role) throws XmlPullParserException, IOException, XmlVerMisException{
 		Adapter result = new Adapter();

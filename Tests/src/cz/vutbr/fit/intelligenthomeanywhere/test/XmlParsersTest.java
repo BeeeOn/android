@@ -56,6 +56,9 @@ public class XmlParsersTest extends TestCase {
 	private static String CONACCOUNTLIST_1 = "<?xml version='1.0' encoding='UTF-8' ?><communication id=\""+ID+"\" state=\"conaccountlist\" version=\""+GVERSION+"\">";
 	private static String CONACCOUNTLIST_2 = "<user email=\"";
 	private static String CONACCOUNTLIST_3 = "\" role=\"";
+	private static String CONACCOUNTLIST_3_2 = "\" name=\"";
+	private static String CONACCOUNTLIST_3_3 = "\" surname=\"";
+	private static String CONACCOUNTLIST_3_4 = "\" gender=\"";
 	private static String CONACCOUNTLIST_4 = "\" />";
 	private static String CONACCOUNTLIST_END = CONTENT_END;
 	
@@ -171,9 +174,9 @@ public class XmlParsersTest extends TestCase {
 
 	@SuppressWarnings("unchecked")
 	public void testConAccountList(){
-		String xmlMessage = CONACCOUNTLIST_1 + CONACCOUNTLIST_2 + "user@gmail.com" + CONACCOUNTLIST_3 + "user" + CONACCOUNTLIST_4
-											 + CONACCOUNTLIST_2 + "user1@gmail.com" + CONACCOUNTLIST_3 + "admin" + CONACCOUNTLIST_4
-											 + CONACCOUNTLIST_2 + "user2@gmail.com" + CONACCOUNTLIST_3 + "superuser" + CONACCOUNTLIST_4 + CONACCOUNTLIST_END;
+		String xmlMessage = CONACCOUNTLIST_1 + CONACCOUNTLIST_2 + "user@gmail.com" + CONACCOUNTLIST_3 + "user" + CONACCOUNTLIST_3_2 + "hanka" + CONACCOUNTLIST_3_3 + "sroubalova" + CONACCOUNTLIST_3_4 + 0 + CONACCOUNTLIST_4
+											 + CONACCOUNTLIST_2 + "user1@gmail.com" + CONACCOUNTLIST_3 + "admin" + CONACCOUNTLIST_3_2 + "rudolf" + CONACCOUNTLIST_3_3 + "jelinek" + CONACCOUNTLIST_3_4 + 1 + CONACCOUNTLIST_4
+											 + CONACCOUNTLIST_2 + "user2@gmail.com" + CONACCOUNTLIST_3 + "superuser" + CONACCOUNTLIST_3_2 + "pepik" + CONACCOUNTLIST_3_3 + "voprcalek" + CONACCOUNTLIST_3_4 + 1 + CONACCOUNTLIST_4 + CONACCOUNTLIST_END;
 							
 		String state = "conaccountlist";
 		
@@ -207,6 +210,7 @@ public class XmlParsersTest extends TestCase {
 		} catch (Exception e) {
 			e.printStackTrace();
 			assertTrue("ConAccountListTest1: " + e.toString() ,false);
+			Log.e(TAG, e.toString());
 		}
 	}
 	

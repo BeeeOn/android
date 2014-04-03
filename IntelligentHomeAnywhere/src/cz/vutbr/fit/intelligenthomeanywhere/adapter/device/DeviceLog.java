@@ -3,7 +3,7 @@ package cz.vutbr.fit.intelligenthomeanywhere.adapter.device;
 import java.util.ArrayList;
 import java.util.Date;
 
-import cz.vutbr.fit.intelligenthomeanywhere.NotImplementedException;
+import cz.vutbr.fit.intelligenthomeanywhere.exception.NotImplementedException;
 
 /**
  * Represents history of values for device. 

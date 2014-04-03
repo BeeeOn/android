@@ -1,4 +1,4 @@
-package cz.vutbr.fit.intelligenthomeanywhere;
+package cz.vutbr.fit.intelligenthomeanywhere.exception;
 
 public class NotImplementedException extends UnsupportedOperationException {
 
