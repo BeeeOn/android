@@ -15,15 +15,15 @@ import javax.net.ssl.SSLHandshakeException;
 import org.xmlpull.v1.XmlPullParserException;
 
 import android.content.Context;
+import cz.vutbr.fit.intelligenthomeanywhere.exception.ComVerMisException;
+import cz.vutbr.fit.intelligenthomeanywhere.exception.NoConnectionException;
+import cz.vutbr.fit.intelligenthomeanywhere.exception.NotImplementedException;
+import cz.vutbr.fit.intelligenthomeanywhere.exception.XmlVerMisException;
 import cz.vutbr.fit.intelligenthomeanywhere.User;
 import cz.vutbr.fit.intelligenthomeanywhere.adapter.Adapter;
 import cz.vutbr.fit.intelligenthomeanywhere.adapter.device.BaseDevice;
 import cz.vutbr.fit.intelligenthomeanywhere.adapter.device.BaseDevice.SaveDevice;
 import cz.vutbr.fit.intelligenthomeanywhere.adapter.device.DeviceLog;
-import cz.vutbr.fit.intelligenthomeanywhere.exception.ComVerMisException;
-import cz.vutbr.fit.intelligenthomeanywhere.exception.NoConnectionException;
-import cz.vutbr.fit.intelligenthomeanywhere.exception.NotImplementedException;
-import cz.vutbr.fit.intelligenthomeanywhere.exception.XmlVerMisException;
 import cz.vutbr.fit.intelligenthomeanywhere.household.DemoHousehold;
 import cz.vutbr.fit.intelligenthomeanywhere.household.Household;
 import cz.vutbr.fit.intelligenthomeanywhere.listing.FavoritesListing;
@@ -96,8 +96,19 @@ public final class Controller {
 	 * Login last logged in user (authenticate on server).
 	 * 
 	 * @return true on success, false if there is no last user or otherwise 
+	 * @throws XmlVerMisException 
+	 * @throws ComVerMisException 
+	 * @throws XmlPullParserException 
+	 * @throws IOException 
+	 * @throws NoConnectionException 
+	 * @throws UnknownHostException 
+	 * @throws NoSuchAlgorithmException 
+	 * @throws KeyStoreException 
+	 * @throws CertificateException 
+	 * @throws SSLHandshakeException 
+	 * @throws KeyManagementException 
 	 */
-	public boolean login() {
+	public boolean login() throws KeyManagementException, SSLHandshakeException, CertificateException, KeyStoreException, NoSuchAlgorithmException, UnknownHostException, NoConnectionException, IOException, XmlPullParserException, ComVerMisException, XmlVerMisException {
 		User lastUser = mPersistence.loadLastUser();
 		
 		if (lastUser != null)
@@ -111,48 +122,24 @@ public final class Controller {
 	 * 
 	 * @param userId
 	 * @return true on success, false otherwise
+	 * @throws XmlVerMisException 
+	 * @throws ComVerMisException 
+	 * @throws XmlPullParserException 
+	 * @throws IOException 
+	 * @throws NoConnectionException 
+	 * @throws UnknownHostException 
+	 * @throws NoSuchAlgorithmException 
+	 * @throws KeyStoreException 
+	 * @throws CertificateException 
+	 * @throws SSLHandshakeException 
+	 * @throws KeyManagementException 
 	 */
-	public boolean login(String userId) {
+	public boolean login(String email) throws KeyManagementException, SSLHandshakeException, CertificateException, KeyStoreException, NoSuchAlgorithmException, UnknownHostException, NoConnectionException, IOException, XmlPullParserException, ComVerMisException, XmlVerMisException {
 		if (!mNetwork.isAvailable())
 			return false; // TODO: throw proper exception
 
 		// TODO: catch and throw proper exception
-		try {
-			mHousehold.user = mNetwork.signIn(userId);
-		} catch (KeyManagementException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (SSLHandshakeException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (CertificateException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (KeyStoreException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (NoSuchAlgorithmException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (UnknownHostException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (NoConnectionException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (XmlPullParserException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (ComVerMisException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (XmlVerMisException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		mHousehold.user = mNetwork.signIn(email);
 		if (mHousehold.user != null) {
 			mPersistence.saveLastUser(mHousehold.user);
 			return true;

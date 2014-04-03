@@ -1,7 +1,17 @@
 package cz.vutbr.fit.intelligenthomeanywhere.activity;
 
+import java.io.IOException;
+import java.net.UnknownHostException;
+import java.security.KeyManagementException;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
+import java.security.cert.CertificateException;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeoutException;
+
+import javax.net.ssl.SSLHandshakeException;
+
+import org.xmlpull.v1.XmlPullParserException;
 
 import android.accounts.Account;
 import android.accounts.AccountManager;
@@ -19,8 +29,14 @@ import com.google.android.gms.common.AccountPicker;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 
+import cz.vutbr.fit.intelligenthomeanywhere.Constants;
+import cz.vutbr.fit.intelligenthomeanywhere.DemoData;
 import cz.vutbr.fit.intelligenthomeanywhere.GetGoogleAuth;
 import cz.vutbr.fit.intelligenthomeanywhere.R;
+import cz.vutbr.fit.intelligenthomeanywhere.controller.Controller;
+import cz.vutbr.fit.intelligenthomeanywhere.exception.ComVerMisException;
+import cz.vutbr.fit.intelligenthomeanywhere.exception.NoConnectionException;
+import cz.vutbr.fit.intelligenthomeanywhere.exception.XmlVerMisException;
 
 /**
  * First sign in class, controls first activity
@@ -29,19 +45,26 @@ import cz.vutbr.fit.intelligenthomeanywhere.R;
  *
  */
 public class LoginActivity extends Activity {
+
+	private String acEmail;
+	private Controller mController;
+	
+	private static final String TAG = "LOGIN";
 	
 	public static final int USER_RECOVERABLE_AUTH = 5;
 	private static final int GET_GOOGLE_ACCOUNT = 6;
-	private static final String TAG = "LOGIN";
-	private String acEmail;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_login);
 		
+		// Get controller
+		mController = Controller.getInstance(this);
+		
 		// Get btn for login
-		ImageButton btnGoogle = (ImageButton) findViewById(R.id.login_app_btn_google);
-		ImageButton btnMojeID = (ImageButton) findViewById(R.id.login_app_btn_mojeid);
+		ImageButton btnGoogle = (ImageButton) findViewById(R.id.login_btn_google);
+		ImageButton btnMojeID = (ImageButton) findViewById(R.id.login_btn_mojeid);
 
 		// Set onClickListener
 		btnGoogle.setOnClickListener(new OnClickListener(){
@@ -56,6 +79,39 @@ public class LoginActivity extends Activity {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				} catch (TimeoutException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (KeyManagementException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (SSLHandshakeException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (CertificateException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (KeyStoreException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (NoSuchAlgorithmException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (UnknownHostException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (NoConnectionException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (XmlPullParserException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (ComVerMisException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (XmlVerMisException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
@@ -73,16 +129,58 @@ public class LoginActivity extends Activity {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        
+        /*
         if (requestCode == USER_RECOVERABLE_AUTH && resultCode == RESULT_OK) {
         	new GetGoogleAuth(this, this.acEmail).execute();
         }
-        
+        */
         
         if (requestCode == GET_GOOGLE_ACCOUNT && resultCode == RESULT_OK) {
         	this.acEmail = data.getStringExtra(AccountManager.KEY_ACCOUNT_NAME);
+        	
+        	try {
+				if(this.mController.login(this.acEmail)) {
+					Intent intent = new Intent(this, LocationScreenActivity.class);
+					intent.putExtra(Constants.LOGIN, Constants.LOGIN_DEMO);
+					//intent.putExtra(name, value);
+					this.startActivity(intent);
+				}
+			} catch (KeyManagementException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (SSLHandshakeException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (CertificateException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (KeyStoreException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (NoSuchAlgorithmException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (UnknownHostException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (NoConnectionException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (XmlPullParserException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (ComVerMisException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (XmlVerMisException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
         	// Get acces token
-			new GetGoogleAuth(this, this.acEmail).execute();
+			//new GetGoogleAuth(this, this.acEmail).execute();
         }
     }
 	
@@ -92,8 +190,19 @@ public class LoginActivity extends Activity {
 	 * @throws TimeoutException 
 	 * @throws ExecutionException 
 	 * @throws InterruptedException 
+	 * @throws XmlVerMisException 
+	 * @throws ComVerMisException 
+	 * @throws XmlPullParserException 
+	 * @throws IOException 
+	 * @throws NoConnectionException 
+	 * @throws UnknownHostException 
+	 * @throws NoSuchAlgorithmException 
+	 * @throws KeyStoreException 
+	 * @throws CertificateException 
+	 * @throws SSLHandshakeException 
+	 * @throws KeyManagementException 
 	 */
-	private boolean getGoogleAccessFromServer(View v) throws InterruptedException, ExecutionException, TimeoutException{
+	private boolean getGoogleAccessFromServer(View v) throws InterruptedException, ExecutionException, TimeoutException, KeyManagementException, SSLHandshakeException, CertificateException, KeyStoreException, NoSuchAlgorithmException, UnknownHostException, NoConnectionException, IOException, XmlPullParserException, ComVerMisException, XmlVerMisException{
 		//TODO: get access via google
 		Log.d(TAG, "BEG: Google access func");
 		if(GooglePlayServicesUtil.isGooglePlayServicesAvailable(getBaseContext()) == ConnectionResult.SUCCESS) {
@@ -103,14 +212,20 @@ public class LoginActivity extends Activity {
 			if(Accounts.length == 1) {
 				Log.d(TAG, "On this device is one account");
 				this.acEmail = Accounts[0];
+				
+				if(this.mController.login(this.acEmail)) {
+					Intent intent = new Intent(this, LocationScreenActivity.class);
+					intent.putExtra(Constants.LOGIN, Constants.LOGIN_DEMO);
+					//intent.putExtra(name, value);
+					this.startActivity(intent);
+	            }
 				// Get acces token
-				new GetGoogleAuth(this, this.acEmail).execute();
+				//new GetGoogleAuth(this, this.acEmail).execute();
 			}
 			else {
 				Log.d(TAG, "On this device are more accounts");
 				Intent intent = AccountPicker.newChooseAccountIntent(null, null, new String[]{"com.google"}, false, null, null, null, null);
 				startActivityForResult(intent, GET_GOOGLE_ACCOUNT);
-				
 			}
 		}
 		else {

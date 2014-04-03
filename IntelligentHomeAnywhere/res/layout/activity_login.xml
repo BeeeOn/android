@@ -1,54 +1,92 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    android:background="@color/blue"
+    android:background="@color/log_blue1"
     tools:context=".LoginActivity" >
 
-    <TextView
-        android:id="@+id/login_app_name"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginTop="16dp"
-        android:text="@string/login_app_name"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.5">
 
-    <TextView
-        android:id="@+id/login_app_sign_in"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/login_app_name"
-        android:layout_below="@+id/login_app_name"
-        android:layout_marginTop="16dp"
-        android:text="@string/login_app_sign_in" />
+        <TextView
+            android:id="@+id/login_app_name"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="40dp"
+            android:layout_marginLeft="80dp"
+            android:layout_marginTop="50dp"
+            android:gravity="center_vertical"
+            android:lines="3"
+            android:minLines="3"
+            android:text="@string/login_app_name"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="@color/white"
+            android:textSize="50dp"
+            android:textStyle="bold" />
 
-    <ImageButton
-        android:id="@+id/login_app_btn_google"
-        android:layout_width="70dp"
-        android:layout_height="64dp"
-        android:layout_alignLeft="@+id/login_app_sign_in"
-        android:layout_below="@+id/login_app_sign_in"
-        android:layout_marginLeft="29dp"
-        android:layout_marginTop="24dp"
-        android:background="@null"
-        android:scaleType="fitXY"
-        android:src="@drawable/ic_google_ac" android:contentDescription="TODO"/>
+    </RelativeLayout>
 
-    <ImageButton
-        android:id="@+id/login_app_btn_mojeid"
-        android:layout_width="64dp"
-        android:layout_height="64dp"
-        android:layout_alignBottom="@+id/login_app_btn_google"
-        android:layout_alignRight="@+id/login_app_name"
-        android:layout_alignTop="@+id/login_app_btn_google"
-        android:background="@null"
-        android:scaleType="fitXY"
-        android:src="@drawable/ic_mojeid" />
+    <RelativeLayout
+        android:id="@+id/relativeLayout1"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.5"
+        android:background="@color/log_blue2" >
 
-</RelativeLayout>
+        <ImageButton
+            android:id="@+id/login_btn_google"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_margin="10dp"
+            android:background="@null"
+            android:contentDescription="TODO"
+            android:scaleType="centerInside"
+            android:src="@drawable/ic_g_log" />
+
+        <ImageButton
+            android:id="@+id/login_btn_mojeid"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_below="@+id/log_sc_or"
+            android:layout_margin="10dp"
+            android:background="@null"
+            android:scaleType="centerInside"
+            android:src="@drawable/ic_mid_log" />
+
+        <TextView
+            android:id="@+id/log_sc_or"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_below="@+id/login_btn_google"
+            android:gravity="center_horizontal"
+            android:text="@string/log_sc_or"
+            android:textColor="@color/white"
+            android:textColorHint="@color/white"
+            android:textSize="20dp" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/login_btn_mojeid"
+            android:layout_below="@+id/login_btn_mojeid"
+            android:gravity="center_horizontal" >
+
+            <CheckBox
+                android:id="@+id/login_cb_remeber_me"
+                style="@style/CheckBoxCustomHoloTheme"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/login_txt_remember_me"
+                android:textAlignment="gravity" />
+
+        </RelativeLayout>
+
+    </RelativeLayout>
+
+</LinearLayout>

@@ -65,10 +65,17 @@ public class GetGoogleAuth extends AsyncTask<Void, Void, String> {
 	return null;
 	}
 	
+	protected String getToken(){
+		if(this.mToken != null) 
+			return this.mToken;
+		return "";
+	}
+	
 	@Override
 	protected void onPostExecute(final String result) {
 		super.onPostExecute(result);
 		if (result != null) {
+			
 			Thread fetchUserInfo = new Thread(new Runnable(){
 			    @Override
 			    public void run() {
@@ -91,19 +98,20 @@ public class GetGoogleAuth extends AsyncTask<Void, Void, String> {
 				e.printStackTrace();
 			}
 			
-			LayoutInflater inflater = mActivity.getLayoutInflater();
+			//LayoutInflater inflater = mActivity.getLayoutInflater();
 			 
             // Inflate the Layout
-            View welcomeToastlayout = inflater.inflate(R.layout.toast_welcome,(ViewGroup) mActivity.findViewById(R.id.toast_welcome_layout));
+           // View welcomeToastlayout = inflater.inflate(R.layout.toast_welcome,(ViewGroup) mActivity.findViewById(R.id.toast_welcome_layout));
  
 			
 			// Log - Token and Name
 			Log.d(TAG, "Token: "+result);
 			Log.d(TAG, "User name: "+this.mUserName);
 			Log.d(TAG, "Picture url:"+mPicture);
+			/*
 			if(mPicture != null) {
 				// Set User profile picture if is set
-				final ImageView picture = (ImageView) welcomeToastlayout.findViewById(R.id.toast_welcome_picture);
+				//final ImageView picture = (ImageView) welcomeToastlayout.findViewById(R.id.toast_welcome_picture);
 				Thread fetchUserPicture = new Thread(new Runnable(){
 				    @Override
 				    public void run() {
@@ -125,8 +133,8 @@ public class GetGoogleAuth extends AsyncTask<Void, Void, String> {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-			}
-			 
+			}*/
+			/*
             TextView text = (TextView) welcomeToastlayout.findViewById(R.id.toast_welcome_text);
             // Set the Text to show in TextView
             text.setText("Welcome \n"+this.mUserName);
@@ -134,7 +142,8 @@ public class GetGoogleAuth extends AsyncTask<Void, Void, String> {
             toast.setGravity(Gravity.BOTTOM, 0, 0);
             toast.setDuration(Toast.LENGTH_LONG);
             toast.setView(welcomeToastlayout);
-            toast.show();
+            toast.show();*/
+			/*
             DemoData demo = new DemoData(mActivity);
             if (demo.checkDemoData()) {
 				Intent intent = new Intent(mActivity, LocationScreenActivity.class);
@@ -142,8 +151,9 @@ public class GetGoogleAuth extends AsyncTask<Void, Void, String> {
 				//intent.putExtra(name, value);
 				mActivity.startActivity(intent);
             }
-	    	mActivity.finish();
+	    	mActivity.finish();*/
 	    	Log.d(TAG, "FINISH");
+	    	
 		}
 	}
 	
