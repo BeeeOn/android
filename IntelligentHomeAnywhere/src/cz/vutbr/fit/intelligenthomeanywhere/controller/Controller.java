@@ -99,12 +99,12 @@ public final class Controller {
 	 * @param userId
 	 * @return true on success, false otherwise
 	 */
-	public boolean login(String userId) {
+	public boolean login(String email) {
 		if (!mNetwork.isAvailable())
 			return false; // TODO: throw proper exception
 
 		// TODO: catch and throw proper exception
-		mHousehold.user = mNetwork.signIn(userId);
+		mHousehold.user = mNetwork.signIn(email);
 		if (mHousehold.user != null) {
 			mPersistence.saveLastUser(mHousehold.user);
 			return true;
