@@ -3,10 +3,10 @@ package cz.vutbr.fit.intelligenthomeanywhere.persistence;
 import java.util.ArrayList;
 
 import android.content.Context;
-import cz.vutbr.fit.intelligenthomeanywhere.NotImplementedException;
 import cz.vutbr.fit.intelligenthomeanywhere.User;
 import cz.vutbr.fit.intelligenthomeanywhere.adapter.Adapter;
 import cz.vutbr.fit.intelligenthomeanywhere.adapter.device.BaseDevice;
+import cz.vutbr.fit.intelligenthomeanywhere.exception.NotImplementedException;
 import cz.vutbr.fit.intelligenthomeanywhere.widget.WidgetData;
 
 /**
