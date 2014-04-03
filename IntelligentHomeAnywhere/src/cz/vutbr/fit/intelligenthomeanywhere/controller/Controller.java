@@ -1,16 +1,29 @@
 package cz.vutbr.fit.intelligenthomeanywhere.controller;
 
+import java.io.IOException;
+import java.net.UnknownHostException;
+import java.security.KeyManagementException;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
+import java.security.cert.CertificateException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import javax.net.ssl.SSLHandshakeException;
+
+import org.xmlpull.v1.XmlPullParserException;
+
 import android.content.Context;
-import cz.vutbr.fit.intelligenthomeanywhere.NotImplementedException;
 import cz.vutbr.fit.intelligenthomeanywhere.User;
 import cz.vutbr.fit.intelligenthomeanywhere.adapter.Adapter;
 import cz.vutbr.fit.intelligenthomeanywhere.adapter.device.BaseDevice;
 import cz.vutbr.fit.intelligenthomeanywhere.adapter.device.BaseDevice.SaveDevice;
 import cz.vutbr.fit.intelligenthomeanywhere.adapter.device.DeviceLog;
+import cz.vutbr.fit.intelligenthomeanywhere.exception.ComVerMisException;
+import cz.vutbr.fit.intelligenthomeanywhere.exception.NoConnectionException;
+import cz.vutbr.fit.intelligenthomeanywhere.exception.NotImplementedException;
+import cz.vutbr.fit.intelligenthomeanywhere.exception.XmlVerMisException;
 import cz.vutbr.fit.intelligenthomeanywhere.household.DemoHousehold;
 import cz.vutbr.fit.intelligenthomeanywhere.household.Household;
 import cz.vutbr.fit.intelligenthomeanywhere.listing.FavoritesListing;
@@ -104,7 +117,42 @@ public final class Controller {
 			return false; // TODO: throw proper exception
 
 		// TODO: catch and throw proper exception
-		mHousehold.user = mNetwork.signIn(userId);
+		try {
+			mHousehold.user = mNetwork.signIn(userId);
+		} catch (KeyManagementException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (SSLHandshakeException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (CertificateException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (KeyStoreException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (NoSuchAlgorithmException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (UnknownHostException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (NoConnectionException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (XmlPullParserException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ComVerMisException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (XmlVerMisException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		if (mHousehold.user != null) {
 			mPersistence.saveLastUser(mHousehold.user);
 			return true;

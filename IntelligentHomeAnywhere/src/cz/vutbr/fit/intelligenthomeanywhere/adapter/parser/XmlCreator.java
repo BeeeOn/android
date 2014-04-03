@@ -111,7 +111,7 @@ public class XmlCreator {
 	 * @param gtoken token from google
 	 * @return XML message
 	 */
-	public String createSignIn(String email, String gtoken, boolean quiet){
+	public static String createSignIn(String email, String gtoken, boolean quiet){
 		XmlSerializer serializer = Xml.newSerializer();
 		StringWriter writer = new StringWriter();
 		try{
@@ -145,7 +145,7 @@ public class XmlCreator {
 	 * @param next if id is non-zero and user is signed in, that TRUE is using new Adapter, old otherwise
 	 * @return XML message
 	 */
-	public String createSignUp(String email, String id, String gtoken, String serialNumber, boolean next){
+	public static String createSignUp(String email, String id, String gtoken, String serialNumber, boolean next){
 		XmlSerializer serializer = Xml.newSerializer();
 		StringWriter writer = new StringWriter();
 		try{
@@ -188,7 +188,7 @@ public class XmlCreator {
 	 * @param next if id is non-zero and user is signed in, that TRUE is using new Adapter, old otherwise
 	 * @return XML message
 	 */
-	public String createSignUp(String email, int id, String gtoken, int serialNumber, boolean next){
+	public static String createSignUp(String email, int id, String gtoken, int serialNumber, boolean next){
 		return createSignUp(email, Integer.toString(id), gtoken, Integer.toString(serialNumber), next);
 	}
 	
@@ -198,7 +198,7 @@ public class XmlCreator {
 	 * @param adapterId id of adapter to work with
 	 * @return init message
 	 */
-	public String createInit(String id, String adapterId){
+	public static String createInit(String id, String adapterId){
 		XmlSerializer serializer = Xml.newSerializer();
 		StringWriter writer = new StringWriter();
 		try{
@@ -229,7 +229,7 @@ public class XmlCreator {
 	 * @param adapterId id of adapter to work with
 	 * @return init message
 	 */
-	public String createInit(int id, int adapterId){
+	public static String createInit(int id, int adapterId){
 		return createInit(Integer.toString(id), Integer.toString(adapterId));
 	}
 	
@@ -240,7 +240,7 @@ public class XmlCreator {
 	 * @param adapterIdNew new id of adapter
 	 * @return ReInit message
 	 */
-	public String createReInit(String id, String adapterIdOld, String adapterIdNew){
+	public static String createReInit(String id, String adapterIdOld, String adapterIdNew){
 		XmlSerializer serializer = Xml.newSerializer();
 		StringWriter writer = new StringWriter();
 		try{
@@ -273,7 +273,7 @@ public class XmlCreator {
 	 * @param adapterIdNew new id of adapter
 	 * @return ReInit message
 	 */
-	public String createReInit(int id, int adapterIdOld, int adapterIdNew){
+	public static String createReInit(int id, int adapterIdOld, int adapterIdNew){
 		return createReInit(Integer.toString(id), Integer.toString(adapterIdOld), Integer.toString(adapterIdNew));
 	}
 
@@ -284,7 +284,7 @@ public class XmlCreator {
 	 * @param from date from probably based of format YYYY-MM-DD-HH:MM:SS
 	 * @return logName message
 	 */
-	public String createLogName(String id, String deviceId, String from, String to){
+	public static String createLogName(String id, String deviceId, String from, String to){
 		XmlSerializer serializer = Xml.newSerializer();
 		StringWriter writer = new StringWriter();
 		try{
@@ -318,7 +318,7 @@ public class XmlCreator {
 	 * @param from date from probably based of format YYYY-MM-DD-HH:MM:SS
 	 * @return logName message
 	 */
-	public String createLogName(int id, String deviceId, String from, String to){
+	public static String createLogName(int id, String deviceId, String from, String to){
 		return createLogName(Integer.toString(id), deviceId, from, to);
 	}
 	
@@ -328,7 +328,7 @@ public class XmlCreator {
 	 * @param users map with pairs e-mail of common user (key) and its role (value) 
 	 * @return addConAccount message
 	 */
-	public String createAddConAccount(String id, HashMap<String, String> users){
+	public static String createAddConAccount(String id, HashMap<String, String> users){
 		return createAddOrChangeConAccount(id, users, true);
 	}
 	
@@ -338,7 +338,7 @@ public class XmlCreator {
 	 * @param users map with pairs e-mail of common user (key) and its role (value) 
 	 * @return addConAccount message
 	 */
-	public String createAddConAccount(int id, HashMap<String, String> users){
+	public static String createAddConAccount(int id, HashMap<String, String> users){
 		return createAddConAccount(Integer.toString(id), users);
 	}
 	
@@ -348,7 +348,7 @@ public class XmlCreator {
 	 * @param userEmails of common users
 	 * @return dellConAccount message
 	 */
-	public String createDelConAccount(String id, ArrayList<String> userEmails){
+	public static String createDelConAccount(String id, ArrayList<String> userEmails){
 		XmlSerializer serializer = Xml.newSerializer();
 		StringWriter writer = new StringWriter();
 		try{
@@ -381,7 +381,7 @@ public class XmlCreator {
 	 * @param userEmails of common users
 	 * @return dellConAccount message
 	 */
-	public String createDelConAccount(int id, ArrayList<String> userEmails){
+	public static String createDelConAccount(int id, ArrayList<String> userEmails){
 		return createDelConAccount(Integer.toString(id),userEmails);
 	}
 
@@ -390,7 +390,7 @@ public class XmlCreator {
 	 * @param id of user
 	 * @return GetConAccount message
 	 */
-	public String createGetConAccount(String id){
+	public static String createGetConAccount(String id){
 		XmlSerializer serializer = Xml.newSerializer();
 		StringWriter writer = new StringWriter();
 		try{
@@ -415,7 +415,7 @@ public class XmlCreator {
 	 * @param id of user
 	 * @return GetConAccount message
 	 */
-	public String createGetConAccount(int id){
+	public static String createGetConAccount(int id){
 		return createGetConAccount(Integer.toString(id));
 	}
 	
@@ -426,7 +426,7 @@ public class XmlCreator {
 	 * @param ADD if is TRUE, addConAccount is chosen, changeConAccount otherwise
 	 * @return Add/ChangeConAccount message
 	 */
-	private String createAddOrChangeConAccount(String id, HashMap<String, String> users, boolean ADD){
+	private static String createAddOrChangeConAccount(String id, HashMap<String, String> users, boolean ADD){
 		XmlSerializer serializer = Xml.newSerializer();
 		StringWriter writer = new StringWriter();
 		try{
@@ -460,7 +460,7 @@ public class XmlCreator {
 	 * @param users map with pairs e-mail of common user (key) and its role (value)
 	 * @return changeConAccount message
 	 */
-	public String createChangeConAccount(String id, HashMap<String, String> users){
+	public static String createChangeConAccount(String id, HashMap<String, String> users){
 		return createAddOrChangeConAccount(id, users, false);
 	}
 	
@@ -470,7 +470,7 @@ public class XmlCreator {
 	 * @param users map with pairs e-mail of common user (key) and its role (value)
 	 * @return changeConAccount message
 	 */
-	public String createChangeConAccount(int id, HashMap<String, String> users){
+	public static String createChangeConAccount(int id, HashMap<String, String> users){
 		return createChangeConAccount(Integer.toString(id), users);
 	}
 
@@ -480,7 +480,7 @@ public class XmlCreator {
 	 * @param additionalInfo contains state of recieved message
 	 * @return TRUE message
 	 */
-	public String createTRUE(String id, String additionalInfo){
+	public static String createTRUE(String id, String additionalInfo){
 		XmlSerializer serializer = Xml.newSerializer();
 		StringWriter writer = new StringWriter();
 		try{
@@ -507,7 +507,7 @@ public class XmlCreator {
 	 * @param additionalInfo contains state of recieved message
 	 * @return TRUE message
 	 */
-	public String createTRUE(int id, String additionalInfo){
+	public static String createTRUE(int id, String additionalInfo){
 		return createTRUE(Integer.toString(id), additionalInfo);
 	}
 
@@ -521,7 +521,7 @@ public class XmlCreator {
 	 * @return FALSE message
 	 */
 	//FIXME: XMLedSubMessage need to by repaired
-	public String createFALSE(String id, String additionalInfo, String XMLedSubMessage){
+	public static String createFALSE(String id, String additionalInfo, String XMLedSubMessage){
 		XmlSerializer serializer = Xml.newSerializer();
 		StringWriter writer = new StringWriter();
 		try{
@@ -556,7 +556,7 @@ public class XmlCreator {
 	 * @param XMLedSubMessage contains string with XML of subMessage of error description 
 	 * @return FALSE message
 	 */	
-	public String createFALSE(int id, String additionalInfo, String XMLedSubMessage){
+	public static String createFALSE(int id, String additionalInfo, String XMLedSubMessage){
 		return createFALSE(Integer.toString(id), additionalInfo, XMLedSubMessage);
 	}
 	
@@ -570,7 +570,7 @@ public class XmlCreator {
 	 * @param devices with changed fields only (use only NON-null and NON-zero values)
 	 * @return Partial message
 	 */
-	public String createPartial(String id, ArrayList<BaseDevice> devices){
+	public static String createPartial(String id, ArrayList<BaseDevice> devices){
 		XmlSerializer serializer = Xml.newSerializer();
 		StringWriter writer = new StringWriter();
 		try{
@@ -639,7 +639,7 @@ public class XmlCreator {
 	 * @param devices with changed fields only (use only NON-null and NON-zero values)
 	 * @return Partial message
 	 */
-	public String createPartial(int id, ArrayList<BaseDevice> devices){
+	public static String createPartial(int id, ArrayList<BaseDevice> devices){
 		return createPartial(Integer.toString(id), devices);
 	}
 	
@@ -648,7 +648,7 @@ public class XmlCreator {
 	 * @param id of user
 	 * @return GetAdapters message
 	 */
-	public String createGetAdapters(String id){
+	public static String createGetAdapters(String id){
 		XmlSerializer serializer = Xml.newSerializer();
 		StringWriter writer = new StringWriter();
 		try{
@@ -674,7 +674,7 @@ public class XmlCreator {
 	 * @param id of user
 	 * @return GetAdapters message
 	 */
-	public String createGetAdapters(int id){
+	public static String createGetAdapters(int id){
 		return createGetAdapters(Integer.toString(id));
 	}
 	
@@ -684,7 +684,7 @@ public class XmlCreator {
 	 * @param devicesId Id of devices to get update fields
 	 * @return update message
 	 */
-	public String createUpdate(String id, ArrayList<String>devicesId){
+	public static String createUpdate(String id, ArrayList<String>devicesId){
 		XmlSerializer serializer = Xml.newSerializer();
 		StringWriter writer = new StringWriter();
 		try{
@@ -717,7 +717,7 @@ public class XmlCreator {
 	 * @param devicesId Id of devices to get update fields
 	 * @return update message
 	 */
-	public String createUpdate(int id, ArrayList<String>devicesId){
+	public static String createUpdate(int id, ArrayList<String>devicesId){
 		return createUpdate(Integer.toString(id), devicesId);
 	}
 	
@@ -728,7 +728,7 @@ public class XmlCreator {
 	 * @param devicesId list of devices id
 	 * @return addView message
 	 */
-	public String createAddView(String id, String viewName, int iconNum, ArrayList<String>devicesId){
+	public static String createAddView(String id, String viewName, int iconNum, ArrayList<String>devicesId){
 		XmlSerializer serializer = Xml.newSerializer();
 		StringWriter writer = new StringWriter();
 		try{
@@ -764,7 +764,7 @@ public class XmlCreator {
 	 * @param devicesId list of devices id
 	 * @return addView message
 	 */
-	public String createAddView(int id, String viewName, int iconNum, ArrayList<String>devicesId){
+	public static String createAddView(int id, String viewName, int iconNum, ArrayList<String>devicesId){
 		return createAddView(Integer.toString(id), viewName, iconNum, devicesId);
 	}
 	
@@ -774,7 +774,7 @@ public class XmlCreator {
 	 * @param viewName of custom view
 	 * @return DelVIew message
 	 */
-	public String createDelView(String id, String viewName){
+	public static String createDelView(String id, String viewName){
 		XmlSerializer serializer = Xml.newSerializer();
 		StringWriter writer = new StringWriter();
 		try{
@@ -802,7 +802,7 @@ public class XmlCreator {
 	 * @param viewName of custom view
 	 * @return DelVIew message
 	 */
-	public String createDelView(int id, String viewName){
+	public static String createDelView(int id, String viewName){
 		return createDelView(Integer.toString(id), viewName);
 	}
 	
@@ -813,7 +813,7 @@ public class XmlCreator {
 	 * @param devices hashMap with device id as key, and action as value
 	 * @return UpdateValue message
 	 */
-	public String createUpdateView(String id, String viewName, int iconNum, HashMap<String, String> devices){
+	public static String createUpdateView(String id, String viewName, int iconNum, HashMap<String, String> devices){
 		XmlSerializer serializer = Xml.newSerializer();
 		StringWriter writer = new StringWriter();
 		try{
@@ -850,7 +850,7 @@ public class XmlCreator {
 	 * @param devices hashMap with device id as key, and action as value
 	 * @return UpdateValue message
 	 */
-	public String createUpdateView(int id, String viewName, int iconNum, HashMap<String, String> devices){
+	public static String createUpdateView(int id, String viewName, int iconNum, HashMap<String, String> devices){
 		return createUpdateView(Integer.toString(id), viewName, iconNum, devices);
 	}
 	
