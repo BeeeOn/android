@@ -1,11 +1,24 @@
 package cz.vutbr.fit.intelligenthomeanywhere.controller;
 
+import java.io.IOException;
+import java.net.UnknownHostException;
+import java.security.KeyManagementException;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
+import java.security.cert.CertificateException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import javax.net.ssl.SSLHandshakeException;
+
+import org.xmlpull.v1.XmlPullParserException;
+
 import android.content.Context;
-import cz.vutbr.fit.intelligenthomeanywhere.NotImplementedException;
+import cz.vutbr.fit.intelligenthomeanywhere.exception.ComVerMisException;
+import cz.vutbr.fit.intelligenthomeanywhere.exception.NoConnectionException;
+import cz.vutbr.fit.intelligenthomeanywhere.exception.NotImplementedException;
+import cz.vutbr.fit.intelligenthomeanywhere.exception.XmlVerMisException;
 import cz.vutbr.fit.intelligenthomeanywhere.User;
 import cz.vutbr.fit.intelligenthomeanywhere.adapter.Adapter;
 import cz.vutbr.fit.intelligenthomeanywhere.adapter.device.BaseDevice;
@@ -83,8 +96,19 @@ public final class Controller {
 	 * Login last logged in user (authenticate on server).
 	 * 
 	 * @return true on success, false if there is no last user or otherwise 
+	 * @throws XmlVerMisException 
+	 * @throws ComVerMisException 
+	 * @throws XmlPullParserException 
+	 * @throws IOException 
+	 * @throws NoConnectionException 
+	 * @throws UnknownHostException 
+	 * @throws NoSuchAlgorithmException 
+	 * @throws KeyStoreException 
+	 * @throws CertificateException 
+	 * @throws SSLHandshakeException 
+	 * @throws KeyManagementException 
 	 */
-	public boolean login() {
+	public boolean login() throws KeyManagementException, SSLHandshakeException, CertificateException, KeyStoreException, NoSuchAlgorithmException, UnknownHostException, NoConnectionException, IOException, XmlPullParserException, ComVerMisException, XmlVerMisException {
 		User lastUser = mPersistence.loadLastUser();
 		
 		if (lastUser != null)
@@ -98,8 +122,19 @@ public final class Controller {
 	 * 
 	 * @param userId
 	 * @return true on success, false otherwise
+	 * @throws XmlVerMisException 
+	 * @throws ComVerMisException 
+	 * @throws XmlPullParserException 
+	 * @throws IOException 
+	 * @throws NoConnectionException 
+	 * @throws UnknownHostException 
+	 * @throws NoSuchAlgorithmException 
+	 * @throws KeyStoreException 
+	 * @throws CertificateException 
+	 * @throws SSLHandshakeException 
+	 * @throws KeyManagementException 
 	 */
-	public boolean login(String email) {
+	public boolean login(String email) throws KeyManagementException, SSLHandshakeException, CertificateException, KeyStoreException, NoSuchAlgorithmException, UnknownHostException, NoConnectionException, IOException, XmlPullParserException, ComVerMisException, XmlVerMisException {
 		if (!mNetwork.isAvailable())
 			return false; // TODO: throw proper exception
 
