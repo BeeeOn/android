@@ -76,6 +76,14 @@ public class Network {
 	private static int mSessionId;
 	
 	/**
+	 * Constructor.
+	 * @param context
+	 */
+	public Network(Context context) {
+		mContext = context;
+	}
+	
+	/**
 	 * Static function for sending data to server via TLS protocol using own
 	 * TrustManger to be able to trust self-signed certificates. CA certificated
 	 * must be located in assets folder. If no exception is thrown, it returns
@@ -178,14 +186,6 @@ public class Network {
 
 		// return server response
 		return response.toString();
-	}
-
-	/**
-	 * Constructor.
-	 * @param context
-	 */
-	public Network(Context context) {
-		mContext = context;
 	}
 
 	/**

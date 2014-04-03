@@ -14,6 +14,7 @@ import javax.net.ssl.SSLHandshakeException;
 
 import org.xmlpull.v1.XmlPullParserException;
 
+import android.test.AndroidTestCase;
 import android.test.InstrumentationTestCase;
 import android.util.Log;
 import cz.vutbr.fit.intelligenthomeanywhere.exception.ComVerMisException;
@@ -25,7 +26,7 @@ import cz.vutbr.fit.intelligenthomeanywhere.network.Network;
  * @author ThinkDeep
  *
  */
-public class NetworkTest extends /*TestCase*/InstrumentationTestCase {
+public class NetworkTest extends /*TestCase*/AndroidTestCase {
 
 	private static final String TAG = "NetworkTests";
 	private static final String USEREMAIL = "email@gmail.com";
@@ -46,7 +47,7 @@ public class NetworkTest extends /*TestCase*/InstrumentationTestCase {
 	}
 	
 	public void testSignIn(){
-		Network net = new Network(getInstrumentation().getContext());
+		Network net = new Network(getContext());
 		try {
 			net.signIn(USEREMAIL);
 		} catch (KeyManagementException e) {
