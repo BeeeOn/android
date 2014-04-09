@@ -1,9 +1,11 @@
 package cz.vutbr.fit.intelligenthomeanywhere.household;
 
+import java.io.File;
 import java.util.ArrayList;
 
 import android.content.Context;
 import cz.vutbr.fit.intelligenthomeanywhere.Constants;
+import cz.vutbr.fit.intelligenthomeanywhere.DemoData;
 import cz.vutbr.fit.intelligenthomeanywhere.User;
 import cz.vutbr.fit.intelligenthomeanywhere.User.Gender;
 import cz.vutbr.fit.intelligenthomeanywhere.User.Role;
@@ -23,9 +25,14 @@ public final class DemoHousehold extends Household {
 	/**
 	 * Constructor.
 	 * @param context
+	 * @throws Exception 
 	 */
-	public DemoHousehold(Context context) {
+	public DemoHousehold(Context context) throws Exception {
 		mContext = context;
+		
+		if(!(new DemoData(mContext)).checkDemoData()){
+			throw new Exception("Something wrong with demo data");
+		}
 		
 		prepareUser();
 		prepareAdapters();
@@ -45,11 +52,16 @@ public final class DemoHousehold extends Household {
 	 */
 	private void prepareAdapters() {
 		this.adapters = new ArrayList<Adapter>();
+		try{
+			String filename = mContext.getExternalFilesDir(null).getPath() + "/" +  Constants.DEMO_FILENAME;
+			//TODO: make new function
+			Adapter adapter = XmlDeviceParser.fromFile(filename);
+			this.adapters.add(adapter);
+		}
+		catch(Exception e){
+			e.printStackTrace();
+		}
 		
-		String filename = mContext.getExternalFilesDir(null).getPath() + Constants.DEMO_FILENAME;
-		Adapter adapter = XmlDeviceParser.fromFile(filename);
-
-		this.adapters.add(adapter);
 	}
 	
 	/**

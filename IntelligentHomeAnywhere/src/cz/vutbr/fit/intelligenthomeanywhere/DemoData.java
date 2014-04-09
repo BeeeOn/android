@@ -6,6 +6,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.res.AssetManager;
 import android.util.Log;
 
@@ -17,10 +18,10 @@ import android.util.Log;
  *
  */
 public class DemoData {
-	private Activity mActivity;
+	private Context mContext;
 	
-	public DemoData(Activity aActivity){
-		this.mActivity = aActivity;
+	public DemoData(Context context){
+		this.mContext = context;
 	}
 	
 	/**
@@ -28,12 +29,12 @@ public class DemoData {
 	 * @return true if everything is OK
 	 */
 	public boolean checkDemoData(){
-		File demoFile = new File(mActivity.getExternalFilesDir(null).getPath() + Constants.DEMO_FILENAME);
-		File demoLogFile = new File(mActivity.getExternalFilesDir(null).getPath() + Constants.DEMO_LOG_FILENAME);
+		File demoFile = new File(mContext.getExternalFilesDir(null).getPath() + "/" + Constants.DEMO_FILENAME);
+		File demoLogFile = new File(mContext.getExternalFilesDir(null).getPath() + "/" +  Constants.DEMO_LOG_FILENAME);
 		
 		if (!demoFile.exists() || !demoLogFile.exists()) {
 			try {
-				AssetManager assetManager = this.mActivity.getAssets();
+				AssetManager assetManager = this.mContext.getAssets();
 				InputStream in_xml = assetManager.open(Constants.DEMO_ASSETNAME);
 				OutputStream out_xml = new FileOutputStream(demoFile);
 				byte[] buf_xml = new byte[1024];
