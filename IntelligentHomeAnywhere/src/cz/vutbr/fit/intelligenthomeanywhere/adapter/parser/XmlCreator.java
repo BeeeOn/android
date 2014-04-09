@@ -39,7 +39,7 @@ public class XmlCreator {
 	/**
 	 * Version of communication protocol for google/android device 
 	 */
-	public static final String GVER = "1.0";
+	public static final String GVER = "1.6";
 	// states
 	public static final String SIGNIN = "signin";
 	public static final String SIGNUP = "signup";
@@ -58,6 +58,7 @@ public class XmlCreator {
 	public static final String ADDVIEW = "addview";
 	public static final String DELVIEW = "delview";
 	public static final String UPDATEVIEW = "updateview";
+	public static final String GETVIEWS = "getviews";
 	
 	// end of states
 	public static final String USER = "user";
@@ -111,7 +112,7 @@ public class XmlCreator {
 	 * @param gtoken token from google
 	 * @return XML message
 	 */
-	public static String createSignIn(String email, String gtoken, boolean quiet){
+	public static String createSignIn(String email, String gtoken/*, boolean quiet*/){
 		XmlSerializer serializer = Xml.newSerializer();
 		StringWriter writer = new StringWriter();
 		try{
@@ -122,7 +123,7 @@ public class XmlCreator {
 			serializer.attribute(ns, ID, INIT_ID);
 			serializer.attribute(ns, STATE, SIGNIN);
 			serializer.attribute(ns, VERSION, GVER);
-			serializer.attribute(ns, MODE, (quiet) ? QUIET : NORMAL);
+			//serializer.attribute(ns, MODE, (quiet) ? QUIET : NORMAL);
 				serializer.startTag(ns, USER);
 				serializer.attribute(ns, EMAIL, email);
 				serializer.attribute(ns, GTOKEN, gtoken);
@@ -160,16 +161,11 @@ public class XmlCreator {
 					serializer.text(serialNumber);
 				serializer.endTag(ns, SERIAL);
 				
-				if(id.equals(INIT_ID)){
-					serializer.startTag(ns, USER);
-					serializer.attribute(ns, EMAIL, email);
-					serializer.attribute(ns, GTOKEN, gtoken);
-					serializer.endTag(ns, USER);
-				}else{
-					serializer.startTag(ns, NEXT);
-					serializer.attribute(ns, ADAPTER, (next)?NEW:OLD);
-					serializer.endTag(ns, NEXT);
-				}
+				serializer.startTag(ns, USER);
+				serializer.attribute(ns, EMAIL, email);
+				serializer.attribute(ns, GTOKEN, gtoken);
+				serializer.endTag(ns, USER);
+
 			serializer.endTag(ns, COM_ROOT);
 			serializer.endDocument();
 			
@@ -766,6 +762,41 @@ public class XmlCreator {
 	 */
 	public static String createAddView(int id, String viewName, int iconNum, ArrayList<String>devicesId){
 		return createAddView(Integer.toString(id), viewName, iconNum, devicesId);
+	}
+	
+	/**
+	 * Method create XML of GetViews message (method added in 1.6 version)
+	 * @param id of user
+	 * @return getViews message
+	 */
+	public static String createGetViews(String id){
+		XmlSerializer serializer = Xml.newSerializer();
+		StringWriter writer = new StringWriter();
+		try{
+			serializer.setOutput(writer);
+			serializer.startDocument("UTF-8", null);
+			
+			serializer.startTag(ns, COM_ROOT);
+			serializer.attribute(ns, ID, id);
+			serializer.attribute(ns, STATE, GETVIEWS);
+			serializer.attribute(ns, VERSION, GVER);
+			
+			serializer.endTag(ns, COM_ROOT);
+			serializer.endDocument();
+			
+			return writer.toString();
+		}catch(Exception e){
+			throw new RuntimeException(e);
+		}
+	}
+	
+	/**
+	 * Method create XML of GetViews message (method added in 1.6 version)
+	 * @param id of user
+	 * @return getViews message
+	 */
+	public static String createGetViews(int id){
+		return createGetViews(Integer.toString(id));
 	}
 	
 	/**

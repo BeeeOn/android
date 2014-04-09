@@ -28,7 +28,7 @@ public class XmlCreatorTest extends TestCase {
 	private static String GTOKEN = "9845658";
 	private static String MODE = "n";
 	private static int ID = 425644;
-	private static String GVERSION = "1.0";
+	private static String GVERSION = "1.6";
 	//FIXME: length of serial???
 	private static int SERIAL = 555645792;
 	private static int ADAPTERID = SERIAL;
@@ -41,13 +41,13 @@ public class XmlCreatorTest extends TestCase {
 	private static String VIEWNAME = "custom_name";
 	
 	//messages
-	private static String SIGNIN_1 = "<?xml version='1.0' encoding='UTF-8' ?><communication id=\"0\" state=\"signin\" version=\""+GVERSION+"\" mode=\""+MODE+"\"><user email=\"";
+	private static String SIGNIN_1 = "<?xml version='1.0' encoding='UTF-8' ?><communication id=\"0\" state=\"signin\" version=\""+GVERSION+"\"><user email=\"";
 	private static String SIGNIN_1_2 = "\" gtoken=\"";
 	private static String SIGNIN_2 = "\" /></communication>";
 	private static String SIGNUP_1 = "<?xml version='1.0' encoding='UTF-8' ?><communication id=\"";
 	private static String SIGNUP_2 = "\" state=\"signup\" version=\""+GVERSION+"\"><serialnumber>";
-	private static String SIGNUP_3_USER_OLD = "</serialnumber><next adapter=\"old\" /></communication>";
-	private static String SIGNUP_3_USER_NEW = "</serialnumber><next adapter=\"new\" /></communication>";
+	//private static String SIGNUP_3_USER_OLD = "</serialnumber><next adapter=\"old\" /></communication>";
+	//private static String SIGNUP_3_USER_NEW = "</serialnumber><next adapter=\"new\" /></communication>";
 	private static String SIGNUP_3_EMAIL_1 = "</serialnumber><user email=\"";
 	private static String SIGNUP_3_EMAIL_1_2 = SIGNIN_1_2;
 	private static String SIGNUP_3_EMAIL_2 =  SIGNIN_2;
@@ -108,6 +108,9 @@ public class XmlCreatorTest extends TestCase {
 	private static String UPDATEVIEW_4 = "\" action=\"";
 	private static String UPDATEVIEW_4_2 = "\" /><device id=\"";
 	private static String UPDATEVIEW_5 = SIGNIN_2;
+	private static String GETVIEWS_1 = SIGNUP_1;
+	private static String GETVIEWS_2 = "\" state=\"getviews\" version=\""+GVERSION+"\" />";
+	
 	
 	private static String PARTIAL_ALL = "<?xml version='1.0' encoding='UTF-8' ?><communication id=\""+ID+"\" state=\"partial\" version=\""+GVERSION+"\">"
 			+ "<device initialized=\"1\" type=\"0x7\" id=\"120:07:ff:000:ffeem\" visibility=\"i\"><location type=\"1\">obyvak</location><logging endabled=\"0\" /></device>"
@@ -130,7 +133,7 @@ public class XmlCreatorTest extends TestCase {
 	}
 
 	public void testSignIn(){
-		String result = XmlCreator.createSignIn(EMAIL, GTOKEN, false);
+		String result = XmlCreator.createSignIn(EMAIL, GTOKEN);
 		String goal = SIGNIN_1+EMAIL+SIGNIN_1_2+GTOKEN+SIGNIN_2;
 		
 		Log.i(TAG, "SignInTest1");
@@ -141,7 +144,7 @@ public class XmlCreatorTest extends TestCase {
 	}
 	
 	public void testSignUp(){
-		String result = XmlCreator.createSignUp(EMAIL, ID, GTOKEN, SERIAL, false);
+		/*String result = XmlCreator.createSignUp(EMAIL, ID, GTOKEN, SERIAL, false);
 		String goal = SIGNUP_1+ID+SIGNUP_2+SERIAL+SIGNUP_3_USER_OLD;
 		
 		Log.i(TAG, "SignUpTest1");
@@ -158,9 +161,9 @@ public class XmlCreatorTest extends TestCase {
 		if(!result.equals(goal))
 			Log.e(TAG, goal);
 		assertTrue("SignUpTest2: messages are not equal",result.equals(goal));
-		
-		result = XmlCreator.createSignUp(EMAIL, 0, GTOKEN, SERIAL, false);
-		goal = SIGNUP_1+0+SIGNUP_2+SERIAL+SIGNUP_3_EMAIL_1+EMAIL+SIGNUP_3_EMAIL_1_2+GTOKEN+SIGNUP_3_EMAIL_2;
+		*/
+		String result = XmlCreator.createSignUp(EMAIL, ID, GTOKEN, SERIAL, false);
+		String goal = SIGNUP_1+ID+SIGNUP_2+SERIAL+SIGNUP_3_EMAIL_1+EMAIL+SIGNUP_3_EMAIL_1_2+GTOKEN+SIGNUP_3_EMAIL_2;
 		
 		Log.i(TAG, "SignUpTest3");
 		Log.d(TAG, result);
@@ -347,6 +350,17 @@ public class XmlCreatorTest extends TestCase {
 		if(!result.equals(goal))
 			Log.e(TAG, goal);
 		assertTrue("UpdateViewTest1: messages are not equal",result.equals(goal));
+	}
+	
+	public void testGetViews(){
+		String result = XmlCreator.createGetViews(ID);
+		String goal = GETVIEWS_1+ID+GETVIEWS_2;
+		
+		Log.i(TAG, "GetViewsTest1");
+		Log.d(TAG, result);
+		if(!result.equals(goal))
+			Log.e(TAG, goal);
+		assertTrue("GetViewsTest1: messages are not equal",result.equals(goal));
 	}
 	
 	public void testPartial(){

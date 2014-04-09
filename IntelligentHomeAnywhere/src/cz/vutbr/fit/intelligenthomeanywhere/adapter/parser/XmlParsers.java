@@ -43,7 +43,7 @@ public class XmlParsers {
 	/**
 	 * Thats mean Android OS
 	 */
-	public static final String COM_VER = "1.0"; // wiki implemented 1.4 
+	public static final String COM_VER = "1.6"; // wiki implemented 1.6 
 	public static final String XML_VER = "1.0.0"; // actually about 1.1.0 :P
 	
 	/**
@@ -72,6 +72,7 @@ public class XmlParsers {
 	public static final String ADDCONACCOUNT = "addconaccount";
 	public static final String DELCONACCOUNT = "delconaccount";
 	public static final String CHANGECONACCOUNT = "changeconaccount";
+	public static final String VIEWSLIST = "viewslist";
 	
 	// end of states
 	public static final String ADAPTER = "adapter";
@@ -99,6 +100,8 @@ public class XmlParsers {
 	public static final String INIT_1 = "1";
 	public static final String INIT_0 = "0";
 	public static final String POSITIVEONE = "1";
+	public static final String ICON = "icon";
+	public static final String VIEW = "view";
 	
 	// exception
 	private static final String mComVerMisExcMessage = "Communication version mismatch.";
@@ -255,6 +258,9 @@ public class XmlParsers {
 		case eXML:
 			// Adapter
 			result.data = parseXml(mParser.getAttributeValue(ns, ROLE));
+			break;
+		case eVIEWSLIST:
+			result.data = parseViewsList();
 			break;
 		}
 		
@@ -549,6 +555,21 @@ public class XmlParsers {
 		return new FalseAnswer(additionalInfo, data);
 	}
 	
+	private static ArrayList<CustomViewPair> parseViewsList() throws XmlPullParserException, IOException{
+		mParser.nextTag();
+		mParser.require(XmlPullParser.START_TAG, ns, VIEW);
+		
+		ArrayList<CustomViewPair> result = new ArrayList<CustomViewPair>();
+		do {
+			result.add(new CustomViewPair(Integer.parseInt(mParser.getAttributeValue(ns, ICON)), mParser.getAttributeValue(ns, NAME)));
+			
+			mParser.nextTag();
+			
+		} while(mParser.nextTag() != XmlPullParser.END_TAG && !mParser.getName().equals(COM_ROOT));
+		
+		return result;
+	}
+	
 	/**
 	 * Skips whole element and sub-elements.
 	 * @throws XmlPullParserException
@@ -596,6 +617,8 @@ public class XmlParsers {
 			return STATES.eTRUE;
 		else if(state.equals(FALSE))
 			return STATES.eFALSE;
+		else if(state.equals(VIEWSLIST))
+			return STATES.eVIEWSLIST;
 		else
 			return STATES.eUNKNOWN;
 	}
@@ -639,7 +662,7 @@ public class XmlParsers {
 	private enum STATES{
 		eREADY, eNOTREGA, eNOTREGB,
 		eXML, ePARTIAL, eCONTENT, eCONACCOUNTLIST,
-		eTRUE, eFALSE, eRESIGN, eUNKNOWN
+		eTRUE, eFALSE, eRESIGN, eUNKNOWN, eVIEWSLIST
 	}
 	
 	/**

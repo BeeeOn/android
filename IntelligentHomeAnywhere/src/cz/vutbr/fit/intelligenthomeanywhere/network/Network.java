@@ -211,7 +211,7 @@ public class Network {
 		//FIXME: get google token somewhere - GetGoogleAuth.mToken
 		String googleToken = 54855555+"";
 			
-		String messageToSend = XmlCreator.createSignIn(userEmail, googleToken, true);
+		String messageToSend = XmlCreator.createSignIn(userEmail, googleToken);
 		
 		String result = startCommunication(messageToSend);
 		//ParsedMessage msg = XmlParsers.parseCommunication(result, false);

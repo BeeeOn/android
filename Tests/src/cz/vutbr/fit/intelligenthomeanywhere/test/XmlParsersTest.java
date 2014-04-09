@@ -13,6 +13,7 @@ import cz.vutbr.fit.intelligenthomeanywhere.User;
 import cz.vutbr.fit.intelligenthomeanywhere.adapter.Adapter;
 import cz.vutbr.fit.intelligenthomeanywhere.adapter.device.BaseDevice;
 import cz.vutbr.fit.intelligenthomeanywhere.adapter.parser.ContentRow;
+import cz.vutbr.fit.intelligenthomeanywhere.adapter.parser.CustomViewPair;
 import cz.vutbr.fit.intelligenthomeanywhere.adapter.parser.FalseAnswer;
 import cz.vutbr.fit.intelligenthomeanywhere.adapter.parser.ParsedMessage;
 import cz.vutbr.fit.intelligenthomeanywhere.adapter.parser.XmlParsers;
@@ -28,7 +29,7 @@ public class XmlParsersTest extends TestCase {
 //	private static String EMAIL = "testmail@domain.com";
 //	private static String GTOKEN = "9845658";
 	private static int ID = 425644;
-	private static String GVERSION = "1.0";
+	private static String GVERSION = "1.6";
 	//FIXME: length of serial???
 //	private static int SERIAL = 555645792;
 //	private static int ADAPTERID = SERIAL;
@@ -61,6 +62,12 @@ public class XmlParsersTest extends TestCase {
 	private static String CONACCOUNTLIST_3_4 = "\" gender=\"";
 	private static String CONACCOUNTLIST_4 = "\" />";
 	private static String CONACCOUNTLIST_END = CONTENT_END;
+	
+	private static String VIEWSLIST_1 = "<?xml version='1.0' encoding='UTF-8' ?><communication id=\""+ID+"\" state=\"viewslist\" version=\""+GVERSION+"\">";
+	private static String VIEWSLIST_2 = "<view name=\"";
+	private static String VIEWSLIST_3 = "\" icon=\"";
+	private static String VIEWSLIST_4 = "\" />";
+	private static String VIEWSLIST_END = CONTENT_END;
 	
 	private static String FALSE_1 = "<?xml version='1.0' encoding='UTF-8' ?><communication id=\""+ID+"\" state=\"false\" version=\""+GVERSION+"\" additionalinfo=\"";
 	private static String FALSE_1_2 = "\">";
@@ -130,6 +137,33 @@ public class XmlParsersTest extends TestCase {
 		} catch (Exception e) {
 			e.printStackTrace();
 			assertTrue("ReadyTest1: error",false);
+		}
+	}
+	
+	@SuppressWarnings("unchecked")
+	public void testViewsList(){
+		String xmlMessage = VIEWSLIST_1 + VIEWSLIST_2 + "jmeno_zobrazeni" + VIEWSLIST_3 + "1" + VIEWSLIST_4
+										+ VIEWSLIST_2 + "jiny_jmeno" + VIEWSLIST_3 + "2" + VIEWSLIST_4
+										+ VIEWSLIST_2 + "uplne_jiny_jmeno" + VIEWSLIST_3 + "3" + VIEWSLIST_4
+										+ VIEWSLIST_END;
+		String state = "viewslist";
+
+		Log.i(TAG, "ViewsListTest1");
+		
+		try {
+			ParsedMessage result = XmlParsers.parseCommunication(xmlMessage, false);
+			assertTrue("ViesListTest1: bad state", result.getState().equals(state));
+			Log.d(TAG, "Communication id: " + result.getSessionId());
+			
+			ArrayList<CustomViewPair> ViewsList = (ArrayList<CustomViewPair>) result.data;
+			for(CustomViewPair pair : ViewsList){
+				Log.d(TAG, "ViewsList: name: " + pair.getName());
+				Log.d(TAG, "ViesList: icon: " + pair.getIcon());
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			assertTrue("ViewsListTest1: error",false);
 		}
 	}
 	
@@ -453,7 +487,7 @@ public class XmlParsersTest extends TestCase {
 	
 	public void testPartial(){
 		String xmlMessage =
-				"<?xml version=\"1.0\" encoding=\"UTF-8\"?><communication version=\"1.0\" id=\""+ID+"\" state=\"partial\">"
+				"<?xml version=\"1.0\" encoding=\"UTF-8\"?><communication version=\"1.6\" id=\""+ID+"\" state=\"partial\">"
 				+	"<device initialized=\"1\" type=\"0x00\" id=\"120:00:FF:000:FFE\" visibility=\"I\">"
 				+		"<location type=\"1\">Obývací pokoj</location>"
 				+		"<name>Teplota u dverí</name>"
@@ -522,7 +556,7 @@ public class XmlParsersTest extends TestCase {
 
 	public void testXml(){
 		String xmlMessage =
-				"<?xml version=\"1.0\" encoding=\"UTF-8\"?><communication version=\"1.0\" id=\""+ID+"\" state=\"xml\" role=\"admin\">"
+				"<?xml version=\"1.0\" encoding=\"UTF-8\"?><communication version=\"1.6\" id=\""+ID+"\" state=\"xml\" role=\"admin\">"
 				+	"<adapter id=\"9999\">"
 				+		"<version>1.0.0</version>"
 				+		"<capabilities>"
