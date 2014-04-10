@@ -162,7 +162,7 @@ public class XmlCreatorTest extends TestCase {
 			Log.e(TAG, goal);
 		assertTrue("SignUpTest2: messages are not equal",result.equals(goal));
 		*/
-		String result = XmlCreator.createSignUp(EMAIL, ID, GTOKEN, SERIAL, false);
+		String result = XmlCreator.createSignUp(EMAIL, ID, GTOKEN, SERIAL);
 		String goal = SIGNUP_1+ID+SIGNUP_2+SERIAL+SIGNUP_3_EMAIL_1+EMAIL+SIGNUP_3_EMAIL_1_2+GTOKEN+SIGNUP_3_EMAIL_2;
 		
 		Log.i(TAG, "SignUpTest3");

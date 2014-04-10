@@ -545,6 +545,8 @@ public class XmlParsers {
 				data.put(keyEmail, valueRole);
 				mParser.nextTag();
 			}else{
+				if(mParser.getName().equals(COM_ROOT) && mParser.getEventType() == XmlPullParser.END_TAG)
+					break;
 				keyEmail = mParser.getName() + "#" + Integer.toString(unknownCounter);
 				data.put(keyEmail, null);
 				skip();

@@ -34,6 +34,7 @@ public class NetworkTest extends /*TestCase*/AndroidTestCase {
 
 	private static final String TAG = "NetworkTests";
 	private static final String USEREMAIL = "email@gmail.com";
+	private static final String SERIAL = "445558745";
 	
 	
 	/**
@@ -51,7 +52,7 @@ public class NetworkTest extends /*TestCase*/AndroidTestCase {
 	}
 	
 	public void testSignIn(){
-		
+		//tif(true)return;
 		String emails = "email";
 		
 		Network net = new Network(getContext());
@@ -64,6 +65,26 @@ public class NetworkTest extends /*TestCase*/AndroidTestCase {
 			Log.e(TAG, e.toString());
 			assertTrue("NetworkTest: " + e.toString() ,false);
 		} catch (CommunicationException e) {
+			e.printStackTrace();
+			Log.e(TAG, e.toString());
+			assertTrue("NetworkTest: " + e.toString() ,false);
+		}
+	}
+	
+	public void testSignUp(){
+		String emails = "email";
+		
+		Network net = new Network(getContext());
+		LoginActivity la = new LoginActivity();
+		new GetGoogleAuth(la, emails);
+		
+		try {
+			net.SignUp(USEREMAIL, SERIAL, 0);
+		} catch (CommunicationException e) {
+			e.printStackTrace();
+			Log.e(TAG, e.toString());
+			assertTrue("NetworkTest: " + e.toString() ,false);
+		} catch (NoConnectionException e) {
 			e.printStackTrace();
 			Log.e(TAG, e.toString());
 			assertTrue("NetworkTest: " + e.toString() ,false);

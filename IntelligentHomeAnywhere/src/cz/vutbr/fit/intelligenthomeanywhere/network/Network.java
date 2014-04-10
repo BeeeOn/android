@@ -51,6 +51,8 @@ import cz.vutbr.fit.intelligenthomeanywhere.exception.XmlVerMisException;
 public class Network {
 	
 	public static final String SIGNIN = "signin";
+	public static final String SIGNUP = "signup";
+	public static final String FALSE = "false";
 	public static final String TRUE = "true";
 	public static final String NOTREGA = "notreg-a";
 	public static final String NOTREGB = "notreg-b";
@@ -255,6 +257,39 @@ public class Network {
 		}
 			
 		return null;
+	}
+	
+	public boolean SignUp(String email, String serialNumber, int SessionId) throws CommunicationException, NoConnectionException{
+		if(!isAvailable())
+			throw new NoConnectionException();
+		
+		ParsedMessage msg;
+		
+		try {
+			String googleToken = GetGoogleAuth.getGetGoogleAuth().getToken();
+			
+			String messageToSend = XmlCreator.createSignUp(email, Integer.toString(SessionId), googleToken, serialNumber);
+			
+			String result = startCommunication(messageToSend);
+			
+			Log.d("IHA - Network", result);
+			
+			msg = XmlParsers.parseCommunication(result, false);
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new CommunicationException(e);
+		}
+		
+		if(msg.getSessionId() != 0 && msg.getState().equals(TRUE) && ((String)msg.data).equals(SIGNUP)){
+			Log.d("IHA - Network", msg.getState());
+			
+			ActualUser aUser = ActualUser.getActualUser();
+			aUser.setSessionId(Integer.toString(msg.getSessionId()));
+			
+			return true;
+		}else //FIXME: do something with false additional info (why not register)
+			return false;
 	}
 	
 }

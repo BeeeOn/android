@@ -143,10 +143,9 @@ public class XmlCreator {
 	 * @param id is 0 if is NOT signed in, non-zero otherwise 
 	 * @param gtoken token from google
 	 * @param serialNumber of new adapter
-	 * @param next if id is non-zero and user is signed in, that TRUE is using new Adapter, old otherwise
 	 * @return XML message
 	 */
-	public static String createSignUp(String email, String id, String gtoken, String serialNumber, boolean next){
+	public static String createSignUp(String email, String id, String gtoken, String serialNumber){
 		XmlSerializer serializer = Xml.newSerializer();
 		StringWriter writer = new StringWriter();
 		try{
@@ -184,8 +183,8 @@ public class XmlCreator {
 	 * @param next if id is non-zero and user is signed in, that TRUE is using new Adapter, old otherwise
 	 * @return XML message
 	 */
-	public static String createSignUp(String email, int id, String gtoken, int serialNumber, boolean next){
-		return createSignUp(email, Integer.toString(id), gtoken, Integer.toString(serialNumber), next);
+	public static String createSignUp(String email, int id, String gtoken, int serialNumber){
+		return createSignUp(email, Integer.toString(id), gtoken, Integer.toString(serialNumber));
 	}
 	
 	/**
