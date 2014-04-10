@@ -16,8 +16,11 @@ import org.xmlpull.v1.XmlPullParserException;
 
 import android.content.Context;
 import cz.vutbr.fit.intelligenthomeanywhere.exception.ComVerMisException;
+import cz.vutbr.fit.intelligenthomeanywhere.exception.CommunicationException;
 import cz.vutbr.fit.intelligenthomeanywhere.exception.NoConnectionException;
 import cz.vutbr.fit.intelligenthomeanywhere.exception.NotImplementedException;
+import cz.vutbr.fit.intelligenthomeanywhere.exception.NotRegAException;
+import cz.vutbr.fit.intelligenthomeanywhere.exception.NotRegBException;
 import cz.vutbr.fit.intelligenthomeanywhere.exception.XmlVerMisException;
 import cz.vutbr.fit.intelligenthomeanywhere.User;
 import cz.vutbr.fit.intelligenthomeanywhere.adapter.Adapter;
@@ -101,19 +104,12 @@ public final class Controller {
 	 * Login last logged in user (authenticate on server).
 	 * 
 	 * @return true on success, false if there is no last user or otherwise 
-	 * @throws XmlVerMisException 
-	 * @throws ComVerMisException 
-	 * @throws XmlPullParserException 
-	 * @throws IOException 
 	 * @throws NoConnectionException 
-	 * @throws UnknownHostException 
-	 * @throws NoSuchAlgorithmException 
-	 * @throws KeyStoreException 
-	 * @throws CertificateException 
-	 * @throws SSLHandshakeException 
-	 * @throws KeyManagementException 
+	 * @throws NotRegBException 
+	 * @throws NotRegAException 
+	 * @throws CommunicationException 
 	 */
-	public boolean login() throws KeyManagementException, SSLHandshakeException, CertificateException, KeyStoreException, NoSuchAlgorithmException, UnknownHostException, NoConnectionException, IOException, XmlPullParserException, ComVerMisException, XmlVerMisException {
+	public boolean login() throws NotRegAException, NotRegBException, NoConnectionException, CommunicationException {
 		User lastUser = mPersistence.loadLastUser();
 		
 		if (lastUser != null)
@@ -127,19 +123,12 @@ public final class Controller {
 	 * 
 	 * @param userId
 	 * @return true on success, false otherwise
-	 * @throws XmlVerMisException 
-	 * @throws ComVerMisException 
-	 * @throws XmlPullParserException 
-	 * @throws IOException 
 	 * @throws NoConnectionException 
-	 * @throws UnknownHostException 
-	 * @throws NoSuchAlgorithmException 
-	 * @throws KeyStoreException 
-	 * @throws CertificateException 
-	 * @throws SSLHandshakeException 
-	 * @throws KeyManagementException 
+	 * @throws NotRegBException 
+	 * @throws NotRegAException 
+	 * @throws CommunicationException  
 	 */
-	public boolean login(String email) throws KeyManagementException, SSLHandshakeException, CertificateException, KeyStoreException, NoSuchAlgorithmException, UnknownHostException, NoConnectionException, IOException, XmlPullParserException, ComVerMisException, XmlVerMisException {
+	public boolean login(String email) throws NotRegAException, NotRegBException, NoConnectionException, CommunicationException {
 		if (!mNetwork.isAvailable())
 			return false; // TODO: throw proper exception
 

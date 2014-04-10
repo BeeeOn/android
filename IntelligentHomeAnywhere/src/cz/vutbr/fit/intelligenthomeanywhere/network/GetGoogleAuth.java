@@ -1,4 +1,4 @@
-package cz.vutbr.fit.intelligenthomeanywhere;
+package cz.vutbr.fit.intelligenthomeanywhere.network;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -35,15 +35,72 @@ import cz.vutbr.fit.intelligenthomeanywhere.activity.LoginActivity;
  */
 public class GetGoogleAuth extends AsyncTask<Void, Void, String> {
 	private static final String TAG = "AUTH";
+	private static GetGoogleAuth mThis;
 	private LoginActivity mActivity;
 	private String mEmail;
 	private String mToken;
 	private String mUserName;
+	
+	/**
+	 * @return the mEmail
+	 */
+	public String getEmail() {
+		return mEmail;
+	}
+
+	/**
+	 * @param mEmail the mEmail to set
+	 */
+	public void setEmail(String mEmail) {
+		this.mEmail = mEmail;
+	}
+
+	/**
+	 * @return the mUserName
+	 */
+	public String getUserName() {
+		return mUserName;
+	}
+
+	/**
+	 * @param mUserName the mUserName to set
+	 */
+	public void setUserName(String mUserName) {
+		this.mUserName = mUserName;
+	}
+
+	/**
+	 * @return the mPicture
+	 */
+	public String getPicture() {
+		return mPicture;
+	}
+
+	/**
+	 * @param mPicture the mPicture to set
+	 */
+	public void setPicture(String mPicture) {
+		this.mPicture = mPicture;
+	}
+
 	private String mPicture;
+	
+	/**
+	 * Singleton-like method, but not initializing
+	 * @return static object
+	 * @throws Exception
+	 */
+	public static GetGoogleAuth getGetGoogleAuth() throws Exception{
+		if(mThis != null){
+			return mThis;
+		}else
+			throw new Exception("Not initialized");
+	}
 	
 	public GetGoogleAuth(LoginActivity mActivity, String mEmail) {
 		this.mActivity = mActivity;
 		this.mEmail = mEmail;
+		this.mThis = this;
 	}
 	
 	@Override
@@ -108,6 +165,7 @@ public class GetGoogleAuth extends AsyncTask<Void, Void, String> {
 			Log.d(TAG, "Token: "+result);
 			Log.d(TAG, "User name: "+this.mUserName);
 			Log.d(TAG, "Picture url:"+mPicture);
+			mToken = result;
 			/*
 			if(mPicture != null) {
 				// Set User profile picture if is set

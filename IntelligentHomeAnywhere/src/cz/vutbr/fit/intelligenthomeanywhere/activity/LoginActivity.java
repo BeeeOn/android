@@ -31,12 +31,17 @@ import com.google.android.gms.common.GooglePlayServicesUtil;
 
 import cz.vutbr.fit.intelligenthomeanywhere.Constants;
 import cz.vutbr.fit.intelligenthomeanywhere.DemoData;
-import cz.vutbr.fit.intelligenthomeanywhere.GetGoogleAuth;
 import cz.vutbr.fit.intelligenthomeanywhere.R;
 import cz.vutbr.fit.intelligenthomeanywhere.controller.Controller;
 import cz.vutbr.fit.intelligenthomeanywhere.exception.ComVerMisException;
+import cz.vutbr.fit.intelligenthomeanywhere.exception.CommunicationException;
 import cz.vutbr.fit.intelligenthomeanywhere.exception.NoConnectionException;
+import cz.vutbr.fit.intelligenthomeanywhere.exception.NotImplementedException;
+import cz.vutbr.fit.intelligenthomeanywhere.exception.NotRegAException;
+import cz.vutbr.fit.intelligenthomeanywhere.exception.NotRegBException;
 import cz.vutbr.fit.intelligenthomeanywhere.exception.XmlVerMisException;
+import cz.vutbr.fit.intelligenthomeanywhere.network.ActualUser;
+import cz.vutbr.fit.intelligenthomeanywhere.network.GetGoogleAuth;
 
 /**
  * First sign in class, controls first activity
@@ -70,51 +75,28 @@ public class LoginActivity extends Activity {
 		btnGoogle.setOnClickListener(new OnClickListener(){
 			@Override
 			public void onClick(View v) {
+
 				try {
 					getGoogleAccessFromServer(v);
-				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
+				} catch (NotRegAException e) {
+					Toast.makeText(v.getContext(), "Not registered", Toast.LENGTH_LONG).show();
 					e.printStackTrace();
-				} catch (ExecutionException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (TimeoutException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (KeyManagementException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (SSLHandshakeException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (CertificateException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (KeyStoreException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (NoSuchAlgorithmException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (UnknownHostException e) {
-					// TODO Auto-generated catch block
+				} catch (NotRegBException e) {
+					Toast.makeText(v.getContext(), "Not registered", Toast.LENGTH_LONG).show();
 					e.printStackTrace();
 				} catch (NoConnectionException e) {
-					// TODO Auto-generated catch block
+					Toast.makeText(v.getContext(), "No Connection to server", Toast.LENGTH_LONG).show();
 					e.printStackTrace();
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
+				} catch (CommunicationException e) {
+					Toast.makeText(v.getContext(), "Ooops, something went wrong", Toast.LENGTH_LONG).show();
 					e.printStackTrace();
-				} catch (XmlPullParserException e) {
-					// TODO Auto-generated catch block
+				} catch(NotImplementedException e){
 					e.printStackTrace();
-				} catch (ComVerMisException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (XmlVerMisException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+					Toast.makeText(v.getContext(), "Not Implemented yet", Toast.LENGTH_LONG).show();
 				}
+				
+
+
 			}
 		});
 		btnMojeID.setOnClickListener(new OnClickListener(){
@@ -145,37 +127,16 @@ public class LoginActivity extends Activity {
 					//intent.putExtra(name, value);
 					this.startActivity(intent);
 				}
-			} catch (KeyManagementException e) {
+			} catch (NotRegAException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
-			} catch (SSLHandshakeException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (CertificateException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (KeyStoreException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (NoSuchAlgorithmException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (UnknownHostException e) {
+			} catch (NotRegBException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} catch (NoConnectionException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (XmlPullParserException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (ComVerMisException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (XmlVerMisException e) {
+			} catch (CommunicationException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
@@ -187,22 +148,12 @@ public class LoginActivity extends Activity {
 	/**
 	 * 
 	 * @return
-	 * @throws TimeoutException 
-	 * @throws ExecutionException 
-	 * @throws InterruptedException 
-	 * @throws XmlVerMisException 
-	 * @throws ComVerMisException 
-	 * @throws XmlPullParserException 
-	 * @throws IOException 
+	 * @throws NotRegBException 
+	 * @throws NotRegAException 
+	 * @throws CommunicationException 
 	 * @throws NoConnectionException 
-	 * @throws UnknownHostException 
-	 * @throws NoSuchAlgorithmException 
-	 * @throws KeyStoreException 
-	 * @throws CertificateException 
-	 * @throws SSLHandshakeException 
-	 * @throws KeyManagementException 
 	 */
-	private boolean getGoogleAccessFromServer(View v) throws InterruptedException, ExecutionException, TimeoutException, KeyManagementException, SSLHandshakeException, CertificateException, KeyStoreException, NoSuchAlgorithmException, UnknownHostException, NoConnectionException, IOException, XmlPullParserException, ComVerMisException, XmlVerMisException{
+	private boolean getGoogleAccessFromServer(View v) throws NotRegAException, NotRegBException, NoConnectionException, CommunicationException{
 		//TODO: get access via google
 		Log.d(TAG, "BEG: Google access func");
 		if(GooglePlayServicesUtil.isGooglePlayServicesAvailable(getBaseContext()) == ConnectionResult.SUCCESS) {
@@ -212,6 +163,18 @@ public class LoginActivity extends Activity {
 			if(Accounts.length == 1) {
 				Log.d(TAG, "On this device is one account");
 				this.acEmail = Accounts[0];
+				
+				new GetGoogleAuth(this, this.acEmail).execute();
+				GetGoogleAuth ggAuth = null;
+				try {
+					ggAuth = GetGoogleAuth.getGetGoogleAuth();
+					ActualUser AUser = new ActualUser(ggAuth.getUserName(), ggAuth.getEmail(), null, null);
+					
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+				
+				
 				
 				if(this.mController.login(this.acEmail)) {
 					Intent intent = new Intent(this, LocationScreenActivity.class);

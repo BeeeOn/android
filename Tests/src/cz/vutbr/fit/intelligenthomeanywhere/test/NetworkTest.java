@@ -14,12 +14,16 @@ import javax.net.ssl.SSLHandshakeException;
 
 import org.xmlpull.v1.XmlPullParserException;
 
+import android.accounts.AccountManager;
 import android.test.AndroidTestCase;
 import android.test.InstrumentationTestCase;
 import android.util.Log;
+import cz.vutbr.fit.intelligenthomeanywhere.activity.LoginActivity;
 import cz.vutbr.fit.intelligenthomeanywhere.exception.ComVerMisException;
+import cz.vutbr.fit.intelligenthomeanywhere.exception.CommunicationException;
 import cz.vutbr.fit.intelligenthomeanywhere.exception.NoConnectionException;
 import cz.vutbr.fit.intelligenthomeanywhere.exception.XmlVerMisException;
+import cz.vutbr.fit.intelligenthomeanywhere.network.GetGoogleAuth;
 import cz.vutbr.fit.intelligenthomeanywhere.network.Network;
 
 /**
@@ -47,54 +51,19 @@ public class NetworkTest extends /*TestCase*/AndroidTestCase {
 	}
 	
 	public void testSignIn(){
+		
+		String emails = "email";
+		
 		Network net = new Network(getContext());
+		LoginActivity la = new LoginActivity();
+		new GetGoogleAuth(la, emails);
 		try {
 			net.signIn(USEREMAIL);
-		} catch (KeyManagementException e) {
-			e.printStackTrace();
-			Log.e(TAG, e.toString());
-			assertTrue("NetworkTest: " + e.toString() ,false);
-		} catch (SSLHandshakeException e) {
-			e.printStackTrace();
-			Log.e(TAG, e.toString());
-			assertTrue("NetworkTest: " + e.toString() ,false);
-		} catch (CertificateException e) {
-			e.printStackTrace();
-			Log.e(TAG, e.toString());
-			assertTrue("NetworkTest: " + e.toString() ,false);
-		} catch (KeyStoreException e) {
-			e.printStackTrace();
-			Log.e(TAG, e.toString());
-			assertTrue("NetworkTest: " + e.toString() ,false);
-		} catch (NoSuchAlgorithmException e) {
-			e.printStackTrace();
-			Log.e(TAG, e.toString());
-			assertTrue("NetworkTest: " + e.toString() ,false);
-		} catch (UnknownHostException e) {
-			e.printStackTrace();
-			Log.e(TAG, e.toString());
-			assertTrue("NetworkTest: " + e.toString() ,false);
 		} catch (NoConnectionException e) {
 			e.printStackTrace();
 			Log.e(TAG, e.toString());
 			assertTrue("NetworkTest: " + e.toString() ,false);
-		} catch (IOException e) {
-			e.printStackTrace();
-			Log.e(TAG, e.toString());
-			assertTrue("NetworkTest: " + e.toString() ,false);
-		} catch (XmlPullParserException e) {
-			e.printStackTrace();
-			Log.e(TAG, e.toString());
-			assertTrue("NetworkTest: " + e.toString() ,false);
-		} catch (ComVerMisException e) {
-			e.printStackTrace();
-			Log.e(TAG, e.toString());
-			assertTrue("NetworkTest: " + e.toString() ,false);
-		} catch (XmlVerMisException e) {
-			e.printStackTrace();
-			Log.e(TAG, e.toString());
-			assertTrue("NetworkTest: " + e.toString() ,false);
-		} catch(Exception e){
+		} catch (CommunicationException e) {
 			e.printStackTrace();
 			Log.e(TAG, e.toString());
 			assertTrue("NetworkTest: " + e.toString() ,false);

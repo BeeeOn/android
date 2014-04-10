@@ -35,8 +35,11 @@ import cz.vutbr.fit.intelligenthomeanywhere.adapter.parser.ParsedMessage;
 import cz.vutbr.fit.intelligenthomeanywhere.adapter.parser.XmlCreator;
 import cz.vutbr.fit.intelligenthomeanywhere.adapter.parser.XmlParsers;
 import cz.vutbr.fit.intelligenthomeanywhere.exception.ComVerMisException;
+import cz.vutbr.fit.intelligenthomeanywhere.exception.CommunicationException;
 import cz.vutbr.fit.intelligenthomeanywhere.exception.NoConnectionException;
 import cz.vutbr.fit.intelligenthomeanywhere.exception.NotImplementedException;
+import cz.vutbr.fit.intelligenthomeanywhere.exception.NotRegAException;
+import cz.vutbr.fit.intelligenthomeanywhere.exception.NotRegBException;
 import cz.vutbr.fit.intelligenthomeanywhere.exception.XmlVerMisException;
 
 /**
@@ -46,6 +49,11 @@ import cz.vutbr.fit.intelligenthomeanywhere.exception.XmlVerMisException;
  * @author Robyer
  */
 public class Network {
+	
+	public static final String SIGNIN = "signin";
+	public static final String TRUE = "true";
+	public static final String NOTREGA = "notreg-a";
+	public static final String NOTREGB = "notreg-b";
 	
 	/**
 	 * Name of CA certificate located in assets
@@ -199,25 +207,53 @@ public class Network {
 	    return activeNetworkInfo != null && activeNetworkInfo.isConnected();
 	}
 
-	public User signIn(String userEmail)
-			throws NoConnectionException, KeyManagementException, SSLHandshakeException,
-				  	CertificateException, KeyStoreException, NoSuchAlgorithmException,
-				  	UnknownHostException, IOException, XmlPullParserException,
-				  	ComVerMisException, XmlVerMisException 
-	{
+	/**
+	 * Method signIn user given by its email to server, BUT before calling must call GetGoogleAuth to get googleToken in it and Init ActualUser
+	 * @param userEmail of current user
+	 * @return ActualUser
+	 * @throws NoConnectionException if there is no Internet connection
+	 * @throws CommunicationException if there is some problem with certificate, timeout, or other communication problem
+	 * @throws NotRegAException if this user is not registered on server and on server is NO FREE ADAPTER (without its lord)
+	 * @throws NotRegBException if this user is not registered on the server but there is FREE ADAPTER
+	 */
+	public ActualUser signIn(String userEmail) throws NoConnectionException, CommunicationException, NotRegAException, NotRegBException{
+		
 		if(!isAvailable())
 			throw new NoConnectionException();
 		
-		//FIXME: get google token somewhere - GetGoogleAuth.mToken
-		String googleToken = 54855555+"";
+		ParsedMessage msg;
+		
+		try {
+			String googleToken = GetGoogleAuth.getGetGoogleAuth().getToken();
 			
-		String messageToSend = XmlCreator.createSignIn(userEmail, googleToken);
+			String messageToSend = XmlCreator.createSignIn(userEmail, googleToken);
+			
+			String result = startCommunication(messageToSend);
+			
+			Log.d("IHA - Network", result);
+			
+			msg = XmlParsers.parseCommunication(result, false);
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new CommunicationException(e);
+		}
 		
-		String result = startCommunication(messageToSend);
-		//ParsedMessage msg = XmlParsers.parseCommunication(result, false);
-		
-		Log.d("IHA - Network", result);
-		
+		if(msg.getSessionId() != 0 && msg.getState().equals(TRUE) && ((String)msg.data).equals(SIGNIN)){
+			Log.d("IHA - Network", msg.getState());
+			
+			ActualUser aUser = ActualUser.getActualUser();
+			aUser.setSessionId(Integer.toString(msg.getSessionId()));
+			
+			return aUser;
+		}
+		if(msg.getState().equals(NOTREGA)){
+			throw new NotRegAException();
+		}
+		if(msg.getState().equals(NOTREGB)){
+			throw new NotRegBException();
+		}
+			
 		return null;
 	}
 	
