@@ -17,6 +17,7 @@ import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.app.Activity;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -164,10 +165,12 @@ public class LoginActivity extends Activity {
 				Log.d(TAG, "On this device is one account");
 				this.acEmail = Accounts[0];
 				
-				new GetGoogleAuth(this, this.acEmail).execute();
+				new GetGoogleAuth(this, this.acEmail);
 				GetGoogleAuth ggAuth = null;
 				try {
 					ggAuth = GetGoogleAuth.getGetGoogleAuth();
+					ggAuth.execute();
+					//while(ggAuth.getStatus() != AsyncTask.Status.FINISHED);
 					ActualUser AUser = new ActualUser(ggAuth.getUserName(), ggAuth.getEmail(), null, null);
 					
 				} catch (Exception e) {
@@ -175,13 +178,37 @@ public class LoginActivity extends Activity {
 				}
 				
 				
-				
-				if(this.mController.login(this.acEmail)) {
+				new Thread(new Runnable() {
+					@Override
+					public void run() {
+						try {
+							mController.login(acEmail);
+						} catch (NotRegAException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						} catch (NotRegBException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						} catch (NoConnectionException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						} catch (CommunicationException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						} catch (NotImplementedException e){
+							e.printStackTrace();
+							//Toast.makeText(getApplicationContext(), "Not implemented yet", Toast.LENGTH_LONG).show();
+						}
+						
+					}
+				}).start();
+				//FIXME: implement this in upper thread and notify gui thread somehow
+				/*if(this.mController.login(this.acEmail)) {
 					Intent intent = new Intent(this, LocationScreenActivity.class);
 					intent.putExtra(Constants.LOGIN, Constants.LOGIN_DEMO);
 					//intent.putExtra(name, value);
 					this.startActivity(intent);
-	            }
+	            }*/
 				// Get acces token
 				//new GetGoogleAuth(this, this.acEmail).execute();
 			}

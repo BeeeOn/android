@@ -485,6 +485,7 @@ public class XmlParsersTest extends TestCase {
 		}
 	}
 	
+	@SuppressWarnings("unchecked")
 	public void testPartial(){
 		String xmlMessage =
 				"<?xml version=\"1.0\" encoding=\"UTF-8\"?><communication version=\"1.6\" id=\""+ID+"\" state=\"partial\">"
@@ -558,7 +559,7 @@ public class XmlParsersTest extends TestCase {
 		String xmlMessage =
 				"<?xml version=\"1.0\" encoding=\"UTF-8\"?><communication version=\"1.6\" id=\""+ID+"\" state=\"xml\" role=\"admin\">"
 				+	"<adapter id=\"9999\">"
-				+		"<version>1.0.0</version>"
+				+		"<version>1.0.1</version>"
 				+		"<capabilities>"
 				+			"<device initialized=\"1\" type=\"0x00\" id=\"120:00:FF:000:FFE\" visibility=\"I\">"
 				+				"<location type=\"1\">Obývací pokoj</location>"

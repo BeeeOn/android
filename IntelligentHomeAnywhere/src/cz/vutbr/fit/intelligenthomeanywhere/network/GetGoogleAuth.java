@@ -9,23 +9,15 @@ import java.net.URL;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.util.Log;
-import android.view.Gravity;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.gms.auth.GoogleAuthUtil;
 import com.google.android.gms.auth.UserRecoverableAuthException;
 
-import cz.vutbr.fit.intelligenthomeanywhere.activity.LocationScreenActivity;
 import cz.vutbr.fit.intelligenthomeanywhere.activity.LoginActivity;
 
 /**
@@ -100,7 +92,7 @@ public class GetGoogleAuth extends AsyncTask<Void, Void, String> {
 	public GetGoogleAuth(LoginActivity mActivity, String mEmail) {
 		this.mActivity = mActivity;
 		this.mEmail = mEmail;
-		this.mThis = this;
+		GetGoogleAuth.mThis = this;
 	}
 	
 	@Override
@@ -215,6 +207,10 @@ public class GetGoogleAuth extends AsyncTask<Void, Void, String> {
 		}
 	}
 	
+	public void setDebugToken(String token){
+		mToken = token;
+	}
+	
 	/****************************************************************************************/
 	/* Prevzato z SDK - EXTRAS - SAMPLE - AUTH  											*/
 	/****************************************************************************************/
@@ -275,7 +271,8 @@ public class GetGoogleAuth extends AsyncTask<Void, Void, String> {
       return (!result) ? profile.getString("picture") : null;
     }
     
-    private void fetchPictureFromProfileServer(String urlPicture, ImageView imageView) throws IOException, JSONException {
+    @SuppressWarnings("unused")
+	private void fetchPictureFromProfileServer(String urlPicture, ImageView imageView) throws IOException, JSONException {
     	try {
     		URL imageURL = new URL(urlPicture);         
             HttpURLConnection connection = (HttpURLConnection) imageURL

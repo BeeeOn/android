@@ -43,8 +43,8 @@ public class XmlParsers {
 	/**
 	 * Thats mean Android OS
 	 */
-	public static final String COM_VER = "1.6"; // wiki implemented 1.6 
-	public static final String XML_VER = "1.0.0"; // actually about 1.1.0 :P
+	public static final String COM_VER = "1.6"; 
+	public static final String XML_VER = "1.0.1";
 	
 	/**
 	 * NameSpace
@@ -369,7 +369,7 @@ public class XmlParsers {
 			
 			mParser.nextTag();
 			
-		}while(mParser.nextTag() != XmlPullParser.END_TAG && mParser.getName().equals(COM_ROOT));
+		}while(mParser.nextTag() != XmlPullParser.END_TAG && !mParser.getName().equals(COM_ROOT));
 		
 		return result;
 	}

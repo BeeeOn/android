@@ -15,6 +15,7 @@ import java.security.NoSuchAlgorithmException;
 import java.security.cert.Certificate;
 import java.security.cert.CertificateException;
 import java.security.cert.CertificateFactory;
+import java.util.ArrayList;
 
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.HttpsURLConnection;
@@ -24,23 +25,20 @@ import javax.net.ssl.SSLSession;
 import javax.net.ssl.SSLSocket;
 import javax.net.ssl.TrustManagerFactory;
 
-import org.xmlpull.v1.XmlPullParserException;
-
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.util.Log;
-import cz.vutbr.fit.intelligenthomeanywhere.User;
+import cz.vutbr.fit.intelligenthomeanywhere.activity.LoginActivity;
+import cz.vutbr.fit.intelligenthomeanywhere.adapter.Adapter;
 import cz.vutbr.fit.intelligenthomeanywhere.adapter.parser.ParsedMessage;
 import cz.vutbr.fit.intelligenthomeanywhere.adapter.parser.XmlCreator;
 import cz.vutbr.fit.intelligenthomeanywhere.adapter.parser.XmlParsers;
-import cz.vutbr.fit.intelligenthomeanywhere.exception.ComVerMisException;
 import cz.vutbr.fit.intelligenthomeanywhere.exception.CommunicationException;
 import cz.vutbr.fit.intelligenthomeanywhere.exception.NoConnectionException;
 import cz.vutbr.fit.intelligenthomeanywhere.exception.NotImplementedException;
 import cz.vutbr.fit.intelligenthomeanywhere.exception.NotRegAException;
 import cz.vutbr.fit.intelligenthomeanywhere.exception.NotRegBException;
-import cz.vutbr.fit.intelligenthomeanywhere.exception.XmlVerMisException;
 
 /**
  * Network service that handles communication with server.
@@ -56,6 +54,9 @@ public class Network {
 	public static final String TRUE = "true";
 	public static final String NOTREGA = "notreg-a";
 	public static final String NOTREGB = "notreg-b";
+	public static final String READY = "ready";
+	public static final String RESIGN = "resign";
+	public static final String XML = "xml";
 	
 	/**
 	 * Name of CA certificate located in assets
@@ -226,7 +227,11 @@ public class Network {
 		ParsedMessage msg;
 		
 		try {
-			String googleToken = GetGoogleAuth.getGetGoogleAuth().getToken();
+			String googleToken;
+			
+			do{
+				googleToken = GetGoogleAuth.getGetGoogleAuth().getToken();
+			}while(googleToken.length() < 1);
 			
 			String messageToSend = XmlCreator.createSignIn(userEmail, googleToken);
 			
@@ -246,6 +251,7 @@ public class Network {
 			
 			ActualUser aUser = ActualUser.getActualUser();
 			aUser.setSessionId(Integer.toString(msg.getSessionId()));
+			mSessionId = msg.getSessionId();
 			
 			return aUser;
 		}
@@ -259,14 +265,27 @@ public class Network {
 		return null;
 	}
 	
-	public boolean SignUp(String email, String serialNumber, int SessionId) throws CommunicationException, NoConnectionException{
+	/**
+	 * Method sign user up to adapter with its email, serial number of adapter (user is in role superuser)
+	 * @param email of registering user
+	 * @param serialNumber number of adapter to register
+	 * @param SessionId if is ID == 0 then needed google token, then the user is switch to work with new adapter, otherwise work with old
+	 * @return true if everything goes well, false otherwise
+	 * @throws CommunicationException
+	 * @throws NoConnectionException
+	 */
+	public boolean signUp(String email, String serialNumber, int SessionId) throws CommunicationException, NoConnectionException{
 		if(!isAvailable())
 			throw new NoConnectionException();
 		
 		ParsedMessage msg;
 		
 		try {
-			String googleToken = GetGoogleAuth.getGetGoogleAuth().getToken();
+			String googleToken;
+			
+			do{
+				googleToken = GetGoogleAuth.getGetGoogleAuth().getToken();
+			}while(googleToken.length() < 1);
 			
 			String messageToSend = XmlCreator.createSignUp(email, Integer.toString(SessionId), googleToken, serialNumber);
 			
@@ -291,5 +310,103 @@ public class Network {
 		}else //FIXME: do something with false additional info (why not register)
 			return false;
 	}
+	
+	/**
+	 * Method ask for list of adapters. User has to be sign in before
+	 * @return list of adapters or null
+	 * @throws NoConnectionException
+	 * @throws CommunicationException
+	 */
+	@SuppressWarnings("unchecked")
+	public ArrayList<Adapter> getAdapters() throws NoConnectionException, CommunicationException{
+		if(!isAvailable())
+			throw new NoConnectionException();
+		
+		ParsedMessage msg;
+		
+		try {
+			String messageToSend = XmlCreator.createGetAdapters(mSessionId);
+			
+			String result = startCommunication(messageToSend);
+			
+			Log.d("IHA - Network", result);
+			
+			msg = XmlParsers.parseCommunication(result, false);
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new CommunicationException(e);
+		}
+		
+		if(msg.getState().equals(READY)){
+			Log.d("IHA - Network", msg.getState());
+			
+			return (ArrayList<Adapter>) msg.data;
+		}else if(msg.getState().equals(RESIGN)){
+			//TODO: maybe use diffrenD way to resign, case stopping of thread, manage this after implement in the controler
+			try {
+				GetGoogleAuth.getGetGoogleAuth().execute();
+			} catch (Exception e) {
+				e.printStackTrace();
+				String tmp = null;
+				new GetGoogleAuth(new LoginActivity(), tmp).execute();
+				//return null;
+			}
+			signIn(ActualUser.getActualUser().getEmail());
+			return getAdapters();
+		}else
+			//FIXME: do something with false additional info (why not register)
+			return null;
+	}
+	
+	/**
+	 * Method as for whole adapter data
+	 * @param adapterId of wanted adapter
+	 * @return Adapter
+	 * @throws NoConnectionException
+	 * @throws CommunicationException
+	 */
+	public Adapter init(String adapterId) throws NoConnectionException, CommunicationException{
+		if(!isAvailable())
+			throw new NoConnectionException();
+		
+		ParsedMessage msg;
+		
+		try {
+			String messageToSend = XmlCreator.createInit(Integer.toString(mSessionId), adapterId);
+			
+			String result = startCommunication(messageToSend);
+			
+			Log.d("IHA - Network", result);
+			
+			msg = XmlParsers.parseCommunication(result, false);
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new CommunicationException(e);
+		}
+		
+		if(msg.getState().equals(XML)){
+			Log.d("IHA - Network", msg.getState());
+			
+			return (Adapter) msg.data;
+		}else if(msg.getState().equals(RESIGN)){
+			//TODO: maybe use diffrenD way to resign, case stopping of thread, manage this after implement in the controler
+			try {
+				GetGoogleAuth.getGetGoogleAuth().execute();
+			} catch (Exception e) {
+				e.printStackTrace();
+				String tmp = null;
+				new GetGoogleAuth(new LoginActivity(), tmp).execute();
+				//return null;
+			}
+			signIn(ActualUser.getActualUser().getEmail());
+			return init(adapterId);
+		}else
+			//FIXME: do something with false additional info (why not register)
+			return null;
+	}
+	
+	
 	
 }
