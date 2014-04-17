@@ -16,6 +16,7 @@ import java.security.cert.Certificate;
 import java.security.cert.CertificateException;
 import java.security.cert.CertificateFactory;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.HttpsURLConnection;
@@ -29,8 +30,12 @@ import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.util.Log;
+import cz.vutbr.fit.intelligenthomeanywhere.User;
 import cz.vutbr.fit.intelligenthomeanywhere.activity.LoginActivity;
 import cz.vutbr.fit.intelligenthomeanywhere.adapter.Adapter;
+import cz.vutbr.fit.intelligenthomeanywhere.adapter.device.BaseDevice;
+import cz.vutbr.fit.intelligenthomeanywhere.adapter.parser.ContentRow;
+import cz.vutbr.fit.intelligenthomeanywhere.adapter.parser.CustomViewPair;
 import cz.vutbr.fit.intelligenthomeanywhere.adapter.parser.ParsedMessage;
 import cz.vutbr.fit.intelligenthomeanywhere.adapter.parser.XmlCreator;
 import cz.vutbr.fit.intelligenthomeanywhere.adapter.parser.XmlParsers;
@@ -57,6 +62,9 @@ public class Network {
 	public static final String READY = "ready";
 	public static final String RESIGN = "resign";
 	public static final String XML = "xml";
+	public static final String PARTIAL = "partial";
+	public static final String CONTENT = "content";
+	public static final String VIEWSLIST = "viewslist";
 	
 	/**
 	 * Name of CA certificate located in assets
@@ -355,12 +363,12 @@ public class Network {
 			signIn(ActualUser.getActualUser().getEmail());
 			return getAdapters();
 		}else
-			//FIXME: do something with false additional info (why not register)
+			//FIXME: do something with false additional info (why not send adapters)
 			return null;
 	}
 	
 	/**
-	 * Method as for whole adapter data
+	 * Method ask for whole adapter data
 	 * @param adapterId of wanted adapter
 	 * @return Adapter
 	 * @throws NoConnectionException
@@ -403,10 +411,630 @@ public class Network {
 			signIn(ActualUser.getActualUser().getEmail());
 			return init(adapterId);
 		}else
-			//FIXME: do something with false additional info (why not register)
+			//FIXME: do something with false additional info (why not init)
 			return null;
 	}
 	
+	/**
+	 * Method change adapter id
+	 * @param oldId id to be changed
+	 * @param newId new id
+	 * @return true if change has been successfully
+	 * @throws NoConnectionException
+	 * @throws CommunicationException
+	 */
+
+	public boolean reInit(String oldId, String newId) throws NoConnectionException, CommunicationException{
+		//TODO: test
+		if(!isAvailable())
+			throw new NoConnectionException();
+		
+		ParsedMessage msg;
+		
+		try {
+			String messageToSend = XmlCreator.createReInit(Integer.toString(mSessionId), oldId, newId);
+			
+			String result = startCommunication(messageToSend);
+			
+			Log.d("IHA - Network", result);
+			
+			msg = XmlParsers.parseCommunication(result, false);
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new CommunicationException(e);
+		}
+		
+		if(msg.getState().equals(TRUE)){
+			Log.d("IHA - Network", msg.getState());
+			
+			return true;
+			
+		}else if(msg.getState().equals(RESIGN)){
+			//TODO: maybe use diffrenD way to resign, case stopping of thread, manage this after implement in the controler
+			try {
+				GetGoogleAuth.getGetGoogleAuth().execute();
+			} catch (Exception e) {
+				e.printStackTrace();
+				String tmp = null;
+				new GetGoogleAuth(new LoginActivity(), tmp).execute();
+				//return null;
+			}
+			signIn(ActualUser.getActualUser().getEmail());
+			return reInit(oldId, newId);
+		}else
+			//FIXME: do something with false additional info (why not register)
+			return false;
+	}
 	
+	/**
+	 * Method send updated fields of devices
+	 * @param devices
+	 * @return true if everything goes well, false otherwise
+	 * @throws NoConnectionException 
+	 * @throws CommunicationException 
+	 */
+	public boolean partial(ArrayList<BaseDevice> devices) throws NoConnectionException, CommunicationException{
+		//TODO: test
+		if(!isAvailable())
+			throw new NoConnectionException();
+		
+		ParsedMessage msg;
+		
+		try {
+			String messageToSend = XmlCreator.createPartial(Integer.toString(mSessionId), devices);
+			
+			String result = startCommunication(messageToSend);
+			
+			Log.d("IHA - Network", result);
+			
+			msg = XmlParsers.parseCommunication(result, false);
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new CommunicationException(e);
+		}
+		
+		if(msg.getState().equals(TRUE)){
+			Log.d("IHA - Network", msg.getState());
+			
+			return true;
+			
+		}else if(msg.getState().equals(RESIGN)){
+			//TODO: maybe use diffrenD way to resign, case stopping of thread, manage this after implement in the controler
+			try {
+				GetGoogleAuth.getGetGoogleAuth().execute();
+			} catch (Exception e) {
+				e.printStackTrace();
+				String tmp = null;
+				new GetGoogleAuth(new LoginActivity(), tmp).execute();
+				//return null;
+			}
+			signIn(ActualUser.getActualUser().getEmail());
+			return partial(devices);
+		}else
+			//FIXME: do something with false additional info (why not update devices)
+			return false;
+	}
 	
+	/**
+	 * Method ask for actual data devices
+	 * @param deviceIds list of IDs to which needed actual data
+	 * @return list of updated devices fields
+	 * @throws NoConnectionException 
+	 * @throws CommunicationException 
+	 */
+	@SuppressWarnings("unchecked")
+	public ArrayList<BaseDevice> update(ArrayList<String> deviceIds) throws NoConnectionException, CommunicationException{
+		// TODO: test
+		if(!isAvailable())
+			throw new NoConnectionException();
+		
+		ParsedMessage msg;
+		
+		try {
+			String messageToSend = XmlCreator.createUpdate(Integer.toString(mSessionId), deviceIds);
+			
+			String result = startCommunication(messageToSend);
+			
+			Log.d("IHA - Network", result);
+			
+			msg = XmlParsers.parseCommunication(result, false);
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new CommunicationException(e);
+		}
+		
+		if(msg.getState().equals(PARTIAL)){
+			Log.d("IHA - Network", msg.getState());
+			
+			return (ArrayList<BaseDevice>) msg.data;
+			
+		}else if(msg.getState().equals(RESIGN)){
+			//TODO: maybe use diffrenD way to resign, case stopping of thread, manage this after implement in the controler
+			try {
+				GetGoogleAuth.getGetGoogleAuth().execute();
+			} catch (Exception e) {
+				e.printStackTrace();
+				String tmp = null;
+				new GetGoogleAuth(new LoginActivity(), tmp).execute();
+				//return null;
+			}
+			signIn(ActualUser.getActualUser().getEmail());
+			return update(deviceIds);
+		}else
+			//FIXME: do something with false additional info (why not get updated fields)
+			return null;
+	}
+	
+	/**
+	 * Method ask for data of logs
+	 * @param deviceId id of wanted device
+	 * @param from date from log begin. Based of format YYYY-MM-DD-HH:MM:SS or empty string when wanted the oldest
+	 * @param to date to log end. Based of format YYYY-MM-DD-HH:MM:SS or empty string when wanted the newest
+	 * @return list of rows with logged data
+	 * @throws NoConnectionException 
+	 * @throws CommunicationException 
+	 */
+	@SuppressWarnings("unchecked")
+	public ArrayList<ContentRow> logName(String deviceId, String from, String to) throws NoConnectionException, CommunicationException{
+		// TODO: test
+		if(!isAvailable())
+			throw new NoConnectionException();
+		
+		ParsedMessage msg;
+		
+		try {
+			String messageToSend = XmlCreator.createLogName(Integer.toString(mSessionId), deviceId, from, to);
+			
+			String result = startCommunication(messageToSend);
+			
+			Log.d("IHA - Network", result);
+			
+			msg = XmlParsers.parseCommunication(result, false);
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new CommunicationException(e);
+		}
+		
+		if(msg.getState().equals(CONTENT)){
+			Log.d("IHA - Network", msg.getState());
+			
+			return (ArrayList<ContentRow>) msg.data;
+			
+		}else if(msg.getState().equals(RESIGN)){
+			//TODO: maybe use diffrenD way to resign, case stopping of thread, manage this after implement in the controler
+			try {
+				GetGoogleAuth.getGetGoogleAuth().execute();
+			} catch (Exception e) {
+				e.printStackTrace();
+				String tmp = null;
+				new GetGoogleAuth(new LoginActivity(), tmp).execute();
+				//return null;
+			}
+			signIn(ActualUser.getActualUser().getEmail());
+			return logName(deviceId, from, to);
+		}else
+			//FIXME: do something with false additional info (why not get log data)
+			return null;
+	}
+	
+	/**
+	 * Wrapper for logName method as protocol name. That name is a little bit misleading when no name of log file
+	 * is sending anymore.
+	 * @param deviceId id of wanted device
+	 * @param from date from log begin. Based of format YYYY-MM-DD-HH:MM:SS or empty string when wanted the oldest
+	 * @param to date to log end. Based of format YYYY-MM-DD-HH:MM:SS or empty string when wanted the newest
+	 * @return list of rows with logged data
+	 * @throws CommunicationException 
+	 * @throws NoConnectionException 
+	 */
+	public ArrayList<ContentRow> getLog(String deviceId, String from, String to) throws NoConnectionException, CommunicationException{
+		return logName(deviceId, from, to);
+	}
+	
+	/**
+	 * Method send newly created custom view
+	 * @param nameOfView name of new custom view
+	 * @param iconId icon that is assigned to the new view
+	 * @param deviceIds list of devices that are assigned to new view
+	 * @return true if everything goes well, false otherwise 
+	 * @throws NoConnectionException 
+	 * @throws CommunicationException 
+	 */
+	public boolean addView(String nameOfView, int iconId, ArrayList<String> deviceIds) throws NoConnectionException, CommunicationException{
+		// TODO: test
+		if(!isAvailable())
+			throw new NoConnectionException();
+		
+		ParsedMessage msg;
+		
+		try {
+			String messageToSend = XmlCreator.createAddView(Integer.toString(mSessionId), nameOfView, iconId, deviceIds);
+			
+			String result = startCommunication(messageToSend);
+			
+			Log.d("IHA - Network", result);
+			
+			msg = XmlParsers.parseCommunication(result, false);
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new CommunicationException(e);
+		}
+		
+		if(msg.getState().equals(TRUE)){
+			Log.d("IHA - Network", msg.getState());
+			
+			return true;
+			
+		}else if(msg.getState().equals(RESIGN)){
+			//TODO: maybe use diffrenD way to resign, case stopping of thread, manage this after implement in the controler
+			try {
+				GetGoogleAuth.getGetGoogleAuth().execute();
+			} catch (Exception e) {
+				e.printStackTrace();
+				String tmp = null;
+				new GetGoogleAuth(new LoginActivity(), tmp).execute();
+				//return null;
+			}
+			signIn(ActualUser.getActualUser().getEmail());
+			return addView(nameOfView, iconId, deviceIds);
+		}else
+			//FIXME: do something with false additional info (why not view added)
+			return false;
+	}
+	
+	/**
+	 * Method ask for list of all custom views
+	 * @return list of defined custom views
+	 * @throws NoConnectionException 
+	 * @throws CommunicationException 
+	 */
+	@SuppressWarnings("unchecked")
+	public ArrayList<CustomViewPair> getViews() throws NoConnectionException, CommunicationException{
+		// TODO: test
+		if(!isAvailable())
+			throw new NoConnectionException();
+		
+		ParsedMessage msg;
+		
+		try {
+			String messageToSend = XmlCreator.createGetViews(Integer.toString(mSessionId));
+			
+			String result = startCommunication(messageToSend);
+			
+			Log.d("IHA - Network", result);
+			
+			msg = XmlParsers.parseCommunication(result, false);
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new CommunicationException(e);
+		}
+		
+		if(msg.getState().equals(VIEWSLIST)){
+			Log.d("IHA - Network", msg.getState());
+			
+			return  (ArrayList<CustomViewPair>) msg.data;
+			
+		}else if(msg.getState().equals(RESIGN)){
+			//TODO: maybe use diffrenD way to resign, case stopping of thread, manage this after implement in the controler
+			try {
+				GetGoogleAuth.getGetGoogleAuth().execute();
+			} catch (Exception e) {
+				e.printStackTrace();
+				String tmp = null;
+				new GetGoogleAuth(new LoginActivity(), tmp).execute();
+				//return null;
+			}
+			signIn(ActualUser.getActualUser().getEmail());
+			return getViews();
+		}else
+			//FIXME: do something with false additional info (why not get log data)
+			return null;
+	}
+	
+	/**
+	 * Method delete whole custom view from server
+	 * @param viewName name of view to erase
+	 * @return true if view has been deleted, false otherwise
+	 * @throws NoConnectionException 
+	 * @throws CommunicationException 
+	 */
+	public boolean deleteView(String viewName) throws NoConnectionException, CommunicationException{
+		// TODO: test
+		if(!isAvailable())
+			throw new NoConnectionException();
+		
+		ParsedMessage msg;
+		
+		try {
+			String messageToSend = XmlCreator.createDelView(Integer.toString(mSessionId), viewName);
+			
+			String result = startCommunication(messageToSend);
+			
+			Log.d("IHA - Network", result);
+			
+			msg = XmlParsers.parseCommunication(result, false);
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new CommunicationException(e);
+		}
+		
+		if(msg.getState().equals(TRUE)){
+			Log.d("IHA - Network", msg.getState());
+			
+			return true;
+			
+		}else if(msg.getState().equals(RESIGN)){
+			//TODO: maybe use diffrenD way to resign, case stopping of thread, manage this after implement in the controler
+			try {
+				GetGoogleAuth.getGetGoogleAuth().execute();
+			} catch (Exception e) {
+				e.printStackTrace();
+				String tmp = null;
+				new GetGoogleAuth(new LoginActivity(), tmp).execute();
+				//return null;
+			}
+			signIn(ActualUser.getActualUser().getEmail());
+			return deleteView(viewName);
+		}else
+			//FIXME: do something with false additional info (why not view deleted)
+			return false;
+	}
+	
+	/**
+	 * Method update custom view.
+	 * @param viewName name of view to be updated
+	 * @param devices map contains device id as key and action as value action={remove, add}
+	 * @return true if all devices has been updated, false otherwise
+	 * @throws NoConnectionException 
+	 * @throws CommunicationException 
+	 */
+	public boolean updateView(String viewName, int iconId, HashMap<String, String> devices) throws NoConnectionException, CommunicationException{
+		//TODO: test
+		if(!isAvailable())
+			throw new NoConnectionException();
+		
+		ParsedMessage msg;
+		
+		try {
+			String messageToSend = XmlCreator.createUpdateView(Integer.toString(mSessionId), viewName, iconId, devices);
+			
+			String result = startCommunication(messageToSend);
+			
+			Log.d("IHA - Network", result);
+			
+			msg = XmlParsers.parseCommunication(result, false);
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new CommunicationException(e);
+		}
+		
+		if(msg.getState().equals(TRUE)){
+			Log.d("IHA - Network", msg.getState());
+			
+			return true;
+			
+		}else if(msg.getState().equals(RESIGN)){
+			//TODO: maybe use diffrenD way to resign, case stopping of thread, manage this after implement in the controler
+			try {
+				GetGoogleAuth.getGetGoogleAuth().execute();
+			} catch (Exception e) {
+				e.printStackTrace();
+				String tmp = null;
+				new GetGoogleAuth(new LoginActivity(), tmp).execute();
+				//return null;
+			}
+			signIn(ActualUser.getActualUser().getEmail());
+			return updateView(viewName, iconId, devices);
+		}else
+			//FIXME: do something with false additional info (why not view updated)
+			return false;
+	}
+	
+	/**
+	 * Method add new users to current adapter
+	 * @param userNrole map contains email as key and role as value
+	 * @return true if all users has been added, false otherwise
+	 * @throws NoConnectionException 
+	 * @throws CommunicationException 
+	 */
+	public boolean addConnectionAccount(HashMap<String, String> userNrole) throws NoConnectionException, CommunicationException{
+		//TODO: test
+		if(!isAvailable())
+			throw new NoConnectionException();
+		
+		ParsedMessage msg;
+		
+		try {
+			String messageToSend = XmlCreator.createAddConAccount(Integer.toString(mSessionId), userNrole);
+			
+			String result = startCommunication(messageToSend);
+			
+			Log.d("IHA - Network", result);
+			
+			msg = XmlParsers.parseCommunication(result, false);
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new CommunicationException(e);
+		}
+		
+		if(msg.getState().equals(TRUE)){
+			Log.d("IHA - Network", msg.getState());
+			
+			return true;
+			
+		}else if(msg.getState().equals(RESIGN)){
+			//TODO: maybe use diffrenD way to resign, case stopping of thread, manage this after implement in the controler
+			try {
+				GetGoogleAuth.getGetGoogleAuth().execute();
+			} catch (Exception e) {
+				e.printStackTrace();
+				String tmp = null;
+				new GetGoogleAuth(new LoginActivity(), tmp).execute();
+				//return null;
+			}
+			signIn(ActualUser.getActualUser().getEmail());
+			return addConnectionAccount(userNrole);
+		}else
+			//FIXME: do something with false additional info (why not account added)
+			return false;
+	}
+	
+	/**
+	 * Method delete users from actual adapter
+	 * @param users email of user
+	 * @return true if all users has been deleted, false otherwise
+	 * @throws NoConnectionException 
+	 * @throws CommunicationException 
+	 */
+	public boolean deleteConnectionAccount(ArrayList<String> users) throws NoConnectionException, CommunicationException{
+		//TODO: test
+		if(!isAvailable())
+			throw new NoConnectionException();
+		
+		ParsedMessage msg;
+		
+		try {
+			String messageToSend = XmlCreator.createDelConAccount(Integer.toString(mSessionId), users);
+			
+			String result = startCommunication(messageToSend);
+			
+			Log.d("IHA - Network", result);
+			
+			msg = XmlParsers.parseCommunication(result, false);
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new CommunicationException(e);
+		}
+		
+		if(msg.getState().equals(TRUE)){
+			Log.d("IHA - Network", msg.getState());
+			
+			return true;
+			
+		}else if(msg.getState().equals(RESIGN)){
+			//TODO: maybe use diffrenD way to resign, case stopping of thread, manage this after implement in the controler
+			try {
+				GetGoogleAuth.getGetGoogleAuth().execute();
+			} catch (Exception e) {
+				e.printStackTrace();
+				String tmp = null;
+				new GetGoogleAuth(new LoginActivity(), tmp).execute();
+				//return null;
+			}
+			signIn(ActualUser.getActualUser().getEmail());
+			return deleteConnectionAccount(users);
+		}else
+			//FIXME: do something with false additional info (why not account deleted)
+			return false;
+	}
+	
+	/**
+	 * Method ask for list of users of current adapter
+	 * @return Map of users where key is email and value is User object
+	 * @throws NoConnectionException 
+	 * @throws CommunicationException 
+	 */
+	@SuppressWarnings("unchecked")
+	public HashMap<String, User> getConnectionAccountList() throws NoConnectionException, CommunicationException{
+		//TODO: test
+		if(!isAvailable())
+			throw new NoConnectionException();
+		
+		ParsedMessage msg;
+		
+		try {
+			String messageToSend = XmlCreator.createGetConAccount(Integer.toString(mSessionId));
+			
+			String result = startCommunication(messageToSend);
+			
+			Log.d("IHA - Network", result);
+			
+			msg = XmlParsers.parseCommunication(result, false);
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new CommunicationException(e);
+		}
+		
+		if(msg.getState().equals(TRUE)){
+			Log.d("IHA - Network", msg.getState());
+			
+			return (HashMap<String, User>) msg.data;
+			
+		}else if(msg.getState().equals(RESIGN)){
+			//TODO: maybe use diffrenD way to resign, case stopping of thread, manage this after implement in the controler
+			try {
+				GetGoogleAuth.getGetGoogleAuth().execute();
+			} catch (Exception e) {
+				e.printStackTrace();
+				String tmp = null;
+				new GetGoogleAuth(new LoginActivity(), tmp).execute();
+				//return null;
+			}
+			signIn(ActualUser.getActualUser().getEmail());
+			return getConnectionAccountList();
+		}else
+			//FIXME: do something with false additional info (why not view added)
+			return null;
+	}
+	
+	/**
+	 * Method update users roles on server on current adapter
+	 * @param userNrole map with email as key and role as value
+	 * @return true if all accounts has been changed false otherwise
+	 * @throws NoConnectionException 
+	 * @throws CommunicationException 
+	 */
+	public boolean changeConnectionAccount(HashMap<String, String> userNrole) throws NoConnectionException, CommunicationException{
+		//TODO: test
+		if(!isAvailable())
+			throw new NoConnectionException();
+		
+		ParsedMessage msg;
+		
+		try {
+			String messageToSend = XmlCreator.createChangeConAccount(Integer.toString(mSessionId), userNrole);
+			
+			String result = startCommunication(messageToSend);
+			
+			Log.d("IHA - Network", result);
+			
+			msg = XmlParsers.parseCommunication(result, false);
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new CommunicationException(e);
+		}
+		
+		if(msg.getState().equals(TRUE)){
+			Log.d("IHA - Network", msg.getState());
+			
+			return true;
+			
+		}else if(msg.getState().equals(RESIGN)){
+			//TODO: maybe use diffrenD way to resign, case stopping of thread, manage this after implement in the controler
+			try {
+				GetGoogleAuth.getGetGoogleAuth().execute();
+			} catch (Exception e) {
+				e.printStackTrace();
+				String tmp = null;
+				new GetGoogleAuth(new LoginActivity(), tmp).execute();
+				//return null;
+			}
+			signIn(ActualUser.getActualUser().getEmail());
+			return changeConnectionAccount(userNrole);
+		}else
+			//FIXME: do something with false additional info (why not account updated)
+			return false;
+	}
 }
