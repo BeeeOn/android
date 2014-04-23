@@ -103,7 +103,7 @@ public class GetGoogleAuth extends AsyncTask<Void, Void, String> {
 	protected String doInBackground(Void... params) {
 	try {
 		mToken = GoogleAuthUtil.getToken(mActivity, mEmail,"oauth2:https://www.googleapis.com/auth/userinfo.profile");
-		
+		Log.d(TAG, "Token");
 	return mToken;
 	
 	} catch (UserRecoverableAuthException userRecoverableException) {
@@ -138,14 +138,14 @@ public class GetGoogleAuth extends AsyncTask<Void, Void, String> {
 			// Fetch user name and surname
 			fetchUserInfo.start(); 
 			// Wait for user name
-			try {
-				synchronized(this) {
-					this.wait();
-				}
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+//			try {
+//				synchronized(this) {
+//					this.wait();
+//				}
+//			} catch (InterruptedException e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//			}
 			
 			//LayoutInflater inflater = mActivity.getLayoutInflater();
 			 
@@ -203,7 +203,9 @@ public class GetGoogleAuth extends AsyncTask<Void, Void, String> {
             }
 	    	mActivity.finish();*/
 	    	Log.d(TAG, "FINISH");
-	    	
+//	    	synchronized(this) {
+//	        	  this.notify();
+//	          }
 		}
 	}
 	
@@ -224,13 +226,13 @@ public class GetGoogleAuth extends AsyncTask<Void, Void, String> {
           String respond = readResponse(is);
           String name = getName(respond);
           String picture = getPicture(respond);
-          Log.d("MAinActivity","Hello " + name + "!");
+          Log.d(TAG,"Hello " + name + "!");
           this.mUserName = name;
           this.mPicture = picture;
           is.close();
-          synchronized(this) {
-        	  this.notify();
-          }
+//          synchronized(this) {
+//        	  this.notify();
+//          }
           return;
         } else if (sc == 401) {
             GoogleAuthUtil.invalidateToken(mActivity, token);

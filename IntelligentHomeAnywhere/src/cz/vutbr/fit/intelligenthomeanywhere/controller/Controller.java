@@ -57,7 +57,7 @@ public final class Controller {
 	private Household mHousehold;
 	
 	/** Switch for using demo mode (with example adapter, without server) */
-	public static final boolean demoMode = true; // TODO: Make this working, somehow...
+	public static final boolean demoMode = false; // TODO: Make this working, somehow...
 	
 	
 	/**
@@ -175,12 +175,24 @@ public final class Controller {
 	 * @throws NotImplementedException
 	 */
 	public List<Adapter> getAdapters() {
-		if (mHousehold.adapters == null) {
-			// TODO: load adapters from network
-			throw new NotImplementedException();
-		}
+		if (mHousehold.adapters == null) { 
+			try { 
+				mHousehold.adapters = mNetwork.getAdapters(); 
+			}
+			catch (NoConnectionException e) { 
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} 
+			catch (CommunicationException e) {
+					// TODO Auto-generated catch block 
+					e.printStackTrace(); 
+			} 
+		} 
 		
+		if (mHousehold.adapters == null) 
+			mHousehold.adapters = new ArrayList<Adapter>();
 		return mHousehold.adapters;
+
 	}
 	
 	/**

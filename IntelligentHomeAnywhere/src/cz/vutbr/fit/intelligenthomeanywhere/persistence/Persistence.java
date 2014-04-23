@@ -27,7 +27,7 @@ public class Persistence {
 	}
 	
 	public void saveLastUser(User user) {
-		throw new NotImplementedException();
+		//throw new NotImplementedException();
 	}
 	
 	public User loadLastUser() {

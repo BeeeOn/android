@@ -1,23 +1,9 @@
 package cz.vutbr.fit.intelligenthomeanywhere.activity;
 
-import java.io.IOException;
-import java.net.UnknownHostException;
-import java.security.KeyManagementException;
-import java.security.KeyStoreException;
-import java.security.NoSuchAlgorithmException;
-import java.security.cert.CertificateException;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeoutException;
-
-import javax.net.ssl.SSLHandshakeException;
-
-import org.xmlpull.v1.XmlPullParserException;
-
 import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.app.Activity;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -31,18 +17,16 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 
 import cz.vutbr.fit.intelligenthomeanywhere.Constants;
-import cz.vutbr.fit.intelligenthomeanywhere.DemoData;
 import cz.vutbr.fit.intelligenthomeanywhere.R;
 import cz.vutbr.fit.intelligenthomeanywhere.controller.Controller;
-import cz.vutbr.fit.intelligenthomeanywhere.exception.ComVerMisException;
 import cz.vutbr.fit.intelligenthomeanywhere.exception.CommunicationException;
 import cz.vutbr.fit.intelligenthomeanywhere.exception.NoConnectionException;
 import cz.vutbr.fit.intelligenthomeanywhere.exception.NotImplementedException;
 import cz.vutbr.fit.intelligenthomeanywhere.exception.NotRegAException;
 import cz.vutbr.fit.intelligenthomeanywhere.exception.NotRegBException;
-import cz.vutbr.fit.intelligenthomeanywhere.exception.XmlVerMisException;
 import cz.vutbr.fit.intelligenthomeanywhere.network.ActualUser;
 import cz.vutbr.fit.intelligenthomeanywhere.network.GetGoogleAuth;
+//import android.os.AsyncTask;
 
 /**
  * First sign in class, controls first activity
@@ -54,6 +38,7 @@ public class LoginActivity extends Activity {
 
 	private String acEmail;
 	private Controller mController;
+	private LoginActivity mActivity;
 	
 	private static final String TAG = "LOGIN";
 	
@@ -64,6 +49,9 @@ public class LoginActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_login);
+		
+		// Get Activity
+		mActivity = this;
 		
 		// Get controller
 		mController = Controller.getInstance(this);
@@ -118,15 +106,20 @@ public class LoginActivity extends Activity {
         }
         */
         
+        
         if (requestCode == GET_GOOGLE_ACCOUNT && resultCode == RESULT_OK) {
         	this.acEmail = data.getStringExtra(AccountManager.KEY_ACCOUNT_NAME);
         	
         	try {
 				if(this.mController.login(this.acEmail)) {
-					Intent intent = new Intent(this, LocationScreenActivity.class);
+					Log.d(TAG, "Login: true");
+					Intent intent = new Intent(mActivity, LocationScreenActivity.class);
 					intent.putExtra(Constants.LOGIN, Constants.LOGIN_DEMO);
 					//intent.putExtra(name, value);
-					this.startActivity(intent);
+					mActivity.startActivity(intent);
+				}
+				else{
+					Log.d(TAG, "Login: false");
 				}
 			} catch (NotRegAException e) {
 				// TODO Auto-generated catch block
@@ -165,11 +158,20 @@ public class LoginActivity extends Activity {
 				Log.d(TAG, "On this device is one account");
 				this.acEmail = Accounts[0];
 				
-				new GetGoogleAuth(this, this.acEmail);
-				GetGoogleAuth ggAuth = null;
+				
+				final GetGoogleAuth ggAuth = new GetGoogleAuth(this, this.acEmail);
 				try {
-					ggAuth = GetGoogleAuth.getGetGoogleAuth();
-					ggAuth.execute();
+//					Log.d(TAG, "Prepare google auth");
+//					ggAuth = GetGoogleAuth.getGetGoogleAuth();
+					Log.d(TAG, "call google auth execute");
+					Thread ggTh = new Thread(new Runnable() {
+						@Override
+						public void run() {
+							ggAuth.execute();
+						}
+					});
+					ggTh.start();
+					Log.d(TAG, "Finish google auth");
 					//while(ggAuth.getStatus() != AsyncTask.Status.FINISHED);
 					ActualUser AUser = new ActualUser(ggAuth.getUserName(), ggAuth.getEmail(), null, null);
 					
@@ -178,11 +180,21 @@ public class LoginActivity extends Activity {
 				}
 				
 				
-				new Thread(new Runnable() {
+				Thread th = new Thread(new Runnable() {
 					@Override
 					public void run() {
 						try {
-							mController.login(acEmail);
+							if(mController.login(acEmail)) {
+								Log.d(TAG, "Login: true");
+								Intent intent = new Intent(mActivity, LocationScreenActivity.class);
+								intent.putExtra(Constants.LOGIN, Constants.LOGIN_DEMO);
+								//intent.putExtra(name, value);
+								mActivity.startActivity(intent);
+				            }
+							else{
+								Log.d(TAG, "Login: false");
+							}
+							
 						} catch (NotRegAException e) {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
@@ -201,14 +213,20 @@ public class LoginActivity extends Activity {
 						}
 						
 					}
-				}).start();
+				});
+				th.start();
+				
+//				try {
+////					synchronized(this) {
+//						th.join();
+////					}
+//				} catch (InterruptedException e) {
+//					// TODO Auto-generated catch block
+//					e.printStackTrace();
+//				}
+				Log.d(TAG, "Login: HERE?");
 				//FIXME: implement this in upper thread and notify gui thread somehow
-				/*if(this.mController.login(this.acEmail)) {
-					Intent intent = new Intent(this, LocationScreenActivity.class);
-					intent.putExtra(Constants.LOGIN, Constants.LOGIN_DEMO);
-					//intent.putExtra(name, value);
-					this.startActivity(intent);
-	            }*/
+//				
 				// Get acces token
 				//new GetGoogleAuth(this, this.acEmail).execute();
 			}

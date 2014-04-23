@@ -56,6 +56,7 @@ public class LocationScreenActivity extends SherlockFragmentActivity {
 	/**
 	 * Call XML parser to file on SDcard
 	 */
+	@SuppressWarnings("null")
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -63,10 +64,27 @@ public class LocationScreenActivity extends SherlockFragmentActivity {
 		
 		mController = Controller.getInstance(this);
 		
-		checkUninitializedDevices();
 		
-		List<LocationListing> locations = mController.getLocations();
-		Log.d("lokace",locations.toString());
+		
+		Thread thUniniDev = new Thread(new Runnable() {
+			@Override
+			public void run() {
+				checkUninitializedDevices();
+			}
+		});
+		thUniniDev.start();
+		
+		List<LocationListing> locations = null;
+		Thread thLoc = new Thread(new Runnable() {
+			@Override
+			public void run() {
+				List<LocationListing> locations2 = mController.getLocations();
+				Log.d("lokace",locations2.toString());
+				getLocations(locations2);
+			}
+		});
+		thLoc.start();
+
 		
 		mTitle = mDrawerTitle = "IHA";
 		
@@ -134,14 +152,19 @@ public class LocationScreenActivity extends SherlockFragmentActivity {
 		
 		int marginTop = 5;
 		int ID = Constants.BUTTON_ID;
-		for(LocationListing location : locations) {
+		/*for(LocationListing location : locations) {
 			if (addLocationButton(location.getName(), ID, marginTop))
 				ID++;
 		}
 		if(locations.size() == 1){
 			Button onlyOne = (Button)findViewById(--ID);
 			onlyOne.performClick();
-		}
+		}*/
+	}
+	
+	public boolean getLocations(List<LocationListing> locations) {
+		
+		return true;
 	}
 	
 	@Override

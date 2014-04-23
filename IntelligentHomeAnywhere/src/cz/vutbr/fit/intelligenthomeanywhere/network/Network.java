@@ -237,15 +237,19 @@ public class Network {
 		try {
 			String googleToken;
 			
+//			GetGoogleAuth.getGetGoogleAuth().execute();
 			do{
 				googleToken = GetGoogleAuth.getGetGoogleAuth().getToken();
-			}while(googleToken.length() < 1);
+				Log.d("IHA - Network - SignIn - token", googleToken);
+			}while(googleToken.equalsIgnoreCase(""));
 			
 			String messageToSend = XmlCreator.createSignIn(userEmail, googleToken);
 			
+			Log.d("IHA - Network - SignIn - fromApp", messageToSend);
+			
 			String result = startCommunication(messageToSend);
 			
-			Log.d("IHA - Network", result);
+			Log.d("IHA - Network - SignIn - fromSrv", result);
 			
 			msg = XmlParsers.parseCommunication(result, false);
 			
@@ -254,7 +258,7 @@ public class Network {
 			throw new CommunicationException(e);
 		}
 		
-		if(msg.getSessionId() != 0 && msg.getState().equals(TRUE) && ((String)msg.data).equals(SIGNIN)){
+		if(msg.getSessionId() != 0 && msg.getState().equals(TRUE) /*&& ((String)msg.data).equals(SIGNIN)*/){
 			Log.d("IHA - Network", msg.getState());
 			
 			ActualUser aUser = ActualUser.getActualUser();
@@ -335,9 +339,11 @@ public class Network {
 		try {
 			String messageToSend = XmlCreator.createGetAdapters(mSessionId);
 			
+			Log.d("IHA - Network - fromApp", messageToSend);
+			
 			String result = startCommunication(messageToSend);
 			
-			Log.d("IHA - Network", result);
+			Log.d("IHA - Network - fromSrv", result);
 			
 			msg = XmlParsers.parseCommunication(result, false);
 			
