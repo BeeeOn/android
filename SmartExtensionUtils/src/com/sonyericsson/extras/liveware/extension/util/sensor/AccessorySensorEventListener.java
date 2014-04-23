@@ -1,6 +1,5 @@
 /*
-Copyright (c) 2011, Sony Ericsson Mobile Communications AB
-Copyright (c) 2011-2013, Sony Mobile Communications AB
+ Copyright (c) 2011, Sony Ericsson Mobile Communications AB
 
  All rights reserved.
 
@@ -14,9 +13,9 @@ Copyright (c) 2011-2013, Sony Mobile Communications AB
  this list of conditions and the following disclaimer in the documentation
  and/or other materials provided with the distribution.
 
- * Neither the name of the Sony Ericsson Mobile Communications AB / Sony Mobile
- Communications AB nor the names of its contributors may be used to endorse or promote
- products derived from this software without specific prior written permission.
+ * Neither the name of the Sony Ericsson Mobile Communications AB nor the names
+ of its contributors may be used to endorse or promote products derived from
+ this software without specific prior written permission.
 
  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
  ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
@@ -29,24 +28,18 @@ Copyright (c) 2011-2013, Sony Mobile Communications AB
  OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package eu.sobtex.findit.extension;
-
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.Intent;
-import android.util.Log;
+package com.sonyericsson.extras.liveware.extension.util.sensor;
 
 /**
- * The extension receiver receives the extension intents and starts the
- * extension service when it arrives.
+ * The sensor event listener is used to listen for sensor events.
  */
-public class ExtensionReceiver extends BroadcastReceiver {
+public interface AccessorySensorEventListener {
 
-    @Override
-    public void onReceive(final Context context, final Intent intent) {
+    /**
+     * Called when a new sensor event is received.
+     *
+     * @param accessorySensorEvent The received sensor event.
+     */
+    public void onSensorEvent(AccessorySensorEvent accessorySensorEvent);
 
-        Log.d(MyExtensionService.LOG_TAG, "onReceive: " + intent.getAction());
-        intent.setClass(context, MyExtensionService.class);
-        context.startService(intent);
-    }
 }
