@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Random;
 
 import android.content.Context;
+import android.text.format.Time;
 import cz.vutbr.fit.intelligenthomeanywhere.User;
 import cz.vutbr.fit.intelligenthomeanywhere.adapter.Adapter;
 import cz.vutbr.fit.intelligenthomeanywhere.adapter.device.BaseDevice;
@@ -156,6 +157,41 @@ public final class Controller {
 	
 	/** Adapter methods *****************************************************/
 
+	private boolean refreshAdapter(Adapter adapter, boolean forceUpdate) {
+		Time that = new Time();
+		that.set(adapter.lastUpdate.toMillis(true) - 10000); // 10 seconds interval between updates
+		
+		// Update only when needed
+		if (!forceUpdate && !adapter.lastUpdate.before(that))
+			return false;
+
+		Adapter newAdapter = null;
+		
+		try {
+			newAdapter = mNetwork.init(adapter.getId());
+		} catch (NoConnectionException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (CommunicationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		if (newAdapter == null)
+			return false;
+		
+		// Update adapter with new data
+		adapter.setDevices(newAdapter.getDevices());
+		adapter.setId(newAdapter.getId());
+		adapter.setName(newAdapter.getName());
+		adapter.setVersion(newAdapter.getVersion());
+		adapter.setRole(newAdapter.getRole());		
+		
+		adapter.lastUpdate.setToNow();
+		
+		return true;
+	}
+	
 	/**
 	 * Return all adapters that this logged in user has access to.
 	 * 
@@ -163,24 +199,30 @@ public final class Controller {
 	 * @throws NotImplementedException
 	 */
 	public List<Adapter> getAdapters() {
+		// TODO: refactor this method, make household's adapters (and favoriteslisting, and user?) final etc.
 		if (mHousehold.adapters == null) { 
 			try { 
-				mHousehold.adapters = mNetwork.getAdapters(); 
+				mHousehold.adapters = mNetwork.getAdapters();
 			}
 			catch (NoConnectionException e) { 
 				// TODO Auto-generated catch block
 				e.printStackTrace();
-			} 
+			}
 			catch (CommunicationException e) {
-					// TODO Auto-generated catch block 
-					e.printStackTrace(); 
-			} 
-		} 
-		
-		if (mHousehold.adapters == null) 
-			mHousehold.adapters = new ArrayList<Adapter>();
-		return mHousehold.adapters;
+				// TODO Auto-generated catch block 
+				e.printStackTrace(); 
+			}
 
+			if (mHousehold.adapters == null) 
+				mHousehold.adapters = new ArrayList<Adapter>();
+			
+			// Refresh all adapters (load their devices)
+			for (Adapter adapter : mHousehold.adapters) {
+				refreshAdapter(adapter, false);
+			}
+		}
+
+		return mHousehold.adapters;
 	}
 	
 	/**
@@ -189,10 +231,12 @@ public final class Controller {
 	 * @param id
 	 * @return Adapter if found, null otherwise
 	 */
-	public Adapter getAdapter(String adapterId) {
+	public Adapter getAdapter(String adapterId, boolean forceUpdate) {
 		for (Adapter a : getAdapters()) {
-			if (a.getId().equals(adapterId))
+			if (a.getId().equals(adapterId)) {
+				refreshAdapter(a, forceUpdate);
 				return a;
+			}
 		}
 		
 		return null;

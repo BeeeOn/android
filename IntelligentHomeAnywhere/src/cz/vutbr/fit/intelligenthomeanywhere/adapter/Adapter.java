@@ -6,6 +6,8 @@ package cz.vutbr.fit.intelligenthomeanywhere.adapter;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.text.format.Time;
+
 import cz.vutbr.fit.intelligenthomeanywhere.User;
 import cz.vutbr.fit.intelligenthomeanywhere.adapter.device.BaseDevice;
 import cz.vutbr.fit.intelligenthomeanywhere.adapter.parser.XmlCreator;
@@ -26,6 +28,8 @@ public class Adapter {
 	private String mName;
 	private User.Role mRole;
 	
+	public final Time lastUpdate = new Time();
+	
 	public Adapter() {}
 	
 	/**
@@ -33,7 +37,7 @@ public class Adapter {
 	 */
 	public String toDebugString() {
 		String result = "";
-		
+
 		result += "ID is " + mId + "\n";
 		result += "VERSION is " + mVersion + "\n";
 		result += "Name is " + mName + "\n";
