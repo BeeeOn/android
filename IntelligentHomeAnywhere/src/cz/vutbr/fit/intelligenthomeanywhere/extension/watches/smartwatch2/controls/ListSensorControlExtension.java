@@ -32,6 +32,8 @@ Copyright (c) 2011-2013, Sony Mobile Communications AB
 
 package cz.vutbr.fit.intelligenthomeanywhere.extension.watches.smartwatch2.controls;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import android.content.Context;
@@ -45,25 +47,27 @@ import com.sonyericsson.extras.liveware.extension.util.control.ControlListItem;
 
 import cz.vutbr.fit.intelligenthomeanywhere.R;
 import cz.vutbr.fit.intelligenthomeanywhere.adapter.Adapter;
+import cz.vutbr.fit.intelligenthomeanywhere.adapter.device.BaseDevice;
 import cz.vutbr.fit.intelligenthomeanywhere.extension.watches.smartwatch2.SW2ExtensionService;
 
 /**
  * ListControlExtension displays a scrollable list, based on a string array.
  * Tapping on list items opens a swipable detail view.
  */
-public class ListAdaptersControlExtension extends ManagedControlExtension {
+public class ListSensorControlExtension extends ManagedControlExtension {
 
-//    protected int mLastKnowPosition = 0;
+	public static final String EXTRA_ADAPTER_ID = "ADAPTER_ID";
+	public static final String EXTRA_LOCATION_NAME = "LOCATION_NAME";
 
-    private List<Adapter> mAdapters;
+	private List<BaseDevice> mDevices;
+	
     /**
      * @see ManagedControlExtension#ManagedControlExtension(Context, String,
      *      ControlManagerCostanza, Intent)
      */
-    public ListAdaptersControlExtension(Context context, String hostAppPackageName,
+    public ListSensorControlExtension(Context context, String hostAppPackageName,
             ControlManagerSmartWatch2 controlManager, Intent intent) {
         super(context, hostAppPackageName, controlManager, intent);
-        mAdapters = mController.getAdapters();
         Log.d(SW2ExtensionService.LOG_TAG, "AdaptersListControl constructor");
     }
 
@@ -73,21 +77,27 @@ public class ListAdaptersControlExtension extends ManagedControlExtension {
         
         Bundle b1 = new Bundle();
         b1.putInt(Control.Intents.EXTRA_LAYOUT_REFERENCE, R.id.list_title);
-        b1.putString(Control.Intents.EXTRA_TEXT, mContext.getString(R.string.choose_adapter));
+        b1.putString(Control.Intents.EXTRA_TEXT, mContext.getString(R.string.choose_sensor));
         
         Bundle[] data = new Bundle[1];
         
         data[0] = b1;
         
         showLayout(R.layout.sw2_list_title, data);
-        sendListCount(R.id.listView, mAdapters.size());
 
         
+        String adapterId = getIntent().getStringExtra(EXTRA_ADAPTER_ID);
+        String locationStr = getIntent().getStringExtra(EXTRA_LOCATION_NAME);
+        if (adapterId == null || locationStr == null) {
+        	mControlManager.onBack();
+        	return;
+        }
         
-        // If requested, move to the correct position in the list.
-//        int startPosition = getIntent().getIntExtra(GalleryTestControl.EXTRA_INITIAL_POSITION, 0);
-//        mLastKnowPosition = startPosition;
-//        sendListPosition(R.id.listView, startPosition);
+        mDevices = mController.getAdapter(adapterId).getDevicesByLocation(locationStr);
+        
+        
+        sendListCount(R.id.listView, mDevices.size());
+
     }
 
     @Override
@@ -125,10 +135,10 @@ public class ListAdaptersControlExtension extends ManagedControlExtension {
 
         if (clickType == Control.Intents.CLICK_TYPE_SHORT) {
             //Intent intent = new Intent(mContext, GalleryTestControl.class);
-            // Here we pass the item position to the next control. It woudl
-            // alsobe possible to put some unique item id in the listitem and
+            // Here we pass the item position to the next control. It would
+            // also be possible to put some unique item id in the listitem and
             // pass listItem.listItemId here.
-            //intent.putExtra(GalleryTestControl.EXTRA_INITIAL_POSITION, listItem.listItemPosition);
+        	//intent.putExtra(GalleryTestControl.EXTRA_INITIAL_POSITION, listItem.listItemPosition);
             //mControlManager.startControl(intent);
         }
     }
@@ -137,20 +147,27 @@ public class ListAdaptersControlExtension extends ManagedControlExtension {
 
         ControlListItem item = new ControlListItem();
         item.layoutReference = R.id.listView;
-        item.dataXmlLayout = R.layout.sw2_item_adapter;
+        item.dataXmlLayout = R.layout.sw2_item_location;
         item.listItemPosition = position;
         // We use position as listItemId. Here we could use some other unique id
         // to reference the list data
         item.listItemId = position;
 
+        
+        // Icon data
+        Bundle iconBundle = new Bundle();
+        iconBundle.putInt(Control.Intents.EXTRA_LAYOUT_REFERENCE, R.id.thumbnail);
+        iconBundle.putString(Control.Intents.EXTRA_DATA_URI,
+                ExtensionUtils.getUriString(mContext, mDevices.get(position).getTypeIconResource()));        
+        
         Bundle headerBundle = new Bundle();
         headerBundle.putInt(Control.Intents.EXTRA_LAYOUT_REFERENCE, R.id.title);
         
-        // TODO predelat na getName() az to bude spravne naplnene
-        headerBundle.putString(Control.Intents.EXTRA_TEXT, mAdapters.get(position).getId());
+        headerBundle.putString(Control.Intents.EXTRA_TEXT, mDevices.get(position).getName());
 
-        item.layoutData = new Bundle[1];
+        item.layoutData = new Bundle[2];
         item.layoutData[0] = headerBundle;
+        item.layoutData[1] = iconBundle;
 
         return item;
     }

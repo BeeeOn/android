@@ -71,22 +71,33 @@ public class ControlManagerSmartWatch2 extends ControlManagerBase {
         
         mController = Controller.getInstance(mContext);
         
+        Intent initialControlIntent;
+        
         if (!mController.isLoggedIn()) {
-        	// TODO zobrazit ze je neprihlaseny
-        	//return;
+        	initialControlIntent = new Intent(mContext, TextControl.class);
+        	initialControlIntent.putExtra(TextControl.EXTRA_TEXT, mContext.getString(R.string.please_log_in));
+        	mCurrentControl = createControl(initialControlIntent);
+        	return;
         }
         
         // TODO zeptat se na predvoleny pohled, jestli existuje -> rovnou zapnout
         
         List<Adapter> adapters = mController.getAdapters();
-        if (adapters.size() < 2) {
-        	// TODO zobrazit primo mistnosti
-        	// return;
+        if (adapters.size() < 1) {
+        	initialControlIntent = new Intent(mContext, TextControl.class);
+        	initialControlIntent.putExtra(TextControl.EXTRA_TEXT, mContext.getString(R.string.no_adapter_available));
+          	mCurrentControl = createControl(initialControlIntent);
+          	return;
+        }
+        else if (adapters.size() < 2) {
+        	Intent intent = new Intent(mContext, ListLocationControlExtension.class);
+        	intent.putExtra(ListLocationControlExtension.EXTRA_ADAPTER_ID, adapters.get(0).getId());
+            mCurrentControl = createControl(intent);
+            return;
         }
         
-        // Create an initial control extension
-        Intent initialListControlIntent = new Intent(mContext, ListAdaptersControlExtension.class);
-        mCurrentControl = createControl(initialListControlIntent);
+        initialControlIntent = new Intent(mContext, ListAdapterControlExtension.class);
+        mCurrentControl = createControl(initialControlIntent);
     }
 
     /**

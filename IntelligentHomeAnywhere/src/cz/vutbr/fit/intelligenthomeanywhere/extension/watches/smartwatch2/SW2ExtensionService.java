@@ -48,7 +48,7 @@ public class SW2ExtensionService extends ExtensionService {
 
     public static final String EXTENSION_KEY = "com.sonymobile.smartconnect.extension.advancedcontrolsample.key";
 
-    public static final String LOG_TAG = "AdvancedControlExtension";
+    public static final String LOG_TAG = "SW2 extension";
 
     public SW2ExtensionService() {
         super(EXTENSION_KEY);

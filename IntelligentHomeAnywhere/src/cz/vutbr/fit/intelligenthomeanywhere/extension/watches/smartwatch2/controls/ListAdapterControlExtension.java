@@ -40,73 +40,67 @@ import android.os.Bundle;
 import android.util.Log;
 
 import com.sonyericsson.extras.liveware.aef.control.Control;
+import com.sonyericsson.extras.liveware.extension.util.ExtensionUtils;
 import com.sonyericsson.extras.liveware.extension.util.control.ControlListItem;
 
 import cz.vutbr.fit.intelligenthomeanywhere.R;
 import cz.vutbr.fit.intelligenthomeanywhere.adapter.Adapter;
-import cz.vutbr.fit.intelligenthomeanywhere.adapter.device.BaseDevice;
 import cz.vutbr.fit.intelligenthomeanywhere.extension.watches.smartwatch2.SW2ExtensionService;
 
 /**
- * GalleryTestControl displays a swipeable gallery, based on a string array.
+ * ListControlExtension displays a scrollable list, based on a string array.
+ * Tapping on list items opens a swipable detail view.
  */
-public class GalleryTestControl extends ManagedControlExtension {
+public class ListAdapterControlExtension extends ManagedControlExtension {
 
-    protected int mLastKnowPosition = 0;
-    
-    public final static String EXTRA_INITIAL_POSITION = "EXTRA_INITIAL_POSITION";
-    public static final String EXTRA_ADAPTER_ID = "ADAPTER_ID";
-	public static final String EXTRA_LOCATION_NAME = "LOCATION_NAME";
-    
-    private Adapter mAdapter;
-    private String mLocationName;
-  
-    private List<BaseDevice> mDevices;
-    
+//    protected int mLastKnowPosition = 0;
+
+    private List<Adapter> mAdapters;
     /**
      * @see ManagedControlExtension#ManagedControlExtension(Context, String,
      *      ControlManagerCostanza, Intent)
      */
-    public GalleryTestControl(Context context, String hostAppPackageName,
+    public ListAdapterControlExtension(Context context, String hostAppPackageName,
             ControlManagerSmartWatch2 controlManager, Intent intent) {
         super(context, hostAppPackageName, controlManager, intent);
+        mAdapters = mController.getAdapters();
+        Log.d(SW2ExtensionService.LOG_TAG, "AdaptersListControl constructor");
     }
 
     @Override
     public void onResume() {
         Log.d(SW2ExtensionService.LOG_TAG, "onResume");
-        showLayout(R.layout.sw2_gallery, null);
         
-     // If requested, move to the correct position in the list.
-        int startPosition = getIntent().getIntExtra(EXTRA_INITIAL_POSITION, 0);
-        mLastKnowPosition = startPosition;
-        sendListPosition(R.id.gallery, startPosition);
+        Bundle b1 = new Bundle();
+        b1.putInt(Control.Intents.EXTRA_LAYOUT_REFERENCE, R.id.list_title);
+        b1.putString(Control.Intents.EXTRA_TEXT, mContext.getString(R.string.choose_adapter));
         
-        String adapterId = getIntent().getStringExtra(EXTRA_ADAPTER_ID);
-        String locationStr = getIntent().getStringExtra(EXTRA_LOCATION_NAME);
-        if (adapterId == null || locationStr == null) {
-        	mControlManager.onBack();
-        	return;
-        }
+        Bundle[] data = new Bundle[1];
         
-        mDevices = mController.getAdapter(adapterId).getDevicesByLocation(locationStr);
+        data[0] = b1;
+        
+        showLayout(R.layout.sw2_list_title, data);
+        sendListCount(R.id.listView, mAdapters.size());
+
         
         
-        sendListCount(R.id.listView, mDevices.size());
-        
+        // If requested, move to the correct position in the list.
+//        int startPosition = getIntent().getIntExtra(GalleryTestControl.EXTRA_INITIAL_POSITION, 0);
+//        mLastKnowPosition = startPosition;
+//        sendListPosition(R.id.listView, startPosition);
     }
 
     @Override
     public void onPause() {
         super.onPause();
         // Position is saved into Control's Intent, possibly to be used later.
-        getIntent().putExtra(EXTRA_INITIAL_POSITION, mLastKnowPosition);
+//        getIntent().putExtra(GalleryTestControl.EXTRA_INITIAL_POSITION, mLastKnowPosition);
     }
 
     @Override
     public void onRequestListItem(final int layoutReference, final int listItemPosition) {
         Log.d(SW2ExtensionService.LOG_TAG, "onRequestListItem() - position " + listItemPosition);
-        if (layoutReference != -1 && listItemPosition != -1 && layoutReference == R.id.gallery) {
+        if (layoutReference != -1 && listItemPosition != -1 && layoutReference == R.id.listView) {
             ControlListItem item = createControlListItem(listItemPosition);
             if (item != null) {
                 sendListItem(item);
@@ -119,7 +113,7 @@ public class GalleryTestControl extends ManagedControlExtension {
         super.onListItemSelected(listItem);
         // We save the last "selected" position, this is the current visible
         // list item index. The position can later be used on resume
-        mLastKnowPosition = listItem.listItemPosition;
+//        mLastKnowPosition = listItem.listItemPosition;
     }
 
     @Override
@@ -128,29 +122,35 @@ public class GalleryTestControl extends ManagedControlExtension {
         Log.d(SW2ExtensionService.LOG_TAG, "Item clicked. Position " + listItem.listItemPosition
                 + ", itemLayoutReference " + itemLayoutReference + ". Type was: "
                 + (clickType == Control.Intents.CLICK_TYPE_SHORT ? "SHORT" : "LONG"));
+
+        if (clickType == Control.Intents.CLICK_TYPE_SHORT) {
+            Intent intent = new Intent(mContext, ListLocationControlExtension.class);
+            // Here we pass the item position to the next control. It would
+            // also be possible to put some unique item id in the listitem and
+            // pass listItem.listItemId here.
+        	intent.putExtra(ListLocationControlExtension.EXTRA_ADAPTER_ID, mAdapters.get(listItem.listItemPosition).getId());
+            mControlManager.startControl(intent);
+        }
     }
 
     protected ControlListItem createControlListItem(int position) {
 
         ControlListItem item = new ControlListItem();
-        item.layoutReference = R.id.gallery;
-        item.dataXmlLayout = R.layout.sw2_item_gallery;
-        item.listItemId = position;
+        item.layoutReference = R.id.listView;
+        item.dataXmlLayout = R.layout.sw2_item_adapter;
         item.listItemPosition = position;
+        // We use position as listItemId. Here we could use some other unique id
+        // to reference the list data
+        item.listItemId = position;
 
-        // Header data
         Bundle headerBundle = new Bundle();
         headerBundle.putInt(Control.Intents.EXTRA_LAYOUT_REFERENCE, R.id.title);
-        headerBundle.putString(Control.Intents.EXTRA_TEXT, mGalleryContent[position]);
+        
+        // TODO predelat na getName() az to bude spravne naplnene
+        headerBundle.putString(Control.Intents.EXTRA_TEXT, mAdapters.get(position).getId());
 
-        // Body data
-        Bundle bodyBundle = new Bundle();
-        bodyBundle.putInt(Control.Intents.EXTRA_LAYOUT_REFERENCE, R.id.body);
-        bodyBundle.putString(Control.Intents.EXTRA_TEXT, mGalleryContent[position]);
-
-        item.layoutData = new Bundle[2];
+        item.layoutData = new Bundle[1];
         item.layoutData[0] = headerBundle;
-        item.layoutData[1] = bodyBundle;
 
         return item;
     }
