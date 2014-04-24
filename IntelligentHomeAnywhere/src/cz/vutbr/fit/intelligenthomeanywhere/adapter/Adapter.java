@@ -41,7 +41,7 @@ public class Adapter {
 		result += "Role is " + mRole + "\n";
 		result += "___start of sensors___\n";
 		
-		for(BaseDevice dev : mDevices.getDevices().values()){
+		for(BaseDevice dev : mDevices.getDevices()){
 			result += dev.toDebugString();
 			result += "__\n";
 		}
@@ -126,7 +126,7 @@ public class Adapter {
 	 * Return map with all devices;
 	 * @return map with all devices (or empty map)
 	 */
-	public Map<String, BaseDevice> getDevices() {
+	public List<BaseDevice> getDevices() {
 		return mDevices.getDevices();
 	}
 	

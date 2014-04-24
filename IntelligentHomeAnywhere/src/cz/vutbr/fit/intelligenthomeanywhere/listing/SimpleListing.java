@@ -15,11 +15,11 @@ public class SimpleListing {
 	private final Map<String, String> mLocations = new HashMap<String, String>();
 	
 	/**
-	 * Return all devices.
-	 * @return map with devices (or empty map).
+	 * Return list of all devices.
+	 * @return list with devices (or empty map).
 	 */
-	public Map<String, BaseDevice> getDevices() {
-		return mDevices;
+	public List<BaseDevice> getDevices() {
+		return new ArrayList<BaseDevice>(mDevices.values());
 	}
 	
 	/**

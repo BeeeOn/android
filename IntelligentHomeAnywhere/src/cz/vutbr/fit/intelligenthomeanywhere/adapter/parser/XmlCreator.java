@@ -904,7 +904,7 @@ public class XmlCreator {
 			
 				serializer.startTag(null, "capabilities");
 					
-				for (BaseDevice d : mAdapter.getDevices().values()) {
+				for (BaseDevice d : mAdapter.getDevices()) {
 					serializer.startTag(null, "device");
 					serializer.attribute(null, "initialized", (d.isInitialized() ? "1" : "0"));
 					serializer.attribute(null, "type", "0x" + Integer.toHexString(d.getType()));
