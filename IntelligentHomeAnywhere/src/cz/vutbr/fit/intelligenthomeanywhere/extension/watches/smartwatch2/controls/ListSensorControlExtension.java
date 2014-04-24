@@ -60,6 +60,10 @@ public class ListSensorControlExtension extends ManagedControlExtension {
 	public static final String EXTRA_LOCATION_NAME = "LOCATION_NAME";
 
 	private List<BaseDevice> mDevices;
+	private String mLocationStr;
+	private Adapter mAdapter;
+	
+	protected int mLastKnowPosition = 0;
 	
     /**
      * @see ManagedControlExtension#ManagedControlExtension(Context, String,
@@ -87,24 +91,31 @@ public class ListSensorControlExtension extends ManagedControlExtension {
 
         
         String adapterId = getIntent().getStringExtra(EXTRA_ADAPTER_ID);
-        String locationStr = getIntent().getStringExtra(EXTRA_LOCATION_NAME);
-        if (adapterId == null || locationStr == null) {
+        mLocationStr = getIntent().getStringExtra(EXTRA_LOCATION_NAME);
+        if (adapterId == null || mLocationStr == null) {
         	mControlManager.onBack();
         	return;
         }
         
-        mDevices = mController.getAdapter(adapterId).getDevicesByLocation(locationStr);
+        mAdapter = mController.getAdapter(adapterId);
+        mDevices = mAdapter.getDevicesByLocation(mLocationStr);
         
         
         sendListCount(R.id.listView, mDevices.size());
 
+		// If requested, move to the correct position in the list.
+		int startPosition = getIntent().getIntExtra(
+				GalleryControlExtension.EXTRA_INITIAL_POSITION, 0);
+		mLastKnowPosition = startPosition;
+		sendListPosition(R.id.listView, startPosition);
     }
 
     @Override
     public void onPause() {
         super.onPause();
         // Position is saved into Control's Intent, possibly to be used later.
-//        getIntent().putExtra(GalleryTestControl.EXTRA_INITIAL_POSITION, mLastKnowPosition);
+        getIntent().putExtra(GalleryControlExtension.EXTRA_INITIAL_POSITION,
+				mLastKnowPosition);
     }
 
     @Override
@@ -123,7 +134,7 @@ public class ListSensorControlExtension extends ManagedControlExtension {
         super.onListItemSelected(listItem);
         // We save the last "selected" position, this is the current visible
         // list item index. The position can later be used on resume
-//        mLastKnowPosition = listItem.listItemPosition;
+        mLastKnowPosition = listItem.listItemPosition;
     }
 
     @Override
@@ -134,12 +145,14 @@ public class ListSensorControlExtension extends ManagedControlExtension {
                 + (clickType == Control.Intents.CLICK_TYPE_SHORT ? "SHORT" : "LONG"));
 
         if (clickType == Control.Intents.CLICK_TYPE_SHORT) {
-            //Intent intent = new Intent(mContext, GalleryTestControl.class);
             // Here we pass the item position to the next control. It would
             // also be possible to put some unique item id in the listitem and
             // pass listItem.listItemId here.
-        	//intent.putExtra(GalleryTestControl.EXTRA_INITIAL_POSITION, listItem.listItemPosition);
-            //mControlManager.startControl(intent);
+        	Intent intent = new Intent(mContext, GalleryControlExtension.class);
+        	intent.putExtra(ListSensorControlExtension.EXTRA_ADAPTER_ID, mAdapter.getId());
+            intent.putExtra(ListSensorControlExtension.EXTRA_LOCATION_NAME, mLocationStr);
+            intent.putExtra(GalleryControlExtension.EXTRA_INITIAL_POSITION, listItem.listItemPosition);
+        	mControlManager.startControl(intent);
         }
     }
 

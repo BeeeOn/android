@@ -50,7 +50,7 @@ import cz.vutbr.fit.intelligenthomeanywhere.extension.watches.smartwatch2.SW2Ext
 /**
  * GalleryTestControl displays a swipeable gallery, based on a string array.
  */
-public class GalleryTestControl extends ManagedControlExtension {
+public class GalleryControlExtension extends ManagedControlExtension {
 
     protected int mLastKnowPosition = 0;
     
@@ -67,7 +67,7 @@ public class GalleryTestControl extends ManagedControlExtension {
      * @see ManagedControlExtension#ManagedControlExtension(Context, String,
      *      ControlManagerCostanza, Intent)
      */
-    public GalleryTestControl(Context context, String hostAppPackageName,
+    public GalleryControlExtension(Context context, String hostAppPackageName,
             ControlManagerSmartWatch2 controlManager, Intent intent) {
         super(context, hostAppPackageName, controlManager, intent);
     }
@@ -80,7 +80,6 @@ public class GalleryTestControl extends ManagedControlExtension {
      // If requested, move to the correct position in the list.
         int startPosition = getIntent().getIntExtra(EXTRA_INITIAL_POSITION, 0);
         mLastKnowPosition = startPosition;
-        sendListPosition(R.id.gallery, startPosition);
         
         String adapterId = getIntent().getStringExtra(EXTRA_ADAPTER_ID);
         String locationStr = getIntent().getStringExtra(EXTRA_LOCATION_NAME);
@@ -92,7 +91,8 @@ public class GalleryTestControl extends ManagedControlExtension {
         mDevices = mController.getAdapter(adapterId).getDevicesByLocation(locationStr);
         
         
-        sendListCount(R.id.listView, mDevices.size());
+        sendListCount(R.id.gallery, mDevices.size());
+        sendListPosition(R.id.gallery, startPosition);
         
     }
 
@@ -141,16 +141,16 @@ public class GalleryTestControl extends ManagedControlExtension {
         // Header data
         Bundle headerBundle = new Bundle();
         headerBundle.putInt(Control.Intents.EXTRA_LAYOUT_REFERENCE, R.id.title);
-        headerBundle.putString(Control.Intents.EXTRA_TEXT, mGalleryContent[position]);
+        headerBundle.putString(Control.Intents.EXTRA_TEXT, mDevices.get(position).getName());
 
         // Body data
-        Bundle bodyBundle = new Bundle();
-        bodyBundle.putInt(Control.Intents.EXTRA_LAYOUT_REFERENCE, R.id.body);
-        bodyBundle.putString(Control.Intents.EXTRA_TEXT, mGalleryContent[position]);
+//        Bundle bodyBundle = new Bundle();
+//        bodyBundle.putInt(Control.Intents.EXTRA_LAYOUT_REFERENCE, R.id.body);
+//        bodyBundle.putString(Control.Intents.EXTRA_TEXT, mGalleryContent[position]);
 
-        item.layoutData = new Bundle[2];
+        item.layoutData = new Bundle[1];
         item.layoutData[0] = headerBundle;
-        item.layoutData[1] = bodyBundle;
+//        item.layoutData[1] = bodyBundle;
 
         return item;
     }
