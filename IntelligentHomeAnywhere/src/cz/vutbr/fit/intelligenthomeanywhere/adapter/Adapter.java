@@ -5,7 +5,6 @@ package cz.vutbr.fit.intelligenthomeanywhere.adapter;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import cz.vutbr.fit.intelligenthomeanywhere.User;
 import cz.vutbr.fit.intelligenthomeanywhere.adapter.device.BaseDevice;

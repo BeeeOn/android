@@ -1,7 +1,6 @@
 package cz.vutbr.fit.intelligenthomeanywhere.listing;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -35,13 +34,7 @@ public class SimpleListing {
 	 * @return list with locations (or empty list).
 	 */
 	public List<String> getLocations() {
-		List<String> locations = new ArrayList<String>();
-		
-		for (String location : mLocations.values()) {
-			locations.add(location);
-		}
-		
-		return locations;
+		return new ArrayList<String>(mLocations.values());
 	}
 
 	/**
@@ -49,16 +42,7 @@ public class SimpleListing {
 	 * Also updates uninitialized and locations maps.
 	 * @param devices
 	 */
-	public void setDevices(final Map<String, BaseDevice> devices) {
-		setDevices(devices.values());
-	}
-
-	/**
-	 * Add all devices to this listing.
-	 * Also updates uninitialized and locations maps.
-	 * @param devices
-	 */
-	public void setDevices(final Collection<BaseDevice> devices) {
+	public void setDevices(final List<BaseDevice> devices) {
 		clearDevices();
 
 		for (BaseDevice device : devices) {

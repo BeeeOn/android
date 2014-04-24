@@ -4,8 +4,6 @@
 package cz.vutbr.fit.intelligenthomeanywhere.network;
 
 import cz.vutbr.fit.intelligenthomeanywhere.User;
-import cz.vutbr.fit.intelligenthomeanywhere.User.Gender;
-import cz.vutbr.fit.intelligenthomeanywhere.User.Role;
 
 /**
  * @author ThinkDeep

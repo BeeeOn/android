@@ -1,32 +1,20 @@
 package cz.vutbr.fit.intelligenthomeanywhere.controller;
 
-import java.io.IOException;
-import java.net.UnknownHostException;
-import java.security.KeyManagementException;
-import java.security.KeyStoreException;
-import java.security.NoSuchAlgorithmException;
-import java.security.cert.CertificateException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import javax.net.ssl.SSLHandshakeException;
-
-import org.xmlpull.v1.XmlPullParserException;
-
 import android.content.Context;
-import cz.vutbr.fit.intelligenthomeanywhere.exception.ComVerMisException;
-import cz.vutbr.fit.intelligenthomeanywhere.exception.CommunicationException;
-import cz.vutbr.fit.intelligenthomeanywhere.exception.NoConnectionException;
-import cz.vutbr.fit.intelligenthomeanywhere.exception.NotImplementedException;
-import cz.vutbr.fit.intelligenthomeanywhere.exception.NotRegAException;
-import cz.vutbr.fit.intelligenthomeanywhere.exception.NotRegBException;
-import cz.vutbr.fit.intelligenthomeanywhere.exception.XmlVerMisException;
 import cz.vutbr.fit.intelligenthomeanywhere.User;
 import cz.vutbr.fit.intelligenthomeanywhere.adapter.Adapter;
 import cz.vutbr.fit.intelligenthomeanywhere.adapter.device.BaseDevice;
 import cz.vutbr.fit.intelligenthomeanywhere.adapter.device.BaseDevice.SaveDevice;
 import cz.vutbr.fit.intelligenthomeanywhere.adapter.device.DeviceLog;
+import cz.vutbr.fit.intelligenthomeanywhere.exception.CommunicationException;
+import cz.vutbr.fit.intelligenthomeanywhere.exception.NoConnectionException;
+import cz.vutbr.fit.intelligenthomeanywhere.exception.NotImplementedException;
+import cz.vutbr.fit.intelligenthomeanywhere.exception.NotRegAException;
+import cz.vutbr.fit.intelligenthomeanywhere.exception.NotRegBException;
 import cz.vutbr.fit.intelligenthomeanywhere.household.DemoHousehold;
 import cz.vutbr.fit.intelligenthomeanywhere.household.Household;
 import cz.vutbr.fit.intelligenthomeanywhere.listing.FavoritesListing;

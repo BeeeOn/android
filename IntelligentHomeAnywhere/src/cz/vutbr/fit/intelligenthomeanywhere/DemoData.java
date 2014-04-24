@@ -5,7 +5,6 @@ import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.res.AssetManager;
 import android.util.Log;

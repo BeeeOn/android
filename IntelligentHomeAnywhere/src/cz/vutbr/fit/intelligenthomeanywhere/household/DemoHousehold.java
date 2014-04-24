@@ -1,6 +1,5 @@
 package cz.vutbr.fit.intelligenthomeanywhere.household;
 
-import java.io.File;
 import java.util.ArrayList;
 
 import android.content.Context;

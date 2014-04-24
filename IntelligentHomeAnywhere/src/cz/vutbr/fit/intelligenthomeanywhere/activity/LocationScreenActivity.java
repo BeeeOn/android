@@ -2,10 +2,6 @@ package cz.vutbr.fit.intelligenthomeanywhere.activity;
 
 import java.util.List;
 
-import com.actionbarsherlock.app.SherlockFragmentActivity;
-import com.actionbarsherlock.view.MenuItem;
-
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -16,7 +12,6 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
-import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.AdapterView;
@@ -26,6 +21,10 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.actionbarsherlock.app.SherlockFragmentActivity;
+import com.actionbarsherlock.view.MenuItem;
+
 import cz.vutbr.fit.intelligenthomeanywhere.Compatibility;
 import cz.vutbr.fit.intelligenthomeanywhere.Constants;
 import cz.vutbr.fit.intelligenthomeanywhere.MenuListAdapter;
