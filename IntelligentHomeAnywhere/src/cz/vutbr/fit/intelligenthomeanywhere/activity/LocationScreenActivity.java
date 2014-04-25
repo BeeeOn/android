@@ -24,6 +24,7 @@ import android.widget.Toast;
 
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.MenuItem;
+import com.actionbarsherlock.view.Window;
 
 import cz.vutbr.fit.intelligenthomeanywhere.Compatibility;
 import cz.vutbr.fit.intelligenthomeanywhere.Constants;
@@ -42,6 +43,7 @@ import cz.vutbr.fit.intelligenthomeanywhere.listing.LocationListing;
 public class LocationScreenActivity extends SherlockFragmentActivity {
 	
 	private Controller mController;
+	private LocationScreenActivity mActivity;
 	private DrawerLayout mDrawerLayout;
     private ListView mDrawerList;
     private ActionBarDrawerToggle mDrawerToggle;
@@ -59,11 +61,17 @@ public class LocationScreenActivity extends SherlockFragmentActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
 		setContentView(R.layout.activity_locaction_screen);
 		
+		// Get Activity
+		mActivity = this;
+		
+		// Get controller
 		mController = Controller.getInstance(this);
 		
-		
+		setSupportProgressBarIndeterminate(true);
+		setSupportProgressBarIndeterminateVisibility(true);
 		
 		Thread thUniniDev = new Thread(new Runnable() {
 			@Override
@@ -73,17 +81,34 @@ public class LocationScreenActivity extends SherlockFragmentActivity {
 		});
 		thUniniDev.start();
 		
-		List<LocationListing> locations = null;
+		//List<LocationListing> locations = null;
+		
 		Thread thLoc = new Thread(new Runnable() {
 			@Override
 			public void run() {
-				List<LocationListing> locations2 = mController.getLocations();
-				Log.d("lokace",locations2.toString());
-				getLocations(locations2);
+				List<LocationListing> locations = mController.getLocations();
+				Log.d("lokace",locations.toArray().toString());
+				getLocations(locations);
 			}
 		});
 		thLoc.start();
 
+		
+		
+		
+		int marginTop = 5;
+		int ID = Constants.BUTTON_ID;
+		/*for(LocationListing location : locations) {
+			if (addLocationButton(location.getName(), ID, marginTop))
+				ID++;
+		}
+		if(locations.size() == 1){
+			Button onlyOne = (Button)findViewById(--ID);
+			onlyOne.performClick();
+		}*/
+	}
+	
+	public boolean getLocations(List<LocationListing> locations) {
 		
 		mTitle = mDrawerTitle = "IHA";
 		
@@ -145,23 +170,10 @@ public class LocationScreenActivity extends SherlockFragmentActivity {
  
         mDrawerLayout.setDrawerListener(mDrawerToggle);
  
-        if (savedInstanceState == null) {
-            selectItem(0);
-        }
+//        if (savedInstanceState == null) {
+//            selectItem(0);
+//        }
 		
-		int marginTop = 5;
-		int ID = Constants.BUTTON_ID;
-		/*for(LocationListing location : locations) {
-			if (addLocationButton(location.getName(), ID, marginTop))
-				ID++;
-		}
-		if(locations.size() == 1){
-			Button onlyOne = (Button)findViewById(--ID);
-			onlyOne.performClick();
-		}*/
-	}
-	
-	public boolean getLocations(List<LocationListing> locations) {
 		
 		return true;
 	}
@@ -218,7 +230,7 @@ public class LocationScreenActivity extends SherlockFragmentActivity {
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
         // Sync the toggle state after onRestoreInstanceState has occurred.
-        mDrawerToggle.syncState();
+       // mDrawerToggle.syncState();
     }
  
     @Override

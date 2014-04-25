@@ -159,7 +159,8 @@ public final class Controller {
 
 	private boolean refreshAdapter(Adapter adapter, boolean forceUpdate) {
 		Time that = new Time();
-		that.set(adapter.lastUpdate.toMillis(true) - 10000); // 10 seconds interval between updates
+		that.setToNow();
+		that.set(that.toMillis(true) - 10000); // 10 seconds interval between updates
 		
 		// Update only when needed
 		if (!forceUpdate && !adapter.lastUpdate.before(that))

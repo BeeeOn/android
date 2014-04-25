@@ -3,6 +3,7 @@ package cz.vutbr.fit.intelligenthomeanywhere.activity;
 import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -39,6 +40,7 @@ public class LoginActivity extends Activity {
 	private String acEmail;
 	private Controller mController;
 	private LoginActivity mActivity;
+	private ProgressDialog mProgress;
 	
 	private static final String TAG = "LOGIN";
 	
@@ -64,7 +66,14 @@ public class LoginActivity extends Activity {
 		btnGoogle.setOnClickListener(new OnClickListener(){
 			@Override
 			public void onClick(View v) {
-
+				
+				mProgress = new ProgressDialog(mActivity);
+				mProgress.setTitle("Please Wait!!");
+				mProgress.setMessage("Sing In to server!!");
+				mProgress.setCancelable(false);
+				mProgress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+				mProgress.show();
+				
 				try {
 					getGoogleAccessFromServer(v);
 				} catch (NotRegAException e) {
@@ -113,10 +122,14 @@ public class LoginActivity extends Activity {
         	try {
 				if(this.mController.login(this.acEmail)) {
 					Log.d(TAG, "Login: true");
+					mProgress.dismiss();
 					Intent intent = new Intent(mActivity, LocationScreenActivity.class);
 					intent.putExtra(Constants.LOGIN, Constants.LOGIN_DEMO);
 					//intent.putExtra(name, value);
+					intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+		            intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
 					mActivity.startActivity(intent);
+					mActivity.finish();
 				}
 				else{
 					Log.d(TAG, "Login: false");
@@ -137,6 +150,12 @@ public class LoginActivity extends Activity {
         	// Get acces token
 			//new GetGoogleAuth(this, this.acEmail).execute();
         }
+    }
+    
+    @Override
+    public void onBackPressed(){
+    	super.onBackPressed();
+    	mActivity.finish();
     }
 	
 	/**
@@ -186,10 +205,14 @@ public class LoginActivity extends Activity {
 						try {
 							if(mController.login(acEmail)) {
 								Log.d(TAG, "Login: true");
+								mProgress.dismiss();
 								Intent intent = new Intent(mActivity, LocationScreenActivity.class);
 								intent.putExtra(Constants.LOGIN, Constants.LOGIN_DEMO);
 								//intent.putExtra(name, value);
+								intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+					            intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
 								mActivity.startActivity(intent);
+								mActivity.finish();
 				            }
 							else{
 								Log.d(TAG, "Login: false");

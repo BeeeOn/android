@@ -43,7 +43,7 @@ public class XmlParsers {
 	/**
 	 * Thats mean Android OS
 	 */
-	public static final String COM_VER = "1.0"; 
+	public static final String COM_VER = "1.6"; 
 	public static final String XML_VER = "1.0.1";
 	
 	/**
