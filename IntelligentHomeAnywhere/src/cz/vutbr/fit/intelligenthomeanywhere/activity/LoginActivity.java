@@ -126,8 +126,8 @@ public class LoginActivity extends Activity {
 					Intent intent = new Intent(mActivity, LocationScreenActivity.class);
 					intent.putExtra(Constants.LOGIN, Constants.LOGIN_DEMO);
 					//intent.putExtra(name, value);
-					intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-		            intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+					//intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+		            //intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
 					mActivity.startActivity(intent);
 					mActivity.finish();
 				}
@@ -209,8 +209,8 @@ public class LoginActivity extends Activity {
 								Intent intent = new Intent(mActivity, LocationScreenActivity.class);
 								intent.putExtra(Constants.LOGIN, Constants.LOGIN_DEMO);
 								//intent.putExtra(name, value);
-								intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-					            intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+								//intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+					            //intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
 								mActivity.startActivity(intent);
 								mActivity.finish();
 				            }

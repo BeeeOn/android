@@ -43,6 +43,8 @@ import cz.vutbr.fit.intelligenthomeanywhere.listing.LocationListing;
 public class LocationScreenActivity extends SherlockFragmentActivity {
 	
 	private Controller mController;
+	private List<LocationListing> locations;
+	
 	private LocationScreenActivity mActivity;
 	private DrawerLayout mDrawerLayout;
     private ListView mDrawerList;
@@ -50,6 +52,10 @@ public class LocationScreenActivity extends SherlockFragmentActivity {
     private MenuListAdapter mMenuAdapter;
     private CharSequence mDrawerTitle;
     private CharSequence mTitle;
+    
+    private static final String TAG = "Location";
+    
+    
     String[] title;
     String[] subtitle;
     int[] icon;
@@ -61,7 +67,7 @@ public class LocationScreenActivity extends SherlockFragmentActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
+		//requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
 		setContentView(R.layout.activity_locaction_screen);
 		
 		// Get Activity
@@ -70,8 +76,8 @@ public class LocationScreenActivity extends SherlockFragmentActivity {
 		// Get controller
 		mController = Controller.getInstance(this);
 		
-		setSupportProgressBarIndeterminate(true);
-		setSupportProgressBarIndeterminateVisibility(true);
+		//setSupportProgressBarIndeterminate(true);
+		//setSupportProgressBarIndeterminateVisibility(true);
 		
 		Thread thUniniDev = new Thread(new Runnable() {
 			@Override
@@ -86,9 +92,16 @@ public class LocationScreenActivity extends SherlockFragmentActivity {
 		Thread thLoc = new Thread(new Runnable() {
 			@Override
 			public void run() {
-				List<LocationListing> locations = mController.getLocations();
+				locations = mController.getLocations();
 				Log.d("lokace",locations.toArray().toString());
-				getLocations(locations);
+				
+				mActivity.runOnUiThread(new Runnable() {
+					@Override
+					public void run() {
+						getLocations(locations);
+					}}
+					);
+				
 			}
 		});
 		thLoc.start();
@@ -108,22 +121,32 @@ public class LocationScreenActivity extends SherlockFragmentActivity {
 		}*/
 	}
 	
-	public boolean getLocations(List<LocationListing> locations) {
+	public boolean getLocations(List<LocationListing> locs) {
+		
+		Log.d(TAG, "ready to work with Locations");
 		
 		mTitle = mDrawerTitle = "IHA";
+		title = new String[locs.size()];
+		subtitle = new String[locs.size()];
+		icon = new int[locs.size()];
+		for(int i = 0 ; i < locs.size();i++) {
+			title[i] = locs.get(i).getName();
+			subtitle[i] = locs.get(i).getName();
+			icon[i] = getIcon( (locs.get(i).getIcon()==null )?"0": locs.get(i).getIcon());
+		}
 		
 		// TEST VALUES
 		// Generate title
-        title = new String[] { "Title Fragment 1", "Title Fragment 2",
-                "Title Fragment 3" };
+//        title = new String[] { "Title Fragment 1", "Title Fragment 2",
+//                "Title Fragment 3" };
  
         // Generate subtitle
-        subtitle = new String[] { "Subtitle Fragment 1", "Subtitle Fragment 2",
-                "Subtitle Fragment 3" };
- 
+//        subtitle = new String[] { "Subtitle Fragment 1", "Subtitle Fragment 2",
+//                "Subtitle Fragment 3" };
+
         // Generate icon
-        icon = new int[] { R.drawable.action_about, R.drawable.action_settings,
-                R.drawable.collections_cloud };
+//        icon = new int[] { R.drawable.action_about, R.drawable.action_settings,
+//                R.drawable.collections_cloud,R.drawable.collections_cloud , R.drawable.action_settings};
 		
 		
 		// Locate DrawerLayout in activity_locaction_screen.xml
@@ -174,10 +197,25 @@ public class LocationScreenActivity extends SherlockFragmentActivity {
 //            selectItem(0);
 //        }
 		
-		
+        mDrawerToggle.syncState();
 		return true;
 	}
 	
+	private int getIcon(String icon2) {
+		int idIcon = Integer.parseInt(icon2);
+		
+		switch (idIcon) {
+		// Koupelna
+		case 0: 
+			return R.drawable.loc_bath_room;
+		// Loznice
+		case 1: 
+			return R.drawable.loc_bed_room;
+		}
+		
+		return 0;
+	}
+
 	@Override
     public boolean onOptionsItemSelected(MenuItem item) {
  
@@ -230,7 +268,7 @@ public class LocationScreenActivity extends SherlockFragmentActivity {
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
         // Sync the toggle state after onRestoreInstanceState has occurred.
-       // mDrawerToggle.syncState();
+        
     }
  
     @Override
