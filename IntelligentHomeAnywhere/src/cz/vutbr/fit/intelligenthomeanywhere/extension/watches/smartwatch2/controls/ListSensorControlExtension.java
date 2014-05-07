@@ -44,6 +44,7 @@ import android.util.Log;
 import com.sonyericsson.extras.liveware.aef.control.Control;
 import com.sonyericsson.extras.liveware.extension.util.ExtensionUtils;
 import com.sonyericsson.extras.liveware.extension.util.control.ControlListItem;
+import com.sonyericsson.extras.liveware.extension.util.control.ControlTouchEvent;
 
 import cz.vutbr.fit.intelligenthomeanywhere.R;
 import cz.vutbr.fit.intelligenthomeanywhere.adapter.Adapter;
@@ -97,7 +98,7 @@ public class ListSensorControlExtension extends ManagedControlExtension {
         	return;
         }
         
-        mAdapter = mController.getAdapter(adapterId,false);
+        mAdapter = mController.getAdapter(adapterId, false);
         mDevices = mAdapter.getDevicesByLocation(mLocationStr);
         
         
@@ -129,6 +130,13 @@ public class ListSensorControlExtension extends ManagedControlExtension {
         }
     }
 
+    @Override
+    public void onSwipe(int direction) {
+    	if (direction == Control.Intents.SWIPE_DIRECTION_RIGHT) {
+    		mControlManager.onBack();
+    	}
+    }
+    
     @Override
     public void onListItemSelected(ControlListItem listItem) {
         super.onListItemSelected(listItem);

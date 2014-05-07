@@ -81,6 +81,7 @@ public class ControlManagerSmartWatch2 extends ControlManagerBase {
         }
         
         // TODO zeptat se na predvoleny pohled, jestli existuje -> rovnou zapnout
+        // TODO zkontrolovat jestli obsahuje dane location nejake sensory!
         
         List<Adapter> adapters = mController.getAdapters();
         if (adapters.size() < 1) {

@@ -124,11 +124,16 @@ public class ListAdapterControlExtension extends ManagedControlExtension {
                 + (clickType == Control.Intents.CLICK_TYPE_SHORT ? "SHORT" : "LONG"));
 
         if (clickType == Control.Intents.CLICK_TYPE_SHORT) {
-            Intent intent = new Intent(mContext, ListLocationControlExtension.class);
-            // Here we pass the item position to the next control. It would
-            // also be possible to put some unique item id in the listitem and
-            // pass listItem.listItemId here.
-        	intent.putExtra(ListLocationControlExtension.EXTRA_ADAPTER_ID, mAdapters.get(listItem.listItemPosition).getId());
+            Intent intent;
+            List<String>locations = mAdapters.get(listItem.listItemPosition).getLocations();
+            if (locations.size() < 1) {
+            	intent = new Intent(mContext, TextControl.class);
+				intent.putExtra(TextControl.EXTRA_TEXT,
+						mContext.getString(R.string.no_location_available));
+            } else {
+            	intent = new Intent(mContext, ListLocationControlExtension.class);
+            	intent.putExtra(ListLocationControlExtension.EXTRA_ADAPTER_ID, mAdapters.get(listItem.listItemPosition).getId());
+            }
             mControlManager.startControl(intent);
         }
     }

@@ -11,21 +11,36 @@
         android:layout_height="wrap_content"
         android:layout_centerInParent="true" >
 
+        <ImageView
+            android:id="@+id/thumbnail"
+            android:layout_width="64px"
+            android:layout_height="64px"
+            android:clickable="true"
+           	android:layout_marginLeft="5px"
+           	android:layout_marginTop="5px"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"/>
+
         <TextView
             android:id="@+id/title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:clickable="true"
+            android:layout_toRightOf="@id/thumbnail"
+            android:gravity="center_vertical|center_vertical"
+            android:paddingLeft="5px"
+            android:paddingTop="20px"
             android:textColor="@android:color/black"
-            android:textSize="@dimen/smart_watch_2_text_size_large" />
+            android:textSize="@dimen/smart_watch_2_text_size_large"
+            android:textStyle="bold" />
 
-<!--         <TextView -->
-<!--             android:id="@+id/body" -->
-<!--             android:layout_width="wrap_content" -->
-<!--             android:layout_height="wrap_content" -->
-<!--             android:layout_below="@+id/title" -->
-<!--             android:textColor="@android:color/black" -->
-<!--             android:textSize="@dimen/smart_watch_2_text_size_medium" /> -->
+        <TextView
+            android:id="@+id/value"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/thumbnail"
+            android:gravity="center"
+            android:textColor="@android:color/black"
+            android:textSize="45px" />
     </RelativeLayout>
 
 </RelativeLayout>

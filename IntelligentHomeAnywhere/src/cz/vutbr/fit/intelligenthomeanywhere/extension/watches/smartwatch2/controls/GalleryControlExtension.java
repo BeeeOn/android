@@ -40,6 +40,7 @@ import android.os.Bundle;
 import android.util.Log;
 
 import com.sonyericsson.extras.liveware.aef.control.Control;
+import com.sonyericsson.extras.liveware.extension.util.ExtensionUtils;
 import com.sonyericsson.extras.liveware.extension.util.control.ControlListItem;
 
 import cz.vutbr.fit.intelligenthomeanywhere.R;
@@ -52,107 +53,126 @@ import cz.vutbr.fit.intelligenthomeanywhere.extension.watches.smartwatch2.SW2Ext
  */
 public class GalleryControlExtension extends ManagedControlExtension {
 
-    protected int mLastKnowPosition = 0;
-    
-    public final static String EXTRA_INITIAL_POSITION = "EXTRA_INITIAL_POSITION";
-    public static final String EXTRA_ADAPTER_ID = "ADAPTER_ID";
+	protected int mLastKnowPosition = 0;
+
+	public final static String EXTRA_INITIAL_POSITION = "EXTRA_INITIAL_POSITION";
+	public static final String EXTRA_ADAPTER_ID = "ADAPTER_ID";
 	public static final String EXTRA_LOCATION_NAME = "LOCATION_NAME";
-    
-    private Adapter mAdapter;
-    private String mLocationName;
-  
-    private List<BaseDevice> mDevices;
-    
-    /**
-     * @see ManagedControlExtension#ManagedControlExtension(Context, String,
-     *      ControlManagerCostanza, Intent)
-     */
-    public GalleryControlExtension(Context context, String hostAppPackageName,
-            ControlManagerSmartWatch2 controlManager, Intent intent) {
-        super(context, hostAppPackageName, controlManager, intent);
-    }
 
-    @Override
-    public void onResume() {
-        Log.d(SW2ExtensionService.LOG_TAG, "onResume");
-        showLayout(R.layout.sw2_gallery, null);
-        
-     // If requested, move to the correct position in the list.
-        int startPosition = getIntent().getIntExtra(EXTRA_INITIAL_POSITION, 0);
-        mLastKnowPosition = startPosition;
-        
-        String adapterId = getIntent().getStringExtra(EXTRA_ADAPTER_ID);
-        String locationStr = getIntent().getStringExtra(EXTRA_LOCATION_NAME);
-        if (adapterId == null || locationStr == null) {
-        	mControlManager.onBack();
-        	return;
-        }
-        
-        mDevices = mController.getAdapter(adapterId,false).getDevicesByLocation(locationStr);
-        
-        
-        sendListCount(R.id.gallery, mDevices.size());
-        sendListPosition(R.id.gallery, startPosition);
-        
-    }
+	private Adapter mAdapter;
+	private String mLocationName;
 
-    @Override
-    public void onPause() {
-        super.onPause();
-        // Position is saved into Control's Intent, possibly to be used later.
-        getIntent().putExtra(EXTRA_INITIAL_POSITION, mLastKnowPosition);
-    }
+	private List<BaseDevice> mDevices;
 
-    @Override
-    public void onRequestListItem(final int layoutReference, final int listItemPosition) {
-        Log.d(SW2ExtensionService.LOG_TAG, "onRequestListItem() - position " + listItemPosition);
-        if (layoutReference != -1 && listItemPosition != -1 && layoutReference == R.id.gallery) {
-            ControlListItem item = createControlListItem(listItemPosition);
-            if (item != null) {
-                sendListItem(item);
-            }
-        }
-    }
+	/**
+	 * @see ManagedControlExtension#ManagedControlExtension(Context, String,
+	 *      ControlManagerCostanza, Intent)
+	 */
+	public GalleryControlExtension(Context context, String hostAppPackageName,
+			ControlManagerSmartWatch2 controlManager, Intent intent) {
+		super(context, hostAppPackageName, controlManager, intent);
+	}
 
-    @Override
-    public void onListItemSelected(ControlListItem listItem) {
-        super.onListItemSelected(listItem);
-        // We save the last "selected" position, this is the current visible
-        // list item index. The position can later be used on resume
-        mLastKnowPosition = listItem.listItemPosition;
-    }
+	@Override
+	public void onResume() {
+		Log.d(SW2ExtensionService.LOG_TAG, "onResume");
+		showLayout(R.layout.sw2_gallery, null);
 
-    @Override
-    public void onListItemClick(final ControlListItem listItem, final int clickType,
-            final int itemLayoutReference) {
-        Log.d(SW2ExtensionService.LOG_TAG, "Item clicked. Position " + listItem.listItemPosition
-                + ", itemLayoutReference " + itemLayoutReference + ". Type was: "
-                + (clickType == Control.Intents.CLICK_TYPE_SHORT ? "SHORT" : "LONG"));
-    }
+		// If requested, move to the correct position in the list.
+		int startPosition = getIntent().getIntExtra(EXTRA_INITIAL_POSITION, 0);
+		mLastKnowPosition = startPosition;
 
-    protected ControlListItem createControlListItem(int position) {
+		String adapterId = getIntent().getStringExtra(EXTRA_ADAPTER_ID);
+		String locationStr = getIntent().getStringExtra(EXTRA_LOCATION_NAME);
+		if (adapterId == null || locationStr == null) {
+			mControlManager.onBack();
+			return;
+		}
 
-        ControlListItem item = new ControlListItem();
-        item.layoutReference = R.id.gallery;
-        item.dataXmlLayout = R.layout.sw2_item_gallery;
-        item.listItemId = position;
-        item.listItemPosition = position;
+		mDevices = mController.getAdapter(adapterId, false).getDevicesByLocation(
+				locationStr);
 
-        // Header data
-        Bundle headerBundle = new Bundle();
-        headerBundle.putInt(Control.Intents.EXTRA_LAYOUT_REFERENCE, R.id.title);
-        headerBundle.putString(Control.Intents.EXTRA_TEXT, mDevices.get(position).getName());
+		sendListCount(R.id.gallery, mDevices.size());
+		sendListPosition(R.id.gallery, startPosition);
 
-        // Body data
-//        Bundle bodyBundle = new Bundle();
-//        bodyBundle.putInt(Control.Intents.EXTRA_LAYOUT_REFERENCE, R.id.body);
-//        bodyBundle.putString(Control.Intents.EXTRA_TEXT, mGalleryContent[position]);
+	}
 
-        item.layoutData = new Bundle[1];
-        item.layoutData[0] = headerBundle;
-//        item.layoutData[1] = bodyBundle;
+	@Override
+	public void onPause() {
+		super.onPause();
+		// Position is saved into Control's Intent, possibly to be used later.
+		getIntent().putExtra(EXTRA_INITIAL_POSITION, mLastKnowPosition);
+	}
 
-        return item;
-    }
+	@Override
+	public void onRequestListItem(final int layoutReference,
+			final int listItemPosition) {
+		Log.d(SW2ExtensionService.LOG_TAG, "onRequestListItem() - position "
+				+ listItemPosition);
+		if (layoutReference != -1 && listItemPosition != -1
+				&& layoutReference == R.id.gallery) {
+			ControlListItem item = createControlListItem(listItemPosition);
+			if (item != null) {
+				sendListItem(item);
+			}
+		}
+	}
+
+	@Override
+	public void onListItemSelected(ControlListItem listItem) {
+		super.onListItemSelected(listItem);
+		// We save the last "selected" position, this is the current visible
+		// list item index. The position can later be used on resume
+		mLastKnowPosition = listItem.listItemPosition;
+	}
+
+	@Override
+	public void onListItemClick(final ControlListItem listItem,
+			final int clickType, final int itemLayoutReference) {
+		Log.d(SW2ExtensionService.LOG_TAG, "Item clicked. Position "
+				+ listItem.listItemPosition
+				+ ", itemLayoutReference "
+				+ itemLayoutReference
+				+ ". Type was: "
+				+ (clickType == Control.Intents.CLICK_TYPE_SHORT ? "SHORT"
+						: "LONG"));
+	}
+
+	protected ControlListItem createControlListItem(int position) {
+
+		ControlListItem item = new ControlListItem();
+		item.layoutReference = R.id.gallery;
+		item.dataXmlLayout = R.layout.sw2_item_gallery;
+		item.listItemId = position;
+		item.listItemPosition = position;
+
+		BaseDevice curDevice = mDevices.get(position);
+		
+		// Title data
+		Bundle headerBundle = new Bundle();
+		headerBundle.putInt(Control.Intents.EXTRA_LAYOUT_REFERENCE, R.id.title);
+		headerBundle.putString(Control.Intents.EXTRA_TEXT,
+				curDevice.getName());
+
+		// Icon data
+		Bundle iconBundle = new Bundle();
+		iconBundle.putInt(Control.Intents.EXTRA_LAYOUT_REFERENCE,
+				R.id.thumbnail);
+		iconBundle.putString(Control.Intents.EXTRA_DATA_URI, ExtensionUtils
+				.getUriString(mContext, curDevice
+						.getTypeIconResource()));
+
+		// Value data
+		Bundle valueBundle = new Bundle();
+		valueBundle.putInt(Control.Intents.EXTRA_LAYOUT_REFERENCE, R.id.value);
+		valueBundle.putString(Control.Intents.EXTRA_TEXT, curDevice.getStringValueUnit(mContext));
+		
+		item.layoutData = new Bundle[3];
+		item.layoutData[0] = headerBundle;
+		item.layoutData[1] = iconBundle;
+		item.layoutData[2] = valueBundle;
+
+		return item;
+	}
 
 }

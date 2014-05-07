@@ -123,6 +123,14 @@ public class ControlManagerBase extends ControlExtension {
     }
 
     @Override
+    public void onSwipe(int direction) {
+    	Log.v(SW2ExtensionService.LOG_TAG, "onSwipe");
+        if (mCurrentControl != null) {
+            mCurrentControl.onSwipe(direction);
+        }
+    }
+    
+    @Override
     public void onDoAction(int requestCode, Bundle bundle) {
         Log.v(SW2ExtensionService.LOG_TAG, "onDoAction");
         if (mCurrentControl != null) {

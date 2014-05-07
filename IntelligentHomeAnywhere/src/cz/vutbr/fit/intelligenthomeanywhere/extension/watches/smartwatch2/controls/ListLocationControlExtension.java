@@ -91,7 +91,7 @@ public class ListLocationControlExtension extends ManagedControlExtension {
 			return;
 		}
 
-		mAdapter = mController.getAdapter(adapterId,false);
+		mAdapter = mController.getAdapter(adapterId, false);
 		mLocations = mAdapter.getLocations();
 
 		sendListCount(R.id.listView, mLocations.size());
@@ -177,8 +177,10 @@ public class ListLocationControlExtension extends ManagedControlExtension {
 		Bundle iconBundle = new Bundle();
 		iconBundle.putInt(Control.Intents.EXTRA_LAYOUT_REFERENCE,
 				R.id.thumbnail);
+		
+		// TODO prevest uzivateluv obrazek
 		iconBundle.putString(Control.Intents.EXTRA_DATA_URI, ExtensionUtils
-				.getUriString(mContext, R.drawable.thumbnail_list_item));
+				.getUriString(mContext, R.drawable.appwidget_bg_pressed));
 
 		Bundle headerBundle = new Bundle();
 		headerBundle.putInt(Control.Intents.EXTRA_LAYOUT_REFERENCE, R.id.title);
