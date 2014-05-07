@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="@dimen/smart_watch_2_control_width"
+    android:layout_height="50px"
+    android:background="@color/gray"
+    tools:ignore="ContentDescription,PxUsage,UselessParent" >
+
+    <RelativeLayout
+        android:id="@+id/content_container"
+        android:layout_width="fill_parent"
+        android:layout_height="48px"
+        android:layout_alignParentTop="true" >
+
+        <ImageView
+            android:id="@+id/thumbnail"
+            android:layout_width="32px"
+            android:layout_height="32px"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:clickable="true" />
+
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@+id/thumbnail"
+            android:paddingLeft="4px"
+            android:textColor="@android:color/black"
+            android:textSize="@dimen/smart_watch_2_text_size_large" />
+
+        <!-- <TextView -->
+        <!-- android:id="@+id/body" -->
+        <!-- android:layout_width="wrap_content" -->
+        <!-- android:layout_height="wrap_content" -->
+        <!-- android:layout_below="@+id/title" -->
+        <!-- android:layout_toRightOf="@+id/thumbnail" -->
+        <!-- android:paddingLeft="4px" -->
+        <!-- android:textColor="@android:color/black" -->
+        <!-- android:textSize="@dimen/smart_watch_2_text_size_medium" /> -->
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="2px"
+        android:layout_alignParentBottom="true"
+        android:layout_below="@+id/content_container" >
+
+        <View
+            android:id="@+id/row1"
+            android:layout_width="fill_parent"
+            android:layout_height="1px"
+            android:background="@color/darkgray" />
+
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="1px"
+            android:layout_below="@+id/row1"
+            android:background="@color/gray" />
+    </RelativeLayout>
+
+</RelativeLayout>
