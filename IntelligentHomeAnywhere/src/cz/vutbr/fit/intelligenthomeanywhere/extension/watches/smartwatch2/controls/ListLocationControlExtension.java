@@ -91,7 +91,7 @@ public class ListLocationControlExtension extends ManagedControlExtension {
 			return;
 		}
 
-		mAdapter = mController.getAdapter(adapterId);
+		mAdapter = mController.getAdapter(adapterId,false);
 		mLocations = mAdapter.getLocations();
 
 		sendListCount(R.id.listView, mLocations.size());

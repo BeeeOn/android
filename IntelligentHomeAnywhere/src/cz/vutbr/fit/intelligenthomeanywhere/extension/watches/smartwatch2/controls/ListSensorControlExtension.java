@@ -97,7 +97,7 @@ public class ListSensorControlExtension extends ManagedControlExtension {
         	return;
         }
         
-        mAdapter = mController.getAdapter(adapterId);
+        mAdapter = mController.getAdapter(adapterId,false);
         mDevices = mAdapter.getDevicesByLocation(mLocationStr);
         
         

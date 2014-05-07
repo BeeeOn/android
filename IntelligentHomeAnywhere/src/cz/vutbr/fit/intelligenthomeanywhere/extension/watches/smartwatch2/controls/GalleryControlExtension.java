@@ -88,7 +88,7 @@ public class GalleryControlExtension extends ManagedControlExtension {
         	return;
         }
         
-        mDevices = mController.getAdapter(adapterId).getDevicesByLocation(locationStr);
+        mDevices = mController.getAdapter(adapterId,false).getDevicesByLocation(locationStr);
         
         
         sendListCount(R.id.gallery, mDevices.size());
