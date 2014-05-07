@@ -10,4 +10,5 @@
     <color name="darkgray">#888888</color>
     <color name="log_blue2">#0099cc</color>
     <color name="log_blue1">#33b5e5</color>
+    <color name="light_gray">#e7e9ea</color>
 </resources>

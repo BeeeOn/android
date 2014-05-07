@@ -6,6 +6,14 @@
     -->
     <style name="AppBaseTheme" parent="Theme.Sherlock.Light">
         <!-- API 11 theme customizations can go here. -->
+
+
+        <item name="android:actionBarStyle">@style/Widget.MyTheme.ActionBar</item>
     </style>
+    
+    <style name="Widget.MyTheme.ActionBar" parent="Widget.Sherlock.Light.ActionBar">
+	    <item name="android:background">@color/log_blue2</item>
+	    <item name="background">@color/log_blue2</item>
+	</style>
 
 </resources>

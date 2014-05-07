@@ -10,7 +10,9 @@ import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
+import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v4.app.FragmentPagerAdapter;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup.LayoutParams;
@@ -23,6 +25,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.actionbarsherlock.app.SherlockFragmentActivity;
+import com.actionbarsherlock.app.ActionBar.Tab;
+import com.actionbarsherlock.app.ActionBar;
+
 import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.view.Window;
 
@@ -30,6 +35,8 @@ import cz.vutbr.fit.intelligenthomeanywhere.Compatibility;
 import cz.vutbr.fit.intelligenthomeanywhere.Constants;
 import cz.vutbr.fit.intelligenthomeanywhere.MenuListAdapter;
 import cz.vutbr.fit.intelligenthomeanywhere.R;
+import cz.vutbr.fit.intelligenthomeanywhere.SensorListAdapter;
+import cz.vutbr.fit.intelligenthomeanywhere.TabsAdapter;
 import cz.vutbr.fit.intelligenthomeanywhere.adapter.device.BaseDevice;
 import cz.vutbr.fit.intelligenthomeanywhere.controller.Controller;
 import cz.vutbr.fit.intelligenthomeanywhere.listing.LocationListing;
@@ -44,21 +51,26 @@ public class LocationScreenActivity extends SherlockFragmentActivity {
 	
 	private Controller mController;
 	private List<LocationListing> locations;
+	private List<BaseDevice> sensors;
 	
 	private LocationScreenActivity mActivity;
 	private DrawerLayout mDrawerLayout;
     private ListView mDrawerList;
     private ActionBarDrawerToggle mDrawerToggle;
     private MenuListAdapter mMenuAdapter;
+    
     private CharSequence mDrawerTitle;
+    
+    private SensorListAdapter mSensorAdapter;
+    private ListView mSensorList;
+    
     private CharSequence mTitle;
+
     
     private static final String TAG = "Location";
     
     
-    String[] title;
-    String[] subtitle;
-    int[] icon;
+    
 	
 	/**
 	 * Call XML parser to file on SDcard
@@ -67,7 +79,7 @@ public class LocationScreenActivity extends SherlockFragmentActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		//requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
+		requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
 		setContentView(R.layout.activity_locaction_screen);
 		
 		// Get Activity
@@ -76,13 +88,13 @@ public class LocationScreenActivity extends SherlockFragmentActivity {
 		// Get controller
 		mController = Controller.getInstance(this);
 		
-		//setSupportProgressBarIndeterminate(true);
-		//setSupportProgressBarIndeterminateVisibility(true);
+		setSupportProgressBarIndeterminate(true);
+		setSupportProgressBarIndeterminateVisibility(true);
 		
 		Thread thUniniDev = new Thread(new Runnable() {
 			@Override
 			public void run() {
-				checkUninitializedDevices();
+				//checkUninitializedDevices();
 			}
 		});
 		thUniniDev.start();
@@ -95,9 +107,11 @@ public class LocationScreenActivity extends SherlockFragmentActivity {
 				locations = mController.getLocations();
 				Log.d("lokace",locations.toArray().toString());
 				
+				
 				mActivity.runOnUiThread(new Runnable() {
 					@Override
 					public void run() {
+						
 						getLocations(locations);
 					}}
 					);
@@ -106,6 +120,11 @@ public class LocationScreenActivity extends SherlockFragmentActivity {
 		});
 		thLoc.start();
 
+		
+		
+		
+		
+		
 		
 		
 		
@@ -124,7 +143,9 @@ public class LocationScreenActivity extends SherlockFragmentActivity {
 	public boolean getLocations(List<LocationListing> locs) {
 		
 		Log.d(TAG, "ready to work with Locations");
-		
+		String[] title;
+	    String[] subtitle;
+	    int[] icon;
 		mTitle = mDrawerTitle = "IHA";
 		title = new String[locs.size()];
 		subtitle = new String[locs.size()];
@@ -132,22 +153,9 @@ public class LocationScreenActivity extends SherlockFragmentActivity {
 		for(int i = 0 ; i < locs.size();i++) {
 			title[i] = locs.get(i).getName();
 			subtitle[i] = locs.get(i).getName();
-			icon[i] = getIcon( (locs.get(i).getIcon()==null )?"0": locs.get(i).getIcon());
+			icon[i] = getIconLocation( (locs.get(i).getIcon()==null )?"0": locs.get(i).getIcon());
 		}
-		
-		// TEST VALUES
-		// Generate title
-//        title = new String[] { "Title Fragment 1", "Title Fragment 2",
-//                "Title Fragment 3" };
- 
-        // Generate subtitle
-//        subtitle = new String[] { "Subtitle Fragment 1", "Subtitle Fragment 2",
-//                "Subtitle Fragment 3" };
-
-        // Generate icon
-//        icon = new int[] { R.drawable.action_about, R.drawable.action_settings,
-//                R.drawable.collections_cloud,R.drawable.collections_cloud , R.drawable.action_settings};
-		
+			
 		
 		// Locate DrawerLayout in activity_locaction_screen.xml
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -192,16 +200,52 @@ public class LocationScreenActivity extends SherlockFragmentActivity {
         };
  
         mDrawerLayout.setDrawerListener(mDrawerToggle);
- 
-//        if (savedInstanceState == null) {
-//            selectItem(0);
-//        }
-		
         mDrawerToggle.syncState();
+		this.setSupportProgressBarIndeterminateVisibility(false);
+        
+		mDrawerLayout.openDrawer(mDrawerList);
+		
+		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+		ft.replace(R.id.content_frame, new MainFragment());
+		ft.commit();
+		
+		
+		
+		
 		return true;
 	}
 	
-	private int getIcon(String icon2) {
+	public boolean getSensors(List<BaseDevice> sensors) {
+		
+		
+		
+		String[] title;
+	    double[] value;
+	    int[] icon;
+		mTitle = mDrawerTitle = "IHA";
+		title = new String[sensors.size()];
+		value = new double[sensors.size()];
+		icon = new int[sensors.size()];
+		for(int i = 0 ; i < sensors.size();i++) {
+			title[i] = sensors.get(i).getName();
+			value[i] = sensors.get(i).getRawIntValue();
+			icon[i] = getIconSensor(0);
+			//icon[i] = getIcon((sensors.get(i).getType()<0)?0: sensors.get(i).getType());
+		}
+		
+		
+		this.mSensorAdapter = new SensorListAdapter(LocationScreenActivity.this,title,value,icon);
+		this.mSensorList =  (ListView) findViewById(R.id.listviewofsensors);
+		this.mSensorList.setAdapter(mSensorAdapter);
+		
+		// Capture listview menu item click
+        //mSensorList.setOnItemClickListener(new DrawerItemClickListener());
+		
+		return true;
+	}
+	
+	
+	private int getIconLocation(String icon2) {
 		int idIcon = Integer.parseInt(icon2);
 		
 		switch (idIcon) {
@@ -215,6 +259,21 @@ public class LocationScreenActivity extends SherlockFragmentActivity {
 		
 		return 0;
 	}
+	private int getIconSensor(int icon2) {
+		int idIcon = icon2;
+		
+		switch (idIcon) {
+		// Teplota
+		case 0: 
+			return R.drawable.dev_teplota;
+		// Tlak
+		case 1: 
+			return R.drawable.dev_tlak;
+		}
+		
+		return 0;
+	}
+	
 
 	@Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -244,23 +303,38 @@ public class LocationScreenActivity extends SherlockFragmentActivity {
     private void selectItem(int position) {
  
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        // Locate Position
-        switch (position) {
-        case 0:
-            //ft.replace(R.id.content_frame, fragment1);
-            break;
-        case 1:
-            //ft.replace(R.id.content_frame, fragment2);
-            break;
-        case 2:
-            //ft.replace(R.id.content_frame, fragment3);
-            break;
-        }
+        
+        
+        final LocationListing selectedItem = this.locations.get(position);
+        
+        
+        Thread thLoc = new Thread(new Runnable() {
+			@Override
+			public void run() {
+				sensors = mController.getDevicesByLocation(selectedItem.getName());
+				Log.d("lokace",locations.toArray().toString());
+				
+				
+				mActivity.runOnUiThread(new Runnable() {
+					@Override
+					public void run() {
+						
+						getSensors(sensors);
+					}}
+					);
+				
+			}
+		});
+		thLoc.start();
+        
+        
+        
+        
         ft.commit();
         mDrawerList.setItemChecked(position, true);
  
         // Get the title followed by the position
-        setTitle(title[position]);
+        setTitle(selectedItem.getName());
         // Close drawer
         mDrawerLayout.closeDrawer(mDrawerList);
     }

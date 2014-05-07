@@ -68,7 +68,6 @@ public class LoginActivity extends Activity {
 			public void onClick(View v) {
 				
 				mProgress = new ProgressDialog(mActivity);
-				mProgress.setTitle("Please Wait!!");
 				mProgress.setMessage("Sing In to server!!");
 				mProgress.setCancelable(false);
 				mProgress.setProgressStyle(ProgressDialog.STYLE_SPINNER);

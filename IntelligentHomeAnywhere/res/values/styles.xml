@@ -4,16 +4,56 @@
         Base application theme, dependent on API level. This theme is replaced
         by AppBaseTheme from res/values-vXX/styles.xml on newer devices.
     -->
-    <style name="AppBaseTheme" parent="Theme.Sherlock.Light.DarkActionBar">
+    <style name="AppBaseTheme" parent="Theme.Sherlock.Light">
         <!--
             Theme customizations available in newer API levels can go in
             res/values-vXX/styles.xml, while customizations related to
             backward-compatibility can go here.
         -->
+        
+        <!-- Support library compatibility -->
+        <item name="actionBarStyle">@style/Widget.MyTheme.ActionBar</item>
+        
+        <!-- item name="actionBarTabStyle">@style/ActionBarTabStyle.Iha</item>
+        <item name="actionModeBackground">@drawable/cab_background_top_iha</item>
+        <item name="actionBarStyle">@style/ActionBar.Solid.Iha</item>
+        <item name="actionBarTabTextStyle">@style/MyActionBarTabText</item>
+        <item name="actionMenuTextColor">@color/white</item-->
+        
+
     </style>
     <!-- Application theme. -->
     <style name="AppTheme" parent="AppBaseTheme">
         <!-- All customizations that are NOT specific to a particular API-level can go here. -->
     </style>
+    
+    <style name="Widget.MyTheme.ActionBar" parent="Widget.Sherlock.Light.ActionBar">
+	    <item name="android:background">@color/log_blue2</item>
+	    <item name="background">@color/log_blue2</item>
+	</style>
+    
+    
+     <!-- ActionBar styles -->
+    <style name="MyActionBar"  parent="@style/Widget.Sherlock.Light.ActionBar">
+
+        <!-- Support library compatibility -->
+        <item name="titleTextStyle">@style/MyActionBarTitleText</item>
+        <item name="background">@color/log_blue2</item>
+
+        
+    </style>
+
+    <!-- ActionBar title text -->
+    <style name="MyActionBarTitleText" parent="@style/TextAppearance.Sherlock.Widget.ActionBar.Title">
+        <item name="android:textColor">@color/white</item>
+        <!-- The textColor property is backward compatible with the Support Library -->
+    </style>
+
+    <!-- ActionBar tabs text -->
+    <style name="MyActionBarTabText"  parent="@style/Widget.Sherlock.Light.ActionBar.TabText">
+        <item name="android:textColor">@color/white</item>
+        <!-- The textColor property is backward compatible with the Support Library -->
+    </style>
+    
 
 </resources>
