@@ -197,6 +197,15 @@ public class ControlManagerSmartWatch2 extends ControlManagerBase {
         }
     }
 
+    protected void previousScreen(Intent intent) {
+    	if(!mControlStack.isEmpty()) {
+    		onBack();
+    	} else {
+    		ControlExtension newControl = createControl(intent);
+            startControl(newControl);
+    	}
+    }
+    
     /**
      * Start a new control. Any currently running control will be stopped and
      * put on the control extension stack.

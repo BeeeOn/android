@@ -63,134 +63,150 @@ public class ListSensorControlExtension extends ManagedControlExtension {
 	private List<BaseDevice> mDevices;
 	private String mLocationStr;
 	private Adapter mAdapter;
-	
+
 	protected int mLastKnowPosition = 0;
-	
-    /**
-     * @see ManagedControlExtension#ManagedControlExtension(Context, String,
-     *      ControlManagerCostanza, Intent)
-     */
-    public ListSensorControlExtension(Context context, String hostAppPackageName,
-            ControlManagerSmartWatch2 controlManager, Intent intent) {
-        super(context, hostAppPackageName, controlManager, intent);
-        Log.d(SW2ExtensionService.LOG_TAG, "AdaptersListControl constructor");
-    }
 
-    @Override
-    public void onResume() {
-        Log.d(SW2ExtensionService.LOG_TAG, "onResume");
-        
-        Bundle b1 = new Bundle();
-        b1.putInt(Control.Intents.EXTRA_LAYOUT_REFERENCE, R.id.list_title);
-        b1.putString(Control.Intents.EXTRA_TEXT, mContext.getString(R.string.choose_sensor));
-        
-        Bundle[] data = new Bundle[1];
-        
-        data[0] = b1;
-        
-        showLayout(R.layout.sw2_list_title, data);
+	/**
+	 * @see ManagedControlExtension#ManagedControlExtension(Context, String,
+	 *      ControlManagerCostanza, Intent)
+	 */
+	public ListSensorControlExtension(Context context,
+			String hostAppPackageName,
+			ControlManagerSmartWatch2 controlManager, Intent intent) {
+		super(context, hostAppPackageName, controlManager, intent);
+		Log.d(SW2ExtensionService.LOG_TAG, "AdaptersListControl constructor");
+	}
 
-        
-        String adapterId = getIntent().getStringExtra(EXTRA_ADAPTER_ID);
-        mLocationStr = getIntent().getStringExtra(EXTRA_LOCATION_NAME);
-        if (adapterId == null || mLocationStr == null) {
-        	mControlManager.onBack();
-        	return;
-        }
-        
-        mAdapter = mController.getAdapter(adapterId, false);
-        mDevices = mAdapter.getDevicesByLocation(mLocationStr);
-        
-        
-        sendListCount(R.id.listView, mDevices.size());
+	@Override
+	public void onResume() {
+		Log.d(SW2ExtensionService.LOG_TAG, "onResume");
+
+		Bundle b1 = new Bundle();
+		b1.putInt(Control.Intents.EXTRA_LAYOUT_REFERENCE, R.id.list_title);
+		b1.putString(Control.Intents.EXTRA_TEXT,
+				mContext.getString(R.string.choose_sensor));
+
+		Bundle[] data = new Bundle[1];
+
+		data[0] = b1;
+
+		showLayout(R.layout.sw2_list_title, data);
+
+		String adapterId = getIntent().getStringExtra(EXTRA_ADAPTER_ID);
+		mLocationStr = getIntent().getStringExtra(EXTRA_LOCATION_NAME);
+		if (adapterId == null || mLocationStr == null) {
+			mControlManager.onBack();
+			return;
+		}
+
+		mAdapter = mController.getAdapter(adapterId, false);
+		mDevices = mAdapter.getDevicesByLocation(mLocationStr);
+
+		sendListCount(R.id.listView, mDevices.size());
 
 		// If requested, move to the correct position in the list.
 		int startPosition = getIntent().getIntExtra(
 				GalleryControlExtension.EXTRA_INITIAL_POSITION, 0);
 		mLastKnowPosition = startPosition;
 		sendListPosition(R.id.listView, startPosition);
-    }
+	}
 
-    @Override
-    public void onPause() {
-        super.onPause();
-        // Position is saved into Control's Intent, possibly to be used later.
-        getIntent().putExtra(GalleryControlExtension.EXTRA_INITIAL_POSITION,
+	@Override
+	public void onPause() {
+		super.onPause();
+		// Position is saved into Control's Intent, possibly to be used later.
+		getIntent().putExtra(GalleryControlExtension.EXTRA_INITIAL_POSITION,
 				mLastKnowPosition);
-    }
+	}
 
-    @Override
-    public void onRequestListItem(final int layoutReference, final int listItemPosition) {
-        Log.d(SW2ExtensionService.LOG_TAG, "onRequestListItem() - position " + listItemPosition);
-        if (layoutReference != -1 && listItemPosition != -1 && layoutReference == R.id.listView) {
-            ControlListItem item = createControlListItem(listItemPosition);
-            if (item != null) {
-                sendListItem(item);
-            }
-        }
-    }
+	@Override
+	public void onRequestListItem(final int layoutReference,
+			final int listItemPosition) {
+		Log.d(SW2ExtensionService.LOG_TAG, "onRequestListItem() - position "
+				+ listItemPosition);
+		if (layoutReference != -1 && listItemPosition != -1
+				&& layoutReference == R.id.listView) {
+			ControlListItem item = createControlListItem(listItemPosition);
+			if (item != null) {
+				sendListItem(item);
+			}
+		}
+	}
 
-    @Override
-    public void onSwipe(int direction) {
-    	if (direction == Control.Intents.SWIPE_DIRECTION_RIGHT) {
-    		mControlManager.onBack();
-    	}
-    }
-    
-    @Override
-    public void onListItemSelected(ControlListItem listItem) {
-        super.onListItemSelected(listItem);
-        // We save the last "selected" position, this is the current visible
-        // list item index. The position can later be used on resume
-        mLastKnowPosition = listItem.listItemPosition;
-    }
+	@Override
+	public void onSwipe(int direction) {
+		if (direction == Control.Intents.SWIPE_DIRECTION_RIGHT) {
+			Intent intent = new Intent(mContext,
+					ListLocationControlExtension.class);
+			intent.putExtra(ListLocationControlExtension.EXTRA_ADAPTER_ID,
+					mAdapter.getId());
+			mControlManager.previousScreen(intent);
+		}
+	}
 
-    @Override
-    public void onListItemClick(final ControlListItem listItem, final int clickType,
-            final int itemLayoutReference) {
-        Log.d(SW2ExtensionService.LOG_TAG, "Item clicked. Position " + listItem.listItemPosition
-                + ", itemLayoutReference " + itemLayoutReference + ". Type was: "
-                + (clickType == Control.Intents.CLICK_TYPE_SHORT ? "SHORT" : "LONG"));
+	@Override
+	public void onListItemSelected(ControlListItem listItem) {
+		super.onListItemSelected(listItem);
+		// We save the last "selected" position, this is the current visible
+		// list item index. The position can later be used on resume
+		mLastKnowPosition = listItem.listItemPosition;
+	}
 
-        if (clickType == Control.Intents.CLICK_TYPE_SHORT) {
-            // Here we pass the item position to the next control. It would
-            // also be possible to put some unique item id in the listitem and
-            // pass listItem.listItemId here.
-        	Intent intent = new Intent(mContext, GalleryControlExtension.class);
-        	intent.putExtra(ListSensorControlExtension.EXTRA_ADAPTER_ID, mAdapter.getId());
-            intent.putExtra(ListSensorControlExtension.EXTRA_LOCATION_NAME, mLocationStr);
-            intent.putExtra(GalleryControlExtension.EXTRA_INITIAL_POSITION, listItem.listItemPosition);
-        	mControlManager.startControl(intent);
-        }
-    }
+	@Override
+	public void onListItemClick(final ControlListItem listItem,
+			final int clickType, final int itemLayoutReference) {
+		Log.d(SW2ExtensionService.LOG_TAG, "Item clicked. Position "
+				+ listItem.listItemPosition
+				+ ", itemLayoutReference "
+				+ itemLayoutReference
+				+ ". Type was: "
+				+ (clickType == Control.Intents.CLICK_TYPE_SHORT ? "SHORT"
+						: "LONG"));
 
-    protected ControlListItem createControlListItem(int position) {
+		if (clickType == Control.Intents.CLICK_TYPE_SHORT) {
+			// Here we pass the item position to the next control. It would
+			// also be possible to put some unique item id in the listitem and
+			// pass listItem.listItemId here.
+			Intent intent = new Intent(mContext, GalleryControlExtension.class);
+			intent.putExtra(ListSensorControlExtension.EXTRA_ADAPTER_ID,
+					mAdapter.getId());
+			intent.putExtra(ListSensorControlExtension.EXTRA_LOCATION_NAME,
+					mLocationStr);
+			intent.putExtra(GalleryControlExtension.EXTRA_INITIAL_POSITION,
+					listItem.listItemPosition);
+			mControlManager.startControl(intent);
+		}
+	}
 
-        ControlListItem item = new ControlListItem();
-        item.layoutReference = R.id.listView;
-        item.dataXmlLayout = R.layout.sw2_item_location;
-        item.listItemPosition = position;
-        // We use position as listItemId. Here we could use some other unique id
-        // to reference the list data
-        item.listItemId = position;
+	protected ControlListItem createControlListItem(int position) {
 
-        
-        // Icon data
-        Bundle iconBundle = new Bundle();
-        iconBundle.putInt(Control.Intents.EXTRA_LAYOUT_REFERENCE, R.id.thumbnail);
-        iconBundle.putString(Control.Intents.EXTRA_DATA_URI,
-                ExtensionUtils.getUriString(mContext, mDevices.get(position).getTypeIconResource()));        
-        
-        Bundle headerBundle = new Bundle();
-        headerBundle.putInt(Control.Intents.EXTRA_LAYOUT_REFERENCE, R.id.title);
-        
-        headerBundle.putString(Control.Intents.EXTRA_TEXT, mDevices.get(position).getName());
+		ControlListItem item = new ControlListItem();
+		item.layoutReference = R.id.listView;
+		item.dataXmlLayout = R.layout.sw2_item_location;
+		item.listItemPosition = position;
+		// We use position as listItemId. Here we could use some other unique id
+		// to reference the list data
+		item.listItemId = position;
 
-        item.layoutData = new Bundle[2];
-        item.layoutData[0] = headerBundle;
-        item.layoutData[1] = iconBundle;
+		// Icon data
+		Bundle iconBundle = new Bundle();
+		iconBundle.putInt(Control.Intents.EXTRA_LAYOUT_REFERENCE,
+				R.id.thumbnail);
+		iconBundle.putString(Control.Intents.EXTRA_DATA_URI, ExtensionUtils
+				.getUriString(mContext, mDevices.get(position)
+						.getTypeIconResource()));
 
-        return item;
-    }
+		Bundle headerBundle = new Bundle();
+		headerBundle.putInt(Control.Intents.EXTRA_LAYOUT_REFERENCE, R.id.title);
+
+		headerBundle.putString(Control.Intents.EXTRA_TEXT,
+				mDevices.get(position).getName());
+
+		item.layoutData = new Bundle[2];
+		item.layoutData[0] = headerBundle;
+		item.layoutData[1] = iconBundle;
+
+		return item;
+	}
 
 }

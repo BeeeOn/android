@@ -106,6 +106,14 @@ public class ListLocationControlExtension extends ManagedControlExtension {
 	}
 
 	@Override
+    public void onSwipe(int direction) {
+    	if (direction == Control.Intents.SWIPE_DIRECTION_RIGHT) {
+    		Intent intent = new Intent(mContext, ListAdapterControlExtension.class);
+    		mControlManager.previousScreen(intent);
+    	}
+    }
+	
+	@Override
 	public void onRequestListItem(final int layoutReference,
 			final int listItemPosition) {
 		Log.d(SW2ExtensionService.LOG_TAG, "onRequestListItem() - position "
