@@ -35,6 +35,8 @@ package cz.vutbr.fit.intelligenthomeanywhere.extension.watches.smartwatch2.contr
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.util.Log;
 
 import com.sonyericsson.extras.liveware.aef.control.Control;
@@ -42,8 +44,10 @@ import com.sonyericsson.extras.liveware.extension.util.control.ControlExtension;
 import com.sonyericsson.extras.liveware.extension.util.control.ControlListItem;
 import com.sonyericsson.extras.liveware.extension.util.control.ControlObjectClickEvent;
 
+import cz.vutbr.fit.intelligenthomeanywhere.Constants;
 import cz.vutbr.fit.intelligenthomeanywhere.R;
 import cz.vutbr.fit.intelligenthomeanywhere.adapter.Adapter;
+import cz.vutbr.fit.intelligenthomeanywhere.adapter.device.BaseDevice;
 import cz.vutbr.fit.intelligenthomeanywhere.controller.Controller;
 import cz.vutbr.fit.intelligenthomeanywhere.extension.watches.smartwatch2.SW2ExtensionService;
 
@@ -72,7 +76,7 @@ public class ControlManagerSmartWatch2 extends ControlManagerBase {
         mController = Controller.getInstance(mContext);
         
         Intent initialControlIntent;
-        
+       
         if (!mController.isLoggedIn()) {
         	initialControlIntent = new Intent(mContext, TextControl.class);
         	initialControlIntent.putExtra(TextControl.EXTRA_TEXT, mContext.getString(R.string.please_log_in));
@@ -80,9 +84,37 @@ public class ControlManagerSmartWatch2 extends ControlManagerBase {
         	return;
         }
         
-        // TODO zeptat se na predvoleny pohled, jestli existuje -> rovnou zapnout
-        // TODO zkontrolovat jestli obsahuje dane location nejake sensory!
-        
+     // Try to find default setting
+        SharedPreferences prefs = PreferenceManager
+				.getDefaultSharedPreferences(mContext);
+		String adapterId = prefs
+				.getString(Constants.SW2_PREF_DEF_ADAPTER, null);
+		String strLocation = prefs.getString(Constants.SW2_PREF_DEF_LOCATION, null);
+		
+		Log.v(SW2ExtensionService.LOG_TAG, "Default adapter ID: " + ((adapterId==null)?"null":adapterId));
+		Log.v(SW2ExtensionService.LOG_TAG, "Default location: " + ((strLocation==null)?"null":strLocation));
+		
+		if (adapterId != null) {
+			Adapter adapter = Controller.getInstance(mContext).getAdapter(adapterId, false);
+			// if default adapter is defined
+			if (adapter != null) {
+				if (strLocation != null) {
+					List<BaseDevice> sensors = adapter.getDevicesByLocation(strLocation);
+					if (sensors != null) {
+						Intent intent = new Intent(mContext, ListSensorControlExtension.class);
+			        	intent.putExtra(ListSensorControlExtension.EXTRA_ADAPTER_ID, adapter.getId());
+			        	intent.putExtra(ListSensorControlExtension.EXTRA_LOCATION_NAME, strLocation);
+			            mCurrentControl = createControl(intent);
+			            return;
+					}
+				}
+				Intent intent = new Intent(mContext, ListLocationControlExtension.class);
+	        	intent.putExtra(ListLocationControlExtension.EXTRA_ADAPTER_ID, adapter.getId());
+	            mCurrentControl = createControl(intent);
+	            return;
+			}
+		}
+		
         List<Adapter> adapters = mController.getAdapters();
         if (adapters.size() < 1) {
         	initialControlIntent = new Intent(mContext, TextControl.class);

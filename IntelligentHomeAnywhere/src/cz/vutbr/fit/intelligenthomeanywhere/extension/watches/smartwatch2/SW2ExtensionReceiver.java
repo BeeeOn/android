@@ -1,5 +1,4 @@
 /*
-Copyright (c) 2011, Sony Ericsson Mobile Communications AB
 Copyright (c) 2011-2013, Sony Mobile Communications AB
 
  All rights reserved.

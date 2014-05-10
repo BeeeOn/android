@@ -141,4 +141,10 @@ public final class Constants {
 	public static final String WIDGET_PREF_INITIALIZED = "initialized";
 	public static final String WIDGET_PREF_DEVICE = "device";
 	
+	
+	/**
+	 * Sony Smartwatch2 preference activity
+	 */
+	public static final String SW2_PREF_DEF_ADAPTER = "default_adapter";
+	public static final String SW2_PREF_DEF_LOCATION = "default_location";
 }

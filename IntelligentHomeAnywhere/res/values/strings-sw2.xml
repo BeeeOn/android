@@ -2,27 +2,29 @@
 <!-- No translation of sample extensions -->
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
     <!-- Title of preference activity -->
-    <string name="preference_activity_title">Advanced Sample control</string>
+    <string name="preference_activity_title">Sony SmartWatch2 settings</string>
     <!-- Name of extension, shown in preferences -->
-    <string name="extension_name">Advanced Sample control</string>
-    <!-- Configuration title shown in preferences -->
     <string name="configuration_text">Sample control settings</string>
     <!-- Menu option shown in preferences -->
-    <string name="preference_option_read_me">READ ME</string>
+    <string name="preference_set_default_location">Set default location</string>
+    <string name="preference_set_default_adapter">Set default adapter</string>
     <!-- Read me text shown in dialog -->
     <string name="preference_option_read_me_txt">The Advanced Control Extension uses API v2 features to display scrollable lists and a swipeable gallery. The Extension overrides the Back button to navigate back to previous control extension screens.  </string>
 
     <string name="choose_adapter">Choose adapter:</string>
     <string name="choose_location">Choose location:</string>
     <string name="choose_sensor">Choose sensor:</string>
+    <string name="choose_default_location">Choose default location</string>
+    <string name="choose_default_adapter">Choose default adapter</string>
+    
+    <string name="adapter_isnt_set">Set default adapter</string>
+    <string name="adapter_doest_exist">Default adapter doesn\'t exist anymore. Set new default adapter.</string>
+    <string name="no_location_available_def_adapter">No location available in default adapter.</string>
     
     <string name="please_log_in">Please Log In</string>
     <string name="no_adapter_available">No adapter available</string>
     <string name="no_sensor_available">No sensor available</string>
     <string name="no_location_available">No location available</string>
 	
-    
-    
-	<!-- PRIVATE STRING FOR PREFERENCES -->
-	<string name="preference_key_read_me">preference_key_read_me</string>
+    <string name="none">None</string>
 </resources>

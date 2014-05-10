@@ -1,111 +1,135 @@
-/*
-Copyright (c) 2011, Sony Ericsson Mobile Communications AB
-Copyright (c) 2011-2013, Sony Mobile Communications AB
-
- All rights reserved.
-
- Redistribution and use in source and binary forms, with or without
- modification, are permitted provided that the following conditions are met:
-
- * Redistributions of source code must retain the above copyright notice, this
- list of conditions and the following disclaimer.
-
- * Redistributions in binary form must reproduce the above copyright notice,
- this list of conditions and the following disclaimer in the documentation
- and/or other materials provided with the distribution.
-
- * Neither the name of the Sony Ericsson Mobile Communications AB / Sony Mobile
- Communications AB nor the names of its contributors may be used to endorse or promote
- products derived from this software without specific prior written permission.
-
- THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
- ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
- WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
- FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
- DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
- SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
- CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
- OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
- OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- */
-
 package cz.vutbr.fit.intelligenthomeanywhere.extension.watches.smartwatch2;
 
-import cz.vutbr.fit.intelligenthomeanywhere.R;
-import android.app.AlertDialog;
-import android.app.Dialog;
-import android.content.DialogInterface;
-import android.content.DialogInterface.OnClickListener;
+import java.util.ArrayList;
+import java.util.List;
+
+import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.Preference;
-import android.preference.Preference.OnPreferenceClickListener;
-import android.preference.PreferenceActivity;
-import android.util.Log;
+import android.preference.PreferenceManager;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
+import android.widget.Toast;
+
+import com.actionbarsherlock.app.SherlockDialogFragment;
+import com.actionbarsherlock.app.SherlockFragmentActivity;
+
+import cz.vutbr.fit.intelligenthomeanywhere.Constants;
+import cz.vutbr.fit.intelligenthomeanywhere.R;
+import cz.vutbr.fit.intelligenthomeanywhere.adapter.Adapter;
+import cz.vutbr.fit.intelligenthomeanywhere.adapter.device.BaseDevice;
+import cz.vutbr.fit.intelligenthomeanywhere.controller.Controller;
 
 /**
- * The sample control preference activity handles the preferences for the sample
+ * The control preference activity handles the preferences for the
  * control extension.
  */
-public class SW2PreferenceActivity extends PreferenceActivity {
+public class SW2PreferenceActivity extends SherlockFragmentActivity {
 
-    private static final int DIALOG_READ_ME = 1;
+	private static final String TAG_DEF_LOCATION = "def_location";
 
-    @SuppressWarnings("deprecation")
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+	private static final int UNDEFINED = -1;
+	
+	private ListView listView;
 
-        // Load the preferences from an XML resource
-        addPreferencesFromResource(R.xml.sw2_preference);
+	private int posAdap;
+	private int posLoc;
 
-        // Handle read me
-        Preference preference = findPreference(getText(R.string.preference_key_read_me));
-        preference.setOnPreferenceClickListener(new OnPreferenceClickListener() {
+	List<String> preferenceList;
 
-            @Override
-            public boolean onPreferenceClick(Preference preference) {
-                showDialog(DIALOG_READ_ME);
-                return true;
-            }
-        });
+	Controller mController; 
+	
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
 
-    }
+		posAdap = UNDEFINED;
+		posLoc = UNDEFINED;
 
-    @Override
-    protected Dialog onCreateDialog(int id) {
-        Dialog dialog = null;
+		setContentView(R.layout.sw2_activity_preference);
 
-        switch (id) {
-            case DIALOG_READ_ME:
-                dialog = createReadMeDialog();
-                break;
-            default:
-                Log.w(SW2ExtensionService.LOG_TAG, "Not a valid dialog id: " + id);
-                break;
-        }
+		mController = Controller.getInstance(this);
+		
+		preferenceList = new ArrayList<String>();
+		
+		// Get ListView object from xml
+		listView = (ListView) findViewById(R.id.list_preference);
 
-        return dialog;
-    }
+		List<Adapter> adapters = mController.getAdapters();
+		if (adapters.size() > 1) {
+			posAdap = preferenceList.size();
+			preferenceList
+					.add(getString(R.string.preference_set_default_adapter));
+		}
 
-    /**
-     * Create the Read me dialog
-     *
-     * @return the Dialog
-     */
-    private Dialog createReadMeDialog() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage(R.string.preference_option_read_me_txt)
-                .setTitle(R.string.preference_option_read_me)
-                .setIcon(android.R.drawable.ic_dialog_info)
-                .setPositiveButton(android.R.string.ok, new OnClickListener() {
+		posLoc = preferenceList.size();
+		preferenceList.add(getString(R.string.preference_set_default_location));
 
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.cancel();
-                    }
-                });
-        return builder.create();
-    }
+		ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
+				android.R.layout.simple_list_item_1, android.R.id.text1,
+				preferenceList.toArray(new String[preferenceList.size()]));
 
+		// Assign adapter to ListView
+		listView.setAdapter(adapter);
+
+		// ListView Item Click Listener
+		listView.setOnItemClickListener(new OnItemClickListener() {
+
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view,
+					int position, long id) {
+				if(!mController.isLoggedIn()) {
+					Toast.makeText(getApplicationContext(), R.string.please_log_in, Toast.LENGTH_LONG).show();
+					return;
+				}
+				if (posLoc == position) {
+					SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+					String adapterId = prefs.getString(Constants.SW2_PREF_DEF_ADAPTER, null);
+					if (adapterId == null) { 
+						// if it doesn't exist and there is only one adapter left, set it as default
+						List<Adapter> adapters = mController.getAdapters();
+						if (adapters.size() == 1) {
+							adapterId =  adapters.get(0).getId();
+							prefs.edit().putString(Constants.SW2_PREF_DEF_ADAPTER, adapterId).commit();
+						} else {
+							Toast.makeText(getApplicationContext(), R.string.adapter_isnt_set, Toast.LENGTH_LONG).show();
+							return;
+						}
+					}
+					
+					// check if saved adapter still exists
+					Adapter adapter = mController.getAdapter(adapterId, false);
+					if (adapter == null) {
+						// if it doesnt exist and there is only one adapter left, set it as default
+						List<Adapter> adapters = mController.getAdapters();
+						if (adapters.size() == 1) {
+							adapter =  adapters.get(0);
+							prefs.edit().putString(Constants.SW2_PREF_DEF_ADAPTER, adapter.getId()).commit();
+						} else {
+							prefs.edit().putString(Constants.SW2_PREF_DEF_ADAPTER, null).commit();
+							Toast.makeText(getApplicationContext(), R.string.adapter_doest_exist, Toast.LENGTH_LONG).show();
+							return;
+						}
+					}
+					
+					// check if there is anything to choose
+					List<BaseDevice> listDevice = adapter.getDevices();
+					if (listDevice.size() < 1) {
+						Toast.makeText(getApplicationContext(), R.string.no_location_available_def_adapter, Toast.LENGTH_LONG).show();
+						return;
+					}
+					
+					SherlockDialogFragment locationChooser = new DialogFragmentDefaultLocation();
+					locationChooser.show(getSupportFragmentManager(),
+							TAG_DEF_LOCATION);
+					
+				} else if (posAdap == position) {
+					
+				}
+			}
+
+		});
+	}
 }

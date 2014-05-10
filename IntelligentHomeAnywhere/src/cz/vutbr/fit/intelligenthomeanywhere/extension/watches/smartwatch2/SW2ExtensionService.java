@@ -46,7 +46,7 @@ import cz.vutbr.fit.intelligenthomeanywhere.extension.watches.smartwatch2.contro
  */
 public class SW2ExtensionService extends ExtensionService {
 
-    public static final String EXTENSION_KEY = "com.sonymobile.smartconnect.extension.advancedcontrolsample.key";
+    public static final String EXTENSION_KEY = "cz.vutbr.fit.intelligenthomeanywhere.extension.watches.smartwatch2.key";
 
     public static final String LOG_TAG = "SW2 extension";
 
@@ -67,6 +67,7 @@ public class SW2ExtensionService extends ExtensionService {
 
     @Override
     protected RegistrationInformation getRegistrationInformation() {
+    	Log.d(SW2ExtensionService.LOG_TAG, "getRegistrationInformation()");
         return new SW2RegistrationInformation(this);
     }
 

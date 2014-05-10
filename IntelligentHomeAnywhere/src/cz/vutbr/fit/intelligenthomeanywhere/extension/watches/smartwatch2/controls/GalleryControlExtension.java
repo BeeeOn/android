@@ -64,6 +64,9 @@ public class GalleryControlExtension extends ManagedControlExtension {
 
 	private List<BaseDevice> mDevices;
 
+	Bundle[] mMenuItemsIcons = new Bundle[1];
+	
+	private static final int MENU_REFRESH = 1;
 	/**
 	 * @see ManagedControlExtension#ManagedControlExtension(Context, String,
 	 *      ControlManagerCostanza, Intent)
@@ -71,8 +74,16 @@ public class GalleryControlExtension extends ManagedControlExtension {
 	public GalleryControlExtension(Context context, String hostAppPackageName,
 			ControlManagerSmartWatch2 controlManager, Intent intent) {
 		super(context, hostAppPackageName, controlManager, intent);
+		initializeMenus();
 	}
 
+	private void initializeMenus() {
+		mMenuItemsIcons[0] = new Bundle();
+        mMenuItemsIcons[0].putInt(Control.Intents.EXTRA_MENU_ITEM_ID, MENU_REFRESH);
+        mMenuItemsIcons[0].putString(Control.Intents.EXTRA_MENU_ITEM_ICON,
+                ExtensionUtils.getUriString(mContext, R.drawable.sensor_humidity));
+	}
+	
 	@Override
 	public void onResume() {
 		Log.d(SW2ExtensionService.LOG_TAG, "onResume");
@@ -119,6 +130,27 @@ public class GalleryControlExtension extends ManagedControlExtension {
 	}
 
 	@Override
+    public void onKey(final int action, final int keyCode, final long timeStamp) {
+        Log.d(SW2ExtensionService.LOG_TAG, "onKey()");
+        if (action == Control.Intents.KEY_ACTION_RELEASE
+                && keyCode == Control.KeyCodes.KEYCODE_OPTIONS) {
+            showMenu(mMenuItemsIcons);
+        }
+        else {
+            mControlManager.onKey(action, keyCode, timeStamp);
+        }
+    }
+	
+	 @Override
+	    public void onMenuItemSelected(final int menuItem) {
+	        Log.d(SW2ExtensionService.LOG_TAG, "onMenuItemSelected() - menu item " + menuItem);
+	        if (menuItem == MENU_REFRESH) {
+	            clearDisplay();
+	            // TODO
+	        }
+	    }
+	
+	@Override
 	public void onListItemSelected(ControlListItem listItem) {
 		super.onListItemSelected(listItem);
 		// We save the last "selected" position, this is the current visible
@@ -159,8 +191,10 @@ public class GalleryControlExtension extends ManagedControlExtension {
 		iconBundle.putInt(Control.Intents.EXTRA_LAYOUT_REFERENCE,
 				R.id.thumbnail);
 		iconBundle.putString(Control.Intents.EXTRA_DATA_URI, ExtensionUtils
-				.getUriString(mContext, curDevice
-						.getTypeIconResource()));
+				.getUriString(mContext, R.drawable.dev_teplota));
+//		iconBundle.putString(Control.Intents.EXTRA_DATA_URI, ExtensionUtils
+//				.getUriString(mContext, curDevice
+//						.getTypeIconResource()));
 
 		// Value data
 		Bundle valueBundle = new Bundle();
