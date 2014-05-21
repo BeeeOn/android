@@ -64,6 +64,10 @@ public class ListSensorControlExtension extends ManagedControlExtension {
 	private String mLocationStr;
 	private Adapter mAdapter;
 
+	private Bundle[] mMenuItemsIcons = new Bundle[1];
+	
+	private static final int MENU_REFRESH = 1;
+	
 	protected int mLastKnowPosition = 0;
 
 	/**
@@ -75,6 +79,7 @@ public class ListSensorControlExtension extends ManagedControlExtension {
 			ControlManagerSmartWatch2 controlManager, Intent intent) {
 		super(context, hostAppPackageName, controlManager, intent);
 		Log.d(SW2ExtensionService.LOG_TAG, "AdaptersListControl constructor");
+		initializeMenus();
 	}
 
 	@Override
@@ -133,6 +138,35 @@ public class ListSensorControlExtension extends ManagedControlExtension {
 		}
 	}
 
+	private void initializeMenus() {
+		mMenuItemsIcons[0] = new Bundle();
+        mMenuItemsIcons[0].putInt(Control.Intents.EXTRA_MENU_ITEM_ID, MENU_REFRESH);
+        mMenuItemsIcons[0].putString(Control.Intents.EXTRA_MENU_ITEM_ICON,
+                ExtensionUtils.getUriString(mContext, R.drawable.sync_grey));
+	}
+	
+	@Override
+	public void onMenuItemSelected(final int menuItem) {
+		Log.d(SW2ExtensionService.LOG_TAG, "onMenuItemSelected() - menu item "
+				+ menuItem);
+		if (menuItem == MENU_REFRESH) {
+			clearDisplay();
+			// TODO
+		}
+	}
+	
+	@Override
+    public void onKey(final int action, final int keyCode, final long timeStamp) {
+        Log.d(SW2ExtensionService.LOG_TAG, "onKey()");
+        if (action == Control.Intents.KEY_ACTION_RELEASE
+                && keyCode == Control.KeyCodes.KEYCODE_OPTIONS) {
+            showMenu(mMenuItemsIcons);
+        }
+        else {
+            mControlManager.onKey(action, keyCode, timeStamp);
+        }
+    }
+	
 	@Override
 	public void onSwipe(int direction) {
 		if (direction == Control.Intents.SWIPE_DIRECTION_RIGHT) {
@@ -182,7 +216,7 @@ public class ListSensorControlExtension extends ManagedControlExtension {
 
 		ControlListItem item = new ControlListItem();
 		item.layoutReference = R.id.listView;
-		item.dataXmlLayout = R.layout.sw2_item_location;
+		item.dataXmlLayout = R.layout.sw2_item_list_sensor;
 		item.listItemPosition = position;
 		// We use position as listItemId. Here we could use some other unique id
 		// to reference the list data
@@ -198,13 +232,18 @@ public class ListSensorControlExtension extends ManagedControlExtension {
 
 		Bundle headerBundle = new Bundle();
 		headerBundle.putInt(Control.Intents.EXTRA_LAYOUT_REFERENCE, R.id.title);
-
 		headerBundle.putString(Control.Intents.EXTRA_TEXT,
 				mDevices.get(position).getName());
+		
+		Bundle valueBundle = new Bundle();
+		valueBundle.putInt(Control.Intents.EXTRA_LAYOUT_REFERENCE, R.id.value);
+		valueBundle.putString(Control.Intents.EXTRA_TEXT,
+				mDevices.get(position).getStringValueUnit(mContext));
 
-		item.layoutData = new Bundle[2];
+		item.layoutData = new Bundle[3];
 		item.layoutData[0] = headerBundle;
 		item.layoutData[1] = iconBundle;
+		item.layoutData[2] = valueBundle;
 
 		return item;
 	}

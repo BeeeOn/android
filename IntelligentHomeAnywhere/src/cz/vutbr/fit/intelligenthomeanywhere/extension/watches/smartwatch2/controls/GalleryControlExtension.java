@@ -32,30 +32,39 @@ Copyright (c) 2011-2013, Sony Mobile Communications AB
 
 package cz.vutbr.fit.intelligenthomeanywhere.extension.watches.smartwatch2.controls;
 
+import java.text.DateFormat;
+import java.util.Calendar;
 import java.util.List;
 
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
 
 import com.sonyericsson.extras.liveware.aef.control.Control;
 import com.sonyericsson.extras.liveware.extension.util.ExtensionUtils;
 import com.sonyericsson.extras.liveware.extension.util.control.ControlListItem;
+import com.sonyericsson.extras.liveware.extension.util.control.ControlObjectClickEvent;
+import com.sonyericsson.extras.liveware.extension.util.control.ControlView;
+import com.sonyericsson.extras.liveware.extension.util.control.ControlViewGroup;
+import com.sonyericsson.extras.liveware.extension.util.control.ControlView.OnClickListener;
 
 import cz.vutbr.fit.intelligenthomeanywhere.R;
 import cz.vutbr.fit.intelligenthomeanywhere.adapter.Adapter;
 import cz.vutbr.fit.intelligenthomeanywhere.adapter.device.BaseDevice;
 import cz.vutbr.fit.intelligenthomeanywhere.extension.watches.smartwatch2.SW2ExtensionService;
+import cz.vutbr.fit.intelligenthomeanywhere.network.ActualUser;
 
 /**
- * GalleryTestControl displays a swipeable gallery, based on a string array.
+ * GalleryControl displays a swipeable gallery.
  */
 public class GalleryControlExtension extends ManagedControlExtension {
 
 	protected int mLastKnowPosition = 0;
 
-	public final static String EXTRA_INITIAL_POSITION = "EXTRA_INITIAL_POSITION";
+	public static final String EXTRA_INITIAL_POSITION = "EXTRA_INITIAL_POSITION";
 	public static final String EXTRA_ADAPTER_ID = "ADAPTER_ID";
 	public static final String EXTRA_LOCATION_NAME = "LOCATION_NAME";
 
@@ -64,9 +73,20 @@ public class GalleryControlExtension extends ManagedControlExtension {
 
 	private List<BaseDevice> mDevices;
 
-	Bundle[] mMenuItemsIcons = new Bundle[1];
-	
+	private ControlViewGroup mLayout = null;
+
+	/**
+	 * Bundle for menu icons
+	 */
+	private Bundle[] mMenuItemsIcons = new Bundle[1];
+
 	private static final int MENU_REFRESH = 1;
+
+	/**
+	 * Minimum battery state for showing red battery
+	 */
+	private static final int MIN_BATTERY_STATE = 10;
+
 	/**
 	 * @see ManagedControlExtension#ManagedControlExtension(Context, String,
 	 *      ControlManagerCostanza, Intent)
@@ -74,16 +94,19 @@ public class GalleryControlExtension extends ManagedControlExtension {
 	public GalleryControlExtension(Context context, String hostAppPackageName,
 			ControlManagerSmartWatch2 controlManager, Intent intent) {
 		super(context, hostAppPackageName, controlManager, intent);
+
+		// setupClickables(context);
 		initializeMenus();
 	}
 
 	private void initializeMenus() {
 		mMenuItemsIcons[0] = new Bundle();
-        mMenuItemsIcons[0].putInt(Control.Intents.EXTRA_MENU_ITEM_ID, MENU_REFRESH);
-        mMenuItemsIcons[0].putString(Control.Intents.EXTRA_MENU_ITEM_ICON,
-                ExtensionUtils.getUriString(mContext, R.drawable.sensor_humidity));
+		mMenuItemsIcons[0].putInt(Control.Intents.EXTRA_MENU_ITEM_ID,
+				MENU_REFRESH);
+		mMenuItemsIcons[0].putString(Control.Intents.EXTRA_MENU_ITEM_ICON,
+				ExtensionUtils.getUriString(mContext, R.drawable.sync_grey));
 	}
-	
+
 	@Override
 	public void onResume() {
 		Log.d(SW2ExtensionService.LOG_TAG, "onResume");
@@ -100,8 +123,8 @@ public class GalleryControlExtension extends ManagedControlExtension {
 			return;
 		}
 
-		mDevices = mController.getAdapter(adapterId, false).getDevicesByLocation(
-				locationStr);
+		mDevices = mController.getAdapter(adapterId, false)
+				.getDevicesByLocation(locationStr);
 
 		sendListCount(R.id.gallery, mDevices.size());
 		sendListPosition(R.id.gallery, startPosition);
@@ -130,26 +153,27 @@ public class GalleryControlExtension extends ManagedControlExtension {
 	}
 
 	@Override
-    public void onKey(final int action, final int keyCode, final long timeStamp) {
-        Log.d(SW2ExtensionService.LOG_TAG, "onKey()");
-        if (action == Control.Intents.KEY_ACTION_RELEASE
-                && keyCode == Control.KeyCodes.KEYCODE_OPTIONS) {
-            showMenu(mMenuItemsIcons);
-        }
-        else {
-            mControlManager.onKey(action, keyCode, timeStamp);
-        }
-    }
-	
-	 @Override
-	    public void onMenuItemSelected(final int menuItem) {
-	        Log.d(SW2ExtensionService.LOG_TAG, "onMenuItemSelected() - menu item " + menuItem);
-	        if (menuItem == MENU_REFRESH) {
-	            clearDisplay();
-	            // TODO
-	        }
-	    }
-	
+	public void onKey(final int action, final int keyCode, final long timeStamp) {
+		Log.d(SW2ExtensionService.LOG_TAG, "onKey()");
+		if (action == Control.Intents.KEY_ACTION_RELEASE
+				&& keyCode == Control.KeyCodes.KEYCODE_OPTIONS) {
+			showMenu(mMenuItemsIcons);
+		} else {
+			mControlManager.onKey(action, keyCode, timeStamp);
+		}
+	}
+
+	@Override
+	public void onMenuItemSelected(final int menuItem) {
+		Log.d(SW2ExtensionService.LOG_TAG, "onMenuItemSelected() - menu item "
+				+ menuItem);
+		if (menuItem == MENU_REFRESH) {
+			
+			clearDisplay();
+			// TODO
+		}
+	}
+
 	@Override
 	public void onListItemSelected(ControlListItem listItem) {
 		super.onListItemSelected(listItem);
@@ -174,37 +198,82 @@ public class GalleryControlExtension extends ManagedControlExtension {
 
 		ControlListItem item = new ControlListItem();
 		item.layoutReference = R.id.gallery;
-		item.dataXmlLayout = R.layout.sw2_item_gallery;
+		item.dataXmlLayout = R.layout.sw2_item_gallery_sensor;
 		item.listItemId = position;
 		item.listItemPosition = position;
 
 		BaseDevice curDevice = mDevices.get(position);
-		
+
+		// Title data
+		Bundle syncBundle = new Bundle();
+		syncBundle.putInt(Control.Intents.EXTRA_LAYOUT_REFERENCE,
+				R.id.sync_time);
+		// TODO spravny cas tam dat
+		String dateTime;
+		DateFormat dateFormat;
+
+		Calendar syncTime = Calendar.getInstance();
+		Calendar actTime = Calendar.getInstance();
+
+		actTime.add(Calendar.HOUR, -24);
+
+		// If sync time is more that 24 ago, show only date. Show time
+		// otherwise.
+		if (actTime.before(syncTime)) {
+			dateFormat = DateFormat.getTimeInstance();
+		} else {
+			dateFormat = DateFormat.getDateInstance();
+		}
+
+		dateTime = dateFormat.format(syncTime.getTime());
+		syncBundle.putString(Control.Intents.EXTRA_TEXT, dateTime);
+
 		// Title data
 		Bundle headerBundle = new Bundle();
-		headerBundle.putInt(Control.Intents.EXTRA_LAYOUT_REFERENCE, R.id.title);
-		headerBundle.putString(Control.Intents.EXTRA_TEXT,
-				curDevice.getName());
+		headerBundle.putInt(Control.Intents.EXTRA_LAYOUT_REFERENCE,
+				R.id.gallery_title);
+		headerBundle.putString(Control.Intents.EXTRA_TEXT, curDevice.getName());
+
+		// Unit data
+		Bundle unitBundle = new Bundle();
+		unitBundle.putInt(Control.Intents.EXTRA_LAYOUT_REFERENCE, R.id.unit);
+		unitBundle.putString(Control.Intents.EXTRA_TEXT,
+				curDevice.getStringUnit(mContext));
+
+		// Battery icon
+		Bundle batteryBundle = new Bundle();
+		if (curDevice.getBattery() < MIN_BATTERY_STATE) {
+			batteryBundle.putInt(Control.Intents.EXTRA_LAYOUT_REFERENCE,
+					R.id.thumbnail);
+			batteryBundle.putString(Control.Intents.EXTRA_DATA_URI,
+					ExtensionUtils.getUriString(mContext, R.drawable.battery));
+		}
 
 		// Icon data
 		Bundle iconBundle = new Bundle();
 		iconBundle.putInt(Control.Intents.EXTRA_LAYOUT_REFERENCE,
 				R.id.thumbnail);
-		iconBundle.putString(Control.Intents.EXTRA_DATA_URI, ExtensionUtils
-				.getUriString(mContext, R.drawable.dev_teplota));
-//		iconBundle.putString(Control.Intents.EXTRA_DATA_URI, ExtensionUtils
-//				.getUriString(mContext, curDevice
-//						.getTypeIconResource()));
+		iconBundle.putString(Control.Intents.EXTRA_DATA_URI,
+				ExtensionUtils.getUriString(mContext, R.drawable.dev_teplota));
+		// iconBundle.putString(Control.Intents.EXTRA_DATA_URI, ExtensionUtils
+		// .getUriString(mContext, curDevice
+		// .getTypeIconResource()));
 
 		// Value data
 		Bundle valueBundle = new Bundle();
 		valueBundle.putInt(Control.Intents.EXTRA_LAYOUT_REFERENCE, R.id.value);
-		valueBundle.putString(Control.Intents.EXTRA_TEXT, curDevice.getStringValueUnit(mContext));
-		
-		item.layoutData = new Bundle[3];
+		// valueBundle.putString(Control.Intents.EXTRA_TEXT,
+		// curDevice.getStringValueUnit(mContext));
+		valueBundle.putString(Control.Intents.EXTRA_TEXT,
+				curDevice.getStringValue());
+
+		item.layoutData = new Bundle[6];
 		item.layoutData[0] = headerBundle;
 		item.layoutData[1] = iconBundle;
 		item.layoutData[2] = valueBundle;
+		item.layoutData[3] = batteryBundle;
+		item.layoutData[4] = syncBundle;
+		item.layoutData[5] = unitBundle;
 
 		return item;
 	}

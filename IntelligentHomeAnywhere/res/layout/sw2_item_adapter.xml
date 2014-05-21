@@ -27,6 +27,7 @@
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
             android:paddingLeft="4px"
+            android:singleLine="true"
             android:textColor="@android:color/black"
             android:textSize="@dimen/smart_watch_2_text_size_large" />
 

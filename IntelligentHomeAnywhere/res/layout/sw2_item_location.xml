@@ -28,7 +28,8 @@
             android:layout_toRightOf="@+id/thumbnail"
             android:paddingLeft="4px"
             android:textColor="@android:color/black"
-            android:textSize="@dimen/smart_watch_2_text_size_large" />
+            android:textSize="@dimen/smart_watch_2_text_size_large"
+            android:singleLine="true" />
 
         <!-- <TextView -->
         <!-- android:id="@+id/body" -->

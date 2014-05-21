@@ -20,6 +20,7 @@
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
             android:paddingLeft="6px"
+            android:singleLine="true"
             android:textColor="@android:color/white"
             android:textSize="@dimen/smart_watch_2_text_size_medium"
             android:textStyle="bold" />

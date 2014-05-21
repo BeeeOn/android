@@ -109,10 +109,17 @@ public abstract class BaseDevice {
 	 * @return
 	 */
 	public String getStringValueUnit(Context context) {
+		return String.format("%s %s", this.getStringValue(), getStringUnit(context));
+	}
+	
+	/**
+	 * Get unit as string
+	 * @param context
+	 * @return
+	 */
+	public String getStringUnit(Context context) {
 		int unitRes = getUnitStringResource();
-		String unit = unitRes > 0 ? context.getResources().getString(unitRes) : "";
-		
-		return String.format("%s %s", this.getStringValue(), unit);
+		return unitRes > 0 ? context.getResources().getString(unitRes) : "";
 	}
 	
 	/**
