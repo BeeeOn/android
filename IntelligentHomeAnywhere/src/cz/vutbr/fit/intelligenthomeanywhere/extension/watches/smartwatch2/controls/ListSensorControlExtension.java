@@ -104,9 +104,9 @@ public class ListSensorControlExtension extends ManagedControlExtension {
 			return;
 		}
 
-		mAdapter = mController.getAdapter(adapterId, false);
+		mAdapter = mController.getAdapter(adapterId, true);
 		mDevices = mAdapter.getDevicesByLocation(mLocationStr);
-
+		
 		sendListCount(R.id.listView, mDevices.size());
 
 		// If requested, move to the correct position in the list.
@@ -151,7 +151,7 @@ public class ListSensorControlExtension extends ManagedControlExtension {
 				+ menuItem);
 		if (menuItem == MENU_REFRESH) {
 			clearDisplay();
-			// TODO
+			resume();
 		}
 	}
 	

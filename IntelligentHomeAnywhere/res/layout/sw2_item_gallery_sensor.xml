@@ -96,12 +96,12 @@
             android:src="@drawable/dev_teplota" />
 
         <TextView
+            android:text="hPa"
             android:id="@+id/unit"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
             android:layout_toRightOf="@+id/thumbnail"
-            android:gravity="center"
             android:paddingLeft="4px"
             android:paddingTop="4px"
             android:singleLine="true"

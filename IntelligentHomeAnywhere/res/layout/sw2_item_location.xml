@@ -14,10 +14,12 @@
 
         <ImageView
             android:id="@+id/thumbnail"
-            android:layout_width="32px"
-            android:layout_height="32px"
+            android:layout_width="42px"
+            android:layout_height="42px"
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
+            android:paddingLeft="4px"
+            android:paddingRight="4px"
             android:clickable="true" />
 
         <TextView
@@ -26,7 +28,7 @@
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_toRightOf="@+id/thumbnail"
-            android:paddingLeft="4px"
+            
             android:textColor="@android:color/black"
             android:textSize="@dimen/smart_watch_2_text_size_large"
             android:singleLine="true" />

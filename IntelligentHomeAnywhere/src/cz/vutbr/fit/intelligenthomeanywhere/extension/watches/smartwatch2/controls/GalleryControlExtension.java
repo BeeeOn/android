@@ -123,7 +123,7 @@ public class GalleryControlExtension extends ManagedControlExtension {
 			return;
 		}
 
-		mDevices = mController.getAdapter(adapterId, false)
+		mDevices = mController.getAdapter(adapterId, true)
 				.getDevicesByLocation(locationStr);
 
 		sendListCount(R.id.gallery, mDevices.size());
@@ -170,7 +170,13 @@ public class GalleryControlExtension extends ManagedControlExtension {
 		if (menuItem == MENU_REFRESH) {
 			
 			clearDisplay();
-			// TODO
+//			mDevices = mController.getAdapter(adapterId, false)
+//					.getDevicesByLocation(locationStr);
+			getIntent().putExtra(EXTRA_INITIAL_POSITION, mLastKnowPosition);
+			resume();
+			
+			//sendListCount(R.id.gallery, mDevices.size());
+			//sendListItem(item)
 		}
 	}
 

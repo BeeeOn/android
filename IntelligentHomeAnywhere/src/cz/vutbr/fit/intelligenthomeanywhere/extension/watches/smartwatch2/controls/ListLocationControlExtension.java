@@ -188,7 +188,7 @@ public class ListLocationControlExtension extends ManagedControlExtension {
 		
 		// TODO prevest uzivateluv obrazek
 		iconBundle.putString(Control.Intents.EXTRA_DATA_URI, ExtensionUtils
-				.getUriString(mContext, R.drawable.appwidget_bg_pressed));
+				.getUriString(mContext, R.drawable.loc_bath_room));
 
 		Bundle headerBundle = new Bundle();
 		headerBundle.putInt(Control.Intents.EXTRA_LAYOUT_REFERENCE, R.id.title);
