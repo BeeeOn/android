@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="@dimen/smart_watch_2_control_width"
     android:layout_height="@dimen/smart_watch_2_control_height"
-    android:background="@color/gray"
+    android:background="@color/white"
     tools:ignore="PxUsage,UselessParent" >
 
     <RelativeLayout
@@ -11,7 +11,7 @@
         android:layout_width="fill_parent"
         android:layout_height="28px"
         android:layout_alignParentTop="true"
-        android:background="@color/log_blue1" >
+        android:background="@color/log_blue2" >
 
         <TextView
             android:id="@+id/list_title"
@@ -21,7 +21,7 @@
             android:layout_centerVertical="true"
             android:paddingLeft="6px"
             android:singleLine="true"
-            android:textColor="@android:color/white"
+            android:textColor="@color/white"
             android:textSize="@dimen/smart_watch_2_text_size_medium"
             android:textStyle="bold" />
     </RelativeLayout>

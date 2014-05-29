@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="@dimen/smart_watch_2_control_width"
     android:layout_height="@dimen/smart_watch_2_control_height"
-    android:background="@color/gray"
+    android:background="@color/white"
     tools:ignore="PxUsage,UselessParent,contentDescription" >
 
     <RelativeLayout
@@ -11,7 +11,7 @@
         android:layout_width="fill_parent"
         android:layout_height="28px"
         android:layout_alignParentTop="true"
-        android:background="@color/log_blue1" >
+        android:background="@color/log_blue2" >
 
         <ImageView
             android:id="@+id/battery"
@@ -31,58 +31,17 @@
             android:layout_toLeftOf="@id/battery"
             android:paddingLeft="6px"
             android:singleLine="true"
-            android:textColor="@android:color/white"
+            android:textColor="@color/white"
             android:textSize="@dimen/smart_watch_2_text_size_medium"
             android:textStyle="bold" />
     </RelativeLayout>
-
-    <!-- <RelativeLayout -->
-    <!-- android:layout_width="wrap_content" -->
-    <!-- android:layout_height="wrap_content" -->
-    <!-- android:layout_centerInParent="true" > -->
-
-
-    <!-- <ImageView -->
-    <!-- android:id="@+id/thumbnail" -->
-    <!-- android:layout_width="64px" -->
-    <!-- android:layout_height="64px" -->
-    <!-- android:layout_alignParentLeft="true" -->
-    <!-- android:layout_alignParentTop="true" -->
-    <!-- android:layout_marginLeft="5px" -->
-    <!-- android:layout_marginTop="5px" -->
-    <!-- android:clickable="true" /> -->
-
-
-    <!-- <TextView -->
-    <!-- android:id="@+id/title" -->
-    <!-- android:layout_width="wrap_content" -->
-    <!-- android:layout_height="wrap_content" -->
-    <!-- android:layout_toRightOf="@id/thumbnail" -->
-    <!-- android:gravity="center_vertical|center_vertical" -->
-    <!-- android:paddingLeft="5px" -->
-    <!-- android:paddingTop="20px" -->
-    <!-- android:textColor="@android:color/black" -->
-    <!-- android:textSize="@dimen/smart_watch_2_text_size_large" -->
-    <!-- android:textStyle="bold" /> -->
-
-
-    <!-- <TextView -->
-    <!-- android:id="@+id/value" -->
-    <!-- android:layout_width="match_parent" -->
-    <!-- android:layout_height="wrap_content" -->
-    <!-- android:layout_below="@id/thumbnail" -->
-    <!-- android:gravity="center" -->
-    <!-- android:textColor="@android:color/black" -->
-    <!-- android:textSize="45px" /> -->
-    <!-- </RelativeLayout> -->
-
 
     <!-- footer area for logo, unit and sync time -->
 
     <RelativeLayout
         android:id="@+id/footer"
         android:layout_width="fill_parent"
-        android:layout_height="80px"
+        android:layout_height="74px"
         android:layout_alignParentBottom="true" >
 
         <ImageView
@@ -92,21 +51,9 @@
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
             android:clickable="true"
-            android:padding="4px"
-            android:src="@drawable/dev_teplota" />
-
-        <TextView
-            android:text="hPa"
-            android:id="@+id/unit"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_toRightOf="@+id/thumbnail"
+            android:paddingBottom="4px"
             android:paddingLeft="4px"
-            android:paddingTop="4px"
-            android:singleLine="true"
-            android:textColor="@android:color/black"
-            android:textSize="40px" />
+            android:paddingRight="4px" />
 
         <RelativeLayout
             android:id="@+id/sync_line"
@@ -124,7 +71,7 @@
                 android:layout_height="@dimen/smart_watch_2_text_size_small"
                 android:layout_alignParentLeft="true"
                 android:layout_centerVertical="true"
-                android:src="@drawable/sync" />
+                android:src="@drawable/sync_darkgrey" />
 
             <TextView
                 android:id="@+id/sync_time"
@@ -134,29 +81,51 @@
                 android:layout_marginLeft="2px"
                 android:layout_toRightOf="@id/sync_icon"
                 android:singleLine="true"
-                android:textColor="@android:color/black"
+                android:textColor="@color/darkgray"
                 android:textSize="@dimen/smart_watch_2_text_size_small" />
         </RelativeLayout>
+
+        <!-- <TextView -->
+        <!-- android:id="@+id/unit" -->
+        <!-- android:layout_width="wrap_content" -->
+        <!-- android:layout_height="wrap_content" -->
+        <!-- android:layout_alignParentRight="true" -->
+        <!-- android:layout_alignParentTop="true" -->
+        <!-- android:paddingLeft="4px" -->
+        <!-- android:paddingRight="4px" -->
+        <!-- android:singleLine="true" -->
+        <!-- android:text="ppp" -->
+        <!-- android:textColor="@color/log_blue2" -->
+        <!-- android:textSize="50px" -->
+        <!-- android:textStyle="bold" /> -->
+
     </RelativeLayout>
+
+    <TextView
+        android:id="@+id/unit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_marginTop="90px"
+        android:paddingLeft="4px"
+        android:paddingRight="4px"
+        android:singleLine="true"
+        android:textColor="@color/log_blue2"
+        android:textSize="50px"
+        android:textStyle="bold" />
 
     <!-- middle area for value -->
 
-    <RelativeLayout
-        android:id="@+id/middle"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:layout_above="@id/footer"
-        android:layout_below="@id/header" >
-
-        <TextView
-            android:id="@+id/value"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:layout_centerVertical="true"
-            android:gravity="center"
-            android:textColor="@android:color/black"
-            android:textSize="45px" />
-    </RelativeLayout>
+    <TextView
+        android:id="@+id/value"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="15px"
+        android:padding="4px"
+        android:singleLine="true"
+        android:textColor="@color/log_blue2"
+        android:textSize="70px"
+        android:textStyle="bold" />
 
 </RelativeLayout>

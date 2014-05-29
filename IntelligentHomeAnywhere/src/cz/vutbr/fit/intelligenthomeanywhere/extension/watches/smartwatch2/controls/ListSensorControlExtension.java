@@ -142,7 +142,7 @@ public class ListSensorControlExtension extends ManagedControlExtension {
 		mMenuItemsIcons[0] = new Bundle();
         mMenuItemsIcons[0].putInt(Control.Intents.EXTRA_MENU_ITEM_ID, MENU_REFRESH);
         mMenuItemsIcons[0].putString(Control.Intents.EXTRA_MENU_ITEM_ICON,
-                ExtensionUtils.getUriString(mContext, R.drawable.sync_grey));
+                ExtensionUtils.getUriString(mContext, R.drawable.sync_white));
 	}
 	
 	@Override

@@ -153,6 +153,7 @@ public class ListAdapterControlExtension extends ManagedControlExtension {
         
         // TODO predelat na getName() az to bude spravne naplnene
         headerBundle.putString(Control.Intents.EXTRA_TEXT, mAdapters.get(position).getId());
+//        headerBundle.putString(Control.Intents.EXTRA_TEXT, mAdapters.get(position).getName());
 
         item.layoutData = new Bundle[1];
         item.layoutData[0] = headerBundle;
