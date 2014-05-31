@@ -153,7 +153,7 @@ public class LocationScreenActivity extends SherlockFragmentActivity {
 		for(int i = 0 ; i < locs.size();i++) {
 			title[i] = locs.get(i).getName();
 			subtitle[i] = locs.get(i).getName();
-			icon[i] = getIconLocation( (locs.get(i).getIcon()==null )?"0": locs.get(i).getIcon());
+			icon[i] = locs.get(i).getIconResource();
 		}
 			
 		
@@ -229,8 +229,7 @@ public class LocationScreenActivity extends SherlockFragmentActivity {
 		for(int i = 0 ; i < sensors.size();i++) {
 			title[i] = sensors.get(i).getName();
 			value[i] = sensors.get(i).getRawIntValue();
-			icon[i] = getIconSensor(0);
-			//icon[i] = getIcon((sensors.get(i).getType()<0)?0: sensors.get(i).getType());
+			icon[i] = sensors.get(i).getTypeIconResource();
 		}
 		
 		
@@ -243,37 +242,6 @@ public class LocationScreenActivity extends SherlockFragmentActivity {
 		
 		return true;
 	}
-	
-	
-	private int getIconLocation(String icon2) {
-		int idIcon = Integer.parseInt(icon2);
-		
-		switch (idIcon) {
-		// Koupelna
-		case 0: 
-			return R.drawable.loc_bath_room;
-		// Loznice
-		case 1: 
-			return R.drawable.loc_bed_room;
-		}
-		
-		return 0;
-	}
-	private int getIconSensor(int icon2) {
-		int idIcon = icon2;
-		
-		switch (idIcon) {
-		// Teplota
-		case 0: 
-			return R.drawable.dev_teplota;
-		// Tlak
-		case 1: 
-			return R.drawable.dev_tlak;
-		}
-		
-		return 0;
-	}
-	
 
 	@Override
     public boolean onOptionsItemSelected(MenuItem item) {

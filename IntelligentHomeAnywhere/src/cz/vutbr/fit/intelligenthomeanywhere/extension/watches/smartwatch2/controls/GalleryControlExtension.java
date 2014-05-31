@@ -260,7 +260,7 @@ public class GalleryControlExtension extends ManagedControlExtension {
 		iconBundle.putInt(Control.Intents.EXTRA_LAYOUT_REFERENCE,
 				R.id.thumbnail);
 		iconBundle.putString(Control.Intents.EXTRA_DATA_URI,
-				ExtensionUtils.getUriString(mContext, R.drawable.dev_teplota));
+				ExtensionUtils.getUriString(mContext, curDevice.getTypeIconResource()));
 		// iconBundle.putString(Control.Intents.EXTRA_DATA_URI, ExtensionUtils
 		// .getUriString(mContext, curDevice
 		// .getTypeIconResource()));

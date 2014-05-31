@@ -23,8 +23,7 @@ public class EmissionDevice extends BaseDevice {
 
 	@Override
 	public int getTypeIconResource() {
-		// TODO return icon resource
-		return 0;
+		return R.drawable.dev_emission;
 	}
 
 	@Override

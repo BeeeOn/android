@@ -28,7 +28,7 @@ public class TemperatureDevice extends BaseDevice {
 	
 	@Override
 	public int getTypeIconResource() {
-		return R.drawable.sensor_temperature;
+		return R.drawable.dev_temperature;
 	}
 
 	@Override

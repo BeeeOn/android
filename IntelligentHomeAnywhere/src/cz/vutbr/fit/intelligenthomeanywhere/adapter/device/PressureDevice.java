@@ -28,7 +28,7 @@ public class PressureDevice extends BaseDevice {
 	
 	@Override
 	public int getTypeIconResource() {
-		return R.drawable.sensor_pressure;
+		return R.drawable.dev_pressure;
 	}
 
 	@Override

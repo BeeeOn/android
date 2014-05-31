@@ -23,8 +23,7 @@ public class IlluminationDevice extends BaseDevice {
 	
 	@Override
 	public int getTypeIconResource() {
-		// TODO return icon resource
-		return 0;
+		return R.drawable.dev_illumination;
 	}
 
 	@Override

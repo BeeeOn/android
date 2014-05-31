@@ -23,7 +23,7 @@ public class HumidityDevice extends BaseDevice {
 	
 	@Override
 	public int getTypeIconResource() {
-		return R.drawable.sensor_humidity;
+		return R.drawable.dev_humidity;
 	}
 
 	@Override
