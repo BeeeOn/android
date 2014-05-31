@@ -4,6 +4,7 @@
 package cz.vutbr.fit.intelligenthomeanywhere.adapter.device;
 
 import android.content.Context;
+import android.text.format.Time;
 
 /**
  * @brief Abstract class for all devices
@@ -21,6 +22,8 @@ public abstract class BaseDevice {
 	protected char mVisibility;
 	
 	protected NetworkState mNetwork = new NetworkState();
+	
+	public final Time lastUpdate = new Time();
 			
 	/**
 	 * Class constructor

@@ -335,9 +335,12 @@ public class XmlParsers {
 					device.setQuality(Integer.parseInt(readText(QUALITY)));
 				else if(nameTag.equals(VALUE))
 					device.setValue(readText(VALUE));
-				else if(nameTag.equals(LOGGING)){
+				else if(nameTag.equals(LOGGING))
 					device.setLogging((mParser.getAttributeValue(ns, ENABLED).equals(INIT_1))?true:false);
-				}
+				else // TODO: set correct last update time
+					device.lastUpdate.setToNow();
+				//else if(nameTag.equals(LASTUPDATE))
+				//	device.lastUpdate.set(time);
 			}
 			
 			result.add(device);

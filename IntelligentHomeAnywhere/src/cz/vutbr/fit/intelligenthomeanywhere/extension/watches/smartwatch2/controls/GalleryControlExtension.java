@@ -39,6 +39,7 @@ import java.util.List;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.format.Time;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -214,24 +215,18 @@ public class GalleryControlExtension extends ManagedControlExtension {
 		Bundle syncBundle = new Bundle();
 		syncBundle.putInt(Control.Intents.EXTRA_LAYOUT_REFERENCE,
 				R.id.sync_time);
-		// TODO spravny cas tam dat
-		String dateTime;
-		DateFormat dateFormat;
+		
+		// Last update time data
+		Time yesterday = new Time();
+		yesterday.setToNow();
+		yesterday.set(yesterday.toMillis(true) - 24*60*60*1000); // -24 hours
+		
+		// If sync time is more that 24 ago, show only date. Show time otherwise.
+		DateFormat dateFormat = yesterday.before(curDevice.lastUpdate)
+				? DateFormat.getTimeInstance()
+				: DateFormat.getDateInstance();  
 
-		Calendar syncTime = Calendar.getInstance();
-		Calendar actTime = Calendar.getInstance();
-
-		actTime.add(Calendar.HOUR, -24);
-
-		// If sync time is more that 24 ago, show only date. Show time
-		// otherwise.
-		if (actTime.before(syncTime)) {
-			dateFormat = DateFormat.getTimeInstance();
-		} else {
-			dateFormat = DateFormat.getDateInstance();
-		}
-
-		dateTime = dateFormat.format(syncTime.getTime());
+		String dateTime = dateFormat.format(curDevice.lastUpdate);
 		syncBundle.putString(Control.Intents.EXTRA_TEXT, dateTime);
 
 		// Title data
