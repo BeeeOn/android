@@ -69,20 +69,20 @@
             android:textColor="@color/white"
             android:textColorHint="@color/white"
             android:textSize="20dp" />
-
+        
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignLeft="@+id/login_btn_mojeid"
             android:layout_below="@+id/login_btn_mojeid"
             android:gravity="center_horizontal" >
-
+            
             <CheckBox
-                android:id="@+id/login_cb_remeber_me"
+                android:id="@+id/login_btn_demo"
                 style="@style/CheckBoxCustomHoloTheme"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/login_txt_remember_me"
+                android:text="@string/login_demo"
                 android:textAlignment="gravity" />
 
         </RelativeLayout>

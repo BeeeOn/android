@@ -9,6 +9,8 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
@@ -18,6 +20,7 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 
 import cz.vutbr.fit.intelligenthomeanywhere.Constants;
+import cz.vutbr.fit.intelligenthomeanywhere.DemoData;
 import cz.vutbr.fit.intelligenthomeanywhere.R;
 import cz.vutbr.fit.intelligenthomeanywhere.controller.Controller;
 import cz.vutbr.fit.intelligenthomeanywhere.exception.CommunicationException;
@@ -58,14 +61,28 @@ public class LoginActivity extends Activity {
 		// Get controller
 		mController = Controller.getInstance(this);
 		
+		// Demo button
+		((CheckBox)findViewById(R.id.login_btn_demo)).setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				mController.setDemoMode(LoginActivity.this, true);
+
+				Intent intent = new Intent(LoginActivity.this, LocationScreenActivity.class);
+				intent.putExtra(Constants.LOGIN, Constants.LOGIN_DEMO);
+	    		startActivity(intent);
+		    	LoginActivity.this.finish();
+			}
+		});
+
 		// Get btn for login
 		ImageButton btnGoogle = (ImageButton) findViewById(R.id.login_btn_google);
 		ImageButton btnMojeID = (ImageButton) findViewById(R.id.login_btn_mojeid);
-
+		
 		// Set onClickListener
 		btnGoogle.setOnClickListener(new OnClickListener(){
 			@Override
 			public void onClick(View v) {
+				mController.setDemoMode(LoginActivity.this, false);
 				
 				mProgress = new ProgressDialog(mActivity);
 				mProgress.setMessage("Signing to server...");

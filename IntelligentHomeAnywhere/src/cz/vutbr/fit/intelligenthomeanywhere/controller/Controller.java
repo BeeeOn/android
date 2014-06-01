@@ -46,7 +46,7 @@ public final class Controller {
 	private Household mHousehold;
 	
 	/** Switch for using demo mode (with example adapter, without server) */
-	public static final boolean demoMode = false; // TODO: Make this working, somehow...
+	private static boolean mDemoMode = false;
 	
 	
 	/**
@@ -79,11 +79,19 @@ public final class Controller {
 		mPersistence = new Persistence(mContext);
 		mNetwork = new Network(mContext);
 		try {
-			mHousehold = demoMode ? new DemoHousehold(mContext) : new Household();
+			mHousehold = mDemoMode ? new DemoHousehold(mContext) : new Household();
 		} catch (Exception e) {
 			mHousehold = new Household();
 			e.printStackTrace();
 		}
+	}
+	
+	public static synchronized void setDemoMode(Context context, boolean demoMode) {
+		if (mDemoMode == demoMode)
+			return;
+		
+		mDemoMode = demoMode;
+		mController = new Controller(context);
 	}
 
 	
