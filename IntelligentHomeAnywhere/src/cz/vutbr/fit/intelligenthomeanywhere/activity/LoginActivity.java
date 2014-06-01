@@ -68,7 +68,7 @@ public class LoginActivity extends Activity {
 			public void onClick(View v) {
 				
 				mProgress = new ProgressDialog(mActivity);
-				mProgress.setMessage("Sing In to server!!");
+				mProgress.setMessage("Signing to server...");
 				mProgress.setCancelable(false);
 				mProgress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
 				mProgress.show();
