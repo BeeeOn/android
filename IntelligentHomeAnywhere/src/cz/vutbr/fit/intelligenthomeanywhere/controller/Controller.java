@@ -221,16 +221,17 @@ public final class Controller {
 				// TODO Auto-generated catch block 
 				e.printStackTrace(); 
 			}
-
-			if (mHousehold.adapters == null) 
-				mHousehold.adapters = new ArrayList<Adapter>();
-			
-			// Refresh all adapters (load their devices)
-			for (Adapter adapter : mHousehold.adapters) {
-				refreshAdapter(adapter, false);
-			}
 		}
 
+		// Network or another error, we must return correct object now, but adapters must be loaded later
+		if (mHousehold.adapters == null) 
+			return new ArrayList<Adapter>();
+
+		// Refresh all adapters (load their devices)
+		for (Adapter adapter : mHousehold.adapters) {
+			refreshAdapter(adapter, false);
+		}
+		
 		return mHousehold.adapters;
 	}
 	
