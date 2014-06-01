@@ -13,7 +13,7 @@ public class SwitchDevice extends BaseDevice {
 	
 	@Override
 	public void setValue(String value){
-		mValue = value;
+		mValue = (value.equalsIgnoreCase(STATE_ON) ? STATE_ON : STATE_OFF);
 	}
 	
 	public static final String STATE_ON = "ON";
@@ -36,8 +36,7 @@ public class SwitchDevice extends BaseDevice {
 	
 	@Override
 	public int getTypeIconResource() {
-		// TODO return icon resource
-		return 0;
+		return isActive() ? R.drawable.dev_switch_open : R.drawable.dev_switch_closed;
 	}
 
 	@Override

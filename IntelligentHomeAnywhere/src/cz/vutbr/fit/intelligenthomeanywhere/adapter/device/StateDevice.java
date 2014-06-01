@@ -14,11 +14,11 @@ public class StateDevice extends BaseDevice {
 	
 	@Override
 	public void setValue(String value){
-		mValue = value;
+		mValue = (value.equalsIgnoreCase(STATE_OPEN) ? STATE_OPEN : STATE_CLOSED);
 	}
 	
-	public static final String STATE_ON = "ON";
-	public static final String STATE_OFF = "OFF";
+	public static final String STATE_OPEN = "OPEN";
+	public static final String STATE_CLOSED = "CLOSED";
 	
 	@Override
 	public int getType() {
@@ -32,8 +32,7 @@ public class StateDevice extends BaseDevice {
 	
 	@Override
 	public int getTypeIconResource() {
-		// TODO return icon resource
-		return 0;
+		return isActive() ? R.drawable.dev_state_open : R.drawable.dev_state_closed;
 	}
 
 	@Override
@@ -54,7 +53,7 @@ public class StateDevice extends BaseDevice {
 
 	@Override
 	public void setValue(int value) {
-		Integer.toString(value);
+		mValue = (value != 0 ? STATE_OPEN : STATE_CLOSED);
 	}
 	
 	@Override
@@ -67,7 +66,7 @@ public class StateDevice extends BaseDevice {
 	 * @return boolean representing active state
 	 */
 	public boolean isActive() {
-		return mValue.equals(STATE_ON);
+		return mValue.equals(STATE_OPEN);
 	}
 	
 	/**

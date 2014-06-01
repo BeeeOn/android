@@ -28,8 +28,7 @@ public class UnknownDevice extends BaseDevice {
 	
 	@Override
 	public int getTypeIconResource() {
-		// TODO return icon resource
-		return 0;
+		return R.drawable.dev_unknown;
 	}
 
 	@Override
