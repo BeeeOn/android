@@ -65,7 +65,7 @@ public class Adapter {
 	 * @return
 	 */
 	public String getName(){
-		return mName;
+		return mName.length() > 0 ? mName : getId();
 	}
 	
 	/**

@@ -60,8 +60,7 @@ public class DialogFragmentDefaultAdapter extends SherlockDialogFragment {
 		mAdapterStringList = new ArrayList<String>();
 		mAdapterStringList.add(getString(R.string.none));
 		for (Adapter adapter : mAdapterList) {
-			// TODO prepnout na getName() az bude spravne naplnene
-			mAdapterStringList.add(adapter.getId());
+			mAdapterStringList.add(adapter.getName());
 		}
 
 		listView.setAdapter(new ArrayAdapter<String>(getSherlockActivity(),

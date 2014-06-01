@@ -170,7 +170,7 @@ public abstract class BaseDevice {
 	 * @return name
 	 */
 	public String getName() {
-		return mName;
+		return mName.length() > 0 ? mName : getId();
 	}
 		
 	/**
@@ -311,7 +311,7 @@ public abstract class BaseDevice {
 
 	@Override
 	public String toString() {
-		return String.format("%s (%s)", mName, mLocation);
+		return String.format("%s (%s)", getName(), getLocation());
 	}
 	
 	/**
