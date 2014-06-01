@@ -215,9 +215,9 @@ public class XmlParsers {
 		
 		mParser.require(XmlPullParser.START_TAG, ns, COM_ROOT);
 		
-		state = mParser.getAttributeValue(ns, STATE);
-		id = Integer.parseInt(mParser.getAttributeValue(ns, ID));
-		version = mParser.getAttributeValue(ns, VERSION);
+		state = getSecureAttrValue(ns, STATE);
+		id = Integer.parseInt(getSecureAttrValue(ns, ID));
+		version = getSecureAttrValue(ns, VERSION);
 		
 		if(!version.equals(COM_VER))
 			throw new ComVerMisException(mComVerMisExcMessage + "Expected: " + COM_VER + " but got: " + version);
@@ -235,7 +235,7 @@ public class XmlParsers {
 			break;
 		case eFALSE:
 			// FalseAnswer (.data is HashMap<String, String> for defined states as <email,role>
-			result.data = parseFalse(mParser.getAttributeValue(ns, ADDITIONALINFO));
+			result.data = parseFalse(getSecureAttrValue(ns, ADDITIONALINFO));
 			break;
 		case eNOTREGA:
 		case eNOTREGB:
@@ -253,11 +253,11 @@ public class XmlParsers {
 			break;
 		case eTRUE:
 			// String
-			result.data = mParser.getAttributeValue(ns, ADDITIONALINFO);
+			result.data = getSecureAttrValue(ns, ADDITIONALINFO);
 			break;
 		case eXML:
 			// Adapter
-			result.data = parseXml(mParser.getAttributeValue(ns, ROLE));
+			result.data = parseXml(getSecureAttrValue(ns, ROLE));
 			break;
 		case eVIEWSLIST:
 			result.data = parseViewsList();
@@ -280,7 +280,7 @@ public class XmlParsers {
 		mParser.nextTag();
 		mParser.require(XmlPullParser.START_TAG, ns, ADAPTER);
 		
-		result.setId(mParser.getAttributeValue(ns, ID));
+		result.setId(getSecureAttrValue(ns, ID));
 		mParser.nextTag();
 		mParser.require(XmlPullParser.START_TAG, ns, VERSION);
 		
@@ -309,20 +309,20 @@ public class XmlParsers {
 		ArrayList<BaseDevice> result = new ArrayList<BaseDevice>();
 		
 		do{	
-			BaseDevice device = getDeviceByType(mParser.getAttributeValue(ns, TYPE));
-			device.setAddress(mParser.getAttributeValue(ns, ID));
-			device.setInitialized((mParser.getAttributeValue(ns, INITIALIZED).equals(INIT_1))?true:false);
+			BaseDevice device = getDeviceByType(getSecureAttrValue(ns, TYPE));
+			device.setAddress(getSecureAttrValue(ns, ID));
+			device.setInitialized((getSecureAttrValue(ns, INITIALIZED).equals(INIT_1))?true:false);
 			if(!device.isInitialized()){
-				device.setInvolveTime(mParser.getAttributeValue(ns, INVOLVED));
+				device.setInvolveTime(getSecureAttrValue(ns, INVOLVED));
 			}
-			device.setVisibility(mParser.getAttributeValue(ns, VISIBILITY).toLowerCase(Locale.US).charAt(0));
+			device.setVisibility(getSecureAttrValue(ns, VISIBILITY).toLowerCase(Locale.US).charAt(0));
 			
 			String nameTag = null;
 			
 
 			while(mParser.nextTag() != XmlPullParser.END_TAG && !(nameTag = mParser.getName()).equals(DEVICE)){
 				if(nameTag.equals(LOCATION)){
-					device.setLocationType(Integer.parseInt(mParser.getAttributeValue(ns, TYPE)));
+					device.setLocationType(Integer.parseInt(getSecureAttrValue(ns, TYPE)));
 					device.setLocation(readText(LOCATION));
 				}
 				else if(nameTag.equals(NAME))
@@ -336,7 +336,7 @@ public class XmlParsers {
 				else if(nameTag.equals(VALUE))
 					device.setValue(readText(VALUE));
 				else if(nameTag.equals(LOGGING))
-					device.setLogging((mParser.getAttributeValue(ns, ENABLED).equals(INIT_1))?true:false);
+					device.setLogging((getSecureAttrValue(ns, ENABLED).equals(INIT_1))?true:false);
 				else // TODO: set correct last update time
 					device.lastUpdate.setToNow();
 				//else if(nameTag.equals(LASTUPDATE))
@@ -365,9 +365,9 @@ public class XmlParsers {
 		
 		do{
 			Adapter adapter = new Adapter();
-			adapter.setId(mParser.getAttributeValue(ns, ID));
-			adapter.setName(mParser.getAttributeValue(ns, NAME));
-			adapter.setRole(User.Role.fromString(mParser.getAttributeValue(ns, ROLE)));
+			adapter.setId(getSecureAttrValue(ns, ID));
+			adapter.setName(getSecureAttrValue(ns, NAME));
+			adapter.setRole(User.Role.fromString(getSecureAttrValue(ns, ROLE)));
 			result.add(adapter);
 			
 			mParser.nextTag();
@@ -454,13 +454,13 @@ public class XmlParsers {
 		
 		HashMap<String, User> result = new HashMap<String, User>();
 		do {
-			String email = mParser.getAttributeValue(ns, EMAIL);
+			String email = getSecureAttrValue(ns, EMAIL);
 			String name = String.format("%s %s",
-					mParser.getAttributeValue(ns, NAME),
-					mParser.getAttributeValue(ns, SURNAME));
+					getSecureAttrValue(ns, NAME),
+					getSecureAttrValue(ns, SURNAME));
 
-			User.Role role = User.Role.fromString(mParser.getAttributeValue(ns, ROLE));
-			User.Gender gender = mParser.getAttributeValue(ns, GENDER).equals(POSITIVEONE)
+			User.Role role = User.Role.fromString(getSecureAttrValue(ns, ROLE));
+			User.Gender gender = getSecureAttrValue(ns, GENDER).equals(POSITIVEONE)
 					? User.Gender.Male
 					: User.Gender.Female;
 
@@ -541,10 +541,10 @@ public class XmlParsers {
 			String valueRole = null;
 			
 			if(additionalInfo.equals(ADDCONACCOUNT) || additionalInfo.equals(CHANGECONACCOUNT))
-				valueRole = mParser.getAttributeValue(ns, ROLE);
+				valueRole = getSecureAttrValue(ns, ROLE);
 			
 			if(!unknownFlag){
-				keyEmail = mParser.getAttributeValue(ns, EMAIL);
+				keyEmail = getSecureAttrValue(ns, EMAIL);
 				data.put(keyEmail, valueRole);
 				mParser.nextTag();
 			}else{
@@ -566,7 +566,7 @@ public class XmlParsers {
 		
 		ArrayList<CustomViewPair> result = new ArrayList<CustomViewPair>();
 		do {
-			result.add(new CustomViewPair(Integer.parseInt(mParser.getAttributeValue(ns, ICON)), mParser.getAttributeValue(ns, NAME)));
+			result.add(new CustomViewPair(Integer.parseInt(getSecureAttrValue(ns, ICON)), getSecureAttrValue(ns, NAME)));
 			
 			mParser.nextTag();
 			
@@ -690,4 +690,16 @@ public class XmlParsers {
 	    return result;
 	}
 	
+	/**
+	 * Method change null result value to empty string (mParser is included)
+	 * @param nameSpace 
+	 * @param name of the attribute
+	 * @return parsed attribute or empty string
+	 */
+	private static String getSecureAttrValue(String nameSpace, String name){
+		String result = mParser.getAttributeValue(nameSpace, name);
+		if(result == null)
+			result = "";
+		return result;
+	}
 }
