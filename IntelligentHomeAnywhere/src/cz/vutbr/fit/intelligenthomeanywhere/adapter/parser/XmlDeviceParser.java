@@ -123,8 +123,9 @@ public class XmlDeviceParser {
 	    mParser.nextTag();
 	    mParser.require(XmlPullParser.START_TAG, ns, ADAPTER_ROOT);
 	    
-	    String id = mParser.getAttributeValue(null, ADAPTER_ID);
-	    adapter.setId(id);
+	    String id_ = mParser.getAttributeValue(null, ADAPTER_ID);
+		if (id_ != null)
+			adapter.setId(id_);
 	    
 	    while (mParser.next() != XmlPullParser.END_TAG) {
 	        if (mParser.getEventType() != XmlPullParser.START_TAG)
