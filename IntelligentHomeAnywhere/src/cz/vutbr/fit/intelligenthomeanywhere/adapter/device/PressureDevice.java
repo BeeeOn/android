@@ -23,7 +23,7 @@ public class PressureDevice extends BaseDevice {
 	
 	@Override
 	public int getTypeStringResource() {
-		return R.string.pressure;
+		return R.string.dev_pressure_type;
 	}
 	
 	@Override
@@ -33,7 +33,7 @@ public class PressureDevice extends BaseDevice {
 
 	@Override
 	public int getUnitStringResource() {
-		return R.string.pressure_Pa;
+		return R.string.dev_pressure_unit;
 	}
 
 	@Override

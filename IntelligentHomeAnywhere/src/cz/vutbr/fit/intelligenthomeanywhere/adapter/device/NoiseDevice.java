@@ -23,7 +23,7 @@ public class NoiseDevice extends BaseDevice {
 	
 	@Override
 	public int getTypeStringResource() {
-		return R.string.noise;
+		return R.string.dev_noise_type;
 	}
 	
 	@Override
@@ -33,7 +33,7 @@ public class NoiseDevice extends BaseDevice {
 
 	@Override
 	public int getUnitStringResource() {
-		return R.string.noise_dB;
+		return R.string.dev_noise_unit;
 	}
 
 	@Override

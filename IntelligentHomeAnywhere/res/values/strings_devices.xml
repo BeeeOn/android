@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Units of devices -->
+    <string name="dev_temperature_unit">°C</string>
+    <string name="dev_humidity_unit">%</string>
+    <string name="dev_pressure_unit">hPa</string>
+    <string name="dev_illumination_unit">lux</string>
+    <string name="dev_noise_unit">dB</string>
+    <string name="dev_emission_unit">ppm</string>
+    <string name="dev_unknown_unit">"???"</string>
+
+    <!-- Types of devices -->
+    <string name="dev_temperature_type">Thermal sensor</string>
+    <string name="dev_humidity_type">Hydrometer</string>
+    <string name="dev_pressure_type">Barometer</string>
+    <string name="dev_state_type">State sensor</string>
+    <string name="dev_switch_type">Switch device</string>
+    <string name="dev_illumination_type">Illumination sensor</string>
+    <string name="dev_noise_type">Sound level sensor</string>
+    <string name="dev_emission_type">Emission sensor</string>
+    <string name="dev_unknown_type">Unknown device</string>
+    
+    <!-- Special values of devices -->
+    <string name="dev_state_value_open">Open</string>
+    <string name="dev_state_value_closed">Closed</string>
+    <string name="dev_switch_value_on">On</string>
+    <string name="dev_switch_value_off">Off</string>
+</resources>

@@ -18,7 +18,7 @@ public class EmissionDevice extends BaseDevice {
 
 	@Override
 	public int getTypeStringResource() {
-		return R.string.emission;
+		return R.string.dev_emission_type;
 	}
 
 	@Override
@@ -28,7 +28,7 @@ public class EmissionDevice extends BaseDevice {
 
 	@Override
 	public int getUnitStringResource() {
-		return R.string.emission_ppm;
+		return R.string.dev_emission_unit;
 	}
 	
 	@Override

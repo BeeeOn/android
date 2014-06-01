@@ -18,7 +18,7 @@ public class IlluminationDevice extends BaseDevice {
 	
 	@Override
 	public int getTypeStringResource() {
-		return R.string.illumination;
+		return R.string.dev_illumination_type;
 	}
 	
 	@Override
@@ -28,7 +28,7 @@ public class IlluminationDevice extends BaseDevice {
 
 	@Override
 	public int getUnitStringResource() {
-		return R.string.illumination_lux;
+		return R.string.dev_illumination_unit;
 	}
 	
 	@Override

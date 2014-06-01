@@ -34,8 +34,6 @@
     <string name="sensordetail_last_value">Last value:\u0020</string>
     <string name="sensordetail_refresh_time">Refresh inteval: </string>
     <string name="sensordetail_battery_state">Battery state</string>
-    <string name="sensor_open">Open</string>
-    <string name="sensor_close">Close</string>
     <string name="update_needed">Please update application</string>
     <string name="addsensor_type">Type of sensor:</string>
     <string name="addsensor_involved_time">Activated at:</string>
@@ -68,23 +66,6 @@
     <!-- Others -->
     <string name="action_settings">Settings</string>
     <string name="addadapter_qrcode_desc">Get QR code</string>
-    <!-- Units -->
-    <string name="temperature_C">°C</string>
-    <string name="humidity_percent">%</string>
-    <string name="pressure_Pa">hPa</string>
-    <string name="illumination_lux">lux</string>
-    <string name="noise_dB">dB</string>
-    <string name="emission_ppm">ppm</string>
-    <!-- Type of sensors -->
-    <string name="temperature">thermal sensor</string>
-    <string name="humidity">hzgrometer</string>
-    <string name="pressure">barometer</string>
-    <string name="switch_s">switch sensor</string>
-    <string name="switch_c">switch controller</string>
-    <string name="illumination">lighting sensor</string>
-    <string name="noise">sound level meter</string>
-    <string name="emission">emission meter</string>
-    <string name="unknown">unknown device type</string>
     <!-- Arrays -->
     <string-array name="registration_spinner">
         <item>Facebook</item>

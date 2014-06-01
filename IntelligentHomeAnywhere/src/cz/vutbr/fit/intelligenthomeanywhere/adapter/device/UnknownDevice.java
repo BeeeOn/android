@@ -23,18 +23,17 @@ public class UnknownDevice extends BaseDevice {
 	
 	@Override
 	public int getTypeStringResource() {
-		return R.string.unknown;
+		return R.string.dev_unknown_type;
 	}
 	
 	@Override
 	public int getTypeIconResource() {
-		// TODO return icon resource
-		return 0;
+		return R.drawable.dev_unknown;
 	}
 
 	@Override
 	public int getUnitStringResource() {
-		return 0; // TODO: get unknown "???" unit?
+		return R.string.dev_unknown_unit;
 	}
 
 	@Override
