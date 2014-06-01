@@ -11,6 +11,8 @@ import cz.vutbr.fit.intelligenthomeanywhere.adapter.Adapter;
 import cz.vutbr.fit.intelligenthomeanywhere.adapter.device.BaseDevice;
 import cz.vutbr.fit.intelligenthomeanywhere.adapter.device.BaseDevice.SaveDevice;
 import cz.vutbr.fit.intelligenthomeanywhere.adapter.device.DeviceLog;
+import cz.vutbr.fit.intelligenthomeanywhere.adapter.device.StateDevice;
+import cz.vutbr.fit.intelligenthomeanywhere.adapter.device.SwitchDevice;
 import cz.vutbr.fit.intelligenthomeanywhere.exception.CommunicationException;
 import cz.vutbr.fit.intelligenthomeanywhere.exception.NoConnectionException;
 import cz.vutbr.fit.intelligenthomeanywhere.exception.NotImplementedException;
@@ -392,8 +394,14 @@ public final class Controller {
 		
 		if (device != null && needsUpdate) {
 			// TODO: load actual value from network
-			int i = new Random().nextInt(100);
-			device.setValue(i);
+			if (device instanceof SwitchDevice) {
+				((SwitchDevice)device).setActive(!((SwitchDevice)device).isActive());
+			} else if (device instanceof StateDevice) {
+				((StateDevice)device).setActive(!((StateDevice)device).isActive());
+			} else {
+				int i = new Random().nextInt(100);
+				device.setValue(i);
+			}
 		}
 		
 		return device;
