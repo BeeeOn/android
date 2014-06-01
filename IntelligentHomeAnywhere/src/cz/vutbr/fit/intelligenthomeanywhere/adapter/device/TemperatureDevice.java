@@ -23,7 +23,7 @@ public class TemperatureDevice extends BaseDevice {
 	
 	@Override
 	public int getTypeStringResource() {
-		return R.string.temperature;
+		return R.string.dev_temperature_type;
 	}
 	
 	@Override
@@ -33,7 +33,7 @@ public class TemperatureDevice extends BaseDevice {
 
 	@Override
 	public int getUnitStringResource() {
-		return R.string.temperature_C;
+		return R.string.dev_temperature_unit;
 	}
 
 	@Override

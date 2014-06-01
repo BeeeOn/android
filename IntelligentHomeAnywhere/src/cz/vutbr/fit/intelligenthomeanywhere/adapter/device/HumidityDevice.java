@@ -18,7 +18,7 @@ public class HumidityDevice extends BaseDevice {
 	
 	@Override
 	public int getTypeStringResource() {
-		return R.string.humidity;
+		return R.string.dev_humidity_type;
 	}
 	
 	@Override
@@ -28,7 +28,7 @@ public class HumidityDevice extends BaseDevice {
 
 	@Override
 	public int getUnitStringResource() {
-		return R.string.humidity_percent;
+		return R.string.dev_humidity_unit;
 	}
 	
 	@Override

@@ -13,17 +13,20 @@ public class SwitchDevice extends BaseDevice {
 	
 	@Override
 	public void setValue(String value){
-		mValue = (value.equalsIgnoreCase(STATE_ON) ? STATE_ON : STATE_OFF);
+		setActive(value.equalsIgnoreCase(SWITCH_ON));
 	}
 	
-	public static final String STATE_ON = "ON";
-	public static final String STATE_OFF = "OFF";
+	public static final String SWITCH_ON = "ON";
+	public static final String SWITCH_OFF = "OFF";
 	
 	@Override
 	public int getType() {
 		return Constants.TYPE_SWITCH;
 	}
 	
+	/**
+	 * This method shouldn't be used for this type of device, use getStateStringResource() instead
+	 */
 	@Override
 	public String getStringValue() {
 		return mValue;
@@ -31,17 +34,17 @@ public class SwitchDevice extends BaseDevice {
 	
 	@Override
 	public int getTypeStringResource() {
-		return R.string.switch_c;
+		return R.string.dev_switch_type;
 	}
 	
 	@Override
 	public int getTypeIconResource() {
-		return isActive() ? R.drawable.dev_switch_open : R.drawable.dev_switch_closed;
+		return isActive() ? R.drawable.dev_switch_on : R.drawable.dev_switch_off;
 	}
 
 	@Override
 	public int getUnitStringResource() {
-		return 0; // TODO: or "on"/"off" depending on actual value?
+		return 0;
 	}
 	
 	@Override
@@ -53,7 +56,7 @@ public class SwitchDevice extends BaseDevice {
 	public float getRawFloatValue() {
 		return 0;
 	}
-	
+
 	@Override
 	public void setValue(int value) {
 		Integer.toString(value);
@@ -64,7 +67,19 @@ public class SwitchDevice extends BaseDevice {
 	 * @return boolean representing active state
 	 */
 	public boolean isActive() {
-		return mValue.equals(STATE_ON);
+		return mValue.equals(SWITCH_ON);
+	}
+	
+	public void setActive(boolean on) {
+		mValue = (on ? SWITCH_ON : SWITCH_OFF);
+	}
+	
+	/**
+	 * Get resource for human readable string representing state of this device
+	 * @return int
+	 */
+	public int getStateStringResource() {
+		return isActive() ? R.string.dev_switch_value_on : R.string.dev_switch_value_off;
 	}
 
 }

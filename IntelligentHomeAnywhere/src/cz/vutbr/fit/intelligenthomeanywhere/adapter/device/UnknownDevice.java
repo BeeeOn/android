@@ -23,7 +23,7 @@ public class UnknownDevice extends BaseDevice {
 	
 	@Override
 	public int getTypeStringResource() {
-		return R.string.unknown;
+		return R.string.dev_unknown_type;
 	}
 	
 	@Override
@@ -33,7 +33,7 @@ public class UnknownDevice extends BaseDevice {
 
 	@Override
 	public int getUnitStringResource() {
-		return 0; // TODO: get unknown "???" unit?
+		return R.string.dev_unknown_unit;
 	}
 
 	@Override

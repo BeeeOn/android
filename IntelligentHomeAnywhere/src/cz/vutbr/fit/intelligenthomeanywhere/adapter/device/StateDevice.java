@@ -14,7 +14,7 @@ public class StateDevice extends BaseDevice {
 	
 	@Override
 	public void setValue(String value){
-		mValue = (value.equalsIgnoreCase(STATE_OPEN) ? STATE_OPEN : STATE_CLOSED);
+		setActive(value.equalsIgnoreCase(STATE_OPEN));
 	}
 	
 	public static final String STATE_OPEN = "OPEN";
@@ -27,7 +27,7 @@ public class StateDevice extends BaseDevice {
 	
 	@Override
 	public int getTypeStringResource() {
-		return R.string.switch_s;
+		return R.string.dev_state_type;
 	}
 	
 	@Override
@@ -37,7 +37,7 @@ public class StateDevice extends BaseDevice {
 
 	@Override
 	public int getUnitStringResource() {
-		return 0; // TODO: or "open"/"closed" depending on actual value?
+		return 0;
 	}
 	
 
@@ -56,6 +56,9 @@ public class StateDevice extends BaseDevice {
 		mValue = (value != 0 ? STATE_OPEN : STATE_CLOSED);
 	}
 	
+	/**
+	 * This method shouldn't be used for this type of device, use getStateStringResource() instead
+	 */
 	@Override
 	public String getStringValue() {
 		return mValue;
@@ -67,6 +70,10 @@ public class StateDevice extends BaseDevice {
 	 */
 	public boolean isActive() {
 		return mValue.equals(STATE_OPEN);
+	}
+	
+	public void setActive(boolean open) {
+		mValue = (open ? STATE_OPEN : STATE_CLOSED);
 	}
 	
 	/**
@@ -81,8 +88,8 @@ public class StateDevice extends BaseDevice {
 	 * Get resource for human readable string representing state of this device
 	 * @return int
 	 */
-	public int getStateStringResource(){
-		return isActive() ? R.string.sensor_open : R.string.sensor_close;
+	public int getStateStringResource() {
+		return isActive() ? R.string.dev_state_value_open : R.string.dev_state_value_closed;
 	}
 
 }
