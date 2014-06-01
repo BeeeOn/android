@@ -142,10 +142,12 @@ public class SensorWidgetProvider extends AppWidgetProvider {
 		remoteViews.setOnClickPendingIntent(R.id.layout, pendingIntent);
 		
 		// open detail activity on click
-		intent = new Intent(context, SensorDetailActivity.class);
-		intent.putExtra(Constants.DEVICE_CLICKED, device.getId());
-		pendingIntent = PendingIntent.getActivity(context, widgetId, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-		remoteViews.setOnClickPendingIntent(R.id.name, pendingIntent);
+		if (device != null) {
+			intent = new Intent(context, SensorDetailActivity.class);
+			intent.putExtra(Constants.DEVICE_CLICKED, device.getId());
+			pendingIntent = PendingIntent.getActivity(context, widgetId, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+			remoteViews.setOnClickPendingIntent(R.id.name, pendingIntent);
+		}
 
 		// request widget redraw
 		appWidgetManager.updateAppWidget(widgetId, remoteViews);
