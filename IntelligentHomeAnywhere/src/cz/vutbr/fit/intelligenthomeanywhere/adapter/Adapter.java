@@ -23,9 +23,9 @@ public class Adapter {
 	 * List of devices
 	 */
 	private final SimpleListing mDevices = new SimpleListing();
-	private String mId;
-	private String mVersion;
-	private String mName;
+	private String mId = "";
+	private String mVersion = "";
+	private String mName = "";
 	private User.Role mRole;
 	
 	public final Time lastUpdate = new Time();

@@ -12,13 +12,13 @@ import android.text.format.Time;
  */
 public abstract class BaseDevice {
 	protected boolean mInitialized;
-	protected String mLocation;
+	protected String mLocation = "";
 	protected int mLocationType;
-	protected String mName;
+	protected String mName = "";
 	protected int mRefreshTime;	
 	protected int mBattery;
 	protected boolean mLogging;
-	protected String mInvolveTime;
+	protected String mInvolveTime = "";
 	protected char mVisibility;
 	
 	protected NetworkState mNetwork = new NetworkState();
@@ -35,7 +35,7 @@ public abstract class BaseDevice {
 	 */
 	public final class NetworkState {
 		public int quality;
-		public String address; 
+		public String address = ""; 
 	}
 	
 	/**
