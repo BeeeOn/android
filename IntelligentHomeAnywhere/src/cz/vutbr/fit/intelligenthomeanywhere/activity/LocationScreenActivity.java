@@ -10,9 +10,7 @@ import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
-import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v4.app.FragmentPagerAdapter;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup.LayoutParams;
@@ -25,9 +23,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.actionbarsherlock.app.SherlockFragmentActivity;
-import com.actionbarsherlock.app.ActionBar.Tab;
-import com.actionbarsherlock.app.ActionBar;
-
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.view.Window;
 
@@ -36,7 +33,6 @@ import cz.vutbr.fit.intelligenthomeanywhere.Constants;
 import cz.vutbr.fit.intelligenthomeanywhere.MenuListAdapter;
 import cz.vutbr.fit.intelligenthomeanywhere.R;
 import cz.vutbr.fit.intelligenthomeanywhere.SensorListAdapter;
-import cz.vutbr.fit.intelligenthomeanywhere.TabsAdapter;
 import cz.vutbr.fit.intelligenthomeanywhere.adapter.device.BaseDevice;
 import cz.vutbr.fit.intelligenthomeanywhere.controller.Controller;
 import cz.vutbr.fit.intelligenthomeanywhere.listing.LocationListing;
@@ -254,6 +250,12 @@ public class LocationScreenActivity extends SherlockFragmentActivity {
                 mDrawerLayout.openDrawer(mDrawerList);
             }
         }
+       if(item.getItemId() == R.id.action_addadapter){
+        	Toast.makeText(this, "go to old", Toast.LENGTH_LONG).show();
+        	
+        	Intent intent = new Intent(LocationScreenActivity.this, AddAdapterActivity.class);
+        	startActivity(intent);
+        }
  
         return super.onOptionsItemSelected(item);
     }
@@ -327,13 +329,13 @@ public class LocationScreenActivity extends SherlockFragmentActivity {
     }
 	
 	
-    /*
+    
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.locaction_screen, menu);
+		MenuInflater inflater = getSupportMenuInflater();
+		inflater.inflate(R.menu.locaction_screen, menu);
 		return true;
-	}*/
+	}
 
 	/**
 	 * Checks if there are any uninitialized devices and if so, shows dialog to ask user for adding them.

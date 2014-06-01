@@ -62,6 +62,7 @@
     <string name="drawer_close">CLOSE</string>
     <!-- Others -->
     <string name="action_settings">Settings</string>
+    <string name="action_addadapter">Add adapter</string>
     <string name="addadapter_qrcode_desc">Get QR code</string>
     <!-- Arrays -->
     <string-array name="registration_spinner">

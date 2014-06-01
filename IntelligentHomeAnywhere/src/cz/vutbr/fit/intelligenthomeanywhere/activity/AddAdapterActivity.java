@@ -10,20 +10,27 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import cz.vutbr.fit.intelligenthomeanywhere.Constants;
 import cz.vutbr.fit.intelligenthomeanywhere.R;
+import cz.vutbr.fit.intelligenthomeanywhere.adapter.AdapterRegisterThred;
+import cz.vutbr.fit.intelligenthomeanywhere.controller.Controller;
 
 /**
  * Class that handle adding new adapter to system
  * @author ThinkDeep
  */
 public class AddAdapterActivity extends Activity {
+	
+	public AddAdapterActivity mActivity;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_add_adapter);
 		initButtons();
+		
+		mActivity = this;
 	}
 	
 	/**
@@ -31,7 +38,7 @@ public class AddAdapterActivity extends Activity {
 	 */
 	private void initButtons() {
 		// QR code button - register new adapter by QR code
-		((Button)findViewById(R.id.addadapter_qrcode_button)).setOnClickListener(new OnClickListener() {
+		((ImageButton)findViewById(R.id.addadapter_qrcode_button)).setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				try {
@@ -54,20 +61,23 @@ public class AddAdapterActivity extends Activity {
 			public void onClick(View v) {
 				EditText serialNuber = (EditText)findViewById(R.id.addadapter_ser_num);
 				Log.i("seriove cislo",serialNuber.getText().toString());
-				Intent intent = new Intent(AddAdapterActivity.this, RegistrationActivity.class);
-		        intent.putExtra(Constants.ADAPTER_SERIAL_NUMBER, serialNuber.getText().toString());
-		        startActivity(intent);
+//				Intent intent = new Intent(AddAdapterActivity.this, RegistrationActivity.class);
+//		        intent.putExtra(Constants.ADAPTER_SERIAL_NUMBER, serialNuber.getText().toString());
+//		        startActivity(intent);
+				
+				new Thread(new AdapterRegisterThred(serialNuber.getText().toString(), mActivity)).start();
+
 		        AddAdapterActivity.this.finish();
 			}
 		});
 	}
 
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.add_adapter, menu);
-		return true;
-	}
+//	@Override
+//	public boolean onCreateOptionsMenu(Menu menu) {
+//		// Inflate the menu; this adds items to the action bar if it is present.
+//		getMenuInflater().inflate(R.menu.add_adapter, menu);
+//		return true;
+//	}
 	
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {           
@@ -77,10 +87,10 @@ public class AddAdapterActivity extends Activity {
 	        if (resultCode == RESULT_OK) {
 	            String contents = data.getStringExtra("SCAN_RESULT");
 	            Log.i("seriove cislo",contents);
-	            Intent intent = new Intent(this, RegistrationActivity.class);
-	            intent.putExtra(Constants.ADAPTER_SERIAL_NUMBER, contents);
-	            startActivity(intent);
-	            
+//	            Intent intent = new Intent(this, RegistrationActivity.class);
+//	            intent.putExtra(Constants.ADAPTER_SERIAL_NUMBER, contents);
+//	            startActivity(intent);
+	            new Thread(new AdapterRegisterThred(contents, mActivity)).start();
 	        }
 	        if(resultCode == RESULT_CANCELED){
 	        	//TODO: handle cancel ?

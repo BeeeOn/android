@@ -22,6 +22,7 @@ import cz.vutbr.fit.intelligenthomeanywhere.household.DemoHousehold;
 import cz.vutbr.fit.intelligenthomeanywhere.household.Household;
 import cz.vutbr.fit.intelligenthomeanywhere.listing.FavoritesListing;
 import cz.vutbr.fit.intelligenthomeanywhere.listing.LocationListing;
+import cz.vutbr.fit.intelligenthomeanywhere.network.ActualUser;
 import cz.vutbr.fit.intelligenthomeanywhere.network.Network;
 import cz.vutbr.fit.intelligenthomeanywhere.persistence.Persistence;
 
@@ -262,7 +263,22 @@ public final class Controller {
 	 * @throws NotImplementedException
 	 */
 	public boolean registerAdapter(String id) {
-		throw new NotImplementedException();
+//		throw new NotImplementedException();
+		ActualUser acUser = ActualUser.getActualUser();
+		try {
+			return mNetwork.signUp(acUser.getEmail(), id, Integer.parseInt(acUser.getSessionId()));
+		} catch (NumberFormatException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (CommunicationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (NoConnectionException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return false;
 	}
 
 	/**

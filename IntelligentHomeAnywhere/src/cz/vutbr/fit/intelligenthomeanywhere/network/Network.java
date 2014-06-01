@@ -301,6 +301,8 @@ public class Network {
 			
 			String messageToSend = XmlCreator.createSignUp(email, Integer.toString(SessionId), googleToken, serialNumber);
 			
+			Log.d("IHA - Network", messageToSend);
+			
 			String result = startCommunication(messageToSend);
 			
 			Log.d("IHA - Network", result);
