@@ -496,9 +496,22 @@ public final class Controller {
 	 * @return true on success, false otherwise
 	 */
 	public boolean saveDevice(BaseDevice device, SaveDevice what) {
-		return true;
+		ArrayList<BaseDevice> devices = new ArrayList<BaseDevice>();
+		devices.add(device);
 		
-		//throw new NotImplementedException();
+		boolean result = false;
+
+		try {
+			result = mNetwork.partial(devices);
+		} catch (NoConnectionException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (CommunicationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return result;
 	}
 	
 	/**

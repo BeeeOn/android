@@ -49,7 +49,7 @@ public class AddSensorActivity extends Activity {
 	
 	private void initViews() {
 		Spinner spinner = (Spinner)findViewById(R.id.spinner_choose_location);
-        ArrayAdapter<?> dataAdapter = new ArrayAdapter<LocationListing>(this, android.R.layout.simple_spinner_item, mController.getLocations());
+        ArrayAdapter<LocationListing> dataAdapter = new ArrayAdapter<LocationListing>(this, android.R.layout.simple_spinner_item, mController.getLocations());
         dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(dataAdapter);
         

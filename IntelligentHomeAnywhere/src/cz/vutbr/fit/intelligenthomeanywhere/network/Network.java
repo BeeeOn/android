@@ -492,9 +492,11 @@ public class Network {
 		try {
 			String messageToSend = XmlCreator.createPartial(Integer.toString(mSessionId), devices);
 			
+			Log.d("IHA - Network fromApp", messageToSend);
+			
 			String result = startCommunication(messageToSend);
 			
-			Log.d("IHA - Network", result);
+			Log.d("IHA - Network fromServer", result);
 			
 			msg = XmlParsers.parseCommunication(result, false);
 			

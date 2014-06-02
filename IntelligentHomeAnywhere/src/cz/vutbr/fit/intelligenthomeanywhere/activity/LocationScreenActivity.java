@@ -254,6 +254,12 @@ public class LocationScreenActivity extends SherlockFragmentActivity {
         	Intent intent = new Intent(LocationScreenActivity.this, AddAdapterActivity.class);
         	startActivity(intent);
         }
+       if(item.getItemId() == R.id.action_addsenzor){
+    	   Toast.makeText(this, "go to old", Toast.LENGTH_LONG).show();
+       	
+	       	Intent intent = new Intent(LocationScreenActivity.this, AddSensorActivity.class);
+	       	startActivity(intent);
+       }
  
         return super.onOptionsItemSelected(item);
     }
