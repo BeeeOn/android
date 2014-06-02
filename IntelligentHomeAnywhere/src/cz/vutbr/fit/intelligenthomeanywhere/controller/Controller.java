@@ -51,6 +51,8 @@ public final class Controller {
 	/** Switch for using demo mode (with example adapter, without server) */
 	private static boolean mDemoMode = false;
 	
+	/** When set to true (by calling {@link #reloadAdapters()}), it will reload all adapters from server in next call of {@link #getAdapters()} */
+	private boolean mReloadAdapters = true;
 	
 	/**
 	 * Return singleton instance of this Controller.
@@ -205,6 +207,13 @@ public final class Controller {
 	}
 	
 	/**
+	 * Calling this will reload all adapters from server in next call of {@link #getAdapters()}
+	 */
+	public void reloadAdapters() {
+		mReloadAdapters = true;
+	}
+	
+	/**
 	 * Return all adapters that this logged in user has access to.
 	 * 
 	 * @return List of adapters
@@ -212,7 +221,7 @@ public final class Controller {
 	 */
 	public List<Adapter> getAdapters() {
 		// TODO: refactor this method, make household's adapters (and favoriteslisting, and user?) final etc.
-		if (mHousehold.adapters == null) { 
+		if (mHousehold.adapters == null || mReloadAdapters) { 
 			try { 
 				mHousehold.adapters = mNetwork.getAdapters();
 			}
@@ -224,6 +233,7 @@ public final class Controller {
 				// TODO Auto-generated catch block 
 				e.printStackTrace(); 
 			}
+			mReloadAdapters = false;
 		}
 
 		// Network or another error, we must return correct object now, but adapters must be loaded later
