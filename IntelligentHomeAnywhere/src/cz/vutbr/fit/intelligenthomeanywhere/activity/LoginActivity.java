@@ -2,6 +2,7 @@ package cz.vutbr.fit.intelligenthomeanywhere.activity;
 
 import android.accounts.Account;
 import android.accounts.AccountManager;
+import android.accounts.NetworkErrorException;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -30,6 +31,7 @@ import cz.vutbr.fit.intelligenthomeanywhere.exception.NotRegAException;
 import cz.vutbr.fit.intelligenthomeanywhere.exception.NotRegBException;
 import cz.vutbr.fit.intelligenthomeanywhere.network.ActualUser;
 import cz.vutbr.fit.intelligenthomeanywhere.network.GetGoogleAuth;
+import cz.vutbr.fit.intelligenthomeanywhere.thread.ToastMessageThread;
 //import android.os.AsyncTask;
 
 /**
@@ -218,6 +220,8 @@ public class LoginActivity extends Activity {
 				Thread th = new Thread(new Runnable() {
 					@Override
 					public void run() {
+						String errMessage = null;
+						boolean errFlag = false;
 						try {
 							if(mController.login(acEmail)) {
 								Log.d(TAG, "Login: true");
@@ -232,25 +236,42 @@ public class LoginActivity extends Activity {
 				            }
 							else{
 								Log.d(TAG, "Login: false");
+								errFlag = true;
+								errMessage = "Please turn internet connection on";
 							}
 							
 						} catch (NotRegAException e) {
-							// TODO Auto-generated catch block
 							e.printStackTrace();
+							
+							Intent intent = new Intent(LoginActivity.this, AddAdapterActivity.class);
+				        	startActivity(intent);
 						} catch (NotRegBException e) {
-							// TODO Auto-generated catch block
 							e.printStackTrace();
+							
+							errFlag = true;
+							errMessage = "There is no unregistered adapter";
 						} catch (NoConnectionException e) {
-							// TODO Auto-generated catch block
 							e.printStackTrace();
+							
+							errFlag = true;
+							errMessage = "Please turn internet connection on";
 						} catch (CommunicationException e) {
-							// TODO Auto-generated catch block
 							e.printStackTrace();
+							
+							errFlag = true;
+							errMessage = "Sorry, some error on server side";
 						} catch (NotImplementedException e){
 							e.printStackTrace();
-							//Toast.makeText(getApplicationContext(), "Not implemented yet", Toast.LENGTH_LONG).show();
+							
+							errFlag = true;
+							errMessage = "Not implemented yet";
 						}
-						
+						finally{
+							mProgress.dismiss();
+							if(errFlag){
+								mActivity.runOnUiThread(new ToastMessageThread(mActivity, errMessage));
+							}
+						}
 					}
 				});
 				th.start();

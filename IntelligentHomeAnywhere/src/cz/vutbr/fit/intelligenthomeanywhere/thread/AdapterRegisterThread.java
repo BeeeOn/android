@@ -1,7 +1,7 @@
 /**
  * 
  */
-package cz.vutbr.fit.intelligenthomeanywhere.adapter;
+package cz.vutbr.fit.intelligenthomeanywhere.thread;
 
 import android.app.Activity;
 import android.util.Log;
@@ -11,7 +11,7 @@ import cz.vutbr.fit.intelligenthomeanywhere.controller.Controller;
  * @author ThinkDeep
  *
  */
-public class AdapterRegisterThred implements Runnable{
+public class AdapterRegisterThread implements Runnable{
 
 	private String mSerialNumber;
 	private Activity mActivity;
@@ -19,23 +19,20 @@ public class AdapterRegisterThred implements Runnable{
 	/**
 	 * Constructor
 	 */
-	public AdapterRegisterThred(String serialNumber, Activity activity) {
+	public AdapterRegisterThread(String serialNumber, Activity activity) {
 		mSerialNumber = serialNumber;
 		mActivity = activity;
 	}
 
 	@Override
 	public void run() {
-		boolean result = Controller.getInstance(mActivity).registerAdapter(mSerialNumber);
+		Controller ctrl = Controller.getInstance(mActivity);
+		boolean result = ctrl.registerAdapter(mSerialNumber);
 		Log.d("THREAD in adapter", result+"");
-		
-//		
-//		mActivity.runOnUiThread(new Runnable() {
-//			@Override
-//			public void run() {
-//				int i;
-//			}
-//		}
+		if(result){
+			ctrl.reloadAdapters();
+		}
+		mActivity.finish();
 	}
 
 }

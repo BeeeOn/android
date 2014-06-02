@@ -13,8 +13,8 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import cz.vutbr.fit.intelligenthomeanywhere.Constants;
 import cz.vutbr.fit.intelligenthomeanywhere.R;
-import cz.vutbr.fit.intelligenthomeanywhere.adapter.AdapterRegisterThred;
 import cz.vutbr.fit.intelligenthomeanywhere.controller.Controller;
+import cz.vutbr.fit.intelligenthomeanywhere.thread.AdapterRegisterThread;
 
 /**
  * Class that handle adding new adapter to system
@@ -65,9 +65,9 @@ public class AddAdapterActivity extends Activity {
 //		        intent.putExtra(Constants.ADAPTER_SERIAL_NUMBER, serialNuber.getText().toString());
 //		        startActivity(intent);
 				
-				new Thread(new AdapterRegisterThred(serialNuber.getText().toString(), mActivity)).start();
+				new Thread(new AdapterRegisterThread(serialNuber.getText().toString(), mActivity)).start();
 
-		        AddAdapterActivity.this.finish();
+		        //AddAdapterActivity.this.finish();
 			}
 		});
 	}
@@ -90,7 +90,7 @@ public class AddAdapterActivity extends Activity {
 //	            Intent intent = new Intent(this, RegistrationActivity.class);
 //	            intent.putExtra(Constants.ADAPTER_SERIAL_NUMBER, contents);
 //	            startActivity(intent);
-	            new Thread(new AdapterRegisterThred(contents, mActivity)).start();
+	            new Thread(new AdapterRegisterThread(contents, mActivity)).start();
 	        }
 	        if(resultCode == RESULT_CANCELED){
 	        	//TODO: handle cancel ?

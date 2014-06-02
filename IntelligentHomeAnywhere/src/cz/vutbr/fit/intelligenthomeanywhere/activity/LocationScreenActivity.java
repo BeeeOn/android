@@ -97,6 +97,23 @@ public class LocationScreenActivity extends SherlockFragmentActivity {
 		
 		//List<LocationListing> locations = null;
 		
+		
+		
+		int marginTop = 5;
+		int ID = Constants.BUTTON_ID;
+		/*for(LocationListing location : locations) {
+			if (addLocationButton(location.getName(), ID, marginTop))
+				ID++;
+		}
+		if(locations.size() == 1){
+			Button onlyOne = (Button)findViewById(--ID);
+			onlyOne.performClick();
+		}*/
+	}
+	
+	public void onResume(){
+		super.onResume();
+		
 		Thread thLoc = new Thread(new Runnable() {
 			@Override
 			public void run() {
@@ -115,25 +132,6 @@ public class LocationScreenActivity extends SherlockFragmentActivity {
 			}
 		});
 		thLoc.start();
-
-		
-		
-		
-		
-		
-		
-		
-		
-		int marginTop = 5;
-		int ID = Constants.BUTTON_ID;
-		/*for(LocationListing location : locations) {
-			if (addLocationButton(location.getName(), ID, marginTop))
-				ID++;
-		}
-		if(locations.size() == 1){
-			Button onlyOne = (Button)findViewById(--ID);
-			onlyOne.performClick();
-		}*/
 	}
 	
 	public boolean getLocations(List<LocationListing> locs) {
