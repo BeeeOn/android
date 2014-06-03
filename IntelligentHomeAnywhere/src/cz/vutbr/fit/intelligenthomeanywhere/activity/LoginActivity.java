@@ -92,24 +92,9 @@ public class LoginActivity extends Activity {
 				mProgress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
 				mProgress.show();
 				
-				try {
-					getGoogleAccessFromServer(v);
-				} catch (NotRegAException e) {
-					Toast.makeText(v.getContext(), "Not registered", Toast.LENGTH_LONG).show();
-					e.printStackTrace();
-				} catch (NotRegBException e) {
-					Toast.makeText(v.getContext(), "Not registered", Toast.LENGTH_LONG).show();
-					e.printStackTrace();
-				} catch (NoConnectionException e) {
-					Toast.makeText(v.getContext(), "No Connection to server", Toast.LENGTH_LONG).show();
-					e.printStackTrace();
-				} catch (CommunicationException e) {
-					Toast.makeText(v.getContext(), "Ooops, something went wrong", Toast.LENGTH_LONG).show();
-					e.printStackTrace();
-				} catch(NotImplementedException e){
-					e.printStackTrace();
-					Toast.makeText(v.getContext(), "Not Implemented yet", Toast.LENGTH_LONG).show();
-				}
+				
+				getGoogleAccessFromServer(v);
+				
 				
 
 
@@ -123,52 +108,6 @@ public class LoginActivity extends Activity {
 			}
 		});
 	}
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        /*
-        if (requestCode == USER_RECOVERABLE_AUTH && resultCode == RESULT_OK) {
-        	new GetGoogleAuth(this, this.acEmail).execute();
-        }
-        */
-        
-        
-        if (requestCode == GET_GOOGLE_ACCOUNT && resultCode == RESULT_OK) {
-        	this.acEmail = data.getStringExtra(AccountManager.KEY_ACCOUNT_NAME);
-        	
-        	try {
-				if(this.mController.login(this.acEmail)) {
-					Log.d(TAG, "Login: true");
-					mProgress.dismiss();
-					Intent intent = new Intent(mActivity, LocationScreenActivity.class);
-					intent.putExtra(Constants.LOGIN, Constants.LOGIN_DEMO);
-					//intent.putExtra(name, value);
-					//intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-		            //intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-					mActivity.startActivity(intent);
-					mActivity.finish();
-				}
-				else{
-					Log.d(TAG, "Login: false");
-				}
-			} catch (NotRegAException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (NotRegBException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (NoConnectionException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (CommunicationException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-        	// Get acces token
-			//new GetGoogleAuth(this, this.acEmail).execute();
-        }
-    }
     
     @Override
     public void onBackPressed(){
@@ -184,7 +123,7 @@ public class LoginActivity extends Activity {
 	 * @throws CommunicationException 
 	 * @throws NoConnectionException 
 	 */
-	private boolean getGoogleAccessFromServer(View v) throws NotRegAException, NotRegBException, NoConnectionException, CommunicationException{
+	private boolean getGoogleAccessFromServer(View v){
 		//TODO: get access via google
 		Log.d(TAG, "BEG: Google access func");
 		if(GooglePlayServicesUtil.isGooglePlayServicesAvailable(getBaseContext()) == ConnectionResult.SUCCESS) {
@@ -227,7 +166,7 @@ public class LoginActivity extends Activity {
 								Log.d(TAG, "Login: true");
 								mProgress.dismiss();
 								Intent intent = new Intent(mActivity, LocationScreenActivity.class);
-								intent.putExtra(Constants.LOGIN, Constants.LOGIN_DEMO);
+//								intent.putExtra(Constants.LOGIN, Constants.LOGIN_DEMO);
 								//intent.putExtra(name, value);
 								//intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 					            //intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
@@ -315,6 +254,29 @@ public class LoginActivity extends Activity {
 	    return names;
 	}
 	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	/**
 	 * TODO: 
 	 * @return
@@ -325,5 +287,50 @@ public class LoginActivity extends Activity {
 		return false;
 	}
 	
+	@Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        /*
+        if (requestCode == USER_RECOVERABLE_AUTH && resultCode == RESULT_OK) {
+        	new GetGoogleAuth(this, this.acEmail).execute();
+        }
+        */
+        
+        
+        if (requestCode == GET_GOOGLE_ACCOUNT && resultCode == RESULT_OK) {
+        	this.acEmail = data.getStringExtra(AccountManager.KEY_ACCOUNT_NAME);
+        	
+        	try {
+				if(this.mController.login(this.acEmail)) {
+					Log.d(TAG, "Login: true");
+					mProgress.dismiss();
+					Intent intent = new Intent(mActivity, LocationScreenActivity.class);
+					intent.putExtra(Constants.LOGIN, Constants.LOGIN_DEMO);
+					//intent.putExtra(name, value);
+					//intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+		            //intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+					mActivity.startActivity(intent);
+					mActivity.finish();
+				}
+				else{
+					Log.d(TAG, "Login: false");
+				}
+			} catch (NotRegAException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (NotRegBException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (NoConnectionException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (CommunicationException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+        	// Get acces token
+			//new GetGoogleAuth(this, this.acEmail).execute();
+        }
+    }
 
 }

@@ -74,7 +74,6 @@ public class LocationScreenActivity extends SherlockFragmentActivity {
 	/**
 	 * Call XML parser to file on SDcard
 	 */
-	@SuppressWarnings("null")
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -90,36 +89,8 @@ public class LocationScreenActivity extends SherlockFragmentActivity {
 		setSupportProgressBarIndeterminate(true);
 		setSupportProgressBarIndeterminateVisibility(true);
 		
-//		Thread thUniniDev = new Thread(new Runnable() {
-//			@Override
-//			public void run() {
-//				checkUninitializedDevices();
-//			}
-//		});
-//		thUniniDev.start();
-		
-//		Thread thLoc = new Thread(new Runnable() {
-//			@Override
-//			public void run() {
-//				locations = mController.getLocations();
-//				Log.d("lokace",locations.toArray().toString());
-//				
-//				
-//				mActivity.runOnUiThread(new Runnable() {
-//					@Override
-//					public void run() {
-//						
-//						getLocations(locations);
-//					}}
-//					);
-//				
-//			}
-//		});
-//		thLoc.start();
-		
-		
-		int marginTop = 5;
-		int ID = Constants.BUTTON_ID;
+//		int marginTop = 5;
+//		int ID = Constants.BUTTON_ID;
 		/*
 		 * for(LocationListing location : locations) { if
 		 * (addLocationButton(location.getName(), ID, marginTop)) ID++; }
@@ -143,13 +114,11 @@ public class LocationScreenActivity extends SherlockFragmentActivity {
 					public void run() {
 						
 						getLocations(locations);
-					}}
-					);
-				
+					}
+				});
 			}
 		});
 		thLoc.start();
-		
 	}
 
 	public boolean getLocations(List<LocationListing> locs) {
@@ -251,36 +220,7 @@ public class LocationScreenActivity extends SherlockFragmentActivity {
 		return true;
 	}
 
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-
-		if (item.getItemId() == android.R.id.home) {
-
-			if (mDrawerLayout.isDrawerOpen(mDrawerList)) {
-				mDrawerLayout.closeDrawer(mDrawerList);
-			} else {
-				mDrawerLayout.openDrawer(mDrawerList);
-			}
-		} else if (item.getItemId() == R.id.action_addadapter) {
-			Toast.makeText(this, "go to old", Toast.LENGTH_LONG).show();
-
-			Intent intent = new Intent(LocationScreenActivity.this,
-					AddAdapterActivity.class);
-			startActivity(intent);
-		} else if (item.getItemId() == R.id.action_addsenzor) {
-			Toast.makeText(this, "go to old", Toast.LENGTH_LONG).show();
-
-			Intent intent = new Intent(LocationScreenActivity.this,
-					AddSensorActivity.class);
-			startActivity(intent);
-		} else if (item.getItemId() == R.id.action_settings) {
-			Intent intent = new Intent(LocationScreenActivity.this,
-					SW2PreferenceActivity.class);
-			startActivity(intent);
-		}
-
-		return super.onOptionsItemSelected(item);
-	}
+	
 
 	// ListView click listener in the navigation drawer
 	private class DrawerItemClickListener implements
@@ -353,6 +293,37 @@ public class LocationScreenActivity extends SherlockFragmentActivity {
 		inflater.inflate(R.menu.locaction_screen, menu);
 		return true;
 	}
+	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+
+		if (item.getItemId() == android.R.id.home) {
+
+			if (mDrawerLayout.isDrawerOpen(mDrawerList)) {
+				mDrawerLayout.closeDrawer(mDrawerList);
+			} else {
+				mDrawerLayout.openDrawer(mDrawerList);
+			}
+		} else if (item.getItemId() == R.id.action_addadapter) {
+			Toast.makeText(this, "go to old", Toast.LENGTH_LONG).show();
+
+			Intent intent = new Intent(LocationScreenActivity.this,
+					AddAdapterActivity.class);
+			startActivity(intent);
+		} else if (item.getItemId() == R.id.action_addsenzor) {
+			Toast.makeText(this, "go to old", Toast.LENGTH_LONG).show();
+
+			Intent intent = new Intent(LocationScreenActivity.this,
+					AddSensorActivity.class);
+			startActivity(intent);
+		} else if (item.getItemId() == R.id.action_settings) {
+			Intent intent = new Intent(LocationScreenActivity.this,
+					SW2PreferenceActivity.class);
+			startActivity(intent);
+		}
+
+		return super.onOptionsItemSelected(item);
+	}
 
 	/**
 	 * Checks if there are any uninitialized devices and if so, shows dialog to
@@ -364,10 +335,8 @@ public class LocationScreenActivity extends SherlockFragmentActivity {
 		if (mActivity.mDevices.size() > 0) {
 			
 			mActivity.runOnUiThread(new Runnable() {
-				
 				@Override
 				public void run() {
-					// TODO Auto-generated method stub
 					AlertDialog.Builder builder = new AlertDialog.Builder(mActivity);
 					
 					builder.setCancelable(false)

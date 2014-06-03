@@ -95,17 +95,18 @@ public class AddSensorActivity extends Activity {
 					mController.saveDevice(mNewDevice);
 					
 					Toast.makeText(getApplicationContext(), getString(R.string.toast_new_sensor_added), Toast.LENGTH_LONG).show();
+					mController.reloadAdapters();
 					AddSensorActivity.this.finish();
 				}
 			}
 		});
 	}
 
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.add_sensor, menu);
-		return true;
-	}
+//	@Override
+//	public boolean onCreateOptionsMenu(Menu menu) {
+//		// Inflate the menu; this adds items to the action bar if it is present.
+//		getMenuInflater().inflate(R.menu.add_sensor, menu);
+//		return true;
+//	}
 
 }
