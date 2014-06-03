@@ -29,7 +29,8 @@ import cz.vutbr.fit.intelligenthomeanywhere.controller.Controller;
 public class SW2PreferenceActivity extends SherlockFragmentActivity {
 
 	private static final String TAG_DEF_LOCATION = "def_location";
-
+	private static final String TAG_DEF_ADAPTER = "def_adapter";
+	
 	private static final int UNDEFINED = -1;
 	
 	private ListView listView;
@@ -84,6 +85,8 @@ public class SW2PreferenceActivity extends SherlockFragmentActivity {
 					Toast.makeText(getApplicationContext(), R.string.please_log_in, Toast.LENGTH_LONG).show();
 					return;
 				}
+				
+				/* LOCATION SETTINGS */
 				if (posLoc == position) {
 					SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
 					String adapterId = prefs.getString(Constants.SW2_PREF_DEF_ADAPTER, null);
@@ -124,9 +127,12 @@ public class SW2PreferenceActivity extends SherlockFragmentActivity {
 					SherlockDialogFragment locationChooser = new DialogFragmentDefaultLocation();
 					locationChooser.show(getSupportFragmentManager(),
 							TAG_DEF_LOCATION);
-					
-				} else if (posAdap == position) {
-					
+				} 
+				
+				/* ADAPTER SETTINGS */
+				else if (posAdap == position) {
+					SherlockDialogFragment locationChooser = new DialogFragmentDefaultAdapter();
+					locationChooser.show(getSupportFragmentManager(), TAG_DEF_ADAPTER);
 				}
 			}
 

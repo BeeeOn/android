@@ -22,6 +22,7 @@ import com.actionbarsherlock.app.SherlockDialogFragment;
 import cz.vutbr.fit.intelligenthomeanywhere.Constants;
 import cz.vutbr.fit.intelligenthomeanywhere.R;
 import cz.vutbr.fit.intelligenthomeanywhere.adapter.Adapter;
+import cz.vutbr.fit.intelligenthomeanywhere.controller.Controller;
 
 public class DialogFragmentDefaultAdapter extends SherlockDialogFragment {
 
@@ -38,6 +39,8 @@ public class DialogFragmentDefaultAdapter extends SherlockDialogFragment {
 		final View view = factory.inflate(
 				R.layout.sw2_fragment_default_location, null);
 
+		mAdapterList = Controller.getInstance(getSherlockActivity()).getAdapters();
+		
 		listView = (ListView) view.findViewById(R.id.number_email_list);
 
 		listView.setBackgroundColor(Color.WHITE);
@@ -53,6 +56,9 @@ public class DialogFragmentDefaultAdapter extends SherlockDialogFragment {
 				prefs.edit()
 						.putString(Constants.SW2_PREF_DEF_ADAPTER, adapterId)
 						.commit();
+				prefs.edit()
+				.putString(Constants.SW2_PREF_DEF_LOCATION, null)
+				.commit();
 				dismiss();
 			}
 		});

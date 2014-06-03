@@ -35,20 +35,22 @@ import cz.vutbr.fit.intelligenthomeanywhere.R;
 import cz.vutbr.fit.intelligenthomeanywhere.SensorListAdapter;
 import cz.vutbr.fit.intelligenthomeanywhere.adapter.device.BaseDevice;
 import cz.vutbr.fit.intelligenthomeanywhere.controller.Controller;
+import cz.vutbr.fit.intelligenthomeanywhere.extension.watches.smartwatch2.SW2PreferenceActivity;
 import cz.vutbr.fit.intelligenthomeanywhere.listing.LocationListing;
 
 /**
  * Activity class for choosing location
+ * 
  * @author ThinkDeep
  * @author Robyer
- *
+ * 
  */
 public class LocationScreenActivity extends SherlockFragmentActivity {
-	
+
 	private Controller mController;
 	private List<LocationListing> locations;
 	private List<BaseDevice> sensors;
-	
+
 	private LocationScreenActivity mActivity;
 	private DrawerLayout mDrawerLayout;
     private ListView mDrawerList;
@@ -78,13 +80,13 @@ public class LocationScreenActivity extends SherlockFragmentActivity {
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
 		setContentView(R.layout.activity_locaction_screen);
-		
+
 		// Get Activity
 		mActivity = this;
-		
+
 		// Get controller
 		mController = Controller.getInstance(this);
-		
+
 		setSupportProgressBarIndeterminate(true);
 		setSupportProgressBarIndeterminateVisibility(true);
 		
@@ -118,17 +120,15 @@ public class LocationScreenActivity extends SherlockFragmentActivity {
 		
 		int marginTop = 5;
 		int ID = Constants.BUTTON_ID;
-		/*for(LocationListing location : locations) {
-			if (addLocationButton(location.getName(), ID, marginTop))
-				ID++;
-		}
-		if(locations.size() == 1){
-			Button onlyOne = (Button)findViewById(--ID);
-			onlyOne.performClick();
-		}*/
+		/*
+		 * for(LocationListing location : locations) { if
+		 * (addLocationButton(location.getName(), ID, marginTop)) ID++; }
+		 * if(locations.size() == 1){ Button onlyOne =
+		 * (Button)findViewById(--ID); onlyOne.performClick(); }
+		 */
 	}
-	
-	public void onResume(){
+
+	public void onResume() {
 		super.onResume();
 		
 		Thread thLoc = new Thread(new Runnable() {
@@ -151,207 +151,202 @@ public class LocationScreenActivity extends SherlockFragmentActivity {
 		thLoc.start();
 		
 	}
-	
+
 	public boolean getLocations(List<LocationListing> locs) {
-		
+
 		Log.d(TAG, "ready to work with Locations");
 		String[] title;
-	    String[] subtitle;
-	    int[] icon;
+		String[] subtitle;
+		int[] icon;
 		mTitle = mDrawerTitle = "IHA";
 		title = new String[locs.size()];
 		subtitle = new String[locs.size()];
 		icon = new int[locs.size()];
-		for(int i = 0 ; i < locs.size();i++) {
+		for (int i = 0; i < locs.size(); i++) {
 			title[i] = locs.get(i).getName();
 			subtitle[i] = locs.get(i).getName();
 			icon[i] = locs.get(i).getIconResource();
 		}
-			
-		
+
 		// Locate DrawerLayout in activity_locaction_screen.xml
-        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
- 
-        // Locate ListView in activity_locaction_screen.xml
-        mDrawerList = (ListView) findViewById(R.id.listview_drawer);
-		
-        // Set a custom shadow that overlays the main content when the drawer
-        // opens
-        mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
-        
-        // Pass string arrays to MenuListAdapter
-        mMenuAdapter = new MenuListAdapter(LocationScreenActivity.this, title, subtitle,  icon);
- 
-        // Set the MenuListAdapter to the ListView
-        mDrawerList.setAdapter(mMenuAdapter);
- 
-        // Capture listview menu item click
-        mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
- 
-        // Enable ActionBar app icon to behave as action to toggle nav drawer
-        getSupportActionBar().setHomeButtonEnabled(true);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
- 
-        // ActionBarDrawerToggle ties together the the proper interactions
-        // between the sliding drawer and the action bar app icon
-        mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout,
-                R.drawable.ic_drawer, R.string.drawer_open,
-                R.string.drawer_close) {
- 
-            public void onDrawerClosed(View view) {
-                // TODO Auto-generated method stub
-                super.onDrawerClosed(view);
-            }
- 
-            public void onDrawerOpened(View drawerView) {
-                // TODO Auto-generated method stub
-                // Set the title on the action when drawer open
-                getSupportActionBar().setTitle(mDrawerTitle);
-                super.onDrawerOpened(drawerView);
-            }
-        };
- 
-        mDrawerLayout.setDrawerListener(mDrawerToggle);
-        mDrawerToggle.syncState();
+		mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+
+		// Locate ListView in activity_locaction_screen.xml
+		mDrawerList = (ListView) findViewById(R.id.listview_drawer);
+
+		// Set a custom shadow that overlays the main content when the drawer
+		// opens
+		mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow,
+				GravityCompat.START);
+
+		// Pass string arrays to MenuListAdapter
+		mMenuAdapter = new MenuListAdapter(LocationScreenActivity.this, title,
+				subtitle, icon);
+
+		// Set the MenuListAdapter to the ListView
+		mDrawerList.setAdapter(mMenuAdapter);
+
+		// Capture listview menu item click
+		mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
+
+		// Enable ActionBar app icon to behave as action to toggle nav drawer
+		getSupportActionBar().setHomeButtonEnabled(true);
+		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+		// ActionBarDrawerToggle ties together the the proper interactions
+		// between the sliding drawer and the action bar app icon
+		mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout,
+				R.drawable.ic_drawer, R.string.drawer_open,
+				R.string.drawer_close) {
+
+			public void onDrawerClosed(View view) {
+				// TODO Auto-generated method stub
+				super.onDrawerClosed(view);
+			}
+
+			public void onDrawerOpened(View drawerView) {
+				// TODO Auto-generated method stub
+				// Set the title on the action when drawer open
+				getSupportActionBar().setTitle(mDrawerTitle);
+				super.onDrawerOpened(drawerView);
+			}
+		};
+
+		mDrawerLayout.setDrawerListener(mDrawerToggle);
+		mDrawerToggle.syncState();
 		this.setSupportProgressBarIndeterminateVisibility(false);
-        
+
 		mDrawerLayout.openDrawer(mDrawerList);
-		
+
 		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
 		ft.replace(R.id.content_frame, new MainFragment());
 		ft.commit();
-		
-		
-		
-		
+
 		return true;
 	}
-	
+
 	public boolean getSensors(List<BaseDevice> sensors) {
-		
-		
-		
+
 		String[] title;
-	    String[] value;
-	    int[] icon;
+		String[] value;
+		int[] icon;
 		mTitle = mDrawerTitle = "IHA";
 		title = new String[sensors.size()];
 		value = new String[sensors.size()];
 		icon = new int[sensors.size()];
-		for(int i = 0 ; i < sensors.size();i++) {
+		for (int i = 0; i < sensors.size(); i++) {
 			title[i] = sensors.get(i).getName();
 			value[i] = sensors.get(i).getStringValue();
 			icon[i] = sensors.get(i).getTypeIconResource();
 		}
-		
-		
-		this.mSensorAdapter = new SensorListAdapter(LocationScreenActivity.this,title,value,icon);
-		this.mSensorList =  (ListView) findViewById(R.id.listviewofsensors);
+
+		this.mSensorAdapter = new SensorListAdapter(
+				LocationScreenActivity.this, title, value, icon);
+		this.mSensorList = (ListView) findViewById(R.id.listviewofsensors);
 		this.mSensorList.setAdapter(mSensorAdapter);
-		
+
 		// Capture listview menu item click
-        //mSensorList.setOnItemClickListener(new DrawerItemClickListener());
+		// mSensorList.setOnItemClickListener(new DrawerItemClickListener());
 		this.setSupportProgressBarIndeterminateVisibility(false);
 		return true;
 	}
 
 	@Override
-    public boolean onOptionsItemSelected(MenuItem item) {
- 
-        if (item.getItemId() == android.R.id.home) {
- 
-            if (mDrawerLayout.isDrawerOpen(mDrawerList)) {
-                mDrawerLayout.closeDrawer(mDrawerList);
-            } else {
-                mDrawerLayout.openDrawer(mDrawerList);
-            }
-        }
-       if(item.getItemId() == R.id.action_addadapter){
-        	Toast.makeText(this, "go to old", Toast.LENGTH_LONG).show();
-        	
-        	Intent intent = new Intent(LocationScreenActivity.this, AddAdapterActivity.class);
-        	startActivity(intent);
-        }
-       if(item.getItemId() == R.id.action_addsenzor){
-    	   Toast.makeText(this, "go to old", Toast.LENGTH_LONG).show();
-       	
-	       	Intent intent = new Intent(LocationScreenActivity.this, AddSensorActivity.class);
-	       	startActivity(intent);
-       }
- 
-        return super.onOptionsItemSelected(item);
-    }
-	
+	public boolean onOptionsItemSelected(MenuItem item) {
+
+		if (item.getItemId() == android.R.id.home) {
+
+			if (mDrawerLayout.isDrawerOpen(mDrawerList)) {
+				mDrawerLayout.closeDrawer(mDrawerList);
+			} else {
+				mDrawerLayout.openDrawer(mDrawerList);
+			}
+		} else if (item.getItemId() == R.id.action_addadapter) {
+			Toast.makeText(this, "go to old", Toast.LENGTH_LONG).show();
+
+			Intent intent = new Intent(LocationScreenActivity.this,
+					AddAdapterActivity.class);
+			startActivity(intent);
+		} else if (item.getItemId() == R.id.action_addsenzor) {
+			Toast.makeText(this, "go to old", Toast.LENGTH_LONG).show();
+
+			Intent intent = new Intent(LocationScreenActivity.this,
+					AddSensorActivity.class);
+			startActivity(intent);
+		} else if (item.getItemId() == R.id.action_settings) {
+			Intent intent = new Intent(LocationScreenActivity.this,
+					SW2PreferenceActivity.class);
+			startActivity(intent);
+		}
+
+		return super.onOptionsItemSelected(item);
+	}
+
 	// ListView click listener in the navigation drawer
-    private class DrawerItemClickListener implements
-            ListView.OnItemClickListener {
-        @Override
-        public void onItemClick(AdapterView<?> parent, View view, int position,
-                long id) {
-            selectItem(position);
-        }
-    }
- 
-    private void selectItem(int position) {
- 
-        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        
-        
-        final LocationListing selectedItem = this.locations.get(position);
-        
-        setSupportProgressBarIndeterminateVisibility(true);
-        Thread thLoc = new Thread(new Runnable() {
+	private class DrawerItemClickListener implements
+			ListView.OnItemClickListener {
+		@Override
+		public void onItemClick(AdapterView<?> parent, View view, int position,
+				long id) {
+			selectItem(position);
+		}
+	}
+
+	private void selectItem(int position) {
+
+		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+
+		final LocationListing selectedItem = this.locations.get(position);
+
+		setSupportProgressBarIndeterminateVisibility(true);
+		Thread thLoc = new Thread(new Runnable() {
 			@Override
 			public void run() {
-				sensors = mController.getDevicesByLocation(selectedItem.getName());
-				Log.d("lokace",locations.toArray().toString());
-				
-				
+				sensors = mController.getDevicesByLocation(selectedItem
+						.getName());
+				Log.d("lokace", locations.toArray().toString());
+
 				mActivity.runOnUiThread(new Runnable() {
 					@Override
 					public void run() {
-						
+
 						getSensors(sensors);
-					}}
-					);
-				
+					}
+				});
+
 			}
 		});
 		thLoc.start();
-        
-        
-        
-        
-        ft.commit();
-        mDrawerList.setItemChecked(position, true);
- 
-        // Get the title followed by the position
-        setTitle(selectedItem.getName());
-        // Close drawer
-        mDrawerLayout.closeDrawer(mDrawerList);
-    }
-    @Override
-    protected void onPostCreate(Bundle savedInstanceState) {
-        super.onPostCreate(savedInstanceState);
-        // Sync the toggle state after onRestoreInstanceState has occurred.
-        
-    }
- 
-    @Override
-    public void onConfigurationChanged(Configuration newConfig) {
-        super.onConfigurationChanged(newConfig);
-        // Pass any configuration change to the drawer toggles
-        mDrawerToggle.onConfigurationChanged(newConfig);
-    }
- 
-    @Override
-    public void setTitle(CharSequence title) {
-        mTitle = title;
-        getSupportActionBar().setTitle(mTitle);
-    }
-	
-	
-    
+
+		ft.commit();
+		mDrawerList.setItemChecked(position, true);
+
+		// Get the title followed by the position
+		setTitle(selectedItem.getName());
+		// Close drawer
+		mDrawerLayout.closeDrawer(mDrawerList);
+	}
+
+	@Override
+	protected void onPostCreate(Bundle savedInstanceState) {
+		super.onPostCreate(savedInstanceState);
+		// Sync the toggle state after onRestoreInstanceState has occurred.
+
+	}
+
+	@Override
+	public void onConfigurationChanged(Configuration newConfig) {
+		super.onConfigurationChanged(newConfig);
+		// Pass any configuration change to the drawer toggles
+		mDrawerToggle.onConfigurationChanged(newConfig);
+	}
+
+	@Override
+	public void setTitle(CharSequence title) {
+		mTitle = title;
+		getSupportActionBar().setTitle(mTitle);
+	}
+
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		MenuInflater inflater = getSupportMenuInflater();
@@ -360,7 +355,8 @@ public class LocationScreenActivity extends SherlockFragmentActivity {
 	}
 
 	/**
-	 * Checks if there are any uninitialized devices and if so, shows dialog to ask user for adding them.
+	 * Checks if there are any uninitialized devices and if so, shows dialog to
+	 * ask user for adding them.
 	 */
 	private void checkUninitializedDevices() {
 //		List<BaseDevice> devices = mController.getUninitializedDevices();
@@ -395,74 +391,89 @@ public class LocationScreenActivity extends SherlockFragmentActivity {
 			
 		}
 	}
-	
+
 	protected void renameLocation(final String location, final TextView view) {
-		AlertDialog.Builder builder = new AlertDialog.Builder(LocationScreenActivity.this);
-		
+		AlertDialog.Builder builder = new AlertDialog.Builder(
+				LocationScreenActivity.this);
+
 		// TODO: use better layout than just single EditText
 		final EditText edit = new EditText(LocationScreenActivity.this);
 		edit.setText(location);
 		edit.selectAll();
 		// TODO: show keyboard automatically
-		
+
 		builder.setCancelable(false)
-			.setView(edit)
-			.setTitle("Rename location")
-			.setNegativeButton("Cancel", null)
-			.setPositiveButton("Rename", new DialogInterface.OnClickListener() {
-			
-				@Override
-				public void onClick(DialogInterface dialog, int which) {
-					String newName = edit.getText().toString();
-					
-					// TODO: show loading while saving new name to server
-					boolean saved = mController.renameLocation(location, newName);
-					
-					String message = saved
-							? String.format("Location was renamed to '%s'", newName)
-							: "Location wasn't renamed due to error";
-							
-					Toast.makeText(LocationScreenActivity.this, message, Toast.LENGTH_LONG).show();
-					
-					// Redraw item in list
-					view.setText(newName);
-				}
-			});
-		
+				.setView(edit)
+				.setTitle("Rename location")
+				.setNegativeButton("Cancel", null)
+				.setPositiveButton("Rename",
+						new DialogInterface.OnClickListener() {
+
+							@Override
+							public void onClick(DialogInterface dialog,
+									int which) {
+								String newName = edit.getText().toString();
+
+								// TODO: show loading while saving new name to
+								// server
+								boolean saved = mController.renameLocation(
+										location, newName);
+
+								String message = saved ? String
+										.format("Location was renamed to '%s'",
+												newName)
+										: "Location wasn't renamed due to error";
+
+								Toast.makeText(LocationScreenActivity.this,
+										message, Toast.LENGTH_LONG).show();
+
+								// Redraw item in list
+								view.setText(newName);
+							}
+						});
+
 		AlertDialog dialog = builder.create();
 		dialog.show();
 	}
-	
+
 	/**
 	 * Draw a button to GUI
-	 * @param s specific location name
-	 * @param ID id of button
-	 * @param marginTop margin of the button
+	 * 
+	 * @param s
+	 *            specific location name
+	 * @param ID
+	 *            id of button
+	 * @param marginTop
+	 *            margin of the button
 	 * @return true on success and false in other cases
 	 */
-	private boolean addLocationButton(String s, int ID, int marginTop){
+	private boolean addLocationButton(String s, int ID, int marginTop) {
 		final Button button = new Button(this);
 		button.setText(s);
 		button.setTextSize(getResources().getDimension(R.dimen.textsize));
 		button.setId(ID);
-		if(s == null || s.length() < 1)
+		if (s == null || s.length() < 1)
 			return false;
-		
-		//LinearLayout mylayout = (LinearLayout)findViewById(R.id.location_scroll);
-		//mylayout.setOrientation(LinearLayout.VERTICAL);
-		//drawerListView = (ListView) findViewById(R.id.left_drawer);
-		
-		LinearLayout.LayoutParams params_btn = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT,LayoutParams.WRAP_CONTENT);
+
+		// LinearLayout mylayout =
+		// (LinearLayout)findViewById(R.id.location_scroll);
+		// mylayout.setOrientation(LinearLayout.VERTICAL);
+		// drawerListView = (ListView) findViewById(R.id.left_drawer);
+
+		LinearLayout.LayoutParams params_btn = new LinearLayout.LayoutParams(
+				LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
 		params_btn.setMargins(0, marginTop, 0, 0);
 		button.setLayoutParams(params_btn);
 		button.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				Button clicked = (Button)v;
-				Log.i("kliknuto-na",clicked.getText().toString());
-				
-				Intent intent = new Intent(getBaseContext(), DataOfLocationScreenActivity.class);
-				intent.putExtra(Constants.LOCATION_CLICKED, clicked.getText().toString());
+				Button clicked = (Button) v;
+				Log.i("kliknuto-na", clicked.getText().toString());
+
+				Intent intent = new Intent(getBaseContext(),
+						DataOfLocationScreenActivity.class);
+				intent.putExtra(Constants.LOCATION_CLICKED, clicked.getText()
+						.toString());
 				startActivity(intent);
 			}
 		});
@@ -474,9 +485,10 @@ public class LocationScreenActivity extends SherlockFragmentActivity {
 			}
 		});
 
-		Compatibility.setBackground(button, getResources().getDrawable(R.drawable.shape));
-		
-		//mylayout.addView(button);
+		Compatibility.setBackground(button,
+				getResources().getDrawable(R.drawable.shape));
+
+		// mylayout.addView(button);
 		return true;
 	}
 
