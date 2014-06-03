@@ -14,11 +14,13 @@
 
         <ImageView
             android:id="@+id/thumbnail"
-            android:layout_width="32px"
-            android:layout_height="32px"
+            android:layout_width="42px"
+            android:layout_height="42px"
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
-            android:clickable="true" />
+            android:clickable="true" 
+            android:paddingLeft="4px"
+            android:paddingRight="4px"/>
 
         <TextView
             android:id="@+id/title"

@@ -72,7 +72,10 @@ public class ListAdapterControlExtension extends ManagedControlExtension {
         mAdapters = mController.getAdapters();
         Log.d(SW2ExtensionService.LOG_TAG, "AdaptersListControl constructor");
         initializeMenus();
+    
     }
+    
+    
 
     @Override
     public void onResume() {

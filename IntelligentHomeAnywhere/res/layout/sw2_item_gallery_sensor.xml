@@ -5,7 +5,7 @@
     android:layout_height="@dimen/smart_watch_2_control_height"
     android:background="@color/white"
     tools:ignore="PxUsage,UselessParent,contentDescription" >
-
+    
     <RelativeLayout
         android:id="@+id/header"
         android:layout_width="fill_parent"
@@ -13,6 +13,8 @@
         android:layout_alignParentTop="true"
         android:background="@color/log_blue2" >
 
+        
+        
         <ImageView
             android:id="@+id/battery"
             android:layout_width="30px"

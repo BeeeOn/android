@@ -101,6 +101,25 @@ public class ListSensorControlExtension extends ManagedControlExtension {
 			return;
 		}
 
+		
+//		
+//		Thread thLoc = new Thread(new Runnable() {
+//			@Override
+//			public void run() {
+//				
+//
+//				mActivity.runOnUiThread(new Runnable() {
+//					@Override
+//					public void run() {
+//
+//						getSensors(sensors);
+//					}
+//				});
+//
+//			}
+//		});
+//		thLoc.start();
+		
 		mAdapter = mController.getAdapter(adapterId, true);
 		mDevices = mAdapter.getDevicesByLocation(mLocationStr);
 		
