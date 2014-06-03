@@ -44,8 +44,7 @@ public abstract class CustomizedListing extends SimpleListing {
 	}
 	
 	public int getIconResource() {
-		// TODO: rewrite better
-			
+		// TODO: use fitting icons (and rewrite better - constants or so)
 		switch (mIcon) {
 		case 0: 
 			// Koupelna
@@ -65,9 +64,10 @@ public abstract class CustomizedListing extends SimpleListing {
 		case 5:
 			// WC
 			return R.drawable.loc_wc;
+		default:
+			// Unknown
+			return R.drawable.loc_unknown;
 		}
-			
-		return 0;
 	}
 	
 	@Override

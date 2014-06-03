@@ -63,7 +63,7 @@ public class SimpleListing {
 			mUninitializedDevices.put(device.getId(), device);
 		
 		Location location = device.getLocation();
-		if (location.getId().length() > 0 && !mLocations.containsValue(location))
+		if (location.getId().length() > 0 && !mLocations.containsKey(location.getId()))
 			mLocations.put(location.getId(), location);
 	}
 	
