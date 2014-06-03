@@ -7,10 +7,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.text.format.Time;
-
 import cz.vutbr.fit.intelligenthomeanywhere.User;
 import cz.vutbr.fit.intelligenthomeanywhere.adapter.device.BaseDevice;
 import cz.vutbr.fit.intelligenthomeanywhere.adapter.parser.XmlCreator;
+import cz.vutbr.fit.intelligenthomeanywhere.listing.Location;
 import cz.vutbr.fit.intelligenthomeanywhere.listing.SimpleListing;
 
 /**
@@ -142,10 +142,10 @@ public class Adapter {
 	}
 	
 	/**
-	 * Return list of location names.
+	 * Return list of locations.
 	 * @return list with locations (or empty list).
 	 */
-	public List<String> getLocations(){
+	public List<Location> getLocations(){
 		return mDevices.getLocations();
 	}
 	

@@ -5,11 +5,11 @@ import cz.vutbr.fit.intelligenthomeanywhere.R;
 
 public abstract class CustomizedListing extends SimpleListing {
 
-	private final String mId;
+	protected final String mId;
 	
-	private String mName;
+	protected String mName;
 	
-	private String mIcon; // FIXME: use better type
+	protected int mIcon;
 	
 	public CustomizedListing(final String id) {
 		mId = id;
@@ -35,19 +35,18 @@ public abstract class CustomizedListing extends SimpleListing {
 	}
 
 	
-	public void setIcon(final String icon) {
+	public void setIcon(final int icon) {
 		mIcon = icon;
 	}
 	
-	public String getIcon() {
+	public int getIcon() {
 		return mIcon;
 	}
 	
 	public int getIconResource() {
-		// TODO: rewrite better and universaly
-		int idIcon = mIcon != null ? Integer.parseInt(mIcon) : (int)(Math.random() * 6);
+		// TODO: rewrite better
 			
-		switch (idIcon) {
+		switch (mIcon) {
 		case 0: 
 			// Koupelna
 			return R.drawable.loc_bath_room;

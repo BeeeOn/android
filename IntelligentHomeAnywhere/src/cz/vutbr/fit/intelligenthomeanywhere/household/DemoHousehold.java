@@ -71,7 +71,7 @@ public final class DemoHousehold extends Household {
 		
 		FavoritesListing list = new FavoritesListing("demoFavorites");
 		list.setName("My favorites");
-		list.setIcon("favorites");
+		list.setIcon(0);
 		list.setDevices(this.adapters.get(0).getDevices());
 
 		this.favoritesListings.add(list);

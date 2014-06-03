@@ -25,6 +25,7 @@ import cz.vutbr.fit.intelligenthomeanywhere.adapter.device.StateDevice;
 import cz.vutbr.fit.intelligenthomeanywhere.adapter.device.SwitchDevice;
 import cz.vutbr.fit.intelligenthomeanywhere.adapter.device.TemperatureDevice;
 import cz.vutbr.fit.intelligenthomeanywhere.adapter.device.UnknownDevice;
+import cz.vutbr.fit.intelligenthomeanywhere.listing.Location;
 
 /**
  * Class for parsing XML file for device
@@ -282,7 +283,7 @@ public class XmlDeviceParser {
 	    }
 		
 		if (location_ != null)
-			device.setLocation(location_);
+			device.setLocation(new Location(location_, location_, 0)); // TODO: location type?
 		if (name_ != null)
 			device.setName(name_);
 		if (refresh_ != null)

@@ -22,6 +22,7 @@ import cz.vutbr.fit.intelligenthomeanywhere.Constants;
 import cz.vutbr.fit.intelligenthomeanywhere.R;
 import cz.vutbr.fit.intelligenthomeanywhere.adapter.Adapter;
 import cz.vutbr.fit.intelligenthomeanywhere.controller.Controller;
+import cz.vutbr.fit.intelligenthomeanywhere.listing.Location;
 
 public class DialogFragmentDefaultLocation extends SherlockDialogFragment {
 
@@ -72,11 +73,10 @@ public class DialogFragmentDefaultLocation extends SherlockDialogFragment {
 			throw new NullPointerException();
 		}
 
-		List<String> locations = adapter.getLocations();
-
 		mLocationList = new ArrayList<String>();
 		mLocationList.add(getString(R.string.none));
-		mLocationList.addAll(locations);
+		for (Location location : adapter.getLocations())
+			mLocationList.add(location.getName());
 
 		listView.setAdapter(new ArrayAdapter<String>(getSherlockActivity(),
 				android.R.layout.simple_list_item_1, mLocationList

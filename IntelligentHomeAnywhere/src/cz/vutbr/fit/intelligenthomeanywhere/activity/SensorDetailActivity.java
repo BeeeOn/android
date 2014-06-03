@@ -68,7 +68,7 @@ public class SensorDetailActivity extends Activity {
 		mainlayout.setOrientation(LinearLayout.VERTICAL);
 		
 		TextView txtvwLocationLabel = new TextView(this);
-		txtvwLocationLabel.setText(mDevice.getLocation());
+		txtvwLocationLabel.setText(mDevice.getLocation().getName());
 		txtvwLocationLabel.setTextSize(getResources().getDimension(R.dimen.textsize));
 		LinearLayout.LayoutParams txtvwLocationParams = new LinearLayout.LayoutParams(android.view.ViewGroup.LayoutParams.WRAP_CONTENT, android.view.ViewGroup.LayoutParams.WRAP_CONTENT);
 		txtvwLocationParams.setMargins(15, 10, 0, 10);

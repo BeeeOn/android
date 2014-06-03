@@ -5,6 +5,7 @@ package cz.vutbr.fit.intelligenthomeanywhere.adapter.device;
 
 import android.content.Context;
 import android.text.format.Time;
+import cz.vutbr.fit.intelligenthomeanywhere.listing.Location;
 
 /**
  * @brief Abstract class for all devices
@@ -12,8 +13,7 @@ import android.text.format.Time;
  */
 public abstract class BaseDevice {
 	protected boolean mInitialized;
-	protected String mLocation = "";
-	protected int mLocationType;
+	protected Location mLocation;
 	protected String mName = "";
 	protected int mRefreshTime;	
 	protected int mBattery;
@@ -150,22 +150,6 @@ public abstract class BaseDevice {
 	}
 
 	/**
-	 * Setter the location type
-	 * @param type
-	 */
-	public void setLocationType(int type){
-		mLocationType = type;
-	}
-	
-	/**
-	 * Get type of location
-	 * @return
-	 */
-	public int getLocationType(){
-		return mLocationType;
-	}
-	
-	/**
 	 * Get name of device
 	 * @return name
 	 */
@@ -182,18 +166,18 @@ public abstract class BaseDevice {
 	}
 	
 	/**
-	 * Get name of location
+	 * Get location of device
 	 * @return location
 	 */
-	public String getLocation() {
+	public Location getLocation() {
 		return mLocation;
 	}
 	
 	/**
-	 * Setting name of location
+	 * Setting location of device
 	 * @param location
 	 */
-	public void setLocation(String location) {		
+	public void setLocation(Location location) {		
 		mLocation = location;
 	}
 	
@@ -322,8 +306,8 @@ public abstract class BaseDevice {
 		String result = "";
 		
 		result += "Name: " + mName + "\n";
-		result += "Location: " + mLocation + "\n";
-		result += "Location type: " + mLocationType + "\n";
+		result += "Location: " + mLocation.getName() + "\n";
+		result += "Location type: " + mLocation.getType() + "\n";
 		result += "Visibility: " + mVisibility + "\n";
 		result += "Initialized: " + mInitialized + "\n";
 		result += "Battery: " + mBattery + "\n";

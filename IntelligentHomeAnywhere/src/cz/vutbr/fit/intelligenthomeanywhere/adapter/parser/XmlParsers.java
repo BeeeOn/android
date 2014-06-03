@@ -31,6 +31,7 @@ import cz.vutbr.fit.intelligenthomeanywhere.adapter.device.TemperatureDevice;
 import cz.vutbr.fit.intelligenthomeanywhere.adapter.device.UnknownDevice;
 import cz.vutbr.fit.intelligenthomeanywhere.exception.ComVerMisException;
 import cz.vutbr.fit.intelligenthomeanywhere.exception.XmlVerMisException;
+import cz.vutbr.fit.intelligenthomeanywhere.listing.Location;
 
 /**
  * @author ThinkDeep
@@ -325,8 +326,10 @@ public class XmlParsers {
 
 			while(mParser.nextTag() != XmlPullParser.END_TAG && !(nameTag = mParser.getName()).equals(DEVICE)){
 				if(nameTag.equals(LOCATION)){
-					device.setLocationType(Integer.parseInt(getSecureAttrValue(ns, TYPE)));
-					device.setLocation(readText(LOCATION));
+					Location location = new Location();
+					location.setType(Integer.parseInt(getSecureAttrValue(ns, TYPE)));
+					location.setId(readText(LOCATION));
+					device.setLocation(location);
 				}
 				else if(nameTag.equals(NAME))
 					device.setName(readText(NAME));

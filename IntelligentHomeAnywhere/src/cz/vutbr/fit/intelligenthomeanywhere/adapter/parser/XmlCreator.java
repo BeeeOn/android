@@ -17,6 +17,7 @@ import org.xmlpull.v1.XmlSerializer;
 import android.util.Xml;
 import cz.vutbr.fit.intelligenthomeanywhere.adapter.Adapter;
 import cz.vutbr.fit.intelligenthomeanywhere.adapter.device.BaseDevice;
+import cz.vutbr.fit.intelligenthomeanywhere.listing.Location;
 
 /**
  * Class for creating XML file from Adapter object
@@ -584,10 +585,11 @@ public class XmlCreator {
 				serializer.attribute(ns, ID, device.getId());
 				serializer.attribute(ns, VISIBILITY, Character.toString(device.getVisibility()));
 				
-				if(device.getLocation() != null){
+				Location location = device.getLocation();
+				if(location != null && location.getId().length() > 0){
 					serializer.startTag(ns, LOCATION);
-					serializer.attribute(ns, TYPE, device.getLocationType()+"");
-					serializer.text(device.getLocation());
+					serializer.attribute(ns, TYPE, location.getType()+"");
+					serializer.text(location.getName());
 					serializer.endTag(ns, LOCATION);
 				}
 				if(device.getName() != null){
@@ -912,7 +914,7 @@ public class XmlCreator {
 						serializer.attribute(null, "involved", d.getInvolveTime());
 					
 						serializer.startTag(null, "location");
-						serializer.text((d.getLocation() != null) ? d.getLocation() : "");
+						serializer.text((d.getLocation() != null) ? d.getLocation().getId() : "");
 						serializer.endTag(null, "location");
 						
 						serializer.startTag(null, "name");

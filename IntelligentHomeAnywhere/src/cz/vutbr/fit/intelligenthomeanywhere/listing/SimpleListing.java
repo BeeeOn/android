@@ -9,9 +9,9 @@ import cz.vutbr.fit.intelligenthomeanywhere.adapter.device.BaseDevice;
 
 public class SimpleListing {
 
-	private final Map<String, BaseDevice> mDevices = new HashMap<String, BaseDevice>();
-	private final Map<String, BaseDevice> mUninitializedDevices = new HashMap<String, BaseDevice>();
-	private final Map<String, String> mLocations = new HashMap<String, String>();
+	protected final Map<String, BaseDevice> mDevices = new HashMap<String, BaseDevice>();
+	protected final Map<String, BaseDevice> mUninitializedDevices = new HashMap<String, BaseDevice>();
+	protected final Map<String, Location> mLocations = new HashMap<String, Location>();
 	
 	/**
 	 * Return list of all devices.
@@ -30,11 +30,11 @@ public class SimpleListing {
 	}
 	
 	/**
-	 * Return list of location names.
+	 * Return list of locations.
 	 * @return list with locations (or empty list).
 	 */
-	public List<String> getLocations() {
-		return new ArrayList<String>(mLocations.values());
+	public List<Location> getLocations() {
+		return new ArrayList<Location>(mLocations.values());
 	}
 
 	/**
@@ -62,9 +62,9 @@ public class SimpleListing {
 		if (!device.isInitialized())
 			mUninitializedDevices.put(device.getId(), device);
 		
-		String location = device.getLocation();
-		if (location.length() > 0 && !mLocations.containsValue(location))
-			mLocations.put(location, location);
+		Location location = device.getLocation();
+		if (location.getId().length() > 0 && !mLocations.containsValue(location))
+			mLocations.put(location.getId(), location);
 	}
 	
 	/**
@@ -95,7 +95,7 @@ public class SimpleListing {
 		
 		if (mLocations.containsValue(location)) {
 			for (BaseDevice device : mDevices.values()) {
-				if (device.getLocation().equals(location)) {
+				if (device.getLocation().getName().equals(location)) {
 					devices.add(device);
 				}
 			}

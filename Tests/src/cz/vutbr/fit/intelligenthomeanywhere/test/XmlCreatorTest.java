@@ -16,6 +16,7 @@ import cz.vutbr.fit.intelligenthomeanywhere.adapter.device.NoiseDevice;
 import cz.vutbr.fit.intelligenthomeanywhere.adapter.device.PressureDevice;
 import cz.vutbr.fit.intelligenthomeanywhere.adapter.device.SwitchDevice;
 import cz.vutbr.fit.intelligenthomeanywhere.adapter.parser.XmlCreator;
+import cz.vutbr.fit.intelligenthomeanywhere.listing.Location;
 
 /**
  * @author ThinkDeep
@@ -370,8 +371,7 @@ public class XmlCreatorTest extends TestCase {
 		em.setInitialized(true);
 		em.setAddress(DEVICEID+"em");
 		em.setVisibility('i');
-		em.setLocation("obyvak");
-		em.setLocationType(1);
+		em.setLocation(new Location("obyvak", "obyvak", 1));
 		devices.add(em);
 		
 		HumidityDevice hu = new HumidityDevice();

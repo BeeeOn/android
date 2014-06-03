@@ -21,6 +21,7 @@ import cz.vutbr.fit.intelligenthomeanywhere.exception.NotRegBException;
 import cz.vutbr.fit.intelligenthomeanywhere.household.DemoHousehold;
 import cz.vutbr.fit.intelligenthomeanywhere.household.Household;
 import cz.vutbr.fit.intelligenthomeanywhere.listing.FavoritesListing;
+import cz.vutbr.fit.intelligenthomeanywhere.listing.Location;
 import cz.vutbr.fit.intelligenthomeanywhere.listing.LocationListing;
 import cz.vutbr.fit.intelligenthomeanywhere.network.ActualUser;
 import cz.vutbr.fit.intelligenthomeanywhere.network.Network;
@@ -323,8 +324,8 @@ public final class Controller {
 		List<LocationListing> listings = new ArrayList<LocationListing>();
 		
 		for (Adapter adapter : getAdapters()) {
-			for (String location : adapter.getLocations()) {
-				listings.add(new LocationListing(location, location));
+			for (Location location : adapter.getLocations()) {
+				listings.add(new LocationListing(location.getId(), location));
 			}
 		}
 		
@@ -382,12 +383,16 @@ public final class Controller {
 	 * @param newName
 	 * @return true always
 	 */
-	public boolean renameLocation(String location, String newName) {
+	public boolean renameLocation(String name, String newName) {
 		// TODO: Use rather saveLocation() method
 	
 		for (Adapter adapter : getAdapters()) {
-			for (BaseDevice device : adapter.getDevicesByLocation(location)) {
-				device.setLocation(newName);
+			for (BaseDevice device : adapter.getDevicesByLocation(name)) {
+				Location location = device.getLocation();
+				location.setId(newName);
+				location.setName(newName);
+				
+				device.setLocation(location);
 				// TODO: Save to server (somehow effectively)
 			}
 		}

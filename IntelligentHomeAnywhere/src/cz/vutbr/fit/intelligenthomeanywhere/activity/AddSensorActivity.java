@@ -16,6 +16,7 @@ import android.widget.Toast;
 import cz.vutbr.fit.intelligenthomeanywhere.R;
 import cz.vutbr.fit.intelligenthomeanywhere.adapter.device.BaseDevice;
 import cz.vutbr.fit.intelligenthomeanywhere.controller.Controller;
+import cz.vutbr.fit.intelligenthomeanywhere.listing.Location;
 import cz.vutbr.fit.intelligenthomeanywhere.listing.LocationListing;
 
 /**
@@ -75,12 +76,12 @@ public class AddSensorActivity extends Activity {
 				if (mNewDevice != null) {
 					EditText name = (EditText)findViewById(R.id.addsensor_sensor_name_hint);
 					EditText elocation = (EditText)findViewById(R.id.addsensor_new_location_hint);
-					String location;
+					String locationName;
 					if(elocation != null && elocation.length() < 1){
 						Spinner slocation = (Spinner)findViewById(R.id.spinner_choose_location);
-						location = slocation.getSelectedItem().toString();
+						locationName = slocation.getSelectedItem().toString();
 					}else {
-						location = elocation.getText().toString();
+						locationName = elocation.getText().toString();
 					}
 					if(name == null || name.length() < 1){
 						Toast.makeText(getApplicationContext(), getString(R.string.toast_need_sensor_name), Toast.LENGTH_LONG).show();
@@ -89,7 +90,7 @@ public class AddSensorActivity extends Activity {
 					
 					mNewDevice.setInitialized(true);
 					mNewDevice.setName(name.getText().toString());
-					mNewDevice.setLocation(location);
+					mNewDevice.setLocation(new Location(locationName, locationName, 0)); // TODO: set location icon
 					// TODO: show loading while saving device
 					mController.saveDevice(mNewDevice);
 					

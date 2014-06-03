@@ -46,6 +46,7 @@ import com.sonyericsson.extras.liveware.extension.util.control.ControlListItem;
 import cz.vutbr.fit.intelligenthomeanywhere.R;
 import cz.vutbr.fit.intelligenthomeanywhere.adapter.Adapter;
 import cz.vutbr.fit.intelligenthomeanywhere.extension.watches.smartwatch2.SW2ExtensionService;
+import cz.vutbr.fit.intelligenthomeanywhere.listing.Location;
 
 /**
  * ListControlExtension displays a scrollable list, based on a string array.
@@ -160,7 +161,7 @@ public class ListAdapterControlExtension extends ManagedControlExtension {
 
         if (clickType == Control.Intents.CLICK_TYPE_SHORT) {
             Intent intent;
-            List<String>locations = mAdapters.get(listItem.listItemPosition).getLocations();
+            List<Location>locations = mAdapters.get(listItem.listItemPosition).getLocations();
             if (locations.size() < 1) {
             	intent = new Intent(mContext, TextControl.class);
 				intent.putExtra(TextControl.EXTRA_TEXT,
