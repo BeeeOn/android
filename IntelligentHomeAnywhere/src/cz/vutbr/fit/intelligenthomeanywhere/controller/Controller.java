@@ -131,6 +131,9 @@ public final class Controller {
 	 * @throws CommunicationException  
 	 */
 	public boolean login(String email) throws NotRegAException, NotRegBException, NoConnectionException, CommunicationException {
+		if (mDemoMode)
+			return true;
+		
 		if (!mNetwork.isAvailable())
 			return false; // TODO: throw proper exception
 
@@ -171,6 +174,9 @@ public final class Controller {
 	/** Adapter methods *****************************************************/
 
 	private boolean refreshAdapter(Adapter adapter, boolean forceUpdate) {
+		if (mDemoMode)
+			return true;
+		
 		Time that = new Time();
 		that.setToNow();
 		that.set(that.toMillis(true) - 10000); // 10 seconds interval between updates
@@ -221,7 +227,7 @@ public final class Controller {
 	 */
 	public List<Adapter> getAdapters() {
 		// TODO: refactor this method, make household's adapters (and favoriteslisting, and user?) final etc.
-		if (mHousehold.adapters == null || mReloadAdapters) { 
+		if (!mDemoMode && (mHousehold.adapters == null || mReloadAdapters)) { 
 			try { 
 				mHousehold.adapters = mNetwork.getAdapters();
 			}
@@ -273,6 +279,9 @@ public final class Controller {
 	 * @throws NotImplementedException
 	 */
 	public boolean registerAdapter(String id) {
+		if (mDemoMode)
+			return false;
+			
 //		throw new NotImplementedException();
 		ActualUser acUser = ActualUser.getActualUser();
 		try {
@@ -496,6 +505,9 @@ public final class Controller {
 	 * @return true on success, false otherwise
 	 */
 	public boolean saveDevice(BaseDevice device, SaveDevice what) {
+		if (mDemoMode)
+			return true;
+		
 		ArrayList<BaseDevice> devices = new ArrayList<BaseDevice>();
 		devices.add(device);
 		
