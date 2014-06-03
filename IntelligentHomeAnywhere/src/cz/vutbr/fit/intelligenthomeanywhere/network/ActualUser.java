@@ -70,6 +70,7 @@ public class ActualUser extends User {
 	public ActualUser(String name, String email, Role role, Gender gender) {
 		super(name, email, role, gender);
 		mActualUser = this;
+		mSessionId = "0";
 	}
 	
 	public static ActualUser getActualUser(){
