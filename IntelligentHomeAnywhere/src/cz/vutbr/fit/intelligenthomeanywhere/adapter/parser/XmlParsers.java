@@ -304,9 +304,12 @@ public class XmlParsers {
 	 */
 	private static ArrayList<BaseDevice> parsePartial() throws XmlPullParserException, IOException{
 		mParser.nextTag();
-		mParser.require(XmlPullParser.START_TAG, ns, DEVICE);
+		//mParser.require(XmlPullParser.START_TAG, ns, DEVICE); // strict solution
 		
 		ArrayList<BaseDevice> result = new ArrayList<BaseDevice>();
+		
+		if(!mParser.getName().equals(DEVICE))
+			return result;
 		
 		do{	
 			BaseDevice device = getDeviceByType(getSecureAttrValue(ns, TYPE));

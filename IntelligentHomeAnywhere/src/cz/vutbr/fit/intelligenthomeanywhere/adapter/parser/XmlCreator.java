@@ -93,7 +93,7 @@ public class XmlCreator {
 	public static final String QUALITY = "quality";
 	public static final String VALUE = "value";
 	public static final String LOGGING = "logging";
-	public static final String ENABLED = "endabled";
+	public static final String ENABLED = "enabled";
 	public static final String INIT_1 = "1";
 	public static final String INIT_0 = "0";
 	
