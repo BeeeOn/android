@@ -93,7 +93,7 @@ public class SimpleListing {
 	public List<BaseDevice> getByLocation(final String location) {
 		List<BaseDevice> devices = new ArrayList<BaseDevice>();
 		
-		if (mLocations.containsValue(location)) {
+		if (mLocations.containsKey(location)) {
 			for (BaseDevice device : mDevices.values()) {
 				if (device.getLocation().getName().equals(location)) {
 					devices.add(device);
