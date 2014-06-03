@@ -167,8 +167,20 @@ public class Adapter {
 		return mDevices.getByLocation(location);
 	}
 	
+	/**
+	 * Returns list of all uninitialized devices in this adapter
+	 * @return
+	 */
 	public List<BaseDevice> getUninitializedDevices() {
 		return new ArrayList<BaseDevice>(mDevices.getUninitializedDevices().values());
+	}
+	
+	/**
+	 * Refreshes device in listings (e.g., in uninitialized devices)
+	 * @param device
+	 */
+	public void refreshDevice(final BaseDevice device) {
+		mDevices.refreshDevice(device);
 	}
 	
 }

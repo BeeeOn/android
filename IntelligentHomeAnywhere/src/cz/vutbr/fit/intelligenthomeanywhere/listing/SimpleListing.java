@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import android.util.Log;
+
 import cz.vutbr.fit.intelligenthomeanywhere.adapter.device.BaseDevice;
 
 public class SimpleListing {
@@ -65,6 +67,28 @@ public class SimpleListing {
 		Location location = device.getLocation();
 		if (location.getId().length() > 0 && !mLocations.containsKey(location.getId()))
 			mLocations.put(location.getId(), location);
+	}
+	
+	/**
+	 * Refreshes device in listings (e.g., in uninitialized devices)
+	 * @param device
+	 */
+	public void refreshDevice(final BaseDevice device) {
+		if (device.isInitialized()) {
+			mUninitializedDevices.remove(device.getId());
+			Log.d("SimpleListing", "Removing initialized device " + device.toString());
+		} else {
+			mUninitializedDevices.put(device.getId(), device);
+			Log.d("SimpleListing", "Adding uninitialized device " + device.toString());
+		}
+		
+		// TODO: remove this when locations will be separated entities on server
+		mLocations.clear();
+		for (BaseDevice dev : mDevices.values()) {
+			Location location = dev.getLocation();
+			if (location.getId().length() > 0 && !mLocations.containsKey(location.getId()))
+				mLocations.put(location.getId(), location);
+		}
 	}
 	
 	/**

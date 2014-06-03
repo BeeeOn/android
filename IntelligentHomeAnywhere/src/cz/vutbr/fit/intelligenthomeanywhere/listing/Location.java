@@ -36,4 +36,9 @@ public class Location {
 	public void setType(int type) {
 		mType = type;
 	}
+	
+	@Override
+	public String toString() {
+		return getName();
+	}
 }

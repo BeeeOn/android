@@ -221,6 +221,16 @@ public final class Controller {
 	}
 	
 	/**
+	 * Refreshes device in listings (e.g., in uninitialized devices)
+	 * @param device
+	 */
+	public void refreshDevice(final BaseDevice device) {
+		for (Adapter adapter : mHousehold.adapters) {
+			adapter.refreshDevice(device);
+		}
+	}
+	
+	/**
 	 * Return all adapters that this logged in user has access to.
 	 * 
 	 * @return List of adapters
@@ -510,8 +520,11 @@ public final class Controller {
 	 * @return true on success, false otherwise
 	 */
 	public boolean saveDevice(BaseDevice device, SaveDevice what) {
-		if (mDemoMode)
+		if (mDemoMode) {
+			device.setInitialized(true);
+			refreshDevice(device);
 			return true;
+		}
 		
 		ArrayList<BaseDevice> devices = new ArrayList<BaseDevice>();
 		devices.add(device);
@@ -520,6 +533,27 @@ public final class Controller {
 
 		try {
 			result = mNetwork.partial(devices);
+			
+			ArrayList<String> deviceIds = new ArrayList<String>();
+			for (BaseDevice d : devices) {
+				deviceIds.add(d.getId());
+			}
+			ArrayList<BaseDevice> newDevices = mNetwork.update(deviceIds);
+			
+			if (newDevices.size() != 1) {
+				return false;
+			}
+			
+			BaseDevice newDevice = newDevices.get(0);
+			device.setLocation(newDevice.getLocation());
+			device.setName(newDevice.getName());
+			device.setRefresh(newDevice.getRefresh());
+			//device.setLogging(newDevice.getLogging());
+			//device.setValue(newDevice.getValue());
+			// TODO: all other values etc.
+			
+			refreshDevice(device);
+			
 		} catch (NoConnectionException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
