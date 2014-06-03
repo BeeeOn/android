@@ -34,6 +34,7 @@ package cz.vutbr.fit.intelligenthomeanywhere.extension.watches.smartwatch2.contr
 
 import java.text.DateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import android.content.Context;
@@ -226,7 +227,8 @@ public class GalleryControlExtension extends ManagedControlExtension {
 				? DateFormat.getTimeInstance()
 				: DateFormat.getDateInstance();  
 
-		String dateTime = dateFormat.format(curDevice.lastUpdate);
+		Date lastUpdate = new Date(curDevice.lastUpdate.toMillis(true));
+		String dateTime = dateFormat.format(lastUpdate);
 		syncBundle.putString(Control.Intents.EXTRA_TEXT, dateTime);
 
 		// Title data

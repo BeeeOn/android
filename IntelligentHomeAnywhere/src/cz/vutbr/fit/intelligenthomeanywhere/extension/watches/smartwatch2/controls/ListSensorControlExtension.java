@@ -32,8 +32,6 @@ Copyright (c) 2011-2013, Sony Mobile Communications AB
 
 package cz.vutbr.fit.intelligenthomeanywhere.extension.watches.smartwatch2.controls;
 
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 import android.content.Context;
@@ -44,7 +42,6 @@ import android.util.Log;
 import com.sonyericsson.extras.liveware.aef.control.Control;
 import com.sonyericsson.extras.liveware.extension.util.ExtensionUtils;
 import com.sonyericsson.extras.liveware.extension.util.control.ControlListItem;
-import com.sonyericsson.extras.liveware.extension.util.control.ControlTouchEvent;
 
 import cz.vutbr.fit.intelligenthomeanywhere.R;
 import cz.vutbr.fit.intelligenthomeanywhere.adapter.Adapter;

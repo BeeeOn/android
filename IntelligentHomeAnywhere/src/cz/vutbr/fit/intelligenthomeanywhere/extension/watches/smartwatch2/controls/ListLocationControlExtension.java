@@ -47,6 +47,7 @@ import cz.vutbr.fit.intelligenthomeanywhere.R;
 import cz.vutbr.fit.intelligenthomeanywhere.adapter.Adapter;
 import cz.vutbr.fit.intelligenthomeanywhere.adapter.device.BaseDevice;
 import cz.vutbr.fit.intelligenthomeanywhere.extension.watches.smartwatch2.SW2ExtensionService;
+import cz.vutbr.fit.intelligenthomeanywhere.listing.LocationListing;
 
 /**
  * ListControlExtension displays a scrollable list, based on a string array.
@@ -57,7 +58,7 @@ public class ListLocationControlExtension extends ManagedControlExtension {
 	public static final String EXTRA_ADAPTER_ID = "ADAPTER_ID";
 
 	private Adapter mAdapter;
-	private List<String> mLocations;
+	private List<LocationListing> mLocations;
 
 	/**
 	 * @see ManagedControlExtension#ManagedControlExtension(Context, String,
@@ -92,7 +93,7 @@ public class ListLocationControlExtension extends ManagedControlExtension {
 		}
 
 		mAdapter = mController.getAdapter(adapterId, false);
-		mLocations = mAdapter.getLocations();
+		mLocations = mController.getLocations();
 
 		sendListCount(R.id.listView, mLocations.size());
 	}
@@ -154,7 +155,7 @@ public class ListLocationControlExtension extends ManagedControlExtension {
 			// listItem.listItemPosition);
 			// mControlManager.startControl(intent);
 			List<BaseDevice> sensors = mAdapter.getDevicesByLocation(mLocations
-					.get(listItem.listItemPosition));
+					.get(listItem.listItemPosition).getName());
 			Intent intent;
 			if (sensors.size() < 1) {
 				intent = new Intent(mContext, TextControl.class);
@@ -165,7 +166,7 @@ public class ListLocationControlExtension extends ManagedControlExtension {
 				intent.putExtra(ListSensorControlExtension.EXTRA_ADAPTER_ID,
 						mAdapter.getId());
 				intent.putExtra(ListSensorControlExtension.EXTRA_LOCATION_NAME,
-						mLocations.get(listItem.listItemPosition));
+						mLocations.get(listItem.listItemPosition).getName());
 			}
 			mControlManager.startControl(intent);
 		}
@@ -188,13 +189,13 @@ public class ListLocationControlExtension extends ManagedControlExtension {
 		
 		// TODO prevest na uzivateluv obrazek
 		iconBundle.putString(Control.Intents.EXTRA_DATA_URI, ExtensionUtils
-				.getUriString(mContext, R.drawable.loc_bath_room));
+				.getUriString(mContext, mLocations.get(position).getIconResource()));
 
 		Bundle headerBundle = new Bundle();
 		headerBundle.putInt(Control.Intents.EXTRA_LAYOUT_REFERENCE, R.id.title);
 
 		headerBundle.putString(Control.Intents.EXTRA_TEXT,
-				mLocations.get(position));
+				mLocations.get(position).getName());
 
 		item.layoutData = new Bundle[2];
 		item.layoutData[0] = headerBundle;
