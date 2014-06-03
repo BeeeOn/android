@@ -40,7 +40,7 @@ public class AddSensorActivity extends Activity {
 			mNewDevice = devices.get(0);
 		} else {
 			Toast.makeText(this, "There are no uninitialized devices.", Toast.LENGTH_LONG).show();
-			finish();	
+			finish();
 		}
 		
 		initButtons();

@@ -65,7 +65,8 @@ public class LocationScreenActivity extends SherlockFragmentActivity {
     
     private static final String TAG = "Location";
     
-    
+    //FIXME: do this better way
+ 	public List<BaseDevice> mDevices;
     
 	
 	/**
@@ -87,32 +88,32 @@ public class LocationScreenActivity extends SherlockFragmentActivity {
 		setSupportProgressBarIndeterminate(true);
 		setSupportProgressBarIndeterminateVisibility(true);
 		
-		Thread thUniniDev = new Thread(new Runnable() {
-			@Override
-			public void run() {
-				//checkUninitializedDevices();
-			}
-		});
-		thUniniDev.start();
+//		Thread thUniniDev = new Thread(new Runnable() {
+//			@Override
+//			public void run() {
+//				checkUninitializedDevices();
+//			}
+//		});
+//		thUniniDev.start();
 		
-		Thread thLoc = new Thread(new Runnable() {
-			@Override
-			public void run() {
-				locations = mController.getLocations();
-				Log.d("lokace",locations.toArray().toString());
-				
-				
-				mActivity.runOnUiThread(new Runnable() {
-					@Override
-					public void run() {
-						
-						getLocations(locations);
-					}}
-					);
-				
-			}
-		});
-		thLoc.start();
+//		Thread thLoc = new Thread(new Runnable() {
+//			@Override
+//			public void run() {
+//				locations = mController.getLocations();
+//				Log.d("lokace",locations.toArray().toString());
+//				
+//				
+//				mActivity.runOnUiThread(new Runnable() {
+//					@Override
+//					public void run() {
+//						
+//						getLocations(locations);
+//					}}
+//					);
+//				
+//			}
+//		});
+//		thLoc.start();
 		
 		
 		int marginTop = 5;
@@ -129,14 +130,14 @@ public class LocationScreenActivity extends SherlockFragmentActivity {
 	
 	public void onResume(){
 		super.onResume();
-		/*
+		
 		Thread thLoc = new Thread(new Runnable() {
 			@Override
 			public void run() {
 				locations = mController.getLocations();
 				Log.d("lokace",locations.toArray().toString());
 				
-				
+				checkUninitializedDevices();
 				mActivity.runOnUiThread(new Runnable() {
 					@Override
 					public void run() {
@@ -148,7 +149,7 @@ public class LocationScreenActivity extends SherlockFragmentActivity {
 			}
 		});
 		thLoc.start();
-		*/
+		
 	}
 	
 	public boolean getLocations(List<LocationListing> locs) {
@@ -362,26 +363,36 @@ public class LocationScreenActivity extends SherlockFragmentActivity {
 	 * Checks if there are any uninitialized devices and if so, shows dialog to ask user for adding them.
 	 */
 	private void checkUninitializedDevices() {
-		List<BaseDevice> devices = mController.getUninitializedDevices();
-		if (devices.size() > 0) {
-			AlertDialog.Builder builder = new AlertDialog.Builder(this);
+//		List<BaseDevice> devices = mController.getUninitializedDevices();
+		mActivity.mDevices = mController.getUninitializedDevices();
+		if (mActivity.mDevices.size() > 0) {
 			
-			builder.setCancelable(false)
-				.setTitle(R.string.notification_title)
-				.setMessage(getResources().getQuantityString(R.plurals.notification_new_sensors, devices.size(), devices.size()))
-				.setNeutralButton(R.string.notification_ingore, null)
-				.setPositiveButton(R.string.notification_add, new DialogInterface.OnClickListener() {
+			mActivity.runOnUiThread(new Runnable() {
 				
-					@Override
-					public void onClick(DialogInterface dialog, int which) {
-						// Open activity for adding new device
-						Intent intent = new Intent(LocationScreenActivity.this, AddSensorActivity.class);
-						startActivity(intent);
-					}
-				});
+				@Override
+				public void run() {
+					// TODO Auto-generated method stub
+					AlertDialog.Builder builder = new AlertDialog.Builder(mActivity);
+					
+					builder.setCancelable(false)
+						.setTitle(R.string.notification_title)
+						.setMessage(getResources().getQuantityString(R.plurals.notification_new_sensors, mActivity.mDevices.size(), mActivity.mDevices.size()))
+						.setNeutralButton(R.string.notification_ingore, null)
+						.setPositiveButton(R.string.notification_add, new DialogInterface.OnClickListener() {
+						
+							@Override
+							public void onClick(DialogInterface dialog, int which) {
+								// Open activity for adding new device
+								Intent intent = new Intent(LocationScreenActivity.this, AddSensorActivity.class);
+								startActivity(intent);
+							}
+						});
+					
+					AlertDialog dialog = builder.create();
+					dialog.show();
+				}
+			});
 			
-			AlertDialog dialog = builder.create();
-			dialog.show();
 		}
 	}
 	
