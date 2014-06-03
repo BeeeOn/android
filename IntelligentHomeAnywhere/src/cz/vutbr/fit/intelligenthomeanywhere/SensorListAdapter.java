@@ -13,11 +13,11 @@ public class SensorListAdapter extends BaseAdapter {
 	// Declare Variables
     Context context;
     String[] mTitle;
-    double[] mValue;
+    String[] mValue;
     int[] mIcon;
     LayoutInflater inflater;
  
-    public SensorListAdapter(Context context, String[] title, double[] value,  int[] icon) {
+    public SensorListAdapter(Context context, String[] title, String[] value,  int[] icon) {
         this.context = context;
         this.mTitle = title;
         this.mValue = value;
@@ -58,7 +58,7 @@ public class SensorListAdapter extends BaseAdapter {
  
         // Set the results into TextViews
         txtTitle.setText(mTitle[position]);
-        txtValue.setText(Double.toString(mValue[position]));
+        txtValue.setText(mValue[position]);
  
         // Set the results into ImageView
         imgIcon.setImageResource(mIcon[position]);

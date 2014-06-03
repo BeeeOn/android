@@ -95,25 +95,6 @@ public class LocationScreenActivity extends SherlockFragmentActivity {
 		});
 		thUniniDev.start();
 		
-		//List<LocationListing> locations = null;
-		
-		
-		
-		int marginTop = 5;
-		int ID = Constants.BUTTON_ID;
-		/*for(LocationListing location : locations) {
-			if (addLocationButton(location.getName(), ID, marginTop))
-				ID++;
-		}
-		if(locations.size() == 1){
-			Button onlyOne = (Button)findViewById(--ID);
-			onlyOne.performClick();
-		}*/
-	}
-	
-	public void onResume(){
-		super.onResume();
-		
 		Thread thLoc = new Thread(new Runnable() {
 			@Override
 			public void run() {
@@ -132,6 +113,42 @@ public class LocationScreenActivity extends SherlockFragmentActivity {
 			}
 		});
 		thLoc.start();
+		
+		
+		int marginTop = 5;
+		int ID = Constants.BUTTON_ID;
+		/*for(LocationListing location : locations) {
+			if (addLocationButton(location.getName(), ID, marginTop))
+				ID++;
+		}
+		if(locations.size() == 1){
+			Button onlyOne = (Button)findViewById(--ID);
+			onlyOne.performClick();
+		}*/
+	}
+	
+	public void onResume(){
+		super.onResume();
+		/*
+		Thread thLoc = new Thread(new Runnable() {
+			@Override
+			public void run() {
+				locations = mController.getLocations();
+				Log.d("lokace",locations.toArray().toString());
+				
+				
+				mActivity.runOnUiThread(new Runnable() {
+					@Override
+					public void run() {
+						
+						getLocations(locations);
+					}}
+					);
+				
+			}
+		});
+		thLoc.start();
+		*/
 	}
 	
 	public boolean getLocations(List<LocationListing> locs) {
@@ -214,15 +231,15 @@ public class LocationScreenActivity extends SherlockFragmentActivity {
 		
 		
 		String[] title;
-	    double[] value;
+	    String[] value;
 	    int[] icon;
 		mTitle = mDrawerTitle = "IHA";
 		title = new String[sensors.size()];
-		value = new double[sensors.size()];
+		value = new String[sensors.size()];
 		icon = new int[sensors.size()];
 		for(int i = 0 ; i < sensors.size();i++) {
 			title[i] = sensors.get(i).getName();
-			value[i] = sensors.get(i).getRawIntValue();
+			value[i] = sensors.get(i).getStringValue();
 			icon[i] = sensors.get(i).getTypeIconResource();
 		}
 		
@@ -233,7 +250,7 @@ public class LocationScreenActivity extends SherlockFragmentActivity {
 		
 		// Capture listview menu item click
         //mSensorList.setOnItemClickListener(new DrawerItemClickListener());
-		
+		this.setSupportProgressBarIndeterminateVisibility(false);
 		return true;
 	}
 
@@ -281,7 +298,7 @@ public class LocationScreenActivity extends SherlockFragmentActivity {
         
         final LocationListing selectedItem = this.locations.get(position);
         
-        
+        setSupportProgressBarIndeterminateVisibility(true);
         Thread thLoc = new Thread(new Runnable() {
 			@Override
 			public void run() {

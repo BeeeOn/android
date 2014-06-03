@@ -53,8 +53,11 @@ public class AddSensorActivity extends Activity {
         dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(dataAdapter);
         
-        TextView type = (TextView)findViewById(R.id.addsensor_type);
-        type.setText(type.getText() + " " + getString(mNewDevice.getTypeStringResource()));
+        int typeStringRes = mNewDevice.getTypeStringResource(); 
+        TextView type = (TextView)findViewById(R.id.addsensor_type); 
+        if (type != null && typeStringRes > 0) { 
+        	type.setText(type.getText() + " " + getString(typeStringRes)); 
+        }
         
         TextView time = (TextView)findViewById(R.id.addsensor_involved_time);
         time.setText(time.getText() + " " + mNewDevice.getInvolveTime());	
