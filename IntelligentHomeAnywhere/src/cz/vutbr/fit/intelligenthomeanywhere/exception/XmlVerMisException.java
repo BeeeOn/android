@@ -10,24 +10,15 @@ package cz.vutbr.fit.intelligenthomeanywhere.exception;
  */
 public class XmlVerMisException extends Exception {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 7259307611261716830L;
+	private static final long serialVersionUID = 1L;
 
-	/**
-	 * Constructor
-	 */
-	public XmlVerMisException() {
-		// TODO Auto-generated constructor stub
-	}
+	public XmlVerMisException() { }
 
 	/**
 	 * @param detailMessage
 	 */
 	public XmlVerMisException(String detailMessage) {
 		super(detailMessage);
-		// TODO Auto-generated constructor stub
 	}
 
 	/**
@@ -35,7 +26,6 @@ public class XmlVerMisException extends Exception {
 	 */
 	public XmlVerMisException(Throwable throwable) {
 		super(throwable);
-		// TODO Auto-generated constructor stub
 	}
 
 	/**
@@ -44,7 +34,6 @@ public class XmlVerMisException extends Exception {
 	 */
 	public XmlVerMisException(String detailMessage, Throwable throwable) {
 		super(detailMessage, throwable);
-		// TODO Auto-generated constructor stub
 	}
 
 }

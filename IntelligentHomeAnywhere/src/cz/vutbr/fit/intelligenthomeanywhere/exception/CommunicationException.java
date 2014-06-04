@@ -7,18 +7,11 @@ package cz.vutbr.fit.intelligenthomeanywhere.exception;
  * @author ThinkDeep
  *
  */
-public class CommunicationException extends Exception {
+public class CommunicationException extends NetworkException {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 
-	/**
-	 * 
-	 */
 	public CommunicationException() {
-		// TODO Auto-generated constructor stub
 	}
 
 	/**
@@ -26,7 +19,6 @@ public class CommunicationException extends Exception {
 	 */
 	public CommunicationException(String detailMessage) {
 		super(detailMessage);
-		// TODO Auto-generated constructor stub
 	}
 
 	/**
@@ -34,7 +26,6 @@ public class CommunicationException extends Exception {
 	 */
 	public CommunicationException(Throwable throwable) {
 		super(throwable);
-		// TODO Auto-generated constructor stub
 	}
 
 	/**
@@ -43,7 +34,6 @@ public class CommunicationException extends Exception {
 	 */
 	public CommunicationException(String detailMessage, Throwable throwable) {
 		super(detailMessage, throwable);
-		// TODO Auto-generated constructor stub
 	}
 
 }

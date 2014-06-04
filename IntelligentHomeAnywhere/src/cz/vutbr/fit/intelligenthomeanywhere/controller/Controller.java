@@ -13,11 +13,8 @@ import cz.vutbr.fit.intelligenthomeanywhere.adapter.device.BaseDevice.SaveDevice
 import cz.vutbr.fit.intelligenthomeanywhere.adapter.device.DeviceLog;
 import cz.vutbr.fit.intelligenthomeanywhere.adapter.device.StateDevice;
 import cz.vutbr.fit.intelligenthomeanywhere.adapter.device.SwitchDevice;
-import cz.vutbr.fit.intelligenthomeanywhere.exception.CommunicationException;
-import cz.vutbr.fit.intelligenthomeanywhere.exception.NoConnectionException;
+import cz.vutbr.fit.intelligenthomeanywhere.exception.NetworkException;
 import cz.vutbr.fit.intelligenthomeanywhere.exception.NotImplementedException;
-import cz.vutbr.fit.intelligenthomeanywhere.exception.NotRegAException;
-import cz.vutbr.fit.intelligenthomeanywhere.exception.NotRegBException;
 import cz.vutbr.fit.intelligenthomeanywhere.household.DemoHousehold;
 import cz.vutbr.fit.intelligenthomeanywhere.household.Household;
 import cz.vutbr.fit.intelligenthomeanywhere.listing.FavoritesListing;
@@ -112,12 +109,9 @@ public final class Controller {
 	 * 
 	 * @param userId
 	 * @return true on success, false otherwise
-	 * @throws NoConnectionException 
-	 * @throws NotRegBException 
-	 * @throws NotRegAException 
-	 * @throws CommunicationException  
+	 * @throws NetworkException
 	 */
-	public boolean login(String email) throws NotRegAException, NotRegBException, NoConnectionException, CommunicationException {
+	public boolean login(String email) throws NetworkException {
 		if (mDemoMode)
 			return true;
 		
@@ -176,8 +170,7 @@ public final class Controller {
 		
 		try {
 			newAdapter = mNetwork.init(adapter.getId());
-		} catch (NoConnectionException e) {
-		} catch (CommunicationException e) {
+		} catch (NetworkException e) {
 			e.printStackTrace();
 		}
 		
@@ -244,8 +237,7 @@ public final class Controller {
 			//device.setLogging(newDevice.getLogging());
 			//device.setValue(newDevice.getValue());
 			// TODO: all other values etc.
-		} catch (NoConnectionException e) {
-		} catch (CommunicationException e) {
+		} catch (NetworkException e) {
 			e.printStackTrace();
 		}
 				
@@ -257,15 +249,13 @@ public final class Controller {
 	 * Return all adapters that this logged in user has access to.
 	 * 
 	 * @return List of adapters
-	 * @throws NotImplementedException
 	 */
 	public List<Adapter> getAdapters() {
 		// TODO: refactor this method, make household's adapters (and favoriteslisting, and user?) final etc.
 		if (!mDemoMode && (mHousehold.adapters == null || mReloadAdapters)) { 
 			try { 
 				mHousehold.adapters = mNetwork.getAdapters();
-			} catch (NoConnectionException e) {
-			} catch (CommunicationException e) {
+			} catch (NetworkException e) {
 				// TODO Auto-generated catch block 
 				e.printStackTrace(); 
 			}
@@ -306,7 +296,6 @@ public final class Controller {
 	 * 
 	 * @param id
 	 * @return true on success, false otherwise
-	 * @throws NotImplementedException
 	 */
 	public boolean registerAdapter(String id) {
 		if (mDemoMode)
@@ -317,10 +306,8 @@ public final class Controller {
 			return mNetwork.signUp(acUser.getEmail(), id, Integer.parseInt(acUser.getSessionId()));
 		} catch (NumberFormatException e) {
 			e.printStackTrace();
-		} catch (CommunicationException e) {
+		} catch (NetworkException e) {
 			e.printStackTrace();
-		} catch (NoConnectionException e) {
-			
 		}
 		
 		return false;
@@ -527,8 +514,7 @@ public final class Controller {
 		try {
 			result = mNetwork.partial(devices);
 			result = updateDevice(device);
-		} catch (NoConnectionException e) {
-		} catch (CommunicationException e) {
+		} catch (NetworkException e) {
 			e.printStackTrace();
 		}
 		

@@ -9,24 +9,15 @@ package cz.vutbr.fit.intelligenthomeanywhere.exception;
  */
 public class NotRegAException extends CommunicationException {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 
-	/**
-	 * 
-	 */
-	public NotRegAException() {
-		// TODO Auto-generated constructor stub
-	}
+	public NotRegAException() {	}
 
 	/**
 	 * @param detailMessage
 	 */
 	public NotRegAException(String detailMessage) {
 		super(detailMessage);
-		// TODO Auto-generated constructor stub
 	}
 
 	/**
@@ -34,7 +25,6 @@ public class NotRegAException extends CommunicationException {
 	 */
 	public NotRegAException(Throwable throwable) {
 		super(throwable);
-		// TODO Auto-generated constructor stub
 	}
 
 	/**
@@ -43,7 +33,6 @@ public class NotRegAException extends CommunicationException {
 	 */
 	public NotRegAException(String detailMessage, Throwable throwable) {
 		super(detailMessage, throwable);
-		// TODO Auto-generated constructor stub
 	}
 
 }

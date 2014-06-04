@@ -3,27 +3,23 @@
  */
 package cz.vutbr.fit.intelligenthomeanywhere.exception;
 
-/**
- * @author ThinkDeep
- *
- */
-public class NoConnectionException extends NetworkException {
+public class NetworkException extends RuntimeException {
 
 	private static final long serialVersionUID = 1L;
 
-	public NoConnectionException() { }
+	public NetworkException() {}
 
 	/**
 	 * @param detailMessage
 	 */
-	public NoConnectionException(String detailMessage) {
+	public NetworkException(String detailMessage) {
 		super(detailMessage);
 	}
 
 	/**
 	 * @param throwable
 	 */
-	public NoConnectionException(Throwable throwable) {
+	public NetworkException(Throwable throwable) {
 		super(throwable);
 	}
 
@@ -31,8 +27,8 @@ public class NoConnectionException extends NetworkException {
 	 * @param detailMessage
 	 * @param throwable
 	 */
-	public NoConnectionException(String detailMessage, Throwable throwable) {
+	public NetworkException(String detailMessage, Throwable throwable) {
 		super(detailMessage, throwable);
 	}
-
+	
 }

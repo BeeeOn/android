@@ -21,6 +21,7 @@ import com.google.android.gms.common.GooglePlayServicesUtil;
 import cz.vutbr.fit.intelligenthomeanywhere.R;
 import cz.vutbr.fit.intelligenthomeanywhere.controller.Controller;
 import cz.vutbr.fit.intelligenthomeanywhere.exception.CommunicationException;
+import cz.vutbr.fit.intelligenthomeanywhere.exception.NetworkException;
 import cz.vutbr.fit.intelligenthomeanywhere.exception.NoConnectionException;
 import cz.vutbr.fit.intelligenthomeanywhere.exception.NotImplementedException;
 import cz.vutbr.fit.intelligenthomeanywhere.exception.NotRegAException;
@@ -130,10 +131,7 @@ public class LoginActivity extends Activity {
 	/**
 	 * 
 	 * @return
-	 * @throws NotRegBException 
-	 * @throws NotRegAException 
-	 * @throws CommunicationException 
-	 * @throws NoConnectionException 
+	 * @throws NetworkException
 	 */
 	private boolean getGoogleAccessFromServer(View v){
 		//TODO: get access via google
@@ -290,7 +288,7 @@ public class LoginActivity extends Activity {
 			else{
 				Log.d(TAG, "Login: false");
 				errFlag = true;
-				errMessage = "Please turn internet connection on";
+				errMessage = "Login failed";
 			}
 			
 		} catch (NotRegAException e) {
