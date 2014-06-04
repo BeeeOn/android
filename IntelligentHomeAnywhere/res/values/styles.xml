@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
 
     <!--
         Base application theme, dependent on API level. This theme is replaced
@@ -55,5 +55,14 @@
         <!-- The textColor property is backward compatible with the Support Library -->
     </style>
     
+    
+    <style name="MyDialog" parent="@android:style/Theme.Dialog">
+        <item name="android:windowIsTranslucent">true</item>
+	    <item name="android:windowBackground">@color/black</item>
+	    <item name="android:windowNoTitle">true</item>
+	    <item name="android:backgroundDimEnabled">true</item>
+	    <item name="android:windowIsFloating">true</item>
+    </style>
+   
 
 </resources>

@@ -33,6 +33,8 @@ import cz.vutbr.fit.intelligenthomeanywhere.Constants;
 import cz.vutbr.fit.intelligenthomeanywhere.MenuListAdapter;
 import cz.vutbr.fit.intelligenthomeanywhere.R;
 import cz.vutbr.fit.intelligenthomeanywhere.SensorListAdapter;
+import cz.vutbr.fit.intelligenthomeanywhere.activity.dialog.AddAdapterActivityDialog;
+import cz.vutbr.fit.intelligenthomeanywhere.activity.dialog.AddSensorActivityDialog;
 import cz.vutbr.fit.intelligenthomeanywhere.adapter.device.BaseDevice;
 import cz.vutbr.fit.intelligenthomeanywhere.controller.Controller;
 import cz.vutbr.fit.intelligenthomeanywhere.extension.watches.smartwatch2.SW2PreferenceActivity;
@@ -307,17 +309,18 @@ public class LocationScreenActivity extends SherlockFragmentActivity {
 			break;
 		case R.id.action_addadapter:
 		{
-			Toast.makeText(this, "go to old", Toast.LENGTH_LONG).show();
+//			Toast.makeText(this, "go to old", Toast.LENGTH_LONG).show();
 
-			Intent intent = new Intent(LocationScreenActivity.this, AddAdapterActivity.class);
+//			Intent intent = new Intent(LocationScreenActivity.this, AddAdapterActivity.class);
+			Intent intent = new Intent(LocationScreenActivity.this, AddAdapterActivityDialog.class);
 			startActivity(intent);
 			break;
 		}
 		case R.id.action_addsensor:
 		{
-			Toast.makeText(this, "go to old", Toast.LENGTH_LONG).show();
+//			Toast.makeText(this, "go to old", Toast.LENGTH_LONG).show();
 
-			Intent intent = new Intent(LocationScreenActivity.this, AddSensorActivity.class);
+			Intent intent = new Intent(LocationScreenActivity.this, AddSensorActivityDialog.class);
 			startActivity(intent);
 			break;
 		}
@@ -363,7 +366,7 @@ public class LocationScreenActivity extends SherlockFragmentActivity {
 							@Override
 							public void onClick(DialogInterface dialog, int which) {
 								// Open activity for adding new device
-								Intent intent = new Intent(LocationScreenActivity.this, AddSensorActivity.class);
+								Intent intent = new Intent(LocationScreenActivity.this, AddSensorActivityDialog.class);
 								startActivity(intent);
 							}
 						});

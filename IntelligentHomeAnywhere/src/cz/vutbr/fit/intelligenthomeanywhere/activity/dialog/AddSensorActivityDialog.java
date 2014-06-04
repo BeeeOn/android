@@ -1,4 +1,4 @@
-package cz.vutbr.fit.intelligenthomeanywhere.activity;
+package cz.vutbr.fit.intelligenthomeanywhere.activity.dialog;
 
 import java.util.List;
 
@@ -8,6 +8,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.Window;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -20,11 +21,7 @@ import cz.vutbr.fit.intelligenthomeanywhere.controller.Controller;
 import cz.vutbr.fit.intelligenthomeanywhere.listing.Location;
 import cz.vutbr.fit.intelligenthomeanywhere.listing.LocationListing;
 
-/**
- * Class that handle adding new sensor to the system
- * @author ThinkDeep
- */
-public class AddSensorActivity extends Activity {
+public class AddSensorActivityDialog extends Activity {
 
 	private Controller mController;
 	
@@ -35,7 +32,9 @@ public class AddSensorActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_add_sensor);
+		requestWindowFeature(Window.FEATURE_NO_TITLE);
+		
+		setContentView(R.layout.activity_add_sensor_activity_dialog);
 		
 		mController = Controller.getInstance(this);
 		
@@ -44,9 +43,10 @@ public class AddSensorActivity extends Activity {
 		mProgress.setMessage("Saving data...");
 		mProgress.setCancelable(false);
 		mProgress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-		
+			
 		// TODO: sent as parameter if we want first uninitialized device or some device with particular id
-	
+			
+		
 		List<BaseDevice> devices = mController.getUninitializedDevices();
 		if (devices.size() > 0) {
 			mNewDevice = devices.get(0);
@@ -102,7 +102,8 @@ public class AddSensorActivity extends Activity {
 					mNewDevice.setInitialized(true);
 					mNewDevice.setName(name.getText().toString());
 					mNewDevice.setLocation(new Location(locationName, locationName, 0)); // TODO: set location icon
-					
+					// TODO: show loading while saving device
+
 					mProgress.show();
 					
 					SaveDeviceTask task = new SaveDeviceTask();
@@ -111,13 +112,6 @@ public class AddSensorActivity extends Activity {
 			}
 		});
 	}
-
-//	@Override
-//	public boolean onCreateOptionsMenu(Menu menu) {
-//		// Inflate the menu; this adds items to the action bar if it is present.
-//		getMenuInflater().inflate(R.menu.add_sensor, menu);
-//		return true;
-//	}
 	
 	private class SaveDeviceTask extends AsyncTask<BaseDevice, Void, BaseDevice> {
     	@Override
@@ -132,8 +126,7 @@ public class AddSensorActivity extends Activity {
     	protected void onPostExecute(BaseDevice device) {
     		Toast.makeText(getApplicationContext(), getString(R.string.toast_new_sensor_added), Toast.LENGTH_LONG).show();    		
     		mProgress.cancel();
-    		AddSensorActivity.this.finish();			
+    		AddSensorActivityDialog.this.finish();			
     	}
 	}
-
 }

@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:minWidth="270dp"
+    android:minHeight="200dp"
+    android:background="@color/light_gray"
+    android:padding="10dp"
+    >
+
+	<TextView
+        android:id="@+id/addadapter_add_adapter"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="@string/addadapter_add_adapter"
+	    android:gravity="center_horizontal"
+	    android:paddingBottom="15dp"
+	    android:textColor="@color/log_blue2"
+	    android:textIsSelectable="false"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
+	
+	<LinearLayout 
+	    android:orientation="horizontal"
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
+	    android:background="@color/light_gray"
+	    android:layout_marginBottom="10dp"
+	    >
+	    
+		<ImageButton
+		    android:id="@+id/addadapter_qrcode_button"
+		    android:layout_width="wrap_content"
+		    android:layout_height="wrap_content"
+		    android:layout_gravity="center_horizontal"
+		    android:layout_marginLeft="55dp"
+		    android:contentDescription="@string/addadapter_qrcode_desc"
+		    android:src="@drawable/qrcode" />
+		
+		<TextView
+		    android:id="@+id/addadapter_or"
+		    android:layout_width="100dp"
+		    android:layout_height="fill_parent"
+		    android:layout_marginBottom="0dp"
+		    android:gravity="center"
+		    android:text="@string/addsensor_or"
+		    android:textColor="@color/log_blue2" 
+		    android:textIsSelectable="false"
+		    android:textAppearance="?android:attr/textAppearanceMedium" />
+		
+		<EditText
+		    android:id="@+id/addadapter_ser_num"
+		    android:layout_width="250dp"
+		    android:layout_height="fill_parent"
+		    android:layout_marginBottom="0dp"
+		    android:ems="10"
+		    android:hint="@string/addadapter_ser_num_hint"
+		    android:layout_gravity="right"
+		    android:inputType="numberDecimal" />
+		    
+	</LinearLayout>
+	
+	<Button
+	    android:id="@+id/addadapter_add_button"
+	    android:layout_width="90dp"
+	    android:layout_height="wrap_content"
+	    android:layout_marginBottom="0dp"
+	    android:layout_gravity="center_horizontal"
+	    android:text="@string/notification_add" />
+
+</LinearLayout>

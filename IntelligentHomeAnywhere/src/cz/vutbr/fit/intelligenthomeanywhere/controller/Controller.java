@@ -14,6 +14,7 @@ import cz.vutbr.fit.intelligenthomeanywhere.adapter.device.DeviceLog;
 import cz.vutbr.fit.intelligenthomeanywhere.adapter.device.StateDevice;
 import cz.vutbr.fit.intelligenthomeanywhere.adapter.device.SwitchDevice;
 import cz.vutbr.fit.intelligenthomeanywhere.exception.NetworkException;
+import cz.vutbr.fit.intelligenthomeanywhere.exception.NoConnectionException;
 import cz.vutbr.fit.intelligenthomeanywhere.exception.NotImplementedException;
 import cz.vutbr.fit.intelligenthomeanywhere.household.DemoHousehold;
 import cz.vutbr.fit.intelligenthomeanywhere.household.Household;
@@ -116,7 +117,7 @@ public final class Controller {
 			return true;
 		
 		if (!mNetwork.isAvailable())
-			return false; // TODO: throw proper exception
+			throw new NoConnectionException();
 
 		// TODO: catch and throw proper exception
 		mHousehold.user = mNetwork.signIn(email);

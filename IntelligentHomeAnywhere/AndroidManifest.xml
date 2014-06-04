@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="cz.vutbr.fit.intelligenthomeanywhere"
+    android:installLocation="auto"
     android:versionCode="1"
-    android:versionName="1.0"
-    android:installLocation="auto" >
+    android:versionName="1.0" >
 
     <uses-sdk
         android:minSdkVersion="8"
@@ -13,8 +13,8 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.NETWORK" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.GET_ACCOUNTS"/>
-    <uses-permission android:name="android.permission.USE_CREDENTIALS"/>
+    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
+    <uses-permission android:name="android.permission.USE_CREDENTIALS" />
     <uses-permission android:name="com.sonyericsson.extras.liveware.aef.EXTENSION_PERMISSION" />
 
     <application
@@ -22,8 +22,9 @@
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
-        <meta-data android:name="com.google.android.gms.version"
-           android:value="@integer/google_play_services_version" />
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/app_id" >
@@ -32,15 +33,16 @@
         <activity
             android:name="cz.vutbr.fit.intelligenthomeanywhere.activity.LoginActivity"
             android:label="@string/app_name"
-            android:theme="@android:style/Theme.NoTitleBar">
+            android:theme="@android:style/Theme.NoTitleBar" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity
             android:name="cz.vutbr.fit.intelligenthomeanywhere.activity.LocationScreenActivity"
-            android:label="@string/title_activity_location_screen"  >
+            android:label="@string/title_activity_location_screen" >
         </activity>
         <activity
             android:name="cz.vutbr.fit.intelligenthomeanywhere.activity.DataOfLocationScreenActivity"
@@ -48,7 +50,7 @@
         </activity>
         <activity
             android:name="cz.vutbr.fit.intelligenthomeanywhere.activity.AddSensorActivity"
-            android:label="@string/title_activity_add_sensor">
+            android:label="@string/title_activity_add_sensor" >
         </activity>
         <activity
             android:name="cz.vutbr.fit.intelligenthomeanywhere.activity.SensorDetailActivity"
@@ -60,11 +62,11 @@
         </activity>
         <activity
             android:name="cz.vutbr.fit.intelligenthomeanywhere.activity.AddAdapterActivity"
-            android:label="@string/title_activity_add_adapter">
+            android:label="@string/title_activity_add_adapter" >
         </activity>
         <activity
             android:name="cz.vutbr.fit.intelligenthomeanywhere.activity.RegistrationActivity"
-            android:label="@string/title_activity_registration">
+            android:label="@string/title_activity_registration" >
         </activity>
         <activity
             android:name="cz.vutbr.fit.intelligenthomeanywhere.activity.WidgetConfigurationActivity"
@@ -73,7 +75,14 @@
                 <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
             </intent-filter>
         </activity>
-        
+        <activity
+            android:name="cz.vutbr.fit.intelligenthomeanywhere.activity.dialog.AddSensorActivityDialog"
+            android:theme="@style/MyDialog" />
+
+        <activity
+            android:name="cz.vutbr.fit.intelligenthomeanywhere.activity.dialog.AddAdapterActivityDialog"
+            android:theme="@style/MyDialog" />
+
         <receiver
             android:name="cz.vutbr.fit.intelligenthomeanywhere.widget.SensorWidgetProvider"
             android:icon="@drawable/ic_launcher"
@@ -92,8 +101,8 @@
             android:enabled="true"
             android:exported="false" >
         </service>
-        
-        <!--     SONY SMARTWATCH2 -->
+
+        <!-- SONY SMARTWATCH2 -->
         <activity
             android:name="cz.vutbr.fit.intelligenthomeanywhere.extension.watches.smartwatch2.SW2PreferenceActivity"
             android:label="@string/preference_activity_title" >
@@ -142,5 +151,8 @@
                 <action android:name="com.sonyericsson.extras.aef.control.MENU_SHOW" />
             </intent-filter>
         </receiver>
+
+        
     </application>
+
 </manifest>

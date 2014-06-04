@@ -19,6 +19,7 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 
 import cz.vutbr.fit.intelligenthomeanywhere.R;
+import cz.vutbr.fit.intelligenthomeanywhere.activity.dialog.AddAdapterActivityDialog;
 import cz.vutbr.fit.intelligenthomeanywhere.controller.Controller;
 import cz.vutbr.fit.intelligenthomeanywhere.exception.CommunicationException;
 import cz.vutbr.fit.intelligenthomeanywhere.exception.NetworkException;
@@ -294,7 +295,7 @@ public class LoginActivity extends Activity {
 		} catch (NotRegAException e) {
 			e.printStackTrace();
 			
-			Intent intent = new Intent(LoginActivity.this, AddAdapterActivity.class);
+			Intent intent = new Intent(LoginActivity.this, AddAdapterActivityDialog.class);
 	    	startActivity(intent);
 		} catch (NotRegBException e) {
 			e.printStackTrace();
@@ -320,7 +321,8 @@ public class LoginActivity extends Activity {
 		finally{
 			mProgress.dismiss();
 			if(errFlag){
-				mActivity.runOnUiThread(new ToastMessageThread(mActivity, errMessage));
+				//mActivity.runOnUiThread(new ToastMessageThread(mActivity, errMessage));
+				new ToastMessageThread(mActivity, errMessage).start();
 			}
 		}
 	}

@@ -9,7 +9,7 @@ import android.widget.Toast;
 
 /**
  * @author ThinkDeep
- *
+ * 
  */
 public class ToastMessageThread implements Runnable{
 
@@ -17,7 +17,9 @@ public class ToastMessageThread implements Runnable{
 	private Activity mActivity;
 	
 	/**
-	 * 
+	 * Constructor
+	 * @param activity where the toast will be shown (must by alive)
+	 * @param message to be shown
 	 */
 	public ToastMessageThread(Activity activity, String message) {
 		mActivity = activity;
@@ -28,6 +30,13 @@ public class ToastMessageThread implements Runnable{
 	public void run() {
 		Log.d("ToastMessageThred", mMessage);
 		Toast.makeText(mActivity, mMessage, Toast.LENGTH_LONG).show();
+	}
+	
+	/**
+	 * Show the message
+	 */
+	public void start(){
+		mActivity.runOnUiThread(this);
 	}
 
 }
