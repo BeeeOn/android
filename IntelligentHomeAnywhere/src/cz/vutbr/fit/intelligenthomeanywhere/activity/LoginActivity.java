@@ -188,7 +188,7 @@ public class LoginActivity extends Activity {
 			ggTh.start();
 			Log.d(TAG, "Finish google auth");
 			//while(ggAuth.getStatus() != AsyncTask.Status.FINISHED);
-			ActualUser AUser = new ActualUser(ggAuth.getUserName(), ggAuth.getEmail(), null, null);
+			ActualUser.setActualUser(ggAuth.getUserName(), ggAuth.getEmail());
 			
 		} catch (Exception e) {
 			e.printStackTrace();

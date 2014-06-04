@@ -11,51 +11,6 @@ import cz.vutbr.fit.intelligenthomeanywhere.User;
  */
 public class ActualUser extends User {
 
-	/* (non-Javadoc)
-	 * @see cz.vutbr.fit.intelligenthomeanywhere.User#getName()
-	 */
-	@Override
-	public String getName() {
-		// TODO Auto-generated method stub
-		return super.getName();
-	}
-
-	/* (non-Javadoc)
-	 * @see cz.vutbr.fit.intelligenthomeanywhere.User#getEmail()
-	 */
-	@Override
-	public String getEmail() {
-		// TODO Auto-generated method stub
-		return super.getEmail();
-	}
-
-	/* (non-Javadoc)
-	 * @see cz.vutbr.fit.intelligenthomeanywhere.User#getRole()
-	 */
-	@Override
-	public Role getRole() {
-		// TODO Auto-generated method stub
-		return super.getRole();
-	}
-
-	/* (non-Javadoc)
-	 * @see cz.vutbr.fit.intelligenthomeanywhere.User#getGender()
-	 */
-	@Override
-	public Gender getGender() {
-		// TODO Auto-generated method stub
-		return super.getGender();
-	}
-
-	/* (non-Javadoc)
-	 * @see cz.vutbr.fit.intelligenthomeanywhere.User#toDebugString()
-	 */
-	@Override
-	public String toDebugString() {
-		// TODO Auto-generated method stub
-		return super.toDebugString();
-	}
-
 	private static ActualUser mActualUser;
 	private String mToken;
 	private String mPicture;
@@ -67,16 +22,20 @@ public class ActualUser extends User {
 	 * @param role
 	 * @param gender
 	 */
-	public ActualUser(String name, String email, Role role, Gender gender) {
+	private ActualUser(String name, String email, Role role, Gender gender) {
 		super(name, email, role, gender);
-		mActualUser = this;
 		mSessionId = "0";
 	}
 	
+	public static void setActualUser(String name, String email) {
+		mActualUser = new ActualUser(name, email, Role.Guest, Gender.Male);
+	}
+	
 	public static ActualUser getActualUser(){
-		if(mActualUser == null){
-			mActualUser = new ActualUser("", "", Role.Guest, Gender.Male);
+		if (mActualUser == null) {
+			setActualUser("", "");
 		}
+
 		return mActualUser;
 	}
 
