@@ -177,10 +177,7 @@ public final class Controller {
 		try {
 			newAdapter = mNetwork.init(adapter.getId());
 		} catch (NoConnectionException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 		} catch (CommunicationException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
@@ -216,6 +213,46 @@ public final class Controller {
 		}
 	}
 	
+	public boolean updateDevice(BaseDevice device) {
+		if (mDemoMode) {
+			// In demo mode update device with random value 
+			if (device instanceof SwitchDevice) {
+				((SwitchDevice)device).setActive(!((SwitchDevice)device).isActive());
+			} else if (device instanceof StateDevice) {
+				((StateDevice)device).setActive(!((StateDevice)device).isActive());
+			} else {
+				int i = new Random().nextInt(100);
+				device.setValue(i);
+			}
+			return true;
+		}
+		
+		ArrayList<String> deviceIds = new ArrayList<String>();
+		deviceIds.add(device.getId());
+
+		ArrayList<BaseDevice> newDevices;
+		try {
+			newDevices = mNetwork.update(deviceIds);
+			if (newDevices.size() != 1)
+				return false;
+			
+			BaseDevice newDevice = newDevices.get(0);
+			device.setLocation(newDevice.getLocation());
+			device.setName(newDevice.getName());
+			device.setRefresh(newDevice.getRefresh());
+			device.lastUpdate.set(newDevice.lastUpdate);
+			//device.setLogging(newDevice.getLogging());
+			//device.setValue(newDevice.getValue());
+			// TODO: all other values etc.
+		} catch (NoConnectionException e) {
+		} catch (CommunicationException e) {
+			e.printStackTrace();
+		}
+				
+		refreshDevice(device);
+		return true;
+	}
+	
 	/**
 	 * Return all adapters that this logged in user has access to.
 	 * 
@@ -227,12 +264,8 @@ public final class Controller {
 		if (!mDemoMode && (mHousehold.adapters == null || mReloadAdapters)) { 
 			try { 
 				mHousehold.adapters = mNetwork.getAdapters();
-			}
-			catch (NoConnectionException e) { 
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			catch (CommunicationException e) {
+			} catch (NoConnectionException e) {
+			} catch (CommunicationException e) {
 				// TODO Auto-generated catch block 
 				e.printStackTrace(); 
 			}
@@ -278,20 +311,16 @@ public final class Controller {
 	public boolean registerAdapter(String id) {
 		if (mDemoMode)
 			return false;
-			
-//		throw new NotImplementedException();
+
 		ActualUser acUser = ActualUser.getActualUser();
 		try {
 			return mNetwork.signUp(acUser.getEmail(), id, Integer.parseInt(acUser.getSessionId()));
 		} catch (NumberFormatException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (CommunicationException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (NoConnectionException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			
 		}
 		
 		return false;
@@ -406,17 +435,6 @@ public final class Controller {
 	 * @return device or null if no device is found
 	 */
 	public BaseDevice getDevice(String id) {
-		return getDevice(id, false);
-	}
-	
-	/**
-	 * Return device by ID from all adapters.
-	 * 
-	 * @param id
-	 * @param forceUpdate set to true if we want to force download new data from server
-	 * @return device or null if no device is found
-	 */
-	public BaseDevice getDevice(String id, boolean forceUpdate) {
 		BaseDevice device = null;
 		
 		for (Adapter adapter : getAdapters()) {
@@ -424,20 +442,9 @@ public final class Controller {
 			if (device != null)
 				break;
 		}
-
-		boolean needsUpdate = true;
-		// TODO: something like: needsUpdate = forceUpdate || !mPersistence->getDevice(device)
 		
-		if (device != null && needsUpdate) {
-			// TODO: load actual value from network
-			if (device instanceof SwitchDevice) {
-				((SwitchDevice)device).setActive(!((SwitchDevice)device).isActive());
-			} else if (device instanceof StateDevice) {
-				((StateDevice)device).setActive(!((StateDevice)device).isActive());
-			} else {
-				int i = new Random().nextInt(100);
-				device.setValue(i);
-			}
+		if (device != null && device.needsUpdate()) {
+			updateDevice(device);
 		}
 		
 		return device;
@@ -519,32 +526,9 @@ public final class Controller {
 
 		try {
 			result = mNetwork.partial(devices);
-			
-			ArrayList<String> deviceIds = new ArrayList<String>();
-			for (BaseDevice d : devices) {
-				deviceIds.add(d.getId());
-			}
-			ArrayList<BaseDevice> newDevices = mNetwork.update(deviceIds);
-			
-			if (newDevices.size() != 1) {
-				return false;
-			}
-			
-			BaseDevice newDevice = newDevices.get(0);
-			device.setLocation(newDevice.getLocation());
-			device.setName(newDevice.getName());
-			device.setRefresh(newDevice.getRefresh());
-			//device.setLogging(newDevice.getLogging());
-			//device.setValue(newDevice.getValue());
-			// TODO: all other values etc.
-			
-			refreshDevice(device);
-			
+			result = updateDevice(device);
 		} catch (NoConnectionException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 		} catch (CommunicationException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		

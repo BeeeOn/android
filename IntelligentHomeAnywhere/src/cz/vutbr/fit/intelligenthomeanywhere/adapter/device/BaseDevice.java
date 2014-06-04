@@ -126,19 +126,19 @@ public abstract class BaseDevice {
 	}
 	
 	/**
-	 * Get refresh time
-	 * @return refresh time
+	 * Get refresh time in secs
+	 * @return refresh time (secs)
 	 */
 	public int getRefresh() {
 		return mRefreshTime;
 	}
 		
 	/**
-	 * Setting refresh time
-	 * @param time
+	 * Setting refresh time in secs
+	 * @param secs
 	 */
-	public void setRefresh(int time) {
-		mRefreshTime = time;
+	public void setRefresh(int secs) {
+		mRefreshTime = secs;
 	}
 	
 	/**
@@ -315,6 +315,14 @@ public abstract class BaseDevice {
 		result += "Value: " + getStringValue() + "\n";
 		
 		return result;
+	}
+
+	public boolean needsUpdate() {
+		Time that = new Time();
+		that.setToNow();
+		that.set(that.toMillis(true) - getRefresh() * 1000); // x seconds interval between updates
+
+		return lastUpdate.before(that);
 	}
 
 }
