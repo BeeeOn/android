@@ -6,6 +6,7 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.FragmentTransaction;
@@ -50,10 +51,8 @@ import cz.vutbr.fit.intelligenthomeanywhere.listing.LocationListing;
 public class LocationScreenActivity extends SherlockFragmentActivity {
 
 	private Controller mController;
-	private List<LocationListing> locations;
-	private List<BaseDevice> sensors;
+	private List<LocationListing> mLocations;
 
-	private LocationScreenActivity mActivity;
 	private DrawerLayout mDrawerLayout;
     private ListView mDrawerList;
     private ActionBarDrawerToggle mDrawerToggle;
@@ -66,11 +65,7 @@ public class LocationScreenActivity extends SherlockFragmentActivity {
     
     private CharSequence mTitle;
 
-    
     private static final String TAG = "Location";
-    
-    //FIXME: do this better way
- 	public List<BaseDevice> mDevices;
     
 	
 	/**
@@ -81,9 +76,6 @@ public class LocationScreenActivity extends SherlockFragmentActivity {
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
 		setContentView(R.layout.activity_location_screen);
-
-		// Get Activity
-		mActivity = this;
 
 		// Get controller
 		mController = Controller.getInstance(this);
@@ -104,35 +96,17 @@ public class LocationScreenActivity extends SherlockFragmentActivity {
 	public void onResume() {
 		super.onResume();
 		
-		Thread thLoc = new Thread(new Runnable() {
-			@Override
-			public void run() {
-				locations = mController.getLocations();
-				Log.d("lokace",locations.toArray().toString());
-				
-				checkUninitializedDevices();
-				mActivity.runOnUiThread(new Runnable() {
-					@Override
-					public void run() {
-						
-						getLocations(locations);
-					}
-				});
-			}
-		});
-		thLoc.start();
+		DevicesTask task = new DevicesTask();
+	    task.execute();
 	}
 
 	public boolean getLocations(List<LocationListing> locs) {
 
 		Log.d(TAG, "ready to work with Locations");
-		String[] title;
-		String[] subtitle;
-		int[] icon;
 		mTitle = mDrawerTitle = "IHA";
-		title = new String[locs.size()];
-		subtitle = new String[locs.size()];
-		icon = new int[locs.size()];
+		String[] title = new String[locs.size()];
+		String[] subtitle = new String[locs.size()];
+		int[] icon = new int[locs.size()];
 		for (int i = 0; i < locs.size(); i++) {
 			title[i] = locs.get(i).getName();
 			subtitle[i] = locs.get(i).getName();
@@ -225,48 +199,21 @@ public class LocationScreenActivity extends SherlockFragmentActivity {
 	
 
 	// ListView click listener in the navigation drawer
-	private class DrawerItemClickListener implements
-			ListView.OnItemClickListener {
+	private class DrawerItemClickListener implements ListView.OnItemClickListener {
 		@Override
-		public void onItemClick(AdapterView<?> parent, View view, int position,
-				long id) {
-			selectItem(position);
+		public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+			// Get the title followed by the position
+			LocationListing selectedItem = mLocations.get(position);
+			String name = (selectedItem != null ? selectedItem.getName() : ""); 
+
+			ChangeLocationTask task = new ChangeLocationTask();
+		    task.execute(new String[] { name });
+			
+			mDrawerList.setItemChecked(position, true);
+			
+			// Close drawer
+			mDrawerLayout.closeDrawer(mDrawerList);
 		}
-	}
-
-	private void selectItem(int position) {
-
-		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-
-		final LocationListing selectedItem = this.locations.get(position);
-
-		setSupportProgressBarIndeterminateVisibility(true);
-		Thread thLoc = new Thread(new Runnable() {
-			@Override
-			public void run() {
-				sensors = mController.getDevicesByLocation(selectedItem
-						.getName());
-				Log.d("lokace", locations.toArray().toString());
-
-				mActivity.runOnUiThread(new Runnable() {
-					@Override
-					public void run() {
-
-						getSensors(sensors);
-					}
-				});
-
-			}
-		});
-		thLoc.start();
-
-		ft.commit();
-		mDrawerList.setItemChecked(position, true);
-
-		// Get the title followed by the position
-		setTitle(selectedItem.getName());
-		// Close drawer
-		mDrawerLayout.closeDrawer(mDrawerList);
 	}
 
 	@Override
@@ -343,42 +290,6 @@ public class LocationScreenActivity extends SherlockFragmentActivity {
 		return super.onOptionsItemSelected(item);
 	}
 
-	/**
-	 * Checks if there are any uninitialized devices and if so, shows dialog to
-	 * ask user for adding them.
-	 */
-	private void checkUninitializedDevices() {
-//		List<BaseDevice> devices = mController.getUninitializedDevices();
-		mActivity.mDevices = mController.getUninitializedDevices();
-		if (mActivity.mDevices.size() > 0) {
-			
-			mActivity.runOnUiThread(new Runnable() {
-				@Override
-				public void run() {
-					AlertDialog.Builder builder = new AlertDialog.Builder(mActivity);
-					
-					builder.setCancelable(false)
-						.setTitle(R.string.notification_title)
-						.setMessage(getResources().getQuantityString(R.plurals.notification_new_sensors, mActivity.mDevices.size(), mActivity.mDevices.size()))
-						.setNeutralButton(R.string.notification_ingore, null)
-						.setPositiveButton(R.string.notification_add, new DialogInterface.OnClickListener() {
-						
-							@Override
-							public void onClick(DialogInterface dialog, int which) {
-								// Open activity for adding new device
-								Intent intent = new Intent(LocationScreenActivity.this, AddSensorActivityDialog.class);
-								startActivity(intent);
-							}
-						});
-					
-					AlertDialog dialog = builder.create();
-					dialog.show();
-				}
-			});
-			
-		}
-	}
-
 	protected void renameLocation(final String location, final TextView view) {
 		AlertDialog.Builder builder = new AlertDialog.Builder(
 				LocationScreenActivity.this);
@@ -397,8 +308,7 @@ public class LocationScreenActivity extends SherlockFragmentActivity {
 						new DialogInterface.OnClickListener() {
 
 							@Override
-							public void onClick(DialogInterface dialog,
-									int which) {
+							public void onClick(DialogInterface dialog, int which) {
 								String newName = edit.getText().toString();
 
 								// TODO: show loading while saving new name to
@@ -479,4 +389,68 @@ public class LocationScreenActivity extends SherlockFragmentActivity {
 		return true;
 	}
 
+	/**
+	 * Loads locations, checks for uninitialized devices and eventually shows dialog for adding them
+	 */
+	private class DevicesTask extends AsyncTask<Void, Void, List<BaseDevice>> {
+    	@Override
+    	protected List<BaseDevice> doInBackground(Void... unused) {
+    		// Load locations
+    		mLocations = mController.getLocations();
+    		Log.d(TAG, String.format("Found %d locations", mLocations.size()));
+    		
+    		// Load uninitialized devices
+    		List<BaseDevice> devices = mController.getUninitializedDevices();
+			Log.d(TAG, String.format("Found %d uninitialized devices", devices.size()));
+
+			return devices;
+    	}
+
+    	@Override
+    	protected void onPostExecute(List<BaseDevice> uninitializedDevices) {
+    		// Redraw locations
+    		getLocations(mLocations);
+    		
+    		// Do something with uninitialized devices
+    		if (uninitializedDevices.size() == 0)
+    			return;
+				
+			AlertDialog.Builder builder = new AlertDialog.Builder(LocationScreenActivity.this);
+				
+			builder.setCancelable(false)
+				.setTitle(R.string.notification_title)
+				.setMessage(getResources().getQuantityString(R.plurals.notification_new_sensors, uninitializedDevices.size(), uninitializedDevices.size()))
+				.setNeutralButton(R.string.notification_ingore, null)
+				.setPositiveButton(R.string.notification_add, new DialogInterface.OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						// Open activity for adding new device
+						Intent intent = new Intent(LocationScreenActivity.this, AddSensorActivity.class);
+						startActivity(intent);
+					}
+				});
+			
+			AlertDialog dialog = builder.create();
+			dialog.show();
+    	}
+	}
+	
+	/**
+	 * Loads locations, checks for uninitialized devices and eventually shows dialog for adding them
+	 */
+	private class ChangeLocationTask extends AsyncTask<String, Void, List<BaseDevice>> {
+    	@Override
+    	protected List<BaseDevice> doInBackground(String... locations) {
+    		List<BaseDevice> devices = mController.getDevicesByLocation(locations[0]);
+    		Log.d(TAG, String.format("Found %d devices in location '%s'", devices.size(), locations[0]));
+    		
+			return devices;
+    	}
+
+    	@Override
+    	protected void onPostExecute(List<BaseDevice> devices) {
+    		getSensors(devices);
+    	}
+	}
+	
 }
