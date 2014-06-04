@@ -3,6 +3,8 @@ package cz.vutbr.fit.intelligenthomeanywhere.activity;
 import java.util.List;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -28,12 +30,22 @@ public class AddSensorActivity extends Activity {
 	
 	private BaseDevice mNewDevice;
 	
+	private ProgressDialog mProgress;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_add_sensor);
 		
 		mController = Controller.getInstance(this);
+		
+		// Prepare progress dialog
+		mProgress = new ProgressDialog(this);
+		mProgress.setMessage("Saving data...");
+		mProgress.setCancelable(false);
+		mProgress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+		
+		// TODO: sent as parameter if we want first uninitialized device or some device with particular id
 	
 		List<BaseDevice> devices = mController.getUninitializedDevices();
 		if (devices.size() > 0) {
@@ -90,12 +102,11 @@ public class AddSensorActivity extends Activity {
 					mNewDevice.setInitialized(true);
 					mNewDevice.setName(name.getText().toString());
 					mNewDevice.setLocation(new Location(locationName, locationName, 0)); // TODO: set location icon
-					// TODO: show loading while saving device
-					mController.saveDevice(mNewDevice);
 					
-					Toast.makeText(getApplicationContext(), getString(R.string.toast_new_sensor_added), Toast.LENGTH_LONG).show();
-					mController.reloadAdapters();
-					AddSensorActivity.this.finish();
+					mProgress.show();
+					
+					SaveDeviceTask task = new SaveDeviceTask();
+				    task.execute(new BaseDevice[] { mNewDevice });
 				}
 			}
 		});
@@ -107,5 +118,22 @@ public class AddSensorActivity extends Activity {
 //		getMenuInflater().inflate(R.menu.add_sensor, menu);
 //		return true;
 //	}
+	
+	private class SaveDeviceTask extends AsyncTask<BaseDevice, Void, BaseDevice> {
+    	@Override
+    	protected BaseDevice doInBackground(BaseDevice... devices) {
+    		BaseDevice device = devices[0]; // expect only one device at a time is sent there
+    		mController.saveDevice(device);
+    		mController.reloadAdapters();
+    		return device;
+    	}
+
+    	@Override
+    	protected void onPostExecute(BaseDevice device) {
+    		Toast.makeText(getApplicationContext(), getString(R.string.toast_new_sensor_added), Toast.LENGTH_LONG).show();    		
+    		mProgress.cancel();
+    		AddSensorActivity.this.finish();			
+    	}
+	}
 
 }
