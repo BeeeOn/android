@@ -53,7 +53,6 @@ public class LocationScreenActivity extends SherlockFragmentActivity {
 
 	private Controller mController;
 	private List<LocationListing> mLocations;
-	private List<BaseDevice> mSensors;
 
 	private DrawerLayout mDrawerLayout;
     private ListView mDrawerList;
@@ -189,7 +188,7 @@ public class LocationScreenActivity extends SherlockFragmentActivity {
 		return true;
 	}
 
-	public boolean getSensors(List<BaseDevice> sensors) {
+	public boolean getSensors(final List<BaseDevice> sensors) {
 
 		String[] title;
 		String[] value;
@@ -210,7 +209,27 @@ public class LocationScreenActivity extends SherlockFragmentActivity {
 		this.mSensorList.setAdapter(mSensorAdapter);
 
 		// Capture listview menu item click
-		mSensorList.setOnItemClickListener(new SensorItemClickListener());
+		mSensorList.setOnItemClickListener(new ListView.OnItemClickListener() {
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view, int position,	long id) {
+				FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+				
+				final BaseDevice selectedItem = sensors.get(position);
+				
+				setSupportProgressBarIndeterminateVisibility(true);
+				
+				Bundle bundle = new Bundle();
+		        String myMessage = selectedItem.getId();
+		        bundle.putString("sensorID", myMessage );
+		        SensorDetailFragment fragment = new SensorDetailFragment();
+		        fragment.setArguments(bundle);
+				
+				ft.replace(R.id.content_frame, fragment);
+				ft.addToBackStack(null);
+				ft.commit();
+			}
+		});
+
 		this.setSupportProgressBarIndeterminateVisibility(false);
 		return true;
 	}
@@ -233,36 +252,6 @@ public class LocationScreenActivity extends SherlockFragmentActivity {
 			mDrawerLayout.closeDrawer(mDrawerList);
 		}
 	}
-	
-	// ListView click listener in the navigation drawer
-	private class SensorItemClickListener implements ListView.OnItemClickListener {
-		@Override
-		public void onItemClick(AdapterView<?> parent, View view, int position,	long id) {
-			selectSensorItem(position);
-		}
-
-			
-	}
-	
-	private void selectSensorItem(int position) {
-		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-		
-		final BaseDevice selectedItem = this.mSensors.get(position);
-		
-		setSupportProgressBarIndeterminateVisibility(true);
-		
-		Bundle bundle = new Bundle();
-        String myMessage = selectedItem.getId();
-        bundle.putString("sensorID", myMessage );
-        SensorDetailFragment fragment = new SensorDetailFragment();
-        fragment.setArguments(bundle);
-		
-		ft.replace(R.id.content_frame, fragment);
-		ft.addToBackStack(null);
-		ft.commit();
-		
-	}
-
 
 	@Override
 	protected void onPostCreate(Bundle savedInstanceState) {
