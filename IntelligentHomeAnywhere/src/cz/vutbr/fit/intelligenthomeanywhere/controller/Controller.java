@@ -166,7 +166,7 @@ public final class Controller {
 		
 		Time that = new Time();
 		that.setToNow();
-		that.set(that.toMillis(true) - 10000); // 10 seconds interval between updates
+		that.set(that.toMillis(true) - 30000); // 30 seconds interval between updates
 		
 		// Update only when needed
 		if (!forceUpdate && !adapter.lastUpdate.before(that))
