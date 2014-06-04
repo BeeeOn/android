@@ -1,10 +1,10 @@
 package cz.vutbr.fit.intelligenthomeanywhere;
 
-import cz.vutbr.fit.intelligenthomeanywhere.activity.GraphOfSensors;
-import cz.vutbr.fit.intelligenthomeanywhere.activity.ListOfSensors;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import cz.vutbr.fit.intelligenthomeanywhere.activity.GraphOfSensors;
+import cz.vutbr.fit.intelligenthomeanywhere.activity.ListOfSensors;
 
 public class ViewPagerAdapter extends FragmentPagerAdapter {
 

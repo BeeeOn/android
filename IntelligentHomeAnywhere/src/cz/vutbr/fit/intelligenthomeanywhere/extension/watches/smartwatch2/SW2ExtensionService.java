@@ -39,7 +39,7 @@ import com.sonyericsson.extras.liveware.extension.util.control.ControlExtension;
 import com.sonyericsson.extras.liveware.extension.util.registration.DeviceInfoHelper;
 import com.sonyericsson.extras.liveware.extension.util.registration.RegistrationInformation;
 
-import cz.vutbr.fit.intelligenthomeanywhere.extension.watches.smartwatch2.controls.*;
+import cz.vutbr.fit.intelligenthomeanywhere.extension.watches.smartwatch2.controls.ControlManagerSmartWatch2;
 /**
  * Extension Service handles registration and keeps track of all
  * controls on all accessories.

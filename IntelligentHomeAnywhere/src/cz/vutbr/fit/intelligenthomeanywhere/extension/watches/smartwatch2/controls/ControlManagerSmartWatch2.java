@@ -32,6 +32,11 @@ Copyright (c) 2011-2013, Sony Mobile Communications AB
 
 package cz.vutbr.fit.intelligenthomeanywhere.extension.watches.smartwatch2.controls;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+import java.util.List;
+import java.util.Stack;
+
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -50,11 +55,6 @@ import cz.vutbr.fit.intelligenthomeanywhere.adapter.Adapter;
 import cz.vutbr.fit.intelligenthomeanywhere.adapter.device.BaseDevice;
 import cz.vutbr.fit.intelligenthomeanywhere.controller.Controller;
 import cz.vutbr.fit.intelligenthomeanywhere.extension.watches.smartwatch2.SW2ExtensionService;
-
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
-import java.util.List;
-import java.util.Stack;
 
 
 /**

@@ -6,7 +6,6 @@ package cz.vutbr.fit.intelligenthomeanywhere.thread;
 import android.app.Activity;
 import android.content.Intent;
 import android.util.Log;
-import cz.vutbr.fit.intelligenthomeanywhere.activity.AddSensorActivity;
 import cz.vutbr.fit.intelligenthomeanywhere.activity.LocationScreenActivity;
 import cz.vutbr.fit.intelligenthomeanywhere.controller.Controller;
 

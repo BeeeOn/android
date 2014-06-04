@@ -35,13 +35,10 @@ package cz.vutbr.fit.intelligenthomeanywhere.extension.watches.smartwatch2.contr
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 
 import com.sonyericsson.extras.liveware.aef.control.Control;
-import com.sonyericsson.extras.liveware.extension.util.control.ControlListItem;
 
 import cz.vutbr.fit.intelligenthomeanywhere.R;
-import cz.vutbr.fit.intelligenthomeanywhere.extension.watches.smartwatch2.SW2ExtensionService;
 
 /**
  * GalleryTestControl displays a swipeable gallery, based on a string array.

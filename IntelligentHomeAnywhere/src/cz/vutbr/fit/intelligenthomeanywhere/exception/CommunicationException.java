@@ -12,6 +12,11 @@ public class CommunicationException extends Exception {
 	/**
 	 * 
 	 */
+	private static final long serialVersionUID = 1L;
+
+	/**
+	 * 
+	 */
 	public CommunicationException() {
 		// TODO Auto-generated constructor stub
 	}

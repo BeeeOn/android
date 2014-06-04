@@ -2,7 +2,6 @@ package cz.vutbr.fit.intelligenthomeanywhere.activity;
 
 import android.accounts.Account;
 import android.accounts.AccountManager;
-import android.accounts.NetworkErrorException;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -10,7 +9,6 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.ImageButton;
 import android.widget.Toast;
@@ -20,8 +18,6 @@ import com.google.android.gms.common.AccountPicker;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 
-import cz.vutbr.fit.intelligenthomeanywhere.Constants;
-import cz.vutbr.fit.intelligenthomeanywhere.DemoData;
 import cz.vutbr.fit.intelligenthomeanywhere.R;
 import cz.vutbr.fit.intelligenthomeanywhere.controller.Controller;
 import cz.vutbr.fit.intelligenthomeanywhere.exception.CommunicationException;
@@ -86,7 +82,7 @@ public class LoginActivity extends Activity {
 			// Automatic login with last used e-mail
 			Log.d(TAG, String.format("Automatic login with last used e-mail (%s)...", lastEmail));
 			
-			mController.setDemoMode(LoginActivity.this, false);
+			Controller.setDemoMode(LoginActivity.this, false);
 			mProgress.show();
 			doGoogleLogin(lastEmail);
 		}
@@ -95,7 +91,7 @@ public class LoginActivity extends Activity {
 		((CheckBox)findViewById(R.id.login_btn_demo)).setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				mController.setDemoMode(LoginActivity.this, true);
+				Controller.setDemoMode(LoginActivity.this, true);
 
 				Intent intent = new Intent(LoginActivity.this, LocationScreenActivity.class);
 	    		startActivity(intent);
@@ -111,7 +107,7 @@ public class LoginActivity extends Activity {
 		btnGoogle.setOnClickListener(new OnClickListener(){
 			@Override
 			public void onClick(View v) {
-				mController.setDemoMode(LoginActivity.this, false);
+				Controller.setDemoMode(LoginActivity.this, false);
 				mProgress.show();
 				getGoogleAccessFromServer(v);
 			}

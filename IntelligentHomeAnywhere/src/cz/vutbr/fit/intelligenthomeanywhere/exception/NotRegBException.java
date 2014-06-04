@@ -12,6 +12,11 @@ public class NotRegBException extends CommunicationException {
 	/**
 	 * 
 	 */
+	private static final long serialVersionUID = 1L;
+
+	/**
+	 * 
+	 */
 	public NotRegBException() {
 		// TODO Auto-generated constructor stub
 	}

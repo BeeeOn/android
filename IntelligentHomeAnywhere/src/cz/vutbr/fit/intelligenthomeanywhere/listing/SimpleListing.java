@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Map;
 
 import android.util.Log;
-
 import cz.vutbr.fit.intelligenthomeanywhere.adapter.device.BaseDevice;
 
 public class SimpleListing {

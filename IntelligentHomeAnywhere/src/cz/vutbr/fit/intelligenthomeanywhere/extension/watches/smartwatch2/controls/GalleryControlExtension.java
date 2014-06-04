@@ -33,7 +33,6 @@ Copyright (c) 2011-2013, Sony Mobile Communications AB
 package cz.vutbr.fit.intelligenthomeanywhere.extension.watches.smartwatch2.controls;
 
 import java.text.DateFormat;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -42,22 +41,16 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.format.Time;
 import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
 
 import com.sonyericsson.extras.liveware.aef.control.Control;
 import com.sonyericsson.extras.liveware.extension.util.ExtensionUtils;
 import com.sonyericsson.extras.liveware.extension.util.control.ControlListItem;
-import com.sonyericsson.extras.liveware.extension.util.control.ControlObjectClickEvent;
-import com.sonyericsson.extras.liveware.extension.util.control.ControlView;
 import com.sonyericsson.extras.liveware.extension.util.control.ControlViewGroup;
-import com.sonyericsson.extras.liveware.extension.util.control.ControlView.OnClickListener;
 
 import cz.vutbr.fit.intelligenthomeanywhere.R;
 import cz.vutbr.fit.intelligenthomeanywhere.adapter.Adapter;
 import cz.vutbr.fit.intelligenthomeanywhere.adapter.device.BaseDevice;
 import cz.vutbr.fit.intelligenthomeanywhere.extension.watches.smartwatch2.SW2ExtensionService;
-import cz.vutbr.fit.intelligenthomeanywhere.network.ActualUser;
 
 /**
  * GalleryControl displays a swipeable gallery.
