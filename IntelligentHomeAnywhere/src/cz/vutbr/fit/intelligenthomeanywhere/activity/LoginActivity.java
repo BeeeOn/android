@@ -70,7 +70,6 @@ public class LoginActivity extends Activity {
 				mController.setDemoMode(LoginActivity.this, true);
 
 				Intent intent = new Intent(LoginActivity.this, LocationScreenActivity.class);
-				intent.putExtra(Constants.LOGIN, Constants.LOGIN_DEMO);
 	    		startActivity(intent);
 		    	LoginActivity.this.finish();
 			}
@@ -166,7 +165,6 @@ public class LoginActivity extends Activity {
 								Log.d(TAG, "Login: true");
 								mProgress.dismiss();
 								Intent intent = new Intent(mActivity, LocationScreenActivity.class);
-//								intent.putExtra(Constants.LOGIN, Constants.LOGIN_DEMO);
 								//intent.putExtra(name, value);
 								//intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 					            //intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
@@ -305,7 +303,6 @@ public class LoginActivity extends Activity {
 					Log.d(TAG, "Login: true");
 					mProgress.dismiss();
 					Intent intent = new Intent(mActivity, LocationScreenActivity.class);
-					intent.putExtra(Constants.LOGIN, Constants.LOGIN_DEMO);
 					//intent.putExtra(name, value);
 					//intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 		            //intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);

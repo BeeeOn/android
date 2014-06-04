@@ -43,26 +43,6 @@ public final class Constants {
 	public static final String ADAPTER_VERSION = "ADAPTER_VERSION";
 	
 	/**
-	 * Footing for initial screen
-	 */
-	public static final String SPLASH = "SPLASH";
-	
-	/**
-	 * Footing for pass from some activities to LocationScreenActivity
-	 */
-	public static final String LOGIN = "LOGIN";
-	
-	/**
-	 * Footing for pass from SplashActivity to LocationScreenActivity
-	 */
-	public static final String LOGIN_DEMO = "LOGIN_DEMO";
-	
-	/**
-	 * Footing for pass from LoginActivity to LocationScreenActivity
-	 */
-	public static final String LOGIN_COMM = "LOGIN_COMM";
-	
-	/**
 	 * Filename of file with prepared household sensors
 	 */
 	public static final String DEMO_FILENAME = "komunikace.xml";
