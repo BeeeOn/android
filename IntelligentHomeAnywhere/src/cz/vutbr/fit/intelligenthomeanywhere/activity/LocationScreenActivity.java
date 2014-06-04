@@ -78,7 +78,7 @@ public class LocationScreenActivity extends SherlockFragmentActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
-		setContentView(R.layout.activity_locaction_screen);
+		setContentView(R.layout.activity_location_screen);
 
 		// Get Activity
 		mActivity = this;
@@ -137,10 +137,10 @@ public class LocationScreenActivity extends SherlockFragmentActivity {
 			icon[i] = locs.get(i).getIconResource();
 		}
 
-		// Locate DrawerLayout in activity_locaction_screen.xml
+		// Locate DrawerLayout in activity_location_screen.xml
 		mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
 
-		// Locate ListView in activity_locaction_screen.xml
+		// Locate ListView in activity_location_screen.xml
 		mDrawerList = (ListView) findViewById(R.id.listview_drawer);
 
 		// Set a custom shadow that overlays the main content when the drawer
@@ -290,36 +290,51 @@ public class LocationScreenActivity extends SherlockFragmentActivity {
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		MenuInflater inflater = getSupportMenuInflater();
-		inflater.inflate(R.menu.locaction_screen, menu);
+		inflater.inflate(R.menu.location_screen, menu);
 		return true;
 	}
 	
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 
-		if (item.getItemId() == android.R.id.home) {
-
+		switch (item.getItemId()) {
+		case android.R.id.home:
 			if (mDrawerLayout.isDrawerOpen(mDrawerList)) {
 				mDrawerLayout.closeDrawer(mDrawerList);
 			} else {
 				mDrawerLayout.openDrawer(mDrawerList);
 			}
-		} else if (item.getItemId() == R.id.action_addadapter) {
+			break;
+		case R.id.action_addadapter:
+		{
 			Toast.makeText(this, "go to old", Toast.LENGTH_LONG).show();
 
-			Intent intent = new Intent(LocationScreenActivity.this,
-					AddAdapterActivity.class);
+			Intent intent = new Intent(LocationScreenActivity.this, AddAdapterActivity.class);
 			startActivity(intent);
-		} else if (item.getItemId() == R.id.action_addsenzor) {
+			break;
+		}
+		case R.id.action_addsenzor:
+		{
 			Toast.makeText(this, "go to old", Toast.LENGTH_LONG).show();
 
-			Intent intent = new Intent(LocationScreenActivity.this,
-					AddSensorActivity.class);
+			Intent intent = new Intent(LocationScreenActivity.this, AddSensorActivity.class);
 			startActivity(intent);
-		} else if (item.getItemId() == R.id.action_settings) {
-			Intent intent = new Intent(LocationScreenActivity.this,
-					SW2PreferenceActivity.class);
+			break;
+		}
+		case R.id.action_settings:
+		{
+			Intent intent = new Intent(LocationScreenActivity.this, SW2PreferenceActivity.class);
 			startActivity(intent);
+			break;
+		}
+		case R.id.action_logout:
+		{	
+			mController.logout();
+			Intent intent = new Intent(LocationScreenActivity.this, LoginActivity.class);
+			startActivity(intent);
+			this.finish();
+			break;
+		}
 		}
 
 		return super.onOptionsItemSelected(item);

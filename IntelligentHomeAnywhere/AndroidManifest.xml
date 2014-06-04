@@ -40,7 +40,7 @@
         </activity>
         <activity
             android:name="cz.vutbr.fit.intelligenthomeanywhere.activity.LocationScreenActivity"
-            android:label="@string/title_activity_locaction_screen"  >
+            android:label="@string/title_activity_location_screen"  >
         </activity>
         <activity
             android:name="cz.vutbr.fit.intelligenthomeanywhere.activity.DataOfLocationScreenActivity"
