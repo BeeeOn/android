@@ -39,6 +39,7 @@ public class AdapterRegisterThread implements Runnable{
 		}
 		
 		if(!ctrl.isLoggedIn()){
+			LocationScreenActivity.healActivity();
 			Intent intent = new Intent(mActivity, LocationScreenActivity.class);
 			mActivity.startActivity(intent);
 		}

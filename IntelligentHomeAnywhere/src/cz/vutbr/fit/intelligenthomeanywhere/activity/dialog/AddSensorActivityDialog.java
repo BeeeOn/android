@@ -16,6 +16,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 import cz.vutbr.fit.intelligenthomeanywhere.R;
+import cz.vutbr.fit.intelligenthomeanywhere.activity.LocationScreenActivity;
 import cz.vutbr.fit.intelligenthomeanywhere.adapter.device.BaseDevice;
 import cz.vutbr.fit.intelligenthomeanywhere.controller.Controller;
 import cz.vutbr.fit.intelligenthomeanywhere.listing.Location;
@@ -113,6 +114,12 @@ public class AddSensorActivityDialog extends Activity {
 		});
 	}
 	
+	@Override
+	public void onBackPressed(){
+		LocationScreenActivity.healActivity();
+		this.finish();
+	}
+	
 	private class SaveDeviceTask extends AsyncTask<BaseDevice, Void, BaseDevice> {
     	@Override
     	protected BaseDevice doInBackground(BaseDevice... devices) {
@@ -126,7 +133,9 @@ public class AddSensorActivityDialog extends Activity {
     	protected void onPostExecute(BaseDevice device) {
     		Toast.makeText(getApplicationContext(), getString(R.string.toast_new_sensor_added), Toast.LENGTH_LONG).show();    		
     		mProgress.cancel();
-    		AddSensorActivityDialog.this.finish();			
+    		AddSensorActivityDialog.this.finish();
+    		
+    		LocationScreenActivity.healActivity();
     	}
 	}
 }

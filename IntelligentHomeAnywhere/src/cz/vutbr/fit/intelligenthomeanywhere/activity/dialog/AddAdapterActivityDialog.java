@@ -14,6 +14,7 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import cz.vutbr.fit.intelligenthomeanywhere.R;
 import cz.vutbr.fit.intelligenthomeanywhere.activity.AddAdapterActivity;
+import cz.vutbr.fit.intelligenthomeanywhere.activity.LocationScreenActivity;
 import cz.vutbr.fit.intelligenthomeanywhere.thread.AdapterRegisterThread;
 
 public class AddAdapterActivityDialog extends Activity {
@@ -66,6 +67,12 @@ public class AddAdapterActivityDialog extends Activity {
 	}
 	
 	@Override
+	public void onBackPressed(){
+		LocationScreenActivity.healActivity();
+		this.finish();
+	}
+	
+	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {           
 	    super.onActivityResult(requestCode, resultCode, data);
 	    if (requestCode == 0) {
@@ -76,6 +83,7 @@ public class AddAdapterActivityDialog extends Activity {
 	            new Thread(new AdapterRegisterThread(contents, mActivity)).start();
 	        }
 	        if(resultCode == RESULT_CANCELED){
+	        	LocationScreenActivity.healActivity();
 	        	//TODO: handle cancel ?
 	        }
 	        this.finish();

@@ -5,6 +5,7 @@ import java.util.List;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -67,7 +68,9 @@ public class LocationScreenActivity extends SherlockFragmentActivity {
 
     private static final String TAG = "Location";
     
-	
+    private static boolean inBackground = false;
+    private static final String BKG = "activityinbackground";
+    
 	/**
 	 * Call XML parser to file on SDcard
 	 */
@@ -91,14 +94,29 @@ public class LocationScreenActivity extends SherlockFragmentActivity {
 		 * if(locations.size() == 1){ Button onlyOne =
 		 * (Button)findViewById(--ID); onlyOne.performClick(); }
 		 */
+		
+		if(savedInstanceState != null)
+			inBackground = savedInstanceState.getBoolean(BKG);
 	}
 
 	public void onResume() {
 		super.onResume();
 		
-		DevicesTask task = new DevicesTask();
-	    task.execute();
+		if(!inBackground){
+			DevicesTask task = new DevicesTask();
+		    task.execute();
+		}
 	}
+	
+	@Override
+	public void onSaveInstanceState(Bundle savedInstaceState){
+		savedInstaceState.putBoolean(BKG, inBackground);
+		super.onSaveInstanceState(savedInstaceState);
+	}
+	
+    public static void healActivity(){
+    	inBackground = false;
+    }
 
 	public boolean getLocations(List<LocationListing> locs) {
 
@@ -196,7 +214,6 @@ public class LocationScreenActivity extends SherlockFragmentActivity {
 		return true;
 	}
 
-	
 
 	// ListView click listener in the navigation drawer
 	private class DrawerItemClickListener implements ListView.OnItemClickListener {
@@ -259,6 +276,7 @@ public class LocationScreenActivity extends SherlockFragmentActivity {
 //			Toast.makeText(this, "go to old", Toast.LENGTH_LONG).show();
 
 //			Intent intent = new Intent(LocationScreenActivity.this, AddAdapterActivity.class);
+			inBackground = true;
 			Intent intent = new Intent(LocationScreenActivity.this, AddAdapterActivityDialog.class);
 			startActivity(intent);
 			break;
@@ -267,8 +285,10 @@ public class LocationScreenActivity extends SherlockFragmentActivity {
 		{
 //			Toast.makeText(this, "go to old", Toast.LENGTH_LONG).show();
 
+			inBackground = true;
 			Intent intent = new Intent(LocationScreenActivity.this, AddSensorActivityDialog.class);
 			startActivity(intent);
+			
 			break;
 		}
 		case R.id.action_settings:
@@ -425,7 +445,8 @@ public class LocationScreenActivity extends SherlockFragmentActivity {
 					@Override
 					public void onClick(DialogInterface dialog, int which) {
 						// Open activity for adding new device
-						Intent intent = new Intent(LocationScreenActivity.this, AddSensorActivity.class);
+						inBackground = true;
+						Intent intent = new Intent(LocationScreenActivity.this, AddSensorActivityDialog.class);
 						startActivity(intent);
 					}
 				});
