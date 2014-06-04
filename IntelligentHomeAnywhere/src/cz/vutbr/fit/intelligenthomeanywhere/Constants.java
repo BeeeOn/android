@@ -121,6 +121,11 @@ public final class Constants {
 	public static final String WIDGET_PREF_INITIALIZED = "initialized";
 	public static final String WIDGET_PREF_DEVICE = "device";
 	
+	/**
+	 * Persistence's shared preferences
+	 */
+	public static final String PERSISTENCE_PREF_FILENAME = "persistence";
+	public static final String PERSISTENCE_PREF_LAST_USER = "last_user";
 	
 	/**
 	 * Sony Smartwatch2 preference activity

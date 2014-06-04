@@ -3,6 +3,9 @@ package cz.vutbr.fit.intelligenthomeanywhere.persistence;
 import java.util.ArrayList;
 
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
+import cz.vutbr.fit.intelligenthomeanywhere.Constants;
 import cz.vutbr.fit.intelligenthomeanywhere.User;
 import cz.vutbr.fit.intelligenthomeanywhere.adapter.Adapter;
 import cz.vutbr.fit.intelligenthomeanywhere.adapter.device.BaseDevice;
@@ -26,12 +29,23 @@ public class Persistence {
 		mContext = context;
 	}
 	
-	public void saveLastUser(User user) {
-		//throw new NotImplementedException();
+	public SharedPreferences getSettings() {
+		return mContext.getSharedPreferences(Constants.PERSISTENCE_PREF_FILENAME, 0);
 	}
 	
-	public User loadLastUser() {
-		throw new NotImplementedException();
+	public void saveLastEmail(String email) {
+		Editor settings = getSettings().edit();
+		
+		if (email == null)
+			settings.remove(Constants.PERSISTENCE_PREF_LAST_USER);
+		else
+			settings.putString(Constants.PERSISTENCE_PREF_LAST_USER, email);
+		
+		settings.commit();
+	}
+	
+	public String loadLastEmail() {
+		return getSettings().getString(Constants.PERSISTENCE_PREF_LAST_USER, "");
 	}
 
 

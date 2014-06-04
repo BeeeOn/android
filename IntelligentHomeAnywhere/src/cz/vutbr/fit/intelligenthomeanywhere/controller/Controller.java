@@ -103,22 +103,8 @@ public final class Controller {
 	
 	/** Communication methods ***********************************************/
 	
-	/**
-	 * Login last logged in user (authenticate on server).
-	 * 
-	 * @return true on success, false if there is no last user or otherwise 
-	 * @throws NoConnectionException 
-	 * @throws NotRegBException 
-	 * @throws NotRegAException 
-	 * @throws CommunicationException 
-	 */
-	public boolean login() throws NotRegAException, NotRegBException, NoConnectionException, CommunicationException {
-		User lastUser = mPersistence.loadLastUser();
-		
-		if (lastUser != null)
-			return login(lastUser.getEmail());
-		
-		return false; // TODO: throw proper exception
+	public String getLastEmail() {
+		return mPersistence.loadLastEmail();
 	}
 
 	/**
@@ -141,7 +127,7 @@ public final class Controller {
 		// TODO: catch and throw proper exception
 		mHousehold.user = mNetwork.signIn(email);
 		if (mHousehold.user != null) {
-			mPersistence.saveLastUser(mHousehold.user);
+			mPersistence.saveLastEmail(mHousehold.user.getEmail());
 			return true;
 		}
 		
@@ -156,7 +142,7 @@ public final class Controller {
 	public boolean logout() {
 		// TODO: also destroy session
 		mHousehold.user = null;
-		mPersistence.saveLastUser(null);
+		mPersistence.saveLastEmail(null);
 		
 		return true;
 	}
