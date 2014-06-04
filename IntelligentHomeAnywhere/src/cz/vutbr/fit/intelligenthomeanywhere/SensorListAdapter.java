@@ -14,14 +14,16 @@ public class SensorListAdapter extends BaseAdapter {
     Context context;
     String[] mTitle;
     String[] mValue;
+    String[] mUnit;
     int[] mIcon;
     LayoutInflater inflater;
  
-    public SensorListAdapter(Context context, String[] title, String[] value,  int[] icon) {
+    public SensorListAdapter(Context context, String[] title, String[] value,String[] unit , int[] icon) {
         this.context = context;
         this.mTitle = title;
         this.mValue = value;
         this.mIcon = icon;
+        this.mUnit = unit;
     }
 
 	@Override
@@ -44,6 +46,7 @@ public class SensorListAdapter extends BaseAdapter {
 		// Declare Variables
         TextView txtTitle;
         TextView txtValue;
+        TextView txtUnit;
         ImageView imgIcon;
  
         inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -52,6 +55,7 @@ public class SensorListAdapter extends BaseAdapter {
         // Locate the TextViews in drawer_list_item.xml
         txtTitle = (TextView) itemView.findViewById(R.id.titleofsensor);
         txtValue = (TextView) itemView.findViewById(R.id.valueofsensor);
+        txtUnit = (TextView) itemView.findViewById(R.id.unitofsensor);
  
         // Locate the ImageView in drawer_list_item.xml
         imgIcon = (ImageView) itemView.findViewById(R.id.iconofsensor);
@@ -59,6 +63,7 @@ public class SensorListAdapter extends BaseAdapter {
         // Set the results into TextViews
         txtTitle.setText(mTitle[position]);
         txtValue.setText(mValue[position]);
+        txtUnit.setText(mUnit[position]);
  
         // Set the results into ImageView
         imgIcon.setImageResource(mIcon[position]);

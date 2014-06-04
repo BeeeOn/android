@@ -16,30 +16,57 @@
         android:layout_gravity="center_vertical"
         android:adjustViewBounds="true" />
  
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="fill_parent"
         android:layout_height="56dp"
-        android:orientation="vertical" >
- 
-        <TextView
-            android:id="@+id/titleofsensor"
-            style="?attr/spinnerDropDownItemStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="20sp"
-            android:layout_marginTop="20dp"
-            android:layout_gravity="left|center_vertical"
-            android:textColor="@color/log_blue2"
-            />
- 
-        <TextView
-            android:id="@+id/valueofsensor"
-            style="?attr/spinnerDropDownItemStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-			android:layout_marginRight="12dp"
-			android:layout_marginTop="-20dp"
-            android:textColor="@color/log_blue2"
-            android:layout_gravity="right"  />      
-    </LinearLayout>
+        android:orientation="horizontal" >
+
+       	<TextView
+       	    android:id="@+id/valueofsensor"
+       	    style="?attr/spinnerDropDownItemStyle"
+       	    android:layout_width="wrap_content"
+       	    android:layout_height="wrap_content"
+       	    android:layout_alignParentBottom="true"
+       	    android:layout_toLeftOf="@+id/unitofsensor"
+       	    android:text="200"
+       	    android:textColor="@color/log_blue2"
+       	    android:textSize="30dp"
+       	    android:textStyle="bold" />
+
+       	<TextView
+       	    android:id="@+id/unitofsensor"
+       	    style="?attr/spinnerDropDownItemStyle"
+       	    android:layout_width="wrap_content"
+       	    android:layout_height="wrap_content"
+       	    android:layout_alignBaseline="@+id/valueofsensor"
+       	    android:layout_alignBottom="@+id/valueofsensor"
+       	    android:layout_alignParentRight="true"
+       	    android:layout_marginRight="20dp"
+       	    android:text="BAR"
+       	    android:textColor="@color/log_blue2"
+       	    android:textSize="18dp" />
+
+       	<TextView
+       	    android:id="@+id/timeofsensor"
+       	    android:layout_width="wrap_content"
+       	    android:layout_height="wrap_content"
+       	    android:layout_alignParentBottom="true"
+       	    android:text="Last sync: 1.1.1970 00:00"
+       	    android:textColor="@color/darkgray"
+       	    android:textSize="10dp" />
+
+       	<TextView
+       	    android:id="@+id/titleofsensor"
+       	    style="?attr/spinnerDropDownItemStyle"
+       	    android:layout_width="wrap_content"
+       	    android:layout_height="wrap_content"
+       	    android:layout_alignParentLeft="true"
+       	    android:layout_alignParentTop="true"
+       	    android:layout_marginTop="5dp"
+       	    android:text="name"
+       	    android:textColor="@color/log_blue2"
+       	    android:textSize="25dp"
+       	    android:textStyle="bold" />
+  
+    </RelativeLayout>
  </LinearLayout>

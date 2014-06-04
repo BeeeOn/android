@@ -192,19 +192,22 @@ public class LocationScreenActivity extends SherlockFragmentActivity {
 
 		String[] title;
 		String[] value;
+		String[] unit;
 		int[] icon;
 		mTitle = mDrawerTitle = "IHA";
 		title = new String[sensors.size()];
 		value = new String[sensors.size()];
+		unit = new String[sensors.size()];
 		icon = new int[sensors.size()];
 		for (int i = 0; i < sensors.size(); i++) {
 			title[i] = sensors.get(i).getName();
 			value[i] = sensors.get(i).getStringValue();
+			unit[i] = sensors.get(i).getStringUnit(this);
 			icon[i] = sensors.get(i).getTypeIconResource();
 		}
 
 		this.mSensorAdapter = new SensorListAdapter(
-				LocationScreenActivity.this, title, value, icon);
+				LocationScreenActivity.this, title, value,unit, icon);
 		this.mSensorList = (ListView) findViewById(R.id.listviewofsensors);
 		this.mSensorList.setAdapter(mSensorAdapter);
 
@@ -247,7 +250,7 @@ public class LocationScreenActivity extends SherlockFragmentActivity {
 		    task.execute(new String[] { name });
 			
 			mDrawerList.setItemChecked(position, true);
-			
+			getSupportActionBar().setTitle(name);
 			// Close drawer
 			mDrawerLayout.closeDrawer(mDrawerList);
 		}

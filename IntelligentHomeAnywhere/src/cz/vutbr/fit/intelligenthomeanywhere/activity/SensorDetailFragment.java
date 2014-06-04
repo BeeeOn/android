@@ -2,12 +2,14 @@ package cz.vutbr.fit.intelligenthomeanywhere.activity;
 
 import java.util.List;
 
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -27,24 +29,71 @@ import cz.vutbr.fit.intelligenthomeanywhere.view.NumberPicker;
 import cz.vutbr.fit.intelligenthomeanywhere.view.NumberPicker.OnChangedListener;
 
 public class SensorDetailFragment extends SherlockFragment {
-	
-	private BaseDevice mDevice;
+
+	private Controller mController;
 	private static final String TAG = "SensorDetail";
 
 
 	@Override
 	 public View onCreateView(LayoutInflater inflater, ViewGroup container,	 Bundle savedInstanceState)
 	 {
+		// Get controller
+		mController = Controller.getInstance(getActivity());
 		
 		Bundle bundle = this.getArguments();
         String sensorID = bundle.getString("sensorID");
-        mDevice = Controller.getInstance(getActivity()).getDevice(sensorID);
-        Log.d(TAG, "ID:" + mDevice.getId() + " Name:" + mDevice.getName());
+        
+        GetDeviceTask task = new GetDeviceTask();
+	    task.execute(new String[] { sensorID });
         
 		View view = inflater.inflate(R.layout.activity_sensor_detail_screen, container, false);
 		return view;
 	 }
 	
+	
+	/**
+	 * Changes selected location and redraws list of adapters there
+	 */
+	private class GetDeviceTask extends AsyncTask<String, Void, BaseDevice> {
+    	@Override
+    	protected BaseDevice doInBackground(String... sensorID) {
+    		
+    		BaseDevice device = mController.getDevice(sensorID[0]);
+    		Log.d(TAG, "ID:" + device.getId() + " Name:" + device.getName());
+    		
+			return device;
+    	}
+
+    	@Override
+    	protected void onPostExecute(BaseDevice device) {
+    		initLayout(device);
+    		
+    	}
+	}
+	
+	
+	private void initLayout(BaseDevice device) {
+		// Get View for sensor name
+		TextView sName = (TextView) getView().findViewById(R.id.sen_detail_name);	
+		// Get View for sensor value
+		TextView sValue = (TextView) getView().findViewById(R.id.sen_detail_value);		
+		// Get View for sensor time
+		TextView sTime = (TextView) getView().findViewById(R.id.sen_detail_time);
+		// Get Image for sensor
+		ImageView sIcon = (ImageView) getView().findViewById(R.id.sen_detail_icon);
+		
+		// Set name of sensor
+		sName.setText(device.getName());
+		// Set value of sensor
+		sValue.setText(device.getStringValueUnit(getActivity()));
+		// Set icon of sensor
+		sIcon.setImageResource(device.getTypeIconResource());
+		// Set time of sensor
+		// sTime.setText()
+		
+		// Disable progress bar
+		getActivity().setProgressBarIndeterminateVisibility(false);
+	}
 	/*
 	private void initLayout() {
 		LinearLayout mainlayout = (LinearLayout) findViewById(R.id.sensordetail_scroll);
