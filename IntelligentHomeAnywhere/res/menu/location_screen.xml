@@ -7,10 +7,10 @@
         android:title="@string/action_addadapter"/>
     
     <item
-        android:id="@+id/action_addsenzor"
+        android:id="@+id/action_addsensor"
         android:orderInCategory="100"
         android:showAsAction="never"
-        android:title="@string/action_addsenzor"/>
+        android:title="@string/action_addsensor"/>
     
     <item
         android:id="@+id/action_settings"

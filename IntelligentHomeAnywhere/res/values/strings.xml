@@ -63,7 +63,7 @@
     <!-- Others -->
     <string name="action_settings">Settings</string>
     <string name="action_addadapter">Add adapter</string>
-    <string name="action_addsenzor">Add senzor</string>
+    <string name="action_addsensor">Add sensor</string>
     <string name="action_logout">Logout</string>
     <string name="addadapter_qrcode_desc">Get QR code</string>
     <!-- Arrays -->

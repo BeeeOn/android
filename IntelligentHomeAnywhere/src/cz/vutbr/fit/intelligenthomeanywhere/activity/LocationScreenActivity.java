@@ -313,7 +313,7 @@ public class LocationScreenActivity extends SherlockFragmentActivity {
 			startActivity(intent);
 			break;
 		}
-		case R.id.action_addsenzor:
+		case R.id.action_addsensor:
 		{
 			Toast.makeText(this, "go to old", Toast.LENGTH_LONG).show();
 
