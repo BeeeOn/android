@@ -74,8 +74,8 @@ public class SimpleListing {
 	 */
 	public void refreshDevice(final BaseDevice device) {
 		if (device.isInitialized()) {
-			mUninitializedDevices.remove(device.getId());
-			Log.d("SimpleListing", "Removing initialized device " + device.toString());
+			if (mUninitializedDevices.remove(device.getId()) != null)
+				Log.d("SimpleListing", "Removing initialized device " + device.toString());
 		} else {
 			mUninitializedDevices.put(device.getId(), device);
 			Log.d("SimpleListing", "Adding uninitialized device " + device.toString());
