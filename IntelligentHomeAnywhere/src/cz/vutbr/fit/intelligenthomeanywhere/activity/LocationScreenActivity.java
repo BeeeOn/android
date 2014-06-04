@@ -53,6 +53,7 @@ public class LocationScreenActivity extends SherlockFragmentActivity {
 
 	private Controller mController;
 	private List<LocationListing> mLocations;
+	private List<BaseDevice> mSensors;
 
 	private DrawerLayout mDrawerLayout;
     private ListView mDrawerList;
@@ -209,7 +210,7 @@ public class LocationScreenActivity extends SherlockFragmentActivity {
 		this.mSensorList.setAdapter(mSensorAdapter);
 
 		// Capture listview menu item click
-		// mSensorList.setOnItemClickListener(new DrawerItemClickListener());
+		mSensorList.setOnItemClickListener(new SensorItemClickListener());
 		this.setSupportProgressBarIndeterminateVisibility(false);
 		return true;
 	}
