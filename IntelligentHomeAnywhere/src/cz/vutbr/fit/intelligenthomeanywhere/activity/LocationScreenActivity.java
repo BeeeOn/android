@@ -233,6 +233,36 @@ public class LocationScreenActivity extends SherlockFragmentActivity {
 			mDrawerLayout.closeDrawer(mDrawerList);
 		}
 	}
+	
+	// ListView click listener in the navigation drawer
+	private class SensorItemClickListener implements ListView.OnItemClickListener {
+		@Override
+		public void onItemClick(AdapterView<?> parent, View view, int position,	long id) {
+			selectSensorItem(position);
+		}
+
+			
+	}
+	
+	private void selectSensorItem(int position) {
+		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+		
+		final BaseDevice selectedItem = this.mSensors.get(position);
+		
+		setSupportProgressBarIndeterminateVisibility(true);
+		
+		Bundle bundle = new Bundle();
+        String myMessage = selectedItem.getId();
+        bundle.putString("sensorID", myMessage );
+        SensorDetailFragment fragment = new SensorDetailFragment();
+        fragment.setArguments(bundle);
+		
+		ft.replace(R.id.content_frame, fragment);
+		ft.addToBackStack(null);
+		ft.commit();
+		
+	}
+
 
 	@Override
 	protected void onPostCreate(Bundle savedInstanceState) {
