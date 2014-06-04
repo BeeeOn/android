@@ -1,6 +1,7 @@
 package cz.vutbr.fit.intelligenthomeanywhere.household;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 import android.content.Context;
 import cz.vutbr.fit.intelligenthomeanywhere.Constants;
@@ -10,6 +11,7 @@ import cz.vutbr.fit.intelligenthomeanywhere.User.Gender;
 import cz.vutbr.fit.intelligenthomeanywhere.User.Role;
 import cz.vutbr.fit.intelligenthomeanywhere.adapter.Adapter;
 import cz.vutbr.fit.intelligenthomeanywhere.adapter.parser.XmlDeviceParser;
+import cz.vutbr.fit.intelligenthomeanywhere.listing.CustomizedListing;
 import cz.vutbr.fit.intelligenthomeanywhere.listing.FavoritesListing;
 
 /**
@@ -71,7 +73,7 @@ public final class DemoHousehold extends Household {
 		
 		FavoritesListing list = new FavoritesListing("demoFavorites");
 		list.setName("My favorites");
-		list.setIcon(0);
+		list.setIcon((new Random()).nextInt(CustomizedListing.icons.length));
 		list.setDevices(this.adapters.get(0).getDevices());
 
 		this.favoritesListings.add(list);

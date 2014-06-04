@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
@@ -25,6 +26,7 @@ import cz.vutbr.fit.intelligenthomeanywhere.adapter.device.StateDevice;
 import cz.vutbr.fit.intelligenthomeanywhere.adapter.device.SwitchDevice;
 import cz.vutbr.fit.intelligenthomeanywhere.adapter.device.TemperatureDevice;
 import cz.vutbr.fit.intelligenthomeanywhere.adapter.device.UnknownDevice;
+import cz.vutbr.fit.intelligenthomeanywhere.listing.CustomizedListing;
 import cz.vutbr.fit.intelligenthomeanywhere.listing.Location;
 
 /**
@@ -283,7 +285,7 @@ public class XmlDeviceParser {
 	    }
 		
 		if (location_ != null)
-			device.setLocation(new Location(location_, location_, 0)); // TODO: location type?
+			device.setLocation(new Location(location_, location_, (new Random()).nextInt(CustomizedListing.icons.length))); // TODO: location type from xml?
 		if (name_ != null)
 			device.setName(name_);
 		if (refresh_ != null)

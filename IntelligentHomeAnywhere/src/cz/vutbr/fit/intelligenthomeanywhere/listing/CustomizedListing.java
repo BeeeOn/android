@@ -9,7 +9,17 @@ public abstract class CustomizedListing extends SimpleListing {
 	
 	protected String mName;
 	
-	protected int mIcon;
+	protected int mIcon = 0;
+	
+	public static final int[] icons = {
+		R.drawable.loc_unknown,		// 0
+		R.drawable.loc_bath_room,	// 1	
+		R.drawable.loc_bed_room,	// 2
+		R.drawable.loc_dinner_room,	// 3
+		R.drawable.loc_garden,		// 4
+		R.drawable.loc_living_room,	// 5
+		R.drawable.loc_wc,			// 6		
+	};
 	
 	public CustomizedListing(final String id) {
 		mId = id;
@@ -44,30 +54,10 @@ public abstract class CustomizedListing extends SimpleListing {
 	}
 	
 	public int getIconResource() {
-		// TODO: use fitting icons (and rewrite better - constants or so)
-		switch (mIcon) {
-		case 0: 
-			// Koupelna
-			return R.drawable.loc_bath_room;
-		case 1: 
-			// Loznice
-			return R.drawable.loc_bed_room;
-		case 2:
-			// Jidelna
-			return R.drawable.loc_dinner_room;
-		case 3:
-			// Zahrada
-			return R.drawable.loc_garden;
-		case 4:
-			// Obyvak
-			return R.drawable.loc_living_room;
-		case 5:
-			// WC
-			return R.drawable.loc_wc;
-		default:
-			// Unknown
-			return R.drawable.loc_unknown;
-		}
+		if (mIcon < 0 || mIcon >= icons.length)
+			return icons[0];
+		else
+			return icons[mIcon];
 	}
 	
 	@Override
