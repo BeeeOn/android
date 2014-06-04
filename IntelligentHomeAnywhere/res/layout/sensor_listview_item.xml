@@ -30,7 +30,7 @@
        	    android:layout_toLeftOf="@+id/unitofsensor"
        	    android:text="200"
        	    android:textColor="@color/log_blue2"
-       	    android:textSize="30dp"
+       	    android:textSize="25dp"
        	    android:textStyle="bold" />
 
        	<TextView
