@@ -436,7 +436,7 @@ public class LocationScreenActivity extends SherlockFragmentActivity {
 	}
 	
 	/**
-	 * Loads locations, checks for uninitialized devices and eventually shows dialog for adding them
+	 * Changes selected location and redraws list of adapters there
 	 */
 	private class ChangeLocationTask extends AsyncTask<String, Void, List<BaseDevice>> {
     	@Override
