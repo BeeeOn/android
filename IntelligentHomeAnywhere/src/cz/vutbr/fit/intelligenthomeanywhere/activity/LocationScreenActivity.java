@@ -48,8 +48,8 @@ import cz.vutbr.fit.intelligenthomeanywhere.listing.LocationListing;
 public class LocationScreenActivity extends SherlockFragmentActivity {
 
 	private Controller mController;
-	private List<LocationListing> locations;
-	private List<BaseDevice> sensors;
+	private List<LocationListing> mLocations;
+	private List<BaseDevice> mSensors;
 
 	private LocationScreenActivity mActivity;
 	private DrawerLayout mDrawerLayout;
@@ -68,7 +68,7 @@ public class LocationScreenActivity extends SherlockFragmentActivity {
     private static final String TAG = "Location";
     
     //FIXME: do this better way
- 	public List<BaseDevice> mDevices;
+ 	//public List<BaseDevice> mSensors;
     
 	
 	/**
@@ -105,15 +105,15 @@ public class LocationScreenActivity extends SherlockFragmentActivity {
 		Thread thLoc = new Thread(new Runnable() {
 			@Override
 			public void run() {
-				locations = mController.getLocations();
-				Log.d("lokace",locations.toArray().toString());
+				mLocations = mController.getLocations();
+				Log.d("lokace",mLocations.toArray().toString());
 				
 				checkUninitializedDevices();
 				mActivity.runOnUiThread(new Runnable() {
 					@Override
 					public void run() {
 						
-						getLocations(locations);
+						getLocations(mLocations);
 					}
 				});
 			}
@@ -215,7 +215,7 @@ public class LocationScreenActivity extends SherlockFragmentActivity {
 		this.mSensorList.setAdapter(mSensorAdapter);
 
 		// Capture listview menu item click
-		// mSensorList.setOnItemClickListener(new DrawerItemClickListener());
+		mSensorList.setOnItemClickListener(new SensorItemClickListener());
 		this.setSupportProgressBarIndeterminateVisibility(false);
 		return true;
 	}
@@ -231,26 +231,55 @@ public class LocationScreenActivity extends SherlockFragmentActivity {
 			selectItem(position);
 		}
 	}
+	
+	// ListView click listener in the navigation drawer
+	private class SensorItemClickListener implements ListView.OnItemClickListener {
+		@Override
+		public void onItemClick(AdapterView<?> parent, View view, int position,	long id) {
+			selectSensorItem(position);
+		}
+
+			
+	}
+	
+	private void selectSensorItem(int position) {
+		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+		
+		final BaseDevice selectedItem = this.mSensors.get(position);
+		
+		setSupportProgressBarIndeterminateVisibility(true);
+		
+		Bundle bundle = new Bundle();
+        String myMessage = selectedItem.getId();
+        bundle.putString("sensorID", myMessage );
+        SensorDetailFragment fragment = new SensorDetailFragment();
+        fragment.setArguments(bundle);
+		
+		ft.replace(R.id.content_frame, fragment);
+		ft.addToBackStack(null);
+		ft.commit();
+		
+	}
 
 	private void selectItem(int position) {
 
 		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
 
-		final LocationListing selectedItem = this.locations.get(position);
+		final LocationListing selectedItem = this.mLocations.get(position);
 
 		setSupportProgressBarIndeterminateVisibility(true);
 		Thread thLoc = new Thread(new Runnable() {
 			@Override
 			public void run() {
-				sensors = mController.getDevicesByLocation(selectedItem
+				mSensors = mController.getDevicesByLocation(selectedItem
 						.getName());
-				Log.d("lokace", locations.toArray().toString());
+				Log.d("lokace", mLocations.toArray().toString());
 
 				mActivity.runOnUiThread(new Runnable() {
 					@Override
 					public void run() {
 
-						getSensors(sensors);
+						getSensors(mSensors);
 					}
 				});
 
@@ -331,8 +360,8 @@ public class LocationScreenActivity extends SherlockFragmentActivity {
 	 */
 	private void checkUninitializedDevices() {
 //		List<BaseDevice> devices = mController.getUninitializedDevices();
-		mActivity.mDevices = mController.getUninitializedDevices();
-		if (mActivity.mDevices.size() > 0) {
+		mActivity.mSensors = mController.getUninitializedDevices();
+		if (mActivity.mSensors.size() > 0) {
 			
 			mActivity.runOnUiThread(new Runnable() {
 				@Override
@@ -341,7 +370,7 @@ public class LocationScreenActivity extends SherlockFragmentActivity {
 					
 					builder.setCancelable(false)
 						.setTitle(R.string.notification_title)
-						.setMessage(getResources().getQuantityString(R.plurals.notification_new_sensors, mActivity.mDevices.size(), mActivity.mDevices.size()))
+						.setMessage(getResources().getQuantityString(R.plurals.notification_new_sensors, mActivity.mSensors.size(), mActivity.mSensors.size()))
 						.setNeutralButton(R.string.notification_ingore, null)
 						.setPositiveButton(R.string.notification_add, new DialogInterface.OnClickListener() {
 						
