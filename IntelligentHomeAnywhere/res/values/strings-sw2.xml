@@ -2,7 +2,7 @@
 <!-- No translation of sample extensions -->
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
     <!-- Title of preference activity -->
-    <string name="preference_activity_title">Sony SmartWatch2 settings</string>
+    <string name="preference_activity_title">Settings</string>
     <!-- Name of extension, shown in preferences -->
     <string name="configuration_text">Sample control settings</string>
     <!-- Menu option shown in preferences -->

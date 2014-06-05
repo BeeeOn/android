@@ -15,6 +15,7 @@ import android.widget.Toast;
 
 import com.actionbarsherlock.app.SherlockDialogFragment;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
+import com.actionbarsherlock.view.MenuItem;
 
 import cz.vutbr.fit.intelligenthomeanywhere.Constants;
 import cz.vutbr.fit.intelligenthomeanywhere.R;
@@ -50,8 +51,9 @@ public class SW2PreferenceActivity extends SherlockFragmentActivity {
 		posLoc = UNDEFINED;
 
 		setContentView(R.layout.sw2_activity_preference);
-
-		getSherlock().getActionBar().setDisplayHomeAsUpEnabled(true);
+		
+		getSupportActionBar().setHomeButtonEnabled(true);
+		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 		
 		mController = Controller.getInstance(this);
 		
@@ -139,5 +141,15 @@ public class SW2PreferenceActivity extends SherlockFragmentActivity {
 			}
 
 		});
+	}
+	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case android.R.id.home:
+			finish();
+			return true;
+		}
+		return false;
 	}
 }

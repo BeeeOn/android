@@ -92,6 +92,8 @@ public class ListLocationControlExtension extends ManagedControlExtension {
 		}
 		actualize();
 	}
+	
+	
 
 	private void initializeMenus() {
 		mMenuItemsIcons[0] = new Bundle();
