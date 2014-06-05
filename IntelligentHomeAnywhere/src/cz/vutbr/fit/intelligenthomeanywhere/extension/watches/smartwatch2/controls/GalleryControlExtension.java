@@ -33,6 +33,7 @@ Copyright (c) 2011-2013, Sony Mobile Communications AB
 package cz.vutbr.fit.intelligenthomeanywhere.extension.watches.smartwatch2.controls;
 
 import java.text.DateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -45,10 +46,8 @@ import android.util.Log;
 import com.sonyericsson.extras.liveware.aef.control.Control;
 import com.sonyericsson.extras.liveware.extension.util.ExtensionUtils;
 import com.sonyericsson.extras.liveware.extension.util.control.ControlListItem;
-import com.sonyericsson.extras.liveware.extension.util.control.ControlViewGroup;
 
 import cz.vutbr.fit.intelligenthomeanywhere.R;
-import cz.vutbr.fit.intelligenthomeanywhere.adapter.Adapter;
 import cz.vutbr.fit.intelligenthomeanywhere.adapter.device.BaseDevice;
 import cz.vutbr.fit.intelligenthomeanywhere.extension.watches.smartwatch2.SW2ExtensionService;
 
@@ -63,12 +62,9 @@ public class GalleryControlExtension extends ManagedControlExtension {
 	public static final String EXTRA_ADAPTER_ID = "ADAPTER_ID";
 	public static final String EXTRA_LOCATION_NAME = "LOCATION_NAME";
 
-	private Adapter mAdapter;
-	private String mLocationName;
-
+	private String mAdapterId;
+	private String mLocationStr;
 	private List<BaseDevice> mDevices;
-
-	private ControlViewGroup mLayout = null;
 
 	/**
 	 * Bundle for menu icons
@@ -92,6 +88,16 @@ public class GalleryControlExtension extends ManagedControlExtension {
 
 		// setupClickables(context);
 		initializeMenus();
+
+		mDevices = new ArrayList<>();
+
+		mAdapterId = getIntent().getStringExtra(EXTRA_ADAPTER_ID);
+		mLocationStr = getIntent().getStringExtra(EXTRA_LOCATION_NAME);
+		if (mAdapterId == null || mLocationStr == null) {
+			mControlManager.onBack();
+			return;
+		}
+		actualize();
 	}
 
 	private void initializeMenus() {
@@ -111,15 +117,10 @@ public class GalleryControlExtension extends ManagedControlExtension {
 		int startPosition = getIntent().getIntExtra(EXTRA_INITIAL_POSITION, 0);
 		mLastKnowPosition = startPosition;
 
-		String adapterId = getIntent().getStringExtra(EXTRA_ADAPTER_ID);
-		String locationStr = getIntent().getStringExtra(EXTRA_LOCATION_NAME);
-		if (adapterId == null || locationStr == null) {
+		if (mAdapterId == null || mLocationStr == null) {
 			mControlManager.onBack();
 			return;
 		}
-
-		mDevices = mController.getAdapter(adapterId, true)
-				.getDevicesByLocation(locationStr);
 
 		sendListCount(R.id.gallery, mDevices.size());
 		sendListPosition(R.id.gallery, startPosition);
@@ -163,15 +164,15 @@ public class GalleryControlExtension extends ManagedControlExtension {
 		Log.d(SW2ExtensionService.LOG_TAG, "onMenuItemSelected() - menu item "
 				+ menuItem);
 		if (menuItem == MENU_REFRESH) {
-			
+
 			clearDisplay();
-//			mDevices = mController.getAdapter(adapterId, false)
-//					.getDevicesByLocation(locationStr);
+			// mDevices = mController.getAdapter(adapterId, false)
+			// .getDevicesByLocation(locationStr);
 			getIntent().putExtra(EXTRA_INITIAL_POSITION, mLastKnowPosition);
-			resume();
-			
-			//sendListCount(R.id.gallery, mDevices.size());
-			//sendListItem(item)
+			actualize();
+
+			// sendListCount(R.id.gallery, mDevices.size());
+			// sendListItem(item)
 		}
 	}
 
@@ -209,16 +210,17 @@ public class GalleryControlExtension extends ManagedControlExtension {
 		Bundle syncBundle = new Bundle();
 		syncBundle.putInt(Control.Intents.EXTRA_LAYOUT_REFERENCE,
 				R.id.sync_time);
-		
+
 		// Last update time data
 		Time yesterday = new Time();
 		yesterday.setToNow();
-		yesterday.set(yesterday.toMillis(true) - 24*60*60*1000); // -24 hours
-		
-		// If sync time is more that 24 ago, show only date. Show time otherwise.
-		DateFormat dateFormat = yesterday.before(curDevice.lastUpdate)
-				? DateFormat.getTimeInstance()
-				: DateFormat.getDateInstance();  
+		yesterday.set(yesterday.toMillis(true) - 24 * 60 * 60 * 1000); // -24
+																		// hours
+
+		// If sync time is more that 24 ago, show only date. Show time
+		// otherwise.
+		DateFormat dateFormat = yesterday.before(curDevice.lastUpdate) ? DateFormat
+				.getTimeInstance() : DateFormat.getDateInstance();
 
 		Date lastUpdate = new Date(curDevice.lastUpdate.toMillis(true));
 		String dateTime = dateFormat.format(lastUpdate);
@@ -249,8 +251,10 @@ public class GalleryControlExtension extends ManagedControlExtension {
 		Bundle iconBundle = new Bundle();
 		iconBundle.putInt(Control.Intents.EXTRA_LAYOUT_REFERENCE,
 				R.id.thumbnail);
-		iconBundle.putString(Control.Intents.EXTRA_DATA_URI,
-				ExtensionUtils.getUriString(mContext, curDevice.getTypeIconResource()));
+		iconBundle.putString(
+				Control.Intents.EXTRA_DATA_URI,
+				ExtensionUtils.getUriString(mContext,
+						curDevice.getTypeIconResource()));
 		// iconBundle.putString(Control.Intents.EXTRA_DATA_URI, ExtensionUtils
 		// .getUriString(mContext, curDevice
 		// .getTypeIconResource()));
@@ -272,6 +276,21 @@ public class GalleryControlExtension extends ManagedControlExtension {
 		item.layoutData[5] = unitBundle;
 
 		return item;
+	}
+
+	private void actualize() {
+		Thread thLoc = new Thread(new Runnable() {
+			@Override
+			public void run() {
+
+				mDevices = mController.getAdapter(mAdapterId, true)
+						.getDevicesByLocation(mLocationStr);
+
+				resume();
+
+			}
+		});
+		thLoc.start();
 	}
 
 }

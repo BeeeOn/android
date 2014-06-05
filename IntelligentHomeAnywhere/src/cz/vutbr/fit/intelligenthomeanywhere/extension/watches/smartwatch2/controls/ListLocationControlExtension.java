@@ -32,6 +32,7 @@ Copyright (c) 2011-2013, Sony Mobile Communications AB
 
 package cz.vutbr.fit.intelligenthomeanywhere.extension.watches.smartwatch2.controls;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import android.content.Context;
@@ -59,12 +60,18 @@ public class ListLocationControlExtension extends ManagedControlExtension {
 
 	private Adapter mAdapter;
 	private List<LocationListing> mLocations;
-
+	private String mAdapterId;
 
 	private Bundle[] mMenuItemsIcons = new Bundle[1];
-	
+
+	/**
+	 * first actualization is not forced to update values, second (sync button
+	 * click) is already forced
+	 */
+	private boolean mForceUpdate = false;
+
 	private static final int MENU_REFRESH = 1;
-	
+
 	/**
 	 * @see ManagedControlExtension#ManagedControlExtension(Context, String,
 	 *      ControlManagerCostanza, Intent)
@@ -75,25 +82,35 @@ public class ListLocationControlExtension extends ManagedControlExtension {
 		super(context, hostAppPackageName, controlManager, intent);
 		Log.d(SW2ExtensionService.LOG_TAG, "AdaptersListControl constructor");
 		initializeMenus();
+
+		mLocations = new ArrayList<>();
+
+		mAdapterId = getIntent().getStringExtra(EXTRA_ADAPTER_ID);
+		if (mAdapterId == null) {
+			mControlManager.onBack();
+			return;
+		}
+		actualize();
 	}
 
 	private void initializeMenus() {
 		mMenuItemsIcons[0] = new Bundle();
-        mMenuItemsIcons[0].putInt(Control.Intents.EXTRA_MENU_ITEM_ID, MENU_REFRESH);
-        mMenuItemsIcons[0].putString(Control.Intents.EXTRA_MENU_ITEM_ICON,
-                ExtensionUtils.getUriString(mContext, R.drawable.sync_white));
+		mMenuItemsIcons[0].putInt(Control.Intents.EXTRA_MENU_ITEM_ID,
+				MENU_REFRESH);
+		mMenuItemsIcons[0].putString(Control.Intents.EXTRA_MENU_ITEM_ICON,
+				ExtensionUtils.getUriString(mContext, R.drawable.sync_white));
 	}
-	
+
 	@Override
 	public void onMenuItemSelected(final int menuItem) {
 		Log.d(SW2ExtensionService.LOG_TAG, "onMenuItemSelected() - menu item "
 				+ menuItem);
 		if (menuItem == MENU_REFRESH) {
 			clearDisplay();
-			resume();
+			actualize();
 		}
 	}
-	
+
 	@Override
 	public void onResume() {
 		Log.d(SW2ExtensionService.LOG_TAG, "onResume");
@@ -109,14 +126,10 @@ public class ListLocationControlExtension extends ManagedControlExtension {
 
 		showLayout(R.layout.sw2_list_title, data);
 
-		String adapterId = getIntent().getStringExtra(EXTRA_ADAPTER_ID);
-		if (adapterId == null) {
+		if (mAdapterId == null) {
 			mControlManager.onBack();
 			return;
 		}
-
-		mAdapter = mController.getAdapter(adapterId, true);
-		mLocations = mController.getLocations();
 
 		sendListCount(R.id.listView, mLocations.size());
 	}
@@ -125,18 +138,19 @@ public class ListLocationControlExtension extends ManagedControlExtension {
 	public void onPause() {
 		super.onPause();
 		// Position is saved into Control's Intent, possibly to be used later.
-//		getIntent().putExtra(GalleryControlExtension.EXTRA_INITIAL_POSITION,
-//				mLastKnowPosition);
+		// getIntent().putExtra(GalleryControlExtension.EXTRA_INITIAL_POSITION,
+		// mLastKnowPosition);
 	}
 
 	@Override
-    public void onSwipe(int direction) {
-    	if (direction == Control.Intents.SWIPE_DIRECTION_RIGHT) {
-    		Intent intent = new Intent(mContext, ListAdapterControlExtension.class);
-    		mControlManager.previousScreen(intent);
-    	}
-    }
-	
+	public void onSwipe(int direction) {
+		if (direction == Control.Intents.SWIPE_DIRECTION_RIGHT) {
+			Intent intent = new Intent(mContext,
+					ListAdapterControlExtension.class);
+			mControlManager.previousScreen(intent);
+		}
+	}
+
 	@Override
 	public void onRequestListItem(final int layoutReference,
 			final int listItemPosition) {
@@ -152,23 +166,22 @@ public class ListLocationControlExtension extends ManagedControlExtension {
 	}
 
 	@Override
-    public void onKey(final int action, final int keyCode, final long timeStamp) {
-        Log.d(SW2ExtensionService.LOG_TAG, "onKey()");
-        if (action == Control.Intents.KEY_ACTION_RELEASE
-                && keyCode == Control.KeyCodes.KEYCODE_OPTIONS) {
-            showMenu(mMenuItemsIcons);
-        }
-        else {
-            mControlManager.onKey(action, keyCode, timeStamp);
-        }
-    }
-	
+	public void onKey(final int action, final int keyCode, final long timeStamp) {
+		Log.d(SW2ExtensionService.LOG_TAG, "onKey()");
+		if (action == Control.Intents.KEY_ACTION_RELEASE
+				&& keyCode == Control.KeyCodes.KEYCODE_OPTIONS) {
+			showMenu(mMenuItemsIcons);
+		} else {
+			mControlManager.onKey(action, keyCode, timeStamp);
+		}
+	}
+
 	@Override
 	public void onListItemSelected(ControlListItem listItem) {
 		super.onListItemSelected(listItem);
 		// We save the last "selected" position, this is the current visible
 		// list item index. The position can later be used on resume
-//		 mLastKnowPosition = listItem.listItemPosition;
+		// mLastKnowPosition = listItem.listItemPosition;
 	}
 
 	@Override
@@ -221,10 +234,10 @@ public class ListLocationControlExtension extends ManagedControlExtension {
 		Bundle iconBundle = new Bundle();
 		iconBundle.putInt(Control.Intents.EXTRA_LAYOUT_REFERENCE,
 				R.id.thumbnail);
-		
-		// TODO prevest na uzivateluv obrazek
+
 		iconBundle.putString(Control.Intents.EXTRA_DATA_URI, ExtensionUtils
-				.getUriString(mContext, mLocations.get(position).getIconResource()));
+				.getUriString(mContext, mLocations.get(position)
+						.getIconResource()));
 
 		Bundle headerBundle = new Bundle();
 		headerBundle.putInt(Control.Intents.EXTRA_LAYOUT_REFERENCE, R.id.title);
@@ -237,6 +250,23 @@ public class ListLocationControlExtension extends ManagedControlExtension {
 		item.layoutData[1] = iconBundle;
 
 		return item;
+	}
+
+	private void actualize() {
+		Thread thLoc = new Thread(new Runnable() {
+			@Override
+			public void run() {
+
+				mAdapter = mController.getAdapter(mAdapterId, mForceUpdate);
+				mLocations = mController.getLocations();
+				
+				mForceUpdate = true;
+				
+				resume();
+
+			}
+		});
+		thLoc.start();
 	}
 
 }

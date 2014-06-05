@@ -69,7 +69,7 @@ public class ListAdapterControlExtension extends ManagedControlExtension {
     public ListAdapterControlExtension(Context context, String hostAppPackageName,
             ControlManagerSmartWatch2 controlManager, Intent intent) {
         super(context, hostAppPackageName, controlManager, intent);
-        mAdapters = mController.getAdapters();
+        actualize();
         Log.d(SW2ExtensionService.LOG_TAG, "AdaptersListControl constructor");
         initializeMenus();
     
@@ -132,7 +132,7 @@ public class ListAdapterControlExtension extends ManagedControlExtension {
 				+ menuItem);
 		if (menuItem == MENU_REFRESH) {
 			clearDisplay();
-			resume();
+			actualize();
 		}
 	}
     
@@ -196,5 +196,19 @@ public class ListAdapterControlExtension extends ManagedControlExtension {
 
         return item;
     }
+    
+    private void actualize() {
+		Thread thLoc = new Thread(new Runnable() {
+			@Override
+			public void run() {
+					
+				mAdapters = mController.getAdapters();
+				
+				resume();
+
+			}
+		});
+		thLoc.start();
+	}
 
 }

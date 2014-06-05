@@ -32,6 +32,7 @@ Copyright (c) 2011-2013, Sony Mobile Communications AB
 
 package cz.vutbr.fit.intelligenthomeanywhere.extension.watches.smartwatch2.controls;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import android.content.Context;
@@ -60,7 +61,8 @@ public class ListSensorControlExtension extends ManagedControlExtension {
 	private List<BaseDevice> mDevices;
 	private String mLocationStr;
 	private Adapter mAdapter;
-
+	private String mAdapterId;
+	
 	private Bundle[] mMenuItemsIcons = new Bundle[1];
 	
 	private static final int MENU_REFRESH = 1;
@@ -77,6 +79,16 @@ public class ListSensorControlExtension extends ManagedControlExtension {
 		super(context, hostAppPackageName, controlManager, intent);
 		Log.d(SW2ExtensionService.LOG_TAG, "AdaptersListControl constructor");
 		initializeMenus();
+		
+		mAdapterId = getIntent().getStringExtra(EXTRA_ADAPTER_ID);
+		mLocationStr = getIntent().getStringExtra(EXTRA_LOCATION_NAME);
+		if (mAdapterId == null || mLocationStr == null) {
+			mControlManager.onBack();
+			return;
+		}
+		
+		mDevices = new ArrayList<BaseDevice>();
+		actualize();
 	}
 
 	@Override
@@ -94,34 +106,10 @@ public class ListSensorControlExtension extends ManagedControlExtension {
 
 		showLayout(R.layout.sw2_list_title, data);
 
-		String adapterId = getIntent().getStringExtra(EXTRA_ADAPTER_ID);
-		mLocationStr = getIntent().getStringExtra(EXTRA_LOCATION_NAME);
-		if (adapterId == null || mLocationStr == null) {
+		if (mAdapterId == null || mLocationStr == null) {
 			mControlManager.onBack();
 			return;
 		}
-
-		
-//		
-//		Thread thLoc = new Thread(new Runnable() {
-//			@Override
-//			public void run() {
-//				
-//
-//				mActivity.runOnUiThread(new Runnable() {
-//					@Override
-//					public void run() {
-//
-//						getSensors(sensors);
-//					}
-//				});
-//
-//			}
-//		});
-//		thLoc.start();
-		
-		mAdapter = mController.getAdapter(adapterId, true);
-		mDevices = mAdapter.getDevicesByLocation(mLocationStr);
 		
 		sendListCount(R.id.listView, mDevices.size());
 
@@ -167,7 +155,7 @@ public class ListSensorControlExtension extends ManagedControlExtension {
 				+ menuItem);
 		if (menuItem == MENU_REFRESH) {
 			clearDisplay();
-			resume();
+			actualize();
 		}
 	}
 	
@@ -262,6 +250,21 @@ public class ListSensorControlExtension extends ManagedControlExtension {
 		item.layoutData[2] = valueBundle;
 
 		return item;
+	}
+	
+	private void actualize() {
+		Thread thLoc = new Thread(new Runnable() {
+			@Override
+			public void run() {
+					
+				mAdapter = mController.getAdapter(mAdapterId, true);
+				mDevices = mAdapter.getDevicesByLocation(mLocationStr);
+				
+				resume();
+
+			}
+		});
+		thLoc.start();
 	}
 
 }
