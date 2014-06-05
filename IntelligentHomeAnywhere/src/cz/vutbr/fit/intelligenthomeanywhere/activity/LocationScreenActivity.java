@@ -71,6 +71,8 @@ public class LocationScreenActivity extends SherlockFragmentActivity {
     private static boolean inBackground = false;
     private static final String BKG = "activityinbackground";
     
+    private String mActiveLocation;
+    
 	/**
 	 * Call XML parser to file on SDcard
 	 */
@@ -163,12 +165,12 @@ public class LocationScreenActivity extends SherlockFragmentActivity {
 				R.string.drawer_close) {
 
 			public void onDrawerClosed(View view) {
-				// TODO Auto-generated method stub
+				// Set the title on the action when drawer closed
+				getSupportActionBar().setTitle(mActiveLocation);
 				super.onDrawerClosed(view);
 			}
 
 			public void onDrawerOpened(View drawerView) {
-				// TODO Auto-generated method stub
 				// Set the title on the action when drawer open
 				getSupportActionBar().setTitle(mDrawerTitle);
 				super.onDrawerOpened(drawerView);
@@ -206,10 +208,16 @@ public class LocationScreenActivity extends SherlockFragmentActivity {
 			icon[i] = sensors.get(i).getTypeIconResource();
 		}
 
-		this.mSensorAdapter = new SensorListAdapter(
+		mSensorList = (ListView) findViewById(R.id.listviewofsensors);
+		if (mSensorList == null) {
+			setSupportProgressBarIndeterminateVisibility(false);
+			return false; // TODO: this happens when we're in different activity (detail), fix that by changing that activity (fragment?) first?
+		}
+		
+		mSensorAdapter = new SensorListAdapter(
 				LocationScreenActivity.this, title, value,unit, icon);
-		this.mSensorList = (ListView) findViewById(R.id.listviewofsensors);
-		this.mSensorList.setAdapter(mSensorAdapter);
+		
+		mSensorList.setAdapter(mSensorAdapter);
 
 		// Capture listview menu item click
 		mSensorList.setOnItemClickListener(new ListView.OnItemClickListener() {
@@ -244,13 +252,12 @@ public class LocationScreenActivity extends SherlockFragmentActivity {
 		public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 			// Get the title followed by the position
 			LocationListing selectedItem = mLocations.get(position);
-			String name = (selectedItem != null ? selectedItem.getName() : ""); 
+			mActiveLocation = (selectedItem != null ? selectedItem.getName() : ""); 
 
-			ChangeLocationTask task = new ChangeLocationTask();
-		    task.execute(new String[] { name });
+			refreshListing();
 			
 			mDrawerList.setItemChecked(position, true);
-			getSupportActionBar().setTitle(name);
+
 			// Close drawer
 			mDrawerLayout.closeDrawer(mDrawerList);
 		}
@@ -294,6 +301,12 @@ public class LocationScreenActivity extends SherlockFragmentActivity {
 				mDrawerLayout.openDrawer(mDrawerList);
 			}
 			break;
+		case R.id.action_refreshlist:
+		{			
+			mController.reloadAdapters();
+			refreshListing();
+			break;
+		}
 		case R.id.action_addadapter:
 		{
 //			Toast.makeText(this, "go to old", Toast.LENGTH_LONG).show();
@@ -432,6 +445,15 @@ public class LocationScreenActivity extends SherlockFragmentActivity {
 		return true;
 	}
 
+	private void refreshListing() {
+		if (mActiveLocation == null)
+			return;
+		
+		setSupportProgressBarIndeterminateVisibility(true);
+		ChangeLocationTask task = new ChangeLocationTask();
+	    task.execute(new String[] { mActiveLocation });
+	}
+	
 	/**
 	 * Loads locations, checks for uninitialized devices and eventually shows dialog for adding them
 	 */

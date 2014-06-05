@@ -64,6 +64,7 @@
     <string name="drawer_close">CLOSE</string>
     <!-- Others -->
     <string name="action_settings">Settings</string>
+    <string name="action_refreshlist">Refresh list</string>
     <string name="action_addadapter">Add adapter</string>
     <string name="action_addsensor">Add sensor</string>
     <string name="action_logout">Logout</string>
