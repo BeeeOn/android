@@ -89,7 +89,7 @@ public class GalleryControlExtension extends ManagedControlExtension {
 		// setupClickables(context);
 		initializeMenus();
 
-		mDevices = new ArrayList<>();
+		mDevices = new ArrayList<BaseDevice>();
 
 		mAdapterId = getIntent().getStringExtra(EXTRA_ADAPTER_ID);
 		mLocationStr = getIntent().getStringExtra(EXTRA_LOCATION_NAME);

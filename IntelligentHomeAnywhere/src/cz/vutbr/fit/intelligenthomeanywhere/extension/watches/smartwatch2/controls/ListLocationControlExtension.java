@@ -83,7 +83,7 @@ public class ListLocationControlExtension extends ManagedControlExtension {
 		Log.d(SW2ExtensionService.LOG_TAG, "AdaptersListControl constructor");
 		initializeMenus();
 
-		mLocations = new ArrayList<>();
+		mLocations = new ArrayList<LocationListing>();
 
 		mAdapterId = getIntent().getStringExtra(EXTRA_ADAPTER_ID);
 		if (mAdapterId == null) {

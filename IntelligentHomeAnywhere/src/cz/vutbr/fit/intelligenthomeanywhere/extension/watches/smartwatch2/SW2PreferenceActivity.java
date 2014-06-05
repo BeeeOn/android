@@ -51,6 +51,8 @@ public class SW2PreferenceActivity extends SherlockFragmentActivity {
 
 		setContentView(R.layout.sw2_activity_preference);
 
+		getSherlock().getActionBar().setDisplayHomeAsUpEnabled(true);
+		
 		mController = Controller.getInstance(this);
 		
 		preferenceList = new ArrayList<String>();
