@@ -51,10 +51,12 @@ import com.sonyericsson.extras.liveware.extension.util.control.ControlObjectClic
 
 import cz.vutbr.fit.intelligenthomeanywhere.Constants;
 import cz.vutbr.fit.intelligenthomeanywhere.R;
+import cz.vutbr.fit.intelligenthomeanywhere.activity.LoginActivity;
 import cz.vutbr.fit.intelligenthomeanywhere.adapter.Adapter;
 import cz.vutbr.fit.intelligenthomeanywhere.adapter.device.BaseDevice;
 import cz.vutbr.fit.intelligenthomeanywhere.controller.Controller;
 import cz.vutbr.fit.intelligenthomeanywhere.extension.watches.smartwatch2.SW2ExtensionService;
+import cz.vutbr.fit.intelligenthomeanywhere.network.GetGoogleAuth;
 
 /**
  * The phone control manager manages which control to currently show on the
@@ -78,6 +80,15 @@ public class ControlManagerSmartWatch2 extends ControlManagerBase {
 
 		if (!mController.isLoggedIn()) {
 			String lastEmail = mController.getLastEmail();
+			try {
+				GetGoogleAuth.getGetGoogleAuth().execute();
+			} catch (Exception e) {
+				initialControlIntent = new Intent(mContext, TextControl.class);
+				initialControlIntent.putExtra(TextControl.EXTRA_TEXT,
+						mContext.getString(R.string.please_log_in));
+				mCurrentControl = createControl(initialControlIntent);
+				return;
+			}
 			if (!(lastEmail.length() < 1) && !mController.login(lastEmail)) {
 				initialControlIntent = new Intent(mContext, TextControl.class);
 				initialControlIntent.putExtra(TextControl.EXTRA_TEXT,
@@ -101,6 +112,7 @@ public class ControlManagerSmartWatch2 extends ControlManagerBase {
 		Log.v(SW2ExtensionService.LOG_TAG, "Default location: "
 				+ ((strLocation == null) ? "null" : strLocation));
 
+		// TODO zkontrolovat jestli neni cil prazdny
 		if (adapterId != null) {
 			Adapter adapter = Controller.getInstance(mContext).getAdapter(
 					adapterId, false);
