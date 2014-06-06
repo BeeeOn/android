@@ -13,6 +13,7 @@ public class SimpleListing {
 
 	protected final Map<String, BaseDevice> mDevices = new HashMap<String, BaseDevice>();
 	protected final Map<String, BaseDevice> mUninitializedDevices = new HashMap<String, BaseDevice>();
+	protected final Map<String, BaseDevice> mUninitializedIgnored = new HashMap<String, BaseDevice>();
 	protected final Map<String, Location> mLocations = new HashMap<String, Location>();
 	
 	/**
@@ -61,8 +62,10 @@ public class SimpleListing {
 	public void addDevice(final BaseDevice device) {
 		mDevices.put(device.getId(), device);
 		
-		if (!device.isInitialized())
-			mUninitializedDevices.put(Constants.GROUP_UNINITIALIZED_BY_ADDRESS ? device.getAddress() : device.getId(), device);
+		String id = Constants.GROUP_UNINITIALIZED_BY_ADDRESS ? device.getAddress() : device.getId();
+		
+		if (!device.isInitialized() && !mUninitializedIgnored.containsKey(id))
+			mUninitializedDevices.put(id, device);
 		
 		Location location = device.getLocation();
 		if (location.getId().length() > 0 && !mLocations.containsKey(location.getId()))
@@ -126,6 +129,32 @@ public class SimpleListing {
 		}
 		
 		return devices;
+	}
+
+	public void ignoreUninitialized(List<BaseDevice> devices) {
+		// TODO: save this list into some cache
+		for (BaseDevice device : devices) {
+			String id = Constants.GROUP_UNINITIALIZED_BY_ADDRESS ? device.getAddress() : device.getId();
+			
+			if (mUninitializedDevices.containsKey(id)) {
+				if (!mUninitializedIgnored.containsKey(id))
+					mUninitializedIgnored.put(id, mUninitializedDevices.get(id));
+				
+				mUninitializedDevices.remove(id);
+			}
+		}
+	}
+
+	public void unignoreUninitialized() {
+		// TODO: update that list in some cache
+		for (BaseDevice device : mUninitializedIgnored.values()) {
+			String id = Constants.GROUP_UNINITIALIZED_BY_ADDRESS ? device.getAddress() : device.getId();
+			
+			if (!mUninitializedDevices.containsKey(id))
+				mUninitializedDevices.put(id, mUninitializedIgnored.get(id));
+		}
+		
+		mUninitializedIgnored.clear();
 	}
 	
 }

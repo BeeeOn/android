@@ -321,6 +321,9 @@ public class LocationScreenActivity extends SherlockFragmentActivity {
 		{
 //			Toast.makeText(this, "go to old", Toast.LENGTH_LONG).show();
 
+			// Show also ignored devices
+			mController.unignoreUninitialized();
+			
 			inBackground = true;
 			Intent intent = new Intent(LocationScreenActivity.this, AddSensorActivityDialog.class);
 			startActivity(intent);
@@ -472,7 +475,7 @@ public class LocationScreenActivity extends SherlockFragmentActivity {
     	}
 
     	@Override
-    	protected void onPostExecute(List<BaseDevice> uninitializedDevices) {
+    	protected void onPostExecute(final List<BaseDevice> uninitializedDevices) {
     		// Redraw locations
     		getLocations(mLocations);
     		
@@ -485,8 +488,17 @@ public class LocationScreenActivity extends SherlockFragmentActivity {
 			builder.setCancelable(false)
 				.setTitle(R.string.notification_title)
 				.setMessage(getResources().getQuantityString(R.plurals.notification_new_sensors, uninitializedDevices.size(), uninitializedDevices.size()))
-				.setNeutralButton(R.string.notification_ingore, null)
+				.setNeutralButton(R.string.notification_ingore, new DialogInterface.OnClickListener() {
+
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						mController.ignoreUninitialized(uninitializedDevices);
+						// TODO: Get this string from resources
+						Toast.makeText(LocationScreenActivity.this, "You can add these devices later through 'Menu / Add sensor'", Toast.LENGTH_LONG).show();
+					}
+				})
 				.setPositiveButton(R.string.notification_add, new DialogInterface.OnClickListener() {
+
 					@Override
 					public void onClick(DialogInterface dialog, int which) {
 						// Open activity for adding new device
@@ -514,7 +526,7 @@ public class LocationScreenActivity extends SherlockFragmentActivity {
     	}
 
     	@Override
-    	protected void onPostExecute(List<BaseDevice> devices) {
+    	protected void onPostExecute(final List<BaseDevice> devices) {
     		getSensors(devices);
     	}
 	}

@@ -661,4 +661,16 @@ public final class Controller {
 		throw new NotImplementedException();
 	}
 
+	public void ignoreUninitialized(List<BaseDevice> devices) {
+		for (Adapter adapter : getAdapters()) {
+			adapter.ignoreUninitialized(devices);
+		}
+	}
+
+	public void unignoreUninitialized() {
+		for (Adapter adapter : getAdapters()) {
+			adapter.unignoreUninitialized();
+		}
+	}
+
 }

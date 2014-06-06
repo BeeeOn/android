@@ -182,5 +182,13 @@ public class Adapter {
 	public void refreshDevice(final BaseDevice device) {
 		mDevices.refreshDevice(device);
 	}
+
+	public void ignoreUninitialized(List<BaseDevice> devices) {
+		mDevices.ignoreUninitialized(devices);		
+	}
+
+	public void unignoreUninitialized() {
+		mDevices.unignoreUninitialized();
+	}
 	
 }
