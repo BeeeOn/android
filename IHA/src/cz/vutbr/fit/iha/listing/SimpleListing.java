@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import android.util.Log;
+import cz.vutbr.fit.iha.Constants;
 import cz.vutbr.fit.iha.adapter.device.BaseDevice;
 
 public class SimpleListing {
@@ -61,7 +62,7 @@ public class SimpleListing {
 		mDevices.put(device.getId(), device);
 		
 		if (!device.isInitialized())
-			mUninitializedDevices.put(device.getId(), device);
+			mUninitializedDevices.put(Constants.GROUP_UNINITIALIZED_BY_ADDRESS ? device.getAddress() : device.getId(), device);
 		
 		Location location = device.getLocation();
 		if (location.getId().length() > 0 && !mLocations.containsKey(location.getId()))
@@ -74,10 +75,10 @@ public class SimpleListing {
 	 */
 	public void refreshDevice(final BaseDevice device) {
 		if (device.isInitialized()) {
-			if (mUninitializedDevices.remove(device.getId()) != null)
+			if (mUninitializedDevices.remove(Constants.GROUP_UNINITIALIZED_BY_ADDRESS ? device.getAddress() : device.getId()) != null)
 				Log.d("SimpleListing", "Removing initialized device " + device.toString());
 		} else {
-			mUninitializedDevices.put(device.getId(), device);
+			mUninitializedDevices.put(Constants.GROUP_UNINITIALIZED_BY_ADDRESS ? device.getAddress() : device.getId(), device);
 			Log.d("SimpleListing", "Adding uninitialized device " + device.toString());
 		}
 		

@@ -16,6 +16,9 @@ package cz.vutbr.fit.iha;
  * @author ThinkDeep
  */
 public final class Constants {
+
+	// TODO: remove this constant as soon as server will support saving such sensors separately
+	public static final boolean GROUP_UNINITIALIZED_BY_ADDRESS = true;
 	
 	/**
 	 * Footing for pass from LocationScreenActivity to DataOfLocationScreenActivity
