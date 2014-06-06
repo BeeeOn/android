@@ -10,7 +10,7 @@ help:
 	echo -e "Dokumentaci pomoci doxygenu vytvorite prikazem:\n make docs"
 	
 docs:
-	doxygen IntelligentHomeAnywhere.doxyfile
+	doxygen IHA.doxyfile
 	
 clean:
 	rm -rf html

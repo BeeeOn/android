@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="cz.vutbr.fit.intelligenthomeanywhere.test"
+    package="cz.vutbr.fit.iha.test"
     android:versionCode="1"
     android:versionName="1.0" >
 
@@ -8,7 +8,7 @@
 
     <instrumentation
         android:name="android.test.InstrumentationTestRunner"
-        android:targetPackage="cz.vutbr.fit.intelligenthomeanywhere" />
+        android:targetPackage="cz.vutbr.fit.iha" />
 
     <application
         android:icon="@drawable/ic_launcher"

@@ -6,7 +6,7 @@
     android:minResizeHeight="40dp"
     android:minResizeWidth="40dp"
     android:resizeMode="horizontal"
-    android:configure="cz.vutbr.fit.intelligenthomeanywhere.activity.WidgetConfigurationActivity"    
+    android:configure="cz.vutbr.fit.iha.activity.WidgetConfigurationActivity"    
     android:updatePeriodMillis="0">
 
 </appwidget-provider>
