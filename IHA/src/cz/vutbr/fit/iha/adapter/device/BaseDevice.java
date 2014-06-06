@@ -146,7 +146,7 @@ public abstract class BaseDevice {
 	 * @return id
 	 */
 	public String getId() {
-		return mNetwork.address;
+		return mNetwork.address + String.valueOf(getType());
 	}
 
 	/**

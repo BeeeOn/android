@@ -582,7 +582,7 @@ public class XmlCreator {
 				serializer.startTag(ns, DEVICE);
 				serializer.attribute(ns, INITIALIZED, (device.isInitialized())?INIT_1:INIT_0);
 				serializer.attribute(ns, TYPE, HEX+Integer.toHexString(device.getType()));
-				serializer.attribute(ns, ID, device.getId());
+				serializer.attribute(ns, ID, device.getAddress());
 				serializer.attribute(ns, VISIBILITY, Character.toString(device.getVisibility()));
 				
 				Location location = device.getLocation();
