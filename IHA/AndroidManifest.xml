@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="cz.vutbr.fit.iha"
+    android:installLocation="auto"
+    android:versionCode="1"
+    android:versionName="1.0" >
+
+    <uses-sdk
+        android:minSdkVersion="8"
+        android:targetSdkVersion="19" />
+
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.NETWORK" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
+    <uses-permission android:name="android.permission.USE_CREDENTIALS" />
+    <uses-permission android:name="com.sonyericsson.extras.liveware.aef.EXTENSION_PERMISSION" />
+
+    <application
+        android:allowBackup="true"
+        android:icon="@drawable/ic_launcher"
+        android:label="@string/app_name"
+        android:theme="@style/AppTheme" >
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
+        <meta-data
+            android:name="com.facebook.sdk.ApplicationId"
+            android:value="@string/app_id" >
+        </meta-data>
+
+        <activity
+            android:name="cz.vutbr.fit.iha.activity.LoginActivity"
+            android:label="@string/app_name"
+            android:theme="@android:style/Theme.NoTitleBar" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="cz.vutbr.fit.iha.activity.LocationScreenActivity"
+            android:label="@string/title_activity_location_screen" >
+        </activity>
+        <activity
+            android:name="cz.vutbr.fit.iha.activity.DataOfLocationScreenActivity"
+            android:label="@string/title_activity_data_of_locacion_screen" >
+        </activity>
+        <activity
+            android:name="cz.vutbr.fit.iha.activity.AddSensorActivity"
+            android:label="@string/title_activity_add_sensor" >
+        </activity>
+        <activity
+            android:name="cz.vutbr.fit.iha.activity.SensorDetailActivity"
+            android:label="@string/title_activity_sensor_detail" >
+        </activity>
+        <activity
+            android:name="cz.vutbr.fit.iha.activity.LoginFacebookActivity"
+            android:label="@string/title_activity_login_facebook" >
+        </activity>
+        <activity
+            android:name="cz.vutbr.fit.iha.activity.AddAdapterActivity"
+            android:label="@string/title_activity_add_adapter" >
+        </activity>
+        <activity
+            android:name="cz.vutbr.fit.iha.activity.RegistrationActivity"
+            android:label="@string/title_activity_registration" >
+        </activity>
+        <activity
+            android:name="cz.vutbr.fit.iha.activity.WidgetConfigurationActivity"
+            android:label="@string/title_activity_widget_configuration" >
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="cz.vutbr.fit.iha.activity.dialog.AddSensorActivityDialog"
+            android:theme="@style/MyDialog" >
+        </activity>
+        <activity
+            android:name="cz.vutbr.fit.iha.activity.dialog.AddAdapterActivityDialog"
+            android:theme="@style/MyDialog" >
+        </activity>
+
+        <receiver
+            android:name="cz.vutbr.fit.iha.widget.SensorWidgetProvider"
+            android:icon="@drawable/ic_launcher"
+            android:label="@string/widget_sensor_title" >
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/widget_sensor" />
+        </receiver>
+
+        <service
+            android:name="cz.vutbr.fit.iha.widget.WidgetUpdateService"
+            android:enabled="true"
+            android:exported="false" >
+        </service>
+
+        <!-- SONY SMARTWATCH2 -->
+        <activity
+            android:name="cz.vutbr.fit.iha.extension.watches.smartwatch2.SW2PreferenceActivity"
+            android:label="@string/preference_activity_title" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+            </intent-filter>
+        </activity>
+
+        <service android:name="cz.vutbr.fit.iha.extension.watches.smartwatch2.SW2ExtensionService" />
+
+        <receiver
+            android:name="cz.vutbr.fit.iha.extension.watches.smartwatch2.SW2ExtensionReceiver"
+            android:permission="com.sonyericsson.extras.liveware.aef.HOSTAPP_PERMISSION" >
+            <intent-filter>
+
+                <!-- Generic extension intents. -->
+                <action android:name="com.sonyericsson.extras.liveware.aef.registration.EXTENSION_REGISTER_REQUEST" />
+                <action android:name="com.sonyericsson.extras.liveware.aef.registration.ACCESSORY_CONNECTION" />
+                <action android:name="android.intent.action.LOCALE_CHANGED" />
+
+                <!-- Notification intents -->
+                <action android:name="com.sonyericsson.extras.liveware.aef.notification.VIEW_EVENT_DETAIL" />
+                <action android:name="com.sonyericsson.extras.liveware.aef.notification.REFRESH_REQUEST" />
+
+                <!-- Widget intents -->
+                <action android:name="com.sonyericsson.extras.aef.widget.START_REFRESH_IMAGE_REQUEST" />
+                <action android:name="com.sonyericsson.extras.aef.widget.STOP_REFRESH_IMAGE_REQUEST" />
+                <action android:name="com.sonyericsson.extras.aef.widget.ONTOUCH" />
+                <action android:name="com.sonyericsson.extras.liveware.extension.util.widget.scheduled.refresh" />
+
+                <!-- Control intents -->
+                <action android:name="com.sonyericsson.extras.aef.control.START" />
+                <action android:name="com.sonyericsson.extras.aef.control.STOP" />
+                <action android:name="com.sonyericsson.extras.aef.control.PAUSE" />
+                <action android:name="com.sonyericsson.extras.aef.control.RESUME" />
+                <action android:name="com.sonyericsson.extras.aef.control.ERROR" />
+                <action android:name="com.sonyericsson.extras.aef.control.KEY_EVENT" />
+                <action android:name="com.sonyericsson.extras.aef.control.TOUCH_EVENT" />
+                <action android:name="com.sonyericsson.extras.aef.control.SWIPE_EVENT" />
+                <action android:name="com.sonyericsson.extras.aef.control.OBJECT_CLICK_EVENT" />
+                <action android:name="com.sonyericsson.extras.aef.control.LIST_REFERESH_REQUEST" />
+                <action android:name="com.sonyericsson.extras.aef.control.LIST_REQUEST_ITEM" />
+                <action android:name="com.sonyericsson.extras.aef.control.LIST_ITEM_CLICK" />
+                <action android:name="com.sonyericsson.extras.aef.control.LIST_ITEM_SELECTED" />
+                <action android:name="com.sonyericsson.extras.aef.control.MENU_ITEM_SELECTED" />
+                <action android:name="com.sonyericsson.extras.aef.control.MENU_SHOW" />
+            </intent-filter>
+        </receiver>
+
+        
+    </application>
+
+</manifest>
