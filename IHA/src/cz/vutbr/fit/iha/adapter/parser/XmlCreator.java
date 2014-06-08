@@ -580,7 +580,7 @@ public class XmlCreator {
 				serializer.attribute(ns, INITIALIZED, (device.isInitialized())?INIT_1:INIT_0);
 				serializer.attribute(ns, TYPE, HEX+Integer.toHexString(device.getType()));
 				serializer.attribute(ns, ID, device.getAddress());
-				serializer.attribute(ns, VISIBILITY, Character.toString(device.getVisibility()));
+				serializer.attribute(ns, VISIBILITY, Character.toString(device.getVisibilityChar()));
 				
 				Location location = device.getLocation();
 				if(location != null && location.getId().length() > 0){
@@ -604,8 +604,6 @@ public class XmlCreator {
 					serializer.text(device.getStringValue());
 					serializer.endTag(ns, VALUE);
 				}
-				// TODO: do it better
-				
 					serializer.startTag(ns, LOGGING);
 					serializer.attribute(ns, ENABLED, (device.isLogging())?INIT_1:INIT_0);
 					serializer.endTag(ns, LOGGING);

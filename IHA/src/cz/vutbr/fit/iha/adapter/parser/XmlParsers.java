@@ -9,6 +9,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Locale;
@@ -16,6 +18,7 @@ import java.util.Locale;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 
+import android.annotation.SuppressLint;
 import android.util.Log;
 import android.util.Xml;
 import cz.vutbr.fit.iha.Constants;
@@ -47,7 +50,7 @@ public class XmlParsers {
 	/**
 	 * Thats mean Android OS
 	 */
-	public static final String COM_VER = "1.6"; 
+	public static final String COM_VER = "1.6";
 	public static final String XML_VER = "1.0.1";
 	
 	/**
@@ -106,6 +109,9 @@ public class XmlParsers {
 	public static final String POSITIVEONE = "1";
 	public static final String ICON = "icon";
 	public static final String VIEW = "view";
+	public static final String HWUPDATED = "hwupdated";
+	
+	public static final String DATEFORMAT = "yyyy-MM-dd HH:mm:ss";
 	
 	// exception
 	private static final String mComVerMisExcMessage = "Communication version mismatch.";
@@ -121,8 +127,9 @@ public class XmlParsers {
 	 * @throws IOException
 	 * @throws ComVerMisException means Communication version mismatch exception
 	 * @throws XmlVerMisException menas Xml version mismatch exception
+	 * @throws ParseException 
 	 */
-	public static ParsedMessage parseCommunication(String xmlInput, boolean namespace) throws XmlPullParserException, IOException, ComVerMisException, XmlVerMisException{
+	public static ParsedMessage parseCommunication(String xmlInput, boolean namespace) throws XmlPullParserException, IOException, ComVerMisException, XmlVerMisException, ParseException{
 		mParser = Xml.newPullParser();
 		mParser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, namespace);
 		
@@ -194,8 +201,9 @@ public class XmlParsers {
 	 * @throws XmlPullParserException
 	 * @throws IOException
 	 * @throws XmlVerMisException means XML version mismatch exception
+	 * @throws ParseException 
 	 */
-	private static Adapter parseXml(String role) throws XmlPullParserException, IOException, XmlVerMisException{
+	private static Adapter parseXml(String role) throws XmlPullParserException, IOException, XmlVerMisException, ParseException{
 		Adapter result = new Adapter();
 		mParser.nextTag();
 		mParser.require(XmlPullParser.START_TAG, ns, ADAPTER);
@@ -221,8 +229,10 @@ public class XmlParsers {
 	 * @return List of devices
 	 * @throws XmlPullParserException
 	 * @throws IOException
+	 * @throws ParseException 
 	 */
-	private static ArrayList<BaseDevice> parsePartial() throws XmlPullParserException, IOException{
+	@SuppressLint("SimpleDateFormat")
+	private static ArrayList<BaseDevice> parsePartial() throws XmlPullParserException, IOException, ParseException{
 		mParser.nextTag();
 		//mParser.require(XmlPullParser.START_TAG, ns, DEVICE); // strict solution
 		
@@ -231,16 +241,14 @@ public class XmlParsers {
 		if(!mParser.getName().equals(DEVICE))
 			return result;
 		
-		do{	
+		do{
 			BaseDevice device = getDeviceByType(getSecureAttrValue(ns, TYPE));
 			device.setAddress(getSecureAttrValue(ns, ID));
 			device.setInitialized((getSecureAttrValue(ns, INITIALIZED).equals(INIT_1))?true:false);
 			if(!device.isInitialized()){
 				device.setInvolveTime(getSecureAttrValue(ns, INVOLVED));
 			}
-			String tmp = getSecureAttrValue(ns, VISIBILITY);
-			tmp = tmp.toLowerCase(Locale.US);
-			device.setVisibility(tmp.charAt(0));
+			device.setVisibility(getSecureAttrValue(ns, VISIBILITY).toLowerCase(Locale.US).charAt(0));
 			
 			String nameTag = null;
 			
@@ -260,14 +268,17 @@ public class XmlParsers {
 					device.setBattery(Integer.parseInt(readText(BATTERY)));
 				else if(nameTag.equals(QUALITY))
 					device.setQuality(Integer.parseInt(readText(QUALITY)));
-				else if(nameTag.equals(VALUE))
+				else if(nameTag.equals(VALUE)){
+					String hwupdated = getSecureAttrValue(ns, HWUPDATED);
+					if(hwupdated.length() < 1){
+						device.lastUpdate.setToNow();
+					}else{
+						device.lastUpdate.set((new SimpleDateFormat(DATEFORMAT).parse(hwupdated)).getTime());
+					}
 					device.setValue(readText(VALUE));
+				}
 				else if(nameTag.equals(LOGGING))
 					device.setLogging((getSecureAttrValue(ns, ENABLED).equals(INIT_1))?true:false);
-				else // TODO: set correct last update time
-					device.lastUpdate.setToNow();
-				//else if(nameTag.equals(LASTUPDATE))
-				//	device.lastUpdate.set(time);
 			}
 			
 			result.add(device);

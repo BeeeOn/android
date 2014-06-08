@@ -7,7 +7,7 @@
 			<refresh>5</refresh>
 			<battery>100</battery>
 			<quality>52</quality>
-			<value>30</value>
+			<value hwupdated="2013-08-28 10:03:56">30</value>
 			<logging enabled="1"/>
 		</device>
 		<device initialized="1" type="0x00" id="100:00:FF:000:FF1" visibility="I">
@@ -16,7 +16,7 @@
 			<refresh>12</refresh>
 			<battery>70</battery>
 			<quality>52</quality>
-			<value>120</value>
+			<value hwupdated="2013-08-28 10:03:56">120</value>
 			<logging enabled="0"/>
 		</device>
 		<device initialized="1" type="0x03" id="100:00:FF:000:FF2" visibility="I"> <!-- switch (open/close) -->
@@ -25,7 +25,7 @@
 			<refresh>12</refresh>
 			<battery>70</battery>
 			<quality>25</quality>
-			<value>OFF</value>
+			<value hwupdated="2013-08-28 10:03:56">OFF</value>
 			<logging enabled="0"/>
 		</device>
 		<device initialized="1" type="0x03" id="100:00:FF:000:FF3" visibility="I">
@@ -34,7 +34,7 @@
 			<refresh>12</refresh>
 			<battery>70</battery>
 			<quality>25</quality>
-			<value>ON</value>
+			<value hwupdated="2013-08-28 10:03:56">ON</value>
 			<logging enabled="0"/>
 		</device>
 		<device initialized="1" type="0x06" id="100:00:FF:000:FF4" visibility="I"> <!-- noise (dB) -->
@@ -43,7 +43,7 @@
 			<refresh>12</refresh>
 			<battery>100</battery>
 			<quality>52</quality>
-			<value>30</value>
+			<value hwupdated="2013-08-28 10:03:56">30</value>
 			<logging enabled="0"/>
 		</device>
 		<device initialized="1" type="0x05" id="100:00:FF:000:FF5" visibility="I"> <!-- illumination (lx) -->
@@ -52,7 +52,7 @@
 			<refresh>12</refresh>
 			<battery>100</battery>
 			<quality>52</quality>
-			<value>15</value>
+			<value hwupdated="2013-08-28 10:03:56">15</value>
 			<logging enabled="0"/>
 		</device>
 		<device initialized="0" type="0x07" involved="2013-08-28 10:03:56" id="100:00:FF:000:FF6" visibility="I"> <!-- emission (ppm) -->
@@ -61,7 +61,7 @@
 			<refresh>12</refresh>
 			<battery>100</battery>
 			<quality>52</quality>
-			<value>430</value>
+			<value hwupdated="2013-08-28 10:03:56">430</value>
 			<logging enabled="0"/>
 		</device>
 		<device initialized="1" type="0x04" id="100:00:FF:000:FF7" visibility="I"> <!-- switch (On/Off) -->
@@ -70,7 +70,7 @@
 			<refresh>12</refresh>
 			<battery>70</battery>
 			<quality>52</quality>
-			<value>ON</value>
+			<value hwupdated="2013-08-28 10:03:56">ON</value>
 			<logging enabled="0"/>
 		</device>
 		<device initialized="1" type="0x04" id="100:00:FF:000:FF8" visibility="I">
@@ -79,7 +79,7 @@
 			<refresh>12</refresh>
 			<battery>0</battery>
 			<quality>52</quality>
-			<value>OFF</value>
+			<value hwupdated="2013-08-28 10:03:56">OFF</value>
 			<logging enabled="0"/>
 		</device>
 		<device initialized="1" type="0x04" id="100:00:FF:000:FF9" visibility="I">
@@ -88,7 +88,7 @@
 			<refresh>12</refresh>
 			<battery>100</battery>
 			<quality>52</quality>
-			<value>ON</value>
+			<value hwupdated="2013-08-28 10:03:56">ON</value>
 			<logging enabled="0"/>
 		</device>
 		<device initialized="1" type="0x04" id="100:00:FF:000:FFA" visibility="I">
@@ -97,7 +97,7 @@
 			<refresh>12</refresh>
 			<battery>100</battery>
 			<quality>52</quality>
-			<value>ON</value>
+			<value hwupdated="2013-08-28 10:03:56">ON</value>
 			<logging enabled="0"/>
 		</device>
 		<device initialized="1" type="0x04" id="100:00:FF:000:FFB" visibility="I">
@@ -106,7 +106,7 @@
 			<refresh>12</refresh>
 			<battery>100</battery>
 			<quality>52</quality>
-			<value>ON</value>
+			<value hwupdated="2013-08-28 10:03:56">ON</value>
 			<logging enabled="0"/>
 		</device>
 		<device initialized="1" type="0x01" id="100:00:FF:000:FFC" visibility="I"> <!-- humidity (%r) -->
@@ -115,7 +115,7 @@
 			<refresh>12</refresh>
 			<battery>100</battery>
 			<quality>52</quality>
-			<value>20</value>
+			<value hwupdated="2013-08-28 10:03:56">20</value>
 			<logging enabled="0"/>
 		</device>
 		<device initialized="1" type="0x02" id="100:00:FF:000:FFD" visibility="I"> <!-- pressure (hPa) -->
@@ -124,7 +124,7 @@
 			<refresh>12</refresh>
 			<battery>100</battery>
 			<quality>52</quality>
-			<value>1058</value>
+			<value hwupdated="2013-08-28 10:03:56">1058</value>
 			<logging enabled="0"/>
 		</device>
 	</capabilities>

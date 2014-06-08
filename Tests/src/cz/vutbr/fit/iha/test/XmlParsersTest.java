@@ -26,20 +26,8 @@ public class XmlParsersTest extends TestCase {
 	
 	
 	private static String TAG = "XmlParsersTest";
-//	private static String EMAIL = "testmail@domain.com";
-//	private static String GTOKEN = "9845658";
 	private static int ID = 425644;
 	private static String GVERSION = "1.6";
-	//FIXME: length of serial???
-//	private static int SERIAL = 555645792;
-//	private static int ADAPTERID = SERIAL;
-//	private static int ADAPTERIDOLD = ADAPTERID++;
-//	private static String DEVICEID = "120:07:ff:000:ffe";
-//	private static String FROM = "2013-08-28-10:00:00";
-//	private static String TO = "2013-08-28-10:09:00";
-//	private static String ADDITIONALINFO = "changeconaccount";
-//	private static String XML = "something";
-//	private static String VIEWNAME = "custom_name";
 	
 	//messages
 	private static String READY_1 = "<?xml version='1.0' encoding='UTF-8' ?><communication id=\""+ID+"\" state=\"ready\" version=\""+GVERSION+"\">";
@@ -106,23 +94,6 @@ public class XmlParsersTest extends TestCase {
 		Log.i(TAG, "ReadyTest1");
 		
 		try {
-			//TODO: remove commented code
-//			HashMap<String, HashMap<Integer, Object>> result = XmlParsers.parseCommunication_old(xmlMessage, false);
-//			for(Map.Entry<String, HashMap<Integer, Object>> entry : result.entrySet()){
-//				assertTrue("ReadyTest1: bad state", entry.getKey().equals(state));
-//				
-//				for(Map.Entry<Integer, Object> data : entry.getValue().entrySet()){
-//					int id = data.getKey();
-//					ArrayList<Adapter> adapters = (ArrayList<Adapter>) data.getValue();
-//					Log.d(TAG, "Communication id: " + id);
-//					for(Adapter adapter : adapters){
-//						Log.d(TAG, "Ready: id: " + adapter.getId());
-//						Log.d(TAG, "Ready: name: " + adapter.getName());
-//						Log.d(TAG, "Ready: role: " + adapter.getRole());
-//					}
-//					
-//				}
-//			}
 			ParsedMessage result = XmlParsers.parseCommunication(xmlMessage, false);
 			assertTrue("ReadyTest1: bad state", result.getState().equals(state));
 			Log.d(TAG, "Communication id: " + result.getSessionId());
@@ -178,19 +149,6 @@ public class XmlParsersTest extends TestCase {
 		Log.i(TAG, "ContentTest1");
 		
 		try {
-//			HashMap<String, HashMap<Integer, Object>> result = XmlParsers.parseCommunication_old(xmlMessage, false);
-//			for(Map.Entry<String, HashMap<Integer, Object>> entry : result.entrySet()){
-//				assertTrue("ContentTest1: bad state", entry.getKey().equals(state));
-//				
-//				for(Map.Entry<Integer, Object> data : entry.getValue().entrySet()){
-//					int id = data.getKey();
-//					ArrayList<String> rows = (ArrayList<String>) data.getValue();
-//					Log.d(TAG, "Communication id: " + id);
-//					for(String row : rows){
-//						Log.d(TAG, "Content: row -> " + row);
-//					}
-//				}
-//			}
 			ParsedMessage result = XmlParsers.parseCommunication(xmlMessage, false);
 			assertTrue("ContentyTest1: bad state", result.getState().equals(state));
 			Log.d(TAG, "Communication id: " + result.getSessionId());
@@ -217,20 +175,6 @@ public class XmlParsersTest extends TestCase {
 		Log.i(TAG, "ConAccountListTest1");
 		
 		try {
-//			HashMap<String, HashMap<Integer, Object>> result = XmlParsers.parseCommunication_old(xmlMessage, false);
-//			for(Map.Entry<String, HashMap<Integer, Object>> entry : result.entrySet()){
-//				assertTrue("ConAccountListTest1: bad state", entry.getKey().equals(state));
-//				
-//				for(Map.Entry<Integer, Object> data : entry.getValue().entrySet()){
-//					int id = data.getKey();
-//					HashMap<String, String> users = (HashMap<String, String>) data.getValue();
-//					Log.d(TAG, "Communication id: " + id);
-//					for(Map.Entry<String, String> user : users.entrySet()){
-//						Log.d(TAG, "ConAccountList: email: " + user.getKey());
-//						Log.d(TAG, "ConAccountList: role: " + user.getValue());
-//					}
-//				}
-//			}
 			ParsedMessage result = XmlParsers.parseCommunication(xmlMessage, false);
 			assertTrue("ConAccountListTest1: bad state", result.getState().equals(state));
 			Log.d(TAG, "Communication id: " + result.getSessionId());
@@ -259,25 +203,6 @@ public class XmlParsersTest extends TestCase {
 		Log.i(TAG, "FalseTest1");
 		
 		try {
-//			HashMap<String, HashMap<Integer, Object>> result = XmlParsers.parseCommunication_old(xmlMessage, false);
-//			for(Map.Entry<String, HashMap<Integer, Object>> entry : result.entrySet()){
-//				assertTrue("FalseTest1: bad state", entry.getKey().equals(state));
-//				
-//				for(Map.Entry<Integer, Object> data : entry.getValue().entrySet()){
-//					int id = data.getKey();
-//					HashMap<String, HashMap<String, String>> info = (HashMap<String, HashMap<String, String>>) data.getValue();
-//					Log.d(TAG, "Communication id: " + id);
-//					
-//					for(Map.Entry<String, HashMap<String, String>> users : info.entrySet()){
-//						Log.d(TAG, "False: additionalinfo: " + users.getKey());
-//						
-//						for(Map.Entry<String, String> user : users.getValue().entrySet()){
-//							Log.d(TAG, "False: email: " + user.getKey());
-//							Log.d(TAG, "False: role: " + user.getValue());
-//						}
-//					}
-//				}
-//			}
 			
 			ParsedMessage result = XmlParsers.parseCommunication(xmlMessage, false);
 			assertTrue("FalseTest1: bad state", result.getState().equals(state));
@@ -305,25 +230,6 @@ public class XmlParsersTest extends TestCase {
 		Log.i(TAG, "FalseTest2");
 		
 		try {
-//			HashMap<String, HashMap<Integer, Object>> result = XmlParsers.parseCommunication_old(xmlMessage, false);
-//			for(Map.Entry<String, HashMap<Integer, Object>> entry : result.entrySet()){
-//				assertTrue("FalseTest2: bad state", entry.getKey().equals(state));
-//				
-//				for(Map.Entry<Integer, Object> data : entry.getValue().entrySet()){
-//					int id = data.getKey();
-//					HashMap<String, HashMap<String, String>> info = (HashMap<String, HashMap<String, String>>) data.getValue();
-//					Log.d(TAG, "Communication id: " + id);
-//					
-//					for(Map.Entry<String, HashMap<String, String>> users : info.entrySet()){
-//						Log.d(TAG, "False: additionalinfo: " + users.getKey());
-//						
-//						for(Map.Entry<String, String> user : users.getValue().entrySet()){
-//							Log.d(TAG, "False: email: " + user.getKey());
-//							Log.d(TAG, "False: role: " + user.getValue());
-//						}
-//					}
-//				}
-//			}
 			
 			ParsedMessage result = XmlParsers.parseCommunication(xmlMessage, false);
 			assertTrue("FalseTest2: bad state", result.getState().equals(state));
@@ -351,24 +257,6 @@ public class XmlParsersTest extends TestCase {
 		Log.i(TAG, "FalseTest3");
 		
 		try {
-//			HashMap<String, HashMap<Integer, Object>> result = XmlParsers.parseCommunication_old(xmlMessage, false);
-//			for(Map.Entry<String, HashMap<Integer, Object>> entry : result.entrySet()){
-//				assertTrue("FalseTest3: bad state", entry.getKey().equals(state));
-//				
-//				for(Map.Entry<Integer, Object> data : entry.getValue().entrySet()){
-//					int id = data.getKey();
-//					HashMap<String, HashMap<String, String>> info = (HashMap<String, HashMap<String, String>>) data.getValue();
-//					Log.d(TAG, "Communication id: " + id);
-//					
-//					for(Map.Entry<String, HashMap<String, String>> users : info.entrySet()){
-//						Log.d(TAG, "False: additionalinfo: " + users.getKey());
-//						
-//						for(Map.Entry<String, String> user : users.getValue().entrySet()){
-//							Log.d(TAG, "False: email: " + user.getKey());
-//						}
-//					}
-//				}
-//			}
 			
 			ParsedMessage result = XmlParsers.parseCommunication(xmlMessage, false);
 			assertTrue("FalseTest3: bad state", result.getState().equals(state));
@@ -396,14 +284,6 @@ public class XmlParsersTest extends TestCase {
 		Log.i(TAG, "NotRegATest1");
 		
 		try {
-//			HashMap<String, HashMap<Integer, Object>> result = XmlParsers.parseCommunication_old(xmlMessage, false);
-//			for(Map.Entry<String, HashMap<Integer, Object>> entry : result.entrySet()){
-//				assertTrue("NotRegATest1: bad state", entry.getKey().equals(state));
-//				
-//				for(Map.Entry<Integer, Object> data : entry.getValue().entrySet()){
-//					Log.d(TAG, "Communication id: " + data.getKey());
-//				}
-//			}
 			
 			ParsedMessage result = XmlParsers.parseCommunication(xmlMessage, false);
 			assertTrue("NotRegATest1: bad state", result.getState().equals(state));
@@ -420,14 +300,6 @@ public class XmlParsersTest extends TestCase {
 		Log.i(TAG, "NotRegBTest1");
 		
 		try {
-//			HashMap<String, HashMap<Integer, Object>> result = XmlParsers.parseCommunication_old(xmlMessage, false);
-//			for(Map.Entry<String, HashMap<Integer, Object>> entry : result.entrySet()){
-//				assertTrue("NotRegBTest1: bad state", entry.getKey().equals(state));
-//				
-//				for(Map.Entry<Integer, Object> data : entry.getValue().entrySet()){
-//					Log.d(TAG, "Communication id: " + data.getKey());
-//				}
-//			}
 			
 			ParsedMessage result = XmlParsers.parseCommunication(xmlMessage, false);
 			assertTrue("NotRegBTest1: bad state", result.getState().equals(state));
@@ -465,15 +337,6 @@ public class XmlParsersTest extends TestCase {
 		Log.i(TAG, "TrueTest1");
 		
 		try {
-//			HashMap<String, HashMap<Integer, Object>> result = XmlParsers.parseCommunication_old(xmlMessage, false);
-//			for(Map.Entry<String, HashMap<Integer, Object>> entry : result.entrySet()){
-//				assertTrue("TrueTest1: bad state", entry.getKey().equals(state));
-//				
-//				for(Map.Entry<Integer, Object> data : entry.getValue().entrySet()){
-//					Log.d(TAG, "Communication id: " + data.getKey());
-//					Log.d(TAG, "Communication additionalifno: " + data.getValue());
-//				}
-//			}
 			
 			ParsedMessage result = XmlParsers.parseCommunication(xmlMessage, false);
 			assertTrue("NotRegBTest1: bad state", result.getState().equals(state));
@@ -524,20 +387,6 @@ public class XmlParsersTest extends TestCase {
 		Log.i(TAG, "PartialTest1");
 		
 		try {
-//			HashMap<String, HashMap<Integer, Object>> result = XmlParsers.parseCommunication_old(xmlMessage, false);
-//			for(Map.Entry<String, HashMap<Integer, Object>> entry : result.entrySet()){
-//				assertTrue("PartialTest1: bad state", entry.getKey().equals(state));
-//				
-//				for(Map.Entry<Integer, Object> data : entry.getValue().entrySet()){
-//					int id = data.getKey();
-//					ArrayList<BaseDevice> devices =  (ArrayList<BaseDevice>) data.getValue();
-//					Log.d(TAG, "Communication id: " + id);
-//					
-//					for(BaseDevice device : devices){
-//						Log.d(TAG, "Partial: " + device.toString(false));
-//					}
-//				}
-//			}
 			
 			ParsedMessage result = XmlParsers.parseCommunication(xmlMessage, false);
 			assertTrue("ReSignBTest1: bad state", result.getState().equals(state));
@@ -598,18 +447,6 @@ public class XmlParsersTest extends TestCase {
 		Log.i(TAG, "XmlTest1");
 		
 		try {
-//			HashMap<String, HashMap<Integer, Object>> result = XmlParsers.parseCommunication_old(xmlMessage, false);
-//			for(Map.Entry<String, HashMap<Integer, Object>> entry : result.entrySet()){
-//				assertTrue("XmlTest1: bad state", entry.getKey().equals(state));
-//				
-//				for(Map.Entry<Integer, Object> data : entry.getValue().entrySet()){
-//					int id = data.getKey();
-//					Adapter adapter =  (Adapter) data.getValue();
-//					Log.d(TAG, "Communication id: " + id);
-//					
-//					Log.d(TAG, "Xml: "+adapter.toString());
-//				}
-//			}
 			
 			ParsedMessage result = XmlParsers.parseCommunication(xmlMessage, false);
 			assertTrue("XmlTest1: bad state", result.getState().equals(state));

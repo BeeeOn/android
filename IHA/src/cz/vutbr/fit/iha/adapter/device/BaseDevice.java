@@ -19,7 +19,7 @@ public abstract class BaseDevice {
 	protected int mBattery;
 	protected boolean mLogging;
 	protected String mInvolveTime = "";
-	protected char mVisibility;
+	protected VisibilityState mVisibility;
 	
 	protected NetworkState mNetwork = new NetworkState();
 	
@@ -49,6 +49,17 @@ public abstract class BaseDevice {
 		SAVE_LOGGING,		// change logging on server
 		SAVE_REFRESH,		// change refresh interval
 		SAVE_TYPE,			// change device's icon, etc.
+	}
+	
+	/**
+	 * Represents visibility state of device 
+	 * @author ThinkDeep
+	 *
+	 */
+	public enum VisibilityState {
+		VISIBLE,
+		HIDDEN,
+		DELETE
 	}
 	
 	/**
@@ -201,8 +212,8 @@ public abstract class BaseDevice {
 	 * Get visibility of device
 	 * @return visibility
 	 */
-	public char getVisibility(){
-		return mVisibility;
+	public char getVisibilityChar(){
+		return getVisibilityFromState(mVisibility);
 	}
 	
 	/**
@@ -210,7 +221,46 @@ public abstract class BaseDevice {
 	 * @param visibility
 	 */
 	public void setVisibility(char visibility){
-		mVisibility = visibility;
+		mVisibility = getVisibilityFromChar(visibility);
+	}
+	
+	public void setVisibility(VisibilityState state){
+		mVisibility = state;
+	}
+	
+	public VisibilityState getVisibility(){
+		return mVisibility;
+	}
+	
+	/**
+	 * Method parse char to visibitilyState
+	 * @param visibility
+	 * @return VisibilityState by char or HIDDEN
+	 */
+	public static VisibilityState getVisibilityFromChar(char visibility){
+		switch(visibility){
+			case 'i':
+				return VisibilityState.VISIBLE;
+			case 'o':
+				return VisibilityState.HIDDEN;
+			case 'x':
+				return VisibilityState.DELETE;
+			default:
+				return VisibilityState.HIDDEN;
+		}
+	}
+	
+	public static char getVisibilityFromState(VisibilityState visibility){
+		switch(visibility){
+		case DELETE:
+			return 'x';
+		case HIDDEN:
+			return 'o';
+		case VISIBLE:
+			return 'i';
+		default:
+			return 'o';
+		}
 	}
 	
 	/**

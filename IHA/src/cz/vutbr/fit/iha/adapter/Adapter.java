@@ -149,6 +149,7 @@ public class Adapter {
 		return mDevices.getLocations();
 	}
 	
+	@Deprecated
 	/**
 	 * Return object as XML file
 	 * @return created XML string
