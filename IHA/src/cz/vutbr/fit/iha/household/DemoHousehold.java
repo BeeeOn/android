@@ -10,7 +10,7 @@ import cz.vutbr.fit.iha.User;
 import cz.vutbr.fit.iha.User.Gender;
 import cz.vutbr.fit.iha.User.Role;
 import cz.vutbr.fit.iha.adapter.Adapter;
-import cz.vutbr.fit.iha.adapter.parser.XmlDeviceParser;
+import cz.vutbr.fit.iha.adapter.parser.XmlParsers;
 import cz.vutbr.fit.iha.listing.CustomizedListing;
 import cz.vutbr.fit.iha.listing.FavoritesListing;
 
@@ -55,8 +55,14 @@ public final class DemoHousehold extends Household {
 		this.adapters = new ArrayList<Adapter>();
 		try{
 			String filename = mContext.getExternalFilesDir(null).getPath() + "/" +  Constants.DEMO_FILENAME;
-			//TODO: make new function
-			Adapter adapter = XmlDeviceParser.fromFile(filename);
+//			Adapter adapter = XmlDeviceParser.fromFile(filename);
+			Adapter adapter = XmlParsers.fromFile(filename);
+			if(adapter == null){
+				if((new DemoData(mContext)).checkDemoData()){
+					//FIXME: do it better
+					adapter = XmlParsers.fromFile(filename);
+				}
+			}
 			this.adapters.add(adapter);
 		}
 		catch(Exception e){

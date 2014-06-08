@@ -3,8 +3,12 @@
  */
 package cz.vutbr.fit.iha.adapter.parser;
 
+import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Locale;
@@ -12,7 +16,6 @@ import java.util.Locale;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 
-import android.annotation.SuppressLint;
 import android.util.Log;
 import android.util.Xml;
 import cz.vutbr.fit.iha.Constants;
@@ -108,90 +111,6 @@ public class XmlParsers {
 	private static final String mComVerMisExcMessage = "Communication version mismatch.";
 	private static final String mXmlVerMisExcMessage = "Xml version mismatch.";
 
-	
-	/**
-	 * Method parse message (XML) in communication version 1.0 and XML adapter version 1.0.0
-	 * @param xmlInput string with XML contains communication tag as root
-	 * @param namespace false
-	 * @return HashMap with one element where
-	 * 			Key is state of communication
-	 * 			Value is HashMap with one element where
-	 * 				Key is sessionID
-	 * 				Value is Object containing data according to state
-	 * @throws XmlPullParserException
-	 * @throws IOException
-	 */
-	@SuppressLint("UseSparseArrays")
-	@SuppressWarnings("unchecked")
-	@Deprecated
-	public static HashMap<String, HashMap<Integer, Object>> parseCommunication_old(String xmlInput, boolean namespace) throws XmlPullParserException, IOException{
-		mParser = Xml.newPullParser();
-		mParser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, namespace);
-		
-		HashMap<String, HashMap<Integer, Object>> outerResult = new HashMap<String, HashMap<Integer, Object>>();
-		
-		@SuppressWarnings("rawtypes")
-		HashMap innerResult = null;
-		String state = null;
-		int id = 0;
-		
-		mParser.setInput(new ByteArrayInputStream(xmlInput.getBytes("UTF-8")), null);
-		mParser.nextTag();
-		
-		mParser.require(XmlPullParser.START_TAG, ns, COM_ROOT);
-		
-		state = mParser.getAttributeValue(ns, STATE);
-		id = Integer.parseInt(mParser.getAttributeValue(ns, ID));
-		
-		switch(getStateEnum(state)){
-		case eCONACCOUNTLIST:
-			innerResult = new HashMap<Integer, HashMap<String, String>>();
-			innerResult.put(id, parseConAccountList_old());
-			break;
-		case eCONTENT:
-			innerResult = new HashMap<Integer, ArrayList<String>>();
-			innerResult.put(id, parseContent_old());
-			break;
-		case eFALSE:
-			innerResult = new HashMap<Integer, HashMap<String, HashMap<String, String>>>();
-			innerResult.put(id, parseFalse_old(mParser.getAttributeValue(ns, ADDITIONALINFO)));
-			break;
-		case eNOTREGA:
-		case eNOTREGB:
-			innerResult = new HashMap<Integer, Object>();
-			innerResult.put(id, null);
-			break;
-		case ePARTIAL:
-			innerResult = new HashMap<Integer, ArrayList<BaseDevice>>();
-			innerResult.put(id, parsePartial());
-			break;
-		case eREADY:
-			innerResult = new HashMap<Integer, HashMap<String, String>>();
-			innerResult.put(id, parseReady());
-			break;
-		case eTRUE:
-			innerResult = new HashMap<Integer, String>();
-			innerResult.put(id, mParser.getAttributeValue(ns, ADDITIONALINFO));
-			break;
-		case eXML:
-			innerResult = new HashMap<Integer, Adapter>();
-			try {
-				innerResult.put(id, parseXml(mParser.getAttributeValue(ns, ROLE)));
-			} catch (XmlVerMisException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			break;
-		case eUNKNOWN: // never gonna happen :D
-			break;
-		default:
-			break;
-		}
-		
-		outerResult.put(state, innerResult);
-		
-		return outerResult;
-	}
 	
 	/**
 	 * Method parse message (XML) in communication version
@@ -319,7 +238,9 @@ public class XmlParsers {
 			if(!device.isInitialized()){
 				device.setInvolveTime(getSecureAttrValue(ns, INVOLVED));
 			}
-			device.setVisibility(getSecureAttrValue(ns, VISIBILITY).toLowerCase(Locale.US).charAt(0));
+			String tmp = getSecureAttrValue(ns, VISIBILITY);
+			tmp = tmp.toLowerCase(Locale.US);
+			device.setVisibility(tmp.charAt(0));
 			
 			String nameTag = null;
 			
@@ -385,29 +306,6 @@ public class XmlParsers {
 	
 	/**
 	 * Method parse inner part of Content.log message
-	 * @return ArrayList of rows of log
-	 * @throws XmlPullParserException
-	 * @throws IOException
-	 */
-	@Deprecated
-	private static ArrayList<String> parseContent_old() throws XmlPullParserException, IOException {
-		mParser.nextTag();
-		mParser.require(XmlPullParser.START_TAG, ns, ROW);
-		
-		ArrayList<String> result = new ArrayList<String>();
-		do{
-
-			String omg = readText(ROW);
-			
-			result.add(omg);
-
-		}while(mParser.nextTag() != XmlPullParser.END_TAG && !mParser.getName().equals(COM_ROOT));
-		
-		return result;
-	}
-	
-	/**
-	 * Method parse inner part of Content.log message
 	 * @return List with ContentRow objects
 	 * @throws XmlPullParserException
 	 * @throws IOException
@@ -421,28 +319,6 @@ public class XmlParsers {
 			
 			result.add(new ContentRow(readText(ROW)));
 
-		}while(mParser.nextTag() != XmlPullParser.END_TAG && !mParser.getName().equals(COM_ROOT));
-		
-		return result;
-	}
-	
-	/**
-	 * Method parse inner part of ConAccountList message
-	 * @return HashMap with email as key and role as value
-	 * @throws XmlPullParserException
-	 * @throws IOException
-	 */
-	@Deprecated
-	private static HashMap<String, String> parseConAccountList_old() throws XmlPullParserException, IOException{
-		mParser.nextTag();
-		mParser.require(XmlPullParser.START_TAG, ns, USER);
-		
-		HashMap<String, String> result = new HashMap<String, String>();
-		do{
-			String keyEmail = mParser.getAttributeValue(ns, EMAIL);
-			result.put(keyEmail, mParser.getAttributeValue(ns, ROLE));
-			mParser.nextTag();
-			
 		}while(mParser.nextTag() != XmlPullParser.END_TAG && !mParser.getName().equals(COM_ROOT));
 		
 		return result;
@@ -478,51 +354,6 @@ public class XmlParsers {
 		return result;
 	}
 	
-	/**
-	 * Method parse inner part of False message.
-	 * In standard way (additionalInfo in {ADDCONACOUNT|DELCONACCOUNT|CHANGECONACCOUNT})
-	 * returns email as key and role as value (except DELCONACCOUNT => role=null).
-	 * In non-standard way (unknown type of additionalInfo) is in key "nameOfTag#num" where
-	 * nameOfTag is name of actual tag and num is number of tag
-	 * @param additionalInfo is previous state
-	 * @return HashMap with user email as key and role as value (or null)
-	 * @throws XmlPullParserException
-	 * @throws IOException
-	 */
-	@Deprecated
-	private static HashMap<String, HashMap<String, String>> parseFalse_old(String additionalInfo) throws XmlPullParserException, IOException{
-		mParser.nextTag();
-		boolean unknownFlag = false;
-		int unknownCounter = 0;
-		if(additionalInfo.equals(ADDCONACCOUNT) || additionalInfo.equals(DELCONACCOUNT) || additionalInfo.equals(CHANGECONACCOUNT))
-			mParser.require(XmlPullParser.START_TAG, ns, USER);
-		else
-			unknownFlag = true;
-		
-		HashMap<String, HashMap<String, String>> result = new HashMap<String, HashMap<String, String>>();
-		HashMap<String, String> data = new HashMap<String, String>();
-		do{
-			String keyEmail = null;
-			String valueRole = null;
-			
-			if(additionalInfo.equals(ADDCONACCOUNT) || additionalInfo.equals(CHANGECONACCOUNT))
-				valueRole = mParser.getAttributeValue(ns, ROLE);
-			if(!unknownFlag){
-				keyEmail = mParser.getAttributeValue(ns, EMAIL);
-				data.put(keyEmail, valueRole);
-				mParser.nextTag();
-			}else{
-				keyEmail = mParser.getName() + "#" + Integer.toString(unknownCounter);
-				data.put(keyEmail, null);
-				skip();
-			}
-
-		}while(mParser.nextTag() != XmlPullParser.END_TAG && !mParser.getName().equals(COM_ROOT));
-		result.put(additionalInfo, data);
-		
-		return result;
-	}
-
 	/**
 	 * Method parse inner part of False message
 	 * @param additionalInfo
@@ -707,5 +538,49 @@ public class XmlParsers {
 		if(result == null)
 			result = "";
 		return result;
+	}
+
+	/**
+     * Factory for parsing adapter from file.
+     * @param filename - path to file
+     * @return Adapter object
+	 * @throws XmlPullParserException 
+     */
+	public static Adapter fromFile(String filename) {
+		Log.i(TAG, String.format("Parsing data from file '%s'", filename));
+		boolean ee = false;
+		
+		Adapter adapter = null;
+		
+		File file = new File(filename);
+		if (!file.exists() || !file.canRead()) {
+			Log.w(TAG, String.format("File '%s' doesn't exists or is not readable", filename));
+			return adapter;
+		}
+
+		InputStream in = null;
+		try {
+			in = new BufferedInputStream(new FileInputStream(file));
+			mParser = Xml.newPullParser();
+			mParser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false);
+			mParser.setInput(in, null);
+			adapter = parseXml("superuser");
+		} catch(XmlVerMisException e){
+			ee = true;
+		} catch(Exception e){
+			Log.e(TAG, e.getMessage(), e);
+		} finally {
+	        try {
+	        	if (in != null)
+	        		in.close();
+	        	if(ee){
+	        		file.delete();
+	        	}
+	        } catch (IOException ioe) {
+	        	Log.e(TAG, ioe.getMessage(), ioe);
+	        }
+		}
+
+		return adapter;
 	}
 }

@@ -4,9 +4,6 @@
 
 package cz.vutbr.fit.iha.adapter.parser;
 
-import java.io.DataOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -885,8 +882,7 @@ public class XmlCreator {
 	public static String createUpdateView(int id, String viewName, int iconNum, HashMap<String, String> devices){
 		return createUpdateView(Integer.toString(id), viewName, iconNum, devices);
 	}
-	
-	
+		
 	@Deprecated
 	/**
 	 * Method for creating XML file (string)
@@ -960,22 +956,4 @@ public class XmlCreator {
 		}
 	}
 	
-	@Deprecated
-	/**
-	 * Method saving XML file with filename on a phone to folder
-	 * @param filename name of new writing XML file
-	 * @param dir is path to the file
-	 */
-	public void saveXml(String dir, String filename){
-		try{
-			byte[] buffer = this.create().getBytes("UTF-8");
-			File file = new File(dir,filename);
-			DataOutputStream out = new DataOutputStream(new FileOutputStream(file));
-			out.flush();
-			out.write(buffer,0,buffer.length);
-			out.close();
-		}catch (Exception e){
-			e.printStackTrace();
-		}
-	}
 }
