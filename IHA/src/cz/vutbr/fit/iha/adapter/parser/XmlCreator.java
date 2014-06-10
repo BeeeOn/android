@@ -578,7 +578,7 @@ public class XmlCreator {
 			for(BaseDevice device : devices){
 				serializer.startTag(ns, DEVICE);
 				serializer.attribute(ns, INITIALIZED, (device.isInitialized())?INIT_1:INIT_0);
-				serializer.attribute(ns, TYPE, HEX+Integer.toHexString(device.getType()));
+				serializer.attribute(ns, TYPE, formatType(device.getType()));
 				serializer.attribute(ns, ID, device.getAddress());
 				serializer.attribute(ns, VISIBILITY, Character.toString(device.getVisibilityChar()));
 				
@@ -691,7 +691,7 @@ public class XmlCreator {
 			for(BaseDevice device : devices){
 				serializer.startTag(ns, DEVICE);
 				serializer.attribute(ns, ID, device.getAddress());
-				serializer.attribute(ns, TYPE, HEX+Integer.toHexString(device.getType()));
+				serializer.attribute(ns, TYPE, formatType(device.getType()));
 				serializer.endTag(ns, DEVICE);
 			}
 			
@@ -904,7 +904,7 @@ public class XmlCreator {
 				for (BaseDevice d : mAdapter.getDevices()) {
 					serializer.startTag(null, "device");
 					serializer.attribute(null, "initialized", (d.isInitialized() ? "1" : "0"));
-					serializer.attribute(null, "type", "0x" + Integer.toHexString(d.getType()));
+					serializer.attribute(null, "type", formatType(d.getType()));
 					if(!d.isInitialized())
 						serializer.attribute(null, "involved", d.getInvolveTime());
 					
@@ -953,6 +953,14 @@ public class XmlCreator {
 		}catch(Exception e){
 			throw new RuntimeException(e);
 		}
+	}
+
+	private static String formatType(int type) {
+		String hex = Integer.toHexString(type);
+		if (hex.length() == 1)
+			hex = "0" + hex;
+		
+		return "0x" + hex;
 	}
 	
 }
