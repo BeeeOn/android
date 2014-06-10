@@ -119,12 +119,12 @@ public class XmlCreatorTest extends TestCase {
 	
 	
 	private static String PARTIAL_ALL = "<?xml version='1.0' encoding='UTF-8' ?><communication id=\""+ID+"\" state=\"partial\" version=\""+GVERSION+"\">"
-			+ "<device initialized=\"1\" type=\"0x7\" id=\"120:07:ff:000:ffeem\" visibility=\"i\"><location type=\"1\">obyvak</location><name>sen1</name><logging enabled=\"0\" /></device>"
-			+ "<device initialized=\"1\" type=\"0x1\" id=\"120:07:ff:000:ffehu\" visibility=\"x\"><name>vlhkomer</name><logging enabled=\"0\" /></device>"
-			+ "<device initialized=\"1\" type=\"0x5\" id=\"120:07:ff:000:ffeil\" visibility=\"x\"><name>sen2</name><refresh>5</refresh><logging enabled=\"0\" /></device>"
-			+ "<device initialized=\"1\" type=\"0x4\" id=\"120:07:ff:000:ffesw\" visibility=\"i\"><name>sen3</name><logging enabled=\"0\" /></device>"
-			+ "<device initialized=\"1\" type=\"0x6\" id=\"120:07:ff:000:ffeno\" visibility=\"i\"><name>sen4</name><logging enabled=\"1\" /></device>"
-			+ "<device initialized=\"0\" type=\"0x2\" id=\"120:07:ff:000:ffepr\" visibility=\"o\"><name>sen5</name><value>50</value><logging enabled=\"0\" /></device>"
+			+ "<device initialized=\"1\" type=\"0x07\" id=\"120:07:ff:000:ffeem\" visibility=\"i\"><location type=\"1\">obyvak</location><name>sen1</name><logging enabled=\"0\" /></device>"
+			+ "<device initialized=\"1\" type=\"0x01\" id=\"120:07:ff:000:ffehu\" visibility=\"x\"><name>vlhkomer</name><logging enabled=\"0\" /></device>"
+			+ "<device initialized=\"1\" type=\"0x05\" id=\"120:07:ff:000:ffeil\" visibility=\"x\"><name>sen2</name><refresh>5</refresh><logging enabled=\"0\" /></device>"
+			+ "<device initialized=\"1\" type=\"0x04\" id=\"120:07:ff:000:ffesw\" visibility=\"i\"><name>sen3</name><logging enabled=\"0\" /></device>"
+			+ "<device initialized=\"1\" type=\"0x06\" id=\"120:07:ff:000:ffeno\" visibility=\"i\"><name>sen4</name><logging enabled=\"1\" /></device>"
+			+ "<device initialized=\"0\" type=\"0x02\" id=\"120:07:ff:000:ffepr\" visibility=\"o\"><name>sen5</name><value>50</value><logging enabled=\"0\" /></device>"
 			+ "</communication>";
 	
  	public XmlCreatorTest() {
@@ -294,9 +294,8 @@ public class XmlCreatorTest extends TestCase {
 		devices.add(a);
 		
 		String result = XmlCreator.createUpdate(ID, devices);
-		//FIXME: 0x
-		String goal = UPDATE_1+ID+UPDATE_2+devices.get(0).getAddress()+UPDATE_2_1+"0x"+devices.get(0).getType()+UPDATE_2_2+
-				devices.get(1).getAddress()+UPDATE_2_1+"0x"+devices.get(1).getType()+UPDATE_3;
+		String goal = UPDATE_1+ID+UPDATE_2+devices.get(0).getAddress()+UPDATE_2_1+"0x0"+devices.get(0).getType()+UPDATE_2_2+
+				devices.get(1).getAddress()+UPDATE_2_1+"0x0"+devices.get(1).getType()+UPDATE_3;
 		
 		Log.i(TAG, "UpdateTest1");
 		Log.d(TAG, result);
