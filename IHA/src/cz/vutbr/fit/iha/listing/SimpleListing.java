@@ -62,10 +62,8 @@ public class SimpleListing {
 	public void addDevice(final BaseDevice device) {
 		mDevices.put(device.getId(), device);
 		
-		String id = Constants.GROUP_UNINITIALIZED_BY_ADDRESS ? device.getAddress() : device.getId();
-		
-		if (!device.isInitialized() && !mUninitializedIgnored.containsKey(id))
-			mUninitializedDevices.put(id, device);
+		if (!device.isInitialized() && !mUninitializedIgnored.containsKey(device.getId()))
+			mUninitializedDevices.put(device.getId(), device);
 		
 		Location location = device.getLocation();
 		if (location.getId().length() > 0 && !mLocations.containsKey(location.getId()))
@@ -78,10 +76,10 @@ public class SimpleListing {
 	 */
 	public void refreshDevice(final BaseDevice device) {
 		if (device.isInitialized()) {
-			if (mUninitializedDevices.remove(Constants.GROUP_UNINITIALIZED_BY_ADDRESS ? device.getAddress() : device.getId()) != null)
+			if (mUninitializedDevices.remove(device.getId()) != null)
 				Log.d("SimpleListing", "Removing initialized device " + device.toString());
 		} else {
-			mUninitializedDevices.put(Constants.GROUP_UNINITIALIZED_BY_ADDRESS ? device.getAddress() : device.getId(), device);
+			mUninitializedDevices.put(device.getId(), device);
 			Log.d("SimpleListing", "Adding uninitialized device " + device.toString());
 		}
 		
@@ -134,7 +132,7 @@ public class SimpleListing {
 	public void ignoreUninitialized(List<BaseDevice> devices) {
 		// TODO: save this list into some cache
 		for (BaseDevice device : devices) {
-			String id = Constants.GROUP_UNINITIALIZED_BY_ADDRESS ? device.getAddress() : device.getId();
+			String id = device.getId();
 			
 			if (mUninitializedDevices.containsKey(id)) {
 				if (!mUninitializedIgnored.containsKey(id))
@@ -148,7 +146,7 @@ public class SimpleListing {
 	public void unignoreUninitialized() {
 		// TODO: update that list in some cache
 		for (BaseDevice device : mUninitializedIgnored.values()) {
-			String id = Constants.GROUP_UNINITIALIZED_BY_ADDRESS ? device.getAddress() : device.getId();
+			String id = device.getId();
 			
 			if (!mUninitializedDevices.containsKey(id))
 				mUninitializedDevices.put(id, mUninitializedIgnored.get(id));
