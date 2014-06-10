@@ -529,13 +529,13 @@ public class Network {
 	
 	/**
 	 * Method ask for actual data devices
-	 * @param deviceIds list of IDs to which needed actual data
+	 * @param devices list of devices to which needed actual data
 	 * @return list of updated devices fields
 	 * @throws NoConnectionException 
 	 * @throws CommunicationException 
 	 */
 	@SuppressWarnings("unchecked")
-	public ArrayList<BaseDevice> update(ArrayList<String> deviceIds) throws NoConnectionException, CommunicationException{
+	public ArrayList<BaseDevice> update(ArrayList<BaseDevice> devices) throws NoConnectionException, CommunicationException{
 		// TODO: test
 		if(!isAvailable())
 			throw new NoConnectionException();
@@ -543,7 +543,7 @@ public class Network {
 		ParsedMessage msg;
 		
 		try {
-			String messageToSend = XmlCreator.createUpdate(Integer.toString(mSessionId), deviceIds);
+			String messageToSend = XmlCreator.createUpdate(Integer.toString(mSessionId), devices);
 			
 			String result = startCommunication(messageToSend);
 			
@@ -572,7 +572,7 @@ public class Network {
 				//return null;
 			}
 			signIn(ActualUser.getActualUser().getEmail());
-			return update(deviceIds);
+			return update(devices);
 		}else
 			//FIXME: do something with false additional info (why not get updated fields)
 			return null;

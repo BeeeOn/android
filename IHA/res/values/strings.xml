@@ -55,6 +55,7 @@
     <!-- Toasts -->
     <string name="toast_changeto">\u0020changed to:\u0020</string>
     <string name="toast_new_sensor_added">New sensor was added</string>
+    <string name="toast_new_sensor_not_added">Error when adding sensor</string>
     <string name="toast_need_sensor_name">Write name of sensor please</string>
     <string name="toast_bad_password">Wrong name or password</string>
     <string name="toast_connecting_to_server">Connecting to server &#8230;</string>

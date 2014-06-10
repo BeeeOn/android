@@ -124,14 +124,16 @@ public class AddSensorActivityDialog extends Activity {
     	@Override
     	protected BaseDevice doInBackground(BaseDevice... devices) {
     		BaseDevice device = devices[0]; // expect only one device at a time is sent there
-    		mController.saveDevice(device);
-    		mController.reloadAdapters();
-    		return device;
+    		if (mController.saveDevice(device)) {
+    			mController.reloadAdapters();
+    			return device;
+    		}
+    		return null;
     	}
 
     	@Override
     	protected void onPostExecute(BaseDevice device) {
-    		Toast.makeText(getApplicationContext(), getString(R.string.toast_new_sensor_added), Toast.LENGTH_LONG).show();    		
+    		Toast.makeText(getApplicationContext(), getString(device != null ? R.string.toast_new_sensor_added : R.string.toast_new_sensor_not_added), Toast.LENGTH_LONG).show();
     		mProgress.cancel();
     		AddSensorActivityDialog.this.finish();
     		

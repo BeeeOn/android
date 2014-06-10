@@ -676,7 +676,7 @@ public class XmlCreator {
 	 * @param devicesId Id of devices to get update fields
 	 * @return update message
 	 */
-	public static String createUpdate(String id, ArrayList<String>devicesId){
+	public static String createUpdate(String id, ArrayList<BaseDevice>devices){
 		XmlSerializer serializer = Xml.newSerializer();
 		StringWriter writer = new StringWriter();
 		try{
@@ -688,9 +688,10 @@ public class XmlCreator {
 			serializer.attribute(ns, STATE, UPDATE);
 			serializer.attribute(ns, VERSION, GVER);
 			
-			for(String deviceId : devicesId){
+			for(BaseDevice device : devices){
 				serializer.startTag(ns, DEVICE);
-				serializer.attribute(ns, ID, deviceId);
+				serializer.attribute(ns, ID, device.getAddress());
+				serializer.attribute(ns, TYPE, HEX+Integer.toHexString(device.getType()));
 				serializer.endTag(ns, DEVICE);
 			}
 			
@@ -706,11 +707,11 @@ public class XmlCreator {
 	/**
 	 * Method create XML of Update message
 	 * @param id of user
-	 * @param devicesId Id of devices to get update fields
+	 * @param devices to get update fields
 	 * @return update message
 	 */
-	public static String createUpdate(int id, ArrayList<String>devicesId){
-		return createUpdate(Integer.toString(id), devicesId);
+	public static String createUpdate(int id, ArrayList<BaseDevice>devices){
+		return createUpdate(Integer.toString(id), devices);
 	}
 	
 	/**

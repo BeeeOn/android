@@ -221,16 +221,15 @@ public final class Controller {
 			return true;
 		}
 		
-		ArrayList<String> deviceIds = new ArrayList<String>();
-		deviceIds.add(device.getId());
+		ArrayList<BaseDevice> devices = new ArrayList<BaseDevice>();
+		devices.add(device);
 
-		ArrayList<BaseDevice> newDevices;
 		try {
-			newDevices = mNetwork.update(deviceIds);
-			if (newDevices.size() != 1)
+			devices = mNetwork.update(devices);
+			if (devices == null || devices.size() != 1)
 				return false;
 			
-			BaseDevice newDevice = newDevices.get(0);
+			BaseDevice newDevice = devices.get(0);
 			device.setLocation(newDevice.getLocation());
 			device.setName(newDevice.getName());
 			device.setRefresh(newDevice.getRefresh());

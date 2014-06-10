@@ -297,9 +297,14 @@ public class XmlCreatorTest extends TestCase {
 	}
 	
 	public void testUpdate(){
-		ArrayList<String>devices = new ArrayList<String>();
-		devices.add(DEVICEID);
-		devices.add(DEVICEID);
+		ArrayList<BaseDevice>devices = new ArrayList<BaseDevice>();
+
+		// FIXME: need rewriting for BaseDevice list (instead of String list)
+		BaseDevice a = new NoiseDevice();
+		a.setAddress(DEVICEID);
+
+		devices.add(a);
+		devices.add(a);
 		
 		String result = XmlCreator.createUpdate(ID, devices);
 		String goal = UPDATE_1+ID+UPDATE_2+devices.get(0)+UPDATE_2_2+devices.get(1)+Update_3;
