@@ -50,7 +50,7 @@ public class XmlParsers {
 	/**
 	 * Thats mean Android OS
 	 */
-	public static final String COM_VER = "1.6";
+	public static final String COM_VER = "1.7";
 	public static final String XML_VER = "1.0.1";
 	
 	/**
@@ -80,6 +80,7 @@ public class XmlParsers {
 	public static final String DELCONACCOUNT = "delconaccount";
 	public static final String CHANGECONACCOUNT = "changeconaccount";
 	public static final String VIEWSLIST = "viewslist";
+	public static final String TIMEZONE = "timezone";
 	
 	// end of states
 	public static final String ADAPTER = "adapter";
@@ -110,6 +111,8 @@ public class XmlParsers {
 	public static final String ICON = "icon";
 	public static final String VIEW = "view";
 	public static final String HWUPDATED = "hwupdated";
+	public static final String TIME = "time";
+	public static final String UTC = "utc";
 	
 	public static final String DATEFORMAT = "yyyy-MM-dd HH:mm:ss";
 	
@@ -187,12 +190,19 @@ public class XmlParsers {
 			result.data = parseXml(getSecureAttrValue(ns, ROLE));
 			break;
 		case eVIEWSLIST:
+			// ArrayList<CustomViewPair>
 			result.data = parseViewsList();
+			break;
+		case eTIMEZONE:
+			// integer
+			result.data = parseTimeZone();
 			break;
 		}
 		
 		return result;
 	}
+	
+	/////////////////////////////////// PARSE
 	
 	/**
 	 * Method parse inner part of XML message (using parsePartial())
@@ -408,6 +418,12 @@ public class XmlParsers {
 		return new FalseAnswer(additionalInfo, data);
 	}
 	
+	/**
+	 * Method parse inner part of ViewList message
+	 * @return list of CustomViewPairs
+	 * @throws XmlPullParserException
+	 * @throws IOException
+	 */
 	private static ArrayList<CustomViewPair> parseViewsList() throws XmlPullParserException, IOException{
 		mParser.nextTag();
 		mParser.require(XmlPullParser.START_TAG, ns, VIEW);
@@ -424,27 +440,20 @@ public class XmlParsers {
 	}
 	
 	/**
-	 * Skips whole element and sub-elements.
+	 * Method parse inner part of TimeZone message
+	 * @return integer in range <-12,12>
 	 * @throws XmlPullParserException
 	 * @throws IOException
 	 */
-	private static void skip() throws XmlPullParserException, IOException {
-	    Log.d(TAG, "Skipping unknown child '" + mParser.getName() + "'");
-		if (mParser.getEventType() != XmlPullParser.START_TAG) {
-	        throw new IllegalStateException();
-	    }
-	    int depth = 1;
-	    while (depth != 0) {
-	        switch (mParser.next()) {
-	        case XmlPullParser.END_TAG:
-	            depth--;
-	            break;
-	        case XmlPullParser.START_TAG:
-	            depth++;
-	            break;
-	        }
-	    }
+	private static Integer parseTimeZone() throws XmlPullParserException, IOException{
+		mParser.nextTag();
+		mParser.require(XmlPullParser.START_TAG, ns, TIME);
+		String result = getSecureAttrValue(ns, UTC);
+		
+		return Integer.valueOf(((result.length() < 1) ? 0 : Integer.parseInt(result)));
 	}
+	
+	/////////////////////////////////// OTHER
 	
 	/**
 	 * Method convert state as string to its enum representation
@@ -472,6 +481,8 @@ public class XmlParsers {
 			return STATES.eFALSE;
 		else if(state.equals(VIEWSLIST))
 			return STATES.eVIEWSLIST;
+		else if(state.equals(TIMEZONE))
+			return STATES.eTIMEZONE;
 		else
 			return STATES.eUNKNOWN;
 	}
@@ -514,8 +525,35 @@ public class XmlParsers {
 	 */
 	private enum STATES{
 		eREADY, eNOTREGA, eNOTREGB,
-		eXML, ePARTIAL, eCONTENT, eCONACCOUNTLIST,
-		eTRUE, eFALSE, eRESIGN, eUNKNOWN, eVIEWSLIST
+		eXML, ePARTIAL, eCONTENT,
+		eCONACCOUNTLIST, eTRUE, eFALSE,
+		eRESIGN, eUNKNOWN, eVIEWSLIST,
+		eTIMEZONE
+	}
+	
+	////////////////////////////////// XML
+	
+	/**
+	 * Skips whole element and sub-elements.
+	 * @throws XmlPullParserException
+	 * @throws IOException
+	 */
+	private static void skip() throws XmlPullParserException, IOException {
+	    Log.d(TAG, "Skipping unknown child '" + mParser.getName() + "'");
+		if (mParser.getEventType() != XmlPullParser.START_TAG) {
+	        throw new IllegalStateException();
+	    }
+	    int depth = 1;
+	    while (depth != 0) {
+	        switch (mParser.next()) {
+	        case XmlPullParser.END_TAG:
+	            depth--;
+	            break;
+	        case XmlPullParser.START_TAG:
+	            depth++;
+	            break;
+	        }
+	    }
 	}
 	
 	/**
@@ -551,6 +589,8 @@ public class XmlParsers {
 		return result;
 	}
 
+	///////////////////////////////// DEMO
+	
 	/**
      * Factory for parsing adapter from file.
      * @param filename - path to file

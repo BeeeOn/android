@@ -29,8 +29,7 @@ public class XmlCreatorTest extends TestCase {
 	private static String GTOKEN = "9845658";
 	private static String MODE = "n";
 	private static int ID = 425644;
-	private static String GVERSION = "1.6";
-	//FIXME: length of serial???
+	private static String GVERSION = "1.7";
 	private static int SERIAL = 555645792;
 	private static int ADAPTERID = SERIAL;
 	private static int ADAPTERIDOLD = ADAPTERID++;
@@ -40,6 +39,7 @@ public class XmlCreatorTest extends TestCase {
 	private static String ADDITIONALINFO = "changeconaccount";
 	private static String XML = "something";
 	private static String VIEWNAME = "custom_name";
+	private static int TIMEZONE = 2;
 	
 	//messages
 	private static String SIGNIN_1 = "<?xml version='1.0' encoding='UTF-8' ?><communication id=\"0\" state=\"signin\" version=\""+GVERSION+"\"><user email=\"";
@@ -47,8 +47,6 @@ public class XmlCreatorTest extends TestCase {
 	private static String SIGNIN_2 = "\" /></communication>";
 	private static String SIGNUP_1 = "<?xml version='1.0' encoding='UTF-8' ?><communication id=\"";
 	private static String SIGNUP_2 = "\" state=\"signup\" version=\""+GVERSION+"\"><serialnumber>";
-	//private static String SIGNUP_3_USER_OLD = "</serialnumber><next adapter=\"old\" /></communication>";
-	//private static String SIGNUP_3_USER_NEW = "</serialnumber><next adapter=\"new\" /></communication>";
 	private static String SIGNUP_3_EMAIL_1 = "</serialnumber><user email=\"";
 	private static String SIGNUP_3_EMAIL_1_2 = SIGNIN_1_2;
 	private static String SIGNUP_3_EMAIL_2 =  SIGNIN_2;
@@ -92,7 +90,8 @@ public class XmlCreatorTest extends TestCase {
 	private static String UPDATE_1 = SIGNUP_1;
 	private static String UPDATE_2 = "\" state=\"update\" version=\""+GVERSION+"\"><device id=\"";
 	private static String UPDATE_2_2 = "\" /><device id=\"";
-	private static String Update_3 = SIGNIN_2;
+	private static String UPDATE_2_1 = "\" type=\"";
+	private static String UPDATE_3 = SIGNIN_2;
 	private static String ADDVIEW_1 = SIGNUP_1;
 	private static String ADDVIEW_2 = "\" state=\"addview\" version=\""+GVERSION+"\" name=\"";
 	private static String ADDVIEW_2_1 = "\" icon=\"";
@@ -111,15 +110,22 @@ public class XmlCreatorTest extends TestCase {
 	private static String UPDATEVIEW_5 = SIGNIN_2;
 	private static String GETVIEWS_1 = SIGNUP_1;
 	private static String GETVIEWS_2 = "\" state=\"getviews\" version=\""+GVERSION+"\" />";
+	private static String SETTIMEZONE_1 = SIGNUP_1;
+	private static String SETTIMEZONE_2 = "\" state=\"settimezone\" version=\""+GVERSION+"\"><time utc=\"";
+	private static String SETTIMEZONE_3 = "\" />";
+	private static String SETTIMEZONE_4 = FALSE_4;
+	private static String GETTIMEZONE_1 = SIGNUP_1;
+	private static String GETTIMEZONE_2 = "\" state=\"gettimezone\" version=\""+GVERSION+"\" />";
 	
 	
 	private static String PARTIAL_ALL = "<?xml version='1.0' encoding='UTF-8' ?><communication id=\""+ID+"\" state=\"partial\" version=\""+GVERSION+"\">"
-			+ "<device initialized=\"1\" type=\"0x7\" id=\"120:07:ff:000:ffeem\" visibility=\"i\"><location type=\"1\">obyvak</location><logging endabled=\"0\" /></device>"
-			+ "<device initialized=\"1\" type=\"0x1\" id=\"120:07:ff:000:ffehu\" visibility=\"x\"><name>vlhkomer</name><logging endabled=\"0\" /></device>"
-			+ "<device initialized=\"1\" type=\"0x5\" id=\"120:07:ff:000:ffeil\" visibility=\"x\"><refresh>5</refresh><logging endabled=\"0\" /></device>"
-			+ "<device initialized=\"1\" type=\"0x4\" id=\"120:07:ff:000:ffesw\" visibility=\"i\"><logging endabled=\"0\" /></device>"
-			+ "<device initialized=\"1\" type=\"0x6\" id=\"120:07:ff:000:ffeno\" visibility=\"i\"><logging endabled=\"1\" /></device>"
-			+ "<device initialized=\"0\" type=\"0x2\" id=\"120:07:ff:000:ffepr\" visibility=\"o\"><value>50</value><logging endabled=\"0\" /></device></communication>";
+			+ "<device initialized=\"1\" type=\"0x7\" id=\"120:07:ff:000:ffeem\" visibility=\"i\"><location type=\"1\">obyvak</location><name>sen1</name><logging enabled=\"0\" /></device>"
+			+ "<device initialized=\"1\" type=\"0x1\" id=\"120:07:ff:000:ffehu\" visibility=\"x\"><name>vlhkomer</name><logging enabled=\"0\" /></device>"
+			+ "<device initialized=\"1\" type=\"0x5\" id=\"120:07:ff:000:ffeil\" visibility=\"x\"><name>sen2</name><refresh>5</refresh><logging enabled=\"0\" /></device>"
+			+ "<device initialized=\"1\" type=\"0x4\" id=\"120:07:ff:000:ffesw\" visibility=\"i\"><name>sen3</name><logging enabled=\"0\" /></device>"
+			+ "<device initialized=\"1\" type=\"0x6\" id=\"120:07:ff:000:ffeno\" visibility=\"i\"><name>sen4</name><logging enabled=\"1\" /></device>"
+			+ "<device initialized=\"0\" type=\"0x2\" id=\"120:07:ff:000:ffepr\" visibility=\"o\"><name>sen5</name><value>50</value><logging enabled=\"0\" /></device>"
+			+ "</communication>";
 	
  	public XmlCreatorTest() {
 		super("cz.vutbr.fit.iha.parser");
@@ -145,24 +151,6 @@ public class XmlCreatorTest extends TestCase {
 	}
 	
 	public void testSignUp(){
-		/*String result = XmlCreator.createSignUp(EMAIL, ID, GTOKEN, SERIAL, false);
-		String goal = SIGNUP_1+ID+SIGNUP_2+SERIAL+SIGNUP_3_USER_OLD;
-		
-		Log.i(TAG, "SignUpTest1");
-		Log.d(TAG, result);
-		if(!result.equals(goal))
-			Log.e(TAG, goal);
-		assertTrue("SignUpTest1: messages are not equal",result.equals(goal));
-		
-		result = XmlCreator.createSignUp(EMAIL, ID, GTOKEN, SERIAL, true);
-		goal = SIGNUP_1+ID+SIGNUP_2+SERIAL+SIGNUP_3_USER_NEW;
-		
-		Log.i(TAG, "SignUpTest2");
-		Log.d(TAG, result);
-		if(!result.equals(goal))
-			Log.e(TAG, goal);
-		assertTrue("SignUpTest2: messages are not equal",result.equals(goal));
-		*/
 		String result = XmlCreator.createSignUp(EMAIL, ID, GTOKEN, SERIAL);
 		String goal = SIGNUP_1+ID+SIGNUP_2+SERIAL+SIGNUP_3_EMAIL_1+EMAIL+SIGNUP_3_EMAIL_1_2+GTOKEN+SIGNUP_3_EMAIL_2;
 		
@@ -299,7 +287,6 @@ public class XmlCreatorTest extends TestCase {
 	public void testUpdate(){
 		ArrayList<BaseDevice>devices = new ArrayList<BaseDevice>();
 
-		// FIXME: need rewriting for BaseDevice list (instead of String list)
 		BaseDevice a = new NoiseDevice();
 		a.setAddress(DEVICEID);
 
@@ -307,7 +294,9 @@ public class XmlCreatorTest extends TestCase {
 		devices.add(a);
 		
 		String result = XmlCreator.createUpdate(ID, devices);
-		String goal = UPDATE_1+ID+UPDATE_2+devices.get(0)+UPDATE_2_2+devices.get(1)+Update_3;
+		//FIXME: 0x
+		String goal = UPDATE_1+ID+UPDATE_2+devices.get(0).getAddress()+UPDATE_2_1+"0x"+devices.get(0).getType()+UPDATE_2_2+
+				devices.get(1).getAddress()+UPDATE_2_1+"0x"+devices.get(1).getType()+UPDATE_3;
 		
 		Log.i(TAG, "UpdateTest1");
 		Log.d(TAG, result);
@@ -369,6 +358,28 @@ public class XmlCreatorTest extends TestCase {
 		assertTrue("GetViewsTest1: messages are not equal",result.equals(goal));
 	}
 	
+	public void testSetTimeZone(){
+		String result = XmlCreator.createSetTimeZone(ID+"", TIMEZONE);
+		String goal = SETTIMEZONE_1+ID+SETTIMEZONE_2+TIMEZONE+SETTIMEZONE_3+SETTIMEZONE_4;
+		
+		Log.i(TAG, "SetTimeZoneTest1");
+		Log.d(TAG, result);
+		if(!result.equals(goal))
+			Log.e(TAG, goal);
+		assertTrue("SetTimeZoneTest1: messages are not equal",result.equals(goal));
+	}
+	
+	public void testGetTimeZone(){
+		String result = XmlCreator.createGetTimeZone(ID+"");
+		String goal = GETTIMEZONE_1+ID+GETTIMEZONE_2;
+		
+		Log.i(TAG, "GetTimeZoneTest1");
+		Log.d(TAG, result);
+		if(!result.equals(goal))
+			Log.e(TAG, goal);
+		assertTrue("GetTimeZoneTest1: messages are not equal",result.equals(goal));
+	}
+	
 	public void testPartial(){
 		ArrayList<BaseDevice> devices = new ArrayList<BaseDevice>();
 		
@@ -377,6 +388,7 @@ public class XmlCreatorTest extends TestCase {
 		em.setAddress(DEVICEID+"em");
 		em.setVisibility('i');
 		em.setLocation(new Location("obyvak", "obyvak", 1));
+		em.setName("sen1");
 		devices.add(em);
 		
 		HumidityDevice hu = new HumidityDevice();
@@ -389,6 +401,7 @@ public class XmlCreatorTest extends TestCase {
 		IlluminationDevice il = new IlluminationDevice();
 		il.setInitialized(true);
 		il.setAddress(DEVICEID+"il");
+		il.setName("sen2");
 		il.setVisibility('x');
 		il.setRefresh(5);
 		devices.add(il);
@@ -398,6 +411,7 @@ public class XmlCreatorTest extends TestCase {
 		sw.setAddress(DEVICEID+"sw");
 		sw.setVisibility('i');
 		sw.setValue("ON");
+		sw.setName("sen3");
 		devices.add(sw);
 		
 		NoiseDevice no = new NoiseDevice();
@@ -405,12 +419,14 @@ public class XmlCreatorTest extends TestCase {
 		no.setVisibility('i');
 		no.setAddress(DEVICEID+"no");
 		no.setLogging(true);
+		no.setName("sen4");
 		devices.add(no);
 		
 		PressureDevice pr = new PressureDevice();
 		pr.setInitialized(false);
 		pr.setVisibility('o');
 		pr.setAddress(DEVICEID+"pr");
+		pr.setName("sen5");
 		pr.setValue(50);
 		pr.setLogging(false);
 		devices.add(pr);

@@ -37,7 +37,7 @@ public class XmlCreator {
 	/**
 	 * Version of communication protocol for google/android device 
 	 */
-	public static final String GVER = "1.6";
+	public static final String GVER = "1.7";
 	// states
 	public static final String SIGNIN = "signin";
 	public static final String SIGNUP = "signup";
@@ -57,6 +57,8 @@ public class XmlCreator {
 	public static final String DELVIEW = "delview";
 	public static final String UPDATEVIEW = "updateview";
 	public static final String GETVIEWS = "getviews";
+	public static final String SETTIMEZONE = "settimezone";
+	public static final String GETTIMEZONE = "gettimezone";
 	
 	// end of states
 	public static final String USER = "user";
@@ -78,6 +80,8 @@ public class XmlCreator {
 	public static final String QUIET = "q";
 	public static final String NORMAL = "n";
 	public static final String ICON = "icon";
+	public static final String TIME = "time";
+	public static final String UTC = "utc";
 	
 	//partial
 	public static final String DEVICE = "device";
@@ -881,13 +885,69 @@ public class XmlCreator {
 	public static String createUpdateView(int id, String viewName, int iconNum, HashMap<String, String> devices){
 		return createUpdateView(Integer.toString(id), viewName, iconNum, devices);
 	}
-		
+	
+	/**
+	 * Method create XML of SetTimeZone message
+	 * @param id of user
+	 * @param diffToGMT difference to GMT (UTC+0), range <-12,12> 
+	 * @return SetTimeZone message
+	 */
+	public static String createSetTimeZone(String id, int diffToGMT){
+		XmlSerializer serializer = Xml.newSerializer();
+		StringWriter writer = new StringWriter();
+		try{
+			serializer.setOutput(writer);
+			serializer.startDocument("UTF-8", null);
+			
+			serializer.startTag(ns, COM_ROOT);
+			serializer.attribute(ns, ID, id);
+			serializer.attribute(ns, STATE, SETTIMEZONE);
+			serializer.attribute(ns, VERSION, GVER);
+			
+				serializer.startTag(ns, TIME);
+				serializer.attribute(ns, UTC, diffToGMT+"");
+				serializer.endTag(ns, TIME);
+			
+			serializer.endTag(ns, COM_ROOT);
+			serializer.endDocument();
+			
+			return writer.toString();
+		}catch(Exception e){
+			throw new RuntimeException(e);
+		}
+	}
+	
+	/**
+	 * Method create XML of GetTimeZone message
+	 * @param id of user
+	 * @return GetTimeZone message
+	 */
+	public static String createGetTimeZone(String id){
+		XmlSerializer serializer = Xml.newSerializer();
+		StringWriter writer = new StringWriter();
+		try{
+			serializer.setOutput(writer);
+			serializer.startDocument("UTF-8", null);
+			
+			serializer.startTag(ns, COM_ROOT);
+			serializer.attribute(ns, ID, id);
+			serializer.attribute(ns, STATE, GETTIMEZONE);
+			serializer.attribute(ns, VERSION, GVER);
+			serializer.endTag(ns, COM_ROOT);
+			serializer.endDocument();
+			
+			return writer.toString();
+		}catch(Exception e){
+			throw new RuntimeException(e);
+		}
+	}
+	
 	@Deprecated
 	/**
 	 * Method for creating XML file (string)
 	 * @return String contains XML file
 	 */
-	public String create(){
+ 	public String create(){
 		XmlSerializer serializer = Xml.newSerializer();
 		StringWriter writer = new StringWriter();
 		try{

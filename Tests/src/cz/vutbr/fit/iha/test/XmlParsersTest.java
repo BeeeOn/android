@@ -27,7 +27,7 @@ public class XmlParsersTest extends TestCase {
 	
 	private static String TAG = "XmlParsersTest";
 	private static int ID = 425644;
-	private static String GVERSION = "1.6";
+	private static String GVERSION = "1.7";
 	
 	//messages
 	private static String READY_1 = "<?xml version='1.0' encoding='UTF-8' ?><communication id=\""+ID+"\" state=\"ready\" version=\""+GVERSION+"\">";
@@ -71,6 +71,11 @@ public class XmlParsersTest extends TestCase {
 	private static String TRUE = "<?xml version='1.0' encoding='UTF-8' ?><communication id=\""+ID+"\" state=\"true\" version=\""+GVERSION+"\" additionalinfo=\"changeconaccount\" />";
 	
 	private static String RESIGN = "<?xml version='1.0' encoding='UTF-8' ?><communication id=\""+0+"\" state=\"resign\" version=\""+GVERSION+"\" />";
+	
+	private static String TIMEZONE_1 = "<?xml version='1.0' encoding='UTF-8' ?><communication id=\""+ID+"\" state=\"timezone\" version=\""+GVERSION+"\">";
+	private static String TIMEZONE_2 = "<time utc=\"";
+	private static String TIMEZONE_3 = "\" />";
+	private static String TIMEZONE_END = CONTENT_END;
 	
  	public XmlParsersTest() {
 		super("cz.vutbr.fit.iha.parser");
@@ -348,10 +353,30 @@ public class XmlParsersTest extends TestCase {
 		}
 	}
 	
+	public void testTimeZone(){
+		String xmlMessage = TIMEZONE_1 + TIMEZONE_2 + "2" + TIMEZONE_3 + TIMEZONE_END;
+		
+		String state = "timezone";
+
+		Log.i(TAG, "TimeZoneTest1");
+		
+		try {
+			ParsedMessage result = XmlParsers.parseCommunication(xmlMessage, false);
+			assertTrue("TimeZoneTest1: bad state", result.getState().equals(state));
+			Log.d(TAG, "Communication id: " + result.getSessionId());
+			Log.d(TAG, "Communication timezone: UTC" + (((Integer)result.data >= 0) ? ("+" + result.data) : result.data));
+
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			assertTrue("TimeZoneTest1: error",false);
+		}
+	}
+	
 	@SuppressWarnings("unchecked")
 	public void testPartial(){
 		String xmlMessage =
-				"<?xml version=\"1.0\" encoding=\"UTF-8\"?><communication version=\"1.6\" id=\""+ID+"\" state=\"partial\">"
+				"<?xml version=\"1.0\" encoding=\"UTF-8\"?><communication version=\"1.7\" id=\""+ID+"\" state=\"partial\">"
 				+	"<device initialized=\"1\" type=\"0x00\" id=\"120:00:FF:000:FFE\" visibility=\"I\">"
 				+		"<location type=\"1\">Obývací pokoj</location>"
 				+		"<name>Teplota u dverí</name>"
@@ -406,7 +431,7 @@ public class XmlParsersTest extends TestCase {
 
 	public void testXml(){
 		String xmlMessage =
-				"<?xml version=\"1.0\" encoding=\"UTF-8\"?><communication version=\"1.6\" id=\""+ID+"\" state=\"xml\" role=\"admin\">"
+				"<?xml version=\"1.0\" encoding=\"UTF-8\"?><communication version=\"1.7\" id=\""+ID+"\" state=\"xml\" role=\"admin\">"
 				+	"<adapter id=\"9999\">"
 				+		"<version>1.0.1</version>"
 				+		"<capabilities>"
