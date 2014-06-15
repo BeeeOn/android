@@ -3,6 +3,7 @@
  */
 package cz.vutbr.fit.iha.network;
 
+import android.graphics.Bitmap;
 import cz.vutbr.fit.iha.User;
 
 /**
@@ -13,7 +14,8 @@ public class ActualUser extends User {
 
 	private static ActualUser mActualUser;
 	private String mToken;
-	private String mPicture;
+	private String mPictureURL;
+	private Bitmap mPictureIMG;
 	private String mSessionId;
 	
 	/**
@@ -56,15 +58,29 @@ public class ActualUser extends User {
 	/**
 	 * @return the mPicture
 	 */
-	public String getPicture() {
-		return mPicture;
+	public String getPictureURL() {
+		return mPictureURL;
 	}
 
 	/**
 	 * @param mPicture the mPicture to set
 	 */
-	public void setPicture(String mPicture) {
-		this.mPicture = mPicture;
+	public void setPicture(String Picture) {
+		this.mPictureURL = Picture;
+	}
+
+	/**
+	 * @return the mPictureIMG
+	 */
+	public Bitmap getPictureIMG() {
+		return mPictureIMG;
+	}
+
+	/**
+	 * @param mPictureIMG the mPictureIMG to set
+	 */
+	public void setPicture(Bitmap PictureIMG) {
+		this.mPictureIMG = PictureIMG;
 	}
 
 	/**

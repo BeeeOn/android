@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Random;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.text.format.Time;
 import cz.vutbr.fit.iha.User;
 import cz.vutbr.fit.iha.adapter.Adapter;
@@ -22,6 +23,7 @@ import cz.vutbr.fit.iha.listing.FavoritesListing;
 import cz.vutbr.fit.iha.listing.Location;
 import cz.vutbr.fit.iha.listing.LocationListing;
 import cz.vutbr.fit.iha.network.ActualUser;
+import cz.vutbr.fit.iha.network.GetGoogleAuth;
 import cz.vutbr.fit.iha.network.Network;
 import cz.vutbr.fit.iha.persistence.Persistence;
 
@@ -120,6 +122,7 @@ public final class Controller {
 			throw new NoConnectionException();
 
 		// TODO: catch and throw proper exception
+		// FIXME: after some time there should be picture in ActualUser object, should save to mPersistence
 		mHousehold.user = mNetwork.signIn(email);
 		if (mHousehold.user != null) {
 			mPersistence.saveLastEmail(mHousehold.user.getEmail());

@@ -17,15 +17,15 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
+import cz.vutbr.fit.iha.R;
+import cz.vutbr.fit.iha.view.ToggleButtonOnClickListener;
 import cz.vutbr.fit.iha.Compatibility;
 import cz.vutbr.fit.iha.Constants;
-import cz.vutbr.fit.iha.R;
 import cz.vutbr.fit.iha.adapter.device.BaseDevice;
 import cz.vutbr.fit.iha.adapter.device.StateDevice;
 import cz.vutbr.fit.iha.adapter.device.SwitchDevice;
 import cz.vutbr.fit.iha.adapter.device.BaseDevice.SaveDevice;
 import cz.vutbr.fit.iha.controller.Controller;
-import cz.vutbr.fit.iha.view.ToggleButtonOnClickListener;
 
 /**
  * Class that handle screen with location data

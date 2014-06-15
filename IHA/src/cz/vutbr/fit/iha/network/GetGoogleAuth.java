@@ -13,7 +13,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.util.Log;
-import android.widget.ImageView;
 
 import com.google.android.gms.auth.GoogleAuthUtil;
 import com.google.android.gms.auth.UserRecoverableAuthException;
@@ -32,6 +31,8 @@ public class GetGoogleAuth extends AsyncTask<Void, Void, String> {
 	private String mEmail;
 	private String mToken;
 	private String mUserName;
+	private String mPictureURL;
+	private Bitmap mPictureIMG;
 	
 	/**
 	 * @return the mEmail
@@ -65,17 +66,39 @@ public class GetGoogleAuth extends AsyncTask<Void, Void, String> {
 	 * @return the mPicture
 	 */
 	public String getPicture() {
-		return mPicture;
+		return mPictureURL;
 	}
 
 	/**
 	 * @param mPicture the mPicture to set
 	 */
 	public void setPicture(String mPicture) {
-		this.mPicture = mPicture;
+		this.mPictureURL = mPicture;
 	}
 
-	private String mPicture;
+	/**
+	 * @return the mPictureIMG
+	 */
+	public Bitmap getPictureIMG() {
+		return mPictureIMG;
+	}
+
+	/**
+	 * @param mPictureIMG the mPictureIMG to set
+	 */
+	public void setPictureIMG(Bitmap mPictureIMG) {
+		this.mPictureIMG = mPictureIMG;
+	}
+
+	/**
+	 * Getter of token
+	 * @return
+	 */
+	protected String getToken(){
+		if(this.mToken != null) 
+			return this.mToken;
+		return "";
+	}
 	
 	/**
 	 * Singleton-like method, but not initializing
@@ -89,6 +112,11 @@ public class GetGoogleAuth extends AsyncTask<Void, Void, String> {
 			throw new Exception("Not initialized");
 	}
 	
+	/**
+	 * Constructor
+	 * @param mActivity
+	 * @param mEmail
+	 */
 	public GetGoogleAuth(LoginActivity mActivity, String mEmail) {
 		this.mActivity = mActivity;
 		this.mEmail = mEmail;
@@ -97,27 +125,24 @@ public class GetGoogleAuth extends AsyncTask<Void, Void, String> {
 	
 	@Override
 	protected void onPreExecute() {
+		//TODO: need something?
 	}
 	
 	@Override
 	protected String doInBackground(Void... params) {
-	try {
-		mToken = GoogleAuthUtil.getToken(mActivity, mEmail,"oauth2:https://www.googleapis.com/auth/userinfo.profile");
-		Log.d(TAG, "Token");
-	return mToken;
-	
-	} catch (UserRecoverableAuthException userRecoverableException) {
-		mActivity.startActivityForResult(userRecoverableException.getIntent(),LoginActivity.USER_RECOVERABLE_AUTH);
-	} catch (Exception e) {
-	e.printStackTrace();
-	}
-	return null;
-	}
-	
-	protected String getToken(){
-		if(this.mToken != null) 
-			return this.mToken;
-		return "";
+		try {
+			mToken = GoogleAuthUtil.getToken(mActivity, mEmail,"oauth2:https://www.googleapis.com/auth/userinfo.profile");
+			Log.d(TAG, "Token");
+			
+			fetchInfoFromProfileServer(mToken);
+			
+			return mToken;
+		} catch (UserRecoverableAuthException userRecoverableException) {
+			mActivity.startActivityForResult(userRecoverableException.getIntent(),LoginActivity.USER_RECOVERABLE_AUTH);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 	
 	@Override
@@ -136,14 +161,15 @@ public class GetGoogleAuth extends AsyncTask<Void, Void, String> {
 			    }
 			});
 			// Fetch user name and surname
-			fetchUserInfo.start(); 
+			//fetchUserInfo.start();
+			//FIXME: this code below need refactoring !!!!! Leo?
+			
 			// Wait for user name
 //			try {
 //				synchronized(this) {
 //					this.wait();
 //				}
 //			} catch (InterruptedException e) {
-//				// TODO Auto-generated catch block
 //				e.printStackTrace();
 //			}
 			
@@ -154,9 +180,9 @@ public class GetGoogleAuth extends AsyncTask<Void, Void, String> {
  
 			
 			// Log - Token and Name
-			Log.d(TAG, "Token: "+result);
-			Log.d(TAG, "User name: "+this.mUserName);
-			Log.d(TAG, "Picture url:"+mPicture);
+//			Log.d(TAG, "Token: "+result);
+//			Log.d(TAG, "User name: "+this.mUserName);
+//			Log.d(TAG, "Picture url:"+mPicture);
 			mToken = result;
 			/*
 			if(mPicture != null) {
@@ -180,7 +206,6 @@ public class GetGoogleAuth extends AsyncTask<Void, Void, String> {
 						this.wait();
 					}
 				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}*/
@@ -217,6 +242,12 @@ public class GetGoogleAuth extends AsyncTask<Void, Void, String> {
 	/* Prevzato z SDK - EXTRAS - SAMPLE - AUTH  											*/
 	/****************************************************************************************/
 	
+	/**
+	 * Method download name and picture URL
+	 * @param token
+	 * @throws IOException
+	 * @throws JSONException
+	 */
 	private void fetchInfoFromProfileServer(String token) throws IOException, JSONException {	
 		URL url = new URL("https://www.googleapis.com/oauth2/v1/userinfo?access_token=" + token);
         HttpURLConnection con = (HttpURLConnection) url.openConnection();
@@ -227,18 +258,22 @@ public class GetGoogleAuth extends AsyncTask<Void, Void, String> {
           String name = getName(respond);
           String picture = getPicture(respond);
           Log.d(TAG,"Hello " + name + "!");
+          Log.i(TAG, picture);
           this.mUserName = name;
-          this.mPicture = picture;
+          this.mPictureURL = picture;
           is.close();
 //          synchronized(this) {
 //        	  this.notify();
 //          }
-          return;
+          if(mPictureURL != null && mPictureURL.length() > 0){
+        	  fetchPictureFromProfileServer(mPictureURL);
+        	  ActualUser.getActualUser().setPicture(mPictureIMG);
+        	  ActualUser.getActualUser().setPicture(mPictureURL);
+        	  //TODO: maybe save name
+          }
+
         } else if (sc == 401) {
             GoogleAuthUtil.invalidateToken(mActivity, token);
-            return;
-        } else {
-          return;
         }
     }
 	
@@ -273,8 +308,13 @@ public class GetGoogleAuth extends AsyncTask<Void, Void, String> {
       return (!result) ? profile.getString("picture") : null;
     }
     
-    @SuppressWarnings("unused")
-	private void fetchPictureFromProfileServer(String urlPicture, ImageView imageView) throws IOException, JSONException {
+    /**
+     * Method download picture
+     * @param urlPicture
+     * @throws IOException
+     * @throws JSONException
+     */
+	private void fetchPictureFromProfileServer(String urlPicture/*, ImageView imageView*/) throws IOException, JSONException {
     	try {
     		URL imageURL = new URL(urlPicture);         
             HttpURLConnection connection = (HttpURLConnection) imageURL
@@ -283,15 +323,15 @@ public class GetGoogleAuth extends AsyncTask<Void, Void, String> {
             connection.connect();
             InputStream inputStream = connection.getInputStream();
             
-            Bitmap bitmap = BitmapFactory.decodeStream(inputStream);// Convert to bitmap
-            imageView.setImageBitmap(bitmap);
+            setPictureIMG(BitmapFactory.decodeStream(inputStream));// Convert to bitmap
+//            imageView.setImageBitmap(mPictureIMG);
         } catch (IOException e) {
             e.printStackTrace();
         }
     	
-    	synchronized(this) {
-      	  this.notify();
-        }
+//    	synchronized(this) {
+//      	  this.notify();
+//        }
         return;
     }
     

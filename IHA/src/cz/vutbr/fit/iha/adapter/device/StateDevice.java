@@ -1,8 +1,8 @@
 package cz.vutbr.fit.iha.adapter.device;
 
 import android.graphics.Color;
-import cz.vutbr.fit.iha.Constants;
 import cz.vutbr.fit.iha.R;
+import cz.vutbr.fit.iha.Constants;
 /**
  * Class that extends BaseDevice for State sensor
  * @author ThinkDeep

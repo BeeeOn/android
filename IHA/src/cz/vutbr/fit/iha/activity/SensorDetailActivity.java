@@ -23,13 +23,13 @@ import com.jjoe64.graphview.GraphView.GraphViewData;
 import com.jjoe64.graphview.GraphViewSeries;
 import com.jjoe64.graphview.LineGraphView;
 
-import cz.vutbr.fit.iha.Compatibility;
-import cz.vutbr.fit.iha.Constants;
 import cz.vutbr.fit.iha.R;
-import cz.vutbr.fit.iha.adapter.device.BaseDevice;
-import cz.vutbr.fit.iha.controller.Controller;
 import cz.vutbr.fit.iha.view.NumberPicker;
 import cz.vutbr.fit.iha.view.NumberPicker.OnChangedListener;
+import cz.vutbr.fit.iha.Compatibility;
+import cz.vutbr.fit.iha.Constants;
+import cz.vutbr.fit.iha.adapter.device.BaseDevice;
+import cz.vutbr.fit.iha.controller.Controller;
 
 /**
  * Class that handle screen with detail of some sensor

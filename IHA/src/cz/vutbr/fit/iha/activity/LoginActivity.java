@@ -19,17 +19,16 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 
 import cz.vutbr.fit.iha.R;
+import cz.vutbr.fit.iha.thread.ToastMessageThread;
 import cz.vutbr.fit.iha.activity.dialog.AddAdapterActivityDialog;
 import cz.vutbr.fit.iha.controller.Controller;
 import cz.vutbr.fit.iha.exception.CommunicationException;
-import cz.vutbr.fit.iha.exception.NetworkException;
 import cz.vutbr.fit.iha.exception.NoConnectionException;
 import cz.vutbr.fit.iha.exception.NotImplementedException;
 import cz.vutbr.fit.iha.exception.NotRegAException;
 import cz.vutbr.fit.iha.exception.NotRegBException;
 import cz.vutbr.fit.iha.network.ActualUser;
 import cz.vutbr.fit.iha.network.GetGoogleAuth;
-import cz.vutbr.fit.iha.thread.ToastMessageThread;
 
 /**
  * First sign in class, controls first activity
@@ -70,9 +69,7 @@ public class LoginActivity extends Activity {
 			Log.d(TAG, "Already logged in, going to locations screen...");
 			
 			Intent intent = new Intent(mActivity, LocationScreenActivity.class);
-			//intent.putExtra(name, value);
-			//intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            //intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+
 			mActivity.startActivity(intent);
 			mActivity.finish();
 			return;
@@ -110,11 +107,10 @@ public class LoginActivity extends Activity {
 			public void onClick(View v) {
 				Controller.setDemoMode(LoginActivity.this, false);
 				mProgress.show();
-				getGoogleAccessFromServer(v);
+				beginGoogleAuthRutine(v);
 			}
 		});
 		btnMojeID.setOnClickListener(new OnClickListener(){
-
 			@Override
 			public void onClick(View v) {
 				getMojeIDAccessFromServer(v);
@@ -128,13 +124,12 @@ public class LoginActivity extends Activity {
     	mActivity.finish();
     }
 	
-	/**
-	 * 
-	 * @return
-	 * @throws NetworkException
-	 */
-	private boolean getGoogleAccessFromServer(View v){
-		//TODO: get access via google
+    /**
+     * Method start routine to access trough google after button click
+     * @param v
+     * @return only false (Leo or Rob legacy)
+     */
+	private boolean beginGoogleAuthRutine(View v){
 		Log.d(TAG, "BEG: Google access func");
 		if(GooglePlayServicesUtil.isGooglePlayServicesAvailable(getBaseContext()) == ConnectionResult.SUCCESS) {
 			// On this device is Google Play, we can proceed
@@ -143,8 +138,6 @@ public class LoginActivity extends Activity {
 			if(Accounts.length == 1) {
 				Log.d(TAG, "On this device is one account");
 				doGoogleLogin(Accounts[0]);
-				
-
 			}
 			else {
 				Log.d(TAG, "On this device are more accounts");
@@ -155,11 +148,16 @@ public class LoginActivity extends Activity {
 		else {
 			// Google Play is missing
 			Log.d(TAG, "Google Play is missing");
+			Toast.makeText(v.getContext(), "Google acount not found", Toast.LENGTH_LONG).show();
 		}
 		Log.d(TAG, "END: Google access func");
 		return false;
 	}
 	
+	/**
+	 * Method mine users account names
+	 * @return array of names to choose
+	 */
 	private String[] getAccountNames() {
 	    AccountManager mAccountManager = AccountManager.get(this);
 	    Account[] accounts = mAccountManager.getAccountsByType(GoogleAuthUtil.GOOGLE_ACCOUNT_TYPE);
@@ -171,105 +169,34 @@ public class LoginActivity extends Activity {
 	    return names;
 	}
 	
+	/**
+	 * Method create (finally only) one thread to get google token and than call last logging method
+	 * @param email of user
+	 */
 	private void doGoogleLogin(final String email) {
 		final GetGoogleAuth ggAuth = new GetGoogleAuth(this, email);
 		try {
-//			Log.d(TAG, "Prepare google auth");
-//			ggAuth = GetGoogleAuth.getGetGoogleAuth();
 			Log.d(TAG, "call google auth execute");
-			Thread ggTh = new Thread(new Runnable() {
+			
+			new Thread(new Runnable() {
 				@Override
 				public void run() {
 					ggAuth.execute();
+					ActualUser.setActualUser(ggAuth.getUserName(), ggAuth.getEmail());
+					doLogin(email);
+					Log.d(TAG, "Finish google auth");
 				}
-			});
-			ggTh.start();
-			Log.d(TAG, "Finish google auth");
-			//while(ggAuth.getStatus() != AsyncTask.Status.FINISHED);
-			ActualUser.setActualUser(ggAuth.getUserName(), ggAuth.getEmail());
+			}).start();
 			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
-		
-		Thread th = new Thread(new Runnable() {
-			@Override
-			public void run() {
-				doLogin(email);
-			}
-		});
-		th.start();
-		
-//		try {
-////			synchronized(this) {
-//				th.join();
-////			}
-//		} catch (InterruptedException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-		Log.d(TAG, "Login: HERE?");
-		//FIXME: implement this in upper thread and notify gui thread somehow
-//		
-		// Get acces token
-		//new GetGoogleAuth(this, this.acEmail).execute();
 	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	/**
-	 * TODO: 
-	 * @return
-	 */
-	private boolean getMojeIDAccessFromServer(View v){
-		//TODO: get access via mojeID
-		Toast.makeText(v.getContext(), "Not Implemented yet", Toast.LENGTH_LONG).show();
-		return false;
-	}
-	
-	@Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        /*
-        if (requestCode == USER_RECOVERABLE_AUTH && resultCode == RESULT_OK) {
-        	new GetGoogleAuth(this, this.acEmail).execute();
-        }
-        */
-        
-        
-        if (requestCode == GET_GOOGLE_ACCOUNT && resultCode == RESULT_OK) {
-        	String email = data.getStringExtra(AccountManager.KEY_ACCOUNT_NAME);
-        	if (email == null) {
-        		Log.d(TAG, "onActivityResult: no email");
-        		return;
-        	}
-        	
-        	doLogin(email);
-        	// Get acces token
-			//new GetGoogleAuth(this, this.acEmail).execute();
-        }
-    }
 
+	/**
+	 * Last logging method that call controller to proceed access to server
+	 * @param email of user
+	 */
 	private void doLogin(final String email) {
 		String errMessage = null;
 		boolean errFlag = false;
@@ -279,9 +206,6 @@ public class LoginActivity extends Activity {
 				Log.d(TAG, "Login: true");
 				mProgress.dismiss();
 				Intent intent = new Intent(mActivity, LocationScreenActivity.class);
-				//intent.putExtra(name, value);
-				//intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-	            //intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
 				mActivity.startActivity(intent);
 				mActivity.finish();
 	        }
@@ -293,7 +217,7 @@ public class LoginActivity extends Activity {
 			
 		} catch (NotRegAException e) {
 			e.printStackTrace();
-			
+			//there is unregistered adapter and we go to register it
 			Intent intent = new Intent(LoginActivity.this, AddAdapterActivityDialog.class);
 	    	startActivity(intent);
 		} catch (NotRegBException e) {
@@ -320,10 +244,59 @@ public class LoginActivity extends Activity {
 		finally{
 			mProgress.dismiss();
 			if(errFlag){
-				//mActivity.runOnUiThread(new ToastMessageThread(mActivity, errMessage));
+				//alternate form: //mActivity.runOnUiThread(new ToastMessageThread(mActivity, errMessage));
 				new ToastMessageThread(mActivity, errMessage).start();
 			}
 		}
 	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+
+	private boolean getMojeIDAccessFromServer(View v){
+		//TODO: get access via mojeID
+		Toast.makeText(v.getContext(), "Not Implemented yet", Toast.LENGTH_LONG).show();
+		return false;
+	}
+	
+	@Override
+	//FIXME: check connections
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        /*
+        if (requestCode == USER_RECOVERABLE_AUTH && resultCode == RESULT_OK) {
+        	new GetGoogleAuth(this, this.acEmail).execute();
+        }
+        */
+        
+        
+        if (requestCode == GET_GOOGLE_ACCOUNT && resultCode == RESULT_OK) {
+        	String email = data.getStringExtra(AccountManager.KEY_ACCOUNT_NAME);
+        	if (email == null) {
+        		Log.d(TAG, "onActivityResult: no email");
+        		return;
+        	}
+        	
+        	doLogin(email);
+        	// Get acces token
+			//new GetGoogleAuth(this, this.acEmail).execute();
+        }
+    }
 	
 }

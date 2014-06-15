@@ -16,13 +16,13 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
-import cz.vutbr.fit.iha.Constants;
 import cz.vutbr.fit.iha.R;
+import cz.vutbr.fit.iha.widget.SensorWidgetProvider;
+import cz.vutbr.fit.iha.widget.WidgetUpdateService;
+import cz.vutbr.fit.iha.Constants;
 import cz.vutbr.fit.iha.adapter.Adapter;
 import cz.vutbr.fit.iha.adapter.device.BaseDevice;
 import cz.vutbr.fit.iha.controller.Controller;
-import cz.vutbr.fit.iha.widget.SensorWidgetProvider;
-import cz.vutbr.fit.iha.widget.WidgetUpdateService;
 
 public class WidgetConfigurationActivity extends Activity {
 

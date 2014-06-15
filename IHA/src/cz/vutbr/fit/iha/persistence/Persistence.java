@@ -10,6 +10,7 @@ import cz.vutbr.fit.iha.User;
 import cz.vutbr.fit.iha.adapter.Adapter;
 import cz.vutbr.fit.iha.adapter.device.BaseDevice;
 import cz.vutbr.fit.iha.exception.NotImplementedException;
+import cz.vutbr.fit.iha.network.ActualUser;
 import cz.vutbr.fit.iha.widget.WidgetData;
 
 /**
@@ -47,7 +48,6 @@ public class Persistence {
 	public String loadLastEmail() {
 		return getSettings().getString(Constants.PERSISTENCE_PREF_LAST_USER, "");
 	}
-
 
 	public ArrayList<Adapter> loadAdapters() {
 		throw new NotImplementedException();
@@ -88,7 +88,7 @@ public class Persistence {
 		throw new NotImplementedException();
 	}
 	
-	public boolean saveLoggedUser(User user) {
+	public boolean saveLoggedUser(ActualUser user) {
 		throw new NotImplementedException();
 	}
 

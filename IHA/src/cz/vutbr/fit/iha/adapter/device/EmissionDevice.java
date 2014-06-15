@@ -1,7 +1,7 @@
 package cz.vutbr.fit.iha.adapter.device;
 
-import cz.vutbr.fit.iha.Constants;
 import cz.vutbr.fit.iha.R;
+import cz.vutbr.fit.iha.Constants;
 /**
  * Class that extend BaseDevice for emmision meter
  * @author ThinkDeep
