@@ -10,8 +10,9 @@ package cz.vutbr.fit.iha.adapter.parser;
 public class FalseAnswer {
 
 	private String mAdditionalInfo;
+	private int mErrCode;
 	
-	public Object data;
+	private String mErrMessage;
 	
 	/**
 	 * Constructor
@@ -23,9 +24,10 @@ public class FalseAnswer {
 	 * @param additionalInfo previous state where exception appear
 	 * @param data of the error message
 	 */
-	public FalseAnswer(String additionalInfo, Object data){
+	public FalseAnswer(String additionalInfo, int errCode, String errMessage){
 		mAdditionalInfo = additionalInfo;
-		this.data = data;
+		mErrCode = errCode;
+		setErrMessage(errMessage);
 	}
 	
 	/**
@@ -34,6 +36,28 @@ public class FalseAnswer {
 	 */
 	public String getInfo(){
 		return mAdditionalInfo;
+	}
+
+	/**
+	 * @return the mErrCode
+	 */
+	public int getErrCode() {
+		return mErrCode;
+	}
+
+	/**
+	 * @param mErrCode the mErrCode to set
+	 */
+	public void setErrCode(int mErrCode) {
+		this.mErrCode = mErrCode;
+	}
+
+	public String getErrMessage() {
+		return mErrMessage;
+	}
+
+	public void setErrMessage(String mErrMessage) {
+		this.mErrMessage = mErrMessage;
 	}
 
 }

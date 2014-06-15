@@ -17,6 +17,7 @@ import java.security.cert.CertificateException;
 import java.security.cert.CertificateFactory;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Locale;
 
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.HttpsURLConnection;
@@ -36,6 +37,7 @@ import cz.vutbr.fit.iha.adapter.Adapter;
 import cz.vutbr.fit.iha.adapter.device.BaseDevice;
 import cz.vutbr.fit.iha.adapter.parser.ContentRow;
 import cz.vutbr.fit.iha.adapter.parser.CustomViewPair;
+import cz.vutbr.fit.iha.adapter.parser.FalseAnswer;
 import cz.vutbr.fit.iha.adapter.parser.ParsedMessage;
 import cz.vutbr.fit.iha.adapter.parser.XmlCreator;
 import cz.vutbr.fit.iha.adapter.parser.XmlParsers;
@@ -44,6 +46,7 @@ import cz.vutbr.fit.iha.exception.NoConnectionException;
 import cz.vutbr.fit.iha.exception.NotImplementedException;
 import cz.vutbr.fit.iha.exception.NotRegAException;
 import cz.vutbr.fit.iha.exception.NotRegBException;
+import cz.vutbr.fit.iha.listing.Location;
 
 /**
  * Network service that handles communication with server.
@@ -65,6 +68,9 @@ public class Network {
 	public static final String PARTIAL = "partial";
 	public static final String CONTENT = "content";
 	public static final String VIEWSLIST = "viewslist";
+	public static final String CONACCOUNTLIST = "conaccountlist";
+	public static final String TIMEZONE = "timezone";
+	public static final String ROOMS = "rooms";
 	
 	/**
 	 * Name of CA certificate located in assets
@@ -132,7 +138,7 @@ public class Network {
 	 * @throws SSLHandshakeException
 	 *             *IMPORTANT* TLS handshake failed
 	 */
-	private static String startCommunication(/*Context appContext,*/ String request)
+	private static String startCommunication(String request)
 			throws IOException, CertificateException, KeyStoreException,
 					NoSuchAlgorithmException, KeyManagementException,
 					UnknownHostException, SSLHandshakeException
@@ -143,7 +149,7 @@ public class Network {
 		 */
 		InputStream inStreamCertTmp = null;
 
-		inStreamCertTmp = /*appContext*/mContext.getAssets().open(ASSEST_CA_CERT);
+		inStreamCertTmp = mContext.getAssets().open(ASSEST_CA_CERT);
 
 		InputStream inStreamCert = new BufferedInputStream(inStreamCertTmp);
 		Certificate ca;
@@ -219,7 +225,7 @@ public class Network {
 	}
 
 	/**
-	 * Method signIn user given by its email to server, BUT before calling must call GetGoogleAuth to get googleToken in it and Init ActualUser
+	 * Method signIn user given by its email to server, BUT before calling must call GetGoogleAuth to get googleToken in it and init ActualUser
 	 * @param userEmail of current user
 	 * @return ActualUser
 	 * @throws NoConnectionException if there is no Internet connection
@@ -243,7 +249,7 @@ public class Network {
 				Log.d("IHA - Network - SignIn - token", googleToken);
 			}while(googleToken.equalsIgnoreCase(""));
 			
-			String messageToSend = XmlCreator.createSignIn(userEmail, googleToken);
+			String messageToSend = XmlCreator.createSignIn(userEmail, googleToken, Locale.getDefault().getLanguage());
 			
 			Log.d("IHA - Network - SignIn - fromApp", messageToSend);
 			
@@ -283,7 +289,7 @@ public class Network {
 	 * @param serialNumber number of adapter to register
 	 * @param SessionId if is ID == 0 then needed google token, then the user is switch to work with new adapter, otherwise work with old
 	 * @return true if everything goes well, false otherwise
-	 * @throws CommunicationException
+	 * @throws CommunicationException including message from server
 	 * @throws NoConnectionException
 	 */
 	public boolean signUp(String email, String serialNumber, int SessionId) throws CommunicationException, NoConnectionException{
@@ -301,11 +307,11 @@ public class Network {
 			
 			String messageToSend = XmlCreator.createSignUp(email, Integer.toString(SessionId), googleToken, serialNumber);
 			
-			Log.d("IHA - Network", messageToSend);
+			Log.d("IHA - Network fromApp", messageToSend);
 			
 			String result = startCommunication(messageToSend);
 			
-			Log.d("IHA - Network", result);
+			Log.d("IHA - Network fromSrv", result);
 			
 			msg = XmlParsers.parseCommunication(result, false);
 			
@@ -321,7 +327,9 @@ public class Network {
 			aUser.setSessionId(Integer.toString(msg.getSessionId()));
 			
 			return true;
-		}else //FIXME: do something with false additional info (why not register)
+		}else if(msg.getState().equals(FALSE) && ((FalseAnswer)msg.data).getErrMessage().length() != 0){
+				throw new CommunicationException(((FalseAnswer)msg.data).getErrMessage());
+		}else
 			return false;
 	}
 	
@@ -329,9 +337,8 @@ public class Network {
 	 * Method ask for list of adapters. User has to be sign in before
 	 * @return list of adapters or null
 	 * @throws NoConnectionException
-	 * @throws CommunicationException
+	 * @throws CommunicationException including message from server
 	 */
-	@SuppressWarnings("unchecked")
 	public ArrayList<Adapter> getAdapters() throws NoConnectionException, CommunicationException{
 		if(!isAvailable())
 			throw new NoConnectionException();
@@ -357,9 +364,13 @@ public class Network {
 		if(msg.getState().equals(READY)){
 			Log.d("IHA - Network", msg.getState());
 			
-			return (ArrayList<Adapter>) msg.data;
+			//http://stackoverflow.com/a/509288/1642090
+			@SuppressWarnings("unchecked")
+			ArrayList<Adapter> result = (ArrayList<Adapter>) msg.data;
+			
+			return result;
 		}else if(msg.getState().equals(RESIGN)){
-			//TODO: maybe use diffrenD way to resign, case stopping of thread, manage this after implement in the controler
+			//TODO: maybe use diffrenD way to resign, case stopping of thread, manage this after implement in the controller
 			try {
 				GetGoogleAuth.getGetGoogleAuth().execute();
 			} catch (Exception e) {
@@ -370,8 +381,10 @@ public class Network {
 			}
 			signIn(ActualUser.getActualUser().getEmail());
 			return getAdapters();
+			
+		}else if(msg.getState().equals(FALSE) && ((FalseAnswer)msg.data).getErrMessage().length() != 0){
+			throw new CommunicationException(((FalseAnswer)msg.data).getErrMessage());
 		}else
-			//FIXME: do something with false additional info (why not send adapters)
 			return null;
 	}
 	
@@ -391,9 +404,11 @@ public class Network {
 		try {
 			String messageToSend = XmlCreator.createInit(Integer.toString(mSessionId), adapterId);
 			
+			Log.d("IHA - Network fromApp", messageToSend);
+			
 			String result = startCommunication(messageToSend);
 			
-			Log.d("IHA - Network", result);
+			Log.d("IHA - Network fromSrv", result);
 			
 			msg = XmlParsers.parseCommunication(result, false);
 			
@@ -418,8 +433,10 @@ public class Network {
 			}
 			signIn(ActualUser.getActualUser().getEmail());
 			return init(adapterId);
+			
+		}else if(msg.getState().equals(FALSE) && ((FalseAnswer)msg.data).getErrMessage().length() != 0){
+			throw new CommunicationException(((FalseAnswer)msg.data).getErrMessage());
 		}else
-			//FIXME: do something with false additional info (why not init)
 			return null;
 	}
 	
@@ -431,9 +448,8 @@ public class Network {
 	 * @throws NoConnectionException
 	 * @throws CommunicationException
 	 */
-
 	public boolean reInit(String oldId, String newId) throws NoConnectionException, CommunicationException{
-		//TODO: test
+		//TODO: test properly
 		if(!isAvailable())
 			throw new NoConnectionException();
 		
@@ -442,9 +458,11 @@ public class Network {
 		try {
 			String messageToSend = XmlCreator.createReInit(Integer.toString(mSessionId), oldId, newId);
 			
+			Log.d("IHA - Network fromApp", messageToSend);
+			
 			String result = startCommunication(messageToSend);
 			
-			Log.d("IHA - Network", result);
+			Log.d("IHA - Network fromSrv", result);
 			
 			msg = XmlParsers.parseCommunication(result, false);
 			
@@ -470,8 +488,10 @@ public class Network {
 			}
 			signIn(ActualUser.getActualUser().getEmail());
 			return reInit(oldId, newId);
+			
+		}else if(msg.getState().equals(FALSE) && ((FalseAnswer)msg.data).getErrMessage().length() != 0){
+			throw new CommunicationException(((FalseAnswer)msg.data).getErrMessage());
 		}else
-			//FIXME: do something with false additional info (why not register)
 			return false;
 	}
 	
@@ -483,7 +503,6 @@ public class Network {
 	 * @throws CommunicationException 
 	 */
 	public boolean partial(ArrayList<BaseDevice> devices) throws NoConnectionException, CommunicationException{
-		//TODO: test
 		if(!isAvailable())
 			throw new NoConnectionException();
 		
@@ -496,7 +515,7 @@ public class Network {
 			
 			String result = startCommunication(messageToSend);
 			
-			Log.d("IHA - Network fromServer", result);
+			Log.d("IHA - Network fromSrv", result);
 			
 			msg = XmlParsers.parseCommunication(result, false);
 			
@@ -522,8 +541,9 @@ public class Network {
 			}
 			signIn(ActualUser.getActualUser().getEmail());
 			return partial(devices);
+		}else if(msg.getState().equals(FALSE) && ((FalseAnswer)msg.data).getErrMessage().length() != 0){
+			throw new CommunicationException(((FalseAnswer)msg.data).getErrMessage());
 		}else
-			//FIXME: do something with false additional info (why not update devices)
 			return false;
 	}
 	
@@ -534,9 +554,7 @@ public class Network {
 	 * @throws NoConnectionException 
 	 * @throws CommunicationException 
 	 */
-	@SuppressWarnings("unchecked")
 	public ArrayList<BaseDevice> update(ArrayList<BaseDevice> devices) throws NoConnectionException, CommunicationException{
-		// TODO: test
 		if(!isAvailable())
 			throw new NoConnectionException();
 		
@@ -545,9 +563,11 @@ public class Network {
 		try {
 			String messageToSend = XmlCreator.createUpdate(Integer.toString(mSessionId), devices);
 			
+			Log.d("IHA - Network fromApp", messageToSend);
+			
 			String result = startCommunication(messageToSend);
 			
-			Log.d("IHA - Network", result);
+			Log.d("IHA - Network fromSrv", result);
 			
 			msg = XmlParsers.parseCommunication(result, false);
 			
@@ -559,7 +579,11 @@ public class Network {
 		if(msg.getState().equals(PARTIAL)){
 			Log.d("IHA - Network", msg.getState());
 			
-			return (ArrayList<BaseDevice>) msg.data;
+			//http://stackoverflow.com/a/509288/1642090
+			@SuppressWarnings("unchecked")
+			ArrayList<BaseDevice> result = (ArrayList<BaseDevice>) msg.data; 
+			
+			return result;
 			
 		}else if(msg.getState().equals(RESIGN)){
 			//TODO: maybe use diffrenD way to resign, case stopping of thread, manage this after implement in the controler
@@ -573,8 +597,9 @@ public class Network {
 			}
 			signIn(ActualUser.getActualUser().getEmail());
 			return update(devices);
+		}else if(msg.getState().equals(FALSE) && ((FalseAnswer)msg.data).getErrMessage().length() != 0){
+			throw new CommunicationException(((FalseAnswer)msg.data).getErrMessage());
 		}else
-			//FIXME: do something with false additional info (why not get updated fields)
 			return null;
 	}
 	
@@ -587,9 +612,8 @@ public class Network {
 	 * @throws NoConnectionException 
 	 * @throws CommunicationException 
 	 */
-	@SuppressWarnings("unchecked")
 	public ArrayList<ContentRow> logName(String deviceId, String from, String to) throws NoConnectionException, CommunicationException{
-		// TODO: test
+		// TODO: test properly
 		if(!isAvailable())
 			throw new NoConnectionException();
 		
@@ -598,9 +622,11 @@ public class Network {
 		try {
 			String messageToSend = XmlCreator.createLogName(Integer.toString(mSessionId), deviceId, from, to);
 			
+			Log.d("IHA - Network fromApp", messageToSend);
+			
 			String result = startCommunication(messageToSend);
 			
-			Log.d("IHA - Network", result);
+			Log.d("IHA - Network fromSrv", result);
 			
 			msg = XmlParsers.parseCommunication(result, false);
 			
@@ -612,7 +638,11 @@ public class Network {
 		if(msg.getState().equals(CONTENT)){
 			Log.d("IHA - Network", msg.getState());
 			
-			return (ArrayList<ContentRow>) msg.data;
+			//http://stackoverflow.com/a/509288/1642090
+			@SuppressWarnings("unchecked")
+			ArrayList<ContentRow> result = (ArrayList<ContentRow>) msg.data; 
+			
+			return result;
 			
 		}else if(msg.getState().equals(RESIGN)){
 			//TODO: maybe use diffrenD way to resign, case stopping of thread, manage this after implement in the controler
@@ -626,8 +656,10 @@ public class Network {
 			}
 			signIn(ActualUser.getActualUser().getEmail());
 			return logName(deviceId, from, to);
+			
+		}else if(msg.getState().equals(FALSE) && ((FalseAnswer)msg.data).getErrMessage().length() != 0){
+			throw new CommunicationException(((FalseAnswer)msg.data).getErrMessage());
 		}else
-			//FIXME: do something with false additional info (why not get log data)
 			return null;
 	}
 	
@@ -655,7 +687,7 @@ public class Network {
 	 * @throws CommunicationException 
 	 */
 	public boolean addView(String nameOfView, int iconId, ArrayList<String> deviceIds) throws NoConnectionException, CommunicationException{
-		// TODO: test
+		// TODO: test properly
 		if(!isAvailable())
 			throw new NoConnectionException();
 		
@@ -664,9 +696,11 @@ public class Network {
 		try {
 			String messageToSend = XmlCreator.createAddView(Integer.toString(mSessionId), nameOfView, iconId, deviceIds);
 			
+			Log.d("IHA - Network fromApp", messageToSend);
+			
 			String result = startCommunication(messageToSend);
 			
-			Log.d("IHA - Network", result);
+			Log.d("IHA - Network fromSrv", result);
 			
 			msg = XmlParsers.parseCommunication(result, false);
 			
@@ -692,8 +726,10 @@ public class Network {
 			}
 			signIn(ActualUser.getActualUser().getEmail());
 			return addView(nameOfView, iconId, deviceIds);
+			
+		}else if(msg.getState().equals(FALSE) && ((FalseAnswer)msg.data).getErrMessage().length() != 0){
+			throw new CommunicationException(((FalseAnswer)msg.data).getErrMessage());
 		}else
-			//FIXME: do something with false additional info (why not view added)
 			return false;
 	}
 	
@@ -703,9 +739,8 @@ public class Network {
 	 * @throws NoConnectionException 
 	 * @throws CommunicationException 
 	 */
-	@SuppressWarnings("unchecked")
 	public ArrayList<CustomViewPair> getViews() throws NoConnectionException, CommunicationException{
-		// TODO: test
+		// TODO: test properly
 		if(!isAvailable())
 			throw new NoConnectionException();
 		
@@ -714,9 +749,11 @@ public class Network {
 		try {
 			String messageToSend = XmlCreator.createGetViews(Integer.toString(mSessionId));
 			
+			Log.d("IHA - Network fromApp", messageToSend);
+			
 			String result = startCommunication(messageToSend);
 			
-			Log.d("IHA - Network", result);
+			Log.d("IHA - Network fromSrv", result);
 			
 			msg = XmlParsers.parseCommunication(result, false);
 			
@@ -728,7 +765,11 @@ public class Network {
 		if(msg.getState().equals(VIEWSLIST)){
 			Log.d("IHA - Network", msg.getState());
 			
-			return  (ArrayList<CustomViewPair>) msg.data;
+			//http://stackoverflow.com/a/509288/1642090
+			@SuppressWarnings("unchecked")
+			ArrayList<CustomViewPair> result = (ArrayList<CustomViewPair>) msg.data;
+			
+			return result;
 			
 		}else if(msg.getState().equals(RESIGN)){
 			//TODO: maybe use diffrenD way to resign, case stopping of thread, manage this after implement in the controler
@@ -742,8 +783,10 @@ public class Network {
 			}
 			signIn(ActualUser.getActualUser().getEmail());
 			return getViews();
+			
+		}else if(msg.getState().equals(FALSE) && ((FalseAnswer)msg.data).getErrMessage().length() != 0){
+			throw new CommunicationException(((FalseAnswer)msg.data).getErrMessage());
 		}else
-			//FIXME: do something with false additional info (why not get log data)
 			return null;
 	}
 	
@@ -755,7 +798,7 @@ public class Network {
 	 * @throws CommunicationException 
 	 */
 	public boolean deleteView(String viewName) throws NoConnectionException, CommunicationException{
-		// TODO: test
+		// TODO: test properly
 		if(!isAvailable())
 			throw new NoConnectionException();
 		
@@ -764,9 +807,11 @@ public class Network {
 		try {
 			String messageToSend = XmlCreator.createDelView(Integer.toString(mSessionId), viewName);
 			
+			Log.d("IHA - Network fromApp", messageToSend);
+			
 			String result = startCommunication(messageToSend);
 			
-			Log.d("IHA - Network", result);
+			Log.d("IHA - Network fromSrv", result);
 			
 			msg = XmlParsers.parseCommunication(result, false);
 			
@@ -792,8 +837,10 @@ public class Network {
 			}
 			signIn(ActualUser.getActualUser().getEmail());
 			return deleteView(viewName);
+			
+		}else if(msg.getState().equals(FALSE) && ((FalseAnswer)msg.data).getErrMessage().length() != 0){
+			throw new CommunicationException(((FalseAnswer)msg.data).getErrMessage());
 		}else
-			//FIXME: do something with false additional info (why not view deleted)
 			return false;
 	}
 	
@@ -806,7 +853,7 @@ public class Network {
 	 * @throws CommunicationException 
 	 */
 	public boolean updateView(String viewName, int iconId, HashMap<String, String> devices) throws NoConnectionException, CommunicationException{
-		//TODO: test
+		//TODO: test properly
 		if(!isAvailable())
 			throw new NoConnectionException();
 		
@@ -815,9 +862,11 @@ public class Network {
 		try {
 			String messageToSend = XmlCreator.createUpdateView(Integer.toString(mSessionId), viewName, iconId, devices);
 			
+			Log.d("IHA - Network fromApp", messageToSend);
+			
 			String result = startCommunication(messageToSend);
 			
-			Log.d("IHA - Network", result);
+			Log.d("IHA - Network fromSrv", result);
 			
 			msg = XmlParsers.parseCommunication(result, false);
 			
@@ -843,8 +892,9 @@ public class Network {
 			}
 			signIn(ActualUser.getActualUser().getEmail());
 			return updateView(viewName, iconId, devices);
+		}else if(msg.getState().equals(FALSE) && ((FalseAnswer)msg.data).getErrMessage().length() != 0){
+			throw new CommunicationException(((FalseAnswer)msg.data).getErrMessage());
 		}else
-			//FIXME: do something with false additional info (why not view updated)
 			return false;
 	}
 	
@@ -856,7 +906,7 @@ public class Network {
 	 * @throws CommunicationException 
 	 */
 	public boolean addConnectionAccount(HashMap<String, String> userNrole) throws NoConnectionException, CommunicationException{
-		//TODO: test
+		//TODO: test properly
 		if(!isAvailable())
 			throw new NoConnectionException();
 		
@@ -865,9 +915,11 @@ public class Network {
 		try {
 			String messageToSend = XmlCreator.createAddConAccount(Integer.toString(mSessionId), userNrole);
 			
+			Log.d("IHA - Network fromApp", messageToSend);
+			
 			String result = startCommunication(messageToSend);
 			
-			Log.d("IHA - Network", result);
+			Log.d("IHA - Network fromSrv", result);
 			
 			msg = XmlParsers.parseCommunication(result, false);
 			
@@ -893,8 +945,9 @@ public class Network {
 			}
 			signIn(ActualUser.getActualUser().getEmail());
 			return addConnectionAccount(userNrole);
+		}else if(msg.getState().equals(FALSE) && ((FalseAnswer)msg.data).getErrMessage().length() != 0){
+			throw new CommunicationException(((FalseAnswer)msg.data).getErrMessage());
 		}else
-			//FIXME: do something with false additional info (why not account added)
 			return false;
 	}
 	
@@ -906,7 +959,7 @@ public class Network {
 	 * @throws CommunicationException 
 	 */
 	public boolean deleteConnectionAccount(ArrayList<String> users) throws NoConnectionException, CommunicationException{
-		//TODO: test
+		//TODO: test properly
 		if(!isAvailable())
 			throw new NoConnectionException();
 		
@@ -915,9 +968,11 @@ public class Network {
 		try {
 			String messageToSend = XmlCreator.createDelConAccount(Integer.toString(mSessionId), users);
 			
+			Log.d("IHA - Network fromApp", messageToSend);
+			
 			String result = startCommunication(messageToSend);
 			
-			Log.d("IHA - Network", result);
+			Log.d("IHA - Network fromSrv", result);
 			
 			msg = XmlParsers.parseCommunication(result, false);
 			
@@ -943,8 +998,9 @@ public class Network {
 			}
 			signIn(ActualUser.getActualUser().getEmail());
 			return deleteConnectionAccount(users);
+		}else if(msg.getState().equals(FALSE) && ((FalseAnswer)msg.data).getErrMessage().length() != 0){
+			throw new CommunicationException(((FalseAnswer)msg.data).getErrMessage());
 		}else
-			//FIXME: do something with false additional info (why not account deleted)
 			return false;
 	}
 	
@@ -954,9 +1010,8 @@ public class Network {
 	 * @throws NoConnectionException 
 	 * @throws CommunicationException 
 	 */
-	@SuppressWarnings("unchecked")
 	public HashMap<String, User> getConnectionAccountList() throws NoConnectionException, CommunicationException{
-		//TODO: test
+		//TODO: test properly
 		if(!isAvailable())
 			throw new NoConnectionException();
 		
@@ -965,9 +1020,11 @@ public class Network {
 		try {
 			String messageToSend = XmlCreator.createGetConAccount(Integer.toString(mSessionId));
 			
+			Log.d("IHA - Network fromApp", messageToSend);
+			
 			String result = startCommunication(messageToSend);
 			
-			Log.d("IHA - Network", result);
+			Log.d("IHA - Network fromSrv", result);
 			
 			msg = XmlParsers.parseCommunication(result, false);
 			
@@ -976,10 +1033,14 @@ public class Network {
 			throw new CommunicationException(e);
 		}
 		
-		if(msg.getState().equals(TRUE)){
+		if(msg.getState().equals(CONACCOUNTLIST)){
 			Log.d("IHA - Network", msg.getState());
 			
-			return (HashMap<String, User>) msg.data;
+			//http://stackoverflow.com/a/509288/1642090
+			@SuppressWarnings("unchecked")
+			HashMap<String, User> result = (HashMap<String, User>) msg.data;
+			
+			return result;
 			
 		}else if(msg.getState().equals(RESIGN)){
 			//TODO: maybe use diffrenD way to resign, case stopping of thread, manage this after implement in the controler
@@ -993,8 +1054,10 @@ public class Network {
 			}
 			signIn(ActualUser.getActualUser().getEmail());
 			return getConnectionAccountList();
+			
+		}else if(msg.getState().equals(FALSE) && ((FalseAnswer)msg.data).getErrMessage().length() != 0){
+			throw new CommunicationException(((FalseAnswer)msg.data).getErrMessage());
 		}else
-			//FIXME: do something with false additional info (why not view added)
 			return null;
 	}
 	
@@ -1006,7 +1069,7 @@ public class Network {
 	 * @throws CommunicationException 
 	 */
 	public boolean changeConnectionAccount(HashMap<String, String> userNrole) throws NoConnectionException, CommunicationException{
-		//TODO: test
+		//TODO: test properly
 		if(!isAvailable())
 			throw new NoConnectionException();
 		
@@ -1015,9 +1078,11 @@ public class Network {
 		try {
 			String messageToSend = XmlCreator.createChangeConAccount(Integer.toString(mSessionId), userNrole);
 			
+			Log.d("IHA - Network fromApp", messageToSend);
+			
 			String result = startCommunication(messageToSend);
 			
-			Log.d("IHA - Network", result);
+			Log.d("IHA - Network fromSrv", result);
 			
 			msg = XmlParsers.parseCommunication(result, false);
 			
@@ -1043,8 +1108,224 @@ public class Network {
 			}
 			signIn(ActualUser.getActualUser().getEmail());
 			return changeConnectionAccount(userNrole);
+		}else if(msg.getState().equals(FALSE) && ((FalseAnswer)msg.data).getErrMessage().length() != 0){
+			throw new CommunicationException(((FalseAnswer)msg.data).getErrMessage());
 		}else
-			//FIXME: do something with false additional info (why not account updated)
 			return false;
 	}
+	
+	/**
+	 * Method set wanted time zone to server
+	 * @NOTE using difference from GMT (UTC+0), reduced range <-12,12>
+	 * @param differenceToGMT
+	 * @return
+	 * @throws NoConnectionException
+	 * @throws CommunicationException
+	 */
+	public boolean setTimeZone(int differenceToGMT) throws NoConnectionException, CommunicationException{
+		//TODO: test properly
+		if(!isAvailable())
+			throw new NoConnectionException();
+		
+		ParsedMessage msg;
+		
+		try {
+			String messageToSend = XmlCreator.createSetTimeZone(Integer.toString(mSessionId), differenceToGMT);
+			
+			Log.d("IHA - Network fromApp", messageToSend);
+			
+			String result = startCommunication(messageToSend);
+			
+			Log.d("IHA - Network fromSrv", result);
+			
+			msg = XmlParsers.parseCommunication(result, false);
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new CommunicationException(e);
+		}
+		
+		if(msg.getState().equals(TRUE)){
+			Log.d("IHA - Network", msg.getState());
+			
+			return true;
+			
+		}else if(msg.getState().equals(RESIGN)){
+			//TODO: maybe use diffrenD way to resign, case stopping of thread, manage this after implement in the controler
+			try {
+				GetGoogleAuth.getGetGoogleAuth().execute();
+			} catch (Exception e) {
+				e.printStackTrace();
+				String tmp = null;
+				new GetGoogleAuth(new LoginActivity(), tmp).execute();
+				//return null;
+			}
+			signIn(ActualUser.getActualUser().getEmail());
+			return setTimeZone(differenceToGMT);
+			
+		}else if(msg.getState().equals(FALSE) && ((FalseAnswer)msg.data).getErrMessage().length() != 0){
+			throw new CommunicationException(((FalseAnswer)msg.data).getErrMessage());
+		}else
+			return false;
+	}
+	
+	/**
+	 * Method call to server to get actual time zone
+	 * @return integer in range <-12,12>
+	 * @throws NoConnectionException
+	 * @throws CommunicationException
+	 */
+	public int getTimeZone() throws NoConnectionException, CommunicationException{
+		//TODO: test properly
+		if(!isAvailable())
+			throw new NoConnectionException();
+		
+		ParsedMessage msg;
+		
+		try {
+			String messageToSend = XmlCreator.createGetTimeZone(Integer.toString(mSessionId));
+			
+			Log.d("IHA - Network fromApp", messageToSend);
+			
+			String result = startCommunication(messageToSend);
+			
+			Log.d("IHA - Network fromSrv", result);
+			
+			msg = XmlParsers.parseCommunication(result, false);
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new CommunicationException(e);
+		}
+		
+		if(msg.getState().equals(TIMEZONE)){
+			Log.d("IHA - Network", msg.getState());
+			
+			return (Integer)msg.data;
+			
+		}else if(msg.getState().equals(RESIGN)){
+			//TODO: maybe use diffrenD way to resign, case stopping of thread, manage this after implement in the controler
+			try {
+				GetGoogleAuth.getGetGoogleAuth().execute();
+			} catch (Exception e) {
+				e.printStackTrace();
+				String tmp = null;
+				new GetGoogleAuth(new LoginActivity(), tmp).execute();
+				//return null;
+			}
+			signIn(ActualUser.getActualUser().getEmail());
+			return getTimeZone();
+			
+		}else if(msg.getState().equals(FALSE) && ((FalseAnswer)msg.data).getErrMessage().length() != 0){
+			throw new CommunicationException(((FalseAnswer)msg.data).getErrMessage());
+		}else
+			return 0;
+	}
+
+	/**
+	 * Method call to server for actual list of locations 
+	 * @return ArrayList with locations
+	 * @throws NoConnectionException
+	 * @throws CommunicationException
+	 */
+	public ArrayList<Location> getLocations() throws NoConnectionException, CommunicationException{
+		//TODO: test properly
+		if(!isAvailable())
+			throw new NoConnectionException();
+		
+		ParsedMessage msg;
+		
+		try {
+			String messageToSend = XmlCreator.createGetRooms(Integer.toString(mSessionId));
+			
+			Log.d("IHA - Network fromApp", messageToSend);
+			
+			String result = startCommunication(messageToSend);
+			
+			Log.d("IHA - Network fromSrv", result);
+			
+			msg = XmlParsers.parseCommunication(result, false);
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new CommunicationException(e);
+		}
+		
+		if(msg.getState().equals(ROOMS)){
+			Log.d("IHA - Network", msg.getState());
+			
+			//http://stackoverflow.com/a/509288/1642090
+			@SuppressWarnings("unchecked")
+			ArrayList<Location> result = (ArrayList<Location>) msg.data;
+			
+			return result;
+			
+		}else if(msg.getState().equals(RESIGN)){
+			//TODO: maybe use diffrenD way to resign, case stopping of thread, manage this after implement in the controler
+			try {
+				GetGoogleAuth.getGetGoogleAuth().execute();
+			} catch (Exception e) {
+				e.printStackTrace();
+				String tmp = null;
+				new GetGoogleAuth(new LoginActivity(), tmp).execute();
+				//return null;
+			}
+			signIn(ActualUser.getActualUser().getEmail());
+			return getLocations();
+			
+		}else if(msg.getState().equals(FALSE) && ((FalseAnswer)msg.data).getErrMessage().length() != 0){
+			throw new CommunicationException(((FalseAnswer)msg.data).getErrMessage());
+		}else
+			return null;
+	}
+
+	public boolean updateLocations(ArrayList<Location> locations) throws NoConnectionException, CommunicationException{
+		//TODO: test properly
+		if(!isAvailable())
+			throw new NoConnectionException();
+		
+		ParsedMessage msg;
+		
+		try {
+			String messageToSend = XmlCreator.createUpdateRooms(Integer.toString(mSessionId), locations);
+			
+			Log.d("IHA - Network fromApp", messageToSend);
+			
+			String result = startCommunication(messageToSend);
+			
+			Log.d("IHA - Network fromSrv", result);
+			
+			msg = XmlParsers.parseCommunication(result, false);
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new CommunicationException(e);
+		}
+		
+		if(msg.getState().equals(TRUE)){
+			Log.d("IHA - Network", msg.getState());
+			
+			return true;
+			
+		}else if(msg.getState().equals(RESIGN)){
+			//TODO: maybe use diffrenD way to resign, case stopping of thread, manage this after implement in the controler
+			try {
+				GetGoogleAuth.getGetGoogleAuth().execute();
+			} catch (Exception e) {
+				e.printStackTrace();
+				String tmp = null;
+				new GetGoogleAuth(new LoginActivity(), tmp).execute();
+				//return null;
+			}
+			signIn(ActualUser.getActualUser().getEmail());
+			return updateLocations(locations);
+			
+		}else if(msg.getState().equals(FALSE) && ((FalseAnswer)msg.data).getErrMessage().length() != 0){
+			throw new CommunicationException(((FalseAnswer)msg.data).getErrMessage());
+		}else
+			return false;
+	}
+
+	//TODO: GetAlerts
+	//TODO: Alerts
 }
