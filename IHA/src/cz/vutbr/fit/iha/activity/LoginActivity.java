@@ -42,6 +42,8 @@ public class LoginActivity extends Activity {
 	private LoginActivity mActivity;
 	private ProgressDialog mProgress;
 	
+	private Thread mDoGoogleLoginThread;
+	
 	private static final String TAG = "LOGIN";
 	
 	public static final int USER_RECOVERABLE_AUTH = 5;
@@ -123,6 +125,16 @@ public class LoginActivity extends Activity {
     	super.onBackPressed();
     	mActivity.finish();
     }
+    
+    public void ProgressDismiss(){
+    	mProgress.dismiss();
+    }
+    
+    public void stopThread(){
+    	if(mDoGoogleLoginThread != null && mDoGoogleLoginThread.isAlive()){
+    		mDoGoogleLoginThread.interrupt();
+    	}
+    }
 	
     /**
      * Method start routine to access trough google after button click
@@ -149,6 +161,7 @@ public class LoginActivity extends Activity {
 			// Google Play is missing
 			Log.d(TAG, "Google Play is missing");
 			Toast.makeText(v.getContext(), "Google acount not found", Toast.LENGTH_LONG).show();
+			mProgress.dismiss();
 		}
 		Log.d(TAG, "END: Google access func");
 		return false;
@@ -178,7 +191,7 @@ public class LoginActivity extends Activity {
 		try {
 			Log.d(TAG, "call google auth execute");
 			
-			new Thread(new Runnable() {
+			mDoGoogleLoginThread = new Thread(new Runnable() {
 				@Override
 				public void run() {
 					ggAuth.execute();
@@ -186,7 +199,8 @@ public class LoginActivity extends Activity {
 					doLogin(email);
 					Log.d(TAG, "Finish google auth");
 				}
-			}).start();
+			});
+			mDoGoogleLoginThread.start();
 			
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -279,12 +293,22 @@ public class LoginActivity extends Activity {
 	//FIXME: check connections
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        /*
-        if (requestCode == USER_RECOVERABLE_AUTH && resultCode == RESULT_OK) {
-        	new GetGoogleAuth(this, this.acEmail).execute();
-        }
-        */
         
+        if (requestCode == USER_RECOVERABLE_AUTH && resultCode == RESULT_OK) {
+        	String email = data.getStringExtra(AccountManager.KEY_ACCOUNT_NAME);
+        	if (email == null) {
+        		Log.d(TAG, "onActivityResult: no email");
+        		return;
+        	}
+        	try {
+				GetGoogleAuth.getGetGoogleAuth().execute();
+				Log.d(TAG, "user aproved, and token is tried to retake.");
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+        	
+        }
         
         if (requestCode == GET_GOOGLE_ACCOUNT && resultCode == RESULT_OK) {
         	String email = data.getStringExtra(AccountManager.KEY_ACCOUNT_NAME);
@@ -292,10 +316,14 @@ public class LoginActivity extends Activity {
         		Log.d(TAG, "onActivityResult: no email");
         		return;
         	}
-        	
-        	doLogin(email);
-        	// Get acces token
-			//new GetGoogleAuth(this, this.acEmail).execute();
+        	Log.i(TAG, "Go do google login again.");
+        	//doGoogleLogin(email);
+        	try {
+				GetGoogleAuth.getGetGoogleAuth().execute();
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
         }
     }
 	

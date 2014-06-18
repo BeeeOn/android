@@ -18,6 +18,7 @@ import com.google.android.gms.auth.GoogleAuthUtil;
 import com.google.android.gms.auth.UserRecoverableAuthException;
 
 import cz.vutbr.fit.iha.activity.LoginActivity;
+import cz.vutbr.fit.iha.thread.ToastMessageThread;
 
 /**
  * Class communicate with Google server
@@ -150,16 +151,16 @@ public class GetGoogleAuth extends AsyncTask<Void, Void, String> {
 		super.onPostExecute(result);
 		if (result != null) {
 			
-			Thread fetchUserInfo = new Thread(new Runnable(){
-			    @Override
-			    public void run() {
-			        try {
-			        	fetchInfoFromProfileServer(result);
-			        } catch (Exception e) {
-			            e.printStackTrace();
-			        }
-			    }
-			});
+//			Thread fetchUserInfo = new Thread(new Runnable(){
+//			    @Override
+//			    public void run() {
+//			        try {
+//			        	fetchInfoFromProfileServer(result);
+//			        } catch (Exception e) {
+//			            e.printStackTrace();
+//			        }
+//			    }
+//			});
 			// Fetch user name and surname
 			//fetchUserInfo.start();
 			//FIXME: this code below need refactoring !!!!! Leo?
@@ -183,7 +184,7 @@ public class GetGoogleAuth extends AsyncTask<Void, Void, String> {
 //			Log.d(TAG, "Token: "+result);
 //			Log.d(TAG, "User name: "+this.mUserName);
 //			Log.d(TAG, "Picture url:"+mPicture);
-			mToken = result;
+//			mToken = result;
 			/*
 			if(mPicture != null) {
 				// Set User profile picture if is set
@@ -231,7 +232,12 @@ public class GetGoogleAuth extends AsyncTask<Void, Void, String> {
 //	    	synchronized(this) {
 //	        	  this.notify();
 //	          }
+	    	return;
 		}
+		Log.e(TAG, "wtf?");
+		mActivity.ProgressDismiss();
+		mActivity.stopThread();
+		new ToastMessageThread(mActivity, "Something goes wrong, try it later please.").start();
 	}
 	
 	public void setDebugToken(String token){
