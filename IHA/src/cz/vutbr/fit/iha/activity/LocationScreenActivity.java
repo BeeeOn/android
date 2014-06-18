@@ -14,6 +14,7 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -36,6 +37,7 @@ import cz.vutbr.fit.iha.R;
 import cz.vutbr.fit.iha.SensorListAdapter;
 import cz.vutbr.fit.iha.activity.dialog.AddAdapterActivityDialog;
 import cz.vutbr.fit.iha.activity.dialog.AddSensorActivityDialog;
+import cz.vutbr.fit.iha.activity.dialog.CustomAlertDialog;
 import cz.vutbr.fit.iha.adapter.device.BaseDevice;
 import cz.vutbr.fit.iha.controller.Controller;
 import cz.vutbr.fit.iha.extension.watches.smartwatch2.SW2PreferenceActivity;
@@ -72,6 +74,8 @@ public class LocationScreenActivity extends SherlockFragmentActivity {
     
     private String mActiveLocation;
     
+    private DevicesTask mTask;
+    
 	/**
 	 * Call XML parser to file on SDcard
 	 */
@@ -104,10 +108,22 @@ public class LocationScreenActivity extends SherlockFragmentActivity {
 		super.onResume();
 		
 		if(!inBackground){
-			DevicesTask task = new DevicesTask();
-		    task.execute();
+			mTask = new DevicesTask();
+		    mTask.execute();
 		}
 	}
+	
+	@Override
+	public void onDestroy(){
+		super.onDestroy();
+		
+		if(mTask != null){
+			if(mTask.getDialog() != null){ 
+				mTask.getDialog().dismiss();
+			}
+		}
+	}
+	
 	
 	@Override
 	public void onSaveInstanceState(Bundle savedInstaceState){
@@ -460,8 +476,18 @@ public class LocationScreenActivity extends SherlockFragmentActivity {
 	 * Loads locations, checks for uninitialized devices and eventually shows dialog for adding them
 	 */
 	private class DevicesTask extends AsyncTask<Void, Void, List<BaseDevice>> {
-    	@Override
-    	protected List<BaseDevice> doInBackground(Void... unused) {
+		
+		private final CustomAlertDialog mDialog = new CustomAlertDialog(LocationScreenActivity.this);
+		
+    	/**
+		 * @return the dialog
+		 */
+		public CustomAlertDialog getDialog() {
+			return mDialog;
+		}
+
+		@Override
+     	protected List<BaseDevice> doInBackground(Void... unused) {
     		// Load locations
     		mLocations = mController.getLocations();
     		Log.d(TAG, String.format("Found %d locations", mLocations.size()));
@@ -481,34 +507,35 @@ public class LocationScreenActivity extends SherlockFragmentActivity {
     		// Do something with uninitialized devices
     		if (uninitializedDevices.size() == 0)
     			return;
-				
-			AlertDialog.Builder builder = new AlertDialog.Builder(LocationScreenActivity.this);
-				
-			builder.setCancelable(false)
-				.setTitle(R.string.notification_title)
-				.setMessage(getResources().getQuantityString(R.plurals.notification_new_sensors, uninitializedDevices.size(), uninitializedDevices.size()))
-				.setNeutralButton(R.string.notification_ingore, new DialogInterface.OnClickListener() {
 
-					@Override
-					public void onClick(DialogInterface dialog, int which) {
-						mController.ignoreUninitialized(uninitializedDevices);
-						// TODO: Get this string from resources
-						Toast.makeText(LocationScreenActivity.this, "You can add these devices later through 'Menu / Add sensor'", Toast.LENGTH_LONG).show();
-					}
-				})
-				.setPositiveButton(R.string.notification_add, new DialogInterface.OnClickListener() {
-
-					@Override
-					public void onClick(DialogInterface dialog, int which) {
-						// Open activity for adding new device
-						inBackground = true;
-						Intent intent = new Intent(LocationScreenActivity.this, AddSensorActivityDialog.class);
-						startActivity(intent);
-					}
-				});
+//			final CustomAlertDialog builder = new CustomAlertDialog(LocationScreenActivity.this);
+				
+			mDialog.setCancelable(false)
+				.setTitle(getResources().getString(R.string.notification_title))
+				.setMessage(getResources().getQuantityString(R.plurals.notification_new_sensors, uninitializedDevices.size(), uninitializedDevices.size()));
 			
-			AlertDialog dialog = builder.create();
-			dialog.show();
+			mDialog.setCustomNeutralButton(getResources().getString(R.string.notification_ingore), new OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					mController.ignoreUninitialized(uninitializedDevices);
+					// TODO: Get this string from resources
+					Toast.makeText(LocationScreenActivity.this, "You can add these devices later through 'Menu / Add sensor'", Toast.LENGTH_LONG).show();
+					mDialog.dismiss();
+				}
+			});
+			
+			mDialog.setCustomPositiveButton(getResources().getString(R.string.notification_add), new OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					// Open activity for adding new device
+					inBackground = true;
+					Intent intent = new Intent(LocationScreenActivity.this, AddSensorActivityDialog.class);
+					startActivity(intent);
+					mDialog.dismiss();
+				}
+			});
+			
+			mDialog.show();
     	}
 	}
 	
@@ -516,6 +543,7 @@ public class LocationScreenActivity extends SherlockFragmentActivity {
 	 * Changes selected location and redraws list of adapters there
 	 */
 	private class ChangeLocationTask extends AsyncTask<String, Void, List<BaseDevice>> {
+		
     	@Override
     	protected List<BaseDevice> doInBackground(String... locations) {
     		List<BaseDevice> devices = mController.getDevicesByLocation(locations[0]);

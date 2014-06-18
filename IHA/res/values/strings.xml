@@ -17,6 +17,8 @@
     <string name="login_login">Login</string>
     <string name="login_demo">Demo mode</string>
     <string name="registration_button">Registration</string>
+    <string name="alert_neutral">Click me</string>
+    <string name="alert_positive">OK</string>
     <!-- New sensor dialog -->
     <string name="notification_title">New sensors</string>
 
@@ -41,6 +43,8 @@
     <string name="addadapter_add_adapter">Add adapter</string>
     <string name="registration_label">New account</string>
     <string name="registration_serial_number">For adapter with serial number:</string>
+    <string name="alert_title">Title</string>
+    <string name="alert_message">Message</string>
     <!-- RadioButtons -->
     <string name="login_radio_facebook">Facebook account</string>
     <string name="login_radio_google">Google account</string>
@@ -125,5 +129,6 @@
     <string name="title_activity_add_adapter_activity_dialog">AddAdapterActivityDialog</string>
     <string name="hello_world">Hello world!</string>
     <string name="title_activity_add_sensor_activity_dialog">AddSensorActivityDialog</string>
+    <string name="title_activity_alert_activity_dialog">AlertActivityDialog</string>
 
 </resources>
