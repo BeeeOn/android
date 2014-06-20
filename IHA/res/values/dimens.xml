@@ -8,4 +8,6 @@
 	
 	<!--  Widget margins -->
 	<dimen name="widget_margin">8dp</dimen>
+	
+	<dimen name="custom_spinner_icon_size">45dp</dimen>
 </resources>

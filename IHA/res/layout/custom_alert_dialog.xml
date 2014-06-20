@@ -19,6 +19,7 @@
 	    android:paddingBottom="15dp"
 	    android:textColor="@color/log_blue2"
 	    android:textIsSelectable="false"
+	    android:visibility="gone"
         android:textAppearance="?android:attr/textAppearanceLarge" />
 	
 	<TextView
@@ -30,6 +31,7 @@
 	    android:textColor="@color/log_blue2" 
 	    android:gravity="center_horizontal"
 	    android:textIsSelectable="false"
+	    android:visibility="gone"
 	    android:textAppearance="?android:attr/textAppearanceMedium" />
 	
 	<LinearLayout 
@@ -43,6 +45,7 @@
 		    android:id="@+id/custom_alert_neutral_button"
 		    android:layout_width="130dp"
 		    android:layout_height="wrap_content"
+		    android:visibility="gone"
 		    android:layout_gravity="center_horizontal"
 		    android:text="@string/alert_neutral" />
 		
@@ -51,6 +54,7 @@
 		    android:id="@+id/custom_alert_positive_button"
 		    android:layout_width="130dp"
 		    android:layout_height="wrap_content"
+		    android:visibility="gone"
 		    android:layout_gravity="center_horizontal"
 		    android:text="@string/alert_positive" />
 		    

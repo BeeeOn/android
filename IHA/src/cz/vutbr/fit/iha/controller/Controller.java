@@ -5,15 +5,15 @@ import java.util.List;
 import java.util.Random;
 
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.text.format.Time;
+import cz.vutbr.fit.iha.R;
 import cz.vutbr.fit.iha.User;
 import cz.vutbr.fit.iha.adapter.Adapter;
 import cz.vutbr.fit.iha.adapter.device.BaseDevice;
+import cz.vutbr.fit.iha.adapter.device.BaseDevice.SaveDevice;
 import cz.vutbr.fit.iha.adapter.device.DeviceLog;
 import cz.vutbr.fit.iha.adapter.device.StateDevice;
 import cz.vutbr.fit.iha.adapter.device.SwitchDevice;
-import cz.vutbr.fit.iha.adapter.device.BaseDevice.SaveDevice;
 import cz.vutbr.fit.iha.exception.NetworkException;
 import cz.vutbr.fit.iha.exception.NoConnectionException;
 import cz.vutbr.fit.iha.exception.NotImplementedException;
@@ -23,7 +23,6 @@ import cz.vutbr.fit.iha.listing.FavoritesListing;
 import cz.vutbr.fit.iha.listing.Location;
 import cz.vutbr.fit.iha.listing.LocationListing;
 import cz.vutbr.fit.iha.network.ActualUser;
-import cz.vutbr.fit.iha.network.GetGoogleAuth;
 import cz.vutbr.fit.iha.network.Network;
 import cz.vutbr.fit.iha.persistence.Persistence;
 
@@ -347,6 +346,35 @@ public final class Controller {
 		return listings;
 	}
 	
+	public List<LocationListing> getLocationsForAddSensorDialog(){
+		List<LocationListing> listings = new ArrayList<LocationListing>();
+		
+		for (Adapter adapter : getAdapters()) {
+			for (Location location : adapter.getLocations()) {
+				listings.add(new LocationListing(location.getId(), location));
+			}
+		}
+		
+		String[] defaultLocations = mContext.getResources().getStringArray(R.array.locations);
+		//FIXME: do it better
+		for(String defLoc : defaultLocations){
+			boolean found = false;
+			for(LocationListing locList : listings){
+				if(locList.getName().equals(defLoc)){
+					found = true;
+					break;
+				}
+			}
+			if(!found){
+				listings.add(new LocationListing("0", new Location("0", defLoc, getIconResourceByName(defLoc, defaultLocations))));
+			}
+		}
+		
+		listings.add(new LocationListing("0", new Location("0", mContext.getResources().getString(R.string.addsensor_new_location_spinner), 0)));
+		
+		return listings;
+	}
+	
 	/**
 	 * Return location by ID.
 	 * 
@@ -415,6 +443,15 @@ public final class Controller {
 		return true;
 	}
 
+	//TODO: maybe do otherwise
+	public int getIconResourceByName(String name, String[] defaults){
+		for(int i = 0; i < defaults.length; i++){
+			if(defaults[i].equals(name)){
+				return i+1;
+			}
+		}
+		return 0;
+	}
 	
 	/** Devices methods *****************************************************/
 	

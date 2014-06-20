@@ -508,8 +508,6 @@ public class LocationScreenActivity extends SherlockFragmentActivity {
     		if (uninitializedDevices.size() == 0)
     			return;
 
-//			final CustomAlertDialog builder = new CustomAlertDialog(LocationScreenActivity.this);
-				
 			mDialog.setCancelable(false)
 				.setTitle(getResources().getString(R.string.notification_title))
 				.setMessage(getResources().getQuantityString(R.plurals.notification_new_sensors, uninitializedDevices.size(), uninitializedDevices.size()));

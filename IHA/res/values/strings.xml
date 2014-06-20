@@ -53,7 +53,7 @@
     <string name="login_user_name_hint">Login/email</string>
     <string name="login_password_hint">Password</string>
     <string name="addsensor_sensor_name_hint">Name of new sensor</string>
-    <string name="addsensor_new_location_hint">New location</string>
+    <string name="addsensor_new_location_hint">New location name</string>
     <string name="addadapter_ser_num_hint">Input of serial number</string>
     <string name="registration_password_repeat_hint">Repeat password</string>
     <!-- Toasts -->
@@ -74,6 +74,7 @@
     <string name="action_addsensor">Add sensor</string>
     <string name="action_logout">Logout</string>
     <string name="addadapter_qrcode_desc">Get QR code</string>
+    <string name="addsensor_new_location_spinner">New location</string>
     <!-- Arrays -->
     <string-array name="registration_spinner">
         <item>Facebook</item>
@@ -87,6 +88,14 @@
         <item>Item 4</item>
         <item>Item 5</item>
         <item>Item 6</item>
+    </string-array>
+    <string-array name="locations">
+        <item>Bathroom</item>
+        <item>Bedroom</item>
+        <item>Garden</item>
+        <item>Kitchen</item>
+        <item>Livingroom</item>
+        <item>WC</item>
     </string-array>
 
     <string name="log_sc_or">or</string>

@@ -50,12 +50,14 @@ public class CustomAlertDialog extends Builder {
 	@Override
 	public Builder setTitle(CharSequence title) {
 		mTitle.setText(title);
+		mTitle.setVisibility(View.VISIBLE);
 		return this;
 	}
 	
 	@Override
 	public Builder setMessage(CharSequence message) {
 		mMessage.setText(message);
+		mMessage.setVisibility(View.VISIBLE);
 		return this;
 	}
 	
@@ -67,6 +69,7 @@ public class CustomAlertDialog extends Builder {
 	 */
 	public Builder setCustomNeutralButton(CharSequence text, OnClickListener listener) {
 		mNeutral.setText(text);
+		mNeutral.setVisibility(View.VISIBLE);
 		mNeutral.setOnClickListener(listener);
 		return this;
 	}
@@ -79,6 +82,7 @@ public class CustomAlertDialog extends Builder {
 	 */
 	public Builder setCustomPositiveButton(CharSequence text, OnClickListener listener) {
 		mPositive.setText(text);
+		mPositive.setVisibility(View.VISIBLE);
 		mPositive.setOnClickListener(listener);
 		return this;
 	}

@@ -4,14 +4,23 @@ import java.util.List;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Context;
+import android.content.res.Configuration;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.view.Window;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CheckedTextView;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.LinearLayout.LayoutParams;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -29,6 +38,10 @@ public class AddSensorActivityDialog extends Activity {
 	private BaseDevice mNewDevice;
 	
 	private ProgressDialog mProgress;
+	
+	private EditText mNewLocation;
+	private TextView mOrLabel;
+	private Spinner mSpinner;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -62,13 +75,41 @@ public class AddSensorActivityDialog extends Activity {
 	}
 	
 	private void initViews() {
-		Spinner spinner = (Spinner)findViewById(R.id.spinner_choose_location);
-        ArrayAdapter<LocationListing> dataAdapter = new ArrayAdapter<LocationListing>(this, android.R.layout.simple_spinner_item, mController.getLocations());
-        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinner.setAdapter(dataAdapter);
+		mSpinner = (Spinner)findViewById(R.id.spinner_choose_location);
+		
+		mSpinner.setOnItemSelectedListener(new OnItemSelectedListener() {
+
+			@Override
+			public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+				if(position == mSpinner.getCount()-1){
+					// show new location
+					if(!hideInputForNewLocation(false) && getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE){
+						shringSpinner(true);
+					}
+				}else{
+					// hide input for new location
+					if(hideInputForNewLocation(true) && getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE){
+						shringSpinner(false);
+					}
+				}
+			}
+
+			@Override
+			public void onNothingSelected(AdapterView<?> parent) {
+				hideInputForNewLocation(true);
+			}
+		});
+		
+
+		
+        CustomArrayAdapter dataAdapter = new CustomArrayAdapter(this, R.layout.custom_spinner_item, mController.getLocationsForAddSensorDialog());
+        dataAdapter.setDropDownViewResource(R.layout.custom_spinner_dropdown_item);
+        
+        mSpinner.setAdapter(dataAdapter);
         
         int typeStringRes = mNewDevice.getTypeStringResource(); 
-        TextView type = (TextView)findViewById(R.id.addsensor_type); 
+        TextView type = (TextView)findViewById(R.id.addsensor_type);
+        
         if (type != null && typeStringRes > 0) { 
         	type.setText(type.getText() + " " + getString(typeStringRes)); 
         }
@@ -114,6 +155,38 @@ public class AddSensorActivityDialog extends Activity {
 		});
 	}
 	
+	/**
+	 * Method take needed inputs and switch visibility
+	 * @param hide items is hidden if true, visible otherwise
+	 * @return true if is item hidden
+	 */
+	private boolean hideInputForNewLocation(boolean hide){
+		if(mNewLocation == null)
+			mNewLocation = (EditText)findViewById(R.id.addsensor_new_location_hint);
+		if(mOrLabel == null)
+			mOrLabel = (TextView)findViewById(R.id.addsensor_or);
+		
+		if(hide){
+			mNewLocation.setVisibility(View.GONE);
+			mOrLabel.setVisibility(View.GONE);
+			return true;
+		}else{
+			mNewLocation.setVisibility(View.VISIBLE);
+			mOrLabel.setVisibility(View.VISIBLE);
+			return false;
+		}
+	}
+	
+	private boolean shringSpinner(boolean shrink){
+		LayoutParams params = (LayoutParams) mSpinner.getLayoutParams();
+		if(shrink)
+			params.width = 180;
+		else
+			params.width = LayoutParams.MATCH_PARENT;
+		mSpinner.setLayoutParams(params);
+		return false;
+	}
+	
 	@Override
 	public void onBackPressed(){
 		LocationScreenActivity.healActivity();
@@ -139,5 +212,53 @@ public class AddSensorActivityDialog extends Activity {
     		
     		LocationScreenActivity.healActivity();
     	}
+	}
+
+	private class CustomArrayAdapter extends ArrayAdapter<LocationListing>{
+		
+		private List<LocationListing> mLocations;
+		private int mLayoutResource;
+		private int mDropDownLayoutResource;
+
+		public CustomArrayAdapter(Context context, int resource, List<LocationListing> objects) {
+			super(context, resource, objects);
+			mLayoutResource = resource;
+			mLocations = objects;
+		}
+		
+		@Override
+		public void setDropDownViewResource(int resource){
+			mDropDownLayoutResource = resource;
+		}
+		
+		@Override
+		public View getDropDownView(int position, View convertView, ViewGroup parent){
+			LayoutInflater inflater=getLayoutInflater();
+            View row = inflater.inflate(mDropDownLayoutResource, parent, false);
+            
+            CheckedTextView label = (CheckedTextView)row.findViewById(R.id.custom_spinner_dropdown_label);
+            label.setText(mLocations.get(position).getName());
+            
+            ImageView icon = (ImageView)row.findViewById(R.id.custom_spinner_dropdown_icon);
+            int id = mLocations.get(position).getIconResource();
+            icon.setImageResource(id);
+            
+            return row;
+		}
+		
+		@Override
+		public View getView(int position, View convertView, ViewGroup parent){
+			LayoutInflater inflater=getLayoutInflater();
+            View row = inflater.inflate(mLayoutResource, parent, false);
+            
+            TextView label = (TextView)row.findViewById(R.id.custom_spinner_label);
+            label.setText(mLocations.get(position).getName());
+            
+            ImageView icon = (ImageView)row.findViewById(R.id.custom_spinner_icon);
+            int id = mLocations.get(position).getIconResource();
+            icon.setImageResource(id);
+            
+            return row;
+		}
 	}
 }

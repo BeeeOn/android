@@ -63,6 +63,5 @@
 	    <item name="android:backgroundDimEnabled">true</item>
 	    <item name="android:windowIsFloating">true</item>
     </style>
-   
 
 </resources>
