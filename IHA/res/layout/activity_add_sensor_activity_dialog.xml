@@ -50,7 +50,7 @@
         android:inputType="textNoSuggestions" />
    
     <Spinner
-        android:id="@+id/spinner_choose_location"
+        android:id="@+id/addsensor_spinner_choose_location"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="25dp" />
@@ -66,14 +66,26 @@
 	    android:textIsSelectable="false"
         android:textAppearance="?android:attr/textAppearanceMedium" />
     
-    <EditText
-        android:id="@+id/addsensor_new_location_hint"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="15dp"
-        android:ems="10"
-        android:hint="@string/addsensor_new_location_hint"
-        android:inputType="textNoSuggestions" />
+    <LinearLayout 
+        android:orientation="horizontal"
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    android:layout_marginBottom="15dp" >
+    
+    	<Spinner
+	        android:id="@+id/addsensor_spinner_choose_new_location_icon"
+	        android:layout_width="wrap_content"
+	        android:layout_height="match_parent" />
+	    
+	    <EditText
+	        android:id="@+id/addsensor_new_location_name"
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:ems="10"
+	        android:hint="@string/addsensor_new_location_hint"
+	        android:inputType="textNoSuggestions" />
+    
+    </LinearLayout>
 
    <Button
         android:id="@+id/addsensor_add"
@@ -82,7 +94,5 @@
         android:layout_marginBottom="30dp"
         android:layout_gravity="center_horizontal"
         android:text="@string/notification_add" />
-
-   
     
 </LinearLayout>

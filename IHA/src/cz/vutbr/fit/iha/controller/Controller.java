@@ -19,6 +19,7 @@ import cz.vutbr.fit.iha.exception.NoConnectionException;
 import cz.vutbr.fit.iha.exception.NotImplementedException;
 import cz.vutbr.fit.iha.household.DemoHousehold;
 import cz.vutbr.fit.iha.household.Household;
+import cz.vutbr.fit.iha.listing.CustomizedListing;
 import cz.vutbr.fit.iha.listing.FavoritesListing;
 import cz.vutbr.fit.iha.listing.Location;
 import cz.vutbr.fit.iha.listing.LocationListing;
@@ -451,6 +452,16 @@ public final class Controller {
 			}
 		}
 		return 0;
+	}
+	
+	public List<Integer> getLocationsIconsResource(){
+		ArrayList<Integer> result = new ArrayList<Integer>();
+		
+		for(int res : CustomizedListing.icons){
+			result.add(Integer.valueOf(res));
+		}
+		
+		return result;
 	}
 	
 	/** Devices methods *****************************************************/

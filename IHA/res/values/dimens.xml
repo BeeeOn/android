@@ -10,4 +10,5 @@
 	<dimen name="widget_margin">8dp</dimen>
 	
 	<dimen name="custom_spinner_icon_size">45dp</dimen>
+	<dimen name="custom_spinner_icon_size_smaller">35dp</dimen>
 </resources>

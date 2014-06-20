@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.res.Configuration;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -42,6 +43,7 @@ public class AddSensorActivityDialog extends Activity {
 	private EditText mNewLocation;
 	private TextView mOrLabel;
 	private Spinner mSpinner;
+	private Spinner mNewIconSpinner;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -75,7 +77,7 @@ public class AddSensorActivityDialog extends Activity {
 	}
 	
 	private void initViews() {
-		mSpinner = (Spinner)findViewById(R.id.spinner_choose_location);
+		mSpinner = (Spinner)findViewById(R.id.addsensor_spinner_choose_location);
 		
 		mSpinner.setOnItemSelectedListener(new OnItemSelectedListener() {
 
@@ -99,8 +101,6 @@ public class AddSensorActivityDialog extends Activity {
 				hideInputForNewLocation(true);
 			}
 		});
-		
-
 		
         CustomArrayAdapter dataAdapter = new CustomArrayAdapter(this, R.layout.custom_spinner_item, mController.getLocationsForAddSensorDialog());
         dataAdapter.setDropDownViewResource(R.layout.custom_spinner_dropdown_item);
@@ -128,23 +128,38 @@ public class AddSensorActivityDialog extends Activity {
 			public void onClick(View v) {
 				if (mNewDevice != null) {
 					EditText name = (EditText)findViewById(R.id.addsensor_sensor_name_hint);
-					EditText elocation = (EditText)findViewById(R.id.addsensor_new_location_hint);
-					String locationName;
-					if(elocation != null && elocation.length() < 1){
-						Spinner slocation = (Spinner)findViewById(R.id.spinner_choose_location);
-						locationName = slocation.getSelectedItem().toString();
-					}else {
+					Location newLocation = null;
+					//last location - means new one
+					if(mSpinner.getSelectedItemPosition() == mSpinner.getCount()-1){
+						EditText elocation = (EditText)findViewById(R.id.addsensor_new_location_name);
+						String locationName;
+						
+//						if(elocation != null && elocation.length() < 1){
+//							Spinner slocation = (Spinner)findViewById(R.id.addsensor_spinner_choose_location);
+//							locationName = slocation.getSelectedItem().toString();
+						// check new location name
+						if(elocation != null && elocation.length() < 1){
+							Toast.makeText(getApplicationContext(), getString(R.string.toast_need_sensor_location_name), Toast.LENGTH_LONG).show();
+							return;
+						}
 						locationName = elocation.getText().toString();
+						//FIXME: what with id???
+						newLocation = new Location("0", locationName, mNewIconSpinner.getSelectedItemPosition());
+					}else{
+						LocationListing item = (LocationListing)mSpinner.getSelectedItem();
+						newLocation = item.getLocation();
 					}
+					
+					// check name
 					if(name == null || name.length() < 1){
 						Toast.makeText(getApplicationContext(), getString(R.string.toast_need_sensor_name), Toast.LENGTH_LONG).show();
 						return;
 					}
 					
+					//FIXME: new device is NOT in new location!!
 					mNewDevice.setInitialized(true);
 					mNewDevice.setName(name.getText().toString());
-					mNewDevice.setLocation(new Location(locationName, locationName, 0)); // TODO: set location icon
-					// TODO: show loading while saving device
+					mNewDevice.setLocation(newLocation);
 
 					mProgress.show();
 					
@@ -162,17 +177,26 @@ public class AddSensorActivityDialog extends Activity {
 	 */
 	private boolean hideInputForNewLocation(boolean hide){
 		if(mNewLocation == null)
-			mNewLocation = (EditText)findViewById(R.id.addsensor_new_location_hint);
+			mNewLocation = (EditText)findViewById(R.id.addsensor_new_location_name);
 		if(mOrLabel == null)
 			mOrLabel = (TextView)findViewById(R.id.addsensor_or);
-		
+		if(mNewIconSpinner == null){
+			mNewIconSpinner = (Spinner)findViewById(R.id.addsensor_spinner_choose_new_location_icon);
+			//first call need to add adapter
+			CustomIconArrayAdapter iconAdapter = new CustomIconArrayAdapter(this, R.layout.custom_spinner_icon_item, mController.getLocationsIconsResource());
+			iconAdapter.setDropDownViewResource(R.layout.custom_spinner_icon_dropdown_item);
+			mNewIconSpinner.setAdapter(iconAdapter);
+		}
+
 		if(hide){
 			mNewLocation.setVisibility(View.GONE);
 			mOrLabel.setVisibility(View.GONE);
+			mNewIconSpinner.setVisibility(View.GONE);
 			return true;
 		}else{
 			mNewLocation.setVisibility(View.VISIBLE);
 			mOrLabel.setVisibility(View.VISIBLE);
+			mNewIconSpinner.setVisibility(View.VISIBLE);
 			return false;
 		}
 	}
@@ -233,7 +257,7 @@ public class AddSensorActivityDialog extends Activity {
 		
 		@Override
 		public View getDropDownView(int position, View convertView, ViewGroup parent){
-			LayoutInflater inflater=getLayoutInflater();
+			LayoutInflater inflater = getLayoutInflater();
             View row = inflater.inflate(mDropDownLayoutResource, parent, false);
             
             CheckedTextView label = (CheckedTextView)row.findViewById(R.id.custom_spinner_dropdown_label);
@@ -248,17 +272,57 @@ public class AddSensorActivityDialog extends Activity {
 		
 		@Override
 		public View getView(int position, View convertView, ViewGroup parent){
-			LayoutInflater inflater=getLayoutInflater();
+			LayoutInflater inflater = getLayoutInflater();
             View row = inflater.inflate(mLayoutResource, parent, false);
             
             TextView label = (TextView)row.findViewById(R.id.custom_spinner_label);
             label.setText(mLocations.get(position).getName());
             
             ImageView icon = (ImageView)row.findViewById(R.id.custom_spinner_icon);
-            int id = mLocations.get(position).getIconResource();
-            icon.setImageResource(id);
+            icon.setImageResource(mLocations.get(position).getIconResource());
             
             return row;
 		}
+	}
+	
+	private class CustomIconArrayAdapter extends ArrayAdapter<Integer>{
+
+		private List<Integer> mIcons;
+		private int mLayoutResource;
+		private int mDropDownLayoutResource;
+		
+		public CustomIconArrayAdapter(Context context, int resource, List<Integer> objects) {
+			super(context, resource, objects);
+			mLayoutResource = resource;
+			mIcons = objects;
+		}
+		
+		@Override
+		public void setDropDownViewResource(int resource){
+			mDropDownLayoutResource = resource;
+		}
+		
+		@Override
+		public View getDropDownView(int position, View convertView, ViewGroup parent){
+			LayoutInflater inflater = getLayoutInflater();
+            View row = inflater.inflate(mDropDownLayoutResource, parent, false);
+            
+            ImageView icon = (ImageView)row.findViewById(R.id.custom_spinner_icon_dropdown_icon);
+            icon.setImageResource(mIcons.get(position));
+            
+            return row;
+		}
+		
+		@Override
+		public View getView(int position, View convertView, ViewGroup parent){
+			LayoutInflater inflater = getLayoutInflater();
+            View row = inflater.inflate(mLayoutResource, parent, false);
+            
+            ImageView icon = (ImageView)row.findViewById(R.id.custom_spinner_icon_icon);
+            icon.setImageResource(mIcons.get(position));
+			
+			return row;
+		}
+		
 	}
 }
