@@ -7,36 +7,24 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
-import android.app.Activity;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.Gravity;
-import android.view.Menu;
-import android.view.View;
-import android.widget.LinearLayout;
-import android.widget.ProgressBar;
+import android.support.v4.app.FragmentTransaction;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.jjoe64.graphview.GraphView;
-import com.jjoe64.graphview.GraphView.GraphViewData;
-import com.jjoe64.graphview.GraphViewSeries;
-import com.jjoe64.graphview.LineGraphView;
+import com.actionbarsherlock.app.SherlockFragmentActivity;
+import com.actionbarsherlock.view.MenuItem;
 
-import cz.vutbr.fit.iha.R;
-import cz.vutbr.fit.iha.view.NumberPicker;
-import cz.vutbr.fit.iha.view.NumberPicker.OnChangedListener;
-import cz.vutbr.fit.iha.Compatibility;
 import cz.vutbr.fit.iha.Constants;
+import cz.vutbr.fit.iha.R;
 import cz.vutbr.fit.iha.adapter.device.BaseDevice;
-import cz.vutbr.fit.iha.controller.Controller;
+import cz.vutbr.fit.iha.view.NumberPicker;
 
 /**
  * Class that handle screen with detail of some sensor
  * @author ThinkDeep
  *
  */
-public class SensorDetailActivity extends Activity {
+public class SensorDetailActivity extends SherlockFragmentActivity {
 
 	//private int type = 0;
 	
@@ -45,8 +33,19 @@ public class SensorDetailActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_sensor_detail_screen);
+		setContentView(R.layout.activity_sensor_detail_wraper);
 		
+		getSupportActionBar().setHomeButtonEnabled(true);
+		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+		
+		SensorDetailFragment fragment = new SensorDetailFragment();
+		fragment.setArguments(getIntent().getExtras());
+		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+		
+		ft.replace(R.id.sensor_wraper, fragment);
+		ft.commit();
+		
+		/*
 		String id = this.getIntent().getExtras().getString(Constants.DEVICE_CLICKED);
 		mDevice = Controller.getInstance(this).getDevice(id);
 		
@@ -57,9 +56,25 @@ public class SensorDetailActivity extends Activity {
 		} else {
 			Log.i("Click on", mDevice.getName());
 			initLayout();
-		}
+		}*/
 	}
 	
+	@Override
+	public void onBackPressed() {
+		super.onBackPressed();
+	return;
+	}
+	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case android.R.id.home:
+			finish();
+			return true;
+		}
+		return false;
+	}
+	/*
 	private void initLayout() {
 		LinearLayout mainlayout = (LinearLayout) findViewById(R.id.sensordetail_scroll);
 		mainlayout.setFocusable(true);
@@ -242,14 +257,14 @@ public class SensorDetailActivity extends Activity {
 		batteryLayout.addView(progressBar);
 		
 		mainlayout.addView(batteryLayout);
-	}
-
+	}*/
+/*
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
 //		getMenuInflater().inflate(R.menu.sensor_detail, menu);
 		return true;
-	}
+	}*/
 	
 	@Override
 	protected void onPause(){
@@ -257,7 +272,7 @@ public class SensorDetailActivity extends Activity {
 		
 		/*switch(type){
 			case Constants.DEVICE_TYPE_TEMP:*/
-				mDevice.setRefresh(GetRightTimeValueInSecs());
+			//	mDevice.setRefresh(GetRightTimeValueInSecs());
 		//}
 	}
 	

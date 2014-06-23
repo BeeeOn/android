@@ -53,6 +53,7 @@ import cz.vutbr.fit.iha.listing.LocationListing;
 public class LocationScreenActivity extends SherlockFragmentActivity {
 
 	private Controller mController;
+	private LocationScreenActivity mActivity;
 	private List<LocationListing> mLocations;
 
 	private DrawerLayout mDrawerLayout;
@@ -72,6 +73,8 @@ public class LocationScreenActivity extends SherlockFragmentActivity {
     private static boolean inBackground = false;
     private static final String BKG = "activityinbackground";
     
+    private static int SENSOR_DETAIL = 1;
+    
     private String mActiveLocation;
     
     private DevicesTask mTask;
@@ -87,6 +90,9 @@ public class LocationScreenActivity extends SherlockFragmentActivity {
 
 		// Get controller
 		mController = Controller.getInstance(this);
+		
+		// Get Activity
+		mActivity = this;
 
 		setSupportProgressBarIndeterminate(true);
 		setSupportProgressBarIndeterminateVisibility(true);
@@ -106,7 +112,7 @@ public class LocationScreenActivity extends SherlockFragmentActivity {
 
 	public void onResume() {
 		super.onResume();
-		
+		Log.d(TAG, "onResume");
 		if(!inBackground){
 			mTask = new DevicesTask();
 		    mTask.execute();
@@ -116,7 +122,7 @@ public class LocationScreenActivity extends SherlockFragmentActivity {
 	@Override
 	public void onDestroy(){
 		super.onDestroy();
-		
+		Log.d(TAG, "onDestroy");
 		if(mTask != null){
 			if(mTask.getDialog() != null){ 
 				mTask.getDialog().dismiss();
@@ -247,17 +253,37 @@ public class LocationScreenActivity extends SherlockFragmentActivity {
 				Bundle bundle = new Bundle();
 		        String myMessage = selectedItem.getId();
 		        bundle.putString("sensorID", myMessage );
-		        SensorDetailFragment fragment = new SensorDetailFragment();
-		        fragment.setArguments(bundle);
+		        //SensorDetailFragment fragment = new SensorDetailFragment();
+		        //fragment.setArguments(bundle);
 				
-				ft.replace(R.id.content_frame, fragment);
-				ft.addToBackStack(null);
-				ft.commit();
+				//ft.replace(R.id.content_frame, fragment);
+				//ft.addToBackStack(null);
+				//ft.commit();
+		        
+		        Intent intent = new Intent(mActivity, SensorDetailActivity.class);
+		        intent.putExtras(bundle);
+		        startActivityForResult(intent,SENSOR_DETAIL);
+				//startActivity(intent);
+				//finish();
 			}
 		});
 
 		this.setSupportProgressBarIndeterminateVisibility(false);
 		return true;
+	}
+	
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+		if (requestCode == SENSOR_DETAIL) {
+			inBackground = true;
+			setSupportProgressBarIndeterminateVisibility(false);
+			
+			mController.reloadAdapters();
+			refreshListing();
+			
+			Log.d(TAG, "Here");
+		}
 	}
 
 
