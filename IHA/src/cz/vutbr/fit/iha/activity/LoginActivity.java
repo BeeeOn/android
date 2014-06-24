@@ -299,13 +299,16 @@ public class LoginActivity extends Activity {
 				Log.d(TAG, "onActivityResult: no email");
 				return;
 			}
-			doGoogleLogin(email);
-			/*
-			 * try { GetGoogleAuth.getGetGoogleAuth().execute(); Log.d(TAG,
-			 * "user aproved, and token is tried to retake."); } catch
-			 * (Exception e) { // TODO Auto-generated catch block
-			 * e.printStackTrace(); }
-			 */
+			//doGoogleLogin(email);
+			
+			  try {
+				  new GetGoogleAuth(this, email);
+				  GetGoogleAuth.getGetGoogleAuth().execute();
+				  Log.d(TAG,"user aproved, and token is tried to retake.");
+			  } catch			  (Exception e) { // TODO Auto-generated catch block
+				  e.printStackTrace();
+			  }
+			 
 
 		}
 
@@ -317,11 +320,15 @@ public class LoginActivity extends Activity {
 			}
 			Log.i(TAG, "Go do google login again.");
 			doGoogleLogin(email);
-			/*
-			 * try { GetGoogleAuth.getGetGoogleAuth().execute(); } catch
-			 * (Exception e) { // TODO Auto-generated catch block
-			 * e.printStackTrace(); }
-			 */
+			
+			/*try { 
+				new GetGoogleAuth(this, email);
+				GetGoogleAuth.getGetGoogleAuth().execute();
+				} 
+			catch (Exception e) { // TODO Auto-generated catch block
+				e.printStackTrace(); 
+				}*/
+			
 		}
 	}
 

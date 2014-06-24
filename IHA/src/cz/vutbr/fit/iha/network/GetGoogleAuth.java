@@ -124,6 +124,11 @@ public class GetGoogleAuth extends AsyncTask<Void, Void, String> {
 		GetGoogleAuth.mThis = this;
 	}
 	
+/*	@Override
+	protected void onCancelled() {
+		mThis = new GetGoogleAuth(mActivity, mEmail);
+	};*/
+	
 	@Override
 	protected void onPreExecute() {
 		//TODO: need something?
