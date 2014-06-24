@@ -17,23 +17,44 @@ import android.util.Log;
 import com.google.android.gms.auth.GoogleAuthUtil;
 import com.google.android.gms.auth.UserRecoverableAuthException;
 
+import cz.vutbr.fit.iha.R;
 import cz.vutbr.fit.iha.activity.LoginActivity;
 import cz.vutbr.fit.iha.thread.ToastMessageThread;
 
 /**
  * Class communicate with Google server
  * Get basic user info and picture if is possible 
- * @author Leopold Podmolík
+ * @author Leopold Podmolik
  */
-public class GetGoogleAuth extends AsyncTask<Void, Void, String> {
+public class GetGoogleAuth extends AsyncTask<Void, Void, STATES> {
 	private static final String TAG = "AUTH";
 	private static GetGoogleAuth mThis;
+	
 	private LoginActivity mActivity;
 	private String mEmail;
 	private String mToken;
 	private String mUserName;
 	private String mPictureURL;
 	private Bitmap mPictureIMG;
+	
+	//////////////////////////////////////////////////////////////////////////////////////
+	///////////////////  Constructors ////////////////////////////////////////////////////
+	//////////////////////////////////////////////////////////////////////////////////////
+	
+	/**
+	 * Constructor
+	 * @param mActivity
+	 * @param mEmail
+	 */
+	public GetGoogleAuth(LoginActivity mActivity, String mEmail) {
+		this.mActivity = mActivity;
+		this.mEmail = mEmail;
+		GetGoogleAuth.mThis = this;
+	}
+	
+	//////////////////////////////////////////////////////////////////////////////////////
+	///////////////////  Get-Set METHODS /////////////////////////////////////////////////
+	//////////////////////////////////////////////////////////////////////////////////////
 	
 	/**
 	 * @return the mEmail
@@ -101,6 +122,10 @@ public class GetGoogleAuth extends AsyncTask<Void, Void, String> {
 		return "";
 	}
 	
+	public void setDebugToken(String token){
+		mToken = token;
+	}
+	
 	/**
 	 * Singleton-like method, but not initializing
 	 * @return static object
@@ -113,49 +138,57 @@ public class GetGoogleAuth extends AsyncTask<Void, Void, String> {
 			throw new Exception("Not initialized");
 	}
 	
-	/**
-	 * Constructor
-	 * @param mActivity
-	 * @param mEmail
-	 */
-	public GetGoogleAuth(LoginActivity mActivity, String mEmail) {
-		this.mActivity = mActivity;
-		this.mEmail = mEmail;
-		GetGoogleAuth.mThis = this;
-	}
-	
-/*	@Override
-	protected void onCancelled() {
-		mThis = new GetGoogleAuth(mActivity, mEmail);
-	};*/
+	//////////////////////////////////////////////////////////////////////////////////////
+	///////////////////  Override METHODS  ///////////////////////////////////////////////
+	//////////////////////////////////////////////////////////////////////////////////////
 	
 	@Override
-	protected void onPreExecute() {
-		//TODO: need something?
-	}
-	
-	@Override
-	protected String doInBackground(Void... params) {
+	protected STATES doInBackground(Void... params) {
 		try {
 			mToken = GoogleAuthUtil.getToken(mActivity, mEmail,"oauth2:https://www.googleapis.com/auth/userinfo.profile");
 			Log.d(TAG, "Token");
 			
 			fetchInfoFromProfileServer(mToken);
 			
-			return mToken;
+			return STATES.eOK;
 		} catch (UserRecoverableAuthException userRecoverableException) {
 			mActivity.startActivityForResult(userRecoverableException.getIntent(),LoginActivity.USER_RECOVERABLE_AUTH);
+			return STATES.eRecorver;
+		} catch(IOException e){
+			return STATES.eNoConnection;
 		} catch (Exception e) {
+			//TODO: check more exceptions and show toast 
 			e.printStackTrace();
 		}
-		return null;
+		return STATES.eUnknown;
 	}
 	
 	@Override
-	protected void onPostExecute(final String result) {
+	protected void onPostExecute(final STATES result) {
 		super.onPostExecute(result);
-		if (result != null) {
-			
+
+		switch(result){
+			case eOK:
+				mActivity.ProgressDismiss();
+				break;
+			case eRecorver:
+				//TODO: check if better with progressBar
+				mActivity.ProgressDismiss();
+				new ToastMessageThread(mActivity, "Google authentication").start();
+				break;
+			case eUnknown:
+				mActivity.ProgressDismiss();
+				new ToastMessageThread(mActivity, "Something goes wrong, try it later please.").start();
+				break;
+			case eNoConnection:
+				mActivity.ProgressDismiss();
+				new ToastMessageThread(mActivity, mActivity.getResources().getString(R.string.toast_internet_connection)).start();
+				break;
+			default:
+				break;
+		}
+		
+			//FIXME: this code below need refactoring !!!!! Leo?
 //			Thread fetchUserInfo = new Thread(new Runnable(){
 //			    @Override
 //			    public void run() {
@@ -168,7 +201,7 @@ public class GetGoogleAuth extends AsyncTask<Void, Void, String> {
 //			});
 			// Fetch user name and surname
 			//fetchUserInfo.start();
-			//FIXME: this code below need refactoring !!!!! Leo?
+
 			
 			// Wait for user name
 //			try {
@@ -190,64 +223,57 @@ public class GetGoogleAuth extends AsyncTask<Void, Void, String> {
 //			Log.d(TAG, "User name: "+this.mUserName);
 //			Log.d(TAG, "Picture url:"+mPicture);
 //			mToken = result;
-			/*
-			if(mPicture != null) {
-				// Set User profile picture if is set
-				//final ImageView picture = (ImageView) welcomeToastlayout.findViewById(R.id.toast_welcome_picture);
-				Thread fetchUserPicture = new Thread(new Runnable(){
-				    @Override
-				    public void run() {
-				        try {
-				        	fetchPictureFromProfileServer(mPicture,picture);
-				        } catch (Exception e) {
-				            e.printStackTrace();
-				        }
-				    }
-				});
-				// Fetch user picture
-				fetchUserPicture.start(); 
-				// Wait for user picture
-				try {
-					synchronized(this) {
-						this.wait();
-					}
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
-			}*/
-			/*
-            TextView text = (TextView) welcomeToastlayout.findViewById(R.id.toast_welcome_text);
-            // Set the Text to show in TextView
-            text.setText("Welcome \n"+this.mUserName);
-            Toast toast = new Toast(mActivity.getApplicationContext());
-            toast.setGravity(Gravity.BOTTOM, 0, 0);
-            toast.setDuration(Toast.LENGTH_LONG);
-            toast.setView(welcomeToastlayout);
-            toast.show();*/
-			/*
-            DemoData demo = new DemoData(mActivity);
-            if (demo.checkDemoData()) {
-				Intent intent = new Intent(mActivity, LocationScreenActivity.class);
-				intent.putExtra(Constants.LOGIN, Constants.LOGIN_DEMO);
-				//intent.putExtra(name, value);
-				mActivity.startActivity(intent);
-            }
-	    	mActivity.finish();*/
-	    	Log.d(TAG, "FINISH");
-//	    	synchronized(this) {
-//	        	  this.notify();
-//	          }
-	    	return;
-		}
-		Log.e(TAG, "wtf?");
-		mActivity.ProgressDismiss();
-		mActivity.stopThread();
-		new ToastMessageThread(mActivity, "Something goes wrong, try it later please.").start();
+			
+//			if(mPicture != null) {
+//				// Set User profile picture if is set
+//				//final ImageView picture = (ImageView) welcomeToastlayout.findViewById(R.id.toast_welcome_picture);
+//				Thread fetchUserPicture = new Thread(new Runnable(){
+//				    @Override
+//				    public void run() {
+//				        try {
+//				        	fetchPictureFromProfileServer(mPicture,picture);
+//				        } catch (Exception e) {
+//				            e.printStackTrace();
+//				        }
+//				    }
+//				});
+//				// Fetch user picture
+//				fetchUserPicture.start(); 
+//				// Wait for user picture
+//				try {
+//					synchronized(this) {
+//						this.wait();
+//					}
+//				} catch (InterruptedException e) {
+//					e.printStackTrace();
+//				}
+//			}
+//			
+//            TextView text = (TextView) welcomeToastlayout.findViewById(R.id.toast_welcome_text);
+//            // Set the Text to show in TextView
+//            text.setText("Welcome \n"+this.mUserName);
+//            Toast toast = new Toast(mActivity.getApplicationContext());
+//            toast.setGravity(Gravity.BOTTOM, 0, 0);
+//            toast.setDuration(Toast.LENGTH_LONG);
+//            toast.setView(welcomeToastlayout);
+//            toast.show();
+//			
+//            DemoData demo = new DemoData(mActivity);
+//            if (demo.checkDemoData()) {
+//				Intent intent = new Intent(mActivity, LocationScreenActivity.class);
+//				intent.putExtra(Constants.LOGIN, Constants.LOGIN_DEMO);
+//				//intent.putExtra(name, value);
+//				mActivity.startActivity(intent);
+//            }
+//	    	mActivity.finish();
+//	    	Log.d(TAG, "FINISH");
+////	    	synchronized(this) {
+////	        	  this.notify();
+////	          }
+//	    	return;
 	}
 	
-	public void setDebugToken(String token){
-		mToken = token;
-	}
+	
 	
 	/****************************************************************************************/
 	/* Prevzato z SDK - EXTRAS - SAMPLE - AUTH  											*/
