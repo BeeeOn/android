@@ -62,11 +62,11 @@ public class ListSensorControlExtension extends ManagedControlExtension {
 	private String mLocationStr;
 	private Adapter mAdapter;
 	private String mAdapterId;
-	
+
 	private Bundle[] mMenuItemsIcons = new Bundle[1];
-	
+
 	private static final int MENU_REFRESH = 1;
-	
+
 	protected int mLastKnowPosition = 0;
 
 	/**
@@ -79,14 +79,14 @@ public class ListSensorControlExtension extends ManagedControlExtension {
 		super(context, hostAppPackageName, controlManager, intent);
 		Log.d(SW2ExtensionService.LOG_TAG, "AdaptersListControl constructor");
 		initializeMenus();
-		
+
 		mAdapterId = getIntent().getStringExtra(EXTRA_ADAPTER_ID);
 		mLocationStr = getIntent().getStringExtra(EXTRA_LOCATION_NAME);
 		if (mAdapterId == null || mLocationStr == null) {
 			mControlManager.onBack();
 			return;
 		}
-		
+
 		mDevices = new ArrayList<BaseDevice>();
 		actualize();
 	}
@@ -110,7 +110,7 @@ public class ListSensorControlExtension extends ManagedControlExtension {
 			mControlManager.onBack();
 			return;
 		}
-		
+
 		sendListCount(R.id.listView, mDevices.size());
 
 		// If requested, move to the correct position in the list.
@@ -144,33 +144,33 @@ public class ListSensorControlExtension extends ManagedControlExtension {
 
 	private void initializeMenus() {
 		mMenuItemsIcons[0] = new Bundle();
-        mMenuItemsIcons[0].putInt(Control.Intents.EXTRA_MENU_ITEM_ID, MENU_REFRESH);
-        mMenuItemsIcons[0].putString(Control.Intents.EXTRA_MENU_ITEM_ICON,
-                ExtensionUtils.getUriString(mContext, R.drawable.sync_white));
+		mMenuItemsIcons[0].putInt(Control.Intents.EXTRA_MENU_ITEM_ID,
+				MENU_REFRESH);
+		mMenuItemsIcons[0].putString(Control.Intents.EXTRA_MENU_ITEM_ICON,
+				ExtensionUtils.getUriString(mContext, R.drawable.sync_white));
 	}
-	
+
 	@Override
 	public void onMenuItemSelected(final int menuItem) {
 		Log.d(SW2ExtensionService.LOG_TAG, "onMenuItemSelected() - menu item "
 				+ menuItem);
 		if (menuItem == MENU_REFRESH) {
-			clearDisplay();
+			// clearDisplay();
 			actualize();
 		}
 	}
-	
+
 	@Override
-    public void onKey(final int action, final int keyCode, final long timeStamp) {
-        Log.d(SW2ExtensionService.LOG_TAG, "onKey()");
-        if (action == Control.Intents.KEY_ACTION_RELEASE
-                && keyCode == Control.KeyCodes.KEYCODE_OPTIONS) {
-            showMenu(mMenuItemsIcons);
-        }
-        else {
-            mControlManager.onKey(action, keyCode, timeStamp);
-        }
-    }
-	
+	public void onKey(final int action, final int keyCode, final long timeStamp) {
+		Log.d(SW2ExtensionService.LOG_TAG, "onKey()");
+		if (action == Control.Intents.KEY_ACTION_RELEASE
+				&& keyCode == Control.KeyCodes.KEYCODE_OPTIONS) {
+			showMenu(mMenuItemsIcons);
+		} else {
+			mControlManager.onKey(action, keyCode, timeStamp);
+		}
+	}
+
 	@Override
 	public void onSwipe(int direction) {
 		if (direction == Control.Intents.SWIPE_DIRECTION_RIGHT) {
@@ -238,11 +238,11 @@ public class ListSensorControlExtension extends ManagedControlExtension {
 		headerBundle.putInt(Control.Intents.EXTRA_LAYOUT_REFERENCE, R.id.title);
 		headerBundle.putString(Control.Intents.EXTRA_TEXT,
 				mDevices.get(position).getName());
-		
+
 		Bundle valueBundle = new Bundle();
 		valueBundle.putInt(Control.Intents.EXTRA_LAYOUT_REFERENCE, R.id.value);
-		valueBundle.putString(Control.Intents.EXTRA_TEXT,
-				mDevices.get(position).getStringValueUnit(mContext));
+		valueBundle.putString(Control.Intents.EXTRA_TEXT, mDevices
+				.get(position).getStringValueUnit(mContext));
 
 		item.layoutData = new Bundle[3];
 		item.layoutData[0] = headerBundle;
@@ -251,17 +251,19 @@ public class ListSensorControlExtension extends ManagedControlExtension {
 
 		return item;
 	}
-	
+
 	private void actualize() {
 		Thread thLoc = new Thread(new Runnable() {
 			@Override
 			public void run() {
-					
-				mAdapter = mController.getAdapter(mAdapterId, true);
-				mDevices = mAdapter.getDevicesByLocation(mLocationStr);
-				
-				resume();
 
+				mAdapter = mController.getAdapter(mAdapterId, true);
+				if (mAdapter != null) {
+					mDevices = mAdapter.getDevicesByLocation(mLocationStr);
+					if (mDevices != null) {
+						resume();
+					}
+				}
 			}
 		});
 		thLoc.start();

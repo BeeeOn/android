@@ -101,7 +101,7 @@
 
         <!-- SONY SMARTWATCH2 -->
         <activity
-            android:name="cz.vutbr.fit.iha.extension.watches.smartwatch2.SW2PreferenceActivity"
+            android:name="cz.vutbr.fit.iha.activity.PreferenceActivity"
             android:label="@string/preference_activity_title" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

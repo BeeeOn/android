@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.MenuItem;
+import com.google.analytics.tracking.android.EasyTracker;
 
 import cz.vutbr.fit.iha.Constants;
 import cz.vutbr.fit.iha.R;
@@ -354,6 +355,20 @@ public class SensorDetailActivity extends SherlockFragmentActivity {
 			e.printStackTrace();
 			return null;
 		}
+	}
+
+	@Override
+	public void onStart() {
+		super.onStart();
+		// The rest of your onStart() code.
+		EasyTracker.getInstance(this).activityStart(this); // Add this method.
+	}
+
+	@Override
+	public void onStop() {
+		super.onStop();
+		// The rest of your onStop() code.
+		EasyTracker.getInstance(this).activityStop(this); // Add this method.
 	}
 
 }

@@ -9,14 +9,14 @@ import com.actionbarsherlock.app.SherlockFragment;
 
 import cz.vutbr.fit.iha.R;
 
-public class ListOfSensors extends SherlockFragment{
+public class ListOfSensors extends SherlockFragment {
 
-	 @Override
-	 public View onCreateView(LayoutInflater inflater, ViewGroup container,	 Bundle savedInstanceState)
-	 {
-		 
-		 View view = inflater.inflate(R.layout.listofsensors, container, false);
-		 return view;
-	 }
+	@Override
+	public View onCreateView(LayoutInflater inflater, ViewGroup container,
+			Bundle savedInstanceState) {
+
+		View view = inflater.inflate(R.layout.listofsensors, container, false);
+		return view;
+	}
 
 }

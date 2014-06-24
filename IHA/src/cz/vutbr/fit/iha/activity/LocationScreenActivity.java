@@ -40,7 +40,6 @@ import cz.vutbr.fit.iha.activity.dialog.AddSensorActivityDialog;
 import cz.vutbr.fit.iha.activity.dialog.CustomAlertDialog;
 import cz.vutbr.fit.iha.adapter.device.BaseDevice;
 import cz.vutbr.fit.iha.controller.Controller;
-import cz.vutbr.fit.iha.extension.watches.smartwatch2.SW2PreferenceActivity;
 import cz.vutbr.fit.iha.listing.LocationListing;
 
 /**
@@ -57,28 +56,28 @@ public class LocationScreenActivity extends SherlockFragmentActivity {
 	private List<LocationListing> mLocations;
 
 	private DrawerLayout mDrawerLayout;
-    private ListView mDrawerList;
-    private ActionBarDrawerToggle mDrawerToggle;
-    private MenuListAdapter mMenuAdapter;
-    
-    private CharSequence mDrawerTitle;
-    
-    private SensorListAdapter mSensorAdapter;
-    private ListView mSensorList;
-    
-    private CharSequence mTitle;
+	private ListView mDrawerList;
+	private ActionBarDrawerToggle mDrawerToggle;
+	private MenuListAdapter mMenuAdapter;
 
-    private static final String TAG = "Location";
-    
-    private static boolean inBackground = false;
-    private static final String BKG = "activityinbackground";
-    
-    private static int SENSOR_DETAIL = 1;
-    
-    private String mActiveLocation;
-    
-    private DevicesTask mTask;
-    
+	private CharSequence mDrawerTitle;
+
+	private SensorListAdapter mSensorAdapter;
+	private ListView mSensorList;
+
+	private CharSequence mTitle;
+
+	private static final String TAG = "Location";
+
+	private static boolean inBackground = false;
+	private static final String BKG = "activityinbackground";
+
+	private static int SENSOR_DETAIL = 1;
+
+	private String mActiveLocation;
+
+	private DevicesTask mTask;
+
 	/**
 	 * Call XML parser to file on SDcard
 	 */
@@ -90,56 +89,55 @@ public class LocationScreenActivity extends SherlockFragmentActivity {
 
 		// Get controller
 		mController = Controller.getInstance(this);
-		
+
 		// Get Activity
 		mActivity = this;
 
 		setSupportProgressBarIndeterminate(true);
 		setSupportProgressBarIndeterminateVisibility(true);
-		
-//		int marginTop = 5;
-//		int ID = Constants.BUTTON_ID;
+
+		// int marginTop = 5;
+		// int ID = Constants.BUTTON_ID;
 		/*
 		 * for(LocationListing location : locations) { if
 		 * (addLocationButton(location.getName(), ID, marginTop)) ID++; }
 		 * if(locations.size() == 1){ Button onlyOne =
 		 * (Button)findViewById(--ID); onlyOne.performClick(); }
 		 */
-		
-		if(savedInstanceState != null)
+
+		if (savedInstanceState != null)
 			inBackground = savedInstanceState.getBoolean(BKG);
 	}
 
 	public void onResume() {
 		super.onResume();
 		Log.d(TAG, "onResume");
-		if(!inBackground){
+		if (!inBackground) {
 			mTask = new DevicesTask();
-		    mTask.execute();
+			mTask.execute();
 		}
 	}
-	
+
 	@Override
-	public void onDestroy(){
+	public void onDestroy() {
 		super.onDestroy();
 		Log.d(TAG, "onDestroy");
-		if(mTask != null){
-			if(mTask.getDialog() != null){ 
+		if (mTask != null) {
+			if (mTask.getDialog() != null) {
 				mTask.getDialog().dismiss();
 			}
 		}
 	}
-	
-	
+
 	@Override
-	public void onSaveInstanceState(Bundle savedInstaceState){
+	public void onSaveInstanceState(Bundle savedInstaceState) {
 		savedInstaceState.putBoolean(BKG, inBackground);
 		super.onSaveInstanceState(savedInstaceState);
 	}
-	
-    public static void healActivity(){
-    	inBackground = false;
-    }
+
+	public static void healActivity() {
+		inBackground = false;
+	}
 
 	public boolean getLocations(List<LocationListing> locs) {
 
@@ -232,71 +230,78 @@ public class LocationScreenActivity extends SherlockFragmentActivity {
 		mSensorList = (ListView) findViewById(R.id.listviewofsensors);
 		if (mSensorList == null) {
 			setSupportProgressBarIndeterminateVisibility(false);
-			return false; // TODO: this happens when we're in different activity (detail), fix that by changing that activity (fragment?) first?
+			return false; // TODO: this happens when we're in different activity
+							// (detail), fix that by changing that activity
+							// (fragment?) first?
 		}
-		
-		mSensorAdapter = new SensorListAdapter(
-				LocationScreenActivity.this, title, value,unit, icon);
-		
+
+		mSensorAdapter = new SensorListAdapter(LocationScreenActivity.this,
+				title, value, unit, icon);
+
 		mSensorList.setAdapter(mSensorAdapter);
 
 		// Capture listview menu item click
 		mSensorList.setOnItemClickListener(new ListView.OnItemClickListener() {
 			@Override
-			public void onItemClick(AdapterView<?> parent, View view, int position,	long id) {
-				FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-				
+			public void onItemClick(AdapterView<?> parent, View view,
+					int position, long id) {
+				FragmentTransaction ft = getSupportFragmentManager()
+						.beginTransaction();
+
 				final BaseDevice selectedItem = sensors.get(position);
-				
+
 				setSupportProgressBarIndeterminateVisibility(true);
-				
+
 				Bundle bundle = new Bundle();
-		        String myMessage = selectedItem.getId();
-		        bundle.putString("sensorID", myMessage );
-		        //SensorDetailFragment fragment = new SensorDetailFragment();
-		        //fragment.setArguments(bundle);
-				
-				//ft.replace(R.id.content_frame, fragment);
-				//ft.addToBackStack(null);
-				//ft.commit();
-		        
-		        Intent intent = new Intent(mActivity, SensorDetailActivity.class);
-		        intent.putExtras(bundle);
-		        startActivityForResult(intent,SENSOR_DETAIL);
-				//startActivity(intent);
-				//finish();
+				String myMessage = selectedItem.getId();
+				bundle.putString("sensorID", myMessage);
+				// SensorDetailFragment fragment = new SensorDetailFragment();
+				// fragment.setArguments(bundle);
+
+				// ft.replace(R.id.content_frame, fragment);
+				// ft.addToBackStack(null);
+				// ft.commit();
+
+				Intent intent = new Intent(mActivity,
+						SensorDetailActivity.class);
+				intent.putExtras(bundle);
+				startActivityForResult(intent, SENSOR_DETAIL);
+				// startActivity(intent);
+				// finish();
 			}
 		});
 
 		this.setSupportProgressBarIndeterminateVisibility(false);
 		return true;
 	}
-	
+
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
 		if (requestCode == SENSOR_DETAIL) {
 			inBackground = true;
 			setSupportProgressBarIndeterminateVisibility(false);
-			
+
 			mController.reloadAdapters();
 			refreshListing();
-			
+
 			Log.d(TAG, "Here");
 		}
 	}
 
-
 	// ListView click listener in the navigation drawer
-	private class DrawerItemClickListener implements ListView.OnItemClickListener {
+	private class DrawerItemClickListener implements
+			ListView.OnItemClickListener {
 		@Override
-		public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+		public void onItemClick(AdapterView<?> parent, View view, int position,
+				long id) {
 			// Get the title followed by the position
 			LocationListing selectedItem = mLocations.get(position);
-			mActiveLocation = (selectedItem != null ? selectedItem.getName() : ""); 
+			mActiveLocation = (selectedItem != null ? selectedItem.getName()
+					: "");
 
 			refreshListing();
-			
+
 			mDrawerList.setItemChecked(position, true);
 
 			// Close drawer
@@ -330,7 +335,7 @@ public class LocationScreenActivity extends SherlockFragmentActivity {
 		inflater.inflate(R.menu.location_screen, menu);
 		return true;
 	}
-	
+
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 
@@ -342,45 +347,45 @@ public class LocationScreenActivity extends SherlockFragmentActivity {
 				mDrawerLayout.openDrawer(mDrawerList);
 			}
 			break;
-		case R.id.action_refreshlist:
-		{			
+		case R.id.action_refreshlist: {
 			mController.reloadAdapters();
 			refreshListing();
 			break;
 		}
-		case R.id.action_addadapter:
-		{
-//			Toast.makeText(this, "go to old", Toast.LENGTH_LONG).show();
+		case R.id.action_addadapter: {
+			// Toast.makeText(this, "go to old", Toast.LENGTH_LONG).show();
 
-//			Intent intent = new Intent(LocationScreenActivity.this, AddAdapterActivity.class);
+			// Intent intent = new Intent(LocationScreenActivity.this,
+			// AddAdapterActivity.class);
 			inBackground = true;
-			Intent intent = new Intent(LocationScreenActivity.this, AddAdapterActivityDialog.class);
+			Intent intent = new Intent(LocationScreenActivity.this,
+					AddAdapterActivityDialog.class);
 			startActivity(intent);
 			break;
 		}
-		case R.id.action_addsensor:
-		{
-//			Toast.makeText(this, "go to old", Toast.LENGTH_LONG).show();
+		case R.id.action_addsensor: {
+			// Toast.makeText(this, "go to old", Toast.LENGTH_LONG).show();
 
 			// Show also ignored devices
 			mController.unignoreUninitialized();
-			
+
 			inBackground = true;
-			Intent intent = new Intent(LocationScreenActivity.this, AddSensorActivityDialog.class);
+			Intent intent = new Intent(LocationScreenActivity.this,
+					AddSensorActivityDialog.class);
 			startActivity(intent);
-			
+
 			break;
 		}
-		case R.id.action_settings:
-		{
-			Intent intent = new Intent(LocationScreenActivity.this, SW2PreferenceActivity.class);
+		case R.id.action_settings: {
+			Intent intent = new Intent(LocationScreenActivity.this,
+					PreferenceActivity.class);
 			startActivity(intent);
 			break;
 		}
-		case R.id.action_logout:
-		{	
+		case R.id.action_logout: {
 			mController.logout();
-			Intent intent = new Intent(LocationScreenActivity.this, LoginActivity.class);
+			Intent intent = new Intent(LocationScreenActivity.this,
+					LoginActivity.class);
 			startActivity(intent);
 			this.finish();
 			break;
@@ -408,7 +413,8 @@ public class LocationScreenActivity extends SherlockFragmentActivity {
 						new DialogInterface.OnClickListener() {
 
 							@Override
-							public void onClick(DialogInterface dialog, int which) {
+							public void onClick(DialogInterface dialog,
+									int which) {
 								String newName = edit.getText().toString();
 
 								// TODO: show loading while saving new name to
@@ -492,20 +498,22 @@ public class LocationScreenActivity extends SherlockFragmentActivity {
 	private void refreshListing() {
 		if (mActiveLocation == null)
 			return;
-		
+
 		setSupportProgressBarIndeterminateVisibility(true);
 		ChangeLocationTask task = new ChangeLocationTask();
-	    task.execute(new String[] { mActiveLocation });
+		task.execute(new String[] { mActiveLocation });
 	}
-	
+
 	/**
-	 * Loads locations, checks for uninitialized devices and eventually shows dialog for adding them
+	 * Loads locations, checks for uninitialized devices and eventually shows
+	 * dialog for adding them
 	 */
 	private class DevicesTask extends AsyncTask<Void, Void, List<BaseDevice>> {
-		
-		private final CustomAlertDialog mDialog = new CustomAlertDialog(LocationScreenActivity.this);
-		
-    	/**
+
+		private final CustomAlertDialog mDialog = new CustomAlertDialog(
+				LocationScreenActivity.this);
+
+		/**
 		 * @return the dialog
 		 */
 		public CustomAlertDialog getDialog() {
@@ -513,73 +521,95 @@ public class LocationScreenActivity extends SherlockFragmentActivity {
 		}
 
 		@Override
-     	protected List<BaseDevice> doInBackground(Void... unused) {
-    		// Load locations
-    		mLocations = mController.getLocations();
-    		Log.d(TAG, String.format("Found %d locations", mLocations.size()));
-    		
-    		// Load uninitialized devices
-    		List<BaseDevice> devices = mController.getUninitializedDevices();
-			Log.d(TAG, String.format("Found %d uninitialized devices", devices.size()));
+		protected List<BaseDevice> doInBackground(Void... unused) {
+			// Load locations
+			mLocations = mController.getLocations();
+			Log.d(TAG, String.format("Found %d locations", mLocations.size()));
+
+			// Load uninitialized devices
+			List<BaseDevice> devices = mController.getUninitializedDevices();
+			Log.d(TAG,
+					String.format("Found %d uninitialized devices",
+							devices.size()));
 
 			return devices;
-    	}
+		}
 
-    	@Override
-    	protected void onPostExecute(final List<BaseDevice> uninitializedDevices) {
-    		// Redraw locations
-    		getLocations(mLocations);
-    		
-    		// Do something with uninitialized devices
-    		if (uninitializedDevices.size() == 0)
-    			return;
+		@Override
+		protected void onPostExecute(final List<BaseDevice> uninitializedDevices) {
+			// Redraw locations
+			getLocations(mLocations);
+
+			// Do something with uninitialized devices
+			if (uninitializedDevices.size() == 0)
+				return;
 
 			mDialog.setCancelable(false)
-				.setTitle(getResources().getString(R.string.notification_title))
-				.setMessage(getResources().getQuantityString(R.plurals.notification_new_sensors, uninitializedDevices.size(), uninitializedDevices.size()));
-			
-			mDialog.setCustomNeutralButton(getResources().getString(R.string.notification_ingore), new OnClickListener() {
-				@Override
-				public void onClick(View v) {
-					mController.ignoreUninitialized(uninitializedDevices);
-					// TODO: Get this string from resources
-					Toast.makeText(LocationScreenActivity.this, "You can add these devices later through 'Menu / Add sensor'", Toast.LENGTH_LONG).show();
-					mDialog.dismiss();
-				}
-			});
-			
-			mDialog.setCustomPositiveButton(getResources().getString(R.string.notification_add), new OnClickListener() {
-				@Override
-				public void onClick(View v) {
-					// Open activity for adding new device
-					inBackground = true;
-					Intent intent = new Intent(LocationScreenActivity.this, AddSensorActivityDialog.class);
-					startActivity(intent);
-					mDialog.dismiss();
-				}
-			});
-			
+					.setTitle(
+							getResources().getString(
+									R.string.notification_title))
+					.setMessage(
+							getResources().getQuantityString(
+									R.plurals.notification_new_sensors,
+									uninitializedDevices.size(),
+									uninitializedDevices.size()));
+
+			mDialog.setCustomNeutralButton(
+					getResources().getString(R.string.notification_ingore),
+					new OnClickListener() {
+						@Override
+						public void onClick(View v) {
+							mController
+									.ignoreUninitialized(uninitializedDevices);
+							// TODO: Get this string from resources
+							Toast.makeText(
+									LocationScreenActivity.this,
+									"You can add these devices later through 'Menu / Add sensor'",
+									Toast.LENGTH_LONG).show();
+							mDialog.dismiss();
+						}
+					});
+
+			mDialog.setCustomPositiveButton(
+					getResources().getString(R.string.notification_add),
+					new OnClickListener() {
+						@Override
+						public void onClick(View v) {
+							// Open activity for adding new device
+							inBackground = true;
+							Intent intent = new Intent(
+									LocationScreenActivity.this,
+									AddSensorActivityDialog.class);
+							startActivity(intent);
+							mDialog.dismiss();
+						}
+					});
+
 			mDialog.show();
-    	}
+		}
 	}
-	
+
 	/**
 	 * Changes selected location and redraws list of adapters there
 	 */
-	private class ChangeLocationTask extends AsyncTask<String, Void, List<BaseDevice>> {
-		
-    	@Override
-    	protected List<BaseDevice> doInBackground(String... locations) {
-    		List<BaseDevice> devices = mController.getDevicesByLocation(locations[0]);
-    		Log.d(TAG, String.format("Found %d devices in location '%s'", devices.size(), locations[0]));
-    		
-			return devices;
-    	}
+	private class ChangeLocationTask extends
+			AsyncTask<String, Void, List<BaseDevice>> {
 
-    	@Override
-    	protected void onPostExecute(final List<BaseDevice> devices) {
-    		getSensors(devices);
-    	}
+		@Override
+		protected List<BaseDevice> doInBackground(String... locations) {
+			List<BaseDevice> devices = mController
+					.getDevicesByLocation(locations[0]);
+			Log.d(TAG,
+					String.format("Found %d devices in location '%s'",
+							devices.size(), locations[0]));
+
+			return devices;
+		}
+
+		@Override
+		protected void onPostExecute(final List<BaseDevice> devices) {
+			getSensors(devices);
+		}
 	}
-	
+
 }

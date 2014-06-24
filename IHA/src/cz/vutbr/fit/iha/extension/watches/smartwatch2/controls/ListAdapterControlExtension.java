@@ -131,7 +131,7 @@ public class ListAdapterControlExtension extends ManagedControlExtension {
 		Log.d(SW2ExtensionService.LOG_TAG, "onMenuItemSelected() - menu item "
 				+ menuItem);
 		if (menuItem == MENU_REFRESH) {
-			clearDisplay();
+//			clearDisplay();
 			actualize();
 		}
 	}

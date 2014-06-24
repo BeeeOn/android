@@ -41,6 +41,7 @@ import com.sonyericsson.extras.liveware.extension.util.ExtensionUtils;
 import com.sonyericsson.extras.liveware.extension.util.registration.RegistrationInformation;
 
 import cz.vutbr.fit.iha.R;
+import cz.vutbr.fit.iha.activity.PreferenceActivity;
 import cz.vutbr.fit.iha.extension.watches.smartwatch2.controls.ControlManagerSmartWatch2;
 
 /**
@@ -104,7 +105,7 @@ public class SW2RegistrationInformation extends RegistrationInformation {
         ContentValues values = new ContentValues();
 
         values.put(Registration.ExtensionColumns.CONFIGURATION_ACTIVITY,
-                SW2PreferenceActivity.class.getName());
+                PreferenceActivity.class.getName());
         values.put(Registration.ExtensionColumns.CONFIGURATION_TEXT,
                 mContext.getString(R.string.configuration_text));
         values.put(Registration.ExtensionColumns.NAME, mContext.getString(R.string.app_name));

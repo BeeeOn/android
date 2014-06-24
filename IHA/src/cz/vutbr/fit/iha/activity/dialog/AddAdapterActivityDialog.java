@@ -1,5 +1,7 @@
 package cz.vutbr.fit.iha.activity.dialog;
 
+import com.google.analytics.tracking.android.EasyTracker;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
@@ -18,73 +20,97 @@ import cz.vutbr.fit.iha.thread.AdapterRegisterThread;
 public class AddAdapterActivityDialog extends Activity {
 
 	public AddAdapterActivityDialog mActivity;
-	
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
-		
+
 		setContentView(R.layout.activity_add_adapter_activity_dialog);
-		
+
 		initButtons();
-		
+
 		mActivity = this;
 	}
-	
+
 	/**
 	 * Initialize listeners
 	 */
 	private void initButtons() {
 		// QR code button - register new adapter by QR code
-		((ImageButton)findViewById(R.id.addadapter_qrcode_button)).setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				try {
-				    Intent intent = new Intent("com.google.zxing.client.android.SCAN");
-				    intent.putExtra("SCAN_MODE", "QR_CODE_MODE"); // PRODUCT_MODE for bar codes
+		((ImageButton) findViewById(R.id.addadapter_qrcode_button))
+				.setOnClickListener(new OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						try {
+							Intent intent = new Intent(
+									"com.google.zxing.client.android.SCAN");
+							intent.putExtra("SCAN_MODE", "QR_CODE_MODE"); // PRODUCT_MODE
+																			// for
+																			// bar
+																			// codes
 
-				    startActivityForResult(intent, 0);
-				} catch (Exception e) {
-				    Uri marketUri = Uri.parse("market://details?id=com.google.zxing.client.android");
-				    Intent marketIntent = new Intent(Intent.ACTION_VIEW,marketUri);
-				    startActivity(marketIntent);
-				}
-			}
-		});
+							startActivityForResult(intent, 0);
+						} catch (Exception e) {
+							Uri marketUri = Uri
+									.parse("market://details?id=com.google.zxing.client.android");
+							Intent marketIntent = new Intent(
+									Intent.ACTION_VIEW, marketUri);
+							startActivity(marketIntent);
+						}
+					}
+				});
 
 		// Serial number button - register new adapter by serial number
-		((Button)findViewById(R.id.addadapter_add_button)).setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				EditText serialNuber = (EditText)findViewById(R.id.addadapter_ser_num);
-				Log.i("seriove cislo",serialNuber.getText().toString());
-				
-				new Thread(new AdapterRegisterThread(serialNuber.getText().toString(), mActivity)).start();
-			}
-		});
+		((Button) findViewById(R.id.addadapter_add_button))
+				.setOnClickListener(new OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						EditText serialNuber = (EditText) findViewById(R.id.addadapter_ser_num);
+						Log.i("seriove cislo", serialNuber.getText().toString());
+
+						new Thread(new AdapterRegisterThread(serialNuber
+								.getText().toString(), mActivity)).start();
+					}
+				});
 	}
-	
+
 	@Override
-	public void onBackPressed(){
+	public void onBackPressed() {
 		LocationScreenActivity.healActivity();
 		this.finish();
 	}
-	
-	@Override
-	protected void onActivityResult(int requestCode, int resultCode, Intent data) {           
-	    super.onActivityResult(requestCode, resultCode, data);
-	    if (requestCode == 0) {
 
-	        if (resultCode == RESULT_OK) {
-	            String contents = data.getStringExtra("SCAN_RESULT");
-	            Log.i("seriove cislo",contents);
-	            new Thread(new AdapterRegisterThread(contents, mActivity)).start();
-	        }
-	        if(resultCode == RESULT_CANCELED){
-	        	LocationScreenActivity.healActivity();
-	        	//TODO: handle cancel ?
-	        }
-	        this.finish();
-	    }
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+		if (requestCode == 0) {
+
+			if (resultCode == RESULT_OK) {
+				String contents = data.getStringExtra("SCAN_RESULT");
+				Log.i("seriove cislo", contents);
+				new Thread(new AdapterRegisterThread(contents, mActivity))
+						.start();
+			}
+			if (resultCode == RESULT_CANCELED) {
+				LocationScreenActivity.healActivity();
+				// TODO: handle cancel ?
+			}
+			this.finish();
+		}
+	}
+
+	@Override
+	public void onStart() {
+		super.onStart();
+		// The rest of your onStart() code.
+		EasyTracker.getInstance(this).activityStart(this); // Add this method.
+	}
+
+	@Override
+	public void onStop() {
+		super.onStop();
+		// The rest of your onStop() code.
+		EasyTracker.getInstance(this).activityStop(this); // Add this method.
 	}
 }

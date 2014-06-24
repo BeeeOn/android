@@ -165,11 +165,11 @@ public class GalleryControlExtension extends ManagedControlExtension {
 				+ menuItem);
 		if (menuItem == MENU_REFRESH) {
 
-			clearDisplay();
+//			clearDisplay();
 			// mDevices = mController.getAdapter(adapterId, false)
 			// .getDevicesByLocation(locationStr);
 			getIntent().putExtra(EXTRA_INITIAL_POSITION, mLastKnowPosition);
-			actualize();
+			actualize(mLastKnowPosition);
 
 			// sendListCount(R.id.gallery, mDevices.size());
 			// sendListItem(item)
@@ -278,6 +278,25 @@ public class GalleryControlExtension extends ManagedControlExtension {
 		return item;
 	}
 
+	private void actualize(final int lastPosition) {
+		Thread thLoc = new Thread(new Runnable() {
+			@Override
+			public void run() {
+				BaseDevice device = mDevices.get(lastPosition);
+				if (mController.updateDevice(device)) {
+					Log.d("ACTUALIZE", "aktualizovano");
+					BaseDevice newDevice = mController.getDevice(device.getId());
+					newDevice.setName("nove");
+					device = newDevice;
+				} else {
+					Log.d("ACTUALIZE", "aktualizace NEPROBEHLA");
+				}
+				sendListItem(createControlListItem(lastPosition));
+			}
+		});
+		thLoc.start();
+	}
+	
 	private void actualize() {
 		Thread thLoc = new Thread(new Runnable() {
 			@Override
