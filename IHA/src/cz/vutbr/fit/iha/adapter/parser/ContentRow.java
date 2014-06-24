@@ -18,7 +18,7 @@ public class ContentRow {
 	private Date mDate;
 	private Date mTime;
 	private int mValue;
-	private int mBattery;
+//	private int mBattery;
 	
 	public static final String DATEFORMAT = "yyyy-MM-dd";
 	public static final String TIMEFORMAT = "HH:mm:ss";
@@ -45,7 +45,7 @@ public class ContentRow {
 		}
 		
 		mValue = Integer.parseInt(parts[2]);
-		mBattery = Integer.parseInt(parts[3]);
+//		mBattery = Integer.parseInt(parts[3]);
 	}
 	
 	/**
@@ -54,14 +54,6 @@ public class ContentRow {
 	 */
 	public int getValue(){
 		return mValue;
-	}
-	
-	/**
-	 * Getter
-	 * @return
-	 */
-	public int getBattery(){
-		return mBattery;
 	}
 	
 	/**
@@ -90,7 +82,7 @@ public class ContentRow {
 		
 		result += new SimpleDateFormat(DATEFORMAT).format(mDate) + " ";
 		result += new SimpleDateFormat(TIMEFORMAT).format(mTime) + " ";
-		result += mValue + " " + mBattery + "\n";
+		result += mValue + "\n";
 		
 		return result;
 	}

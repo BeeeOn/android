@@ -61,6 +61,9 @@ public class XmlCreator {
 	public static final String GETTIMEZONE = "gettimezone";
 	public static final String GETROOMS = "getrooms";
 	public static final String UPDATEROOMS = "updaterooms";
+	public static final String ADDROOM = "addroom";
+	public static final String DELROOM = "delroom";
+	
 	public static final String GETALERTS = "getalerts";
 	
 	// end of states
@@ -253,7 +256,7 @@ public class XmlCreator {
 	 * @param from date from probably based of format YYYY-MM-DD-HH:MM:SS
 	 * @return logName message
 	 */
-	public static String createLogName(String id, String deviceId, String from, String to){
+	public static String createLogName(String id, String deviceId, int Type, String from, String to){
 		XmlSerializer serializer = Xml.newSerializer();
 		StringWriter writer = new StringWriter();
 		try{
@@ -269,6 +272,7 @@ public class XmlCreator {
 			
 				serializer.startTag(ns, DEVICE);
 				serializer.attribute(ns, ID, deviceId);
+				serializer.attribute(ns, TYPE, formatType(Type));
 				serializer.endTag(ns, DEVICE);
 				
 			serializer.endTag(ns, COM_ROOT);
@@ -599,7 +603,7 @@ public class XmlCreator {
 	 * @param devicesId list of devices id
 	 * @return addView message
 	 */
-	public static String createAddView(String id, String viewName, int iconNum, ArrayList<String>devicesId){
+	public static String createAddView(String id, String viewName, int iconNum, ArrayList<BaseDevice>devices){
 		XmlSerializer serializer = Xml.newSerializer();
 		StringWriter writer = new StringWriter();
 		try{
@@ -613,9 +617,10 @@ public class XmlCreator {
 			serializer.attribute(ns, NAME, viewName);
 			serializer.attribute(ns, ICON, Integer.toString(iconNum));
 			
-			for(String deviceId : devicesId){
+			for(BaseDevice device : devices){
 				serializer.startTag(ns, DEVICE);
-				serializer.attribute(ns, ID, deviceId);
+				serializer.attribute(ns, ID, device.getId());
+				serializer.attribute(ns, TYPE, formatType(device.getType()));
 				serializer.endTag(ns, DEVICE);
 			}
 			
@@ -825,6 +830,69 @@ public class XmlCreator {
 				serializer.text(location.getName());
 				serializer.endTag(ns, LOCATION);
 			}
+			
+			serializer.endTag(ns, COM_ROOT);
+			serializer.endDocument();
+			
+			return writer.toString();
+		}catch(Exception e){
+			throw new RuntimeException(e);
+		}
+	}
+	
+	/**
+	 * Method create XML of AddRoom message
+	 * @param id of user
+	 * @param location to create
+	 * @return created message
+	 */
+	public static String createAddRooms(String id, Location location){
+		XmlSerializer serializer = Xml.newSerializer();
+		StringWriter writer = new StringWriter();
+		try{
+			serializer.setOutput(writer);
+			serializer.startDocument("UTF-8", null);
+			
+			serializer.startTag(ns, COM_ROOT);
+			serializer.attribute(ns, ID, id);
+			serializer.attribute(ns, STATE, ADDROOM);
+			serializer.attribute(ns, VERSION, GVER);
+			
+				serializer.startTag(ns, LOCATION);
+				serializer.attribute(ns, ID, location.getId());
+				serializer.attribute(ns, TYPE,location.getType()+"");
+				serializer.text(location.getName());
+			
+			serializer.endTag(ns, COM_ROOT);
+			serializer.endDocument();
+			
+			return writer.toString();
+		}catch(Exception e){
+			throw new RuntimeException(e);
+		}
+	}
+	
+	/**
+	 * Method create XML of DelRoom message
+	 * @param id
+	 * @param location
+	 * @return
+	 */
+	public static String createDelRooms(String id, Location location){
+		XmlSerializer serializer = Xml.newSerializer();
+		StringWriter writer = new StringWriter();
+		try{
+			serializer.setOutput(writer);
+			serializer.startDocument("UTF-8", null);
+			
+			serializer.startTag(ns, COM_ROOT);
+			serializer.attribute(ns, ID, id);
+			serializer.attribute(ns, STATE, DELROOM);
+			serializer.attribute(ns, VERSION, GVER);
+			
+				serializer.startTag(ns, LOCATION);
+				serializer.attribute(ns, ID, location.getId());
+				serializer.attribute(ns, TYPE,location.getType()+"");
 			
 			serializer.endTag(ns, COM_ROOT);
 			serializer.endDocument();

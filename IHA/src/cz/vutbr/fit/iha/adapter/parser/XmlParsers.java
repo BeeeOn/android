@@ -81,6 +81,7 @@ public class XmlParsers {
 	public static final String VIEWSLIST = "viewslist";
 	public static final String TIMEZONE = "timezone";
 	public static final String ROOMS = "rooms";
+	public static final String ROOMCREATED = "roomcreated";
 	
 	// end of states
 	public static final String ADAPTER = "adapter";
@@ -156,54 +157,58 @@ public class XmlParsers {
 		ParsedMessage result = new ParsedMessage(state, id, null);
 		
 		switch(getStateEnum(state)){
-		case eCONACCOUNTLIST:
-			// HashMap<String, User>
-			result.data = parseConAccountList();
-			break;
-		case eCONTENT:
-			// ArrayList<ContentRow>
-			result.data = parseContent();
-			break;
-		case eFALSE:
-			// FalseAnswer
-			result.data = parseFalse();
-			break;
-		case eNOTREGA:
-		case eNOTREGB:
-		case eRESIGN:
-		case eUNKNOWN: // never gonna happen :D
-			// null
-			break;
-		case ePARTIAL:
-			// ArrayList<BaseDevice>
-			result.data = parsePartial();
-			break;
-		case eREADY:
-			// ArrayList<Adapter>
-			result.data = parseReady();
-			break;
-		case eTRUE:
-			// String
-			result.data = getSecureAttrValue(ns, ADDITIONALINFO);
-			break;
-		case eXML:
-			// Adapter
-			result.data = parseXml(getSecureAttrValue(ns, ROLE));
-			break;
-		case eVIEWSLIST:
-			// ArrayList<CustomViewPair>
-			result.data = parseViewsList();
-			break;
-		case eTIMEZONE:
-			// integer
-			result.data = parseTimeZone();
-			break;
-		case eROOMS:
-			// ArrayList<Location>
-			result.data = parseRooms();
-			break;
-		default:
-			break;
+			case eCONACCOUNTLIST:
+				// HashMap<String, User>
+				result.data = parseConAccountList();
+				break;
+			case eCONTENT:
+				// ArrayList<ContentRow>
+				result.data = parseContent();
+				break;
+			case eFALSE:
+				// FalseAnswer
+				result.data = parseFalse();
+				break;
+			case eNOTREGA:
+			case eNOTREGB:
+			case eRESIGN:
+			case eUNKNOWN: // never gonna happen :D
+				// null
+				break;
+			case ePARTIAL:
+				// ArrayList<BaseDevice>
+				result.data = parsePartial();
+				break;
+			case eREADY:
+				// ArrayList<Adapter>
+				result.data = parseReady();
+				break;
+			case eTRUE:
+				// String
+				result.data = getSecureAttrValue(ns, ADDITIONALINFO);
+				break;
+			case eXML:
+				// Adapter
+				result.data = parseXml(getSecureAttrValue(ns, ROLE));
+				break;
+			case eVIEWSLIST:
+				// ArrayList<CustomViewPair>
+				result.data = parseViewsList();
+				break;
+			case eTIMEZONE:
+				// integer
+				result.data = parseTimeZone();
+				break;
+			case eROOMS:
+				// ArrayList<Location>
+				result.data = parseRooms();
+				break;
+			case eROOMCREATED:
+				// String
+				result.data = parseRoomCreated();
+				break;
+			default:
+				break;
 		}
 		
 		return result;
@@ -446,6 +451,13 @@ public class XmlParsers {
 		return result;
 	}
 	
+	private static String parseRoomCreated() throws XmlPullParserException, IOException{
+		mParser.nextTag();
+		mParser.require(XmlPullParser.START_TAG, ns, LOCATION);
+		
+		return getSecureAttrValue(ns, ID);
+	}
+	
 	/////////////////////////////////// OTHER
 	
 	/**
@@ -478,6 +490,8 @@ public class XmlParsers {
 			return STATES.eTIMEZONE;
 		else if(state.equals(ROOMS))
 			return STATES.eROOMS;
+		else if(state.equals(ROOMCREATED))
+			return STATES.eROOMCREATED;
 		else
 			return STATES.eUNKNOWN;
 	}
@@ -523,7 +537,7 @@ public class XmlParsers {
 		eXML, ePARTIAL, eCONTENT,
 		eCONACCOUNTLIST, eTRUE, eFALSE,
 		eRESIGN, eUNKNOWN, eVIEWSLIST,
-		eTIMEZONE, eROOMS
+		eTIMEZONE, eROOMS, eROOMCREATED
 	}
 	
 	////////////////////////////////// XML

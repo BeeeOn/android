@@ -71,6 +71,7 @@ public class Network {
 	public static final String CONACCOUNTLIST = "conaccountlist";
 	public static final String TIMEZONE = "timezone";
 	public static final String ROOMS = "rooms";
+	public static final String ROOMCREATED = "roomcreated";
 	
 	/**
 	 * Name of CA certificate located in assets
@@ -612,7 +613,7 @@ public class Network {
 	 * @throws NoConnectionException 
 	 * @throws CommunicationException 
 	 */
-	public ArrayList<ContentRow> logName(String deviceId, String from, String to) throws NoConnectionException, CommunicationException{
+	public ArrayList<ContentRow> logName(String deviceId, int deviceType, String from, String to) throws NoConnectionException, CommunicationException{
 		// TODO: test properly
 		if(!isAvailable())
 			throw new NoConnectionException();
@@ -620,7 +621,7 @@ public class Network {
 		ParsedMessage msg;
 		
 		try {
-			String messageToSend = XmlCreator.createLogName(Integer.toString(mSessionId), deviceId, from, to);
+			String messageToSend = XmlCreator.createLogName(Integer.toString(mSessionId), deviceId, deviceType, from, to);
 			
 			Log.d("IHA - Network fromApp", messageToSend);
 			
@@ -655,7 +656,7 @@ public class Network {
 				//return null;
 			}
 			signIn(ActualUser.getActualUser().getEmail());
-			return logName(deviceId, from, to);
+			return logName(deviceId, deviceType, from, to);
 			
 		}else if(msg.getState().equals(FALSE) && ((FalseAnswer)msg.data).getErrMessage().length() != 0){
 			throw new CommunicationException(((FalseAnswer)msg.data).getErrMessage());
@@ -673,8 +674,8 @@ public class Network {
 	 * @throws CommunicationException 
 	 * @throws NoConnectionException 
 	 */
-	public ArrayList<ContentRow> getLog(String deviceId, String from, String to) throws NoConnectionException, CommunicationException{
-		return logName(deviceId, from, to);
+	public ArrayList<ContentRow> getLog(String deviceId, int deviceType, String from, String to) throws NoConnectionException, CommunicationException{
+		return logName(deviceId, deviceType, from, to);
 	}
 	
 	/**
@@ -686,7 +687,7 @@ public class Network {
 	 * @throws NoConnectionException 
 	 * @throws CommunicationException 
 	 */
-	public boolean addView(String nameOfView, int iconId, ArrayList<String> deviceIds) throws NoConnectionException, CommunicationException{
+	public boolean addView(String nameOfView, int iconId, ArrayList<BaseDevice> devices) throws NoConnectionException, CommunicationException{
 		// TODO: test properly
 		if(!isAvailable())
 			throw new NoConnectionException();
@@ -694,7 +695,7 @@ public class Network {
 		ParsedMessage msg;
 		
 		try {
-			String messageToSend = XmlCreator.createAddView(Integer.toString(mSessionId), nameOfView, iconId, deviceIds);
+			String messageToSend = XmlCreator.createAddView(Integer.toString(mSessionId), nameOfView, iconId, devices);
 			
 			Log.d("IHA - Network fromApp", messageToSend);
 			
@@ -725,7 +726,7 @@ public class Network {
 				//return null;
 			}
 			signIn(ActualUser.getActualUser().getEmail());
-			return addView(nameOfView, iconId, deviceIds);
+			return addView(nameOfView, iconId, devices);
 			
 		}else if(msg.getState().equals(FALSE) && ((FalseAnswer)msg.data).getErrMessage().length() != 0){
 			throw new CommunicationException(((FalseAnswer)msg.data).getErrMessage());
@@ -1279,6 +1280,13 @@ public class Network {
 			return null;
 	}
 
+	/**
+	 * Method call to server to update location
+	 * @param locations to update
+	 * @return true if everything is OK, false otherwise
+	 * @throws NoConnectionException
+	 * @throws CommunicationException
+	 */
 	public boolean updateLocations(ArrayList<Location> locations) throws NoConnectionException, CommunicationException{
 		//TODO: test properly
 		if(!isAvailable())
@@ -1326,6 +1334,107 @@ public class Network {
 			return false;
 	}
 
+	/**
+	 * Method call to server and delete location
+	 * @param location to delete
+	 * @return true room is deleted, false otherwise
+	 */
+	public boolean deleteLocation(Location location) throws NoConnectionException, CommunicationException {
+		//TODO: test properly
+		if(!isAvailable())
+			throw new NoConnectionException();
+		
+		ParsedMessage msg;
+		
+		try {
+			String messageToSend = XmlCreator.createDelRooms(Integer.toString(mSessionId), location);
+			
+			Log.d("IHA - Network fromApp", messageToSend);
+			
+			String result = startCommunication(messageToSend);
+			
+			Log.d("IHA - Network fromSrv", result);
+			
+			msg = XmlParsers.parseCommunication(result, false);
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new CommunicationException(e);
+		}
+		
+		if(msg.getState().equals(TRUE)){
+			Log.d("IHA - Network", msg.getState());
+			
+			return true;
+			
+		}else if(msg.getState().equals(RESIGN)){
+			//TODO: maybe use diffrenD way to resign, case stopping of thread, manage this after implement in the controler
+			try {
+				GetGoogleAuth.getGetGoogleAuth().execute();
+			} catch (Exception e) {
+				e.printStackTrace();
+				String tmp = null;
+				new GetGoogleAuth(new LoginActivity(), tmp).execute();
+				//return null;
+			}
+			signIn(ActualUser.getActualUser().getEmail());
+			return deleteLocation(location);
+			
+		}else if(msg.getState().equals(FALSE) && ((FalseAnswer)msg.data).getErrMessage().length() != 0){
+			throw new CommunicationException(((FalseAnswer)msg.data).getErrMessage());
+		}else
+			return false;
+	}
+
+	public Location createLocation(Location location) throws NoConnectionException, CommunicationException{
+		//TODO: test properly
+		if(!isAvailable())
+			throw new NoConnectionException();
+		
+		ParsedMessage msg;
+		
+		try {
+			String messageToSend = XmlCreator.createAddRooms(Integer.toString(mSessionId), location);
+			
+			Log.d("IHA - Network fromApp", messageToSend);
+			
+			String result = startCommunication(messageToSend);
+			
+			Log.d("IHA - Network fromSrv", result);
+			
+			msg = XmlParsers.parseCommunication(result, false);
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new CommunicationException(e);
+		}
+		
+		if(msg.getState().equals(ROOMCREATED)){
+			Log.d("IHA - Network", msg.getState());
+			
+			location.setId((String)msg.data);
+			
+			return location;
+			
+		}else if(msg.getState().equals(RESIGN)){
+			//TODO: maybe use diffrenD way to resign, case stopping of thread, manage this after implement in the controler
+			try {
+				GetGoogleAuth.getGetGoogleAuth().execute();
+			} catch (Exception e) {
+				e.printStackTrace();
+				String tmp = null;
+				new GetGoogleAuth(new LoginActivity(), tmp).execute();
+				//return null;
+			}
+			signIn(ActualUser.getActualUser().getEmail());
+			return createLocation(location);
+			
+		}else if(msg.getState().equals(FALSE) && ((FalseAnswer)msg.data).getErrMessage().length() != 0){
+			throw new CommunicationException(((FalseAnswer)msg.data).getErrMessage());
+		}else
+			return null;
+	}
+	
 	//TODO: GetAlerts
 	//TODO: Alerts
 }
