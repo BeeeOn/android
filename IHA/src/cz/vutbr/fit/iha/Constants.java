@@ -48,6 +48,9 @@ public final class Constants {
 	public static final String DEMO_FILENAME = "komunikace.xml";
 	public static final String DEMO_ASSETNAME = "komunikace.xml";
 	
+	public static final String DEMO_LOCATION_FILENAME = "lokace.xml";
+	public static final String DEMO_LOCATION_ASSETNAME = "lokace.xml";
+	
 	/**
 	 * Filename of demo file with prepared household log info from one sensor
 	 */

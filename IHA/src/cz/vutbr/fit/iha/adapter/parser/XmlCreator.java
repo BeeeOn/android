@@ -37,7 +37,7 @@ public class XmlCreator {
 	/**
 	 * Version of communication protocol for google/android device 
 	 */
-	public static final String GVER = "1.7";
+	public static final String GVER = "1.8";
 	// states
 	public static final String SIGNIN = "signin";
 	public static final String SIGNUP = "signup";
@@ -59,6 +59,9 @@ public class XmlCreator {
 	public static final String GETVIEWS = "getviews";
 	public static final String SETTIMEZONE = "settimezone";
 	public static final String GETTIMEZONE = "gettimezone";
+	public static final String GETROOMS = "getrooms";
+	public static final String UPDATEROOMS = "updaterooms";
+	public static final String GETALERTS = "getalerts";
 	
 	// end of states
 	public static final String USER = "user";
@@ -82,6 +85,8 @@ public class XmlCreator {
 	public static final String ICON = "icon";
 	public static final String TIME = "time";
 	public static final String UTC = "utc";
+	public static final String LOCALE = "locale";
+	public static final String ERRCODE = "errcode";
 	
 	//partial
 	public static final String DEVICE = "device";
@@ -112,9 +117,10 @@ public class XmlCreator {
 	 * Method create XML for signIn message
 	 * @param email of user
 	 * @param gtoken token from google
+	 * @param lokale language of App {cs, en}
 	 * @return XML message
 	 */
-	public static String createSignIn(String email, String gtoken/*, boolean quiet*/){
+	public static String createSignIn(String email, String gtoken, String lokale){
 		XmlSerializer serializer = Xml.newSerializer();
 		StringWriter writer = new StringWriter();
 		try{
@@ -125,10 +131,10 @@ public class XmlCreator {
 			serializer.attribute(ns, ID, INIT_ID);
 			serializer.attribute(ns, STATE, SIGNIN);
 			serializer.attribute(ns, VERSION, GVER);
-			//serializer.attribute(ns, MODE, (quiet) ? QUIET : NORMAL);
 				serializer.startTag(ns, USER);
 				serializer.attribute(ns, EMAIL, email);
 				serializer.attribute(ns, GTOKEN, gtoken);
+				serializer.attribute(ns, LOCALE, lokale);
 				serializer.endTag(ns, USER);
 			serializer.endTag(ns, COM_ROOT);
 			serializer.endDocument();
@@ -177,19 +183,6 @@ public class XmlCreator {
 	}
 	
 	/**
-	 * Method create XML for singUp message
-	 * @param email of user
-	 * @param id is 0 if is NOT signed in, non-zero otherwise 
-	 * @param gtoken token from google
-	 * @param serialNumber of new adapter
-	 * @param next if id is non-zero and user is signed in, that TRUE is using new Adapter, old otherwise
-	 * @return XML message
-	 */
-	public static String createSignUp(String email, int id, String gtoken, int serialNumber){
-		return createSignUp(email, Integer.toString(id), gtoken, Integer.toString(serialNumber));
-	}
-	
-	/**
 	 * Method create XML for init[x1] message
 	 * @param id of user
 	 * @param adapterId id of adapter to work with
@@ -218,16 +211,6 @@ public class XmlCreator {
 		}catch(Exception e){
 			throw new RuntimeException(e);
 		}
-	}
-	
-	/**
-	 * Method create XML for init[x1] message
-	 * @param id of user
-	 * @param adapterId id of adapter to work with
-	 * @return init message
-	 */
-	public static String createInit(int id, int adapterId){
-		return createInit(Integer.toString(id), Integer.toString(adapterId));
 	}
 	
 	/**
@@ -264,17 +247,6 @@ public class XmlCreator {
 	}
 	
 	/**
-	 * Method create XML for ReInit message
-	 * @param id of user
-	 * @param adapterIdOld old id of adapter
-	 * @param adapterIdNew new id of adapter
-	 * @return ReInit message
-	 */
-	public static String createReInit(int id, int adapterIdOld, int adapterIdNew){
-		return createReInit(Integer.toString(id), Integer.toString(adapterIdOld), Integer.toString(adapterIdNew));
-	}
-
-	/**
 	 * Method create XML for LogName message
 	 * @param id of user
 	 * @param deviceId id of sensor
@@ -309,17 +281,6 @@ public class XmlCreator {
 	}
 	
 	/**
-	 * Method create XML for LogName message
-	 * @param id of user
-	 * @param deviceId id of sensor
-	 * @param from date from probably based of format YYYY-MM-DD-HH:MM:SS
-	 * @return logName message
-	 */
-	public static String createLogName(int id, String deviceId, String from, String to){
-		return createLogName(Integer.toString(id), deviceId, from, to);
-	}
-	
-	/**
 	 * Method create XML for AddConAccount message
 	 * @param id of user (superuser)
 	 * @param users map with pairs e-mail of common user (key) and its role (value) 
@@ -327,16 +288,6 @@ public class XmlCreator {
 	 */
 	public static String createAddConAccount(String id, HashMap<String, String> users){
 		return createAddOrChangeConAccount(id, users, true);
-	}
-	
-	/**
-	 * Method create XML for AddConAccount message
-	 * @param id of user (superuser)
-	 * @param users map with pairs e-mail of common user (key) and its role (value) 
-	 * @return addConAccount message
-	 */
-	public static String createAddConAccount(int id, HashMap<String, String> users){
-		return createAddConAccount(Integer.toString(id), users);
 	}
 	
 	/**
@@ -373,16 +324,6 @@ public class XmlCreator {
 	}
 	
 	/**
-	 * Method create XML for DelConAccount message
-	 * @param id of user (superuser)
-	 * @param userEmails of common users
-	 * @return dellConAccount message
-	 */
-	public static String createDelConAccount(int id, ArrayList<String> userEmails){
-		return createDelConAccount(Integer.toString(id),userEmails);
-	}
-
-	/**
 	 * Method create XML for GetConAccount message
 	 * @param id of user
 	 * @return GetConAccount message
@@ -405,15 +346,6 @@ public class XmlCreator {
 		}catch(Exception e){
 			throw new RuntimeException(e);
 		}
-	}
-	
-	/**
-	 * Method create XML for GetConAccount message
-	 * @param id of user
-	 * @return GetConAccount message
-	 */
-	public static String createGetConAccount(int id){
-		return createGetConAccount(Integer.toString(id));
 	}
 	
 	/**
@@ -462,16 +394,6 @@ public class XmlCreator {
 	}
 	
 	/**
-	 * Method create XML of ChangeConAccount message
-	 * @param id of user (superuser)
-	 * @param users map with pairs e-mail of common user (key) and its role (value)
-	 * @return changeConAccount message
-	 */
-	public static String createChangeConAccount(int id, HashMap<String, String> users){
-		return createChangeConAccount(Integer.toString(id), users);
-	}
-
-	/**
 	 * Method create XML of TRUE message
 	 * @param id of user
 	 * @param additionalInfo contains state of recieved message
@@ -497,28 +419,17 @@ public class XmlCreator {
 			throw new RuntimeException(e);
 		}
 	}
-	
-	/**
-	 * Method create XML of TRUE message
-	 * @param id of user
-	 * @param additionalInfo contains state of recieved message
-	 * @return TRUE message
-	 */
-	public static String createTRUE(int id, String additionalInfo){
-		return createTRUE(Integer.toString(id), additionalInfo);
-	}
 
 	/**
 	 * Method create XML of FALSE message, the additional info and its description
-	 * (XMLedSubMessage) is probably NOT used in android client app for any known
+	 * is probably NOT used in android client App for any known
 	 * messages, but it can passed it if some other method create sub XML
 	 * @param id of user
-	 * @param additionalInfo contains state of recieved message
-	 * @param XMLedSubMessage contains string with XML of subMessage of error description 
+	 * @param additionalInfo contains state of received message
+	 * @param planeText contains string with error description 
 	 * @return FALSE message
 	 */
-	//FIXME: XMLedSubMessage need to by repaired
-	public static String createFALSE(String id, String additionalInfo, String XMLedSubMessage){
+	public static String createFALSE(String id, String additionalInfo, int errCode, String planeText){
 		XmlSerializer serializer = Xml.newSerializer();
 		StringWriter writer = new StringWriter();
 		try{
@@ -530,9 +441,10 @@ public class XmlCreator {
 			serializer.attribute(ns, STATE, FALSE);
 			serializer.attribute(ns, VERSION, GVER);
 			serializer.attribute(ns, ADDITIONALINFO, additionalInfo);
+			serializer.attribute(ns, ERRCODE, errCode+"");
 				
-			if(XMLedSubMessage != null)
-				serializer.text(XMLedSubMessage);
+			if(planeText != null)
+				serializer.text(planeText);
 			
 			serializer.endTag(ns, COM_ROOT);
 			serializer.endDocument();
@@ -541,20 +453,6 @@ public class XmlCreator {
 		}catch(Exception e){
 			throw new RuntimeException(e);
 		}
-	}
-	
-	//FIXME: XMLedSubMessage need to by repaired
-	/**
-	 * Method create XML of FALSE message, the additional info and its description
-	 * (XMLedSubMessage) is probably NOT used in android client app for any known
-	 * messages, but it can passed it if some other method create sub XML
-	 * @param id of user
-	 * @param additionalInfo contains state of recieved message
-	 * @param XMLedSubMessage contains string with XML of subMessage of error description 
-	 * @return FALSE message
-	 */	
-	public static String createFALSE(int id, String additionalInfo, String XMLedSubMessage){
-		return createFALSE(Integer.toString(id), additionalInfo, XMLedSubMessage);
 	}
 	
 	/**
@@ -567,6 +465,7 @@ public class XmlCreator {
 	 * @param devices with changed fields only (use only NON-null and NON-zero values)
 	 * @return Partial message
 	 */
+	//TODO: do eco mode
 	public static String createPartial(String id, ArrayList<BaseDevice> devices){
 		XmlSerializer serializer = Xml.newSerializer();
 		StringWriter writer = new StringWriter();
@@ -589,8 +488,7 @@ public class XmlCreator {
 				Location location = device.getLocation();
 				if(location != null && location.getId().length() > 0){
 					serializer.startTag(ns, LOCATION);
-					serializer.attribute(ns, TYPE, location.getType()+"");
-					serializer.text(location.getName());
+					serializer.attribute(ns, ID, location.getId()+"");
 					serializer.endTag(ns, LOCATION);
 				}
 				if(device.getName() != null){
@@ -623,20 +521,6 @@ public class XmlCreator {
 		}catch(Exception e){
 			throw new RuntimeException(e);
 		}
-	}
-	
-	/**
-	 * Method create XML of PARTIAL message. Almost all fields are optional.
-	 * Use field only if it is NOT null or ZERO.
-	 * Android app can NOT set filename of logging file, only turn on/off its existence =>
-	 * this method switch logging by value getting from isLogging(), but check this only if
-	 * some NON-null value is in getLog() field
-	 * @param id of user
-	 * @param devices with changed fields only (use only NON-null and NON-zero values)
-	 * @return Partial message
-	 */
-	public static String createPartial(int id, ArrayList<BaseDevice> devices){
-		return createPartial(Integer.toString(id), devices);
 	}
 	
 	/**
@@ -709,16 +593,6 @@ public class XmlCreator {
 	}
 	
 	/**
-	 * Method create XML of Update message
-	 * @param id of user
-	 * @param devices to get update fields
-	 * @return update message
-	 */
-	public static String createUpdate(int id, ArrayList<BaseDevice>devices){
-		return createUpdate(Integer.toString(id), devices);
-	}
-	
-	/**
 	 * Method create XML of AddView message
 	 * @param id of user
 	 * @param viewName name of custom view
@@ -755,17 +629,6 @@ public class XmlCreator {
 	}
 	
 	/**
-	 * Method create XML of AddView message
-	 * @param id of user
-	 * @param viewName name of custom view
-	 * @param devicesId list of devices id
-	 * @return addView message
-	 */
-	public static String createAddView(int id, String viewName, int iconNum, ArrayList<String>devicesId){
-		return createAddView(Integer.toString(id), viewName, iconNum, devicesId);
-	}
-	
-	/**
 	 * Method create XML of GetViews message (method added in 1.6 version)
 	 * @param id of user
 	 * @return getViews message
@@ -789,15 +652,6 @@ public class XmlCreator {
 		}catch(Exception e){
 			throw new RuntimeException(e);
 		}
-	}
-	
-	/**
-	 * Method create XML of GetViews message (method added in 1.6 version)
-	 * @param id of user
-	 * @return getViews message
-	 */
-	public static String createGetViews(int id){
-		return createGetViews(Integer.toString(id));
 	}
 	
 	/**
@@ -826,16 +680,6 @@ public class XmlCreator {
 		}catch(Exception e){
 			throw new RuntimeException(e);
 		}
-	}
-	
-	/**
-	 * Method create XML of DelVIew message
-	 * @param id of user
-	 * @param viewName of custom view
-	 * @return DelVIew message
-	 */
-	public static String createDelView(int id, String viewName){
-		return createDelView(Integer.toString(id), viewName);
 	}
 	
 	/**
@@ -873,17 +717,6 @@ public class XmlCreator {
 		}catch(Exception e){
 			throw new RuntimeException(e);
 		}
-	}
-	
-	/**
-	 * Method create XML of UpdateView message
-	 * @param id of user
-	 * @param viewName of custom view
-	 * @param devices hashMap with device id as key, and action as value
-	 * @return UpdateValue message
-	 */
-	public static String createUpdateView(int id, String viewName, int iconNum, HashMap<String, String> devices){
-		return createUpdateView(Integer.toString(id), viewName, iconNum, devices);
 	}
 	
 	/**
@@ -932,6 +765,91 @@ public class XmlCreator {
 			serializer.startTag(ns, COM_ROOT);
 			serializer.attribute(ns, ID, id);
 			serializer.attribute(ns, STATE, GETTIMEZONE);
+			serializer.attribute(ns, VERSION, GVER);
+			serializer.endTag(ns, COM_ROOT);
+			serializer.endDocument();
+			
+			return writer.toString();
+		}catch(Exception e){
+			throw new RuntimeException(e);
+		}
+	}
+	
+	/**
+	 * Method create XML of GetRooms message
+	 * @param id of user
+	 * @return message GetRooms
+	 */
+	public static String createGetRooms(String id){
+		XmlSerializer serializer = Xml.newSerializer();
+		StringWriter writer = new StringWriter();
+		try{
+			serializer.setOutput(writer);
+			serializer.startDocument("UTF-8", null);
+			
+			serializer.startTag(ns, COM_ROOT);
+			serializer.attribute(ns, ID, id);
+			serializer.attribute(ns, STATE, GETROOMS);
+			serializer.attribute(ns, VERSION, GVER);
+			serializer.endTag(ns, COM_ROOT);
+			serializer.endDocument();
+			
+			return writer.toString();
+		}catch(Exception e){
+			throw new RuntimeException(e);
+		}
+	}
+	
+	/**
+	 * Method create XML of UpdateRooms message
+	 * @param id of user
+	 * @param locations list of location object to update
+	 * @return message UpdateRooms
+	 */
+	public static String createUpdateRooms(String id, ArrayList<Location> locations){
+		XmlSerializer serializer = Xml.newSerializer();
+		StringWriter writer = new StringWriter();
+		try{
+			serializer.setOutput(writer);
+			serializer.startDocument("UTF-8", null);
+			
+			serializer.startTag(ns, COM_ROOT);
+			serializer.attribute(ns, ID, id);
+			serializer.attribute(ns, STATE, UPDATEROOMS);
+			serializer.attribute(ns, VERSION, GVER);
+			
+			for(Location location : locations){
+				serializer.startTag(ns, LOCATION);
+				serializer.attribute(ns, ID, location.getId());
+				serializer.attribute(ns, TYPE,location.getType()+"");
+				serializer.text(location.getName());
+				serializer.endTag(ns, LOCATION);
+			}
+			
+			serializer.endTag(ns, COM_ROOT);
+			serializer.endDocument();
+			
+			return writer.toString();
+		}catch(Exception e){
+			throw new RuntimeException(e);
+		}
+	}
+	
+	/**
+	 * Method create XML of GetAlerts message
+	 * @param id of user
+	 * @return message GetAlerts
+	 */
+	public static String createGetAlerts(String id){
+		XmlSerializer serializer = Xml.newSerializer();
+		StringWriter writer = new StringWriter();
+		try{
+			serializer.setOutput(writer);
+			serializer.startDocument("UTF-8", null);
+			
+			serializer.startTag(ns, COM_ROOT);
+			serializer.attribute(ns, ID, id);
+			serializer.attribute(ns, STATE, GETALERTS);
 			serializer.attribute(ns, VERSION, GVER);
 			serializer.endTag(ns, COM_ROOT);
 			serializer.endDocument();

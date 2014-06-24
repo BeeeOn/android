@@ -18,7 +18,6 @@ import java.util.Locale;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 
-import android.annotation.SuppressLint;
 import android.util.Log;
 import android.util.Xml;
 import cz.vutbr.fit.iha.Constants;
@@ -50,8 +49,8 @@ public class XmlParsers {
 	/**
 	 * Thats mean Android OS
 	 */
-	public static final String COM_VER = "1.7";
-	public static final String XML_VER = "1.0.1";
+	public static final String COM_VER = "1.8";
+	public static final String XML_VER = "1.0.2";
 	
 	/**
 	 * NameSpace
@@ -81,6 +80,7 @@ public class XmlParsers {
 	public static final String CHANGECONACCOUNT = "changeconaccount";
 	public static final String VIEWSLIST = "viewslist";
 	public static final String TIMEZONE = "timezone";
+	public static final String ROOMS = "rooms";
 	
 	// end of states
 	public static final String ADAPTER = "adapter";
@@ -113,6 +113,7 @@ public class XmlParsers {
 	public static final String HWUPDATED = "hwupdated";
 	public static final String TIME = "time";
 	public static final String UTC = "utc";
+	public static final String ERRCODE = "errcode";
 	
 	public static final String DATEFORMAT = "yyyy-MM-dd HH:mm:ss";
 	
@@ -129,7 +130,7 @@ public class XmlParsers {
 	 * @throws XmlPullParserException
 	 * @throws IOException
 	 * @throws ComVerMisException means Communication version mismatch exception
-	 * @throws XmlVerMisException menas Xml version mismatch exception
+	 * @throws XmlVerMisException means XML version mismatch exception
 	 * @throws ParseException 
 	 */
 	public static ParsedMessage parseCommunication(String xmlInput, boolean namespace) throws XmlPullParserException, IOException, ComVerMisException, XmlVerMisException, ParseException{
@@ -164,8 +165,8 @@ public class XmlParsers {
 			result.data = parseContent();
 			break;
 		case eFALSE:
-			// FalseAnswer (.data is HashMap<String, String> for defined states as <email,role>
-			result.data = parseFalse(getSecureAttrValue(ns, ADDITIONALINFO));
+			// FalseAnswer
+			result.data = parseFalse();
 			break;
 		case eNOTREGA:
 		case eNOTREGB:
@@ -196,6 +197,12 @@ public class XmlParsers {
 		case eTIMEZONE:
 			// integer
 			result.data = parseTimeZone();
+			break;
+		case eROOMS:
+			// ArrayList<Location>
+			result.data = parseRooms();
+			break;
+		default:
 			break;
 		}
 		
@@ -241,7 +248,6 @@ public class XmlParsers {
 	 * @throws IOException
 	 * @throws ParseException 
 	 */
-	@SuppressLint("SimpleDateFormat")
 	private static ArrayList<BaseDevice> parsePartial() throws XmlPullParserException, IOException, ParseException{
 		mParser.nextTag();
 		//mParser.require(XmlPullParser.START_TAG, ns, DEVICE); // strict solution
@@ -266,9 +272,9 @@ public class XmlParsers {
 			while(mParser.nextTag() != XmlPullParser.END_TAG && !(nameTag = mParser.getName()).equals(DEVICE)){
 				if(nameTag.equals(LOCATION)){
 					Location location = new Location();
-					location.setType(Integer.parseInt(getSecureAttrValue(ns, TYPE)));
-					location.setId(readText(LOCATION));
+					location.setId(getSecureAttrValue(ns, ID));
 					device.setLocation(location);
+					mParser.next();
 				}
 				else if(nameTag.equals(NAME))
 					device.setName(readText(NAME));
@@ -283,7 +289,7 @@ public class XmlParsers {
 					if(hwupdated.length() < 1){
 						device.lastUpdate.setToNow();
 					}else{
-						device.lastUpdate.set((new SimpleDateFormat(DATEFORMAT).parse(hwupdated)).getTime());
+						device.lastUpdate.set((new SimpleDateFormat(DATEFORMAT, Locale.getDefault()).parse(hwupdated)).getTime());
 					}
 					device.setValue(readText(VALUE));
 				}
@@ -377,45 +383,12 @@ public class XmlParsers {
 	
 	/**
 	 * Method parse inner part of False message
-	 * @param additionalInfo
-	 * @return FalseAnswer object with HashMap<String, String> as data
+	 * @return FalseAnswer
 	 * @throws XmlPullParserException
 	 * @throws IOException
 	 */
-	private static FalseAnswer parseFalse(String additionalInfo) throws XmlPullParserException, IOException{
-		mParser.nextTag();
-		
-		boolean unknownFlag = false;
-		int unknownCounter = 0;
-		
-		if(additionalInfo.equals(ADDCONACCOUNT) || additionalInfo.equals(DELCONACCOUNT) || additionalInfo.equals(CHANGECONACCOUNT))
-			mParser.require(XmlPullParser.START_TAG, ns, USER);
-		else
-			unknownFlag = true;
-		
-		HashMap<String, String> data = new HashMap<String, String>();
-		do{
-			String keyEmail = null;
-			String valueRole = null;
-			
-			if(additionalInfo.equals(ADDCONACCOUNT) || additionalInfo.equals(CHANGECONACCOUNT))
-				valueRole = getSecureAttrValue(ns, ROLE);
-			
-			if(!unknownFlag){
-				keyEmail = getSecureAttrValue(ns, EMAIL);
-				data.put(keyEmail, valueRole);
-				mParser.nextTag();
-			}else{
-				if(mParser.getName().equals(COM_ROOT) && mParser.getEventType() == XmlPullParser.END_TAG)
-					break;
-				keyEmail = mParser.getName() + "#" + Integer.toString(unknownCounter);
-				data.put(keyEmail, null);
-				skip();
-			}
-
-		}while(mParser.nextTag() != XmlPullParser.END_TAG && !mParser.getName().equals(COM_ROOT));
-		
-		return new FalseAnswer(additionalInfo, data);
+	private static FalseAnswer parseFalse() throws XmlPullParserException, IOException{
+		return new FalseAnswer(getSecureAttrValue(ns, ADDITIONALINFO), getSecureInt(getSecureAttrValue(ns, ERRCODE)), readText(COM_ROOT));
 	}
 	
 	/**
@@ -448,17 +421,37 @@ public class XmlParsers {
 	private static Integer parseTimeZone() throws XmlPullParserException, IOException{
 		mParser.nextTag();
 		mParser.require(XmlPullParser.START_TAG, ns, TIME);
-		String result = getSecureAttrValue(ns, UTC);
 		
-		return Integer.valueOf(((result.length() < 1) ? 0 : Integer.parseInt(result)));
+		return Integer.valueOf(getSecureInt(getSecureAttrValue(ns, UTC)));
+	}
+	
+	/**
+	 * Method parse inner part of Rooms message
+	 * @return list of locations
+	 * @throws XmlPullParserException
+	 * @throws IOException
+	 */
+	private static ArrayList<Location> parseRooms() throws XmlPullParserException, IOException{
+		mParser.nextTag();
+		mParser.require(XmlPullParser.START_TAG, ns, LOCATION);
+		
+		ArrayList<Location> result = new ArrayList<Location>();
+		
+		do{
+			int type = getSecureInt(getSecureAttrValue(ns, TYPE));
+			result.add(new Location(getSecureAttrValue(ns, ID), readText(LOCATION), type));
+			
+		}while(mParser.nextTag() != XmlPullParser.END_TAG && !mParser.getName().equals(COM_ROOT));
+		
+		return result;
 	}
 	
 	/////////////////////////////////// OTHER
 	
 	/**
-	 * Method convert state as string to its enum representation
+	 * Method convert state as string to its ENUM representation
 	 * @param state of communication
-	 * @return one of enum STATES
+	 * @return one of ENUM STATES
 	 */
 	private static STATES getStateEnum(String state){
 		if(state.equals(READY))
@@ -483,6 +476,8 @@ public class XmlParsers {
 			return STATES.eVIEWSLIST;
 		else if(state.equals(TIMEZONE))
 			return STATES.eTIMEZONE;
+		else if(state.equals(ROOMS))
+			return STATES.eROOMS;
 		else
 			return STATES.eUNKNOWN;
 	}
@@ -490,7 +485,7 @@ public class XmlParsers {
 	/**
 	 * Method create empty object of device by type
 	 * @param sType string type of device (e.g. 0x03)
-	 * @return emtpy object
+	 * @return empty object
 	 */
 	public static BaseDevice getDeviceByType(String sType){
 		
@@ -528,7 +523,7 @@ public class XmlParsers {
 		eXML, ePARTIAL, eCONTENT,
 		eCONACCOUNTLIST, eTRUE, eFALSE,
 		eRESIGN, eUNKNOWN, eVIEWSLIST,
-		eTIMEZONE
+		eTIMEZONE, eROOMS
 	}
 	
 	////////////////////////////////// XML
@@ -538,6 +533,7 @@ public class XmlParsers {
 	 * @throws XmlPullParserException
 	 * @throws IOException
 	 */
+	@SuppressWarnings("unused")
 	private static void skip() throws XmlPullParserException, IOException {
 	    Log.d(TAG, "Skipping unknown child '" + mParser.getName() + "'");
 		if (mParser.getEventType() != XmlPullParser.START_TAG) {
@@ -588,6 +584,15 @@ public class XmlParsers {
 			result = "";
 		return result;
 	}
+	
+	/**
+	 * Method return integer value of string, of zero if length is 0
+	 * @param value
+	 * @return integer value of zero if length is 0
+	 */
+	private static int getSecureInt(String value){
+		return (value.length() < 1) ? 0 : Integer.parseInt(value);
+	}
 
 	///////////////////////////////// DEMO
 	
@@ -597,9 +602,9 @@ public class XmlParsers {
      * @return Adapter object
 	 * @throws XmlPullParserException 
      */
-	public static Adapter fromFile(String filename) {
+	public static Adapter getDemoAdapterFromFile(String filename) {
 		Log.i(TAG, String.format("Parsing data from file '%s'", filename));
-		boolean ee = false;
+//		boolean ee = false;
 		
 		Adapter adapter = null;
 		
@@ -617,21 +622,66 @@ public class XmlParsers {
 			mParser.setInput(in, null);
 			adapter = parseXml("superuser");
 		} catch(XmlVerMisException e){
-			ee = true;
+//			ee = true;
 		} catch(Exception e){
 			Log.e(TAG, e.getMessage(), e);
 		} finally {
 	        try {
 	        	if (in != null)
 	        		in.close();
-	        	if(ee){
-	        		file.delete();
-	        	}
+//	        	if(ee){
+//	        		file.delete();
+//	        	}
 	        } catch (IOException ioe) {
 	        	Log.e(TAG, ioe.getMessage(), ioe);
 	        }
 		}
 
 		return adapter;
+	}
+	
+	public static ArrayList<Location> getDemoLocationsFromFile(String filename) {
+		Log.i(TAG, String.format("Parsing data from file '%s'", filename));
+//		boolean ee = false;
+		
+		ArrayList<Location> result = new ArrayList<Location>();
+		
+		File file = new File(filename);
+		if (!file.exists() || !file.canRead()) {
+			Log.w(TAG, String.format("File '%s' doesn't exists or is not readable", filename));
+			return result;
+		}
+
+		InputStream in = null;
+		try {
+			in = new BufferedInputStream(new FileInputStream(file));
+			mParser = Xml.newPullParser();
+			mParser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false);
+			mParser.setInput(in, null);
+			mParser.nextTag();
+			
+			String version = getSecureAttrValue(ns, VERSION);
+			
+			if(!version.equals(COM_VER))
+				throw new ComVerMisException(mComVerMisExcMessage + "Expected: " + COM_VER + " but got: " + version);
+			
+			result = parseRooms();
+		} catch(ComVerMisException e){
+//			ee = true;
+		} catch(Exception e){
+			Log.e(TAG, e.getMessage(), e);
+		} finally {
+	        try {
+	        	if (in != null)
+	        		in.close();
+//	        	if(ee){
+//	        		file.delete();
+//	        	}
+	        } catch (IOException ioe) {
+	        	Log.e(TAG, ioe.getMessage(), ioe);
+	        }
+		}
+
+		return result;
 	}
 }

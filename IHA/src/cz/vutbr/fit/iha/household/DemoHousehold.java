@@ -10,9 +10,11 @@ import cz.vutbr.fit.iha.User;
 import cz.vutbr.fit.iha.User.Gender;
 import cz.vutbr.fit.iha.User.Role;
 import cz.vutbr.fit.iha.adapter.Adapter;
+import cz.vutbr.fit.iha.adapter.device.BaseDevice;
 import cz.vutbr.fit.iha.adapter.parser.XmlParsers;
 import cz.vutbr.fit.iha.listing.CustomizedListing;
 import cz.vutbr.fit.iha.listing.FavoritesListing;
+import cz.vutbr.fit.iha.listing.Location;
 
 /**
  * Represents demo household with adapters and devices loaded from local assets file.
@@ -55,15 +57,28 @@ public final class DemoHousehold extends Household {
 		this.adapters = new ArrayList<Adapter>();
 		try{
 			String filename = mContext.getExternalFilesDir(null).getPath() + "/" +  Constants.DEMO_FILENAME;
-//			Adapter adapter = XmlDeviceParser.fromFile(filename);
-			Adapter adapter = XmlParsers.fromFile(filename);
-			if(adapter == null){
-				if((new DemoData(mContext)).checkDemoData()){
-					//FIXME: do it better
-					adapter = XmlParsers.fromFile(filename);
+			Adapter adapter = XmlParsers.getDemoAdapterFromFile(filename);
+//			if(adapter == null){
+//				if((new DemoData(mContext)).checkDemoData()){
+//					//FIXME: do it better
+//					adapter = XmlParsers.getDemoAdapterFromFile(filename);
+//				}
+//			}
+			this.adapters.add(adapter);
+			
+			filename = mContext.getExternalFilesDir(null).getPath() + "/" +  Constants.DEMO_LOCATION_FILENAME;
+			//TODO: do something with locations
+			ArrayList<Location> lokace = XmlParsers.getDemoLocationsFromFile(filename);
+			
+			//FIXME: this is temporary solution (maybe getDemoLocationsFromFile should returns hashmap with id key)
+			for(BaseDevice dev : adapter.getDevices()){
+				for(Location loc : lokace){
+					if(dev.getLocation().getId().equals(loc.getId())){
+						dev.setLocation(loc);
+						break;
+					}
 				}
 			}
-			this.adapters.add(adapter);
 		}
 		catch(Exception e){
 			e.printStackTrace();
