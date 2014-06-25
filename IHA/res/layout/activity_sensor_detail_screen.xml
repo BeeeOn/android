@@ -11,7 +11,7 @@
         <RelativeLayout
             android:id="@+id/sensordetail_scroll"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:orientation="horizontal" >
 
             <ImageView
@@ -98,6 +98,17 @@
                 android:text="@string/sen_graph_label"
                 android:textColor="@color/log_blue2"
                 android:textSize="18sp" />
+
+            <LinearLayout
+                android:id="@+id/sen_graph_layout"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:layout_alignLeft="@id/sen_graph_name"
+                android:layout_alignRight="@id/sen_refresh_time_seekBar"
+                android:layout_below="@id/sen_graph_name"
+                android:orientation="vertical" >
+
+            </LinearLayout>
 
         </RelativeLayout>
     </ScrollView>

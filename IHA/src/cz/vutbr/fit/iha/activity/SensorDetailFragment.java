@@ -3,6 +3,7 @@ package cz.vutbr.fit.iha.activity;
 import java.text.DateFormat;
 import java.util.Date;
 
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.format.Time;
@@ -12,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+//import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
@@ -39,7 +41,7 @@ public class SensorDetailFragment extends SherlockFragment {
 	private ImageView sIcon;
 	private TextView sRefreshTimeText;
 	private SeekBar sRefreshTimeValue;
-	private RelativeLayout sGraphLayout;
+	private LinearLayout sGraphLayout;
 	
 	// Array for refresh time constant
 	// 1sec, 5sec, 10sec, 20sec , 30sec, 1min, 5min, 10min, 15min, 30,min, 1h, 2h,3h,4h, 8h, 12h, 24h
@@ -120,7 +122,7 @@ public class SensorDetailFragment extends SherlockFragment {
 			}
 		});
 		// Get LinearLayout for graph
-		//sGraphLayout = (RelativeLayout) getView().findViewById(R.id.sensordetail_layout);
+		sGraphLayout = (LinearLayout) getView().findViewById(R.id.sen_graph_layout);
 
 		// Set name of sensor
 		sName.setText(device.getName());
@@ -138,28 +140,59 @@ public class SensorDetailFragment extends SherlockFragment {
 		sRefreshTimeValue.setProgress(prepareIntervalValue(device.getRefresh()));
 
 		// Add Graph with history data
-		//addGraphView();
+		addGraphView();
 		// Disable progress bar
 		getActivity().setProgressBarIndeterminateVisibility(false);
 	}
-	/*
+	
 	private void addGraphView() {
 		// init example series data
-		GraphViewSeries exampleSeries = new GraphViewSeries(new GraphView.GraphViewData[] {
+		/*GraphViewSeries exampleSeries = new GraphViewSeries(new GraphView.GraphViewData[] {
 		    new GraphView.GraphViewData(1, 2.0d)
 		    , new GraphView.GraphViewData(2, 1.5d)
 		    , new GraphView.GraphViewData(3, 2.5d)
 		    , new GraphView.GraphViewData(4, 1.0d)
-		});
-		 
+		    , new GraphView.GraphViewData(4, 1.0d)
+		    , new GraphView.GraphViewData(7, 1.0d)
+		    , new GraphView.GraphViewData(4, 1.0d)
+		    , new GraphView.GraphViewData(1, 1.0d)
+		    , new GraphView.GraphViewData(0, 1.0d)
+		    , new GraphView.GraphViewData(7, 1.0d)
+		    
+		});*/
+		
+		
+		
 		GraphView graphView = new LineGraphView(
 				getView().getContext() // context
-		    , "GraphViewDemo" // heading
+		    , "" // heading
 		);
-		graphView.addSeries(exampleSeries); // data
+		
+		graphView.getGraphViewStyle().setVerticalLabelsColor(getResources().getColor(R.color.log_blue2));
+		graphView.getGraphViewStyle().setHorizontalLabelsColor(getResources().getColor(R.color.log_blue2));
+		graphView.setBackgroundColor(Color.argb(128, 0, 153, 204));//getResources().getColor(R.color.log_blue2));
+		
+		((LineGraphView) graphView).setDrawBackground(true);
+		//graphView.setAlpha(128);
+		// draw sin curve
+		int num = 150;
+		GraphView.GraphViewData[] data = new GraphView.GraphViewData[num];
+		double v=0;
+		for (int i=0; i<num; i++) {
+		  v += 0.2;
+		  data[i] = new GraphView.GraphViewData(i, Math.sin(v));
+		}
+		graphView.addSeries(new GraphViewSeries(data));
+		// set view port, start=2, size=40
+		graphView.setViewPort(2, 40);
+		
+		graphView.setScrollable(true);
+		// optional - activate scaling / zooming
+		graphView.setScalable(true);
 		sGraphLayout.addView(graphView);
+		
 	}
-*/
+
 	private CharSequence setLastUpdate(Time lastUpdate) {
 		// Last update time data
 		Time yesterday = new Time();
