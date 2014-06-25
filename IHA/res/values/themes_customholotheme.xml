@@ -8,7 +8,7 @@
   <style name="_CustomHoloTheme" parent="android:Theme.Light">
 
     <item name="android:checkboxStyle">@style/CheckBoxCustomHoloTheme</item>
-
+	<item name="android:seekBarStyle">@style/SeekBarCustomHoloTheme</item>
   </style>
 
 </resources>

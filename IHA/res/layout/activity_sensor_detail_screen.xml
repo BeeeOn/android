@@ -41,6 +41,7 @@
                 android:id="@+id/sen_refresh_time_seekBar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                style="@style/SeekBarCustomHoloTheme"
                 android:layout_alignLeft="@+id/sen_detail_icon"
                 android:layout_alignRight="@+id/sen_detail_time"
                 android:layout_below="@+id/sen_detail_icon"
