@@ -78,6 +78,8 @@ public class LocationScreenActivity extends SherlockFragmentActivity {
 	private String mActiveLocation;
 
 	private DevicesTask mTask;
+	
+	private boolean backPressed = false;
 
 	/**
 	 * Call XML parser to file on SDcard
@@ -96,7 +98,7 @@ public class LocationScreenActivity extends SherlockFragmentActivity {
 
 		setSupportProgressBarIndeterminate(true);
 		setSupportProgressBarIndeterminateVisibility(true);
-
+		getSupportActionBar().setIcon(R.drawable.ic_launcher_white);
 		// int marginTop = 5;
 		// int ID = Constants.BUTTON_ID;
 		/*
@@ -112,11 +114,13 @@ public class LocationScreenActivity extends SherlockFragmentActivity {
 
 	public void onResume() {
 		super.onResume();
+		//healActivity();
 		Log.d(TAG, "onResume");
 		if (!inBackground) {
 			mTask = new DevicesTask();
 			mTask.execute();
 		}
+		backPressed = false;
 	}
 
 	@Override
@@ -128,6 +132,25 @@ public class LocationScreenActivity extends SherlockFragmentActivity {
 				mTask.getDialog().dismiss();
 			}
 		}
+	}
+	
+	@Override
+	public void onBackPressed() {
+		if(backPressed){
+			//Toast.makeText(this, getResources().getString(R.string.toast_leaving_app), Toast.LENGTH_LONG).show();
+			super.onBackPressed();
+			//this.finish();
+			
+			android.os.Process.killProcess(android.os.Process.myPid());
+		}
+		else{
+			backPressed = true;
+			if(mDrawerLayout != null)
+				mDrawerLayout.openDrawer(mDrawerList);
+		}
+		Log.d(TAG, "BackPressed - onBackPressed " + String.valueOf(backPressed));
+		
+	return;
 	}
 
 	@Override
@@ -177,7 +200,7 @@ public class LocationScreenActivity extends SherlockFragmentActivity {
 		// Enable ActionBar app icon to behave as action to toggle nav drawer
 		getSupportActionBar().setHomeButtonEnabled(true);
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
+		//getSupportActionBar().setIcon(R.drawable.ic_launcher_white);
 		// ActionBarDrawerToggle ties together the the proper interactions
 		// between the sliding drawer and the action bar app icon
 		mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout,
@@ -185,15 +208,21 @@ public class LocationScreenActivity extends SherlockFragmentActivity {
 				R.string.drawer_close) {
 
 			public void onDrawerClosed(View view) {
+				if(backPressed) 
+					onBackPressed();
 				// Set the title on the action when drawer closed
 				getSupportActionBar().setTitle(mActiveLocation);
 				super.onDrawerClosed(view);
+				Log.d(TAG, "BackPressed - onDrawerClosed " + String.valueOf(backPressed));
+				
+				
 			}
 
 			public void onDrawerOpened(View drawerView) {
 				// Set the title on the action when drawer open
 				getSupportActionBar().setTitle(mDrawerTitle);
 				super.onDrawerOpened(drawerView);
+				//backPressed = true;
 			}
 		};
 
@@ -452,7 +481,7 @@ public class LocationScreenActivity extends SherlockFragmentActivity {
 	 * @param marginTop
 	 *            margin of the button
 	 * @return true on success and false in other cases
-	 */
+	 *//*
 	private boolean addLocationButton(String s, int ID, int marginTop) {
 		final Button button = new Button(this);
 		button.setText(s);
@@ -497,7 +526,7 @@ public class LocationScreenActivity extends SherlockFragmentActivity {
 		// mylayout.addView(button);
 		return true;
 	}
-
+*/
 	private void refreshListing() {
 		if (mActiveLocation == null)
 			return;

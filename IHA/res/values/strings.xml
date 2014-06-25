@@ -47,7 +47,7 @@
     <string name="alert_message">Message</string>
     <string name="refresh_time">Refresh time:</string>
     <string name="last_update">Last update:</string>
-    <string name="sen_graph_label">Graph of sensor</string>
+    <string name="sen_graph_label">Graph of history</string>
     <!-- RadioButtons -->
     <string name="login_radio_facebook">Facebook account</string>
     <string name="login_radio_google">Google account</string>
@@ -72,6 +72,7 @@
     <string name="toast_internet_connection">Please turn internet connection on</string>
     <string name="toast_no_unregistered_adapter">There is no connected unregistered adapter</string>
     <string name="toast_communication_error">Sorry, some communication problem, try later</string>
+    <string name="toast_leaving_app">You are leaving application</string>
     <!-- NavDrawer -->
     <string name="drawer_open">OPEN</string>
     <string name="drawer_close">CLOSE</string>

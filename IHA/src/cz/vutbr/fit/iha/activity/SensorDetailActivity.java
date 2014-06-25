@@ -38,26 +38,13 @@ public class SensorDetailActivity extends SherlockFragmentActivity {
 		
 		getSupportActionBar().setHomeButtonEnabled(true);
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-		
+		getSupportActionBar().setIcon(R.drawable.ic_launcher_white);
 		SensorDetailFragment fragment = new SensorDetailFragment();
 		fragment.setArguments(getIntent().getExtras());
 		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
 		
 		ft.replace(R.id.sensor_wraper, fragment);
 		ft.commit();
-		
-		/*
-		String id = this.getIntent().getExtras().getString(Constants.DEVICE_CLICKED);
-		mDevice = Controller.getInstance(this).getDevice(id);
-		
-		if (mDevice == null) {
-			Log.e("SensorDetailActivity", String.format("Device with id '%s' wasn't found", id));
-			Toast.makeText(this, "This device wasn't found", Toast.LENGTH_LONG).show();
-			finish();
-		} else {
-			Log.i("Click on", mDevice.getName());
-			initLayout();
-		}*/
 	}
 	
 	@Override
