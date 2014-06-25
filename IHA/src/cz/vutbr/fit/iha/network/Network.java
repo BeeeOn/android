@@ -613,7 +613,7 @@ public class Network {
 	 * @throws NoConnectionException 
 	 * @throws CommunicationException 
 	 */
-	public ArrayList<ContentRow> logName(String deviceId, int deviceType, String from, String to) throws NoConnectionException, CommunicationException{
+	public ArrayList<ContentRow> logName(String deviceId, int deviceType, String from, String to, String funcType, int interval) throws NoConnectionException, CommunicationException{
 		// TODO: test properly
 		if(!isAvailable())
 			throw new NoConnectionException();
@@ -621,7 +621,7 @@ public class Network {
 		ParsedMessage msg;
 		
 		try {
-			String messageToSend = XmlCreator.createLogName(Integer.toString(mSessionId), deviceId, deviceType, from, to);
+			String messageToSend = XmlCreator.createLogName(Integer.toString(mSessionId), deviceId, deviceType, from, to, funcType, interval);
 			
 			Log.d("IHA - Network fromApp", messageToSend);
 			
@@ -656,7 +656,7 @@ public class Network {
 				//return null;
 			}
 			signIn(ActualUser.getActualUser().getEmail());
-			return logName(deviceId, deviceType, from, to);
+			return logName(deviceId, deviceType, from, to, funcType, interval);
 			
 		}else if(msg.getState().equals(FALSE) && ((FalseAnswer)msg.data).getErrMessage().length() != 0){
 			throw new CommunicationException(((FalseAnswer)msg.data).getErrMessage());
@@ -674,8 +674,8 @@ public class Network {
 	 * @throws CommunicationException 
 	 * @throws NoConnectionException 
 	 */
-	public ArrayList<ContentRow> getLog(String deviceId, int deviceType, String from, String to) throws NoConnectionException, CommunicationException{
-		return logName(deviceId, deviceType, from, to);
+	public ArrayList<ContentRow> getLog(String deviceId, int deviceType, String from, String to, String funcType, int interval) throws NoConnectionException, CommunicationException{
+		return logName(deviceId, deviceType, from, to, funcType, interval);
 	}
 	
 	/**

@@ -90,6 +90,7 @@ public class XmlCreator {
 	public static final String UTC = "utc";
 	public static final String LOCALE = "locale";
 	public static final String ERRCODE = "errcode";
+	public static final String INTERVAL = "interval";
 	
 	//partial
 	public static final String DEVICE = "device";
@@ -253,10 +254,13 @@ public class XmlCreator {
 	 * Method create XML for LogName message
 	 * @param id of user
 	 * @param deviceId id of sensor
+	 * @param deviceType is type of sensor
 	 * @param from date from probably based of format YYYY-MM-DD-HH:MM:SS
+	 * @param funcType is aggregation function type {avg, median, ...}
+	 * @param interval is time value in seconds that represents nicely e.g. month, week, day, 10 hours, 1 hour, ...
 	 * @return logName message
 	 */
-	public static String createLogName(String id, String deviceId, int Type, String from, String to){
+	public static String createLogName(String id, String deviceId, int deviceType, String from, String to, String funcType, int interval){
 		XmlSerializer serializer = Xml.newSerializer();
 		StringWriter writer = new StringWriter();
 		try{
@@ -269,10 +273,12 @@ public class XmlCreator {
 			serializer.attribute(ns, VERSION, GVER);
 			serializer.attribute(ns, FROM, from);
 			serializer.attribute(ns, TO, to);
+			serializer.attribute(ns, TYPE, funcType);
+			serializer.attribute(ns, INTERVAL, String.valueOf(interval));
 			
 				serializer.startTag(ns, DEVICE);
 				serializer.attribute(ns, ID, deviceId);
-				serializer.attribute(ns, TYPE, formatType(Type));
+				serializer.attribute(ns, TYPE, formatType(deviceType));
 				serializer.endTag(ns, DEVICE);
 				
 			serializer.endTag(ns, COM_ROOT);
