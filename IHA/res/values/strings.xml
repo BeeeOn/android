@@ -45,6 +45,9 @@
     <string name="registration_serial_number">For adapter with serial number:</string>
     <string name="alert_title">Title</string>
     <string name="alert_message">Message</string>
+    <string name="refresh_time">Refresh time:</string>
+    <string name="last_update">Last update:</string>
+    <string name="sen_graph_label">Graph of sensor</string>
     <!-- RadioButtons -->
     <string name="login_radio_facebook">Facebook account</string>
     <string name="login_radio_google">Google account</string>
@@ -144,5 +147,11 @@
     <string name="hello_world">Hello world!</string>
     <string name="title_activity_add_sensor_activity_dialog">AddSensorActivityDialog</string>
     <string name="title_activity_alert_activity_dialog">AlertActivityDialog</string>
+    
+    <!--  Units -->
+    <string name="second">sec</string>
+    <string name="minute">min</string>
+    <string name="hour">h</string>
+    <string name="day">day</string>
 
 </resources>

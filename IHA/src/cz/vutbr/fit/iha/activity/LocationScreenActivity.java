@@ -12,6 +12,7 @@ import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.text.format.Time;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -214,17 +215,20 @@ public class LocationScreenActivity extends SherlockFragmentActivity {
 		String[] title;
 		String[] value;
 		String[] unit;
+		Time[] time;
 		int[] icon;
 		mTitle = mDrawerTitle = "IHA";
 		title = new String[sensors.size()];
 		value = new String[sensors.size()];
 		unit = new String[sensors.size()];
 		icon = new int[sensors.size()];
+		time = new Time[sensors.size()];
 		for (int i = 0; i < sensors.size(); i++) {
 			title[i] = sensors.get(i).getName();
 			value[i] = sensors.get(i).getStringValue();
 			unit[i] = sensors.get(i).getStringUnit(this);
 			icon[i] = sensors.get(i).getTypeIconResource();
+			time[i] = sensors.get(i).lastUpdate;
 		}
 
 		mSensorList = (ListView) findViewById(R.id.listviewofsensors);
@@ -235,8 +239,7 @@ public class LocationScreenActivity extends SherlockFragmentActivity {
 							// (fragment?) first?
 		}
 
-		mSensorAdapter = new SensorListAdapter(LocationScreenActivity.this,
-				title, value, unit, icon);
+		mSensorAdapter = new SensorListAdapter(LocationScreenActivity.this,	title, value, unit,time, icon);
 
 		mSensorList.setAdapter(mSensorAdapter);
 

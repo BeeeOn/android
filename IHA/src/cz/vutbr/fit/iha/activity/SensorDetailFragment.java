@@ -1,15 +1,26 @@
 package cz.vutbr.fit.iha.activity;
 
+import java.text.DateFormat;
+import java.util.Date;
+
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.text.format.Time;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
+import android.widget.SeekBar;
+import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
 
 import com.actionbarsherlock.app.SherlockFragment;
+import com.jjoe64.graphview.GraphView;
+import com.jjoe64.graphview.GraphViewSeries;
+import com.jjoe64.graphview.LineGraphView;
 
 import cz.vutbr.fit.iha.R;
 import cz.vutbr.fit.iha.adapter.device.BaseDevice;
@@ -19,6 +30,23 @@ public class SensorDetailFragment extends SherlockFragment {
 
 	private Controller mController;
 	private static final String TAG = "SensorDetail";
+	
+	// GUI elements
+	private TextView sName;
+	private TextView sLocation;
+	private TextView sValue;
+	private TextView sTime;
+	private ImageView sIcon;
+	private TextView sRefreshTimeText;
+	private SeekBar sRefreshTimeValue;
+	private RelativeLayout sGraphLayout;
+	
+	// Array for refresh time constant
+	// 1sec, 5sec, 10sec, 20sec , 30sec, 1min, 5min, 10min, 15min, 30,min, 1h, 2h,3h,4h, 8h, 12h, 24h
+	private int[] sRefreshTimeSeekBarValues = { 1, 5, 10, 30, 60, 300, 600, 900, 1800,
+			3600, 7200, 10800, 14400, 28800, 43200, 86400 };
+			
+	
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -59,29 +87,93 @@ public class SensorDetailFragment extends SherlockFragment {
 
 	private void initLayout(BaseDevice device) {
 		// Get View for sensor name
-		TextView sName = (TextView) getView()
-				.findViewById(R.id.sen_detail_name);
+		sName = (TextView) getView().findViewById(R.id.sen_detail_name);
+		// Get View for sensor location
+		sLocation = (TextView) getView().findViewById(R.id.sen_detail_loc_name);
 		// Get View for sensor value
-		TextView sValue = (TextView) getView().findViewById(
-				R.id.sen_detail_value);
+		sValue = (TextView) getView().findViewById(R.id.sen_detail_value);
 		// Get View for sensor time
-		TextView sTime = (TextView) getView()
-				.findViewById(R.id.sen_detail_time);
+		sTime = (TextView) getView().findViewById(R.id.sen_detail_time);
 		// Get Image for sensor
-		ImageView sIcon = (ImageView) getView().findViewById(
-				R.id.sen_detail_icon);
+		sIcon = (ImageView) getView().findViewById(R.id.sen_detail_icon);
+		// Get TextView for refresh time
+		sRefreshTimeText = (TextView) getView().findViewById(R.id.sen_refresh_time);
+		// Get SeekBar for refresh time
+		sRefreshTimeValue = (SeekBar) getView().findViewById(R.id.sen_refresh_time_seekBar);
+		// Set Max value by length of array with values
+		sRefreshTimeValue.setMax(sRefreshTimeSeekBarValues.length-1);
+		sRefreshTimeValue.setOnSeekBarChangeListener(new OnSeekBarChangeListener() { 
+
+		    public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+		    	sRefreshTimeText.setText(
+		    			getString(R.string.refresh_time)+" "+prepareIntervalText(sRefreshTimeSeekBarValues[progress]));
+		    }
+
+			@Override
+			public void onStartTrackingTouch(SeekBar seekBar) {
+				// TODO Auto-generated method stub
+			}
+
+			@Override
+			public void onStopTrackingTouch(SeekBar seekBar) {
+				Log.d(TAG, "Stop select value " +prepareIntervalText(sRefreshTimeSeekBarValues[seekBar.getProgress()]) );
+			}
+		});
+		// Get LinearLayout for graph
+		//sGraphLayout = (RelativeLayout) getView().findViewById(R.id.sensordetail_layout);
 
 		// Set name of sensor
 		sName.setText(device.getName());
+		// Set name of location from sensor
+		sLocation.setText(device.getLocation().getName());
 		// Set value of sensor
 		sValue.setText(device.getStringValueUnit(getActivity()));
 		// Set icon of sensor
 		sIcon.setImageResource(device.getTypeIconResource());
 		// Set time of sensor
-		// sTime.setText()
+		sTime.setText(setLastUpdate(device.lastUpdate));
+		// Set refresh time Text
+		sRefreshTimeText.setText( getString(R.string.refresh_time)+" "+prepareIntervalText(device.getRefresh()));
+		// Set refresh time SeekBar
+		sRefreshTimeValue.setProgress(prepareIntervalValue(device.getRefresh()));
 
+		// Add Graph with history data
+		//addGraphView();
 		// Disable progress bar
 		getActivity().setProgressBarIndeterminateVisibility(false);
+	}
+	/*
+	private void addGraphView() {
+		// init example series data
+		GraphViewSeries exampleSeries = new GraphViewSeries(new GraphView.GraphViewData[] {
+		    new GraphView.GraphViewData(1, 2.0d)
+		    , new GraphView.GraphViewData(2, 1.5d)
+		    , new GraphView.GraphViewData(3, 2.5d)
+		    , new GraphView.GraphViewData(4, 1.0d)
+		});
+		 
+		GraphView graphView = new LineGraphView(
+				getView().getContext() // context
+		    , "GraphViewDemo" // heading
+		);
+		graphView.addSeries(exampleSeries); // data
+		sGraphLayout.addView(graphView);
+	}
+*/
+	private CharSequence setLastUpdate(Time lastUpdate) {
+		// Last update time data
+		Time yesterday = new Time();
+		yesterday.setToNow();
+		yesterday.set(yesterday.toMillis(true) - 24 * 60 * 60 * 1000); // -24
+																		// hours
+
+		// If sync time is more that 24 ago, show only date. Show time
+		// otherwise.
+		DateFormat dateFormat = yesterday.before(lastUpdate) ? DateFormat
+				.getTimeInstance() : DateFormat.getDateInstance();
+		
+		Date lastUpdateDate = new Date(lastUpdate.toMillis(true));
+		return dateFormat.format(lastUpdateDate);
 	}
 	/*
 	 * private void initLayout() { LinearLayout mainlayout = (LinearLayout)
@@ -263,4 +355,32 @@ public class SensorDetailFragment extends SherlockFragment {
 	 * 
 	 * mainlayout.addView(batteryLayout); }
 	 */
+
+	private int prepareIntervalValue(int refresh) {
+		int index = 0;
+		if(refresh == 0 )
+			return 0;
+		for (int item : sRefreshTimeSeekBarValues ){
+			if (item == refresh)
+				return index;
+			index++;
+		}
+		return sRefreshTimeSeekBarValues.length-1;
+	}
+
+	private String prepareIntervalText(int seconds) {
+		int minutes = (int) seconds / 60;
+		int hours = (int) seconds / 3600;
+		if(hours == 0 ) {
+			if(minutes == 0) {
+				return String.valueOf(seconds)+ " " +  getString(R.string.second);
+			}
+			else {
+				return String.valueOf(minutes)+ " " +  getString(R.string.minute);
+			}
+		}
+		else {
+			return String.valueOf(hours)+" "+ getString(R.string.hour);
+		}
+	}
 }
