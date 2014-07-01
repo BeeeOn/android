@@ -12,6 +12,11 @@
             android:id="@+id/sensordetail_scroll"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:background="@drawable/shadow"
+            android:layout_marginLeft="10dp"
+         	android:layout_marginRight="10dp"
+         	android:layout_marginTop="10dp"
+         	android:paddingBottom="15dp"
             android:orientation="horizontal" >
 
             <ImageView

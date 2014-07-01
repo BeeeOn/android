@@ -10,7 +10,8 @@
             res/values-vXX/styles.xml, while customizations related to
             backward-compatibility can go here.
         -->
-        
+        <item name="android:windowBackground">@color/iha_background</item>
+    	<item name="android:colorBackground">@color/iha_background</item>
         <!-- Support library compatibility -->
         <item name="actionBarStyle">@style/Widget.MyTheme.ActionBar</item>
         
