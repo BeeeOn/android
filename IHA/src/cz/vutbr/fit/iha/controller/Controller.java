@@ -224,16 +224,20 @@ public final class Controller {
 			return true;
 		}
 		
+		Adapter adapter = getAdapterByDevice(device);
+		if (adapter == null)
+			return false;
+		
 		ArrayList<BaseDevice> devices = new ArrayList<BaseDevice>();
 		devices.add(device);
 
 		try {
-			devices = mNetwork.update(devices);
+			devices = mNetwork.update(adapter.getId(), devices);
 			if (devices == null || devices.size() != 1)
 				return false;
 			
 			BaseDevice newDevice = devices.get(0);
-			device.setLocation(newDevice.getLocation());
+			device.setLocationId(newDevice.getLocationId());
 			device.setName(newDevice.getName());
 			device.setRefresh(newDevice.getRefresh());
 			device.lastUpdate.set(newDevice.lastUpdate);
@@ -293,7 +297,36 @@ public final class Controller {
 		
 		return null;
 	}
+	
+	/**
+	 * Return id of active adapter.
+	 * 
+	 * @return id of adapter if found, null otherwise
+	 */
+	public synchronized String getActiveAdapterId() {
+		// FIXME: right now it return first adapter every time, rewrite it to allow switching them
+		for (Adapter a : getAdapters()) {
+			return a.getId();
+		}
+		
+		return null;
+	}
 
+	/**
+	 * Return Adapter which this device belongs to.
+	 * 
+	 * @param device
+	 * @return Adapter if found, null otherwise
+	 */
+	public Adapter getAdapterByDevice(BaseDevice device) {
+		for (Adapter a : getAdapters()) {
+			if (a.getDeviceById(device.getId()) != null);
+				return a; 
+		}
+		
+		return null;
+	}
+	
 	/**
 	 * Registers new adapter to server.
 	 * 
@@ -335,7 +368,7 @@ public final class Controller {
 	 * 
 	 * @return List of LocationListing
 	 */
-	public List<LocationListing> getLocations() {
+	public List<LocationListing> getLocations() { // FIXME: return only Location, for devices use getDevicesByLocation
 		List<LocationListing> listings = new ArrayList<LocationListing>();
 		
 		for (Adapter adapter : getAdapters()) {
@@ -347,7 +380,7 @@ public final class Controller {
 		return listings;
 	}
 	
-	public List<LocationListing> getLocationsForAddSensorDialog(){
+	public List<LocationListing> getLocationsForAddSensorDialog(){ // FIXME: return only Location, for devices use getDevicesByLocation
 		List<LocationListing> listings = new ArrayList<LocationListing>();
 		
 		for (Adapter adapter : getAdapters()) {
@@ -377,73 +410,48 @@ public final class Controller {
 	}
 	
 	/**
-	 * Return location by ID.
+	 * Return location by id.
 	 * 
 	 * @param id
-	 * @return
-	 * @throws NotImplementedException
+	 * @return Location if found, null otherwise.
 	 */
-	public LocationListing getLocation(String id) {
-		throw new NotImplementedException();
-	}
-	
-	/**
-	 * Add new location to server.
-	 * 
-	 * @param location
-	 * @return
-	 * @throws NotImplementedException
-	 */
-	public boolean addLocation(LocationListing location) {
-		throw new NotImplementedException();
+	public Location getLocation(String id) {
+		// FIXME: support activeAdapter somehow
+		for (Adapter a : getAdapters()) {
+			Location location = a.getLocation(id);
+			if (location != null)
+				return location;
+		}
+
+		return null;
 	}
 	
 	/**
 	 * Deletes location from server.
 	 * 
-	 * @param location
+	 * @param id
 	 * @return
 	 * @throws NotImplementedException
 	 */
-	public boolean deleteLocation(LocationListing location) {
+	public boolean deleteLocation(String id) {
+		// TODO: implement this
 		throw new NotImplementedException();
 	}
 	
 	/**
-	 * Save changes of location to server.
+	 * Save new or changed location to server.
 	 * 
 	 * @param location
-	 * @return
-	 * @throws NotImplementedException
+	 * @return always false, until implemented
 	 */
-	public boolean saveLocation(LocationListing location) {
-		throw new NotImplementedException();
-	}
-	
-	/**
-	 * Rename location from all adapters.
-	 * 
-	 * @param location
-	 * @param newName
-	 * @return true always
-	 */
-	public boolean renameLocation(String name, String newName) {
-		// TODO: Use rather saveLocation() method
-	
-		for (Adapter adapter : getAdapters()) {
-			for (BaseDevice device : adapter.getDevicesByLocation(name)) {
-				Location location = device.getLocation();
-				location.setId(newName);
-				location.setName(newName);
-				
-				device.setLocation(location);
-				// TODO: Save to server (somehow effectively)
-			}
-		}
-		
-		return true;
+	public boolean saveLocation(Location location) {
+		// TODO: implement this
+		return false;
 	}
 
+	
+	// TODO: completely refactor these 2 methods below
+	
 	//TODO: maybe do otherwise
 	public int getIconResourceByName(String name, String[] defaults){
 		for(int i = 0; i < defaults.length; i++){
@@ -533,11 +541,11 @@ public final class Controller {
 	 * @param location
 	 * @return List of devices (or empty list)
 	 */
-	public List<BaseDevice> getDevicesByLocation(String location) {
+	public List<BaseDevice> getDevicesByLocation(String locationId) {
 		List<BaseDevice> list = new ArrayList<BaseDevice>();
 		
 		for (Adapter adapter : getAdapters()) {
-			list.addAll(adapter.getDevicesByLocation(location));
+			list.addAll(adapter.getDevicesByLocation(locationId));
 		}
 		
 		return list;
@@ -563,8 +571,11 @@ public final class Controller {
 		boolean result = false;
 
 		try {
-			result = mNetwork.partial(devices);
-			result = updateDevice(device);
+			Adapter adapter = getAdapterByDevice(device);
+			if (adapter != null) {
+				result = mNetwork.partial(adapter.getId(), devices);
+				result = updateDevice(device);
+			}
 		} catch (NetworkException e) {
 			e.printStackTrace();
 		}

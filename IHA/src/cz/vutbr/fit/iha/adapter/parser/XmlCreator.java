@@ -537,10 +537,9 @@ public class XmlCreator {
 				serializer.attribute(ns, ID, device.getAddress());
 				serializer.attribute(ns, VISIBILITY, Character.toString(device.getVisibilityChar()));
 				
-				Location location = device.getLocation();
-				if(location != null && location.getId().length() > 0){
+				if(device.getLocationId() != null){
 					serializer.startTag(ns, LOCATION);
-					serializer.attribute(ns, ID, location.getId()+"");
+					serializer.attribute(ns, ID, device.getLocationId());
 					serializer.endTag(ns, LOCATION);
 				}
 				if(device.getName() != null){
@@ -558,10 +557,10 @@ public class XmlCreator {
 					serializer.text(device.getStringValue());
 					serializer.endTag(ns, VALUE);
 				}
-					serializer.startTag(ns, LOGGING);
-					serializer.attribute(ns, ENABLED, (device.isLogging())?INIT_1:INIT_0);
-					serializer.endTag(ns, LOGGING);
 				
+				serializer.startTag(ns, LOGGING);
+				serializer.attribute(ns, ENABLED, (device.isLogging())?INIT_1:INIT_0);
+				serializer.endTag(ns, LOGGING);
 				
 				serializer.endTag(ns, DEVICE);
 			}
@@ -1027,7 +1026,7 @@ public class XmlCreator {
 						serializer.attribute(null, "involved", d.getInvolveTime());
 					
 						serializer.startTag(null, "location");
-						serializer.text((d.getLocation() != null) ? d.getLocation().getId() : "");
+						serializer.text((d.getLocationId() != null) ? d.getLocationId() : "");
 						serializer.endTag(null, "location");
 						
 						serializer.startTag(null, "name");

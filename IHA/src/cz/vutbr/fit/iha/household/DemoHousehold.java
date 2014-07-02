@@ -73,8 +73,8 @@ public final class DemoHousehold extends Household {
 			//FIXME: this is temporary solution (maybe getDemoLocationsFromFile should returns hashmap with id key)
 			for(BaseDevice dev : adapter.getDevices()){
 				for(Location loc : lokace){
-					if(dev.getLocation().getId().equals(loc.getId())){
-						dev.setLocation(loc);
+					if(dev.getLocationId().equals(loc.getId())){
+						dev.setLocationId(loc.getId());
 						break;
 					}
 				}

@@ -11,9 +11,10 @@ import cz.vutbr.fit.iha.adapter.device.BaseDevice;
 public class SimpleListing {
 
 	protected final Map<String, BaseDevice> mDevices = new HashMap<String, BaseDevice>();
+	
+	// TODO: move these 2 to Adapter? Or move this whole SimpleListing to Adapter?
 	protected final Map<String, BaseDevice> mUninitializedDevices = new HashMap<String, BaseDevice>();
 	protected final Map<String, BaseDevice> mUninitializedIgnored = new HashMap<String, BaseDevice>();
-	protected final Map<String, Location> mLocations = new HashMap<String, Location>();
 	
 	/**
 	 * Return list of all devices.
@@ -29,14 +30,6 @@ public class SimpleListing {
 	 */
 	public Map<String, BaseDevice> getUninitializedDevices() {
 		return mUninitializedDevices;
-	}
-	
-	/**
-	 * Return list of locations.
-	 * @return list with locations (or empty list).
-	 */
-	public List<Location> getLocations() {
-		return new ArrayList<Location>(mLocations.values());
 	}
 
 	/**
@@ -63,10 +56,6 @@ public class SimpleListing {
 		
 		if (!device.isInitialized() && !mUninitializedIgnored.containsKey(device.getId()))
 			mUninitializedDevices.put(device.getId(), device);
-		
-		Location location = device.getLocation();
-		if (location.getId().length() > 0 && !mLocations.containsKey(location.getId()))
-			mLocations.put(location.getId(), location);
 	}
 	
 	/**
@@ -81,14 +70,6 @@ public class SimpleListing {
 			mUninitializedDevices.put(device.getId(), device);
 			Log.d("SimpleListing", "Adding uninitialized device " + device.toString());
 		}
-		
-		// TODO: remove this when locations will be separated entities on server
-		mLocations.clear();
-		for (BaseDevice dev : mDevices.values()) {
-			Location location = dev.getLocation();
-			if (location.getId().length() > 0 && !mLocations.containsKey(location.getId()))
-				mLocations.put(location.getId(), location);
-		}
 	}
 	
 	/**
@@ -97,7 +78,6 @@ public class SimpleListing {
 	private void clearDevices() {
 		mDevices.clear();
 		mUninitializedDevices.clear();
-		mLocations.clear();
 	}
 	
 	/**
@@ -114,14 +94,12 @@ public class SimpleListing {
 	 * @param location
 	 * @return list with devices (or empty list)
 	 */
-	public List<BaseDevice> getByLocation(final String location) {
+	public List<BaseDevice> getByLocation(final String locationId) {
 		List<BaseDevice> devices = new ArrayList<BaseDevice>();
 		
-		if (mLocations.containsKey(location)) {
-			for (BaseDevice device : mDevices.values()) {
-				if (device.getLocation().getName().equals(location)) {
-					devices.add(device);
-				}
+		for (BaseDevice device : mDevices.values()) {
+			if (device.getLocationId().equals(locationId)) {
+				devices.add(device);
 			}
 		}
 		

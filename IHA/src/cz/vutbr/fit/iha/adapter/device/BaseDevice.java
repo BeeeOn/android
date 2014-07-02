@@ -13,7 +13,7 @@ import cz.vutbr.fit.iha.listing.Location;
  */
 public abstract class BaseDevice {
 	protected boolean mInitialized;
-	protected Location mLocation;
+	protected String mLocationId;
 	protected String mName = "";
 	protected int mRefreshTime;	
 	protected int mBattery;
@@ -180,16 +180,16 @@ public abstract class BaseDevice {
 	 * Get location of device
 	 * @return location
 	 */
-	public Location getLocation() {
-		return mLocation;
+	public String getLocationId() {
+		return mLocationId;
 	}
 	
 	/**
 	 * Setting location of device
-	 * @param location
+	 * @param locationId
 	 */
-	public void setLocation(Location location) {		
-		mLocation = location;
+	public void setLocationId(String locationId) {		
+		mLocationId = locationId;
 	}
 	
 	/**
@@ -345,7 +345,9 @@ public abstract class BaseDevice {
 
 	@Override
 	public String toString() {
-		return String.format("%s (%s)", getName(), getLocation());
+		Location location = new Location(mLocationId, mLocationId, 0); // FIXME: get this location somehow from parent adapter
+		
+		return String.format("%s (%s)", getName(), location.getName());
 	}
 	
 	/**
@@ -354,10 +356,9 @@ public abstract class BaseDevice {
 	 */
 	public String toDebugString() {
 		String result = "";
-		
+
 		result += "Name: " + mName + "\n";
-		result += "Location: " + mLocation.getName() + "\n";
-		result += "Location type: " + mLocation.getType() + "\n";
+		result += "Location: " + mLocationId + "\n";
 		result += "Visibility: " + mVisibility + "\n";
 		result += "Initialized: " + mInitialized + "\n";
 		result += "Battery: " + mBattery + "\n";

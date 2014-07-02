@@ -127,6 +127,19 @@ public class AddSensorActivityDialog extends Activity {
 	}
 
 	/**
+	 * Represents pair of device and location for saving it to server
+	 */
+	private class DeviceLocationPair {
+		public final BaseDevice device;
+		public final Location location;
+		
+		public DeviceLocationPair(final BaseDevice device, final Location location) {
+			this.device = device;
+			this.location = location;
+		}
+	}
+	
+	/**
 	 * Initialize listeners
 	 */
 	private void initButtons() {
@@ -137,12 +150,10 @@ public class AddSensorActivityDialog extends Activity {
 					public void onClick(View v) {
 						if (mNewDevice != null) {
 							EditText name = (EditText) findViewById(R.id.addsensor_sensor_name_hint);
-							Location newLocation = null;
+							Location location = null;
 							// last location - means new one
-							if (mSpinner.getSelectedItemPosition() == mSpinner
-									.getCount() - 1) {
+							if (mSpinner.getSelectedItemPosition() == mSpinner.getCount() - 1) {
 								EditText elocation = (EditText) findViewById(R.id.addsensor_new_location_name);
-								String locationName;
 
 								// if(elocation != null && elocation.length() <
 								// 1){
@@ -158,15 +169,14 @@ public class AddSensorActivityDialog extends Activity {
 											Toast.LENGTH_LONG).show();
 									return;
 								}
-								locationName = elocation.getText().toString();
-								// FIXME: what with id???
-								newLocation = new Location("0", locationName,
-										mNewIconSpinner
-												.getSelectedItemPosition());
+
+								location = new Location(
+										Location.NEW_LOCATION_ID,
+										elocation.getText().toString(),
+										mNewIconSpinner.getSelectedItemPosition());
 							} else {
-								LocationListing item = (LocationListing) mSpinner
-										.getSelectedItem();
-								newLocation = item.getLocation();
+								LocationListing item = (LocationListing) mSpinner.getSelectedItem();
+								location = item.getLocation();
 							}
 
 							// check name
@@ -178,15 +188,14 @@ public class AddSensorActivityDialog extends Activity {
 								return;
 							}
 
-							// FIXME: new device is NOT in new location!!
 							mNewDevice.setInitialized(true);
 							mNewDevice.setName(name.getText().toString());
-							mNewDevice.setLocation(newLocation);
+							mNewDevice.setLocationId(location.getId());
 
 							mProgress.show();
-
+							
 							SaveDeviceTask task = new SaveDeviceTask();
-							task.execute(new BaseDevice[] { mNewDevice });
+							task.execute(new DeviceLocationPair[] { new DeviceLocationPair(mNewDevice, location) });
 						}
 					}
 				});
@@ -215,17 +224,12 @@ public class AddSensorActivityDialog extends Activity {
 			mNewIconSpinner.setAdapter(iconAdapter);
 		}
 
-		if (hide) {
-			mNewLocation.setVisibility(View.GONE);
-			mOrLabel.setVisibility(View.GONE);
-			mNewIconSpinner.setVisibility(View.GONE);
-			return true;
-		} else {
-			mNewLocation.setVisibility(View.VISIBLE);
-			mOrLabel.setVisibility(View.VISIBLE);
-			mNewIconSpinner.setVisibility(View.VISIBLE);
-			return false;
-		}
+		int visibility = (hide ? View.GONE : View.VISIBLE);
+		mNewLocation.setVisibility(visibility);
+		mOrLabel.setVisibility(visibility);
+		mNewIconSpinner.setVisibility(visibility);
+
+		return hide;
 	}
 
 	private boolean shringSpinner(boolean shrink) {
@@ -245,24 +249,32 @@ public class AddSensorActivityDialog extends Activity {
 	}
 
 	private class SaveDeviceTask extends
-			AsyncTask<BaseDevice, Void, BaseDevice> {
+			AsyncTask<DeviceLocationPair, Void, DeviceLocationPair> {
 		@Override
-		protected BaseDevice doInBackground(BaseDevice... devices) {
-			BaseDevice device = devices[0]; // expect only one device at a time
-											// is sent there
-			if (mController.saveDevice(device)) {
-				mController.reloadAdapters();
-				return device;
+		protected DeviceLocationPair doInBackground(DeviceLocationPair... pairs) {
+			DeviceLocationPair pair = pairs[0]; // expects only one device at a time is sent there
+
+			if (pair.location.getId().equals(Location.NEW_LOCATION_ID)) {
+				// We need to save new location to server first
+				if (!mController.saveLocation(pair.location))
+					return null;
+				
+				pair.device.setLocationId(pair.location.getId());
 			}
+
+			if (mController.saveDevice(pair.device)) {
+				mController.reloadAdapters();
+				return pair;
+			}
+
 			return null;
 		}
 
 		@Override
-		protected void onPostExecute(BaseDevice device) {
+		protected void onPostExecute(DeviceLocationPair pair) {
 			Toast.makeText(
 					getApplicationContext(),
-					getString(device != null ? R.string.toast_new_sensor_added
-							: R.string.toast_new_sensor_not_added),
+					getString(pair != null ? R.string.toast_new_sensor_added : R.string.toast_new_sensor_not_added),
 					Toast.LENGTH_LONG).show();
 			mProgress.cancel();
 			AddSensorActivityDialog.this.finish();

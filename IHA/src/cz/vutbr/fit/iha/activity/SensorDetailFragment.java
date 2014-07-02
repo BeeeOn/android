@@ -13,8 +13,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-//import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
@@ -27,6 +25,8 @@ import com.jjoe64.graphview.LineGraphView;
 import cz.vutbr.fit.iha.R;
 import cz.vutbr.fit.iha.adapter.device.BaseDevice;
 import cz.vutbr.fit.iha.controller.Controller;
+import cz.vutbr.fit.iha.listing.Location;
+//import android.widget.LinearLayout;
 
 public class SensorDetailFragment extends SherlockFragment {
 
@@ -126,8 +126,14 @@ public class SensorDetailFragment extends SherlockFragment {
 
 		// Set name of sensor
 		sName.setText(device.getName());
-		// Set name of location from sensor
-		sLocation.setText(device.getLocation().getName());
+		// Set name of location
+		if (mController != null) {
+			Location location = mController.getLocation(device.getLocationId());
+			sLocation.setText(location.getName());
+		} else {
+			Log.e(TAG, "mController is null (this shouldn't happen)");
+			sLocation.setText(device.getLocationId());
+		}
 		// Set value of sensor
 		sValue.setText(device.getStringValueUnit(getActivity()));
 		// Set icon of sensor

@@ -41,6 +41,7 @@ import cz.vutbr.fit.iha.activity.dialog.AddSensorActivityDialog;
 import cz.vutbr.fit.iha.activity.dialog.CustomAlertDialog;
 import cz.vutbr.fit.iha.adapter.device.BaseDevice;
 import cz.vutbr.fit.iha.controller.Controller;
+import cz.vutbr.fit.iha.listing.Location;
 import cz.vutbr.fit.iha.listing.LocationListing;
 
 /**
@@ -449,18 +450,17 @@ public class LocationScreenActivity extends SherlockFragmentActivity {
 									int which) {
 								String newName = edit.getText().toString();
 
-								// TODO: show loading while saving new name to
-								// server
-								boolean saved = mController.renameLocation(
-										location, newName);
+								// TODO: show loading while saving new name to server (+ use asynctask)
+								Location location = new Location(); // FIXME: get that original location from somewhere
+								location.setName(newName);
+								
+								boolean saved = mController.saveLocation(location);
 
-								String message = saved ? String
-										.format("Location was renamed to '%s'",
-												newName)
+								String message = saved
+										? String.format("Location was renamed to '%s'", newName)
 										: "Location wasn't renamed due to error";
 
-								Toast.makeText(LocationScreenActivity.this,
-										message, Toast.LENGTH_LONG).show();
+								Toast.makeText(LocationScreenActivity.this, message, Toast.LENGTH_LONG).show();
 
 								// Redraw item in list
 								view.setText(newName);

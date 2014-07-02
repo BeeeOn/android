@@ -4,7 +4,9 @@
 package cz.vutbr.fit.iha.adapter;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import android.text.format.Time;
 import cz.vutbr.fit.iha.User;
@@ -22,7 +24,8 @@ public class Adapter {
 	/**
 	 * List of devices
 	 */
-	private final SimpleListing mDevices = new SimpleListing();
+	private final Map<String, Location> mLocations = new HashMap<String, Location>();
+	private final SimpleListing mDevices = new SimpleListing();	
 	private String mId = "";
 	private String mVersion = "";
 	private String mName = "";
@@ -56,7 +59,7 @@ public class Adapter {
 	 * Set name of adapter
 	 * @param name
 	 */
-	public void setName(String name){
+	public void setName(String name) {
 		mName = name;
 	}
 	
@@ -64,7 +67,7 @@ public class Adapter {
 	 * Get name of adapter
 	 * @return
 	 */
-	public String getName(){
+	public String getName() {
 		return mName.length() > 0 ? mName : getId();
 	}
 	
@@ -72,7 +75,7 @@ public class Adapter {
 	 * Set role of actual user of adapter
 	 * @param role
 	 */
-	public void setRole(User.Role role){
+	public void setRole(User.Role role) {
 		mRole = role;
 	}
 	
@@ -80,7 +83,7 @@ public class Adapter {
 	 * Get role of actual user of adapter
 	 * @return
 	 */
-	public User.Role getRole(){
+	public User.Role getRole() {
 		return mRole;
 	}
 	
@@ -88,7 +91,7 @@ public class Adapter {
 	 * Setting id of adapter
 	 * @param ID
 	 */
-	public void setId(String ID){
+	public void setId(String ID) {
 		mId = ID;
 	}
 	
@@ -96,7 +99,7 @@ public class Adapter {
 	 * Returning id of adapter
 	 * @return id
 	 */
-	public String getId(){
+	public String getId() {
 		return mId;
 	}
 	
@@ -104,7 +107,7 @@ public class Adapter {
 	 * Setting version of protocol
 	 * @param Version
 	 */
-	public void setVersion(String Version){
+	public void setVersion(String Version) {
 		mVersion = Version;
 	}
 	
@@ -112,7 +115,7 @@ public class Adapter {
 	 * Returning version of protocol
 	 * @return version
 	 */
-	public String getVersion(){
+	public String getVersion() {
 		return mVersion;
 	}
 	
@@ -121,7 +124,7 @@ public class Adapter {
 	 * @param id of device
 	 * @return BaseDevice or null
 	 */
-	public BaseDevice getDeviceById(String id){
+	public BaseDevice getDeviceById(String id) {
 		return mDevices.getById(id);
 	}
 	
@@ -145,8 +148,29 @@ public class Adapter {
 	 * Return list of locations.
 	 * @return list with locations (or empty list).
 	 */
-	public List<Location> getLocations(){
-		return mDevices.getLocations();
+	public List<Location> getLocations() {
+		return new ArrayList<Location>(mLocations.values());
+	}
+	
+	/**
+	 * Return location by id.
+	 * @param id
+	 * @return Location if found, null otherwise.
+	 */
+	public Location getLocation(String id) {
+		return mLocations.get(id);
+	}
+	
+	/**
+	 * Set locations that belongs to this adapter.
+	 * @param locations
+	 */
+	public void setLocations(final List<Location> locations) {
+		mLocations.clear();
+		
+		for (Location location : locations) {
+			mLocations.put(location.getId(), location);
+		}
 	}
 	
 	@Deprecated
@@ -154,18 +178,22 @@ public class Adapter {
 	 * Return object as XML file
 	 * @return created XML string
 	 */
-	public String getXml(){
+	public String getXml() {
 		XmlCreator xmlcreator = new XmlCreator(this);
 		return xmlcreator.create();
 	}
 	
 	/**
-	 * Method for search all adapters by location
-	 * @param name of location
-	 * @return ArrayList with all adapters with needed location
+	 * Return list of devices in specified location.
+	 * @param id
+	 * @return list with devices (or empty list)
 	 */
-	public List<BaseDevice> getDevicesByLocation(String location){
-		return mDevices.getByLocation(location);
+	public List<BaseDevice> getDevicesByLocation(String id) {
+		// Small optimization
+		if (!mLocations.containsKey(id))
+			return new ArrayList<BaseDevice>();
+			
+		return mDevices.getByLocation(id);
 	}
 	
 	/**

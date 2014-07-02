@@ -1,6 +1,9 @@
 package cz.vutbr.fit.iha.listing;
 
 public class Location {
+	/** Represents id of newly created location (not saved on server yet) */
+	public static final String NEW_LOCATION_ID = "-NEW-";
+	
 	protected String mId = "";
 	protected String mName = "";
 	protected int mType;
