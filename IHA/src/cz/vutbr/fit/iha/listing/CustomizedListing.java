@@ -10,7 +10,7 @@ public abstract class CustomizedListing extends SimpleListing {
 	protected String mName;
 	
 	protected int mIcon = 0;
-	
+
 	public static final int[] icons = {
 		R.drawable.loc_unknown,		// 0
 		R.drawable.loc_bath_room,	// 1	
@@ -53,6 +53,7 @@ public abstract class CustomizedListing extends SimpleListing {
 		return mIcon;
 	}
 	
+	// FIXME: Maybe remove this method and icons from this object. Maybe remove these whole classes.
 	public int getIconResource() {
 		if (mIcon < 0 || mIcon >= icons.length)
 			return icons[0];

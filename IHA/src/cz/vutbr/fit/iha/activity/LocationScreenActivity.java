@@ -55,7 +55,7 @@ public class LocationScreenActivity extends SherlockFragmentActivity {
 
 	private Controller mController;
 	private LocationScreenActivity mActivity;
-	private List<LocationListing> mLocations;
+	private List<Location> mLocations;
 
 	private DrawerLayout mDrawerLayout;
 	private ListView mDrawerList;
@@ -76,7 +76,7 @@ public class LocationScreenActivity extends SherlockFragmentActivity {
 
 	private static int SENSOR_DETAIL = 1;
 
-	private String mActiveLocation;
+	private Location mActiveLocation;
 
 	private DevicesTask mTask;
 	
@@ -164,7 +164,7 @@ public class LocationScreenActivity extends SherlockFragmentActivity {
 		inBackground = false;
 	}
 
-	public boolean getLocations(List<LocationListing> locs) {
+	public boolean getLocations(List<Location> locs) {
 
 		Log.d(TAG, "ready to work with Locations");
 		mTitle = mDrawerTitle = "IHA";
@@ -212,7 +212,7 @@ public class LocationScreenActivity extends SherlockFragmentActivity {
 				if(backPressed) 
 					onBackPressed();
 				// Set the title on the action when drawer closed
-				getSupportActionBar().setTitle(mActiveLocation);
+				getSupportActionBar().setTitle(mActiveLocation.getName());
 				super.onDrawerClosed(view);
 				Log.d(TAG, "BackPressed - onDrawerClosed " + String.valueOf(backPressed));
 				
@@ -329,9 +329,7 @@ public class LocationScreenActivity extends SherlockFragmentActivity {
 		public void onItemClick(AdapterView<?> parent, View view, int position,
 				long id) {
 			// Get the title followed by the position
-			LocationListing selectedItem = mLocations.get(position);
-			mActiveLocation = (selectedItem != null ? selectedItem.getName()
-					: "");
+			mActiveLocation = mLocations.get(position);
 
 			refreshListing();
 
@@ -533,7 +531,7 @@ public class LocationScreenActivity extends SherlockFragmentActivity {
 
 		setSupportProgressBarIndeterminateVisibility(true);
 		ChangeLocationTask task = new ChangeLocationTask();
-		task.execute(new String[] { mActiveLocation });
+		task.execute(new Location[] { mActiveLocation });
 	}
 
 	/**
@@ -542,8 +540,7 @@ public class LocationScreenActivity extends SherlockFragmentActivity {
 	 */
 	private class DevicesTask extends AsyncTask<Void, Void, List<BaseDevice>> {
 
-		private final CustomAlertDialog mDialog = new CustomAlertDialog(
-				LocationScreenActivity.this);
+		private final CustomAlertDialog mDialog = new CustomAlertDialog(LocationScreenActivity.this);
 
 		/**
 		 * @return the dialog
@@ -560,9 +557,7 @@ public class LocationScreenActivity extends SherlockFragmentActivity {
 
 			// Load uninitialized devices
 			List<BaseDevice> devices = mController.getUninitializedDevices();
-			Log.d(TAG,
-					String.format("Found %d uninitialized devices",
-							devices.size()));
+			Log.d(TAG, String.format("Found %d uninitialized devices", devices.size()));
 
 			return devices;
 		}
@@ -577,11 +572,9 @@ public class LocationScreenActivity extends SherlockFragmentActivity {
 				return;
 
 			mDialog.setCancelable(false)
-					.setTitle(
-							getResources().getString(
+					.setTitle(getResources().getString(
 									R.string.notification_title))
-					.setMessage(
-							getResources().getQuantityString(
+					.setMessage(getResources().getQuantityString(
 									R.plurals.notification_new_sensors,
 									uninitializedDevices.size(),
 									uninitializedDevices.size()));
@@ -591,8 +584,7 @@ public class LocationScreenActivity extends SherlockFragmentActivity {
 					new OnClickListener() {
 						@Override
 						public void onClick(View v) {
-							mController
-									.ignoreUninitialized(uninitializedDevices);
+							mController.ignoreUninitialized(uninitializedDevices);
 							// TODO: Get this string from resources
 							Toast.makeText(
 									LocationScreenActivity.this,
@@ -624,16 +616,12 @@ public class LocationScreenActivity extends SherlockFragmentActivity {
 	/**
 	 * Changes selected location and redraws list of adapters there
 	 */
-	private class ChangeLocationTask extends
-			AsyncTask<String, Void, List<BaseDevice>> {
+	private class ChangeLocationTask extends AsyncTask<Location, Void, List<BaseDevice>> {
 
 		@Override
-		protected List<BaseDevice> doInBackground(String... locations) {
-			List<BaseDevice> devices = mController
-					.getDevicesByLocation(locations[0]);
-			Log.d(TAG,
-					String.format("Found %d devices in location '%s'",
-							devices.size(), locations[0]));
+		protected List<BaseDevice> doInBackground(Location... locations) {
+			List<BaseDevice> devices = mController.getDevicesByLocation(locations[0].getId());
+			Log.d(TAG, String.format("Found %d devices in location '%s'", devices.size(), locations[0].getName()));
 
 			return devices;
 		}

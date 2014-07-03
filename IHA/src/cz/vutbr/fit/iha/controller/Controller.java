@@ -366,18 +366,18 @@ public final class Controller {
 	/**
 	 * Return all locations from all adapters.
 	 * 
-	 * @return List of LocationListing
+	 * @return List of Location
 	 */
-	public List<LocationListing> getLocations() { // FIXME: return only Location, for devices use getDevicesByLocation
-		List<LocationListing> listings = new ArrayList<LocationListing>();
+	public List<Location> getLocations() {
+		List<Location> locations = new ArrayList<Location>();
 		
 		for (Adapter adapter : getAdapters()) {
 			for (Location location : adapter.getLocations()) {
-				listings.add(new LocationListing(location.getId(), location));
+				locations.add(location);
 			}
 		}
 		
-		return listings;
+		return locations;
 	}
 	
 	public List<LocationListing> getLocationsForAddSensorDialog(){ // FIXME: return only Location, for devices use getDevicesByLocation

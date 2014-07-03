@@ -48,6 +48,7 @@ import cz.vutbr.fit.iha.R;
 import cz.vutbr.fit.iha.adapter.Adapter;
 import cz.vutbr.fit.iha.adapter.device.BaseDevice;
 import cz.vutbr.fit.iha.extension.watches.smartwatch2.SW2ExtensionService;
+import cz.vutbr.fit.iha.listing.Location;
 import cz.vutbr.fit.iha.listing.LocationListing;
 
 /**
@@ -59,7 +60,7 @@ public class ListLocationControlExtension extends ManagedControlExtension {
 	public static final String EXTRA_ADAPTER_ID = "ADAPTER_ID";
 
 	private Adapter mAdapter;
-	private List<LocationListing> mLocations;
+	private List<Location> mLocations;
 	private String mAdapterId;
 
 	private Bundle[] mMenuItemsIcons = new Bundle[1];
@@ -83,7 +84,7 @@ public class ListLocationControlExtension extends ManagedControlExtension {
 		Log.d(SW2ExtensionService.LOG_TAG, "AdaptersListControl constructor");
 		initializeMenus();
 
-		mLocations = new ArrayList<LocationListing>();
+		mLocations = new ArrayList<Location>();
 
 		mAdapterId = getIntent().getStringExtra(EXTRA_ADAPTER_ID);
 		if (mAdapterId == null) {
