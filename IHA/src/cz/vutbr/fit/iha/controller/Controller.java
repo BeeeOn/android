@@ -22,6 +22,7 @@ import cz.vutbr.fit.iha.household.Household;
 import cz.vutbr.fit.iha.listing.CustomizedListing;
 import cz.vutbr.fit.iha.listing.FavoritesListing;
 import cz.vutbr.fit.iha.listing.Location;
+import cz.vutbr.fit.iha.listing.Location.DefaultRoom;
 import cz.vutbr.fit.iha.listing.LocationListing;
 import cz.vutbr.fit.iha.network.ActualUser;
 import cz.vutbr.fit.iha.network.Network;
@@ -370,7 +371,7 @@ public final class Controller {
 	 */
 	public List<Location> getLocations() {
 		List<Location> locations = new ArrayList<Location>();
-		
+		// TODO: get locations only from active adapter
 		for (Adapter adapter : getAdapters()) {
 			for (Location location : adapter.getLocations()) {
 				locations.add(location);
@@ -378,35 +379,6 @@ public final class Controller {
 		}
 		
 		return locations;
-	}
-	
-	public List<LocationListing> getLocationsForAddSensorDialog(){ // FIXME: return only Location, for devices use getDevicesByLocation
-		List<LocationListing> listings = new ArrayList<LocationListing>();
-		
-		for (Adapter adapter : getAdapters()) {
-			for (Location location : adapter.getLocations()) {
-				listings.add(new LocationListing(location.getId(), location));
-			}
-		}
-		
-		String[] defaultLocations = mContext.getResources().getStringArray(R.array.locations);
-		//FIXME: do it better
-		for(String defLoc : defaultLocations){
-			boolean found = false;
-			for(LocationListing locList : listings){
-				if(locList.getName().equals(defLoc)){
-					found = true;
-					break;
-				}
-			}
-			if(!found){
-				listings.add(new LocationListing("0", new Location("0", defLoc, getIconResourceByName(defLoc, defaultLocations))));
-			}
-		}
-		
-		listings.add(new LocationListing("0", new Location("0", mContext.getResources().getString(R.string.addsensor_new_location_spinner), 0)));
-		
-		return listings;
 	}
 	
 	/**
@@ -449,29 +421,7 @@ public final class Controller {
 		return false;
 	}
 
-	
-	// TODO: completely refactor these 2 methods below
-	
-	//TODO: maybe do otherwise
-	public int getIconResourceByName(String name, String[] defaults){
-		for(int i = 0; i < defaults.length; i++){
-			if(defaults[i].equals(name)){
-				return i+1;
-			}
-		}
-		return 0;
-	}
-	
-	public List<Integer> getLocationsIconsResource(){
-		ArrayList<Integer> result = new ArrayList<Integer>();
-		
-		for(int res : CustomizedListing.icons){
-			result.add(Integer.valueOf(res));
-		}
-		
-		return result;
-	}
-	
+
 	/** Devices methods *****************************************************/
 	
 	/**

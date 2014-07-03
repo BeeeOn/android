@@ -1,8 +1,8 @@
 package cz.vutbr.fit.iha.activity.dialog;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
-
-import com.google.analytics.tracking.android.EasyTracker;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
@@ -26,12 +26,15 @@ import android.widget.LinearLayout.LayoutParams;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.google.analytics.tracking.android.EasyTracker;
+
 import cz.vutbr.fit.iha.R;
 import cz.vutbr.fit.iha.activity.LocationScreenActivity;
 import cz.vutbr.fit.iha.adapter.device.BaseDevice;
 import cz.vutbr.fit.iha.controller.Controller;
 import cz.vutbr.fit.iha.listing.Location;
-import cz.vutbr.fit.iha.listing.LocationListing;
+import cz.vutbr.fit.iha.listing.Location.DefaultRoom;
 
 public class AddSensorActivityDialog extends Activity {
 
@@ -107,11 +110,8 @@ public class AddSensorActivityDialog extends Activity {
 			}
 		});
 
-		CustomArrayAdapter dataAdapter = new CustomArrayAdapter(this,
-				R.layout.custom_spinner_item,
-				mController.getLocationsForAddSensorDialog());
-		dataAdapter
-				.setDropDownViewResource(R.layout.custom_spinner_dropdown_item);
+		CustomArrayAdapter dataAdapter = new CustomArrayAdapter(this, R.layout.custom_spinner_item, getLocationsForAddSensorDialog());
+		dataAdapter.setDropDownViewResource(R.layout.custom_spinner_dropdown_item);
 
 		mSpinner.setAdapter(dataAdapter);
 
@@ -124,6 +124,41 @@ public class AddSensorActivityDialog extends Activity {
 
 		TextView time = (TextView) findViewById(R.id.addsensor_involved_time);
 		time.setText(time.getText() + " " + mNewDevice.getInvolveTime());
+	}
+	
+	/**
+	 * Helper method to prepare list of locations (from adapter + defaults)
+	 * 
+	 * @return list of Location
+	 */
+	public List<Location> getLocationsForAddSensorDialog(){
+		// Get locations from adapter
+		List<Location> locations = mController.getLocations();
+		
+		// Add "missing" default rooms
+		for (DefaultRoom room : Location.defaults) {
+			String name = getString(room.rName);
+			
+			boolean found = false;
+			for (Location location : locations) {
+				if (location.getName().equals(name)) {
+					found = true;
+					break;
+				}
+			}
+			
+			if (!found) {
+				locations.add(new Location(Location.NEW_LOCATION_ID, name, room.type));	
+			}
+		}
+		
+		// Sort them
+		Collections.sort(locations);
+		
+		// Add "New location" item
+		locations.add(new Location(Location.NEW_LOCATION_ID, getString(R.string.addsensor_new_location_spinner), 0));
+		
+		return locations;
 	}
 
 	/**
@@ -175,8 +210,7 @@ public class AddSensorActivityDialog extends Activity {
 										elocation.getText().toString(),
 										mNewIconSpinner.getSelectedItemPosition());
 							} else {
-								LocationListing item = (LocationListing) mSpinner.getSelectedItem();
-								location = item.getLocation();
+								location = (Location) mSpinner.getSelectedItem();
 							}
 
 							// check name
@@ -215,12 +249,16 @@ public class AddSensorActivityDialog extends Activity {
 			mOrLabel = (TextView) findViewById(R.id.addsensor_or);
 		if (mNewIconSpinner == null) {
 			mNewIconSpinner = (Spinner) findViewById(R.id.addsensor_spinner_choose_new_location_icon);
+
+			// Prepare list of icons
+			ArrayList<Integer> iconsList = new ArrayList<Integer>(); 
+			for (int rIcon : Location.icons) {
+				iconsList.add(Integer.valueOf(rIcon));
+			}
+			
 			// first call need to add adapter
-			CustomIconArrayAdapter iconAdapter = new CustomIconArrayAdapter(
-					this, R.layout.custom_spinner_icon_item,
-					mController.getLocationsIconsResource());
-			iconAdapter
-					.setDropDownViewResource(R.layout.custom_spinner_icon_dropdown_item);
+			CustomIconArrayAdapter iconAdapter = new CustomIconArrayAdapter(this, R.layout.custom_spinner_icon_item, iconsList);
+			iconAdapter.setDropDownViewResource(R.layout.custom_spinner_icon_dropdown_item);
 			mNewIconSpinner.setAdapter(iconAdapter);
 		}
 
@@ -283,14 +321,13 @@ public class AddSensorActivityDialog extends Activity {
 		}
 	}
 
-	private class CustomArrayAdapter extends ArrayAdapter<LocationListing> {
+	private class CustomArrayAdapter extends ArrayAdapter<Location> {
 
-		private List<LocationListing> mLocations;
+		private List<Location> mLocations;
 		private int mLayoutResource;
 		private int mDropDownLayoutResource;
 
-		public CustomArrayAdapter(Context context, int resource,
-				List<LocationListing> objects) {
+		public CustomArrayAdapter(Context context, int resource, List<Location> objects) {
 			super(context, resource, objects);
 			mLayoutResource = resource;
 			mLocations = objects;
@@ -342,8 +379,7 @@ public class AddSensorActivityDialog extends Activity {
 		private int mLayoutResource;
 		private int mDropDownLayoutResource;
 
-		public CustomIconArrayAdapter(Context context, int resource,
-				List<Integer> objects) {
+		public CustomIconArrayAdapter(Context context, int resource, List<Integer> objects) {
 			super(context, resource, objects);
 			mLayoutResource = resource;
 			mIcons = objects;
@@ -355,13 +391,11 @@ public class AddSensorActivityDialog extends Activity {
 		}
 
 		@Override
-		public View getDropDownView(int position, View convertView,
-				ViewGroup parent) {
+		public View getDropDownView(int position, View convertView, ViewGroup parent) {
 			LayoutInflater inflater = getLayoutInflater();
 			View row = inflater.inflate(mDropDownLayoutResource, parent, false);
 
-			ImageView icon = (ImageView) row
-					.findViewById(R.id.custom_spinner_icon_dropdown_icon);
+			ImageView icon = (ImageView) row.findViewById(R.id.custom_spinner_icon_dropdown_icon);
 			icon.setImageResource(mIcons.get(position));
 
 			return row;
@@ -372,8 +406,7 @@ public class AddSensorActivityDialog extends Activity {
 			LayoutInflater inflater = getLayoutInflater();
 			View row = inflater.inflate(mLayoutResource, parent, false);
 
-			ImageView icon = (ImageView) row
-					.findViewById(R.id.custom_spinner_icon_icon);
+			ImageView icon = (ImageView) row.findViewById(R.id.custom_spinner_icon_icon);
 			icon.setImageResource(mIcons.get(position));
 
 			return row;

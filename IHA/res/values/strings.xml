@@ -98,14 +98,6 @@
         <item>Item 5</item>
         <item>Item 6</item>
     </string-array>
-    <string-array name="locations">
-        <item>Bathroom</item>
-        <item>Bedroom</item>
-        <item>Garden</item>
-        <item>Kitchen</item>
-        <item>Livingroom</item>
-        <item>WC</item>
-    </string-array>
 
     <string name="log_sc_or">or</string>
 

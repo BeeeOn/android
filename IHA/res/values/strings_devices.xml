@@ -25,4 +25,13 @@
     <string name="dev_state_value_closed">Closed</string>
     <string name="dev_switch_value_on">On</string>
     <string name="dev_switch_value_off">Off</string>
+    
+    <!-- Names of default locations -->
+    <string name="loc_bathroom">Bathroom</string>
+    <string name="loc_bedroom">Bedroom</string>
+    <string name="loc_dining_room">Dining room</string>
+    <string name="loc_garden">Garden</string>
+    <string name="loc_kitchen">Kitchen</string>
+    <string name="loc_living_room">Living room</string>
+    <string name="loc_wc">WC</string>
 </resources>

@@ -84,7 +84,7 @@ public final class DemoHousehold extends Household {
 		
 		FavoritesListing list = new FavoritesListing("demoFavorites");
 		list.setName("My favorites");
-		list.setIcon((new Random()).nextInt(CustomizedListing.icons.length));
+		list.setIcon((new Random()).nextInt(Location.icons.length));
 		list.setDevices(this.adapters.get(0).getDevices());
 
 		this.favoritesListings.add(list);

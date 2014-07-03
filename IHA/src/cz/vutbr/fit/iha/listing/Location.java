@@ -2,7 +2,7 @@ package cz.vutbr.fit.iha.listing;
 
 import cz.vutbr.fit.iha.R;
 
-public class Location {
+public class Location implements Comparable<Location> {
 	/** Represents id of newly created location (not saved on server yet) */
 	public static final String NEW_LOCATION_ID = "-NEW-";
 	
@@ -20,6 +20,32 @@ public class Location {
 		R.drawable.loc_wc,			// 6		
 	};
 	
+	/**
+	 * Represents single default room.
+	 */
+	public static final class DefaultRoom {
+		public final int type; // Icon type
+		public final int rName; // Name resource
+		
+		public DefaultRoom(final int type, final int rName) {
+			this.type = type;
+			this.rName = rName;
+		}
+	}
+	
+	/**
+	 * List of default rooms - icons and their names.
+	 */
+	public static DefaultRoom defaults[] = {
+		new DefaultRoom(1, R.string.loc_bathroom),
+		new DefaultRoom(2, R.string.loc_bedroom),
+		new DefaultRoom(3, R.string.loc_garden),
+		new DefaultRoom(4, R.string.loc_dining_room),
+		new DefaultRoom(5, R.string.loc_living_room),
+		new DefaultRoom(6, R.string.loc_wc),
+	};
+	
+
 	public Location() {}
 	
 	public Location(String id, String name, int type) {
@@ -62,5 +88,10 @@ public class Location {
 	@Override
 	public String toString() {
 		return getName();
+	}
+
+	@Override
+	public int compareTo(Location another) {
+		return getName().compareTo(another.getName());
 	}
 }
