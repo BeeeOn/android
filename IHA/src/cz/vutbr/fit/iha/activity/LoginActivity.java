@@ -230,7 +230,7 @@ public class LoginActivity extends Activity {
 			// Google Play is missing
 			Log.d(TAG, "Google Play is missing");
 			//TODO: maybe show customAlertDialog with possibility actualize play
-			Toast.makeText(v.getContext(), getResources().getString(R.string.toast_play_missing), Toast.LENGTH_LONG).show();
+			Toast.makeText(v.getContext(), getString(R.string.toast_play_missing), Toast.LENGTH_LONG).show();
 			mProgress.dismiss();
 		}
 		Log.d(TAG, "END: Google access func");
@@ -293,17 +293,17 @@ public class LoginActivity extends Activity {
 			e.printStackTrace();
 
 			errFlag = true;
-			errMessage = getResources().getString(R.string.toast_no_unregistered_adapter);
+			errMessage = getString(R.string.toast_no_unregistered_adapter);
 		} catch (NoConnectionException e) {
 			e.printStackTrace();
 
 			errFlag = true;
-			errMessage = getResources().getString(R.string.toast_internet_connection);
+			errMessage = getString(R.string.toast_internet_connection);
 		} catch (CommunicationException e) {
 			e.printStackTrace();
 
 			errFlag = true;
-			errMessage = getResources().getString(R.string.toast_communication_error);
+			errMessage = getString(R.string.toast_communication_error);
 		} catch (NotImplementedException e) {
 			e.printStackTrace();
 			//FIXME: remove in final version

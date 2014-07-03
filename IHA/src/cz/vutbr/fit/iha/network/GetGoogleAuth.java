@@ -182,7 +182,7 @@ public class GetGoogleAuth extends AsyncTask<Void, Void, STATES> {
 				break;
 			case eNoConnection:
 				mActivity.ProgressDismiss();
-				new ToastMessageThread(mActivity, mActivity.getResources().getString(R.string.toast_internet_connection)).start();
+				new ToastMessageThread(mActivity, mActivity.getString(R.string.toast_internet_connection)).start();
 				break;
 			default:
 				break;

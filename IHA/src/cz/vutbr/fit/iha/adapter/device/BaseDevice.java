@@ -133,7 +133,7 @@ public abstract class BaseDevice {
 	 */
 	public String getStringUnit(Context context) {
 		int unitRes = getUnitStringResource();
-		return unitRes > 0 ? context.getResources().getString(unitRes) : "";
+		return unitRes > 0 ? context.getString(unitRes) : "";
 	}
 	
 	/**

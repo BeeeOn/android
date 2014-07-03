@@ -138,7 +138,7 @@ public class LocationScreenActivity extends SherlockFragmentActivity {
 	@Override
 	public void onBackPressed() {
 		if(backPressed){
-			//Toast.makeText(this, getResources().getString(R.string.toast_leaving_app), Toast.LENGTH_LONG).show();
+			//Toast.makeText(this, getString(R.string.toast_leaving_app), Toast.LENGTH_LONG).show();
 			super.onBackPressed();
 			//this.finish();
 			
@@ -572,15 +572,13 @@ public class LocationScreenActivity extends SherlockFragmentActivity {
 				return;
 
 			mDialog.setCancelable(false)
-					.setTitle(getResources().getString(
-									R.string.notification_title))
+					.setTitle(getString(R.string.notification_title))
 					.setMessage(getResources().getQuantityString(
 									R.plurals.notification_new_sensors,
 									uninitializedDevices.size(),
 									uninitializedDevices.size()));
 
-			mDialog.setCustomNeutralButton(
-					getResources().getString(R.string.notification_ingore),
+			mDialog.setCustomNeutralButton(getString(R.string.notification_ingore),
 					new OnClickListener() {
 						@Override
 						public void onClick(View v) {
@@ -594,8 +592,7 @@ public class LocationScreenActivity extends SherlockFragmentActivity {
 						}
 					});
 
-			mDialog.setCustomPositiveButton(
-					getResources().getString(R.string.notification_add),
+			mDialog.setCustomPositiveButton(getString(R.string.notification_add),
 					new OnClickListener() {
 						@Override
 						public void onClick(View v) {
