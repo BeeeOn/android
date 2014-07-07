@@ -79,6 +79,10 @@
             android:name="cz.vutbr.fit.iha.activity.dialog.AddAdapterActivityDialog"
             android:theme="@style/MyDialog" >
         </activity>
+        <activity
+            android:name="cz.vutbr.fit.iha.activity.dialog.EditLocationActitivityDialog"
+            android:theme="@style/MyDialog" >
+        </activity>
 
         <receiver
             android:name="cz.vutbr.fit.iha.widget.SensorWidgetProvider"

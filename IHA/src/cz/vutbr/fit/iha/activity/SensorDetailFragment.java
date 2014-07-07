@@ -14,6 +14,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnFocusChangeListener;
+import android.view.View.OnLongClickListener;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
@@ -149,14 +150,17 @@ public class SensorDetailFragment extends SherlockFragment {
 		sName.setText(device.getName());
 
 		sName.setBackgroundColor(Color.TRANSPARENT);
-		sName.setOnClickListener(new OnClickListener() {
+		sName.setOnLongClickListener(new OnLongClickListener() {
 			
 			@Override
-			public void onClick(View v) {
+			public boolean onLongClick(View v) {
 				mMode = getSherlockActivity().startActionMode(new AnActionModeOfEpicProportions());
 				sName.setVisibility(View.GONE);
 				sNameEdit.setVisibility(View.VISIBLE);
 				sNameEdit.setText(sName.getText());
+				InputMethodManager imm = (InputMethodManager) getSherlockActivity().getSystemService( getSherlockActivity().INPUT_METHOD_SERVICE);
+				imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
+				return true;
 			}
 		});
 		// Set name of location from sensor
@@ -254,6 +258,7 @@ public class SensorDetailFragment extends SherlockFragment {
 		graphView.setViewPort(2, 40);
 		graphView.setManualYAxis(true);
 		graphView.setManualYAxisBounds(1.0, -1.0);
+		
 		
 		
 		graphView.setScrollable(true);
@@ -492,7 +497,7 @@ public class SensorDetailFragment extends SherlockFragment {
 	
 	
 	
-	private final class AnActionModeOfEpicProportions implements ActionMode.Callback {
+	class AnActionModeOfEpicProportions implements ActionMode.Callback {
 
 		@Override
 		public boolean onCreateActionMode(ActionMode mode, Menu menu) {

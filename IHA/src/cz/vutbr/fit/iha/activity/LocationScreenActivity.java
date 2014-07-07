@@ -17,7 +17,9 @@ import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup.LayoutParams;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -26,6 +28,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.actionbarsherlock.app.SherlockFragmentActivity;
+import com.actionbarsherlock.view.ActionMode;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
@@ -36,6 +39,7 @@ import cz.vutbr.fit.iha.Constants;
 import cz.vutbr.fit.iha.MenuListAdapter;
 import cz.vutbr.fit.iha.R;
 import cz.vutbr.fit.iha.SensorListAdapter;
+import cz.vutbr.fit.iha.activity.SensorDetailFragment.AnActionModeOfEpicProportions;
 import cz.vutbr.fit.iha.activity.dialog.AddAdapterActivityDialog;
 import cz.vutbr.fit.iha.activity.dialog.AddSensorActivityDialog;
 import cz.vutbr.fit.iha.activity.dialog.CustomAlertDialog;
@@ -78,6 +82,12 @@ public class LocationScreenActivity extends SherlockFragmentActivity {
 	private String mActiveLocation;
 
 	private DevicesTask mTask;
+	
+	// 
+	ActionMode mMode;
+	
+	protected TextView mDrawerItemText;
+	protected EditText mDrawerItemEdit;
 	
 	private boolean backPressed = false;
 
@@ -196,6 +206,17 @@ public class LocationScreenActivity extends SherlockFragmentActivity {
 
 		// Capture listview menu item click
 		mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
+		mDrawerList.setOnItemLongClickListener(new OnItemLongClickListener() {
+
+			@Override
+			public boolean onItemLongClick(AdapterView<?> parent, View view,
+					int position, long id) {
+				
+				Log.d(TAG, "Long press");
+				return true;
+			}
+			
+		});
 
 		// Enable ActionBar app icon to behave as action to toggle nav drawer
 		getSupportActionBar().setHomeButtonEnabled(true);
@@ -641,6 +662,51 @@ public class LocationScreenActivity extends SherlockFragmentActivity {
 		@Override
 		protected void onPostExecute(final List<BaseDevice> devices) {
 			getSensors(devices);
+		}
+	}
+	
+	class AnActionModeOfEpicProportions implements ActionMode.Callback {
+
+		@Override
+		public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+			// TODO Auto-generated method stub
+			menu.add("Save").setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+			menu.add("Cancel").setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+			
+			return true;
+		}
+
+		@Override
+		public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+			// TODO Auto-generated method stub
+			return false;
+		}
+
+		@Override
+		public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+			// TODO Auto-generated method stub
+			if(item.getTitle().equals("Save")) {
+				//sName.setText(sNameEdit.getText());
+			}
+			//sNameEdit.setVisibility(View.GONE);
+			//sName.setVisibility(View.VISIBLE);
+			
+			//sNameEdit.clearFocus();
+			//getSherlockActivity().getCurrentFocus().clearFocus();
+			//InputMethodManager imm = (InputMethodManager) getSystemService( getBaseContext().INPUT_METHOD_SERVICE);
+			//imm.hideSoftInputFromWindow(mDrawerItemEdit.getWindowToken(), 0);
+			mode.finish();
+            return true;
+		}
+
+		@Override
+		public void onDestroyActionMode(ActionMode mode) {
+			// TODO Auto-generated method stub
+			//sNameEdit.clearFocus();
+			//sNameEdit.setVisibility(View.GONE);
+			//sName.setVisibility(View.VISIBLE);
+			mMode = null;
+
 		}
 	}
 

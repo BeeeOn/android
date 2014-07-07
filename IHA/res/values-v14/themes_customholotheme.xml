@@ -9,6 +9,7 @@
 
     <item name="android:listChoiceIndicatorMultiple">@drawable/customholotheme_btn_check_holo_light</item>
 	<item name="android:seekBarStyle">@style/SeekBarCustomHoloTheme</item>
+	
   </style>
 
 </resources>
