@@ -4,15 +4,21 @@ import java.text.DateFormat;
 import java.util.Date;
 
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.graphics.drawable.DrawableCompat;
 import android.text.format.Time;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
+import android.view.View.OnFocusChangeListener;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.EditText;
 //import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
@@ -20,9 +26,17 @@ import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
 
 import com.actionbarsherlock.app.SherlockFragment;
+import com.actionbarsherlock.view.ActionMode;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuItem;
+import com.google.android.gms.internal.gr;
+import com.jjoe64.graphview.BarGraphView;
 import com.jjoe64.graphview.GraphView;
+import com.jjoe64.graphview.GraphViewDataInterface;
 import com.jjoe64.graphview.GraphViewSeries;
+import com.jjoe64.graphview.GraphViewSeries.GraphViewSeriesStyle;
 import com.jjoe64.graphview.LineGraphView;
+import com.jjoe64.graphview.ValueDependentColor;
 
 import cz.vutbr.fit.iha.R;
 import cz.vutbr.fit.iha.adapter.device.BaseDevice;
@@ -35,6 +49,7 @@ public class SensorDetailFragment extends SherlockFragment {
 	
 	// GUI elements
 	private TextView sName;
+	private EditText sNameEdit;
 	private TextView sLocation;
 	private TextView sValue;
 	private TextView sTime;
@@ -43,11 +58,15 @@ public class SensorDetailFragment extends SherlockFragment {
 	private SeekBar sRefreshTimeValue;
 	private LinearLayout sGraphLayout;
 	
+	// 
+	ActionMode mMode;
+	
 	// Array for refresh time constant
 	// 1sec, 5sec, 10sec, 20sec , 30sec, 1min, 5min, 10min, 15min, 30,min, 1h, 2h,3h,4h, 8h, 12h, 24h
 	private int[] sRefreshTimeSeekBarValues = { 1, 5, 10, 30, 60, 300, 600, 900, 1800,
 			3600, 7200, 10800, 14400, 28800, 43200, 86400 };
 			
+	public double minimum;
 	
 
 	@Override
@@ -59,6 +78,7 @@ public class SensorDetailFragment extends SherlockFragment {
 		Bundle bundle = this.getArguments();
 		String sensorID = bundle.getString("sensorID");
 
+		
 		GetDeviceTask task = new GetDeviceTask();
 		task.execute(new String[] { sensorID });
 
@@ -90,6 +110,7 @@ public class SensorDetailFragment extends SherlockFragment {
 	private void initLayout(BaseDevice device) {
 		// Get View for sensor name
 		sName = (TextView) getView().findViewById(R.id.sen_detail_name);
+		sNameEdit = (EditText) getView().findViewById(R.id.sen_detail_name_edit);
 		// Get View for sensor location
 		sLocation = (TextView) getView().findViewById(R.id.sen_detail_loc_name);
 		// Get View for sensor value
@@ -126,6 +147,18 @@ public class SensorDetailFragment extends SherlockFragment {
 
 		// Set name of sensor
 		sName.setText(device.getName());
+
+		sName.setBackgroundColor(Color.TRANSPARENT);
+		sName.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				mMode = getSherlockActivity().startActionMode(new AnActionModeOfEpicProportions());
+				sName.setVisibility(View.GONE);
+				sNameEdit.setVisibility(View.VISIBLE);
+				sNameEdit.setText(sName.getText());
+			}
+		});
 		// Set name of location from sensor
 		sLocation.setText(device.getLocation().getName());
 		// Set value of sensor
@@ -168,6 +201,25 @@ public class SensorDetailFragment extends SherlockFragment {
 		    , "" // heading
 		);
 		
+		minimum = -1.0;
+		
+		GraphViewSeriesStyle seriesStyle = new GraphViewSeriesStyle(getResources().getColor(R.color.log_blue2),2);
+		GraphViewSeriesStyle seriesStyle2 = new GraphViewSeriesStyle(Color.GRAY,2);
+		/*
+		seriesStyle.setValueDependentColor(new ValueDependentColor() {
+		  @Override
+		  public int get(GraphViewDataInterface data) {
+		    // the higher the more red
+			  if(data.getX() == minimum) {
+				  return Color.GRAY;
+			  }
+			  else {
+				  //return Color.rgb((int)(150+((data.getY()/3)*100)), (int)(150-((data.getY()/3)*150)), (int)(150-((data.getY()/3)*150)));
+				  return getResources().getColor(R.color.log_blue2);
+			  }
+		  }
+		});*/
+		
 		graphView.getGraphViewStyle().setVerticalLabelsColor(getResources().getColor(R.color.log_blue2));
 		graphView.getGraphViewStyle().setHorizontalLabelsColor(getResources().getColor(R.color.log_blue2));
 		graphView.setBackgroundColor(Color.argb(128, 0, 153, 204));//getResources().getColor(R.color.log_blue2));
@@ -180,11 +232,29 @@ public class SensorDetailFragment extends SherlockFragment {
 		double v=0;
 		for (int i=0; i<num; i++) {
 		  v += 0.2;
-		  data[i] = new GraphView.GraphViewData(i, Math.sin(v));
+		  if(i > 100 && i <120) {
+			  data[i] = new GraphView.GraphViewData(i, -1);
+		  }else 
+		  {
+			  data[i] = new GraphView.GraphViewData(i, Math.sin(v));
+		  }
+		  
 		}
-		graphView.addSeries(new GraphViewSeries(data));
+		/*
+		GraphView.GraphViewData[] data2 = new GraphView.GraphViewData[19];
+		for (int i=0; i<19; i++) {
+		  //if(i > 100 && i <120) {
+			  data2[i] = new GraphView.GraphViewData(i+101, -1);
+		  //}
+		}*/
+		 
+		graphView.addSeries(new GraphViewSeries("Graph",seriesStyle,data));
+		//graphView.addSeries(new GraphViewSeries("Empty",seriesStyle2,data2));
 		// set view port, start=2, size=40
 		graphView.setViewPort(2, 40);
+		graphView.setManualYAxis(true);
+		graphView.setManualYAxisBounds(1.0, -1.0);
+		
 		
 		graphView.setScrollable(true);
 		// optional - activate scaling / zooming
@@ -253,7 +323,8 @@ public class SensorDetailFragment extends SherlockFragment {
 	 * graph.addSeries(series);
 	 * 
 	 * ((LineGraphView) graph).setDrawBackground(true); ((LineGraphView)
-	 * graph).setBackgroundColor(getResources().getColor(R.color.darkblue));
+	 * graph).setBackgroundColor(getResources().InputMethodManager imm = (InputMethodManager) v.getContext().getSystemService(Context.INPUT_METHOD_SERVICE); 
+                    imm.hideSoftInputFromWindow(v.getWindowToken(), 0);getColor(R.color.darkblue));
 	 * LinearLayout.LayoutParams graphParams = new
 	 * LinearLayout.LayoutParams(android
 	 * .view.ViewGroup.LayoutParams.MATCH_PARENT,300);
@@ -270,7 +341,8 @@ public class SensorDetailFragment extends SherlockFragment {
 	 * Constants.TYPE_ILLUMINATION: case Constants.TYPE_NOISE: case
 	 * Constants.TYPE_EMMISION: //type = Constants.DEVICE_TYPE_TEMP;
 	 * 
-	 * int unitResource = mDevice.getUnitStringResource(); String unit =
+	 * int unitResource = mDevice.getUnitStringRInputMethodManager imm = (InputMethodManager) v.getContext().getSystemService(Context.INPUT_METHOD_SERVICE); 
+                    imm.hideSoftInputFromWindow(v.getWindowToken(), 0);esource(); String unit =
 	 * (unitResource > 0) ? " " + getString(unitResource) : "";
 	 * 
 	 * TextView lastValueLabel = new TextView(this);
@@ -414,6 +486,54 @@ public class SensorDetailFragment extends SherlockFragment {
 		}
 		else {
 			return String.valueOf(hours)+" "+ getString(R.string.hour);
+		}
+	}
+	
+	
+	
+	
+	private final class AnActionModeOfEpicProportions implements ActionMode.Callback {
+
+		@Override
+		public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+			// TODO Auto-generated method stub
+			menu.add("Save").setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+			menu.add("Cancel").setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+			
+			return true;
+		}
+
+		@Override
+		public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+			// TODO Auto-generated method stub
+			return false;
+		}
+
+		@Override
+		public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+			// TODO Auto-generated method stub
+			if(item.getTitle().equals("Save")) {
+				sName.setText(sNameEdit.getText());
+			}
+			sNameEdit.setVisibility(View.GONE);
+			sName.setVisibility(View.VISIBLE);
+			
+			sNameEdit.clearFocus();
+			//getSherlockActivity().getCurrentFocus().clearFocus();
+			InputMethodManager imm = (InputMethodManager) getSherlockActivity().getSystemService( getSherlockActivity().INPUT_METHOD_SERVICE);
+			imm.hideSoftInputFromWindow(sNameEdit.getWindowToken(), 0);
+			mode.finish();
+            return true;
+		}
+
+		@Override
+		public void onDestroyActionMode(ActionMode mode) {
+			// TODO Auto-generated method stub
+			sNameEdit.clearFocus();
+			sNameEdit.setVisibility(View.GONE);
+			sName.setVisibility(View.VISIBLE);
+			mMode = null;
+
 		}
 	}
 }
