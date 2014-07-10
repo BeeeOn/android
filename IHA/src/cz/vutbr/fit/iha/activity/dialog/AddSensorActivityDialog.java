@@ -315,9 +315,12 @@ public class AddSensorActivityDialog extends Activity {
 					getString(pair != null ? R.string.toast_new_sensor_added : R.string.toast_new_sensor_not_added),
 					Toast.LENGTH_LONG).show();
 			mProgress.cancel();
-			AddSensorActivityDialog.this.finish();
 
-			LocationScreenActivity.healActivity();
+			if (pair != null) {
+				// Successfuly saved, close this dialog and return back
+				AddSensorActivityDialog.this.finish();
+				LocationScreenActivity.healActivity();
+			}
 		}
 	}
 
