@@ -406,6 +406,19 @@ public final class Controller {
 	}
 	
 	/**
+	 * Return location object that belongs to device.
+	 * @param device
+	 * @return Location if found, null otherwise.
+	 */
+	public Location getLocationByDevice(BaseDevice device) {
+		Adapter adapter = getAdapterByDevice(device);
+		if (adapter == null)
+			return null;
+		
+		return adapter.getLocation(device.getLocationId());
+	}
+	
+	/**
 	 * Deletes location from server.
 	 * 
 	 * @param location
