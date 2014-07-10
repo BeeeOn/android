@@ -29,6 +29,7 @@
                 android:layout_marginTop="10dp"
                 android:src="@drawable/dev_unknown" />
 
+            
             <TextView
                 android:id="@+id/sen_detail_name"
                 android:layout_width="wrap_content"
@@ -36,11 +37,27 @@
                 android:layout_alignParentRight="true"
                 android:layout_alignTop="@+id/sen_detail_icon"
                 android:layout_marginRight="10dp"
+                android:layout_marginBottom="10dp"
                 android:gravity="right"
                 android:text="NameSensor"
                 android:textColor="@color/log_blue2"
                 android:textSize="30dp"
                 android:textStyle="bold" />
+            
+            <EditText
+                android:id="@+id/sen_detail_name_edit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_alignTop="@+id/sen_detail_icon"
+                android:layout_marginRight="-2dp"
+                android:layout_marginTop="-7dp"
+                android:gravity="right"
+                android:text="NameSensor"
+                android:textColor="@color/log_blue2"
+                android:textSize="30dp"
+                android:textStyle="bold"
+                android:visibility="invisible" />
 
             <SeekBar
                 android:id="@+id/sen_refresh_time_seekBar"
@@ -78,8 +95,10 @@
                 android:id="@+id/sen_detail_loc_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignRight="@+id/sen_detail_name"
-                android:layout_below="@+id/sen_detail_name"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_above="@+id/sen_detail_value"
                 android:text="location"
                 android:textColor="@color/darkgray"
                 android:textSize="15dp" />
@@ -90,6 +109,7 @@
                 android:layout_height="wrap_content"
                 android:layout_above="@+id/sen_detail_time"
                 android:layout_alignRight="@+id/sen_detail_loc_name"
+                android:layout_marginBottom="-5dp"
                 android:text="ValueSensor"
                 android:textColor="@color/log_blue2"
                 android:textSize="32dp" />

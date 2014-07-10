@@ -32,5 +32,13 @@
       <item name="android:indeterminateDrawable">@drawable/customholotheme_scrubber_progress_horizontal_holo_light</item>
       <item name="android:thumb">@drawable/customholotheme_scrubber_control_selector_holo_light</item>
   	</style>
+  	
+   	<style name="MyDialog" parent="@android:style/Theme.Holo.Dialog">
+        <item name="android:windowIsTranslucent">true</item>
+	    <item name="android:windowBackground">@color/black</item>
+	    <item name="android:windowNoTitle">true</item>
+	    <item name="android:backgroundDimEnabled">true</item>
+	    <item name="android:windowIsFloating">true</item>
+    </style>
 
 </resources>
