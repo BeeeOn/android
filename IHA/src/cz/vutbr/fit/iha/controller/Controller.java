@@ -464,6 +464,7 @@ public final class Controller {
 			if (adding) {
 				if (mDemoMode) {
 					location.setId(adapter.getUnusedLocationId());
+					saved = true;
 				} else {
 					location = mNetwork.createLocation(adapter.getId(), location);
 					saved = (location != null);
