@@ -24,9 +24,8 @@ import com.jjoe64.graphview.LineGraphView;
 
 import cz.vutbr.fit.iha.R;
 import cz.vutbr.fit.iha.adapter.device.BaseDevice;
+import cz.vutbr.fit.iha.adapter.location.Location;
 import cz.vutbr.fit.iha.controller.Controller;
-import cz.vutbr.fit.iha.listing.Location;
-//import android.widget.LinearLayout;
 
 public class SensorDetailFragment extends SherlockFragment {
 

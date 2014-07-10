@@ -45,8 +45,8 @@ import com.sonyericsson.extras.liveware.extension.util.control.ControlListItem;
 
 import cz.vutbr.fit.iha.R;
 import cz.vutbr.fit.iha.adapter.Adapter;
+import cz.vutbr.fit.iha.adapter.location.Location;
 import cz.vutbr.fit.iha.extension.watches.smartwatch2.SW2ExtensionService;
-import cz.vutbr.fit.iha.listing.Location;
 
 /**
  * ListControlExtension displays a scrollable list, based on a string array.

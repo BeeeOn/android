@@ -1,4 +1,4 @@
-package cz.vutbr.fit.iha.listing;
+package cz.vutbr.fit.iha.adapter.location;
 
 import cz.vutbr.fit.iha.R;
 

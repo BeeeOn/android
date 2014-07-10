@@ -5,7 +5,7 @@ package cz.vutbr.fit.iha.adapter.device;
 
 import android.content.Context;
 import android.text.format.Time;
-import cz.vutbr.fit.iha.listing.Location;
+import cz.vutbr.fit.iha.adapter.location.Location;
 
 /**
  * @brief Abstract class for all devices

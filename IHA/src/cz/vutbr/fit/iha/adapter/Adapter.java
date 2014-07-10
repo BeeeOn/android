@@ -9,11 +9,11 @@ import java.util.List;
 import java.util.Map;
 
 import android.text.format.Time;
+import android.util.Log;
 import cz.vutbr.fit.iha.User;
 import cz.vutbr.fit.iha.adapter.device.BaseDevice;
+import cz.vutbr.fit.iha.adapter.location.Location;
 import cz.vutbr.fit.iha.adapter.parser.XmlCreator;
-import cz.vutbr.fit.iha.listing.Location;
-import cz.vutbr.fit.iha.listing.SimpleListing;
 
 /**
  * @brief Class for parsed data from XML file of adapters
@@ -21,11 +21,13 @@ import cz.vutbr.fit.iha.listing.SimpleListing;
  *
  */
 public class Adapter {
-	/**
-	 * List of devices
-	 */
+	public static final String TAG = Adapter.class.getSimpleName();
+	
 	private final Map<String, Location> mLocations = new HashMap<String, Location>();
-	private final SimpleListing mDevices = new SimpleListing();	
+	private final Map<String, BaseDevice> mDevices = new HashMap<String, BaseDevice>();
+	private final Map<String, BaseDevice> mUninitializedDevices = new HashMap<String, BaseDevice>();
+	private final Map<String, BaseDevice> mUninitializedIgnored = new HashMap<String, BaseDevice>();
+	
 	private String mId = "";
 	private String mVersion = "";
 	private String mName = "";
@@ -47,7 +49,7 @@ public class Adapter {
 		result += "Role is " + mRole + "\n";
 		result += "___start of sensors___\n";
 		
-		for(BaseDevice dev : mDevices.getDevices()){
+		for(BaseDevice dev : mDevices.values()){
 			result += dev.toDebugString();
 			result += "__\n";
 		}
@@ -122,26 +124,31 @@ public class Adapter {
 	/**
 	 * Find and return device by given id
 	 * @param id of device
-	 * @return BaseDevice or null
+	 * @return BaseDevice or null if no device with this id is found.
 	 */
 	public BaseDevice getDeviceById(String id) {
-		return mDevices.getById(id);
+		return mDevices.get(id);
 	}
 	
 	/**
-	 * Return map with all devices;
-	 * @return map with all devices (or empty map)
+	 * Return list of all devices.
+	 * @return list with devices (or empty map).
 	 */
 	public List<BaseDevice> getDevices() {
-		return mDevices.getDevices();
+		return new ArrayList<BaseDevice>(mDevices.values());
 	}
 	
 	/**
 	 * Set devices that belongs to this adapter.
+	 * Also updates uninitialized and locations maps.
 	 * @param devices
 	 */
-	public void setDevices(List<BaseDevice> devices) {
-		mDevices.setDevices(devices);
+	public void setDevices(final List<BaseDevice> devices) {
+		clearDevices();
+
+		for (BaseDevice device : devices) {
+			addDevice(device);
+		}
 	}
 	
 	/**
@@ -182,26 +189,47 @@ public class Adapter {
 		XmlCreator xmlcreator = new XmlCreator(this);
 		return xmlcreator.create();
 	}
-	
+
 	/**
 	 * Return list of devices in specified location.
-	 * @param id
+	 * @param locationId
 	 * @return list with devices (or empty list)
 	 */
-	public List<BaseDevice> getDevicesByLocation(String id) {
+	public List<BaseDevice> getDevicesByLocation(final String locationId) {
+		List<BaseDevice> devices = new ArrayList<BaseDevice>();
+		
 		// Small optimization
-		if (!mLocations.containsKey(id))
-			return new ArrayList<BaseDevice>();
-			
-		return mDevices.getByLocation(id);
+		if (!mLocations.containsKey(locationId))
+			return devices;
+		
+		for (BaseDevice device : mDevices.values()) {
+			if (device.getLocationId().equals(locationId)) {
+				devices.add(device);
+			}
+		}
+		
+		return devices;
 	}
 	
 	/**
 	 * Returns list of all uninitialized devices in this adapter
-	 * @return
+	 * @return list with uninitialized devices (or empty list)
 	 */
 	public List<BaseDevice> getUninitializedDevices() {
-		return new ArrayList<BaseDevice>(mDevices.getUninitializedDevices().values());
+		return new ArrayList<BaseDevice>(mUninitializedDevices.values());
+	}
+	
+	/**
+	 * Add device to this listing.
+	 * Also updates uninitialized and locations maps.
+	 * @param device
+	 * @return
+	 */
+	public void addDevice(final BaseDevice device) {
+		mDevices.put(device.getId(), device);
+		
+		if (!device.isInitialized() && !mUninitializedIgnored.containsKey(device.getId()))
+			mUninitializedDevices.put(device.getId(), device);
 	}
 	
 	/**
@@ -209,15 +237,47 @@ public class Adapter {
 	 * @param device
 	 */
 	public void refreshDevice(final BaseDevice device) {
-		mDevices.refreshDevice(device);
+		if (device.isInitialized()) {
+			if (mUninitializedDevices.remove(device.getId()) != null)
+				Log.d(TAG, "Removing initialized device " + device.toString());
+		} else {
+			mUninitializedDevices.put(device.getId(), device);
+			Log.d(TAG, "Adding uninitialized device " + device.toString());
+		}
+	}
+	
+	/**
+	 * Clears all devices, uninitialized devices and locations maps.
+	 */
+	private void clearDevices() {
+		mDevices.clear();
+		mUninitializedDevices.clear();
 	}
 
 	public void ignoreUninitialized(List<BaseDevice> devices) {
-		mDevices.ignoreUninitialized(devices);		
+		// TODO: save this list into some cache
+		for (BaseDevice device : devices) {
+			String id = device.getId();
+			
+			if (mUninitializedDevices.containsKey(id)) {
+				if (!mUninitializedIgnored.containsKey(id))
+					mUninitializedIgnored.put(id, mUninitializedDevices.get(id));
+				
+				mUninitializedDevices.remove(id);
+			}
+		}	
 	}
 
 	public void unignoreUninitialized() {
-		mDevices.unignoreUninitialized();
+		// TODO: update that list in some cache
+		for (BaseDevice device : mUninitializedIgnored.values()) {
+			String id = device.getId();
+			
+			if (!mUninitializedDevices.containsKey(id))
+				mUninitializedDevices.put(id, mUninitializedIgnored.get(id));
+		}
+		
+		mUninitializedIgnored.clear();
 	}
 	
 }

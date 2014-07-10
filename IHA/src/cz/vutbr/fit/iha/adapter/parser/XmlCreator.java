@@ -14,7 +14,7 @@ import org.xmlpull.v1.XmlSerializer;
 import android.util.Xml;
 import cz.vutbr.fit.iha.adapter.Adapter;
 import cz.vutbr.fit.iha.adapter.device.BaseDevice;
-import cz.vutbr.fit.iha.listing.Location;
+import cz.vutbr.fit.iha.adapter.location.Location;
 
 /**
  * Class for creating XML file from Adapter object

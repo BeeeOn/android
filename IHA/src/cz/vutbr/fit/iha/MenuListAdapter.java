@@ -7,7 +7,6 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
-import cz.vutbr.fit.iha.R;
 
 public class MenuListAdapter extends BaseAdapter {
 

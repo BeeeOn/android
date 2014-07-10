@@ -35,6 +35,7 @@ import cz.vutbr.fit.iha.User;
 import cz.vutbr.fit.iha.activity.LoginActivity;
 import cz.vutbr.fit.iha.adapter.Adapter;
 import cz.vutbr.fit.iha.adapter.device.BaseDevice;
+import cz.vutbr.fit.iha.adapter.location.Location;
 import cz.vutbr.fit.iha.adapter.parser.ContentRow;
 import cz.vutbr.fit.iha.adapter.parser.CustomViewPair;
 import cz.vutbr.fit.iha.adapter.parser.FalseAnswer;
@@ -46,7 +47,6 @@ import cz.vutbr.fit.iha.exception.NoConnectionException;
 import cz.vutbr.fit.iha.exception.NotImplementedException;
 import cz.vutbr.fit.iha.exception.NotRegAException;
 import cz.vutbr.fit.iha.exception.NotRegBException;
-import cz.vutbr.fit.iha.listing.Location;
 
 /**
  * Network service that handles communication with server.

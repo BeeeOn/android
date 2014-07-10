@@ -1,7 +1,6 @@
 package cz.vutbr.fit.iha.household;
 
 import java.util.ArrayList;
-import java.util.Random;
 
 import android.content.Context;
 import cz.vutbr.fit.iha.Constants;
@@ -10,10 +9,8 @@ import cz.vutbr.fit.iha.User;
 import cz.vutbr.fit.iha.User.Gender;
 import cz.vutbr.fit.iha.User.Role;
 import cz.vutbr.fit.iha.adapter.Adapter;
+import cz.vutbr.fit.iha.adapter.location.Location;
 import cz.vutbr.fit.iha.adapter.parser.XmlParsers;
-import cz.vutbr.fit.iha.listing.CustomizedListing;
-import cz.vutbr.fit.iha.listing.FavoritesListing;
-import cz.vutbr.fit.iha.listing.Location;
 
 /**
  * Represents demo household with adapters and devices loaded from local assets file.
@@ -32,13 +29,12 @@ public final class DemoHousehold extends Household {
 	public DemoHousehold(Context context) throws Exception {
 		mContext = context;
 		
-		if(!(new DemoData(mContext)).checkDemoData()){
+		if (!(new DemoData(mContext)).checkDemoData()) {
 			throw new Exception("Something wrong with demo data");
 		}
 		
 		prepareUser();
 		prepareAdapters();
-		prepareListings();
 	}
 	
 	/**
@@ -54,6 +50,7 @@ public final class DemoHousehold extends Household {
 	 */
 	private void prepareAdapters() {
 		this.adapters = new ArrayList<Adapter>();
+		
 		try {
 			String basePath = mContext.getExternalFilesDir(null).getPath() + "/";
 			
@@ -72,22 +69,7 @@ public final class DemoHousehold extends Household {
 		}
 		catch(Exception e){
 			e.printStackTrace();
-		}
-		
-	}
-	
-	/**
-	 * Prepare demo custom lists.
-	 */
-	private void prepareListings() {
-		this.favoritesListings = new ArrayList<FavoritesListing>();
-		
-		FavoritesListing list = new FavoritesListing("demoFavorites");
-		list.setName("My favorites");
-		list.setIcon((new Random()).nextInt(Location.icons.length));
-		list.setDevices(this.adapters.get(0).getDevices());
-
-		this.favoritesListings.add(list);
+		}	
 	}
 	
 }

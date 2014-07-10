@@ -32,9 +32,9 @@ import com.google.analytics.tracking.android.EasyTracker;
 import cz.vutbr.fit.iha.R;
 import cz.vutbr.fit.iha.activity.LocationScreenActivity;
 import cz.vutbr.fit.iha.adapter.device.BaseDevice;
+import cz.vutbr.fit.iha.adapter.location.Location;
+import cz.vutbr.fit.iha.adapter.location.Location.DefaultRoom;
 import cz.vutbr.fit.iha.controller.Controller;
-import cz.vutbr.fit.iha.listing.Location;
-import cz.vutbr.fit.iha.listing.Location.DefaultRoom;
 
 public class AddSensorActivityDialog extends Activity {
 

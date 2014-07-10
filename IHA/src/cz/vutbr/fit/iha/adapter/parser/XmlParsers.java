@@ -34,9 +34,9 @@ import cz.vutbr.fit.iha.adapter.device.StateDevice;
 import cz.vutbr.fit.iha.adapter.device.SwitchDevice;
 import cz.vutbr.fit.iha.adapter.device.TemperatureDevice;
 import cz.vutbr.fit.iha.adapter.device.UnknownDevice;
+import cz.vutbr.fit.iha.adapter.location.Location;
 import cz.vutbr.fit.iha.exception.ComVerMisException;
 import cz.vutbr.fit.iha.exception.XmlVerMisException;
-import cz.vutbr.fit.iha.listing.Location;
 
 /**
  * @author ThinkDeep

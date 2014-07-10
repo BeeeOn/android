@@ -20,7 +20,6 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 
 import cz.vutbr.fit.iha.R;
-import cz.vutbr.fit.iha.thread.ToastMessageThread;
 import cz.vutbr.fit.iha.activity.dialog.AddAdapterActivityDialog;
 import cz.vutbr.fit.iha.controller.Controller;
 import cz.vutbr.fit.iha.exception.CommunicationException;
@@ -30,6 +29,7 @@ import cz.vutbr.fit.iha.exception.NotRegAException;
 import cz.vutbr.fit.iha.exception.NotRegBException;
 import cz.vutbr.fit.iha.network.ActualUser;
 import cz.vutbr.fit.iha.network.GetGoogleAuth;
+import cz.vutbr.fit.iha.thread.ToastMessageThread;
 
 /**
  * First sign in class, controls first activity

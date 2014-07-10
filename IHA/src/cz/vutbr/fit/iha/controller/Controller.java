@@ -6,7 +6,6 @@ import java.util.Random;
 
 import android.content.Context;
 import android.text.format.Time;
-import cz.vutbr.fit.iha.R;
 import cz.vutbr.fit.iha.User;
 import cz.vutbr.fit.iha.adapter.Adapter;
 import cz.vutbr.fit.iha.adapter.device.BaseDevice;
@@ -14,16 +13,12 @@ import cz.vutbr.fit.iha.adapter.device.BaseDevice.SaveDevice;
 import cz.vutbr.fit.iha.adapter.device.DeviceLog;
 import cz.vutbr.fit.iha.adapter.device.StateDevice;
 import cz.vutbr.fit.iha.adapter.device.SwitchDevice;
+import cz.vutbr.fit.iha.adapter.location.Location;
 import cz.vutbr.fit.iha.exception.NetworkException;
 import cz.vutbr.fit.iha.exception.NoConnectionException;
 import cz.vutbr.fit.iha.exception.NotImplementedException;
 import cz.vutbr.fit.iha.household.DemoHousehold;
 import cz.vutbr.fit.iha.household.Household;
-import cz.vutbr.fit.iha.listing.CustomizedListing;
-import cz.vutbr.fit.iha.listing.FavoritesListing;
-import cz.vutbr.fit.iha.listing.Location;
-import cz.vutbr.fit.iha.listing.Location.DefaultRoom;
-import cz.vutbr.fit.iha.listing.LocationListing;
 import cz.vutbr.fit.iha.network.ActualUser;
 import cz.vutbr.fit.iha.network.Network;
 import cz.vutbr.fit.iha.persistence.Persistence;
@@ -605,80 +600,16 @@ public final class Controller {
 		throw new NotImplementedException();
 	}
 	
-	
-	/** Custom lists methods ************************************************/
-	
-	/**
-	 * Return list of all custom lists.
-	 * 
-	 * @return List with listings or empty list
-	 * @throws NotImplementedException
-	 */
-	public List<FavoritesListing> getCustomLists() {
-		if (mHousehold.favoritesListings == null) {
-			// TODO: load favorites from network
-			throw new NotImplementedException();
-		}
-		
-		return mHousehold.favoritesListings;
-	}
-	
-	/**
-	 * Return custom list by ID.
-	 * 
-	 * @param id
-	 * @return listing or null if not found
-	 * @throws NotImplementedException
-	 */
-	public FavoritesListing getCustomList(String id) {
-		for (FavoritesListing l : getCustomLists()) {
-			if (l.getId().equals(id))
-				return l;
-		}
-		
-		return null;
-	}
-
-	/**
-	 * Add new custom list to server.
-	 * 
-	 * @param list
-	 * @return true on success, false otherwise
-	 * @throws NotImplementedException
-	 */
-	public boolean addCustomList(FavoritesListing list) {
-		throw new NotImplementedException();
-	}
-	
-	/**
-	 * Delete custom list from server.
-	 * 
-	 * @param list
-	 * @return true on success, false otherwise
-	 * @throws NotImplementedException
-	 */
-	public boolean deleteCustomList(FavoritesListing list) {
-		throw new NotImplementedException();
-	}
-	
-	/**
-	 * Save custom list settings to server.
-	 * 
-	 * @param list
-	 * @return true on success, false otherwise
-	 * @throws NotImplementedException
-	 */
-	public boolean saveCustomList(FavoritesListing list) {
-		throw new NotImplementedException();
-	}
 
 	public void ignoreUninitialized(List<BaseDevice> devices) {
+		// TODO: use active adapter somehow
 		for (Adapter adapter : getAdapters()) {
 			adapter.ignoreUninitialized(devices);
 		}
 	}
 
 	public void unignoreUninitialized() {
+		// TODO: use active adapter somehow
 		for (Adapter adapter : getAdapters()) {
 			adapter.unignoreUninitialized();
 		}
