@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 import android.text.format.Time;
 import android.util.Log;
@@ -176,8 +177,45 @@ public class Adapter {
 		mLocations.clear();
 		
 		for (Location location : locations) {
-			mLocations.put(location.getId(), location);
+			addLocation(location);
 		}
+	}
+	
+	/**
+	 * Adds new location to list of locations. 
+	 * @param location
+	 * @return false if there is already location with this id
+	 */
+	public boolean addLocation(Location location) {
+		if (mLocations.containsKey(location.getId()))
+			return false;
+
+		mLocations.put(location.getId(), location);
+		return true;
+	}
+	
+	/**
+	 * Removes location from list of locations.
+	 * @param id
+	 * @return false when there wasn't location with this id
+	 */
+	public boolean deleteLocation(String id) {
+		return mLocations.remove(id) != null;
+	}
+	
+	/**
+	 * Updates location in list of locations.
+	 * @param location
+	 * @return
+	 */
+	public boolean updateLocation(Location location) {
+		if (!mLocations.containsKey(location.getId())) {
+			Log.w(TAG, String.format("Can't update location with id=%s. It doesn't exists.", location.getId()));
+			return false;
+		}
+		
+		mLocations.put(location.getId(), location);
+		return true;
 	}
 	
 	@Deprecated
@@ -192,18 +230,18 @@ public class Adapter {
 
 	/**
 	 * Return list of devices in specified location.
-	 * @param locationId
+	 * @param id
 	 * @return list with devices (or empty list)
 	 */
-	public List<BaseDevice> getDevicesByLocation(final String locationId) {
+	public List<BaseDevice> getDevicesByLocation(final String id) {
 		List<BaseDevice> devices = new ArrayList<BaseDevice>();
 		
 		// Small optimization
-		if (!mLocations.containsKey(locationId))
+		if (!mLocations.containsKey(id))
 			return devices;
 		
 		for (BaseDevice device : mDevices.values()) {
-			if (device.getLocationId().equals(locationId)) {
+			if (device.getLocationId().equals(id)) {
 				devices.add(device);
 			}
 		}
@@ -227,6 +265,9 @@ public class Adapter {
 	 */
 	public void addDevice(final BaseDevice device) {
 		mDevices.put(device.getId(), device);
+		
+		if (!mLocations.containsKey(device.getLocationId()))
+			Log.w(TAG, "Adding device with unknown locationId: " + device.getLocationId());
 		
 		if (!device.isInitialized() && !mUninitializedIgnored.containsKey(device.getId()))
 			mUninitializedDevices.put(device.getId(), device);
@@ -278,6 +319,21 @@ public class Adapter {
 		}
 		
 		mUninitializedIgnored.clear();
+	}
+
+	/**
+	 * This is used ONLY for DemoMode when saving new location! 
+	 * @return unique id of location
+	 */
+	public String getUnusedLocationId() {		
+		String id;
+		Random random = new Random();
+
+		do {
+			id = String.valueOf(random.nextInt(1000));
+		} while (mLocations.containsKey(id));
+		
+		return id;
 	}
 	
 }

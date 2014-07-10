@@ -154,6 +154,12 @@ public final class Controller {
 	
 	/** Adapter methods *****************************************************/
 
+	/**
+	 * Refreshes adapter data - loads devices and locations
+	 * @param adapter
+	 * @param forceUpdate if you want to refresh adapter even if it's perhaps not needed
+	 * @return
+	 */
 	private boolean refreshAdapter(Adapter adapter, boolean forceUpdate) {
 		if (mDemoMode)
 			return true;
@@ -167,17 +173,20 @@ public final class Controller {
 			return false;
 
 		Adapter newAdapter = null;
+		List<Location> newLocations = null;
 		
 		try {
 			newAdapter = mNetwork.init(adapter.getId());
+			newLocations = mNetwork.getLocations(adapter.getId());
 		} catch (NetworkException e) {
 			e.printStackTrace();
 		}
 		
 		if (newAdapter == null)
 			return false;
-		
+
 		// Update adapter with new data
+		adapter.setLocations(newLocations);
 		adapter.setDevices(newAdapter.getDevices());
 		adapter.setId(newAdapter.getId());
 		adapter.setName(newAdapter.getName());
@@ -259,8 +268,7 @@ public final class Controller {
 			try { 
 				mHousehold.adapters = mNetwork.getAdapters();
 			} catch (NetworkException e) {
-				// TODO Auto-generated catch block 
-				e.printStackTrace(); 
+				e.printStackTrace();
 			}
 			mReloadAdapters = false;
 		}
@@ -269,7 +277,7 @@ public final class Controller {
 		if (mHousehold.adapters == null) 
 			return new ArrayList<Adapter>();
 
-		// Refresh all adapters (load their devices)
+		// Refresh all adapters (load their devices and locations)
 		for (Adapter adapter : mHousehold.adapters) {
 			refreshAdapter(adapter, false);
 		}
@@ -295,14 +303,14 @@ public final class Controller {
 	}
 	
 	/**
-	 * Return id of active adapter.
+	 * Return active adapter.
 	 * 
-	 * @return id of adapter if found, null otherwise
+	 * @return adapter if found, null otherwise
 	 */
-	public synchronized String getActiveAdapterId() {
+	public synchronized Adapter getActiveAdapter() {
 		// FIXME: right now it return first adapter every time, rewrite it to allow switching them
 		for (Adapter a : getAdapters()) {
-			return a.getId();
+			return a;
 		}
 		
 		return null;
@@ -365,6 +373,8 @@ public final class Controller {
 	 * @return List of Location
 	 */
 	public List<Location> getLocations() {
+		// FIXME: Should this be removed when there will be switching activeAdapter somehow, because one should call getLocation on adapter object?
+		
 		List<Location> locations = new ArrayList<Location>();
 		// TODO: get locations only from active adapter
 		for (Adapter adapter : getAdapters()) {
@@ -383,7 +393,9 @@ public final class Controller {
 	 * @return Location if found, null otherwise.
 	 */
 	public Location getLocation(String id) {
-		// FIXME: support activeAdapter somehow
+		// FIXME: should this be removed when there will be switching activeAdapter somehow, because one should call getLocation on adapter object?
+
+		// TODO: or use getLocations() method as base?
 		for (Adapter a : getAdapters()) {
 			Location location = a.getLocation(id);
 			if (location != null)
@@ -396,13 +408,29 @@ public final class Controller {
 	/**
 	 * Deletes location from server.
 	 * 
-	 * @param id
+	 * @param location
 	 * @return
-	 * @throws NotImplementedException
 	 */
-	public boolean deleteLocation(String id) {
-		// TODO: implement this
-		throw new NotImplementedException();
+	public boolean deleteLocation(Location location) {
+		Adapter adapter = getActiveAdapter();
+		if (adapter == null)
+			return false;
+
+		boolean deleted = false;
+		try {
+			if (mDemoMode)
+				deleted = true;
+			else	
+				deleted = mNetwork.deleteLocation(adapter.getId(), location);
+		} catch (NetworkException e) {
+			e.printStackTrace();
+		}
+		
+		if (!deleted)
+			return false;
+
+		// Location was deleted on server, remove it from adapter too		
+		return adapter.deleteLocation(location.getId());
 	}
 	
 	/**
@@ -412,8 +440,43 @@ public final class Controller {
 	 * @return always false, until implemented
 	 */
 	public boolean saveLocation(Location location) {
-		// TODO: implement this
-		return false;
+		// TODO: separate it to 2 methods? (createLocation and saveLocation)
+		Adapter adapter = getActiveAdapter();
+		if (adapter == null)
+			return false;
+
+		boolean saved = false;
+		boolean adding = location.getId().equals(Location.NEW_LOCATION_ID);
+		try {
+			if (adding) {
+				if (mDemoMode) {
+					location.setId(adapter.getUnusedLocationId());
+				} else {
+					location = mNetwork.createLocation(adapter.getId(), location);
+					saved = (location != null);
+				}
+			} else {
+				if (mDemoMode) {
+					saved = true;
+				} else {
+					ArrayList<Location> locations = new ArrayList<Location>();
+					locations.add(location);
+					saved = mNetwork.updateLocations(adapter.getId(), locations);
+				}
+			}
+		} catch (NetworkException e) {
+			e.printStackTrace();
+		}
+		
+		if (!saved)
+			return false;
+
+		// Location was saved on server, save it to adapter too
+		if (adding) {
+			return adapter.addLocation(location);
+		} else {
+			return adapter.updateLocation(location);
+		}		
 	}
 
 
