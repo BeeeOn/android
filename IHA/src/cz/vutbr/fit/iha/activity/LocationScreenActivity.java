@@ -206,7 +206,8 @@ public class LocationScreenActivity extends SherlockFragmentActivity {
 				if(backPressed) 
 					onBackPressed();
 				// Set the title on the action when drawer closed
-				getSupportActionBar().setTitle(mActiveLocation.getName());
+				if (mActiveLocation != null)
+					getSupportActionBar().setTitle(mActiveLocation.getName());
 				super.onDrawerClosed(view);
 				Log.d(TAG, "BackPressed - onDrawerClosed " + String.valueOf(backPressed));
 				
