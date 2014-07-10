@@ -1,13 +1,14 @@
 package cz.vutbr.fit.iha.activity.dialog;
 
+import android.app.Activity;
+import android.os.Bundle;
+import android.view.Window;
+
 import com.google.analytics.tracking.android.EasyTracker;
 
 import cz.vutbr.fit.iha.R;
 import cz.vutbr.fit.iha.activity.LocationScreenActivity;
 import cz.vutbr.fit.iha.controller.Controller;
-import android.app.Activity;
-import android.os.Bundle;
-import android.view.Window;
 
 public class EditLocationActitivityDialog extends Activity {
 	

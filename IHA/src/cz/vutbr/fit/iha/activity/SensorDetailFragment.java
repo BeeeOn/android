@@ -4,24 +4,18 @@ import java.text.DateFormat;
 import java.util.Date;
 
 import android.graphics.Color;
-import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v4.graphics.drawable.DrawableCompat;
 import android.text.format.Time;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
-import android.view.View.OnFocusChangeListener;
 import android.view.View.OnLongClickListener;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.EditText;
-//import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
@@ -30,18 +24,16 @@ import com.actionbarsherlock.app.SherlockFragment;
 import com.actionbarsherlock.view.ActionMode;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
-import com.google.android.gms.internal.gr;
-import com.jjoe64.graphview.BarGraphView;
 import com.jjoe64.graphview.GraphView;
-import com.jjoe64.graphview.GraphViewDataInterface;
 import com.jjoe64.graphview.GraphViewSeries;
 import com.jjoe64.graphview.GraphViewSeries.GraphViewSeriesStyle;
 import com.jjoe64.graphview.LineGraphView;
-import com.jjoe64.graphview.ValueDependentColor;
 
 import cz.vutbr.fit.iha.R;
 import cz.vutbr.fit.iha.adapter.device.BaseDevice;
+import cz.vutbr.fit.iha.adapter.location.Location;
 import cz.vutbr.fit.iha.controller.Controller;
+//import android.widget.LinearLayout;
 
 public class SensorDetailFragment extends SherlockFragment {
 
@@ -148,7 +140,6 @@ public class SensorDetailFragment extends SherlockFragment {
 
 		// Set name of sensor
 		sName.setText(device.getName());
-
 		sName.setBackgroundColor(Color.TRANSPARENT);
 		sName.setOnLongClickListener(new OnLongClickListener() {
 			
@@ -163,8 +154,15 @@ public class SensorDetailFragment extends SherlockFragment {
 				return true;
 			}
 		});
-		// Set name of location from sensor
-		sLocation.setText(device.getLocation().getName());
+		// Set name of location
+		if (mController != null) {
+			Location location = mController.getLocationByDevice(device);
+			if (location != null)
+				sLocation.setText(location.getName());
+		} else {
+			Log.e(TAG, "mController is null (this shouldn't happen)");
+			sLocation.setText(device.getLocationId());
+		}
 		// Set value of sensor
 		sValue.setText(device.getStringValueUnit(getActivity()));
 		// Set icon of sensor

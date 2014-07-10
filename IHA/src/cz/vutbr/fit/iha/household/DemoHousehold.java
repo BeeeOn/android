@@ -1,7 +1,6 @@
 package cz.vutbr.fit.iha.household;
 
 import java.util.ArrayList;
-import java.util.Random;
 
 import android.content.Context;
 import cz.vutbr.fit.iha.Constants;
@@ -10,11 +9,8 @@ import cz.vutbr.fit.iha.User;
 import cz.vutbr.fit.iha.User.Gender;
 import cz.vutbr.fit.iha.User.Role;
 import cz.vutbr.fit.iha.adapter.Adapter;
-import cz.vutbr.fit.iha.adapter.device.BaseDevice;
+import cz.vutbr.fit.iha.adapter.location.Location;
 import cz.vutbr.fit.iha.adapter.parser.XmlParsers;
-import cz.vutbr.fit.iha.listing.CustomizedListing;
-import cz.vutbr.fit.iha.listing.FavoritesListing;
-import cz.vutbr.fit.iha.listing.Location;
 
 /**
  * Represents demo household with adapters and devices loaded from local assets file.
@@ -33,13 +29,12 @@ public final class DemoHousehold extends Household {
 	public DemoHousehold(Context context) throws Exception {
 		mContext = context;
 		
-		if(!(new DemoData(mContext)).checkDemoData()){
+		if (!(new DemoData(mContext)).checkDemoData()) {
 			throw new Exception("Something wrong with demo data");
 		}
 		
 		prepareUser();
 		prepareAdapters();
-		prepareListings();
 	}
 	
 	/**
@@ -55,49 +50,26 @@ public final class DemoHousehold extends Household {
 	 */
 	private void prepareAdapters() {
 		this.adapters = new ArrayList<Adapter>();
-		try{
-			String filename = mContext.getExternalFilesDir(null).getPath() + "/" +  Constants.DEMO_FILENAME;
-			Adapter adapter = XmlParsers.getDemoAdapterFromFile(filename);
+		
+		try {
+			String basePath = mContext.getExternalFilesDir(null).getPath() + "/";
+			
+			Adapter adapter = XmlParsers.getDemoAdapterFromFile(basePath + Constants.DEMO_FILENAME);
 //			if(adapter == null){
 //				if((new DemoData(mContext)).checkDemoData()){
 //					//FIXME: do it better
 //					adapter = XmlParsers.getDemoAdapterFromFile(filename);
 //				}
 //			}
+			
+			ArrayList<Location> lokace = XmlParsers.getDemoLocationsFromFile(basePath + Constants.DEMO_LOCATION_FILENAME);
+			adapter.setLocations(lokace);
+			
 			this.adapters.add(adapter);
-			
-			filename = mContext.getExternalFilesDir(null).getPath() + "/" +  Constants.DEMO_LOCATION_FILENAME;
-			//TODO: do something with locations
-			ArrayList<Location> lokace = XmlParsers.getDemoLocationsFromFile(filename);
-			
-			//FIXME: this is temporary solution (maybe getDemoLocationsFromFile should returns hashmap with id key)
-			for(BaseDevice dev : adapter.getDevices()){
-				for(Location loc : lokace){
-					if(dev.getLocation().getId().equals(loc.getId())){
-						dev.setLocation(loc);
-						break;
-					}
-				}
-			}
 		}
 		catch(Exception e){
 			e.printStackTrace();
-		}
-		
-	}
-	
-	/**
-	 * Prepare demo custom lists.
-	 */
-	private void prepareListings() {
-		this.favoritesListings = new ArrayList<FavoritesListing>();
-		
-		FavoritesListing list = new FavoritesListing("demoFavorites");
-		list.setName("My favorites");
-		list.setIcon((new Random()).nextInt(CustomizedListing.icons.length));
-		list.setDevices(this.adapters.get(0).getDevices());
-
-		this.favoritesListings.add(list);
+		}	
 	}
 	
 }

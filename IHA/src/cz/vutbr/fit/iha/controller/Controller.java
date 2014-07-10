@@ -6,7 +6,6 @@ import java.util.Random;
 
 import android.content.Context;
 import android.text.format.Time;
-import cz.vutbr.fit.iha.R;
 import cz.vutbr.fit.iha.User;
 import cz.vutbr.fit.iha.adapter.Adapter;
 import cz.vutbr.fit.iha.adapter.device.BaseDevice;
@@ -14,15 +13,12 @@ import cz.vutbr.fit.iha.adapter.device.BaseDevice.SaveDevice;
 import cz.vutbr.fit.iha.adapter.device.DeviceLog;
 import cz.vutbr.fit.iha.adapter.device.StateDevice;
 import cz.vutbr.fit.iha.adapter.device.SwitchDevice;
+import cz.vutbr.fit.iha.adapter.location.Location;
 import cz.vutbr.fit.iha.exception.NetworkException;
 import cz.vutbr.fit.iha.exception.NoConnectionException;
 import cz.vutbr.fit.iha.exception.NotImplementedException;
 import cz.vutbr.fit.iha.household.DemoHousehold;
 import cz.vutbr.fit.iha.household.Household;
-import cz.vutbr.fit.iha.listing.CustomizedListing;
-import cz.vutbr.fit.iha.listing.FavoritesListing;
-import cz.vutbr.fit.iha.listing.Location;
-import cz.vutbr.fit.iha.listing.LocationListing;
 import cz.vutbr.fit.iha.network.ActualUser;
 import cz.vutbr.fit.iha.network.Network;
 import cz.vutbr.fit.iha.persistence.Persistence;
@@ -158,6 +154,12 @@ public final class Controller {
 	
 	/** Adapter methods *****************************************************/
 
+	/**
+	 * Refreshes adapter data - loads devices and locations
+	 * @param adapter
+	 * @param forceUpdate if you want to refresh adapter even if it's perhaps not needed
+	 * @return
+	 */
 	private boolean refreshAdapter(Adapter adapter, boolean forceUpdate) {
 		if (mDemoMode)
 			return true;
@@ -171,17 +173,20 @@ public final class Controller {
 			return false;
 
 		Adapter newAdapter = null;
+		List<Location> newLocations = null;
 		
 		try {
 			newAdapter = mNetwork.init(adapter.getId());
+			newLocations = mNetwork.getLocations(adapter.getId());
 		} catch (NetworkException e) {
 			e.printStackTrace();
 		}
 		
 		if (newAdapter == null)
 			return false;
-		
+
 		// Update adapter with new data
+		adapter.setLocations(newLocations);
 		adapter.setDevices(newAdapter.getDevices());
 		adapter.setId(newAdapter.getId());
 		adapter.setName(newAdapter.getName());
@@ -224,16 +229,20 @@ public final class Controller {
 			return true;
 		}
 		
+		Adapter adapter = getAdapterByDevice(device);
+		if (adapter == null)
+			return false;
+		
 		ArrayList<BaseDevice> devices = new ArrayList<BaseDevice>();
 		devices.add(device);
 
 		try {
-			devices = mNetwork.update(devices);
+			devices = mNetwork.update(adapter.getId(), devices);
 			if (devices == null || devices.size() != 1)
 				return false;
 			
 			BaseDevice newDevice = devices.get(0);
-			device.setLocation(newDevice.getLocation());
+			device.setLocationId(newDevice.getLocationId());
 			device.setName(newDevice.getName());
 			device.setRefresh(newDevice.getRefresh());
 			device.lastUpdate.set(newDevice.lastUpdate);
@@ -259,8 +268,7 @@ public final class Controller {
 			try { 
 				mHousehold.adapters = mNetwork.getAdapters();
 			} catch (NetworkException e) {
-				// TODO Auto-generated catch block 
-				e.printStackTrace(); 
+				e.printStackTrace();
 			}
 			mReloadAdapters = false;
 		}
@@ -269,7 +277,7 @@ public final class Controller {
 		if (mHousehold.adapters == null) 
 			return new ArrayList<Adapter>();
 
-		// Refresh all adapters (load their devices)
+		// Refresh all adapters (load their devices and locations)
 		for (Adapter adapter : mHousehold.adapters) {
 			refreshAdapter(adapter, false);
 		}
@@ -293,7 +301,36 @@ public final class Controller {
 		
 		return null;
 	}
+	
+	/**
+	 * Return active adapter.
+	 * 
+	 * @return adapter if found, null otherwise
+	 */
+	public synchronized Adapter getActiveAdapter() {
+		// FIXME: right now it return first adapter every time, rewrite it to allow switching them
+		for (Adapter a : getAdapters()) {
+			return a;
+		}
+		
+		return null;
+	}
 
+	/**
+	 * Return Adapter which this device belongs to.
+	 * 
+	 * @param device
+	 * @return Adapter if found, null otherwise
+	 */
+	public Adapter getAdapterByDevice(BaseDevice device) {
+		for (Adapter a : getAdapters()) {
+			if (a.getDeviceById(device.getId()) != null);
+				return a; 
+		}
+		
+		return null;
+	}
+	
 	/**
 	 * Registers new adapter to server.
 	 * 
@@ -333,69 +370,52 @@ public final class Controller {
 	/**
 	 * Return all locations from all adapters.
 	 * 
-	 * @return List of LocationListing
+	 * @return List of Location
 	 */
-	public List<LocationListing> getLocations() {
-		List<LocationListing> listings = new ArrayList<LocationListing>();
+	public List<Location> getLocations() {
+		// FIXME: Should this be removed when there will be switching activeAdapter somehow, because one should call getLocation on adapter object?
 		
+		List<Location> locations = new ArrayList<Location>();
+		// TODO: get locations only from active adapter
 		for (Adapter adapter : getAdapters()) {
 			for (Location location : adapter.getLocations()) {
-				listings.add(new LocationListing(location.getId(), location));
+				locations.add(location);
 			}
 		}
 		
-		return listings;
-	}
-	
-	public List<LocationListing> getLocationsForAddSensorDialog(){
-		List<LocationListing> listings = new ArrayList<LocationListing>();
-		
-		for (Adapter adapter : getAdapters()) {
-			for (Location location : adapter.getLocations()) {
-				listings.add(new LocationListing(location.getId(), location));
-			}
-		}
-		
-		String[] defaultLocations = mContext.getResources().getStringArray(R.array.locations);
-		//FIXME: do it better
-		for(String defLoc : defaultLocations){
-			boolean found = false;
-			for(LocationListing locList : listings){
-				if(locList.getName().equals(defLoc)){
-					found = true;
-					break;
-				}
-			}
-			if(!found){
-				listings.add(new LocationListing("0", new Location("0", defLoc, getIconResourceByName(defLoc, defaultLocations))));
-			}
-		}
-		
-		listings.add(new LocationListing("0", new Location("0", mContext.getResources().getString(R.string.addsensor_new_location_spinner), 0)));
-		
-		return listings;
+		return locations;
 	}
 	
 	/**
-	 * Return location by ID.
+	 * Return location by id.
 	 * 
 	 * @param id
-	 * @return
-	 * @throws NotImplementedException
+	 * @return Location if found, null otherwise.
 	 */
-	public LocationListing getLocation(String id) {
-		throw new NotImplementedException();
+	public Location getLocation(String id) {
+		// FIXME: should this be removed when there will be switching activeAdapter somehow, because one should call getLocation on adapter object?
+
+		// TODO: or use getLocations() method as base?
+		for (Adapter a : getAdapters()) {
+			Location location = a.getLocation(id);
+			if (location != null)
+				return location;
+		}
+
+		return null;
 	}
 	
 	/**
-	 * Add new location to server.
-	 * 
-	 * @param location
-	 * @return
-	 * @throws NotImplementedException
+	 * Return location object that belongs to device.
+	 * @param device
+	 * @return Location if found, null otherwise.
 	 */
-	public boolean addLocation(LocationListing location) {
-		throw new NotImplementedException();
+	public Location getLocationByDevice(BaseDevice device) {
+		Adapter adapter = getAdapterByDevice(device);
+		if (adapter == null)
+			return null;
+		
+		return adapter.getLocation(device.getLocationId());
 	}
 	
 	/**
@@ -403,67 +423,77 @@ public final class Controller {
 	 * 
 	 * @param location
 	 * @return
-	 * @throws NotImplementedException
 	 */
-	public boolean deleteLocation(LocationListing location) {
-		throw new NotImplementedException();
-	}
-	
-	/**
-	 * Save changes of location to server.
-	 * 
-	 * @param location
-	 * @return
-	 * @throws NotImplementedException
-	 */
-	public boolean saveLocation(LocationListing location) {
-		throw new NotImplementedException();
-	}
-	
-	/**
-	 * Rename location from all adapters.
-	 * 
-	 * @param location
-	 * @param newName
-	 * @return true always
-	 */
-	public boolean renameLocation(String name, String newName) {
-		// TODO: Use rather saveLocation() method
-	
-		for (Adapter adapter : getAdapters()) {
-			for (BaseDevice device : adapter.getDevicesByLocation(name)) {
-				Location location = device.getLocation();
-				location.setId(newName);
-				location.setName(newName);
-				
-				device.setLocation(location);
-				// TODO: Save to server (somehow effectively)
-			}
+	public boolean deleteLocation(Location location) {
+		Adapter adapter = getActiveAdapter();
+		if (adapter == null)
+			return false;
+
+		boolean deleted = false;
+		try {
+			if (mDemoMode)
+				deleted = true;
+			else	
+				deleted = mNetwork.deleteLocation(adapter.getId(), location);
+		} catch (NetworkException e) {
+			e.printStackTrace();
 		}
 		
-		return true;
+		if (!deleted)
+			return false;
+
+		// Location was deleted on server, remove it from adapter too		
+		return adapter.deleteLocation(location.getId());
+	}
+	
+	/**
+	 * Save new or changed location to server.
+	 * 
+	 * @param location
+	 * @return always false, until implemented
+	 */
+	public boolean saveLocation(Location location) {
+		// TODO: separate it to 2 methods? (createLocation and saveLocation)
+		Adapter adapter = getActiveAdapter();
+		if (adapter == null)
+			return false;
+
+		boolean saved = false;
+		boolean adding = location.getId().equals(Location.NEW_LOCATION_ID);
+		try {
+			if (adding) {
+				if (mDemoMode) {
+					location.setId(adapter.getUnusedLocationId());
+					saved = true;
+				} else {
+					location = mNetwork.createLocation(adapter.getId(), location);
+					saved = (location != null);
+				}
+			} else {
+				if (mDemoMode) {
+					saved = true;
+				} else {
+					ArrayList<Location> locations = new ArrayList<Location>();
+					locations.add(location);
+					saved = mNetwork.updateLocations(adapter.getId(), locations);
+				}
+			}
+		} catch (NetworkException e) {
+			e.printStackTrace();
+		}
+		
+		if (!saved)
+			return false;
+
+		// Location was saved on server, save it to adapter too
+		if (adding) {
+			return adapter.addLocation(location);
+		} else {
+			return adapter.updateLocation(location);
+		}		
 	}
 
-	//TODO: maybe do otherwise
-	public int getIconResourceByName(String name, String[] defaults){
-		for(int i = 0; i < defaults.length; i++){
-			if(defaults[i].equals(name)){
-				return i+1;
-			}
-		}
-		return 0;
-	}
-	
-	public List<Integer> getLocationsIconsResource(){
-		ArrayList<Integer> result = new ArrayList<Integer>();
-		
-		for(int res : CustomizedListing.icons){
-			result.add(Integer.valueOf(res));
-		}
-		
-		return result;
-	}
-	
+
 	/** Devices methods *****************************************************/
 	
 	/**
@@ -533,11 +563,11 @@ public final class Controller {
 	 * @param location
 	 * @return List of devices (or empty list)
 	 */
-	public List<BaseDevice> getDevicesByLocation(String location) {
+	public List<BaseDevice> getDevicesByLocation(String locationId) {
 		List<BaseDevice> list = new ArrayList<BaseDevice>();
 		
 		for (Adapter adapter : getAdapters()) {
-			list.addAll(adapter.getDevicesByLocation(location));
+			list.addAll(adapter.getDevicesByLocation(locationId));
 		}
 		
 		return list;
@@ -563,8 +593,11 @@ public final class Controller {
 		boolean result = false;
 
 		try {
-			result = mNetwork.partial(devices);
-			result = updateDevice(device);
+			Adapter adapter = getAdapterByDevice(device);
+			if (adapter != null) {
+				result = mNetwork.partial(adapter.getId(), devices);
+				result = updateDevice(device);
+			}
 		} catch (NetworkException e) {
 			e.printStackTrace();
 		}
@@ -644,80 +677,16 @@ public final class Controller {
 		throw new NotImplementedException();
 	}
 	
-	
-	/** Custom lists methods ************************************************/
-	
-	/**
-	 * Return list of all custom lists.
-	 * 
-	 * @return List with listings or empty list
-	 * @throws NotImplementedException
-	 */
-	public List<FavoritesListing> getCustomLists() {
-		if (mHousehold.favoritesListings == null) {
-			// TODO: load favorites from network
-			throw new NotImplementedException();
-		}
-		
-		return mHousehold.favoritesListings;
-	}
-	
-	/**
-	 * Return custom list by ID.
-	 * 
-	 * @param id
-	 * @return listing or null if not found
-	 * @throws NotImplementedException
-	 */
-	public FavoritesListing getCustomList(String id) {
-		for (FavoritesListing l : getCustomLists()) {
-			if (l.getId().equals(id))
-				return l;
-		}
-		
-		return null;
-	}
-
-	/**
-	 * Add new custom list to server.
-	 * 
-	 * @param list
-	 * @return true on success, false otherwise
-	 * @throws NotImplementedException
-	 */
-	public boolean addCustomList(FavoritesListing list) {
-		throw new NotImplementedException();
-	}
-	
-	/**
-	 * Delete custom list from server.
-	 * 
-	 * @param list
-	 * @return true on success, false otherwise
-	 * @throws NotImplementedException
-	 */
-	public boolean deleteCustomList(FavoritesListing list) {
-		throw new NotImplementedException();
-	}
-	
-	/**
-	 * Save custom list settings to server.
-	 * 
-	 * @param list
-	 * @return true on success, false otherwise
-	 * @throws NotImplementedException
-	 */
-	public boolean saveCustomList(FavoritesListing list) {
-		throw new NotImplementedException();
-	}
 
 	public void ignoreUninitialized(List<BaseDevice> devices) {
+		// TODO: use active adapter somehow
 		for (Adapter adapter : getAdapters()) {
 			adapter.ignoreUninitialized(devices);
 		}
 	}
 
 	public void unignoreUninitialized() {
+		// TODO: use active adapter somehow
 		for (Adapter adapter : getAdapters()) {
 			adapter.unignoreUninitialized();
 		}

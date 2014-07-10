@@ -34,9 +34,9 @@ import cz.vutbr.fit.iha.adapter.device.StateDevice;
 import cz.vutbr.fit.iha.adapter.device.SwitchDevice;
 import cz.vutbr.fit.iha.adapter.device.TemperatureDevice;
 import cz.vutbr.fit.iha.adapter.device.UnknownDevice;
+import cz.vutbr.fit.iha.adapter.location.Location;
 import cz.vutbr.fit.iha.exception.ComVerMisException;
 import cz.vutbr.fit.iha.exception.XmlVerMisException;
-import cz.vutbr.fit.iha.listing.Location;
 
 /**
  * @author ThinkDeep
@@ -275,13 +275,10 @@ public class XmlParsers {
 			
 
 			while(mParser.nextTag() != XmlPullParser.END_TAG && !(nameTag = mParser.getName()).equals(DEVICE)){
-				if(nameTag.equals(LOCATION)){
-					Location location = new Location();
-					location.setId(getSecureAttrValue(ns, ID));
-					device.setLocation(location);
+				if(nameTag.equals(LOCATION)) {
+					device.setLocationId(getSecureAttrValue(ns, ID));
 					mParser.next();
-				}
-				else if(nameTag.equals(NAME))
+				} else if(nameTag.equals(NAME))
 					device.setName(readText(NAME));
 				else if(nameTag.equals(REFRESH))
 					device.setRefresh(Integer.parseInt(readText(REFRESH)));

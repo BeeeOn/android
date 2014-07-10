@@ -35,6 +35,7 @@ import cz.vutbr.fit.iha.User;
 import cz.vutbr.fit.iha.activity.LoginActivity;
 import cz.vutbr.fit.iha.adapter.Adapter;
 import cz.vutbr.fit.iha.adapter.device.BaseDevice;
+import cz.vutbr.fit.iha.adapter.location.Location;
 import cz.vutbr.fit.iha.adapter.parser.ContentRow;
 import cz.vutbr.fit.iha.adapter.parser.CustomViewPair;
 import cz.vutbr.fit.iha.adapter.parser.FalseAnswer;
@@ -46,7 +47,6 @@ import cz.vutbr.fit.iha.exception.NoConnectionException;
 import cz.vutbr.fit.iha.exception.NotImplementedException;
 import cz.vutbr.fit.iha.exception.NotRegAException;
 import cz.vutbr.fit.iha.exception.NotRegBException;
-import cz.vutbr.fit.iha.listing.Location;
 
 /**
  * Network service that handles communication with server.
@@ -403,7 +403,8 @@ public class Network {
 		ParsedMessage msg;
 		
 		try {
-			String messageToSend = XmlCreator.createInit(Integer.toString(mSessionId), adapterId);
+//			String messageToSend = XmlCreator.createInit(Integer.toString(mSessionId), adapterId);
+			String messageToSend = XmlCreator.createGetXml(Integer.toString(mSessionId), adapterId);
 			
 			Log.d("IHA - Network fromApp", messageToSend);
 			
@@ -503,14 +504,14 @@ public class Network {
 	 * @throws NoConnectionException 
 	 * @throws CommunicationException 
 	 */
-	public boolean partial(ArrayList<BaseDevice> devices) throws NoConnectionException, CommunicationException{
+	public boolean partial(String adapterId, ArrayList<BaseDevice> devices) throws NoConnectionException, CommunicationException{
 		if(!isAvailable())
 			throw new NoConnectionException();
 		
 		ParsedMessage msg;
 		
 		try {
-			String messageToSend = XmlCreator.createPartial(Integer.toString(mSessionId), devices);
+			String messageToSend = XmlCreator.createPartial(adapterId, Integer.toString(mSessionId), devices);
 			
 			Log.d("IHA - Network fromApp", messageToSend);
 			
@@ -541,7 +542,7 @@ public class Network {
 				//return null;
 			}
 			signIn(ActualUser.getActualUser().getEmail());
-			return partial(devices);
+			return partial(adapterId, devices);
 		}else if(msg.getState().equals(FALSE) && ((FalseAnswer)msg.data).getErrMessage().length() != 0){
 			throw new CommunicationException(((FalseAnswer)msg.data).getErrMessage());
 		}else
@@ -555,14 +556,14 @@ public class Network {
 	 * @throws NoConnectionException 
 	 * @throws CommunicationException 
 	 */
-	public ArrayList<BaseDevice> update(ArrayList<BaseDevice> devices) throws NoConnectionException, CommunicationException{
+	public ArrayList<BaseDevice> update(String adapterId, ArrayList<BaseDevice> devices) throws NoConnectionException, CommunicationException{
 		if(!isAvailable())
 			throw new NoConnectionException();
 		
 		ParsedMessage msg;
 		
 		try {
-			String messageToSend = XmlCreator.createUpdate(Integer.toString(mSessionId), devices);
+			String messageToSend = XmlCreator.createUpdate(adapterId, Integer.toString(mSessionId), devices);
 			
 			Log.d("IHA - Network fromApp", messageToSend);
 			
@@ -597,7 +598,7 @@ public class Network {
 				//return null;
 			}
 			signIn(ActualUser.getActualUser().getEmail());
-			return update(devices);
+			return update(adapterId, devices);
 		}else if(msg.getState().equals(FALSE) && ((FalseAnswer)msg.data).getErrMessage().length() != 0){
 			throw new CommunicationException(((FalseAnswer)msg.data).getErrMessage());
 		}else
@@ -613,7 +614,7 @@ public class Network {
 	 * @throws NoConnectionException 
 	 * @throws CommunicationException 
 	 */
-	public ArrayList<ContentRow> logName(String deviceId, int deviceType, String from, String to, String funcType, int interval) throws NoConnectionException, CommunicationException{
+	public ArrayList<ContentRow> logName(String adapterId, String deviceId, int deviceType, String from, String to, String funcType, int interval) throws NoConnectionException, CommunicationException{
 		// TODO: test properly
 		if(!isAvailable())
 			throw new NoConnectionException();
@@ -621,7 +622,7 @@ public class Network {
 		ParsedMessage msg;
 		
 		try {
-			String messageToSend = XmlCreator.createLogName(Integer.toString(mSessionId), deviceId, deviceType, from, to, funcType, interval);
+			String messageToSend = XmlCreator.createLogName(adapterId, Integer.toString(mSessionId), deviceId, deviceType, from, to, funcType, interval);
 			
 			Log.d("IHA - Network fromApp", messageToSend);
 			
@@ -656,7 +657,7 @@ public class Network {
 				//return null;
 			}
 			signIn(ActualUser.getActualUser().getEmail());
-			return logName(deviceId, deviceType, from, to, funcType, interval);
+			return logName(adapterId, deviceId, deviceType, from, to, funcType, interval);
 			
 		}else if(msg.getState().equals(FALSE) && ((FalseAnswer)msg.data).getErrMessage().length() != 0){
 			throw new CommunicationException(((FalseAnswer)msg.data).getErrMessage());
@@ -674,8 +675,8 @@ public class Network {
 	 * @throws CommunicationException 
 	 * @throws NoConnectionException 
 	 */
-	public ArrayList<ContentRow> getLog(String deviceId, int deviceType, String from, String to, String funcType, int interval) throws NoConnectionException, CommunicationException{
-		return logName(deviceId, deviceType, from, to, funcType, interval);
+	public ArrayList<ContentRow> getLog(String adapterId, String deviceId, int deviceType, String from, String to, String funcType, int interval) throws NoConnectionException, CommunicationException{
+		return logName(adapterId, deviceId, deviceType, from, to, funcType, interval);
 	}
 	
 	/**
@@ -687,7 +688,7 @@ public class Network {
 	 * @throws NoConnectionException 
 	 * @throws CommunicationException 
 	 */
-	public boolean addView(String nameOfView, int iconId, ArrayList<BaseDevice> devices) throws NoConnectionException, CommunicationException{
+	public boolean addView(String adapterId, String nameOfView, int iconId, ArrayList<BaseDevice> devices) throws NoConnectionException, CommunicationException{
 		// TODO: test properly
 		if(!isAvailable())
 			throw new NoConnectionException();
@@ -695,7 +696,7 @@ public class Network {
 		ParsedMessage msg;
 		
 		try {
-			String messageToSend = XmlCreator.createAddView(Integer.toString(mSessionId), nameOfView, iconId, devices);
+			String messageToSend = XmlCreator.createAddView(adapterId, Integer.toString(mSessionId), nameOfView, iconId, devices);
 			
 			Log.d("IHA - Network fromApp", messageToSend);
 			
@@ -726,7 +727,7 @@ public class Network {
 				//return null;
 			}
 			signIn(ActualUser.getActualUser().getEmail());
-			return addView(nameOfView, iconId, devices);
+			return addView(adapterId, nameOfView, iconId, devices);
 			
 		}else if(msg.getState().equals(FALSE) && ((FalseAnswer)msg.data).getErrMessage().length() != 0){
 			throw new CommunicationException(((FalseAnswer)msg.data).getErrMessage());
@@ -740,7 +741,7 @@ public class Network {
 	 * @throws NoConnectionException 
 	 * @throws CommunicationException 
 	 */
-	public ArrayList<CustomViewPair> getViews() throws NoConnectionException, CommunicationException{
+	public ArrayList<CustomViewPair> getViews(String adapterId) throws NoConnectionException, CommunicationException{
 		// TODO: test properly
 		if(!isAvailable())
 			throw new NoConnectionException();
@@ -748,7 +749,7 @@ public class Network {
 		ParsedMessage msg;
 		
 		try {
-			String messageToSend = XmlCreator.createGetViews(Integer.toString(mSessionId));
+			String messageToSend = XmlCreator.createGetViews(adapterId, Integer.toString(mSessionId));
 			
 			Log.d("IHA - Network fromApp", messageToSend);
 			
@@ -783,7 +784,7 @@ public class Network {
 				//return null;
 			}
 			signIn(ActualUser.getActualUser().getEmail());
-			return getViews();
+			return getViews(adapterId);
 			
 		}else if(msg.getState().equals(FALSE) && ((FalseAnswer)msg.data).getErrMessage().length() != 0){
 			throw new CommunicationException(((FalseAnswer)msg.data).getErrMessage());
@@ -798,7 +799,7 @@ public class Network {
 	 * @throws NoConnectionException 
 	 * @throws CommunicationException 
 	 */
-	public boolean deleteView(String viewName) throws NoConnectionException, CommunicationException{
+	public boolean deleteView(String adapterId, String viewName) throws NoConnectionException, CommunicationException{
 		// TODO: test properly
 		if(!isAvailable())
 			throw new NoConnectionException();
@@ -806,7 +807,7 @@ public class Network {
 		ParsedMessage msg;
 		
 		try {
-			String messageToSend = XmlCreator.createDelView(Integer.toString(mSessionId), viewName);
+			String messageToSend = XmlCreator.createDelView(adapterId, Integer.toString(mSessionId), viewName);
 			
 			Log.d("IHA - Network fromApp", messageToSend);
 			
@@ -837,7 +838,7 @@ public class Network {
 				//return null;
 			}
 			signIn(ActualUser.getActualUser().getEmail());
-			return deleteView(viewName);
+			return deleteView(adapterId, viewName);
 			
 		}else if(msg.getState().equals(FALSE) && ((FalseAnswer)msg.data).getErrMessage().length() != 0){
 			throw new CommunicationException(((FalseAnswer)msg.data).getErrMessage());
@@ -853,7 +854,7 @@ public class Network {
 	 * @throws NoConnectionException 
 	 * @throws CommunicationException 
 	 */
-	public boolean updateView(String viewName, int iconId, HashMap<String, String> devices) throws NoConnectionException, CommunicationException{
+	public boolean updateView(String adapterId, String viewName, int iconId, HashMap<String, String> devices) throws NoConnectionException, CommunicationException{
 		//TODO: test properly
 		if(!isAvailable())
 			throw new NoConnectionException();
@@ -861,7 +862,7 @@ public class Network {
 		ParsedMessage msg;
 		
 		try {
-			String messageToSend = XmlCreator.createUpdateView(Integer.toString(mSessionId), viewName, iconId, devices);
+			String messageToSend = XmlCreator.createUpdateView(adapterId, Integer.toString(mSessionId), viewName, iconId, devices);
 			
 			Log.d("IHA - Network fromApp", messageToSend);
 			
@@ -892,7 +893,7 @@ public class Network {
 				//return null;
 			}
 			signIn(ActualUser.getActualUser().getEmail());
-			return updateView(viewName, iconId, devices);
+			return updateView(adapterId, viewName, iconId, devices);
 		}else if(msg.getState().equals(FALSE) && ((FalseAnswer)msg.data).getErrMessage().length() != 0){
 			throw new CommunicationException(((FalseAnswer)msg.data).getErrMessage());
 		}else
@@ -906,7 +907,7 @@ public class Network {
 	 * @throws NoConnectionException 
 	 * @throws CommunicationException 
 	 */
-	public boolean addConnectionAccount(HashMap<String, String> userNrole) throws NoConnectionException, CommunicationException{
+	public boolean addConnectionAccount(String adapterId, HashMap<String, String> userNrole) throws NoConnectionException, CommunicationException{
 		//TODO: test properly
 		if(!isAvailable())
 			throw new NoConnectionException();
@@ -914,7 +915,7 @@ public class Network {
 		ParsedMessage msg;
 		
 		try {
-			String messageToSend = XmlCreator.createAddConAccount(Integer.toString(mSessionId), userNrole);
+			String messageToSend = XmlCreator.createAddConAccount(adapterId, Integer.toString(mSessionId), userNrole);
 			
 			Log.d("IHA - Network fromApp", messageToSend);
 			
@@ -945,7 +946,7 @@ public class Network {
 				//return null;
 			}
 			signIn(ActualUser.getActualUser().getEmail());
-			return addConnectionAccount(userNrole);
+			return addConnectionAccount(adapterId, userNrole);
 		}else if(msg.getState().equals(FALSE) && ((FalseAnswer)msg.data).getErrMessage().length() != 0){
 			throw new CommunicationException(((FalseAnswer)msg.data).getErrMessage());
 		}else
@@ -959,7 +960,7 @@ public class Network {
 	 * @throws NoConnectionException 
 	 * @throws CommunicationException 
 	 */
-	public boolean deleteConnectionAccount(ArrayList<String> users) throws NoConnectionException, CommunicationException{
+	public boolean deleteConnectionAccount(String adapterId, ArrayList<String> users) throws NoConnectionException, CommunicationException{
 		//TODO: test properly
 		if(!isAvailable())
 			throw new NoConnectionException();
@@ -967,7 +968,7 @@ public class Network {
 		ParsedMessage msg;
 		
 		try {
-			String messageToSend = XmlCreator.createDelConAccount(Integer.toString(mSessionId), users);
+			String messageToSend = XmlCreator.createDelConAccount(adapterId, Integer.toString(mSessionId), users);
 			
 			Log.d("IHA - Network fromApp", messageToSend);
 			
@@ -998,7 +999,7 @@ public class Network {
 				//return null;
 			}
 			signIn(ActualUser.getActualUser().getEmail());
-			return deleteConnectionAccount(users);
+			return deleteConnectionAccount(adapterId, users);
 		}else if(msg.getState().equals(FALSE) && ((FalseAnswer)msg.data).getErrMessage().length() != 0){
 			throw new CommunicationException(((FalseAnswer)msg.data).getErrMessage());
 		}else
@@ -1011,7 +1012,7 @@ public class Network {
 	 * @throws NoConnectionException 
 	 * @throws CommunicationException 
 	 */
-	public HashMap<String, User> getConnectionAccountList() throws NoConnectionException, CommunicationException{
+	public HashMap<String, User> getConnectionAccountList(String adapterId) throws NoConnectionException, CommunicationException{
 		//TODO: test properly
 		if(!isAvailable())
 			throw new NoConnectionException();
@@ -1019,7 +1020,7 @@ public class Network {
 		ParsedMessage msg;
 		
 		try {
-			String messageToSend = XmlCreator.createGetConAccount(Integer.toString(mSessionId));
+			String messageToSend = XmlCreator.createGetConAccount(adapterId, Integer.toString(mSessionId));
 			
 			Log.d("IHA - Network fromApp", messageToSend);
 			
@@ -1054,7 +1055,7 @@ public class Network {
 				//return null;
 			}
 			signIn(ActualUser.getActualUser().getEmail());
-			return getConnectionAccountList();
+			return getConnectionAccountList(adapterId);
 			
 		}else if(msg.getState().equals(FALSE) && ((FalseAnswer)msg.data).getErrMessage().length() != 0){
 			throw new CommunicationException(((FalseAnswer)msg.data).getErrMessage());
@@ -1069,7 +1070,7 @@ public class Network {
 	 * @throws NoConnectionException 
 	 * @throws CommunicationException 
 	 */
-	public boolean changeConnectionAccount(HashMap<String, String> userNrole) throws NoConnectionException, CommunicationException{
+	public boolean changeConnectionAccount(String adapterId, HashMap<String, String> userNrole) throws NoConnectionException, CommunicationException{
 		//TODO: test properly
 		if(!isAvailable())
 			throw new NoConnectionException();
@@ -1077,7 +1078,7 @@ public class Network {
 		ParsedMessage msg;
 		
 		try {
-			String messageToSend = XmlCreator.createChangeConAccount(Integer.toString(mSessionId), userNrole);
+			String messageToSend = XmlCreator.createChangeConAccount(adapterId, Integer.toString(mSessionId), userNrole);
 			
 			Log.d("IHA - Network fromApp", messageToSend);
 			
@@ -1108,7 +1109,7 @@ public class Network {
 				//return null;
 			}
 			signIn(ActualUser.getActualUser().getEmail());
-			return changeConnectionAccount(userNrole);
+			return changeConnectionAccount(adapterId, userNrole);
 		}else if(msg.getState().equals(FALSE) && ((FalseAnswer)msg.data).getErrMessage().length() != 0){
 			throw new CommunicationException(((FalseAnswer)msg.data).getErrMessage());
 		}else
@@ -1123,7 +1124,7 @@ public class Network {
 	 * @throws NoConnectionException
 	 * @throws CommunicationException
 	 */
-	public boolean setTimeZone(int differenceToGMT) throws NoConnectionException, CommunicationException{
+	public boolean setTimeZone(String adapterId, int differenceToGMT) throws NoConnectionException, CommunicationException{
 		//TODO: test properly
 		if(!isAvailable())
 			throw new NoConnectionException();
@@ -1131,7 +1132,7 @@ public class Network {
 		ParsedMessage msg;
 		
 		try {
-			String messageToSend = XmlCreator.createSetTimeZone(Integer.toString(mSessionId), differenceToGMT);
+			String messageToSend = XmlCreator.createSetTimeZone(adapterId, Integer.toString(mSessionId), differenceToGMT);
 			
 			Log.d("IHA - Network fromApp", messageToSend);
 			
@@ -1162,7 +1163,7 @@ public class Network {
 				//return null;
 			}
 			signIn(ActualUser.getActualUser().getEmail());
-			return setTimeZone(differenceToGMT);
+			return setTimeZone(adapterId, differenceToGMT);
 			
 		}else if(msg.getState().equals(FALSE) && ((FalseAnswer)msg.data).getErrMessage().length() != 0){
 			throw new CommunicationException(((FalseAnswer)msg.data).getErrMessage());
@@ -1176,7 +1177,7 @@ public class Network {
 	 * @throws NoConnectionException
 	 * @throws CommunicationException
 	 */
-	public int getTimeZone() throws NoConnectionException, CommunicationException{
+	public int getTimeZone(String adapterId) throws NoConnectionException, CommunicationException{
 		//TODO: test properly
 		if(!isAvailable())
 			throw new NoConnectionException();
@@ -1184,7 +1185,7 @@ public class Network {
 		ParsedMessage msg;
 		
 		try {
-			String messageToSend = XmlCreator.createGetTimeZone(Integer.toString(mSessionId));
+			String messageToSend = XmlCreator.createGetTimeZone(adapterId, Integer.toString(mSessionId));
 			
 			Log.d("IHA - Network fromApp", messageToSend);
 			
@@ -1215,7 +1216,7 @@ public class Network {
 				//return null;
 			}
 			signIn(ActualUser.getActualUser().getEmail());
-			return getTimeZone();
+			return getTimeZone(adapterId);
 			
 		}else if(msg.getState().equals(FALSE) && ((FalseAnswer)msg.data).getErrMessage().length() != 0){
 			throw new CommunicationException(((FalseAnswer)msg.data).getErrMessage());
@@ -1229,7 +1230,7 @@ public class Network {
 	 * @throws NoConnectionException
 	 * @throws CommunicationException
 	 */
-	public ArrayList<Location> getLocations() throws NoConnectionException, CommunicationException{
+	public ArrayList<Location> getLocations(String adapterId) throws NoConnectionException, CommunicationException{
 		//TODO: test properly
 		if(!isAvailable())
 			throw new NoConnectionException();
@@ -1237,7 +1238,7 @@ public class Network {
 		ParsedMessage msg;
 		
 		try {
-			String messageToSend = XmlCreator.createGetRooms(Integer.toString(mSessionId));
+			String messageToSend = XmlCreator.createGetRooms(adapterId, Integer.toString(mSessionId));
 			
 			Log.d("IHA - Network fromApp", messageToSend);
 			
@@ -1272,7 +1273,7 @@ public class Network {
 				//return null;
 			}
 			signIn(ActualUser.getActualUser().getEmail());
-			return getLocations();
+			return getLocations(adapterId);
 			
 		}else if(msg.getState().equals(FALSE) && ((FalseAnswer)msg.data).getErrMessage().length() != 0){
 			throw new CommunicationException(((FalseAnswer)msg.data).getErrMessage());
@@ -1287,7 +1288,7 @@ public class Network {
 	 * @throws NoConnectionException
 	 * @throws CommunicationException
 	 */
-	public boolean updateLocations(ArrayList<Location> locations) throws NoConnectionException, CommunicationException{
+	public boolean updateLocations(String adapterId, ArrayList<Location> locations) throws NoConnectionException, CommunicationException{
 		//TODO: test properly
 		if(!isAvailable())
 			throw new NoConnectionException();
@@ -1295,7 +1296,7 @@ public class Network {
 		ParsedMessage msg;
 		
 		try {
-			String messageToSend = XmlCreator.createUpdateRooms(Integer.toString(mSessionId), locations);
+			String messageToSend = XmlCreator.createUpdateRooms(adapterId, Integer.toString(mSessionId), locations);
 			
 			Log.d("IHA - Network fromApp", messageToSend);
 			
@@ -1326,7 +1327,7 @@ public class Network {
 				//return null;
 			}
 			signIn(ActualUser.getActualUser().getEmail());
-			return updateLocations(locations);
+			return updateLocations(adapterId, locations);
 			
 		}else if(msg.getState().equals(FALSE) && ((FalseAnswer)msg.data).getErrMessage().length() != 0){
 			throw new CommunicationException(((FalseAnswer)msg.data).getErrMessage());
@@ -1339,7 +1340,7 @@ public class Network {
 	 * @param location to delete
 	 * @return true room is deleted, false otherwise
 	 */
-	public boolean deleteLocation(Location location) throws NoConnectionException, CommunicationException {
+	public boolean deleteLocation(String adapterId, Location location) throws NoConnectionException, CommunicationException {
 		//TODO: test properly
 		if(!isAvailable())
 			throw new NoConnectionException();
@@ -1347,7 +1348,7 @@ public class Network {
 		ParsedMessage msg;
 		
 		try {
-			String messageToSend = XmlCreator.createDelRooms(Integer.toString(mSessionId), location);
+			String messageToSend = XmlCreator.createDelRooms(adapterId, Integer.toString(mSessionId), location);
 			
 			Log.d("IHA - Network fromApp", messageToSend);
 			
@@ -1378,7 +1379,7 @@ public class Network {
 				//return null;
 			}
 			signIn(ActualUser.getActualUser().getEmail());
-			return deleteLocation(location);
+			return deleteLocation(adapterId, location);
 			
 		}else if(msg.getState().equals(FALSE) && ((FalseAnswer)msg.data).getErrMessage().length() != 0){
 			throw new CommunicationException(((FalseAnswer)msg.data).getErrMessage());
@@ -1386,7 +1387,7 @@ public class Network {
 			return false;
 	}
 
-	public Location createLocation(Location location) throws NoConnectionException, CommunicationException{
+	public Location createLocation(String adapterId, Location location) throws NoConnectionException, CommunicationException{
 		//TODO: test properly
 		if(!isAvailable())
 			throw new NoConnectionException();
@@ -1394,7 +1395,7 @@ public class Network {
 		ParsedMessage msg;
 		
 		try {
-			String messageToSend = XmlCreator.createAddRooms(Integer.toString(mSessionId), location);
+			String messageToSend = XmlCreator.createAddRooms(adapterId, Integer.toString(mSessionId), location);
 			
 			Log.d("IHA - Network fromApp", messageToSend);
 			
@@ -1427,7 +1428,7 @@ public class Network {
 				//return null;
 			}
 			signIn(ActualUser.getActualUser().getEmail());
-			return createLocation(location);
+			return createLocation(adapterId, location);
 			
 		}else if(msg.getState().equals(FALSE) && ((FalseAnswer)msg.data).getErrMessage().length() != 0){
 			throw new CommunicationException(((FalseAnswer)msg.data).getErrMessage());

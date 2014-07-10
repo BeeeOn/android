@@ -3,8 +3,6 @@ package cz.vutbr.fit.iha.activity;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.google.analytics.tracking.android.EasyTracker;
-
 import android.app.Activity;
 import android.appwidget.AppWidgetManager;
 import android.content.Intent;
@@ -18,13 +16,16 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
-import cz.vutbr.fit.iha.R;
-import cz.vutbr.fit.iha.widget.SensorWidgetProvider;
-import cz.vutbr.fit.iha.widget.WidgetUpdateService;
+
+import com.google.analytics.tracking.android.EasyTracker;
+
 import cz.vutbr.fit.iha.Constants;
+import cz.vutbr.fit.iha.R;
 import cz.vutbr.fit.iha.adapter.Adapter;
 import cz.vutbr.fit.iha.adapter.device.BaseDevice;
 import cz.vutbr.fit.iha.controller.Controller;
+import cz.vutbr.fit.iha.widget.SensorWidgetProvider;
+import cz.vutbr.fit.iha.widget.WidgetUpdateService;
 
 public class WidgetConfigurationActivity extends Activity {
 

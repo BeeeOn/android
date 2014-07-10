@@ -16,13 +16,9 @@ import android.text.format.Time;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.ViewGroup.LayoutParams;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemLongClickListener;
-import android.widget.Button;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -34,8 +30,6 @@ import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.view.Window;
 
-import cz.vutbr.fit.iha.Compatibility;
-import cz.vutbr.fit.iha.Constants;
 import cz.vutbr.fit.iha.MenuListAdapter;
 import cz.vutbr.fit.iha.R;
 import cz.vutbr.fit.iha.SensorListAdapter;
@@ -44,8 +38,8 @@ import cz.vutbr.fit.iha.activity.dialog.AddAdapterActivityDialog;
 import cz.vutbr.fit.iha.activity.dialog.AddSensorActivityDialog;
 import cz.vutbr.fit.iha.activity.dialog.CustomAlertDialog;
 import cz.vutbr.fit.iha.adapter.device.BaseDevice;
+import cz.vutbr.fit.iha.adapter.location.Location;
 import cz.vutbr.fit.iha.controller.Controller;
-import cz.vutbr.fit.iha.listing.LocationListing;
 
 /**
  * Activity class for choosing location
@@ -58,7 +52,7 @@ public class LocationScreenActivity extends SherlockFragmentActivity {
 
 	private Controller mController;
 	private LocationScreenActivity mActivity;
-	private List<LocationListing> mLocations;
+	private List<Location> mLocations;
 
 	private DrawerLayout mDrawerLayout;
 	private ListView mDrawerList;
@@ -79,7 +73,7 @@ public class LocationScreenActivity extends SherlockFragmentActivity {
 
 	private static int SENSOR_DETAIL = 1;
 
-	private String mActiveLocation;
+	private Location mActiveLocation;
 
 	private DevicesTask mTask;
 	
@@ -147,7 +141,7 @@ public class LocationScreenActivity extends SherlockFragmentActivity {
 	@Override
 	public void onBackPressed() {
 		if(backPressed){
-			//Toast.makeText(this, getResources().getString(R.string.toast_leaving_app), Toast.LENGTH_LONG).show();
+			//Toast.makeText(this, getString(R.string.toast_leaving_app), Toast.LENGTH_LONG).show();
 			super.onBackPressed();
 			//this.finish();
 			
@@ -173,7 +167,7 @@ public class LocationScreenActivity extends SherlockFragmentActivity {
 		inBackground = false;
 	}
 
-	public boolean getLocations(List<LocationListing> locs) {
+	public boolean getLocations(List<Location> locs) {
 
 		Log.d(TAG, "ready to work with Locations");
 		mTitle = mDrawerTitle = "IHA";
@@ -232,7 +226,8 @@ public class LocationScreenActivity extends SherlockFragmentActivity {
 				if(backPressed) 
 					onBackPressed();
 				// Set the title on the action when drawer closed
-				getSupportActionBar().setTitle(mActiveLocation);
+				if (mActiveLocation != null)
+					getSupportActionBar().setTitle(mActiveLocation.getName());
 				super.onDrawerClosed(view);
 				Log.d(TAG, "BackPressed - onDrawerClosed " + String.valueOf(backPressed));
 				
@@ -349,9 +344,7 @@ public class LocationScreenActivity extends SherlockFragmentActivity {
 		public void onItemClick(AdapterView<?> parent, View view, int position,
 				long id) {
 			// Get the title followed by the position
-			LocationListing selectedItem = mLocations.get(position);
-			mActiveLocation = (selectedItem != null ? selectedItem.getName()
-					: "");
+			mActiveLocation = mLocations.get(position);
 
 			refreshListing();
 
@@ -470,18 +463,17 @@ public class LocationScreenActivity extends SherlockFragmentActivity {
 									int which) {
 								String newName = edit.getText().toString();
 
-								// TODO: show loading while saving new name to
-								// server
-								boolean saved = mController.renameLocation(
-										location, newName);
+								// TODO: show loading while saving new name to server (+ use asynctask)
+								Location location = new Location(); // FIXME: get that original location from somewhere
+								location.setName(newName);
+								
+								boolean saved = mController.saveLocation(location);
 
-								String message = saved ? String
-										.format("Location was renamed to '%s'",
-												newName)
+								String message = saved
+										? String.format("Location was renamed to '%s'", newName)
 										: "Location wasn't renamed due to error";
 
-								Toast.makeText(LocationScreenActivity.this,
-										message, Toast.LENGTH_LONG).show();
+								Toast.makeText(LocationScreenActivity.this, message, Toast.LENGTH_LONG).show();
 
 								// Redraw item in list
 								view.setText(newName);
@@ -554,7 +546,7 @@ public class LocationScreenActivity extends SherlockFragmentActivity {
 
 		setSupportProgressBarIndeterminateVisibility(true);
 		ChangeLocationTask task = new ChangeLocationTask();
-		task.execute(new String[] { mActiveLocation });
+		task.execute(new Location[] { mActiveLocation });
 	}
 
 	/**
@@ -563,8 +555,7 @@ public class LocationScreenActivity extends SherlockFragmentActivity {
 	 */
 	private class DevicesTask extends AsyncTask<Void, Void, List<BaseDevice>> {
 
-		private final CustomAlertDialog mDialog = new CustomAlertDialog(
-				LocationScreenActivity.this);
+		private final CustomAlertDialog mDialog = new CustomAlertDialog(LocationScreenActivity.this);
 
 		/**
 		 * @return the dialog
@@ -581,9 +572,7 @@ public class LocationScreenActivity extends SherlockFragmentActivity {
 
 			// Load uninitialized devices
 			List<BaseDevice> devices = mController.getUninitializedDevices();
-			Log.d(TAG,
-					String.format("Found %d uninitialized devices",
-							devices.size()));
+			Log.d(TAG, String.format("Found %d uninitialized devices", devices.size()));
 
 			return devices;
 		}
@@ -598,22 +587,17 @@ public class LocationScreenActivity extends SherlockFragmentActivity {
 				return;
 
 			mDialog.setCancelable(false)
-					.setTitle(
-							getResources().getString(
-									R.string.notification_title))
-					.setMessage(
-							getResources().getQuantityString(
+					.setTitle(getString(R.string.notification_title))
+					.setMessage(getResources().getQuantityString(
 									R.plurals.notification_new_sensors,
 									uninitializedDevices.size(),
 									uninitializedDevices.size()));
 
-			mDialog.setCustomNeutralButton(
-					getResources().getString(R.string.notification_ingore),
+			mDialog.setCustomNeutralButton(getString(R.string.notification_ingore),
 					new OnClickListener() {
 						@Override
 						public void onClick(View v) {
-							mController
-									.ignoreUninitialized(uninitializedDevices);
+							mController.ignoreUninitialized(uninitializedDevices);
 							// TODO: Get this string from resources
 							Toast.makeText(
 									LocationScreenActivity.this,
@@ -623,8 +607,7 @@ public class LocationScreenActivity extends SherlockFragmentActivity {
 						}
 					});
 
-			mDialog.setCustomPositiveButton(
-					getResources().getString(R.string.notification_add),
+			mDialog.setCustomPositiveButton(getString(R.string.notification_add),
 					new OnClickListener() {
 						@Override
 						public void onClick(View v) {
@@ -645,16 +628,12 @@ public class LocationScreenActivity extends SherlockFragmentActivity {
 	/**
 	 * Changes selected location and redraws list of adapters there
 	 */
-	private class ChangeLocationTask extends
-			AsyncTask<String, Void, List<BaseDevice>> {
+	private class ChangeLocationTask extends AsyncTask<Location, Void, List<BaseDevice>> {
 
 		@Override
-		protected List<BaseDevice> doInBackground(String... locations) {
-			List<BaseDevice> devices = mController
-					.getDevicesByLocation(locations[0]);
-			Log.d(TAG,
-					String.format("Found %d devices in location '%s'",
-							devices.size(), locations[0]));
+		protected List<BaseDevice> doInBackground(Location... locations) {
+			List<BaseDevice> devices = mController.getDevicesByLocation(locations[0].getId());
+			Log.d(TAG, String.format("Found %d devices in location '%s'", devices.size(), locations[0].getName()));
 
 			return devices;
 		}
