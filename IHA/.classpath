@@ -5,10 +5,7 @@
 	<classpathentry exported="true" kind="con" path="com.android.ide.eclipse.adt.DEPENDENCIES"/>
 	<classpathentry exported="true" kind="lib" path="libs/androidplot-core-0.6.1.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/GraphView-3.1.1.jar"/>
-	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/ActionBarSherlock"/>
-	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/google-play-services_lib"/>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="src" path="gen"/>
-	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/SmartExtensionUtils"/>
 	<classpathentry kind="output" path="bin/classes"/>
 </classpath>
