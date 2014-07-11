@@ -13,7 +13,7 @@ public class ParsedMessage {
 	private int mSessionId;
 	
 	/**
-	 * Inner data of message, basically HashMap or ArrayList depend on type of message (state)
+	 * Inner data of message, basically HashMap or List depend on type of message (state)
 	 */
 	public Object data;
 	

@@ -5,8 +5,8 @@
 package cz.vutbr.fit.iha.adapter.parser;
 
 import java.io.StringWriter;
-import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map.Entry;
 
 import org.xmlpull.v1.XmlSerializer;
@@ -339,7 +339,7 @@ public class XmlCreator {
 	 * @param userEmails of common users
 	 * @return dellConAccount message
 	 */
-	public static String createDelConAccount(String id, String adapterId, ArrayList<String> userEmails){
+	public static String createDelConAccount(String id, String adapterId, List<String> userEmails){
 		XmlSerializer serializer = Xml.newSerializer();
 		StringWriter writer = new StringWriter();
 		try{
@@ -517,7 +517,7 @@ public class XmlCreator {
 	 * @return Partial message
 	 */
 	//TODO: do eco mode
-	public static String createPartial(String id, String adapterId, ArrayList<BaseDevice> devices){
+	public static String createPartial(String id, String adapterId, List<BaseDevice> devices){
 		XmlSerializer serializer = Xml.newSerializer();
 		StringWriter writer = new StringWriter();
 		try{
@@ -616,7 +616,7 @@ public class XmlCreator {
 	 * @param devicesId Id of devices to get update fields
 	 * @return update message
 	 */
-	public static String createUpdate(String id, String adapterId, ArrayList<BaseDevice>devices){
+	public static String createUpdate(String id, String adapterId, List<BaseDevice>devices){
 		XmlSerializer serializer = Xml.newSerializer();
 		StringWriter writer = new StringWriter();
 		try{
@@ -653,7 +653,7 @@ public class XmlCreator {
 	 * @param devicesId list of devices id
 	 * @return addView message
 	 */
-	public static String createAddView(String id, String adapterId, String viewName, int iconNum, ArrayList<BaseDevice>devices){
+	public static String createAddView(String id, String adapterId, String viewName, int iconNum, List<BaseDevice>devices){
 		XmlSerializer serializer = Xml.newSerializer();
 		StringWriter writer = new StringWriter();
 		try{
@@ -877,7 +877,7 @@ public class XmlCreator {
 	 * @param locations list of location object to update
 	 * @return message UpdateRooms
 	 */
-	public static String createUpdateRooms(String id, String adapterId, ArrayList<Location> locations){
+	public static String createUpdateRooms(String id, String adapterId, List<Location> locations){
 		XmlSerializer serializer = Xml.newSerializer();
 		StringWriter writer = new StringWriter();
 		try{

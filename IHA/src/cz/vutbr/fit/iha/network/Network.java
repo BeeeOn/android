@@ -15,8 +15,8 @@ import java.security.NoSuchAlgorithmException;
 import java.security.cert.Certificate;
 import java.security.cert.CertificateException;
 import java.security.cert.CertificateFactory;
-import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 
 import javax.net.ssl.HostnameVerifier;
@@ -340,7 +340,7 @@ public class Network {
 	 * @throws NoConnectionException
 	 * @throws CommunicationException including message from server
 	 */
-	public ArrayList<Adapter> getAdapters() throws NoConnectionException, CommunicationException{
+	public List<Adapter> getAdapters() throws NoConnectionException, CommunicationException{
 		if(!isAvailable())
 			throw new NoConnectionException();
 		
@@ -367,7 +367,7 @@ public class Network {
 			
 			//http://stackoverflow.com/a/509288/1642090
 			@SuppressWarnings("unchecked")
-			ArrayList<Adapter> result = (ArrayList<Adapter>) msg.data;
+			List<Adapter> result = (List<Adapter>) msg.data;
 			
 			return result;
 		}else if(msg.getState().equals(RESIGN)){
@@ -504,7 +504,7 @@ public class Network {
 	 * @throws NoConnectionException 
 	 * @throws CommunicationException 
 	 */
-	public boolean partial(String adapterId, ArrayList<BaseDevice> devices) throws NoConnectionException, CommunicationException{
+	public boolean partial(String adapterId, List<BaseDevice> devices) throws NoConnectionException, CommunicationException{
 		if(!isAvailable())
 			throw new NoConnectionException();
 		
@@ -556,7 +556,7 @@ public class Network {
 	 * @throws NoConnectionException 
 	 * @throws CommunicationException 
 	 */
-	public ArrayList<BaseDevice> update(String adapterId, ArrayList<BaseDevice> devices) throws NoConnectionException, CommunicationException{
+	public List<BaseDevice> update(String adapterId, List<BaseDevice> devices) throws NoConnectionException, CommunicationException{
 		if(!isAvailable())
 			throw new NoConnectionException();
 		
@@ -583,7 +583,7 @@ public class Network {
 			
 			//http://stackoverflow.com/a/509288/1642090
 			@SuppressWarnings("unchecked")
-			ArrayList<BaseDevice> result = (ArrayList<BaseDevice>) msg.data; 
+			List<BaseDevice> result = (List<BaseDevice>) msg.data; 
 			
 			return result;
 			
@@ -614,7 +614,7 @@ public class Network {
 	 * @throws NoConnectionException 
 	 * @throws CommunicationException 
 	 */
-	public ArrayList<ContentRow> logName(String adapterId, String deviceId, int deviceType, String from, String to, String funcType, int interval) throws NoConnectionException, CommunicationException{
+	public List<ContentRow> logName(String adapterId, String deviceId, int deviceType, String from, String to, String funcType, int interval) throws NoConnectionException, CommunicationException{
 		// TODO: test properly
 		if(!isAvailable())
 			throw new NoConnectionException();
@@ -642,7 +642,7 @@ public class Network {
 			
 			//http://stackoverflow.com/a/509288/1642090
 			@SuppressWarnings("unchecked")
-			ArrayList<ContentRow> result = (ArrayList<ContentRow>) msg.data; 
+			List<ContentRow> result = (List<ContentRow>) msg.data; 
 			
 			return result;
 			
@@ -675,7 +675,7 @@ public class Network {
 	 * @throws CommunicationException 
 	 * @throws NoConnectionException 
 	 */
-	public ArrayList<ContentRow> getLog(String adapterId, String deviceId, int deviceType, String from, String to, String funcType, int interval) throws NoConnectionException, CommunicationException{
+	public List<ContentRow> getLog(String adapterId, String deviceId, int deviceType, String from, String to, String funcType, int interval) throws NoConnectionException, CommunicationException{
 		return logName(adapterId, deviceId, deviceType, from, to, funcType, interval);
 	}
 	
@@ -688,7 +688,7 @@ public class Network {
 	 * @throws NoConnectionException 
 	 * @throws CommunicationException 
 	 */
-	public boolean addView(String adapterId, String nameOfView, int iconId, ArrayList<BaseDevice> devices) throws NoConnectionException, CommunicationException{
+	public boolean addView(String adapterId, String nameOfView, int iconId, List<BaseDevice> devices) throws NoConnectionException, CommunicationException{
 		// TODO: test properly
 		if(!isAvailable())
 			throw new NoConnectionException();
@@ -741,7 +741,7 @@ public class Network {
 	 * @throws NoConnectionException 
 	 * @throws CommunicationException 
 	 */
-	public ArrayList<CustomViewPair> getViews(String adapterId) throws NoConnectionException, CommunicationException{
+	public List<CustomViewPair> getViews(String adapterId) throws NoConnectionException, CommunicationException{
 		// TODO: test properly
 		if(!isAvailable())
 			throw new NoConnectionException();
@@ -769,7 +769,7 @@ public class Network {
 			
 			//http://stackoverflow.com/a/509288/1642090
 			@SuppressWarnings("unchecked")
-			ArrayList<CustomViewPair> result = (ArrayList<CustomViewPair>) msg.data;
+			List<CustomViewPair> result = (List<CustomViewPair>) msg.data;
 			
 			return result;
 			
@@ -960,7 +960,7 @@ public class Network {
 	 * @throws NoConnectionException 
 	 * @throws CommunicationException 
 	 */
-	public boolean deleteConnectionAccount(String adapterId, ArrayList<String> users) throws NoConnectionException, CommunicationException{
+	public boolean deleteConnectionAccount(String adapterId, List<String> users) throws NoConnectionException, CommunicationException{
 		//TODO: test properly
 		if(!isAvailable())
 			throw new NoConnectionException();
@@ -1226,11 +1226,11 @@ public class Network {
 
 	/**
 	 * Method call to server for actual list of locations 
-	 * @return ArrayList with locations
+	 * @return List with locations
 	 * @throws NoConnectionException
 	 * @throws CommunicationException
 	 */
-	public ArrayList<Location> getLocations(String adapterId) throws NoConnectionException, CommunicationException{
+	public List<Location> getLocations(String adapterId) throws NoConnectionException, CommunicationException{
 		//TODO: test properly
 		if(!isAvailable())
 			throw new NoConnectionException();
@@ -1258,7 +1258,7 @@ public class Network {
 			
 			//http://stackoverflow.com/a/509288/1642090
 			@SuppressWarnings("unchecked")
-			ArrayList<Location> result = (ArrayList<Location>) msg.data;
+			List<Location> result = (List<Location>) msg.data;
 			
 			return result;
 			
@@ -1288,7 +1288,7 @@ public class Network {
 	 * @throws NoConnectionException
 	 * @throws CommunicationException
 	 */
-	public boolean updateLocations(String adapterId, ArrayList<Location> locations) throws NoConnectionException, CommunicationException{
+	public boolean updateLocations(String adapterId, List<Location> locations) throws NoConnectionException, CommunicationException{
 		//TODO: test properly
 		if(!isAvailable())
 			throw new NoConnectionException();

@@ -13,6 +13,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 
 import org.xmlpull.v1.XmlPullParser;
@@ -162,7 +163,7 @@ public class XmlParsers {
 				result.data = parseConAccountList();
 				break;
 			case eCONTENT:
-				// ArrayList<ContentRow>
+				// List<ContentRow>
 				result.data = parseContent();
 				break;
 			case eFALSE:
@@ -176,11 +177,11 @@ public class XmlParsers {
 				// null
 				break;
 			case ePARTIAL:
-				// ArrayList<BaseDevice>
+				// List<BaseDevice>
 				result.data = parsePartial();
 				break;
 			case eREADY:
-				// ArrayList<Adapter>
+				// List<Adapter>
 				result.data = parseReady();
 				break;
 			case eTRUE:
@@ -192,7 +193,7 @@ public class XmlParsers {
 				result.data = parseXml(getSecureAttrValue(ns, ROLE));
 				break;
 			case eVIEWSLIST:
-				// ArrayList<CustomViewPair>
+				// List<CustomViewPair>
 				result.data = parseViewsList();
 				break;
 			case eTIMEZONE:
@@ -200,7 +201,7 @@ public class XmlParsers {
 				result.data = parseTimeZone();
 				break;
 			case eROOMS:
-				// ArrayList<Location>
+				// List<Location>
 				result.data = parseRooms();
 				break;
 			case eROOMCREATED:
@@ -253,11 +254,11 @@ public class XmlParsers {
 	 * @throws IOException
 	 * @throws ParseException 
 	 */
-	private static ArrayList<BaseDevice> parsePartial() throws XmlPullParserException, IOException, ParseException{
+	private static List<BaseDevice> parsePartial() throws XmlPullParserException, IOException, ParseException{
 		mParser.nextTag();
 		//mParser.require(XmlPullParser.START_TAG, ns, DEVICE); // strict solution
 		
-		ArrayList<BaseDevice> result = new ArrayList<BaseDevice>();
+		List<BaseDevice> result = new ArrayList<BaseDevice>();
 		
 		if(!mParser.getName().equals(DEVICE))
 			return result;
@@ -309,15 +310,15 @@ public class XmlParsers {
 	
 	/**
 	 * Method parse inner part of Ready[x1,x2,...] message
-	 * @return ArrayList of adapters (contains only Id, name, and user role)
+	 * @return List of adapters (contains only Id, name, and user role)
 	 * @throws XmlPullParserException
 	 * @throws IOException
 	 */
-	private static ArrayList<Adapter> parseReady() throws XmlPullParserException, IOException{
+	private static List<Adapter> parseReady() throws XmlPullParserException, IOException{
 		mParser.nextTag();
 		mParser.require(XmlPullParser.START_TAG, ns, ADAPTER);
 		
-		ArrayList<Adapter> result = new ArrayList<Adapter>();
+		List<Adapter> result = new ArrayList<Adapter>();
 		
 		do{
 			Adapter adapter = new Adapter();
@@ -339,11 +340,11 @@ public class XmlParsers {
 	 * @throws XmlPullParserException
 	 * @throws IOException
 	 */
-	private static ArrayList<ContentRow> parseContent() throws XmlPullParserException, IOException {
+	private static List<ContentRow> parseContent() throws XmlPullParserException, IOException {
 		mParser.nextTag();
 		mParser.require(XmlPullParser.START_TAG, ns, ROW);
 		
-		ArrayList<ContentRow> result = new ArrayList<ContentRow>();
+		List<ContentRow> result = new ArrayList<ContentRow>();
 		do{
 			
 			result.add(new ContentRow(readText(ROW)));
@@ -399,11 +400,11 @@ public class XmlParsers {
 	 * @throws XmlPullParserException
 	 * @throws IOException
 	 */
-	private static ArrayList<CustomViewPair> parseViewsList() throws XmlPullParserException, IOException{
+	private static List<CustomViewPair> parseViewsList() throws XmlPullParserException, IOException{
 		mParser.nextTag();
 		mParser.require(XmlPullParser.START_TAG, ns, VIEW);
 		
-		ArrayList<CustomViewPair> result = new ArrayList<CustomViewPair>();
+		List<CustomViewPair> result = new ArrayList<CustomViewPair>();
 		do {
 			result.add(new CustomViewPair(Integer.parseInt(getSecureAttrValue(ns, ICON)), getSecureAttrValue(ns, NAME)));
 			
@@ -433,11 +434,11 @@ public class XmlParsers {
 	 * @throws XmlPullParserException
 	 * @throws IOException
 	 */
-	private static ArrayList<Location> parseRooms() throws XmlPullParserException, IOException{
+	private static List<Location> parseRooms() throws XmlPullParserException, IOException{
 		mParser.nextTag();
 		mParser.require(XmlPullParser.START_TAG, ns, LOCATION);
 		
-		ArrayList<Location> result = new ArrayList<Location>();
+		List<Location> result = new ArrayList<Location>();
 		
 		do{
 			int type = getSecureInt(getSecureAttrValue(ns, TYPE));
@@ -651,11 +652,11 @@ public class XmlParsers {
 		return adapter;
 	}
 	
-	public static ArrayList<Location> getDemoLocationsFromFile(String filename) {
+	public static List<Location> getDemoLocationsFromFile(String filename) {
 		Log.i(TAG, String.format("Parsing data from file '%s'", filename));
 //		boolean ee = false;
 		
-		ArrayList<Location> result = new ArrayList<Location>();
+		List<Location> result = new ArrayList<Location>();
 		
 		File file = new File(filename);
 		if (!file.exists() || !file.canRead()) {

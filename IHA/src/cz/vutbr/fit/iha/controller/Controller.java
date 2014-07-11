@@ -233,7 +233,7 @@ public final class Controller {
 		if (adapter == null)
 			return false;
 		
-		ArrayList<BaseDevice> devices = new ArrayList<BaseDevice>();
+		List<BaseDevice> devices = new ArrayList<BaseDevice>();
 		devices.add(device);
 
 		try {
@@ -473,7 +473,7 @@ public final class Controller {
 				if (mDemoMode) {
 					saved = true;
 				} else {
-					ArrayList<Location> locations = new ArrayList<Location>();
+					List<Location> locations = new ArrayList<Location>();
 					locations.add(location);
 					saved = mNetwork.updateLocations(adapter.getId(), locations);
 				}
@@ -587,7 +587,7 @@ public final class Controller {
 			return true;
 		}
 		
-		ArrayList<BaseDevice> devices = new ArrayList<BaseDevice>();
+		List<BaseDevice> devices = new ArrayList<BaseDevice>();
 		devices.add(device);
 		
 		boolean result = false;

@@ -1,7 +1,7 @@
 package cz.vutbr.fit.iha.adapter.device;
 
-import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import cz.vutbr.fit.iha.exception.NotImplementedException;
 
@@ -14,11 +14,11 @@ public class DeviceLog {
 		throw new NotImplementedException();
 	}
 	
-	public ArrayList<String> getValues() {
+	public List<String> getValues() {
 		throw new NotImplementedException();
 	}
 	
-	public ArrayList<String> getValues(Date start, Date end) {
+	public List<String> getValues(Date start, Date end) {
 		throw new NotImplementedException();
 	}
 

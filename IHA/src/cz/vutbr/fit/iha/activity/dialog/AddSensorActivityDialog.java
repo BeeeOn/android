@@ -247,7 +247,7 @@ public class AddSensorActivityDialog extends BaseActivityDialog {
 			mNewIconSpinner = (Spinner) findViewById(R.id.addsensor_spinner_choose_new_location_icon);
 
 			// Prepare list of icons
-			ArrayList<Integer> iconsList = new ArrayList<Integer>(); 
+			List<Integer> iconsList = new ArrayList<Integer>(); 
 			for (int rIcon : Location.icons) {
 				iconsList.add(Integer.valueOf(rIcon));
 			}

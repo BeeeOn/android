@@ -1,6 +1,6 @@
 package cz.vutbr.fit.iha.persistence;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -49,20 +49,20 @@ public class Persistence {
 		return getSettings().getString(Constants.PERSISTENCE_PREF_LAST_USER, "");
 	}
 
-	public ArrayList<Adapter> loadAdapters() {
+	public List<Adapter> loadAdapters() {
 		throw new NotImplementedException();
 	}
 	
-	public boolean saveAdapters(ArrayList<Adapter> adapters) {
+	public boolean saveAdapters(List<Adapter> adapters) {
 		throw new NotImplementedException();
 	}
 	
 	
-	public ArrayList<BaseDevice> loadDevices(String adapterId) {
+	public List<BaseDevice> loadDevices(String adapterId) {
 		throw new NotImplementedException();
 	}
 	
-	public boolean saveDevices(ArrayList<BaseDevice> devices) {
+	public boolean saveDevices(List<BaseDevice> devices) {
 		throw new NotImplementedException();
 	}
 	

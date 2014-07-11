@@ -1,6 +1,7 @@
 package cz.vutbr.fit.iha.household;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import android.content.Context;
 import cz.vutbr.fit.iha.Constants;
@@ -62,7 +63,7 @@ public final class DemoHousehold extends Household {
 //				}
 //			}
 			
-			ArrayList<Location> lokace = XmlParsers.getDemoLocationsFromFile(basePath + Constants.DEMO_LOCATION_FILENAME);
+			List<Location> lokace = XmlParsers.getDemoLocationsFromFile(basePath + Constants.DEMO_LOCATION_FILENAME);
 			adapter.setLocations(lokace);
 			
 			this.adapters.add(adapter);
