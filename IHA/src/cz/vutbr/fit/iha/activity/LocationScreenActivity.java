@@ -279,11 +279,7 @@ public class LocationScreenActivity extends SherlockFragmentActivity {
 		// Capture listview menu item click
 		mSensorList.setOnItemClickListener(new ListView.OnItemClickListener() {
 			@Override
-			public void onItemClick(AdapterView<?> parent, View view,
-					int position, long id) {
-				FragmentTransaction ft = getSupportFragmentManager()
-						.beginTransaction();
-
+			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 				final BaseDevice selectedItem = sensors.get(position);
 
 				setSupportProgressBarIndeterminateVisibility(true);
@@ -294,6 +290,7 @@ public class LocationScreenActivity extends SherlockFragmentActivity {
 				// SensorDetailFragment fragment = new SensorDetailFragment();
 				// fragment.setArguments(bundle);
 
+				// FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
 				// ft.replace(R.id.content_frame, fragment);
 				// ft.addToBackStack(null);
 				// ft.commit();

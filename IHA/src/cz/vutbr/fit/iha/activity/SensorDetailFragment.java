@@ -3,6 +3,7 @@ package cz.vutbr.fit.iha.activity;
 import java.text.DateFormat;
 import java.util.Date;
 
+import android.content.Context;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -149,7 +150,7 @@ public class SensorDetailFragment extends SherlockFragment {
 				sName.setVisibility(View.GONE);
 				sNameEdit.setVisibility(View.VISIBLE);
 				sNameEdit.setText(sName.getText());
-				InputMethodManager imm = (InputMethodManager) getSherlockActivity().getSystemService( getSherlockActivity().INPUT_METHOD_SERVICE);
+				InputMethodManager imm = (InputMethodManager) getSherlockActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
 				imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
 				return true;
 			}
@@ -206,7 +207,7 @@ public class SensorDetailFragment extends SherlockFragment {
 		minimum = -1.0;
 		
 		GraphViewSeriesStyle seriesStyle = new GraphViewSeriesStyle(getResources().getColor(R.color.log_blue2),2);
-		GraphViewSeriesStyle seriesStyle2 = new GraphViewSeriesStyle(Color.GRAY,2);
+		//GraphViewSeriesStyle seriesStyle2 = new GraphViewSeriesStyle(Color.GRAY,2);
 		/*
 		seriesStyle.setValueDependentColor(new ValueDependentColor() {
 		  @Override
@@ -336,7 +337,7 @@ public class SensorDetailFragment extends SherlockFragment {
 			
 			sNameEdit.clearFocus();
 			//getSherlockActivity().getCurrentFocus().clearFocus();
-			InputMethodManager imm = (InputMethodManager) getSherlockActivity().getSystemService( getSherlockActivity().INPUT_METHOD_SERVICE);
+			InputMethodManager imm = (InputMethodManager) getSherlockActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
 			imm.hideSoftInputFromWindow(sNameEdit.getWindowToken(), 0);
 			mode.finish();
             return true;

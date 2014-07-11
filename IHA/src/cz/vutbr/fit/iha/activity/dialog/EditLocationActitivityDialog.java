@@ -8,19 +8,17 @@ import com.google.analytics.tracking.android.EasyTracker;
 
 import cz.vutbr.fit.iha.R;
 import cz.vutbr.fit.iha.activity.LocationScreenActivity;
-import cz.vutbr.fit.iha.controller.Controller;
 
-public class EditLocationActitivityDialog extends Activity {
-	
-	private Controller mController;
-	
+public class EditLocationActitivityDialog extends Activity
+{
+	//private Controller mController;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		
-		mController = Controller.getInstance(this);
+		//mController = Controller.getInstance(this);
 		
 		setContentView(R.layout.activity_edit_location_activity_dialog);
 	}
