@@ -1,6 +1,5 @@
 package cz.vutbr.fit.iha.activity.dialog;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -11,14 +10,11 @@ import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
-
-import com.google.analytics.tracking.android.EasyTracker;
-
 import cz.vutbr.fit.iha.R;
 import cz.vutbr.fit.iha.activity.LocationScreenActivity;
 import cz.vutbr.fit.iha.thread.AdapterRegisterThread;
 
-public class AddAdapterActivityDialog extends Activity {
+public class AddAdapterActivityDialog extends BaseActivityDialog {
 
 	public AddAdapterActivityDialog mActivity;
 
@@ -101,17 +97,4 @@ public class AddAdapterActivityDialog extends Activity {
 		}
 	}
 
-	@Override
-	public void onStart() {
-		super.onStart();
-		// The rest of your onStart() code.
-		EasyTracker.getInstance(this).activityStart(this); // Add this method.
-	}
-
-	@Override
-	public void onStop() {
-		super.onStop();
-		// The rest of your onStop() code.
-		EasyTracker.getInstance(this).activityStop(this); // Add this method.
-	}
 }

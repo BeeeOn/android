@@ -14,9 +14,7 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.actionbarsherlock.app.SherlockDialogFragment;
-import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.MenuItem;
-import com.google.analytics.tracking.android.EasyTracker;
 
 import cz.vutbr.fit.iha.Constants;
 import cz.vutbr.fit.iha.R;
@@ -30,7 +28,7 @@ import cz.vutbr.fit.iha.extension.watches.smartwatch2.DialogFragmentDefaultLocat
  * The control preference activity handles the preferences for the control
  * extension.
  */
-public class PreferenceActivity extends SherlockFragmentActivity {
+public class PreferenceActivity extends BaseActivity {
 
 	private static final String TAG_DEF_LOCATION = "def_location";
 	private static final String TAG_DEF_ADAPTER = "def_adapter";
@@ -162,20 +160,6 @@ public class PreferenceActivity extends SherlockFragmentActivity {
 			}
 
 		});
-	}
-
-	@Override
-	public void onStart() {
-		super.onStart();
-		// The rest of your onStart() code.
-		EasyTracker.getInstance(this).activityStart(this);
-	}
-
-	@Override
-	public void onStop() {
-		super.onStop();
-		// The rest of your onStop() code.
-		EasyTracker.getInstance(this).activityStop(this);
 	}
 
 	@Override

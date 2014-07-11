@@ -2,7 +2,6 @@ package cz.vutbr.fit.iha.activity;
 
 import android.accounts.Account;
 import android.accounts.AccountManager;
-import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
@@ -13,7 +12,6 @@ import android.widget.CheckBox;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
-import com.google.analytics.tracking.android.EasyTracker;
 import com.google.android.gms.auth.GoogleAuthUtil;
 import com.google.android.gms.common.AccountPicker;
 import com.google.android.gms.common.ConnectionResult;
@@ -38,7 +36,7 @@ import cz.vutbr.fit.iha.thread.ToastMessageThread;
  * @author Leopold Podmolik
  * 
  */
-public class LoginActivity extends Activity {
+public class LoginActivity extends BaseActivity {
 
 	private Controller mController;
 	private LoginActivity mActivity;
@@ -123,13 +121,6 @@ public class LoginActivity extends Activity {
 			}
 		});
 	}
-
-	@Override
-	public void onStart() {
-		super.onStart();
-		// The rest of your onStart() code.
-		EasyTracker.getInstance(this).activityStart(this); // Add this method.
-	}
 	
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -164,13 +155,6 @@ public class LoginActivity extends Activity {
 	public void onBackPressed() {
 		super.onBackPressed();
 		mActivity.finish();
-	}
-	
-	@Override
-	public void onStop() {
-		super.onStop();
-		// The rest of your onStop() code.
-		EasyTracker.getInstance(this).activityStop(this); // Add this method.
 	}
 
 	//////////////////////////////////////////////////////////////////////////////////////

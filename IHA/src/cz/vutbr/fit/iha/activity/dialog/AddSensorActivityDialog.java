@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.res.Configuration;
@@ -26,9 +25,6 @@ import android.widget.LinearLayout.LayoutParams;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import com.google.analytics.tracking.android.EasyTracker;
-
 import cz.vutbr.fit.iha.R;
 import cz.vutbr.fit.iha.activity.LocationScreenActivity;
 import cz.vutbr.fit.iha.adapter.device.BaseDevice;
@@ -36,7 +32,7 @@ import cz.vutbr.fit.iha.adapter.location.Location;
 import cz.vutbr.fit.iha.adapter.location.Location.DefaultRoom;
 import cz.vutbr.fit.iha.controller.Controller;
 
-public class AddSensorActivityDialog extends Activity {
+public class AddSensorActivityDialog extends BaseActivityDialog {
 
 	private Controller mController;
 
@@ -417,17 +413,4 @@ public class AddSensorActivityDialog extends Activity {
 
 	}
 
-	@Override
-	public void onStart() {
-		super.onStart();
-		// The rest of your onStart() code.
-		EasyTracker.getInstance(this).activityStart(this); // Add this method.
-	}
-
-	@Override
-	public void onStop() {
-		super.onStop();
-		// The rest of your onStop() code.
-		EasyTracker.getInstance(this).activityStop(this); // Add this method.
-	}
 }

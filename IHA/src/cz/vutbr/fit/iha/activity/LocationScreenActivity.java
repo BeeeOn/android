@@ -23,7 +23,6 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.ActionMode;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
@@ -47,7 +46,7 @@ import cz.vutbr.fit.iha.controller.Controller;
  * @author Robyer
  * 
  */
-public class LocationScreenActivity extends SherlockFragmentActivity {
+public class LocationScreenActivity extends BaseActivity {
 
 	private Controller mController;
 	private LocationScreenActivity mActivity;

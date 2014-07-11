@@ -3,7 +3,6 @@ package cz.vutbr.fit.iha.activity;
 import java.util.ArrayList;
 import java.util.List;
 
-import android.app.Activity;
 import android.appwidget.AppWidgetManager;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -16,9 +15,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
-
-import com.google.analytics.tracking.android.EasyTracker;
-
 import cz.vutbr.fit.iha.Constants;
 import cz.vutbr.fit.iha.R;
 import cz.vutbr.fit.iha.adapter.Adapter;
@@ -27,7 +23,7 @@ import cz.vutbr.fit.iha.controller.Controller;
 import cz.vutbr.fit.iha.widget.SensorWidgetProvider;
 import cz.vutbr.fit.iha.widget.WidgetUpdateService;
 
-public class WidgetConfigurationActivity extends Activity {
+public class WidgetConfigurationActivity extends BaseActivity {
 
 	private static final String TAG = WidgetConfigurationActivity.class
 			.getSimpleName();
@@ -192,17 +188,4 @@ public class WidgetConfigurationActivity extends Activity {
 		return true;
 	}
 
-	@Override
-	public void onStart() {
-		super.onStart();
-		// The rest of your onStart() code.
-		EasyTracker.getInstance(this).activityStart(this); // Add this method.
-	}
-
-	@Override
-	public void onStop() {
-		super.onStop();
-		// The rest of your onStop() code.
-		EasyTracker.getInstance(this).activityStop(this); // Add this method.
-	}
 }

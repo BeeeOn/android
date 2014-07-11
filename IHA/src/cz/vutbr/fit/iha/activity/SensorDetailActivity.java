@@ -3,9 +3,7 @@ package cz.vutbr.fit.iha.activity;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 
-import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.MenuItem;
-import com.google.analytics.tracking.android.EasyTracker;
 
 import cz.vutbr.fit.iha.R;
 
@@ -14,7 +12,7 @@ import cz.vutbr.fit.iha.R;
  * @author ThinkDeep
  *
  */
-public class SensorDetailActivity extends SherlockFragmentActivity
+public class SensorDetailActivity extends BaseActivity
 {
 
 	@Override
@@ -33,21 +31,6 @@ public class SensorDetailActivity extends SherlockFragmentActivity
 		ft.commit();
 	}
 
-	@Override
-	public void onStart() {
-		super.onStart();
-		// The rest of your onStart() code.
-		EasyTracker.getInstance(this).activityStart(this); // Add this method.
-	}
-
-	@Override
-	public void onStop() {
-		super.onStop();
-		// The rest of your onStop() code.
-		EasyTracker.getInstance(this).activityStop(this); // Add this method.
-	}
-
-	
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
