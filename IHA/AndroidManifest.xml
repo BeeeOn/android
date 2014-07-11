@@ -41,10 +41,6 @@
             android:label="@string/title_activity_location_screen" >
         </activity>
         <activity
-            android:name="cz.vutbr.fit.iha.activity.DataOfLocationScreenActivity"
-            android:label="@string/title_activity_data_of_locacion_screen" >
-        </activity>
-        <activity
             android:name="cz.vutbr.fit.iha.activity.AddSensorActivity"
             android:label="@string/title_activity_add_sensor" >
         </activity>

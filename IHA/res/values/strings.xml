@@ -5,7 +5,6 @@
     <string name="app_id">1411635335720288</string>
     <!-- Titles -->
     <string name="title_activity_location_screen">Locations</string>
-    <string name="title_activity_data_of_locacion_screen">Devices</string>
     <string name="title_activity_notification">Notification</string>
     <string name="title_activity_add_sensor">Add Sensor</string>
     <string name="title_activity_sensor_detail">Sensor Detail</string>

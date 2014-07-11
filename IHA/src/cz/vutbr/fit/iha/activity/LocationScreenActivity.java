@@ -33,7 +33,6 @@ import com.actionbarsherlock.view.Window;
 import cz.vutbr.fit.iha.MenuListAdapter;
 import cz.vutbr.fit.iha.R;
 import cz.vutbr.fit.iha.SensorListAdapter;
-import cz.vutbr.fit.iha.activity.SensorDetailFragment.AnActionModeOfEpicProportions;
 import cz.vutbr.fit.iha.activity.dialog.AddAdapterActivityDialog;
 import cz.vutbr.fit.iha.activity.dialog.AddSensorActivityDialog;
 import cz.vutbr.fit.iha.activity.dialog.CustomAlertDialog;
@@ -85,9 +84,6 @@ public class LocationScreenActivity extends SherlockFragmentActivity {
 	
 	private boolean backPressed = false;
 
-	/**
-	 * Call XML parser to file on SDcard
-	 */
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -103,14 +99,6 @@ public class LocationScreenActivity extends SherlockFragmentActivity {
 		setSupportProgressBarIndeterminate(true);
 		setSupportProgressBarIndeterminateVisibility(true);
 		getSupportActionBar().setIcon(R.drawable.ic_launcher_white);
-		// int marginTop = 5;
-		// int ID = Constants.BUTTON_ID;
-		/*
-		 * for(LocationListing location : locations) { if
-		 * (addLocationButton(location.getName(), ID, marginTop)) ID++; }
-		 * if(locations.size() == 1){ Button onlyOne =
-		 * (Button)findViewById(--ID); onlyOne.performClick(); }
-		 */
 
 		if (savedInstanceState != null)
 			inBackground = savedInstanceState.getBoolean(BKG);
@@ -484,62 +472,6 @@ public class LocationScreenActivity extends SherlockFragmentActivity {
 		dialog.show();
 	}
 
-	/**
-	 * Draw a button to GUI
-	 * 
-	 * @param s
-	 *            specific location name
-	 * @param ID
-	 *            id of button
-	 * @param marginTop
-	 *            margin of the button
-	 * @return true on success and false in other cases
-	 *//*
-	private boolean addLocationButton(String s, int ID, int marginTop) {
-		final Button button = new Button(this);
-		button.setText(s);
-		button.setTextSize(getResources().getDimension(R.dimen.textsize));
-		button.setId(ID);
-		if (s == null || s.length() < 1)
-			return false;
-
-		// LinearLayout mylayout =
-		// (LinearLayout)findViewById(R.id.location_scroll);
-		// mylayout.setOrientation(LinearLayout.VERTICAL);
-		// drawerListView = (ListView) findViewById(R.id.left_drawer);
-
-		LinearLayout.LayoutParams params_btn = new LinearLayout.LayoutParams(
-				LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
-		params_btn.setMargins(0, marginTop, 0, 0);
-		button.setLayoutParams(params_btn);
-		button.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				Button clicked = (Button) v;
-				Log.i("kliknuto-na", clicked.getText().toString());
-
-				Intent intent = new Intent(getBaseContext(),
-						DataOfLocationScreenActivity.class);
-				intent.putExtra(Constants.LOCATION_CLICKED, clicked.getText()
-						.toString());
-				startActivity(intent);
-			}
-		});
-		button.setOnLongClickListener(new View.OnLongClickListener() {
-			@Override
-			public boolean onLongClick(View v) {
-				renameLocation(button.getText().toString(), button);
-				return true;
-			}
-		});
-
-		Compatibility.setBackground(button,
-				getResources().getDrawable(R.drawable.shape));
-
-		// mylayout.addView(button);
-		return true;
-	}
-*/
 	private void refreshListing() {
 		if (mActiveLocation == null)
 			return;
