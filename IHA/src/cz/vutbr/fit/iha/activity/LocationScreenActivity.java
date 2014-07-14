@@ -193,6 +193,14 @@ public class LocationScreenActivity extends BaseActivity {
 			public boolean onItemLongClick(AdapterView<?> parent, View view,
 					int position, long id) {
 				
+				Bundle bundle = new Bundle();
+				String myMessage = mLocations.get(position).getId();
+				bundle.putString("locationID", myMessage);
+				Intent intent = new Intent(mActivity,
+						LocationDetailActivity.class);
+				intent.putExtras(bundle);
+				startActivityForResult(intent, SENSOR_DETAIL);
+				
 				Log.d(TAG, "Long press");
 				return true;
 			}
@@ -286,14 +294,6 @@ public class LocationScreenActivity extends BaseActivity {
 				Bundle bundle = new Bundle();
 				String myMessage = selectedItem.getId();
 				bundle.putString("sensorID", myMessage);
-				// SensorDetailFragment fragment = new SensorDetailFragment();
-				// fragment.setArguments(bundle);
-
-				// FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-				// ft.replace(R.id.content_frame, fragment);
-				// ft.addToBackStack(null);
-				// ft.commit();
-
 				Intent intent = new Intent(mActivity,
 						SensorDetailActivity.class);
 				intent.putExtras(bundle);

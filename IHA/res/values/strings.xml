@@ -12,6 +12,7 @@
     <string name="title_activity_registration">Registration</string>
     <string name="title_activity_login_facebook">Facebook</string>
     <string name="title_activity_widget_configuration">Widget Configuration</string>
+    <string name="title_activity_location_detail_screen">Location Detail</string>
     <!-- Buttons -->
     <string name="login_login">Login</string>
     <string name="login_demo">Demo mode</string>

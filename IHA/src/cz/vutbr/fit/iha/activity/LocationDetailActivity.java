@@ -13,16 +13,16 @@ public class LocationDetailActivity extends BaseActivity
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_sensor_detail_wraper);
+		setContentView(R.layout.activity_location_detail_wraper);
 		
 		getSupportActionBar().setHomeButtonEnabled(true);
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 		getSupportActionBar().setIcon(R.drawable.ic_launcher_white);
-		SensorDetailFragment fragment = new SensorDetailFragment();
+		LocationDetailFragment fragment = new LocationDetailFragment();
 		fragment.setArguments(getIntent().getExtras());
 		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
 		
-		ft.replace(R.id.sensor_wraper, fragment);
+		ft.replace(R.id.location_detail_wraper, fragment);
 		ft.commit();
 	}
 
