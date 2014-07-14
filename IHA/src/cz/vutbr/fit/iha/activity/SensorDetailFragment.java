@@ -3,6 +3,7 @@ package cz.vutbr.fit.iha.activity;
 import java.text.DateFormat;
 import java.util.Date;
 
+import android.app.Fragment;
 import android.content.Context;
 import android.graphics.Color;
 import android.os.AsyncTask;
@@ -39,7 +40,7 @@ import cz.vutbr.fit.iha.controller.Controller;
 public class SensorDetailFragment extends SherlockFragment {
 
 	private Controller mController;
-	private static final String TAG = "SensorDetail";
+	private static final String TAG = "SensorDetailFragment";
 	
 	// GUI elements
 	private TextView sName;
@@ -52,6 +53,10 @@ public class SensorDetailFragment extends SherlockFragment {
 	private SeekBar sRefreshTimeValue;
 	private LinearLayout sGraphLayout;
 	
+	
+	public static final String ARG_PAGE = "page";
+	
+	private String mPageNumber;
 	// 
 	ActionMode mMode;
 	
@@ -62,6 +67,27 @@ public class SensorDetailFragment extends SherlockFragment {
 			
 	public double minimum;
 	
+	
+	/**
+     * Factory method for this fragment class. Constructs a new fragment for the given page number.
+     */
+    public static SensorDetailFragment create(String pageNumber) {
+    	SensorDetailFragment fragment = new SensorDetailFragment();
+        Bundle args = new Bundle();
+        args.putString(ARG_PAGE, pageNumber);
+        fragment.setArguments(args);
+        return fragment;
+    }
+
+    public SensorDetailFragment() {
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        mPageNumber = getArguments().getString(ARG_PAGE);
+    }
+	
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -69,12 +95,12 @@ public class SensorDetailFragment extends SherlockFragment {
 		// Get controller
 		mController = Controller.getInstance(getActivity());
 
-		Bundle bundle = this.getArguments();
-		String sensorID = bundle.getString("sensorID");
+		//Bundle bundle = this.getArguments();
+		//String sensorID = bundle.getString("sensorID");
 
 		
 		GetDeviceTask task = new GetDeviceTask();
-		task.execute(new String[] { sensorID });
+		task.execute(new String[] { mPageNumber });
 
 		View view = inflater.inflate(R.layout.activity_sensor_detail_screen,
 				container, false);
@@ -308,7 +334,7 @@ public class SensorDetailFragment extends SherlockFragment {
 		}
 	}
 
-
+	// Menu for Action bar mode - edit
 	class AnActionModeOfEpicProportions implements ActionMode.Callback {
 
 		@Override
@@ -353,4 +379,5 @@ public class SensorDetailFragment extends SherlockFragment {
 
 		}
 	}
+
 }

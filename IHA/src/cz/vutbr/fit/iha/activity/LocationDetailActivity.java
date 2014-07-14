@@ -2,6 +2,8 @@ package cz.vutbr.fit.iha.activity;
 
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.view.PagerAdapter;
+import android.support.v4.view.ViewPager;
 
 import com.actionbarsherlock.view.MenuItem;
 
@@ -9,6 +11,8 @@ import cz.vutbr.fit.iha.R;
 
 public class LocationDetailActivity extends BaseActivity
 {
+	private ViewPager mPager;
+	private PagerAdapter mPagerAdapter;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {

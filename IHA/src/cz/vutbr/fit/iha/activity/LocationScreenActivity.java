@@ -292,8 +292,9 @@ public class LocationScreenActivity extends BaseActivity {
 				setSupportProgressBarIndeterminateVisibility(true);
 
 				Bundle bundle = new Bundle();
-				String myMessage = selectedItem.getId();
-				bundle.putString("sensorID", myMessage);
+				String myMessage = selectedItem.getLocationId();
+				bundle.putString("LocationOfSensorID", myMessage);
+				bundle.putInt("SensorPosition", position);
 				Intent intent = new Intent(mActivity,
 						SensorDetailActivity.class);
 				intent.putExtras(bundle);
