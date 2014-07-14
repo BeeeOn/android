@@ -37,6 +37,7 @@
 	        android:layout_marginBottom="10dp"
 	        android:gravity="right"
 	        android:text="NameSensor"
+	        
 	        android:textColor="@color/log_blue2"
 	        android:textSize="30sp"
 	        android:textStyle="bold" />
@@ -133,6 +134,15 @@
 	        android:orientation="vertical" >
 	
 	    </LinearLayout>
+
+	    <RelativeLayout
+	        android:layout_width="10dp"
+	        android:layout_height="10dp"
+	        android:layout_marginRight="-2dp"
+	        android:layout_alignBottom="@+id/sen_detail_name"
+	        android:layout_alignRight="@+id/sen_detail_name" 
+	        android:background="@drawable/rectangle_background">
+	    </RelativeLayout>
 	
 	</RelativeLayout>
 
