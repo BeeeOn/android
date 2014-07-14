@@ -29,7 +29,7 @@
         <activity
             android:name="cz.vutbr.fit.iha.activity.LoginActivity"
             android:label="@string/app_name"
-            android:theme="@android:style/Theme.NoTitleBar" >
+            android:theme="@style/Theme.Sherlock.NoActionBar" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
