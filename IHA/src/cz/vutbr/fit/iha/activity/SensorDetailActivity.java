@@ -16,6 +16,7 @@ import com.actionbarsherlock.view.MenuItem;
 import cz.vutbr.fit.iha.R;
 import cz.vutbr.fit.iha.adapter.device.BaseDevice;
 import cz.vutbr.fit.iha.controller.Controller;
+import cz.vutbr.fit.iha.view.CustomViewPager;
 
 /**
  * Class that handle screen with detail of some sensor
@@ -139,6 +140,11 @@ public class SensorDetailActivity extends BaseActivity
                 //invalidateOptionsMenu();
             }
         });
+        ((CustomViewPager) mPager).setPagingEnabled(true);
         mPager.setCurrentItem(mSensorPosition);
+	}
+	
+	public void setEnableSwipe (boolean state) {
+		((CustomViewPager) mPager).setPagingEnabled(state);
 	}
 }

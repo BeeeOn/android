@@ -11,13 +11,19 @@ import android.os.Bundle;
 import android.text.format.Time;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.View.OnClickListener;
+import android.view.View.OnGenericMotionListener;
+import android.view.View.OnHoverListener;
 import android.view.View.OnLongClickListener;
+import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
@@ -36,6 +42,7 @@ import cz.vutbr.fit.iha.adapter.device.BaseDevice;
 import cz.vutbr.fit.iha.adapter.location.Location;
 import cz.vutbr.fit.iha.controller.Controller;
 //import android.widget.LinearLayout;
+import cz.vutbr.fit.iha.view.CustomViewPager;
 
 public class SensorDetailFragment extends SherlockFragment {
 
@@ -52,13 +59,21 @@ public class SensorDetailFragment extends SherlockFragment {
 	private TextView sRefreshTimeText;
 	private SeekBar sRefreshTimeValue;
 	private LinearLayout sGraphLayout;
+	private RelativeLayout mLayout;
 	
+	private SensorDetailActivity mActivity;
+	private GraphView mGraphView; 
+	//private CustomViewPager mPager;
 	
 	public static final String ARG_PAGE = "page";
 	
 	private String mPageNumber;
+	
+	private boolean mWasTapLayout = false;
+	private boolean mWasTapGraph = false;
 	// 
 	ActionMode mMode;
+	
 	
 	// Array for refresh time constant
 	// 1sec, 5sec, 10sec, 20sec , 30sec, 1min, 5min, 10min, 15min, 30,min, 1h, 2h,3h,4h, 8h, 12h, 24h
@@ -95,9 +110,7 @@ public class SensorDetailFragment extends SherlockFragment {
 		// Get controller
 		mController = Controller.getInstance(getActivity());
 
-		//Bundle bundle = this.getArguments();
-		//String sensorID = bundle.getString("sensorID");
-
+		mActivity = (SensorDetailActivity) getActivity();
 		
 		GetDeviceTask task = new GetDeviceTask();
 		task.execute(new String[] { mPageNumber });
@@ -164,7 +177,30 @@ public class SensorDetailFragment extends SherlockFragment {
 		});
 		// Get LinearLayout for graph
 		sGraphLayout = (LinearLayout) getView().findViewById(R.id.sen_graph_layout);
-
+		
+		// Get RelativeLayout of detail
+		mLayout = (RelativeLayout) getView().findViewById(R.id.sensordetail_scroll);
+		mLayout.setOnTouchListener(new OnTouchListener() {
+			
+			@Override
+			public boolean onTouch(View v, MotionEvent event) {
+				if(mWasTapLayout)
+					return true;
+				
+				mWasTapLayout = true;
+				mWasTapGraph = false;
+				if(mGraphView != null) {
+					mGraphView.setScalable(false);
+					mGraphView.setScrollable(false);
+					mActivity.setEnableSwipe(true);
+					
+					onTouch(v,event);
+					return true;
+				}
+				return false;
+			}
+		});
+		
 		// Set name of sensor
 		sName.setText(device.getName());
 		sName.setBackgroundColor(Color.TRANSPARENT);
@@ -208,24 +244,7 @@ public class SensorDetailFragment extends SherlockFragment {
 	}
 	
 	private void addGraphView() {
-		// init example series data
-		/*GraphViewSeries exampleSeries = new GraphViewSeries(new GraphView.GraphViewData[] {
-		    new GraphView.GraphViewData(1, 2.0d)
-		    , new GraphView.GraphViewData(2, 1.5d)
-		    , new GraphView.GraphViewData(3, 2.5d)
-		    , new GraphView.GraphViewData(4, 1.0d)
-		    , new GraphView.GraphViewData(4, 1.0d)
-		    , new GraphView.GraphViewData(7, 1.0d)
-		    , new GraphView.GraphViewData(4, 1.0d)
-		    , new GraphView.GraphViewData(1, 1.0d)
-		    , new GraphView.GraphViewData(0, 1.0d)
-		    , new GraphView.GraphViewData(7, 1.0d)
-		    
-		});*/
-		
-		
-		
-		GraphView graphView = new LineGraphView(
+		mGraphView = new LineGraphView(
 				getView().getContext() // context
 		    , "" // heading
 		);
@@ -233,27 +252,12 @@ public class SensorDetailFragment extends SherlockFragment {
 		minimum = -1.0;
 		
 		GraphViewSeriesStyle seriesStyle = new GraphViewSeriesStyle(getResources().getColor(R.color.log_blue2),2);
-		//GraphViewSeriesStyle seriesStyle2 = new GraphViewSeriesStyle(Color.GRAY,2);
-		/*
-		seriesStyle.setValueDependentColor(new ValueDependentColor() {
-		  @Override
-		  public int get(GraphViewDataInterface data) {
-		    // the higher the more red
-			  if(data.getX() == minimum) {
-				  return Color.GRAY;
-			  }
-			  else {
-				  //return Color.rgb((int)(150+((data.getY()/3)*100)), (int)(150-((data.getY()/3)*150)), (int)(150-((data.getY()/3)*150)));
-				  return getResources().getColor(R.color.log_blue2);
-			  }
-		  }
-		});*/
+
+		mGraphView.getGraphViewStyle().setVerticalLabelsColor(getResources().getColor(R.color.log_blue2));
+		mGraphView.getGraphViewStyle().setHorizontalLabelsColor(getResources().getColor(R.color.log_blue2));
+		mGraphView.setBackgroundColor(Color.argb(128, 0, 153, 204));//getResources().getColor(R.color.log_blue2));
 		
-		graphView.getGraphViewStyle().setVerticalLabelsColor(getResources().getColor(R.color.log_blue2));
-		graphView.getGraphViewStyle().setHorizontalLabelsColor(getResources().getColor(R.color.log_blue2));
-		graphView.setBackgroundColor(Color.argb(128, 0, 153, 204));//getResources().getColor(R.color.log_blue2));
-		
-		((LineGraphView) graphView).setDrawBackground(true);
+		((LineGraphView) mGraphView).setDrawBackground(true);
 		//graphView.setAlpha(128);
 		// draw sin curve
 		int num = 150;
@@ -269,27 +273,39 @@ public class SensorDetailFragment extends SherlockFragment {
 		  }
 		  
 		}
-		/*
-		GraphView.GraphViewData[] data2 = new GraphView.GraphViewData[19];
-		for (int i=0; i<19; i++) {
-		  //if(i > 100 && i <120) {
-			  data2[i] = new GraphView.GraphViewData(i+101, -1);
-		  //}
-		}*/
+
 		 
-		graphView.addSeries(new GraphViewSeries("Graph",seriesStyle,data));
-		//graphView.addSeries(new GraphViewSeries("Empty",seriesStyle2,data2));
+		mGraphView.addSeries(new GraphViewSeries("Graph",seriesStyle,data));
 		// set view port, start=2, size=40
-		graphView.setViewPort(2, 40);
-		graphView.setManualYAxis(true);
-		graphView.setManualYAxisBounds(1.0, -1.0);
+		mGraphView.setViewPort(2, 40);
+		mGraphView.setManualYAxis(true);
+		mGraphView.setManualYAxisBounds(1.0, -1.0);
 		
 		
-		
-		graphView.setScrollable(true);
+
+		//graphView.setScrollable(true);
 		// optional - activate scaling / zooming
-		graphView.setScalable(true);
-		sGraphLayout.addView(graphView);
+		//graphView.setScalable(true);
+		sGraphLayout.addView(mGraphView);
+
+		sGraphLayout.setOnTouchListener(new OnTouchListener() {
+			
+			@Override
+			public boolean onTouch(View v, MotionEvent event) {
+				if(mWasTapGraph)
+					return true;
+				
+				mWasTapLayout = false;
+				mWasTapGraph = true;
+				
+				Log.d(TAG, "onTouch layout");
+				mGraphView.setScrollable(true);
+				mGraphView.setScalable(true);
+				mActivity.setEnableSwipe(false);
+				onTouch(v,event);
+				return true;
+			}
+		});
 		
 	}
 
