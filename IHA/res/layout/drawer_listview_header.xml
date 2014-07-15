@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    style="?attr/spinnerDropDownItemStyle"
+    android:layout_width="match_parent"
+    android:layout_height="48dp"
+    android:orientation="horizontal"
+    android:background="@drawable/border"
+    android:paddingTop="2dp">
+    
+    <TextView 
+        android:id="@+id/section"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        style="?attr/spinnerDropDownItemStyle"
+        android:ellipsize="end"
+        android:textColor="@color/log_blue2"
+        android:singleLine="true" />
+ 
+ </LinearLayout>
