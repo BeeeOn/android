@@ -284,14 +284,9 @@ public class GalleryControlExtension extends ManagedControlExtension {
 			public void run() {
 				BaseDevice device = mDevices.get(lastPosition);
 				if (mController.updateDevice(device)) {
-					Log.d("ACTUALIZE", "aktualizovano");
-					BaseDevice newDevice = mController.getDevice(device.getId());
-					newDevice.setName("nove");
-					device = newDevice;
-				} else {
-					Log.d("ACTUALIZE", "aktualizace NEPROBEHLA");
+					sendListItem(createControlListItem(lastPosition));
 				}
-				sendListItem(createControlListItem(lastPosition));
+				
 			}
 		});
 		thLoc.start();
@@ -306,7 +301,6 @@ public class GalleryControlExtension extends ManagedControlExtension {
 						.getDevicesByLocation(mLocationStr);
 
 				resume();
-
 			}
 		});
 		thLoc.start();
