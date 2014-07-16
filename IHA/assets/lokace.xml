@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<communication version="1.8" id="1" state="rooms"> 
+<communication version="1.9" id="1" state="rooms"> 
 	<location id="5555" type="5">Obývací pokoj</location>
 	<location id="2222" type="2">Ložnice</location>
 	<location id="4444" type="4">Kuchyň</location>
