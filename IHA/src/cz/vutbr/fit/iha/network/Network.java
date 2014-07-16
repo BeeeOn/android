@@ -511,7 +511,7 @@ public class Network {
 		ParsedMessage msg;
 		
 		try {
-			String messageToSend = XmlCreator.createPartial(adapterId, Integer.toString(mSessionId), devices);
+			String messageToSend = XmlCreator.createPartial(Integer.toString(mSessionId), adapterId, devices);
 			
 			Log.d("IHA - Network fromApp", messageToSend);
 			
@@ -563,7 +563,7 @@ public class Network {
 		ParsedMessage msg;
 		
 		try {
-			String messageToSend = XmlCreator.createUpdate(adapterId, Integer.toString(mSessionId), devices);
+			String messageToSend = XmlCreator.createUpdate(Integer.toString(mSessionId), adapterId, devices);
 			
 			Log.d("IHA - Network fromApp", messageToSend);
 			
@@ -622,7 +622,7 @@ public class Network {
 		ParsedMessage msg;
 		
 		try {
-			String messageToSend = XmlCreator.createLogName(adapterId, Integer.toString(mSessionId), deviceId, deviceType, from, to, funcType, interval);
+			String messageToSend = XmlCreator.createLogName(Integer.toString(mSessionId), adapterId, deviceId, deviceType, from, to, funcType, interval);
 			
 			Log.d("IHA - Network fromApp", messageToSend);
 			
@@ -696,7 +696,7 @@ public class Network {
 		ParsedMessage msg;
 		
 		try {
-			String messageToSend = XmlCreator.createAddView(adapterId, Integer.toString(mSessionId), nameOfView, iconId, devices);
+			String messageToSend = XmlCreator.createAddView(Integer.toString(mSessionId), adapterId, nameOfView, iconId, devices);
 			
 			Log.d("IHA - Network fromApp", messageToSend);
 			
@@ -749,7 +749,7 @@ public class Network {
 		ParsedMessage msg;
 		
 		try {
-			String messageToSend = XmlCreator.createGetViews(adapterId, Integer.toString(mSessionId));
+			String messageToSend = XmlCreator.createGetViews(Integer.toString(mSessionId), adapterId);
 			
 			Log.d("IHA - Network fromApp", messageToSend);
 			
@@ -807,7 +807,7 @@ public class Network {
 		ParsedMessage msg;
 		
 		try {
-			String messageToSend = XmlCreator.createDelView(adapterId, Integer.toString(mSessionId), viewName);
+			String messageToSend = XmlCreator.createDelView(Integer.toString(mSessionId), adapterId, viewName);
 			
 			Log.d("IHA - Network fromApp", messageToSend);
 			
@@ -862,7 +862,7 @@ public class Network {
 		ParsedMessage msg;
 		
 		try {
-			String messageToSend = XmlCreator.createUpdateView(adapterId, Integer.toString(mSessionId), viewName, iconId, devices);
+			String messageToSend = XmlCreator.createUpdateView(Integer.toString(mSessionId), adapterId, viewName, iconId, devices);
 			
 			Log.d("IHA - Network fromApp", messageToSend);
 			
@@ -915,7 +915,7 @@ public class Network {
 		ParsedMessage msg;
 		
 		try {
-			String messageToSend = XmlCreator.createAddConAccount(adapterId, Integer.toString(mSessionId), userNrole);
+			String messageToSend = XmlCreator.createAddConAccount(Integer.toString(mSessionId), adapterId, userNrole);
 			
 			Log.d("IHA - Network fromApp", messageToSend);
 			
@@ -968,7 +968,7 @@ public class Network {
 		ParsedMessage msg;
 		
 		try {
-			String messageToSend = XmlCreator.createDelConAccount(adapterId, Integer.toString(mSessionId), users);
+			String messageToSend = XmlCreator.createDelConAccount(Integer.toString(mSessionId), adapterId, users);
 			
 			Log.d("IHA - Network fromApp", messageToSend);
 			
@@ -1020,7 +1020,7 @@ public class Network {
 		ParsedMessage msg;
 		
 		try {
-			String messageToSend = XmlCreator.createGetConAccount(adapterId, Integer.toString(mSessionId));
+			String messageToSend = XmlCreator.createGetConAccount(Integer.toString(mSessionId), adapterId);
 			
 			Log.d("IHA - Network fromApp", messageToSend);
 			
@@ -1078,7 +1078,7 @@ public class Network {
 		ParsedMessage msg;
 		
 		try {
-			String messageToSend = XmlCreator.createChangeConAccount(adapterId, Integer.toString(mSessionId), userNrole);
+			String messageToSend = XmlCreator.createChangeConAccount(Integer.toString(mSessionId), adapterId, userNrole);
 			
 			Log.d("IHA - Network fromApp", messageToSend);
 			
@@ -1132,7 +1132,7 @@ public class Network {
 		ParsedMessage msg;
 		
 		try {
-			String messageToSend = XmlCreator.createSetTimeZone(adapterId, Integer.toString(mSessionId), differenceToGMT);
+			String messageToSend = XmlCreator.createSetTimeZone(Integer.toString(mSessionId), adapterId, differenceToGMT);
 			
 			Log.d("IHA - Network fromApp", messageToSend);
 			
@@ -1185,7 +1185,7 @@ public class Network {
 		ParsedMessage msg;
 		
 		try {
-			String messageToSend = XmlCreator.createGetTimeZone(adapterId, Integer.toString(mSessionId));
+			String messageToSend = XmlCreator.createGetTimeZone(Integer.toString(mSessionId), adapterId);
 			
 			Log.d("IHA - Network fromApp", messageToSend);
 			
@@ -1238,7 +1238,7 @@ public class Network {
 		ParsedMessage msg;
 		
 		try {
-			String messageToSend = XmlCreator.createGetRooms(adapterId, Integer.toString(mSessionId));
+			String messageToSend = XmlCreator.createGetRooms(Integer.toString(mSessionId), adapterId);
 			
 			Log.d("IHA - Network fromApp", messageToSend);
 			
@@ -1296,7 +1296,7 @@ public class Network {
 		ParsedMessage msg;
 		
 		try {
-			String messageToSend = XmlCreator.createUpdateRooms(adapterId, Integer.toString(mSessionId), locations);
+			String messageToSend = XmlCreator.createUpdateRooms(Integer.toString(mSessionId), adapterId, locations);
 			
 			Log.d("IHA - Network fromApp", messageToSend);
 			
@@ -1348,7 +1348,7 @@ public class Network {
 		ParsedMessage msg;
 		
 		try {
-			String messageToSend = XmlCreator.createDelRooms(adapterId, Integer.toString(mSessionId), location);
+			String messageToSend = XmlCreator.createDelRooms(Integer.toString(mSessionId), adapterId, location);
 			
 			Log.d("IHA - Network fromApp", messageToSend);
 			
@@ -1395,7 +1395,7 @@ public class Network {
 		ParsedMessage msg;
 		
 		try {
-			String messageToSend = XmlCreator.createAddRooms(adapterId, Integer.toString(mSessionId), location);
+			String messageToSend = XmlCreator.createAddRooms(Integer.toString(mSessionId), adapterId, location);
 			
 			Log.d("IHA - Network fromApp", messageToSend);
 			
