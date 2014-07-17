@@ -48,14 +48,10 @@ public enum RefreshInterval {
 			// minutes
 			int value = (int) mSecs / 60;
 			return context.getResources().getQuantityString(R.plurals.interval_minutes, value, value);
-		} else if (mSecs < 60*60*24) {
+		} else {
 			// hours
 			int value = (int) mSecs / (60*60);
 			return context.getResources().getQuantityString(R.plurals.interval_hours, value, value);
-		} else {
-			// days (not used in actual enum)
-			int value = (int) mSecs / (60*60*24);
-			return context.getResources().getQuantityString(R.plurals.interval_days, value, value);
 		}
 	}
 
