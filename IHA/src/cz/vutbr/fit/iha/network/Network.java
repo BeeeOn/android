@@ -224,6 +224,43 @@ public class Network {
 		}
 		signIn(ActualUser.getActualUser().getEmail());
 	}
+	
+	public ParsedMessage doRequest(String messageToSend) {
+		//TODO: test properly
+		if(!isAvailable())
+			throw new NoConnectionException();
+		
+		ParsedMessage msg = null;
+		
+		try {
+			String result = startCommunication(messageToSend);
+			Log.d("IHA - Network fromApp", messageToSend);
+			
+			msg = XmlParsers.parseCommunication(result, false);
+			Log.d("IHA - Network fromSrv", result);
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new CommunicationException(e);
+		}
+		
+		return msg;
+	}
+	
+	public String getGoogleToken() {
+		if(!isAvailable())
+			throw new NoConnectionException();
+		
+		String googleToken = "";
+		try {
+			do {
+				googleToken = GetGoogleAuth.getGetGoogleAuth().getToken();
+				Log.d("IHA - Network - SignIn - token", googleToken);
+			} while (googleToken.equalsIgnoreCase(""));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return googleToken;
+	}
 
 	/**
 	 * Method signIn user given by its email to server, BUT before calling must call GetGoogleAuth to get googleToken in it and init ActualUser
@@ -235,35 +272,12 @@ public class Network {
 	 * @throws NotRegBException if this user is not registered on the server but there is FREE ADAPTER
 	 */
 	public ActualUser signIn(String userEmail) throws NoConnectionException, CommunicationException, NotRegAException, NotRegBException{
+		String googleToken = getGoogleToken();
+		if (googleToken.length() == 0)
+			throw new CommunicationException();
 		
-		if(!isAvailable())
-			throw new NoConnectionException();
-		
-		ParsedMessage msg;
-		
-		try {
-			String googleToken;
-			
-//			GetGoogleAuth.getGetGoogleAuth().execute();
-			do{
-				googleToken = GetGoogleAuth.getGetGoogleAuth().getToken();
-				Log.d("IHA - Network - SignIn - token", googleToken);
-			}while(googleToken.equalsIgnoreCase(""));
-			
-			String messageToSend = XmlCreator.createSignIn(userEmail, googleToken, Locale.getDefault().getLanguage());
-			
-			Log.d("IHA - Network - SignIn - fromApp", messageToSend);
-			
-			String result = startCommunication(messageToSend);
-			
-			Log.d("IHA - Network - SignIn - fromSrv", result);
-			
-			msg = XmlParsers.parseCommunication(result, false);
-			
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new CommunicationException(e);
-		}
+		String messageToSend = XmlCreator.createSignIn(userEmail, googleToken, Locale.getDefault().getLanguage());
+		ParsedMessage msg = doRequest(messageToSend);
 		
 		if(msg.getSessionId() != 0 && msg.getState() == State.TRUE /*&& ((String)msg.data).equals(SIGNIN)*/){
 			Log.d("IHA - Network", msg.getState().getValue());
@@ -294,32 +308,19 @@ public class Network {
 	 * @throws NoConnectionException
 	 */
 	public boolean signUp(String email, String serialNumber, int SessionId) throws CommunicationException, NoConnectionException{
-		if(!isAvailable())
-			throw new NoConnectionException();
 		
-		ParsedMessage msg;
-		
+		String googleToken;
 		try {
-			String googleToken;
-			
-			do{
+			do {
 				googleToken = GetGoogleAuth.getGetGoogleAuth().getToken();
-			}while(googleToken.length() < 1);
-			
-			String messageToSend = XmlCreator.createSignUp(email, Integer.toString(SessionId), googleToken, serialNumber);
-			
-			Log.d("IHA - Network fromApp", messageToSend);
-			
-			String result = startCommunication(messageToSend);
-			
-			Log.d("IHA - Network fromSrv", result);
-			
-			msg = XmlParsers.parseCommunication(result, false);
-			
+			} while(googleToken.length() < 1);
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw new CommunicationException(e);
 		}
+		
+		String messageToSend = XmlCreator.createSignUp(email, Integer.toString(SessionId), googleToken, serialNumber);
+		ParsedMessage msg = doRequest(messageToSend);
 		
 		if(msg.getSessionId() != 0 && msg.getState() == State.TRUE && ((String)msg.data).equals(SIGNUP)){
 			Log.d("IHA - Network", msg.getState().getValue());
@@ -341,26 +342,8 @@ public class Network {
 	 * @throws CommunicationException including message from server
 	 */
 	public List<Adapter> getAdapters() throws NoConnectionException, CommunicationException{
-		if(!isAvailable())
-			throw new NoConnectionException();
-		
-		ParsedMessage msg;
-		
-		try {
-			String messageToSend = XmlCreator.createGetAdapters(mSessionId);
-			
-			Log.d("IHA - Network - fromApp", messageToSend);
-			
-			String result = startCommunication(messageToSend);
-			
-			Log.d("IHA - Network - fromSrv", result);
-			
-			msg = XmlParsers.parseCommunication(result, false);
-			
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new CommunicationException(e);
-		}
+		String messageToSend = XmlCreator.createGetAdapters(mSessionId);
+		ParsedMessage msg = doRequest(messageToSend);
 		
 		if(msg.getState() == State.READY){
 			Log.d("IHA - Network", msg.getState().getValue());
@@ -388,27 +371,9 @@ public class Network {
 	 * @throws CommunicationException
 	 */
 	public Adapter init(String adapterId) throws NoConnectionException, CommunicationException{
-		if(!isAvailable())
-			throw new NoConnectionException();
-		
-		ParsedMessage msg;
-		
-		try {
-//			String messageToSend = XmlCreator.createInit(Integer.toString(mSessionId), adapterId);
-			String messageToSend = XmlCreator.createGetXml(Integer.toString(mSessionId), adapterId);
-			
-			Log.d("IHA - Network fromApp", messageToSend);
-			
-			String result = startCommunication(messageToSend);
-			
-			Log.d("IHA - Network fromSrv", result);
-			
-			msg = XmlParsers.parseCommunication(result, false);
-			
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new CommunicationException(e);
-		}
+		// String messageToSend = XmlCreator.createInit(Integer.toString(mSessionId), adapterId);
+		String messageToSend = XmlCreator.createGetXml(Integer.toString(mSessionId), adapterId);
+		ParsedMessage msg = doRequest(messageToSend);
 		
 		if(msg.getState() == State.XML){
 			Log.d("IHA - Network", msg.getState().getValue());
@@ -433,27 +398,8 @@ public class Network {
 	 * @throws CommunicationException
 	 */
 	public boolean reInit(String oldId, String newId) throws NoConnectionException, CommunicationException{
-		//TODO: test properly
-		if(!isAvailable())
-			throw new NoConnectionException();
-		
-		ParsedMessage msg;
-		
-		try {
-			String messageToSend = XmlCreator.createReInit(Integer.toString(mSessionId), oldId, newId);
-			
-			Log.d("IHA - Network fromApp", messageToSend);
-			
-			String result = startCommunication(messageToSend);
-			
-			Log.d("IHA - Network fromSrv", result);
-			
-			msg = XmlParsers.parseCommunication(result, false);
-			
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new CommunicationException(e);
-		}
+		String messageToSend = XmlCreator.createReInit(Integer.toString(mSessionId), oldId, newId);
+		ParsedMessage msg = doRequest(messageToSend);
 		
 		if(msg.getState() == State.TRUE){
 			Log.d("IHA - Network", msg.getState().getValue());
@@ -478,26 +424,8 @@ public class Network {
 	 * @throws CommunicationException 
 	 */
 	public boolean partial(String adapterId, List<BaseDevice> devices) throws NoConnectionException, CommunicationException{
-		if(!isAvailable())
-			throw new NoConnectionException();
-		
-		ParsedMessage msg;
-		
-		try {
-			String messageToSend = XmlCreator.createPartial(Integer.toString(mSessionId), adapterId, devices);
-			
-			Log.d("IHA - Network fromApp", messageToSend);
-			
-			String result = startCommunication(messageToSend);
-			
-			Log.d("IHA - Network fromSrv", result);
-			
-			msg = XmlParsers.parseCommunication(result, false);
-			
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new CommunicationException(e);
-		}
+		String messageToSend = XmlCreator.createPartial(Integer.toString(mSessionId), adapterId, devices);
+		ParsedMessage msg = doRequest(messageToSend);
 		
 		if(msg.getState() == State.TRUE){
 			Log.d("IHA - Network", msg.getState().getValue());
@@ -521,26 +449,8 @@ public class Network {
 	 * @throws CommunicationException 
 	 */
 	public List<BaseDevice> update(String adapterId, List<BaseDevice> devices) throws NoConnectionException, CommunicationException{
-		if(!isAvailable())
-			throw new NoConnectionException();
-		
-		ParsedMessage msg;
-		
-		try {
-			String messageToSend = XmlCreator.createUpdate(Integer.toString(mSessionId), adapterId, devices);
-			
-			Log.d("IHA - Network fromApp", messageToSend);
-			
-			String result = startCommunication(messageToSend);
-			
-			Log.d("IHA - Network fromSrv", result);
-			
-			msg = XmlParsers.parseCommunication(result, false);
-			
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new CommunicationException(e);
-		}
+		String messageToSend = XmlCreator.createUpdate(Integer.toString(mSessionId), adapterId, devices);
+		ParsedMessage msg = doRequest(messageToSend);
 		
 		if(msg.getState() == State.PARTIAL){
 			Log.d("IHA - Network", msg.getState().getValue());
@@ -570,27 +480,8 @@ public class Network {
 	 * @throws CommunicationException 
 	 */
 	public List<ContentRow> logName(String adapterId, String deviceId, int deviceType, String from, String to, String funcType, int interval) throws NoConnectionException, CommunicationException{
-		// TODO: test properly
-		if(!isAvailable())
-			throw new NoConnectionException();
-		
-		ParsedMessage msg;
-		
-		try {
-			String messageToSend = XmlCreator.createLogName(Integer.toString(mSessionId), adapterId, deviceId, deviceType, from, to, funcType, interval);
-			
-			Log.d("IHA - Network fromApp", messageToSend);
-			
-			String result = startCommunication(messageToSend);
-			
-			Log.d("IHA - Network fromSrv", result);
-			
-			msg = XmlParsers.parseCommunication(result, false);
-			
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new CommunicationException(e);
-		}
+		String messageToSend = XmlCreator.createLogName(Integer.toString(mSessionId), adapterId, deviceId, deviceType, from, to, funcType, interval);
+		ParsedMessage msg = doRequest(messageToSend);
 		
 		if(msg.getState() == State.CONTENT){
 			Log.d("IHA - Network", msg.getState().getValue());
@@ -635,27 +526,8 @@ public class Network {
 	 * @throws CommunicationException 
 	 */
 	public boolean addView(String adapterId, String nameOfView, int iconId, List<BaseDevice> devices) throws NoConnectionException, CommunicationException{
-		// TODO: test properly
-		if(!isAvailable())
-			throw new NoConnectionException();
-		
-		ParsedMessage msg;
-		
-		try {
-			String messageToSend = XmlCreator.createAddView(Integer.toString(mSessionId), adapterId, nameOfView, iconId, devices);
-			
-			Log.d("IHA - Network fromApp", messageToSend);
-			
-			String result = startCommunication(messageToSend);
-			
-			Log.d("IHA - Network fromSrv", result);
-			
-			msg = XmlParsers.parseCommunication(result, false);
-			
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new CommunicationException(e);
-		}
+		String messageToSend = XmlCreator.createAddView(Integer.toString(mSessionId), adapterId, nameOfView, iconId, devices);
+		ParsedMessage msg = doRequest(messageToSend);
 		
 		if(msg.getState() == State.TRUE){
 			Log.d("IHA - Network", msg.getState().getValue());
@@ -679,28 +551,9 @@ public class Network {
 	 * @throws CommunicationException 
 	 */
 	public List<CustomViewPair> getViews(String adapterId) throws NoConnectionException, CommunicationException{
-		// TODO: test properly
-		if(!isAvailable())
-			throw new NoConnectionException();
-		
-		ParsedMessage msg;
-		
-		try {
-			String messageToSend = XmlCreator.createGetViews(Integer.toString(mSessionId), adapterId);
-			
-			Log.d("IHA - Network fromApp", messageToSend);
-			
-			String result = startCommunication(messageToSend);
-			
-			Log.d("IHA - Network fromSrv", result);
-			
-			msg = XmlParsers.parseCommunication(result, false);
-			
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new CommunicationException(e);
-		}
-		
+		String messageToSend = XmlCreator.createGetViews(Integer.toString(mSessionId), adapterId);
+		ParsedMessage msg = doRequest(messageToSend);
+
 		if(msg.getState() == State.VIEWSLIST){
 			Log.d("IHA - Network", msg.getState().getValue());
 			
@@ -728,27 +581,8 @@ public class Network {
 	 * @throws CommunicationException 
 	 */
 	public boolean deleteView(String adapterId, String viewName) throws NoConnectionException, CommunicationException{
-		// TODO: test properly
-		if(!isAvailable())
-			throw new NoConnectionException();
-		
-		ParsedMessage msg;
-		
-		try {
-			String messageToSend = XmlCreator.createDelView(Integer.toString(mSessionId), adapterId, viewName);
-			
-			Log.d("IHA - Network fromApp", messageToSend);
-			
-			String result = startCommunication(messageToSend);
-			
-			Log.d("IHA - Network fromSrv", result);
-			
-			msg = XmlParsers.parseCommunication(result, false);
-			
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new CommunicationException(e);
-		}
+		String messageToSend = XmlCreator.createDelView(Integer.toString(mSessionId), adapterId, viewName);
+		ParsedMessage msg = doRequest(messageToSend);
 		
 		if(msg.getState() == State.TRUE){
 			Log.d("IHA - Network", msg.getState().getValue());
@@ -774,27 +608,8 @@ public class Network {
 	 * @throws CommunicationException 
 	 */
 	public boolean updateView(String adapterId, String viewName, int iconId, HashMap<String, String> devices) throws NoConnectionException, CommunicationException{
-		//TODO: test properly
-		if(!isAvailable())
-			throw new NoConnectionException();
-		
-		ParsedMessage msg;
-		
-		try {
-			String messageToSend = XmlCreator.createUpdateView(Integer.toString(mSessionId), adapterId, viewName, iconId, devices);
-			
-			Log.d("IHA - Network fromApp", messageToSend);
-			
-			String result = startCommunication(messageToSend);
-			
-			Log.d("IHA - Network fromSrv", result);
-			
-			msg = XmlParsers.parseCommunication(result, false);
-			
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new CommunicationException(e);
-		}
+		String messageToSend = XmlCreator.createUpdateView(Integer.toString(mSessionId), adapterId, viewName, iconId, devices);
+		ParsedMessage msg = doRequest(messageToSend);
 		
 		if(msg.getState() == State.TRUE){
 			Log.d("IHA - Network", msg.getState().getValue());
@@ -818,27 +633,8 @@ public class Network {
 	 * @throws CommunicationException 
 	 */
 	public boolean addConnectionAccount(String adapterId, HashMap<String, String> userNrole) throws NoConnectionException, CommunicationException{
-		//TODO: test properly
-		if(!isAvailable())
-			throw new NoConnectionException();
-		
-		ParsedMessage msg;
-		
-		try {
-			String messageToSend = XmlCreator.createAddConAccount(Integer.toString(mSessionId), adapterId, userNrole);
-			
-			Log.d("IHA - Network fromApp", messageToSend);
-			
-			String result = startCommunication(messageToSend);
-			
-			Log.d("IHA - Network fromSrv", result);
-			
-			msg = XmlParsers.parseCommunication(result, false);
-			
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new CommunicationException(e);
-		}
+		String messageToSend = XmlCreator.createAddConAccount(Integer.toString(mSessionId), adapterId, userNrole);
+		ParsedMessage msg = doRequest(messageToSend);
 		
 		if(msg.getState() == State.TRUE){
 			Log.d("IHA - Network", msg.getState().getValue());
@@ -862,27 +658,8 @@ public class Network {
 	 * @throws CommunicationException 
 	 */
 	public boolean deleteConnectionAccount(String adapterId, List<String> users) throws NoConnectionException, CommunicationException{
-		//TODO: test properly
-		if(!isAvailable())
-			throw new NoConnectionException();
-		
-		ParsedMessage msg;
-		
-		try {
-			String messageToSend = XmlCreator.createDelConAccount(Integer.toString(mSessionId), adapterId, users);
-			
-			Log.d("IHA - Network fromApp", messageToSend);
-			
-			String result = startCommunication(messageToSend);
-			
-			Log.d("IHA - Network fromSrv", result);
-			
-			msg = XmlParsers.parseCommunication(result, false);
-			
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new CommunicationException(e);
-		}
+		String messageToSend = XmlCreator.createDelConAccount(Integer.toString(mSessionId), adapterId, users);
+		ParsedMessage msg = doRequest(messageToSend);
 		
 		if(msg.getState() == State.TRUE){
 			Log.d("IHA - Network", msg.getState().getValue());
@@ -905,27 +682,8 @@ public class Network {
 	 * @throws CommunicationException 
 	 */
 	public HashMap<String, User> getConnectionAccountList(String adapterId) throws NoConnectionException, CommunicationException{
-		//TODO: test properly
-		if(!isAvailable())
-			throw new NoConnectionException();
-		
-		ParsedMessage msg;
-		
-		try {
-			String messageToSend = XmlCreator.createGetConAccount(Integer.toString(mSessionId), adapterId);
-			
-			Log.d("IHA - Network fromApp", messageToSend);
-			
-			String result = startCommunication(messageToSend);
-			
-			Log.d("IHA - Network fromSrv", result);
-			
-			msg = XmlParsers.parseCommunication(result, false);
-			
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new CommunicationException(e);
-		}
+		String messageToSend = XmlCreator.createGetConAccount(Integer.toString(mSessionId), adapterId);
+		ParsedMessage msg = doRequest(messageToSend);
 		
 		if (msg.getState() == State.CONACCOUNTLIST) {
 			Log.d("IHA - Network", msg.getState().toString());
@@ -954,27 +712,8 @@ public class Network {
 	 * @throws CommunicationException 
 	 */
 	public boolean changeConnectionAccount(String adapterId, HashMap<String, String> userNrole) throws NoConnectionException, CommunicationException{
-		//TODO: test properly
-		if(!isAvailable())
-			throw new NoConnectionException();
-		
-		ParsedMessage msg;
-		
-		try {
-			String messageToSend = XmlCreator.createChangeConAccount(Integer.toString(mSessionId), adapterId, userNrole);
-			
-			Log.d("IHA - Network fromApp", messageToSend);
-			
-			String result = startCommunication(messageToSend);
-			
-			Log.d("IHA - Network fromSrv", result);
-			
-			msg = XmlParsers.parseCommunication(result, false);
-			
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new CommunicationException(e);
-		}
+		String messageToSend = XmlCreator.createChangeConAccount(Integer.toString(mSessionId), adapterId, userNrole);
+		ParsedMessage msg = doRequest(messageToSend);
 		
 		if(msg.getState() == State.TRUE){
 			Log.d("IHA - Network", msg.getState().toString());
@@ -999,27 +738,8 @@ public class Network {
 	 * @throws CommunicationException
 	 */
 	public boolean setTimeZone(String adapterId, int differenceToGMT) throws NoConnectionException, CommunicationException{
-		//TODO: test properly
-		if(!isAvailable())
-			throw new NoConnectionException();
-		
-		ParsedMessage msg;
-		
-		try {
-			String messageToSend = XmlCreator.createSetTimeZone(Integer.toString(mSessionId), adapterId, differenceToGMT);
-			
-			Log.d("IHA - Network fromApp", messageToSend);
-			
-			String result = startCommunication(messageToSend);
-			
-			Log.d("IHA - Network fromSrv", result);
-			
-			msg = XmlParsers.parseCommunication(result, false);
-			
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new CommunicationException(e);
-		}
+		String messageToSend = XmlCreator.createSetTimeZone(Integer.toString(mSessionId), adapterId, differenceToGMT);
+		ParsedMessage msg = doRequest(messageToSend);
 		
 		if(msg.getState() == State.TRUE){
 			Log.d("IHA - Network", msg.getState().getValue());
@@ -1043,28 +763,9 @@ public class Network {
 	 * @throws CommunicationException
 	 */
 	public int getTimeZone(String adapterId) throws NoConnectionException, CommunicationException{
-		//TODO: test properly
-		if(!isAvailable())
-			throw new NoConnectionException();
-		
-		ParsedMessage msg;
-		
-		try {
-			String messageToSend = XmlCreator.createGetTimeZone(Integer.toString(mSessionId), adapterId);
-			
-			Log.d("IHA - Network fromApp", messageToSend);
-			
-			String result = startCommunication(messageToSend);
-			
-			Log.d("IHA - Network fromSrv", result);
-			
-			msg = XmlParsers.parseCommunication(result, false);
-			
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new CommunicationException(e);
-		}
-		
+		String messageToSend = XmlCreator.createGetTimeZone(Integer.toString(mSessionId), adapterId);
+		ParsedMessage msg = doRequest(messageToSend);
+
 		if(msg.getState() == State.TIMEZONE){
 			Log.d("IHA - Network", msg.getState().getValue());
 			
@@ -1087,27 +788,8 @@ public class Network {
 	 * @throws CommunicationException
 	 */
 	public List<Location> getLocations(String adapterId) throws NoConnectionException, CommunicationException{
-		//TODO: test properly
-		if(!isAvailable())
-			throw new NoConnectionException();
-		
-		ParsedMessage msg;
-		
-		try {
-			String messageToSend = XmlCreator.createGetRooms(Integer.toString(mSessionId), adapterId);
-			
-			Log.d("IHA - Network fromApp", messageToSend);
-			
-			String result = startCommunication(messageToSend);
-			
-			Log.d("IHA - Network fromSrv", result);
-			
-			msg = XmlParsers.parseCommunication(result, false);
-			
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new CommunicationException(e);
-		}
+		String messageToSend = XmlCreator.createGetRooms(Integer.toString(mSessionId), adapterId);
+		ParsedMessage msg = doRequest(messageToSend);
 		
 		if(msg.getState() == State.ROOMS){
 			Log.d("IHA - Network", msg.getState().getValue());
@@ -1136,28 +818,9 @@ public class Network {
 	 * @throws CommunicationException
 	 */
 	public boolean updateLocations(String adapterId, List<Location> locations) throws NoConnectionException, CommunicationException{
-		//TODO: test properly
-		if(!isAvailable())
-			throw new NoConnectionException();
-		
-		ParsedMessage msg;
-		
-		try {
-			String messageToSend = XmlCreator.createUpdateRooms(Integer.toString(mSessionId), adapterId, locations);
+		String messageToSend = XmlCreator.createUpdateRooms(Integer.toString(mSessionId), adapterId, locations);
+		ParsedMessage msg = doRequest(messageToSend);
 			
-			Log.d("IHA - Network fromApp", messageToSend);
-			
-			String result = startCommunication(messageToSend);
-			
-			Log.d("IHA - Network fromSrv", result);
-			
-			msg = XmlParsers.parseCommunication(result, false);
-			
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new CommunicationException(e);
-		}
-		
 		if(msg.getState() == State.TRUE){
 			Log.d("IHA - Network", msg.getState().getValue());
 			
@@ -1179,28 +842,9 @@ public class Network {
 	 * @return true room is deleted, false otherwise
 	 */
 	public boolean deleteLocation(String adapterId, Location location) throws NoConnectionException, CommunicationException {
-		//TODO: test properly
-		if(!isAvailable())
-			throw new NoConnectionException();
-		
-		ParsedMessage msg;
-		
-		try {
-			String messageToSend = XmlCreator.createDelRooms(Integer.toString(mSessionId), adapterId, location);
-			
-			Log.d("IHA - Network fromApp", messageToSend);
-			
-			String result = startCommunication(messageToSend);
-			
-			Log.d("IHA - Network fromSrv", result);
-			
-			msg = XmlParsers.parseCommunication(result, false);
-			
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new CommunicationException(e);
-		}
-		
+		String messageToSend = XmlCreator.createDelRooms(Integer.toString(mSessionId), adapterId, location);
+		ParsedMessage msg = doRequest(messageToSend);
+
 		if(msg.getState() == State.TRUE){
 			Log.d("IHA - Network", msg.getState().getValue());
 			
@@ -1215,29 +859,10 @@ public class Network {
 		}else
 			return false;
 	}
-
+	
 	public Location createLocation(String adapterId, Location location) throws NoConnectionException, CommunicationException{
-		//TODO: test properly
-		if(!isAvailable())
-			throw new NoConnectionException();
-		
-		ParsedMessage msg;
-		
-		try {
-			String messageToSend = XmlCreator.createAddRooms(Integer.toString(mSessionId), adapterId, location);
-			
-			Log.d("IHA - Network fromApp", messageToSend);
-			
-			String result = startCommunication(messageToSend);
-			
-			Log.d("IHA - Network fromSrv", result);
-			
-			msg = XmlParsers.parseCommunication(result, false);
-			
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new CommunicationException(e);
-		}
+		String messageToSend = XmlCreator.createAddRooms(Integer.toString(mSessionId), adapterId, location);
+		ParsedMessage msg = doRequest(messageToSend);
 		
 		if(msg.getState() == State.ROOMCREATED){
 			Log.d("IHA - Network", msg.getState().getValue());
