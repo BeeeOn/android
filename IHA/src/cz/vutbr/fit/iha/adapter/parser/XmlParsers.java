@@ -65,26 +65,54 @@ public class XmlParsers {
 	public static final String VERSION = "version";
 	public static final String CAPABILITIES = "capabilities";
 	
-	// states
-	public static final String READY = "ready";
-	public static final String NOTREGA = "notreg-a";
-	public static final String NOTREGB = "notreg-b";
-	public static final String XML = "xml";
-	public static final String PARTIAL = "partial";
-	public static final String CONTENT = "content";
-	public static final String CONACCOUNTLIST = "conaccountlist";
-	public static final String TRUE = "true";
-	public static final String FALSE = "false";
-	//extra states
-	public static final String ADDCONACCOUNT = "addconaccount";
-	public static final String DELCONACCOUNT = "delconaccount";
-	public static final String CHANGECONACCOUNT = "changeconaccount";
-	public static final String VIEWSLIST = "viewslist";
-	public static final String TIMEZONE = "timezone";
-	public static final String ROOMS = "rooms";
-	public static final String ROOMCREATED = "roomcreated";
-	
-	// end of states
+	/**
+	 * Represents states of communication (from server to app)
+	 * @author ThinkDeep
+	 * @author Robyer
+	 *
+	 */
+	public enum State {
+		READY("ready"),
+		NOTREGA("notreg-a"),
+		NOTREGB("notreg-b"),
+		XML("xml"),
+		PARTIAL("partial"),
+		CONTENT("content"),
+		CONACCOUNTLIST("conaccountlist"),
+		TRUE("true"),
+		FALSE("false"),
+		RESIGN("resign"),
+		
+		//extra states (not used yet?
+		ADDCONACCOUNT("addconaccount"),
+		DELCONACCOUNT("delconaccount"),
+		CHANGECONACCOUNT("changeconaccount"),
+		
+		VIEWSLIST("viewslist"),
+		TIMEZONE("timezone"),
+		ROOMS("rooms"),
+		ROOMCREATED("roomcreated"),
+		UNKNOWN("");
+		
+		private final String mValue;
+		
+		private State(String value) {
+			mValue = value;
+		}
+		
+		public String getValue() {
+			return mValue;
+		}
+		
+		public static State fromValue(String value) {
+			for (State item : values()) {
+				if (value.equalsIgnoreCase(item.getValue()))
+					return item;
+			}
+			throw new IllegalArgumentException("Invalid State value");
+		}
+	}
+
 	public static final String ADAPTER = "adapter";
 	public static final String ROW = "row";
 	public static final String USER = "user";
@@ -139,72 +167,68 @@ public class XmlParsers {
 		mParser = Xml.newPullParser();
 		mParser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, namespace);
 		
-		String state = null;
-		int id = 0;
-		String version = null;
-		
 		mParser.setInput(new ByteArrayInputStream(xmlInput.getBytes("UTF-8")), null);
 		mParser.nextTag();
 		
 		mParser.require(XmlPullParser.START_TAG, ns, COM_ROOT);
 		
-		state = getSecureAttrValue(ns, STATE);
-		id = Integer.parseInt(getSecureAttrValue(ns, ID));
-		version = getSecureAttrValue(ns, VERSION);
+		State state = State.fromValue(getSecureAttrValue(ns, STATE));
+		int id = Integer.parseInt(getSecureAttrValue(ns, ID));
+		String version = getSecureAttrValue(ns, VERSION);
 		
 		if(!version.equals(COM_VER))
 			throw new ComVerMisException(mComVerMisExcMessage + "Expected: " + COM_VER + " but got: " + version);
 		
 		ParsedMessage result = new ParsedMessage(state, id, null);
 		
-		switch(getStateEnum(state)){
-			case eCONACCOUNTLIST:
+		switch (state){
+			case CONACCOUNTLIST:
 				// HashMap<String, User>
 				result.data = parseConAccountList();
 				break;
-			case eCONTENT:
+			case CONTENT:
 				// List<ContentRow>
 				result.data = parseContent();
 				break;
-			case eFALSE:
+			case FALSE:
 				// FalseAnswer
 				result.data = parseFalse();
 				break;
-			case eNOTREGA:
-			case eNOTREGB:
-			case eRESIGN:
-			case eUNKNOWN: // never gonna happen :D
+			case NOTREGA:
+			case NOTREGB:
+			case RESIGN:
+			case UNKNOWN: // never gonna happen :D
 				// null
 				break;
-			case ePARTIAL:
+			case PARTIAL:
 				// List<BaseDevice>
 				result.data = parsePartial();
 				break;
-			case eREADY:
+			case READY:
 				// List<Adapter>
 				result.data = parseReady();
 				break;
-			case eTRUE:
+			case TRUE:
 				// String
 				result.data = getSecureAttrValue(ns, ADDITIONALINFO);
 				break;
-			case eXML:
+			case XML:
 				// Adapter
 				result.data = parseXml(getSecureAttrValue(ns, ROLE));
 				break;
-			case eVIEWSLIST:
+			case VIEWSLIST:
 				// List<CustomViewPair>
 				result.data = parseViewsList();
 				break;
-			case eTIMEZONE:
+			case TIMEZONE:
 				// integer
 				result.data = parseTimeZone();
 				break;
-			case eROOMS:
+			case ROOMS:
 				// List<Location>
 				result.data = parseRooms();
 				break;
-			case eROOMCREATED:
+			case ROOMCREATED:
 				// String
 				result.data = parseRoomCreated();
 				break;
@@ -459,42 +483,6 @@ public class XmlParsers {
 	/////////////////////////////////// OTHER
 	
 	/**
-	 * Method convert state as string to its ENUM representation
-	 * @param state of communication
-	 * @return one of ENUM STATES
-	 */
-	private static STATES getStateEnum(String state){
-		if(state.equals(READY))
-			return STATES.eREADY;
-		else if(state.equals(NOTREGA))
-			return STATES.eNOTREGA;
-		else if(state.equals(NOTREGB))
-			return STATES.eNOTREGB;
-		else if(state.equals(XML))
-			return STATES.eXML;
-		else if(state.equals(PARTIAL))
-			return STATES.ePARTIAL;
-		else if(state.equals(CONTENT))
-			return STATES.eCONTENT;
-		else if(state.equals(CONACCOUNTLIST))
-			return STATES.eCONACCOUNTLIST;
-		else if(state.equals(TRUE))
-			return STATES.eTRUE;
-		else if(state.equals(FALSE))
-			return STATES.eFALSE;
-		else if(state.equals(VIEWSLIST))
-			return STATES.eVIEWSLIST;
-		else if(state.equals(TIMEZONE))
-			return STATES.eTIMEZONE;
-		else if(state.equals(ROOMS))
-			return STATES.eROOMS;
-		else if(state.equals(ROOMCREATED))
-			return STATES.eROOMCREATED;
-		else
-			return STATES.eUNKNOWN;
-	}
-	
-	/**
 	 * Method create empty object of device by type
 	 * @param sType string type of device (e.g. 0x03)
 	 * @return empty object
@@ -523,19 +511,6 @@ public class XmlParsers {
 			default:
 				return new UnknownDevice();
 		}
-	}
-	
-	/**
-	 * Represents states of communication (from server to app)
-	 * @author ThinkDeep
-	 *
-	 */
-	private enum STATES{
-		eREADY, eNOTREGA, eNOTREGB,
-		eXML, ePARTIAL, eCONTENT,
-		eCONACCOUNTLIST, eTRUE, eFALSE,
-		eRESIGN, eUNKNOWN, eVIEWSLIST,
-		eTIMEZONE, eROOMS, eROOMCREATED
 	}
 	
 	////////////////////////////////// XML
@@ -592,9 +567,7 @@ public class XmlParsers {
 	 */
 	private static String getSecureAttrValue(String nameSpace, String name){
 		String result = mParser.getAttributeValue(nameSpace, name);
-		if(result == null)
-			result = "";
-		return result;
+		return (result == null) ? "" : result;
 	}
 	
 	/**

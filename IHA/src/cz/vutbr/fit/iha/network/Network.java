@@ -42,6 +42,7 @@ import cz.vutbr.fit.iha.adapter.parser.FalseAnswer;
 import cz.vutbr.fit.iha.adapter.parser.ParsedMessage;
 import cz.vutbr.fit.iha.adapter.parser.XmlCreator;
 import cz.vutbr.fit.iha.adapter.parser.XmlParsers;
+import cz.vutbr.fit.iha.adapter.parser.XmlParsers.State;
 import cz.vutbr.fit.iha.exception.CommunicationException;
 import cz.vutbr.fit.iha.exception.NoConnectionException;
 import cz.vutbr.fit.iha.exception.NotImplementedException;
@@ -58,20 +59,6 @@ public class Network {
 	
 	public static final String SIGNIN = "signin";
 	public static final String SIGNUP = "signup";
-	public static final String FALSE = "false";
-	public static final String TRUE = "true";
-	public static final String NOTREGA = "notreg-a";
-	public static final String NOTREGB = "notreg-b";
-	public static final String READY = "ready";
-	public static final String RESIGN = "resign";
-	public static final String XML = "xml";
-	public static final String PARTIAL = "partial";
-	public static final String CONTENT = "content";
-	public static final String VIEWSLIST = "viewslist";
-	public static final String CONACCOUNTLIST = "conaccountlist";
-	public static final String TIMEZONE = "timezone";
-	public static final String ROOMS = "rooms";
-	public static final String ROOMCREATED = "roomcreated";
 	
 	/**
 	 * Name of CA certificate located in assets
@@ -265,8 +252,8 @@ public class Network {
 			throw new CommunicationException(e);
 		}
 		
-		if(msg.getSessionId() != 0 && msg.getState().equals(TRUE) /*&& ((String)msg.data).equals(SIGNIN)*/){
-			Log.d("IHA - Network", msg.getState());
+		if(msg.getSessionId() != 0 && msg.getState() == State.TRUE /*&& ((String)msg.data).equals(SIGNIN)*/){
+			Log.d("IHA - Network", msg.getState().getValue());
 			
 			ActualUser aUser = ActualUser.getActualUser();
 			aUser.setSessionId(Integer.toString(msg.getSessionId()));
@@ -274,10 +261,10 @@ public class Network {
 			
 			return aUser;
 		}
-		if(msg.getState().equals(NOTREGA)){
+		if(msg.getState() == State.NOTREGA){
 			throw new NotRegAException();
 		}
-		if(msg.getState().equals(NOTREGB)){
+		if(msg.getState() == State.NOTREGB){
 			throw new NotRegBException();
 		}
 			
@@ -321,14 +308,14 @@ public class Network {
 			throw new CommunicationException(e);
 		}
 		
-		if(msg.getSessionId() != 0 && msg.getState().equals(TRUE) && ((String)msg.data).equals(SIGNUP)){
-			Log.d("IHA - Network", msg.getState());
+		if(msg.getSessionId() != 0 && msg.getState() == State.TRUE && ((String)msg.data).equals(SIGNUP)){
+			Log.d("IHA - Network", msg.getState().getValue());
 			
 			ActualUser aUser = ActualUser.getActualUser();
 			aUser.setSessionId(Integer.toString(msg.getSessionId()));
 			
 			return true;
-		}else if(msg.getState().equals(FALSE) && ((FalseAnswer)msg.data).getErrMessage().length() != 0){
+		}else if(msg.getState() == State.FALSE && ((FalseAnswer)msg.data).getErrMessage().length() != 0){
 				throw new CommunicationException(((FalseAnswer)msg.data).getErrMessage());
 		}else
 			return false;
@@ -362,15 +349,15 @@ public class Network {
 			throw new CommunicationException(e);
 		}
 		
-		if(msg.getState().equals(READY)){
-			Log.d("IHA - Network", msg.getState());
+		if(msg.getState() == State.READY){
+			Log.d("IHA - Network", msg.getState().getValue());
 			
 			//http://stackoverflow.com/a/509288/1642090
 			@SuppressWarnings("unchecked")
 			List<Adapter> result = (List<Adapter>) msg.data;
 			
 			return result;
-		}else if(msg.getState().equals(RESIGN)){
+		}else if(msg.getState() == State.RESIGN){
 			//TODO: maybe use diffrenD way to resign, case stopping of thread, manage this after implement in the controller
 			try {
 				GetGoogleAuth.getGetGoogleAuth().execute();
@@ -383,7 +370,7 @@ public class Network {
 			signIn(ActualUser.getActualUser().getEmail());
 			return getAdapters();
 			
-		}else if(msg.getState().equals(FALSE) && ((FalseAnswer)msg.data).getErrMessage().length() != 0){
+		}else if(msg.getState() == State.FALSE && ((FalseAnswer)msg.data).getErrMessage().length() != 0){
 			throw new CommunicationException(((FalseAnswer)msg.data).getErrMessage());
 		}else
 			return null;
@@ -419,11 +406,11 @@ public class Network {
 			throw new CommunicationException(e);
 		}
 		
-		if(msg.getState().equals(XML)){
-			Log.d("IHA - Network", msg.getState());
+		if(msg.getState() == State.XML){
+			Log.d("IHA - Network", msg.getState().getValue());
 			
 			return (Adapter) msg.data;
-		}else if(msg.getState().equals(RESIGN)){
+		}else if(msg.getState() == State.RESIGN){
 			//TODO: maybe use diffrenD way to resign, case stopping of thread, manage this after implement in the controler
 			try {
 				GetGoogleAuth.getGetGoogleAuth().execute();
@@ -436,7 +423,7 @@ public class Network {
 			signIn(ActualUser.getActualUser().getEmail());
 			return init(adapterId);
 			
-		}else if(msg.getState().equals(FALSE) && ((FalseAnswer)msg.data).getErrMessage().length() != 0){
+		}else if(msg.getState() == State.FALSE && ((FalseAnswer)msg.data).getErrMessage().length() != 0){
 			throw new CommunicationException(((FalseAnswer)msg.data).getErrMessage());
 		}else
 			return null;
@@ -473,12 +460,12 @@ public class Network {
 			throw new CommunicationException(e);
 		}
 		
-		if(msg.getState().equals(TRUE)){
-			Log.d("IHA - Network", msg.getState());
+		if(msg.getState() == State.TRUE){
+			Log.d("IHA - Network", msg.getState().getValue());
 			
 			return true;
 			
-		}else if(msg.getState().equals(RESIGN)){
+		}else if(msg.getState() == State.RESIGN){
 			//TODO: maybe use diffrenD way to resign, case stopping of thread, manage this after implement in the controler
 			try {
 				GetGoogleAuth.getGetGoogleAuth().execute();
@@ -491,7 +478,7 @@ public class Network {
 			signIn(ActualUser.getActualUser().getEmail());
 			return reInit(oldId, newId);
 			
-		}else if(msg.getState().equals(FALSE) && ((FalseAnswer)msg.data).getErrMessage().length() != 0){
+		}else if(msg.getState() == State.FALSE && ((FalseAnswer)msg.data).getErrMessage().length() != 0){
 			throw new CommunicationException(((FalseAnswer)msg.data).getErrMessage());
 		}else
 			return false;
@@ -526,12 +513,12 @@ public class Network {
 			throw new CommunicationException(e);
 		}
 		
-		if(msg.getState().equals(TRUE)){
-			Log.d("IHA - Network", msg.getState());
+		if(msg.getState() == State.TRUE){
+			Log.d("IHA - Network", msg.getState().getValue());
 			
 			return true;
 			
-		}else if(msg.getState().equals(RESIGN)){
+		}else if(msg.getState() == State.RESIGN){
 			//TODO: maybe use diffrenD way to resign, case stopping of thread, manage this after implement in the controler
 			try {
 				GetGoogleAuth.getGetGoogleAuth().execute();
@@ -543,7 +530,7 @@ public class Network {
 			}
 			signIn(ActualUser.getActualUser().getEmail());
 			return partial(adapterId, devices);
-		}else if(msg.getState().equals(FALSE) && ((FalseAnswer)msg.data).getErrMessage().length() != 0){
+		}else if(msg.getState() == State.FALSE && ((FalseAnswer)msg.data).getErrMessage().length() != 0){
 			throw new CommunicationException(((FalseAnswer)msg.data).getErrMessage());
 		}else
 			return false;
@@ -578,8 +565,8 @@ public class Network {
 			throw new CommunicationException(e);
 		}
 		
-		if(msg.getState().equals(PARTIAL)){
-			Log.d("IHA - Network", msg.getState());
+		if(msg.getState() == State.PARTIAL){
+			Log.d("IHA - Network", msg.getState().getValue());
 			
 			//http://stackoverflow.com/a/509288/1642090
 			@SuppressWarnings("unchecked")
@@ -587,7 +574,7 @@ public class Network {
 			
 			return result;
 			
-		}else if(msg.getState().equals(RESIGN)){
+		}else if(msg.getState() == State.RESIGN){
 			//TODO: maybe use diffrenD way to resign, case stopping of thread, manage this after implement in the controler
 			try {
 				GetGoogleAuth.getGetGoogleAuth().execute();
@@ -599,7 +586,7 @@ public class Network {
 			}
 			signIn(ActualUser.getActualUser().getEmail());
 			return update(adapterId, devices);
-		}else if(msg.getState().equals(FALSE) && ((FalseAnswer)msg.data).getErrMessage().length() != 0){
+		}else if(msg.getState() == State.FALSE && ((FalseAnswer)msg.data).getErrMessage().length() != 0){
 			throw new CommunicationException(((FalseAnswer)msg.data).getErrMessage());
 		}else
 			return null;
@@ -637,8 +624,8 @@ public class Network {
 			throw new CommunicationException(e);
 		}
 		
-		if(msg.getState().equals(CONTENT)){
-			Log.d("IHA - Network", msg.getState());
+		if(msg.getState() == State.CONTENT){
+			Log.d("IHA - Network", msg.getState().getValue());
 			
 			//http://stackoverflow.com/a/509288/1642090
 			@SuppressWarnings("unchecked")
@@ -646,7 +633,7 @@ public class Network {
 			
 			return result;
 			
-		}else if(msg.getState().equals(RESIGN)){
+		}else if(msg.getState() == State.RESIGN){
 			//TODO: maybe use diffrenD way to resign, case stopping of thread, manage this after implement in the controler
 			try {
 				GetGoogleAuth.getGetGoogleAuth().execute();
@@ -659,7 +646,7 @@ public class Network {
 			signIn(ActualUser.getActualUser().getEmail());
 			return logName(adapterId, deviceId, deviceType, from, to, funcType, interval);
 			
-		}else if(msg.getState().equals(FALSE) && ((FalseAnswer)msg.data).getErrMessage().length() != 0){
+		}else if(msg.getState() == State.FALSE && ((FalseAnswer)msg.data).getErrMessage().length() != 0){
 			throw new CommunicationException(((FalseAnswer)msg.data).getErrMessage());
 		}else
 			return null;
@@ -711,12 +698,12 @@ public class Network {
 			throw new CommunicationException(e);
 		}
 		
-		if(msg.getState().equals(TRUE)){
-			Log.d("IHA - Network", msg.getState());
+		if(msg.getState() == State.TRUE){
+			Log.d("IHA - Network", msg.getState().getValue());
 			
 			return true;
 			
-		}else if(msg.getState().equals(RESIGN)){
+		}else if(msg.getState() == State.RESIGN){
 			//TODO: maybe use diffrenD way to resign, case stopping of thread, manage this after implement in the controler
 			try {
 				GetGoogleAuth.getGetGoogleAuth().execute();
@@ -729,7 +716,7 @@ public class Network {
 			signIn(ActualUser.getActualUser().getEmail());
 			return addView(adapterId, nameOfView, iconId, devices);
 			
-		}else if(msg.getState().equals(FALSE) && ((FalseAnswer)msg.data).getErrMessage().length() != 0){
+		}else if(msg.getState() == State.FALSE && ((FalseAnswer)msg.data).getErrMessage().length() != 0){
 			throw new CommunicationException(((FalseAnswer)msg.data).getErrMessage());
 		}else
 			return false;
@@ -764,8 +751,8 @@ public class Network {
 			throw new CommunicationException(e);
 		}
 		
-		if(msg.getState().equals(VIEWSLIST)){
-			Log.d("IHA - Network", msg.getState());
+		if(msg.getState() == State.VIEWSLIST){
+			Log.d("IHA - Network", msg.getState().getValue());
 			
 			//http://stackoverflow.com/a/509288/1642090
 			@SuppressWarnings("unchecked")
@@ -773,7 +760,7 @@ public class Network {
 			
 			return result;
 			
-		}else if(msg.getState().equals(RESIGN)){
+		}else if(msg.getState() == State.RESIGN){
 			//TODO: maybe use diffrenD way to resign, case stopping of thread, manage this after implement in the controler
 			try {
 				GetGoogleAuth.getGetGoogleAuth().execute();
@@ -786,7 +773,7 @@ public class Network {
 			signIn(ActualUser.getActualUser().getEmail());
 			return getViews(adapterId);
 			
-		}else if(msg.getState().equals(FALSE) && ((FalseAnswer)msg.data).getErrMessage().length() != 0){
+		}else if(msg.getState() == State.FALSE && ((FalseAnswer)msg.data).getErrMessage().length() != 0){
 			throw new CommunicationException(((FalseAnswer)msg.data).getErrMessage());
 		}else
 			return null;
@@ -822,12 +809,12 @@ public class Network {
 			throw new CommunicationException(e);
 		}
 		
-		if(msg.getState().equals(TRUE)){
-			Log.d("IHA - Network", msg.getState());
+		if(msg.getState() == State.TRUE){
+			Log.d("IHA - Network", msg.getState().getValue());
 			
 			return true;
 			
-		}else if(msg.getState().equals(RESIGN)){
+		}else if(msg.getState() == State.RESIGN){
 			//TODO: maybe use diffrenD way to resign, case stopping of thread, manage this after implement in the controler
 			try {
 				GetGoogleAuth.getGetGoogleAuth().execute();
@@ -840,7 +827,7 @@ public class Network {
 			signIn(ActualUser.getActualUser().getEmail());
 			return deleteView(adapterId, viewName);
 			
-		}else if(msg.getState().equals(FALSE) && ((FalseAnswer)msg.data).getErrMessage().length() != 0){
+		}else if(msg.getState() == State.FALSE && ((FalseAnswer)msg.data).getErrMessage().length() != 0){
 			throw new CommunicationException(((FalseAnswer)msg.data).getErrMessage());
 		}else
 			return false;
@@ -877,12 +864,12 @@ public class Network {
 			throw new CommunicationException(e);
 		}
 		
-		if(msg.getState().equals(TRUE)){
-			Log.d("IHA - Network", msg.getState());
+		if(msg.getState() == State.TRUE){
+			Log.d("IHA - Network", msg.getState().getValue());
 			
 			return true;
 			
-		}else if(msg.getState().equals(RESIGN)){
+		}else if(msg.getState() == State.RESIGN){
 			//TODO: maybe use diffrenD way to resign, case stopping of thread, manage this after implement in the controler
 			try {
 				GetGoogleAuth.getGetGoogleAuth().execute();
@@ -894,7 +881,7 @@ public class Network {
 			}
 			signIn(ActualUser.getActualUser().getEmail());
 			return updateView(adapterId, viewName, iconId, devices);
-		}else if(msg.getState().equals(FALSE) && ((FalseAnswer)msg.data).getErrMessage().length() != 0){
+		}else if(msg.getState() == State.FALSE && ((FalseAnswer)msg.data).getErrMessage().length() != 0){
 			throw new CommunicationException(((FalseAnswer)msg.data).getErrMessage());
 		}else
 			return false;
@@ -930,12 +917,12 @@ public class Network {
 			throw new CommunicationException(e);
 		}
 		
-		if(msg.getState().equals(TRUE)){
-			Log.d("IHA - Network", msg.getState());
+		if(msg.getState() == State.TRUE){
+			Log.d("IHA - Network", msg.getState().getValue());
 			
 			return true;
 			
-		}else if(msg.getState().equals(RESIGN)){
+		}else if(msg.getState() == State.RESIGN){
 			//TODO: maybe use diffrenD way to resign, case stopping of thread, manage this after implement in the controler
 			try {
 				GetGoogleAuth.getGetGoogleAuth().execute();
@@ -947,7 +934,7 @@ public class Network {
 			}
 			signIn(ActualUser.getActualUser().getEmail());
 			return addConnectionAccount(adapterId, userNrole);
-		}else if(msg.getState().equals(FALSE) && ((FalseAnswer)msg.data).getErrMessage().length() != 0){
+		}else if(msg.getState() == State.FALSE && ((FalseAnswer)msg.data).getErrMessage().length() != 0){
 			throw new CommunicationException(((FalseAnswer)msg.data).getErrMessage());
 		}else
 			return false;
@@ -983,12 +970,12 @@ public class Network {
 			throw new CommunicationException(e);
 		}
 		
-		if(msg.getState().equals(TRUE)){
-			Log.d("IHA - Network", msg.getState());
+		if(msg.getState() == State.TRUE){
+			Log.d("IHA - Network", msg.getState().getValue());
 			
 			return true;
 			
-		}else if(msg.getState().equals(RESIGN)){
+		}else if(msg.getState() == State.RESIGN){
 			//TODO: maybe use diffrenD way to resign, case stopping of thread, manage this after implement in the controler
 			try {
 				GetGoogleAuth.getGetGoogleAuth().execute();
@@ -1000,7 +987,7 @@ public class Network {
 			}
 			signIn(ActualUser.getActualUser().getEmail());
 			return deleteConnectionAccount(adapterId, users);
-		}else if(msg.getState().equals(FALSE) && ((FalseAnswer)msg.data).getErrMessage().length() != 0){
+		}else if(msg.getState() == State.FALSE && ((FalseAnswer)msg.data).getErrMessage().length() != 0){
 			throw new CommunicationException(((FalseAnswer)msg.data).getErrMessage());
 		}else
 			return false;
@@ -1035,16 +1022,16 @@ public class Network {
 			throw new CommunicationException(e);
 		}
 		
-		if(msg.getState().equals(CONACCOUNTLIST)){
-			Log.d("IHA - Network", msg.getState());
+		if (msg.getState() == State.CONACCOUNTLIST) {
+			Log.d("IHA - Network", msg.getState().toString());
 			
 			//http://stackoverflow.com/a/509288/1642090
 			@SuppressWarnings("unchecked")
 			HashMap<String, User> result = (HashMap<String, User>) msg.data;
 			
 			return result;
-			
-		}else if(msg.getState().equals(RESIGN)){
+
+		} else if (msg.getState() == State.RESIGN) {
 			//TODO: maybe use diffrenD way to resign, case stopping of thread, manage this after implement in the controler
 			try {
 				GetGoogleAuth.getGetGoogleAuth().execute();
@@ -1057,7 +1044,7 @@ public class Network {
 			signIn(ActualUser.getActualUser().getEmail());
 			return getConnectionAccountList(adapterId);
 			
-		}else if(msg.getState().equals(FALSE) && ((FalseAnswer)msg.data).getErrMessage().length() != 0){
+		}else if(msg.getState() == State.FALSE && ((FalseAnswer)msg.data).getErrMessage().length() != 0){
 			throw new CommunicationException(((FalseAnswer)msg.data).getErrMessage());
 		}else
 			return null;
@@ -1093,12 +1080,12 @@ public class Network {
 			throw new CommunicationException(e);
 		}
 		
-		if(msg.getState().equals(TRUE)){
-			Log.d("IHA - Network", msg.getState());
+		if(msg.getState() == State.TRUE){
+			Log.d("IHA - Network", msg.getState().toString());
 			
 			return true;
 			
-		}else if(msg.getState().equals(RESIGN)){
+		}else if(msg.getState() == State.RESIGN){
 			//TODO: maybe use diffrenD way to resign, case stopping of thread, manage this after implement in the controler
 			try {
 				GetGoogleAuth.getGetGoogleAuth().execute();
@@ -1110,7 +1097,7 @@ public class Network {
 			}
 			signIn(ActualUser.getActualUser().getEmail());
 			return changeConnectionAccount(adapterId, userNrole);
-		}else if(msg.getState().equals(FALSE) && ((FalseAnswer)msg.data).getErrMessage().length() != 0){
+		}else if(msg.getState() == State.FALSE && ((FalseAnswer)msg.data).getErrMessage().length() != 0){
 			throw new CommunicationException(((FalseAnswer)msg.data).getErrMessage());
 		}else
 			return false;
@@ -1147,12 +1134,12 @@ public class Network {
 			throw new CommunicationException(e);
 		}
 		
-		if(msg.getState().equals(TRUE)){
-			Log.d("IHA - Network", msg.getState());
+		if(msg.getState() == State.TRUE){
+			Log.d("IHA - Network", msg.getState().getValue());
 			
 			return true;
 			
-		}else if(msg.getState().equals(RESIGN)){
+		}else if(msg.getState() == State.RESIGN){
 			//TODO: maybe use diffrenD way to resign, case stopping of thread, manage this after implement in the controler
 			try {
 				GetGoogleAuth.getGetGoogleAuth().execute();
@@ -1165,7 +1152,7 @@ public class Network {
 			signIn(ActualUser.getActualUser().getEmail());
 			return setTimeZone(adapterId, differenceToGMT);
 			
-		}else if(msg.getState().equals(FALSE) && ((FalseAnswer)msg.data).getErrMessage().length() != 0){
+		}else if(msg.getState() == State.FALSE && ((FalseAnswer)msg.data).getErrMessage().length() != 0){
 			throw new CommunicationException(((FalseAnswer)msg.data).getErrMessage());
 		}else
 			return false;
@@ -1200,12 +1187,12 @@ public class Network {
 			throw new CommunicationException(e);
 		}
 		
-		if(msg.getState().equals(TIMEZONE)){
-			Log.d("IHA - Network", msg.getState());
+		if(msg.getState() == State.TIMEZONE){
+			Log.d("IHA - Network", msg.getState().getValue());
 			
 			return (Integer)msg.data;
 			
-		}else if(msg.getState().equals(RESIGN)){
+		}else if(msg.getState() == State.RESIGN){
 			//TODO: maybe use diffrenD way to resign, case stopping of thread, manage this after implement in the controler
 			try {
 				GetGoogleAuth.getGetGoogleAuth().execute();
@@ -1218,7 +1205,7 @@ public class Network {
 			signIn(ActualUser.getActualUser().getEmail());
 			return getTimeZone(adapterId);
 			
-		}else if(msg.getState().equals(FALSE) && ((FalseAnswer)msg.data).getErrMessage().length() != 0){
+		}else if(msg.getState() == State.FALSE && ((FalseAnswer)msg.data).getErrMessage().length() != 0){
 			throw new CommunicationException(((FalseAnswer)msg.data).getErrMessage());
 		}else
 			return 0;
@@ -1253,8 +1240,8 @@ public class Network {
 			throw new CommunicationException(e);
 		}
 		
-		if(msg.getState().equals(ROOMS)){
-			Log.d("IHA - Network", msg.getState());
+		if(msg.getState() == State.ROOMS){
+			Log.d("IHA - Network", msg.getState().getValue());
 			
 			//http://stackoverflow.com/a/509288/1642090
 			@SuppressWarnings("unchecked")
@@ -1262,7 +1249,7 @@ public class Network {
 			
 			return result;
 			
-		}else if(msg.getState().equals(RESIGN)){
+		}else if(msg.getState() == State.RESIGN){
 			//TODO: maybe use diffrenD way to resign, case stopping of thread, manage this after implement in the controler
 			try {
 				GetGoogleAuth.getGetGoogleAuth().execute();
@@ -1275,7 +1262,7 @@ public class Network {
 			signIn(ActualUser.getActualUser().getEmail());
 			return getLocations(adapterId);
 			
-		}else if(msg.getState().equals(FALSE) && ((FalseAnswer)msg.data).getErrMessage().length() != 0){
+		}else if(msg.getState() == State.FALSE && ((FalseAnswer)msg.data).getErrMessage().length() != 0){
 			throw new CommunicationException(((FalseAnswer)msg.data).getErrMessage());
 		}else
 			return null;
@@ -1311,12 +1298,12 @@ public class Network {
 			throw new CommunicationException(e);
 		}
 		
-		if(msg.getState().equals(TRUE)){
-			Log.d("IHA - Network", msg.getState());
+		if(msg.getState() == State.TRUE){
+			Log.d("IHA - Network", msg.getState().getValue());
 			
 			return true;
 			
-		}else if(msg.getState().equals(RESIGN)){
+		}else if(msg.getState() == State.RESIGN){
 			//TODO: maybe use diffrenD way to resign, case stopping of thread, manage this after implement in the controler
 			try {
 				GetGoogleAuth.getGetGoogleAuth().execute();
@@ -1329,7 +1316,7 @@ public class Network {
 			signIn(ActualUser.getActualUser().getEmail());
 			return updateLocations(adapterId, locations);
 			
-		}else if(msg.getState().equals(FALSE) && ((FalseAnswer)msg.data).getErrMessage().length() != 0){
+		}else if(msg.getState() == State.FALSE && ((FalseAnswer)msg.data).getErrMessage().length() != 0){
 			throw new CommunicationException(((FalseAnswer)msg.data).getErrMessage());
 		}else
 			return false;
@@ -1363,12 +1350,12 @@ public class Network {
 			throw new CommunicationException(e);
 		}
 		
-		if(msg.getState().equals(TRUE)){
-			Log.d("IHA - Network", msg.getState());
+		if(msg.getState() == State.TRUE){
+			Log.d("IHA - Network", msg.getState().getValue());
 			
 			return true;
 			
-		}else if(msg.getState().equals(RESIGN)){
+		}else if(msg.getState() == State.RESIGN){
 			//TODO: maybe use diffrenD way to resign, case stopping of thread, manage this after implement in the controler
 			try {
 				GetGoogleAuth.getGetGoogleAuth().execute();
@@ -1381,7 +1368,7 @@ public class Network {
 			signIn(ActualUser.getActualUser().getEmail());
 			return deleteLocation(adapterId, location);
 			
-		}else if(msg.getState().equals(FALSE) && ((FalseAnswer)msg.data).getErrMessage().length() != 0){
+		}else if(msg.getState() == State.FALSE && ((FalseAnswer)msg.data).getErrMessage().length() != 0){
 			throw new CommunicationException(((FalseAnswer)msg.data).getErrMessage());
 		}else
 			return false;
@@ -1410,14 +1397,14 @@ public class Network {
 			throw new CommunicationException(e);
 		}
 		
-		if(msg.getState().equals(ROOMCREATED)){
-			Log.d("IHA - Network", msg.getState());
+		if(msg.getState() == State.ROOMCREATED){
+			Log.d("IHA - Network", msg.getState().getValue());
 			
 			location.setId((String)msg.data);
 			
 			return location;
 			
-		}else if(msg.getState().equals(RESIGN)){
+		}else if(msg.getState() == State.RESIGN){
 			//TODO: maybe use diffrenD way to resign, case stopping of thread, manage this after implement in the controler
 			try {
 				GetGoogleAuth.getGetGoogleAuth().execute();
@@ -1430,7 +1417,7 @@ public class Network {
 			signIn(ActualUser.getActualUser().getEmail());
 			return createLocation(adapterId, location);
 			
-		}else if(msg.getState().equals(FALSE) && ((FalseAnswer)msg.data).getErrMessage().length() != 0){
+		}else if(msg.getState() == State.FALSE && ((FalseAnswer)msg.data).getErrMessage().length() != 0){
 			throw new CommunicationException(((FalseAnswer)msg.data).getErrMessage());
 		}else
 			return null;
