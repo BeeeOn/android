@@ -410,7 +410,11 @@ public class LocationScreenActivity extends BaseActivity {
 				// Intent intent = new Intent(LocationScreenActivity.this,
 				// AddAdapterActivity.class);
 				inBackground = true;
+				
+				Bundle bundle = new Bundle();
+				bundle.putBoolean("Cancel", true);
 				Intent intent = new Intent(LocationScreenActivity.this, AddAdapterActivityDialog.class);
+				intent.putExtras(bundle);
 				startActivity(intent);
 				break;
 			}

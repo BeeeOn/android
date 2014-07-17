@@ -29,6 +29,7 @@
 
     <string name="notification_ingore">Ignore</string>
     <string name="notification_add">Add</string>
+    <string name="notification_cancel">Cancel</string>
     <!-- Labels -->
     <string name="login_app_name">Intelligent Home Anywhere</string>
     <string name="login_or_use">or use</string>

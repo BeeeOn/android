@@ -272,6 +272,9 @@ public class LoginActivity extends BaseActivity {
 			e.printStackTrace();
 			// there is unregistered adapter and we go to register it
 			Intent intent = new Intent(LoginActivity.this, AddAdapterActivityDialog.class);
+			Bundle bundle = new Bundle();
+			bundle.putBoolean("Cancel", false);
+			intent.putExtras(bundle);
 			startActivity(intent);
 		} catch (NotRegBException e) {
 			e.printStackTrace();

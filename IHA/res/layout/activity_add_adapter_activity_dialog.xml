@@ -61,8 +61,10 @@
 	    android:textColor="@color/log_blue2" />
 
 	<LinearLayout
+	    android:id="@+id/addadapter_buttons"
 	    android:layout_width="match_parent"
-	    android:layout_height="wrap_content" >
+	    android:layout_height="wrap_content"
+	    android:orientation="horizontal" >
 
 		<Button
 		    android:id="@+id/addadapter_add_button"
@@ -72,12 +74,12 @@
 		    android:text="@string/notification_add" />
 
 		<Button
-		    android:id="@+id/Button01"
+		    android:id="@+id/addadapter_cancel_button"
 		    android:layout_width="130dp"
 		    android:layout_height="match_parent"
 		    android:layout_gravity="right"
 		    android:layout_marginBottom="5dp"
-		    android:text="@string/notification_add" />
+		    android:text="@string/notification_cancel"/>
 
 	</LinearLayout>
 

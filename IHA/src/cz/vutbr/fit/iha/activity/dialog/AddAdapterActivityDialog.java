@@ -4,12 +4,14 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import cz.vutbr.fit.iha.R;
 import cz.vutbr.fit.iha.activity.LocationScreenActivity;
 import cz.vutbr.fit.iha.thread.AdapterRegisterThread;
@@ -25,9 +27,9 @@ public class AddAdapterActivityDialog extends BaseActivityDialog {
 
 		setContentView(R.layout.activity_add_adapter_activity_dialog);
 
-		initButtons();
-
 		mActivity = this;
+		
+		initButtons();
 	}
 
 	/**
@@ -59,6 +61,11 @@ public class AddAdapterActivityDialog extends BaseActivityDialog {
 				});
 
 		// Serial number button - register new adapter by serial number
+		if (!mActivity.getIntent().getExtras().getBoolean("Cancel"))
+			((Button) findViewById(R.id.addadapter_add_button)).setLayoutParams(new LinearLayout.LayoutParams(
+					(int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 260, getResources().getDisplayMetrics()),
+					(int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 50, getResources().getDisplayMetrics())));
+		
 		((Button) findViewById(R.id.addadapter_add_button))
 				.setOnClickListener(new OnClickListener() {
 					@Override
@@ -70,6 +77,18 @@ public class AddAdapterActivityDialog extends BaseActivityDialog {
 								.getText().toString(), mActivity)).start();
 					}
 				});
+		
+		//If this dialog as first use (from login page)- invisible button
+		if (!mActivity.getIntent().getExtras().getBoolean("Cancel"))
+			((Button) findViewById(R.id.addadapter_cancel_button)).setVisibility(View.INVISIBLE);
+		
+		((Button) findViewById(R.id.addadapter_cancel_button))
+		.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				mActivity.finish();
+			}
+			});
 	}
 
 	@Override
