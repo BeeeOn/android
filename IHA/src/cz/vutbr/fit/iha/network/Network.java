@@ -211,6 +211,19 @@ public class Network {
 	    NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
 	    return activeNetworkInfo != null && activeNetworkInfo.isConnected();
 	}
+	
+	private void doResign() {
+		//TODO: maybe use diffrenD way to resign, case stopping of thread, manage this after implement in the controller
+		try {
+			GetGoogleAuth.getGetGoogleAuth().execute();
+		} catch (Exception e) {
+			e.printStackTrace();
+			String tmp = null;
+			new GetGoogleAuth(new LoginActivity(), tmp).execute();
+			//return null;
+		}
+		signIn(ActualUser.getActualUser().getEmail());
+	}
 
 	/**
 	 * Method signIn user given by its email to server, BUT before calling must call GetGoogleAuth to get googleToken in it and init ActualUser
@@ -358,16 +371,7 @@ public class Network {
 			
 			return result;
 		}else if(msg.getState() == State.RESIGN){
-			//TODO: maybe use diffrenD way to resign, case stopping of thread, manage this after implement in the controller
-			try {
-				GetGoogleAuth.getGetGoogleAuth().execute();
-			} catch (Exception e) {
-				e.printStackTrace();
-				String tmp = null;
-				new GetGoogleAuth(new LoginActivity(), tmp).execute();
-				//return null;
-			}
-			signIn(ActualUser.getActualUser().getEmail());
+			doResign();
 			return getAdapters();
 			
 		}else if(msg.getState() == State.FALSE && ((FalseAnswer)msg.data).getErrMessage().length() != 0){
@@ -411,16 +415,7 @@ public class Network {
 			
 			return (Adapter) msg.data;
 		}else if(msg.getState() == State.RESIGN){
-			//TODO: maybe use diffrenD way to resign, case stopping of thread, manage this after implement in the controler
-			try {
-				GetGoogleAuth.getGetGoogleAuth().execute();
-			} catch (Exception e) {
-				e.printStackTrace();
-				String tmp = null;
-				new GetGoogleAuth(new LoginActivity(), tmp).execute();
-				//return null;
-			}
-			signIn(ActualUser.getActualUser().getEmail());
+			doResign();
 			return init(adapterId);
 			
 		}else if(msg.getState() == State.FALSE && ((FalseAnswer)msg.data).getErrMessage().length() != 0){
@@ -466,16 +461,7 @@ public class Network {
 			return true;
 			
 		}else if(msg.getState() == State.RESIGN){
-			//TODO: maybe use diffrenD way to resign, case stopping of thread, manage this after implement in the controler
-			try {
-				GetGoogleAuth.getGetGoogleAuth().execute();
-			} catch (Exception e) {
-				e.printStackTrace();
-				String tmp = null;
-				new GetGoogleAuth(new LoginActivity(), tmp).execute();
-				//return null;
-			}
-			signIn(ActualUser.getActualUser().getEmail());
+			doResign();
 			return reInit(oldId, newId);
 			
 		}else if(msg.getState() == State.FALSE && ((FalseAnswer)msg.data).getErrMessage().length() != 0){
@@ -519,16 +505,7 @@ public class Network {
 			return true;
 			
 		}else if(msg.getState() == State.RESIGN){
-			//TODO: maybe use diffrenD way to resign, case stopping of thread, manage this after implement in the controler
-			try {
-				GetGoogleAuth.getGetGoogleAuth().execute();
-			} catch (Exception e) {
-				e.printStackTrace();
-				String tmp = null;
-				new GetGoogleAuth(new LoginActivity(), tmp).execute();
-				//return null;
-			}
-			signIn(ActualUser.getActualUser().getEmail());
+			doResign();
 			return partial(adapterId, devices);
 		}else if(msg.getState() == State.FALSE && ((FalseAnswer)msg.data).getErrMessage().length() != 0){
 			throw new CommunicationException(((FalseAnswer)msg.data).getErrMessage());
@@ -575,16 +552,7 @@ public class Network {
 			return result;
 			
 		}else if(msg.getState() == State.RESIGN){
-			//TODO: maybe use diffrenD way to resign, case stopping of thread, manage this after implement in the controler
-			try {
-				GetGoogleAuth.getGetGoogleAuth().execute();
-			} catch (Exception e) {
-				e.printStackTrace();
-				String tmp = null;
-				new GetGoogleAuth(new LoginActivity(), tmp).execute();
-				//return null;
-			}
-			signIn(ActualUser.getActualUser().getEmail());
+			doResign();
 			return update(adapterId, devices);
 		}else if(msg.getState() == State.FALSE && ((FalseAnswer)msg.data).getErrMessage().length() != 0){
 			throw new CommunicationException(((FalseAnswer)msg.data).getErrMessage());
@@ -634,16 +602,7 @@ public class Network {
 			return result;
 			
 		}else if(msg.getState() == State.RESIGN){
-			//TODO: maybe use diffrenD way to resign, case stopping of thread, manage this after implement in the controler
-			try {
-				GetGoogleAuth.getGetGoogleAuth().execute();
-			} catch (Exception e) {
-				e.printStackTrace();
-				String tmp = null;
-				new GetGoogleAuth(new LoginActivity(), tmp).execute();
-				//return null;
-			}
-			signIn(ActualUser.getActualUser().getEmail());
+			doResign();
 			return logName(adapterId, deviceId, deviceType, from, to, funcType, interval);
 			
 		}else if(msg.getState() == State.FALSE && ((FalseAnswer)msg.data).getErrMessage().length() != 0){
@@ -704,16 +663,7 @@ public class Network {
 			return true;
 			
 		}else if(msg.getState() == State.RESIGN){
-			//TODO: maybe use diffrenD way to resign, case stopping of thread, manage this after implement in the controler
-			try {
-				GetGoogleAuth.getGetGoogleAuth().execute();
-			} catch (Exception e) {
-				e.printStackTrace();
-				String tmp = null;
-				new GetGoogleAuth(new LoginActivity(), tmp).execute();
-				//return null;
-			}
-			signIn(ActualUser.getActualUser().getEmail());
+			doResign();
 			return addView(adapterId, nameOfView, iconId, devices);
 			
 		}else if(msg.getState() == State.FALSE && ((FalseAnswer)msg.data).getErrMessage().length() != 0){
@@ -761,16 +711,7 @@ public class Network {
 			return result;
 			
 		}else if(msg.getState() == State.RESIGN){
-			//TODO: maybe use diffrenD way to resign, case stopping of thread, manage this after implement in the controler
-			try {
-				GetGoogleAuth.getGetGoogleAuth().execute();
-			} catch (Exception e) {
-				e.printStackTrace();
-				String tmp = null;
-				new GetGoogleAuth(new LoginActivity(), tmp).execute();
-				//return null;
-			}
-			signIn(ActualUser.getActualUser().getEmail());
+			doResign();
 			return getViews(adapterId);
 			
 		}else if(msg.getState() == State.FALSE && ((FalseAnswer)msg.data).getErrMessage().length() != 0){
@@ -815,16 +756,7 @@ public class Network {
 			return true;
 			
 		}else if(msg.getState() == State.RESIGN){
-			//TODO: maybe use diffrenD way to resign, case stopping of thread, manage this after implement in the controler
-			try {
-				GetGoogleAuth.getGetGoogleAuth().execute();
-			} catch (Exception e) {
-				e.printStackTrace();
-				String tmp = null;
-				new GetGoogleAuth(new LoginActivity(), tmp).execute();
-				//return null;
-			}
-			signIn(ActualUser.getActualUser().getEmail());
+			doResign();
 			return deleteView(adapterId, viewName);
 			
 		}else if(msg.getState() == State.FALSE && ((FalseAnswer)msg.data).getErrMessage().length() != 0){
@@ -870,16 +802,7 @@ public class Network {
 			return true;
 			
 		}else if(msg.getState() == State.RESIGN){
-			//TODO: maybe use diffrenD way to resign, case stopping of thread, manage this after implement in the controler
-			try {
-				GetGoogleAuth.getGetGoogleAuth().execute();
-			} catch (Exception e) {
-				e.printStackTrace();
-				String tmp = null;
-				new GetGoogleAuth(new LoginActivity(), tmp).execute();
-				//return null;
-			}
-			signIn(ActualUser.getActualUser().getEmail());
+			doResign();
 			return updateView(adapterId, viewName, iconId, devices);
 		}else if(msg.getState() == State.FALSE && ((FalseAnswer)msg.data).getErrMessage().length() != 0){
 			throw new CommunicationException(((FalseAnswer)msg.data).getErrMessage());
@@ -923,16 +846,7 @@ public class Network {
 			return true;
 			
 		}else if(msg.getState() == State.RESIGN){
-			//TODO: maybe use diffrenD way to resign, case stopping of thread, manage this after implement in the controler
-			try {
-				GetGoogleAuth.getGetGoogleAuth().execute();
-			} catch (Exception e) {
-				e.printStackTrace();
-				String tmp = null;
-				new GetGoogleAuth(new LoginActivity(), tmp).execute();
-				//return null;
-			}
-			signIn(ActualUser.getActualUser().getEmail());
+			doResign();
 			return addConnectionAccount(adapterId, userNrole);
 		}else if(msg.getState() == State.FALSE && ((FalseAnswer)msg.data).getErrMessage().length() != 0){
 			throw new CommunicationException(((FalseAnswer)msg.data).getErrMessage());
@@ -976,16 +890,7 @@ public class Network {
 			return true;
 			
 		}else if(msg.getState() == State.RESIGN){
-			//TODO: maybe use diffrenD way to resign, case stopping of thread, manage this after implement in the controler
-			try {
-				GetGoogleAuth.getGetGoogleAuth().execute();
-			} catch (Exception e) {
-				e.printStackTrace();
-				String tmp = null;
-				new GetGoogleAuth(new LoginActivity(), tmp).execute();
-				//return null;
-			}
-			signIn(ActualUser.getActualUser().getEmail());
+			doResign();
 			return deleteConnectionAccount(adapterId, users);
 		}else if(msg.getState() == State.FALSE && ((FalseAnswer)msg.data).getErrMessage().length() != 0){
 			throw new CommunicationException(((FalseAnswer)msg.data).getErrMessage());
@@ -1032,16 +937,7 @@ public class Network {
 			return result;
 
 		} else if (msg.getState() == State.RESIGN) {
-			//TODO: maybe use diffrenD way to resign, case stopping of thread, manage this after implement in the controler
-			try {
-				GetGoogleAuth.getGetGoogleAuth().execute();
-			} catch (Exception e) {
-				e.printStackTrace();
-				String tmp = null;
-				new GetGoogleAuth(new LoginActivity(), tmp).execute();
-				//return null;
-			}
-			signIn(ActualUser.getActualUser().getEmail());
+			doResign();
 			return getConnectionAccountList(adapterId);
 			
 		}else if(msg.getState() == State.FALSE && ((FalseAnswer)msg.data).getErrMessage().length() != 0){
@@ -1086,16 +982,7 @@ public class Network {
 			return true;
 			
 		}else if(msg.getState() == State.RESIGN){
-			//TODO: maybe use diffrenD way to resign, case stopping of thread, manage this after implement in the controler
-			try {
-				GetGoogleAuth.getGetGoogleAuth().execute();
-			} catch (Exception e) {
-				e.printStackTrace();
-				String tmp = null;
-				new GetGoogleAuth(new LoginActivity(), tmp).execute();
-				//return null;
-			}
-			signIn(ActualUser.getActualUser().getEmail());
+			doResign();
 			return changeConnectionAccount(adapterId, userNrole);
 		}else if(msg.getState() == State.FALSE && ((FalseAnswer)msg.data).getErrMessage().length() != 0){
 			throw new CommunicationException(((FalseAnswer)msg.data).getErrMessage());
@@ -1140,16 +1027,7 @@ public class Network {
 			return true;
 			
 		}else if(msg.getState() == State.RESIGN){
-			//TODO: maybe use diffrenD way to resign, case stopping of thread, manage this after implement in the controler
-			try {
-				GetGoogleAuth.getGetGoogleAuth().execute();
-			} catch (Exception e) {
-				e.printStackTrace();
-				String tmp = null;
-				new GetGoogleAuth(new LoginActivity(), tmp).execute();
-				//return null;
-			}
-			signIn(ActualUser.getActualUser().getEmail());
+			doResign();
 			return setTimeZone(adapterId, differenceToGMT);
 			
 		}else if(msg.getState() == State.FALSE && ((FalseAnswer)msg.data).getErrMessage().length() != 0){
@@ -1193,16 +1071,7 @@ public class Network {
 			return (Integer)msg.data;
 			
 		}else if(msg.getState() == State.RESIGN){
-			//TODO: maybe use diffrenD way to resign, case stopping of thread, manage this after implement in the controler
-			try {
-				GetGoogleAuth.getGetGoogleAuth().execute();
-			} catch (Exception e) {
-				e.printStackTrace();
-				String tmp = null;
-				new GetGoogleAuth(new LoginActivity(), tmp).execute();
-				//return null;
-			}
-			signIn(ActualUser.getActualUser().getEmail());
+			doResign();
 			return getTimeZone(adapterId);
 			
 		}else if(msg.getState() == State.FALSE && ((FalseAnswer)msg.data).getErrMessage().length() != 0){
@@ -1250,16 +1119,7 @@ public class Network {
 			return result;
 			
 		}else if(msg.getState() == State.RESIGN){
-			//TODO: maybe use diffrenD way to resign, case stopping of thread, manage this after implement in the controler
-			try {
-				GetGoogleAuth.getGetGoogleAuth().execute();
-			} catch (Exception e) {
-				e.printStackTrace();
-				String tmp = null;
-				new GetGoogleAuth(new LoginActivity(), tmp).execute();
-				//return null;
-			}
-			signIn(ActualUser.getActualUser().getEmail());
+			doResign();
 			return getLocations(adapterId);
 			
 		}else if(msg.getState() == State.FALSE && ((FalseAnswer)msg.data).getErrMessage().length() != 0){
@@ -1304,16 +1164,7 @@ public class Network {
 			return true;
 			
 		}else if(msg.getState() == State.RESIGN){
-			//TODO: maybe use diffrenD way to resign, case stopping of thread, manage this after implement in the controler
-			try {
-				GetGoogleAuth.getGetGoogleAuth().execute();
-			} catch (Exception e) {
-				e.printStackTrace();
-				String tmp = null;
-				new GetGoogleAuth(new LoginActivity(), tmp).execute();
-				//return null;
-			}
-			signIn(ActualUser.getActualUser().getEmail());
+			doResign();
 			return updateLocations(adapterId, locations);
 			
 		}else if(msg.getState() == State.FALSE && ((FalseAnswer)msg.data).getErrMessage().length() != 0){
@@ -1356,16 +1207,7 @@ public class Network {
 			return true;
 			
 		}else if(msg.getState() == State.RESIGN){
-			//TODO: maybe use diffrenD way to resign, case stopping of thread, manage this after implement in the controler
-			try {
-				GetGoogleAuth.getGetGoogleAuth().execute();
-			} catch (Exception e) {
-				e.printStackTrace();
-				String tmp = null;
-				new GetGoogleAuth(new LoginActivity(), tmp).execute();
-				//return null;
-			}
-			signIn(ActualUser.getActualUser().getEmail());
+			doResign();
 			return deleteLocation(adapterId, location);
 			
 		}else if(msg.getState() == State.FALSE && ((FalseAnswer)msg.data).getErrMessage().length() != 0){
@@ -1405,16 +1247,7 @@ public class Network {
 			return location;
 			
 		}else if(msg.getState() == State.RESIGN){
-			//TODO: maybe use diffrenD way to resign, case stopping of thread, manage this after implement in the controler
-			try {
-				GetGoogleAuth.getGetGoogleAuth().execute();
-			} catch (Exception e) {
-				e.printStackTrace();
-				String tmp = null;
-				new GetGoogleAuth(new LoginActivity(), tmp).execute();
-				//return null;
-			}
-			signIn(ActualUser.getActualUser().getEmail());
+			doResign();
 			return createLocation(adapterId, location);
 			
 		}else if(msg.getState() == State.FALSE && ((FalseAnswer)msg.data).getErrMessage().length() != 0){
