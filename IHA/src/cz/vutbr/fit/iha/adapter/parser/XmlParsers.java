@@ -22,6 +22,7 @@ import org.xmlpull.v1.XmlPullParserException;
 import android.util.Log;
 import android.util.Xml;
 import cz.vutbr.fit.iha.Constants;
+import cz.vutbr.fit.iha.RefreshInterval;
 import cz.vutbr.fit.iha.User;
 import cz.vutbr.fit.iha.User.Role;
 import cz.vutbr.fit.iha.adapter.Adapter;
@@ -282,7 +283,7 @@ public class XmlParsers {
 				} else if(nameTag.equals(NAME))
 					device.setName(readText(NAME));
 				else if(nameTag.equals(REFRESH))
-					device.setRefresh(Integer.parseInt(readText(REFRESH)));
+					device.setRefresh(RefreshInterval.fromInterval(Integer.parseInt(readText(REFRESH))));
 				else if(nameTag.equals(BATTERY))
 					device.setBattery(Integer.parseInt(readText(BATTERY)));
 				else if(nameTag.equals(QUALITY))

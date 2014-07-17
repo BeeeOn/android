@@ -5,6 +5,7 @@ package cz.vutbr.fit.iha.adapter.device;
 
 import android.content.Context;
 import android.text.format.Time;
+import cz.vutbr.fit.iha.RefreshInterval;
 import cz.vutbr.fit.iha.adapter.location.Location;
 
 /**
@@ -15,7 +16,7 @@ public abstract class BaseDevice {
 	protected boolean mInitialized;
 	protected String mLocationId;
 	protected String mName = "";
-	protected int mRefreshTime;	
+	protected RefreshInterval mRefreshInterval;	
 	protected int mBattery;
 	protected boolean mLogging;
 	protected String mInvolveTime = "";
@@ -137,19 +138,19 @@ public abstract class BaseDevice {
 	}
 	
 	/**
-	 * Get refresh time in secs
-	 * @return refresh time (secs)
+	 * Get refresh interval
+	 * @return refresh interval
 	 */
-	public int getRefresh() {
-		return mRefreshTime;
+	public RefreshInterval getRefresh() {
+		return mRefreshInterval;
 	}
 		
 	/**
-	 * Setting refresh time in secs
-	 * @param secs
+	 * Setting refresh interval
+	 * @param interval
 	 */
-	public void setRefresh(int secs) {
-		mRefreshTime = secs;
+	public void setRefresh(RefreshInterval interval) {
+		mRefreshInterval = interval;
 	}
 	
 	/**
@@ -232,6 +233,7 @@ public abstract class BaseDevice {
 		return mVisibility;
 	}
 	
+	// FIXME: refactor this - these methods should be inside VisibilityState enum
 	/**
 	 * Method parse char to visibitilyState
 	 * @param visibility
@@ -363,6 +365,7 @@ public abstract class BaseDevice {
 		result += "Initialized: " + mInitialized + "\n";
 		result += "Battery: " + mBattery + "\n";
 		result += "Logging: " + mLogging + "\n";
+		result += "Refresh: " + mRefreshInterval.getInterval() + "\n";
 		result += "Value: " + getStringValue() + "\n";
 		
 		return result;
@@ -371,7 +374,7 @@ public abstract class BaseDevice {
 	public boolean needsUpdate() {
 		Time that = new Time();
 		that.setToNow();
-		that.set(that.toMillis(true) - getRefresh() * 1000); // x seconds interval between updates
+		that.set(that.toMillis(true) - mRefreshInterval.getInterval() * 1000); // x seconds interval between updates
 
 		return lastUpdate.before(that);
 	}

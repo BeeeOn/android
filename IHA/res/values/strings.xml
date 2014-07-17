@@ -45,7 +45,7 @@
     <string name="registration_serial_number">For adapter with serial number:</string>
     <string name="alert_title">Title</string>
     <string name="alert_message">Message</string>
-    <string name="refresh_time">Refresh time:</string>
+    <string name="refresh_time">Refresh time: %s</string>
     <string name="last_update">Last update:</string>
     <string name="sen_graph_label">Graph of history</string>
     <!-- RadioButtons -->
@@ -114,10 +114,22 @@
     <string name="title_activity_add_sensor_activity_dialog">AddSensorActivityDialog</string>
     <string name="title_activity_alert_activity_dialog">AlertActivityDialog</string>
     
-    <!--  Units -->
-    <string name="second">sec</string>
-    <string name="minute">min</string>
-    <string name="hour">h</string>
-    <string name="day">day</string>
+    <!--  Refresh intervals -->
+    <plurals name="interval_seconds">
+        <item quantity="one">1 second</item>
+        <item quantity="other">%d seconds</item>
+    </plurals>
+    <plurals name="interval_minutes">
+        <item quantity="one">1 minute</item>
+        <item quantity="other">%d minutes</item>
+    </plurals>
+    <plurals name="interval_hours">
+        <item quantity="one">1 hour</item>
+        <item quantity="other">%d hours</item>
+    </plurals>
+    <plurals name="interval_days">
+        <item quantity="one">1 day</item>
+        <item quantity="other">%d days</item>
+    </plurals>
 
 </resources>

@@ -547,9 +547,9 @@ public class XmlCreator {
 					serializer.text(device.getName());
 					serializer.endTag(ns, NAME);
 				}
-				if(device.getRefresh() != 0){
+				if(device.getRefresh() != null){
 					serializer.startTag(ns, REFRESH);
-					serializer.text(Integer.toString(device.getRefresh()));
+					serializer.text(Integer.toString(device.getRefresh().getInterval()));
 					serializer.endTag(ns, REFRESH);
 				}
 				if(device.getRawIntValue() != Integer.MAX_VALUE){
@@ -1034,7 +1034,7 @@ public class XmlCreator {
 						serializer.endTag(null, "name");
 						
 						serializer.startTag(null, "refresh");
-						serializer.text(Integer.toString(d.getRefresh()));
+						serializer.text(Integer.toString(d.getRefresh().getInterval()));
 						serializer.endTag(null, "refresh");
 						
 						serializer.startTag(null, "battery");

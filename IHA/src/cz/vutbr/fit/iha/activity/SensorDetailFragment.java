@@ -38,6 +38,7 @@ import com.jjoe64.graphview.GraphViewSeries.GraphViewSeriesStyle;
 import com.jjoe64.graphview.LineGraphView;
 
 import cz.vutbr.fit.iha.R;
+import cz.vutbr.fit.iha.RefreshInterval;
 import cz.vutbr.fit.iha.adapter.device.BaseDevice;
 import cz.vutbr.fit.iha.adapter.location.Location;
 import cz.vutbr.fit.iha.controller.Controller;
@@ -73,12 +74,6 @@ public class SensorDetailFragment extends SherlockFragment {
 	private boolean mWasTapGraph = false;
 	// 
 	ActionMode mMode;
-	
-	
-	// Array for refresh time constant
-	// 1sec, 5sec, 10sec, 20sec , 30sec, 1min, 5min, 10min, 15min, 30,min, 1h, 2h,3h,4h, 8h, 12h, 24h
-	private int[] sRefreshTimeSeekBarValues = { 1, 5, 10, 30, 60, 300, 600, 900, 1800,
-			3600, 7200, 10800, 14400, 28800, 43200, 86400 };
 			
 	public double minimum;
 	
@@ -147,6 +142,7 @@ public class SensorDetailFragment extends SherlockFragment {
 	}
 
 	private void initLayout(BaseDevice device) {
+		final Context context = SensorDetailFragment.this.getView().getContext(); 
 		// Get View for sensor name
 		sName = (TextView) getView().findViewById(R.id.sen_detail_name);
 		sNameEdit = (EditText) getView().findViewById(R.id.sen_detail_name_edit);
@@ -163,12 +159,12 @@ public class SensorDetailFragment extends SherlockFragment {
 		// Get SeekBar for refresh time
 		sRefreshTimeValue = (SeekBar) getView().findViewById(R.id.sen_refresh_time_seekBar);
 		// Set Max value by length of array with values
-		sRefreshTimeValue.setMax(sRefreshTimeSeekBarValues.length-1);
+		sRefreshTimeValue.setMax(RefreshInterval.values().length-1);
 		sRefreshTimeValue.setOnSeekBarChangeListener(new OnSeekBarChangeListener() { 
 
 		    public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-		    	sRefreshTimeText.setText(
-		    			getString(R.string.refresh_time)+" "+prepareIntervalText(sRefreshTimeSeekBarValues[progress]));
+		    	String interval = RefreshInterval.values()[progress].getStringInterval(context);
+		    	sRefreshTimeText.setText(getString(R.string.refresh_time, interval));
 		    }
 
 			@Override
@@ -178,7 +174,8 @@ public class SensorDetailFragment extends SherlockFragment {
 
 			@Override
 			public void onStopTrackingTouch(SeekBar seekBar) {
-				Log.d(TAG, "Stop select value " +prepareIntervalText(sRefreshTimeSeekBarValues[seekBar.getProgress()]) );
+				String interval = RefreshInterval.values()[seekBar.getProgress()].getStringInterval(context);
+				Log.d(TAG, String.format("Stop select value %s", interval));
 			}
 		});
 		// Get LinearLayout for graph
@@ -239,10 +236,9 @@ public class SensorDetailFragment extends SherlockFragment {
 		// Set time of sensor
 		sTime.setText(setLastUpdate(device.lastUpdate));
 		// Set refresh time Text
-		sRefreshTimeText.setText( getString(R.string.refresh_time)+" "+prepareIntervalText(device.getRefresh()));
+    	sRefreshTimeText.setText(getString(R.string.refresh_time, device.getRefresh().getStringInterval(context)));
 		// Set refresh time SeekBar
-		sRefreshTimeValue.setProgress(prepareIntervalValue(device.getRefresh()));
-
+		sRefreshTimeValue.setProgress(device.getRefresh().getIntervalIndex());
 		// Add Graph with history data
 		addGraphView();
 		// Disable progress bar
@@ -326,34 +322,6 @@ public class SensorDetailFragment extends SherlockFragment {
 		
 		Date lastUpdateDate = new Date(lastUpdate.toMillis(true));
 		return dateFormat.format(lastUpdateDate);
-	}
-
-	private int prepareIntervalValue(int refresh) {
-		int index = 0;
-		if(refresh == 0 )
-			return 0;
-		for (int item : sRefreshTimeSeekBarValues ){
-			if (item == refresh)
-				return index;
-			index++;
-		}
-		return sRefreshTimeSeekBarValues.length-1;
-	}
-
-	private String prepareIntervalText(int seconds) {
-		int minutes = (int) seconds / 60;
-		int hours = (int) seconds / 3600;
-		if(hours == 0 ) {
-			if(minutes == 0) {
-				return String.valueOf(seconds)+ " " +  getString(R.string.second);
-			}
-			else {
-				return String.valueOf(minutes)+ " " +  getString(R.string.minute);
-			}
-		}
-		else {
-			return String.valueOf(hours)+" "+ getString(R.string.hour);
-		}
 	}
 
 	// Menu for Action bar mode - edit
