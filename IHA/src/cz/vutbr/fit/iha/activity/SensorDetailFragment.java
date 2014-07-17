@@ -112,12 +112,18 @@ public class SensorDetailFragment extends SherlockFragment {
 
 		mActivity = (SensorDetailActivity) getActivity();
 		
-		GetDeviceTask task = new GetDeviceTask();
-		task.execute(new String[] { mPageNumber });
-
 		View view = inflater.inflate(R.layout.activity_sensor_detail_screen,
 				container, false);
+		
 		return view;
+	}
+	
+	@Override
+	public void onActivityCreated (Bundle savedInstanceState) {
+		super.onActivityCreated(savedInstanceState);
+		
+		GetDeviceTask task = new GetDeviceTask();
+		task.execute(new String[] { mPageNumber });
 	}
 
 	/**
