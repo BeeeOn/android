@@ -5,7 +5,6 @@ import java.util.List;
 
 import android.content.Context;
 import cz.vutbr.fit.iha.Constants;
-import cz.vutbr.fit.iha.DemoData;
 import cz.vutbr.fit.iha.User;
 import cz.vutbr.fit.iha.User.Gender;
 import cz.vutbr.fit.iha.User.Role;
@@ -14,7 +13,7 @@ import cz.vutbr.fit.iha.adapter.location.Location;
 import cz.vutbr.fit.iha.adapter.parser.XmlParsers;
 
 /**
- * Represents demo household with adapters and devices loaded from local assets file.
+ * Represents demo household with adapters and devices loaded from local assets files.
  * 
  * @author Robyer
  */
@@ -22,18 +21,9 @@ public final class DemoHousehold extends Household {
 	
 	private final Context mContext;
 	
-	/**
-	 * Constructor.
-	 * @param context
-	 * @throws Exception 
-	 */
-	public DemoHousehold(Context context) throws Exception {
+	public DemoHousehold(Context context) {
 		mContext = context;
-		
-		if (!(new DemoData(mContext)).checkDemoData()) {
-			throw new Exception("Something wrong with demo data");
-		}
-		
+
 		prepareUser();
 		prepareAdapters();
 	}
@@ -53,18 +43,9 @@ public final class DemoHousehold extends Household {
 		this.adapters = new ArrayList<Adapter>();
 		
 		try {
-			String basePath = mContext.getExternalFilesDir(null).getPath() + "/";
-			
-			Adapter adapter = XmlParsers.getDemoAdapterFromFile(basePath + Constants.DEMO_FILENAME);
-//			if(adapter == null){
-//				if((new DemoData(mContext)).checkDemoData()){
-//					//FIXME: do it better
-//					adapter = XmlParsers.getDemoAdapterFromFile(filename);
-//				}
-//			}
-			
-			List<Location> lokace = XmlParsers.getDemoLocationsFromFile(basePath + Constants.DEMO_LOCATION_FILENAME);
-			adapter.setLocations(lokace);
+			Adapter adapter = XmlParsers.getDemoAdapterFromAsset(mContext, Constants.ASSET_ADAPTERS_FILENAME);
+			List<Location> locations = XmlParsers.getDemoLocationsFromAsset(mContext, Constants.ASSET_LOCATIONS_FILENAME);
+			adapter.setLocations(locations);
 			
 			this.adapters.add(adapter);
 		}

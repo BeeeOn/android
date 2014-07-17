@@ -5,8 +5,6 @@ package cz.vutbr.fit.iha.adapter.parser;
 
 import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.ParseException;
@@ -19,6 +17,7 @@ import java.util.Locale;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 
+import android.content.Context;
 import android.util.Log;
 import android.util.Xml;
 import cz.vutbr.fit.iha.Constants;
@@ -610,91 +609,67 @@ public class XmlParsers {
 	///////////////////////////////// DEMO
 	
 	/**
-     * Factory for parsing adapter from file.
-     * @param filename - path to file
-     * @return Adapter object
-	 * @throws XmlPullParserException 
-     */
-	public static Adapter getDemoAdapterFromFile(String filename) {
-		Log.i(TAG, String.format("Parsing data from file '%s'", filename));
-//		boolean ee = false;
-		
+	 * Factory for parsing adapter from asset.
+	 * @param context
+	 * @param filename
+	 * @return Adapter or null
+	 */
+	public static Adapter getDemoAdapterFromAsset(Context context, String filename) {
+		Log.i(TAG, String.format("Loading adapter from asset '%s'", filename));
 		Adapter adapter = null;
-		
-		File file = new File(filename);
-		if (!file.exists() || !file.canRead()) {
-			Log.w(TAG, String.format("File '%s' doesn't exists or is not readable", filename));
-			return adapter;
-		}
-
-		InputStream in = null;
+		InputStream stream = null;
 		try {
-			in = new BufferedInputStream(new FileInputStream(file));
+			stream = new BufferedInputStream(context.getAssets().open(filename));
 			mParser = Xml.newPullParser();
 			mParser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false);
-			mParser.setInput(in, null);
+			mParser.setInput(stream, null);
 			adapter = parseXml("superuser");
-		} catch(XmlVerMisException e){
-//			ee = true;
-		} catch(Exception e){
+		} catch (Exception e) {
 			Log.e(TAG, e.getMessage(), e);
 		} finally {
 	        try {
-	        	if (in != null)
-	        		in.close();
-//	        	if(ee){
-//	        		file.delete();
-//	        	}
+	        	if (stream != null)
+	        		stream.close();
 	        } catch (IOException ioe) {
 	        	Log.e(TAG, ioe.getMessage(), ioe);
 	        }
 		}
-
 		return adapter;
 	}
 	
-	public static List<Location> getDemoLocationsFromFile(String filename) {
-		Log.i(TAG, String.format("Parsing data from file '%s'", filename));
-//		boolean ee = false;
-		
-		List<Location> result = new ArrayList<Location>();
-		
-		File file = new File(filename);
-		if (!file.exists() || !file.canRead()) {
-			Log.w(TAG, String.format("File '%s' doesn't exists or is not readable", filename));
-			return result;
-		}
-
-		InputStream in = null;
+	/**
+	 * Factory for parsing locations from asset.
+	 * @param context
+	 * @param filename
+	 * @return list of locations or empty list
+	 */
+	public static List<Location> getDemoLocationsFromAsset(Context context, String filename) {
+		Log.i(TAG, String.format("Loading locations from asset '%s'", filename));
+		List<Location> locations = new ArrayList<Location>();
+		InputStream stream = null;
 		try {
-			in = new BufferedInputStream(new FileInputStream(file));
+			stream = new BufferedInputStream(context.getAssets().open(filename));
 			mParser = Xml.newPullParser();
 			mParser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false);
-			mParser.setInput(in, null);
+			mParser.setInput(stream, null);
 			mParser.nextTag();
 			
 			String version = getSecureAttrValue(ns, VERSION);
-			
-			if(!version.equals(COM_VER))
+			if (!version.equals(COM_VER))
 				throw new ComVerMisException(mComVerMisExcMessage + "Expected: " + COM_VER + " but got: " + version);
 			
-			result = parseRooms();
-		} catch(ComVerMisException e){
-//			ee = true;
-		} catch(Exception e){
+			locations = parseRooms();
+		} catch (Exception e) {
 			Log.e(TAG, e.getMessage(), e);
 		} finally {
 	        try {
-	        	if (in != null)
-	        		in.close();
-//	        	if(ee){
-//	        		file.delete();
-//	        	}
+	        	if (stream != null)
+	        		stream.close();
 	        } catch (IOException ioe) {
 	        	Log.e(TAG, ioe.getMessage(), ioe);
 	        }
 		}
-
-		return result;
+		return locations;
 	}
+
 }

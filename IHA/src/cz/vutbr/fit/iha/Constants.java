@@ -1,64 +1,37 @@
-/*! \mainpage 
- * \section todo doxygen main page :-)
- * Some awesome first page here
- * \section other important stuffs
- * Put Here
- */
-
 /**
- * @brief Package for whole application resources
+ * Package for whole application resources
  */
 package cz.vutbr.fit.iha;
 
 
 /**
- * @brief Class for all constants
+ * Class for all constants
  * @author ThinkDeep
+ * @author Robyer
  */
 public final class Constants {
 	
 	/**
-	 * Footing for pass from LocationScreenActivity to DataOfLocationScreenActivity
+	 * Footing for pass between activities 
 	 */
-	public static final String LOCATION_CLICKED = "LOCATION_CLICKED";
-	
-	/**
-	 * Footing for pass from DataOfLocationScreenActivity to SensorDetailActivity
-	 */
-	public static final String DEVICE_CLICKED = "DEVICE_CLICKED";
-	
-	/**
-	 * Footing for pass from AddAdapterActivity to RegistrationActivity
-	 */
-	public static final String ADAPTER_SERIAL_NUMBER = "ADAPTER_SERIAL_NUMBER";
+	public static final String LOCATION_CLICKED = "LOCATION_CLICKED"; 			// LocationScreenActivity -> DataOfLocationScreenActivity
+	public static final String DEVICE_CLICKED = "DEVICE_CLICKED"; 				// DataOfLocationScreenActivity -> SensorDetailActivity
+	public static final String ADAPTER_SERIAL_NUMBER = "ADAPTER_SERIAL_NUMBER";	// AddAdapterActivity -> RegistrationActivity
 	
 	/**
 	 * Not used
 	 */
 	public static final String ADAPTER_ID = "ADAPTER_ID";
-	
-	/**
-	 * Not used
-	 */
 	public static final String ADAPTER_VERSION = "ADAPTER_VERSION";
 	
 	/**
-	 * Filename of file with prepared household sensors
+	 * Assets with prepared devices and locations for demo mode
 	 */
-	public static final String DEMO_FILENAME = "komunikace.xml";
-	public static final String DEMO_ASSETNAME = "komunikace.xml";
-	
-	public static final String DEMO_LOCATION_FILENAME = "lokace.xml";
-	public static final String DEMO_LOCATION_ASSETNAME = "lokace.xml";
+	public static final String ASSET_ADAPTERS_FILENAME = "komunikace.xml";
+	public static final String ASSET_LOCATIONS_FILENAME = "lokace.xml";
 	
 	/**
-	 * Filename of demo file with prepared household log info from one sensor
-	 */
-	public static final String DEMO_LOG_FILENAME = "sensor0.log";
-	public static final String DEMO_LOG_ASSETNAME = "sensor0.log";
-	
-	/**
-	 * Device types
+	 * Device's types
 	 */
 	public static final int TYPE_UNKNOWN = -1; 		// unknown device
 	public static final int TYPE_TEMPERATURE = 0; 	// temperature meter
