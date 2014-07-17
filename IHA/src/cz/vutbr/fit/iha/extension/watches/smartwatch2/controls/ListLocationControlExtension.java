@@ -205,7 +205,7 @@ public class ListLocationControlExtension extends ManagedControlExtension {
 			// listItem.listItemPosition);
 			// mControlManager.startControl(intent);
 			List<BaseDevice> sensors = mAdapter.getDevicesByLocation(mLocations
-					.get(listItem.listItemPosition).getName());
+					.get(listItem.listItemPosition).getId());
 			Intent intent;
 			if (sensors.size() < 1) {
 				intent = new Intent(mContext, TextControl.class);
@@ -216,7 +216,7 @@ public class ListLocationControlExtension extends ManagedControlExtension {
 				intent.putExtra(ListSensorControlExtension.EXTRA_ADAPTER_ID,
 						mAdapter.getId());
 				intent.putExtra(ListSensorControlExtension.EXTRA_LOCATION_NAME,
-						mLocations.get(listItem.listItemPosition).getName());
+						mLocations.get(listItem.listItemPosition).getId());
 			}
 			mControlManager.startControl(intent);
 		}
