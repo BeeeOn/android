@@ -270,7 +270,7 @@ public class XmlParsers {
 			if(!device.isInitialized()){
 				device.setInvolveTime(getSecureAttrValue(ns, INVOLVED));
 			}
-			device.setVisibility(getSecureAttrValue(ns, VISIBILITY).toLowerCase(Locale.US).charAt(0));
+			device.setVisibility(BaseDevice.VisibilityState.fromValue(getSecureAttrValue(ns, VISIBILITY)));
 			
 			String nameTag = null;
 			

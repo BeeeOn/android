@@ -40,7 +40,7 @@ public abstract class BaseDevice {
 	}
 	
 	/**
-	 * Represents settings of device which could be saved to server.
+	 * Represents settings of device which could be saved to server
 	 */
 	public enum SaveDevice {
 		SAVE_ALL,			// save all settings
@@ -53,14 +53,30 @@ public abstract class BaseDevice {
 	}
 	
 	/**
-	 * Represents visibility state of device 
-	 * @author ThinkDeep
-	 *
+	 * Represents visibility state of device
 	 */
 	public enum VisibilityState {
-		VISIBLE,
-		HIDDEN,
-		DELETE
+		VISIBLE("i"),		// device is visible (standard state)
+		HIDDEN("o"),		// device is hidden
+		DELETE("x");		// device is deleted
+		
+		private final String mVisibility;
+		
+		private VisibilityState(String visibility) {
+			mVisibility = visibility;
+		}
+		
+		public String getValue() {
+			return mVisibility;
+		}
+		
+		public static VisibilityState fromValue(String value) {
+			for (VisibilityState item : values()) {
+				if (value.equalsIgnoreCase(item.getValue()))
+					return item;
+			}
+			throw new IllegalArgumentException("Invalid VisibilityState value");
+		}
 	}
 	
 	/**
@@ -86,7 +102,6 @@ public abstract class BaseDevice {
 	 * @return
 	 */
 	public abstract int getTypeIconResource();
-	
 	
 	/**
 	 * Get value as a string
@@ -213,56 +228,16 @@ public abstract class BaseDevice {
 	 * Get visibility of device
 	 * @return visibility
 	 */
-	public char getVisibilityChar(){
-		return getVisibilityFromState(mVisibility);
-	}
-	
-	/**
-	 * Set visibility of device
-	 * @param visibility
-	 */
-	public void setVisibility(char visibility){
-		mVisibility = getVisibilityFromChar(visibility);
-	}
-	
-	public void setVisibility(VisibilityState state){
-		mVisibility = state;
-	}
-	
-	public VisibilityState getVisibility(){
+	public VisibilityState getVisibility() {
 		return mVisibility;
 	}
 	
-	// FIXME: refactor this - these methods should be inside VisibilityState enum
 	/**
-	 * Method parse char to visibitilyState
+	 * Setting visibility of device
 	 * @param visibility
-	 * @return VisibilityState by char or HIDDEN
 	 */
-	public static VisibilityState getVisibilityFromChar(char visibility){
-		switch(visibility){
-			case 'i':
-				return VisibilityState.VISIBLE;
-			case 'o':
-				return VisibilityState.HIDDEN;
-			case 'x':
-				return VisibilityState.DELETE;
-			default:
-				return VisibilityState.HIDDEN;
-		}
-	}
-	
-	public static char getVisibilityFromState(VisibilityState visibility){
-		switch(visibility){
-		case DELETE:
-			return 'x';
-		case HIDDEN:
-			return 'o';
-		case VISIBLE:
-			return 'i';
-		default:
-			return 'o';
-		}
+	public void setVisibility(VisibilityState visibility) {
+		mVisibility = visibility;
 	}
 	
 	/**
@@ -361,7 +336,7 @@ public abstract class BaseDevice {
 
 		result += "Name: " + mName + "\n";
 		result += "Location: " + mLocationId + "\n";
-		result += "Visibility: " + mVisibility + "\n";
+		result += "Visibility: " + mVisibility.getValue() + "\n";
 		result += "Initialized: " + mInitialized + "\n";
 		result += "Battery: " + mBattery + "\n";
 		result += "Logging: " + mLogging + "\n";
