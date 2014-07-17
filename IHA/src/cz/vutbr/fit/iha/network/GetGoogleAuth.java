@@ -26,7 +26,7 @@ import cz.vutbr.fit.iha.thread.ToastMessageThread;
  * Get basic user info and picture if is possible 
  * @author Leopold Podmolik
  */
-public class GetGoogleAuth extends AsyncTask<Void, Void, STATES> {
+public class GetGoogleAuth extends AsyncTask<Void, Void, GoogleAuthState> {
 	private static final String TAG = "AUTH";
 	private static GetGoogleAuth mThis;
 	
@@ -143,28 +143,28 @@ public class GetGoogleAuth extends AsyncTask<Void, Void, STATES> {
 	//////////////////////////////////////////////////////////////////////////////////////
 	
 	@Override
-	protected STATES doInBackground(Void... params) {
+	protected GoogleAuthState doInBackground(Void... params) {
 		try {
 			mToken = GoogleAuthUtil.getToken(mActivity, mEmail,"oauth2:https://www.googleapis.com/auth/userinfo.profile");
 			Log.d(TAG, "Token");
 			
 			fetchInfoFromProfileServer(mToken);
 			
-			return STATES.eOK;
+			return GoogleAuthState.eOK;
 		} catch (UserRecoverableAuthException userRecoverableException) {
 			mActivity.startActivityForResult(userRecoverableException.getIntent(),LoginActivity.USER_RECOVERABLE_AUTH);
-			return STATES.eRecorver;
+			return GoogleAuthState.eRecorver;
 		} catch(IOException e){
-			return STATES.eNoConnection;
+			return GoogleAuthState.eNoConnection;
 		} catch (Exception e) {
 			//TODO: check more exceptions and show toast 
 			e.printStackTrace();
 		}
-		return STATES.eUnknown;
+		return GoogleAuthState.eUnknown;
 	}
 	
 	@Override
-	protected void onPostExecute(final STATES result) {
+	protected void onPostExecute(final GoogleAuthState result) {
 		super.onPostExecute(result);
 
 		switch(result){
