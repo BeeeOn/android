@@ -5,7 +5,7 @@ package cz.vutbr.fit.iha;
  */
 public class User {
 
-	private final String mName;
+	private String mName;
 	
 	private final String mEmail;
 	
@@ -48,6 +48,10 @@ public class User {
 	
 	public String getName() {
 		return mName;
+	}
+	
+	public void setName(String name){
+		mName = name;
 	}
 	
 	public String getEmail() {

@@ -296,7 +296,9 @@ public class GetGoogleAuth extends AsyncTask<Void, Void, STATES> {
           String picture = getPicture(respond);
           Log.d(TAG,"Hello " + name + "!");
           Log.i(TAG, picture);
+          //TODO: refactor
           this.mUserName = name;
+          ActualUser.getActualUser().setName(name);
           this.mPictureURL = picture;
           is.close();
 //          synchronized(this) {

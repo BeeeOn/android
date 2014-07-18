@@ -156,9 +156,10 @@ public class XmlCreator {
 	 * @param id is 0 if is NOT signed in, non-zero otherwise 
 	 * @param gtoken token from google
 	 * @param serialNumber of new adapter
+	 * @param lokale language of APP {cs, en}
 	 * @return XML message
 	 */
-	public static String createSignUp(String email, String id, String gtoken, String serialNumber){
+	public static String createSignUp(String email, String id, String gtoken, String serialNumber, String lokale){
 		XmlSerializer serializer = Xml.newSerializer();
 		StringWriter writer = new StringWriter();
 		try{
@@ -176,6 +177,7 @@ public class XmlCreator {
 				serializer.startTag(ns, USER);
 				serializer.attribute(ns, EMAIL, email);
 				serializer.attribute(ns, GTOKEN, gtoken);
+				serializer.attribute(ns, LOCALE, lokale);
 				serializer.endTag(ns, USER);
 
 			serializer.endTag(ns, COM_ROOT);
@@ -653,7 +655,7 @@ public class XmlCreator {
 	 * @param devicesId list of devices id
 	 * @return addView message
 	 */
-	public static String createAddView(String id, String adapterId, String viewName, int iconNum, List<BaseDevice>devices){
+	public static String createAddView(String id, String viewName, int iconNum, List<BaseDevice>devices){
 		XmlSerializer serializer = Xml.newSerializer();
 		StringWriter writer = new StringWriter();
 		try{
@@ -666,7 +668,6 @@ public class XmlCreator {
 			serializer.attribute(ns, VERSION, GVER);
 			serializer.attribute(ns, NAME, viewName);
 			serializer.attribute(ns, ICON, Integer.toString(iconNum));
-			serializer.attribute(ns, ADAPTER, adapterId);
 			
 			for(BaseDevice device : devices){
 				serializer.startTag(ns, DEVICE);
@@ -690,7 +691,7 @@ public class XmlCreator {
 	 * @param adapterId
 	 * @return getViews message
 	 */
-	public static String createGetViews(String id, String adapterId){
+	public static String createGetViews(String id){
 		XmlSerializer serializer = Xml.newSerializer();
 		StringWriter writer = new StringWriter();
 		try{
@@ -701,7 +702,6 @@ public class XmlCreator {
 			serializer.attribute(ns, ID, id);
 			serializer.attribute(ns, STATE, GETVIEWS);
 			serializer.attribute(ns, VERSION, GVER);
-			serializer.attribute(ns, ADAPTER, adapterId);
 			
 			serializer.endTag(ns, COM_ROOT);
 			serializer.endDocument();
@@ -719,7 +719,7 @@ public class XmlCreator {
 	 * @param viewName of custom view
 	 * @return DelVIew message
 	 */
-	public static String createDelView(String id, String adapterId, String viewName){
+	public static String createDelView(String id, String viewName){
 		XmlSerializer serializer = Xml.newSerializer();
 		StringWriter writer = new StringWriter();
 		try{
@@ -731,7 +731,6 @@ public class XmlCreator {
 			serializer.attribute(ns, STATE, DELVIEW);
 			serializer.attribute(ns, VERSION, GVER);
 			serializer.attribute(ns, NAME, viewName);
-			serializer.attribute(ns, ADAPTER, adapterId);
 			
 			serializer.endTag(ns, COM_ROOT);
 			serializer.endDocument();
@@ -750,7 +749,7 @@ public class XmlCreator {
 	 * @param devices hashMap with device id as key, and action as value
 	 * @return UpdateValue message
 	 */
-	public static String createUpdateView(String id, String adapterId, String viewName, int iconNum, HashMap<String, String> devices){
+	public static String createUpdateView(String id, String viewName, int iconNum, HashMap<String, String> devices){
 		XmlSerializer serializer = Xml.newSerializer();
 		StringWriter writer = new StringWriter();
 		try{
@@ -763,7 +762,6 @@ public class XmlCreator {
 			serializer.attribute(ns, VERSION, GVER);
 			serializer.attribute(ns, NAME, viewName);
 			serializer.attribute(ns, ICON, Integer.toString(iconNum));
-			serializer.attribute(ns, ADAPTER, adapterId);
 			
 			for(Entry<String, String> device : devices.entrySet()){
 				serializer.startTag(ns, DEVICE);
@@ -928,7 +926,6 @@ public class XmlCreator {
 			serializer.attribute(ns, ADAPTER, adapterId);
 			
 				serializer.startTag(ns, LOCATION);
-				serializer.attribute(ns, ID, location.getId());
 				serializer.attribute(ns, TYPE,location.getType()+"");
 				serializer.text(location.getName());
 			
@@ -963,7 +960,6 @@ public class XmlCreator {
 			
 				serializer.startTag(ns, LOCATION);
 				serializer.attribute(ns, ID, location.getId());
-				serializer.attribute(ns, TYPE,location.getType()+"");
 			
 			serializer.endTag(ns, COM_ROOT);
 			serializer.endDocument();
