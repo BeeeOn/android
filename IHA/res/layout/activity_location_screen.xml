@@ -2,37 +2,41 @@
     android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
- 
+
     <FrameLayout
         android:id="@+id/content_frame"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-         >
-        
+        android:layout_height="match_parent" >
+
         <android.support.v4.view.ViewPager
-		    xmlns:android="http://schemas.android.com/apk/res/android"
-		    android:id="@+id/pager"
-		    android:layout_width="match_parent"
-		    android:layout_height="match_parent">
-		</android.support.v4.view.ViewPager>
-        
-        
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/pager"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" >
+        </android.support.v4.view.ViewPager>
     </FrameLayout>
- 
-    <ListView
+
+    <se.emilsjolander.stickylistheaders.StickyListHeadersListView
         android:id="@+id/listview_drawer"
         android:layout_width="240dp"
         android:layout_height="match_parent"
         android:layout_gravity="start"
         android:background="@color/light_gray"
         android:choiceMode="singleChoice"
-        android:divider="@android:color/transparent"
         android:dividerHeight="0dp" />
- 
-</android.support.v4.widget.DrawerLayout>
 
+<!--     <ListView -->
+<!--         android:id="@+id/listview_drawer" -->
+<!--         android:layout_width="240dp" -->
+<!--         android:layout_height="match_parent" -->
+<!--         android:layout_gravity="start" -->
+<!--         android:background="@color/light_gray" -->
+<!--         android:choiceMode="singleChoice" -->
+<!--         android:divider="@android:color/transparent" -->
+<!--         android:dividerHeight="0dp" /> -->
 
-<!--LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+</android.support.v4.widget.DrawerLayout><!--
+LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/location_layout"
     android:layout_width="match_parent"
@@ -55,4 +59,5 @@
         </LinearLayout>
         
     </ScrollView>
-</LinearLayout-->
+</LinearLayout
+-->

@@ -1,172 +1,151 @@
 package cz.vutbr.fit.iha;
 
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.List;
 
+import cz.vutbr.fit.iha.activity.menuItem.MenuItem;
+
+import se.emilsjolander.stickylistheaders.StickyListHeadersAdapter;
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.ImageView;
-import android.widget.TextView;
+import android.widget.SectionIndexer;
 
 /**
  * Class for location left drawer menu
- * @author ThinkDeep
- *
  */
-public class MenuListAdapter extends BaseAdapter {
+public class MenuListAdapter extends BaseAdapter implements
+		StickyListHeadersAdapter, SectionIndexer {
+	private final Context mContext;
 
-	// Declare Variables
-	Context context;
-	
-	private ArrayList<String> mTitle;
-	private ArrayList<String> mSubTitle;
-	private ArrayList<Integer> mIcon;
-	
 	private LayoutInflater mInflater;
-	
-	private ArrayList<String> mHeaders;
-	private ArrayList<Integer> mLengths;
-	private int mSectionStartPosition = -1;
-	private int mSSP;
-	private int mHeaderPosition = 0;
 
-	/**
-	 * Constructor
-	 * @param context
-	 */
-	public MenuListAdapter(Context context){
-		this.context = context;
-		mTitle = new ArrayList<String>();
-		mSubTitle = new ArrayList<String>();
-		mIcon = new ArrayList<Integer>();
-		mHeaders = new ArrayList<String>();
-		mLengths = new ArrayList<Integer>();
-	}
+	private List<MenuItem> mListItem;
+
+	private List<MenuItem> mListHeader;
+
+	private List<Integer> mListHeaderPos;
 	
-	/**
-	 * Constructor
-	 * @param context
-	 * @param title
-	 * @param subtitle
-	 * @param icon
-	 */
-	public MenuListAdapter(Context context, ArrayList<String> title, ArrayList<String> subtitle, ArrayList<Integer> icon) {
-		this.context = context;
-		this.mTitle = title;
-		this.mSubTitle = subtitle;
-		this.mIcon = icon;
-		this.mHeaders = new ArrayList<String>();
-		this.mLengths = new ArrayList<Integer>();
+//	private List<MenuItem> mListAllItems;
+
+	public MenuListAdapter(Context context) {
+		mContext = context;
+		mInflater = LayoutInflater.from(context);
+		mListHeader = new ArrayList<MenuItem>();
+		mListItem = new ArrayList<MenuItem>();
+		mListHeaderPos = new ArrayList<Integer>();
+//		mListAllItems = new ArrayList<MenuItem>();
 	}
 
+	public void addItem(MenuItem item) {
+		mListItem.add(item);
+//		mListAllItems.add(item);
+	}
+
+	public void addHeader(MenuItem item) {
+		mListHeader.add(item);
+//		mListAllItems.add(item);
+		mListHeaderPos.add(mListItem.size());
+	}
+	
 	@Override
 	public int getCount() {
-		return mTitle.size() + mHeaders.size();
+		return mListItem.size();
 	}
 
 	@Override
 	public Object getItem(int position) {
-		return mTitle.get(position);
+		if (position < 0) {
+			position = 0;
+		} else if (position > mListItem.size()-1) {
+			position = mListItem.size()-1;
+		}
+		return mListItem.get(position);
 	}
 
 	@Override
 	public long getItemId(int position) {
 		return position;
 	}
-	
-	public void addSection(String section, ArrayList<String> title, ArrayList<String> subtitle, ArrayList<Integer> icon){
-		mHeaders.add(section);
-		mLengths.add(title.size());
-		if(mSectionStartPosition < 0){
-			mSectionStartPosition = mTitle.size();
-			mSSP = mTitle.size();
-		}
-		
-		mTitle.addAll(title);
-		mSubTitle.addAll(subtitle);
-		mIcon.addAll(icon);
+
+	@Override
+	public View getView(int position, View convertView, ViewGroup parent) {
+		convertView = mInflater.inflate(mListItem.get(position).getLayout(), parent, false);
+		mListItem.get(position).setView(convertView);
+		return convertView;
 	}
 
-	public View getView(int position, View convertView, ViewGroup parent) {
-		// Declare Variables
-		TextView txtTitle;
-		TextView txtSubTitle;
-		ImageView imgIcon;
-		TextView header;
-		
-		View resultView;
+	@Override
+	public long getHeaderId(int position) {
+		return mListHeader.get(getSectionForPosition(position)).hashCode();
+	}
 
-		mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		if(mSectionStartPosition != position){
-			resultView = mInflater.inflate(R.layout.drawer_listview_item, parent, false);
-			
-			// Locate the TextViews in drawer_list_item.xml
-			txtTitle = (TextView) resultView.findViewById(R.id.title);
-			txtSubTitle = (TextView) resultView.findViewById(R.id.subtitle);
+	@Override
+	public View getHeaderView(int position, View convertView, ViewGroup parent) {
+		convertView = mInflater.inflate(mListHeader.get(getSectionForPosition(position)).getLayout(), parent, false);
+		mListHeader.get(getSectionForPosition(position)).setView(convertView);
+		return convertView;
 
-			// Locate the ImageView in drawer_list_item.xml
-			imgIcon = (ImageView) resultView.findViewById(R.id.icon);
+	}
 
-			// Set the results into TextViews
-			txtTitle.setText(mTitle.get(position-mHeaderPosition));
-			txtSubTitle.setText(mSubTitle.get(position-mHeaderPosition));
+	@Override
+	public Object[] getSections() {
+		return mListHeader.toArray(new MenuItem[mListHeader.size()]);
+	}
 
-			// Set the results into ImageView
-			imgIcon.setImageResource(mIcon.get(position-mHeaderPosition));
-			
-		}else{
-			resultView = mInflater.inflate(R.layout.drawer_listview_header, parent, false);
-			
-			if(mHeaderPosition < mHeaders.size()){
-				header = (TextView)resultView.findViewById(R.id.section);
-				header.setText(mHeaders.get(mHeaderPosition));
-				
-				mSectionStartPosition += mLengths.get(mHeaderPosition) + 1;
+	@Override
+	public int getPositionForSection(int section) {
+		if (mListHeaderPos.size() == 0) {
+			return 0;
+		}
 
-				mHeaderPosition++;
+		if (section >= mListHeaderPos.size()) {
+			section = mListHeaderPos.size() - 1;
+		} else if (section < 0) {
+			section = 0;
+		}
+		return mListHeaderPos.get(section);
+	}
+
+	@Override
+	public int getSectionForPosition(int position) {
+		for (int i = 0; i < mListHeaderPos.size(); i++) {
+			if (position < mListHeaderPos.get(i)) {
+				return i - 1;
 			}
 		}
-		if(position == getCount()-1){
-			mHeaderPosition = 0;
-			mSectionStartPosition = mSSP;
-		}
-		
-		return resultView;
-	}
-	
-	public TYPE getTypeByPosition(int position){
-		if(position == 0)
-			return TYPE.USER;
-		if(mSectionStartPosition > 0){
-			if(position == mSectionStartPosition)
-				return TYPE.HEADER;
-			if(position > mSectionStartPosition && position <= (1 + mLengths.get(0)))
-				return TYPE.LOCATION;
-			if(position == (1 + 1 + mLengths.get(0)))
-				return TYPE.HEADER;
-			else
-				return TYPE.VIEW;
-		}
-		
-		return TYPE.HEADER;
-	}
-	
-	public int getTypePosition(int position, TYPE type){
-		if(type == TYPE.LOCATION){
-			return position - 2;
-		}
-		if(type == TYPE.VIEW){
-			return position - 3 - mLengths.get(0);
-		}
-		return 0;
-	}
-	
-	public enum TYPE{
-		USER, HEADER, LOCATION, VIEW
-	}
+		return mListHeaderPos.size() - 1;
 
+	}
+	
+	public void log() {
+		Log.i("MENU","ITEMS:");
+		for (int i = 0; i < mListItem.size(); i++) {
+			Log.i("MENU","  " + String.valueOf(i) + ": "+mListItem.get(i).getId());
+		}
+		
+		Log.i("MENU","###########################");
+		
+		Log.i("MENU", "HEADERS:");
+		for (int i = 0; i < mListHeader.size(); i++) {
+			Log.i("MENU","  " + String.valueOf(i) + ": "+mListHeader.get(i).getId());
+		}
+		
+		Log.i("MENU","###########################");
+		
+//		Log.i("MENU", "ALL:");
+//		for (int i = 0; i < mListAllItems.size(); i++) {
+//			Log.i("MENU","  " + String.valueOf(i) + ": "+mListAllItems.get(i).getId());
+//		}
+		
+		Log.i("MENU","###########################");
+		
+		Log.i("MENU","POSITIONS:");
+		for (Integer actItem:mListHeaderPos) {
+			Log.i("MENU", "  " + String.valueOf(actItem));
+		}
+	}
 }
