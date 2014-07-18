@@ -266,7 +266,7 @@ public class LocationScreenActivity extends BaseActivity {
 				R.string.action_about), R.drawable.loc_unknown,
 				cz.vutbr.fit.iha.activity.menuItem.MenuItem.ID_ABOUT));
 
-		mMenuAdapter.log();
+//		mMenuAdapter.log();
 
 		// Set the MenuListAdapter to the ListView
 		mDrawerList.setAdapter(mMenuAdapter);
@@ -331,16 +331,24 @@ public class LocationScreenActivity extends BaseActivity {
 			@Override
 			public boolean onItemLongClick(AdapterView<?> parent, View view,
 					int position, long id) {
-
-				Bundle bundle = new Bundle();
-				String myMessage = mLocations.get(position).getId();
-				bundle.putString("locationID", myMessage);
-				Intent intent = new Intent(mActivity,
-						LocationDetailActivity.class);
-				intent.putExtras(bundle);
-				startActivityForResult(intent, SENSOR_DETAIL);
-
-				Log.d(TAG, "Long press");
+				Log.d(TAG, "Item Long press");
+				
+				cz.vutbr.fit.iha.activity.menuItem.MenuItem item = (cz.vutbr.fit.iha.activity.menuItem.MenuItem) mMenuAdapter
+						.getItem(position);
+				switch (item.getType()) {
+				case LOCATION:
+					Bundle bundle = new Bundle();
+					String myMessage = item.getId();
+					bundle.putString("locationID", myMessage);
+					Intent intent = new Intent(mActivity,
+							LocationDetailActivity.class);
+					intent.putExtras(bundle);
+					startActivityForResult(intent, SENSOR_DETAIL);
+					break;
+				default:
+					// do nothing
+					break;
+				}
 				return true;
 			}
 

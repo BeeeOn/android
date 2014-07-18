@@ -16,11 +16,11 @@
         android:background="@color/gray" />
 
     <LinearLayout
-        android:orientation="horizontal"
-        android:layout_weight="1"
         android:layout_width="fill_parent"
         android:layout_height="0dp"
-        android:gravity="center_vertical">
+        android:layout_weight="1"
+        android:gravity="center_vertical"
+        android:orientation="horizontal" >
 
         <ImageView
             android:id="@+id/icon"
