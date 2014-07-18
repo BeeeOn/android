@@ -44,6 +44,7 @@ import cz.vutbr.fit.iha.adapter.parser.XmlCreator;
 import cz.vutbr.fit.iha.adapter.parser.XmlParsers;
 import cz.vutbr.fit.iha.adapter.parser.XmlParsers.State;
 import cz.vutbr.fit.iha.exception.CommunicationException;
+import cz.vutbr.fit.iha.exception.FalseException;
 import cz.vutbr.fit.iha.exception.NoConnectionException;
 import cz.vutbr.fit.iha.exception.NotImplementedException;
 import cz.vutbr.fit.iha.exception.NotRegAException;
@@ -90,6 +91,7 @@ public class Network {
 	
 	/**
 	 * Constructor.
+	 * 
 	 * @param context
 	 */
 	public Network(Context context) {
@@ -126,11 +128,7 @@ public class Network {
 	 * @throws SSLHandshakeException
 	 *             *IMPORTANT* TLS handshake failed
 	 */
-	private static String startCommunication(String request)
-			throws IOException, CertificateException, KeyStoreException,
-					NoSuchAlgorithmException, KeyManagementException,
-					UnknownHostException, SSLHandshakeException
-	{
+	private static String startCommunication(String request) throws IOException, CertificateException, KeyStoreException, NoSuchAlgorithmException, KeyManagementException, UnknownHostException, SSLHandshakeException {
 
 		/*
 		 * opening CA certificate from assets
@@ -163,8 +161,7 @@ public class Network {
 		sslContext.init(null, tmf.getTrustManagers(), null);
 
 		// Open SSLSocket directly to server
-		SSLSocket socket = (SSLSocket) sslContext.getSocketFactory()
-				.createSocket(SERVER_ADDR, SERVER_PORT);
+		SSLSocket socket = (SSLSocket) sslContext.getSocketFactory().createSocket(SERVER_ADDR, SERVER_PORT);
 
 		HostnameVerifier hv = HttpsURLConnection.getDefaultHostnameVerifier();
 		SSLSession s = socket.getSession();
@@ -172,16 +169,13 @@ public class Network {
 		// Verify that the certificate hostName
 		// This is due to lack of SNI support in the current SSLSocket.
 		if (!hv.verify(SERVER_CN_CERTIFICATE, s)) {
-			throw new SSLHandshakeException("Expected CN value:"
-					+ SERVER_CN_CERTIFICATE + ", found " + s.getPeerPrincipal());
+			throw new SSLHandshakeException("Expected CN value:" + SERVER_CN_CERTIFICATE + ", found " + s.getPeerPrincipal());
 		}
 
 		// At this point SSLSocket performed certificate verification and
 		// we have performed hostName verification, so it is safe to proceed.
-		BufferedWriter w = new BufferedWriter(new OutputStreamWriter(
-				socket.getOutputStream()));
-		BufferedReader r = new BufferedReader(new InputStreamReader(
-				socket.getInputStream()));
+		BufferedWriter w = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
+		BufferedReader r = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 
 		w.write(request, 0, request.length());
 		w.flush();
@@ -203,6 +197,7 @@ public class Network {
 
 	/**
 	 * Checks if Internet connection is available.
+	 * 
 	 * @return true if available, false otherwise
 	 * @throws NotImplementedException
 	 */
@@ -213,7 +208,8 @@ public class Network {
 	}
 	
 	private void doResign() {
-		//TODO: maybe use diffrenD way to resign, case stopping of thread, manage this after implement in the controller
+		// TODO: maybe use diffrenD way to resign, case stopping of thread,
+		// manage this after implement in the controller
 		try {
 			GetGoogleAuth.getGetGoogleAuth().execute();
 		} catch (Exception e) {
@@ -263,13 +259,23 @@ public class Network {
 	}
 
 	/**
-	 * Method signIn user given by its email to server, BUT before calling must call GetGoogleAuth to get googleToken in it and init ActualUser
-	 * @param userEmail of current user
+	 * Method signIn user given by its email to server, BUT before calling must
+	 * call GetGoogleAuth to get googleToken in it and init ActualUser
+	 * 
+	 * @param userEmail
+	 *            of current user
 	 * @return ActualUser
-	 * @throws NoConnectionException if there is no Internet connection
-	 * @throws CommunicationException if there is some problem with certificate, timeout, or other communication problem
-	 * @throws NotRegAException if this user is not registered on server and on server is NO FREE ADAPTER (without its lord)
-	 * @throws NotRegBException if this user is not registered on the server but there is FREE ADAPTER
+	 * @throws NoConnectionException
+	 *             if there is no Internet connection
+	 * @throws CommunicationException
+	 *             if there is some problem with certificate, timeout, or other
+	 *             communication problem
+	 * @throws NotRegAException
+	 *             if this user is not registered on server and on server is NO
+	 *             FREE ADAPTER (without its lord)
+	 * @throws NotRegBException
+	 *             if this user is not registered on the server but there is
+	 *             FREE ADAPTER
 	 */
 	public ActualUser signIn(String userEmail) throws NoConnectionException, CommunicationException, NotRegAException, NotRegBException{
 		String googleToken = getGoogleToken();
@@ -294,17 +300,27 @@ public class Network {
 		if(msg.getState() == State.NOTREGB){
 			throw new NotRegBException();
 		}
+		if (msg.getState() == State.FALSE) {
+			throw new FalseException(((FalseAnswer) msg.data));
+		}
 			
 		return null;
 	}
 	
 	/**
-	 * Method sign user up to adapter with its email, serial number of adapter (user is in role superuser)
-	 * @param email of registering user
-	 * @param serialNumber number of adapter to register
-	 * @param SessionId if is ID == 0 then needed google token, then the user is switch to work with new adapter, otherwise work with old
+	 * Method sign user up to adapter with its email, serial number of adapter
+	 * (user is in role superuser)
+	 * 
+	 * @param email
+	 *            of registering user
+	 * @param serialNumber
+	 *            number of adapter to register
+	 * @param SessionId
+	 *            if is ID == 0 then needed google token, then the user is
+	 *            switch to work with new adapter, otherwise work with old
 	 * @return true if everything goes well, false otherwise
-	 * @throws CommunicationException including message from server
+	 * @throws CommunicationException
+	 *             including message from server
 	 * @throws NoConnectionException
 	 */
 	public boolean signUp(String email, String serialNumber, int SessionId) throws CommunicationException, NoConnectionException{
@@ -319,7 +335,7 @@ public class Network {
 			throw new CommunicationException(e);
 		}
 		
-		String messageToSend = XmlCreator.createSignUp(email, Integer.toString(SessionId), googleToken, serialNumber);
+		String messageToSend = XmlCreator.createSignUp(email, Integer.toString(SessionId), googleToken, serialNumber, Locale.getDefault().getLanguage());
 		ParsedMessage msg = doRequest(messageToSend);
 		
 		if(msg.getSessionId() != 0 && msg.getState() == State.TRUE && ((String)msg.data).equals(SIGNUP)){
@@ -327,19 +343,23 @@ public class Network {
 			
 			ActualUser aUser = ActualUser.getActualUser();
 			aUser.setSessionId(Integer.toString(msg.getSessionId()));
+			mSessionId = msg.getSessionId();
 			
 			return true;
-		}else if(msg.getState() == State.FALSE && ((FalseAnswer)msg.data).getErrMessage().length() != 0){
-				throw new CommunicationException(((FalseAnswer)msg.data).getErrMessage());
-		}else
+		}
+		if (msg.getState() == State.FALSE) {
+				throw new FalseException(((FalseAnswer) msg.data));
+		} else
 			return false;
 	}
 	
 	/**
 	 * Method ask for list of adapters. User has to be sign in before
+	 * 
 	 * @return list of adapters or null
 	 * @throws NoConnectionException
 	 * @throws CommunicationException including message from server
+	 *             including message from server
 	 */
 	public List<Adapter> getAdapters() throws NoConnectionException, CommunicationException{
 		String messageToSend = XmlCreator.createGetAdapters(mSessionId);
@@ -348,7 +368,7 @@ public class Network {
 		if(msg.getState() == State.READY){
 			Log.d("IHA - Network", msg.getState().getValue());
 			
-			//http://stackoverflow.com/a/509288/1642090
+			// http://stackoverflow.com/a/509288/1642090
 			@SuppressWarnings("unchecked")
 			List<Adapter> result = (List<Adapter>) msg.data;
 			
@@ -365,7 +385,9 @@ public class Network {
 	
 	/**
 	 * Method ask for whole adapter data
-	 * @param adapterId of wanted adapter
+	 * 
+	 * @param adapterId
+	 *            of wanted adapter
 	 * @return Adapter
 	 * @throws NoConnectionException
 	 * @throws CommunicationException
@@ -391,8 +413,11 @@ public class Network {
 	
 	/**
 	 * Method change adapter id
-	 * @param oldId id to be changed
-	 * @param newId new id
+	 * 
+	 * @param oldId
+	 *            id to be changed
+	 * @param newId
+	 *            new id
 	 * @return true if change has been successfully
 	 * @throws NoConnectionException
 	 * @throws CommunicationException
@@ -418,6 +443,7 @@ public class Network {
 	
 	/**
 	 * Method send updated fields of devices
+	 * 
 	 * @param devices
 	 * @return true if everything goes well, false otherwise
 	 * @throws NoConnectionException 
@@ -440,13 +466,15 @@ public class Network {
 		}else
 			return false;
 	}
-	
+
 	/**
 	 * Method ask for actual data devices
-	 * @param devices list of devices to which needed actual data
+	 * 
+	 * @param devices
+	 *            list of devices to which needed actual data
 	 * @return list of updated devices fields
-	 * @throws NoConnectionException 
-	 * @throws CommunicationException 
+	 * @throws NoConnectionException
+	 * @throws CommunicationException
 	 */
 	public List<BaseDevice> update(String adapterId, List<BaseDevice> devices) throws NoConnectionException, CommunicationException{
 		String messageToSend = XmlCreator.createUpdate(Integer.toString(mSessionId), adapterId, devices);
@@ -472,12 +500,18 @@ public class Network {
 	
 	/**
 	 * Method ask for data of logs
-	 * @param deviceId id of wanted device
-	 * @param from date from log begin. Based of format YYYY-MM-DD-HH:MM:SS or empty string when wanted the oldest
-	 * @param to date to log end. Based of format YYYY-MM-DD-HH:MM:SS or empty string when wanted the newest
+	 * 
+	 * @param deviceId
+	 *            id of wanted device
+	 * @param from
+	 *            date from log begin. Based of format YYYY-MM-DD-HH:MM:SS or
+	 *            empty string when wanted the oldest
+	 * @param to
+	 *            date to log end. Based of format YYYY-MM-DD-HH:MM:SS or empty
+	 *            string when wanted the newest
 	 * @return list of rows with logged data
-	 * @throws NoConnectionException 
-	 * @throws CommunicationException 
+	 * @throws NoConnectionException
+	 * @throws CommunicationException
 	 */
 	public List<ContentRow> logName(String adapterId, String deviceId, int deviceType, String from, String to, String funcType, int interval) throws NoConnectionException, CommunicationException{
 		String messageToSend = XmlCreator.createLogName(Integer.toString(mSessionId), adapterId, deviceId, deviceType, from, to, funcType, interval);
@@ -503,14 +537,20 @@ public class Network {
 	}
 	
 	/**
-	 * Wrapper for logName method as protocol name. That name is a little bit misleading when no name of log file
-	 * is sending anymore.
-	 * @param deviceId id of wanted device
-	 * @param from date from log begin. Based of format YYYY-MM-DD-HH:MM:SS or empty string when wanted the oldest
-	 * @param to date to log end. Based of format YYYY-MM-DD-HH:MM:SS or empty string when wanted the newest
+	 * Wrapper for logName method as protocol name. That name is a little bit
+	 * misleading when no name of log file is sending anymore.
+	 * 
+	 * @param deviceId
+	 *            id of wanted device
+	 * @param from
+	 *            date from log begin. Based of format YYYY-MM-DD-HH:MM:SS or
+	 *            empty string when wanted the oldest
+	 * @param to
+	 *            date to log end. Based of format YYYY-MM-DD-HH:MM:SS or empty
+	 *            string when wanted the newest
 	 * @return list of rows with logged data
-	 * @throws CommunicationException 
-	 * @throws NoConnectionException 
+	 * @throws CommunicationException
+	 * @throws NoConnectionException
 	 */
 	public List<ContentRow> getLog(String adapterId, String deviceId, int deviceType, String from, String to, String funcType, int interval) throws NoConnectionException, CommunicationException{
 		return logName(adapterId, deviceId, deviceType, from, to, funcType, interval);
@@ -518,15 +558,19 @@ public class Network {
 	
 	/**
 	 * Method send newly created custom view
-	 * @param nameOfView name of new custom view
-	 * @param iconId icon that is assigned to the new view
-	 * @param deviceIds list of devices that are assigned to new view
-	 * @return true if everything goes well, false otherwise 
-	 * @throws NoConnectionException 
-	 * @throws CommunicationException 
+	 * 
+	 * @param nameOfView
+	 *            name of new custom view
+	 * @param iconId
+	 *            icon that is assigned to the new view
+	 * @param deviceIds
+	 *            list of devices that are assigned to new view
+	 * @return true if everything goes well, false otherwise
+	 * @throws NoConnectionException
+	 * @throws CommunicationException
 	 */
-	public boolean addView(String adapterId, String nameOfView, int iconId, List<BaseDevice> devices) throws NoConnectionException, CommunicationException{
-		String messageToSend = XmlCreator.createAddView(Integer.toString(mSessionId), adapterId, nameOfView, iconId, devices);
+	public boolean addView(String nameOfView, int iconId, List<BaseDevice> devices) throws NoConnectionException, CommunicationException{
+		String messageToSend = XmlCreator.createAddView(Integer.toString(mSessionId), nameOfView, iconId, devices);
 		ParsedMessage msg = doRequest(messageToSend);
 		
 		if(msg.getState() == State.TRUE){
@@ -536,7 +580,7 @@ public class Network {
 			
 		}else if(msg.getState() == State.RESIGN){
 			doResign();
-			return addView(adapterId, nameOfView, iconId, devices);
+			return addView(nameOfView, iconId, devices);
 			
 		}else if(msg.getState() == State.FALSE && ((FalseAnswer)msg.data).getErrMessage().length() != 0){
 			throw new CommunicationException(((FalseAnswer)msg.data).getErrMessage());
@@ -546,12 +590,13 @@ public class Network {
 	
 	/**
 	 * Method ask for list of all custom views
+	 * 
 	 * @return list of defined custom views
 	 * @throws NoConnectionException 
 	 * @throws CommunicationException 
 	 */
-	public List<CustomViewPair> getViews(String adapterId) throws NoConnectionException, CommunicationException{
-		String messageToSend = XmlCreator.createGetViews(Integer.toString(mSessionId), adapterId);
+	public List<CustomViewPair> getViews() throws NoConnectionException, CommunicationException{
+		String messageToSend = XmlCreator.createGetViews(Integer.toString(mSessionId));
 		ParsedMessage msg = doRequest(messageToSend);
 
 		if(msg.getState() == State.VIEWSLIST){
@@ -565,23 +610,25 @@ public class Network {
 			
 		}else if(msg.getState() == State.RESIGN){
 			doResign();
-			return getViews(adapterId);
+			return getViews();
 			
 		}else if(msg.getState() == State.FALSE && ((FalseAnswer)msg.data).getErrMessage().length() != 0){
 			throw new CommunicationException(((FalseAnswer)msg.data).getErrMessage());
 		}else
 			return null;
 	}
-	
+
 	/**
 	 * Method delete whole custom view from server
-	 * @param viewName name of view to erase
+	 * 
+	 * @param viewName
+	 *            name of view to erase
 	 * @return true if view has been deleted, false otherwise
-	 * @throws NoConnectionException 
-	 * @throws CommunicationException 
+	 * @throws NoConnectionException
+	 * @throws CommunicationException
 	 */
-	public boolean deleteView(String adapterId, String viewName) throws NoConnectionException, CommunicationException{
-		String messageToSend = XmlCreator.createDelView(Integer.toString(mSessionId), adapterId, viewName);
+	public boolean deleteView(String viewName) throws NoConnectionException, CommunicationException{
+		String messageToSend = XmlCreator.createDelView(Integer.toString(mSessionId), viewName);
 		ParsedMessage msg = doRequest(messageToSend);
 		
 		if(msg.getState() == State.TRUE){
@@ -591,7 +638,7 @@ public class Network {
 			
 		}else if(msg.getState() == State.RESIGN){
 			doResign();
-			return deleteView(adapterId, viewName);
+			return deleteView(viewName);
 			
 		}else if(msg.getState() == State.FALSE && ((FalseAnswer)msg.data).getErrMessage().length() != 0){
 			throw new CommunicationException(((FalseAnswer)msg.data).getErrMessage());
@@ -601,14 +648,18 @@ public class Network {
 	
 	/**
 	 * Method update custom view.
-	 * @param viewName name of view to be updated
-	 * @param devices map contains device id as key and action as value action={remove, add}
+	 * 
+	 * @param viewName
+	 *            name of view to be updated
+	 * @param devices
+	 *            map contains device id as key and action as value
+	 *            action={remove, add}
 	 * @return true if all devices has been updated, false otherwise
-	 * @throws NoConnectionException 
-	 * @throws CommunicationException 
+	 * @throws NoConnectionException
+	 * @throws CommunicationException
 	 */
-	public boolean updateView(String adapterId, String viewName, int iconId, HashMap<String, String> devices) throws NoConnectionException, CommunicationException{
-		String messageToSend = XmlCreator.createUpdateView(Integer.toString(mSessionId), adapterId, viewName, iconId, devices);
+	public boolean updateView(String viewName, int iconId, HashMap<String, String> devices) throws NoConnectionException, CommunicationException{
+		String messageToSend = XmlCreator.createUpdateView(Integer.toString(mSessionId), viewName, iconId, devices);
 		ParsedMessage msg = doRequest(messageToSend);
 		
 		if(msg.getState() == State.TRUE){
@@ -618,7 +669,7 @@ public class Network {
 			
 		}else if(msg.getState() == State.RESIGN){
 			doResign();
-			return updateView(adapterId, viewName, iconId, devices);
+			return updateView(viewName, iconId, devices);
 		}else if(msg.getState() == State.FALSE && ((FalseAnswer)msg.data).getErrMessage().length() != 0){
 			throw new CommunicationException(((FalseAnswer)msg.data).getErrMessage());
 		}else
@@ -627,10 +678,12 @@ public class Network {
 	
 	/**
 	 * Method add new users to current adapter
-	 * @param userNrole map contains email as key and role as value
+	 * 
+	 * @param userNrole
+	 *            map contains email as key and role as value
 	 * @return true if all users has been added, false otherwise
-	 * @throws NoConnectionException 
-	 * @throws CommunicationException 
+	 * @throws NoConnectionException
+	 * @throws CommunicationException
 	 */
 	public boolean addConnectionAccount(String adapterId, HashMap<String, String> userNrole) throws NoConnectionException, CommunicationException{
 		String messageToSend = XmlCreator.createAddConAccount(Integer.toString(mSessionId), adapterId, userNrole);
@@ -652,10 +705,12 @@ public class Network {
 	
 	/**
 	 * Method delete users from actual adapter
-	 * @param users email of user
+	 * 
+	 * @param users
+	 *            email of user
 	 * @return true if all users has been deleted, false otherwise
-	 * @throws NoConnectionException 
-	 * @throws CommunicationException 
+	 * @throws NoConnectionException
+	 * @throws CommunicationException
 	 */
 	public boolean deleteConnectionAccount(String adapterId, List<String> users) throws NoConnectionException, CommunicationException{
 		String messageToSend = XmlCreator.createDelConAccount(Integer.toString(mSessionId), adapterId, users);
@@ -677,6 +732,7 @@ public class Network {
 	
 	/**
 	 * Method ask for list of users of current adapter
+	 * 
 	 * @return Map of users where key is email and value is User object
 	 * @throws NoConnectionException 
 	 * @throws CommunicationException 
@@ -706,10 +762,12 @@ public class Network {
 	
 	/**
 	 * Method update users roles on server on current adapter
-	 * @param userNrole map with email as key and role as value
+	 * 
+	 * @param userNrole
+	 *            map with email as key and role as value
 	 * @return true if all accounts has been changed false otherwise
-	 * @throws NoConnectionException 
-	 * @throws CommunicationException 
+	 * @throws NoConnectionException
+	 * @throws CommunicationException
 	 */
 	public boolean changeConnectionAccount(String adapterId, HashMap<String, String> userNrole) throws NoConnectionException, CommunicationException{
 		String messageToSend = XmlCreator.createChangeConAccount(Integer.toString(mSessionId), adapterId, userNrole);
@@ -731,6 +789,7 @@ public class Network {
 	
 	/**
 	 * Method set wanted time zone to server
+	 * 
 	 * @NOTE using difference from GMT (UTC+0), reduced range <-12,12>
 	 * @param differenceToGMT
 	 * @return
@@ -758,6 +817,7 @@ public class Network {
 	
 	/**
 	 * Method call to server to get actual time zone
+	 * 
 	 * @return integer in range <-12,12>
 	 * @throws NoConnectionException
 	 * @throws CommunicationException
@@ -783,6 +843,7 @@ public class Network {
 
 	/**
 	 * Method call to server for actual list of locations 
+	 * 
 	 * @return List with locations
 	 * @throws NoConnectionException
 	 * @throws CommunicationException
@@ -812,7 +873,9 @@ public class Network {
 
 	/**
 	 * Method call to server to update location
-	 * @param locations to update
+	 * 
+	 * @param locations
+	 *            to update
 	 * @return true if everything is OK, false otherwise
 	 * @throws NoConnectionException
 	 * @throws CommunicationException
@@ -838,7 +901,9 @@ public class Network {
 
 	/**
 	 * Method call to server and delete location
-	 * @param location to delete
+	 * 
+	 * @param location
+	 *            to delete
 	 * @return true room is deleted, false otherwise
 	 */
 	public boolean deleteLocation(String adapterId, Location location) throws NoConnectionException, CommunicationException {
@@ -881,6 +946,6 @@ public class Network {
 			return null;
 	}
 	
-	//TODO: GetAlerts
-	//TODO: Alerts
+	// TODO: GetAlerts
+	// TODO: Alerts
 }
