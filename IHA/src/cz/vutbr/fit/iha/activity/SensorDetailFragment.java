@@ -49,18 +49,24 @@ public class SensorDetailFragment extends SherlockFragment {
 
 	private Controller mController;
 	private static final String TAG = "SensorDetailFragment";
+	private static final int EDIT_NONE = 0;
+	private static final int EDIT_NAME = 1;
+	private static final int EDIT_LOC = 2;
+	private static final int EDIT_REFRESH_T = 3;
 	
 	// GUI elements
-	private TextView sName;
-	private EditText sNameEdit;
-	private TextView sLocation;
-	private TextView sValue;
-	private TextView sTime;
-	private ImageView sIcon;
-	private TextView sRefreshTimeText;
-	private SeekBar sRefreshTimeValue;
-	private LinearLayout sGraphLayout;
+	private TextView mName;
+	private EditText mNameEdit;
+	private TextView mLocation;
+	private TextView mValue;
+	private TextView mTime;
+	private ImageView mIcon;
+	private TextView mRefreshTimeText;
+	private SeekBar mRefreshTimeValue;
+	private LinearLayout mGraphLayout;
 	private RelativeLayout mLayout;
+	private RelativeLayout mRectangleName;
+	private RelativeLayout mRectangleLoc;
 	
 	private SensorDetailActivity mActivity;
 	private GraphView mGraphView; 
@@ -72,10 +78,13 @@ public class SensorDetailFragment extends SherlockFragment {
 	
 	private boolean mWasTapLayout = false;
 	private boolean mWasTapGraph = false;
+	private int mEditMode = EDIT_NONE;
+	
 	// 
 	ActionMode mMode;
 			
 	public double minimum;
+	private int mLastProgressRefreshTime;
 	
 	
 	/**
@@ -144,32 +153,37 @@ public class SensorDetailFragment extends SherlockFragment {
 	private void initLayout(BaseDevice device) {
 		final Context context = SensorDetailFragment.this.getView().getContext(); 
 		// Get View for sensor name
-		sName = (TextView) getView().findViewById(R.id.sen_detail_name);
-		sNameEdit = (EditText) getView().findViewById(R.id.sen_detail_name_edit);
+		mName = (TextView) getView().findViewById(R.id.sen_detail_name);
+		mNameEdit = (EditText) getView().findViewById(R.id.sen_detail_name_edit);
+		mRectangleName = (RelativeLayout) getView().findViewById(R.id.sen_rectangle_name);
 		// Get View for sensor location
-		sLocation = (TextView) getView().findViewById(R.id.sen_detail_loc_name);
+		mLocation = (TextView) getView().findViewById(R.id.sen_detail_loc_name);
+		mRectangleLoc = (RelativeLayout) getView().findViewById(R.id.sen_rectangle_loc);
 		// Get View for sensor value
-		sValue = (TextView) getView().findViewById(R.id.sen_detail_value);
+		mValue = (TextView) getView().findViewById(R.id.sen_detail_value);
 		// Get View for sensor time
-		sTime = (TextView) getView().findViewById(R.id.sen_detail_time);
+		mTime = (TextView) getView().findViewById(R.id.sen_detail_time);
 		// Get Image for sensor
-		sIcon = (ImageView) getView().findViewById(R.id.sen_detail_icon);
+		mIcon = (ImageView) getView().findViewById(R.id.sen_detail_icon);
 		// Get TextView for refresh time
-		sRefreshTimeText = (TextView) getView().findViewById(R.id.sen_refresh_time);
+		mRefreshTimeText = (TextView) getView().findViewById(R.id.sen_refresh_time);
 		// Get SeekBar for refresh time
-		sRefreshTimeValue = (SeekBar) getView().findViewById(R.id.sen_refresh_time_seekBar);
+		mRefreshTimeValue = (SeekBar) getView().findViewById(R.id.sen_refresh_time_seekBar);
 		// Set Max value by length of array with values
-		sRefreshTimeValue.setMax(RefreshInterval.values().length-1);
-		sRefreshTimeValue.setOnSeekBarChangeListener(new OnSeekBarChangeListener() { 
+		mRefreshTimeValue.setMax(RefreshInterval.values().length-1);
+		mRefreshTimeValue.setOnSeekBarChangeListener(new OnSeekBarChangeListener() { 
 
 		    public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
 		    	String interval = RefreshInterval.values()[progress].getStringInterval(context);
-		    	sRefreshTimeText.setText(getString(R.string.refresh_time, interval));
+		    	mRefreshTimeText.setText(getString(R.string.refresh_time, interval));
 		    }
 
 			@Override
 			public void onStartTrackingTouch(SeekBar seekBar) {
 				// TODO Auto-generated method stub
+				mEditMode = EDIT_REFRESH_T;
+				mMode = getSherlockActivity().startActionMode(new AnActionModeOfEpicProportions());
+				mLastProgressRefreshTime = seekBar.getProgress();
 			}
 
 			@Override
@@ -179,7 +193,7 @@ public class SensorDetailFragment extends SherlockFragment {
 			}
 		});
 		// Get LinearLayout for graph
-		sGraphLayout = (LinearLayout) getView().findViewById(R.id.sen_graph_layout);
+		mGraphLayout = (LinearLayout) getView().findViewById(R.id.sen_graph_layout);
 		
 		// Get RelativeLayout of detail
 		mLayout = (RelativeLayout) getView().findViewById(R.id.sensordetail_scroll);
@@ -205,40 +219,42 @@ public class SensorDetailFragment extends SherlockFragment {
 		});
 		
 		// Set name of sensor
-		sName.setText(device.getName());
-		sName.setBackgroundColor(Color.TRANSPARENT);
-		sName.setOnLongClickListener(new OnLongClickListener() {
+		mName.setText(device.getName());
+		mName.setBackgroundColor(Color.TRANSPARENT);
+		mName.setOnClickListener(new OnClickListener() {
 			
 			@Override
-			public boolean onLongClick(View v) {
+			public void onClick(View v) {
+				mEditMode = EDIT_NAME;
 				mMode = getSherlockActivity().startActionMode(new AnActionModeOfEpicProportions());
-				sName.setVisibility(View.GONE);
-				sNameEdit.setVisibility(View.VISIBLE);
-				sNameEdit.setText(sName.getText());
+				mName.setVisibility(View.GONE);
+				mRectangleName.setVisibility(View.GONE);
+				mNameEdit.setVisibility(View.VISIBLE);
+				mNameEdit.setText(mName.getText());
 				InputMethodManager imm = (InputMethodManager) getSherlockActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
 				imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
-				return true;
+				//return true;
 			}
 		});
 		// Set name of location
 		if (mController != null) {
 			Location location = mController.getLocationByDevice(device);
 			if (location != null)
-				sLocation.setText(location.getName());
+				mLocation.setText(location.getName());
 		} else {
 			Log.e(TAG, "mController is null (this shouldn't happen)");
-			sLocation.setText(device.getLocationId());
+			mLocation.setText(device.getLocationId());
 		}
 		// Set value of sensor
-		sValue.setText(device.getStringValueUnit(getActivity()));
+		mValue.setText(device.getStringValueUnit(getActivity()));
 		// Set icon of sensor
-		sIcon.setImageResource(device.getTypeIconResource());
+		mIcon.setImageResource(device.getTypeIconResource());
 		// Set time of sensor
-		sTime.setText(setLastUpdate(device.lastUpdate));
+		mTime.setText(setLastUpdate(device.lastUpdate));
 		// Set refresh time Text
-    	sRefreshTimeText.setText(getString(R.string.refresh_time, device.getRefresh().getStringInterval(context)));
+    	mRefreshTimeText.setText(getString(R.string.refresh_time, device.getRefresh().getStringInterval(context)));
 		// Set refresh time SeekBar
-		sRefreshTimeValue.setProgress(device.getRefresh().getIntervalIndex());
+		mRefreshTimeValue.setProgress(device.getRefresh().getIntervalIndex());
 		// Add Graph with history data
 		addGraphView();
 		// Disable progress bar
@@ -288,9 +304,9 @@ public class SensorDetailFragment extends SherlockFragment {
 		//graphView.setScrollable(true);
 		// optional - activate scaling / zooming
 		//graphView.setScalable(true);
-		sGraphLayout.addView(mGraphView);
+		mGraphLayout.addView(mGraphView);
 
-		sGraphLayout.setOnTouchListener(new OnTouchListener() {
+		mGraphLayout.setOnTouchListener(new OnTouchListener() {
 			
 			@Override
 			public boolean onTouch(View v, MotionEvent event) {
@@ -330,8 +346,11 @@ public class SensorDetailFragment extends SherlockFragment {
 		@Override
 		public boolean onCreateActionMode(ActionMode mode, Menu menu) {
 			// TODO Auto-generated method stub
-			menu.add("Save").setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-			menu.add("Cancel").setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+			//View view = LayoutInflater.from(mActivity).inflate(R.layout.custom_actionmode_item, null);
+			//((Button) view.findViewById(R.id.actionmode_button)).
+			//menu.add("Save").setActionView(view).setIcon(R.drawable.ic_action_accept).setTitle("Save").setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+			menu.add("Save").setIcon(R.drawable.ic_action_accept).setTitle("Save").setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+			menu.add("Cancel").setIcon(R.drawable.ic_action_cancel).setTitle("Cancel").setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 			
 			return true;
 		}
@@ -345,16 +364,40 @@ public class SensorDetailFragment extends SherlockFragment {
 		@Override
 		public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
 			// TODO Auto-generated method stub
-			if(item.getTitle().equals("Save")) {
-				sName.setText(sNameEdit.getText());
-			}
-			sNameEdit.setVisibility(View.GONE);
-			sName.setVisibility(View.VISIBLE);
-			
-			sNameEdit.clearFocus();
-			//getSherlockActivity().getCurrentFocus().clearFocus();
 			InputMethodManager imm = (InputMethodManager) getSherlockActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-			imm.hideSoftInputFromWindow(sNameEdit.getWindowToken(), 0);
+			
+			switch(mEditMode) {
+			case EDIT_LOC:
+				break;
+			case EDIT_NAME:
+				if(item.getTitle().equals("Save")) {
+					mName.setText(mNameEdit.getText());
+				} 
+				mNameEdit.setVisibility(View.GONE);
+				mName.setVisibility(View.VISIBLE);
+				mRectangleName.setVisibility(View.VISIBLE);
+				
+				mNameEdit.clearFocus();
+				imm.hideSoftInputFromWindow(mNameEdit.getWindowToken(), 0);
+				break;
+			case EDIT_REFRESH_T:
+				// set actual progress
+				
+				
+				// Was clicked on cancel 
+				if(item.getTitle().equals("Cancel")) {
+					mRefreshTimeValue.setProgress(mLastProgressRefreshTime);
+				}
+				break;
+			
+			default:
+				break;
+				
+			}
+			
+			
+			
+						
 			mode.finish();
             return true;
 		}
@@ -362,10 +405,11 @@ public class SensorDetailFragment extends SherlockFragment {
 		@Override
 		public void onDestroyActionMode(ActionMode mode) {
 			// TODO Auto-generated method stub
-			sNameEdit.clearFocus();
-			sNameEdit.setVisibility(View.GONE);
-			sName.setVisibility(View.VISIBLE);
-			mMode = null;
+			//mName.setText(mNameEdit.getText());
+			//mNameEdit.clearFocus();
+			//mNameEdit.setVisibility(View.GONE);
+			//mName.setVisibility(View.VISIBLE);
+			//mMode = null;
 
 		}
 	}

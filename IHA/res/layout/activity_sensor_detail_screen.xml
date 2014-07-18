@@ -32,7 +32,7 @@
 	        android:layout_height="wrap_content"
 	        android:layout_alignParentRight="true"
 	        android:layout_alignTop="@+id/sen_detail_icon"
-	        android:layout_marginRight="10dp"
+	        android:layout_marginRight="15dp"
 	        android:layout_marginBottom="10dp"
 	        android:gravity="right"
 	        android:text="NameSensor"
@@ -47,7 +47,7 @@
 	        android:layout_height="wrap_content"
 	        android:layout_alignParentRight="true"
 	        android:layout_alignTop="@+id/sen_detail_icon"
-	        android:layout_marginRight="-2dp"
+	        android:layout_marginRight="3dp"
 	        android:layout_marginTop="-7dp"
 	        android:gravity="right"
 	        android:text="NameSensor"
@@ -85,6 +85,7 @@
 	        android:layout_height="wrap_content"
 	        android:layout_alignBottom="@+id/sen_detail_icon"
 	        android:layout_alignRight="@+id/sen_detail_value"
+	        
 	        android:text="1.1. 1970"
 	        android:textColor="@color/darkgray"
 	        android:textSize="15sp" />
@@ -94,7 +95,7 @@
 	        android:layout_width="wrap_content"
 	        android:layout_height="wrap_content"
 	        android:layout_alignParentRight="true"
-	        android:layout_marginRight="10dp"
+	        android:layout_marginRight="15dp"
 	        android:layout_marginTop="10dp"
 	        android:layout_above="@+id/sen_detail_value"
 	        android:text="location"
@@ -107,6 +108,7 @@
 	        android:layout_height="wrap_content"
 	        android:layout_above="@+id/sen_detail_time"
 	        android:layout_alignRight="@+id/sen_detail_loc_name"
+	        android:layout_marginRight="-5dp"
 	        android:layout_marginBottom="-5dp"
 	        android:text="ValueSensor"
 	        android:textColor="@color/log_blue2"
@@ -135,12 +137,24 @@
 	    </LinearLayout>
 
 	    <RelativeLayout
+	        android:id="@+id/sen_rectangle_name"
 	        android:layout_width="10dp"
 	        android:layout_height="10dp"
-	        android:layout_marginRight="-2dp"
+	        android:layout_marginRight="-5dp"
+	        android:layout_marginBottom="3dp"
 	        android:layout_alignBottom="@+id/sen_detail_name"
 	        android:layout_alignRight="@+id/sen_detail_name" 
-	        android:background="@drawable/rectangle_background">
+	        android:background="@drawable/rectangle_blue_background">
+	    </RelativeLayout>
+	    <RelativeLayout
+	        android:id="@+id/sen_rectangle_loc"
+	        android:layout_width="10dp"
+	        android:layout_height="10dp"
+	        android:layout_marginRight="-5dp"
+	        android:layout_marginBottom="0dp"
+	        android:layout_alignBottom="@+id/sen_detail_loc_name"
+	        android:layout_alignRight="@+id/sen_detail_loc_name" 
+	        android:background="@drawable/rectangle_gray_background">
 	    </RelativeLayout>
 	
 	</RelativeLayout>
