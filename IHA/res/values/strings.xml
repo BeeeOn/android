@@ -117,8 +117,19 @@
     <string name="hello_world">Hello world!</string>
     <string name="title_activity_add_sensor_activity_dialog">AddSensorActivityDialog</string>
     <string name="title_activity_alert_activity_dialog">AlertActivityDialog</string>
-    
-    <!--  Refresh intervals -->
+
+    <!-- ABOUT -->
+    <string name="play_link">market://details?id=cz.vutbr.fit.iha</string>
+    <string name="company_email">support@sobtex.eu</string>
+    <string name="company_web">http://www.fit.vutbr.cz/</string>
+    <string name="copyright">\u00A9 2014 FIT Brno University of Technology. All rights reserved</string>
+    <string name="version">Version</string>
+    <string name="logo">Logo</string>
+    <string name="rate">Rate</string>
+    <string name="ok">OK</string>
+    <string name="website">Website</string>
+
+    <!-- Refresh intervals -->
     <plurals name="interval_seconds">
         <item quantity="one">1 second</item>
         <item quantity="other">%d seconds</item>
