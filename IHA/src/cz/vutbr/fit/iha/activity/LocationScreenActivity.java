@@ -210,7 +210,7 @@ public class LocationScreenActivity extends BaseActivity {
 		// mMenuAdapter.addItem(new GroupMenuItem("2:Item3"));
 
 		// Adding profile header
-		mMenuAdapter.addHeader(new ProfileMenuItem("Martin Doudera", actUser
+		mMenuAdapter.addHeader(new ProfileMenuItem(actUser.getName(), actUser
 				.getEmail(), largeIcon));
 
 		// Adding separator as item (we don't want to let it float as header)
