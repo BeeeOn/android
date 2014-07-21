@@ -57,10 +57,10 @@ import cz.vutbr.fit.iha.exception.NotRegBException;
  * @author Robyer
  */
 public class Network {
-	
+
 	public static final String SIGNIN = "signin";
 	public static final String SIGNUP = "signup";
-	
+
 	/**
 	 * Name of CA certificate located in assets
 	 */
@@ -85,10 +85,12 @@ public class Network {
 	 * CN value to be verified in server certificate
 	 */
 	private static final String SERVER_CN_CERTIFICATE = "ant-2.fit.vutbr.cz";
-	
+
 	private static Context mContext;
 	private static int mSessionId;
 	
+	private static final String GoogleExcMessage = "Google token error";
+
 	/**
 	 * Constructor.
 	 * 
@@ -97,7 +99,7 @@ public class Network {
 	public Network(Context context) {
 		mContext = context;
 	}
-	
+
 	/**
 	 * Static function for sending data to server via TLS protocol using own
 	 * TrustManger to be able to trust self-signed certificates. CA certificated
@@ -203,10 +205,10 @@ public class Network {
 	 */
 	public boolean isAvailable() {
 		ConnectivityManager connectivityManager = (ConnectivityManager) mContext.getSystemService(Context.CONNECTIVITY_SERVICE);
-	    NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
-	    return activeNetworkInfo != null && activeNetworkInfo.isConnected();
+		NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+		return activeNetworkInfo != null && activeNetworkInfo.isConnected();
 	}
-	
+
 	private void doResign() {
 		// TODO: maybe use diffrenD way to resign, case stopping of thread,
 		// manage this after implement in the controller
@@ -216,36 +218,39 @@ public class Network {
 			e.printStackTrace();
 			String tmp = null;
 			new GetGoogleAuth(new LoginActivity(), tmp).execute();
-			//return null;
+			// return null;
 		}
 		signIn(ActualUser.getActualUser().getEmail());
 	}
-	
-	public ParsedMessage doRequest(String messageToSend) {
-		//TODO: test properly
-		if(!isAvailable())
+
+	private ParsedMessage doRequest(String messageToSend) {
+		if (!isAvailable())
 			throw new NoConnectionException();
-		
+
 		ParsedMessage msg = null;
-		
+
 		try {
 			String result = startCommunication(messageToSend);
 			Log.d("IHA - Network fromApp", messageToSend);
-			
+
 			msg = XmlParsers.parseCommunication(result, false);
 			Log.d("IHA - Network fromSrv", result);
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw new CommunicationException(e);
 		}
-		
+
 		return msg;
 	}
-	
+
+	/**
+	 * Blocking way to get token
+	 * @return google token
+	 */
 	public String getGoogleToken() {
-		if(!isAvailable())
+		if (!isAvailable())
 			throw new NoConnectionException();
-		
+
 		String googleToken = "";
 		try {
 			do {
@@ -277,36 +282,36 @@ public class Network {
 	 *             if this user is not registered on the server but there is
 	 *             FREE ADAPTER
 	 */
-	public ActualUser signIn(String userEmail) throws NoConnectionException, CommunicationException, NotRegAException, NotRegBException{
+	public ActualUser signIn(String userEmail) throws NoConnectionException, CommunicationException, NotRegAException, NotRegBException, FalseException {
 		String googleToken = getGoogleToken();
 		if (googleToken.length() == 0)
-			throw new CommunicationException();
-		
+			throw new CommunicationException(GoogleExcMessage);
+
 		String messageToSend = XmlCreator.createSignIn(userEmail, googleToken, Locale.getDefault().getLanguage());
 		ParsedMessage msg = doRequest(messageToSend);
-		
-		if(msg.getSessionId() != 0 && msg.getState() == State.TRUE /*&& ((String)msg.data).equals(SIGNIN)*/){
+
+		if (msg.getSessionId() != 0 && msg.getState() == State.TRUE && ((String)msg.data).equals(SIGNIN)) {
 			Log.d("IHA - Network", msg.getState().getValue());
-			
+
 			ActualUser aUser = ActualUser.getActualUser();
 			aUser.setSessionId(Integer.toString(msg.getSessionId()));
 			mSessionId = msg.getSessionId();
-			
+
 			return aUser;
 		}
-		if(msg.getState() == State.NOTREGA){
+		if (msg.getState() == State.NOTREGA) {
 			throw new NotRegAException();
 		}
-		if(msg.getState() == State.NOTREGB){
+		if (msg.getState() == State.NOTREGB) {
 			throw new NotRegBException();
 		}
 		if (msg.getState() == State.FALSE) {
 			throw new FalseException(((FalseAnswer) msg.data));
 		}
-			
+
 		return null;
 	}
-	
+
 	/**
 	 * Method sign user up to adapter with its email, serial number of adapter
 	 * (user is in role superuser)
@@ -323,66 +328,60 @@ public class Network {
 	 *             including message from server
 	 * @throws NoConnectionException
 	 */
-	public boolean signUp(String email, String serialNumber, int SessionId) throws CommunicationException, NoConnectionException{
-		
-		String googleToken;
-		try {
-			do {
-				googleToken = GetGoogleAuth.getGetGoogleAuth().getToken();
-			} while(googleToken.length() < 1);
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new CommunicationException(e);
-		}
-		
+	public boolean signUp(String email, String serialNumber, int SessionId) throws CommunicationException, NoConnectionException, FalseException {
+
+		String googleToken = getGoogleToken();
+		if (googleToken.length() == 0)
+			throw new CommunicationException(GoogleExcMessage);
+
 		String messageToSend = XmlCreator.createSignUp(email, Integer.toString(SessionId), googleToken, serialNumber, Locale.getDefault().getLanguage());
 		ParsedMessage msg = doRequest(messageToSend);
-		
-		if(msg.getSessionId() != 0 && msg.getState() == State.TRUE && ((String)msg.data).equals(SIGNUP)){
+
+		if (msg.getSessionId() != 0 && msg.getState() == State.TRUE && ((String) msg.data).equals(SIGNUP)) {
 			Log.d("IHA - Network", msg.getState().getValue());
-			
+
 			ActualUser aUser = ActualUser.getActualUser();
 			aUser.setSessionId(Integer.toString(msg.getSessionId()));
 			mSessionId = msg.getSessionId();
-			
+
 			return true;
 		}
 		if (msg.getState() == State.FALSE) {
-				throw new FalseException(((FalseAnswer) msg.data));
+			throw new FalseException(((FalseAnswer) msg.data));
 		} else
 			return false;
 	}
-	
+
 	/**
 	 * Method ask for list of adapters. User has to be sign in before
 	 * 
 	 * @return list of adapters or null
 	 * @throws NoConnectionException
-	 * @throws CommunicationException including message from server
-	 *             including message from server
+	 * @throws CommunicationException
+	 *             including message from server including message from server
 	 */
-	public List<Adapter> getAdapters() throws NoConnectionException, CommunicationException{
+	public List<Adapter> getAdapters() throws NoConnectionException, CommunicationException, FalseException {
 		String messageToSend = XmlCreator.createGetAdapters(mSessionId);
 		ParsedMessage msg = doRequest(messageToSend);
-		
-		if(msg.getState() == State.READY){
+
+		if (msg.getState() == State.READY) {
 			Log.d("IHA - Network", msg.getState().getValue());
-			
+
 			// http://stackoverflow.com/a/509288/1642090
 			@SuppressWarnings("unchecked")
 			List<Adapter> result = (List<Adapter>) msg.data;
-			
+
 			return result;
-		}else if(msg.getState() == State.RESIGN){
+		} else if (msg.getState() == State.RESIGN) {
 			doResign();
 			return getAdapters();
-			
-		}else if(msg.getState() == State.FALSE && ((FalseAnswer)msg.data).getErrMessage().length() != 0){
-			throw new CommunicationException(((FalseAnswer)msg.data).getErrMessage());
-		}else
+
+		} else if (msg.getState() == State.FALSE) {
+			throw new FalseException(((FalseAnswer) msg.data));
+		} else
 			return null;
 	}
-	
+
 	/**
 	 * Method ask for whole adapter data
 	 * 
@@ -392,25 +391,24 @@ public class Network {
 	 * @throws NoConnectionException
 	 * @throws CommunicationException
 	 */
-	public Adapter init(String adapterId) throws NoConnectionException, CommunicationException{
-		// String messageToSend = XmlCreator.createInit(Integer.toString(mSessionId), adapterId);
+	public Adapter init(String adapterId) throws NoConnectionException, CommunicationException, FalseException {
 		String messageToSend = XmlCreator.createGetXml(Integer.toString(mSessionId), adapterId);
 		ParsedMessage msg = doRequest(messageToSend);
-		
-		if(msg.getState() == State.XML){
+
+		if (msg.getState() == State.XML) {
 			Log.d("IHA - Network", msg.getState().getValue());
-			
+
 			return (Adapter) msg.data;
-		}else if(msg.getState() == State.RESIGN){
+		} else if (msg.getState() == State.RESIGN) {
 			doResign();
 			return init(adapterId);
-			
-		}else if(msg.getState() == State.FALSE && ((FalseAnswer)msg.data).getErrMessage().length() != 0){
-			throw new CommunicationException(((FalseAnswer)msg.data).getErrMessage());
-		}else
+
+		} else if (msg.getState() == State.FALSE) {
+			throw new FalseException(((FalseAnswer) msg.data));
+		} else
 			return null;
 	}
-	
+
 	/**
 	 * Method change adapter id
 	 * 
@@ -422,48 +420,48 @@ public class Network {
 	 * @throws NoConnectionException
 	 * @throws CommunicationException
 	 */
-	public boolean reInit(String oldId, String newId) throws NoConnectionException, CommunicationException{
+	public boolean reInit(String oldId, String newId) throws NoConnectionException, CommunicationException, FalseException {
 		String messageToSend = XmlCreator.createReInit(Integer.toString(mSessionId), oldId, newId);
 		ParsedMessage msg = doRequest(messageToSend);
-		
-		if(msg.getState() == State.TRUE){
+
+		if (msg.getState() == State.TRUE) {
 			Log.d("IHA - Network", msg.getState().getValue());
-			
+
 			return true;
-			
-		}else if(msg.getState() == State.RESIGN){
+
+		} else if (msg.getState() == State.RESIGN) {
 			doResign();
 			return reInit(oldId, newId);
-			
-		}else if(msg.getState() == State.FALSE && ((FalseAnswer)msg.data).getErrMessage().length() != 0){
-			throw new CommunicationException(((FalseAnswer)msg.data).getErrMessage());
-		}else
+
+		} else if (msg.getState() == State.FALSE) {
+			throw new FalseException(((FalseAnswer) msg.data));
+		} else
 			return false;
 	}
-	
+
 	/**
 	 * Method send updated fields of devices
 	 * 
 	 * @param devices
 	 * @return true if everything goes well, false otherwise
-	 * @throws NoConnectionException 
-	 * @throws CommunicationException 
+	 * @throws NoConnectionException
+	 * @throws CommunicationException
 	 */
-	public boolean partial(String adapterId, List<BaseDevice> devices) throws NoConnectionException, CommunicationException{
+	public boolean partial(String adapterId, List<BaseDevice> devices) throws NoConnectionException, CommunicationException, FalseException {
 		String messageToSend = XmlCreator.createPartial(Integer.toString(mSessionId), adapterId, devices);
 		ParsedMessage msg = doRequest(messageToSend);
-		
-		if(msg.getState() == State.TRUE){
+
+		if (msg.getState() == State.TRUE) {
 			Log.d("IHA - Network", msg.getState().getValue());
-			
+
 			return true;
-			
-		}else if(msg.getState() == State.RESIGN){
+
+		} else if (msg.getState() == State.RESIGN) {
 			doResign();
 			return partial(adapterId, devices);
-		}else if(msg.getState() == State.FALSE && ((FalseAnswer)msg.data).getErrMessage().length() != 0){
-			throw new CommunicationException(((FalseAnswer)msg.data).getErrMessage());
-		}else
+		} else if (msg.getState() == State.FALSE) {
+			throw new FalseException(((FalseAnswer) msg.data));
+		} else
 			return false;
 	}
 
@@ -476,28 +474,28 @@ public class Network {
 	 * @throws NoConnectionException
 	 * @throws CommunicationException
 	 */
-	public List<BaseDevice> update(String adapterId, List<BaseDevice> devices) throws NoConnectionException, CommunicationException{
+	public List<BaseDevice> update(String adapterId, List<BaseDevice> devices) throws NoConnectionException, CommunicationException, FalseException {
 		String messageToSend = XmlCreator.createUpdate(Integer.toString(mSessionId), adapterId, devices);
 		ParsedMessage msg = doRequest(messageToSend);
-		
-		if(msg.getState() == State.PARTIAL){
+
+		if (msg.getState() == State.PARTIAL) {
 			Log.d("IHA - Network", msg.getState().getValue());
-			
-			//http://stackoverflow.com/a/509288/1642090
+
+			// http://stackoverflow.com/a/509288/1642090
 			@SuppressWarnings("unchecked")
-			List<BaseDevice> result = (List<BaseDevice>) msg.data; 
-			
+			List<BaseDevice> result = (List<BaseDevice>) msg.data;
+
 			return result;
-			
-		}else if(msg.getState() == State.RESIGN){
+
+		} else if (msg.getState() == State.RESIGN) {
 			doResign();
 			return update(adapterId, devices);
-		}else if(msg.getState() == State.FALSE && ((FalseAnswer)msg.data).getErrMessage().length() != 0){
-			throw new CommunicationException(((FalseAnswer)msg.data).getErrMessage());
-		}else
+		} else if (msg.getState() == State.FALSE) {
+			throw new FalseException(((FalseAnswer) msg.data));
+		} else
 			return null;
 	}
-	
+
 	/**
 	 * Method ask for data of logs
 	 * 
@@ -513,49 +511,29 @@ public class Network {
 	 * @throws NoConnectionException
 	 * @throws CommunicationException
 	 */
-	public List<ContentRow> logName(String adapterId, String deviceId, int deviceType, String from, String to, String funcType, int interval) throws NoConnectionException, CommunicationException{
+	public List<ContentRow> getLog(String adapterId, String deviceId, int deviceType, String from, String to, String funcType, int interval) throws NoConnectionException, CommunicationException, FalseException {
 		String messageToSend = XmlCreator.createLogName(Integer.toString(mSessionId), adapterId, deviceId, deviceType, from, to, funcType, interval);
 		ParsedMessage msg = doRequest(messageToSend);
-		
-		if(msg.getState() == State.CONTENT){
+
+		if (msg.getState() == State.CONTENT) {
 			Log.d("IHA - Network", msg.getState().getValue());
-			
-			//http://stackoverflow.com/a/509288/1642090
+
+			// http://stackoverflow.com/a/509288/1642090
 			@SuppressWarnings("unchecked")
-			List<ContentRow> result = (List<ContentRow>) msg.data; 
-			
+			List<ContentRow> result = (List<ContentRow>) msg.data;
+
 			return result;
-			
-		}else if(msg.getState() == State.RESIGN){
+
+		} else if (msg.getState() == State.RESIGN) {
 			doResign();
-			return logName(adapterId, deviceId, deviceType, from, to, funcType, interval);
-			
-		}else if(msg.getState() == State.FALSE && ((FalseAnswer)msg.data).getErrMessage().length() != 0){
-			throw new CommunicationException(((FalseAnswer)msg.data).getErrMessage());
-		}else
+			return getLog(adapterId, deviceId, deviceType, from, to, funcType, interval);
+
+		} else if (msg.getState() == State.FALSE) {
+			throw new FalseException(((FalseAnswer) msg.data));
+		} else
 			return null;
 	}
-	
-	/**
-	 * Wrapper for logName method as protocol name. That name is a little bit
-	 * misleading when no name of log file is sending anymore.
-	 * 
-	 * @param deviceId
-	 *            id of wanted device
-	 * @param from
-	 *            date from log begin. Based of format YYYY-MM-DD-HH:MM:SS or
-	 *            empty string when wanted the oldest
-	 * @param to
-	 *            date to log end. Based of format YYYY-MM-DD-HH:MM:SS or empty
-	 *            string when wanted the newest
-	 * @return list of rows with logged data
-	 * @throws CommunicationException
-	 * @throws NoConnectionException
-	 */
-	public List<ContentRow> getLog(String adapterId, String deviceId, int deviceType, String from, String to, String funcType, int interval) throws NoConnectionException, CommunicationException{
-		return logName(adapterId, deviceId, deviceType, from, to, funcType, interval);
-	}
-	
+
 	/**
 	 * Method send newly created custom view
 	 * 
@@ -569,52 +547,52 @@ public class Network {
 	 * @throws NoConnectionException
 	 * @throws CommunicationException
 	 */
-	public boolean addView(String nameOfView, int iconId, List<BaseDevice> devices) throws NoConnectionException, CommunicationException{
+	public boolean addView(String nameOfView, int iconId, List<BaseDevice> devices) throws NoConnectionException, CommunicationException, FalseException {
 		String messageToSend = XmlCreator.createAddView(Integer.toString(mSessionId), nameOfView, iconId, devices);
 		ParsedMessage msg = doRequest(messageToSend);
-		
-		if(msg.getState() == State.TRUE){
+
+		if (msg.getState() == State.TRUE) {
 			Log.d("IHA - Network", msg.getState().getValue());
-			
+
 			return true;
-			
-		}else if(msg.getState() == State.RESIGN){
+
+		} else if (msg.getState() == State.RESIGN) {
 			doResign();
 			return addView(nameOfView, iconId, devices);
-			
-		}else if(msg.getState() == State.FALSE && ((FalseAnswer)msg.data).getErrMessage().length() != 0){
-			throw new CommunicationException(((FalseAnswer)msg.data).getErrMessage());
-		}else
+
+		} else if (msg.getState() == State.FALSE) {
+			throw new FalseException(((FalseAnswer) msg.data));
+		} else
 			return false;
 	}
-	
+
 	/**
 	 * Method ask for list of all custom views
 	 * 
 	 * @return list of defined custom views
-	 * @throws NoConnectionException 
-	 * @throws CommunicationException 
+	 * @throws NoConnectionException
+	 * @throws CommunicationException
 	 */
-	public List<CustomViewPair> getViews() throws NoConnectionException, CommunicationException{
+	public List<CustomViewPair> getViews() throws NoConnectionException, CommunicationException, FalseException {
 		String messageToSend = XmlCreator.createGetViews(Integer.toString(mSessionId));
 		ParsedMessage msg = doRequest(messageToSend);
 
-		if(msg.getState() == State.VIEWSLIST){
+		if (msg.getState() == State.VIEWSLIST) {
 			Log.d("IHA - Network", msg.getState().getValue());
-			
-			//http://stackoverflow.com/a/509288/1642090
+
+			// http://stackoverflow.com/a/509288/1642090
 			@SuppressWarnings("unchecked")
 			List<CustomViewPair> result = (List<CustomViewPair>) msg.data;
-			
+
 			return result;
-			
-		}else if(msg.getState() == State.RESIGN){
+
+		} else if (msg.getState() == State.RESIGN) {
 			doResign();
 			return getViews();
-			
-		}else if(msg.getState() == State.FALSE && ((FalseAnswer)msg.data).getErrMessage().length() != 0){
-			throw new CommunicationException(((FalseAnswer)msg.data).getErrMessage());
-		}else
+
+		} else if (msg.getState() == State.FALSE) {
+			throw new FalseException(((FalseAnswer) msg.data));
+		} else
 			return null;
 	}
 
@@ -627,25 +605,25 @@ public class Network {
 	 * @throws NoConnectionException
 	 * @throws CommunicationException
 	 */
-	public boolean deleteView(String viewName) throws NoConnectionException, CommunicationException{
+	public boolean deleteView(String viewName) throws NoConnectionException, CommunicationException, FalseException {
 		String messageToSend = XmlCreator.createDelView(Integer.toString(mSessionId), viewName);
 		ParsedMessage msg = doRequest(messageToSend);
-		
-		if(msg.getState() == State.TRUE){
+
+		if (msg.getState() == State.TRUE) {
 			Log.d("IHA - Network", msg.getState().getValue());
-			
+
 			return true;
-			
-		}else if(msg.getState() == State.RESIGN){
+
+		} else if (msg.getState() == State.RESIGN) {
 			doResign();
 			return deleteView(viewName);
-			
-		}else if(msg.getState() == State.FALSE && ((FalseAnswer)msg.data).getErrMessage().length() != 0){
-			throw new CommunicationException(((FalseAnswer)msg.data).getErrMessage());
-		}else
+
+		} else if (msg.getState() == State.FALSE) {
+			throw new FalseException(((FalseAnswer) msg.data));
+		} else
 			return false;
 	}
-	
+
 	/**
 	 * Method update custom view.
 	 * 
@@ -658,24 +636,24 @@ public class Network {
 	 * @throws NoConnectionException
 	 * @throws CommunicationException
 	 */
-	public boolean updateView(String viewName, int iconId, HashMap<String, String> devices) throws NoConnectionException, CommunicationException{
+	public boolean updateView(String viewName, int iconId, HashMap<String, String> devices) throws NoConnectionException, CommunicationException, FalseException {
 		String messageToSend = XmlCreator.createUpdateView(Integer.toString(mSessionId), viewName, iconId, devices);
 		ParsedMessage msg = doRequest(messageToSend);
-		
-		if(msg.getState() == State.TRUE){
+
+		if (msg.getState() == State.TRUE) {
 			Log.d("IHA - Network", msg.getState().getValue());
-			
+
 			return true;
-			
-		}else if(msg.getState() == State.RESIGN){
+
+		} else if (msg.getState() == State.RESIGN) {
 			doResign();
 			return updateView(viewName, iconId, devices);
-		}else if(msg.getState() == State.FALSE && ((FalseAnswer)msg.data).getErrMessage().length() != 0){
-			throw new CommunicationException(((FalseAnswer)msg.data).getErrMessage());
-		}else
+		} else if (msg.getState() == State.FALSE) {
+			throw new FalseException(((FalseAnswer) msg.data));
+		} else
 			return false;
 	}
-	
+
 	/**
 	 * Method add new users to current adapter
 	 * 
@@ -685,24 +663,24 @@ public class Network {
 	 * @throws NoConnectionException
 	 * @throws CommunicationException
 	 */
-	public boolean addConnectionAccount(String adapterId, HashMap<String, String> userNrole) throws NoConnectionException, CommunicationException{
+	public boolean addConnectionAccount(String adapterId, HashMap<String, String> userNrole) throws NoConnectionException, CommunicationException, FalseException {
 		String messageToSend = XmlCreator.createAddConAccount(Integer.toString(mSessionId), adapterId, userNrole);
 		ParsedMessage msg = doRequest(messageToSend);
-		
-		if(msg.getState() == State.TRUE){
+
+		if (msg.getState() == State.TRUE) {
 			Log.d("IHA - Network", msg.getState().getValue());
-			
+
 			return true;
-			
-		}else if(msg.getState() == State.RESIGN){
+
+		} else if (msg.getState() == State.RESIGN) {
 			doResign();
 			return addConnectionAccount(adapterId, userNrole);
-		}else if(msg.getState() == State.FALSE && ((FalseAnswer)msg.data).getErrMessage().length() != 0){
-			throw new CommunicationException(((FalseAnswer)msg.data).getErrMessage());
-		}else
+		} else if (msg.getState() == State.FALSE) {
+			throw new FalseException(((FalseAnswer) msg.data));
+		} else
 			return false;
 	}
-	
+
 	/**
 	 * Method delete users from actual adapter
 	 * 
@@ -712,54 +690,54 @@ public class Network {
 	 * @throws NoConnectionException
 	 * @throws CommunicationException
 	 */
-	public boolean deleteConnectionAccount(String adapterId, List<String> users) throws NoConnectionException, CommunicationException{
+	public boolean deleteConnectionAccount(String adapterId, List<String> users) throws NoConnectionException, CommunicationException, FalseException {
 		String messageToSend = XmlCreator.createDelConAccount(Integer.toString(mSessionId), adapterId, users);
 		ParsedMessage msg = doRequest(messageToSend);
-		
-		if(msg.getState() == State.TRUE){
+
+		if (msg.getState() == State.TRUE) {
 			Log.d("IHA - Network", msg.getState().getValue());
-			
+
 			return true;
-			
-		}else if(msg.getState() == State.RESIGN){
+
+		} else if (msg.getState() == State.RESIGN) {
 			doResign();
 			return deleteConnectionAccount(adapterId, users);
-		}else if(msg.getState() == State.FALSE && ((FalseAnswer)msg.data).getErrMessage().length() != 0){
-			throw new CommunicationException(((FalseAnswer)msg.data).getErrMessage());
-		}else
+		} else if (msg.getState() == State.FALSE) {
+			throw new FalseException(((FalseAnswer) msg.data));
+		} else
 			return false;
 	}
-	
+
 	/**
 	 * Method ask for list of users of current adapter
 	 * 
 	 * @return Map of users where key is email and value is User object
-	 * @throws NoConnectionException 
-	 * @throws CommunicationException 
+	 * @throws NoConnectionException
+	 * @throws CommunicationException
 	 */
-	public HashMap<String, User> getConnectionAccountList(String adapterId) throws NoConnectionException, CommunicationException{
+	public HashMap<String, User> getConnectionAccountList(String adapterId) throws NoConnectionException, CommunicationException, FalseException {
 		String messageToSend = XmlCreator.createGetConAccount(Integer.toString(mSessionId), adapterId);
 		ParsedMessage msg = doRequest(messageToSend);
-		
+
 		if (msg.getState() == State.CONACCOUNTLIST) {
 			Log.d("IHA - Network", msg.getState().toString());
-			
-			//http://stackoverflow.com/a/509288/1642090
+
+			// http://stackoverflow.com/a/509288/1642090
 			@SuppressWarnings("unchecked")
 			HashMap<String, User> result = (HashMap<String, User>) msg.data;
-			
+
 			return result;
 
 		} else if (msg.getState() == State.RESIGN) {
 			doResign();
 			return getConnectionAccountList(adapterId);
-			
-		}else if(msg.getState() == State.FALSE && ((FalseAnswer)msg.data).getErrMessage().length() != 0){
-			throw new CommunicationException(((FalseAnswer)msg.data).getErrMessage());
-		}else
+
+		} else if (msg.getState() == State.FALSE) {
+			throw new FalseException(((FalseAnswer) msg.data));
+		} else
 			return null;
 	}
-	
+
 	/**
 	 * Method update users roles on server on current adapter
 	 * 
@@ -769,24 +747,24 @@ public class Network {
 	 * @throws NoConnectionException
 	 * @throws CommunicationException
 	 */
-	public boolean changeConnectionAccount(String adapterId, HashMap<String, String> userNrole) throws NoConnectionException, CommunicationException{
+	public boolean changeConnectionAccount(String adapterId, HashMap<String, String> userNrole) throws NoConnectionException, CommunicationException, FalseException {
 		String messageToSend = XmlCreator.createChangeConAccount(Integer.toString(mSessionId), adapterId, userNrole);
 		ParsedMessage msg = doRequest(messageToSend);
-		
-		if(msg.getState() == State.TRUE){
+
+		if (msg.getState() == State.TRUE) {
 			Log.d("IHA - Network", msg.getState().toString());
-			
+
 			return true;
-			
-		}else if(msg.getState() == State.RESIGN){
+
+		} else if (msg.getState() == State.RESIGN) {
 			doResign();
 			return changeConnectionAccount(adapterId, userNrole);
-		}else if(msg.getState() == State.FALSE && ((FalseAnswer)msg.data).getErrMessage().length() != 0){
-			throw new CommunicationException(((FalseAnswer)msg.data).getErrMessage());
-		}else
+		} else if (msg.getState() == State.FALSE) {
+			throw new FalseException(((FalseAnswer) msg.data));
+		} else
 			return false;
 	}
-	
+
 	/**
 	 * Method set wanted time zone to server
 	 * 
@@ -796,25 +774,25 @@ public class Network {
 	 * @throws NoConnectionException
 	 * @throws CommunicationException
 	 */
-	public boolean setTimeZone(String adapterId, int differenceToGMT) throws NoConnectionException, CommunicationException{
+	public boolean setTimeZone(String adapterId, int differenceToGMT) throws NoConnectionException, CommunicationException, FalseException {
 		String messageToSend = XmlCreator.createSetTimeZone(Integer.toString(mSessionId), adapterId, differenceToGMT);
 		ParsedMessage msg = doRequest(messageToSend);
-		
-		if(msg.getState() == State.TRUE){
+
+		if (msg.getState() == State.TRUE) {
 			Log.d("IHA - Network", msg.getState().getValue());
-			
+
 			return true;
-			
-		}else if(msg.getState() == State.RESIGN){
+
+		} else if (msg.getState() == State.RESIGN) {
 			doResign();
 			return setTimeZone(adapterId, differenceToGMT);
-			
-		}else if(msg.getState() == State.FALSE && ((FalseAnswer)msg.data).getErrMessage().length() != 0){
-			throw new CommunicationException(((FalseAnswer)msg.data).getErrMessage());
-		}else
+
+		} else if (msg.getState() == State.FALSE) {
+			throw new FalseException(((FalseAnswer) msg.data));
+		} else
 			return false;
 	}
-	
+
 	/**
 	 * Method call to server to get actual time zone
 	 * 
@@ -822,52 +800,52 @@ public class Network {
 	 * @throws NoConnectionException
 	 * @throws CommunicationException
 	 */
-	public int getTimeZone(String adapterId) throws NoConnectionException, CommunicationException{
+	public int getTimeZone(String adapterId) throws NoConnectionException, CommunicationException, FalseException {
 		String messageToSend = XmlCreator.createGetTimeZone(Integer.toString(mSessionId), adapterId);
 		ParsedMessage msg = doRequest(messageToSend);
 
-		if(msg.getState() == State.TIMEZONE){
+		if (msg.getState() == State.TIMEZONE) {
 			Log.d("IHA - Network", msg.getState().getValue());
-			
-			return (Integer)msg.data;
-			
-		}else if(msg.getState() == State.RESIGN){
+
+			return (Integer) msg.data;
+
+		} else if (msg.getState() == State.RESIGN) {
 			doResign();
 			return getTimeZone(adapterId);
-			
-		}else if(msg.getState() == State.FALSE && ((FalseAnswer)msg.data).getErrMessage().length() != 0){
-			throw new CommunicationException(((FalseAnswer)msg.data).getErrMessage());
-		}else
+
+		} else if (msg.getState() == State.FALSE) {
+			throw new FalseException(((FalseAnswer) msg.data));
+		} else
 			return 0;
 	}
 
 	/**
-	 * Method call to server for actual list of locations 
+	 * Method call to server for actual list of locations
 	 * 
 	 * @return List with locations
 	 * @throws NoConnectionException
 	 * @throws CommunicationException
 	 */
-	public List<Location> getLocations(String adapterId) throws NoConnectionException, CommunicationException{
+	public List<Location> getLocations(String adapterId) throws NoConnectionException, CommunicationException, FalseException {
 		String messageToSend = XmlCreator.createGetRooms(Integer.toString(mSessionId), adapterId);
 		ParsedMessage msg = doRequest(messageToSend);
-		
-		if(msg.getState() == State.ROOMS){
+
+		if (msg.getState() == State.ROOMS) {
 			Log.d("IHA - Network", msg.getState().getValue());
-			
-			//http://stackoverflow.com/a/509288/1642090
+
+			// http://stackoverflow.com/a/509288/1642090
 			@SuppressWarnings("unchecked")
 			List<Location> result = (List<Location>) msg.data;
-			
+
 			return result;
-			
-		}else if(msg.getState() == State.RESIGN){
+
+		} else if (msg.getState() == State.RESIGN) {
 			doResign();
 			return getLocations(adapterId);
-			
-		}else if(msg.getState() == State.FALSE && ((FalseAnswer)msg.data).getErrMessage().length() != 0){
-			throw new CommunicationException(((FalseAnswer)msg.data).getErrMessage());
-		}else
+
+		} else if (msg.getState() == State.FALSE) {
+			throw new FalseException(((FalseAnswer) msg.data));
+		} else
 			return null;
 	}
 
@@ -880,22 +858,22 @@ public class Network {
 	 * @throws NoConnectionException
 	 * @throws CommunicationException
 	 */
-	public boolean updateLocations(String adapterId, List<Location> locations) throws NoConnectionException, CommunicationException{
+	public boolean updateLocations(String adapterId, List<Location> locations) throws NoConnectionException, CommunicationException, FalseException {
 		String messageToSend = XmlCreator.createUpdateRooms(Integer.toString(mSessionId), adapterId, locations);
 		ParsedMessage msg = doRequest(messageToSend);
-			
-		if(msg.getState() == State.TRUE){
+
+		if (msg.getState() == State.TRUE) {
 			Log.d("IHA - Network", msg.getState().getValue());
-			
+
 			return true;
-			
-		}else if(msg.getState() == State.RESIGN){
+
+		} else if (msg.getState() == State.RESIGN) {
 			doResign();
 			return updateLocations(adapterId, locations);
-			
-		}else if(msg.getState() == State.FALSE && ((FalseAnswer)msg.data).getErrMessage().length() != 0){
-			throw new CommunicationException(((FalseAnswer)msg.data).getErrMessage());
-		}else
+
+		} else if (msg.getState() == State.FALSE) {
+			throw new FalseException(((FalseAnswer) msg.data));
+		} else
 			return false;
 	}
 
@@ -906,46 +884,46 @@ public class Network {
 	 *            to delete
 	 * @return true room is deleted, false otherwise
 	 */
-	public boolean deleteLocation(String adapterId, Location location) throws NoConnectionException, CommunicationException {
+	public boolean deleteLocation(String adapterId, Location location) throws NoConnectionException, CommunicationException, FalseException {
 		String messageToSend = XmlCreator.createDelRooms(Integer.toString(mSessionId), adapterId, location);
 		ParsedMessage msg = doRequest(messageToSend);
 
-		if(msg.getState() == State.TRUE){
+		if (msg.getState() == State.TRUE) {
 			Log.d("IHA - Network", msg.getState().getValue());
-			
+
 			return true;
-			
-		}else if(msg.getState() == State.RESIGN){
+
+		} else if (msg.getState() == State.RESIGN) {
 			doResign();
 			return deleteLocation(adapterId, location);
-			
-		}else if(msg.getState() == State.FALSE && ((FalseAnswer)msg.data).getErrMessage().length() != 0){
-			throw new CommunicationException(((FalseAnswer)msg.data).getErrMessage());
-		}else
+
+		} else if (msg.getState() == State.FALSE) {
+			throw new FalseException(((FalseAnswer) msg.data));
+		} else
 			return false;
 	}
-	
-	public Location createLocation(String adapterId, Location location) throws NoConnectionException, CommunicationException{
+
+	public Location createLocation(String adapterId, Location location) throws NoConnectionException, CommunicationException, FalseException {
 		String messageToSend = XmlCreator.createAddRooms(Integer.toString(mSessionId), adapterId, location);
 		ParsedMessage msg = doRequest(messageToSend);
-		
-		if(msg.getState() == State.ROOMCREATED){
+
+		if (msg.getState() == State.ROOMCREATED) {
 			Log.d("IHA - Network", msg.getState().getValue());
-			
-			location.setId((String)msg.data);
-			
+
+			location.setId((String) msg.data);
+
 			return location;
-			
-		}else if(msg.getState() == State.RESIGN){
+
+		} else if (msg.getState() == State.RESIGN) {
 			doResign();
 			return createLocation(adapterId, location);
-			
-		}else if(msg.getState() == State.FALSE && ((FalseAnswer)msg.data).getErrMessage().length() != 0){
-			throw new CommunicationException(((FalseAnswer)msg.data).getErrMessage());
-		}else
+
+		} else if (msg.getState() == State.FALSE) {
+			throw new FalseException(((FalseAnswer) msg.data));
+		} else
 			return null;
 	}
-	
+
 	// TODO: GetAlerts
 	// TODO: Alerts
 }

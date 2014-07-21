@@ -188,38 +188,7 @@ public class XmlCreator {
 			throw new RuntimeException(e);
 		}
 	}
-	
-	/**
-	 * Method create XML for init[x1] message
-	 * @param id of user
-	 * @param adapterId id of adapter to work with
-	 * @return init message
-	 */
-	@Deprecated
-	public static String createInit(String id, String adapterId){
-		XmlSerializer serializer = Xml.newSerializer();
-		StringWriter writer = new StringWriter();
-		try{
-			serializer.setOutput(writer);
-			serializer.startDocument("UTF-8", null);
-			
-			serializer.startTag(ns, COM_ROOT);
-			serializer.attribute(ns, ID, id);
-			serializer.attribute(ns, STATE, INIT);
-			serializer.attribute(ns, VERSION, GVER);
-				
-				serializer.startTag(ns, ADAPTER);
-				serializer.attribute(ns, ID, adapterId);
-				serializer.endTag(ns, ADAPTER);
-			
-			serializer.endTag(ns, COM_ROOT);
-			serializer.endDocument();
-			
-			return writer.toString();
-		}catch(Exception e){
-			throw new RuntimeException(e);
-		}
-	}
+
 	
 	/**
 	 * Method create XML for GetXml message

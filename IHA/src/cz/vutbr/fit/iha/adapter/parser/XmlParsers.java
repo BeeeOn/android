@@ -513,6 +513,59 @@ public class XmlParsers {
 		}
 	}
 	
+	public static List<BaseDevice> getFalseMessage6(String message) throws XmlPullParserException, IOException{
+		mParser = Xml.newPullParser();
+		mParser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false);
+		
+		mParser.setInput(new ByteArrayInputStream(message.getBytes("UTF-8")), null);
+		mParser.nextTag();
+		
+		mParser.require(XmlPullParser.START_TAG, ns, FalseAnswer.START_TAG);
+		
+		List<BaseDevice> result = new ArrayList<BaseDevice>();
+		
+		mParser.nextTag();
+		if(!mParser.getName().equals(DEVICE))
+			return result;
+		
+		do{
+			BaseDevice device = getDeviceByType(getSecureAttrValue(ns, TYPE));
+			device.setAddress(getSecureAttrValue(ns, ID));
+			
+			result.add(device);
+			mParser.nextTag();
+			
+		}while(mParser.nextTag() != XmlPullParser.END_TAG && !mParser.getName().equals(FalseAnswer.END_TAG));
+		
+		return result;
+	}
+	
+	public static List<User> getFalseMessage13(String message) throws XmlPullParserException, IOException{
+		mParser = Xml.newPullParser();
+		mParser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false);
+		
+		mParser.setInput(new ByteArrayInputStream(message.getBytes("UTF-8")), null);
+		mParser.nextTag();
+		
+		mParser.require(XmlPullParser.START_TAG, ns, FalseAnswer.START_TAG);
+		
+		List<User> result = new ArrayList<User>();
+		
+		mParser.nextTag();
+		if(!mParser.getName().equals(USER))
+			return result;
+		
+		do{
+			User user = new User("", getSecureAttrValue(ns, EMAIL), User.Role.fromString(getSecureAttrValue(ns, ROLE)), getSecureAttrValue(ns, GENDER).equals(POSITIVEONE) ? User.Gender.Male : User.Gender.Female);
+			
+			result.add(user);
+			mParser.nextTag();
+			
+		}while(mParser.nextTag() != XmlPullParser.END_TAG && !mParser.getName().equals(FalseAnswer.END_TAG));
+		
+		return result;
+	}
+	
 	////////////////////////////////// XML
 	
 	/**

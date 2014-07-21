@@ -3,16 +3,22 @@
  */
 package cz.vutbr.fit.iha.adapter.parser;
 
+import java.util.ArrayList;
+
 /**
+ * 
  * @author ThinkDeep
- *
+ * @see <a href="https://merlin.fit.vutbr.cz/wiki-iot/index.php/Smarthome_cloud#Info_-_tabulky">err cods</a>
  */
 public class FalseAnswer {
 
 	private String mAdditionalInfo;
 	private int mErrCode;
-	
 	private String mErrMessage;
+	
+	public Object troubleMakers;
+	public static final String START_TAG = "<start>";
+	public static final String END_TAG = "</start>";
 	
 	/**
 	 * Constructor
@@ -27,7 +33,22 @@ public class FalseAnswer {
 	public FalseAnswer(String additionalInfo, int errCode, String errMessage){
 		mAdditionalInfo = additionalInfo;
 		mErrCode = errCode;
-		setErrMessage(errMessage);
+		try{
+			switch(errCode){
+				case 6:
+					troubleMakers = XmlParsers.getFalseMessage6(START_TAG + errMessage + END_TAG);
+					break;
+				case 13:
+					troubleMakers = XmlParsers.getFalseMessage6(START_TAG + errMessage + END_TAG);
+					break;
+				default:
+					mErrMessage = errMessage;
+					break;
+			}
+		}catch(Exception e){
+			e.printStackTrace();
+			mErrMessage = errMessage;
+		}
 	}
 	
 	/**
