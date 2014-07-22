@@ -1,5 +1,6 @@
 /*
 Copyright (c) 2011, Sony Ericsson Mobile Communications AB
+Copyright (c) 2013-2014 Sony Mobile Communications AB.
 
 All rights reserved.
 
@@ -17,6 +18,10 @@ modification, are permitted provided that the following conditions are met:
   of its contributors may be used to endorse or promote products derived from
   this software without specific prior written permission.
 
+ * Neither the name of the Sony Mobile Communications AB nor the names
+  of its contributors may be used to endorse or promote products derived from
+  this software without specific prior written permission.
+
 THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
 ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
 WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -30,10 +35,6 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
 package com.sonyericsson.extras.liveware.extension.util;
-
-import com.sonyericsson.extras.liveware.aef.registration.Registration;
-import com.sonyericsson.extras.liveware.aef.registration.Registration.Device;
-import com.sonyericsson.extras.liveware.aef.registration.Registration.DeviceColumns;
 
 import android.content.ContentResolver;
 import android.content.Context;
@@ -54,6 +55,12 @@ import android.text.TextPaint;
 import android.text.format.DateUtils;
 import android.text.format.Time;
 import android.util.DisplayMetrics;
+
+import com.sonyericsson.extras.liveware.aef.registration.Registration;
+import com.sonyericsson.extras.liveware.aef.registration.Registration.Device;
+import com.sonyericsson.extras.liveware.aef.registration.Registration.DeviceColumns;
+import com.sonyericsson.extras.liveware.aef.registration.Registration.DisplayColumns;
+import com.sonyericsson.extras.liveware.aef.registration.Registration.VersionColumns;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -432,6 +439,86 @@ public class ExtensionUtils {
 
         return (DateUtils.getRelativeTimeSpanString(publishedTime, now, DateUtils.MINUTE_IN_MILLIS,
                 flags)).toString();
+    }
+
+    /**
+     * Get the version of the registration API that is implemented by the
+     * current phone/tablet the extension is running on.
+     *
+     * @param context The context.
+     * @return The version of the registration API.
+     */
+    public static int getRegistrationVersion(Context context) {
+        Cursor cursor = null;
+
+        try {
+            cursor = context.getContentResolver().query(Registration.Version.URI, null, null, null,
+                    null);
+            if (cursor != null && cursor.moveToFirst()) {
+                return cursor.getInt(cursor.getColumnIndexOrThrow(VersionColumns.VERSION));
+            }
+        } catch (SQLException e) {
+            // Expected on V2 or V1 where version table is missing.
+            if (ExtensionUtils.hasIsEmulatedColumnInDisplayTable(context)) {
+                return 2;
+            } else {
+                return 1;
+            }
+        } catch (SecurityException e) {
+            if (Dbg.DEBUG) {
+                Dbg.w("Failed to query version", e);
+            }
+        } catch (IllegalArgumentException e) {
+            if (Dbg.DEBUG) {
+                Dbg.w("Failed to query version", e);
+            }
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+        }
+
+        return 1;
+    }
+
+    /**
+     * Check if the
+     * {@link com.sonyericsson.extras.liveware.aef.registration.Registration.DisplayColumns#IS_EMULATED}
+     * column is present in the
+     * {@link com.sonyericsson.extras.liveware.aef.registration.Registration.Display}
+     * table in the registration API.
+     *
+     * @param context The context.
+     * @return True if the table exists.
+     */
+    public static boolean hasIsEmulatedColumnInDisplayTable(Context context) {
+        Cursor cursor = null;
+        try {
+            cursor = context.getContentResolver().query(Registration.Display.URI, null, null, null,
+                    null);
+            if (cursor != null) {
+                int columnIndex = cursor.getColumnIndex(DisplayColumns.IS_EMULATED);
+                return columnIndex != -1;
+            }
+        } catch (SQLException e) {
+            if (Dbg.DEBUG) {
+                Dbg.w("Failed to query display", e);
+            }
+        } catch (SecurityException e) {
+            if (Dbg.DEBUG) {
+                Dbg.w("Failed to query display", e);
+            }
+        } catch (IllegalArgumentException e) {
+            if (Dbg.DEBUG) {
+                Dbg.w("Failed to query display", e);
+            }
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+        }
+
+        return false;
     }
 
 }

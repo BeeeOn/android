@@ -1,5 +1,6 @@
 /*
 Copyright (c) 2011, Sony Ericsson Mobile Communications AB
+Copyright (c) 2012-2014 Sony Mobile Communications AB.
 
 All rights reserved.
 
@@ -17,6 +18,10 @@ modification, are permitted provided that the following conditions are met:
   of its contributors may be used to endorse or promote products derived from
   this software without specific prior written permission.
 
+* Neither the name of the Sony Mobile Communications AB nor the names
+  of its contributors may be used to endorse or promote products derived from
+  this software without specific prior written permission.
+
 THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
 ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
 WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -31,6 +36,10 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package com.sonyericsson.extras.liveware.extension.util.registration;
 
+import android.content.Context;
+import android.database.Cursor;
+import android.database.SQLException;
+
 import com.sonyericsson.extras.liveware.aef.registration.Registration.Display;
 import com.sonyericsson.extras.liveware.aef.registration.Registration.DisplayColumns;
 import com.sonyericsson.extras.liveware.aef.registration.Registration.Input;
@@ -40,6 +49,8 @@ import com.sonyericsson.extras.liveware.aef.registration.Registration.KeyPadColu
 import com.sonyericsson.extras.liveware.aef.registration.Registration.SensorColumns;
 import com.sonyericsson.extras.liveware.aef.registration.Registration.SensorType;
 import com.sonyericsson.extras.liveware.aef.registration.Registration.SensorTypeColumns;
+import com.sonyericsson.extras.liveware.aef.registration.Registration.Tap;
+import com.sonyericsson.extras.liveware.aef.registration.Registration.TapColumns;
 import com.sonyericsson.extras.liveware.extension.util.Dbg;
 import com.sonyericsson.extras.liveware.extension.util.sensor.AccessorySensor;
 import com.sonyericsson.extras.liveware.extension.util.sensor.AccessorySensorType;
@@ -74,6 +85,8 @@ public class DeviceInfo {
     private List<AccessorySensor> mSensors = null;
 
     private List<InputInfo> mInputs = null;
+
+    private List<TapInfo> mTaps = null;
 
     /**
      * Create device info.
@@ -171,8 +184,8 @@ public class DeviceInfo {
                         .getColumnIndexOrThrow(DisplayColumns.TAP_TOUCH)) == 1);
                 boolean motionTouch = (cursor.getInt(cursor
                         .getColumnIndexOrThrow(DisplayColumns.MOTION_TOUCH)) == 1);
-                DisplayInfo display = new DisplayInfo(displayId, width, height, colors,
-                        refreshRate, latency, tapTouch, motionTouch);
+                DisplayInfo display = new DisplayInfo(mContext, displayId, width, height,
+                        colors, refreshRate, latency, tapTouch, motionTouch);
                 mDisplays.add(display);
             }
         } catch (SQLException e) {
@@ -392,6 +405,51 @@ public class DeviceInfo {
         }
 
         return keyPad;
+    }
+
+    /**
+     * Gets a list of supported tap actions.
+     * @return The list of supported tap actions.
+     */
+    public List<TapInfo> getTaps() {
+        if (mTaps != null) {
+            // List of taps already available. Avoid re-reading from database.
+            return mTaps;
+        }
+
+        mTaps = new ArrayList<TapInfo>();
+        Cursor cursor = null;
+        try {
+            cursor = mContext.getContentResolver().query(Tap.URI, null,
+                    TapColumns.DEVICE_ID + " = ?", new String[] {
+                        Long.toString(mId)
+                    }, null);
+            while (cursor != null && cursor.moveToNext()) {
+                long id = cursor.getLong(cursor.getColumnIndexOrThrow(TapColumns._ID));
+                int action = cursor.getInt(cursor.getColumnIndexOrThrow(TapColumns.ACTION));
+                TapInfo tap = new TapInfo(id, action);
+                mTaps.add(tap);
+            }
+
+        } catch (SQLException e) {
+            if (Dbg.DEBUG) {
+                Dbg.w("Failed to query taps", e);
+            }
+        } catch (SecurityException e) {
+            if (Dbg.DEBUG) {
+                Dbg.w("Failed to query taps", e);
+            }
+        } catch (IllegalArgumentException e) {
+            if (Dbg.DEBUG) {
+                Dbg.w("Failed to query taps", e);
+            }
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+        }
+
+        return mTaps;
     }
 
 }

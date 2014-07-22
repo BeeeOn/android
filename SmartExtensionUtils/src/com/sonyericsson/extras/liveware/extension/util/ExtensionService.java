@@ -1,6 +1,6 @@
 /*
 Copyright (c) 2011, Sony Ericsson Mobile Communications AB
-Copyright (c) 2012 Sony Mobile Communications AB.
+Copyright (c) 2012-2014 Sony Mobile Communications AB.
 
 All rights reserved.
 
@@ -15,6 +15,10 @@ modification, are permitted provided that the following conditions are met:
   and/or other materials provided with the distribution.
 
  * Neither the name of the Sony Ericsson Mobile Communications AB nor the names
+  of its contributors may be used to endorse or promote products derived from
+  this software without specific prior written permission.
+
+ * Neither the name of the Sony Mobile Communications AB nor the names
   of its contributors may be used to endorse or promote products derived from
   this software without specific prior written permission.
 
@@ -36,9 +40,11 @@ import android.app.Service;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.SQLException;
+import android.os.Binder;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
+import android.text.TextUtils;
 
 import com.sonyericsson.extras.liveware.aef.control.Control;
 import com.sonyericsson.extras.liveware.aef.notification.Notification;
@@ -53,6 +59,7 @@ import com.sonyericsson.extras.liveware.extension.util.control.ControlTouchEvent
 import com.sonyericsson.extras.liveware.extension.util.registration.IRegisterCallback;
 import com.sonyericsson.extras.liveware.extension.util.registration.RegisterExtensionTask;
 import com.sonyericsson.extras.liveware.extension.util.registration.RegistrationInformation;
+import com.sonyericsson.extras.liveware.extension.util.widget.BaseWidget;
 import com.sonyericsson.extras.liveware.extension.util.widget.WidgetExtension;
 
 import java.util.HashMap;
@@ -85,13 +92,17 @@ public abstract class ExtensionService extends Service implements IRegisterCallb
 
     private RegisterExtensionTask mRegisterTask = null;
 
-    private final String mExtensionKey;
+    private String mExtensionKey = null;
 
-    private RegistrationInformation mRegistrationInformation;
+    /**
+     * Registration information with the extension capabilities and
+     * requirements.
+     */
+    protected RegistrationInformation mRegistrationInformation;
 
-    private HashMap<String, WidgetExtension> mWidgets = new HashMap<String, WidgetExtension>();
+    private final HashMap<String, WidgetExtension> mWidgets = new HashMap<String, WidgetExtension>();
 
-    private HashMap<String, ControlExtension> mControls = new HashMap<String, ControlExtension>();
+    private final HashMap<String, ControlExtension> mControls = new HashMap<String, ControlExtension>();
 
     private int mStartId;
 
@@ -111,6 +122,20 @@ public abstract class ExtensionService extends Service implements IRegisterCallb
             throw new IllegalArgumentException("extensionKey == null");
         }
         mExtensionKey = extensionKey;
+    }
+
+    /**
+     * Create instance of ExtensionService. This constructor does not include an extension key so
+     * getExtensionKey must be implemented if it's used.
+     */
+    protected ExtensionService() {
+    }
+
+    private String getExtensionKey() {
+        if (TextUtils.isEmpty(mExtensionKey)) {
+            mExtensionKey = getRegistrationInformation().getExtensionKey();
+        }
+        return mExtensionKey;
     }
 
     /**
@@ -134,79 +159,18 @@ public abstract class ExtensionService extends Service implements IRegisterCallb
     }
 
     @Override
-    public IBinder onBind(Intent intent) {
-        return null;
-    }
-
-    @Override
     public void onStart(Intent intent, int startId) {
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+
         if (intent != null) {
             IntentRunner runner = new IntentRunner(intent, startId) {
                 @Override
                 public void run() {
                     ExtensionService.this.mStartId = mRunnerStartId;
-                    String action = mIntent.getAction();
-                    if (Registration.Intents.EXTENSION_REGISTER_REQUEST_INTENT.equals(action)) {
-                        onRegisterRequest();
-                        // Registration done in async task.
-                        // Stopped when task is completed
-                    } else if (Intent.ACTION_LOCALE_CHANGED.equals(action)) {
-                        onLocaleChanged();
-                        stopSelfCheck();
-                    } else if (Registration.Intents.ACCESSORY_CONNECTION_INTENT.equals(action)) {
-                        int status = mIntent.getIntExtra(
-                                Registration.Intents.EXTRA_CONNECTION_STATUS, -1);
-                        onConnectionChanged(status == Registration.AccessoryConnectionStatus.STATUS_CONNECTED);
-                        if (status == Registration.AccessoryConnectionStatus.STATUS_DISCONNECTED) {
-                            // Accessory disconnected.
-                            stopSelfCheck();
-                        } else {
-                            stopSelfCheck(true);
-                        }
-                    } else if (Notification.Intents.VIEW_EVENT_INTENT.equals(action)
-                            || Notification.Intents.REFRESH_REQUEST_INTENT.equals(action)) {
-                        handleNotificationIntent(mIntent);
-                        // Check if service shall be stopped.
-                        // Assume accessory connected as it sent something to
-                        // us.
-                        stopSelfCheck(true);
-                    } else if (Widget.Intents.WIDGET_START_REFRESH_IMAGE_INTENT.equals(action)
-                            || Widget.Intents.WIDGET_STOP_REFRESH_IMAGE_INTENT.equals(action)
-                            || Widget.Intents.WIDGET_ONTOUCH_INTENT.equals(action)
-                            || Widget.Intents.WIDGET_OBJECT_CLICK_EVENT_INTENT.equals(action)
-                            || WidgetExtension.SCHEDULED_REFRESH_INTENT.equals(action)) {
-                        handleWidgetIntent(mIntent);
-
-                        // Check if service shall be stopped.
-                        // Assume accessory connected as it sent something to
-                        // us.
-                        stopSelfCheck(true);
-                    } else if (Control.Intents.CONTROL_START_INTENT.equals(action)
-                            || Control.Intents.CONTROL_STOP_INTENT.equals(action)
-                            || Control.Intents.CONTROL_RESUME_INTENT.equals(action)
-                            || Control.Intents.CONTROL_PAUSE_INTENT.equals(action)
-                            || Control.Intents.CONTROL_ACTIVE_POWER_SAVE_MODE_STATUS_CHANGED_INTENT
-                                    .equals(action)
-                            || Control.Intents.CONTROL_ERROR_INTENT.equals(action)
-                            || Control.Intents.CONTROL_KEY_EVENT_INTENT.equals(action)
-                            || Control.Intents.CONTROL_TOUCH_EVENT_INTENT.equals(action)
-                            || Control.Intents.CONTROL_OBJECT_CLICK_EVENT_INTENT.equals(action)
-                            || Control.Intents.CONTROL_LIST_REQUEST_ITEM_INTENT.equals(action)
-                            || Control.Intents.CONTROL_LIST_ITEM_CLICK_INTENT.equals(action)
-                            || Control.Intents.CONTROL_LIST_REFRESH_REQUEST_INTENT.equals(action)
-                            || Control.Intents.CONTROL_LIST_ITEM_SELECTED_INTENT.equals(action)
-                            || Control.Intents.CONTROL_MENU_ITEM_SELECTED.equals(action)
-                            || Control.Intents.CONTROL_SWIPE_EVENT_INTENT.equals(action)) {
-                        handleControlIntent(mIntent);
-                        // Check if service shall be stopped.
-                        // Assume accessory connected as it sent something to
-                        // us.
-                        stopSelfCheck(true);
-                    }
+                    handleIntent(mIntent);
                 }
             };
             // post on handler to return quicker since started from broadcast
@@ -215,6 +179,73 @@ public abstract class ExtensionService extends Service implements IRegisterCallb
         }
 
         return START_STICKY;
+    }
+
+    /**
+     * Handle intent received by extension service.
+     * @param intent The intent.
+     */
+    protected void handleIntent(Intent intent) {
+
+        String action = intent.getAction();
+        if (Registration.Intents.EXTENSION_REGISTER_REQUEST_INTENT.equals(action)) {
+            onRegisterRequest();
+            // Registration done in async task.
+            // Stopped when task is completed
+        } else if (Intent.ACTION_LOCALE_CHANGED.equals(action)) {
+            onLocaleChanged();
+            stopSelfCheck();
+        } else if (Registration.Intents.ACCESSORY_CONNECTION_INTENT.equals(action)) {
+            int status = intent.getIntExtra(
+                    Registration.Intents.EXTRA_CONNECTION_STATUS, -1);
+            onConnectionChanged(status == Registration.AccessoryConnectionStatus.STATUS_CONNECTED);
+            if (status == Registration.AccessoryConnectionStatus.STATUS_DISCONNECTED) {
+                // Accessory disconnected.
+                stopSelfCheck();
+            } else {
+                stopSelfCheck(true);
+            }
+        } else if (Notification.Intents.VIEW_EVENT_INTENT.equals(action)
+                || Notification.Intents.REFRESH_REQUEST_INTENT.equals(action)) {
+            handleNotificationIntent(intent);
+            // Check if service shall be stopped.
+            // Assume accessory connected as it sent something to
+            // us.
+            stopSelfCheck(true);
+        } else if (Widget.Intents.WIDGET_START_REFRESH_IMAGE_INTENT.equals(action)
+                || Widget.Intents.WIDGET_STOP_REFRESH_IMAGE_INTENT.equals(action)
+                || Widget.Intents.WIDGET_ONTOUCH_INTENT.equals(action)
+                || Widget.Intents.WIDGET_OBJECT_CLICK_EVENT_INTENT.equals(action)
+                || WidgetExtension.SCHEDULED_REFRESH_INTENT.equals(action)) {
+            handleWidgetIntent(intent);
+
+            // Check if service shall be stopped.
+            // Assume accessory connected as it sent something to
+            // us.
+            stopSelfCheck(true);
+        } else if (Control.Intents.CONTROL_START_INTENT.equals(action)
+                || Control.Intents.CONTROL_STOP_INTENT.equals(action)
+                || Control.Intents.CONTROL_RESUME_INTENT.equals(action)
+                || Control.Intents.CONTROL_PAUSE_INTENT.equals(action)
+                || Control.Intents.CONTROL_ACTIVE_POWER_SAVE_MODE_STATUS_CHANGED_INTENT
+                        .equals(action)
+                || Control.Intents.CONTROL_ERROR_INTENT.equals(action)
+                || Control.Intents.CONTROL_KEY_EVENT_INTENT.equals(action)
+                || Control.Intents.CONTROL_TOUCH_EVENT_INTENT.equals(action)
+                || Control.Intents.CONTROL_OBJECT_CLICK_EVENT_INTENT.equals(action)
+                || Control.Intents.CONTROL_LIST_REQUEST_ITEM_INTENT.equals(action)
+                || Control.Intents.CONTROL_LIST_ITEM_CLICK_INTENT.equals(action)
+                || Control.Intents.CONTROL_LIST_REFRESH_REQUEST_INTENT.equals(action)
+                || Control.Intents.CONTROL_LIST_ITEM_SELECTED_INTENT.equals(action)
+                || Control.Intents.CONTROL_MENU_ITEM_SELECTED.equals(action)
+                || Control.Intents.CONTROL_SWIPE_EVENT_INTENT.equals(action)
+                || Control.Intents.CONTROL_TAP_EVENT_INTENT.equals(action)) {
+            handleControlIntent(intent);
+            // Check if service shall be stopped.
+            // Assume accessory connected as it sent something to
+            // us.
+            stopSelfCheck(true);
+        }
     }
 
     /**
@@ -237,8 +268,8 @@ public abstract class ExtensionService extends Service implements IRegisterCallb
     }
 
     /**
-     * Perform extension registration in background Override this method to do
-     * anything else when locale change
+     * Called when locale is changed. Default implementation performs
+     * extension registration in background.
      *
      * @see #onRegisterResult()
      */
@@ -247,8 +278,7 @@ public abstract class ExtensionService extends Service implements IRegisterCallb
     }
 
     /**
-     * Called when accessory is connected/disconnected Override this method to
-     * handle connection/disconnection of accessory
+     * Called when accessory is connected/disconnected.
      *
      * @param success True on source registration refresh success.
      */
@@ -257,8 +287,8 @@ public abstract class ExtensionService extends Service implements IRegisterCallb
     }
 
     /**
-     * Perform extension registration in background Override this method to
-     * handle registration
+     * Called when registration is requested. Default implementation performs
+     * extension registration in background.
      *
      * @see #onRegisterResult()
      */
@@ -357,7 +387,8 @@ public abstract class ExtensionService extends Service implements IRegisterCallb
     }
 
     /**
-     * Get the extension registration information
+     * Provides the extension registration information. This method has to be
+     * implemented for all extensions.
      *
      * @return The extension registration information.
      */
@@ -443,16 +474,18 @@ public abstract class ExtensionService extends Service implements IRegisterCallb
 
     /**
      * Create widget extension. Override this method to provide extension
-     * widgets.
+     * widgets. This method must be implemented when implementing widgets
+     * targeting widget API version 2 or lower.
      *
-     * @param hostAppPackageName The host application package name.
+     * @param hostAppPackageName The package name of the host application that
+     *            the widget will be shown on.
      * @see WidgetExtension
      * @see RegistrationInformation#getRequiredWidgetApiVersion()
      * @return The widget extension.
      */
     public WidgetExtension createWidgetExtension(String hostAppPackageName) {
         throw new IllegalArgumentException(
-                "createWidgetExtension() not implemented. Widget extensions must override this method");
+                "createWidgetExtension(String) not implemented. Widget extensions must override this method");
     }
 
     /**
@@ -570,7 +603,8 @@ public abstract class ExtensionService extends Service implements IRegisterCallb
     private final void handleNotificationIntent(final Intent intent) {
         String action = intent.getAction();
 
-        if (!mExtensionKey.equals(intent.getStringExtra(Notification.Intents.EXTRA_EXTENSION_KEY))) {
+        if (!getExtensionKey().equals(
+                intent.getStringExtra(Notification.Intents.EXTRA_EXTENSION_KEY))) {
             if (Dbg.DEBUG) {
                 Dbg.w("Invalid extension key: "
                         + intent.getStringExtra(Notification.Intents.EXTRA_EXTENSION_KEY));
@@ -596,7 +630,7 @@ public abstract class ExtensionService extends Service implements IRegisterCallb
             Dbg.d("Received intent: " + action);
         }
 
-        if (!mExtensionKey.equals(intent.getStringExtra(Widget.Intents.EXTRA_EXTENSION_KEY))) {
+        if (!getExtensionKey().equals(intent.getStringExtra(Widget.Intents.EXTRA_EXTENSION_KEY))) {
             if (Dbg.DEBUG) {
                 Dbg.w("Invalid extension key: "
                         + intent.getStringExtra(Widget.Intents.EXTRA_EXTENSION_KEY));
@@ -605,14 +639,16 @@ public abstract class ExtensionService extends Service implements IRegisterCallb
         }
 
         String hostAppPackageName = intent.getStringExtra(Widget.Intents.EXTRA_AHA_PACKAGE_NAME);
-
-        // Lookup widget based on host application package name.
-        WidgetExtension widget = mWidgets.get(hostAppPackageName);
+        String widgetKey = intent.getStringExtra(Widget.Intents.EXTRA_KEY);
+        int widgetInstanceId = intent.getIntExtra(Widget.Intents.EXTRA_INSTANCE_ID, -1);
+        String widgetMapKey = hostAppPackageName + String.valueOf(widgetInstanceId);
+        // Lookup widget based on host application package name and instance id.
+        WidgetExtension widget = mWidgets.get(widgetMapKey);
 
         if (widget == null) {
             if (Widget.Intents.WIDGET_STOP_REFRESH_IMAGE_INTENT.equals(action)) {
                 if (Dbg.DEBUG) {
-                    Dbg.w("No widget object for: " + hostAppPackageName + ". Ignoring stop.");
+                    Dbg.w("No widget object for: " + widgetMapKey + ". Ignoring stop.");
                 }
                 return;
             }
@@ -621,7 +657,7 @@ public abstract class ExtensionService extends Service implements IRegisterCallb
                 // If the widget was stopped, but there was a scheduled refresh
                 // waiting to be processed this would start the widget again.
                 if (Dbg.DEBUG) {
-                    Dbg.d("No widget object for: " + hostAppPackageName
+                    Dbg.d("No widget object for: " + widgetMapKey
                             + ". Ignoring scheduled refersh.");
                 }
                 return;
@@ -629,7 +665,7 @@ public abstract class ExtensionService extends Service implements IRegisterCallb
 
             if (!Widget.Intents.WIDGET_START_REFRESH_IMAGE_INTENT.equals(action)) {
                 if (Dbg.DEBUG) {
-                    Dbg.w("No widget object for: " + hostAppPackageName + ". Creating one.");
+                    Dbg.w("No widget object for: " + widgetMapKey + ". Creating one.");
                 }
             }
 
@@ -638,17 +674,23 @@ public abstract class ExtensionService extends Service implements IRegisterCallb
             // We do this not only for start intents since the process might be
             // killed after the start intent, and in that case we need to
             // recreate the widget object when we get a new intent.
-            // Otherwise it will be experienced as the that the widget is not
+            // Otherwise it will be experienced as that the widget is not
             // responding to user actions.
-            widget = createWidgetExtension(hostAppPackageName);
-            mWidgets.put(hostAppPackageName, widget);
+            if (!supportsAdvancedWidgets(intent)) {
+                widget = createWidgetExtension(hostAppPackageName);
+            } else {
+                widget = RegistrationInformation.getWidgetInstanceFromClass(this,
+                        hostAppPackageName, widgetInstanceId, widgetKey);
+                ((BaseWidget) widget).onCreate();
+            }
+            mWidgets.put(widgetMapKey, widget);
 
             widget.startRefresh();
         } else {
             if (Widget.Intents.WIDGET_START_REFRESH_IMAGE_INTENT.equals(action)) {
                 // ignoring start for already started.
                 if (Dbg.DEBUG) {
-                    Dbg.w("Ignoring start for: " + hostAppPackageName + ". Already started.");
+                    Dbg.w("Ignoring start for: " + widgetMapKey + ". Already started.");
                 }
             }
         }
@@ -659,7 +701,7 @@ public abstract class ExtensionService extends Service implements IRegisterCallb
             // Destroy the widget and remove it from the list of active
             // widgets.
             widget.destroy();
-            mWidgets.remove(hostAppPackageName);
+            mWidgets.remove(widgetMapKey);
 
         } else if (WidgetExtension.SCHEDULED_REFRESH_INTENT.equals(action)) {
             widget.onScheduledRefresh();
@@ -699,13 +741,25 @@ public abstract class ExtensionService extends Service implements IRegisterCallb
     }
 
     /**
+     * Checks if in intent is coming from a host application that supports the new Widget registration features.
+     * @param intent the intent from the host application
+     * @return true if advanced widget features are supported
+     */
+    private boolean supportsAdvancedWidgets(Intent intent) {
+        // To avoid the performance hit of checking the Registration database
+        // for API level, this implementation simply checks for the instanceId,
+        // required in all intents for advanced widgets.
+        return intent.hasExtra(Widget.Intents.EXTRA_INSTANCE_ID);
+    }
+
+    /**
      * Handle control intent.
      *
      * @param intent The intent to handle.
      */
     private final void handleControlIntent(final Intent intent) {
 
-        if (!mExtensionKey.equals(intent.getStringExtra(Control.Intents.EXTRA_EXTENSION_KEY))) {
+        if (!getExtensionKey().equals(intent.getStringExtra(Control.Intents.EXTRA_EXTENSION_KEY))) {
             if (Dbg.DEBUG) {
                 Dbg.w("Invalid extension key: "
                         + intent.getStringExtra(Control.Intents.EXTRA_EXTENSION_KEY));
@@ -783,6 +837,9 @@ public abstract class ExtensionService extends Service implements IRegisterCallb
         } else if (Control.Intents.CONTROL_KEY_EVENT_INTENT.equals(action)) {
             control.onKey(intent.getIntExtra(Control.Intents.EXTRA_KEY_ACTION, -1),
                     intent.getIntExtra(Control.Intents.EXTRA_KEY_CODE, -1),
+                    intent.getLongExtra(Control.Intents.EXTRA_TIMESTAMP, 0));
+        } else if (Control.Intents.CONTROL_TAP_EVENT_INTENT.equals(action)) {
+            control.onTap(intent.getIntExtra(Control.Intents.EXTRA_TAP_ACTION, -1),
                     intent.getLongExtra(Control.Intents.EXTRA_TIMESTAMP, 0));
         } else if (Control.Intents.CONTROL_TOUCH_EVENT_INTENT.equals(action)) {
 
@@ -895,5 +952,53 @@ public abstract class ExtensionService extends Service implements IRegisterCallb
      */
     protected void onControlError(String hostAppPackageName, int errorCode) {
 
+    }
+
+    public interface ExtensionIntentSender {
+        void send(Intent i);
+    }
+
+    // Binder given to clients
+    private final IBinder mBinder = new LocalBinder();
+
+    private ExtensionIntentSender mIntentSender;
+
+    /**
+     * Class used for the client Binder.  Because we know this service always
+     * runs in the same process as its clients, we don't need to deal with IPC.
+     */
+    public class LocalBinder extends Binder {
+        ExtensionService getService() {
+            // Return this instance of LocalService so clients can call public
+            // methods
+            return ExtensionService.this;
+        }
+    }
+
+    @Override
+    public IBinder onBind(Intent intent) {
+        return mBinder;
+    }
+
+    public void setIntentSender(ExtensionIntentSender intentSender) {
+        mIntentSender = intentSender;
+    }
+
+    @Override
+    public boolean onUnbind(Intent intent) {
+
+        // Needed to prevent leaking the client.
+        mIntentSender = null;
+
+        return super.onUnbind(intent);
+    }
+
+    @Override
+    public void sendBroadcast(Intent intent, String receiverPermission) {
+        if (mIntentSender != null) {
+            mIntentSender.send(intent);
+        } else {
+            super.sendBroadcast(intent, receiverPermission);
+        }
     }
 }

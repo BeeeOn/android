@@ -1,6 +1,6 @@
 /*
 Copyright (c) 2011, Sony Ericsson Mobile Communications AB
-Copyright (C) 2012-2013 Sony Mobile Communications AB
+Copyright (C) 2012-2014 Sony Mobile Communications AB
 
 All rights reserved.
 
@@ -42,9 +42,8 @@ import android.provider.BaseColumns;
 import com.sonyericsson.extras.liveware.aef.registration.Registration.ExtensionColumns;
 
 /**
- * <h1>Overview</h1>
- * <p>Notification is a part of the Smart Extension APIs.
- * The Notification engine enables the gathering of event-type data from different
+ * Notification API is a part of the Smart Extension APIs.
+ * <p>The Notification engine enables the gathering of event-type data from different
  * sources to one place so that accessory host applications will be able to
  * access this data, instead of getting the data from each individual source.
  * Examples of event-data are activity streams on a social network, new incoming
@@ -64,11 +63,11 @@ import com.sonyericsson.extras.liveware.aef.registration.Registration.ExtensionC
  * <img src="../../../../../../../images/notification_operating_environment.png"
  * alt="Operating context" border="1" />
  * </p>
- * The Notification API defines and implements an Android ContentProvider that
- * extensions access via the Android ContentResolver API. The ContentProvider
+ * The Notification API defines and implements an <a href="http://developer.android.com/reference/android/content/ContentProvider.html">ContentProvider</a> that
+ * extensions access via the <a href="http://developer.android.com/reference/android/content/ContentResolver.html">ContentResolver</a> API. The ContentProvider
  * implementation is backed by a database implementation. In order for an extension
- * to interact with Notification API, the extension must have used the Registration API
- * and inserted information in the extension table. See Registration &amp; Capabilities API
+ * to interact with Notification API, the extension must have used the {@link com.sonyericsson.extras.liveware.aef.registration.Registration} API
+ * and inserted information in the extension table. See {@link com.sonyericsson.extras.liveware.aef.registration.Registration} API
  * for more information on how to insert a record in the extension table.
  * When needed, Android Intents are sent to the extensions to perform a task.
  * </p>
@@ -77,8 +76,8 @@ import com.sonyericsson.extras.liveware.aef.registration.Registration.ExtensionC
  * As they are standalone Android applications in their own right,
  * extensions may be uninstalled any time, unless they are part of the system
  * image, and may be installed any time during the operation of the device. They
- * may be &#39disabled&#39 as well by the end user via the user interface or by the
- * extension developer; when &#39disabled&#39, data from that extension may not be
+ * may be &#39;disabled&#39; as well by the end user via the user interface or by the
+ * extension developer; when &#39;disabled&#39;, data from that extension may not be
  * displayed by the accessory host applications.
  * </p>
  * <p>
@@ -98,11 +97,11 @@ import com.sonyericsson.extras.liveware.aef.registration.Registration.ExtensionC
  * security. Cross-database queries are slow and even slower when there are
  * potentially many databases involved and this will severely impact the
  * performance of accessories and their perceived user experience.
- * It is difficult and practically impossible to allow the &#39correct&#39
+ * It is difficult and practically impossible to allow the &#39;correct&#39;
  * applications to access the extension-data when there are many databases to
  * interact with. However tempting it may be, the purpose of the engine is NOT to
  * be a central store for all kinds of data, e.g. files, media etc., such that it
- * will be a &#34store room&#34 for all kinds of extension-data.
+ * will be a &#34;store room&#34; for all kinds of extension-data.
  * </p>
  * <p>Topics covered here:
  * <ol>
@@ -114,7 +113,7 @@ import com.sonyericsson.extras.liveware.aef.registration.Registration.ExtensionC
  * <li><a href="#getevents">Getting event-data</a>
  * <li><a href="#viewEvent">Showing the Detail View of an Event</a>
  * <li><a href="#ContactLinking">Contact Linking</a>
- * <li><a href="#Images">Handling Images</a>
+ * <li><a href="#Images">Handling Images</a>{@link com.sonyericsson.extras.liveware.aef.registration.Registration}
  * <li><a href="#DataIntegrity">Data Integrity</a>
  * <li><a href="#Performance">Performance</a>
  * </ol>
@@ -123,14 +122,14 @@ import com.sonyericsson.extras.liveware.aef.registration.Registration.ExtensionC
  * <h3>Concept Explanations</h3>
  * <p>
  * There are three fundamental concepts in the Notification engine's database
- * extension developers are required to understand.
+ * that developers are required to understand.
  * </p>
  * <p>
  * The concept of <i>Extension</i> is on Android APK level. The extension table
  * of the registration database contains meta-information about each extension.
  * The purpose of the extension is to provide the necessary data to the notification
  * engine set by the database schema. The source of the extension's event-data may
- * be self-generated, other Android ContentProvider, a Web server or a combination of
+ * be self-generated, another Android ContentProvider, a Web server or a combination of
  * these. The extension is a standalone application which may have its own GUI that
  * also has the capability to provide data to be shown by a host application
  * using the Notification engine, or it may not have its own GUI and it is
@@ -143,21 +142,21 @@ import com.sonyericsson.extras.liveware.aef.registration.Registration.ExtensionC
  * backends but retain the ability to package these in a standalone APK. A use
  * case example is an email aggregator extension that allows the user to connect to
  * different email accounts through the installation of only one Android package
- * file; each email account can be set as a Source or the extension defines only
+ * file; each email account can be set as {@link com.sonyericsson.extras.liveware.aef.registration.Registration}a Source or the extension defines only
  * one Source. In the latter scenario, emails from all accounts may be shown
  * in one view instead of separate views. {@link Source} stores attribute
  * information about a Source. The accessory host application may use this
  * information to filter event-data by <i>Source</i> or provide
  * configuration options on the user interface to filter event-data by
- * <i>Source</i>.Extension developers who wish to have the accessory host
+ * <i>Source</i>. Extension developers who wish to have the accessory host
  * application display events from different <i>Sources</i>
  * clearly should add {@link Source} information.
- * Up to 8 sources can be linked to a <i>Extension</i>.
+ * Up to 8 sources can be linked to an <i>Extension</i>.
  * If the limit
  * is reached, an exception will be thrown. A <i>Source</i> always has to be
  * linked to an <i>Extension</i> .
  * </p>
- * <p>
+ * <p><a href="http://developer.android.com/reference/android/content/ContentResolver.html">ContentResolver</a> API
  * An <i>Event</i> is a representation of a notification that may be noteworthy
  * to present to the end user. Examples of events are incoming SMS
  * message notifications, a missed call notification, updates from friends on a
@@ -166,8 +165,8 @@ import com.sonyericsson.extras.liveware.aef.registration.Registration.ExtensionC
  * in this table to present the data. An <i>Event</i> is always connected
  * to a <i>Source</i> but a </i>Source</i> may not always have to have an
  * <i>Event</i>.
- * Maximum 100 events from a <i>Source</i>
- * stored in {@link Event}; when the limit is reached, events will be automatically
+ * A maximum of 100 events from a <i>Source</i>
+ * can be stored in {@link Event}; when the limit is reached, events will be automatically
  * removed.
  * </p>
  * <img src="../../../../../../../images/notification_database.png"
@@ -175,14 +174,16 @@ import com.sonyericsson.extras.liveware.aef.registration.Registration.ExtensionC
  * <a name="InterAppCommunication"></a>
  * <h3>Inter-application communication</h3>
  * <p>
- * Extensions only use the Android ContentResolver API to communicate with the
+ * Extensions only use the <a href="http://developer.android.com/reference/android/content/ContentResolver.html">ContentResolver</a> API to communicate with the
  * Notification engine's ContentProvider. For the possibility to react to user
  * input, extensions should implement at least an Android BroadcastReceiver to
- * catch Intents sent from the accessory host
- * applications. Also see the Control API, Widget API and Sensor API documentation.
+ * catch Intents sent from the accessory host applications.
+ * It is recommended for an extension to also implement a tunnel service using the {@link com.sonyericsson.extras.liveware.aef.tunnel.Tunnel} API
+ * to prevent time sensitive intents from getting delayed.
+ * Also see the {@link com.sonyericsson.extras.liveware.aef.control.Control} API, {@link com.sonyericsson.extras.liveware.aef.widget.Widget} API and {@link com.sonyericsson.extras.liveware.aef.sensor.Sensor} API documentation.
  * </p>
  * <p>
- * The list and descriptions of each BroadcastIntent extensions could listen to
+ * The list and descriptions of each Intent that extensions may listen to
  * are found in {@link Intents} together with the Intent-extra data
  * that are sent in each Intent.
  * </p>
@@ -190,13 +191,13 @@ import com.sonyericsson.extras.liveware.aef.registration.Registration.ExtensionC
  * <h3>Security</h3>
  * <p>
  * In order to use the Notification API, an extension must first add information
- * in the extension table. This require a specific permission. See the documentation
- * of the Registration API for more information
+ * in the extension table. This requires a specific permission. Refer to the documentation
+ * of the {@link com.sonyericsson.extras.liveware.aef.registration.Registration} API for more information
  *</p>
  *<p>
- * A extension only has access to its own data: it is able to insert, query, update
+ * An extension only has access to its own data: it is able to insert, query, update
  * and remove its data that is stored on the Notification engine. When an
- * application registered as a extension is uninstalled from the Android system,
+ * application registered as an extension is uninstalled from the Android system,
  * the associated data that is stored in the engine is automatically removed
  * by the Notification engine's implementation.
  * </p>
@@ -221,11 +222,11 @@ import com.sonyericsson.extras.liveware.aef.registration.Registration.ExtensionC
  * of this application's attributes. This process is known as registration and
  * after a successful registration, the application is referred as an extension in
  * the Notification engine's context. In practice, the process of registering
- * a extension involves the application inserting some data about itself using the
- * Registration API.
+ * an extension involves the application inserting some data about itself using the
+ * {@link com.sonyericsson.extras.liveware.aef.registration.Registration} API.
  * </p>
  * <p>
- * From the Notification engine's perspective, the life cycle of a extension starts
+ * From the Notification engine's perspective, the life cycle of an extension starts
  * from the time a successful registration takes place to the time the Android
  * system uninstalls the application or the extension deregisters itself from the
  * Notification engine. During this time, the extension is free to access the Event
@@ -296,14 +297,11 @@ import com.sonyericsson.extras.liveware.aef.registration.Registration.ExtensionC
  * <p>
  * If you need to synchronize periodically with a server in a network, consider
  * using the {@link android.app.AlarmManager} to achieve optimal power consumption.
- * A tutorial explaining how you can implement this is posted at the
- * <a href="http://blogs.sonyericsson.com/developerworld/2010/08/23/android-tutorial-reducing-power-consumption-of-connected-apps/">
- * Sony Ericsson Developer blog</a>.
  * </p>
  * <a name="viewEvent"></a>
  * <h3>Showing the Detail View of an Event</h3>
  * <p>
- * The event-data supplied by your plug-in in {@link Event} may be a snapshot of
+ * The event-data supplied by your extension in {@link Event} may be a snapshot of
  * the information and the user has limited possibilities to interact with the
  * information presented by the accessory host application. The user may wish to
  * see all details related to that event and react to it, e.g. mark it as a
@@ -341,7 +339,7 @@ import com.sonyericsson.extras.liveware.aef.registration.Registration.ExtensionC
  * especially true for foreign keys. As an example, <i>sourceId</i> for an
  * <i>Event</i> is a foreign key to the column <i>_id</i> in the <i>Source</i>
  * table, thus the <i>source_id</i> must have a valid reference to a row in the
- * <i>Source</i> table which in turn is associated with a plug-in. If values for
+ * <i>Source</i> table which in turn is associated with an extension. If values for
  * the stated mandatory columns are not provided, SQLExceptions with constraint
  * failures will be thrown.
  * </p>
@@ -351,7 +349,7 @@ import com.sonyericsson.extras.liveware.aef.registration.Registration.ExtensionC
  * For best performance, it is recommended the extension developer use
  * {@link android.content.ContentResolver#bulkInsert(Uri, android.content.ContentValues[])}
  * or {@link android.content.ContentResolver#applyBatch(String, java.util.ArrayList)}
- * when doing inserts or updates to the Event Stream&#39s ContentProvider.
+ * when doing inserts or updates to the Event Stream&#39;s ContentProvider.
  * </p>
  */
 public class Notification {
@@ -379,7 +377,8 @@ public class Notification {
     protected static final Uri BASE_URI = Uri.parse("content://" + AUTHORITY);
 
     /**
-     * Broadcast Intents sent to extensions by the host application.
+     * Intents sent to extensions by the host applications either
+     * using the broadcast queue or {@link com.sonyericsson.extras.liveware.aef.tunnel.Tunnel}.
      */
     public interface Intents {
 
@@ -401,13 +400,18 @@ public class Notification {
         static final String VIEW_EVENT_INTENT = "com.sonyericsson.extras.liveware.aef.notification.VIEW_EVENT_DETAIL";
 
         /**
-         * Intent sent by the host application when an update of available data is needed
+         * Intent sent by the host application when an update of available data
+         * is needed. It is optional for the host application to send this
+         * intent, and most host application do not send it at all. Instead the
+         * extensions controls the timing for when it wants to add/update/delete
+         * events.
          * <p>
          * Intent-extra data:
          * </p>
          * <ul>
          <li>{@link #EXTRA_EXTENSION_KEY}</li>
          * </ul>
+         *
          * @since 1.0
          */
         static final String REFRESH_REQUEST_INTENT = "com.sonyericsson.extras.liveware.aef.notification.REFRESH_REQUEST";

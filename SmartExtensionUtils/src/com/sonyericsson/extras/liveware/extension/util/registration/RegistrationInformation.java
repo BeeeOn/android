@@ -1,5 +1,6 @@
 /*
 Copyright (c) 2011, Sony Ericsson Mobile Communications AB
+Copyright (c) 2012-2014, Sony Mobile Communications AB
 
 All rights reserved.
 
@@ -14,6 +15,10 @@ modification, are permitted provided that the following conditions are met:
   and/or other materials provided with the distribution.
 
  * Neither the name of the Sony Ericsson Mobile Communications AB nor the names
+  of its contributors may be used to endorse or promote products derived from
+  this software without specific prior written permission.
+
+* Neither the name of the Sony Mobile Communications AB nor the names
   of its contributors may be used to endorse or promote products derived from
   this software without specific prior written permission.
 
@@ -33,48 +38,81 @@ package com.sonyericsson.extras.liveware.extension.util.registration;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.text.TextUtils;
 
 import com.sonyericsson.extras.liveware.aef.notification.Notification;
 import com.sonyericsson.extras.liveware.aef.registration.Registration;
+import com.sonyericsson.extras.liveware.aef.registration.Registration.WidgetRegistrationColumns;
 import com.sonyericsson.extras.liveware.extension.util.Dbg;
 import com.sonyericsson.extras.liveware.extension.util.ExtensionService;
+import com.sonyericsson.extras.liveware.extension.util.ExtensionUtils;
 import com.sonyericsson.extras.liveware.extension.util.sensor.AccessorySensor;
+import com.sonyericsson.extras.liveware.extension.util.widget.BaseWidget;
+import com.sonyericsson.extras.liveware.extension.util.widget.WidgetExtension;
+
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 /**
- * Provides information needed during extension registration
+ * Returns information needed during extension registration
  */
 public abstract class RegistrationInformation {
 
+    /**
+     * Constant defining that an API is not required for extension.
+     */
     public static int API_NOT_REQUIRED = 0;
 
+    private static final int CATEGORY_SUPPORT_API_VERSION = 5;
+
     /**
-     * Get the required notifications API version
+     * Return if the specified Control API device is supported by the extension.
+     * Default implementation checks if the display size is supported by
+     * the extension. Override this method to adapt it to your needs,
+     * e.g. to include tap support.
+     *
+     * @param deviceInfo The device.
+     * @return True if the Control API device is supported.
+     */
+    public boolean isControlDeviceSupported(DeviceInfo deviceInfo) {
+        for (DisplayInfo display : deviceInfo.getDisplays()) {
+            if (isDisplaySizeSupported(display.getWidth(), display.getHeight())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Return the required notifications API version
      *
      * @see Registration.ExtensionColumns#NOTIFICATION_API_VERSION
      * @see #getSourceRegistrationConfigurations
      * @see ExtensionService#onViewEvent
      * @see ExtensionService#onRefreshRequest
-     * @return Required notification API version, or 0 if not supporting
-     *         notification.
+     * @return Required notification API version, or {@link #API_NOT_REQUIRED}
+     *         if not requiring notification support.
      */
     public abstract int getRequiredNotificationApiVersion();
 
     /**
      * Get the extension registration information.
-     * 
+     *
      * @see ExtensionService#onRegisterResult
      * @return The registration configuration.
      */
     public abstract ContentValues getExtensionRegistrationConfiguration();
 
     /**
-     * Get all source registration configurations. The extensions specific id
-     * must be set if there are more than one source. Override this method if
-     * this is a notification extension
+     * Get all source registration configurations. Note that the extension
+     * specific id must be set if there are more than one source. Override
+     * this method if this is a notification extension.
      *
      * @see Notification.SourceColumns#EXTENSION_SPECIFIC_ID
      * @see #getRequiredNotificationApiVersion()
-     * @param extensionSpecificId The extension specific id.
      * @return The source registration information.
      */
     public ContentValues[] getSourceRegistrationConfigurations() {
@@ -96,30 +134,30 @@ public abstract class RegistrationInformation {
     }
 
     /**
-     * Get the required widget API version
+     * Return the required widget API version.
      *
      * @see #isWidgetSizeSupported
      * @see ExtensionService#createWidgetExtension
      * @see Registration.ApiRegistrationColumns#WIDGET_API_VERSION
-     * @return Required API widget version, or 0 if not supporting widget.
+     * @return Required API widget version, or {@link #API_NOT_REQUIRED} if not supporting widget.
      */
     abstract public int getRequiredWidgetApiVersion();
 
     /**
-     * Get the target widget API version
+     * Return the target widget API version.
      *
      * @see #isWidgetSizeSupported
      * @see ExtensionService#createWidgetExtension
      * @see Registration.ApiRegistrationColumns#WIDGET_API_VERSION
-     * @return Required API widget version, or 0 if not supporting widget.
-     *         Returns required widget API version by default.
+     * @return Required API widget version, or {@link #API_NOT_REQUIRED} if not
+     *         supporting widget. Returns required widget API version by default.
      */
     public int getTargetWidgetApiVersion() {
         return getRequiredWidgetApiVersion();
     }
 
     /**
-     * Checks if the display size is supported.
+     * Return if the display size is supported.
      *
      * @param width The display width.
      * @param height The display height.
@@ -132,33 +170,35 @@ public abstract class RegistrationInformation {
     }
 
     /**
-     * Get the required control API version
+     * Return the required control API version.
      *
      * @see #isDisplaySizeSupported
      * @see ExtensionService#createControlExtension
      * @see Registration.ApiRegistrationColumns#CONTROL_API_VERSION
-     * @return Required API control version, or 0 if not supporting control.
+     * @return Required API control version, or {@link #API_NOT_REQUIRED}
+     *         if not supporting control.
      */
     abstract public int getRequiredControlApiVersion();
 
     /**
-     * Get the target control API version
+     * Return the target control API version.
      *
      * @see #isDisplaySizeSupported
      * @see ExtensionService#createControlExtension
      * @see Registration.ApiRegistrationColumns#CONTROL_API_VERSION
-     * @return Required API control version, or 0 if not supporting control.
-     *         Returns required control API version by default.
+     * @return Required API control version, or {@link #API_NOT_REQUIRED}
+     *         if not supporting control. Returns required control API version
+     *         by default.
      */
     public int getTargetControlApiVersion() {
         return getRequiredControlApiVersion();
     }
 
     /**
-     * Check if the sensor is supported.
+     * Return if the sensor is used by extension.
      *
      * @param sensor The sensor.
-     * @return True if sensor is supported.
+     * @return True if sensor is used by the extension.
      */
     public boolean isSensorSupported(final AccessorySensor sensor) {
         throw new IllegalArgumentException(
@@ -167,31 +207,33 @@ public abstract class RegistrationInformation {
     }
 
     /**
-     * Get the required sensor API version
+     * Return the required sensor API version.
      *
      * @see #isDisplaySizeSupported
      * @see Registration.ApiRegistrationColumns#SENSOR_API_VERSION
-     * @return Required API sensor version, or 0 if not supporting sensor.
+     * @return Required API sensor version, or {@link #API_NOT_REQUIRED}
+     *         if not supporting sensor.
      */
     abstract public int getRequiredSensorApiVersion();
 
     /**
-     * Get the target sensor API version
+     * Return the target sensor API version.
      *
      * @see #isDisplaySizeSupported
      * @see #getRequiredSensorApiVersion()
      * @see Registration.ApiRegistrationColumns#SENSOR_API_VERSION
-     * @return Target API sensor version, or 0 if not supporting sensor. Returns
-     *         required sensor API version by default.
+     * @return Target API sensor version, or {@link #API_NOT_REQUIRED}
+     *         if not supporting sensor. Returns required sensor API version
+     *         by default.
      */
     public int getTargetSensorApiVersion() {
         return getRequiredSensorApiVersion();
     }
 
     /**
-     * Return true if low power mode is supported by the control extension.
+     * Return true if low power mode is used by the control extension.
      *
-     * @return True if low power mode is supported
+     * @return True if low power mode is used by the extension.
      */
     public boolean supportsLowPowerMode() {
         return false;
@@ -199,7 +241,7 @@ public abstract class RegistrationInformation {
 
     /**
      * Return true if the control extension wants to intercept the back button
-     * of the connected accessory
+     * of the connected accessory.
      *
      * @return True if extension wants to intercept back button
      */
@@ -318,14 +360,152 @@ public abstract class RegistrationInformation {
         }
 
         for (DeviceInfo device : hostApplication.getDevices()) {
-            for (DisplayInfo display : device.getDisplays()) {
-                if (isDisplaySizeSupported(display.getWidth(), display.getHeight())) {
-                    return true;
-                }
+            if (isControlDeviceSupported(device)) {
+                return true;
             }
         }
 
         return false;
     }
 
+    /**
+     * Get widget registration values for a host application widget.
+     *
+     * @param context The context.
+     * @param hostAppPackageName The host application package name
+     * @param widgetContainer The host application widget the registration is for.
+     * @param registrationVersion
+     * @return Content values with widget registration values.
+     */
+    public List<ContentValues> getWidgetRegistrationValues(Context context,
+            String packageName, WidgetContainer widgetContainer, int registrationVersion) {
+        List<ContentValues> widgetList = new ArrayList<ContentValues>();
+        WidgetClassList widgetRegistrations = getWidgetClasses(context,
+                packageName,
+                widgetContainer);
+        for (Class<?> widgetClass : widgetRegistrations) {
+            BaseWidget wr = getWidgetInstanceFromClass(context, packageName,
+                    WidgetExtension.NOT_SET, widgetClass.getName());
+            ContentValues values = new ContentValues();
+            values.put(WidgetRegistrationColumns.NAME, context.getString(wr.getName()));
+            values.put(WidgetRegistrationColumns.WIDTH, wr.getWidth());
+            values.put(WidgetRegistrationColumns.HEIGHT, wr.getHeight());
+            values.put(WidgetRegistrationColumns.TYPE, widgetContainer.getType());
+            if (Dbg.DEBUG) {
+                Dbg.w("Registraton version: " + registrationVersion);
+            }
+            if (registrationVersion >= CATEGORY_SUPPORT_API_VERSION) {
+                values.put(WidgetRegistrationColumns.CATEGORY, wr.getCategory());
+            }
+            values.put(WidgetRegistrationColumns.KEY, widgetClass.getName());
+            values.put(WidgetRegistrationColumns.PREVIEW_IMAGE_URI,
+                    ExtensionUtils.getUriString(context,
+                            wr.getPreviewUri()));
+            widgetList.add(values);
+        }
+
+        return widgetList;
+    }
+
+    /**
+     * Class containing a list of widgets. Used to define multiple widgets
+     * for an extension.
+     */
+    public final static class WidgetClassList implements Iterable<Class<? extends BaseWidget>> {
+
+        ArrayList<Class<? extends BaseWidget>> mList = new ArrayList<Class<? extends BaseWidget>>();
+
+        public WidgetClassList() {
+        }
+
+        public WidgetClassList(Class<? extends BaseWidget>... widgetClasses) {
+            for (Class<? extends BaseWidget> class1 : widgetClasses) {
+                add(class1);
+            }
+        }
+
+        public boolean add(Class<? extends BaseWidget> object) {
+            if (mList.contains(object)) {
+                return false;
+            }
+            return mList.add(object);
+        }
+
+        @Override
+        public Iterator<Class<? extends BaseWidget>> iterator() {
+            return mList.iterator();
+        }
+
+    }
+
+    /**
+     * Get widget registration info for a host application widget.
+     *
+     * @param context The context.
+     * @param hostAppPackageName The host application package name
+     * @param widgetContainer The host application widget the registration is for.
+     * @return A list with widget registration info.
+     */
+    protected WidgetClassList getWidgetClasses(Context context,
+            String hostAppPackageName, WidgetContainer widgetContainer) {
+        throw new IllegalArgumentException(
+                "getExtensionWidgets() not implemented. Extensions targeting widget API version 3 or later must implement this method.");
+    }
+
+    /**
+     * Get the extension's registration key.
+     *
+     * @return The extensionKey.
+     */
+    public String getExtensionKey() {
+        throw new IllegalArgumentException("extensionKey == null or not implemented");
+    }
+
+    /**
+     * Create a widget instance for provided class.
+     *
+     * @param context Extension service context.
+     * @param hostAppPackageName Host app package name.
+     * @param instanceId Widget instance ID.
+     * @param key The widget class name.
+     * @return Widget instance.
+     */
+    public static BaseWidget getWidgetInstanceFromClass(Context context,
+            String hostAppPackageName, int instanceId, String key) {
+        if (TextUtils.isEmpty(key)) {
+            throw new IllegalArgumentException(
+                    "Registered Extension class is not valid: "
+                            + key + " from key:" + key);
+        }
+        try {
+            Class<?> widgetClass = Class.forName(key);
+            if (widgetClass == null
+                    || !BaseWidget.class.isAssignableFrom(widgetClass)) {
+                throw new IllegalArgumentException(
+                        "Widget class " + widgetClass
+                                + " must extend WidgetExtension");
+            }
+            Constructor<?> constructor = widgetClass.getConstructor(BaseWidget.WidgetBundle.class);
+            constructor.setAccessible(true);
+            BaseWidget widgetExtension = (BaseWidget) constructor
+                    .newInstance(new BaseWidget.WidgetBundle(context, hostAppPackageName,
+                            instanceId));
+            return widgetExtension;
+        } catch (ClassNotFoundException e) {
+            throw new IllegalArgumentException("Class not found " + key, e);
+        } catch (InstantiationException e) {
+            throw new IllegalArgumentException("Could not instantiate Widget " + key, e);
+        } catch (IllegalAccessException e) {
+            throw new IllegalArgumentException("Could not instantiate Widget" + key, e);
+        } catch (NoSuchMethodException e) {
+            throw new IllegalArgumentException(key
+                    + " must have the public constructor BaseWidget(WidgetBundle bundle) ");
+        } catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException(key
+                    + "  must have the public constructor BaseWidget(WidgetBundle bundle) ");
+        } catch (InvocationTargetException e) {
+            throw new IllegalArgumentException(key
+                    + "  must have the public constructor BaseWidget(WidgetBundle bundle) ");
+        }
+    }
 }

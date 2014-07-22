@@ -1,5 +1,6 @@
 /*
 Copyright (c) 2011, Sony Ericsson Mobile Communications AB
+Copyright (c) 2012-2014 Sony Mobile Communications AB.
 
 All rights reserved.
 
@@ -14,6 +15,10 @@ modification, are permitted provided that the following conditions are met:
   and/or other materials provided with the distribution.
 
  * Neither the name of the Sony Ericsson Mobile Communications AB nor the names
+  of its contributors may be used to endorse or promote products derived from
+  this software without specific prior written permission.
+
+* Neither the name of the Sony Mobile Communications AB nor the names
   of its contributors may be used to endorse or promote products derived from
   this software without specific prior written permission.
 
@@ -67,16 +72,27 @@ public abstract class ControlExtension {
 
     private int mState = STATE_CREATED;
 
+    /**
+     * The context of the extension service
+     */
     protected final Context mContext;
 
+    /**
+     * Package name of the host application
+     */
     protected final String mHostAppPackageName;
 
+    /**
+     * Default bitmap factory options that will be frequently used throughout
+     * the extension to avoid any automatic scaling. Keep in mind that we are
+     * not showing the images on the phone, but on the accessory.
+     */
     protected final BitmapFactory.Options mBitmapOptions;
 
     /**
      * Create control extension.
      *
-     * @param context The context.
+     * @param context The extension service context.
      * @param hostAppPackageName Package name of host application.
      */
     public ControlExtension(final Context context, final String hostAppPackageName) {
@@ -86,18 +102,14 @@ public abstract class ControlExtension {
         mContext = context;
         mHostAppPackageName = hostAppPackageName;
 
-        // Set some default bitmap factory options that we frequently will use.
         mBitmapOptions = new BitmapFactory.Options();
-        // We use default throughout the extension to avoid any automatic
-        // scaling.
-        // Keep in mind that we are not showing the images on the phone, but on
-        // the accessory.
         mBitmapOptions.inDensity = DisplayMetrics.DENSITY_DEFAULT;
         mBitmapOptions.inTargetDensity = DisplayMetrics.DENSITY_DEFAULT;
     }
 
     /**
-     * Start control.
+     * Sets the control state to started. To request a control extension to start
+     * you have to use {@link #startRequest()} method.
      */
     public final void start() {
         mState = STATE_STARTED;
@@ -105,7 +117,7 @@ public abstract class ControlExtension {
     }
 
     /**
-     * Resume control.
+     * Sets the control state to resumed.
      */
     public final void resume() {
         mState = STATE_FOREGROUND;
@@ -113,7 +125,7 @@ public abstract class ControlExtension {
     }
 
     /**
-     * Pause control.
+     * Sets the control state to paused.
      */
     public final void pause() {
         mState = STATE_STARTED;
@@ -121,7 +133,8 @@ public abstract class ControlExtension {
     }
 
     /**
-     * Stop control.
+     * Sets the control state to stopped. To request a control extension to stop
+     * you have to use {@link #stopRequest()} method.
      */
     public final void stop() {
         // If in foreground then pause it.
@@ -134,7 +147,7 @@ public abstract class ControlExtension {
     }
 
     /**
-     * Destroy control.
+     * Sets the control state to destroyed.
      */
     public final void destroy() {
         // If in foreground then pause it.
@@ -151,9 +164,9 @@ public abstract class ControlExtension {
     }
 
     /**
-     * Take action based on request code
+     * Called when the control receives an action request.
      *
-     * @see ControlReceiver#doActionOnAllControls(int)
+     * @see ExtensionService#doActionOnAllControls(int,Bundle)
      * @param requestCode Code used to distinguish between different actions.
      * @param bundle Optional bundle with additional information.
      */
@@ -198,12 +211,26 @@ public abstract class ControlExtension {
     }
 
     /**
-     * Called when host application reports an error.
+     * Called when extension receives an error.
      *
      * @param code The reported error code.
      *            {@link Control.Intents#EXTRA_ERROR_CODE}
      */
     public void onError(final int code) {
+
+    }
+
+    /**
+     * Called when a tap event has occurred.
+     *
+     * @param action
+     *            Can be any tap actions defined in the
+     *            {@link Control.TapActions} interface.
+     *
+     * @param timeStamp
+     *            The time when the tap event occurred.
+     */
+    public void onTap(final int action, final long timeStamp) {
 
     }
 
@@ -242,7 +269,7 @@ public abstract class ControlExtension {
     }
 
     /**
-     * Called when a swipe event has occurred
+     * Called when a swipe event has occurred.
      *
      * @param direction The swipe direction, one of
      *            <ul>
@@ -261,7 +288,7 @@ public abstract class ControlExtension {
      * item.
      *
      * @param layoutReference The referenced list view
-     * @param listItemPosition The referenced list item position
+     * @param listItemPosition The requested list item position
      */
     public void onRequestListItem(final int layoutReference, final int listItemPosition) {
 
@@ -271,9 +298,10 @@ public abstract class ControlExtension {
      * Called when an item in a list has been clicked.
      *
      * @param listItem The list item that was clicked
-     * @param clickType The type of click (long, short)
+     * @param clickType The type of click ({@link Control.Intents#CLICK_TYPE_SHORT},
+     *        {@link Control.Intents#CLICK_TYPE_LONG})
      * @param itemLayoutReference The object within the list item that was
-     *            clicked
+     *        clicked
      */
     public void onListItemClick(final ControlListItem listItem, final int clickType,
             final int itemLayoutReference) {
@@ -281,7 +309,7 @@ public abstract class ControlExtension {
     }
 
     /**
-     * Called when an item in a list has been clicked.
+     * Called when list refresh was requested.
      *
      * @param layoutReference The referenced list view
      */
@@ -309,7 +337,7 @@ public abstract class ControlExtension {
 
     /**
      * Called when the accessory screen's state leaves or enters Active Low
-     * Power mode
+     * Power mode.
      *
      * @param lowPowerModeOn true when the low power mode is started, false when
      *            the accessory screen leaves Active Low power mode
@@ -319,7 +347,7 @@ public abstract class ControlExtension {
     }
 
     /**
-     * Send request to start to host application.
+     * Send request to start control extension.
      */
     protected void startRequest() {
         if (Dbg.DEBUG) {
@@ -330,7 +358,7 @@ public abstract class ControlExtension {
     }
 
     /**
-     * Send request to stop to host application.
+     * Send request to stop control extension.
      */
     protected void stopRequest() {
         if (Dbg.DEBUG) {
@@ -367,6 +395,7 @@ public abstract class ControlExtension {
      *
      * @param layoutId The layout resource id.
      * @param layoutData The layout data.
+     * @see Control#Intents.EXTRA_LAYOUT_DATA
      */
     protected void showLayout(final int layoutId, final Bundle[] layoutData) {
         if (Dbg.DEBUG) {
@@ -421,11 +450,10 @@ public abstract class ControlExtension {
     }
 
     /**
-     * Update text in a specific layout, on the accessory. TODO: This should be
-     * moved to ControlExtension
+     * Update text in a specific layout, on the accessory.
      *
      * @param layoutReference The referenced resource within the current layout.
-     * @param resourceId The image resource id.
+     * @param text The text to show.
      */
     protected void sendText(final int layoutReference, final String text) {
         if (Dbg.DEBUG) {
@@ -496,7 +524,7 @@ public abstract class ControlExtension {
     }
 
     /**
-     * Start repeating vibrator
+     * Start repeating vibrator.
      *
      * @param onDuration On duration in milliseconds.
      * @param offDuration Off duration in milliseconds.
@@ -553,7 +581,7 @@ public abstract class ControlExtension {
     }
 
     /**
-     * Turn led off
+     * Turn led off.
      *
      * @param id Id of the LED to be controlled.
      */
@@ -567,7 +595,7 @@ public abstract class ControlExtension {
     }
 
     /**
-     * Clear accessory diplay.
+     * Clear accessory display.
      */
     protected void clearDisplay() {
         if (Dbg.DEBUG) {
@@ -577,6 +605,12 @@ public abstract class ControlExtension {
         sendToHostApp(intent);
     }
 
+    /**
+     * Set the number of items in list. Used to specify the initial size of
+     * the list and to update the size of the list.
+     * @param layoutReference The referenced list view.
+     * @param listCount The requested number of items in list.
+     */
     protected void sendListCount(int layoutReference, int listCount) {
         Intent intent = new Intent(Control.Intents.CONTROL_LIST_COUNT_INTENT);
         intent.putExtra(Control.Intents.EXTRA_LAYOUT_REFERENCE, layoutReference);
@@ -584,6 +618,12 @@ public abstract class ControlExtension {
         sendToHostApp(intent);
     }
 
+    /**
+     * Set the number of items in list and populate it with content.
+     * @param layoutReference The referenced list view.
+     * @param listCount The requested number of items in list.
+     * @param bundles List content. See {@link Control.Intents#EXTRA_LIST_CONTENT}.
+     */
     protected void sendListCountWithContent(int layoutReference, int listCount, Bundle[] bundles) {
         Intent intent = new Intent(Control.Intents.CONTROL_LIST_COUNT_INTENT);
         intent.putExtra(Control.Intents.EXTRA_LAYOUT_REFERENCE, layoutReference);
@@ -592,6 +632,10 @@ public abstract class ControlExtension {
         sendToHostApp(intent);
     }
 
+    /**
+     * Update a list item.
+     * @param item List item.
+     */
     protected void sendListItem(ControlListItem item) {
         Intent intent = new Intent(Control.Intents.CONTROL_LIST_ITEM_INTENT);
         intent.putExtra(Control.Intents.EXTRA_LAYOUT_REFERENCE, item.layoutReference);
@@ -609,10 +653,10 @@ public abstract class ControlExtension {
     }
 
     /**
-     * Sends a request to host app to move a list to a specified position
+     * Sends a request to move a list to a specified position.
      *
-     * @param layoutReference The referenced list view
-     * @param listItemPosition The referenced list item position
+     * @param layoutReference The referenced list view.
+     * @param listItemPosition The referenced list item position.
      */
     protected void sendListPosition(int layoutReference, int position) {
         Intent intent = new Intent(Control.Intents.CONTROL_LIST_MOVE_INTENT);
@@ -621,6 +665,10 @@ public abstract class ControlExtension {
         sendToHostApp(intent);
     }
 
+    /**
+     * Show a menu.
+     * @param menuItems Menu items. See {@link Control.Intents.EXTRA_MENU_ITEMS}.
+     */
     protected void showMenu(Bundle[] menuItems) {
         Intent intent = new Intent(Control.Intents.CONTROL_MENU_SHOW);
         intent.putExtra(Control.Intents.EXTRA_MENU_ITEMS, menuItems);
@@ -718,6 +766,12 @@ public abstract class ControlExtension {
         return false;
     }
 
+    /**
+     * Process View and whole ViewGroup tree into ControlViewGroup used by 
+     * accessory.
+     * @param v View to parse.
+     * @return Group of processed views.
+     */
     protected ControlViewGroup parseLayout(View v) {
         ControlViewGroup controlViewGroup = new ControlViewGroup();
         controlViewGroup.addView(new ControlView(v.getId(), v.isClickable(), v.isLongClickable()));
@@ -727,6 +781,11 @@ public abstract class ControlExtension {
         return controlViewGroup;
     }
 
+    /**
+     * Helper method for {@link #parseLayout(View)}.
+     * @param v View to parse.
+     * @param controlViewGroup Group of processed views.
+     */
     private void parseLayoutTraverse(ViewGroup v, ControlViewGroup controlViewGroup) {
         for (int i = 0; i < v.getChildCount(); i++) {
             View current = v.getChildAt(i);

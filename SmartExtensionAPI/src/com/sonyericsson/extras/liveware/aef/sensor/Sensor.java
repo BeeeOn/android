@@ -1,20 +1,20 @@
 /*
-Copyright (c) 2011, Sony Ericsson Mobile Communications AB
-Copyright (C) 2012-2013 Sony Mobile Communications AB
+Copyright (c) 2011 Sony Ericsson Mobile Communications AB
+Copyright (C) 2012 Sony Mobile Communications AB
 
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
 modification, are permitted provided that the following conditions are met:
 
-* Redistributions of source code must retain the above copyright notice, this
+ * Redistributions of source code must retain the above copyright notice, this
   list of conditions and the following disclaimer.
 
-* Redistributions in binary form must reproduce the above copyright notice,
+ * Redistributions in binary form must reproduce the above copyright notice,
   this list of conditions and the following disclaimer in the documentation
   and/or other materials provided with the distribution.
 
-* Neither the name of the Sony Ericsson Mobile Communications AB nor the names
+ * Neither the name of the Sony Ericsson Mobile Communications AB nor the names
   of its contributors may be used to endorse or promote products derived from
   this software without specific prior written permission.
 
@@ -28,38 +28,36 @@ SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
 CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-*/
+ */
 
 package com.sonyericsson.extras.liveware.aef.sensor;
 
 import com.sonyericsson.extras.liveware.aef.registration.Registration;
 
 /**
- * <h1>Sensor API is a part of the Smart Extension APIs</h1>
- * <h3>Overview</h3>
- * <p>
- * The Sensor API is used to send accessory sensor data from a host application to
+ * Sensor API is a part of the Smart Extension APIs.
+ * <p>The Sensor API is used to send accessory sensor data from a host application to
  * an accessory extension.
  * </p>
  * <p>
  * When a host application registers its capabilities, it will declare if it supports
  * the Sensor API and what sensors it exposes.
- * Extensions can use the Registration and Capability API to query host
+ * Extensions can use the {@link com.sonyericsson.extras.liveware.aef.registration.Registration} API to query host
  * applications for supported sensors.
  * </p>
  * <p>
  * In order to use this API, an application must have registered itself properly in
- * the registration content provider, see the Registration and Capabilities API.
+ * the registration content provider, see {@link com.sonyericsson.extras.liveware.aef.registration.Registration} API.
  * </p>
  * <h3>How to register a listener</h3>
  * <p>
  * Sensor data is sent over a LocalSocket. In order to start communication the extension
  * should setup a LocalServerSocket {@link android.net.LocalServerSocket}
  * in listening mode and send the {@link Intents#SENSOR_REGISTER_LISTENER_INTENT} intent.
- * The capability API can be used to query the host application for supported sensors.
+ * The {@link com.sonyericsson.extras.liveware.aef.registration.Registration} API can be used to query the host application for supported sensors.
  * If multiple sensors are used, multiple LocalServerSocket objects must also be used since
  * one sensor is bound to exactly one LocalServerSocket.
- * When a extension registers a listener it also specifies what sample rate it wants to have.
+ * When an extension registers a listener it also specifies what sample rate it wants to have.
  * </p>
  * <p>
  * Some sensors support interrupt mode.
@@ -91,18 +89,18 @@ public class Sensor {
     /**
      * @hide
      * This class is only intended as a utility class containing declared constants
-     *  that will be used by Sensor API Extension developers.
+     *  that will be used by Sensor API extension developers.
      */
     protected Sensor() {
     }
 
     /**
-     * Intents sent between Sensor Extensions and Accessory Host Applications
+     * Intents sent between extensions and host applications either using the broadcast queue or {@link com.sonyericsson.extras.liveware.aef.tunnel.Tunnel}.
      */
     public interface Intents {
 
         /**
-         * Intent used by the Sensor Extension whenever it wants to start listen
+         * Intent used by the Sensor extension whenever it wants to start listen
          * to sensor data.
          * The purpose of the intent is to tell the host application that a
          * local server socket is now waiting for a connection from the host application.
@@ -127,7 +125,7 @@ public class Sensor {
         static final String SENSOR_REGISTER_LISTENER_INTENT = "com.sonyericsson.extras.aef.sensor.REGISTER_LISTENER";
 
         /**
-         * Intent used by the Sensor Extension whenever it wants to stop listen
+         * Intent used by the Sensor extension whenever it wants to stop listen
          * to sensor data.
          * <p>
          * This intent should be sent with enforced security by supplying the host application permission
@@ -161,7 +159,7 @@ public class Sensor {
         static final String SENSOR_ERROR_MESSAGE_INTENT = "com.sonyericsson.extras.aef.sensor.ERROR_MESSSAGE";
 
         /**
-         * The name of the Intent-extra used to identify the Extension.
+         * The name of the Intent-extra used to identify the extension.
          * The extension will send its package name
          * <P>
          * TYPE: TEXT
@@ -172,7 +170,7 @@ public class Sensor {
 
         /**
          * The name of the Intent-extra used to identify the Sensor.
-         * The Extension will send the ID of the sensor. The ID must
+         * The extension will send the ID of the sensor. The ID must
          * be identical to the value of the SENSOR_ID column from the Sensor
          * table of a sensor that is attached to the current host application
          * <P>
@@ -348,7 +346,7 @@ public class Sensor {
      * see {@link android.hardware.Sensor#TYPE_ACCELEROMETER}
      *
      * @deprecated
-     * @see Registration.SensorTypeValue#ACCELEROMETER
+     * @see com.sonyericsson.extras.liveware.aef.registration.Registration.SensorTypeValue#ACCELEROMETER
      */
     public static final String SENSOR_TYPE_ACCELEROMETER = Registration.SensorTypeValue.ACCELEROMETER;
 
@@ -360,7 +358,7 @@ public class Sensor {
      * see {@link android.hardware.Sensor#TYPE_LIGHT}
      *
      * @deprecated
-     * @see Registration.SensorTypeValue#LIGHT
+     * @see com.sonyericsson.extras.liveware.aef.registration.Registration.SensorTypeValue#LIGHT
      */
     public static final String SENSOR_TYPE_LIGHT = Registration.SensorTypeValue.LIGHT;
 }

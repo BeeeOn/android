@@ -37,6 +37,7 @@ import android.database.Cursor;
 import android.database.SQLException;
 import android.text.TextUtils;
 
+import com.sonyericsson.extras.liveware.aef.registration.Registration;
 import com.sonyericsson.extras.liveware.aef.registration.Registration.Device;
 import com.sonyericsson.extras.liveware.aef.registration.Registration.DeviceColumns;
 import com.sonyericsson.extras.liveware.aef.registration.Registration.HostApp;
@@ -74,7 +75,8 @@ public class AccessorySensorManager {
      * Get sensor.
      *
      * @param sensorType The string identifying the sensor type.
-     * @return The sensor or null if no sensor found for the given value
+     * @return The sensor or null if no sensor found for the given value.
+     * @see Registration.SensorTypeValue
      */
     public AccessorySensor getSensor(final String sensorType) {
         return getSensorForType(sensorType, null);
@@ -85,7 +87,8 @@ public class AccessorySensorManager {
      *
      * @param sensorType The string identifying the sensor type.
      * @param delicate True if delicate, false otherwise.
-     * @return The sensor or null if no sensor found for the given value
+     * @return The sensor or null if no sensor found for the given value.
+     * @see Registration.SensorTypeValue
      */
     public AccessorySensor getSensor(final String sensorType, final boolean delicate) {
         return getSensorForType(sensorType, delicate);

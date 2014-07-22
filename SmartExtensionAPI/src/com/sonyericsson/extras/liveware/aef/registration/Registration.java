@@ -1,24 +1,24 @@
 /*
-Copyright (c) 2011, Sony Ericsson Mobile Communications AB
-Copyright (C) 2012-2013 Sony Mobile Communications AB
+Copyright (c) 2011 Sony Ericsson Mobile Communications AB
+Copyright (C) 2012 Sony Mobile Communications AB
 
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
 modification, are permitted provided that the following conditions are met:
 
-* Redistributions of source code must retain the above copyright notice, this
+ * Redistributions of source code must retain the above copyright notice, this
   list of conditions and the following disclaimer.
 
-* Redistributions in binary form must reproduce the above copyright notice,
+ * Redistributions in binary form must reproduce the above copyright notice,
   this list of conditions and the following disclaimer in the documentation
   and/or other materials provided with the distribution.
 
-* Neither the name of the Sony Ericsson Mobile Communications AB nor the names
+ * Neither the name of the Sony Ericsson Mobile Communications AB nor the names
   of its contributors may be used to endorse or promote products derived from
   this software without specific prior written permission.
 
-* Neither the name of the Sony Mobile Communications AB nor the names
+ * Neither the name of the Sony Mobile Communications AB nor the names
   of its contributors may be used to endorse or promote products derived from
   this software without specific prior written permission.
 
@@ -32,20 +32,16 @@ SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
 CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-*/
+ */
 
 package com.sonyericsson.extras.liveware.aef.registration;
 
 import android.net.Uri;
 import android.provider.BaseColumns;
 
-import com.sonyericsson.extras.liveware.aef.control.Control;
-import com.sonyericsson.extras.liveware.aef.widget.Widget;
-
 /**
- * <h1>The Registration and Capability API is a part of the Smart Extension APIs</h1>
- * <p>
- * This API is used by accessory extensions and accessory host applications. Typically host applications insert
+ * Registration and Capability API is a part of the Smart Extension APIs.
+ * <p>This API is used by accessory extensions and accessory host applications. Typically host applications insert
  * and maintain information about the accessories capabilities. Extensions use the capability information
  * in order to interact with the accessories in a correct way. Before an extension can interact with an accessory it must
  * provide (register) some information needed by the host applications.
@@ -64,14 +60,14 @@ import com.sonyericsson.extras.liveware.aef.widget.Widget;
  * <p>
  * This API is an Android content provider that provides information about the capabilities of the accessories. The information is
  * provided by the host applications and are used by the extensions to obtain necessary information in order to interact with the
- * accessories through the Control, Sensor and Widget APIs. The content provider contains the tables shown in the picture below.
+ * accessories through the {@link com.sonyericsson.extras.liveware.aef.control.Control}, {@link com.sonyericsson.extras.liveware.aef.widget.Widget} and {@link com.sonyericsson.extras.liveware.aef.sensor.Sensor} APIs. The content provider contains the tables shown in the picture below.
  * </p>
  * <img src="../../../../../../../images/capabilities_database.png" alt="Operating context" border="1" />
  * <p>
- * For each accessory there is a corresponding record in the host_application table. A Particular host application is identified
- * by its package name. For each host application there is one or more device records in the device table.
- * A particular device can support zero or more displays, sensors, leds and inputs, defined in the display, sensor, led and input
- * tables respectively. There is a sensor_type table describing each type of sensor and keypad table describing the capabilities if
+ * For each accessory there is a corresponding record in the {@link HostApp} table. A Particular host application is identified
+ * by its package name. For each host application there is one or more device records in the {@link Device} table.
+ * A particular device can support zero or more displays, sensors, leds and inputs, defined in the {@link Display}, {@link Sensor}, {@link Led}, {@link Input} and {@link Widget}
+ * tables respectively. There is a {@link SensorType} table describing each type of sensor, a {@link KeyPad} table describing the capabilities of
  * the keypads of each input type. The capabilities tables are accessible through the content provider.
  * </p>
  * <p> Capability URI's and description
@@ -82,6 +78,7 @@ import com.sonyericsson.extras.liveware.aef.widget.Widget;
  * <li> Host application URI {@link Sensor#URI} and columns {@link SensorColumns}
  * <li> Host application URI {@link Input#URI} and columns {@link InputColumns}
  * <li> Host application URI {@link Led#URI} and columns {@link LedColumns}
+ * <li> Host application URI {@link Widget#URI} and columns {@link WidgetColumns}
  * <li> Host application URI {@link SensorType#URI} and columns {@link SensorTypeColumns}
  * <li> Host application URI {@link KeyPad#URI} and columns {@link KeyPadColumns}
  * </ol>
@@ -91,21 +88,23 @@ import com.sonyericsson.extras.liveware.aef.widget.Widget;
  * <a name="Registration"></a>
  * <h3>Extension registration</h3>
  * <p>
- * Before an extension can use an accessory, the extension must use the registration API content provider
- * to insert a record in the extension table. The URI is defined in the Extension interface {@link Extension#URI} and
+ * Before an extension can use an accessory, the extension must use the Registration API content provider
+ * to insert a record in the extension table. The URI is defined in the extension interface {@link Extension#URI} and
  * the table scheme is defined in the ExtensionColumns interface {@link ExtensionColumns}.
  * </p>
  * <img src="../../../../../../../images/registration_database.png" alt="Operating context" border="1" />
  * <p>
  * After inserting a record in the extensions table, the extension is ready to use the Notification API.
- * No further registration is needed in order to use the Notification API and start writing sources and events.
- * More advanced extensions that also want to use any of the Widget API, Control API or Sensor API must also register
+ * No further registration is needed in order to use the {@link com.sonyericsson.extras.liveware.aef.notification.Notification} API and start writing sources and events.
+ * More advanced extensions that also want to use any of the {@link com.sonyericsson.extras.liveware.aef.widget.Widget} API, {@link com.sonyericsson.extras.liveware.aef.control.Control} API or {@link com.sonyericsson.extras.liveware.aef.sensor.Sensor} API must also register
  * information in the registration table. This should be done for each host application that the extension wants to interact with.
  * In order to find out what host applications are available and what capabilities they support, the extension should use the
  * <a href="#Capabilities">capability API</a>.
  * The URI of the registration table is defined in the ApiRegistration interface {@link ApiRegistration#URI} and
  * the table schema is defined in the ApiRegistrationColumns interface {@link ApiRegistrationColumns}. The extension should provide
  * the host application package name and indicate what APIs it will use.
+ * If the extension wants to use {@link com.sonyericsson.extras.liveware.aef.widget.Widget} API version 3 or later it registers the available widgets in the
+ * {@link WidgetRegistration} table.
  * </p>
  * <p>
  * Before an application can register itself as an extension, there must be at least one host application installed on the phone.
@@ -117,19 +116,19 @@ import com.sonyericsson.extras.liveware.aef.widget.Widget;
  * This intent is broadcasted when a new application is installed and when a new host application
  * has added its capabilities to the tables.
  * </p>
- * <a name="configActivity"/>
+ * <a name="configActivity"></a>
  * <h3>User extension configuration</h3>
  * <p>
- * Smart Extension apps may require configuration by the user before they can fully function.
+ * Extensions may require configuration by the user before they can fully function.
  * For example, the end user might need to login to a service on the Internet before events can be retrieved.
- * The Smart Extension app is responsible for providing this configuration UI to be displayed.
+ * The extension is responsible for providing this configuration UI to be displayed.
  * </p>
  * <p>
  * Host applications have their own configuration UIs from within the configuration UIs of registered
- * Smart Extension apps can be reached.
+ * extensions can be reached.
  * When registering to the Smart Connect, there is a column in the extension table called
  * configurationActivity.
- * If your Smart Extension app needs to be configured after it is registered, insert your Android
+ * If your extension needs to be configured after it is registered, insert your Android
  * Activity class name in this column.
  * </p>
  * <pre class="prettyprint">
@@ -156,8 +155,8 @@ import com.sonyericsson.extras.liveware.aef.widget.Widget;
  * </p>
  * <p>
  * Android Intents are sent when interaction with the extension is needed.
- * See the documentation of the Control API, Widget API, Sensor API and
- * Notification API for more information about intents.
+ * See the documentation of the {@link com.sonyericsson.extras.liveware.aef.control.Control} API, {@link com.sonyericsson.extras.liveware.aef.widget.Widget} API, {@link com.sonyericsson.extras.liveware.aef.sensor.Sensor} API and
+ * {@link com.sonyericsson.extras.liveware.aef.notification.Notification} API for more information about intents.
  * To enable the extension to verify the sender of the
  * Intents is a trusted application with access to the APIs and not a malicious
  * application that sends the same Intents on pretext of being a trusted application,
@@ -188,7 +187,7 @@ public class Registration {
     /**
      * All extensions should add in their AndroidManifest.xml a <uses-permission>
      * tag to use this permission. The purpose is to indicate to the end user
-     * the application containing the extension interacts with the registration API.
+     * the application containing the extension interacts with the Registration API.
      *
      * @since 1.0
      */
@@ -218,14 +217,16 @@ public class Registration {
     protected static final Uri BASE_URI = Uri.parse("content://" + AUTHORITY);
 
     /**
-     * Broadcast Intents sent to extensions by the host applications
+     * Intents sent to extensions by the host applications either using the broadcast queue or {@link com.sonyericsson.extras.liveware.aef.tunnel.Tunnel}.
      */
     public interface Intents {
 
         /**
-         * Intent sent to extensions to request
-         * extension registrations.
+         * Intent sent to extensions to request extension registrations.
          * Extensions that are already registered do not need to register again
+         *
+         * This intent will never be sent over {@link com.sonyericsson.extras.liveware.aef.tunnel.Tunnel}.
+         *
          * @since 1.0
          */
         static final String EXTENSION_REGISTER_REQUEST_INTENT = "com.sonyericsson.extras.liveware.aef.registration.EXTENSION_REGISTER_REQUEST";
@@ -234,7 +235,7 @@ public class Registration {
          * Intent sent from the host applications to extensions to
          * indicate that an accessory has been connected or disconnected
          * The host application must register the status in the {@link DeviceColumns#ACCESSORY_CONNECTED}
-         *  column of the device table before sending this intent
+         * column of the device table before sending this intent.
          * <p>
          * Intent-extra data:
          * </p>
@@ -276,7 +277,7 @@ public class Registration {
          * of starting the activity defined in the
          * {@link ExtensionColumns#CONFIGURATION_ACTIVITY} of the extension.
          * The Intent-extra is only valid for extensions that support the
-         * notification API.
+         * {@link com.sonyericsson.extras.liveware.aef.notification.Notification} API.
          *
          * This extra indicates if the accessory supports showing notifications history.
          * <P>
@@ -296,7 +297,7 @@ public class Registration {
          * of starting the activity defined in the
          * {@link ExtensionColumns#CONFIGURATION_ACTIVITY} of the extension.
          * The Intent-extra is only valid for extensions that support the
-         * notification API
+         * {@link com.sonyericsson.extras.liveware.aef.notification.Notification} API
          *
          * This extra indicates if the accessory supports triggering actions
          * linked to notification events. For more information about actions see.
@@ -483,8 +484,8 @@ public class Registration {
         static final String EXTENSION_KEY = "extension_key";
 
         /**
-         * API version. If the extension uses the notification API, this field
-         * should tell what version of the notification API that is used.
+         * If the extension uses the {@link com.sonyericsson.extras.liveware.aef.notification.Notification} API, this field
+         * should tell what version of the API that is used.
          * Value 0 means that the API is not used
          *
          * <P>
@@ -515,7 +516,7 @@ public class Registration {
 
         /**
          * Specifies the preferred launch mode for extensions that supports both the
-         * Control and the Notification API.
+         * {@link com.sonyericsson.extras.liveware.aef.control.Control} and the {@link com.sonyericsson.extras.liveware.aef.notification.Notification} API.
          * This value is ignored for extensions that only supports one of these APIs.
          * <P>
          * TYPE: INTEGER (int)
@@ -593,8 +594,8 @@ public class Registration {
         static final String HOST_APPLICATION_PACKAGE = "hostAppPackageName";
 
         /**
-         * API version. If the the widget API is used, this field
-         * should tell what version of the widget API that is used.
+         * If the {@link com.sonyericsson.extras.liveware.aef.widget.Widget} API is used, this field
+         * should tell what version of the API that is used.
          * Value 0 means that the API is not used
          *
          * <P>
@@ -609,8 +610,8 @@ public class Registration {
         static final String WIDGET_API_VERSION = "widgetApiVersion";
 
         /**
-         * API version. If the the control API is used, this field
-         * should tell what version of the control API that is used.
+         * If the {@link com.sonyericsson.extras.liveware.aef.control.Control} API is used, this field
+         * should tell what version of the API that is used.
          * Value 0 means that the API is not used
          *
          * <P>
@@ -625,8 +626,8 @@ public class Registration {
         static final String CONTROL_API_VERSION = "controlApiVersion";
 
         /**
-         * API version. If the the sensor API is used, this field
-         * should tell what version of the sensor API that is used.
+         * If the {@link com.sonyericsson.extras.liveware.aef.sensor.Sensor} API is used, this field
+         * should tell what version of the API that is used.
          * Value 0 means that the API is not used
          *
          * <P>
@@ -641,10 +642,8 @@ public class Registration {
         static final String SENSOR_API_VERSION = "sensorApiVersion";
 
         /**
-         * Indicates if the extension (control) supports
-         * Active Low Power. In such cases the extension must
-         * provide a black and white screen to the accessory
-         * This should be done through a XML layout.
+         * Indicates if the extension (control) supports Active Low Power. If true, the extension
+         * will receive power save status changes.
          *
          * <P>
          * TYPE: BOOLEAN
@@ -653,17 +652,17 @@ public class Registration {
          * PRESENCE: OPTIONAL (Default false)
          *  </P>
          *
-         * @see Control.Intents#CONTROL_ACTIVE_POWER_SAVE_MODE_STATUS_CHANGED_INTENT
+         * @see com.sonyericsson.extras.liveware.aef.control.Control.Intents#CONTROL_ACTIVE_POWER_SAVE_MODE_STATUS_CHANGED_INTENT
          * @see DisplayColumns#SUPPORTS_LOW_POWER_MODE
          * @since 2.0
          */
         static final String LOW_POWER_SUPPORT = "lowPowerSupport";
 
         /**
-         * If true presses on the {@link Control.KeyCodes#KEYCODE_BACK} will be sent to the Control
-         * extension in {@link Control.Intents#CONTROL_KEY_EVENT_INTENT} intents.
+         * If true presses on the {@link com.sonyericsson.extras.liveware.aef.control.Control.KeyCodes#KEYCODE_BACK} will be sent to the Control
+         * extension in {@link com.sonyericsson.extras.liveware.aef.control.Control.Intents#CONTROL_KEY_EVENT_INTENT} intents.
          * This allows the Control extension to implements its own handling.
-         * If false a press on the {@link Control.KeyCodes#KEYCODE_BACK} will stop the control.
+         * If false a press on the {@link com.sonyericsson.extras.liveware.aef.control.Control.KeyCodes#KEYCODE_BACK} will stop the control.
          *
          * <P>
          * TYPE: BOOLEAN
@@ -680,7 +679,9 @@ public class Registration {
     /**
      * Definitions used for interacting with the Capabilities-view
      *
+     * @deprecated Use separate queries for the individual tables.
      */
+    @Deprecated
     public interface Capabilities {
 
         /**
@@ -740,8 +741,8 @@ public class Registration {
         static final String VERSION = "version";
 
         /**
-         * API version. If the host application supports the Widget API, this field
-         * should tell what version of the Widget API that is supported.
+         * If the host application supports the {@link com.sonyericsson.extras.liveware.aef.widget.Widget} API, 
+         * this field identifies which version of the API is supported.
          * Value 0 means that the API is not supported
          *
          * <P>
@@ -770,8 +771,8 @@ public class Registration {
         static final String WIDGET_REFRESH_RATE = "widgetRefreshrate";
 
         /**
-         * API version. If the host application supports the Control API, this field
-         * should tell what version of the Control API that is supported.
+         * If the host application supports the {@link com.sonyericsson.extras.liveware.aef.control.Control} API,
+         * this field identifies which version of the API is supported.
          * Value 0 means that the API is not supported
          *
          * <P>
@@ -786,8 +787,8 @@ public class Registration {
         static final String CONTROL_API_VERSION = "controlApiVersion";
 
         /**
-         * API version. If the host application supports the Sensor API, this field
-         * should tell what version of the Sensor API that is supported.
+         * If the host application supports the {@link com.sonyericsson.extras.liveware.aef.sensor.Sensor} API,
+         * this field identifies which version of the API is supported.
          * Value 0 means that the API is not supported
          *
          * <P>
@@ -802,8 +803,8 @@ public class Registration {
         static final String SENSOR_API_VERSION = "sensorApiVersion";
 
         /**
-         * API version. If the host application supports the Notification API, this field
-         * should tell what version of the Notification API that is supported.
+         * If the host application supports the {@link com.sonyericsson.extras.liveware.aef.notification.Notification} API,
+         * this field identifies which version of the API is supported.
          * Value 0 means that the API is not supported
          *
          * <P>
@@ -959,7 +960,9 @@ public class Registration {
         static final String FIRMWARE_VERSION = "firmwareVersion";
 
         /**
-         * The height of the widget image
+         * The height of the widget image.
+         * Starting with API version 3, the supported widget height may be defined in the
+         * {@link Widget} table to allow one host application to support widgets of different sizes.
          *
          * <P>
          * TYPE: INTEGER (int)
@@ -973,7 +976,9 @@ public class Registration {
         static final String WIDGET_IMAGE_HEIGHT = "widgetImageHeight";
 
         /**
-         * The width of the widget image
+         * The width of the widget image.
+         * Starting with API version 3, the supported widget width may be defined in the
+         * {@link Widget} table to allow one host application to support widgets of different sizes.
          *
          * <P>
          * TYPE: INTEGER (int)
@@ -1019,14 +1024,14 @@ public class Registration {
          * Specifies the XML layout elements that are supported on this device.
          *
          * <P>
-         * TYPE: INTEGER (int, bit field see {@link LayoutSupport}.
+         * TYPE: INTEGER (int), bit field see {@link LayoutSupport}.
          * </P>
          * <P>
          * PRESENCE: OPTIONAL (Default 0)
          * </P>
          *
-         * @see Control.Intents#EXTRA_DATA_XML_LAYOUT
-         * @see Widget.Intents#EXTRA_DATA_XML_LAYOUT
+         * @see com.sonyericsson.extras.liveware.aef.control.Control.Intents#EXTRA_DATA_XML_LAYOUT
+         * @see com.sonyericsson.extras.liveware.aef.widget.Widget.Intents#EXTRA_DATA_XML_LAYOUT
          *
          * @since 2.0
          */
@@ -1213,7 +1218,7 @@ public class Registration {
          *  </P>
          *
          * @since 2.0
-         * @see Control.Intents#CONTROL_MENU_SHOW
+         * @see com.sonyericsson.extras.liveware.aef.control.Control.Intents#CONTROL_MENU_SHOW
          */
         static final String MENU_ITEMS = "menuItems";
     }
@@ -1362,6 +1367,17 @@ public class Registration {
          * @since 1.0
          */
         static final String SUPPORTS_SENSOR_INTERRUPT = "sensorInterrupt";
+    }
+
+    public interface Tap {
+        static final String MIME_TYPE = "aef-tap";
+        static final String TAPS_PATH = "tap";
+        static final Uri URI = Uri.withAppendedPath(BASE_URI, TAPS_PATH);
+    }
+
+    public interface TapColumns extends BaseColumns {
+        static final String DEVICE_ID = "deviceId";
+        static final String ACTION = "action";
     }
 
     /**
@@ -1518,16 +1534,9 @@ public class Registration {
 
         /**
          * The Type.
-         * <p>
-         * The following sensor types are supported:
-         * </p>
-         * <ul>
-         * <li>{@link com.sonyericsson.extras.liveware.aef.sensor.Sensor#SENSOR_TYPE_ACCELEROMETER}</li>
-         * <li>{@link com.sonyericsson.extras.liveware.aef.sensor.Sensor#SENSOR_TYPE_LIGHT}</li>
-         * </ul>
          *
          * <P>
-         * TYPE: TEXT
+         * TYPE: TEXT (see {@link SensorTypeValue} for allowed values)
          * </P>
          * <P>
          * PRESENCE: REQUIRED
@@ -1583,7 +1592,7 @@ public class Registration {
              * The Type
              *
              * <P>
-             * TYPE: TEXT (see {@link KeyPadType for allowed values}
+             * TYPE: TEXT (see {@link KeyPadType} for allowed values)
              * </P>
              * <P>
              * PRESENCE: REQUIRED
@@ -1595,18 +1604,349 @@ public class Registration {
         }
 
         /**
+         * Definitions used for interacting with the Version table
+         */
+        public interface Version {
+            /**
+             * Data row MIME type
+             */
+            static final String MIME_TYPE = "aef-version";
+
+            /**
+             * Path segment
+             */
+            static final String PATH = "version";
+
+            /**
+             * Content URI
+             */
+            static final Uri URI = Uri.withAppendedPath(BASE_URI, PATH);
+        }
+
+        /**
+         * Column-definitions for the Version table
+         */
+        public interface VersionColumns extends BaseColumns {
+
+            /**
+             * The version of the Registration and Capabilities content provider.
+             *
+             * <P>
+             * TYPE: INTEGER (int)
+             * </P>
+             * <P>
+             * PRESENCE: REQUIRED
+             *  </P>
+             *
+             * @since 3.0
+             */
+            static final String VERSION = "version";
+        }
+
+        /**
+         * Definitions used for interacting with the Widget table.
+         * The widget table specifies the widget support on a display.
+         */
+        public interface Widget {
+            /**
+             * Data row MIME type
+             */
+            static final String MIME_TYPE = "aef-widget";
+
+            /**
+             * Path segment
+             */
+            static final String PATH = "widget";
+
+            /**
+             * Content URI
+             *
+             * @since 5.0
+             */
+            static final Uri URI = Uri.withAppendedPath(BASE_URI, PATH);
+        }
+
+        /**
+         * Column-definitions for the Widget table
+         */
+        public interface WidgetColumns extends BaseColumns {
+
+            /**
+             * The ID of the display that the widget can be shown on.
+             *
+             * <P>
+             * TYPE: INTEGER (long)
+             * </P>
+             * <P>
+             * PRESENCE: REQUIRED
+             *  </P>
+             *
+             * @since 5.0
+             */
+            static final String DISPLAY_ID = "displayId";
+
+            /**
+             * The width of a widget cell in pixels.
+             * The host application may position widgets based on a grid of cells.
+             * If the width of a widget does not match the width of the cells the
+             * widget width will be rounded up to the nearest cell width.
+             *
+             * <P>
+             * TYPE: INTEGER (int)
+             * </P>
+             * <P>
+             * PRESENCE: REQUIRED
+             *  </P>
+             *
+             * @since 5.0
+             */
+            static final String CELL_WIDTH = "cellWidth";
+
+            /**
+             * The height of a widget cell in pixels.
+             * The host application may position widgets based on a grid of cells.
+             * If the height of a widget does not match the width of the cells the
+             * widget height will be rounded up to the nearest cell height.
+             *
+             * <P>
+             * TYPE: INTEGER (int)
+             * </P>
+             * <P>
+             * PRESENCE: REQUIRED
+             *  </P>
+             *
+             * @since 5.0
+             */
+            static final String CELL_HEIGHT = "cellHeight";
+
+            /**
+             * The maximum width of a widget in pixels.
+             *
+             * <P>
+             * TYPE: INTEGER (int)
+             * </P>
+             * <P>
+             * PRESENCE: REQUIRED
+             *  </P>
+             *
+             * @since 5.0
+             */
+            static final String MAX_WIDTH = "maxWidth";
+
+            /**
+             * The maximum height of widget in pixels.
+             *
+             * <P>
+             * TYPE: INTEGER (int)
+             * </P>
+             * <P>
+             * PRESENCE: REQUIRED
+             *  </P>
+             *
+             * @since 5.0
+             */
+            static final String MAX_HEIGHT = "maxHeight";
+
+            /**
+             * Specifies the different states an accessory can enter. The accessory's state can 
+             * affect which resources are used for displaying widgets
+             *
+             * <P>
+             * TYPE: INTEGER (int, bit field see {@link com.sonyericsson.extras.liveware.aef.widget.Widget.AccessoryState}.
+             * </P>
+             * <P>
+             * PRESENCE: REQUIRED
+             * </P>
+             *
+             * @since 5.0
+             */
+            static final String ACCESSORY_STATE = "displayMode";
+
+            /**
+             * Specifies the widget type.
+             * This is an unique string specified by each host application that is used by the
+             * extension to specify the widget it registers for.
+             *
+             * <P>
+             * TYPE: TEXT
+             * </P>
+             * <P>
+             * PRESENCE: REQUIRED
+             * </P>
+             *
+             * @since 5.0
+             */
+            static final String TYPE = "type";
+        }
+
+        /**
+         * Definitions used for interacting with the WidgetRegistration table.
+         * The WidgetRegistation table specifies the widgets supported by an
+         * extension for a given host application.
+         */
+        public interface WidgetRegistration {
+            /**
+             * Data row MIME type
+             */
+            static final String MIME_TYPE = "aef-widget_registration";
+
+            /**
+             * Path segment
+             */
+            static final String PATH = "widget_registration";
+
+            /**
+             * Content URI
+             *
+             * @since 5.0
+             */
+            static final Uri URI = Uri.withAppendedPath(BASE_URI, PATH);
+        }
+
+        /**
+         * Column-definitions for the WidgetRegistration table
+         */
+        public interface WidgetRegistrationColumns extends BaseColumns {
+
+            /**
+             * The ID of the API registration {@link ApiRegistration} with a host application that
+             * the widget can be shown on.
+             *
+             * <P>
+             * TYPE: INTEGER (long)
+             * </P>
+             * <P>
+             * PRESENCE: REQUIRED
+             *  </P>
+             *
+             * @since 5.0
+             */
+            static final String API_REGISTRATION_ID = "apiRegistrationId";
+
+            /**
+             * Specifies the widget type that the widget is for.
+             * Should match the string the host application has specified in {@link WidgetColumns#TYPE}.
+             *
+             * <P>
+             * TYPE: TEXT
+             * </P>
+             * <P>
+             * PRESENCE: REQUIRED
+             * </P>
+             *
+             * @since 5.0
+             */
+            static final String TYPE = "type";
+
+            /**
+             * Display name of the widget that may be shown in the settings.
+             *
+             * <P>
+             * TYPE: TEXT
+             * </P>
+             * <P>
+             * PRESENCE: REQUIRED
+             * </P>
+             *
+             * @since 5.0
+             */
+            static final String NAME = "name";
+
+            /**
+             * The width of the widget in pixels.
+             *
+             * <P>
+             * TYPE: INTEGER (int)
+             * </P>
+             * <P>
+             * PRESENCE: REQUIRED
+             *  </P>
+             *
+             * @since 5.0
+             */
+            static final String WIDTH = "width";
+
+            /**
+             * The height of the widget in pixels.
+             *
+             * <P>
+             * TYPE: INTEGER (int)
+             * </P>
+             * <P>
+             * PRESENCE: REQUIRED
+             *  </P>
+             *
+             * @since 5.0
+             */
+            static final String HEIGHT = "height";
+
+            /**
+             * The URI of a high resolution preview image that may show up in a settings screen on for example a phone or tablet.
+             * It should be a typical representation of the widget.
+             * It is recommended that the image has the same aspect ratio as the actual widget.
+             *
+             * <P>
+             * TYPE: TEXT
+             * </P>
+             * <P>
+             * PRESENCE: REQUIRED
+             * </P>
+             *
+             * @since 5.0
+             */
+            static final String PREVIEW_IMAGE_URI = "previewImageUri";
+
+            /**
+             * A key that can be used to identify the widget in the extension.
+             * This key is sent as an intent extra to the extension from the
+             * host application.
+             *
+             * <P>
+             * TYPE: TEXT
+             * </P>
+             * <P>
+             * PRESENCE: OPTIONAL (REQUIRED if more than one widget is supported by the extension)
+             *  </P>
+             *
+             * @since 5.0
+             */
+            static final String KEY = "key";
+
+            /**
+             * Specifies the category of the widget. Categories may be used to group widgets when
+             * presenting them to end-users so this property relates to how a widget is used, rather
+             * than its technical specifications
+             * <P>
+             * TYPE: INTEGER (int)
+             * </P>
+             * <P>
+             * ALLOWED VALUES:
+             * <ul>
+             * <li>{@link com.sonyericsson.extras.liveware.aef.widget.Widget.Category#DEFAULT} (default)</li>
+             * <li>{@link com.sonyericsson.extras.liveware.aef.widget.Widget.Category#CLOCK}</li>
+             * </ul>
+             * <P>
+             * PRESENCE: OPTIONAL
+             * </P>
+             *
+             * @since 5.0
+             */
+            static final String CATEGORY = "category";
+        }
+
+        /**
          * Specifies which API that shall be started when launching the extension.
          */
         public interface LaunchMode {
             /**
-             * The Control API shall be started when launching the extension.
+             * The {@link com.sonyericsson.extras.liveware.aef.control.Control} API shall be started when launching the extension.
              *
              * @since 2.0
              */
             static final int CONTROL = 0;
 
             /**
-             * The Notification API shall be started when launching the extension.
+             * The {@link com.sonyericsson.extras.liveware.aef.notification.Notification} API shall be started when launching the extension.
              *
              * @since 2.0
              */
@@ -1644,6 +1984,13 @@ public class Registration {
              * @since 2.0
              */
             static final int GALLERY = 1<<3;
+
+            /**
+             * Bit to indicate that {@link com.sonyericsson.extras.liveware.aef.widget.TimeView} is supported.
+             *
+             * @since 5.0
+             */
+            static final int TIME_VIEW = 1<<4;
         }
 
         /**
@@ -1652,37 +1999,37 @@ public class Registration {
         public interface KeyPadType {
 
             /**
-             * Play key. Corresponds to {@link Control.KeyCodes#KEYCODE_PLAY}.
+             * Play key. Corresponds to {@link com.sonyericsson.extras.liveware.aef.control.Control.KeyCodes#KEYCODE_PLAY}.
              */
             static final String PLAY = "Play";
 
             /**
-             * Next key. Corresponds to {@link Control.KeyCodes#KEYCODE_NEXT}.
+             * Next key. Corresponds to {@link com.sonyericsson.extras.liveware.aef.control.Control.KeyCodes#KEYCODE_NEXT}.
              */
             static final String NEXT = "Next";
 
             /**
-             * Previous key. Corresponds to {@link Control.KeyCodes#KEYCODE_PREVIOUS}.
+             * Previous key. Corresponds to {@link com.sonyericsson.extras.liveware.aef.control.Control.KeyCodes#KEYCODE_PREVIOUS}.
              */
             static final String PREVIOUS = "Previous";
 
             /**
-             * Volume down key. Corresponds to {@link Control.KeyCodes#KEYCODE_VOLUME_DOWN}.
+             * Volume down key. Corresponds to {@link com.sonyericsson.extras.liveware.aef.control.Control.KeyCodes#KEYCODE_VOLUME_DOWN}.
              */
             static final String VOLUME_DOWN = "Volume down";
 
             /**
-             * Volume up key. Corresponds to {@link Control.KeyCodes#KEYCODE_VOLUME_UP}.
+             * Volume up key. Corresponds to {@link com.sonyericsson.extras.liveware.aef.control.Control.KeyCodes#KEYCODE_VOLUME_UP}.
              */
             static final String VOLUME_UP = "Volume up";
 
             /**
-             * Action key. Corresponds to {@link Control.KeyCodes#KEYCODE_ACTION}.
+             * Action key. Corresponds to {@link com.sonyericsson.extras.liveware.aef.control.Control.KeyCodes#KEYCODE_ACTION}.
              */
             static final String ACTION = "App";
 
             /**
-             * Back key. Corresponds to {@link Control.KeyCodes#KEYCODE_BACK}.
+             * Back key. Corresponds to {@link com.sonyericsson.extras.liveware.aef.control.Control.KeyCodes#KEYCODE_BACK}.
              */
             static final String BACK = "Back";
         }
@@ -1714,15 +2061,15 @@ public class Registration {
              */
             static final String LIGHT = "Light";
 
-            /**
-             * Constant defining the sensor type Magnetic Field. Sensor data is sent
-             * as an array of 3 float values representing the ambient geomagnetic
-             * field for all three physical axes (x, y, z) in μT. For more
-             * information about the magnetic field sensor type, see
-             * {@link android.hardware.Sensor#TYPE_MAGNETIC_FIELD}
-             *
-             * @since 2.0
-             */
+          /**
+           * Constant defining the sensor type Magnetic Field. Sensor data is sent
+           * as an array of 3 float values representing the ambient geomagnetic
+           * field for all three physical axes (x, y, z) in μT. For more
+           * information about the magnetic field sensor type, see
+           * {@link android.hardware.Sensor#TYPE_MAGNETIC_FIELD}
+           *
+           * @since 2.0
+           */
             static final String MAGNETIC_FIELD = "MagneticField";
         }
 }

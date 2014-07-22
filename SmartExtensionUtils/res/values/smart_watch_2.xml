@@ -7,9 +7,12 @@
     
     <dimen name="smart_watch_2_statusbar_height">28px</dimen>
 
-    <dimen name="smart_watch_2_widget_width">204px</dimen>
-    <dimen name="smart_watch_2_widget_height">60px</dimen>
-    
+    <dimen name="smart_watch_2_widget_width">215px</dimen>
+    <dimen name="smart_watch_2_widget_height">170px</dimen>
+
+    <dimen name="smart_watch_2_widget_cell_width">43px</dimen>
+    <dimen name="smart_watch_2_widget_cell_height">34px</dimen>
+
     <dimen name="smart_watch_2_text_size_large">20px</dimen>
     <dimen name="smart_watch_2_text_size_medium">15px</dimen>
     <dimen name="smart_watch_2_text_size_small">13px</dimen>

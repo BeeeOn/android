@@ -1,5 +1,6 @@
 /*
 Copyright (c) 2011, Sony Ericsson Mobile Communications AB
+Copyright (C) 2013-2014 Sony Mobile Communications AB
 
 All rights reserved.
 
@@ -17,6 +18,10 @@ modification, are permitted provided that the following conditions are met:
   of its contributors may be used to endorse or promote products derived from
   this software without specific prior written permission.
 
+ * Neither the name of the Sony Mobile Communications AB nor the names
+  of its contributors may be used to endorse or promote products derived from
+  this software without specific prior written permission.
+
 THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
 ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
 WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -31,13 +36,6 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package com.sonyericsson.extras.liveware.extension.util.widget;
 
-import com.sonyericsson.extras.liveware.aef.notification.Notification;
-import com.sonyericsson.extras.liveware.aef.widget.Widget;
-import com.sonyericsson.extras.liveware.extension.util.Dbg;
-import com.sonyericsson.extras.liveware.extension.util.R;
-import com.sonyericsson.extras.liveware.extension.util.SmartWatchConst;
-import com.sonyericsson.extras.liveware.extension.util.notification.NotificationUtil;
-
 import android.content.Context;
 import android.content.Intent;
 import android.database.ContentObserver;
@@ -46,6 +44,13 @@ import android.database.SQLException;
 import android.graphics.Bitmap;
 import android.os.Handler;
 import android.text.format.DateUtils;
+
+import com.sonyericsson.extras.liveware.aef.notification.Notification;
+import com.sonyericsson.extras.liveware.aef.widget.Widget;
+import com.sonyericsson.extras.liveware.extension.util.Dbg;
+import com.sonyericsson.extras.liveware.extension.util.R;
+import com.sonyericsson.extras.liveware.extension.util.SmartWatchConst;
+import com.sonyericsson.extras.liveware.extension.util.notification.NotificationUtil;
 
 import java.util.GregorianCalendar;
 
@@ -186,7 +191,7 @@ public class NotificationWidgetExtension extends WidgetExtension {
     }
 
     /**
-     * Get bitmap.
+     * Create a bitmap from notification event.
      *
      * @param event The event or null if no events.
      *

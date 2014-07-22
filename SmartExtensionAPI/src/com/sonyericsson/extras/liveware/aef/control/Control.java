@@ -1,24 +1,24 @@
 /*
-Copyright (c) 2011, Sony Ericsson Mobile Communications AB
-Copyright (C) 2012-2013 Sony Mobile Communications AB
+Copyright (c) 2011 Sony Ericsson Mobile Communications AB
+Copyright (C) 2012 Sony Mobile Communications AB
 
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
 modification, are permitted provided that the following conditions are met:
 
-* Redistributions of source code must retain the above copyright notice, this
+ * Redistributions of source code must retain the above copyright notice, this
   list of conditions and the following disclaimer.
 
-* Redistributions in binary form must reproduce the above copyright notice,
+ * Redistributions in binary form must reproduce the above copyright notice,
   this list of conditions and the following disclaimer in the documentation
   and/or other materials provided with the distribution.
 
-* Neither the name of the Sony Ericsson Mobile Communications AB nor the names
+ * Neither the name of the Sony Ericsson Mobile Communications AB nor the names
   of its contributors may be used to endorse or promote products derived from
   this software without specific prior written permission.
 
-* Neither the name of the Sony Mobile Communications AB nor the names
+ * Neither the name of the Sony Mobile Communications AB nor the names
   of its contributors may be used to endorse or promote products derived from
   this software without specific prior written permission.
 
@@ -32,21 +32,18 @@ SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
 CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-*/
+ */
 
 package com.sonyericsson.extras.liveware.aef.control;
 
-import com.sonyericsson.extras.liveware.aef.registration.Registration;
 import com.sonyericsson.extras.liveware.aef.registration.Registration.DeviceColumns;
 
-
 /**
- * <h1>Control API is a part of the Smart Extension APIs</h1>
- * <p>
- * Some of our Smart accessories will support the Control API.
- * The Control API enables the Extension to take total control of the accessory.
+ * Control API is a part of the Smart Extension APIs.
+ * <p>Some of our Smart accessories will support the Control API.
+ * The Control API enables the extension to take total control of the accessory.
  * It takes control over the display, LEDs, vibrator, input events.
- * Because of this, only one Extension can run in this mode at a time.
+ * Because of this, only one extension can run in this mode at a time.
  * </p>
  * <p>Topics covered here:
  * <ol>
@@ -63,27 +60,27 @@ import com.sonyericsson.extras.liveware.aef.registration.Registration.DeviceColu
  * <a name="Registration"></a>
  * <h3>Registration</h3>
  * <p>
- * Before a Control Extension can use an accessory, it must use the registration API
+ * Before a Control extension can use an accessory, it must use the {@link com.sonyericsson.extras.liveware.aef.registration.Registration} API
  * content provider to insert a record in the extension table. It must also register
  * information in the registration table. This must be done for each Host Application
- * that the Extension wants to interact with.
+ * that the extension wants to interact with.
  * </p>
  * <p>
  * In order to find out what Host Applications are available and what capabilities they
- * support, the Extension should use the Capability API.
+ * support, the extension should use the {@link com.sonyericsson.extras.liveware.aef.registration.Registration} API.
  * </p>
  * <a name="Lifecycle"></a>
  * <h3>Extension lifecycle</h3>
  * <p>
- * After a successful registration the Extension can start communicating with the Host
- * Application. Since an Extension implementing this API takes complete control over the
- * accessory only one Extension can run at a time.
+ * After a successful registration, the extension can start communicating with the Host
+ * Application. Since an extension implementing this API takes complete control over the
+ * accessory, only one extension can run at a time.
  * </p>
  * <p>
- * An Extension cannot just start executing whenever it wants, it needs to make sure that
- * no other Extension is running, therefore the Extension can only request to be started,
+ * An extension cannot just start executing whenever it wants, it needs to make sure that
+ * no other extension is running, therefore the extension can only request to be started,
  * {@link Intents#CONTROL_START_REQUEST_INTENT}. When the Host Application is ready to give
- * control to the Extension it will send a {@link Intents#CONTROL_START_INTENT}, see figure
+ * control to the extension it will send a {@link Intents#CONTROL_START_INTENT}, see figure
  * below.
  * </p>
  * <p>
@@ -91,116 +88,116 @@ import com.sonyericsson.extras.liveware.aef.registration.Registration.DeviceColu
  * alt="Extension lifecycle" border="1" />
  * </p>
  * <p>
- * When the Extension requests to start controlling the accessory the Host Application can
- * either accept the request and give control to the Extension, or if something is not right
+ * When the extension requests to start controlling the accessory, the Host Application can
+ * either accept the request and give control to the extension, or if something is not right
  * the Host Application can send a {@link Intents#CONTROL_ERROR_INTENT}. See
  * {@link Intents#EXTRA_ERROR_CODE} for different error codes that the Host Application can send.
  * </p>
  * <p>
- * The {@link Intents#CONTROL_RESUME_INTENT} is sent when the Extension is visible on the accessory.
- * From this point on the Extension controls everything, the Host Application just forwards the
- * information between the accessory and the Extension.
+ * The {@link Intents#CONTROL_RESUME_INTENT} is sent when the extension is visible on the accessory.
+ * From this point on the extension controls everything, the Host Application just forwards the
+ * information between the accessory and the extension.
  * </p>
  * <p>
- * An Extension can also be paused, either if a high priority Extension needs to run for a
+ * An extension can also be paused, either if a high priority extension needs to run for a
  * while or if the Host Application is in charge of the display state and the display is
  * turned off. In this case the Host Application sends a {@link Intents#CONTROL_PAUSE_INTENT}
- * to the Extension. This means that there is no point for the Extension to update the display
- * since it is either turned off or someone else has control over it. If the Extension would
+ * to the extension. This means that there is no point for the extension to update the display
+ * since it is either turned off or someone else has control over it. If the extension would
  * break this rule and try to update the display anyway, the Host Application will ignore these
  * calls.
  * </p>
  * <p>
- * When the Extension is in a paused state it no longer has control over the display/LEDs/
- * vibrator/key events. As an example one could say that a telephony Extension has high priority.
- * E.g. when a random Extension is running and the user receives a phone call. We want to pause
- * the running Extension and let the telephony Extension display the caller id on the accessory
- * display. When the phone call ends the telephony Extension is done and the other Extension can
+ * When the extension is in a paused state, it no longer has control over the display/LEDs/
+ * vibrator/key events. As an example, one could say that a telephony extension has high priority.
+ * E.g. when a random extension is running and the user receives a phone call. We want to pause
+ * the running extension and let the telephony extension display the caller id on the accessory
+ * display. When the phone call ends, the telephony extension is done and the other extension can
  * resume its running, it will then receive a {@link Intents#CONTROL_RESUME_INTENT}.
  * </p>
  * <p>
- * When the {@link Intents#CONTROL_RESUME_INTENT} is sent from a Host Application the Extension is
+ * When the {@link Intents#CONTROL_RESUME_INTENT} is sent from a Host Application, the extension is
  * once again in charge of everything.
  * </p>
  * <p>
- * When the user chooses to exit the Extension the Host Application will send a
+ * When the user chooses to exit the extension, the Host Application will send a
  * {@link Intents#CONTROL_PAUSE_INTENT} followed by a {@link Intents#CONTROL_STOP_INTENT}.
  * From this point on the Host Application regains control.
  * </p>
  * <p>
- * If the Extension would like to stop itself when running, like the telephony Extension, it can
+ * If the extension would like to stop itself when running, like the telephony extension, it can
  * send a {@link Intents#CONTROL_STOP_REQUEST_INTENT} to the Host Application. The Host Application
  * will then make sure to stop it and send a {@link Intents#CONTROL_STOP_INTENT}.
- * If the extension was not already paused the it will be paused before it is stopped and a
+ * If the extension was not already paused, then it will be paused before it is stopped and a
  * {@link Intents#CONTROL_PAUSE_INTENT} is sent before the {@link Intents#CONTROL_STOP_INTENT}.
- * In case another Extension has been paused it will be resumed.
+ * In case another extension has been paused it will be resumed.
  * </p>
  *
  * <a name="DisplayControl"></a>
  * <h3>Controlling the display</h3>
  * <p>
  * Extensions implementing this API have the possibility to control the state of the accessory
- * display.The display can be controlled via {@link Intents#CONTROL_SET_SCREEN_STATE_INTENT}.
+ * display. The display can be controlled via {@link Intents#CONTROL_SET_SCREEN_STATE_INTENT}.
  * </p>
  * <p>
- * It is important that you program your Extension so that it consumes as little power as possible,
+ * It is important that you program your extension so that it consumes as little power as possible,
  * both on the phone side and on the accessory. The accessory has a much smaller battery then the
  * phone so use this functionality with caution. When possible, let the Host Application take control
  * of the display state. That way you don't have to bother about the power consumption on the accessory.
  * You can do this by setting the display state to "Auto".
  * </p>
  * <p>
- * By default when your Extension starts the display state will be set to "Auto", which means that the
- * Host Application controls the on/off/dim behavior. If the Extension wants to control the display state
+ * By default when your extension starts the display state will be set to "Auto", which means that the
+ * Host Application controls the on/off/dim behavior. If the extension wants to control the display state
  * it must explicitly change the state.
  * </p>
  * <p>
- * If the Extension controls the display state and you get a {@link Intents#CONTROL_STOP_INTENT}, meaning
- * your Extension is no longer running, the Host Application will automatically take over the display
+ * If the extension controls the display state and you get a {@link Intents#CONTROL_STOP_INTENT}, meaning
+ * your extension is no longer running, the Host Application will automatically take over the display
  * control.
  * </p>
  * <p>
- * Note that when in "Auto" mode, the Extension will receive a {@link Intents#CONTROL_PAUSE_INTENT} when
+ * Note that when in "Auto" mode, the extension will receive a {@link Intents#CONTROL_PAUSE_INTENT} when
  * display is off and a {@link Intents#CONTROL_RESUME_INTENT} when the display goes back on.
  * </p>
- * <h4>Active power save mode</h4>
+ * <h4>Active low power mode</h4>
  * <p>
  * Some accessories may support an additional display mode where information can be shown to the
- * user while keeping the battery consumption to a minimum. In this active power save mode the
- * display only supports monochrome (black and white) display content.
- * Accessories with support for active power save mode indicates this in
- * {@link Registration.DisplayColumns#SUPPORTS_LOW_POWER_MODE}.
- * If the control extension wants use the active power save mode it must set the
- * {@link Registration.ApiRegistration#LOW_POWER_SUPPORT} to TRUE when registering with a Host
+ * user while keeping the battery consumption to a minimum. In this active low power mode, the
+ * accessory may display content in a lower color depth.
+ * Accessories with support for active low power mode indicates this in
+ * {@link com.sonyericsson.extras.liveware.aef.registration.Registration.DisplayColumns#SUPPORTS_LOW_POWER_MODE}.
+ * If the control extension wants use the active low power mode it must set the
+ * {@link com.sonyericsson.extras.liveware.aef.registration.Registration.ApiRegistrationColumns#LOW_POWER_SUPPORT} to TRUE when registering with a Host
  * Application.
  * </p>
  * <p>
- * If both the extension and the accessory support active power save mode, this mode will be
+ * If both the extension and the accessory support active low power mode, this mode will be
  * activated when the screen would otherwise go off.
  * This means that if screen state is {@link Intents#SCREEN_STATE_AUTO} the accessory will decide when to
- * enter active power save mode.
- * If screen state is {@link Intents#SCREEN_STATE_ON} or {@link Intents#SCREEN_STATE_DIM} the
- * extension can put the display in active power save mode by setting the screen state to
- * {@link Intents#SCREEN_STATE_OFF}.
+ * enter active low power mode.
+ * If screen state is {@link Intents#SCREEN_STATE_ON}, {@link Intents#SCREEN_STATE_AUTO} or
+ * {@link Intents#SCREEN_STATE_DIM} the extension can put the display in active low power mode
+ * by setting the screen state to {@link Intents#SCREEN_STATE_OFF}.
  * The {@link Intents#CONTROL_ACTIVE_POWER_SAVE_MODE_STATUS_CHANGED_INTENT} intent is sent to the
- * extension when the display enters active power save mode both when the active power save
+ * extension when the display enters active low power mode both when the active low power
  * mode is initiated by the accessory and extension.
- * When in active power save mode the extension is expected to provide monochrome display
+ * When in active low power mode, the extension is expected to provide display
  * content through the same intents as in normal display mode.
  * The extension can update the display in the same ways as in normal display mode.
  * </p>
  * <p>
  * If the screen state is {@link Intents#SCREEN_STATE_AUTO} and the display was put in active
- * power save mode by the accessory, the accessory also decides when to leave the active
- * power save mode.
- * In this mode the extension will not receive any input events from the accessory as these
- * will cause the display to leave the active power save mode.
- * If the display was put in active power save mode by the control extension it is the
- * responsibility of the control extension to decide when to leave the active power save mode
- * by setting the screen state to {@link Intents#SCREEN_STATE_ON}.
- * If the extension wants to get input events when the screen is in active power save mode, it must
- * manually put the display in active power save mode.
- * When the display leaves the active power save mode a
+ * low power mode by the accessory, the accessory also decides when to leave the active
+ * low power mode.
+ * In this mode, the extension will not receive any input events from the accessory as these
+ * will cause the display to leave the active low power mode.
+ * If the display was put in active low power mode by the control extension, it is the
+ * responsibility of the control extension to decide when to leave the active low power mode
+ * by setting the screen state to {@link Intents#SCREEN_STATE_ON} or {@link Intents#SCREEN_STATE_AUTO}.
+ * If the extension wants to get input events when the screen is in active low power mode, it must
+ * manually put the display in active low power mode.
+ * When the display leaves the active low power mode, a
  * {@link Intents#CONTROL_ACTIVE_POWER_SAVE_MODE_STATUS_CHANGED_INTENT} will always be sent to
  * the extension and the extension is expected by update the display with new content.
  * </p>
@@ -208,82 +205,81 @@ import com.sonyericsson.extras.liveware.aef.registration.Registration.DeviceColu
  * <h3>Controlling the LEDs</h3>
  * <p>
  * The accessory might have one or more LEDs that are used to notify the user about events. The
- * Extension can find information about the LEDs for a certain accessory via the Registration &amp;
- * Capability API.
+ * extension can find information about the LEDs for a certain accessory via the {@link com.sonyericsson.extras.liveware.aef.registration.Registration} API.
  * </p>
  * <p>
- * If the accessory has LEDs, the Extension can control them via the Control API. The LEDs can be
+ * If the accessory has LEDs, the extension can control them via the Control API. The LEDs can be
  * controlled via the {@link Intents#CONTROL_LED_INTENT}.
  * Note that the Host Application might overtake the control of the LED at any time if it wants to
  * show some important notifications to the user, e.g. when the accessory battery level is low.
- * The Extension is unaware of this so it might still try to control the LEDs but the Host
+ * The extension is unaware of this so it might still try to control the LEDs but the Host
  * Application will ignore the calls.
  * </p>
  * <a name="VibratorControl"></a>
  * <h3>Controlling the vibrator</h3>
  * <p>
- * Our accessories might or might not have a vibrator. The Extension can find this out by checking
- * the capabilities of the Host Application via the Registration &amp; Capability API. If the accessory
- * has a vibrator it is controllable via the Control API, {@link Intents#CONTROL_VIBRATE_INTENT}.
+ * Our accessories might or might not have a vibrator. The extension can find this out by checking
+ * the capabilities of the Host Application via the {@link com.sonyericsson.extras.liveware.aef.registration.Registration} API. If the accessory
+ * has a vibrator, it is controllable via the Control API, {@link Intents#CONTROL_VIBRATE_INTENT}.
  * </p>
  * <a name="KeyEvents"></a>
  * <h3>Key events</h3>
  * <p>
  * The accessory might have several hardware keys. Your extension will receive the key events when
- * one of the keys is pressed. The {@link Intents#CONTROL_KEY_EVENT_INTENT} is sent to the Extension when
+ * one of the keys is pressed. The {@link Intents#CONTROL_KEY_EVENT_INTENT} is sent to the extension when
  * a user presses a key on the accessory.
  * </p>
  * <p>
  * The Intent carries a few parameters, such as the time stamp of the event, the type of event
  * (press, release and repeat) and also the key code. The accessory might have one or more keypads
- * defined. Extensions can look this up in the Registration &amp; Capabilities API. Each key will have a
+ * defined. Extensions can look this up in the {@link com.sonyericsson.extras.liveware.aef.registration.Registration} API. Each key will have a
  * unique key code for identification. Key codes can be found in the product SDK.
  * </p>
  * <a name="TouchEvents"></a>
  * <h3>Touch events</h3>
  * <p>
  * Certain accessories might have a touch display. Extensions can find this information using the
- * Registration &amp; Capabilities API. The {@link Intents#CONTROL_TOUCH_EVENT_INTENT} is sent to the
- * Extension when a user taps the accessory display.
+ * {@link com.sonyericsson.extras.liveware.aef.registration.Registration} API. The {@link Intents#CONTROL_TOUCH_EVENT_INTENT} is sent to the
+ * extension when a user taps the accessory display.
  * </p>
  * <p>
  * If the {@link Intents#CONTROL_DISPLAY_DATA_INTENT} is used to send images, then touch events with
  * display coordinates are delivered in the {@link Intents#CONTROL_TOUCH_EVENT_INTENT} intents.
  * If a swipe gesture is detected then a {@link Intents#CONTROL_SWIPE_EVENT_INTENT} is sent to the
- * Extension instead.
+ * extension instead.
  * </p>
  * <p>
  * If the {@link Intents#CONTROL_PROCESS_LAYOUT_INTENT} is used to send layouts then some Views
  * in the layout may handle the touch events themselves.
- * Touch events are for example handled by views that have android:clickable set to to true.
- * For these views the extension is informed about clicks through the
+ * Touch events are for example handled by views that have android:clickable or android:longClickable set to to true.
+ * For these views, the extension is informed about clicks through the
  * {@link Intents#CONTROL_OBJECT_CLICK_EVENT_INTENT} intent.
  * ListViews also handle touch event and report clicks in {@link Intents#CONTROL_LIST_ITEM_CLICK_INTENT}
  * intents.
  * Touch events and swipe gestures that are not handled by Views in the layout are sent to the
- * Extension through {@link Intents#CONTROL_TOUCH_EVENT_INTENT} and
+ * extension through {@link Intents#CONTROL_TOUCH_EVENT_INTENT} and
  * {@link Intents#CONTROL_SWIPE_EVENT_INTENT} intents.
  * </p>
  * <a name="DataSending"></a>
  * <h3>Displaying content on the accessory display</h3>
  * <p>
- * Since the Extension is controlling the accessory it also controls what is visible on the display.
- * The content visible to the user comes from the Extension. Basically the Extension sends images to
+ * Since the extension is controlling the accessory, it also controls what is visible on the display.
+ * The content visible to the user comes from the extension. Basically the extension sends images to
  * be displayed on the accessory display. To find out the dimensions of the display and the color depth
- * it supports the Extension can use the Registration &amp; Capabilities API. The
- * {@link Intents#CONTROL_DISPLAY_DATA_INTENT} is sent from the Extension when it wants to update the accessory
+ * it supports, the extension can use the {@link com.sonyericsson.extras.liveware.aef.registration.Registration} API. The
+ * {@link Intents#CONTROL_DISPLAY_DATA_INTENT} is sent from the extension when it wants to update the accessory
  * display. Extensions can also clear the accessory display at any point if they want to by sending
  * the {@link Intents#CONTROL_CLEAR_DISPLAY_INTENT}.
  * </p>
  * <p>
- * The Extension can send images as raw data (byte array) or it can just send the URI of the image to
+ * The extension can send images as raw data (byte array) or it can just send the URI of the image to
  * be displayed. Note that we are using Bluetooth as bearer which means that we can't send that many
- * frames per second (FPS). Refresh rate of the display can be found in the Registration &amp; Capabilities API.
+ * frames per second (FPS). Refresh rate of the display can be found in the {@link com.sonyericsson.extras.liveware.aef.registration.Registration} API.
  * </p>
- * <a name="Layouts"/>
+ * <a name="Layouts"></a>
  * <h3>Layouts</h3>
  * <p>
- * Starting with version 2 of the Control API it is possible to send layouts to the accessory as an
+ * Starting with version 2 of the Control API, it is possible to send layouts to the accessory as an
  * alternative to sending images.
  * The subset of Android layouts that are supported is specified in {@link Intents#EXTRA_DATA_XML_LAYOUT}.
  * Layouts are sent using {@link Intents#CONTROL_PROCESS_LAYOUT_INTENT}.
@@ -291,7 +287,7 @@ import com.sonyericsson.extras.liveware.aef.registration.Registration.DeviceColu
  * and {@link Intents#CONTROL_SEND_TEXT_INTENT}.
  * When using layouts, click events are delivered as {@link Intents#CONTROL_OBJECT_CLICK_EVENT_INTENT} intents.
  * </p>
- * <a name="Lists"/>
+ * <a name="Lists"></a>
  * <h4>Lists</h4>
  * <p>
  * A layout may include a ListView.
@@ -320,7 +316,7 @@ import com.sonyericsson.extras.liveware.aef.registration.Registration.DeviceColu
  * If only the existing list items should be updated this is done through a number of
  * {@link Intents#CONTROL_LIST_ITEM_INTENT} intents.
  * </p>
- * <a name="Gallery"/>
+ * <a name="Gallery"></a>
  * <h4>Gallery</h4>
  * <p>
  * The Control extension interacts with the Gallery view in the same way as the ListView with the
@@ -338,20 +334,20 @@ public class Control {
     /**
      * @hide
      * This class is only intended as a utility class containing declared constants
-     * that will be used by Control API Extension developers.
+     * that will be used by Control API extension developers.
      */
     protected Control() {
     }
 
     /**
-     * Intents sent between Control Extensions and Accessory Host Applications.
+     * Intents sent between Control extensions and Accessory Host Applications.
      */
     public interface Intents {
 
         /**
-         * Intent sent by the Extension when it wants to take control of the accessory display.
+         * Intent sent by the extension when it wants to take control of the accessory display.
          * <p>
-         * This intent should be sent with enforced security by supplying the host application permission
+         * When using the broadcast queue, this intent should be sent with enforced security by supplying the host application permission
          * to sendBroadcast(Intent, String). {@link com.sonyericsson.extras.liveware.aef.registration.Registration#HOSTAPP_PERMISSION}
          * </p>
          * <p>
@@ -366,9 +362,9 @@ public class Control {
         static final String CONTROL_START_REQUEST_INTENT = "com.sonyericsson.extras.aef.control.START_REQUEST";
 
         /**
-         * Intent sent by the Extension when it wants to stop controlling the accessory display.
+         * Intent sent by the extension when it wants to stop controlling the accessory display.
          * <p>
-         * This intent should be sent with enforced security by supplying the host application permission
+         * When using the broadcast queue, this intent should be sent with enforced security by supplying the host application permission
          * to sendBroadcast(Intent, String). {@link com.sonyericsson.extras.liveware.aef.registration.Registration#HOSTAPP_PERMISSION}
          * </p>
          * <p>
@@ -383,9 +379,9 @@ public class Control {
         static final String CONTROL_STOP_REQUEST_INTENT = "com.sonyericsson.extras.aef.control.STOP_REQUEST";
 
         /**
-         * Intent sent by the Host Application when it grants control of the accessory display to the Extension.
-         * This Intent might be sent when the Host Application wants to start the Extension or as a
-         * result of the Extensions sending a {@link #CONTROL_START_REQUEST_INTENT} Intent.
+         * Intent sent by the Host Application when it grants control of the accessory display to the extension.
+         * This Intent might be sent when the Host Application wants to start the extension or as a
+         * result of the extensions sending a {@link #CONTROL_START_REQUEST_INTENT} Intent.
          * <p>
          * Intent-extra data:
          * </p>
@@ -399,9 +395,9 @@ public class Control {
         static final String CONTROL_START_INTENT = "com.sonyericsson.extras.aef.control.START";
 
         /**
-         * Intent sent by the Host Application when it takes back control of the accessory display from the Extension.
-         * This Intent might be sent when the Host Application wants to stop the Extension or as a
-         * result of the Extensions sending a {@link #CONTROL_STOP_REQUEST_INTENT} Intent.
+         * Intent sent by the Host Application when it takes back control of the accessory display from the extension.
+         * This Intent might be sent when the Host Application wants to stop the extension or as a
+         * result of the extensions sending a {@link #CONTROL_STOP_REQUEST_INTENT} Intent.
          * <p>
          * Intent-extra data:
          * </p>
@@ -415,7 +411,7 @@ public class Control {
         static final String CONTROL_STOP_INTENT = "com.sonyericsson.extras.aef.control.STOP";
 
         /**
-         * Intent sent by the Host Application when the Extension is no longer visible on the display.
+         * Intent sent by the Host Application when the extension is no longer visible on the display.
          * <p>
          * Intent-extra data:
          * </p>
@@ -429,7 +425,7 @@ public class Control {
         static final String CONTROL_PAUSE_INTENT = "com.sonyericsson.extras.aef.control.PAUSE";
 
         /**
-         * Intent sent by the Host Application when the Extension is visible on the display.
+         * Intent sent by the Host Application when the extension is visible on the display.
          * <p>
          * Intent-extra data:
          * </p>
@@ -458,11 +454,11 @@ public class Control {
         static final String CONTROL_ERROR_INTENT = "com.sonyericsson.extras.aef.control.ERROR";
 
         /**
-         * Intent sent by the Extension when it wants to set the state of the accessory display.
-         * If the Extension does not set the state explicitly it will by default be controlled by
+         * Intent sent by the extension when it wants to set the state of the accessory display.
+         * If the extension does not set the state explicitly it will by default be controlled by
          * the Host Application (Display Auto) for optimal power consumption.
          * <p>
-         * This intent should be sent with enforced security by supplying the host application permission
+         * When using the broadcast queue, this intent should be sent with enforced security by supplying the host application permission
          * to sendBroadcast(Intent, String). {@link com.sonyericsson.extras.liveware.aef.registration.Registration#HOSTAPP_PERMISSION}
          * </p>
          * <p>
@@ -478,11 +474,11 @@ public class Control {
         static final String CONTROL_SET_SCREEN_STATE_INTENT = "com.sonyericsson.extras.aef.control.SET_SCREEN_STATE";
 
         /**
-         * Intent sent by the Extension when it wants to control one of the LEDs available on the accessory.
+         * Intent sent by the extension when it wants to control one of the LEDs available on the accessory.
          * Every Host Application will expose information about its LEDs in the
-         * Registration &amp; Capabilities API.
+         * {@link com.sonyericsson.extras.liveware.aef.registration.Registration} API.
          * <p>
-         * This intent should be sent with enforced security by supplying the host application permission
+         * When using the broadcast queue, this intent should be sent with enforced security by supplying the host application permission
          * to sendBroadcast(Intent, String). {@link com.sonyericsson.extras.liveware.aef.registration.Registration#HOSTAPP_PERMISSION}
          * </p>
          * <p>
@@ -502,7 +498,7 @@ public class Control {
         static final String CONTROL_LED_INTENT = "com.sonyericsson.extras.aef.control.LED";
 
         /**
-         * Intent sent by the Extension when it wants to stop an ongoing LED sequence on the accessory.
+         * Intent sent by the extension when it wants to stop an ongoing LED sequence on the accessory.
          * If the LED specified in the Intent-extra if off, this Intent will be ignored by the Host Application.
          * <p>
          * This intent should be sent with enforced security by supplying the host application permission
@@ -521,11 +517,11 @@ public class Control {
         static final String CONTROL_STOP_LED_INTENT = "com.sonyericsson.extras.aef.control.STOP_LED";
 
         /**
-         * Intent sent by the Extension when it wants to control the vibrator available on the accessory.
+         * Intent sent by the extension when it wants to control the vibrator available on the accessory.
          * Every Host Application will expose information about the vibrator if it has one in the
-         * Registration &amp; Capabilities API.
+         * {@link com.sonyericsson.extras.liveware.aef.registration.Registration} API.
          * <p>
-         * This intent should be sent with enforced security by supplying the host application permission
+         * When using the broadcast queue, this intent should be sent with enforced security by supplying the host application permission
          * to sendBroadcast(Intent, String). {@link com.sonyericsson.extras.liveware.aef.registration.Registration#HOSTAPP_PERMISSION}
          * </p>
          * <p>
@@ -543,10 +539,10 @@ public class Control {
         static final String CONTROL_VIBRATE_INTENT = "com.sonyericsson.extras.aef.control.VIBRATE";
 
         /**
-         * Intent sent by the Extension when it wants to stop an ongoing vibration on the accessory.
+         * Intent sent by the extension when it wants to stop an ongoing vibration on the accessory.
          * If no vibration is ongoing, this Intent will be ignored by the Host Application.
          * <p>
-         * This intent should be sent with enforced security by supplying the host application permission
+         * When using the broadcast queue, this intent should be sent with enforced security by supplying the host application permission
          * to sendBroadcast(Intent, String). {@link com.sonyericsson.extras.liveware.aef.registration.Registration#HOSTAPP_PERMISSION}
          * </p>
          * Intent-extra data:
@@ -560,19 +556,19 @@ public class Control {
         static final String CONTROL_STOP_VIBRATE_INTENT = "com.sonyericsson.extras.aef.control.STOP_VIBRATE";
 
         /**
-         * Intent sent by the Extension whenever it wants to update the accessory display.
-         * The display size is accessory dependent and can be found using the Registration &amp; Capabilities API.
+         * Intent sent by the extension whenever it wants to update the accessory display.
+         * The display size is accessory dependent and can be found using the {@link com.sonyericsson.extras.liveware.aef.registration.Registration} API.
          * <p>
          * The Accessory may support several displays.
          * The displays can be real displays or emulated displays to provide compatibility for
-         * Extensions written for other Accessories.
-         * If several displays are supported the Extension can use {@link #EXTRA_DISPLAY_ID}
+         * extensions written for other Accessories.
+         * If several displays are supported, the extension can use {@link #EXTRA_DISPLAY_ID}
          * to specify the target display.
          * If {@link #EXTRA_DISPLAY_ID} is absent the Host Application will make a selection
          * of target display and if necessary scale the image.
          * </p>
          * <p>
-         * This intent should be sent with enforced security by supplying the host application permission
+         * When using the broadcast queue, this intent should be sent with enforced security by supplying the host application permission
          * to sendBroadcast(Intent, String). {@link com.sonyericsson.extras.liveware.aef.registration.Registration#HOSTAPP_PERMISSION}
          * </p>
          * <p>
@@ -592,9 +588,9 @@ public class Control {
         static final String CONTROL_DISPLAY_DATA_INTENT = "com.sonyericsson.extras.aef.control.DISPLAY_DATA";
 
         /**
-         * Intent sent by the Extension whenever it wants to clear the accessory display.
+         * Intent sent by the extension whenever it wants to clear the accessory display.
          * <p>
-         * This intent should be sent with enforced security by supplying the host application permission
+         * When using the broadcast queue, this intent should be sent with enforced security by supplying the host application permission
          * to sendBroadcast(Intent, String). {@link com.sonyericsson.extras.liveware.aef.registration.Registration#HOSTAPP_PERMISSION}
          * </p>
          * <p>
@@ -609,7 +605,7 @@ public class Control {
         static final String CONTROL_CLEAR_DISPLAY_INTENT = "com.sonyericsson.extras.aef.control.CLEAR_DISPLAY";
 
         /**
-         * Intent sent by the Host Application to the controlling Extension whenever an hardware
+         * Intent sent by the Host Application to the controlling extension whenever an hardware
          * key is pressed/released.
          * <p>
          * Intent-extra data:
@@ -626,8 +622,10 @@ public class Control {
          */
         static final String CONTROL_KEY_EVENT_INTENT = "com.sonyericsson.extras.aef.control.KEY_EVENT";
 
+        static final String CONTROL_TAP_EVENT_INTENT = "com.sonyericsson.extras.aef.control.TAP_EVENT";
+
         /**
-         * Intent sent by the Host Application to the controlling Extension whenever an touch
+         * Intent sent by the Host Application to the controlling extension whenever an touch
          * event is detected.
          * <p>
          * Intent-extra data:
@@ -646,7 +644,7 @@ public class Control {
         static final String CONTROL_TOUCH_EVENT_INTENT = "com.sonyericsson.extras.aef.control.TOUCH_EVENT";
 
         /**
-         * Intent sent by the Host Application to the controlling Extension whenever an swipe
+         * Intent sent by the Host Application to the controlling extension whenever an swipe
          * event is detected.
          * <p>
          * Intent-extra data:
@@ -662,16 +660,16 @@ public class Control {
         static final String CONTROL_SWIPE_EVENT_INTENT = "com.sonyericsson.extras.aef.control.SWIPE_EVENT";
 
         /**
-         * Intent sent by the Extension whenever it wants to update the Accessory display by sending an XML layout.
+         * Intent sent by the extension whenever it wants to update the Accessory display by sending an XML layout.
          * Note that the extension must always send a layout covering the full screen according to the display screen size.
          * This means that even though the extension wants to update a portion of the screen a full screen layout must
          * be supplied anyway. Objects that should be displayed in the layout are sent separately.
          * <p>
-         * {@link #EXTRA_LAYOUT_DATA} can be used to update view in the layout with new values.
+         * {@link #EXTRA_LAYOUT_DATA} can be used to populate views in the layout with initial values.
          * The content of the view in the layout can also be updated using {@link #CONTROL_SEND_TEXT_INTENT} and {@link #CONTROL_SEND_IMAGE_INTENT}.
          * </p>
          * <p>
-         * This intent should be sent with enforced security by supplying the host application permission
+         * When using the broadcast queue, this intent should be sent with enforced security by supplying the host application permission
          * to sendBroadcast(Intent, String). {@link com.sonyericsson.extras.liveware.aef.registration.Registration#HOSTAPP_PERMISSION}
          * </p>
          * <p>
@@ -692,7 +690,7 @@ public class Control {
          * The image can be a URI or an array of a raw image, like JPEG
          * The image will replace any previous sent image with the same reference.
          * <p>
-         * This intent should be sent with enforced security by supplying the host application permission
+         * When using the broadcast queue, this intent should be sent with enforced security by supplying the host application permission
          * to sendBroadcast(Intent, String). {@link com.sonyericsson.extras.liveware.aef.registration.Registration#HOSTAPP_PERMISSION}
          * </p>
          * <p>
@@ -713,7 +711,7 @@ public class Control {
          * Intent sent by the Control extension whenever it wants to update a text in a TextView on the accessory.
          * The text will replace any previous sent text with the same reference.
          * <p>
-         * This intent should be sent with enforced security by supplying the host application permission
+         * When using the broadcast queue, this intent should be sent with enforced security by supplying the host application permission
          * to sendBroadcast(Intent, String). {@link com.sonyericsson.extras.liveware.aef.registration.Registration#HOSTAPP_PERMISSION}
          * </p>
          * <p>
@@ -730,11 +728,9 @@ public class Control {
         static final String CONTROL_SEND_TEXT_INTENT = "com.sonyericsson.extras.aef.control.SEND_TEXT";
 
         /**
-         * Intent sent by the Host Application to the controlling Extension whenever the active power save mode status changed.
-         * This intent is only sent to control extensions that support active power save mode.
-         * In active power save mode, the control should supply a black and white image.
+         * Intent sent by the Host Application to the controlling extension whenever the active low power mode status changed.
+         * This intent is only sent to control extensions that support active low power mode.
          *
-         * Depending on the mode, a suitable layout should be sent to the accessory.
          * <p>
          * Intent-extra data:
          * </p>
@@ -749,7 +745,7 @@ public class Control {
         static final String CONTROL_ACTIVE_POWER_SAVE_MODE_STATUS_CHANGED_INTENT = "com.sonyericsson.extras.aef.control.ACTIVE_POWER_SAVE_MODE_STATUS_CHANGED";
 
         /**
-         * Intent sent by the Host Application to the controlling Extension whenever a click
+         * Intent sent by the Host Application to the controlling extension whenever a click
          * event is detected on a graphical object referenced from a layout.
          * <p>
          * Intent-extra data:
@@ -778,7 +774,7 @@ public class Control {
          * {@link #CONTROL_LIST_REFRESH_REQUEST_INTENT} intent.
          * </p>
          * <p>
-         * This intent should be sent with enforced security by supplying the
+         * When using the broadcast queue, this intent should be sent with enforced security by supplying the
          * host application permission to sendBroadcast(Intent, String).
          * {@link com.sonyericsson.extras.liveware.aef.registration.Registration#HOSTAPP_PERMISSION}
          * </p>
@@ -805,7 +801,7 @@ public class Control {
          * specified using {@link #EXTRA_LIST_ITEM_POSITION} or
          * {@link #EXTRA_LIST_ITEM_ID}.
          * <p>
-         * This intent should be sent with enforced security by supplying the
+         * When using the broadcast queue, this intent should be sent with enforced security by supplying the
          * host application permission to sendBroadcast(Intent, String).
          * {@link com.sonyericsson.extras.liveware.aef.registration.Registration#HOSTAPP_PERMISSION}
          * </p>
@@ -856,7 +852,7 @@ public class Control {
          * item layout with new values.
          * </p>
          * <p>
-         * This intent should be sent with enforced security by supplying the
+         * When using the broadcast queue, this intent should be sent with enforced security by supplying the
          * host application permission to sendBroadcast(Intent, String).
          * {@link com.sonyericsson.extras.liveware.aef.registration.Registration#HOSTAPP_PERMISSION}
          * </p>
@@ -880,7 +876,7 @@ public class Control {
         /**
          * Intent sent by the Host Application to the Control extension when a
          * list item has been clicked. If the list item contains any views where
-         * android:clickable is true and one of these views were clicked the
+         * android:clickable or android:longClickable is true and one of these views were clicked the
          * android:id of that view is returned in
          * {@link #EXTRA_LIST_ITEM_LAYOUT_REFERENCE}.
          * <p>
@@ -943,7 +939,7 @@ public class Control {
          * menu item has been selected.
          *
          * <p>
-         * This intent should be sent with enforced security by supplying the
+         * When using the broadcast queue, this intent should be sent with enforced security by supplying the
          * host application permission to sendBroadcast(Intent, String).
          * {@link com.sonyericsson.extras.liveware.aef.registration.Registration#HOSTAPP_PERMISSION}
          * </p>
@@ -989,8 +985,8 @@ public class Control {
         static final String EXTRA_AHA_PACKAGE_NAME = "aha_package_name";
 
         /**
-         * The name of the Intent-extra used to identify the Extension.
-         * The Extension will send its package name
+         * The name of the Intent-extra used to identify the extension.
+         * The extension will send its package name
          * <P>
          * TYPE: TEXT
          * </P>
@@ -1133,7 +1129,7 @@ public class Control {
         /**
          * The name of the Intent-extra used to identify the keycode.
          * Information about what type of keypad a accessory has can be found using the
-         * Registration &amp; Capabilities API
+         * {@link com.sonyericsson.extras.liveware.aef.registration.Registration} API
          * <P>
          * ALLOWED VALUES:
          * Any key code defined in the {@link KeyCodes} interface.
@@ -1144,6 +1140,8 @@ public class Control {
          * @since 1.0
          */
         static final String EXTRA_KEY_CODE = "key_code";
+
+        static final String EXTRA_TAP_ACTION = "tap_action";
 
         /**
          * The name of the Intent-extra used to indicate the touch action
@@ -1236,8 +1234,6 @@ public class Control {
          * <h3>Dimensions</h3>
          * <P>
          * The px dimensions is the only dimension supported.
-         * The only exception is text sizes which can be specified using sp to indicate that the text
-         * shall be scaled to the user preference setting on the accessory.
          * </P>
          * <h3>ViewGroups</h3>
          * <P>
@@ -1267,8 +1263,17 @@ public class Control {
          * <p>
          * The following View XML attributes are supported
          * <ul>
-         * <li>android:background - restricted to a solid color such as "#ff000000" (black)</li>
-         * <li>android:clickable - {@link #CONTROL_OBJECT_CLICK_EVENT_INTENT} are sent for views that are clickable</li>
+         * <li>android:background - can be a solid color such as "#ff000000" (black) or a
+         * StateListDrawable with solid colors.
+         * Only the android:state_pressed attribute of the StateListDrawable is supported.
+         * Using a StateListDrawable requires that the view has at least one of android:clickable or
+         * android:longClickable set to true.</li>
+         * <li>android:clickable - if true the extension will receive
+         * {@link #CONTROL_OBJECT_CLICK_EVENT_INTENT} (or for a list item
+         * {@link #CONTROL_LIST_ITEM_CLICK_INTENT}) intents for short clicks on the view.
+         * <li>android:longClickable - if true the extension will receive
+         * {@link #CONTROL_OBJECT_CLICK_EVENT_INTENT} (or for a list item
+         * {@link #CONTROL_LIST_ITEM_CLICK_INTENT}) intents for long clicks on the view.</li>
          * <li>android:id</li>
          * <li>android:layout_height</li>
          * <li>android:layout_width</li>
@@ -1301,9 +1306,6 @@ public class Control {
          * <li>android:textSize - Not all text sizes are supported by all accessories.
          * If a not supported text size is used the accessory will select the closest available text size.
          * See the accessory white paper for a list of supported text sizes.
-         * </br>
-         * If the sp unit is used the text is scaled according to settings on the accessories (if supported by the accessory).
-         * If the px unit is used the text is not affected by any settings on the accessory.
          * </li>
          * <li>android:textStyle</li>
          * </ul>
@@ -1465,7 +1467,7 @@ public class Control {
 
         /**
          * The id of the display.
-         * Refers to {@link Registration.DisplayColumns#_ID}.
+         * Refers to the {@link android.provider.BaseColumns#_ID} field of the {@link com.sonyericsson.extras.liveware.aef.registration.Registration.DisplayColumns} table.
          * <P>
          * TYPE: INTEGER (int)
          * </P>
@@ -1508,7 +1510,7 @@ public class Control {
         /**
          * Items for a menu. Each menu item can either be an icon or a text
          * string. The {@link #EXTRA_MENU_ITEM_ID} is used to identify the
-         * selected menu item. {@link Registration.DisplayColumns#MENU_ITEMS}
+         * selected menu item. {@link com.sonyericsson.extras.liveware.aef.registration.Registration.DisplayColumns#MENU_ITEMS}
          * specifies the number of menu items supported by the display.
          * <P>
          * TYPE: Array of BUNDLEs with following information in each BUNDLE.
@@ -1715,5 +1717,11 @@ public class Control {
          * Keycode representing an options button
          */
         static final int KEYCODE_OPTIONS = 8;
+    }
+
+    public interface TapActions {
+        static final int SINGLE_TAP = 0;
+        static final int DOUBLE_TAP = 1;
+        static final int TRIPLE_TAP = 2;
     }
 }

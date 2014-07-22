@@ -116,8 +116,8 @@ public class AccessorySensor {
      * listener per sensor.
      *
      * @param listener The event listener.
-     * @param sensorRate The sensor rate.
-     * @param interruptMode The interrupt mode.
+     * @param sensorRate The sensor rate. See: {@link Sensor.SensorRates}
+     * @param interruptMode The interrupt mode. See: {@link Sensor.SensorInterruptMode}.
      */
     public void registerListener(final AccessorySensorEventListener listener, final int sensorRate,
             final int interruptMode) throws AccessorySensorException {
@@ -134,8 +134,10 @@ public class AccessorySensor {
 
     /**
      * Register a sensor event listener that gets new data when the sensor has
-     * new data. It is only possible to have one listener per sensor.
+     * new data. This type of listener is available if sensor support interrupt
+     * mode. It is only possible to have one listener per sensor.
      *
+     * @see #isInterruptModeSupported()
      * @param listener The event listener.
      */
     public void registerInterruptListener(final AccessorySensorEventListener listener)
@@ -156,8 +158,7 @@ public class AccessorySensor {
      *
      * @param listener The event listener.
      * @param sensorRate Any one of the constants defined in the
-     *            Sensor.SensorRate interface.
-     * @see Sensor.SensorRates
+     *            {@link Sensor.SensorRates} interface.
      */
     public void registerFixedRateListener(final AccessorySensorEventListener listener,
             int sensorRate) throws AccessorySensorException {
@@ -193,7 +194,9 @@ public class AccessorySensor {
     }
 
     /**
-     * Is interrupt mode supported.
+     * Is interrupt mode supported. Sensor in interrupt mode can send data
+     * right after they are measured and and won't be required to send them
+     * at a fixed rate.
      *
      * @see Registration.SensorColumns.#SUPPORTS_SENSOR_INTERRUPT
      * @return True if interrupt mode is supported.
