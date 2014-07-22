@@ -46,7 +46,7 @@
     <string name="registration_serial_number">For adapter with serial number:</string>
     <string name="alert_title">Title</string>
     <string name="alert_message">Message</string>
-    <string name="refresh_time">Refresh time:</string>
+    <string name="refresh_time">Refresh time: %s</string>
     <string name="last_update">Last update:</string>
     <string name="sen_graph_label">Graph of history</string>
     <!-- RadioButtons -->

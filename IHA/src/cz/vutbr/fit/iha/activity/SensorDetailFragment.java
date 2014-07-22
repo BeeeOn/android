@@ -175,7 +175,7 @@ public class SensorDetailFragment extends SherlockFragment {
 
 		    public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
 		    	String interval = RefreshInterval.values()[progress].getStringInterval(context);
-		    	mRefreshTimeText.setText(getString(R.string.refresh_time, interval));
+		    	mRefreshTimeText.setText(String.format(getString(R.string.refresh_time), interval));
 		    }
 
 			@Override
