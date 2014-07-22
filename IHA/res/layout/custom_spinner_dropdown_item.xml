@@ -10,8 +10,8 @@
          android:contentDescription="@string/placeholder_icon"
          android:layout_width="@dimen/custom_spinner_icon_size"
          android:layout_height="@dimen/custom_spinner_icon_size"
-         android:paddingLeft="10dp"
-         android:paddingRight="10dp"
+         android:paddingLeft="5dp"
+         android:paddingRight="5dp"
          android:src="@drawable/loc_unknown"/>
     
     <CheckedTextView

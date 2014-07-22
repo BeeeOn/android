@@ -1,7 +1,9 @@
 package cz.vutbr.fit.iha.activity;
 
 import java.text.DateFormat;
+import java.util.Collections;
 import java.util.Date;
+import java.util.List;
 
 import android.app.Fragment;
 import android.content.Context;
@@ -26,6 +28,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.actionbarsherlock.app.SherlockFragment;
@@ -37,10 +40,12 @@ import com.jjoe64.graphview.GraphViewSeries;
 import com.jjoe64.graphview.GraphViewSeries.GraphViewSeriesStyle;
 import com.jjoe64.graphview.LineGraphView;
 
+import cz.vutbr.fit.iha.LocationArrayAdapter;
 import cz.vutbr.fit.iha.R;
 import cz.vutbr.fit.iha.RefreshInterval;
 import cz.vutbr.fit.iha.adapter.device.BaseDevice;
 import cz.vutbr.fit.iha.adapter.location.Location;
+import cz.vutbr.fit.iha.adapter.location.Location.DefaultRoom;
 import cz.vutbr.fit.iha.controller.Controller;
 //import android.widget.LinearLayout;
 import cz.vutbr.fit.iha.view.CustomViewPager;
@@ -67,6 +72,7 @@ public class SensorDetailFragment extends SherlockFragment {
 	private RelativeLayout mLayout;
 	private RelativeLayout mRectangleName;
 	private RelativeLayout mRectangleLoc;
+	private Spinner mSpinnerLoc;
 	
 	private SensorDetailActivity mActivity;
 	private GraphView mGraphView; 
@@ -159,6 +165,7 @@ public class SensorDetailFragment extends SherlockFragment {
 		// Get View for sensor location
 		mLocation = (TextView) getView().findViewById(R.id.sen_detail_loc_name);
 		mRectangleLoc = (RelativeLayout) getView().findViewById(R.id.sen_rectangle_loc);
+		mSpinnerLoc = (Spinner) getView().findViewById(R.id.sen_detail_spinner_choose_location);
 		// Get View for sensor value
 		mValue = (TextView) getView().findViewById(R.id.sen_detail_value);
 		// Get View for sensor time
@@ -236,15 +243,37 @@ public class SensorDetailFragment extends SherlockFragment {
 				//return true;
 			}
 		});
+		
 		// Set name of location
 		if (mController != null) {
 			Location location = mController.getLocationByDevice(device);
 			if (location != null)
 				mLocation.setText(location.getName());
+			    mLocation.setOnClickListener(new OnClickListener() {
+					
+					@Override
+					public void onClick(View v) {
+						mEditMode = EDIT_LOC;
+						mMode = getSherlockActivity().startActionMode(new AnActionModeOfEpicProportions());
+						mSpinnerLoc.setVisibility(View.VISIBLE);
+						mLocation.setVisibility(View.GONE);
+						mRectangleLoc.setVisibility(View.GONE);
+					}
+				});
 		} else {
 			Log.e(TAG, "mController is null (this shouldn't happen)");
 			mLocation.setText(device.getLocationId());
 		}
+		
+		
+		
+		// Set locations to spinner
+		LocationArrayAdapter dataAdapter = new LocationArrayAdapter(this.getActivity(), R.layout.custom_spinner_item, getLocationsArray());
+		dataAdapter.setLayoutInflater(getLayoutInflater(null));
+		dataAdapter.setDropDownViewResource(R.layout.custom_spinner_dropdown_item);
+
+		mSpinnerLoc.setAdapter(dataAdapter);
+		
 		// Set value of sensor
 		mValue.setText(device.getStringValueUnit(getActivity()));
 		// Set icon of sensor
@@ -326,6 +355,37 @@ public class SensorDetailFragment extends SherlockFragment {
 		});
 		
 	}
+	
+	
+	private  List<Location> getLocationsArray(){
+		// Get locations from adapter
+		List<Location> locations = mController.getLocations();
+		
+		// Add "missing" default rooms
+		for (DefaultRoom room : Location.defaults) {
+			String name = getString(room.rName);
+			
+			boolean found = false;
+			for (Location location : locations) {
+				if (location.getName().equals(name)) {
+					found = true;
+					break;
+				}
+			}
+			
+			if (!found) {
+				locations.add(new Location(Location.NEW_LOCATION_ID, name, room.type));	
+			}
+		}
+		
+		// Sort them
+		Collections.sort(locations);
+		
+		// Add "New location" item
+		locations.add(new Location(Location.NEW_LOCATION_ID, getString(R.string.addsensor_new_location_spinner), 0));
+		
+		return locations;
+	}
 
 	private CharSequence setLastUpdate(Time lastUpdate) {
 		// Last update time data
@@ -368,6 +428,9 @@ public class SensorDetailFragment extends SherlockFragment {
 			
 			switch(mEditMode) {
 			case EDIT_LOC:
+				mSpinnerLoc.setVisibility(View.GONE);
+				mLocation.setVisibility(View.VISIBLE);
+				mRectangleLoc.setVisibility(View.VISIBLE);
 				break;
 			case EDIT_NAME:
 				if(item.getTitle().equals("Save")) {

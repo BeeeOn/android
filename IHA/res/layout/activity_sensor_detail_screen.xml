@@ -25,20 +25,18 @@
 	        android:src="@drawable/dev_unknown"
 	        android:contentDescription="Icon of device" />
 	
-	    
 	    <TextView
 	        android:id="@+id/sen_detail_name"
 	        android:layout_width="wrap_content"
 	        android:layout_height="wrap_content"
 	        android:layout_alignParentRight="true"
 	        android:layout_alignTop="@+id/sen_detail_icon"
-	        android:layout_marginRight="15dp"
 	        android:layout_marginBottom="10dp"
+	        android:layout_marginRight="15dp"
 	        android:gravity="right"
 	        android:text="NameSensor"
-	        
 	        android:textColor="@color/log_blue2"
-	        android:textSize="30sp"
+	        android:textSize="35dp"
 	        android:textStyle="bold" />
 	    
 	    <EditText
@@ -50,12 +48,12 @@
 	        android:layout_marginRight="3dp"
 	        android:layout_marginTop="-7dp"
 	        android:gravity="right"
+	        android:inputType="textCapSentences"
 	        android:text="NameSensor"
 	        android:textColor="@color/log_blue2"
-	        android:textSize="30sp"
+	        android:textSize="35dp"
 	        android:textStyle="bold"
-	        android:visibility="invisible"
-	        android:inputType="textCapSentences" />
+	        android:visibility="invisible" />
 	
 	    <SeekBar
 	        android:id="@+id/sen_refresh_time_seekBar"
@@ -63,56 +61,31 @@
 	        android:layout_height="wrap_content"
 	        style="@style/SeekBarCustomHoloTheme"
 	        android:layout_alignLeft="@+id/sen_detail_icon"
-	        android:layout_alignRight="@+id/sen_detail_time"
 	        android:layout_below="@+id/sen_detail_icon"
 	        android:layout_marginTop="38dp" />
 	
 	    <TextView
 	        android:id="@+id/sen_refresh_time"
-	        android:layout_width="match_parent"
+	        android:layout_width="wrap_content"
 	        android:layout_height="wrap_content"
-	        android:layout_alignLeft="@+id/sen_refresh_time_seekBar"
-	        android:layout_alignRight="@+id/sen_refresh_time_seekBar"
+	        android:layout_alignLeft="@id/sen_refresh_time_seekBar"
 	        android:layout_below="@+id/sen_detail_icon"
 	        android:layout_marginTop="14dp"
 	        android:text="TextView"
 	        android:textColor="@color/log_blue2"
-	        android:textSize="18sp" />
-	
-	    <TextView
-	        android:id="@+id/sen_detail_time"
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content"
-	        android:layout_alignBottom="@+id/sen_detail_icon"
-	        android:layout_alignRight="@+id/sen_detail_value"
-	        
-	        android:text="1.1. 1970"
-	        android:textColor="@color/darkgray"
-	        android:textSize="15sp" />
+	        android:textSize="18dp" />
 	
 	    <TextView
 	        android:id="@+id/sen_detail_loc_name"
 	        android:layout_width="wrap_content"
 	        android:layout_height="wrap_content"
-	        android:layout_alignParentRight="true"
+	        android:layout_above="@+id/sen_detail_value"
+	        android:layout_alignRight="@+id/sen_refresh_time_seekBar"
 	        android:layout_marginRight="15dp"
 	        android:layout_marginTop="10dp"
-	        android:layout_above="@+id/sen_detail_value"
 	        android:text="location"
 	        android:textColor="@color/darkgray"
-	        android:textSize="15sp" />
-	
-	    <TextView
-	        android:id="@+id/sen_detail_value"
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content"
-	        android:layout_above="@+id/sen_detail_time"
-	        android:layout_alignRight="@+id/sen_detail_loc_name"
-	        android:layout_marginRight="-5dp"
-	        android:layout_marginBottom="-5dp"
-	        android:text="ValueSensor"
-	        android:textColor="@color/log_blue2"
-	        android:textSize="32sp" />
+	        android:textSize="25dp"/>
 	
 	    <TextView
 	        android:id="@+id/sen_graph_name"
@@ -123,7 +96,7 @@
 	        android:layout_marginTop="10dp"
 	        android:text="@string/sen_graph_label"
 	        android:textColor="@color/log_blue2"
-	        android:textSize="18sp" />
+	        android:textSize="18dp" />
 	
 	    <LinearLayout
 	        android:id="@+id/sen_graph_layout"
@@ -156,6 +129,41 @@
 	        android:layout_alignRight="@+id/sen_detail_loc_name" 
 	        android:background="@drawable/rectangle_gray_background">
 	    </RelativeLayout>
+
+	    <Spinner
+	        android:id="@+id/sen_detail_spinner_choose_location"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:layout_above="@+id/sen_detail_value"
+	        android:layout_alignRight="@+id/sen_detail_value"
+	        android:layout_below="@+id/sen_rectangle_name"
+	        android:layout_marginBottom="-7dp"
+	        android:layout_marginTop="-8dp"
+	        android:layout_toRightOf="@+id/sen_detail_icon"
+	        android:layout_marginLeft="5dp"
+	        android:visibility="gone" />
+
+	    <TextView
+	        android:id="@+id/sen_detail_time"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:layout_alignBaseline="@+id/sen_refresh_time"
+	        android:layout_alignBottom="@+id/sen_refresh_time"
+	        android:layout_alignRight="@+id/sen_detail_value"
+	        android:text="1.1. 1970"
+	        android:textColor="@color/darkgray"
+	        android:textSize="15dp" />
+
+	    <TextView
+	        android:id="@+id/sen_detail_value"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:layout_alignBottom="@+id/sen_detail_icon"
+	        android:layout_alignRight="@+id/sen_refresh_time_seekBar"
+	        android:layout_marginRight="10dp"
+	        android:text="ValueSensor"
+	        android:textColor="@color/log_blue2"
+	        android:textSize="32dp" />
 	
 	</RelativeLayout>
 
