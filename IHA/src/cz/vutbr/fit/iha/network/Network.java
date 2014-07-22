@@ -466,6 +466,88 @@ public class Network {
 	}
 
 	/**
+	 * Method toggle or set actor to new value
+	 * @param adapterId
+	 * @param device
+	 * @return
+	 * @throws NoConnectionException
+	 * @throws CommunicationException
+	 * @throws FalseException
+	 */
+	public boolean switchState(String adapterId, BaseDevice device) throws NoConnectionException, CommunicationException, FalseException {
+		String messageToSend = XmlCreator.createSwitch(Integer.toString(mSessionId), adapterId, device);
+		ParsedMessage msg = doRequest(messageToSend);
+		
+		if (msg.getState() == State.TRUE) {
+			Log.d("IHA - Network", msg.getState().getValue());
+
+			return true;
+
+		} else if (msg.getState() == State.RESIGN) {
+			doResign();
+			return switchState(adapterId, device);
+		} else if (msg.getState() == State.FALSE) {
+			throw new FalseException(((FalseAnswer) msg.data));
+		} else
+			return false;
+	}
+	
+	/**
+	 * Method make adapter to special state, when listen for new sensors (e.g. 15s) and wait
+	 * if some sensors has been shaken to connect
+	 * @param adapterId
+	 * @return
+	 * @throws NoConnectionException
+	 * @throws CommunicationException
+	 * @throws FalseException
+	 */
+	public boolean prepareAdapterToListenNewSensors(String adapterId) throws NoConnectionException, CommunicationException, FalseException {
+		String messageToSend = XmlCreator.createAdapterListen(Integer.toString(mSessionId), adapterId);
+		ParsedMessage msg = doRequest(messageToSend);
+		
+		if (msg.getState() == State.TRUE) {
+			Log.d("IHA - Network", msg.getState().getValue());
+
+			return true;
+
+		} else if (msg.getState() == State.RESIGN) {
+			doResign();
+			return prepareAdapterToListenNewSensors(adapterId);
+		} else if (msg.getState() == State.FALSE) {
+			throw new FalseException(((FalseAnswer) msg.data));
+		} else
+			return false;
+
+	}
+	
+	/**
+	 * Method delete sensor from server
+	 * @param adapterId
+	 * @param device to be deleted
+	 * @return true if is deleted, false otherwise
+	 * @throws NoConnectionException
+	 * @throws CommunicationException
+	 * @throws FalseException
+	 */
+	public boolean deleteDevice(String adapterId, BaseDevice device) throws NoConnectionException, CommunicationException, FalseException {
+		String messageToSend = XmlCreator.createDeleteDevice(Integer.toString(mSessionId), adapterId, device);
+		ParsedMessage msg = doRequest(messageToSend);
+		
+		if (msg.getState() == State.TRUE) {
+			Log.d("IHA - Network", msg.getState().getValue());
+
+			return true;
+
+		} else if (msg.getState() == State.RESIGN) {
+			doResign();
+			return switchState(adapterId, device);
+		} else if (msg.getState() == State.FALSE) {
+			throw new FalseException(((FalseAnswer) msg.data));
+		} else
+			return false;
+	}
+	
+	/**
 	 * Method ask for actual data devices
 	 * 
 	 * @param devices

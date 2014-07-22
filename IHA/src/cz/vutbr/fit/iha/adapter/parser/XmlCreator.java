@@ -64,6 +64,9 @@ public class XmlCreator {
 	public static final String ADDROOM = "addroom";
 	public static final String DELROOM = "delroom";
 	public static final String GETXML = "getxml";
+	public static final String ADAPTERLISTEN = "adapterlisten";
+	public static final String SWITCH = "switch";
+	public static final String DELDEVICE = "deldevice";
 	
 	public static final String GETALERTS = "getalerts";
 	
@@ -189,6 +192,105 @@ public class XmlCreator {
 		}
 	}
 
+	/**
+	 * Method create XML for AdapterListen message
+	 * @param id of user
+	 * @param adapterId
+	 * @return XML of AdapterListen message
+	 */
+	public static String createAdapterListen(String id, String adapterId){
+		XmlSerializer serializer = Xml.newSerializer();
+		StringWriter writer = new StringWriter();
+		try{
+			serializer.setOutput(writer);
+			serializer.startDocument("UTF-8", null);
+			
+			serializer.startTag(ns, COM_ROOT);
+			serializer.attribute(ns, ID, id);
+			serializer.attribute(ns, STATE, ADAPTERLISTEN);
+			serializer.attribute(ns, VERSION, GVER);
+			serializer.attribute(ns, ADAPTER, adapterId);
+			serializer.endTag(ns, COM_ROOT);
+			serializer.endDocument();
+			
+			return writer.toString();
+		}catch(Exception e){
+			throw new RuntimeException(e);
+		}
+	}
+	
+	/**
+	 * Method create XML for Switch message
+	 * @param id of user
+	 * @param adapterId
+	 * @param device with data to change
+	 * @return XML of Switch message
+	 */
+	public static String createSwitch(String id, String adapterId, BaseDevice device){
+		XmlSerializer serializer = Xml.newSerializer();
+		StringWriter writer = new StringWriter();
+		try{
+			serializer.setOutput(writer);
+			serializer.startDocument("UTF-8", null);
+			
+			serializer.startTag(ns, COM_ROOT);
+			serializer.attribute(ns, ID, id);
+			serializer.attribute(ns, STATE, SWITCH);
+			serializer.attribute(ns, VERSION, GVER);
+			serializer.attribute(ns, ADAPTER, adapterId);
+			
+				serializer.startTag(ns, DEVICE);
+				serializer.attribute(ns, ID, device.getAddress());
+				serializer.attribute(ns, TYPE, formatType(device.getType()));
+				
+					serializer.startTag(ns, VALUE);
+					serializer.text(device.getStringValue());
+					serializer.endTag(ns, VALUE);
+				
+			serializer.endTag(ns, DEVICE);
+			
+			serializer.endTag(ns, COM_ROOT);
+			serializer.endDocument();
+			
+			return writer.toString();
+		}catch(Exception e){
+			throw new RuntimeException(e);
+		}
+	}
+	
+	/**
+	 * Method create XML of DelDevice message
+	 * @param id
+	 * @param adapterId
+	 * @param device
+	 * @return XML of DelDevice message
+	 */
+	public static String createDeleteDevice(String id, String adapterId, BaseDevice device){
+		XmlSerializer serializer = Xml.newSerializer();
+		StringWriter writer = new StringWriter();
+		try{
+			serializer.setOutput(writer);
+			serializer.startDocument("UTF-8", null);
+			
+			serializer.startTag(ns, COM_ROOT);
+			serializer.attribute(ns, ID, id);
+			serializer.attribute(ns, STATE, SWITCH);
+			serializer.attribute(ns, VERSION, GVER);
+			serializer.attribute(ns, ADAPTER, adapterId);
+			
+				serializer.startTag(ns, DEVICE);
+				serializer.attribute(ns, ID, device.getAddress());
+				serializer.attribute(ns, TYPE, formatType(device.getType()));
+				serializer.endTag(ns, DEVICE);
+			
+			serializer.endTag(ns, COM_ROOT);
+			serializer.endDocument();
+			
+			return writer.toString();
+		}catch(Exception e){
+			throw new RuntimeException(e);
+		}
+	}
 	
 	/**
 	 * Method create XML for GetXml message
