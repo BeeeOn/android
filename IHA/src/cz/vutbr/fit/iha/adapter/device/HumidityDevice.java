@@ -9,7 +9,7 @@ import cz.vutbr.fit.iha.R;
  */
 public class HumidityDevice extends BaseDevice {
 
-	private int mValue = Integer.MAX_VALUE;
+	private float mValue = Float.MAX_VALUE;
 
 	@Override
 	public int getType() {
@@ -33,13 +33,13 @@ public class HumidityDevice extends BaseDevice {
 	
 	@Override
 	public void setValue(int value){
-		mValue = value;
+		mValue = value/100f;
 	}
 	
 
 	@Override
 	public int getRawIntValue() {
-		return mValue;
+		return (int)mValue;
 	}
 
 	@Override
@@ -49,13 +49,13 @@ public class HumidityDevice extends BaseDevice {
 
 	@Override
 	public void setValue(String value) {
-		mValue = Integer.parseInt(value);
+		mValue = Integer.parseInt(value)/100f;
 		
 	}
 	
 	@Override
 	public String getStringValue() {
-		return Integer.toString(mValue);
+		return Float.toString(mValue);
 	}
 
 }
