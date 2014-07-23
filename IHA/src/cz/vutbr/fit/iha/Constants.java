@@ -60,8 +60,9 @@ public final class Constants {
 	public static final String PERSISTENCE_PREF_LAST_USER = "last_user";
 	
 	/**
-	 * Sony Smartwatch2 preference activity
+	 * Settings keys for SharedPreferences
 	 */
-	public static final String SW2_PREF_DEF_ADAPTER = "default_adapter";
-	public static final String SW2_PREF_DEF_LOCATION = "default_location";
+	public static final String PREF_SW2_ADAPTER = "pref_sw2_adapter";
+	public static final String PREF_SW2_LOCATION = "pref_sw2_location";
+	public static final String PREF_TEMPERATURE = "pref_temperature";
 }

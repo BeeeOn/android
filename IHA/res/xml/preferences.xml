@@ -1,0 +1,34 @@
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <PreferenceCategory
+        android:persistent="false"
+        android:title="@string/personal" >
+        <Preference android:title="@string/user_profile" >
+            <intent
+                android:action="android.intent.action.VIEW"
+                android:data="https://www.google.com/settings/personalinfo" />
+        </Preference>
+
+        <PreferenceScreen
+            android:persistent="false"
+            android:title="@string/units" >
+            <SwitchPreference
+                android:defaultValue="false"
+                android:key="pref_temperature"
+                android:switchTextOff="@string/celsius"
+                android:switchTextOn="@string/fahrenheit"
+                android:title="@string/temperature" />
+        </PreferenceScreen>
+    </PreferenceCategory>
+    <PreferenceCategory android:title="@string/smartwatches" >
+        <ListPreference
+            android:dialogTitle="@string/choose_default_adapter"
+            android:key="pref_sw2_adapter"
+            android:title="@string/default_adapter" />
+        <ListPreference
+            android:dialogTitle="@string/choose_default_location"
+            android:key="pref_sw2_location"
+            android:title="@string/default_location" />
+    </PreferenceCategory>
+
+</PreferenceScreen>

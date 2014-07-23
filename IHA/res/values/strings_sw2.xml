@@ -14,8 +14,7 @@
     <string name="choose_adapter">Choose adapter:</string>
     <string name="choose_location">Choose location:</string>
     <string name="choose_sensor">Choose sensor:</string>
-    <string name="choose_default_location">Choose default location</string>
-    <string name="choose_default_adapter">Choose default adapter</string>
+    
     
     <string name="adapter_isnt_set">Set default adapter</string>
     <string name="adapter_doest_exist">Default adapter doesn\'t exist anymore. Set new default adapter.</string>

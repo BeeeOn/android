@@ -83,7 +83,18 @@
             android:name="cz.vutbr.fit.iha.activity.dialog.EditLocationActitivityDialog"
             android:theme="@style/MyDialog" >
         </activity>
-
+        <activity
+            android:name="cz.vutbr.fit.iha.activity.SettingsActivity"
+            android:label="@string/preference_activity_title" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="cz.vutbr.fit.iha.activity.SmartwatchesPreferenceActivity"
+            android:label="@string/preference_activity_title" >
+        </activity>
+        
         <receiver
             android:name="cz.vutbr.fit.iha.widget.SensorWidgetProvider"
             android:icon="@drawable/ic_launcher"
@@ -102,15 +113,6 @@
             android:enabled="true"
             android:exported="false" >
         </service>
-
-        <!-- SONY SMARTWATCH2 -->
-        <activity
-            android:name="cz.vutbr.fit.iha.activity.PreferenceActivity"
-            android:label="@string/preference_activity_title" >
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-            </intent-filter>
-        </activity>
 
         <service android:name="cz.vutbr.fit.iha.extension.watches.smartwatch2.SW2ExtensionService" />
 

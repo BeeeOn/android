@@ -230,13 +230,22 @@ public class LocationScreenActivity extends BaseActivity {
 		// Adding profile header
 		mMenuAdapter.addHeader(new ProfileMenuItem(actUser.getName(), actUser.getEmail(), largeIcon));
 
-		// Adding separator as item (we don't want to let it float as header)
-		mMenuAdapter.addItem(new SeparatorMenuItem());
+		
 
-		// Adding adapters
-		Adapter chosenAdapter = controller.getActiveAdapter();
-		for (Adapter actAdapter : controller.getAdapters()) {
-			mMenuAdapter.addItem(new AdapterMenuItem(actAdapter.getName(), actAdapter.getRole().name(), chosenAdapter.getId().equals(actAdapter.getId()), actAdapter.getId()));
+		List<Adapter> adapters = controller.getAdapters();
+		if (adapters.size() > 1) {
+			// Adding separator as item (we don't want to let it float as header)
+			mMenuAdapter.addItem(new SeparatorMenuItem());
+			
+			// Adding adapters
+			Adapter chosenAdapter = controller.getActiveAdapter();
+			for (Adapter actAdapter : adapters) {
+				mMenuAdapter
+						.addItem(new AdapterMenuItem(actAdapter.getName(),
+								actAdapter.getRole().name(), chosenAdapter
+										.getId().equals(actAdapter.getId()),
+								actAdapter.getId()));
+			}
 		}
 
 		// Adding separator as item (we don't want to let it float as header)
@@ -284,44 +293,47 @@ public class LocationScreenActivity extends BaseActivity {
 				Controller controller = Controller.getInstance(LocationScreenActivity.this);
 				cz.vutbr.fit.iha.activity.menuItem.MenuItem item = (cz.vutbr.fit.iha.activity.menuItem.MenuItem) mMenuAdapter.getItem(position);
 				switch (item.getType()) {
-					case ADAPTER:
-						// if it is not chosen, switch to selected adapter
-						if (controller.getActiveAdapter().getId().equals(item.getId())) {
-							// TODO prepnuti addapteru, prekreslit
-							// menuListDrawer
-						}
-						break;
+				case ADAPTER:
+					// if it is not chosen, switch to selected adapter
+					if (controller.getActiveAdapter().getId()
+							.equals(item.getId())) {
+						// TODO prepnuti addapteru, prekreslit menuListDrawer
+					}
+					break;
 
-					case CUSTOM_VIEW:
-						// TODO otevrit custom view, jeste nedelame s customView
-						// taze pozdeji
-						break;
+				case CUSTOM_VIEW:
+					// TODO otevrit custom view, jeste nedelame s customView
+					// taze pozdeji
+					break;
 
-					case SETTING:
-						if (item.getId().equals(cz.vutbr.fit.iha.activity.menuItem.MenuItem.ID_ABOUT)) {
-							InfoDialogFragment dialog = new InfoDialogFragment();
-							dialog.show(getSupportFragmentManager(), TAG_INFO);
-						} else if (item.getId().equals(cz.vutbr.fit.iha.activity.menuItem.MenuItem.ID_SETTINGS)) {
-							Intent intent = new Intent(LocationScreenActivity.this, PreferenceActivity.class);
-							startActivity(intent);
-						}
-						break;
+				case SETTING:
+					if (item.getId()
+							.equals(cz.vutbr.fit.iha.activity.menuItem.MenuItem.ID_ABOUT)) {
+						InfoDialogFragment dialog = new InfoDialogFragment();
+						dialog.show(getSupportFragmentManager(), TAG_INFO);
+					} else if (item
+							.getId()
+							.equals(cz.vutbr.fit.iha.activity.menuItem.MenuItem.ID_SETTINGS)) {
+						Intent intent = new Intent(LocationScreenActivity.this,
+								SettingsActivity.class);
+						startActivity(intent);
+					}
+					break;
 
-					case LOCATION:
-						// Get the title followed by the position
-						mActiveLocationId = item.getId();
-						mActiveLocation = controller.getLocation(mActiveLocationId);
+				case LOCATION:
+					// Get the title followed by the position
+					mActiveLocation = controller.getLocation(item.getId());
 
-						refreshListing();
+					refreshListing();
 
-						mDrawerList.setItemChecked(position, true);
+					mDrawerList.setItemChecked(position, true);
 
-						// Close drawer
-						mDrawerLayout.closeDrawer(mDrawerList);
-						break;
+					// Close drawer
+					mDrawerLayout.closeDrawer(mDrawerList);
+					break;
 
-					default:
-						break;
+				default:
+					break;
 				}
 			}
 		});
@@ -331,7 +343,8 @@ public class LocationScreenActivity extends BaseActivity {
 			public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
 				Log.d(TAG, "Item Long press");
 
-				cz.vutbr.fit.iha.activity.menuItem.MenuItem item = (cz.vutbr.fit.iha.activity.menuItem.MenuItem) mMenuAdapter.getItem(position);
+				cz.vutbr.fit.iha.activity.menuItem.MenuItem item = (cz.vutbr.fit.iha.activity.menuItem.MenuItem) mMenuAdapter
+						.getItem(position);
 				switch (item.getType()) {
 					case LOCATION:
 						Bundle bundle = new Bundle();
@@ -527,20 +540,22 @@ public class LocationScreenActivity extends BaseActivity {
 				Intent intent = new Intent(LocationScreenActivity.this, AddSensorActivityDialog.class);
 				startActivity(intent);
 
-				break;
-			}
-			case R.id.action_settings: {
-				Intent intent = new Intent(LocationScreenActivity.this, PreferenceActivity.class);
-				startActivity(intent);
-				break;
-			}
-			case R.id.action_logout: {
-				mController.logout();
-				Intent intent = new Intent(LocationScreenActivity.this, LoginActivity.class);
-				startActivity(intent);
-				this.finish();
-				break;
-			}
+			break;
+		}
+		case R.id.action_settings: {
+			Intent intent = new Intent(LocationScreenActivity.this,
+					SettingsActivity.class);
+			startActivity(intent);
+			break;
+		}
+		case R.id.action_logout: {
+			mController.logout();
+			Intent intent = new Intent(LocationScreenActivity.this,
+					LoginActivity.class);
+			startActivity(intent);
+			this.finish();
+			break;
+		}
 		}
 
 		return super.onOptionsItemSelected(item);

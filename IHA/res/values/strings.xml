@@ -142,5 +142,20 @@
         <item quantity="one">1 hour</item>
         <item quantity="other">%d hours</item>
     </plurals>
+    
+
+<!-- Settings -->
+	<string name="personal">Personal</string>
+	<string name="user_profile">User profile</string>
+	<string name="units">Units</string>
+	<string name="temperature">Temperature</string>
+	<string name="celsius">°C</string>
+	<string name="fahrenheit">°F</string>
+	<string name="connections">Connections</string>
+	<string name="smartwatches">Smartwatches</string>
+	<string name="choose_default_location">Choose default location</string>
+    <string name="choose_default_adapter">Choose default adapter</string>
+    <string name="default_location">Default location</string>
+    <string name="default_adapter">Default adapter</string>
 
 </resources>
