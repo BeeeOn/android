@@ -11,6 +11,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
@@ -89,6 +90,9 @@ public class LocationScreenActivity extends BaseActivity {
 	private String mActiveLocationId;
 	private static final String LCTN = "lastlocation";
 	private static boolean mOrientation = false;
+	private List<BaseDevice> mSensors;
+	private Handler mTimeHandler = new Handler();
+	private Runnable mTimeRun;
 
 	private DevicesTask mTask;
 
@@ -322,7 +326,8 @@ public class LocationScreenActivity extends BaseActivity {
 
 				case LOCATION:
 					// Get the title followed by the position
-					mActiveLocation = controller.getLocation(item.getId());
+					mActiveLocationId = item.getId();
+					mActiveLocation = controller.getLocation(mActiveLocationId);
 
 					refreshListing();
 
@@ -405,6 +410,23 @@ public class LocationScreenActivity extends BaseActivity {
 
 	public boolean getSensors(final List<BaseDevice> sensors) {
 		Log.d("LifeCycle", "getsensors start");
+		
+		//TODO: this works, but its not the best solution
+		if(!ListOfSensors.ready){
+			mSensors = sensors;
+			mTimeRun = new Runnable() {
+				@Override
+				public void run() {
+					getSensors(mSensors);
+					Log.d("LifeCycle", "getsensors in timer");
+				}
+			};
+			mTimeHandler.postDelayed(mTimeRun, 500);
+			Log.d("LifeCycle", "getsensors timer run");
+			return false;
+		}
+		mTimeHandler.removeCallbacks(mTimeRun);
+		Log.d("LifeCycle", "getsensors timer remove");
 
 		String[] title;
 		String[] value;
@@ -459,7 +481,7 @@ public class LocationScreenActivity extends BaseActivity {
 		});
 
 		this.setSupportProgressBarIndeterminateVisibility(false);
-		Log.d("LifeCycle", "getsensors");
+		Log.d("LifeCycle", "getsensors end");
 		return true;
 	}
 
@@ -686,13 +708,14 @@ public class LocationScreenActivity extends BaseActivity {
 		protected List<BaseDevice> doInBackground(Location... locations) {
 			List<BaseDevice> devices = mController.getDevicesByLocation(locations[0].getId());
 			Log.d(TAG, String.format("Found %d devices in location '%s'", devices.size(), locations[0].getName()));
-
+			
 			return devices;
 		}
 
 		@Override
 		protected void onPostExecute(final List<BaseDevice> devices) {
 			getSensors(devices);
+			
 		}
 	}
 
