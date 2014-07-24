@@ -187,10 +187,14 @@ public class SensorDetailFragment extends SherlockFragment {
 
 			@Override
 			public void onStartTrackingTouch(SeekBar seekBar) {
-				// TODO Auto-generated method stub
-				mEditMode = EDIT_REFRESH_T;
-				mMode = getSherlockActivity().startActionMode(new AnActionModeOfEpicProportions());
-				mLastProgressRefreshTime = seekBar.getProgress();
+				// Set variable if this first touch
+				if(mEditMode != EDIT_REFRESH_T) {
+					mEditMode = EDIT_REFRESH_T;
+					mMode = getSherlockActivity().startActionMode(new AnActionModeOfEpicProportions());
+					mLastProgressRefreshTime = seekBar.getProgress();
+				}
+				
+				
 			}
 
 			@Override
@@ -458,7 +462,7 @@ public class SensorDetailFragment extends SherlockFragment {
 				
 			}
 			
-			
+			mEditMode = EDIT_NONE;
 			
 						
 			mode.finish();
