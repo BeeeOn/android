@@ -79,8 +79,12 @@ public class SensorDetailFragment extends SherlockFragment {
 	//private CustomViewPager mPager;
 	
 	public static final String ARG_PAGE = "page";
+	public static final String ARG_CUR_PAGE = "currentpage";
+	public static final String ARG_SEL_PAGE = "selectedpage";
 	
 	private String mPageNumber;
+	private int mCurPageNumber;
+	private int mSelPageNumber;
 	
 	private boolean mWasTapLayout = false;
 	private boolean mWasTapGraph = false;
@@ -96,10 +100,12 @@ public class SensorDetailFragment extends SherlockFragment {
 	/**
      * Factory method for this fragment class. Constructs a new fragment for the given page number.
      */
-    public static SensorDetailFragment create(String pageNumber) {
+    public static SensorDetailFragment create(String IDSensor,int position, int selPosition) {
     	SensorDetailFragment fragment = new SensorDetailFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_PAGE, pageNumber);
+        args.putString(ARG_PAGE, IDSensor);
+        args.putInt(ARG_CUR_PAGE, position);
+        args.putInt(ARG_SEL_PAGE, selPosition);
         fragment.setArguments(args);
         return fragment;
     }
@@ -111,6 +117,9 @@ public class SensorDetailFragment extends SherlockFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mPageNumber = getArguments().getString(ARG_PAGE);
+        mSelPageNumber = getArguments().getInt(ARG_SEL_PAGE);
+        mCurPageNumber = getArguments().getInt(ARG_CUR_PAGE);
+        Log.d(TAG, "Here 1 "+ mCurPageNumber);
     }
 	
 
@@ -124,7 +133,8 @@ public class SensorDetailFragment extends SherlockFragment {
 		
 		View view = inflater.inflate(R.layout.activity_sensor_detail_screen,
 				container, false);
-		
+		Log.d(TAG,String.format( "this position: %s , selected item: %s ",mCurPageNumber,mSelPageNumber));
+
 		return view;
 	}
 	
@@ -134,6 +144,8 @@ public class SensorDetailFragment extends SherlockFragment {
 		
 		GetDeviceTask task = new GetDeviceTask();
 		task.execute(new String[] { mPageNumber });
+		
+		Log.d(TAG, "Here 3 "+ mCurPageNumber);
 	}
 
 	/**
@@ -157,7 +169,7 @@ public class SensorDetailFragment extends SherlockFragment {
 	}
 
 	private void initLayout(BaseDevice device) {
-		final Context context = SensorDetailFragment.this.getView().getContext(); 
+		final Context context = getActivity();// SensorDetailFragment.this.getView().getContext(); 
 		// Get View for sensor name
 		mName = (TextView) getView().findViewById(R.id.sen_detail_name);
 		mNameEdit = (EditText) getView().findViewById(R.id.sen_detail_name_edit);
@@ -292,6 +304,8 @@ public class SensorDetailFragment extends SherlockFragment {
 		addGraphView();
 		// Disable progress bar
 		getActivity().setProgressBarIndeterminateVisibility(false);
+		
+		
 	}
 	
 	private void addGraphView() {

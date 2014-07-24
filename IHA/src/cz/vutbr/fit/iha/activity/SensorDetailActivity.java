@@ -108,7 +108,8 @@ public class SensorDetailActivity extends BaseActivity
 
         @Override
         public SensorDetailFragment getItem(int position) {
-            return SensorDetailFragment.create(mDevices.get(position).getId());
+        	Log.d(TAG, "Here 2 "+ position);
+            return SensorDetailFragment.create(mDevices.get(position).getId(),position,mSensorPosition);
         }
 
         @Override
@@ -141,10 +142,15 @@ public class SensorDetailActivity extends BaseActivity
             }
         });
         ((CustomViewPager) mPager).setPagingEnabled(true);
+        mPager.setOffscreenPageLimit(countSensor);
         mPager.setCurrentItem(mSensorPosition);
 	}
 	
 	public void setEnableSwipe (boolean state) {
 		((CustomViewPager) mPager).setPagingEnabled(state);
+	}
+	
+	public void setCurrentViewPager() {
+		mPager.setCurrentItem(mSensorPosition);
 	}
 }
