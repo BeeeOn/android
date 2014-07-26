@@ -12,4 +12,6 @@
     <color name="log_blue1">#33b5e5</color>
     <color name="light_gray">#e7e9ea</color>
     <color name="iha_background">#d3d6db</color>
+    <color name="alpha_grey">#7de7e9ea</color>
+    <color name="alpha_blue">#7d33b5e5</color>
 </resources>

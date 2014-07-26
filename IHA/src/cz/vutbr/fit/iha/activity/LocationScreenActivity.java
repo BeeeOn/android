@@ -135,7 +135,7 @@ public class LocationScreenActivity extends BaseActivity {
 
 	public void onResume() {
 		super.onResume();
-		Log.d(TAG, "onResume");
+		Log.d(TAG, "onResume  , inBackground: "+String.valueOf(inBackground));
 		if (!inBackground) {
 			mTask = new DevicesTask();
 			mTask.execute();
@@ -412,7 +412,7 @@ public class LocationScreenActivity extends BaseActivity {
 		Log.d("LifeCycle", "getsensors start");
 		
 		//TODO: this works, but its not the best solution
-		if(!ListOfSensors.ready){
+	/*if(!ListOfSensors.ready){
 			mSensors = sensors;
 			mTimeRun = new Runnable() {
 				@Override
@@ -426,7 +426,7 @@ public class LocationScreenActivity extends BaseActivity {
 			return false;
 		}
 		mTimeHandler.removeCallbacks(mTimeRun);
-		Log.d("LifeCycle", "getsensors timer remove");
+		Log.d("LifeCycle", "getsensors timer remove");*/
 
 		String[] title;
 		String[] value;
@@ -466,7 +466,7 @@ public class LocationScreenActivity extends BaseActivity {
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 				final BaseDevice selectedItem = sensors.get(position);
 
-				setSupportProgressBarIndeterminateVisibility(true);
+				//setSupportProgressBarIndeterminateVisibility(true);
 
 				Bundle bundle = new Bundle();
 				String myMessage = selectedItem.getLocationId();
@@ -572,6 +572,7 @@ public class LocationScreenActivity extends BaseActivity {
 		}
 		case R.id.action_logout: {
 			mController.logout();
+			inBackground = false;
 			Intent intent = new Intent(LocationScreenActivity.this,
 					LoginActivity.class);
 			startActivity(intent);

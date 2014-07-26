@@ -88,6 +88,7 @@
     <string name="action_logout">Logout</string>
     <string name="addadapter_qrcode_desc">Get QR code</string>
     <string name="addsensor_new_location_spinner">New location</string>
+    <string name="sen_detail_graph_info">Tap to Active</string>
     <!-- Arrays -->
     <string-array name="registration_spinner">
         <item>Facebook</item>

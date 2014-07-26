@@ -11,6 +11,7 @@ import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.format.Time;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -68,15 +69,16 @@ public class SensorDetailFragment extends SherlockFragment {
 	private ImageView mIcon;
 	private TextView mRefreshTimeText;
 	private SeekBar mRefreshTimeValue;
+	private TextView mGraphLabel;
 	private LinearLayout mGraphLayout;
 	private RelativeLayout mLayout;
 	private RelativeLayout mRectangleName;
 	private RelativeLayout mRectangleLoc;
 	private Spinner mSpinnerLoc;
+	private GraphView mGraphView;
+	private TextView mGraphInfo;
 	
 	private SensorDetailActivity mActivity;
-	private GraphView mGraphView; 
-	//private CustomViewPager mPager;
 	
 	public static final String ARG_PAGE = "page";
 	public static final String ARG_CUR_PAGE = "currentpage";
@@ -91,7 +93,7 @@ public class SensorDetailFragment extends SherlockFragment {
 	private int mEditMode = EDIT_NONE;
 	
 	// 
-	ActionMode mMode;
+	private ActionMode mMode;
 			
 	public double minimum;
 	private int mLastProgressRefreshTime;
@@ -217,7 +219,8 @@ public class SensorDetailFragment extends SherlockFragment {
 		});
 		// Get LinearLayout for graph
 		mGraphLayout = (LinearLayout) getView().findViewById(R.id.sen_graph_layout);
-		
+		mGraphLabel = (TextView) getView().findViewById(R.id.sen_graph_name);
+		mGraphInfo = (TextView) getView().findViewById(R.id.sen_graph_info);
 		// Get RelativeLayout of detail
 		mLayout = (RelativeLayout) getView().findViewById(R.id.sensordetail_scroll);
 		mLayout.setOnTouchListener(new OnTouchListener() {
@@ -233,7 +236,7 @@ public class SensorDetailFragment extends SherlockFragment {
 					mGraphView.setScalable(false);
 					mGraphView.setScrollable(false);
 					mActivity.setEnableSwipe(true);
-					
+					mGraphInfo.setVisibility(View.VISIBLE);
 					onTouch(v,event);
 					return true;
 				}
@@ -302,12 +305,50 @@ public class SensorDetailFragment extends SherlockFragment {
 		mRefreshTimeValue.setProgress(device.getRefresh().getIntervalIndex());
 		// Add Graph with history data
 		addGraphView();
+		
+		// Visible all elements
+		visibleAllElements();
+				
+		//mGraphLayout.getLayoutParams().height
+		//mGraphInfo.setma
+		
+		
+		DisplayMetrics displaymetrics = new DisplayMetrics();
+		getActivity().getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
+		//int height = displaymetrics.heightPixels;
+		//int width = displaymetrics.widthPixels;
+		
+		RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) mGraphInfo.getLayoutParams();
+		//Log.d(TAG, "GraphLayout width x height " + mGraphLayout.getLayoutParams().width + " x "+ mGraphLayout.getLayoutParams().height);
+		params.setMargins((int) ((displaymetrics.widthPixels/2)-(60*displaymetrics.density)), (int) ((-120)*displaymetrics.density), 0, 0); //substitute parameters for left, top, right, bottom
+		mGraphInfo.setLayoutParams(params);
+		
 		// Disable progress bar
 		getActivity().setProgressBarIndeterminateVisibility(false);
 		
 		
 	}
 	
+	private void visibleAllElements() {
+		mName.setVisibility(View.VISIBLE);
+		//mNameEdit;
+		mLocation.setVisibility(View.VISIBLE);
+		mValue.setVisibility(View.VISIBLE);
+		mTime.setVisibility(View.VISIBLE);
+		mIcon.setVisibility(View.VISIBLE);
+		mRefreshTimeText.setVisibility(View.VISIBLE);
+		mRefreshTimeValue.setVisibility(View.VISIBLE);
+		mGraphLayout.setVisibility(View.VISIBLE);
+		mGraphLabel.setVisibility(View.VISIBLE);
+		//mLayout;
+		mRectangleName.setVisibility(View.VISIBLE);
+		mRectangleLoc.setVisibility(View.VISIBLE);
+		//mSpinnerLoc;
+		mGraphView.setVisibility(View.VISIBLE); 
+		mGraphInfo.setVisibility(View.VISIBLE);
+		
+	}
+
 	private void addGraphView() {
 		mGraphView = new LineGraphView(
 				getView().getContext() // context
@@ -316,11 +357,12 @@ public class SensorDetailFragment extends SherlockFragment {
 		
 		minimum = -1.0;
 		
-		GraphViewSeriesStyle seriesStyle = new GraphViewSeriesStyle(getResources().getColor(R.color.log_blue2),2);
+		GraphViewSeriesStyle seriesStyleBlue = new GraphViewSeriesStyle(getResources().getColor(R.color.log_blue2),2);
+		GraphViewSeriesStyle seriesStyleGray = new GraphViewSeriesStyle(getResources().getColor(R.color.light_gray),2);
 
 		mGraphView.getGraphViewStyle().setVerticalLabelsColor(getResources().getColor(R.color.log_blue2));
 		mGraphView.getGraphViewStyle().setHorizontalLabelsColor(getResources().getColor(R.color.log_blue2));
-		mGraphView.setBackgroundColor(Color.argb(128, 0, 153, 204));//getResources().getColor(R.color.log_blue2));
+		mGraphView.setBackgroundColor(getResources().getColor(R.color.alpha_blue));//getResources().getColor(R.color.log_blue2));
 		
 		((LineGraphView) mGraphView).setDrawBackground(true);
 		//graphView.setAlpha(128);
@@ -340,7 +382,7 @@ public class SensorDetailFragment extends SherlockFragment {
 		}
 
 		 
-		mGraphView.addSeries(new GraphViewSeries("Graph",seriesStyle,data));
+		mGraphView.addSeries(new GraphViewSeries("Graph",seriesStyleBlue,data));
 		// set view port, start=2, size=40
 		mGraphView.setViewPort(2, 40);
 		mGraphView.setManualYAxis(true);
@@ -367,6 +409,7 @@ public class SensorDetailFragment extends SherlockFragment {
 				mGraphView.setScrollable(true);
 				mGraphView.setScalable(true);
 				mActivity.setEnableSwipe(false);
+				mGraphInfo.setVisibility(View.GONE);
 				onTouch(v,event);
 				return true;
 			}

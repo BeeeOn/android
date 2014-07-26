@@ -35,5 +35,10 @@ public class ListOfSensors extends SherlockFragment {
 		super.onPause();
 		ready = false;
 	}
+	
+	public void onResume(){
+		super.onResume();
+		ready = true;
+	}
 
 }
