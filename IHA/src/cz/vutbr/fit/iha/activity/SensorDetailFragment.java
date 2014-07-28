@@ -80,6 +80,8 @@ public class SensorDetailFragment extends SherlockFragment {
 	
 	private SensorDetailActivity mActivity;
 	
+	private BaseDevice mDevice;
+	
 	public static final String ARG_PAGE = "page";
 	public static final String ARG_CUR_PAGE = "currentpage";
 	public static final String ARG_SEL_PAGE = "selectedpage";
@@ -150,25 +152,7 @@ public class SensorDetailFragment extends SherlockFragment {
 		Log.d(TAG, "Here 3 "+ mCurPageNumber);
 	}
 
-	/**
-	 * Changes selected location and redraws list of adapters there
-	 */
-	private class GetDeviceTask extends AsyncTask<String, Void, BaseDevice> {
-		@Override
-		protected BaseDevice doInBackground(String... sensorID) {
 
-			BaseDevice device = mController.getDevice(sensorID[0]);
-			Log.d(TAG, "ID:" + device.getId() + " Name:" + device.getName());
-
-			return device;
-		}
-
-		@Override
-		protected void onPostExecute(BaseDevice device) {
-			initLayout(device);
-
-		}
-	}
 
 	private void initLayout(BaseDevice device) {
 		final Context context = getActivity();// SensorDetailFragment.this.getView().getContext(); 
@@ -483,6 +467,66 @@ public class SensorDetailFragment extends SherlockFragment {
 		Date lastUpdateDate = new Date(lastUpdate.toMillis(true));
 		return dateFormat.format(lastUpdateDate);
 	}
+	
+	/*
+	 * ================================= ASYNC TASK ===========================
+	 */
+	
+	
+	/**
+	 * Changes selected location and redraws list of adapters there
+	 */
+	private class GetDeviceTask extends AsyncTask<String, Void, BaseDevice> {
+		@Override
+		protected BaseDevice doInBackground(String... sensorID) {
+
+			BaseDevice device = mController.getDevice(sensorID[0]);
+			Log.d(TAG, "ID:" + device.getId() + " Name:" + device.getName());
+
+			return device;
+		}
+
+		@Override
+		protected void onPostExecute(BaseDevice device) {
+			mDevice = device;
+			initLayout(device);
+
+		}
+	}
+	
+	/**
+	 * Changes selected location and redraws list of adapters there
+	 */
+	private class UpdateDeviceTask extends AsyncTask<Void, Void, Boolean > {
+		@Override
+		protected Boolean doInBackground(Void... params) {
+
+			// BaseDevice device = mController.getDevice(sensorID[0]);
+			
+			Log.d(TAG, "ID:" + mDevice.getId() + " Name:" + mDevice.getName());
+
+			return mController.saveDevice(mDevice);
+		}
+		@Override
+		protected void onPostExecute(Boolean ret) {
+			//mDevice = device;
+			//initLayout(device);
+			if(ret.booleanValue() ){
+				Log.d(TAG, "Success save to server");
+			}
+			else {
+				Log.d(TAG, "Fail save to server");
+			}
+					
+		}
+
+	}
+	
+	
+
+	/*
+	 * ============================= ACTION MODE ==============================
+	 */
 
 	// Menu for Action bar mode - edit
 	class AnActionModeOfEpicProportions implements ActionMode.Callback {
@@ -519,6 +563,12 @@ public class SensorDetailFragment extends SherlockFragment {
 			case EDIT_NAME:
 				if(item.getTitle().equals("Save")) {
 					mName.setText(mNameEdit.getText());
+					
+					// Set new name to device
+					mDevice.setName(mNameEdit.getText().toString());
+					// Update device to server
+					UpdateDeviceTask task = new UpdateDeviceTask();
+					task.execute();
 				} 
 				mNameEdit.setVisibility(View.GONE);
 				mName.setVisibility(View.VISIBLE);
@@ -552,12 +602,6 @@ public class SensorDetailFragment extends SherlockFragment {
 
 		@Override
 		public void onDestroyActionMode(ActionMode mode) {
-			// TODO Auto-generated method stub
-			//mName.setText(mNameEdit.getText());
-			//mNameEdit.clearFocus();
-			//mNameEdit.setVisibility(View.GONE);
-			//mName.setVisibility(View.VISIBLE);
-			//mMode = null;
 
 		}
 	}

@@ -14,6 +14,7 @@ import cz.vutbr.fit.iha.adapter.device.DeviceLog;
 import cz.vutbr.fit.iha.adapter.device.StateDevice;
 import cz.vutbr.fit.iha.adapter.device.SwitchDevice;
 import cz.vutbr.fit.iha.adapter.location.Location;
+import cz.vutbr.fit.iha.adapter.parser.ContentRow;
 import cz.vutbr.fit.iha.exception.NetworkException;
 import cz.vutbr.fit.iha.exception.NoConnectionException;
 import cz.vutbr.fit.iha.exception.NotImplementedException;
@@ -624,6 +625,12 @@ public final class Controller {
 	 */
 	public DeviceLog getDeviceLog(BaseDevice device) {
 		throw new NotImplementedException();
+	}
+	
+	// TEMP LOG
+	public ArrayList<ContentRow> getDeviceLogTemp(BaseDevice device,String from, String to, String FuncType,int interval) {
+		Adapter adapter = getAdapterByDevice(device);
+		return (ArrayList<ContentRow>) mNetwork.getLog(adapter.getId(), device.getId(), device.getType(), from, to, "avg", interval);
 	}
 
 	
