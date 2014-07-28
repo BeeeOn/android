@@ -176,6 +176,10 @@ public class Adapter {
 	public void setLocations(final List<Location> locations) {
 		mLocations.clear();
 		
+		//FIXME: empty adapter cause nullpointerexception
+		if(locations == null)
+			return;
+		
 		for (Location location : locations) {
 			addLocation(location);
 		}

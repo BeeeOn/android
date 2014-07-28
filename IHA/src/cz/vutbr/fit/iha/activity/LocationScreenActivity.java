@@ -412,7 +412,7 @@ public class LocationScreenActivity extends BaseActivity {
 		Log.d("LifeCycle", "getsensors start");
 		
 		//TODO: this works, but its not the best solution
-	/*if(!ListOfSensors.ready){
+		if(!ListOfSensors.ready){
 			mSensors = sensors;
 			mTimeRun = new Runnable() {
 				@Override
@@ -426,7 +426,7 @@ public class LocationScreenActivity extends BaseActivity {
 			return false;
 		}
 		mTimeHandler.removeCallbacks(mTimeRun);
-		Log.d("LifeCycle", "getsensors timer remove");*/
+		Log.d("LifeCycle", "getsensors timer remove");
 
 		String[] title;
 		String[] value;
@@ -540,21 +540,19 @@ public class LocationScreenActivity extends BaseActivity {
 			case R.id.action_refreshlist: {
 				mController.reloadAdapters();
 				refreshListing();
+				
 				break;
 			}
 			case R.id.action_addadapter: {
-				// Toast.makeText(this, "go to old", Toast.LENGTH_LONG).show();
-
-				// Intent intent = new Intent(LocationScreenActivity.this,
-				// AddAdapterActivity.class);
 				inBackground = true;
 				Intent intent = new Intent(LocationScreenActivity.this, AddAdapterActivityDialog.class);
+				Bundle bundle = new Bundle();
+				bundle.putBoolean("Cancel", true);
+				intent.putExtras(bundle);
 				startActivity(intent);
 				break;
 			}
 			case R.id.action_addsensor: {
-				// Toast.makeText(this, "go to old", Toast.LENGTH_LONG).show();
-
 				// Show also ignored devices
 				mController.unignoreUninitialized();
 
@@ -562,23 +560,23 @@ public class LocationScreenActivity extends BaseActivity {
 				Intent intent = new Intent(LocationScreenActivity.this, AddSensorActivityDialog.class);
 				startActivity(intent);
 
-			break;
-		}
-		case R.id.action_settings: {
-			Intent intent = new Intent(LocationScreenActivity.this,
-					SettingsActivity.class);
-			startActivity(intent);
-			break;
-		}
-		case R.id.action_logout: {
-			mController.logout();
-			inBackground = false;
-			Intent intent = new Intent(LocationScreenActivity.this,
-					LoginActivity.class);
-			startActivity(intent);
-			this.finish();
-			break;
-		}
+				break;
+			}
+			case R.id.action_settings: {
+				Intent intent = new Intent(LocationScreenActivity.this,
+						SettingsActivity.class);
+				startActivity(intent);
+				break;
+			}
+			case R.id.action_logout: {
+				mController.logout();
+				inBackground = false;
+				Intent intent = new Intent(LocationScreenActivity.this,
+						LoginActivity.class);
+				startActivity(intent);
+				this.finish();
+				break;
+			}
 		}
 
 		return super.onOptionsItemSelected(item);

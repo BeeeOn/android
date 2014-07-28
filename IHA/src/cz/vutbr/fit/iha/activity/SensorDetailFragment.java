@@ -344,9 +344,8 @@ public class SensorDetailFragment extends SherlockFragment {
 		mGraphInfo.setLayoutParams(params);
 		
 		// Disable progress bar
-		getActivity().setProgressBarIndeterminateVisibility(false);
-		
-		
+//		getActivity().setProgressBarIndeterminateVisibility(false);
+		getSherlockActivity().setSupportProgressBarIndeterminateVisibility(false);
 	}
 	
 	private void visibleAllElements() {
