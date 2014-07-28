@@ -18,7 +18,6 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.text.format.Time;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -163,13 +162,13 @@ public class LocationScreenActivity extends BaseActivity {
 		}
 		return super.dispatchTouchEvent(ev);
 	}
-	
+
 	@Override
 	public void onBackPressed() {
 		if (backPressed) {
 			// Toast.makeText(this, getString(R.string.toast_leaving_app),
 			// Toast.LENGTH_LONG).show();
-//			super.onBackPressed();
+			super.onBackPressed();
 			// this.finish();
 
 			android.os.Process.killProcess(android.os.Process.myPid());
@@ -214,8 +213,6 @@ public class LocationScreenActivity extends BaseActivity {
 
 		// Locate DrawerLayout in activity_location_screen.xml
 		mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-
-		mDrawerLayout.setFocusableInTouchMode(true);
 
 		// Locate ListView in activity_location_screen.xml
 		mDrawerList = (StickyListHeadersListView) findViewById(R.id.listview_drawer);
@@ -319,9 +316,6 @@ public class LocationScreenActivity extends BaseActivity {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
-				
-				backPressed = false;
-				
 				Controller controller = Controller
 						.getInstance(LocationScreenActivity.this);
 				cz.vutbr.fit.iha.activity.menuItem.MenuItem item = (cz.vutbr.fit.iha.activity.menuItem.MenuItem) mMenuAdapter
@@ -379,8 +373,6 @@ public class LocationScreenActivity extends BaseActivity {
 					int position, long id) {
 				Log.d(TAG, "Item Long press");
 
-				backPressed = false;
-				
 				cz.vutbr.fit.iha.activity.menuItem.MenuItem item = (cz.vutbr.fit.iha.activity.menuItem.MenuItem) mMenuAdapter
 						.getItem(position);
 				switch (item.getType()) {
@@ -408,7 +400,6 @@ public class LocationScreenActivity extends BaseActivity {
 		// getSupportActionBar().setIcon(R.drawable.ic_launcher_white);
 		// ActionBarDrawerToggle ties together the the proper interactions
 		// between the sliding drawer and the action bar app icon
-
 		mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout,
 				R.drawable.ic_drawer, R.string.drawer_open,
 				R.string.drawer_close) {
@@ -449,9 +440,9 @@ public class LocationScreenActivity extends BaseActivity {
 
 	public boolean getSensors(final List<BaseDevice> sensors) {
 		Log.d("LifeCycle", "getsensors start");
-		
-		//TODO: this works, but its not the best solution
-		if(!ListOfSensors.ready){
+
+		// TODO: this works, but its not the best solution
+		if (!ListOfSensors.ready) {
 			mSensors = sensors;
 			mTimeRun = new Runnable() {
 				@Override
@@ -572,29 +563,30 @@ public class LocationScreenActivity extends BaseActivity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 
 		switch (item.getItemId()) {
-			case android.R.id.home:
-				if (mDrawerLayout.isDrawerOpen(mDrawerList)) {
-					mDrawerLayout.closeDrawer(mDrawerList);
-				} else {
-					mDrawerLayout.openDrawer(mDrawerList);
-				}
-				break;
-			case R.id.action_refreshlist: {
-				mController.reloadAdapters();
-				refreshListing();
-				
-				break;
+		case android.R.id.home:
+			if (mDrawerLayout.isDrawerOpen(mDrawerList)) {
+				mDrawerLayout.closeDrawer(mDrawerList);
+			} else {
+				mDrawerLayout.openDrawer(mDrawerList);
 			}
-			case R.id.action_addadapter: {
-				inBackground = true;
-				Intent intent = new Intent(LocationScreenActivity.this, AddAdapterActivityDialog.class);
-				Bundle bundle = new Bundle();
-				bundle.putBoolean("Cancel", true);
-				intent.putExtras(bundle);
-				startActivity(intent);
-				break;
-			}
+			break;
+		case R.id.action_refreshlist: {
+			mController.reloadAdapters();
+			refreshListing();
 
+			break;
+		}
+		case R.id.action_addadapter: {
+			inBackground = true;
+			Intent intent = new Intent(LocationScreenActivity.this,
+					AddAdapterActivityDialog.class);
+			Bundle bundle = new Bundle();
+			bundle.putBoolean("Cancel", true);
+			intent.putExtras(bundle);
+			startActivity(intent);
+			break;
+		}
+		case R.id.action_addsensor: {
 			// Show also ignored devices
 			mController.unignoreUninitialized();
 
@@ -603,23 +595,23 @@ public class LocationScreenActivity extends BaseActivity {
 					AddSensorActivityDialog.class);
 			startActivity(intent);
 
-				break;
-			}
-			case R.id.action_settings: {
-				Intent intent = new Intent(LocationScreenActivity.this,
-						SettingsActivity.class);
-				startActivity(intent);
-				break;
-			}
-			case R.id.action_logout: {
-				mController.logout();
-				inBackground = false;
-				Intent intent = new Intent(LocationScreenActivity.this,
-						LoginActivity.class);
-				startActivity(intent);
-				this.finish();
-				break;
-			}
+			break;
+		}
+		case R.id.action_settings: {
+			Intent intent = new Intent(LocationScreenActivity.this,
+					SettingsActivity.class);
+			startActivity(intent);
+			break;
+		}
+		case R.id.action_logout: {
+			mController.logout();
+			inBackground = false;
+			Intent intent = new Intent(LocationScreenActivity.this,
+					LoginActivity.class);
+			startActivity(intent);
+			this.finish();
+			break;
+		}
 		}
 
 		return super.onOptionsItemSelected(item);
