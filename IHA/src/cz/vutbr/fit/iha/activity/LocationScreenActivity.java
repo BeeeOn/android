@@ -165,14 +165,18 @@ public class LocationScreenActivity extends BaseActivity {
 
 	@Override
 	public void onBackPressed() {
+		// second click
 		if (backPressed) {
 			// Toast.makeText(this, getString(R.string.toast_leaving_app),
 			// Toast.LENGTH_LONG).show();
-			super.onBackPressed();
+			// super.onBackPressed();
 			// this.finish();
-
+			
 			android.os.Process.killProcess(android.os.Process.myPid());
-		} else {
+		} 
+		// first click
+		else {
+			Toast.makeText(this, getString(R.string.toast_tap_again_exit), Toast.LENGTH_SHORT).show();
 			backPressed = true;
 			if (mDrawerLayout != null)
 				mDrawerLayout.openDrawer(mDrawerList);
