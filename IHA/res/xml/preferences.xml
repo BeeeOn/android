@@ -12,11 +12,10 @@
         <PreferenceScreen
             android:persistent="false"
             android:title="@string/units" >
-            <SwitchPreference
-                android:defaultValue="false"
+            <ListPreference
+                android:entries="@array/unit_temperature_name"
+                android:entryValues="@array/unit_temperature_value"
                 android:key="pref_temperature"
-                android:switchTextOff="@string/celsius"
-                android:switchTextOn="@string/fahrenheit"
                 android:title="@string/temperature" />
         </PreferenceScreen>
     </PreferenceCategory>

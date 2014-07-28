@@ -3,7 +3,7 @@ package cz.vutbr.fit.iha.activity;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.google.analytics.tracking.android.EasyTracker;
 
-public class BaseActivity extends SherlockFragmentActivity
+public abstract class BaseActivity extends SherlockFragmentActivity
 {
 
 	@Override

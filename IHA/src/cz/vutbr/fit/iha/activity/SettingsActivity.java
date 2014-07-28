@@ -23,12 +23,13 @@ import cz.vutbr.fit.iha.controller.Controller;
  * extension.
  */
 public class SettingsActivity extends SherlockPreferenceActivity implements
-		 OnSharedPreferenceChangeListener {
+		OnSharedPreferenceChangeListener {
 	/**
 	 * keys which are defined in res/xml/preferences.xml
 	 */
 
-	private ListPreference mAdapterListPref, mLocationListPref;
+	private ListPreference mListPrefAdapter, mListPrefLocation,
+			mListPrefTemperature;
 	private Controller mController;
 	private SharedPreferences prefs;
 
@@ -40,24 +41,23 @@ public class SettingsActivity extends SherlockPreferenceActivity implements
 
 		getSupportActionBar().setHomeButtonEnabled(true);
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-		
+
 		prefs = PreferenceManager
 				.getDefaultSharedPreferences(getApplicationContext());
-		
+
 		// Load the preferences from an XML resource
 		addPreferencesFromResource(R.xml.preferences);
 
 		mController = Controller.getInstance(this);
 
-		mAdapterListPref = (ListPreference) findPreference(Constants.PREF_SW2_ADAPTER);
-		mLocationListPref = (ListPreference) findPreference(Constants.PREF_SW2_LOCATION);
+		mListPrefAdapter = (ListPreference) findPreference(Constants.PREF_SW2_ADAPTER);
+		mListPrefLocation = (ListPreference) findPreference(Constants.PREF_SW2_LOCATION);
+		mListPrefTemperature = (ListPreference) findPreference(Constants.PREF_TEMPERATURE);
+		// mAdapterListPref.set
+		// mAdapterListPref.setOnPreferenceChangeListener(this);
+		// mLocationListPref.setOnPreferenceChangeListener(this);
 
-		
-//		mAdapterListPref.set
-//		mAdapterListPref.setOnPreferenceChangeListener(this);
-//		mLocationListPref.setOnPreferenceChangeListener(this);
-		
-		setDefaultLocAndAdap();
+		redraw();
 	}
 
 	@Override
@@ -65,43 +65,47 @@ public class SettingsActivity extends SherlockPreferenceActivity implements
 		super.onResume();
 		prefs.registerOnSharedPreferenceChangeListener(this);
 	}
-	
+
 	@Override
 	protected void onPause() {
 		super.onPause();
 		prefs.unregisterOnSharedPreferenceChangeListener(this);
 	}
+
+	private void redraw() {
+		setDefaultLocAndAdap();
+		
+//		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+	}
 	
 	private void setDefaultLocAndAdap() {
 		List<Adapter> adapters = mController.getAdapters();
 
-		
-
 		// no adapter, disable adapter and location ListPreference
 		if (adapters.size() < 1) {
-			mAdapterListPref.setEnabled(false);
-			mLocationListPref.setEnabled(false);
+			mListPrefAdapter.setEnabled(false);
+			mListPrefLocation.setEnabled(false);
 
-			mLocationListPref.setSummary(R.string.no_location_available);
-			mAdapterListPref.setSummary(R.string.no_location_available);
+			mListPrefLocation.setSummary(R.string.no_location_available);
+			mListPrefAdapter.setSummary(R.string.no_location_available);
 
 			return;
 		}
 
 		// only 1 adapter available, set as default and disable adapter choice
 		if (adapters.size() < 2) {
-			mAdapterListPref.setEnabled(false);
+			mListPrefAdapter.setEnabled(false);
 			Adapter adapter = adapters.get(0);
 
 			// save default adapter
 			prefs.edit().putString(Constants.PREF_SW2_ADAPTER, adapter.getId());
 			prefs.edit().commit();
 
-			mAdapterListPref.setSummary(adapter.getName());
+			mListPrefAdapter.setSummary(adapter.getName());
 
 			setLocationList(adapter);
 		} else {
-			mAdapterListPref.setEnabled(true);
+			mListPrefAdapter.setEnabled(true);
 
 			// fill lists with data
 			CharSequence[] entries = new CharSequence[adapters.size() + 1];
@@ -117,18 +121,17 @@ public class SettingsActivity extends SherlockPreferenceActivity implements
 				entryValues[i + 1] = adapters.get(i).getId();
 			}
 
-			mAdapterListPref.setEntries(entries);
-			mAdapterListPref.setEntryValues(entryValues);
-			mAdapterListPref.setDefaultValue("");
+			mListPrefAdapter.setEntries(entries);
+			mListPrefAdapter.setEntryValues(entryValues);
+			mListPrefAdapter.setDefaultValue("");
 
-			String adapterId = prefs
-					.getString(Constants.PREF_SW2_ADAPTER, "");
+			String adapterId = prefs.getString(Constants.PREF_SW2_ADAPTER, "");
 
 			Adapter adapter;
 			// valid default adapter
 			if (adapterId != ""
 					&& (adapter = mController.getAdapter(adapterId, false)) != null) {
-				mAdapterListPref.setSummary(adapter.getName());
+				mListPrefAdapter.setSummary(adapter.getName());
 				setLocationList(adapter);
 			}
 			// invalid adapter or it hasn't been chosen yet
@@ -138,16 +141,16 @@ public class SettingsActivity extends SherlockPreferenceActivity implements
 				prefs.edit().commit();
 
 				// set "None" as summary
-				mAdapterListPref.setSummary(R.string.none);
-				mLocationListPref.setEnabled(false);
-				mLocationListPref.setSummary(R.string.none);
+				mListPrefAdapter.setSummary(R.string.none);
+				mListPrefLocation.setEnabled(false);
+				mListPrefLocation.setSummary(R.string.none);
 			}
 		}
 
 	}
 
 	private void setLocationList(Adapter adapter) {
-		mLocationListPref.setEnabled(true);
+		mListPrefLocation.setEnabled(true);
 
 		SharedPreferences prefs = PreferenceManager
 				.getDefaultSharedPreferences(getApplicationContext());
@@ -156,18 +159,18 @@ public class SettingsActivity extends SherlockPreferenceActivity implements
 		Location loc;
 		// valid
 		if (locId != "" && (loc = adapter.getLocation(locId)) != null) {
-			mLocationListPref.setSummary(loc.getName());
+			mListPrefLocation.setSummary(loc.getName());
 		} else {
-			mLocationListPref.setSummary(R.string.none);
+			mListPrefLocation.setSummary(R.string.none);
 			prefs.edit().putString(Constants.PREF_SW2_LOCATION, "");
 			prefs.edit().commit();
 		}
 		List<Location> locations = adapter.getLocations();
 		// no location available
 		if (locations.size() < 1) {
-			mLocationListPref.setEnabled(false);
-			mLocationListPref.setSummary(R.string.none);
-		} 
+			mListPrefLocation.setEnabled(false);
+			mListPrefLocation.setSummary(R.string.none);
+		}
 		// 1 and more locations available
 		else {
 			// fill lists with data
@@ -184,9 +187,9 @@ public class SettingsActivity extends SherlockPreferenceActivity implements
 				entryValues[i + 1] = locations.get(i).getId();
 			}
 
-			mLocationListPref.setEntries(entries);
-			mLocationListPref.setEntryValues(entryValues);
-			mLocationListPref.setDefaultValue("");
+			mListPrefLocation.setEntries(entries);
+			mListPrefLocation.setEntryValues(entryValues);
+			mListPrefLocation.setDefaultValue("");
 		}
 	}
 
@@ -200,19 +203,19 @@ public class SettingsActivity extends SherlockPreferenceActivity implements
 		return false;
 	}
 
-//	@Override
-//	public boolean onPreferenceChange(Preference preference, Object newValue) {
-//
-//		setDefaultLocAndAdap();
-//		
-//		return true;
-//	}
+	// @Override
+	// public boolean onPreferenceChange(Preference preference, Object newValue)
+	// {
+	//
+	// setDefaultLocAndAdap();
+	//
+	// return true;
+	// }
 
 	@Override
 	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences,
 			String key) {
-		setDefaultLocAndAdap();
+		redraw();
 	}
-	
 
 }

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- PRIVATE, DON'T TRANSLATE, DON'T CHANGE ORDER OF ITEMS -->
+    <!-- used as constant for Preferences and as summary in Preference -->
+
+    <string-array name="unit_temperature_value">
+        <item>Celsius</item>
+        <item>Fahrenheit</item>
+    </string-array>
+
+</resources>

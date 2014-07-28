@@ -3,6 +3,7 @@
 
     <string name="app_name">IntelligentHomeAnywhere</string>
     <string name="app_id">1411635335720288</string>
+
     <!-- Titles -->
     <string name="title_activity_location_screen">Locations</string>
     <string name="title_activity_notification">Notification</string>
@@ -13,12 +14,14 @@
     <string name="title_activity_login_facebook">Facebook</string>
     <string name="title_activity_widget_configuration">Widget Configuration</string>
     <string name="title_activity_location_detail_screen">Location Detail</string>
+
     <!-- Buttons -->
     <string name="login_login">Login</string>
     <string name="login_demo">Demo mode</string>
     <string name="registration_button">Registration</string>
     <string name="alert_neutral">Click me</string>
     <string name="alert_positive">OK</string>
+
     <!-- New sensor dialog -->
     <string name="notification_title">New sensors</string>
 
@@ -30,6 +33,7 @@
     <string name="notification_ingore">Ignore</string>
     <string name="notification_add">Add</string>
     <string name="notification_cancel">Cancel</string>
+
     <!-- Labels -->
     <string name="login_app_name">Intelligent Home Anywhere</string>
     <string name="login_or_use">or use</string>
@@ -49,10 +53,12 @@
     <string name="refresh_time">Refresh time: %s</string>
     <string name="last_update">Last update:</string>
     <string name="sen_graph_label">Graph of history</string>
+
     <!-- RadioButtons -->
     <string name="login_radio_facebook">Facebook account</string>
     <string name="login_radio_google">Google account</string>
     <string name="login_radio_mojeid">MojeID</string>
+
     <!-- Hints -->
     <string name="login_user_name_hint">Login/email</string>
     <string name="login_password_hint">Password</string>
@@ -143,20 +149,24 @@
         <item quantity="one">1 hour</item>
         <item quantity="other">%d hours</item>
     </plurals>
-    
 
-<!-- Settings -->
-	<string name="personal">Personal</string>
-	<string name="user_profile">User profile</string>
-	<string name="units">Units</string>
-	<string name="temperature">Temperature</string>
-	<string name="celsius">°C</string>
-	<string name="fahrenheit">°F</string>
-	<string name="connections">Connections</string>
-	<string name="smartwatches">Smartwatches</string>
-	<string name="choose_default_location">Choose default location</string>
+    <!-- Settings -->
+    <string name="personal">Personal</string>
+    <string name="user_profile">User profile</string>
+    <string name="units">Units</string>
+    <string name="temperature">Temperature</string>
+    <string name="connections">Connections</string>
+    <string name="smartwatches">Smartwatches</string>
+    <string name="choose_default_location">Choose default location</string>
     <string name="choose_default_adapter">Choose default adapter</string>
     <string name="default_location">Default location</string>
     <string name="default_adapter">Default adapter</string>
+
+    <!-- Units -->
+    <!-- don't change order of items, if so change order in string_private.xml as well -->
+    <string-array name="unit_temperature_name">
+        <item>°C</item>
+        <item>°F</item>
+    </string-array>
 
 </resources>

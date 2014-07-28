@@ -1,8 +1,5 @@
 package cz.vutbr.fit.iha.activity.dialog;
 
-import com.actionbarsherlock.app.SherlockDialogFragment;
-
-import cz.vutbr.fit.iha.R;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
@@ -14,6 +11,8 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
+import cz.vutbr.fit.iha.R;
+import cz.vutbr.fit.iha.activity.TrackDialogFragment;
 
 /**
  * About dialog
@@ -21,7 +20,7 @@ import android.widget.TextView;
  * @author Martin Doudera
  * 
  */
-public class InfoDialogFragment extends SherlockDialogFragment {
+public class InfoDialogFragment extends TrackDialogFragment {
 
 	// ///////////////////////////////////////////////
 	// COMPONENTS
