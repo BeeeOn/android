@@ -192,6 +192,7 @@ public class SensorDetailFragment extends SherlockFragment {
 		mRefreshTimeValue = (SeekBar) getView().findViewById(R.id.sen_refresh_time_seekBar);
 		// Set Max value by length of array with values
 		mRefreshTimeValue.setMax(RefreshInterval.values().length-1);
+		
 		mRefreshTimeValue.setOnSeekBarChangeListener(new OnSeekBarChangeListener() { 
 
 		    public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
@@ -202,6 +203,9 @@ public class SensorDetailFragment extends SherlockFragment {
 			@Override
 			public void onStartTrackingTouch(SeekBar seekBar) {
 				// Set variable if this first touch
+				if(mEditMode != EDIT_NONE) 
+					return;
+				
 				if(mEditMode != EDIT_REFRESH_T) {
 					mEditMode = EDIT_REFRESH_T;
 					mMode = getSherlockActivity().startActionMode(new AnActionModeOfEpicProportions());
@@ -227,6 +231,10 @@ public class SensorDetailFragment extends SherlockFragment {
 			
 			@Override
 			public boolean onTouch(View v, MotionEvent event) {
+				// Disable graph if in edit Mode
+				if(mEditMode != EDIT_NONE)
+					return false;
+				
 				if(mWasTapLayout)
 					return true;
 				
@@ -251,6 +259,13 @@ public class SensorDetailFragment extends SherlockFragment {
 			
 			@Override
 			public void onClick(View v) {
+				if(mEditMode != EDIT_NONE) 
+					return;
+				// Disable SeekBar
+				mRefreshTimeValue.setEnabled(false);
+				// Disable SwipeGesture
+				mActivity.setEnableSwipe(false);
+				
 				mEditMode = EDIT_NAME;
 				mMode = getSherlockActivity().startActionMode(new AnActionModeOfEpicProportions());
 				mName.setVisibility(View.GONE);
@@ -272,6 +287,11 @@ public class SensorDetailFragment extends SherlockFragment {
 					
 					@Override
 					public void onClick(View v) {
+						if(mEditMode != EDIT_NONE) 
+							return;
+						// Disable SeekBar
+						mRefreshTimeValue.setEnabled(false);
+						
 						mEditMode = EDIT_LOC;
 						mMode = getSherlockActivity().startActionMode(new AnActionModeOfEpicProportions());
 						mSpinnerLoc.setVisibility(View.VISIBLE);
@@ -399,6 +419,10 @@ public class SensorDetailFragment extends SherlockFragment {
 			
 			@Override
 			public boolean onTouch(View v, MotionEvent event) {
+				// Disable graph if in edit Mode
+				if(mEditMode != EDIT_NONE)
+					return false;
+				
 				if(mWasTapGraph)
 					return true;
 				
@@ -520,7 +544,8 @@ public class SensorDetailFragment extends SherlockFragment {
 			}
 			
 			mEditMode = EDIT_NONE;
-			
+			// enable SeekBar
+			mRefreshTimeValue.setEnabled(true);
 						
 			mode.finish();
             return true;
