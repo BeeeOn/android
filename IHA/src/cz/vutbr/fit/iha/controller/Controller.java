@@ -624,7 +624,7 @@ public final class Controller {
 	// TEMP LOG
 	public ArrayList<ContentRow> getDeviceLogTemp(BaseDevice device,String from, String to, String FuncType,int interval) {
 		Adapter adapter = getAdapterByDevice(device);
-		return (ArrayList<ContentRow>) mNetwork.getLog(adapter.getId(), device.getId(), device.getType(), from, to, "avg", interval);
+		return (ArrayList<ContentRow>) mNetwork.getLog(adapter.getId(), device.getAddress(), device.getType(), from, to, FuncType, interval);
 	}
 
 	
