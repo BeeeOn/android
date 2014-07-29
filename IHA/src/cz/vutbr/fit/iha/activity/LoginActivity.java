@@ -204,6 +204,23 @@ public class LoginActivity extends BaseActivity {
 			}
 		}.start();
 	}
+	
+	/**
+	 * Method show progress, thread-safe
+	 */
+	private void ProgressShow() {
+		new Thread() {
+			public void run() {
+				runOnUiThread(new Runnable() {
+					@Override
+					public void run() {
+						if (mProgress != null)
+							mProgress.show();
+					}
+				});
+			}
+		}.start();
+	}
 
 	/**
 	 * Method mine users account names
@@ -264,6 +281,7 @@ public class LoginActivity extends BaseActivity {
 	 *            of user
 	 */
 	private void doGoogleLogin(final String email) {
+		ProgressShow();
 		final GetGoogleAuth ggAuth = new GetGoogleAuth(this, email);
 		try {
 			Log.d(TAG, "call google auth execute");
