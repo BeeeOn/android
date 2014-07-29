@@ -11,10 +11,10 @@ import java.util.Random;
 
 import android.text.format.Time;
 import android.util.Log;
-import cz.vutbr.fit.iha.User;
 import cz.vutbr.fit.iha.adapter.device.BaseDevice;
 import cz.vutbr.fit.iha.adapter.location.Location;
 import cz.vutbr.fit.iha.adapter.parser.XmlCreator;
+import cz.vutbr.fit.iha.household.User;
 
 /**
  * @brief Class for parsed data from XML file of adapters

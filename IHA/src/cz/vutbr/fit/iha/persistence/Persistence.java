@@ -6,11 +6,11 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import cz.vutbr.fit.iha.Constants;
-import cz.vutbr.fit.iha.User;
 import cz.vutbr.fit.iha.adapter.Adapter;
 import cz.vutbr.fit.iha.adapter.device.BaseDevice;
 import cz.vutbr.fit.iha.exception.NotImplementedException;
-import cz.vutbr.fit.iha.network.ActualUser;
+import cz.vutbr.fit.iha.household.ActualUser;
+import cz.vutbr.fit.iha.household.User;
 import cz.vutbr.fit.iha.widget.WidgetData;
 
 /**

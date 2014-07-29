@@ -27,15 +27,15 @@ import cz.vutbr.fit.iha.thread.ToastMessageThread;
  * @author Leopold Podmolik
  */
 public class GetGoogleAuth extends AsyncTask<Void, Void, GoogleAuthState> {
-	private static final String TAG = "AUTH";
+	private static final String TAG = GetGoogleAuth.class.getSimpleName();
 	private static GetGoogleAuth mThis;
 	
 	private LoginActivity mActivity;
 	private String mEmail;
 	private String mToken;
 	private String mUserName;
-	private String mPictureURL;
-	private Bitmap mPictureIMG;
+	private String mPictureUrl;
+	private Bitmap mPicture;
 	
 	//////////////////////////////////////////////////////////////////////////////////////
 	///////////////////  Constructors ////////////////////////////////////////////////////
@@ -88,28 +88,28 @@ public class GetGoogleAuth extends AsyncTask<Void, Void, GoogleAuthState> {
 	 * @return the mPicture
 	 */
 	public String getPicture() {
-		return mPictureURL;
+		return mPictureUrl;
 	}
 
 	/**
 	 * @param mPicture the mPicture to set
 	 */
 	public void setPicture(String mPicture) {
-		this.mPictureURL = mPicture;
+		this.mPictureUrl = mPicture;
 	}
 
 	/**
-	 * @return the mPictureIMG
+	 * @return the mPicture
 	 */
 	public Bitmap getPictureIMG() {
-		return mPictureIMG;
+		return mPicture;
 	}
 
 	/**
-	 * @param mPictureIMG the mPictureIMG to set
+	 * @param mPicture the mPicture to set
 	 */
 	public void setPictureIMG(Bitmap mPictureIMG) {
-		this.mPictureIMG = mPictureIMG;
+		this.mPicture = mPictureIMG;
 	}
 
 	/**
@@ -290,27 +290,22 @@ public class GetGoogleAuth extends AsyncTask<Void, Void, GoogleAuthState> {
         HttpURLConnection con = (HttpURLConnection) url.openConnection();
         int sc = con.getResponseCode();
         if (sc == 200) {
-          InputStream is = con.getInputStream();
-          String respond = readResponse(is);
-          String name = getName(respond);
-          String picture = getPicture(respond);
-          Log.d(TAG,"Hello " + name + "!");
-          Log.i(TAG, picture);
-          //TODO: refactor
-          this.mUserName = name;
-          ActualUser.getActualUser().setName(name);
-          this.mPictureURL = picture;
-          is.close();
-//          synchronized(this) {
-//        	  this.notify();
-//          }
-          if(mPictureURL != null && mPictureURL.length() > 0){
-        	  fetchPictureFromProfileServer(mPictureURL);
-        	  ActualUser.getActualUser().setPicture(mPictureIMG);
-        	  ActualUser.getActualUser().setPicture(mPictureURL);
-        	  //TODO: maybe save name
-          }
-
+	          InputStream is = con.getInputStream();
+	          String respond = readResponse(is);
+	          
+	          mUserName = getName(respond);
+	          mPictureUrl = getPicture(respond);
+	          
+	          Log.d(TAG, String.format("Hello %s!", mUserName));
+	          Log.i(TAG, mPictureUrl);
+	          is.close();
+//	          synchronized(this) {
+//	        	  this.notify();
+//	          }
+	          if (mPictureUrl != null && mPictureUrl.length() > 0) {
+	        	  fetchPictureFromProfileServer(mPictureUrl);
+	          }
+	          
         } else if (sc == 401) {
             GoogleAuthUtil.invalidateToken(mActivity, token);
         }
@@ -363,7 +358,7 @@ public class GetGoogleAuth extends AsyncTask<Void, Void, GoogleAuthState> {
             InputStream inputStream = connection.getInputStream();
             
             setPictureIMG(BitmapFactory.decodeStream(inputStream));// Convert to bitmap
-//            imageView.setImageBitmap(mPictureIMG);
+//            imageView.setImageBitmap(mPicture);
         } catch (IOException e) {
             e.printStackTrace();
         }

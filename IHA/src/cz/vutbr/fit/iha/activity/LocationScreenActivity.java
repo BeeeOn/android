@@ -53,7 +53,7 @@ import cz.vutbr.fit.iha.adapter.Adapter;
 import cz.vutbr.fit.iha.adapter.device.BaseDevice;
 import cz.vutbr.fit.iha.adapter.location.Location;
 import cz.vutbr.fit.iha.controller.Controller;
-import cz.vutbr.fit.iha.network.ActualUser;
+import cz.vutbr.fit.iha.household.ActualUser;
 
 /**
  * Activity class for choosing location
@@ -230,11 +230,9 @@ public class LocationScreenActivity extends BaseActivity {
 		mMenuAdapter = new MenuListAdapter(LocationScreenActivity.this);
 
 		// FIXME zmenit obrazek na obrazek uzivatele
-		Bitmap largeIcon = BitmapFactory.decodeResource(getResources(),
-				R.drawable.loc_unknown);
-		Controller controller = Controller.getInstance(this);
+		Bitmap largeIcon = BitmapFactory.decodeResource(getResources(), R.drawable.loc_unknown);
 
-		ActualUser actUser = ActualUser.getActualUser();
+		ActualUser actUser = mController.getActualUser();
 
 		// mMenuAdapter.addHeader(new GroupMenuItem("GROUP1"));
 		// mMenuAdapter.addItem(new GroupMenuItem("1:Item1"));
@@ -250,14 +248,14 @@ public class LocationScreenActivity extends BaseActivity {
 		mMenuAdapter.addHeader(new ProfileMenuItem(actUser.getName(), actUser
 				.getEmail(), largeIcon));
 
-		List<Adapter> adapters = controller.getAdapters();
+		List<Adapter> adapters = mController.getAdapters();
 		if (adapters.size() > 1) {
 			// Adding separator as item (we don't want to let it float as
 			// header)
 			mMenuAdapter.addItem(new SeparatorMenuItem());
 
 			// Adding adapters
-			Adapter chosenAdapter = controller.getActiveAdapter();
+			Adapter chosenAdapter = mController.getActiveAdapter();
 			for (Adapter actAdapter : adapters) {
 				mMenuAdapter
 						.addItem(new AdapterMenuItem(actAdapter.getName(),

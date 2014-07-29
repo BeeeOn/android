@@ -6,7 +6,6 @@ import java.util.Random;
 
 import android.content.Context;
 import android.text.format.Time;
-import cz.vutbr.fit.iha.User;
 import cz.vutbr.fit.iha.adapter.Adapter;
 import cz.vutbr.fit.iha.adapter.device.BaseDevice;
 import cz.vutbr.fit.iha.adapter.device.BaseDevice.SaveDevice;
@@ -18,9 +17,10 @@ import cz.vutbr.fit.iha.adapter.parser.ContentRow;
 import cz.vutbr.fit.iha.exception.NetworkException;
 import cz.vutbr.fit.iha.exception.NoConnectionException;
 import cz.vutbr.fit.iha.exception.NotImplementedException;
+import cz.vutbr.fit.iha.household.ActualUser;
 import cz.vutbr.fit.iha.household.DemoHousehold;
 import cz.vutbr.fit.iha.household.Household;
-import cz.vutbr.fit.iha.network.ActualUser;
+import cz.vutbr.fit.iha.household.User;
 import cz.vutbr.fit.iha.network.Network;
 import cz.vutbr.fit.iha.persistence.Persistence;
 
@@ -44,7 +44,7 @@ public final class Controller {
 	private final Network mNetwork;
 	
 	/** Household object holds logged in user and all adapters and lists which belongs to him */
-	private Household mHousehold;
+	private final Household mHousehold;
 	
 	/** Switch for using demo mode (with example adapter, without server) */
 	private static boolean mDemoMode = false;
@@ -79,14 +79,9 @@ public final class Controller {
 	private Controller(Context context) {
 		mContext = context;
 
+		mHousehold = mDemoMode ? new DemoHousehold(mContext) : new Household();
 		mPersistence = new Persistence(mContext);
-		mNetwork = new Network(mContext);
-		try {
-			mHousehold = mDemoMode ? new DemoHousehold(mContext) : new Household();
-		} catch (Exception e) {
-			mHousehold = new Household();
-			e.printStackTrace();
-		}
+		mNetwork = new Network(mContext, mHousehold.user);
 	}
 	
 	public static synchronized void setDemoMode(Context context, boolean demoMode) {
@@ -105,9 +100,9 @@ public final class Controller {
 	}
 
 	/**
-	 * Login user by his id (authenticate on server).
+	 * Login user by his email (authenticate on server).
 	 * 
-	 * @param userId
+	 * @param email
 	 * @return true on success, false otherwise
 	 * @throws NetworkException
 	 */
@@ -120,8 +115,7 @@ public final class Controller {
 
 		// TODO: catch and throw proper exception
 		// FIXME: after some time there should be picture in ActualUser object, should save to mPersistence
-		mHousehold.user = mNetwork.signIn(email);
-		if (mHousehold.user != null) {
+		if (mNetwork.signIn(email)) {
 			mPersistence.saveLastEmail(mHousehold.user.getEmail());
 			return true;
 		}
@@ -136,7 +130,7 @@ public final class Controller {
 	 */
 	public boolean logout() {
 		// TODO: also destroy session
-		mHousehold.user = null;
+		mHousehold.user.logout();
 		mPersistence.saveLastEmail(null);
 		
 		return true;
@@ -149,7 +143,7 @@ public final class Controller {
 	 */
 	public boolean isLoggedIn() {
 		// TODO: also check session lifetime
-		return mHousehold.user != null;
+		return mHousehold.user.isLoggedIn();
 	}
 	
 	
@@ -345,11 +339,8 @@ public final class Controller {
 		if (mDemoMode)
 			return false;
 
-		ActualUser acUser = ActualUser.getActualUser();
 		try {
-			return mNetwork.signUp(acUser.getEmail(), id, Integer.parseInt(acUser.getSessionId()));
-		} catch (NumberFormatException e) {
-			e.printStackTrace();
+			return mNetwork.signUp(mHousehold.user.getEmail(), id, mHousehold.user.getSessionId());
 		} catch (NetworkException e) {
 			e.printStackTrace();
 		}
@@ -700,6 +691,10 @@ public final class Controller {
 		for (Adapter adapter : getAdapters()) {
 			adapter.unignoreUninitialized();
 		}
+	}
+
+	public ActualUser getActualUser() {
+		return mHousehold.user;
 	}
 
 }

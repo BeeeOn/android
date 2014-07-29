@@ -27,7 +27,7 @@ import cz.vutbr.fit.iha.exception.NoConnectionException;
 import cz.vutbr.fit.iha.exception.NotImplementedException;
 import cz.vutbr.fit.iha.exception.NotRegAException;
 import cz.vutbr.fit.iha.exception.NotRegBException;
-import cz.vutbr.fit.iha.network.ActualUser;
+import cz.vutbr.fit.iha.household.ActualUser;
 import cz.vutbr.fit.iha.network.GetGoogleAuth;
 import cz.vutbr.fit.iha.thread.ToastMessageThread;
 
@@ -291,8 +291,10 @@ public class LoginActivity extends BaseActivity {
 				@Override
 				public void run() {
 					ggAuth.execute();
-					ActualUser.setActualUser(ggAuth.getUserName(),
-							ggAuth.getEmail());
+					// FIXME: I think name and email should be saved on IHA server and loaded from there. It should be used from google only in registration, no?
+					ActualUser user = mController.getActualUser();
+					user.setName(ggAuth.getUserName());
+					user.setEmail(ggAuth.getEmail());
 					doLogin(email);
 					Log.d(TAG, "Finish google auth");
 				}

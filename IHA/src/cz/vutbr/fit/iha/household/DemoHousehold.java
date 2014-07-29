@@ -5,12 +5,10 @@ import java.util.List;
 
 import android.content.Context;
 import cz.vutbr.fit.iha.Constants;
-import cz.vutbr.fit.iha.User;
-import cz.vutbr.fit.iha.User.Gender;
-import cz.vutbr.fit.iha.User.Role;
 import cz.vutbr.fit.iha.adapter.Adapter;
 import cz.vutbr.fit.iha.adapter.location.Location;
 import cz.vutbr.fit.iha.adapter.parser.XmlParsers;
+import cz.vutbr.fit.iha.household.User.Gender;
 
 /**
  * Represents demo household with adapters and devices loaded from local assets files.
@@ -32,8 +30,9 @@ public final class DemoHousehold extends Household {
 	 * Prepare logged in user.
 	 */
 	private void prepareUser() {
-		// TODO: role belongs to adapter so it has no meaning here
-		this.user = new User("John Doe", "john@doe.com", Role.Superuser, Gender.Male);
+		user.setName("John Doe");
+		user.setEmail("john@doe.com");
+		user.setGender(Gender.Male);
 	}
 	
 	/**

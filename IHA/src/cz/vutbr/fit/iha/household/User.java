@@ -1,4 +1,4 @@
-package cz.vutbr.fit.iha;
+package cz.vutbr.fit.iha.household;
 
 /**
  * Represents single person.
@@ -7,11 +7,13 @@ public class User {
 
 	private String mName;
 	
-	private final String mEmail;
+	private String mEmail;
 	
-	private final Role mRole;
+	private Role mRole;
 	
-	private final Gender mGender;
+	private Gender mGender;
+	
+	public User() { }
 	
 	public User(final String name, final String email, final Role role, final Gender gender) {
 		mName = name;
@@ -50,7 +52,7 @@ public class User {
 		return mName;
 	}
 	
-	public void setName(String name){
+	public void setName(String name) {
 		mName = name;
 	}
 	
@@ -58,12 +60,24 @@ public class User {
 		return mEmail;
 	}
 	
+	public void setEmail(String email) {
+		mEmail = email;
+	}
+	
 	public Role getRole() {
 		return mRole;
 	}
 	
+	public void setRole(Role role) {
+		mRole = role;
+	}
+	
 	public Gender getGender() {
 		return mGender;
+	}
+	
+	public void setGender(Gender gender) {
+		mGender = gender;
 	}
 
 	public String toDebugString(){

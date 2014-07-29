@@ -22,8 +22,6 @@ import android.util.Log;
 import android.util.Xml;
 import cz.vutbr.fit.iha.Constants;
 import cz.vutbr.fit.iha.RefreshInterval;
-import cz.vutbr.fit.iha.User;
-import cz.vutbr.fit.iha.User.Role;
 import cz.vutbr.fit.iha.adapter.Adapter;
 import cz.vutbr.fit.iha.adapter.device.BaseDevice;
 import cz.vutbr.fit.iha.adapter.device.EmissionDevice;
@@ -38,6 +36,8 @@ import cz.vutbr.fit.iha.adapter.device.UnknownDevice;
 import cz.vutbr.fit.iha.adapter.location.Location;
 import cz.vutbr.fit.iha.exception.ComVerMisException;
 import cz.vutbr.fit.iha.exception.XmlVerMisException;
+import cz.vutbr.fit.iha.household.User;
+import cz.vutbr.fit.iha.household.User.Role;
 
 /**
  * @author ThinkDeep

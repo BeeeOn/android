@@ -31,7 +31,6 @@ import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.util.Log;
-import cz.vutbr.fit.iha.User;
 import cz.vutbr.fit.iha.activity.LoginActivity;
 import cz.vutbr.fit.iha.adapter.Adapter;
 import cz.vutbr.fit.iha.adapter.device.BaseDevice;
@@ -49,6 +48,8 @@ import cz.vutbr.fit.iha.exception.NoConnectionException;
 import cz.vutbr.fit.iha.exception.NotImplementedException;
 import cz.vutbr.fit.iha.exception.NotRegAException;
 import cz.vutbr.fit.iha.exception.NotRegBException;
+import cz.vutbr.fit.iha.household.ActualUser;
+import cz.vutbr.fit.iha.household.User;
 
 /**
  * Network service that handles communication with server.
@@ -87,6 +88,7 @@ public class Network {
 	private static final String SERVER_CN_CERTIFICATE = "ant-2.fit.vutbr.cz";
 
 	private static Context mContext;
+	private static ActualUser mUser;
 	private static int mSessionId;
 	
 	private static final String GoogleExcMessage = "Google token error";
@@ -96,8 +98,9 @@ public class Network {
 	 * 
 	 * @param context
 	 */
-	public Network(Context context) {
+	public Network(Context context, ActualUser user) {
 		mContext = context;
+		mUser = user;
 	}
 
 	/**
@@ -220,7 +223,7 @@ public class Network {
 			new GetGoogleAuth(new LoginActivity(), tmp).execute();
 			// return null;
 		}
-		signIn(ActualUser.getActualUser().getEmail());
+		signIn(mUser.getEmail());
 	}
 
 	private ParsedMessage doRequest(String messageToSend) {
@@ -269,7 +272,7 @@ public class Network {
 	 * 
 	 * @param userEmail
 	 *            of current user
-	 * @return ActualUser
+	 * @return boolean
 	 * @throws NoConnectionException
 	 *             if there is no Internet connection
 	 * @throws CommunicationException
@@ -282,7 +285,7 @@ public class Network {
 	 *             if this user is not registered on the server but there is
 	 *             FREE ADAPTER
 	 */
-	public ActualUser signIn(String userEmail) throws NoConnectionException, CommunicationException, NotRegAException, NotRegBException, FalseException {
+	public boolean signIn(String userEmail) throws NoConnectionException, CommunicationException, NotRegAException, NotRegBException, FalseException {
 		String googleToken = getGoogleToken();
 		if (googleToken.length() == 0)
 			throw new CommunicationException(GoogleExcMessage);
@@ -293,11 +296,10 @@ public class Network {
 		if (msg.getSessionId() != 0 && msg.getState() == State.TRUE && ((String)msg.data).equals(SIGNIN)) {
 			Log.d("IHA - Network", msg.getState().getValue());
 
-			ActualUser aUser = ActualUser.getActualUser();
-			aUser.setSessionId(Integer.toString(msg.getSessionId()));
+			mUser.setSessionId(Integer.toString(msg.getSessionId()));
 			mSessionId = msg.getSessionId();
 
-			return aUser;
+			return true;
 		}
 		if (msg.getState() == State.NOTREGA) {
 			throw new NotRegAException();
@@ -309,7 +311,7 @@ public class Network {
 			throw new FalseException(((FalseAnswer) msg.data));
 		}
 
-		return null;
+		return false;
 	}
 
 	/**
@@ -321,27 +323,26 @@ public class Network {
 	 * @param serialNumber
 	 *            number of adapter to register
 	 * @param SessionId
-	 *            if is ID == 0 then needed google token, then the user is
+	 *            if is "" then needed google token, then the user is
 	 *            switch to work with new adapter, otherwise work with old
 	 * @return true if everything goes well, false otherwise
 	 * @throws CommunicationException
 	 *             including message from server
 	 * @throws NoConnectionException
 	 */
-	public boolean signUp(String email, String serialNumber, int SessionId) throws CommunicationException, NoConnectionException, FalseException {
+	public boolean signUp(String email, String serialNumber, String SessionId) throws CommunicationException, NoConnectionException, FalseException {
 
 		String googleToken = getGoogleToken();
 		if (googleToken.length() == 0)
 			throw new CommunicationException(GoogleExcMessage);
 
-		String messageToSend = XmlCreator.createSignUp(email, Integer.toString(SessionId), googleToken, serialNumber, Locale.getDefault().getLanguage());
+		String messageToSend = XmlCreator.createSignUp(email, SessionId, googleToken, serialNumber, Locale.getDefault().getLanguage());
 		ParsedMessage msg = doRequest(messageToSend);
 
 		if (msg.getSessionId() != 0 && msg.getState() == State.TRUE && ((String) msg.data).equals(SIGNUP)) {
 			Log.d("IHA - Network", msg.getState().getValue());
 
-			ActualUser aUser = ActualUser.getActualUser();
-			aUser.setSessionId(Integer.toString(msg.getSessionId()));
+			mUser.setSessionId(Integer.toString(msg.getSessionId()));
 			mSessionId = msg.getSessionId();
 
 			return true;
