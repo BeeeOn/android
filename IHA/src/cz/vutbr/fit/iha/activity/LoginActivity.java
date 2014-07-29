@@ -3,6 +3,8 @@ package cz.vutbr.fit.iha.activity;
 import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
+import android.content.DialogInterface.OnCancelListener;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -42,14 +44,16 @@ public class LoginActivity extends BaseActivity {
 	private LoginActivity mActivity;
 	private ProgressDialog mProgress;
 	private Thread mDoGoogleLoginThread;
+	private StoppableRunnable mDoGoogleLoginRunnable;
 
 	private static final String TAG = "LOGIN";
 	public static final int USER_RECOVERABLE_AUTH = 5;
 	private static final int GET_GOOGLE_ACCOUNT = 6;
-	
-	//////////////////////////////////////////////////////////////////////////////////////
-	///////////////////  Override METHODS  ///////////////////////////////////////////////
-	//////////////////////////////////////////////////////////////////////////////////////
+
+	// ////////////////////////////////////////////////////////////////////////////////////
+	// ///////////////// Override METHODS
+	// ///////////////////////////////////////////////
+	// ////////////////////////////////////////////////////////////////////////////////////
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -65,7 +69,18 @@ public class LoginActivity extends BaseActivity {
 		// Prepare progress dialog
 		mProgress = new ProgressDialog(mActivity);
 		mProgress.setMessage("Signing to server...");
-		mProgress.setCancelable(false);
+		mProgress.setCancelable(true);
+		mProgress.setCanceledOnTouchOutside(false);
+		mProgress.setOnCancelListener(new OnCancelListener() {
+
+			@Override
+			public void onCancel(DialogInterface dialog) {
+				if (mDoGoogleLoginRunnable != null) {
+					mDoGoogleLoginRunnable.stop();
+				}
+			}
+		});
+
 		mProgress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
 
 		if (mController.isLoggedIn()) {
@@ -82,7 +97,8 @@ public class LoginActivity extends BaseActivity {
 		String lastEmail = mController.getLastEmail();
 		if (lastEmail.length() > 0) {
 			// Automatic login with last used e-mail
-			Log.d(TAG, String.format("Automatic login with last used e-mail (%s)...", lastEmail));
+			Log.d(TAG, String.format(
+					"Automatic login with last used e-mail (%s)...", lastEmail));
 
 			Controller.setDemoMode(LoginActivity.this, false);
 			mProgress.show();
@@ -90,16 +106,18 @@ public class LoginActivity extends BaseActivity {
 		}
 
 		// Demo button
-		((CheckBox) findViewById(R.id.login_btn_demo)).setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				Controller.setDemoMode(LoginActivity.this, true);
+		((CheckBox) findViewById(R.id.login_btn_demo))
+				.setOnClickListener(new OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						Controller.setDemoMode(LoginActivity.this, true);
 
-				Intent intent = new Intent(LoginActivity.this, LocationScreenActivity.class);
-				startActivity(intent);
-				LoginActivity.this.finish();
-			}
-		});
+						Intent intent = new Intent(LoginActivity.this,
+								LocationScreenActivity.class);
+						startActivity(intent);
+						LoginActivity.this.finish();
+					}
+				});
 
 		// Get btn for login
 		ImageButton btnGoogle = (ImageButton) findViewById(R.id.login_btn_google);
@@ -121,11 +139,19 @@ public class LoginActivity extends BaseActivity {
 			}
 		});
 	}
-	
+
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
 
+		if (resultCode == RESULT_CANCELED) {
+			if (mDoGoogleLoginRunnable != null) {
+				mDoGoogleLoginRunnable.stop();
+			}
+			ProgressDismiss();
+			return;
+		}
+		
 		if (requestCode == USER_RECOVERABLE_AUTH && resultCode == RESULT_OK) {
 			String email = data.getStringExtra(AccountManager.KEY_ACCOUNT_NAME);
 			if (email == null) {
@@ -150,41 +176,44 @@ public class LoginActivity extends BaseActivity {
 			doGoogleLogin(email);
 		}
 	}
-	
+
 	@Override
 	public void onBackPressed() {
 		super.onBackPressed();
 		mActivity.finish();
 	}
 
-	//////////////////////////////////////////////////////////////////////////////////////
-	///////////////////  Custom METHODS  /////////////////////////////////////////////////
-	//////////////////////////////////////////////////////////////////////////////////////
-	
+	// ////////////////////////////////////////////////////////////////////////////////////
+	// ///////////////// Custom METHODS
+	// /////////////////////////////////////////////////
+	// ////////////////////////////////////////////////////////////////////////////////////
+
 	/**
 	 * Method cancel running progressBar, thread-safe
 	 */
 	public void ProgressDismiss() {
-		new Thread(){
-			public void run(){
+		new Thread() {
+			public void run() {
 				runOnUiThread(new Runnable() {
 					@Override
 					public void run() {
-						if(mProgress.isShowing())
+						if (mProgress != null && mProgress.isShowing())
 							mProgress.dismiss();
 					}
 				});
 			}
 		}.start();
 	}
-	
+
 	/**
 	 * Method mine users account names
+	 * 
 	 * @return array of names to choose
 	 */
 	private String[] getAccountNames() {
 		AccountManager mAccountManager = AccountManager.get(this);
-		Account[] accounts = mAccountManager.getAccountsByType(GoogleAuthUtil.GOOGLE_ACCOUNT_TYPE);
+		Account[] accounts = mAccountManager
+				.getAccountsByType(GoogleAuthUtil.GOOGLE_ACCOUNT_TYPE);
 		String[] names = new String[accounts.length];
 		for (int i = 0; i < names.length; i++) {
 			names[i] = accounts[i].name;
@@ -194,11 +223,13 @@ public class LoginActivity extends BaseActivity {
 
 	/**
 	 * Method start routine to access trough google after button click
+	 * 
 	 * @param v
 	 */
 	private void beginGoogleAuthRutine(View v) {
 		Log.d(TAG, "BEG: Google access func");
-		if (GooglePlayServicesUtil.isGooglePlayServicesAvailable(getBaseContext()) == ConnectionResult.SUCCESS) {
+		if (GooglePlayServicesUtil
+				.isGooglePlayServicesAvailable(getBaseContext()) == ConnectionResult.SUCCESS) {
 			// On this device is Google Play, we can proceed
 			Log.d(TAG, "On this device is Google Play, we can proceed");
 			String[] Accounts = this.getAccountNames();
@@ -207,41 +238,70 @@ public class LoginActivity extends BaseActivity {
 				doGoogleLogin(Accounts[0]);
 			} else {
 				Log.d(TAG, "On this device are more accounts");
-				Intent intent = AccountPicker.newChooseAccountIntent(null, null, new String[] { "com.google" }, false, null, null, null, null);
+				Intent intent = AccountPicker.newChooseAccountIntent(null,
+						null, new String[] { "com.google" }, false, null, null,
+						null, null);
 				startActivityForResult(intent, GET_GOOGLE_ACCOUNT);
 			}
 		} else {
 			// Google Play is missing
 			Log.d(TAG, "Google Play is missing");
-			//TODO: maybe show customAlertDialog with possibility actualize play
-			Toast.makeText(v.getContext(), getString(R.string.toast_play_missing), Toast.LENGTH_LONG).show();
+			// TODO: maybe show customAlertDialog with possibility actualize
+			// play
+			Toast.makeText(v.getContext(),
+					getString(R.string.toast_play_missing), Toast.LENGTH_LONG)
+					.show();
 			mProgress.dismiss();
 		}
 		Log.d(TAG, "END: Google access func");
 	}
 
 	/**
-	 * Method create (finally only) one thread to get google token and than call last logging method
-	 * @param email of user
+	 * Method create (finally only) one thread to get google token and than call
+	 * last logging method
+	 * 
+	 * @param email
+	 *            of user
 	 */
 	private void doGoogleLogin(final String email) {
 		final GetGoogleAuth ggAuth = new GetGoogleAuth(this, email);
 		try {
 			Log.d(TAG, "call google auth execute");
 
-			mDoGoogleLoginThread = new Thread(new Runnable() {
+			mDoGoogleLoginRunnable = new StoppableRunnable() {
+
 				@Override
 				public void run() {
 					ggAuth.execute();
-					ActualUser.setActualUser(ggAuth.getUserName(), ggAuth.getEmail());
+					ActualUser.setActualUser(ggAuth.getUserName(),
+							ggAuth.getEmail());
 					doLogin(email);
 					Log.d(TAG, "Finish google auth");
 				}
-			});
+			};
+
+			mDoGoogleLoginThread = new Thread(mDoGoogleLoginRunnable);
 			mDoGoogleLoginThread.start();
 
 		} catch (Exception e) {
 			e.printStackTrace();
+		}
+	}
+
+	private abstract class StoppableRunnable implements Runnable {
+		private volatile boolean mIsStopped = false;
+
+		public boolean isStopped() {
+			return mIsStopped;
+		}
+
+		private void setStopped(boolean isStop) {
+			if (mIsStopped != isStop)
+				mIsStopped = isStop;
+		}
+
+		public void stop() {
+			setStopped(true);
 		}
 	}
 
@@ -259,9 +319,12 @@ public class LoginActivity extends BaseActivity {
 			if (mController.login(email)) {
 				Log.d(TAG, "Login: true");
 				ProgressDismiss();
-				Intent intent = new Intent(mActivity, LocationScreenActivity.class);
-				mActivity.startActivity(intent);
-				mActivity.finish();
+				if (!mDoGoogleLoginRunnable.isStopped()) {
+					Intent intent = new Intent(mActivity,
+							LocationScreenActivity.class);
+					mActivity.startActivity(intent);
+					mActivity.finish();
+				}
 			} else {
 				Log.d(TAG, "Login: false");
 				errFlag = true;
@@ -271,7 +334,8 @@ public class LoginActivity extends BaseActivity {
 		} catch (NotRegAException e) {
 			e.printStackTrace();
 			// there is unregistered adapter and we go to register it
-			Intent intent = new Intent(LoginActivity.this, AddAdapterActivityDialog.class);
+			Intent intent = new Intent(LoginActivity.this,
+					AddAdapterActivityDialog.class);
 			Bundle bundle = new Bundle();
 			bundle.putBoolean("Cancel", false);
 			intent.putExtras(bundle);
@@ -293,25 +357,28 @@ public class LoginActivity extends BaseActivity {
 			errMessage = getString(R.string.toast_communication_error);
 		} catch (NotImplementedException e) {
 			e.printStackTrace();
-			//FIXME: remove in final version
+			// FIXME: remove in final version
 			errFlag = true;
 			errMessage = "Not implemented yet";
 		} finally {
 			ProgressDismiss();
 			if (errFlag) {
-				// alternate form: //mActivity.runOnUiThread(new ToastMessageThread(mActivity, errMessage));
+				// alternate form: //mActivity.runOnUiThread(new
+				// ToastMessageThread(mActivity, errMessage));
 				new ToastMessageThread(mActivity, errMessage).start();
 			}
 		}
 	}
 
-	//////////////////////////////////////////////////////////////////////////////////////
-	///////////////////  TODO METHODS    /////////////////////////////////////////////////
-	//////////////////////////////////////////////////////////////////////////////////////
-	
+	// ////////////////////////////////////////////////////////////////////////////////////
+	// ///////////////// TODO METHODS
+	// /////////////////////////////////////////////////
+	// ////////////////////////////////////////////////////////////////////////////////////
+
 	private boolean getMojeIDAccessFromServer(View v) {
 		// TODO: get access via mojeID
-		Toast.makeText(v.getContext(), "Not Implemented yet", Toast.LENGTH_LONG).show();
+		Toast.makeText(v.getContext(), "Not Implemented yet", Toast.LENGTH_LONG)
+				.show();
 		return false;
 	}
 }
