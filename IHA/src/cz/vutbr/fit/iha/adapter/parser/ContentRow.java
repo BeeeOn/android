@@ -17,7 +17,7 @@ public class ContentRow {
 	
 	private Date mDate;
 	private Date mTime;
-	private int mValue;
+	private float mValue;
 //	private int mBattery;
 	
 	public static final String DATEFORMAT = "yyyy-MM-dd";
@@ -44,7 +44,7 @@ public class ContentRow {
 			e.printStackTrace();
 		}
 		
-		mValue = Integer.parseInt(parts[2]);
+		mValue = Float.parseFloat(parts[2]);
 //		mBattery = Integer.parseInt(parts[3]);
 	}
 	
@@ -52,7 +52,7 @@ public class ContentRow {
 	 * Getter
 	 * @return
 	 */
-	public int getValue(){
+	public float getValue(){
 		return mValue;
 	}
 	

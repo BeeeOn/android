@@ -15,6 +15,7 @@ import java.security.NoSuchAlgorithmException;
 import java.security.cert.Certificate;
 import java.security.cert.CertificateException;
 import java.security.cert.CertificateFactory;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -31,6 +32,7 @@ import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.util.Log;
+import cz.vutbr.fit.iha.User;
 import cz.vutbr.fit.iha.activity.LoginActivity;
 import cz.vutbr.fit.iha.adapter.Adapter;
 import cz.vutbr.fit.iha.adapter.device.BaseDevice;
@@ -48,8 +50,6 @@ import cz.vutbr.fit.iha.exception.NoConnectionException;
 import cz.vutbr.fit.iha.exception.NotImplementedException;
 import cz.vutbr.fit.iha.exception.NotRegAException;
 import cz.vutbr.fit.iha.exception.NotRegBException;
-import cz.vutbr.fit.iha.household.ActualUser;
-import cz.vutbr.fit.iha.household.User;
 
 /**
  * Network service that handles communication with server.
@@ -361,26 +361,26 @@ public class Network {
 	 * @throws CommunicationException
 	 *             including message from server including message from server
 	 */
+	// http://stackoverflow.com/a/509288/1642090
+	@SuppressWarnings("unchecked")
 	public List<Adapter> getAdapters() throws NoConnectionException, CommunicationException, FalseException {
 		String messageToSend = XmlCreator.createGetAdapters(mSessionId);
 		ParsedMessage msg = doRequest(messageToSend);
+		
+		List<Adapter> result = new ArrayList<Adapter>();
 
 		if (msg.getState() == State.READY) {
 			Log.d("IHA - Network", msg.getState().getValue());
 
-			// http://stackoverflow.com/a/509288/1642090
-			@SuppressWarnings("unchecked")
-			List<Adapter> result = (List<Adapter>) msg.data;
-
-			return result;
+			result.addAll((List<Adapter>) msg.data);
 		} else if (msg.getState() == State.RESIGN) {
 			doResign();
 			return getAdapters();
 
 		} else if (msg.getState() == State.FALSE) {
 			throw new FalseException(((FalseAnswer) msg.data));
-		} else
-			return null;
+		}
+		return result;
 	}
 
 	/**
@@ -395,19 +395,19 @@ public class Network {
 	public Adapter init(String adapterId) throws NoConnectionException, CommunicationException, FalseException {
 		String messageToSend = XmlCreator.createGetXml(Integer.toString(mSessionId), adapterId);
 		ParsedMessage msg = doRequest(messageToSend);
+		Adapter result = new Adapter();
 
 		if (msg.getState() == State.XML) {
 			Log.d("IHA - Network", msg.getState().getValue());
 
-			return (Adapter) msg.data;
+			result = (Adapter) msg.data;
 		} else if (msg.getState() == State.RESIGN) {
 			doResign();
 			return init(adapterId);
-
 		} else if (msg.getState() == State.FALSE) {
 			throw new FalseException(((FalseAnswer) msg.data));
-		} else
-			return null;
+		}
+		return result;
 	}
 
 	/**
@@ -557,26 +557,25 @@ public class Network {
 	 * @throws NoConnectionException
 	 * @throws CommunicationException
 	 */
+	// http://stackoverflow.com/a/509288/1642090
+	@SuppressWarnings("unchecked")
 	public List<BaseDevice> update(String adapterId, List<BaseDevice> devices) throws NoConnectionException, CommunicationException, FalseException {
 		String messageToSend = XmlCreator.createUpdate(Integer.toString(mSessionId), adapterId, devices);
 		ParsedMessage msg = doRequest(messageToSend);
+		
+		List<BaseDevice> result = new ArrayList<BaseDevice>();
 
 		if (msg.getState() == State.PARTIAL) {
 			Log.d("IHA - Network", msg.getState().getValue());
-
-			// http://stackoverflow.com/a/509288/1642090
-			@SuppressWarnings("unchecked")
-			List<BaseDevice> result = (List<BaseDevice>) msg.data;
-
-			return result;
-
+			
+			result.addAll((List<BaseDevice>) msg.data);
 		} else if (msg.getState() == State.RESIGN) {
 			doResign();
 			return update(adapterId, devices);
 		} else if (msg.getState() == State.FALSE) {
 			throw new FalseException(((FalseAnswer) msg.data));
-		} else
-			return null;
+		}
+		return result;
 	}
 
 	/**
@@ -594,27 +593,26 @@ public class Network {
 	 * @throws NoConnectionException
 	 * @throws CommunicationException
 	 */
+	//http://stackoverflow.com/a/509288/1642090
+	@SuppressWarnings("unchecked")
 	public List<ContentRow> getLog(String adapterId, String deviceId, int deviceType, String from, String to, String funcType, int interval) throws NoConnectionException, CommunicationException, FalseException {
 		String messageToSend = XmlCreator.createLogName(Integer.toString(mSessionId), adapterId, deviceId, deviceType, from, to, funcType, interval);
 		ParsedMessage msg = doRequest(messageToSend);
+		
+		List<ContentRow> result = new ArrayList<ContentRow>();
 
 		if (msg.getState() == State.CONTENT) {
 			Log.d("IHA - Network", msg.getState().getValue());
 
-			// http://stackoverflow.com/a/509288/1642090
-			@SuppressWarnings("unchecked")
-			List<ContentRow> result = (List<ContentRow>) msg.data;
-
-			return result;
-
+			result.addAll((List<ContentRow>) msg.data);
 		} else if (msg.getState() == State.RESIGN) {
 			doResign();
 			return getLog(adapterId, deviceId, deviceType, from, to, funcType, interval);
 
 		} else if (msg.getState() == State.FALSE) {
 			throw new FalseException(((FalseAnswer) msg.data));
-		} else
-			return null;
+		}
+		return result;
 	}
 
 	/**
@@ -656,27 +654,26 @@ public class Network {
 	 * @throws NoConnectionException
 	 * @throws CommunicationException
 	 */
+	// http://stackoverflow.com/a/509288/1642090
+	@SuppressWarnings("unchecked")
 	public List<CustomViewPair> getViews() throws NoConnectionException, CommunicationException, FalseException {
 		String messageToSend = XmlCreator.createGetViews(Integer.toString(mSessionId));
 		ParsedMessage msg = doRequest(messageToSend);
 
+		List<CustomViewPair> result = new ArrayList<CustomViewPair>();
+		
 		if (msg.getState() == State.VIEWSLIST) {
 			Log.d("IHA - Network", msg.getState().getValue());
 
-			// http://stackoverflow.com/a/509288/1642090
-			@SuppressWarnings("unchecked")
-			List<CustomViewPair> result = (List<CustomViewPair>) msg.data;
-
-			return result;
-
+			result.addAll((List<CustomViewPair>) msg.data);
 		} else if (msg.getState() == State.RESIGN) {
 			doResign();
 			return getViews();
 
 		} else if (msg.getState() == State.FALSE) {
 			throw new FalseException(((FalseAnswer) msg.data));
-		} else
-			return null;
+		}
+		return result;
 	}
 
 	/**
@@ -798,27 +795,26 @@ public class Network {
 	 * @throws NoConnectionException
 	 * @throws CommunicationException
 	 */
+	// http://stackoverflow.com/a/509288/1642090
+	@SuppressWarnings("unchecked")
 	public HashMap<String, User> getConnectionAccountList(String adapterId) throws NoConnectionException, CommunicationException, FalseException {
 		String messageToSend = XmlCreator.createGetConAccount(Integer.toString(mSessionId), adapterId);
 		ParsedMessage msg = doRequest(messageToSend);
 
+		HashMap<String, User> result = new HashMap<String, User>();
+		
 		if (msg.getState() == State.CONACCOUNTLIST) {
 			Log.d("IHA - Network", msg.getState().toString());
 
-			// http://stackoverflow.com/a/509288/1642090
-			@SuppressWarnings("unchecked")
-			HashMap<String, User> result = (HashMap<String, User>) msg.data;
-
-			return result;
-
+			result.putAll((HashMap<String, User>) msg.data);
 		} else if (msg.getState() == State.RESIGN) {
 			doResign();
 			return getConnectionAccountList(adapterId);
 
 		} else if (msg.getState() == State.FALSE) {
 			throw new FalseException(((FalseAnswer) msg.data));
-		} else
-			return null;
+		}
+		return result;
 	}
 
 	/**
@@ -909,27 +905,26 @@ public class Network {
 	 * @throws NoConnectionException
 	 * @throws CommunicationException
 	 */
+	// http://stackoverflow.com/a/509288/1642090
+	@SuppressWarnings("unchecked")
 	public List<Location> getLocations(String adapterId) throws NoConnectionException, CommunicationException, FalseException {
 		String messageToSend = XmlCreator.createGetRooms(Integer.toString(mSessionId), adapterId);
 		ParsedMessage msg = doRequest(messageToSend);
 
+		List<Location> result = new ArrayList<Location>();
+		
 		if (msg.getState() == State.ROOMS) {
 			Log.d("IHA - Network", msg.getState().getValue());
 
-			// http://stackoverflow.com/a/509288/1642090
-			@SuppressWarnings("unchecked")
-			List<Location> result = (List<Location>) msg.data;
-
-			return result;
-
+			result.addAll((List<Location>) msg.data);
 		} else if (msg.getState() == State.RESIGN) {
 			doResign();
 			return getLocations(adapterId);
 
 		} else if (msg.getState() == State.FALSE) {
 			throw new FalseException(((FalseAnswer) msg.data));
-		} else
-			return null;
+		}
+		return result;
 	}
 
 	/**
@@ -989,22 +984,19 @@ public class Network {
 	public Location createLocation(String adapterId, Location location) throws NoConnectionException, CommunicationException, FalseException {
 		String messageToSend = XmlCreator.createAddRooms(Integer.toString(mSessionId), adapterId, location);
 		ParsedMessage msg = doRequest(messageToSend);
-
+		
 		if (msg.getState() == State.ROOMCREATED) {
 			Log.d("IHA - Network", msg.getState().getValue());
 
 			location.setId((String) msg.data);
-
-			return location;
-
 		} else if (msg.getState() == State.RESIGN) {
 			doResign();
 			return createLocation(adapterId, location);
 
 		} else if (msg.getState() == State.FALSE) {
 			throw new FalseException(((FalseAnswer) msg.data));
-		} else
-			return null;
+		}
+		return location;
 	}
 
 	// TODO: GetAlerts
