@@ -32,7 +32,6 @@ import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.util.Log;
-import cz.vutbr.fit.iha.User;
 import cz.vutbr.fit.iha.activity.LoginActivity;
 import cz.vutbr.fit.iha.adapter.Adapter;
 import cz.vutbr.fit.iha.adapter.device.BaseDevice;
@@ -50,6 +49,8 @@ import cz.vutbr.fit.iha.exception.NoConnectionException;
 import cz.vutbr.fit.iha.exception.NotImplementedException;
 import cz.vutbr.fit.iha.exception.NotRegAException;
 import cz.vutbr.fit.iha.exception.NotRegBException;
+import cz.vutbr.fit.iha.household.ActualUser;
+import cz.vutbr.fit.iha.household.User;
 
 /**
  * Network service that handles communication with server.
