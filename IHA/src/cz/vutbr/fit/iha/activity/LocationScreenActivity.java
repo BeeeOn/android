@@ -85,7 +85,8 @@ public class LocationScreenActivity extends BaseActivity {
 	private static boolean inBackground = false;
 	private static final String BKG = "activityinbackground";
 
-	private static int SENSOR_DETAIL = 1;
+	private final static int REQUEST_SENSOR_DETAIL = 1;
+	private final static int REQUEST_ADD_ADAPTER = 2;
 
 	private Location mActiveLocation;
 	private String mActiveLocationId;
@@ -105,6 +106,8 @@ public class LocationScreenActivity extends BaseActivity {
 
 	private boolean backPressed = false;
 
+	
+	
 	/**
 	 * Constant to tag InfoDIalogFragment
 	 */
@@ -132,6 +135,8 @@ public class LocationScreenActivity extends BaseActivity {
 			if (mActiveLocationId != null)
 				mOrientation = true;
 		}
+		
+		initMenu();
 	}
 
 	public void onResume() {
@@ -210,54 +215,31 @@ public class LocationScreenActivity extends BaseActivity {
 		mOrientation = false;
 	}
 
-	public boolean getLocations(List<Location> locs) {
-
-		Log.d(TAG, "ready to work with Locations");
-		mTitle = mDrawerTitle = "IHA";
-
-		// Locate DrawerLayout in activity_location_screen.xml
-		mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-
-		// Locate ListView in activity_location_screen.xml
-		mDrawerList = (StickyListHeadersListView) findViewById(R.id.listview_drawer);
-
-		// Set a custom shadow that overlays the main content when the drawer
-		// opens
-		mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow,
-				GravityCompat.START);
-
-		// Pass string arrays to MenuListAdapter
-		mMenuAdapter = new MenuListAdapter(LocationScreenActivity.this);
+	/**
+	 * Use Thread to call it or for refreshing Menu use redrawMenu() instead.
+	 */
+	private MenuListAdapter getMenuAdapter() {
+		MenuListAdapter menuAdapter = new MenuListAdapter(LocationScreenActivity.this);
 
 		// FIXME zmenit obrazek na obrazek uzivatele
 		Bitmap largeIcon = BitmapFactory.decodeResource(getResources(), R.drawable.loc_unknown);
 
 		ActualUser actUser = mController.getActualUser();
 
-		// mMenuAdapter.addHeader(new GroupMenuItem("GROUP1"));
-		// mMenuAdapter.addItem(new GroupMenuItem("1:Item1"));
-		// mMenuAdapter.addItem(new GroupMenuItem("1:Item2"));
-		// mMenuAdapter.addItem(new GroupMenuItem("1:Item3"));
-		//
-		// mMenuAdapter.addHeader(new GroupMenuItem("GROUP2"));
-		// mMenuAdapter.addItem(new GroupMenuItem("2:Item1"));
-		// mMenuAdapter.addItem(new GroupMenuItem("2:Item2"));
-		// mMenuAdapter.addItem(new GroupMenuItem("2:Item3"));
-
 		// Adding profile header
-		mMenuAdapter.addHeader(new ProfileMenuItem(actUser.getName(), actUser
+		menuAdapter.addHeader(new ProfileMenuItem(actUser.getName(), actUser
 				.getEmail(), largeIcon));
 
 		List<Adapter> adapters = mController.getAdapters();
 		if (adapters.size() > 1) {
 			// Adding separator as item (we don't want to let it float as
 			// header)
-			mMenuAdapter.addItem(new SeparatorMenuItem());
+			menuAdapter.addItem(new SeparatorMenuItem());
 
 			// Adding adapters
 			Adapter chosenAdapter = mController.getActiveAdapter();
 			for (Adapter actAdapter : adapters) {
-				mMenuAdapter
+				menuAdapter
 						.addItem(new AdapterMenuItem(actAdapter.getName(),
 								actAdapter.getRole().name(), chosenAdapter
 										.getId().equals(actAdapter.getId()),
@@ -266,21 +248,21 @@ public class LocationScreenActivity extends BaseActivity {
 		}
 
 		// Adding separator as item (we don't want to let it float as header)
-		mMenuAdapter.addItem(new SeparatorMenuItem());
+		menuAdapter.addItem(new SeparatorMenuItem());
 
 		// Adding location header
-		mMenuAdapter.addHeader(new GroupMenuItem(getResources().getString(
+		menuAdapter.addHeader(new GroupMenuItem(getResources().getString(
 				R.string.location)));
 
 		// Adding location
-		for (int i = 0; i < locs.size(); i++) {
-			Location actLoc = locs.get(i);
-			mMenuAdapter.addItem(new LocationMenuItem(actLoc.getName(), actLoc
+		for (int i = 0; i < mLocations.size(); i++) {
+			Location actLoc = mLocations.get(i);
+			menuAdapter.addItem(new LocationMenuItem(actLoc.getName(), actLoc
 					.getIconResource(), i != 0, actLoc.getId()));
 		}
 
 		// Adding custom view header
-		mMenuAdapter.addHeader(new GroupImageMenuItem(getResources().getString(
+		menuAdapter.addHeader(new GroupImageMenuItem(getResources().getString(
 				R.string.custom_view), R.drawable.add_custom_view,
 				new OnClickListener() {
 
@@ -297,20 +279,39 @@ public class LocationScreenActivity extends BaseActivity {
 		// TODO pridat custom views
 
 		// Adding separator as header
-		mMenuAdapter.addItem(new SeparatorMenuItem());
+		menuAdapter.addItem(new SeparatorMenuItem());
 
 		// Adding settings, about etc.
-		mMenuAdapter.addItem(new SettingMenuItem(getResources().getString(
+		menuAdapter.addItem(new SettingMenuItem(getResources().getString(
 				R.string.action_settings), R.drawable.loc_unknown,
 				cz.vutbr.fit.iha.activity.menuItem.MenuItem.ID_SETTINGS));
-		mMenuAdapter.addItem(new SettingMenuItem(getResources().getString(
+		menuAdapter.addItem(new SettingMenuItem(getResources().getString(
 				R.string.action_about), R.drawable.loc_unknown,
 				cz.vutbr.fit.iha.activity.menuItem.MenuItem.ID_ABOUT));
 
-		// mMenuAdapter.log();
+		// menuAdapter.log();
+		return menuAdapter;
+	}
+	
+	public boolean initMenu() {
 
-		// Set the MenuListAdapter to the ListView
-		mDrawerList.setAdapter(mMenuAdapter);
+		Log.d(TAG, "ready to work with Locations");
+		mTitle = mDrawerTitle = "IHA";
+
+		// Locate DrawerLayout in activity_location_screen.xml
+		mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+
+		// Locate ListView in activity_location_screen.xml
+		mDrawerList = (StickyListHeadersListView) findViewById(R.id.listview_drawer);
+
+		// Set a custom shadow that overlays the main content when the drawer
+		// opens
+		mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow,
+				GravityCompat.START);
+
+		 
+//		// Set the MenuListAdapter to the ListView
+//		mDrawerList.setAdapter(mMenuAdapter);
 
 		// Capture listview menu item click
 		mDrawerList.setOnItemClickListener(new OnItemClickListener() {
@@ -385,7 +386,7 @@ public class LocationScreenActivity extends BaseActivity {
 					Intent intent = new Intent(mActivity,
 							LocationDetailActivity.class);
 					intent.putExtras(bundle);
-					startActivityForResult(intent, SENSOR_DETAIL);
+					startActivityForResult(intent, REQUEST_SENSOR_DETAIL);
 					break;
 				default:
 					// do nothing
@@ -509,7 +510,7 @@ public class LocationScreenActivity extends BaseActivity {
 				Intent intent = new Intent(mActivity,
 						SensorDetailActivity.class);
 				intent.putExtras(bundle);
-				startActivityForResult(intent, SENSOR_DETAIL);
+				startActivityForResult(intent, REQUEST_SENSOR_DETAIL);
 				// startActivity(intent);
 				// finish();
 			}
@@ -523,7 +524,9 @@ public class LocationScreenActivity extends BaseActivity {
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
-		if (requestCode == SENSOR_DETAIL) {
+		
+		
+		if (requestCode == REQUEST_SENSOR_DETAIL) {
 			inBackground = true;
 			setSupportProgressBarIndeterminateVisibility(false);
 
@@ -532,8 +535,29 @@ public class LocationScreenActivity extends BaseActivity {
 
 			Log.d(TAG, "Here");
 		}
+		else if (requestCode == REQUEST_ADD_ADAPTER) {
+			redrawMenu();
+		}
 	}
 
+	/**
+	 * New thread, it takes changes from server and refresh menu items
+	 */
+	protected void redrawMenu() {
+		new AsyncTask<Void, Void, MenuListAdapter>() {
+
+			@Override
+			protected MenuListAdapter doInBackground(Void... params) {
+				return getMenuAdapter();
+			}
+			
+			protected void onPostExecute(MenuListAdapter result) {
+				setNewAdapterRedraw(result);
+			};
+			
+		}.execute();
+	}
+	
 	@Override
 	protected void onPostCreate(Bundle savedInstanceState) {
 		super.onPostCreate(savedInstanceState);
@@ -585,7 +609,7 @@ public class LocationScreenActivity extends BaseActivity {
 			Bundle bundle = new Bundle();
 			bundle.putBoolean("Cancel", true);
 			intent.putExtras(bundle);
-			startActivity(intent);
+			startActivityForResult(intent, REQUEST_ADD_ADAPTER);
 			break;
 		}
 		case R.id.action_addsensor: {
@@ -681,6 +705,11 @@ public class LocationScreenActivity extends BaseActivity {
 		task.execute(new Location[] { mActiveLocation });
 	}
 
+	private void setNewAdapterRedraw(MenuListAdapter adapter) {
+		mMenuAdapter = adapter;
+		mDrawerList.setAdapter(mMenuAdapter);
+	}
+	
 	/**
 	 * Loads locations, checks for uninitialized devices and eventually shows
 	 * dialog for adding them
@@ -715,7 +744,8 @@ public class LocationScreenActivity extends BaseActivity {
 		@Override
 		protected void onPostExecute(final List<BaseDevice> uninitializedDevices) {
 			// Redraw locations
-			getLocations(mLocations);
+			setNewAdapterRedraw(getMenuAdapter());
+			
 			onOrientationChanged();
 
 			// Do something with uninitialized devices
