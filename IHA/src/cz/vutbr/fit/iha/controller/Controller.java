@@ -185,6 +185,9 @@ public final class Controller {
 		
 		if (newAdapter == null)
 			return false;
+		
+		if (newLocations == null)
+			newLocations = new ArrayList<Location>();
 
 		// Update adapter with new data
 		adapter.setLocations(newLocations);
