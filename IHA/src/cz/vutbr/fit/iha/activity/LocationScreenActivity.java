@@ -106,7 +106,12 @@ public class LocationScreenActivity extends BaseActivity {
 	private Handler mTimeHandler = new Handler();
 	private Runnable mTimeRun;
 
-	private DevicesTask mTask;
+	/**
+	 * Tasks which can be running in this activity and after finishing can try 
+	 * to change GUI -> must be cancelled when activity stop
+	 */
+	private DevicesTask mDevicesTask;
+	private ChangeLocationTask mChangeLocationTask;
 
 	//
 	ActionMode mMode;
@@ -160,10 +165,14 @@ public class LocationScreenActivity extends BaseActivity {
 	public void onDestroy() {
 		super.onDestroy();
 		Log.d(TAG, "onDestroy");
-		if (mTask != null) {
-			if (mTask.getDialog() != null) {
-				mTask.getDialog().dismiss();
+		if (mDevicesTask != null) {
+			mDevicesTask.cancel(true);
+			if (mDevicesTask.getDialog() != null) {
+				mDevicesTask.getDialog().dismiss();
 			}
+		}
+		if (mChangeLocationTask != null) {
+			mChangeLocationTask.cancel(true);
 		}
 	}
 
@@ -558,8 +567,8 @@ public class LocationScreenActivity extends BaseActivity {
 		setSupportProgressBarIndeterminate(true);
 		setSupportProgressBarIndeterminateVisibility(true);
 		// if (!inBackground) {
-		mTask = new DevicesTask();
-		mTask.execute();
+		mDevicesTask = new DevicesTask();
+		mDevicesTask.execute();
 		// }
 	}
 
@@ -706,8 +715,8 @@ public class LocationScreenActivity extends BaseActivity {
 			return;
 
 		setSupportProgressBarIndeterminateVisibility(true);
-		ChangeLocationTask task = new ChangeLocationTask();
-		task.execute(new Location[] { mActiveLocation });
+		mChangeLocationTask = new ChangeLocationTask();
+		mChangeLocationTask.execute(new Location[] { mActiveLocation });
 	}
 
 	private void setNewAdapterRedraw(MenuListAdapter adapter) {
