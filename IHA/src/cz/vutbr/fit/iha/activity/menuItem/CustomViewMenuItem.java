@@ -1,10 +1,9 @@
 package cz.vutbr.fit.iha.activity.menuItem;
 
-import cz.vutbr.fit.iha.R;
-import android.graphics.Bitmap;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import cz.vutbr.fit.iha.R;
 
 public class CustomViewMenuItem extends AbstractMenuItem {
 	private String mName;

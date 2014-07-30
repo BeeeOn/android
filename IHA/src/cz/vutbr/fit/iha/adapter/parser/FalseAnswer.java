@@ -3,7 +3,6 @@
  */
 package cz.vutbr.fit.iha.adapter.parser;
 
-import java.util.ArrayList;
 
 /**
  * 

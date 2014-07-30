@@ -2,12 +2,10 @@ package cz.vutbr.fit.iha.activity;
 
 import java.text.DateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
-import android.app.Fragment;
 import android.content.Context;
 import android.graphics.Color;
 import android.os.AsyncTask;
@@ -19,9 +17,6 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.View.OnGenericMotionListener;
-import android.view.View.OnHoverListener;
-import android.view.View.OnLongClickListener;
 import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
@@ -48,11 +43,9 @@ import cz.vutbr.fit.iha.R;
 import cz.vutbr.fit.iha.RefreshInterval;
 import cz.vutbr.fit.iha.adapter.device.BaseDevice;
 import cz.vutbr.fit.iha.adapter.location.Location;
-import cz.vutbr.fit.iha.adapter.location.Location.DefaultRoom;
 import cz.vutbr.fit.iha.adapter.parser.ContentRow;
 import cz.vutbr.fit.iha.controller.Controller;
 //import android.widget.LinearLayout;
-import cz.vutbr.fit.iha.view.CustomViewPager;
 
 public class SensorDetailFragment extends SherlockFragment {
 

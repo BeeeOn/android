@@ -9,8 +9,8 @@ import android.view.ViewGroup;
 import com.actionbarsherlock.app.SherlockFragment;
 
 import cz.vutbr.fit.iha.R;
-//import cz.vutbr.fit.iha.activity.SensorDetailFragment.GetDeviceTask;
 import cz.vutbr.fit.iha.controller.Controller;
+//import cz.vutbr.fit.iha.activity.SensorDetailFragment.GetDeviceTask;
 
 public class LocationDetailFragment extends SherlockFragment {
 
