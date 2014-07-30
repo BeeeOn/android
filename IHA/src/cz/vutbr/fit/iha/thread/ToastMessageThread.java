@@ -13,6 +13,8 @@ import android.widget.Toast;
  */
 public class ToastMessageThread implements Runnable{
 
+	private static final String TAG = ToastMessageThread.class.getSimpleName();
+
 	private String mMessage;
 	private Activity mActivity;
 	
@@ -28,7 +30,7 @@ public class ToastMessageThread implements Runnable{
 
 	@Override
 	public void run() {
-		Log.d("ToastMessageThred", mMessage);
+		Log.d(TAG, mMessage);
 		Toast.makeText(mActivity, mMessage, Toast.LENGTH_LONG).show();
 	}
 	

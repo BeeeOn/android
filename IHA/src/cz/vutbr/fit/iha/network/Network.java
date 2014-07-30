@@ -60,6 +60,8 @@ import cz.vutbr.fit.iha.household.User;
  */
 public class Network {
 
+	private static final String TAG = Network.class.getSimpleName();
+
 	public static final String SIGNIN = "signin";
 	public static final String SIGNUP = "signup";
 
@@ -235,10 +237,10 @@ public class Network {
 
 		try {
 			String result = startCommunication(messageToSend);
-			Log.d("IHA - Network fromApp", messageToSend);
+			Log.d(TAG + " - fromApp", messageToSend);
 
 			msg = XmlParsers.parseCommunication(result, false);
-			Log.d("IHA - Network fromSrv", result);
+			Log.d(TAG + " - fromSrv", result);
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw new CommunicationException(e);
@@ -259,7 +261,7 @@ public class Network {
 		try {
 			do {
 				googleToken = GetGoogleAuth.getGetGoogleAuth().getToken();
-				Log.d("IHA - Network - SignIn - token", googleToken);
+				Log.d(TAG + " - SignIn - token", googleToken);
 			} while (googleToken.equalsIgnoreCase(""));
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -295,7 +297,7 @@ public class Network {
 		ParsedMessage msg = doRequest(messageToSend);
 
 		if (msg.getSessionId() != 0 && msg.getState() == State.TRUE && ((String)msg.data).equals(SIGNIN)) {
-			Log.d("IHA - Network", msg.getState().getValue());
+			Log.d(TAG, msg.getState().getValue());
 
 			mUser.setSessionId(Integer.toString(msg.getSessionId()));
 			mSessionId = msg.getSessionId();
@@ -341,7 +343,7 @@ public class Network {
 		ParsedMessage msg = doRequest(messageToSend);
 
 		if (msg.getSessionId() != 0 && msg.getState() == State.TRUE && ((String) msg.data).equals(SIGNUP)) {
-			Log.d("IHA - Network", msg.getState().getValue());
+			Log.d(TAG, msg.getState().getValue());
 
 			mUser.setSessionId(Integer.toString(msg.getSessionId()));
 			mSessionId = msg.getSessionId();
@@ -371,7 +373,7 @@ public class Network {
 		List<Adapter> result = new ArrayList<Adapter>();
 
 		if (msg.getState() == State.READY) {
-			Log.d("IHA - Network", msg.getState().getValue());
+			Log.d(TAG, msg.getState().getValue());
 
 			result.addAll((List<Adapter>) msg.data);
 		} else if (msg.getState() == State.RESIGN) {
@@ -399,7 +401,7 @@ public class Network {
 		Adapter result = new Adapter();
 
 		if (msg.getState() == State.XML) {
-			Log.d("IHA - Network", msg.getState().getValue());
+			Log.d(TAG, msg.getState().getValue());
 
 			result = (Adapter) msg.data;
 		} else if (msg.getState() == State.RESIGN) {
@@ -427,7 +429,7 @@ public class Network {
 		ParsedMessage msg = doRequest(messageToSend);
 
 		if (msg.getState() == State.TRUE) {
-			Log.d("IHA - Network", msg.getState().getValue());
+			Log.d(TAG, msg.getState().getValue());
 
 			return true;
 
@@ -454,7 +456,7 @@ public class Network {
 		ParsedMessage msg = doRequest(messageToSend);
 
 		if (msg.getState() == State.TRUE) {
-			Log.d("IHA - Network", msg.getState().getValue());
+			Log.d(TAG, msg.getState().getValue());
 
 			return true;
 
@@ -481,7 +483,7 @@ public class Network {
 		ParsedMessage msg = doRequest(messageToSend);
 		
 		if (msg.getState() == State.TRUE) {
-			Log.d("IHA - Network", msg.getState().getValue());
+			Log.d(TAG, msg.getState().getValue());
 
 			return true;
 
@@ -508,7 +510,7 @@ public class Network {
 		ParsedMessage msg = doRequest(messageToSend);
 		
 		if (msg.getState() == State.TRUE) {
-			Log.d("IHA - Network", msg.getState().getValue());
+			Log.d(TAG, msg.getState().getValue());
 
 			return true;
 
@@ -536,7 +538,7 @@ public class Network {
 		ParsedMessage msg = doRequest(messageToSend);
 		
 		if (msg.getState() == State.TRUE) {
-			Log.d("IHA - Network", msg.getState().getValue());
+			Log.d(TAG, msg.getState().getValue());
 
 			return true;
 
@@ -567,7 +569,7 @@ public class Network {
 		List<BaseDevice> result = new ArrayList<BaseDevice>();
 
 		if (msg.getState() == State.PARTIAL) {
-			Log.d("IHA - Network", msg.getState().getValue());
+			Log.d(TAG, msg.getState().getValue());
 			
 			result.addAll((List<BaseDevice>) msg.data);
 		} else if (msg.getState() == State.RESIGN) {
@@ -603,7 +605,7 @@ public class Network {
 		List<ContentRow> result = new ArrayList<ContentRow>();
 
 		if (msg.getState() == State.CONTENT) {
-			Log.d("IHA - Network", msg.getState().getValue());
+			Log.d(TAG, msg.getState().getValue());
 
 			result.addAll((List<ContentRow>) msg.data);
 		} else if (msg.getState() == State.RESIGN) {
@@ -634,7 +636,7 @@ public class Network {
 		ParsedMessage msg = doRequest(messageToSend);
 
 		if (msg.getState() == State.TRUE) {
-			Log.d("IHA - Network", msg.getState().getValue());
+			Log.d(TAG, msg.getState().getValue());
 
 			return true;
 
@@ -664,7 +666,7 @@ public class Network {
 		List<CustomViewPair> result = new ArrayList<CustomViewPair>();
 		
 		if (msg.getState() == State.VIEWSLIST) {
-			Log.d("IHA - Network", msg.getState().getValue());
+			Log.d(TAG, msg.getState().getValue());
 
 			result.addAll((List<CustomViewPair>) msg.data);
 		} else if (msg.getState() == State.RESIGN) {
@@ -691,7 +693,7 @@ public class Network {
 		ParsedMessage msg = doRequest(messageToSend);
 
 		if (msg.getState() == State.TRUE) {
-			Log.d("IHA - Network", msg.getState().getValue());
+			Log.d(TAG, msg.getState().getValue());
 
 			return true;
 
@@ -722,7 +724,7 @@ public class Network {
 		ParsedMessage msg = doRequest(messageToSend);
 
 		if (msg.getState() == State.TRUE) {
-			Log.d("IHA - Network", msg.getState().getValue());
+			Log.d(TAG, msg.getState().getValue());
 
 			return true;
 
@@ -749,7 +751,7 @@ public class Network {
 		ParsedMessage msg = doRequest(messageToSend);
 
 		if (msg.getState() == State.TRUE) {
-			Log.d("IHA - Network", msg.getState().getValue());
+			Log.d(TAG, msg.getState().getValue());
 
 			return true;
 
@@ -776,7 +778,7 @@ public class Network {
 		ParsedMessage msg = doRequest(messageToSend);
 
 		if (msg.getState() == State.TRUE) {
-			Log.d("IHA - Network", msg.getState().getValue());
+			Log.d(TAG, msg.getState().getValue());
 
 			return true;
 
@@ -805,7 +807,7 @@ public class Network {
 		HashMap<String, User> result = new HashMap<String, User>();
 		
 		if (msg.getState() == State.CONACCOUNTLIST) {
-			Log.d("IHA - Network", msg.getState().toString());
+			Log.d(TAG, msg.getState().toString());
 
 			result.putAll((HashMap<String, User>) msg.data);
 		} else if (msg.getState() == State.RESIGN) {
@@ -832,7 +834,7 @@ public class Network {
 		ParsedMessage msg = doRequest(messageToSend);
 
 		if (msg.getState() == State.TRUE) {
-			Log.d("IHA - Network", msg.getState().toString());
+			Log.d(TAG, msg.getState().toString());
 
 			return true;
 
@@ -859,7 +861,7 @@ public class Network {
 		ParsedMessage msg = doRequest(messageToSend);
 
 		if (msg.getState() == State.TRUE) {
-			Log.d("IHA - Network", msg.getState().getValue());
+			Log.d(TAG, msg.getState().getValue());
 
 			return true;
 
@@ -885,7 +887,7 @@ public class Network {
 		ParsedMessage msg = doRequest(messageToSend);
 
 		if (msg.getState() == State.TIMEZONE) {
-			Log.d("IHA - Network", msg.getState().getValue());
+			Log.d(TAG, msg.getState().getValue());
 
 			return (Integer) msg.data;
 
@@ -915,7 +917,7 @@ public class Network {
 		List<Location> result = new ArrayList<Location>();
 		
 		if (msg.getState() == State.ROOMS) {
-			Log.d("IHA - Network", msg.getState().getValue());
+			Log.d(TAG, msg.getState().getValue());
 
 			result.addAll((List<Location>) msg.data);
 		} else if (msg.getState() == State.RESIGN) {
@@ -942,7 +944,7 @@ public class Network {
 		ParsedMessage msg = doRequest(messageToSend);
 
 		if (msg.getState() == State.TRUE) {
-			Log.d("IHA - Network", msg.getState().getValue());
+			Log.d(TAG, msg.getState().getValue());
 
 			return true;
 
@@ -968,7 +970,7 @@ public class Network {
 		ParsedMessage msg = doRequest(messageToSend);
 
 		if (msg.getState() == State.TRUE) {
-			Log.d("IHA - Network", msg.getState().getValue());
+			Log.d(TAG, msg.getState().getValue());
 
 			return true;
 
@@ -987,7 +989,7 @@ public class Network {
 		ParsedMessage msg = doRequest(messageToSend);
 		
 		if (msg.getState() == State.ROOMCREATED) {
-			Log.d("IHA - Network", msg.getState().getValue());
+			Log.d(TAG, msg.getState().getValue());
 
 			location.setId((String) msg.data);
 		} else if (msg.getState() == State.RESIGN) {

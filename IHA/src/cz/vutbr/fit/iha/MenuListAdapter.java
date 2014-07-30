@@ -19,6 +19,8 @@ import android.widget.SectionIndexer;
  */
 public class MenuListAdapter extends BaseAdapter implements
 		StickyListHeadersAdapter, SectionIndexer {
+	private static final String TAG = MenuListAdapter.class.getSimpleName();
+	
 	private final Context mContext;
 
 	private LayoutInflater mInflater;
@@ -122,30 +124,30 @@ public class MenuListAdapter extends BaseAdapter implements
 	}
 	
 	public void log() {
-		Log.i("MENU","ITEMS:");
+		Log.i(TAG,"ITEMS:");
 		for (int i = 0; i < mListItem.size(); i++) {
-			Log.i("MENU","  " + String.valueOf(i) + ": "+mListItem.get(i).getId());
+			Log.i(TAG,"  " + String.valueOf(i) + ": "+mListItem.get(i).getId());
 		}
 		
-		Log.i("MENU","###########################");
+		Log.i(TAG,"###########################");
 		
-		Log.i("MENU", "HEADERS:");
+		Log.i(TAG, "HEADERS:");
 		for (int i = 0; i < mListHeader.size(); i++) {
-			Log.i("MENU","  " + String.valueOf(i) + ": "+mListHeader.get(i).getId());
+			Log.i(TAG,"  " + String.valueOf(i) + ": "+mListHeader.get(i).getId());
 		}
 		
-		Log.i("MENU","###########################");
+		Log.i(TAG,"###########################");
 		
-//		Log.i("MENU", "ALL:");
+//		Log.i(TAG, "ALL:");
 //		for (int i = 0; i < mListAllItems.size(); i++) {
-//			Log.i("MENU","  " + String.valueOf(i) + ": "+mListAllItems.get(i).getId());
+//			Log.i(TAG,"  " + String.valueOf(i) + ": "+mListAllItems.get(i).getId());
 //		}
 		
-		Log.i("MENU","###########################");
+		Log.i(TAG,"###########################");
 		
-		Log.i("MENU","POSITIONS:");
+		Log.i(TAG,"POSITIONS:");
 		for (Integer actItem:mListHeaderPos) {
-			Log.i("MENU", "  " + String.valueOf(actItem));
+			Log.i(TAG, "  " + String.valueOf(actItem));
 		}
 	}
 }

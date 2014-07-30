@@ -63,6 +63,7 @@ import cz.vutbr.fit.iha.household.ActualUser;
  * 
  */
 public class LocationScreenActivity extends BaseActivity {
+	private static final String TAG = LocationScreenActivity.class.getSimpleName();
 
 	private Controller mController;
 	private LocationScreenActivity mActivity;
@@ -79,8 +80,6 @@ public class LocationScreenActivity extends BaseActivity {
 	private ListView mSensorList;
 
 	private CharSequence mTitle;
-
-	private static final String TAG = "Location";
 
 	private static boolean inBackground = false;
 
@@ -230,7 +229,7 @@ public class LocationScreenActivity extends BaseActivity {
 			if (!mIsDrawerOpen) {
 				// Close drawer
 				mDrawerLayout.closeDrawer(mDrawerList);
-				Log.d("LifeCycle", "onOrientation");
+				Log.d(TAG, "LifeCycle: onOrientation");
 			}
 		}
 		mOrientation = false;
@@ -464,7 +463,7 @@ public class LocationScreenActivity extends BaseActivity {
 	}
 
 	public boolean getSensors(final List<BaseDevice> sensors) {
-		Log.d("LifeCycle", "getsensors start");
+		Log.d(TAG, "LifeCycle: getsensors start");
 
 		// TODO: this works, but its not the best solution
 		if (!ListOfSensors.ready) {
@@ -473,15 +472,15 @@ public class LocationScreenActivity extends BaseActivity {
 				@Override
 				public void run() {
 					getSensors(mSensors);
-					Log.d("LifeCycle", "getsensors in timer");
+					Log.d(TAG, "LifeCycle: getsensors in timer");
 				}
 			};
 			mTimeHandler.postDelayed(mTimeRun, 500);
-			Log.d("LifeCycle", "getsensors timer run");
+			Log.d(TAG, "LifeCycle: getsensors timer run");
 			return false;
 		}
 		mTimeHandler.removeCallbacks(mTimeRun);
-		Log.d("LifeCycle", "getsensors timer remove");
+		Log.d(TAG, "LifeCycle: getsensors timer remove");
 
 		String[] title;
 		String[] value;
@@ -505,7 +504,7 @@ public class LocationScreenActivity extends BaseActivity {
 		mSensorList = (ListView) findViewById(R.id.listviewofsensors);
 		if (mSensorList == null) {
 			setSupportProgressBarIndeterminateVisibility(false);
-			Log.e("LifeCycle", "bad timing or what?");
+			Log.e(TAG, "LifeCycle: bad timing or what?");
 			return false; // TODO: this happens when we're in different activity
 							// (detail), fix that by changing that activity
 							// (fragment?) first?
@@ -539,7 +538,7 @@ public class LocationScreenActivity extends BaseActivity {
 		});
 
 		this.setSupportProgressBarIndeterminateVisibility(false);
-		Log.d("LifeCycle", "getsensors end");
+		Log.d(TAG, "LifeCycle: getsensors end");
 		return true;
 	}
 
@@ -809,7 +808,7 @@ public class LocationScreenActivity extends BaseActivity {
 					});
 
 			mDialog.show();
-			Log.d("LifeCycle", "devicetask");
+			Log.d(TAG, "LifeCycle: devicetask");
 		}
 	}
 

@@ -15,6 +15,8 @@ import cz.vutbr.fit.iha.controller.Controller;
  */
 public class AdapterRegisterThread implements Runnable{
 
+	private static final String TAG = AdapterRegisterThread.class.getSimpleName();
+
 	private String mSerialNumber;
 	private Activity mActivity;
 	
@@ -30,7 +32,7 @@ public class AdapterRegisterThread implements Runnable{
 	public void run() {
 		Controller ctrl = Controller.getInstance(mActivity);
 		boolean result = ctrl.registerAdapter(mSerialNumber);
-		Log.d("THREAD in adapter", result+"");
+		Log.d(TAG, result+"");
 		if(result){
 			ctrl.reloadAdapters();
 			mActivity.runOnUiThread(new ToastMessageThread(mActivity, "Adapter has been activated."));

@@ -18,6 +18,8 @@ import cz.vutbr.fit.iha.thread.AdapterRegisterThread;
 
 public class AddAdapterActivityDialog extends BaseActivityDialog {
 
+	private static final String TAG = AddAdapterActivityDialog.class.getSimpleName();
+
 	public AddAdapterActivityDialog mActivity;
 
 	@Override
@@ -64,7 +66,7 @@ public class AddAdapterActivityDialog extends BaseActivityDialog {
 			@Override
 			public void onClick(View v) {
 				EditText serialNuber = (EditText) findViewById(R.id.addadapter_ser_num);
-				Log.i("seriove cislo", serialNuber.getText().toString());
+				Log.i(TAG, "seriove cislo: " + serialNuber.getText().toString());
 
 				new Thread(new AdapterRegisterThread(serialNuber.getText().toString(), mActivity)).start();
 			}
@@ -95,7 +97,7 @@ public class AddAdapterActivityDialog extends BaseActivityDialog {
 
 			if (resultCode == RESULT_OK) {
 				String contents = data.getStringExtra("SCAN_RESULT");
-				Log.i("seriove cislo", contents);
+				Log.i(TAG, "seriove cislo: " + contents);
 				new Thread(new AdapterRegisterThread(contents, mActivity)).start();
 			}
 			if (resultCode == RESULT_CANCELED) {
