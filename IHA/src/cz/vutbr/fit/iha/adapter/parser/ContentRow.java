@@ -78,13 +78,10 @@ public class ContentRow {
 	 */
 	@SuppressLint("SimpleDateFormat")
 	public String debugString(){
-		String result = "";
-		
-		result += new SimpleDateFormat(DATEFORMAT).format(mDate) + " ";
-		result += new SimpleDateFormat(TIMEFORMAT).format(mTime) + " ";
-		result += mValue + "\n";
-		
-		return result;
+		return String.format("%s %s %s\n",
+			new SimpleDateFormat(DATEFORMAT).format(mDate),
+			new SimpleDateFormat(TIMEFORMAT).format(mTime),
+			mValue);
 	}
 
 }

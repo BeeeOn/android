@@ -72,7 +72,7 @@ public class SensorListAdapter extends BaseAdapter {
         txtTitle.setText(mTitle[position]);
         txtValue.setText(mValue[position]);
         txtUnit.setText(mUnit[position]);
-        txtTime.setText(context.getString(R.string.last_update)+" "+setLastUpdate(mTime[position]));
+        txtTime.setText(String.format("%s %s", context.getString(R.string.last_update), setLastUpdate(mTime[position])));
  
         // Set the results into ImageView
         imgIcon.setImageResource(mIcon[position]);

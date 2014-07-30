@@ -36,10 +36,8 @@ public class InfoDialogFragment extends TrackDialogFragment {
 
 		version = (TextView) view.findViewById(R.id.version);
 		try {
-			version.setText(getString(R.string.version)
-					+ " "
-					+ getActivity().getPackageManager().getPackageInfo(
-							getActivity().getPackageName(), 0).versionName);
+			version.setText(String.format("%s %s", getString(R.string.version),
+				getActivity().getPackageManager().getPackageInfo(getActivity().getPackageName(), 0).versionName));
 		} catch (NameNotFoundException e) {
 			version.setText("0.0");
 		}

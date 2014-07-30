@@ -115,11 +115,11 @@ public class AddSensorActivityDialog extends BaseActivityDialog {
 		TextView type = (TextView) findViewById(R.id.addsensor_type);
 
 		if (type != null && typeStringRes > 0) {
-			type.setText(type.getText() + " " + getString(typeStringRes));
+			type.setText(String.format("%s %s", type.getText(), getString(typeStringRes)));
 		}
 
 		TextView time = (TextView) findViewById(R.id.addsensor_involved_time);
-		time.setText(time.getText() + " " + mNewDevice.getInvolveTime());
+		time.setText(String.format("%s %s", time.getText(), mNewDevice.getInvolveTime()));
 	}
 	
 	/**
