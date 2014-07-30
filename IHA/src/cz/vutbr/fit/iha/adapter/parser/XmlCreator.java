@@ -564,7 +564,7 @@ public class XmlCreator {
 			serializer.attribute(ns, STATE, FALSE);
 			serializer.attribute(ns, VERSION, GVER);
 			serializer.attribute(ns, ADDITIONALINFO, additionalInfo);
-			serializer.attribute(ns, ERRCODE, errCode+"");
+			serializer.attribute(ns, ERRCODE, Integer.toString(errCode));
 				
 			if(planeText != null)
 				serializer.text(planeText);
@@ -871,7 +871,7 @@ public class XmlCreator {
 			serializer.attribute(ns, ADAPTER, adapterId);
 			
 				serializer.startTag(ns, TIME);
-				serializer.attribute(ns, UTC, diffToGMT+"");
+				serializer.attribute(ns, UTC, Integer.toString(diffToGMT));
 				serializer.endTag(ns, TIME);
 			
 			serializer.endTag(ns, COM_ROOT);
@@ -962,7 +962,7 @@ public class XmlCreator {
 			for(Location location : locations){
 				serializer.startTag(ns, LOCATION);
 				serializer.attribute(ns, ID, location.getId());
-				serializer.attribute(ns, TYPE,location.getType()+"");
+				serializer.attribute(ns, TYPE, Integer.toString(location.getType()));
 				serializer.text(location.getName());
 				serializer.endTag(ns, LOCATION);
 			}
@@ -997,7 +997,7 @@ public class XmlCreator {
 			serializer.attribute(ns, ADAPTER, adapterId);
 			
 				serializer.startTag(ns, LOCATION);
-				serializer.attribute(ns, TYPE,location.getType()+"");
+				serializer.attribute(ns, TYPE, Integer.toString(location.getType()));
 				serializer.text(location.getName());
 			
 			serializer.endTag(ns, COM_ROOT);

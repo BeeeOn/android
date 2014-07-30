@@ -32,7 +32,7 @@ public class AdapterRegisterThread implements Runnable{
 	public void run() {
 		Controller ctrl = Controller.getInstance(mActivity);
 		boolean result = ctrl.registerAdapter(mSerialNumber);
-		Log.d(TAG, result+"");
+		Log.d(TAG, Boolean.toString(result));
 		if(result){
 			ctrl.reloadAdapters();
 			mActivity.runOnUiThread(new ToastMessageThread(mActivity, "Adapter has been activated."));
