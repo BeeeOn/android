@@ -142,11 +142,9 @@ public class LocationScreenActivity extends BaseActivity {
 	public void onResume() {
 		super.onResume();
 		Log.d(TAG, "onResume  , inBackground: " + String.valueOf(inBackground));
-		if (!inBackground) {
-			mTask = new DevicesTask();
-			mTask.execute();
-		}
+		redrawMenu();
 		backPressed = false;
+		
 	}
 
 	@Override
@@ -221,10 +219,11 @@ public class LocationScreenActivity extends BaseActivity {
 	private MenuListAdapter getMenuAdapter() {
 		MenuListAdapter menuAdapter = new MenuListAdapter(LocationScreenActivity.this);
 
-		// FIXME zmenit obrazek na obrazek uzivatele
-		Bitmap largeIcon = BitmapFactory.decodeResource(getResources(), R.drawable.loc_unknown);
-
 		ActualUser actUser = mController.getActualUser();
+		
+		// FIXME zmenit obrazek na obrazek uzivatele
+		Bitmap largeIcon = BitmapFactory.decodeResource(getResources(), R.drawable.person_siluete);
+
 
 		// Adding profile header
 		menuAdapter.addHeader(new ProfileMenuItem(actUser.getName(), actUser
@@ -544,18 +543,12 @@ public class LocationScreenActivity extends BaseActivity {
 	 * New thread, it takes changes from server and refresh menu items
 	 */
 	protected void redrawMenu() {
-		new AsyncTask<Void, Void, MenuListAdapter>() {
-
-			@Override
-			protected MenuListAdapter doInBackground(Void... params) {
-				return getMenuAdapter();
-			}
-			
-			protected void onPostExecute(MenuListAdapter result) {
-				setNewAdapterRedraw(result);
-			};
-			
-		}.execute();
+		setSupportProgressBarIndeterminate(true);
+		setSupportProgressBarIndeterminateVisibility(true);
+//		if (!inBackground) {
+			mTask = new DevicesTask();
+			mTask.execute();
+//		}
 	}
 	
 	@Override
@@ -748,6 +741,9 @@ public class LocationScreenActivity extends BaseActivity {
 			
 			onOrientationChanged();
 
+			setSupportProgressBarIndeterminate(false);
+			setSupportProgressBarIndeterminateVisibility(false);
+			
 			// Do something with uninitialized devices
 			if (uninitializedDevices.size() == 0)
 				return;
