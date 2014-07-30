@@ -47,13 +47,15 @@
         android:layout_marginBottom="20dp"
         android:ems="10"
         android:hint="@string/addsensor_sensor_name_hint"
-        android:inputType="textNoSuggestions" />
+        android:inputType="textNoSuggestions"
+        android:textColor="@color/log_blue2" />
    
     <Spinner
         android:id="@+id/addsensor_spinner_choose_location"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="25dp" />
+        android:layout_marginBottom="25dp" 
+        />
     
     <TextView
         android:id="@+id/addsensor_or"
@@ -83,7 +85,8 @@
 	        android:layout_height="wrap_content"
 	        android:ems="10"
 	        android:hint="@string/addsensor_new_location_hint"
-	        android:inputType="textNoSuggestions" />
+	        android:inputType="textNoSuggestions" 
+	        android:textColor="@color/log_blue2"/>
     
     </LinearLayout>
 
