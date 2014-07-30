@@ -83,15 +83,25 @@ public class LocationScreenActivity extends BaseActivity {
 	private static final String TAG = "Location";
 
 	private static boolean inBackground = false;
+
+	/**
+	 * Instance save state tags
+	 */
 	private static final String BKG = "activityinbackground";
+	private static final String LCTN = "lastlocation";
+	private static final String IS_DRAWER_OPEN = "draweropen";
 
 	private final static int REQUEST_SENSOR_DETAIL = 1;
 	private final static int REQUEST_ADD_ADAPTER = 2;
 
+	/**
+	 * saved instance states
+	 */
 	private Location mActiveLocation;
 	private String mActiveLocationId;
-	private static final String LCTN = "lastlocation";
 	private static boolean mOrientation = false;
+	private static boolean mIsDrawerOpen;
+
 	private List<BaseDevice> mSensors;
 	private Handler mTimeHandler = new Handler();
 	private Runnable mTimeRun;
@@ -106,8 +116,6 @@ public class LocationScreenActivity extends BaseActivity {
 
 	private boolean backPressed = false;
 
-	
-	
 	/**
 	 * Constant to tag InfoDIalogFragment
 	 */
@@ -131,11 +139,12 @@ public class LocationScreenActivity extends BaseActivity {
 
 		if (savedInstanceState != null) {
 			inBackground = savedInstanceState.getBoolean(BKG);
+			mIsDrawerOpen = savedInstanceState.getBoolean(IS_DRAWER_OPEN);
 			mActiveLocationId = savedInstanceState.getString(LCTN);
 			if (mActiveLocationId != null)
 				mOrientation = true;
 		}
-		
+
 		initMenu();
 	}
 
@@ -144,7 +153,7 @@ public class LocationScreenActivity extends BaseActivity {
 		Log.d(TAG, "onResume  , inBackground: " + String.valueOf(inBackground));
 		redrawMenu();
 		backPressed = false;
-		
+
 	}
 
 	@Override
@@ -174,12 +183,13 @@ public class LocationScreenActivity extends BaseActivity {
 			// Toast.LENGTH_LONG).show();
 			// super.onBackPressed();
 			// this.finish();
-			
+
 			android.os.Process.killProcess(android.os.Process.myPid());
-		} 
+		}
 		// first click
 		else {
-			Toast.makeText(this, getString(R.string.toast_tap_again_exit), Toast.LENGTH_SHORT).show();
+			Toast.makeText(this, getString(R.string.toast_tap_again_exit),
+					Toast.LENGTH_SHORT).show();
 			backPressed = true;
 			if (mDrawerLayout != null)
 				mDrawerLayout.openDrawer(mDrawerList);
@@ -193,6 +203,8 @@ public class LocationScreenActivity extends BaseActivity {
 	public void onSaveInstanceState(Bundle savedInstaceState) {
 		savedInstaceState.putBoolean(BKG, inBackground);
 		savedInstaceState.putString(LCTN, mActiveLocationId);
+		savedInstaceState.putBoolean(IS_DRAWER_OPEN,
+				mDrawerLayout.isDrawerOpen(mDrawerList));
 		super.onSaveInstanceState(savedInstaceState);
 	}
 
@@ -206,9 +218,11 @@ public class LocationScreenActivity extends BaseActivity {
 
 			refreshListing();
 
-			// Close drawer
-			mDrawerLayout.closeDrawer(mDrawerList);
-			Log.d("LifeCycle", "onOrientation");
+			if (!mIsDrawerOpen) {
+				// Close drawer
+				mDrawerLayout.closeDrawer(mDrawerList);
+				Log.d("LifeCycle", "onOrientation");
+			}
 		}
 		mOrientation = false;
 	}
@@ -217,13 +231,14 @@ public class LocationScreenActivity extends BaseActivity {
 	 * Use Thread to call it or for refreshing Menu use redrawMenu() instead.
 	 */
 	private MenuListAdapter getMenuAdapter() {
-		MenuListAdapter menuAdapter = new MenuListAdapter(LocationScreenActivity.this);
+		MenuListAdapter menuAdapter = new MenuListAdapter(
+				LocationScreenActivity.this);
 
 		ActualUser actUser = mController.getActualUser();
-		
-		// FIXME zmenit obrazek na obrazek uzivatele
-		Bitmap largeIcon = BitmapFactory.decodeResource(getResources(), R.drawable.person_siluete);
 
+		// FIXME zmenit obrazek na obrazek uzivatele
+		Bitmap largeIcon = BitmapFactory.decodeResource(getResources(),
+				R.drawable.person_siluete);
 
 		// Adding profile header
 		menuAdapter.addHeader(new ProfileMenuItem(actUser.getName(), actUser
@@ -291,7 +306,7 @@ public class LocationScreenActivity extends BaseActivity {
 		// menuAdapter.log();
 		return menuAdapter;
 	}
-	
+
 	public boolean initMenu() {
 
 		Log.d(TAG, "ready to work with Locations");
@@ -308,9 +323,8 @@ public class LocationScreenActivity extends BaseActivity {
 		mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow,
 				GravityCompat.START);
 
-		 
-//		// Set the MenuListAdapter to the ListView
-//		mDrawerList.setAdapter(mMenuAdapter);
+		// // Set the MenuListAdapter to the ListView
+		// mDrawerList.setAdapter(mMenuAdapter);
 
 		// Capture listview menu item click
 		mDrawerList.setOnItemClickListener(new OnItemClickListener() {
@@ -523,8 +537,7 @@ public class LocationScreenActivity extends BaseActivity {
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
-		
-		
+
 		if (requestCode == REQUEST_SENSOR_DETAIL) {
 			inBackground = true;
 			setSupportProgressBarIndeterminateVisibility(false);
@@ -533,8 +546,7 @@ public class LocationScreenActivity extends BaseActivity {
 			refreshListing();
 
 			Log.d(TAG, "Here");
-		}
-		else if (requestCode == REQUEST_ADD_ADAPTER) {
+		} else if (requestCode == REQUEST_ADD_ADAPTER) {
 			redrawMenu();
 		}
 	}
@@ -545,12 +557,12 @@ public class LocationScreenActivity extends BaseActivity {
 	protected void redrawMenu() {
 		setSupportProgressBarIndeterminate(true);
 		setSupportProgressBarIndeterminateVisibility(true);
-//		if (!inBackground) {
-			mTask = new DevicesTask();
-			mTask.execute();
-//		}
+		// if (!inBackground) {
+		mTask = new DevicesTask();
+		mTask.execute();
+		// }
 	}
-	
+
 	@Override
 	protected void onPostCreate(Bundle savedInstanceState) {
 		super.onPostCreate(savedInstanceState);
@@ -702,7 +714,7 @@ public class LocationScreenActivity extends BaseActivity {
 		mMenuAdapter = adapter;
 		mDrawerList.setAdapter(mMenuAdapter);
 	}
-	
+
 	/**
 	 * Loads locations, checks for uninitialized devices and eventually shows
 	 * dialog for adding them
@@ -738,12 +750,12 @@ public class LocationScreenActivity extends BaseActivity {
 		protected void onPostExecute(final List<BaseDevice> uninitializedDevices) {
 			// Redraw locations
 			setNewAdapterRedraw(getMenuAdapter());
-			
+
 			onOrientationChanged();
 
 			setSupportProgressBarIndeterminate(false);
 			setSupportProgressBarIndeterminateVisibility(false);
-			
+
 			// Do something with uninitialized devices
 			if (uninitializedDevices.size() == 0)
 				return;
