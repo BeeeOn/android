@@ -113,7 +113,7 @@ public class SensorDetailActivity extends BaseActivity
         @Override
         public SensorDetailFragment getItem(int position) {
         	Log.d(TAG, "Here 2 "+ position);
-            return SensorDetailFragment.create(mDevices.get(position).getId(),position,mSensorPosition);
+            return SensorDetailFragment.create(mDevices.get(position).getId(),mDevices.get(position).getLocationId(),position,mSensorPosition);
         }
 
         @Override

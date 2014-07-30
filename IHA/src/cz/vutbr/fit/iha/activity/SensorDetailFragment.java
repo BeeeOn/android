@@ -1,6 +1,8 @@
 package cz.vutbr.fit.iha.activity;
 
 import java.text.DateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -47,6 +49,7 @@ import cz.vutbr.fit.iha.RefreshInterval;
 import cz.vutbr.fit.iha.adapter.device.BaseDevice;
 import cz.vutbr.fit.iha.adapter.location.Location;
 import cz.vutbr.fit.iha.adapter.location.Location.DefaultRoom;
+import cz.vutbr.fit.iha.adapter.parser.ContentRow;
 import cz.vutbr.fit.iha.controller.Controller;
 //import android.widget.LinearLayout;
 import cz.vutbr.fit.iha.view.CustomViewPager;
@@ -87,8 +90,10 @@ public class SensorDetailFragment extends SherlockFragment {
 	public static final String ARG_PAGE = "page";
 	public static final String ARG_CUR_PAGE = "currentpage";
 	public static final String ARG_SEL_PAGE = "selectedpage";
-
+	public static final String ARG_LOC_ID = "locationid";
+	
 	private String mPageNumber;
+	private String mLocationID;
 	private int mCurPageNumber;
 	private int mSelPageNumber;
 
@@ -103,31 +108,35 @@ public class SensorDetailFragment extends SherlockFragment {
 	private int mLastProgressRefreshTime;
 
 	/**
-	 * Factory method for this fragment class. Constructs a new fragment for the
-	 * given page number.
-	 */
-	public static SensorDetailFragment create(String IDSensor, int position,
-			int selPosition) {
-		SensorDetailFragment fragment = new SensorDetailFragment();
-		Bundle args = new Bundle();
-		args.putString(ARG_PAGE, IDSensor);
-		args.putInt(ARG_CUR_PAGE, position);
-		args.putInt(ARG_SEL_PAGE, selPosition);
-		fragment.setArguments(args);
-		return fragment;
-	}
+	
+	
+	/**
+     * Factory method for this fragment class. Constructs a new fragment for the given page number.
+     */
+    public static SensorDetailFragment create(String IDSensor, String IDLocation, int position, int selPosition) {
+    	SensorDetailFragment fragment = new SensorDetailFragment();
+        Bundle args = new Bundle();
+        args.putString(ARG_PAGE, IDSensor);
+        args.putString(ARG_LOC_ID, IDLocation);
+        args.putInt(ARG_CUR_PAGE, position);
+        args.putInt(ARG_SEL_PAGE, selPosition);
+        fragment.setArguments(args);
+        return fragment;
+    }
 
-	public SensorDetailFragment() {
-	}
+    public SensorDetailFragment() {
+    }
 
-	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		mPageNumber = getArguments().getString(ARG_PAGE);
-		mSelPageNumber = getArguments().getInt(ARG_SEL_PAGE);
-		mCurPageNumber = getArguments().getInt(ARG_CUR_PAGE);
-		Log.d(TAG, "Here 1 " + mCurPageNumber);
-	}
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        mPageNumber = getArguments().getString(ARG_PAGE);
+        mLocationID = getArguments().getString(ARG_LOC_ID);
+        mSelPageNumber = getArguments().getInt(ARG_SEL_PAGE);
+        mCurPageNumber = getArguments().getInt(ARG_CUR_PAGE);
+        Log.d(TAG, "Here 1 "+ mCurPageNumber);
+    }
+	
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -323,7 +332,8 @@ public class SensorDetailFragment extends SherlockFragment {
 				.setDropDownViewResource(R.layout.custom_spinner_dropdown_item);
 
 		mSpinnerLoc.setAdapter(dataAdapter);
-
+		mSpinnerLoc.setSelection(getLocationsIndexFromArray(getLocationsArray()));
+		
 		// Set value of sensor
 		mValue.setText(device.getStringValueUnit(getActivity()));
 		// Set icon of sensor
@@ -340,10 +350,7 @@ public class SensorDetailFragment extends SherlockFragment {
 
 		// Visible all elements
 		visibleAllElements();
-
-		// mGraphLayout.getLayoutParams().height
-		// mGraphInfo.setma
-
+		
 		DisplayMetrics displaymetrics = new DisplayMetrics();
 		getActivity().getWindowManager().getDefaultDisplay()
 				.getMetrics(displaymetrics);
@@ -396,19 +403,14 @@ public class SensorDetailFragment extends SherlockFragment {
 		);
 
 		minimum = -1.0;
+		
+		GraphViewSeriesStyle seriesStyleBlue = new GraphViewSeriesStyle(getResources().getColor(R.color.log_blue2),2);
+		//GraphViewSeriesStyle seriesStyleGray = new GraphViewSeriesStyle(getResources().getColor(R.color.light_gray),2);
 
-		GraphViewSeriesStyle seriesStyleBlue = new GraphViewSeriesStyle(
-				getResources().getColor(R.color.log_blue2), 2);
-		GraphViewSeriesStyle seriesStyleGray = new GraphViewSeriesStyle(
-				getResources().getColor(R.color.light_gray), 2);
-
-		mGraphView.getGraphViewStyle().setVerticalLabelsColor(
-				getResources().getColor(R.color.log_blue2));
-		mGraphView.getGraphViewStyle().setHorizontalLabelsColor(
-				getResources().getColor(R.color.log_blue2));
-		mGraphView.setBackgroundColor(getResources().getColor(
-				R.color.alpha_blue));// getResources().getColor(R.color.log_blue2));
-
+		mGraphView.getGraphViewStyle().setVerticalLabelsColor(getResources().getColor(R.color.log_blue2));
+		mGraphView.getGraphViewStyle().setHorizontalLabelsColor(getResources().getColor(R.color.log_blue2));
+		mGraphView.setBackgroundColor(getResources().getColor(R.color.alpha_blue));//getResources().getColor(R.color.log_blue2));
+		
 		((LineGraphView) mGraphView).setDrawBackground(true);
 		// graphView.setAlpha(128);
 		// draw sin curve
@@ -424,6 +426,30 @@ public class SensorDetailFragment extends SherlockFragment {
 			}
 
 		}
+		
+		// Set interval
+		int interval = RefreshInterval.HOUR_24.getInterval();
+		// Get Today 
+		Time now = new Time();
+		now.setToNow();
+		// Get before month
+		Time beforeMonth = new Time();
+		beforeMonth.set(now.monthDay, now.month-1, now.year); 
+		
+		Log.d(TAG, "Today: "+now.format("%Y-%m-%d %H:%M:%S")+"  before month: "+beforeMonth.format("%Y-%m-%d %H:%M:%S"));
+		
+		String[] params = new String[4];
+		// From
+		params[0] = beforeMonth.format("%Y-%m-%d %H:%M:%S");
+		// To
+		params[1] = now.format("%Y-%m-%d %H:%M:%S");
+		// Type
+		params[2] = "avg";
+		// Interval
+		params[3] = String.valueOf(interval);
+		
+		GetDeviceLogTask task = new GetDeviceLogTask();
+		task.execute(params);
 
 		mGraphView
 				.addSeries(new GraphViewSeries("Graph", seriesStyleBlue, data));
@@ -467,32 +493,21 @@ public class SensorDetailFragment extends SherlockFragment {
 		// Get locations from adapter
 		List<Location> locations = mController.getLocations();
 
-		// Add "missing" default rooms
-		for (DefaultRoom room : Location.defaults) {
-			String name = getString(room.rName);
-
-			boolean found = false;
-			for (Location location : locations) {
-				if (location.getName().equals(name)) {
-					found = true;
-					break;
-				}
-			}
-
-			if (!found) {
-				locations.add(new Location(Location.NEW_LOCATION_ID, name,
-						room.type));
-			}
-		}
-
 		// Sort them
 		Collections.sort(locations);
 
-		// Add "New location" item
-		locations.add(new Location(Location.NEW_LOCATION_ID,
-				getString(R.string.addsensor_new_location_spinner), 0));
-
 		return locations;
+	}
+	
+	private int getLocationsIndexFromArray(List<Location> locations) {
+		int index = 0;
+		for (Location room : locations) {
+			if (room.getId().equalsIgnoreCase(mLocationID)) {
+				return index;
+			}
+			index++;
+		}
+		return index;
 	}
 
 	private CharSequence setLastUpdate(Time lastUpdate) {
@@ -544,24 +559,35 @@ public class SensorDetailFragment extends SherlockFragment {
 	private class UpdateDeviceTask extends AsyncTask<Void, Void, Boolean> {
 		@Override
 		protected Boolean doInBackground(Void... params) {
-
-			// BaseDevice device = mController.getDevice(sensorID[0]);
-
 			Log.d(TAG, "ID:" + mDevice.getId() + " Name:" + mDevice.getName());
-
 			return mController.saveDevice(mDevice);
 		}
 
 		@Override
 		protected void onPostExecute(Boolean ret) {
-			// mDevice = device;
-			// initLayout(device);
-			if (ret.booleanValue()) {
+			if(ret.booleanValue() ){
 				Log.d(TAG, "Success save to server");
 			} else {
 				Log.d(TAG, "Fail save to server");
-			}
+				// Show failer toast !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+			}		
+		}
 
+	}
+	
+	/**
+	 * Changes selected location and redraws list of adapters there
+	 */
+	private class GetDeviceLogTask extends AsyncTask<String, Void, ArrayList<ContentRow> > {
+		@Override
+		protected ArrayList<ContentRow> doInBackground(String... params) {
+			return mController.getDeviceLogTemp(mDevice, params[0], params[1], params[2], Integer.valueOf(params[3]));
+		}
+		@Override
+		protected void onPostExecute(ArrayList<ContentRow> result) {
+			for(ContentRow item : result) {
+				Log.d(TAG, item.debugString());
+			}
 		}
 
 	}
@@ -608,6 +634,7 @@ public class SensorDetailFragment extends SherlockFragment {
 				mSpinnerLoc.setVisibility(View.GONE);
 				mLocation.setVisibility(View.VISIBLE);
 				mRectangleLoc.setVisibility(View.VISIBLE);
+				mRefreshTimeValue.setEnabled(true);
 				break;
 			case EDIT_NAME:
 				if (item.getTitle().equals("Save")) {
@@ -625,13 +652,21 @@ public class SensorDetailFragment extends SherlockFragment {
 
 				mNameEdit.clearFocus();
 				imm.hideSoftInputFromWindow(mNameEdit.getWindowToken(), 0);
+				mRefreshTimeValue.setEnabled(true);
 				break;
 			case EDIT_REFRESH_T:
-				// set actual progress
-
-				// Was clicked on cancel
-				if (item.getTitle().equals("Cancel")) {
+				// Was clicked on cancel 
+				if(item.getTitle().equals("Cancel")) {
 					mRefreshTimeValue.setProgress(mLastProgressRefreshTime);
+				}
+				else {
+					// set actual progress
+					mDevice.setRefresh(RefreshInterval.values()[mRefreshTimeValue.getProgress()]);
+					
+					Log.d(TAG, "Refresh time "+ mDevice.getRefresh().getStringInterval(mActivity));
+					// Update device to server
+					UpdateDeviceTask task = new UpdateDeviceTask();
+					task.execute();
 				}
 				break;
 
@@ -642,15 +677,27 @@ public class SensorDetailFragment extends SherlockFragment {
 
 			mEditMode = EDIT_NONE;
 			// enable SeekBar
-			mRefreshTimeValue.setEnabled(true);
-
+			
+						
 			mode.finish();
 			return true;
 		}
 
 		@Override
 		public void onDestroyActionMode(ActionMode mode) {
-
+			mSpinnerLoc.setVisibility(View.GONE);
+			mLocation.setVisibility(View.VISIBLE);
+			mRectangleLoc.setVisibility(View.VISIBLE);
+			mNameEdit.setVisibility(View.GONE);
+			mName.setVisibility(View.VISIBLE);
+			mRectangleName.setVisibility(View.VISIBLE);
+			mNameEdit.clearFocus();
+			InputMethodManager imm = (InputMethodManager) getSherlockActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+			imm.hideSoftInputFromWindow(mNameEdit.getWindowToken(), 0);
+			//mRefreshTimeValue.setProgress(mLastProgressRefreshTime);
+			mEditMode = EDIT_NONE;
+			// enable SeekBar
+			mRefreshTimeValue.setEnabled(true);
 		}
 	}
 
