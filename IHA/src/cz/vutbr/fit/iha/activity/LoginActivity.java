@@ -49,7 +49,7 @@ public class LoginActivity extends BaseActivity {
 	private Thread mDoGoogleLoginThread;
 	private StoppableRunnable mDoGoogleLoginRunnable;
 
-	private static final String TAG = "LOGIN";
+	private static final String TAG = LoginActivity.class.getSimpleName();
 	public static final int USER_RECOVERABLE_AUTH = 5;
 	private static final int GET_GOOGLE_ACCOUNT = 6;
 

@@ -36,7 +36,7 @@ public class SensorDetailActivity extends BaseActivity
 	private String mLocationOfSensorID;
 	private int mSensorPosition;
 	
-	private static final String TAG = "SensorDetailActivity";
+	private static final String TAG = SensorDetailActivity.class.getSimpleName();
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {

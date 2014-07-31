@@ -15,7 +15,7 @@ import cz.vutbr.fit.iha.controller.Controller;
 public class LocationDetailFragment extends SherlockFragment {
 
 	private Controller mController;
-	private static final String TAG = "LocationDetail";
+	private static final String TAG = LocationDetailFragment.class.getSimpleName();
 	
 	
 	@Override

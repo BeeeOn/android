@@ -61,7 +61,7 @@ public class XmlParsers {
 	public static final String ID = "id";
 	public static final String INIT_ID = "0";
 	public static final String STATE = "state";
-	public static final String TAG = "XmlParser";
+	public static final String TAG = XmlParsers.class.getSimpleName();
 	public static final String VERSION = "version";
 	public static final String CAPABILITIES = "capabilities";
 	

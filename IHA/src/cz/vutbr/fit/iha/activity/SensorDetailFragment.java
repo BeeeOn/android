@@ -50,7 +50,7 @@ import cz.vutbr.fit.iha.controller.Controller;
 public class SensorDetailFragment extends SherlockFragment {
 
 	private Controller mController;
-	private static final String TAG = "SensorDetailFragment";
+	private static final String TAG = SensorDetailFragment.class.getSimpleName();
 	private static final int EDIT_NONE = 0;
 	private static final int EDIT_NAME = 1;
 	private static final int EDIT_LOC = 2;
