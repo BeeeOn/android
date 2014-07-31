@@ -347,9 +347,9 @@ public class LocationScreenActivity extends BaseActivity {
 				switch (item.getType()) {
 				case ADAPTER:
 					// if it is not chosen, switch to selected adapter
-					if (controller.getActiveAdapter().getId()
-							.equals(item.getId())) {
+					if (!controller.getActiveAdapter().getId().equals(item.getId())) {
 						// TODO prepnuti addapteru, prekreslit menuListDrawer
+						controller.setActiveAdapter(item.getId());
 					}
 					break;
 

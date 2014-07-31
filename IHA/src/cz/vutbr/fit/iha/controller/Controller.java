@@ -6,6 +6,7 @@ import java.util.Random;
 
 import android.content.Context;
 import android.text.format.Time;
+import android.util.Log;
 import cz.vutbr.fit.iha.adapter.Adapter;
 import cz.vutbr.fit.iha.adapter.device.BaseDevice;
 import cz.vutbr.fit.iha.adapter.device.BaseDevice.SaveDevice;
@@ -31,6 +32,8 @@ import cz.vutbr.fit.iha.persistence.Persistence;
  */
 public final class Controller {
 
+	public static final String TAG = Controller.class.getSimpleName();
+	
 	/** This singleton instance. */
 	private static Controller mController;
 	
@@ -208,7 +211,8 @@ public final class Controller {
 	 * @param device
 	 */
 	public void refreshDevice(final BaseDevice device) {
-		for (Adapter adapter : mHousehold.adapters) {
+		Adapter adapter = getActiveAdapter();
+		if (adapter != null) {
 			adapter.refreshDevice(device);
 		}
 	}
@@ -303,15 +307,36 @@ public final class Controller {
 	/**
 	 * Return active adapter.
 	 * 
-	 * @return adapter if found, null otherwise
+	 * @return active adapter, or first adapter, or null if there are no adapters
 	 */
 	public synchronized Adapter getActiveAdapter() {
-		// FIXME: right now it return first adapter every time, rewrite it to allow switching them
-		for (Adapter a : getAdapters()) {
-			return a;
+		if (mHousehold.activeAdapter == null) {
+			// If there is no active adapter, set first one as active
+			for (Adapter a : getAdapters()) {
+				mHousehold.activeAdapter = a;
+			}
 		}
-		
-		return null;
+
+		return mHousehold.activeAdapter;
+	}
+	
+	/**
+	 * Sets active adapter.
+	 * 
+	 * @param id
+	 * @return true on success, false if there is no adapter with this id
+	 */
+	public synchronized boolean setActiveAdapter(String id) {
+		for (Adapter a : getAdapters()) {
+			if (a.getId().equals(id)) {
+				mHousehold.activeAdapter = a;
+				Log.d(TAG, String.format("Set active adapter to '%s'", a.getName()));
+				return true;
+			}
+		}
+
+		Log.d(TAG, String.format("Can't set active adapter to '%s'", id));
+		return false;
 	}
 
 	/**

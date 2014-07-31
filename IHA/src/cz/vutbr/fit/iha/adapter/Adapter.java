@@ -276,8 +276,14 @@ public class Adapter {
 	/**
 	 * Refreshes device in listings (e.g., in uninitialized devices)
 	 * @param device
+	 * @return false if adapter doesn't contain this device, true otherwise
 	 */
-	public void refreshDevice(final BaseDevice device) {
+	public boolean refreshDevice(final BaseDevice device) {
+		if (!mDevices.containsKey(device.getId())) {
+			Log.w(TAG, String.format("Can't refresh device '%s', adapter '%s' doesn't contain it", device.getName(), getName()));
+			return false;
+		}
+		
 		if (device.isInitialized()) {
 			if (mUninitializedDevices.remove(device.getId()) != null)
 				Log.d(TAG, "Removing initialized device " + device.toString());
@@ -285,6 +291,7 @@ public class Adapter {
 			mUninitializedDevices.put(device.getId(), device);
 			Log.d(TAG, "Adding uninitialized device " + device.toString());
 		}
+		return true;
 	}
 	
 	/**

@@ -17,4 +17,7 @@ public class Household {
 	/** List of adapters that this user has access to (either as owner, user or guest). */
 	public List<Adapter> adapters;
 	
+	/** Active adapter. */
+	public Adapter activeAdapter;
+	
 }
