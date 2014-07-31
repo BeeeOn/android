@@ -484,7 +484,7 @@ public class SensorDetailFragment extends SherlockFragment {
 
 	private List<Location> getLocationsArray() {
 		// Get locations from adapter
-		List<Location> locations = mController.getLocations();
+		List<Location> locations = mController.getActiveAdapter().getLocations();
 
 		// Sort them
 		Collections.sort(locations);

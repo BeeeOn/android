@@ -129,7 +129,7 @@ public class AddSensorActivityDialog extends BaseActivityDialog {
 	 */
 	public List<Location> getLocationsForAddSensorDialog(){
 		// Get locations from adapter
-		List<Location> locations = mController.getLocations();
+		List<Location> locations = mController.getActiveAdapter().getLocations();
 		
 		// Add "missing" default rooms
 		for (DefaultRoom room : Location.defaults) {

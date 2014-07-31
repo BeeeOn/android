@@ -388,25 +388,6 @@ public final class Controller {
 	/** Location methods ****************************************************/
 	
 	/**
-	 * Return all locations from all adapters.
-	 * 
-	 * @return List of Location
-	 */
-	public List<Location> getLocations() {
-		// FIXME: Should this be removed when there will be switching activeAdapter somehow, because one should call getLocation on adapter object?
-		
-		List<Location> locations = new ArrayList<Location>();
-		// TODO: get locations only from active adapter
-		for (Adapter adapter : getAdapters()) {
-			for (Location location : adapter.getLocations()) {
-				locations.add(location);
-			}
-		}
-		
-		return locations;
-	}
-	
-	/**
 	 * Return location by id.
 	 * 
 	 * @param id
