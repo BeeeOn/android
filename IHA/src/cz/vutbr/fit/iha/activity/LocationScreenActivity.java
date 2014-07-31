@@ -348,8 +348,8 @@ public class LocationScreenActivity extends BaseActivity {
 				case ADAPTER:
 					// if it is not chosen, switch to selected adapter
 					if (!controller.getActiveAdapter().getId().equals(item.getId())) {
-						// TODO prepnuti addapteru, prekreslit menuListDrawer
 						controller.setActiveAdapter(item.getId());
+						redrawMenu();
 					}
 					break;
 
@@ -742,7 +742,7 @@ public class LocationScreenActivity extends BaseActivity {
 		@Override
 		protected List<BaseDevice> doInBackground(Void... unused) {
 			// Load locations
-			mLocations = mController.getLocations();
+			mLocations = mController.getActiveAdapter().getLocations();
 			Log.d(TAG, String.format("Found %d locations", mLocations.size()));
 
 			// Load uninitialized devices
