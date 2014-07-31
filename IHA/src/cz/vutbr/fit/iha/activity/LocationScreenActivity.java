@@ -250,7 +250,7 @@ public class LocationScreenActivity extends BaseActivity {
 
 		// Adding profile header
 		menuAdapter.addHeader(new ProfileMenuItem(actUser.getName(), actUser
-				.getEmail(), actUser.getPicture()));
+				.getEmail(), actUser.getPicture(this)));
 
 		List<Adapter> adapters = mController.getAdapters();
 		if (adapters.size() > 1) {
