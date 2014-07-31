@@ -58,6 +58,12 @@ public class LoginActivity extends BaseActivity {
 	// ///////////////////////////////////////////////
 	// ////////////////////////////////////////////////////////////////////////////////////
 
+	protected void setDemoMode(boolean demoMode) {
+		// After changing demo mode must be controller reloaded
+		Controller.setDemoMode(this, demoMode);
+		mController = Controller.getInstance(this);
+	}
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -103,7 +109,7 @@ public class LoginActivity extends BaseActivity {
 			Log.d(TAG, String.format(
 					"Automatic login with last used e-mail (%s)...", lastEmail));
 
-			Controller.setDemoMode(LoginActivity.this, false);
+			mActivity.setDemoMode(false);
 			mProgress.show();
 			doGoogleLogin(lastEmail);
 		}
@@ -113,7 +119,7 @@ public class LoginActivity extends BaseActivity {
 				.setOnClickListener(new OnClickListener() {
 					@Override
 					public void onClick(View v) {
-						Controller.setDemoMode(LoginActivity.this, true);
+						mActivity.setDemoMode(true);
 
 						Intent intent = new Intent(LoginActivity.this,
 								LocationScreenActivity.class);
@@ -130,7 +136,7 @@ public class LoginActivity extends BaseActivity {
 		btnGoogle.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				Controller.setDemoMode(LoginActivity.this, false);
+				mActivity.setDemoMode(false);
 				mProgress.show();
 				beginGoogleAuthRutine(v);
 			}
