@@ -11,10 +11,11 @@ import cz.vutbr.fit.iha.adapter.Adapter;
 import cz.vutbr.fit.iha.adapter.device.BaseDevice;
 import cz.vutbr.fit.iha.adapter.device.BaseDevice.SaveDevice;
 import cz.vutbr.fit.iha.adapter.device.DeviceLog;
+import cz.vutbr.fit.iha.adapter.device.DeviceLog.DataInterval;
+import cz.vutbr.fit.iha.adapter.device.DeviceLog.DataType;
 import cz.vutbr.fit.iha.adapter.device.StateDevice;
 import cz.vutbr.fit.iha.adapter.device.SwitchDevice;
 import cz.vutbr.fit.iha.adapter.location.Location;
-import cz.vutbr.fit.iha.adapter.parser.ContentRow;
 import cz.vutbr.fit.iha.exception.NetworkException;
 import cz.vutbr.fit.iha.exception.NoConnectionException;
 import cz.vutbr.fit.iha.exception.NotImplementedException;
@@ -623,16 +624,26 @@ public final class Controller {
 	 * @return
 	 * @throws NotImplementedException
 	 */
-	public DeviceLog getDeviceLog(BaseDevice device) {
-		throw new NotImplementedException();
+	public DeviceLog getDeviceLog(BaseDevice device, String from, String to, DataType type, DataInterval interval) {
+		// FIXME: rewrite this method even better - demo mode, caching, etc.
+		DeviceLog log = new DeviceLog(DataType.AVERAGE, DataInterval.RAW);
+		
+		if (mDemoMode) {
+			return log;
+		}
+		
+		try {
+			Adapter adapter = getAdapterByDevice(device);
+			if (adapter != null) {
+				log = mNetwork.getLog(adapter.getId(), device, from, to, type, interval);
+			}
+		} catch (NetworkException e) {
+			e.printStackTrace();
+		}
+
+		return log;
 	}
 	
-	// TEMP LOG
-	public ArrayList<ContentRow> getDeviceLogTemp(BaseDevice device,String from, String to, String FuncType,int interval) {
-		Adapter adapter = getAdapterByDevice(device);
-		return (ArrayList<ContentRow>) mNetwork.getLog(adapter.getId(), device.getAddress(), device.getType(), from, to, FuncType, interval);
-	}
-
 	
 	/** User methods ********************************************************/
 

@@ -24,6 +24,9 @@ import cz.vutbr.fit.iha.Constants;
 import cz.vutbr.fit.iha.RefreshInterval;
 import cz.vutbr.fit.iha.adapter.Adapter;
 import cz.vutbr.fit.iha.adapter.device.BaseDevice;
+import cz.vutbr.fit.iha.adapter.device.DeviceLog;
+import cz.vutbr.fit.iha.adapter.device.DeviceLog.DataInterval;
+import cz.vutbr.fit.iha.adapter.device.DeviceLog.DataType;
 import cz.vutbr.fit.iha.adapter.device.EmissionDevice;
 import cz.vutbr.fit.iha.adapter.device.HumidityDevice;
 import cz.vutbr.fit.iha.adapter.device.IlluminationDevice;
@@ -187,7 +190,7 @@ public class XmlParsers {
 				result.data = parseConAccountList();
 				break;
 			case CONTENT:
-				// List<ContentRow>
+				// DeviceLog
 				result.data = parseContent();
 				break;
 			case FALSE:
@@ -364,18 +367,18 @@ public class XmlParsers {
 	 * @throws XmlPullParserException
 	 * @throws IOException
 	 */
-	private static List<ContentRow> parseContent() throws XmlPullParserException, IOException {
+	private static DeviceLog parseContent() throws XmlPullParserException, IOException {
 		mParser.nextTag();
 		mParser.require(XmlPullParser.START_TAG, ns, ROW);
 		
-		List<ContentRow> result = new ArrayList<ContentRow>();
-		do{
-			
-			result.add(new ContentRow(readText(ROW)));
-
-		}while(mParser.nextTag() != XmlPullParser.END_TAG && !mParser.getName().equals(COM_ROOT));
+		// FIXME: get from protocol what type of data it is
+		DeviceLog log = new DeviceLog(DataType.AVERAGE, DataInterval.RAW);
 		
-		return result;
+		do {
+			log.addValue(log.new DataRow(readText(ROW)));
+		} while (mParser.nextTag() != XmlPullParser.END_TAG && !mParser.getName().equals(COM_ROOT));
+		
+		return log;
 	}
 	
 	/**

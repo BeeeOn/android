@@ -1,7 +1,6 @@
 package cz.vutbr.fit.iha.activity;
 
 import java.text.DateFormat;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -42,8 +41,10 @@ import cz.vutbr.fit.iha.LocationArrayAdapter;
 import cz.vutbr.fit.iha.R;
 import cz.vutbr.fit.iha.RefreshInterval;
 import cz.vutbr.fit.iha.adapter.device.BaseDevice;
+import cz.vutbr.fit.iha.adapter.device.DeviceLog;
+import cz.vutbr.fit.iha.adapter.device.DeviceLog.DataInterval;
+import cz.vutbr.fit.iha.adapter.device.DeviceLog.DataType;
 import cz.vutbr.fit.iha.adapter.location.Location;
-import cz.vutbr.fit.iha.adapter.parser.ContentRow;
 import cz.vutbr.fit.iha.controller.Controller;
 //import android.widget.LinearLayout;
 
@@ -101,7 +102,23 @@ public class SensorDetailFragment extends SherlockFragment {
 	private int mLastProgressRefreshTime;
 
 	/**
-	
+	 * Represents "pair" of data required for get device log
+	 */
+	private class LogDataPair {
+		public final BaseDevice device;
+		public final String from;
+		public final String to;
+		public final DataType type;
+		public final DataInterval interval;
+		
+		public LogDataPair(final BaseDevice device, final String from, final String to, final DataType type, final DataInterval interval) {
+			this.device = device;
+			this.from = from;
+			this.to = to;
+			this.type = type;
+			this.interval = interval;
+		}
+	}
 	
 	/**
      * Factory method for this fragment class. Constructs a new fragment for the given page number.
@@ -420,8 +437,6 @@ public class SensorDetailFragment extends SherlockFragment {
 
 		}
 		
-		// Set interval
-		int interval = RefreshInterval.HOUR_24.getInterval();
 		// Get Today 
 		Time now = new Time();
 		now.setToNow();
@@ -429,20 +444,16 @@ public class SensorDetailFragment extends SherlockFragment {
 		Time beforeMonth = new Time();
 		beforeMonth.set(now.monthDay, now.month-1, now.year); 
 		
-		Log.d(TAG, "Today: "+now.format("%Y-%m-%d %H:%M:%S")+"  before month: "+beforeMonth.format("%Y-%m-%d %H:%M:%S"));
-		
-		String[] params = new String[4];
-		// From
-		params[0] = beforeMonth.format("%Y-%m-%d %H:%M:%S");
-		// To
-		params[1] = now.format("%Y-%m-%d %H:%M:%S");
-		// Type
-		params[2] = "avg";
-		// Interval
-		params[3] = String.valueOf(interval);
+		Log.d(TAG, String.format("Today: %s, before month: %s", now.format("%Y-%m-%d %H:%M:%S"), beforeMonth.format("%Y-%m-%d %H:%M:%S")));
 		
 		GetDeviceLogTask task = new GetDeviceLogTask();
-		task.execute(params);
+		LogDataPair pair = new LogDataPair (
+				mDevice, // device
+				beforeMonth.format("%Y-%m-%d %H:%M:%S"), // from
+				now.format("%Y-%m-%d %H:%M:%S"), // to
+				DataType.AVERAGE, // type
+				DataInterval.RAW); // interval
+		task.execute(new LogDataPair[] { pair });
 
 		mGraphView
 				.addSeries(new GraphViewSeries("Graph", seriesStyleBlue, data));
@@ -571,14 +582,17 @@ public class SensorDetailFragment extends SherlockFragment {
 	/**
 	 * Changes selected location and redraws list of adapters there
 	 */
-	private class GetDeviceLogTask extends AsyncTask<String, Void, ArrayList<ContentRow> > {
+	private class GetDeviceLogTask extends AsyncTask<LogDataPair, Void, DeviceLog> {
 		@Override
-		protected ArrayList<ContentRow> doInBackground(String... params) {
-			return mController.getDeviceLogTemp(mDevice, params[0], params[1], params[2], Integer.valueOf(params[3]));
+		protected DeviceLog doInBackground(LogDataPair... pairs) {
+			LogDataPair pair = pairs[0]; // expects only one device at a time is sent there
+			
+			return mController.getDeviceLog(pair.device, pair.from, pair.to, pair.type, pair.interval);
 		}
+
 		@Override
-		protected void onPostExecute(ArrayList<ContentRow> result) {
-			for(ContentRow item : result) {
+		protected void onPostExecute(DeviceLog log) {
+			for (DeviceLog.DataRow item : log.getValues()) {
 				Log.d(TAG, item.debugString());
 			}
 		}

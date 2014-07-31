@@ -35,8 +35,10 @@ import android.util.Log;
 import cz.vutbr.fit.iha.activity.LoginActivity;
 import cz.vutbr.fit.iha.adapter.Adapter;
 import cz.vutbr.fit.iha.adapter.device.BaseDevice;
+import cz.vutbr.fit.iha.adapter.device.DeviceLog;
+import cz.vutbr.fit.iha.adapter.device.DeviceLog.DataInterval;
+import cz.vutbr.fit.iha.adapter.device.DeviceLog.DataType;
 import cz.vutbr.fit.iha.adapter.location.Location;
-import cz.vutbr.fit.iha.adapter.parser.ContentRow;
 import cz.vutbr.fit.iha.adapter.parser.CustomViewPair;
 import cz.vutbr.fit.iha.adapter.parser.FalseAnswer;
 import cz.vutbr.fit.iha.adapter.parser.ParsedMessage;
@@ -598,23 +600,25 @@ public class Network {
 	 */
 	//http://stackoverflow.com/a/509288/1642090
 	@SuppressWarnings("unchecked")
-	public List<ContentRow> getLog(String adapterId, String deviceId, int deviceType, String from, String to, String funcType, int interval) throws NoConnectionException, CommunicationException, FalseException {
-		String messageToSend = XmlCreator.createLogName(Integer.toString(mSessionId), adapterId, deviceId, deviceType, from, to, funcType, interval);
+	public DeviceLog getLog(String adapterId, BaseDevice device, String from, String to, DataType type, DataInterval interval) throws NoConnectionException, CommunicationException, FalseException {
+		String messageToSend = XmlCreator.createLogName(Integer.toString(mSessionId), adapterId, device.getAddress(), device.getType(), from, to, type.getValue(), interval.getValue());
 		ParsedMessage msg = doRequest(messageToSend);
 		
-		List<ContentRow> result = new ArrayList<ContentRow>();
+		DeviceLog result = new DeviceLog(type, interval);
 
 		if (msg.getState() == State.CONTENT) {
 			Log.d(TAG, msg.getState().getValue());
 
-			result.addAll((List<ContentRow>) msg.data);
+			// FIXME: don't do this useless get & set, return whole DeviceLog object that we've parsed - but first it must parse type and interval from xml message
+			result.setValues(((DeviceLog) msg.data).getValues());
 		} else if (msg.getState() == State.RESIGN) {
 			doResign();
-			return getLog(adapterId, deviceId, deviceType, from, to, funcType, interval);
+			return getLog(adapterId, device, from, to, type, interval);
 
 		} else if (msg.getState() == State.FALSE) {
 			throw new FalseException(((FalseAnswer) msg.data));
 		}
+
 		return result;
 	}
 
