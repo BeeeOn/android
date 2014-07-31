@@ -442,7 +442,19 @@ public class SensorDetailFragment extends SherlockFragment {
 		now.setToNow();
 		// Get before month
 		Time beforeMonth = new Time();
-		beforeMonth.set(now.monthDay, now.month-1, now.year); 
+		int day = now.monthDay;
+		int month = now.month-1	;
+		// Controll Febuary and Last day in month 
+		if(month == 1 ) { // is febuary 
+			day = (day>28)?28:day;
+		} // Is shorter month 
+		else if( month == 3 || month == 5 || month == 8 || month == 10) {
+			day = (day>30)?30:day;
+		}
+		beforeMonth.set(
+				day,
+				month,
+				now.year); 
 		
 		Log.d(TAG, String.format("Today: %s, before month: %s", now.format("%Y-%m-%d %H:%M:%S"), beforeMonth.format("%Y-%m-%d %H:%M:%S")));
 		
@@ -452,7 +464,7 @@ public class SensorDetailFragment extends SherlockFragment {
 				beforeMonth.format("%Y-%m-%d %H:%M:%S"), // from
 				now.format("%Y-%m-%d %H:%M:%S"), // to
 				DataType.AVERAGE, // type
-				DataInterval.RAW); // interval
+				DataInterval.DAY); // interval
 		task.execute(new LogDataPair[] { pair });
 
 		mGraphView
