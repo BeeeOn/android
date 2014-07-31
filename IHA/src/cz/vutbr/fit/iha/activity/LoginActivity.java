@@ -1,5 +1,7 @@
 package cz.vutbr.fit.iha.activity;
 
+import java.util.concurrent.ExecutionException;
+
 import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.app.ProgressDialog;
@@ -20,6 +22,7 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 
 import cz.vutbr.fit.iha.R;
+import cz.vutbr.fit.iha.Utils;
 import cz.vutbr.fit.iha.activity.dialog.AddAdapterActivityDialog;
 import cz.vutbr.fit.iha.controller.Controller;
 import cz.vutbr.fit.iha.exception.CommunicationException;
@@ -290,11 +293,17 @@ public class LoginActivity extends BaseActivity {
 
 				@Override
 				public void run() {
-					ggAuth.execute();
+					// FIXME don't call thread in thread
+					try {
+						ggAuth.execute().get();
+					} catch (Exception e) {
+						e.printStackTrace();
+					} 
 					// FIXME: I think name and email should be saved on IHA server and loaded from there. It should be used from google only in registration, no?
 					ActualUser user = mController.getActualUser();
 					user.setName(ggAuth.getUserName());
 					user.setEmail(ggAuth.getEmail());
+					user.setPicture(ggAuth.getPictureIMG());
 					doLogin(email);
 					Log.d(TAG, "Finish google auth");
 				}

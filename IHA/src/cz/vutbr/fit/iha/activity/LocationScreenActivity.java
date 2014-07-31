@@ -244,13 +244,13 @@ public class LocationScreenActivity extends BaseActivity {
 
 		ActualUser actUser = mController.getActualUser();
 
-		// FIXME zmenit obrazek na obrazek uzivatele
-		Bitmap largeIcon = BitmapFactory.decodeResource(getResources(),
-				R.drawable.person_siluete);
+//		// FIXME zmenit obrazek na obrazek uzivatele
+//		Bitmap largeIcon = BitmapFactory.decodeResource(getResources(),
+//				R.drawable.person_siluete);
 
 		// Adding profile header
 		menuAdapter.addHeader(new ProfileMenuItem(actUser.getName(), actUser
-				.getEmail(), largeIcon));
+				.getEmail(), actUser.getPicture()));
 
 		List<Adapter> adapters = mController.getAdapters();
 		if (adapters.size() > 1) {

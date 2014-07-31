@@ -3,6 +3,7 @@
  */
 package cz.vutbr.fit.iha.household;
 
+import cz.vutbr.fit.iha.Utils;
 import android.graphics.Bitmap;
 
 /**
@@ -44,7 +45,7 @@ public class ActualUser extends User
 	 * @param mPictureIMG the mPictureIMG to set
 	 */
 	public void setPicture(Bitmap picture) {
-		mPicture = picture;
+		mPicture = Utils.getRoundedShape(picture);
 	}
 
 	/**

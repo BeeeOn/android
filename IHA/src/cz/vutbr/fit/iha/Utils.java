@@ -7,8 +7,8 @@ import android.graphics.Rect;
 
 public class Utils {
 	public static Bitmap getRoundedShape(Bitmap scaleBitmapImage) {
-	    int targetWidth = 50;
-	    int targetHeight = 50;
+	    int targetWidth = 200;
+	    int targetHeight = 200;
 	    Bitmap targetBitmap = Bitmap.createBitmap(targetWidth, 
 	                        targetHeight,Bitmap.Config.ARGB_8888);
 
