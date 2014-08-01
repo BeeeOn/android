@@ -85,6 +85,8 @@
     <string name="drawer_close">CLOSE</string>
     <string name="location">Location</string>
     <string name="custom_view">Custom view</string>
+    <string name="no_location">No location</string>
+    <string name="no_custom_view">No custom view</string>
     <!-- Others -->
     <string name="action_settings">Settings</string>
     <string name="action_about">About</string>
@@ -95,7 +97,7 @@
     <string name="addadapter_qrcode_desc">Get QR code</string>
     <string name="addsensor_new_location_spinner">New location</string>
     <string name="sen_detail_graph_info">Tap to Active</string>
-    <string name="loading_data">Loading data...</string>
+    <string name="loading_data">Loading data&#8230;</string>
     <string name="no_sensor_cap">NO SENSOR</string>
     
     <!-- Arrays -->

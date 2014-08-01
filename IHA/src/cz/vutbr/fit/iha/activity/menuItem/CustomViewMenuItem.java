@@ -23,6 +23,9 @@ public class CustomViewMenuItem extends AbstractMenuItem {
 		ImageView iconView = (ImageView) view.findViewById(cz.vutbr.fit.iha.R.id.icon);
 		View separatorView = (View) view.findViewById(cz.vutbr.fit.iha.R.id.top_separator);
 		
+		view.setEnabled(false);
+		view.setOnClickListener(null);
+		
 		nameView.setText(mName);
 		iconView.setImageResource(mIconRes);
 		if (mTopSeparatorVisible) {

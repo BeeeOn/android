@@ -8,7 +8,7 @@ public interface MenuItem {
 	public static final String ID_UNDEFINED = "id_undefined";
 	
 	public enum MenuItemType {
-		ADAPTER, GROUP_IMAGE, GROUP, CUSTOM_VIEW, LOCATION, PROFILE, SEPARATOR, SETTING
+		ADAPTER, GROUP_IMAGE, GROUP, CUSTOM_VIEW, LOCATION, PROFILE, SEPARATOR, SETTING, EMPTY
 	}
 	
 	public void setView(View view);

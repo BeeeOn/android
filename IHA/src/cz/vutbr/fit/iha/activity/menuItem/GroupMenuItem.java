@@ -22,6 +22,9 @@ public class GroupMenuItem extends AbstractMenuItem {
 		TextView nameView = (TextView) view
 				.findViewById(cz.vutbr.fit.iha.R.id.name);
 		nameView.setText(mName);
+		
+		view.setEnabled(false);
+		view.setOnClickListener(null);
 	}
 
 	@Override

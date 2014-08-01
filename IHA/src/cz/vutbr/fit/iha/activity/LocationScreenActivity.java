@@ -1,6 +1,10 @@
 package cz.vutbr.fit.iha.activity;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
+import java.util.ListIterator;
 
 import se.emilsjolander.stickylistheaders.StickyListHeadersListView;
 import android.app.AlertDialog;
@@ -12,6 +16,7 @@ import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.WorkSource;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
@@ -45,6 +50,7 @@ import cz.vutbr.fit.iha.activity.dialog.AddSensorActivityDialog;
 import cz.vutbr.fit.iha.activity.dialog.CustomAlertDialog;
 import cz.vutbr.fit.iha.activity.dialog.InfoDialogFragment;
 import cz.vutbr.fit.iha.activity.menuItem.AdapterMenuItem;
+import cz.vutbr.fit.iha.activity.menuItem.EmptyMenuItem;
 import cz.vutbr.fit.iha.activity.menuItem.GroupImageMenuItem;
 import cz.vutbr.fit.iha.activity.menuItem.GroupMenuItem;
 import cz.vutbr.fit.iha.activity.menuItem.LocationMenuItem;
@@ -114,6 +120,7 @@ public class LocationScreenActivity extends BaseActivity {
 	 */
 	private DevicesTask mDevicesTask;
 	private ChangeLocationTask mChangeLocationTask;
+	private SwitchAdapter mSwitchAdapter;
 
 	//
 	ActionMode mMode;
@@ -158,6 +165,7 @@ public class LocationScreenActivity extends BaseActivity {
 	public void onResume() {
 		super.onResume();
 		Log.d(TAG, "onResume  , inBackground: " + String.valueOf(inBackground));
+		setLocationOrEmpty();
 		redrawMenu();
 		backPressed = false;
 
@@ -167,14 +175,22 @@ public class LocationScreenActivity extends BaseActivity {
 	public void onDestroy() {
 		super.onDestroy();
 		Log.d(TAG, "onDestroy");
+
+		this.setSupportProgressBarIndeterminateVisibility(false);
+
 		if (mDevicesTask != null) {
 			mDevicesTask.cancel(true);
 			if (mDevicesTask.getDialog() != null) {
 				mDevicesTask.getDialog().dismiss();
 			}
 		}
+
 		if (mChangeLocationTask != null) {
 			mChangeLocationTask.cancel(true);
+		}
+
+		if (mSwitchAdapter != null) {
+			mSwitchAdapter.cancel(true);
 		}
 	}
 
@@ -186,6 +202,9 @@ public class LocationScreenActivity extends BaseActivity {
 		return super.dispatchTouchEvent(ev);
 	}
 
+	/**
+	 * Handling first tap back button
+	 */
 	private void firstTapBack() {
 		Toast.makeText(this, getString(R.string.toast_tap_again_exit),
 				Toast.LENGTH_SHORT).show();
@@ -194,6 +213,9 @@ public class LocationScreenActivity extends BaseActivity {
 			mDrawerLayout.openDrawer(mDrawerList);
 	}
 
+	/**
+	 * Handling second tap back button - exiting
+	 */
 	private void secondTapBack() {
 		// Toast.makeText(this, getString(R.string.toast_leaving_app),
 		// Toast.LENGTH_LONG).show();
@@ -287,11 +309,17 @@ public class LocationScreenActivity extends BaseActivity {
 		menuAdapter.addHeader(new GroupMenuItem(getResources().getString(
 				R.string.location)));
 
-		// Adding location
-		for (int i = 0; i < mLocations.size(); i++) {
-			Location actLoc = mLocations.get(i);
-			menuAdapter.addItem(new LocationMenuItem(actLoc.getName(), actLoc
-					.getIconResource(), i != 0, actLoc.getId()));
+		if (mLocations.size() > 0) {
+
+			// Adding location
+			for (int i = 0; i < mLocations.size(); i++) {
+				Location actLoc = mLocations.get(i);
+				menuAdapter.addItem(new LocationMenuItem(actLoc.getName(),
+						actLoc.getIconResource(), i != 0, actLoc.getId()));
+			}
+		} else {
+			menuAdapter.addItem(new EmptyMenuItem(mActivity.getResources()
+					.getString(R.string.no_location)));
 		}
 
 		// Adding custom view header
@@ -310,6 +338,8 @@ public class LocationScreenActivity extends BaseActivity {
 				}));
 		// Adding custom views
 		// TODO pridat custom views
+		menuAdapter.addItem(new EmptyMenuItem(mActivity.getResources()
+				.getString(R.string.no_custom_view)));
 
 		// Adding separator as header
 		menuAdapter.addItem(new SeparatorMenuItem());
@@ -346,7 +376,8 @@ public class LocationScreenActivity extends BaseActivity {
 
 			@Override
 			public boolean onKey(View v, int keyCode, KeyEvent event) {
-				if (keyCode == KeyEvent.KEYCODE_BACK && event.getAction()==KeyEvent.ACTION_UP) {
+				if (keyCode == KeyEvent.KEYCODE_BACK
+						&& event.getAction() == KeyEvent.ACTION_UP) {
 					Log.d(TAG, "BackPressed = " + String.valueOf(backPressed));
 					if (mDrawerLayout.isDrawerOpen(mDrawerList) && !backPressed) {
 						firstTapBack();
@@ -379,8 +410,11 @@ public class LocationScreenActivity extends BaseActivity {
 					// if it is not chosen, switch to selected adapter
 					if (!controller.getActiveAdapter().getId()
 							.equals(item.getId())) {
-						controller.setActiveAdapter(item.getId());
-						redrawMenu();
+
+						setSupportProgressBarIndeterminateVisibility(true);
+						mSwitchAdapter = new LocationScreenActivity.SwitchAdapter();
+						mSwitchAdapter.execute(item.getId());
+
 					}
 					break;
 
@@ -406,14 +440,10 @@ public class LocationScreenActivity extends BaseActivity {
 				case LOCATION:
 					// Get the title followed by the position
 					mActiveLocationId = item.getId();
-					mActiveLocation = controller.getLocation(mActiveLocationId);
 
-					refreshListing();
+					changeLocation(mController.getLocation(mActiveLocationId),
+							true);
 
-					mDrawerList.setItemChecked(position, true);
-
-					// Close drawer
-					mDrawerLayout.closeDrawer(mDrawerList);
 					break;
 
 				default:
@@ -493,10 +523,48 @@ public class LocationScreenActivity extends BaseActivity {
 		return true;
 	}
 
+	private void setEmptySensors() {
+
+		getSensors(new ArrayList<BaseDevice>());
+	}
+
+	private void changeLocation(Location location, boolean closeDrawer) {
+		mActiveLocation = location;
+
+		refreshListing();
+
+		// mDrawerList.setItemChecked(position, true);
+
+		// Close drawer
+		if (closeDrawer) {
+			mDrawerLayout.closeDrawer(mDrawerList);
+		}
+	}
+
 	public boolean getSensors(final List<BaseDevice> sensors) {
 		Log.d(TAG, "LifeCycle: getsensors start");
-		
-		
+
+		String[] title;
+		String[] value;
+		String[] unit;
+		Time[] time;
+		int[] icon;
+		mTitle = mDrawerTitle = "IHA";
+
+		mSensorList = (ListView) findViewById(R.id.listviewofsensors);
+		TextView nosensor = (TextView) findViewById(R.id.nosensorlistview);
+		// If no sensor - display text only
+		if (sensors.size() == 0) {
+			if (nosensor != null) {
+				nosensor.setVisibility(View.VISIBLE);
+			}
+			mSensorList.setVisibility(View.GONE);
+			this.setSupportProgressBarIndeterminateVisibility(false);
+			return true;
+		} else {
+			nosensor.setVisibility(View.GONE);
+			mSensorList.setVisibility(View.VISIBLE);
+		}
 
 		// TODO: this works, but its not the best solution
 		if (!ListOfSensors.ready) {
@@ -515,12 +583,6 @@ public class LocationScreenActivity extends BaseActivity {
 		mTimeHandler.removeCallbacks(mTimeRun);
 		Log.d(TAG, "LifeCycle: getsensors timer remove");
 
-		String[] title;
-		String[] value;
-		String[] unit;
-		Time[] time;
-		int[] icon;
-		mTitle = mDrawerTitle = "IHA";
 		title = new String[sensors.size()];
 		value = new String[sensors.size()];
 		unit = new String[sensors.size()];
@@ -534,20 +596,12 @@ public class LocationScreenActivity extends BaseActivity {
 			time[i] = sensors.get(i).lastUpdate;
 		}
 
-		mSensorList = (ListView) findViewById(R.id.listviewofsensors);
 		if (mSensorList == null) {
 			setSupportProgressBarIndeterminateVisibility(false);
 			Log.e(TAG, "LifeCycle: bad timing or what?");
 			return false; // TODO: this happens when we're in different activity
 							// (detail), fix that by changing that activity
 							// (fragment?) first?
-		}
-		
-		// If no sensor - display text only
-		if(sensors.size() == 0) {
-			TextView nosensor = (TextView) findViewById(R.id.nosensorlistview);
-			nosensor.setVisibility(View.VISIBLE);
-			mSensorList.setVisibility(View.GONE);
 		}
 
 		mSensorAdapter = new SensorListAdapter(LocationScreenActivity.this,
@@ -749,6 +803,9 @@ public class LocationScreenActivity extends BaseActivity {
 		dialog.show();
 	}
 
+	/**
+	 * Refresh sensors in actual location
+	 */
 	private void refreshListing() {
 		if (mActiveLocation == null)
 			return;
@@ -761,6 +818,56 @@ public class LocationScreenActivity extends BaseActivity {
 	private void setNewAdapterRedraw(MenuListAdapter adapter) {
 		mMenuAdapter = adapter;
 		mDrawerList.setAdapter(mMenuAdapter);
+	}
+
+	private void setLocationOnStart(List<Location> locations) {
+		if (locations.size() > 0) {
+			Log.d("default", "DEFAULT POSITION: first position selected");
+			changeLocation(locations.get(0), false);
+		} else {
+			Log.d("default", "DEFAULT POSITION: Empty sensor set");
+			Log.d("default", "EMPTY SENSOR SET");
+			setEmptySensors();
+		}
+	}
+
+	private void setLocationOrEmpty() {
+		Adapter actAdapter = mController.getActiveAdapter();
+
+		// FIXME opravit na posledni pouzivany
+		if (actAdapter != null) {
+			setLocationOnStart(actAdapter.getLocations());
+			Log.d("default", "DEFAULT POSITION: active adapter found");
+		} else {
+			if (mController.getAdapters().size() > 0) {
+				Log.d("default", "DEFAULT POSITION: selected first adapter");
+				setLocationOnStart(mController.getAdapters().get(0)
+						.getLocations());
+			}
+		}
+	}
+
+	/**
+	 * Loads locations, checks for uninitialized devices and eventually shows
+	 * dialog for adding them
+	 */
+	private class SwitchAdapter extends
+			AsyncTask<String, Void, List<BaseDevice>> {
+
+		@Override
+		protected List<BaseDevice> doInBackground(String... params) {
+			mController.setActiveAdapter(params[0]);
+
+			return null;
+		}
+
+		@Override
+		protected void onPostExecute(List<BaseDevice> result) {
+			setLocationOrEmpty();
+			redrawMenu();
+			setSupportProgressBarIndeterminateVisibility(false);
+		}
+
 	}
 
 	/**

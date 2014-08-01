@@ -335,6 +335,7 @@ public final class Controller {
 		for (Adapter a : getAdapters()) {
 			if (a.getId().equals(id)) {
 				mHousehold.activeAdapter = a;
+				refreshAdapter(a, true);
 				Log.d(TAG, String.format("Set active adapter to '%s'", a.getName()));
 				return true;
 			}
