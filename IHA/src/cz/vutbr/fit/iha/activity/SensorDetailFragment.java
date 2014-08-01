@@ -84,6 +84,7 @@ public class SensorDetailFragment extends SherlockFragment {
 	private BaseDevice mDevice;
 
 	private GetDeviceTask mGetDeviceTask;
+	private GetDeviceLogTask mGetDeviceLogTask;
 
 	public static final String ARG_PAGE = "page";
 	public static final String ARG_CUR_PAGE = "currentpage";
@@ -189,6 +190,9 @@ public class SensorDetailFragment extends SherlockFragment {
 	public void onStop() {
 		if (mGetDeviceTask != null) {
 			mGetDeviceTask.cancel(true);
+		}
+		if (mGetDeviceLogTask != null) {
+			mGetDeviceLogTask.cancel(true);
 		}
 		super.onStop();
 	}
@@ -461,14 +465,14 @@ public class SensorDetailFragment extends SherlockFragment {
 
 		Log.d(TAG, String.format("Today: %s, beforeDAY month: %s", now.format(mFormatDateTime), beforeMonth.format(mFormatDateTime)));
 		
-		GetDeviceLogTask task = new GetDeviceLogTask();
+		mGetDeviceLogTask = new GetDeviceLogTask();
 		LogDataPair pair = new LogDataPair (
 				mDevice, // device
 				beforeMonth.format(mFormatDateTime), // from
 				now.format(mFormatDateTime), // to
 				DataType.AVERAGE, // type
 				DataInterval.DAY); // interval
-		task.execute(new LogDataPair[] { pair });
+		mGetDeviceLogTask.execute(new LogDataPair[] { pair });
 
 		mGraphSeries = new GraphViewSeries("Graph", seriesStyleBlue, data);
 		mGraphView
