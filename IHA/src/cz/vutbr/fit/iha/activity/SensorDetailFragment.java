@@ -1,8 +1,11 @@
 package cz.vutbr.fit.iha.activity;
 
 import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 import android.content.Context;
@@ -32,6 +35,7 @@ import com.actionbarsherlock.app.SherlockFragment;
 import com.actionbarsherlock.view.ActionMode;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
+import com.jjoe64.graphview.CustomLabelFormatter;
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.GraphViewSeries;
 import com.jjoe64.graphview.GraphViewSeries.GraphViewSeriesStyle;
@@ -100,6 +104,13 @@ public class SensorDetailFragment extends SherlockFragment {
 
 	public double minimum;
 	private int mLastProgressRefreshTime;
+	
+	private GraphViewSeries mGraphSeries;
+	
+	private String mFormatDateTime = "%Y-%m-%d %H:%M:%S";
+	private String mGraphDateFormat = "dd.MM. hh:mm";
+	private String mGraphTimeFormat = "hh:mm";
+	private float mNonValue = (float) -1000.0;
 
 	/**
 	 * Represents "pair" of data required for get device log
@@ -424,17 +435,12 @@ public class SensorDetailFragment extends SherlockFragment {
 		((LineGraphView) mGraphView).setDrawBackground(true);
 		// graphView.setAlpha(128);
 		// draw sin curve
-		int num = 150;
+		int num = 50;
 		GraphView.GraphViewData[] data = new GraphView.GraphViewData[num];
 		double v = 0;
 		for (int i = 0; i < num; i++) {
 			v += 0.2;
-			if (i > 100 && i < 120) {
-				data[i] = new GraphView.GraphViewData(i, -1);
-			} else {
 				data[i] = new GraphView.GraphViewData(i, Math.sin(v));
-			}
-
 		}
 		
 		// Get Today 
@@ -442,41 +448,30 @@ public class SensorDetailFragment extends SherlockFragment {
 		now.setToNow();
 		// Get before month
 		Time beforeMonth = new Time();
-		int day = now.monthDay;
-		int month = now.month-1	;
-		// Controll Febuary and Last day in month 
-		if(month == 1 ) { // is febuary 
-			day = (day>28)?28:day;
-		} // Is shorter month 
-		else if( month == 3 || month == 5 || month == 8 || month == 10) {
-			day = (day>30)?30:day;
-		}
-		beforeMonth.set(
-				day,
-				month,
-				now.year); 
+		Calendar cal = GregorianCalendar.getInstance();
+		cal.add(Calendar.DAY_OF_YEAR, -7);
+			
+		beforeMonth.set(cal.get(Calendar.DAY_OF_MONTH), cal.get(Calendar.MONTH), cal.get(Calendar.YEAR)); 
 		
-		Log.d(TAG, String.format("Today: %s, before month: %s", now.format("%Y-%m-%d %H:%M:%S"), beforeMonth.format("%Y-%m-%d %H:%M:%S")));
+		Log.d(TAG,"Day: "+ cal.get(Calendar.DAY_OF_MONTH)+ " Month: " + cal.get(Calendar.MONTH));
+
+		Log.d(TAG, String.format("Today: %s, beforeDAY month: %s", now.format(mFormatDateTime), beforeMonth.format(mFormatDateTime)));
 		
 		GetDeviceLogTask task = new GetDeviceLogTask();
 		LogDataPair pair = new LogDataPair (
 				mDevice, // device
-				beforeMonth.format("%Y-%m-%d %H:%M:%S"), // from
-				now.format("%Y-%m-%d %H:%M:%S"), // to
+				beforeMonth.format(mFormatDateTime), // from
+				now.format(mFormatDateTime), // to
 				DataType.AVERAGE, // type
 				DataInterval.DAY); // interval
 		task.execute(new LogDataPair[] { pair });
 
+		mGraphSeries = new GraphViewSeries("Graph", seriesStyleBlue, data);
 		mGraphView
-				.addSeries(new GraphViewSeries("Graph", seriesStyleBlue, data));
-		// set view port, start=2, size=40
-		mGraphView.setViewPort(2, 40);
+				.addSeries(mGraphSeries);
 		mGraphView.setManualYAxis(true);
 		mGraphView.setManualYAxisBounds(1.0, -1.0);
 
-		// graphView.setScrollable(true);
-		// optional - activate scaling / zooming
-		// graphView.setScalable(true);
 		mGraphLayout.addView(mGraphView);
 
 		mGraphLayout.setOnTouchListener(new OnTouchListener() {
@@ -541,6 +536,64 @@ public class SensorDetailFragment extends SherlockFragment {
 		Date lastUpdateDate = new Date(lastUpdate.toMillis(true));
 		return dateFormat.format(lastUpdateDate);
 	}
+	
+	
+	public void fillGraph(DeviceLog log) {
+		
+		final DateFormat DateFormatter = new SimpleDateFormat(mGraphDateFormat);
+		final DateFormat TimeFormatter = new SimpleDateFormat(mGraphTimeFormat);
+		
+		mGraphView.setCustomLabelFormatter(new CustomLabelFormatter() {
+	        @Override
+	        public String formatLabel(double value, boolean isValueX) {
+	            // TODO Auto-generated method stub
+	            if (isValueX) {
+	                Log.d(TAG, "LABEL FORMATER - Value: "+ value +" Date: "+ DateFormatter.format(new Date((long) value)));
+	                return DateFormatter.format(new Date((long) value));
+	            }
+	            return null;
+	        }
+	    });
+		
+		
+		int size = log.getValues().size();
+		float minimum = (log.getValues().get(0).value > 1000)? log.getValues().get(0).value/100:log.getValues().get(0).value ;
+		float maximum = (log.getValues().get(0).value > 1000)? log.getValues().get(0).value/100:log.getValues().get(0).value ;
+		// IF minimum is NAN
+		if(minimum == mNonValue)
+			minimum = 0;
+		float value = 0;
+		Calendar cal = Calendar.getInstance();
+		GraphView.GraphViewData[] data = new GraphView.GraphViewData[size];
+		for (int i = 0; i < size; i++) {
+			value = log.getValues().get(i).value;
+			cal.setTime(log.getValues().get(i).date);
+			
+			if(value == mNonValue) {
+				value = 0;
+			}
+			else if(value > 1000 ) {
+				value = (float) (value/100.0);
+			}
+			
+			if(minimum > value) {
+				minimum = value;
+			}
+			if(maximum < value) {
+				maximum = value;
+			}
+			
+			data[i] = new GraphView.GraphViewData(cal.getTimeInMillis(),value);
+			Log.d(TAG, "FILL GRAPH - date(msec):"  +cal.getTimeInMillis() + " Value: "+value);
+		}
+		
+		Log.d(TAG, "LOG - Min: " + minimum + " Max: "+maximum);
+		float deviation = maximum - minimum;
+		// Set maximum as +20% more than deviation and minimum as -20% deviation
+		mGraphView.setManualYAxisBounds(maximum+(deviation*0.2), (minimum > 0)?minimum-(deviation*0.2):0);
+		//mGraphView.setViewPort(0, 7);
+		mGraphSeries.resetData(data);
+	}
 
 	/*
 	 * ================================= ASYNC TASK ===========================
@@ -604,9 +657,12 @@ public class SensorDetailFragment extends SherlockFragment {
 
 		@Override
 		protected void onPostExecute(DeviceLog log) {
-			for (DeviceLog.DataRow item : log.getValues()) {
-				Log.d(TAG, item.debugString());
-			}
+			/// FIXME: Kontrola zda neni prazdny 
+			//for (DeviceLog.DataRow item : log.getValues()) {
+			//	Log.d(TAG, item.debugString());
+			//}
+			
+			fillGraph(log);
 		}
 
 	}
@@ -719,5 +775,7 @@ public class SensorDetailFragment extends SherlockFragment {
 			mRefreshTimeValue.setEnabled(true);
 		}
 	}
+
+
 
 }
