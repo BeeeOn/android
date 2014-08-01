@@ -119,13 +119,13 @@
 		
 	    <TextView
 	        android:id="@+id/sen_graph_info"
-	        android:layout_width="120dp"
+	        android:layout_width="140dp"
 	        android:layout_height="40dp"
 	        android:layout_below="@+id/sen_graph_layout"
 	        android:layout_marginTop="-120dp"
 	        android:fitsSystemWindows="true"
 	        android:gravity="center"
-	        android:text="@string/sen_detail_graph_info"
+	        android:text="@string/loading_data"
 	        android:textColor="@color/log_blue2"
 	        android:textSize="20sp"
 	        android:visibility="invisible" />

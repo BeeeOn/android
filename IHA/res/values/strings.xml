@@ -95,6 +95,7 @@
     <string name="addadapter_qrcode_desc">Get QR code</string>
     <string name="addsensor_new_location_spinner">New location</string>
     <string name="sen_detail_graph_info">Tap to Active</string>
+    <string name="loading_data">Loading data...</string>
     <string name="no_sensor_cap">NO SENSOR</string>
     
     <!-- Arrays -->

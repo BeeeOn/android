@@ -384,7 +384,7 @@ public class SensorDetailFragment extends SherlockFragment {
 		// mGraphLayout.getLayoutParams().width + " x "+
 		// mGraphLayout.getLayoutParams().height);
 		params.setMargins(
-				(int) ((displaymetrics.widthPixels / 2) - (60 * displaymetrics.density)),
+				(int) ((displaymetrics.widthPixels / 2) - (70 * displaymetrics.density)),
 				(int) ((-120) * displaymetrics.density), 0, 0); // substitute
 																// parameters
 																// for left,
@@ -435,13 +435,17 @@ public class SensorDetailFragment extends SherlockFragment {
 		((LineGraphView) mGraphView).setDrawBackground(true);
 		// graphView.setAlpha(128);
 		// draw sin curve
-		int num = 50;
+		int num = 3;
 		GraphView.GraphViewData[] data = new GraphView.GraphViewData[num];
-		double v = 0;
+		data[0] = new GraphView.GraphViewData(0, 0);
+		data[1] = new GraphView.GraphViewData(1, 0);
+		data[2] = new GraphView.GraphViewData(2, 0);
+		
+		/*double v = 0;
 		for (int i = 0; i < num; i++) {
 			v += 0.2;
 				data[i] = new GraphView.GraphViewData(i, Math.sin(v));
-		}
+		}*/
 		
 		// Get Today 
 		Time now = new Time();
@@ -470,7 +474,7 @@ public class SensorDetailFragment extends SherlockFragment {
 		mGraphView
 				.addSeries(mGraphSeries);
 		mGraphView.setManualYAxis(true);
-		mGraphView.setManualYAxisBounds(1.0, -1.0);
+		mGraphView.setManualYAxisBounds(1.0, 0.0);
 
 		mGraphLayout.addView(mGraphView);
 
@@ -593,6 +597,7 @@ public class SensorDetailFragment extends SherlockFragment {
 		mGraphView.setManualYAxisBounds(maximum+(deviation*0.2), (minimum > 0)?minimum-(deviation*0.2):0);
 		//mGraphView.setViewPort(0, 7);
 		mGraphSeries.resetData(data);
+		mGraphInfo.setText(getView().getResources().getString(R.string.sen_detail_graph_info));
 	}
 
 	/*
