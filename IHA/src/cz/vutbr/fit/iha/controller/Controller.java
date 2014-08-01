@@ -95,6 +95,10 @@ public final class Controller {
 		mDemoMode = demoMode;
 		mController = new Controller(context);
 	}
+	
+	public static boolean isDemoMode() {
+		return mDemoMode;
+	}
 
 	
 	/** Communication methods ***********************************************/
