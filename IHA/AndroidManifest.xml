@@ -2,11 +2,11 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="cz.vutbr.fit.iha"
     android:installLocation="auto"
-    android:versionCode="3"
-    android:versionName="1.0.0 debug" >
+    android:versionCode="4"
+    android:versionName="1.1.0 debug" >
 
     <uses-sdk
-        android:minSdkVersion="8"
+        android:minSdkVersion="9"
         android:targetSdkVersion="19" />
 
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />

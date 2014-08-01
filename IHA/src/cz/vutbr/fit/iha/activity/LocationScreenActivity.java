@@ -551,20 +551,6 @@ public class LocationScreenActivity extends BaseActivity {
 		int[] icon;
 		mTitle = mDrawerTitle = "IHA";
 
-		mSensorList = (ListView) findViewById(R.id.listviewofsensors);
-		TextView nosensor = (TextView) findViewById(R.id.nosensorlistview);
-		// If no sensor - display text only
-		if (sensors.size() == 0) {
-			if (nosensor != null) {
-				nosensor.setVisibility(View.VISIBLE);
-			}
-			mSensorList.setVisibility(View.GONE);
-			this.setSupportProgressBarIndeterminateVisibility(false);
-			return true;
-		} else {
-			nosensor.setVisibility(View.GONE);
-			mSensorList.setVisibility(View.VISIBLE);
-		}
 
 		// TODO: this works, but its not the best solution
 		if (!ListOfSensors.ready) {
@@ -583,6 +569,9 @@ public class LocationScreenActivity extends BaseActivity {
 		mTimeHandler.removeCallbacks(mTimeRun);
 		Log.d(TAG, "LifeCycle: getsensors timer remove");
 
+		mSensorList = (ListView) findViewById(R.id.listviewofsensors);
+		TextView nosensor = (TextView) findViewById(R.id.nosensorlistview);
+		
 		title = new String[sensors.size()];
 		value = new String[sensors.size()];
 		unit = new String[sensors.size()];
@@ -603,6 +592,24 @@ public class LocationScreenActivity extends BaseActivity {
 							// (detail), fix that by changing that activity
 							// (fragment?) first?
 		}
+		
+		
+		// If no sensor - display text only
+		if (sensors.size() == 0) {
+			if (nosensor != null) {
+				nosensor.setVisibility(View.VISIBLE);
+				mSensorList.setVisibility(View.GONE);
+			}
+			
+			this.setSupportProgressBarIndeterminateVisibility(false);
+			return true;
+		} else {
+			nosensor.setVisibility(View.GONE);
+			mSensorList.setVisibility(View.VISIBLE);
+		}
+
+		
+		
 
 		mSensorAdapter = new SensorListAdapter(LocationScreenActivity.this,
 				title, value, unit, time, icon);
