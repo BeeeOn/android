@@ -8,6 +8,8 @@ import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnCancelListener;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -52,6 +54,8 @@ public class LoginActivity extends BaseActivity {
 	private static final String TAG = LoginActivity.class.getSimpleName();
 	public static final int USER_RECOVERABLE_AUTH = 5;
 	private static final int GET_GOOGLE_ACCOUNT = 6;
+	
+	private boolean mIgnoreChange = false;
 
 	// ////////////////////////////////////////////////////////////////////////////////////
 	// ///////////////// Override METHODS
@@ -136,9 +140,11 @@ public class LoginActivity extends BaseActivity {
 		btnGoogle.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
+				mIgnoreChange = true;
 				mActivity.setDemoMode(false);
 				mProgress.show();
 				beginGoogleAuthRutine(v);
+				mIgnoreChange = false;
 			}
 		});
 		btnMojeID.setOnClickListener(new OnClickListener() {
@@ -190,6 +196,15 @@ public class LoginActivity extends BaseActivity {
 	public void onBackPressed() {
 		super.onBackPressed();
 		mActivity.finish();
+	}
+	
+	@Override
+	public void onConfigurationChanged(Configuration newConfig) {
+		Log.d(TAG, "Ignore change orientation ?");
+	   // ignore orientation change
+	   if (!mIgnoreChange) {
+	       super.onConfigurationChanged(newConfig);
+	   }
 	}
 
 	// ////////////////////////////////////////////////////////////////////////////////////
