@@ -18,9 +18,11 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.text.format.Time;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.View.OnKeyListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
@@ -63,7 +65,8 @@ import cz.vutbr.fit.iha.household.ActualUser;
  * 
  */
 public class LocationScreenActivity extends BaseActivity {
-	private static final String TAG = LocationScreenActivity.class.getSimpleName();
+	private static final String TAG = LocationScreenActivity.class
+			.getSimpleName();
 
 	private Controller mController;
 	private LocationScreenActivity mActivity;
@@ -106,7 +109,7 @@ public class LocationScreenActivity extends BaseActivity {
 	private Runnable mTimeRun;
 
 	/**
-	 * Tasks which can be running in this activity and after finishing can try 
+	 * Tasks which can be running in this activity and after finishing can try
 	 * to change GUI -> must be cancelled when activity stop
 	 */
 	private DevicesTask mDevicesTask;
@@ -183,24 +186,32 @@ public class LocationScreenActivity extends BaseActivity {
 		return super.dispatchTouchEvent(ev);
 	}
 
+	private void firstTapBack() {
+		Toast.makeText(this, getString(R.string.toast_tap_again_exit),
+				Toast.LENGTH_SHORT).show();
+		backPressed = true;
+		if (mDrawerLayout != null)
+			mDrawerLayout.openDrawer(mDrawerList);
+	}
+
+	private void secondTapBack() {
+		// Toast.makeText(this, getString(R.string.toast_leaving_app),
+		// Toast.LENGTH_LONG).show();
+		// super.onBackPressed();
+		// this.finish();
+
+		android.os.Process.killProcess(android.os.Process.myPid());
+	}
+
 	@Override
 	public void onBackPressed() {
 		// second click
 		if (backPressed) {
-			// Toast.makeText(this, getString(R.string.toast_leaving_app),
-			// Toast.LENGTH_LONG).show();
-			// super.onBackPressed();
-			// this.finish();
-
-			android.os.Process.killProcess(android.os.Process.myPid());
+			secondTapBack();
 		}
 		// first click
 		else {
-			Toast.makeText(this, getString(R.string.toast_tap_again_exit),
-					Toast.LENGTH_SHORT).show();
-			backPressed = true;
-			if (mDrawerLayout != null)
-				mDrawerLayout.openDrawer(mDrawerList);
+			firstTapBack();
 		}
 		Log.d(TAG, "BackPressed - onBackPressed " + String.valueOf(backPressed));
 
@@ -244,9 +255,9 @@ public class LocationScreenActivity extends BaseActivity {
 
 		ActualUser actUser = mController.getActualUser();
 
-//		// FIXME zmenit obrazek na obrazek uzivatele
-//		Bitmap largeIcon = BitmapFactory.decodeResource(getResources(),
-//				R.drawable.person_siluete);
+		// // FIXME zmenit obrazek na obrazek uzivatele
+		// Bitmap largeIcon = BitmapFactory.decodeResource(getResources(),
+		// R.drawable.person_siluete);
 
 		// Adding profile header
 		menuAdapter.addHeader(new ProfileMenuItem(actUser.getName(), actUser
@@ -331,6 +342,25 @@ public class LocationScreenActivity extends BaseActivity {
 		mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow,
 				GravityCompat.START);
 
+		mDrawerLayout.setOnKeyListener(new OnKeyListener() {
+
+			@Override
+			public boolean onKey(View v, int keyCode, KeyEvent event) {
+				if (keyCode == KeyEvent.KEYCODE_BACK && event.getAction()==KeyEvent.ACTION_UP) {
+					Log.d(TAG, "BackPressed = " + String.valueOf(backPressed));
+					if (mDrawerLayout.isDrawerOpen(mDrawerList) && !backPressed) {
+						firstTapBack();
+						return true;
+					} else if (mDrawerLayout.isDrawerOpen(mDrawerList)
+							&& backPressed) {
+						secondTapBack();
+						return true;
+					}
+				}
+				return false;
+			}
+		});
+
 		// // Set the MenuListAdapter to the ListView
 		// mDrawerList.setAdapter(mMenuAdapter);
 
@@ -347,7 +377,8 @@ public class LocationScreenActivity extends BaseActivity {
 				switch (item.getType()) {
 				case ADAPTER:
 					// if it is not chosen, switch to selected adapter
-					if (!controller.getActiveAdapter().getId().equals(item.getId())) {
+					if (!controller.getActiveAdapter().getId()
+							.equals(item.getId())) {
 						controller.setActiveAdapter(item.getId());
 						redrawMenu();
 					}
