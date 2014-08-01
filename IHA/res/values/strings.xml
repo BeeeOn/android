@@ -95,6 +95,8 @@
     <string name="addadapter_qrcode_desc">Get QR code</string>
     <string name="addsensor_new_location_spinner">New location</string>
     <string name="sen_detail_graph_info">Tap to Active</string>
+    <string name="no_sensor_cap">NO SENSOR</string>
+    
     <!-- Arrays -->
     <string-array name="registration_spinner">
         <item>Facebook</item>
@@ -108,6 +110,10 @@
         <item>Item 4</item>
         <item>Item 5</item>
         <item>Item 6</item>
+    </string-array>
+    <string-array name="title_of_main_fragments" >
+        <item>Custom </item>
+        <item>List</item>
     </string-array>
 
     <string name="log_sc_or">or</string>

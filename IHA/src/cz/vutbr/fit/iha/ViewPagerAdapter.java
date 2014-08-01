@@ -1,5 +1,7 @@
 package cz.vutbr.fit.iha;
 
+import android.content.Context;
+import android.content.res.Resources;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -10,10 +12,11 @@ public class ViewPagerAdapter extends FragmentPagerAdapter {
 
 	 // Declare the number of ViewPager pages
 	  final int PAGE_COUNT = 2;
-	  private String titles[] = new String[] { "List ", "Graph" };
+	  private String titles[] ;;
 
-	  public ViewPagerAdapter(FragmentManager fm) {
+	  public ViewPagerAdapter(FragmentManager fm, Context ctx) {
 	    super(fm);
+	    titles = ctx.getResources().getStringArray(R.array.title_of_main_fragments);
 	  }
 
 	  @Override
@@ -21,12 +24,12 @@ public class ViewPagerAdapter extends FragmentPagerAdapter {
 	    switch (position) {
 
 	    // Open FragmentTab2.java
-	    case 0:
+	    case 1:
 	    	ListOfSensors fragmenttab2 = new ListOfSensors();
 	      return fragmenttab2;
 	      
 	      // Open FragmentTab1.java
-	    case 1:
+	    case 0:
 	    	GraphOfSensors fragmenttab1 = new GraphOfSensors();
 	      return fragmenttab1;
 

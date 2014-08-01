@@ -11,5 +11,14 @@
         android:layout_alignParentTop="true" 
         android:divider="@null">
     </ListView>
+    <TextView
+        android:id="@+id/nosensorlistview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_centerInParent="true"
+        android:text="@string/no_sensor_cap"
+        android:textSize="20dp"
+        android:visibility="gone"
+        />
 
 </RelativeLayout>

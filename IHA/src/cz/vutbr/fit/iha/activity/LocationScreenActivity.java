@@ -495,6 +495,8 @@ public class LocationScreenActivity extends BaseActivity {
 
 	public boolean getSensors(final List<BaseDevice> sensors) {
 		Log.d(TAG, "LifeCycle: getsensors start");
+		
+		
 
 		// TODO: this works, but its not the best solution
 		if (!ListOfSensors.ready) {
@@ -539,6 +541,13 @@ public class LocationScreenActivity extends BaseActivity {
 			return false; // TODO: this happens when we're in different activity
 							// (detail), fix that by changing that activity
 							// (fragment?) first?
+		}
+		
+		// If no sensor - display text only
+		if(sensors.size() == 0) {
+			TextView nosensor = (TextView) findViewById(R.id.nosensorlistview);
+			nosensor.setVisibility(View.VISIBLE);
+			mSensorList.setVisibility(View.GONE);
 		}
 
 		mSensorAdapter = new SensorListAdapter(LocationScreenActivity.this,
