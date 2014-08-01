@@ -38,6 +38,8 @@ public class SensorDetailActivity extends BaseActivity
 	
 	private static final String TAG = SensorDetailActivity.class.getSimpleName();
 	
+	private GetDevicesTask mTask;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -64,8 +66,8 @@ public class SensorDetailActivity extends BaseActivity
 		mLocationOfSensorID = bundle.getString("LocationOfSensorID");
 		mSensorPosition = bundle.getInt("SensorPosition");
 		
-		GetDevicesTask task = new GetDevicesTask();
-		task.execute(new String[] { mLocationOfSensorID });
+		mTask = new GetDevicesTask();
+		mTask.execute(new String[] { mLocationOfSensorID });
 	}
 
 	@Override
@@ -76,6 +78,14 @@ public class SensorDetailActivity extends BaseActivity
 			return true;
 		}
 		return false;
+	}
+	
+	@Override
+	public void onStop() {
+		if (mTask != null) {
+			mTask.cancel(true);
+		}
+		super.onStop();
 	}
 	
 	
