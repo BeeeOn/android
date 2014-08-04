@@ -109,9 +109,10 @@ public class SensorDetailFragment extends SherlockFragment {
 	private GraphViewSeries mGraphSeries;
 	
 	private String mFormatDateTime = "%Y-%m-%d %H:%M:%S";
-	private String mGraphDateFormat = "dd.MM. hh:mm";
+	private String mGraphDateFormat = "dd.MM.";
 	private String mGraphTimeFormat = "hh:mm";
 	private float mNonValue = (float) -1000.0;
+	private float mTempConstant = (float) 1000;
 
 	/**
 	 * Represents "pair" of data required for get device log
@@ -434,22 +435,18 @@ public class SensorDetailFragment extends SherlockFragment {
 
 		mGraphView.getGraphViewStyle().setVerticalLabelsColor(getResources().getColor(R.color.log_blue2));
 		mGraphView.getGraphViewStyle().setHorizontalLabelsColor(getResources().getColor(R.color.log_blue2));
+		//mGraphView.getGraphViewStyle().setVerticalLabelsWidth(60);
+		//mGraphView.getGraphViewStyle().setNumHorizontalLabels(2);
 		mGraphView.setBackgroundColor(getResources().getColor(R.color.alpha_blue));//getResources().getColor(R.color.log_blue2));
 		
 		((LineGraphView) mGraphView).setDrawBackground(true);
 		// graphView.setAlpha(128);
-		// draw sin curve
 		int num = 3;
 		GraphView.GraphViewData[] data = new GraphView.GraphViewData[num];
 		data[0] = new GraphView.GraphViewData(0, 0);
 		data[1] = new GraphView.GraphViewData(1, 0);
 		data[2] = new GraphView.GraphViewData(2, 0);
-		
-		/*double v = 0;
-		for (int i = 0; i < num; i++) {
-			v += 0.2;
-				data[i] = new GraphView.GraphViewData(i, Math.sin(v));
-		}*/
+
 		
 		// Get Today 
 		Time now = new Time();
@@ -557,19 +554,24 @@ public class SensorDetailFragment extends SherlockFragment {
 	            // TODO Auto-generated method stub
 	            if (isValueX) {
 	                Log.d(TAG, "LABEL FORMATER - Value: "+ value +" Date: "+ DateFormatter.format(new Date((long) value)));
-	                return DateFormatter.format(new Date((long) value));
+	                return DateFormatter.format(new Date((long) value))+ " "+TimeFormatter.format(new Date((long) value));
 	            }
-	            return null;
+	            return String.format("%.1f", value);
 	        }
 	    });
 		
 		
 		int size = log.getValues().size();
-		float minimum = (log.getValues().get(0).value > 1000)? log.getValues().get(0).value/100:log.getValues().get(0).value ;
-		float maximum = (log.getValues().get(0).value > 1000)? log.getValues().get(0).value/100:log.getValues().get(0).value ;
-		// IF minimum is NAN
-		if(minimum == mNonValue)
-			minimum = 0;
+		float minimum = log.getMinimumValue();
+		float maximum = log.getMaximumValue();
+		// Temp controll to bigger than 1 000
+		minimum = (float) ((minimum > mTempConstant)?minimum/100.0:minimum);
+		maximum = (float) ((maximum > mTempConstant)?maximum/100.0:maximum);
+		Log.d(TAG, "LOG1 - Min: " + minimum + " Max: "+maximum);
+		float deviation = maximum - minimum;
+		float minLimit = (float) (minimum-(deviation*0.2));
+		float maxLimit = (float) (maximum+(deviation*0.2));
+
 		float value = 0;
 		Calendar cal = Calendar.getInstance();
 		GraphView.GraphViewData[] data = new GraphView.GraphViewData[size];
@@ -578,27 +580,20 @@ public class SensorDetailFragment extends SherlockFragment {
 			cal.setTime(log.getValues().get(i).date);
 			
 			if(value == mNonValue) {
-				value = 0;
+				value = minLimit;
 			}
 			else if(value > 1000 ) {
 				value = (float) (value/100.0);
-			}
-			
-			if(minimum > value) {
-				minimum = value;
-			}
-			if(maximum < value) {
-				maximum = value;
 			}
 			
 			data[i] = new GraphView.GraphViewData(cal.getTimeInMillis(),value);
 			Log.d(TAG, "FILL GRAPH - date(msec):"  +cal.getTimeInMillis() + " Value: "+value);
 		}
 		
-		Log.d(TAG, "LOG - Min: " + minimum + " Max: "+maximum);
-		float deviation = maximum - minimum;
+		Log.d(TAG, "LOG2 - Min: " + minimum + " Max: "+maximum);
+		
 		// Set maximum as +20% more than deviation and minimum as -20% deviation
-		mGraphView.setManualYAxisBounds(maximum+(deviation*0.2), (minimum > 0)?minimum-(deviation*0.2):0);
+		mGraphView.setManualYAxisBounds(maxLimit, (minimum > 0)?minLimit:0);
 		//mGraphView.setViewPort(0, 7);
 		mGraphSeries.resetData(data);
 		mGraphInfo.setText(getView().getResources().getString(R.string.sen_detail_graph_info));

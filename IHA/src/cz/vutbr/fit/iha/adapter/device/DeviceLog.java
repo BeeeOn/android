@@ -16,6 +16,7 @@ public class DeviceLog {
 	private List<DataRow> mValues = new ArrayList<DataRow>(); // FIXME: use rather Map
 	private DataType mType;
 	private DataInterval mInterval;
+	private float mNullValue = (float) -1000.0;
 	
 	public enum DataType {
 		MINIMUM("min"),
@@ -148,6 +149,48 @@ public class DeviceLog {
 	 */
 	public List<DataRow> getValues() {
 		return mValues;
+	}
+	
+	/**
+	 * Return minimum value from Array
+	 * @return
+	 */
+	public float getMinimumValue() {
+		if(mValues.isEmpty()) {
+			return 0;
+		}
+		
+		float minimum = 0;
+		// Find first nonNull value
+		for( DataRow row : mValues ) {
+			if(mNullValue == row.value) {
+				continue;
+			}
+			minimum = row.value;
+			break;
+		}
+		for( DataRow row : mValues ) {
+			if(mNullValue == row.value) {
+				continue;
+			}
+			minimum = Math.min(row.value, minimum);
+		}
+		return minimum;
+	}
+	
+	/**
+	 * Return maximum value from Array
+	 * @return
+	 */
+	public float getMaximumValue() {
+		if(mValues.isEmpty()) {
+			return 0;
+		}
+		float maximum = mValues.get(0).value;
+		for( DataRow row : mValues ) {
+			maximum = Math.max(row.value, maximum);
+		}
+		return maximum;
 	}
 	
 	/**
