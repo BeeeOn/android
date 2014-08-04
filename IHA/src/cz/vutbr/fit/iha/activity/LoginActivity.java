@@ -324,7 +324,7 @@ public class LoginActivity extends BaseActivity {
 					ActualUser user = mController.getActualUser();
 					user.setName(ggAuth.getUserName());
 					user.setEmail(ggAuth.getEmail());
-					user.setPicture(ggAuth.getPictureIMG());
+					user.setPicture(LoginActivity.this, ggAuth.getPictureIMG());
 					doLogin(email);
 					Log.d(TAG, "Finish google auth");
 				}

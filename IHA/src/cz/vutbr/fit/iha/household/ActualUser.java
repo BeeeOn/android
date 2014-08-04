@@ -42,17 +42,30 @@ public class ActualUser extends User {
 	 */
 	public Bitmap getPicture(Context context) {
 		if (mPicture == null) {
-			mPicture = Utils.getRoundedShape(BitmapFactory.decodeResource(context.getResources(), R.drawable.person_siluete));
+			setDefaultPicture(context);
 		}
 		return mPicture;
 	}
 
 	/**
+	 * Set default profile picture
+	 * @param context
+	 */
+	private void setDefaultPicture(Context context) {
+		mPicture = Utils.getRoundedShape(BitmapFactory.decodeResource(context.getResources(),
+				R.drawable.person_siluete));
+	}
+	
+	/**
 	 * @param mPictureIMG
 	 *            the mPictureIMG to set
 	 */
-	public void setPicture(Bitmap picture) {
-		mPicture = Utils.getRoundedShape(picture);
+	public void setPicture(Context context, Bitmap picture) {
+		if (picture == null) {
+			setDefaultPicture(context);
+		} else {
+			mPicture = Utils.getRoundedShape(picture);
+		}
 	}
 
 	/**
