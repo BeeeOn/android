@@ -174,106 +174,51 @@ public class GetGoogleAuth extends AsyncTask<Void, Void, GoogleAuthState> {
 			case eRecorver:
 				//TODO: check if better with progressBar
 				mActivity.ProgressDismiss();
-				new ToastMessageThread(mActivity, "Google authentication").start();
+				new ToastMessageThread(mActivity, R.string.toast_google_auth).start();
 				break;
 			case eUnknown:
 				mActivity.ProgressDismiss();
-				new ToastMessageThread(mActivity, "Something goes wrong, try it later please.").start();
+				new ToastMessageThread(mActivity, R.string.toast_something_wrong).start();
 				break;
 			case eNoConnection:
 				mActivity.ProgressDismiss();
-				new ToastMessageThread(mActivity, mActivity.getString(R.string.toast_internet_connection)).start();
+				new ToastMessageThread(mActivity, R.string.toast_internet_connection).start();
 				break;
 			default:
 				break;
 		}
-		
-			//FIXME: this code below need refactoring !!!!! Leo?
-//			Thread fetchUserInfo = new Thread(new Runnable(){
-//			    @Override
-//			    public void run() {
-//			        try {
-//			        	fetchInfoFromProfileServer(result);
-//			        } catch (Exception e) {
-//			            e.printStackTrace();
-//			        }
-//			    }
-//			});
-			// Fetch user name and surname
-			//fetchUserInfo.start();
-
-			
-			// Wait for user name
-//			try {
-//				synchronized(this) {
-//					this.wait();
-//				}
-//			} catch (InterruptedException e) {
-//				e.printStackTrace();
-//			}
-			
-			//LayoutInflater inflater = mActivity.getLayoutInflater();
-			 
-            // Inflate the Layout
-           // View welcomeToastlayout = inflater.inflate(R.layout.toast_welcome,(ViewGroup) mActivity.findViewById(R.id.toast_welcome_layout));
- 
-			
-			// Log - Token and Name
-//			Log.d(TAG, "Token: "+result);
-//			Log.d(TAG, "User name: "+this.mUserName);
-//			Log.d(TAG, "Picture url:"+mPicture);
-//			mToken = result;
-			
-//			if(mPicture != null) {
-//				// Set User profile picture if is set
-//				//final ImageView picture = (ImageView) welcomeToastlayout.findViewById(R.id.toast_welcome_picture);
-//				Thread fetchUserPicture = new Thread(new Runnable(){
-//				    @Override
-//				    public void run() {
-//				        try {
-//				        	fetchPictureFromProfileServer(mPicture,picture);
-//				        } catch (Exception e) {
-//				            e.printStackTrace();
-//				        }
-//				    }
-//				});
-//				// Fetch user picture
-//				fetchUserPicture.start(); 
-//				// Wait for user picture
-//				try {
-//					synchronized(this) {
-//						this.wait();
-//					}
-//				} catch (InterruptedException e) {
-//					e.printStackTrace();
-//				}
-//			}
-//			
-//            TextView text = (TextView) welcomeToastlayout.findViewById(R.id.toast_welcome_text);
-//            // Set the Text to show in TextView
-//            text.setText("Welcome \n"+this.mUserName);
-//            Toast toast = new Toast(mActivity.getApplicationContext());
-//            toast.setGravity(Gravity.BOTTOM, 0, 0);
-//            toast.setDuration(Toast.LENGTH_LONG);
-//            toast.setView(welcomeToastlayout);
-//            toast.show();
-//			
-//            DemoData demo = new DemoData(mActivity);
-//            if (demo.checkDemoData()) {
-//				Intent intent = new Intent(mActivity, LocationScreenActivity.class);
-//				intent.putExtra(Constants.LOGIN, Constants.LOGIN_DEMO);
-//				//intent.putExtra(name, value);
-//				mActivity.startActivity(intent);
-//            }
-//	    	mActivity.finish();
-//	    	Log.d(TAG, "FINISH");
-////	    	synchronized(this) {
-////	        	  this.notify();
-////	          }
-//	    	return;
 	}
 	
+	//////////////////////////////////////////////////////////////////////////////////////
+	///////////////////  NON-THREAD METHODS (need parent thread) /////////////////////////
+	//////////////////////////////////////////////////////////////////////////////////////
 	
+	public boolean doInForeground(boolean fetchPhoto){
+		try {
+			mToken = GoogleAuthUtil.getToken(mActivity, mEmail,"oauth2:https://www.googleapis.com/auth/userinfo.profile");
+			Log.d(TAG, "Token");
+			
+			if(fetchPhoto)
+				fetchInfoFromProfileServer(mToken);
+			
+			return true;
+		} catch (UserRecoverableAuthException userRecoverableException) {
+			mActivity.startActivityForResult(userRecoverableException.getIntent(),LoginActivity.USER_RECOVERABLE_AUTH);
+			mActivity.ProgressDismiss();
+			new ToastMessageThread(mActivity, R.string.toast_google_auth).start();
+			return true;
+		} catch(IOException e){
+			mActivity.ProgressDismiss();
+			new ToastMessageThread(mActivity, R.string.toast_something_wrong).start();
+			e.printStackTrace();
+		} catch (Exception e) {
+			//TODO: check more exceptions and show toast 
+			mActivity.ProgressDismiss();
+			new ToastMessageThread(mActivity, R.string.toast_internet_connection).start();
+			e.printStackTrace();
+		}
+		return false;
+	}
 	
 	/****************************************************************************************/
 	/* Prevzato z SDK - EXTRAS - SAMPLE - AUTH  											*/
@@ -299,9 +244,6 @@ public class GetGoogleAuth extends AsyncTask<Void, Void, GoogleAuthState> {
 	          Log.d(TAG, String.format("Hello %s!", mUserName));
 	          Log.i(TAG, mPictureUrl);
 	          is.close();
-//	          synchronized(this) {
-//	        	  this.notify();
-//	          }
 	          if (mPictureUrl != null && mPictureUrl.length() > 0) {
 	        	  fetchPictureFromProfileServer(mPictureUrl);
 	          }
@@ -348,7 +290,7 @@ public class GetGoogleAuth extends AsyncTask<Void, Void, GoogleAuthState> {
      * @throws IOException
      * @throws JSONException
      */
-	private void fetchPictureFromProfileServer(String urlPicture/*, ImageView imageView*/) throws IOException, JSONException {
+	private void fetchPictureFromProfileServer(String urlPicture) throws IOException, JSONException {
     	try {
     		URL imageURL = new URL(urlPicture);         
             HttpURLConnection connection = (HttpURLConnection) imageURL
@@ -358,14 +300,9 @@ public class GetGoogleAuth extends AsyncTask<Void, Void, GoogleAuthState> {
             InputStream inputStream = connection.getInputStream();
             
             setPictureIMG(BitmapFactory.decodeStream(inputStream));// Convert to bitmap
-//            imageView.setImageBitmap(mPicture);
         } catch (IOException e) {
             e.printStackTrace();
         }
-    	
-//    	synchronized(this) {
-//      	  this.notify();
-//        }
         return;
     }
     

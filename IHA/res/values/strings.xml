@@ -80,6 +80,8 @@
     <string name="toast_no_unregistered_adapter">There is no connected unregistered adapter</string>
     <string name="toast_communication_error">Sorry, some communication problem, try later</string>
     <string name="toast_tap_again_exit">Tap back again to exit</string>
+    <string name="toast_google_auth">Google authentication</string>
+    <string name="toast_something_wrong">Something goes wrong, try it later please</string>
     <!-- NavDrawer -->
     <string name="drawer_open">OPEN</string>
     <string name="drawer_close">CLOSE</string>

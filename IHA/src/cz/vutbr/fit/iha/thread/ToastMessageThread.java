@@ -27,6 +27,16 @@ public class ToastMessageThread implements Runnable{
 		mActivity = activity;
 		mMessage = message;
 	}
+	
+	/**
+	 * Constructor
+	 * @param activity where the toast will be shown (must by alive)
+	 * @param messageResourceId of string to be shown 
+	 */
+	public ToastMessageThread(Activity activity, int messageResourceId){
+		mActivity = activity;
+		mMessage = mActivity.getString(messageResourceId);
+	}
 
 	@Override
 	public void run() {
