@@ -41,7 +41,7 @@
         android:textAppearance="?android:attr/textAppearanceSmall" />
 
     <EditText
-        android:id="@+id/addsensor_sensor_name_hint"
+        android:id="@+id/addsensor_sensor_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="20dp"

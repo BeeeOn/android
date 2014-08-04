@@ -3,8 +3,11 @@ package cz.vutbr.fit.iha.activity.dialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.util.TypedValue;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
@@ -12,6 +15,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.TextView;
+import android.widget.TextView.OnEditorActionListener;
 import cz.vutbr.fit.iha.R;
 import cz.vutbr.fit.iha.activity.LocationScreenActivity;
 import cz.vutbr.fit.iha.thread.AdapterRegisterThread;
@@ -21,6 +26,8 @@ public class AddAdapterActivityDialog extends BaseActivityDialog {
 	private static final String TAG = AddAdapterActivityDialog.class.getSimpleName();
 
 	public AddAdapterActivityDialog mActivity;
+	private Button mAddButton;
+	private Button mCancelButton;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -32,6 +39,7 @@ public class AddAdapterActivityDialog extends BaseActivityDialog {
 		mActivity = this;
 
 		initButtons();
+		initViews();
 	}
 
 	/**
@@ -44,10 +52,7 @@ public class AddAdapterActivityDialog extends BaseActivityDialog {
 			public void onClick(View v) {
 				try {
 					Intent intent = new Intent("com.google.zxing.client.android.SCAN");
-					intent.putExtra("SCAN_MODE", "QR_CODE_MODE"); // PRODUCT_MODE
-																	// for
-																	// bar
-																	// codes
+					intent.putExtra("SCAN_MODE", "QR_CODE_MODE"); // PRODUCT_MODE for bar codes
 
 					startActivityForResult(intent, 0);
 				} catch (Exception e) {
@@ -58,11 +63,15 @@ public class AddAdapterActivityDialog extends BaseActivityDialog {
 			}
 		});
 
+		mAddButton = (Button)findViewById(R.id.addadapter_add_button);
+		mCancelButton = (Button) findViewById(R.id.addadapter_cancel_button);
+		
 		// Serial number button - register new adapter by serial number
-		if (!mActivity.getIntent().getExtras().getBoolean("Cancel"))
-			((Button) findViewById(R.id.addadapter_add_button)).setLayoutParams(new LinearLayout.LayoutParams((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 260, getResources().getDisplayMetrics()), (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 50, getResources().getDisplayMetrics())));
-
-		((Button) findViewById(R.id.addadapter_add_button)).setOnClickListener(new OnClickListener() {
+		if (!mActivity.getIntent().getExtras().getBoolean("Cancel")){
+			mAddButton.setLayoutParams(new LinearLayout.LayoutParams((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 260, getResources().getDisplayMetrics()), (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 50, getResources().getDisplayMetrics())));
+		}
+		
+		mAddButton.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				EditText serialNuber = (EditText) findViewById(R.id.addadapter_ser_num);
@@ -74,14 +83,40 @@ public class AddAdapterActivityDialog extends BaseActivityDialog {
 
 		// If this dialog as first use (from login page)- invisible button
 		if (!mActivity.getIntent().getExtras().getBoolean("Cancel"))
-			((Button) findViewById(R.id.addadapter_cancel_button)).setVisibility(View.INVISIBLE);
+			mCancelButton.setVisibility(View.INVISIBLE);
 
-		((Button) findViewById(R.id.addadapter_cancel_button)).setOnClickListener(new OnClickListener() {
+		mCancelButton.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				mActivity.finish();
 			}
 		});
+	}
+	
+	/**
+	 * Initialize TextWatchers
+	 */
+	private void initViews(){
+		EditText serialInput = (EditText)findViewById(R.id.addadapter_ser_num);
+		
+		TextWatcher tw = new TextWatcher(){
+
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count, int after) { /* nothing to do now */ }
+
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before, int count) { /* nothing to do now */ }
+
+			@Override
+			public void afterTextChanged(Editable s) {
+				if(s.length() > 0)
+					mAddButton.setEnabled(true);
+				else
+					mAddButton.setEnabled(false);
+			}
+		};
+		
+		serialInput.addTextChangedListener(tw);
 	}
 
 	@Override
