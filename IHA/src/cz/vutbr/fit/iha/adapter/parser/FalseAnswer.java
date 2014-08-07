@@ -38,7 +38,7 @@ public class FalseAnswer {
 					troubleMakers = XmlParsers.getFalseMessage6(START_TAG + errMessage + END_TAG);
 					break;
 				case 13:
-					troubleMakers = XmlParsers.getFalseMessage6(START_TAG + errMessage + END_TAG);
+					troubleMakers = XmlParsers.getFalseMessage13(START_TAG + errMessage + END_TAG);
 					break;
 				default:
 					mErrMessage = errMessage;

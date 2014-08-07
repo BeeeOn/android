@@ -126,6 +126,11 @@ public class GetGoogleAuth extends AsyncTask<Void, Void, GoogleAuthState> {
 		mToken = token;
 	}
 	
+	public void invalidateToken(){
+		GoogleAuthUtil.invalidateToken(mActivity, mToken);
+		mToken = "";
+	}
+	
 	/**
 	 * Singleton-like method, but not initializing
 	 * @return static object
@@ -204,12 +209,12 @@ public class GetGoogleAuth extends AsyncTask<Void, Void, GoogleAuthState> {
 			return true;
 		} catch (UserRecoverableAuthException userRecoverableException) {
 			mActivity.startActivityForResult(userRecoverableException.getIntent(),LoginActivity.USER_RECOVERABLE_AUTH);
-			mActivity.ProgressDismiss();
+			mActivity.ProgressChangeText(mActivity.getString(R.string.progress_google));
 			new ToastMessageThread(mActivity, R.string.toast_google_auth).start();
 			return true;
 		} catch(IOException e){
 			mActivity.ProgressDismiss();
-			new ToastMessageThread(mActivity, R.string.toast_something_wrong).start();
+			new ToastMessageThread(mActivity, R.string.toast_internet_connection).start();
 			e.printStackTrace();
 		} catch (Exception e) {
 			//TODO: check more exceptions and show toast 

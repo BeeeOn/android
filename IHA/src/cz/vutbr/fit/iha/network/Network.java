@@ -175,10 +175,14 @@ public class Network {
 
 		HostnameVerifier hv = HttpsURLConnection.getDefaultHostnameVerifier();
 		SSLSession s = socket.getSession();
+		
+		if(!s.isValid())
+			Log.e("Network", "sslshiiit");
 
 		// Verify that the certificate hostName
 		// This is due to lack of SNI support in the current SSLSocket.
 		if (!hv.verify(SERVER_CN_CERTIFICATE, s)) {
+			Log.e("Network", "rict pavlovi ze to opravil :)");
 			throw new SSLHandshakeException("Expected CN value:" + SERVER_CN_CERTIFICATE + ", found " + s.getPeerPrincipal());
 		}
 
@@ -299,7 +303,7 @@ public class Network {
 		ParsedMessage msg = doRequest(messageToSend);
 
 		if (msg.getSessionId() != 0 && msg.getState() == State.TRUE && ((String)msg.data).equals(SIGNIN)) {
-			Log.d(TAG, msg.getState().getValue());
+			Log.i(TAG, msg.getState().getValue());
 
 			mUser.setSessionId(Integer.toString(msg.getSessionId()));
 			mSessionId = msg.getSessionId();
@@ -345,7 +349,7 @@ public class Network {
 		ParsedMessage msg = doRequest(messageToSend);
 
 		if (msg.getSessionId() != 0 && msg.getState() == State.TRUE && ((String) msg.data).equals(SIGNUP)) {
-			Log.d(TAG, msg.getState().getValue());
+			Log.i(TAG, msg.getState().getValue());
 
 			mUser.setSessionId(Integer.toString(msg.getSessionId()));
 			mSessionId = msg.getSessionId();
@@ -375,7 +379,7 @@ public class Network {
 		List<Adapter> result = new ArrayList<Adapter>();
 
 		if (msg.getState() == State.READY) {
-			Log.d(TAG, msg.getState().getValue());
+			Log.i(TAG, msg.getState().getValue());
 
 			result.addAll((List<Adapter>) msg.data);
 		} else if (msg.getState() == State.RESIGN) {
@@ -403,7 +407,7 @@ public class Network {
 		Adapter result = new Adapter();
 
 		if (msg.getState() == State.XML) {
-			Log.d(TAG, msg.getState().getValue());
+			Log.i(TAG, msg.getState().getValue());
 
 			result = (Adapter) msg.data;
 		} else if (msg.getState() == State.RESIGN) {

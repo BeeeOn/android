@@ -54,18 +54,12 @@
     <string name="last_update">Last update:</string>
     <string name="sen_graph_label">Graph of history</string>
 
-    <!-- RadioButtons -->
-    <string name="login_radio_facebook">Facebook account</string>
-    <string name="login_radio_google">Google account</string>
-    <string name="login_radio_mojeid">MojeID</string>
-
     <!-- Hints -->
     <string name="login_user_name_hint">Login/email</string>
-    <string name="login_password_hint">Password</string>
     <string name="addsensor_sensor_name_hint">Name of new sensor</string>
     <string name="addsensor_new_location_hint">New location name</string>
     <string name="addadapter_ser_num_hint">Input of serial number</string>
-    <string name="registration_password_repeat_hint">Repeat password</string>
+    
     <!-- Toasts -->
     <string name="toast_changeto">\u0020changed to:\u0020</string>
     <string name="toast_new_sensor_added">New sensor was added</string>
@@ -82,6 +76,11 @@
     <string name="toast_tap_again_exit">Tap back again to exit</string>
     <string name="toast_google_auth">Google authentication</string>
     <string name="toast_something_wrong">Something goes wrong, try it later please</string>
+    
+    <!-- Progress -->
+    <string name="progress_signing">Signing to server&#8230;</string>
+    <string name="progress_google">Handshake with google</string>
+    
     <!-- NavDrawer -->
     <string name="drawer_open">OPEN</string>
     <string name="drawer_close">CLOSE</string>
@@ -89,6 +88,7 @@
     <string name="custom_view">Custom view</string>
     <string name="no_location">No location</string>
     <string name="no_custom_view">No custom view</string>
+    
     <!-- Others -->
     <string name="action_settings">Settings</string>
     <string name="action_about">About</string>

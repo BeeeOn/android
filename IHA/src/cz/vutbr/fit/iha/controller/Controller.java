@@ -16,6 +16,7 @@ import cz.vutbr.fit.iha.adapter.device.DeviceLog.DataType;
 import cz.vutbr.fit.iha.adapter.device.StateDevice;
 import cz.vutbr.fit.iha.adapter.device.SwitchDevice;
 import cz.vutbr.fit.iha.adapter.location.Location;
+import cz.vutbr.fit.iha.exception.FalseException;
 import cz.vutbr.fit.iha.exception.NetworkException;
 import cz.vutbr.fit.iha.exception.NoConnectionException;
 import cz.vutbr.fit.iha.exception.NotImplementedException;
@@ -23,6 +24,7 @@ import cz.vutbr.fit.iha.household.ActualUser;
 import cz.vutbr.fit.iha.household.DemoHousehold;
 import cz.vutbr.fit.iha.household.Household;
 import cz.vutbr.fit.iha.household.User;
+import cz.vutbr.fit.iha.network.GetGoogleAuth;
 import cz.vutbr.fit.iha.network.Network;
 import cz.vutbr.fit.iha.persistence.Persistence;
 
@@ -123,11 +125,37 @@ public final class Controller {
 
 		// TODO: catch and throw proper exception
 		// FIXME: after some time there should be picture in ActualUser object, should save to mPersistence
-		if (mNetwork.signIn(email)) {
-			mPersistence.saveLastEmail(mHousehold.user.getEmail());
-			return true;
+		try{
+			if (mNetwork.signIn(email)) {
+				mPersistence.saveLastEmail(mHousehold.user.getEmail());
+				return true;
+			}
+		}catch(FalseException e){
+			//FIXME: ROB, do this how you want, this is working code :)
+			switch(e.getDetail().getErrCode()){
+				case 0:
+					break;
+				case 1: // bad token or email
+					try {
+						//TODO: do this otherway
+						GetGoogleAuth ggAuth = GetGoogleAuth.getGetGoogleAuth();
+						
+						ggAuth.invalidateToken();
+						ggAuth.doInForeground((ggAuth.getPictureIMG() == null)? true:false);
+						
+						//this happen only on first signing (or when someone delete grants on google, or token is old)
+						while(GetGoogleAuth.getGetGoogleAuth().getPictureIMG() == null);
+						
+						return login(email);
+						
+					} catch (Exception e1) {
+						e1.printStackTrace();
+					}
+					break;
+				default:
+					break;
+			}
 		}
-		
 		return false;
 	}
 

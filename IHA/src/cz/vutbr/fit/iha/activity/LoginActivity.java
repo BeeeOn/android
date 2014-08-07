@@ -1,14 +1,11 @@
 package cz.vutbr.fit.iha.activity;
 
-import java.util.concurrent.ExecutionException;
-
 import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnCancelListener;
 import android.content.Intent;
-import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.util.Log;
@@ -24,7 +21,6 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 
 import cz.vutbr.fit.iha.R;
-import cz.vutbr.fit.iha.Utils;
 import cz.vutbr.fit.iha.activity.dialog.AddAdapterActivityDialog;
 import cz.vutbr.fit.iha.controller.Controller;
 import cz.vutbr.fit.iha.exception.CommunicationException;
@@ -81,7 +77,7 @@ public class LoginActivity extends BaseActivity {
 
 		// Prepare progress dialog
 		mProgress = new ProgressDialog(mActivity);
-		mProgress.setMessage("Signing to server...");
+		mProgress.setMessage(getString(R.string.progress_signing));
 		mProgress.setCancelable(true);
 		mProgress.setCanceledOnTouchOutside(false);
 		mProgress.setOnCancelListener(new OnCancelListener() {
@@ -150,6 +146,8 @@ public class LoginActivity extends BaseActivity {
 				getMojeIDAccessFromServer(v);
 			}
 		});
+		
+		Log.i("IHA app starting...","___________________________________");
 	}
 
 	@Override
@@ -173,6 +171,7 @@ public class LoginActivity extends BaseActivity {
 			try {
 				new GetGoogleAuth(this, email);
 				GetGoogleAuth.getGetGoogleAuth().execute();
+				ProgressChangeText(getString(R.string.loading_data));
 				Log.d(TAG, "user aproved, and token is tried to retake.");
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -242,7 +241,26 @@ public class LoginActivity extends BaseActivity {
 			}
 		}.start();
 	}
-
+	
+	/**
+	 * Method set new text to progress, thread-safe
+	 * @param message
+	 * 				to show
+	 */
+	public void ProgressChangeText(final String message){
+		new Thread() {
+			public void run() {
+				runOnUiThread(new Runnable() {
+					@Override
+					public void run() {
+						if (mProgress != null)
+							mProgress.setMessage(message);
+					}
+				});
+			}
+		}.start();
+	}
+	
 	/**
 	 * Method mine users account names
 	 * 
@@ -305,14 +323,14 @@ public class LoginActivity extends BaseActivity {
 
 				@Override
 				public void run() {
-					ggAuth.doInForeground(true);
+					if(!ggAuth.doInForeground(true)){
+						Log.e("Login", "exception in ggAuth");
+						return;
+					}
 					// FIXME: I think name and email should be saved on IHA
 					// server and loaded from there. It should be used from
 					// google only in registration, no?
-					ActualUser user = mController.getActualUser();
-					user.setName(ggAuth.getUserName());
-					user.setEmail(ggAuth.getEmail());
-					user.setPicture(LoginActivity.this, ggAuth.getPictureIMG());
+					
 					doLogin(email);
 					Log.d(TAG, "Finish google auth");
 				}
@@ -352,10 +370,20 @@ public class LoginActivity extends BaseActivity {
 	private void doLogin(final String email) {
 		String errMessage = null;
 		boolean errFlag = false;
-
+		
 		try {
 			if (mController.login(email)) {
 				Log.d(TAG, "Login: true");
+				try {
+					GetGoogleAuth ggAuth = GetGoogleAuth.getGetGoogleAuth();
+					ActualUser user = mController.getActualUser();
+					user.setName(ggAuth.getUserName());
+					user.setEmail(ggAuth.getEmail());
+					user.setPicture(LoginActivity.this, ggAuth.getPictureIMG());
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} 
 				ProgressDismiss();
 				if (!mDoGoogleLoginRunnable.isStopped()) {
 					Intent intent = new Intent(mActivity, LocationScreenActivity.class);
@@ -399,8 +427,7 @@ public class LoginActivity extends BaseActivity {
 		} finally {
 			ProgressDismiss();
 			if (errFlag) {
-				// alternate form: //mActivity.runOnUiThread(new
-				// ToastMessageThread(mActivity, errMessage));
+				// alternate form: //mActivity.runOnUiThread(new ToastMessageThread(mActivity, errMessage));
 				new ToastMessageThread(mActivity, errMessage).start();
 			}
 		}
