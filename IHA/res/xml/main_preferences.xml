@@ -10,13 +10,10 @@
         </Preference>
 
         <PreferenceScreen
+            android:key="key_units"
             android:persistent="false"
             android:title="@string/units" >
-            <ListPreference
-                android:entries="@array/unit_temperature_name"
-                android:entryValues="@array/unit_temperature_value"
-                android:key="pref_temperature"
-                android:title="@string/temperature" />
+            
         </PreferenceScreen>
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/smartwatches" >

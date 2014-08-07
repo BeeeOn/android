@@ -85,15 +85,16 @@
             android:theme="@style/MyDialog" >
         </activity>
         <activity
-            android:name="cz.vutbr.fit.iha.activity.SettingsActivity"
+            android:name="cz.vutbr.fit.iha.activity.SettingsMainActivity"
             android:label="@string/preference_activity_title" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
             </intent-filter>
         </activity>
+        
         <activity
-            android:name="cz.vutbr.fit.iha.activity.SmartwatchesPreferenceActivity"
-            android:label="@string/preference_activity_title" >
+            android:name="cz.vutbr.fit.iha.activity.SettingsUnitActivity"
+            android:label="@string/units" >
         </activity>
         
         <receiver

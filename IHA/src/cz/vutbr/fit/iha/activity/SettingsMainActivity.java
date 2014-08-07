@@ -2,10 +2,12 @@ package cz.vutbr.fit.iha.activity;
 
 import java.util.List;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.os.Bundle;
 import android.preference.ListPreference;
+import android.preference.Preference;
 import android.preference.PreferenceManager;
 
 import com.actionbarsherlock.app.SherlockPreferenceActivity;
@@ -21,7 +23,7 @@ import cz.vutbr.fit.iha.controller.Controller;
  * The control preference activity handles the preferences for the control
  * extension.
  */
-public class SettingsActivity extends SherlockPreferenceActivity implements
+public class SettingsMainActivity extends SherlockPreferenceActivity implements
 		OnSharedPreferenceChangeListener {
 	/**
 	 * keys which are defined in res/xml/preferences.xml
@@ -29,6 +31,7 @@ public class SettingsActivity extends SherlockPreferenceActivity implements
 
 	private ListPreference mListPrefAdapter, mListPrefLocation,
 			mListPrefTemperature;
+	private Preference mPrefUnits;
 	private Controller mController;
 	private SharedPreferences prefs;
 
@@ -45,13 +48,17 @@ public class SettingsActivity extends SherlockPreferenceActivity implements
 				.getDefaultSharedPreferences(getApplicationContext());
 
 		// Load the preferences from an XML resource
-		addPreferencesFromResource(R.xml.preferences);
+		addPreferencesFromResource(R.xml.main_preferences);
 
 		mController = Controller.getInstance(this);
 
 		mListPrefAdapter = (ListPreference) findPreference(Constants.PREF_SW2_ADAPTER);
 		mListPrefLocation = (ListPreference) findPreference(Constants.PREF_SW2_LOCATION);
 		mListPrefTemperature = (ListPreference) findPreference(Constants.PREF_TEMPERATURE);
+		mPrefUnits = findPreference(Constants.KEY_UNITS);
+        Intent intentUnit = new Intent(this, SettingsUnitActivity.class);
+		mPrefUnits.setIntent(intentUnit);
+		
 		// mAdapterListPref.set
 		// mAdapterListPref.setOnPreferenceChangeListener(this);
 		// mLocationListPref.setOnPreferenceChangeListener(this);

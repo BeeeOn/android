@@ -432,7 +432,7 @@ public class LocationScreenActivity extends BaseActivity {
 							.getId()
 							.equals(cz.vutbr.fit.iha.activity.menuItem.MenuItem.ID_SETTINGS)) {
 						Intent intent = new Intent(LocationScreenActivity.this,
-								SettingsActivity.class);
+								SettingsMainActivity.class);
 						startActivity(intent);
 					}
 					break;
@@ -739,7 +739,7 @@ public class LocationScreenActivity extends BaseActivity {
 		}
 		case R.id.action_settings: {
 			Intent intent = new Intent(LocationScreenActivity.this,
-					SettingsActivity.class);
+					SettingsMainActivity.class);
 			startActivity(intent);
 			break;
 		}
