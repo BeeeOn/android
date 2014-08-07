@@ -127,7 +127,7 @@ public final class Controller {
 		// FIXME: after some time there should be picture in ActualUser object, should save to mPersistence
 		try{
 			if (mNetwork.signIn(email)) {
-				mPersistence.saveLastEmail(mHousehold.user.getEmail());
+				mPersistence.saveLastEmail(email);
 				return true;
 			}
 		}catch(FalseException e){
