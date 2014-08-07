@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.ListIterator;
 
 import se.emilsjolander.stickylistheaders.StickyListHeadersListView;
+import android.R.drawable;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -306,8 +307,17 @@ public class LocationScreenActivity extends BaseActivity {
 		menuAdapter.addItem(new SeparatorMenuItem());
 
 		// Adding location header
-		menuAdapter.addHeader(new GroupMenuItem(getResources().getString(
-				R.string.location)));
+		menuAdapter.addHeader(new GroupImageMenuItem(getResources().getString(
+				R.string.location), R.drawable.add_custom_view, new OnClickListener() {
+					
+					@Override
+					public void onClick(View v) {
+						Toast.makeText(LocationScreenActivity.this,
+								"Not implemented yet", Toast.LENGTH_SHORT)
+								.show();
+					}
+				}));
+		
 
 		if (mLocations.size() > 0) {
 
