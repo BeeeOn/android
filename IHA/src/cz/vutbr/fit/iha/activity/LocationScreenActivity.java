@@ -272,19 +272,13 @@ public class LocationScreenActivity extends BaseActivity {
 	private MenuListAdapter getMenuAdapter() {
 		MenuListAdapter menuAdapter = new MenuListAdapter(LocationScreenActivity.this);
 
-		ActualUser actUser = mController.getActualUser();
-
-		// // FIXME zmenit obrazek na obrazek uzivatele
-		// Bitmap largeIcon = BitmapFactory.decodeResource(getResources(),
-		// R.drawable.person_siluete);
-
 		// Adding profile header
+		ActualUser actUser = mController.getActualUser();
 		menuAdapter.addHeader(new ProfileMenuItem(actUser.getName(), actUser.getEmail(), actUser.getPicture(this)));
 
 		List<Adapter> adapters = mController.getAdapters();
 		if (adapters.size() > 1) {
-			// Adding separator as item (we don't want to let it float as
-			// header)
+			// Adding separator as item (we don't want to let it float as header)
 			menuAdapter.addItem(new SeparatorMenuItem());
 
 			// Adding adapters
@@ -611,7 +605,7 @@ public class LocationScreenActivity extends BaseActivity {
 			inBackground = true;
 			setSupportProgressBarIndeterminateVisibility(false);
 
-			mController.reloadAdapters();
+			//mController.reloadAdapters();
 			refreshListing();
 
 			Log.d(TAG, "Here");
@@ -785,15 +779,8 @@ public class LocationScreenActivity extends BaseActivity {
 	private void setLocationOrEmpty() {
 		Adapter actAdapter = mController.getActiveAdapter();
 
-		// FIXME opravit na posledni pouzivany
 		if (actAdapter != null) {
 			setLocationOnStart(actAdapter.getLocations());
-			Log.d("default", "DEFAULT POSITION: active adapter found");
-		} else {
-			if (mController.getAdapters().size() > 0) {
-				Log.d("default", "DEFAULT POSITION: selected first adapter");
-				setLocationOnStart(mController.getAdapters().get(0).getLocations());
-			}
 		}
 	}
 

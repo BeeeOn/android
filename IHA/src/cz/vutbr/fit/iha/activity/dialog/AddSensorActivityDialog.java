@@ -9,6 +9,7 @@ import android.content.Context;
 import android.content.res.Configuration;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.text.format.Time;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -27,6 +28,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import cz.vutbr.fit.iha.R;
 import cz.vutbr.fit.iha.activity.LocationScreenActivity;
+import cz.vutbr.fit.iha.adapter.Adapter;
 import cz.vutbr.fit.iha.adapter.device.BaseDevice;
 import cz.vutbr.fit.iha.adapter.location.Location;
 import cz.vutbr.fit.iha.adapter.location.Location.DefaultRoom;
@@ -283,7 +285,8 @@ public class AddSensorActivityDialog extends BaseActivityDialog {
 			}
 
 			if (mController.saveDevice(pair.device)) {
-				mController.reloadAdapters();
+				Adapter adapter = mController.getAdapterByDevice(pair.device);
+				adapter.lastUpdate.set(0); // force refresh
 				return pair;
 			}
 

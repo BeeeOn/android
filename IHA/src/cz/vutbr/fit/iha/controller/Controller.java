@@ -193,11 +193,13 @@ public final class Controller {
 		
 		Time that = new Time();
 		that.setToNow();
-		that.set(that.toMillis(true) - 30000); // 30 seconds interval between updates
+		that.set(that.toMillis(true) - 15*60*1000); // 15 minutes interval between updates
 		
 		// Update only when needed
 		if (!forceUpdate && !adapter.lastUpdate.before(that))
 			return false;
+
+		Log.i(TAG, String.format("Adapter (%s) update needed (%s)", adapter.getName(), forceUpdate ? "force" : "time elapsed"));
 
 		Adapter newAdapter = null;
 		List<Location> newLocations = null;
@@ -340,6 +342,7 @@ public final class Controller {
 	 */
 	public synchronized Adapter getActiveAdapter() {
 		if (mHousehold.activeAdapter == null) {
+			// TODO: load last used adapter
 			// If there is no active adapter, set first one as active
 			for (Adapter a : getAdapters()) {
 				mHousehold.activeAdapter = a;
@@ -356,6 +359,7 @@ public final class Controller {
 	 * @return true on success, false if there is no adapter with this id
 	 */
 	public synchronized boolean setActiveAdapter(String id) {
+		// TODO: remember as last used adapter
 		for (Adapter a : getAdapters()) {
 			if (a.getId().equals(id)) {
 				mHousehold.activeAdapter = a;
@@ -602,6 +606,10 @@ public final class Controller {
 		}
 		
 		return list;
+	}
+	
+	public List<BaseDevice> getDevicesByAdapter(String adapterId) {
+		return getAdapter(adapterId, false).getDevices();
 	}
 	
 	/**

@@ -55,8 +55,9 @@ public class WidgetConfigurationActivity extends BaseActivity {
 		setResult(RESULT_CANCELED, resultValue);
 
 		// prepare list with all sensors to use in spinner
-		for (Adapter adapter : Controller.getInstance(this).getAdapters()) {
-			for (BaseDevice device : adapter.getDevices()) {
+		Controller controller = Controller.getInstance(this);
+		for (Adapter adapter : controller.getAdapters()) {
+			for (BaseDevice device : controller.getDevicesByAdapter(adapter.getId())) {
 				mDevices.add(device);
 			}
 		}
