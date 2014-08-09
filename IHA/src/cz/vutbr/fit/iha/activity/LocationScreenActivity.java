@@ -64,8 +64,7 @@ import cz.vutbr.fit.iha.household.ActualUser;
  * 
  */
 public class LocationScreenActivity extends BaseActivity {
-	private static final String TAG = LocationScreenActivity.class
-			.getSimpleName();
+	private static final String TAG = LocationScreenActivity.class.getSimpleName();
 
 	private Controller mController;
 	private LocationScreenActivity mActivity;
@@ -84,6 +83,7 @@ public class LocationScreenActivity extends BaseActivity {
 	private CharSequence mTitle;
 
 	private static boolean inBackground = false;
+	private static boolean isPaused = false;
 
 	/**
 	 * Instance save state tags
@@ -161,7 +161,14 @@ public class LocationScreenActivity extends BaseActivity {
 		setLocationOrEmpty();
 		redrawMenu();
 		backPressed = false;
+		isPaused = false;
 
+	}
+
+	public void onPause() {
+		super.onPause();
+		isPaused = true;
+		mTimeHandler.removeCallbacks(mTimeRun);
 	}
 
 	@Override
@@ -199,8 +206,7 @@ public class LocationScreenActivity extends BaseActivity {
 	 * Handling first tap back button
 	 */
 	private void firstTapBack() {
-		Toast.makeText(this, getString(R.string.toast_tap_again_exit),
-				Toast.LENGTH_SHORT).show();
+		Toast.makeText(this, getString(R.string.toast_tap_again_exit), Toast.LENGTH_SHORT).show();
 		backPressed = true;
 		if (mDrawerLayout != null)
 			mDrawerLayout.openDrawer(mDrawerList);
@@ -237,8 +243,7 @@ public class LocationScreenActivity extends BaseActivity {
 	public void onSaveInstanceState(Bundle savedInstaceState) {
 		savedInstaceState.putBoolean(BKG, inBackground);
 		savedInstaceState.putString(LCTN, mActiveLocationId);
-		savedInstaceState.putBoolean(IS_DRAWER_OPEN,
-				mDrawerLayout.isDrawerOpen(mDrawerList));
+		savedInstaceState.putBoolean(IS_DRAWER_OPEN, mDrawerLayout.isDrawerOpen(mDrawerList));
 		super.onSaveInstanceState(savedInstaceState);
 	}
 
@@ -265,8 +270,7 @@ public class LocationScreenActivity extends BaseActivity {
 	 * Use Thread to call it or for refreshing Menu use redrawMenu() instead.
 	 */
 	private MenuListAdapter getMenuAdapter() {
-		MenuListAdapter menuAdapter = new MenuListAdapter(
-				LocationScreenActivity.this);
+		MenuListAdapter menuAdapter = new MenuListAdapter(LocationScreenActivity.this);
 
 		ActualUser actUser = mController.getActualUser();
 
@@ -275,8 +279,7 @@ public class LocationScreenActivity extends BaseActivity {
 		// R.drawable.person_siluete);
 
 		// Adding profile header
-		menuAdapter.addHeader(new ProfileMenuItem(actUser.getName(), actUser
-				.getEmail(), actUser.getPicture(this)));
+		menuAdapter.addHeader(new ProfileMenuItem(actUser.getName(), actUser.getEmail(), actUser.getPicture(this)));
 
 		List<Adapter> adapters = mController.getAdapters();
 		if (adapters.size() > 1) {
@@ -287,11 +290,7 @@ public class LocationScreenActivity extends BaseActivity {
 			// Adding adapters
 			Adapter chosenAdapter = mController.getActiveAdapter();
 			for (Adapter actAdapter : adapters) {
-				menuAdapter
-						.addItem(new AdapterMenuItem(actAdapter.getName(),
-								actAdapter.getRole().name(), chosenAdapter
-										.getId().equals(actAdapter.getId()),
-								actAdapter.getId()));
+				menuAdapter.addItem(new AdapterMenuItem(actAdapter.getName(), actAdapter.getRole().name(), chosenAdapter.getId().equals(actAdapter.getId()), actAdapter.getId()));
 			}
 		}
 
@@ -299,60 +298,45 @@ public class LocationScreenActivity extends BaseActivity {
 		menuAdapter.addItem(new SeparatorMenuItem());
 
 		// Adding location header
-		menuAdapter.addHeader(new GroupImageMenuItem(getResources().getString(
-				R.string.location), R.drawable.add_custom_view, new OnClickListener() {
-					
-					@Override
-					public void onClick(View v) {
-						Toast.makeText(LocationScreenActivity.this,
-								"Not implemented yet", Toast.LENGTH_SHORT)
-								.show();
-					}
-				}));
-		
+		menuAdapter.addHeader(new GroupImageMenuItem(getResources().getString(R.string.location), R.drawable.add_custom_view, new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				Toast.makeText(LocationScreenActivity.this, "Not implemented yet", Toast.LENGTH_SHORT).show();
+			}
+		}));
 
 		if (mLocations.size() > 0) {
 
 			// Adding location
 			for (int i = 0; i < mLocations.size(); i++) {
 				Location actLoc = mLocations.get(i);
-				menuAdapter.addItem(new LocationMenuItem(actLoc.getName(),
-						actLoc.getIconResource(), i != 0, actLoc.getId()));
+				menuAdapter.addItem(new LocationMenuItem(actLoc.getName(), actLoc.getIconResource(), i != 0, actLoc.getId()));
 			}
 		} else {
-			menuAdapter.addItem(new EmptyMenuItem(mActivity.getResources()
-					.getString(R.string.no_location)));
+			menuAdapter.addItem(new EmptyMenuItem(mActivity.getResources().getString(R.string.no_location)));
 		}
 
 		// Adding custom view header
-		menuAdapter.addHeader(new GroupImageMenuItem(getResources().getString(
-				R.string.custom_view), R.drawable.add_custom_view,
-				new OnClickListener() {
+		menuAdapter.addHeader(new GroupImageMenuItem(getResources().getString(R.string.custom_view), R.drawable.add_custom_view, new OnClickListener() {
 
-					@Override
-					public void onClick(View v) {
-						// TODO doplnit spusteni dialogu pro vytvoreni custom
-						// view
-						Toast.makeText(LocationScreenActivity.this,
-								"Not implemented yet", Toast.LENGTH_SHORT)
-								.show();
-					}
-				}));
+			@Override
+			public void onClick(View v) {
+				// TODO doplnit spusteni dialogu pro vytvoreni custom
+				// view
+				Toast.makeText(LocationScreenActivity.this, "Not implemented yet", Toast.LENGTH_SHORT).show();
+			}
+		}));
 		// Adding custom views
 		// TODO pridat custom views
-		menuAdapter.addItem(new EmptyMenuItem(mActivity.getResources()
-				.getString(R.string.no_custom_view)));
+		menuAdapter.addItem(new EmptyMenuItem(mActivity.getResources().getString(R.string.no_custom_view)));
 
 		// Adding separator as header
 		menuAdapter.addItem(new SeparatorMenuItem());
 
 		// Adding settings, about etc.
-		menuAdapter.addItem(new SettingMenuItem(getResources().getString(
-				R.string.action_settings), R.drawable.loc_unknown,
-				cz.vutbr.fit.iha.activity.menuItem.MenuItem.ID_SETTINGS));
-		menuAdapter.addItem(new SettingMenuItem(getResources().getString(
-				R.string.action_about), R.drawable.loc_unknown,
-				cz.vutbr.fit.iha.activity.menuItem.MenuItem.ID_ABOUT));
+		menuAdapter.addItem(new SettingMenuItem(getResources().getString(R.string.action_settings), R.drawable.loc_unknown, cz.vutbr.fit.iha.activity.menuItem.MenuItem.ID_SETTINGS));
+		menuAdapter.addItem(new SettingMenuItem(getResources().getString(R.string.action_about), R.drawable.loc_unknown, cz.vutbr.fit.iha.activity.menuItem.MenuItem.ID_ABOUT));
 
 		// menuAdapter.log();
 		return menuAdapter;
@@ -371,21 +355,18 @@ public class LocationScreenActivity extends BaseActivity {
 
 		// Set a custom shadow that overlays the main content when the drawer
 		// opens
-		mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow,
-				GravityCompat.START);
+		mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
 
 		mDrawerLayout.setOnKeyListener(new OnKeyListener() {
 
 			@Override
 			public boolean onKey(View v, int keyCode, KeyEvent event) {
-				if (keyCode == KeyEvent.KEYCODE_BACK
-						&& event.getAction() == KeyEvent.ACTION_UP) {
+				if (keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_UP) {
 					Log.d(TAG, "BackPressed = " + String.valueOf(backPressed));
 					if (mDrawerLayout.isDrawerOpen(mDrawerList) && !backPressed) {
 						firstTapBack();
 						return true;
-					} else if (mDrawerLayout.isDrawerOpen(mDrawerList)
-							&& backPressed) {
+					} else if (mDrawerLayout.isDrawerOpen(mDrawerList) && backPressed) {
 						secondTapBack();
 						return true;
 					}
@@ -401,80 +382,68 @@ public class LocationScreenActivity extends BaseActivity {
 		mDrawerList.setOnItemClickListener(new OnItemClickListener() {
 
 			@Override
-			public void onItemClick(AdapterView<?> parent, View view,
-					int position, long id) {
-				Controller controller = Controller
-						.getInstance(LocationScreenActivity.this);
-				cz.vutbr.fit.iha.activity.menuItem.MenuItem item = (cz.vutbr.fit.iha.activity.menuItem.MenuItem) mMenuAdapter
-						.getItem(position);
+			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+				Controller controller = Controller.getInstance(LocationScreenActivity.this);
+				cz.vutbr.fit.iha.activity.menuItem.MenuItem item = (cz.vutbr.fit.iha.activity.menuItem.MenuItem) mMenuAdapter.getItem(position);
 				switch (item.getType()) {
-				case ADAPTER:
-					// if it is not chosen, switch to selected adapter
-					if (!controller.getActiveAdapter().getId()
-							.equals(item.getId())) {
+					case ADAPTER:
+						// if it is not chosen, switch to selected adapter
+						if (!controller.getActiveAdapter().getId().equals(item.getId())) {
 
-						setSupportProgressBarIndeterminateVisibility(true);
-						mSwitchAdapter = new LocationScreenActivity.SwitchAdapter();
-						mSwitchAdapter.execute(item.getId());
+							setSupportProgressBarIndeterminateVisibility(true);
+							mSwitchAdapter = new LocationScreenActivity.SwitchAdapter();
+							mSwitchAdapter.execute(item.getId());
 
-					}
-					break;
+						}
+						break;
 
-				case CUSTOM_VIEW:
-					// TODO otevrit custom view, jeste nedelame s customView
-					// taze pozdeji
-					break;
+					case CUSTOM_VIEW:
+						// TODO otevrit custom view, jeste nedelame s customView
+						// taze pozdeji
+						break;
 
-				case SETTING:
-					if (item.getId()
-							.equals(cz.vutbr.fit.iha.activity.menuItem.MenuItem.ID_ABOUT)) {
-						InfoDialogFragment dialog = new InfoDialogFragment();
-						dialog.show(getSupportFragmentManager(), TAG_INFO);
-					} else if (item
-							.getId()
-							.equals(cz.vutbr.fit.iha.activity.menuItem.MenuItem.ID_SETTINGS)) {
-						Intent intent = new Intent(LocationScreenActivity.this,
-								SettingsMainActivity.class);
-						startActivity(intent);
-					}
-					break;
+					case SETTING:
+						if (item.getId().equals(cz.vutbr.fit.iha.activity.menuItem.MenuItem.ID_ABOUT)) {
+							InfoDialogFragment dialog = new InfoDialogFragment();
+							dialog.show(getSupportFragmentManager(), TAG_INFO);
+						} else if (item.getId().equals(cz.vutbr.fit.iha.activity.menuItem.MenuItem.ID_SETTINGS)) {
+							Intent intent = new Intent(LocationScreenActivity.this, SettingsMainActivity.class);
+							startActivity(intent);
+						}
+						break;
 
-				case LOCATION:
-					// Get the title followed by the position
-					mActiveLocationId = item.getId();
+					case LOCATION:
+						// Get the title followed by the position
+						mActiveLocationId = item.getId();
 
-					changeLocation(mController.getLocation(mActiveLocationId),
-							true);
+						changeLocation(mController.getLocation(mActiveLocationId), true);
 
-					break;
+						break;
 
-				default:
-					break;
+					default:
+						break;
 				}
 			}
 		});
 		mDrawerList.setOnItemLongClickListener(new OnItemLongClickListener() {
 
 			@Override
-			public boolean onItemLongClick(AdapterView<?> parent, View view,
-					int position, long id) {
+			public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
 				Log.d(TAG, "Item Long press");
 
-				cz.vutbr.fit.iha.activity.menuItem.MenuItem item = (cz.vutbr.fit.iha.activity.menuItem.MenuItem) mMenuAdapter
-						.getItem(position);
+				cz.vutbr.fit.iha.activity.menuItem.MenuItem item = (cz.vutbr.fit.iha.activity.menuItem.MenuItem) mMenuAdapter.getItem(position);
 				switch (item.getType()) {
-				case LOCATION:
-					Bundle bundle = new Bundle();
-					String myMessage = item.getId();
-					bundle.putString("locationID", myMessage);
-					Intent intent = new Intent(mActivity,
-							LocationDetailActivity.class);
-					intent.putExtras(bundle);
-					startActivityForResult(intent, REQUEST_SENSOR_DETAIL);
-					break;
-				default:
-					// do nothing
-					break;
+					case LOCATION:
+						Bundle bundle = new Bundle();
+						String myMessage = item.getId();
+						bundle.putString("locationID", myMessage);
+						Intent intent = new Intent(mActivity, LocationDetailActivity.class);
+						intent.putExtras(bundle);
+						startActivityForResult(intent, REQUEST_SENSOR_DETAIL);
+						break;
+					default:
+						// do nothing
+						break;
 				}
 				return true;
 			}
@@ -487,9 +456,7 @@ public class LocationScreenActivity extends BaseActivity {
 		// getSupportActionBar().setIcon(R.drawable.ic_launcher_white);
 		// ActionBarDrawerToggle ties together the the proper interactions
 		// between the sliding drawer and the action bar app icon
-		mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout,
-				R.drawable.ic_drawer, R.string.drawer_open,
-				R.string.drawer_close) {
+		mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, R.drawable.ic_drawer, R.string.drawer_open, R.string.drawer_close) {
 
 			public void onDrawerClosed(View view) {
 				if (backPressed)
@@ -498,9 +465,7 @@ public class LocationScreenActivity extends BaseActivity {
 				if (mActiveLocation != null)
 					getSupportActionBar().setTitle(mActiveLocation.getName());
 				super.onDrawerClosed(view);
-				Log.d(TAG,
-						"BackPressed - onDrawerClosed "
-								+ String.valueOf(backPressed));
+				Log.d(TAG, "BackPressed - onDrawerClosed " + String.valueOf(backPressed));
 
 			}
 
@@ -553,7 +518,6 @@ public class LocationScreenActivity extends BaseActivity {
 		int[] icon;
 		mTitle = mDrawerTitle = "IHA";
 
-
 		// TODO: this works, but its not the best solution
 		if (!ListOfSensors.ready) {
 			mSensors = sensors;
@@ -564,7 +528,8 @@ public class LocationScreenActivity extends BaseActivity {
 					Log.d(TAG, "LifeCycle: getsensors in timer");
 				}
 			};
-			mTimeHandler.postDelayed(mTimeRun, 500);
+			if(!isPaused)
+				mTimeHandler.postDelayed(mTimeRun, 500);
 			Log.d(TAG, "LifeCycle: getsensors timer run");
 			return false;
 		}
@@ -573,7 +538,7 @@ public class LocationScreenActivity extends BaseActivity {
 
 		mSensorList = (ListView) findViewById(R.id.listviewofsensors);
 		TextView nosensor = (TextView) findViewById(R.id.nosensorlistview);
-		
+
 		title = new String[sensors.size()];
 		value = new String[sensors.size()];
 		unit = new String[sensors.size()];
@@ -594,15 +559,14 @@ public class LocationScreenActivity extends BaseActivity {
 							// (detail), fix that by changing that activity
 							// (fragment?) first?
 		}
-		
-		
+
 		// If no sensor - display text only
 		if (sensors.size() == 0) {
 			if (nosensor != null) {
 				nosensor.setVisibility(View.VISIBLE);
 				mSensorList.setVisibility(View.GONE);
 			}
-			
+
 			this.setSupportProgressBarIndeterminateVisibility(false);
 			return true;
 		} else {
@@ -610,19 +574,14 @@ public class LocationScreenActivity extends BaseActivity {
 			mSensorList.setVisibility(View.VISIBLE);
 		}
 
-		
-		
-
-		mSensorAdapter = new SensorListAdapter(LocationScreenActivity.this,
-				title, value, unit, time, icon);
+		mSensorAdapter = new SensorListAdapter(LocationScreenActivity.this, title, value, unit, time, icon);
 
 		mSensorList.setAdapter(mSensorAdapter);
 
 		// Capture listview menu item click
 		mSensorList.setOnItemClickListener(new ListView.OnItemClickListener() {
 			@Override
-			public void onItemClick(AdapterView<?> parent, View view,
-					int position, long id) {
+			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 				final BaseDevice selectedItem = sensors.get(position);
 
 				// setSupportProgressBarIndeterminateVisibility(true);
@@ -631,8 +590,7 @@ public class LocationScreenActivity extends BaseActivity {
 				String myMessage = selectedItem.getLocationId();
 				bundle.putString("LocationOfSensorID", myMessage);
 				bundle.putInt("SensorPosition", position);
-				Intent intent = new Intent(mActivity,
-						SensorDetailActivity.class);
+				Intent intent = new Intent(mActivity, SensorDetailActivity.class);
 				intent.putExtras(bundle);
 				startActivityForResult(intent, REQUEST_SENSOR_DETAIL);
 				// startActivity(intent);
@@ -705,63 +663,58 @@ public class LocationScreenActivity extends BaseActivity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 
 		switch (item.getItemId()) {
-		case android.R.id.home:
-			if (mDrawerLayout.isDrawerOpen(mDrawerList)) {
-				mDrawerLayout.closeDrawer(mDrawerList);
-			} else {
-				mDrawerLayout.openDrawer(mDrawerList);
+			case android.R.id.home:
+				if (mDrawerLayout.isDrawerOpen(mDrawerList)) {
+					mDrawerLayout.closeDrawer(mDrawerList);
+				} else {
+					mDrawerLayout.openDrawer(mDrawerList);
+				}
+				break;
+			case R.id.action_refreshlist: {
+				mController.reloadAdapters();
+				refreshListing();
+
+				break;
 			}
-			break;
-		case R.id.action_refreshlist: {
-			mController.reloadAdapters();
-			refreshListing();
+			case R.id.action_addadapter: {
+				inBackground = true;
+				Intent intent = new Intent(LocationScreenActivity.this, AddAdapterActivityDialog.class);
+				Bundle bundle = new Bundle();
+				bundle.putBoolean("Cancel", true);
+				intent.putExtras(bundle);
+				startActivityForResult(intent, REQUEST_ADD_ADAPTER);
+				break;
+			}
+			case R.id.action_addsensor: {
+				// Show also ignored devices
+				mController.unignoreUninitialized();
 
-			break;
-		}
-		case R.id.action_addadapter: {
-			inBackground = true;
-			Intent intent = new Intent(LocationScreenActivity.this,
-					AddAdapterActivityDialog.class);
-			Bundle bundle = new Bundle();
-			bundle.putBoolean("Cancel", true);
-			intent.putExtras(bundle);
-			startActivityForResult(intent, REQUEST_ADD_ADAPTER);
-			break;
-		}
-		case R.id.action_addsensor: {
-			// Show also ignored devices
-			mController.unignoreUninitialized();
+				inBackground = true;
+				Intent intent = new Intent(LocationScreenActivity.this, AddSensorActivityDialog.class);
+				startActivity(intent);
 
-			inBackground = true;
-			Intent intent = new Intent(LocationScreenActivity.this,
-					AddSensorActivityDialog.class);
-			startActivity(intent);
-
-			break;
-		}
-		case R.id.action_settings: {
-			Intent intent = new Intent(LocationScreenActivity.this,
-					SettingsMainActivity.class);
-			startActivity(intent);
-			break;
-		}
-		case R.id.action_logout: {
-			mController.logout();
-			inBackground = false;
-			Intent intent = new Intent(LocationScreenActivity.this,
-					LoginActivity.class);
-			startActivity(intent);
-			this.finish();
-			break;
-		}
+				break;
+			}
+			case R.id.action_settings: {
+				Intent intent = new Intent(LocationScreenActivity.this, SettingsMainActivity.class);
+				startActivity(intent);
+				break;
+			}
+			case R.id.action_logout: {
+				mController.logout();
+				inBackground = false;
+				Intent intent = new Intent(LocationScreenActivity.this, LoginActivity.class);
+				startActivity(intent);
+				this.finish();
+				break;
+			}
 		}
 
 		return super.onOptionsItemSelected(item);
 	}
 
 	protected void renameLocation(final String location, final TextView view) {
-		AlertDialog.Builder builder = new AlertDialog.Builder(
-				LocationScreenActivity.this);
+		AlertDialog.Builder builder = new AlertDialog.Builder(LocationScreenActivity.this);
 
 		// TODO: use better layout than just single EditText
 		final EditText edit = new EditText(LocationScreenActivity.this);
@@ -769,44 +722,33 @@ public class LocationScreenActivity extends BaseActivity {
 		edit.selectAll();
 		// TODO: show keyboard automatically
 
-		builder.setCancelable(false)
-				.setView(edit)
-				.setTitle("Rename location")
-				.setNegativeButton("Cancel", null)
-				.setPositiveButton("Rename",
-						new DialogInterface.OnClickListener() {
+		builder.setCancelable(false).setView(edit).setTitle("Rename location").setNegativeButton("Cancel", null).setPositiveButton("Rename", new DialogInterface.OnClickListener() {
 
-							@Override
-							public void onClick(DialogInterface dialog,
-									int which) {
-								String newName = edit.getText().toString();
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				String newName = edit.getText().toString();
 
-								// TODO: show loading while saving new name to
-								// server (+ use
-								// asynctask)
-								Location location = new Location(); // FIXME:
-																	// get that
-																	// original
-																	// location
-																	// from
-																	// somewhere
-								location.setName(newName);
+				// TODO: show loading while saving new name to
+				// server (+ use
+				// asynctask)
+				Location location = new Location(); // FIXME:
+													// get that
+													// original
+													// location
+													// from
+													// somewhere
+				location.setName(newName);
 
-								boolean saved = mController
-										.saveLocation(location);
+				boolean saved = mController.saveLocation(location);
 
-								String message = saved ? String
-										.format("Location was renamed to '%s'",
-												newName)
-										: "Location wasn't renamed due to error";
+				String message = saved ? String.format("Location was renamed to '%s'", newName) : "Location wasn't renamed due to error";
 
-								Toast.makeText(LocationScreenActivity.this,
-										message, Toast.LENGTH_LONG).show();
+				Toast.makeText(LocationScreenActivity.this, message, Toast.LENGTH_LONG).show();
 
-								// Redraw item in list
-								view.setText(newName);
-							}
-						});
+				// Redraw item in list
+				view.setText(newName);
+			}
+		});
 
 		AlertDialog dialog = builder.create();
 		dialog.show();
@@ -850,8 +792,7 @@ public class LocationScreenActivity extends BaseActivity {
 		} else {
 			if (mController.getAdapters().size() > 0) {
 				Log.d("default", "DEFAULT POSITION: selected first adapter");
-				setLocationOnStart(mController.getAdapters().get(0)
-						.getLocations());
+				setLocationOnStart(mController.getAdapters().get(0).getLocations());
 			}
 		}
 	}
@@ -860,8 +801,7 @@ public class LocationScreenActivity extends BaseActivity {
 	 * Loads locations, checks for uninitialized devices and eventually shows
 	 * dialog for adding them
 	 */
-	private class SwitchAdapter extends
-			AsyncTask<String, Void, List<BaseDevice>> {
+	private class SwitchAdapter extends AsyncTask<String, Void, List<BaseDevice>> {
 
 		@Override
 		protected List<BaseDevice> doInBackground(String... params) {
@@ -885,8 +825,7 @@ public class LocationScreenActivity extends BaseActivity {
 	 */
 	private class DevicesTask extends AsyncTask<Void, Void, List<BaseDevice>> {
 
-		private final CustomAlertDialog mDialog = new CustomAlertDialog(
-				LocationScreenActivity.this);
+		private final CustomAlertDialog mDialog = new CustomAlertDialog(LocationScreenActivity.this);
 
 		/**
 		 * @return the dialog
@@ -903,9 +842,7 @@ public class LocationScreenActivity extends BaseActivity {
 
 			// Load uninitialized devices
 			List<BaseDevice> devices = mController.getUninitializedDevices();
-			Log.d(TAG,
-					String.format("Found %d uninitialized devices",
-							devices.size()));
+			Log.d(TAG, String.format("Found %d uninitialized devices", devices.size()));
 
 			return devices;
 		}
@@ -924,44 +861,28 @@ public class LocationScreenActivity extends BaseActivity {
 			if (uninitializedDevices.size() == 0)
 				return;
 
-			mDialog.setCancelable(false)
-					.setTitle(getString(R.string.notification_title))
-					.setMessage(
-							getResources().getQuantityString(
-									R.plurals.notification_new_sensors,
-									uninitializedDevices.size(),
-									uninitializedDevices.size()));
+			mDialog.setCancelable(false).setTitle(getString(R.string.notification_title)).setMessage(getResources().getQuantityString(R.plurals.notification_new_sensors, uninitializedDevices.size(), uninitializedDevices.size()));
 
-			mDialog.setCustomNeutralButton(
-					getString(R.string.notification_ingore),
-					new OnClickListener() {
-						@Override
-						public void onClick(View v) {
-							mController
-									.ignoreUninitialized(uninitializedDevices);
-							// TODO: Get this string from resources
-							Toast.makeText(
-									LocationScreenActivity.this,
-									"You can add these devices later through 'Menu / Add sensor'",
-									Toast.LENGTH_LONG).show();
-							mDialog.dismiss();
-						}
-					});
+			mDialog.setCustomNeutralButton(getString(R.string.notification_ingore), new OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					mController.ignoreUninitialized(uninitializedDevices);
+					// TODO: Get this string from resources
+					Toast.makeText(LocationScreenActivity.this, "You can add these devices later through 'Menu / Add sensor'", Toast.LENGTH_LONG).show();
+					mDialog.dismiss();
+				}
+			});
 
-			mDialog.setCustomPositiveButton(
-					getString(R.string.notification_add),
-					new OnClickListener() {
-						@Override
-						public void onClick(View v) {
-							// Open activity for adding new device
-							inBackground = true;
-							Intent intent = new Intent(
-									LocationScreenActivity.this,
-									AddSensorActivityDialog.class);
-							startActivity(intent);
-							mDialog.dismiss();
-						}
-					});
+			mDialog.setCustomPositiveButton(getString(R.string.notification_add), new OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					// Open activity for adding new device
+					inBackground = true;
+					Intent intent = new Intent(LocationScreenActivity.this, AddSensorActivityDialog.class);
+					startActivity(intent);
+					mDialog.dismiss();
+				}
+			});
 
 			mDialog.show();
 			Log.d(TAG, "LifeCycle: devicetask");
@@ -971,23 +892,20 @@ public class LocationScreenActivity extends BaseActivity {
 	/**
 	 * Changes selected location and redraws list of adapters there
 	 */
-	private class ChangeLocationTask extends
-			AsyncTask<Location, Void, List<BaseDevice>> {
+	private class ChangeLocationTask extends AsyncTask<Location, Void, List<BaseDevice>> {
 
 		@Override
 		protected List<BaseDevice> doInBackground(Location... locations) {
-			List<BaseDevice> devices = mController
-					.getDevicesByLocation(locations[0].getId());
-			Log.d(TAG,
-					String.format("Found %d devices in location '%s'",
-							devices.size(), locations[0].getName()));
+			List<BaseDevice> devices = mController.getDevicesByLocation(locations[0].getId());
+			Log.d(TAG, String.format("Found %d devices in location '%s'", devices.size(), locations[0].getName()));
 
 			return devices;
 		}
 
 		@Override
 		protected void onPostExecute(final List<BaseDevice> devices) {
-			getSensors(devices);
+			if(!isPaused)
+				getSensors(devices);
 
 		}
 	}
