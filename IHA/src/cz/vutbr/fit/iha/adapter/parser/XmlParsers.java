@@ -374,9 +374,13 @@ public class XmlParsers {
 		// FIXME: get from protocol what type of data it is
 		DeviceLog log = new DeviceLog(DataType.AVERAGE, DataInterval.RAW);
 		
-		do {
-			log.addValue(log.new DataRow(readText(ROW)));
-		} while (mParser.nextTag() != XmlPullParser.END_TAG && !mParser.getName().equals(COM_ROOT));
+		try {
+			do {
+				log.addValue(log.new DataRow(readText(ROW)));
+			} while (mParser.nextTag() != XmlPullParser.END_TAG && !mParser.getName().equals(COM_ROOT));
+		} catch (IllegalArgumentException e) {
+			// TODO: what now?
+		}
 		
 		return log;
 	}

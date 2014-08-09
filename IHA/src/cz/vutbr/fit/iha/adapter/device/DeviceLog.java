@@ -5,18 +5,22 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
-import android.annotation.SuppressLint;
+import android.util.Log;
 
 /**
  * Represents history of values for device. 
  */
 public class DeviceLog {
-
+	private static final String TAG = DeviceLog.class.getSimpleName();
+	
 	private List<DataRow> mValues = new ArrayList<DataRow>(); // FIXME: use rather Map
 	private DataType mType;
 	private DataInterval mInterval;
-	private float mNullValue = (float) -1000.0;
+	
+	private float mMinValue;
+	private float mMaxValue;
 	
 	public enum DataType {
 		MINIMUM("min"),
@@ -72,47 +76,45 @@ public class DeviceLog {
 	}
 	
 	public class DataRow {
-		public static final String DATEFORMAT = "yyyy-MM-dd";
-		public static final String TIMEFORMAT = "HH:mm:ss";
+		private static final String FORMAT = "yyyy-MM-dd HH:mm:ss";
+		private static final String SEPARATOR = "\\s+";
 		
+		private SimpleDateFormat mFormatter = new SimpleDateFormat(FORMAT, Locale.getDefault());
+
 		public final Date date;
-		public final Date time;
 		public final float value;
 
 		/**
 		 * Constructor
 		 * @param row from ContentLog message
+		 * @throws IllegalArgumentException
 		 */
-		@SuppressLint("SimpleDateFormat")
-		public DataRow(String row){
-			// TODO: check this
-			String[] parts = row.split("\\s+");
+		public DataRow(String row) throws IllegalArgumentException {
+			String[] parts = row.split(SEPARATOR);
 			
-			Date date = null;
-			Date time = null;
-			
-			try {
-				date = new SimpleDateFormat(DATEFORMAT).parse(parts[0]);
-				time = new SimpleDateFormat(TIMEFORMAT).parse(parts[1]);
-			} catch (ParseException e) {
-				e.printStackTrace();
+			if (parts.length != 3) {
+				Log.e(TAG, String.format("Wrong number of parts (%d) of data: %s", parts.length, row));
+				throw new IllegalArgumentException();
 			}
-			
-			this.date = date;
-			this.time = time;
-			this.value = Float.parseFloat(parts[2]);
+
+			try {
+				this.date = mFormatter.parse(String.format("%s %s", parts[0], parts[1]));
+				this.value = Float.parseFloat(parts[2]);
+			} catch (ParseException e) {
+				Log.e(TAG, String.format("Wrong date format: %s", parts[0]));
+				throw new IllegalArgumentException(e);
+			} catch (NumberFormatException e) {
+				Log.e(TAG, String.format("Wrong value format: %s", parts[1]));
+				throw new IllegalArgumentException(e);
+			}
 		}
 
 		/**
 		 * Method emulate toString method for debugging
 		 * @return
 		 */
-		@SuppressLint("SimpleDateFormat")
 		public String debugString() {
-			return String.format("%s %s %s\n",
-				new SimpleDateFormat(DATEFORMAT).format(date),
-				new SimpleDateFormat(TIMEFORMAT).format(time),
-				value);
+			return String.format("%s %s\n", mFormatter.format(date), value);
 		}
 	}
 	
@@ -125,6 +127,7 @@ public class DeviceLog {
 	public DeviceLog(DataType type, DataInterval interval) {
 		mType = type;
 		mInterval = interval;
+		clearValues(); // to reset min/max values
 	}
 	
 	/**
@@ -152,45 +155,19 @@ public class DeviceLog {
 	}
 	
 	/**
-	 * Return minimum value from Array
+	 * Return minimum value in this log
 	 * @return
 	 */
 	public float getMinimumValue() {
-		if(mValues.isEmpty()) {
-			return 0;
-		}
-		
-		float minimum = 0;
-		// Find first nonNull value
-		for( DataRow row : mValues ) {
-			if(mNullValue == row.value) {
-				continue;
-			}
-			minimum = row.value;
-			break;
-		}
-		for( DataRow row : mValues ) {
-			if(mNullValue == row.value) {
-				continue;
-			}
-			minimum = Math.min(row.value, minimum);
-		}
-		return minimum;
+		return mMinValue;
 	}
 	
 	/**
-	 * Return maximum value from Array
+	 * Return maximum value in this log
 	 * @return
 	 */
 	public float getMaximumValue() {
-		if(mValues.isEmpty()) {
-			return 0;
-		}
-		float maximum = mValues.get(0).value;
-		for( DataRow row : mValues ) {
-			maximum = Math.max(row.value, maximum);
-		}
-		return maximum;
+		return mMaxValue;
 	}
 	
 	/**
@@ -203,7 +180,6 @@ public class DeviceLog {
 		List<DataRow> values = new ArrayList<DataRow>();
 		
 		for (DataRow row : mValues) {
-			// FIXME: check also time - it shouldn't be saved separately but as something like DateTime from the beginning (= in Network)
 			if (row.date.after(start) && row.date.before(end))
 				values.add(row);
 		}
@@ -217,6 +193,12 @@ public class DeviceLog {
 	 */
 	public void addValue(DataRow row) {
 		mValues.add(row);
+		
+		// Remember min/max values
+		if (!Float.isNaN(row.value)) {
+			mMinValue = Math.min(mMinValue, row.value);
+			mMaxValue = Math.max(mMaxValue, row.value);
+		}
 	}
 	
 	/**
@@ -225,7 +207,9 @@ public class DeviceLog {
 	 */
 	public void setValues(List<DataRow> rows) {
 		clearValues();
-		mValues.addAll(rows);
+		
+		for (DataRow row : rows)
+			addValue(row);
 	}
 	
 	/**
@@ -233,6 +217,8 @@ public class DeviceLog {
 	 */
 	public void clearValues() {
 		mValues.clear();
+		mMinValue = Float.POSITIVE_INFINITY;
+		mMaxValue = Float.NEGATIVE_INFINITY;
 	}
 
 }
