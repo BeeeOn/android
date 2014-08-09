@@ -48,6 +48,16 @@ public class Persistence {
 	public String loadLastEmail() {
 		return getSettings().getString(Constants.PERSISTENCE_PREF_LAST_USER, "");
 	}
+	
+	public void saveActiveAdapter(String adapterId) {
+		Editor settings = getSettings().edit();
+		settings.putString(Constants.PERSISTENCE_PREF_ACTIVE_ADAPTER, adapterId);
+		settings.commit();
+	}
+	
+	public String loadActiveAdapter() {
+		return getSettings().getString(Constants.PERSISTENCE_PREF_ACTIVE_ADAPTER, "");
+	}
 
 	public List<Adapter> loadAdapters() {
 		throw new NotImplementedException();

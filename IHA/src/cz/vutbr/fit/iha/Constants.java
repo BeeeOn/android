@@ -58,6 +58,7 @@ public final class Constants {
 	 */
 	public static final String PERSISTENCE_PREF_FILENAME = "persistence";
 	public static final String PERSISTENCE_PREF_LAST_USER = "last_user";
+	public static final String PERSISTENCE_PREF_ACTIVE_ADAPTER = "active_adapter";
 	
 	
 	/**

@@ -342,11 +342,21 @@ public final class Controller {
 	 */
 	public synchronized Adapter getActiveAdapter() {
 		if (mHousehold.activeAdapter == null) {
-			// TODO: load last used adapter
-			// If there is no active adapter, set first one as active
+			String lastId = mPersistence.loadActiveAdapter();
+			
 			for (Adapter a : getAdapters()) {
-				mHousehold.activeAdapter = a;
+				if (lastId.isEmpty() || a.getId().equals(lastId)) {
+					mHousehold.activeAdapter = a;
+					break;
+				}
 			}
+			
+			if (mHousehold.activeAdapter == null && mHousehold.adapters != null && !mHousehold.adapters.isEmpty()) {
+				mHousehold.activeAdapter = mHousehold.adapters.get(0);
+			}
+			
+			if (mHousehold.activeAdapter != null)
+				mPersistence.saveActiveAdapter(mHousehold.activeAdapter.getId());
 		}
 
 		return mHousehold.activeAdapter;
@@ -359,12 +369,12 @@ public final class Controller {
 	 * @return true on success, false if there is no adapter with this id
 	 */
 	public synchronized boolean setActiveAdapter(String id) {
-		// TODO: remember as last used adapter
 		for (Adapter a : getAdapters()) {
 			if (a.getId().equals(id)) {
 				mHousehold.activeAdapter = a;
 				refreshAdapter(a, true);
 				Log.d(TAG, String.format("Set active adapter to '%s'", a.getName()));
+				mPersistence.saveActiveAdapter(mHousehold.activeAdapter.getId());
 				return true;
 			}
 		}
