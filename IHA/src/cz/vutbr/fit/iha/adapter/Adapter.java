@@ -42,20 +42,12 @@ public class Adapter {
 	 * Debug method
 	 */
 	public String toDebugString() {
-		String result = "";
-
-		result += "ID is " + mId + "\n";
-		result += "VERSION is " + mVersion + "\n";
-		result += "Name is " + mName + "\n";
-		result += "Role is " + mRole + "\n";
-		result += "___start of sensors___\n";
-		
-		for(BaseDevice dev : mDevices.values()){
-			result += dev.toDebugString();
-			result += "__\n";
+		String devices = "";
+		for (BaseDevice dev : mDevices.values()) {
+			devices += String.format(" - %s\n", dev.toDebugString());
 		}
 		
-		return result;
+		return String.format("Id: %s\nVersion: %s\nName: %s\nRole: %s\nDevices:\n%s", mId, mVersion, mName, mRole, devices);
 	}
 	
 	/**

@@ -25,7 +25,7 @@ public abstract class BaseDevice {
 	protected NetworkState mNetwork = new NetworkState();
 	
 	public final Time lastUpdate = new Time();
-			
+	
 	/**
 	 * Class constructor
 	 */
@@ -204,7 +204,7 @@ public abstract class BaseDevice {
 	 * Setting location of device
 	 * @param locationId
 	 */
-	public void setLocationId(String locationId) {		
+	public void setLocationId(String locationId) {
 		mLocationId = locationId;
 	}
 	
@@ -332,18 +332,8 @@ public abstract class BaseDevice {
 	 * @return
 	 */
 	public String toDebugString() {
-		String result = "";
-
-		result += "Name: " + mName + "\n";
-		result += "Location: " + mLocationId + "\n";
-		result += "Visibility: " + mVisibility.getValue() + "\n";
-		result += "Initialized: " + mInitialized + "\n";
-		result += "Battery: " + mBattery + "\n";
-		result += "Logging: " + mLogging + "\n";
-		result += "Refresh: " + mRefreshInterval.getInterval() + "\n";
-		result += "Value: " + getStringValue() + "\n";
-		
-		return result;
+		return String.format("Name: %s\nLocation: %s\nVisibility: %s\nInitialized: %s\nBattery: %s\nLogging: %s\nRefresh: %s\nValue: %s",
+			mName, mLocationId, mVisibility.getValue(), mInitialized, mBattery, mLogging, mRefreshInterval.getInterval(), getStringValue());
 	}
 
 	public boolean needsUpdate() {

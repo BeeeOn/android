@@ -12,12 +12,12 @@ public class Location implements Comparable<Location> {
 	
 	public static final int[] icons = {
 		R.drawable.loc_unknown,		// 0
-		R.drawable.loc_bath_room,	// 1	
+		R.drawable.loc_bath_room,	// 1
 		R.drawable.loc_bed_room,	// 2
 		R.drawable.loc_garden,		// 3
 		R.drawable.loc_dinner_room,	// 4
 		R.drawable.loc_living_room,	// 5
-		R.drawable.loc_wc,			// 6		
+		R.drawable.loc_wc,			// 6
 	};
 	
 	/**

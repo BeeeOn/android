@@ -80,15 +80,8 @@ public class User {
 		mGender = gender;
 	}
 
-	public String toDebugString(){
-		String result = "";
-
-		result += "Email: " + mEmail + "\n";
-		result += "Role: " + mRole + "\n";
-		result += "Name: " + mName + "\n";
-		result += "Gender: " + mGender + "\n";
-		
-		return result;
+	public String toDebugString() {
+		return String.format("Email: %s\nRole: %s\nName: %s\nGender: %s", mEmail, mRole, mName, mGender);
 	}
 
 }
