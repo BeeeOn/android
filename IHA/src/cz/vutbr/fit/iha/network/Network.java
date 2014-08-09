@@ -45,14 +45,13 @@ import cz.vutbr.fit.iha.adapter.parser.ParsedMessage;
 import cz.vutbr.fit.iha.adapter.parser.XmlCreator;
 import cz.vutbr.fit.iha.adapter.parser.XmlParsers;
 import cz.vutbr.fit.iha.adapter.parser.XmlParsers.State;
-import cz.vutbr.fit.iha.exception.CommunicationException;
-import cz.vutbr.fit.iha.exception.FalseException;
-import cz.vutbr.fit.iha.exception.NoConnectionException;
-import cz.vutbr.fit.iha.exception.NotImplementedException;
-import cz.vutbr.fit.iha.exception.NotRegAException;
-import cz.vutbr.fit.iha.exception.NotRegBException;
 import cz.vutbr.fit.iha.household.ActualUser;
 import cz.vutbr.fit.iha.household.User;
+import cz.vutbr.fit.iha.network.exception.CommunicationException;
+import cz.vutbr.fit.iha.network.exception.FalseException;
+import cz.vutbr.fit.iha.network.exception.NoConnectionException;
+import cz.vutbr.fit.iha.network.exception.NotRegAException;
+import cz.vutbr.fit.iha.network.exception.NotRegBException;
 
 /**
  * Network service that handles communication with server.
@@ -213,7 +212,6 @@ public class Network {
 	 * Checks if Internet connection is available.
 	 * 
 	 * @return true if available, false otherwise
-	 * @throws NotImplementedException
 	 */
 	public boolean isAvailable() {
 		ConnectivityManager connectivityManager = (ConnectivityManager) mContext.getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -603,7 +601,6 @@ public class Network {
 	 * @throws CommunicationException
 	 */
 	//http://stackoverflow.com/a/509288/1642090
-	@SuppressWarnings("unchecked")
 	public DeviceLog getLog(String adapterId, BaseDevice device, String from, String to, DataType type, DataInterval interval) throws NoConnectionException, CommunicationException, FalseException {
 		String messageToSend = XmlCreator.createLogName(Integer.toString(mSessionId), adapterId, device.getAddress(), device.getType(), from, to, type.getValue(), interval.getValue());
 		ParsedMessage msg = doRequest(messageToSend);

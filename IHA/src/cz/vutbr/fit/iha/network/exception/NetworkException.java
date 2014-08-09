@@ -1,9 +1,9 @@
 /**
  * 
  */
-package cz.vutbr.fit.iha.exception;
+package cz.vutbr.fit.iha.network.exception;
 
-public class NetworkException extends RuntimeException {
+public abstract class NetworkException extends RuntimeException {
 
 	private static final long serialVersionUID = 1L;
 

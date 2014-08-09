@@ -1,14 +1,14 @@
 /**
  * 
  */
-package cz.vutbr.fit.iha.exception;
+package cz.vutbr.fit.iha.adapter.parser.exception;
 
 /**
  * XmlVersionMismatchException
  * @author ThinkDeep
  *
  */
-public class XmlVerMisException extends Exception {
+public class XmlVerMisException extends RuntimeException {
 
 	private static final long serialVersionUID = 1L;
 

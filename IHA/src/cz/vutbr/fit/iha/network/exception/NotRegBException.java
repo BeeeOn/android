@@ -1,13 +1,14 @@
 /**
  * 
  */
-package cz.vutbr.fit.iha.exception;
+package cz.vutbr.fit.iha.network.exception;
+
 
 /**
  * @author ThinkDeep
  *
  */
-public class NotRegBException extends CommunicationException {
+public class NotRegBException extends NetworkException {
 
 	private static final long serialVersionUID = 1L;
 

@@ -16,9 +16,6 @@ import cz.vutbr.fit.iha.adapter.device.DeviceLog.DataType;
 import cz.vutbr.fit.iha.adapter.device.StateDevice;
 import cz.vutbr.fit.iha.adapter.device.SwitchDevice;
 import cz.vutbr.fit.iha.adapter.location.Location;
-import cz.vutbr.fit.iha.exception.FalseException;
-import cz.vutbr.fit.iha.exception.NetworkException;
-import cz.vutbr.fit.iha.exception.NoConnectionException;
 import cz.vutbr.fit.iha.exception.NotImplementedException;
 import cz.vutbr.fit.iha.household.ActualUser;
 import cz.vutbr.fit.iha.household.DemoHousehold;
@@ -26,6 +23,8 @@ import cz.vutbr.fit.iha.household.Household;
 import cz.vutbr.fit.iha.household.User;
 import cz.vutbr.fit.iha.network.GetGoogleAuth;
 import cz.vutbr.fit.iha.network.Network;
+import cz.vutbr.fit.iha.network.exception.FalseException;
+import cz.vutbr.fit.iha.network.exception.NetworkException;
 import cz.vutbr.fit.iha.persistence.Persistence;
 
 /**
@@ -120,9 +119,6 @@ public final class Controller {
 		if (mDemoMode)
 			return true;
 		
-		if (!mNetwork.isAvailable())
-			throw new NoConnectionException();
-
 		// TODO: catch and throw proper exception
 		// FIXME: after some time there should be picture in ActualUser object, should save to mPersistence
 		try{
@@ -414,7 +410,7 @@ public final class Controller {
 	 * @return true on success, false otherwise
 	 * @throws NotImplementedException
 	 */
-	public boolean unregisterAdapter(String id) {
+	public boolean unregisterAdapter(String id) throws NotImplementedException {
 		throw new NotImplementedException();
 	}
 
@@ -560,7 +556,7 @@ public final class Controller {
 	 * @return true on success, false otherwise
 	 * @throws NotImplementedException
 	 */
-	public boolean hideDevice(BaseDevice device) {
+	public boolean hideDevice(BaseDevice device) throws NotImplementedException {
 		// TODO: replace this with saveDevice method?
 		throw new NotImplementedException();
 	}
@@ -572,7 +568,7 @@ public final class Controller {
 	 * @return true on success, false otherwise
 	 * @throws NotImplementedException
 	 */
-	public boolean unhideDevice(BaseDevice device) {
+	public boolean unhideDevice(BaseDevice device) throws NotImplementedException {
 		// TODO: replace this with saveDevice method?
 		throw new NotImplementedException();
 	}
@@ -655,7 +651,6 @@ public final class Controller {
 	 * 
 	 * @param device
 	 * @return
-	 * @throws NotImplementedException
 	 */
 	public DeviceLog getDeviceLog(BaseDevice device, String from, String to, DataType type, DataInterval interval) {
 		// FIXME: rewrite this method even better - demo mode, caching, etc.
@@ -688,7 +683,7 @@ public final class Controller {
 	 * @return
 	 * @throws NotImplementedException
 	 */
-	public User getUser(String adapterId, String userId) {
+	public User getUser(String adapterId, String userId) throws NotImplementedException {
 		throw new NotImplementedException();
 	}
 
@@ -700,7 +695,7 @@ public final class Controller {
 	 * @return
 	 * @throws NotImplementedException
 	 */
-	public boolean addUser(String adapterId, User user) {
+	public boolean addUser(String adapterId, User user) throws NotImplementedException {
 		throw new NotImplementedException();
 	}
 	
@@ -712,7 +707,7 @@ public final class Controller {
 	 * @return
 	 * @throws NotImplementedException
 	 */
-	public boolean deleteUser(String adapterId, User user) {
+	public boolean deleteUser(String adapterId, User user) throws NotImplementedException {
 		throw new NotImplementedException();
 	}
 	
@@ -724,7 +719,7 @@ public final class Controller {
 	 * @return
 	 * @throws NotImplementedException
 	 */
-	public boolean saveUser(String adapterId, User user) {
+	public boolean saveUser(String adapterId, User user) throws NotImplementedException {
 		throw new NotImplementedException();
 	}
 	

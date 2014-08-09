@@ -37,8 +37,8 @@ import cz.vutbr.fit.iha.adapter.device.SwitchDevice;
 import cz.vutbr.fit.iha.adapter.device.TemperatureDevice;
 import cz.vutbr.fit.iha.adapter.device.UnknownDevice;
 import cz.vutbr.fit.iha.adapter.location.Location;
-import cz.vutbr.fit.iha.exception.ComVerMisException;
-import cz.vutbr.fit.iha.exception.XmlVerMisException;
+import cz.vutbr.fit.iha.adapter.parser.exception.ComVerMisException;
+import cz.vutbr.fit.iha.adapter.parser.exception.XmlVerMisException;
 import cz.vutbr.fit.iha.household.User;
 import cz.vutbr.fit.iha.household.User.Role;
 
@@ -490,7 +490,7 @@ public class XmlParsers {
 	 * @param sType string type of device (e.g. 0x03)
 	 * @return empty object
 	 */
-	public static BaseDevice getDeviceByType(String sType){
+	private static BaseDevice getDeviceByType(String sType){
 		
 		int iType = Integer.parseInt(sType.replaceAll("0x", ""), 16);
 		
@@ -516,7 +516,7 @@ public class XmlParsers {
 		}
 	}
 	
-	public static List<BaseDevice> getFalseMessage6(String message) throws XmlPullParserException, IOException{
+	static List<BaseDevice> getFalseMessage6(String message) throws XmlPullParserException, IOException{
 		mParser = Xml.newPullParser();
 		mParser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false);
 		
@@ -543,7 +543,7 @@ public class XmlParsers {
 		return result;
 	}
 	
-	public static List<User> getFalseMessage13(String message) throws XmlPullParserException, IOException{
+	static List<User> getFalseMessage13(String message) throws XmlPullParserException, IOException{
 		mParser = Xml.newPullParser();
 		mParser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false);
 		

@@ -1,14 +1,16 @@
 /**
  * 
  */
-package cz.vutbr.fit.iha.exception;
+package cz.vutbr.fit.iha.adapter.parser.exception;
+
+
 
 /**
  * CommunicationVersionMismatchException
  * @author ThinkDeep
  *
  */
-public class ComVerMisException extends NetworkException {
+public class ComVerMisException extends RuntimeException {
 
 	private static final long serialVersionUID = 1L;
 

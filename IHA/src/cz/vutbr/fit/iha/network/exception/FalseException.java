@@ -1,7 +1,7 @@
 /**
  * 
  */
-package cz.vutbr.fit.iha.exception;
+package cz.vutbr.fit.iha.network.exception;
 
 import cz.vutbr.fit.iha.adapter.parser.FalseAnswer;
 

@@ -1,23 +1,16 @@
 package cz.vutbr.fit.iha.activity;
 
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
 import java.util.List;
-import java.util.ListIterator;
 
 import se.emilsjolander.stickylistheaders.StickyListHeadersListView;
-import android.R.drawable;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.WorkSource;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
@@ -53,7 +46,6 @@ import cz.vutbr.fit.iha.activity.dialog.InfoDialogFragment;
 import cz.vutbr.fit.iha.activity.menuItem.AdapterMenuItem;
 import cz.vutbr.fit.iha.activity.menuItem.EmptyMenuItem;
 import cz.vutbr.fit.iha.activity.menuItem.GroupImageMenuItem;
-import cz.vutbr.fit.iha.activity.menuItem.GroupMenuItem;
 import cz.vutbr.fit.iha.activity.menuItem.LocationMenuItem;
 import cz.vutbr.fit.iha.activity.menuItem.ProfileMenuItem;
 import cz.vutbr.fit.iha.activity.menuItem.SeparatorMenuItem;
