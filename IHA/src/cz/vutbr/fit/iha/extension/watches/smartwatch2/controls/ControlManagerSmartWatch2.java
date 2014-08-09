@@ -41,7 +41,6 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
 import android.util.Log;
 
 import com.sonyericsson.extras.liveware.aef.control.Control;
@@ -99,12 +98,9 @@ public class ControlManagerSmartWatch2 extends ControlManagerBase {
 		}
 
 		// Try to find default setting
-		SharedPreferences prefs = PreferenceManager
-				.getDefaultSharedPreferences(mContext);
-		String adapterId = prefs
-				.getString(Constants.PREF_SW2_ADAPTER, null);
-		String strLocation = prefs.getString(Constants.PREF_SW2_LOCATION,
-				null);
+		SharedPreferences prefs = mController.getUserSettings();
+		String adapterId = prefs.getString(Constants.PREF_SW2_ADAPTER, null);
+		String strLocation = prefs.getString(Constants.PREF_SW2_LOCATION, null);
 
 		Log.v(SW2ExtensionService.LOG_TAG, "Default adapter ID: "
 				+ ((adapterId == null) ? "null" : adapterId));

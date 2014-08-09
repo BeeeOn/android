@@ -14,14 +14,26 @@ import cz.vutbr.fit.iha.Utils;
  * 
  */
 public class ActualUser extends User {
+	private String mId;
 	private Bitmap mPicture;
 	private String mPictureUrl;
-	private String mSessionId = "";
+	private String mSessionId = "";	
 
 	public ActualUser() {
 		super();
 	}
 
+	public String getId() {
+		if (mId == null) {
+			mId = getEmail();
+		}
+		return mId;
+	}
+	
+	public void setId(String id) {
+		mId = id;
+	}
+	
 	/**
 	 * @return picture url or empty string
 	 */

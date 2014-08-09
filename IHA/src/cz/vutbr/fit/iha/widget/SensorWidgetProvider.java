@@ -99,6 +99,7 @@ public class SensorWidgetProvider extends AppWidgetProvider {
 	}
 	
 	public static SharedPreferences getSettings(Context context, int widgetId) {
+		// TODO: Rewrite this to use with Controller?
 		return context.getSharedPreferences(String.format(Constants.WIDGET_PREF_FILENAME, widgetId), 0);
 	}
     

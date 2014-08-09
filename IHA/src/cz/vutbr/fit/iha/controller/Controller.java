@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Random;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.text.format.Time;
 import android.util.Log;
 import cz.vutbr.fit.iha.adapter.Adapter;
@@ -100,14 +101,25 @@ public final class Controller {
 	public static boolean isDemoMode() {
 		return mDemoMode;
 	}
+	
+	
+	/** Persistence methods *************************************************/
 
-	
-	/** Communication methods ***********************************************/
-	
 	public String getLastEmail() {
 		return mPersistence.loadLastEmail();
 	}
 
+	public SharedPreferences getUserSettings() throws IllegalStateException {
+		String userId = mHousehold.user.getId();
+		if (userId.isEmpty())
+			throw new IllegalStateException("ActualUser is not initialized (logged in) yet");
+		
+		return mPersistence.getSettings(userId);
+	}
+	
+	
+	/** Communication methods ***********************************************/
+	
 	/**
 	 * Login user by his email (authenticate on server).
 	 * 
@@ -342,7 +354,7 @@ public final class Controller {
 	 */
 	public synchronized Adapter getActiveAdapter() {
 		if (mHousehold.activeAdapter == null) {
-			String lastId = mPersistence.loadActiveAdapter();
+			String lastId = mPersistence.loadActiveAdapter(mHousehold.user.getId());
 			
 			for (Adapter a : getAdapters()) {
 				if (lastId.isEmpty() || a.getId().equals(lastId)) {
@@ -356,7 +368,7 @@ public final class Controller {
 			}
 			
 			if (mHousehold.activeAdapter != null)
-				mPersistence.saveActiveAdapter(mHousehold.activeAdapter.getId());
+				mPersistence.saveActiveAdapter(mHousehold.user.getId(), mHousehold.activeAdapter.getId());
 		}
 
 		return mHousehold.activeAdapter;
@@ -374,7 +386,7 @@ public final class Controller {
 				mHousehold.activeAdapter = a;
 				refreshAdapter(a, true);
 				Log.d(TAG, String.format("Set active adapter to '%s'", a.getName()));
-				mPersistence.saveActiveAdapter(mHousehold.activeAdapter.getId());
+				mPersistence.saveActiveAdapter(mHousehold.user.getId(), mHousehold.activeAdapter.getId());
 				return true;
 			}
 		}

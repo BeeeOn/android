@@ -8,7 +8,6 @@ import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.os.Bundle;
 import android.preference.ListPreference;
 import android.preference.Preference;
-import android.preference.PreferenceManager;
 
 import com.actionbarsherlock.app.SherlockPreferenceActivity;
 import com.actionbarsherlock.view.MenuItem;
@@ -29,11 +28,10 @@ public class SettingsMainActivity extends SherlockPreferenceActivity implements
 	 * keys which are defined in res/xml/preferences.xml
 	 */
 
-	private ListPreference mListPrefAdapter, mListPrefLocation,
-			mListPrefTemperature;
+	private ListPreference mListPrefAdapter, mListPrefLocation, mListPrefTemperature;
 	private Preference mPrefUnits;
 	private Controller mController;
-	private SharedPreferences prefs;
+	private SharedPreferences mPrefs;
 
 	// added suppressWarnings because of support of lower version
 	@SuppressWarnings("deprecation")
@@ -41,16 +39,15 @@ public class SettingsMainActivity extends SherlockPreferenceActivity implements
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
+		mController = Controller.getInstance(this);
+		
 		getSupportActionBar().setHomeButtonEnabled(true);
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-		prefs = PreferenceManager
-				.getDefaultSharedPreferences(getApplicationContext());
+		mPrefs = mController.getUserSettings();
 
 		// Load the preferences from an XML resource
 		addPreferencesFromResource(R.xml.main_preferences);
-
-		mController = Controller.getInstance(this);
 
 		mListPrefAdapter = (ListPreference) findPreference(Constants.PREF_SW2_ADAPTER);
 		mListPrefLocation = (ListPreference) findPreference(Constants.PREF_SW2_LOCATION);
@@ -69,19 +66,17 @@ public class SettingsMainActivity extends SherlockPreferenceActivity implements
 	@Override
 	protected void onResume() {
 		super.onResume();
-		prefs.registerOnSharedPreferenceChangeListener(this);
+		mPrefs.registerOnSharedPreferenceChangeListener(this);
 	}
 
 	@Override
 	protected void onPause() {
 		super.onPause();
-		prefs.unregisterOnSharedPreferenceChangeListener(this);
+		mPrefs.unregisterOnSharedPreferenceChangeListener(this);
 	}
 
 	private void redraw() {
 		setDefaultLocAndAdap();
-		
-//		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
 	}
 	
 	private void setDefaultLocAndAdap() {
@@ -104,8 +99,8 @@ public class SettingsMainActivity extends SherlockPreferenceActivity implements
 			Adapter adapter = adapters.get(0);
 
 			// save default adapter
-			prefs.edit().putString(Constants.PREF_SW2_ADAPTER, adapter.getId());
-			prefs.edit().commit();
+			mPrefs.edit().putString(Constants.PREF_SW2_ADAPTER, adapter.getId());
+			mPrefs.edit().commit();
 
 			mListPrefAdapter.setSummary(adapter.getName());
 
@@ -131,7 +126,7 @@ public class SettingsMainActivity extends SherlockPreferenceActivity implements
 			mListPrefAdapter.setEntryValues(entryValues);
 			mListPrefAdapter.setDefaultValue("");
 
-			String adapterId = prefs.getString(Constants.PREF_SW2_ADAPTER, "");
+			String adapterId = mPrefs.getString(Constants.PREF_SW2_ADAPTER, "");
 
 			Adapter adapter;
 			// valid default adapter
@@ -143,8 +138,8 @@ public class SettingsMainActivity extends SherlockPreferenceActivity implements
 			// invalid adapter or it hasn't been chosen yet
 			else {
 				// in case of invalid adapter - rewrite
-				prefs.edit().putString(Constants.PREF_SW2_ADAPTER, "");
-				prefs.edit().commit();
+				mPrefs.edit().putString(Constants.PREF_SW2_ADAPTER, "");
+				mPrefs.edit().commit();
 
 				// set "None" as summary
 				mListPrefAdapter.setSummary(R.string.none);
@@ -158,18 +153,15 @@ public class SettingsMainActivity extends SherlockPreferenceActivity implements
 	private void setLocationList(Adapter adapter) {
 		mListPrefLocation.setEnabled(true);
 
-		SharedPreferences prefs = PreferenceManager
-				.getDefaultSharedPreferences(getApplicationContext());
-
-		String locId = prefs.getString(Constants.PREF_SW2_LOCATION, "");
+		String locId = mPrefs.getString(Constants.PREF_SW2_LOCATION, "");
 		Location loc;
 		// valid
 		if (locId != "" && (loc = adapter.getLocation(locId)) != null) {
 			mListPrefLocation.setSummary(loc.getName());
 		} else {
 			mListPrefLocation.setSummary(R.string.none);
-			prefs.edit().putString(Constants.PREF_SW2_LOCATION, "");
-			prefs.edit().commit();
+			mPrefs.edit().putString(Constants.PREF_SW2_LOCATION, "");
+			mPrefs.edit().commit();
 		}
 		List<Location> locations = adapter.getLocations();
 		// no location available
@@ -219,8 +211,7 @@ public class SettingsMainActivity extends SherlockPreferenceActivity implements
 	// }
 
 	@Override
-	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences,
-			String key) {
+	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
 		redraw();
 	}
 

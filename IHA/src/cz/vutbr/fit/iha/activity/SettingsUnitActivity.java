@@ -4,7 +4,6 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.os.Bundle;
 import android.preference.ListPreference;
-import android.preference.PreferenceManager;
 
 import com.actionbarsherlock.app.SherlockPreferenceActivity;
 import com.actionbarsherlock.view.MenuItem;
@@ -25,7 +24,7 @@ public class SettingsUnitActivity extends SherlockPreferenceActivity implements
 
 	private ListPreference mListPrefTemperature;
 	private Controller mController;
-	private SharedPreferences prefs;
+	private SharedPreferences mPrefs;
 
 	// added suppressWarnings because of support of lower version
 	@SuppressWarnings("deprecation")
@@ -33,16 +32,15 @@ public class SettingsUnitActivity extends SherlockPreferenceActivity implements
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
+		mController = Controller.getInstance(this);
+		
 		getSupportActionBar().setHomeButtonEnabled(true);
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-		prefs = PreferenceManager
-				.getDefaultSharedPreferences(getApplicationContext());
+		mPrefs = mController.getUserSettings();
 
 		// Load the preferences from an XML resource
 		addPreferencesFromResource(R.xml.unit_preferences);
-
-		mController = Controller.getInstance(this);
 
 		mListPrefTemperature = (ListPreference) findPreference(Constants.PREF_TEMPERATURE);
 
@@ -51,13 +49,13 @@ public class SettingsUnitActivity extends SherlockPreferenceActivity implements
 	@Override
 	protected void onResume() {
 		super.onResume();
-		prefs.registerOnSharedPreferenceChangeListener(this);
+		mPrefs.registerOnSharedPreferenceChangeListener(this);
 	}
 
 	@Override
 	protected void onPause() {
 		super.onPause();
-		prefs.unregisterOnSharedPreferenceChangeListener(this);
+		mPrefs.unregisterOnSharedPreferenceChangeListener(this);
 	}
 
 
@@ -83,8 +81,7 @@ public class SettingsUnitActivity extends SherlockPreferenceActivity implements
 	// }
 
 	@Override
-	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences,
-			String key) {
+	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
 	}
 
 }

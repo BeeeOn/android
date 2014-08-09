@@ -1,12 +1,10 @@
 package cz.vutbr.fit.iha.household;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import android.content.Context;
 import cz.vutbr.fit.iha.Constants;
 import cz.vutbr.fit.iha.adapter.Adapter;
-import cz.vutbr.fit.iha.adapter.location.Location;
 import cz.vutbr.fit.iha.adapter.parser.XmlParsers;
 import cz.vutbr.fit.iha.household.User.Gender;
 
@@ -30,6 +28,7 @@ public final class DemoHousehold extends Household {
 	 * Prepare logged in user.
 	 */
 	private void prepareUser() {
+		user.setId("demo");
 		user.setName("John Doe");
 		user.setEmail("john@doe.com");
 		user.setGender(Gender.Male);

@@ -19,7 +19,8 @@ import cz.vutbr.fit.iha.widget.WidgetData;
  * @author Robyer
  */
 public class Persistence {
-
+	private static final String GLOBAL_USER = "global";	
+	
 	private final Context mContext;
 	
 	/**
@@ -30,12 +31,16 @@ public class Persistence {
 		mContext = context;
 	}
 	
-	public SharedPreferences getSettings() {
-		return mContext.getSharedPreferences(Constants.PERSISTENCE_PREF_FILENAME, 0);
+	public SharedPreferences getGlobalSettings() {
+		return getSettings(GLOBAL_USER);
+	}
+	
+	public SharedPreferences getSettings(String userId) {
+		return mContext.getSharedPreferences(String.format(Constants.PERSISTENCE_PREF_FILENAME, userId), 0);
 	}
 	
 	public void saveLastEmail(String email) {
-		Editor settings = getSettings().edit();
+		Editor settings = getGlobalSettings().edit();
 		
 		if (email == null)
 			settings.remove(Constants.PERSISTENCE_PREF_LAST_USER);
@@ -46,17 +51,17 @@ public class Persistence {
 	}
 	
 	public String loadLastEmail() {
-		return getSettings().getString(Constants.PERSISTENCE_PREF_LAST_USER, "");
+		return getGlobalSettings().getString(Constants.PERSISTENCE_PREF_LAST_USER, "");
 	}
 	
-	public void saveActiveAdapter(String adapterId) {
-		Editor settings = getSettings().edit();
+	public void saveActiveAdapter(String userId, String adapterId) {
+		Editor settings = getSettings(userId).edit();
 		settings.putString(Constants.PERSISTENCE_PREF_ACTIVE_ADAPTER, adapterId);
 		settings.commit();
 	}
 	
-	public String loadActiveAdapter() {
-		return getSettings().getString(Constants.PERSISTENCE_PREF_ACTIVE_ADAPTER, "");
+	public String loadActiveAdapter(String userId) {
+		return getSettings(userId).getString(Constants.PERSISTENCE_PREF_ACTIVE_ADAPTER, "");
 	}
 
 	public List<Adapter> loadAdapters() {
