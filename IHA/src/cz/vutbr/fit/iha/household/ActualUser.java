@@ -23,53 +23,50 @@ public class ActualUser extends User {
 	}
 
 	/**
-	 * @return the mPicture
+	 * @return picture url or empty string
 	 */
 	public String getPictureURL() {
 		return mPictureUrl;
 	}
 
 	/**
-	 * @param mPicture
-	 *            the mPicture to set
+	 * @param String picture url set
 	 */
 	public void setPictureUrl(String url) {
 		mPictureUrl = url;
 	}
 
 	/**
-	 * @return the mPictureIMG
+	 * Get user picture
+	 * @param context
+	 * @return user picture or default silhouette
 	 */
 	public Bitmap getPicture(Context context) {
 		if (mPicture == null) {
-			setDefaultPicture(context);
+			setPicture(getDefaultPicture(context));
 		}
 		return mPicture;
 	}
 
 	/**
-	 * Set default profile picture
+	 * Get bitmap of default silhouette
 	 * @param context
+	 * @return bitmap with default silhouette
 	 */
-	private void setDefaultPicture(Context context) {
-		mPicture = Utils.getRoundedShape(BitmapFactory.decodeResource(context.getResources(),
-				R.drawable.person_siluete));
+	private Bitmap getDefaultPicture(Context context) {
+		return BitmapFactory.decodeResource(context.getResources(), R.drawable.person_silhouette);
 	}
 	
 	/**
-	 * @param mPictureIMG
-	 *            the mPictureIMG to set
+	 * Set user picture 
+	 * @param picture
 	 */
-	public void setPicture(Context context, Bitmap picture) {
-		if (picture == null) {
-			setDefaultPicture(context);
-		} else {
-			mPicture = Utils.getRoundedShape(picture);
-		}
+	public void setPicture(Bitmap picture) {
+		mPicture = Utils.getRoundedShape(picture);
 	}
 
 	/**
-	 * @return the mSessionId
+	 * @return sessionId
 	 */
 	public String getSessionId() {
 		return mSessionId;
@@ -77,16 +74,22 @@ public class ActualUser extends User {
 
 	/**
 	 * @param sessionId
-	 *            the mSessionId to set
 	 */
 	public void setSessionId(String sessionId) {
 		mSessionId = sessionId;
 	}
 
+	/**
+	 * Checks if user is logged in (has sessionId)
+	 * @return true if user is logged in, false otherwise
+	 */
 	public boolean isLoggedIn() {
 		return mSessionId.length() > 0;
 	}
 
+	/**
+	 * Logout user (erases his sessionId)
+	 */
 	public void logout() {
 		mSessionId = "";
 	}

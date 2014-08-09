@@ -379,7 +379,7 @@ public class LoginActivity extends BaseActivity {
 					ActualUser user = mController.getActualUser();
 					user.setName(ggAuth.getUserName());
 					user.setEmail(ggAuth.getEmail());
-					user.setPicture(LoginActivity.this, ggAuth.getPictureIMG());
+					user.setPicture(ggAuth.getPictureIMG());
 				} catch (Exception e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
