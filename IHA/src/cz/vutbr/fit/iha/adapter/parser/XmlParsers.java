@@ -176,7 +176,7 @@ public class XmlParsers {
 		mParser.require(XmlPullParser.START_TAG, ns, COM_ROOT);
 		
 		State state = State.fromValue(getSecureAttrValue(ns, STATE));
-		int id = Integer.parseInt(getSecureAttrValue(ns, ID));
+		String id = getSecureAttrValue(ns, ID);
 		String version = getSecureAttrValue(ns, VERSION);
 		
 		if(!version.equals(COM_VER))

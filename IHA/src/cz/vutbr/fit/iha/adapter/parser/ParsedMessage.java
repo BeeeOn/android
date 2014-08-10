@@ -10,7 +10,7 @@ package cz.vutbr.fit.iha.adapter.parser;
 public class ParsedMessage {
 
 	private XmlParsers.State mState;
-	private int mSessionId;
+	private String mSessionId;
 	
 	/**
 	 * Inner data of message, basically HashMap or List depend on type of message (state)
@@ -22,7 +22,7 @@ public class ParsedMessage {
 	 */
 	public ParsedMessage() {
 		mState = null;
-		mSessionId = 0;
+		mSessionId = "";
 		data = null;
 	}
 	
@@ -32,7 +32,7 @@ public class ParsedMessage {
 	 * @param sessionId id of actual communication with server
 	 * @param data object with inner data of communication
 	 */
-	public ParsedMessage(XmlParsers.State state, int sessionId, Object data) {
+	public ParsedMessage(XmlParsers.State state, String sessionId, Object data) {
 		mState = state;
 		mSessionId = sessionId;
 		data = null;
@@ -58,7 +58,7 @@ public class ParsedMessage {
 	 * Getter
 	 * @return
 	 */
-	public int getSessionId(){
+	public String getSessionId(){
 		return mSessionId;
 	}
 	
@@ -66,7 +66,7 @@ public class ParsedMessage {
 	 * Setter
 	 * @param sessionId
 	 */
-	public void setSessionId(int sessionId){
+	public void setSessionId(String sessionId) {
 		mSessionId = sessionId;
 	}
 
