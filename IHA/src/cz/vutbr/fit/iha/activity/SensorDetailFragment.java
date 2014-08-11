@@ -111,7 +111,6 @@ public class SensorDetailFragment extends SherlockFragment {
 	private String mFormatDateTime = "%Y-%m-%d %H:%M:%S";
 	private String mGraphDateFormat = "dd.MM.";
 	private String mGraphTimeFormat = "hh:mm";
-	private float mNonValue = (float) -1000.0;
 	private float mTempConstant = (float) 1000;
 
 	/**
@@ -553,7 +552,7 @@ public class SensorDetailFragment extends SherlockFragment {
 	        public String formatLabel(double value, boolean isValueX) {
 	            // TODO Auto-generated method stub
 	            if (isValueX) {
-	                Log.d(TAG, "LABEL FORMATER - Value: "+ value +" Date: "+ DateFormatter.format(new Date((long) value)));
+	                Log.d(TAG, "LABEL FORMATER - Value: "+ value +" Date: "+ DateFormatter.format(new Date((long) value))+ " "+TimeFormatter.format(new Date((long) value)));
 	                return DateFormatter.format(new Date((long) value))+ " "+TimeFormatter.format(new Date((long) value));
 	            }
 	            return String.format("%.1f", value);
@@ -577,17 +576,17 @@ public class SensorDetailFragment extends SherlockFragment {
 		GraphView.GraphViewData[] data = new GraphView.GraphViewData[size];
 		for (int i = 0; i < size; i++) {
 			value = log.getValues().get(i).value;
-			cal.setTime(log.getValues().get(i).date);
+			//cal.setTimeInMillis(log.getValues().get(i).date.getTime());
 			
-			if(value == mNonValue) {
+			if(Float.isNaN(value)) {
 				value = minLimit;
 			}
 			else if(value > 1000 ) {
 				value = (float) (value/100.0);
 			}
 			
-			data[i] = new GraphView.GraphViewData(cal.getTimeInMillis(),value);
-			Log.d(TAG, "FILL GRAPH - date(msec):"  +cal.getTimeInMillis() + " Value: "+value);
+			data[i] = new GraphView.GraphViewData(log.getValues().get(i).date.getTime(),value);
+			Log.d(TAG, "FILL GRAPH - date(msec):"  +log.getValues().get(i).date.getTime() + " Value: "+value);
 		}
 		
 		Log.d(TAG, "LOG2 - Min: " + minimum + " Max: "+maximum);
