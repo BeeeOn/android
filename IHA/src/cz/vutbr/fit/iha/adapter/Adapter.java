@@ -13,7 +13,6 @@ import android.text.format.Time;
 import android.util.Log;
 import cz.vutbr.fit.iha.adapter.device.BaseDevice;
 import cz.vutbr.fit.iha.adapter.location.Location;
-import cz.vutbr.fit.iha.adapter.parser.XmlCreator;
 import cz.vutbr.fit.iha.household.User;
 
 /**
@@ -30,7 +29,6 @@ public class Adapter {
 	private final Map<String, BaseDevice> mUninitializedIgnored = new HashMap<String, BaseDevice>();
 	
 	private String mId = "";
-	private String mVersion = "";
 	private String mName = "";
 	private User.Role mRole;
 	
@@ -47,7 +45,7 @@ public class Adapter {
 			devices += String.format(" - %s\n", dev.toDebugString());
 		}
 		
-		return String.format("Id: %s\nVersion: %s\nName: %s\nRole: %s\nDevices:\n%s", mId, mVersion, mName, mRole, devices);
+		return String.format("Id: %s\nName: %s\nRole: %s\nDevices:\n%s", mId, mName, mRole, devices);
 	}
 	
 	/**
@@ -97,22 +95,7 @@ public class Adapter {
 	public String getId() {
 		return mId;
 	}
-	
-	/**
-	 * Setting version of protocol
-	 * @param Version
-	 */
-	public void setVersion(String Version) {
-		mVersion = Version;
-	}
-	
-	/**
-	 * Returning version of protocol
-	 * @return version
-	 */
-	public String getVersion() {
-		return mVersion;
-	}
+
 	
 	/**
 	 * Find and return device by given id
@@ -208,16 +191,6 @@ public class Adapter {
 		
 		mLocations.put(location.getId(), location);
 		return true;
-	}
-	
-	@Deprecated
-	/**
-	 * Return object as XML file
-	 * @return created XML string
-	 */
-	public String getXml() {
-		XmlCreator xmlcreator = new XmlCreator(this);
-		return xmlcreator.create();
 	}
 
 	/**

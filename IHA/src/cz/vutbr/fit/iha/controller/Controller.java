@@ -242,7 +242,6 @@ public final class Controller {
 		adapter.setDevices(newAdapter.getDevices());
 		adapter.setId(newAdapter.getId());
 		adapter.setName(newAdapter.getName());
-		adapter.setVersion(newAdapter.getVersion());
 		adapter.setRole(newAdapter.getRole());		
 		
 		adapter.lastUpdate.setToNow();

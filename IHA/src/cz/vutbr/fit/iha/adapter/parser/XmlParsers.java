@@ -262,9 +262,9 @@ public class XmlParsers {
 		mParser.nextTag();
 		mParser.require(XmlPullParser.START_TAG, ns, VERSION);
 		
-			result.setVersion(readText(VERSION));
-			if(!result.getVersion().equals(XML_VER))
-				throw new XmlVerMisException(mXmlVerMisExcMessage + "Expected: " + XML_VER + " but got: " + result.getVersion());
+			String version = readText(VERSION);
+			if(!version.equals(XML_VER))
+				throw new XmlVerMisException(mXmlVerMisExcMessage + "Expected: " + XML_VER + " but got: " + version);
 			
 			result.setRole(Role.fromString(role));
 			mParser.nextTag();
