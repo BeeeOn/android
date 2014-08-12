@@ -315,6 +315,11 @@ public class LoginActivity extends BaseActivity {
 	 */
 	private void doGoogleLogin(final String email) {
 		ProgressShow();
+		if(!mController.isInternetAvailable()){
+			Toast.makeText(mActivity, getString(R.string.toast_internet_connection), Toast.LENGTH_LONG).show();
+			ProgressDismiss();
+			return;
+		}
 		final GetGoogleAuth ggAuth = new GetGoogleAuth(this, email);
 		try {
 			Log.d(TAG, "call google auth execute");

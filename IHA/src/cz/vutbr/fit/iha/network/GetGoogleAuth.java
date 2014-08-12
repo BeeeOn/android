@@ -187,7 +187,7 @@ public class GetGoogleAuth extends AsyncTask<Void, Void, GoogleAuthState> {
 				break;
 			case eNoConnection:
 				mActivity.ProgressDismiss();
-				new ToastMessageThread(mActivity, R.string.toast_internet_connection).start();
+				new ToastMessageThread(mActivity, R.string.toast_check_your_connection_via_browser).start();
 				break;
 			default:
 				break;
@@ -214,7 +214,7 @@ public class GetGoogleAuth extends AsyncTask<Void, Void, GoogleAuthState> {
 			return true;
 		} catch(IOException e){
 			mActivity.ProgressDismiss();
-			new ToastMessageThread(mActivity, R.string.toast_internet_connection).start();
+			new ToastMessageThread(mActivity, R.string.toast_check_your_connection_via_browser).start();
 			e.printStackTrace();
 		} catch (Exception e) {
 			//TODO: check more exceptions and show toast 
@@ -238,6 +238,7 @@ public class GetGoogleAuth extends AsyncTask<Void, Void, GoogleAuthState> {
 	private void fetchInfoFromProfileServer(String token) throws IOException, JSONException {	
 		URL url = new URL("https://www.googleapis.com/oauth2/v1/userinfo?access_token=" + token);
         HttpURLConnection con = (HttpURLConnection) url.openConnection();
+        con.setConnectTimeout(1000);
         int sc = con.getResponseCode();
         if (sc == 200) {
 	          InputStream is = con.getInputStream();

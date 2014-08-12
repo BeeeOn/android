@@ -218,6 +218,17 @@ public class Network {
 		NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
 		return activeNetworkInfo != null && activeNetworkInfo.isConnected();
 	}
+	
+	/**
+	 * Method check background data under API 14
+	 * @see APP works without demo data on (2.3.4 tested)
+	 * @return true if is allowed
+	 */
+	@SuppressWarnings("deprecation")
+	public boolean checkBackgroundData(){
+		ConnectivityManager connectivityManager = (ConnectivityManager) mContext.getSystemService(Context.CONNECTIVITY_SERVICE);
+		return connectivityManager.getBackgroundDataSetting();
+	}
 
 	private void doResign() {
 		// TODO: maybe use diffrenD way to resign, case stopping of thread,
@@ -234,6 +245,9 @@ public class Network {
 	}
 
 	private ParsedMessage doRequest(String messageToSend) {
+		//TODO: This is not needed anymore
+		if(!checkBackgroundData())
+			Log.e("Network", "backgrounddata");
 		if (!isAvailable())
 			throw new NoConnectionException();
 

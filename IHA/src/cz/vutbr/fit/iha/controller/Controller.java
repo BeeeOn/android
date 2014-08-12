@@ -190,6 +190,9 @@ public final class Controller {
 		return mHousehold.user.isLoggedIn();
 	}
 	
+	public boolean isInternetAvailable(){
+		return mNetwork.isAvailable();
+	}
 	
 	/** Adapter methods *****************************************************/
 
