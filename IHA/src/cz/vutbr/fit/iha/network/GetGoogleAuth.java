@@ -16,6 +16,7 @@ import android.util.Log;
 
 import com.google.android.gms.auth.GoogleAuthUtil;
 import com.google.android.gms.auth.UserRecoverableAuthException;
+import com.google.android.gms.common.Scopes;
 
 import cz.vutbr.fit.iha.R;
 import cz.vutbr.fit.iha.activity.LoginActivity;
@@ -29,6 +30,8 @@ import cz.vutbr.fit.iha.thread.ToastMessageThread;
 public class GetGoogleAuth extends AsyncTask<Void, Void, GoogleAuthState> {
 	private static final String TAG = GetGoogleAuth.class.getSimpleName();
 	private static GetGoogleAuth mThis;
+	
+	private static String SCOPE = "oauth2:https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email";
 	
 	private LoginActivity mActivity;
 	private String mEmail;
@@ -150,7 +153,7 @@ public class GetGoogleAuth extends AsyncTask<Void, Void, GoogleAuthState> {
 	@Override
 	protected GoogleAuthState doInBackground(Void... params) {
 		try {
-			mToken = GoogleAuthUtil.getToken(mActivity, mEmail,"oauth2:https://www.googleapis.com/auth/userinfo.profile");
+			mToken = GoogleAuthUtil.getToken(mActivity, mEmail, SCOPE);
 			Log.d(TAG, "Token");
 			
 			fetchInfoFromProfileServer(mToken);
@@ -200,7 +203,8 @@ public class GetGoogleAuth extends AsyncTask<Void, Void, GoogleAuthState> {
 	
 	public boolean doInForeground(boolean fetchPhoto){
 		try {
-			mToken = GoogleAuthUtil.getToken(mActivity, mEmail,"oauth2:https://www.googleapis.com/auth/userinfo.profile");
+//			mToken = GoogleAuthUtil.getToken(mActivity, mEmail, "oauth2:https://www.googleapis.com/auth/userinfo.profile");
+			mToken = GoogleAuthUtil.getToken(mActivity, mEmail, SCOPE);
 			Log.d(TAG, "Token");
 			
 			if(fetchPhoto)
