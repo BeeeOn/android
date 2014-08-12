@@ -40,6 +40,7 @@ import cz.vutbr.fit.iha.MenuListAdapter;
 import cz.vutbr.fit.iha.R;
 import cz.vutbr.fit.iha.SensorListAdapter;
 import cz.vutbr.fit.iha.activity.dialog.AddAdapterActivityDialog;
+import cz.vutbr.fit.iha.activity.dialog.AddSensorActivityDialog;
 import cz.vutbr.fit.iha.activity.dialog.SetupSensorActivityDialog;
 import cz.vutbr.fit.iha.activity.dialog.CustomAlertDialog;
 import cz.vutbr.fit.iha.activity.dialog.InfoDialogFragment;
@@ -578,6 +579,16 @@ public class LocationScreenActivity extends BaseActivity {
 		mSensorList.setOnItemClickListener(new ListView.OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+				if(position == sensors.size()) {
+					Log.d(TAG, "HERE ADD SENSOR +");
+					mController.unignoreUninitialized();
+
+					inBackground = true;
+					Intent intent = new Intent(LocationScreenActivity.this, AddSensorActivityDialog.class);
+					startActivity(intent);
+					return;
+				}
+				
 				final BaseDevice selectedItem = sensors.get(position);
 
 				// setSupportProgressBarIndeterminateVisibility(true);
@@ -680,7 +691,7 @@ public class LocationScreenActivity extends BaseActivity {
 				intent.putExtras(bundle);
 				startActivityForResult(intent, REQUEST_ADD_ADAPTER);
 				break;
-			}
+			}/*
 			case R.id.action_addsensor: {
 				// Show also ignored devices
 				mController.unignoreUninitialized();
@@ -690,7 +701,7 @@ public class LocationScreenActivity extends BaseActivity {
 				startActivity(intent);
 
 				break;
-			}
+			}*/
 			case R.id.action_settings: {
 				Intent intent = new Intent(LocationScreenActivity.this, SettingsMainActivity.class);
 				startActivity(intent);

@@ -91,6 +91,11 @@
     <string name="no_location">No location</string>
     <string name="no_custom_view">No custom view</string>
     
+    <!-- Add sensor dialog -->
+    <string name="addsensor_sending_request">Pair request sending </string>
+    <string name="addsensor_send_request">Send pair request  </string>
+    <string name="addsensor_active_pair">Active pair mode </string>
+    
     <!-- Others -->
     <string name="action_settings">Settings</string>
     <string name="action_about">About</string>

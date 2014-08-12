@@ -15,31 +15,39 @@ import android.widget.TextView;
 public class SensorListAdapter extends BaseAdapter {
 	
 	// Declare Variables
-    Context context;
-    String[] mTitle;
-    String[] mValue;
-    String[] mUnit;
-    Time[] mTime;
-    int[] mIcon;
-    LayoutInflater inflater;
+    private Context mContext;
+    private String[] mTitle;
+    private String[] mValue;
+    private String[] mUnit;
+    private Time[] mTime;
+    private int[] mIcon;
+    private LayoutInflater inflater;
+    private int mCount;
+    private int mLenght;
  
     public SensorListAdapter(Context context, String[] title, String[] value,String[] unit, Time[] time , int[] icon) {
-        this.context = context;
-        this.mTitle = title;
-        this.mValue = value;
-        this.mIcon = icon;
-        this.mUnit = unit;
-        this.mTime = time;
+        mContext = context;
+        mTitle = title;
+        mValue = value;
+        mIcon = icon;
+        mUnit = unit;
+        mTime = time;
+        mLenght = mTitle.length;
+        mCount = mTitle.length+1;
     }
 
 	@Override
 	public int getCount() {
-		return this.mTitle.length;
+		return mCount;
 	}
 
 	@Override
 	public Object getItem(int position) {
-		return mTitle[position];
+		if(position < mLenght)
+		{
+			return mTitle[position];
+		}
+		return "Test";
 	}
 
 	@Override
@@ -49,6 +57,21 @@ public class SensorListAdapter extends BaseAdapter {
 
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
+		if(position < mLenght)
+		{
+			return addItem(position,convertView,parent);
+		}
+        return addAddSensor(convertView,parent);
+	}
+	
+	
+	private View addAddSensor(View convertView, ViewGroup parent) {
+		inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View itemView = inflater.inflate(R.layout.sensor_listview_addsensor, parent,false);
+		return itemView;
+	}
+
+	private View addItem(int position, View convertView, ViewGroup parent) {
 		// Declare Variables
         TextView txtTitle;
         TextView txtValue;
@@ -56,7 +79,7 @@ public class SensorListAdapter extends BaseAdapter {
         TextView txtTime;
         ImageView imgIcon;
  
-        inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View itemView = inflater.inflate(R.layout.sensor_listview_item, parent,false);
  
         // Locate the TextViews in drawer_list_item.xml
@@ -72,7 +95,7 @@ public class SensorListAdapter extends BaseAdapter {
         txtTitle.setText(mTitle[position]);
         txtValue.setText(mValue[position]);
         txtUnit.setText(mUnit[position]);
-        txtTime.setText(String.format("%s %s", context.getString(R.string.last_update), setLastUpdate(mTime[position])));
+        txtTime.setText(String.format("%s %s", mContext.getString(R.string.last_update), setLastUpdate(mTime[position])));
  
         // Set the results into ImageView
         imgIcon.setImageResource(mIcon[position]);

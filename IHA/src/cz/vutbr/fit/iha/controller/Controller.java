@@ -709,6 +709,14 @@ public final class Controller {
 		return log;
 	}
 	
+	/**
+	 * Send pair request 
+	 * @param stringID
+	 * @return result
+	 */
+	public boolean sendPairRequest(String adapterID) {
+		return mNetwork.prepareAdapterToListenNewSensors(adapterID);
+	}
 	
 	/** User methods ********************************************************/
 

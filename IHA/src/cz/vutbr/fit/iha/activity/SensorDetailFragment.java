@@ -297,7 +297,7 @@ public class SensorDetailFragment extends SherlockFragment {
 				return false;
 			}
 		});
-		mLayoutScroll.setOnTouchListener(new OnTouchListener() {
+		/*mLayoutScroll.setOnTouchListener(new OnTouchListener() {
 
 			@Override
 			public boolean onTouch(View v, MotionEvent event) {
@@ -320,7 +320,7 @@ public class SensorDetailFragment extends SherlockFragment {
 				}
 				return false;
 			}
-		});
+		});*/
 		
 		// Set name of sensor
 		mName.setText(device.getName());
