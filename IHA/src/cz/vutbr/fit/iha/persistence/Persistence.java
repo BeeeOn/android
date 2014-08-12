@@ -33,7 +33,7 @@ public class Persistence {
 	
 	public SharedPreferences getSettings(String namespace) {
 		String name = getPreferencesFilename(namespace);
-		return mContext.getSharedPreferences(String.format(Constants.PERSISTENCE_PREF_FILENAME, namespace), 0);
+		return mContext.getSharedPreferences(name, 0);
 	}
 	
 	public void initializeDefaultSettings(String namespace) {
