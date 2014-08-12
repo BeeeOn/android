@@ -467,7 +467,7 @@ public class SensorDetailFragment extends SherlockFragment {
 				beforeMonth.format(mFormatDateTime), // from
 				now.format(mFormatDateTime), // to
 				DataType.AVERAGE, // type
-				DataInterval.DAY); // interval
+				DataInterval.HOUR); // interval
 		mGetDeviceLogTask.execute(new LogDataPair[] { pair });
 
 		mGraphSeries = new GraphViewSeries("Graph", seriesStyleBlue, data);

@@ -40,7 +40,7 @@ import cz.vutbr.fit.iha.MenuListAdapter;
 import cz.vutbr.fit.iha.R;
 import cz.vutbr.fit.iha.SensorListAdapter;
 import cz.vutbr.fit.iha.activity.dialog.AddAdapterActivityDialog;
-import cz.vutbr.fit.iha.activity.dialog.AddSensorActivityDialog;
+import cz.vutbr.fit.iha.activity.dialog.SetupSensorActivityDialog;
 import cz.vutbr.fit.iha.activity.dialog.CustomAlertDialog;
 import cz.vutbr.fit.iha.activity.dialog.InfoDialogFragment;
 import cz.vutbr.fit.iha.activity.menuItem.AdapterMenuItem;
@@ -684,7 +684,7 @@ public class LocationScreenActivity extends BaseActivity {
 				mController.unignoreUninitialized();
 
 				inBackground = true;
-				Intent intent = new Intent(LocationScreenActivity.this, AddSensorActivityDialog.class);
+				Intent intent = new Intent(LocationScreenActivity.this, SetupSensorActivityDialog.class);
 				startActivity(intent);
 
 				break;
@@ -865,7 +865,7 @@ public class LocationScreenActivity extends BaseActivity {
 				public void onClick(View v) {
 					// Open activity for adding new device
 					inBackground = true;
-					Intent intent = new Intent(LocationScreenActivity.this, AddSensorActivityDialog.class);
+					Intent intent = new Intent(LocationScreenActivity.this, SetupSensorActivityDialog.class);
 					startActivity(intent);
 					mDialog.dismiss();
 				}

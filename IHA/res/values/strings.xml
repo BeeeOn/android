@@ -38,6 +38,7 @@
     <string name="login_app_name">Intelligent Home Anywhere</string>
     <string name="login_or_use">or use</string>
     <string name="addsensor_add_sensor">Add sensor</string>
+    <string name="addsensor_setup_sensor">Setup sensor</string>
     <string name="addsensor_or">or</string>
     <string name="sensordetail_last_value">Last value:\u0020</string>
     <string name="sensordetail_refresh_time">Refresh inteval: </string>
