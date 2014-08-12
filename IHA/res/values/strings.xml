@@ -119,8 +119,8 @@
         <item>Item 6</item>
     </string-array>
     <string-array name="title_of_main_fragments" >
-        <item>Custom </item>
         <item>List</item>
+        <item>Custom</item>
     </string-array>
 
     <string name="log_sc_or">or</string>

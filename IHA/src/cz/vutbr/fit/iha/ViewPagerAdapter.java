@@ -23,12 +23,12 @@ public class ViewPagerAdapter extends FragmentPagerAdapter {
 	    switch (position) {
 
 	    // Open FragmentTab2.java
-	    case 1:
+	    case 0:
 	    	ListOfSensors fragmenttab2 = new ListOfSensors();
 	      return fragmenttab2;
 	      
 	      // Open FragmentTab1.java
-	    case 0:
+	    case 1:
 	    	GraphOfSensors fragmenttab1 = new GraphOfSensors();
 	      return fragmenttab1;
 
