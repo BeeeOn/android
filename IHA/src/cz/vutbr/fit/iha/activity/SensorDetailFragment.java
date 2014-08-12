@@ -763,7 +763,12 @@ public class SensorDetailFragment extends SherlockFragment {
 
 		@Override
 		public void onDestroyActionMode(ActionMode mode) {
-			
+			// Controll mode and set default values
+			switch (mEditMode) {
+			case EDIT_REFRESH_T:
+					mRefreshTimeValue.setProgress(mLastProgressRefreshTime);
+				break;
+			}
 			mActivity.setEnableSwipe(true);
 			
 			mSpinnerLoc.setVisibility(View.GONE);
