@@ -763,6 +763,9 @@ public class SensorDetailFragment extends SherlockFragment {
 
 		@Override
 		public void onDestroyActionMode(ActionMode mode) {
+			
+			mActivity.setEnableSwipe(true);
+			
 			mSpinnerLoc.setVisibility(View.GONE);
 			mLocation.setVisibility(View.VISIBLE);
 			mRectangleLoc.setVisibility(View.VISIBLE);

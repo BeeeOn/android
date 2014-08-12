@@ -30,9 +30,16 @@
     </LinearLayout>
 
     <ImageView
-        android:id="@+id/dialof_addsensor_image"
+        android:id="@+id/dialog_addsensor_image"
         android:layout_width="fill_parent"
         android:layout_height="150dp"
         android:src="@drawable/ic_launcher" />
+
+    <Button
+        android:id="@+id/dialog_addsensor_btn"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="Button"
+        android:enabled="false" />
 
 </LinearLayout>
