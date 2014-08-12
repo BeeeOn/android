@@ -238,7 +238,7 @@ public class GetGoogleAuth extends AsyncTask<Void, Void, GoogleAuthState> {
 	private void fetchInfoFromProfileServer(String token) throws IOException, JSONException {	
 		URL url = new URL("https://www.googleapis.com/oauth2/v1/userinfo?access_token=" + token);
         HttpURLConnection con = (HttpURLConnection) url.openConnection();
-        con.setConnectTimeout(1000);
+        con.setConnectTimeout(10000);
         int sc = con.getResponseCode();
         if (sc == 200) {
 	          InputStream is = con.getInputStream();

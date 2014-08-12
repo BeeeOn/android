@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.content.DialogInterface.OnCancelListener;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -301,6 +302,9 @@ public class LoginActivity extends BaseActivity {
 			// TODO: maybe show customAlertDialog with possibility actualize
 			// play
 			Toast.makeText(v.getContext(), getString(R.string.toast_play_missing), Toast.LENGTH_LONG).show();
+			Uri marketUri = Uri.parse("market://details?id=com.google.android.gms");
+			Intent marketIntent = new Intent(Intent.ACTION_VIEW, marketUri);
+			startActivity(marketIntent);
 			mProgress.dismiss();
 		}
 		Log.d(TAG, "END: Google access func");
