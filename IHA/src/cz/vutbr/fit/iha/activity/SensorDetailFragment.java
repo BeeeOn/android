@@ -26,6 +26,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.Spinner;
@@ -72,7 +73,8 @@ public class SensorDetailFragment extends SherlockFragment {
 	private SeekBar mRefreshTimeValue;
 	private TextView mGraphLabel;
 	private LinearLayout mGraphLayout;
-	private RelativeLayout mLayout;
+	private ScrollView mLayoutScroll;
+	private RelativeLayout mLayoutRelative;
 	private RelativeLayout mRectangleName;
 	private RelativeLayout mRectangleLoc;
 	private Spinner mSpinnerLoc;
@@ -245,6 +247,8 @@ public class SensorDetailFragment extends SherlockFragment {
 
 						if (mEditMode != EDIT_REFRESH_T) {
 							mEditMode = EDIT_REFRESH_T;
+							// Disable Swipe
+							mActivity.setEnableSwipe(false);
 							mMode = getSherlockActivity().startActionMode(
 									new AnActionModeOfEpicProportions());
 							mLastProgressRefreshTime = seekBar.getProgress();
@@ -266,9 +270,10 @@ public class SensorDetailFragment extends SherlockFragment {
 		mGraphLabel = (TextView) getView().findViewById(R.id.sen_graph_name);
 		mGraphInfo = (TextView) getView().findViewById(R.id.sen_graph_info);
 		// Get RelativeLayout of detail
-		mLayout = (RelativeLayout) getView().findViewById(
+		mLayoutRelative = (RelativeLayout) getView().findViewById(
 				R.id.sensordetail_scroll);
-		mLayout.setOnTouchListener(new OnTouchListener() {
+		mLayoutScroll = (ScrollView) getView().findViewById(R.id.sensordetail_layout);
+		mLayoutRelative.setOnTouchListener(new OnTouchListener() {
 
 			@Override
 			public boolean onTouch(View v, MotionEvent event) {
@@ -292,7 +297,31 @@ public class SensorDetailFragment extends SherlockFragment {
 				return false;
 			}
 		});
+		mLayoutScroll.setOnTouchListener(new OnTouchListener() {
 
+			@Override
+			public boolean onTouch(View v, MotionEvent event) {
+				// Disable graph if in edit Mode
+				if (mEditMode != EDIT_NONE)
+					return false;
+
+				if (mWasTapLayout)
+					return true;
+
+				mWasTapLayout = true;
+				mWasTapGraph = false;
+				if (mGraphView != null) {
+					mGraphView.setScalable(false);
+					mGraphView.setScrollable(false);
+					mActivity.setEnableSwipe(true);
+					mGraphInfo.setVisibility(View.VISIBLE);
+					onTouch(v, event);
+					return true;
+				}
+				return false;
+			}
+		});
+		
 		// Set name of sensor
 		mName.setText(device.getName());
 		mName.setBackgroundColor(Color.TRANSPARENT);
@@ -334,6 +363,9 @@ public class SensorDetailFragment extends SherlockFragment {
 						return;
 					// Disable SeekBar
 					mRefreshTimeValue.setEnabled(false);
+					
+					// Disable Swipe
+					mActivity.setEnableSwipe(false);
 
 					mEditMode = EDIT_LOC;
 					mMode = getSherlockActivity().startActionMode(
