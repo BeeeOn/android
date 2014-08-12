@@ -21,6 +21,8 @@
         <item name="actionBarTabTextStyle">@style/MyActionBarTabText</item>
         <item name="actionMenuTextColor">@color/white</item-->
         
+        <!-- item name="homeAsUpIndicator">@drawable/ic_drawer</item-->
+        
 
     </style>
     <!-- Application theme. -->
@@ -29,7 +31,7 @@
     </style>
        
     <!-- ActionBar styles -->
-    <style name="Widget.MyTheme.ActionBar"  parent="Widget.Sherlock.Light.ActionBar">
+    <style name="Widget.MyTheme.ActionBar"  parent="@style/Widget.Sherlock.Light.ActionBar">
 		<item name="android:background">@color/log_blue2</item>
         <!-- Support library compatibility -->
         <item name="titleTextStyle">@style/Widget.MyTheme.ActionBar.TitleText</item>

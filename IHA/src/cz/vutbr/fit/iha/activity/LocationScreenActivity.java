@@ -193,6 +193,7 @@ public class LocationScreenActivity extends BaseActivity {
 			mSwitchAdapter.cancel(true);
 		}
 	}
+	
 
 	@Override
 	public boolean dispatchTouchEvent(MotionEvent ev) {
@@ -444,9 +445,7 @@ public class LocationScreenActivity extends BaseActivity {
 
 		});
 
-		// Enable ActionBar app icon to behave as action to toggle nav drawer
-		getSupportActionBar().setHomeButtonEnabled(true);
-		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+		
 		// getSupportActionBar().setIcon(R.drawable.ic_launcher_white);
 		// ActionBarDrawerToggle ties together the the proper interactions
 		// between the sliding drawer and the action bar app icon
@@ -470,10 +469,13 @@ public class LocationScreenActivity extends BaseActivity {
 				// backPressed = true;
 			}
 		};
-
+		
 		mDrawerLayout.setDrawerListener(mDrawerToggle);
 		mDrawerToggle.syncState();
-		this.setSupportProgressBarIndeterminateVisibility(false);
+		// Enable ActionBar app icon to behave as action to toggle nav drawer
+		getSupportActionBar().setHomeButtonEnabled(true);
+		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+		setSupportProgressBarIndeterminateVisibility(false);
 
 		mDrawerLayout.openDrawer(mDrawerList);
 
@@ -630,7 +632,7 @@ public class LocationScreenActivity extends BaseActivity {
 	protected void onPostCreate(Bundle savedInstanceState) {
 		super.onPostCreate(savedInstanceState);
 		// Sync the toggle state after onRestoreInstanceState has occurred.
-
+		mDrawerToggle.syncState();
 	}
 
 	@Override
