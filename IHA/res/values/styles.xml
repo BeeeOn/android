@@ -61,8 +61,7 @@
 	    <item name="android:windowNoTitle">true</item>
 	    <item name="android:backgroundDimEnabled">true</item>
 	    <item name="android:windowIsFloating">true</item>
-	    <item name="android:windowBackground">@color/light_gray</item>
-	    <item name="android:background">@color/light_gray</item>
+	    <item name="android:windowBackground">@color/black</item>
     </style>
 
 </resources>

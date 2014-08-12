@@ -8,8 +8,9 @@
     >
     
     <LinearLayout
-        android:layout_width="match_parent"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
+        android:minHeight="30dp"
         android:background="@color/log_blue2"
         android:orientation="vertical" >
 
