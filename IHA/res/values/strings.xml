@@ -162,23 +162,4 @@
         <item quantity="other">%d hours</item>
     </plurals>
 
-    <!-- Settings -->
-    <string name="personal">Personal</string>
-    <string name="user_profile">User profile</string>
-    <string name="units">Units</string>
-    <string name="temperature">Temperature</string>
-    <string name="connections">Connections</string>
-    <string name="smartwatches">Smartwatches</string>
-    <string name="choose_default_location">Choose default location</string>
-    <string name="choose_default_adapter">Choose default adapter</string>
-    <string name="default_location">Default location</string>
-    <string name="default_adapter">Default adapter</string>
-
-    <!-- Units -->
-    <!-- don't change order of items, if so change order in string_private.xml as well -->
-    <string-array name="unit_temperature_name">
-        <item>°C</item>
-        <item>°F</item>
-    </string-array>
-
 </resources>

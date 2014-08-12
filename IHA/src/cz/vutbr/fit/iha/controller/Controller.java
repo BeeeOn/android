@@ -128,14 +128,19 @@ public final class Controller {
 	 * @throws NetworkException
 	 */
 	public boolean login(String email) throws NetworkException {
-		if (mDemoMode)
+		if (mDemoMode) {
+			// TODO: remember and login automatically to demo next time?
+			// mPersistence.saveLastEmail(...);
+			mPersistence.initializeDefaultSettings(email);
 			return true;
+		}
 		
 		// TODO: catch and throw proper exception
 		// FIXME: after some time there should be picture in ActualUser object, should save to mPersistence
 		try{
 			if (mNetwork.signIn(email)) {
 				mPersistence.saveLastEmail(email);
+				mPersistence.initializeDefaultSettings(email);
 				return true;
 			}
 		}catch(FalseException e){

@@ -17,6 +17,7 @@ import cz.vutbr.fit.iha.R;
 import cz.vutbr.fit.iha.adapter.Adapter;
 import cz.vutbr.fit.iha.adapter.location.Location;
 import cz.vutbr.fit.iha.controller.Controller;
+import cz.vutbr.fit.iha.persistence.Persistence;
 
 /**
  * The control preference activity handles the preferences for the control
@@ -43,6 +44,9 @@ public class SettingsMainActivity extends SherlockPreferenceActivity implements
 		
 		getSupportActionBar().setHomeButtonEnabled(true);
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+		
+		// Use own name for sharedPreferences
+		getPreferenceManager().setSharedPreferencesName(Persistence.getPreferencesFilename(mController.getActualUser().getEmail()));
 
 		mPrefs = mController.getUserSettings();
 

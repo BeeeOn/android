@@ -11,6 +11,7 @@ import com.actionbarsherlock.view.MenuItem;
 import cz.vutbr.fit.iha.Constants;
 import cz.vutbr.fit.iha.R;
 import cz.vutbr.fit.iha.controller.Controller;
+import cz.vutbr.fit.iha.persistence.Persistence;
 
 /**
  * The control preference activity handles the preferences for the control
@@ -37,6 +38,9 @@ public class SettingsUnitActivity extends SherlockPreferenceActivity implements
 		getSupportActionBar().setHomeButtonEnabled(true);
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+		// Use own name for sharedPreferences
+		getPreferenceManager().setSharedPreferencesName(Persistence.getPreferencesFilename(mController.getActualUser().getEmail()));
+		
 		mPrefs = mController.getUserSettings();
 
 		// Load the preferences from an XML resource
