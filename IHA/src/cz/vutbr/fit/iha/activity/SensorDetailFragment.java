@@ -44,11 +44,11 @@ import com.jjoe64.graphview.LineGraphView;
 
 import cz.vutbr.fit.iha.LocationArrayAdapter;
 import cz.vutbr.fit.iha.R;
-import cz.vutbr.fit.iha.RefreshInterval;
 import cz.vutbr.fit.iha.adapter.device.BaseDevice;
 import cz.vutbr.fit.iha.adapter.device.DeviceLog;
 import cz.vutbr.fit.iha.adapter.device.DeviceLog.DataInterval;
 import cz.vutbr.fit.iha.adapter.device.DeviceLog.DataType;
+import cz.vutbr.fit.iha.adapter.device.RefreshInterval;
 import cz.vutbr.fit.iha.adapter.location.Location;
 import cz.vutbr.fit.iha.controller.Controller;
 //import android.widget.LinearLayout;

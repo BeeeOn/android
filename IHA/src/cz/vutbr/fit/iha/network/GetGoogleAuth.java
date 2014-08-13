@@ -16,7 +16,6 @@ import android.util.Log;
 
 import com.google.android.gms.auth.GoogleAuthUtil;
 import com.google.android.gms.auth.UserRecoverableAuthException;
-import com.google.android.gms.common.Scopes;
 
 import cz.vutbr.fit.iha.R;
 import cz.vutbr.fit.iha.activity.LoginActivity;

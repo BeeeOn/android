@@ -7,7 +7,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import cz.vutbr.fit.iha.R;
-import cz.vutbr.fit.iha.Utils;
+import cz.vutbr.fit.iha.util.Utils;
 
 /**
  * @author ThinkDeep

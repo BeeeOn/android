@@ -12,7 +12,6 @@ import java.util.Map.Entry;
 import org.xmlpull.v1.XmlSerializer;
 
 import android.util.Xml;
-import cz.vutbr.fit.iha.adapter.Adapter;
 import cz.vutbr.fit.iha.adapter.device.BaseDevice;
 import cz.vutbr.fit.iha.adapter.location.Location;
 
@@ -23,7 +22,6 @@ import cz.vutbr.fit.iha.adapter.location.Location;
  */
 public class XmlCreator {
 
-	private Adapter mAdapter;
 	/**
 	 * NameSpace
 	 */
@@ -112,14 +110,6 @@ public class XmlCreator {
 	public static final String INIT_1 = "1";
 	public static final String INIT_0 = "0";
 	
-	
-	/**
-	 * Constructor
-	 * @param cap
-	 */
-	public XmlCreator(Adapter cap){
-		mAdapter = cap;
-	}
 	
 	/**
 	 * Method create XML for signIn message

@@ -1,4 +1,4 @@
-package cz.vutbr.fit.iha;
+package cz.vutbr.fit.iha.util;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;

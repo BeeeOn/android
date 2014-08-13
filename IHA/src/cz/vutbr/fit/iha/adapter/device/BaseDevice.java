@@ -5,7 +5,6 @@ package cz.vutbr.fit.iha.adapter.device;
 
 import android.content.Context;
 import android.text.format.Time;
-import cz.vutbr.fit.iha.RefreshInterval;
 import cz.vutbr.fit.iha.adapter.location.Location;
 
 /**

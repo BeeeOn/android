@@ -1,6 +1,7 @@
-package cz.vutbr.fit.iha;
+package cz.vutbr.fit.iha.adapter.device;
 
 import android.content.Context;
+import cz.vutbr.fit.iha.R;
 
 public enum RefreshInterval {
 	SEC_1(1),

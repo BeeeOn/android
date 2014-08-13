@@ -1,20 +1,14 @@
 package cz.vutbr.fit.iha.activity.dialog;
 
-import java.util.List;
-
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.CountDownTimer;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
 import android.widget.Button;
-import android.widget.Toast;
 import cz.vutbr.fit.iha.R;
 import cz.vutbr.fit.iha.adapter.Adapter;
-import cz.vutbr.fit.iha.adapter.device.BaseDevice;
-import cz.vutbr.fit.iha.adapter.location.Location;
 import cz.vutbr.fit.iha.controller.Controller;
 
 public class AddSensorActivityDialog extends BaseActivityDialog{
