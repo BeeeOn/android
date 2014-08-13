@@ -249,7 +249,7 @@ public final class Controller {
 	}
 	
 	/**
-	 * Calling this will reload all adapters from server in next call of {@link #getAdapters()}
+	 * Calling this will reload all adapters from server in next call of {@link #getAdapters()} or {@link #getActiveAdapter()}
 	 */
 	public void reloadAdapters() {
 		mReloadAdapters = true;
@@ -359,8 +359,13 @@ public final class Controller {
 	 * @return active adapter, or first adapter, or null if there are no adapters
 	 */
 	public synchronized Adapter getActiveAdapter() {
-		if (mHousehold.activeAdapter == null) {
-			String lastId = mPersistence.loadActiveAdapter(mHousehold.user.getId());
+		if (mHousehold.activeAdapter == null || mReloadAdapters) {
+			String lastId;
+			if (mReloadAdapters && mHousehold.activeAdapter != null) {
+				lastId = mHousehold.activeAdapter.getId();
+			} else {
+				lastId = mPersistence.loadActiveAdapter(mHousehold.user.getId());
+			}
 			
 			for (Adapter a : getAdapters()) {
 				if (lastId.isEmpty() || a.getId().equals(lastId)) {
@@ -376,7 +381,7 @@ public final class Controller {
 			if (mHousehold.activeAdapter != null)
 				mPersistence.saveActiveAdapter(mHousehold.user.getId(), mHousehold.activeAdapter.getId());
 		}
-
+		
 		return mHousehold.activeAdapter;
 	}
 	
@@ -427,7 +432,10 @@ public final class Controller {
 			return false;
 
 		try {
-			return mNetwork.signUp(mHousehold.user.getEmail(), id, mHousehold.user.getSessionId());
+			if (mNetwork.signUp(mHousehold.user.getEmail(), id, mHousehold.user.getSessionId())) {
+				reloadAdapters(); // TODO: reload (or just add this adapter) only adapters list (without reloading devices)
+				return true;
+			}
 		} catch (NetworkException e) {
 			e.printStackTrace();
 		}
@@ -625,12 +633,14 @@ public final class Controller {
 	 * @param location
 	 * @return List of devices (or empty list)
 	 */
-	public List<BaseDevice> getDevicesByLocation(String locationId) {
+	public List<BaseDevice> getDevicesByLocation(String locationId, boolean forceUpdate) {
 		List<BaseDevice> list = new ArrayList<BaseDevice>();
 		
 		Adapter adapter = getActiveAdapter();
-		if (adapter != null)
+		if (adapter != null) {
+			refreshAdapter(adapter, forceUpdate); // TODO: update only devices in this location? or no?
 			list.addAll(adapter.getDevicesByLocation(locationId));
+		}
 		
 		return list;
 	}

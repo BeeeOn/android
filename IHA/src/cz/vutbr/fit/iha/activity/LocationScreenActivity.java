@@ -85,6 +85,7 @@ public class LocationScreenActivity extends BaseActivity {
 
 	private static boolean inBackground = false;
 	private static boolean isPaused = false;
+	private static boolean forceReloadListing = false;
 
 	/**
 	 * Instance save state tags
@@ -678,7 +679,7 @@ public class LocationScreenActivity extends BaseActivity {
 				}
 				break;
 			case R.id.action_refreshlist: {
-				mController.reloadAdapters();
+				forceReloadListing = true;
 				refreshListing();
 
 				break;
@@ -889,8 +890,9 @@ public class LocationScreenActivity extends BaseActivity {
 
 		@Override
 		protected List<BaseDevice> doInBackground(Location... locations) {
-			List<BaseDevice> devices = mController.getDevicesByLocation(locations[0].getId());
+			List<BaseDevice> devices = mController.getDevicesByLocation(locations[0].getId(), forceReloadListing);
 			Log.d(TAG, String.format("Found %d devices in location '%s'", devices.size(), locations[0].getName()));
+			forceReloadListing = false;
 
 			return devices;
 		}

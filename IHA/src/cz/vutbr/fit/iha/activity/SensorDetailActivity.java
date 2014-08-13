@@ -96,7 +96,7 @@ public class SensorDetailActivity extends BaseActivity
 		@Override
 		protected List<BaseDevice> doInBackground(String... locationID) {
 
-			List<BaseDevice> devices = mController.getDevicesByLocation(locationID[0]);
+			List<BaseDevice> devices = mController.getDevicesByLocation(locationID[0], false);
 			Log.d(TAG, "String:" + devices.toString() + " Size:" + devices.size());
 			
 			return devices;

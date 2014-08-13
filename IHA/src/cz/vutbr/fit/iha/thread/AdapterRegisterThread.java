@@ -30,17 +30,19 @@ public class AdapterRegisterThread implements Runnable{
 
 	@Override
 	public void run() {
-		Controller ctrl = Controller.getInstance(mActivity);
-		boolean result = ctrl.registerAdapter(mSerialNumber);
-		Log.d(TAG, Boolean.toString(result));
-		if(result){
-			ctrl.reloadAdapters();
-			mActivity.runOnUiThread(new ToastMessageThread(mActivity, "Adapter has been activated."));
-		}else{
-			mActivity.runOnUiThread(new ToastMessageThread(mActivity, "Failed to activated adapter."));
+		Controller controller = Controller.getInstance(mActivity);
+		
+		String message;
+		if (controller.registerAdapter(mSerialNumber)) {
+			message = "Adapter has been activated.";
+		} else {
+			message = "Failed to activate adapter.";
 		}
 		
-		if(!ctrl.isLoggedIn()){
+		Log.d(TAG, message);
+		mActivity.runOnUiThread(new ToastMessageThread(mActivity, message));
+		
+		if(!controller.isLoggedIn()){
 			LocationScreenActivity.healActivity();
 			Intent intent = new Intent(mActivity, LocationScreenActivity.class);
 			mActivity.startActivity(intent);
