@@ -715,7 +715,15 @@ public final class Controller {
 	 * @return result
 	 */
 	public boolean sendPairRequest(String adapterID) {
-		return mNetwork.prepareAdapterToListenNewSensors(adapterID);
+		boolean result = false;
+		
+		try {
+			result = mNetwork.prepareAdapterToListenNewSensors(adapterID);
+		} catch (NetworkException e) {
+			e.printStackTrace();
+		}
+
+		return result;
 	}
 	
 	/** User methods ********************************************************/
