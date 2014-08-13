@@ -31,6 +31,7 @@ public class Adapter {
 	private String mId = "";
 	private String mName = "";
 	private User.Role mRole;
+	private int mUtcOffset;
 	
 	public final Time lastUpdate = new Time();
 	
@@ -82,10 +83,10 @@ public class Adapter {
 	
 	/**
 	 * Setting id of adapter
-	 * @param ID
+	 * @param id
 	 */
-	public void setId(String ID) {
-		mId = ID;
+	public void setId(String id) {
+		mId = id;
 	}
 	
 	/**
@@ -94,6 +95,22 @@ public class Adapter {
 	 */
 	public String getId() {
 		return mId;
+	}
+	
+	/**
+	 * Setting utc offset of adapter
+	 * @param utcOffset
+	 */
+	public void setUtcOffset(int offset) {
+		mUtcOffset = offset;
+	}
+	
+	/**
+	 * Returning id of adapter
+	 * @return utcOffset
+	 */
+	public int getUtcOffset() {
+		return mUtcOffset;
 	}
 
 	

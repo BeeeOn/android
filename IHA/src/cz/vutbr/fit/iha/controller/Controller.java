@@ -223,26 +223,25 @@ public final class Controller {
 
 		Adapter newAdapter = null;
 		List<Location> newLocations = null;
+		int newUtcOffset = 0;
 		
 		try {
 			newAdapter = mNetwork.init(adapter.getId());
 			newLocations = mNetwork.getLocations(adapter.getId());
+			newUtcOffset = mNetwork.getTimeZone(adapter.getId());
 		} catch (NetworkException e) {
 			e.printStackTrace();
+			return false;
 		}
 		
-		if (newAdapter == null)
-			return false;
-		
-		if (newLocations == null)
-			newLocations = new ArrayList<Location>();
-
 		// Update adapter with new data
 		adapter.setLocations(newLocations);
+		adapter.setUtcOffset(newUtcOffset);
+
 		adapter.setDevices(newAdapter.getDevices());
 		adapter.setId(newAdapter.getId());
 		adapter.setName(newAdapter.getName());
-		adapter.setRole(newAdapter.getRole());		
+		adapter.setRole(newAdapter.getRole());
 		
 		adapter.lastUpdate.setToNow();
 		

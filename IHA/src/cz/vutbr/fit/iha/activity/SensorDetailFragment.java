@@ -7,6 +7,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
+import java.util.Locale;
 
 import android.content.Context;
 import android.graphics.Color;
@@ -51,6 +52,7 @@ import cz.vutbr.fit.iha.adapter.device.DeviceLog.DataType;
 import cz.vutbr.fit.iha.adapter.device.RefreshInterval;
 import cz.vutbr.fit.iha.adapter.location.Location;
 import cz.vutbr.fit.iha.controller.Controller;
+import cz.vutbr.fit.iha.util.Utils;
 //import android.widget.LinearLayout;
 
 public class SensorDetailFragment extends SherlockFragment {
@@ -396,7 +398,7 @@ public class SensorDetailFragment extends SherlockFragment {
 		// Set icon of sensor
 		mIcon.setImageResource(device.getTypeIconResource());
 		// Set time of sensor
-		mTime.setText(setLastUpdate(device.lastUpdate));
+		mTime.setText(Utils.formatLastUpdate(device.lastUpdate));
 		// Set refresh time Text
 		mRefreshTimeText.setText(getString(R.string.refresh_time, device
 				.getRefresh().getStringInterval(context)));
@@ -557,37 +559,19 @@ public class SensorDetailFragment extends SherlockFragment {
 		return index;
 	}
 
-	private CharSequence setLastUpdate(Time lastUpdate) {
-		// Last update time data
-		Time yesterday = new Time();
-		yesterday.setToNow();
-		yesterday.set(yesterday.toMillis(true) - 24 * 60 * 60 * 1000); // -24
-																		// hours
-
-		// If sync time is more that 24 ago, show only date. Show time
-		// otherwise.
-		DateFormat dateFormat = yesterday.before(lastUpdate) ? DateFormat
-				.getTimeInstance() : DateFormat.getDateInstance();
-
-		Date lastUpdateDate = new Date(lastUpdate.toMillis(true));
-		return dateFormat.format(lastUpdateDate);
-	}
-	
-	
 	public void fillGraph(DeviceLog log) {
 		
-		final DateFormat DateFormatter = new SimpleDateFormat(mGraphDateFormat);
-		final DateFormat TimeFormatter = new SimpleDateFormat(mGraphTimeFormat);
+		final DateFormat formatter = new SimpleDateFormat(mGraphDateFormat + " " + mGraphTimeFormat, Locale.getDefault());
 		
 		mGraphView.setCustomLabelFormatter(new CustomLabelFormatter() {
 	        @Override
 	        public String formatLabel(double value, boolean isValueX) {
-	            // TODO Auto-generated method stub
 	            if (isValueX) {
-	                Log.d(TAG, "LABEL FORMATER - Value: "+ value +" Date: "+ DateFormatter.format(new Date((long) value))+ " "+TimeFormatter.format(new Date((long) value)));
-	                return DateFormatter.format(new Date((long) value))+ " "+TimeFormatter.format(new Date((long) value));
+	                String date = formatter.format(new Date((long) value));
+	            	Log.d(TAG, String.format("LABEL FORMATER - Value: %s Date: %s", value, date));
+	                return date;
 	            }
-	            return String.format("%.1f", value);
+	            return String.format(Locale.getDefault(), "%.1f", value);
 	        }
 	    });
 		
@@ -604,7 +588,6 @@ public class SensorDetailFragment extends SherlockFragment {
 		float maxLimit = (float) (maximum+(deviation*0.2));
 
 		float value = 0;
-		Calendar cal = Calendar.getInstance();
 		GraphView.GraphViewData[] data = new GraphView.GraphViewData[size];
 		for (int i = 0; i < size; i++) {
 			value = log.getValues().get(i).value;
