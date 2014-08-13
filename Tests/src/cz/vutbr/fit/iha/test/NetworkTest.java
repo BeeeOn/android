@@ -9,10 +9,10 @@ import android.test.AndroidTestCase;
 import android.util.Log;
 import cz.vutbr.fit.iha.activity.LoginActivity;
 import cz.vutbr.fit.iha.adapter.Adapter;
-import cz.vutbr.fit.iha.exception.CommunicationException;
-import cz.vutbr.fit.iha.exception.NoConnectionException;
 import cz.vutbr.fit.iha.network.GetGoogleAuth;
 import cz.vutbr.fit.iha.network.Network;
+import cz.vutbr.fit.iha.network.exception.CommunicationException;
+import cz.vutbr.fit.iha.network.exception.NoConnectionException;
 
 /**
  * @author ThinkDeep
@@ -39,11 +39,12 @@ public class NetworkTest extends /*TestCase*/AndroidTestCase {
 		super.setUp();
 	}
 	
+	//TODO: repair to 1.9(2.0)
 	public void testSignIn(){
 		//if(true)return;
 		String emails = "email";
 		
-		Network net = new Network(getContext());
+		Network net = new Network(getContext(), null);
 		LoginActivity la = new LoginActivity();
 		GetGoogleAuth gga = new GetGoogleAuth(la, emails);
 		gga.setDebugToken("token");
@@ -60,17 +61,18 @@ public class NetworkTest extends /*TestCase*/AndroidTestCase {
 		}
 	}
 	
+	//TODO: repair to 1.9(2.0)
 	public void testSignUp(){
 		//if(true)return;
 		String emails = "email";
 		
-		Network net = new Network(getContext());
+		Network net = new Network(getContext(), null);
 		LoginActivity la = new LoginActivity();
 		GetGoogleAuth gga = new GetGoogleAuth(la, emails);
 		gga.setDebugToken("token");
 		
 		try {
-			net.signUp(USEREMAIL, SERIAL, 0);
+			net.signUp(USEREMAIL, SERIAL, "");
 		} catch (CommunicationException e) {
 			e.printStackTrace();
 			Log.e(TAG, e.toString());
@@ -82,11 +84,12 @@ public class NetworkTest extends /*TestCase*/AndroidTestCase {
 		}
 	}
 	
+	//TODO: repair to 1.9(2.0)
 	public void testGetAdapters(){
 		//if(true)return; // if reply is resign, method block, because of not in new thread
-		Network net = new Network(getContext());
+		Network net = new Network(getContext(), null);
 		try {
-			ArrayList<Adapter> result = net.getAdapters();
+			ArrayList<Adapter> result = (ArrayList<Adapter>) net.getAdapters();
 			
 			if(result != null){
 				for(Adapter adapter : result){
@@ -106,10 +109,11 @@ public class NetworkTest extends /*TestCase*/AndroidTestCase {
 			assertTrue("NetworkTest: " + e.toString() ,false);
 		}
 	}
-	
+
+	//TODO: repair to 1.9(2.0)
 	public void testInit(){
 		//if(true)return; // if reply is resign, method block, because of not in new thread
-		Network net = new Network(getContext());
+		Network net = new Network(getContext(), null);
 		try {
 			Adapter result = net.init("5844569");
 			

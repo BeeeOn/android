@@ -468,9 +468,12 @@ public class XmlParsers {
 	 */
 	private static List<Location> parseRooms() throws XmlPullParserException, IOException{
 		mParser.nextTag();
-		mParser.require(XmlPullParser.START_TAG, ns, LOCATION);
+//		mParser.require(XmlPullParser.START_TAG, ns, LOCATION); // strict solution
 		
 		List<Location> result = new ArrayList<Location>();
+		
+		if(!mParser.getName().equals(LOCATION))
+			return result;
 		
 		do{
 			int type = getSecureInt(getSecureAttrValue(ns, TYPE));
