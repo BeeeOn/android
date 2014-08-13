@@ -170,6 +170,7 @@ public class XmlParsers {
 		mParser = Xml.newPullParser();
 		mParser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, namespace);
 		
+		Log.i(TAG, xmlInput.length()+"");
 		mParser.setInput(new ByteArrayInputStream(xmlInput.getBytes("UTF-8")), null);
 		mParser.nextTag();
 		
@@ -371,15 +372,15 @@ public class XmlParsers {
 		mParser.nextTag();
 		mParser.require(XmlPullParser.START_TAG, ns, ROW);
 		
-		// FIXME: get from protocol what type of data it is
-		DeviceLog log = new DeviceLog(DataType.AVERAGE, DataInterval.RAW);
+		DeviceLog log = new DeviceLog();
 		
 		try {
 			do {
 				log.addValue(log.new DataRow(readText(ROW)));
 			} while (mParser.nextTag() != XmlPullParser.END_TAG && !mParser.getName().equals(COM_ROOT));
 		} catch (IllegalArgumentException e) {
-			// TODO: what now?
+			e.printStackTrace();
+			//FIXME:!!!
 		}
 		
 		return log;
@@ -495,6 +496,9 @@ public class XmlParsers {
 	 * @return empty object
 	 */
 	private static BaseDevice getDeviceByType(String sType){
+		
+		if(sType.length() < 3)
+			return new UnknownDevice();
 		
 		int iType = Integer.parseInt(sType.replaceAll("0x", ""), 16);
 		

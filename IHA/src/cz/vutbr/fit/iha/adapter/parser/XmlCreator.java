@@ -542,6 +542,7 @@ public class XmlCreator {
 	 * @param planeText contains string with error description 
 	 * @return FALSE message
 	 */
+	@Deprecated
 	public static String createFALSE(String id, String additionalInfo, int errCode, String planeText){
 		XmlSerializer serializer = Xml.newSerializer();
 		StringWriter writer = new StringWriter();

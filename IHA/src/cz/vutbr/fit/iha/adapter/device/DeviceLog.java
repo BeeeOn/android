@@ -119,6 +119,13 @@ public class DeviceLog {
 	}
 	
 	/**
+	 * Constructor
+	 */
+	public DeviceLog(){
+		clearValues();
+	}
+	
+	/**
 	 * Constructor.
 	 * 
 	 * @param type
@@ -210,6 +217,14 @@ public class DeviceLog {
 		
 		for (DataRow row : rows)
 			addValue(row);
+	}
+	
+	public void setDataType(DataType type){
+		mType = type;
+	}
+	
+	public void setDataInterval(DataInterval interval){
+		mInterval = interval;
 	}
 	
 	/**

@@ -32,7 +32,6 @@ import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.util.Log;
-import cz.vutbr.fit.iha.activity.LoginActivity;
 import cz.vutbr.fit.iha.adapter.Adapter;
 import cz.vutbr.fit.iha.adapter.device.BaseDevice;
 import cz.vutbr.fit.iha.adapter.device.DeviceLog;
@@ -234,11 +233,11 @@ public class Network {
 		// TODO: maybe use diffrenD way to resign, case stopping of thread,
 		// manage this after implement in the controller
 		try {
-			GetGoogleAuth.getGetGoogleAuth().execute();
+			GetGoogleAuth.getGetGoogleAuth().doInForeground(false);
 		} catch (Exception e) {
 			e.printStackTrace();
-			String tmp = null;
-			new GetGoogleAuth(new LoginActivity(), tmp).execute();
+//			String tmp = null;
+//			new GetGoogleAuth(new LoginActivity(), tmp).execute();
 			// return null;
 		}
 		signIn(mUser.getEmail());
@@ -248,6 +247,7 @@ public class Network {
 		//TODO: This is not needed anymore
 		if(!checkBackgroundData())
 			Log.e("Network", "backgrounddata");
+		
 		if (!isAvailable())
 			throw new NoConnectionException();
 
@@ -271,7 +271,7 @@ public class Network {
 	 * Blocking way to get token
 	 * @return google token
 	 */
-	public String getGoogleToken() {
+	private String getGoogleToken() {
 		if (!isAvailable())
 			throw new NoConnectionException();
 
@@ -287,6 +287,8 @@ public class Network {
 		return googleToken;
 	}
 
+	////////////////////////////////////////// prihlaseni, registrace adaptery
+	
 	/**
 	 * Method signIn user given by its email to server, BUT before calling must
 	 * call GetGoogleAuth to get googleToken in it and init ActualUser
@@ -447,7 +449,7 @@ public class Network {
 		ParsedMessage msg = doRequest(messageToSend);
 
 		if (msg.getState() == State.TRUE) {
-			Log.d(TAG, msg.getState().getValue());
+			Log.i(TAG, msg.getState().getValue());
 
 			return true;
 
@@ -461,6 +463,8 @@ public class Network {
 			return false;
 	}
 
+	//////////////////////////////////////// zarizeni, logy
+	
 	/**
 	 * Method send updated fields of devices
 	 * 
@@ -587,7 +591,7 @@ public class Network {
 		List<BaseDevice> result = new ArrayList<BaseDevice>();
 
 		if (msg.getState() == State.PARTIAL) {
-			Log.d(TAG, msg.getState().getValue());
+			Log.i(TAG, msg.getState().getValue());
 			
 			result.addAll((List<BaseDevice>) msg.data);
 		} else if (msg.getState() == State.RESIGN) {
@@ -617,15 +621,18 @@ public class Network {
 	//http://stackoverflow.com/a/509288/1642090
 	public DeviceLog getLog(String adapterId, BaseDevice device, String from, String to, DataType type, DataInterval interval) throws NoConnectionException, CommunicationException, FalseException {
 		String messageToSend = XmlCreator.createLogName(mSessionId, adapterId, device.getAddress(), device.getType(), from, to, type.getValue(), interval.getValue());
+		
 		ParsedMessage msg = doRequest(messageToSend);
 		
-		DeviceLog result = new DeviceLog(type, interval);
+		DeviceLog result = null;
 
 		if (msg.getState() == State.CONTENT) {
-			Log.d(TAG, msg.getState().getValue());
+			Log.i(TAG, msg.getState().getValue());
 
-			// FIXME: don't do this useless get & set, return whole DeviceLog object that we've parsed - but first it must parse type and interval from xml message
-			result.setValues(((DeviceLog) msg.data).getValues());
+			result = (DeviceLog) msg.data;
+			result.setDataInterval(interval);
+			result.setDataType(type);
+			
 		} else if (msg.getState() == State.RESIGN) {
 			doResign();
 			return getLog(adapterId, device, from, to, type, interval);
@@ -637,289 +644,8 @@ public class Network {
 		return result;
 	}
 
-	/**
-	 * Method send newly created custom view
-	 * 
-	 * @param nameOfView
-	 *            name of new custom view
-	 * @param iconId
-	 *            icon that is assigned to the new view
-	 * @param deviceIds
-	 *            list of devices that are assigned to new view
-	 * @return true if everything goes well, false otherwise
-	 * @throws NoConnectionException
-	 * @throws CommunicationException
-	 */
-	public boolean addView(String nameOfView, int iconId, List<BaseDevice> devices) throws NoConnectionException, CommunicationException, FalseException {
-		String messageToSend = XmlCreator.createAddView(mSessionId, nameOfView, iconId, devices);
-		ParsedMessage msg = doRequest(messageToSend);
-
-		if (msg.getState() == State.TRUE) {
-			Log.d(TAG, msg.getState().getValue());
-
-			return true;
-
-		} else if (msg.getState() == State.RESIGN) {
-			doResign();
-			return addView(nameOfView, iconId, devices);
-
-		} else if (msg.getState() == State.FALSE) {
-			throw new FalseException(((FalseAnswer) msg.data));
-		} else
-			return false;
-	}
-
-	/**
-	 * Method ask for list of all custom views
-	 * 
-	 * @return list of defined custom views
-	 * @throws NoConnectionException
-	 * @throws CommunicationException
-	 */
-	// http://stackoverflow.com/a/509288/1642090
-	@SuppressWarnings("unchecked")
-	public List<CustomViewPair> getViews() throws NoConnectionException, CommunicationException, FalseException {
-		String messageToSend = XmlCreator.createGetViews(mSessionId);
-		ParsedMessage msg = doRequest(messageToSend);
-
-		List<CustomViewPair> result = new ArrayList<CustomViewPair>();
-		
-		if (msg.getState() == State.VIEWSLIST) {
-			Log.d(TAG, msg.getState().getValue());
-
-			result.addAll((List<CustomViewPair>) msg.data);
-		} else if (msg.getState() == State.RESIGN) {
-			doResign();
-			return getViews();
-
-		} else if (msg.getState() == State.FALSE) {
-			throw new FalseException(((FalseAnswer) msg.data));
-		}
-		return result;
-	}
-
-	/**
-	 * Method delete whole custom view from server
-	 * 
-	 * @param viewName
-	 *            name of view to erase
-	 * @return true if view has been deleted, false otherwise
-	 * @throws NoConnectionException
-	 * @throws CommunicationException
-	 */
-	public boolean deleteView(String viewName) throws NoConnectionException, CommunicationException, FalseException {
-		String messageToSend = XmlCreator.createDelView(mSessionId, viewName);
-		ParsedMessage msg = doRequest(messageToSend);
-
-		if (msg.getState() == State.TRUE) {
-			Log.d(TAG, msg.getState().getValue());
-
-			return true;
-
-		} else if (msg.getState() == State.RESIGN) {
-			doResign();
-			return deleteView(viewName);
-
-		} else if (msg.getState() == State.FALSE) {
-			throw new FalseException(((FalseAnswer) msg.data));
-		} else
-			return false;
-	}
-
-	/**
-	 * Method update custom view.
-	 * 
-	 * @param viewName
-	 *            name of view to be updated
-	 * @param devices
-	 *            map contains device id as key and action as value
-	 *            action={remove, add}
-	 * @return true if all devices has been updated, false otherwise
-	 * @throws NoConnectionException
-	 * @throws CommunicationException
-	 */
-	public boolean updateView(String viewName, int iconId, HashMap<String, String> devices) throws NoConnectionException, CommunicationException, FalseException {
-		String messageToSend = XmlCreator.createUpdateView(mSessionId, viewName, iconId, devices);
-		ParsedMessage msg = doRequest(messageToSend);
-
-		if (msg.getState() == State.TRUE) {
-			Log.d(TAG, msg.getState().getValue());
-
-			return true;
-
-		} else if (msg.getState() == State.RESIGN) {
-			doResign();
-			return updateView(viewName, iconId, devices);
-		} else if (msg.getState() == State.FALSE) {
-			throw new FalseException(((FalseAnswer) msg.data));
-		} else
-			return false;
-	}
-
-	/**
-	 * Method add new users to current adapter
-	 * 
-	 * @param userNrole
-	 *            map contains email as key and role as value
-	 * @return true if all users has been added, false otherwise
-	 * @throws NoConnectionException
-	 * @throws CommunicationException
-	 */
-	public boolean addConnectionAccount(String adapterId, HashMap<String, String> userNrole) throws NoConnectionException, CommunicationException, FalseException {
-		String messageToSend = XmlCreator.createAddConAccount(mSessionId, adapterId, userNrole);
-		ParsedMessage msg = doRequest(messageToSend);
-
-		if (msg.getState() == State.TRUE) {
-			Log.d(TAG, msg.getState().getValue());
-
-			return true;
-
-		} else if (msg.getState() == State.RESIGN) {
-			doResign();
-			return addConnectionAccount(adapterId, userNrole);
-		} else if (msg.getState() == State.FALSE) {
-			throw new FalseException(((FalseAnswer) msg.data));
-		} else
-			return false;
-	}
-
-	/**
-	 * Method delete users from actual adapter
-	 * 
-	 * @param users
-	 *            email of user
-	 * @return true if all users has been deleted, false otherwise
-	 * @throws NoConnectionException
-	 * @throws CommunicationException
-	 */
-	public boolean deleteConnectionAccount(String adapterId, List<String> users) throws NoConnectionException, CommunicationException, FalseException {
-		String messageToSend = XmlCreator.createDelConAccount(mSessionId, adapterId, users);
-		ParsedMessage msg = doRequest(messageToSend);
-
-		if (msg.getState() == State.TRUE) {
-			Log.d(TAG, msg.getState().getValue());
-
-			return true;
-
-		} else if (msg.getState() == State.RESIGN) {
-			doResign();
-			return deleteConnectionAccount(adapterId, users);
-		} else if (msg.getState() == State.FALSE) {
-			throw new FalseException(((FalseAnswer) msg.data));
-		} else
-			return false;
-	}
-
-	/**
-	 * Method ask for list of users of current adapter
-	 * 
-	 * @return Map of users where key is email and value is User object
-	 * @throws NoConnectionException
-	 * @throws CommunicationException
-	 */
-	// http://stackoverflow.com/a/509288/1642090
-	@SuppressWarnings("unchecked")
-	public HashMap<String, User> getConnectionAccountList(String adapterId) throws NoConnectionException, CommunicationException, FalseException {
-		String messageToSend = XmlCreator.createGetConAccount(mSessionId, adapterId);
-		ParsedMessage msg = doRequest(messageToSend);
-
-		HashMap<String, User> result = new HashMap<String, User>();
-		
-		if (msg.getState() == State.CONACCOUNTLIST) {
-			Log.d(TAG, msg.getState().toString());
-
-			result.putAll((HashMap<String, User>) msg.data);
-		} else if (msg.getState() == State.RESIGN) {
-			doResign();
-			return getConnectionAccountList(adapterId);
-
-		} else if (msg.getState() == State.FALSE) {
-			throw new FalseException(((FalseAnswer) msg.data));
-		}
-		return result;
-	}
-
-	/**
-	 * Method update users roles on server on current adapter
-	 * 
-	 * @param userNrole
-	 *            map with email as key and role as value
-	 * @return true if all accounts has been changed false otherwise
-	 * @throws NoConnectionException
-	 * @throws CommunicationException
-	 */
-	public boolean changeConnectionAccount(String adapterId, HashMap<String, String> userNrole) throws NoConnectionException, CommunicationException, FalseException {
-		String messageToSend = XmlCreator.createChangeConAccount(mSessionId, adapterId, userNrole);
-		ParsedMessage msg = doRequest(messageToSend);
-
-		if (msg.getState() == State.TRUE) {
-			Log.d(TAG, msg.getState().toString());
-
-			return true;
-
-		} else if (msg.getState() == State.RESIGN) {
-			doResign();
-			return changeConnectionAccount(adapterId, userNrole);
-		} else if (msg.getState() == State.FALSE) {
-			throw new FalseException(((FalseAnswer) msg.data));
-		} else
-			return false;
-	}
-
-	/**
-	 * Method set wanted time zone to server
-	 * 
-	 * @NOTE using difference from GMT (UTC+0), reduced range <-12,12>
-	 * @param differenceToGMT
-	 * @return
-	 * @throws NoConnectionException
-	 * @throws CommunicationException
-	 */
-	public boolean setTimeZone(String adapterId, int differenceToGMT) throws NoConnectionException, CommunicationException, FalseException {
-		String messageToSend = XmlCreator.createSetTimeZone(mSessionId, adapterId, differenceToGMT);
-		ParsedMessage msg = doRequest(messageToSend);
-
-		if (msg.getState() == State.TRUE) {
-			Log.d(TAG, msg.getState().getValue());
-
-			return true;
-
-		} else if (msg.getState() == State.RESIGN) {
-			doResign();
-			return setTimeZone(adapterId, differenceToGMT);
-
-		} else if (msg.getState() == State.FALSE) {
-			throw new FalseException(((FalseAnswer) msg.data));
-		} else
-			return false;
-	}
-
-	/**
-	 * Method call to server to get actual time zone
-	 * 
-	 * @return integer in range <-12,12>
-	 * @throws NoConnectionException
-	 * @throws CommunicationException
-	 */
-	public int getTimeZone(String adapterId) throws NoConnectionException, CommunicationException, FalseException {
-		String messageToSend = XmlCreator.createGetTimeZone(mSessionId, adapterId);
-		ParsedMessage msg = doRequest(messageToSend);
-
-		if (msg.getState() == State.TIMEZONE) {
-			Log.d(TAG, msg.getState().getValue());
-
-			return (Integer) msg.data;
-
-		} else if (msg.getState() == State.RESIGN) {
-			doResign();
-			return getTimeZone(adapterId);
-
-		} else if (msg.getState() == State.FALSE) {
-			throw new FalseException(((FalseAnswer) msg.data));
-		} else
-			return 0;
-	}
-
+	////////////////////////////////////////// mistnosti
+	
 	/**
 	 * Method call to server for actual list of locations
 	 * 
@@ -936,7 +662,7 @@ public class Network {
 		List<Location> result = new ArrayList<Location>();
 		
 		if (msg.getState() == State.ROOMS) {
-			Log.d(TAG, msg.getState().getValue());
+			Log.i(TAG, msg.getState().getValue());
 
 			result.addAll((List<Location>) msg.data);
 		} else if (msg.getState() == State.RESIGN) {
@@ -1008,7 +734,7 @@ public class Network {
 		ParsedMessage msg = doRequest(messageToSend);
 		
 		if (msg.getState() == State.ROOMCREATED) {
-			Log.d(TAG, msg.getState().getValue());
+			Log.i(TAG, msg.getState().getValue());
 
 			location.setId((String) msg.data);
 		} else if (msg.getState() == State.RESIGN) {
@@ -1020,6 +746,297 @@ public class Network {
 		}
 		return location;
 	}
+	
+	///////////////////////////////////////// pohledy
+	
+	/**
+	 * Method send newly created custom view
+	 * 
+	 * @param nameOfView
+	 *            name of new custom view
+	 * @param iconId
+	 *            icon that is assigned to the new view
+	 * @param deviceIds
+	 *            list of devices that are assigned to new view
+	 * @return true if everything goes well, false otherwise
+	 * @throws NoConnectionException
+	 * @throws CommunicationException
+	 */
+	public boolean addView(String nameOfView, int iconId, List<BaseDevice> devices) throws NoConnectionException, CommunicationException, FalseException {
+		String messageToSend = XmlCreator.createAddView(mSessionId, nameOfView, iconId, devices);
+		ParsedMessage msg = doRequest(messageToSend);
+
+		if (msg.getState() == State.TRUE) {
+			Log.d(TAG, msg.getState().getValue());
+
+			return true;
+
+		} else if (msg.getState() == State.RESIGN) {
+			doResign();
+			return addView(nameOfView, iconId, devices);
+
+		} else if (msg.getState() == State.FALSE) {
+			throw new FalseException(((FalseAnswer) msg.data));
+		} else
+			return false;
+	}
+
+	/**
+	 * Method ask for list of all custom views
+	 * 
+	 * @return list of defined custom views
+	 * @throws NoConnectionException
+	 * @throws CommunicationException
+	 */
+	// http://stackoverflow.com/a/509288/1642090
+	@SuppressWarnings("unchecked")
+	public List<CustomViewPair> getViews() throws NoConnectionException, CommunicationException, FalseException {
+		String messageToSend = XmlCreator.createGetViews(mSessionId);
+		ParsedMessage msg = doRequest(messageToSend);
+
+		List<CustomViewPair> result = new ArrayList<CustomViewPair>();
+		
+		if (msg.getState() == State.VIEWSLIST) {
+			Log.i(TAG, msg.getState().getValue());
+
+			result.addAll((List<CustomViewPair>) msg.data);
+		} else if (msg.getState() == State.RESIGN) {
+			doResign();
+			return getViews();
+
+		} else if (msg.getState() == State.FALSE) {
+			throw new FalseException(((FalseAnswer) msg.data));
+		}
+		return result;
+	}
+
+	/**
+	 * Method delete whole custom view from server
+	 * 
+	 * @param viewName
+	 *            name of view to erase
+	 * @return true if view has been deleted, false otherwise
+	 * @throws NoConnectionException
+	 * @throws CommunicationException
+	 */
+	public boolean deleteView(String viewName) throws NoConnectionException, CommunicationException, FalseException {
+		String messageToSend = XmlCreator.createDelView(mSessionId, viewName);
+		ParsedMessage msg = doRequest(messageToSend);
+
+		if (msg.getState() == State.TRUE) {
+			Log.d(TAG, msg.getState().getValue());
+
+			return true;
+
+		} else if (msg.getState() == State.RESIGN) {
+			doResign();
+			return deleteView(viewName);
+
+		} else if (msg.getState() == State.FALSE) {
+			throw new FalseException(((FalseAnswer) msg.data));
+		} else
+			return false;
+	}
+
+	/**
+	 * Method update custom view.
+	 * 
+	 * @param viewName
+	 *            name of view to be updated
+	 * @param devices
+	 *            map contains device id as key and action as value
+	 *            action={remove, add}
+	 * @return true if all devices has been updated, false otherwise
+	 * @throws NoConnectionException
+	 * @throws CommunicationException
+	 */
+	public boolean updateView(String viewName, int iconId, HashMap<String, String> devices) throws NoConnectionException, CommunicationException, FalseException {
+		String messageToSend = XmlCreator.createUpdateView(mSessionId, viewName, iconId, devices);
+		ParsedMessage msg = doRequest(messageToSend);
+
+		if (msg.getState() == State.TRUE) {
+			Log.d(TAG, msg.getState().getValue());
+
+			return true;
+
+		} else if (msg.getState() == State.RESIGN) {
+			doResign();
+			return updateView(viewName, iconId, devices);
+		} else if (msg.getState() == State.FALSE) {
+			throw new FalseException(((FalseAnswer) msg.data));
+		} else
+			return false;
+	}
+
+	/////////////////////////////////////////// ucty
+	
+	/**
+	 * Method add new users to current adapter
+	 * 
+	 * @param userNrole
+	 *            map contains email as key and role as value
+	 * @return true if all users has been added, false otherwise
+	 * @throws NoConnectionException
+	 * @throws CommunicationException
+	 */
+	public boolean addConnectionAccount(String adapterId, HashMap<String, String> userNrole) throws NoConnectionException, CommunicationException, FalseException {
+		String messageToSend = XmlCreator.createAddConAccount(mSessionId, adapterId, userNrole);
+		ParsedMessage msg = doRequest(messageToSend);
+
+		if (msg.getState() == State.TRUE) {
+			Log.d(TAG, msg.getState().getValue());
+
+			return true;
+
+		} else if (msg.getState() == State.RESIGN) {
+			doResign();
+			return addConnectionAccount(adapterId, userNrole);
+		} else if (msg.getState() == State.FALSE) {
+			throw new FalseException(((FalseAnswer) msg.data));
+		} else
+			return false;
+	}
+
+	/**
+	 * Method delete users from actual adapter
+	 * 
+	 * @param users
+	 *            email of user
+	 * @return true if all users has been deleted, false otherwise
+	 * @throws NoConnectionException
+	 * @throws CommunicationException
+	 */
+	public boolean deleteConnectionAccount(String adapterId, List<String> users) throws NoConnectionException, CommunicationException, FalseException {
+		String messageToSend = XmlCreator.createDelConAccount(mSessionId, adapterId, users);
+		ParsedMessage msg = doRequest(messageToSend);
+
+		if (msg.getState() == State.TRUE) {
+			Log.d(TAG, msg.getState().getValue());
+
+			return true;
+
+		} else if (msg.getState() == State.RESIGN) {
+			doResign();
+			return deleteConnectionAccount(adapterId, users);
+		} else if (msg.getState() == State.FALSE) {
+			throw new FalseException(((FalseAnswer) msg.data));
+		} else
+			return false;
+	}
+
+	/**
+	 * Method ask for list of users of current adapter
+	 * 
+	 * @return Map of users where key is email and value is User object
+	 * @throws NoConnectionException
+	 * @throws CommunicationException
+	 */
+	// http://stackoverflow.com/a/509288/1642090
+	@SuppressWarnings("unchecked")
+	public HashMap<String, User> getConnectionAccountList(String adapterId) throws NoConnectionException, CommunicationException, FalseException {
+		String messageToSend = XmlCreator.createGetConAccount(mSessionId, adapterId);
+		ParsedMessage msg = doRequest(messageToSend);
+
+		HashMap<String, User> result = new HashMap<String, User>();
+		
+		if (msg.getState() == State.CONACCOUNTLIST) {
+			Log.i(TAG, msg.getState().toString());
+
+			result.putAll((HashMap<String, User>) msg.data);
+		} else if (msg.getState() == State.RESIGN) {
+			doResign();
+			return getConnectionAccountList(adapterId);
+
+		} else if (msg.getState() == State.FALSE) {
+			throw new FalseException(((FalseAnswer) msg.data));
+		}
+		return result;
+	}
+
+	/**
+	 * Method update users roles on server on current adapter
+	 * 
+	 * @param userNrole
+	 *            map with email as key and role as value
+	 * @return true if all accounts has been changed false otherwise
+	 * @throws NoConnectionException
+	 * @throws CommunicationException
+	 */
+	public boolean changeConnectionAccount(String adapterId, HashMap<String, String> userNrole) throws NoConnectionException, CommunicationException, FalseException {
+		String messageToSend = XmlCreator.createChangeConAccount(mSessionId, adapterId, userNrole);
+		ParsedMessage msg = doRequest(messageToSend);
+
+		if (msg.getState() == State.TRUE) {
+			Log.d(TAG, msg.getState().toString());
+
+			return true;
+
+		} else if (msg.getState() == State.RESIGN) {
+			doResign();
+			return changeConnectionAccount(adapterId, userNrole);
+		} else if (msg.getState() == State.FALSE) {
+			throw new FalseException(((FalseAnswer) msg.data));
+		} else
+			return false;
+	}
+
+	////////////////////////////////////////// cas
+	
+	/**
+	 * Method set wanted time zone to server
+	 * 
+	 * @NOTE using difference from GMT (UTC+0), reduced range <-12,12>
+	 * @param differenceToGMT
+	 * @return
+	 * @throws NoConnectionException
+	 * @throws CommunicationException
+	 */
+	public boolean setTimeZone(String adapterId, int differenceToGMT) throws NoConnectionException, CommunicationException, FalseException {
+		String messageToSend = XmlCreator.createSetTimeZone(mSessionId, adapterId, differenceToGMT);
+		ParsedMessage msg = doRequest(messageToSend);
+
+		if (msg.getState() == State.TRUE) {
+			Log.d(TAG, msg.getState().getValue());
+
+			return true;
+
+		} else if (msg.getState() == State.RESIGN) {
+			doResign();
+			return setTimeZone(adapterId, differenceToGMT);
+
+		} else if (msg.getState() == State.FALSE) {
+			throw new FalseException(((FalseAnswer) msg.data));
+		} else
+			return false;
+	}
+
+	/**
+	 * Method call to server to get actual time zone
+	 * 
+	 * @return integer in range <-12,12>
+	 * @throws NoConnectionException
+	 * @throws CommunicationException
+	 */
+	public int getTimeZone(String adapterId) throws NoConnectionException, CommunicationException, FalseException {
+		String messageToSend = XmlCreator.createGetTimeZone(mSessionId, adapterId);
+		ParsedMessage msg = doRequest(messageToSend);
+
+		if (msg.getState() == State.TIMEZONE) {
+			Log.i(TAG, msg.getState().getValue());
+
+			return (Integer) msg.data;
+
+		} else if (msg.getState() == State.RESIGN) {
+			doResign();
+			return getTimeZone(adapterId);
+
+		} else if (msg.getState() == State.FALSE) {
+			throw new FalseException(((FalseAnswer) msg.data));
+		} else
+			return 0;
+	}
+
+	///////////////////////////////////////////// todo
 
 	// TODO: GetAlerts
 	// TODO: Alerts
