@@ -27,7 +27,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 import cz.vutbr.fit.iha.R;
 import cz.vutbr.fit.iha.activity.LocationScreenActivity;
-import cz.vutbr.fit.iha.adapter.Adapter;
 import cz.vutbr.fit.iha.adapter.device.BaseDevice;
 import cz.vutbr.fit.iha.adapter.location.Location;
 import cz.vutbr.fit.iha.adapter.location.Location.DefaultRoom;
@@ -272,24 +271,22 @@ public class SetupSensorActivityDialog extends BaseActivityDialog {
 	private class SaveDeviceTask extends AsyncTask<DeviceLocationPair, Void, DeviceLocationPair> {
 		@Override
 		protected DeviceLocationPair doInBackground(DeviceLocationPair... pairs) {
-			DeviceLocationPair pair = pairs[0]; // expects only one device at a
-												// time is sent there
+			DeviceLocationPair pair = pairs[0]; // expects only one device at a time is sent there
 
 			if (pair.location.getId().equals(Location.NEW_LOCATION_ID)) {
 				// We need to save new location to server first
-				if (!mController.saveLocation(pair.location))
+				Location newLocation = mController.saveLocation(pair.location);
+				if (newLocation == null)
 					return null;
 
-				pair.device.setLocationId(pair.location.getId());
+				pair.device.setLocationId(newLocation.getId());
 			}
 
-			if (mController.saveDevice(pair.device)) {
-				Adapter adapter = mController.getAdapterByDevice(pair.device);
-				adapter.lastUpdate.set(0); // force refresh
-				return pair;
+			if (!mController.saveDevice(pair.device)) {
+				return null;
 			}
 
-			return null;
+			return pair;
 		}
 
 		@Override

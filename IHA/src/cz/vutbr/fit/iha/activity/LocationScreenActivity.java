@@ -735,18 +735,11 @@ public class LocationScreenActivity extends BaseActivity {
 			public void onClick(DialogInterface dialog, int which) {
 				String newName = edit.getText().toString();
 
-				// TODO: show loading while saving new name to
-				// server (+ use
-				// asynctask)
-				Location location = new Location(); // FIXME:
-													// get that
-													// original
-													// location
-													// from
-													// somewhere
+				// TODO: show loading while saving new name to server (+ use asynctask)
+				Location location = new Location(); // FIXME: get that original location from somewhere
 				location.setName(newName);
 
-				boolean saved = mController.saveLocation(location);
+				boolean saved = mController.saveLocation(location) != null;
 
 				String message = saved ? String.format("Location was renamed to '%s'", newName) : "Location wasn't renamed due to error";
 

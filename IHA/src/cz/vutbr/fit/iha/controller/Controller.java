@@ -450,7 +450,7 @@ public final class Controller {
 	/** Location methods ****************************************************/
 	
 	/**
-	 * Return location by id.
+	 * Return location from active adapter by id.
 	 * 
 	 * @param id
 	 * @return Location if found, null otherwise.
@@ -459,12 +459,11 @@ public final class Controller {
 		// FIXME: should this be removed when there will be switching activeAdapter somehow, because one should call getLocation on adapter object?
 
 		// TODO: or use getLocations() method as base?
-		for (Adapter a : getAdapters()) {
-			Location location = a.getLocation(id);
-			if (location != null)
-				return location;
+		Adapter adapter = getActiveAdapter();
+		if (adapter != null) {
+			return adapter.getLocation(id);
 		}
-
+		
 		return null;
 	}
 	
@@ -513,13 +512,13 @@ public final class Controller {
 	 * Save new or changed location to server.
 	 * 
 	 * @param location
-	 * @return always false, until implemented
+	 * @return new location object or null on error
 	 */
-	public boolean saveLocation(Location location) {
+	public Location saveLocation(Location location) {
 		// TODO: separate it to 2 methods? (createLocation and saveLocation)
 		Adapter adapter = getActiveAdapter();
 		if (adapter == null)
-			return false;
+			return null;
 
 		boolean saved = false;
 		boolean adding = location.getId().equals(Location.NEW_LOCATION_ID);
@@ -546,14 +545,14 @@ public final class Controller {
 		}
 		
 		if (!saved)
-			return false;
+			return null;
 
 		// Location was saved on server, save it to adapter too
 		if (adding) {
-			return adapter.addLocation(location);
+			return adapter.addLocation(location) ? location : null;
 		} else {
-			return adapter.updateLocation(location);
-		}		
+			return adapter.updateLocation(location) ? location : null;
+		}
 	}
 
 
@@ -606,22 +605,22 @@ public final class Controller {
 	}
 
 	/**
-	 * Return list of all uninitialized devices from all adapters.
+	 * Return list of all uninitialized devices from active adapter.
 	 * 
 	 * @return List of devices (or empty list)
 	 */
 	public List<BaseDevice> getUninitializedDevices() {
 		List<BaseDevice> list = new ArrayList<BaseDevice>();
 		
-		for (Adapter adapter : getAdapters()) {
+		Adapter adapter = getActiveAdapter();
+		if (adapter != null)
 			list.addAll(adapter.getUninitializedDevices());
-		}
 		
 		return list;
 	}
 	
 	/**
-	 * Return list of all devices by location from all adapters.
+	 * Return list of all devices by location from active adapter.
 	 * 
 	 * @param location
 	 * @return List of devices (or empty list)
@@ -629,9 +628,9 @@ public final class Controller {
 	public List<BaseDevice> getDevicesByLocation(String locationId) {
 		List<BaseDevice> list = new ArrayList<BaseDevice>();
 		
-		for (Adapter adapter : getAdapters()) {
+		Adapter adapter = getActiveAdapter();
+		if (adapter != null)
 			list.addAll(adapter.getDevicesByLocation(locationId));
-		}
 		
 		return list;
 	}
@@ -777,17 +776,15 @@ public final class Controller {
 	
 
 	public void ignoreUninitialized(List<BaseDevice> devices) {
-		// TODO: use active adapter somehow
-		for (Adapter adapter : getAdapters()) {
+		Adapter adapter = getActiveAdapter();
+		if (adapter != null)
 			adapter.ignoreUninitialized(devices);
-		}
 	}
 
 	public void unignoreUninitialized() {
-		// TODO: use active adapter somehow
-		for (Adapter adapter : getAdapters()) {
+		Adapter adapter = getActiveAdapter();
+		if (adapter != null)
 			adapter.unignoreUninitialized();
-		}
 	}
 
 	public ActualUser getActualUser() {
