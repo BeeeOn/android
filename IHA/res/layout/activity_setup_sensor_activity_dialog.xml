@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
+    android:layout_height="wrap_content"
     android:minWidth="270dp"
   	android:background="@color/light_gray"
     >
@@ -102,12 +102,29 @@
     
     </LinearLayout>
 
-   <Button
-        android:id="@+id/addsensor_add"
-        android:layout_width="90dp"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="30dp"
-        android:layout_gravity="center_horizontal"
-        android:text="@string/notification_add" />
+        android:orientation="horizontal" 
+        
+        android:gravity="center_horizontal">
+	    
+        <Button
+	        android:id="@+id/addsensor_add"
+	        android:layout_width="130dp"
+	        android:layout_height="match_parent"
+	        android:layout_marginBottom="5dp"
+	        android:layout_gravity="center_horizontal"
+	        android:text="@string/notification_add" />
+        <Button
+	        android:id="@+id/addsensor_cancel"
+	        android:layout_width="130dp"
+	        android:layout_height="match_parent"
+	        android:layout_marginBottom="5dp"
+	        android:layout_gravity="center_horizontal"
+	        android:text="@string/notification_cancel" />
+	        
+    </LinearLayout>
+   
     
 </LinearLayout>

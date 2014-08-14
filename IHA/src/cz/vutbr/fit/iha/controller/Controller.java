@@ -414,7 +414,7 @@ public final class Controller {
 	 */
 	public Adapter getAdapterByDevice(BaseDevice device) {
 		for (Adapter a : getAdapters()) {
-			if (a.getDeviceById(device.getId()) != null);
+			if (a.getDeviceById(device.getId()) != null)
 				return a; 
 		}
 		
@@ -670,6 +670,7 @@ public final class Controller {
 
 		try {
 			Adapter adapter = getAdapterByDevice(device);
+			Log.d(TAG, "Adapter ID: "+adapter.getId()+ " device:"+device.getAddress());
 			if (adapter != null) {
 				result = mNetwork.partial(adapter.getId(), devices);
 				result = updateDevice(device);

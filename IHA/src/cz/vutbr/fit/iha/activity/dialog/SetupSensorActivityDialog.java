@@ -6,9 +6,11 @@ import java.util.List;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -36,6 +38,8 @@ import cz.vutbr.fit.iha.controller.Controller;
 public class SetupSensorActivityDialog extends BaseActivityDialog {
 
 	private Controller mController;
+	
+	private static final String TAG = LocationScreenActivity.class.getSimpleName();
 
 	private BaseDevice mNewDevice;
 	private List<BaseDevice> mUnInitDevices;
@@ -49,8 +53,9 @@ public class SetupSensorActivityDialog extends BaseActivityDialog {
 	private Spinner mSpinner;
 	private Spinner mNewIconSpinner;
 	private Button mAddButton;
+	private Button mCancelButton;
 	
-	private int mCountOfSensor;
+	private int mCountOfSensor = 1;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -61,6 +66,8 @@ public class SetupSensorActivityDialog extends BaseActivityDialog {
 
 		mController = Controller.getInstance(this);
 
+		
+		
 		// Prepare progress dialog
 		mProgress = new ProgressDialog(this);
 		mProgress.setMessage("Saving data...");
@@ -72,10 +79,12 @@ public class SetupSensorActivityDialog extends BaseActivityDialog {
 
 		mUnInitDevices = mController.getUninitializedDevices();
 		if (mUnInitDevices.size() > 0) {
-			// Get number of new sensors
-			Bundle bundle = getIntent().getExtras();
-			mCountOfSensor = bundle.getInt(Constants.ADDSENSOR_COUNT_SENSOR);
 			
+			if(!Controller.isDemoMode()) {
+				// Get number of new sensors
+				Bundle bundle = getIntent().getExtras();
+				mCountOfSensor = bundle.getInt(Constants.ADDSENSOR_COUNT_SENSOR);
+			}
 			mNewDevice = mUnInitDevices.get(0);
 		} else {
 			Toast.makeText(this, "There are no uninitialized devices.", Toast.LENGTH_LONG).show();
@@ -88,14 +97,16 @@ public class SetupSensorActivityDialog extends BaseActivityDialog {
 	}
 
 	private void initViews() {
-		mHeader = (TextView) findViewById(R.id.addadapter_add_adapter);
+		mHeader = (TextView) findViewById(R.id.addsensor_add_sensor);
 		mName = (EditText) findViewById(R.id.addsensor_sensor_name);
 		mNewLocation = (EditText) findViewById(R.id.addsensor_new_location_name);
 		mSpinner = (Spinner) findViewById(R.id.addsensor_spinner_choose_location);
 		
-		// Set Header
-		mHeader.setText(getResources().getString(R.string.addsensor_setup_sensor)+" "+String.valueOf(mCountOfSensor-mUnInitDevices.size()+1) +"/"+String.valueOf(mCountOfSensor));
-
+		if(!Controller.isDemoMode()) {
+			Log.d(TAG, "mCountofSensor: "+String.valueOf(mCountOfSensor)+" mUnInitDevices-size: "+mUnInitDevices.size());
+			// Set Header
+			mHeader.setText(getResources().getString(R.string.addsensor_setup_sensor)+" "+String.valueOf(mCountOfSensor-mUnInitDevices.size()+1) +"/"+String.valueOf(mCountOfSensor));
+		}
 		mSpinner.setOnItemSelectedListener(new OnItemSelectedListener() {
 
 			@Override
@@ -229,11 +240,13 @@ public class SetupSensorActivityDialog extends BaseActivityDialog {
 				}
 			}
 		});
-		// set name
-		if(mUnInitDevices.size()>1) {
-			mAddButton.setText(getResources().getString(R.string.addsensor_save_and_continue));
-		}
-		
+		mCancelButton = (Button) findViewById(R.id.addsensor_cancel);
+		mCancelButton.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				SetupSensorActivityDialog.this.finish();
+			}
+		});
 	}
 
 	/**
@@ -316,6 +329,18 @@ public class SetupSensorActivityDialog extends BaseActivityDialog {
 			if (pair != null) {
 				// Successfuly saved, close this dialog and return back
 				SetupSensorActivityDialog.this.finish();
+				// controll if more sensor is uninit
+				if(mUnInitDevices.size()>1){
+					Bundle bundle = new Bundle();
+	        		 bundle.putInt(Constants.ADDSENSOR_COUNT_SENSOR, mCountOfSensor);
+	        		 // go to setup uninit sensor
+	        		 Intent intent = new Intent(SetupSensorActivityDialog.this, SetupSensorActivityDialog.class);
+	        		 intent.putExtras(bundle);
+	        		 startActivity(intent);
+	        		 return;
+				}
+				
+				// Heal Location screen activity - refresh sensors
 				LocationScreenActivity.healActivity();
 			}
 		}

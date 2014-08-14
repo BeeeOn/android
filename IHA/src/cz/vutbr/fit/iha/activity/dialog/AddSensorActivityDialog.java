@@ -16,6 +16,7 @@ import cz.vutbr.fit.iha.R;
 import cz.vutbr.fit.iha.activity.LocationScreenActivity;
 import cz.vutbr.fit.iha.adapter.Adapter;
 import cz.vutbr.fit.iha.adapter.device.BaseDevice;
+import cz.vutbr.fit.iha.adapter.location.Location;
 import cz.vutbr.fit.iha.controller.Controller;
 
 public class AddSensorActivityDialog extends BaseActivityDialog{
@@ -27,7 +28,7 @@ public class AddSensorActivityDialog extends BaseActivityDialog{
 	
 	private CountDownTimer mCountDownTimer;
 	private boolean mTimerDone = false;
-	private int mTimerButtonSec = 15;
+	private int mTimerButtonSec = 20;
 	private int mIntervalToCheckUninitSensor = 5;
 	
 	private PairRequestTask mPairRequestTask;
@@ -84,21 +85,8 @@ public class AddSensorActivityDialog extends BaseActivityDialog{
 		         if( (millisUntilFinished / 1000)% mIntervalToCheckUninitSensor == 0 ){
 		        	 // check if are new uninit sensor
 		        	 Log.d(TAG, "PAIR - check if some uninit sensor");
-		        	 List<BaseDevice> devices = mController.getUninitializedDevices();
-		        	 if(devices.size() > 0 ) {
-		        		 // Setup variable as true for disable timer
-		        		 mTimerDone = true;
-		        		 mCountDownTimer.cancel();
-		        		 // Send count of sensors
-		        		 Bundle bundle = new Bundle();
-		        		 bundle.putInt(Constants.ADDSENSOR_COUNT_SENSOR, devices.size());
-		        		 // go to setup uninit sensor
-		        		 Intent intent = new Intent(AddSensorActivityDialog.this, SetupSensorActivityDialog.class);
-		        		 intent.putExtras(bundle);
-		        		 startActivity(intent);
-		        		 finish();
-		        	 }
-		        		 
+		        	 GetRefreshAdapterTask task = new GetRefreshAdapterTask();
+		        	 task.execute();
 		         }
 		     }
 
@@ -135,8 +123,39 @@ public class AddSensorActivityDialog extends BaseActivityDialog{
 				resetPairButton();
 			}
 		}
+	}
+	
+	/**
+	 * Changes selected location and redraws list of adapters there
+	 */
+	private class GetRefreshAdapterTask extends AsyncTask<Void, Void, List<BaseDevice> > {
 
-		
+		@Override
+		protected List<BaseDevice>  doInBackground(Void... params) {
+
+			mController.reloadAdapters();
+			List<BaseDevice> devices = mController.getUninitializedDevices();
+			return devices;
+		}
+
+		@Override
+		protected void onPostExecute(List<BaseDevice>  devices) {
+			 
+        	 if(devices.size() > 0 ) {
+        		 // Setup variable as true for disable timer
+        		 mTimerDone = true;
+        		 mCountDownTimer.cancel();
+        		 // Send count of sensors
+        		 Bundle bundle = new Bundle();
+        		 bundle.putInt(Constants.ADDSENSOR_COUNT_SENSOR, devices.size());
+        		 // go to setup uninit sensor
+        		 Intent intent = new Intent(AddSensorActivityDialog.this, SetupSensorActivityDialog.class);
+        		 intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        		 intent.putExtras(bundle);
+        		 startActivity(intent);
+        		 finish();
+        	 }
+		}
 	}
 
 
