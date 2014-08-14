@@ -437,6 +437,7 @@ public final class Controller {
 		try {
 			if (mNetwork.signUp(mHousehold.user.getEmail(), id, mHousehold.user.getSessionId())) {
 				reloadAdapters(); // TODO: reload (or just add this adapter) only adapters list (without reloading devices)
+				setActiveAdapter(id); // FIXME : kurvaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
 				return true;
 			}
 		} catch (NetworkException e) {

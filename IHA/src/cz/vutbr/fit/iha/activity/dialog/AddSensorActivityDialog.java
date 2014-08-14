@@ -28,7 +28,7 @@ public class AddSensorActivityDialog extends BaseActivityDialog{
 	
 	private CountDownTimer mCountDownTimer;
 	private boolean mTimerDone = false;
-	private int mTimerButtonSec = 20;
+	private int mTimerButtonSec = 30;
 	private int mIntervalToCheckUninitSensor = 5;
 	
 	private PairRequestTask mPairRequestTask;

@@ -156,17 +156,7 @@ public class LocationScreenActivity extends BaseActivity {
 				mOrientation = true;
 		}
 		
-		//FIXME: no adapters for user 
-		if(mController.getActiveAdapter() == null){
-			Intent intent = new Intent(this, AddAdapterActivityDialog.class);
-			Bundle bundle = new Bundle();
-			bundle.putBoolean(Constants.CANCEL, true);
-			intent.putExtras(bundle);
-			startActivity(intent);
-			//this.finish();
-//			return ;
-		}
-
+	
 		initMenu();
 	}
 
@@ -721,17 +711,17 @@ public class LocationScreenActivity extends BaseActivity {
 				intent.putExtras(bundle);
 				startActivityForResult(intent, REQUEST_ADD_ADAPTER);
 				break;
-			}/*
+			}
 			case R.id.action_addsensor: {
 				// Show also ignored devices
 				mController.unignoreUninitialized();
 
 				inBackground = true;
-				Intent intent = new Intent(LocationScreenActivity.this, SetupSensorActivityDialog.class);
+				Intent intent = new Intent(LocationScreenActivity.this, AddSensorActivityDialog.class);
 				startActivity(intent);
 
 				break;
-			}*/
+			}
 			case R.id.action_settings: {
 				Intent intent = new Intent(LocationScreenActivity.this, SettingsMainActivity.class);
 				startActivity(intent);
@@ -863,6 +853,13 @@ public class LocationScreenActivity extends BaseActivity {
 			//FIXME: no adapters for user
 			if(mController.getActiveAdapter() == null){
 				mLocations = new ArrayList<Location>();
+				// ############################################
+				//FIXME: no adapters for user 
+					Intent intent = new Intent(LocationScreenActivity.this, AddAdapterActivityDialog.class);
+					Bundle bundle = new Bundle();
+					bundle.putBoolean(Constants.CANCEL, true);
+					intent.putExtras(bundle);
+					startActivity(intent);
 				return new ArrayList<BaseDevice>();
 			}
 			
@@ -873,6 +870,8 @@ public class LocationScreenActivity extends BaseActivity {
 			// Load uninitialized devices
 			List<BaseDevice> devices = mController.getUninitializedDevices();
 			Log.d(TAG, String.format("Found %d uninitialized devices", devices.size()));
+			
+			
 
 			return devices;
 		}
