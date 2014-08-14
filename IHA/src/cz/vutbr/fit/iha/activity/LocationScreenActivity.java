@@ -37,6 +37,7 @@ import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.view.Window;
 
+import cz.vutbr.fit.iha.Constants;
 import cz.vutbr.fit.iha.MenuListAdapter;
 import cz.vutbr.fit.iha.R;
 import cz.vutbr.fit.iha.SensorListAdapter;
@@ -886,6 +887,7 @@ public class LocationScreenActivity extends BaseActivity {
 					// Open activity for adding new device
 					inBackground = true;
 					Intent intent = new Intent(LocationScreenActivity.this, SetupSensorActivityDialog.class);
+					intent.putExtra(Constants.ADDSENSOR_COUNT_SENSOR, uninitializedDevices.size());
 					startActivity(intent);
 					mDialog.dismiss();
 				}
