@@ -73,5 +73,6 @@ public final class Constants {
 	 * Keys for bundle
 	 */
 	public static final String ADDSENSOR_COUNT_SENSOR = "countofuninitsensor";
+	public static final String CANCEL = "cancel";
 }
 

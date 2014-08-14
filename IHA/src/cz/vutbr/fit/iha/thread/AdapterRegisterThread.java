@@ -6,7 +6,10 @@ package cz.vutbr.fit.iha.thread;
 import android.app.Activity;
 import android.content.Intent;
 import android.util.Log;
+import cz.vutbr.fit.iha.R;
 import cz.vutbr.fit.iha.activity.LocationScreenActivity;
+import cz.vutbr.fit.iha.activity.dialog.AddSensorActivityDialog;
+import cz.vutbr.fit.iha.adapter.Adapter;
 import cz.vutbr.fit.iha.controller.Controller;
 
 /**
@@ -32,21 +35,27 @@ public class AdapterRegisterThread implements Runnable{
 	public void run() {
 		Controller controller = Controller.getInstance(mActivity);
 		
-		String message;
-		if (controller.registerAdapter(mSerialNumber)) {
-			message = "Adapter has been activated.";
+		int messageId;
+		boolean result = controller.registerAdapter(mSerialNumber); 
+		if (result) {
+			messageId = R.string.toast_adapter_activated;
 		} else {
-			message = "Failed to activate adapter.";
+			messageId = R.string.toast_adapter_activate_failed;
 		}
 		
-		Log.d(TAG, message);
-		mActivity.runOnUiThread(new ToastMessageThread(mActivity, message));
+		Log.d(TAG, mActivity.getString(messageId));
+		new ToastMessageThread(mActivity, messageId).start();
 		
-		if(!controller.isLoggedIn()){
-			LocationScreenActivity.healActivity();
-			Intent intent = new Intent(mActivity, LocationScreenActivity.class);
+		if(controller.getAdapter(mSerialNumber, true).isEmpty()){
+			Log.i(TAG, mSerialNumber+" is empty");
+			Intent intent = new Intent(mActivity, AddSensorActivityDialog.class);
 			mActivity.startActivity(intent);
-		}
+		}else 
+			if(controller.isLoggedIn()){
+//				LocationScreenActivity.healActivity();
+				Intent intent = new Intent(mActivity, LocationScreenActivity.class);
+				mActivity.startActivity(intent);
+			}
 		
 		mActivity.finish();
 	}

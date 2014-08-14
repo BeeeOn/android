@@ -339,6 +339,14 @@ public class SetupSensorActivityDialog extends BaseActivityDialog {
 	        		 startActivity(intent);
 	        		 return;
 				}
+				if(mUnInitDevices.size() == 1){ // last one
+					if(!mController.isLoggedIn()){
+						LocationScreenActivity.healActivity();
+						Intent intent = new Intent(SetupSensorActivityDialog.this, LocationScreenActivity.class);
+						startActivity(intent);
+						return;
+					}
+				}
 				
 				// Heal Location screen activity - refresh sensors
 				LocationScreenActivity.healActivity();

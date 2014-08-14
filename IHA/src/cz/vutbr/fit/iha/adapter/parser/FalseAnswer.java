@@ -32,7 +32,7 @@ public class FalseAnswer {
 	public FalseAnswer(String additionalInfo, int errCode, String errMessage){
 		mAdditionalInfo = additionalInfo;
 		mErrCode = errCode;
-		try{
+		try{ //FIXME: fix this after demo!!!
 			switch(errCode){
 				case 6:
 					troubleMakers = XmlParsers.getFalseMessage6(START_TAG + errMessage + END_TAG);

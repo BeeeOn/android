@@ -257,8 +257,8 @@ public class Network {
 			String result = startCommunication(messageToSend);
 			Log.d(TAG + " - fromApp", messageToSend);
 
-			msg = XmlParsers.parseCommunication(result, false);
 			Log.d(TAG + " - fromSrv", result);
+			msg = XmlParsers.parseCommunication(result, false);
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw new CommunicationException(e);
@@ -358,8 +358,8 @@ public class Network {
 		String googleToken = getGoogleToken();
 		if (googleToken.length() == 0)
 			throw new CommunicationException(GoogleExcMessage);
-
-		String messageToSend = XmlCreator.createSignUp(email, SessionId, googleToken, serialNumber, Locale.getDefault().getLanguage());
+		//FIXME: session id
+		String messageToSend = XmlCreator.createSignUp(email, "0", googleToken, serialNumber, Locale.getDefault().getLanguage());
 		ParsedMessage msg = doRequest(messageToSend);
 
 		if (!msg.getSessionId().isEmpty() && msg.getState() == State.TRUE && ((String) msg.data).equals(SIGNUP)) {

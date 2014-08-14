@@ -78,6 +78,10 @@
     <string name="toast_google_auth">Google authentication</string>
     <string name="toast_something_wrong">Something goes wrong, try it later please</string>
     <string name="toast_check_your_connection_via_browser">Check your connection via browser</string>
+    <string name="toast_not_implemented">Not implemented yet!</string>
+	<string name="toast_login_failed">Login failed</string>
+	<string name="toast_adapter_activate_failed">Failed to activate adapter.</string>
+	<string name="toast_adapter_activated">Adapter has been activated.</string>
     
     <!-- Progress -->
     <string name="progress_signing">Signing to server&#8230;</string>

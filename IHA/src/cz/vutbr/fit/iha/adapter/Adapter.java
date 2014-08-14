@@ -325,4 +325,9 @@ public class Adapter {
 		return id;
 	}
 	
+	public boolean isEmpty(){
+		if(mLocations.size() == 0 && mDevices.size() == 0)
+			return true;
+		return false;
+	}
 }

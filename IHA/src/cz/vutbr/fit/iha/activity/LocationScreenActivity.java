@@ -155,6 +155,17 @@ public class LocationScreenActivity extends BaseActivity {
 			if (mActiveLocationId != null)
 				mOrientation = true;
 		}
+		
+		//FIXME: no adapters for user 
+		if(mController.getActiveAdapter() == null){
+			Intent intent = new Intent(this, AddAdapterActivityDialog.class);
+			Bundle bundle = new Bundle();
+			bundle.putBoolean(Constants.CANCEL, true);
+			intent.putExtras(bundle);
+			startActivity(intent);
+			//this.finish();
+//			return ;
+		}
 
 		initMenu();
 	}
@@ -654,12 +665,16 @@ public class LocationScreenActivity extends BaseActivity {
 		// }
 	}
 
-	@Override
-	protected void onPostCreate(Bundle savedInstanceState) {
-		super.onPostCreate(savedInstanceState);
-		// Sync the toggle state after onRestoreInstanceState has occurred.
-		mDrawerToggle.syncState();
-	}
+//	@Override
+//	protected void onPostCreate(Bundle savedInstanceState) {
+//		super.onPostCreate(savedInstanceState);
+//		//FIXME: no adapters for user
+//		if(mController.getActiveAdapter() == null)
+//			return;
+//		
+//		// Sync the toggle state after onRestoreInstanceState has occurred.
+//		mDrawerToggle.syncState();
+//	}
 
 	@Override
 	public void onConfigurationChanged(Configuration newConfig) {
@@ -702,7 +717,7 @@ public class LocationScreenActivity extends BaseActivity {
 				inBackground = true;
 				Intent intent = new Intent(LocationScreenActivity.this, AddAdapterActivityDialog.class);
 				Bundle bundle = new Bundle();
-				bundle.putBoolean("Cancel", true);
+				bundle.putBoolean(Constants.CANCEL, true);
 				intent.putExtras(bundle);
 				startActivityForResult(intent, REQUEST_ADD_ADAPTER);
 				break;
@@ -844,6 +859,13 @@ public class LocationScreenActivity extends BaseActivity {
 
 		@Override
 		protected List<BaseDevice> doInBackground(Void... unused) {
+			
+			//FIXME: no adapters for user
+			if(mController.getActiveAdapter() == null){
+				mLocations = new ArrayList<Location>();
+				return new ArrayList<BaseDevice>();
+			}
+			
 			// Load locations
 			mLocations = mController.getActiveAdapter().getLocations();
 			Log.d(TAG, String.format("Found %d locations", mLocations.size()));
@@ -857,6 +879,9 @@ public class LocationScreenActivity extends BaseActivity {
 
 		@Override
 		protected void onPostExecute(final List<BaseDevice> uninitializedDevices) {
+			if(uninitializedDevices == null)
+				return;
+			
 			// Redraw locations
 			setNewAdapterRedraw(getMenuAdapter());
 

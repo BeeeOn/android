@@ -990,6 +990,7 @@ public class XmlCreator {
 				serializer.startTag(ns, LOCATION);
 				serializer.attribute(ns, TYPE, Integer.toString(location.getType()));
 				serializer.text(location.getName());
+				serializer.endTag(ns, LOCATION);
 			
 			serializer.endTag(ns, COM_ROOT);
 			serializer.endDocument();

@@ -21,6 +21,7 @@ import com.google.android.gms.common.AccountPicker;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 
+import cz.vutbr.fit.iha.Constants;
 import cz.vutbr.fit.iha.R;
 import cz.vutbr.fit.iha.activity.dialog.AddAdapterActivityDialog;
 import cz.vutbr.fit.iha.controller.Controller;
@@ -407,10 +408,23 @@ public class LoginActivity extends BaseActivity {
 
 		} catch (NotRegAException e) {
 			e.printStackTrace();
+			try { //FIXME: this is 2x here, fix this after demo
+				GetGoogleAuth ggAuth = GetGoogleAuth.getGetGoogleAuth();
+				ActualUser user = mController.getActualUser();
+				user.setName(ggAuth.getUserName());
+				user.setEmail(ggAuth.getEmail());
+				user.setPicture(ggAuth.getPictureIMG());
+			} catch (Exception e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			} 
+			
 			// there is unregistered adapter and we go to register it
+			//FIXME: repair this after de
 			Intent intent = new Intent(LoginActivity.this, AddAdapterActivityDialog.class);
+//			Intent intent = new Intent(LoginActivity.this, LocationScreenActivity.class);
 			Bundle bundle = new Bundle();
-			bundle.putBoolean("Cancel", false);
+			bundle.putBoolean(Constants.CANCEL, false);
 			intent.putExtras(bundle);
 			startActivity(intent);
 		} catch (NotRegBException e) {
@@ -432,7 +446,7 @@ public class LoginActivity extends BaseActivity {
 			e.printStackTrace();
 			// FIXME: remove in final version
 			errFlag = true;
-			errMessage = "Not implemented yet";
+			errMessage = getString(R.string.toast_not_implemented);
 		} finally {
 			ProgressDismiss();
 			if (errFlag) {

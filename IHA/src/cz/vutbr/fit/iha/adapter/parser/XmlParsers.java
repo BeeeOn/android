@@ -424,6 +424,7 @@ public class XmlParsers {
 	 * @throws IOException
 	 */
 	private static FalseAnswer parseFalse() throws XmlPullParserException, IOException{
+		//FIXME: bad error code 6 a 13 fix after demo
 		return new FalseAnswer(getSecureAttrValue(ns, ADDITIONALINFO), getSecureInt(getSecureAttrValue(ns, ERRCODE)), readText(COM_ROOT));
 	}
 	
@@ -528,6 +529,7 @@ public class XmlParsers {
 		}
 	}
 	
+	//FIXME: after demo
 	static List<BaseDevice> getFalseMessage6(String message) throws XmlPullParserException, IOException{
 		mParser = Xml.newPullParser();
 		mParser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false);
@@ -555,6 +557,7 @@ public class XmlParsers {
 		return result;
 	}
 	
+	//FIXME: after demo
 	static List<User> getFalseMessage13(String message) throws XmlPullParserException, IOException{
 		mParser = Xml.newPullParser();
 		mParser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false);

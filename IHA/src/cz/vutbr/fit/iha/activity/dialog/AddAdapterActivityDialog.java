@@ -14,6 +14,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import cz.vutbr.fit.iha.Constants;
 import cz.vutbr.fit.iha.R;
 import cz.vutbr.fit.iha.activity.LocationScreenActivity;
 import cz.vutbr.fit.iha.thread.AdapterRegisterThread;
@@ -64,7 +65,7 @@ public class AddAdapterActivityDialog extends BaseActivityDialog {
 		mCancelButton = (Button) findViewById(R.id.addadapter_cancel_button);
 		
 		// Serial number button - register new adapter by serial number
-		if (!mActivity.getIntent().getExtras().getBoolean("Cancel")){
+		if (!mActivity.getIntent().getExtras().getBoolean(Constants.CANCEL)){
 			mAddButton.setLayoutParams(new LinearLayout.LayoutParams((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 260, getResources().getDisplayMetrics()), (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 50, getResources().getDisplayMetrics())));
 		}
 		
@@ -79,7 +80,7 @@ public class AddAdapterActivityDialog extends BaseActivityDialog {
 		});
 
 		// If this dialog as first use (from login page)- invisible button
-		if (!mActivity.getIntent().getExtras().getBoolean("Cancel"))
+		if (!mActivity.getIntent().getExtras().getBoolean(Constants.CANCEL))
 			mCancelButton.setVisibility(View.INVISIBLE);
 
 		mCancelButton.setOnClickListener(new OnClickListener() {
