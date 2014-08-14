@@ -33,6 +33,7 @@ public class HumidityDevice extends BaseDevice {
 	
 	@Override
 	public void setValue(int value){
+		//TODO: check 100
 		mValue = value/100f;
 	}
 	
@@ -49,7 +50,7 @@ public class HumidityDevice extends BaseDevice {
 
 	@Override
 	public void setValue(String value) {
-		mValue = Integer.parseInt(value)/100f;
+		mValue = Float.parseFloat(value);
 		
 	}
 	

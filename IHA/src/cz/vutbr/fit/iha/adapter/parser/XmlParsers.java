@@ -24,8 +24,6 @@ import cz.vutbr.fit.iha.Constants;
 import cz.vutbr.fit.iha.adapter.Adapter;
 import cz.vutbr.fit.iha.adapter.device.BaseDevice;
 import cz.vutbr.fit.iha.adapter.device.DeviceLog;
-import cz.vutbr.fit.iha.adapter.device.DeviceLog.DataInterval;
-import cz.vutbr.fit.iha.adapter.device.DeviceLog.DataType;
 import cz.vutbr.fit.iha.adapter.device.EmissionDevice;
 import cz.vutbr.fit.iha.adapter.device.HumidityDevice;
 import cz.vutbr.fit.iha.adapter.device.IlluminationDevice;
@@ -344,9 +342,12 @@ public class XmlParsers {
 	 */
 	private static List<Adapter> parseReady() throws XmlPullParserException, IOException{
 		mParser.nextTag();
-		mParser.require(XmlPullParser.START_TAG, ns, ADAPTER);
+//		mParser.require(XmlPullParser.START_TAG, ns, ADAPTER); // strict solution
 		
 		List<Adapter> result = new ArrayList<Adapter>();
+		
+		if(!mParser.getName().equals(ADAPTER))
+			return result;
 		
 		do{
 			Adapter adapter = new Adapter();
