@@ -25,6 +25,7 @@ import android.widget.LinearLayout.LayoutParams;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
+import cz.vutbr.fit.iha.Constants;
 import cz.vutbr.fit.iha.R;
 import cz.vutbr.fit.iha.activity.LocationScreenActivity;
 import cz.vutbr.fit.iha.adapter.device.BaseDevice;
@@ -37,15 +38,19 @@ public class SetupSensorActivityDialog extends BaseActivityDialog {
 	private Controller mController;
 
 	private BaseDevice mNewDevice;
+	private List<BaseDevice> mUnInitDevices;
 
 	private ProgressDialog mProgress;
 
 	private EditText mNewLocation;
 	private EditText mName;
 	private TextView mOrLabel;
+	private TextView mHeader;
 	private Spinner mSpinner;
 	private Spinner mNewIconSpinner;
 	private Button mAddButton;
+	
+	private int mCountOfSensor;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -65,9 +70,13 @@ public class SetupSensorActivityDialog extends BaseActivityDialog {
 		// TODO: sent as parameter if we want first uninitialized device or some
 		// device with particular id
 
-		List<BaseDevice> devices = mController.getUninitializedDevices();
-		if (devices.size() > 0) {
-			mNewDevice = devices.get(0);
+		mUnInitDevices = mController.getUninitializedDevices();
+		if (mUnInitDevices.size() > 0) {
+			// Get number of new sensors
+			Bundle bundle = getIntent().getExtras();
+			mCountOfSensor = bundle.getInt(Constants.ADDSENSOR_COUNT_SENSOR);
+			
+			mNewDevice = mUnInitDevices.get(0);
 		} else {
 			Toast.makeText(this, "There are no uninitialized devices.", Toast.LENGTH_LONG).show();
 			finish();
@@ -79,7 +88,13 @@ public class SetupSensorActivityDialog extends BaseActivityDialog {
 	}
 
 	private void initViews() {
+		mHeader = (TextView) findViewById(R.id.addadapter_add_adapter);
+		mName = (EditText) findViewById(R.id.addsensor_sensor_name);
+		mNewLocation = (EditText) findViewById(R.id.addsensor_new_location_name);
 		mSpinner = (Spinner) findViewById(R.id.addsensor_spinner_choose_location);
+		
+		// Set Header
+		mHeader.setText(getResources().getString(R.string.addsensor_setup_sensor)+" "+String.valueOf(mCountOfSensor-mUnInitDevices.size()+1) +"/"+String.valueOf(mCountOfSensor));
 
 		mSpinner.setOnItemSelectedListener(new OnItemSelectedListener() {
 
@@ -119,8 +134,7 @@ public class SetupSensorActivityDialog extends BaseActivityDialog {
 		TextView time = (TextView) findViewById(R.id.addsensor_involved_time);
 		time.setText(String.format("%s %s", time.getText(), mNewDevice.getInvolveTime()));
 		
-		mName = (EditText) findViewById(R.id.addsensor_sensor_name);
-		mNewLocation = (EditText) findViewById(R.id.addsensor_new_location_name);
+		
 	}
 
 	/**
@@ -215,6 +229,11 @@ public class SetupSensorActivityDialog extends BaseActivityDialog {
 				}
 			}
 		});
+		// set name
+		if(mUnInitDevices.size()>1) {
+			mAddButton.setText(getResources().getString(R.string.addsensor_save_and_continue));
+		}
+		
 	}
 
 	/**

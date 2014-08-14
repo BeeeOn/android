@@ -95,6 +95,8 @@
     <string name="addsensor_sending_request">Pair request sending </string>
     <string name="addsensor_send_request">Send pair request  </string>
     <string name="addsensor_active_pair">Active pair mode </string>
+    <string name="addsensor_save_and_continue">Add and Continue</string>
+    <string name="addsensor_save">Add</string>
     
     <!-- Others -->
     <string name="action_settings">Settings</string>

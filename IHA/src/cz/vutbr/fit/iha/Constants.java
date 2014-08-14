@@ -68,5 +68,10 @@ public final class Constants {
 	public static final String PREF_SW2_LOCATION = "pref_sw2_location";
 	public static final String PREF_TEMPERATURE = "pref_temperature";
 	public static final String KEY_UNITS = "key_units";
+	
+	/**
+	 * Keys for bundle
+	 */
+	public static final String ADDSENSOR_COUNT_SENSOR = "countofuninitsensor";
 }
 

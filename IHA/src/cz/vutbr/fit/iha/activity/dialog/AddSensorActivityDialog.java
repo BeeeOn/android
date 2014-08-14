@@ -1,14 +1,21 @@
 package cz.vutbr.fit.iha.activity.dialog;
 
+import java.util.List;
+
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
 import android.widget.Button;
+import cz.vutbr.fit.iha.Constants;
 import cz.vutbr.fit.iha.R;
+import cz.vutbr.fit.iha.activity.LocationScreenActivity;
 import cz.vutbr.fit.iha.adapter.Adapter;
+import cz.vutbr.fit.iha.adapter.device.BaseDevice;
 import cz.vutbr.fit.iha.controller.Controller;
 
 public class AddSensorActivityDialog extends BaseActivityDialog{
@@ -19,12 +26,14 @@ public class AddSensorActivityDialog extends BaseActivityDialog{
 	private Button mButton;
 	
 	private CountDownTimer mCountDownTimer;
+	private boolean mTimerDone = false;
 	private int mTimerButtonSec = 15;
 	private int mIntervalToCheckUninitSensor = 5;
 	
 	private PairRequestTask mPairRequestTask;
 	
-	//private BaseDevice mNewDevice;
+	private static final String TAG = LocationScreenActivity.class.getSimpleName();
+	
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -68,13 +77,26 @@ public class AddSensorActivityDialog extends BaseActivityDialog{
 		mCountDownTimer = new CountDownTimer(mTimerButtonSec*1000, 1000) {
 
 		     public void onTick(long millisUntilFinished) {
+		    	 if(mTimerDone)
+		    		 return;
+		    	 
 		         mButton.setText(getResources().getString(R.string.addsensor_active_pair) +" 0:"+ millisUntilFinished / 1000);
 		         if( (millisUntilFinished / 1000)% mIntervalToCheckUninitSensor == 0 ){
 		        	 // check if are new uninit sensor
-		        	 if(mController.getUninitializedDevices().size() > 0 ) {
+		        	 Log.d(TAG, "PAIR - check if some uninit sensor");
+		        	 List<BaseDevice> devices = mController.getUninitializedDevices();
+		        	 if(devices.size() > 0 ) {
+		        		 // Setup variable as true for disable timer
+		        		 mTimerDone = true;
 		        		 mCountDownTimer.cancel();
+		        		 // Send count of sensors
+		        		 Bundle bundle = new Bundle();
+		        		 bundle.putInt(Constants.ADDSENSOR_COUNT_SENSOR, devices.size());
 		        		 // go to setup uninit sensor
-		        		 
+		        		 Intent intent = new Intent(AddSensorActivityDialog.this, SetupSensorActivityDialog.class);
+		        		 intent.putExtras(bundle);
+		        		 startActivity(intent);
+		        		 finish();
 		        	 }
 		        		 
 		         }
@@ -100,8 +122,8 @@ public class AddSensorActivityDialog extends BaseActivityDialog{
 
 		@Override
 		protected Boolean doInBackground(String... adapterID) {
-			//return mController.sendPairRequest(adapterID[0]);
-			return true;
+			return mController.sendPairRequest(adapterID[0]);
+			//return true;
 		}
 
 		@Override
