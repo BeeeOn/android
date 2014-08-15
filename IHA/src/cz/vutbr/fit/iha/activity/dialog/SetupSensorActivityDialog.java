@@ -340,6 +340,7 @@ public class SetupSensorActivityDialog extends BaseActivityDialog {
 	        		 return;
 				}
 				if(mUnInitDevices.size() == 1){ // last one
+					//TODO: this only when going from loginscreen, need to review
 					if(mController.isLoggedIn()){
 						LocationScreenActivity.healActivity();
 						Intent intent = new Intent(SetupSensorActivityDialog.this, LocationScreenActivity.class);

@@ -58,6 +58,7 @@ import cz.vutbr.fit.iha.adapter.device.BaseDevice;
 import cz.vutbr.fit.iha.adapter.location.Location;
 import cz.vutbr.fit.iha.controller.Controller;
 import cz.vutbr.fit.iha.household.ActualUser;
+import cz.vutbr.fit.iha.thread.ToastMessageThread;
 
 /**
  * Activity class for choosing location
@@ -88,6 +89,7 @@ public class LocationScreenActivity extends BaseActivity {
 	private static boolean inBackground = false;
 	private static boolean isPaused = false;
 	private static boolean forceReloadListing = false;
+	private static boolean isClosing = false;
 
 	/**
 	 * Instance save state tags
@@ -225,15 +227,17 @@ public class LocationScreenActivity extends BaseActivity {
 		// Toast.makeText(this, getString(R.string.toast_leaving_app),
 		// Toast.LENGTH_LONG).show();
 		// super.onBackPressed();
-		// this.finish();
+		 this.finish();
 
-		android.os.Process.killProcess(android.os.Process.myPid());
+		//android.os.Process.killProcess(android.os.Process.myPid());
 	}
 
 	@Override
 	public void onBackPressed() {
 		// second click
 		if (backPressed) {
+			isClosing = true;
+			Log.d(TAG, "kua to co je" + Boolean.toString(isClosing));
 			secondTapBack();
 		}
 		// first click
@@ -441,6 +445,26 @@ public class LocationScreenActivity extends BaseActivity {
 						intent.putExtras(bundle);
 						startActivityForResult(intent, REQUEST_SENSOR_DETAIL);
 						break;
+					case ADAPTER:
+						//FIXME: debug implementation -> need to set active adapter manualy
+						Log.e(TAG, "deleting adapter");
+						mController.setActiveAdapter(item.getId());
+						new Thread(new Runnable() {
+							@Override
+							public void run() {
+								if(mController.unregisterAdapter(mController.getActiveAdapter().getId())){
+									new ToastMessageThread(mActivity, "adapter removed").start();
+									mActivity.runOnUiThread(new Runnable() {
+										@Override
+										public void run() {
+											redrawMenu();
+										}
+									});
+								}
+								
+							}
+						}).run();
+						break;
 					default:
 						// do nothing
 						break;
@@ -644,15 +668,14 @@ public class LocationScreenActivity extends BaseActivity {
 	}
 
 	/**
+	 * FIXME: change from protected
 	 * New thread, it takes changes from server and refresh menu items
 	 */
-	protected void redrawMenu() {
+	public void redrawMenu() {
 		setSupportProgressBarIndeterminate(true);
 		setSupportProgressBarIndeterminateVisibility(true);
-		// if (!inBackground) {
 		mDevicesTask = new DevicesTask();
 		mDevicesTask.execute();
-		// }
 	}
 
 //	@Override
@@ -851,15 +874,17 @@ public class LocationScreenActivity extends BaseActivity {
 		protected List<BaseDevice> doInBackground(Void... unused) {
 			
 			//FIXME: no adapters for user
-			if(mController.getActiveAdapter() == null){
+			if(mController.getActiveAdapter() == null && !isClosing){
 				mLocations = new ArrayList<Location>();
 				// ############################################
 				//FIXME: no adapters for user 
-					Intent intent = new Intent(LocationScreenActivity.this, AddAdapterActivityDialog.class);
-					Bundle bundle = new Bundle();
-					bundle.putBoolean(Constants.CANCEL, true);
-					intent.putExtras(bundle);
-					startActivity(intent);
+				Log.e(TAG, "kulehovnableskyted");
+				Log.d(TAG, "data: " + Boolean.toString(isClosing) + " " + Boolean.toString(mController.getActiveAdapter() == null));
+				Intent intent = new Intent(LocationScreenActivity.this, AddAdapterActivityDialog.class);
+				Bundle bundle = new Bundle();
+				bundle.putBoolean(Constants.CANCEL, true);
+				intent.putExtras(bundle);
+				startActivity(intent);
 				return new ArrayList<BaseDevice>();
 			}
 			

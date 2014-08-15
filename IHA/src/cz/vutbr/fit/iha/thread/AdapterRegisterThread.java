@@ -46,16 +46,18 @@ public class AdapterRegisterThread implements Runnable{
 		Log.d(TAG, mActivity.getString(messageId));
 		new ToastMessageThread(mActivity, messageId).start();
 		
-		if(controller.getAdapter(mSerialNumber, true).isEmpty()){
+		if(controller.getAdapter(mSerialNumber, true) != null && controller.getAdapter(mSerialNumber, true).isEmpty()){
 			Log.i(TAG, mSerialNumber+" is empty");
 			Intent intent = new Intent(mActivity, AddSensorActivityDialog.class);
 			mActivity.startActivity(intent);
-		}else 
-			if(controller.isLoggedIn()){
+		}
+		//TODO: this only from loginscreen
+//		else 
+//			if(controller.isLoggedIn()){
 //				LocationScreenActivity.healActivity();
-				Intent intent = new Intent(mActivity, LocationScreenActivity.class);
-				mActivity.startActivity(intent);
-			}
+//				Intent intent = new Intent(mActivity, LocationScreenActivity.class);
+//				mActivity.startActivity(intent);
+//			}
 		
 		mActivity.finish();
 	}

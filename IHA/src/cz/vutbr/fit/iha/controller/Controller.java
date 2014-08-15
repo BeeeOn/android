@@ -448,6 +448,7 @@ public final class Controller {
 	}
 
 	/**
+	 * FIXME: debug imple
 	 * Unregisters adapter from server.
 	 * 
 	 * @param id
@@ -455,7 +456,27 @@ public final class Controller {
 	 * @throws NotImplementedException
 	 */
 	public boolean unregisterAdapter(String id) throws NotImplementedException {
-		throw new NotImplementedException();
+		//TODO: this is debug implementation
+		
+		if (mDemoMode)
+			return false;
+		
+		ArrayList<String> user = new ArrayList<String>();
+		user.add(mHousehold.user.getEmail());
+
+		try {
+			if (mNetwork.deleteConnectionAccount(id, user)) {
+				reloadAdapters(); // TODO: reload (or just add this adapter) only adapters list (without reloading devices)
+//				setActiveAdapter(id);
+				return true;
+			}
+		} catch (NetworkException e) {
+			e.printStackTrace();
+		}
+		
+		return false;
+		
+		//throw new NotImplementedException();
 	}
 
 
