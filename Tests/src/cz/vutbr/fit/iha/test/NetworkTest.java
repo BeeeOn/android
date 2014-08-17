@@ -72,7 +72,7 @@ public class NetworkTest extends /*TestCase*/AndroidTestCase {
 		gga.setDebugToken("token");
 		
 		try {
-			net.signUp(USEREMAIL, SERIAL, "");
+			net.signUp(USEREMAIL);
 		} catch (CommunicationException e) {
 			e.printStackTrace();
 			Log.e(TAG, e.toString());

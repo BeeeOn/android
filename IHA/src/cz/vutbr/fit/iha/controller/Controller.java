@@ -289,7 +289,7 @@ public final class Controller {
 		devices.add(device);
 
 		try {
-			devices = mNetwork.update(adapter.getId(), devices);
+			devices = mNetwork.getDevices(adapter.getId(), devices);
 			if (devices == null || devices.size() != 1)
 				return false;
 			
@@ -431,12 +431,13 @@ public final class Controller {
 	 * @param id
 	 * @return true on success, false otherwise
 	 */
-	public boolean registerAdapter(String id) {
+	//FIXME: this register user not adapter
+	public boolean registerAdapter(String id, String adapterName) {
 		if (mDemoMode)
 			return false;
 
 		try {
-			if (mNetwork.signUp(mHousehold.user.getEmail(), id, mHousehold.user.getSessionId())) {
+			if (mNetwork.addAdapter(id, adapterName)) {
 				reloadAdapters(); // TODO: reload (or just add this adapter) only adapters list (without reloading devices)
 				setActiveAdapter(id); // FIXME : kurvaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
 				return true;
@@ -447,9 +448,25 @@ public final class Controller {
 		
 		return false;
 	}
+	
+	//TODO: review this
+	public boolean registerUser(String id){
+		if (mDemoMode)
+			return false;
+
+		try {
+			if (mNetwork.signUp(mHousehold.user.getEmail())) {
+				return true;
+			}
+		} catch (NetworkException e) {
+			e.printStackTrace();
+		}
+		
+		return false;
+	}
 
 	/**
-	 * FIXME: debug imple
+	 * FIXME: debug implementation
 	 * Unregisters adapter from server.
 	 * 
 	 * @param id
@@ -700,7 +717,7 @@ public final class Controller {
 			Adapter adapter = getAdapterByDevice(device);
 			Log.d(TAG, "Adapter ID: "+adapter.getId()+ " device:"+device.getAddress());
 			if (adapter != null) {
-				result = mNetwork.partial(adapter.getId(), devices);
+				result = mNetwork.setDevices(adapter.getId(), devices);
 				result = updateDevice(device);
 			}
 		} catch (NetworkException e) {

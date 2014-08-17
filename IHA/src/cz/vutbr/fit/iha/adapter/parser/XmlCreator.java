@@ -35,22 +35,23 @@ public class XmlCreator {
 	/**
 	 * Version of communication protocol for google/android device 
 	 */
-	public static final String GVER = "1.9";
+	public static final String GVER = "2.0";
 	// states
 	public static final String SIGNIN = "signin";
 	public static final String SIGNUP = "signup";
+	public static final String ADDADAPTER = "addadapter";
 	public static final String INIT = "init";
-	public static final String REINIT = "reinit";
-	public static final String LOGNAME = "logname";
-	public static final String ADDCONACCOUNT = "addconaccount";
-	public static final String DELCONACCOUNT = "delconaccount";
-	public static final String GETCONACCOUNT = "getconaccount";
-	public static final String CHANGECONACCOUNT = "changeconaccount";
+	public static final String REINITADAPTER = "reinitadapter";
+	public static final String GETLOG = "getlog";
+	public static final String ADDACCOUNT = "addaccount";
+	public static final String DELACCOUNT = "delaccount";
+	public static final String GETACCOUNTS = "getaccounts";
+	public static final String UPDATEACCOUNT = "updateaccount";
 	public static final String TRUE = "true";
 	public static final String FALSE = "false";
-	public static final String PARTIAL = "partial";
+	public static final String DEVICES = "devices";
 	public static final String GETADAPTERS = "getadapters";
-	public static final String UPDATE = "update";
+	public static final String GETDEVICES = "getdevices";
 	public static final String ADDVIEW = "addview";
 	public static final String DELVIEW = "delview";
 	public static final String UPDATEVIEW = "updateview";
@@ -61,7 +62,7 @@ public class XmlCreator {
 	public static final String UPDATEROOMS = "updaterooms";
 	public static final String ADDROOM = "addroom";
 	public static final String DELROOM = "delroom";
-	public static final String GETXML = "getxml";
+	public static final String GETALLDEVICES = "getalldevices";
 	public static final String ADAPTERLISTEN = "adapterlisten";
 	public static final String SWITCH = "switch";
 	public static final String DELDEVICE = "deldevice";
@@ -145,14 +146,43 @@ public class XmlCreator {
 	
 	/**
 	 * Method create XML for singUp message
-	 * @param email of user
-	 * @param id is 0 if is NOT signed in, non-zero otherwise 
+	 * @param email of user 
 	 * @param gtoken token from google
-	 * @param serialNumber of new adapter
-	 * @param lokale language of APP {cs, en}
 	 * @return XML message
 	 */
-	public static String createSignUp(String email, String id, String gtoken, String serialNumber, String lokale){
+	public static String createSignUp(String email, String gtoken){
+		XmlSerializer serializer = Xml.newSerializer();
+		StringWriter writer = new StringWriter();
+		try{
+			serializer.setOutput(writer);
+			serializer.startDocument("UTF-8", null);
+			
+			serializer.startTag(ns, COM_ROOT);
+			serializer.attribute(ns, STATE, SIGNUP);
+			serializer.attribute(ns, VERSION, GVER);
+				
+				serializer.startTag(ns, USER);
+				serializer.attribute(ns, EMAIL, email);
+				serializer.attribute(ns, GTOKEN, gtoken);
+				serializer.endTag(ns, USER);
+
+			serializer.endTag(ns, COM_ROOT);
+			serializer.endDocument();
+			
+			return writer.toString();
+		}catch(Exception e){
+			throw new RuntimeException(e);
+		}
+	}
+	
+	/**
+	 * Method create XML for AddAdapter message
+	 * @param id of user
+	 * @param serialNumber of adapter
+	 * @param adapterName name of adapter
+	 * @return XML message
+	 */
+	public static String createAddAdapter(String id, String serialNumber, String adapterName){
 		XmlSerializer serializer = Xml.newSerializer();
 		StringWriter writer = new StringWriter();
 		try{
@@ -161,18 +191,14 @@ public class XmlCreator {
 			
 			serializer.startTag(ns, COM_ROOT);
 			serializer.attribute(ns, ID, id);
-			serializer.attribute(ns, STATE, SIGNUP);
+			serializer.attribute(ns, STATE, ADDADAPTER);
 			serializer.attribute(ns, VERSION, GVER);
-				serializer.startTag(ns, SERIAL);
-					serializer.text(serialNumber);
-				serializer.endTag(ns, SERIAL);
+			
+				serializer.startTag(ns, ADAPTER);
+				serializer.attribute(ns, SERIAL, serialNumber);
+				serializer.attribute(ns, NAME, adapterName);
+				serializer.endTag(ns, ADAPTER);
 				
-				serializer.startTag(ns, USER);
-				serializer.attribute(ns, EMAIL, email);
-				serializer.attribute(ns, GTOKEN, gtoken);
-				serializer.attribute(ns, LOCALE, lokale);
-				serializer.endTag(ns, USER);
-
 			serializer.endTag(ns, COM_ROOT);
 			serializer.endDocument();
 			
@@ -288,7 +314,7 @@ public class XmlCreator {
 	 * @param adapterId
 	 * @return XML of GetXml message
 	 */
-	public static String createGetXml(String id, String adapterId){
+	public static String createGetAllDevices(String id, String adapterId){
 		XmlSerializer serializer = Xml.newSerializer();
 		StringWriter writer = new StringWriter();
 		try{
@@ -297,7 +323,7 @@ public class XmlCreator {
 			
 			serializer.startTag(ns, COM_ROOT);
 			serializer.attribute(ns, ID, id);
-			serializer.attribute(ns, STATE, GETXML);
+			serializer.attribute(ns, STATE, GETALLDEVICES);
 			serializer.attribute(ns, VERSION, GVER);
 			serializer.attribute(ns, ADAPTER, adapterId);
 			serializer.endTag(ns, COM_ROOT);
@@ -316,7 +342,7 @@ public class XmlCreator {
 	 * @param adapterIdNew new id of adapter
 	 * @return ReInit message
 	 */
-	public static String createReInit(String id, String adapterIdOld, String adapterIdNew){
+	public static String createReInitAdapter(String id, String adapterIdOld, String adapterIdNew){
 		XmlSerializer serializer = Xml.newSerializer();
 		StringWriter writer = new StringWriter();
 		try{
@@ -325,7 +351,7 @@ public class XmlCreator {
 			
 			serializer.startTag(ns, COM_ROOT);
 			serializer.attribute(ns, ID, id);
-			serializer.attribute(ns, STATE, REINIT);
+			serializer.attribute(ns, STATE, REINITADAPTER);
 			serializer.attribute(ns, VERSION, GVER);
 				
 				serializer.startTag(ns, ADAPTER);
@@ -353,7 +379,7 @@ public class XmlCreator {
 	 * @param interval is time value in seconds that represents nicely e.g. month, week, day, 10 hours, 1 hour, ...
 	 * @return logName message
 	 */
-	public static String createLogName(String id, String adapterId, String deviceId, int deviceType, String from, String to, String funcType, int interval){
+	public static String createGetLog(String id, String adapterId, String deviceId, int deviceType, String from, String to, String funcType, int interval){
 		XmlSerializer serializer = Xml.newSerializer();
 		StringWriter writer = new StringWriter();
 		try{
@@ -362,7 +388,7 @@ public class XmlCreator {
 			
 			serializer.startTag(ns, COM_ROOT);
 			serializer.attribute(ns, ID, id);
-			serializer.attribute(ns, STATE, LOGNAME);
+			serializer.attribute(ns, STATE, GETLOG);
 			serializer.attribute(ns, VERSION, GVER);
 			serializer.attribute(ns, FROM, from);
 			serializer.attribute(ns, TO, to);
@@ -391,7 +417,7 @@ public class XmlCreator {
 	 * @param users map with pairs e-mail of common user (key) and its role (value) 
 	 * @return addConAccount message
 	 */
-	public static String createAddConAccount(String id, String adapterId, HashMap<String, String> users){
+	public static String createAddAccount(String id, String adapterId, HashMap<String, String> users){
 		return createAddOrChangeConAccount(id, adapterId, users, true);
 	}
 	
@@ -402,7 +428,7 @@ public class XmlCreator {
 	 * @param userEmails of common users
 	 * @return dellConAccount message
 	 */
-	public static String createDelConAccount(String id, String adapterId, List<String> userEmails){
+	public static String createDelAccount(String id, String adapterId, List<String> userEmails){
 		XmlSerializer serializer = Xml.newSerializer();
 		StringWriter writer = new StringWriter();
 		try{
@@ -411,7 +437,7 @@ public class XmlCreator {
 			
 			serializer.startTag(ns, COM_ROOT);
 			serializer.attribute(ns, ID, id);
-			serializer.attribute(ns, STATE, DELCONACCOUNT);
+			serializer.attribute(ns, STATE, DELACCOUNT);
 			serializer.attribute(ns, VERSION, GVER);
 			serializer.attribute(ns, ADAPTER, adapterId);
 			
@@ -436,7 +462,7 @@ public class XmlCreator {
 	 * @param adapterId
 	 * @return GetConAccount message
 	 */
-	public static String createGetConAccount(String id, String adapterId){
+	public static String createGetAccount(String id, String adapterId){
 		XmlSerializer serializer = Xml.newSerializer();
 		StringWriter writer = new StringWriter();
 		try{
@@ -445,7 +471,7 @@ public class XmlCreator {
 			
 			serializer.startTag(ns, COM_ROOT);
 			serializer.attribute(ns, ID, id);
-			serializer.attribute(ns, STATE, GETCONACCOUNT);
+			serializer.attribute(ns, STATE, GETACCOUNTS);
 			serializer.attribute(ns, VERSION, GVER);
 			serializer.attribute(ns, ADAPTER, adapterId);
 			
@@ -475,7 +501,7 @@ public class XmlCreator {
 			
 			serializer.startTag(ns, COM_ROOT);
 			serializer.attribute(ns, ID, id);
-			serializer.attribute(ns, STATE, (ADD)?ADDCONACCOUNT:CHANGECONACCOUNT);
+			serializer.attribute(ns, STATE, (ADD)?ADDACCOUNT:UPDATEACCOUNT);
 			serializer.attribute(ns, VERSION, GVER);
 			serializer.attribute(ns, ADAPTER, adapterId);
 			
@@ -502,7 +528,7 @@ public class XmlCreator {
 	 * @param users map with pairs e-mail of common user (key) and its role (value)
 	 * @return changeConAccount message
 	 */
-	public static String createChangeConAccount(String id, String adapterId, HashMap<String, String> users){
+	public static String createUpdateAccount(String id, String adapterId, HashMap<String, String> users){
 		return createAddOrChangeConAccount(id, adapterId, users, false);
 	}
 	
@@ -581,7 +607,7 @@ public class XmlCreator {
 	 * @return Partial message
 	 */
 	//TODO: do eco mode
-	public static String createPartial(String id, String adapterId, List<BaseDevice> devices){
+	public static String createDevices(String id, String adapterId, List<BaseDevice> devices){
 		XmlSerializer serializer = Xml.newSerializer();
 		StringWriter writer = new StringWriter();
 		try{
@@ -590,7 +616,7 @@ public class XmlCreator {
 			
 			serializer.startTag(ns, COM_ROOT);
 			serializer.attribute(ns, ID, id);
-			serializer.attribute(ns, STATE, PARTIAL);
+			serializer.attribute(ns, STATE, DEVICES);
 			serializer.attribute(ns, VERSION, GVER);
 			serializer.attribute(ns, ADAPTER, adapterId);
 			
@@ -599,7 +625,7 @@ public class XmlCreator {
 				serializer.attribute(ns, INITIALIZED, (device.isInitialized())?INIT_1:INIT_0);
 				serializer.attribute(ns, TYPE, formatType(device.getType()));
 				serializer.attribute(ns, ID, device.getAddress());
-				serializer.attribute(ns, VISIBILITY, device.getVisibility().getValue());
+				serializer.attribute(ns, VISIBILITY, (device.getVisibility())?INIT_1:INIT_0);
 				
 				if(device.getLocationId() != null){
 					serializer.startTag(ns, LOCATION);
@@ -680,7 +706,7 @@ public class XmlCreator {
 	 * @param devicesId Id of devices to get update fields
 	 * @return update message
 	 */
-	public static String createUpdate(String id, String adapterId, List<BaseDevice>devices){
+	public static String createGetDevices(String id, String adapterId, List<BaseDevice>devices){
 		XmlSerializer serializer = Xml.newSerializer();
 		StringWriter writer = new StringWriter();
 		try{
@@ -689,7 +715,7 @@ public class XmlCreator {
 			
 			serializer.startTag(ns, COM_ROOT);
 			serializer.attribute(ns, ID, id);
-			serializer.attribute(ns, STATE, UPDATE);
+			serializer.attribute(ns, STATE, GETDEVICES);
 			serializer.attribute(ns, VERSION, GVER);
 			serializer.attribute(ns, ADAPTER, adapterId);
 			

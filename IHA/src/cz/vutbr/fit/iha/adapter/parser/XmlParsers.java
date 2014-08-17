@@ -51,7 +51,7 @@ public class XmlParsers {
 	/**
 	 * Thats mean Android OS
 	 */
-	public static final String COM_VER = "1.9";
+	public static final String COM_VER = "2.0";
 	public static final String XML_VER = "1.0.2";
 	
 	/**
@@ -73,22 +73,16 @@ public class XmlParsers {
 	 *
 	 */
 	public enum State {
-		READY("ready"),
+		ADAPTERSREADY("adaptersready"),
 		NOTREGA("notreg-a"),
 		NOTREGB("notreg-b"),
-		XML("xml"),
-		PARTIAL("partial"),
-		CONTENT("content"),
-		CONACCOUNTLIST("conaccountlist"),
+		ALLDEVICES("alldevices"),
+		DEVICES("devices"),
+		LOGDATA("logdata"),
+		ACCOUNTSLIST("accountslist"),
 		TRUE("true"),
 		FALSE("false"),
 		RESIGN("resign"),
-		
-		//extra states (not used yet?
-		ADDCONACCOUNT("addconaccount"),
-		DELCONACCOUNT("delconaccount"),
-		CHANGECONACCOUNT("changeconaccount"),
-		
 		VIEWSLIST("viewslist"),
 		TIMEZONE("timezone"),
 		ROOMS("rooms"),
@@ -187,13 +181,13 @@ public class XmlParsers {
 		ParsedMessage result = new ParsedMessage(state, id, null);
 		
 		switch (state){
-			case CONACCOUNTLIST:
+			case ACCOUNTSLIST:
 				// HashMap<String, User>
 				result.data = parseConAccountList();
 				break;
-			case CONTENT:
+			case LOGDATA:
 				// DeviceLog
-				result.data = parseContent();
+				result.data = parseLogData();
 				break;
 			case FALSE:
 				// FalseAnswer
@@ -205,21 +199,21 @@ public class XmlParsers {
 			case UNKNOWN: // never gonna happen :D
 				// null
 				break;
-			case PARTIAL:
+			case DEVICES:
 				// List<BaseDevice>
-				result.data = parsePartial();
+				result.data = parseDevices();
 				break;
-			case READY:
+			case ADAPTERSREADY:
 				// List<Adapter>
-				result.data = parseReady();
+				result.data = parseAdaptersReady();
 				break;
 			case TRUE:
 				// String
 				result.data = getSecureAttrValue(ns, ADDITIONALINFO);
 				break;
-			case XML:
+			case ALLDEVICES:
 				// Adapter
-				result.data = parseXml(getSecureAttrValue(ns, ROLE));
+				result.data = parseAllDevices(getSecureAttrValue(ns, ROLE));
 				break;
 			case VIEWSLIST:
 				// List<CustomViewPair>
@@ -247,7 +241,7 @@ public class XmlParsers {
 	/////////////////////////////////// PARSE
 	
 	/**
-	 * Method parse inner part of XML message (using parsePartial())
+	 * Method parse inner part of AllDevice message (old:XML message (using parsePartial()))
 	 * @param role authority of current user for this adapter
 	 * @return Adapter object
 	 * @throws XmlPullParserException
@@ -255,7 +249,7 @@ public class XmlParsers {
 	 * @throws XmlVerMisException means XML version mismatch exception
 	 * @throws ParseException 
 	 */
-	private Adapter parseXml(String role) throws XmlPullParserException, IOException, XmlVerMisException, ParseException{
+	private static Adapter parseAllDevices(String role) throws XmlPullParserException, IOException, XmlVerMisException, ParseException{
 		Adapter result = new Adapter();
 		mParser.nextTag();
 		mParser.require(XmlPullParser.START_TAG, ns, ADAPTER);
@@ -271,19 +265,19 @@ public class XmlParsers {
 			result.setRole(Role.fromString(role));
 			mParser.nextTag();
 			mParser.require(XmlPullParser.START_TAG, ns, CAPABILITIES);
-			result.setDevices(parsePartial());
+			result.setDevices(parseDevices());
 		
 		return result;
 	}
 	
 	/**
-	 * Method parse inner part of Partial message (set of device's tag)
+	 * Method parse inner part of Device message (old:Partial message (set of device's tag))
 	 * @return List of devices
 	 * @throws XmlPullParserException
 	 * @throws IOException
 	 * @throws ParseException 
 	 */
-	private List<BaseDevice> parsePartial() throws XmlPullParserException, IOException, ParseException{
+	private static List<BaseDevice> parseDevices() throws XmlPullParserException, IOException, ParseException{
 		mParser.nextTag();
 		//mParser.require(XmlPullParser.START_TAG, ns, DEVICE); // strict solution
 		
@@ -299,7 +293,7 @@ public class XmlParsers {
 			if(!device.isInitialized()){
 				device.setInvolveTime(getSecureAttrValue(ns, INVOLVED));
 			}
-			device.setVisibility(BaseDevice.VisibilityState.fromValue(getSecureAttrValue(ns, VISIBILITY)));
+			device.setVisibility((getSecureAttrValue(ns, VISIBILITY).equals(INIT_1))?true:false);
 			
 			String nameTag = null;
 			
@@ -338,12 +332,12 @@ public class XmlParsers {
 	}
 	
 	/**
-	 * Method parse inner part of Ready[x1,x2,...] message
+	 * Method parse inner part of AdaptersReady message
 	 * @return List of adapters (contains only Id, name, and user role)
 	 * @throws XmlPullParserException
 	 * @throws IOException
 	 */
-	private List<Adapter> parseReady() throws XmlPullParserException, IOException{
+	private static List<Adapter> parseAdaptersReady() throws XmlPullParserException, IOException{
 		mParser.nextTag();
 //		mParser.require(XmlPullParser.START_TAG, ns, ADAPTER); // strict solution
 		
@@ -367,12 +361,12 @@ public class XmlParsers {
 	}
 	
 	/**
-	 * Method parse inner part of Content.log message
+	 * Method parse inner part of LogData (old:Content.log) message
 	 * @return List with ContentRow objects
 	 * @throws XmlPullParserException
 	 * @throws IOException
 	 */
-	private DeviceLog parseContent() throws XmlPullParserException, IOException {
+	private static DeviceLog parseLogData() throws XmlPullParserException, IOException {
 		mParser.nextTag();
 		mParser.require(XmlPullParser.START_TAG, ns, ROW);
 		
@@ -670,7 +664,7 @@ public class XmlParsers {
 			mParser = Xml.newPullParser();
 			mParser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false);
 			mParser.setInput(stream, null);
-			adapter = parseXml("superuser");
+			adapter = parseAllDevices("superuser");
 		} catch (Exception e) {
 			Log.e(TAG, e.getMessage(), e);
 		} finally {

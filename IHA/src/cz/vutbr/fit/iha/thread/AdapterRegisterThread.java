@@ -22,6 +22,7 @@ public class AdapterRegisterThread implements Runnable{
 
 	private String mSerialNumber;
 	private Activity mActivity;
+	private String mName;
 	
 	/**
 	 * Constructor
@@ -29,6 +30,8 @@ public class AdapterRegisterThread implements Runnable{
 	public AdapterRegisterThread(String serialNumber, Activity activity) {
 		mSerialNumber = serialNumber;
 		mActivity = activity;
+		//TODO: name of adapter
+		mName = "test";
 	}
 
 	@Override
@@ -36,7 +39,7 @@ public class AdapterRegisterThread implements Runnable{
 		Controller controller = Controller.getInstance(mActivity);
 		
 		int messageId;
-		boolean result = controller.registerAdapter(mSerialNumber); 
+		boolean result = controller.registerAdapter(mSerialNumber, mName);
 		if (result) {
 			messageId = R.string.toast_adapter_activated;
 		} else {

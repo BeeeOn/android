@@ -19,7 +19,7 @@ public abstract class BaseDevice {
 	protected int mBattery;
 	protected boolean mLogging;
 	protected String mInvolveTime = "";
-	protected VisibilityState mVisibility;
+	protected boolean mVisibility;
 	
 	protected NetworkState mNetwork = new NetworkState();
 	
@@ -45,15 +45,16 @@ public abstract class BaseDevice {
 		SAVE_ALL,			// save all settings
 		SAVE_NAME,			// rename device
 		SAVE_LOCATION,		// change location
-		SAVE_VISIBILITY,	// change visibility
+		SAVE_VISIBILITY,	// change visibility				//NOTE: sending always
 		SAVE_LOGGING,		// change logging on server
 		SAVE_REFRESH,		// change refresh interval
-		SAVE_TYPE,			// change device's icon, etc.
+		SAVE_TYPE,			// change device's icon, etc.		//NOTE: what? type cannot be changed
 	}
 	
 	/**
 	 * Represents visibility state of device
 	 */
+	@Deprecated
 	public enum VisibilityState {
 		VISIBLE("i"),		// device is visible (standard state)
 		HIDDEN("o"),		// device is hidden
@@ -225,17 +226,17 @@ public abstract class BaseDevice {
 	
 	/**
 	 * Get visibility of device
-	 * @return visibility
+	 * @return true if visible
 	 */
-	public VisibilityState getVisibility() {
+	public boolean getVisibility() {
 		return mVisibility;
 	}
 	
 	/**
 	 * Setting visibility of device
-	 * @param visibility
+	 * @param visibility true if visible
 	 */
-	public void setVisibility(VisibilityState visibility) {
+	public void setVisibility(boolean visibility) {
 		mVisibility = visibility;
 	}
 	
@@ -332,7 +333,7 @@ public abstract class BaseDevice {
 	 */
 	public String toDebugString() {
 		return String.format("Name: %s\nLocation: %s\nVisibility: %s\nInitialized: %s\nBattery: %s\nLogging: %s\nRefresh: %s\nValue: %s",
-			mName, mLocationId, mVisibility.getValue(), mInitialized, mBattery, mLogging, mRefreshInterval.getInterval(), getStringValue());
+			mName, mLocationId, Boolean.toString(mVisibility), mInitialized, mBattery, mLogging, mRefreshInterval.getInterval(), getStringValue());
 	}
 
 	public boolean needsUpdate() {

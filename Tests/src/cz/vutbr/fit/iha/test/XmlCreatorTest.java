@@ -160,7 +160,7 @@ public class XmlCreatorTest extends TestCase {
 	
 	//TODO: repair to 1.9(2.0)
 	public void testSignUp(){
-		String result = XmlCreator.createSignUp(EMAIL, ID, GTOKEN, SERIAL, LOCALE);
+		String result = XmlCreator.createSignUp(EMAIL, GTOKEN);
 		String goal = SIGNUP_1+ID+SIGNUP_2+SERIAL+SIGNUP_3_EMAIL_1+EMAIL+SIGNUP_3_EMAIL_1_2+GTOKEN+SIGNUP_3_EMAIL_2;
 		
 		Log.i(TAG, "SignUpTest3");
@@ -172,7 +172,7 @@ public class XmlCreatorTest extends TestCase {
 	
 	//TODO: repair to 1.9(2.0)
 	public void testInit(){
-		String result = XmlCreator.createGetXml(ID, ADAPTERID);
+		String result = XmlCreator.createGetAllDevices(ID, ADAPTERID);
 		String goal = INIT_1+ID+INIT_2+ADAPTERID+INIT_3; 
 		
 		Log.i(TAG, "InitTest1");
@@ -184,7 +184,7 @@ public class XmlCreatorTest extends TestCase {
 	
 	//TODO: repair to 1.9(2.0)
 	public void testReInit(){
-		String result = XmlCreator.createReInit(ID,ADAPTERIDOLD,ADAPTERID);
+		String result = XmlCreator.createReInitAdapter(ID,ADAPTERIDOLD,ADAPTERID);
 		String goal = REINIT_1+ID+REINIT_2+ADAPTERIDOLD+REINIT_3+ADAPTERID+REINIT_4;
 		
 		Log.i(TAG, "ReInitTest1");
@@ -196,7 +196,7 @@ public class XmlCreatorTest extends TestCase {
 	
 	//TODO: repair to 1.9(2.0)
 	public void testLogName(){
-		String result = XmlCreator.createLogName(ID, SERIAL, DEVICEID, DEVICETYPE, FROM, TO, FUNCTYPE, INTERVAL);
+		String result = XmlCreator.createGetLog(ID, SERIAL, DEVICEID, DEVICETYPE, FROM, TO, FUNCTYPE, INTERVAL);
 		String goal = LOGNAME_1+ID+LOGNAME_2+FROM+LOGNAME_3+TO+LOGNAME_4+DEVICEID+LOGNAME_5;
 		
 		Log.i(TAG, "LogNameTest1");
@@ -228,7 +228,7 @@ public class XmlCreatorTest extends TestCase {
 		users.add(EMAIL);
 		users.add(EMAIL+"x");
 		
-		String result = XmlCreator.createDelConAccount(ID, SERIAL, users);
+		String result = XmlCreator.createDelAccount(ID, SERIAL, users);
 		String goal = DELCONACCOUNT_1+ID+DELCONACCOUNT_2+users.get(0)+DELCONACCOUNT_2_2+users.get(1)+DELCONACCOUNT_3;
 		
 		Log.i(TAG, "DelConAccountTest1");
@@ -240,7 +240,7 @@ public class XmlCreatorTest extends TestCase {
 	
 	//TODO: repair to 1.9(2.0)
 	public void testGetConAccount(){
-		String result = XmlCreator.createGetConAccount(ID, SERIAL);
+		String result = XmlCreator.createGetAccount(ID, SERIAL);
 		String goal = GETCONACCOUNT_1+ID+GETCONACCOUNT_2;
 		
 		Log.i(TAG, "GetConAccountTest1");
@@ -256,7 +256,7 @@ public class XmlCreatorTest extends TestCase {
 		users.put(EMAIL+"x", "admin");
 		users.put(EMAIL, "user");
 		
-		String result = XmlCreator.createChangeConAccount(ID, SERIAL, users);
+		String result = XmlCreator.createUpdateAccount(ID, SERIAL, users);
 		String goal = CHANGECONACCOUNT_1+ID+CHANGECONACCOUNT_2+EMAIL+"x"+CHANGECONACCOUNT_3+users.get(EMAIL+"x")+CHANGECONACCOUNT_2_2+EMAIL+
 				CHANGECONACCOUNT_3+users.get(EMAIL)+CHANGECONACCOUNT_4;
 		
@@ -313,7 +313,7 @@ public class XmlCreatorTest extends TestCase {
 		devices.add(a);
 		devices.add(a);
 		
-		String result = XmlCreator.createUpdate(ID, SERIAL, devices);
+		String result = XmlCreator.createGetDevices(ID, SERIAL, devices);
 		String goal = UPDATE_1+ID+UPDATE_2+devices.get(0).getAddress()+UPDATE_2_1+"0x0"+devices.get(0).getType()+UPDATE_2_2+
 				devices.get(1).getAddress()+UPDATE_2_1+"0x0"+devices.get(1).getType()+UPDATE_3;
 		
@@ -458,7 +458,7 @@ public class XmlCreatorTest extends TestCase {
 		devices.add(pr);
 		
 		
-		String result = XmlCreator.createPartial(ID, SERIAL, devices);
+		String result = XmlCreator.createDevices(ID, SERIAL, devices);
 		String goal = PARTIAL_ALL;
 		
 		Log.i(TAG, "PartialTest1");

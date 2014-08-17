@@ -339,28 +339,20 @@ public class Network {
 	}
 
 	/**
-	 * Method sign user up to adapter with its email, serial number of adapter
-	 * (user is in role superuser)
-	 * 
-	 * @param email
-	 *            of registering user
-	 * @param serialNumber
-	 *            number of adapter to register
-	 * @param SessionId
-	 *            if is "" then needed google token, then the user is
-	 *            switch to work with new adapter, otherwise work with old
+	 * Method sign user to server with its email up
+	 * @param email of registering user
 	 * @return true if everything goes well, false otherwise
-	 * @throws CommunicationException
-	 *             including message from server
+	 * @throws CommunicationException including message from server
 	 * @throws NoConnectionException
 	 */
-	public boolean signUp(String email, String serialNumber, String SessionId) throws CommunicationException, NoConnectionException, FalseException {
+	public boolean signUp(String email) throws CommunicationException, NoConnectionException, FalseException {
 
 		String googleToken = getGoogleToken();
+		
 		if (googleToken.length() == 0)
 			throw new CommunicationException(GoogleExcMessage);
-		//FIXME: session id
-		String messageToSend = XmlCreator.createSignUp(email, "0", googleToken, serialNumber, Locale.getDefault().getLanguage());
+		
+		String messageToSend = XmlCreator.createSignUp(email, googleToken);
 		ParsedMessage msg = doRequest(messageToSend);
 
 		if (!msg.getSessionId().isEmpty() && msg.getState() == State.TRUE && ((String) msg.data).equals(SIGNUP)) {
@@ -368,6 +360,27 @@ public class Network {
 
 			mUser.setSessionId(msg.getSessionId());
 			mSessionId = msg.getSessionId();
+
+			return true;
+		}
+		if (msg.getState() == State.FALSE) {
+			throw new FalseException(((FalseAnswer) msg.data));
+		} else
+			return false;
+	}
+	
+	/**
+	 * Method register adapter to server
+	 * @param serialNumber adapter id
+	 * @param adapterName adapter name
+	 * @return true if adapter has been registered, false otherwise
+	 */
+	public boolean addAdapter(String serialNumber, String adapterName){
+		String messageToSend = XmlCreator.createAddAdapter(mSessionId, serialNumber, adapterName);
+		ParsedMessage msg = doRequest(messageToSend);
+
+		if (msg.getState() == State.TRUE) {
+			Log.i(TAG, msg.getState().getValue());
 
 			return true;
 		}
@@ -393,7 +406,7 @@ public class Network {
 		
 		List<Adapter> result = new ArrayList<Adapter>();
 
-		if (msg.getState() == State.READY) {
+		if (msg.getState() == State.ADAPTERSREADY) {
 			Log.i(TAG, msg.getState().getValue());
 
 			result.addAll((List<Adapter>) msg.data);
@@ -417,11 +430,11 @@ public class Network {
 	 * @throws CommunicationException
 	 */
 	public Adapter init(String adapterId) throws NoConnectionException, CommunicationException, FalseException {
-		String messageToSend = XmlCreator.createGetXml(mSessionId, adapterId);
+		String messageToSend = XmlCreator.createGetAllDevices(mSessionId, adapterId);
 		ParsedMessage msg = doRequest(messageToSend);
 		Adapter result = new Adapter();
 
-		if (msg.getState() == State.XML) {
+		if (msg.getState() == State.ALLDEVICES) {
 			Log.i(TAG, msg.getState().getValue());
 
 			result = (Adapter) msg.data;
@@ -445,8 +458,8 @@ public class Network {
 	 * @throws NoConnectionException
 	 * @throws CommunicationException
 	 */
-	public boolean reInit(String oldId, String newId) throws NoConnectionException, CommunicationException, FalseException {
-		String messageToSend = XmlCreator.createReInit(mSessionId, oldId, newId);
+	public boolean reInitAdapter(String oldId, String newId) throws NoConnectionException, CommunicationException, FalseException {
+		String messageToSend = XmlCreator.createReInitAdapter(mSessionId, oldId, newId);
 		ParsedMessage msg = doRequest(messageToSend);
 
 		if (msg.getState() == State.TRUE) {
@@ -456,7 +469,7 @@ public class Network {
 
 		} else if (msg.getState() == State.RESIGN) {
 			doResign();
-			return reInit(oldId, newId);
+			return reInitAdapter(oldId, newId);
 
 		} else if (msg.getState() == State.FALSE) {
 			throw new FalseException(((FalseAnswer) msg.data));
@@ -474,8 +487,8 @@ public class Network {
 	 * @throws NoConnectionException
 	 * @throws CommunicationException
 	 */
-	public boolean partial(String adapterId, List<BaseDevice> devices) throws NoConnectionException, CommunicationException, FalseException {
-		String messageToSend = XmlCreator.createPartial(mSessionId, adapterId, devices);
+	public boolean setDevices(String adapterId, List<BaseDevice> devices) throws NoConnectionException, CommunicationException, FalseException {
+		String messageToSend = XmlCreator.createDevices(mSessionId, adapterId, devices);
 		ParsedMessage msg = doRequest(messageToSend);
 
 		if (msg.getState() == State.TRUE) {
@@ -485,7 +498,7 @@ public class Network {
 
 		} else if (msg.getState() == State.RESIGN) {
 			doResign();
-			return partial(adapterId, devices);
+			return setDevices(adapterId, devices);
 		} else if (msg.getState() == State.FALSE) {
 			throw new FalseException(((FalseAnswer) msg.data));
 		} else
@@ -585,19 +598,19 @@ public class Network {
 	 */
 	// http://stackoverflow.com/a/509288/1642090
 	@SuppressWarnings("unchecked")
-	public List<BaseDevice> update(String adapterId, List<BaseDevice> devices) throws NoConnectionException, CommunicationException, FalseException {
-		String messageToSend = XmlCreator.createUpdate(mSessionId, adapterId, devices);
+	public List<BaseDevice> getDevices(String adapterId, List<BaseDevice> devices) throws NoConnectionException, CommunicationException, FalseException {
+		String messageToSend = XmlCreator.createGetDevices(mSessionId, adapterId, devices);
 		ParsedMessage msg = doRequest(messageToSend);
 		
 		List<BaseDevice> result = new ArrayList<BaseDevice>();
 
-		if (msg.getState() == State.PARTIAL) {
+		if (msg.getState() == State.DEVICES) {
 			Log.i(TAG, msg.getState().getValue());
 			
 			result.addAll((List<BaseDevice>) msg.data);
 		} else if (msg.getState() == State.RESIGN) {
 			doResign();
-			return update(adapterId, devices);
+			return getDevices(adapterId, devices);
 		} else if (msg.getState() == State.FALSE) {
 			throw new FalseException(((FalseAnswer) msg.data));
 		}
@@ -621,13 +634,13 @@ public class Network {
 	 */
 	//http://stackoverflow.com/a/509288/1642090
 	public DeviceLog getLog(String adapterId, BaseDevice device, String from, String to, DataType type, DataInterval interval) throws NoConnectionException, CommunicationException, FalseException {
-		String messageToSend = XmlCreator.createLogName(mSessionId, adapterId, device.getAddress(), device.getType(), from, to, type.getValue(), interval.getValue());
+		String messageToSend = XmlCreator.createGetLog(mSessionId, adapterId, device.getAddress(), device.getType(), from, to, type.getValue(), interval.getValue());
 		
 		ParsedMessage msg = doRequest(messageToSend);
 		
 		DeviceLog result = null;
 
-		if (msg.getState() == State.CONTENT) {
+		if (msg.getState() == State.LOGDATA) {
 			Log.i(TAG, msg.getState().getValue());
 
 			result = (DeviceLog) msg.data;
@@ -881,7 +894,7 @@ public class Network {
 	 * @throws CommunicationException
 	 */
 	public boolean addConnectionAccount(String adapterId, HashMap<String, String> userNrole) throws NoConnectionException, CommunicationException, FalseException {
-		String messageToSend = XmlCreator.createAddConAccount(mSessionId, adapterId, userNrole);
+		String messageToSend = XmlCreator.createAddAccount(mSessionId, adapterId, userNrole);
 		ParsedMessage msg = doRequest(messageToSend);
 
 		if (msg.getState() == State.TRUE) {
@@ -908,7 +921,7 @@ public class Network {
 	 * @throws CommunicationException
 	 */
 	public boolean deleteConnectionAccount(String adapterId, List<String> users) throws NoConnectionException, CommunicationException, FalseException {
-		String messageToSend = XmlCreator.createDelConAccount(mSessionId, adapterId, users);
+		String messageToSend = XmlCreator.createDelAccount(mSessionId, adapterId, users);
 		ParsedMessage msg = doRequest(messageToSend);
 
 		if (msg.getState() == State.TRUE) {
@@ -935,12 +948,12 @@ public class Network {
 	// http://stackoverflow.com/a/509288/1642090
 	@SuppressWarnings("unchecked")
 	public HashMap<String, User> getConnectionAccountList(String adapterId) throws NoConnectionException, CommunicationException, FalseException {
-		String messageToSend = XmlCreator.createGetConAccount(mSessionId, adapterId);
+		String messageToSend = XmlCreator.createGetAccount(mSessionId, adapterId);
 		ParsedMessage msg = doRequest(messageToSend);
 
 		HashMap<String, User> result = new HashMap<String, User>();
 		
-		if (msg.getState() == State.CONACCOUNTLIST) {
+		if (msg.getState() == State.ACCOUNTSLIST) {
 			Log.i(TAG, msg.getState().toString());
 
 			result.putAll((HashMap<String, User>) msg.data);
@@ -964,7 +977,7 @@ public class Network {
 	 * @throws CommunicationException
 	 */
 	public boolean changeConnectionAccount(String adapterId, HashMap<String, String> userNrole) throws NoConnectionException, CommunicationException, FalseException {
-		String messageToSend = XmlCreator.createChangeConAccount(mSessionId, adapterId, userNrole);
+		String messageToSend = XmlCreator.createUpdateAccount(mSessionId, adapterId, userNrole);
 		ParsedMessage msg = doRequest(messageToSend);
 
 		if (msg.getState() == State.TRUE) {
