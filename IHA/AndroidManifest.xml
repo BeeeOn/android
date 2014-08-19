@@ -16,6 +16,23 @@
     <uses-permission android:name="android.permission.MANAGE_ACCOUNTS" />
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
     <uses-permission android:name="android.permission.USE_CREDENTIALS" />
+
+    <!-- Keeps the processor from sleeping when a message is received. -->
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
+
+    <!--
+    Creates a custom permission so only this app can receive its messages. 
+    NOTE: the permission *must* be called PACKAGE.permission.C2D_MESSAGE, where 
+    PACKAGE is the application's package name.
+    -->
+    <permission
+        android:name="cz.vutbr.fit.iha.permission.C2D_MESSAGE"
+        android:protectionLevel="signature" />
+
+    <uses-permission android:name="cz.vutbr.fit.iha.permission.C2D_MESSAGE" />
+
+    <!-- Sony Smartwatch permission -->
     <uses-permission android:name="com.sonyericsson.extras.liveware.aef.EXTENSION_PERMISSION" />
 
     <application
@@ -29,8 +46,8 @@
 
         <activity
             android:name="cz.vutbr.fit.iha.activity.LoginActivity"
-            android:label="@string/app_name"
             android:configChanges="orientation"
+            android:label="@string/app_name"
             android:theme="@style/Theme.Sherlock.NoActionBar" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -96,12 +113,11 @@
                 <action android:name="android.intent.action.MAIN" />
             </intent-filter>
         </activity>
-        
         <activity
             android:name="cz.vutbr.fit.iha.activity.SettingsUnitActivity"
             android:label="@string/units" >
         </activity>
-        
+
         <receiver
             android:name="cz.vutbr.fit.iha.widget.SensorWidgetProvider"
             android:icon="@drawable/ic_launcher"
@@ -120,9 +136,22 @@
             android:enabled="true"
             android:exported="false" >
         </service>
-
         <service android:name="cz.vutbr.fit.iha.extension.watches.smartwatch2.SW2ExtensionService" />
 
+        <!-- GOOGLE CLOUD MESSAGING -->
+        <receiver
+            android:name="cz.vutbr.fit.iha.gcm.GcmBroadcastReceiver"
+            android:permission="com.google.android.c2dm.permission.SEND" >
+            <intent-filter>
+                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+
+                <category android:name="cz.vutbr.fit.iha" />
+            </intent-filter>
+        </receiver>
+
+        <service android:name="cz.vutbr.fit.iha.gcm.GcmMessageHandler" />
+
+        <!-- SMARTWATCHES -->
         <receiver
             android:name="cz.vutbr.fit.iha.extension.watches.smartwatch2.SW2ExtensionReceiver"
             android:permission="com.sonyericsson.extras.liveware.aef.HOSTAPP_PERMISSION" >
