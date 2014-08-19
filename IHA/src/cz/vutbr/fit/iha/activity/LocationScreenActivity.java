@@ -465,7 +465,7 @@ public class LocationScreenActivity extends BaseActivity {
 //							}
 //						}).run();
 //						RemoveAdapter_Debug runnable = new RemoveAdapter_Debug(mActivity, item.getId());
-						new Thread(new RemoveAdapter_Debug(mActivity, item.getId())).run();
+						new Thread(new RemoveAdapter_Debug(mActivity, item.getId())).start();
 						break;
 					default:
 						// do nothing
