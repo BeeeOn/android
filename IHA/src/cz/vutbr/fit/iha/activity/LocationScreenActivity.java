@@ -448,22 +448,24 @@ public class LocationScreenActivity extends BaseActivity {
 					case ADAPTER:
 						//FIXME: debug implementation -> need to set active adapter manualy
 						Log.e(TAG, "deleting adapter");
-						mController.setActiveAdapter(item.getId());
-						new Thread(new Runnable() {
-							@Override
-							public void run() {
-								if(mController.unregisterAdapter(mController.getActiveAdapter().getId())){
-									new ToastMessageThread(mActivity, "adapter removed").start();
-									mActivity.runOnUiThread(new Runnable() {
-										@Override
-										public void run() {
-											redrawMenu();
-										}
-									});
-								}
-								
-							}
-						}).run();
+//						mController.setActiveAdapter(item.getId());
+//						new Thread(new Runnable() {
+//							@Override
+//							public void run() {
+//								if(mController.unregisterAdapter(mController.getActiveAdapter().getId())){
+//									new ToastMessageThread(mActivity, "adapter removed").start();
+//									mActivity.runOnUiThread(new Runnable() {
+//										@Override
+//										public void run() {
+//											redrawMenu();
+//										}
+//									});
+//								}
+//								
+//							}
+//						}).run();
+//						RemoveAdapter_Debug runnable = new RemoveAdapter_Debug(mActivity, item.getId());
+						new Thread(new RemoveAdapter_Debug(mActivity, item.getId())).run();
 						break;
 					default:
 						// do nothing
@@ -1015,4 +1017,29 @@ public class LocationScreenActivity extends BaseActivity {
 		}
 	}
 
+	private class RemoveAdapter_Debug implements Runnable{
+
+		private String mAdapterId;
+		private LocationScreenActivity mActivity;
+		
+		public RemoveAdapter_Debug(LocationScreenActivity activity, String adapterId){
+			mActivity = activity;
+			mAdapterId = adapterId;
+		}
+		
+		@Override
+		public void run() {
+			if(mController.unregisterAdapter(mAdapterId)){
+				new ToastMessageThread(mActivity, "adapter removed").start();
+				mActivity.runOnUiThread(new Runnable() {
+					@Override
+					public void run() {
+						mActivity.redrawMenu();
+					}
+				});
+			}
+			
+		}
+		
+	}
 }
