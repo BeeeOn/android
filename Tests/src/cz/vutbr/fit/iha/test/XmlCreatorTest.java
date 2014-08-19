@@ -212,7 +212,7 @@ public class XmlCreatorTest extends TestCase {
 		users.put(EMAIL+"x", "admin");
 		users.put(EMAIL, "user");
 		
-		String result = XmlCreator.createAddConAccount(ID, SERIAL, users);
+		String result = XmlCreator.createAddAccount(ID, SERIAL, users);
 		String goal = ADDCONACCOUNT_1+ID+ADDCONACCOUNT_2+EMAIL+"x"+ADDCONACCOUNT_3+users.get(EMAIL+"x")+ADDCONACCOUNT_2_2+EMAIL+ADDCONACCOUNT_3+users.get(EMAIL)+ADDCONACCOUNT_4;
 		
 		Log.i(TAG, "AddConAccountTest1");
@@ -412,7 +412,7 @@ public class XmlCreatorTest extends TestCase {
 		EmissionDevice em = new EmissionDevice();
 		em.setInitialized(true);
 		em.setAddress(DEVICEID+"em");
-		em.setVisibility(VisibilityState.VISIBLE);
+//		em.setVisibility(VisibilityState.VISIBLE);
 		//em.setLocation(new Location("obyvak", "obyvak", 1));
 		em.setName("sen1");
 		devices.add(em);
@@ -420,7 +420,7 @@ public class XmlCreatorTest extends TestCase {
 		HumidityDevice hu = new HumidityDevice();
 		hu.setInitialized(true);
 		hu.setAddress(DEVICEID+"hu");
-		hu.setVisibility(VisibilityState.DELETE);
+//		hu.setVisibility(VisibilityState.DELETE);
 		hu.setName("vlhkomer");
 		devices.add(hu);
 		
@@ -428,21 +428,21 @@ public class XmlCreatorTest extends TestCase {
 		il.setInitialized(true);
 		il.setAddress(DEVICEID+"il");
 		il.setName("sen2");
-		il.setVisibility(VisibilityState.DELETE);
+//		il.setVisibility(VisibilityState.DELETE);
 		il.setRefresh(RefreshInterval.HOUR_1);
 		devices.add(il);
 		
 		SwitchDevice sw = new SwitchDevice();
 		sw.setInitialized(true);
 		sw.setAddress(DEVICEID+"sw");
-		sw.setVisibility(VisibilityState.VISIBLE);
+//		sw.setVisibility(VisibilityState.VISIBLE);
 		sw.setValue("ON");
 		sw.setName("sen3");
 		devices.add(sw);
 		
 		NoiseDevice no = new NoiseDevice();
 		no.setInitialized(true);
-		no.setVisibility(VisibilityState.VISIBLE);
+//		no.setVisibility(VisibilityState.VISIBLE);
 		no.setAddress(DEVICEID+"no");
 		no.setLogging(true);
 		no.setName("sen4");
@@ -450,7 +450,7 @@ public class XmlCreatorTest extends TestCase {
 		
 		PressureDevice pr = new PressureDevice();
 		pr.setInitialized(false);
-		pr.setVisibility(VisibilityState.HIDDEN);
+//		pr.setVisibility(VisibilityState.HIDDEN);
 		pr.setAddress(DEVICEID+"pr");
 		pr.setName("sen5");
 		pr.setValue(50);
