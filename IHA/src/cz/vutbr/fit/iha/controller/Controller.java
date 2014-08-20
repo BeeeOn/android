@@ -466,6 +466,8 @@ public final class Controller {
 
 		try {
 			if (mNetwork.deleteConnectionAccount(id, user)) {
+				if(mHousehold.activeAdapter != null && mHousehold.activeAdapter.getId().equals(id))
+					mHousehold.activeAdapter = null;
 				reloadAdapters(); // TODO: reload (or just add this adapter) only adapters list (without reloading devices)
 //				setActiveAdapter(id);
 				return true;
