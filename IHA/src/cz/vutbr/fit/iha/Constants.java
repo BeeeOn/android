@@ -60,6 +60,7 @@ public final class Constants {
 	public static final String PERSISTENCE_PREF_LAST_USER = "last_user";
 	public static final String PERSISTENCE_PREF_ACTIVE_ADAPTER = "active_adapter";
 	public static final String PERSISTENCE_PREF_IGNORE_NO_ADAPTER = "ignore_no_adapter";
+	public static final String PERSISTENCE_PREF_LAST_LOCATION = "location_%s";
 	
 	
 	/**
@@ -75,5 +76,21 @@ public final class Constants {
 	 */
 	public static final String ADDSENSOR_COUNT_SENSOR = "countofuninitsensor";
 	public static final String CANCEL = "cancel";
+	
+	/**
+	 *  Project number from the API Console
+	 */
+	public static final String PROJECT_NUMBER = "863203863728";
+	
+	/**
+	 * GCM preference name
+	 */
+	public static final String SHARED_PREF_GCM_NAME = "shared_pref_gcm";
+	
+	/**
+	 * GCM preference keys
+	 */
+	public static final String PREF_GCM_REG_ID = "gcm_registration_id";
+    public static final String PREF_GCM_APP_VERSION = "gcm_app_version";
 }
 

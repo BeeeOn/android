@@ -31,6 +31,10 @@ public class Persistence {
 		return String.format(Constants.PERSISTENCE_PREF_FILENAME, namespace);
 	}
 	
+	public static String getPreferencesLastLocation(String adapterId) {
+		return String.format(Constants.PERSISTENCE_PREF_FILENAME, adapterId);
+	}
+	
 	public SharedPreferences getSettings(String namespace) {
 		String name = getPreferencesFilename(namespace);
 		return mContext.getSharedPreferences(name, 0);
