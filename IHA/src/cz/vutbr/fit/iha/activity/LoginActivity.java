@@ -97,6 +97,7 @@ public class LoginActivity extends BaseActivity {
 		if (mController.isLoggedIn()) {
 			// If we're already logged in, continue to location screen
 			Log.d(TAG, "Already logged in, going to locations screen...");
+			new GetGoogleAuth(this, mController.getLastEmail());
 
 			Intent intent = new Intent(mActivity, LocationScreenActivity.class);
 
