@@ -50,7 +50,4 @@ public class GcmMessageHandler extends IntentService {
 		 });
 
 	}
-	
-	
-
 }
