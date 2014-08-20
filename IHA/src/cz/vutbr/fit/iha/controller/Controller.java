@@ -314,7 +314,7 @@ public final class Controller {
 	 * @return List of adapters
 	 */
 	public List<Adapter> getAdapters() {
-		if(!isLoggedIn()){
+		if(!isLoggedIn() && !mDemoMode){
 			return new ArrayList<Adapter>();
 		}
 		// TODO: refactor this method, make household's adapters (and favoriteslisting, and user?) final etc.

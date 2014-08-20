@@ -880,13 +880,15 @@ public class LocationScreenActivity extends BaseActivity {
 				mLocations = new ArrayList<Location>();
 				// ############################################
 				//FIXME: no adapters for user 
-				Log.e(TAG, "kulehovnableskyted");
-				Log.d(TAG, "data: " + Boolean.toString(isClosing) + " " + Boolean.toString(mController.getActiveAdapter() == null));
-				Intent intent = new Intent(LocationScreenActivity.this, AddAdapterActivityDialog.class);
-				Bundle bundle = new Bundle();
-				bundle.putBoolean(Constants.CANCEL, true);
-				intent.putExtras(bundle);
+				if(!mController.getUserSettings().getBoolean(Constants.PERSISTENCE_PREF_IGNORE_NO_ADAPTER, false)){
+					Log.e(TAG, "kulehovnableskyted");
+					Log.d(TAG, "data: " + Boolean.toString(isClosing) + " " + Boolean.toString(mController.getActiveAdapter() == null));
+					Intent intent = new Intent(LocationScreenActivity.this, AddAdapterActivityDialog.class);
+					Bundle bundle = new Bundle();
+					bundle.putBoolean(Constants.CANCEL, true);
+					intent.putExtras(bundle);
 				startActivity(intent);
+				}
 				return new ArrayList<BaseDevice>();
 			}
 			

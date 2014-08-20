@@ -1,6 +1,7 @@
 package cz.vutbr.fit.iha.activity.dialog;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.Editable;
@@ -17,6 +18,7 @@ import android.widget.LinearLayout;
 import cz.vutbr.fit.iha.Constants;
 import cz.vutbr.fit.iha.R;
 import cz.vutbr.fit.iha.activity.LocationScreenActivity;
+import cz.vutbr.fit.iha.controller.Controller;
 import cz.vutbr.fit.iha.thread.AdapterRegisterThread;
 
 public class AddAdapterActivityDialog extends BaseActivityDialog {
@@ -86,6 +88,8 @@ public class AddAdapterActivityDialog extends BaseActivityDialog {
 		mCancelButton.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
+				SharedPreferences settings = Controller.getInstance(mActivity).getUserSettings();
+				settings.edit().putBoolean(Constants.PERSISTENCE_PREF_IGNORE_NO_ADAPTER, true).commit();
 				mActivity.finish();
 			}
 		});
