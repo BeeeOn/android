@@ -2,7 +2,7 @@
  * @brief Package for manipulation with XML and parsers
  */
 
-package cz.vutbr.fit.iha.adapter.parser;
+package cz.vutbr.fit.iha.network.xml;
 
 import java.io.StringWriter;
 import java.util.HashMap;
@@ -13,7 +13,10 @@ import org.xmlpull.v1.XmlSerializer;
 
 import android.util.Xml;
 import cz.vutbr.fit.iha.adapter.device.BaseDevice;
+import cz.vutbr.fit.iha.adapter.device.BaseDevice.SaveDevice;
 import cz.vutbr.fit.iha.adapter.location.Location;
+import cz.vutbr.fit.iha.household.User;
+import cz.vutbr.fit.iha.network.Network.NetworkAction;
 
 /**
  * Class for creating XML file from Adapter object
@@ -417,8 +420,78 @@ public class XmlCreator {
 	 * @param users map with pairs e-mail of common user (key) and its role (value) 
 	 * @return addConAccount message
 	 */
-	public static String createAddAccount(String id, String adapterId, HashMap<String, String> users){
+	public static String createAddAccounts(String id, String adapterId, HashMap<String, String> users){
 		return createAddOrChangeConAccount(id, adapterId, users, true);
+	}
+	
+	/**
+	 * Method create XML for AddAcount message
+	 * @param id
+	 * @param adapterId
+	 * @param email
+	 * @param role
+	 * @return
+	 */
+	public static String createAddAccount(String id, String adapterId, String email, User.Role role){
+		XmlSerializer serializer = Xml.newSerializer();
+		StringWriter writer = new StringWriter();
+		try{
+			serializer.setOutput(writer);
+			serializer.startDocument("UTF-8", null);
+			
+			serializer.startTag(ns, COM_ROOT);
+			serializer.attribute(ns, ID, id);
+			serializer.attribute(ns, STATE, ADDACCOUNT);
+			serializer.attribute(ns, VERSION, GVER);
+			serializer.attribute(ns, ADAPTER, adapterId);
+			
+				serializer.startTag(ns, USER);
+				serializer.attribute(ns, EMAIL, email);
+				serializer.attribute(ns, ROLE, role.getValue());
+				serializer.endTag(ns, USER);
+				
+			serializer.endTag(ns, COM_ROOT);
+			serializer.endDocument();
+			
+			return writer.toString();
+		}catch(Exception e){
+			throw new RuntimeException(e);
+		}
+	}
+	
+	/**
+	 * Method create XML of UpdateAccount message
+	 * @param id
+	 * @param adapterId
+	 * @param user
+	 * @param role
+	 * @return
+	 */
+	public static String createUpdateAccount(String id, String adapterId, User user, User.Role role){
+		XmlSerializer serializer = Xml.newSerializer();
+		StringWriter writer = new StringWriter();
+		try{
+			serializer.setOutput(writer);
+			serializer.startDocument("UTF-8", null);
+			
+			serializer.startTag(ns, COM_ROOT);
+			serializer.attribute(ns, ID, id);
+			serializer.attribute(ns, STATE, UPDATEACCOUNT);
+			serializer.attribute(ns, VERSION, GVER);
+			serializer.attribute(ns, ADAPTER, adapterId);
+			
+				serializer.startTag(ns, USER);
+				serializer.attribute(ns, EMAIL, user.getEmail());
+				serializer.attribute(ns, ROLE, role.getValue());
+				serializer.endTag(ns, USER);
+				
+			serializer.endTag(ns, COM_ROOT);
+			serializer.endDocument();
+			
+			return writer.toString();
+		}catch(Exception e){
+			throw new RuntimeException(e);
+		}
 	}
 	
 	/**
@@ -428,7 +501,7 @@ public class XmlCreator {
 	 * @param userEmails of common users
 	 * @return dellConAccount message
 	 */
-	public static String createDelAccount(String id, String adapterId, List<String> userEmails){
+	public static String createDelAccounts(String id, String adapterId, List<String> userEmails){
 		XmlSerializer serializer = Xml.newSerializer();
 		StringWriter writer = new StringWriter();
 		try{
@@ -446,6 +519,39 @@ public class XmlCreator {
 				serializer.attribute(ns, EMAIL, userEmail);
 				serializer.endTag(ns, USER);
 			}
+				
+			serializer.endTag(ns, COM_ROOT);
+			serializer.endDocument();
+			
+			return writer.toString();
+		}catch(Exception e){
+			throw new RuntimeException(e);
+		}
+	}
+	
+	/**
+	 * Method create XML of DelAccount message
+	 * @param id
+	 * @param adapterId
+	 * @param user
+	 * @return
+	 */
+	public static String createDelAccount(String id, String adapterId, User user){
+		XmlSerializer serializer = Xml.newSerializer();
+		StringWriter writer = new StringWriter();
+		try{
+			serializer.setOutput(writer);
+			serializer.startDocument("UTF-8", null);
+			
+			serializer.startTag(ns, COM_ROOT);
+			serializer.attribute(ns, ID, id);
+			serializer.attribute(ns, STATE, DELACCOUNT);
+			serializer.attribute(ns, VERSION, GVER);
+			serializer.attribute(ns, ADAPTER, adapterId);
+			
+				serializer.startTag(ns, USER);
+				serializer.attribute(ns, EMAIL, user.getEmail());
+				serializer.endTag(ns, USER);
 				
 			serializer.endTag(ns, COM_ROOT);
 			serializer.endDocument();
@@ -528,7 +634,7 @@ public class XmlCreator {
 	 * @param users map with pairs e-mail of common user (key) and its role (value)
 	 * @return changeConAccount message
 	 */
-	public static String createUpdateAccount(String id, String adapterId, HashMap<String, String> users){
+	public static String createUpdateAccounts(String id, String adapterId, HashMap<String, String> users){
 		return createAddOrChangeConAccount(id, adapterId, users, false);
 	}
 	
@@ -606,7 +712,6 @@ public class XmlCreator {
 	 * @param devices with changed fields only (use only NON-null and NON-zero values)
 	 * @return Partial message
 	 */
-	//TODO: do eco mode
 	public static String createDevices(String id, String adapterId, List<BaseDevice> devices){
 		XmlSerializer serializer = Xml.newSerializer();
 		StringWriter writer = new StringWriter();
@@ -665,6 +770,73 @@ public class XmlCreator {
 	}
 	
 	/**
+	 * New method create XML of devices message with only one device in it.
+	 * To save device field must by not null and toSave parameter must by set properly.
+	 * @param id of user
+	 * @param adapterId id of adapter
+	 * @param device to save
+	 * @param toSave ECO mode to save only wanted fields
+	 * @return Devices message
+	 */
+	public static String createDevice(String id, String adapterId, BaseDevice device, BaseDevice.SaveDevice toSave){
+		XmlSerializer serializer = Xml.newSerializer();
+		StringWriter writer = new StringWriter();
+		try{
+			serializer.setOutput(writer);
+			serializer.startDocument("UTF-8", null);
+			
+			serializer.startTag(ns, COM_ROOT);
+			serializer.attribute(ns, ID, id);
+			serializer.attribute(ns, STATE, DEVICES);
+			serializer.attribute(ns, VERSION, GVER);
+			serializer.attribute(ns, ADAPTER, adapterId);
+			
+				serializer.startTag(ns, DEVICE);
+				serializer.attribute(ns, INITIALIZED, (device.isInitialized())?INIT_1:INIT_0);
+				serializer.attribute(ns, TYPE, formatType(device.getType()));
+				serializer.attribute(ns, ID, device.getAddress());
+				if(toSave == SaveDevice.SAVE_VISIBILITY || toSave == SaveDevice.SAVE_ALL)
+					serializer.attribute(ns, VISIBILITY, (device.getVisibility())?INIT_1:INIT_0);
+				
+				if(device.getLocationId() != null && toSave == SaveDevice.SAVE_LOCATION || toSave == SaveDevice.SAVE_ALL){
+					serializer.startTag(ns, LOCATION);
+					serializer.attribute(ns, ID, device.getLocationId());
+					serializer.endTag(ns, LOCATION);
+				}
+				if(device.getName() != null && toSave == SaveDevice.SAVE_NAME || toSave == SaveDevice.SAVE_ALL){
+					serializer.startTag(ns, NAME);
+					serializer.text(device.getName());
+					serializer.endTag(ns, NAME);
+				}
+				if(device.getRefresh() != null && toSave == SaveDevice.SAVE_REFRESH || toSave == SaveDevice.SAVE_ALL){
+					serializer.startTag(ns, REFRESH);
+					serializer.text(Integer.toString(device.getRefresh().getInterval()));
+					serializer.endTag(ns, REFRESH);
+				}
+				if(device.getStringValue() != null && device.getStringValue().length() > 0 && toSave == SaveDevice.SAVE_ALL){
+					serializer.startTag(ns, VALUE);
+					serializer.text(device.getStringValue());
+					serializer.endTag(ns, VALUE);
+				}
+				
+				if(toSave == SaveDevice.SAVE_LOGGING || toSave == SaveDevice.SAVE_ALL){
+					serializer.startTag(ns, LOGGING);
+					serializer.attribute(ns, ENABLED, (device.isLogging())?INIT_1:INIT_0);
+					serializer.endTag(ns, LOGGING);
+				}
+				
+				serializer.endTag(ns, DEVICE);
+			
+			serializer.endTag(ns, COM_ROOT);
+			serializer.endDocument();
+			
+			return writer.toString();
+		}catch(Exception e){
+			throw new RuntimeException(e);
+		}
+	}
+	
+	/**
 	 * Method create XML of GetAdapters message
 	 * @param id of user
 	 * @return GetAdapters message
@@ -700,7 +872,7 @@ public class XmlCreator {
 	}
 	
 	/**
-	 * Method create XML of Update message
+	 * Method create XML of GetDevices message
 	 * @param id of user
 	 * @param adapterId
 	 * @param devicesId Id of devices to get update fields
@@ -725,6 +897,40 @@ public class XmlCreator {
 				serializer.attribute(ns, TYPE, formatType(device.getType()));
 				serializer.endTag(ns, DEVICE);
 			}
+			
+			serializer.endTag(ns, COM_ROOT);
+			serializer.endDocument();
+			
+			return writer.toString();
+		}catch(Exception e){
+			throw new RuntimeException(e);
+		}
+	}
+	
+	/**
+	 * Method create XML of GetDevices message
+	 * @param id
+	 * @param adapterId
+	 * @param device
+	 * @return
+	 */
+	public static String createGetDevice(String id, String adapterId, BaseDevice device){
+		XmlSerializer serializer = Xml.newSerializer();
+		StringWriter writer = new StringWriter();
+		try{
+			serializer.setOutput(writer);
+			serializer.startDocument("UTF-8", null);
+			
+			serializer.startTag(ns, COM_ROOT);
+			serializer.attribute(ns, ID, id);
+			serializer.attribute(ns, STATE, GETDEVICES);
+			serializer.attribute(ns, VERSION, GVER);
+			serializer.attribute(ns, ADAPTER, adapterId);
+			
+				serializer.startTag(ns, DEVICE);
+				serializer.attribute(ns, ID, device.getAddress());
+				serializer.attribute(ns, TYPE, formatType(device.getType()));
+				serializer.endTag(ns, DEVICE);
 			
 			serializer.endTag(ns, COM_ROOT);
 			serializer.endDocument();
@@ -837,7 +1043,7 @@ public class XmlCreator {
 	 * @param devices hashMap with device id as key, and action as value
 	 * @return UpdateValue message
 	 */
-	public static String createUpdateView(String id, String viewName, int iconNum, HashMap<String, String> devices){
+	public static String createUpdateViews(String id, String viewName, int iconNum, HashMap<String, String> devices){
 		XmlSerializer serializer = Xml.newSerializer();
 		StringWriter writer = new StringWriter();
 		try{
@@ -857,6 +1063,43 @@ public class XmlCreator {
 				serializer.attribute(ns, ACTION, device.getValue());
 				serializer.endTag(ns, DEVICE);
 			}
+			
+			serializer.endTag(ns, COM_ROOT);
+			serializer.endDocument();
+			
+			return writer.toString();
+		}catch(Exception e){
+			throw new RuntimeException(e);
+		}
+	}
+	
+	/**
+	 * Method create one view to update message
+	 * @param id
+	 * @param viewName
+	 * @param iconNum
+	 * @param device
+	 * @param action
+	 * @return
+	 */
+	public static String createUpdateView(String id, String viewName, int iconNum, BaseDevice device, NetworkAction action){
+		XmlSerializer serializer = Xml.newSerializer();
+		StringWriter writer = new StringWriter();
+		try{
+			serializer.setOutput(writer);
+			serializer.startDocument("UTF-8", null);
+			
+			serializer.startTag(ns, COM_ROOT);
+			serializer.attribute(ns, ID, id);
+			serializer.attribute(ns, STATE, UPDATEVIEW);
+			serializer.attribute(ns, VERSION, GVER);
+			serializer.attribute(ns, NAME, viewName);
+			serializer.attribute(ns, ICON, Integer.toString(iconNum));
+			
+				serializer.startTag(ns, DEVICE);
+				serializer.attribute(ns, ID, device.getId());
+				serializer.attribute(ns, ACTION, action.getValue());
+				serializer.endTag(ns, DEVICE);
 			
 			serializer.endTag(ns, COM_ROOT);
 			serializer.endDocument();
@@ -983,6 +1226,41 @@ public class XmlCreator {
 				serializer.text(location.getName());
 				serializer.endTag(ns, LOCATION);
 			}
+			
+			serializer.endTag(ns, COM_ROOT);
+			serializer.endDocument();
+			
+			return writer.toString();
+		}catch(Exception e){
+			throw new RuntimeException(e);
+		}
+	}
+	
+	/**
+	 * Method create XML of UpdateRooms message
+	 * @param id
+	 * @param adapterId
+	 * @param location
+	 * @return
+	 */
+	public static String createUpdateRoom(String id, String adapterId, Location location){
+		XmlSerializer serializer = Xml.newSerializer();
+		StringWriter writer = new StringWriter();
+		try{
+			serializer.setOutput(writer);
+			serializer.startDocument("UTF-8", null);
+			
+			serializer.startTag(ns, COM_ROOT);
+			serializer.attribute(ns, ID, id);
+			serializer.attribute(ns, STATE, UPDATEROOMS);
+			serializer.attribute(ns, VERSION, GVER);
+			serializer.attribute(ns, ADAPTER, adapterId);
+			
+				serializer.startTag(ns, LOCATION);
+				serializer.attribute(ns, ID, location.getId());
+				serializer.attribute(ns, TYPE, Integer.toString(location.getType()));
+				serializer.text(location.getName());
+				serializer.endTag(ns, LOCATION);
 			
 			serializer.endTag(ns, COM_ROOT);
 			serializer.endDocument();

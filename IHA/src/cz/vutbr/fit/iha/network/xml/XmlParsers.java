@@ -1,7 +1,7 @@
 /**
  * 
  */
-package cz.vutbr.fit.iha.adapter.parser;
+package cz.vutbr.fit.iha.network.xml;
 
 import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
@@ -38,7 +38,6 @@ import cz.vutbr.fit.iha.adapter.location.Location;
 import cz.vutbr.fit.iha.adapter.parser.exception.ComVerMisException;
 import cz.vutbr.fit.iha.adapter.parser.exception.XmlVerMisException;
 import cz.vutbr.fit.iha.household.User;
-import cz.vutbr.fit.iha.household.User.Role;
 
 /**
  * @author ThinkDeep
@@ -212,8 +211,8 @@ public class XmlParsers {
 				result.data = getSecureAttrValue(ns, ADDITIONALINFO);
 				break;
 			case ALLDEVICES:
-				// Adapter
-				result.data = parseAllDevices(getSecureAttrValue(ns, ROLE));
+				// List<BaseDevice>
+				result.data = parseAllDevices();
 				break;
 			case VIEWSLIST:
 				// List<CustomViewPair>
@@ -242,19 +241,18 @@ public class XmlParsers {
 	
 	/**
 	 * Method parse inner part of AllDevice message (old:XML message (using parsePartial()))
-	 * @param role authority of current user for this adapter
-	 * @return Adapter object
+	 * @return list of devices
 	 * @throws XmlPullParserException
 	 * @throws IOException
 	 * @throws XmlVerMisException means XML version mismatch exception
 	 * @throws ParseException 
 	 */
-	private static Adapter parseAllDevices(String role) throws XmlPullParserException, IOException, XmlVerMisException, ParseException{
-		Adapter result = new Adapter();
+	private static List<BaseDevice> parseAllDevices() throws XmlPullParserException, IOException, XmlVerMisException, ParseException{
 		mParser.nextTag();
 		mParser.require(XmlPullParser.START_TAG, ns, ADAPTER);
 		
-		result.setId(getSecureAttrValue(ns, ID));
+		//unused
+//		getSecureAttrValue(ns, ID);
 		mParser.nextTag();
 		mParser.require(XmlPullParser.START_TAG, ns, VERSION);
 		
@@ -262,12 +260,9 @@ public class XmlParsers {
 			if(!version.equals(XML_VER))
 				throw new XmlVerMisException(mXmlVerMisExcMessage + "Expected: " + XML_VER + " but got: " + version);
 			
-			result.setRole(Role.fromString(role));
 			mParser.nextTag();
 			mParser.require(XmlPullParser.START_TAG, ns, CAPABILITIES);
-			result.setDevices(parseDevices());
-		
-		return result;
+			return parseDevices();
 	}
 	
 	/**
@@ -655,16 +650,16 @@ public class XmlParsers {
 	 * @param filename
 	 * @return Adapter or null
 	 */
-	public Adapter getDemoAdapterFromAsset(Context context, String filename) {
+	public static List<BaseDevice> getDemoDevicesFromAsset(Context context, String filename) {
 		Log.i(TAG, String.format("Loading adapter from asset '%s'", filename));
-		Adapter adapter = null;
+		List<BaseDevice> result = null;
 		InputStream stream = null;
 		try {
 			stream = new BufferedInputStream(context.getAssets().open(filename));
 			mParser = Xml.newPullParser();
 			mParser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false);
 			mParser.setInput(stream, null);
-			adapter = parseAllDevices("superuser");
+			result = parseAllDevices();
 		} catch (Exception e) {
 			Log.e(TAG, e.getMessage(), e);
 		} finally {
@@ -675,7 +670,7 @@ public class XmlParsers {
 	        	Log.e(TAG, ioe.getMessage(), ioe);
 	        }
 		}
-		return adapter;
+		return result;
 	}
 	
 	/**
@@ -713,4 +708,38 @@ public class XmlParsers {
 		return locations;
 	}
 
+	/**
+	 * Factory for parsing list of adapters from asset
+	 * @param context
+	 * @param filename
+	 * @return list of adapters or empty list
+	 */
+	public static List<Adapter> getDemoAdaptersFromAsset(Context context, String filename){
+		Log.i(TAG, String.format("Loading adapters from asset '%s'", filename));
+		List<Adapter> adapters = new ArrayList<Adapter>();
+		InputStream stream = null;
+		try {
+			stream = new BufferedInputStream(context.getAssets().open(filename));
+			mParser = Xml.newPullParser();
+			mParser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false);
+			mParser.setInput(stream, null);
+			mParser.nextTag();
+			
+			String version = getSecureAttrValue(ns, VERSION);
+			if (!version.equals(COM_VER))
+				throw new ComVerMisException(mComVerMisExcMessage + "Expected: " + COM_VER + " but got: " + version);
+			
+			adapters = parseAdaptersReady();
+		} catch (Exception e) {
+			Log.e(TAG, e.getMessage(), e);
+		} finally {
+	        try {
+	        	if (stream != null)
+	        		stream.close();
+	        } catch (IOException ioe) {
+	        	Log.e(TAG, ioe.getMessage(), ioe);
+	        }
+		}
+		return adapters;
+	}
 }

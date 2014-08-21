@@ -3,7 +3,7 @@
  */
 package cz.vutbr.fit.iha.network.exception;
 
-import cz.vutbr.fit.iha.adapter.parser.FalseAnswer;
+import cz.vutbr.fit.iha.network.xml.FalseAnswer;
 
 /**
  * FalseException

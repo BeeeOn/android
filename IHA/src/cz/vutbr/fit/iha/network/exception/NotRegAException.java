@@ -8,7 +8,7 @@ package cz.vutbr.fit.iha.network.exception;
  * @author ThinkDeep
  *
  */
-public class NotRegAException extends NetworkException {
+public class NotRegAException extends NotRegException {
 
 	private static final long serialVersionUID = 1L;
 

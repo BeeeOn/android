@@ -8,23 +8,23 @@ package cz.vutbr.fit.iha.network.exception;
  * @author ThinkDeep
  *
  */
-public class NotRegBException extends NotRegException {
+public class NotRegException extends NetworkException {
 
 	private static final long serialVersionUID = 1L;
 
-	public NotRegBException() {	}
+	public NotRegException() {	}
 
 	/**
 	 * @param detailMessage
 	 */
-	public NotRegBException(String detailMessage) {
+	public NotRegException(String detailMessage) {
 		super(detailMessage);
 	}
 
 	/**
 	 * @param throwable
 	 */
-	public NotRegBException(Throwable throwable) {
+	public NotRegException(Throwable throwable) {
 		super(throwable);
 	}
 
@@ -32,7 +32,7 @@ public class NotRegBException extends NotRegException {
 	 * @param detailMessage
 	 * @param throwable
 	 */
-	public NotRegBException(String detailMessage, Throwable throwable) {
+	public NotRegException(String detailMessage, Throwable throwable) {
 		super(detailMessage, throwable);
 	}
 

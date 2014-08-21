@@ -23,10 +23,20 @@ public class User {
 	}
 
 	public enum Role {
-		Guest,		// can only read adapter and devices' data
-		User,		// = guest + can switch state of switch devices
-		Admin,		// = user + can change devices' settings (rename, logging, refresh,...) 
-		Superuser;	// = admin + can change whole adapter's settings (devices, users,...)
+		Guest("guest"),			// can only read adapter and devices' data
+		User("user"),			// = guest + can switch state of switch devices
+		Admin("admin"),			// = user + can change devices' settings (rename, logging, refresh,...) 
+		Superuser("superuser");	// = admin + can change whole adapter's settings (devices, users,...)
+		
+		private final String mRole;
+		
+		private Role(String role){
+			mRole = role;
+		}
+		
+		public String getValue(){
+			return mRole;
+		}
 		
 		public static Role fromString(final String role) {
 			if (role.equalsIgnoreCase("superuser")) {

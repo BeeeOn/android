@@ -38,8 +38,7 @@ import cz.vutbr.fit.iha.household.ActualUser;
 import cz.vutbr.fit.iha.network.GetGoogleAuth;
 import cz.vutbr.fit.iha.network.exception.CommunicationException;
 import cz.vutbr.fit.iha.network.exception.NoConnectionException;
-import cz.vutbr.fit.iha.network.exception.NotRegAException;
-import cz.vutbr.fit.iha.network.exception.NotRegBException;
+import cz.vutbr.fit.iha.network.exception.NotRegException;
 import cz.vutbr.fit.iha.thread.ToastMessageThread;
 
 /**
@@ -443,7 +442,7 @@ public class LoginActivity extends BaseActivity {
 				errMessage = "Login failed";
 			}
 
-		} catch (NotRegAException e) {
+		} catch (NotRegException e) {
 			e.printStackTrace();
 			try { //FIXME: this is 2x here, fix this after demo
 				GetGoogleAuth ggAuth = GetGoogleAuth.getGetGoogleAuth();
@@ -464,11 +463,11 @@ public class LoginActivity extends BaseActivity {
 			bundle.putBoolean(Constants.CANCEL, false);
 			intent.putExtras(bundle);
 			startActivity(intent);
-		} catch (NotRegBException e) {
-			e.printStackTrace();
-
-			errFlag = true;
-			errMessage = getString(R.string.toast_no_unregistered_adapter);
+//		} catch (NotRegBException e) {
+//			e.printStackTrace();
+//
+//			errFlag = true;
+//			errMessage = getString(R.string.toast_no_unregistered_adapter);
 		} catch (NoConnectionException e) {
 			e.printStackTrace();
 

@@ -52,34 +52,6 @@ public abstract class BaseDevice {
 	}
 	
 	/**
-	 * Represents visibility state of device
-	 */
-	@Deprecated
-	public enum VisibilityState {
-		VISIBLE("i"),		// device is visible (standard state)
-		HIDDEN("o"),		// device is hidden
-		DELETE("x");		// device is deleted
-		
-		private final String mVisibility;
-		
-		private VisibilityState(String visibility) {
-			mVisibility = visibility;
-		}
-		
-		public String getValue() {
-			return mVisibility;
-		}
-		
-		public static VisibilityState fromValue(String value) {
-			for (VisibilityState item : values()) {
-				if (value.equalsIgnoreCase(item.getValue()))
-					return item;
-			}
-			throw new IllegalArgumentException("Invalid VisibilityState value");
-		}
-	}
-	
-	/**
 	 * Get numeric identifier representing type of this device
 	 * @return
 	 */

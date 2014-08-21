@@ -62,7 +62,8 @@ public class AdapterRegisterThread implements Runnable{
 //				mActivity.startActivity(intent);
 //			}
 		
-		mActivity.finish();
+		//uncomment this if you want to hide dialog after bad serial number
+//		mActivity.finish();
 	}
 
 }

@@ -38,12 +38,6 @@ import cz.vutbr.fit.iha.adapter.device.DeviceLog;
 import cz.vutbr.fit.iha.adapter.device.DeviceLog.DataInterval;
 import cz.vutbr.fit.iha.adapter.device.DeviceLog.DataType;
 import cz.vutbr.fit.iha.adapter.location.Location;
-import cz.vutbr.fit.iha.adapter.parser.CustomViewPair;
-import cz.vutbr.fit.iha.adapter.parser.FalseAnswer;
-import cz.vutbr.fit.iha.adapter.parser.ParsedMessage;
-import cz.vutbr.fit.iha.adapter.parser.XmlCreator;
-import cz.vutbr.fit.iha.adapter.parser.XmlParsers;
-import cz.vutbr.fit.iha.adapter.parser.XmlParsers.State;
 import cz.vutbr.fit.iha.household.ActualUser;
 import cz.vutbr.fit.iha.household.User;
 import cz.vutbr.fit.iha.network.exception.CommunicationException;
@@ -51,6 +45,12 @@ import cz.vutbr.fit.iha.network.exception.FalseException;
 import cz.vutbr.fit.iha.network.exception.NoConnectionException;
 import cz.vutbr.fit.iha.network.exception.NotRegAException;
 import cz.vutbr.fit.iha.network.exception.NotRegBException;
+import cz.vutbr.fit.iha.network.xml.CustomViewPair;
+import cz.vutbr.fit.iha.network.xml.FalseAnswer;
+import cz.vutbr.fit.iha.network.xml.ParsedMessage;
+import cz.vutbr.fit.iha.network.xml.XmlCreator;
+import cz.vutbr.fit.iha.network.xml.XmlParsers;
+import cz.vutbr.fit.iha.network.xml.XmlParsers.State;
 
 /**
  * Network service that handles communication with server.
@@ -59,6 +59,34 @@ import cz.vutbr.fit.iha.network.exception.NotRegBException;
  * @author Robyer
  */
 public class Network {
+	
+	/**
+	 * Action of View messages
+	 * @author ThinkDeep
+	 *
+	 */
+	public enum NetworkAction {
+		REMOVE("remove"),
+		ADD("add");
+		
+		private final String mAction;
+		
+		private NetworkAction(String action) {
+			mAction = action;
+		}
+		
+		public String getValue() {
+			return mAction;
+		}
+		
+		public static NetworkAction fromValue(String value) {
+			for (NetworkAction item : values()) {
+				if (value.equalsIgnoreCase(item.getValue()))
+					return item;
+			}
+			throw new IllegalArgumentException("Invalid NetworkAction value");
+		}
+	}
 
 	private static final String TAG = Network.class.getSimpleName();
 
@@ -429,15 +457,16 @@ public class Network {
 	 * @throws NoConnectionException
 	 * @throws CommunicationException
 	 */
-	public Adapter init(String adapterId) throws NoConnectionException, CommunicationException, FalseException {
+	@SuppressWarnings("unchecked")
+	public List<BaseDevice> init(String adapterId) throws NoConnectionException, CommunicationException, FalseException {
 		String messageToSend = XmlCreator.createGetAllDevices(mSessionId, adapterId);
 		ParsedMessage msg = doRequest(messageToSend);
-		Adapter result = new Adapter();
+		List<BaseDevice> result = new ArrayList<BaseDevice>();
 
 		if (msg.getState() == State.ALLDEVICES) {
 			Log.i(TAG, msg.getState().getValue());
 
-			result = (Adapter) msg.data;
+			result = (ArrayList<BaseDevice>) msg.data;
 		} else if (msg.getState() == State.RESIGN) {
 			doResign();
 			return init(adapterId);
@@ -499,6 +528,34 @@ public class Network {
 		} else if (msg.getState() == State.RESIGN) {
 			doResign();
 			return setDevices(adapterId, devices);
+		} else if (msg.getState() == State.FALSE) {
+			throw new FalseException(((FalseAnswer) msg.data));
+		} else
+			return false;
+	}
+	
+	/**
+	 * Method send wanted fields of device to server
+	 * @param adapterId id of adapter
+	 * @param device to save
+	 * @param toSave ENUM specified fields to save
+	 * @return true if fields has been updated, false otherwise
+	 * @throws NoConnectionException
+	 * @throws CommunicationException
+	 * @throws FalseException
+	 */
+	public boolean setDevice(String adapterId, BaseDevice device, BaseDevice.SaveDevice toSave) throws NoConnectionException, CommunicationException, FalseException{
+		String messageToSend = XmlCreator.createDevice(mSessionId, adapterId, device, toSave);
+		ParsedMessage msg = doRequest(messageToSend);
+
+		if (msg.getState() == State.TRUE) {
+			Log.d(TAG, msg.getState().getValue());
+
+			return true;
+
+		} else if (msg.getState() == State.RESIGN) {
+			doResign();
+			return setDevice(adapterId, device, toSave);
 		} else if (msg.getState() == State.FALSE) {
 			throw new FalseException(((FalseAnswer) msg.data));
 		} else
@@ -616,6 +673,34 @@ public class Network {
 		}
 		return result;
 	}
+	
+	/**
+	 * Method ask server for actual data of one device
+	 * @param adapterId
+	 * @param device
+	 * @return
+	 * @throws NoConnectionException
+	 * @throws CommunicationException
+	 * @throws FalseException
+	 */
+	public BaseDevice getDevice(String adapterId, BaseDevice device) throws NoConnectionException, CommunicationException, FalseException {
+		String messageToSend = XmlCreator.createGetDevice(mSessionId, adapterId, device);
+		ParsedMessage msg = doRequest(messageToSend);
+		
+		BaseDevice result = null;
+
+		if (msg.getState() == State.DEVICES) {
+			Log.i(TAG, msg.getState().getValue());
+			
+			return (BaseDevice) msg.data;
+		} else if (msg.getState() == State.RESIGN) {
+			doResign();
+			return getDevice(adapterId, device);
+		} else if (msg.getState() == State.FALSE) {
+			throw new FalseException(((FalseAnswer) msg.data));
+		}
+		return result;
+	}
 
 	/**
 	 * Method ask for data of logs
@@ -717,6 +802,34 @@ public class Network {
 			return false;
 	}
 
+	/**
+	 * Method call to server to update location
+	 * @param adapterId
+	 * @param location
+	 * @return
+	 * @throws NoConnectionException
+	 * @throws CommunicationException
+	 * @throws FalseException
+	 */
+	public boolean updateLocation(String adapterId, Location location) throws NoConnectionException, CommunicationException, FalseException {
+		String messageToSend = XmlCreator.createUpdateRoom(mSessionId, adapterId, location);
+		ParsedMessage msg = doRequest(messageToSend);
+
+		if (msg.getState() == State.TRUE) {
+			Log.d(TAG, msg.getState().getValue());
+
+			return true;
+
+		} else if (msg.getState() == State.RESIGN) {
+			doResign();
+			return updateLocation(adapterId, location);
+
+		} else if (msg.getState() == State.FALSE) {
+			throw new FalseException(((FalseAnswer) msg.data));
+		} else
+			return false;
+	}
+	
 	/**
 	 * Method call to server and delete location
 	 * 
@@ -864,8 +977,8 @@ public class Network {
 	 * @throws NoConnectionException
 	 * @throws CommunicationException
 	 */
-	public boolean updateView(String viewName, int iconId, HashMap<String, String> devices) throws NoConnectionException, CommunicationException, FalseException {
-		String messageToSend = XmlCreator.createUpdateView(mSessionId, viewName, iconId, devices);
+	public boolean updateViews(String viewName, int iconId, HashMap<String, String> devices) throws NoConnectionException, CommunicationException, FalseException {
+		String messageToSend = XmlCreator.createUpdateViews(mSessionId, viewName, iconId, devices);
 		ParsedMessage msg = doRequest(messageToSend);
 
 		if (msg.getState() == State.TRUE) {
@@ -875,13 +988,31 @@ public class Network {
 
 		} else if (msg.getState() == State.RESIGN) {
 			doResign();
-			return updateView(viewName, iconId, devices);
+			return updateViews(viewName, iconId, devices);
 		} else if (msg.getState() == State.FALSE) {
 			throw new FalseException(((FalseAnswer) msg.data));
 		} else
 			return false;
 	}
 
+	public boolean updateView(String viewName, int iconId, BaseDevice device, NetworkAction action){
+		String messageToSend = XmlCreator.createUpdateView(mSessionId, viewName, iconId, device, action);
+		ParsedMessage msg = doRequest(messageToSend);
+
+		if (msg.getState() == State.TRUE) {
+			Log.d(TAG, msg.getState().getValue());
+
+			return true;
+
+		} else if (msg.getState() == State.RESIGN) {
+			doResign();
+			return updateView(viewName, iconId, device, action);
+		} else if (msg.getState() == State.FALSE) {
+			throw new FalseException(((FalseAnswer) msg.data));
+		} else
+			return false;
+	}
+	
 	/////////////////////////////////////////// ucty
 	
 	/**
@@ -893,8 +1024,8 @@ public class Network {
 	 * @throws NoConnectionException
 	 * @throws CommunicationException
 	 */
-	public boolean addConnectionAccount(String adapterId, HashMap<String, String> userNrole) throws NoConnectionException, CommunicationException, FalseException {
-		String messageToSend = XmlCreator.createAddAccount(mSessionId, adapterId, userNrole);
+	public boolean addConnectionAccounts(String adapterId, HashMap<String, String> userNrole) throws NoConnectionException, CommunicationException, FalseException {
+		String messageToSend = XmlCreator.createAddAccounts(mSessionId, adapterId, userNrole);
 		ParsedMessage msg = doRequest(messageToSend);
 
 		if (msg.getState() == State.TRUE) {
@@ -904,13 +1035,39 @@ public class Network {
 
 		} else if (msg.getState() == State.RESIGN) {
 			doResign();
-			return addConnectionAccount(adapterId, userNrole);
+			return addConnectionAccounts(adapterId, userNrole);
 		} else if (msg.getState() == State.FALSE) {
 			throw new FalseException(((FalseAnswer) msg.data));
 		} else
 			return false;
 	}
 
+	/**
+	 * Method add new user to adapter
+	 * @param adapterId
+	 * @param email
+	 * @param role
+	 * @return
+	 */
+	public boolean addConnectionAccount(String adapterId, String email, User.Role role){
+		String messageToSend = XmlCreator.createAddAccount(mSessionId, adapterId, email, role);
+		ParsedMessage msg = doRequest(messageToSend);
+
+		if (msg.getState() == State.TRUE) {
+			Log.d(TAG, msg.getState().getValue());
+
+			return true;
+
+		} else if (msg.getState() == State.RESIGN) {
+			doResign();
+			return addConnectionAccount(adapterId, email, role);
+		} else if (msg.getState() == State.FALSE) {
+			throw new FalseException(((FalseAnswer) msg.data));
+		} else
+			return false;
+	}
+	
+	
 	/**
 	 * Method delete users from actual adapter
 	 * 
@@ -920,8 +1077,8 @@ public class Network {
 	 * @throws NoConnectionException
 	 * @throws CommunicationException
 	 */
-	public boolean deleteConnectionAccount(String adapterId, List<String> users) throws NoConnectionException, CommunicationException, FalseException {
-		String messageToSend = XmlCreator.createDelAccount(mSessionId, adapterId, users);
+	public boolean deleteConnectionAccounts(String adapterId, List<String> users) throws NoConnectionException, CommunicationException, FalseException {
+		String messageToSend = XmlCreator.createDelAccounts(mSessionId, adapterId, users);
 		ParsedMessage msg = doRequest(messageToSend);
 
 		if (msg.getState() == State.TRUE) {
@@ -931,13 +1088,40 @@ public class Network {
 
 		} else if (msg.getState() == State.RESIGN) {
 			doResign();
-			return deleteConnectionAccount(adapterId, users);
+			return deleteConnectionAccounts(adapterId, users);
 		} else if (msg.getState() == State.FALSE) {
 			throw new FalseException(((FalseAnswer) msg.data));
 		} else
 			return false;
 	}
 
+	/**
+	 * Method delete on user from adapter
+	 * @param adapterId
+	 * @param user
+	 * @return
+	 * @throws NoConnectionException
+	 * @throws CommunicationException
+	 * @throws FalseException
+	 */
+	public boolean deleteConnectionAccount(String adapterId, User user) throws NoConnectionException, CommunicationException, FalseException {
+		String messageToSend = XmlCreator.createDelAccount(mSessionId, adapterId, user);
+		ParsedMessage msg = doRequest(messageToSend);
+
+		if (msg.getState() == State.TRUE) {
+			Log.d(TAG, msg.getState().getValue());
+
+			return true;
+
+		} else if (msg.getState() == State.RESIGN) {
+			doResign();
+			return deleteConnectionAccount(adapterId, user);
+		} else if (msg.getState() == State.FALSE) {
+			throw new FalseException(((FalseAnswer) msg.data));
+		} else
+			return false;
+	}
+	
 	/**
 	 * Method ask for list of users of current adapter
 	 * 
@@ -976,8 +1160,8 @@ public class Network {
 	 * @throws NoConnectionException
 	 * @throws CommunicationException
 	 */
-	public boolean changeConnectionAccount(String adapterId, HashMap<String, String> userNrole) throws NoConnectionException, CommunicationException, FalseException {
-		String messageToSend = XmlCreator.createUpdateAccount(mSessionId, adapterId, userNrole);
+	public boolean changeConnectionAccounts(String adapterId, HashMap<String, String> userNrole) throws NoConnectionException, CommunicationException, FalseException {
+		String messageToSend = XmlCreator.createUpdateAccounts(mSessionId, adapterId, userNrole);
 		ParsedMessage msg = doRequest(messageToSend);
 
 		if (msg.getState() == State.TRUE) {
@@ -987,13 +1171,44 @@ public class Network {
 
 		} else if (msg.getState() == State.RESIGN) {
 			doResign();
-			return changeConnectionAccount(adapterId, userNrole);
+			return changeConnectionAccounts(adapterId, userNrole);
+		} else if (msg.getState() == State.FALSE) {
+			throw new FalseException(((FalseAnswer) msg.data));
+		} else
+			return false;
+	}
+	
+	/**
+	 * Method update users role on adapter
+	 * @param adapterId
+	 * @param user
+	 * @param role
+	 * @return
+	 * @throws NoConnectionException
+	 * @throws CommunicationException
+	 * @throws FalseException
+	 */
+	public boolean changeConnectionAccount(String adapterId, User user, User.Role role) throws NoConnectionException, CommunicationException, FalseException {
+		String messageToSend = XmlCreator.createUpdateAccount(mSessionId, adapterId, user, role);
+		ParsedMessage msg = doRequest(messageToSend);
+
+		if (msg.getState() == State.TRUE) {
+			Log.d(TAG, msg.getState().toString());
+
+			return true;
+
+		} else if (msg.getState() == State.RESIGN) {
+			doResign();
+			return changeConnectionAccount(adapterId, user, role);
 		} else if (msg.getState() == State.FALSE) {
 			throw new FalseException(((FalseAnswer) msg.data));
 		} else
 			return false;
 	}
 
+
+	
+	
 	////////////////////////////////////////// cas
 	
 	/**

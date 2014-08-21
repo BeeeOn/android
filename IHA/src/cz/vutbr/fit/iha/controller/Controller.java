@@ -222,12 +222,12 @@ public final class Controller {
 
 		Log.i(TAG, String.format("Adapter (%s) update needed (%s)", adapter.getName(), forceUpdate ? "force" : "time elapsed"));
 
-		Adapter newAdapter = null;
+		Adapter newAdapter = new Adapter();
 		List<Location> newLocations = null;
 		int newUtcOffset = 0;
 		
 		try {
-			newAdapter = mNetwork.init(adapter.getId());
+			newAdapter.setDevices(mNetwork.init(adapter.getId()));
 			newLocations = mNetwork.getLocations(adapter.getId());
 			newUtcOffset = mNetwork.getTimeZone(adapter.getId());
 		} catch (NetworkException e) {
@@ -483,7 +483,7 @@ public final class Controller {
 		user.add(mHousehold.user.getEmail());
 
 		try {
-			if (mNetwork.deleteConnectionAccount(id, user)) {
+			if (mNetwork.deleteConnectionAccounts(id, user)) {
 				if(mHousehold.activeAdapter != null && mHousehold.activeAdapter.getId().equals(id))
 					mHousehold.activeAdapter = null;
 				reloadAdapters(); // TODO: reload (or just add this adapter) only adapters list (without reloading devices)
