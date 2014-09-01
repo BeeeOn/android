@@ -15,6 +15,8 @@
         <!-- Support library compatibility -->
         <item name="actionBarStyle">@style/Widget.MyTheme.ActionBar</item>
         <item name="actionModeCloseButtonStyle">@style/NoCloseButton</item>
+        <item name="windowContentOverlay">@null</item>
+    	<item name="android:windowContentOverlay">@null</item>
         <!-- item name="actionBarTabStyle">@style/ActionBarTabStyle.Iha</item>
         <item name="actionModeBackground">@drawable/cab_background_top_iha</item>
         <item name="actionBarStyle">@style/ActionBar.Solid.Iha</item>
@@ -32,10 +34,10 @@
        
     <!-- ActionBar styles -->
     <style name="Widget.MyTheme.ActionBar"  parent="@style/Widget.Sherlock.Light.ActionBar">
-		<item name="android:background">@color/log_blue2</item>
+		<item name="android:background">@color/iha_primary_cyan</item>
         <!-- Support library compatibility -->
         <item name="titleTextStyle">@style/Widget.MyTheme.ActionBar.TitleText</item>
-        <item name="background">@color/log_blue2</item>
+        <item name="background">@color/iha_primary_cyan</item>
 
     </style>
 

@@ -1,21 +1,21 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
+    android:orientation="horizontal"
     tools:context=".LoginActivity" >
 
     <RelativeLayout
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_weight="0.5"
         android:gravity="center_vertical"
-        android:layout_height="0dp" >
+        android:layout_height="match_parent" >
 
         <ImageView
             android:id="@+id/login_app_name"
             android:layout_width="wrap_content"
-            android:layout_height="140dp"
+            android:layout_height="120dp"
             android:layout_margin="20dp"
             android:src="@drawable/ic_launcher" />
 
@@ -32,12 +32,13 @@
 
     <RelativeLayout
         android:id="@+id/relativeLayout1"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
+        android:layout_width="0dp"
         android:layout_weight="0.5"
-        android:background="@color/iha_primary_cyan"
-        android:gravity="center_vertical|center_horizontal" >
+        android:layout_height="match_parent"
+        android:gravity="center_vertical"
+        android:background="@color/iha_primary_cyan" >
 
+        
         <ImageButton
             android:id="@+id/login_btn_google"
             android:layout_width="match_parent"
@@ -70,8 +71,6 @@
             android:background="@null"
             android:scaleType="centerInside"
             android:src="@drawable/ic_demo_log" />
-        
-       
 
     </RelativeLayout>
 

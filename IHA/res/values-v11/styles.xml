@@ -10,15 +10,17 @@
     	<item name="android:colorBackground">@color/iha_background</item>
 		<item name="android:actionModeCloseButtonStyle">@style/NoCloseButton</item>
         <item name="android:actionBarStyle">@style/Widget.MyTheme.ActionBar</item>
+        <item name="windowContentOverlay">@null</item>
+    	<item name="android:windowContentOverlay">@null</item>
     </style>
     
     <!-- ActionBar styles -->
     <style name="Widget.MyTheme.ActionBar"  parent="Widget.Sherlock.Light.ActionBar">
-		<item name="android:background">@color/log_blue2</item>
+		<item name="android:background">@color/iha_primary_cyan</item>
 		<item name="android:titleTextStyle">@style/Widget.MyTheme.ActionBar.TitleText</item>
         <!-- Support library compatibility -->
         <item name="titleTextStyle">@style/Widget.MyTheme.ActionBar.TitleText</item>
-        <item name="background">@color/log_blue2</item>
+        <item name="background">@color/iha_primary_cyan</item>
 
     </style>
 

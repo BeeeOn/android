@@ -132,7 +132,7 @@ public class LoginActivity extends BaseActivity {
 		}
 
 		// Demo button
-		((CheckBox) findViewById(R.id.login_btn_demo)).setOnClickListener(new OnClickListener() {
+		((ImageButton) findViewById(R.id.login_btn_demo)).setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				mActivity.setDemoMode(true);
