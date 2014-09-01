@@ -12,6 +12,7 @@ import java.util.Random;
 import android.text.format.Time;
 import android.util.Log;
 import cz.vutbr.fit.iha.adapter.device.BaseDevice;
+import cz.vutbr.fit.iha.adapter.device.Component;
 import cz.vutbr.fit.iha.adapter.location.Location;
 import cz.vutbr.fit.iha.household.User;
 
@@ -27,6 +28,7 @@ public class Adapter {
 	private final Map<String, BaseDevice> mDevices = new HashMap<String, BaseDevice>();
 	private final Map<String, BaseDevice> mUninitializedDevices = new HashMap<String, BaseDevice>();
 	private final Map<String, BaseDevice> mUninitializedIgnored = new HashMap<String, BaseDevice>();
+	private final Map<String, List<BaseDevice>> mGroupedDevices = new HashMap<String, List<BaseDevice>>();
 	
 	private String mId = "";
 	private String mName = "";
@@ -253,6 +255,12 @@ public class Adapter {
 		
 		if (!device.isInitialized() && !mUninitializedIgnored.containsKey(device.getId()))
 			mUninitializedDevices.put(device.getId(), device);
+
+		// FIXME: MultiDevices discovery - having second map is very uneffective and wrong, it should be in one
+		if (!mGroupedDevices.containsKey(device.getAddress()))
+			mGroupedDevices.put(device.getAddress(), new ArrayList<BaseDevice>());
+
+		mGroupedDevices.get(device.getAddress()).add(device);
 	}
 	
 	/**
@@ -282,6 +290,12 @@ public class Adapter {
 	private void clearDevices() {
 		mDevices.clear();
 		mUninitializedDevices.clear();
+		
+		// TODO: is this needed or will garbage collector do this itself?
+		for (List<BaseDevice> list : mGroupedDevices.values()) {
+			list.clear();
+		}
+		mGroupedDevices.clear();
 	}
 
 	public void ignoreUninitialized(List<BaseDevice> devices) {
@@ -325,9 +339,46 @@ public class Adapter {
 		return id;
 	}
 	
-	public boolean isEmpty(){
-		if(mLocations.size() == 0 && mDevices.size() == 0)
-			return true;
-		return false;
+	public boolean isEmpty() {
+		return mLocations.size() == 0 && mDevices.size() == 0;
 	}
+
+	/**
+	 * Return list of devices with this address.
+	 * @param id
+	 * @return list with devices (or empty list)
+	 */
+	public List<BaseDevice> getDevicesByAddress(String address) {
+		List<BaseDevice> devices = new ArrayList<BaseDevice>();
+		
+		if (mGroupedDevices.containsKey(address))
+			devices.addAll(mGroupedDevices.get(address));
+		
+		return devices;
+	}
+	
+	// FIXME: this is temporary and should be rewrited
+	public Map<String, Component> getComponentsByLocation(String id) {
+		Map<String, Component> components = new HashMap<String, Component>();
+		
+		for (BaseDevice device : getDevicesByLocation(id)) {
+			if (!components.containsKey(device.getAddress())) {
+				Component component = new Component();
+				component.setAddress(device.getAddress());
+				component.setBattery(device.getBattery());
+				component.setInitialized(device.isInitialized());
+				component.setInvolveTime(device.getInvolveTime());
+				component.setLocationId(device.getLocationId());
+				component.setQuality(device.getQuality());
+				component.setRefresh(device.getRefresh());
+
+				components.put(component.getAddress(), component);
+			}
+
+			components.get(device.getAddress()).devices.add(device);
+		}
+		
+		return components;
+	}
+	
 }

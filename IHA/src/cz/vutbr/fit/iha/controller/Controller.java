@@ -11,6 +11,7 @@ import android.util.Log;
 import cz.vutbr.fit.iha.adapter.Adapter;
 import cz.vutbr.fit.iha.adapter.device.BaseDevice;
 import cz.vutbr.fit.iha.adapter.device.BaseDevice.SaveDevice;
+import cz.vutbr.fit.iha.adapter.device.Component;
 import cz.vutbr.fit.iha.adapter.device.DeviceLog;
 import cz.vutbr.fit.iha.adapter.device.DeviceLog.DataInterval;
 import cz.vutbr.fit.iha.adapter.device.DeviceLog.DataType;
@@ -827,6 +828,18 @@ public final class Controller {
 
 	public ActualUser getActualUser() {
 		return mHousehold.user;
+	}
+	
+	public List<Component> getComponentsByLocation(String locationId, boolean forceUpdate) {
+		List<Component> list = new ArrayList<Component>();
+		
+		Adapter adapter = getActiveAdapter();
+		if (adapter != null) {
+			refreshAdapter(adapter, forceUpdate); // TODO: update only devices in this location? or no?
+			list.addAll(adapter.getComponentsByLocation(locationId).values());
+		}
+		
+		return list;
 	}
 
 }
