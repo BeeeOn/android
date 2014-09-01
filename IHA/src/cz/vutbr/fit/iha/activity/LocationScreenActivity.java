@@ -362,10 +362,10 @@ public class LocationScreenActivity extends BaseActivity {
 
 		// Adding settings, about etc.
 		menuAdapter.addItem(new SettingMenuItem(getResources().getString(
-				R.string.action_settings), R.drawable.loc_unknown,
+				R.string.action_settings), R.drawable.settings,
 				cz.vutbr.fit.iha.activity.menuItem.MenuItem.ID_SETTINGS));
 		menuAdapter.addItem(new SettingMenuItem(getResources().getString(
-				R.string.action_about), R.drawable.loc_unknown,
+				R.string.action_about), R.drawable.info,
 				cz.vutbr.fit.iha.activity.menuItem.MenuItem.ID_ABOUT));
 
 		// menuAdapter.log();
@@ -621,7 +621,6 @@ public class LocationScreenActivity extends BaseActivity {
 
 		mSensorList = (ListView) findViewById(R.id.listviewofsensors);
 		TextView nosensor = (TextView) findViewById(R.id.nosensorlistview);
-		ImageView addsensorImg = (ImageView) findViewById(R.id.nosensor_addsensor);
 
 		title = new String[sensors.size()];
 		value = new String[sensors.size()];
@@ -649,17 +648,6 @@ public class LocationScreenActivity extends BaseActivity {
 			if (nosensor != null) {
 				nosensor.setVisibility(View.VISIBLE);
 				mSensorList.setVisibility(View.GONE);
-				addsensorImg.setVisibility(View.VISIBLE);
-				addsensorImg.setOnClickListener(new OnClickListener() {
-
-					@Override
-					public void onClick(View v) {
-						inBackground = true;
-						Intent intent = new Intent(LocationScreenActivity.this,
-								AddSensorActivityDialog.class);
-						startActivity(intent);
-					}
-				});
 			}
 
 			this.setSupportProgressBarIndeterminateVisibility(false);
@@ -667,7 +655,6 @@ public class LocationScreenActivity extends BaseActivity {
 		} else {
 			nosensor.setVisibility(View.GONE);
 			mSensorList.setVisibility(View.VISIBLE);
-			addsensorImg.setVisibility(View.GONE);
 		}
 
 		mSensorAdapter = new SensorListAdapter(LocationScreenActivity.this,
