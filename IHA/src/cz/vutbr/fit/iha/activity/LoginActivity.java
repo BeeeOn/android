@@ -58,6 +58,7 @@ public class LoginActivity extends BaseActivity {
 	private StoppableRunnable mDoGoogleLoginRunnable;
 
 	private static final String TAG = LoginActivity.class.getSimpleName();
+	private static final String TAG_GCM = "IHA_GCM";
 	public static final int USER_RECOVERABLE_AUTH = 5;
 	private static final int GET_GOOGLE_ACCOUNT = 6;
 
@@ -65,10 +66,9 @@ public class LoginActivity extends BaseActivity {
 
 	private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 1;
 	
-    GoogleCloudMessaging gcm;
-    SharedPreferences prefs;
-    Context context;
-    String regid;
+    private GoogleCloudMessaging mGcm;
+    private Context mContext;
+    private String mRegid;
 	
 	// ////////////////////////////////////////////////////////////////////////////////////
 	// ///////////////// Override METHODS
@@ -88,7 +88,8 @@ public class LoginActivity extends BaseActivity {
 
 		// Get Activity
 		mActivity = this;
-
+		mContext = this;
+		
 		// Get controller
 		mController = Controller.getInstance(this);
 
@@ -107,6 +108,12 @@ public class LoginActivity extends BaseActivity {
 			}
 		});
 
+		// try to register GCM
+		mGcm = GoogleCloudMessaging.getInstance(this);
+		if (getGCMRegistrationId().isEmpty() && GooglePlayServicesUtil.isGooglePlayServicesAvailable(getBaseContext())== ConnectionResult.SUCCESS) {
+			registerGCMInBackground();
+		}
+		
 		mProgress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
 
 		if (mController.isLoggedIn()) {
@@ -164,8 +171,6 @@ public class LoginActivity extends BaseActivity {
 				getMojeIDAccessFromServer(v);
 			}
 		});
-		
-		getRegistrationId(context);
 		
 		Log.i("IHA app starting...","___________________________________");
 	}
@@ -366,6 +371,14 @@ public class LoginActivity extends BaseActivity {
 					// google only in registration, no?
 					
 					doLogin(email);
+					
+					String gcmId = getGCMRegistrationId();
+					if (!gcmId.isEmpty()) {
+						Log.i(TAG_GCM, "GCM ID: " + gcmId);
+						
+						// TODO: register in server
+					}
+					
 					Log.d(TAG, "Finish google auth");
 				}
 			};
@@ -501,20 +514,20 @@ public class LoginActivity extends BaseActivity {
 	 * @return registration ID, or empty string if there is no existing
 	 *         registration ID.
 	 */
-	private String getRegistrationId(Context context) {
+	private String getGCMRegistrationId() {
 	    final SharedPreferences prefs = getGCMPreferences();
 	    String registrationId = prefs.getString(Constants.PREF_GCM_REG_ID, "");
 	    if (registrationId.isEmpty()) {
-	        Log.i(TAG, "GCM: Registration not found.");
+	        Log.i(TAG_GCM, "GCM: Registration not found.");
 	        return "";
 	    }
 	    // Check if app was updated; if so, it must clear the registration ID
 	    // since the existing regID is not guaranteed to work with the new
 	    // app version.
 	    int registeredVersion = prefs.getInt(Constants.PREF_GCM_APP_VERSION, Integer.MIN_VALUE);
-	    int currentVersion = getAppVersion(context);
+	    int currentVersion = getAppVersion(mContext);
 	    if (registeredVersion != currentVersion) {
-	        Log.i(TAG, "GCM: App version changed.");
+	        Log.i(TAG_GCM, "GCM: App version changed.");
 	        return "";
 	    }
 	    return registrationId;
@@ -540,30 +553,30 @@ public class LoginActivity extends BaseActivity {
 	 * Stores the registration ID and app versionCode in the application's
 	 * shared preferences.
 	 */
-	private void registerInBackground() {
+	private void registerGCMInBackground() {
 	    new AsyncTask<Void, Void, String>() {
 	        @Override
 	        protected String doInBackground(Void... params) {
 	            String msg = "";
 	            try {
-	                if (gcm == null) {
-	                    gcm = GoogleCloudMessaging.getInstance(context);
+	                if (mGcm == null) {
+	                    mGcm = GoogleCloudMessaging.getInstance(mContext);
 	                }
-	                regid = gcm.register(Constants.PROJECT_NUMBER);
-	                msg = "Device registered, registration ID=" + regid;
+	                mRegid = mGcm.register(Constants.PROJECT_NUMBER);
+	                msg = "Device registered, registration ID=" + mRegid;
 
 	                // You should send the registration ID to your server over HTTP,
 	                // so it can use GCM/HTTP or CCS to send messages to your app.
 	                // The request to your server should be authenticated if your app
 	                // is using accounts.
-	                sendRegistrationIdToBackend();
+	                sendGCMRegistrationIdToBackend();
 
 	                // For this demo: we don't need to send it because the device
 	                // will send upstream messages to a server that echo back the
 	                // message using the 'from' address in the message.
 
 	                // Persist the regID - no need to register again.
-	                storeRegistrationId(context, regid);
+	                storeGCMRegistrationId(mContext, mRegid);
 	            } catch (IOException ex) {
 	                msg = "Error :" + ex.getMessage();
 	                // If there is an error, don't just keep trying to register.
@@ -575,7 +588,7 @@ public class LoginActivity extends BaseActivity {
 
 	        @Override
 	        protected void onPostExecute(String msg) {
-//	            mDisplay.append(msg + "\n");
+	            Log.i(TAG_GCM, msg);
 	        }
 	    }.execute(null, null, null);
 	}
@@ -586,7 +599,7 @@ public class LoginActivity extends BaseActivity {
 	 * device sends upstream messages to a server that echoes back the message
 	 * using the 'from' address in the message.
 	 */
-	private void sendRegistrationIdToBackend() {
+	private void sendGCMRegistrationIdToBackend() {
 	    // Your implementation here.
 	}
 	
@@ -597,10 +610,10 @@ public class LoginActivity extends BaseActivity {
 	 * @param context application's context.
 	 * @param regId registration ID
 	 */
-	private void storeRegistrationId(Context context, String regId) {
+	private void storeGCMRegistrationId(Context context, String regId) {
 	    final SharedPreferences prefs = getGCMPreferences();
 	    int appVersion = getAppVersion(context);
-	    Log.i(TAG, "Saving regId on app version " + appVersion);
+	    Log.i(TAG_GCM, "Saving regId on app version " + appVersion);
 	    SharedPreferences.Editor editor = prefs.edit();
 	    editor.putString(Constants.PREF_GCM_REG_ID, regId);
 	    editor.putInt(Constants.PREF_GCM_APP_VERSION, appVersion);
