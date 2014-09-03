@@ -150,7 +150,7 @@
     <!-- ABOUT -->
     <string name="play_link">market://details?id=cz.vutbr.fit.iha</string>
     <string name="company_email">media@rehivetech.com</string>
-    <string name="company_web">media@rehivetech.com</string>
+    <string name="company_web">http://rehivetech.com/</string>
     <string name="copyright">\u00A9 2014 RehiveTech. All rights reserved</string>
     <string name="version">Version</string>
     <string name="logo">Logo</string>
