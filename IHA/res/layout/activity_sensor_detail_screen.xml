@@ -36,9 +36,9 @@
 	        android:layout_marginRight="15dp"
 	        android:gravity="right"
 	        android:text="NameSensor"
-	        android:textColor="@color/log_blue2"
+	        android:textColor="@color/iha_text_color"
 	        android:textSize="35dp"
-	        android:textStyle="bold"
+	        android:textStyle="normal"
 	        android:visibility="invisible" />
 	    
 	    <EditText
@@ -52,9 +52,9 @@
 	        android:gravity="right"
 	        android:inputType="textCapSentences"
 	        android:text="NameSensor"
-	        android:textColor="@color/log_blue2"
+	        android:textColor="@color/iha_text_color"
 	        android:textSize="35dp"
-	        android:textStyle="bold"
+	        android:textStyle="normal"
 	        android:visibility="invisible" />
 	
 	    <SeekBar
@@ -89,7 +89,7 @@
 	        android:layout_marginRight="5dp"
 	        android:layout_marginTop="10dp"
 	        android:text="location"
-	        android:textColor="@color/darkgray"
+	        android:textColor="@color/iha_text_hint"
 	        android:textSize="25dp"
 	        android:visibility="invisible"/>
 	
@@ -101,7 +101,7 @@
 	        android:layout_below="@+id/sen_refresh_time_seekBar"
 	        android:layout_marginTop="10dp"
 	        android:text="@string/sen_graph_label"
-	        android:textColor="@color/log_blue2"
+	        android:textColor="@color/iha_primary_cyan"
 	        android:textSize="18dp" 
 	        android:visibility="invisible"/>
 	
@@ -126,7 +126,7 @@
 	        android:fitsSystemWindows="true"
 	        android:gravity="center"
 	        android:text="@string/loading_data"
-	        android:textColor="@color/log_blue2"
+	        android:textColor="@color/iha_secundary_pink"
 	        android:textSize="20sp"
 	        android:visibility="invisible" />
 
@@ -143,7 +143,7 @@
 	        android:layout_marginBottom="3dp"
 	        android:layout_alignBottom="@+id/sen_detail_name"
 	        android:layout_alignRight="@+id/sen_detail_name" 
-	        android:background="@drawable/rectangle_blue_background"
+	        android:background="@drawable/rectangle_pink_background"
 	        android:visibility="invisible">
 	    </RelativeLayout>
 	    <RelativeLayout
@@ -154,7 +154,7 @@
 	        android:layout_marginBottom="0dp"
 	        android:layout_alignBottom="@+id/sen_detail_loc_name"
 	        android:layout_alignRight="@+id/sen_detail_loc_name" 
-	        android:background="@drawable/rectangle_gray_background"
+	        android:background="@drawable/rectangle_pink_background"
 	        android:visibility="invisible">
 	    </RelativeLayout>
 
@@ -179,7 +179,7 @@
 	        android:layout_alignBottom="@+id/sen_refresh_time"
 	        android:layout_alignRight="@+id/sen_detail_value"
 	        android:text="1.1. 1970"
-	        android:textColor="@color/darkgray"
+	        android:textColor="@color/iha_text_hint"
 	        android:textSize="15dp" 
 	        android:visibility="invisible"/>
 
@@ -191,7 +191,7 @@
 	        android:layout_alignRight="@+id/sen_refresh_time_seekBar"
 	        
 	        android:text="ValueSensor"
-	        android:textColor="@color/log_blue2"
+	        android:textColor="@color/iha_secundary_pink"
 	        android:textSize="32dp" 
 	        android:visibility="invisible"/>
 	    

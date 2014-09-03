@@ -12,7 +12,7 @@
     </stroke>
  
     <!-- Here is the corner radius -->
-    <corners android:radius="5dp" >
+    <corners android:radius="7dp" >
     </corners>
  
 </shape>
