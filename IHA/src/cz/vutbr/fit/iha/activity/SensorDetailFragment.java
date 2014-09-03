@@ -223,7 +223,7 @@ public class SensorDetailFragment extends SherlockFragment {
 		mIcon = (ImageView) getView().findViewById(R.id.sen_detail_icon);
 		// Get TextView for refresh time
 		mRefreshTimeText = (TextView) getView().findViewById(
-				R.id.sen_refresh_time);
+				R.id.sen_refresh_time_value);
 		// Get SeekBar for refresh time
 		mRefreshTimeValue = (SeekBar) getView().findViewById(
 				R.id.sen_refresh_time_seekBar);
@@ -237,8 +237,7 @@ public class SensorDetailFragment extends SherlockFragment {
 							int progress, boolean fromUser) {
 						String interval = RefreshInterval.values()[progress]
 								.getStringInterval(context);
-						mRefreshTimeText.setText(String.format(
-								getString(R.string.refresh_time), interval));
+						mRefreshTimeText.setText( interval);
 					}
 
 					@Override
@@ -400,8 +399,7 @@ public class SensorDetailFragment extends SherlockFragment {
 		// Set time of sensor
 		mTime.setText(Utils.formatLastUpdate(device.lastUpdate));
 		// Set refresh time Text
-		mRefreshTimeText.setText(getString(R.string.refresh_time, device
-				.getRefresh().getStringInterval(context)));
+		mRefreshTimeText.setText(device.getRefresh().getStringInterval(context));
 		// Set refresh time SeekBar
 		mRefreshTimeValue.setProgress(device.getRefresh().getIntervalIndex());
 		// Add Graph with history data
@@ -444,6 +442,7 @@ public class SensorDetailFragment extends SherlockFragment {
 		mTime.setVisibility(View.VISIBLE);
 		mIcon.setVisibility(View.VISIBLE);
 		mRefreshTimeText.setVisibility(View.VISIBLE);
+		((TextView) getView().findViewById(R.id.sen_refresh_time)).setVisibility(View.VISIBLE);
 		mRefreshTimeValue.setVisibility(View.VISIBLE);
 		mGraphLayout.setVisibility(View.VISIBLE);
 		mGraphLabel.setVisibility(View.VISIBLE);
@@ -463,11 +462,11 @@ public class SensorDetailFragment extends SherlockFragment {
 
 		minimum = -1.0;
 		
-		GraphViewSeriesStyle seriesStyleBlue = new GraphViewSeriesStyle(getResources().getColor(R.color.log_blue2),2);
+		GraphViewSeriesStyle seriesStyleBlue = new GraphViewSeriesStyle(getResources().getColor(R.color.iha_primary_cyan),2);
 		//GraphViewSeriesStyle seriesStyleGray = new GraphViewSeriesStyle(getResources().getColor(R.color.light_gray),2);
 
-		mGraphView.getGraphViewStyle().setVerticalLabelsColor(getResources().getColor(R.color.log_blue2));
-		mGraphView.getGraphViewStyle().setHorizontalLabelsColor(getResources().getColor(R.color.log_blue2));
+		mGraphView.getGraphViewStyle().setVerticalLabelsColor(getResources().getColor(R.color.iha_primary_cyan));
+		mGraphView.getGraphViewStyle().setHorizontalLabelsColor(getResources().getColor(R.color.iha_primary_cyan));
 		//mGraphView.getGraphViewStyle().setVerticalLabelsWidth(60);
 		//mGraphView.getGraphViewStyle().setNumHorizontalLabels(2);
 		mGraphView.setBackgroundColor(getResources().getColor(R.color.alpha_blue));//getResources().getColor(R.color.log_blue2));
@@ -584,6 +583,7 @@ public class SensorDetailFragment extends SherlockFragment {
 		maximum = (float) ((maximum > mTempConstant)?maximum/100.0:maximum);
 		Log.d(TAG, "LOG1 - Min: " + minimum + " Max: "+maximum);
 		float deviation = maximum - minimum;
+		deviation = (deviation <=0 )? 1 : deviation;
 		float minLimit = (float) (minimum-(deviation*0.2));
 		float maxLimit = (float) (maximum+(deviation*0.2));
 
@@ -592,11 +592,11 @@ public class SensorDetailFragment extends SherlockFragment {
 		for (int i = 0; i < size; i++) {
 			value = log.getValues().get(i).value;
 			//cal.setTimeInMillis(log.getValues().get(i).date.getTime());
-			
+			Log.d(TAG, "Value: "+value);
 			if(Float.isNaN(value)) {
 				value = minLimit;
 			}
-			else if(value > 1000 ) {
+			else if(value > mTempConstant ) {
 				value = (float) (value/100.0);
 			}
 			
@@ -700,13 +700,12 @@ public class SensorDetailFragment extends SherlockFragment {
 			// null);
 			// ((Button) view.findViewById(R.id.actionmode_button)).
 			// menu.add("Save").setActionView(view).setIcon(R.drawable.ic_action_accept).setTitle("Save").setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-			menu.add("Save").setIcon(R.drawable.ic_action_accept)
+			menu.add("Save").setIcon(R.drawable.ic_action_accept_1)
 					.setTitle("Save")
 					.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-			menu.add("Cancel").setIcon(R.drawable.ic_action_cancel)
+			menu.add("Cancel").setIcon(R.drawable.ic_action_cancel_1)
 					.setTitle("Cancel")
 					.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-
 			return true;
 		}
 

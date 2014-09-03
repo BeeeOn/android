@@ -6,16 +6,18 @@
     android:background="@color/white"
     tools:context=".LoginActivity" >
 
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_weight="0.5"
         android:gravity="center_vertical"
+        android:orientation="vertical"
         android:layout_height="0dp" >
 
         <ImageView
             android:id="@+id/login_app_name"
-            android:layout_width="wrap_content"
-            android:layout_height="140dp"
+            android:layout_width="fill_parent"    
+            android:layout_height="0dp"
+           	android:layout_weight="0.5"
             android:layout_margin="20dp"
             android:src="@drawable/ic_launcher" />
 
@@ -25,10 +27,11 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/login_app_name"
             android:layout_centerHorizontal="true"
+            android:layout_gravity="center_vertical|center_horizontal"
             android:text="@string/login_app_name"
             android:textSize="20sp" />
 
-    </RelativeLayout>
+    </LinearLayout>
 
     <RelativeLayout
         android:id="@+id/relativeLayout1"

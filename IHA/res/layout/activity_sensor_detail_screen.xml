@@ -75,8 +75,19 @@
 	        android:layout_alignLeft="@id/sen_refresh_time_seekBar"
 	        android:layout_below="@+id/sen_detail_icon"
 	        android:layout_marginTop="14dp"
+	        android:text="@string/refresh_time"
+	        android:textColor="@color/iha_primary_cyan"
+	        android:textSize="18dp" 
+	        android:visibility="invisible"/>
+	    <TextView
+	        android:id="@+id/sen_refresh_time_value"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:layout_toRightOf="@+id/sen_refresh_time"
+	        android:layout_below="@+id/sen_detail_icon"
+	        android:layout_marginTop="14dp"
 	        android:text="TextView"
-	        android:textColor="@color/log_blue2"
+	        android:textColor="@color/iha_secundary_pink"
 	        android:textSize="18dp" 
 	        android:visibility="invisible"/>
 	
