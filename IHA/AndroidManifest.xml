@@ -2,8 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="cz.vutbr.fit.iha"
     android:installLocation="auto"
-    android:versionCode="9"
-    android:versionName="1.1.3 debug" >
+    android:versionCode="10"
+    android:versionName="1.1.4 debug" >
 
     <uses-sdk
         android:minSdkVersion="9"

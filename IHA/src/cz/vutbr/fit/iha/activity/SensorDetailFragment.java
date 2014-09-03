@@ -237,7 +237,7 @@ public class SensorDetailFragment extends SherlockFragment {
 							int progress, boolean fromUser) {
 						String interval = RefreshInterval.values()[progress]
 								.getStringInterval(context);
-						mRefreshTimeText.setText( interval);
+						mRefreshTimeText.setText( " "+interval);
 					}
 
 					@Override
@@ -399,7 +399,7 @@ public class SensorDetailFragment extends SherlockFragment {
 		// Set time of sensor
 		mTime.setText(Utils.formatLastUpdate(device.lastUpdate));
 		// Set refresh time Text
-		mRefreshTimeText.setText(device.getRefresh().getStringInterval(context));
+		mRefreshTimeText.setText(" "+device.getRefresh().getStringInterval(context));
 		// Set refresh time SeekBar
 		mRefreshTimeValue.setProgress(device.getRefresh().getIntervalIndex());
 		// Add Graph with history data
