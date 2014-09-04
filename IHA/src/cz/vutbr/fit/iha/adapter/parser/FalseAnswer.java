@@ -35,10 +35,10 @@ public class FalseAnswer {
 		try{ //FIXME: fix this after demo!!!
 			switch(errCode){
 				case 6:
-					troubleMakers = XmlParsers.getFalseMessage6(START_TAG + errMessage + END_TAG);
+					troubleMakers = new XmlParsers().getFalseMessage6(START_TAG + errMessage + END_TAG);
 					break;
 				case 13:
-					troubleMakers = XmlParsers.getFalseMessage13(START_TAG + errMessage + END_TAG);
+					troubleMakers = new XmlParsers().getFalseMessage13(START_TAG + errMessage + END_TAG);
 					break;
 				default:
 					mErrMessage = errMessage;

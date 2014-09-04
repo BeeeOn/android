@@ -258,7 +258,8 @@ public class Network {
 			Log.d(TAG + " - fromApp", messageToSend);
 
 			Log.d(TAG + " - fromSrv", result);
-			msg = XmlParsers.parseCommunication(result, false);
+			
+			msg = new XmlParsers().parseCommunication(result, false);
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw new CommunicationException(e);

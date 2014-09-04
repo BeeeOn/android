@@ -46,7 +46,7 @@ import cz.vutbr.fit.iha.household.User.Role;
  */
 public class XmlParsers {
 	
-	private static XmlPullParser mParser;
+	private XmlPullParser mParser;
 	
 	/**
 	 * Thats mean Android OS
@@ -152,6 +152,9 @@ public class XmlParsers {
 	private static final String mComVerMisExcMessage = "Communication version mismatch.";
 	private static final String mXmlVerMisExcMessage = "Xml version mismatch.";
 
+	public XmlParsers(){
+		
+	}
 	
 	/**
 	 * Method parse message (XML) in communication version
@@ -164,7 +167,7 @@ public class XmlParsers {
 	 * @throws XmlVerMisException means XML version mismatch exception
 	 * @throws ParseException 
 	 */
-	public static ParsedMessage parseCommunication(String xmlInput, boolean namespace) throws XmlPullParserException, IOException, ComVerMisException, XmlVerMisException, ParseException{
+	public ParsedMessage parseCommunication(String xmlInput, boolean namespace) throws XmlPullParserException, IOException, ComVerMisException, XmlVerMisException, ParseException{
 		mParser = Xml.newPullParser();
 		mParser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, namespace);
 		
@@ -252,7 +255,7 @@ public class XmlParsers {
 	 * @throws XmlVerMisException means XML version mismatch exception
 	 * @throws ParseException 
 	 */
-	private static Adapter parseXml(String role) throws XmlPullParserException, IOException, XmlVerMisException, ParseException{
+	private Adapter parseXml(String role) throws XmlPullParserException, IOException, XmlVerMisException, ParseException{
 		Adapter result = new Adapter();
 		mParser.nextTag();
 		mParser.require(XmlPullParser.START_TAG, ns, ADAPTER);
@@ -280,7 +283,7 @@ public class XmlParsers {
 	 * @throws IOException
 	 * @throws ParseException 
 	 */
-	private static List<BaseDevice> parsePartial() throws XmlPullParserException, IOException, ParseException{
+	private List<BaseDevice> parsePartial() throws XmlPullParserException, IOException, ParseException{
 		mParser.nextTag();
 		//mParser.require(XmlPullParser.START_TAG, ns, DEVICE); // strict solution
 		
@@ -340,7 +343,7 @@ public class XmlParsers {
 	 * @throws XmlPullParserException
 	 * @throws IOException
 	 */
-	private static List<Adapter> parseReady() throws XmlPullParserException, IOException{
+	private List<Adapter> parseReady() throws XmlPullParserException, IOException{
 		mParser.nextTag();
 //		mParser.require(XmlPullParser.START_TAG, ns, ADAPTER); // strict solution
 		
@@ -369,7 +372,7 @@ public class XmlParsers {
 	 * @throws XmlPullParserException
 	 * @throws IOException
 	 */
-	private static DeviceLog parseContent() throws XmlPullParserException, IOException {
+	private DeviceLog parseContent() throws XmlPullParserException, IOException {
 		mParser.nextTag();
 		mParser.require(XmlPullParser.START_TAG, ns, ROW);
 		
@@ -393,7 +396,7 @@ public class XmlParsers {
 	 * @throws XmlPullParserException
 	 * @throws IOException
 	 */
-	private static HashMap<String, User> parseConAccountList() throws XmlPullParserException, IOException{
+	private HashMap<String, User> parseConAccountList() throws XmlPullParserException, IOException{
 		mParser.nextTag();
 		mParser.require(XmlPullParser.START_TAG, ns, USER);
 		
@@ -423,7 +426,7 @@ public class XmlParsers {
 	 * @throws XmlPullParserException
 	 * @throws IOException
 	 */
-	private static FalseAnswer parseFalse() throws XmlPullParserException, IOException{
+	private FalseAnswer parseFalse() throws XmlPullParserException, IOException{
 		//FIXME: bad error code 6 a 13 fix after demo
 		return new FalseAnswer(getSecureAttrValue(ns, ADDITIONALINFO), getSecureInt(getSecureAttrValue(ns, ERRCODE)), readText(COM_ROOT));
 	}
@@ -434,7 +437,7 @@ public class XmlParsers {
 	 * @throws XmlPullParserException
 	 * @throws IOException
 	 */
-	private static List<CustomViewPair> parseViewsList() throws XmlPullParserException, IOException{
+	private List<CustomViewPair> parseViewsList() throws XmlPullParserException, IOException{
 		mParser.nextTag();
 		mParser.require(XmlPullParser.START_TAG, ns, VIEW);
 		
@@ -455,7 +458,7 @@ public class XmlParsers {
 	 * @throws XmlPullParserException
 	 * @throws IOException
 	 */
-	private static Integer parseTimeZone() throws XmlPullParserException, IOException{
+	private Integer parseTimeZone() throws XmlPullParserException, IOException{
 		mParser.nextTag();
 		mParser.require(XmlPullParser.START_TAG, ns, TIME);
 		
@@ -468,7 +471,7 @@ public class XmlParsers {
 	 * @throws XmlPullParserException
 	 * @throws IOException
 	 */
-	private static List<Location> parseRooms() throws XmlPullParserException, IOException{
+	private List<Location> parseRooms() throws XmlPullParserException, IOException{
 		mParser.nextTag();
 //		mParser.require(XmlPullParser.START_TAG, ns, LOCATION); // strict solution
 		
@@ -486,7 +489,7 @@ public class XmlParsers {
 		return result;
 	}
 	
-	private static String parseRoomCreated() throws XmlPullParserException, IOException{
+	private String parseRoomCreated() throws XmlPullParserException, IOException{
 		mParser.nextTag();
 		mParser.require(XmlPullParser.START_TAG, ns, LOCATION);
 		
@@ -500,7 +503,7 @@ public class XmlParsers {
 	 * @param sType string type of device (e.g. 0x03)
 	 * @return empty object
 	 */
-	private static BaseDevice getDeviceByType(String sType){
+	private BaseDevice getDeviceByType(String sType){
 		
 		if(sType.length() < 3)
 			return new UnknownDevice();
@@ -530,7 +533,7 @@ public class XmlParsers {
 	}
 	
 	//FIXME: after demo
-	static List<BaseDevice> getFalseMessage6(String message) throws XmlPullParserException, IOException{
+	List<BaseDevice> getFalseMessage6(String message) throws XmlPullParserException, IOException{
 		mParser = Xml.newPullParser();
 		mParser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false);
 		
@@ -558,7 +561,7 @@ public class XmlParsers {
 	}
 	
 	//FIXME: after demo
-	static List<User> getFalseMessage13(String message) throws XmlPullParserException, IOException{
+	List<User> getFalseMessage13(String message) throws XmlPullParserException, IOException{
 		mParser = Xml.newPullParser();
 		mParser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false);
 		
@@ -592,7 +595,7 @@ public class XmlParsers {
 	 * @throws IOException
 	 */
 	@SuppressWarnings("unused")
-	private static void skip() throws XmlPullParserException, IOException {
+	private void skip() throws XmlPullParserException, IOException {
 	    Log.d(TAG, "Skipping unknown child '" + mParser.getName() + "'");
 		if (mParser.getEventType() != XmlPullParser.START_TAG) {
 	        throw new IllegalStateException();
@@ -617,7 +620,7 @@ public class XmlParsers {
 	 * @throws IOException
 	 * @throws XmlPullParserException
 	 */
-	private static String readText(String tag) throws IOException, XmlPullParserException {
+	private String readText(String tag) throws IOException, XmlPullParserException {
 	    mParser.require(XmlPullParser.START_TAG, ns, tag);
 		
 		String result = "";
@@ -636,7 +639,7 @@ public class XmlParsers {
 	 * @param name of the attribute
 	 * @return parsed attribute or empty string
 	 */
-	private static String getSecureAttrValue(String nameSpace, String name){
+	private String getSecureAttrValue(String nameSpace, String name){
 		String result = mParser.getAttributeValue(nameSpace, name);
 		return (result == null) ? "" : result;
 	}
@@ -646,7 +649,7 @@ public class XmlParsers {
 	 * @param value
 	 * @return integer value of zero if length is 0
 	 */
-	private static int getSecureInt(String value){
+	private int getSecureInt(String value){
 		return (value.length() < 1) ? 0 : Integer.parseInt(value);
 	}
 
@@ -658,7 +661,7 @@ public class XmlParsers {
 	 * @param filename
 	 * @return Adapter or null
 	 */
-	public static Adapter getDemoAdapterFromAsset(Context context, String filename) {
+	public Adapter getDemoAdapterFromAsset(Context context, String filename) {
 		Log.i(TAG, String.format("Loading adapter from asset '%s'", filename));
 		Adapter adapter = null;
 		InputStream stream = null;
@@ -687,7 +690,7 @@ public class XmlParsers {
 	 * @param filename
 	 * @return list of locations or empty list
 	 */
-	public static List<Location> getDemoLocationsFromAsset(Context context, String filename) {
+	public List<Location> getDemoLocationsFromAsset(Context context, String filename) {
 		Log.i(TAG, String.format("Loading locations from asset '%s'", filename));
 		List<Location> locations = new ArrayList<Location>();
 		InputStream stream = null;
