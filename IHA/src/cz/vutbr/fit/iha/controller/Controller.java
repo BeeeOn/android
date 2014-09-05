@@ -138,13 +138,13 @@ public final class Controller {
 		
 		// TODO: catch and throw proper exception
 		// FIXME: after some time there should be picture in ActualUser object, should save to mPersistence
-		try{
+		try {
 			if (mNetwork.signIn(email)) {
 				mPersistence.saveLastEmail(email);
 				mPersistence.initializeDefaultSettings(email);
 				return true;
 			}
-		}catch(FalseException e){
+		} catch(FalseException e) {
 			//FIXME: ROB, do this how you want, this is working code :)
 			switch(e.getDetail().getErrCode()){
 				case 0:
@@ -209,8 +209,9 @@ public final class Controller {
 	 * @return
 	 */
 	private boolean refreshAdapter(Adapter adapter, boolean forceUpdate) {
-		if (mDemoMode)
+		if (mDemoMode) {
 			return true;
+		}
 		
 		Time that = new Time();
 		that.setToNow();
@@ -315,22 +316,28 @@ public final class Controller {
 	 * @return List of adapters
 	 */
 	public List<Adapter> getAdapters() {
-		if(!isLoggedIn() && !mDemoMode){
+		if (mDemoMode) {
+			return mHousehold.adapters;
+		}
+		
+		if (!isLoggedIn()) {
 			return new ArrayList<Adapter>();
 		}
+		
 		// TODO: refactor this method, make household's adapters (and favoriteslisting, and user?) final etc.
-		if (!mDemoMode && (mHousehold.adapters == null || mReloadAdapters)) { 
+		if (mHousehold.adapters == null || mReloadAdapters) { 
 			try { 
 				mHousehold.adapters = mNetwork.getAdapters();
+				mReloadAdapters = false;
 			} catch (NetworkException e) {
+				// Network or another error, we must return correct object now, but adapters must be loaded later
+				mHousehold.adapters = new ArrayList<Adapter>();
+				mReloadAdapters = true;
+
 				e.printStackTrace();
 			}
-			mReloadAdapters = false;
+			
 		}
-
-		// Network or another error, we must return correct object now, but adapters must be loaded later
-		if (mHousehold.adapters == null) 
-			return new ArrayList<Adapter>();
 
 		// Refresh all adapters (load their devices and locations)
 		for (Adapter adapter : mHousehold.adapters) {
@@ -433,36 +440,40 @@ public final class Controller {
 	 */
 	//FIXME: this register user not adapter
 	public boolean registerAdapter(String id, String adapterName) {
-		if (mDemoMode)
+		if (mDemoMode) {
 			return false;
+		}
 
+		boolean result = false;
+		
 		try {
 			if (mNetwork.addAdapter(id, adapterName)) {
 				reloadAdapters(); // TODO: reload (or just add this adapter) only adapters list (without reloading devices)
 				setActiveAdapter(id); // FIXME : kurvaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
-				return true;
+				result = true;
 			}
 		} catch (NetworkException e) {
 			e.printStackTrace();
 		}
 		
-		return false;
+		return result;
 	}
 	
 	//TODO: review this
 	public boolean registerUser(String id){
-		if (mDemoMode)
+		if (mDemoMode) {
 			return false;
+		}
 
+		boolean result = false;
+		
 		try {
-			if (mNetwork.signUp(mHousehold.user.getEmail())) {
-				return true;
-			}
+			result = mNetwork.signUp(mHousehold.user.getEmail());
 		} catch (NetworkException e) {
 			e.printStackTrace();
 		}
 		
-		return false;
+		return result;
 	}
 
 	/**
@@ -474,29 +485,30 @@ public final class Controller {
 	 * @throws NotImplementedException
 	 */
 	public boolean unregisterAdapter(String id) throws NotImplementedException {
-		//TODO: this is debug implementation
-		
-		if (mDemoMode)
+		if (mDemoMode) {
 			return false;
-		
+		}
+
+		//TODO: this is debug implementation
+
 		ArrayList<String> user = new ArrayList<String>();
 		user.add(mHousehold.user.getEmail());
 
+		boolean result = false;
+		
 		try {
 			if (mNetwork.deleteConnectionAccounts(id, user)) {
 				if(mHousehold.activeAdapter != null && mHousehold.activeAdapter.getId().equals(id))
 					mHousehold.activeAdapter = null;
 				reloadAdapters(); // TODO: reload (or just add this adapter) only adapters list (without reloading devices)
 //				setActiveAdapter(id);
-				return true;
+				result = true;
 			}
 		} catch (NetworkException e) {
 			e.printStackTrace();
 		}
 		
-		return false;
-		
-		//throw new NotImplementedException();
+		return result;
 	}
 
 
@@ -527,8 +539,9 @@ public final class Controller {
 	 */
 	public Location getLocationByDevice(BaseDevice device) {
 		Adapter adapter = getAdapterByDevice(device);
-		if (adapter == null)
+		if (adapter == null) {
 			return null;
+		}
 		
 		return adapter.getLocation(device.getLocationId());
 	}
@@ -541,21 +554,24 @@ public final class Controller {
 	 */
 	public boolean deleteLocation(Location location) {
 		Adapter adapter = getActiveAdapter();
-		if (adapter == null)
+		if (adapter == null) {
 			return false;
+		}
 
 		boolean deleted = false;
 		try {
-			if (mDemoMode)
+			if (mDemoMode) {
 				deleted = true;
-			else	
+			} else {	
 				deleted = mNetwork.deleteLocation(adapter.getId(), location);
+			}
 		} catch (NetworkException e) {
 			e.printStackTrace();
 		}
 		
-		if (!deleted)
+		if (!deleted) {
 			return false;
+		}
 
 		// Location was deleted on server, remove it from adapter too		
 		return adapter.deleteLocation(location.getId());
@@ -570,8 +586,9 @@ public final class Controller {
 	public Location saveLocation(Location location) {
 		// TODO: separate it to 2 methods? (createLocation and saveLocation)
 		Adapter adapter = getActiveAdapter();
-		if (adapter == null)
+		if (adapter == null) {
 			return null;
+		}
 
 		boolean saved = false;
 		boolean adding = location.getId().equals(Location.NEW_LOCATION_ID);
@@ -597,8 +614,9 @@ public final class Controller {
 			e.printStackTrace();
 		}
 		
-		if (!saved)
+		if (!saved) {
 			return null;
+		}
 
 		// Location was saved on server, save it to adapter too
 		if (adding) {
@@ -666,8 +684,9 @@ public final class Controller {
 		List<BaseDevice> list = new ArrayList<BaseDevice>();
 		
 		Adapter adapter = getActiveAdapter();
-		if (adapter != null)
+		if (adapter != null) {
 			list.addAll(adapter.getUninitializedDevices());
+		}
 		
 		return list;
 	}
@@ -769,6 +788,10 @@ public final class Controller {
 	 * @return result
 	 */
 	public boolean sendPairRequest(String adapterID) {
+		if (mDemoMode) {
+			return false;
+		}
+		
 		boolean result = false;
 		
 		try {
