@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<adapter id="01233145645792">
+<adapter id="65260">
 	<version>1.0.2</version>
 	<capabilities>
 		<device initialized="1" type="0x00" id="100:00:FF:000:FF0" visibility="I"> <!-- temperature (°C) -->

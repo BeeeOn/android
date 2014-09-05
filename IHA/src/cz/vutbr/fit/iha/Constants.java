@@ -27,8 +27,9 @@ public final class Constants {
 	/**
 	 * Assets with prepared devices and locations for demo mode
 	 */
-	public static final String ASSET_ADAPTERS_FILENAME = "komunikace.xml";
-	public static final String ASSET_LOCATIONS_FILENAME = "lokace.xml";
+	public static final String ASSET_ADAPTERS_FILENAME = "adapters.xml";
+	public static final String ASSET_ADAPTER_DATA_FILENAME = "adapter_%s.xml";
+	public static final String ASSET_LOCATIONS_FILENAME = "locations_%s.xml";
 	
 	/**
 	 * Device's types

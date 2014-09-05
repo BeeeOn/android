@@ -41,19 +41,18 @@ public final class DemoHousehold extends Household {
 		this.adapters = new ArrayList<Adapter>();
 		
 		try {
-			Adapter adapter = new Adapter();
-			adapter.setDevices(XmlParsers.getDemoDevicesFromAsset(mContext, Constants.ASSET_ADAPTERS_FILENAME));
-					
-			adapter.setId("01233145645792"); // original from xml
-			adapter.setName("Home adapter");
-			adapter.setLocations(XmlParsers.getDemoLocationsFromAsset(mContext, Constants.ASSET_LOCATIONS_FILENAME));
-			this.adapters.add(adapter);
-
-			adapter.setDevices(XmlParsers.getDemoDevicesFromAsset(mContext, Constants.ASSET_ADAPTERS_FILENAME));
-			adapter.setId("16457841561538"); // random one
-			adapter.setName("Testing duplicate");
-			adapter.setLocations(XmlParsers.getDemoLocationsFromAsset(mContext, Constants.ASSET_LOCATIONS_FILENAME));
-			this.adapters.add(adapter);
+			XmlParsers parser = new XmlParsers();
+			
+			String assetName = Constants.ASSET_ADAPTERS_FILENAME;
+			this.adapters = parser.getDemoAdaptersFromAsset(mContext, assetName);
+			
+			for (Adapter adapter : this.adapters) {
+				assetName = String.format(Constants.ASSET_LOCATIONS_FILENAME, adapter.getId());
+				adapter.setLocations(parser.getDemoLocationsFromAsset(mContext, assetName));
+				
+				assetName = String.format(Constants.ASSET_ADAPTER_DATA_FILENAME, adapter.getId());
+				adapter.setDevices(parser.getDemoDevicesFromAsset(mContext, assetName));
+			}			
 		}
 		catch(Exception e){
 			e.printStackTrace();

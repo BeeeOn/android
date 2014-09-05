@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<adapter id="64206">
+	<version>1.0.2</version>
+	<capabilities>
+		<device initialized="1" type="0x00" id="100:00:FF:000:FF0" visibility="I"> <!-- temperature (°C) -->
+			<location id="5555"/>
+			<name>Teplota na okne</name>
+			<refresh>5</refresh>
+			<battery>100</battery>
+			<quality>52</quality>
+			<value hwupdated="2013-08-28 10:03:56">30</value>
+			<logging enabled="1"/>
+		</device>
+		<device initialized="1" type="0x00" id="100:00:FF:000:FF1" visibility="I">
+			<location id="5555"/>
+			<name>Teplota u dverí</name>
+			<refresh>12</refresh>
+			<battery>70</battery>
+			<quality>52</quality>
+			<value hwupdated="2013-08-28 10:03:56">120</value>
+			<logging enabled="0"/>
+		</device>
+		<device initialized="1" type="0x03" id="100:00:FF:000:FF2" visibility="I"> <!-- switch (open/close) -->
+			<location id="5555"/>
+			<name>Okno</name>
+			<refresh>12</refresh>
+			<battery>70</battery>
+			<quality>25</quality>
+			<value hwupdated="2013-08-28 10:03:56">OFF</value>
+			<logging enabled="0"/>
+		</device>
+		<device initialized="1" type="0x03" id="100:00:FF:000:FF3" visibility="I">
+			<location id="5555"/>
+			<name>Balkón</name>
+			<refresh>12</refresh>
+			<battery>70</battery>
+			<quality>25</quality>
+			<value hwupdated="2013-08-28 10:03:56">ON</value>
+			<logging enabled="0"/>
+		</device>
+		<device initialized="1" type="0x06" id="100:00:FF:000:FF4" visibility="I"> <!-- noise (dB) -->
+			<location id="2222"/>
+			<name>Postel</name>
+			<refresh>12</refresh>
+			<battery>100</battery>
+			<quality>52</quality>
+			<value hwupdated="2013-08-28 10:03:56">30</value>
+			<logging enabled="0"/>
+		</device>
+		<device initialized="1" type="0x05" id="100:00:FF:000:FF5" visibility="I"> <!-- illumination (lx) -->
+			<location id="2222"/>
+			<name>Psací stůl</name>
+			<refresh>12</refresh>
+			<battery>100</battery>
+			<quality>52</quality>
+			<value hwupdated="2013-08-28 10:03:56">15</value>
+			<logging enabled="0"/>
+		</device>
+		<device initialized="0" type="0x07" involved="2013-08-28 10:03:56" id="100:00:FF:000:FF6" visibility="I"> <!-- emission (ppm) -->
+			<location id="0"/>
+			<name></name>
+			<refresh>12</refresh>
+			<battery>100</battery>
+			<quality>52</quality>
+			<value hwupdated="2013-08-28 10:03:56">430</value>
+			<logging enabled="0"/>
+		</device>
+		<device initialized="1" type="0x04" id="100:00:FF:000:FF7" visibility="I"> <!-- switch (On/Off) -->
+			<location id="5555"/>
+			<name>Ventilátor</name>
+			<refresh>12</refresh>
+			<battery>70</battery>
+			<quality>52</quality>
+			<value hwupdated="2013-08-28 10:03:56">ON</value>
+			<logging enabled="0"/>
+		</device>
+		<device initialized="1" type="0x04" id="100:00:FF:000:FF8" visibility="I">
+			<location id="5555"/>
+			<name>Počítač</name>
+			<refresh>12</refresh>
+			<battery>0</battery>
+			<quality>52</quality>
+			<value hwupdated="2013-08-28 10:03:56">OFF</value>
+			<logging enabled="0"/>
+		</device>
+		<device initialized="1" type="0x04" id="100:00:FF:000:FF9" visibility="I">
+			<location id="5555"/>
+			<name>Lampa u TV</name>
+			<refresh>12</refresh>
+			<battery>100</battery>
+			<quality>52</quality>
+			<value hwupdated="2013-08-28 10:03:56">ON</value>
+			<logging enabled="0"/>
+		</device>
+		<device initialized="1" type="0x04" id="100:00:FF:000:FFA" visibility="I">
+			<location id="5555"/>
+			<name>Televízor</name>
+			<refresh>12</refresh>
+			<battery>100</battery>
+			<quality>52</quality>
+			<value hwupdated="2013-08-28 10:03:56">ON</value>
+			<logging enabled="0"/>
+		</device>
+		<device initialized="1" type="0x04" id="100:00:FF:000:FFB" visibility="I">
+			<location id="4444"/>
+			<name>Sporák</name>
+			<refresh>12</refresh>
+			<battery>100</battery>
+			<quality>52</quality>
+			<value hwupdated="2013-08-28 10:03:56">ON</value>
+			<logging enabled="0"/>
+		</device>
+		<device initialized="1" type="0x01" id="100:00:FF:000:FFC" visibility="I"> <!-- humidity (%r) -->
+			<location id="6666"/>
+			<name>Osvěžovač</name>
+			<refresh>12</refresh>
+			<battery>100</battery>
+			<quality>52</quality>
+			<value hwupdated="2013-08-28 10:03:56">20</value>
+			<logging enabled="0"/>
+		</device>
+		<device initialized="1" type="0x02" id="100:00:FF:000:FFD" visibility="I"> <!-- pressure (hPa) -->
+			<location id="6666"/>
+			<name>Tlakoměr</name>
+			<refresh>12</refresh>
+			<battery>100</battery>
+			<quality>52</quality>
+			<value hwupdated="2013-08-28 10:03:56">1058</value>
+			<logging enabled="0"/>
+		</device>
+	</capabilities>
+</adapter>
