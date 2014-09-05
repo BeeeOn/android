@@ -843,24 +843,14 @@ public class LocationScreenActivity extends BaseActivity {
 
 								// TODO: show loading while saving new name to
 								// server (+ use asynctask)
-								Location location = new Location(); // FIXME:
-																	// get that
-																	// original
-																	// location
-																	// from
-																	// somewhere
+								Location location = new Location(); // FIXME: get that original location from somewhere
 								location.setName(newName);
 
-								boolean saved = mController
-										.saveLocation(location) != null;
+								boolean saved = mController.saveLocation(location);
 
-								String message = saved ? String
-										.format("Location was renamed to '%s'",
-												newName)
-										: "Location wasn't renamed due to error";
+								String message = saved ? String.format("Location was renamed to '%s'", newName) : "Location wasn't renamed due to error";
 
-								Toast.makeText(LocationScreenActivity.this,
-										message, Toast.LENGTH_LONG).show();
+								Toast.makeText(LocationScreenActivity.this, message, Toast.LENGTH_LONG).show();
 
 								// Redraw item in list
 								view.setText(newName);

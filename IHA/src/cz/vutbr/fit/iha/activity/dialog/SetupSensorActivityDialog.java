@@ -309,7 +309,7 @@ public class SetupSensorActivityDialog extends BaseActivityDialog {
 
 			if (pair.location.getId().equals(Location.NEW_LOCATION_ID)) {
 				// We need to save new location to server first
-				Location newLocation = mController.saveLocation(pair.location);
+				Location newLocation = mController.addLocation(pair.location);
 				if (newLocation == null)
 					return null;
 

@@ -565,59 +565,62 @@ public final class Controller {
 			e.printStackTrace();
 		}
 		
-		if (!deleted) {
-			return false;
-		}
-
 		// Location was deleted on server, remove it from adapter too		
-		return adapter.deleteLocation(location.getId());
+		return deleted && adapter.deleteLocation(location.getId());
 	}
 	
 	/**
-	 * Save new or changed location to server.
+	 * Save changed location to server.
 	 * 
 	 * @param location
 	 * @return new location object or null on error
 	 */
-	public Location saveLocation(Location location) {
-		// TODO: separate it to 2 methods? (createLocation and saveLocation)
+	public boolean saveLocation(Location location) {
 		Adapter adapter = getActiveAdapter();
 		if (adapter == null) {
-			return null;
+			return false;
 		}
 
 		boolean saved = false;
-		boolean adding = location.getId().equals(Location.NEW_LOCATION_ID);
 		try {
-			if (adding) {
-				if (mDemoMode) {
-					location.setId(adapter.getUnusedLocationId());
-					saved = true;
-				} else {
-					location = mNetwork.createLocation(adapter.getId(), location);
-					saved = (location != null);
-				}
+			if (mDemoMode) {
+				saved = true;
 			} else {
-				if (mDemoMode) {
-					saved = true;
-				} else {
-					saved = mNetwork.updateLocation(adapter.getId(), location);
-				}
+				saved = mNetwork.updateLocation(adapter.getId(), location);
 			}
 		} catch (NetworkException e) {
 			e.printStackTrace();
 		}
 		
-		if (!saved) {
+		// Location was updated on server, update it to adapter too
+		return saved && adapter.updateLocation(location);
+	}
+	
+	/**
+	 * Create and add new location to server.
+	 * 
+	 * @param location
+	 * @return new location object or null on error
+	 */
+	public Location addLocation(Location location) {
+		Adapter adapter = getActiveAdapter();
+		if (adapter == null) {
 			return null;
 		}
 
-		// Location was saved on server, save it to adapter too
-		if (adding) {
-			return adapter.addLocation(location) ? location : null;
-		} else {
-			return adapter.updateLocation(location) ? location : null;
+		try {
+			if (mDemoMode) {
+				location.setId(adapter.getUnusedLocationId());
+			} else {
+				location = mNetwork.createLocation(adapter.getId(), location);
+			}
+		} catch (NetworkException e) {
+			e.printStackTrace();
+			location = null;
 		}
+		
+		// Location was saved on server, save it to adapter too
+		return (location != null && adapter.addLocation(location)) ? location : null;
 	}
 
 
