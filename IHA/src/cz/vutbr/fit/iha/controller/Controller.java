@@ -272,9 +272,9 @@ public final class Controller {
 		if (mDemoMode) {
 			// In demo mode update device with random value 
 			if (device instanceof SwitchDevice) {
-				((SwitchDevice)device).setActive(!((SwitchDevice)device).isActive());
+				((SwitchDevice)device).setActive(new Random().nextBoolean());
 			} else if (device instanceof StateDevice) {
-				((StateDevice)device).setActive(!((StateDevice)device).isActive());
+				((StateDevice)device).setActive(new Random().nextBoolean());
 			} else {
 				int i = new Random().nextInt(100);
 				device.setValue(i);
