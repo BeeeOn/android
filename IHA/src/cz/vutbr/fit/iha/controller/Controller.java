@@ -223,31 +223,21 @@ public final class Controller {
 
 		Log.i(TAG, String.format("Adapter (%s) update needed (%s)", adapter.getName(), forceUpdate ? "force" : "time elapsed"));
 
-		Adapter newAdapter = new Adapter();
-		List<Location> newLocations = null;
-		int newUtcOffset = 0;
+		boolean result = false;
 		
 		try {
-			newAdapter.setDevices(mNetwork.init(adapter.getId()));
-			newLocations = mNetwork.getLocations(adapter.getId());
-			newUtcOffset = mNetwork.getTimeZone(adapter.getId());
+			// Update adapter with new data
+			adapter.setLocations(mNetwork.getLocations(adapter.getId()));
+			adapter.setUtcOffset(mNetwork.getTimeZone(adapter.getId()));
+			adapter.setDevices(mNetwork.init(adapter.getId()));
+
+			adapter.lastUpdate.setToNow();
+			result = true;
 		} catch (NetworkException e) {
 			e.printStackTrace();
-			return false;
 		}
 		
-		// Update adapter with new data
-		adapter.setLocations(newLocations);
-		adapter.setUtcOffset(newUtcOffset);
-
-		adapter.setDevices(newAdapter.getDevices());
-		adapter.setId(newAdapter.getId());
-		adapter.setName(newAdapter.getName());
-		adapter.setRole(newAdapter.getRole());
-		
-		adapter.lastUpdate.setToNow();
-		
-		return true;
+		return result;
 	}
 	
 	/**
@@ -286,18 +276,15 @@ public final class Controller {
 		if (adapter == null)
 			return false;
 		
-		List<BaseDevice> devices = new ArrayList<BaseDevice>();
-		devices.add(device);
-
 		try {
-			devices = mNetwork.getDevices(adapter.getId(), devices);
-			if (devices == null || devices.size() != 1)
+			BaseDevice newDevice = mNetwork.getDevice(adapter.getId(), device);
+			if (newDevice == null)
 				return false;
 			
-			BaseDevice newDevice = devices.get(0);
 			device.replaceData(newDevice);
 		} catch (NetworkException e) {
 			e.printStackTrace();
+			return false;
 		}
 				
 		refreshDevice(device);
@@ -599,9 +586,7 @@ public final class Controller {
 				if (mDemoMode) {
 					saved = true;
 				} else {
-					List<Location> locations = new ArrayList<Location>();
-					locations.add(location);
-					saved = mNetwork.updateLocations(adapter.getId(), locations);
+					saved = mNetwork.updateLocation(adapter.getId(), location);
 				}
 			}
 		} catch (NetworkException e) {
@@ -721,16 +706,13 @@ public final class Controller {
 			return true;
 		}
 		
-		List<BaseDevice> devices = new ArrayList<BaseDevice>();
-		devices.add(device);
-		
 		boolean result = false;
 
 		try {
 			Adapter adapter = getAdapterByDevice(device);
 			Log.d(TAG, "Adapter ID: "+adapter.getId()+ " device:"+device.getAddress());
 			if (adapter != null) {
-				result = mNetwork.setDevices(adapter.getId(), devices);
+				result = mNetwork.setDevice(adapter.getId(), device, what);
 				result = updateDevice(device);
 			}
 		} catch (NetworkException e) {
