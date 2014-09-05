@@ -6,6 +6,7 @@ import java.util.Random;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager.NameNotFoundException;
 import android.text.format.Time;
 import android.util.Log;
 import cz.vutbr.fit.iha.adapter.Adapter;
@@ -88,7 +89,7 @@ public final class Controller {
 
 		mHousehold = mDemoMode ? new DemoHousehold(mContext) : new Household();
 		mPersistence = new Persistence(mContext);
-		mNetwork = new Network(mContext, mHousehold.user);
+		mNetwork = new Network(mContext, mHousehold.user, isDebugVersion());
 	}
 	
 	public static synchronized void setDemoMode(Context context, boolean demoMode) {
@@ -102,7 +103,20 @@ public final class Controller {
 	public static boolean isDemoMode() {
 		return mDemoMode;
 	}
-	
+
+	/**
+	 * Check if this is debug version of application
+	 * 
+	 * @return true if version in Manifest contains "debug", false otherwise  
+	 */
+	private boolean isDebugVersion() {
+		try {
+			String version = mContext.getPackageManager().getPackageInfo(mContext.getPackageName(), 0).versionName;
+			return version.contains("debug");
+		} catch (NameNotFoundException e) {}
+
+		return false;
+	}
 	
 	/** Persistence methods *************************************************/
 

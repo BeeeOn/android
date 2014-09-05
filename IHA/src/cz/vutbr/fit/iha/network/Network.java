@@ -104,15 +104,17 @@ public class Network {
 	private static final String ALIAS_CA_CERT = "ca";
 
 	/**
-	 * Address or hostName of server
+	 * Address and port of debug server
 	 */
-	private static final String SERVER_ADDR = "ant-2.fit.vutbr.cz";
+	private static final String SERVER_ADDR_DEBUG = "ant-2.fit.vutbr.cz";
+	private static final int SERVER_PORT_DEBUG = 4566;
 
 	/**
-	 * Port of server
+	 * Address and port of production server
 	 */
-	private static final int SERVER_PORT = 4565;
-
+	private static final String SERVER_ADDR_PRODUCTION = "ant-2.fit.vutbr.cz";
+	private static final int SERVER_PORT_PRODUCTION = 4565;
+	
 	/**
 	 * CN value to be verified in server certificate
 	 */
@@ -121,6 +123,7 @@ public class Network {
 	private static Context mContext;
 	private static ActualUser mUser;
 	private static String mSessionId;
+	private static boolean mUseDebugServer;
 	
 	private static final String GoogleExcMessage = "Google token error";
 
@@ -129,9 +132,10 @@ public class Network {
 	 * 
 	 * @param context
 	 */
-	public Network(Context context, ActualUser user) {
+	public Network(Context context, ActualUser user, boolean useDebugServer) {
 		mContext = context;
 		mUser = user;
+		mUseDebugServer = useDebugServer;
 	}
 
 	/**
@@ -197,7 +201,12 @@ public class Network {
 		sslContext.init(null, tmf.getTrustManagers(), null);
 
 		// Open SSLSocket directly to server
-		SSLSocket socket = (SSLSocket) sslContext.getSocketFactory().createSocket(SERVER_ADDR, SERVER_PORT);
+		SSLSocket socket;
+		if (mUseDebugServer) {
+			socket = (SSLSocket) sslContext.getSocketFactory().createSocket(SERVER_ADDR_DEBUG, SERVER_PORT_DEBUG);
+		} else {
+			socket = (SSLSocket) sslContext.getSocketFactory().createSocket(SERVER_ADDR_PRODUCTION, SERVER_PORT_PRODUCTION);
+		}
 
 		HostnameVerifier hv = HttpsURLConnection.getDefaultHostnameVerifier();
 		SSLSession s = socket.getSession();
