@@ -82,6 +82,7 @@
 	<string name="toast_login_failed">Login failed</string>
 	<string name="toast_adapter_activate_failed">Failed to activate adapter.</string>
 	<string name="toast_adapter_activated">Adapter has been activated.</string>
+	<string name="toast_no_adapter">You have no registered adapter.</string>
     
     <!-- Progress -->
     <string name="progress_signing">Signing to server&#8230;</string>

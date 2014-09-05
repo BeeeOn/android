@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
 import android.widget.Button;
+import android.widget.Toast;
 import cz.vutbr.fit.iha.Constants;
 import cz.vutbr.fit.iha.R;
 import cz.vutbr.fit.iha.activity.LocationScreenActivity;
@@ -45,10 +46,16 @@ public class AddSensorActivityDialog extends BaseActivityDialog{
 		
 		mController = Controller.getInstance(this);
 		
-		
 		initViews();
+
 		// Send request
 		Adapter actAdapter = mController.getActiveAdapter();
+		if (actAdapter == null) {
+			Toast.makeText(this, getResources().getString(R.string.toast_no_adapter), Toast.LENGTH_LONG).show();
+			finish();
+			return;
+		}
+		
 		mPairRequestTask = new PairRequestTask();
 		mPairRequestTask.execute(actAdapter.getId());
 	}
