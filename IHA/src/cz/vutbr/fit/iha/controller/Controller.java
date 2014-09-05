@@ -295,13 +295,7 @@ public final class Controller {
 				return false;
 			
 			BaseDevice newDevice = devices.get(0);
-			device.setLocationId(newDevice.getLocationId());
-			device.setName(newDevice.getName());
-			device.setRefresh(newDevice.getRefresh());
-			device.lastUpdate.set(newDevice.lastUpdate);
-			//device.setLogging(newDevice.getLogging());
-			//device.setValue(newDevice.getValue());
-			// TODO: all other values etc.
+			device.replaceData(newDevice);
 		} catch (NetworkException e) {
 			e.printStackTrace();
 		}

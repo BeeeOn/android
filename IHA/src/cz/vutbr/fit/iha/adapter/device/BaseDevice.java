@@ -316,4 +316,24 @@ public abstract class BaseDevice {
 		return lastUpdate.before(that);
 	}
 
+	/**
+	 * Replace all data of this device by data of different device 
+	 * @param newDevice with data that should be copied
+	 */
+	public void replaceData(BaseDevice newDevice) {
+		setAddress(newDevice.getAddress());
+		setBattery(newDevice.getBattery());
+		setInitialized(newDevice.isInitialized());
+		setInvolveTime(newDevice.getInvolveTime());
+		setLocationId(newDevice.getLocationId());
+		setLogging(newDevice.isLogging());
+		setName(newDevice.getName());
+		setQuality(newDevice.getQuality());
+		setRefresh(newDevice.getRefresh());
+		setValue(newDevice.getStringValue());
+		setVisibility(newDevice.getVisibility());
+		
+		lastUpdate.set(newDevice.lastUpdate);
+	}
+
 }
