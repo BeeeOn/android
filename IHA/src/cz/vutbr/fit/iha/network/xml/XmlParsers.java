@@ -247,7 +247,7 @@ public class XmlParsers {
 	 * @throws XmlVerMisException means XML version mismatch exception
 	 * @throws ParseException 
 	 */
-	private static List<BaseDevice> parseAllDevices() throws XmlPullParserException, IOException, XmlVerMisException, ParseException{
+	private List<BaseDevice> parseAllDevices() throws XmlPullParserException, IOException, XmlVerMisException, ParseException{
 		mParser.nextTag();
 		mParser.require(XmlPullParser.START_TAG, ns, ADAPTER);
 		
@@ -272,7 +272,7 @@ public class XmlParsers {
 	 * @throws IOException
 	 * @throws ParseException 
 	 */
-	private static List<BaseDevice> parseDevices() throws XmlPullParserException, IOException, ParseException{
+	private List<BaseDevice> parseDevices() throws XmlPullParserException, IOException, ParseException{
 		mParser.nextTag();
 		//mParser.require(XmlPullParser.START_TAG, ns, DEVICE); // strict solution
 		
@@ -332,7 +332,7 @@ public class XmlParsers {
 	 * @throws XmlPullParserException
 	 * @throws IOException
 	 */
-	private static List<Adapter> parseAdaptersReady() throws XmlPullParserException, IOException{
+	private List<Adapter> parseAdaptersReady() throws XmlPullParserException, IOException{
 		mParser.nextTag();
 //		mParser.require(XmlPullParser.START_TAG, ns, ADAPTER); // strict solution
 		
@@ -361,7 +361,7 @@ public class XmlParsers {
 	 * @throws XmlPullParserException
 	 * @throws IOException
 	 */
-	private static DeviceLog parseLogData() throws XmlPullParserException, IOException {
+	private DeviceLog parseLogData() throws XmlPullParserException, IOException {
 		mParser.nextTag();
 		mParser.require(XmlPullParser.START_TAG, ns, ROW);
 		
@@ -650,7 +650,7 @@ public class XmlParsers {
 	 * @param filename
 	 * @return Adapter or null
 	 */
-	public static List<BaseDevice> getDemoDevicesFromAsset(Context context, String filename) {
+	public List<BaseDevice> getDemoDevicesFromAsset(Context context, String filename) {
 		Log.i(TAG, String.format("Loading adapter from asset '%s'", filename));
 		List<BaseDevice> result = null;
 		InputStream stream = null;
@@ -714,7 +714,7 @@ public class XmlParsers {
 	 * @param filename
 	 * @return list of adapters or empty list
 	 */
-	public static List<Adapter> getDemoAdaptersFromAsset(Context context, String filename){
+	public List<Adapter> getDemoAdaptersFromAsset(Context context, String filename){
 		Log.i(TAG, String.format("Loading adapters from asset '%s'", filename));
 		List<Adapter> adapters = new ArrayList<Adapter>();
 		InputStream stream = null;
