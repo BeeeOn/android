@@ -1,6 +1,7 @@
 package cz.vutbr.fit.iha.controller;
 
 import java.util.ArrayList;
+import java.util.EnumSet;
 import java.util.List;
 import java.util.Random;
 
@@ -649,11 +650,10 @@ public final class Controller {
 	 * 
 	 * @param device
 	 * @return true on success, false otherwise
-	 * @throws NotImplementedException
 	 */
 	public boolean hideDevice(BaseDevice device) throws NotImplementedException {
-		// TODO: replace this with saveDevice method?
-		throw new NotImplementedException();
+		device.setVisibility(false);
+		return saveDevice(device, EnumSet.of(SaveDevice.SAVE_VISIBILITY));
 	}
 	
 	/**
@@ -661,11 +661,10 @@ public final class Controller {
 	 * 
 	 * @param device
 	 * @return true on success, false otherwise
-	 * @throws NotImplementedException
 	 */
 	public boolean unhideDevice(BaseDevice device) throws NotImplementedException {
-		// TODO: replace this with saveDevice method?
-		throw new NotImplementedException();
+		device.setVisibility(true);
+		return saveDevice(device, EnumSet.of(SaveDevice.SAVE_VISIBILITY));
 	}
 
 	/**
@@ -707,13 +706,13 @@ public final class Controller {
 	}
 	
 	/**
-	 * Save specified setting of device to server.
+	 * Save specified settings of device to server.
 	 * 
 	 * @param device
 	 * @param what type of settings to save
 	 * @return true on success, false otherwise
 	 */
-	public boolean saveDevice(BaseDevice device, SaveDevice what) {
+	public boolean saveDevice(BaseDevice device, EnumSet<SaveDevice> what) {
 		if (mDemoMode) {
 			device.setInitialized(true);
 			refreshDevice(device);
@@ -724,7 +723,7 @@ public final class Controller {
 
 		try {
 			Adapter adapter = getAdapterByDevice(device);
-			Log.d(TAG, "Adapter ID: "+adapter.getId()+ " device:"+device.getAddress());
+			Log.d(TAG, String.format("Adapter ID: %s, device: %s", adapter.getId(), device.getAddress()));
 			if (adapter != null) {
 				result = mNetwork.setDevice(adapter.getId(), device, what);
 				result = updateDevice(device);
@@ -734,16 +733,6 @@ public final class Controller {
 		}
 		
 		return result;
-	}
-	
-	/**
-	 * Save all settings of device to server.
-	 * 
-	 * @param device
-	 * @return true on success, false otherwise
-	 */
-	public boolean saveDevice(BaseDevice device) {
-		return saveDevice(device, SaveDevice.SAVE_ALL);
 	}
 	
 	/**

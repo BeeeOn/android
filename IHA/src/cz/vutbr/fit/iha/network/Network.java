@@ -16,6 +16,7 @@ import java.security.cert.Certificate;
 import java.security.cert.CertificateException;
 import java.security.cert.CertificateFactory;
 import java.util.ArrayList;
+import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -34,6 +35,7 @@ import android.net.NetworkInfo;
 import android.util.Log;
 import cz.vutbr.fit.iha.adapter.Adapter;
 import cz.vutbr.fit.iha.adapter.device.BaseDevice;
+import cz.vutbr.fit.iha.adapter.device.BaseDevice.SaveDevice;
 import cz.vutbr.fit.iha.adapter.device.DeviceLog;
 import cz.vutbr.fit.iha.adapter.device.DeviceLog.DataInterval;
 import cz.vutbr.fit.iha.adapter.device.DeviceLog.DataType;
@@ -547,13 +549,13 @@ public class Network {
 	 * Method send wanted fields of device to server
 	 * @param adapterId id of adapter
 	 * @param device to save
-	 * @param toSave ENUM specified fields to save
+	 * @param toSave ENUMSET specified fields to save
 	 * @return true if fields has been updated, false otherwise
 	 * @throws NoConnectionException
 	 * @throws CommunicationException
 	 * @throws FalseException
 	 */
-	public boolean setDevice(String adapterId, BaseDevice device, BaseDevice.SaveDevice toSave) throws NoConnectionException, CommunicationException, FalseException{
+	public boolean setDevice(String adapterId, BaseDevice device, EnumSet<SaveDevice> toSave) throws NoConnectionException, CommunicationException, FalseException{
 		String messageToSend = XmlCreator.createDevice(mSessionId, adapterId, device, toSave);
 		ParsedMessage msg = doRequest(messageToSend);
 

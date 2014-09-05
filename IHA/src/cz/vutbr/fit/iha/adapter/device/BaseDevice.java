@@ -42,12 +42,12 @@ public abstract class BaseDevice {
 	 * Represents settings of device which could be saved to server
 	 */
 	public enum SaveDevice {
-		SAVE_ALL,			// save all settings
 		SAVE_NAME,			// rename device
 		SAVE_LOCATION,		// change location
 		SAVE_VISIBILITY,	// change visibility				//NOTE: sending always
 		SAVE_LOGGING,		// change logging on server
 		SAVE_REFRESH,		// change refresh interval
+		SAVE_VALUE,			// change value (of actor)
 		SAVE_TYPE,			// change device's icon, etc.		//NOTE: what? type cannot be changed
 	}
 	

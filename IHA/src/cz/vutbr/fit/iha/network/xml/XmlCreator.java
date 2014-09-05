@@ -5,6 +5,7 @@
 package cz.vutbr.fit.iha.network.xml;
 
 import java.io.StringWriter;
+import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map.Entry;
@@ -778,7 +779,7 @@ public class XmlCreator {
 	 * @param toSave ECO mode to save only wanted fields
 	 * @return Devices message
 	 */
-	public static String createDevice(String id, String adapterId, BaseDevice device, BaseDevice.SaveDevice toSave){
+	public static String createDevice(String id, String adapterId, BaseDevice device, EnumSet<SaveDevice> toSave){
 		XmlSerializer serializer = Xml.newSerializer();
 		StringWriter writer = new StringWriter();
 		try{
@@ -795,31 +796,32 @@ public class XmlCreator {
 				serializer.attribute(ns, INITIALIZED, (device.isInitialized())?INIT_1:INIT_0);
 				serializer.attribute(ns, TYPE, formatType(device.getType()));
 				serializer.attribute(ns, ID, device.getAddress());
-				if(toSave == SaveDevice.SAVE_VISIBILITY || toSave == SaveDevice.SAVE_ALL)
+				
+				if(toSave.contains(SaveDevice.SAVE_VISIBILITY))
 					serializer.attribute(ns, VISIBILITY, (device.getVisibility())?INIT_1:INIT_0);
 				
-				if(device.getLocationId() != null && toSave == SaveDevice.SAVE_LOCATION || toSave == SaveDevice.SAVE_ALL){
+				if(toSave.contains(SaveDevice.SAVE_LOCATION) && device.getLocationId() != null){
 					serializer.startTag(ns, LOCATION);
 					serializer.attribute(ns, ID, device.getLocationId());
 					serializer.endTag(ns, LOCATION);
 				}
-				if(device.getName() != null && toSave == SaveDevice.SAVE_NAME || toSave == SaveDevice.SAVE_ALL){
+				if(toSave.contains(SaveDevice.SAVE_NAME) && device.getName() != null){
 					serializer.startTag(ns, NAME);
 					serializer.text(device.getName());
 					serializer.endTag(ns, NAME);
 				}
-				if(device.getRefresh() != null && toSave == SaveDevice.SAVE_REFRESH || toSave == SaveDevice.SAVE_ALL){
+				if(toSave.contains(SaveDevice.SAVE_REFRESH) && device.getRefresh() != null){
 					serializer.startTag(ns, REFRESH);
 					serializer.text(Integer.toString(device.getRefresh().getInterval()));
 					serializer.endTag(ns, REFRESH);
 				}
-				if(device.getStringValue() != null && device.getStringValue().length() > 0 && toSave == SaveDevice.SAVE_ALL){
+				if(toSave.contains(SaveDevice.SAVE_VALUE) && device.getStringValue() != null && device.getStringValue().length() > 0){
 					serializer.startTag(ns, VALUE);
 					serializer.text(device.getStringValue());
 					serializer.endTag(ns, VALUE);
 				}
 				
-				if(toSave == SaveDevice.SAVE_LOGGING || toSave == SaveDevice.SAVE_ALL){
+				if(toSave.contains(SaveDevice.SAVE_LOGGING)){
 					serializer.startTag(ns, LOGGING);
 					serializer.attribute(ns, ENABLED, (device.isLogging())?INIT_1:INIT_0);
 					serializer.endTag(ns, LOGGING);

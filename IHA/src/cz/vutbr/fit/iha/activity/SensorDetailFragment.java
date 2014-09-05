@@ -5,6 +5,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
+import java.util.EnumSet;
 import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Locale;
@@ -46,6 +47,7 @@ import com.jjoe64.graphview.LineGraphView;
 import cz.vutbr.fit.iha.LocationArrayAdapter;
 import cz.vutbr.fit.iha.R;
 import cz.vutbr.fit.iha.adapter.device.BaseDevice;
+import cz.vutbr.fit.iha.adapter.device.BaseDevice.SaveDevice;
 import cz.vutbr.fit.iha.adapter.device.DeviceLog;
 import cz.vutbr.fit.iha.adapter.device.DeviceLog.DataInterval;
 import cz.vutbr.fit.iha.adapter.device.DeviceLog.DataType;
@@ -643,11 +645,12 @@ public class SensorDetailFragment extends SherlockFragment {
 	/**
 	 * Changes selected location and redraws list of adapters there
 	 */
-	private class UpdateDeviceTask extends AsyncTask<Void, Void, Boolean> {
+	private class UpdateDeviceTask extends AsyncTask<SaveDevice, Void, Boolean> {
 		@Override
-		protected Boolean doInBackground(Void... params) {
+		protected Boolean doInBackground(SaveDevice... params) {
 			Log.d(TAG, "ID:" + mDevice.getId() + " Name:" + mDevice.getName());
-			return mController.saveDevice(mDevice);
+			EnumSet<SaveDevice> what = EnumSet.of(params[0]); // method expects exactly one parameter
+			return mController.saveDevice(mDevice, what);
 		}
 
 		@Override
@@ -736,7 +739,7 @@ public class SensorDetailFragment extends SherlockFragment {
 					mDevice.setName(mNameEdit.getText().toString());
 					// Update device to server
 					UpdateDeviceTask task = new UpdateDeviceTask();
-					task.execute();
+					task.execute(new SaveDevice[] { SaveDevice.SAVE_NAME });
 				}
 				mNameEdit.setVisibility(View.GONE);
 				mName.setVisibility(View.VISIBLE);
@@ -758,7 +761,7 @@ public class SensorDetailFragment extends SherlockFragment {
 					Log.d(TAG, "Refresh time "+ mDevice.getRefresh().getStringInterval(mActivity));
 					// Update device to server
 					UpdateDeviceTask task = new UpdateDeviceTask();
-					task.execute();
+					task.execute(new SaveDevice[] { SaveDevice.SAVE_REFRESH });
 				}
 				break;
 

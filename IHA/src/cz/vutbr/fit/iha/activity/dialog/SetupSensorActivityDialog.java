@@ -2,6 +2,7 @@ package cz.vutbr.fit.iha.activity.dialog;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.EnumSet;
 import java.util.List;
 
 import android.app.ProgressDialog;
@@ -31,6 +32,7 @@ import cz.vutbr.fit.iha.Constants;
 import cz.vutbr.fit.iha.R;
 import cz.vutbr.fit.iha.activity.LocationScreenActivity;
 import cz.vutbr.fit.iha.adapter.device.BaseDevice;
+import cz.vutbr.fit.iha.adapter.device.BaseDevice.SaveDevice;
 import cz.vutbr.fit.iha.adapter.location.Location;
 import cz.vutbr.fit.iha.adapter.location.Location.DefaultRoom;
 import cz.vutbr.fit.iha.controller.Controller;
@@ -314,7 +316,8 @@ public class SetupSensorActivityDialog extends BaseActivityDialog {
 				pair.device.setLocationId(newLocation.getId());
 			}
 
-			if (!mController.saveDevice(pair.device)) {
+			EnumSet<SaveDevice> what = EnumSet.of(SaveDevice.SAVE_LOCATION, SaveDevice.SAVE_NAME);
+			if (!mController.saveDevice(pair.device, what)) {
 				return null;
 			}
 
