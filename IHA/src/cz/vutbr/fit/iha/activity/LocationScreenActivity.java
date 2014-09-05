@@ -168,8 +168,10 @@ public class LocationScreenActivity extends BaseActivity {
 	public void onResume() {
 		super.onResume();
 		Log.d(TAG, "onResume  , inBackground: " + String.valueOf(inBackground));
-		setLocationOrEmpty();
-		redrawMenu();
+		
+		mSwitchAdapter = new LocationScreenActivity.SwitchAdapter();
+		mSwitchAdapter.execute(new String[0]); // to call setLocationOrEmpty and redrawMenu
+		
 		backPressed = false;
 		isPaused = false;
 
@@ -429,7 +431,7 @@ public class LocationScreenActivity extends BaseActivity {
 
 						setSupportProgressBarIndeterminateVisibility(true);
 						mSwitchAdapter = new LocationScreenActivity.SwitchAdapter();
-						mSwitchAdapter.execute(item.getId());
+						mSwitchAdapter.execute(new String[] { item.getId() });
 
 					}
 					break;
@@ -935,14 +937,16 @@ public class LocationScreenActivity extends BaseActivity {
 
 		@Override
 		protected List<BaseDevice> doInBackground(String... params) {
-			mController.setActiveAdapter(params[0]);
+			if (params.length > 0) {
+				mController.setActiveAdapter(params[0]);
+			}
 
+			setLocationOrEmpty();
 			return null;
 		}
 
 		@Override
 		protected void onPostExecute(List<BaseDevice> result) {
-			setLocationOrEmpty();
 			redrawMenu();
 			setSupportProgressBarIndeterminateVisibility(false);
 		}
