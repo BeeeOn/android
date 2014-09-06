@@ -275,15 +275,12 @@ public class Network {
 			GetGoogleAuth.getGetGoogleAuth().doInForeground(false);
 		} catch (Exception e) {
 			e.printStackTrace();
-//			String tmp = null;
-//			new GetGoogleAuth(new LoginActivity(), tmp).execute();
-			// return null;
 		}
 		signIn(mUser.getEmail());
 	}
 
 	private ParsedMessage doRequest(String messageToSend) {
-		//TODO: This is not needed anymore
+		//NOTE: This is not needed anymore
 		if(!checkBackgroundData())
 			Log.e("Network", "backgrounddata");
 		
@@ -702,8 +699,8 @@ public class Network {
 
 		if (msg.getState() == State.DEVICES) {
 			Log.i(TAG, msg.getState().getValue());
-			
-			// FIXME: Petre, nevim, jestli je tohle spravne reseni, nebo je chyba nekde uvnitr doRequest() a ma to skutecne vracet BaseDevice, zkontroluj 
+			 
+			@SuppressWarnings("unchecked")
 			List<BaseDevice> devices = (List<BaseDevice>) msg.data;
 			if (devices.size() != 0)
 				result = devices.get(0);
@@ -1220,9 +1217,6 @@ public class Network {
 			return false;
 	}
 
-
-	
-	
 	////////////////////////////////////////// cas
 	
 	/**
@@ -1281,6 +1275,4 @@ public class Network {
 
 	///////////////////////////////////////////// todo
 
-	// TODO: GetAlerts
-	// TODO: Alerts
 }
