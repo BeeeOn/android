@@ -7,9 +7,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.util.Log;
 import cz.vutbr.fit.iha.R;
-import cz.vutbr.fit.iha.activity.LocationScreenActivity;
 import cz.vutbr.fit.iha.activity.dialog.AddSensorActivityDialog;
-import cz.vutbr.fit.iha.adapter.Adapter;
 import cz.vutbr.fit.iha.controller.Controller;
 
 /**
