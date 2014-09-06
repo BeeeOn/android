@@ -136,6 +136,19 @@ public class LocationScreenActivity extends BaseActivity {
 	 * Constant to tag InfoDIalogFragment
 	 */
 	private final static String TAG_INFO = "tag_info";
+	
+	/**
+	 * Represents "pair" of data required for get device log
+	 */
+	private class AdapterMenuDevicesPair {
+		public final MenuListAdapter menuListAdapter;
+		public final List<BaseDevice> devices;
+		
+		public AdapterMenuDevicesPair(final MenuListAdapter menuListAdapter, List<BaseDevice> devices) {
+			this.menuListAdapter = menuListAdapter;
+			this.devices = devices;
+		}
+	}
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -921,8 +934,7 @@ public class LocationScreenActivity extends BaseActivity {
 	 * Loads locations, checks for uninitialized devices and eventually shows
 	 * dialog for adding them
 	 */
-	private class SwitchAdapter extends
-			AsyncTask<String, Void, List<BaseDevice>> {
+	private class SwitchAdapter extends AsyncTask<String, Void, List<BaseDevice>> {
 
 		@Override
 		protected List<BaseDevice> doInBackground(String... params) {
@@ -946,7 +958,7 @@ public class LocationScreenActivity extends BaseActivity {
 	 * Loads locations, checks for uninitialized devices and eventually shows
 	 * dialog for adding them
 	 */
-	private class DevicesTask extends AsyncTask<Void, Void, List<BaseDevice>> {
+	private class DevicesTask extends AsyncTask<Void, Void, AdapterMenuDevicesPair> {
 
 		private final CustomAlertDialog mDialog = new CustomAlertDialog(
 				LocationScreenActivity.this);
@@ -959,7 +971,7 @@ public class LocationScreenActivity extends BaseActivity {
 		}
 
 		@Override
-		protected List<BaseDevice> doInBackground(Void... unused) {
+		protected AdapterMenuDevicesPair doInBackground(Void... unused) {
 
 			// FIXME: no adapters for user
 			if (mController.getActiveAdapter() == null && !isClosing) {
@@ -982,7 +994,7 @@ public class LocationScreenActivity extends BaseActivity {
 					intent.putExtras(bundle);
 					startActivity(intent);
 				}
-				return new ArrayList<BaseDevice>();
+				return new AdapterMenuDevicesPair(getMenuAdapter(), new ArrayList<BaseDevice>());
 			}
 
 			// Load locations
@@ -994,17 +1006,18 @@ public class LocationScreenActivity extends BaseActivity {
 			Log.d(TAG,
 					String.format("Found %d uninitialized devices",
 							devices.size()));
-
-			return devices;
+			
+			return new AdapterMenuDevicesPair(getMenuAdapter(), devices);
 		}
 
 		@Override
-		protected void onPostExecute(final List<BaseDevice> uninitializedDevices) {
+		protected void onPostExecute(final AdapterMenuDevicesPair pair) {
+			final List<BaseDevice> uninitializedDevices = pair.devices;
 			if (uninitializedDevices == null)
 				return;
 
 			// Redraw locations
-			setNewAdapterRedraw(getMenuAdapter());
+			setNewAdapterRedraw(pair.menuListAdapter);
 
 			onOrientationChanged();
 
