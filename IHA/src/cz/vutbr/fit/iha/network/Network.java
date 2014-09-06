@@ -122,12 +122,12 @@ public class Network {
 	 */
 	private static final String SERVER_CN_CERTIFICATE = "ant-2.fit.vutbr.cz";
 
-	private static Context mContext;
-	private static ActualUser mUser;
-	private static String mSessionId;
-	private static boolean mUseDebugServer;
-	
 	private static final String GoogleExcMessage = "Google token error";
+	
+	private Context mContext;
+	private ActualUser mUser;
+	private String mSessionId;
+	private boolean mUseDebugServer;
 
 	/**
 	 * Constructor.
@@ -141,7 +141,7 @@ public class Network {
 	}
 
 	/**
-	 * Static function for sending data to server via TLS protocol using own
+	 * Method for sending data to server via TLS protocol using own
 	 * TrustManger to be able to trust self-signed certificates. CA certificated
 	 * must be located in assets folder. If no exception is thrown, it returns
 	 * server response.
@@ -170,7 +170,7 @@ public class Network {
 	 * @throws SSLHandshakeException
 	 *             *IMPORTANT* TLS handshake failed
 	 */
-	private static String startCommunication(String request) throws IOException, CertificateException, KeyStoreException, NoSuchAlgorithmException, KeyManagementException, UnknownHostException, SSLHandshakeException {
+	private String startCommunication(String request) throws IOException, CertificateException, KeyStoreException, NoSuchAlgorithmException, KeyManagementException, UnknownHostException, SSLHandshakeException {
 
 		/*
 		 * opening CA certificate from assets
