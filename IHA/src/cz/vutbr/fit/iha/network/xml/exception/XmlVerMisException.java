@@ -1,7 +1,7 @@
 /**
  * 
  */
-package cz.vutbr.fit.iha.adapter.parser.exception;
+package cz.vutbr.fit.iha.network.xml.exception;
 
 /**
  * XmlVersionMismatchException
