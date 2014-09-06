@@ -703,7 +703,10 @@ public class Network {
 		if (msg.getState() == State.DEVICES) {
 			Log.i(TAG, msg.getState().getValue());
 			
-			return (BaseDevice) msg.data;
+			// FIXME: Petre, nevim, jestli je tohle spravne reseni, nebo je chyba nekde uvnitr doRequest() a ma to skutecne vracet BaseDevice, zkontroluj 
+			List<BaseDevice> devices = (List<BaseDevice>) msg.data;
+			if (devices.size() != 0)
+				result = devices.get(0);
 		} else if (msg.getState() == State.RESIGN) {
 			doResign();
 			return getDevice(adapterId, device);
