@@ -114,9 +114,8 @@ public class SensorDetailFragment extends SherlockFragment {
 	
 	private GraphViewSeries mGraphSeries;
 	
-	private String mFormatDateTime = "%Y-%m-%d %H:%M:%S";
-	private String mGraphDateFormat = "dd.MM.";
-	private String mGraphTimeFormat = "hh:mm";
+	private String mDateTimeFormat = "%Y-%m-%d %H:%M:%S";
+	private String mGraphDateTimeFormat = "dd.MM. kk:mm";
 	private float mTempConstant = (float) 1000;
 
 	/**
@@ -494,13 +493,13 @@ public class SensorDetailFragment extends SherlockFragment {
 		
 		Log.d(TAG,"Day: "+ cal.get(Calendar.DAY_OF_MONTH)+ " Month: " + cal.get(Calendar.MONTH));
 
-		Log.d(TAG, String.format("Today: %s, beforeDAY month: %s", now.format(mFormatDateTime), beforeMonth.format(mFormatDateTime)));
+		Log.d(TAG, String.format("Today: %s, beforeDAY month: %s", now.format(mDateTimeFormat), beforeMonth.format(mDateTimeFormat)));
 		
 		mGetDeviceLogTask = new GetDeviceLogTask();
 		LogDataPair pair = new LogDataPair (
 				mDevice, // device
-				beforeMonth.format(mFormatDateTime), // from
-				now.format(mFormatDateTime), // to
+				beforeMonth.format(mDateTimeFormat), // from
+				now.format(mDateTimeFormat), // to
 				DataType.AVERAGE, // type
 				DataInterval.DAY); // interval
 		mGetDeviceLogTask.execute(new LogDataPair[] { pair });
@@ -562,14 +561,14 @@ public class SensorDetailFragment extends SherlockFragment {
 
 	public void fillGraph(DeviceLog log) {
 		
-		final DateFormat formatter = new SimpleDateFormat(mGraphDateFormat + " " + mGraphTimeFormat, Locale.getDefault());
+		final DateFormat formatter = new SimpleDateFormat(mGraphDateTimeFormat, Locale.getDefault());
 		
 		mGraphView.setCustomLabelFormatter(new CustomLabelFormatter() {
 	        @Override
 	        public String formatLabel(double value, boolean isValueX) {
 	            if (isValueX) {
 	                String date = formatter.format(new Date((long) value));
-	            	Log.d(TAG, String.format("LABEL FORMATER - Value: %s Date: %s", value, date));
+	            	Log.v(TAG, String.format("LABEL FORMATER - Value: %s Date: %s", value, date));
 	                return date;
 	            }
 	            return String.format(Locale.getDefault(), "%.1f", value);
