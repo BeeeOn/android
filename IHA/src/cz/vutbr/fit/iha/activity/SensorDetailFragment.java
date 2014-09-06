@@ -40,6 +40,7 @@ import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.jjoe64.graphview.CustomLabelFormatter;
 import com.jjoe64.graphview.GraphView;
+import com.jjoe64.graphview.GraphView.GraphViewData;
 import com.jjoe64.graphview.GraphViewSeries;
 import com.jjoe64.graphview.GraphViewSeries.GraphViewSeriesStyle;
 import com.jjoe64.graphview.LineGraphView;
@@ -65,6 +66,9 @@ public class SensorDetailFragment extends SherlockFragment {
 	private static final int EDIT_NAME = 1;
 	private static final int EDIT_LOC = 2;
 	private static final int EDIT_REFRESH_T = 3;
+	
+	// Maximum number of items in graph
+	private static final int MAX_GRAPH_DATA_COUNT = 500;
 
 	// GUI elements
 	private TextView mName;
@@ -457,15 +461,10 @@ public class SensorDetailFragment extends SherlockFragment {
 	}
 
 	private void addGraphView() {
-		mGraphView = new LineGraphView(getView().getContext() // context
-				, "" // heading
-		);
-
+		mGraphView = new LineGraphView(getView().getContext(), ""); // empty heading
 		minimum = -1.0;
 		
-		GraphViewSeriesStyle seriesStyleBlue = new GraphViewSeriesStyle(getResources().getColor(R.color.iha_primary_cyan),2);
-		//GraphViewSeriesStyle seriesStyleGray = new GraphViewSeriesStyle(getResources().getColor(R.color.light_gray),2);
-
+		mGraphView.getGraphViewStyle().setTextSize(getResources().getDimension(R.dimen.textsizesmaller));
 		mGraphView.getGraphViewStyle().setVerticalLabelsColor(getResources().getColor(R.color.iha_primary_cyan));
 		mGraphView.getGraphViewStyle().setHorizontalLabelsColor(getResources().getColor(R.color.iha_primary_cyan));
 		//mGraphView.getGraphViewStyle().setVerticalLabelsWidth(60);
@@ -474,42 +473,29 @@ public class SensorDetailFragment extends SherlockFragment {
 		
 		((LineGraphView) mGraphView).setDrawBackground(true);
 		// graphView.setAlpha(128);
-		int num = 3;
-		GraphView.GraphViewData[] data = new GraphView.GraphViewData[num];
-		data[0] = new GraphView.GraphViewData(0, 0);
-		data[1] = new GraphView.GraphViewData(1, 0);
-		data[2] = new GraphView.GraphViewData(2, 0);
-
 		
-		// Get Today 
-		Time now = new Time();
-		now.setToNow();
-		// Get before month
-		Time beforeMonth = new Time();
-		Calendar cal = GregorianCalendar.getInstance();
-		cal.add(Calendar.DAY_OF_YEAR, -7);
-			
-		beforeMonth.set(cal.get(Calendar.DAY_OF_MONTH), cal.get(Calendar.MONTH), cal.get(Calendar.YEAR)); 
+		GraphViewSeriesStyle seriesStyleBlue = new GraphViewSeriesStyle(getResources().getColor(R.color.iha_primary_cyan),2);
+		//GraphViewSeriesStyle seriesStyleGray = new GraphViewSeriesStyle(getResources().getColor(R.color.light_gray),2);
 		
-		Log.d(TAG,"Day: "+ cal.get(Calendar.DAY_OF_MONTH)+ " Month: " + cal.get(Calendar.MONTH));
-
-		Log.d(TAG, String.format("Today: %s, beforeDAY month: %s", now.format(mDateTimeFormat), beforeMonth.format(mDateTimeFormat)));
-		
-		mGetDeviceLogTask = new GetDeviceLogTask();
-		LogDataPair pair = new LogDataPair (
-				mDevice, // device
-				beforeMonth.format(mDateTimeFormat), // from
-				now.format(mDateTimeFormat), // to
-				DataType.AVERAGE, // type
-				DataInterval.DAY); // interval
-		mGetDeviceLogTask.execute(new LogDataPair[] { pair });
-
-		mGraphSeries = new GraphViewSeries("Graph", seriesStyleBlue, data);
-		mGraphView
-				.addSeries(mGraphSeries);
-		mGraphView.setManualYAxis(true);
+		mGraphSeries = new GraphViewSeries("Graph", seriesStyleBlue, new GraphViewData[] {
+				new GraphView.GraphViewData(0, 0),
+		});
+		mGraphView.addSeries(mGraphSeries);
 		mGraphView.setManualYAxisBounds(1.0, 0.0);
+		
+		mGraphView.setCustomLabelFormatter(new CustomLabelFormatter() {
+			final DateFormat formatter = new SimpleDateFormat(mGraphDateTimeFormat, Locale.getDefault());
 
+			@Override
+	        public String formatLabel(double value, boolean isValueX) {
+				if (isValueX)
+	                return formatter.format(new Date((long) value));
+
+	            String unit = getResources().getString(mDevice.getUnitStringResource());
+	            return String.format(Locale.getDefault(), "%.1f %s", value, unit);
+	        }
+	    });
+		
 		mGraphLayout.addView(mGraphView);
 
 		mGraphLayout.setOnTouchListener(new OnTouchListener() {
@@ -535,7 +521,32 @@ public class SensorDetailFragment extends SherlockFragment {
 				return true;
 			}
 		});
-
+		
+		loadGraphData();
+	}
+	
+	private void loadGraphData() {
+		// Get Today 
+		Time now = new Time();
+		now.setToNow();
+		// Get before month
+		Time beforeMonth = new Time();
+		Calendar cal = GregorianCalendar.getInstance();
+		cal.add(Calendar.DAY_OF_YEAR, -7);
+			
+		beforeMonth.set(cal.get(Calendar.DAY_OF_MONTH), cal.get(Calendar.MONTH), cal.get(Calendar.YEAR)); 
+		
+		Log.d(TAG,"Day: "+ cal.get(Calendar.DAY_OF_MONTH)+ " Month: " + cal.get(Calendar.MONTH));
+		Log.d(TAG, String.format("Today: %s, beforeDAY month: %s", now.format(mDateTimeFormat), beforeMonth.format(mDateTimeFormat)));
+		
+		mGetDeviceLogTask = new GetDeviceLogTask();
+		LogDataPair pair = new LogDataPair (
+				mDevice, // device
+				beforeMonth.format(mDateTimeFormat), // from
+				now.format(mDateTimeFormat), // to
+				DataType.AVERAGE, // type
+				DataInterval.DAY); // interval
+		mGetDeviceLogTask.execute(new LogDataPair[] { pair });
 	}
 
 	private List<Location> getLocationsArray() {
@@ -560,52 +571,49 @@ public class SensorDetailFragment extends SherlockFragment {
 	}
 
 	public void fillGraph(DeviceLog log) {
-		
 		final DateFormat formatter = new SimpleDateFormat(mGraphDateTimeFormat, Locale.getDefault());
-		
-		mGraphView.setCustomLabelFormatter(new CustomLabelFormatter() {
-	        @Override
-	        public String formatLabel(double value, boolean isValueX) {
-	            if (isValueX) {
-	                String date = formatter.format(new Date((long) value));
-	            	Log.v(TAG, String.format("LABEL FORMATER - Value: %s Date: %s", value, date));
-	                return date;
-	            }
-	            return String.format(Locale.getDefault(), "%.1f", value);
-	        }
-	    });
-		
-		
-		int size = log.getValues().size();
+
 		float minimum = log.getMinimumValue();
 		float maximum = log.getMaximumValue();
 		// Temp controll to bigger than 1 000
-		minimum = (float) ((minimum > mTempConstant)?minimum/100.0:minimum);
-		maximum = (float) ((maximum > mTempConstant)?maximum/100.0:maximum);
-		Log.d(TAG, "LOG1 - Min: " + minimum + " Max: "+maximum);
+		minimum = (float) ((minimum > mTempConstant) ? minimum/100.0:minimum);
+		maximum = (float) ((maximum > mTempConstant) ? maximum/100.0:maximum);
 		float deviation = maximum - minimum;
-		deviation = (deviation <=0 )? 1 : deviation;
+		deviation = (deviation <= 0) ? 1 : deviation;
 		float minLimit = (float) (minimum-(deviation*0.2));
 		float maxLimit = (float) (maximum+(deviation*0.2));
-
-		float value = 0;
-		GraphView.GraphViewData[] data = new GraphView.GraphViewData[size];
-		for (int i = 0; i < size; i++) {
-			value = log.getValues().get(i).value;
-			//cal.setTimeInMillis(log.getValues().get(i).date.getTime());
-			Log.d(TAG, "Value: "+value);
-			if(Float.isNaN(value)) {
-				value = minLimit;
-			}
-			else if(value > mTempConstant ) {
-				value = (float) (value/100.0);
-			}
-			
-			data[i] = new GraphView.GraphViewData(log.getValues().get(i).date.getTime(),value);
-			Log.d(TAG, "FILL GRAPH - date(msec):"  +log.getValues().get(i).date.getTime() + " Value: "+value);
+		
+		int size = log.getValues().size();
+		Log.d(TAG, String.format("Filling graph with %d values. Min: %.1f, Max: %.1f", size, minimum, maximum));
+		
+		int begin;
+		GraphView.GraphViewData[] data;
+		
+		if (size > MAX_GRAPH_DATA_COUNT) {
+			data = new GraphView.GraphViewData[MAX_GRAPH_DATA_COUNT];
+			begin = (size - MAX_GRAPH_DATA_COUNT);
+		} else {
+			data = new GraphView.GraphViewData[size];
+			begin = 0;
 		}
 		
-		Log.d(TAG, "LOG2 - Min: " + minimum + " Max: "+maximum);
+		for (int i = begin; i < size; i++) {
+		//for (DeviceLog.DataRow row : log.getValues()) {
+			DeviceLog.DataRow row = log.getValues().get(i);
+			float value = row.value;
+			
+			//cal.setTimeInMillis(row.date.getTime());
+			if (Float.isNaN(value)) {
+				value = minLimit;
+			} else if (value > mTempConstant) {
+				value = (float) (value/100.0);
+			}
+
+			data[i - begin] = new GraphView.GraphViewData(row.date.getTime(), value);
+			Log.v(TAG, String.format("Graph value: date(msec): %s, Value: %.1f (Orig: %.1f)", formatter.format(row.date), value, row.value));
+		}
+
+		Log.d(TAG, "Filling graph finished");
 		
 		// Set maximum as +20% more than deviation and minimum as -20% deviation
 		mGraphView.setManualYAxisBounds(maxLimit, (minimum > 0)?minLimit:0);
@@ -677,10 +685,8 @@ public class SensorDetailFragment extends SherlockFragment {
 
 		@Override
 		protected void onPostExecute(DeviceLog log) {
-			/// FIXME: Kontrola zda neni prazdny 
-			//for (DeviceLog.DataRow item : log.getValues()) {
-			//	Log.d(TAG, item.debugString());
-			//}
+			if (log.getValues().size() == 0)
+				return;
 			
 			fillGraph(log);
 		}
