@@ -326,20 +326,14 @@ public final class Controller {
 				mHousehold.adapters = mNetwork.getAdapters();
 				mReloadAdapters = false;
 			} catch (NetworkException e) {
+				e.printStackTrace();
 				// Network or another error, we must return correct object now, but adapters must be loaded later
 				mHousehold.adapters = new ArrayList<Adapter>();
 				mReloadAdapters = true;
-
-				e.printStackTrace();
 			}
 			
 		}
 
-		// Refresh all adapters (load their devices and locations)
-		for (Adapter adapter : mHousehold.adapters) {
-			refreshAdapter(adapter, false);
-		}
-		
 		return mHousehold.adapters;
 	}
 	
@@ -388,6 +382,10 @@ public final class Controller {
 			if (mHousehold.activeAdapter != null)
 				mPersistence.saveActiveAdapter(mHousehold.user.getId(), mHousehold.activeAdapter.getId());
 		}
+		
+		// Refresh active adapter (load its locations and devices)
+		if (mHousehold.activeAdapter != null)
+			refreshAdapter(mHousehold.activeAdapter, false);
 		
 		return mHousehold.activeAdapter;
 	}
@@ -517,17 +515,26 @@ public final class Controller {
 	 * @return Location if found, null otherwise.
 	 */
 	public Location getLocation(String id) {
-		// FIXME: should this be removed when there will be switching activeAdapter somehow, because one should call getLocation on adapter object?
-
-		// TODO: or use getLocations() method as base?
 		Adapter adapter = getActiveAdapter();
-		if (adapter != null) {
-			return adapter.getLocation(id);
-		}
+		if (adapter == null)
+			return null;
 		
-		return null;
+		return adapter.getLocation(id);
 	}
 	
+	/**
+	 * Return list of locations from active adapter.
+	 * 
+	 * @return List of locations (or empty list)
+	 */
+	public List<Location> getLocations() {
+		Adapter adapter = getActiveAdapter();
+		if (adapter == null)
+			return new ArrayList<Location>();
+		
+		return adapter.getLocations();
+	}
+
 	/**
 	 * Return location object that belongs to device.
 	 * @param device
@@ -649,7 +656,7 @@ public final class Controller {
 	}
 	
 	/**
-	 * Marks device ad hidden on server.
+	 * Marks device as hidden on server.
 	 * 
 	 * @param device
 	 * @return true on success, false otherwise

@@ -84,6 +84,9 @@ public class SettingsMainActivity extends SherlockPreferenceActivity implements
 		setDefaultLocAndAdap();
 	}
 	
+	// FIXME: This method must use same ActiveAdapter from application,
+	// we can't have in controller more activeAdapters for getting locations and devices...
+	// Use mController.setActiveAdapter(...) to switch to another adapter 
 	private void setDefaultLocAndAdap() {
 		List<Adapter> adapters = mController.getAdapters();
 
@@ -94,23 +97,19 @@ public class SettingsMainActivity extends SherlockPreferenceActivity implements
 
 			mListPrefLocation.setSummary(R.string.no_location_available);
 			mListPrefAdapter.setSummary(R.string.no_location_available);
-
-			return;
 		}
-
-		// only 1 adapter available, set as default and disable adapter choice
-		if (adapters.size() < 2) {
+		// only 1 adapter available, disable adapter choice
+		else if (adapters.size() < 2) {
+			
 			mListPrefAdapter.setEnabled(false);
 			Adapter adapter = adapters.get(0);
 
-			// save default adapter
-			mPrefs.edit().putString(Constants.PREF_SW2_ADAPTER, adapter.getId());
-			mPrefs.edit().commit();
-
 			mListPrefAdapter.setSummary(adapter.getName());
 
-			setLocationList(adapter);
-		} else {
+			setLocationList();
+		}
+		// 2 or more adapters available
+		else {
 			mListPrefAdapter.setEnabled(true);
 
 			// fill lists with data
@@ -131,21 +130,11 @@ public class SettingsMainActivity extends SherlockPreferenceActivity implements
 			mListPrefAdapter.setEntryValues(entryValues);
 			mListPrefAdapter.setDefaultValue("");
 
-			String adapterId = mPrefs.getString(Constants.PREF_SW2_ADAPTER, "");
-
-			Adapter adapter;
-			// valid default adapter
-			if (adapterId != ""
-					&& (adapter = mController.getAdapter(adapterId, false)) != null) {
+			Adapter adapter = mController.getActiveAdapter();
+			if (adapter != null) {
 				mListPrefAdapter.setSummary(adapter.getName());
-				setLocationList(adapter);
-			}
-			// invalid adapter or it hasn't been chosen yet
-			else {
-				// in case of invalid adapter - rewrite
-				mPrefs.edit().putString(Constants.PREF_SW2_ADAPTER, "");
-				mPrefs.edit().commit();
-
+				setLocationList();
+			} else {
 				// set "None" as summary
 				mListPrefAdapter.setSummary(R.string.none);
 				mListPrefLocation.setEnabled(false);
@@ -155,20 +144,20 @@ public class SettingsMainActivity extends SherlockPreferenceActivity implements
 
 	}
 
-	private void setLocationList(Adapter adapter) {
+	private void setLocationList() {
 		mListPrefLocation.setEnabled(true);
 
 		String locId = mPrefs.getString(Constants.PREF_SW2_LOCATION, "");
 		Location loc;
 		// valid
-		if (locId != "" && (loc = adapter.getLocation(locId)) != null) {
+		if (locId != "" && (loc = mController.getLocation(locId)) != null) {
 			mListPrefLocation.setSummary(loc.getName());
 		} else {
 			mListPrefLocation.setSummary(R.string.none);
 			mPrefs.edit().putString(Constants.PREF_SW2_LOCATION, "");
 			mPrefs.edit().commit();
 		}
-		List<Location> locations = adapter.getLocations();
+		List<Location> locations = mController.getLocations();
 		// no location available
 		if (locations.size() < 1) {
 			mListPrefLocation.setEnabled(false);
