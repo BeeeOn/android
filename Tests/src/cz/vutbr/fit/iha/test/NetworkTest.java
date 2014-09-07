@@ -4,11 +4,13 @@
 package cz.vutbr.fit.iha.test;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import android.test.AndroidTestCase;
 import android.util.Log;
 import cz.vutbr.fit.iha.activity.LoginActivity;
 import cz.vutbr.fit.iha.adapter.Adapter;
+import cz.vutbr.fit.iha.adapter.device.BaseDevice;
 import cz.vutbr.fit.iha.network.GetGoogleAuth;
 import cz.vutbr.fit.iha.network.Network;
 import cz.vutbr.fit.iha.network.exception.CommunicationException;
@@ -44,7 +46,7 @@ public class NetworkTest extends /*TestCase*/AndroidTestCase {
 		//if(true)return;
 		String emails = "email";
 		
-		Network net = new Network(getContext(), null);
+		Network net = new Network(getContext(), null, false);
 		LoginActivity la = new LoginActivity();
 		GetGoogleAuth gga = new GetGoogleAuth(la, emails);
 		gga.setDebugToken("token");
@@ -66,7 +68,7 @@ public class NetworkTest extends /*TestCase*/AndroidTestCase {
 		//if(true)return;
 		String emails = "email";
 		
-		Network net = new Network(getContext(), null);
+		Network net = new Network(getContext(), null, false);
 		LoginActivity la = new LoginActivity();
 		GetGoogleAuth gga = new GetGoogleAuth(la, emails);
 		gga.setDebugToken("token");
@@ -87,7 +89,7 @@ public class NetworkTest extends /*TestCase*/AndroidTestCase {
 	//TODO: repair to 1.9(2.0)
 	public void testGetAdapters(){
 		//if(true)return; // if reply is resign, method block, because of not in new thread
-		Network net = new Network(getContext(), null);
+		Network net = new Network(getContext(), null, false);
 		try {
 			ArrayList<Adapter> result = (ArrayList<Adapter>) net.getAdapters();
 			
@@ -113,12 +115,12 @@ public class NetworkTest extends /*TestCase*/AndroidTestCase {
 	//TODO: repair to 1.9(2.0)
 	public void testInit(){
 		//if(true)return; // if reply is resign, method block, because of not in new thread
-		Network net = new Network(getContext(), null);
+		Network net = new Network(getContext(), null, false);
 		try {
-			Adapter result = net.init("5844569");
+			List<BaseDevice> result = net.init("5844569");
 			
 			if(result != null){
-				Log.d(TAG, result.toDebugString());
+				Log.d(TAG, "todo");
 			}
 			
 		} catch (NoConnectionException e) {

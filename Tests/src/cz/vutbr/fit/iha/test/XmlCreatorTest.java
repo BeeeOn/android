@@ -17,9 +17,8 @@ import cz.vutbr.fit.iha.adapter.device.PressureDevice;
 import cz.vutbr.fit.iha.adapter.device.RefreshInterval;
 import cz.vutbr.fit.iha.adapter.device.SwitchDevice;
 import cz.vutbr.fit.iha.adapter.device.TemperatureDevice;
-import cz.vutbr.fit.iha.adapter.device.BaseDevice.VisibilityState;
-import cz.vutbr.fit.iha.adapter.location.Location;
-import cz.vutbr.fit.iha.adapter.parser.XmlCreator;
+import cz.vutbr.fit.iha.household.User;
+import cz.vutbr.fit.iha.network.xml.XmlCreator;
 
 /**
  * @author ThinkDeep
@@ -212,7 +211,7 @@ public class XmlCreatorTest extends TestCase {
 		users.put(EMAIL+"x", "admin");
 		users.put(EMAIL, "user");
 		
-		String result = XmlCreator.createAddAccount(ID, SERIAL, users);
+		String result = XmlCreator.createAddAccounts(ID, SERIAL, users);
 		String goal = ADDCONACCOUNT_1+ID+ADDCONACCOUNT_2+EMAIL+"x"+ADDCONACCOUNT_3+users.get(EMAIL+"x")+ADDCONACCOUNT_2_2+EMAIL+ADDCONACCOUNT_3+users.get(EMAIL)+ADDCONACCOUNT_4;
 		
 		Log.i(TAG, "AddConAccountTest1");
@@ -224,12 +223,12 @@ public class XmlCreatorTest extends TestCase {
 	
 	//TODO: repair to 1.9(2.0)
 	public void testDelConAccount(){
-		ArrayList<String>users = new ArrayList<String>();
-		users.add(EMAIL);
-		users.add(EMAIL+"x");
+		User user = new User();
+//		users.add(EMAIL);
+//		users.add(EMAIL+"x");
 		
-		String result = XmlCreator.createDelAccount(ID, SERIAL, users);
-		String goal = DELCONACCOUNT_1+ID+DELCONACCOUNT_2+users.get(0)+DELCONACCOUNT_2_2+users.get(1)+DELCONACCOUNT_3;
+		String result = XmlCreator.createDelAccount(ID, SERIAL, user);
+		String goal = DELCONACCOUNT_1+ID+DELCONACCOUNT_2+user.getEmail()+DELCONACCOUNT_2_2+user.getName()+DELCONACCOUNT_3;
 		
 		Log.i(TAG, "DelConAccountTest1");
 		Log.d(TAG, result);
@@ -256,7 +255,7 @@ public class XmlCreatorTest extends TestCase {
 		users.put(EMAIL+"x", "admin");
 		users.put(EMAIL, "user");
 		
-		String result = XmlCreator.createUpdateAccount(ID, SERIAL, users);
+		String result = XmlCreator.createUpdateAccounts(ID, SERIAL, users);
 		String goal = CHANGECONACCOUNT_1+ID+CHANGECONACCOUNT_2+EMAIL+"x"+CHANGECONACCOUNT_3+users.get(EMAIL+"x")+CHANGECONACCOUNT_2_2+EMAIL+
 				CHANGECONACCOUNT_3+users.get(EMAIL)+CHANGECONACCOUNT_4;
 		
@@ -358,7 +357,7 @@ public class XmlCreatorTest extends TestCase {
 		devices.put(DEVICEID, "remove");
 		devices.put(DEVICEID+"x", "add");
 		
-		String result = XmlCreator.createUpdateView(ID, VIEWNAME, 0, devices);
+		String result = XmlCreator.createUpdateViews(ID, VIEWNAME, 0, devices);
 		String goal = UPDATEVIEW_1+ID+UPDATEVIEW_2+VIEWNAME+UPDATEVIEW_2_1+0+UPDATEVIEW_3+DEVICEID+"x"+UPDATEVIEW_4+devices.get(DEVICEID+"x")+UPDATEVIEW_4_2+DEVICEID+UPDATEVIEW_4
 				+devices.get(DEVICEID)+UPDATEVIEW_5;
 		

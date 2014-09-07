@@ -1222,7 +1222,7 @@ public class Network {
 	/**
 	 * Method set wanted time zone to server
 	 * 
-	 * @NOTE using difference from GMT (UTC+0), reduced range <-12,12>
+	 * @NOTE using difference from GMT (UTC+0), https://merlin.fit.vutbr.cz/wiki-iot/index.php/Smarthome_cloud#SetTimeZone
 	 * @param differenceToGMT
 	 * @return
 	 * @throws NoConnectionException
@@ -1273,6 +1273,61 @@ public class Network {
 			return 0;
 	}
 
-	///////////////////////////////////////////// todo
+	///////////////////////////////////////////// notifikace
+	
+	/**
+	 * Method delete old gcmid to avoid fake notifications
+	 * @param email of old/last user of gcmid (app+device id)
+	 * @param gcmid - google cloud message id
+	 * @return true if id has been deleted, false otherwise
+	 * @throws NoConnectionException
+	 * @throws CommunicationException
+	 * @throws FalseException
+	 */
+	public boolean deleteGCMID(String email, String gcmid) throws NoConnectionException, CommunicationException, FalseException {
+		String messageToSend = XmlCreator.createDeLGCMID(mSessionId, email, gcmid);
+		ParsedMessage msg = doRequest(messageToSend);
+
+		if (msg.getState() == State.TRUE) {
+			Log.d(TAG, msg.getState().getValue());
+
+			return true;
+
+		} else if (msg.getState() == State.RESIGN) {
+			doResign();
+			return deleteGCMID(email, gcmid);
+
+		} else if (msg.getState() == State.FALSE) {
+			throw new FalseException(((FalseAnswer) msg.data));
+		} else
+			return false;
+	}
+	
+	/**
+	 * Method set read flag to notification on server
+	 * @param msgid id of notification
+	 * @return true if server took flag, false otherwise
+	 * @throws NoConnectionException
+	 * @throws CommunicationException
+	 * @throws FalseException
+	 */
+	public boolean NotificationRead(String msgid) throws NoConnectionException, CommunicationException, FalseException {
+		String messageToSend = XmlCreator.createNotificaionRead(mSessionId, msgid);
+		ParsedMessage msg = doRequest(messageToSend);
+
+		if (msg.getState() == State.TRUE) {
+			Log.d(TAG, msg.getState().getValue());
+
+			return true;
+
+		} else if (msg.getState() == State.RESIGN) {
+			doResign();
+			return NotificationRead(msgid);
+
+		} else if (msg.getState() == State.FALSE) {
+			throw new FalseException(((FalseAnswer) msg.data));
+		} else
+			return false;
+	}
 
 }

@@ -17,6 +17,8 @@ import java.util.Locale;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 
+import com.actionbarsherlock.internal.widget.ActionBarContainer;
+
 import android.content.Context;
 import android.util.Log;
 import android.util.Xml;
@@ -35,6 +37,8 @@ import cz.vutbr.fit.iha.adapter.device.SwitchDevice;
 import cz.vutbr.fit.iha.adapter.device.TemperatureDevice;
 import cz.vutbr.fit.iha.adapter.device.UnknownDevice;
 import cz.vutbr.fit.iha.adapter.location.Location;
+import cz.vutbr.fit.iha.gcm.Notification;
+import cz.vutbr.fit.iha.gcm.Notification.ActionType;
 import cz.vutbr.fit.iha.household.User;
 import cz.vutbr.fit.iha.network.xml.exception.ComVerMisException;
 import cz.vutbr.fit.iha.network.xml.exception.XmlVerMisException;
@@ -86,6 +90,7 @@ public class XmlParsers {
 		TIMEZONE("timezone"),
 		ROOMS("rooms"),
 		ROOMCREATED("roomcreated"),
+		NOTIFICATIONS("notifications"),
 		UNKNOWN("");
 		
 		private final String mValue;
@@ -138,6 +143,16 @@ public class XmlParsers {
 	public static final String TIME = "time";
 	public static final String UTC = "utc";
 	public static final String ERRCODE = "errcode";
+	public static final String NOTIFICATION = "notification";
+	public static final String MSGID = "msgid";
+	public static final String READ = "read";
+	public static final String ACTION = "action";
+	public static final String URL = "url";
+	public static final String ADAPTERID = "adapterid";
+	public static final String LOCATIONID = "locationid";
+	public static final String DEVICEID = "deviceid";
+	public static final String MESSAGE = "message";
+	public static final String SETTINGS = "settings";
 	
 	public static final String DATEFORMAT = "yyyy-MM-dd HH:mm:ss";
 	
@@ -230,6 +245,9 @@ public class XmlParsers {
 				// String
 				result.data = parseRoomCreated();
 				break;
+			case NOTIFICATIONS:
+				// List<Notification>
+				result.data = parseNotifications();
 			default:
 				break;
 		}
@@ -238,7 +256,8 @@ public class XmlParsers {
 	}
 	
 	/////////////////////////////////// PARSE
-	
+
+
 	/**
 	 * Method parse inner part of AllDevice message (old:XML message (using parsePartial()))
 	 * @return list of devices
@@ -485,6 +504,88 @@ public class XmlParsers {
 		return getSecureAttrValue(ns, ID);
 	}
 	
+	private List<Notification> parseNotifications() throws XmlPullParserException, IOException {
+		mParser.nextTag();
+//		mParser.require(XmlPullParser.START_TAG, ns, NOTIFICATION); // strict solution
+		
+		List<Notification> result = new ArrayList<Notification>();
+		
+		if(!mParser.getName().equals(NOTIFICATION))
+			return result;
+		
+		do{
+			Notification ntfc = new Notification(getSecureAttrValue(ns, MSGID), getSecureAttrValue(ns, TIME), getSecureAttrValue(ns, TYPE), (getSecureAttrValue(ns, READ).equals(INIT_1)) ? true : false);
+			
+			mParser.nextTag();
+			
+			if(mParser.getName().equals(MESSAGE)){ // get text from notification if is first tag
+				ntfc.setMessage(readText(MESSAGE));
+				mParser.nextTag();
+			}
+
+			if(mParser.getName().equals(ACTION)){	// get action from notification
+				Notification.Action action = ntfc.new Action(getSecureAttrValue(ns, TYPE));
+				
+				if(action.getMasterType() == ActionType.WEB){ // get url and should open web or play
+					action.setURL(getSecureAttrValue(ns, URL));
+					ntfc.setAction(action);
+				}
+				
+				if(action.getMasterType() == ActionType.APP){ // open some aktivity in app
+					mParser.nextTag();
+					
+					ActionType tagName = ActionType.fromValue(mParser.getName());
+					action.setSlaveType(tagName);
+					switch (tagName) {
+						case SETTINGS: // open settings {main, account, adapter, location}
+							ActionType settings = ActionType.fromValue(SETTINGS+getSecureAttrValue(ns, TYPE));
+							action.setSlaveType(settings);
+							String stngs = settings.getValue(); 
+							if(stngs.equals(ADAPTER) || stngs.equals(LOCATION)){ // open adapter or location settings
+								action.setAdapterId(getSecureAttrValue(ns, ADAPTERID));
+								if(stngs.equals(LOCATION)) // open location settings
+									action.setLocationId(getSecureAttrValue(ns, LOCATIONID));
+							}
+							break;
+						case OPENADAPTER: // switch adapter
+							action.setAdapterId(getSecureAttrValue(ns, ADAPTERID));
+							break;
+						case OPENLOCATION: // open specific location in specific adapter
+							action.setAdapterId(getSecureAttrValue(ns, ADAPTERID));
+							action.setLocationId(getSecureAttrValue(ns, LOCATIONID));
+							break;
+						case OPENDEVICE: // open detail of specific device in specific adapter
+							action.setAdapterId(getSecureAttrValue(ns, ADAPTERID));
+							action.setDeviceId(getSecureAttrValue(ns, DEVICEID));
+							break;
+						default:
+							break;
+					}
+					ntfc.setAction(action);
+					mParser.nextTag(); // end of settings or adapter or location or device
+				}
+				mParser.nextTag(); // action end tag
+			}
+			
+			if(ntfc.getMessage() == null){ // get text from notification if is second tag
+				mParser.nextTag(); // notification end tag or message start tag
+				if(mParser.getName().equals(MESSAGE)){
+					ntfc.setMessage(readText(MESSAGE));
+					mParser.nextTag(); // notification end tag
+				}
+			}
+				
+			result.add(ntfc);
+			
+//			boolean f1 = mParser.nextTag() != XmlPullParser.END_TAG;
+//			boolean f2 = !mParser.getName().equals(COM_ROOT);
+//			String name = mParser.getName();
+			
+		}while(mParser.nextTag() != XmlPullParser.END_TAG && !mParser.getName().equals(COM_ROOT));
+		
+		return result;
+	}
+	
 	/////////////////////////////////// OTHER
 	
 	/**
@@ -634,7 +735,7 @@ public class XmlParsers {
 	}
 	
 	/**
-	 * Method return integer value of string, of zero if length is 0
+	 * Method return integer value of string, or zero if length is 0
 	 * @param value
 	 * @return integer value of zero if length is 0
 	 */

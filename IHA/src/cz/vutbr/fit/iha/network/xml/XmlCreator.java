@@ -70,8 +70,9 @@ public class XmlCreator {
 	public static final String ADAPTERLISTEN = "adapterlisten";
 	public static final String SWITCH = "switch";
 	public static final String DELDEVICE = "deldevice";
-	
-	public static final String GETALERTS = "getalerts";
+	public static final String DELGCMID = "delgcmid";
+	public static final String GETNOTIFICATIONS = "getnotifications";
+	public static final String NOTIFICATIONREAD = "notificationread";
 	
 	// end of states
 	public static final String USER = "user";
@@ -90,14 +91,15 @@ public class XmlCreator {
 	public static final String FROM = "from";
 	public static final String TO = "to";
 	public static final String ACTION = "action";
-	public static final String QUIET = "q";
-	public static final String NORMAL = "n";
 	public static final String ICON = "icon";
 	public static final String TIME = "time";
 	public static final String UTC = "utc";
 	public static final String LOCALE = "locale";
 	public static final String ERRCODE = "errcode";
 	public static final String INTERVAL = "interval";
+	public static final String GCMID = "gcmid";
+	public static final String NOTIFICAION = "notification";
+	public static final String MSGID = "msgid";
 	
 	//partial
 	public static final String DEVICE = "device";
@@ -1340,11 +1342,13 @@ public class XmlCreator {
 	}
 	
 	/**
-	 * Method create XML of GetAlerts message
-	 * @param id of user
-	 * @return message GetAlerts
+	 * Method create XML of DelGCMID message (delete google cloud message id)
+	 * @param id of user logged in now
+	 * @param email of last logged user
+	 * @param gcmid id of google messaging
+	 * @return message DelGCMID
 	 */
-	public static String createGetAlerts(String id){
+	public static String createDeLGCMID(String id, String email, String gcmid){
 		XmlSerializer serializer = Xml.newSerializer();
 		StringWriter writer = new StringWriter();
 		try{
@@ -1353,8 +1357,70 @@ public class XmlCreator {
 			
 			serializer.startTag(ns, COM_ROOT);
 			serializer.attribute(ns, ID, id);
-			serializer.attribute(ns, STATE, GETALERTS);
+			serializer.attribute(ns, STATE, DELGCMID);
 			serializer.attribute(ns, VERSION, GVER);
+			
+				serializer.startTag(ns, USER);
+				serializer.attribute(ns, EMAIL, email);
+				serializer.attribute(ns, GCMID, gcmid);
+				serializer.endTag(ns, USER);
+				
+			serializer.endTag(ns, COM_ROOT);
+			serializer.endDocument();
+			
+			return writer.toString();
+		}catch(Exception e){
+			throw new RuntimeException(e);
+		}
+	}
+	
+	/**
+	 * Method create XML of GetNotifications message
+	 * @param id of user
+	 * @return message GetNotifications
+	 */
+	public static String createGetNotifications(String id){
+		XmlSerializer serializer = Xml.newSerializer();
+		StringWriter writer = new StringWriter();
+		try{
+			serializer.setOutput(writer);
+			serializer.startDocument("UTF-8", null);
+			
+			serializer.startTag(ns, COM_ROOT);
+			serializer.attribute(ns, ID, id);
+			serializer.attribute(ns, STATE, GETNOTIFICATIONS);
+			serializer.attribute(ns, VERSION, GVER);
+			serializer.endTag(ns, COM_ROOT);
+			serializer.endDocument();
+			
+			return writer.toString();
+		}catch(Exception e){
+			throw new RuntimeException(e);
+		}
+	}
+	
+	/**
+	 * Method create XML of NotificationRead message
+	 * @param id of user
+	 * @param msgid id of read notification
+	 * @return message NotificationRead
+	 */
+	public static String createNotificaionRead(String id, String msgid){
+		XmlSerializer serializer = Xml.newSerializer();
+		StringWriter writer = new StringWriter();
+		try{
+			serializer.setOutput(writer);
+			serializer.startDocument("UTF-8", null);
+			
+			serializer.startTag(ns, COM_ROOT);
+			serializer.attribute(ns, ID, id);
+			serializer.attribute(ns, STATE, NOTIFICATIONREAD);
+			serializer.attribute(ns, VERSION, GVER);
+			
+				serializer.startTag(ns, NOTIFICAION);
+				serializer.attribute(ns, MSGID, msgid);
+				serializer.endTag(ns, NOTIFICAION);
+				
 			serializer.endTag(ns, COM_ROOT);
 			serializer.endDocument();
 			
