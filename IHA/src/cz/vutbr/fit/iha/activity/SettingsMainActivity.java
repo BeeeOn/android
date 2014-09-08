@@ -18,6 +18,7 @@ import cz.vutbr.fit.iha.adapter.Adapter;
 import cz.vutbr.fit.iha.adapter.location.Location;
 import cz.vutbr.fit.iha.controller.Controller;
 import cz.vutbr.fit.iha.persistence.Persistence;
+import cz.vutbr.fit.iha.settings.Timezone;
 
 /**
  * The control preference activity handles the preferences for the control
@@ -29,7 +30,7 @@ public class SettingsMainActivity extends SherlockPreferenceActivity implements
 	 * keys which are defined in res/xml/preferences.xml
 	 */
 
-	private ListPreference mListPrefAdapter, mListPrefLocation, mListPrefTemperature;
+	private ListPreference mListPrefAdapter, mListPrefLocation, mListPrefTimezone;
 	private Preference mPrefUnits;
 	private Controller mController;
 	private SharedPreferences mPrefs;
@@ -56,7 +57,12 @@ public class SettingsMainActivity extends SherlockPreferenceActivity implements
 
 		mListPrefAdapter = (ListPreference) findPreference(Constants.PREF_SW2_ADAPTER);
 		mListPrefLocation = (ListPreference) findPreference(Constants.PREF_SW2_LOCATION);
-		mListPrefTemperature = (ListPreference) findPreference(Constants.PREF_TEMPERATURE);
+		
+		mListPrefTimezone = (ListPreference) findPreference(Constants.PREF_TIMEZONE);
+		mListPrefTimezone.setEntries(Timezone.getEntries(this));
+		mListPrefTimezone.setEntryValues(Timezone.getEntryValues());
+		mListPrefTimezone.setSummary(Timezone.getSharedPreferenceOption(this).getName(this));
+		
 		mPrefUnits = findPreference(Constants.KEY_UNITS);
         Intent intentUnit = new Intent(this, SettingsUnitActivity.class);
 		mPrefUnits.setIntent(intentUnit);
@@ -82,6 +88,7 @@ public class SettingsMainActivity extends SherlockPreferenceActivity implements
 
 	private void redraw() {
 		setDefaultLocAndAdap();
+		mListPrefTimezone.setSummary(Timezone.getSharedPreferenceOption(this).getName(this));
 	}
 	
 	// FIXME: This method must use same ActiveAdapter from application,

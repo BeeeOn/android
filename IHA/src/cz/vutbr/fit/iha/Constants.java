@@ -70,6 +70,7 @@ public final class Constants {
 	public static final String PREF_SW2_ADAPTER = "pref_sw2_adapter";
 	public static final String PREF_SW2_LOCATION = "pref_sw2_location";
 	public static final String PREF_TEMPERATURE = "pref_temperature";
+	public static final String PREF_TIMEZONE = "pref_timezone";
 	public static final String KEY_UNITS = "key_units";
 	
 	/**

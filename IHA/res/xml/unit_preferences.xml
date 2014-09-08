@@ -1,7 +1,6 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
 
     <ListPreference
-        ListPreference=""
         android:dialogTitle="@string/temperature"
         android:key="pref_temperature"
         android:title="@string/temperature" >

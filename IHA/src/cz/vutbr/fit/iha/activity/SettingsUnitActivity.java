@@ -51,7 +51,7 @@ public class SettingsUnitActivity extends SherlockPreferenceActivity implements
 		mListPrefTemperature = (ListPreference) findPreference(Constants.PREF_TEMPERATURE);
 		mListPrefTemperature.setEntries(Temperature.getEntries(this));
 		mListPrefTemperature.setEntryValues(Temperature.getEntryValues());
-		Temperature actTemp = Temperature.getTemperatureById(mPrefs.getString(Constants.PREF_TEMPERATURE, Temperature.getDefault().getId()));
+		Temperature actTemp = Temperature.getSharedPreferencesOption(this);
 		mListPrefTemperature.setSummary(actTemp.getFullNameWithShortName(this));
 	}
 
@@ -89,7 +89,7 @@ public class SettingsUnitActivity extends SherlockPreferenceActivity implements
 
 	@Override
 	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-		Temperature actTemp = Temperature.getTemperatureById(mPrefs.getString(Constants.PREF_TEMPERATURE, Temperature.getDefault().getId()));
+		Temperature actTemp = Temperature.getSharedPreferencesOption(this);
 		mListPrefTemperature.setSummary(actTemp.getFullNameWithShortName(this));
 	}
 

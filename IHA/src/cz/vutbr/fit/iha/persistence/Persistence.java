@@ -1,11 +1,15 @@
 package cz.vutbr.fit.iha.persistence;
 
+import java.util.Locale;
+
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.preference.PreferenceManager;
 import cz.vutbr.fit.iha.Constants;
 import cz.vutbr.fit.iha.R;
+import cz.vutbr.fit.iha.adapter.device.units.DefaultUnitPackages;
+import cz.vutbr.fit.iha.settings.Timezone;
 
 /**
  * Persistence service that handles caching data on this device.
@@ -42,9 +46,14 @@ public class Persistence {
 	
 	public void initializeDefaultSettings(String namespace) {
 		String name = getPreferencesFilename(namespace);
-
 		PreferenceManager.setDefaultValues(mContext, name, Context.MODE_PRIVATE, R.xml.main_preferences, true);
 		PreferenceManager.setDefaultValues(mContext, name, Context.MODE_PRIVATE, R.xml.unit_preferences, true);
+		
+		Editor editor = PreferenceManager.getDefaultSharedPreferences(mContext).edit();;
+		editor.putString(Constants.PREF_TIMEZONE, Timezone.getDefault().getId());
+		editor.commit();
+		
+		DefaultUnitPackages.setDefaultUnits(mContext);
 	}
 	
 	

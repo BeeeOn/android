@@ -178,6 +178,7 @@
     <string name="personal">Personal</string>
     <string name="user_profile">User profile</string>
     <string name="units">Units</string>
+    <string name="timezone">Timezone</string>
     <string name="temperature">Temperature</string>
     <string name="connections">Connections</string>
     <string name="smartwatches">Smartwatches</string>
@@ -185,4 +186,6 @@
     <string name="choose_default_adapter">Choose default adapter</string>
     <string name="default_location">Default location</string>
     <string name="default_adapter">Default adapter</string>
+    <string name="actual_timezone">Current timezone</string>
+    <string name="adapter_timezone">Adapter timezone</string>
 </resources>

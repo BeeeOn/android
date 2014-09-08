@@ -4,7 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.content.Context;
+import android.preference.PreferenceManager;
 
+import cz.vutbr.fit.iha.Constants;
 import cz.vutbr.fit.iha.R;
 
 /**
@@ -15,7 +17,7 @@ import cz.vutbr.fit.iha.R;
  */
 public enum Temperature {
 	CELSIUS("0", R.string.dev_temperature_celsius_unit_full, R.string.dev_temperature_celsius_unit), 
-	FAHRENHEIT("1", R.string.dev_temperature_fahrenheit_unit_full, R.string.dev_temperature_fahrenheit_unit), 
+	FAHRENHEIT("1",	R.string.dev_temperature_fahrenheit_unit_full, R.string.dev_temperature_fahrenheit_unit), 
 	KELVIN("2", R.string.dev_temperature_kelvin_unit_full, R.string.dev_temperature_kelvin_unit);
 
 	private final String mID;
@@ -41,7 +43,7 @@ public enum Temperature {
 	public String getId() {
 		return mID;
 	}
-	
+
 	/**
 	 * Get short form for unit. For example for celsius you will get "°C".
 	 * 
@@ -63,17 +65,17 @@ public enum Temperature {
 	public String getFullName(Context context) {
 		return context.getString(mResUnitName);
 	}
-	
+
 	/**
-	 * Get full name with short form for unit. For example for celsius you will get "Celsius (°C)".
+	 * Get full name with short form for unit. For example for celsius you will
+	 * get "Celsius (°C)".
 	 * 
 	 * @param context
 	 *            It can be app context
 	 * @return String which
 	 */
 	public String getFullNameWithShortName(Context context) {
-		return getFullName(context) + " ("
-				+ getShortName(context) + ")";
+		return getFullName(context) + " (" + getShortName(context) + ")";
 	}
 
 	/**
@@ -105,7 +107,7 @@ public enum Temperature {
 	 * @return If the ID exists, it returns Temperature object. Otherwise it
 	 *         returns default temperature unit.
 	 */
-	public static Temperature getTemperatureById(String id) {
+	private static Temperature getTemperatureById(String id) {
 		for (Temperature actTemp : Temperature.values()) {
 			if (actTemp.mID.equals(id)) {
 				return actTemp;
@@ -114,18 +116,23 @@ public enum Temperature {
 		return getDefault();
 	}
 
-	
-	///// CONVERTIONS
-	
+	public static Temperature getSharedPreferencesOption(Context context) {
+		return getTemperatureById(PreferenceManager
+				.getDefaultSharedPreferences(context).getString(
+						Constants.PREF_TEMPERATURE, getDefault().getId()));
+	}
+
+	// /// CONVERTIONS
+
 	public static float convertCelsius(Temperature to, float value) {
 		switch (to) {
 		case FAHRENHEIT:
-			return value*9/5+32;
+			return value * 9 / 5 + 32;
 		case KELVIN:
-			return (float) (value+273.15);
+			return (float) (value + 273.15);
 		default:
 			return value;
 		}
-		
+
 	}
 }

@@ -9,11 +9,16 @@
                 android:data="https://www.google.com/settings/personalinfo" />
         </Preference>
 
+        <ListPreference
+            android:dialogTitle="@string/timezone"
+            android:key="pref_timezone"
+            android:title="@string/timezone" >
+        </ListPreference>
+
         <PreferenceScreen
             android:key="key_units"
             android:persistent="false"
             android:title="@string/units" >
-            
         </PreferenceScreen>
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/smartwatches" >
