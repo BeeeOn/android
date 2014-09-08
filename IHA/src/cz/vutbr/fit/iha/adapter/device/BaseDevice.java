@@ -4,8 +4,10 @@
 package cz.vutbr.fit.iha.adapter.device;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.text.format.Time;
 import cz.vutbr.fit.iha.adapter.location.Location;
+import cz.vutbr.fit.iha.controller.Controller;
 
 /**
  * @brief Abstract class for all devices
@@ -23,12 +25,14 @@ public abstract class BaseDevice {
 	
 	protected NetworkState mNetwork = new NetworkState();
 	
+	
 	public final Time lastUpdate = new Time();
 	
 	/**
 	 * Class constructor
 	 */
-	public BaseDevice() {}
+	public BaseDevice() {
+	}
 	
 	/**
 	 * Public class that implements structure

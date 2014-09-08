@@ -1,11 +1,10 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
 
-    <ListPreference 
-        android:key="pref_temperature"
-        android:title="@string/temperature"
+    <ListPreference
+        ListPreference=""
         android:dialogTitle="@string/temperature"
-        android:entries="@array/unit_temperature_entries"
-        android:entryValues="@array/unit_temperature_values"
-        android:defaultValue="@string/unit_temperature_default" />
+        android:key="pref_temperature"
+        android:title="@string/temperature" >
+    </ListPreference>
 
 </PreferenceScreen>

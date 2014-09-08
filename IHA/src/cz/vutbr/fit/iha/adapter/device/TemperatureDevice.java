@@ -34,7 +34,7 @@ public class TemperatureDevice extends BaseDevice {
 
 	@Override
 	public int getUnitStringResource() {
-		return R.string.dev_temperature_unit;
+		return R.string.dev_temperature_celsius_unit;
 	}
 
 	@Override
