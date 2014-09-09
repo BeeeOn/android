@@ -48,7 +48,7 @@ public class SettingsUnitActivity extends SherlockPreferenceActivity implements
 		// Load the preferences from an XML resource
 		addPreferencesFromResource(R.xml.unit_preferences);
 
-		mListPrefTemperature = (ListPreference) findPreference(Constants.PREF_TEMPERATURE);
+		mListPrefTemperature = (ListPreference) findPreference(Constants.PERSISTANCE_PREF_TEMPERATURE);
 		mListPrefTemperature.setEntries(Temperature.getEntries(this));
 		mListPrefTemperature.setEntryValues(Temperature.getEntryValues());
 		Temperature actTemp = Temperature.getSharedPreferencesOption(mController.getUserSettings());

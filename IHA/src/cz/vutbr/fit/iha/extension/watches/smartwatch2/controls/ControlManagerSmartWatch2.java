@@ -99,8 +99,8 @@ public class ControlManagerSmartWatch2 extends ControlManagerBase {
 
 		// Try to find default setting
 		SharedPreferences prefs = mController.getUserSettings();
-		String adapterId = prefs.getString(Constants.PREF_SW2_ADAPTER, null);
-		String strLocation = prefs.getString(Constants.PREF_SW2_LOCATION, null);
+		String adapterId = prefs.getString(Constants.PERSISTANCE_PREF_SW2_ADAPTER, null);
+		String strLocation = prefs.getString(Constants.PERSISTANCE_PREF_SW2_LOCATION, null);
 
 		Log.v(SW2ExtensionService.LOG_TAG, "Default adapter ID: "
 				+ ((adapterId == null) ? "null" : adapterId));

@@ -93,7 +93,7 @@ public enum Timezone {
 
 	public static Timezone getSharedPreferenceOption(SharedPreferences prefs) {
 			return getTimezoneById(prefs.getString(
-					Constants.PREF_TIMEZONE, getDefault().getId()));
+					Constants.PERSISTANCE_PREF_TIMEZONE, getDefault().getId()));
 	}
 	
 	///// CONVERTIONS

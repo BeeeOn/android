@@ -3,9 +3,7 @@ package cz.vutbr.fit.iha.persistence;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
-import android.preference.PreferenceManager;
 import cz.vutbr.fit.iha.Constants;
-import cz.vutbr.fit.iha.R;
 import cz.vutbr.fit.iha.adapter.device.units.DefaultUnitPackages;
 import cz.vutbr.fit.iha.settings.Timezone;
 
@@ -43,11 +41,11 @@ public class Persistence {
 	}
 	
 	public void initializeDefaultSettings(String namespace) {
-		String name = getPreferencesFilename(namespace);
-		PreferenceManager.setDefaultValues(mContext, name, Context.MODE_PRIVATE, R.xml.main_preferences, true);
-		PreferenceManager.setDefaultValues(mContext, name, Context.MODE_PRIVATE, R.xml.unit_preferences, true);
+//		String name = getPreferencesFilename(namespace);
+//		PreferenceManager.setDefaultValues(mContext, name, Context.MODE_PRIVATE, R.xml.main_preferences, true);
+//		PreferenceManager.setDefaultValues(mContext, name, Context.MODE_PRIVATE, R.xml.unit_preferences, true);
 		
-		setString(namespace, Constants.PREF_TIMEZONE, Timezone.getDefault().getId());
+		setString(namespace, Constants.PERSISTANCE_PREF_TIMEZONE, Timezone.getDefault().getId());
 		
 		DefaultUnitPackages.setDefaultUnits(this, namespace);
 	}
@@ -58,6 +56,12 @@ public class Persistence {
 	public void setString(String namespace, String key, String value) {
 		Editor settings = getSettings(namespace).edit();
 		settings.putString(key, value);
+		settings.commit();
+	}
+	
+	private void setBoolean(String namespace, String key, boolean value) {
+		Editor settings = getSettings(namespace).edit();
+		settings.putBoolean(key, value);
 		settings.commit();
 	}
 	
@@ -85,6 +89,14 @@ public class Persistence {
 	
 	public String loadLastEmail() {
 		return getSettings(GLOBAL).getString(Constants.PERSISTENCE_PREF_LAST_USER, "");
+	}
+	
+	public void saveFirstLogin(String namespace) {
+		setBoolean(namespace, Constants.PERSISTANCE_PREF_FIRST_LOGIN, false);
+	}
+	
+	public boolean loadIsFirstLogin(String namespace) {
+		return getSettings(namespace).getBoolean(Constants.PERSISTANCE_PREF_FIRST_LOGIN, true);
 	}
 	
 	public void saveActiveAdapter(String userId, String adapterId) {
