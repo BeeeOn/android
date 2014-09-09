@@ -16,7 +16,7 @@ import cz.vutbr.fit.iha.Constants;
 import cz.vutbr.fit.iha.R;
 import cz.vutbr.fit.iha.activity.LocationScreenActivity;
 import cz.vutbr.fit.iha.adapter.Adapter;
-import cz.vutbr.fit.iha.adapter.device.BaseDevice;
+import cz.vutbr.fit.iha.adapter.device.Facility;
 import cz.vutbr.fit.iha.controller.Controller;
 
 public class AddSensorActivityDialog extends BaseActivityDialog{
@@ -134,18 +134,18 @@ public class AddSensorActivityDialog extends BaseActivityDialog{
 	/**
 	 * Changes selected location and redraws list of adapters there
 	 */
-	private class GetRefreshAdapterTask extends AsyncTask<Void, Void, List<BaseDevice> > {
+	private class GetRefreshAdapterTask extends AsyncTask<Void, Void, List<Facility> > {
 
 		@Override
-		protected List<BaseDevice>  doInBackground(Void... params) {
+		protected List<Facility>  doInBackground(Void... params) {
 
 			mController.reloadAdapters();
-			List<BaseDevice> devices = mController.getUninitializedDevices();
+			List<Facility> devices = mController.getUninitializedDevices();
 			return devices;
 		}
 
 		@Override
-		protected void onPostExecute(List<BaseDevice>  devices) {
+		protected void onPostExecute(List<Facility>  devices) {
 			 
         	 if(devices.size() > 0 ) {
         		 // Setup variable as true for disable timer

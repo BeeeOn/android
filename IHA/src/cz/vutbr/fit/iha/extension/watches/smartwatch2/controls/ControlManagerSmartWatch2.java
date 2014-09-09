@@ -51,7 +51,7 @@ import com.sonyericsson.extras.liveware.extension.util.control.ControlObjectClic
 import cz.vutbr.fit.iha.Constants;
 import cz.vutbr.fit.iha.R;
 import cz.vutbr.fit.iha.adapter.Adapter;
-import cz.vutbr.fit.iha.adapter.device.BaseDevice;
+import cz.vutbr.fit.iha.adapter.device.Facility;
 import cz.vutbr.fit.iha.controller.Controller;
 import cz.vutbr.fit.iha.extension.watches.smartwatch2.SW2ExtensionService;
 import cz.vutbr.fit.iha.network.GetGoogleAuth;
@@ -114,7 +114,7 @@ public class ControlManagerSmartWatch2 extends ControlManagerBase {
 			// if default adapter is defined
 			if (adapter != null) {
 				if (strLocation != null) {
-					List<BaseDevice> sensors = adapter
+					List<Facility> sensors = adapter
 							.getDevicesByLocation(strLocation);
 					if (sensors != null) {
 						Intent intent = new Intent(mContext,

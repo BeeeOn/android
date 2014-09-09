@@ -11,8 +11,7 @@ import java.util.Random;
 
 import android.text.format.Time;
 import android.util.Log;
-import cz.vutbr.fit.iha.adapter.device.BaseDevice;
-import cz.vutbr.fit.iha.adapter.device.Component;
+import cz.vutbr.fit.iha.adapter.device.Facility;
 import cz.vutbr.fit.iha.adapter.location.Location;
 import cz.vutbr.fit.iha.household.User;
 
@@ -25,10 +24,10 @@ public class Adapter {
 	public static final String TAG = Adapter.class.getSimpleName();
 	
 	private final Map<String, Location> mLocations = new HashMap<String, Location>();
-	private final Map<String, BaseDevice> mDevices = new HashMap<String, BaseDevice>();
-	private final Map<String, BaseDevice> mUninitializedDevices = new HashMap<String, BaseDevice>();
-	private final Map<String, BaseDevice> mUninitializedIgnored = new HashMap<String, BaseDevice>();
-	private final Map<String, List<BaseDevice>> mGroupedDevices = new HashMap<String, List<BaseDevice>>();
+	private final Map<String, Facility> mDevices = new HashMap<String, Facility>();
+	private final Map<String, Facility> mUninitializedDevices = new HashMap<String, Facility>();
+	private final Map<String, Facility> mUninitializedIgnored = new HashMap<String, Facility>();
+	private final Map<String, List<Facility>> mGroupedDevices = new HashMap<String, List<Facility>>();
 	
 	private String mId = "";
 	private String mName = "";
@@ -44,7 +43,7 @@ public class Adapter {
 	 */
 	public String toDebugString() {
 		String devices = "";
-		for (BaseDevice dev : mDevices.values()) {
+		for (Facility dev : mDevices.values()) {
 			devices += String.format(" - %s\n", dev.toDebugString());
 		}
 		
@@ -121,7 +120,7 @@ public class Adapter {
 	 * @param id of device
 	 * @return BaseDevice or null if no device with this id is found.
 	 */
-	public BaseDevice getDeviceById(String id) {
+	public Facility getDeviceById(String id) {
 		return mDevices.get(id);
 	}
 	
@@ -129,8 +128,8 @@ public class Adapter {
 	 * Return list of all devices.
 	 * @return list with devices (or empty map).
 	 */
-	public List<BaseDevice> getDevices() {
-		return new ArrayList<BaseDevice>(mDevices.values());
+	public List<Facility> getDevices() {
+		return new ArrayList<Facility>(mDevices.values());
 	}
 	
 	/**
@@ -138,10 +137,10 @@ public class Adapter {
 	 * Also updates uninitialized and locations maps.
 	 * @param devices
 	 */
-	public void setDevices(final List<BaseDevice> devices) {
+	public void setDevices(final List<Facility> devices) {
 		clearDevices();
 
-		for (BaseDevice device : devices) {
+		for (Facility device : devices) {
 			addDevice(device);
 		}
 	}
@@ -217,14 +216,14 @@ public class Adapter {
 	 * @param id
 	 * @return list with devices (or empty list)
 	 */
-	public List<BaseDevice> getDevicesByLocation(final String id) {
-		List<BaseDevice> devices = new ArrayList<BaseDevice>();
+	public List<Facility> getDevicesByLocation(final String id) {
+		List<Facility> devices = new ArrayList<Facility>();
 		
 		// Small optimization
 		if (!mLocations.containsKey(id))
 			return devices;
 		
-		for (BaseDevice device : mDevices.values()) {
+		for (Facility device : mDevices.values()) {
 			if (device.getLocationId().equals(id)) {
 				devices.add(device);
 			}
@@ -237,8 +236,8 @@ public class Adapter {
 	 * Returns list of all uninitialized devices in this adapter
 	 * @return list with uninitialized devices (or empty list)
 	 */
-	public List<BaseDevice> getUninitializedDevices() {
-		return new ArrayList<BaseDevice>(mUninitializedDevices.values());
+	public List<Facility> getUninitializedDevices() {
+		return new ArrayList<Facility>(mUninitializedDevices.values());
 	}
 	
 	/**
@@ -247,7 +246,7 @@ public class Adapter {
 	 * @param device
 	 * @return
 	 */
-	public void addDevice(final BaseDevice device) {
+	public void addDevice(final Facility device) {
 		mDevices.put(device.getId(), device);
 		
 		if (!mLocations.containsKey(device.getLocationId()))
@@ -258,7 +257,7 @@ public class Adapter {
 
 		// FIXME: MultiDevices discovery - having second map is very uneffective and wrong, it should be in one
 		if (!mGroupedDevices.containsKey(device.getAddress()))
-			mGroupedDevices.put(device.getAddress(), new ArrayList<BaseDevice>());
+			mGroupedDevices.put(device.getAddress(), new ArrayList<Facility>());
 
 		mGroupedDevices.get(device.getAddress()).add(device);
 	}
@@ -268,9 +267,9 @@ public class Adapter {
 	 * @param device
 	 * @return false if adapter doesn't contain this device, true otherwise
 	 */
-	public boolean refreshDevice(final BaseDevice device) {
+	public boolean refreshDevice(final Facility device) {
 		if (!mDevices.containsKey(device.getId())) {
-			Log.w(TAG, String.format("Can't refresh device '%s', adapter '%s' doesn't contain it", device.getName(), getName()));
+			Log.w(TAG, String.format("Can't refresh device '%s', adapter '%s' doesn't contain it", device.getId(), getName()));
 			return false;
 		}
 		
@@ -292,15 +291,15 @@ public class Adapter {
 		mUninitializedDevices.clear();
 		
 		// TODO: is this needed or will garbage collector do this itself?
-		for (List<BaseDevice> list : mGroupedDevices.values()) {
+		for (List<Facility> list : mGroupedDevices.values()) {
 			list.clear();
 		}
 		mGroupedDevices.clear();
 	}
 
-	public void ignoreUninitialized(List<BaseDevice> devices) {
+	public void ignoreUninitialized(List<Facility> devices) {
 		// TODO: save this list into some cache
-		for (BaseDevice device : devices) {
+		for (Facility device : devices) {
 			String id = device.getId();
 			
 			if (mUninitializedDevices.containsKey(id)) {
@@ -314,7 +313,7 @@ public class Adapter {
 
 	public void unignoreUninitialized() {
 		// TODO: update that list in some cache
-		for (BaseDevice device : mUninitializedIgnored.values()) {
+		for (Facility device : mUninitializedIgnored.values()) {
 			String id = device.getId();
 			
 			if (!mUninitializedDevices.containsKey(id))
@@ -348,37 +347,13 @@ public class Adapter {
 	 * @param id
 	 * @return list with devices (or empty list)
 	 */
-	public List<BaseDevice> getDevicesByAddress(String address) {
-		List<BaseDevice> devices = new ArrayList<BaseDevice>();
+	public List<Facility> getDevicesByAddress(String address) {
+		List<Facility> devices = new ArrayList<Facility>();
 		
 		if (mGroupedDevices.containsKey(address))
 			devices.addAll(mGroupedDevices.get(address));
 		
 		return devices;
-	}
-	
-	// FIXME: this is temporary and should be rewrited
-	public Map<String, Component> getComponentsByLocation(String id) {
-		Map<String, Component> components = new HashMap<String, Component>();
-		
-		for (BaseDevice device : getDevicesByLocation(id)) {
-			if (!components.containsKey(device.getAddress())) {
-				Component component = new Component();
-				component.setAddress(device.getAddress());
-				component.setBattery(device.getBattery());
-				component.setInitialized(device.isInitialized());
-				component.setInvolveTime(device.getInvolveTime());
-				component.setLocationId(device.getLocationId());
-				component.setQuality(device.getQuality());
-				component.setRefresh(device.getRefresh());
-
-				components.put(component.getAddress(), component);
-			}
-
-			components.get(device.getAddress()).devices.add(device);
-		}
-		
-		return components;
 	}
 	
 }

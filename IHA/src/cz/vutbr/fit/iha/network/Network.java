@@ -39,6 +39,7 @@ import cz.vutbr.fit.iha.adapter.device.BaseDevice.SaveDevice;
 import cz.vutbr.fit.iha.adapter.device.DeviceLog;
 import cz.vutbr.fit.iha.adapter.device.DeviceLog.DataInterval;
 import cz.vutbr.fit.iha.adapter.device.DeviceLog.DataType;
+import cz.vutbr.fit.iha.adapter.device.Facility;
 import cz.vutbr.fit.iha.adapter.location.Location;
 import cz.vutbr.fit.iha.household.ActualUser;
 import cz.vutbr.fit.iha.household.User;
@@ -466,15 +467,15 @@ public class Network {
 	 * @throws CommunicationException
 	 */
 	@SuppressWarnings("unchecked")
-	public List<BaseDevice> init(String adapterId) throws NoConnectionException, CommunicationException, FalseException {
+	public List<Facility> init(String adapterId) throws NoConnectionException, CommunicationException, FalseException {
 		String messageToSend = XmlCreator.createGetAllDevices(mSessionId, adapterId);
 		ParsedMessage msg = doRequest(messageToSend);
-		List<BaseDevice> result = new ArrayList<BaseDevice>();
+		List<Facility> result = new ArrayList<Facility>();
 
 		if (msg.getState() == State.ALLDEVICES) {
 			Log.i(TAG, msg.getState().getValue());
 
-			result = (ArrayList<BaseDevice>) msg.data;
+			result = (ArrayList<Facility>) msg.data;
 		} else if (msg.getState() == State.RESIGN) {
 			doResign();
 			return init(adapterId);
@@ -628,14 +629,14 @@ public class Network {
 	/**
 	 * Method delete sensor from server
 	 * @param adapterId
-	 * @param device to be deleted
+	 * @param facility to be deleted
 	 * @return true if is deleted, false otherwise
 	 * @throws NoConnectionException
 	 * @throws CommunicationException
 	 * @throws FalseException
 	 */
-	public boolean deleteDevice(String adapterId, BaseDevice device) throws NoConnectionException, CommunicationException, FalseException {
-		String messageToSend = XmlCreator.createDeleteDevice(mSessionId, adapterId, device);
+	public boolean deleteDevice(String adapterId, Facility facility) throws NoConnectionException, CommunicationException, FalseException {
+		String messageToSend = XmlCreator.createDeleteDevice(mSessionId, adapterId, facility);
 		ParsedMessage msg = doRequest(messageToSend);
 		
 		if (msg.getState() == State.TRUE) {
@@ -645,7 +646,7 @@ public class Network {
 
 		} else if (msg.getState() == State.RESIGN) {
 			doResign();
-			return switchState(adapterId, device);
+			return deleteDevice(adapterId, facility);
 		} else if (msg.getState() == State.FALSE) {
 			throw new FalseException(((FalseAnswer) msg.data));
 		} else
@@ -655,7 +656,7 @@ public class Network {
 	/**
 	 * Method ask for actual data devices
 	 * 
-	 * @param devices
+	 * @param facilities
 	 *            list of devices to which needed actual data
 	 * @return list of updated devices fields
 	 * @throws NoConnectionException
@@ -663,19 +664,19 @@ public class Network {
 	 */
 	// http://stackoverflow.com/a/509288/1642090
 	@SuppressWarnings("unchecked")
-	public List<BaseDevice> getDevices(String adapterId, List<BaseDevice> devices) throws NoConnectionException, CommunicationException, FalseException {
-		String messageToSend = XmlCreator.createGetDevices(mSessionId, adapterId, devices);
+	public List<Facility> getFacilities(String adapterId, List<Facility> facilities) throws NoConnectionException, CommunicationException, FalseException {
+		String messageToSend = XmlCreator.createGetDevices(mSessionId, adapterId, facilities);
 		ParsedMessage msg = doRequest(messageToSend);
 		
-		List<BaseDevice> result = new ArrayList<BaseDevice>();
+		List<Facility> result = new ArrayList<Facility>();
 
 		if (msg.getState() == State.DEVICES) {
 			Log.i(TAG, msg.getState().getValue());
 			
-			result.addAll((List<BaseDevice>) msg.data);
+			result.addAll((List<Facility>) msg.data);
 		} else if (msg.getState() == State.RESIGN) {
 			doResign();
-			return getDevices(adapterId, devices);
+			return getFacilities(adapterId, facilities);
 		} else if (msg.getState() == State.FALSE) {
 			throw new FalseException(((FalseAnswer) msg.data));
 		}
@@ -685,28 +686,28 @@ public class Network {
 	/**
 	 * Method ask server for actual data of one device
 	 * @param adapterId
-	 * @param device
+	 * @param facility
 	 * @return
 	 * @throws NoConnectionException
 	 * @throws CommunicationException
 	 * @throws FalseException
 	 */
-	public BaseDevice getDevice(String adapterId, BaseDevice device) throws NoConnectionException, CommunicationException, FalseException {
-		String messageToSend = XmlCreator.createGetDevice(mSessionId, adapterId, device);
+	public Facility getFacility(String adapterId, Facility facility) throws NoConnectionException, CommunicationException, FalseException {
+		String messageToSend = XmlCreator.createGetDevice(mSessionId, adapterId, facility);
 		ParsedMessage msg = doRequest(messageToSend);
 		
-		BaseDevice result = null;
+		Facility result = null;
 
 		if (msg.getState() == State.DEVICES) {
 			Log.i(TAG, msg.getState().getValue());
 			 
 			@SuppressWarnings("unchecked")
-			List<BaseDevice> devices = (List<BaseDevice>) msg.data;
+			List<Facility> devices = (List<Facility>) msg.data;
 			if (devices.size() != 0)
 				result = devices.get(0);
 		} else if (msg.getState() == State.RESIGN) {
 			doResign();
-			return getDevice(adapterId, device);
+			return getFacility(adapterId, facility);
 		} else if (msg.getState() == State.FALSE) {
 			throw new FalseException(((FalseAnswer) msg.data));
 		}
@@ -730,7 +731,7 @@ public class Network {
 	 */
 	//http://stackoverflow.com/a/509288/1642090
 	public DeviceLog getLog(String adapterId, BaseDevice device, String from, String to, DataType type, DataInterval interval) throws NoConnectionException, CommunicationException, FalseException {
-		String messageToSend = XmlCreator.createGetLog(mSessionId, adapterId, device.getAddress(), device.getType(), from, to, type.getValue(), interval.getValue());
+		String messageToSend = XmlCreator.createGetLog(mSessionId, adapterId, device.getFacility().getAddress(), device.getType(), from, to, type.getValue(), interval.getValue());
 		
 		ParsedMessage msg = doRequest(messageToSend);
 		
@@ -1006,8 +1007,8 @@ public class Network {
 			return false;
 	}
 
-	public boolean updateView(String viewName, int iconId, BaseDevice device, NetworkAction action){
-		String messageToSend = XmlCreator.createUpdateView(mSessionId, viewName, iconId, device, action);
+	public boolean updateView(String viewName, int iconId, Facility facility, NetworkAction action){
+		String messageToSend = XmlCreator.createUpdateView(mSessionId, viewName, iconId, facility, action);
 		ParsedMessage msg = doRequest(messageToSend);
 
 		if (msg.getState() == State.TRUE) {
@@ -1017,7 +1018,7 @@ public class Network {
 
 		} else if (msg.getState() == State.RESIGN) {
 			doResign();
-			return updateView(viewName, iconId, device, action);
+			return updateView(viewName, iconId, facility, action);
 		} else if (msg.getState() == State.FALSE) {
 			throw new FalseException(((FalseAnswer) msg.data));
 		} else

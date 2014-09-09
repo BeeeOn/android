@@ -46,7 +46,7 @@ import com.sonyericsson.extras.liveware.extension.util.control.ControlListItem;
 
 import cz.vutbr.fit.iha.R;
 import cz.vutbr.fit.iha.adapter.Adapter;
-import cz.vutbr.fit.iha.adapter.device.BaseDevice;
+import cz.vutbr.fit.iha.adapter.device.Facility;
 import cz.vutbr.fit.iha.adapter.location.Location;
 import cz.vutbr.fit.iha.extension.watches.smartwatch2.SW2ExtensionService;
 
@@ -204,7 +204,7 @@ public class ListLocationControlExtension extends ManagedControlExtension {
 			// intent.putExtra(GalleryTestControl.EXTRA_INITIAL_POSITION,
 			// listItem.listItemPosition);
 			// mControlManager.startControl(intent);
-			List<BaseDevice> sensors = mAdapter.getDevicesByLocation(mLocations
+			List<Facility> sensors = mAdapter.getDevicesByLocation(mLocations
 					.get(listItem.listItemPosition).getId());
 			Intent intent;
 			if (sensors.size() < 1) {

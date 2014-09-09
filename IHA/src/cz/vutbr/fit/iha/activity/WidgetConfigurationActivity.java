@@ -19,14 +19,14 @@ import cz.vutbr.fit.iha.Constants;
 import cz.vutbr.fit.iha.R;
 import cz.vutbr.fit.iha.adapter.Adapter;
 import cz.vutbr.fit.iha.adapter.device.BaseDevice;
+import cz.vutbr.fit.iha.adapter.device.Facility;
 import cz.vutbr.fit.iha.controller.Controller;
 import cz.vutbr.fit.iha.widget.SensorWidgetProvider;
 import cz.vutbr.fit.iha.widget.WidgetUpdateService;
 
 public class WidgetConfigurationActivity extends BaseActivity {
 
-	private static final String TAG = WidgetConfigurationActivity.class
-			.getSimpleName();
+	private static final String TAG = WidgetConfigurationActivity.class.getSimpleName();
 
 	private int mAppWidgetId = 0;
 
@@ -57,8 +57,8 @@ public class WidgetConfigurationActivity extends BaseActivity {
 		// prepare list with all sensors to use in spinner
 		Controller controller = Controller.getInstance(this);
 		for (Adapter adapter : controller.getAdapters()) {
-			for (BaseDevice device : controller.getDevicesByAdapter(adapter.getId())) {
-				mDevices.add(device);
+			for (Facility facility : controller.getDevicesByAdapter(adapter.getId())) {
+				mDevices.addAll(facility.getDevices());
 			}
 		}
 
@@ -126,8 +126,7 @@ public class WidgetConfigurationActivity extends BaseActivity {
 
 	private void initSpinner() {
 		Spinner s = (Spinner) findViewById(R.id.sensor);
-		ArrayAdapter<?> arrayAdapter = new ArrayAdapter<BaseDevice>(this,
-				android.R.layout.simple_spinner_dropdown_item, mDevices);
+		ArrayAdapter<?> arrayAdapter = new ArrayAdapter<BaseDevice>(this, android.R.layout.simple_spinner_dropdown_item, mDevices);
 		s.setAdapter(arrayAdapter);
 	}
 
@@ -140,7 +139,7 @@ public class WidgetConfigurationActivity extends BaseActivity {
 			Spinner s = (Spinner) findViewById(R.id.sensor);
 
 			for (int i = 0; i < s.getCount(); i++) {
-				BaseDevice device = (BaseDevice) s.getItemAtPosition(i);
+				Facility device = (Facility) s.getItemAtPosition(i);
 				if (device.getId().equals(id)) {
 					s.setSelection(i);
 					break;
@@ -156,16 +155,14 @@ public class WidgetConfigurationActivity extends BaseActivity {
 	}
 
 	private boolean saveSettings() {
-		SharedPreferences settings = SensorWidgetProvider.getSettings(
-				WidgetConfigurationActivity.this, mAppWidgetId);
+		SharedPreferences settings = SensorWidgetProvider.getSettings(WidgetConfigurationActivity.this, mAppWidgetId);
 		SharedPreferences.Editor editor = settings.edit();
 
 		Spinner spinner = (Spinner) findViewById(R.id.sensor);
 		BaseDevice device = (BaseDevice) spinner.getSelectedItem();
 		if (device == null) {
 			// FIXME: use string from resources
-			Toast.makeText(this, "Select sensor from list", Toast.LENGTH_LONG)
-					.show();
+			Toast.makeText(this, "Select sensor from list", Toast.LENGTH_LONG).show();
 			return false;
 		}
 

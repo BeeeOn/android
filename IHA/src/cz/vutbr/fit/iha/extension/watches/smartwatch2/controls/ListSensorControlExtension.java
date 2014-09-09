@@ -47,6 +47,7 @@ import com.sonyericsson.extras.liveware.extension.util.control.ControlListItem;
 import cz.vutbr.fit.iha.R;
 import cz.vutbr.fit.iha.adapter.Adapter;
 import cz.vutbr.fit.iha.adapter.device.BaseDevice;
+import cz.vutbr.fit.iha.adapter.device.Facility;
 import cz.vutbr.fit.iha.extension.watches.smartwatch2.SW2ExtensionService;
 
 /**
@@ -259,10 +260,16 @@ public class ListSensorControlExtension extends ManagedControlExtension {
 
 				mAdapter = mController.getAdapter(mAdapterId, true);
 				if (mAdapter != null) {
-					mDevices = mAdapter.getDevicesByLocation(mLocationStr);
+					mDevices = new ArrayList<BaseDevice>();
+					
+					List<Facility> facilities = mAdapter.getDevicesByLocation(mLocationStr);
+					for (Facility facility : facilities) {
+						mDevices.addAll(facility.getDevices());
+					}
+					
 					if (mDevices != null) {
 						resume();
-					}
+					}					
 				}
 			}
 		});

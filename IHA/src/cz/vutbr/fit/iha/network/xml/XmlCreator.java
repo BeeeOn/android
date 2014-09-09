@@ -15,6 +15,7 @@ import org.xmlpull.v1.XmlSerializer;
 import android.util.Xml;
 import cz.vutbr.fit.iha.adapter.device.BaseDevice;
 import cz.vutbr.fit.iha.adapter.device.BaseDevice.SaveDevice;
+import cz.vutbr.fit.iha.adapter.device.Facility;
 import cz.vutbr.fit.iha.adapter.location.Location;
 import cz.vutbr.fit.iha.household.User;
 import cz.vutbr.fit.iha.network.Network.NetworkAction;
@@ -262,7 +263,7 @@ public class XmlCreator {
 			serializer.attribute(ns, ADAPTER, adapterId);
 			
 				serializer.startTag(ns, DEVICE);
-				serializer.attribute(ns, ID, device.getAddress());
+				serializer.attribute(ns, ID, device.getFacility().getAddress());
 				serializer.attribute(ns, TYPE, formatType(device.getType()));
 				
 					serializer.startTag(ns, VALUE);
@@ -284,10 +285,10 @@ public class XmlCreator {
 	 * Method create XML of DelDevice message
 	 * @param id
 	 * @param adapterId
-	 * @param device
+	 * @param facility
 	 * @return XML of DelDevice message
 	 */
-	public static String createDeleteDevice(String id, String adapterId, BaseDevice device){
+	public static String createDeleteDevice(String id, String adapterId, Facility facility){
 		XmlSerializer serializer = Xml.newSerializer();
 		StringWriter writer = new StringWriter();
 		try{
@@ -301,8 +302,9 @@ public class XmlCreator {
 			serializer.attribute(ns, ADAPTER, adapterId);
 			
 				serializer.startTag(ns, DEVICE);
-				serializer.attribute(ns, ID, device.getAddress());
-				serializer.attribute(ns, TYPE, formatType(device.getType()));
+				serializer.attribute(ns, ID, facility.getAddress());
+				// FIXME: it doesn't make sense to have type here, we want whole facility with all sensors (not single sensor data)
+				serializer.attribute(ns, TYPE, formatType(facility.getDevices().get(0).getType())); // FIXME: this will crash if this facility has no devices
 				serializer.endTag(ns, DEVICE);
 			
 			serializer.endTag(ns, COM_ROOT);
@@ -729,15 +731,17 @@ public class XmlCreator {
 			serializer.attribute(ns, ADAPTER, adapterId);
 			
 			for(BaseDevice device : devices){
-				serializer.startTag(ns, DEVICE);
-				serializer.attribute(ns, INITIALIZED, (device.isInitialized())?INIT_1:INIT_0);
-				serializer.attribute(ns, TYPE, formatType(device.getType()));
-				serializer.attribute(ns, ID, device.getAddress());
-				serializer.attribute(ns, VISIBILITY, (device.getVisibility())?INIT_1:INIT_0);
+				Facility facility = device.getFacility();
 				
-				if(device.getLocationId() != null){
+				serializer.startTag(ns, DEVICE);
+				serializer.attribute(ns, INITIALIZED, (facility.isInitialized())?INIT_1:INIT_0);
+				serializer.attribute(ns, TYPE, formatType(device.getType()));
+				serializer.attribute(ns, ID, facility.getAddress());
+				serializer.attribute(ns, VISIBILITY, (facility.getVisibility())?INIT_1:INIT_0);
+				
+				if(facility.getLocationId() != null){
 					serializer.startTag(ns, LOCATION);
-					serializer.attribute(ns, ID, device.getLocationId());
+					serializer.attribute(ns, ID, facility.getLocationId());
 					serializer.endTag(ns, LOCATION);
 				}
 				if(device.getName() != null){
@@ -745,9 +749,9 @@ public class XmlCreator {
 					serializer.text(device.getName());
 					serializer.endTag(ns, NAME);
 				}
-				if(device.getRefresh() != null){
+				if(facility.getRefresh() != null){
 					serializer.startTag(ns, REFRESH);
-					serializer.text(Integer.toString(device.getRefresh().getInterval()));
+					serializer.text(Integer.toString(facility.getRefresh().getInterval()));
 					serializer.endTag(ns, REFRESH);
 				}
 				if(device.getRawIntValue() != Integer.MAX_VALUE){
@@ -785,6 +789,8 @@ public class XmlCreator {
 		XmlSerializer serializer = Xml.newSerializer();
 		StringWriter writer = new StringWriter();
 		try{
+			Facility facility = device.getFacility();
+			
 			serializer.setOutput(writer);
 			serializer.startDocument("UTF-8", null);
 			
@@ -795,16 +801,16 @@ public class XmlCreator {
 			serializer.attribute(ns, ADAPTER, adapterId);
 			
 				serializer.startTag(ns, DEVICE);
-				serializer.attribute(ns, INITIALIZED, (device.isInitialized())?INIT_1:INIT_0);
+				serializer.attribute(ns, INITIALIZED, (facility.isInitialized())?INIT_1:INIT_0);
 				serializer.attribute(ns, TYPE, formatType(device.getType()));
-				serializer.attribute(ns, ID, device.getAddress());
+				serializer.attribute(ns, ID, facility.getAddress());
 				
 				if(toSave.contains(SaveDevice.SAVE_VISIBILITY))
-					serializer.attribute(ns, VISIBILITY, (device.getVisibility())?INIT_1:INIT_0);
+					serializer.attribute(ns, VISIBILITY, (facility.getVisibility())?INIT_1:INIT_0);
 				
-				if(toSave.contains(SaveDevice.SAVE_LOCATION) && device.getLocationId() != null){
+				if(toSave.contains(SaveDevice.SAVE_LOCATION) && facility.getLocationId() != null){
 					serializer.startTag(ns, LOCATION);
-					serializer.attribute(ns, ID, device.getLocationId());
+					serializer.attribute(ns, ID, facility.getLocationId());
 					serializer.endTag(ns, LOCATION);
 				}
 				if(toSave.contains(SaveDevice.SAVE_NAME) && device.getName() != null){
@@ -812,9 +818,9 @@ public class XmlCreator {
 					serializer.text(device.getName());
 					serializer.endTag(ns, NAME);
 				}
-				if(toSave.contains(SaveDevice.SAVE_REFRESH) && device.getRefresh() != null){
+				if(toSave.contains(SaveDevice.SAVE_REFRESH) && facility.getRefresh() != null){
 					serializer.startTag(ns, REFRESH);
-					serializer.text(Integer.toString(device.getRefresh().getInterval()));
+					serializer.text(Integer.toString(facility.getRefresh().getInterval()));
 					serializer.endTag(ns, REFRESH);
 				}
 				if(toSave.contains(SaveDevice.SAVE_VALUE) && device.getStringValue() != null && device.getStringValue().length() > 0){
@@ -882,7 +888,7 @@ public class XmlCreator {
 	 * @param devicesId Id of devices to get update fields
 	 * @return update message
 	 */
-	public static String createGetDevices(String id, String adapterId, List<BaseDevice>devices){
+	public static String createGetDevices(String id, String adapterId, List<Facility>facilities){
 		XmlSerializer serializer = Xml.newSerializer();
 		StringWriter writer = new StringWriter();
 		try{
@@ -895,11 +901,13 @@ public class XmlCreator {
 			serializer.attribute(ns, VERSION, GVER);
 			serializer.attribute(ns, ADAPTER, adapterId);
 			
-			for(BaseDevice device : devices){
-				serializer.startTag(ns, DEVICE);
-				serializer.attribute(ns, ID, device.getAddress());
-				serializer.attribute(ns, TYPE, formatType(device.getType()));
-				serializer.endTag(ns, DEVICE);
+			for(Facility facility : facilities){
+				for (BaseDevice device : facility.getDevices()) {
+					serializer.startTag(ns, DEVICE);
+					serializer.attribute(ns, ID, facility.getAddress());
+					serializer.attribute(ns, TYPE, formatType(device.getType()));
+					serializer.endTag(ns, DEVICE);
+				}
 			}
 			
 			serializer.endTag(ns, COM_ROOT);
@@ -915,10 +923,10 @@ public class XmlCreator {
 	 * Method create XML of GetDevices message
 	 * @param id
 	 * @param adapterId
-	 * @param device
+	 * @param facility
 	 * @return
 	 */
-	public static String createGetDevice(String id, String adapterId, BaseDevice device){
+	public static String createGetDevice(String id, String adapterId, Facility facility){
 		XmlSerializer serializer = Xml.newSerializer();
 		StringWriter writer = new StringWriter();
 		try{
@@ -931,10 +939,12 @@ public class XmlCreator {
 			serializer.attribute(ns, VERSION, GVER);
 			serializer.attribute(ns, ADAPTER, adapterId);
 			
+			for (BaseDevice device : facility.getDevices()) {
 				serializer.startTag(ns, DEVICE);
-				serializer.attribute(ns, ID, device.getAddress());
+				serializer.attribute(ns, ID, facility.getAddress());
 				serializer.attribute(ns, TYPE, formatType(device.getType()));
 				serializer.endTag(ns, DEVICE);
+			}
 			
 			serializer.endTag(ns, COM_ROOT);
 			serializer.endDocument();
@@ -1086,7 +1096,7 @@ public class XmlCreator {
 	 * @param action
 	 * @return
 	 */
-	public static String createUpdateView(String id, String viewName, int iconNum, BaseDevice device, NetworkAction action){
+	public static String createUpdateView(String id, String viewName, int iconNum, Facility device, NetworkAction action){
 		XmlSerializer serializer = Xml.newSerializer();
 		StringWriter writer = new StringWriter();
 		try{

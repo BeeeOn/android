@@ -56,6 +56,7 @@ import cz.vutbr.fit.iha.activity.menuItem.SeparatorMenuItem;
 import cz.vutbr.fit.iha.activity.menuItem.SettingMenuItem;
 import cz.vutbr.fit.iha.adapter.Adapter;
 import cz.vutbr.fit.iha.adapter.device.BaseDevice;
+import cz.vutbr.fit.iha.adapter.device.Facility;
 import cz.vutbr.fit.iha.adapter.location.Location;
 import cz.vutbr.fit.iha.controller.Controller;
 import cz.vutbr.fit.iha.household.ActualUser;
@@ -142,9 +143,9 @@ public class LocationScreenActivity extends BaseActivity {
 	 */
 	private class AdapterMenuDevicesPair {
 		public final MenuListAdapter menuListAdapter;
-		public final List<BaseDevice> devices;
+		public final List<Facility> devices;
 		
-		public AdapterMenuDevicesPair(final MenuListAdapter menuListAdapter, List<BaseDevice> devices) {
+		public AdapterMenuDevicesPair(final MenuListAdapter menuListAdapter, List<Facility> devices) {
 			this.menuListAdapter = menuListAdapter;
 			this.devices = devices;
 		}
@@ -588,7 +589,6 @@ public class LocationScreenActivity extends BaseActivity {
 	}
 
 	private void setEmptySensors() {
-
 		getSensors(new ArrayList<BaseDevice>());
 	}
 
@@ -654,7 +654,7 @@ public class LocationScreenActivity extends BaseActivity {
 			value[i] = sensors.get(i).getStringValue();
 			unit[i] = sensors.get(i).getStringUnit(this);
 			icon[i] = sensors.get(i).getTypeIconResource();
-			time[i] = sensors.get(i).lastUpdate;
+			time[i] = sensors.get(i).getFacility().lastUpdate;
 		}
 
 		if (mSensorList == null) {
@@ -705,7 +705,7 @@ public class LocationScreenActivity extends BaseActivity {
 				// setSupportProgressBarIndeterminateVisibility(true);
 
 				Bundle bundle = new Bundle();
-				String myMessage = selectedItem.getLocationId();
+				String myMessage = selectedItem.getFacility().getLocationId();
 				bundle.putString("LocationOfSensorID", myMessage);
 				bundle.putInt("SensorPosition", position);
 				Intent intent = new Intent(mActivity,
@@ -942,10 +942,10 @@ public class LocationScreenActivity extends BaseActivity {
 	 * Loads locations, checks for uninitialized devices and eventually shows
 	 * dialog for adding them
 	 */
-	private class SwitchAdapter extends AsyncTask<String, Void, List<BaseDevice>> {
+	private class SwitchAdapter extends AsyncTask<String, Void, List<Facility>> {
 
 		@Override
-		protected List<BaseDevice> doInBackground(String... params) {
+		protected List<Facility> doInBackground(String... params) {
 			if (params.length > 0) {
 				mController.setActiveAdapter(params[0]);
 			}
@@ -955,7 +955,7 @@ public class LocationScreenActivity extends BaseActivity {
 		}
 
 		@Override
-		protected void onPostExecute(List<BaseDevice> result) {
+		protected void onPostExecute(List<Facility> result) {
 			redrawMenu();
 			setSupportProgressBarIndeterminateVisibility(false);
 		}
@@ -1002,7 +1002,7 @@ public class LocationScreenActivity extends BaseActivity {
 					intent.putExtras(bundle);
 					startActivity(intent);
 				}
-				return new AdapterMenuDevicesPair(getMenuAdapter(), new ArrayList<BaseDevice>());
+				return new AdapterMenuDevicesPair(getMenuAdapter(), new ArrayList<Facility>());
 			}
 
 			// Load locations
@@ -1010,7 +1010,7 @@ public class LocationScreenActivity extends BaseActivity {
 			Log.d(TAG, String.format("Found %d locations", mLocations.size()));
 
 			// Load uninitialized devices
-			List<BaseDevice> devices = mController.getUninitializedDevices();
+			List<Facility> devices = mController.getUninitializedDevices();
 			Log.d(TAG,
 					String.format("Found %d uninitialized devices",
 							devices.size()));
@@ -1020,7 +1020,7 @@ public class LocationScreenActivity extends BaseActivity {
 
 		@Override
 		protected void onPostExecute(final AdapterMenuDevicesPair pair) {
-			final List<BaseDevice> uninitializedDevices = pair.devices;
+			final List<Facility> uninitializedDevices = pair.devices;
 			if (uninitializedDevices == null)
 				return;
 
@@ -1090,11 +1090,14 @@ public class LocationScreenActivity extends BaseActivity {
 
 		@Override
 		protected List<BaseDevice> doInBackground(Location... locations) {
-			List<BaseDevice> devices = mController.getDevicesByLocation(
-					locations[0].getId(), forceReloadListing);
-			Log.d(TAG,
-					String.format("Found %d devices in location '%s'",
-							devices.size(), locations[0].getName()));
+			List<Facility> facilities = mController.getFacilitiesByLocation(locations[0].getId(), forceReloadListing);
+			List<BaseDevice> devices = new ArrayList<BaseDevice>();
+			
+			for (Facility facility : facilities) {
+				devices.addAll(facility.getDevices());
+			}
+			
+			Log.d(TAG, String.format("Found %d devices in location '%s'", devices.size(), locations[0].getName()));
 			forceReloadListing = false;
 
 			return devices;
@@ -1104,7 +1107,6 @@ public class LocationScreenActivity extends BaseActivity {
 		protected void onPostExecute(final List<BaseDevice> devices) {
 			if (!isPaused)
 				getSensors(devices);
-
 		}
 	}
 

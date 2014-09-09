@@ -45,7 +45,7 @@ public enum Temperature {
 	}
 
 	/**
-	 * Get short form for unit. For example for celsius you will get "°C".
+	 * Get short form for unit. For example for celsius you will get "ï¿½C".
 	 * 
 	 * @param context
 	 *            It can be app context
@@ -68,7 +68,7 @@ public enum Temperature {
 
 	/**
 	 * Get full name with short form for unit. For example for celsius you will
-	 * get "Celsius (°C)".
+	 * get "Celsius (ï¿½C)".
 	 * 
 	 * @param context
 	 *            It can be app context
@@ -79,7 +79,7 @@ public enum Temperature {
 	}
 
 	/**
-	 * @return List of values (name and short form of unit (ex.: Celsius (°C)))
+	 * @return List of values (name and short form of unit (ex.: Celsius (ï¿½C)))
 	 *         which will be visible for user
 	 */
 	public static CharSequence[] getEntries(Context context) {

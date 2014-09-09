@@ -17,8 +17,6 @@ import java.util.Locale;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 
-import com.actionbarsherlock.internal.widget.ActionBarContainer;
-
 import android.content.Context;
 import android.util.Log;
 import android.util.Xml;
@@ -27,6 +25,7 @@ import cz.vutbr.fit.iha.adapter.Adapter;
 import cz.vutbr.fit.iha.adapter.device.BaseDevice;
 import cz.vutbr.fit.iha.adapter.device.DeviceLog;
 import cz.vutbr.fit.iha.adapter.device.EmissionDevice;
+import cz.vutbr.fit.iha.adapter.device.Facility;
 import cz.vutbr.fit.iha.adapter.device.HumidityDevice;
 import cz.vutbr.fit.iha.adapter.device.IlluminationDevice;
 import cz.vutbr.fit.iha.adapter.device.NoiseDevice;
@@ -266,7 +265,7 @@ public class XmlParsers {
 	 * @throws XmlVerMisException means XML version mismatch exception
 	 * @throws ParseException 
 	 */
-	private List<BaseDevice> parseAllDevices() throws XmlPullParserException, IOException, XmlVerMisException, ParseException{
+	private List<Facility> parseAllDevices() throws XmlPullParserException, IOException, XmlVerMisException, ParseException{
 		mParser.nextTag();
 		mParser.require(XmlPullParser.START_TAG, ns, ADAPTER);
 		
@@ -291,56 +290,88 @@ public class XmlParsers {
 	 * @throws IOException
 	 * @throws ParseException 
 	 */
-	private List<BaseDevice> parseDevices() throws XmlPullParserException, IOException, ParseException{
+	private List<Facility> parseDevices() throws XmlPullParserException, IOException, ParseException{
 		mParser.nextTag();
 		//mParser.require(XmlPullParser.START_TAG, ns, DEVICE); // strict solution
 		
-		List<BaseDevice> result = new ArrayList<BaseDevice>();
+		List<Facility> result = new ArrayList<Facility>();
 		
 		if(!mParser.getName().equals(DEVICE))
 			return result;
 		
 		do{
-			BaseDevice device = getDeviceByType(getSecureAttrValue(ns, TYPE));
-			device.setAddress(getSecureAttrValue(ns, ID));
-			device.setInitialized((getSecureAttrValue(ns, INITIALIZED).equals(INIT_1))?true:false);
-			if(!device.isInitialized()){
-				device.setInvolveTime(getSecureAttrValue(ns, INVOLVED));
+			Facility facility = null;
+			boolean facilityExists = false;
+			
+			BaseDevice device = createDeviceByType(getSecureAttrValue(ns, TYPE));
+			
+			String id = getSecureAttrValue(ns, ID);
+			for (Facility fac : result) {
+				if (fac.getAddress().equals(id)) {
+					// We already have this facility, just add new devices to it
+					Log.d(TAG, String.format("We already have this facility (%s), just add new devices to it", id));
+					facilityExists = true;
+					facility = fac;
+					break;
+				}
 			}
-			device.setVisibility((getSecureAttrValue(ns, VISIBILITY).equals(INIT_1))?true:false);
+			
+			boolean initialized = (getSecureAttrValue(ns, INITIALIZED).equals(INIT_1)) ? true : false;
+			String involved = (!initialized) ? getSecureAttrValue(ns, INVOLVED) : "";
+			boolean visibility = (getSecureAttrValue(ns, VISIBILITY).equals(INIT_1)) ? true : false;
+			
+			if (facility == null) {
+				// This facility is new, first create a object for it
+				facility = new Facility();
+				facility.setAddress(id);
+				facility.setInitialized(initialized);
+				if (!facility.isInitialized()){
+					facility.setInvolveTime(involved);
+				}
+				facility.setVisibility(visibility);
+			}
 			
 			String nameTag = null;
-			
-
 			while(mParser.nextTag() != XmlPullParser.END_TAG && !(nameTag = mParser.getName()).equals(DEVICE)){
 				if(nameTag.equals(LOCATION)) {
-					device.setLocationId(getSecureAttrValue(ns, ID));
+					facility.setLocationId(getSecureAttrValue(ns, ID));
 					mParser.next();
 				} else if(nameTag.equals(NAME))
 					device.setName(readText(NAME));
 				else if(nameTag.equals(REFRESH))
-					device.setRefresh(RefreshInterval.fromInterval(Integer.parseInt(readText(REFRESH))));
+					facility.setRefresh(RefreshInterval.fromInterval(Integer.parseInt(readText(REFRESH))));
 				else if(nameTag.equals(BATTERY))
-					device.setBattery(Integer.parseInt(readText(BATTERY)));
+					facility.setBattery(Integer.parseInt(readText(BATTERY)));
 				else if(nameTag.equals(QUALITY))
-					device.setQuality(Integer.parseInt(readText(QUALITY)));
+					facility.setQuality(Integer.parseInt(readText(QUALITY)));
 				else if(nameTag.equals(VALUE)){
 					String hwupdated = getSecureAttrValue(ns, HWUPDATED);
 					if(hwupdated.length() < 1){
-						device.lastUpdate.setToNow();
+						facility.lastUpdate.setToNow();
 					}else{
-						device.lastUpdate.set((new SimpleDateFormat(DATEFORMAT, Locale.getDefault()).parse(hwupdated)).getTime());
+						facility.lastUpdate.set((new SimpleDateFormat(DATEFORMAT, Locale.getDefault()).parse(hwupdated)).getTime());
 					}
 					device.setValue(readText(VALUE));
 				}
 				else if(nameTag.equals(LOGGING))
-					device.setLogging((getSecureAttrValue(ns, ENABLED).equals(INIT_1))?true:false);
+					facility.setLogging((getSecureAttrValue(ns, ENABLED).equals(INIT_1))?true:false);
 			}
 			
-			result.add(device);
+			facility.addDevice(device);
+			Log.d(TAG, String.format("Adding device (%s) to facility (%s).", device.getId(), facility.getId()));
+			
+			if (!facilityExists) {
+				Log.d(TAG, String.format("Adding facility (%s) with %d devices.", facility.getId(), facility.getDevices().size()));
+				result.add(facility);
+			}
+
 			mParser.nextTag();
 			
 		}while(mParser.nextTag() != XmlPullParser.END_TAG && !mParser.getName().equals(COM_ROOT));
+		
+		for (Facility fac : result) {
+			Log.d(TAG, String.format("Facility: %s with %d devices", fac.getId(), fac.getDevices().size()));
+		}
 		
 		return result;
 	}
@@ -593,7 +624,7 @@ public class XmlParsers {
 	 * @param sType string type of device (e.g. 0x03)
 	 * @return empty object
 	 */
-	private BaseDevice getDeviceByType(String sType){
+	private BaseDevice createDeviceByType(String sType){
 		
 		if(sType.length() < 3)
 			return new UnknownDevice();
@@ -623,7 +654,7 @@ public class XmlParsers {
 	}
 	
 	//FIXME: after demo
-	List<BaseDevice> getFalseMessage6(String message) throws XmlPullParserException, IOException{
+	List<Facility> getFalseMessage6(String message) throws XmlPullParserException, IOException{
 		mParser = Xml.newPullParser();
 		mParser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false);
 		
@@ -632,17 +663,39 @@ public class XmlParsers {
 		
 		mParser.require(XmlPullParser.START_TAG, ns, FalseAnswer.START_TAG);
 		
-		List<BaseDevice> result = new ArrayList<BaseDevice>();
+		List<Facility> result = new ArrayList<Facility>();
 		
 		mParser.nextTag();
 		if(!mParser.getName().equals(DEVICE))
 			return result;
 		
 		do{
-			BaseDevice device = getDeviceByType(getSecureAttrValue(ns, TYPE));
-			device.setAddress(getSecureAttrValue(ns, ID));
+			Facility facility = null;
+			boolean facilityExists = false;
 			
-			result.add(device);
+			BaseDevice device = createDeviceByType(getSecureAttrValue(ns, TYPE));
+			
+			String id = getSecureAttrValue(ns, ID);
+			for (Facility fac : result) {
+				if (fac.getAddress().equals(id)) {
+					// We already have this facility, just add new devices to it
+					facilityExists = true;
+					facility = fac;
+					break;
+				}
+			}
+			
+			if (facility == null) {
+				// This facility is new, first create a object for it
+				facility = new Facility();
+				facility.setAddress(id);
+			}
+			
+			facility.addDevice(device);
+			
+			if (!facilityExists)
+				result.add(facility);
+			
 			mParser.nextTag();
 			
 		}while(mParser.nextTag() != XmlPullParser.END_TAG && !mParser.getName().equals(FalseAnswer.END_TAG));
@@ -751,9 +804,9 @@ public class XmlParsers {
 	 * @param filename
 	 * @return Adapter or null
 	 */
-	public List<BaseDevice> getDemoDevicesFromAsset(Context context, String filename) {
+	public List<Facility> getDemoDevicesFromAsset(Context context, String filename) {
 		Log.i(TAG, String.format("Loading adapter from asset '%s'", filename));
-		List<BaseDevice> result = null;
+		List<Facility> result = null;
 		InputStream stream = null;
 		try {
 			stream = new BufferedInputStream(context.getAssets().open(filename));

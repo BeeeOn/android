@@ -49,6 +49,7 @@ import com.sonyericsson.extras.liveware.extension.util.control.ControlListItem;
 
 import cz.vutbr.fit.iha.R;
 import cz.vutbr.fit.iha.adapter.device.BaseDevice;
+import cz.vutbr.fit.iha.adapter.device.Facility;
 import cz.vutbr.fit.iha.extension.watches.smartwatch2.SW2ExtensionService;
 
 /**
@@ -219,10 +220,10 @@ public class GalleryControlExtension extends ManagedControlExtension {
 
 		// If sync time is more that 24 ago, show only date. Show time
 		// otherwise.
-		DateFormat dateFormat = yesterday.before(curDevice.lastUpdate) ? DateFormat
+		DateFormat dateFormat = yesterday.before(curDevice.getFacility().lastUpdate) ? DateFormat
 				.getTimeInstance() : DateFormat.getDateInstance();
 
-		Date lastUpdate = new Date(curDevice.lastUpdate.toMillis(true));
+		Date lastUpdate = new Date(curDevice.getFacility().lastUpdate.toMillis(true));
 		String dateTime = dateFormat.format(lastUpdate);
 		syncBundle.putString(Control.Intents.EXTRA_TEXT, dateTime);
 
@@ -240,7 +241,7 @@ public class GalleryControlExtension extends ManagedControlExtension {
 
 		// Battery icon
 		Bundle batteryBundle = new Bundle();
-		if (curDevice.getBattery() < MIN_BATTERY_STATE) {
+		if (curDevice.getFacility().getBattery() < MIN_BATTERY_STATE) {
 			batteryBundle.putInt(Control.Intents.EXTRA_LAYOUT_REFERENCE,
 					R.id.thumbnail);
 			batteryBundle.putString(Control.Intents.EXTRA_DATA_URI,
@@ -283,7 +284,7 @@ public class GalleryControlExtension extends ManagedControlExtension {
 			@Override
 			public void run() {
 				BaseDevice device = mDevices.get(lastPosition);
-				if (mController.updateDevice(device)) {
+				if (mController.updateDevice(device.getFacility())) {
 					sendListItem(createControlListItem(lastPosition));
 				}
 				
@@ -297,8 +298,12 @@ public class GalleryControlExtension extends ManagedControlExtension {
 			@Override
 			public void run() {
 
-				mDevices = mController.getAdapter(mAdapterId, true)
-						.getDevicesByLocation(mLocationStr);
+				mDevices = new ArrayList<BaseDevice>();
+				
+				List<Facility> facilities = mController.getAdapter(mAdapterId, true).getDevicesByLocation(mLocationStr);
+				for (Facility facility : facilities) {
+					mDevices.addAll(facility.getDevices());
+				}
 
 				resume();
 			}

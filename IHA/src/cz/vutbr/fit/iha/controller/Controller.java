@@ -13,10 +13,10 @@ import android.util.Log;
 import cz.vutbr.fit.iha.adapter.Adapter;
 import cz.vutbr.fit.iha.adapter.device.BaseDevice;
 import cz.vutbr.fit.iha.adapter.device.BaseDevice.SaveDevice;
-import cz.vutbr.fit.iha.adapter.device.Component;
 import cz.vutbr.fit.iha.adapter.device.DeviceLog;
 import cz.vutbr.fit.iha.adapter.device.DeviceLog.DataInterval;
 import cz.vutbr.fit.iha.adapter.device.DeviceLog.DataType;
+import cz.vutbr.fit.iha.adapter.device.Facility;
 import cz.vutbr.fit.iha.adapter.device.StateDevice;
 import cz.vutbr.fit.iha.adapter.device.SwitchDevice;
 import cz.vutbr.fit.iha.adapter.location.Location;
@@ -266,43 +266,45 @@ public final class Controller {
 	 * Refreshes device in listings (e.g., in uninitialized devices)
 	 * @param device
 	 */
-	public void refreshDevice(final BaseDevice device) {
+	public void refreshDevice(final Facility device) {
 		Adapter adapter = getActiveAdapter();
 		if (adapter != null) {
 			adapter.refreshDevice(device);
 		}
 	}
 	
-	public boolean updateDevice(BaseDevice device) {
+	public boolean updateDevice(Facility facility) {
 		if (mDemoMode) {
-			// In demo mode update device with random value 
-			if (device instanceof SwitchDevice) {
-				((SwitchDevice)device).setActive(new Random().nextBoolean());
-			} else if (device instanceof StateDevice) {
-				((StateDevice)device).setActive(new Random().nextBoolean());
-			} else {
-				int i = new Random().nextInt(100);
-				device.setValue(i);
+			// In demo mode update facility devices with random values 
+			for (BaseDevice device : facility.getDevices()) {
+				if (device instanceof SwitchDevice) {
+					((SwitchDevice)device).setActive(new Random().nextBoolean());
+				} else if (device instanceof StateDevice) {
+					((StateDevice)device).setActive(new Random().nextBoolean());
+				} else {
+					int i = new Random().nextInt(100);
+					device.setValue(i);
+				}	
 			}
 			return true;
 		}
 		
-		Adapter adapter = getAdapterByDevice(device);
+		Adapter adapter = getAdapterByDevice(facility);
 		if (adapter == null)
 			return false;
 		
 		try {
-			BaseDevice newDevice = mNetwork.getDevice(adapter.getId(), device);
+			Facility newDevice = mNetwork.getFacility(adapter.getId(), facility);
 			if (newDevice == null)
 				return false;
 			
-			device.replaceData(newDevice);
+			facility.replaceData(newDevice);
 		} catch (NetworkException e) {
 			e.printStackTrace();
 			return false;
 		}
 				
-		refreshDevice(device);
+		refreshDevice(facility);
 		return true;
 	}
 	
@@ -417,7 +419,7 @@ public final class Controller {
 	 * @param device
 	 * @return Adapter if found, null otherwise
 	 */
-	public Adapter getAdapterByDevice(BaseDevice device) {
+	public Adapter getAdapterByDevice(Facility device) {
 		for (Adapter a : getAdapters()) {
 			if (a.getDeviceById(device.getId()) != null)
 				return a; 
@@ -540,7 +542,7 @@ public final class Controller {
 	 * @param device
 	 * @return Location if found, null otherwise.
 	 */
-	public Location getLocationByDevice(BaseDevice device) {
+	public Location getLocationByDevice(Facility device) {
 		Adapter adapter = getAdapterByDevice(device);
 		if (adapter == null) {
 			return null;
@@ -639,8 +641,8 @@ public final class Controller {
 	 * @param id
 	 * @return device or null if no device is found
 	 */
-	public BaseDevice getDevice(String id) {
-		BaseDevice device = null;
+	public Facility getFacility(String id) {
+		Facility device = null;
 		
 		for (Adapter adapter : getAdapters()) {
 			device = adapter.getDeviceById(id);
@@ -655,6 +657,16 @@ public final class Controller {
 		return device;
 	}
 	
+	public BaseDevice getDevice(String id) {
+		String[] ids = id.split(BaseDevice.ID_SEPARATOR, 2);
+		
+		Facility facility = getFacility(ids[0]);
+		if (facility == null)
+			return null;
+		
+		return facility.getDeviceByType(Integer.parseInt(ids[1]));
+	}
+	
 	/**
 	 * Marks device as hidden on server.
 	 * 
@@ -662,8 +674,8 @@ public final class Controller {
 	 * @return true on success, false otherwise
 	 */
 	public boolean hideDevice(BaseDevice device) throws NotImplementedException {
-		device.setVisibility(false);
-		return saveDevice(device, EnumSet.of(SaveDevice.SAVE_VISIBILITY));
+		device.getFacility().setVisibility(false);
+		return saveDevice(device, EnumSet.of(SaveDevice.SAVE_VISIBILITY)); // TODO: this should be for facility, not device
 	}
 	
 	/**
@@ -673,8 +685,8 @@ public final class Controller {
 	 * @return true on success, false otherwise
 	 */
 	public boolean unhideDevice(BaseDevice device) throws NotImplementedException {
-		device.setVisibility(true);
-		return saveDevice(device, EnumSet.of(SaveDevice.SAVE_VISIBILITY));
+		device.getFacility().setVisibility(true);
+		return saveDevice(device, EnumSet.of(SaveDevice.SAVE_VISIBILITY)); // TODO: this should be for facility, not device
 	}
 
 	/**
@@ -682,8 +694,8 @@ public final class Controller {
 	 * 
 	 * @return List of devices (or empty list)
 	 */
-	public List<BaseDevice> getUninitializedDevices() {
-		List<BaseDevice> list = new ArrayList<BaseDevice>();
+	public List<Facility> getUninitializedDevices() {
+		List<Facility> list = new ArrayList<Facility>();
 		
 		Adapter adapter = getActiveAdapter();
 		if (adapter != null) {
@@ -699,8 +711,8 @@ public final class Controller {
 	 * @param location
 	 * @return List of devices (or empty list)
 	 */
-	public List<BaseDevice> getDevicesByLocation(String locationId, boolean forceUpdate) {
-		List<BaseDevice> list = new ArrayList<BaseDevice>();
+	public List<Facility> getFacilitiesByLocation(String locationId, boolean forceUpdate) {
+		List<Facility> list = new ArrayList<Facility>();
 		
 		Adapter adapter = getActiveAdapter();
 		if (adapter != null) {
@@ -711,7 +723,7 @@ public final class Controller {
 		return list;
 	}
 	
-	public List<BaseDevice> getDevicesByAdapter(String adapterId) {
+	public List<Facility> getDevicesByAdapter(String adapterId) {
 		return getAdapter(adapterId, false).getDevices();
 	}
 	
@@ -723,20 +735,22 @@ public final class Controller {
 	 * @return true on success, false otherwise
 	 */
 	public boolean saveDevice(BaseDevice device, EnumSet<SaveDevice> what) {
+		Facility facility = device.getFacility();
+		
 		if (mDemoMode) {
-			device.setInitialized(true);
-			refreshDevice(device);
+			facility.setInitialized(true);
+			refreshDevice(facility);
 			return true;
 		}
 		
 		boolean result = false;
 
 		try {
-			Adapter adapter = getAdapterByDevice(device);
-			Log.d(TAG, String.format("Adapter ID: %s, device: %s", adapter.getId(), device.getAddress()));
+			Adapter adapter = getAdapterByDevice(facility);
+			Log.d(TAG, String.format("Adapter ID: %s, device: %s", adapter.getId(), facility.getAddress()));
 			if (adapter != null) {
 				result = mNetwork.setDevice(adapter.getId(), device, what);
-				result = updateDevice(device);
+				result = updateDevice(facility);
 			}
 		} catch (NetworkException e) {
 			e.printStackTrace();
@@ -760,7 +774,7 @@ public final class Controller {
 		}
 		
 		try {
-			Adapter adapter = getAdapterByDevice(device);
+			Adapter adapter = getAdapterByDevice(device.getFacility());
 			if (adapter != null) {
 				log = mNetwork.getLog(adapter.getId(), device, from, to, type, interval);
 			}
@@ -843,7 +857,7 @@ public final class Controller {
 	}
 	
 
-	public void ignoreUninitialized(List<BaseDevice> devices) {
+	public void ignoreUninitialized(List<Facility> devices) {
 		Adapter adapter = getActiveAdapter();
 		if (adapter != null)
 			adapter.ignoreUninitialized(devices);
@@ -857,18 +871,6 @@ public final class Controller {
 
 	public ActualUser getActualUser() {
 		return mHousehold.user;
-	}
-	
-	public List<Component> getComponentsByLocation(String locationId, boolean forceUpdate) {
-		List<Component> list = new ArrayList<Component>();
-		
-		Adapter adapter = getActiveAdapter();
-		if (adapter != null) {
-			refreshAdapter(adapter, forceUpdate); // TODO: update only devices in this location? or no?
-			list.addAll(adapter.getComponentsByLocation(locationId).values());
-		}
-		
-		return list;
 	}
 
 }

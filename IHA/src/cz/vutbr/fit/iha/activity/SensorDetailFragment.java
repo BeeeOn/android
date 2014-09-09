@@ -359,7 +359,7 @@ public class SensorDetailFragment extends SherlockFragment {
 
 		// Set name of location
 		if (mController != null) {
-			Location location = mController.getLocationByDevice(device);
+			Location location = mController.getLocationByDevice(device.getFacility());
 			if (location != null)
 				mLocation.setText(location.getName());
 			mLocation.setOnClickListener(new OnClickListener() {
@@ -384,7 +384,7 @@ public class SensorDetailFragment extends SherlockFragment {
 			});
 		} else {
 			Log.e(TAG, "mController is null (this shouldn't happen)");
-			mLocation.setText(device.getLocationId());
+			mLocation.setText(device.getFacility().getLocationId());
 		}
 
 		// Set locations to spinner
@@ -403,11 +403,11 @@ public class SensorDetailFragment extends SherlockFragment {
 		// Set icon of sensor
 		mIcon.setImageResource(device.getTypeIconResource());
 		// Set time of sensor
-		mTime.setText(Timezone.getSharedPreferenceOption(mActivity).formatLastUpdate(device.lastUpdate));
+		mTime.setText(Timezone.getSharedPreferenceOption(mActivity).formatLastUpdate(device.getFacility().lastUpdate));
 		// Set refresh time Text
-		mRefreshTimeText.setText(" "+device.getRefresh().getStringInterval(context));
+		mRefreshTimeText.setText(" "+device.getFacility().getRefresh().getStringInterval(context));
 		// Set refresh time SeekBar
-		mRefreshTimeValue.setProgress(device.getRefresh().getIntervalIndex());
+		mRefreshTimeValue.setProgress(device.getFacility().getRefresh().getIntervalIndex());
 		// Add Graph with history data
 		addGraphView();
 
@@ -761,9 +761,9 @@ public class SensorDetailFragment extends SherlockFragment {
 				}
 				else {
 					// set actual progress
-					mDevice.setRefresh(RefreshInterval.values()[mRefreshTimeValue.getProgress()]);
+					mDevice.getFacility().setRefresh(RefreshInterval.values()[mRefreshTimeValue.getProgress()]);
 					
-					Log.d(TAG, "Refresh time "+ mDevice.getRefresh().getStringInterval(mActivity));
+					Log.d(TAG, "Refresh time "+ mDevice.getFacility().getRefresh().getStringInterval(mActivity));
 					// Update device to server
 					UpdateDeviceTask task = new UpdateDeviceTask();
 					task.execute(new SaveDevice[] { SaveDevice.SAVE_REFRESH });

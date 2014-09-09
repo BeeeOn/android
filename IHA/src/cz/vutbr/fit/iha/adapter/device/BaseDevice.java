@@ -4,29 +4,17 @@
 package cz.vutbr.fit.iha.adapter.device;
 
 import android.content.Context;
-import android.content.SharedPreferences;
-import android.text.format.Time;
-import cz.vutbr.fit.iha.adapter.location.Location;
-import cz.vutbr.fit.iha.controller.Controller;
 
 /**
  * @brief Abstract class for all devices
  * @author Robyer
  */
 public abstract class BaseDevice {
-	protected boolean mInitialized;
-	protected String mLocationId;
+	public static final String ID_SEPARATOR = "---";
+	
+	protected Facility mFacility;
 	protected String mName = "";
-	protected RefreshInterval mRefreshInterval;	
-	protected int mBattery;
 	protected boolean mLogging;
-	protected String mInvolveTime = "";
-	protected boolean mVisibility;
-	
-	protected NetworkState mNetwork = new NetworkState();
-	
-	
-	public final Time lastUpdate = new Time();
 	
 	/**
 	 * Class constructor
@@ -35,16 +23,9 @@ public abstract class BaseDevice {
 	}
 	
 	/**
-	 * Public class that implements structure
-	 */
-	public final class NetworkState {
-		public int quality;
-		public String address = ""; 
-	}
-	
-	/**
 	 * Represents settings of device which could be saved to server
 	 */
+	// FIXME: only name, logging, "type" (icon) and value can be changed here 
 	public enum SaveDevice {
 		SAVE_NAME,			// rename device
 		SAVE_LOCATION,		// change location
@@ -109,6 +90,14 @@ public abstract class BaseDevice {
 	 */
 	public abstract void setValue(int value);
 	
+	public void setFacility(Facility facility) {
+		mFacility = facility;
+	}
+	
+	public Facility getFacility() {
+		return mFacility;
+	}
+	
 	/**
 	 * Get value with unit as string
 	 * @param context
@@ -129,29 +118,17 @@ public abstract class BaseDevice {
 	}
 	
 	/**
-	 * Get refresh interval
-	 * @return refresh interval
-	 */
-	public RefreshInterval getRefresh() {
-		return mRefreshInterval;
-	}
-		
-	/**
-	 * Setting refresh interval
-	 * @param interval
-	 */
-	public void setRefresh(RefreshInterval interval) {
-		mRefreshInterval = interval;
-	}
-	
-	/**
 	 * Get unique identifier of device
 	 * @return id
 	 */
 	public String getId() {
-		return mNetwork.address + String.valueOf(getType());
+		// TODO: what if there will be more devices with same type for one facility?
+		if (mFacility == null)
+			throw new RuntimeException("Device's facility is NULL, WHY!?");
+		
+		return mFacility.getAddress() + ID_SEPARATOR + String.valueOf(getType());
 	}
-
+	
 	/**
 	 * Get name of device
 	 * @return name
@@ -166,22 +143,6 @@ public abstract class BaseDevice {
 	 */
 	public void setName(String name) {		
 		mName = name;
-	}
-	
-	/**
-	 * Get location of device
-	 * @return location
-	 */
-	public String getLocationId() {
-		return mLocationId;
-	}
-	
-	/**
-	 * Setting location of device
-	 * @param locationId
-	 */
-	public void setLocationId(String locationId) {
-		mLocationId = locationId;
 	}
 	
 	/**
@@ -200,107 +161,9 @@ public abstract class BaseDevice {
 		mLogging = logging;
 	}
 	
-	/**
-	 * Get visibility of device
-	 * @return true if visible
-	 */
-	public boolean getVisibility() {
-		return mVisibility;
-	}
-	
-	/**
-	 * Setting visibility of device
-	 * @param visibility true if visible
-	 */
-	public void setVisibility(boolean visibility) {
-		mVisibility = visibility;
-	}
-	
-	/**
-	 * Returning flag if device has been initialized yet
-	 * @return
-	 */
-	public boolean isInitialized() {
-		return mInitialized;
-	}
-	
-	/**
-	 * Setting flag for device initialization state
-	 * @param initialized
-	 */
-	public void setInitialized(boolean initialized) {
-		mInitialized = initialized;
-	}
-	
-	/**
-	 * Get state of battery
-	 * @return battery
-	 */
-	public int getBattery() {
-		return mBattery;
-	}
-
-	/**
-	 * Setting state of battery
-	 * @param battery
-	 */
-	public void setBattery(int battery) {
-		mBattery = battery;
-	}
-
-	/**
-	 * Get time of setting of device to system
-	 * @return involve time
-	 */
-	public String getInvolveTime() {
-		return mInvolveTime;
-	}
-
-	/**
-	 * Setting involve time
-	 * @param involved
-	 */
-	public void setInvolveTime(String involved) {
-		mInvolveTime = involved;		
-	}
-
-	/**
-	 * Get MAC address of device
-	 * @return address
-	 */
-	public String getAddress() {
-		return mNetwork.address;
-	}
-
-	/**
-	 * Setting MAC address
-	 * @param address
-	 */
-	public void setAddress(String address) {
-		mNetwork.address = address;
-	}
-
-	/**
-	 * Get value of signal quality
-	 * @return quality
-	 */
-	public int getQuality() {
-		return mNetwork.quality;
-	}
-
-	/**
-	 * Setting quality
-	 * @param quality
-	 */
-	public void setQuality(int quality) {
-		mNetwork.quality = quality;
-	}
-
 	@Override
 	public String toString() {
-		Location location = new Location(mLocationId, mLocationId, 0); // FIXME: get this location somehow from parent adapter
-		
-		return String.format("%s (%s)", getName(), location.getName());
+		return getName();
 	}
 	
 	/**
@@ -308,16 +171,7 @@ public abstract class BaseDevice {
 	 * @return
 	 */
 	public String toDebugString() {
-		return String.format("Name: %s\nLocation: %s\nVisibility: %s\nInitialized: %s\nBattery: %s\nLogging: %s\nRefresh: %s\nValue: %s",
-			mName, mLocationId, Boolean.toString(mVisibility), mInitialized, mBattery, mLogging, mRefreshInterval.getInterval(), getStringValue());
-	}
-
-	public boolean needsUpdate() {
-		Time that = new Time();
-		that.setToNow();
-		that.set(that.toMillis(true) - mRefreshInterval.getInterval() * 1000); // x seconds interval between updates
-
-		return lastUpdate.before(that);
+		return String.format("Name: %s\nLogging: %s\nValue: %s", mName, mLogging, getStringValue());
 	}
 
 	/**
@@ -325,19 +179,10 @@ public abstract class BaseDevice {
 	 * @param newDevice with data that should be copied
 	 */
 	public void replaceData(BaseDevice newDevice) {
-		setAddress(newDevice.getAddress());
-		setBattery(newDevice.getBattery());
-		setInitialized(newDevice.isInitialized());
-		setInvolveTime(newDevice.getInvolveTime());
-		setLocationId(newDevice.getLocationId());
+		setFacility(newDevice.getFacility());
 		setLogging(newDevice.isLogging());
 		setName(newDevice.getName());
-		setQuality(newDevice.getQuality());
-		setRefresh(newDevice.getRefresh());
 		setValue(newDevice.getStringValue());
-		setVisibility(newDevice.getVisibility());
-		
-		lastUpdate.set(newDevice.lastUpdate);
 	}
 
 }

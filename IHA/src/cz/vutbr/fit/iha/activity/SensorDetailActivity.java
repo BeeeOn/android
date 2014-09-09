@@ -1,5 +1,6 @@
 package cz.vutbr.fit.iha.activity;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import android.os.AsyncTask;
@@ -15,6 +16,7 @@ import com.actionbarsherlock.view.Window;
 
 import cz.vutbr.fit.iha.R;
 import cz.vutbr.fit.iha.adapter.device.BaseDevice;
+import cz.vutbr.fit.iha.adapter.device.Facility;
 import cz.vutbr.fit.iha.controller.Controller;
 import cz.vutbr.fit.iha.view.CustomViewPager;
 
@@ -96,7 +98,13 @@ public class SensorDetailActivity extends BaseActivity
 		@Override
 		protected List<BaseDevice> doInBackground(String... locationID) {
 
-			List<BaseDevice> devices = mController.getDevicesByLocation(locationID[0], false);
+			List<Facility> facilities = mController.getFacilitiesByLocation(locationID[0], false);
+			List<BaseDevice> devices = new ArrayList<BaseDevice>();
+			
+			for (Facility facility : facilities) {
+				devices.addAll(facility.getDevices());
+			}
+			
 			Log.d(TAG, "String:" + devices.toString() + " Size:" + devices.size());
 			
 			return devices;
@@ -122,7 +130,7 @@ public class SensorDetailActivity extends BaseActivity
         @Override
         public SensorDetailFragment getItem(int position) {
         	Log.d(TAG, "Here 2 "+ position);
-            return SensorDetailFragment.create(mDevices.get(position).getId(),mDevices.get(position).getLocationId(),position,mSensorPosition);
+            return SensorDetailFragment.create(mDevices.get(position).getId(),mDevices.get(position).getFacility().getLocationId(),position,mSensorPosition);
         }
 
         @Override

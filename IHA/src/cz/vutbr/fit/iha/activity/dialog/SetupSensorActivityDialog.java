@@ -33,6 +33,7 @@ import cz.vutbr.fit.iha.R;
 import cz.vutbr.fit.iha.activity.LocationScreenActivity;
 import cz.vutbr.fit.iha.adapter.device.BaseDevice;
 import cz.vutbr.fit.iha.adapter.device.BaseDevice.SaveDevice;
+import cz.vutbr.fit.iha.adapter.device.Facility;
 import cz.vutbr.fit.iha.adapter.location.Location;
 import cz.vutbr.fit.iha.adapter.location.Location.DefaultRoom;
 import cz.vutbr.fit.iha.controller.Controller;
@@ -79,7 +80,12 @@ public class SetupSensorActivityDialog extends BaseActivityDialog {
 		// TODO: sent as parameter if we want first uninitialized device or some
 		// device with particular id
 
-		mUnInitDevices = mController.getUninitializedDevices();
+		mUnInitDevices = new ArrayList<BaseDevice>();
+
+		for (Facility facility : mController.getUninitializedDevices()) {
+			mUnInitDevices.addAll(facility.getDevices());
+		}
+		
 		if (mUnInitDevices.size() > 0) {
 			
 			if(!Controller.isDemoMode()) {
@@ -145,7 +151,7 @@ public class SetupSensorActivityDialog extends BaseActivityDialog {
 		}
 
 		TextView time = (TextView) findViewById(R.id.addsensor_involved_time);
-		time.setText(String.format("%s %s", time.getText(), mNewDevice.getInvolveTime()));
+		time.setText(String.format("%s %s", time.getText(), mNewDevice.getFacility().getInvolveTime()));
 		
 		
 	}
@@ -231,9 +237,9 @@ public class SetupSensorActivityDialog extends BaseActivityDialog {
 						return;
 					}
 
-					mNewDevice.setInitialized(true);
+					mNewDevice.getFacility().setInitialized(true);
 					mNewDevice.setName(mName.getText().toString());
-					mNewDevice.setLocationId(location.getId());
+					mNewDevice.getFacility().setLocationId(location.getId());
 
 					mProgress.show();
 
@@ -313,7 +319,7 @@ public class SetupSensorActivityDialog extends BaseActivityDialog {
 				if (newLocation == null)
 					return null;
 
-				pair.device.setLocationId(newLocation.getId());
+				pair.device.getFacility().setLocationId(newLocation.getId());
 			}
 
 			EnumSet<SaveDevice> what = EnumSet.of(SaveDevice.SAVE_LOCATION, SaveDevice.SAVE_NAME);
