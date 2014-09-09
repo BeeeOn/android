@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.text.format.Time;
-import android.util.Log;
 import cz.vutbr.fit.iha.adapter.location.Location;
 
 /**
@@ -228,9 +227,7 @@ public class Facility {
 
 	@Override
 	public String toString() {
-		Location location = new Location(mLocationId, mLocationId, 0); // FIXME: get this location somehow from parent adapter
-		
-		return String.format("%s (%s)", getId(), location.getName()); // FIXME: create better output
+		return String.format("Facility: %s", getId());
 	}
 	
 	/**
@@ -265,14 +262,11 @@ public class Facility {
 	
 	public BaseDevice getDeviceByType(int type) {
 		for (BaseDevice device : getDevices()) {
-			Log.v("Facility", String.format("Comparing for %s: %d == %d", device.getId(), device.getType(), type));
 			if (device.getType() == type) {
-				Log.v("Facility", "Found it!");
 				return device;
 			}
 		}
-		
-		Log.v("Facility", String.format("Didn't found anything! Wanted %d", type));
+
 		return null;
 	}
 

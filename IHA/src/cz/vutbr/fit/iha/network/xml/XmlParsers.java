@@ -309,7 +309,6 @@ public class XmlParsers {
 			for (Facility fac : result) {
 				if (fac.getAddress().equals(id)) {
 					// We already have this facility, just add new devices to it
-					Log.d(TAG, String.format("We already have this facility (%s), just add new devices to it", id));
 					facilityExists = true;
 					facility = fac;
 					break;
@@ -358,7 +357,6 @@ public class XmlParsers {
 			}
 			
 			facility.addDevice(device);
-			Log.d(TAG, String.format("Adding device (%s) to facility (%s).", device.getId(), facility.getId()));
 			
 			if (!facilityExists) {
 				Log.d(TAG, String.format("Adding facility (%s) with %d devices.", facility.getId(), facility.getDevices().size()));
@@ -368,10 +366,6 @@ public class XmlParsers {
 			mParser.nextTag();
 			
 		}while(mParser.nextTag() != XmlPullParser.END_TAG && !mParser.getName().equals(COM_ROOT));
-		
-		for (Facility fac : result) {
-			Log.d(TAG, String.format("Facility: %s with %d devices", fac.getId(), fac.getDevices().size()));
-		}
 		
 		return result;
 	}
