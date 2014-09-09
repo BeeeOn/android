@@ -25,8 +25,6 @@ import cz.vutbr.fit.iha.R;
 import cz.vutbr.fit.iha.controller.Controller;
 import cz.vutbr.fit.iha.exception.NotImplementedException;
 import cz.vutbr.fit.iha.gcm.GcmHelper;
-import cz.vutbr.fit.iha.household.ActualUser;
-import cz.vutbr.fit.iha.network.GoogleAuth;
 import cz.vutbr.fit.iha.network.exception.CommunicationException;
 import cz.vutbr.fit.iha.network.exception.NoConnectionException;
 import cz.vutbr.fit.iha.network.exception.NotRegException;

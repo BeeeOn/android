@@ -10,7 +10,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import cz.vutbr.fit.iha.controller.Controller;
 import cz.vutbr.fit.iha.settings.Timezone;
-import cz.vutbr.fit.iha.util.Utils;
 
 public class SensorListAdapter extends BaseAdapter {
 

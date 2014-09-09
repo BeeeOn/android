@@ -54,7 +54,6 @@ import cz.vutbr.fit.iha.adapter.Adapter;
 import cz.vutbr.fit.iha.adapter.device.Facility;
 import cz.vutbr.fit.iha.controller.Controller;
 import cz.vutbr.fit.iha.extension.watches.smartwatch2.SW2ExtensionService;
-import cz.vutbr.fit.iha.network.GoogleAuth;
 
 /**
  * The phone control manager manages which control to currently show on the

@@ -5,11 +5,8 @@ import java.util.List;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
-
 import cz.vutbr.fit.iha.Constants;
 import cz.vutbr.fit.iha.R;
-import cz.vutbr.fit.iha.persistence.Persistence;
 
 /**
  * Enum for temperature unit

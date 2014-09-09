@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.text.format.Time;
-import cz.vutbr.fit.iha.adapter.location.Location;
 
 /**
  * @brief Facility class which contains own data and devices (sensors, actors)
