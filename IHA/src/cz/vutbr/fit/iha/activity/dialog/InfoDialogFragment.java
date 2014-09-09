@@ -62,16 +62,17 @@ public class InfoDialogFragment extends TrackDialogFragment {
 
 							}
 						})
-				.setNeutralButton(getString(R.string.website),
-						new OnClickListener() {
-							@Override
-							public void onClick(DialogInterface dialog,
-									int which) {
-								Intent companyLink = new Intent(
-										Intent.ACTION_VIEW,
-										Uri.parse(getString(R.string.company_web)));
-								startActivity(companyLink);
-							}
-						}).create();
+//				.setNeutralButton(getString(R.string.website),
+//						new OnClickListener() {
+//							@Override
+//							public void onClick(DialogInterface dialog,
+//									int which) {
+//								Intent companyLink = new Intent(
+//										Intent.ACTION_VIEW,
+//										Uri.parse(getString(R.string.company_web)));
+//								startActivity(companyLink);
+//							}
+//						})
+						.create();
 	}
 }
