@@ -19,11 +19,9 @@ import com.google.android.gms.auth.GoogleAuthUtil;
 import com.google.android.gms.common.AccountPicker;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
-import com.google.android.gms.gcm.GoogleCloudMessaging;
 
 import cz.vutbr.fit.iha.Constants;
 import cz.vutbr.fit.iha.R;
-import cz.vutbr.fit.iha.activity.dialog.AddAdapterActivityDialog;
 import cz.vutbr.fit.iha.controller.Controller;
 import cz.vutbr.fit.iha.exception.NotImplementedException;
 import cz.vutbr.fit.iha.gcm.GcmHelper;
@@ -53,14 +51,12 @@ public class LoginActivity extends BaseActivity {
 	public static final int USER_RECOVERABLE_AUTH = 5;
 	private static final int GET_GOOGLE_ACCOUNT = 6;
 
-
 	private boolean mIgnoreChange = false;
 	private boolean mSignUp = false;
 
 	private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 1;
-
-	private Context mContext;
-
+	
+    private Context mContext;
 	// ////////////////////////////////////////////////////////////////////////////////////
 	// ///////////////// Override METHODS
 	// ///////////////////////////////////////////////
@@ -74,7 +70,7 @@ public class LoginActivity extends BaseActivity {
 		// Get Activity
 		mActivity = this;
 		mContext = this;
-
+		
 		// Get controller
 		mController = Controller.getInstance(this);
 
@@ -94,12 +90,10 @@ public class LoginActivity extends BaseActivity {
 		});
 
 		// try to register GCM
-		if (GcmHelper.getGCMRegistrationId(mContext).isEmpty()
-				&& GooglePlayServicesUtil
-						.isGooglePlayServicesAvailable(getBaseContext()) == ConnectionResult.SUCCESS) {
+		if (GcmHelper.getGCMRegistrationId(mContext).isEmpty() && GooglePlayServicesUtil.isGooglePlayServicesAvailable(getBaseContext())== ConnectionResult.SUCCESS) {
 			GcmHelper.registerGCMInBackground(mContext);
 		}
-
+		
 		mProgress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
 
 		if (mController.isLoggedIn()) {
@@ -117,8 +111,7 @@ public class LoginActivity extends BaseActivity {
 		String lastEmail = mController.getLastEmail();
 		if (lastEmail.length() > 0) {
 			// Automatic login with last used e-mail
-			Log.d(TAG, String.format(
-					"Automatic login with last used e-mail (%s)...", lastEmail));
+			Log.d(TAG, String.format("Automatic login with last used e-mail (%s)...", lastEmail));
 
 			mActivity.setDemoMode(false);
 			mProgress.show();
@@ -126,18 +119,16 @@ public class LoginActivity extends BaseActivity {
 		}
 
 		// Demo button
-		((ImageButton) findViewById(R.id.login_btn_demo))
-				.setOnClickListener(new OnClickListener() {
-					@Override
-					public void onClick(View v) {
-						mActivity.setDemoMode(true);
+		((ImageButton) findViewById(R.id.login_btn_demo)).setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				mActivity.setDemoMode(true);
 
-						Intent intent = new Intent(LoginActivity.this,
-								LocationScreenActivity.class);
-						startActivity(intent);
-						LoginActivity.this.finish();
-					}
-				});
+				Intent intent = new Intent(LoginActivity.this, LocationScreenActivity.class);
+				startActivity(intent);
+				LoginActivity.this.finish();
+			}
+		});
 
 		// Get btn for login
 		ImageButton btnGoogle = (ImageButton) findViewById(R.id.login_btn_google);
@@ -160,8 +151,8 @@ public class LoginActivity extends BaseActivity {
 				getMojeIDAccessFromServer(v);
 			}
 		});
-
-		Log.i("IHA app starting...", "___________________________________");
+		
+		Log.i("IHA app starting...","___________________________________");
 	}
 
 	@Override
@@ -261,14 +252,13 @@ public class LoginActivity extends BaseActivity {
 			}
 		}.start();
 	}
-
+	
 	/**
 	 * Method set new text to progress, thread-safe
-	 * 
 	 * @param message
-	 *            to show
+	 * 				to show
 	 */
-	public void ProgressChangeText(final String message) {
+	public void ProgressChangeText(final String message){
 		new Thread() {
 			public void run() {
 				runOnUiThread(new Runnable() {
@@ -281,7 +271,7 @@ public class LoginActivity extends BaseActivity {
 			}
 		}.start();
 	}
-
+	
 	/**
 	 * Method mine users account names
 	 * 
@@ -289,8 +279,7 @@ public class LoginActivity extends BaseActivity {
 	 */
 	private String[] getAccountNames() {
 		AccountManager mAccountManager = AccountManager.get(this);
-		Account[] accounts = mAccountManager
-				.getAccountsByType(GoogleAuthUtil.GOOGLE_ACCOUNT_TYPE);
+		Account[] accounts = mAccountManager.getAccountsByType(GoogleAuthUtil.GOOGLE_ACCOUNT_TYPE);
 		String[] names = new String[accounts.length];
 		for (int i = 0; i < names.length; i++) {
 			names[i] = accounts[i].name;
@@ -305,8 +294,7 @@ public class LoginActivity extends BaseActivity {
 	 */
 	private void beginGoogleAuthRutine(View v) {
 		Log.d(TAG, "BEG: Google access func");
-		int resultCode = GooglePlayServicesUtil
-				.isGooglePlayServicesAvailable(getBaseContext());
+		int resultCode = GooglePlayServicesUtil.isGooglePlayServicesAvailable(getBaseContext());
 		if (resultCode == ConnectionResult.SUCCESS) {
 			// On this device is Google Play, we can proceed
 			Log.d(TAG, "On this device is Google Play, we can proceed");
@@ -316,27 +304,23 @@ public class LoginActivity extends BaseActivity {
 				doGoogleLogin(Accounts[0]);
 			} else {
 				Log.d(TAG, "On this device are more accounts");
-				Intent intent = AccountPicker.newChooseAccountIntent(null,
-						null, new String[] { "com.google" }, false, null, null,
-						null, null);
+				Intent intent = AccountPicker.newChooseAccountIntent(null, null, new String[] { "com.google" }, false, null, null, null, null);
 				startActivityForResult(intent, GET_GOOGLE_ACCOUNT);
 			}
 		} else {
 			// Google Play is missing
 			Log.d(TAG, "Google Play Services is missing or not allowed");
-
+			
 			GooglePlayServicesUtil.getErrorDialog(resultCode, this,
-					PLAY_SERVICES_RESOLUTION_REQUEST).show();
-			// 20.8. 2014 Martin changed it to system supported dialog which
-			// should solve the problem
-			// Toast.makeText(v.getContext(),
-			// getString(R.string.toast_play_missing),
-			// Toast.LENGTH_LONG).show();
-			// Uri marketUri =
-			// Uri.parse("market://details?id=com.google.android.gms");
-			// Intent marketIntent = new Intent(Intent.ACTION_VIEW, marketUri);
-			// startActivity(marketIntent);
-
+                    PLAY_SERVICES_RESOLUTION_REQUEST).show();
+			// 20.8. 2014 Martin changed it to system supported dialog which should solve the problem
+//			Toast.makeText(v.getContext(), getString(R.string.toast_play_missing), Toast.LENGTH_LONG).show();
+//			Uri marketUri = Uri.parse("market://details?id=com.google.android.gms");
+//			Intent marketIntent = new Intent(Intent.ACTION_VIEW, marketUri);
+//			startActivity(marketIntent);
+			
+			
+			
 			mProgress.dismiss();
 		}
 		Log.d(TAG, "END: Google access func");
@@ -351,10 +335,8 @@ public class LoginActivity extends BaseActivity {
 	 */
 	private void doGoogleLogin(final String email) {
 		ProgressShow();
-		if (!mController.isInternetAvailable()) {
-			Toast.makeText(mActivity,
-					getString(R.string.toast_internet_connection),
-					Toast.LENGTH_LONG).show();
+		if(!mController.isInternetAvailable()){
+			Toast.makeText(mActivity, getString(R.string.toast_internet_connection), Toast.LENGTH_LONG).show();
 			ProgressDismiss();
 			return;
 		}
@@ -381,17 +363,21 @@ public class LoginActivity extends BaseActivity {
 					}
 
 					Log.i(GcmHelper.TAG_GCM, "GCM ID: " + gcmId);
-
-					if (!ggAuth.doInForeground(true)) {
+					
+					if(!ggAuth.doInForeground(true)){
 						Log.e("Login", "exception in ggAuth");
 						return;
 					}
-					// FIXME: I think name and email should be saved on IHA
-					// server and loaded from there. It should be used from
-					// google only in registration, no?
-
+					
+					
+//					GetGoogleAuth ggAuth = GetGoogleAuth.getGetGoogleAuth();
+					ActualUser user = mController.getActualUser();
+					user.setName(ggAuth.getUserName());
+					user.setEmail(ggAuth.getEmail());
+					user.setPicture(ggAuth.getPictureIMG());
+					
 					doLogin(email);
-
+					
 					Log.d(TAG, "Finish google auth");
 				}
 			};
@@ -430,24 +416,27 @@ public class LoginActivity extends BaseActivity {
 	private void doLogin(final String email) {
 		String errMessage = null;
 		boolean errFlag = false;
-
+		
 		try {
 			if (mController.login(email)) {
 				Log.d(TAG, "Login: true");
-				try {
-					GetGoogleAuth ggAuth = GetGoogleAuth.getGetGoogleAuth();
-					ActualUser user = mController.getActualUser();
-					user.setName(ggAuth.getUserName());
-					user.setEmail(ggAuth.getEmail());
-					user.setPicture(ggAuth.getPictureIMG());
-				} catch (Exception e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
+//				try {
+//					GetGoogleAuth ggAuth = GetGoogleAuth.getGetGoogleAuth();
+//					ActualUser user = mController.getActualUser();
+//					user.setName(ggAuth.getUserName());
+//					user.setEmail(ggAuth.getEmail());
+//					user.setPicture(ggAuth.getPictureIMG());
+//				} catch (Exception e) {
+//					e.printStackTrace();
+//				}
 				ProgressDismiss();
 				if (!mDoGoogleLoginRunnable.isStopped()) {
-					Intent intent = new Intent(mActivity,
-							LocationScreenActivity.class);
+					Intent intent = new Intent(mActivity, LocationScreenActivity.class);
+					if(mSignUp){
+						Bundle bundle = new Bundle();
+						bundle.putBoolean(Constants.NOADAPTER, true);
+						intent.putExtras(bundle);
+					}
 					mActivity.startActivity(intent);
 					mActivity.finish();
 				}
@@ -458,32 +447,33 @@ public class LoginActivity extends BaseActivity {
 			}
 		} catch (NotRegException e) {
 			e.printStackTrace();
-			try { // FIXME: this is 2x here, fix this after demo
-				GetGoogleAuth ggAuth = GetGoogleAuth.getGetGoogleAuth();
-				ActualUser user = mController.getActualUser();
-				user.setName(ggAuth.getUserName());
-				user.setEmail(ggAuth.getEmail());
-				user.setPicture(ggAuth.getPictureIMG());
-			} catch (Exception e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
-
+			if(!mSignUp)
+				doRegisterUser(email);
+			
+//			try { //FIXME: this is 2x here, fix this after demo
+//				GetGoogleAuth ggAuth = GetGoogleAuth.getGetGoogleAuth();
+//				ActualUser user = mController.getActualUser();
+//				user.setName(ggAuth.getUserName());
+//				user.setEmail(ggAuth.getEmail());
+//				user.setPicture(ggAuth.getPictureIMG());
+//			} catch (Exception e1) {
+//				// TODO Auto-generated catch block
+//				e1.printStackTrace();
+//			} 
+			
 			// there is unregistered adapter and we go to register it
-			// FIXME: repair this after de
-			Intent intent = new Intent(LoginActivity.this,
-					AddAdapterActivityDialog.class);
-			// Intent intent = new Intent(LoginActivity.this,
-			// LocationScreenActivity.class);
-			Bundle bundle = new Bundle();
-			bundle.putBoolean(Constants.CANCEL, false);
-			intent.putExtras(bundle);
-			startActivity(intent);
-			// } catch (NotRegBException e) {
-			// e.printStackTrace();
-			//
-			// errFlag = true;
-			// errMessage = getString(R.string.toast_no_unregistered_adapter);
+			//FIXME: repair this after de
+//			Intent intent = new Intent(LoginActivity.this, AddAdapterActivityDialog.class);
+//			Intent intent = new Intent(LoginActivity.this, LocationScreenActivity.class);
+//			Bundle bundle = new Bundle();
+//			bundle.putBoolean(Constants.CANCEL, false);
+//			intent.putExtras(bundle);
+//			startActivity(intent);
+//		} catch (NotRegBException e) {
+//			e.printStackTrace();
+//
+//			errFlag = true;
+//			errMessage = getString(R.string.toast_no_unregistered_adapter);
 		} catch (NoConnectionException e) {
 			e.printStackTrace();
 
@@ -502,13 +492,24 @@ public class LoginActivity extends BaseActivity {
 		} finally {
 			ProgressDismiss();
 			if (errFlag) {
-				// alternate form: //mActivity.runOnUiThread(new
-				// ToastMessageThread(mActivity, errMessage));
+				// alternate form: //mActivity.runOnUiThread(new ToastMessageThread(mActivity, errMessage));
 				new ToastMessageThread(mActivity, errMessage).start();
 			}
 		}
 	}
-
+	
+	private void doRegisterUser(final String email){
+		mSignUp = true;
+		ProgressChangeText(getString(R.string.progress_signup));
+		ProgressShow();
+		if(mController.registerUser(email)){
+			doLogin(email);
+		}else{
+			ProgressDismiss();
+			new ToastMessageThread(mActivity, R.string.toast_something_wrong);
+		}
+	}
+	
 	// ////////////////////////////////////////////////////////////////////////////////////
 	// ///////////////// TODO METHODS
 	// /////////////////////////////////////////////////
@@ -516,8 +517,7 @@ public class LoginActivity extends BaseActivity {
 
 	private boolean getMojeIDAccessFromServer(View v) {
 		// TODO: get access via mojeID
-		Toast.makeText(v.getContext(), "Not Implemented yet", Toast.LENGTH_LONG)
-				.show();
+		Toast.makeText(v.getContext(), "Not Implemented yet", Toast.LENGTH_LONG).show();
 		return false;
 	}
 }
