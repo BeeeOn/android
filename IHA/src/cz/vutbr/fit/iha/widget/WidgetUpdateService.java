@@ -80,7 +80,7 @@ public class WidgetUpdateService extends Service {
     public int onStartCommand(final Intent intent, int flags, int startId) {
     	super.onStartCommand(intent, flags, startId);
     	
-    	Log.d(TAG, "onStartCommand(), startId = " + startId);
+    	Log.d(TAG, String.format("onStartCommand(), startId = %d", startId));
     	
     	if (!intent.getBooleanExtra(EXTRA_FORCE_UPDATE, false)) {
     		// set alarm for next update
@@ -134,18 +134,18 @@ public class WidgetUpdateService extends Service {
 			
 			// ignore uninitialized widgets
 			if (!settings.getBoolean(Constants.WIDGET_PREF_INITIALIZED, false)) {
-				Log.v(TAG, "Ignoring widget " + widgetId + " (not initialized)");
+				Log.v(TAG, String.format("Ignoring widget %d (not initialized)", widgetId));
 				continue;
 			}
 			
 			// don't update widgets until their interval elapsed (or will be <1000ms from now) or we have forced update			
 			if (!intent.getBooleanExtra(EXTRA_FORCE_UPDATE, false)
 					&& ((lastUpdate + interval * 1000) - now > 1000)) {
-				Log.v(TAG, "Ignoring widget " + widgetId + " (not elapsed)");
+				Log.v(TAG, String.format("Ignoring widget %d (not elapsed)", widgetId));
 				continue;
 			}
 			
-			Log.v(TAG, "Updating widget " + widgetId);
+			Log.v(TAG, String.format("Updating widget %d", widgetId));
 			
 			String deviceId = settings.getString(Constants.WIDGET_PREF_DEVICE, "");
 			BaseDevice device = Controller.getInstance(this).getDevice(deviceId);

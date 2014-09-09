@@ -79,7 +79,7 @@ public class SensorWidgetProvider extends AppWidgetProvider {
     		name = "widget_sensor_small.xml";
     	}
     	
-    	Log.d(TAG, "[" + min_width + "-" + max_width + "] x [" + min_height + "-" + max_height + "] -> " + name);
+    	Log.d(TAG, String.format("[%d-%d] x [%d-%d] -> %s", min_width, max_width, min_height, max_height, name));
     	
     	// save layout resource to widget settings 
         SharedPreferences.Editor editor = getSettings(context, appWidgetId).edit();
@@ -99,7 +99,7 @@ public class SensorWidgetProvider extends AppWidgetProvider {
 	}
 	
 	public static SharedPreferences getSettings(Context context, int widgetId) {
-		// TODO: Rewrite this to use with Controller?
+		// We don't use getting settings from Controller, because widgets are independent and doesn't depend on logged user
 		return context.getSharedPreferences(String.format(Constants.WIDGET_PREF_FILENAME, widgetId), 0);
 	}
     
