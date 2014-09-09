@@ -156,12 +156,7 @@ public final class Controller {
 		try {
 			if (mNetwork.signIn(email)) {
 				mPersistence.saveLastEmail(email);
-				// initialize settings only once
-				String namespace = Persistence.getPreferencesFilename(email);
-				if (mPersistence.loadIsFirstLogin(namespace)) {
-					mPersistence.saveFirstLogin(namespace);
-					mPersistence.initializeDefaultSettings(email);
-				}
+				mPersistence.initializeDefaultSettings(email);
 				return true;
 			}
 		} catch(FalseException e) {

@@ -45,7 +45,7 @@ public class Persistence {
 //		PreferenceManager.setDefaultValues(mContext, name, Context.MODE_PRIVATE, R.xml.main_preferences, true);
 //		PreferenceManager.setDefaultValues(mContext, name, Context.MODE_PRIVATE, R.xml.unit_preferences, true);
 		
-		setString(namespace, Constants.PERSISTANCE_PREF_TIMEZONE, Timezone.getDefault().getId());
+		initializePreference(namespace, Constants.PERSISTANCE_PREF_TIMEZONE, Timezone.getDefault().getId());
 		
 		DefaultUnitPackages.setDefaultUnits(this, namespace);
 	}
@@ -53,15 +53,15 @@ public class Persistence {
 	
 	/** HELPERS **/
 	
-	public void setString(String namespace, String key, String value) {
-		Editor settings = getSettings(namespace).edit();
-		settings.putString(key, value);
-		settings.commit();
+	public void initializePreference(String namespace, String key, String value) {
+		if (!getSettings(namespace).contains(key)) {
+			setString(namespace, key, value);
+		}
 	}
 	
-	private void setBoolean(String namespace, String key, boolean value) {
+	private void setString(String namespace, String key, String value) {
 		Editor settings = getSettings(namespace).edit();
-		settings.putBoolean(key, value);
+		settings.putString(key, value);
 		settings.commit();
 	}
 	
@@ -89,14 +89,6 @@ public class Persistence {
 	
 	public String loadLastEmail() {
 		return getSettings(GLOBAL).getString(Constants.PERSISTENCE_PREF_LAST_USER, "");
-	}
-	
-	public void saveFirstLogin(String namespace) {
-		setBoolean(namespace, Constants.PERSISTANCE_PREF_FIRST_LOGIN, false);
-	}
-	
-	public boolean loadIsFirstLogin(String namespace) {
-		return getSettings(namespace).getBoolean(Constants.PERSISTANCE_PREF_FIRST_LOGIN, true);
 	}
 	
 	public void saveActiveAdapter(String userId, String adapterId) {

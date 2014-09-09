@@ -66,7 +66,6 @@ public final class Constants {
 	public static final String PERSISTANCE_PREF_SW2_LOCATION = "pref_sw2_location";
 	public static final String PERSISTANCE_PREF_TEMPERATURE = "pref_temperature";
 	public static final String PERSISTANCE_PREF_TIMEZONE = "pref_timezone";
-	public static final String PERSISTANCE_PREF_FIRST_LOGIN = "pref_first_login";
 	
 	public static final String KEY_UNITS = "key_units";
 	
