@@ -141,6 +141,7 @@
     <!-- Placeholders -->
     <string name="placeholder_icon">Icon</string>
     <string name="placeholder_none">Loading</string>
+    <string name="placeholder_not_exists">NOT EXISTS</string>
     <!-- WidgetConfigurationActivity -->
     <string name="widget_configuration_sensor">Sensor to be shown:</string>
     <string name="widget_configuration_interval">Update interval (sec.):</string>

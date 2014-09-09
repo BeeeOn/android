@@ -122,7 +122,7 @@ public class SensorWidgetProvider extends AppWidgetProvider {
 			remoteViews.setTextViewText(R.id.value, device.getStringValueUnit(context));
         } else {
         	// device doesn't exists - was removed or something
-			remoteViews.setTextViewText(R.id.name, "NOT EXISTS"); // FIXME: use string from resources
+			remoteViews.setTextViewText(R.id.name, context.getString(R.string.placeholder_not_exists));
 			remoteViews.setTextViewText(R.id.value, "");
         }
 		
