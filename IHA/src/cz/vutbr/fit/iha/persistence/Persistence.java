@@ -1,7 +1,5 @@
 package cz.vutbr.fit.iha.persistence;
 
-import java.util.Locale;
-
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
@@ -49,17 +47,15 @@ public class Persistence {
 		PreferenceManager.setDefaultValues(mContext, name, Context.MODE_PRIVATE, R.xml.main_preferences, true);
 		PreferenceManager.setDefaultValues(mContext, name, Context.MODE_PRIVATE, R.xml.unit_preferences, true);
 		
-		Editor editor = PreferenceManager.getDefaultSharedPreferences(mContext).edit();;
-		editor.putString(Constants.PREF_TIMEZONE, Timezone.getDefault().getId());
-		editor.commit();
+		setString(namespace, Constants.PREF_TIMEZONE, Timezone.getDefault().getId());
 		
-		DefaultUnitPackages.setDefaultUnits(mContext);
+		DefaultUnitPackages.setDefaultUnits(this, namespace);
 	}
 	
 	
 	/** HELPERS **/
 	
-	private void setString(String namespace, String key, String value) {
+	public void setString(String namespace, String key, String value) {
 		Editor settings = getSettings(namespace).edit();
 		settings.putString(key, value);
 		settings.commit();
