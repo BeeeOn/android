@@ -125,7 +125,7 @@ public enum Timezone {
 		// Last update time data
 		Time yesterday = new Time();
 		yesterday.setToNow();
-		yesterday.set(yesterday.toMillis(true) - 24 * 60 * 60 * 1000); // -24 hours
+		yesterday.set(yesterday.toMillis(true) - 23 * 60 * 60 * 1000); // -23 hours
 		
 		// If sync time is more that 24 ago, show only date. Show time otherwise.
 		DateFormat dateFormat = yesterday.before(lastUpdate) ? DateFormat.getTimeInstance() : DateFormat.getDateInstance();
