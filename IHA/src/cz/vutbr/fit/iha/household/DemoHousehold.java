@@ -9,7 +9,7 @@ import cz.vutbr.fit.iha.household.User.Gender;
 import cz.vutbr.fit.iha.network.xml.XmlParsers;
 
 /**
- * Represents demo household with adapters and devices loaded from local assets files.
+ * Represents demo household with adapters and facilities loaded from local assets files.
  * 
  * @author Robyer
  */
@@ -51,7 +51,7 @@ public final class DemoHousehold extends Household {
 				adapter.setLocations(parser.getDemoLocationsFromAsset(mContext, assetName));
 				
 				assetName = String.format(Constants.ASSET_ADAPTER_DATA_FILENAME, adapter.getId());
-				adapter.setDevices(parser.getDemoDevicesFromAsset(mContext, assetName));
+				adapter.setFacilities(parser.getDemoFacilitiesFromAsset(mContext, assetName));
 			}			
 		}
 		catch(Exception e){

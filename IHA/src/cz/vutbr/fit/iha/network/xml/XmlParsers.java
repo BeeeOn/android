@@ -213,8 +213,8 @@ public class XmlParsers {
 				// null
 				break;
 			case DEVICES:
-				// List<BaseDevice>
-				result.data = parseDevices();
+				// List<Facility>
+				result.data = parseFacilities();
 				break;
 			case ADAPTERSREADY:
 				// List<Adapter>
@@ -225,8 +225,8 @@ public class XmlParsers {
 				result.data = getSecureAttrValue(ns, ADDITIONALINFO);
 				break;
 			case ALLDEVICES:
-				// List<BaseDevice>
-				result.data = parseAllDevices();
+				// List<Facility>
+				result.data = parseAllFacilities();
 				break;
 			case VIEWSLIST:
 				// List<CustomViewPair>
@@ -259,13 +259,13 @@ public class XmlParsers {
 
 	/**
 	 * Method parse inner part of AllDevice message (old:XML message (using parsePartial()))
-	 * @return list of devices
+	 * @return list of facilities
 	 * @throws XmlPullParserException
 	 * @throws IOException
 	 * @throws XmlVerMisException means XML version mismatch exception
 	 * @throws ParseException 
 	 */
-	private List<Facility> parseAllDevices() throws XmlPullParserException, IOException, XmlVerMisException, ParseException{
+	private List<Facility> parseAllFacilities() throws XmlPullParserException, IOException, XmlVerMisException, ParseException{
 		mParser.nextTag();
 		mParser.require(XmlPullParser.START_TAG, ns, ADAPTER);
 		
@@ -280,17 +280,17 @@ public class XmlParsers {
 			
 			mParser.nextTag();
 			mParser.require(XmlPullParser.START_TAG, ns, CAPABILITIES);
-			return parseDevices();
+			return parseFacilities();
 	}
 	
 	/**
 	 * Method parse inner part of Device message (old:Partial message (set of device's tag))
-	 * @return List of devices
+	 * @return List of facilities
 	 * @throws XmlPullParserException
 	 * @throws IOException
 	 * @throws ParseException 
 	 */
-	private List<Facility> parseDevices() throws XmlPullParserException, IOException, ParseException{
+	private List<Facility> parseFacilities() throws XmlPullParserException, IOException, ParseException{
 		mParser.nextTag();
 		//mParser.require(XmlPullParser.START_TAG, ns, DEVICE); // strict solution
 		
@@ -804,7 +804,7 @@ public class XmlParsers {
 	 * @param filename
 	 * @return Adapter or null
 	 */
-	public List<Facility> getDemoDevicesFromAsset(Context context, String filename) {
+	public List<Facility> getDemoFacilitiesFromAsset(Context context, String filename) {
 		Log.i(TAG, String.format("Loading adapter from asset '%s'", filename));
 		List<Facility> result = null;
 		InputStream stream = null;
@@ -813,7 +813,7 @@ public class XmlParsers {
 			mParser = Xml.newPullParser();
 			mParser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false);
 			mParser.setInput(stream, null);
-			result = parseAllDevices();
+			result = parseAllFacilities();
 		} catch (Exception e) {
 			Log.e(TAG, e.getMessage(), e);
 		} finally {

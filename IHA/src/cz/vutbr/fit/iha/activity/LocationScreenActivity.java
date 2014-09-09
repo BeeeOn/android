@@ -113,7 +113,7 @@ public class LocationScreenActivity extends BaseActivity {
 	private static boolean mOrientation = false;
 	private static boolean mIsDrawerOpen;
 
-	private List<BaseDevice> mSensors;
+	private List<BaseDevice> mDevices;
 	private Handler mTimeHandler = new Handler();
 	private Runnable mTimeRun;
 
@@ -121,7 +121,7 @@ public class LocationScreenActivity extends BaseActivity {
 	 * Tasks which can be running in this activity and after finishing can try
 	 * to change GUI -> must be cancelled when activity stop
 	 */
-	private DevicesTask mDevicesTask;
+	private FacilitiesTask mFacilitiesTask;
 	private ChangeLocationTask mChangeLocationTask;
 	private SwitchAdapter mSwitchAdapter;
 
@@ -139,15 +139,15 @@ public class LocationScreenActivity extends BaseActivity {
 	private final static String TAG_INFO = "tag_info";
 	
 	/**
-	 * Represents "pair" of data required for get device log
+	 * Represents "pair" of data required for get adapter locations and uninitialized facilities
 	 */
-	private class AdapterMenuDevicesPair {
+	private class AdapterMenuFacilitiesPair {
 		public final MenuListAdapter menuListAdapter;
-		public final List<Facility> devices;
+		public final List<Facility> facilities;
 		
-		public AdapterMenuDevicesPair(final MenuListAdapter menuListAdapter, List<Facility> devices) {
+		public AdapterMenuFacilitiesPair(final MenuListAdapter menuListAdapter, List<Facility> facilities) {
 			this.menuListAdapter = menuListAdapter;
-			this.devices = devices;
+			this.facilities = facilities;
 		}
 	}
 
@@ -211,10 +211,10 @@ public class LocationScreenActivity extends BaseActivity {
 
 		this.setSupportProgressBarIndeterminateVisibility(false);
 
-		if (mDevicesTask != null) {
-			mDevicesTask.cancel(true);
-			if (mDevicesTask.getDialog() != null) {
-				mDevicesTask.getDialog().dismiss();
+		if (mFacilitiesTask != null) {
+			mFacilitiesTask.cancel(true);
+			if (mFacilitiesTask.getDialog() != null) {
+				mFacilitiesTask.getDialog().dismiss();
 			}
 		}
 
@@ -588,8 +588,8 @@ public class LocationScreenActivity extends BaseActivity {
 		return true;
 	}
 
-	private void setEmptySensors() {
-		getSensors(new ArrayList<BaseDevice>());
+	private void setEmptyDevices() {
+		getDevices(new ArrayList<BaseDevice>());
 	}
 
 	private void changeLocation(Location location, boolean closeDrawer) {
@@ -613,7 +613,7 @@ public class LocationScreenActivity extends BaseActivity {
 		}
 	}
 
-	public boolean getSensors(final List<BaseDevice> sensors) {
+	public boolean getDevices(final List<BaseDevice> devices) {
 		Log.d(TAG, "LifeCycle: getsensors start");
 
 		String[] title;
@@ -624,12 +624,12 @@ public class LocationScreenActivity extends BaseActivity {
 		mTitle = mDrawerTitle = "IHA";
 
 		// TODO: this works, but its not the best solution
-		if (!ListOfSensors.ready) {
-			mSensors = sensors;
+		if (!ListOfDevices.ready) {
+			mDevices = devices;
 			mTimeRun = new Runnable() {
 				@Override
 				public void run() {
-					getSensors(mSensors);
+					getDevices(mDevices);
 					Log.d(TAG, "LifeCycle: getsensors in timer");
 				}
 			};
@@ -644,17 +644,17 @@ public class LocationScreenActivity extends BaseActivity {
 		mSensorList = (ListView) findViewById(R.id.listviewofsensors);
 		TextView nosensor = (TextView) findViewById(R.id.nosensorlistview);
 
-		title = new String[sensors.size()];
-		value = new String[sensors.size()];
-		unit = new String[sensors.size()];
-		icon = new int[sensors.size()];
-		time = new Time[sensors.size()];
-		for (int i = 0; i < sensors.size(); i++) {
-			title[i] = sensors.get(i).getName();
-			value[i] = sensors.get(i).getStringValue();
-			unit[i] = sensors.get(i).getStringUnit(this);
-			icon[i] = sensors.get(i).getTypeIconResource();
-			time[i] = sensors.get(i).getFacility().lastUpdate;
+		title = new String[devices.size()];
+		value = new String[devices.size()];
+		unit = new String[devices.size()];
+		icon = new int[devices.size()];
+		time = new Time[devices.size()];
+		for (int i = 0; i < devices.size(); i++) {
+			title[i] = devices.get(i).getName();
+			value[i] = devices.get(i).getStringValue();
+			unit[i] = devices.get(i).getStringUnit(this);
+			icon[i] = devices.get(i).getTypeIconResource();
+			time[i] = devices.get(i).getFacility().lastUpdate;
 		}
 
 		if (mSensorList == null) {
@@ -666,7 +666,7 @@ public class LocationScreenActivity extends BaseActivity {
 		}
 
 		// If no sensor - display text only
-		if (sensors.size() == 0) {
+		if (devices.size() == 0) {
 			if (nosensor != null) {
 				nosensor.setVisibility(View.VISIBLE);
 				mSensorList.setVisibility(View.GONE);
@@ -689,7 +689,7 @@ public class LocationScreenActivity extends BaseActivity {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
-				if (position == sensors.size()) {
+				if (position == devices.size()) {
 					Log.d(TAG, "HERE ADD SENSOR +");
 					mController.unignoreUninitialized();
 
@@ -700,7 +700,7 @@ public class LocationScreenActivity extends BaseActivity {
 					return;
 				}
 
-				final BaseDevice selectedItem = sensors.get(position);
+				final BaseDevice selectedItem = devices.get(position);
 
 				// setSupportProgressBarIndeterminateVisibility(true);
 
@@ -746,8 +746,8 @@ public class LocationScreenActivity extends BaseActivity {
 	public void redrawMenu() {
 		setSupportProgressBarIndeterminate(true);
 		setSupportProgressBarIndeterminateVisibility(true);
-		mDevicesTask = new DevicesTask();
-		mDevicesTask.execute();
+		mFacilitiesTask = new FacilitiesTask();
+		mFacilitiesTask.execute();
 	}
 
 	// @Override
@@ -920,7 +920,7 @@ public class LocationScreenActivity extends BaseActivity {
 		} else {
 			Log.d("default", "DEFAULT POSITION: Empty sensor set");
 			Log.d("default", "EMPTY SENSOR SET");
-			setEmptySensors();
+			setEmptyDevices();
 		}
 	}
 
@@ -939,7 +939,7 @@ public class LocationScreenActivity extends BaseActivity {
 	}
 
 	/**
-	 * Loads locations, checks for uninitialized devices and eventually shows
+	 * Changes adapter and loads locations, checks for uninitialized devices and eventually shows
 	 * dialog for adding them
 	 */
 	private class SwitchAdapter extends AsyncTask<String, Void, List<Facility>> {
@@ -966,10 +966,9 @@ public class LocationScreenActivity extends BaseActivity {
 	 * Loads locations, checks for uninitialized devices and eventually shows
 	 * dialog for adding them
 	 */
-	private class DevicesTask extends AsyncTask<Void, Void, AdapterMenuDevicesPair> {
+	private class FacilitiesTask extends AsyncTask<Void, Void, AdapterMenuFacilitiesPair> {
 
-		private final CustomAlertDialog mDialog = new CustomAlertDialog(
-				LocationScreenActivity.this);
+		private final CustomAlertDialog mDialog = new CustomAlertDialog(LocationScreenActivity.this);
 
 		/**
 		 * @return the dialog
@@ -979,7 +978,7 @@ public class LocationScreenActivity extends BaseActivity {
 		}
 
 		@Override
-		protected AdapterMenuDevicesPair doInBackground(Void... unused) {
+		protected AdapterMenuFacilitiesPair doInBackground(Void... unused) {
 
 			// FIXME: no adapters for user
 			if (mController.getActiveAdapter() == null && !isClosing) {
@@ -989,39 +988,31 @@ public class LocationScreenActivity extends BaseActivity {
 				if (!mController.getUserSettings().getBoolean(
 						Constants.PERSISTENCE_PREF_IGNORE_NO_ADAPTER, false)) {
 					Log.e(TAG, "kulehovnableskyted");
-					Log.d(TAG,
-							"data: "
-									+ Boolean.toString(isClosing)
-									+ " "
-									+ Boolean.toString(mController
-											.getActiveAdapter() == null));
-					Intent intent = new Intent(LocationScreenActivity.this,
-							AddAdapterActivityDialog.class);
+					Log.d(TAG, "data: " + Boolean.toString(isClosing) + " " + Boolean.toString(mController.getActiveAdapter() == null));
+					Intent intent = new Intent(LocationScreenActivity.this, AddAdapterActivityDialog.class);
 					Bundle bundle = new Bundle();
 					bundle.putBoolean(Constants.CANCEL, true);
 					intent.putExtras(bundle);
 					startActivity(intent);
 				}
-				return new AdapterMenuDevicesPair(getMenuAdapter(), new ArrayList<Facility>());
+				return new AdapterMenuFacilitiesPair(getMenuAdapter(), new ArrayList<Facility>());
 			}
 
 			// Load locations
 			mLocations = mController.getActiveAdapter().getLocations();
 			Log.d(TAG, String.format("Found %d locations", mLocations.size()));
 
-			// Load uninitialized devices
-			List<Facility> devices = mController.getUninitializedDevices();
-			Log.d(TAG,
-					String.format("Found %d uninitialized devices",
-							devices.size()));
+			// Load uninitialized facilities
+			List<Facility> facilities = mController.getUninitializedFacilities();
+			Log.d(TAG, String.format("Found %d uninitialized facilities", facilities.size()));
 			
-			return new AdapterMenuDevicesPair(getMenuAdapter(), devices);
+			return new AdapterMenuFacilitiesPair(getMenuAdapter(), facilities);
 		}
 
 		@Override
-		protected void onPostExecute(final AdapterMenuDevicesPair pair) {
-			final List<Facility> uninitializedDevices = pair.devices;
-			if (uninitializedDevices == null)
+		protected void onPostExecute(final AdapterMenuFacilitiesPair pair) {
+			final List<Facility> uninitializedFacilities = pair.facilities;
+			if (uninitializedFacilities == null)
 				return;
 
 			// Redraw locations
@@ -1032,8 +1023,8 @@ public class LocationScreenActivity extends BaseActivity {
 			setSupportProgressBarIndeterminate(false);
 			setSupportProgressBarIndeterminateVisibility(false);
 
-			// Do something with uninitialized devices
-			if (uninitializedDevices.size() == 0)
+			// Do something with uninitialized facilities
+			if (uninitializedFacilities.size() == 0)
 				return;
 
 			mDialog.setCancelable(false)
@@ -1041,8 +1032,8 @@ public class LocationScreenActivity extends BaseActivity {
 					.setMessage(
 							getResources().getQuantityString(
 									R.plurals.notification_new_sensors,
-									uninitializedDevices.size(),
-									uninitializedDevices.size()));
+									uninitializedFacilities.size(),
+									uninitializedFacilities.size()));
 
 			mDialog.setCustomNeutralButton(
 					getString(R.string.notification_ingore),
@@ -1050,7 +1041,7 @@ public class LocationScreenActivity extends BaseActivity {
 						@Override
 						public void onClick(View v) {
 							mController
-									.ignoreUninitialized(uninitializedDevices);
+									.ignoreUninitialized(uninitializedFacilities);
 							// TODO: Get this string from resources
 							Toast.makeText(
 									LocationScreenActivity.this,
@@ -1065,13 +1056,10 @@ public class LocationScreenActivity extends BaseActivity {
 					new OnClickListener() {
 						@Override
 						public void onClick(View v) {
-							// Open activity for adding new device
+							// Open activity for adding new facility
 							inBackground = true;
-							Intent intent = new Intent(
-									LocationScreenActivity.this,
-									SetupSensorActivityDialog.class);
-							intent.putExtra(Constants.ADDSENSOR_COUNT_SENSOR,
-									uninitializedDevices.size());
+							Intent intent = new Intent(LocationScreenActivity.this, SetupSensorActivityDialog.class);
+							intent.putExtra(Constants.ADDSENSOR_COUNT_SENSOR, uninitializedFacilities.size());
 							startActivity(intent);
 							mDialog.dismiss();
 						}
@@ -1106,7 +1094,7 @@ public class LocationScreenActivity extends BaseActivity {
 		@Override
 		protected void onPostExecute(final List<BaseDevice> devices) {
 			if (!isPaused)
-				getSensors(devices);
+				getDevices(devices);
 		}
 	}
 

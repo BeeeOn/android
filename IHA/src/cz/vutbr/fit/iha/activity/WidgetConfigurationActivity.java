@@ -57,16 +57,14 @@ public class WidgetConfigurationActivity extends BaseActivity {
 		// prepare list with all sensors to use in spinner
 		Controller controller = Controller.getInstance(this);
 		for (Adapter adapter : controller.getAdapters()) {
-			for (Facility facility : controller.getDevicesByAdapter(adapter.getId())) {
+			for (Facility facility : controller.getFacilitiesByAdapter(adapter.getId())) {
 				mDevices.addAll(facility.getDevices());
 			}
 		}
 
 		if (mDevices.isEmpty()) {
 			// FIXME: use string from resources
-			Toast.makeText(this,
-					"No sensors available.\nTry to run application first.",
-					Toast.LENGTH_LONG).show();
+			Toast.makeText(this, "No sensors available.\nTry to run application first.", Toast.LENGTH_LONG).show();
 			finish();
 			return;
 		}
@@ -148,8 +146,7 @@ public class WidgetConfigurationActivity extends BaseActivity {
 		}
 
 		EditText i = (EditText) findViewById(R.id.interval);
-		int interval = settings.getInt(Constants.WIDGET_PREF_INTERVAL,
-				WidgetUpdateService.UPDATE_INTERVAL_DEFAULT);
+		int interval = settings.getInt(Constants.WIDGET_PREF_INTERVAL, WidgetUpdateService.UPDATE_INTERVAL_DEFAULT);
 		interval = Math.max(interval, WidgetUpdateService.UPDATE_INTERVAL_MIN);
 		i.setText(Integer.toString(interval));
 	}

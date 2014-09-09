@@ -288,7 +288,7 @@ public class XmlCreator {
 	 * @param facility
 	 * @return XML of DelDevice message
 	 */
-	public static String createDeleteDevice(String id, String adapterId, Facility facility){
+	public static String createDeleteFacility(String id, String adapterId, Facility facility){
 		XmlSerializer serializer = Xml.newSerializer();
 		StringWriter writer = new StringWriter();
 		try{
@@ -888,7 +888,7 @@ public class XmlCreator {
 	 * @param devicesId Id of devices to get update fields
 	 * @return update message
 	 */
-	public static String createGetDevices(String id, String adapterId, List<Facility>facilities){
+	public static String createGetFacilities(String id, String adapterId, List<Facility>facilities){
 		XmlSerializer serializer = Xml.newSerializer();
 		StringWriter writer = new StringWriter();
 		try{
@@ -926,7 +926,7 @@ public class XmlCreator {
 	 * @param facility
 	 * @return
 	 */
-	public static String createGetDevice(String id, String adapterId, Facility facility){
+	public static String createGetFacility(String id, String adapterId, Facility facility){
 		XmlSerializer serializer = Xml.newSerializer();
 		StringWriter writer = new StringWriter();
 		try{

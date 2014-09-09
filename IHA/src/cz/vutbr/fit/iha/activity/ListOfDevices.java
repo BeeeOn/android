@@ -9,7 +9,7 @@ import com.actionbarsherlock.app.SherlockFragment;
 
 import cz.vutbr.fit.iha.R;
 
-public class ListOfSensors extends SherlockFragment {
+public class ListOfDevices extends SherlockFragment {
 	
 //	private static final String SSII = "ssii";
 	public static boolean ready = false;

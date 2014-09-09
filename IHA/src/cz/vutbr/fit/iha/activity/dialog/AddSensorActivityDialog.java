@@ -140,20 +140,20 @@ public class AddSensorActivityDialog extends BaseActivityDialog{
 		protected List<Facility>  doInBackground(Void... params) {
 
 			mController.reloadAdapters();
-			List<Facility> devices = mController.getUninitializedDevices();
-			return devices;
+			List<Facility> facilities = mController.getUninitializedFacilities();
+			return facilities;
 		}
 
 		@Override
-		protected void onPostExecute(List<Facility>  devices) {
+		protected void onPostExecute(List<Facility> facilities) {
 			 
-        	 if(devices.size() > 0 ) {
+        	 if(facilities.size() > 0 ) {
         		 // Setup variable as true for disable timer
         		 mTimerDone = true;
         		 mCountDownTimer.cancel();
         		 // Send count of sensors
         		 Bundle bundle = new Bundle();
-        		 bundle.putInt(Constants.ADDSENSOR_COUNT_SENSOR, devices.size());
+        		 bundle.putInt(Constants.ADDSENSOR_COUNT_SENSOR, facilities.size());
         		 // go to setup uninit sensor
         		 Intent intent = new Intent(AddSensorActivityDialog.this, SetupSensorActivityDialog.class);
         		 intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);

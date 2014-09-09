@@ -5,7 +5,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import cz.vutbr.fit.iha.activity.GraphOfSensors;
-import cz.vutbr.fit.iha.activity.ListOfSensors;
+import cz.vutbr.fit.iha.activity.ListOfDevices;
 
 public class ViewPagerAdapter extends FragmentPagerAdapter {
 
@@ -24,7 +24,7 @@ public class ViewPagerAdapter extends FragmentPagerAdapter {
 
 	    // Open FragmentTab2.java
 	    case 0:
-	    	ListOfSensors fragmenttab2 = new ListOfSensors();
+	    	ListOfDevices fragmenttab2 = new ListOfDevices();
 	      return fragmenttab2;
 	      
 	      // Open FragmentTab1.java

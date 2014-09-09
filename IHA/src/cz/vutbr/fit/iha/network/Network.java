@@ -664,7 +664,7 @@ public class Network {
 	}
 	
 	/**
-	 * Method delete sensor from server
+	 * Method delete facility from server
 	 * @param adapterId
 	 * @param facility to be deleted
 	 * @return true if is deleted, false otherwise
@@ -672,8 +672,8 @@ public class Network {
 	 * @throws CommunicationException
 	 * @throws FalseException
 	 */
-	public boolean deleteDevice(String adapterId, Facility facility) throws NoConnectionException, CommunicationException, FalseException {
-		String messageToSend = XmlCreator.createDeleteDevice(mSessionId, adapterId, facility);
+	public boolean deleteFacility(String adapterId, Facility facility) throws NoConnectionException, CommunicationException, FalseException {
+		String messageToSend = XmlCreator.createDeleteFacility(mSessionId, adapterId, facility);
 		ParsedMessage msg = doRequest(messageToSend);
 		
 		if (msg.getState() == State.TRUE) {
@@ -683,7 +683,7 @@ public class Network {
 
 		} else if (msg.getState() == State.RESIGN) {
 			doResign();
-			return deleteDevice(adapterId, facility);
+			return deleteFacility(adapterId, facility);
 		} else if (msg.getState() == State.FALSE) {
 			throw new FalseException(((FalseAnswer) msg.data));
 		} else
@@ -691,18 +691,17 @@ public class Network {
 	}
 	
 	/**
-	 * Method ask for actual data devices
+	 * Method ask for actual data of facilities
 	 * 
-	 * @param facilities
-	 *            list of devices to which needed actual data
-	 * @return list of updated devices fields
+	 * @param facilities list of facilities to which needed actual data
+	 * @return list of updated facilities fields
 	 * @throws NoConnectionException
 	 * @throws CommunicationException
 	 */
 	// http://stackoverflow.com/a/509288/1642090
 	@SuppressWarnings("unchecked")
 	public List<Facility> getFacilities(String adapterId, List<Facility> facilities) throws NoConnectionException, CommunicationException, FalseException {
-		String messageToSend = XmlCreator.createGetDevices(mSessionId, adapterId, facilities);
+		String messageToSend = XmlCreator.createGetFacilities(mSessionId, adapterId, facilities);
 		ParsedMessage msg = doRequest(messageToSend);
 		
 		List<Facility> result = new ArrayList<Facility>();
@@ -721,7 +720,7 @@ public class Network {
 	}
 	
 	/**
-	 * Method ask server for actual data of one device
+	 * Method ask server for actual data of one facility
 	 * @param adapterId
 	 * @param facility
 	 * @return
@@ -730,7 +729,7 @@ public class Network {
 	 * @throws FalseException
 	 */
 	public Facility getFacility(String adapterId, Facility facility) throws NoConnectionException, CommunicationException, FalseException {
-		String messageToSend = XmlCreator.createGetDevice(mSessionId, adapterId, facility);
+		String messageToSend = XmlCreator.createGetFacility(mSessionId, adapterId, facility);
 		ParsedMessage msg = doRequest(messageToSend);
 		
 		Facility result = null;

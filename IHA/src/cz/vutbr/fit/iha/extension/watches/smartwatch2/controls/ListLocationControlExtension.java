@@ -204,10 +204,10 @@ public class ListLocationControlExtension extends ManagedControlExtension {
 			// intent.putExtra(GalleryTestControl.EXTRA_INITIAL_POSITION,
 			// listItem.listItemPosition);
 			// mControlManager.startControl(intent);
-			List<Facility> sensors = mAdapter.getDevicesByLocation(mLocations
+			List<Facility> facilities = mAdapter.getFacilitiesByLocation(mLocations
 					.get(listItem.listItemPosition).getId());
 			Intent intent;
-			if (sensors.size() < 1) {
+			if (facilities.size() < 1) {
 				intent = new Intent(mContext, TextControl.class);
 				intent.putExtra(TextControl.EXTRA_TEXT,
 						mContext.getString(R.string.no_sensor_available));

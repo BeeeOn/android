@@ -116,7 +116,7 @@ public class ControlManagerSmartWatch2 extends ControlManagerBase {
 			if (adapter != null) {
 				if (strLocation != null) {
 					List<Facility> sensors = adapter
-							.getDevicesByLocation(strLocation);
+							.getFacilitiesByLocation(strLocation);
 					if (sensors != null) {
 						Intent intent = new Intent(mContext,
 								ListSensorControlExtension.class);

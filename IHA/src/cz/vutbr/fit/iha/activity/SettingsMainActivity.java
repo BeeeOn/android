@@ -92,7 +92,7 @@ public class SettingsMainActivity extends SherlockPreferenceActivity implements
 	}
 	
 	// FIXME: This method must use same ActiveAdapter from application,
-	// we can't have in controller more activeAdapters for getting locations and devices...
+	// we can't have in controller more activeAdapters for getting locations and facilities...
 	// Use mController.setActiveAdapter(...) to switch to another adapter 
 	private void setDefaultLocAndAdap() {
 		List<Adapter> adapters = mController.getAdapters();

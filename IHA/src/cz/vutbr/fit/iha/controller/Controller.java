@@ -222,7 +222,7 @@ public final class Controller {
 	/** Adapter methods *****************************************************/
 
 	/**
-	 * Refreshes adapter data - loads devices and locations
+	 * Refreshes adapter data - loads facilities and locations
 	 * @param adapter
 	 * @param forceUpdate if you want to refresh adapter even if it's perhaps not needed
 	 * @return
@@ -248,7 +248,7 @@ public final class Controller {
 			// Update adapter with new data
 			adapter.setLocations(mNetwork.getLocations(adapter.getId()));
 			adapter.setUtcOffset(mNetwork.getTimeZone(adapter.getId()));
-			adapter.setDevices(mNetwork.init(adapter.getId()));
+			adapter.setFacilities(mNetwork.init(adapter.getId()));
 
 			adapter.lastUpdate.setToNow();
 			result = true;
@@ -267,17 +267,17 @@ public final class Controller {
 	}
 	
 	/**
-	 * Refreshes device in listings (e.g., in uninitialized devices)
-	 * @param device
+	 * Refreshes facility in listings (e.g., in uninitialized facilities)
+	 * @param facility
 	 */
-	public void refreshDevice(final Facility device) {
+	public void refreshFacility(final Facility facility) {
 		Adapter adapter = getActiveAdapter();
 		if (adapter != null) {
-			adapter.refreshDevice(device);
+			adapter.refreshFacility(facility);
 		}
 	}
 	
-	public boolean updateDevice(Facility facility) {
+	public boolean updateFacility(Facility facility) {
 		if (mDemoMode) {
 			// In demo mode update facility devices with random values 
 			for (BaseDevice device : facility.getDevices()) {
@@ -293,22 +293,22 @@ public final class Controller {
 			return true;
 		}
 		
-		Adapter adapter = getAdapterByDevice(facility);
+		Adapter adapter = getAdapterByFacility(facility);
 		if (adapter == null)
 			return false;
 		
 		try {
-			Facility newDevice = mNetwork.getFacility(adapter.getId(), facility);
-			if (newDevice == null)
+			Facility newFacility = mNetwork.getFacility(adapter.getId(), facility);
+			if (newFacility == null)
 				return false;
 			
-			facility.replaceData(newDevice);
+			facility.replaceData(newFacility);
 		} catch (NetworkException e) {
 			e.printStackTrace();
 			return false;
 		}
 				
-		refreshDevice(facility);
+		refreshFacility(facility);
 		return true;
 	}
 	
@@ -389,7 +389,7 @@ public final class Controller {
 				mPersistence.saveActiveAdapter(mHousehold.user.getId(), mHousehold.activeAdapter.getId());
 		}
 		
-		// Refresh active adapter (load its locations and devices)
+		// Refresh active adapter (load its locations and facilities)
 		if (mHousehold.activeAdapter != null)
 			refreshAdapter(mHousehold.activeAdapter, false);
 		
@@ -418,14 +418,14 @@ public final class Controller {
 	}
 
 	/**
-	 * Return Adapter which this device belongs to.
+	 * Return Adapter which this facility belongs to.
 	 * 
-	 * @param device
+	 * @param facility
 	 * @return Adapter if found, null otherwise
 	 */
-	public Adapter getAdapterByDevice(Facility device) {
+	public Adapter getAdapterByFacility(Facility facility) {
 		for (Adapter a : getAdapters()) {
-			if (a.getDeviceById(device.getId()) != null)
+			if (a.getFacilityById(facility.getId()) != null)
 				return a; 
 		}
 		
@@ -448,7 +448,7 @@ public final class Controller {
 		
 		try {
 			if (mNetwork.addAdapter(id, adapterName)) {
-				reloadAdapters(); // TODO: reload (or just add this adapter) only adapters list (without reloading devices)
+				reloadAdapters(); // TODO: reload (or just add this adapter) only adapters list (without reloading facilities)
 				setActiveAdapter(id); // FIXME : kurvaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
 				result = true;
 			}
@@ -500,7 +500,7 @@ public final class Controller {
 			if (mNetwork.deleteConnectionAccounts(id, user)) {
 				if(mHousehold.activeAdapter != null && mHousehold.activeAdapter.getId().equals(id))
 					mHousehold.activeAdapter = null;
-				reloadAdapters(); // TODO: reload (or just add this adapter) only adapters list (without reloading devices)
+				reloadAdapters(); // TODO: reload (or just add this adapter) only adapters list (without reloading facilities)
 //				setActiveAdapter(id);
 				result = true;
 			}
@@ -542,17 +542,17 @@ public final class Controller {
 	}
 
 	/**
-	 * Return location object that belongs to device.
-	 * @param device
+	 * Return location object that belongs to facility.
+	 * @param facility
 	 * @return Location if found, null otherwise.
 	 */
-	public Location getLocationByDevice(Facility device) {
-		Adapter adapter = getAdapterByDevice(device);
+	public Location getLocationByFacility(Facility facility) {
+		Adapter adapter = getAdapterByFacility(facility);
 		if (adapter == null) {
 			return null;
 		}
 		
-		return adapter.getLocation(device.getLocationId());
+		return adapter.getLocation(facility.getLocationId());
 	}
 	
 	/**
@@ -637,28 +637,28 @@ public final class Controller {
 	}
 
 
-	/** Devices methods *****************************************************/
+	/** Facilities methods **************************************************/
 	
 	/**
-	 * Return device by ID from all adapters.
+	 * Return facility by ID from all adapters.
 	 * 
 	 * @param id
-	 * @return device or null if no device is found
+	 * @return facility or null if no facility is found
 	 */
 	public Facility getFacility(String id) {
-		Facility device = null;
+		Facility facility = null;
 		
 		for (Adapter adapter : getAdapters()) {
-			device = adapter.getDeviceById(id);
-			if (device != null)
+			facility = adapter.getFacilityById(id);
+			if (facility != null)
 				break;
 		}
 		
-		if (device != null && device.needsUpdate()) {
-			updateDevice(device);
+		if (facility != null && facility.needsUpdate()) {
+			updateFacility(facility);
 		}
 		
-		return device;
+		return facility;
 	}
 	
 	public BaseDevice getDevice(String id) {
@@ -694,41 +694,41 @@ public final class Controller {
 	}
 
 	/**
-	 * Return list of all uninitialized devices from active adapter.
+	 * Return list of all uninitialized facilities from active adapter.
 	 * 
-	 * @return List of devices (or empty list)
+	 * @return List of facilities (or empty list)
 	 */
-	public List<Facility> getUninitializedDevices() {
+	public List<Facility> getUninitializedFacilities() {
 		List<Facility> list = new ArrayList<Facility>();
 		
 		Adapter adapter = getActiveAdapter();
 		if (adapter != null) {
-			list.addAll(adapter.getUninitializedDevices());
+			list.addAll(adapter.getUninitializedFacilities());
 		}
 		
 		return list;
 	}
 	
 	/**
-	 * Return list of all devices by location from active adapter.
+	 * Return list of all facilities by location from active adapter.
 	 * 
 	 * @param location
-	 * @return List of devices (or empty list)
+	 * @return List of facilities (or empty list)
 	 */
 	public List<Facility> getFacilitiesByLocation(String locationId, boolean forceUpdate) {
 		List<Facility> list = new ArrayList<Facility>();
 		
 		Adapter adapter = getActiveAdapter();
 		if (adapter != null) {
-			refreshAdapter(adapter, forceUpdate); // TODO: update only devices in this location? or no?
-			list.addAll(adapter.getDevicesByLocation(locationId));
+			refreshAdapter(adapter, forceUpdate); // TODO: update only facilities in this location? or no?
+			list.addAll(adapter.getFacilitiesByLocation(locationId));
 		}
 		
 		return list;
 	}
 	
-	public List<Facility> getDevicesByAdapter(String adapterId) {
-		return getAdapter(adapterId, false).getDevices();
+	public List<Facility> getFacilitiesByAdapter(String adapterId) {
+		return getAdapter(adapterId, false).getFacilities();
 	}
 	
 	/**
@@ -743,18 +743,18 @@ public final class Controller {
 		
 		if (mDemoMode) {
 			facility.setInitialized(true);
-			refreshDevice(facility);
+			refreshFacility(facility);
 			return true;
 		}
 		
 		boolean result = false;
 
 		try {
-			Adapter adapter = getAdapterByDevice(facility);
+			Adapter adapter = getAdapterByFacility(facility);
 			Log.d(TAG, String.format("Adapter ID: %s, device: %s", adapter.getId(), facility.getAddress()));
 			if (adapter != null) {
 				result = mNetwork.setDevice(adapter.getId(), device, what);
-				result = updateDevice(facility);
+				result = updateFacility(facility);
 			}
 		} catch (NetworkException e) {
 			e.printStackTrace();
@@ -778,7 +778,7 @@ public final class Controller {
 		}
 		
 		try {
-			Adapter adapter = getAdapterByDevice(device.getFacility());
+			Adapter adapter = getAdapterByFacility(device.getFacility());
 			if (adapter != null) {
 				log = mNetwork.getLog(adapter.getId(), device, from, to, type, interval);
 			}
@@ -879,10 +879,10 @@ public final class Controller {
 		return mNetwork.startGoogleAuth(blocking, fetchPhoto);
 	}
 
-	public void ignoreUninitialized(List<Facility> devices) {
+	public void ignoreUninitialized(List<Facility> facilities) {
 		Adapter adapter = getActiveAdapter();
 		if (adapter != null)
-			adapter.ignoreUninitialized(devices);
+			adapter.ignoreUninitialized(facilities);
 	}
 
 	public void unignoreUninitialized() {

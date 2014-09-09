@@ -358,7 +358,7 @@ public class SensorDetailFragment extends SherlockFragment {
 
 		// Set name of location
 		if (mController != null) {
-			Location location = mController.getLocationByDevice(device.getFacility());
+			Location location = mController.getLocationByFacility(device.getFacility());
 			if (location != null)
 				mLocation.setText(location.getName());
 			mLocation.setOnClickListener(new OnClickListener() {

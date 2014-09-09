@@ -82,7 +82,7 @@ public class SetupSensorActivityDialog extends BaseActivityDialog {
 
 		mUnInitDevices = new ArrayList<BaseDevice>();
 
-		for (Facility facility : mController.getUninitializedDevices()) {
+		for (Facility facility : mController.getUninitializedFacilities()) {
 			mUnInitDevices.addAll(facility.getDevices());
 		}
 		
