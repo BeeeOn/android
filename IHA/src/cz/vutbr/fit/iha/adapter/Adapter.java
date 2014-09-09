@@ -27,7 +27,6 @@ public class Adapter {
 	private final Map<String, Facility> mFacilities = new HashMap<String, Facility>();
 	private final Map<String, Facility> mUninitializedFacilities = new HashMap<String, Facility>();
 	private final Map<String, Facility> mUninitializedIgnored = new HashMap<String, Facility>();
-	private final Map<String, List<Facility>> mGroupedDevices = new HashMap<String, List<Facility>>();
 	
 	private String mId = "";
 	private String mName = "";
@@ -254,12 +253,6 @@ public class Adapter {
 		
 		if (!facility.isInitialized() && !mUninitializedIgnored.containsKey(facility.getId()))
 			mUninitializedFacilities.put(facility.getId(), facility);
-
-		// FIXME: MultiDevices discovery - having second map is very uneffective and wrong, it should be in one
-		if (!mGroupedDevices.containsKey(facility.getAddress()))
-			mGroupedDevices.put(facility.getAddress(), new ArrayList<Facility>());
-
-		mGroupedDevices.get(facility.getAddress()).add(facility);
 	}
 	
 	/**
@@ -289,12 +282,6 @@ public class Adapter {
 	private void clearFacilities() {
 		mFacilities.clear();
 		mUninitializedFacilities.clear();
-		
-		// TODO: is this needed or will garbage collector do this itself?
-		for (List<Facility> list : mGroupedDevices.values()) {
-			list.clear();
-		}
-		mGroupedDevices.clear();
 	}
 
 	public void ignoreUninitialized(List<Facility> facilities) {
@@ -340,20 +327,6 @@ public class Adapter {
 	
 	public boolean isEmpty() {
 		return mLocations.size() == 0 && mFacilities.size() == 0;
-	}
-
-	/**
-	 * Return list of facilities with this address.
-	 * @param id
-	 * @return list with facilities (or empty list)
-	 */
-	public List<Facility> getFacilitiesByAddress(String address) {
-		List<Facility> facilities = new ArrayList<Facility>();
-		
-		if (mGroupedDevices.containsKey(address))
-			facilities.addAll(mGroupedDevices.get(address));
-		
-		return facilities;
 	}
 	
 }
