@@ -301,11 +301,12 @@ public class XmlCreator {
 			serializer.attribute(ns, VERSION, GVER);
 			serializer.attribute(ns, ADAPTER, adapterId);
 			
-				serializer.startTag(ns, DEVICE);
-				serializer.attribute(ns, ID, facility.getAddress());
-				// FIXME: it doesn't make sense to have type here, we want whole facility with all sensors (not single sensor data)
-				serializer.attribute(ns, TYPE, formatType(facility.getDevices().get(0).getType())); // FIXME: this will crash if this facility has no devices
-				serializer.endTag(ns, DEVICE);
+				for (BaseDevice device : facility.getDevices()) {
+					serializer.startTag(ns, DEVICE);
+					serializer.attribute(ns, ID, facility.getAddress());
+					serializer.attribute(ns, TYPE, formatType(device.getType()));
+					serializer.endTag(ns, DEVICE);
+				}
 			
 			serializer.endTag(ns, COM_ROOT);
 			serializer.endDocument();
