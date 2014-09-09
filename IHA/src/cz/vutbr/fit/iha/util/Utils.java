@@ -1,9 +1,5 @@
 package cz.vutbr.fit.iha.util;
 
-import java.text.DateFormat;
-import java.util.Date;
-import java.util.TimeZone;
-
 import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
@@ -11,7 +7,6 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Path;
 import android.graphics.Rect;
-import android.text.format.Time;
 
 public class Utils {
 	public static Bitmap getRoundedShape(Bitmap scaleBitmapImage) {

@@ -9,10 +9,8 @@ import java.util.TimeZone;
 import android.content.Context;
 import android.preference.PreferenceManager;
 import android.text.format.Time;
-
 import cz.vutbr.fit.iha.Constants;
 import cz.vutbr.fit.iha.R;
-import cz.vutbr.fit.iha.adapter.device.units.Temperature;
 
 /**
  * Enum for temperature unit
