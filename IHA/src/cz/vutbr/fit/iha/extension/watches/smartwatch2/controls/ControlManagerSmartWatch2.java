@@ -54,7 +54,7 @@ import cz.vutbr.fit.iha.adapter.Adapter;
 import cz.vutbr.fit.iha.adapter.device.Facility;
 import cz.vutbr.fit.iha.controller.Controller;
 import cz.vutbr.fit.iha.extension.watches.smartwatch2.SW2ExtensionService;
-import cz.vutbr.fit.iha.network.GetGoogleAuth;
+import cz.vutbr.fit.iha.network.GoogleAuth;
 
 /**
  * The phone control manager manages which control to currently show on the
@@ -79,7 +79,8 @@ public class ControlManagerSmartWatch2 extends ControlManagerBase {
 		if (!mController.isLoggedIn()) {
 			String lastEmail = mController.getLastEmail();
 			try {
-				GetGoogleAuth.getGetGoogleAuth().execute();
+//				GoogleAuth.getGoogleAuth().execute();
+				mController.startGoogle(false, false); // this is equivalent of upper line but
 			} catch (Exception e) {
 				initialControlIntent = new Intent(mContext, TextControl.class);
 				initialControlIntent.putExtra(TextControl.EXTRA_TEXT,

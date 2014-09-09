@@ -126,9 +126,11 @@ public class Network {
 	private static final String GoogleExcMessage = "Google token error";
 	
 	private Context mContext;
+	private GoogleAuth mGoogleAuth;
 	private ActualUser mUser;
 	private String mSessionId;
 	private boolean mUseDebugServer;
+	private boolean mGoogleReinit;
 
 	/**
 	 * Constructor.
@@ -248,6 +250,39 @@ public class Network {
 	}
 
 	/**
+	 * Must be called on start or on reinit
+	 * @param googleAuth
+	 */
+	public void initGoogle(GoogleAuth googleAuth){
+		mGoogleAuth = googleAuth;
+		mGoogleReinit = false;
+	}
+	
+	/**
+	 * Method start downloading data from google
+	 * @param blocking true is running in same thread, false for start new thread
+	 * @param fetchPhoto true if want download user photo, false if not
+	 * @return true if everything Ok, false when you need to reinit object via call initGoogle(GoogleAuth), or some error
+	 */
+	public boolean startGoogleAuth(boolean blocking, boolean fetchPhoto){
+		if(blocking){
+			if(mGoogleAuth.doInForeground(fetchPhoto)){
+				mUser.setName(mGoogleAuth.getUserName());
+				mUser.setEmail(mGoogleAuth.getEmail());
+				mUser.setPicture(mGoogleAuth.getPictureIMG());
+				mUser.setPictureUrl(mGoogleAuth.getPicture());
+				return true;
+			}
+			return false;
+		}else{
+			if(mGoogleReinit)
+				return false;
+			mGoogleAuth.execute();
+		}
+		return true;
+	}
+	
+	/**
 	 * Checks if Internet connection is available.
 	 * 
 	 * @return true if available, false otherwise
@@ -273,7 +308,8 @@ public class Network {
 		// TODO: maybe use diffrenD way to resign, case stopping of thread,
 		// manage this after implement in the controller
 		try {
-			GetGoogleAuth.getGetGoogleAuth().doInForeground(false);
+//			GoogleAuth.getGoogleAuth().doInForeground(false);
+			startGoogleAuth(true, false);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -316,7 +352,7 @@ public class Network {
 		String googleToken = "";
 		try {
 			do {
-				googleToken = GetGoogleAuth.getGetGoogleAuth().getToken();
+				googleToken = mGoogleAuth.getToken();
 				Log.d(TAG + " - SignIn - token", googleToken);
 			} while (googleToken.equalsIgnoreCase(""));
 		} catch (Exception e) {
@@ -329,7 +365,7 @@ public class Network {
 	
 	/**
 	 * Method signIn user given by its email to server, BUT before calling must
-	 * call GetGoogleAuth to get googleToken in it and init ActualUser
+	 * call GoogleAuth to get googleToken in it and init ActualUser
 	 * 
 	 * @param userEmail
 	 *            of current user
@@ -369,6 +405,7 @@ public class Network {
 			throw new NotRegBException();
 		}
 		if (msg.getState() == State.FALSE) {
+			mGoogleAuth.invalidateToken();
 			throw new FalseException(((FalseAnswer) msg.data));
 		}
 

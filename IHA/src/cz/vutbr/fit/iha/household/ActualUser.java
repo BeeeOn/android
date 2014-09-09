@@ -18,6 +18,7 @@ public class ActualUser extends User {
 	private Bitmap mPicture;
 	private String mPictureUrl;
 	private String mSessionId = "";	
+	private boolean mDefaultPicture = true;
 
 	public ActualUser() {
 		super();
@@ -47,6 +48,10 @@ public class ActualUser extends User {
 	public void setPictureUrl(String url) {
 		mPictureUrl = url;
 	}
+	
+	public boolean isPictureDefault(){
+		return mDefaultPicture;
+	}
 
 	/**
 	 * Get user picture
@@ -55,8 +60,10 @@ public class ActualUser extends User {
 	 */
 	public Bitmap getPicture(Context context) {
 		if (mPicture == null) {
+			mDefaultPicture = true;
 			setPicture(getDefaultPicture(context));
-		}
+		}else
+			mDefaultPicture = false;
 		return mPicture;
 	}
 

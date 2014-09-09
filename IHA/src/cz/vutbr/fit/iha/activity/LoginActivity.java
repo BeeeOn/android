@@ -26,7 +26,7 @@ import cz.vutbr.fit.iha.controller.Controller;
 import cz.vutbr.fit.iha.exception.NotImplementedException;
 import cz.vutbr.fit.iha.gcm.GcmHelper;
 import cz.vutbr.fit.iha.household.ActualUser;
-import cz.vutbr.fit.iha.network.GetGoogleAuth;
+import cz.vutbr.fit.iha.network.GoogleAuth;
 import cz.vutbr.fit.iha.network.exception.CommunicationException;
 import cz.vutbr.fit.iha.network.exception.NoConnectionException;
 import cz.vutbr.fit.iha.network.exception.NotRegException;
@@ -99,7 +99,7 @@ public class LoginActivity extends BaseActivity {
 		if (mController.isLoggedIn()) {
 			// If we're already logged in, continue to location screen
 			Log.d(TAG, "Already logged in, going to locations screen...");
-			new GetGoogleAuth(this, mController.getLastEmail());
+			mController.initGoogle(this, mController.getLastEmail());
 
 			Intent intent = new Intent(mActivity, LocationScreenActivity.class);
 
@@ -174,8 +174,8 @@ public class LoginActivity extends BaseActivity {
 				return;
 			}
 			try {
-				new GetGoogleAuth(this, email);
-				GetGoogleAuth.getGetGoogleAuth().execute();
+				mController.initGoogle(this, email);
+				mController.startGoogle(false, true); // do NOT need check returned value, init is called line before
 				ProgressChangeText(getString(R.string.loading_data));
 				Log.d(TAG, "user aproved, and token is tried to retake.");
 			} catch (Exception e) {
@@ -340,7 +340,8 @@ public class LoginActivity extends BaseActivity {
 			ProgressDismiss();
 			return;
 		}
-		final GetGoogleAuth ggAuth = new GetGoogleAuth(this, email);
+//		final GoogleAuth ggAuth = new GoogleAuth(this, email);
+		mController.initGoogle(this, email);
 		try {
 			Log.d(TAG, "call google auth execute");
 
@@ -364,17 +365,18 @@ public class LoginActivity extends BaseActivity {
 
 					Log.i(GcmHelper.TAG_GCM, "GCM ID: " + gcmId);
 					
-					if(!ggAuth.doInForeground(true)){
+//					if(!ggAuth.doInForeground(true)){
+					if(!mController.startGoogle(true, true)){ // returned value is from doInForeground only
 						Log.e("Login", "exception in ggAuth");
 						return;
 					}
 					
 					
-//					GetGoogleAuth ggAuth = GetGoogleAuth.getGetGoogleAuth();
-					ActualUser user = mController.getActualUser();
-					user.setName(ggAuth.getUserName());
-					user.setEmail(ggAuth.getEmail());
-					user.setPicture(ggAuth.getPictureIMG());
+//					GoogleAuth ggAuth = GoogleAuth.getGetGoogleAuth();
+//					ActualUser user = mController.getActualUser();
+//					user.setName(ggAuth.getUserName());
+//					user.setEmail(ggAuth.getEmail());
+//					user.setPicture(ggAuth.getPictureIMG());
 					
 					doLogin(email);
 					
@@ -421,7 +423,7 @@ public class LoginActivity extends BaseActivity {
 			if (mController.login(email)) {
 				Log.d(TAG, "Login: true");
 //				try {
-//					GetGoogleAuth ggAuth = GetGoogleAuth.getGetGoogleAuth();
+//					GoogleAuth ggAuth = GoogleAuth.getGetGoogleAuth();
 //					ActualUser user = mController.getActualUser();
 //					user.setName(ggAuth.getUserName());
 //					user.setEmail(ggAuth.getEmail());
@@ -451,7 +453,7 @@ public class LoginActivity extends BaseActivity {
 				doRegisterUser(email);
 			
 //			try { //FIXME: this is 2x here, fix this after demo
-//				GetGoogleAuth ggAuth = GetGoogleAuth.getGetGoogleAuth();
+//				GoogleAuth ggAuth = GoogleAuth.getGetGoogleAuth();
 //				ActualUser user = mController.getActualUser();
 //				user.setName(ggAuth.getUserName());
 //				user.setEmail(ggAuth.getEmail());

@@ -11,6 +11,7 @@ import android.util.Log;
 import cz.vutbr.fit.iha.activity.LoginActivity;
 import cz.vutbr.fit.iha.adapter.Adapter;
 import cz.vutbr.fit.iha.adapter.device.BaseDevice;
+import cz.vutbr.fit.iha.adapter.device.Facility;
 import cz.vutbr.fit.iha.network.GetGoogleAuth;
 import cz.vutbr.fit.iha.network.Network;
 import cz.vutbr.fit.iha.network.exception.CommunicationException;
@@ -117,7 +118,7 @@ public class NetworkTest extends /*TestCase*/AndroidTestCase {
 		//if(true)return; // if reply is resign, method block, because of not in new thread
 		Network net = new Network(getContext(), null, false);
 		try {
-			List<BaseDevice> result = net.init("5844569");
+			List<Facility> result = net.init("5844569");
 			
 			if(result != null){
 				Log.d(TAG, "todo");

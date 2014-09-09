@@ -26,9 +26,9 @@ import cz.vutbr.fit.iha.thread.ToastMessageThread;
  * Get basic user info and picture if is possible 
  * @author Leopold Podmolik
  */
-public class GetGoogleAuth extends AsyncTask<Void, Void, GoogleAuthState> {
-	private static final String TAG = GetGoogleAuth.class.getSimpleName();
-	private static GetGoogleAuth mThis;
+public class GoogleAuth extends AsyncTask<Void, Void, GoogleAuthState> {
+	private static final String TAG = GoogleAuth.class.getSimpleName();
+	private static GoogleAuth mThis;
 	
 	private static String SCOPE = "oauth2:https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email";
 	
@@ -48,10 +48,10 @@ public class GetGoogleAuth extends AsyncTask<Void, Void, GoogleAuthState> {
 	 * @param mActivity
 	 * @param mEmail
 	 */
-	public GetGoogleAuth(LoginActivity mActivity, String mEmail) {
-		this.mActivity = mActivity;
-		this.mEmail = mEmail;
-		GetGoogleAuth.mThis = this;
+	public GoogleAuth(LoginActivity activity, String Email) {
+		this.mActivity = activity;
+		this.mEmail = Email;
+		GoogleAuth.mThis = this;
 	}
 	
 	//////////////////////////////////////////////////////////////////////////////////////
@@ -68,8 +68,8 @@ public class GetGoogleAuth extends AsyncTask<Void, Void, GoogleAuthState> {
 	/**
 	 * @param mEmail the mEmail to set
 	 */
-	public void setEmail(String mEmail) {
-		this.mEmail = mEmail;
+	public void setEmail(String Email) {
+		this.mEmail = Email;
 	}
 
 	/**
@@ -82,8 +82,8 @@ public class GetGoogleAuth extends AsyncTask<Void, Void, GoogleAuthState> {
 	/**
 	 * @param mUserName the mUserName to set
 	 */
-	public void setUserName(String mUserName) {
-		this.mUserName = mUserName;
+	public void setUserName(String UserName) {
+		this.mUserName = UserName;
 	}
 
 	/**
@@ -96,8 +96,8 @@ public class GetGoogleAuth extends AsyncTask<Void, Void, GoogleAuthState> {
 	/**
 	 * @param mPicture the mPicture to set
 	 */
-	public void setPicture(String mPicture) {
-		this.mPictureUrl = mPicture;
+	public void setPicture(String Picture) {
+		this.mPictureUrl = Picture;
 	}
 
 	/**
@@ -110,8 +110,8 @@ public class GetGoogleAuth extends AsyncTask<Void, Void, GoogleAuthState> {
 	/**
 	 * @param mPicture the mPicture to set
 	 */
-	public void setPictureIMG(Bitmap mPictureIMG) {
-		this.mPicture = mPictureIMG;
+	public void setPictureIMG(Bitmap PictureIMG) {
+		this.mPicture = PictureIMG;
 	}
 
 	/**
@@ -138,7 +138,7 @@ public class GetGoogleAuth extends AsyncTask<Void, Void, GoogleAuthState> {
 	 * @return static object
 	 * @throws Exception
 	 */
-	public static GetGoogleAuth getGetGoogleAuth() throws Exception{
+	public static GoogleAuth getGoogleAuth() throws Exception{
 		if(mThis != null){
 			return mThis;
 		}else
@@ -164,7 +164,6 @@ public class GetGoogleAuth extends AsyncTask<Void, Void, GoogleAuthState> {
 		} catch(IOException e){
 			return GoogleAuthState.eNoConnection;
 		} catch (Exception e) {
-			//TODO: check more exceptions and show toast 
 			e.printStackTrace();
 		}
 		return GoogleAuthState.eUnknown;
@@ -179,7 +178,6 @@ public class GetGoogleAuth extends AsyncTask<Void, Void, GoogleAuthState> {
 				mActivity.ProgressDismiss();
 				break;
 			case eRecorver:
-				//TODO: check if better with progressBar
 				mActivity.ProgressDismiss();
 				new ToastMessageThread(mActivity, R.string.toast_google_auth).start();
 				break;
@@ -202,7 +200,6 @@ public class GetGoogleAuth extends AsyncTask<Void, Void, GoogleAuthState> {
 	
 	public boolean doInForeground(boolean fetchPhoto){
 		try {
-//			mToken = GoogleAuthUtil.getToken(mActivity, mEmail, "oauth2:https://www.googleapis.com/auth/userinfo.profile");
 			mToken = GoogleAuthUtil.getToken(mActivity, mEmail, SCOPE);
 			Log.d(TAG, "Token");
 			
@@ -220,7 +217,6 @@ public class GetGoogleAuth extends AsyncTask<Void, Void, GoogleAuthState> {
 			new ToastMessageThread(mActivity, R.string.toast_check_your_connection_via_browser).start();
 			e.printStackTrace();
 		} catch (Exception e) {
-			//TODO: check more exceptions and show toast 
 			mActivity.ProgressDismiss();
 			new ToastMessageThread(mActivity, R.string.toast_internet_connection).start();
 			e.printStackTrace();

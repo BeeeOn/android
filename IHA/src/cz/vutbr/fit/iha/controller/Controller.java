@@ -10,6 +10,7 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.text.format.Time;
 import android.util.Log;
+import cz.vutbr.fit.iha.activity.LoginActivity;
 import cz.vutbr.fit.iha.adapter.Adapter;
 import cz.vutbr.fit.iha.adapter.device.BaseDevice;
 import cz.vutbr.fit.iha.adapter.device.BaseDevice.SaveDevice;
@@ -25,7 +26,7 @@ import cz.vutbr.fit.iha.household.ActualUser;
 import cz.vutbr.fit.iha.household.DemoHousehold;
 import cz.vutbr.fit.iha.household.Household;
 import cz.vutbr.fit.iha.household.User;
-import cz.vutbr.fit.iha.network.GetGoogleAuth;
+import cz.vutbr.fit.iha.network.GoogleAuth;
 import cz.vutbr.fit.iha.network.Network;
 import cz.vutbr.fit.iha.network.exception.FalseException;
 import cz.vutbr.fit.iha.network.exception.NetworkException;
@@ -167,13 +168,16 @@ public final class Controller {
 				case 1: // bad token or email
 					try {
 						//TODO: do this otherway
-						GetGoogleAuth ggAuth = GetGoogleAuth.getGetGoogleAuth();
+//						GoogleAuth ggAuth = GoogleAuth.getGoogleAuth();
+//						
+//						ggAuth.invalidateToken();
+//						ggAuth.doInForeground((ggAuth.getPictureIMG() == null)? true:false);
 						
-						ggAuth.invalidateToken();
-						ggAuth.doInForeground((ggAuth.getPictureIMG() == null)? true:false);
+						mNetwork.startGoogleAuth(true, getActualUser().isPictureDefault()?true:false);
 						
 						//this happen only on first signing (or when someone delete grants on google, or token is old)
-						while(GetGoogleAuth.getGetGoogleAuth().getPictureIMG() == null);
+//						while(GoogleAuth.getGoogleAuth().getPictureIMG() == null);
+						while(getActualUser().isPictureDefault()); // FIXME: not sure with this, need to check (first sing in)
 						
 						return login(email);
 						
@@ -856,6 +860,24 @@ public final class Controller {
 		throw new NotImplementedException();
 	}
 	
+	/**
+	 * TODO: this is NEW method initializing googleAuth in network
+	 * @param activity
+	 * @param email
+	 */
+	public void initGoogle(LoginActivity activity, String email){
+		mNetwork.initGoogle(new GoogleAuth(activity, email));
+	}
+	
+	/**
+	 * TODO: this is NEW method for start google communication
+	 * @param blocking -> look at network
+	 * @param fetchPhoto -> look at network
+	 * @return -> look at network
+	 */
+	public boolean startGoogle(boolean blocking, boolean fetchPhoto){
+		return mNetwork.startGoogleAuth(blocking, fetchPhoto);
+	}
 
 	public void ignoreUninitialized(List<Facility> devices) {
 		Adapter adapter = getActiveAdapter();
