@@ -492,8 +492,7 @@ public class SensorDetailFragment extends SherlockFragment {
 				if (isValueX)
 	                return formatter.format(new Date((long) value));
 
-	            String unit = getResources().getString(mDevice.getUnitStringResource());
-	            return String.format(Locale.getDefault(), "%.1f %s", value, unit);
+	            return String.format(Locale.getDefault(), "%.1f %s", value, mDevice.getStringUnit(getActivity()));
 	        }
 	    });
 		
