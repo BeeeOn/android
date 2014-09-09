@@ -56,7 +56,6 @@ import cz.vutbr.fit.iha.adapter.device.RefreshInterval;
 import cz.vutbr.fit.iha.adapter.location.Location;
 import cz.vutbr.fit.iha.controller.Controller;
 import cz.vutbr.fit.iha.settings.Timezone;
-import cz.vutbr.fit.iha.util.Utils;
 //import android.widget.LinearLayout;
 
 public class SensorDetailFragment extends SherlockFragment {
@@ -403,7 +402,7 @@ public class SensorDetailFragment extends SherlockFragment {
 		// Set icon of sensor
 		mIcon.setImageResource(device.getTypeIconResource());
 		// Set time of sensor
-		mTime.setText(Timezone.getSharedPreferenceOption(mActivity).formatLastUpdate(device.getFacility().lastUpdate));
+		mTime.setText(Timezone.getSharedPreferenceOption(mController.getUserSettings()).formatLastUpdate(device.getFacility().lastUpdate));
 		// Set refresh time Text
 		mRefreshTimeText.setText(" "+device.getFacility().getRefresh().getStringInterval(context));
 		// Set refresh time SeekBar

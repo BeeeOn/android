@@ -61,7 +61,7 @@ public class SettingsMainActivity extends SherlockPreferenceActivity implements
 		mListPrefTimezone = (ListPreference) findPreference(Constants.PREF_TIMEZONE);
 		mListPrefTimezone.setEntries(Timezone.getEntries(this));
 		mListPrefTimezone.setEntryValues(Timezone.getEntryValues());
-		mListPrefTimezone.setSummary(Timezone.getSharedPreferenceOption(this).getName(this));
+		mListPrefTimezone.setSummary(Timezone.getSharedPreferenceOption(mController.getUserSettings()).getName(this));
 		
 		mPrefUnits = findPreference(Constants.KEY_UNITS);
         Intent intentUnit = new Intent(this, SettingsUnitActivity.class);
@@ -88,7 +88,7 @@ public class SettingsMainActivity extends SherlockPreferenceActivity implements
 
 	private void redraw() {
 		setDefaultLocAndAdap();
-		mListPrefTimezone.setSummary(Timezone.getSharedPreferenceOption(this).getName(this));
+		mListPrefTimezone.setSummary(Timezone.getSharedPreferenceOption(mController.getUserSettings()).getName(this));
 	}
 	
 	// FIXME: This method must use same ActiveAdapter from application,

@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+import cz.vutbr.fit.iha.controller.Controller;
 import cz.vutbr.fit.iha.settings.Timezone;
 import cz.vutbr.fit.iha.util.Utils;
 
@@ -23,6 +24,8 @@ public class SensorListAdapter extends BaseAdapter {
 	private LayoutInflater inflater;
 	// private int mCount;
 	private int mLenght;
+	
+	private final Controller mController;
 
 	public SensorListAdapter(Context context, String[] title, String[] value,
 			String[] unit, Time[] time, int[] icon) {
@@ -33,6 +36,7 @@ public class SensorListAdapter extends BaseAdapter {
 		mUnit = unit;
 		mTime = time;
 		mLenght = mTitle.length;
+		mController = Controller.getInstance(context);
 		// mCount = mTitle.length;
 	}
 
@@ -97,7 +101,7 @@ public class SensorListAdapter extends BaseAdapter {
 		txtTime.setText(String.format(
 				"%s %s",
 				mContext.getString(R.string.last_update),
-				Timezone.getSharedPreferenceOption(mContext).formatLastUpdate(
+				Timezone.getSharedPreferenceOption(mController.getUserSettings()).formatLastUpdate(
 						mTime[position])));
 
 		// Set the results into ImageView

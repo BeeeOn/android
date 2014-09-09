@@ -4,10 +4,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
 import cz.vutbr.fit.iha.Constants;
 import cz.vutbr.fit.iha.R;
+import cz.vutbr.fit.iha.persistence.Persistence;
 
 /**
  * Enum for temperature unit
@@ -116,10 +118,11 @@ public enum Temperature {
 		return getDefault();
 	}
 
-	public static Temperature getSharedPreferencesOption(Context context) {
-		return getTemperatureById(PreferenceManager
-				.getDefaultSharedPreferences(context).getString(
-						Constants.PREF_TEMPERATURE, getDefault().getId()));
+	public static Temperature getSharedPreferencesOption(SharedPreferences prefs) {
+//		return getTemperatureById(PreferenceManager
+//				.getDefaultSharedPreferences(context).getString(
+//						Constants.PREF_TEMPERATURE, getDefault().getId()));
+		return getTemperatureById(prefs.getString(Constants.PREF_TEMPERATURE, getDefault().getId()));
 	}
 
 	// /// CONVERTIONS

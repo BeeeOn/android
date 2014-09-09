@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.TimeZone;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.text.format.Time;
 import cz.vutbr.fit.iha.Constants;
@@ -90,10 +91,9 @@ public enum Timezone {
 		return getDefault();
 	}
 
-	public static Timezone getSharedPreferenceOption(Context context) {
-			return getTimezoneById(PreferenceManager
-					.getDefaultSharedPreferences(context).getString(
-							Constants.PREF_TIMEZONE, getDefault().getId()));
+	public static Timezone getSharedPreferenceOption(SharedPreferences prefs) {
+			return getTimezoneById(prefs.getString(
+					Constants.PREF_TIMEZONE, getDefault().getId()));
 	}
 	
 	///// CONVERTIONS
