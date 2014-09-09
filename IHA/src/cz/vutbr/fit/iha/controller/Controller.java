@@ -454,7 +454,7 @@ public final class Controller {
 	}
 	
 	//TODO: review this
-	public boolean registerUser(String id){
+	public boolean registerUser(String email){
 		if (mDemoMode) {
 			return false;
 		}

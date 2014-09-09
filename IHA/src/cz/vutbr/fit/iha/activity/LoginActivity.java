@@ -60,6 +60,7 @@ public class LoginActivity extends BaseActivity {
 	private static final int GET_GOOGLE_ACCOUNT = 6;
 
 	private boolean mIgnoreChange = false;
+	private boolean mSignUp = false;
 
 	private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 1;
 	
@@ -71,12 +72,6 @@ public class LoginActivity extends BaseActivity {
 	// ///////////////// Override METHODS
 	// ///////////////////////////////////////////////
 	// ////////////////////////////////////////////////////////////////////////////////////
-
-	protected void setDemoMode(boolean demoMode) {
-		// After changing demo mode must be controller reloaded
-		Controller.setDemoMode(this, demoMode);
-		mController = Controller.getInstance(this);
-	}
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -230,6 +225,12 @@ public class LoginActivity extends BaseActivity {
 	// /////////////////////////////////////////////////
 	// ////////////////////////////////////////////////////////////////////////////////////
 
+	protected void setDemoMode(boolean demoMode) {
+		// After changing demo mode must be controller reloaded
+		Controller.setDemoMode(this, demoMode);
+		mController = Controller.getInstance(this);
+	}
+	
 	/**
 	 * Method cancel running progressBar, thread-safe
 	 */
@@ -338,7 +339,7 @@ public class LoginActivity extends BaseActivity {
 	}
 
 	/**
-	 * Method create (finally only) one thread to get google token and than call
+	 * Method create one thread to get google token and than call
 	 * last logging method
 	 * 
 	 * @param email
@@ -363,9 +364,13 @@ public class LoginActivity extends BaseActivity {
 						Log.e("Login", "exception in ggAuth");
 						return;
 					}
-					// FIXME: I think name and email should be saved on IHA
-					// server and loaded from there. It should be used from
-					// google only in registration, no?
+					
+					
+//					GetGoogleAuth ggAuth = GetGoogleAuth.getGetGoogleAuth();
+					ActualUser user = mController.getActualUser();
+					user.setName(ggAuth.getUserName());
+					user.setEmail(ggAuth.getEmail());
+					user.setPicture(ggAuth.getPictureIMG());
 					
 					doLogin(email);
 					
@@ -373,7 +378,7 @@ public class LoginActivity extends BaseActivity {
 					if (!gcmId.isEmpty()) {
 						Log.i(TAG_GCM, "GCM ID: " + gcmId);
 						
-						// TODO: register in server
+						// TODO: register in server, Network is ready wait for controller and server
 					}
 					
 					Log.d(TAG, "Finish google auth");
@@ -418,19 +423,23 @@ public class LoginActivity extends BaseActivity {
 		try {
 			if (mController.login(email)) {
 				Log.d(TAG, "Login: true");
-				try {
-					GetGoogleAuth ggAuth = GetGoogleAuth.getGetGoogleAuth();
-					ActualUser user = mController.getActualUser();
-					user.setName(ggAuth.getUserName());
-					user.setEmail(ggAuth.getEmail());
-					user.setPicture(ggAuth.getPictureIMG());
-				} catch (Exception e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} 
+//				try {
+//					GetGoogleAuth ggAuth = GetGoogleAuth.getGetGoogleAuth();
+//					ActualUser user = mController.getActualUser();
+//					user.setName(ggAuth.getUserName());
+//					user.setEmail(ggAuth.getEmail());
+//					user.setPicture(ggAuth.getPictureIMG());
+//				} catch (Exception e) {
+//					e.printStackTrace();
+//				}
 				ProgressDismiss();
 				if (!mDoGoogleLoginRunnable.isStopped()) {
 					Intent intent = new Intent(mActivity, LocationScreenActivity.class);
+					if(mSignUp){
+						Bundle bundle = new Bundle();
+						bundle.putBoolean(Constants.NOADAPTER, true);
+						intent.putExtras(bundle);
+					}
 					mActivity.startActivity(intent);
 					mActivity.finish();
 				}
@@ -439,28 +448,30 @@ public class LoginActivity extends BaseActivity {
 				errFlag = true;
 				errMessage = "Login failed";
 			}
-
 		} catch (NotRegException e) {
 			e.printStackTrace();
-			try { //FIXME: this is 2x here, fix this after demo
-				GetGoogleAuth ggAuth = GetGoogleAuth.getGetGoogleAuth();
-				ActualUser user = mController.getActualUser();
-				user.setName(ggAuth.getUserName());
-				user.setEmail(ggAuth.getEmail());
-				user.setPicture(ggAuth.getPictureIMG());
-			} catch (Exception e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			} 
+			if(!mSignUp)
+				doRegisterUser(email);
+			
+//			try { //FIXME: this is 2x here, fix this after demo
+//				GetGoogleAuth ggAuth = GetGoogleAuth.getGetGoogleAuth();
+//				ActualUser user = mController.getActualUser();
+//				user.setName(ggAuth.getUserName());
+//				user.setEmail(ggAuth.getEmail());
+//				user.setPicture(ggAuth.getPictureIMG());
+//			} catch (Exception e1) {
+//				// TODO Auto-generated catch block
+//				e1.printStackTrace();
+//			} 
 			
 			// there is unregistered adapter and we go to register it
 			//FIXME: repair this after de
-			Intent intent = new Intent(LoginActivity.this, AddAdapterActivityDialog.class);
+//			Intent intent = new Intent(LoginActivity.this, AddAdapterActivityDialog.class);
 //			Intent intent = new Intent(LoginActivity.this, LocationScreenActivity.class);
-			Bundle bundle = new Bundle();
-			bundle.putBoolean(Constants.CANCEL, false);
-			intent.putExtras(bundle);
-			startActivity(intent);
+//			Bundle bundle = new Bundle();
+//			bundle.putBoolean(Constants.CANCEL, false);
+//			intent.putExtras(bundle);
+//			startActivity(intent);
 //		} catch (NotRegBException e) {
 //			e.printStackTrace();
 //
@@ -487,6 +498,18 @@ public class LoginActivity extends BaseActivity {
 				// alternate form: //mActivity.runOnUiThread(new ToastMessageThread(mActivity, errMessage));
 				new ToastMessageThread(mActivity, errMessage).start();
 			}
+		}
+	}
+	
+	private void doRegisterUser(final String email){
+		mSignUp = true;
+		ProgressChangeText(getString(R.string.progress_signup));
+		ProgressShow();
+		if(mController.registerUser(email)){
+			doLogin(email);
+		}else{
+			ProgressDismiss();
+			new ToastMessageThread(mActivity, R.string.toast_something_wrong);
 		}
 	}
 	

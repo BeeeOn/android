@@ -78,6 +78,7 @@ public final class Constants {
 	 */
 	public static final String ADDSENSOR_COUNT_SENSOR = "countofuninitsensor";
 	public static final String CANCEL = "cancel";
+	public static final String NOADAPTER = "noadapter";
 	
 	/**
 	 *  Project number from the API Console

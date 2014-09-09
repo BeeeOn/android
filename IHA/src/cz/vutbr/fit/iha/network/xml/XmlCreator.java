@@ -201,7 +201,7 @@ public class XmlCreator {
 			serializer.attribute(ns, VERSION, GVER);
 			
 				serializer.startTag(ns, ADAPTER);
-				serializer.attribute(ns, SERIAL, serialNumber);
+				serializer.attribute(ns, ID, serialNumber);
 				serializer.attribute(ns, NAME, adapterName);
 				serializer.endTag(ns, ADAPTER);
 				
