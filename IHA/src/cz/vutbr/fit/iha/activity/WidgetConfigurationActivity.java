@@ -139,7 +139,7 @@ public class WidgetConfigurationActivity extends BaseActivity {
 			Spinner s = (Spinner) findViewById(R.id.sensor);
 
 			for (int i = 0; i < s.getCount(); i++) {
-				Facility device = (Facility) s.getItemAtPosition(i);
+				BaseDevice device = (BaseDevice) s.getItemAtPosition(i);
 				if (device.getId().equals(id)) {
 					s.setSelection(i);
 					break;
