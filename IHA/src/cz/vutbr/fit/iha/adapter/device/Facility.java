@@ -13,21 +13,18 @@ import android.text.format.Time;
  * @author Robyer
  */
 public class Facility {
-	protected boolean mInitialized;
+	protected String mAdapterId;
 	protected String mLocationId;
+	protected boolean mInitialized;
 	protected RefreshInterval mRefreshInterval;	
 	protected int mBattery;
 	protected boolean mLogging;
 	protected String mInvolveTime = "";
 	protected boolean mVisibility;
-	
 	protected NetworkState mNetwork = new NetworkState();
-	
-	public final Time lastUpdate = new Time();
-	
 	protected final List<BaseDevice> mDevices = new ArrayList<BaseDevice>();
-	
-	protected String mAdapterId;
+
+	public final Time lastUpdate = new Time();
 	
 	/**
 	 * Class constructor
@@ -234,8 +231,8 @@ public class Facility {
 	 * @return
 	 */
 	public String toDebugString() {
-		return String.format("Id: %s\nLocation: %s\nVisibility: %s\nInitialized: %s\nBattery: %s\nLogging: %s\nRefresh: %s\nDevices: %s",
-			getId(), mLocationId, Boolean.toString(mVisibility), mInitialized, mBattery, mLogging, mRefreshInterval.getInterval(), Integer.toString(mDevices.size()));
+		return String.format("Id: %s\nAdapter: %s\nLocation: %s\nVisibility: %s\nInitialized: %s\nBattery: %s\nLogging: %s\nRefresh: %s\nDevices: %s",
+			getId(), mAdapterId, mLocationId, Boolean.toString(mVisibility), mInitialized, mBattery, mLogging, mRefreshInterval.getInterval(), Integer.toString(mDevices.size()));
 	}
 
 	public boolean needsUpdate() {
@@ -274,6 +271,7 @@ public class Facility {
 	 * @param newFacility with data that should be copied
 	 */
 	public void replaceData(Facility newFacility) {
+		setAdapterId(newFacility.getAdapterId());
 		setAddress(newFacility.getAddress());
 		setBattery(newFacility.getBattery());
 		setInitialized(newFacility.isInitialized());

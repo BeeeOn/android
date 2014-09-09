@@ -424,6 +424,11 @@ public final class Controller {
 	 * @return Adapter if found, null otherwise
 	 */
 	public Adapter getAdapterByFacility(Facility facility) {
+		String adapterId = facility.getAdapterId();
+		if (adapterId.length() > 0)
+			return getAdapter(adapterId, false);
+		
+		// FIXME: remove when facilities will have correctly set adapterId 
 		for (Adapter a : getAdapters()) {
 			if (a.getFacilityById(facility.getId()) != null)
 				return a; 

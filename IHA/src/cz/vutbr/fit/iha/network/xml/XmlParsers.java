@@ -187,6 +187,7 @@ public class XmlParsers {
 		State state = State.fromValue(getSecureAttrValue(ns, STATE));
 		String id = getSecureAttrValue(ns, ID);
 		String version = getSecureAttrValue(ns, VERSION);
+		String adapterId = getSecureAttrValue(ns, "adapter"); // FIXME: get adapterId correctly, this doesn't seem to work
 		
 		if(!version.equals(COM_VER))
 			throw new ComVerMisException(mComVerMisExcMessage + "Expected: " + COM_VER + " but got: " + version);
@@ -214,7 +215,7 @@ public class XmlParsers {
 				break;
 			case DEVICES:
 				// List<Facility>
-				result.data = parseFacilities();
+				result.data = parseFacilities(adapterId);
 				break;
 			case ADAPTERSREADY:
 				// List<Adapter>
@@ -269,6 +270,8 @@ public class XmlParsers {
 		mParser.nextTag();
 		mParser.require(XmlPullParser.START_TAG, ns, ADAPTER);
 		
+		String adapterId = getSecureAttrValue(ns, "id"); // FIXME: get adapterId correctly, this doesn't seem to work
+
 		//unused
 //		getSecureAttrValue(ns, ID);
 		mParser.nextTag();
@@ -280,7 +283,7 @@ public class XmlParsers {
 			
 			mParser.nextTag();
 			mParser.require(XmlPullParser.START_TAG, ns, CAPABILITIES);
-			return parseFacilities();
+			return parseFacilities(adapterId);
 	}
 	
 	/**
@@ -290,7 +293,7 @@ public class XmlParsers {
 	 * @throws IOException
 	 * @throws ParseException 
 	 */
-	private List<Facility> parseFacilities() throws XmlPullParserException, IOException, ParseException{
+	private List<Facility> parseFacilities(String adapterId) throws XmlPullParserException, IOException, ParseException{
 		mParser.nextTag();
 		//mParser.require(XmlPullParser.START_TAG, ns, DEVICE); // strict solution
 		
@@ -322,6 +325,7 @@ public class XmlParsers {
 			if (facility == null) {
 				// This facility is new, first create a object for it
 				facility = new Facility();
+				facility.setAdapterId(adapterId);
 				facility.setAddress(id);
 				facility.setInitialized(initialized);
 				if (!facility.isInitialized()){
