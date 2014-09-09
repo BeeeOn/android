@@ -11,8 +11,9 @@ import com.google.android.gms.gcm.GoogleCloudMessaging;
 
 public class GcmMessageHandler extends IntentService {
 
-     String mes;
-     private Handler handler;
+	String mes;
+	private Handler handler;
+
 	public GcmMessageHandler() {
 		super("GcmMessageHandler");
 	}
@@ -23,31 +24,33 @@ public class GcmMessageHandler extends IntentService {
 		super.onCreate();
 		handler = new Handler();
 	}
+
 	@Override
 	protected void onHandleIntent(Intent intent) {
-        Bundle extras = intent.getExtras();
-        
-        GoogleCloudMessaging gcm = GoogleCloudMessaging.getInstance(this);
-        // The getMessageType() intent parameter must be the intent you received
-        // in your BroadcastReceiver.
-        String messageType = gcm.getMessageType(intent);
+		Bundle extras = intent.getExtras();
 
-       mes = extras.getString("title");
-       showToast();
-       Log.i("GCM", "Received : (" +messageType+")  "+extras.getString("title"));
-       
-              
-        
-        GcmBroadcastReceiver.completeWakefulIntent(intent);
+		GoogleCloudMessaging gcm = GoogleCloudMessaging.getInstance(this);
+		// The getMessageType() intent parameter must be the intent you received
+		// in your BroadcastReceiver.
+		String messageType = gcm.getMessageType(intent);
+
+		mes = extras.getString("title");
+		showToast();
+		Log.i("GCM",
+				"Received : (" + messageType + ")  "
+						+ extras.getString("title"));
+
+		GcmBroadcastReceiver.completeWakefulIntent(intent);
 
 	}
-	
-	public void showToast(){
+
+	public void showToast() {
 		handler.post(new Runnable() {
-		    public void run() {
-		        Toast.makeText(getApplicationContext(),mes , Toast.LENGTH_LONG).show();
-		    }
-		 });
+			public void run() {
+				Toast.makeText(getApplicationContext(), mes, Toast.LENGTH_LONG)
+						.show();
+			}
+		});
 
 	}
 }

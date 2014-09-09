@@ -1,6 +1,9 @@
 package cz.vutbr.fit.iha.activity;
 
 import java.io.IOException;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 import android.accounts.Account;
 import android.accounts.AccountManager;
@@ -32,12 +35,14 @@ import cz.vutbr.fit.iha.R;
 import cz.vutbr.fit.iha.activity.dialog.AddAdapterActivityDialog;
 import cz.vutbr.fit.iha.controller.Controller;
 import cz.vutbr.fit.iha.exception.NotImplementedException;
+import cz.vutbr.fit.iha.gcm.GcmHelper;
 import cz.vutbr.fit.iha.household.ActualUser;
 import cz.vutbr.fit.iha.network.GetGoogleAuth;
 import cz.vutbr.fit.iha.network.exception.CommunicationException;
 import cz.vutbr.fit.iha.network.exception.NoConnectionException;
 import cz.vutbr.fit.iha.network.exception.NotRegException;
 import cz.vutbr.fit.iha.thread.ToastMessageThread;
+import cz.vutbr.fit.iha.util.Utils;
 
 /**
  * First sign in class, controls first activity
@@ -55,19 +60,19 @@ public class LoginActivity extends BaseActivity {
 	private StoppableRunnable mDoGoogleLoginRunnable;
 
 	private static final String TAG = LoginActivity.class.getSimpleName();
-	private static final String TAG_GCM = "IHA_GCM";
 	public static final int USER_RECOVERABLE_AUTH = 5;
 	private static final int GET_GOOGLE_ACCOUNT = 6;
+
 
 	private boolean mIgnoreChange = false;
 	private boolean mSignUp = false;
 
 	private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 1;
-	
-    private GoogleCloudMessaging mGcm;
-    private Context mContext;
-    private String mRegid;
-	
+
+	private GoogleCloudMessaging mGcm;
+	private Context mContext;
+	private String mRegid = null;
+
 	// ////////////////////////////////////////////////////////////////////////////////////
 	// ///////////////// Override METHODS
 	// ///////////////////////////////////////////////
@@ -81,7 +86,7 @@ public class LoginActivity extends BaseActivity {
 		// Get Activity
 		mActivity = this;
 		mContext = this;
-		
+
 		// Get controller
 		mController = Controller.getInstance(this);
 
@@ -102,10 +107,12 @@ public class LoginActivity extends BaseActivity {
 
 		// try to register GCM
 		mGcm = GoogleCloudMessaging.getInstance(this);
-		if (getGCMRegistrationId().isEmpty() && GooglePlayServicesUtil.isGooglePlayServicesAvailable(getBaseContext())== ConnectionResult.SUCCESS) {
-			registerGCMInBackground();
+		if (GcmHelper.getGCMRegistrationId(mContext).isEmpty()
+				&& GooglePlayServicesUtil
+						.isGooglePlayServicesAvailable(getBaseContext()) == ConnectionResult.SUCCESS) {
+			GcmHelper.registerGCMInBackground(mContext);
 		}
-		
+
 		mProgress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
 
 		if (mController.isLoggedIn()) {
@@ -123,7 +130,8 @@ public class LoginActivity extends BaseActivity {
 		String lastEmail = mController.getLastEmail();
 		if (lastEmail.length() > 0) {
 			// Automatic login with last used e-mail
-			Log.d(TAG, String.format("Automatic login with last used e-mail (%s)...", lastEmail));
+			Log.d(TAG, String.format(
+					"Automatic login with last used e-mail (%s)...", lastEmail));
 
 			mActivity.setDemoMode(false);
 			mProgress.show();
@@ -131,16 +139,18 @@ public class LoginActivity extends BaseActivity {
 		}
 
 		// Demo button
-		((ImageButton) findViewById(R.id.login_btn_demo)).setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				mActivity.setDemoMode(true);
+		((ImageButton) findViewById(R.id.login_btn_demo))
+				.setOnClickListener(new OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						mActivity.setDemoMode(true);
 
-				Intent intent = new Intent(LoginActivity.this, LocationScreenActivity.class);
-				startActivity(intent);
-				LoginActivity.this.finish();
-			}
-		});
+						Intent intent = new Intent(LoginActivity.this,
+								LocationScreenActivity.class);
+						startActivity(intent);
+						LoginActivity.this.finish();
+					}
+				});
 
 		// Get btn for login
 		ImageButton btnGoogle = (ImageButton) findViewById(R.id.login_btn_google);
@@ -163,8 +173,8 @@ public class LoginActivity extends BaseActivity {
 				getMojeIDAccessFromServer(v);
 			}
 		});
-		
-		Log.i("IHA app starting...","___________________________________");
+
+		Log.i("IHA app starting...", "___________________________________");
 	}
 
 	@Override
@@ -264,13 +274,14 @@ public class LoginActivity extends BaseActivity {
 			}
 		}.start();
 	}
-	
+
 	/**
 	 * Method set new text to progress, thread-safe
+	 * 
 	 * @param message
-	 * 				to show
+	 *            to show
 	 */
-	public void ProgressChangeText(final String message){
+	public void ProgressChangeText(final String message) {
 		new Thread() {
 			public void run() {
 				runOnUiThread(new Runnable() {
@@ -283,7 +294,7 @@ public class LoginActivity extends BaseActivity {
 			}
 		}.start();
 	}
-	
+
 	/**
 	 * Method mine users account names
 	 * 
@@ -291,7 +302,8 @@ public class LoginActivity extends BaseActivity {
 	 */
 	private String[] getAccountNames() {
 		AccountManager mAccountManager = AccountManager.get(this);
-		Account[] accounts = mAccountManager.getAccountsByType(GoogleAuthUtil.GOOGLE_ACCOUNT_TYPE);
+		Account[] accounts = mAccountManager
+				.getAccountsByType(GoogleAuthUtil.GOOGLE_ACCOUNT_TYPE);
 		String[] names = new String[accounts.length];
 		for (int i = 0; i < names.length; i++) {
 			names[i] = accounts[i].name;
@@ -306,7 +318,8 @@ public class LoginActivity extends BaseActivity {
 	 */
 	private void beginGoogleAuthRutine(View v) {
 		Log.d(TAG, "BEG: Google access func");
-		int resultCode = GooglePlayServicesUtil.isGooglePlayServicesAvailable(getBaseContext());
+		int resultCode = GooglePlayServicesUtil
+				.isGooglePlayServicesAvailable(getBaseContext());
 		if (resultCode == ConnectionResult.SUCCESS) {
 			// On this device is Google Play, we can proceed
 			Log.d(TAG, "On this device is Google Play, we can proceed");
@@ -316,23 +329,27 @@ public class LoginActivity extends BaseActivity {
 				doGoogleLogin(Accounts[0]);
 			} else {
 				Log.d(TAG, "On this device are more accounts");
-				Intent intent = AccountPicker.newChooseAccountIntent(null, null, new String[] { "com.google" }, false, null, null, null, null);
+				Intent intent = AccountPicker.newChooseAccountIntent(null,
+						null, new String[] { "com.google" }, false, null, null,
+						null, null);
 				startActivityForResult(intent, GET_GOOGLE_ACCOUNT);
 			}
 		} else {
 			// Google Play is missing
 			Log.d(TAG, "Google Play Services is missing or not allowed");
-			
+
 			GooglePlayServicesUtil.getErrorDialog(resultCode, this,
-                    PLAY_SERVICES_RESOLUTION_REQUEST).show();
-			// 20.8. 2014 Martin changed it to system supported dialog which should solve the problem
-//			Toast.makeText(v.getContext(), getString(R.string.toast_play_missing), Toast.LENGTH_LONG).show();
-//			Uri marketUri = Uri.parse("market://details?id=com.google.android.gms");
-//			Intent marketIntent = new Intent(Intent.ACTION_VIEW, marketUri);
-//			startActivity(marketIntent);
-			
-			
-			
+					PLAY_SERVICES_RESOLUTION_REQUEST).show();
+			// 20.8. 2014 Martin changed it to system supported dialog which
+			// should solve the problem
+			// Toast.makeText(v.getContext(),
+			// getString(R.string.toast_play_missing),
+			// Toast.LENGTH_LONG).show();
+			// Uri marketUri =
+			// Uri.parse("market://details?id=com.google.android.gms");
+			// Intent marketIntent = new Intent(Intent.ACTION_VIEW, marketUri);
+			// startActivity(marketIntent);
+
 			mProgress.dismiss();
 		}
 		Log.d(TAG, "END: Google access func");
@@ -347,8 +364,10 @@ public class LoginActivity extends BaseActivity {
 	 */
 	private void doGoogleLogin(final String email) {
 		ProgressShow();
-		if(!mController.isInternetAvailable()){
-			Toast.makeText(mActivity, getString(R.string.toast_internet_connection), Toast.LENGTH_LONG).show();
+		if (!mController.isInternetAvailable()) {
+			Toast.makeText(mActivity,
+					getString(R.string.toast_internet_connection),
+					Toast.LENGTH_LONG).show();
 			ProgressDismiss();
 			return;
 		}
@@ -360,27 +379,32 @@ public class LoginActivity extends BaseActivity {
 
 				@Override
 				public void run() {
-					if(!ggAuth.doInForeground(true)){
+					String gcmId = GcmHelper.getGCMRegistrationId(mContext);
+					// try to register again in 1 second, otherwise register in
+					// separate thread
+					if (gcmId.isEmpty()) {
+						GcmHelper.registerGCMInForeground(mContext);
+						gcmId = GcmHelper.getGCMRegistrationId(mContext);
+						// if it still doesn't have GCM ID, try it repeatedly in
+						// new thread
+						if (gcmId.isEmpty()) {
+							GcmHelper.registerGCMInBackground(mContext);
+							Log.e(GcmHelper.TAG_GCM, "GCM ID is not accesible, creating new thread for ");
+						}
+					}
+
+					Log.i(GcmHelper.TAG_GCM, "GCM ID: " + gcmId);
+
+					if (!ggAuth.doInForeground(true)) {
 						Log.e("Login", "exception in ggAuth");
 						return;
 					}
-					
-					
-//					GetGoogleAuth ggAuth = GetGoogleAuth.getGetGoogleAuth();
-					ActualUser user = mController.getActualUser();
-					user.setName(ggAuth.getUserName());
-					user.setEmail(ggAuth.getEmail());
-					user.setPicture(ggAuth.getPictureIMG());
-					
+					// FIXME: I think name and email should be saved on IHA
+					// server and loaded from there. It should be used from
+					// google only in registration, no?
+
 					doLogin(email);
-					
-					String gcmId = getGCMRegistrationId();
-					if (!gcmId.isEmpty()) {
-						Log.i(TAG_GCM, "GCM ID: " + gcmId);
-						
-						// TODO: register in server, Network is ready wait for controller and server
-					}
-					
+
 					Log.d(TAG, "Finish google auth");
 				}
 			};
@@ -419,27 +443,24 @@ public class LoginActivity extends BaseActivity {
 	private void doLogin(final String email) {
 		String errMessage = null;
 		boolean errFlag = false;
-		
+
 		try {
 			if (mController.login(email)) {
 				Log.d(TAG, "Login: true");
-//				try {
-//					GetGoogleAuth ggAuth = GetGoogleAuth.getGetGoogleAuth();
-//					ActualUser user = mController.getActualUser();
-//					user.setName(ggAuth.getUserName());
-//					user.setEmail(ggAuth.getEmail());
-//					user.setPicture(ggAuth.getPictureIMG());
-//				} catch (Exception e) {
-//					e.printStackTrace();
-//				}
+				try {
+					GetGoogleAuth ggAuth = GetGoogleAuth.getGetGoogleAuth();
+					ActualUser user = mController.getActualUser();
+					user.setName(ggAuth.getUserName());
+					user.setEmail(ggAuth.getEmail());
+					user.setPicture(ggAuth.getPictureIMG());
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 				ProgressDismiss();
 				if (!mDoGoogleLoginRunnable.isStopped()) {
-					Intent intent = new Intent(mActivity, LocationScreenActivity.class);
-					if(mSignUp){
-						Bundle bundle = new Bundle();
-						bundle.putBoolean(Constants.NOADAPTER, true);
-						intent.putExtras(bundle);
-					}
+					Intent intent = new Intent(mActivity,
+							LocationScreenActivity.class);
 					mActivity.startActivity(intent);
 					mActivity.finish();
 				}
@@ -450,33 +471,32 @@ public class LoginActivity extends BaseActivity {
 			}
 		} catch (NotRegException e) {
 			e.printStackTrace();
-			if(!mSignUp)
-				doRegisterUser(email);
-			
-//			try { //FIXME: this is 2x here, fix this after demo
-//				GetGoogleAuth ggAuth = GetGoogleAuth.getGetGoogleAuth();
-//				ActualUser user = mController.getActualUser();
-//				user.setName(ggAuth.getUserName());
-//				user.setEmail(ggAuth.getEmail());
-//				user.setPicture(ggAuth.getPictureIMG());
-//			} catch (Exception e1) {
-//				// TODO Auto-generated catch block
-//				e1.printStackTrace();
-//			} 
-			
+			try { // FIXME: this is 2x here, fix this after demo
+				GetGoogleAuth ggAuth = GetGoogleAuth.getGetGoogleAuth();
+				ActualUser user = mController.getActualUser();
+				user.setName(ggAuth.getUserName());
+				user.setEmail(ggAuth.getEmail());
+				user.setPicture(ggAuth.getPictureIMG());
+			} catch (Exception e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+
 			// there is unregistered adapter and we go to register it
-			//FIXME: repair this after de
-//			Intent intent = new Intent(LoginActivity.this, AddAdapterActivityDialog.class);
-//			Intent intent = new Intent(LoginActivity.this, LocationScreenActivity.class);
-//			Bundle bundle = new Bundle();
-//			bundle.putBoolean(Constants.CANCEL, false);
-//			intent.putExtras(bundle);
-//			startActivity(intent);
-//		} catch (NotRegBException e) {
-//			e.printStackTrace();
-//
-//			errFlag = true;
-//			errMessage = getString(R.string.toast_no_unregistered_adapter);
+			// FIXME: repair this after de
+			Intent intent = new Intent(LoginActivity.this,
+					AddAdapterActivityDialog.class);
+			// Intent intent = new Intent(LoginActivity.this,
+			// LocationScreenActivity.class);
+			Bundle bundle = new Bundle();
+			bundle.putBoolean(Constants.CANCEL, false);
+			intent.putExtras(bundle);
+			startActivity(intent);
+			// } catch (NotRegBException e) {
+			// e.printStackTrace();
+			//
+			// errFlag = true;
+			// errMessage = getString(R.string.toast_no_unregistered_adapter);
 		} catch (NoConnectionException e) {
 			e.printStackTrace();
 
@@ -495,151 +515,13 @@ public class LoginActivity extends BaseActivity {
 		} finally {
 			ProgressDismiss();
 			if (errFlag) {
-				// alternate form: //mActivity.runOnUiThread(new ToastMessageThread(mActivity, errMessage));
+				// alternate form: //mActivity.runOnUiThread(new
+				// ToastMessageThread(mActivity, errMessage));
 				new ToastMessageThread(mActivity, errMessage).start();
 			}
 		}
 	}
-	
-	private void doRegisterUser(final String email){
-		mSignUp = true;
-		ProgressChangeText(getString(R.string.progress_signup));
-		ProgressShow();
-		if(mController.registerUser(email)){
-			doLogin(email);
-		}else{
-			ProgressDismiss();
-			new ToastMessageThread(mActivity, R.string.toast_something_wrong);
-		}
-	}
-	
-	// //////////////////////////////////////////////////////////////////////////////////
-	//////////////////////  GCM METHODS
-	/////////////////////////////////////////////////////////////////////////////////////
-	/**
-	 * @return Application's {@code SharedPreferences}.
-	 */
-	protected SharedPreferences getGCMPreferences() {
-	    // This sample app persists the registration ID in shared preferences, but
-	    // how you store the regID in your app is up to you.
-	    return getSharedPreferences(Constants.SHARED_PREF_GCM_NAME,
-	            Context.MODE_PRIVATE);
-	}
-	
-	/**
-	 * Gets the current registration ID for application on GCM service.
-	 * <p>
-	 * If result is empty, the app needs to register.
-	 *
-	 * @return registration ID, or empty string if there is no existing
-	 *         registration ID.
-	 */
-	private String getGCMRegistrationId() {
-	    final SharedPreferences prefs = getGCMPreferences();
-	    String registrationId = prefs.getString(Constants.PREF_GCM_REG_ID, "");
-	    if (registrationId.isEmpty()) {
-	        Log.i(TAG_GCM, "GCM: Registration not found.");
-	        return "";
-	    }
-	    // Check if app was updated; if so, it must clear the registration ID
-	    // since the existing regID is not guaranteed to work with the new
-	    // app version.
-	    int registeredVersion = prefs.getInt(Constants.PREF_GCM_APP_VERSION, Integer.MIN_VALUE);
-	    int currentVersion = getAppVersion(mContext);
-	    if (registeredVersion != currentVersion) {
-	        Log.i(TAG_GCM, "GCM: App version changed.");
-	        return "";
-	    }
-	    return registrationId;
-	}
-	
-	/**
-	 * @return Application's version code from the {@code PackageManager}.
-	 */
-	private static int getAppVersion(Context context) {
-	    try {
-	        PackageInfo packageInfo = context.getPackageManager()
-	                .getPackageInfo(context.getPackageName(), 0);
-	        return packageInfo.versionCode;
-	    } catch (NameNotFoundException e) {
-	        // should never happen
-	        throw new RuntimeException("Could not get package name: " + e);
-	    }
-	}
-	
-	/**
-	 * Registers the application with GCM servers asynchronously.
-	 * <p>
-	 * Stores the registration ID and app versionCode in the application's
-	 * shared preferences.
-	 */
-	private void registerGCMInBackground() {
-	    new AsyncTask<Void, Void, String>() {
-	        @Override
-	        protected String doInBackground(Void... params) {
-	            String msg = "";
-	            try {
-	                if (mGcm == null) {
-	                    mGcm = GoogleCloudMessaging.getInstance(mContext);
-	                }
-	                mRegid = mGcm.register(Constants.PROJECT_NUMBER);
-	                msg = "Device registered, registration ID=" + mRegid;
 
-	                // You should send the registration ID to your server over HTTP,
-	                // so it can use GCM/HTTP or CCS to send messages to your app.
-	                // The request to your server should be authenticated if your app
-	                // is using accounts.
-	                sendGCMRegistrationIdToBackend();
-
-	                // For this demo: we don't need to send it because the device
-	                // will send upstream messages to a server that echo back the
-	                // message using the 'from' address in the message.
-
-	                // Persist the regID - no need to register again.
-	                storeGCMRegistrationId(mContext, mRegid);
-	            } catch (IOException ex) {
-	                msg = "Error :" + ex.getMessage();
-	                // If there is an error, don't just keep trying to register.
-	                // Require the user to click a button again, or perform
-	                // exponential back-off.
-	            }
-	            return msg;
-	        }
-
-	        @Override
-	        protected void onPostExecute(String msg) {
-	            Log.i(TAG_GCM, msg);
-	        }
-	    }.execute(null, null, null);
-	}
-	
-	/**
-	 * Sends the registration ID to your server over HTTP, so it can use GCM/HTTP
-	 * or CCS to send messages to your app. Not needed for this demo since the
-	 * device sends upstream messages to a server that echoes back the message
-	 * using the 'from' address in the message.
-	 */
-	private void sendGCMRegistrationIdToBackend() {
-	    // Your implementation here.
-	}
-	
-	/**
-	 * Stores the registration ID and app versionCode in the application's
-	 * {@code SharedPreferences}.
-	 *
-	 * @param context application's context.
-	 * @param regId registration ID
-	 */
-	private void storeGCMRegistrationId(Context context, String regId) {
-	    final SharedPreferences prefs = getGCMPreferences();
-	    int appVersion = getAppVersion(context);
-	    Log.i(TAG_GCM, "Saving regId on app version " + appVersion);
-	    SharedPreferences.Editor editor = prefs.edit();
-	    editor.putString(Constants.PREF_GCM_REG_ID, regId);
-	    editor.putInt(Constants.PREF_GCM_APP_VERSION, appVersion);
-	    editor.commit();
-	}
-	
 	// ////////////////////////////////////////////////////////////////////////////////////
 	// ///////////////// TODO METHODS
 	// /////////////////////////////////////////////////
@@ -647,7 +529,8 @@ public class LoginActivity extends BaseActivity {
 
 	private boolean getMojeIDAccessFromServer(View v) {
 		// TODO: get access via mojeID
-		Toast.makeText(v.getContext(), "Not Implemented yet", Toast.LENGTH_LONG).show();
+		Toast.makeText(v.getContext(), "Not Implemented yet", Toast.LENGTH_LONG)
+				.show();
 		return false;
 	}
 }
