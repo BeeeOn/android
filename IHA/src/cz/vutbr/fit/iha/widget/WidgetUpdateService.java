@@ -80,7 +80,7 @@ public class WidgetUpdateService extends Service {
     public int onStartCommand(final Intent intent, int flags, int startId) {
     	super.onStartCommand(intent, flags, startId);
     	
-    	Log.d(TAG, String.format("onStartCommand(), startId = %d", startId));
+    	Log.v(TAG, String.format("onStartCommand(), startId = %d", startId));
     	
     	if (!intent.getBooleanExtra(EXTRA_FORCE_UPDATE, false)) {
     		// set alarm for next update
@@ -92,7 +92,7 @@ public class WidgetUpdateService extends Service {
     	// don't update when screen is off
 	    PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
 	    if (!pm.isScreenOn()) {
-	    	Log.d(TAG, "Screen is off, exiting...");
+	    	Log.v(TAG, "Screen is off, exiting...");
 	    	stopSelf();
 	        return START_NOT_STICKY;
 	    }
@@ -155,12 +155,12 @@ public class WidgetUpdateService extends Service {
 				.edit()
 				.putLong(Constants.WIDGET_PREF_LAST_UPDATE, now)
 				.commit();
-			
+
 			// update widget		        
 	        widgetProvider.updateWidget(this, widgetId, device);				
 		}
 	}
-	
+
 	private long calcNextUpdate() {
 		int minInterval = 0;
 		long nextUpdate = 0;

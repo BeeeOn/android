@@ -53,6 +53,9 @@ public final class Constants {
 	public static final String WIDGET_PREF_LAST_UPDATE = "lastUpdate";
 	public static final String WIDGET_PREF_INITIALIZED = "initialized";
 	public static final String WIDGET_PREF_DEVICE = "device";
+	public static final String WIDGET_PREF_DEVICE_NAME = "device_name";
+	public static final String WIDGET_PREF_DEVICE_ICON = "device_icon";
+	public static final String WIDGET_PREF_DEVICE_VALUE = "device_value";
 	
 	/**
 	 * Persistence's shared preferences

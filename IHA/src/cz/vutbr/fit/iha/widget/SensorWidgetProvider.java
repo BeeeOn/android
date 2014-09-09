@@ -107,24 +107,46 @@ public class SensorWidgetProvider extends AppWidgetProvider {
     	//Log.d(TAG, "updateWidget()");
     	AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
         
+    	SharedPreferences settings = getSettings(context, widgetId);
+    	
     	// set layout resource from settings
-    	int layout = getSettings(context, widgetId).getInt(Constants.WIDGET_PREF_LAYOUT, R.layout.widget_sensor);
+    	int layout = settings.getInt(Constants.WIDGET_PREF_LAYOUT, R.layout.widget_sensor);
         RemoteViews remoteViews = new RemoteViews(context.getPackageName(), layout);
         
+        int icon = 0;
+        String name = "";
+        String value = "";
+        
         if (device != null) {
-	        int icon = device.getTypeIconResource();
-	        if (icon == 0) {
-	        	icon = R.drawable.ic_launcher;
-	        }
-	        
-	        remoteViews.setImageViewResource(R.id.icon, icon);
-			remoteViews.setTextViewText(R.id.name, device.getName());
-			remoteViews.setTextViewText(R.id.value, device.getStringValueUnit(context));
+        	// Load values from device
+        	icon = device.getTypeIconResource();
+        	name = device.getName();
+        	value = device.getStringValueUnit(context);
+        	
+        	// Cache these values
+			Log.v(TAG, String.format("Saving widget (%d) data to cache", widgetId));
+			
+			settings
+	    		.edit()
+	    		.putInt(Constants.WIDGET_PREF_DEVICE_ICON, icon)
+	    		.putString(Constants.WIDGET_PREF_DEVICE_NAME, name)
+	    		.putString(Constants.WIDGET_PREF_DEVICE_VALUE, value)
+				.commit();
         } else {
-        	// device doesn't exists - was removed or something
-			remoteViews.setTextViewText(R.id.name, context.getString(R.string.placeholder_not_exists));
-			remoteViews.setTextViewText(R.id.value, "");
+        	// Device doesn't exists -> try to load values from cache
+			Log.v(TAG, String.format("Loading widget (%d) data from cache", widgetId));
+
+        	icon = settings.getInt(Constants.WIDGET_PREF_DEVICE_ICON, 0);
+        	name = settings.getString(Constants.WIDGET_PREF_DEVICE_NAME, context.getString(R.string.placeholder_not_exists)); 
+        	value = settings.getString(Constants.WIDGET_PREF_DEVICE_VALUE, "");
+        	
+        	name += " (cached)"; // NOTE: just temporary solution until it will be showed better on widget
         }
+        
+        remoteViews.setImageViewResource(R.id.icon, icon == 0 ? R.drawable.ic_launcher : icon);
+		remoteViews.setTextViewText(R.id.name, name);
+		remoteViews.setTextViewText(R.id.value, value);
+		
 		
 		// register an onClickListener
 		PendingIntent pendingIntent;
