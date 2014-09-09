@@ -1,10 +1,5 @@
 package cz.vutbr.fit.iha.activity;
 
-import java.io.IOException;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
-
 import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.app.ProgressDialog;
@@ -12,11 +7,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnCancelListener;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.res.Configuration;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -42,7 +33,6 @@ import cz.vutbr.fit.iha.network.exception.CommunicationException;
 import cz.vutbr.fit.iha.network.exception.NoConnectionException;
 import cz.vutbr.fit.iha.network.exception.NotRegException;
 import cz.vutbr.fit.iha.thread.ToastMessageThread;
-import cz.vutbr.fit.iha.util.Utils;
 
 /**
  * First sign in class, controls first activity
@@ -69,9 +59,7 @@ public class LoginActivity extends BaseActivity {
 
 	private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 1;
 
-	private GoogleCloudMessaging mGcm;
 	private Context mContext;
-	private String mRegid = null;
 
 	// ////////////////////////////////////////////////////////////////////////////////////
 	// ///////////////// Override METHODS
@@ -106,7 +94,6 @@ public class LoginActivity extends BaseActivity {
 		});
 
 		// try to register GCM
-		mGcm = GoogleCloudMessaging.getInstance(this);
 		if (GcmHelper.getGCMRegistrationId(mContext).isEmpty()
 				&& GooglePlayServicesUtil
 						.isGooglePlayServicesAvailable(getBaseContext()) == ConnectionResult.SUCCESS) {
