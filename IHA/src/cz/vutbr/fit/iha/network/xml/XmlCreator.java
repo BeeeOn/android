@@ -297,16 +297,19 @@ public class XmlCreator {
 			
 			serializer.startTag(ns, COM_ROOT);
 			serializer.attribute(ns, ID, id);
-			serializer.attribute(ns, STATE, SWITCH);
+			serializer.attribute(ns, STATE, DELDEVICE);
 			serializer.attribute(ns, VERSION, GVER);
 			serializer.attribute(ns, ADAPTER, adapterId);
 			
-				for (BaseDevice device : facility.getDevices()) {
-					serializer.startTag(ns, DEVICE);
-					serializer.attribute(ns, ID, facility.getAddress());
-					serializer.attribute(ns, TYPE, formatType(device.getType()));
-					serializer.endTag(ns, DEVICE);
-				}
+//				for (BaseDevice device : facility.getDevices()) {
+//					serializer.startTag(ns, DEVICE);
+//					serializer.attribute(ns, ID, facility.getAddress());
+//					serializer.attribute(ns, TYPE, formatType(device.getType()));
+//					serializer.endTag(ns, DEVICE);
+//				}
+				serializer.startTag(ns, DEVICE);
+				serializer.attribute(ns, ID, facility.getAddress());
+				serializer.endTag(ns, DEVICE);
 			
 			serializer.endTag(ns, COM_ROOT);
 			serializer.endDocument();

@@ -187,7 +187,6 @@ public class XmlParsers {
 		State state = State.fromValue(getSecureAttrValue(ns, STATE));
 		String id = getSecureAttrValue(ns, ID);
 		String version = getSecureAttrValue(ns, VERSION);
-		String adapterId = getSecureAttrValue(ns, "adapter"); // FIXME: get adapterId correctly, this doesn't seem to work
 		
 		if(!version.equals(COM_VER))
 			throw new ComVerMisException(mComVerMisExcMessage + "Expected: " + COM_VER + " but got: " + version);
@@ -215,6 +214,7 @@ public class XmlParsers {
 				break;
 			case DEVICES:
 				// List<Facility>
+				String adapterId = getSecureAttrValue(ns, ADAPTER); // TODO: waiting to server fix problem
 				result.data = parseFacilities(adapterId);
 				break;
 			case ADAPTERSREADY:
@@ -270,10 +270,8 @@ public class XmlParsers {
 		mParser.nextTag();
 		mParser.require(XmlPullParser.START_TAG, ns, ADAPTER);
 		
-		String adapterId = getSecureAttrValue(ns, "id"); // FIXME: get adapterId correctly, this doesn't seem to work
+		String adapterId = getSecureAttrValue(ns, ID);
 
-		//unused
-//		getSecureAttrValue(ns, ID);
 		mParser.nextTag();
 		mParser.require(XmlPullParser.START_TAG, ns, VERSION);
 		
