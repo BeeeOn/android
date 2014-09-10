@@ -74,6 +74,7 @@ public class XmlCreator {
 	public static final String DELGCMID = "delgcmid";
 	public static final String GETNOTIFICATIONS = "getnotifications";
 	public static final String NOTIFICATIONREAD = "notificationread";
+	public static final String GETNEWDEVICES = "getnewdevices";
 	
 	// end of states
 	public static final String USER = "user";
@@ -336,6 +337,33 @@ public class XmlCreator {
 			serializer.startTag(ns, COM_ROOT);
 			serializer.attribute(ns, ID, id);
 			serializer.attribute(ns, STATE, GETALLDEVICES);
+			serializer.attribute(ns, VERSION, GVER);
+			serializer.attribute(ns, ADAPTER, adapterId);
+			serializer.endTag(ns, COM_ROOT);
+			serializer.endDocument();
+			
+			return writer.toString();
+		}catch(Exception e){
+			throw new RuntimeException(e);
+		}
+	}
+	
+	/**
+	 * Method create XML for getting uninitialized devices
+	 * @param id of user
+	 * @param adapterId of wanted adapter
+	 * @return XML of GetNewDevices message
+	 */
+	public static String createGetNewDevices(String id, String adapterId){
+		XmlSerializer serializer = Xml.newSerializer();
+		StringWriter writer = new StringWriter();
+		try{
+			serializer.setOutput(writer);
+			serializer.startDocument("UTF-8", null);
+			
+			serializer.startTag(ns, COM_ROOT);
+			serializer.attribute(ns, ID, id);
+			serializer.attribute(ns, STATE, GETNEWDEVICES);
 			serializer.attribute(ns, VERSION, GVER);
 			serializer.attribute(ns, ADAPTER, adapterId);
 			serializer.endTag(ns, COM_ROOT);

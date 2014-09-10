@@ -30,6 +30,7 @@ import cz.vutbr.fit.iha.network.GoogleAuth;
 import cz.vutbr.fit.iha.network.Network;
 import cz.vutbr.fit.iha.network.exception.FalseException;
 import cz.vutbr.fit.iha.network.exception.NetworkException;
+import cz.vutbr.fit.iha.network.xml.UtcAdapterPair;
 import cz.vutbr.fit.iha.persistence.Persistence;
 
 /**
@@ -248,7 +249,9 @@ public final class Controller {
 			// Update adapter with new data
 			adapter.setLocations(mNetwork.getLocations(adapter.getId()));
 			adapter.setUtcOffset(mNetwork.getTimeZone(adapter.getId()));
-			adapter.setFacilities(mNetwork.init(adapter.getId()));
+			UtcAdapterPair utcadapterpair = mNetwork.init(adapter.getId());
+			adapter.setUtcOffset(utcadapterpair.UTC);
+			adapter.setFacilities(utcadapterpair.Facilities);
 
 			adapter.lastUpdate.setToNow();
 			result = true;

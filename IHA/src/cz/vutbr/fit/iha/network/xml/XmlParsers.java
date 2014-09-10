@@ -226,7 +226,7 @@ public class XmlParsers {
 				result.data = getSecureAttrValue(ns, ADDITIONALINFO);
 				break;
 			case ALLDEVICES:
-				// List<Facility>
+				// UtcAdapterPair
 				result.data = parseAllFacilities();
 				break;
 			case VIEWSLIST:
@@ -266,11 +266,12 @@ public class XmlParsers {
 	 * @throws XmlVerMisException means XML version mismatch exception
 	 * @throws ParseException 
 	 */
-	private List<Facility> parseAllFacilities() throws XmlPullParserException, IOException, XmlVerMisException, ParseException{
+	private UtcAdapterPair parseAllFacilities() throws XmlPullParserException, IOException, XmlVerMisException, ParseException{
 		mParser.nextTag();
 		mParser.require(XmlPullParser.START_TAG, ns, ADAPTER);
 		
 		String adapterId = getSecureAttrValue(ns, ID);
+		int utc = getSecureInt(getSecureAttrValue(ns, UTC));
 
 		mParser.nextTag();
 		mParser.require(XmlPullParser.START_TAG, ns, VERSION);
@@ -281,7 +282,7 @@ public class XmlParsers {
 			
 			mParser.nextTag();
 			mParser.require(XmlPullParser.START_TAG, ns, CAPABILITIES);
-			return parseFacilities(adapterId);
+			return new UtcAdapterPair(parseFacilities(adapterId), utc);
 	}
 	
 	/**
@@ -809,7 +810,8 @@ public class XmlParsers {
 			mParser = Xml.newPullParser();
 			mParser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false);
 			mParser.setInput(stream, null);
-			result = parseAllFacilities();
+			//TODO: repair this
+			result = parseAllFacilities().Facilities;
 		} catch (Exception e) {
 			Log.e(TAG, e.getMessage(), e);
 		} finally {

@@ -51,6 +51,7 @@ import cz.vutbr.fit.iha.network.exception.NotRegBException;
 import cz.vutbr.fit.iha.network.xml.CustomViewPair;
 import cz.vutbr.fit.iha.network.xml.FalseAnswer;
 import cz.vutbr.fit.iha.network.xml.ParsedMessage;
+import cz.vutbr.fit.iha.network.xml.UtcAdapterPair;
 import cz.vutbr.fit.iha.network.xml.XmlCreator;
 import cz.vutbr.fit.iha.network.xml.XmlParsers;
 import cz.vutbr.fit.iha.network.xml.XmlParsers.State;
@@ -131,7 +132,7 @@ public class Network {
 	private String mSessionId;
 	private boolean mUseDebugServer;
 	private boolean mGoogleReinit;
-
+	
 	/**
 	 * Constructor.
 	 * 
@@ -503,16 +504,15 @@ public class Network {
 	 * @throws NoConnectionException
 	 * @throws CommunicationException
 	 */
-	@SuppressWarnings("unchecked")
-	public List<Facility> init(String adapterId) throws NoConnectionException, CommunicationException, FalseException {
+	public UtcAdapterPair init(String adapterId) throws NoConnectionException, CommunicationException, FalseException {
 		String messageToSend = XmlCreator.createGetAllDevices(mSessionId, adapterId);
 		ParsedMessage msg = doRequest(messageToSend);
-		List<Facility> result = new ArrayList<Facility>();
+		UtcAdapterPair result = new UtcAdapterPair(new ArrayList<Facility>(), 0);
 
 		if (msg.getState() == State.ALLDEVICES) {
 			Log.i(TAG, msg.getState().getValue());
 
-			result = (ArrayList<Facility>) msg.data;
+			result = (UtcAdapterPair) msg.data;
 		} else if (msg.getState() == State.RESIGN) {
 			doResign();
 			return init(adapterId);
@@ -750,6 +750,35 @@ public class Network {
 		return result;
 	}
 
+	/**
+	 * TODO: need to test
+	 * @param adapterId
+	 * @param facilities
+	 * @return
+	 * @throws NoConnectionException
+	 * @throws CommunicationException
+	 * @throws FalseException
+	 */
+	@SuppressWarnings("unchecked")
+	public List<Facility> getNewFacilities(String adapterId) throws NoConnectionException, CommunicationException, FalseException {
+		String messageToSend = XmlCreator.createGetNewDevices(mSessionId, adapterId);
+		ParsedMessage msg = doRequest(messageToSend);
+		
+		List<Facility> result = new ArrayList<Facility>();
+
+		if (msg.getState() == State.DEVICES) {
+			Log.i(TAG, msg.getState().getValue());
+			
+			result.addAll((List<Facility>) msg.data);
+		} else if (msg.getState() == State.RESIGN) {
+			doResign();
+			return getNewFacilities(adapterId);
+		} else if (msg.getState() == State.FALSE) {
+			throw new FalseException(((FalseAnswer) msg.data));
+		}
+		return result;
+	}
+	
 	/**
 	 * Method ask for data of logs
 	 * 
