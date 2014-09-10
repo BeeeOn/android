@@ -465,8 +465,8 @@ public class SensorDetailFragment extends SherlockFragment {
 		minimum = -1.0;
 		
 		mGraphView.getGraphViewStyle().setTextSize(getResources().getDimension(R.dimen.textsizesmaller));
-		mGraphView.getGraphViewStyle().setVerticalLabelsColor(getResources().getColor(R.color.iha_primary_cyan));
-		mGraphView.getGraphViewStyle().setHorizontalLabelsColor(getResources().getColor(R.color.iha_primary_cyan));
+		mGraphView.getGraphViewStyle().setVerticalLabelsColor(getResources().getColor(R.color.iha_text_hint));
+		mGraphView.getGraphViewStyle().setHorizontalLabelsColor(getResources().getColor(R.color.iha_text_hint));
 		//mGraphView.getGraphViewStyle().setVerticalLabelsWidth(60);
 		//mGraphView.getGraphViewStyle().setNumHorizontalLabels(2);
 		mGraphView.setBackgroundColor(getResources().getColor(R.color.alpha_blue));//getResources().getColor(R.color.log_blue2));

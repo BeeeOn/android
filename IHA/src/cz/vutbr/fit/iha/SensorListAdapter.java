@@ -20,28 +20,32 @@ public class SensorListAdapter extends BaseAdapter {
 	private String[] mUnit;
 	private Time[] mTime;
 	private int[] mIcon;
+	private int[] mRelPos;
+	private int[] mFacSize;
 	private LayoutInflater inflater;
-	// private int mCount;
+	private int mCount;
 	private int mLenght;
 	
 	private final Controller mController;
 
 	public SensorListAdapter(Context context, String[] title, String[] value,
-			String[] unit, Time[] time, int[] icon) {
+			String[] unit, Time[] time, int[] icon, int[] relPos, int[] facSize) {
 		mContext = context;
 		mTitle = title;
 		mValue = value;
 		mIcon = icon;
 		mUnit = unit;
 		mTime = time;
+		mRelPos = relPos;
+		mFacSize = facSize;
 		mLenght = mTitle.length;
 		mController = Controller.getInstance(context);
-		// mCount = mTitle.length;
+		mCount = mTitle.length+1;
 	}
 
 	@Override
 	public int getCount() {
-		return mLenght;
+		return mCount;
 	}
 
 	@Override
@@ -56,20 +60,20 @@ public class SensorListAdapter extends BaseAdapter {
 
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
-		// if(position < mLenght)
-		// {
-		return addItem(position, convertView, parent);
-		// }
-		// return addAddSensor(convertView,parent);
+		if(position < mLenght)
+		{
+			return addItem(position, convertView, parent);
+		}
+		return addAddSensor(convertView,parent);
 	}
 
-	/*
-	 * private View addAddSensor(View convertView, ViewGroup parent) { inflater
-	 * = (LayoutInflater)
-	 * mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE); View itemView
-	 * = inflater.inflate(R.layout.sensor_listview_addsensor, parent,false);
-	 * return itemView; }
-	 */
+	
+	private View addAddSensor(View convertView, ViewGroup parent) {
+		inflater = (LayoutInflater)	mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE); 
+		View itemView = inflater.inflate(R.layout.sensor_listview_addsensor, parent,false);
+		return itemView;
+	}
+	 
 
 	private View addItem(int position, View convertView, ViewGroup parent) {
 		// Declare Variables
@@ -94,7 +98,7 @@ public class SensorListAdapter extends BaseAdapter {
 		imgIcon = (ImageView) itemView.findViewById(R.id.iconofsensor);
 
 		// Set the results into TextViews
-		txtTitle.setText(mTitle[position]);
+		txtTitle.setText(mTitle[position] + mRelPos[position]+"/"+mFacSize[position]);
 		txtValue.setText(mValue[position]);
 		txtUnit.setText(mUnit[position]);
 		txtTime.setText(String.format(

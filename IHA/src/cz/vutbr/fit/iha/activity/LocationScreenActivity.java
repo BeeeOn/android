@@ -89,6 +89,9 @@ public class LocationScreenActivity extends BaseActivity {
 	private ListView mSensorList;
 
 	private CharSequence mTitle;
+	
+	private int mCntOfAllDev;
+	private String mActLocID;
 
 	private static boolean inBackground = false;
 	private static boolean isPaused = false;
@@ -114,6 +117,7 @@ public class LocationScreenActivity extends BaseActivity {
 	private static boolean mIsDrawerOpen;
 
 	private List<BaseDevice> mDevices;
+	private List<Facility> mFacilities;
 	private Handler mTimeHandler = new Handler();
 	private Runnable mTimeRun;
 
@@ -589,7 +593,7 @@ public class LocationScreenActivity extends BaseActivity {
 	}
 
 	private void setEmptyDevices() {
-		getDevices(new ArrayList<BaseDevice>());
+		getDevices(new ArrayList<Facility>());
 	}
 
 	private void changeLocation(Location location, boolean closeDrawer) {
@@ -613,7 +617,7 @@ public class LocationScreenActivity extends BaseActivity {
 		}
 	}
 
-	public boolean getDevices(final List<BaseDevice> devices) {
+	public boolean getDevices(final List<Facility> facilities) {
 		Log.d(TAG, "LifeCycle: getsensors start");
 
 		String[] title;
@@ -621,15 +625,17 @@ public class LocationScreenActivity extends BaseActivity {
 		String[] unit;
 		Time[] time;
 		int[] icon;
+		int[] relPos;
+		int[] facSize;
 		mTitle = mDrawerTitle = "IHA";
 
 		// TODO: this works, but its not the best solution
 		if (!ListOfDevices.ready) {
-			mDevices = devices;
+			mFacilities = facilities;
 			mTimeRun = new Runnable() {
 				@Override
 				public void run() {
-					getDevices(mDevices);
+					getDevices(mFacilities);
 					Log.d(TAG, "LifeCycle: getsensors in timer");
 				}
 			};
@@ -643,19 +649,38 @@ public class LocationScreenActivity extends BaseActivity {
 
 		mSensorList = (ListView) findViewById(R.id.listviewofsensors);
 		TextView nosensor = (TextView) findViewById(R.id.nosensorlistview);
-
-		title = new String[devices.size()];
-		value = new String[devices.size()];
-		unit = new String[devices.size()];
-		icon = new int[devices.size()];
-		time = new Time[devices.size()];
-		for (int i = 0; i < devices.size(); i++) {
-			title[i] = devices.get(i).getName();
-			value[i] = devices.get(i).getStringValue();
-			unit[i] = devices.get(i).getStringUnit(this);
-			icon[i] = devices.get(i).getTypeIconResource();
-			time[i] = devices.get(i).getFacility().lastUpdate;
+		
+		mCntOfAllDev = 0;
+		for (Facility facility : facilities) {
+			mCntOfAllDev += facility.getDevices().size();
 		}
+		
+		title 				= new String[mCntOfAllDev];
+		value 				= new String[mCntOfAllDev];
+		unit 				= new String[mCntOfAllDev];
+		icon 				= new int[mCntOfAllDev];
+		time 				= new Time[mCntOfAllDev];
+		relPos				= new int[mCntOfAllDev];
+		facSize				= new int[mCntOfAllDev];
+		
+		int iDev = 0;
+		int relDev = 0;
+		for (Facility facility : facilities) {
+			relDev = 0;
+			for( BaseDevice device : facility.getDevices() ) {
+				title[iDev] 	= device.getName();
+				value[iDev] 	= device.getStringValue();
+				unit[iDev] 		= device.getStringUnit(this);
+				icon[iDev] 		= device.getTypeIconResource();
+				time[iDev] 		= device.getFacility().lastUpdate;
+				relPos[iDev]	= relDev+1;
+				facSize[iDev]	= facility.getDevices().size();
+				relDev++;
+				iDev++;
+			}
+			mActLocID = facility.getLocationId();
+		}
+
 
 		if (mSensorList == null) {
 			setSupportProgressBarIndeterminateVisibility(false);
@@ -666,7 +691,7 @@ public class LocationScreenActivity extends BaseActivity {
 		}
 
 		// If no sensor - display text only
-		if (devices.size() == 0) {
+		if (mCntOfAllDev == 0) {
 			if (nosensor != null) {
 				nosensor.setVisibility(View.VISIBLE);
 				mSensorList.setVisibility(View.GONE);
@@ -680,7 +705,7 @@ public class LocationScreenActivity extends BaseActivity {
 		}
 
 		mSensorAdapter = new SensorListAdapter(LocationScreenActivity.this,
-				title, value, unit, time, icon);
+				title, value, unit, time, icon,relPos,facSize);
 
 		mSensorList.setAdapter(mSensorAdapter);
 
@@ -689,7 +714,7 @@ public class LocationScreenActivity extends BaseActivity {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
-				if (position == devices.size()) {
+				if (position == mCntOfAllDev) {
 					Log.d(TAG, "HERE ADD SENSOR +");
 					mController.unignoreUninitialized();
 
@@ -700,12 +725,12 @@ public class LocationScreenActivity extends BaseActivity {
 					return;
 				}
 
-				final BaseDevice selectedItem = devices.get(position);
+				//final BaseDevice selectedItem = devices.get(position);
 
 				// setSupportProgressBarIndeterminateVisibility(true);
 
 				Bundle bundle = new Bundle();
-				String myMessage = selectedItem.getFacility().getLocationId();
+				String myMessage = mActLocID;
 				bundle.putString("LocationOfSensorID", myMessage);
 				bundle.putInt("SensorPosition", position);
 				Intent intent = new Intent(mActivity,
@@ -808,7 +833,7 @@ public class LocationScreenActivity extends BaseActivity {
 			startActivityForResult(intent, REQUEST_ADD_ADAPTER);
 			break;
 		}
-		case R.id.action_addsensor: {
+		/*case R.id.action_addsensor: {
 			// Show also ignored devices
 			mController.unignoreUninitialized();
 
@@ -818,7 +843,7 @@ public class LocationScreenActivity extends BaseActivity {
 			startActivity(intent);
 
 			break;
-		}
+		}*/
 		case R.id.action_settings: {
 			Intent intent = new Intent(LocationScreenActivity.this,
 					SettingsMainActivity.class);
@@ -1074,27 +1099,27 @@ public class LocationScreenActivity extends BaseActivity {
 	 * Changes selected location and redraws list of adapters there
 	 */
 	private class ChangeLocationTask extends
-			AsyncTask<Location, Void, List<BaseDevice>> {
+			AsyncTask<Location, Void, List<Facility>> {
 
 		@Override
-		protected List<BaseDevice> doInBackground(Location... locations) {
+		protected List<Facility> doInBackground(Location... locations) {
 			List<Facility> facilities = mController.getFacilitiesByLocation(locations[0].getId(), forceReloadListing);
-			List<BaseDevice> devices = new ArrayList<BaseDevice>();
+			//List<BaseDevice> devices = new ArrayList<BaseDevice>();
 			
-			for (Facility facility : facilities) {
-				devices.addAll(facility.getDevices());
-			}
+			//for (Facility facility : facilities) {
+			//	devices.addAll(facility.getDevices());
+			//}
 			
-			Log.d(TAG, String.format("Found %d devices in location '%s'", devices.size(), locations[0].getName()));
+			Log.d(TAG, String.format("Found %d devices in location '%s'", facilities.size(), locations[0].getName()));
 			forceReloadListing = false;
 
-			return devices;
+			return facilities;
 		}
 
 		@Override
-		protected void onPostExecute(final List<BaseDevice> devices) {
+		protected void onPostExecute(final List<Facility> facilities) {
 			if (!isPaused)
-				getDevices(devices);
+				getDevices(facilities);
 		}
 	}
 
