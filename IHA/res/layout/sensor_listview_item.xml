@@ -35,7 +35,6 @@
 
              <TextView
                  android:id="@+id/valueofsensor"
-                 style="?attr/spinnerDropDownItemStyle"
                  android:layout_width="wrap_content"
                  android:layout_height="wrap_content"
                  android:layout_alignParentBottom="true"
@@ -47,7 +46,6 @@
 
              <TextView
                  android:id="@+id/unitofsensor"
-                 style="?attr/spinnerDropDownItemStyle"
                  android:layout_width="wrap_content"
                  android:layout_height="wrap_content"
                  android:layout_alignBaseline="@+id/valueofsensor"
@@ -69,7 +67,6 @@
 
              <TextView
                  android:id="@+id/titleofsensor"
-                 style="?attr/spinnerDropDownItemStyle"
                  android:layout_width="wrap_content"
                  android:layout_height="wrap_content"
                  android:layout_alignParentLeft="true"
@@ -78,6 +75,7 @@
                  android:text="name"
                  android:textColor="@color/iha_text_color"
                  android:textSize="25dp"
+                 android:textAlignment="viewStart"
                  android:textStyle="normal" />
          </RelativeLayout>
 

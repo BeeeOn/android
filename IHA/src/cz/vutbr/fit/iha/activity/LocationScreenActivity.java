@@ -358,7 +358,7 @@ public class LocationScreenActivity extends BaseActivity {
 			for (int i = 0; i < mLocations.size(); i++) {
 				Location actLoc = mLocations.get(i);
 				menuAdapter.addItem(new LocationMenuItem(actLoc.getName(),
-						actLoc.getIconResource(), i != 0, actLoc.getId()));
+						actLoc.getIconResource(), false, actLoc.getId()));
 			}
 		} else {
 			menuAdapter.addItem(new EmptyMenuItem(mActivity.getResources()

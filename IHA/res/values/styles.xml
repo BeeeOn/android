@@ -4,7 +4,7 @@
         Base application theme, dependent on API level. This theme is replaced
         by AppBaseTheme from res/values-vXX/styles.xml on newer devices.
     -->
-    <style name="AppBaseTheme" parent="Theme.Sherlock.Light.DarkActionBar">
+    <style name="AppBaseTheme" parent="Theme.Sherlock.Light">
         <!--
             Theme customizations available in newer API levels can go in
             res/values-vXX/styles.xml, while customizations related to
@@ -13,18 +13,10 @@
         <item name="android:windowBackground">@color/iha_background</item>
     	<item name="android:colorBackground">@color/iha_background</item>
         <!-- Support library compatibility -->
-        <item name="actionBarStyle">@style/Widget.MyTheme.ActionBar</item>
-        <item name="actionModeCloseButtonStyle">@style/NoCloseButton</item>
+        <item name="actionBarStyle">@style/IHA.ActionBar</item>
+        <item name="actionModeCloseButtonStyle">@style/IHA.NoCloseButton</item>
         <item name="windowContentOverlay">@null</item>
     	<item name="android:windowContentOverlay">@null</item>
-        <!-- item name="actionBarTabStyle">@style/ActionBarTabStyle.Iha</item>
-        <item name="actionModeBackground">@drawable/cab_background_top_iha</item>
-        <item name="actionBarStyle">@style/ActionBar.Solid.Iha</item>
-        <item name="actionBarTabTextStyle">@style/MyActionBarTabText</item>
-        <item name="actionMenuTextColor">@color/white</item-->
-        
-        <!-- item name="homeAsUpIndicator">@drawable/ic_drawer</item-->
-        
 
     </style>
     <!-- Application theme. -->
@@ -33,16 +25,16 @@
     </style>
        
     <!-- ActionBar styles -->
-    <style name="Widget.MyTheme.ActionBar"  parent="@style/Widget.Sherlock.Light.ActionBar">
+    <style name="IHA.ActionBar"  parent="@style/Widget.Sherlock.Light.ActionBar">
 		<item name="android:background">@color/iha_primary_cyan</item>
         <!-- Support library compatibility -->
-        <item name="titleTextStyle">@style/Widget.MyTheme.ActionBar.TitleText</item>
+        <item name="titleTextStyle">@style/IHA.ActionBar.TitleText</item>
         <item name="background">@color/iha_primary_cyan</item>
 
     </style>
 
     <!-- ActionBar title text -->
-    <style name="Widget.MyTheme.ActionBar.TitleText" parent="@style/TextAppearance.Sherlock.Widget.ActionBar.Title">
+    <style name="IHA.ActionBar.TitleText" parent="@style/TextAppearance.Sherlock.Widget.ActionBar.Title">
         <item name="android:textColor">@color/white</item>
         <!-- The textColor property is backward compatible with the Support Library -->
     </style>
@@ -53,11 +45,10 @@
         <!-- The textColor property is backward compatible with the Support Library -->
     </style>
     
-    <style name="NoCloseButton" parent="Widget.Sherlock.ActionButton.CloseMode">
+    <style name="IHA.NoCloseButton" parent="Widget.Sherlock.ActionButton.CloseMode">
         <item name="android:visibility">gone</item>
     </style>
-    
-    
+
     <style name="MyDialog" parent="@android:style/Theme.Dialog">
         <item name="android:windowIsTranslucent">true</item>
 	    <item name="android:windowNoTitle">true</item>
@@ -65,5 +56,6 @@
 	    <item name="android:windowIsFloating">true</item>
 	    <item name="android:windowBackground">@color/black</item>
     </style>
+
 
 </resources>

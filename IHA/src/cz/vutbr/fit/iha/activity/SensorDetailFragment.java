@@ -707,10 +707,10 @@ public class SensorDetailFragment extends SherlockFragment {
 			// null);
 			// ((Button) view.findViewById(R.id.actionmode_button)).
 			// menu.add("Save").setActionView(view).setIcon(R.drawable.ic_action_accept).setTitle("Save").setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-			menu.add("Save").setIcon(R.drawable.ic_action_accept_1)
+			menu.add("Save").setIcon(R.drawable.iha_ic_action_accept)
 					.setTitle("Save")
 					.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-			menu.add("Cancel").setIcon(R.drawable.ic_action_cancel_1)
+			menu.add("Cancel").setIcon(R.drawable.iha_ic_action_cancel)
 					.setTitle("Cancel")
 					.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 			return true;
