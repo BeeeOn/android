@@ -8,28 +8,33 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
+import cz.vutbr.fit.iha.network.xml.XmlParsers;
+
+import android.os.Bundle;
 import android.util.Log;
 
 /**
  * @author ThinkDeep
- *
+ * 
  */
 public class Notification {
-	
+
 	public static final String TAG = Notification.class.getSimpleName();
-	private static final String FORMAT = "yyyy-MM-dd HH:mm:ss";
+	// private static final String FORMAT = "yyyy-MM-dd HH:mm:ss";
 	private static final String SEPARATOR = "\\s+";
-	
-	private SimpleDateFormat mFormatter = new SimpleDateFormat(FORMAT, Locale.getDefault());
+
+	private SimpleDateFormat mFormatter = new SimpleDateFormat(
+			XmlParsers.DATEFORMAT, Locale.getDefault());
 
 	private final Date mDate;
 	private final String mMsgid;
 	private boolean mRead;
 	private final NotificationType mType;
 	private Action mAction;
+	private String mEmail = null;
 	private String mMessage;
-	
-	public class Action{
+
+	public class Action {
 		// web or app
 		private final ActionType mMasterType;
 		// app sub types
@@ -42,8 +47,8 @@ public class Notification {
 		private String mLocationId;
 		// if app + adapter + device
 		private String mDeviceId;
-		
-		public Action(String masterType){
+
+		public Action(String masterType) {
 			mMasterType = ActionType.fromValue(masterType);
 		}
 
@@ -62,7 +67,8 @@ public class Notification {
 		}
 
 		/**
-		 * @param mSlaveType the mSlaveType to set
+		 * @param mSlaveType
+		 *            the mSlaveType to set
 		 */
 		public void setSlaveType(ActionType SlaveType) {
 			this.mSlaveType = SlaveType;
@@ -76,7 +82,8 @@ public class Notification {
 		}
 
 		/**
-		 * @param mURL the mURL to set
+		 * @param mURL
+		 *            the mURL to set
 		 */
 		public void setURL(String URL) {
 			this.mURL = URL;
@@ -90,7 +97,8 @@ public class Notification {
 		}
 
 		/**
-		 * @param mAdapterId the mAdapterId to set
+		 * @param mAdapterId
+		 *            the mAdapterId to set
 		 */
 		public void setAdapterId(String AdapterId) {
 			this.mAdapterId = AdapterId;
@@ -104,7 +112,8 @@ public class Notification {
 		}
 
 		/**
-		 * @param mLocationId the mLocationId to set
+		 * @param mLocationId
+		 *            the mLocationId to set
 		 */
 		public void setLocationId(String LocationId) {
 			this.mLocationId = LocationId;
@@ -118,38 +127,31 @@ public class Notification {
 		}
 
 		/**
-		 * @param mDeviceId the mDeviceId to set
+		 * @param mDeviceId
+		 *            the mDeviceId to set
 		 */
 		public void setDeviceId(String DeviceId) {
 			this.mDeviceId = DeviceId;
 		}
-		
+
 	}
-	
-	public enum ActionType{
-		WEB("web"),
-		APP("app"),
-		NONE("none"),
-		SETTINGS("settings"),
-		SETTINGSMAIN("settingsmain"),
-		SETTINGSACCOUNT("settingsaccount"),
-		SETTINGSADAPTER("settingsadapter"),
-		SETTINGSLOCATION("settingslocation"),
-		OPENADAPTER("adapter"),
-		OPENLOCATION("location"),
-		OPENDEVICE("device");
-		
-		
+
+	public enum ActionType {
+		WEB("web"), APP("app"), NONE("none"), SETTINGS("settings"), SETTINGSMAIN(
+				"settingsmain"), SETTINGSACCOUNT("settingsaccount"), SETTINGSADAPTER(
+				"settingsadapter"), SETTINGSLOCATION("settingslocation"), OPENADAPTER(
+				"adapter"), OPENLOCATION("location"), OPENDEVICE("device");
+
 		private final String mValue;
-		
-		ActionType(String value){
+
+		ActionType(String value) {
 			mValue = value;
 		}
-		
+
 		public String getValue() {
 			return mValue;
 		}
-		
+
 		public static ActionType fromValue(String value) {
 			for (ActionType item : values()) {
 				if (value.equalsIgnoreCase(item.getValue()))
@@ -158,23 +160,20 @@ public class Notification {
 			throw new IllegalArgumentException("Invalid State value");
 		}
 	}
-	
-	public enum NotificationType{
-		INFO("info"),
-		ADVERT("advert"),
-		ALERT("alert"),
-		CONTROL("control");
-		
+
+	public enum NotificationType {
+		INFO("info"), ADVERT("advert"), ALERT("alert"), CONTROL("control");
+
 		private final String mValue;
-		
-		NotificationType(String value){
+
+		NotificationType(String value) {
 			mValue = value;
 		}
 
 		public String getValue() {
 			return mValue;
 		}
-		
+
 		public static NotificationType fromValue(String value) {
 			for (NotificationType item : values()) {
 				if (value.equalsIgnoreCase(item.getValue()))
@@ -183,22 +182,23 @@ public class Notification {
 			throw new IllegalArgumentException("Invalid State value");
 		}
 	}
-	
-	
+
 	/**
 	 * Constructor
 	 */
-	public Notification(String msgid, String time, String type, boolean read){
+	public Notification(String msgid, String time, String type, boolean read) {
 		mMsgid = msgid;
 		String[] parts = time.split(SEPARATOR);
-		
+
 		if (parts.length != 2) {
-			Log.e(TAG, String.format("Wrong number of parts (%d) of data: %s", parts.length, time));
+			Log.e(TAG, String.format("Wrong number of parts (%d) of data: %s",
+					parts.length, time));
 			throw new IllegalArgumentException();
 		}
-		
-		try { //TODO: check this
-			mDate = mFormatter.parse(String.format("%s %s", parts[0], parts[1]));
+
+		try { // TODO: check this
+			mDate = mFormatter
+					.parse(String.format("%s %s", parts[0], parts[1]));
 		} catch (ParseException e) {
 			Log.e(TAG, String.format("Wrong date format: %s", parts[0]));
 			throw new IllegalArgumentException(e);
@@ -206,9 +206,20 @@ public class Notification {
 			Log.e(TAG, String.format("Wrong value format: %s", parts[1]));
 			throw new IllegalArgumentException(e);
 		}
-		
+
 		mType = NotificationType.fromValue(type);
 		mRead = read;
+	}
+
+	/**
+	 * @return Email if notification was received by GCM. Null otherwise.
+	 */
+	public String getEmail() {
+		return mEmail;
+	}
+
+	public void setEmail(String email) {
+		mEmail = email;
 	}
 
 	/**
@@ -233,7 +244,8 @@ public class Notification {
 	}
 
 	/**
-	 * @param mRead the mRead to set
+	 * @param mRead
+	 *            the mRead to set
 	 */
 	public void setRead(boolean Read) {
 		this.mRead = Read;
@@ -254,7 +266,8 @@ public class Notification {
 	}
 
 	/**
-	 * @param mAction the mAction to set
+	 * @param mAction
+	 *            the mAction to set
 	 */
 	public void setAction(Action Action) {
 		this.mAction = Action;
@@ -268,10 +281,34 @@ public class Notification {
 	}
 
 	/**
-	 * @param mMessage the mMessage to set
+	 * @param mMessage
+	 *            the mMessage to set
 	 */
 	public void setMessage(String Message) {
 		this.mMessage = Message;
+	}
+
+	protected static Notification parseBundle(Bundle bundle) {
+		String msgid = bundle.getString(XmlParsers.MSGID);
+		String email = bundle.getString(XmlParsers.EMAIL);
+		String time = bundle.getString(XmlParsers.TIME);
+		String type = bundle.getString(XmlParsers.TYPE);
+		String message = bundle.getString(XmlParsers.MESSAGE);
+		String action = bundle.getString(XmlParsers.ACTION);
+
+		// control validity of message
+		if (msgid == null || email == null || time == null || type == null
+				|| action == null || message == null) {
+			return null;
+		}
+
+		Notification notification = new Notification(msgid, time, type, false);
+		// we need email in notification to check validity
+		notification.setEmail(email);
+		notification.setMessage(message);
+		notification.setAction(notification.new Action(action));
+
+		return notification;
 	}
 
 }

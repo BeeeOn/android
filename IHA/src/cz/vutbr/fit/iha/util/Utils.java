@@ -8,7 +8,10 @@ import android.graphics.Canvas;
 import android.graphics.Path;
 import android.graphics.Rect;
 
-public class Utils {
+final public class Utils {
+	
+	private Utils() {}; // private constructor to avoid instantiation
+	
 	public static Bitmap getRoundedShape(Bitmap scaleBitmapImage) {
 	    int targetWidth = 200;
 	    int targetHeight = 200;
