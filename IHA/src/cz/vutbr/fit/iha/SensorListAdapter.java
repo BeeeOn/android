@@ -7,12 +7,23 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.LinearLayout.LayoutParams;
 import android.widget.TextView;
 import cz.vutbr.fit.iha.controller.Controller;
 import cz.vutbr.fit.iha.settings.Timezone;
 
 public class SensorListAdapter extends BaseAdapter {
 
+	private static final int MARGIN_LEFT_RIGHT = 10;
+	private static final int MARGIN_TOP = 10;
+	private static final int MARGIN_BOTTOM = 0;
+	private static final int MARGIN_TOP_M_L = -2;
+	private static final int PADDING_LEFT_RIGHT = 5;
+	private static final int PADDING_TOP = 6;
+	private static final int PADDING_BOTTOM = 5;
+	private float mScale;
+	
 	// Declare Variables
 	private Context mContext;
 	private String[] mTitle;
@@ -82,6 +93,8 @@ public class SensorListAdapter extends BaseAdapter {
 		TextView txtUnit;
 		TextView txtTime;
 		ImageView imgIcon;
+		LinearLayout layout;
+		
 
 		inflater = (LayoutInflater) mContext
 				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -98,7 +111,7 @@ public class SensorListAdapter extends BaseAdapter {
 		imgIcon = (ImageView) itemView.findViewById(R.id.iconofsensor);
 
 		// Set the results into TextViews
-		txtTitle.setText(mTitle[position] + mRelPos[position]+"/"+mFacSize[position]);
+		txtTitle.setText(mTitle[position]);
 		txtValue.setText(mValue[position]);
 		txtUnit.setText(mUnit[position]);
 		txtTime.setText(String.format(
@@ -109,6 +122,27 @@ public class SensorListAdapter extends BaseAdapter {
 
 		// Set the results into ImageView
 		imgIcon.setImageResource(mIcon[position]);
+		mScale = parent.getResources().getDisplayMetrics().density;
+		
+		// Set layout with right background
+		layout = (LinearLayout) itemView.findViewById(R.id.layoutofsensor);
+		if(mFacSize[position] == 1) {// it is SOLO device from FACILITY
+			layout.setBackgroundResource(R.drawable.iha_item_solo_bg);
+			((LayoutParams) layout.getLayoutParams()).setMargins((int)mScale*MARGIN_LEFT_RIGHT,(int) mScale*MARGIN_TOP,(int) mScale*MARGIN_LEFT_RIGHT,(int) mScale*MARGIN_BOTTOM);
+		}
+		else if(mRelPos[position] == 1) { // FIRST from FACILITY
+			layout.setBackgroundResource(R.drawable.iha_item_first_bg);
+			((LayoutParams) layout.getLayoutParams()).setMargins((int)mScale*MARGIN_LEFT_RIGHT,(int) mScale*MARGIN_TOP,(int) mScale*MARGIN_LEFT_RIGHT,(int) mScale*MARGIN_BOTTOM);
+		} 
+		else if(mRelPos[position] == mFacSize[position]) {// LAST from FACILITY
+			layout.setBackgroundResource(R.drawable.iha_item_last_bg);
+			((LayoutParams) layout.getLayoutParams()).setMargins((int)mScale*MARGIN_LEFT_RIGHT,(int) mScale*MARGIN_TOP_M_L,(int) mScale*MARGIN_LEFT_RIGHT,(int) mScale*MARGIN_BOTTOM);
+			layout.setPadding((int)mScale*PADDING_LEFT_RIGHT, (int)mScale*PADDING_TOP, (int)mScale*PADDING_LEFT_RIGHT, (int)mScale*PADDING_BOTTOM);
+		}
+		else { // MIDLE from FACILITY
+			layout.setBackgroundResource(R.drawable.iha_item_midle_bg);
+			((LayoutParams) layout.getLayoutParams()).setMargins((int)mScale*MARGIN_LEFT_RIGHT,(int) mScale*MARGIN_TOP_M_L,(int) mScale*MARGIN_LEFT_RIGHT,(int) mScale*MARGIN_BOTTOM);
+		}
 
 		return itemView;
 	}

@@ -8,7 +8,7 @@
 	    android:id="@+id/sensordetail_scroll"
 	    android:layout_width="match_parent"
 	    android:layout_height="wrap_content"
-	    android:background="@drawable/shadow"
+	    android:background="@drawable/iha_item_solo_bg"
 	    android:layout_margin="10dp"
 	 	android:paddingBottom="15dp"
 	 	android:layout_gravity="top"
