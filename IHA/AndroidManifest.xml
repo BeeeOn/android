@@ -3,7 +3,7 @@
     package="cz.vutbr.fit.iha"
     android:installLocation="auto"
     android:versionCode="10"
-    android:versionName="1.1.4 debug" >
+    android:versionName="1.1.4" >
 
     <uses-sdk
         android:minSdkVersion="9"
