@@ -15,7 +15,7 @@ import cz.vutbr.fit.iha.settings.Timezone;
 
 public class SensorListAdapter extends BaseAdapter {
 
-	private static final int MARGIN_LEFT_RIGHT = 10;
+	private static final int MARGIN_LEFT_RIGHT = 2;
 	private static final int MARGIN_TOP = 10;
 	private static final int MARGIN_BOTTOM = 0;
 	private static final int MARGIN_TOP_M_L = -2;
