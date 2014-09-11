@@ -97,6 +97,7 @@ public class LocationScreenActivity extends BaseActivity {
 	private static boolean isPaused = false;
 	private static boolean forceReloadListing = false;
 	private static boolean isClosing = false;
+	private static boolean isRefreshDone = false;
 
 	/**
 	 * Instance save state tags
@@ -188,6 +189,7 @@ public class LocationScreenActivity extends BaseActivity {
 			intent.putExtras(bundle);
 			startActivity(intent);
 		}
+		
 	}
 
 	public void onResume() {
@@ -741,7 +743,9 @@ public class LocationScreenActivity extends BaseActivity {
 				// finish();
 			}
 		});
-
+		
+		if(!isRefreshDone)
+			isRefreshDone = true;
 		this.setSupportProgressBarIndeterminateVisibility(false);
 		Log.d(TAG, "LifeCycle: getsensors end");
 		return true;
@@ -817,12 +821,12 @@ public class LocationScreenActivity extends BaseActivity {
 				mDrawerLayout.openDrawer(mDrawerList);
 			}
 			break;
-		case R.id.action_refreshlist: {
+		/*case R.id.action_refreshlist: {
 			forceReloadListing = true;
 			refreshListing();
 
 			break;
-		}
+		}*/
 		case R.id.action_addadapter: {
 			inBackground = true;
 			Intent intent = new Intent(LocationScreenActivity.this,
@@ -909,13 +913,17 @@ public class LocationScreenActivity extends BaseActivity {
 	/**
 	 * Refresh sensors in actual location
 	 */
-	private void refreshListing() {
+	public void refreshListing() {
 		if (mActiveLocation == null)
 			return;
-
+		isRefreshDone = false;
 		setSupportProgressBarIndeterminateVisibility(true);
 		mChangeLocationTask = new ChangeLocationTask();
 		mChangeLocationTask.execute(new Location[] { mActiveLocation });
+	}
+	
+	public boolean isRefreshListingDone(){
+		return isRefreshDone;
 	}
 
 	private void setNewAdapterRedraw(MenuListAdapter adapter) {
@@ -1120,6 +1128,7 @@ public class LocationScreenActivity extends BaseActivity {
 		protected void onPostExecute(final List<Facility> facilities) {
 			if (!isPaused)
 				getDevices(facilities);
+			
 		}
 	}
 
