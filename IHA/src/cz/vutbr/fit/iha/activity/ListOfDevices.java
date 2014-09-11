@@ -44,6 +44,7 @@ public class ListOfDevices extends SherlockFragment {
 			
 			@Override
 			public void onRefresh() {
+				mActivity.setForceRefeshListing(true);
 				mActivity.refreshListing();
 				isFinish();
 			}

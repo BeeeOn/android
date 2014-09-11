@@ -925,6 +925,10 @@ public class LocationScreenActivity extends BaseActivity {
 	public boolean isRefreshListingDone(){
 		return isRefreshDone;
 	}
+	
+	public void setForceRefeshListing(boolean val) {
+		forceReloadListing = val;
+	}
 
 	private void setNewAdapterRedraw(MenuListAdapter adapter) {
 		mMenuAdapter = adapter;
