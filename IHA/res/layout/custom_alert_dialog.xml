@@ -17,7 +17,7 @@
         android:text="@string/alert_title"
 	    android:gravity="center_horizontal"
 	    android:paddingBottom="15dp"
-	    android:textColor="@color/log_blue2"
+	    android:textColor="@color/iha_primary_cyan"
 	    android:textIsSelectable="false"
 	    android:visibility="gone"
         android:textAppearance="?android:attr/textAppearanceLarge" />
