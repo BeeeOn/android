@@ -7,15 +7,17 @@ import cz.vutbr.fit.iha.network.xml.FalseAnswer;
 
 /**
  * FalseException
+ * 
  * @author ThinkDeep
- *
+ * 
  */
 public class FalseException extends NetworkException {
 
 	private static final long serialVersionUID = 1L;
 	private FalseAnswer mFalseAnswer;
 
-	public FalseException() { }
+	public FalseException() {
+	}
 
 	/**
 	 * @param detailMessage
@@ -38,20 +40,23 @@ public class FalseException extends NetworkException {
 	public FalseException(String detailMessage, Throwable throwable) {
 		super(detailMessage, throwable);
 	}
-	
+
 	/**
 	 * Constructor
-	 * @param answer with error code and message
+	 * 
+	 * @param answer
+	 *            with error code and message
 	 */
-	public FalseException(FalseAnswer answer){
+	public FalseException(FalseAnswer answer) {
 		mFalseAnswer = answer;
 	}
-	
+
 	/**
 	 * Method return info about false answer
+	 * 
 	 * @return FalseAnswer Obejct
 	 */
-	public FalseAnswer getDetail(){
+	public FalseAnswer getDetail() {
 		return mFalseAnswer;
 	}
 

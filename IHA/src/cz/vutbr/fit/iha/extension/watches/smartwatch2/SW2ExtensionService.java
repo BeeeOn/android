@@ -40,62 +40,58 @@ import com.sonyericsson.extras.liveware.extension.util.registration.DeviceInfoHe
 import com.sonyericsson.extras.liveware.extension.util.registration.RegistrationInformation;
 
 import cz.vutbr.fit.iha.extension.watches.smartwatch2.controls.ControlManagerSmartWatch2;
+
 /**
- * Extension Service handles registration and keeps track of all
- * controls on all accessories.
+ * Extension Service handles registration and keeps track of all controls on all accessories.
  */
 public class SW2ExtensionService extends ExtensionService {
 
-    public static final String EXTENSION_KEY = "cz.vutbr.fit.iha.extension.watches.smartwatch2.key";
+	public static final String EXTENSION_KEY = "cz.vutbr.fit.iha.extension.watches.smartwatch2.key";
 
-    public static final String LOG_TAG = "SW2 extension";
+	public static final String LOG_TAG = "SW2 extension";
 
-    public SW2ExtensionService() {
-        super(EXTENSION_KEY);
-    }
+	public SW2ExtensionService() {
+		super(EXTENSION_KEY);
+	}
 
-    /**
-     * {@inheritDoc}
-     *
-     * @see android.app.Service#onCreate()
-     */
-    @Override
-    public void onCreate() {
-        super.onCreate();
-        Log.d(SW2ExtensionService.LOG_TAG, "Service: onCreate");
-    }
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see android.app.Service#onCreate()
+	 */
+	@Override
+	public void onCreate() {
+		super.onCreate();
+		Log.d(SW2ExtensionService.LOG_TAG, "Service: onCreate");
+	}
 
-    @Override
-    protected RegistrationInformation getRegistrationInformation() {
-    	Log.d(SW2ExtensionService.LOG_TAG, "getRegistrationInformation()");
-        return new SW2RegistrationInformation(this);
-    }
+	@Override
+	protected RegistrationInformation getRegistrationInformation() {
+		Log.d(SW2ExtensionService.LOG_TAG, "getRegistrationInformation()");
+		return new SW2RegistrationInformation(this);
+	}
 
-    /*
-     * (non-Javadoc)
-     * @see com.sonyericsson.extras.liveware.aef.util.ExtensionService#
-     * keepRunningWhenConnected()
-     */
-    @Override
-    protected boolean keepRunningWhenConnected() {
-        return false;
-    }
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.sonyericsson.extras.liveware.aef.util.ExtensionService# keepRunningWhenConnected()
+	 */
+	@Override
+	protected boolean keepRunningWhenConnected() {
+		return false;
+	}
 
-    @Override
-    public ControlExtension createControlExtension(String hostAppPackageName) {
-        Log.d(SW2ExtensionService.LOG_TAG, "Service: createControlExtension");
-        boolean advancedFeaturesSupported = DeviceInfoHelper.isSmartWatch2ApiAndScreenDetected(
-                this, hostAppPackageName);
-        if (advancedFeaturesSupported) {
-            Log.d(SW2ExtensionService.LOG_TAG,
-                    "Service: Advanced features supported, returning SmartWatch2 extension control manager");
-            return new ControlManagerSmartWatch2(this, hostAppPackageName);
-        } else {
-            Log.d(SW2ExtensionService.LOG_TAG,
-                    "Service: Advanced features not supported, exiting");
-            // Possible to return a legacy control extension here
-            throw new IllegalArgumentException("No control for: " +
-                    hostAppPackageName);
-        }
-    }
+	@Override
+	public ControlExtension createControlExtension(String hostAppPackageName) {
+		Log.d(SW2ExtensionService.LOG_TAG, "Service: createControlExtension");
+		boolean advancedFeaturesSupported = DeviceInfoHelper.isSmartWatch2ApiAndScreenDetected(this, hostAppPackageName);
+		if (advancedFeaturesSupported) {
+			Log.d(SW2ExtensionService.LOG_TAG, "Service: Advanced features supported, returning SmartWatch2 extension control manager");
+			return new ControlManagerSmartWatch2(this, hostAppPackageName);
+		} else {
+			Log.d(SW2ExtensionService.LOG_TAG, "Service: Advanced features not supported, exiting");
+			// Possible to return a legacy control extension here
+			throw new IllegalArgumentException("No control for: " + hostAppPackageName);
+		}
+	}
 }

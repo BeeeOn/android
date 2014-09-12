@@ -63,14 +63,15 @@ public class AddAdapterActivityDialog extends BaseActivityDialog {
 			}
 		});
 
-		mAddButton = (Button)findViewById(R.id.addadapter_add_button);
+		mAddButton = (Button) findViewById(R.id.addadapter_add_button);
 		mCancelButton = (Button) findViewById(R.id.addadapter_cancel_button);
-		
+
 		// Serial number button - register new adapter by serial number
-		if (!mActivity.getIntent().getExtras().getBoolean(Constants.CANCEL)){
-			mAddButton.setLayoutParams(new LinearLayout.LayoutParams((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 260, getResources().getDisplayMetrics()), (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 50, getResources().getDisplayMetrics())));
+		if (!mActivity.getIntent().getExtras().getBoolean(Constants.CANCEL)) {
+			mAddButton.setLayoutParams(new LinearLayout.LayoutParams((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 260, getResources().getDisplayMetrics()), (int) TypedValue
+					.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 50, getResources().getDisplayMetrics())));
 		}
-		
+
 		mAddButton.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -94,30 +95,32 @@ public class AddAdapterActivityDialog extends BaseActivityDialog {
 			}
 		});
 	}
-	
+
 	/**
 	 * Initialize TextWatchers
 	 */
-	private void initViews(){
-		EditText serialInput = (EditText)findViewById(R.id.addadapter_ser_num);
-		
-		TextWatcher tw = new TextWatcher(){
+	private void initViews() {
+		EditText serialInput = (EditText) findViewById(R.id.addadapter_ser_num);
+
+		TextWatcher tw = new TextWatcher() {
 
 			@Override
-			public void beforeTextChanged(CharSequence s, int start, int count, int after) { /* nothing to do now */ }
+			public void beforeTextChanged(CharSequence s, int start, int count, int after) { /* nothing to do now */
+			}
 
 			@Override
-			public void onTextChanged(CharSequence s, int start, int before, int count) { /* nothing to do now */ }
+			public void onTextChanged(CharSequence s, int start, int before, int count) { /* nothing to do now */
+			}
 
 			@Override
 			public void afterTextChanged(Editable s) {
-				if(s.length() > 0)
+				if (s.length() > 0)
 					mAddButton.setEnabled(true);
 				else
 					mAddButton.setEnabled(false);
 			}
 		};
-		
+
 		serialInput.addTextChangedListener(tw);
 	}
 

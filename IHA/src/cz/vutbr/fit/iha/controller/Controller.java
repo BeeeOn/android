@@ -35,57 +35,58 @@ import cz.vutbr.fit.iha.persistence.Persistence;
 
 /**
  * Core of application (used as singleton), provides methods and access to all data and household.
- *
+ * 
  * @author Robyer
  */
 public final class Controller {
 
 	public static final String TAG = Controller.class.getSimpleName();
-	
+
 	/** This singleton instance. */
 	private static Controller mController;
-	
+
 	/** Application context */
 	private final Context mContext;
-	
+
 	/** Persistence service for caching purposes */
 	private final Persistence mPersistence;
-	
+
 	/** Network service for communication with server */
 	private final Network mNetwork;
-	
+
 	/** Household object holds logged in user and all adapters and lists which belongs to him */
 	private final Household mHousehold;
-	
+
 	/** Switch for using demo mode (with example adapter, without server) */
 	private static boolean mDemoMode = false;
-	
+
 	/** When set to true (by calling {@link #reloadAdapters()}), it will reload all adapters from server in next call of {@link #getAdapters()} */
 	private boolean mReloadAdapters = true;
-	
+
 	/**
-	 * Return singleton instance of this Controller.
-	 * This is thread-safe.
+	 * Return singleton instance of this Controller. This is thread-safe.
 	 * 
-	 * @param global application context
+	 * @param global
+	 *            application context
 	 * @return singleton instance of controller
 	 */
 	public static Controller getInstance(Context context) {
 		if (mController == null) {
-			synchronized(Controller.class) {
+			synchronized (Controller.class) {
 				if (mController == null) {
 					mController = new Controller(context);
 				}
 			}
 		}
-		
+
 		return mController;
 	}
 
 	/**
 	 * Private constructor.
 	 * 
-	 * @param global application context
+	 * @param global
+	 *            application context
 	 */
 	private Controller(Context context) {
 		mContext = context;
@@ -94,15 +95,15 @@ public final class Controller {
 		mPersistence = new Persistence(mContext);
 		mNetwork = new Network(mContext, mHousehold.user, isDebugVersion());
 	}
-	
+
 	public static synchronized void setDemoMode(Context context, boolean demoMode) {
 		if (mDemoMode == demoMode)
 			return;
-		
+
 		mDemoMode = demoMode;
 		mController = new Controller(context);
 	}
-	
+
 	public static boolean isDemoMode() {
 		return mDemoMode;
 	}
@@ -110,17 +111,18 @@ public final class Controller {
 	/**
 	 * Check if this is debug version of application
 	 * 
-	 * @return true if version in Manifest contains "debug", false otherwise  
+	 * @return true if version in Manifest contains "debug", false otherwise
 	 */
 	private boolean isDebugVersion() {
 		try {
 			String version = mContext.getPackageManager().getPackageInfo(mContext.getPackageName(), 0).versionName;
 			return version.contains("debug");
-		} catch (NameNotFoundException e) {}
+		} catch (NameNotFoundException e) {
+		}
 
 		return false;
 	}
-	
+
 	/** Persistence methods *************************************************/
 
 	public String getLastEmail() {
@@ -131,13 +133,12 @@ public final class Controller {
 		String userId = mHousehold.user.getId();
 		if (userId.isEmpty())
 			throw new IllegalStateException("ActualUser is not initialized (logged in) yet");
-		
+
 		return mPersistence.getSettings(userId);
 	}
-	
-	
+
 	/** Communication methods ***********************************************/
-	
+
 	/**
 	 * Login user by his email (authenticate on server).
 	 * 
@@ -152,7 +153,7 @@ public final class Controller {
 			mPersistence.initializeDefaultSettings(email);
 			return true;
 		}
-		
+
 		// TODO: catch and throw proper exception
 		// FIXME: after some time there should be picture in ActualUser object, should save to mPersistence
 		try {
@@ -161,33 +162,34 @@ public final class Controller {
 				mPersistence.initializeDefaultSettings(email);
 				return true;
 			}
-		} catch(FalseException e) {
-			//FIXME: ROB, do this how you want, this is working code :)
-			switch(e.getDetail().getErrCode()){
-				case 0:
-					break;
-				case 1: // bad token or email
-					try {
-						//TODO: do this otherway
-//						GoogleAuth ggAuth = GoogleAuth.getGoogleAuth();
-//						
-//						ggAuth.invalidateToken();
-//						ggAuth.doInForeground((ggAuth.getPictureIMG() == null)? true:false);
-						
-						mNetwork.startGoogleAuth(true, getActualUser().isPictureDefault()?true:false);
-						
-						//this happen only on first signing (or when someone delete grants on google, or token is old)
-//						while(GoogleAuth.getGoogleAuth().getPictureIMG() == null);
-						while(getActualUser().isPictureDefault()); // FIXME: not sure with this, need to check (first sing in)
-						
-						return login(email);
-						
-					} catch (Exception e1) {
-						e1.printStackTrace();
-					}
-					break;
-				default:
-					break;
+		} catch (FalseException e) {
+			// FIXME: ROB, do this how you want, this is working code :)
+			switch (e.getDetail().getErrCode()) {
+			case 0:
+				break;
+			case 1: // bad token or email
+				try {
+					// TODO: do this otherway
+					// GoogleAuth ggAuth = GoogleAuth.getGoogleAuth();
+					//
+					// ggAuth.invalidateToken();
+					// ggAuth.doInForeground((ggAuth.getPictureIMG() == null)? true:false);
+
+					mNetwork.startGoogleAuth(true, getActualUser().isPictureDefault() ? true : false);
+
+					// this happen only on first signing (or when someone delete grants on google, or token is old)
+					// while(GoogleAuth.getGoogleAuth().getPictureIMG() == null);
+					while (getActualUser().isPictureDefault())
+						; // FIXME: not sure with this, need to check (first sing in)
+
+					return login(email);
+
+				} catch (Exception e1) {
+					e1.printStackTrace();
+				}
+				break;
+			default:
+				break;
 			}
 		}
 		return false;
@@ -202,7 +204,7 @@ public final class Controller {
 		// TODO: also destroy session
 		mHousehold.user.logout();
 		mPersistence.saveLastEmail(null);
-		
+
 		return true;
 	}
 
@@ -215,28 +217,30 @@ public final class Controller {
 		// TODO: also check session lifetime
 		return mHousehold.user.isLoggedIn();
 	}
-	
-	public boolean isInternetAvailable(){
+
+	public boolean isInternetAvailable() {
 		return mNetwork.isAvailable();
 	}
-	
+
 	/** Adapter methods *****************************************************/
 
 	/**
 	 * Refreshes adapter data - loads facilities and locations
+	 * 
 	 * @param adapter
-	 * @param forceUpdate if you want to refresh adapter even if it's perhaps not needed
+	 * @param forceUpdate
+	 *            if you want to refresh adapter even if it's perhaps not needed
 	 * @return
 	 */
 	private boolean refreshAdapter(Adapter adapter, boolean forceUpdate) {
 		if (mDemoMode) {
 			return true;
 		}
-		
+
 		Time that = new Time();
 		that.setToNow();
-		that.set(that.toMillis(true) - 15*60*1000); // 15 minutes interval between updates
-		
+		that.set(that.toMillis(true) - 15 * 60 * 1000); // 15 minutes interval between updates
+
 		// Update only when needed
 		if (!forceUpdate && !adapter.lastUpdate.before(that))
 			return false;
@@ -244,7 +248,7 @@ public final class Controller {
 		Log.i(TAG, String.format("Adapter (%s) update needed (%s)", adapter.getName(), forceUpdate ? "force" : "time elapsed"));
 
 		boolean result = false;
-		
+
 		try {
 			// Update adapter with new data
 			adapter.setLocations(mNetwork.getLocations(adapter.getId()));
@@ -258,19 +262,20 @@ public final class Controller {
 		} catch (NetworkException e) {
 			e.printStackTrace();
 		}
-		
+
 		return result;
 	}
-	
+
 	/**
 	 * Calling this will reload all adapters from server in next call of {@link #getAdapters()} or {@link #getActiveAdapter()}
 	 */
 	public void reloadAdapters() {
 		mReloadAdapters = true;
 	}
-	
+
 	/**
 	 * Refreshes facility in listings (e.g., in uninitialized facilities)
+	 * 
 	 * @param facility
 	 */
 	public void refreshFacility(final Facility facility) {
@@ -279,42 +284,42 @@ public final class Controller {
 			adapter.refreshFacility(facility);
 		}
 	}
-	
+
 	public boolean updateFacility(Facility facility) {
 		if (mDemoMode) {
-			// In demo mode update facility devices with random values 
+			// In demo mode update facility devices with random values
 			for (BaseDevice device : facility.getDevices()) {
 				if (device instanceof SwitchDevice) {
-					((SwitchDevice)device).setActive(new Random().nextBoolean());
+					((SwitchDevice) device).setActive(new Random().nextBoolean());
 				} else if (device instanceof StateDevice) {
-					((StateDevice)device).setActive(new Random().nextBoolean());
+					((StateDevice) device).setActive(new Random().nextBoolean());
 				} else {
 					int i = new Random().nextInt(100);
 					device.setValue(i);
-				}	
+				}
 			}
 			return true;
 		}
-		
+
 		Adapter adapter = getAdapterByFacility(facility);
 		if (adapter == null)
 			return false;
-		
+
 		try {
 			Facility newFacility = mNetwork.getFacility(adapter.getId(), facility);
 			if (newFacility == null)
 				return false;
-			
+
 			facility.replaceData(newFacility);
 		} catch (NetworkException e) {
 			e.printStackTrace();
 			return false;
 		}
-				
+
 		refreshFacility(facility);
 		return true;
 	}
-	
+
 	/**
 	 * Return all adapters that this logged in user has access to.
 	 * 
@@ -324,14 +329,14 @@ public final class Controller {
 		if (mDemoMode) {
 			return mHousehold.adapters;
 		}
-		
+
 		if (!isLoggedIn()) {
 			return new ArrayList<Adapter>();
 		}
-		
+
 		// TODO: refactor this method, make household's adapters (and favoriteslisting, and user?) final etc.
-		if (mHousehold.adapters == null || mReloadAdapters) { 
-			try { 
+		if (mHousehold.adapters == null || mReloadAdapters) {
+			try {
 				mHousehold.adapters = mNetwork.getAdapters();
 				mReloadAdapters = false;
 			} catch (NetworkException e) {
@@ -340,12 +345,12 @@ public final class Controller {
 				mHousehold.adapters = new ArrayList<Adapter>();
 				mReloadAdapters = true;
 			}
-			
+
 		}
 
 		return mHousehold.adapters;
 	}
-	
+
 	/**
 	 * Return adapter by his ID.
 	 * 
@@ -359,10 +364,10 @@ public final class Controller {
 				return a;
 			}
 		}
-		
+
 		return null;
 	}
-	
+
 	/**
 	 * Return active adapter.
 	 * 
@@ -376,29 +381,29 @@ public final class Controller {
 			} else {
 				lastId = mPersistence.loadActiveAdapter(mHousehold.user.getId());
 			}
-			
+
 			for (Adapter a : getAdapters()) {
 				if (lastId.isEmpty() || a.getId().equals(lastId)) {
 					mHousehold.activeAdapter = a;
 					break;
 				}
 			}
-			
+
 			if (mHousehold.activeAdapter == null && mHousehold.adapters != null && !mHousehold.adapters.isEmpty()) {
 				mHousehold.activeAdapter = mHousehold.adapters.get(0);
 			}
-			
+
 			if (mHousehold.activeAdapter != null)
 				mPersistence.saveActiveAdapter(mHousehold.user.getId(), mHousehold.activeAdapter.getId());
 		}
-		
+
 		// Refresh active adapter (load its locations and facilities)
 		if (mHousehold.activeAdapter != null)
 			refreshAdapter(mHousehold.activeAdapter, false);
-		
+
 		return mHousehold.activeAdapter;
 	}
-	
+
 	/**
 	 * Sets active adapter.
 	 * 
@@ -430,30 +435,30 @@ public final class Controller {
 		String adapterId = facility.getAdapterId();
 		if (adapterId.length() > 0)
 			return getAdapter(adapterId, false);
-		
-		// FIXME: remove when facilities will have correctly set adapterId 
+
+		// FIXME: remove when facilities will have correctly set adapterId
 		for (Adapter a : getAdapters()) {
 			if (a.getFacilityById(facility.getId()) != null)
-				return a; 
+				return a;
 		}
-		
+
 		return null;
 	}
-	
+
 	/**
 	 * Registers new adapter to server.
 	 * 
 	 * @param id
 	 * @return true on success, false otherwise
 	 */
-	//FIXME: this register user not adapter
+	// FIXME: this register user not adapter
 	public boolean registerAdapter(String id, String adapterName) {
 		if (mDemoMode) {
 			return false;
 		}
 
 		boolean result = false;
-		
+
 		try {
 			if (mNetwork.addAdapter(id, adapterName)) {
 				reloadAdapters(); // TODO: reload (or just add this adapter) only adapters list (without reloading facilities)
@@ -463,30 +468,29 @@ public final class Controller {
 		} catch (NetworkException e) {
 			e.printStackTrace();
 		}
-		
+
 		return result;
 	}
-	
-	//TODO: review this
-	public boolean registerUser(String email){
+
+	// TODO: review this
+	public boolean registerUser(String email) {
 		if (mDemoMode) {
 			return false;
 		}
 
 		boolean result = false;
-		
+
 		try {
 			result = mNetwork.signUp(mHousehold.user.getEmail());
 		} catch (NetworkException e) {
 			e.printStackTrace();
 		}
-		
+
 		return result;
 	}
 
 	/**
-	 * FIXME: debug implementation
-	 * Unregisters adapter from server.
+	 * FIXME: debug implementation Unregisters adapter from server.
 	 * 
 	 * @param id
 	 * @return true on success, false otherwise
@@ -497,31 +501,30 @@ public final class Controller {
 			return false;
 		}
 
-		//TODO: this is debug implementation
+		// TODO: this is debug implementation
 
 		ArrayList<String> user = new ArrayList<String>();
 		user.add(mHousehold.user.getEmail());
 
 		boolean result = false;
-		
+
 		try {
 			if (mNetwork.deleteConnectionAccounts(id, user)) {
-				if(mHousehold.activeAdapter != null && mHousehold.activeAdapter.getId().equals(id))
+				if (mHousehold.activeAdapter != null && mHousehold.activeAdapter.getId().equals(id))
 					mHousehold.activeAdapter = null;
 				reloadAdapters(); // TODO: reload (or just add this adapter) only adapters list (without reloading facilities)
-//				setActiveAdapter(id);
+				// setActiveAdapter(id);
 				result = true;
 			}
 		} catch (NetworkException e) {
 			e.printStackTrace();
 		}
-		
+
 		return result;
 	}
 
-
 	/** Location methods ****************************************************/
-	
+
 	/**
 	 * Return location from active adapter by id.
 	 * 
@@ -532,10 +535,10 @@ public final class Controller {
 		Adapter adapter = getActiveAdapter();
 		if (adapter == null)
 			return null;
-		
+
 		return adapter.getLocation(id);
 	}
-	
+
 	/**
 	 * Return list of locations from active adapter.
 	 * 
@@ -545,12 +548,13 @@ public final class Controller {
 		Adapter adapter = getActiveAdapter();
 		if (adapter == null)
 			return new ArrayList<Location>();
-		
+
 		return adapter.getLocations();
 	}
 
 	/**
 	 * Return location object that belongs to facility.
+	 * 
 	 * @param facility
 	 * @return Location if found, null otherwise.
 	 */
@@ -559,10 +563,10 @@ public final class Controller {
 		if (adapter == null) {
 			return null;
 		}
-		
+
 		return adapter.getLocation(facility.getLocationId());
 	}
-	
+
 	/**
 	 * Deletes location from server.
 	 * 
@@ -579,17 +583,17 @@ public final class Controller {
 		try {
 			if (mDemoMode) {
 				deleted = true;
-			} else {	
+			} else {
 				deleted = mNetwork.deleteLocation(adapter.getId(), location);
 			}
 		} catch (NetworkException e) {
 			e.printStackTrace();
 		}
-		
-		// Location was deleted on server, remove it from adapter too		
+
+		// Location was deleted on server, remove it from adapter too
 		return deleted && adapter.deleteLocation(location.getId());
 	}
-	
+
 	/**
 	 * Save changed location to server.
 	 * 
@@ -612,11 +616,11 @@ public final class Controller {
 		} catch (NetworkException e) {
 			e.printStackTrace();
 		}
-		
+
 		// Location was updated on server, update it to adapter too
 		return saved && adapter.updateLocation(location);
 	}
-	
+
 	/**
 	 * Create and add new location to server.
 	 * 
@@ -639,14 +643,13 @@ public final class Controller {
 			e.printStackTrace();
 			location = null;
 		}
-		
+
 		// Location was saved on server, save it to adapter too
 		return (location != null && adapter.addLocation(location)) ? location : null;
 	}
 
-
 	/** Facilities methods **************************************************/
-	
+
 	/**
 	 * Return facility by ID from all adapters.
 	 * 
@@ -655,30 +658,30 @@ public final class Controller {
 	 */
 	public Facility getFacility(String id) {
 		Facility facility = null;
-		
+
 		for (Adapter adapter : getAdapters()) {
 			facility = adapter.getFacilityById(id);
 			if (facility != null)
 				break;
 		}
-		
+
 		if (facility != null && facility.needsUpdate()) {
 			updateFacility(facility);
 		}
-		
+
 		return facility;
 	}
-	
+
 	public BaseDevice getDevice(String id) {
 		String[] ids = id.split(BaseDevice.ID_SEPARATOR, 2);
-		
+
 		Facility facility = getFacility(ids[0]);
 		if (facility == null)
 			return null;
-		
+
 		return facility.getDeviceByType(Integer.parseInt(ids[1]));
 	}
-	
+
 	/**
 	 * Marks device as hidden on server.
 	 * 
@@ -689,7 +692,7 @@ public final class Controller {
 		device.getFacility().setVisibility(false);
 		return saveDevice(device, EnumSet.of(SaveDevice.SAVE_VISIBILITY)); // TODO: this should be for facility, not device
 	}
-	
+
 	/**
 	 * Marks device as visible on server.
 	 * 
@@ -708,15 +711,15 @@ public final class Controller {
 	 */
 	public List<Facility> getUninitializedFacilities() {
 		List<Facility> list = new ArrayList<Facility>();
-		
+
 		Adapter adapter = getActiveAdapter();
 		if (adapter != null) {
 			list.addAll(adapter.getUninitializedFacilities());
 		}
-		
+
 		return list;
 	}
-	
+
 	/**
 	 * Return list of all facilities by location from active adapter.
 	 * 
@@ -725,36 +728,37 @@ public final class Controller {
 	 */
 	public List<Facility> getFacilitiesByLocation(String locationId, boolean forceUpdate) {
 		List<Facility> list = new ArrayList<Facility>();
-		
+
 		Adapter adapter = getActiveAdapter();
 		if (adapter != null) {
 			refreshAdapter(adapter, forceUpdate); // TODO: update only facilities in this location? or no?
 			list.addAll(adapter.getFacilitiesByLocation(locationId));
 		}
-		
+
 		return list;
 	}
-	
+
 	public List<Facility> getFacilitiesByAdapter(String adapterId) {
 		return getAdapter(adapterId, false).getFacilities();
 	}
-	
+
 	/**
 	 * Save specified settings of device to server.
 	 * 
 	 * @param device
-	 * @param what type of settings to save
+	 * @param what
+	 *            type of settings to save
 	 * @return true on success, false otherwise
 	 */
 	public boolean saveDevice(BaseDevice device, EnumSet<SaveDevice> what) {
 		Facility facility = device.getFacility();
-		
+
 		if (mDemoMode) {
 			facility.setInitialized(true);
 			refreshFacility(facility);
 			return true;
 		}
-		
+
 		boolean result = false;
 
 		try {
@@ -767,10 +771,10 @@ public final class Controller {
 		} catch (NetworkException e) {
 			e.printStackTrace();
 		}
-		
+
 		return result;
 	}
-	
+
 	/**
 	 * Return log for device.
 	 * 
@@ -780,11 +784,11 @@ public final class Controller {
 	public DeviceLog getDeviceLog(BaseDevice device, String from, String to, DataType type, DataInterval interval) {
 		// FIXME: rewrite this method even better - demo mode, caching, etc.
 		DeviceLog log = new DeviceLog(DataType.AVERAGE, DataInterval.RAW);
-		
+
 		if (mDemoMode) {
 			return log;
 		}
-		
+
 		try {
 			Adapter adapter = getAdapterByFacility(device.getFacility());
 			if (adapter != null) {
@@ -796,9 +800,10 @@ public final class Controller {
 
 		return log;
 	}
-	
+
 	/**
-	 * Send pair request 
+	 * Send pair request
+	 * 
 	 * @param stringID
 	 * @return result
 	 */
@@ -806,9 +811,9 @@ public final class Controller {
 		if (mDemoMode) {
 			return false;
 		}
-		
+
 		boolean result = false;
-		
+
 		try {
 			result = mNetwork.prepareAdapterToListenNewSensors(adapterID);
 		} catch (NetworkException e) {
@@ -817,7 +822,7 @@ public final class Controller {
 
 		return result;
 	}
-	
+
 	/** User methods ********************************************************/
 
 	/**
@@ -843,7 +848,7 @@ public final class Controller {
 	public boolean addUser(String adapterId, User user) throws NotImplementedException {
 		throw new NotImplementedException();
 	}
-	
+
 	/**
 	 * Delete user from adapter.
 	 * 
@@ -855,7 +860,7 @@ public final class Controller {
 	public boolean deleteUser(String adapterId, User user) throws NotImplementedException {
 		throw new NotImplementedException();
 	}
-	
+
 	/**
 	 * Save user settings to adapter.
 	 * 
@@ -867,23 +872,27 @@ public final class Controller {
 	public boolean saveUser(String adapterId, User user) throws NotImplementedException {
 		throw new NotImplementedException();
 	}
-	
+
 	/**
 	 * TODO: this is NEW method initializing googleAuth in network
+	 * 
 	 * @param activity
 	 * @param email
 	 */
-	public void initGoogle(LoginActivity activity, String email){
+	public void initGoogle(LoginActivity activity, String email) {
 		mNetwork.initGoogle(new GoogleAuth(activity, email));
 	}
-	
+
 	/**
 	 * TODO: this is NEW method for start google communication
-	 * @param blocking -> look at network
-	 * @param fetchPhoto -> look at network
+	 * 
+	 * @param blocking
+	 *            -> look at network
+	 * @param fetchPhoto
+	 *            -> look at network
 	 * @return -> look at network
 	 */
-	public boolean startGoogle(boolean blocking, boolean fetchPhoto){
+	public boolean startGoogle(boolean blocking, boolean fetchPhoto) {
 		return mNetwork.startGoogleAuth(blocking, fetchPhoto);
 	}
 

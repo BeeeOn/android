@@ -36,16 +36,15 @@ import android.content.Intent;
 import android.util.Log;
 
 /**
- * The extension receiver receives the extension intents and starts the
- * extension service when it arrives.
+ * The extension receiver receives the extension intents and starts the extension service when it arrives.
  */
 public class SW2ExtensionReceiver extends BroadcastReceiver {
 
-    @Override
-    public void onReceive(final Context context, final Intent intent) {
+	@Override
+	public void onReceive(final Context context, final Intent intent) {
 
-        Log.d(SW2ExtensionService.LOG_TAG, "onReceive: " + intent.getAction());
-        intent.setClass(context, SW2ExtensionService.class);
-        context.startService(intent);
-    }
+		Log.d(SW2ExtensionService.LOG_TAG, "onReceive: " + intent.getAction());
+		intent.setClass(context, SW2ExtensionService.class);
+		context.startService(intent);
+	}
 }

@@ -41,7 +41,7 @@ import cz.vutbr.fit.iha.controller.Controller;
 public class SetupSensorActivityDialog extends BaseActivityDialog {
 
 	private Controller mController;
-	
+
 	private static final String TAG = LocationScreenActivity.class.getSimpleName();
 
 	private BaseDevice mNewDevice;
@@ -57,7 +57,7 @@ public class SetupSensorActivityDialog extends BaseActivityDialog {
 	private Spinner mNewIconSpinner;
 	private Button mAddButton;
 	private Button mCancelButton;
-	
+
 	private int mCountOfSensor = 1;
 
 	@Override
@@ -69,8 +69,6 @@ public class SetupSensorActivityDialog extends BaseActivityDialog {
 
 		mController = Controller.getInstance(this);
 
-		
-		
 		// Prepare progress dialog
 		mProgress = new ProgressDialog(this);
 		mProgress.setMessage("Saving data...");
@@ -85,10 +83,10 @@ public class SetupSensorActivityDialog extends BaseActivityDialog {
 		for (Facility facility : mController.getUninitializedFacilities()) {
 			mUnInitDevices.addAll(facility.getDevices());
 		}
-		
+
 		if (mUnInitDevices.size() > 0) {
-			
-			if(!Controller.isDemoMode()) {
+
+			if (!Controller.isDemoMode()) {
 				// Get number of new sensors
 				Bundle bundle = getIntent().getExtras();
 				mCountOfSensor = bundle.getInt(Constants.ADDSENSOR_COUNT_SENSOR);
@@ -109,11 +107,11 @@ public class SetupSensorActivityDialog extends BaseActivityDialog {
 		mName = (EditText) findViewById(R.id.addsensor_sensor_name);
 		mNewLocation = (EditText) findViewById(R.id.addsensor_new_location_name);
 		mSpinner = (Spinner) findViewById(R.id.addsensor_spinner_choose_location);
-		
-		if(!Controller.isDemoMode()) {
-			Log.d(TAG, "mCountofSensor: "+String.valueOf(mCountOfSensor)+" mUnInitDevices-size: "+mUnInitDevices.size());
+
+		if (!Controller.isDemoMode()) {
+			Log.d(TAG, "mCountofSensor: " + String.valueOf(mCountOfSensor) + " mUnInitDevices-size: " + mUnInitDevices.size());
 			// Set Header
-			mHeader.setText(getResources().getString(R.string.addsensor_setup_sensor)+" "+String.valueOf(mCountOfSensor-mUnInitDevices.size()+1) +"/"+String.valueOf(mCountOfSensor));
+			mHeader.setText(getResources().getString(R.string.addsensor_setup_sensor) + " " + String.valueOf(mCountOfSensor - mUnInitDevices.size() + 1) + "/" + String.valueOf(mCountOfSensor));
 		}
 		mSpinner.setOnItemSelectedListener(new OnItemSelectedListener() {
 
@@ -152,8 +150,7 @@ public class SetupSensorActivityDialog extends BaseActivityDialog {
 
 		TextView time = (TextView) findViewById(R.id.addsensor_involved_time);
 		time.setText(String.format("%s %s", time.getText(), mNewDevice.getFacility().getInvolveTime()));
-		
-		
+
 	}
 
 	/**
@@ -214,7 +211,7 @@ public class SetupSensorActivityDialog extends BaseActivityDialog {
 			@Override
 			public void onClick(View v) {
 				if (mNewDevice != null) {
-					
+
 					Location location = null;
 					// last location - means new one
 					if (mSpinner.getSelectedItemPosition() == mSpinner.getCount() - 1) {
@@ -226,7 +223,7 @@ public class SetupSensorActivityDialog extends BaseActivityDialog {
 						}
 
 						location = new Location(Location.NEW_LOCATION_ID, mNewLocation.getText().toString(), mNewIconSpinner.getSelectedItemPosition());
-						
+
 					} else {
 						location = (Location) mSpinner.getSelectedItem();
 					}
@@ -339,25 +336,25 @@ public class SetupSensorActivityDialog extends BaseActivityDialog {
 				// Successfuly saved, close this dialog and return back
 				SetupSensorActivityDialog.this.finish();
 				// controll if more sensor is uninit
-				if(mUnInitDevices.size()>1){
+				if (mUnInitDevices.size() > 1) {
 					Bundle bundle = new Bundle();
-	        		 bundle.putInt(Constants.ADDSENSOR_COUNT_SENSOR, mCountOfSensor);
-	        		 // go to setup uninit sensor
-	        		 Intent intent = new Intent(SetupSensorActivityDialog.this, SetupSensorActivityDialog.class);
-	        		 intent.putExtras(bundle);
-	        		 startActivity(intent);
-	        		 return;
+					bundle.putInt(Constants.ADDSENSOR_COUNT_SENSOR, mCountOfSensor);
+					// go to setup uninit sensor
+					Intent intent = new Intent(SetupSensorActivityDialog.this, SetupSensorActivityDialog.class);
+					intent.putExtras(bundle);
+					startActivity(intent);
+					return;
 				}
-				if(mUnInitDevices.size() == 1){ // last one
-					//TODO: this only when going from loginscreen, need to review
-					if(mController.isLoggedIn()){
+				if (mUnInitDevices.size() == 1) { // last one
+					// TODO: this only when going from loginscreen, need to review
+					if (mController.isLoggedIn()) {
 						LocationScreenActivity.healActivity();
 						Intent intent = new Intent(SetupSensorActivityDialog.this, LocationScreenActivity.class);
 						startActivity(intent);
 						return;
 					}
 				}
-				
+
 				// Heal Location screen activity - refresh sensors
 				LocationScreenActivity.healActivity();
 			}

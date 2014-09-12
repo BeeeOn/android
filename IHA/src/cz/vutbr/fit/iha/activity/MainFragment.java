@@ -14,33 +14,30 @@ import com.actionbarsherlock.app.SherlockFragment;
 import cz.vutbr.fit.iha.R;
 import cz.vutbr.fit.iha.ViewPagerAdapter;
 
+public class MainFragment extends SherlockFragment {
 
-public class MainFragment extends SherlockFragment{
-	
-	 @Override
-	  public View onCreateView(LayoutInflater inflater, ViewGroup container,
-	      Bundle savedInstanceState) {
-	    View view = inflater.inflate(R.layout.viewpager_main, container, false);
-	    // Locate the ViewPager in viewpager_main.xml
-	    ViewPager mViewPager = (ViewPager) view.findViewById(R.id.viewPager);
-	    // Set the ViewPagerAdapter into ViewPager
-	    mViewPager.setAdapter(new ViewPagerAdapter(getChildFragmentManager(), getSherlockActivity()));
-	    mViewPager.setCurrentItem(0);
-	    return view;
-	  }
+	@Override
+	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+		View view = inflater.inflate(R.layout.viewpager_main, container, false);
+		// Locate the ViewPager in viewpager_main.xml
+		ViewPager mViewPager = (ViewPager) view.findViewById(R.id.viewPager);
+		// Set the ViewPagerAdapter into ViewPager
+		mViewPager.setAdapter(new ViewPagerAdapter(getChildFragmentManager(), getSherlockActivity()));
+		mViewPager.setCurrentItem(0);
+		return view;
+	}
 
-	  @Override
-	  public void onDetach() {
-	    super.onDetach();
-	    try {
-	      Field childFragmentManager = Fragment.class
-	          .getDeclaredField("mChildFragmentManager");
-	      childFragmentManager.setAccessible(true);
-	      childFragmentManager.set(this, null);
-	    } catch (NoSuchFieldException e) {
-	      throw new RuntimeException(e);
-	    } catch (IllegalAccessException e) {
-	      throw new RuntimeException(e);
-	    }
-	  }
+	@Override
+	public void onDetach() {
+		super.onDetach();
+		try {
+			Field childFragmentManager = Fragment.class.getDeclaredField("mChildFragmentManager");
+			childFragmentManager.setAccessible(true);
+			childFragmentManager.set(this, null);
+		} catch (NoSuchFieldException e) {
+			throw new RuntimeException(e);
+		} catch (IllegalAccessException e) {
+			throw new RuntimeException(e);
+		}
+	}
 }

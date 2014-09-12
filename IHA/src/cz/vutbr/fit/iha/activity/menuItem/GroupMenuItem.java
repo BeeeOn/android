@@ -11,7 +11,7 @@ public class GroupMenuItem extends AbstractMenuItem {
 		super(MenuItem.ID_UNDEFINED, type);
 		mName = name;
 	}
-	
+
 	public GroupMenuItem(String name) {
 		super(MenuItem.ID_UNDEFINED, MenuItemType.GROUP);
 		mName = name;
@@ -19,10 +19,9 @@ public class GroupMenuItem extends AbstractMenuItem {
 
 	@Override
 	public void setView(View view) {
-		TextView nameView = (TextView) view
-				.findViewById(cz.vutbr.fit.iha.R.id.name);
+		TextView nameView = (TextView) view.findViewById(cz.vutbr.fit.iha.R.id.name);
 		nameView.setText(mName);
-		
+
 		view.setEnabled(false);
 		view.setOnClickListener(null);
 	}

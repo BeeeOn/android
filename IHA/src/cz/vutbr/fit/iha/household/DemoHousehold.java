@@ -14,16 +14,16 @@ import cz.vutbr.fit.iha.network.xml.XmlParsers;
  * @author Robyer
  */
 public final class DemoHousehold extends Household {
-	
+
 	private final Context mContext;
-	
+
 	public DemoHousehold(Context context) {
 		mContext = context;
 
 		prepareUser();
 		prepareAdapters();
 	}
-	
+
 	/**
 	 * Prepare logged in user.
 	 */
@@ -33,30 +33,29 @@ public final class DemoHousehold extends Household {
 		user.setEmail("john@doe.com");
 		user.setGender(Gender.Male);
 	}
-	
+
 	/**
 	 * Prepare demo adapters.
 	 */
 	private void prepareAdapters() {
 		this.adapters = new ArrayList<Adapter>();
-		
+
 		try {
 			XmlParsers parser = new XmlParsers();
-			
+
 			String assetName = Constants.ASSET_ADAPTERS_FILENAME;
 			this.adapters = parser.getDemoAdaptersFromAsset(mContext, assetName);
-			
+
 			for (Adapter adapter : this.adapters) {
 				assetName = String.format(Constants.ASSET_LOCATIONS_FILENAME, adapter.getId());
 				adapter.setLocations(parser.getDemoLocationsFromAsset(mContext, assetName));
-				
+
 				assetName = String.format(Constants.ASSET_ADAPTER_DATA_FILENAME, adapter.getId());
 				adapter.setFacilities(parser.getDemoFacilitiesFromAsset(mContext, assetName));
-			}			
-		}
-		catch(Exception e){
+			}
+		} catch (Exception e) {
 			e.printStackTrace();
-		}	
+		}
 	}
-	
+
 }

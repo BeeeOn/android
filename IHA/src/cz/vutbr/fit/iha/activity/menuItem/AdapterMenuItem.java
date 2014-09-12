@@ -9,7 +9,7 @@ public class AdapterMenuItem extends AbstractMenuItem {
 	private String mName;
 	private String mRole;
 	private boolean mIsChosen;
-	
+
 	public AdapterMenuItem(String name, String role, boolean isChosen, String id) {
 		super(id, MenuItemType.ADAPTER);
 		mName = name;
@@ -22,7 +22,7 @@ public class AdapterMenuItem extends AbstractMenuItem {
 		TextView nameView = (TextView) view.findViewById(cz.vutbr.fit.iha.R.id.name);
 		TextView roleView = (TextView) view.findViewById(cz.vutbr.fit.iha.R.id.role);
 		ImageView iconView = (ImageView) view.findViewById(cz.vutbr.fit.iha.R.id.icon);
-		
+
 		nameView.setText(mName);
 		roleView.setText(mRole);
 		if (mIsChosen) {
@@ -39,6 +39,4 @@ public class AdapterMenuItem extends AbstractMenuItem {
 		return R.layout.drawer_listview_adapter;
 	}
 
-	
-	
 }

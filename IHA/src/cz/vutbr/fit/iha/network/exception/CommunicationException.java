@@ -5,7 +5,7 @@ package cz.vutbr.fit.iha.network.exception;
 
 /**
  * @author ThinkDeep
- *
+ * 
  */
 public class CommunicationException extends NetworkException {
 

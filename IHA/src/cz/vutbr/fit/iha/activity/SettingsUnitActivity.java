@@ -15,11 +15,9 @@ import cz.vutbr.fit.iha.controller.Controller;
 import cz.vutbr.fit.iha.persistence.Persistence;
 
 /**
- * The control preference activity handles the preferences for the control
- * extension.
+ * The control preference activity handles the preferences for the control extension.
  */
-public class SettingsUnitActivity extends SherlockPreferenceActivity implements
-		OnSharedPreferenceChangeListener {
+public class SettingsUnitActivity extends SherlockPreferenceActivity implements OnSharedPreferenceChangeListener {
 	/**
 	 * keys which are defined in res/xml/preferences.xml
 	 */
@@ -35,14 +33,14 @@ public class SettingsUnitActivity extends SherlockPreferenceActivity implements
 		super.onCreate(savedInstanceState);
 
 		mController = Controller.getInstance(this);
-		
+
 		getSupportActionBar().setHomeButtonEnabled(true);
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 		getSupportActionBar().setIcon(R.drawable.ic_launcher_white);
 
 		// Use own name for sharedPreferences
 		getPreferenceManager().setSharedPreferencesName(Persistence.getPreferencesFilename(mController.getActualUser().getEmail()));
-		
+
 		mPrefs = mController.getUserSettings();
 
 		// Load the preferences from an XML resource
@@ -77,7 +75,6 @@ public class SettingsUnitActivity extends SherlockPreferenceActivity implements
 		return false;
 	}
 
-	
 	// @Override
 	// public boolean onPreferenceChange(Preference preference, Object newValue)
 	// {

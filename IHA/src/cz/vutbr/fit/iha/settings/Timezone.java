@@ -19,9 +19,8 @@ import cz.vutbr.fit.iha.R;
  * 
  */
 public enum Timezone {
-	ACTUAL("0", R.string.actual_timezone),
-	ADAPTER("1", R.string.adapter_timezone);
-	
+	ACTUAL("0", R.string.actual_timezone), ADAPTER("1", R.string.adapter_timezone);
+
 	private final String mID;
 	private final int mResName;
 
@@ -43,7 +42,7 @@ public enum Timezone {
 	public String getId() {
 		return mID;
 	}
-	
+
 	/**
 	 * @param context
 	 *            It can be app context
@@ -78,8 +77,7 @@ public enum Timezone {
 	/**
 	 * Get Temperature by ID which will be saved in SharedPreferences.
 	 * 
-	 * @return If the ID exists, it returns Timezone object. Otherwise it
-	 *         returns default timezone option.
+	 * @return If the ID exists, it returns Timezone object. Otherwise it returns default timezone option.
 	 */
 	private static Timezone getTimezoneById(String id) {
 		for (Timezone actTemp : Timezone.values()) {
@@ -91,13 +89,13 @@ public enum Timezone {
 	}
 
 	public static Timezone getSharedPreferenceOption(SharedPreferences prefs) {
-			return getTimezoneById(prefs.getString(
-					Constants.PERSISTANCE_PREF_TIMEZONE, getDefault().getId()));
+		return getTimezoneById(prefs.getString(Constants.PERSISTANCE_PREF_TIMEZONE, getDefault().getId()));
 	}
-	
-	///// CONVERTIONS
+
+	// /// CONVERTIONS
 	/**
 	 * Return offset from UTC in milliseconds
+	 * 
 	 * @return
 	 */
 	private static int getLocalUtcOffset() {
@@ -105,30 +103,30 @@ public enum Timezone {
 		Date now = new Date();
 		return tz.getOffset(now.getTime());
 	}
-	
+
 	private Time applyUtcOffset(Time time) {
 		boolean useLocalTime = this.equals(ACTUAL);
-		
-		int utcOffset = useLocalTime ? getLocalUtcOffset() : 0; 
+
+		int utcOffset = useLocalTime ? getLocalUtcOffset() : 0;
 		Time result = new Time();
 		result.set(time.toMillis(true) + utcOffset);
 		return result;
 	}
-	
+
 	public String formatLastUpdate(Time lastUpdate) {
 		// Apply utcOffset
 		lastUpdate = applyUtcOffset(lastUpdate);
-		
+
 		// Last update time data
 		Time yesterday = new Time();
 		yesterday.setToNow();
 		yesterday.set(yesterday.toMillis(true) - 23 * 60 * 60 * 1000); // -23 hours
-		
+
 		// If sync time is more that 24 ago, show only date. Show time otherwise.
 		DateFormat dateFormat = yesterday.before(lastUpdate) ? DateFormat.getTimeInstance() : DateFormat.getDateInstance();
-		
+
 		Date lastUpdateDate = new Date(lastUpdate.toMillis(true));
 		return dateFormat.format(lastUpdateDate);
 	}
-		
+
 }

@@ -7,7 +7,8 @@ public abstract class NetworkException extends RuntimeException {
 
 	private static final long serialVersionUID = 1L;
 
-	public NetworkException() {}
+	public NetworkException() {
+	}
 
 	/**
 	 * @param detailMessage
@@ -30,5 +31,5 @@ public abstract class NetworkException extends RuntimeException {
 	public NetworkException(String detailMessage, Throwable throwable) {
 		super(detailMessage, throwable);
 	}
-	
+
 }

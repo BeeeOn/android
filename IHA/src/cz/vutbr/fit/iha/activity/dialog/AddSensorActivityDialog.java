@@ -19,32 +19,31 @@ import cz.vutbr.fit.iha.adapter.Adapter;
 import cz.vutbr.fit.iha.adapter.device.Facility;
 import cz.vutbr.fit.iha.controller.Controller;
 
-public class AddSensorActivityDialog extends BaseActivityDialog{
-	
+public class AddSensorActivityDialog extends BaseActivityDialog {
+
 	private Controller mController;
-	
+
 	// GUI elements
 	private Button mButton;
-	
+
 	private CountDownTimer mCountDownTimer;
 	private boolean mTimerDone = false;
 	private int mTimerButtonSec = 30;
 	private int mIntervalToCheckUninitSensor = 5;
-	
+
 	private PairRequestTask mPairRequestTask;
-	
+
 	private static final String TAG = LocationScreenActivity.class.getSimpleName();
-	
-	
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
-		
+
 		setContentView(R.layout.activity_add_sensor_activity_dialog);
-		
+
 		mController = Controller.getInstance(this);
-		
+
 		initViews();
 
 		// Send request
@@ -54,24 +53,21 @@ public class AddSensorActivityDialog extends BaseActivityDialog{
 			finish();
 			return;
 		}
-		
+
 		mPairRequestTask = new PairRequestTask();
 		mPairRequestTask.execute(actAdapter.getId());
 	}
-	
+
 	private void initViews() {
 		mButton = (Button) findViewById(R.id.dialog_addsensor_btn);
 		mButton.setText(getResources().getString(R.string.addsensor_sending_request));
 	}
-	
-	
-	
-	
+
 	public void resetPairButton() {
 		mButton.setText(getResources().getString(R.string.addsensor_send_request));
 		mButton.setEnabled(true);
 		mButton.setOnClickListener(new OnClickListener() {
-			
+
 			@Override
 			public void onClick(View v) {
 				startTimerOnButton();
@@ -79,36 +75,36 @@ public class AddSensorActivityDialog extends BaseActivityDialog{
 			}
 		});
 	}
-	
+
 	public void startTimerOnButton() {
-		mCountDownTimer = new CountDownTimer(mTimerButtonSec*1000, 1000) {
+		mCountDownTimer = new CountDownTimer(mTimerButtonSec * 1000, 1000) {
 
-		     public void onTick(long millisUntilFinished) {
-		    	 if(mTimerDone)
-		    		 return;
-		    	 
-		         mButton.setText(getResources().getString(R.string.addsensor_active_pair) +" 0:"+ millisUntilFinished / 1000);
-		         if( (millisUntilFinished / 1000)% mIntervalToCheckUninitSensor == 0 ){
-		        	 // check if are new uninit sensor
-		        	 Log.d(TAG, "PAIR - check if some uninit sensor");
-		        	 GetRefreshAdapterTask task = new GetRefreshAdapterTask();
-		        	 task.execute();
-		         }
-		     }
+			public void onTick(long millisUntilFinished) {
+				if (mTimerDone)
+					return;
 
-		     public void onFinish() {
-		    	 //mButton.setText("done!");
-		    	 resetPairButton();
-		     }
-		  }.start();
+				mButton.setText(getResources().getString(R.string.addsensor_active_pair) + " 0:" + millisUntilFinished / 1000);
+				if ((millisUntilFinished / 1000) % mIntervalToCheckUninitSensor == 0) {
+					// check if are new uninit sensor
+					Log.d(TAG, "PAIR - check if some uninit sensor");
+					GetRefreshAdapterTask task = new GetRefreshAdapterTask();
+					task.execute();
+				}
+			}
+
+			public void onFinish() {
+				// mButton.setText("done!");
+				resetPairButton();
+			}
+		}.start();
 
 	}
-	
+
 	public void checkUninitSensors() {
 		// GOTO next dialog to setup sensors
 		startTimerOnButton();
 	}
-	
+
 	/**
 	 * Send pair request
 	 */
@@ -117,27 +113,26 @@ public class AddSensorActivityDialog extends BaseActivityDialog{
 		@Override
 		protected Boolean doInBackground(String... adapterID) {
 			return mController.sendPairRequest(adapterID[0]);
-			//return true;
+			// return true;
 		}
 
 		@Override
 		protected void onPostExecute(Boolean res) {
-			if(res) { // Request was succesful send
+			if (res) { // Request was succesful send
 				checkUninitSensors();
-			}
-			else { // Request wasnt send
+			} else { // Request wasnt send
 				resetPairButton();
 			}
 		}
 	}
-	
+
 	/**
 	 * Changes selected location and redraws list of adapters there
 	 */
-	private class GetRefreshAdapterTask extends AsyncTask<Void, Void, List<Facility> > {
+	private class GetRefreshAdapterTask extends AsyncTask<Void, Void, List<Facility>> {
 
 		@Override
-		protected List<Facility>  doInBackground(Void... params) {
+		protected List<Facility> doInBackground(Void... params) {
 
 			mController.reloadAdapters();
 			List<Facility> facilities = mController.getUninitializedFacilities();
@@ -146,24 +141,22 @@ public class AddSensorActivityDialog extends BaseActivityDialog{
 
 		@Override
 		protected void onPostExecute(List<Facility> facilities) {
-			 
-        	 if(facilities.size() > 0 ) {
-        		 // Setup variable as true for disable timer
-        		 mTimerDone = true;
-        		 mCountDownTimer.cancel();
-        		 // Send count of sensors
-        		 Bundle bundle = new Bundle();
-        		 bundle.putInt(Constants.ADDSENSOR_COUNT_SENSOR, facilities.size());
-        		 // go to setup uninit sensor
-        		 Intent intent = new Intent(AddSensorActivityDialog.this, SetupSensorActivityDialog.class);
-        		 intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-        		 intent.putExtras(bundle);
-        		 startActivity(intent);
-        		 finish();
-        	 }
+
+			if (facilities.size() > 0) {
+				// Setup variable as true for disable timer
+				mTimerDone = true;
+				mCountDownTimer.cancel();
+				// Send count of sensors
+				Bundle bundle = new Bundle();
+				bundle.putInt(Constants.ADDSENSOR_COUNT_SENSOR, facilities.size());
+				// go to setup uninit sensor
+				Intent intent = new Intent(AddSensorActivityDialog.this, SetupSensorActivityDialog.class);
+				intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+				intent.putExtras(bundle);
+				startActivity(intent);
+				finish();
+			}
 		}
 	}
-
-
 
 }

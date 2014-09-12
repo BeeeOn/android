@@ -9,39 +9,31 @@ import android.graphics.Path;
 import android.graphics.Rect;
 
 final public class Utils {
-	
-	private Utils() {}; // private constructor to avoid instantiation
-	
+
+	private Utils() {
+	}; // private constructor to avoid instantiation
+
 	public static Bitmap getRoundedShape(Bitmap scaleBitmapImage) {
-	    int targetWidth = 200;
-	    int targetHeight = 200;
-	    Bitmap targetBitmap = Bitmap.createBitmap(targetWidth, 
-	                        targetHeight,Bitmap.Config.ARGB_8888);
+		int targetWidth = 200;
+		int targetHeight = 200;
+		Bitmap targetBitmap = Bitmap.createBitmap(targetWidth, targetHeight, Bitmap.Config.ARGB_8888);
 
-	    Canvas canvas = new Canvas(targetBitmap);
-	    Path path = new Path();
-	    path.addCircle(((float) targetWidth - 1) / 2,
-	        ((float) targetHeight - 1) / 2,
-	        (Math.min(((float) targetWidth), 
-	        ((float) targetHeight)) / 2),
-	        Path.Direction.CCW);
+		Canvas canvas = new Canvas(targetBitmap);
+		Path path = new Path();
+		path.addCircle(((float) targetWidth - 1) / 2, ((float) targetHeight - 1) / 2, (Math.min(((float) targetWidth), ((float) targetHeight)) / 2), Path.Direction.CCW);
 
-	    canvas.clipPath(path);
-	    Bitmap sourceBitmap = scaleBitmapImage;
-	    canvas.drawBitmap(sourceBitmap, 
-	        new Rect(0, 0, sourceBitmap.getWidth(),
-	        sourceBitmap.getHeight()), 
-	        new Rect(0, 0, targetWidth, targetHeight), null);
-	    return targetBitmap;
+		canvas.clipPath(path);
+		Bitmap sourceBitmap = scaleBitmapImage;
+		canvas.drawBitmap(sourceBitmap, new Rect(0, 0, sourceBitmap.getWidth(), sourceBitmap.getHeight()), new Rect(0, 0, targetWidth, targetHeight), null);
+		return targetBitmap;
 	}
-	
+
 	/**
 	 * @return Application's version code from the {@code PackageManager}.
 	 */
 	public static int getAppVersion(Context context) {
 		try {
-			PackageInfo packageInfo = context.getPackageManager()
-					.getPackageInfo(context.getPackageName(), 0);
+			PackageInfo packageInfo = context.getPackageManager().getPackageInfo(context.getPackageName(), 0);
 			return packageInfo.versionCode;
 		} catch (NameNotFoundException e) {
 			// should never happen

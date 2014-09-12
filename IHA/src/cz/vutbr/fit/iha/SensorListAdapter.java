@@ -23,7 +23,7 @@ public class SensorListAdapter extends BaseAdapter {
 	private static final int PADDING_TOP = 6;
 	private static final int PADDING_BOTTOM = 5;
 	private float mScale;
-	
+
 	// Declare Variables
 	private Context mContext;
 	private String[] mTitle;
@@ -36,11 +36,10 @@ public class SensorListAdapter extends BaseAdapter {
 	private LayoutInflater inflater;
 	private int mCount;
 	private int mLenght;
-	
+
 	private final Controller mController;
 
-	public SensorListAdapter(Context context, String[] title, String[] value,
-			String[] unit, Time[] time, int[] icon, int[] relPos, int[] facSize) {
+	public SensorListAdapter(Context context, String[] title, String[] value, String[] unit, Time[] time, int[] icon, int[] relPos, int[] facSize) {
 		mContext = context;
 		mTitle = title;
 		mValue = value;
@@ -51,7 +50,7 @@ public class SensorListAdapter extends BaseAdapter {
 		mFacSize = facSize;
 		mLenght = mTitle.length;
 		mController = Controller.getInstance(context);
-		mCount = mTitle.length+1;
+		mCount = mTitle.length + 1;
 	}
 
 	@Override
@@ -71,20 +70,17 @@ public class SensorListAdapter extends BaseAdapter {
 
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
-		if(position < mLenght)
-		{
+		if (position < mLenght) {
 			return addItem(position, convertView, parent);
 		}
-		return addAddSensor(convertView,parent);
+		return addAddSensor(convertView, parent);
 	}
 
-	
 	private View addAddSensor(View convertView, ViewGroup parent) {
-		inflater = (LayoutInflater)	mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE); 
-		View itemView = inflater.inflate(R.layout.sensor_listview_addsensor, parent,false);
+		inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		View itemView = inflater.inflate(R.layout.sensor_listview_addsensor, parent, false);
 		return itemView;
 	}
-	 
 
 	private View addItem(int position, View convertView, ViewGroup parent) {
 		// Declare Variables
@@ -94,12 +90,9 @@ public class SensorListAdapter extends BaseAdapter {
 		TextView txtTime;
 		ImageView imgIcon;
 		LinearLayout layout;
-		
 
-		inflater = (LayoutInflater) mContext
-				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		View itemView = inflater.inflate(R.layout.sensor_listview_item, parent,
-				false);
+		inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		View itemView = inflater.inflate(R.layout.sensor_listview_item, parent, false);
 
 		// Locate the TextViews in drawer_list_item.xml
 		txtTitle = (TextView) itemView.findViewById(R.id.titleofsensor);
@@ -114,34 +107,27 @@ public class SensorListAdapter extends BaseAdapter {
 		txtTitle.setText(mTitle[position]);
 		txtValue.setText(mValue[position]);
 		txtUnit.setText(mUnit[position]);
-		txtTime.setText(String.format(
-				"%s %s",
-				mContext.getString(R.string.last_update),
-				Timezone.getSharedPreferenceOption(mController.getUserSettings()).formatLastUpdate(
-						mTime[position])));
+		txtTime.setText(String.format("%s %s", mContext.getString(R.string.last_update), Timezone.getSharedPreferenceOption(mController.getUserSettings()).formatLastUpdate(mTime[position])));
 
 		// Set the results into ImageView
 		imgIcon.setImageResource(mIcon[position]);
 		mScale = parent.getResources().getDisplayMetrics().density;
-		
+
 		// Set layout with right background
 		layout = (LinearLayout) itemView.findViewById(R.id.layoutofsensor);
-		if(mFacSize[position] == 1) {// it is SOLO device from FACILITY
+		if (mFacSize[position] == 1) {// it is SOLO device from FACILITY
 			layout.setBackgroundResource(R.drawable.iha_item_solo_bg);
-			((LayoutParams) layout.getLayoutParams()).setMargins((int)mScale*MARGIN_LEFT_RIGHT,(int) mScale*MARGIN_TOP,(int) mScale*MARGIN_LEFT_RIGHT,(int) mScale*MARGIN_BOTTOM);
-		}
-		else if(mRelPos[position] == 1) { // FIRST from FACILITY
+			((LayoutParams) layout.getLayoutParams()).setMargins((int) mScale * MARGIN_LEFT_RIGHT, (int) mScale * MARGIN_TOP, (int) mScale * MARGIN_LEFT_RIGHT, (int) mScale * MARGIN_BOTTOM);
+		} else if (mRelPos[position] == 1) { // FIRST from FACILITY
 			layout.setBackgroundResource(R.drawable.iha_item_first_bg);
-			((LayoutParams) layout.getLayoutParams()).setMargins((int)mScale*MARGIN_LEFT_RIGHT,(int) mScale*MARGIN_TOP,(int) mScale*MARGIN_LEFT_RIGHT,(int) mScale*MARGIN_BOTTOM);
-		} 
-		else if(mRelPos[position] == mFacSize[position]) {// LAST from FACILITY
+			((LayoutParams) layout.getLayoutParams()).setMargins((int) mScale * MARGIN_LEFT_RIGHT, (int) mScale * MARGIN_TOP, (int) mScale * MARGIN_LEFT_RIGHT, (int) mScale * MARGIN_BOTTOM);
+		} else if (mRelPos[position] == mFacSize[position]) {// LAST from FACILITY
 			layout.setBackgroundResource(R.drawable.iha_item_last_bg);
-			((LayoutParams) layout.getLayoutParams()).setMargins((int)mScale*MARGIN_LEFT_RIGHT,(int) mScale*MARGIN_TOP_M_L,(int) mScale*MARGIN_LEFT_RIGHT,(int) mScale*MARGIN_BOTTOM);
-			layout.setPadding((int)mScale*PADDING_LEFT_RIGHT, (int)mScale*PADDING_TOP, (int)mScale*PADDING_LEFT_RIGHT, (int)mScale*PADDING_BOTTOM);
-		}
-		else { // MIDLE from FACILITY
+			((LayoutParams) layout.getLayoutParams()).setMargins((int) mScale * MARGIN_LEFT_RIGHT, (int) mScale * MARGIN_TOP_M_L, (int) mScale * MARGIN_LEFT_RIGHT, (int) mScale * MARGIN_BOTTOM);
+			layout.setPadding((int) mScale * PADDING_LEFT_RIGHT, (int) mScale * PADDING_TOP, (int) mScale * PADDING_LEFT_RIGHT, (int) mScale * PADDING_BOTTOM);
+		} else { // MIDLE from FACILITY
 			layout.setBackgroundResource(R.drawable.iha_item_midle_bg);
-			((LayoutParams) layout.getLayoutParams()).setMargins((int)mScale*MARGIN_LEFT_RIGHT,(int) mScale*MARGIN_TOP_M_L,(int) mScale*MARGIN_LEFT_RIGHT,(int) mScale*MARGIN_BOTTOM);
+			((LayoutParams) layout.getLayoutParams()).setMargins((int) mScale * MARGIN_LEFT_RIGHT, (int) mScale * MARGIN_TOP_M_L, (int) mScale * MARGIN_LEFT_RIGHT, (int) mScale * MARGIN_BOTTOM);
 		}
 
 		return itemView;

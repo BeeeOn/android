@@ -3,16 +3,16 @@
  */
 package cz.vutbr.fit.iha.network.exception;
 
-
 /**
  * @author ThinkDeep
- *
+ * 
  */
 public class NotRegBException extends NotRegException {
 
 	private static final long serialVersionUID = 1L;
 
-	public NotRegBException() {	}
+	public NotRegBException() {
+	}
 
 	/**
 	 * @param detailMessage

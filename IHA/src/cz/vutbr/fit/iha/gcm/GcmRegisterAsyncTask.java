@@ -10,14 +10,13 @@ import cz.vutbr.fit.iha.Constants;
 
 public class GcmRegisterAsyncTask extends AsyncTask<Context, Void, Void> {
 	/**
-	 * Minimum delay in milliseconds after register GCM fail and then
-	 * exponentially more.
+	 * Minimum delay in milliseconds after register GCM fail and then exponentially more.
 	 */
 	private static final int MIN_SLEEP_TIME_GCM = 5;
-	
+
 	private String mRegId = null;
 	private GoogleCloudMessaging mGcm;
-	
+
 	@Override
 	protected Void doInBackground(Context... params) {
 		Context context = params[0];
@@ -31,11 +30,9 @@ public class GcmRegisterAsyncTask extends AsyncTask<Context, Void, Void> {
 			try {
 				mRegId = mGcm.register(Constants.PROJECT_NUMBER);
 			} catch (Exception e) {
-				Log.e(GcmHelper.TAG_GCM, "Error: attempt n."+ String.valueOf(attempt) + " :"+e.getMessage());
+				Log.e(GcmHelper.TAG_GCM, "Error: attempt n." + String.valueOf(attempt) + " :" + e.getMessage());
 				/*
-				 * No matter how many times you call register, it will
-				 * always fail and throw an exception on some devices. On
-				 * these devices we need to get GCM ID this way.
+				 * No matter how many times you call register, it will always fail and throw an exception on some devices. On these devices we need to get GCM ID this way.
 				 */
 				// final String registrationId =
 				// context.getIntent().getStringExtra(
@@ -44,20 +41,17 @@ public class GcmRegisterAsyncTask extends AsyncTask<Context, Void, Void> {
 				// mRegId = registrationId;
 				// break;
 				// }
-					try {
-						Thread.sleep(timeToSleep);
-					} catch (InterruptedException e1) {
-						e1.printStackTrace();
-					}
-					timeToSleep = timeToSleep * timeToSleep;
-					continue;
+				try {
+					Thread.sleep(timeToSleep);
+				} catch (InterruptedException e1) {
+					e1.printStackTrace();
+				}
+				timeToSleep = timeToSleep * timeToSleep;
+				continue;
 			}
 		}
 
-		Log.i(GcmHelper.TAG_GCM,
-				"Device registered, attempt number "
-						+ String.valueOf(attempt) + " , registration ID="
-						+ mRegId);
+		Log.i(GcmHelper.TAG_GCM, "Device registered, attempt number " + String.valueOf(attempt) + " , registration ID=" + mRegId);
 
 		// For this demo: we don't need to send it because the device
 		// will send upstream messages to a server that echo back the

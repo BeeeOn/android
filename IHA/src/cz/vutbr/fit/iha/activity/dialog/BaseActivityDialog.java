@@ -4,8 +4,7 @@ import android.app.Activity;
 
 import com.google.analytics.tracking.android.EasyTracker;
 
-public class BaseActivityDialog extends Activity
-{
+public class BaseActivityDialog extends Activity {
 
 	@Override
 	public void onStart() {

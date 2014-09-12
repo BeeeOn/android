@@ -10,13 +10,12 @@ import cz.vutbr.fit.iha.util.Utils;
 
 public class GcmHelper {
 	public static final String TAG_GCM = "IHA_GCM";
-	
+
 	/**
-	 * Maximum milliseconds which device will wait in thread for reparation GCM
-	 * ID. If it isn't registered after this time, new thread will be created.
+	 * Maximum milliseconds which device will wait in thread for reparation GCM ID. If it isn't registered after this time, new thread will be created.
 	 */
 	private static final int MAX_MILLSEC_GCM = 1000;
-	
+
 	/**
 	 * @return Application's {@code SharedPreferences}.
 	 */
@@ -24,15 +23,13 @@ public class GcmHelper {
 		// This sample app persists the registration ID in shared preferences,
 		// but
 		// how you store the regID in your app is up to you.
-		return context.getSharedPreferences(Constants.SHARED_PREF_GCM_NAME,
-				Context.MODE_PRIVATE);
+		return context.getSharedPreferences(Constants.SHARED_PREF_GCM_NAME, Context.MODE_PRIVATE);
 	}
-	
+
 	/**
 	 * Registers the application with GCM servers asynchronously.
 	 * <p>
-	 * Stores the registration ID and app versionCode in the application's
-	 * shared preferences.
+	 * Stores the registration ID and app versionCode in the application's shared preferences.
 	 */
 	public static void registerGCMInBackground(Context context) {
 		new GcmRegisterAsyncTask().execute(context, null, null);
@@ -46,14 +43,13 @@ public class GcmHelper {
 			e.printStackTrace();
 		}
 	}
-	
+
 	/**
 	 * Gets the current registration ID for application on GCM service.
 	 * <p>
 	 * If result is empty, the app needs to register.
 	 * 
-	 * @return registration ID, or empty string if there is no existing
-	 *         registration ID.
+	 * @return registration ID, or empty string if there is no existing registration ID.
 	 */
 	public static String getGCMRegistrationId(Context context) {
 		final SharedPreferences prefs = getGCMPreferences(context);
@@ -65,8 +61,7 @@ public class GcmHelper {
 		// Check if app was updated; if so, it must clear the registration ID
 		// since the existing regID is not guaranteed to work with the new
 		// app version.
-		int registeredVersion = prefs.getInt(Constants.PREF_GCM_APP_VERSION,
-				Integer.MIN_VALUE);
+		int registeredVersion = prefs.getInt(Constants.PREF_GCM_APP_VERSION, Integer.MIN_VALUE);
 		int currentVersion = Utils.getAppVersion(context);
 		if (registeredVersion != currentVersion) {
 			Log.i(TAG_GCM, "GCM: App version changed.");
@@ -74,10 +69,9 @@ public class GcmHelper {
 		}
 		return registrationId;
 	}
-	
+
 	/**
-	 * Stores the registration ID and app versionCode in the application's
-	 * {@code SharedPreferences}.
+	 * Stores the registration ID and app versionCode in the application's {@code SharedPreferences}.
 	 * 
 	 * @param context
 	 *            application's context.

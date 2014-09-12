@@ -21,11 +21,9 @@ import cz.vutbr.fit.iha.persistence.Persistence;
 import cz.vutbr.fit.iha.settings.Timezone;
 
 /**
- * The control preference activity handles the preferences for the control
- * extension.
+ * The control preference activity handles the preferences for the control extension.
  */
-public class SettingsMainActivity extends SherlockPreferenceActivity implements
-		OnSharedPreferenceChangeListener {
+public class SettingsMainActivity extends SherlockPreferenceActivity implements OnSharedPreferenceChangeListener {
 	/**
 	 * keys which are defined in res/xml/preferences.xml
 	 */
@@ -42,11 +40,11 @@ public class SettingsMainActivity extends SherlockPreferenceActivity implements
 		super.onCreate(savedInstanceState);
 
 		mController = Controller.getInstance(this);
-		
+
 		getSupportActionBar().setHomeButtonEnabled(true);
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 		getSupportActionBar().setIcon(R.drawable.ic_launcher_white);
-		
+
 		// Use own name for sharedPreferences
 		getPreferenceManager().setSharedPreferencesName(Persistence.getPreferencesFilename(mController.getActualUser().getEmail()));
 
@@ -57,16 +55,16 @@ public class SettingsMainActivity extends SherlockPreferenceActivity implements
 
 		mListPrefAdapter = (ListPreference) findPreference(Constants.PERSISTANCE_PREF_SW2_ADAPTER);
 		mListPrefLocation = (ListPreference) findPreference(Constants.PERSISTANCE_PREF_SW2_LOCATION);
-		
+
 		mListPrefTimezone = (ListPreference) findPreference(Constants.PERSISTANCE_PREF_TIMEZONE);
 		mListPrefTimezone.setEntries(Timezone.getEntries(this));
 		mListPrefTimezone.setEntryValues(Timezone.getEntryValues());
 		mListPrefTimezone.setSummary(Timezone.getSharedPreferenceOption(mController.getUserSettings()).getName(this));
-		
+
 		mPrefUnits = findPreference(Constants.KEY_UNITS);
-        Intent intentUnit = new Intent(this, SettingsUnitActivity.class);
+		Intent intentUnit = new Intent(this, SettingsUnitActivity.class);
 		mPrefUnits.setIntent(intentUnit);
-		
+
 		// mAdapterListPref.set
 		// mAdapterListPref.setOnPreferenceChangeListener(this);
 		// mLocationListPref.setOnPreferenceChangeListener(this);
@@ -90,10 +88,10 @@ public class SettingsMainActivity extends SherlockPreferenceActivity implements
 		setDefaultLocAndAdap();
 		mListPrefTimezone.setSummary(Timezone.getSharedPreferenceOption(mController.getUserSettings()).getName(this));
 	}
-	
+
 	// FIXME: This method must use same ActiveAdapter from application,
 	// we can't have in controller more activeAdapters for getting locations and facilities...
-	// Use mController.setActiveAdapter(...) to switch to another adapter 
+	// Use mController.setActiveAdapter(...) to switch to another adapter
 	private void setDefaultLocAndAdap() {
 		List<Adapter> adapters = mController.getAdapters();
 
@@ -107,7 +105,7 @@ public class SettingsMainActivity extends SherlockPreferenceActivity implements
 		}
 		// only 1 adapter available, disable adapter choice
 		else if (adapters.size() < 2) {
-			
+
 			mListPrefAdapter.setEnabled(false);
 			Adapter adapter = adapters.get(0);
 

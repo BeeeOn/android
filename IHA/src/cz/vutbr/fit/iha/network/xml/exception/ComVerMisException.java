@@ -3,18 +3,18 @@
  */
 package cz.vutbr.fit.iha.network.xml.exception;
 
-
-
 /**
  * CommunicationVersionMismatchException
+ * 
  * @author ThinkDeep
- *
+ * 
  */
 public class ComVerMisException extends RuntimeException {
 
 	private static final long serialVersionUID = 1L;
 
-	public ComVerMisException() { }
+	public ComVerMisException() {
+	}
 
 	/**
 	 * @param detailMessage

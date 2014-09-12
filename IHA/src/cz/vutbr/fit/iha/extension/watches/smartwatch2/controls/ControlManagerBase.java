@@ -42,150 +42,152 @@ import com.sonyericsson.extras.liveware.extension.util.control.ControlTouchEvent
 import cz.vutbr.fit.iha.extension.watches.smartwatch2.SW2ExtensionService;
 
 /**
- * The phone control manager manages which control to currently show on the
- * display. This class then forwards any life-cycle methods and events events to
- * the running control. This base class only handles API level 1 methods.
+ * The phone control manager manages which control to currently show on the display. This class then forwards any life-cycle methods and events events to the running control. This base class only
+ * handles API level 1 methods.
  */
 public class ControlManagerBase extends ControlExtension {
 
-    protected ControlExtension mCurrentControl = null;
+	protected ControlExtension mCurrentControl = null;
 
-    private static final int STATE_IDLE = 0;
+	private static final int STATE_IDLE = 0;
 
-    protected static final int STATE_STARTED = 1;
+	protected static final int STATE_STARTED = 1;
 
-    protected static final int STATE_FOREGROUND = 2;
+	protected static final int STATE_FOREGROUND = 2;
 
-    protected int mControlState = STATE_IDLE;
+	protected int mControlState = STATE_IDLE;
 
-    /**
-     * Create phone control manager.
-     *
-     * @param context The context to use.
-     * @param packageName The package name of the host application.
-     */
-    public ControlManagerBase(final Context context, final String packageName) {
-        super(context, packageName);
-        Log.v(SW2ExtensionService.LOG_TAG, "created");
+	/**
+	 * Create phone control manager.
+	 * 
+	 * @param context
+	 *            The context to use.
+	 * @param packageName
+	 *            The package name of the host application.
+	 */
+	public ControlManagerBase(final Context context, final String packageName) {
+		super(context, packageName);
+		Log.v(SW2ExtensionService.LOG_TAG, "created");
 
-    }
+	}
 
-    @Override
-    public void onDestroy() {
-        Log.v(SW2ExtensionService.LOG_TAG, "ControlManager onDestroy");
-        if (mCurrentControl != null) {
-            mCurrentControl.onDestroy();
-        }
-    }
+	@Override
+	public void onDestroy() {
+		Log.v(SW2ExtensionService.LOG_TAG, "ControlManager onDestroy");
+		if (mCurrentControl != null) {
+			mCurrentControl.onDestroy();
+		}
+	}
 
-    @Override
-    public void onStart() {
-        Log.v(SW2ExtensionService.LOG_TAG, "onStart");
-        mControlState = STATE_STARTED;
-        if (mCurrentControl != null) {
-            mCurrentControl.onStart();
-        }
-    }
+	@Override
+	public void onStart() {
+		Log.v(SW2ExtensionService.LOG_TAG, "onStart");
+		mControlState = STATE_STARTED;
+		if (mCurrentControl != null) {
+			mCurrentControl.onStart();
+		}
+	}
 
-    @Override
-    public void onStop() {
-        Log.v(SW2ExtensionService.LOG_TAG, "onStop");
-        mControlState = STATE_IDLE;
-        if (mCurrentControl != null) {
-            mCurrentControl.onStop();
-        }
-    }
+	@Override
+	public void onStop() {
+		Log.v(SW2ExtensionService.LOG_TAG, "onStop");
+		mControlState = STATE_IDLE;
+		if (mCurrentControl != null) {
+			mCurrentControl.onStop();
+		}
+	}
 
-    @Override
-    public void onPause() {
-        Log.v(SW2ExtensionService.LOG_TAG, "onPause");
-        mControlState = STATE_STARTED;
-        if (mCurrentControl != null) {
-            mCurrentControl.onPause();
-        }
-    }
+	@Override
+	public void onPause() {
+		Log.v(SW2ExtensionService.LOG_TAG, "onPause");
+		mControlState = STATE_STARTED;
+		if (mCurrentControl != null) {
+			mCurrentControl.onPause();
+		}
+	}
 
-    @Override
-    public void onResume() {
-        Log.v(SW2ExtensionService.LOG_TAG, "onResume");
-        mControlState = STATE_FOREGROUND;
-        if (mCurrentControl != null) {
-            mCurrentControl.onResume();
-        }
-    }
+	@Override
+	public void onResume() {
+		Log.v(SW2ExtensionService.LOG_TAG, "onResume");
+		mControlState = STATE_FOREGROUND;
+		if (mCurrentControl != null) {
+			mCurrentControl.onResume();
+		}
+	}
 
-    @Override
-    public void onTouch(final ControlTouchEvent event) {
-        Log.v(SW2ExtensionService.LOG_TAG, "onTouch");
-        if (mCurrentControl != null) {
-            mCurrentControl.onTouch(event);
-        }
-    }
+	@Override
+	public void onTouch(final ControlTouchEvent event) {
+		Log.v(SW2ExtensionService.LOG_TAG, "onTouch");
+		if (mCurrentControl != null) {
+			mCurrentControl.onTouch(event);
+		}
+	}
 
-    @Override
-    public void onSwipe(int direction) {
-    	Log.v(SW2ExtensionService.LOG_TAG, "onSwipe");
-        if (mCurrentControl != null) {
-            mCurrentControl.onSwipe(direction);
-        }
-    }
-    
-    @Override
-    public void onDoAction(int requestCode, Bundle bundle) {
-        Log.v(SW2ExtensionService.LOG_TAG, "onDoAction");
-        if (mCurrentControl != null) {
-            mCurrentControl.onDoAction(requestCode, bundle);
-        }
-    }
+	@Override
+	public void onSwipe(int direction) {
+		Log.v(SW2ExtensionService.LOG_TAG, "onSwipe");
+		if (mCurrentControl != null) {
+			mCurrentControl.onSwipe(direction);
+		}
+	}
 
-    @Override
-    public void onError(int code) {
-        Log.d(SW2ExtensionService.LOG_TAG, "onError");
-        if (mCurrentControl != null) {
-            mCurrentControl.onError(code);
-        }
-    }
+	@Override
+	public void onDoAction(int requestCode, Bundle bundle) {
+		Log.v(SW2ExtensionService.LOG_TAG, "onDoAction");
+		if (mCurrentControl != null) {
+			mCurrentControl.onDoAction(requestCode, bundle);
+		}
+	}
 
-    @Override
-    public void onKey(int action, int keyCode, long timeStamp) {
-        Log.v(SW2ExtensionService.LOG_TAG, "onKey");
-        if (mCurrentControl != null) {
-            mCurrentControl.onKey(action, keyCode, timeStamp);
-        }
-    }
+	@Override
+	public void onError(int code) {
+		Log.d(SW2ExtensionService.LOG_TAG, "onError");
+		if (mCurrentControl != null) {
+			mCurrentControl.onError(code);
+		}
+	}
 
-    /**
-     * Start a new control. Any currently running control will be stopped.
-     *
-     * @param newControlId The control to start.
-     */
-    protected void startControl(final ControlExtension newControl) {
+	@Override
+	public void onKey(int action, int keyCode, long timeStamp) {
+		Log.v(SW2ExtensionService.LOG_TAG, "onKey");
+		if (mCurrentControl != null) {
+			mCurrentControl.onKey(action, keyCode, timeStamp);
+		}
+	}
 
-        Log.d(SW2ExtensionService.LOG_TAG, "ControlManager startControl");
-        if (newControl != null) {
-            // Stop the current control
-            int savedState = mControlState;
-            closeCurrentControl();
-            mCurrentControl = newControl;
-            // Start and resume the new control
-            if (mCurrentControl != null) {
-                onStart();
-                if (savedState == STATE_FOREGROUND) {
-                    onResume();
-                }
-            }
-        }
-    }
+	/**
+	 * Start a new control. Any currently running control will be stopped.
+	 * 
+	 * @param newControlId
+	 *            The control to start.
+	 */
+	protected void startControl(final ControlExtension newControl) {
 
-    protected void closeCurrentControl() {
-        if (mCurrentControl != null) {
-            if (mControlState == STATE_FOREGROUND) {
-                onPause();
-            }
-            if (mControlState == STATE_STARTED) {
-                onStop();
-            }
-            mCurrentControl.onDestroy();
-        }
-    }
+		Log.d(SW2ExtensionService.LOG_TAG, "ControlManager startControl");
+		if (newControl != null) {
+			// Stop the current control
+			int savedState = mControlState;
+			closeCurrentControl();
+			mCurrentControl = newControl;
+			// Start and resume the new control
+			if (mCurrentControl != null) {
+				onStart();
+				if (savedState == STATE_FOREGROUND) {
+					onResume();
+				}
+			}
+		}
+	}
+
+	protected void closeCurrentControl() {
+		if (mCurrentControl != null) {
+			if (mControlState == STATE_FOREGROUND) {
+				onPause();
+			}
+			if (mControlState == STATE_STARTED) {
+				onStop();
+			}
+			mCurrentControl.onDestroy();
+		}
+	}
 }

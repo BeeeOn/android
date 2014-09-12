@@ -39,8 +39,7 @@ public class WidgetConfigurationActivity extends BaseActivity {
 		Intent intent = getIntent();
 		Bundle extras = intent.getExtras();
 		if (extras != null) {
-			mAppWidgetId = extras.getInt(AppWidgetManager.EXTRA_APPWIDGET_ID,
-					AppWidgetManager.INVALID_APPWIDGET_ID);
+			mAppWidgetId = extras.getInt(AppWidgetManager.EXTRA_APPWIDGET_ID, AppWidgetManager.INVALID_APPWIDGET_ID);
 		}
 
 		// no valid ID, so bail out
@@ -81,45 +80,35 @@ public class WidgetConfigurationActivity extends BaseActivity {
 	 */
 	private void initButtons() {
 		// Cancel button - close window without adding widget
-		((Button) findViewById(R.id.btn_cancel))
-				.setOnClickListener(new OnClickListener() {
-					@Override
-					public void onClick(View v) {
-						Log.d(TAG, "Cancel clicked");
-						finish();
-					}
-				});
+		((Button) findViewById(R.id.btn_cancel)).setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				Log.d(TAG, "Cancel clicked");
+				finish();
+			}
+		});
 
 		// Add button - save widget and his settings
-		((Button) findViewById(R.id.btn_add))
-				.setOnClickListener(new OnClickListener() {
-					@Override
-					public void onClick(View v) {
-						Log.d(TAG, "OK clicked");
+		((Button) findViewById(R.id.btn_add)).setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				Log.d(TAG, "OK clicked");
 
-						if (!saveSettings())
-							return;
+				if (!saveSettings())
+					return;
 
-						Intent firstUpdate = new Intent(
-								WidgetConfigurationActivity.this,
-								SensorWidgetProvider.class);
-						firstUpdate
-								.setAction("android.appwidget.action.APPWIDGET_UPDATE");
-						firstUpdate.putExtra(
-								AppWidgetManager.EXTRA_APPWIDGET_IDS,
-								new int[] { mAppWidgetId });
-						WidgetConfigurationActivity.this
-								.sendBroadcast(firstUpdate);
+				Intent firstUpdate = new Intent(WidgetConfigurationActivity.this, SensorWidgetProvider.class);
+				firstUpdate.setAction("android.appwidget.action.APPWIDGET_UPDATE");
+				firstUpdate.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, new int[] { mAppWidgetId });
+				WidgetConfigurationActivity.this.sendBroadcast(firstUpdate);
 
-						// return the original widget ID, found in onCreate()
-						Intent resultValue = new Intent();
-						resultValue.putExtra(
-								AppWidgetManager.EXTRA_APPWIDGET_ID,
-								mAppWidgetId);
-						setResult(RESULT_OK, resultValue);
-						finish();
-					}
-				});
+				// return the original widget ID, found in onCreate()
+				Intent resultValue = new Intent();
+				resultValue.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, mAppWidgetId);
+				setResult(RESULT_OK, resultValue);
+				finish();
+			}
+		});
 	}
 
 	private void initSpinner() {
@@ -129,8 +118,7 @@ public class WidgetConfigurationActivity extends BaseActivity {
 	}
 
 	private void loadSettings() {
-		SharedPreferences settings = SensorWidgetProvider.getSettings(
-				WidgetConfigurationActivity.this, mAppWidgetId);
+		SharedPreferences settings = SensorWidgetProvider.getSettings(WidgetConfigurationActivity.this, mAppWidgetId);
 
 		String id = settings.getString(Constants.WIDGET_PREF_DEVICE, "");
 		if (id != "") {
@@ -167,8 +155,7 @@ public class WidgetConfigurationActivity extends BaseActivity {
 		String i = edit.getText().toString();
 		if (i == null || i.length() == 0) {
 			// FIXME: use string from resources
-			Toast.makeText(this, "Set update interval", Toast.LENGTH_LONG)
-					.show();
+			Toast.makeText(this, "Set update interval", Toast.LENGTH_LONG).show();
 			return false;
 		}
 

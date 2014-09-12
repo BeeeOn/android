@@ -3,16 +3,16 @@
  */
 package cz.vutbr.fit.iha.network.exception;
 
-
 /**
  * @author ThinkDeep
- *
+ * 
  */
 public class NoConnectionException extends NetworkException {
 
 	private static final long serialVersionUID = 1L;
 
-	public NoConnectionException() { }
+	public NoConnectionException() {
+	}
 
 	/**
 	 * @param detailMessage

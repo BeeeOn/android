@@ -10,7 +10,7 @@ public class ProfileMenuItem extends AbstractMenuItem {
 	private String mName;
 	private String mEmail;
 	private Bitmap mIcon;
-	
+
 	public ProfileMenuItem(String name, String email, Bitmap icon) {
 		super(MenuItem.ID_UNDEFINED, MenuItemType.PROFILE);
 		mName = name;
@@ -23,7 +23,7 @@ public class ProfileMenuItem extends AbstractMenuItem {
 		TextView nameView = (TextView) view.findViewById(cz.vutbr.fit.iha.R.id.name);
 		TextView emailView = (TextView) view.findViewById(cz.vutbr.fit.iha.R.id.email);
 		ImageView iconView = (ImageView) view.findViewById(cz.vutbr.fit.iha.R.id.icon);
-		
+
 		nameView.setText(mName);
 		emailView.setText(mEmail);
 		iconView.setImageBitmap(mIcon);
@@ -34,6 +34,4 @@ public class ProfileMenuItem extends AbstractMenuItem {
 		return R.layout.drawer_listview_profile;
 	}
 
-	
-	
 }

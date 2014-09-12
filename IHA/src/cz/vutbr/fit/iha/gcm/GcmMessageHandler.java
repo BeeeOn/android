@@ -48,13 +48,11 @@ public class GcmMessageHandler extends IntentService {
 		}
 
 		if (GoogleCloudMessaging.MESSAGE_TYPE_SEND_ERROR.equals(messageType)) {
-			Log.w(GcmHelper.TAG_GCM,"Send error: " + extras.toString());
-		} else if (GoogleCloudMessaging.MESSAGE_TYPE_DELETED
-				.equals(messageType)) {
+			Log.w(GcmHelper.TAG_GCM, "Send error: " + extras.toString());
+		} else if (GoogleCloudMessaging.MESSAGE_TYPE_DELETED.equals(messageType)) {
 			Log.w(GcmHelper.TAG_GCM, "Deleted messages on server: " + extras.toString());
 			// If it's a regular GCM message, do some work.
-		} else if (GoogleCloudMessaging.MESSAGE_TYPE_MESSAGE
-				.equals(messageType)) {
+		} else if (GoogleCloudMessaging.MESSAGE_TYPE_MESSAGE.equals(messageType)) {
 			Notification notification = Notification.parseBundle(extras);
 
 			// control if message was valid
@@ -63,53 +61,36 @@ public class GcmMessageHandler extends IntentService {
 				GcmBroadcastReceiver.completeWakefulIntent(intent);
 				return;
 			}
-			
-			if (!notification.getEmail().equals(Controller.getInstance(
-					getApplicationContext()).getLastEmail())) {
+
+			if (!notification.getEmail().equals(Controller.getInstance(getApplicationContext()).getLastEmail())) {
 				// TODO poslat na server delete GCM ID
-				Log.w(GcmHelper.TAG_GCM,
-						"Notification email wasn't veryfied. Server GCM ID will be deleted.");
-				Log.w(GcmHelper.TAG_GCM, notification.getEmail()
-						+ " != "
-						+ Controller.getInstance(this)
-								.getLastEmail());
+				Log.w(GcmHelper.TAG_GCM, "Notification email wasn't veryfied. Server GCM ID will be deleted.");
+				Log.w(GcmHelper.TAG_GCM, notification.getEmail() + " != " + Controller.getInstance(this).getLastEmail());
 			}
 			// EVERYTHING VERYFIED SUCCESFULY, MAKE ACTION HERE
 			else {
-				NotificationCompat.Builder mBuilder =
-					    new NotificationCompat.Builder(this)
-					    .setSmallIcon(R.drawable.ic_launcher_white)
-					    .setContentTitle(getText(R.string.app_name))
-					    .setContentText(notification.getMessage())
-					    .setAutoCancel(true);
-				
+				NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this).setSmallIcon(R.drawable.ic_launcher_white).setContentTitle(getText(R.string.app_name))
+						.setContentText(notification.getMessage()).setAutoCancel(true);
+
 				// define notification action
 				Intent resultIntent = new Intent(this, LoginActivity.class);
 
 				// Because clicking the notification opens a new ("special") activity, there's
 				// no need to create an artificial back stack.
-				PendingIntent resultPendingIntent =
-				    PendingIntent.getActivity(
-				    this,
-				    0,
-				    resultIntent,
-				    PendingIntent.FLAG_UPDATE_CURRENT
-				);
-				
+				PendingIntent resultPendingIntent = PendingIntent.getActivity(this, 0, resultIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+
 				// Set the Notification's Click Behavior
 				mBuilder.setContentIntent(resultPendingIntent);
-				
+
 				// Gets an instance of the NotificationManager service
-				NotificationManager mNotifyMgr = 
-				        (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-				
-				//FIXME msgid se musi parsovat jako int
+				NotificationManager mNotifyMgr = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+
+				// FIXME msgid se musi parsovat jako int
 				// Builds the notification and issues it.
 				mNotifyMgr.notify(Integer.valueOf(notification.getMsgid()), mBuilder.build());
-				
-//				showToast(notification.getMessage());
-				Log.i(GcmHelper.TAG_GCM, "Received : (" + messageType + ")  "
-						+ notification.getMessage());
+
+				// showToast(notification.getMessage());
+				Log.i(GcmHelper.TAG_GCM, "Received : (" + messageType + ")  " + notification.getMessage());
 			}
 		}
 
@@ -119,8 +100,7 @@ public class GcmMessageHandler extends IntentService {
 	public void showToast(final String message) {
 		handler.post(new Runnable() {
 			public void run() {
-				Toast.makeText(getApplicationContext(), message,
-						Toast.LENGTH_LONG).show();
+				Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
 			}
 		});
 
