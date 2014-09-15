@@ -111,7 +111,7 @@ public class Network {
 	 * Address and port of debug server
 	 */
 	private static final String SERVER_ADDR_DEBUG = "ant-2.fit.vutbr.cz";
-	private static final int SERVER_PORT_DEBUG = 4565;
+	private static final int SERVER_PORT_DEBUG = 4566;
 
 	/**
 	 * Address and port of production server
