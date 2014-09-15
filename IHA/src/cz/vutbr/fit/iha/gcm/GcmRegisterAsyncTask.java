@@ -46,7 +46,7 @@ public class GcmRegisterAsyncTask extends AsyncTask<Context, Void, Void> {
 				} catch (InterruptedException e1) {
 					e1.printStackTrace();
 				}
-				timeToSleep = timeToSleep * timeToSleep;
+				timeToSleep = timeToSleep * 2;
 				continue;
 			}
 		}
