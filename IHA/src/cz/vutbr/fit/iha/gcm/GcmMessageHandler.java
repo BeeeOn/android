@@ -4,6 +4,7 @@ import android.app.IntentService;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Intent;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.NotificationCompat;
@@ -69,7 +70,10 @@ public class GcmMessageHandler extends IntentService {
 			}
 			// EVERYTHING VERYFIED SUCCESFULY, MAKE ACTION HERE
 			else {
-				NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this).setSmallIcon(R.drawable.ic_launcher_white).setContentTitle(getText(R.string.app_name))
+				NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this)
+						.setSmallIcon(R.drawable.ic_launcher_white)
+						.setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.ic_launcher_white_icons))
+						.setWhen(notification.getDate().getTime()).setContentTitle(getText(R.string.app_name))
 						.setContentText(notification.getMessage()).setAutoCancel(true);
 
 				// define notification action
@@ -77,7 +81,8 @@ public class GcmMessageHandler extends IntentService {
 
 				// Because clicking the notification opens a new ("special") activity, there's
 				// no need to create an artificial back stack.
-				PendingIntent resultPendingIntent = PendingIntent.getActivity(this, 0, resultIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+				PendingIntent resultPendingIntent = PendingIntent.getActivity(this, 0, resultIntent,
+						PendingIntent.FLAG_UPDATE_CURRENT);
 
 				// Set the Notification's Click Behavior
 				mBuilder.setContentIntent(resultPendingIntent);
