@@ -32,15 +32,12 @@ Copyright (c) 2011-2013, Sony Mobile Communications AB
 
 package cz.vutbr.fit.iha.extension.watches.smartwatch2.controls;
 
-import java.text.DateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.format.Time;
 import android.util.Log;
 
 import com.sonyericsson.extras.liveware.aef.control.Control;
@@ -51,6 +48,7 @@ import cz.vutbr.fit.iha.R;
 import cz.vutbr.fit.iha.adapter.device.BaseDevice;
 import cz.vutbr.fit.iha.adapter.device.Facility;
 import cz.vutbr.fit.iha.extension.watches.smartwatch2.SW2ExtensionService;
+import cz.vutbr.fit.iha.settings.Timezone;
 
 /**
  * GalleryControl displays a swipeable gallery.
@@ -195,19 +193,9 @@ public class GalleryControlExtension extends ManagedControlExtension {
 		// Title data
 		Bundle syncBundle = new Bundle();
 		syncBundle.putInt(Control.Intents.EXTRA_LAYOUT_REFERENCE, R.id.sync_time);
-
-		// Last update time data
-		Time yesterday = new Time();
-		yesterday.setToNow();
-		yesterday.set(yesterday.toMillis(true) - 24 * 60 * 60 * 1000); // -24
-																		// hours
-
-		// If sync time is more that 24 ago, show only date. Show time
-		// otherwise.
-		DateFormat dateFormat = yesterday.before(curDevice.getFacility().lastUpdate) ? DateFormat.getTimeInstance() : DateFormat.getDateInstance();
-
-		Date lastUpdate = new Date(curDevice.getFacility().lastUpdate.toMillis(true));
-		String dateTime = dateFormat.format(lastUpdate);
+		
+		// FIXME: Using Timezone.ACTUAL is wrong, but how can I call formatLastUpdate without it?
+		String dateTime = Timezone.ACTUAL.formatLastUpdate(curDevice.getFacility().lastUpdate);
 		syncBundle.putString(Control.Intents.EXTRA_TEXT, dateTime);
 
 		// Title data

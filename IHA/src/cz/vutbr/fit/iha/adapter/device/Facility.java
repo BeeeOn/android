@@ -258,14 +258,6 @@ public class Facility {
 				Boolean.toString(mVisibility), mInitialized, mBattery, mLogging, mRefreshInterval.getInterval(), Integer.toString(mDevices.size()));
 	}
 
-	public boolean needsUpdate() {
-		Time that = new Time();
-		that.setToNow();
-		that.set(that.toMillis(true) - mRefreshInterval.getInterval() * 1000); // x seconds interval between updates
-
-		return lastUpdate.before(that);
-	}
-
 	public void addDevice(BaseDevice device) {
 		device.setFacility(this);
 		mDevices.add(device);

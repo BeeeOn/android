@@ -11,6 +11,7 @@ import android.content.SharedPreferences;
 import android.text.format.Time;
 import cz.vutbr.fit.iha.Constants;
 import cz.vutbr.fit.iha.R;
+import cz.vutbr.fit.iha.util.Utils;
 
 /**
  * Enum for temperature unit
@@ -117,14 +118,9 @@ public enum Timezone {
 		// Apply utcOffset
 		lastUpdate = applyUtcOffset(lastUpdate);
 
-		// Last update time data
-		Time yesterday = new Time();
-		yesterday.setToNow();
-		yesterday.set(yesterday.toMillis(true) - 23 * 60 * 60 * 1000); // -23 hours
-
-		// If sync time is more that 24 ago, show only date. Show time otherwise.
-		DateFormat dateFormat = yesterday.before(lastUpdate) ? DateFormat.getTimeInstance() : DateFormat.getDateInstance();
-
+		// If sync time is more that 23 ago, show only date. Show time otherwise.
+		DateFormat dateFormat = Utils.isExpired(lastUpdate, 23 * 60 * 60) ? DateFormat.getDateInstance() : DateFormat.getTimeInstance();
+		
 		Date lastUpdateDate = new Date(lastUpdate.toMillis(true));
 		return dateFormat.format(lastUpdateDate);
 	}

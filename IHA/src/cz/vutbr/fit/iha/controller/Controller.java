@@ -8,7 +8,6 @@ import java.util.Random;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager.NameNotFoundException;
-import android.text.format.Time;
 import android.util.Log;
 import cz.vutbr.fit.iha.activity.LoginActivity;
 import cz.vutbr.fit.iha.adapter.Adapter;
@@ -32,6 +31,7 @@ import cz.vutbr.fit.iha.network.exception.FalseException;
 import cz.vutbr.fit.iha.network.exception.NetworkException;
 import cz.vutbr.fit.iha.network.xml.UtcAdapterPair;
 import cz.vutbr.fit.iha.persistence.Persistence;
+import cz.vutbr.fit.iha.util.Utils;
 
 /**
  * Core of application (used as singleton), provides methods and access to all data and household.
@@ -237,12 +237,8 @@ public final class Controller {
 			return true;
 		}
 
-		Time that = new Time();
-		that.setToNow();
-		that.set(that.toMillis(true) - 15 * 60 * 1000); // 15 minutes interval between updates
-
 		// Update only when needed
-		if (!forceUpdate && !adapter.lastUpdate.before(that))
+		if (!forceUpdate && !Utils.isExpired(adapter.lastUpdate, 15 * 60))
 			return false;
 
 		Log.i(TAG, String.format("Adapter (%s) update needed (%s)", adapter.getName(), forceUpdate ? "force" : "time elapsed"));
@@ -665,7 +661,7 @@ public final class Controller {
 				break;
 		}
 
-		if (facility != null && facility.needsUpdate()) {
+		if (facility != null && Utils.isExpired(facility.lastUpdate, facility.getRefresh().getInterval())) {
 			updateFacility(facility);
 		}
 
