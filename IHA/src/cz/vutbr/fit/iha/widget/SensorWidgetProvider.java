@@ -157,12 +157,14 @@ public class SensorWidgetProvider extends AppWidgetProvider {
 		remoteViews.setOnClickPendingIntent(R.id.layout, pendingIntent);
 
 		// open detail activity on click
-		if (device != null) {
+		// FIXME: this is waiting for Leo to allow opening SensorDetail...
+		/*if (adapterId.length() > 0 && deviceId.length() > 0) {
 			intent = new Intent(context, SensorDetailActivity.class);
-			intent.putExtra(Constants.DEVICE_CLICKED, device.getId());
+			intent.putExtra(Constants.DEVICE_ID, deviceId);
+			intent.putExtra(Constants.ADAPTER_ID, adapterId);
 			pendingIntent = PendingIntent.getActivity(context, widgetId, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 			remoteViews.setOnClickPendingIntent(R.id.name, pendingIntent);
-		}
+		}*/
 
 		// request widget redraw
 		appWidgetManager.updateAppWidget(widgetId, remoteViews);
