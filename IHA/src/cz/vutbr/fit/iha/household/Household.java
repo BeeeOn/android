@@ -5,6 +5,7 @@ import cz.vutbr.fit.iha.adapter.Adapter;
 import cz.vutbr.fit.iha.network.Network;
 import cz.vutbr.fit.iha.persistence.AdaptersModel;
 import cz.vutbr.fit.iha.persistence.FacilitiesModel;
+import cz.vutbr.fit.iha.persistence.LocationsModel;
 
 /**
  * Represents "household" for logged user with all adapters and custom lists.
@@ -23,6 +24,8 @@ public class Household {
 	
 	public final FacilitiesModel facilitiesModel;
 
+	public final LocationsModel locationsModel;
+
 	/** Active adapter. */
 	public Adapter activeAdapter;
 	
@@ -31,6 +34,7 @@ public class Household {
 		
 		adaptersModel = new AdaptersModel(network);
 		facilitiesModel = new FacilitiesModel(network);
+		locationsModel = new LocationsModel(network);
 	}
 
 }

@@ -1,5 +1,6 @@
 package cz.vutbr.fit.iha.activity;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import android.content.Intent;
@@ -155,14 +156,18 @@ public class SettingsMainActivity extends SherlockPreferenceActivity implements 
 		String locId = mPrefs.getString(Constants.PERSISTANCE_PREF_SW2_LOCATION, "");
 		Location loc;
 		// valid
-		if (locId != "" && (loc = mController.getLocation(locId)) != null) {
+		Adapter adapter = mController.getActiveAdapter();
+		if (adapter != null && locId != "" && (loc = mController.getLocation(adapter.getId(), locId)) != null) {
 			mListPrefLocation.setSummary(loc.getName());
 		} else {
 			mListPrefLocation.setSummary(R.string.none);
 			mPrefs.edit().putString(Constants.PERSISTANCE_PREF_SW2_LOCATION, "");
 			mPrefs.edit().commit();
 		}
-		List<Location> locations = mController.getLocations();
+		List<Location> locations = new ArrayList<Location>();
+		if (adapter != null) {
+			locations = mController.getLocations(adapter.getId());
+		}
 		// no location available
 		if (locations.size() < 1) {
 			mListPrefLocation.setEnabled(false);

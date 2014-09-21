@@ -7,11 +7,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
 
-import android.util.Log;
 import cz.vutbr.fit.iha.adapter.device.Facility;
-import cz.vutbr.fit.iha.adapter.location.Location;
 import cz.vutbr.fit.iha.household.User;
 
 /**
@@ -22,7 +19,6 @@ import cz.vutbr.fit.iha.household.User;
 public class Adapter {
 	public static final String TAG = Adapter.class.getSimpleName();
 
-	private final Map<String, Location> mLocations = new HashMap<String, Location>();
 	private final Map<String, Facility> mUninitializedFacilities = new HashMap<String, Facility>();
 	private final Map<String, Facility> mUninitializedIgnored = new HashMap<String, Facility>();
 
@@ -144,78 +140,6 @@ public class Adapter {
 	}*/
 
 	/**
-	 * Return list of locations.
-	 * 
-	 * @return list with locations (or empty list).
-	 */
-	public List<Location> getLocations() {
-		return new ArrayList<Location>(mLocations.values());
-	}
-
-	/**
-	 * Return location by id.
-	 * 
-	 * @param id
-	 * @return Location if found, null otherwise.
-	 */
-	public Location getLocation(String id) {
-		return mLocations.get(id);
-	}
-
-	/**
-	 * Set locations that belongs to this adapter.
-	 * 
-	 * @param locations
-	 */
-	public void setLocations(final List<Location> locations) {
-		mLocations.clear();
-
-		for (Location location : locations) {
-			addLocation(location);
-		}
-	}
-
-	/**
-	 * Adds new location to list of locations.
-	 * 
-	 * @param location
-	 * @return false if there is already location with this id
-	 */
-	public boolean addLocation(Location location) {
-		if (mLocations.containsKey(location.getId()))
-			return false;
-
-		mLocations.put(location.getId(), location);
-		return true;
-	}
-
-	/**
-	 * Removes location from list of locations.
-	 * 
-	 * @param id
-	 * @return false when there wasn't location with this id
-	 */
-	public boolean deleteLocation(String id) {
-		return mLocations.remove(id) != null;
-	}
-
-	/**
-	 * Updates location in list of locations.
-	 * 
-	 * @param location
-	 * @return
-	 */
-	public boolean updateLocation(Location location) {
-		if (!mLocations.containsKey(location.getId())) {
-			Log.w(TAG, String.format("Can't update location with id=%s. It doesn't exists.", location.getId()));
-			return false;
-		}
-
-		mLocations.put(location.getId(), location);
-		return true;
-	}
-
-	/**
 	 * Return list of facilities in specified location.
 	 * 
 	 * @param id
@@ -316,22 +240,6 @@ public class Adapter {
 		}
 
 		mUninitializedIgnored.clear();
-	}
-
-	/**
-	 * This is used ONLY for DemoMode when saving new location!
-	 * 
-	 * @return unique id of location
-	 */
-	public String getUnusedLocationId() {
-		String id;
-		Random random = new Random();
-
-		do {
-			id = String.valueOf(random.nextInt(1000));
-		} while (mLocations.containsKey(id));
-
-		return id;
 	}
 
 	/*public boolean isEmpty() {

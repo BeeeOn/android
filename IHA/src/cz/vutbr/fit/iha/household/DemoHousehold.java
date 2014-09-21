@@ -43,7 +43,7 @@ public final class DemoHousehold extends Household {
 
 			for (Adapter adapter : adaptersModel.getAdapters()) {
 				assetName = String.format(Constants.ASSET_LOCATIONS_FILENAME, adapter.getId());
-				adapter.setLocations(parser.getDemoLocationsFromAsset(mContext, assetName));
+				locationsModel.setLocationsByAdapter(adapter.getId(), parser.getDemoLocationsFromAsset(mContext, assetName));
 
 				assetName = String.format(Constants.ASSET_ADAPTER_DATA_FILENAME, adapter.getId());
 				facilitiesModel.setFacilitiesByAdapter(adapter.getId(), parser.getDemoFacilitiesFromAsset(mContext, assetName));

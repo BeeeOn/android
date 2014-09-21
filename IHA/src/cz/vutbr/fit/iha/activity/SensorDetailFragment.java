@@ -2,6 +2,7 @@ package cz.vutbr.fit.iha.activity;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
@@ -327,9 +328,17 @@ public class SensorDetailFragment extends SherlockFragment {
 
 		// Set name of location
 		if (mController != null) {
-			Location location = mController.getLocation(device.getFacility().getLocationId());
-			if (location != null)
+			Location location = null;
+			
+			Adapter adapter = mController.getActiveAdapter();
+			if (adapter != null) {
+				location = mController.getLocation(adapter.getId(), device.getFacility().getLocationId());
+			}
+			
+			if (location != null) {
 				mLocation.setText(location.getName());
+			}
+			
 			mLocation.setOnClickListener(new OnClickListener() {
 
 				@Override
@@ -513,7 +522,12 @@ public class SensorDetailFragment extends SherlockFragment {
 
 	private List<Location> getLocationsArray() {
 		// Get locations from adapter
-		List<Location> locations = mController.getActiveAdapter().getLocations();
+		List<Location> locations = new ArrayList<Location>();
+		
+		Adapter adapter = mController.getActiveAdapter();
+		if (adapter != null) {
+			locations = mController.getLocations(adapter.getId());
+		}
 
 		// Sort them
 		Collections.sort(locations);

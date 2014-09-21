@@ -292,7 +292,9 @@ public class LocationScreenActivity extends BaseActivity {
 
 	public void onOrientationChanged() {
 		if (mOrientation) {
-			mActiveLocation = mController.getLocation(mActiveLocationId);
+			Adapter adapter = mController.getActiveAdapter();
+			if (adapter != null)
+				mActiveLocation = mController.getLocation(adapter.getId(), mActiveLocationId);
 
 			refreshListing();
 
@@ -450,7 +452,9 @@ public class LocationScreenActivity extends BaseActivity {
 					// Get the title followed by the position
 					mActiveLocationId = item.getId();
 
-					changeLocation(mController.getLocation(mActiveLocationId), true);
+					Adapter adapter = mController.getActiveAdapter();
+					if (adapter != null)
+						changeLocation(mController.getLocation(adapter.getId(), mActiveLocationId), true);
 
 					break;
 
@@ -892,7 +896,13 @@ public class LocationScreenActivity extends BaseActivity {
 		String locationID = prefs.getString(prefKey, null);
 
 		if (locationID != null) {
-			Location location = mController.getLocation(locationID);
+			Location location = null;
+			
+			Adapter adapter = mController.getActiveAdapter();
+			if (adapter != null) {
+				location = mController.getLocation(adapter.getId(), locationID);
+			}
+			
 			if (location != null) {
 				Log.d("default", "DEFAULT POSITION: saved position selected");
 				changeLocation(location, false);
@@ -917,7 +927,7 @@ public class LocationScreenActivity extends BaseActivity {
 			mActivity.runOnUiThread(new Runnable() {
 				@Override
 				public void run() {
-					setLocationOnStart(actAdapter.getLocations());
+					setLocationOnStart(mController.getLocations(actAdapter.getId()));
 				}
 			});
 
@@ -984,7 +994,10 @@ public class LocationScreenActivity extends BaseActivity {
 			}
 
 			// Load locations
-			mLocations = mController.getActiveAdapter().getLocations();
+			Adapter adapter = mController.getActiveAdapter();
+			if (adapter != null) {
+				mLocations = mController.getLocations(adapter.getId());
+			}
 			Log.d(TAG, String.format("Found %d locations", mLocations.size()));
 
 			// Load uninitialized facilities

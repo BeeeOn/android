@@ -32,6 +32,7 @@ import android.widget.Toast;
 import cz.vutbr.fit.iha.Constants;
 import cz.vutbr.fit.iha.R;
 import cz.vutbr.fit.iha.activity.LocationScreenActivity;
+import cz.vutbr.fit.iha.adapter.Adapter;
 import cz.vutbr.fit.iha.adapter.device.BaseDevice;
 import cz.vutbr.fit.iha.adapter.device.BaseDevice.SaveDevice;
 import cz.vutbr.fit.iha.adapter.device.Facility;
@@ -164,7 +165,12 @@ public class SetupSensorActivityDialog extends Activity {
 	 */
 	public List<Location> getLocationsForAddSensorDialog() {
 		// Get locations from adapter
-		List<Location> locations = mController.getActiveAdapter().getLocations();
+		List<Location> locations = new ArrayList<Location>();
+		
+		Adapter adapter = mController.getActiveAdapter();
+		if (adapter != null) {
+			locations = mController.getLocations(adapter.getId());
+		}
 
 		// Add "missing" default rooms
 		for (DefaultRoom room : Location.defaults) {

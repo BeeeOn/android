@@ -276,6 +276,14 @@ public final class Controller {
 		return mHousehold.facilitiesModel.reloadFacilitiesByAdapter(adapterId, forceReload);
 	}
 	
+	public boolean reloadLocations(String adapterId, boolean forceReload) {
+		if (mDemoMode || !isLoggedIn()) {
+			return false;
+		}
+			
+		return mHousehold.locationsModel.reloadLocationsByAdapter(adapterId, forceReload);
+	}
+	
 	public boolean reloadUninitializedFacilities(boolean forceReload) {
 		if (mDemoMode || !isLoggedIn()) {
 			return false;
@@ -468,12 +476,8 @@ public final class Controller {
 	 * @param id
 	 * @return Location if found, null otherwise.
 	 */
-	public Location getLocation(String id) {
-		Adapter adapter = getActiveAdapter();
-		if (adapter == null)
-			return null;
-
-		return adapter.getLocation(id);
+	public Location getLocation(String adapterId, String id) {
+		return mHousehold.locationsModel.getLocation(adapterId, id);
 	}
 
 	/**
@@ -481,12 +485,8 @@ public final class Controller {
 	 * 
 	 * @return List of locations (or empty list)
 	 */
-	public List<Location> getLocations() {
-		Adapter adapter = getActiveAdapter();
-		if (adapter == null)
-			return new ArrayList<Location>();
-
-		return adapter.getLocations();
+	public List<Location> getLocations(String adapterId) {
+		return mHousehold.locationsModel.getLocationsByAdapter(adapterId);
 	}
 
 	/**
@@ -513,7 +513,7 @@ public final class Controller {
 		}
 
 		// Location was deleted on server, remove it from adapter too
-		return deleted && adapter.deleteLocation(location.getId());
+		return deleted && mHousehold.locationsModel.deleteLocation(adapter.getId(), location.getId());
 	}
 
 	/**
@@ -540,7 +540,7 @@ public final class Controller {
 		}
 
 		// Location was updated on server, update it to adapter too
-		return saved && adapter.updateLocation(location);
+		return saved && mHousehold.locationsModel.updateLocation(adapter.getId(), location);
 	}
 
 	/**
@@ -557,7 +557,7 @@ public final class Controller {
 
 		try {
 			if (mDemoMode) {
-				location.setId(adapter.getUnusedLocationId());
+				location.setId(mHousehold.locationsModel.getUnusedLocationId(adapter.getId()));
 			} else {
 				location = mNetwork.createLocation(adapter.getId(), location);
 			}
@@ -567,7 +567,7 @@ public final class Controller {
 		}
 
 		// Location was saved on server, save it to adapter too
-		return (location != null && adapter.addLocation(location)) ? location : null;
+		return (location != null && mHousehold.locationsModel.addLocation(adapter.getId(), location)) ? location : null;
 	}
 
 	/** Facilities methods **************************************************/
