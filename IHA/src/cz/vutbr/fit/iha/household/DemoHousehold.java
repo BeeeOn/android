@@ -46,7 +46,7 @@ public final class DemoHousehold extends Household {
 				adapter.setLocations(parser.getDemoLocationsFromAsset(mContext, assetName));
 
 				assetName = String.format(Constants.ASSET_ADAPTER_DATA_FILENAME, adapter.getId());
-				adapter.setFacilities(parser.getDemoFacilitiesFromAsset(mContext, assetName));
+				facilitiesModel.setFacilitiesByAdapter(adapter.getId(), parser.getDemoFacilitiesFromAsset(mContext, assetName));
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

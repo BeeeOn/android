@@ -13,7 +13,6 @@ import android.util.Log;
 import android.widget.RemoteViews;
 import cz.vutbr.fit.iha.Constants;
 import cz.vutbr.fit.iha.R;
-import cz.vutbr.fit.iha.activity.SensorDetailActivity;
 import cz.vutbr.fit.iha.activity.WidgetConfigurationActivity;
 import cz.vutbr.fit.iha.adapter.device.BaseDevice;
 import cz.vutbr.fit.iha.util.Compatibility;
@@ -114,17 +113,27 @@ public class SensorWidgetProvider extends AppWidgetProvider {
 		int icon = 0;
 		String name = "";
 		String value = "";
+		String adapterId = "";
+		String deviceId = "";
 
 		if (device != null) {
 			// Load values from device
 			icon = device.getTypeIconResource();
 			name = device.getName();
 			value = device.getStringValueUnit(context);
+			adapterId = device.getFacility().getAdapterId();
+			deviceId = device.getId();
 
 			// Cache these values
 			Log.v(TAG, String.format("Saving widget (%d) data to cache", widgetId));
 
-			settings.edit().putInt(Constants.WIDGET_PREF_DEVICE_ICON, icon).putString(Constants.WIDGET_PREF_DEVICE_NAME, name).putString(Constants.WIDGET_PREF_DEVICE_VALUE, value).commit();
+			settings
+				.edit()
+				.putInt(Constants.WIDGET_PREF_DEVICE_ICON, icon)
+				.putString(Constants.WIDGET_PREF_DEVICE_NAME, name)
+				.putString(Constants.WIDGET_PREF_DEVICE_VALUE, value)
+				.putString(Constants.WIDGET_PREF_DEVICE_ADAPTER_ID, adapterId)
+				.commit();
 		} else {
 			// Device doesn't exists -> try to load values from cache
 			Log.v(TAG, String.format("Loading widget (%d) data from cache", widgetId));
@@ -132,6 +141,8 @@ public class SensorWidgetProvider extends AppWidgetProvider {
 			icon = settings.getInt(Constants.WIDGET_PREF_DEVICE_ICON, 0);
 			name = settings.getString(Constants.WIDGET_PREF_DEVICE_NAME, context.getString(R.string.placeholder_not_exists));
 			value = settings.getString(Constants.WIDGET_PREF_DEVICE_VALUE, "");
+			adapterId = settings.getString(Constants.WIDGET_PREF_DEVICE_ADAPTER_ID, "");
+			deviceId = settings.getString(Constants.WIDGET_PREF_DEVICE, "");
 
 			name += " (cached)"; // NOTE: just temporary solution until it will be showed better on widget
 		}

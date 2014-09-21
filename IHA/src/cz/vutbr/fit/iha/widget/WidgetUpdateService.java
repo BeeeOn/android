@@ -129,6 +129,7 @@ public class WidgetUpdateService extends Service {
 			SharedPreferences settings = SensorWidgetProvider.getSettings(this, widgetId);
 			int interval = settings.getInt(Constants.WIDGET_PREF_INTERVAL, UPDATE_INTERVAL_DEFAULT);
 			long lastUpdate = settings.getLong(Constants.WIDGET_PREF_LAST_UPDATE, 0);
+			String adapterId = settings.getString(Constants.WIDGET_PREF_DEVICE_ADAPTER_ID, "");
 
 			// ignore uninitialized widgets
 			if (!settings.getBoolean(Constants.WIDGET_PREF_INITIALIZED, false)) {
@@ -145,7 +146,7 @@ public class WidgetUpdateService extends Service {
 			Log.v(TAG, String.format("Updating widget %d", widgetId));
 
 			String deviceId = settings.getString(Constants.WIDGET_PREF_DEVICE, "");
-			BaseDevice device = Controller.getInstance(this).getDevice(deviceId);
+			BaseDevice device = Controller.getInstance(this).getDevice(adapterId, deviceId);
 
 			// save last update time
 			settings.edit().putLong(Constants.WIDGET_PREF_LAST_UPDATE, now).commit();

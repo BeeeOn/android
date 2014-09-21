@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.util.Log;
 import cz.vutbr.fit.iha.R;
 import cz.vutbr.fit.iha.activity.dialog.AddSensorActivityDialog;
+import cz.vutbr.fit.iha.adapter.Adapter;
 import cz.vutbr.fit.iha.controller.Controller;
 
 /**
@@ -47,7 +48,9 @@ public class AdapterRegisterThread implements Runnable {
 		Log.d(TAG, mActivity.getString(messageId));
 		new ToastMessageThread(mActivity, messageId).start();
 
-		if (controller.getAdapter(mSerialNumber, true) != null ){// && controller.getAdapter(mSerialNumber, true).isEmpty()) {
+		controller.reloadAdapters(true);
+		Adapter adapter = controller.getAdapter(mSerialNumber); 
+		if (adapter != null) {// && controller.getFacilitiesByAdapter(adapter.getId()).isEmpty()) {
 			Log.i(TAG, mSerialNumber + " is empty");
 			Intent intent = new Intent(mActivity, AddSensorActivityDialog.class);
 			mActivity.startActivity(intent);

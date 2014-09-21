@@ -47,6 +47,10 @@ public class AdaptersModel {
 		}
 	}
 	
+	public Adapter getAdapter(String id) {
+		return mAdapters.get(id);
+	}
+	
 	public void setLastUpdate(Time lastUpdate) {
 		if (lastUpdate == null)
 			mLastUpdate.setToNow();

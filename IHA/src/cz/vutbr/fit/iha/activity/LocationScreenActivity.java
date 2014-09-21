@@ -1049,15 +1049,21 @@ public class LocationScreenActivity extends BaseActivity {
 
 		@Override
 		protected List<Facility> doInBackground(Location... locations) {
-			List<Facility> facilities = mController.getFacilitiesByLocation(locations[0].getId(), forceReloadListing);
-			// List<BaseDevice> devices = new ArrayList<BaseDevice>();
+			List<Facility> facilities = new ArrayList<Facility>();
+			
+			Adapter adapter = mController.getActiveAdapter();
+			if (adapter != null) {
+				mController.reloadFacilitiesByAdapter(adapter.getId(), forceReloadListing);
+				facilities = mController.getFacilitiesByLocation(adapter.getId(), locations[0].getId());
+				// List<BaseDevice> devices = new ArrayList<BaseDevice>();
 
-			// for (Facility facility : facilities) {
-			// devices.addAll(facility.getDevices());
-			// }
+				// for (Facility facility : facilities) {
+				// devices.addAll(facility.getDevices());
+				// }
 
-			Log.d(TAG, String.format("Found %d devices in location '%s'", facilities.size(), locations[0].getName()));
-			forceReloadListing = false;
+				Log.d(TAG, String.format("Found %d devices in location '%s'", facilities.size(), locations[0].getName()));
+				forceReloadListing = false;	
+			}
 
 			return facilities;
 		}

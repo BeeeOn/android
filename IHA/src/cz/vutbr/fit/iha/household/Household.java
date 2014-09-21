@@ -4,6 +4,7 @@ import android.content.Context;
 import cz.vutbr.fit.iha.adapter.Adapter;
 import cz.vutbr.fit.iha.network.Network;
 import cz.vutbr.fit.iha.persistence.AdaptersModel;
+import cz.vutbr.fit.iha.persistence.FacilitiesModel;
 
 /**
  * Represents "household" for logged user with all adapters and custom lists.
@@ -19,6 +20,8 @@ public class Household {
 
 	/** List of adapters that this user has access to (either as owner, user or guest). */
 	public final AdaptersModel adaptersModel;
+	
+	public final FacilitiesModel facilitiesModel;
 
 	/** Active adapter. */
 	public Adapter activeAdapter;
@@ -27,7 +30,7 @@ public class Household {
 		mContext = context;
 		
 		adaptersModel = new AdaptersModel(network);
+		facilitiesModel = new FacilitiesModel(network);
 	}
-	
 
 }

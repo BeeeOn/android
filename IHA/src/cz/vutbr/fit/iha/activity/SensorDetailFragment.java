@@ -327,7 +327,7 @@ public class SensorDetailFragment extends SherlockFragment {
 
 		// Set name of location
 		if (mController != null) {
-			Location location = mController.getLocationByFacility(device.getFacility());
+			Location location = mController.getLocation(device.getFacility().getLocationId());
 			if (location != null)
 				mLocation.setText(location.getName());
 			mLocation.setOnClickListener(new OnClickListener() {
@@ -595,15 +595,19 @@ public class SensorDetailFragment extends SherlockFragment {
 		@Override
 		protected BaseDevice doInBackground(String... sensorID) {
 
-			BaseDevice device = mController.getDevice(sensorID[0]);
-			Log.d(TAG, "ID:" + device.getId() + " Name:" + device.getName());
+			BaseDevice device = null;
+			Adapter adapter = mController.getActiveAdapter();
+			if (adapter != null) {
+				device = mController.getDevice(adapter.getId(), sensorID[0]);
+				Log.d(TAG, "ID:" + device.getId() + " Name:" + device.getName());
+			}
 
 			return device;
 		}
 
 		@Override
 		protected void onPostExecute(BaseDevice device) {
-			mDevice = device;
+			mDevice = device; // FIXME: this might be null now...
 			if (!isCancelled()) {
 				initLayout(device);
 			}

@@ -32,7 +32,6 @@ import cz.vutbr.fit.iha.network.Network;
 import cz.vutbr.fit.iha.network.exception.FalseException;
 import cz.vutbr.fit.iha.network.exception.NetworkException;
 import cz.vutbr.fit.iha.persistence.Persistence;
-import cz.vutbr.fit.iha.util.Utils;
 
 /**
  * Core of application (used as singleton), provides methods and access to all data and household.
@@ -230,7 +229,7 @@ public final class Controller {
 	 *            if you want to refresh adapter even if it's perhaps not needed
 	 * @return
 	 */
-	private boolean refreshAdapter(Adapter adapter, boolean forceUpdate) {
+/*	private boolean refreshAdapter(Adapter adapter, boolean forceUpdate) {
 		if (mDemoMode) {
 			return true;
 		}
@@ -256,7 +255,7 @@ public final class Controller {
 		}
 
 		return result;
-	}
+	}*/
 
 	/**
 	 * Calling this will reload all adapters from server in next call of {@link #getAdapters()} or {@link #getActiveAdapter()}
@@ -267,6 +266,14 @@ public final class Controller {
 		}
 			
 		return mHousehold.adaptersModel.reloadAdapters(forceReload);
+	}
+	
+	public boolean reloadFacilitiesByAdapter(String adapterId, boolean forceReload) {
+		if (mDemoMode || !isLoggedIn()) {
+			return false;
+		}
+			
+		return mHousehold.facilitiesModel.reloadFacilitiesByAdapter(adapterId, forceReload);
 	}
 	
 	public boolean reloadUninitializedFacilities(boolean forceReload) {
@@ -284,12 +291,12 @@ public final class Controller {
 	 * 
 	 * @param facility
 	 */
-	public void refreshFacility(final Facility facility) {
+	/*public void refreshFacility(final Facility facility) {
 		Adapter adapter = getActiveAdapter();
 		if (adapter != null) {
 			adapter.refreshFacility(facility);
 		}
-	}
+	}*/
 
 	public boolean updateFacility(Facility facility) {
 		if (mDemoMode) {
@@ -307,23 +314,7 @@ public final class Controller {
 			return true;
 		}
 
-		Adapter adapter = getAdapterByFacility(facility);
-		if (adapter == null)
-			return false;
-
-		try {
-			Facility newFacility = mNetwork.getFacility(adapter.getId(), facility);
-			if (newFacility == null)
-				return false;
-
-			facility.replaceData(newFacility);
-		} catch (NetworkException e) {
-			e.printStackTrace();
-			return false;
-		}
-
-		refreshFacility(facility);
-		return true;
+		return mHousehold.facilitiesModel.refreshFacility(facility);
 	}
 
 	/**
@@ -341,15 +332,8 @@ public final class Controller {
 	 * @param id
 	 * @return Adapter if found, null otherwise
 	 */
-	public Adapter getAdapter(String adapterId, boolean forceUpdate) {
-		for (Adapter a : getAdapters()) {
-			if (a.getId().equals(adapterId)) {
-				refreshAdapter(a, forceUpdate);
-				return a;
-			}
-		}
-
-		return null;
+	public Adapter getAdapter(String id) {
+		return mHousehold.adaptersModel.getAdapter(id);
 	}
 
 	/**
@@ -396,26 +380,6 @@ public final class Controller {
 		Log.d(TAG, String.format("Set active adapter to '%s'", adapter.getName()));
 		mPersistence.saveActiveAdapter(mHousehold.user.getId(), adapter.getId());
 		return true;
-	}
-
-	/**
-	 * Return Adapter which this facility belongs to.
-	 * 
-	 * @param facility
-	 * @return Adapter if found, null otherwise
-	 */
-	public Adapter getAdapterByFacility(Facility facility) {
-		String adapterId = facility.getAdapterId();
-		if (adapterId.length() > 0)
-			return getAdapter(adapterId, false);
-
-		// FIXME: remove when facilities will have correctly set adapterId
-		for (Adapter a : getAdapters()) {
-			if (a.getFacilityById(facility.getId()) != null)
-				return a;
-		}
-
-		return null;
 	}
 
 	/**
@@ -526,21 +490,6 @@ public final class Controller {
 	}
 
 	/**
-	 * Return location object that belongs to facility.
-	 * 
-	 * @param facility
-	 * @return Location if found, null otherwise.
-	 */
-	public Location getLocationByFacility(Facility facility) {
-		Adapter adapter = getAdapterByFacility(facility);
-		if (adapter == null) {
-			return null;
-		}
-
-		return adapter.getLocation(facility.getLocationId());
-	}
-
-	/**
 	 * Deletes location from server.
 	 * 
 	 * @param location
@@ -624,31 +573,19 @@ public final class Controller {
 	/** Facilities methods **************************************************/
 
 	/**
-	 * Return facility by ID from all adapters.
+	 * Return facility by ID.
 	 * 
 	 * @param id
 	 * @return facility or null if no facility is found
 	 */
-	public Facility getFacility(String id) {
-		Facility facility = null;
-
-		for (Adapter adapter : getAdapters()) {
-			facility = adapter.getFacilityById(id);
-			if (facility != null)
-				break;
-		}
-
-		if (facility != null && Utils.isExpired(facility.lastUpdate, facility.getRefresh().getInterval())) {
-			updateFacility(facility);
-		}
-
-		return facility;
+	public Facility getFacility(String adapterId, String id) {
+		return mHousehold.facilitiesModel.getFacility(adapterId, id);
 	}
 
-	public BaseDevice getDevice(String id) {
+	public BaseDevice getDevice(String adapterId, String id) {
 		String[] ids = id.split(BaseDevice.ID_SEPARATOR, 2);
 
-		Facility facility = getFacility(ids[0]);
+		Facility facility = getFacility(adapterId, ids[0]);
 		if (facility == null)
 			return null;
 
@@ -699,20 +636,12 @@ public final class Controller {
 	 * @param location
 	 * @return List of facilities (or empty list)
 	 */
-	public List<Facility> getFacilitiesByLocation(String locationId, boolean forceUpdate) {
-		List<Facility> list = new ArrayList<Facility>();
-
-		Adapter adapter = getActiveAdapter();
-		if (adapter != null) {
-			refreshAdapter(adapter, forceUpdate); // TODO: update only facilities in this location? or no?
-			list.addAll(adapter.getFacilitiesByLocation(locationId));
-		}
-
-		return list;
+	public List<Facility> getFacilitiesByLocation(String adapterId, String locationId) {
+		return mHousehold.facilitiesModel.getFacilitiesByLocation(adapterId, locationId);
 	}
 
 	public List<Facility> getFacilitiesByAdapter(String adapterId) {
-		return getAdapter(adapterId, false).getFacilities();
+		return mHousehold.facilitiesModel.getFacilitiesByAdapter(adapterId);
 	}
 
 	/**
@@ -728,14 +657,15 @@ public final class Controller {
 
 		if (mDemoMode) {
 			facility.setInitialized(true);
-			refreshFacility(facility);
+			// FIXME: when implemented working with uninitialized devices
+			//refreshFacility(facility);
 			return true;
 		}
 
 		boolean result = false;
 
 		try {
-			Adapter adapter = getAdapterByFacility(facility);
+			Adapter adapter = getAdapter(facility.getAdapterId());
 			Log.d(TAG, String.format("Adapter ID: %s, device: %s", adapter.getId(), facility.getAddress()));
 			if (adapter != null) {
 				result = mNetwork.setDevice(adapter.getId(), device, what);
@@ -763,7 +693,7 @@ public final class Controller {
 		}
 
 		try {
-			Adapter adapter = getAdapterByFacility(device.getFacility());
+			Adapter adapter = getAdapter(device.getFacility().getAdapterId());
 			if (adapter != null) {
 				log = mNetwork.getLog(adapter.getId(), device, from, to, type, interval);
 			}

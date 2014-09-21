@@ -182,7 +182,7 @@ public class ListLocationControlExtension extends ManagedControlExtension {
 			// intent.putExtra(GalleryTestControl.EXTRA_INITIAL_POSITION,
 			// listItem.listItemPosition);
 			// mControlManager.startControl(intent);
-			List<Facility> facilities = mAdapter.getFacilitiesByLocation(mLocations.get(listItem.listItemPosition).getId());
+			List<Facility> facilities = mController.getFacilitiesByLocation(mAdapter.getId(), mLocations.get(listItem.listItemPosition).getId());
 			Intent intent;
 			if (facilities.size() < 1) {
 				intent = new Intent(mContext, TextControl.class);
@@ -229,8 +229,10 @@ public class ListLocationControlExtension extends ManagedControlExtension {
 			@Override
 			public void run() {
 
-				mAdapter = mController.getAdapter(mAdapterId, mForceUpdate);
-				mLocations = mController.getActiveAdapter().getLocations();
+				// FIXME: uncomment when implemented 
+				//mController.reloadLocations(mAdapterId, mForceUpdate);
+				mAdapter = mController.getAdapter(mAdapterId);
+				mLocations = mController.getLocations();
 
 				mForceUpdate = true;
 

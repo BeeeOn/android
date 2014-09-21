@@ -266,7 +266,8 @@ public class GalleryControlExtension extends ManagedControlExtension {
 
 				mDevices = new ArrayList<BaseDevice>();
 
-				List<Facility> facilities = mController.getAdapter(mAdapterId, true).getFacilitiesByLocation(mLocationStr);
+				mController.reloadFacilitiesByAdapter(mAdapterId, true);
+				List<Facility> facilities = mController.getFacilitiesByLocation(mAdapterId, mLocationStr);
 				for (Facility facility : facilities) {
 					mDevices.addAll(facility.getDevices());
 				}
