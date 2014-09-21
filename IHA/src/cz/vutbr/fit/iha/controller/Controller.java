@@ -3,6 +3,7 @@ package cz.vutbr.fit.iha.controller;
 import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 
 import android.content.Context;
@@ -60,9 +61,6 @@ public final class Controller {
 	/** Switch for using demo mode (with example adapter, without server) */
 	private static boolean mDemoMode = false;
 
-	/** When set to true (by calling {@link #reloadAdapters()}), it will reload all adapters from server in next call of {@link #getAdapters()} */
-	private boolean mReloadAdapters = true;
-
 	/**
 	 * Return singleton instance of this Controller. This is thread-safe.
 	 * 
@@ -91,9 +89,9 @@ public final class Controller {
 	private Controller(Context context) {
 		mContext = context;
 
-		mHousehold = mDemoMode ? new DemoHousehold(mContext) : new Household();
+		mNetwork = new Network(mContext, isDebugVersion());
 		mPersistence = new Persistence(mContext);
-		mNetwork = new Network(mContext, mHousehold.user, isDebugVersion());
+		mHousehold = mDemoMode ? new DemoHousehold(mContext, mNetwork) : new Household(mContext, mNetwork);
 	}
 
 	public static synchronized void setDemoMode(Context context, boolean demoMode) {
@@ -263,8 +261,22 @@ public final class Controller {
 	/**
 	 * Calling this will reload all adapters from server in next call of {@link #getAdapters()} or {@link #getActiveAdapter()}
 	 */
-	public void reloadAdapters() {
-		mReloadAdapters = true;
+	public boolean reloadAdapters(boolean forceReload) {
+		if (mDemoMode || !isLoggedIn()) {
+			return false;
+		}
+			
+		return mHousehold.adaptersModel.reloadAdapters(forceReload);
+	}
+	
+	public boolean reloadUninitializedFacilities(boolean forceReload) {
+		if (mDemoMode || !isLoggedIn()) {
+			return false;
+		}
+			
+		// FIXME: uncomment when implemented
+		//return mHousehold.facilitiesModel.reloadUninitializedFacilities(forceReload);
+		return false;
 	}
 
 	/**
@@ -320,29 +332,7 @@ public final class Controller {
 	 * @return List of adapters
 	 */
 	public List<Adapter> getAdapters() {
-		if (mDemoMode) {
-			return mHousehold.adapters;
-		}
-
-		if (!isLoggedIn()) {
-			return new ArrayList<Adapter>();
-		}
-
-		// TODO: refactor this method, make household's adapters (and favoriteslisting, and user?) final etc.
-		if (mHousehold.adapters == null || mReloadAdapters) {
-			try {
-				mHousehold.adapters = mNetwork.getAdapters();
-				mReloadAdapters = false;
-			} catch (NetworkException e) {
-				e.printStackTrace();
-				// Network or another error, we must return correct object now, but adapters must be loaded later
-				mHousehold.adapters = new ArrayList<Adapter>();
-				mReloadAdapters = true;
-			}
-
-		}
-
-		return mHousehold.adapters;
+		return mHousehold.adaptersModel.getAdapters();
 	}
 
 	/**
@@ -368,32 +358,22 @@ public final class Controller {
 	 * @return active adapter, or first adapter, or null if there are no adapters
 	 */
 	public synchronized Adapter getActiveAdapter() {
-		if (mHousehold.activeAdapter == null || mReloadAdapters) {
-			String lastId;
-			if (mReloadAdapters && mHousehold.activeAdapter != null) {
-				lastId = mHousehold.activeAdapter.getId();
-			} else {
-				lastId = mPersistence.loadActiveAdapter(mHousehold.user.getId());
-			}
+		if (mHousehold.activeAdapter == null) {
+			String lastId = mPersistence.loadActiveAdapter(mHousehold.user.getId());
 
-			for (Adapter a : getAdapters()) {
-				if (lastId.isEmpty() || a.getId().equals(lastId)) {
-					mHousehold.activeAdapter = a;
+			Map<String, Adapter> adapters = mHousehold.adaptersModel.getAdaptersMap();
+			if (!lastId.isEmpty() && adapters.containsKey(lastId)) {
+				mHousehold.activeAdapter = adapters.get(lastId);
+			} else {
+				for (Adapter adapter : adapters.values()) {
+					mHousehold.activeAdapter = adapter;	
 					break;
 				}
 			}
-
-			if (mHousehold.activeAdapter == null && mHousehold.adapters != null && !mHousehold.adapters.isEmpty()) {
-				mHousehold.activeAdapter = mHousehold.adapters.get(0);
-			}
-
+			
 			if (mHousehold.activeAdapter != null)
 				mPersistence.saveActiveAdapter(mHousehold.user.getId(), mHousehold.activeAdapter.getId());
 		}
-
-		// Refresh active adapter (load its locations and facilities)
-		if (mHousehold.activeAdapter != null)
-			refreshAdapter(mHousehold.activeAdapter, false);
 
 		return mHousehold.activeAdapter;
 	}
@@ -405,18 +385,17 @@ public final class Controller {
 	 * @return true on success, false if there is no adapter with this id
 	 */
 	public synchronized boolean setActiveAdapter(String id) {
-		for (Adapter a : getAdapters()) {
-			if (a.getId().equals(id)) {
-				mHousehold.activeAdapter = a;
-				refreshAdapter(a, true);
-				Log.d(TAG, String.format("Set active adapter to '%s'", a.getName()));
-				mPersistence.saveActiveAdapter(mHousehold.user.getId(), mHousehold.activeAdapter.getId());
-				return true;
-			}
+		Map<String, Adapter> adapters = mHousehold.adaptersModel.getAdaptersMap();
+		if (!adapters.containsKey(id)) {
+			Log.d(TAG, String.format("Can't set active adapter to '%s'", id));
+			return false;	
 		}
 
-		Log.d(TAG, String.format("Can't set active adapter to '%s'", id));
-		return false;
+		Adapter adapter = adapters.get(id);
+		mHousehold.activeAdapter = adapter;
+		Log.d(TAG, String.format("Set active adapter to '%s'", adapter.getName()));
+		mPersistence.saveActiveAdapter(mHousehold.user.getId(), adapter.getId());
+		return true;
 	}
 
 	/**
@@ -455,8 +434,8 @@ public final class Controller {
 
 		try {
 			if (mNetwork.addAdapter(id, adapterName)) {
-				reloadAdapters(); // TODO: reload (or just add this adapter) only adapters list (without reloading facilities)
-				setActiveAdapter(id); // FIXME : kurvaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+				mHousehold.adaptersModel.reloadAdapters(true);
+				setActiveAdapter(id);
 				result = true;
 			}
 		} catch (NetworkException e) {
@@ -506,8 +485,8 @@ public final class Controller {
 			if (mNetwork.deleteConnectionAccounts(id, user)) {
 				if (mHousehold.activeAdapter != null && mHousehold.activeAdapter.getId().equals(id))
 					mHousehold.activeAdapter = null;
-				reloadAdapters(); // TODO: reload (or just add this adapter) only adapters list (without reloading facilities)
-				// setActiveAdapter(id);
+
+				mHousehold.adaptersModel.reloadAdapters(true);
 				result = true;
 			}
 		} catch (NetworkException e) {

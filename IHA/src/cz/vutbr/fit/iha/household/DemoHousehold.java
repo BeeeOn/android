@@ -1,11 +1,10 @@
 package cz.vutbr.fit.iha.household;
 
-import java.util.ArrayList;
-
 import android.content.Context;
 import cz.vutbr.fit.iha.Constants;
 import cz.vutbr.fit.iha.adapter.Adapter;
 import cz.vutbr.fit.iha.household.User.Gender;
+import cz.vutbr.fit.iha.network.Network;
 import cz.vutbr.fit.iha.network.xml.XmlParsers;
 
 /**
@@ -15,10 +14,8 @@ import cz.vutbr.fit.iha.network.xml.XmlParsers;
  */
 public final class DemoHousehold extends Household {
 
-	private final Context mContext;
-
-	public DemoHousehold(Context context) {
-		mContext = context;
+	public DemoHousehold(Context context, Network network) {
+		super(context, network);
 
 		prepareUser();
 		prepareAdapters();
@@ -38,15 +35,13 @@ public final class DemoHousehold extends Household {
 	 * Prepare demo adapters.
 	 */
 	private void prepareAdapters() {
-		this.adapters = new ArrayList<Adapter>();
-
 		try {
 			XmlParsers parser = new XmlParsers();
 
 			String assetName = Constants.ASSET_ADAPTERS_FILENAME;
-			this.adapters = parser.getDemoAdaptersFromAsset(mContext, assetName);
+			adaptersModel.setAdapters(parser.getDemoAdaptersFromAsset(mContext, assetName));
 
-			for (Adapter adapter : this.adapters) {
+			for (Adapter adapter : adaptersModel.getAdapters()) {
 				assetName = String.format(Constants.ASSET_LOCATIONS_FILENAME, adapter.getId());
 				adapter.setLocations(parser.getDemoLocationsFromAsset(mContext, assetName));
 

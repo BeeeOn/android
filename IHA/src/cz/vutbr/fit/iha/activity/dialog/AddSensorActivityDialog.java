@@ -134,10 +134,8 @@ public class AddSensorActivityDialog extends Activity {
 
 		@Override
 		protected List<Facility> doInBackground(Void... params) {
-
-			mController.reloadAdapters();
-			List<Facility> facilities = mController.getUninitializedFacilities();
-			return facilities;
+			mController.reloadUninitializedFacilities(true);
+			return mController.getUninitializedFacilities();
 		}
 
 		@Override

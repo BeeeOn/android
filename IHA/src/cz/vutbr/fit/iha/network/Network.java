@@ -141,10 +141,13 @@ public class Network {
 	 * 
 	 * @param context
 	 */
-	public Network(Context context, ActualUser user, boolean useDebugServer) {
+	public Network(Context context, boolean useDebugServer) {
 		mContext = context;
-		mUser = user;
 		mUseDebugServer = useDebugServer;
+	}
+	
+	public void setUser(ActualUser user) {
+		mUser = user;
 	}
 
 	/**
@@ -477,7 +480,7 @@ public class Network {
 	/**
 	 * Method ask for list of adapters. User has to be sign in before
 	 * 
-	 * @return list of adapters or null
+	 * @return list of adapters or empty list
 	 * @throws NoConnectionException
 	 * @throws CommunicationException
 	 *             including message from server including message from server
