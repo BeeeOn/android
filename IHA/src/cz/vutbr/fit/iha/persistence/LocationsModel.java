@@ -62,7 +62,7 @@ public class LocationsModel {
 		}
 	}
 	
-	public void setLastUpdate(String adapterId, Time lastUpdate) {
+	private void setLastUpdate(String adapterId, Time lastUpdate) {
 		Time oldLastUpdate = mLastUpdates.get(adapterId);
 		if (oldLastUpdate == null) {
 			oldLastUpdate = new Time();
@@ -75,7 +75,7 @@ public class LocationsModel {
 			oldLastUpdate.set(lastUpdate);
 	}
 	
-	public boolean isExpired(String adapterId) {
+	private boolean isExpired(String adapterId) {
 		return !mLastUpdates.containsKey(adapterId) || Utils.isExpired(mLastUpdates.get(adapterId), RELOAD_EVERY_SECONDS);
 	}
 	
@@ -94,7 +94,7 @@ public class LocationsModel {
 		return false;
 	}
 	
-	public boolean loadFromServer(String adapterId) {
+	private boolean loadFromServer(String adapterId) {
 		try {
 			setLocationsByAdapter(adapterId, mNetwork.getLocations(adapterId));
 			setLastUpdate(adapterId, null);
@@ -107,7 +107,7 @@ public class LocationsModel {
 		return true;
 	}
 	
-	public boolean loadFromCache(String adapterId) {
+	private boolean loadFromCache(String adapterId) {
 		// TODO: implement this
 		return false;
 		
@@ -115,7 +115,7 @@ public class LocationsModel {
 		//setLastUpdate(adapterId, lastUpdateFromCache);
 	}
 	
-	public void saveToCache(String adapterId) {
+	private void saveToCache(String adapterId) {
 		// TODO: implement this
 	}
 	

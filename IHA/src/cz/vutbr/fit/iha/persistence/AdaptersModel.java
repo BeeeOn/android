@@ -51,14 +51,14 @@ public class AdaptersModel {
 		return mAdapters.get(id);
 	}
 	
-	public void setLastUpdate(Time lastUpdate) {
+	private void setLastUpdate(Time lastUpdate) {
 		if (lastUpdate == null)
 			mLastUpdate.setToNow();
 		else
 			mLastUpdate.set(lastUpdate);
 	}
 	
-	public boolean isExpired() {
+	private boolean isExpired() {
 		return Utils.isExpired(mLastUpdate, RELOAD_EVERY_SECONDS);
 	}
 	
@@ -77,7 +77,7 @@ public class AdaptersModel {
 		return false;
 	}
 	
-	public boolean loadFromServer() {
+	private boolean loadFromServer() {
 		try {
 			setAdapters(mNetwork.getAdapters());
 			setLastUpdate(null);
@@ -90,7 +90,7 @@ public class AdaptersModel {
 		return true;
 	}
 	
-	public boolean loadFromCache() {
+	private boolean loadFromCache() {
 		// TODO: implement this
 		return false;
 		
@@ -98,7 +98,7 @@ public class AdaptersModel {
 		//setLastUpdate(lastUpdateFromCache);
 	}
 	
-	public void saveToCache() {
+	private void saveToCache() {
 		// TODO: implement this
 	}
 

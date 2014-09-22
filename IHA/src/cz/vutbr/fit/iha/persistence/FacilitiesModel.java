@@ -75,7 +75,7 @@ public class FacilitiesModel {
 		return facilities;
 	}
 	
-	public void setLastUpdate(String adapterId, Time lastUpdate) {
+	private void setLastUpdate(String adapterId, Time lastUpdate) {
 		Time oldLastUpdate = mLastUpdates.get(adapterId);
 		if (oldLastUpdate == null) {
 			oldLastUpdate = new Time();
@@ -88,7 +88,7 @@ public class FacilitiesModel {
 			oldLastUpdate.set(lastUpdate);
 	}
 	
-	public boolean isExpired(String adapterId) {
+	private boolean isExpired(String adapterId) {
 		return !mLastUpdates.containsKey(adapterId) || Utils.isExpired(mLastUpdates.get(adapterId), RELOAD_EVERY_SECONDS);
 	}
 	
@@ -111,7 +111,7 @@ public class FacilitiesModel {
 	// public boolean refreshFacilitiesByLocation(String adapterId, String locationId, boolean forceRefresh) {}
 	// public boolean refreshFacility(String adapterId, String locationId, boolean forceRefresh) {}
 	
-	public boolean loadFromServer(String adapterId) {
+	private boolean loadFromServer(String adapterId) {
 		try {
 			UtcAdapterPair pair = mNetwork.init(adapterId);
 			setFacilitiesByAdapter(adapterId, pair.Facilities);
@@ -125,7 +125,7 @@ public class FacilitiesModel {
 		return true;
 	}
 	
-	public boolean loadFromCache(String adapterId) {
+	private boolean loadFromCache(String adapterId) {
 		// TODO: implement this
 		return false;
 		
@@ -133,7 +133,7 @@ public class FacilitiesModel {
 		//setLastUpdate(adapterId, lastUpdateFromCache);
 	}
 	
-	public void saveToCache(String adapterId) {
+	private void saveToCache(String adapterId) {
 		// TODO: implement this
 	}
 
