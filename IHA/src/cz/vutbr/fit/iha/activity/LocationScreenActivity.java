@@ -28,6 +28,7 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -316,7 +317,7 @@ public class LocationScreenActivity extends BaseActivity {
 		menuAdapter.addHeader(new ProfileMenuItem(actUser.getName(), actUser.getEmail(), actUser.getPicture(this)));
 
 		List<Adapter> adapters = mController.getAdapters();
-		if (adapters.size() > 1) {
+		//if (adapters.size() > 1) {
 			// Adding separator as item (we don't want to let it float as
 			// header)
 			menuAdapter.addItem(new SeparatorMenuItem());
@@ -326,7 +327,7 @@ public class LocationScreenActivity extends BaseActivity {
 			for (Adapter actAdapter : adapters) {
 				menuAdapter.addItem(new AdapterMenuItem(actAdapter.getName(), actAdapter.getRole().name(), chosenAdapter.getId().equals(actAdapter.getId()), actAdapter.getId()));
 			}
-		}
+		//}
 
 		// Adding separator as item (we don't want to let it float as header)
 		menuAdapter.addItem(new SeparatorMenuItem());
@@ -606,6 +607,21 @@ public class LocationScreenActivity extends BaseActivity {
 
 		mSensorList = (ListView) findViewById(R.id.listviewofsensors);
 		TextView nosensor = (TextView) findViewById(R.id.nosensorlistview);
+		ImageView addsensor = (ImageView) findViewById(R.id.nosensorlistview_addsensor_image);
+		
+		addsensor.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				Log.d(TAG, "HERE ADD SENSOR +");
+				mController.unignoreUninitialized();
+
+				inBackground = true;
+				Intent intent = new Intent(LocationScreenActivity.this, AddSensorActivityDialog.class);
+				startActivity(intent);
+				return;
+			}
+		});
 
 		mCntOfAllDev = 0;
 		for (Facility facility : facilities) {
@@ -650,6 +666,7 @@ public class LocationScreenActivity extends BaseActivity {
 		if (mCntOfAllDev == 0) {
 			if (nosensor != null) {
 				nosensor.setVisibility(View.VISIBLE);
+				addsensor.setVisibility(View.VISIBLE);
 				mSensorList.setVisibility(View.GONE);
 			}
 
@@ -657,6 +674,7 @@ public class LocationScreenActivity extends BaseActivity {
 			return true;
 		} else {
 			nosensor.setVisibility(View.GONE);
+			addsensor.setVisibility(View.GONE);
 			mSensorList.setVisibility(View.VISIBLE);
 		}
 

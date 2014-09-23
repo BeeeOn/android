@@ -345,6 +345,9 @@ public class SensorDetailFragment extends SherlockFragment {
 					mSpinnerLoc.setVisibility(View.VISIBLE);
 					mLocation.setVisibility(View.GONE);
 					mRectangleLoc.setVisibility(View.GONE);
+					
+					// open Spinner
+					mSpinnerLoc.performClick();
 				}
 			});
 		} else {
