@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.EnumSet;
 import java.util.List;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -38,7 +39,7 @@ import cz.vutbr.fit.iha.adapter.location.Location;
 import cz.vutbr.fit.iha.adapter.location.Location.DefaultRoom;
 import cz.vutbr.fit.iha.controller.Controller;
 
-public class SetupSensorActivityDialog extends BaseActivityDialog {
+public class SetupSensorActivityDialog extends Activity {
 
 	private Controller mController;
 
@@ -81,6 +82,9 @@ public class SetupSensorActivityDialog extends BaseActivityDialog {
 		mUnInitDevices = new ArrayList<BaseDevice>();
 
 		for (Facility facility : mController.getUninitializedFacilities()) {
+			//for(BaseDevice device : facility.getDevices()) {
+			//	if (device.)
+			//}
 			mUnInitDevices.addAll(facility.getDevices());
 		}
 

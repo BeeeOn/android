@@ -25,11 +25,11 @@ public class AdapterRegisterThread implements Runnable {
 	/**
 	 * Constructor
 	 */
-	public AdapterRegisterThread(String serialNumber, Activity activity) {
+	public AdapterRegisterThread(String name, String serialNumber, Activity activity) {
 		mSerialNumber = serialNumber;
 		mActivity = activity;
 		// TODO: name of adapter
-		mName = "test";
+		mName = (name.isEmpty())?"test": name;
 	}
 
 	@Override
@@ -47,7 +47,7 @@ public class AdapterRegisterThread implements Runnable {
 		Log.d(TAG, mActivity.getString(messageId));
 		new ToastMessageThread(mActivity, messageId).start();
 
-		if (controller.getAdapter(mSerialNumber, true) != null && controller.getAdapter(mSerialNumber, true).isEmpty()) {
+		if (controller.getAdapter(mSerialNumber, true) != null ){// && controller.getAdapter(mSerialNumber, true).isEmpty()) {
 			Log.i(TAG, mSerialNumber + " is empty");
 			Intent intent = new Intent(mActivity, AddSensorActivityDialog.class);
 			mActivity.startActivity(intent);

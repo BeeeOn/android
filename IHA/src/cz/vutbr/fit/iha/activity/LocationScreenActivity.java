@@ -14,6 +14,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.ActionBarDrawerToggle;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -795,11 +796,14 @@ public class LocationScreenActivity extends BaseActivity {
 		 */
 		case R.id.action_addadapter: {
 			inBackground = true;
-			Intent intent = new Intent(LocationScreenActivity.this, AddAdapterActivityDialog.class);
+			/*Intent intent = new Intent(LocationScreenActivity.this, AddAdapterActivityDialog.class);
 			Bundle bundle = new Bundle();
 			bundle.putBoolean(Constants.CANCEL, true);
 			intent.putExtras(bundle);
-			startActivityForResult(intent, REQUEST_ADD_ADAPTER);
+			startActivityForResult(intent, REQUEST_ADD_ADAPTER);*/
+			DialogFragment newFragment = new AddAdapterActivityDialog();
+		    newFragment.show(getSupportFragmentManager(), "missiles");
+
 			break;
 		}
 		/*

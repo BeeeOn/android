@@ -2,6 +2,7 @@ package cz.vutbr.fit.iha.activity.dialog;
 
 import java.util.List;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -19,7 +20,7 @@ import cz.vutbr.fit.iha.adapter.Adapter;
 import cz.vutbr.fit.iha.adapter.device.Facility;
 import cz.vutbr.fit.iha.controller.Controller;
 
-public class AddSensorActivityDialog extends BaseActivityDialog {
+public class AddSensorActivityDialog extends Activity {
 
 	private Controller mController;
 
@@ -148,7 +149,7 @@ public class AddSensorActivityDialog extends BaseActivityDialog {
 				mCountDownTimer.cancel();
 				// Send count of sensors
 				Bundle bundle = new Bundle();
-				bundle.putInt(Constants.ADDSENSOR_COUNT_SENSOR, facilities.size());
+				bundle.putInt(Constants.ADDSENSOR_COUNT_SENSOR, facilities.get(0).getDevices().size());
 				// go to setup uninit sensor
 				Intent intent = new Intent(AddSensorActivityDialog.this, SetupSensorActivityDialog.class);
 				intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
