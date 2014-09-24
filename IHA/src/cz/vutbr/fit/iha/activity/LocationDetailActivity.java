@@ -29,6 +29,7 @@ public class LocationDetailActivity extends BaseActivity {
 		ft.commit();
 	}
 
+	
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {

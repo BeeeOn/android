@@ -44,7 +44,7 @@ import cz.vutbr.fit.iha.Constants;
 import cz.vutbr.fit.iha.MenuListAdapter;
 import cz.vutbr.fit.iha.R;
 import cz.vutbr.fit.iha.SensorListAdapter;
-import cz.vutbr.fit.iha.activity.dialog.AddAdapterActivityDialog;
+import cz.vutbr.fit.iha.activity.dialog.AddAdapterFragmentDialog;
 import cz.vutbr.fit.iha.activity.dialog.AddSensorActivityDialog;
 import cz.vutbr.fit.iha.activity.dialog.CustomAlertDialog;
 import cz.vutbr.fit.iha.activity.dialog.InfoDialogFragment;
@@ -183,7 +183,7 @@ public class LocationScreenActivity extends BaseActivity {
 		initMenu();
 
 		if (getIntent().getExtras() != null && getIntent().getExtras().getBoolean(Constants.NOADAPTER)) {
-			Intent intent = new Intent(LocationScreenActivity.this, AddAdapterActivityDialog.class);
+			Intent intent = new Intent(LocationScreenActivity.this, AddAdapterFragmentDialog.class);
 			Bundle bundle = new Bundle();
 			bundle.putBoolean(Constants.CANCEL, true);
 			intent.putExtras(bundle);
@@ -801,9 +801,10 @@ public class LocationScreenActivity extends BaseActivity {
 			bundle.putBoolean(Constants.CANCEL, true);
 			intent.putExtras(bundle);
 			startActivityForResult(intent, REQUEST_ADD_ADAPTER);*/
-			DialogFragment newFragment = new AddAdapterActivityDialog();
+			DialogFragment newFragment = new AddAdapterFragmentDialog();
 		    newFragment.show(getSupportFragmentManager(), "missiles");
 
+		    
 			break;
 		}
 		/*
@@ -978,11 +979,13 @@ public class LocationScreenActivity extends BaseActivity {
 				if (!mController.getUserSettings().getBoolean(Constants.PERSISTENCE_PREF_IGNORE_NO_ADAPTER, false)) {
 					Log.e(TAG, "kulehovnableskyted");
 					Log.d(TAG, "data: " + Boolean.toString(isClosing) + " " + Boolean.toString(mController.getActiveAdapter() == null));
-					Intent intent = new Intent(LocationScreenActivity.this, AddAdapterActivityDialog.class);
-					Bundle bundle = new Bundle();
-					bundle.putBoolean(Constants.CANCEL, true);
-					intent.putExtras(bundle);
-					startActivity(intent);
+//					Intent intent = new Intent(LocationScreenActivity.this, AddAdapterFragmentDialog.class);
+//					Bundle bundle = new Bundle();
+//					bundle.putBoolean(Constants.CANCEL, true);
+//					intent.putExtras(bundle);
+//					startActivity(intent);
+					DialogFragment newFragment = new AddAdapterFragmentDialog();
+				    newFragment.show(getSupportFragmentManager(), "missiles");
 				}
 				return new AdapterMenuFacilitiesPair(getMenuAdapter(), new ArrayList<Facility>());
 			}

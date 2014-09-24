@@ -99,10 +99,10 @@
             android:name="cz.vutbr.fit.iha.activity.dialog.SetupSensorActivityDialog"
             android:theme="@style/MyDialog" >
         </activity>
-        <activity
-            android:name="cz.vutbr.fit.iha.activity.dialog.AddAdapterActivityDialog"
-            android:theme="@android:style/Theme.Dialog">
-        </activity>
+<!--         <activity -->
+<!--             android:name="cz.vutbr.fit.iha.activity.dialog.AddAdapterFragmentDialog" -->
+<!--             android:theme="@android:style/Theme.Dialog"> -->
+<!--         </activity> -->
         <activity
             android:name="cz.vutbr.fit.iha.activity.dialog.EditLocationActitivityDialog"
             android:theme="@style/MyDialog" >

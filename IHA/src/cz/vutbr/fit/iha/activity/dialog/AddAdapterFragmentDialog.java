@@ -5,31 +5,22 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.util.Log;
-import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.View.OnClickListener;
-import android.view.Window;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.LinearLayout;
-import cz.vutbr.fit.iha.Constants;
 import cz.vutbr.fit.iha.R;
 import cz.vutbr.fit.iha.activity.LocationScreenActivity;
-import cz.vutbr.fit.iha.controller.Controller;
+import cz.vutbr.fit.iha.activity.TrackDialogFragment;
 import cz.vutbr.fit.iha.thread.AdapterRegisterThread;
 
-public class AddAdapterActivityDialog extends BaseActivityDialog {
+public class AddAdapterFragmentDialog extends TrackDialogFragment {
 
-	private static final String TAG = AddAdapterActivityDialog.class.getSimpleName();
+	private static final String TAG = AddAdapterFragmentDialog.class.getSimpleName();
 
 	public Activity mActivity;
 	private View mView;
