@@ -53,7 +53,7 @@ public class XmlParsers {
 	/**
 	 * Thats mean Android OS
 	 */
-	public static final String COM_VER = "2.0";
+	public static final String COM_VER = Constants.COM_VER;
 	public static final String XML_VER = "1.0.2";
 
 	/**
@@ -168,7 +168,7 @@ public class XmlParsers {
 		mParser = Xml.newPullParser();
 		mParser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, namespace);
 
-		Log.i(TAG, xmlInput.length() + "");
+//		Log.i(TAG, xmlInput.length() + "");
 		mParser.setInput(new ByteArrayInputStream(xmlInput.getBytes("UTF-8")), null);
 		mParser.nextTag();
 
@@ -257,12 +257,11 @@ public class XmlParsers {
 	 *             means XML version mismatch exception
 	 * @throws ParseException
 	 */
-	private UtcAdapterPair parseAllFacilities() throws XmlPullParserException, IOException, XmlVerMisException, ParseException {
+	private List<Facility> parseAllFacilities() throws XmlPullParserException, IOException, XmlVerMisException, ParseException {
 		mParser.nextTag();
 		mParser.require(XmlPullParser.START_TAG, ns, ADAPTER);
 
 		String adapterId = getSecureAttrValue(ns, ID);
-		int utc = getSecureInt(getSecureAttrValue(ns, UTC));
 
 		mParser.nextTag();
 		mParser.require(XmlPullParser.START_TAG, ns, VERSION);
@@ -273,7 +272,7 @@ public class XmlParsers {
 
 		mParser.nextTag();
 		mParser.require(XmlPullParser.START_TAG, ns, CAPABILITIES);
-		return new UtcAdapterPair(parseFacilities(adapterId), utc);
+		return parseFacilities(adapterId);
 	}
 
 	/**
@@ -385,6 +384,7 @@ public class XmlParsers {
 			adapter.setId(getSecureAttrValue(ns, ID));
 			adapter.setName(getSecureAttrValue(ns, NAME));
 			adapter.setRole(User.Role.fromString(getSecureAttrValue(ns, ROLE)));
+			adapter.setUtcOffset(getSecureInt(getSecureAttrValue(ns, UTC)));
 			result.add(adapter);
 
 			mParser.nextTag();
@@ -814,8 +814,7 @@ public class XmlParsers {
 			mParser = Xml.newPullParser();
 			mParser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false);
 			mParser.setInput(stream, null);
-			// TODO: repair this
-			result = parseAllFacilities().Facilities;
+			result = parseAllFacilities();
 		} catch (Exception e) {
 			Log.e(TAG, e.getMessage(), e);
 		} finally {

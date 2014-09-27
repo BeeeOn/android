@@ -12,6 +12,11 @@ package cz.vutbr.fit.iha;
 public final class Constants {
 
 	/**
+	 * Network layer version
+	 */
+	public static final String COM_VER = "2.1";
+	
+	/**
 	 * Footing for pass between activities
 	 */
 	public static final String LOCATION_CLICKED = "LOCATION_CLICKED"; // LocationScreenActivity -> DataOfLocationScreenActivity

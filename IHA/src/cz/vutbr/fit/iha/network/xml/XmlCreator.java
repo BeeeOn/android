@@ -5,6 +5,7 @@
 package cz.vutbr.fit.iha.network.xml;
 
 import java.io.StringWriter;
+import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.List;
@@ -13,6 +14,7 @@ import java.util.Map.Entry;
 import org.xmlpull.v1.XmlSerializer;
 
 import android.util.Xml;
+import cz.vutbr.fit.iha.Constants;
 import cz.vutbr.fit.iha.adapter.device.BaseDevice;
 import cz.vutbr.fit.iha.adapter.device.BaseDevice.SaveDevice;
 import cz.vutbr.fit.iha.adapter.device.Facility;
@@ -41,7 +43,7 @@ public class XmlCreator {
 	/**
 	 * Version of communication protocol for google/android device
 	 */
-	public static final String GVER = "2.0";
+	public static final String GVER = Constants.COM_VER;
 	// states
 	public static final String SIGNIN = "signin";
 	public static final String SIGNUP = "signup";
@@ -76,6 +78,8 @@ public class XmlCreator {
 	public static final String GETNOTIFICATIONS = "getnotifications";
 	public static final String NOTIFICATIONREAD = "notificationread";
 	public static final String GETNEWDEVICES = "getnewdevices";
+	public static final String SETCONDITION = "setcondition";
+	public static final String SETLOCALE = "setlocale";
 
 	// end of states
 	public static final String USER = "user";
@@ -103,6 +107,8 @@ public class XmlCreator {
 	public static final String GCMID = "gcmid";
 	public static final String NOTIFICAION = "notification";
 	public static final String MSGID = "msgid";
+	public static final String CONDITION = "condition";
+	public static final String FUNC = "func";
 
 	// partial
 	public static final String DEVICE = "device";
@@ -120,6 +126,30 @@ public class XmlCreator {
 	public static final String INIT_1 = "1";
 	public static final String INIT_0 = "0";
 
+	//new drop
+	public enum ConditionType {
+		AND("and"),
+		OR("or");
+
+		private final String mValue;
+
+		private ConditionType(String value) {
+			mValue = value;
+		}
+
+		public String getValue() {
+			return mValue;
+		}
+
+		public static ConditionType fromValue(String value) {
+			for (ConditionType item : values()) {
+				if (value.equalsIgnoreCase(item.getValue()))
+					return item;
+			}
+			throw new IllegalArgumentException("Invalid ConditionType value");
+		}
+	}
+	
 	/**
 	 * Method create XML for signIn message
 	 * 
@@ -131,7 +161,7 @@ public class XmlCreator {
 	 *            language of App {cs, en}
 	 * @return XML message
 	 */
-	public static String createSignIn(String email, String gtoken, String lokale) {
+	public static String createSignIn(String email, String gtoken, String lokale, String gcmid) {
 		XmlSerializer serializer = Xml.newSerializer();
 		StringWriter writer = new StringWriter();
 		try {
@@ -146,6 +176,7 @@ public class XmlCreator {
 			serializer.attribute(ns, EMAIL, email);
 			serializer.attribute(ns, GTOKEN, gtoken);
 			serializer.attribute(ns, LOCALE, lokale);
+			serializer.attribute(ns, GCMID, gcmid);
 			serializer.endTag(ns, USER);
 			serializer.endTag(ns, COM_ROOT);
 			serializer.endDocument();
@@ -988,7 +1019,7 @@ public class XmlCreator {
 	 *            Id of devices to get update fields
 	 * @return update message
 	 */
-	public static String createGetFacilities(String id, String adapterId, List<Facility> facilities) {
+	public static String createGetDevices(String id, String adapterId, List<Facility> facilities) {
 		XmlSerializer serializer = Xml.newSerializer();
 		StringWriter writer = new StringWriter();
 		try {
@@ -1027,7 +1058,7 @@ public class XmlCreator {
 	 * @param facility
 	 * @return
 	 */
-	public static String createGetFacility(String id, String adapterId, Facility facility) {
+	public static String createGetDevice(String id, String adapterId, Facility facility) {
 		XmlSerializer serializer = Xml.newSerializer();
 		StringWriter writer = new StringWriter();
 		try {
@@ -1579,6 +1610,126 @@ public class XmlCreator {
 		}
 	}
 
+	public static String createSetLocale(String id, String locale){
+		XmlSerializer serializer = Xml.newSerializer();
+		StringWriter writer = new StringWriter();
+		try {
+			serializer.setOutput(writer);
+			serializer.startDocument("UTF-8", null);
+
+			serializer.startTag(ns, COM_ROOT);
+			serializer.attribute(ns, ID, id);
+			serializer.attribute(ns, STATE, SETLOCALE);
+			serializer.attribute(ns, VERSION, GVER);
+			serializer.attribute(ns, LOCALE, locale);
+
+			serializer.endTag(ns, COM_ROOT);
+			serializer.endDocument();
+
+			return writer.toString();
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+	}
+	
+	//new drop
+	public static String createSetCondition(String id, String name, ConditionType type, ArrayList<ConditionFunction> condFuncs){
+				XmlSerializer serializer = Xml.newSerializer();
+		StringWriter writer = new StringWriter();
+		try {
+			serializer.setOutput(writer);
+			serializer.startDocument("UTF-8", null);
+
+			serializer.startTag(ns, COM_ROOT);
+			serializer.attribute(ns, ID, id);
+			serializer.attribute(ns, STATE, SETCONDITION);
+			serializer.attribute(ns, VERSION, GVER);
+
+				serializer.startTag(ns, CONDITION);
+				serializer.attribute(ns, NAME, name);
+				serializer.attribute(ns, TYPE, type.getValue());
+				
+					for(ConditionFunction func : condFuncs){
+						serializer.startTag(ns, FUNC);
+						serializer.attribute(ns, TYPE, func.getFuncType().getValue());
+						
+						switch(func.getFuncType()){
+							case EQ:
+							case GT:
+							case GE:
+							case LT:
+							case LE:
+								serializer.startTag(ns, DEVICE);
+								//FIXME
+//								serializer.attribute(ns, ID, func.getDevice().getID());
+//								serializer.attribute(ns, TYPE, func.getDevice().getType());
+								serializer.endTag(ns, DEVICE);
+								
+								serializer.startTag(ns, VALUE);
+								//FIXME
+//								serializer.setText(func.getValue());
+								serializer.endTag(ns, VALUE);
+								break;
+							case BTW:
+								serializer.startTag(ns, DEVICE);
+								//FIXME
+//								serializer.attribute(ns, ID, func.getDevice().getID());
+//								serializer.attribute(ns, TYPE, func.getDevice().getType());
+								serializer.endTag(ns, DEVICE);
+								
+								serializer.startTag(ns, VALUE);
+								//FIXME
+//								serializer.setText(func.getMinValue());
+								serializer.endTag(ns, VALUE);
+								
+								serializer.startTag(ns, VALUE);
+								//FIXME
+//								serializer.setText(func.getMaxValue());
+								serializer.endTag(ns, VALUE);
+								break;
+							case DP:
+								serializer.startTag(ns, DEVICE);
+								//FIXME
+//								serializer.attribute(ns, ID, func.getTempDevice().getID());
+//								serializer.attribute(ns, TYPE, func.getTempDevice().getType());
+								serializer.endTag(ns, DEVICE);
+								
+								serializer.startTag(ns, DEVICE);
+								//FIXME
+//								serializer.attribute(ns, ID, func.getHumiDevice().getID());
+//								serializer.attribute(ns, TYPE, func.getHumiDevice().getType());
+								serializer.endTag(ns, DEVICE);
+								break;
+							case TIME:
+								serializer.startTag(ns, VALUE);
+								//FIXME
+//								serializer.setText(func.getTime());
+								serializer.endTag(ns, VALUE);
+								break;
+							case GEO:
+								serializer.startTag(ns, VALUE);
+								//FIXME
+//								serializer.setText("TODO");
+								serializer.endTag(ns, VALUE);
+								break;
+							default:
+								break;
+						}
+						
+						serializer.endTag(ns, FUNC);
+					}
+					
+				serializer.endTag(ns, CONDITION);
+
+			serializer.endTag(ns, COM_ROOT);
+			serializer.endDocument();
+
+			return writer.toString();
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+	}
+	
 	private static String formatType(int type) {
 		String hex = Integer.toHexString(type);
 		if (hex.length() == 1)

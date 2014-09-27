@@ -21,6 +21,7 @@ import cz.vutbr.fit.iha.adapter.device.StateDevice;
 import cz.vutbr.fit.iha.adapter.device.SwitchDevice;
 import cz.vutbr.fit.iha.adapter.location.Location;
 import cz.vutbr.fit.iha.exception.NotImplementedException;
+import cz.vutbr.fit.iha.gcm.GcmHelper;
 import cz.vutbr.fit.iha.household.ActualUser;
 import cz.vutbr.fit.iha.household.DemoHousehold;
 import cz.vutbr.fit.iha.household.Household;
@@ -29,7 +30,6 @@ import cz.vutbr.fit.iha.network.GoogleAuth;
 import cz.vutbr.fit.iha.network.Network;
 import cz.vutbr.fit.iha.network.exception.FalseException;
 import cz.vutbr.fit.iha.network.exception.NetworkException;
-import cz.vutbr.fit.iha.network.xml.UtcAdapterPair;
 import cz.vutbr.fit.iha.persistence.Persistence;
 import cz.vutbr.fit.iha.util.Utils;
 
@@ -157,7 +157,7 @@ public final class Controller {
 		// TODO: catch and throw proper exception
 		// FIXME: after some time there should be picture in ActualUser object, should save to mPersistence
 		try {
-			if (mNetwork.signIn(email)) {
+			if (mNetwork.signIn(email, GcmHelper.getGCMRegistrationId(mContext))) { //FIXME: gcmid
 				mPersistence.saveLastEmail(email);
 				mPersistence.initializeDefaultSettings(email);
 				return true;
@@ -249,9 +249,7 @@ public final class Controller {
 			// Update adapter with new data
 			adapter.setLocations(mNetwork.getLocations(adapter.getId()));
 			adapter.setUtcOffset(mNetwork.getTimeZone(adapter.getId()));
-			UtcAdapterPair utcadapterpair = mNetwork.init(adapter.getId());
-			adapter.setUtcOffset(utcadapterpair.UTC);
-			adapter.setFacilities(utcadapterpair.Facilities);
+			adapter.setFacilities(mNetwork.init(adapter.getId()));
 
 			adapter.lastUpdate.setToNow();
 			result = true;

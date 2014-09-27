@@ -41,6 +41,7 @@ import cz.vutbr.fit.iha.adapter.device.DeviceLog.DataInterval;
 import cz.vutbr.fit.iha.adapter.device.DeviceLog.DataType;
 import cz.vutbr.fit.iha.adapter.device.Facility;
 import cz.vutbr.fit.iha.adapter.location.Location;
+import cz.vutbr.fit.iha.gcm.GcmHelper;
 import cz.vutbr.fit.iha.household.ActualUser;
 import cz.vutbr.fit.iha.household.User;
 import cz.vutbr.fit.iha.network.exception.CommunicationException;
@@ -51,7 +52,6 @@ import cz.vutbr.fit.iha.network.exception.NotRegBException;
 import cz.vutbr.fit.iha.network.xml.CustomViewPair;
 import cz.vutbr.fit.iha.network.xml.FalseAnswer;
 import cz.vutbr.fit.iha.network.xml.ParsedMessage;
-import cz.vutbr.fit.iha.network.xml.UtcAdapterPair;
 import cz.vutbr.fit.iha.network.xml.XmlCreator;
 import cz.vutbr.fit.iha.network.xml.XmlParsers;
 import cz.vutbr.fit.iha.network.xml.XmlParsers.State;
@@ -111,7 +111,7 @@ public class Network {
 	 * Address and port of debug server
 	 */
 	private static final String SERVER_ADDR_DEBUG = "ant-2.fit.vutbr.cz";
-	private static final int SERVER_PORT_DEBUG = 4566;
+	private static final int SERVER_PORT_DEBUG = 4565;
 
 	/**
 	 * Address and port of production server
@@ -210,8 +210,10 @@ public class Network {
 		}
 
 		HostnameVerifier hv = HttpsURLConnection.getDefaultHostnameVerifier();
+		socket.setSoTimeout(10000);
+//		Log.i(TAG, ""+socket.set);
 		SSLSession s = socket.getSession();
-
+		//FIXME
 		if (!s.isValid())
 			Log.e("Network", "sslshiiit");
 
@@ -219,6 +221,7 @@ public class Network {
 		// This is due to lack of SNI support in the current SSLSocket.
 		if (!hv.verify(SERVER_CN_CERTIFICATE, s)) {
 			Log.e("Network", "rict pavlovi ze to opravil :)");
+			
 			throw new SSLHandshakeException("Expected CN value:" + SERVER_CN_CERTIFICATE + ", found " + s.getPeerPrincipal());
 		}
 
@@ -314,7 +317,7 @@ public class Network {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		signIn(mUser.getEmail());
+		signIn(mUser.getEmail(), GcmHelper.getGCMRegistrationId(mContext)); //FIXME: gcmid
 	}
 
 	private ParsedMessage doRequest(String messageToSend) {
@@ -380,12 +383,12 @@ public class Network {
 	 * @throws NotRegBException
 	 *             if this user is not registered on the server but there is FREE ADAPTER
 	 */
-	public boolean signIn(String userEmail) throws NoConnectionException, CommunicationException, NotRegAException, NotRegBException, FalseException {
+	public boolean signIn(String userEmail, String gcmid) throws NoConnectionException, CommunicationException, NotRegAException, NotRegBException, FalseException {
 		String googleToken = getGoogleToken();
 		if (googleToken.length() == 0)
 			throw new CommunicationException(GoogleExcMessage);
 
-		String messageToSend = XmlCreator.createSignIn(userEmail, googleToken, Locale.getDefault().getLanguage());
+		String messageToSend = XmlCreator.createSignIn(userEmail, googleToken, Locale.getDefault().getLanguage(), gcmid);
 		ParsedMessage msg = doRequest(messageToSend);
 
 		if (!msg.getSessionId().isEmpty() && msg.getState() == State.TRUE && ((String) msg.data).equals(SIGNIN)) {
@@ -507,15 +510,16 @@ public class Network {
 	 * @throws NoConnectionException
 	 * @throws CommunicationException
 	 */
-	public UtcAdapterPair init(String adapterId) throws NoConnectionException, CommunicationException, FalseException {
+	@SuppressWarnings("unchecked")
+	public List<Facility> init(String adapterId) throws NoConnectionException, CommunicationException, FalseException {
 		String messageToSend = XmlCreator.createGetAllDevices(mSessionId, adapterId);
 		ParsedMessage msg = doRequest(messageToSend);
-		UtcAdapterPair result = new UtcAdapterPair(new ArrayList<Facility>(), 0);
+		ArrayList<Facility> result = new ArrayList<Facility>();
 
 		if (msg.getState() == State.ALLDEVICES) {
 			Log.i(TAG, msg.getState().getValue());
 
-			result = (UtcAdapterPair) msg.data;
+			result = (ArrayList<Facility>) msg.data;
 		} else if (msg.getState() == State.RESIGN) {
 			doResign();
 			return init(adapterId);
@@ -712,7 +716,7 @@ public class Network {
 	// http://stackoverflow.com/a/509288/1642090
 	@SuppressWarnings("unchecked")
 	public List<Facility> getFacilities(String adapterId, List<Facility> facilities) throws NoConnectionException, CommunicationException, FalseException {
-		String messageToSend = XmlCreator.createGetFacilities(mSessionId, adapterId, facilities);
+		String messageToSend = XmlCreator.createGetDevices(mSessionId, adapterId, facilities);
 		ParsedMessage msg = doRequest(messageToSend);
 
 		List<Facility> result = new ArrayList<Facility>();
@@ -741,7 +745,7 @@ public class Network {
 	 * @throws FalseException
 	 */
 	public Facility getFacility(String adapterId, Facility facility) throws NoConnectionException, CommunicationException, FalseException {
-		String messageToSend = XmlCreator.createGetFacility(mSessionId, adapterId, facility);
+		String messageToSend = XmlCreator.createGetDevice(mSessionId, adapterId, facility);
 		ParsedMessage msg = doRequest(messageToSend);
 
 		Facility result = null;

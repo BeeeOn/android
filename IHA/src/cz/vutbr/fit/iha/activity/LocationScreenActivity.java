@@ -183,11 +183,12 @@ public class LocationScreenActivity extends BaseActivity {
 		initMenu();
 
 		if (getIntent().getExtras() != null && getIntent().getExtras().getBoolean(Constants.NOADAPTER)) {
-			Intent intent = new Intent(LocationScreenActivity.this, AddAdapterFragmentDialog.class);
-			Bundle bundle = new Bundle();
-			bundle.putBoolean(Constants.CANCEL, true);
-			intent.putExtras(bundle);
-			startActivity(intent);
+//			Intent intent = new Intent(LocationScreenActivity.this, AddAdapterFragmentDialog.class);
+//			Bundle bundle = new Bundle();
+//			bundle.putBoolean(Constants.CANCEL, true);
+//			intent.putExtras(bundle);
+//			startActivity(intent);
+			Log.e(TAG, "ktery prase? no, jen si to odkomentuj");
 		}
 
 	}
