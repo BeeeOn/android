@@ -70,6 +70,13 @@ public class SetupSensorActivityDialog extends Activity {
 		setContentView(R.layout.activity_setup_sensor_activity_dialog);
 
 		mController = Controller.getInstance(this);
+		
+		Adapter adapter = mController.getActiveAdapter();
+		if (adapter == null) {
+			Toast.makeText(this, "There are no adapters.", Toast.LENGTH_LONG).show();
+			finish();
+			return;
+		}
 
 		// Prepare progress dialog
 		mProgress = new ProgressDialog(this);
@@ -82,7 +89,7 @@ public class SetupSensorActivityDialog extends Activity {
 
 		mUnInitDevices = new ArrayList<BaseDevice>();
 
-		for (Facility facility : mController.getUninitializedFacilities()) {
+		for (Facility facility : mController.getUninitializedFacilities(adapter.getId(), false)) {
 			//for(BaseDevice device : facility.getDevices()) {
 			//	if (device.)
 			//}

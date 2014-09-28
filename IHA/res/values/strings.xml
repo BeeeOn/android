@@ -84,6 +84,7 @@
 	<string name="toast_adapter_activated">Adapter has been activated.</string>
 	<string name="toast_adapter_removed">Adapter has been removed.</string>
 	<string name="toast_no_adapter">You have no registered adapter.</string>
+	<string name="toast_ignore_uninitialized_info">You can add these devices later by clicking on (+)</string>
     
     <!-- Progress -->
     <string name="progress_signing">Signing to server&#8230;</string>

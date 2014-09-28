@@ -32,6 +32,8 @@ public class AddSensorActivityDialog extends Activity {
 	private int mTimerButtonSec = 30;
 	private int mIntervalToCheckUninitSensor = 5;
 
+	private Adapter mAdapter;
+	
 	private PairRequestTask mPairRequestTask;
 
 	private static final String TAG = LocationScreenActivity.class.getSimpleName();
@@ -48,15 +50,15 @@ public class AddSensorActivityDialog extends Activity {
 		initViews();
 
 		// Send request
-		Adapter actAdapter = mController.getActiveAdapter();
-		if (actAdapter == null) {
+		mAdapter = mController.getActiveAdapter();
+		if (mAdapter == null) {
 			Toast.makeText(this, getResources().getString(R.string.toast_no_adapter), Toast.LENGTH_LONG).show();
 			finish();
 			return;
 		}
 
 		mPairRequestTask = new PairRequestTask();
-		mPairRequestTask.execute(actAdapter.getId());
+		mPairRequestTask.execute(new String[] { mAdapter.getId() });
 	}
 
 	private void initViews() {
@@ -88,8 +90,8 @@ public class AddSensorActivityDialog extends Activity {
 				if ((millisUntilFinished / 1000) % mIntervalToCheckUninitSensor == 0) {
 					// check if are new uninit sensor
 					Log.d(TAG, "PAIR - check if some uninit sensor");
-					GetRefreshAdapterTask task = new GetRefreshAdapterTask();
-					task.execute();
+					GetUninitializedFacilitiesTask task = new GetUninitializedFacilitiesTask();
+					task.execute(new String[] { mAdapter.getId() });
 				}
 			}
 
@@ -112,35 +114,38 @@ public class AddSensorActivityDialog extends Activity {
 	private class PairRequestTask extends AsyncTask<String, Void, Boolean> {
 
 		@Override
-		protected Boolean doInBackground(String... adapterID) {
-			return mController.sendPairRequest(adapterID[0]);
-			// return true;
+		protected Boolean doInBackground(String... adapterIds) {
+			return mController.sendPairRequest(adapterIds[0]);
 		}
 
 		@Override
-		protected void onPostExecute(Boolean res) {
-			if (res) { // Request was succesful send
+		protected void onPostExecute(Boolean result) {
+			if (result) { // Request was successfully sent
 				checkUninitSensors();
-			} else { // Request wasnt send
+			} else { // Request wasn't send
 				resetPairButton();
 			}
 		}
 	}
 
 	/**
-	 * Changes selected location and redraws list of adapters there
+	 * Reload uninitialized facilities
 	 */
-	private class GetRefreshAdapterTask extends AsyncTask<Void, Void, List<Facility>> {
+	private class GetUninitializedFacilitiesTask extends AsyncTask<String, Void, Boolean> {
 
 		@Override
-		protected List<Facility> doInBackground(Void... params) {
-			mController.reloadUninitializedFacilities(true);
-			return mController.getUninitializedFacilities();
+		protected Boolean doInBackground(String... adapterIds) {
+			return mController.reloadUninitializedFacilitiesByAdapter(adapterIds[0], true);
 		}
 
 		@Override
-		protected void onPostExecute(List<Facility> facilities) {
-
+		protected void onPostExecute(Boolean success) {
+			if (!success) {
+				return;
+			}
+			
+			List<Facility> facilities = mController.getUninitializedFacilities(mAdapter.getId(), false);
+			
 			if (facilities.size() > 0) {
 				// Setup variable as true for disable timer
 				mTimerDone = true;
@@ -157,5 +162,5 @@ public class AddSensorActivityDialog extends Activity {
 			}
 		}
 	}
-
+	
 }

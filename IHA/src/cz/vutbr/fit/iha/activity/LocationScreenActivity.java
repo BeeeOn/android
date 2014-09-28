@@ -566,7 +566,7 @@ public class LocationScreenActivity extends BaseActivity {
 			@Override
 			public void onClick(View v) {
 				Log.d(TAG, "HERE ADD SENSOR +");
-				mController.unignoreUninitialized();
+				mController.unignoreUninitialized(mActiveAdapterId);
 
 				inBackground = true;
 				Intent intent = new Intent(LocationScreenActivity.this, AddSensorActivityDialog.class);
@@ -637,7 +637,7 @@ public class LocationScreenActivity extends BaseActivity {
 				public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 					if (position == mCntOfAllDev) {
 						Log.d(TAG, "HERE ADD SENSOR +");
-						mController.unignoreUninitialized();
+						mController.unignoreUninitialized(mActiveAdapterId);
 	
 						inBackground = true;
 						Intent intent = new Intent(LocationScreenActivity.this, AddSensorActivityDialog.class);
@@ -759,7 +759,7 @@ public class LocationScreenActivity extends BaseActivity {
 	
 	public void checkUninitializedDevices() {
 		// Get uninitialized facilities
-		final List<Facility> uninitializedFacilities = mController.getUninitializedFacilities();
+		final List<Facility> uninitializedFacilities = mController.getUninitializedFacilities(mActiveAdapterId, false);
 		Log.d(TAG, String.format("Found %d uninitialized facilities", uninitializedFacilities.size()));
 		
 		// Do something with uninitialized facilities
@@ -780,9 +780,8 @@ public class LocationScreenActivity extends BaseActivity {
 		mDialog.setCustomNeutralButton(getString(R.string.notification_ingore), new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				mController.ignoreUninitialized(uninitializedFacilities);
-				// TODO: Get this string from resources
-				Toast.makeText(LocationScreenActivity.this, "You can add these devices later through 'Menu / Add sensor'", Toast.LENGTH_LONG).show();
+				mController.ignoreUninitializedFacilities(mActiveAdapterId);
+				Toast.makeText(LocationScreenActivity.this, R.string.toast_ignore_uninitialized_info, Toast.LENGTH_LONG).show();
 				mDialog.dismiss();
 			}
 		});

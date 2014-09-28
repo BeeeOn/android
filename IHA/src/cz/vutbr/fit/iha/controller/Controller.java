@@ -281,6 +281,21 @@ public final class Controller {
 	 * @param forceReload
 	 * @return
 	 */
+	public boolean reloadLocations(String adapterId, boolean forceReload) {
+		if (mDemoMode || !isLoggedIn()) {
+			return false;
+		}
+			
+		return mHousehold.locationsModel.reloadLocationsByAdapter(adapterId, forceReload);
+	}
+	
+	/**
+	 * This CAN'T be called on UI thread!
+	 * 
+	 * @param adapterId
+	 * @param forceReload
+	 * @return
+	 */
 	public boolean reloadFacilitiesByAdapter(String adapterId, boolean forceReload) {
 		if (mDemoMode || !isLoggedIn()) {
 			return false;
@@ -296,42 +311,13 @@ public final class Controller {
 	 * @param forceReload
 	 * @return
 	 */
-	public boolean reloadLocations(String adapterId, boolean forceReload) {
+	public boolean reloadUninitializedFacilitiesByAdapter(String adapterId, boolean forceReload) {
 		if (mDemoMode || !isLoggedIn()) {
 			return false;
 		}
 			
-		return mHousehold.locationsModel.reloadLocationsByAdapter(adapterId, forceReload);
-	}
-	
-	/**
-	 * This CAN'T be called on UI thread!
-	 * 
-	 * @param forceReload
-	 * @return
-	 */
-	public boolean reloadUninitializedFacilities(boolean forceReload) {
-		if (mDemoMode || !isLoggedIn()) {
-			return false;
-		}
-			
-		// FIXME: uncomment when implemented
-		//return mHousehold.facilitiesModel.reloadUninitializedFacilities(forceReload);
-		return false;
-	}
-
-	/**
-	 * Refreshes facility in listings (e.g., in uninitialized facilities)
-	 * 
-	 * @param facility
-	 */
-	/*public void refreshFacility(final Facility facility) {
-		Adapter adapter = getActiveAdapter();
-		if (adapter != null) {
-			adapter.refreshFacility(facility);
-		}
-	}*/
-
+		return mHousehold.uninitializedFacilitiesModel.reloadUninitializedFacilitiesByAdapter(adapterId, forceReload);
+	}	
 	
 	/**
 	 * This CAN'T be called on UI thread!
@@ -675,23 +661,36 @@ public final class Controller {
 	}
 
 	/**
-	 * Return list of all uninitialized facilities from active adapter.
+	 * Return list of all uninitialized facilities from adapter
 	 * 
-	 * @return List of facilities (or empty list)
+	 * @param adapterId
+	 * @param withIgnored
+	 * @return List of uninitialized facilities (or empty list)
 	 */
-	public List<Facility> getUninitializedFacilities() {
-		List<Facility> list = new ArrayList<Facility>();
-
-		Adapter adapter = getActiveAdapter();
-		if (adapter != null) {
-			list.addAll(adapter.getUninitializedFacilities());
-		}
-
-		return list;
+	public List<Facility> getUninitializedFacilities(String adapterId, boolean withIgnored) {
+		return mHousehold.uninitializedFacilitiesModel.getUninitializedFacilitiesByAdapter(adapterId, withIgnored);
+	}
+	
+	/**
+	 * Set all uninitialized facilities from adapter as ignored (won't be returned by calling getUninitializedFacilities)
+	 * 
+	 * @param adapterId
+	 */
+	public void ignoreUninitializedFacilities(String adapterId) {
+		mHousehold.uninitializedFacilitiesModel.ignoreUninitalizedFacilities(adapterId);
 	}
 
 	/**
-	 * Return list of all facilities by location from active adapter.
+	 * Stop ignoring all ignored uninitialized facilities from adapter (will be returned by calling getUninitializedFacilities)
+	 * 
+	 * @param adapterId
+	 */
+	public void unignoreUninitialized(String adapterId) {
+		mHousehold.uninitializedFacilitiesModel.unignoreUninitializedFacilities(adapterId);
+	}
+
+	/**
+	 * Return list of all facilities by location from adapter
 	 * 
 	 * @param location
 	 * @return List of facilities (or empty list)
@@ -700,6 +699,12 @@ public final class Controller {
 		return mHousehold.facilitiesModel.getFacilitiesByLocation(adapterId, locationId);
 	}
 
+	/**
+	 * Return list of all facilities from adapter
+	 * 
+	 * @param adapterId
+	 * @return List of facilities (or empty list)
+	 */
 	public List<Facility> getFacilitiesByAdapter(String adapterId) {
 		return mHousehold.facilitiesModel.getFacilitiesByAdapter(adapterId);
 	}
@@ -867,18 +872,6 @@ public final class Controller {
 	 */
 	public boolean startGoogle(boolean blocking, boolean fetchPhoto) {
 		return mNetwork.startGoogleAuth(blocking, fetchPhoto);
-	}
-
-	public void ignoreUninitialized(List<Facility> facilities) {
-		Adapter adapter = getActiveAdapter();
-		if (adapter != null)
-			adapter.ignoreUninitialized(facilities);
-	}
-
-	public void unignoreUninitialized() {
-		Adapter adapter = getActiveAdapter();
-		if (adapter != null)
-			adapter.unignoreUninitialized();
 	}
 
 	public ActualUser getActualUser() {
