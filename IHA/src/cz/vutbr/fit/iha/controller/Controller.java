@@ -91,6 +91,7 @@ public final class Controller {
 		mNetwork = new Network(mContext, isDebugVersion());
 		mPersistence = new Persistence(mContext);
 		mHousehold = mDemoMode ? new DemoHousehold(mContext, mNetwork) : new Household(mContext, mNetwork);
+		mNetwork.setUser(mHousehold.user);
 	}
 
 	public static synchronized void setDemoMode(Context context, boolean demoMode) {
