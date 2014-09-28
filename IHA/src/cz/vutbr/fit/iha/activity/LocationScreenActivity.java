@@ -942,7 +942,7 @@ public class LocationScreenActivity extends BaseActivity {
 		@Override
 		protected List<Facility> doInBackground(String... params) {
 			if (params.length > 0) {
-				mController.setActiveAdapter(params[0]);
+				mController.setActiveAdapter(params[0], false);
 			}
 
 			setLocationOrEmpty();

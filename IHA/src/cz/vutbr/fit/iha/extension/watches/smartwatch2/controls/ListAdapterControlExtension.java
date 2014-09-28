@@ -152,7 +152,7 @@ public class ListAdapterControlExtension extends ManagedControlExtension {
 		if (clickType == Control.Intents.CLICK_TYPE_SHORT) {
 			Intent intent;
 			String adapterId = mAdapters.get(listItem.listItemPosition).getId();
-			mController.setActiveAdapter(adapterId);
+			mController.setActiveAdapter(adapterId, false);
 			List<Location> locations = mController.getLocations(adapterId);
 			if (locations.size() < 1) {
 				intent = new Intent(mContext, TextControl.class);

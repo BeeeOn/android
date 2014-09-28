@@ -377,7 +377,7 @@ public final class Controller {
 	 * @param id
 	 * @return true on success, false if there is no adapter with this id
 	 */
-	public synchronized boolean setActiveAdapter(String id) {
+	public synchronized boolean setActiveAdapter(String id, boolean forceReload) {
 		Map<String, Adapter> adapters = mHousehold.adaptersModel.getAdaptersMap();
 		if (!adapters.containsKey(id)) {
 			Log.d(TAG, String.format("Can't set active adapter to '%s'", id));
@@ -388,6 +388,11 @@ public final class Controller {
 		mHousehold.activeAdapter = adapter;
 		Log.d(TAG, String.format("Set active adapter to '%s'", adapter.getName()));
 		mPersistence.saveActiveAdapter(mHousehold.user.getId(), adapter.getId());
+		
+		// Load locations and facilities, if needed
+		mHousehold.locationsModel.reloadLocationsByAdapter(id, forceReload);
+		mHousehold.facilitiesModel.reloadFacilitiesByAdapter(id, forceReload);
+		
 		return true;
 	}
 
@@ -408,11 +413,8 @@ public final class Controller {
 
 		try {
 			if (mNetwork.addAdapter(id, adapterName)) {
-				if (mHousehold.adaptersModel.reloadAdapters(true)) {
-					setActiveAdapter(id);
-					mHousehold.locationsModel.reloadLocationsByAdapter(id, true);
-					mHousehold.facilitiesModel.reloadFacilitiesByAdapter(id, true);
-				}
+				mHousehold.adaptersModel.reloadAdapters(true);
+				setActiveAdapter(id, true);
 				result = true;
 			}
 		} catch (NetworkException e) {
