@@ -619,9 +619,11 @@ public class LocationScreenActivity extends BaseActivity {
 		boolean haveDevices = mCntOfAllDev > 0;
 		boolean haveAdapters = mController.getAdapters().size() > 0;
 		
-		// If no sensors - display text only
+		// If no sensors - display text
 		nosensor.setVisibility(haveDevices ? View.GONE : View.VISIBLE);
-		addsensor.setVisibility(haveDevices ? View.GONE : View.VISIBLE);
+		
+		// If we have no sensors but we have adapters - display add button
+		addsensor.setVisibility(haveDevices || !haveAdapters ? View.GONE : View.VISIBLE);
 		
 		// If we have adapters (but we're right now in empty room) show list so we can pull it to refresh
 		mSensorList.setVisibility(haveDevices || haveAdapters ? View.VISIBLE : View.GONE);
