@@ -9,7 +9,6 @@ import android.text.format.Time;
 import cz.vutbr.fit.iha.adapter.device.Facility;
 import cz.vutbr.fit.iha.network.Network;
 import cz.vutbr.fit.iha.network.exception.NetworkException;
-import cz.vutbr.fit.iha.network.xml.UtcAdapterPair;
 import cz.vutbr.fit.iha.util.Utils;
 
 public class FacilitiesModel {
@@ -113,8 +112,7 @@ public class FacilitiesModel {
 	
 	private boolean loadFromServer(String adapterId) {
 		try {
-			UtcAdapterPair pair = mNetwork.init(adapterId);
-			setFacilitiesByAdapter(adapterId, pair.Facilities);
+			setFacilitiesByAdapter(adapterId, mNetwork.init(adapterId));
 			setLastUpdate(adapterId, null);
 			saveToCache(adapterId);
 		} catch (NetworkException e) {

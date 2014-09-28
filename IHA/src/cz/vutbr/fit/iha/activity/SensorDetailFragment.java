@@ -375,7 +375,7 @@ public class SensorDetailFragment extends SherlockFragment {
 		mSpinnerLoc.setSelection(getLocationsIndexFromArray(getLocationsArray()));
 
 		Facility facility = device.getFacility();
-		Adapter adapter = mController.getAdapterByFacility(facility);
+		Adapter adapter = mController.getAdapter(facility.getAdapterId());
 		
 		// Set value of sensor
 		mValue.setText(device.getStringValueUnit(getActivity()));

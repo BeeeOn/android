@@ -106,7 +106,7 @@ public class SensorListAdapter extends BaseAdapter {
 		// Locate the ImageView in drawer_list_item.xml
 		imgIcon = (ImageView) itemView.findViewById(R.id.iconofsensor);
 
-		Adapter adapter = mController.getAdapter(mAdapterId[position], false);
+		Adapter adapter = mController.getAdapter(mAdapterId[position]);
 		
 		// Set the results into TextViews
 		txtTitle.setText(mTitle[position]);
