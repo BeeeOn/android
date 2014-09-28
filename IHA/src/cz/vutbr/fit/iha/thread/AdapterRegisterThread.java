@@ -19,6 +19,8 @@ public class AdapterRegisterThread implements Runnable {
 
 	private static final String TAG = AdapterRegisterThread.class.getSimpleName();
 
+	private Controller mController;
+	
 	private String mSerialNumber;
 	private Activity mActivity;
 	private String mName;
@@ -27,18 +29,23 @@ public class AdapterRegisterThread implements Runnable {
 	 * Constructor
 	 */
 	public AdapterRegisterThread(String name, String serialNumber, Activity activity) {
+		
+		mController = Controller.getInstance(activity);
 		mSerialNumber = serialNumber;
 		mActivity = activity;
-		// TODO: name of adapter
-		mName = (name.isEmpty())?"test": name;
+		mName = name;
+
+		if (mName.isEmpty()) {
+			// Set default name for this adapter
+			int adaptersCount = mController.getAdapters().size();
+			mName = activity.getString(R.string.adapter_default_name, adaptersCount + 1);	
+		}
 	}
 
 	@Override
 	public void run() {
-		Controller controller = Controller.getInstance(mActivity);
-
 		int messageId;
-		boolean result = controller.registerAdapter(mSerialNumber, mName);
+		boolean result = mController.registerAdapter(mSerialNumber, mName);
 		if (result) {
 			messageId = R.string.toast_adapter_activated;
 		} else {
@@ -48,23 +55,25 @@ public class AdapterRegisterThread implements Runnable {
 		Log.d(TAG, mActivity.getString(messageId));
 		new ToastMessageThread(mActivity, messageId).start();
 
-		controller.reloadAdapters(true);
-		Adapter adapter = controller.getAdapter(mSerialNumber); 
-		if (adapter != null) {// && controller.getFacilitiesByAdapter(adapter.getId()).isEmpty()) {
-			Log.i(TAG, mSerialNumber + " is empty");
-			Intent intent = new Intent(mActivity, AddSensorActivityDialog.class);
-			mActivity.startActivity(intent);
+		if (result) {
+			Adapter adapter = mController.getAdapter(mSerialNumber); 
+			if (adapter != null && mController.getFacilitiesByAdapter(adapter.getId()).isEmpty()) {
+				// Show activity for adding new sensor, when this adapter doesn't have any yet
+				Log.i(TAG, mSerialNumber + " is empty");
+				Intent intent = new Intent(mActivity, AddSensorActivityDialog.class);
+				mActivity.startActivity(intent);
+			}
+			// TODO: this only from loginscreen
+			// else
+			// if(controller.isLoggedIn()){
+			// LocationScreenActivity.healActivity();
+			// Intent intent = new Intent(mActivity, LocationScreenActivity.class);
+			// mActivity.startActivity(intent);
+			// }
+		} else {
+			// uncomment this if you want to hide dialog after bad serial number
+			// mActivity.finish();			
 		}
-		// TODO: this only from loginscreen
-		// else
-		// if(controller.isLoggedIn()){
-		// LocationScreenActivity.healActivity();
-		// Intent intent = new Intent(mActivity, LocationScreenActivity.class);
-		// mActivity.startActivity(intent);
-		// }
-
-		// uncomment this if you want to hide dialog after bad serial number
-		// mActivity.finish();
 	}
 
 }

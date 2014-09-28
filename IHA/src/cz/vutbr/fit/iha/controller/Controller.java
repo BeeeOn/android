@@ -394,10 +394,11 @@ public final class Controller {
 	/**
 	 * Registers new adapter to server.
 	 * 
+	 * Automatically reloads list of adapters, set this adapter as active and load all its sensors. 
+	 * 
 	 * @param id
 	 * @return true on success, false otherwise
 	 */
-	// FIXME: this register user not adapter
 	public boolean registerAdapter(String id, String adapterName) {
 		if (mDemoMode) {
 			return false;
@@ -407,8 +408,11 @@ public final class Controller {
 
 		try {
 			if (mNetwork.addAdapter(id, adapterName)) {
-				mHousehold.adaptersModel.reloadAdapters(true);
-				setActiveAdapter(id);
+				if (mHousehold.adaptersModel.reloadAdapters(true)) {
+					setActiveAdapter(id);
+					mHousehold.locationsModel.reloadLocationsByAdapter(id, true);
+					mHousehold.facilitiesModel.reloadFacilitiesByAdapter(id, true);
+				}
 				result = true;
 			}
 		} catch (NetworkException e) {

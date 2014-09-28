@@ -194,4 +194,7 @@
     <string name="default_adapter">Default adapter</string>
     <string name="actual_timezone">Current timezone</string>
     <string name="adapter_timezone">Adapter timezone</string>
+    
+    <!-- Default names -->
+    <string name="adapter_default_name">Adapter #%d</string>
 </resources>
