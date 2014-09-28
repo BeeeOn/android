@@ -1,5 +1,7 @@
 package cz.vutbr.fit.iha.activity.dialog;
 
+import java.util.Vector;
+
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
@@ -18,6 +20,7 @@ import cz.vutbr.fit.iha.Constants;
 import cz.vutbr.fit.iha.R;
 import cz.vutbr.fit.iha.activity.LocationScreenActivity;
 import cz.vutbr.fit.iha.activity.TrackDialogFragment;
+import cz.vutbr.fit.iha.adapter.Adapter;
 import cz.vutbr.fit.iha.controller.Controller;
 import cz.vutbr.fit.iha.thread.ToastMessageThread;
 
@@ -158,6 +161,23 @@ public class AddAdapterFragmentDialog extends TrackDialogFragment {
 	
 	private class RegisterAdapterTask extends AsyncTask<RegisterAdapterPair, Void, Boolean> {
 
+		private String getUniqueAdapterName() {
+			Vector<String> adapterNames = new Vector<String>();
+			
+			for (Adapter adapter : mController.getAdapters()) {
+				adapterNames.add(adapter.getName());
+			}
+			
+			String name = "";
+
+			int number = 1;			
+			do {
+				name = mActivity.getString(R.string.adapter_default_name, number++);
+			} while (adapterNames.contains(name));
+			
+			return name;
+		}
+		
 		@Override
 		protected Boolean doInBackground(RegisterAdapterPair... pairs) {
 			RegisterAdapterPair pair = pairs[0];
@@ -167,8 +187,7 @@ public class AddAdapterFragmentDialog extends TrackDialogFragment {
 
 			// Set default name for this adapter, if user didn't filled any
 			if (name.isEmpty()) {
-				int adaptersCount = mController.getAdapters().size();
-				name = mActivity.getString(R.string.adapter_default_name, adaptersCount + 1);	
+				name = getUniqueAdapterName();
 			}
 			
 			return mController.registerAdapter(serialNumber, name);
