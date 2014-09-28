@@ -616,56 +616,51 @@ public class LocationScreenActivity extends BaseActivity {
 							// (fragment?) first?
 		}
 
-		// If no sensor - display text only
-		if (mCntOfAllDev == 0) {
-			if (nosensor != null) {
-				nosensor.setVisibility(View.VISIBLE);
-				addsensor.setVisibility(View.VISIBLE);
-				mSensorList.setVisibility(View.GONE);
-			}
+		boolean haveDevices = mCntOfAllDev > 0;
+		boolean haveAdapters = mController.getAdapters().size() > 0;
+		
+		// If no sensors - display text only
+		nosensor.setVisibility(haveDevices ? View.GONE : View.VISIBLE);
+		addsensor.setVisibility(haveDevices ? View.GONE : View.VISIBLE);
+		
+		// If we have adapters (but we're right now in empty room) show list so we can pull it to refresh
+		mSensorList.setVisibility(haveDevices || haveAdapters ? View.VISIBLE : View.GONE);
 
-			this.setSupportProgressBarIndeterminateVisibility(false);
-			Log.d(TAG, "LifeCycle: finished - no sensors count");
-			return true;
-		} else {
-			nosensor.setVisibility(View.GONE);
-			addsensor.setVisibility(View.GONE);
-			mSensorList.setVisibility(View.VISIBLE);
-		}
-
-		mSensorAdapter = new SensorListAdapter(LocationScreenActivity.this, adapterId, title, value, unit, time, icon, relPos, facSize);
-
+		// Update list adapter
+		mSensorAdapter = new SensorListAdapter(LocationScreenActivity.this, adapterId, title, value, unit, time, icon, relPos, facSize, mCntOfAllDev > 0);
 		mSensorList.setAdapter(mSensorAdapter);
 
-		// Capture listview menu item click
-		mSensorList.setOnItemClickListener(new ListView.OnItemClickListener() {
-			@Override
-			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-				if (position == mCntOfAllDev) {
-					Log.d(TAG, "HERE ADD SENSOR +");
-					mController.unignoreUninitialized();
-
-					inBackground = true;
-					Intent intent = new Intent(LocationScreenActivity.this, AddSensorActivityDialog.class);
-					startActivity(intent);
-					return;
+		if (haveDevices) {
+			// Capture listview menu item click
+			mSensorList.setOnItemClickListener(new ListView.OnItemClickListener() {
+				@Override
+				public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+					if (position == mCntOfAllDev) {
+						Log.d(TAG, "HERE ADD SENSOR +");
+						mController.unignoreUninitialized();
+	
+						inBackground = true;
+						Intent intent = new Intent(LocationScreenActivity.this, AddSensorActivityDialog.class);
+						startActivity(intent);
+						return;
+					}
+	
+					// final BaseDevice selectedItem = devices.get(position);
+	
+					// setSupportProgressBarIndeterminateVisibility(true);
+	
+					Bundle bundle = new Bundle();
+					String myMessage = mActLocID;
+					bundle.putString("LocationOfSensorID", myMessage);
+					bundle.putInt("SensorPosition", position);
+					Intent intent = new Intent(LocationScreenActivity.this, SensorDetailActivity.class);
+					intent.putExtras(bundle);
+					startActivityForResult(intent, REQUEST_SENSOR_DETAIL);
+					// startActivity(intent);
+					// finish();
 				}
-
-				// final BaseDevice selectedItem = devices.get(position);
-
-				// setSupportProgressBarIndeterminateVisibility(true);
-
-				Bundle bundle = new Bundle();
-				String myMessage = mActLocID;
-				bundle.putString("LocationOfSensorID", myMessage);
-				bundle.putInt("SensorPosition", position);
-				Intent intent = new Intent(LocationScreenActivity.this, SensorDetailActivity.class);
-				intent.putExtras(bundle);
-				startActivityForResult(intent, REQUEST_SENSOR_DETAIL);
-				// startActivity(intent);
-				// finish();
-			}
-		});
+			});
+		}
 
 		this.setSupportProgressBarIndeterminateVisibility(false);
 		Log.d(TAG, "LifeCycle: getsensors end");
