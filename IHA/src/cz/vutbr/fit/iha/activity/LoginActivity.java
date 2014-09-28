@@ -163,7 +163,7 @@ public class LoginActivity extends BaseActivity {
 			if (mDoGoogleLoginRunnable != null) {
 				mDoGoogleLoginRunnable.stop();
 			}
-			ProgressDismiss();
+			progressDismiss();
 			return;
 		}
 
@@ -176,7 +176,7 @@ public class LoginActivity extends BaseActivity {
 			try {
 				mController.initGoogle(this, email);
 				mController.startGoogle(false, true); // do NOT need check returned value, init is called line before
-				ProgressChangeText(getString(R.string.loading_data));
+				progressChangeText(getString(R.string.loading_data));
 				Log.d(TAG, "user aproved, and token is tried to retake.");
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -222,35 +222,27 @@ public class LoginActivity extends BaseActivity {
 	/**
 	 * Method cancel running progressBar, thread-safe
 	 */
-	public void ProgressDismiss() {
-		new Thread() {
+	public void progressDismiss() {
+		runOnUiThread(new Runnable() {
+			@Override
 			public void run() {
-				runOnUiThread(new Runnable() {
-					@Override
-					public void run() {
-						if (mProgress != null && mProgress.isShowing())
-							mProgress.dismiss();
-					}
-				});
+				if (mProgress != null && mProgress.isShowing())
+					mProgress.dismiss();
 			}
-		}.start();
+		});
 	}
 
 	/**
 	 * Method show progress, thread-safe
 	 */
-	private void ProgressShow() {
-		new Thread() {
+	private void progressShow() {
+		runOnUiThread(new Runnable() {
+			@Override
 			public void run() {
-				runOnUiThread(new Runnable() {
-					@Override
-					public void run() {
-						if (mProgress != null)
-							mProgress.show();
-					}
-				});
+				if (mProgress != null)
+					mProgress.show();
 			}
-		}.start();
+		});
 	}
 
 	/**
@@ -259,18 +251,14 @@ public class LoginActivity extends BaseActivity {
 	 * @param message
 	 *            to show
 	 */
-	public void ProgressChangeText(final String message) {
-		new Thread() {
+	public void progressChangeText(final String message) {
+		runOnUiThread(new Runnable() {
+			@Override
 			public void run() {
-				runOnUiThread(new Runnable() {
-					@Override
-					public void run() {
-						if (mProgress != null)
-							mProgress.setMessage(message);
-					}
-				});
+				if (mProgress != null)
+					mProgress.setMessage(message);
 			}
-		}.start();
+		});
 	}
 
 	/**
@@ -331,10 +319,10 @@ public class LoginActivity extends BaseActivity {
 	 *            of user
 	 */
 	private void doGoogleLogin(final String email) {
-		ProgressShow();
+		progressShow();
 		if (!mController.isInternetAvailable()) {
 			Toast.makeText(mActivity, getString(R.string.toast_internet_connection), Toast.LENGTH_LONG).show();
-			ProgressDismiss();
+			progressDismiss();
 			return;
 		}
 		// final GoogleAuth ggAuth = new GoogleAuth(this, email);
@@ -430,18 +418,18 @@ public class LoginActivity extends BaseActivity {
 				
 				
 				// Load all adapters and data for active one on login
-				ProgressChangeText(getString(R.string.progress_loading_adapters));
+				progressChangeText(getString(R.string.progress_loading_adapters));
 				mController.reloadAdapters(true);
 
 				Adapter active = mController.getActiveAdapter();
 				if (active != null) {
 					// Load data for active adapter
-					ProgressChangeText(getString(R.string.progress_loading_adapter));
+					progressChangeText(getString(R.string.progress_loading_adapter));
 					mController.reloadLocations(active.getId(), true);
 					mController.reloadFacilitiesByAdapter(active.getId(), true);
 				}
 				
-				ProgressDismiss();
+				progressDismiss();
 				if (!mDoGoogleLoginRunnable.isStopped()) {
 					Intent intent = new Intent(mActivity, LocationScreenActivity.class);
 					if (mSignUp) {
@@ -502,7 +490,7 @@ public class LoginActivity extends BaseActivity {
 			errFlag = true;
 			errMessage = getString(R.string.toast_not_implemented);
 		} finally {
-			ProgressDismiss();
+			progressDismiss();
 			if (errFlag) {
 				// alternate form: //mActivity.runOnUiThread(new ToastMessageThread(mActivity, errMessage));
 				new ToastMessageThread(mActivity, errMessage).start();
@@ -512,12 +500,12 @@ public class LoginActivity extends BaseActivity {
 
 	private void doRegisterUser(final String email) {
 		mSignUp = true;
-		ProgressChangeText(getString(R.string.progress_signup));
-		ProgressShow();
+		progressChangeText(getString(R.string.progress_signup));
+		progressShow();
 		if (mController.registerUser(email)) {
 			doLogin(email);
 		} else {
-			ProgressDismiss();
+			progressDismiss();
 			new ToastMessageThread(mActivity, R.string.toast_something_wrong);
 		}
 	}

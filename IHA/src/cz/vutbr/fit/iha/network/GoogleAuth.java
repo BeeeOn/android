@@ -182,18 +182,18 @@ public class GoogleAuth extends AsyncTask<Void, Void, GoogleAuthState> {
 
 		switch (result) {
 		case eOK:
-			mActivity.ProgressDismiss();
+			mActivity.progressDismiss();
 			break;
 		case eRecorver:
-			mActivity.ProgressDismiss();
+			mActivity.progressDismiss();
 			new ToastMessageThread(mActivity, R.string.toast_google_auth).start();
 			break;
 		case eUnknown:
-			mActivity.ProgressDismiss();
+			mActivity.progressDismiss();
 			new ToastMessageThread(mActivity, R.string.toast_something_wrong).start();
 			break;
 		case eNoConnection:
-			mActivity.ProgressDismiss();
+			mActivity.progressDismiss();
 			new ToastMessageThread(mActivity, R.string.toast_check_your_connection_via_browser).start();
 			break;
 		default:
@@ -216,15 +216,15 @@ public class GoogleAuth extends AsyncTask<Void, Void, GoogleAuthState> {
 			return true;
 		} catch (UserRecoverableAuthException userRecoverableException) {
 			mActivity.startActivityForResult(userRecoverableException.getIntent(), LoginActivity.USER_RECOVERABLE_AUTH);
-			mActivity.ProgressChangeText(mActivity.getString(R.string.progress_google));
+			mActivity.progressChangeText(mActivity.getString(R.string.progress_google));
 			new ToastMessageThread(mActivity, R.string.toast_google_auth).start();
 			return true;
 		} catch (IOException e) {
-			mActivity.ProgressDismiss();
+			mActivity.progressDismiss();
 			new ToastMessageThread(mActivity, R.string.toast_check_your_connection_via_browser).start();
 			e.printStackTrace();
 		} catch (Exception e) {
-			mActivity.ProgressDismiss();
+			mActivity.progressDismiss();
 			new ToastMessageThread(mActivity, R.string.toast_internet_connection).start();
 			e.printStackTrace();
 		}
