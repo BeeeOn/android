@@ -18,7 +18,7 @@ import cz.vutbr.fit.iha.adapter.Adapter;
 import cz.vutbr.fit.iha.adapter.location.Location;
 import cz.vutbr.fit.iha.controller.Controller;
 import cz.vutbr.fit.iha.persistence.Persistence;
-import cz.vutbr.fit.iha.settings.Timezone;
+import cz.vutbr.fit.iha.util.Timezone;
 
 /**
  * The control preference activity handles the preferences for the control extension.

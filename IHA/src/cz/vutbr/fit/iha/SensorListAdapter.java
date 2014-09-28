@@ -12,7 +12,7 @@ import android.widget.LinearLayout.LayoutParams;
 import android.widget.TextView;
 import cz.vutbr.fit.iha.adapter.Adapter;
 import cz.vutbr.fit.iha.controller.Controller;
-import cz.vutbr.fit.iha.settings.Timezone;
+import cz.vutbr.fit.iha.util.Timezone;
 
 public class SensorListAdapter extends BaseAdapter {
 

@@ -49,7 +49,7 @@ import cz.vutbr.fit.iha.adapter.Adapter;
 import cz.vutbr.fit.iha.adapter.device.BaseDevice;
 import cz.vutbr.fit.iha.adapter.device.Facility;
 import cz.vutbr.fit.iha.extension.watches.smartwatch2.SW2ExtensionService;
-import cz.vutbr.fit.iha.settings.Timezone;
+import cz.vutbr.fit.iha.util.Timezone;
 
 /**
  * GalleryControl displays a swipeable gallery.

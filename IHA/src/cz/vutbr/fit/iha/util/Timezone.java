@@ -1,4 +1,4 @@
-package cz.vutbr.fit.iha.settings;
+package cz.vutbr.fit.iha.util;
 
 import java.text.DateFormat;
 import java.util.ArrayList;
@@ -12,7 +12,6 @@ import android.text.format.Time;
 import cz.vutbr.fit.iha.Constants;
 import cz.vutbr.fit.iha.R;
 import cz.vutbr.fit.iha.adapter.Adapter;
-import cz.vutbr.fit.iha.util.Utils;
 
 /**
  * Enum for temperature unit

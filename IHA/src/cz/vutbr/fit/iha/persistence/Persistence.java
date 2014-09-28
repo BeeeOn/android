@@ -5,7 +5,7 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import cz.vutbr.fit.iha.Constants;
 import cz.vutbr.fit.iha.adapter.device.units.DefaultUnitPackages;
-import cz.vutbr.fit.iha.settings.Timezone;
+import cz.vutbr.fit.iha.util.Timezone;
 
 /**
  * Persistence service that handles caching data on this device.
