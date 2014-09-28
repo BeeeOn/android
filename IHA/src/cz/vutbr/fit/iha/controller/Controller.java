@@ -260,6 +260,11 @@ public final class Controller {
 
 	/**
 	 * Calling this will reload all adapters from server in next call of {@link #getAdapters()} or {@link #getActiveAdapter()}
+	 * 
+	 * This CAN'T be called on UI thread!
+	 * 
+	 * @param forceReload
+	 * @return
 	 */
 	public boolean reloadAdapters(boolean forceReload) {
 		if (mDemoMode || !isLoggedIn()) {
@@ -269,6 +274,13 @@ public final class Controller {
 		return mHousehold.adaptersModel.reloadAdapters(forceReload);
 	}
 	
+	/**
+	 * This CAN'T be called on UI thread!
+	 * 
+	 * @param adapterId
+	 * @param forceReload
+	 * @return
+	 */
 	public boolean reloadFacilitiesByAdapter(String adapterId, boolean forceReload) {
 		if (mDemoMode || !isLoggedIn()) {
 			return false;
@@ -277,6 +289,13 @@ public final class Controller {
 		return mHousehold.facilitiesModel.reloadFacilitiesByAdapter(adapterId, forceReload);
 	}
 	
+	/**
+	 * This CAN'T be called on UI thread!
+	 * 
+	 * @param adapterId
+	 * @param forceReload
+	 * @return
+	 */
 	public boolean reloadLocations(String adapterId, boolean forceReload) {
 		if (mDemoMode || !isLoggedIn()) {
 			return false;
@@ -285,6 +304,12 @@ public final class Controller {
 		return mHousehold.locationsModel.reloadLocationsByAdapter(adapterId, forceReload);
 	}
 	
+	/**
+	 * This CAN'T be called on UI thread!
+	 * 
+	 * @param forceReload
+	 * @return
+	 */
 	public boolean reloadUninitializedFacilities(boolean forceReload) {
 		if (mDemoMode || !isLoggedIn()) {
 			return false;
@@ -307,6 +332,13 @@ public final class Controller {
 		}
 	}*/
 
+	
+	/**
+	 * This CAN'T be called on UI thread!
+	 * 
+	 * @param facility
+	 * @return
+	 */
 	public boolean updateFacility(Facility facility) {
 		if (mDemoMode) {
 			// In demo mode update facility devices with random values
@@ -372,9 +404,12 @@ public final class Controller {
 	}
 
 	/**
-	 * Sets active adapter.
+	 * Sets active adapter and load all locations and facilities, if needed (or if forceReload = true)
+	 * 
+	 * This CAN'T be called on UI thread!
 	 * 
 	 * @param id
+	 * @param forceReload
 	 * @return true on success, false if there is no adapter with this id
 	 */
 	public synchronized boolean setActiveAdapter(String id, boolean forceReload) {
@@ -398,8 +433,9 @@ public final class Controller {
 
 	/**
 	 * Registers new adapter to server.
-	 * 
-	 * Automatically reloads list of adapters, set this adapter as active and load all its sensors. 
+	 * Automatically reloads list of adapters, set this adapter as active and load all its sensors.
+	 *  
+	 * This CAN'T be called on UI thread!
 	 * 
 	 * @param id
 	 * @return true on success, false otherwise
@@ -424,6 +460,12 @@ public final class Controller {
 		return result;
 	}
 
+	/**
+	 * This CAN'T be called on UI thread!
+	 * 
+	 * @param email
+	 * @return
+	 */
 	// TODO: review this
 	public boolean registerUser(String email) {
 		if (mDemoMode) {
@@ -444,16 +486,17 @@ public final class Controller {
 	/**
 	 * FIXME: debug implementation Unregisters adapter from server.
 	 * 
+	 * This CAN'T be called on UI thread!
+	 * 
 	 * @param id
 	 * @return true on success, false otherwise
-	 * @throws NotImplementedException
 	 */
 	public boolean unregisterAdapter(String id) throws NotImplementedException {
 		if (mDemoMode) {
 			return false;
 		}
 
-		// TODO: this is debug implementation
+		// FIXME: This debug implementation unregisters actual user from adapter, not adapter itself
 
 		ArrayList<String> user = new ArrayList<String>();
 		user.add(mHousehold.user.getEmail());
@@ -499,6 +542,8 @@ public final class Controller {
 	/**
 	 * Deletes location from server.
 	 * 
+	 * This CAN'T be called on UI thread!
+	 * 
 	 * @param location
 	 * @return
 	 */
@@ -526,6 +571,8 @@ public final class Controller {
 	/**
 	 * Save changed location to server.
 	 * 
+	 * This CAN'T be called on UI thread!
+	 * 
 	 * @param location
 	 * @return new location object or null on error
 	 */
@@ -552,6 +599,8 @@ public final class Controller {
 
 	/**
 	 * Create and add new location to server.
+	 * 
+	 * This CAN'T be called on UI thread!
 	 * 
 	 * @param location
 	 * @return new location object or null on error
@@ -602,6 +651,8 @@ public final class Controller {
 	/**
 	 * Marks device as hidden on server.
 	 * 
+	 * This CAN'T be called on UI thread!
+	 * 
 	 * @param device
 	 * @return true on success, false otherwise
 	 */
@@ -612,6 +663,8 @@ public final class Controller {
 
 	/**
 	 * Marks device as visible on server.
+	 * 
+	 * This CAN'T be called on UI thread!
 	 * 
 	 * @param device
 	 * @return true on success, false otherwise
@@ -654,6 +707,8 @@ public final class Controller {
 	/**
 	 * Save specified settings of device to server.
 	 * 
+	 * This CAN'T be called on UI thread!
+	 * 
 	 * @param device
 	 * @param what
 	 *            type of settings to save
@@ -688,6 +743,8 @@ public final class Controller {
 	/**
 	 * Return log for device.
 	 * 
+	 * This CAN'T be called on UI thread!
+	 * 
 	 * @param device
 	 * @return
 	 */
@@ -713,6 +770,8 @@ public final class Controller {
 
 	/**
 	 * Send pair request
+	 * 
+	 * This CAN'T be called on UI thread!
 	 * 
 	 * @param stringID
 	 * @return result
@@ -786,6 +845,8 @@ public final class Controller {
 	/**
 	 * TODO: this is NEW method initializing googleAuth in network
 	 * 
+	 * This CAN'T be called on UI thread!
+	 * 
 	 * @param activity
 	 * @param email
 	 */
@@ -795,6 +856,8 @@ public final class Controller {
 
 	/**
 	 * TODO: this is NEW method for start google communication
+	 * 
+	 * This CAN'T be called on UI thread!
 	 * 
 	 * @param blocking
 	 *            -> look at network
