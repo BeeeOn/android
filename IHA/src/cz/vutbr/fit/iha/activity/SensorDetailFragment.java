@@ -47,11 +47,13 @@ import com.jjoe64.graphview.LineGraphView;
 
 import cz.vutbr.fit.iha.LocationArrayAdapter;
 import cz.vutbr.fit.iha.R;
+import cz.vutbr.fit.iha.adapter.Adapter;
 import cz.vutbr.fit.iha.adapter.device.BaseDevice;
 import cz.vutbr.fit.iha.adapter.device.BaseDevice.SaveDevice;
 import cz.vutbr.fit.iha.adapter.device.DeviceLog;
 import cz.vutbr.fit.iha.adapter.device.DeviceLog.DataInterval;
 import cz.vutbr.fit.iha.adapter.device.DeviceLog.DataType;
+import cz.vutbr.fit.iha.adapter.device.Facility;
 import cz.vutbr.fit.iha.adapter.device.RefreshInterval;
 import cz.vutbr.fit.iha.adapter.location.Location;
 import cz.vutbr.fit.iha.controller.Controller;
@@ -363,16 +365,19 @@ public class SensorDetailFragment extends SherlockFragment {
 		mSpinnerLoc.setAdapter(dataAdapter);
 		mSpinnerLoc.setSelection(getLocationsIndexFromArray(getLocationsArray()));
 
+		Facility facility = device.getFacility();
+		Adapter adapter = mController.getAdapterByFacility(facility);
+		
 		// Set value of sensor
 		mValue.setText(device.getStringValueUnit(getActivity()));
 		// Set icon of sensor
 		mIcon.setImageResource(device.getTypeIconResource());
 		// Set time of sensor
-		mTime.setText(Timezone.getSharedPreferenceOption(mController.getUserSettings()).formatLastUpdate(device.getFacility().lastUpdate));
+		mTime.setText(Timezone.getSharedPreferenceOption(mController.getUserSettings()).formatLastUpdate(facility.lastUpdate, adapter));
 		// Set refresh time Text
-		mRefreshTimeText.setText(" " + device.getFacility().getRefresh().getStringInterval(context));
+		mRefreshTimeText.setText(" " + facility.getRefresh().getStringInterval(context));
 		// Set refresh time SeekBar
-		mRefreshTimeValue.setProgress(device.getFacility().getRefresh().getIntervalIndex());
+		mRefreshTimeValue.setProgress(facility.getRefresh().getIntervalIndex());
 		// Add Graph with history data
 		addGraphView();
 

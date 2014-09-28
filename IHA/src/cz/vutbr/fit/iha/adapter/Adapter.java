@@ -107,7 +107,7 @@ public class Adapter {
 	/**
 	 * Setting utc offset of adapter
 	 * 
-	 * @param utcOffset
+	 * @param utcOffset in minutes
 	 */
 	public void setUtcOffset(int offset) {
 		mUtcOffset = offset;
@@ -116,7 +116,7 @@ public class Adapter {
 	/**
 	 * Returning id of adapter
 	 * 
-	 * @return utcOffset
+	 * @return utcOffset in minutes
 	 */
 	public int getUtcOffset() {
 		return mUtcOffset;

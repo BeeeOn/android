@@ -12,11 +12,11 @@ import cz.vutbr.fit.iha.R;
  * Enum for temperature unit
  * 
  * @author Martin Doudera
- * 
  */
 public enum Temperature {
-	CELSIUS("0", R.string.dev_temperature_celsius_unit_full, R.string.dev_temperature_celsius_unit), FAHRENHEIT("1", R.string.dev_temperature_fahrenheit_unit_full,
-			R.string.dev_temperature_fahrenheit_unit), KELVIN("2", R.string.dev_temperature_kelvin_unit_full, R.string.dev_temperature_kelvin_unit);
+	CELSIUS("0", R.string.dev_temperature_celsius_unit_full, R.string.dev_temperature_celsius_unit), //
+	FAHRENHEIT("1", R.string.dev_temperature_fahrenheit_unit_full, R.string.dev_temperature_fahrenheit_unit), //
+	KELVIN("2", R.string.dev_temperature_kelvin_unit_full, R.string.dev_temperature_kelvin_unit);
 
 	private final String mID;
 	private final int mResUnitName;
@@ -104,7 +104,7 @@ public enum Temperature {
 	 */
 	private static Temperature getTemperatureById(String id) {
 		for (Temperature actTemp : Temperature.values()) {
-			if (actTemp.mID.equals(id)) {
+			if (actTemp.mID.equalsIgnoreCase(id)) {
 				return actTemp;
 			}
 		}

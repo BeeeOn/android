@@ -45,6 +45,7 @@ import com.sonyericsson.extras.liveware.extension.util.ExtensionUtils;
 import com.sonyericsson.extras.liveware.extension.util.control.ControlListItem;
 
 import cz.vutbr.fit.iha.R;
+import cz.vutbr.fit.iha.adapter.Adapter;
 import cz.vutbr.fit.iha.adapter.device.BaseDevice;
 import cz.vutbr.fit.iha.adapter.device.Facility;
 import cz.vutbr.fit.iha.extension.watches.smartwatch2.SW2ExtensionService;
@@ -189,13 +190,16 @@ public class GalleryControlExtension extends ManagedControlExtension {
 		item.listItemPosition = position;
 
 		BaseDevice curDevice = mDevices.get(position);
+		Facility curFacility = curDevice.getFacility();
 
 		// Title data
 		Bundle syncBundle = new Bundle();
 		syncBundle.putInt(Control.Intents.EXTRA_LAYOUT_REFERENCE, R.id.sync_time);
-		
-		// FIXME: Using Timezone.ACTUAL is wrong, but how can I call formatLastUpdate without it?
-		String dateTime = Timezone.ACTUAL.formatLastUpdate(curDevice.getFacility().lastUpdate);
+
+		// Last update data
+		Timezone timezone = Timezone.getSharedPreferenceOption(mController.getUserSettings());
+		Adapter curAdapter = mController.getAdapterByFacility(curFacility);
+		String dateTime = timezone.formatLastUpdate(curFacility.lastUpdate, curAdapter);
 		syncBundle.putString(Control.Intents.EXTRA_TEXT, dateTime);
 
 		// Title data

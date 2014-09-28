@@ -11,6 +11,7 @@ import android.content.SharedPreferences;
 import android.text.format.Time;
 import cz.vutbr.fit.iha.Constants;
 import cz.vutbr.fit.iha.R;
+import cz.vutbr.fit.iha.adapter.Adapter;
 import cz.vutbr.fit.iha.util.Utils;
 
 /**
@@ -65,7 +66,7 @@ public enum Timezone {
 	}
 
 	/**
-	 * @return List of IDs which will be saved in SharedPreferences.
+	 * @return List of IDs which will be saved in SharedPreferences
 	 */
 	public static CharSequence[] getEntryValues() {
 		List<String> retList = new ArrayList<String>();
@@ -76,7 +77,7 @@ public enum Timezone {
 	}
 
 	/**
-	 * Get Temperature by ID which will be saved in SharedPreferences.
+	 * Get Temperature by ID which will be saved in SharedPreferences
 	 * 
 	 * @return If the ID exists, it returns Timezone object. Otherwise it returns default timezone option.
 	 */
@@ -95,28 +96,47 @@ public enum Timezone {
 
 	// /// CONVERTIONS
 	/**
-	 * Return offset from UTC in milliseconds
-	 * 
-	 * @return
+	 * @return offset from UTC in milliseconds
 	 */
-	private static int getLocalUtcOffset() {
+	private int getLocalUtcOffset() {
 		TimeZone tz = TimeZone.getDefault();
 		Date now = new Date();
 		return tz.getOffset(now.getTime());
 	}
+	
+	/**
+	 * @param adapter
+	 * @return adapter offset in milliseconds
+	 */
+	private int getAdapterUtcOffset(Adapter adapter) {
+		// Adapter have it in minutes, so we convert it to milliseconds
+		return adapter.getUtcOffset() * 60 * 1000;
+	}
 
-	private Time applyUtcOffset(Time time) {
-		boolean useLocalTime = this.equals(ACTUAL);
-
-		int utcOffset = useLocalTime ? getLocalUtcOffset() : 0;
+	/**
+	 * @param time
+	 * @param offsetMillis UTC offset in milliseconds
+	 * @return new Time object with applied UTC offset
+	 */
+	private Time applyUtcOffset(Time time, int offsetMillis) {
 		Time result = new Time();
-		result.set(time.toMillis(true) + utcOffset);
+		result.set(time.toMillis(true) + offsetMillis);
 		return result;
 	}
 
-	public String formatLastUpdate(Time lastUpdate) {
+	/**
+	 * Return string with formatted time (if it is 23 hours ago, it show only date)
+	 * 
+	 * @param lastUpdate
+	 * @param adapter If null, then it will use local timezone
+	 * @return
+	 */
+	public String formatLastUpdate(Time lastUpdate, Adapter adapter) {
+		boolean useLocalTime = this.equals(ACTUAL) || adapter == null;
+		int utcOffsetMillis = useLocalTime ? getLocalUtcOffset() : getAdapterUtcOffset(adapter);
+		
 		// Apply utcOffset
-		lastUpdate = applyUtcOffset(lastUpdate);
+		lastUpdate = applyUtcOffset(lastUpdate, utcOffsetMillis);
 
 		// If sync time is more that 23 ago, show only date. Show time otherwise.
 		DateFormat dateFormat = Utils.isExpired(lastUpdate, 23 * 60 * 60) ? DateFormat.getDateInstance() : DateFormat.getTimeInstance();

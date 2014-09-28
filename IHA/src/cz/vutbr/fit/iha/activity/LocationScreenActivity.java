@@ -580,13 +580,6 @@ public class LocationScreenActivity extends BaseActivity {
 	public boolean getDevices(final List<Facility> facilities) {
 		Log.d(TAG, "LifeCycle: getsensors start");
 
-		String[] title;
-		String[] value;
-		String[] unit;
-		Time[] time;
-		int[] icon;
-		int[] relPos;
-		int[] facSize;
 		mTitle = mDrawerTitle = "IHA";
 
 		// TODO: this works, but its not the best solution
@@ -630,19 +623,21 @@ public class LocationScreenActivity extends BaseActivity {
 			mCntOfAllDev += facility.getDevices().size();
 		}
 
-		title = new String[mCntOfAllDev];
-		value = new String[mCntOfAllDev];
-		unit = new String[mCntOfAllDev];
-		icon = new int[mCntOfAllDev];
-		time = new Time[mCntOfAllDev];
-		relPos = new int[mCntOfAllDev];
-		facSize = new int[mCntOfAllDev];
+		String[] adapterId = new String[mCntOfAllDev];
+		String[] title = new String[mCntOfAllDev];
+		String[] value = new String[mCntOfAllDev];
+		String[] unit = new String[mCntOfAllDev];
+		Time[] time = new Time[mCntOfAllDev];
+		int[] icon = new int[mCntOfAllDev];
+		int[] relPos = new int[mCntOfAllDev];
+		int[] facSize = new int[mCntOfAllDev];
 
 		int iDev = 0;
 		int relDev = 0;
 		for (Facility facility : facilities) {
 			relDev = 0;
 			for (BaseDevice device : facility.getDevices()) {
+				adapterId[iDev] = device.getFacility().getAdapterId();
 				title[iDev] = device.getName();
 				value[iDev] = device.getStringValue();
 				unit[iDev] = device.getStringUnit(this);
@@ -680,7 +675,7 @@ public class LocationScreenActivity extends BaseActivity {
 			mSensorList.setVisibility(View.VISIBLE);
 		}
 
-		mSensorAdapter = new SensorListAdapter(LocationScreenActivity.this, title, value, unit, time, icon, relPos, facSize);
+		mSensorAdapter = new SensorListAdapter(LocationScreenActivity.this, adapterId, title, value, unit, time, icon, relPos, facSize);
 
 		mSensorList.setAdapter(mSensorAdapter);
 

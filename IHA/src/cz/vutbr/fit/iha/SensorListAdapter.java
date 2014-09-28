@@ -10,6 +10,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.TextView;
+import cz.vutbr.fit.iha.adapter.Adapter;
 import cz.vutbr.fit.iha.controller.Controller;
 import cz.vutbr.fit.iha.settings.Timezone;
 
@@ -26,6 +27,7 @@ public class SensorListAdapter extends BaseAdapter {
 
 	// Declare Variables
 	private Context mContext;
+	private String[] mAdapterId;
 	private String[] mTitle;
 	private String[] mValue;
 	private String[] mUnit;
@@ -39,8 +41,9 @@ public class SensorListAdapter extends BaseAdapter {
 
 	private final Controller mController;
 
-	public SensorListAdapter(Context context, String[] title, String[] value, String[] unit, Time[] time, int[] icon, int[] relPos, int[] facSize) {
+	public SensorListAdapter(Context context, String[] adapterId, String[] title, String[] value, String[] unit, Time[] time, int[] icon, int[] relPos, int[] facSize) {
 		mContext = context;
+		mAdapterId = adapterId;
 		mTitle = title;
 		mValue = value;
 		mIcon = icon;
@@ -103,11 +106,13 @@ public class SensorListAdapter extends BaseAdapter {
 		// Locate the ImageView in drawer_list_item.xml
 		imgIcon = (ImageView) itemView.findViewById(R.id.iconofsensor);
 
+		Adapter adapter = mController.getAdapter(mAdapterId[position], false);
+		
 		// Set the results into TextViews
 		txtTitle.setText(mTitle[position]);
 		txtValue.setText(mValue[position]);
 		txtUnit.setText(mUnit[position]);
-		txtTime.setText(String.format("%s %s", mContext.getString(R.string.last_update), Timezone.getSharedPreferenceOption(mController.getUserSettings()).formatLastUpdate(mTime[position])));
+		txtTime.setText(String.format("%s %s", mContext.getString(R.string.last_update), Timezone.getSharedPreferenceOption(mController.getUserSettings()).formatLastUpdate(mTime[position], adapter)));
 
 		// Set the results into ImageView
 		imgIcon.setImageResource(mIcon[position]);
