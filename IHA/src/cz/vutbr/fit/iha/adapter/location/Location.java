@@ -6,6 +6,7 @@ public class Location implements Comparable<Location> {
 	/** Represents id of newly created location (not saved on server yet) */
 	public static final String NEW_LOCATION_ID = "-NEW-";
 
+	protected String mAdapterId;
 	protected String mId = "";
 	protected String mName = "";
 	protected int mType;
@@ -52,6 +53,24 @@ public class Location implements Comparable<Location> {
 		setType(type);
 	}
 
+	/**
+	 * Get adapter id of location
+	 * 
+	 * @return adapter id
+	 */
+	public String getAdapterId() {
+		return mAdapterId;
+	}
+
+	/**
+	 * Set adapter id of location
+	 * 
+	 * @param adapterId
+	 */
+	public void setAdapterId(String adapterId) {
+		mAdapterId = adapterId;
+	}
+	
 	public String getId() {
 		return mId;
 	}

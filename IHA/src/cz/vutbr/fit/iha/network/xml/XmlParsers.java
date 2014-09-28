@@ -512,7 +512,10 @@ public class XmlParsers {
 
 		do {
 			int type = getSecureInt(getSecureAttrValue(ns, TYPE));
-			result.add(new Location(getSecureAttrValue(ns, ID), readText(LOCATION), type));
+			Location location = new Location(getSecureAttrValue(ns, ID), readText(LOCATION), type);
+			// FIXME: Fix this when we will have support in protocol
+			// location.setAdapterId(adapterId);
+			result.add(location);
 
 		} while (mParser.nextTag() != XmlPullParser.END_TAG && !mParser.getName().equals(COM_ROOT));
 
