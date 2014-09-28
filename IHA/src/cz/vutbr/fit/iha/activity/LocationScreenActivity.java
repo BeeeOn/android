@@ -182,6 +182,7 @@ public class LocationScreenActivity extends BaseActivity {
 		
 		checkNoAdapters();
 		checkUninitializedDevices();
+		// checkNoDevices(); // commented because this should be used only after registering new adapter
 	}
 
 	public void onPause() {
@@ -526,8 +527,10 @@ public class LocationScreenActivity extends BaseActivity {
 	}
 
 	public boolean redrawDevices() {
-		if (isPaused)
+		if (isPaused) {
+			this.setSupportProgressBarIndeterminateVisibility(false);
 			return false;
+		}
 
 		// TODO: this works, but its not the best solution
 		if (!ListOfDevices.ready) {
@@ -723,7 +726,7 @@ public class LocationScreenActivity extends BaseActivity {
 			}
 		} else {
 			// no adapters, set blank lists
-			
+			redrawDevices();
 		}
 		// konec kodu
 		
@@ -746,6 +749,16 @@ public class LocationScreenActivity extends BaseActivity {
 				DialogFragment newFragment = new AddAdapterFragmentDialog();
 			    newFragment.show(getSupportFragmentManager(), "missiles");
 			}
+		}
+	}
+
+	public void checkNoDevices() {
+		Adapter adapter = mController.getActiveAdapter(); 
+		if (adapter != null && mController.getFacilitiesByAdapter(adapter.getId()).isEmpty()) {
+			// Show activity for adding new sensor, when this adapter doesn't have any yet
+			Log.i(TAG, String.format("%s is empty", adapter.getName()));
+			Intent intent = new Intent(this, AddSensorActivityDialog.class);
+			startActivity(intent);
 		}
 	}
 	
@@ -1050,8 +1063,12 @@ public class LocationScreenActivity extends BaseActivity {
 
 		@Override
 		protected void onPostExecute(Boolean success) {
-			new ToastMessageThread(LocationScreenActivity.this, "Adapter removed").start();
-			redrawMenu();
+			if (success) {
+				new ToastMessageThread(LocationScreenActivity.this, R.string.toast_adapter_removed).start();
+				redrawMenu();
+			}
+			
+			setSupportProgressBarIndeterminateVisibility(false);
 		}
 	}
 
