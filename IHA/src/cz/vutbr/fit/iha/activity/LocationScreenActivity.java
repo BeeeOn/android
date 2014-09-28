@@ -686,46 +686,41 @@ public class LocationScreenActivity extends BaseActivity {
 		}
 	}
 
-	public void redrawMenu() {
-		
-		// kod from setlocationorempty
+	private void setActiveAdapterAndLocation() {
+		// Set active adapter and location
 		Adapter adapter = mController.getActiveAdapter();
-
 		if (adapter != null) {
 			mActiveAdapterId = adapter.getId();
 			
-			List<Location> locations = mController.getLocations(adapter.getId());
-			
 			String prefKey = Persistence.getPreferencesLastLocation(adapter.getId());
-
-			Location location = null;
-			
 			SharedPreferences prefs = mController.getUserSettings();
-			String locationId = prefs.getString(prefKey, null);
-			if (locationId == null) {
-				// No saved location, set first location
+			Location location = mController.getLocation(adapter.getId(), prefs.getString(prefKey, ""));
+			
+			if (location == null) {
+				// No saved or found location, set first location
+				List<Location> locations = mController.getLocations(adapter.getId());
+
 				if (locations.size() > 0) {
 					Log.d("default", "DEFAULT POSITION: first position selected");
 					location = locations.get(0);
-				} else {
-					Log.d("default", "DEFAULT POSITION: Empty sensor set");
-					Log.d("default", "EMPTY SENSOR SET");
 				}
 			} else {
 				Log.d("default", "DEFAULT POSITION: saved position selected");
-				location = mController.getLocation(adapter.getId(), locationId); 
 			}
 
 			if (location != null) {
 				changeLocation(location, false);
-			} else {
-				// something?
+				return;
 			}
-		} else {
-			// no adapters, set blank lists
-			redrawDevices();
 		}
-		// konec kodu
+		
+		// no adapters or sensors
+		Log.d("default", "DEFAULT POSITION: Empty adapter or sensor set");
+		redrawDevices();
+	}
+	
+	public void redrawMenu() {
+		setActiveAdapterAndLocation();
 		
 		mMenuAdapter = getMenuAdapter();
 		mDrawerList.setAdapter(mMenuAdapter);
