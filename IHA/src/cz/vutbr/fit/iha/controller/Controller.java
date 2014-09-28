@@ -411,8 +411,8 @@ public final class Controller {
 		mPersistence.saveActiveAdapter(mHousehold.user.getId(), adapter.getId());
 		
 		// Load locations and facilities, if needed
-		mHousehold.locationsModel.reloadLocationsByAdapter(id, forceReload);
-		mHousehold.facilitiesModel.reloadFacilitiesByAdapter(id, forceReload);
+		reloadLocations(id, forceReload);
+		reloadFacilitiesByAdapter(id, forceReload);
 		
 		return true;
 	}
