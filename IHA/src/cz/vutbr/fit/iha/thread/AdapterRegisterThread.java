@@ -7,6 +7,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.util.Log;
 import cz.vutbr.fit.iha.R;
+import cz.vutbr.fit.iha.activity.LocationScreenActivity;
 import cz.vutbr.fit.iha.activity.dialog.AddSensorActivityDialog;
 import cz.vutbr.fit.iha.adapter.Adapter;
 import cz.vutbr.fit.iha.controller.Controller;
@@ -56,6 +57,7 @@ public class AdapterRegisterThread implements Runnable {
 		new ToastMessageThread(mActivity, messageId).start();
 
 		if (result) {
+			// FIXME: I don't think this should be here... this should be in LocationScreenActivity itself...
 			Adapter adapter = mController.getAdapter(mSerialNumber); 
 			if (adapter != null && mController.getFacilitiesByAdapter(adapter.getId()).isEmpty()) {
 				// Show activity for adding new sensor, when this adapter doesn't have any yet
