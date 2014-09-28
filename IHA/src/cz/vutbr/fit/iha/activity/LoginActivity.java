@@ -22,6 +22,7 @@ import com.google.android.gms.common.GooglePlayServicesUtil;
 
 import cz.vutbr.fit.iha.Constants;
 import cz.vutbr.fit.iha.R;
+import cz.vutbr.fit.iha.adapter.Adapter;
 import cz.vutbr.fit.iha.controller.Controller;
 import cz.vutbr.fit.iha.exception.NotImplementedException;
 import cz.vutbr.fit.iha.gcm.GcmHelper;
@@ -426,6 +427,20 @@ public class LoginActivity extends BaseActivity {
 				// } catch (Exception e) {
 				// e.printStackTrace();
 				// }
+				
+				
+				// Load all adapters and data for active one on login
+				ProgressChangeText(getString(R.string.progress_loading_adapters));
+				mController.reloadAdapters(true);
+
+				Adapter active = mController.getActiveAdapter();
+				if (active != null) {
+					// Load data for active adapter
+					ProgressChangeText(getString(R.string.progress_loading_adapter));
+					mController.reloadLocations(active.getId(), true);
+					mController.reloadFacilitiesByAdapter(active.getId(), true);
+				}
+				
 				ProgressDismiss();
 				if (!mDoGoogleLoginRunnable.isStopped()) {
 					Intent intent = new Intent(mActivity, LocationScreenActivity.class);
