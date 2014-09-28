@@ -1,4 +1,4 @@
-package cz.vutbr.fit.iha.network.xml;
+package cz.vutbr.fit.iha.network.xml.condition;
 
 //new drop
 public abstract class ConditionFunction{

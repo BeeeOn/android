@@ -15,8 +15,6 @@ public class FalseAnswer {
 	private String mErrMessage;
 
 	public Object troubleMakers;
-	public static final String START_TAG = "<start>";
-	public static final String END_TAG = "</start>";
 
 	/**
 	 * Constructor
@@ -32,25 +30,10 @@ public class FalseAnswer {
 	 * @param data
 	 *            of the error message
 	 */
-	public FalseAnswer(String additionalInfo, int errCode, String errMessage) {
+	public FalseAnswer(String additionalInfo, int errCode, Object troubleMaker) {
 		mAdditionalInfo = additionalInfo;
 		mErrCode = errCode;
-		try { // FIXME: fix this after demo!!!
-			switch (errCode) {
-			case 6:
-				troubleMakers = new XmlParsers().getFalseMessage6(START_TAG + errMessage + END_TAG);
-				break;
-			case 13:
-				troubleMakers = new XmlParsers().getFalseMessage13(START_TAG + errMessage + END_TAG);
-				break;
-			default:
-				mErrMessage = errMessage;
-				break;
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-			mErrMessage = errMessage;
-		}
+		troubleMakers = troubleMaker;
 	}
 
 	/**

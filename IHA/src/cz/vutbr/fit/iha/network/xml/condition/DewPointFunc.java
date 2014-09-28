@@ -1,4 +1,4 @@
-package cz.vutbr.fit.iha.network.xml;
+package cz.vutbr.fit.iha.network.xml.condition;
 
 import cz.vutbr.fit.iha.adapter.device.BaseDevice;
 

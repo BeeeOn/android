@@ -21,6 +21,16 @@ import cz.vutbr.fit.iha.adapter.device.Facility;
 import cz.vutbr.fit.iha.adapter.location.Location;
 import cz.vutbr.fit.iha.household.User;
 import cz.vutbr.fit.iha.network.Network.NetworkAction;
+import cz.vutbr.fit.iha.network.xml.action.Action;
+import cz.vutbr.fit.iha.network.xml.condition.BetweenFunc;
+import cz.vutbr.fit.iha.network.xml.condition.ConditionFunction;
+import cz.vutbr.fit.iha.network.xml.condition.DewPointFunc;
+import cz.vutbr.fit.iha.network.xml.condition.EqualFunc;
+import cz.vutbr.fit.iha.network.xml.condition.GreaterEqualFunc;
+import cz.vutbr.fit.iha.network.xml.condition.GreaterThanFunc;
+import cz.vutbr.fit.iha.network.xml.condition.LesserEqualFunc;
+import cz.vutbr.fit.iha.network.xml.condition.LesserThanFunc;
+import cz.vutbr.fit.iha.network.xml.condition.TimeFunc;
 
 /**
  * Class for creating XML file from Adapter object
@@ -80,6 +90,16 @@ public class XmlCreator {
 	public static final String GETNEWDEVICES = "getnewdevices";
 	public static final String SETCONDITION = "setcondition";
 	public static final String SETLOCALE = "setlocale";
+	public static final String CONDITIONPLUSACTION = "conditionplusaction";
+	public static final String GETCONDITION = "getcondition";
+	public static final String GETCONDITIONS = "getconditions";
+	public static final String UPDATECONDITION = "updatecondition";
+	public static final String DELCONDITION = "delcondition";
+	public static final String SETACTION = "setaction";
+	public static final String GETACTIONS = "getactions";
+	public static final String GETACTION = "getaction";
+	public static final String UPDATEACTION = "updateaction";
+	public static final String DELACTION = "delaction";
 
 	// end of states
 	public static final String USER = "user";
@@ -109,6 +129,7 @@ public class XmlCreator {
 	public static final String MSGID = "msgid";
 	public static final String CONDITION = "condition";
 	public static final String FUNC = "func";
+	public static final String COMPLEXACTION = "complexaction";
 
 	// partial
 	public static final String DEVICE = "device";
@@ -1632,9 +1653,9 @@ public class XmlCreator {
 		}
 	}
 	
-	//new drop
-	public static String createSetCondition(String id, String name, ConditionType type, ArrayList<ConditionFunction> condFuncs){
-				XmlSerializer serializer = Xml.newSerializer();
+	//new 2.1
+	private static String sendCondition(String id, String name, ConditionType type, ArrayList<ConditionFunction> condFuncs, String conditionId, boolean isNew){
+		XmlSerializer serializer = Xml.newSerializer();
 		StringWriter writer = new StringWriter();
 		try {
 			serializer.setOutput(writer);
@@ -1642,12 +1663,14 @@ public class XmlCreator {
 
 			serializer.startTag(ns, COM_ROOT);
 			serializer.attribute(ns, ID, id);
-			serializer.attribute(ns, STATE, SETCONDITION);
+			serializer.attribute(ns, STATE, (isNew)?SETCONDITION:UPDATECONDITION);
 			serializer.attribute(ns, VERSION, GVER);
 
 				serializer.startTag(ns, CONDITION);
 				serializer.attribute(ns, NAME, name);
 				serializer.attribute(ns, TYPE, type.getValue());
+				if(isNew)
+					serializer.attribute(ns, ID, conditionId);
 				
 					for(ConditionFunction func : condFuncs){
 						serializer.startTag(ns, FUNC);
@@ -1655,61 +1678,89 @@ public class XmlCreator {
 						
 						switch(func.getFuncType()){
 							case EQ:
-							case GT:
-							case GE:
-							case LT:
-							case LE:
 								serializer.startTag(ns, DEVICE);
-								//FIXME
-//								serializer.attribute(ns, ID, func.getDevice().getID());
-//								serializer.attribute(ns, TYPE, func.getDevice().getType());
+								serializer.attribute(ns, ID, ((EqualFunc)func).getDevice().getId());
+								serializer.attribute(ns, TYPE, ((EqualFunc)func).getDevice().getType()+"");
 								serializer.endTag(ns, DEVICE);
 								
 								serializer.startTag(ns, VALUE);
-								//FIXME
-//								serializer.setText(func.getValue());
+								serializer.text(((EqualFunc)func).getValue());
+								serializer.endTag(ns, VALUE);
+								break;
+							case GT:
+								serializer.startTag(ns, DEVICE);
+								serializer.attribute(ns, ID, ((GreaterThanFunc)func).getDevice().getId());
+								serializer.attribute(ns, TYPE, ((GreaterThanFunc)func).getDevice().getType()+"");
+								serializer.endTag(ns, DEVICE);
+								
+								serializer.startTag(ns, VALUE);
+								serializer.text(((GreaterThanFunc)func).getValue());
+								serializer.endTag(ns, VALUE);
+								break;
+							case GE:
+								serializer.startTag(ns, DEVICE);
+								serializer.attribute(ns, ID, ((GreaterEqualFunc)func).getDevice().getId());
+								serializer.attribute(ns, TYPE, ((GreaterEqualFunc)func).getDevice().getType()+"");
+								serializer.endTag(ns, DEVICE);
+								
+								serializer.startTag(ns, VALUE);
+								serializer.text(((GreaterEqualFunc)func).getValue());
+								serializer.endTag(ns, VALUE);
+								break;
+							case LT:
+								serializer.startTag(ns, DEVICE);
+								serializer.attribute(ns, ID, ((LesserThanFunc)func).getDevice().getId());
+								serializer.attribute(ns, TYPE, ((LesserThanFunc)func).getDevice().getType()+"");
+								serializer.endTag(ns, DEVICE);
+								
+								serializer.startTag(ns, VALUE);
+								serializer.text(((LesserThanFunc)func).getValue());
+								serializer.endTag(ns, VALUE);
+								break;
+							case LE:
+								serializer.startTag(ns, DEVICE);
+								serializer.attribute(ns, ID, ((LesserEqualFunc)func).getDevice().getId());
+								serializer.attribute(ns, TYPE, ((LesserEqualFunc)func).getDevice().getType()+"");
+								serializer.endTag(ns, DEVICE);
+								
+								serializer.startTag(ns, VALUE);
+								serializer.text(((LesserEqualFunc)func).getValue());
 								serializer.endTag(ns, VALUE);
 								break;
 							case BTW:
 								serializer.startTag(ns, DEVICE);
-								//FIXME
-//								serializer.attribute(ns, ID, func.getDevice().getID());
-//								serializer.attribute(ns, TYPE, func.getDevice().getType());
+								serializer.attribute(ns, ID, ((BetweenFunc)func).getDevice().getId());
+								serializer.attribute(ns, TYPE, ((BetweenFunc)func).getDevice().getType()+"");
 								serializer.endTag(ns, DEVICE);
 								
 								serializer.startTag(ns, VALUE);
-								//FIXME
-//								serializer.setText(func.getMinValue());
+								serializer.text(((BetweenFunc)func).getMinValue());
 								serializer.endTag(ns, VALUE);
 								
 								serializer.startTag(ns, VALUE);
-								//FIXME
-//								serializer.setText(func.getMaxValue());
+								serializer.text(((BetweenFunc)func).getMaxValue());
 								serializer.endTag(ns, VALUE);
 								break;
 							case DP:
 								serializer.startTag(ns, DEVICE);
-								//FIXME
-//								serializer.attribute(ns, ID, func.getTempDevice().getID());
-//								serializer.attribute(ns, TYPE, func.getTempDevice().getType());
+								serializer.attribute(ns, ID, ((DewPointFunc)func).getTempDevice().getId());
+								serializer.attribute(ns, TYPE, ((DewPointFunc)func).getTempDevice().getType()+"");
 								serializer.endTag(ns, DEVICE);
 								
 								serializer.startTag(ns, DEVICE);
-								//FIXME
-//								serializer.attribute(ns, ID, func.getHumiDevice().getID());
-//								serializer.attribute(ns, TYPE, func.getHumiDevice().getType());
+								serializer.attribute(ns, ID, ((DewPointFunc)func).getHumiDevice().getId());
+								serializer.attribute(ns, TYPE, ((DewPointFunc)func).getHumiDevice().getType()+"");
 								serializer.endTag(ns, DEVICE);
 								break;
 							case TIME:
 								serializer.startTag(ns, VALUE);
-								//FIXME
-//								serializer.setText(func.getTime());
+								serializer.text(((TimeFunc)func).getTime());
 								serializer.endTag(ns, VALUE);
 								break;
 							case GEO:
 								serializer.startTag(ns, VALUE);
 								//FIXME
-//								serializer.setText("TODO");
+								serializer.text("TODO");
 								serializer.endTag(ns, VALUE);
 								break;
 							default:
@@ -1720,6 +1771,251 @@ public class XmlCreator {
 					}
 					
 				serializer.endTag(ns, CONDITION);
+
+			serializer.endTag(ns, COM_ROOT);
+			serializer.endDocument();
+
+			return writer.toString();
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+	}
+	
+	//new 2.1
+	public static String createSetCondition(String id, String name, ConditionType type, ArrayList<ConditionFunction> condFuncs){
+		return sendCondition(id, name, type, condFuncs, "0", true);
+	}
+	
+	//new 2.1
+	public static String createUpdateCondition(String id, String name, ConditionType type, String conditionId, ArrayList<ConditionFunction> condFuncs){
+		return sendCondition(id, name, type, condFuncs, conditionId, false);
+	}
+	
+	//new 2.1
+	public static String createConditionPlusAction(String id, String conditionId, String actionId){
+		XmlSerializer serializer = Xml.newSerializer();
+		StringWriter writer = new StringWriter();
+		try {
+			serializer.setOutput(writer);
+			serializer.startDocument("UTF-8", null);
+
+			serializer.startTag(ns, COM_ROOT);
+			serializer.attribute(ns, ID, id);
+			serializer.attribute(ns, STATE, CONDITIONPLUSACTION);
+			serializer.attribute(ns, VERSION, GVER);
+
+				serializer.startTag(ns, CONDITION);
+				serializer.attribute(ns, ID, conditionId);
+				serializer.endTag(ns, CONDITION);
+				
+				serializer.startTag(ns, ACTION);
+				serializer.attribute(ns, ID, actionId);
+				serializer.endTag(ns, ACTION);
+			
+			serializer.endTag(ns, COM_ROOT);
+			serializer.endDocument();
+
+			return writer.toString();
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+	}
+	
+	//new 2.1
+	public static String createGetCondition(String id, String conditionId){
+		XmlSerializer serializer = Xml.newSerializer();
+		StringWriter writer = new StringWriter();
+		try {
+			serializer.setOutput(writer);
+			serializer.startDocument("UTF-8", null);
+
+			serializer.startTag(ns, COM_ROOT);
+			serializer.attribute(ns, ID, id);
+			serializer.attribute(ns, STATE, GETCONDITION);
+			serializer.attribute(ns, VERSION, GVER);
+
+				serializer.startTag(ns, CONDITION);
+				serializer.attribute(ns, ID, conditionId);
+				serializer.endTag(ns, CONDITION);
+			
+			serializer.endTag(ns, COM_ROOT);
+			serializer.endDocument();
+
+			return writer.toString();
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+	}
+	
+	//new 2.1
+	public static String createGetConditions(String id){
+		XmlSerializer serializer = Xml.newSerializer();
+		StringWriter writer = new StringWriter();
+		try {
+			serializer.setOutput(writer);
+			serializer.startDocument("UTF-8", null);
+
+			serializer.startTag(ns, COM_ROOT);
+			serializer.attribute(ns, ID, id);
+			serializer.attribute(ns, STATE, GETCONDITIONS);
+			serializer.attribute(ns, VERSION, GVER);
+
+			serializer.endTag(ns, COM_ROOT);
+			serializer.endDocument();
+
+			return writer.toString();
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+	}
+	
+	//new 2.1
+	public static String createDelCondition(String id, String conditionId){
+		XmlSerializer serializer = Xml.newSerializer();
+		StringWriter writer = new StringWriter();
+		try {
+			serializer.setOutput(writer);
+			serializer.startDocument("UTF-8", null);
+
+			serializer.startTag(ns, COM_ROOT);
+			serializer.attribute(ns, ID, id);
+			serializer.attribute(ns, STATE, DELCONDITION);
+			serializer.attribute(ns, VERSION, GVER);
+			
+				serializer.startTag(ns, CONDITION);
+				serializer.attribute(ns, ID, conditionId);
+				serializer.endTag(ns, CONDITION);
+
+			serializer.endTag(ns, COM_ROOT);
+			serializer.endDocument();
+
+			return writer.toString();
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+	}
+	
+	//new 2.1
+	private static String sendAction(String id, String name, String actionId, List<Action> actions, boolean isNew){
+		XmlSerializer serializer = Xml.newSerializer();
+		StringWriter writer = new StringWriter();
+		try {
+			serializer.setOutput(writer);
+			serializer.startDocument("UTF-8", null);
+
+			serializer.startTag(ns, COM_ROOT);
+			serializer.attribute(ns, ID, id);
+			serializer.attribute(ns, STATE, (isNew)?SETACTION:UPDATEACTION);
+			serializer.attribute(ns, VERSION, GVER);
+			
+				serializer.startTag(ns, COMPLEXACTION);
+				serializer.attribute(ns, NAME, name);
+				serializer.attribute(ns, ID, actionId);
+				
+				for(Action action : actions){
+					serializer.startTag(ns, ACTION);
+					serializer.attribute(ns, TYPE, action.getType().getValue());
+
+						if(action.getType() == Action.ActionType.ACTOR){
+							serializer.startTag(ns, DEVICE);
+							serializer.attribute(ns, ID, action.getDevice().getId());
+							serializer.attribute(ns, TYPE, action.getDevice().getType()+"");
+							
+								serializer.startTag(ns, VALUE);
+								serializer.text(action.getValue());
+								serializer.endTag(ns, VALUE);
+							
+							serializer.endTag(ns, DEVICE);
+						}
+					
+					serializer.endTag(ns, ACTION);
+				}
+				
+				serializer.endTag(ns, COMPLEXACTION);
+
+			serializer.endTag(ns, COM_ROOT);
+			serializer.endDocument();
+
+			return writer.toString();
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+	}
+	
+	//new 2.1
+	public static String createSetAction(String id, String name, List<Action> actions){
+		return sendAction(id, name, "0", actions, true);
+	}
+	
+	//new 2.1
+	public static String createUpdateAction(String id, String name, String actionId, List<Action> actions){
+		return sendAction(id, name, actionId, actions, false);
+	}
+	
+	//new 2.1
+	public static String createGetActions(String id){
+		XmlSerializer serializer = Xml.newSerializer();
+		StringWriter writer = new StringWriter();
+		try {
+			serializer.setOutput(writer);
+			serializer.startDocument("UTF-8", null);
+
+			serializer.startTag(ns, COM_ROOT);
+			serializer.attribute(ns, ID, id);
+			serializer.attribute(ns, STATE, GETACTIONS);
+			serializer.attribute(ns, VERSION, GVER);
+
+			serializer.endTag(ns, COM_ROOT);
+			serializer.endDocument();
+
+			return writer.toString();
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+	}
+	
+	//new 2.1
+	public static String createGetAction(String id, String actionId){
+		XmlSerializer serializer = Xml.newSerializer();
+		StringWriter writer = new StringWriter();
+		try {
+			serializer.setOutput(writer);
+			serializer.startDocument("UTF-8", null);
+
+			serializer.startTag(ns, COM_ROOT);
+			serializer.attribute(ns, ID, id);
+			serializer.attribute(ns, STATE, GETACTION);
+			serializer.attribute(ns, VERSION, GVER);
+			
+				serializer.startTag(ns, COMPLEXACTION);
+				serializer.attribute(ns, ID, actionId);
+				serializer.endTag(ns, COMPLEXACTION);
+
+			serializer.endTag(ns, COM_ROOT);
+			serializer.endDocument();
+
+			return writer.toString();
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+	}
+	
+	//new 2.1
+	public static String createDelAction(String id, String actionId){
+		XmlSerializer serializer = Xml.newSerializer();
+		StringWriter writer = new StringWriter();
+		try {
+			serializer.setOutput(writer);
+			serializer.startDocument("UTF-8", null);
+
+			serializer.startTag(ns, COM_ROOT);
+			serializer.attribute(ns, ID, id);
+			serializer.attribute(ns, STATE, DELACTION);
+			serializer.attribute(ns, VERSION, GVER);
+			
+				serializer.startTag(ns, COMPLEXACTION);
+				serializer.attribute(ns, ID, actionId);
+				serializer.endTag(ns, COMPLEXACTION);
 
 			serializer.endTag(ns, COM_ROOT);
 			serializer.endDocument();

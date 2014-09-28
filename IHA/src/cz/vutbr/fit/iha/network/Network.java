@@ -55,6 +55,9 @@ import cz.vutbr.fit.iha.network.xml.ParsedMessage;
 import cz.vutbr.fit.iha.network.xml.XmlCreator;
 import cz.vutbr.fit.iha.network.xml.XmlParsers;
 import cz.vutbr.fit.iha.network.xml.XmlParsers.State;
+import cz.vutbr.fit.iha.network.xml.action.Action;
+import cz.vutbr.fit.iha.network.xml.action.ComplexAction;
+import cz.vutbr.fit.iha.network.xml.condition.Condition;
 
 /**
  * Network service that handles communication with server.
@@ -1418,4 +1421,232 @@ public class Network {
 			return false;
 	}
 
+	/////////////////////////////////////////////// podminky a akce
+	
+	public Condition setCondition(Condition condition){
+		String messageToSend = XmlCreator.createSetCondition(mSessionId, condition.getName(), XmlCreator.ConditionType.fromValue(condition.getType()), condition.getFuncs());
+		ParsedMessage msg = doRequest(messageToSend);
+
+		if (msg.getState() == State.CONDITIONCREATED) {
+			Log.d(TAG, msg.getState().getValue());
+			
+			condition.setId((String)msg.data);
+
+			return condition;
+
+		} else if (msg.getState() == State.RESIGN) {
+			doResign();
+			return setCondition(condition);
+
+		} else if (msg.getState() == State.FALSE) {
+			throw new FalseException(((FalseAnswer) msg.data));
+		} else
+			return condition;
+	}
+	
+	public boolean connectConditionWithAction(String conditionId, String actionId){
+		String messageToSend = XmlCreator.createConditionPlusAction(mSessionId, conditionId, actionId);
+		ParsedMessage msg = doRequest(messageToSend);
+
+		if (msg.getState() == State.TRUE) {
+			Log.d(TAG, msg.getState().getValue());
+
+			return true;
+
+		} else if (msg.getState() == State.RESIGN) {
+			doResign();
+			return connectConditionWithAction(conditionId, actionId);
+
+		} else if (msg.getState() == State.FALSE) {
+			throw new FalseException(((FalseAnswer) msg.data));
+		} else
+			return false;
+	}
+	
+	public Condition getCondition(Condition condition){
+		String messageToSend = XmlCreator.createGetCondition(mSessionId, condition.getId());
+		ParsedMessage msg = doRequest(messageToSend);
+
+		if (msg.getState() == State.CONDITIONCREATED) {
+			Log.d(TAG, msg.getState().getValue());
+			
+			Condition tmp = (Condition)msg.data;
+			
+			condition.setType(tmp.getType());
+			condition.setFuncs(tmp.getFuncs());
+
+			return condition;
+
+		} else if (msg.getState() == State.RESIGN) {
+			doResign();
+			return getCondition(condition);
+
+		} else if (msg.getState() == State.FALSE) {
+			throw new FalseException(((FalseAnswer) msg.data));
+		} else
+			return condition;
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<Condition> getConditions(){
+		String messageToSend = XmlCreator.createGetConditions(mSessionId);
+		ParsedMessage msg = doRequest(messageToSend);
+
+		List<Condition> result = new ArrayList<Condition>();
+
+		if (msg.getState() == State.CONDITIONS) {
+			Log.i(TAG, msg.getState().getValue());
+
+			result.addAll((List<Condition>) msg.data);
+		} else if (msg.getState() == State.RESIGN) {
+			doResign();
+			return getConditions();
+
+		} else if (msg.getState() == State.FALSE) {
+			throw new FalseException(((FalseAnswer) msg.data));
+		}
+		return result;
+	}
+	
+	public boolean updateCondition(Condition condition){
+		String messageToSend = XmlCreator.createUpdateCondition(mSessionId, condition.getName(), XmlCreator.ConditionType.fromValue(condition.getType()), condition.getId(), condition.getFuncs());
+		ParsedMessage msg = doRequest(messageToSend);
+
+		if (msg.getState() == State.TRUE) {
+			Log.d(TAG, msg.getState().getValue());
+
+			return true;
+
+		} else if (msg.getState() == State.RESIGN) {
+			doResign();
+			return updateCondition(condition);
+
+		} else if (msg.getState() == State.FALSE) {
+			throw new FalseException(((FalseAnswer) msg.data));
+		} else
+			return false;
+	}
+	
+	public boolean deleteCondition(Condition condition){
+		String messageToSend = XmlCreator.createDelCondition(mSessionId, condition.getId());
+		ParsedMessage msg = doRequest(messageToSend);
+
+		if (msg.getState() == State.TRUE) {
+			Log.d(TAG, msg.getState().getValue());
+
+			return true;
+
+		} else if (msg.getState() == State.RESIGN) {
+			doResign();
+			return deleteCondition(condition);
+
+		} else if (msg.getState() == State.FALSE) {
+			throw new FalseException(((FalseAnswer) msg.data));
+		} else
+			return false;
+	}
+	
+	public ComplexAction setAction(ComplexAction action){
+		String messageToSend = XmlCreator.createSetAction(mSessionId, action.getName(), action.getActions());
+		ParsedMessage msg = doRequest(messageToSend);
+
+		if (msg.getState() == State.ACTIONCREATED) {
+			Log.d(TAG, msg.getState().getValue());
+			
+			action.setId((String)msg.data);
+
+			return action;
+
+		} else if (msg.getState() == State.RESIGN) {
+			doResign();
+			return setAction(action);
+
+		} else if (msg.getState() == State.FALSE) {
+			throw new FalseException(((FalseAnswer) msg.data));
+		} else
+			return action;
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<ComplexAction> getActions(){
+		String messageToSend = XmlCreator.createGetActions(mSessionId);
+		ParsedMessage msg = doRequest(messageToSend);
+
+		List<ComplexAction> result = new ArrayList<ComplexAction>();
+
+		if (msg.getState() == State.ACTIONS) {
+			Log.i(TAG, msg.getState().getValue());
+
+			result.addAll((List<ComplexAction>) msg.data);
+		} else if (msg.getState() == State.RESIGN) {
+			doResign();
+			return getActions();
+
+		} else if (msg.getState() == State.FALSE) {
+			throw new FalseException(((FalseAnswer) msg.data));
+		}
+		return result;
+	}
+	
+	public ComplexAction getAction(ComplexAction action){
+		String messageToSend = XmlCreator.createGetCondition(mSessionId, action.getId());
+		ParsedMessage msg = doRequest(messageToSend);
+
+		if (msg.getState() == State.ACTION) {
+			Log.d(TAG, msg.getState().getValue());
+			
+			ComplexAction tmp = (ComplexAction)msg.data;
+			
+			action.setActions(tmp.getActions());
+
+			return action;
+
+		} else if (msg.getState() == State.RESIGN) {
+			doResign();
+			return getAction(action);
+
+		} else if (msg.getState() == State.FALSE) {
+			throw new FalseException(((FalseAnswer) msg.data));
+		} else
+			return action;
+	}
+	
+	public boolean updateAction(ComplexAction action){
+		String messageToSend = XmlCreator.createUpdateAction(mSessionId, action.getName(), action.getId(), action.getActions());
+		ParsedMessage msg = doRequest(messageToSend);
+
+		if (msg.getState() == State.TRUE) {
+			Log.d(TAG, msg.getState().getValue());
+
+			return true;
+
+		} else if (msg.getState() == State.RESIGN) {
+			doResign();
+			return updateAction(action);
+
+		} else if (msg.getState() == State.FALSE) {
+			throw new FalseException(((FalseAnswer) msg.data));
+		} else
+			return false;
+	}
+	
+	public boolean deleteAction(ComplexAction action){
+		String messageToSend = XmlCreator.createDelAction(mSessionId, action.getId());
+		ParsedMessage msg = doRequest(messageToSend);
+
+		if (msg.getState() == State.TRUE) {
+			Log.d(TAG, msg.getState().getValue());
+
+			return true;
+
+		} else if (msg.getState() == State.RESIGN) {
+			doResign();
+			return deleteAction(action);
+
+		} else if (msg.getState() == State.FALSE) {
+			throw new FalseException(((FalseAnswer) msg.data));
+		} else
+			return false;
+	}
+	
 }

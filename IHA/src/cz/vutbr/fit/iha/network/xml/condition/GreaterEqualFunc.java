@@ -1,13 +1,13 @@
-package cz.vutbr.fit.iha.network.xml;
+package cz.vutbr.fit.iha.network.xml.condition;
 
 import cz.vutbr.fit.iha.adapter.device.BaseDevice;
 
 //new drop
-public class LesserEqualFunc extends ConditionFunction{
+public class GreaterEqualFunc extends ConditionFunction{
 	private String mValue;
 	private BaseDevice mDevice;
 	
-	public LesserEqualFunc(BaseDevice device, String value){
+	public GreaterEqualFunc(BaseDevice device, String value){
 		mDevice = device;
 		mValue = value;
 	}
