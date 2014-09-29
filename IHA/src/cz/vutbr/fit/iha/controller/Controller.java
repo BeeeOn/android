@@ -212,6 +212,10 @@ public final class Controller {
 	 * @return true if user is logged in, false otherwise
 	 */
 	public boolean isLoggedIn() {
+		if (mDemoMode) {
+			return true;
+		}
+		
 		// TODO: also check session lifetime
 		return mHousehold.user.isLoggedIn();
 	}
