@@ -27,7 +27,7 @@ import cz.vutbr.fit.iha.view.CustomViewPager;
  * @author ThinkDeep
  * 
  */
-public class SensorDetailActivity extends BaseActivity {
+public class SensorDetailActivity extends BaseApplicationActivity {
 
 	private Controller mController;
 	private List<BaseDevice> mDevices;

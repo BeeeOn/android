@@ -71,7 +71,7 @@ import cz.vutbr.fit.iha.thread.ToastMessageThread;
  * @author Robyer
  * 
  */
-public class LocationScreenActivity extends BaseActivity {
+public class LocationScreenActivity extends BaseApplicationActivity {
 	private static final String TAG = LocationScreenActivity.class.getSimpleName();
 
 	private Controller mController;

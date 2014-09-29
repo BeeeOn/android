@@ -9,7 +9,7 @@ import com.actionbarsherlock.view.MenuItem;
 
 import cz.vutbr.fit.iha.R;
 
-public class LocationDetailActivity extends BaseActivity {
+public class LocationDetailActivity extends BaseApplicationActivity {
 	private ViewPager mPager;
 	private PagerAdapter mPagerAdapter;
 

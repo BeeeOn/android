@@ -40,6 +40,8 @@ import cz.vutbr.fit.iha.thread.ToastMessageThread;
  */
 public class LoginActivity extends BaseActivity {
 
+	public static final String BUNDLE_REDIRECT = "isRedirect";
+	
 	private Controller mController;
 	private LoginActivity mActivity;
 	private ProgressDialog mProgress;
@@ -56,6 +58,8 @@ public class LoginActivity extends BaseActivity {
 	private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 1;
 
 	private Context mContext;
+	
+	private boolean isRedirect = false;
 
 	// ////////////////////////////////////////////////////////////////////////////////////
 	// ///////////////// Override METHODS
@@ -66,6 +70,12 @@ public class LoginActivity extends BaseActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_login);
+		
+		// Check if this is redirect (e.g., after connection loss) or classic start 
+		Bundle bundle = getIntent().getExtras();
+		if (bundle != null) {
+			isRedirect = bundle.getBoolean(BUNDLE_REDIRECT, false);
+		}
 
 		// Get Activity
 		mActivity = this;
@@ -101,9 +111,11 @@ public class LoginActivity extends BaseActivity {
 			Log.d(TAG, "Already logged in, going to locations screen...");
 			mController.initGoogle(this, mController.getLastEmail());
 
-			Intent intent = new Intent(mActivity, LocationScreenActivity.class);
+			if (!isRedirect) {
+				Intent intent = new Intent(mActivity, LocationScreenActivity.class);
+				mActivity.startActivity(intent);
+			}
 
-			mActivity.startActivity(intent);
 			mActivity.finish();
 			return;
 		}
@@ -124,8 +136,11 @@ public class LoginActivity extends BaseActivity {
 			public void onClick(View v) {
 				mActivity.setDemoMode(true);
 
-				Intent intent = new Intent(LoginActivity.this, LocationScreenActivity.class);
-				startActivity(intent);
+				if (!isRedirect) {
+					Intent intent = new Intent(LoginActivity.this, LocationScreenActivity.class);
+					startActivity(intent);
+				}
+
 				LoginActivity.this.finish();
 			}
 		});
@@ -431,13 +446,15 @@ public class LoginActivity extends BaseActivity {
 				
 				progressDismiss();
 				if (!mDoGoogleLoginRunnable.isStopped()) {
-					Intent intent = new Intent(mActivity, LocationScreenActivity.class);
-					if (mSignUp) {
-						Bundle bundle = new Bundle();
-						bundle.putBoolean(Constants.NOADAPTER, true);
-						intent.putExtras(bundle);
+					if (!isRedirect) {
+						Intent intent = new Intent(mActivity, LocationScreenActivity.class);
+						if (mSignUp) {
+							Bundle bundle = new Bundle();
+							bundle.putBoolean(Constants.NOADAPTER, true);
+							intent.putExtras(bundle);
+						}
+						mActivity.startActivity(intent);
 					}
-					mActivity.startActivity(intent);
 					mActivity.finish();
 				}
 			} else {
