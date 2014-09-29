@@ -24,7 +24,7 @@ import cz.vutbr.fit.iha.controller.Controller;
 import cz.vutbr.fit.iha.widget.SensorWidgetProvider;
 import cz.vutbr.fit.iha.widget.WidgetUpdateService;
 
-public class WidgetConfigurationActivity extends BaseApplicationActivity {
+public class WidgetConfigurationActivity extends BaseActivity {
 
 	private static final String TAG = WidgetConfigurationActivity.class.getSimpleName();
 
@@ -33,6 +33,7 @@ public class WidgetConfigurationActivity extends BaseApplicationActivity {
 	private List<BaseDevice> mDevices = new ArrayList<BaseDevice>();
 	
 	private boolean isInitialized = false;
+	private boolean triedLoginAlready = false;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -71,10 +72,11 @@ public class WidgetConfigurationActivity extends BaseApplicationActivity {
 		}
 
 		if (mDevices.isEmpty()) {
-			if (!controller.isLoggedIn()) {
+			if (!controller.isLoggedIn() && !triedLoginAlready) {
 				// If user is not logged in we redirect to LoginActivity
+				triedLoginAlready = true;
 				Toast.makeText(this, "You must be logged in first.", Toast.LENGTH_LONG).show(); // FIXME: use string from resources
-				redirectToLogin();
+				BaseApplicationActivity.redirectToLogin(this);
 			} else {
 				// Otherwise he is logged in but has no sensors, we quit completely
 				Toast.makeText(this, "You have no sensors to add to widget.", Toast.LENGTH_LONG).show(); // FIXME: use string from resources
@@ -82,6 +84,8 @@ public class WidgetConfigurationActivity extends BaseApplicationActivity {
 			}
 
 			return;
+		} else {
+			triedLoginAlready = false;
 		}
 		
 		if (!isInitialized) {
