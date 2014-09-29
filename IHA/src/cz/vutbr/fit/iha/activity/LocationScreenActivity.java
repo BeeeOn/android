@@ -131,7 +131,7 @@ public class LocationScreenActivity extends BaseActivity {
 	private SwitchAdapter mSwitchAdapter;
 
 	//
-	ActionMode mMode;
+	private ActionMode mMode;
 
 	protected TextView mDrawerItemText;
 	protected EditText mDrawerItemEdit;
@@ -183,12 +183,9 @@ public class LocationScreenActivity extends BaseActivity {
 		initMenu();
 
 		if (getIntent().getExtras() != null && getIntent().getExtras().getBoolean(Constants.NOADAPTER)) {
-//			Intent intent = new Intent(LocationScreenActivity.this, AddAdapterFragmentDialog.class);
-//			Bundle bundle = new Bundle();
-//			bundle.putBoolean(Constants.CANCEL, true);
-//			intent.putExtras(bundle);
-//			startActivity(intent);
-			Log.e(TAG, "ktery prase? no, jen si to odkomentuj");
+			
+			DialogFragment newFragment = new AddAdapterFragmentDialog();
+		    newFragment.show(getSupportFragmentManager(), "missiles");
 		}
 
 	}
@@ -1073,7 +1070,7 @@ public class LocationScreenActivity extends BaseActivity {
 		}
 	}
 
-	class AnActionModeOfEpicProportions implements ActionMode.Callback {
+	class ActionModeEditSensors implements ActionMode.Callback {
 
 		@Override
 		public boolean onCreateActionMode(ActionMode mode, Menu menu) {
