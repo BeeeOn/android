@@ -3,6 +3,7 @@ package cz.vutbr.fit.iha.controller;
 import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 
 import android.content.Context;
@@ -31,7 +32,6 @@ import cz.vutbr.fit.iha.network.Network;
 import cz.vutbr.fit.iha.network.exception.FalseException;
 import cz.vutbr.fit.iha.network.exception.NetworkException;
 import cz.vutbr.fit.iha.persistence.Persistence;
-import cz.vutbr.fit.iha.util.Utils;
 
 /**
  * Core of application (used as singleton), provides methods and access to all data and household.
@@ -59,9 +59,6 @@ public final class Controller {
 
 	/** Switch for using demo mode (with example adapter, without server) */
 	private static boolean mDemoMode = false;
-
-	/** When set to true (by calling {@link #reloadAdapters()}), it will reload all adapters from server in next call of {@link #getAdapters()} */
-	private boolean mReloadAdapters = true;
 
 	/**
 	 * Return singleton instance of this Controller. This is thread-safe.
@@ -91,9 +88,10 @@ public final class Controller {
 	private Controller(Context context) {
 		mContext = context;
 
-		mHousehold = mDemoMode ? new DemoHousehold(mContext) : new Household();
+		mNetwork = new Network(mContext, isDebugVersion());
 		mPersistence = new Persistence(mContext);
-		mNetwork = new Network(mContext, mHousehold.user, isDebugVersion());
+		mHousehold = mDemoMode ? new DemoHousehold(mContext, mNetwork) : new Household(mContext, mNetwork);
+		mNetwork.setUser(mHousehold.user);
 	}
 
 	public static synchronized void setDemoMode(Context context, boolean demoMode) {
@@ -232,7 +230,7 @@ public final class Controller {
 	 *            if you want to refresh adapter even if it's perhaps not needed
 	 * @return
 	 */
-	private boolean refreshAdapter(Adapter adapter, boolean forceUpdate) {
+/*	private boolean refreshAdapter(Adapter adapter, boolean forceUpdate) {
 		if (mDemoMode) {
 			return true;
 		}
@@ -258,27 +256,75 @@ public final class Controller {
 		}
 
 		return result;
-	}
+	}*/
 
 	/**
 	 * Calling this will reload all adapters from server in next call of {@link #getAdapters()} or {@link #getActiveAdapter()}
+	 * 
+	 * This CAN'T be called on UI thread!
+	 * 
+	 * @param forceReload
+	 * @return
 	 */
-	public void reloadAdapters() {
-		mReloadAdapters = true;
+	public boolean reloadAdapters(boolean forceReload) {
+		if (mDemoMode || !isLoggedIn()) {
+			return false;
+		}
+			
+		return mHousehold.adaptersModel.reloadAdapters(forceReload);
 	}
-
+	
 	/**
-	 * Refreshes facility in listings (e.g., in uninitialized facilities)
+	 * This CAN'T be called on UI thread!
+	 * 
+	 * @param adapterId
+	 * @param forceReload
+	 * @return
+	 */
+	public boolean reloadLocations(String adapterId, boolean forceReload) {
+		if (mDemoMode || !isLoggedIn()) {
+			return false;
+		}
+			
+		return mHousehold.locationsModel.reloadLocationsByAdapter(adapterId, forceReload);
+	}
+	
+	/**
+	 * This CAN'T be called on UI thread!
+	 * 
+	 * @param adapterId
+	 * @param forceReload
+	 * @return
+	 */
+	public boolean reloadFacilitiesByAdapter(String adapterId, boolean forceReload) {
+		if (mDemoMode || !isLoggedIn()) {
+			return false;
+		}
+			
+		return mHousehold.facilitiesModel.reloadFacilitiesByAdapter(adapterId, forceReload);
+	}
+	
+	/**
+	 * This CAN'T be called on UI thread!
+	 * 
+	 * @param adapterId
+	 * @param forceReload
+	 * @return
+	 */
+	public boolean reloadUninitializedFacilitiesByAdapter(String adapterId, boolean forceReload) {
+		if (mDemoMode || !isLoggedIn()) {
+			return false;
+		}
+			
+		return mHousehold.uninitializedFacilitiesModel.reloadUninitializedFacilitiesByAdapter(adapterId, forceReload);
+	}	
+	
+	/**
+	 * This CAN'T be called on UI thread!
 	 * 
 	 * @param facility
+	 * @return
 	 */
-	public void refreshFacility(final Facility facility) {
-		Adapter adapter = getActiveAdapter();
-		if (adapter != null) {
-			adapter.refreshFacility(facility);
-		}
-	}
-
 	public boolean updateFacility(Facility facility) {
 		if (mDemoMode) {
 			// In demo mode update facility devices with random values
@@ -295,23 +341,7 @@ public final class Controller {
 			return true;
 		}
 
-		Adapter adapter = getAdapterByFacility(facility);
-		if (adapter == null)
-			return false;
-
-		try {
-			Facility newFacility = mNetwork.getFacility(adapter.getId(), facility);
-			if (newFacility == null)
-				return false;
-
-			facility.replaceData(newFacility);
-		} catch (NetworkException e) {
-			e.printStackTrace();
-			return false;
-		}
-
-		refreshFacility(facility);
-		return true;
+		return mHousehold.facilitiesModel.refreshFacility(facility);
 	}
 
 	/**
@@ -320,29 +350,7 @@ public final class Controller {
 	 * @return List of adapters
 	 */
 	public List<Adapter> getAdapters() {
-		if (mDemoMode) {
-			return mHousehold.adapters;
-		}
-
-		if (!isLoggedIn()) {
-			return new ArrayList<Adapter>();
-		}
-
-		// TODO: refactor this method, make household's adapters (and favoriteslisting, and user?) final etc.
-		if (mHousehold.adapters == null || mReloadAdapters) {
-			try {
-				mHousehold.adapters = mNetwork.getAdapters();
-				mReloadAdapters = false;
-			} catch (NetworkException e) {
-				e.printStackTrace();
-				// Network or another error, we must return correct object now, but adapters must be loaded later
-				mHousehold.adapters = new ArrayList<Adapter>();
-				mReloadAdapters = true;
-			}
-
-		}
-
-		return mHousehold.adapters;
+		return mHousehold.adaptersModel.getAdapters();
 	}
 
 	/**
@@ -351,15 +359,8 @@ public final class Controller {
 	 * @param id
 	 * @return Adapter if found, null otherwise
 	 */
-	public Adapter getAdapter(String adapterId, boolean forceUpdate) {
-		for (Adapter a : getAdapters()) {
-			if (a.getId().equals(adapterId)) {
-				refreshAdapter(a, forceUpdate);
-				return a;
-			}
-		}
-
-		return null;
+	public Adapter getAdapter(String id) {
+		return mHousehold.adaptersModel.getAdapter(id);
 	}
 
 	/**
@@ -368,84 +369,63 @@ public final class Controller {
 	 * @return active adapter, or first adapter, or null if there are no adapters
 	 */
 	public synchronized Adapter getActiveAdapter() {
-		if (mHousehold.activeAdapter == null || mReloadAdapters) {
-			String lastId;
-			if (mReloadAdapters && mHousehold.activeAdapter != null) {
-				lastId = mHousehold.activeAdapter.getId();
-			} else {
-				lastId = mPersistence.loadActiveAdapter(mHousehold.user.getId());
-			}
+		if (mHousehold.activeAdapter == null) {
+			String lastId = mPersistence.loadActiveAdapter(mHousehold.user.getId());
 
-			for (Adapter a : getAdapters()) {
-				if (lastId.isEmpty() || a.getId().equals(lastId)) {
-					mHousehold.activeAdapter = a;
+			Map<String, Adapter> adapters = mHousehold.adaptersModel.getAdaptersMap();
+			if (!lastId.isEmpty() && adapters.containsKey(lastId)) {
+				mHousehold.activeAdapter = adapters.get(lastId);
+			} else {
+				for (Adapter adapter : adapters.values()) {
+					mHousehold.activeAdapter = adapter;	
 					break;
 				}
 			}
-
-			if (mHousehold.activeAdapter == null && mHousehold.adapters != null && !mHousehold.adapters.isEmpty()) {
-				mHousehold.activeAdapter = mHousehold.adapters.get(0);
-			}
-
+			
 			if (mHousehold.activeAdapter != null)
 				mPersistence.saveActiveAdapter(mHousehold.user.getId(), mHousehold.activeAdapter.getId());
 		}
-
-		// Refresh active adapter (load its locations and facilities)
-		if (mHousehold.activeAdapter != null)
-			refreshAdapter(mHousehold.activeAdapter, false);
 
 		return mHousehold.activeAdapter;
 	}
 
 	/**
-	 * Sets active adapter.
+	 * Sets active adapter and load all locations and facilities, if needed (or if forceReload = true)
+	 * 
+	 * This CAN'T be called on UI thread!
 	 * 
 	 * @param id
+	 * @param forceReload
 	 * @return true on success, false if there is no adapter with this id
 	 */
-	public synchronized boolean setActiveAdapter(String id) {
-		for (Adapter a : getAdapters()) {
-			if (a.getId().equals(id)) {
-				mHousehold.activeAdapter = a;
-				refreshAdapter(a, true);
-				Log.d(TAG, String.format("Set active adapter to '%s'", a.getName()));
-				mPersistence.saveActiveAdapter(mHousehold.user.getId(), mHousehold.activeAdapter.getId());
-				return true;
-			}
+	public synchronized boolean setActiveAdapter(String id, boolean forceReload) {
+		Map<String, Adapter> adapters = mHousehold.adaptersModel.getAdaptersMap();
+		if (!adapters.containsKey(id)) {
+			Log.d(TAG, String.format("Can't set active adapter to '%s'", id));
+			return false;	
 		}
 
-		Log.d(TAG, String.format("Can't set active adapter to '%s'", id));
-		return false;
-	}
-
-	/**
-	 * Return Adapter which this facility belongs to.
-	 * 
-	 * @param facility
-	 * @return Adapter if found, null otherwise
-	 */
-	public Adapter getAdapterByFacility(Facility facility) {
-		String adapterId = facility.getAdapterId();
-		if (adapterId.length() > 0)
-			return getAdapter(adapterId, false);
-
-		// FIXME: remove when facilities will have correctly set adapterId
-		for (Adapter a : getAdapters()) {
-			if (a.getFacilityById(facility.getId()) != null)
-				return a;
-		}
-
-		return null;
+		Adapter adapter = adapters.get(id);
+		mHousehold.activeAdapter = adapter;
+		Log.d(TAG, String.format("Set active adapter to '%s'", adapter.getName()));
+		mPersistence.saveActiveAdapter(mHousehold.user.getId(), adapter.getId());
+		
+		// Load locations and facilities, if needed
+		reloadLocations(id, forceReload);
+		reloadFacilitiesByAdapter(id, forceReload);
+		
+		return true;
 	}
 
 	/**
 	 * Registers new adapter to server.
+	 * Automatically reloads list of adapters, set this adapter as active and load all its sensors.
+	 *  
+	 * This CAN'T be called on UI thread!
 	 * 
 	 * @param id
 	 * @return true on success, false otherwise
 	 */
-	// FIXME: this register user not adapter
 	public boolean registerAdapter(String id, String adapterName) {
 		if (mDemoMode) {
 			return false;
@@ -455,8 +435,8 @@ public final class Controller {
 
 		try {
 			if (mNetwork.addAdapter(id, adapterName)) {
-				reloadAdapters(); // TODO: reload (or just add this adapter) only adapters list (without reloading facilities)
-				setActiveAdapter(id); // FIXME : kurvaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+				mHousehold.adaptersModel.reloadAdapters(true);
+				setActiveAdapter(id, true);
 				result = true;
 			}
 		} catch (NetworkException e) {
@@ -466,6 +446,12 @@ public final class Controller {
 		return result;
 	}
 
+	/**
+	 * This CAN'T be called on UI thread!
+	 * 
+	 * @param email
+	 * @return
+	 */
 	// TODO: review this
 	public boolean registerUser(String email) {
 		if (mDemoMode) {
@@ -486,16 +472,17 @@ public final class Controller {
 	/**
 	 * FIXME: debug implementation Unregisters adapter from server.
 	 * 
+	 * This CAN'T be called on UI thread!
+	 * 
 	 * @param id
 	 * @return true on success, false otherwise
-	 * @throws NotImplementedException
 	 */
 	public boolean unregisterAdapter(String id) throws NotImplementedException {
 		if (mDemoMode) {
 			return false;
 		}
 
-		// TODO: this is debug implementation
+		// FIXME: This debug implementation unregisters actual user from adapter, not adapter itself
 
 		ArrayList<String> user = new ArrayList<String>();
 		user.add(mHousehold.user.getEmail());
@@ -506,8 +493,8 @@ public final class Controller {
 			if (mNetwork.deleteConnectionAccounts(id, user)) {
 				if (mHousehold.activeAdapter != null && mHousehold.activeAdapter.getId().equals(id))
 					mHousehold.activeAdapter = null;
-				reloadAdapters(); // TODO: reload (or just add this adapter) only adapters list (without reloading facilities)
-				// setActiveAdapter(id);
+
+				mHousehold.adaptersModel.reloadAdapters(true);
 				result = true;
 			}
 		} catch (NetworkException e) {
@@ -525,12 +512,8 @@ public final class Controller {
 	 * @param id
 	 * @return Location if found, null otherwise.
 	 */
-	public Location getLocation(String id) {
-		Adapter adapter = getActiveAdapter();
-		if (adapter == null)
-			return null;
-
-		return adapter.getLocation(id);
+	public Location getLocation(String adapterId, String id) {
+		return mHousehold.locationsModel.getLocation(adapterId, id);
 	}
 
 	/**
@@ -538,31 +521,14 @@ public final class Controller {
 	 * 
 	 * @return List of locations (or empty list)
 	 */
-	public List<Location> getLocations() {
-		Adapter adapter = getActiveAdapter();
-		if (adapter == null)
-			return new ArrayList<Location>();
-
-		return adapter.getLocations();
-	}
-
-	/**
-	 * Return location object that belongs to facility.
-	 * 
-	 * @param facility
-	 * @return Location if found, null otherwise.
-	 */
-	public Location getLocationByFacility(Facility facility) {
-		Adapter adapter = getAdapterByFacility(facility);
-		if (adapter == null) {
-			return null;
-		}
-
-		return adapter.getLocation(facility.getLocationId());
+	public List<Location> getLocations(String adapterId) {
+		return mHousehold.locationsModel.getLocationsByAdapter(adapterId);
 	}
 
 	/**
 	 * Deletes location from server.
+	 * 
+	 * This CAN'T be called on UI thread!
 	 * 
 	 * @param location
 	 * @return
@@ -585,11 +551,13 @@ public final class Controller {
 		}
 
 		// Location was deleted on server, remove it from adapter too
-		return deleted && adapter.deleteLocation(location.getId());
+		return deleted && mHousehold.locationsModel.deleteLocation(adapter.getId(), location.getId());
 	}
 
 	/**
 	 * Save changed location to server.
+	 * 
+	 * This CAN'T be called on UI thread!
 	 * 
 	 * @param location
 	 * @return new location object or null on error
@@ -612,11 +580,13 @@ public final class Controller {
 		}
 
 		// Location was updated on server, update it to adapter too
-		return saved && adapter.updateLocation(location);
+		return saved && mHousehold.locationsModel.updateLocation(adapter.getId(), location);
 	}
 
 	/**
 	 * Create and add new location to server.
+	 * 
+	 * This CAN'T be called on UI thread!
 	 * 
 	 * @param location
 	 * @return new location object or null on error
@@ -629,7 +599,7 @@ public final class Controller {
 
 		try {
 			if (mDemoMode) {
-				location.setId(adapter.getUnusedLocationId());
+				location.setId(mHousehold.locationsModel.getUnusedLocationId(adapter.getId()));
 			} else {
 				location = mNetwork.createLocation(adapter.getId(), location);
 			}
@@ -639,37 +609,25 @@ public final class Controller {
 		}
 
 		// Location was saved on server, save it to adapter too
-		return (location != null && adapter.addLocation(location)) ? location : null;
+		return (location != null && mHousehold.locationsModel.addLocation(adapter.getId(), location)) ? location : null;
 	}
 
 	/** Facilities methods **************************************************/
 
 	/**
-	 * Return facility by ID from all adapters.
+	 * Return facility by ID.
 	 * 
 	 * @param id
 	 * @return facility or null if no facility is found
 	 */
-	public Facility getFacility(String id) {
-		Facility facility = null;
-
-		for (Adapter adapter : getAdapters()) {
-			facility = adapter.getFacilityById(id);
-			if (facility != null)
-				break;
-		}
-
-		if (facility != null && Utils.isExpired(facility.lastUpdate, facility.getRefresh().getInterval())) {
-			updateFacility(facility);
-		}
-
-		return facility;
+	public Facility getFacility(String adapterId, String id) {
+		return mHousehold.facilitiesModel.getFacility(adapterId, id);
 	}
 
-	public BaseDevice getDevice(String id) {
+	public BaseDevice getDevice(String adapterId, String id) {
 		String[] ids = id.split(BaseDevice.ID_SEPARATOR, 2);
 
-		Facility facility = getFacility(ids[0]);
+		Facility facility = getFacility(adapterId, ids[0]);
 		if (facility == null)
 			return null;
 
@@ -678,6 +636,8 @@ public final class Controller {
 
 	/**
 	 * Marks device as hidden on server.
+	 * 
+	 * This CAN'T be called on UI thread!
 	 * 
 	 * @param device
 	 * @return true on success, false otherwise
@@ -690,6 +650,8 @@ public final class Controller {
 	/**
 	 * Marks device as visible on server.
 	 * 
+	 * This CAN'T be called on UI thread!
+	 * 
 	 * @param device
 	 * @return true on success, false otherwise
 	 */
@@ -699,45 +661,58 @@ public final class Controller {
 	}
 
 	/**
-	 * Return list of all uninitialized facilities from active adapter.
+	 * Return list of all uninitialized facilities from adapter
 	 * 
-	 * @return List of facilities (or empty list)
+	 * @param adapterId
+	 * @param withIgnored
+	 * @return List of uninitialized facilities (or empty list)
 	 */
-	public List<Facility> getUninitializedFacilities() {
-		List<Facility> list = new ArrayList<Facility>();
-
-		Adapter adapter = getActiveAdapter();
-		if (adapter != null) {
-			list.addAll(adapter.getUninitializedFacilities());
-		}
-
-		return list;
+	public List<Facility> getUninitializedFacilities(String adapterId, boolean withIgnored) {
+		return mHousehold.uninitializedFacilitiesModel.getUninitializedFacilitiesByAdapter(adapterId, withIgnored);
+	}
+	
+	/**
+	 * Set all uninitialized facilities from adapter as ignored (won't be returned by calling getUninitializedFacilities)
+	 * 
+	 * @param adapterId
+	 */
+	public void ignoreUninitializedFacilities(String adapterId) {
+		mHousehold.uninitializedFacilitiesModel.ignoreUninitalizedFacilities(adapterId);
 	}
 
 	/**
-	 * Return list of all facilities by location from active adapter.
+	 * Stop ignoring all ignored uninitialized facilities from adapter (will be returned by calling getUninitializedFacilities)
+	 * 
+	 * @param adapterId
+	 */
+	public void unignoreUninitialized(String adapterId) {
+		mHousehold.uninitializedFacilitiesModel.unignoreUninitializedFacilities(adapterId);
+	}
+
+	/**
+	 * Return list of all facilities by location from adapter
 	 * 
 	 * @param location
 	 * @return List of facilities (or empty list)
 	 */
-	public List<Facility> getFacilitiesByLocation(String locationId, boolean forceUpdate) {
-		List<Facility> list = new ArrayList<Facility>();
-
-		Adapter adapter = getActiveAdapter();
-		if (adapter != null) {
-			refreshAdapter(adapter, forceUpdate); // TODO: update only facilities in this location? or no?
-			list.addAll(adapter.getFacilitiesByLocation(locationId));
-		}
-
-		return list;
+	public List<Facility> getFacilitiesByLocation(String adapterId, String locationId) {
+		return mHousehold.facilitiesModel.getFacilitiesByLocation(adapterId, locationId);
 	}
 
+	/**
+	 * Return list of all facilities from adapter
+	 * 
+	 * @param adapterId
+	 * @return List of facilities (or empty list)
+	 */
 	public List<Facility> getFacilitiesByAdapter(String adapterId) {
-		return getAdapter(adapterId, false).getFacilities();
+		return mHousehold.facilitiesModel.getFacilitiesByAdapter(adapterId);
 	}
 
 	/**
 	 * Save specified settings of device to server.
+	 * 
+	 * This CAN'T be called on UI thread!
 	 * 
 	 * @param device
 	 * @param what
@@ -749,14 +724,15 @@ public final class Controller {
 
 		if (mDemoMode) {
 			facility.setInitialized(true);
-			refreshFacility(facility);
+			// FIXME: when implemented working with uninitialized devices
+			//refreshFacility(facility);
 			return true;
 		}
 
 		boolean result = false;
 
 		try {
-			Adapter adapter = getAdapterByFacility(facility);
+			Adapter adapter = getAdapter(facility.getAdapterId());
 			Log.d(TAG, String.format("Adapter ID: %s, device: %s", adapter.getId(), facility.getAddress()));
 			if (adapter != null) {
 				result = mNetwork.setDevice(adapter.getId(), device, what);
@@ -772,6 +748,8 @@ public final class Controller {
 	/**
 	 * Return log for device.
 	 * 
+	 * This CAN'T be called on UI thread!
+	 * 
 	 * @param device
 	 * @return
 	 */
@@ -784,7 +762,7 @@ public final class Controller {
 		}
 
 		try {
-			Adapter adapter = getAdapterByFacility(device.getFacility());
+			Adapter adapter = getAdapter(device.getFacility().getAdapterId());
 			if (adapter != null) {
 				log = mNetwork.getLog(adapter.getId(), device, from, to, type, interval);
 			}
@@ -797,6 +775,8 @@ public final class Controller {
 
 	/**
 	 * Send pair request
+	 * 
+	 * This CAN'T be called on UI thread!
 	 * 
 	 * @param stringID
 	 * @return result
@@ -870,6 +850,8 @@ public final class Controller {
 	/**
 	 * TODO: this is NEW method initializing googleAuth in network
 	 * 
+	 * This CAN'T be called on UI thread!
+	 * 
 	 * @param activity
 	 * @param email
 	 */
@@ -880,6 +862,8 @@ public final class Controller {
 	/**
 	 * TODO: this is NEW method for start google communication
 	 * 
+	 * This CAN'T be called on UI thread!
+	 * 
 	 * @param blocking
 	 *            -> look at network
 	 * @param fetchPhoto
@@ -888,18 +872,6 @@ public final class Controller {
 	 */
 	public boolean startGoogle(boolean blocking, boolean fetchPhoto) {
 		return mNetwork.startGoogleAuth(blocking, fetchPhoto);
-	}
-
-	public void ignoreUninitialized(List<Facility> facilities) {
-		Adapter adapter = getActiveAdapter();
-		if (adapter != null)
-			adapter.ignoreUninitialized(facilities);
-	}
-
-	public void unignoreUninitialized() {
-		Adapter adapter = getActiveAdapter();
-		if (adapter != null)
-			adapter.unignoreUninitialized();
 	}
 
 	public ActualUser getActualUser() {

@@ -15,6 +15,7 @@ import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.view.Window;
 
 import cz.vutbr.fit.iha.R;
+import cz.vutbr.fit.iha.adapter.Adapter;
 import cz.vutbr.fit.iha.adapter.device.BaseDevice;
 import cz.vutbr.fit.iha.adapter.device.Facility;
 import cz.vutbr.fit.iha.controller.Controller;
@@ -26,7 +27,7 @@ import cz.vutbr.fit.iha.view.CustomViewPager;
  * @author ThinkDeep
  * 
  */
-public class SensorDetailActivity extends BaseActivity {
+public class SensorDetailActivity extends BaseApplicationActivity {
 
 	private Controller mController;
 	private List<BaseDevice> mDevices;
@@ -65,11 +66,13 @@ public class SensorDetailActivity extends BaseActivity {
 		// ft.commit();
 
 		Bundle bundle = getIntent().getExtras();
-		mLocationOfSensorID = bundle.getString("LocationOfSensorID");
-		mSensorPosition = bundle.getInt("SensorPosition");
+		if (bundle != null) {
+			mLocationOfSensorID = bundle.getString("LocationOfSensorID");
+			mSensorPosition = bundle.getInt("SensorPosition");
 
-		mTask = new GetDevicesTask();
-		mTask.execute(new String[] { mLocationOfSensorID });
+			mTask = new GetDevicesTask();
+			mTask.execute(new String[] { mLocationOfSensorID });
+		}
 	}
 
 	@Override
@@ -96,15 +99,19 @@ public class SensorDetailActivity extends BaseActivity {
 	private class GetDevicesTask extends AsyncTask<String, Void, List<BaseDevice>> {
 		@Override
 		protected List<BaseDevice> doInBackground(String... locationID) {
-
-			List<Facility> facilities = mController.getFacilitiesByLocation(locationID[0], false);
 			List<BaseDevice> devices = new ArrayList<BaseDevice>();
+			
+			Adapter adapter = mController.getActiveAdapter();
+			if (adapter != null) {
+				mController.reloadFacilitiesByAdapter(adapter.getId(), false);
+				List<Facility> facilities = mController.getFacilitiesByLocation(adapter.getId(), locationID[0]);
 
-			for (Facility facility : facilities) {
-				devices.addAll(facility.getDevices());
+				for (Facility facility : facilities) {
+					devices.addAll(facility.getDevices());
+				}
+				
+				Log.d(TAG, "String:" + devices.toString() + " Size:" + devices.size());
 			}
-
-			Log.d(TAG, "String:" + devices.toString() + " Size:" + devices.size());
 
 			return devices;
 		}

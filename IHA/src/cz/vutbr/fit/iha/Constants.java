@@ -15,19 +15,6 @@ public final class Constants {
 	 * Network layer version
 	 */
 	public static final String COM_VER = "2.1";
-	
-	/**
-	 * Footing for pass between activities
-	 */
-	public static final String LOCATION_CLICKED = "LOCATION_CLICKED"; // LocationScreenActivity -> DataOfLocationScreenActivity
-	public static final String DEVICE_CLICKED = "DEVICE_CLICKED"; // DataOfLocationScreenActivity -> SensorDetailActivity
-	public static final String ADAPTER_SERIAL_NUMBER = "ADAPTER_SERIAL_NUMBER"; // AddAdapterActivity -> RegistrationActivity
-
-	/**
-	 * Not used
-	 */
-	public static final String ADAPTER_ID = "ADAPTER_ID";
-	public static final String ADAPTER_VERSION = "ADAPTER_VERSION";
 
 	/**
 	 * Assets with prepared devices and locations for demo mode
@@ -61,6 +48,7 @@ public final class Constants {
 	public static final String WIDGET_PREF_DEVICE_NAME = "device_name";
 	public static final String WIDGET_PREF_DEVICE_ICON = "device_icon";
 	public static final String WIDGET_PREF_DEVICE_VALUE = "device_value";
+	public static final String WIDGET_PREF_DEVICE_ADAPTER_ID = "device_adapter_id";
 
 	/**
 	 * Persistence's shared preferences

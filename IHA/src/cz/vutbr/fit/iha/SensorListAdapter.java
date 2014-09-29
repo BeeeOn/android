@@ -36,12 +36,12 @@ public class SensorListAdapter extends BaseAdapter {
 	private int[] mRelPos;
 	private int[] mFacSize;
 	private LayoutInflater inflater;
-	private int mCount;
-	private int mLenght;
+	private int mLength;
+	private boolean mShowAdd;
 
 	private final Controller mController;
 
-	public SensorListAdapter(Context context, String[] adapterId, String[] title, String[] value, String[] unit, Time[] time, int[] icon, int[] relPos, int[] facSize) {
+	public SensorListAdapter(Context context, String[] adapterId, String[] title, String[] value, String[] unit, Time[] time, int[] icon, int[] relPos, int[] facSize, boolean showAdd) {
 		mContext = context;
 		mAdapterId = adapterId;
 		mTitle = title;
@@ -51,14 +51,14 @@ public class SensorListAdapter extends BaseAdapter {
 		mTime = time;
 		mRelPos = relPos;
 		mFacSize = facSize;
-		mLenght = mTitle.length;
+		mLength = mTitle.length;
 		mController = Controller.getInstance(context);
-		mCount = mTitle.length + 1;
+		mShowAdd = showAdd;
 	}
 
 	@Override
 	public int getCount() {
-		return mCount;
+		return mShowAdd ? mLength + 1 : mLength;
 	}
 
 	@Override
@@ -73,7 +73,7 @@ public class SensorListAdapter extends BaseAdapter {
 
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
-		if (position < mLenght) {
+		if (position < mLength) {
 			return addItem(position, convertView, parent);
 		}
 		return addAddSensor(convertView, parent);
@@ -106,7 +106,7 @@ public class SensorListAdapter extends BaseAdapter {
 		// Locate the ImageView in drawer_list_item.xml
 		imgIcon = (ImageView) itemView.findViewById(R.id.iconofsensor);
 
-		Adapter adapter = mController.getAdapter(mAdapterId[position], false);
+		Adapter adapter = mController.getAdapter(mAdapterId[position]);
 		
 		// Set the results into TextViews
 		txtTitle.setText(mTitle[position]);

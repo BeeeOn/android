@@ -103,11 +103,15 @@ public class ControlManagerSmartWatch2 extends ControlManagerBase {
 
 		// TODO zkontrolovat jestli neni cil prazdny
 		if (adapterId != null) {
-			Adapter adapter = Controller.getInstance(mContext).getAdapter(adapterId, false);
+			Controller controller = Controller.getInstance(mContext);
+			
+			controller.reloadAdapters(false);
+			Adapter adapter = controller.getAdapter(adapterId);
 			// if default adapter is defined
 			if (adapter != null) {
 				if (strLocation != null) {
-					List<Facility> sensors = adapter.getFacilitiesByLocation(strLocation);
+					controller.reloadFacilitiesByAdapter(adapter.getId(), false);
+					List<Facility> sensors = controller.getFacilitiesByLocation(adapter.getId(), strLocation);
 					if (sensors != null) {
 						Intent intent = new Intent(mContext, ListSensorControlExtension.class);
 						intent.putExtra(ListSensorControlExtension.EXTRA_ADAPTER_ID, adapter.getId());

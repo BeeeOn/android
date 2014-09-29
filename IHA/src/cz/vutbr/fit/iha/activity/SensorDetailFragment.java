@@ -2,6 +2,7 @@ package cz.vutbr.fit.iha.activity;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
@@ -327,9 +328,17 @@ public class SensorDetailFragment extends SherlockFragment {
 
 		// Set name of location
 		if (mController != null) {
-			Location location = mController.getLocationByFacility(device.getFacility());
-			if (location != null)
+			Location location = null;
+			
+			Adapter adapter = mController.getActiveAdapter();
+			if (adapter != null) {
+				location = mController.getLocation(adapter.getId(), device.getFacility().getLocationId());
+			}
+			
+			if (location != null) {
 				mLocation.setText(location.getName());
+			}
+			
 			mLocation.setOnClickListener(new OnClickListener() {
 
 				@Override
@@ -366,7 +375,7 @@ public class SensorDetailFragment extends SherlockFragment {
 		mSpinnerLoc.setSelection(getLocationsIndexFromArray(getLocationsArray()));
 
 		Facility facility = device.getFacility();
-		Adapter adapter = mController.getAdapterByFacility(facility);
+		Adapter adapter = mController.getAdapter(facility.getAdapterId());
 		
 		// Set value of sensor
 		mValue.setText(device.getStringValueUnit(getActivity()));
@@ -513,7 +522,12 @@ public class SensorDetailFragment extends SherlockFragment {
 
 	private List<Location> getLocationsArray() {
 		// Get locations from adapter
-		List<Location> locations = mController.getActiveAdapter().getLocations();
+		List<Location> locations = new ArrayList<Location>();
+		
+		Adapter adapter = mController.getActiveAdapter();
+		if (adapter != null) {
+			locations = mController.getLocations(adapter.getId());
+		}
 
 		// Sort them
 		Collections.sort(locations);
@@ -595,15 +609,19 @@ public class SensorDetailFragment extends SherlockFragment {
 		@Override
 		protected BaseDevice doInBackground(String... sensorID) {
 
-			BaseDevice device = mController.getDevice(sensorID[0]);
-			Log.d(TAG, "ID:" + device.getId() + " Name:" + device.getName());
+			BaseDevice device = null;
+			Adapter adapter = mController.getActiveAdapter();
+			if (adapter != null) {
+				device = mController.getDevice(adapter.getId(), sensorID[0]);
+				Log.d(TAG, "ID:" + device.getId() + " Name:" + device.getName());
+			}
 
 			return device;
 		}
 
 		@Override
 		protected void onPostExecute(BaseDevice device) {
-			mDevice = device;
+			mDevice = device; // FIXME: this might be null now...
 			if (!isCancelled()) {
 				initLayout(device);
 			}

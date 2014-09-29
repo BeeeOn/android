@@ -31,6 +31,9 @@ public class WidgetConfigurationActivity extends BaseActivity {
 	private int mAppWidgetId = 0;
 
 	private List<BaseDevice> mDevices = new ArrayList<BaseDevice>();
+	
+	private boolean isInitialized = false;
+	private boolean triedLoginAlready = false;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -53,6 +56,13 @@ public class WidgetConfigurationActivity extends BaseActivity {
 		resultValue.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, mAppWidgetId);
 		setResult(RESULT_CANCELED, resultValue);
 
+		setContentView(R.layout.activity_widget_configuration);		
+	}
+	
+	@Override
+	public void onResume() {
+		super.onResume();
+		
 		// prepare list with all sensors to use in spinner
 		Controller controller = Controller.getInstance(this);
 		for (Adapter adapter : controller.getAdapters()) {
@@ -62,17 +72,29 @@ public class WidgetConfigurationActivity extends BaseActivity {
 		}
 
 		if (mDevices.isEmpty()) {
-			// FIXME: use string from resources
-			Toast.makeText(this, "No sensors available.\nTry to run application first.", Toast.LENGTH_LONG).show();
-			finish();
+			if (!controller.isLoggedIn() && !triedLoginAlready) {
+				// If user is not logged in we redirect to LoginActivity
+				triedLoginAlready = true;
+				Toast.makeText(this, "You must be logged in first.", Toast.LENGTH_LONG).show(); // FIXME: use string from resources
+				BaseApplicationActivity.redirectToLogin(this);
+			} else {
+				// Otherwise he is logged in but has no sensors, we quit completely
+				Toast.makeText(this, "You have no sensors to add to widget.", Toast.LENGTH_LONG).show(); // FIXME: use string from resources
+				finish();
+			}
+
 			return;
+		} else {
+			triedLoginAlready = false;
 		}
+		
+		if (!isInitialized) {
+			isInitialized = true;
 
-		setContentView(R.layout.activity_widget_configuration);
-
-		initButtons();
-		initSpinner();
-		loadSettings();
+			initButtons();
+			initSpinner();
+			loadSettings();
+		}
 	}
 
 	/**

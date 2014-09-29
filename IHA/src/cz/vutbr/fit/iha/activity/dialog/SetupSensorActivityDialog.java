@@ -32,6 +32,7 @@ import android.widget.Toast;
 import cz.vutbr.fit.iha.Constants;
 import cz.vutbr.fit.iha.R;
 import cz.vutbr.fit.iha.activity.LocationScreenActivity;
+import cz.vutbr.fit.iha.adapter.Adapter;
 import cz.vutbr.fit.iha.adapter.device.BaseDevice;
 import cz.vutbr.fit.iha.adapter.device.BaseDevice.SaveDevice;
 import cz.vutbr.fit.iha.adapter.device.Facility;
@@ -69,6 +70,13 @@ public class SetupSensorActivityDialog extends Activity {
 		setContentView(R.layout.activity_setup_sensor_activity_dialog);
 
 		mController = Controller.getInstance(this);
+		
+		Adapter adapter = mController.getActiveAdapter();
+		if (adapter == null) {
+			Toast.makeText(this, "There are no adapters.", Toast.LENGTH_LONG).show();
+			finish();
+			return;
+		}
 
 		// Prepare progress dialog
 		mProgress = new ProgressDialog(this);
@@ -81,7 +89,7 @@ public class SetupSensorActivityDialog extends Activity {
 
 		mUnInitDevices = new ArrayList<BaseDevice>();
 
-		for (Facility facility : mController.getUninitializedFacilities()) {
+		for (Facility facility : mController.getUninitializedFacilities(adapter.getId(), false)) {
 			//for(BaseDevice device : facility.getDevices()) {
 			//	if (device.)
 			//}
@@ -93,7 +101,9 @@ public class SetupSensorActivityDialog extends Activity {
 			if (!Controller.isDemoMode()) {
 				// Get number of new sensors
 				Bundle bundle = getIntent().getExtras();
-				mCountOfSensor = bundle.getInt(Constants.ADDSENSOR_COUNT_SENSOR);
+				if (bundle != null) {
+					mCountOfSensor = bundle.getInt(Constants.ADDSENSOR_COUNT_SENSOR);
+				}
 			}
 			mNewDevice = mUnInitDevices.get(0);
 		} else {
@@ -164,7 +174,12 @@ public class SetupSensorActivityDialog extends Activity {
 	 */
 	public List<Location> getLocationsForAddSensorDialog() {
 		// Get locations from adapter
-		List<Location> locations = mController.getActiveAdapter().getLocations();
+		List<Location> locations = new ArrayList<Location>();
+		
+		Adapter adapter = mController.getActiveAdapter();
+		if (adapter != null) {
+			locations = mController.getLocations(adapter.getId());
+		}
 
 		// Add "missing" default rooms
 		for (DefaultRoom room : Location.defaults) {

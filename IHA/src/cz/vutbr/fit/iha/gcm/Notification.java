@@ -8,10 +8,9 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
-import cz.vutbr.fit.iha.network.xml.XmlParsers;
-
 import android.os.Bundle;
 import android.util.Log;
+import cz.vutbr.fit.iha.network.xml.XmlParsers;
 
 /**
  * @author ThinkDeep
