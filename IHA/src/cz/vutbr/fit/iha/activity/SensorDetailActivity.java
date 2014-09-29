@@ -66,11 +66,13 @@ public class SensorDetailActivity extends BaseActivity {
 		// ft.commit();
 
 		Bundle bundle = getIntent().getExtras();
-		mLocationOfSensorID = bundle.getString("LocationOfSensorID");
-		mSensorPosition = bundle.getInt("SensorPosition");
+		if (bundle != null) {
+			mLocationOfSensorID = bundle.getString("LocationOfSensorID");
+			mSensorPosition = bundle.getInt("SensorPosition");
 
-		mTask = new GetDevicesTask();
-		mTask.execute(new String[] { mLocationOfSensorID });
+			mTask = new GetDevicesTask();
+			mTask.execute(new String[] { mLocationOfSensorID });
+		}
 	}
 
 	@Override

@@ -101,7 +101,9 @@ public class SetupSensorActivityDialog extends Activity {
 			if (!Controller.isDemoMode()) {
 				// Get number of new sensors
 				Bundle bundle = getIntent().getExtras();
-				mCountOfSensor = bundle.getInt(Constants.ADDSENSOR_COUNT_SENSOR);
+				if (bundle != null) {
+					mCountOfSensor = bundle.getInt(Constants.ADDSENSOR_COUNT_SENSOR);
+				}
 			}
 			mNewDevice = mUnInitDevices.get(0);
 		} else {
