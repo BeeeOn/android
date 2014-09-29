@@ -154,7 +154,9 @@
     <string name="placeholder_not_exists">NOT EXISTS</string>
     
     <!-- Widgets -->
-    <string name="widget_sensor_title">Sensor detail</string>
+    <string name="widget_sensor_title_small">IHA Sensor detail 1x1</string>
+    <string name="widget_sensor_title_medium">IHA Sensor detail 2x1</string>
+    <string name="widget_sensor_title_large">IHA Sensor detail 3x1</string>
     
     <!-- WidgetConfigurationActivity -->
     <string name="widget_configuration_adapter">Adapter:</string>
