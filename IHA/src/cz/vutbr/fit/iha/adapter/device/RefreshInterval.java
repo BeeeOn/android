@@ -4,8 +4,23 @@ import android.content.Context;
 import cz.vutbr.fit.iha.R;
 
 public enum RefreshInterval {
-	SEC_1(1), SEC_5(5), SEC_10(10), SEC_20(20), SEC_30(30), MIN_1(60 * 1), MIN_5(60 * 5), MIN_10(60 * 10), MIN_15(60 * 15), MIN_30(60 * 30), HOUR_1(60 * 60 * 1), HOUR_2(60 * 60 * 2), HOUR_3(
-			60 * 60 * 3), HOUR_4(60 * 60 * 4), HOUR_8(60 * 60 * 8), HOUR_12(60 * 60 * 12), HOUR_24(60 * 60 * 24);
+	SEC_1(1), //
+	SEC_5(5), //
+	SEC_10(10), //
+	SEC_20(20), //
+	SEC_30(30), //
+	MIN_1(60 * 1), //
+	MIN_5(60 * 5), //
+	MIN_10(60 * 10), //
+	MIN_15(60 * 15), //
+	MIN_30(60 * 30), //
+	HOUR_1(60 * 60 * 1), //
+	HOUR_2(60 * 60 * 2), //
+	HOUR_3(60 * 60 * 3), //
+	HOUR_4(60 * 60 * 4), //
+	HOUR_8(60 * 60 * 8), //
+	HOUR_12(60 * 60 * 12), //
+	HOUR_24(60 * 60 * 24); //
 
 	private final int mSecs;
 

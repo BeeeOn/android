@@ -18,6 +18,11 @@ public class Adapter {
 	private User.Role mRole;
 	private int mUtcOffset;
 
+	@Override
+	public String toString() {
+		return getName();
+	}
+	
 	/**
 	 * Debug method
 	 */
