@@ -29,6 +29,7 @@ public final class DemoHousehold extends Household {
 		user.setName("John Doe");
 		user.setEmail("john@doe.com");
 		user.setGender(Gender.Male);
+		user.setSessionId("123456789");
 	}
 
 	/**
