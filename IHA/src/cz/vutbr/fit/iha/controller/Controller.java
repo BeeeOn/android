@@ -266,7 +266,7 @@ public final class Controller {
 	 * @param forceReload
 	 * @return
 	 */
-	public boolean reloadAdapters(boolean forceReload) {
+	public synchronized boolean reloadAdapters(boolean forceReload) {
 		if (mDemoMode || !isLoggedIn()) {
 			return false;
 		}
@@ -281,7 +281,7 @@ public final class Controller {
 	 * @param forceReload
 	 * @return
 	 */
-	public boolean reloadLocations(String adapterId, boolean forceReload) {
+	public synchronized boolean reloadLocations(String adapterId, boolean forceReload) {
 		if (mDemoMode || !isLoggedIn()) {
 			return false;
 		}
@@ -296,7 +296,7 @@ public final class Controller {
 	 * @param forceReload
 	 * @return
 	 */
-	public boolean reloadFacilitiesByAdapter(String adapterId, boolean forceReload) {
+	public synchronized boolean reloadFacilitiesByAdapter(String adapterId, boolean forceReload) {
 		if (mDemoMode || !isLoggedIn()) {
 			return false;
 		}
@@ -311,7 +311,7 @@ public final class Controller {
 	 * @param forceReload
 	 * @return
 	 */
-	public boolean reloadUninitializedFacilitiesByAdapter(String adapterId, boolean forceReload) {
+	public synchronized boolean reloadUninitializedFacilitiesByAdapter(String adapterId, boolean forceReload) {
 		if (mDemoMode || !isLoggedIn()) {
 			return false;
 		}
