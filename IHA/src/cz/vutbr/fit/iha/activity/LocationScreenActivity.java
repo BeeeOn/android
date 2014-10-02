@@ -2,6 +2,8 @@ package cz.vutbr.fit.iha.activity;
 
 import java.util.List;
 
+import org.joda.time.DateTime;
+
 import se.emilsjolander.stickylistheaders.StickyListHeadersListView;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -17,7 +19,6 @@ import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.text.format.Time;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
@@ -584,7 +585,7 @@ public class LocationScreenActivity extends BaseApplicationActivity {
 		String[] title = new String[mCntOfAllDev];
 		String[] value = new String[mCntOfAllDev];
 		String[] unit = new String[mCntOfAllDev];
-		Time[] time = new Time[mCntOfAllDev];
+		DateTime[] time = new DateTime[mCntOfAllDev];
 		int[] icon = new int[mCntOfAllDev];
 		int[] relPos = new int[mCntOfAllDev];
 		int[] facSize = new int[mCntOfAllDev];
@@ -599,7 +600,7 @@ public class LocationScreenActivity extends BaseApplicationActivity {
 				value[iDev] = device.getStringValue();
 				unit[iDev] = device.getStringUnit(this);
 				icon[iDev] = device.getTypeIconResource();
-				time[iDev] = device.getFacility().lastUpdate;
+				time[iDev] = device.getFacility().getLastUpdate();
 				relPos[iDev] = relDev + 1;
 				facSize[iDev] = facility.getDevices().size();
 				relDev++;

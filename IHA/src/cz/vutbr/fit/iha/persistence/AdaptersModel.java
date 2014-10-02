@@ -5,11 +5,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import android.text.format.Time;
+import org.joda.time.DateTime;
+
 import cz.vutbr.fit.iha.adapter.Adapter;
 import cz.vutbr.fit.iha.network.Network;
 import cz.vutbr.fit.iha.network.exception.NetworkException;
-import cz.vutbr.fit.iha.util.Utils;
 
 public class AdaptersModel {
 	
@@ -17,9 +17,9 @@ public class AdaptersModel {
 	
 	private final Map<String, Adapter> mAdapters = new HashMap<String, Adapter>();
 	
-	private final Time mLastUpdate = new Time();
+	private DateTime mLastUpdate;
 	
-	private static final long RELOAD_EVERY_SECONDS = 10 * 60;
+	private static final int RELOAD_EVERY_SECONDS = 10 * 60;
 	
 	public AdaptersModel(Network network) {
 		mNetwork = network;
@@ -51,15 +51,12 @@ public class AdaptersModel {
 		return mAdapters.get(id);
 	}
 	
-	private void setLastUpdate(Time lastUpdate) {
-		if (lastUpdate == null)
-			mLastUpdate.setToNow();
-		else
-			mLastUpdate.set(lastUpdate);
+	private void setLastUpdate(DateTime lastUpdate) {
+		mLastUpdate = lastUpdate;
 	}
 	
 	private boolean isExpired() {
-		return Utils.isExpired(mLastUpdate, RELOAD_EVERY_SECONDS);
+		return mLastUpdate == null || mLastUpdate.plusSeconds(RELOAD_EVERY_SECONDS).isBeforeNow();
 	}
 	
 	public boolean reloadAdapters(boolean forceReload) {
@@ -80,7 +77,7 @@ public class AdaptersModel {
 	private boolean loadFromServer() {
 		try {
 			setAdapters(mNetwork.getAdapters());
-			setLastUpdate(null);
+			setLastUpdate(DateTime.now());
 			saveToCache();
 		} catch (NetworkException e) {
 			e.printStackTrace();

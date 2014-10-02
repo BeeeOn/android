@@ -8,12 +8,12 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 
+import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 
@@ -401,12 +401,9 @@ public class XmlParsers {
 					facility.setQuality(Integer.parseInt(readText(QUALITY)));
 				else if (nameTag.equals(VALUE)) {
 					String hwupdated = getSecureAttrValue(ns, HWUPDATED);
-					if (hwupdated.length() < 1) {
-						facility.lastUpdate.setToNow();
-					} else {
-						facility.lastUpdate
-								.set((new SimpleDateFormat(DATEFORMAT, Locale.getDefault()).parse(hwupdated)).getTime());
-					}
+					DateTime lastUpdate = hwupdated.isEmpty() ? DateTime.now() : DateTimeFormat.forPattern(DATEFORMAT).parseDateTime(hwupdated);
+					facility.setLastUpdate(lastUpdate);
+
 					device.setValue(readText(VALUE));
 				} else if (nameTag.equals(LOGGING))
 					facility.setLogging((getSecureAttrValue(ns, ENABLED).equals(INIT_1)) ? true : false);

@@ -6,7 +6,7 @@ package cz.vutbr.fit.iha.adapter.device;
 import java.util.ArrayList;
 import java.util.List;
 
-import android.text.format.Time;
+import org.joda.time.DateTime;
 
 /**
  * @brief Facility class which contains own data and devices (sensors, actors)
@@ -15,16 +15,15 @@ import android.text.format.Time;
 public class Facility {
 	protected String mAdapterId;
 	protected String mLocationId;
-	protected boolean mInitialized;
+	protected boolean mInitialized;	
 	protected RefreshInterval mRefreshInterval;
 	protected int mBattery;
 	protected boolean mLogging;
 	protected String mInvolveTime = "";
 	protected boolean mVisibility;
 	protected NetworkState mNetwork = new NetworkState();
+	protected DateTime mLastUpdate;
 	protected final List<BaseDevice> mDevices = new ArrayList<BaseDevice>();
-
-	public final Time lastUpdate = new Time();
 
 	/**
 	 * Class constructor
@@ -53,6 +52,33 @@ public class Facility {
 		SAVE_TYPE, // change facility's icon, etc. //NOTE: what? type cannot be changed
 	}
 
+	/**
+	 * Get last update time
+	 * 
+	 * @return 
+	 */
+	public DateTime getLastUpdate() {
+		return mLastUpdate;
+	}
+
+	/**
+	 * Setting last update time
+	 * 
+	 * @param lastUpdate 
+	 */
+	public void setLastUpdate(DateTime lastUpdate) {
+		mLastUpdate = lastUpdate;
+	}
+	
+	/**
+	 * Check if actual value of this sensor is expired
+	 * 
+	 * @return true when refresh interval since last update expired
+	 */
+	public boolean isExpired() {
+		return mLastUpdate.plusSeconds(mRefreshInterval.getInterval()).isBeforeNow();
+	}
+	
 	/**
 	 * Get refresh interval
 	 * 
@@ -298,6 +324,7 @@ public class Facility {
 		setQuality(newFacility.getQuality());
 		setRefresh(newFacility.getRefresh());
 		setVisibility(newFacility.getVisibility());
+		setLastUpdate(newFacility.getLastUpdate());
 
 		mDevices.clear();
 		for (BaseDevice newDevice : newFacility.mDevices) {
@@ -311,8 +338,6 @@ public class Facility {
 				e.printStackTrace();
 			}
 		}
-
-		lastUpdate.set(newFacility.lastUpdate);
 	}
 
 }

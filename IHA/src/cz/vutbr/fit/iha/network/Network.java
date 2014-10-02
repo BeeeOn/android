@@ -55,7 +55,6 @@ import cz.vutbr.fit.iha.network.xml.ParsedMessage;
 import cz.vutbr.fit.iha.network.xml.XmlCreator;
 import cz.vutbr.fit.iha.network.xml.XmlParsers;
 import cz.vutbr.fit.iha.network.xml.XmlParsers.State;
-import cz.vutbr.fit.iha.network.xml.action.Action;
 import cz.vutbr.fit.iha.network.xml.action.ComplexAction;
 import cz.vutbr.fit.iha.network.xml.condition.Condition;
 

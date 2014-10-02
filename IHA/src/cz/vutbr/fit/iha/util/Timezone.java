@@ -1,26 +1,28 @@
 package cz.vutbr.fit.iha.util;
 
-import java.text.DateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-import java.util.TimeZone;
+
+import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.text.format.Time;
 import cz.vutbr.fit.iha.Constants;
 import cz.vutbr.fit.iha.R;
 import cz.vutbr.fit.iha.adapter.Adapter;
 
 /**
- * Enum for temperature unit
+ * Enum for timezone unit
  * 
  * @author Martin Doudera
  * 
  */
 public enum Timezone {
-	ACTUAL("0", R.string.actual_timezone), ADAPTER("1", R.string.adapter_timezone);
+	ACTUAL("0", R.string.actual_timezone), //
+	ADAPTER("1", R.string.adapter_timezone);
 
 	private final String mID;
 	private final int mResName;
@@ -31,7 +33,7 @@ public enum Timezone {
 	}
 
 	/**
-	 * @return Default temperature unit
+	 * @return Default timezone unit
 	 */
 	public static Timezone getDefault() {
 		return ACTUAL;
@@ -76,7 +78,7 @@ public enum Timezone {
 	}
 
 	/**
-	 * Get Temperature by ID which will be saved in SharedPreferences
+	 * Get Timezone by ID which will be saved in SharedPreferences
 	 * 
 	 * @return If the ID exists, it returns Timezone object. Otherwise it returns default timezone option.
 	 */
@@ -92,35 +94,10 @@ public enum Timezone {
 	public static Timezone getSharedPreferenceOption(SharedPreferences prefs) {
 		return getTimezoneById(prefs.getString(Constants.PERSISTANCE_PREF_TIMEZONE, getDefault().getId()));
 	}
-
-	// /// CONVERTIONS
-	/**
-	 * @return offset from UTC in milliseconds
-	 */
-	private int getLocalUtcOffset() {
-		TimeZone tz = TimeZone.getDefault();
-		Date now = new Date();
-		return tz.getOffset(now.getTime());
-	}
 	
-	/**
-	 * @param adapter
-	 * @return adapter offset in milliseconds
-	 */
-	private int getAdapterUtcOffset(Adapter adapter) {
-		// Adapter have it in minutes, so we convert it to milliseconds
-		return adapter.getUtcOffset() * 60 * 1000;
-	}
-
-	/**
-	 * @param time
-	 * @param offsetMillis UTC offset in milliseconds
-	 * @return new Time object with applied UTC offset
-	 */
-	private Time applyUtcOffset(Time time, int offsetMillis) {
-		Time result = new Time();
-		result.set(time.toMillis(true) + offsetMillis);
-		return result;
+	public DateTimeZone getDateTimeZone(Adapter adapter) {
+		boolean useLocalTime = this.equals(ACTUAL) || adapter == null;
+		return useLocalTime ? DateTimeZone.getDefault() : DateTimeZone.forOffsetMillis(adapter.getUtcOffsetMillis());
 	}
 
 	/**
@@ -130,18 +107,14 @@ public enum Timezone {
 	 * @param adapter If null, then it will use local timezone
 	 * @return
 	 */
-	public String formatLastUpdate(Time lastUpdate, Adapter adapter) {
+	public String formatLastUpdate(DateTime lastUpdate, Adapter adapter) {
 		boolean useLocalTime = this.equals(ACTUAL) || adapter == null;
-		int utcOffsetMillis = useLocalTime ? getLocalUtcOffset() : getAdapterUtcOffset(adapter);
+		boolean isTooOld = lastUpdate.plusHours(23).isBeforeNow();
+				
+		DateTimeZone zone = useLocalTime ? DateTimeZone.getDefault() : DateTimeZone.forOffsetMillis(adapter.getUtcOffsetMillis()); 
+		DateTimeFormatter fmt = isTooOld ? DateTimeFormat.shortDate() : DateTimeFormat.mediumTime();
 		
-		// Apply utcOffset
-		lastUpdate = applyUtcOffset(lastUpdate, utcOffsetMillis);
-
-		// If sync time is more that 23 ago, show only date. Show time otherwise.
-		DateFormat dateFormat = Utils.isExpired(lastUpdate, 23 * 60 * 60) ? DateFormat.getDateInstance() : DateFormat.getTimeInstance();
-		
-		Date lastUpdateDate = new Date(lastUpdate.toMillis(true));
-		return dateFormat.format(lastUpdateDate);
+		return fmt.withZone(zone).print(lastUpdate);
 	}
 
 }

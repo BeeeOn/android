@@ -1,15 +1,16 @@
 package cz.vutbr.fit.iha.activity;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
-import java.util.Date;
 import java.util.EnumSet;
 import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Locale;
+
+import org.joda.time.DateTimeZone;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 
 import android.content.Context;
 import android.graphics.Color;
@@ -376,19 +377,20 @@ public class SensorDetailFragment extends SherlockFragment {
 
 		Facility facility = device.getFacility();
 		Adapter adapter = mController.getAdapter(facility.getAdapterId());
+		Timezone timezone = Timezone.getSharedPreferenceOption(mController.getUserSettings());
 		
 		// Set value of sensor
 		mValue.setText(device.getStringValueUnit(getActivity()));
 		// Set icon of sensor
 		mIcon.setImageResource(device.getTypeIconResource());
 		// Set time of sensor
-		mTime.setText(Timezone.getSharedPreferenceOption(mController.getUserSettings()).formatLastUpdate(facility.lastUpdate, adapter));
+		mTime.setText(timezone.formatLastUpdate(facility.getLastUpdate(), adapter));
 		// Set refresh time Text
 		mRefreshTimeText.setText(" " + facility.getRefresh().getStringInterval(context));
 		// Set refresh time SeekBar
 		mRefreshTimeValue.setProgress(facility.getRefresh().getIntervalIndex());
 		// Add Graph with history data
-		addGraphView();
+		addGraphView(timezone.getDateTimeZone(adapter));
 
 		// Visible all elements
 		visibleAllElements();
@@ -435,7 +437,7 @@ public class SensorDetailFragment extends SherlockFragment {
 
 	}
 
-	private void addGraphView() {
+	private void addGraphView(final DateTimeZone dateTimeZone) {
 		mGraphView = new LineGraphView(getView().getContext(), ""); // empty heading
 		minimum = -1.0;
 
@@ -455,14 +457,17 @@ public class SensorDetailFragment extends SherlockFragment {
 		mGraphSeries = new GraphViewSeries("Graph", seriesStyleBlue, new GraphViewData[] { new GraphView.GraphViewData(0, 0), });
 		mGraphView.addSeries(mGraphSeries);
 		mGraphView.setManualYAxisBounds(1.0, 0.0);
-
+		
 		mGraphView.setCustomLabelFormatter(new CustomLabelFormatter() {
-			final DateFormat formatter = new SimpleDateFormat(mGraphDateTimeFormat, Locale.getDefault());
-
+			final DateTimeFormatter formatter = DateTimeFormat
+					.forPattern(mGraphDateTimeFormat)
+					.withZone(dateTimeZone);
+			
 			@Override
 			public String formatLabel(double value, boolean isValueX) {
-				if (isValueX)
-					return formatter.format(new Date((long) value));
+				if (isValueX) {
+					return formatter.print((long) value);
+				}
 
 				return String.format(Locale.getDefault(), "%.1f %s", value, mDevice.getStringUnit(getActivity()));
 			}
@@ -547,7 +552,8 @@ public class SensorDetailFragment extends SherlockFragment {
 	}
 
 	public void fillGraph(DeviceLog log) {
-		final DateFormat formatter = new SimpleDateFormat(mGraphDateTimeFormat, Locale.getDefault());
+		 // NOTE: This formatter is only for Log, correct timezone from app setting doesn't matter here
+		final DateTimeFormatter formatter = DateTimeFormat.forPattern(mGraphDateTimeFormat); 
 
 		float minimum = log.getMinimumValue();
 		float maximum = log.getMaximumValue();
@@ -578,15 +584,14 @@ public class SensorDetailFragment extends SherlockFragment {
 			DeviceLog.DataRow row = log.getValues().get(i);
 			float value = row.value;
 
-			// cal.setTimeInMillis(row.date.getTime());
 			if (Float.isNaN(value)) {
 				value = minLimit;
 			} else if (value > mTempConstant) {
 				value = (float) (value / 100.0);
 			}
-
-			data[i - begin] = new GraphView.GraphViewData(row.date.getTime(), value);
-			Log.v(TAG, String.format("Graph value: date(msec): %s, Value: %.1f (Orig: %.1f)", formatter.format(row.date), value, row.value));
+			
+			data[i - begin] = new GraphView.GraphViewData(row.date.getMillis(), value);
+			Log.v(TAG, String.format("Graph value: date(msec): %s, Value: %.1f (Orig: %.1f)", formatter.print(row.date), value, row.value));
 		}
 
 		Log.d(TAG, "Filling graph finished");
@@ -665,9 +670,6 @@ public class SensorDetailFragment extends SherlockFragment {
 
 		@Override
 		protected void onPostExecute(DeviceLog log) {
-			if (log.getValues().size() == 0)
-				return;
-
 			fillGraph(log);
 		}
 

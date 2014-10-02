@@ -7,7 +7,6 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Path;
 import android.graphics.Rect;
-import android.text.format.Time;
 
 final public class Utils {
 
@@ -47,14 +46,6 @@ final public class Utils {
 			// should never happen
 			throw new RuntimeException("Could not get package name: " + e);
 		}
-	}
-	
-	public static boolean isExpired(Time lastUpdate, long secondsInPast) {
-		Time that = new Time();
-		that.setToNow();
-		that.set(that.toMillis(true) - secondsInPast * 1000);
-		
-		return lastUpdate.before(that);
 	}
 	
 }

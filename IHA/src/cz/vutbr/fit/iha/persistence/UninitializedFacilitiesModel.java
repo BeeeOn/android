@@ -6,21 +6,21 @@ import java.util.List;
 import java.util.Map;
 import java.util.Vector;
 
-import android.text.format.Time;
+import org.joda.time.DateTime;
+
 import cz.vutbr.fit.iha.adapter.device.Facility;
 import cz.vutbr.fit.iha.network.Network;
 import cz.vutbr.fit.iha.network.exception.NetworkException;
-import cz.vutbr.fit.iha.util.Utils;
 
 public class UninitializedFacilitiesModel {
 	
 	private final Network mNetwork;
 	
 	private final Map<String, Map<String, Facility>> mFacilities = new HashMap<String, Map<String, Facility>>(); // adapterId => (facilityId => facility)
-	private final Map<String, Time> mLastUpdates = new HashMap<String, Time>(); // adapterId => lastUpdate of facilities
+	private final Map<String, DateTime> mLastUpdates = new HashMap<String, DateTime>(); // adapterId => lastUpdate of facilities
 	private final Vector<String> mIgnoredFacilities = new Vector<String>(); // adapterId
 	
-	private static final long RELOAD_EVERY_SECONDS = 10 * 60;
+	private static final int RELOAD_EVERY_SECONDS = 10 * 60;
 	
 	public UninitializedFacilitiesModel(Network network) {
 		mNetwork = network;
@@ -69,21 +69,13 @@ public class UninitializedFacilitiesModel {
 		}
 	}
 	
-	private void setLastUpdate(String adapterId, Time lastUpdate) {
-		Time oldLastUpdate = mLastUpdates.get(adapterId);
-		if (oldLastUpdate == null) {
-			oldLastUpdate = new Time();
-			mLastUpdates.put(adapterId, oldLastUpdate);
-		}
-
-		if (lastUpdate == null)
-			oldLastUpdate.setToNow();
-		else
-			oldLastUpdate.set(lastUpdate);
+	private void setLastUpdate(String adapterId, DateTime lastUpdate) {
+		mLastUpdates.put(adapterId, lastUpdate);
 	}
 	
 	private boolean isExpired(String adapterId) {
-		return !mLastUpdates.containsKey(adapterId) || Utils.isExpired(mLastUpdates.get(adapterId), RELOAD_EVERY_SECONDS);
+		DateTime lastUpdate = mLastUpdates.get(adapterId);
+		return lastUpdate == null || lastUpdate.plusSeconds(RELOAD_EVERY_SECONDS).isBeforeNow();
 	}
 	
 	public boolean reloadUninitializedFacilitiesByAdapter(String adapterId, boolean forceReload) {
@@ -105,7 +97,7 @@ public class UninitializedFacilitiesModel {
 		try {
 			// TODO: Load ignoredUninitializedDevices from some cache
 			setUninitialiyedFacilitiesByAdapter(adapterId, mNetwork.getNewFacilities(adapterId));
-			setLastUpdate(adapterId, null);
+			setLastUpdate(adapterId, DateTime.now());
 			saveToCache(adapterId);
 		} catch (NetworkException e) {
 			e.printStackTrace();

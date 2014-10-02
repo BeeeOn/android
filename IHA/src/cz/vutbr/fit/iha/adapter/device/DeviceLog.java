@@ -1,11 +1,12 @@
 package cz.vutbr.fit.iha.adapter.device;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-import java.util.Locale;
+
+import org.joda.time.DateTime;
+import org.joda.time.Interval;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 
 import android.util.Log;
 
@@ -23,7 +24,11 @@ public class DeviceLog {
 	private float mMaxValue;
 
 	public enum DataType {
-		MINIMUM("min"), AVERAGE("avg"), MEDIAN("med"), MAXIMUM("max"), BATTERY("bat"); // for future use
+		MINIMUM("min"), //
+		AVERAGE("avg"), //
+		MEDIAN("med"), //
+		MAXIMUM("max"), //
+		BATTERY("bat"); // for future use
 
 		private final String mValue;
 
@@ -45,7 +50,12 @@ public class DeviceLog {
 	}
 
 	public enum DataInterval {
-		RAW(0), MINUTE(60), HOUR(60 * 60), DAY(60 * 60 * 24), WEEK(60 * 60 * 24 * 7), MONTH(60 * 60 * 24 * 7 * 4); // for server this is anything bigger than value of week
+		RAW(0), //
+		MINUTE(60), //
+		HOUR(60 * 60), //
+		DAY(60 * 60 * 24), //
+		WEEK(60 * 60 * 24 * 7), //
+		MONTH(60 * 60 * 24 * 7 * 4); // for server this is anything bigger than value of week
 
 		private final int mValue;
 
@@ -70,13 +80,13 @@ public class DeviceLog {
 		private static final String FORMAT = "yyyy-MM-dd HH:mm:ss";
 		private static final String SEPARATOR = "\\s+";
 
-		private SimpleDateFormat mFormatter = new SimpleDateFormat(FORMAT, Locale.getDefault());
+		private DateTimeFormatter mFormatter = DateTimeFormat.forPattern(FORMAT);
 
-		public final Date date;
+		public final DateTime date;
 		public final float value;
 
 		/**
-		 * Constructor
+		 * Constructor creates new DataRow from string
 		 * 
 		 * @param row
 		 *            from ContentLog message
@@ -90,16 +100,8 @@ public class DeviceLog {
 				throw new IllegalArgumentException();
 			}
 
-			try {
-				this.date = mFormatter.parse(String.format("%s %s", parts[0], parts[1]));
-				this.value = Float.parseFloat(parts[2]);
-			} catch (ParseException e) {
-				Log.e(TAG, String.format("Wrong date format: %s", parts[0]));
-				throw new IllegalArgumentException(e);
-			} catch (NumberFormatException e) {
-				Log.e(TAG, String.format("Wrong value format: %s", parts[1]));
-				throw new IllegalArgumentException(e);
-			}
+			this.date = mFormatter.parseDateTime(String.format("%s %s", parts[0], parts[1]));
+			this.value = Float.parseFloat(parts[2]);
 		}
 
 		/**
@@ -108,7 +110,7 @@ public class DeviceLog {
 		 * @return
 		 */
 		public String debugString() {
-			return String.format("%s %s\n", mFormatter.format(date), value);
+			return String.format("%s %s\n", mFormatter.print(date), value);
 		}
 	}
 
@@ -183,11 +185,11 @@ public class DeviceLog {
 	 * @param end
 	 * @return list of rows or empty list
 	 */
-	public List<DataRow> getValues(Date start, Date end) {
+	public List<DataRow> getValues(Interval interval) {
 		List<DataRow> values = new ArrayList<DataRow>();
 
 		for (DataRow row : mValues) {
-			if (row.date.after(start) && row.date.before(end))
+			if (interval.contains(row.date))
 				values.add(row);
 		}
 

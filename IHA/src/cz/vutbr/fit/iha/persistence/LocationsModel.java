@@ -6,21 +6,20 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
-import android.text.format.Time;
-import android.util.Log;
+import org.joda.time.DateTime;
+
 import cz.vutbr.fit.iha.adapter.location.Location;
 import cz.vutbr.fit.iha.network.Network;
 import cz.vutbr.fit.iha.network.exception.NetworkException;
-import cz.vutbr.fit.iha.util.Utils;
 
 public class LocationsModel {
 	
 	private final Network mNetwork;
 	
 	private final Map<String, Map<String, Location>> mLocations = new HashMap<String, Map<String, Location>>(); // adapterId => (locationId => location)
-	private final Map<String, Time> mLastUpdates = new HashMap<String, Time>(); // adapterId => lastUpdate of location
+	private final Map<String, DateTime> mLastUpdates = new HashMap<String, DateTime>(); // adapterId => lastUpdate of location
 	
-	private static final long RELOAD_EVERY_SECONDS = 10 * 60;
+	private static final int RELOAD_EVERY_SECONDS = 10 * 60;
 	
 	public LocationsModel(Network network) {
 		mNetwork = network;
@@ -62,21 +61,13 @@ public class LocationsModel {
 		}
 	}
 	
-	private void setLastUpdate(String adapterId, Time lastUpdate) {
-		Time oldLastUpdate = mLastUpdates.get(adapterId);
-		if (oldLastUpdate == null) {
-			oldLastUpdate = new Time();
-			mLastUpdates.put(adapterId, oldLastUpdate);
-		}
-
-		if (lastUpdate == null)
-			oldLastUpdate.setToNow();
-		else
-			oldLastUpdate.set(lastUpdate);
+	private void setLastUpdate(String adapterId, DateTime lastUpdate) {
+		mLastUpdates.put(adapterId, lastUpdate);
 	}
 	
 	private boolean isExpired(String adapterId) {
-		return !mLastUpdates.containsKey(adapterId) || Utils.isExpired(mLastUpdates.get(adapterId), RELOAD_EVERY_SECONDS);
+		DateTime lastUpdate = mLastUpdates.get(adapterId);
+		return lastUpdate == null || lastUpdate.plusSeconds(RELOAD_EVERY_SECONDS).isBeforeNow();
 	}
 	
 	public boolean reloadLocationsByAdapter(String adapterId, boolean forceReload) {
@@ -97,7 +88,7 @@ public class LocationsModel {
 	private boolean loadFromServer(String adapterId) {
 		try {
 			setLocationsByAdapter(adapterId, mNetwork.getLocations(adapterId));
-			setLastUpdate(adapterId, null);
+			setLastUpdate(adapterId, DateTime.now());
 			saveToCache(adapterId);
 		} catch (NetworkException e) {
 			e.printStackTrace();

@@ -1,7 +1,8 @@
 package cz.vutbr.fit.iha;
 
+import org.joda.time.DateTime;
+
 import android.content.Context;
-import android.text.format.Time;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,7 +32,7 @@ public class SensorListAdapter extends BaseAdapter {
 	private String[] mTitle;
 	private String[] mValue;
 	private String[] mUnit;
-	private Time[] mTime;
+	private DateTime[] mTime;
 	private int[] mIcon;
 	private int[] mRelPos;
 	private int[] mFacSize;
@@ -41,7 +42,7 @@ public class SensorListAdapter extends BaseAdapter {
 
 	private final Controller mController;
 
-	public SensorListAdapter(Context context, String[] adapterId, String[] title, String[] value, String[] unit, Time[] time, int[] icon, int[] relPos, int[] facSize, boolean showAdd) {
+	public SensorListAdapter(Context context, String[] adapterId, String[] title, String[] value, String[] unit, DateTime[] time, int[] icon, int[] relPos, int[] facSize, boolean showAdd) {
 		mContext = context;
 		mAdapterId = adapterId;
 		mTitle = title;

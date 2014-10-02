@@ -16,7 +16,7 @@ public class Adapter {
 	private String mId = "";
 	private String mName = "";
 	private User.Role mRole;
-	private int mUtcOffset;
+	private int mUtcOffsetMillis;
 
 	@Override
 	public String toString() {
@@ -85,21 +85,21 @@ public class Adapter {
 	}
 
 	/**
-	 * Setting utc offset of adapter
+	 * Setting UTC offset of adapter
 	 * 
-	 * @param utcOffset in minutes
+	 * @param utcOffsetInMinutes
 	 */
-	public void setUtcOffset(int offset) {
-		mUtcOffset = offset;
+	public void setUtcOffset(int offsetInMinutes) {
+		mUtcOffsetMillis = offsetInMinutes * 60 * 1000;
 	}
 
 	/**
-	 * Returning id of adapter
+	 * Returning UTC offset of adapter
 	 * 
-	 * @return utcOffset in minutes
+	 * @return UTC offset in milliseconds
 	 */
-	public int getUtcOffset() {
-		return mUtcOffset;
+	public int getUtcOffsetMillis() {
+		return mUtcOffsetMillis;
 	}
 
 }
