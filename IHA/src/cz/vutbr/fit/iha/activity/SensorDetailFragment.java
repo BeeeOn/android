@@ -590,8 +590,8 @@ public class SensorDetailFragment extends SherlockFragment {
 				value = (float) (value / 100.0);
 			}
 			
-			data[i - begin] = new GraphView.GraphViewData(row.date.getMillis(), value);
-			Log.v(TAG, String.format("Graph value: date(msec): %s, Value: %.1f (Orig: %.1f)", formatter.print(row.date), value, row.value));
+			data[i - begin] = new GraphView.GraphViewData(row.dateMillis, value);
+			Log.v(TAG, String.format("Graph value: date(msec): %s, Value: %.1f (Orig: %.1f)", formatter.print(row.dateMillis), value, row.value));
 		}
 
 		Log.d(TAG, "Filling graph finished");

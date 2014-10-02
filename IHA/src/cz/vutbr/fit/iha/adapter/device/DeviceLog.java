@@ -3,7 +3,6 @@ package cz.vutbr.fit.iha.adapter.device;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.joda.time.DateTime;
 import org.joda.time.Interval;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
@@ -82,7 +81,7 @@ public class DeviceLog {
 	}
 
 	public class DataRow {
-		public final DateTime date;
+		public final long dateMillis;
 		public final float value;
 
 		/**
@@ -100,7 +99,7 @@ public class DeviceLog {
 				throw new IllegalArgumentException();
 			}
 
-			this.date = mFormatter.parseDateTime(String.format("%s %s", parts[0], parts[1]));
+			this.dateMillis = mFormatter.parseDateTime(String.format("%s %s", parts[0], parts[1])).getMillis();
 			this.value = Float.parseFloat(parts[2]);
 		}
 
@@ -110,7 +109,7 @@ public class DeviceLog {
 		 * @return
 		 */
 		public String debugString() {
-			return String.format("%s %s\n", mFormatter.print(date), value);
+			return String.format("%s %s\n", mFormatter.print(dateMillis), value);
 		}
 	}
 
@@ -189,7 +188,7 @@ public class DeviceLog {
 		List<DataRow> values = new ArrayList<DataRow>();
 
 		for (DataRow row : mValues) {
-			if (interval.contains(row.date))
+			if (interval.contains(row.dateMillis))
 				values.add(row);
 		}
 
