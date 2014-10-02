@@ -13,6 +13,7 @@ import org.joda.time.DateTime;
  * @author Robyer
  */
 public class Facility {
+	protected String mAddress;
 	protected String mAdapterId;
 	protected String mLocationId;
 	protected boolean mInitialized;	
@@ -21,7 +22,7 @@ public class Facility {
 	protected boolean mLogging;
 	protected String mInvolveTime = "";
 	protected boolean mVisibility;
-	protected NetworkState mNetwork = new NetworkState();
+	protected int mNetworkQuality;	
 	protected DateTime mLastUpdate;
 	protected final List<BaseDevice> mDevices = new ArrayList<BaseDevice>();
 
@@ -29,14 +30,6 @@ public class Facility {
 	 * Class constructor
 	 */
 	public Facility() {
-	}
-
-	/**
-	 * Public class that implements structure
-	 */
-	public final class NetworkState {
-		public int quality;
-		public String address = "";
 	}
 
 	/**
@@ -103,7 +96,7 @@ public class Facility {
 	 * @return id
 	 */
 	public String getId() {
-		return mNetwork.address;
+		return mAddress;
 	}
 
 	/**
@@ -239,7 +232,7 @@ public class Facility {
 	 * @return address
 	 */
 	public String getAddress() {
-		return mNetwork.address;
+		return mAddress;
 	}
 
 	/**
@@ -248,7 +241,7 @@ public class Facility {
 	 * @param address
 	 */
 	public void setAddress(String address) {
-		mNetwork.address = address;
+		mAddress = address;
 	}
 
 	/**
@@ -256,17 +249,17 @@ public class Facility {
 	 * 
 	 * @return quality
 	 */
-	public int getQuality() {
-		return mNetwork.quality;
+	public int getNetworkQuality() {
+		return mNetworkQuality;
 	}
 
 	/**
 	 * Setting quality
 	 * 
-	 * @param quality
+	 * @param networkQuality
 	 */
-	public void setQuality(int quality) {
-		mNetwork.quality = quality;
+	public void setNetworkQuality(int networkQuality) {
+		mNetworkQuality = networkQuality;
 	}
 
 	@Override
@@ -321,7 +314,7 @@ public class Facility {
 		setInvolveTime(newFacility.getInvolveTime());
 		setLocationId(newFacility.getLocationId());
 		setLogging(newFacility.isLogging());
-		setQuality(newFacility.getQuality());
+		setNetworkQuality(newFacility.getNetworkQuality());
 		setRefresh(newFacility.getRefresh());
 		setVisibility(newFacility.getVisibility());
 		setLastUpdate(newFacility.getLastUpdate());

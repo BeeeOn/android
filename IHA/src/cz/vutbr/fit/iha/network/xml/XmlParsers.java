@@ -398,7 +398,7 @@ public class XmlParsers {
 				else if (nameTag.equals(BATTERY))
 					facility.setBattery(Integer.parseInt(readText(BATTERY)));
 				else if (nameTag.equals(QUALITY))
-					facility.setQuality(Integer.parseInt(readText(QUALITY)));
+					facility.setNetworkQuality(Integer.parseInt(readText(QUALITY)));
 				else if (nameTag.equals(VALUE)) {
 					String hwupdated = getSecureAttrValue(ns, HWUPDATED);
 					DateTime lastUpdate = hwupdated.isEmpty() ? DateTime.now() : DateTimeFormat.forPattern(DATEFORMAT).parseDateTime(hwupdated);
