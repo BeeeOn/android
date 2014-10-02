@@ -16,6 +16,11 @@ import android.util.Log;
 public class DeviceLog {
 	private static final String TAG = DeviceLog.class.getSimpleName();
 
+	private static final String DATA_FORMAT = "yyyy-MM-dd HH:mm:ss";
+	private static final String DATA_SEPARATOR = "\\s+";
+
+	private DateTimeFormatter mFormatter = DateTimeFormat.forPattern(DATA_FORMAT);
+
 	private List<DataRow> mValues = new ArrayList<DataRow>(); // FIXME: use rather Map
 	private DataType mType;
 	private DataInterval mInterval;
@@ -77,11 +82,6 @@ public class DeviceLog {
 	}
 
 	public class DataRow {
-		private static final String FORMAT = "yyyy-MM-dd HH:mm:ss";
-		private static final String SEPARATOR = "\\s+";
-
-		private DateTimeFormatter mFormatter = DateTimeFormat.forPattern(FORMAT);
-
 		public final DateTime date;
 		public final float value;
 
@@ -93,7 +93,7 @@ public class DeviceLog {
 		 * @throws IllegalArgumentException
 		 */
 		public DataRow(String row) throws IllegalArgumentException {
-			String[] parts = row.split(SEPARATOR);
+			String[] parts = row.split(DATA_SEPARATOR);
 
 			if (parts.length != 3) {
 				Log.e(TAG, String.format("Wrong number of parts (%d) of data: %s", parts.length, row));
