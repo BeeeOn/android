@@ -8,8 +8,8 @@ import cz.vutbr.fit.iha.adapter.device.values.BaseEnumValue;
 
 public class UnitsFormatter {
 	
-	private SharedPreferences mPrefs;
-	private Context mContext;
+	private final SharedPreferences mPrefs;
+	private final Context mContext;
 	
 	public UnitsFormatter(SharedPreferences prefs, Context context) {
 		mPrefs = prefs;

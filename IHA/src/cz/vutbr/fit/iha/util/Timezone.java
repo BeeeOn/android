@@ -3,10 +3,7 @@ package cz.vutbr.fit.iha.util;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
-import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -99,22 +96,6 @@ public enum Timezone {
 	public DateTimeZone getDateTimeZone(Adapter adapter) {
 		boolean useLocalTime = this.equals(ACTUAL) || adapter == null;
 		return useLocalTime ? DateTimeZone.getDefault() : DateTimeZone.forOffsetMillis(adapter.getUtcOffsetMillis());
-	}
-
-	/**
-	 * Return string with formatted time (if it is 23 hours ago, it show only date)
-	 * 
-	 * @param lastUpdate
-	 * @param adapter If null, then it will use local timezone
-	 * @return
-	 */
-	public String formatLastUpdate(DateTime lastUpdate, Adapter adapter) {
-		DateTimeZone zone = getDateTimeZone(adapter);
-		
-		boolean isTooOld = lastUpdate.plusHours(23).isBeforeNow();
-		DateTimeFormatter fmt = isTooOld ? DateTimeFormat.shortDate() : DateTimeFormat.mediumTime();
-		
-		return fmt.withZone(zone).print(lastUpdate);
 	}
 
 }

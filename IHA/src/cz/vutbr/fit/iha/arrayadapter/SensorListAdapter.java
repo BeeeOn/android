@@ -3,6 +3,7 @@ package cz.vutbr.fit.iha.arrayadapter;
 import java.util.List;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -13,15 +14,11 @@ import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.TextView;
 import cz.vutbr.fit.iha.R;
-import cz.vutbr.fit.iha.R.drawable;
-import cz.vutbr.fit.iha.R.id;
-import cz.vutbr.fit.iha.R.layout;
-import cz.vutbr.fit.iha.R.string;
 import cz.vutbr.fit.iha.adapter.Adapter;
 import cz.vutbr.fit.iha.adapter.device.BaseDevice;
 import cz.vutbr.fit.iha.adapter.device.Facility;
 import cz.vutbr.fit.iha.controller.Controller;
-import cz.vutbr.fit.iha.util.Timezone;
+import cz.vutbr.fit.iha.util.TimeHelper;
 import cz.vutbr.fit.iha.util.UnitsFormatter;
 
 public class SensorListAdapter extends BaseAdapter {
@@ -101,12 +98,14 @@ public class SensorListAdapter extends BaseAdapter {
 
 		BaseDevice device = mDevices.get(position);
 		Facility facility = device.getFacility();
-		
 		Adapter adapter = mController.getAdapter(facility.getAdapterId());
-		Timezone timezone = Timezone.fromPreferences(mController.getUserSettings());
-		String lastUpdate = timezone.formatLastUpdate(facility.getLastUpdate(), adapter);
 		
-		UnitsFormatter fmt = new UnitsFormatter(mController.getUserSettings(), mContext);
+		SharedPreferences userSettings = mController.getUserSettings();
+
+		TimeHelper timeHelper = new TimeHelper(userSettings);
+		String lastUpdate = timeHelper.formatLastUpdate(facility.getLastUpdate(), adapter);
+		
+		UnitsFormatter fmt = new UnitsFormatter(userSettings, mContext);
 		
 		// Set the results into TextViews
 		txtTitle.setText(device.getName());
