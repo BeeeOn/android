@@ -24,11 +24,11 @@ public enum Timezone {
 	ACTUAL("0", R.string.actual_timezone), //
 	ADAPTER("1", R.string.adapter_timezone);
 
-	private final String mID;
+	private final String mId;
 	private final int mResName;
 
 	private Timezone(String id, int resName) {
-		this.mID = id;
+		this.mId = id;
 		this.mResName = resName;
 	}
 
@@ -43,7 +43,7 @@ public enum Timezone {
 	 * @return SharedPreference ID
 	 */
 	public String getId() {
-		return mID;
+		return mId;
 	}
 
 	/**
@@ -58,23 +58,23 @@ public enum Timezone {
 	/**
 	 * @return List of values which will be visible for user
 	 */
-	public static CharSequence[] getEntries(Context context) {
+	public static String[] getNamesArray(Context context) {
 		List<String> retList = new ArrayList<String>();
 		for (Timezone actTemp : Timezone.values()) {
 			retList.add(actTemp.getName(context));
 		}
-		return retList.toArray(new CharSequence[retList.size()]);
+		return (String[]) retList.toArray();
 	}
 
 	/**
 	 * @return List of IDs which will be saved in SharedPreferences
 	 */
-	public static CharSequence[] getEntryValues() {
+	public static String[] getIdsArray() {
 		List<String> retList = new ArrayList<String>();
 		for (Timezone actTemp : Timezone.values()) {
-			retList.add(actTemp.mID);
+			retList.add(actTemp.mId);
 		}
-		return retList.toArray(new CharSequence[retList.size()]);
+		return (String[]) retList.toArray();
 	}
 
 	/**
@@ -82,9 +82,9 @@ public enum Timezone {
 	 * 
 	 * @return If the ID exists, it returns Timezone object. Otherwise it returns default timezone option.
 	 */
-	private static Timezone getTimezoneById(String id) {
+	private static Timezone getTimezoneByIdOrDefault(String id) {
 		for (Timezone actTemp : Timezone.values()) {
-			if (actTemp.mID.equals(id)) {
+			if (actTemp.mId.equals(id)) {
 				return actTemp;
 			}
 		}
@@ -92,9 +92,9 @@ public enum Timezone {
 	}
 
 	public static Timezone getSharedPreferenceOption(SharedPreferences prefs) {
-		return getTimezoneById(prefs.getString(Constants.PERSISTANCE_PREF_TIMEZONE, getDefault().getId()));
+		return getTimezoneByIdOrDefault(prefs.getString(Constants.PERSISTANCE_PREF_TIMEZONE, getDefault().getId()));
 	}
-	
+
 	public DateTimeZone getDateTimeZone(Adapter adapter) {
 		boolean useLocalTime = this.equals(ACTUAL) || adapter == null;
 		return useLocalTime ? DateTimeZone.getDefault() : DateTimeZone.forOffsetMillis(adapter.getUtcOffsetMillis());

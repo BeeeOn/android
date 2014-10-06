@@ -58,8 +58,8 @@ public class SettingsMainActivity extends SherlockPreferenceActivity implements 
 		mListPrefLocation = (ListPreference) findPreference(Constants.PERSISTANCE_PREF_SW2_LOCATION);
 
 		mListPrefTimezone = (ListPreference) findPreference(Constants.PERSISTANCE_PREF_TIMEZONE);
-		mListPrefTimezone.setEntries(Timezone.getEntries(this));
-		mListPrefTimezone.setEntryValues(Timezone.getEntryValues());
+		mListPrefTimezone.setEntries(Timezone.getNamesArray(this));
+		mListPrefTimezone.setEntryValues(Timezone.getIdsArray());
 		mListPrefTimezone.setSummary(Timezone.getSharedPreferenceOption(mController.getUserSettings()).getName(this));
 
 		mPrefUnits = findPreference(Constants.KEY_UNITS);
