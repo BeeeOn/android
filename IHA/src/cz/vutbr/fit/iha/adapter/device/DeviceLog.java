@@ -3,7 +3,6 @@ package cz.vutbr.fit.iha.adapter.device;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.joda.time.DateTime;
 import org.joda.time.Interval;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
@@ -15,6 +14,11 @@ import android.util.Log;
  */
 public class DeviceLog {
 	private static final String TAG = DeviceLog.class.getSimpleName();
+
+	private static final String DATA_FORMAT = "yyyy-MM-dd HH:mm:ss";
+	private static final String DATA_SEPARATOR = "\\s+";
+
+	private DateTimeFormatter mFormatter = DateTimeFormat.forPattern(DATA_FORMAT);
 
 	private List<DataRow> mValues = new ArrayList<DataRow>(); // FIXME: use rather Map
 	private DataType mType;
@@ -77,12 +81,7 @@ public class DeviceLog {
 	}
 
 	public class DataRow {
-		private static final String FORMAT = "yyyy-MM-dd HH:mm:ss";
-		private static final String SEPARATOR = "\\s+";
-
-		private DateTimeFormatter mFormatter = DateTimeFormat.forPattern(FORMAT);
-
-		public final DateTime date;
+		public final long dateMillis;
 		public final float value;
 
 		/**
@@ -93,14 +92,14 @@ public class DeviceLog {
 		 * @throws IllegalArgumentException
 		 */
 		public DataRow(String row) throws IllegalArgumentException {
-			String[] parts = row.split(SEPARATOR);
+			String[] parts = row.split(DATA_SEPARATOR);
 
 			if (parts.length != 3) {
 				Log.e(TAG, String.format("Wrong number of parts (%d) of data: %s", parts.length, row));
 				throw new IllegalArgumentException();
 			}
 
-			this.date = mFormatter.parseDateTime(String.format("%s %s", parts[0], parts[1]));
+			this.dateMillis = mFormatter.parseDateTime(String.format("%s %s", parts[0], parts[1])).getMillis();
 			this.value = Float.parseFloat(parts[2]);
 		}
 
@@ -110,7 +109,7 @@ public class DeviceLog {
 		 * @return
 		 */
 		public String debugString() {
-			return String.format("%s %s\n", mFormatter.print(date), value);
+			return String.format("%s %s\n", mFormatter.print(dateMillis), value);
 		}
 	}
 
@@ -189,7 +188,7 @@ public class DeviceLog {
 		List<DataRow> values = new ArrayList<DataRow>();
 
 		for (DataRow row : mValues) {
-			if (interval.contains(row.date))
+			if (interval.contains(row.dateMillis))
 				values.add(row);
 		}
 
