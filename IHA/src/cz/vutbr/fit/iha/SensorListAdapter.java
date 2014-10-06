@@ -113,7 +113,7 @@ public class SensorListAdapter extends BaseAdapter {
 		txtTitle.setText(mTitle[position]);
 		txtValue.setText(mValue[position]);
 		txtUnit.setText(mUnit[position]);
-		txtTime.setText(String.format("%s %s", mContext.getString(R.string.last_update), Timezone.getSharedPreferenceOption(mController.getUserSettings()).formatLastUpdate(mTime[position], adapter)));
+		txtTime.setText(String.format("%s %s", mContext.getString(R.string.last_update), Timezone.fromPreferences(mController.getUserSettings()).formatLastUpdate(mTime[position], adapter)));
 
 		// Set the results into ImageView
 		imgIcon.setImageResource(mIcon[position]);

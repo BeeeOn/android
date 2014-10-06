@@ -197,7 +197,7 @@ public class GalleryControlExtension extends ManagedControlExtension {
 		syncBundle.putInt(Control.Intents.EXTRA_LAYOUT_REFERENCE, R.id.sync_time);
 
 		// Last update data
-		Timezone timezone = Timezone.getSharedPreferenceOption(mController.getUserSettings());
+		Timezone timezone = Timezone.fromPreferences(mController.getUserSettings());
 		Adapter curAdapter = mController.getAdapter(curFacility.getAdapterId());
 		String dateTime = timezone.formatLastUpdate(curFacility.getLastUpdate(), curAdapter);
 		syncBundle.putString(Control.Intents.EXTRA_TEXT, dateTime);

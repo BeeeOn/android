@@ -91,7 +91,7 @@ public enum Timezone {
 		return getDefault();
 	}
 
-	public static Timezone getSharedPreferenceOption(SharedPreferences prefs) {
+	public static Timezone fromPreferences(SharedPreferences prefs) {
 		return getTimezoneByIdOrDefault(prefs.getString(Constants.PERSISTANCE_PREF_TIMEZONE, getDefault().getId()));
 	}
 

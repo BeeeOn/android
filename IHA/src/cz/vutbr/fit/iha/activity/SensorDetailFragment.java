@@ -377,7 +377,7 @@ public class SensorDetailFragment extends SherlockFragment {
 
 		Facility facility = device.getFacility();
 		Adapter adapter = mController.getAdapter(facility.getAdapterId());
-		Timezone timezone = Timezone.getSharedPreferenceOption(mController.getUserSettings());
+		Timezone timezone = Timezone.fromPreferences(mController.getUserSettings());
 		
 		// Set value of sensor
 		mValue.setText(device.getStringValueUnit(getActivity()));
