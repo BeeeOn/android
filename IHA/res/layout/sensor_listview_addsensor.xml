@@ -16,5 +16,6 @@
         android:layout_width="wrap_content"
         android:layout_height="50dp"
         android:adjustViewBounds="true"
+        android:clickable="true"
         android:src="@drawable/add_custom_view" />
 </LinearLayout>

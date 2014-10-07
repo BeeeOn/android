@@ -38,13 +38,13 @@
 	        android:textAppearance="?android:attr/textAppearanceSmall" />
 	     
 	    <TextView
-	        android:id="@+id/addsensor_involved_time"
+	        android:id="@+id/setup_sensor_info_text"
 	        android:layout_width="match_parent"
 	        android:layout_height="wrap_content"
-	        android:text="@string/addsensor_involved_time"
+	        android:text="@string/setup_sensor_info_text"
+	        android:textAppearance="?android:attr/textAppearanceSmall"
 	        android:textColor="@color/log_blue2"
-		    android:textIsSelectable="false"
-	        android:textAppearance="?android:attr/textAppearanceSmall" />
+	        android:textIsSelectable="false" />
 	    
     </LinearLayout>
 

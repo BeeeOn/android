@@ -3,14 +3,17 @@ package cz.vutbr.fit.iha;
 import org.joda.time.DateTime;
 
 import android.content.Context;
+import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.TextView;
+import cz.vutbr.fit.iha.activity.dialog.AddSensorFragmentDialog;
 import cz.vutbr.fit.iha.adapter.Adapter;
 import cz.vutbr.fit.iha.controller.Controller;
 import cz.vutbr.fit.iha.util.Timezone;
@@ -39,10 +42,11 @@ public class SensorListAdapter extends BaseAdapter {
 	private LayoutInflater inflater;
 	private int mLength;
 	private boolean mShowAdd;
+	private OnClickListener mListener;
 
 	private final Controller mController;
 
-	public SensorListAdapter(Context context, String[] adapterId, String[] title, String[] value, String[] unit, DateTime[] time, int[] icon, int[] relPos, int[] facSize, boolean showAdd) {
+	public SensorListAdapter(Context context, String[] adapterId, String[] title, String[] value, String[] unit, DateTime[] time, int[] icon, int[] relPos, int[] facSize, boolean showAdd,OnClickListener listener) {
 		mContext = context;
 		mAdapterId = adapterId;
 		mTitle = title;
@@ -55,6 +59,7 @@ public class SensorListAdapter extends BaseAdapter {
 		mLength = mTitle.length;
 		mController = Controller.getInstance(context);
 		mShowAdd = showAdd;
+		mListener = listener;
 	}
 
 	@Override
@@ -82,7 +87,11 @@ public class SensorListAdapter extends BaseAdapter {
 
 	private View addAddSensor(View convertView, ViewGroup parent) {
 		inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		View itemView = inflater.inflate(R.layout.sensor_listview_addsensor, parent, false);
+		final View itemView = inflater.inflate(R.layout.sensor_listview_addsensor, parent, false);
+		itemView.setClickable(false);
+		itemView.setOnClickListener(null);
+		ImageView img = (ImageView) itemView.findViewById(R.id.sensor_listview_addsensor_image);
+		img.setOnClickListener(mListener);
 		return itemView;
 	}
 

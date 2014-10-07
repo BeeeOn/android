@@ -92,11 +92,11 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="cz.vutbr.fit.iha.activity.dialog.AddSensorActivityDialog"
+            android:name="cz.vutbr.fit.iha.activity.dialog.AddSensorFragmentDialog"
             android:theme="@style/MyDialog" >
         </activity>
         <activity
-            android:name="cz.vutbr.fit.iha.activity.dialog.SetupSensorActivityDialog"
+            android:name="cz.vutbr.fit.iha.activity.dialog.SetupSensorFragmentDialog"
             android:theme="@style/MyDialog" >
         </activity>
 <!--         <activity -->

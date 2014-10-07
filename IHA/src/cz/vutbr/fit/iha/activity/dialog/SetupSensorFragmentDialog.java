@@ -6,8 +6,11 @@ import java.util.EnumSet;
 import java.util.List;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.AsyncTask;
@@ -26,12 +29,15 @@ import android.widget.CheckedTextView;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout.LayoutParams;
+import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 import cz.vutbr.fit.iha.Constants;
 import cz.vutbr.fit.iha.R;
+import cz.vutbr.fit.iha.SetupSensorListAdapter;
 import cz.vutbr.fit.iha.activity.LocationScreenActivity;
+import cz.vutbr.fit.iha.activity.TrackDialogFragment;
 import cz.vutbr.fit.iha.adapter.Adapter;
 import cz.vutbr.fit.iha.adapter.device.BaseDevice;
 import cz.vutbr.fit.iha.adapter.device.BaseDevice.SaveDevice;
@@ -40,93 +46,176 @@ import cz.vutbr.fit.iha.adapter.location.Location;
 import cz.vutbr.fit.iha.adapter.location.Location.DefaultRoom;
 import cz.vutbr.fit.iha.controller.Controller;
 
-public class SetupSensorActivityDialog extends Activity {
+public class SetupSensorFragmentDialog extends TrackDialogFragment {
 
+	public LocationScreenActivity mActivity;
+	private View mView;
 	private Controller mController;
 
 	private static final String TAG = LocationScreenActivity.class.getSimpleName();
 
-	private BaseDevice mNewDevice;
-	private List<BaseDevice> mUnInitDevices;
+	private Adapter mAdapter;
+	private List<Facility> mNewFacilities;
 
 	private ProgressDialog mProgress;
 
+	private ListView mListOfName;
 	private EditText mNewLocation;
-	private EditText mName;
 	private TextView mOrLabel;
-	private TextView mHeader;
 	private Spinner mSpinner;
 	private Spinner mNewIconSpinner;
-	private Button mAddButton;
-	private Button mCancelButton;
+	private Button mPosButton;
 
-	private int mCountOfSensor = 1;
 
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
+	public Dialog onCreateDialog(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		requestWindowFeature(Window.FEATURE_NO_TITLE);
-
-		setContentView(R.layout.activity_setup_sensor_activity_dialog);
-
-		mController = Controller.getInstance(this);
 		
-		Adapter adapter = mController.getActiveAdapter();
-		if (adapter == null) {
-			Toast.makeText(this, "There are no adapters.", Toast.LENGTH_LONG).show();
-			finish();
-			return;
-		}
-
+		// Get activity and controller
+		mActivity = (LocationScreenActivity)getActivity();
+		mController = Controller.getInstance(mActivity);
+		
+		
 		// Prepare progress dialog
-		mProgress = new ProgressDialog(this);
+		mProgress = new ProgressDialog(mActivity);
 		mProgress.setMessage("Saving data...");
 		mProgress.setCancelable(false);
 		mProgress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+				
+				// TODO: sent as parameter if we want first uninitialized device or some
+				// device with particular id
 
-		// TODO: sent as parameter if we want first uninitialized device or some
-		// device with particular id
+		// Use the Builder class for convenient dialog construction
+		AlertDialog.Builder builder = new AlertDialog.Builder(mActivity);
 
-		mUnInitDevices = new ArrayList<BaseDevice>();
+		LayoutInflater inflater = mActivity.getLayoutInflater();
 
-		for (Facility facility : mController.getUninitializedFacilities(adapter.getId(), false)) {
-			//for(BaseDevice device : facility.getDevices()) {
-			//	if (device.)
-			//}
-			mUnInitDevices.addAll(facility.getDevices());
-		}
+		// Get View
+		mView = inflater.inflate(R.layout.activity_setup_sensor_activity_dialog, null);
 
-		if (mUnInitDevices.size() > 0) {
-
-			if (!Controller.isDemoMode()) {
-				// Get number of new sensors
-				Bundle bundle = getIntent().getExtras();
-				if (bundle != null) {
-					mCountOfSensor = bundle.getInt(Constants.ADDSENSOR_COUNT_SENSOR);
-				}
+		DialogInterface.OnClickListener dummyListener = new DialogInterface.OnClickListener() {
+			public void onClick(DialogInterface dialog, int id) {
+				// Do nothing here because we override this button later to change the close behaviour. 
+                // However, we still need this because on older versions of Android unless we 
+                // pass a handler the button doesn't get instantiated
 			}
-			mNewDevice = mUnInitDevices.get(0);
-		} else {
-			Toast.makeText(this, "There are no uninitialized devices.", Toast.LENGTH_LONG).show();
-			finish();
-			return;
-		}
+		};
 
-		initButtons();
-		initViews();
+		builder.setView(mView)
+			.setPositiveButton(R.string.notification_add, dummyListener)
+			.setNegativeButton(R.string.notification_cancel, dummyListener);
+
+		// Send request
+		mAdapter = mController.getActiveAdapter();
+		if (mAdapter == null) {
+			Toast.makeText(mActivity, getResources().getString(R.string.toast_no_adapter), Toast.LENGTH_LONG).show();
+			//TODO: Ukoncit dialog ?
+		}
+		
+		//mUnInitDevices = new ArrayList<BaseDevice>();
+
+		mNewFacilities = (List<Facility>) mController.getUninitializedFacilities(mAdapter.getId(), false);
+		//TODO: add control if is only one new facility
+		
+		if (mNewFacilities.get(0).getDevices().size() == 0){
+			Toast.makeText(mActivity, "There are no uninitialized devices.", Toast.LENGTH_LONG).show();
+			//TODO: Kontrolovat jestli se dialog spustil spatne
+		}
+				
+		
+		
+		if(savedInstanceState != null) {
+			 // Neco na ulozeni ?
+		}
+		
+		// Create the AlertDialog object and return it
+		return builder.create();
+
 	}
+	
+	@Override
+	public void onStart() {
+	    super.onStart();
+	    
+	    // Get dialog
+	    final AlertDialog dialog = (AlertDialog)getDialog();
+	    
+	    // Init GUI elements 
+	    initViews(dialog);
+		
+	    mPosButton = dialog.getButton(Dialog.BUTTON_POSITIVE);
+	    mPosButton.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				// Controll if Names arent empty
+				for (int i = 0 ; i < mNewFacilities.get(0).getDevices().size();i++) {
+					// Get new names from EditText
+					String name = ((EditText) mListOfName.getChildAt(i).findViewById(R.id.setup_sensor_item_name)).getText().toString();
+					Log.d(TAG, "Name of "+i+" is"+name);
+					if(name.isEmpty()) {
+						Toast.makeText(mActivity, getString(R.string.toast_empty_sensor_name), Toast.LENGTH_LONG).show();
+						return;
+					}
+					// Set this new name to sensor
+					mNewFacilities.get(0).getDevices().get(i).setName(name);
+					
+				}
+				
+				Location location = null;
+				// last location - means new one
+				if (mSpinner.getSelectedItemPosition() == mSpinner.getCount() - 1) {
 
-	private void initViews() {
-		mHeader = (TextView) findViewById(R.id.addsensor_add_sensor);
-		mName = (EditText) findViewById(R.id.addsensor_sensor_name);
-		mNewLocation = (EditText) findViewById(R.id.addsensor_new_location_name);
-		mSpinner = (Spinner) findViewById(R.id.addsensor_spinner_choose_location);
+					// check new location name
+					if (mNewLocation != null && mNewLocation.length() < 1) {
+						Toast.makeText(mActivity, getString(R.string.toast_need_sensor_location_name), Toast.LENGTH_LONG).show();
+						return;
+					}
 
-		if (!Controller.isDemoMode()) {
-			Log.d(TAG, "mCountofSensor: " + String.valueOf(mCountOfSensor) + " mUnInitDevices-size: " + mUnInitDevices.size());
-			// Set Header
-			mHeader.setText(getResources().getString(R.string.addsensor_setup_sensor) + " " + String.valueOf(mCountOfSensor - mUnInitDevices.size() + 1) + "/" + String.valueOf(mCountOfSensor));
-		}
+					location = new Location(Location.NEW_LOCATION_ID, mNewLocation.getText().toString(), mNewIconSpinner.getSelectedItemPosition());
+
+				} else {
+					location = (Location) mSpinner.getSelectedItem();
+				}
+				
+				// Set location to facility
+				mNewFacilities.get(0).setLocationId(location.getId());
+				
+				// Set that facility was inicialized
+				mNewFacilities.get(0).setInitialized(true);
+				// Show progress bar for saving
+				mProgress.show();
+				
+				// TODO TEMP Method tu save all devices from falicity
+				for (int i = 0 ; i < mNewFacilities.get(0).getDevices().size();i++) {
+					SaveDeviceTask task = new SaveDeviceTask();
+					Log.d(TAG, "SaveDevice - device:"+mNewFacilities.get(0).getDevices().get(i).getId()+" loc:"+location.getId());
+					task.execute(new DeviceLocationPair[] { new DeviceLocationPair(mNewFacilities.get(0).getDevices().get(i), location) });
+				}
+				
+			}
+		});
+	    
+	}
+		
+
+		
+
+	private void initViews(AlertDialog dialog) {
+		// Get GUI elements
+		mListOfName = (ListView) dialog.findViewById(R.id.setup_sensor_name_list);
+		mSpinner = (Spinner) dialog.findViewById(R.id.addsensor_spinner_choose_location);
+		mNewLocation = (EditText)  dialog.findViewById(R.id.addsensor_new_location_name);
+		TextView time = (TextView) dialog.findViewById(R.id.setup_sensor_info_text);
+				
+		// Create adapter for setting names of new sensors
+		SetupSensorListAdapter listAdapter = new SetupSensorListAdapter(mActivity,mNewFacilities.get(0));
+		CustomArrayAdapter dataAdapter = new CustomArrayAdapter(mActivity, R.layout.custom_spinner_item, getLocationsForAddSensorDialog());
+		
+		// Set layout to DataAdapter for locations
+		dataAdapter.setDropDownViewResource(R.layout.custom_spinner_dropdown_item);
+		
+		// Set listener for hide or unhide layout for add new location
 		mSpinner.setOnItemSelectedListener(new OnItemSelectedListener() {
 
 			@Override
@@ -149,22 +238,13 @@ public class SetupSensorActivityDialog extends Activity {
 				hideInputForNewLocation(true);
 			}
 		});
+		
+		// Set involved time of facility
+		time.setText(String.format("%s %s", time.getText(), mNewFacilities.get(0).getInvolveTime()));
 
-		CustomArrayAdapter dataAdapter = new CustomArrayAdapter(this, R.layout.custom_spinner_item, getLocationsForAddSensorDialog());
-		dataAdapter.setDropDownViewResource(R.layout.custom_spinner_dropdown_item);
-
+		// Set adapter to ListView and to Spinner
+		mListOfName.setAdapter(listAdapter);
 		mSpinner.setAdapter(dataAdapter);
-
-		int typeStringRes = mNewDevice.getTypeStringResource();
-		TextView type = (TextView) findViewById(R.id.addsensor_type);
-
-		if (type != null && typeStringRes > 0) {
-			type.setText(String.format("%s %s", type.getText(), getString(typeStringRes)));
-		}
-
-		TextView time = (TextView) findViewById(R.id.addsensor_involved_time);
-		time.setText(String.format("%s %s", time.getText(), mNewDevice.getFacility().getInvolveTime()));
-
 	}
 
 	/**
@@ -222,7 +302,7 @@ public class SetupSensorActivityDialog extends Activity {
 
 	/**
 	 * Initialize listeners
-	 */
+	 *//*
 	private void initButtons() {
 		// Add sensor button - add new name and location for new sensor
 		mAddButton = (Button) findViewById(R.id.addsensor_add);
@@ -271,7 +351,7 @@ public class SetupSensorActivityDialog extends Activity {
 				SetupSensorActivityDialog.this.finish();
 			}
 		});
-	}
+	}*/
 
 	/**
 	 * Method take needed inputs and switch visibility
@@ -282,11 +362,11 @@ public class SetupSensorActivityDialog extends Activity {
 	 */
 	private boolean hideInputForNewLocation(boolean hide) {
 		if (mNewLocation == null)
-			mNewLocation = (EditText) findViewById(R.id.addsensor_new_location_name);
+			mNewLocation = (EditText) getDialog().findViewById(R.id.addsensor_new_location_name);
 		if (mOrLabel == null)
-			mOrLabel = (TextView) findViewById(R.id.addsensor_or);
+			mOrLabel = (TextView) getDialog().findViewById(R.id.addsensor_or);
 		if (mNewIconSpinner == null) {
-			mNewIconSpinner = (Spinner) findViewById(R.id.addsensor_spinner_choose_new_location_icon);
+			mNewIconSpinner = (Spinner) getDialog().findViewById(R.id.addsensor_spinner_choose_new_location_icon);
 
 			// Prepare list of icons
 			List<Integer> iconsList = new ArrayList<Integer>();
@@ -295,7 +375,7 @@ public class SetupSensorActivityDialog extends Activity {
 			}
 
 			// first call need to add adapter
-			CustomIconArrayAdapter iconAdapter = new CustomIconArrayAdapter(this, R.layout.custom_spinner_icon_item, iconsList);
+			CustomIconArrayAdapter iconAdapter = new CustomIconArrayAdapter(mActivity, R.layout.custom_spinner_icon_item, iconsList);
 			iconAdapter.setDropDownViewResource(R.layout.custom_spinner_icon_dropdown_item);
 			mNewIconSpinner.setAdapter(iconAdapter);
 		}
@@ -318,11 +398,6 @@ public class SetupSensorActivityDialog extends Activity {
 		return false;
 	}
 
-	@Override
-	public void onBackPressed() {
-		LocationScreenActivity.healActivity();
-		this.finish();
-	}
 
 	private class SaveDeviceTask extends AsyncTask<DeviceLocationPair, Void, DeviceLocationPair> {
 		@Override
@@ -348,12 +423,20 @@ public class SetupSensorActivityDialog extends Activity {
 
 		@Override
 		protected void onPostExecute(DeviceLocationPair pair) {
-			Toast.makeText(getApplicationContext(), getString(pair != null ? R.string.toast_new_sensor_added : R.string.toast_new_sensor_not_added), Toast.LENGTH_LONG).show();
-			mProgress.cancel();
-
+			
+			
+			AlertDialog dialog = (AlertDialog) getDialog();
+			if(dialog != null)
+			{
+				Toast.makeText(mActivity, getString(pair != null ? R.string.toast_new_sensor_added : R.string.toast_new_sensor_not_added), Toast.LENGTH_LONG).show();
+				mProgress.cancel();
+				dialog.dismiss();
+				LocationScreenActivity.healActivity();
+			}
+/*
 			if (pair != null) {
 				// Successfuly saved, close this dialog and return back
-				SetupSensorActivityDialog.this.finish();
+				//SetupSensorActivityDialog.this.finish();
 				// controll if more sensor is uninit
 				if (mUnInitDevices.size() > 1) {
 					Bundle bundle = new Bundle();
@@ -375,19 +458,21 @@ public class SetupSensorActivityDialog extends Activity {
 				}
 
 				// Heal Location screen activity - refresh sensors
-				LocationScreenActivity.healActivity();
+				LocationScreenActivity.healActivity();*/
 			}
 		}
-	}
 
-	private class CustomArrayAdapter extends ArrayAdapter<Location> {
+
+	class CustomArrayAdapter extends ArrayAdapter<Location> {
 
 		private List<Location> mLocations;
 		private int mLayoutResource;
 		private int mDropDownLayoutResource;
+		private Context mContext;
 
 		public CustomArrayAdapter(Context context, int resource, List<Location> objects) {
 			super(context, resource, objects);
+			mContext = context;
 			mLayoutResource = resource;
 			mLocations = objects;
 		}
@@ -399,7 +484,8 @@ public class SetupSensorActivityDialog extends Activity {
 
 		@Override
 		public View getDropDownView(int position, View convertView, ViewGroup parent) {
-			LayoutInflater inflater = getLayoutInflater();
+			
+			LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 			View row = inflater.inflate(mDropDownLayoutResource, parent, false);
 
 			CheckedTextView label = (CheckedTextView) row.findViewById(R.id.custom_spinner_dropdown_label);
@@ -414,7 +500,7 @@ public class SetupSensorActivityDialog extends Activity {
 
 		@Override
 		public View getView(int position, View convertView, ViewGroup parent) {
-			LayoutInflater inflater = getLayoutInflater();
+			LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 			View row = inflater.inflate(mLayoutResource, parent, false);
 
 			TextView label = (TextView) row.findViewById(R.id.custom_spinner_label);
@@ -427,16 +513,18 @@ public class SetupSensorActivityDialog extends Activity {
 		}
 	}
 
-	private class CustomIconArrayAdapter extends ArrayAdapter<Integer> {
+	class CustomIconArrayAdapter extends ArrayAdapter<Integer> {
 
 		private List<Integer> mIcons;
 		private int mLayoutResource;
 		private int mDropDownLayoutResource;
+		private Context mContext;
 
 		public CustomIconArrayAdapter(Context context, int resource, List<Integer> objects) {
 			super(context, resource, objects);
 			mLayoutResource = resource;
 			mIcons = objects;
+			mContext = context;
 		}
 
 		@Override
@@ -446,7 +534,7 @@ public class SetupSensorActivityDialog extends Activity {
 
 		@Override
 		public View getDropDownView(int position, View convertView, ViewGroup parent) {
-			LayoutInflater inflater = getLayoutInflater();
+			LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 			View row = inflater.inflate(mDropDownLayoutResource, parent, false);
 
 			ImageView icon = (ImageView) row.findViewById(R.id.custom_spinner_icon_dropdown_icon);
@@ -457,7 +545,7 @@ public class SetupSensorActivityDialog extends Activity {
 
 		@Override
 		public View getView(int position, View convertView, ViewGroup parent) {
-			LayoutInflater inflater = getLayoutInflater();
+			LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 			View row = inflater.inflate(mLayoutResource, parent, false);
 
 			ImageView icon = (ImageView) row.findViewById(R.id.custom_spinner_icon_icon);

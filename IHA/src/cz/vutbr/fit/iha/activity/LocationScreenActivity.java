@@ -45,10 +45,10 @@ import cz.vutbr.fit.iha.MenuListAdapter;
 import cz.vutbr.fit.iha.R;
 import cz.vutbr.fit.iha.SensorListAdapter;
 import cz.vutbr.fit.iha.activity.dialog.AddAdapterFragmentDialog;
-import cz.vutbr.fit.iha.activity.dialog.AddSensorActivityDialog;
+import cz.vutbr.fit.iha.activity.dialog.AddSensorFragmentDialog;
 import cz.vutbr.fit.iha.activity.dialog.CustomAlertDialog;
 import cz.vutbr.fit.iha.activity.dialog.InfoDialogFragment;
-import cz.vutbr.fit.iha.activity.dialog.SetupSensorActivityDialog;
+import cz.vutbr.fit.iha.activity.dialog.SetupSensorFragmentDialog;
 import cz.vutbr.fit.iha.activity.menuItem.AdapterMenuItem;
 import cz.vutbr.fit.iha.activity.menuItem.EmptyMenuItem;
 import cz.vutbr.fit.iha.activity.menuItem.GroupImageMenuItem;
@@ -570,8 +570,8 @@ public class LocationScreenActivity extends BaseApplicationActivity {
 				mController.unignoreUninitialized(mActiveAdapterId);
 
 				inBackground = true;
-				Intent intent = new Intent(LocationScreenActivity.this, AddSensorActivityDialog.class);
-				startActivity(intent);
+				DialogFragment newFragment = new AddSensorFragmentDialog();
+			    newFragment.show(getSupportFragmentManager(), "missiles");
 				return;
 			}
 		});
@@ -629,8 +629,23 @@ public class LocationScreenActivity extends BaseApplicationActivity {
 		// If we have adapters (but we're right now in empty room) show list so we can pull it to refresh
 		mSensorList.setVisibility(haveDevices || haveAdapters ? View.VISIBLE : View.GONE);
 
+		OnClickListener AddSensorListener = new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				Log.d(TAG, "HERE ADD SENSOR +");
+				mController.unignoreUninitialized(mActiveAdapterId);
+
+				inBackground = true;
+				//Intent intent = new Intent(LocationScreenActivity.this, AddSensorFragmentDialog.class);
+				//startActivity(intent);
+				
+				DialogFragment newFragment = new AddSensorFragmentDialog();
+			    newFragment.show(getSupportFragmentManager(), "missiles");
+			}
+		};
 		// Update list adapter
-		mSensorAdapter = new SensorListAdapter(LocationScreenActivity.this, adapterId, title, value, unit, time, icon, relPos, facSize, mCntOfAllDev > 0);
+		mSensorAdapter = new SensorListAdapter(LocationScreenActivity.this, adapterId, title, value, unit, time, icon, relPos, facSize, mCntOfAllDev > 0,AddSensorListener);
 		mSensorList.setAdapter(mSensorAdapter);
 
 		if (haveDevices) {
@@ -643,8 +658,11 @@ public class LocationScreenActivity extends BaseApplicationActivity {
 						mController.unignoreUninitialized(mActiveAdapterId);
 	
 						inBackground = true;
-						Intent intent = new Intent(LocationScreenActivity.this, AddSensorActivityDialog.class);
-						startActivity(intent);
+						//Intent intent = new Intent(LocationScreenActivity.this, AddSensorFragmentDialog.class);
+						//startActivity(intent);
+						
+						DialogFragment newFragment = new AddSensorFragmentDialog();
+					    newFragment.show(getSupportFragmentManager(), "missiles");
 						return;
 					}
 	
@@ -750,8 +768,10 @@ public class LocationScreenActivity extends BaseApplicationActivity {
 		if (adapter != null && mController.getFacilitiesByAdapter(adapter.getId()).isEmpty()) {
 			// Show activity for adding new sensor, when this adapter doesn't have any yet
 			Log.i(TAG, String.format("%s is empty", adapter.getName()));
-			Intent intent = new Intent(this, AddSensorActivityDialog.class);
-			startActivity(intent);
+			//Intent intent = new Intent(this, AddSensorFragmentDialog.class);
+			//startActivity(intent);
+			DialogFragment newFragment = new AddSensorFragmentDialog();
+		    newFragment.show(getSupportFragmentManager(), "missiles");
 		}
 	}
 	
@@ -789,7 +809,7 @@ public class LocationScreenActivity extends BaseApplicationActivity {
 			public void onClick(View v) {
 				// Open activity for adding new facility
 				inBackground = true;
-				Intent intent = new Intent(LocationScreenActivity.this, SetupSensorActivityDialog.class);
+				Intent intent = new Intent(LocationScreenActivity.this, SetupSensorFragmentDialog.class);
 				intent.putExtra(Constants.ADDSENSOR_COUNT_SENSOR, uninitializedFacilities.size());
 				startActivity(intent);
 				mDialog.dismiss();

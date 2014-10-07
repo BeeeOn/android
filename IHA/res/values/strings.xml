@@ -41,14 +41,17 @@
     <string name="login_app_name">Intelligent Home Anywhere</string>
     <string name="login_or_use">or use</string>
     <string name="addsensor_add_sensor">Add sensor</string>
-    <string name="addsensor_setup_sensor">Setup sensor</string>
+    <string name="addsensor_setup_sensor">Setup facility</string>
     <string name="addsensor_or">or</string>
     <string name="sensordetail_last_value">Last value:\u0020</string>
     <string name="sensordetail_refresh_time">Refresh inteval: </string>
     <string name="sensordetail_battery_state">Battery state</string>
     <string name="update_needed">Please update application</string>
     <string name="addsensor_type">Type of sensor:</string>
-    <string name="addsensor_involved_time">Activated at:</string>
+    <string name="setup_sensor_info_text">Please, setup your new facility which was activated at </string>
+    <string name="setup_sensor_header_names">Sensors names</string>
+    <string name="setup_sensor_set_name">Set name of sensor</string>
+    <string name="setup_sensor_header_location">Location</string>
     <string name="addadapter_add_adapter">Add adapter</string>
     <string name="registration_label">New account</string>
     <string name="registration_serial_number">For adapter with serial number:</string>
@@ -88,6 +91,7 @@
 	<string name="toast_adapter_removed">Adapter has been removed.</string>
 	<string name="toast_no_adapter">You have no registered adapter.</string>
 	<string name="toast_ignore_uninitialized_info">You can add these devices later by clicking on (+)</string>
+	<string name="toast_empty_sensor_name">Fill names of all sensors !</string>
     
     <!-- Progress -->
     <string name="progress_signing">Signing to server&#8230;</string>
