@@ -179,7 +179,7 @@ public class LocationScreenActivity extends BaseApplicationActivity {
 		redrawMenu();
 		
 		checkNoAdapters();
-		checkUninitializedDevices();
+		//checkUninitializedDevices();
 		// checkNoDevices(); // commented because this should be used only after registering new adapter
 	}
 

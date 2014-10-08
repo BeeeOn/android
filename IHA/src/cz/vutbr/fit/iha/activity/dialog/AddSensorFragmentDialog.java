@@ -54,7 +54,7 @@ public class AddSensorFragmentDialog extends TrackDialogFragment {
 	private static final String TIMER_VALUE_PAUSE = "AddSensorTimerValueOnPause";
 	//private static final String TIMER_BOOL_PAUSE = "AddSensorTimerBooleanOnPause";
 	
-	private static final boolean DEBUG_MODE = true;
+	private static final boolean DEBUG_MODE = false;
 
 	@Override
 	public Dialog onCreateDialog(Bundle savedInstanceState) {

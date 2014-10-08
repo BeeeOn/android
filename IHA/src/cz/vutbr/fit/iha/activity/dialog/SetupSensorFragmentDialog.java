@@ -65,6 +65,8 @@ public class SetupSensorFragmentDialog extends TrackDialogFragment {
 	private Spinner mSpinner;
 	private Spinner mNewIconSpinner;
 	private Button mPosButton;
+	
+	private boolean isError = false;
 
 
 	@Override
@@ -110,6 +112,7 @@ public class SetupSensorFragmentDialog extends TrackDialogFragment {
 		if (mAdapter == null) {
 			Toast.makeText(mActivity, getResources().getString(R.string.toast_no_adapter), Toast.LENGTH_LONG).show();
 			//TODO: Ukoncit dialog ?
+			isError = true;
 		}
 		
 		//mUnInitDevices = new ArrayList<BaseDevice>();
@@ -117,9 +120,10 @@ public class SetupSensorFragmentDialog extends TrackDialogFragment {
 		mNewFacilities = (List<Facility>) mController.getUninitializedFacilities(mAdapter.getId(), false);
 		//TODO: add control if is only one new facility
 		
-		if (mNewFacilities.get(0).getDevices().size() == 0){
+		if (mNewFacilities.isEmpty()){
 			Toast.makeText(mActivity, "There are no uninitialized devices.", Toast.LENGTH_LONG).show();
 			//TODO: Kontrolovat jestli se dialog spustil spatne
+			isError = true;
 		}
 				
 		
@@ -139,6 +143,11 @@ public class SetupSensorFragmentDialog extends TrackDialogFragment {
 	    
 	    // Get dialog
 	    final AlertDialog dialog = (AlertDialog)getDialog();
+	    
+	    if(isError){
+	    	dialog.dismiss();
+	    	return;
+	    }
 	    
 	    // Init GUI elements 
 	    initViews(dialog);
