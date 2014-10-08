@@ -74,6 +74,12 @@ public class SensorDetailActivity extends BaseApplicationActivity {
 			mTask.execute(new String[] { mLocationOfSensorID });
 		}
 	}
+	
+	@Override
+	protected void onAppResume() {}
+
+	@Override
+	protected void onAppPause() {}
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {

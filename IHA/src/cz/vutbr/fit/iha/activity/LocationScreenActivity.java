@@ -93,7 +93,6 @@ public class LocationScreenActivity extends BaseApplicationActivity {
 	private String mActLocID;
 
 	private static boolean inBackground = false;
-	private static boolean isPaused = false;
 	private static boolean isClosing = false;
 
 	/**
@@ -172,12 +171,10 @@ public class LocationScreenActivity extends BaseApplicationActivity {
 
 	}
 
-	public void onResume() {
-		super.onResume();
-		Log.d(TAG, "onResume  , inBackground: " + String.valueOf(inBackground));
+	public void onAppResume() {
+		Log.d(TAG, "onAppResume  , inBackground: " + String.valueOf(inBackground));
 
 		backPressed = false;
-		isPaused = false;
 		
 		redrawMenu();
 		
@@ -186,9 +183,7 @@ public class LocationScreenActivity extends BaseApplicationActivity {
 		// checkNoDevices(); // commented because this should be used only after registering new adapter
 	}
 
-	public void onPause() {
-		super.onPause();
-		isPaused = true;
+	public void onAppPause() {
 		mTimeHandler.removeCallbacks(mTimeRun);
 	}
 

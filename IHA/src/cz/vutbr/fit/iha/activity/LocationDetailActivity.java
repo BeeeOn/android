@@ -29,6 +29,11 @@ public class LocationDetailActivity extends BaseApplicationActivity {
 		ft.commit();
 	}
 
+	@Override
+	protected void onAppResume() {}
+
+	@Override
+	protected void onAppPause() {}
 	
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {

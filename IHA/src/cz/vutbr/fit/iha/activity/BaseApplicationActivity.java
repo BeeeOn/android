@@ -13,6 +13,8 @@ public abstract class BaseApplicationActivity extends BaseActivity {
 
 	private boolean triedLoginAlready = false;
 	
+	protected static boolean isPaused = false;
+	
 	@Override
 	public void onResume() {
 		super.onResume();
@@ -24,9 +26,21 @@ public abstract class BaseApplicationActivity extends BaseActivity {
 			} else {
 				finish();
 			}
+			return;
 		} else {
 			triedLoginAlready = false;
 		}
+		
+		isPaused = false;
+		onAppResume();
+	}
+	
+	@Override
+	public void onPause() {
+		super.onPause();
+		
+		isPaused = true;
+		onAppPause();
 	}
 	
 	public static void redirectToLogin(Context context) {
@@ -36,5 +50,15 @@ public abstract class BaseApplicationActivity extends BaseActivity {
 
 		context.startActivity(intent);
 	}
+	
+	/**
+	 * This is called after onResume(), but only when user is correctly logged in
+	 */
+	protected abstract void onAppResume();
+	
+	/**
+	 * This is called after onPause()
+	 */
+	protected abstract void onAppPause();
 
 }
