@@ -129,7 +129,7 @@ public final class Controller {
 
 	public SharedPreferences getUserSettings() throws IllegalStateException {
 		String userId = mHousehold.user.getId();
-		if (userId.isEmpty())
+		if (userId == null || userId.isEmpty())
 			throw new IllegalStateException("ActualUser is not initialized (logged in) yet");
 
 		return mPersistence.getSettings(userId);
