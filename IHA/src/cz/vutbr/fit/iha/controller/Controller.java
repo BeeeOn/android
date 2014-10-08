@@ -155,7 +155,7 @@ public final class Controller {
 		// TODO: catch and throw proper exception
 		// FIXME: after some time there should be picture in ActualUser object, should save to mPersistence
 		try {
-			if (mNetwork.signIn(email, GcmHelper.getGCMRegistrationId(mContext))) { //FIXME: gcmid
+			if (mNetwork.signIn(email, GcmHelper.getGCMRegistrationId(mContext))) { // FIXME: gcmid
 				mPersistence.saveLastEmail(email);
 				mPersistence.initializeDefaultSettings(email);
 				return true;
@@ -270,10 +270,10 @@ public final class Controller {
 		if (mDemoMode || !isLoggedIn()) {
 			return false;
 		}
-			
+
 		return mHousehold.adaptersModel.reloadAdapters(forceReload);
 	}
-	
+
 	/**
 	 * This CAN'T be called on UI thread!
 	 * 
@@ -285,10 +285,10 @@ public final class Controller {
 		if (mDemoMode || !isLoggedIn()) {
 			return false;
 		}
-			
+
 		return mHousehold.locationsModel.reloadLocationsByAdapter(adapterId, forceReload);
 	}
-	
+
 	/**
 	 * This CAN'T be called on UI thread!
 	 * 
@@ -300,10 +300,10 @@ public final class Controller {
 		if (mDemoMode || !isLoggedIn()) {
 			return false;
 		}
-			
+
 		return mHousehold.facilitiesModel.reloadFacilitiesByAdapter(adapterId, forceReload);
 	}
-	
+
 	/**
 	 * This CAN'T be called on UI thread!
 	 * 
@@ -315,10 +315,10 @@ public final class Controller {
 		if (mDemoMode || !isLoggedIn()) {
 			return false;
 		}
-			
+
 		return mHousehold.uninitializedFacilitiesModel.reloadUninitializedFacilitiesByAdapter(adapterId, forceReload);
-	}	
-	
+	}
+
 	/**
 	 * This CAN'T be called on UI thread!
 	 * 
@@ -377,11 +377,11 @@ public final class Controller {
 				mHousehold.activeAdapter = adapters.get(lastId);
 			} else {
 				for (Adapter adapter : adapters.values()) {
-					mHousehold.activeAdapter = adapter;	
+					mHousehold.activeAdapter = adapter;
 					break;
 				}
 			}
-			
+
 			if (mHousehold.activeAdapter != null)
 				mPersistence.saveActiveAdapter(mHousehold.user.getId(), mHousehold.activeAdapter.getId());
 		}
@@ -402,25 +402,24 @@ public final class Controller {
 		Map<String, Adapter> adapters = mHousehold.adaptersModel.getAdaptersMap();
 		if (!adapters.containsKey(id)) {
 			Log.d(TAG, String.format("Can't set active adapter to '%s'", id));
-			return false;	
+			return false;
 		}
 
 		Adapter adapter = adapters.get(id);
 		mHousehold.activeAdapter = adapter;
 		Log.d(TAG, String.format("Set active adapter to '%s'", adapter.getName()));
 		mPersistence.saveActiveAdapter(mHousehold.user.getId(), adapter.getId());
-		
+
 		// Load locations and facilities, if needed
 		reloadLocations(id, forceReload);
 		reloadFacilitiesByAdapter(id, forceReload);
-		
+
 		return true;
 	}
 
 	/**
-	 * Registers new adapter to server.
-	 * Automatically reloads list of adapters, set this adapter as active and load all its sensors.
-	 *  
+	 * Registers new adapter to server. Automatically reloads list of adapters, set this adapter as active and load all its sensors.
+	 * 
 	 * This CAN'T be called on UI thread!
 	 * 
 	 * @param id
@@ -670,7 +669,7 @@ public final class Controller {
 	public List<Facility> getUninitializedFacilities(String adapterId, boolean withIgnored) {
 		return mHousehold.uninitializedFacilitiesModel.getUninitializedFacilitiesByAdapter(adapterId, withIgnored);
 	}
-	
+
 	/**
 	 * Set all uninitialized facilities from adapter as ignored (won't be returned by calling getUninitializedFacilities)
 	 * 
@@ -710,6 +709,21 @@ public final class Controller {
 	}
 
 	/**
+	 * Save specified settings of facility to server.
+	 * 
+	 * This CAN'T be called on UI thread!
+	 * 
+	 * @param facility
+	 * @param what
+	 *            type of settings to save
+	 * @return true on success, false otherwise
+	 */
+	public boolean saveFacility(Facility facility, EnumSet<SaveDevice> what) {
+		// FIXME: fix demoMode
+		return mHousehold.facilitiesModel.saveFacility(facility, what);
+	}
+
+	/**
 	 * Save specified settings of device to server.
 	 * 
 	 * This CAN'T be called on UI thread!
@@ -720,29 +734,8 @@ public final class Controller {
 	 * @return true on success, false otherwise
 	 */
 	public boolean saveDevice(BaseDevice device, EnumSet<SaveDevice> what) {
-		Facility facility = device.getFacility();
-
-		if (mDemoMode) {
-			facility.setInitialized(true);
-			// FIXME: when implemented working with uninitialized devices
-			//refreshFacility(facility);
-			return true;
-		}
-
-		boolean result = false;
-
-		try {
-			Adapter adapter = getAdapter(facility.getAdapterId());
-			Log.d(TAG, String.format("Adapter ID: %s, device: %s", adapter.getId(), facility.getAddress()));
-			if (adapter != null) {
-				result = mNetwork.setDevice(adapter.getId(), device, what);
-				result = updateFacility(facility);
-			}
-		} catch (NetworkException e) {
-			e.printStackTrace();
-		}
-
-		return result;
+		// FIXME: fix demoMode
+		return mHousehold.facilitiesModel.saveDevice(device, what);
 	}
 
 	/**

@@ -148,8 +148,10 @@ public class SetupSensorFragmentDialog extends TrackDialogFragment {
 			
 			@Override
 			public void onClick(View v) {
+				Facility newFacility = mNewFacilities.get(0);
+				
 				// Controll if Names arent empty
-				for (int i = 0 ; i < mNewFacilities.get(0).getDevices().size();i++) {
+				for (int i = 0 ; i < newFacility.getDevices().size();i++) {
 					// Get new names from EditText
 					String name = ((EditText) mListOfName.getChildAt(i).findViewById(R.id.setup_sensor_item_name)).getText().toString();
 					Log.d(TAG, "Name of "+i+" is"+name);
@@ -158,8 +160,8 @@ public class SetupSensorFragmentDialog extends TrackDialogFragment {
 						return;
 					}
 					// Set this new name to sensor
-					mNewFacilities.get(0).getDevices().get(i).setName(name);
-					
+					newFacility.getDevices().get(i).setName(name);
+
 				}
 				
 				Location location = null;
@@ -179,20 +181,17 @@ public class SetupSensorFragmentDialog extends TrackDialogFragment {
 				}
 				
 				// Set location to facility
-				mNewFacilities.get(0).setLocationId(location.getId());
+				newFacility.setLocationId(location.getId());
 				
 				// Set that facility was inicialized
-				mNewFacilities.get(0).setInitialized(true);
+				newFacility.setInitialized(true);
 				// Show progress bar for saving
 				mProgress.show();
 				
-				// TODO TEMP Method tu save all devices from falicity
-				for (int i = 0 ; i < mNewFacilities.get(0).getDevices().size();i++) {
-					SaveDeviceTask task = new SaveDeviceTask();
-					Log.d(TAG, "SaveDevice - device:"+mNewFacilities.get(0).getDevices().get(i).getId()+" loc:"+location.getId());
-					task.execute(new DeviceLocationPair[] { new DeviceLocationPair(mNewFacilities.get(0).getDevices().get(i), location) });
-				}
-				
+				// Save that facility
+				SaveDeviceTask task = new SaveDeviceTask();
+				Log.d(TAG, String.format("SaveDevice - device: %s, loc: %s", newFacility.getId(), location.getId()));
+				task.execute(new DeviceLocationPair[] { new DeviceLocationPair(newFacility, location) });
 			}
 		});
 	    
@@ -291,11 +290,11 @@ public class SetupSensorFragmentDialog extends TrackDialogFragment {
 	 * Represents pair of device and location for saving it to server
 	 */
 	private class DeviceLocationPair {
-		public final BaseDevice device;
+		public final Facility facility;
 		public final Location location;
 
-		public DeviceLocationPair(final BaseDevice device, final Location location) {
-			this.device = device;
+		public DeviceLocationPair(final Facility facility, final Location location) {
+			this.facility = facility;
 			this.location = location;
 		}
 	}
@@ -399,9 +398,9 @@ public class SetupSensorFragmentDialog extends TrackDialogFragment {
 	}
 
 
-	private class SaveDeviceTask extends AsyncTask<DeviceLocationPair, Void, DeviceLocationPair> {
+	private class SaveDeviceTask extends AsyncTask<DeviceLocationPair, Void, Boolean> {
 		@Override
-		protected DeviceLocationPair doInBackground(DeviceLocationPair... pairs) {
+		protected Boolean doInBackground(DeviceLocationPair... pairs) {
 			DeviceLocationPair pair = pairs[0]; // expects only one device at a time is sent there
 
 			if (pair.location.getId().equals(Location.NEW_LOCATION_ID)) {
@@ -410,31 +409,27 @@ public class SetupSensorFragmentDialog extends TrackDialogFragment {
 				if (newLocation == null)
 					return null;
 
-				pair.device.getFacility().setLocationId(newLocation.getId());
+				pair.facility.setLocationId(newLocation.getId());
 			}
 
 			EnumSet<SaveDevice> what = EnumSet.of(SaveDevice.SAVE_LOCATION, SaveDevice.SAVE_NAME);
-			if (!mController.saveDevice(pair.device, what)) {
-				return null;
-			}
-
-			return pair;
+		
+			return mController.saveFacility(pair.facility, what);
 		}
 
 		@Override
-		protected void onPostExecute(DeviceLocationPair pair) {
-			
+		protected void onPostExecute(Boolean success) {
 			
 			AlertDialog dialog = (AlertDialog) getDialog();
 			if(dialog != null)
 			{
-				Toast.makeText(mActivity, getString(pair != null ? R.string.toast_new_sensor_added : R.string.toast_new_sensor_not_added), Toast.LENGTH_LONG).show();
+				Toast.makeText(mActivity, getString(success ? R.string.toast_new_sensor_added : R.string.toast_new_sensor_not_added), Toast.LENGTH_LONG).show();
 				mProgress.cancel();
 				dialog.dismiss();
 				LocationScreenActivity.healActivity();
 			}
 /*
-			if (pair != null) {
+			if (success) {
 				// Successfuly saved, close this dialog and return back
 				//SetupSensorActivityDialog.this.finish();
 				// controll if more sensor is uninit

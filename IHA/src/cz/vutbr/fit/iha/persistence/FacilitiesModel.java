@@ -1,12 +1,15 @@
 package cz.vutbr.fit.iha.persistence;
 
 import java.util.ArrayList;
+import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.joda.time.DateTime;
 
+import cz.vutbr.fit.iha.adapter.device.BaseDevice;
+import cz.vutbr.fit.iha.adapter.device.BaseDevice.SaveDevice;
 import cz.vutbr.fit.iha.adapter.device.Facility;
 import cz.vutbr.fit.iha.network.Network;
 import cz.vutbr.fit.iha.network.exception.NetworkException;
@@ -127,21 +130,69 @@ public class FacilitiesModel {
 		// TODO: implement this
 	}
 
-	public boolean refreshFacility(Facility facility) {
-		// FIXME: needs review and refactoring... it is just copied from Controller
+	private void updateFacilityInMap(Facility facility) {
+		// TODO: rewrite better?
+		String adapterId = facility.getAdapterId();
 		
+		Map<String, Facility> adapterFacilities = mFacilities.get(adapterId);
+		if (adapterFacilities == null) {
+			adapterFacilities = new HashMap<String, Facility>();
+			mFacilities.put(adapterId, adapterFacilities);
+		}
+
+		Facility oldFacility = adapterFacilities.get(facility.getId());
+		if (oldFacility == null) {
+			adapterFacilities.put(facility.getId(), facility);
+		} else {
+			oldFacility.replaceData(facility);
+		}
+	}
+	
+	/**
+	 * This reloads data of facility from server...
+	 */
+	public boolean refreshFacility(Facility facility) {
 		try {
 			Facility newFacility = mNetwork.getFacility(facility.getAdapterId(), facility);
 			if (newFacility == null)
 				return false;
 
-			facility.replaceData(newFacility);
+			updateFacilityInMap(facility);
 		} catch (NetworkException e) {
 			e.printStackTrace();
 			return false;
 		}
 
 		return true;
+	}
+
+	public boolean saveFacility(Facility facility, EnumSet<SaveDevice> what) {
+		boolean result = false;
+
+		try {
+			result = mNetwork.setDevices(facility.getAdapterId(), facility.getDevices()); //, what); // FIXME: add what, when supported in Network 
+			result = refreshFacility(facility);
+		} catch (NetworkException e) {
+			e.printStackTrace();
+		}
+
+		return result;
+	}
+	
+	public boolean saveDevice(BaseDevice device, EnumSet<SaveDevice> what) {
+		// FIXME: This should be rewrited somehow
+		Facility facility = device.getFacility();
+
+		boolean result = false;
+
+		try {
+			result = mNetwork.setDevice(facility.getAdapterId(), device, what);
+			//result = updateFacility(facility);
+		} catch (NetworkException e) {
+			e.printStackTrace();
+		}
+
+		return result;
 	}
 
 }
