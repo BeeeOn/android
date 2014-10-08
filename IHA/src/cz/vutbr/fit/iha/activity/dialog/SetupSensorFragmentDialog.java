@@ -427,6 +427,8 @@ public class SetupSensorFragmentDialog extends TrackDialogFragment {
 				mProgress.cancel();
 				dialog.dismiss();
 				LocationScreenActivity.healActivity();
+				mActivity.redrawMenu();
+				mActivity.redrawDevices();
 			}
 /*
 			if (success) {
