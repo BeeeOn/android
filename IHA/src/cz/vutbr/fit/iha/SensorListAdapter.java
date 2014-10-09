@@ -3,7 +3,6 @@ package cz.vutbr.fit.iha;
 import org.joda.time.DateTime;
 
 import android.content.Context;
-import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -13,7 +12,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.TextView;
-import cz.vutbr.fit.iha.activity.dialog.AddSensorFragmentDialog;
 import cz.vutbr.fit.iha.adapter.Adapter;
 import cz.vutbr.fit.iha.controller.Controller;
 import cz.vutbr.fit.iha.util.Timezone;
@@ -57,7 +55,7 @@ public class SensorListAdapter extends BaseAdapter {
 		mRelPos = relPos;
 		mFacSize = facSize;
 		mLength = mTitle.length;
-		mController = Controller.getInstance(context);
+		mController = Controller.getInstance(context.getApplicationContext());
 		mShowAdd = showAdd;
 		mListener = listener;
 	}

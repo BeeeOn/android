@@ -63,7 +63,7 @@ public class WidgetConfigurationActivity extends BaseActivity {
 			return;
 		}
 		
-		mController = Controller.getInstance(this);
+		mController = Controller.getInstance(getApplicationContext());
 
 		// if the user press BACK, do not add any widget
 		Intent resultValue = new Intent();

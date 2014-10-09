@@ -19,7 +19,7 @@ public abstract class BaseApplicationActivity extends BaseActivity {
 	public void onResume() {
 		super.onResume();
 	
-		if (!Controller.getInstance(this).isLoggedIn()) {
+		if (!Controller.getInstance(getApplicationContext()).isLoggedIn()) {
 			if (!triedLoginAlready) {
 				triedLoginAlready = true;
 				redirectToLogin(this);

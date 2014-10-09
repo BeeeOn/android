@@ -82,7 +82,7 @@ public class LoginActivity extends BaseActivity {
 		mContext = this;
 
 		// Get controller
-		mController = Controller.getInstance(this);
+		mController = Controller.getInstance(getApplicationContext());
 
 		// Prepare progress dialog
 		mProgress = new ProgressDialog(mActivity);
@@ -230,8 +230,8 @@ public class LoginActivity extends BaseActivity {
 
 	protected void setDemoMode(boolean demoMode) {
 		// After changing demo mode must be controller reloaded
-		Controller.setDemoMode(this, demoMode);
-		mController = Controller.getInstance(this);
+		Controller.setDemoMode(getApplicationContext(), demoMode);
+		mController = Controller.getInstance(getApplicationContext());
 	}
 
 	/**

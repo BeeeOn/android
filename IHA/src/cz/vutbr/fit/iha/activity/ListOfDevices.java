@@ -43,7 +43,7 @@ public class ListOfDevices extends SherlockFragment {
 		ready = true;
 
 		mActivity = (LocationScreenActivity) getActivity();
-		mController = Controller.getInstance(mActivity);
+		mController = Controller.getInstance(mActivity.getApplicationContext());
 		
 		// Init swipe-refreshig layout
 		mSwipeLayout = (SwipeRefreshLayout) mActivity.findViewById(R.id.swipe_container);

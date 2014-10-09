@@ -62,7 +62,7 @@ public class AddSensorFragmentDialog extends TrackDialogFragment {
 		
 		// Get activity and controller
 		mActivity = (LocationScreenActivity)getActivity();
-		mController = Controller.getInstance(mActivity);
+		mController = Controller.getInstance(mActivity.getApplicationContext());
 		
 		// Use the Builder class for convenient dialog construction
 		AlertDialog.Builder builder = new AlertDialog.Builder(mActivity);

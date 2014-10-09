@@ -175,10 +175,10 @@ public class SensorDetailFragment extends SherlockFragment {
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		// Get controller
-		mController = Controller.getInstance(getActivity());
-
 		mActivity = (SensorDetailActivity) getActivity();
+		
+		// Get controller
+		mController = Controller.getInstance(mActivity.getApplicationContext());
 
 		View view = inflater.inflate(R.layout.activity_sensor_detail_screen, container, false);
 		Log.d(TAG, String.format("this position: %s , selected item: %s ", mCurPageNumber, mSelPageNumber));

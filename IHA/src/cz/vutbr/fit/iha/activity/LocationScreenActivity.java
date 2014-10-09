@@ -64,6 +64,7 @@ import cz.vutbr.fit.iha.controller.Controller;
 import cz.vutbr.fit.iha.household.ActualUser;
 import cz.vutbr.fit.iha.persistence.Persistence;
 import cz.vutbr.fit.iha.thread.ToastMessageThread;
+import cz.vutbr.fit.iha.util.Timezone;
 
 /**
  * Activity class for choosing location
@@ -386,7 +387,7 @@ public class LocationScreenActivity extends BaseApplicationActivity {
 
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-				Controller controller = Controller.getInstance(LocationScreenActivity.this);
+				Controller controller = Controller.getInstance(getApplicationContext());
 				cz.vutbr.fit.iha.activity.menuItem.MenuItem item = (cz.vutbr.fit.iha.activity.menuItem.MenuItem) mMenuAdapter.getItem(position);
 				switch (item.getType()) {
 				case ADAPTER:
@@ -639,8 +640,9 @@ public class LocationScreenActivity extends BaseApplicationActivity {
 			    newFragment.show(getSupportFragmentManager(), "missiles");
 			}
 		};
+		
 		// Update list adapter
-		mSensorAdapter = new SensorListAdapter(LocationScreenActivity.this, adapterId, title, value, unit, time, icon, relPos, facSize, mCntOfAllDev > 0,AddSensorListener);
+		mSensorAdapter = new SensorListAdapter(this, adapterId, title, value, unit, time, icon, relPos, facSize, mCntOfAllDev > 0,AddSensorListener);
 		mSensorList.setAdapter(mSensorAdapter);
 
 		if (haveDevices) {

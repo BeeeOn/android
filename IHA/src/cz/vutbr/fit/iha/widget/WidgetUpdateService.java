@@ -146,7 +146,7 @@ public class WidgetUpdateService extends Service {
 			Log.v(TAG, String.format("Updating widget %d", widgetId));
 
 			String deviceId = settings.getString(Constants.WIDGET_PREF_DEVICE, "");
-			BaseDevice device = Controller.getInstance(this).getDevice(adapterId, deviceId);
+			BaseDevice device = Controller.getInstance(getApplicationContext()).getDevice(adapterId, deviceId);
 
 			// save last update time
 			settings.edit().putLong(Constants.WIDGET_PREF_LAST_UPDATE, now).commit();

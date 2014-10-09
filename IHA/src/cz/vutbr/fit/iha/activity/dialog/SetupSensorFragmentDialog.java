@@ -75,7 +75,7 @@ public class SetupSensorFragmentDialog extends TrackDialogFragment {
 		
 		// Get activity and controller
 		mActivity = (LocationScreenActivity)getActivity();
-		mController = Controller.getInstance(mActivity);
+		mController = Controller.getInstance(mActivity.getApplicationContext());
 		
 		
 		// Prepare progress dialog

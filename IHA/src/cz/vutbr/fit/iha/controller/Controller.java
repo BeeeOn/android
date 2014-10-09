@@ -63,8 +63,8 @@ public final class Controller {
 	/**
 	 * Return singleton instance of this Controller. This is thread-safe.
 	 * 
-	 * @param global
-	 *            application context
+	 * @param context
+	 *            This must be the global application context.
 	 * @return singleton instance of controller
 	 */
 	public static Controller getInstance(Context context) {
@@ -82,8 +82,8 @@ public final class Controller {
 	/**
 	 * Private constructor.
 	 * 
-	 * @param global
-	 *            application context
+	 * @param context
+	 *            This must be the global application context.
 	 */
 	private Controller(Context context) {
 		mContext = context;
@@ -94,6 +94,11 @@ public final class Controller {
 		mNetwork.setUser(mHousehold.user);
 	}
 
+	/**
+	 * @param context
+	 *            This must be the global Application context.
+	 * @param demoMode
+	 */
 	public static synchronized void setDemoMode(Context context, boolean demoMode) {
 		if (mDemoMode == demoMode)
 			return;

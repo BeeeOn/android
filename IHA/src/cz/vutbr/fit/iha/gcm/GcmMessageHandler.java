@@ -62,12 +62,14 @@ public class GcmMessageHandler extends IntentService {
 				GcmBroadcastReceiver.completeWakefulIntent(intent);
 				return;
 			}
+			
+			Controller controller = Controller.getInstance(getApplicationContext());
 
 			// control email if it equals with actual user
-			if (!notification.getEmail().equals(Controller.getInstance(getApplicationContext()).getLastEmail())) {
+			if (!notification.getEmail().equals(controller.getLastEmail())) {
 				// TODO poslat na server delete GCM ID
 				Log.w(GcmHelper.TAG_GCM, "Notification email wasn't veryfied. Server GCM ID will be deleted.");
-				Log.w(GcmHelper.TAG_GCM, notification.getEmail() + " != " + Controller.getInstance(this).getLastEmail());
+				Log.w(GcmHelper.TAG_GCM, notification.getEmail() + " != " + controller.getLastEmail());
 			}
 			// EVERYTHING VERYFIED SUCCESFULY, MAKE ACTION HERE
 			else {

@@ -40,7 +40,7 @@ public class SettingsMainActivity extends SherlockPreferenceActivity implements 
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		mController = Controller.getInstance(this);
+		mController = Controller.getInstance(getApplicationContext());
 
 		getSupportActionBar().setHomeButtonEnabled(true);
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);

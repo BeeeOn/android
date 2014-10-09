@@ -21,7 +21,7 @@ public class LocationDetailFragment extends SherlockFragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		// Get controller
-		mController = Controller.getInstance(getActivity());
+		mController = Controller.getInstance(getActivity().getApplicationContext());
 
 		Bundle bundle = this.getArguments();
 		String locationID = bundle.getString("locationID");

@@ -56,7 +56,7 @@ public class SensorDetailActivity extends BaseApplicationActivity {
 		getSupportActionBar().setIcon(R.drawable.ic_launcher_white);
 
 		// Get controller
-		mController = Controller.getInstance(this);
+		mController = Controller.getInstance(getApplicationContext());
 
 		// SensorDetailFragment fragment = new SensorDetailFragment();
 		// fragment.setArguments(getIntent().getExtras());
