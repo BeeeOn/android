@@ -4,13 +4,13 @@
     android:layout_height="fill_parent"
     android:background="@color/light_gray"
     android:minHeight="200dp"
-    android:minWidth="270dp"
+    android:minWidth="200dp"
     android:orientation="vertical" >
     
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/log_blue2"
+        android:background="@color/iha_primary_cyan"
         android:orientation="vertical"
         android:layout_marginBottom="10dp" >
 
@@ -27,54 +27,107 @@
 	        android:textIsSelectable="false" />
     
     </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="wrap_content"
+    
+    <LinearLayout 
+        android:orientation="vertical"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="10dp"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:gravity="center"
-        android:orientation="horizontal" >
-
-        <ImageButton
-            android:id="@+id/addadapter_qrcode_button"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginLeft="55dp"
-            android:layout_weight="1"
-            android:contentDescription="@string/addadapter_qrcode_desc"
-            android:src="@drawable/qrcode" />
-
+        android:padding="10dp"
+        android:layout_marginBottom="5dp"
+        android:layout_gravity="center">
+        
         <TextView
-            android:id="@+id/addadapter_or"
-            android:layout_width="100dp"
-            android:layout_height="fill_parent"
-            android:layout_marginBottom="0dp"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:text="@string/addsensor_or"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:textColor="@color/log_blue2"
-            android:textIsSelectable="false" />
-
-        <EditText
-            android:id="@+id/addadapter_ser_num"
-            android:layout_width="250dp"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="0dp"
-            android:layout_weight="1"
-            android:ems="10"
-            android:hint="@string/addadapter_ser_num_hint"
-            android:inputType="numberDecimal"
-            android:textColor="@color/log_blue2" >
-
-            <requestFocus />
-        </EditText>
+		    android:id="@+id/addadapter_textview_name"
+		    android:layout_width="wrap_content"
+		    android:layout_height="wrap_content"
+		    android:text="@string/addadapter_textview_name"
+		    android:textColor="@color/iha_text_color" 
+		    android:layout_gravity="left"
+		    android:textIsSelectable="false"
+		    android:textAppearance="?android:attr/textAppearanceMedium" />
+		
+		<EditText
+		    android:id="@+id/addadapter_text_name"
+		    android:layout_width="fill_parent"
+		    android:layout_height="wrap_content"
+		    android:layout_gravity="center"
+		    android:layout_marginLeft="5dp"
+		    android:layout_marginRight="5dp"
+		    android:ems="10"
+		    android:hint="@string/addadapter_view_setname"
+		    android:textColor="@color/iha_primary_cyan"
+		    android:singleLine="true"
+		    android:imeOptions="actionNext"  />
+        
     </LinearLayout>
-
     <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:layout_marginBottom="15dp"
+        android:layout_gravity="center" 
+        >
+         <TextView
+		    android:id="@+id/addadapter_textview_code"
+		    android:layout_width="wrap_content"
+		    android:layout_height="wrap_content"
+		    android:text="@string/addadapter_textview_code"
+		    android:textColor="@color/iha_text_color" 
+		    android:layout_gravity="left"
+		    android:textIsSelectable="false"
+		    android:textAppearance="?android:attr/textAppearanceMedium" />
+
+	    <LinearLayout
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:layout_marginBottom="10dp"
+	        android:layout_marginLeft="10dp"
+	        android:layout_marginRight="10dp"
+	        android:gravity="center"
+	        android:orientation="horizontal" >
+	
+	        <ImageButton
+	            android:id="@+id/addadapter_qrcode_button"
+	            android:layout_width="0dp"
+	            android:layout_height="wrap_content"
+	            android:layout_gravity="center_horizontal"
+	            android:layout_marginLeft="55dp"
+	            android:layout_weight="1"
+	            android:contentDescription="@string/addadapter_qrcode_desc"
+	            android:src="@drawable/qrcode" />
+	
+	        <TextView
+	            android:id="@+id/addadapter_or"
+	            android:layout_width="100dp"
+	            android:layout_height="fill_parent"
+	            android:layout_marginBottom="0dp"
+	            android:layout_weight="1"
+	            android:gravity="center"
+	            android:text="@string/addsensor_or"
+	            android:textAppearance="?android:attr/textAppearanceMedium"
+	            android:textColor="@color/iha_text_hint"
+	            android:textIsSelectable="false" />
+	
+	        <EditText
+	            android:id="@+id/addadapter_ser_num"
+	            android:layout_width="250dp"
+	            android:layout_height="wrap_content"
+	            android:layout_marginBottom="0dp"
+	            android:layout_weight="1"
+	            android:ems="10"
+	            android:hint="@string/addadapter_ser_num_hint"
+	            android:inputType="numberDecimal"
+	            android:textColor="@color/iha_primary_cyan"
+	            android:singleLine="true"
+		    	android:imeOptions="actionDone"  >
+	
+	            <requestFocus />
+	        </EditText>
+	    </LinearLayout>
+	    </LinearLayout>
+
+    <!-- LinearLayout
         android:id="@+id/addadapter_buttons"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -97,6 +150,6 @@
             android:layout_gravity="right"
             android:layout_marginBottom="5dp"
             android:text="@string/notification_cancel" />
-    </LinearLayout>
+    </LinearLayout-->
 
 </LinearLayout>

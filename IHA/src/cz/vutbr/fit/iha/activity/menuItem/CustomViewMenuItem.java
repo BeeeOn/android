@@ -9,7 +9,7 @@ public class CustomViewMenuItem extends AbstractMenuItem {
 	private String mName;
 	private int mIconRes;
 	private boolean mTopSeparatorVisible;
-	
+
 	public CustomViewMenuItem(String name, int iconRes, boolean topSeparator, String id) {
 		super(id, MenuItemType.CUSTOM_VIEW);
 		mName = name;
@@ -22,10 +22,10 @@ public class CustomViewMenuItem extends AbstractMenuItem {
 		TextView nameView = (TextView) view.findViewById(cz.vutbr.fit.iha.R.id.name);
 		ImageView iconView = (ImageView) view.findViewById(cz.vutbr.fit.iha.R.id.icon);
 		View separatorView = (View) view.findViewById(cz.vutbr.fit.iha.R.id.top_separator);
-		
+
 		view.setEnabled(false);
 		view.setOnClickListener(null);
-		
+
 		nameView.setText(mName);
 		iconView.setImageResource(mIconRes);
 		if (mTopSeparatorVisible) {
@@ -40,6 +40,4 @@ public class CustomViewMenuItem extends AbstractMenuItem {
 		return R.layout.drawer_listview_custom_view;
 	}
 
-	
-	
 }

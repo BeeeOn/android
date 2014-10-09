@@ -16,10 +16,9 @@ import cz.vutbr.fit.iha.activity.menuItem.MenuItem;
 /**
  * Class for location left drawer menu
  */
-public class MenuListAdapter extends BaseAdapter implements
-		StickyListHeadersAdapter, SectionIndexer {
+public class MenuListAdapter extends BaseAdapter implements StickyListHeadersAdapter, SectionIndexer {
 	private static final String TAG = MenuListAdapter.class.getSimpleName();
-	
+
 	private final Context mContext;
 
 	private LayoutInflater mInflater;
@@ -29,8 +28,8 @@ public class MenuListAdapter extends BaseAdapter implements
 	private List<MenuItem> mListHeader;
 
 	private List<Integer> mListHeaderPos;
-	
-//	private List<MenuItem> mListAllItems;
+
+	// private List<MenuItem> mListAllItems;
 
 	public MenuListAdapter(Context context) {
 		mContext = context;
@@ -38,20 +37,20 @@ public class MenuListAdapter extends BaseAdapter implements
 		mListHeader = new ArrayList<MenuItem>();
 		mListItem = new ArrayList<MenuItem>();
 		mListHeaderPos = new ArrayList<Integer>();
-//		mListAllItems = new ArrayList<MenuItem>();
+		// mListAllItems = new ArrayList<MenuItem>();
 	}
 
 	public void addItem(MenuItem item) {
 		mListItem.add(item);
-//		mListAllItems.add(item);
+		// mListAllItems.add(item);
 	}
 
 	public void addHeader(MenuItem item) {
 		mListHeader.add(item);
-//		mListAllItems.add(item);
+		// mListAllItems.add(item);
 		mListHeaderPos.add(mListItem.size());
 	}
-	
+
 	@Override
 	public int getCount() {
 		return mListItem.size();
@@ -61,8 +60,8 @@ public class MenuListAdapter extends BaseAdapter implements
 	public Object getItem(int position) {
 		if (position < 0) {
 			position = 0;
-		} else if (position > mListItem.size()-1) {
-			position = mListItem.size()-1;
+		} else if (position > mListItem.size() - 1) {
+			position = mListItem.size() - 1;
 		}
 		return mListItem.get(position);
 	}
@@ -121,31 +120,31 @@ public class MenuListAdapter extends BaseAdapter implements
 		return mListHeaderPos.size() - 1;
 
 	}
-	
+
 	public void log() {
-		Log.i(TAG,"ITEMS:");
+		Log.i(TAG, "ITEMS:");
 		for (int i = 0; i < mListItem.size(); i++) {
-			Log.i(TAG,"  " + String.valueOf(i) + ": "+mListItem.get(i).getId());
+			Log.i(TAG, "  " + String.valueOf(i) + ": " + mListItem.get(i).getId());
 		}
-		
-		Log.i(TAG,"###########################");
-		
+
+		Log.i(TAG, "###########################");
+
 		Log.i(TAG, "HEADERS:");
 		for (int i = 0; i < mListHeader.size(); i++) {
-			Log.i(TAG,"  " + String.valueOf(i) + ": "+mListHeader.get(i).getId());
+			Log.i(TAG, "  " + String.valueOf(i) + ": " + mListHeader.get(i).getId());
 		}
-		
-		Log.i(TAG,"###########################");
-		
-//		Log.i(TAG, "ALL:");
-//		for (int i = 0; i < mListAllItems.size(); i++) {
-//			Log.i(TAG,"  " + String.valueOf(i) + ": "+mListAllItems.get(i).getId());
-//		}
-		
-		Log.i(TAG,"###########################");
-		
-		Log.i(TAG,"POSITIONS:");
-		for (Integer actItem:mListHeaderPos) {
+
+		Log.i(TAG, "###########################");
+
+		// Log.i(TAG, "ALL:");
+		// for (int i = 0; i < mListAllItems.size(); i++) {
+		// Log.i(TAG,"  " + String.valueOf(i) + ": "+mListAllItems.get(i).getId());
+		// }
+
+		Log.i(TAG, "###########################");
+
+		Log.i(TAG, "POSITIONS:");
+		for (Integer actItem : mListHeaderPos) {
 			Log.i(TAG, "  " + String.valueOf(actItem));
 		}
 	}

@@ -15,11 +15,9 @@ import cz.vutbr.fit.iha.controller.Controller;
 import cz.vutbr.fit.iha.persistence.Persistence;
 
 /**
- * The control preference activity handles the preferences for the control
- * extension.
+ * The control preference activity handles the preferences for the control extension.
  */
-public class SettingsUnitActivity extends SherlockPreferenceActivity implements
-		OnSharedPreferenceChangeListener {
+public class SettingsUnitActivity extends SherlockPreferenceActivity implements OnSharedPreferenceChangeListener {
 	/**
 	 * keys which are defined in res/xml/preferences.xml
 	 */
@@ -34,21 +32,21 @@ public class SettingsUnitActivity extends SherlockPreferenceActivity implements
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		mController = Controller.getInstance(this);
-		
+		mController = Controller.getInstance(getApplicationContext());
+
 		getSupportActionBar().setHomeButtonEnabled(true);
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 		getSupportActionBar().setIcon(R.drawable.ic_launcher_white);
 
 		// Use own name for sharedPreferences
 		getPreferenceManager().setSharedPreferencesName(Persistence.getPreferencesFilename(mController.getActualUser().getEmail()));
-		
+
 		mPrefs = mController.getUserSettings();
 
 		// Load the preferences from an XML resource
 		addPreferencesFromResource(R.xml.unit_preferences);
 
-		mListPrefTemperature = (ListPreference) findPreference(Constants.PERSISTANCE_PREF_TEMPERATURE);
+		mListPrefTemperature = (ListPreference) findPreference(Constants.PERSISTENCE_PREF_TEMPERATURE);
 		mListPrefTemperature.setEntries(Temperature.getEntries(this));
 		mListPrefTemperature.setEntryValues(Temperature.getEntryValues());
 		Temperature actTemp = Temperature.getSharedPreferencesOption(mController.getUserSettings());
@@ -77,7 +75,6 @@ public class SettingsUnitActivity extends SherlockPreferenceActivity implements
 		return false;
 	}
 
-	
 	// @Override
 	// public boolean onPreferenceChange(Preference preference, Object newValue)
 	// {

@@ -14,6 +14,9 @@
     <string name="title_activity_login_facebook">Facebook</string>
     <string name="title_activity_widget_configuration">Widget Configuration</string>
     <string name="title_activity_location_detail_screen">Location Detail</string>
+    <string name="title_activity_add_adapter_activity_dialog">AddAdapterActivityDialog</string>
+    <string name="title_activity_add_sensor_activity_dialog">AddSensorActivityDialog</string>
+    <string name="title_activity_alert_activity_dialog">AlertActivityDialog</string>
 
     <!-- Buttons -->
     <string name="login_login">Login</string>
@@ -38,14 +41,17 @@
     <string name="login_app_name">Intelligent Home Anywhere</string>
     <string name="login_or_use">or use</string>
     <string name="addsensor_add_sensor">Add sensor</string>
-    <string name="addsensor_setup_sensor">Setup sensor</string>
+    <string name="addsensor_setup_sensor">Setup facility</string>
     <string name="addsensor_or">or</string>
     <string name="sensordetail_last_value">Last value:\u0020</string>
     <string name="sensordetail_refresh_time">Refresh inteval: </string>
     <string name="sensordetail_battery_state">Battery state</string>
     <string name="update_needed">Please update application</string>
     <string name="addsensor_type">Type of sensor:</string>
-    <string name="addsensor_involved_time">Activated at:</string>
+    <string name="setup_sensor_info_text">Please, setup your new facility which was activated at </string>
+    <string name="setup_sensor_header_names">Sensors names</string>
+    <string name="setup_sensor_set_name">Set name of sensor</string>
+    <string name="setup_sensor_header_location">Location</string>
     <string name="addadapter_add_adapter">Add adapter</string>
     <string name="registration_label">New account</string>
     <string name="registration_serial_number">For adapter with serial number:</string>
@@ -82,25 +88,35 @@
 	<string name="toast_login_failed">Login failed</string>
 	<string name="toast_adapter_activate_failed">Failed to activate adapter.</string>
 	<string name="toast_adapter_activated">Adapter has been activated.</string>
+	<string name="toast_adapter_removed">Adapter has been removed.</string>
 	<string name="toast_no_adapter">You have no registered adapter.</string>
+	<string name="toast_ignore_uninitialized_info">You can add these devices later by clicking on (+)</string>
+	<string name="toast_empty_sensor_name">Fill names of all sensors !</string>
     
     <!-- Progress -->
     <string name="progress_signing">Signing to server&#8230;</string>
-    <string name="progress_google">Handshake with google</string>
-    <string name="progress_signup">Register new user&#8230;</string>
+    <string name="progress_google">Handshaking with Google&#8230;</string>
+    <string name="progress_signup">Registering new user&#8230;</string>
+    <string name="progress_loading_adapters">Loading your adapters&#8230;</string>
+    <string name="progress_loading_adapter">Loading adapter data&#8230;</string>
     
     <!-- NavDrawer -->
     <string name="drawer_open">OPEN</string>
     <string name="drawer_close">CLOSE</string>
-    <string name="location">Location</string>
-    <string name="custom_view">Custom view</string>
-    <string name="no_location">No location</string>
-    <string name="no_custom_view">No custom view</string>
+    <string name="location">Locations</string>
+    <string name="custom_view">Custom views</string>
+    <string name="no_location">No locations</string>
+    <string name="no_custom_view">No custom views</string>
+    <string name="no_adapters">You have no adapters</string>
     
     <!-- Add sensor dialog -->
     <string name="addsensor_sending_request">Pair request sending </string>
     <string name="addsensor_send_request">Send pair request  </string>
     <string name="addsensor_active_pair">Active pair mode </string>
+    
+    <string name="addadapter_textview_name">Name</string>
+    <string name="addadapter_view_setname">Set name</string>
+    <string name="addadapter_textview_code">Code</string>
     
     <!-- Others -->
     <string name="action_settings">Settings</string>
@@ -113,7 +129,7 @@
     <string name="addsensor_new_location_spinner">New location</string>
     <string name="sen_detail_graph_info">Tap to Active</string>
     <string name="loading_data">Loading data&#8230;</string>
-    <string name="no_sensor_cap">NO SENSOR</string>
+    <string name="no_sensor_cap">NO SENSORS</string>
     
     <!-- Arrays -->
     <string-array name="registration_spinner">
@@ -136,19 +152,22 @@
 
     <string name="log_sc_or">or</string>
 
-    <!-- Widgets -->
-    <string name="widget_sensor_title">Sensor detail</string>
     <!-- Placeholders -->
     <string name="placeholder_icon">Icon</string>
     <string name="placeholder_none">Loading</string>
     <string name="placeholder_not_exists">NOT EXISTS</string>
+    
+    <!-- Widgets -->
+    <string name="widget_sensor_title_small">IHA Sensor detail 1x1</string>
+    <string name="widget_sensor_title_medium">IHA Sensor detail 2x1</string>
+    <string name="widget_sensor_title_large">IHA Sensor detail 3x1</string>
+    
     <!-- WidgetConfigurationActivity -->
+    <string name="widget_configuration_adapter">Adapter:</string>
     <string name="widget_configuration_sensor">Sensor to be shown:</string>
-    <string name="widget_configuration_interval">Update interval (sec.):</string>
-    <string name="title_activity_add_adapter_activity_dialog">AddAdapterActivityDialog</string>
-    <string name="hello_world">Hello world!</string>
-    <string name="title_activity_add_sensor_activity_dialog">AddSensorActivityDialog</string>
-    <string name="title_activity_alert_activity_dialog">AlertActivityDialog</string>
+    <string name="widget_configuration_interval_sensor">Sensor update interval (sec.):</string>
+    <string name="widget_configuration_interval_widget">Widget update interval (sec.):</string>
+
 
     <!-- ABOUT -->
     <string name="play_link">market://details?id=cz.vutbr.fit.iha</string>
@@ -174,7 +193,6 @@
         <item quantity="one">1 hour</item>
         <item quantity="other">%d hours</item>
     </plurals>
-
     
     <!-- SETTINGS -->
     <string name="personal">Personal</string>
@@ -190,4 +208,7 @@
     <string name="default_adapter">Default adapter</string>
     <string name="actual_timezone">Current timezone</string>
     <string name="adapter_timezone">Adapter timezone</string>
+    
+    <!-- Default names -->
+    <string name="adapter_default_name">Adapter #%d</string>
 </resources>

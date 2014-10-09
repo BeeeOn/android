@@ -5,13 +5,13 @@ package cz.vutbr.fit.iha.network.xml;
 
 /**
  * @author ThinkDeep
- *
+ * 
  */
 public class CustomViewPair {
 
 	private int mIcon;
 	private String mName;
-	
+
 	/**
 	 * 
 	 */
@@ -19,8 +19,8 @@ public class CustomViewPair {
 		setIcon(0);
 		setName("");
 	}
-	
-	public CustomViewPair(int icon, String name){
+
+	public CustomViewPair(int icon, String name) {
 		mIcon = icon;
 		mName = name;
 	}
@@ -33,7 +33,8 @@ public class CustomViewPair {
 	}
 
 	/**
-	 * @param mName the mName to set
+	 * @param mName
+	 *            the mName to set
 	 */
 	public void setName(String mName) {
 		this.mName = mName;
@@ -47,12 +48,11 @@ public class CustomViewPair {
 	}
 
 	/**
-	 * @param mIcon the mIcon to set
+	 * @param mIcon
+	 *            the mIcon to set
 	 */
 	public void setIcon(int mIcon) {
 		this.mIcon = mIcon;
 	}
-	
-	
 
 }

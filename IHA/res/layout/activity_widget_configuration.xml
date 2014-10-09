@@ -1,40 +1,77 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     android:padding="12dip" >
 
-    <TextView
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingBottom="5dp"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-       	android:text="@string/widget_configuration_sensor" />
-    
-    <Spinner
-        android:id="@+id/sensor"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-    
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingTop="10dp"
-        android:paddingBottom="4dp"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-       	android:text="@string/widget_configuration_interval" />
-    
-    <EditText
-        android:id="@+id/interval"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:inputType="number" />
+    	android:layout_height="0dp"
+    	android:layout_weight="1" >
+    	
+        <LinearLayout
+	        android:orientation="vertical"
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content" >
+	        
+		    <TextView
+		        android:id="@+id/adapter_label"
+		        android:layout_width="match_parent"
+		        android:layout_height="wrap_content"
+		        android:paddingBottom="5dp"
+		        android:textAppearance="?android:attr/textAppearanceLarge"
+		       	android:text="@string/widget_configuration_adapter" />
+		    
+		    <Spinner
+		        android:id="@+id/adapter"
+		        android:layout_width="match_parent"
+		        android:layout_height="wrap_content" />
+		    
+		    <TextView
+		        android:layout_width="match_parent"
+		        android:layout_height="wrap_content"
+		        android:paddingBottom="5dp"
+		        android:textAppearance="?android:attr/textAppearanceLarge"
+		       	android:text="@string/widget_configuration_sensor" />
+		    
+		    <Spinner
+		        android:id="@+id/sensor"
+		        android:layout_width="match_parent"
+		        android:layout_height="wrap_content" />
+		    
+		    <TextView
+		        android:layout_width="match_parent"
+		        android:layout_height="wrap_content"
+		        android:paddingTop="10dp"
+		        android:paddingBottom="4dp"
+		        android:textAppearance="?android:attr/textAppearanceLarge"
+		       	android:text="@string/widget_configuration_interval_sensor" />
+		    
+		    <EditText
+		        android:id="@+id/interval_sensor"
+		        android:layout_width="match_parent"
+		        android:layout_height="wrap_content"
+		        android:inputType="numberDecimal"
+		        android:enabled="false" />
+		    
+		    <TextView
+		        android:layout_width="match_parent"
+		        android:layout_height="wrap_content"
+		        android:paddingTop="10dp"
+		        android:paddingBottom="4dp"
+		        android:textAppearance="?android:attr/textAppearanceLarge"
+		       	android:text="@string/widget_configuration_interval_widget" />
+		    
+		    <EditText
+		        android:id="@+id/interval_widget"
+		        android:layout_width="match_parent"
+		        android:layout_height="wrap_content"
+		        android:inputType="numberDecimal" />
 
-    <View 
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1" />
+		</LinearLayout>
+
+	</ScrollView>
     
 	<LinearLayout
 	    android:orientation="horizontal"

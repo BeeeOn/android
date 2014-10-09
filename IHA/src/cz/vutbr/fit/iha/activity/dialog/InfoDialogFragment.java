@@ -36,43 +36,35 @@ public class InfoDialogFragment extends TrackDialogFragment {
 
 		version = (TextView) view.findViewById(R.id.version);
 		try {
-			version.setText(String.format("%s %s", getString(R.string.version),
-				getActivity().getPackageManager().getPackageInfo(getActivity().getPackageName(), 0).versionName));
+			version.setText(String.format("%s %s", getString(R.string.version), getActivity().getPackageManager().getPackageInfo(getActivity().getPackageName(), 0).versionName));
 		} catch (NameNotFoundException e) {
 			version.setText("0.0");
 		}
 
-		return new AlertDialog.Builder(getActivity())
-				.setView(view)
-				.setNegativeButton(R.string.rate, new OnClickListener() {
+		return new AlertDialog.Builder(getActivity()).setView(view).setNegativeButton(R.string.rate, new OnClickListener() {
 
-					@Override
-					public void onClick(DialogInterface dialog, int which) {
-						Uri uri = Uri.parse(getActivity().getResources()
-								.getString(R.string.play_link));
-						Intent myAppLinkToMarket = new Intent(
-								Intent.ACTION_VIEW, uri);
-						startActivity(myAppLinkToMarket);
-					}
-				})
-				.setPositiveButton(getString(R.string.ok),
-						new DialogInterface.OnClickListener() {
-							public void onClick(DialogInterface dialog,
-									int whichButton) {
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				Uri uri = Uri.parse(getActivity().getResources().getString(R.string.play_link));
+				Intent myAppLinkToMarket = new Intent(Intent.ACTION_VIEW, uri);
+				startActivity(myAppLinkToMarket);
+			}
+		}).setPositiveButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
+			public void onClick(DialogInterface dialog, int whichButton) {
 
-							}
-						})
-//				.setNeutralButton(getString(R.string.website),
-//						new OnClickListener() {
-//							@Override
-//							public void onClick(DialogInterface dialog,
-//									int which) {
-//								Intent companyLink = new Intent(
-//										Intent.ACTION_VIEW,
-//										Uri.parse(getString(R.string.company_web)));
-//								startActivity(companyLink);
-//							}
-//						})
-						.create();
+			}
+		})
+		// .setNeutralButton(getString(R.string.website),
+		// new OnClickListener() {
+		// @Override
+		// public void onClick(DialogInterface dialog,
+		// int which) {
+		// Intent companyLink = new Intent(
+		// Intent.ACTION_VIEW,
+		// Uri.parse(getString(R.string.company_web)));
+		// startActivity(companyLink);
+		// }
+		// })
+				.create();
 	}
 }

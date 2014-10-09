@@ -18,8 +18,7 @@ public class GroupImageMenuItem extends GroupMenuItem {
 	@Override
 	public void setView(View view) {
 		super.setView(view);
-		ImageView imgView = (ImageView) view
-				.findViewById(cz.vutbr.fit.iha.R.id.image);
+		ImageView imgView = (ImageView) view.findViewById(cz.vutbr.fit.iha.R.id.image);
 		imgView.setImageResource(mImgRes);
 		imgView.setOnClickListener(mListener);
 	}

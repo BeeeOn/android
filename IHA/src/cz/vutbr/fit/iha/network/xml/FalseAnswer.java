@@ -3,7 +3,6 @@
  */
 package cz.vutbr.fit.iha.network.xml;
 
-
 /**
  * 
  * @author ThinkDeep
@@ -14,47 +13,35 @@ public class FalseAnswer {
 	private String mAdditionalInfo;
 	private int mErrCode;
 	private String mErrMessage;
-	
+
 	public Object troubleMakers;
-	public static final String START_TAG = "<start>";
-	public static final String END_TAG = "</start>";
-	
+
 	/**
 	 * Constructor
 	 */
-	public FalseAnswer() {}
-	
+	public FalseAnswer() {
+	}
+
 	/**
 	 * Constructor
-	 * @param additionalInfo previous state where exception appear
-	 * @param data of the error message
+	 * 
+	 * @param additionalInfo
+	 *            previous state where exception appear
+	 * @param data
+	 *            of the error message
 	 */
-	public FalseAnswer(String additionalInfo, int errCode, String errMessage){
+	public FalseAnswer(String additionalInfo, int errCode, Object troubleMaker) {
 		mAdditionalInfo = additionalInfo;
 		mErrCode = errCode;
-		try{ //FIXME: fix this after demo!!!
-			switch(errCode){
-				case 6:
-					troubleMakers = new XmlParsers().getFalseMessage6(START_TAG + errMessage + END_TAG);
-					break;
-				case 13:
-					troubleMakers = new XmlParsers().getFalseMessage13(START_TAG + errMessage + END_TAG);
-					break;
-				default:
-					mErrMessage = errMessage;
-					break;
-			}
-		}catch(Exception e){
-			e.printStackTrace();
-			mErrMessage = errMessage;
-		}
+		troubleMakers = troubleMaker;
 	}
-	
+
 	/**
 	 * Getter
+	 * 
 	 * @return
 	 */
-	public String getInfo(){
+	public String getInfo() {
 		return mAdditionalInfo;
 	}
 
@@ -66,7 +53,8 @@ public class FalseAnswer {
 	}
 
 	/**
-	 * @param mErrCode the mErrCode to set
+	 * @param mErrCode
+	 *            the mErrCode to set
 	 */
 	public void setErrCode(int mErrCode) {
 		this.mErrCode = mErrCode;

@@ -5,14 +5,16 @@ package cz.vutbr.fit.iha.network.xml.exception;
 
 /**
  * XmlVersionMismatchException
+ * 
  * @author ThinkDeep
- *
+ * 
  */
 public class XmlVerMisException extends RuntimeException {
 
 	private static final long serialVersionUID = 1L;
 
-	public XmlVerMisException() { }
+	public XmlVerMisException() {
+	}
 
 	/**
 	 * @param detailMessage

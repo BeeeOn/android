@@ -32,15 +32,12 @@ Copyright (c) 2011-2013, Sony Mobile Communications AB
 
 package cz.vutbr.fit.iha.extension.watches.smartwatch2.controls;
 
-import java.text.DateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.format.Time;
 import android.util.Log;
 
 import com.sonyericsson.extras.liveware.aef.control.Control;
@@ -48,9 +45,11 @@ import com.sonyericsson.extras.liveware.extension.util.ExtensionUtils;
 import com.sonyericsson.extras.liveware.extension.util.control.ControlListItem;
 
 import cz.vutbr.fit.iha.R;
+import cz.vutbr.fit.iha.adapter.Adapter;
 import cz.vutbr.fit.iha.adapter.device.BaseDevice;
 import cz.vutbr.fit.iha.adapter.device.Facility;
 import cz.vutbr.fit.iha.extension.watches.smartwatch2.SW2ExtensionService;
+import cz.vutbr.fit.iha.util.Timezone;
 
 /**
  * GalleryControl displays a swipeable gallery.
@@ -80,11 +79,9 @@ public class GalleryControlExtension extends ManagedControlExtension {
 	private static final int MIN_BATTERY_STATE = 10;
 
 	/**
-	 * @see ManagedControlExtension#ManagedControlExtension(Context, String,
-	 *      ControlManagerCostanza, Intent)
+	 * @see ManagedControlExtension#ManagedControlExtension(Context, String, ControlManagerCostanza, Intent)
 	 */
-	public GalleryControlExtension(Context context, String hostAppPackageName,
-			ControlManagerSmartWatch2 controlManager, Intent intent) {
+	public GalleryControlExtension(Context context, String hostAppPackageName, ControlManagerSmartWatch2 controlManager, Intent intent) {
 		super(context, hostAppPackageName, controlManager, intent);
 
 		// setupClickables(context);
@@ -103,10 +100,8 @@ public class GalleryControlExtension extends ManagedControlExtension {
 
 	private void initializeMenus() {
 		mMenuItemsIcons[0] = new Bundle();
-		mMenuItemsIcons[0].putInt(Control.Intents.EXTRA_MENU_ITEM_ID,
-				MENU_REFRESH);
-		mMenuItemsIcons[0].putString(Control.Intents.EXTRA_MENU_ITEM_ICON,
-				ExtensionUtils.getUriString(mContext, R.drawable.sync_white));
+		mMenuItemsIcons[0].putInt(Control.Intents.EXTRA_MENU_ITEM_ID, MENU_REFRESH);
+		mMenuItemsIcons[0].putString(Control.Intents.EXTRA_MENU_ITEM_ICON, ExtensionUtils.getUriString(mContext, R.drawable.sync_white));
 	}
 
 	@Override
@@ -136,12 +131,9 @@ public class GalleryControlExtension extends ManagedControlExtension {
 	}
 
 	@Override
-	public void onRequestListItem(final int layoutReference,
-			final int listItemPosition) {
-		Log.d(SW2ExtensionService.LOG_TAG, "onRequestListItem() - position "
-				+ listItemPosition);
-		if (layoutReference != -1 && listItemPosition != -1
-				&& layoutReference == R.id.gallery) {
+	public void onRequestListItem(final int layoutReference, final int listItemPosition) {
+		Log.d(SW2ExtensionService.LOG_TAG, "onRequestListItem() - position " + listItemPosition);
+		if (layoutReference != -1 && listItemPosition != -1 && layoutReference == R.id.gallery) {
 			ControlListItem item = createControlListItem(listItemPosition);
 			if (item != null) {
 				sendListItem(item);
@@ -152,8 +144,7 @@ public class GalleryControlExtension extends ManagedControlExtension {
 	@Override
 	public void onKey(final int action, final int keyCode, final long timeStamp) {
 		Log.d(SW2ExtensionService.LOG_TAG, "onKey()");
-		if (action == Control.Intents.KEY_ACTION_RELEASE
-				&& keyCode == Control.KeyCodes.KEYCODE_OPTIONS) {
+		if (action == Control.Intents.KEY_ACTION_RELEASE && keyCode == Control.KeyCodes.KEYCODE_OPTIONS) {
 			showMenu(mMenuItemsIcons);
 		} else {
 			mControlManager.onKey(action, keyCode, timeStamp);
@@ -162,11 +153,10 @@ public class GalleryControlExtension extends ManagedControlExtension {
 
 	@Override
 	public void onMenuItemSelected(final int menuItem) {
-		Log.d(SW2ExtensionService.LOG_TAG, "onMenuItemSelected() - menu item "
-				+ menuItem);
+		Log.d(SW2ExtensionService.LOG_TAG, "onMenuItemSelected() - menu item " + menuItem);
 		if (menuItem == MENU_REFRESH) {
 
-//			clearDisplay();
+			// clearDisplay();
 			// mDevices = mController.getAdapter(adapterId, false)
 			// .getDevicesByLocation(locationStr);
 			getIntent().putExtra(EXTRA_INITIAL_POSITION, mLastKnowPosition);
@@ -186,15 +176,9 @@ public class GalleryControlExtension extends ManagedControlExtension {
 	}
 
 	@Override
-	public void onListItemClick(final ControlListItem listItem,
-			final int clickType, final int itemLayoutReference) {
-		Log.d(SW2ExtensionService.LOG_TAG, "Item clicked. Position "
-				+ listItem.listItemPosition
-				+ ", itemLayoutReference "
-				+ itemLayoutReference
-				+ ". Type was: "
-				+ (clickType == Control.Intents.CLICK_TYPE_SHORT ? "SHORT"
-						: "LONG"));
+	public void onListItemClick(final ControlListItem listItem, final int clickType, final int itemLayoutReference) {
+		Log.d(SW2ExtensionService.LOG_TAG, "Item clicked. Position " + listItem.listItemPosition + ", itemLayoutReference " + itemLayoutReference + ". Type was: "
+				+ (clickType == Control.Intents.CLICK_TYPE_SHORT ? "SHORT" : "LONG"));
 	}
 
 	protected ControlListItem createControlListItem(int position) {
@@ -206,56 +190,39 @@ public class GalleryControlExtension extends ManagedControlExtension {
 		item.listItemPosition = position;
 
 		BaseDevice curDevice = mDevices.get(position);
+		Facility curFacility = curDevice.getFacility();
 
 		// Title data
 		Bundle syncBundle = new Bundle();
-		syncBundle.putInt(Control.Intents.EXTRA_LAYOUT_REFERENCE,
-				R.id.sync_time);
+		syncBundle.putInt(Control.Intents.EXTRA_LAYOUT_REFERENCE, R.id.sync_time);
 
-		// Last update time data
-		Time yesterday = new Time();
-		yesterday.setToNow();
-		yesterday.set(yesterday.toMillis(true) - 24 * 60 * 60 * 1000); // -24
-																		// hours
-
-		// If sync time is more that 24 ago, show only date. Show time
-		// otherwise.
-		DateFormat dateFormat = yesterday.before(curDevice.getFacility().lastUpdate) ? DateFormat
-				.getTimeInstance() : DateFormat.getDateInstance();
-
-		Date lastUpdate = new Date(curDevice.getFacility().lastUpdate.toMillis(true));
-		String dateTime = dateFormat.format(lastUpdate);
+		// Last update data
+		Timezone timezone = Timezone.fromPreferences(mController.getUserSettings());
+		Adapter curAdapter = mController.getAdapter(curFacility.getAdapterId());
+		String dateTime = timezone.formatLastUpdate(curFacility.getLastUpdate(), curAdapter);
 		syncBundle.putString(Control.Intents.EXTRA_TEXT, dateTime);
 
 		// Title data
 		Bundle headerBundle = new Bundle();
-		headerBundle.putInt(Control.Intents.EXTRA_LAYOUT_REFERENCE,
-				R.id.gallery_title);
+		headerBundle.putInt(Control.Intents.EXTRA_LAYOUT_REFERENCE, R.id.gallery_title);
 		headerBundle.putString(Control.Intents.EXTRA_TEXT, curDevice.getName());
 
 		// Unit data
 		Bundle unitBundle = new Bundle();
 		unitBundle.putInt(Control.Intents.EXTRA_LAYOUT_REFERENCE, R.id.unit);
-		unitBundle.putString(Control.Intents.EXTRA_TEXT,
-				curDevice.getStringUnit(mContext));
+		unitBundle.putString(Control.Intents.EXTRA_TEXT, curDevice.getStringUnit(mContext));
 
 		// Battery icon
 		Bundle batteryBundle = new Bundle();
 		if (curDevice.getFacility().getBattery() < MIN_BATTERY_STATE) {
-			batteryBundle.putInt(Control.Intents.EXTRA_LAYOUT_REFERENCE,
-					R.id.thumbnail);
-			batteryBundle.putString(Control.Intents.EXTRA_DATA_URI,
-					ExtensionUtils.getUriString(mContext, R.drawable.battery));
+			batteryBundle.putInt(Control.Intents.EXTRA_LAYOUT_REFERENCE, R.id.thumbnail);
+			batteryBundle.putString(Control.Intents.EXTRA_DATA_URI, ExtensionUtils.getUriString(mContext, R.drawable.battery));
 		}
 
 		// Icon data
 		Bundle iconBundle = new Bundle();
-		iconBundle.putInt(Control.Intents.EXTRA_LAYOUT_REFERENCE,
-				R.id.thumbnail);
-		iconBundle.putString(
-				Control.Intents.EXTRA_DATA_URI,
-				ExtensionUtils.getUriString(mContext,
-						curDevice.getTypeIconResource()));
+		iconBundle.putInt(Control.Intents.EXTRA_LAYOUT_REFERENCE, R.id.thumbnail);
+		iconBundle.putString(Control.Intents.EXTRA_DATA_URI, ExtensionUtils.getUriString(mContext, curDevice.getTypeIconResource()));
 		// iconBundle.putString(Control.Intents.EXTRA_DATA_URI, ExtensionUtils
 		// .getUriString(mContext, curDevice
 		// .getTypeIconResource()));
@@ -265,8 +232,7 @@ public class GalleryControlExtension extends ManagedControlExtension {
 		valueBundle.putInt(Control.Intents.EXTRA_LAYOUT_REFERENCE, R.id.value);
 		// valueBundle.putString(Control.Intents.EXTRA_TEXT,
 		// curDevice.getStringValueUnit(mContext));
-		valueBundle.putString(Control.Intents.EXTRA_TEXT,
-				curDevice.getStringValue());
+		valueBundle.putString(Control.Intents.EXTRA_TEXT, curDevice.getStringValue());
 
 		item.layoutData = new Bundle[6];
 		item.layoutData[0] = headerBundle;
@@ -287,20 +253,21 @@ public class GalleryControlExtension extends ManagedControlExtension {
 				if (mController.updateFacility(device.getFacility())) {
 					sendListItem(createControlListItem(lastPosition));
 				}
-				
+
 			}
 		});
 		thLoc.start();
 	}
-	
+
 	private void actualize() {
 		Thread thLoc = new Thread(new Runnable() {
 			@Override
 			public void run() {
 
 				mDevices = new ArrayList<BaseDevice>();
-				
-				List<Facility> facilities = mController.getAdapter(mAdapterId, true).getFacilitiesByLocation(mLocationStr);
+
+				mController.reloadFacilitiesByAdapter(mAdapterId, true);
+				List<Facility> facilities = mController.getFacilitiesByLocation(mAdapterId, mLocationStr);
 				for (Facility facility : facilities) {
 					mDevices.addAll(facility.getDevices());
 				}

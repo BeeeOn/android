@@ -51,8 +51,7 @@ import cz.vutbr.fit.iha.adapter.location.Location;
 import cz.vutbr.fit.iha.extension.watches.smartwatch2.SW2ExtensionService;
 
 /**
- * ListControlExtension displays a scrollable list, based on a string array.
- * Tapping on list items opens a swipable detail view.
+ * ListControlExtension displays a scrollable list, based on a string array. Tapping on list items opens a swipable detail view.
  */
 public class ListLocationControlExtension extends ManagedControlExtension {
 
@@ -65,20 +64,16 @@ public class ListLocationControlExtension extends ManagedControlExtension {
 	private Bundle[] mMenuItemsIcons = new Bundle[1];
 
 	/**
-	 * first actualization is not forced to update values, second (sync button
-	 * click) is already forced
+	 * first actualization is not forced to update values, second (sync button click) is already forced
 	 */
 	private boolean mForceUpdate = false;
 
 	private static final int MENU_REFRESH = 1;
 
 	/**
-	 * @see ManagedControlExtension#ManagedControlExtension(Context, String,
-	 *      ControlManagerCostanza, Intent)
+	 * @see ManagedControlExtension#ManagedControlExtension(Context, String, ControlManagerCostanza, Intent)
 	 */
-	public ListLocationControlExtension(Context context,
-			String hostAppPackageName,
-			ControlManagerSmartWatch2 controlManager, Intent intent) {
+	public ListLocationControlExtension(Context context, String hostAppPackageName, ControlManagerSmartWatch2 controlManager, Intent intent) {
 		super(context, hostAppPackageName, controlManager, intent);
 		Log.d(SW2ExtensionService.LOG_TAG, "AdaptersListControl constructor");
 		initializeMenus();
@@ -92,23 +87,18 @@ public class ListLocationControlExtension extends ManagedControlExtension {
 		}
 		actualize();
 	}
-	
-	
 
 	private void initializeMenus() {
 		mMenuItemsIcons[0] = new Bundle();
-		mMenuItemsIcons[0].putInt(Control.Intents.EXTRA_MENU_ITEM_ID,
-				MENU_REFRESH);
-		mMenuItemsIcons[0].putString(Control.Intents.EXTRA_MENU_ITEM_ICON,
-				ExtensionUtils.getUriString(mContext, R.drawable.sync_white));
+		mMenuItemsIcons[0].putInt(Control.Intents.EXTRA_MENU_ITEM_ID, MENU_REFRESH);
+		mMenuItemsIcons[0].putString(Control.Intents.EXTRA_MENU_ITEM_ICON, ExtensionUtils.getUriString(mContext, R.drawable.sync_white));
 	}
 
 	@Override
 	public void onMenuItemSelected(final int menuItem) {
-		Log.d(SW2ExtensionService.LOG_TAG, "onMenuItemSelected() - menu item "
-				+ menuItem);
+		Log.d(SW2ExtensionService.LOG_TAG, "onMenuItemSelected() - menu item " + menuItem);
 		if (menuItem == MENU_REFRESH) {
-//			clearDisplay();
+			// clearDisplay();
 			actualize();
 		}
 	}
@@ -119,8 +109,7 @@ public class ListLocationControlExtension extends ManagedControlExtension {
 
 		Bundle b1 = new Bundle();
 		b1.putInt(Control.Intents.EXTRA_LAYOUT_REFERENCE, R.id.list_title);
-		b1.putString(Control.Intents.EXTRA_TEXT,
-				mContext.getString(R.string.choose_location));
+		b1.putString(Control.Intents.EXTRA_TEXT, mContext.getString(R.string.choose_location));
 
 		Bundle[] data = new Bundle[1];
 
@@ -147,19 +136,15 @@ public class ListLocationControlExtension extends ManagedControlExtension {
 	@Override
 	public void onSwipe(int direction) {
 		if (direction == Control.Intents.SWIPE_DIRECTION_RIGHT) {
-			Intent intent = new Intent(mContext,
-					ListAdapterControlExtension.class);
+			Intent intent = new Intent(mContext, ListAdapterControlExtension.class);
 			mControlManager.previousScreen(intent);
 		}
 	}
 
 	@Override
-	public void onRequestListItem(final int layoutReference,
-			final int listItemPosition) {
-		Log.d(SW2ExtensionService.LOG_TAG, "onRequestListItem() - position "
-				+ listItemPosition);
-		if (layoutReference != -1 && listItemPosition != -1
-				&& layoutReference == R.id.listView) {
+	public void onRequestListItem(final int layoutReference, final int listItemPosition) {
+		Log.d(SW2ExtensionService.LOG_TAG, "onRequestListItem() - position " + listItemPosition);
+		if (layoutReference != -1 && listItemPosition != -1 && layoutReference == R.id.listView) {
 			ControlListItem item = createControlListItem(listItemPosition);
 			if (item != null) {
 				sendListItem(item);
@@ -170,8 +155,7 @@ public class ListLocationControlExtension extends ManagedControlExtension {
 	@Override
 	public void onKey(final int action, final int keyCode, final long timeStamp) {
 		Log.d(SW2ExtensionService.LOG_TAG, "onKey()");
-		if (action == Control.Intents.KEY_ACTION_RELEASE
-				&& keyCode == Control.KeyCodes.KEYCODE_OPTIONS) {
+		if (action == Control.Intents.KEY_ACTION_RELEASE && keyCode == Control.KeyCodes.KEYCODE_OPTIONS) {
 			showMenu(mMenuItemsIcons);
 		} else {
 			mControlManager.onKey(action, keyCode, timeStamp);
@@ -187,15 +171,9 @@ public class ListLocationControlExtension extends ManagedControlExtension {
 	}
 
 	@Override
-	public void onListItemClick(final ControlListItem listItem,
-			final int clickType, final int itemLayoutReference) {
-		Log.d(SW2ExtensionService.LOG_TAG, "Item clicked. Position "
-				+ listItem.listItemPosition
-				+ ", itemLayoutReference "
-				+ itemLayoutReference
-				+ ". Type was: "
-				+ (clickType == Control.Intents.CLICK_TYPE_SHORT ? "SHORT"
-						: "LONG"));
+	public void onListItemClick(final ControlListItem listItem, final int clickType, final int itemLayoutReference) {
+		Log.d(SW2ExtensionService.LOG_TAG, "Item clicked. Position " + listItem.listItemPosition + ", itemLayoutReference " + itemLayoutReference + ". Type was: "
+				+ (clickType == Control.Intents.CLICK_TYPE_SHORT ? "SHORT" : "LONG"));
 
 		if (clickType == Control.Intents.CLICK_TYPE_SHORT) {
 			// Here we pass the item position to the next control. It would
@@ -204,19 +182,15 @@ public class ListLocationControlExtension extends ManagedControlExtension {
 			// intent.putExtra(GalleryTestControl.EXTRA_INITIAL_POSITION,
 			// listItem.listItemPosition);
 			// mControlManager.startControl(intent);
-			List<Facility> facilities = mAdapter.getFacilitiesByLocation(mLocations
-					.get(listItem.listItemPosition).getId());
+			List<Facility> facilities = mController.getFacilitiesByLocation(mAdapter.getId(), mLocations.get(listItem.listItemPosition).getId());
 			Intent intent;
 			if (facilities.size() < 1) {
 				intent = new Intent(mContext, TextControl.class);
-				intent.putExtra(TextControl.EXTRA_TEXT,
-						mContext.getString(R.string.no_sensor_available));
+				intent.putExtra(TextControl.EXTRA_TEXT, mContext.getString(R.string.no_sensor_available));
 			} else {
 				intent = new Intent(mContext, ListSensorControlExtension.class);
-				intent.putExtra(ListSensorControlExtension.EXTRA_ADAPTER_ID,
-						mAdapter.getId());
-				intent.putExtra(ListSensorControlExtension.EXTRA_LOCATION_NAME,
-						mLocations.get(listItem.listItemPosition).getId());
+				intent.putExtra(ListSensorControlExtension.EXTRA_ADAPTER_ID, mAdapter.getId());
+				intent.putExtra(ListSensorControlExtension.EXTRA_LOCATION_NAME, mLocations.get(listItem.listItemPosition).getId());
 			}
 			mControlManager.startControl(intent);
 		}
@@ -234,18 +208,14 @@ public class ListLocationControlExtension extends ManagedControlExtension {
 
 		// Icon data
 		Bundle iconBundle = new Bundle();
-		iconBundle.putInt(Control.Intents.EXTRA_LAYOUT_REFERENCE,
-				R.id.thumbnail);
+		iconBundle.putInt(Control.Intents.EXTRA_LAYOUT_REFERENCE, R.id.thumbnail);
 
-		iconBundle.putString(Control.Intents.EXTRA_DATA_URI, ExtensionUtils
-				.getUriString(mContext, mLocations.get(position)
-						.getIconResource()));
+		iconBundle.putString(Control.Intents.EXTRA_DATA_URI, ExtensionUtils.getUriString(mContext, mLocations.get(position).getIconResource()));
 
 		Bundle headerBundle = new Bundle();
 		headerBundle.putInt(Control.Intents.EXTRA_LAYOUT_REFERENCE, R.id.title);
 
-		headerBundle.putString(Control.Intents.EXTRA_TEXT,
-				mLocations.get(position).getName());
+		headerBundle.putString(Control.Intents.EXTRA_TEXT, mLocations.get(position).getName());
 
 		item.layoutData = new Bundle[2];
 		item.layoutData[0] = headerBundle;
@@ -258,12 +228,13 @@ public class ListLocationControlExtension extends ManagedControlExtension {
 		Thread thLoc = new Thread(new Runnable() {
 			@Override
 			public void run() {
+ 
+				mController.reloadLocations(mAdapterId, mForceUpdate);
+				mAdapter = mController.getAdapter(mAdapterId);
+				mLocations = mController.getLocations(mAdapterId);
 
-				mAdapter = mController.getAdapter(mAdapterId, mForceUpdate);
-				mLocations = mController.getActiveAdapter().getLocations();
-				
 				mForceUpdate = true;
-				
+
 				resume();
 
 			}

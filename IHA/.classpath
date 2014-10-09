@@ -5,6 +5,7 @@
 	<classpathentry exported="true" kind="con" path="com.android.ide.eclipse.adt.DEPENDENCIES"/>
 	<classpathentry exported="true" kind="lib" path="libs/androidplot-core-0.6.1.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/GraphView-3.1.1.jar"/>
+	<classpathentry exported="true" kind="lib" path="libs/joda-time-2.4.jar"/>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="src" path="gen"/>
 	<classpathentry kind="output" path="bin/classes"/>

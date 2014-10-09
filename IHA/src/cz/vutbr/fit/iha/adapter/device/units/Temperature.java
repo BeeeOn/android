@@ -12,11 +12,10 @@ import cz.vutbr.fit.iha.R;
  * Enum for temperature unit
  * 
  * @author Martin Doudera
- * 
  */
 public enum Temperature {
-	CELSIUS("0", R.string.dev_temperature_celsius_unit_full, R.string.dev_temperature_celsius_unit), 
-	FAHRENHEIT("1",	R.string.dev_temperature_fahrenheit_unit_full, R.string.dev_temperature_fahrenheit_unit), 
+	CELSIUS("0", R.string.dev_temperature_celsius_unit_full, R.string.dev_temperature_celsius_unit), //
+	FAHRENHEIT("1", R.string.dev_temperature_fahrenheit_unit_full, R.string.dev_temperature_fahrenheit_unit), //
 	KELVIN("2", R.string.dev_temperature_kelvin_unit_full, R.string.dev_temperature_kelvin_unit);
 
 	private final String mID;
@@ -66,8 +65,7 @@ public enum Temperature {
 	}
 
 	/**
-	 * Get full name with short form for unit. For example for celsius you will
-	 * get "Celsius (�C)".
+	 * Get full name with short form for unit. For example for celsius you will get "Celsius (�C)".
 	 * 
 	 * @param context
 	 *            It can be app context
@@ -78,8 +76,7 @@ public enum Temperature {
 	}
 
 	/**
-	 * @return List of values (name and short form of unit (ex.: Celsius (�C)))
-	 *         which will be visible for user
+	 * @return List of values (name and short form of unit (ex.: Celsius (�C))) which will be visible for user
 	 */
 	public static CharSequence[] getEntries(Context context) {
 		List<String> retList = new ArrayList<String>();
@@ -103,12 +100,11 @@ public enum Temperature {
 	/**
 	 * Get Temperature by ID which will be saved in SharedPreferences.
 	 * 
-	 * @return If the ID exists, it returns Temperature object. Otherwise it
-	 *         returns default temperature unit.
+	 * @return If the ID exists, it returns Temperature object. Otherwise it returns default temperature unit.
 	 */
 	private static Temperature getTemperatureById(String id) {
 		for (Temperature actTemp : Temperature.values()) {
-			if (actTemp.mID.equals(id)) {
+			if (actTemp.mID.equalsIgnoreCase(id)) {
 				return actTemp;
 			}
 		}
@@ -116,10 +112,10 @@ public enum Temperature {
 	}
 
 	public static Temperature getSharedPreferencesOption(SharedPreferences prefs) {
-//		return getTemperatureById(PreferenceManager
-//				.getDefaultSharedPreferences(context).getString(
-//						Constants.PREF_TEMPERATURE, getDefault().getId()));
-		return getTemperatureById(prefs.getString(Constants.PERSISTANCE_PREF_TEMPERATURE, getDefault().getId()));
+		// return getTemperatureById(PreferenceManager
+		// .getDefaultSharedPreferences(context).getString(
+		// Constants.PREF_TEMPERATURE, getDefault().getId()));
+		return getTemperatureById(prefs.getString(Constants.PERSISTENCE_PREF_TEMPERATURE, getDefault().getId()));
 	}
 
 	// /// CONVERTIONS

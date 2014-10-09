@@ -3,15 +3,13 @@
  */
 package cz.vutbr.fit.iha.gcm;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Locale;
-
-import cz.vutbr.fit.iha.network.xml.XmlParsers;
+import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 
 import android.os.Bundle;
 import android.util.Log;
+import cz.vutbr.fit.iha.network.xml.XmlParsers;
 
 /**
  * @author ThinkDeep
@@ -23,10 +21,9 @@ public class Notification {
 	// private static final String FORMAT = "yyyy-MM-dd HH:mm:ss";
 	private static final String SEPARATOR = "\\s+";
 
-	private SimpleDateFormat mFormatter = new SimpleDateFormat(
-			XmlParsers.DATEFORMAT, Locale.getDefault());
+	private DateTimeFormatter mFormatter = DateTimeFormat.forPattern(XmlParsers.DATEFORMAT);
 
-	private final Date mDate;
+	private final DateTime mDate;
 	private final String mMsgid;
 	private boolean mRead;
 	private final NotificationType mType;
@@ -137,10 +134,8 @@ public class Notification {
 	}
 
 	public enum ActionType {
-		WEB("web"), APP("app"), NONE("none"), SETTINGS("settings"), SETTINGSMAIN(
-				"settingsmain"), SETTINGSACCOUNT("settingsaccount"), SETTINGSADAPTER(
-				"settingsadapter"), SETTINGSLOCATION("settingslocation"), OPENADAPTER(
-				"adapter"), OPENLOCATION("location"), OPENDEVICE("device");
+		WEB("web"), APP("app"), NONE("none"), SETTINGS("settings"), SETTINGSMAIN("settingsmain"), SETTINGSACCOUNT("settingsaccount"), SETTINGSADAPTER("settingsadapter"), SETTINGSLOCATION(
+				"settingslocation"), OPENADAPTER("adapter"), OPENLOCATION("location"), OPENDEVICE("device");
 
 		private final String mValue;
 
@@ -186,27 +181,16 @@ public class Notification {
 	/**
 	 * Constructor
 	 */
-	public Notification(String msgid, String time, String type, boolean read) {
+	public Notification(String msgid, String time, String type, boolean read) throws IllegalArgumentException {
 		mMsgid = msgid;
 		String[] parts = time.split(SEPARATOR);
 
 		if (parts.length != 2) {
-			Log.e(TAG, String.format("Wrong number of parts (%d) of data: %s",
-					parts.length, time));
+			Log.e(TAG, String.format("Wrong number of parts (%d) of data: %s", parts.length, time));
 			throw new IllegalArgumentException();
 		}
 
-		try { // TODO: check this
-			mDate = mFormatter
-					.parse(String.format("%s %s", parts[0], parts[1]));
-		} catch (ParseException e) {
-			Log.e(TAG, String.format("Wrong date format: %s", parts[0]));
-			throw new IllegalArgumentException(e);
-		} catch (NumberFormatException e) {
-			Log.e(TAG, String.format("Wrong value format: %s", parts[1]));
-			throw new IllegalArgumentException(e);
-		}
-
+		mDate = mFormatter.parseDateTime(String.format("%s %s", parts[0], parts[1]));
 		mType = NotificationType.fromValue(type);
 		mRead = read;
 	}
@@ -225,7 +209,7 @@ public class Notification {
 	/**
 	 * @return the mDate
 	 */
-	public Date getDate() {
+	public DateTime getDate() {
 		return mDate;
 	}
 
@@ -297,8 +281,7 @@ public class Notification {
 		String action = bundle.getString(XmlParsers.ACTION);
 
 		// control validity of message
-		if (msgid == null || email == null || time == null || type == null
-				|| action == null || message == null) {
+		if (msgid == null || email == null || time == null || type == null || action == null || message == null) {
 			return null;
 		}
 

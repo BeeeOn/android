@@ -2,8 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="cz.vutbr.fit.iha"
     android:installLocation="auto"
-    android:versionCode="11"
-    android:versionName="1.1.5 debug" >
+    android:versionCode="12"
+    android:versionName="1.2.0" >
 
     <uses-sdk
         android:minSdkVersion="9"
@@ -92,17 +92,17 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="cz.vutbr.fit.iha.activity.dialog.AddSensorActivityDialog"
+            android:name="cz.vutbr.fit.iha.activity.dialog.AddSensorFragmentDialog"
             android:theme="@style/MyDialog" >
         </activity>
         <activity
-            android:name="cz.vutbr.fit.iha.activity.dialog.SetupSensorActivityDialog"
+            android:name="cz.vutbr.fit.iha.activity.dialog.SetupSensorFragmentDialog"
             android:theme="@style/MyDialog" >
         </activity>
-        <activity
-            android:name="cz.vutbr.fit.iha.activity.dialog.AddAdapterActivityDialog"
-            android:theme="@style/MyDialog" >
-        </activity>
+<!--         <activity -->
+<!--             android:name="cz.vutbr.fit.iha.activity.dialog.AddAdapterFragmentDialog" -->
+<!--             android:theme="@android:style/Theme.Dialog"> -->
+<!--         </activity> -->
         <activity
             android:name="cz.vutbr.fit.iha.activity.dialog.EditLocationActitivityDialog"
             android:theme="@style/MyDialog" >
@@ -119,17 +119,42 @@
             android:label="@string/units" >
         </activity>
 
+        <!--  WIDGETS -->
         <receiver
-            android:name="cz.vutbr.fit.iha.widget.SensorWidgetProvider"
+            android:name="cz.vutbr.fit.iha.widget.SensorWidgetProviderSmall"
             android:icon="@drawable/ic_launcher"
-            android:label="@string/widget_sensor_title" >
+            android:label="@string/widget_sensor_title_small" >
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
             </intent-filter>
 
             <meta-data
                 android:name="android.appwidget.provider"
-                android:resource="@xml/widget_sensor" />
+                android:resource="@xml/widget_provider_small" />
+        </receiver>
+        <receiver
+            android:name="cz.vutbr.fit.iha.widget.SensorWidgetProviderMedium"
+            android:icon="@drawable/ic_launcher"
+            android:label="@string/widget_sensor_title_medium" >
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/widget_provider_medium" />
+        </receiver>
+        <receiver
+            android:name="cz.vutbr.fit.iha.widget.SensorWidgetProviderLarge"
+            android:icon="@drawable/ic_launcher"
+            android:label="@string/widget_sensor_title_large" >
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/widget_provider_large" />
         </receiver>
 
         <service

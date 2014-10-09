@@ -9,7 +9,7 @@ public class LocationMenuItem extends AbstractMenuItem {
 	private String mName;
 	private int mIconRes;
 	private boolean mTopSeparatorVisible;
-	
+
 	public LocationMenuItem(String name, int iconRes, boolean topSeparator, String id) {
 		super(id, MenuItemType.LOCATION);
 		mName = name;
@@ -22,7 +22,7 @@ public class LocationMenuItem extends AbstractMenuItem {
 		TextView nameView = (TextView) view.findViewById(cz.vutbr.fit.iha.R.id.name);
 		ImageView iconView = (ImageView) view.findViewById(cz.vutbr.fit.iha.R.id.icon);
 		View separatorView = (View) view.findViewById(cz.vutbr.fit.iha.R.id.top_separator);
-		
+
 		nameView.setText(mName);
 		iconView.setImageResource(mIconRes);
 		if (mTopSeparatorVisible) {
@@ -37,6 +37,4 @@ public class LocationMenuItem extends AbstractMenuItem {
 		return R.layout.drawer_listview_location;
 	}
 
-	
-	
 }

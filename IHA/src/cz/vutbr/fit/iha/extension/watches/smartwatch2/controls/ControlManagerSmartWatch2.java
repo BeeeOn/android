@@ -56,10 +56,8 @@ import cz.vutbr.fit.iha.controller.Controller;
 import cz.vutbr.fit.iha.extension.watches.smartwatch2.SW2ExtensionService;
 
 /**
- * The phone control manager manages which control to currently show on the
- * display. This class then forwards any life-cycle methods and events events to
- * the running control. This class handles API level 2 methods and an Intent
- * based ControlExtension history stack
+ * The phone control manager manages which control to currently show on the display. This class then forwards any life-cycle methods and events events to the running control. This class handles API
+ * level 2 methods and an Intent based ControlExtension history stack
  */
 public class ControlManagerSmartWatch2 extends ControlManagerBase {
 
@@ -71,26 +69,24 @@ public class ControlManagerSmartWatch2 extends ControlManagerBase {
 		super(context, packageName);
 		mControlStack = new Stack<Intent>();
 
-		mController = Controller.getInstance(mContext);
+		mController = Controller.getInstance(mContext.getApplicationContext());
 
 		Intent initialControlIntent;
 
 		if (!mController.isLoggedIn()) {
 			String lastEmail = mController.getLastEmail();
 			try {
-//				GoogleAuth.getGoogleAuth().execute();
+				// GoogleAuth.getGoogleAuth().execute();
 				mController.startGoogle(false, false); // this is equivalent of upper line but
 			} catch (Exception e) {
 				initialControlIntent = new Intent(mContext, TextControl.class);
-				initialControlIntent.putExtra(TextControl.EXTRA_TEXT,
-						mContext.getString(R.string.please_log_in));
+				initialControlIntent.putExtra(TextControl.EXTRA_TEXT, mContext.getString(R.string.please_log_in));
 				mCurrentControl = createControl(initialControlIntent);
 				return;
 			}
 			if (!(lastEmail.length() < 1) && !mController.login(lastEmail)) {
 				initialControlIntent = new Intent(mContext, TextControl.class);
-				initialControlIntent.putExtra(TextControl.EXTRA_TEXT,
-						mContext.getString(R.string.please_log_in));
+				initialControlIntent.putExtra(TextControl.EXTRA_TEXT, mContext.getString(R.string.please_log_in));
 				mCurrentControl = createControl(initialControlIntent);
 				return;
 			}
@@ -99,40 +95,33 @@ public class ControlManagerSmartWatch2 extends ControlManagerBase {
 
 		// Try to find default setting
 		SharedPreferences prefs = mController.getUserSettings();
-		String adapterId = prefs.getString(Constants.PERSISTANCE_PREF_SW2_ADAPTER, null);
-		String strLocation = prefs.getString(Constants.PERSISTANCE_PREF_SW2_LOCATION, null);
+		String adapterId = prefs.getString(Constants.PERSISTENCE_PREF_SW2_ADAPTER, null);
+		String strLocation = prefs.getString(Constants.PERSISTENCE_PREF_SW2_LOCATION, null);
 
-		Log.v(SW2ExtensionService.LOG_TAG, "Default adapter ID: "
-				+ ((adapterId == null) ? "null" : adapterId));
-		Log.v(SW2ExtensionService.LOG_TAG, "Default location: "
-				+ ((strLocation == null) ? "null" : strLocation));
+		Log.v(SW2ExtensionService.LOG_TAG, "Default adapter ID: " + ((adapterId == null) ? "null" : adapterId));
+		Log.v(SW2ExtensionService.LOG_TAG, "Default location: " + ((strLocation == null) ? "null" : strLocation));
 
 		// TODO zkontrolovat jestli neni cil prazdny
 		if (adapterId != null) {
-			Adapter adapter = Controller.getInstance(mContext).getAdapter(
-					adapterId, false);
+			Controller controller = Controller.getInstance(mContext);
+			
+			controller.reloadAdapters(false);
+			Adapter adapter = controller.getAdapter(adapterId);
 			// if default adapter is defined
 			if (adapter != null) {
 				if (strLocation != null) {
-					List<Facility> sensors = adapter
-							.getFacilitiesByLocation(strLocation);
+					controller.reloadFacilitiesByAdapter(adapter.getId(), false);
+					List<Facility> sensors = controller.getFacilitiesByLocation(adapter.getId(), strLocation);
 					if (sensors != null) {
-						Intent intent = new Intent(mContext,
-								ListSensorControlExtension.class);
-						intent.putExtra(
-								ListSensorControlExtension.EXTRA_ADAPTER_ID,
-								adapter.getId());
-						intent.putExtra(
-								ListSensorControlExtension.EXTRA_LOCATION_NAME,
-								strLocation);
+						Intent intent = new Intent(mContext, ListSensorControlExtension.class);
+						intent.putExtra(ListSensorControlExtension.EXTRA_ADAPTER_ID, adapter.getId());
+						intent.putExtra(ListSensorControlExtension.EXTRA_LOCATION_NAME, strLocation);
 						mCurrentControl = createControl(intent);
 						return;
 					}
 				}
-				Intent intent = new Intent(mContext,
-						ListLocationControlExtension.class);
-				intent.putExtra(ListLocationControlExtension.EXTRA_ADAPTER_ID,
-						adapter.getId());
+				Intent intent = new Intent(mContext, ListLocationControlExtension.class);
+				intent.putExtra(ListLocationControlExtension.EXTRA_ADAPTER_ID, adapter.getId());
 				mCurrentControl = createControl(intent);
 				return;
 			}
@@ -141,21 +130,17 @@ public class ControlManagerSmartWatch2 extends ControlManagerBase {
 		List<Adapter> adapters = mController.getAdapters();
 		if (adapters.size() < 1) {
 			initialControlIntent = new Intent(mContext, TextControl.class);
-			initialControlIntent.putExtra(TextControl.EXTRA_TEXT,
-					mContext.getString(R.string.no_adapter_available));
+			initialControlIntent.putExtra(TextControl.EXTRA_TEXT, mContext.getString(R.string.no_adapter_available));
 			mCurrentControl = createControl(initialControlIntent);
 			return;
 		} else if (adapters.size() < 2) {
-			Intent intent = new Intent(mContext,
-					ListLocationControlExtension.class);
-			intent.putExtra(ListLocationControlExtension.EXTRA_ADAPTER_ID,
-					adapters.get(0).getId());
+			Intent intent = new Intent(mContext, ListLocationControlExtension.class);
+			intent.putExtra(ListLocationControlExtension.EXTRA_ADAPTER_ID, adapters.get(0).getId());
 			mCurrentControl = createControl(intent);
 			return;
 		}
 
-		initialControlIntent = new Intent(mContext,
-				ListAdapterControlExtension.class);
+		initialControlIntent = new Intent(mContext, ListAdapterControlExtension.class);
 		mCurrentControl = createControl(initialControlIntent);
 	}
 
@@ -167,8 +152,7 @@ public class ControlManagerSmartWatch2 extends ControlManagerBase {
 	 * @return the width.
 	 */
 	public static int getSupportedControlWidth(Context context) {
-		return context.getResources().getDimensionPixelSize(
-				R.dimen.smart_watch_2_control_width);
+		return context.getResources().getDimensionPixelSize(R.dimen.smart_watch_2_control_width);
 	}
 
 	/**
@@ -179,26 +163,22 @@ public class ControlManagerSmartWatch2 extends ControlManagerBase {
 	 * @return the height.
 	 */
 	public static int getSupportedControlHeight(Context context) {
-		return context.getResources().getDimensionPixelSize(
-				R.dimen.smart_watch_2_control_height);
+		return context.getResources().getDimensionPixelSize(R.dimen.smart_watch_2_control_height);
 	}
 
 	@Override
 	public void onRequestListItem(int layoutReference, int listItemPosition) {
 		Log.v(SW2ExtensionService.LOG_TAG, "onRequestListItem");
 		if (mCurrentControl != null) {
-			mCurrentControl
-					.onRequestListItem(layoutReference, listItemPosition);
+			mCurrentControl.onRequestListItem(layoutReference, listItemPosition);
 		}
 	}
 
 	@Override
-	public void onListItemClick(ControlListItem listItem, int clickType,
-			int itemLayoutReference) {
+	public void onListItemClick(ControlListItem listItem, int clickType, int itemLayoutReference) {
 		Log.v(SW2ExtensionService.LOG_TAG, "onListItemClick");
 		if (mCurrentControl != null) {
-			mCurrentControl.onListItemClick(listItem, clickType,
-					itemLayoutReference);
+			mCurrentControl.onListItemClick(listItem, clickType, itemLayoutReference);
 		}
 	}
 
@@ -230,10 +210,8 @@ public class ControlManagerSmartWatch2 extends ControlManagerBase {
 	public void onKey(int action, int keyCode, long timeStamp) {
 		Log.v(SW2ExtensionService.LOG_TAG, "onKey");
 
-		if (action == Control.Intents.KEY_ACTION_RELEASE
-				&& keyCode == Control.KeyCodes.KEYCODE_BACK) {
-			Log.d(SW2ExtensionService.LOG_TAG,
-					"onKey() - back button intercepted.");
+		if (action == Control.Intents.KEY_ACTION_RELEASE && keyCode == Control.KeyCodes.KEYCODE_BACK) {
+			Log.d(SW2ExtensionService.LOG_TAG, "onKey() - back button intercepted.");
 			onBack();
 		} else if (mCurrentControl != null) {
 			super.onKey(action, keyCode, timeStamp);
@@ -249,8 +227,7 @@ public class ControlManagerSmartWatch2 extends ControlManagerBase {
 	}
 
 	/**
-	 * Closes the currently open control extension. If there is a control on the
-	 * back stack it is opened, otherwise extension is closed.
+	 * Closes the currently open control extension. If there is a control on the back stack it is opened, otherwise extension is closed.
 	 */
 	public void onBack() {
 		Log.v(SW2ExtensionService.LOG_TAG, "onBack");
@@ -273,13 +250,10 @@ public class ControlManagerSmartWatch2 extends ControlManagerBase {
 	}
 
 	/**
-	 * Start a new control. Any currently running control will be stopped and
-	 * put on the control extension stack.
+	 * Start a new control. Any currently running control will be stopped and put on the control extension stack.
 	 * 
 	 * @param intent
-	 *            the Intent used to create the ManagedControlExtension. The
-	 *            intent must have the requested ManagedControlExtension as
-	 *            component, e.g. Intent intent = new Intent(mContext,
+	 *            the Intent used to create the ManagedControlExtension. The intent must have the requested ManagedControlExtension as component, e.g. Intent intent = new Intent(mContext,
 	 *            CallLogDetailsControl.class);
 	 */
 	public void startControl(Intent intent) {
@@ -289,24 +263,18 @@ public class ControlManagerSmartWatch2 extends ControlManagerBase {
 	}
 
 	public void addCurrentToControlStack() {
-		if (mCurrentControl != null
-				&& mCurrentControl instanceof ManagedControlExtension) {
-			Intent intent = ((ManagedControlExtension) mCurrentControl)
-					.getIntent();
-			boolean isNoHistory = intent.getBooleanExtra(
-					ManagedControlExtension.EXTENSION_NO_HISTORY, false);
+		if (mCurrentControl != null && mCurrentControl instanceof ManagedControlExtension) {
+			Intent intent = ((ManagedControlExtension) mCurrentControl).getIntent();
+			boolean isNoHistory = intent.getBooleanExtra(ManagedControlExtension.EXTENSION_NO_HISTORY, false);
 			if (isNoHistory) {
 				// Not adding this control to history
-				Log.d(SW2ExtensionService.LOG_TAG,
-						"Not adding control to history stack");
+				Log.d(SW2ExtensionService.LOG_TAG, "Not adding control to history stack");
 			} else {
-				Log.d(SW2ExtensionService.LOG_TAG,
-						"Adding control to history stack");
+				Log.d(SW2ExtensionService.LOG_TAG, "Adding control to history stack");
 				mControlStack.add(intent);
 			}
 		} else {
-			Log.w(SW2ExtensionService.LOG_TAG,
-					"ControlManageronly supports ManagedControlExtensions");
+			Log.w(SW2ExtensionService.LOG_TAG, "ControlManageronly supports ManagedControlExtensions");
 		}
 	}
 
@@ -316,42 +284,31 @@ public class ControlManagerSmartWatch2 extends ControlManagerBase {
 			String className = component.getClassName();
 			Log.d(SW2ExtensionService.LOG_TAG, "Class name:" + className);
 			Class<?> clazz = Class.forName(className);
-			Constructor<?> ctor = clazz
-					.getConstructor(Context.class, String.class,
-							ControlManagerSmartWatch2.class, Intent.class);
+			Constructor<?> ctor = clazz.getConstructor(Context.class, String.class, ControlManagerSmartWatch2.class, Intent.class);
 			if (ctor == null) {
 				return null;
 			}
-			Object object = ctor.newInstance(new Object[] { mContext,
-					mHostAppPackageName, this, intent });
+			Object object = ctor.newInstance(new Object[] { mContext, mHostAppPackageName, this, intent });
 			if (object instanceof ManagedControlExtension) {
 				return (ManagedControlExtension) object;
 			} else {
-				Log.w(SW2ExtensionService.LOG_TAG,
-						"Created object not a ManagedControlException");
+				Log.w(SW2ExtensionService.LOG_TAG, "Created object not a ManagedControlException");
 			}
 
 		} catch (SecurityException e) {
-			Log.w(SW2ExtensionService.LOG_TAG,
-					"ControlManager: Failed in creating control", e);
+			Log.w(SW2ExtensionService.LOG_TAG, "ControlManager: Failed in creating control", e);
 		} catch (NoSuchMethodException e) {
-			Log.w(SW2ExtensionService.LOG_TAG,
-					"ControlManager: Failed in creating control", e);
+			Log.w(SW2ExtensionService.LOG_TAG, "ControlManager: Failed in creating control", e);
 		} catch (IllegalArgumentException e) {
-			Log.w(SW2ExtensionService.LOG_TAG,
-					"ControlManager: Failed in creating control", e);
+			Log.w(SW2ExtensionService.LOG_TAG, "ControlManager: Failed in creating control", e);
 		} catch (InstantiationException e) {
-			Log.w(SW2ExtensionService.LOG_TAG,
-					"ControlManager: Failed in creating control", e);
+			Log.w(SW2ExtensionService.LOG_TAG, "ControlManager: Failed in creating control", e);
 		} catch (IllegalAccessException e) {
-			Log.w(SW2ExtensionService.LOG_TAG,
-					"ControlManager: Failed in creating control", e);
+			Log.w(SW2ExtensionService.LOG_TAG, "ControlManager: Failed in creating control", e);
 		} catch (InvocationTargetException e) {
-			Log.w(SW2ExtensionService.LOG_TAG,
-					"ControlManager: Failed in creating control", e);
+			Log.w(SW2ExtensionService.LOG_TAG, "ControlManager: Failed in creating control", e);
 		} catch (ClassNotFoundException e) {
-			Log.w(SW2ExtensionService.LOG_TAG,
-					"ControlManager: Failed in creating control", e);
+			Log.w(SW2ExtensionService.LOG_TAG, "ControlManager: Failed in creating control", e);
 		}
 		return null;
 	}

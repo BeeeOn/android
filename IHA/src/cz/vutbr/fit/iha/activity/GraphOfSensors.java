@@ -12,8 +12,7 @@ import cz.vutbr.fit.iha.R;
 public class GraphOfSensors extends SherlockFragment {
 
 	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container,
-			Bundle savedInstanceState) {
+	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.graphofsensors, container, false);
 		return view;
 	}

@@ -17,7 +17,7 @@ public class ActualUser extends User {
 	private String mId;
 	private Bitmap mPicture;
 	private String mPictureUrl;
-	private String mSessionId = "";	
+	private String mSessionId = "";
 	private boolean mDefaultPicture = true;
 
 	public ActualUser() {
@@ -30,11 +30,11 @@ public class ActualUser extends User {
 		}
 		return mId;
 	}
-	
+
 	public void setId(String id) {
 		mId = id;
 	}
-	
+
 	/**
 	 * @return picture url or empty string
 	 */
@@ -43,18 +43,20 @@ public class ActualUser extends User {
 	}
 
 	/**
-	 * @param String picture url set
+	 * @param String
+	 *            picture url set
 	 */
 	public void setPictureUrl(String url) {
 		mPictureUrl = url;
 	}
-	
-	public boolean isPictureDefault(){
+
+	public boolean isPictureDefault() {
 		return mDefaultPicture;
 	}
 
 	/**
 	 * Get user picture
+	 * 
 	 * @param context
 	 * @return user picture or default silhouette
 	 */
@@ -62,22 +64,24 @@ public class ActualUser extends User {
 		if (mPicture == null) {
 			mDefaultPicture = true;
 			setPicture(getDefaultPicture(context));
-		}else
+		} else
 			mDefaultPicture = false;
 		return mPicture;
 	}
 
 	/**
 	 * Get bitmap of default silhouette
+	 * 
 	 * @param context
 	 * @return bitmap with default silhouette
 	 */
 	private Bitmap getDefaultPicture(Context context) {
 		return BitmapFactory.decodeResource(context.getResources(), R.drawable.person_silhouette);
 	}
-	
+
 	/**
-	 * Set user picture 
+	 * Set user picture
+	 * 
 	 * @param picture
 	 */
 	public void setPicture(Bitmap picture) {
@@ -100,6 +104,7 @@ public class ActualUser extends User {
 
 	/**
 	 * Checks if user is logged in (has sessionId)
+	 * 
 	 * @return true if user is logged in, false otherwise
 	 */
 	public boolean isLoggedIn() {

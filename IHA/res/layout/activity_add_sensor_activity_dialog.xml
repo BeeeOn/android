@@ -11,7 +11,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/log_blue2"
+        android:background="@color/iha_primary_cyan"
         android:orientation="vertical" >
 
         <TextView
@@ -34,12 +34,5 @@
         android:layout_width="fill_parent"
         android:layout_height="150dp"
         android:src="@drawable/ic_launcher" />
-
-    <Button
-        android:id="@+id/dialog_addsensor_btn"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:text="Button"
-        android:enabled="false" />
 
 </LinearLayout>

@@ -46,28 +46,27 @@ import cz.vutbr.fit.iha.R;
 public class TextControl extends ManagedControlExtension {
 
 	public final static String EXTRA_TEXT = "TEXT";
-	
-    public TextControl(Context context, String hostAppPackageName,
-            ControlManagerSmartWatch2 controlManager, Intent intent) {
-        super(context, hostAppPackageName, controlManager, intent);
-    }
 
-    @Override
-    public void onResume() {
-    	String text = getIntent().getStringExtra(EXTRA_TEXT);
-    	if (text == null) {
-    		mControlManager.onBack();
-    		return;
-    	}
-    	
-    	Bundle b1 = new Bundle();
-        b1.putInt(Control.Intents.EXTRA_LAYOUT_REFERENCE, R.id.text_only);
-        b1.putString(Control.Intents.EXTRA_TEXT, text);
-        
-        Bundle[] data = new Bundle[1];
-        
-        data[0] = b1;
-    	
-    	showLayout(R.layout.sw2_text_only, data);
-    }
+	public TextControl(Context context, String hostAppPackageName, ControlManagerSmartWatch2 controlManager, Intent intent) {
+		super(context, hostAppPackageName, controlManager, intent);
+	}
+
+	@Override
+	public void onResume() {
+		String text = getIntent().getStringExtra(EXTRA_TEXT);
+		if (text == null) {
+			mControlManager.onBack();
+			return;
+		}
+
+		Bundle b1 = new Bundle();
+		b1.putInt(Control.Intents.EXTRA_LAYOUT_REFERENCE, R.id.text_only);
+		b1.putString(Control.Intents.EXTRA_TEXT, text);
+
+		Bundle[] data = new Bundle[1];
+
+		data[0] = b1;
+
+		showLayout(R.layout.sw2_text_only, data);
+	}
 }

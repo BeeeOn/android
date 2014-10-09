@@ -1,17 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
-    android:minWidth="270dp"
-  	android:background="@color/light_gray"
-    >
-    
+    android:background="@color/light_gray"
+    android:orientation="vertical" >
+
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
+        android:background="@color/iha_primary_cyan"
         android:minHeight="30dp"
-        android:background="@color/log_blue2"
         android:orientation="vertical" >
 
         <TextView
@@ -26,105 +24,95 @@
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:textColor="@color/white"
             android:textIsSelectable="false" />
-
     </LinearLayout>
-    
-    
+
     <TextView
-        android:id="@+id/addsensor_type"
+        android:id="@+id/setup_sensor_info_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="15dp"
+        android:layout_marginBottom="10dp"
         android:layout_marginLeft="10dp"
-        android:text="@string/addsensor_type"
-        android:textColor="@color/log_blue2"
-	    android:textIsSelectable="false"
-        android:textAppearance="?android:attr/textAppearanceSmall" />
-     
-    <TextView
-        android:id="@+id/addsensor_involved_time"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="15dp"
-		android:layout_marginLeft="10dp"
-        android:text="@string/addsensor_involved_time"
-        android:textColor="@color/log_blue2"
-	    android:textIsSelectable="false"
-        android:textAppearance="?android:attr/textAppearanceSmall" />
-
-    <EditText
-        android:id="@+id/addsensor_sensor_name"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="20dp"
-        android:ems="10"
-        android:hint="@string/addsensor_sensor_name_hint"
-        android:inputType="textNoSuggestions"
-        android:textColor="@color/log_blue2" />
-   
-    <Spinner
-        android:id="@+id/addsensor_spinner_choose_location"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="25dp" 
-        />
-    
-    <TextView
-        android:id="@+id/addsensor_or"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center_horizontal"
-        android:layout_marginBottom="20dp"
-        android:text="@string/addsensor_or"
-        android:textColor="@color/log_blue2"
-	    android:textIsSelectable="false"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
-    
-    <LinearLayout 
-        android:orientation="horizontal"
-	    android:layout_width="match_parent"
-	    android:layout_height="wrap_content"
-	    android:layout_marginBottom="15dp" >
-    
-    	<Spinner
-	        android:id="@+id/addsensor_spinner_choose_new_location_icon"
-	        android:layout_width="wrap_content"
-	        android:layout_height="match_parent" />
-	    
-	    <EditText
-	        android:id="@+id/addsensor_new_location_name"
-	        android:layout_width="match_parent"
-	        android:layout_height="wrap_content"
-	        android:ems="10"
-	        android:hint="@string/addsensor_new_location_hint"
-	        android:inputType="textNoSuggestions" 
-	        android:textColor="@color/log_blue2"/>
-    
-    </LinearLayout>
+        android:layout_marginRight="10dp"
+        android:text="@string/setup_sensor_info_text"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textColor="@color/iha_text_hint"
+        android:textIsSelectable="false" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal" 
-        
-        android:gravity="center_horizontal">
-	    
-        <Button
-	        android:id="@+id/addsensor_add"
-	        android:layout_width="130dp"
-	        android:layout_height="match_parent"
-	        android:layout_marginBottom="5dp"
-	        android:layout_gravity="center_horizontal"
-	        android:text="@string/notification_add" />
-        <Button
-	        android:id="@+id/addsensor_cancel"
-	        android:layout_width="130dp"
-	        android:layout_height="match_parent"
-	        android:layout_marginBottom="5dp"
-	        android:layout_gravity="center_horizontal"
-	        android:text="@string/notification_cancel" />
-	        
+        android:orientation="vertical" >
+
+        <TextView
+            android:id="@+id/setup_sensor_header_names"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:text="@string/setup_sensor_header_names"
+            android:textColor="@color/iha_text_color"
+            android:textAppearance="?android:attr/textAppearanceMedium"  />
+
+        <ListView
+            android:id="@+id/setup_sensor_name_list"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="120dp"
+            android:divider="@null"
+            android:layout_marginBottom="10dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp" >
+        </ListView>
     </LinearLayout>
-   
-    
+
+    <TextView
+        android:id="@+id/setup_sensor_header_location"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="5dp"
+        android:text="@string/setup_sensor_header_location"
+        android:textColor="@color/iha_text_color" 
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <Spinner
+        android:id="@+id/addsensor_spinner_choose_location"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginBottom="15dp" />
+
+    <TextView
+        android:id="@+id/addsensor_or"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
+        android:gravity="center_horizontal"
+        android:text="@string/addsensor_or"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textColor="@color/log_blue2"
+        android:textIsSelectable="false" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="15dp"
+        android:orientation="horizontal" >
+
+        <Spinner
+            android:id="@+id/addsensor_spinner_choose_new_location_icon"
+            android:layout_width="60dp"
+            android:layout_marginLeft="10dp"
+            android:layout_height="match_parent" />
+
+        <EditText
+            android:id="@+id/addsensor_new_location_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:hint="@string/addsensor_new_location_hint"
+            android:inputType="textNoSuggestions"
+            android:textColor="@color/log_blue2" 
+            android:layout_marginRight="10dp"/>
+    </LinearLayout>
+
 </LinearLayout>

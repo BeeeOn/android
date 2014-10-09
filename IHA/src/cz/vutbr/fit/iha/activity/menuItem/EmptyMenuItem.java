@@ -6,7 +6,7 @@ import cz.vutbr.fit.iha.R;
 
 public class EmptyMenuItem extends AbstractMenuItem {
 	private String mName;
-	
+
 	public EmptyMenuItem(String name) {
 		super(MenuItem.ID_UNDEFINED, MenuItemType.EMPTY);
 		mName = name;
@@ -16,7 +16,7 @@ public class EmptyMenuItem extends AbstractMenuItem {
 	public void setView(View view) {
 		TextView nameView = (TextView) view.findViewById(cz.vutbr.fit.iha.R.id.name);
 		nameView.setText(mName);
-		
+
 		view.setEnabled(false);
 		view.setOnClickListener(null);
 	}
@@ -26,6 +26,4 @@ public class EmptyMenuItem extends AbstractMenuItem {
 		return R.layout.drawer_listview_empty;
 	}
 
-	
-	
 }
