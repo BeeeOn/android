@@ -63,7 +63,7 @@ public enum Timezone {
 		for (Timezone actTemp : Timezone.values()) {
 			retList.add(actTemp.getName(context));
 		}
-		return (String[]) retList.toArray();
+		return retList.toArray(new String[retList.size()]);
 	}
 
 	/**
@@ -74,7 +74,7 @@ public enum Timezone {
 		for (Timezone actTemp : Timezone.values()) {
 			retList.add(actTemp.mId);
 		}
-		return (String[]) retList.toArray();
+		return retList.toArray(new String[retList.size()]);
 	}
 
 	/**
