@@ -7,6 +7,7 @@ import android.util.Log;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 
 import cz.vutbr.fit.iha.Constants;
+import cz.vutbr.fit.iha.controller.Controller;
 
 public class GcmRegisterAsyncTask extends AsyncTask<Context, Void, Void> {
 	/**
@@ -58,7 +59,7 @@ public class GcmRegisterAsyncTask extends AsyncTask<Context, Void, Void> {
 		// message using the 'from' address in the message.
 
 		// Persist the regID - no need to register again.
-		GcmHelper.storeGCMRegistrationId(context, mRegId);
+		Controller.getInstance(context.getApplicationContext()).setGCMRegistrationId(mRegId);
 
 		return null;
 	}

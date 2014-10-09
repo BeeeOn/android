@@ -57,6 +57,12 @@ public class Persistence {
 		}
 	}
 
+	private void setInt(String namespace, String key, int value) {
+		Editor settings = getSettings(namespace).edit();
+		settings.putInt(key, value);
+		settings.commit();
+	}
+	
 	private void setString(String namespace, String key, String value) {
 		Editor settings = getSettings(namespace).edit();
 		settings.putString(key, value);
@@ -74,12 +80,10 @@ public class Persistence {
 		settings.commit();
 	}
 
-	private String getString(String namespace, String key, String defValue) {
-		return getSettings(namespace).getString(key, defValue);
-	}
-
 	/** DATA MANIPULATION **/
 
+	// Last user
+	
 	public void saveLastEmail(String email) {
 		setOrRemoveString(GLOBAL, Constants.PERSISTENCE_PREF_LAST_USER, email);
 	}
@@ -87,13 +91,35 @@ public class Persistence {
 	public String loadLastEmail() {
 		return getSettings(GLOBAL).getString(Constants.PERSISTENCE_PREF_LAST_USER, "");
 	}
+	
+	
+	// GCM
+	
+	public void saveGCMRegistrationId(String regId) {
+		setString(GLOBAL, Constants.PREF_GCM_REG_ID, regId);
+	}
+	
+	public String loadGCMRegistrationId() { 
+		return getSettings(GLOBAL).getString(Constants.PREF_GCM_REG_ID, "");
+	}
+	
+	public void saveLastApplicationVersion(int appVersion) {
+		setInt(GLOBAL, Constants.PREF_GCM_APP_VERSION, appVersion);
+	}
+	
+	public int loadLastApplicationVersion() {
+		return getSettings(GLOBAL).getInt(Constants.PREF_GCM_APP_VERSION, Integer.MIN_VALUE);
+	}
+	
 
+	// Active adapter
+	
 	public void saveActiveAdapter(String userId, String adapterId) {
 		setString(userId, Constants.PERSISTENCE_PREF_ACTIVE_ADAPTER, adapterId);
 	}
 
 	public String loadActiveAdapter(String userId) {
-		return getString(userId, Constants.PERSISTENCE_PREF_ACTIVE_ADAPTER, "");
+		return getSettings(userId).getString(Constants.PERSISTENCE_PREF_ACTIVE_ADAPTER, "");
 	}
 
 }

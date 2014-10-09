@@ -22,7 +22,6 @@ import cz.vutbr.fit.iha.adapter.device.StateDevice;
 import cz.vutbr.fit.iha.adapter.device.SwitchDevice;
 import cz.vutbr.fit.iha.adapter.location.Location;
 import cz.vutbr.fit.iha.exception.NotImplementedException;
-import cz.vutbr.fit.iha.gcm.GcmHelper;
 import cz.vutbr.fit.iha.household.ActualUser;
 import cz.vutbr.fit.iha.household.DemoHousehold;
 import cz.vutbr.fit.iha.household.Household;
@@ -32,6 +31,7 @@ import cz.vutbr.fit.iha.network.Network;
 import cz.vutbr.fit.iha.network.exception.FalseException;
 import cz.vutbr.fit.iha.network.exception.NetworkException;
 import cz.vutbr.fit.iha.persistence.Persistence;
+import cz.vutbr.fit.iha.util.Utils;
 
 /**
  * Core of application (used as singleton), provides methods and access to all data and household.
@@ -88,7 +88,7 @@ public final class Controller {
 	private Controller(Context context) {
 		mContext = context;
 
-		mNetwork = new Network(mContext, isDebugVersion());
+		mNetwork = new Network(mContext, this, isDebugVersion());
 		mPersistence = new Persistence(mContext);
 		mHousehold = mDemoMode ? new DemoHousehold(mContext, mNetwork) : new Household(mContext, mNetwork);
 		mNetwork.setUser(mHousehold.user);
@@ -160,7 +160,7 @@ public final class Controller {
 		// TODO: catch and throw proper exception
 		// FIXME: after some time there should be picture in ActualUser object, should save to mPersistence
 		try {
-			if (mNetwork.signIn(email, GcmHelper.getGCMRegistrationId(mContext))) { // FIXME: gcmid
+			if (mNetwork.signIn(email, getGCMRegistrationId())) { // FIXME: gcmid
 				mPersistence.saveLastEmail(email);
 				mPersistence.initializeDefaultSettings(email);
 				return true;
@@ -225,47 +225,9 @@ public final class Controller {
 		return mNetwork.isAvailable();
 	}
 
-	/** Adapter methods *****************************************************/
+	/** Reloading data methods **********************************************/
 
 	/**
-	 * Refreshes adapter data - loads facilities and locations
-	 * 
-	 * @param adapter
-	 * @param forceUpdate
-	 *            if you want to refresh adapter even if it's perhaps not needed
-	 * @return
-	 */
-/*	private boolean refreshAdapter(Adapter adapter, boolean forceUpdate) {
-		if (mDemoMode) {
-			return true;
-		}
-
-		// Update only when needed
-		if (!forceUpdate && !Utils.isExpired(adapter.lastUpdate, 15 * 60))
-			return false;
-
-		Log.i(TAG, String.format("Adapter (%s) update needed (%s)", adapter.getName(), forceUpdate ? "force" : "time elapsed"));
-
-		boolean result = false;
-
-		try {
-			// Update adapter with new data
-			adapter.setLocations(mNetwork.getLocations(adapter.getId()));
-			adapter.setUtcOffset(mNetwork.getTimeZone(adapter.getId()));
-			adapter.setFacilities(mNetwork.init(adapter.getId()));
-
-			adapter.lastUpdate.setToNow();
-			result = true;
-		} catch (NetworkException e) {
-			e.printStackTrace();
-		}
-
-		return result;
-	}*/
-
-	/**
-	 * Calling this will reload all adapters from server in next call of {@link #getAdapters()} or {@link #getActiveAdapter()}
-	 * 
 	 * This CAN'T be called on UI thread!
 	 * 
 	 * @param forceReload
@@ -870,6 +832,45 @@ public final class Controller {
 	 */
 	public boolean startGoogle(boolean blocking, boolean fetchPhoto) {
 		return mNetwork.startGoogleAuth(blocking, fetchPhoto);
+	}
+
+	/**
+	 * Gets the current registration ID for application on GCM service.
+	 * <p>
+	 * If result is empty, the app needs to register.
+	 * 
+	 * @return registration ID, or empty string if there is no existing registration ID.
+	 */
+	public String getGCMRegistrationId() {
+		String registrationId = mPersistence.loadGCMRegistrationId();
+		if (registrationId.isEmpty()) {
+			Log.i(TAG, "GCM: Registration not found.");
+			return "";
+		}
+		// Check if app was updated; if so, it must clear the registration ID
+		// since the existing regID is not guaranteed to work with the new
+		// app version.
+		int registeredVersion = mPersistence.loadLastApplicationVersion();
+		int currentVersion = Utils.getAppVersion(mContext);
+		if (registeredVersion != currentVersion) {
+			Log.i(TAG, "GCM: App version changed.");
+			return "";
+		}
+		return registrationId;
+	}
+
+	/**
+	 * Stores the registration ID and app versionCode in the application's {@code SharedPreferences}.
+	 * 
+	 * @param regId
+	 *            registration ID
+	 */
+	public void setGCMRegistrationId(String regId) {
+		int appVersion = Utils.getAppVersion(mContext);
+		Log.i(TAG, "Saving regId on app version " + appVersion);
+
+		mPersistence.saveGCMRegistrationId(regId);
+		mPersistence.saveLastApplicationVersion(appVersion);
 	}
 
 	public ActualUser getActualUser() {

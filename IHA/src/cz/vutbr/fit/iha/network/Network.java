@@ -41,7 +41,7 @@ import cz.vutbr.fit.iha.adapter.device.DeviceLog.DataInterval;
 import cz.vutbr.fit.iha.adapter.device.DeviceLog.DataType;
 import cz.vutbr.fit.iha.adapter.device.Facility;
 import cz.vutbr.fit.iha.adapter.location.Location;
-import cz.vutbr.fit.iha.gcm.GcmHelper;
+import cz.vutbr.fit.iha.controller.Controller;
 import cz.vutbr.fit.iha.household.ActualUser;
 import cz.vutbr.fit.iha.household.User;
 import cz.vutbr.fit.iha.network.exception.CommunicationException;
@@ -134,14 +134,16 @@ public class Network {
 	private String mSessionId;
 	private boolean mUseDebugServer;
 	private boolean mGoogleReinit;
+	private Controller mController; // FIXME: remove this dependency on controller?
 
 	/**
 	 * Constructor.
 	 * 
 	 * @param context
 	 */
-	public Network(Context context, boolean useDebugServer) {
+	public Network(Context context, Controller controller, boolean useDebugServer) {
 		mContext = context;
+		mController = controller;
 		mUseDebugServer = useDebugServer;
 	}
 	
@@ -322,7 +324,7 @@ public class Network {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		signIn(mUser.getEmail(), GcmHelper.getGCMRegistrationId(mContext)); //FIXME: gcmid
+		signIn(mUser.getEmail(), mController.getGCMRegistrationId()); //FIXME: gcmid
 	}
 
 	private ParsedMessage doRequest(String messageToSend) {

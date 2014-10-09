@@ -66,6 +66,12 @@ public final class Constants {
 	public static final String KEY_UNITS = "key_units";
 
 	/**
+	 * GCM preference keys
+	 */
+	public static final String PREF_GCM_REG_ID = "gcm_registration_id";
+	public static final String PREF_GCM_APP_VERSION = "gcm_app_version";
+	
+	/**
 	 * Keys for bundle
 	 */
 	public static final String ADDSENSOR_COUNT_SENSOR = "countofuninitsensor";
@@ -77,14 +83,5 @@ public final class Constants {
 	 */
 	public static final String PROJECT_NUMBER = "863203863728";
 
-	/**
-	 * GCM preference name
-	 */
-	public static final String SHARED_PREF_GCM_NAME = "shared_pref_gcm";
 
-	/**
-	 * GCM preference keys
-	 */
-	public static final String PREF_GCM_REG_ID = "gcm_registration_id";
-	public static final String PREF_GCM_APP_VERSION = "gcm_app_version";
 }

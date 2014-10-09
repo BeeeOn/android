@@ -100,7 +100,7 @@ public class LoginActivity extends BaseActivity {
 		});
 
 		// try to register GCM
-		if (GcmHelper.getGCMRegistrationId(mContext).isEmpty() && GooglePlayServicesUtil.isGooglePlayServicesAvailable(getBaseContext()) == ConnectionResult.SUCCESS) {
+		if (mController.getGCMRegistrationId().isEmpty() && GooglePlayServicesUtil.isGooglePlayServicesAvailable(getBaseContext()) == ConnectionResult.SUCCESS) {
 			GcmHelper.registerGCMInBackground(mContext);
 		}
 
@@ -349,12 +349,12 @@ public class LoginActivity extends BaseActivity {
 
 				@Override
 				public void run() {
-					String gcmId = GcmHelper.getGCMRegistrationId(mContext);
+					String gcmId = mController.getGCMRegistrationId();
 					// try to register again in 1 second, otherwise register in
 					// separate thread
 					if (gcmId.isEmpty()) {
 						GcmHelper.registerGCMInForeground(mContext);
-						gcmId = GcmHelper.getGCMRegistrationId(mContext);
+						gcmId = mController.getGCMRegistrationId();
 						// if it still doesn't have GCM ID, try it repeatedly in
 						// new thread
 						if (gcmId.isEmpty()) {
