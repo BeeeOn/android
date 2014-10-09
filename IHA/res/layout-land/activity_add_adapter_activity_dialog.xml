@@ -55,7 +55,9 @@
 		    android:layout_marginRight="5dp"
 		    android:ems="10"
 		    android:hint="@string/addadapter_view_setname"
-		    android:textColor="@color/iha_primary_cyan" />
+		    android:textColor="@color/iha_primary_cyan"
+		    android:singleLine="true"
+		    android:imeOptions="actionNext"  />
         
     </LinearLayout>
     <LinearLayout
@@ -116,7 +118,9 @@
 	            android:ems="10"
 	            android:hint="@string/addadapter_ser_num_hint"
 	            android:inputType="numberDecimal"
-	            android:textColor="@color/iha_primary_cyan" >
+	            android:textColor="@color/iha_primary_cyan"
+	            android:singleLine="true"
+		    	android:imeOptions="actionDone"  >
 	
 	            <requestFocus />
 	        </EditText>
