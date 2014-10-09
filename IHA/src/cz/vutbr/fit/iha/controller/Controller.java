@@ -88,7 +88,7 @@ public final class Controller {
 	private Controller(Context context) {
 		mContext = context;
 
-		mNetwork = new Network(mContext, this, isDebugVersion());
+		mNetwork = new Network(mContext, this, Utils.isDebugVersion(context));
 		mPersistence = new Persistence(mContext);
 		mHousehold = mDemoMode ? new DemoHousehold(mContext, mNetwork) : new Household(mContext, mNetwork);
 		mNetwork.setUser(mHousehold.user);
@@ -109,21 +109,6 @@ public final class Controller {
 
 	public static boolean isDemoMode() {
 		return mDemoMode;
-	}
-
-	/**
-	 * Check if this is debug version of application
-	 * 
-	 * @return true if version in Manifest contains "debug", false otherwise
-	 */
-	private boolean isDebugVersion() {
-		try {
-			String version = mContext.getPackageManager().getPackageInfo(mContext.getPackageName(), 0).versionName;
-			return version.contains("debug");
-		} catch (NameNotFoundException e) {
-		}
-
-		return false;
 	}
 
 	/** Persistence methods *************************************************/
