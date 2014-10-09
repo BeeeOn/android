@@ -99,10 +99,11 @@ public class LoginActivity extends BaseActivity {
 			}
 		});
 
-		// try to register GCM
-		if (mController.getGCMRegistrationId().isEmpty() && GooglePlayServicesUtil.isGooglePlayServicesAvailable(getBaseContext()) == ConnectionResult.SUCCESS) {
-			GcmHelper.registerGCMInBackground(mContext);
-		}
+// FIXME commented for release
+//		// try to register GCM
+//		if (mController.getGCMRegistrationId().isEmpty() && GooglePlayServicesUtil.isGooglePlayServicesAvailable(getBaseContext()) == ConnectionResult.SUCCESS) {
+//			GcmHelper.registerGCMInBackground(mContext);
+//		}
 
 		mProgress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
 
@@ -349,21 +350,21 @@ public class LoginActivity extends BaseActivity {
 
 				@Override
 				public void run() {
-					String gcmId = mController.getGCMRegistrationId();
-					// try to register again in 1 second, otherwise register in
-					// separate thread
-					if (gcmId.isEmpty()) {
-						GcmHelper.registerGCMInForeground(mContext);
-						gcmId = mController.getGCMRegistrationId();
-						// if it still doesn't have GCM ID, try it repeatedly in
-						// new thread
-						if (gcmId.isEmpty()) {
-							GcmHelper.registerGCMInBackground(mContext);
-							Log.e(GcmHelper.TAG_GCM, "GCM ID is not accesible, creating new thread for ");
-						}
-					}
-
-					Log.i(GcmHelper.TAG_GCM, "GCM ID: " + gcmId);
+//					String gcmId = mController.getGCMRegistrationId();
+//					// try to register again in 1 second, otherwise register in
+//					// separate thread
+//					if (gcmId.isEmpty()) {
+//						GcmHelper.registerGCMInForeground(mContext);
+//						gcmId = mController.getGCMRegistrationId();
+//						// if it still doesn't have GCM ID, try it repeatedly in
+//						// new thread
+//						if (gcmId.isEmpty()) {
+//							GcmHelper.registerGCMInBackground(mContext);
+//							Log.e(GcmHelper.TAG_GCM, "GCM ID is not accesible, creating new thread for ");
+//						}
+//					}
+//
+//					Log.i(GcmHelper.TAG_GCM, "GCM ID: " + gcmId);
 
 					// if(!ggAuth.doInForeground(true)){
 					if (!mController.startGoogle(true, true)) { // returned value is from doInForeground only

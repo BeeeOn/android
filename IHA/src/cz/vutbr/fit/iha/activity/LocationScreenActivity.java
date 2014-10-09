@@ -64,7 +64,6 @@ import cz.vutbr.fit.iha.controller.Controller;
 import cz.vutbr.fit.iha.household.ActualUser;
 import cz.vutbr.fit.iha.persistence.Persistence;
 import cz.vutbr.fit.iha.thread.ToastMessageThread;
-import cz.vutbr.fit.iha.util.Timezone;
 
 /**
  * Activity class for choosing location
@@ -164,11 +163,12 @@ public class LocationScreenActivity extends BaseApplicationActivity {
 
 		initMenu();
 
+		/*
 		if (getIntent().getExtras() != null && getIntent().getExtras().getBoolean(Constants.NOADAPTER)) {
 			
 			DialogFragment newFragment = new AddAdapterFragmentDialog();
 		    newFragment.show(getSupportFragmentManager(), "missiles");
-		}
+		}*/
 
 	}
 

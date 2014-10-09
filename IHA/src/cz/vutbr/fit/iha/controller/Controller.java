@@ -145,7 +145,7 @@ public final class Controller {
 		// TODO: catch and throw proper exception
 		// FIXME: after some time there should be picture in ActualUser object, should save to mPersistence
 		try {
-			if (mNetwork.signIn(email, getGCMRegistrationId())) { // FIXME: gcmid
+			if (mNetwork.signIn(email, "")) { // FIXME: gcmid
 				mPersistence.saveLastEmail(email);
 				mPersistence.initializeDefaultSettings(email);
 				return true;
