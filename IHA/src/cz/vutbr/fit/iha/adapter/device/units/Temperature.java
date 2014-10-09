@@ -115,7 +115,7 @@ public enum Temperature {
 		// return getTemperatureById(PreferenceManager
 		// .getDefaultSharedPreferences(context).getString(
 		// Constants.PREF_TEMPERATURE, getDefault().getId()));
-		return getTemperatureById(prefs.getString(Constants.PERSISTANCE_PREF_TEMPERATURE, getDefault().getId()));
+		return getTemperatureById(prefs.getString(Constants.PERSISTENCE_PREF_TEMPERATURE, getDefault().getId()));
 	}
 
 	// /// CONVERTIONS

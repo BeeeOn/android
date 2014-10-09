@@ -54,10 +54,10 @@ public class SettingsMainActivity extends SherlockPreferenceActivity implements 
 		// Load the preferences from an XML resource
 		addPreferencesFromResource(R.xml.main_preferences);
 
-		mListPrefAdapter = (ListPreference) findPreference(Constants.PERSISTANCE_PREF_SW2_ADAPTER);
-		mListPrefLocation = (ListPreference) findPreference(Constants.PERSISTANCE_PREF_SW2_LOCATION);
+		mListPrefAdapter = (ListPreference) findPreference(Constants.PERSISTENCE_PREF_SW2_ADAPTER);
+		mListPrefLocation = (ListPreference) findPreference(Constants.PERSISTENCE_PREF_SW2_LOCATION);
 
-		mListPrefTimezone = (ListPreference) findPreference(Constants.PERSISTANCE_PREF_TIMEZONE);
+		mListPrefTimezone = (ListPreference) findPreference(Constants.PERSISTENCE_PREF_TIMEZONE);
 		mListPrefTimezone.setEntries(Timezone.getNamesArray(this));
 		mListPrefTimezone.setEntryValues(Timezone.getIdsArray());
 		mListPrefTimezone.setSummary(Timezone.fromPreferences(mController.getUserSettings()).getName(this));
@@ -153,7 +153,7 @@ public class SettingsMainActivity extends SherlockPreferenceActivity implements 
 	private void setLocationList() {
 		mListPrefLocation.setEnabled(true);
 
-		String locId = mPrefs.getString(Constants.PERSISTANCE_PREF_SW2_LOCATION, "");
+		String locId = mPrefs.getString(Constants.PERSISTENCE_PREF_SW2_LOCATION, "");
 		Location loc;
 		// valid
 		Adapter adapter = mController.getActiveAdapter();
@@ -161,7 +161,7 @@ public class SettingsMainActivity extends SherlockPreferenceActivity implements 
 			mListPrefLocation.setSummary(loc.getName());
 		} else {
 			mListPrefLocation.setSummary(R.string.none);
-			mPrefs.edit().putString(Constants.PERSISTANCE_PREF_SW2_LOCATION, "");
+			mPrefs.edit().putString(Constants.PERSISTENCE_PREF_SW2_LOCATION, "");
 			mPrefs.edit().commit();
 		}
 		List<Location> locations = new ArrayList<Location>();

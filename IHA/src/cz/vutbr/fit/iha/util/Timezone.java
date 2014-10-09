@@ -92,7 +92,7 @@ public enum Timezone {
 	}
 
 	public static Timezone fromPreferences(SharedPreferences prefs) {
-		return getTimezoneByIdOrDefault(prefs.getString(Constants.PERSISTANCE_PREF_TIMEZONE, getDefault().getId()));
+		return getTimezoneByIdOrDefault(prefs.getString(Constants.PERSISTENCE_PREF_TIMEZONE, getDefault().getId()));
 	}
 
 	public DateTimeZone getDateTimeZone(Adapter adapter) {

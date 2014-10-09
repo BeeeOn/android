@@ -19,7 +19,7 @@ public class DefaultUnitPackages {
 		// TODO udelat prepinac pro ruzne zeme a podle toho nastavit vychozi jednotky
 		// prozatim davam jednotky, ktere pouzivame v CR
 
-		persistance.initializePreference(namespace, Constants.PERSISTANCE_PREF_TEMPERATURE, Temperature.CELSIUS.getId());
+		persistance.initializePreference(namespace, Constants.PERSISTENCE_PREF_TEMPERATURE, Temperature.CELSIUS.getId());
 
 	}
 }
