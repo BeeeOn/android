@@ -98,7 +98,6 @@ public class SensorDetailFragment extends SherlockFragment {
 
 	private BaseDevice mDevice;
 
-	private GetDeviceTask mGetDeviceTask;
 	private GetDeviceLogTask mGetDeviceLogTask;
 
 	public static final String ARG_PAGE = "page";
@@ -192,18 +191,18 @@ public class SensorDetailFragment extends SherlockFragment {
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
-
-		mGetDeviceTask = new GetDeviceTask();
-		mGetDeviceTask.execute(new String[] { mPageNumber });
+		
+		mDevice = mController.getDevice(mAdapterId, mPageNumber);
+		if (mDevice != null) {
+			Log.d(TAG, String.format("ID: %s, Name: %s", mDevice.getId(), mDevice.getName()));
+			initLayout(mDevice);
+		}
 
 		Log.d(TAG, "Here 3 " + mCurPageNumber);
 	}
 
 	@Override
 	public void onStop() {
-		if (mGetDeviceTask != null) {
-			mGetDeviceTask.cancel(true);
-		}
 		if (mGetDeviceLogTask != null) {
 			mGetDeviceLogTask.cancel(true);
 		}
@@ -608,34 +607,6 @@ public class SensorDetailFragment extends SherlockFragment {
 	/*
 	 * ================================= ASYNC TASK ===========================
 	 */
-
-	/**
-	 * Changes selected location and redraws list of adapters there
-	 */
-	private class GetDeviceTask extends AsyncTask<String, Void, BaseDevice> {
-		@Override
-		protected BaseDevice doInBackground(String... sensorID) {
-
-			BaseDevice device = null;
-			Adapter adapter = mController.getAdapter(mAdapterId);
-			if (adapter != null) {
-				device = mController.getDevice(adapter.getId(), sensorID[0]);
-				if (device != null)
-					Log.d(TAG, "ID:" + device.getId() + " Name:" + device.getName());
-			}
-
-			return device;
-		}
-
-		@Override
-		protected void onPostExecute(BaseDevice device) {
-			mDevice = device; // FIXME: this might be null now...
-			if (!isCancelled() && device != null) {
-				initLayout(device);
-			}
-
-		}
-	}
 
 	/**
 	 * Changes selected location and redraws list of adapters there
