@@ -1,6 +1,6 @@
 package cz.vutbr.fit.iha;
 
-import org.joda.time.DateTime;
+import java.util.List;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -13,6 +13,8 @@ import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.TextView;
 import cz.vutbr.fit.iha.adapter.Adapter;
+import cz.vutbr.fit.iha.adapter.device.BaseDevice;
+import cz.vutbr.fit.iha.adapter.device.Facility;
 import cz.vutbr.fit.iha.controller.Controller;
 import cz.vutbr.fit.iha.util.Timezone;
 
@@ -25,69 +27,46 @@ public class SensorListAdapter extends BaseAdapter {
 	private static final int PADDING_LEFT_RIGHT = 5;
 	private static final int PADDING_TOP = 6;
 	private static final int PADDING_BOTTOM = 5;
-	private float mScale;
 
 	// Declare Variables
 	private Context mContext;
-	private String[] mAdapterId;
-	private String[] mDeviceId;
-	private String[] mTitle;
-	private String[] mValue;
-	private String[] mUnit;
-	private DateTime[] mTime;
-	private int[] mIcon;
-	private int[] mRelPos;
-	private int[] mFacSize;
 	private LayoutInflater inflater;
-	private int mLength;
 	private boolean mShowAdd;
 	private OnClickListener mListener;
+	private List<BaseDevice> mDevices;
 
 	private final Controller mController;
 
-	public SensorListAdapter(Context context, String[] adapterId, String[] deviceId, String[] title, String[] value, String[] unit, DateTime[] time, int[] icon, int[] relPos, int[] facSize, boolean showAdd,OnClickListener listener) {
+	public SensorListAdapter(Context context, List<BaseDevice> devices, OnClickListener listener) {
 		mContext = context;
-		mAdapterId = adapterId;
-		mDeviceId = deviceId;
-		mTitle = title;
-		mValue = value;
-		mIcon = icon;
-		mUnit = unit;
-		mTime = time;
-		mRelPos = relPos;
-		mFacSize = facSize;
-		mLength = mTitle.length;
 		mController = Controller.getInstance(context.getApplicationContext());
-		mShowAdd = showAdd;
+		mDevices = devices;
+		mShowAdd = !devices.isEmpty();
 		mListener = listener;
 	}
 
 	@Override
 	public int getCount() {
-		return mShowAdd ? mLength + 1 : mLength;
+		return mDevices.size() + (mShowAdd ? 1 : 0);
 	}
 
 	@Override
 	public Object getItem(int position) {
-		return mTitle[position];
+		return mDevices.get(position).getName();
 	}
 
 	@Override
 	public long getItemId(int position) {
-		return position;
+		return position; // TODO: what's this?
 	}
 	
-	public String getAdapterId(int position) {
-		return mAdapterId[position];
-	}
-	
-	public String getDeviceId(int position) {
-		return mDeviceId[position];
+	public BaseDevice getDevice(int position) {
+		return mDevices.get(position);
 	}
 
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
-		if (position < mLength) {
+		if (position < mDevices.size()) {
 			return addItem(position, convertView, parent);
 		}
 		return addAddSensor(convertView, parent);
@@ -104,53 +83,77 @@ public class SensorListAdapter extends BaseAdapter {
 	}
 
 	private View addItem(int position, View convertView, ViewGroup parent) {
-		// Declare Variables
-		TextView txtTitle;
-		TextView txtValue;
-		TextView txtUnit;
-		TextView txtTime;
-		ImageView imgIcon;
-		LinearLayout layout;
-
 		inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		View itemView = inflater.inflate(R.layout.sensor_listview_item, parent, false);
 
 		// Locate the TextViews in drawer_list_item.xml
-		txtTitle = (TextView) itemView.findViewById(R.id.titleofsensor);
-		txtValue = (TextView) itemView.findViewById(R.id.valueofsensor);
-		txtUnit = (TextView) itemView.findViewById(R.id.unitofsensor);
-		txtTime = (TextView) itemView.findViewById(R.id.timeofsensor);
+		TextView txtTitle = (TextView) itemView.findViewById(R.id.titleofsensor);
+		TextView txtValue = (TextView) itemView.findViewById(R.id.valueofsensor);
+		TextView txtUnit = (TextView) itemView.findViewById(R.id.unitofsensor);
+		TextView txtTime = (TextView) itemView.findViewById(R.id.timeofsensor);
 
 		// Locate the ImageView in drawer_list_item.xml
-		imgIcon = (ImageView) itemView.findViewById(R.id.iconofsensor);
+		ImageView imgIcon = (ImageView) itemView.findViewById(R.id.iconofsensor);
 
-		Adapter adapter = mController.getAdapter(mAdapterId[position]);
+		BaseDevice device = mDevices.get(position);
+		Facility facility = device.getFacility();
+		
+		Adapter adapter = mController.getAdapter(facility.getAdapterId());
+		Timezone timezone = Timezone.fromPreferences(mController.getUserSettings());
+		String lastUpdate = timezone.formatLastUpdate(facility.getLastUpdate(), adapter);
 		
 		// Set the results into TextViews
-		txtTitle.setText(mTitle[position]);
-		txtValue.setText(mValue[position]);
-		txtUnit.setText(mUnit[position]);
-		txtTime.setText(String.format("%s %s", mContext.getString(R.string.last_update), Timezone.fromPreferences(mController.getUserSettings()).formatLastUpdate(mTime[position], adapter)));
+		txtTitle.setText(device.getName());
+		txtValue.setText(device.getStringValue());
+		txtUnit.setText(device.getStringUnit(mContext));
+		txtTime.setText(String.format("%s %s", mContext.getString(R.string.last_update), lastUpdate));
 
 		// Set the results into ImageView
-		imgIcon.setImageResource(mIcon[position]);
-		mScale = parent.getResources().getDisplayMetrics().density;
+		imgIcon.setImageResource(device.getTypeIconResource());
 
 		// Set layout with right background
-		layout = (LinearLayout) itemView.findViewById(R.id.layoutofsensor);
-		if (mFacSize[position] == 1) {// it is SOLO device from FACILITY
-			layout.setBackgroundResource(R.drawable.iha_item_solo_bg);
-			((LayoutParams) layout.getLayoutParams()).setMargins((int) mScale * MARGIN_LEFT_RIGHT, (int) mScale * MARGIN_TOP, (int) mScale * MARGIN_LEFT_RIGHT, (int) mScale * MARGIN_BOTTOM);
-		} else if (mRelPos[position] == 1) { // FIRST from FACILITY
-			layout.setBackgroundResource(R.drawable.iha_item_first_bg);
-			((LayoutParams) layout.getLayoutParams()).setMargins((int) mScale * MARGIN_LEFT_RIGHT, (int) mScale * MARGIN_TOP, (int) mScale * MARGIN_LEFT_RIGHT, (int) mScale * MARGIN_BOTTOM);
-		} else if (mRelPos[position] == mFacSize[position]) {// LAST from FACILITY
-			layout.setBackgroundResource(R.drawable.iha_item_last_bg);
-			((LayoutParams) layout.getLayoutParams()).setMargins((int) mScale * MARGIN_LEFT_RIGHT, (int) mScale * MARGIN_TOP_M_L, (int) mScale * MARGIN_LEFT_RIGHT, (int) mScale * MARGIN_BOTTOM);
-			layout.setPadding((int) mScale * PADDING_LEFT_RIGHT, (int) mScale * PADDING_TOP, (int) mScale * PADDING_LEFT_RIGHT, (int) mScale * PADDING_BOTTOM);
-		} else { // MIDLE from FACILITY
-			layout.setBackgroundResource(R.drawable.iha_item_midle_bg);
-			((LayoutParams) layout.getLayoutParams()).setMargins((int) mScale * MARGIN_LEFT_RIGHT, (int) mScale * MARGIN_TOP_M_L, (int) mScale * MARGIN_LEFT_RIGHT, (int) mScale * MARGIN_BOTTOM);
+		LinearLayout layout = (LinearLayout) itemView.findViewById(R.id.layoutofsensor);
+		
+		List<BaseDevice> facDevices = facility.getDevices();
+		if (facDevices.size() == 0) {
+			// This shouldn't happen
+			return itemView;
+		}
+		
+		boolean isFirst = facDevices.get(0).getId().equals(device.getId());
+		boolean isLast = facDevices.get(facDevices.size() - 1).getId().equals(device.getId());
+		boolean isSingle = isFirst && isLast;
+
+		float scale = parent.getResources().getDisplayMetrics().density;
+		
+		int left, right, top, bottom, backgroundRes;
+		left = right = (int) scale * MARGIN_LEFT_RIGHT;
+		bottom = (int) scale * MARGIN_BOTTOM;
+		
+		if (isSingle) {
+			// SOLO device from FACILITY
+			backgroundRes = R.drawable.iha_item_solo_bg;
+			top = (int) scale * MARGIN_TOP;
+		} else if (isFirst) {
+			// FIRST device from FACILITY
+			backgroundRes = R.drawable.iha_item_first_bg;
+			top = (int) scale * MARGIN_TOP;
+		} else if (isLast) {
+			// LAST device from FACILITY
+			backgroundRes = R.drawable.iha_item_last_bg;
+			top = (int) scale * MARGIN_TOP_M_L;
+		} else {
+			// MIDLE device from FACILITY
+			backgroundRes = R.drawable.iha_item_midle_bg;
+			top = (int) scale * MARGIN_TOP_M_L;
+		}
+		
+		layout.setBackgroundResource(backgroundRes);
+		((LayoutParams) layout.getLayoutParams()).setMargins(left, top, right, bottom);
+
+		// Padding for last device in facility
+		if (isLast) {
+			layout.setPadding((int) scale * PADDING_LEFT_RIGHT, (int) scale * PADDING_TOP, (int) scale * PADDING_LEFT_RIGHT, (int) scale * PADDING_BOTTOM);
 		}
 
 		return itemView;
