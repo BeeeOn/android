@@ -144,7 +144,8 @@ public class SensorWidgetProvider extends AppWidgetProvider {
 			adapterId = settings.getString(Constants.WIDGET_PREF_DEVICE_ADAPTER_ID, "");
 			//deviceId = settings.getString(Constants.WIDGET_PREF_DEVICE, "");
 
-			name += " (cached)"; // NOTE: just temporary solution until it will be showed better on widget
+			// NOTE: just temporary solution until it will be showed better on widget
+			name = String.format("%s %s", name, context.getString(R.string.widget_cached));
 		}
 
 		remoteViews.setImageViewResource(R.id.icon, icon == 0 ? R.drawable.ic_launcher : icon);

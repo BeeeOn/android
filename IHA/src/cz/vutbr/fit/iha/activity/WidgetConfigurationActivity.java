@@ -86,11 +86,11 @@ public class WidgetConfigurationActivity extends BaseActivity {
 			if (!mController.isLoggedIn() && !triedLoginAlready) {
 				// If user is not logged in we redirect to LoginActivity
 				triedLoginAlready = true;
-				Toast.makeText(this, "You must be logged in first.", Toast.LENGTH_LONG).show(); // FIXME: use string from resources
+				Toast.makeText(this, R.string.widget_configuration_login_first, Toast.LENGTH_LONG).show();
 				BaseApplicationActivity.redirectToLogin(this);
 			} else if (mController.isLoggedIn()) {
 				// Otherwise he is logged in but has no sensors, we quit completely
-				Toast.makeText(this, "You have no adapters and thus no sensors to use in widget.", Toast.LENGTH_LONG).show(); // FIXME: use string from resources
+				Toast.makeText(this, R.string.widget_configuration_no_adapters, Toast.LENGTH_LONG).show();
 				finish();
 			}
 
@@ -214,7 +214,7 @@ public class WidgetConfigurationActivity extends BaseActivity {
 					mDevices.addAll(facility.getDevices());
 				}
 				
-				Log.d(TAG, "Selected adapter " + adapter.getName());
+				Log.d(TAG, String.format("Selected adapter %s", adapter.getName()));
 
 				ArrayAdapter<?> arrayAdapter = new ArrayAdapter<BaseDevice>(WidgetConfigurationActivity.this, android.R.layout.simple_spinner_dropdown_item, mDevices);
 				s.setAdapter(arrayAdapter);
@@ -238,7 +238,7 @@ public class WidgetConfigurationActivity extends BaseActivity {
 				TextView intervalText = (TextView) findViewById(R.id.interval_sensor);
 				intervalText.setText(device.getFacility().getRefresh().getStringInterval(WidgetConfigurationActivity.this));
 				
-				Log.d(TAG, "Selected device " + device.getName());
+				Log.d(TAG, String.format("Selected device %s", device.getName()));
 			}
 
 			@Override
@@ -246,7 +246,7 @@ public class WidgetConfigurationActivity extends BaseActivity {
 				TextView interval = (TextView) findViewById(R.id.interval_sensor);
 				interval.setText("");
 				
-				Log.d(TAG, "Selected no device ");
+				Log.d(TAG, "Selected no device");
 			}
 
 		});
@@ -259,7 +259,7 @@ public class WidgetConfigurationActivity extends BaseActivity {
 		Spinner spinSensor = (Spinner) findViewById(R.id.sensor);
 		
 		String adapterId = settings.getString(Constants.WIDGET_PREF_DEVICE_ADAPTER_ID, "");
-		if (adapterId != "") {
+		if (!adapterId.isEmpty()) {
 			for (int i = 0; i < mAdapters.size(); i++) {
 				if (mAdapters.get(i).getId().equals(adapterId)) {
 					spinAdapter.setSelection(i);
@@ -280,7 +280,7 @@ public class WidgetConfigurationActivity extends BaseActivity {
 		}
 
 		String id = settings.getString(Constants.WIDGET_PREF_DEVICE, "");
-		if (adapterId != "" && id != "") {
+		if (!adapterId.isEmpty() && !id.isEmpty()) {
 			for (int i = 0; i < mDevices.size(); i++) {
 				if (mDevices.get(i).getId().equals(id)) {
 					spinSensor.setSelection(i);
@@ -302,16 +302,14 @@ public class WidgetConfigurationActivity extends BaseActivity {
 		Spinner spinner = (Spinner) findViewById(R.id.adapter);
 		Adapter adapter = (Adapter) spinner.getSelectedItem();
 		if (adapter == null) {
-			// FIXME: use string from resources
-			Toast.makeText(this, "Select adapter from list", Toast.LENGTH_LONG).show();
+			Toast.makeText(this, R.string.widget_configuration_select_adapter, Toast.LENGTH_LONG).show();
 			return false;
 		}
 		
 		spinner = (Spinner) findViewById(R.id.sensor);
 		BaseDevice device = (BaseDevice) spinner.getSelectedItem();
 		if (device == null) {
-			// FIXME: use string from resources
-			Toast.makeText(this, "Select sensor from list", Toast.LENGTH_LONG).show();
+			Toast.makeText(this, R.string.widget_configuration_select_device, Toast.LENGTH_LONG).show();
 			return false;
 		}
 
