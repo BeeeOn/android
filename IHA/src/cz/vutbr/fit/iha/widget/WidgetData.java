@@ -68,8 +68,6 @@ public class WidgetData {
 	 * @param context
 	 */
 	public void loadData(Context context) {
-		Log.v(TAG, String.format("Loading widget (%d) data from cache", mWidgetId));
-
 		SharedPreferences prefs = getSettings(context);
 
 		layout = prefs.getInt(PREF_LAYOUT, R.layout.widget_sensor);
@@ -91,11 +89,8 @@ public class WidgetData {
 	 * @param context
 	 */
 	public void saveData(Context context) {
-		Log.v(TAG, String.format("Saving widget (%d) data to cache", mWidgetId));
-
-		SharedPreferences prefs = getSettings(context);
-
-		prefs.edit() //
+		getSettings(context) //
+			.edit() //
 
 			.putInt(PREF_LAYOUT, layout) //
 			.putInt(PREF_INTERVAL, interval) //
