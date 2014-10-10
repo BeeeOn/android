@@ -20,6 +20,8 @@ import cz.vutbr.fit.iha.activity.LocationScreenActivity;
 import cz.vutbr.fit.iha.activity.TrackDialogFragment;
 import cz.vutbr.fit.iha.adapter.Adapter;
 import cz.vutbr.fit.iha.adapter.device.Facility;
+import cz.vutbr.fit.iha.asynctask.CallbackTask.CallbackTaskListener;
+import cz.vutbr.fit.iha.asynctask.PairRequestTask;
 import cz.vutbr.fit.iha.controller.Controller;
 
 public class AddSensorFragmentDialog extends TrackDialogFragment {
@@ -121,9 +123,7 @@ public class AddSensorFragmentDialog extends TrackDialogFragment {
 	public void onStart() {
 	    super.onStart();
 	    
-	    // Send First automatic pair request
-	    mPairRequestTask = new PairRequestTask();
-		mPairRequestTask.execute(new String[] { mAdapter.getId() });
+	    doPairRequestTask(mAdapter.getId());
 	    
 	    final AlertDialog dialog = (AlertDialog)getDialog();
 
@@ -159,6 +159,25 @@ public class AddSensorFragmentDialog extends TrackDialogFragment {
 	    
 	}
 	
+	private void doPairRequestTask(String adapterId) {
+		// Send First automatic pair request
+	    mPairRequestTask = new PairRequestTask(getActivity().getApplicationContext());
+	    mPairRequestTask.setListener(new CallbackTaskListener() {
+
+			@Override
+			public void onExecute(boolean success) {
+				if (success) {
+					// Request was successfully sent
+					checkUninitSensors();
+				} else {
+					// Request wasn't send
+					resetPairButton();
+				}
+			}
+
+		});
+		mPairRequestTask.execute(adapterId);
+	}
 
 	public void resetPairButton() {
 		mPosButton.setText(getResources().getString(R.string.addsensor_send_request));
@@ -171,8 +190,7 @@ public class AddSensorFragmentDialog extends TrackDialogFragment {
 					startTimerOnButton();
 				}
 				else {
-					mPairRequestTask = new PairRequestTask();
-					mPairRequestTask.execute(new String[] { mAdapter.getId() });
+					doPairRequestTask(mAdapter.getId());
 				}
 				mPosButton.setEnabled(false);
 			}
@@ -208,26 +226,6 @@ public class AddSensorFragmentDialog extends TrackDialogFragment {
 	public void checkUninitSensors() {
 		// GOTO next dialog to setup sensors
 		startTimerOnButton();
-	}
-
-	/**
-	 * Send pair request
-	 */
-	private class PairRequestTask extends AsyncTask<String, Void, Boolean> {
-
-		@Override
-		protected Boolean doInBackground(String... adapterIds) {
-			return mController.sendPairRequest(adapterIds[0]);
-		}
-
-		@Override
-		protected void onPostExecute(Boolean result) {
-			if (result) { // Request was successfully sent
-				checkUninitSensors();
-			} else { // Request wasn't send
-				resetPairButton();
-			}
-		}
 	}
 
 	/**
