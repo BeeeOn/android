@@ -161,9 +161,10 @@ public class SensorWidgetProvider extends AppWidgetProvider {
 		PendingIntent pendingIntent;
 		Intent intent;
 
-		// force update on click to icon
+		// force update on click to lastUpdate
 		pendingIntent = WidgetUpdateService.getForceUpdatePendingIntent(context, widgetId);
-		remoteViews.setOnClickPendingIntent(R.id.icon, pendingIntent);
+		remoteViews.setOnClickPendingIntent(R.id.value, pendingIntent);
+		remoteViews.setOnClickPendingIntent(R.id.last_update, pendingIntent);		
 
 		// open configuration on click elsewhere
 		intent = new Intent(context, WidgetConfigurationActivity.class);
@@ -173,14 +174,14 @@ public class SensorWidgetProvider extends AppWidgetProvider {
 		pendingIntent = PendingIntent.getActivity(context, widgetId, intent, PendingIntent.FLAG_CANCEL_CURRENT);
 		remoteViews.setOnClickPendingIntent(R.id.layout, pendingIntent);
 
-		// open detail activity on click
+		// open detail activity on click to icon
 		// FIXME: this is waiting for Leo to allow opening SensorDetail...
 		/*if (adapterId.length() > 0 && deviceId.length() > 0) {
 			intent = new Intent(context, SensorDetailActivity.class);
 			intent.putExtra(Constants.DEVICE_ID, deviceId);
 			intent.putExtra(Constants.ADAPTER_ID, adapterId);
 			pendingIntent = PendingIntent.getActivity(context, widgetId, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-			remoteViews.setOnClickPendingIntent(R.id.name, pendingIntent);
+			remoteViews.setOnClickPendingIntent(R.id.icon, pendingIntent);
 		}*/
 
 		// request widget redraw
