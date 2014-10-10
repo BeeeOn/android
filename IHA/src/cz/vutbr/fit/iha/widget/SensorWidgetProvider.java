@@ -7,18 +7,15 @@ import android.appwidget.AppWidgetProvider;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.RemoteViews;
-import android.widget.TextView;
 import cz.vutbr.fit.iha.Constants;
 import cz.vutbr.fit.iha.R;
 import cz.vutbr.fit.iha.activity.WidgetConfigurationActivity;
 import cz.vutbr.fit.iha.adapter.device.BaseDevice;
 import cz.vutbr.fit.iha.util.Compatibility;
-import cz.vutbr.fit.iha.util.Timezone;
 
 public class SensorWidgetProvider extends AppWidgetProvider {
 
@@ -117,8 +114,7 @@ public class SensorWidgetProvider extends AppWidgetProvider {
 		String name = "";
 		String value = "";
 		String adapterId = "";
-		String deviceId = "";
-		String lastUpdate = "";
+		//String deviceId = "";
 
 		if (device != null) {
 			// Load values from device
@@ -126,8 +122,7 @@ public class SensorWidgetProvider extends AppWidgetProvider {
 			name = device.getName();
 			value = device.getStringValueUnit(context);
 			adapterId = device.getFacility().getAdapterId();
-			deviceId = device.getId();
-			lastUpdate = Timezone.getDefault().formatLastUpdate(device.getFacility().getLastUpdate(), null); // FIXME: use correct timezone
+			//deviceId = device.getId();
 
 			// Cache these values
 			Log.v(TAG, String.format("Saving widget (%d) data to cache", widgetId));
@@ -138,7 +133,6 @@ public class SensorWidgetProvider extends AppWidgetProvider {
 				.putString(Constants.WIDGET_PREF_DEVICE_NAME, name)
 				.putString(Constants.WIDGET_PREF_DEVICE_VALUE, value)
 				.putString(Constants.WIDGET_PREF_DEVICE_ADAPTER_ID, adapterId)
-				.putString(Constants.WIDGET_PREF_DEVICE_LAST_UPDATE, lastUpdate)
 				.commit();
 		} else {
 			// Device doesn't exists -> try to load values from cache
@@ -148,8 +142,7 @@ public class SensorWidgetProvider extends AppWidgetProvider {
 			name = settings.getString(Constants.WIDGET_PREF_DEVICE_NAME, context.getString(R.string.placeholder_not_exists));
 			value = settings.getString(Constants.WIDGET_PREF_DEVICE_VALUE, "");
 			adapterId = settings.getString(Constants.WIDGET_PREF_DEVICE_ADAPTER_ID, "");
-			deviceId = settings.getString(Constants.WIDGET_PREF_DEVICE, "");
-			lastUpdate = settings.getString(Constants.WIDGET_PREF_DEVICE_LAST_UPDATE, "");
+			//deviceId = settings.getString(Constants.WIDGET_PREF_DEVICE, "");
 
 			name += " (cached)"; // NOTE: just temporary solution until it will be showed better on widget
 		}
@@ -160,6 +153,7 @@ public class SensorWidgetProvider extends AppWidgetProvider {
 		
 		if (layout == R.layout.widget_sensor) {
 			// For classic (= not-small) layout of widget, set also lastUpdate
+			String lastUpdate = settings.getString(Constants.WIDGET_PREF_DEVICE_LAST_UPDATE, "");
 			remoteViews.setTextViewText(R.id.last_update, lastUpdate);
 		}
 

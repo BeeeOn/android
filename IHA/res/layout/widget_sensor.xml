@@ -38,9 +38,10 @@
 	    <TextView
 	      android:id="@+id/value"
 	      android:layout_width="match_parent"
-	      android:layout_height="30dp"
+	      android:layout_height="28dp"
 	      android:gravity="center_vertical"
 	      android:textSize="18sp"
+	      android:ellipsize="end"
 	      android:textColor="@color/black"
 	      android:text="@string/placeholder_none" />
 	    

@@ -13,8 +13,10 @@ import android.os.PowerManager;
 import android.os.SystemClock;
 import android.util.Log;
 import cz.vutbr.fit.iha.Constants;
+import cz.vutbr.fit.iha.adapter.Adapter;
 import cz.vutbr.fit.iha.adapter.device.BaseDevice;
 import cz.vutbr.fit.iha.controller.Controller;
+import cz.vutbr.fit.iha.util.Timezone;
 
 public class WidgetUpdateService extends Service {
 
@@ -125,11 +127,15 @@ public class WidgetUpdateService extends Service {
 		SensorWidgetProvider widgetProvider = new SensorWidgetProvider();
 		long now = SystemClock.elapsedRealtime();
 
+		Controller controller = Controller.getInstance(getApplicationContext());
+
+		// Reload adapters to have data about Timezone offset
+		controller.reloadAdapters(false);
+
 		for (int widgetId : widgetIds) {
 			SharedPreferences settings = SensorWidgetProvider.getSettings(this, widgetId);
 			int interval = settings.getInt(Constants.WIDGET_PREF_INTERVAL, UPDATE_INTERVAL_DEFAULT);
-			long lastUpdate = settings.getLong(Constants.WIDGET_PREF_LAST_UPDATE, 0);
-			String adapterId = settings.getString(Constants.WIDGET_PREF_DEVICE_ADAPTER_ID, "");
+			long lastUpdateWidget = settings.getLong(Constants.WIDGET_PREF_LAST_UPDATE, 0);
 
 			// ignore uninitialized widgets
 			if (!settings.getBoolean(Constants.WIDGET_PREF_INITIALIZED, false)) {
@@ -138,18 +144,27 @@ public class WidgetUpdateService extends Service {
 			}
 
 			// don't update widgets until their interval elapsed (or will be <1000ms from now) or we have forced update
-			if (!intent.getBooleanExtra(EXTRA_FORCE_UPDATE, false) && ((lastUpdate + interval * 1000) - now > 1000)) {
+			if (!intent.getBooleanExtra(EXTRA_FORCE_UPDATE, false) && ((lastUpdateWidget + interval * 1000) - now > 1000)) {
 				Log.v(TAG, String.format("Ignoring widget %d (not elapsed)", widgetId));
 				continue;
 			}
 
 			Log.v(TAG, String.format("Updating widget %d", widgetId));
 
-			String deviceId = settings.getString(Constants.WIDGET_PREF_DEVICE, "");
-			BaseDevice device = Controller.getInstance(getApplicationContext()).getDevice(adapterId, deviceId);
+			String adapterId = settings.getString(Constants.WIDGET_PREF_DEVICE_ADAPTER_ID, "");
+			Adapter adapter = controller.getAdapter(adapterId);
 
-			// save last update time
-			settings.edit().putLong(Constants.WIDGET_PREF_LAST_UPDATE, now).commit();
+			String deviceId = settings.getString(Constants.WIDGET_PREF_DEVICE, "");
+			BaseDevice device = controller.getDevice(adapterId, deviceId);
+
+			// NOTE: This should use absolute time, because widgets aren't updated so often
+			String lastUpdateDevice = Timezone.fromPreferences(controller.getUserSettings()).formatLastUpdate(device.getFacility().getLastUpdate(), adapter);
+
+			// save last update times of widget and device
+			settings.edit() //
+					.putLong(Constants.WIDGET_PREF_LAST_UPDATE, now) //
+					.putString(Constants.WIDGET_PREF_DEVICE_LAST_UPDATE, lastUpdateDevice) //
+					.commit();
 
 			// update widget
 			widgetProvider.updateWidget(this, widgetId, device);
