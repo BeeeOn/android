@@ -236,7 +236,7 @@ public class SetupSensorFragmentDialog extends TrackDialogFragment {
 				});
 				
 				Log.d(TAG, String.format("SaveDevice - device: %s, loc: %s", newFacility.getId(), location.getId()));
-				task.execute(new DeviceLocationPair[] { new DeviceLocationPair(newFacility, location) });
+				task.execute(new DeviceLocationPair(newFacility, location));
 			}
 		});
 	    

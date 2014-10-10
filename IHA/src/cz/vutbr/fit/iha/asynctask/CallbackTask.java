@@ -10,12 +10,24 @@ public abstract class CallbackTask<Params> extends AsyncTask<Params, Void, Boole
 		public void onExecute(boolean success);
 	}
 	
-	public void setListener(CallbackTaskListener listener) {
+	public final void setListener(CallbackTaskListener listener) {
 		mListener = listener;
 	}
 	
+	@SuppressWarnings("unchecked")
+	protected final void execute(Params param) {
+		super.execute(param);
+	}
+	
 	@Override
-	protected void onPostExecute(Boolean success) {
+	protected final Boolean doInBackground(Params... params) {
+		return doInBackground(params[0]);
+	}
+	
+	protected abstract Boolean doInBackground(Params param);
+	
+	@Override
+	protected final void onPostExecute(Boolean success) {
 		mListener.onExecute(success);
 	}
 

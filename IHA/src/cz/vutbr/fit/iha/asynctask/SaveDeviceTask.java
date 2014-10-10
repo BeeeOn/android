@@ -18,9 +18,7 @@ public class SaveDeviceTask extends CallbackTask<DeviceLocationPair> {
 	}
 	
 	@Override
-	protected Boolean doInBackground(DeviceLocationPair... pairs) {
-		DeviceLocationPair pair = pairs[0]; // expects only one device at a time is sent there
-		
+	protected Boolean doInBackground(DeviceLocationPair pair) {
 		Controller controller = Controller.getInstance(mContext);
 
 		if (pair.location.getId().equals(Location.NEW_LOCATION_ID)) {
