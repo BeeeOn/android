@@ -2,7 +2,6 @@ package cz.vutbr.fit.iha.activity.dialog;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.EnumSet;
 import java.util.List;
 
 import android.app.AlertDialog;
@@ -11,7 +10,6 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.res.Configuration;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -35,11 +33,13 @@ import cz.vutbr.fit.iha.SetupSensorListAdapter;
 import cz.vutbr.fit.iha.activity.LocationScreenActivity;
 import cz.vutbr.fit.iha.activity.TrackDialogFragment;
 import cz.vutbr.fit.iha.adapter.Adapter;
-import cz.vutbr.fit.iha.adapter.device.BaseDevice.SaveDevice;
 import cz.vutbr.fit.iha.adapter.device.Facility;
 import cz.vutbr.fit.iha.adapter.location.Location;
 import cz.vutbr.fit.iha.adapter.location.Location.DefaultRoom;
+import cz.vutbr.fit.iha.asynctask.CallbackTask.CallbackTaskListener;
+import cz.vutbr.fit.iha.asynctask.SaveDeviceTask;
 import cz.vutbr.fit.iha.controller.Controller;
+import cz.vutbr.fit.iha.pair.DeviceLocationPair;
 
 public class SetupSensorFragmentDialog extends TrackDialogFragment {
 
@@ -193,7 +193,48 @@ public class SetupSensorFragmentDialog extends TrackDialogFragment {
 				mProgress.show();
 				
 				// Save that facility
-				SaveDeviceTask task = new SaveDeviceTask();
+				SaveDeviceTask task = new SaveDeviceTask(getActivity().getApplicationContext());
+				task.setListener(new CallbackTaskListener() {
+
+					@Override
+					public void onExecute(boolean success) {
+						
+						AlertDialog dialog = (AlertDialog) getDialog();
+						if(dialog != null)
+						{
+							Toast.makeText(mActivity, getString(success ? R.string.toast_new_sensor_added : R.string.toast_new_sensor_not_added), Toast.LENGTH_LONG).show();
+							mProgress.cancel();
+							dialog.dismiss();
+							mActivity.redrawMenu();
+							mActivity.redrawDevices();
+						}
+						
+						/*if (success) {
+							// Successfuly saved, close this dialog and return back
+							//SetupSensorActivityDialog.this.finish();
+							// controll if more sensor is uninit
+							if (mUnInitDevices.size() > 1) {
+								Bundle bundle = new Bundle();
+								bundle.putInt(Constants.ADDSENSOR_COUNT_SENSOR, mCountOfSensor);
+								// go to setup uninit sensor
+								Intent intent = new Intent(SetupSensorActivityDialog.this, SetupSensorActivityDialog.class);
+								intent.putExtras(bundle);
+								startActivity(intent);
+								return;
+							}
+							if (mUnInitDevices.size() == 1) { // last one
+								// TODO: this only when going from loginscreen, need to review
+								if (mController.isLoggedIn()) {
+									Intent intent = new Intent(SetupSensorActivityDialog.this, LocationScreenActivity.class);
+									startActivity(intent);
+									return;
+								}
+							}
+						}*/
+					}
+					
+				});
+				
 				Log.d(TAG, String.format("SaveDevice - device: %s, loc: %s", newFacility.getId(), location.getId()));
 				task.execute(new DeviceLocationPair[] { new DeviceLocationPair(newFacility, location) });
 			}
@@ -288,19 +329,6 @@ public class SetupSensorFragmentDialog extends TrackDialogFragment {
 		locations.add(new Location(Location.NEW_LOCATION_ID, getString(R.string.addsensor_new_location_spinner), 0));
 
 		return locations;
-	}
-
-	/**
-	 * Represents pair of device and location for saving it to server
-	 */
-	private class DeviceLocationPair {
-		public final Facility facility;
-		public final Location location;
-
-		public DeviceLocationPair(final Facility facility, final Location location) {
-			this.facility = facility;
-			this.location = location;
-		}
 	}
 
 	/**
@@ -402,61 +430,7 @@ public class SetupSensorFragmentDialog extends TrackDialogFragment {
 	}
 
 
-	private class SaveDeviceTask extends AsyncTask<DeviceLocationPair, Void, Boolean> {
-		@Override
-		protected Boolean doInBackground(DeviceLocationPair... pairs) {
-			DeviceLocationPair pair = pairs[0]; // expects only one device at a time is sent there
-
-			if (pair.location.getId().equals(Location.NEW_LOCATION_ID)) {
-				// We need to save new location to server first
-				Location newLocation = mController.addLocation(pair.location);
-				if (newLocation == null)
-					return null;
-
-				pair.facility.setLocationId(newLocation.getId());
-			}
-
-			EnumSet<SaveDevice> what = EnumSet.of(SaveDevice.SAVE_LOCATION, SaveDevice.SAVE_NAME);
-		
-			return mController.saveFacility(pair.facility, what);
-		}
-
-		@Override
-		protected void onPostExecute(Boolean success) {
-			
-			AlertDialog dialog = (AlertDialog) getDialog();
-			if(dialog != null)
-			{
-				Toast.makeText(mActivity, getString(success ? R.string.toast_new_sensor_added : R.string.toast_new_sensor_not_added), Toast.LENGTH_LONG).show();
-				mProgress.cancel();
-				dialog.dismiss();
-				mActivity.redrawMenu();
-				mActivity.redrawDevices();
-			}
-/*
-			if (success) {
-				// Successfuly saved, close this dialog and return back
-				//SetupSensorActivityDialog.this.finish();
-				// controll if more sensor is uninit
-				if (mUnInitDevices.size() > 1) {
-					Bundle bundle = new Bundle();
-					bundle.putInt(Constants.ADDSENSOR_COUNT_SENSOR, mCountOfSensor);
-					// go to setup uninit sensor
-					Intent intent = new Intent(SetupSensorActivityDialog.this, SetupSensorActivityDialog.class);
-					intent.putExtras(bundle);
-					startActivity(intent);
-					return;
-				}
-				if (mUnInitDevices.size() == 1) { // last one
-					// TODO: this only when going from loginscreen, need to review
-					if (mController.isLoggedIn()) {
-						Intent intent = new Intent(SetupSensorActivityDialog.this, LocationScreenActivity.class);
-						startActivity(intent);
-						return;
-					}
-				}*/
-			}
-		}
+	
 
 
 	class CustomArrayAdapter extends ArrayAdapter<Location> {
