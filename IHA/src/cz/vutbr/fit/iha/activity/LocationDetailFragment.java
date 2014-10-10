@@ -9,20 +9,15 @@ import android.view.ViewGroup;
 import com.actionbarsherlock.app.SherlockFragment;
 
 import cz.vutbr.fit.iha.R;
-import cz.vutbr.fit.iha.controller.Controller;
 
 //import cz.vutbr.fit.iha.activity.SensorDetailFragment.GetDeviceTask;
 
 public class LocationDetailFragment extends SherlockFragment {
 
-	private Controller mController;
 	private static final String TAG = LocationDetailFragment.class.getSimpleName();
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		// Get controller
-		mController = Controller.getInstance(getActivity().getApplicationContext());
-
 		Bundle bundle = this.getArguments();
 		String locationID = bundle.getString("locationID");
 		Log.d(TAG, "location id: " + locationID);

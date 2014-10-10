@@ -13,7 +13,7 @@ public abstract class BaseApplicationActivity extends BaseActivity {
 
 	private boolean triedLoginAlready = false;
 	
-	protected static boolean isPaused = false;
+	protected boolean isPaused = false;
 	
 	@Override
 	public void onResume() {

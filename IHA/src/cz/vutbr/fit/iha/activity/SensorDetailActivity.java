@@ -29,6 +29,8 @@ import cz.vutbr.fit.iha.view.CustomViewPager;
  */
 public class SensorDetailActivity extends BaseApplicationActivity {
 
+	private static final String TAG = SensorDetailActivity.class.getSimpleName();
+	
 	public static final String EXTRA_DEVICE_ID = "device_id";
 	public static final String EXTRA_ADAPTER_ID = "adapter_id";
 	
@@ -41,8 +43,6 @@ public class SensorDetailActivity extends BaseApplicationActivity {
 	private String mActiveAdapterId;
 	private String mActiveDeviceId;
 	private int mActiveDevicePosition;
-
-	private static final String TAG = SensorDetailActivity.class.getSimpleName();
 
 	private GetDevicesTask mTask;
 

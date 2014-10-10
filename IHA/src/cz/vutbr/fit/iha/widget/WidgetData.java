@@ -2,12 +2,9 @@ package cz.vutbr.fit.iha.widget;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.util.Log;
 import cz.vutbr.fit.iha.R;
 
 public class WidgetData {
-
-	private static final String TAG = SensorWidgetProvider.class.getSimpleName();
 
 	private static final String PREF_FILENAME = "widget_%d";
 	private static final String PREF_LAYOUT = "layout";

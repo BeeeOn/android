@@ -3,8 +3,6 @@ package cz.vutbr.fit.iha.activity;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.joda.time.DateTime;
-
 import se.emilsjolander.stickylistheaders.StickyListHeadersListView;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -88,21 +86,12 @@ public class LocationScreenActivity extends BaseApplicationActivity {
 	private SensorListAdapter mSensorAdapter;
 	private ListView mSensorList;
 
-	private CharSequence mTitle;
-
-	private static boolean inBackground = false;
-	private static boolean isClosing = false;
-
 	/**
 	 * Instance save state tags
 	 */
-	private static final String BKG = "activityinbackground";
 	private static final String LCTN = "lastlocation";
 	private static final String ADAPTER_ID = "lastAdapterId";
 	private static final String IS_DRAWER_OPEN = "draweropen";
-
-	private final static int REQUEST_SENSOR_DETAIL = 1;
-	private final static int REQUEST_ADD_ADAPTER = 2;
 
 	/**
 	 * saved instance states
@@ -110,8 +99,7 @@ public class LocationScreenActivity extends BaseApplicationActivity {
 	private Location mActiveLocation;
 	private String mActiveLocationId;
 	private String mActiveAdapterId;
-	private static boolean mOrientation = false;
-	private static boolean mIsDrawerOpen;
+	private boolean mIsDrawerOpen;
 
 	private Handler mTimeHandler = new Handler();
 	private Runnable mTimeRun;
@@ -150,13 +138,9 @@ public class LocationScreenActivity extends BaseApplicationActivity {
 		getSupportActionBar().setIcon(R.drawable.ic_launcher_white);
 
 		if (savedInstanceState != null) {
-			inBackground = savedInstanceState.getBoolean(BKG);
 			mIsDrawerOpen = savedInstanceState.getBoolean(IS_DRAWER_OPEN);
 			mActiveLocationId = savedInstanceState.getString(LCTN);
 			mActiveAdapterId = savedInstanceState.getString(ADAPTER_ID);
-
-			if (mActiveLocationId != null)
-				mOrientation = true;
 		}
 
 		initMenu();
@@ -171,7 +155,7 @@ public class LocationScreenActivity extends BaseApplicationActivity {
 	}
 
 	public void onAppResume() {
-		Log.d(TAG, "onAppResume  , inBackground: " + String.valueOf(inBackground));
+		Log.d(TAG, "onAppResume()");
 
 		backPressed = false;
 		
@@ -238,14 +222,11 @@ public class LocationScreenActivity extends BaseApplicationActivity {
 
 	@Override
 	public void onBackPressed() {
-		// second click
 		if (backPressed) {
-			isClosing = true;
-			Log.d(TAG, "kua to co je" + Boolean.toString(isClosing));
+			// second click
 			secondTapBack();
-		}
-		// first click
-		else {
+		} else {
+			// first click
 			firstTapBack();
 		}
 		Log.d(TAG, "BackPressed - onBackPressed " + String.valueOf(backPressed));
@@ -255,15 +236,10 @@ public class LocationScreenActivity extends BaseApplicationActivity {
 
 	@Override
 	public void onSaveInstanceState(Bundle savedInstanceState) {
-		savedInstanceState.putBoolean(BKG, inBackground);
 		savedInstanceState.putString(ADAPTER_ID, mActiveAdapterId);
 		savedInstanceState.putString(LCTN, mActiveLocationId);
-		savedInstanceState.putBoolean(IS_DRAWER_OPEN, mDrawerLayout.isDrawerOpen(mDrawerList));
+		savedInstanceState.putBoolean(IS_DRAWER_OPEN, mIsDrawerOpen);
 		super.onSaveInstanceState(savedInstanceState);
-	}
-
-	public static void healActivity() {
-		inBackground = false;
 	}
 
 	/**
@@ -348,7 +324,7 @@ public class LocationScreenActivity extends BaseApplicationActivity {
 	public boolean initMenu() {
 
 		Log.d(TAG, "initMenu()");
-		mTitle = mDrawerTitle = "IHA";
+		mDrawerTitle = "IHA";
 
 		// Locate DrawerLayout in activity_location_screen.xml
 		mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -441,7 +417,7 @@ public class LocationScreenActivity extends BaseApplicationActivity {
 					bundle.putString("locationID", myMessage);
 					Intent intent = new Intent(LocationScreenActivity.this, LocationDetailActivity.class);
 					intent.putExtras(bundle);
-					startActivityForResult(intent, REQUEST_SENSOR_DETAIL);
+					startActivity(intent);
 					break;
 				case ADAPTER:
 					Log.i(TAG, "deleting adapter");
@@ -472,13 +448,14 @@ public class LocationScreenActivity extends BaseApplicationActivity {
 					getSupportActionBar().setTitle(mActiveLocation.getName());
 				super.onDrawerClosed(view);
 				Log.d(TAG, "BackPressed - onDrawerClosed " + String.valueOf(backPressed));
-
+				mIsDrawerOpen = false;
 			}
 
 			public void onDrawerOpened(View drawerView) {
 				// Set the title on the action when drawer open
 				getSupportActionBar().setTitle(mDrawerTitle);
 				super.onDrawerOpened(drawerView);
+				mIsDrawerOpen = true;
 				// backPressed = true;
 			}
 		};
@@ -550,7 +527,7 @@ public class LocationScreenActivity extends BaseApplicationActivity {
 		
 		Log.d(TAG, "LifeCycle: redraw devices list start");
 
-		mTitle = mDrawerTitle = "IHA";
+		mDrawerTitle = "IHA";
 
 		mSensorList = (ListView) findViewById(R.id.listviewofsensors);
 		TextView nosensor = (TextView) findViewById(R.id.nosensorlistview);
@@ -563,7 +540,6 @@ public class LocationScreenActivity extends BaseApplicationActivity {
 				Log.d(TAG, "HERE ADD SENSOR +");
 				mController.unignoreUninitialized(mActiveAdapterId);
 
-				inBackground = true;
 				DialogFragment newFragment = new AddSensorFragmentDialog();
 			    newFragment.show(getSupportFragmentManager(), "missiles");
 				return;
@@ -602,7 +578,6 @@ public class LocationScreenActivity extends BaseApplicationActivity {
 				Log.d(TAG, "HERE ADD SENSOR +");
 				mController.unignoreUninitialized(mActiveAdapterId);
 
-				inBackground = true;
 				//Intent intent = new Intent(LocationScreenActivity.this, AddSensorFragmentDialog.class);
 				//startActivity(intent);
 				
@@ -624,7 +599,6 @@ public class LocationScreenActivity extends BaseApplicationActivity {
 						Log.d(TAG, "HERE ADD SENSOR +");
 						mController.unignoreUninitialized(mActiveAdapterId);
 	
-						inBackground = true;
 						//Intent intent = new Intent(LocationScreenActivity.this, AddSensorFragmentDialog.class);
 						//startActivity(intent);
 						
@@ -644,8 +618,7 @@ public class LocationScreenActivity extends BaseApplicationActivity {
 					bundle.putString(SensorDetailActivity.EXTRA_DEVICE_ID, device.getId());
 					Intent intent = new Intent(LocationScreenActivity.this, SensorDetailActivity.class);
 					intent.putExtras(bundle);
-					startActivityForResult(intent, REQUEST_SENSOR_DETAIL);
-					// startActivity(intent);
+					startActivity(intent);
 					// finish();
 				}
 			});
@@ -654,23 +627,6 @@ public class LocationScreenActivity extends BaseApplicationActivity {
 		this.setSupportProgressBarIndeterminateVisibility(false);
 		Log.d(TAG, "LifeCycle: getsensors end");
 		return true;
-	}
-
-	@Override
-	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		super.onActivityResult(requestCode, resultCode, data);
-
-		if (requestCode == REQUEST_SENSOR_DETAIL) {
-			inBackground = true;
-			setSupportProgressBarIndeterminateVisibility(false);
-
-			// mController.reloadAdapters();
-			redrawDevices();
-
-			Log.d(TAG, "Here");
-		} else if (requestCode == REQUEST_ADD_ADAPTER) {
-			redrawMenu();
-		}
 	}
 
 	private void setActiveAdapterAndLocation() {
@@ -712,14 +668,11 @@ public class LocationScreenActivity extends BaseApplicationActivity {
 		mMenuAdapter = getMenuAdapter();
 		mDrawerList.setAdapter(mMenuAdapter);
 
-		if (mOrientation) {
-			if (!mIsDrawerOpen) {
-				// Close drawer
-				mDrawerLayout.closeDrawer(mDrawerList);
-				Log.d(TAG, "LifeCycle: onOrientation");
-			}
+		if (!mIsDrawerOpen) {
+			// Close drawer
+			mDrawerLayout.closeDrawer(mDrawerList);
+			Log.d(TAG, "LifeCycle: onOrientation");
 		}
-		mOrientation = false;
 	}
 	
 	public void checkNoAdapters() {
@@ -776,7 +729,6 @@ public class LocationScreenActivity extends BaseApplicationActivity {
 			@Override
 			public void onClick(View v) {
 				// Open activity for adding new facility
-				inBackground = true;
 				Intent intent = new Intent(LocationScreenActivity.this, SetupSensorFragmentDialog.class);
 				startActivity(intent);
 				mDialog.dismiss();
@@ -806,12 +758,6 @@ public class LocationScreenActivity extends BaseApplicationActivity {
 	}
 
 	@Override
-	public void setTitle(CharSequence title) {
-		mTitle = title;
-		getSupportActionBar().setTitle(mTitle);
-	}
-
-	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		MenuInflater inflater = getSupportMenuInflater();
 		inflater.inflate(R.menu.location_screen, menu);
@@ -831,7 +777,6 @@ public class LocationScreenActivity extends BaseApplicationActivity {
 			break;
 
 		case R.id.action_addadapter: {
-			inBackground = true;
 			/*Intent intent = new Intent(LocationScreenActivity.this, AddAdapterActivityDialog.class);
 			Bundle bundle = new Bundle();
 			bundle.putBoolean(Constants.CANCEL, true);
@@ -857,7 +802,6 @@ public class LocationScreenActivity extends BaseApplicationActivity {
 		}
 		case R.id.action_logout: {
 			mController.logout();
-			inBackground = false;
 			Intent intent = new Intent(LocationScreenActivity.this, LoginActivity.class);
 			startActivity(intent);
 			this.finish();

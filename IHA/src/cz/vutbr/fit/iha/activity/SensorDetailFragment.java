@@ -120,7 +120,6 @@ public class SensorDetailFragment extends SherlockFragment {
 	//
 	private ActionMode mMode;
 
-	public double minimum;
 	private int mLastProgressRefreshTime;
 
 	private GraphViewSeries mGraphSeries;
@@ -443,7 +442,6 @@ public class SensorDetailFragment extends SherlockFragment {
 
 	private void addGraphView(final DateTimeZone dateTimeZone) {
 		mGraphView = new LineGraphView(getView().getContext(), ""); // empty heading
-		minimum = -1.0;
 
 		mGraphView.getGraphViewStyle().setTextSize(getResources().getDimension(R.dimen.textsizesmaller));
 		mGraphView.getGraphViewStyle().setVerticalLabelsColor(getResources().getColor(R.color.iha_text_hint));

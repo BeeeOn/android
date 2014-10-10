@@ -5,13 +5,11 @@ import java.util.Collections;
 import java.util.EnumSet;
 import java.util.List;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -20,7 +18,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
@@ -33,13 +30,11 @@ import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
-import cz.vutbr.fit.iha.Constants;
 import cz.vutbr.fit.iha.R;
 import cz.vutbr.fit.iha.SetupSensorListAdapter;
 import cz.vutbr.fit.iha.activity.LocationScreenActivity;
 import cz.vutbr.fit.iha.activity.TrackDialogFragment;
 import cz.vutbr.fit.iha.adapter.Adapter;
-import cz.vutbr.fit.iha.adapter.device.BaseDevice;
 import cz.vutbr.fit.iha.adapter.device.BaseDevice.SaveDevice;
 import cz.vutbr.fit.iha.adapter.device.Facility;
 import cz.vutbr.fit.iha.adapter.location.Location;
@@ -435,7 +430,6 @@ public class SetupSensorFragmentDialog extends TrackDialogFragment {
 				Toast.makeText(mActivity, getString(success ? R.string.toast_new_sensor_added : R.string.toast_new_sensor_not_added), Toast.LENGTH_LONG).show();
 				mProgress.cancel();
 				dialog.dismiss();
-				LocationScreenActivity.healActivity();
 				mActivity.redrawMenu();
 				mActivity.redrawDevices();
 			}
@@ -456,15 +450,11 @@ public class SetupSensorFragmentDialog extends TrackDialogFragment {
 				if (mUnInitDevices.size() == 1) { // last one
 					// TODO: this only when going from loginscreen, need to review
 					if (mController.isLoggedIn()) {
-						LocationScreenActivity.healActivity();
 						Intent intent = new Intent(SetupSensorActivityDialog.this, LocationScreenActivity.class);
 						startActivity(intent);
 						return;
 					}
-				}
-
-				// Heal Location screen activity - refresh sensors
-				LocationScreenActivity.healActivity();*/
+				}*/
 			}
 		}
 

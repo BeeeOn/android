@@ -3,7 +3,6 @@ package cz.vutbr.fit.iha.activity;
 import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnCancelListener;
 import android.content.Intent;
@@ -41,7 +40,6 @@ public class LoginActivity extends BaseActivity {
 	public static final String BUNDLE_REDIRECT = "isRedirect";
 	
 	private Controller mController;
-	private LoginActivity mActivity;
 	private ProgressDialog mProgress;
 	private Thread mDoGoogleLoginThread;
 	private StoppableRunnable mDoGoogleLoginRunnable;
@@ -54,8 +52,6 @@ public class LoginActivity extends BaseActivity {
 	private boolean mSignUp = false;
 
 	private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 1;
-
-	private Context mContext;
 	
 	private boolean isRedirect = false;
 
@@ -75,15 +71,11 @@ public class LoginActivity extends BaseActivity {
 			isRedirect = bundle.getBoolean(BUNDLE_REDIRECT, false);
 		}
 
-		// Get Activity
-		mActivity = this;
-		mContext = this;
-
 		// Get controller
 		mController = Controller.getInstance(getApplicationContext());
 
 		// Prepare progress dialog
-		mProgress = new ProgressDialog(mActivity);
+		mProgress = new ProgressDialog(this);
 		mProgress.setMessage(getString(R.string.progress_signing));
 		mProgress.setCancelable(true);
 		mProgress.setCanceledOnTouchOutside(false);
@@ -100,7 +92,7 @@ public class LoginActivity extends BaseActivity {
 // FIXME commented for release
 //		// try to register GCM
 //		if (mController.getGCMRegistrationId().isEmpty() && GooglePlayServicesUtil.isGooglePlayServicesAvailable(getBaseContext()) == ConnectionResult.SUCCESS) {
-//			GcmHelper.registerGCMInBackground(mContext);
+//			GcmHelper.registerGCMInBackground(this);
 //		}
 
 		mProgress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
@@ -111,11 +103,11 @@ public class LoginActivity extends BaseActivity {
 			mController.initGoogle(this, mController.getLastEmail());
 
 			if (!isRedirect) {
-				Intent intent = new Intent(mActivity, LocationScreenActivity.class);
-				mActivity.startActivity(intent);
+				Intent intent = new Intent(this, LocationScreenActivity.class);
+				startActivity(intent);
 			}
 
-			mActivity.finish();
+			finish();
 			return;
 		}
 
@@ -124,7 +116,7 @@ public class LoginActivity extends BaseActivity {
 			// Automatic login with last used e-mail
 			Log.d(TAG, String.format("Automatic login with last used e-mail (%s)...", lastEmail));
 
-			mActivity.setDemoMode(false);
+			setDemoMode(false);
 			mProgress.show();
 			doGoogleLogin(lastEmail);
 		}
@@ -133,7 +125,7 @@ public class LoginActivity extends BaseActivity {
 		((ImageButton) findViewById(R.id.login_btn_demo)).setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				mActivity.setDemoMode(true);
+				setDemoMode(true);
 
 				if (!isRedirect) {
 					Intent intent = new Intent(LoginActivity.this, LocationScreenActivity.class);
@@ -153,7 +145,7 @@ public class LoginActivity extends BaseActivity {
 			@Override
 			public void onClick(View v) {
 				mIgnoreChange = true;
-				mActivity.setDemoMode(false);
+				setDemoMode(false);
 				mProgress.show();
 				beginGoogleAuthRutine(v);
 				mIgnoreChange = false;
@@ -210,7 +202,7 @@ public class LoginActivity extends BaseActivity {
 	@Override
 	public void onBackPressed() {
 		super.onBackPressed();
-		mActivity.finish();
+		finish();
 	}
 
 	@Override
@@ -335,7 +327,7 @@ public class LoginActivity extends BaseActivity {
 	private void doGoogleLogin(final String email) {
 		progressShow();
 		if (!mController.isInternetAvailable()) {
-			Toast.makeText(mActivity, getString(R.string.toast_internet_connection), Toast.LENGTH_LONG).show();
+			Toast.makeText(this, getString(R.string.toast_internet_connection), Toast.LENGTH_LONG).show();
 			progressDismiss();
 			return;
 		}
@@ -352,12 +344,12 @@ public class LoginActivity extends BaseActivity {
 //					// try to register again in 1 second, otherwise register in
 //					// separate thread
 //					if (gcmId.isEmpty()) {
-//						GcmHelper.registerGCMInForeground(mContext);
+//						GcmHelper.registerGCMInForeground(LoginActivity.this);
 //						gcmId = mController.getGCMRegistrationId();
 //						// if it still doesn't have GCM ID, try it repeatedly in
 //						// new thread
 //						if (gcmId.isEmpty()) {
-//							GcmHelper.registerGCMInBackground(mContext);
+//							GcmHelper.registerGCMInBackground(LoginActivity.this);
 //							Log.e(GcmHelper.TAG_GCM, "GCM ID is not accesible, creating new thread for ");
 //						}
 //					}
@@ -446,10 +438,10 @@ public class LoginActivity extends BaseActivity {
 				progressDismiss();
 				if (!mDoGoogleLoginRunnable.isStopped()) {
 					if (!isRedirect) {
-						Intent intent = new Intent(mActivity, LocationScreenActivity.class);
-						mActivity.startActivity(intent);
+						Intent intent = new Intent(this, LocationScreenActivity.class);
+						startActivity(intent);
 					}
-					mActivity.finish();
+					finish();
 				}
 			} else {
 				Log.d(TAG, "Login: false");
@@ -504,7 +496,7 @@ public class LoginActivity extends BaseActivity {
 			progressDismiss();
 			if (errFlag) {
 				// alternate form: //mActivity.runOnUiThread(new ToastMessageThread(mActivity, errMessage));
-				new ToastMessageThread(mActivity, errMessage).start();
+				new ToastMessageThread(this, errMessage).start();
 			}
 		}
 	}
@@ -517,7 +509,7 @@ public class LoginActivity extends BaseActivity {
 			doLogin(email);
 		} else {
 			progressDismiss();
-			new ToastMessageThread(mActivity, R.string.toast_something_wrong);
+			new ToastMessageThread(this, R.string.toast_something_wrong);
 		}
 	}
 
