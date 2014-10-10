@@ -1,14 +1,11 @@
 package cz.vutbr.fit.iha.activity.dialog;
 
-import java.util.Vector;
-
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -20,8 +17,10 @@ import cz.vutbr.fit.iha.Constants;
 import cz.vutbr.fit.iha.R;
 import cz.vutbr.fit.iha.activity.LocationScreenActivity;
 import cz.vutbr.fit.iha.activity.TrackDialogFragment;
-import cz.vutbr.fit.iha.adapter.Adapter;
+import cz.vutbr.fit.iha.asynctask.CallbackTask.CallbackTaskListener;
+import cz.vutbr.fit.iha.asynctask.RegisterAdapterTask;
 import cz.vutbr.fit.iha.controller.Controller;
+import cz.vutbr.fit.iha.pair.RegisterAdapterPair;
 import cz.vutbr.fit.iha.thread.ToastMessageThread;
 
 public class AddAdapterFragmentDialog extends TrackDialogFragment {
@@ -33,16 +32,6 @@ public class AddAdapterFragmentDialog extends TrackDialogFragment {
 	private Controller mController;
 	
 	private RegisterAdapterTask mRegisterAdapterTask;
-	
-	private class RegisterAdapterPair {
-		public final String adapterId;
-		public final String adapterName;
-		
-		public RegisterAdapterPair(String adapterId, String adapterName) {
-			this.adapterId = adapterId;
-			this.adapterName = adapterName;
-		}
-	}
 
 	@Override
 	public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -129,8 +118,7 @@ public class AddAdapterFragmentDialog extends TrackDialogFragment {
             			String adapterName = adapterNameEdit.getText().toString();
             			Log.i(TAG, "seriove cislo: " + serialNumber);
             			
-            			mRegisterAdapterTask = new RegisterAdapterTask();
-            			mRegisterAdapterTask.execute(new RegisterAdapterPair[] { new RegisterAdapterPair(serialNumber, adapterName) });
+            			doRegisterAdapterTask(new RegisterAdapterPair(serialNumber, adapterName));
             		}
                 }
             });
@@ -159,52 +147,27 @@ public class AddAdapterFragmentDialog extends TrackDialogFragment {
 		}
 	}
 	
-	private class RegisterAdapterTask extends AsyncTask<RegisterAdapterPair, Void, Boolean> {
-
-		private String getUniqueAdapterName() {
-			Vector<String> adapterNames = new Vector<String>();
-			
-			for (Adapter adapter : mController.getAdapters()) {
-				adapterNames.add(adapter.getName());
-			}
-			
-			String name = "";
-
-			int number = 1;			
-			do {
-				name = mActivity.getString(R.string.adapter_default_name, number++);
-			} while (adapterNames.contains(name));
-			
-			return name;
-		}
+	public void doRegisterAdapterTask(RegisterAdapterPair pair) {
+		mRegisterAdapterTask = new RegisterAdapterTask(getActivity().getApplicationContext());
 		
-		@Override
-		protected Boolean doInBackground(RegisterAdapterPair... pairs) {
-			RegisterAdapterPair pair = pairs[0];
+		mRegisterAdapterTask.setListener(new CallbackTaskListener() {
 
-			String serialNumber = pair.adapterId;
-			String name = pair.adapterName;
+			@Override
+			public void onExecute(boolean success) {
+				int messageId = success ? R.string.toast_adapter_activated : R.string.toast_adapter_activate_failed; 
+				Log.d(TAG, mActivity.getString(messageId));
+				new ToastMessageThread(mActivity, messageId).start();
 
-			// Set default name for this adapter, if user didn't filled any
-			if (name.isEmpty()) {
-				name = getUniqueAdapterName();
+				if (success) {
+					AddAdapterFragmentDialog.this.dismiss();
+					mActivity.redrawMenu();
+					mActivity.checkNoDevices();
+				}
 			}
-			
-			return mController.registerAdapter(serialNumber, name);
-		}
-
-		@Override
-		protected void onPostExecute(Boolean success) {
-			int messageId = success ? R.string.toast_adapter_activated : R.string.toast_adapter_activate_failed; 
-			Log.d(TAG, mActivity.getString(messageId));
-			new ToastMessageThread(mActivity, messageId).start();
-
-			if (success) {
-				AddAdapterFragmentDialog.this.dismiss();
-				mActivity.redrawMenu();
-				mActivity.checkNoDevices();
-			}
-		}
+		});
+		
+		mRegisterAdapterTask.execute(pair);
 	}
+
 
 }
