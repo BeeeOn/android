@@ -187,62 +187,64 @@ public class SetupSensorFragmentDialog extends TrackDialogFragment {
 				// Set location to facility
 				newFacility.setLocationId(location.getId());
 				
-				// Set that facility was inicialized
+				// Set that facility was initialized
 				newFacility.setInitialized(true);
 				// Show progress bar for saving
 				mProgress.show();
 				
 				// Save that facility
-				SaveDeviceTask task = new SaveDeviceTask(getActivity().getApplicationContext());
-				task.setListener(new CallbackTaskListener() {
-
-					@Override
-					public void onExecute(boolean success) {
-						
-						AlertDialog dialog = (AlertDialog) getDialog();
-						if(dialog != null)
-						{
-							Toast.makeText(mActivity, getString(success ? R.string.toast_new_sensor_added : R.string.toast_new_sensor_not_added), Toast.LENGTH_LONG).show();
-							mProgress.cancel();
-							dialog.dismiss();
-							mActivity.redrawMenu();
-							mActivity.redrawDevices();
-						}
-						
-						/*if (success) {
-							// Successfuly saved, close this dialog and return back
-							//SetupSensorActivityDialog.this.finish();
-							// controll if more sensor is uninit
-							if (mUnInitDevices.size() > 1) {
-								Bundle bundle = new Bundle();
-								bundle.putInt(Constants.ADDSENSOR_COUNT_SENSOR, mCountOfSensor);
-								// go to setup uninit sensor
-								Intent intent = new Intent(SetupSensorActivityDialog.this, SetupSensorActivityDialog.class);
-								intent.putExtras(bundle);
-								startActivity(intent);
-								return;
-							}
-							if (mUnInitDevices.size() == 1) { // last one
-								// TODO: this only when going from loginscreen, need to review
-								if (mController.isLoggedIn()) {
-									Intent intent = new Intent(SetupSensorActivityDialog.this, LocationScreenActivity.class);
-									startActivity(intent);
-									return;
-								}
-							}
-						}*/
-					}
-					
-				});
-				
 				Log.d(TAG, String.format("SaveDevice - device: %s, loc: %s", newFacility.getId(), location.getId()));
-				task.execute(new DeviceLocationPair(newFacility, location));
+				doSaveDeviceTask(new DeviceLocationPair(newFacility, location));				
 			}
 		});
 	    
 	}
 		
+	private void doSaveDeviceTask(DeviceLocationPair pair) {
+		SaveDeviceTask task = new SaveDeviceTask(getActivity().getApplicationContext());
+		task.setListener(new CallbackTaskListener() {
 
+			@Override
+			public void onExecute(boolean success) {
+				
+				AlertDialog dialog = (AlertDialog) getDialog();
+				if(dialog != null)
+				{
+					Toast.makeText(mActivity, getString(success ? R.string.toast_new_sensor_added : R.string.toast_new_sensor_not_added), Toast.LENGTH_LONG).show();
+					mProgress.cancel();
+					dialog.dismiss();
+					mActivity.redrawMenu();
+					mActivity.redrawDevices();
+				}
+				
+				/*if (success) {
+					// Successfuly saved, close this dialog and return back
+					//SetupSensorActivityDialog.this.finish();
+					// controll if more sensor is uninit
+					if (mUnInitDevices.size() > 1) {
+						Bundle bundle = new Bundle();
+						bundle.putInt(Constants.ADDSENSOR_COUNT_SENSOR, mCountOfSensor);
+						// go to setup uninit sensor
+						Intent intent = new Intent(SetupSensorActivityDialog.this, SetupSensorActivityDialog.class);
+						intent.putExtras(bundle);
+						startActivity(intent);
+						return;
+					}
+					if (mUnInitDevices.size() == 1) { // last one
+						// TODO: this only when going from loginscreen, need to review
+						if (mController.isLoggedIn()) {
+							Intent intent = new Intent(SetupSensorActivityDialog.this, LocationScreenActivity.class);
+							startActivity(intent);
+							return;
+						}
+					}
+				}*/
+			}
+			
+		});
+
+		task.execute(pair);
+	}
 		
 
 	private void initViews(AlertDialog dialog) {
