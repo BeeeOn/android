@@ -59,6 +59,8 @@ import cz.vutbr.fit.iha.adapter.Adapter;
 import cz.vutbr.fit.iha.adapter.device.BaseDevice;
 import cz.vutbr.fit.iha.adapter.device.Facility;
 import cz.vutbr.fit.iha.adapter.location.Location;
+import cz.vutbr.fit.iha.asynctask.CallbackTask.CallbackTaskListener;
+import cz.vutbr.fit.iha.asynctask.SwitchAdapterTask;
 import cz.vutbr.fit.iha.controller.Controller;
 import cz.vutbr.fit.iha.household.ActualUser;
 import cz.vutbr.fit.iha.persistence.Persistence;
@@ -107,7 +109,7 @@ public class LocationScreenActivity extends BaseApplicationActivity {
 	/**
 	 * Tasks which can be running in this activity and after finishing can try to change GUI -> must be cancelled when activity stop
 	 */
-	private SwitchAdapter mSwitchAdapter;
+	private SwitchAdapterTask mSwitchAdapterTask;
 	private UnregisterAdapterTask mUnregisterAdapterTask;
 	private CustomAlertDialog mDialog;
 
@@ -181,8 +183,8 @@ public class LocationScreenActivity extends BaseApplicationActivity {
 			mDialog.dismiss();
 		}
 
-		if (mSwitchAdapter != null) {
-			mSwitchAdapter.cancel(true);
+		if (mSwitchAdapterTask != null) {
+			mSwitchAdapterTask.cancel(true);
 		}
 		
 		if (mUnregisterAdapterTask != null) {
@@ -367,11 +369,7 @@ public class LocationScreenActivity extends BaseApplicationActivity {
 				case ADAPTER:
 					// if it is not chosen, switch to selected adapter
 					if (!controller.getActiveAdapter().getId().equals(item.getId())) {
-
-						setSupportProgressBarIndeterminateVisibility(true);
-						mSwitchAdapter = new LocationScreenActivity.SwitchAdapter();
-						mSwitchAdapter.execute(new String[] { item.getId() });
-
+						doSwitchAdapter(item.getId());
 					}
 					break;
 
@@ -847,31 +845,23 @@ public class LocationScreenActivity extends BaseApplicationActivity {
 		dialog.show();
 	}
 
-	/**
-	 * Changes adapter and loads locations, checks for uninitialized devices and eventually shows dialog for adding them
-	 */
-	private class SwitchAdapter extends AsyncTask<String, Void, Boolean> {
+	private void doSwitchAdapter(String adapterId) {
+		mSwitchAdapterTask = new SwitchAdapterTask(this, false);
 
-		@Override
-		protected Boolean doInBackground(String... params) {
-			if (params.length > 0) {
-				mActiveAdapterId = params[0];
-				mController.setActiveAdapter(params[0], false);
-				return true;
-			}
-			
-			return false;
-		}
+		mSwitchAdapterTask.setListener(new CallbackTaskListener() {
 
-		@Override
-		protected void onPostExecute(Boolean result) {
-			if (result) {
-				redrawMenu();
+			@Override
+			public void onExecute(boolean success) {
+				if (success) {
+					redrawMenu();
+				}
+
+				setSupportProgressBarIndeterminateVisibility(false);			
 			}
+		});
 		
-			setSupportProgressBarIndeterminateVisibility(false);
-		}
-
+		setSupportProgressBarIndeterminateVisibility(true);
+		mSwitchAdapterTask.execute(adapterId);
 	}
 
 	/**
