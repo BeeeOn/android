@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.RemoteViews;
 import cz.vutbr.fit.iha.R;
+import cz.vutbr.fit.iha.activity.SensorDetailActivity;
 import cz.vutbr.fit.iha.activity.WidgetConfigurationActivity;
 import cz.vutbr.fit.iha.adapter.device.BaseDevice;
 import cz.vutbr.fit.iha.util.Compatibility;
@@ -135,7 +136,7 @@ public class SensorWidgetProvider extends AppWidgetProvider {
 		// force update on click to lastUpdate
 		pendingIntent = WidgetUpdateService.getForceUpdatePendingIntent(context, widgetId);
 		remoteViews.setOnClickPendingIntent(R.id.value, pendingIntent);
-		remoteViews.setOnClickPendingIntent(R.id.last_update, pendingIntent);		
+		remoteViews.setOnClickPendingIntent(R.id.last_update, pendingIntent);
 
 		// open configuration on click elsewhere
 		intent = new Intent(context, WidgetConfigurationActivity.class);
@@ -146,14 +147,14 @@ public class SensorWidgetProvider extends AppWidgetProvider {
 		remoteViews.setOnClickPendingIntent(R.id.layout, pendingIntent);
 
 		// open detail activity on click to icon
-		// FIXME: this is waiting for Leo to allow opening SensorDetail...
-		/*if (widgetData.deviceAdapterId.length() > 0 && widgetData.deviceId.length() > 0) {
+		if (widgetData.deviceAdapterId.length() > 0 && widgetData.deviceId.length() > 0) {
 			intent = new Intent(context, SensorDetailActivity.class);
-			intent.putExtra(SensorDetailActivity.DEVICE_ID, widgetData.deviceId);
-			intent.putExtra(SensorDetailActivity.ADAPTER_ID, widgetData.deviceAdapterId);
+			intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+			intent.putExtra(SensorDetailActivity.EXTRA_DEVICE_ID, widgetData.deviceId);
+			intent.putExtra(SensorDetailActivity.EXTRA_ADAPTER_ID, widgetData.deviceAdapterId);
 			pendingIntent = PendingIntent.getActivity(context, widgetId, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 			remoteViews.setOnClickPendingIntent(R.id.icon, pendingIntent);
-		}*/
+		}
 
 		// request widget redraw
 		appWidgetManager.updateAppWidget(widgetId, remoteViews);
