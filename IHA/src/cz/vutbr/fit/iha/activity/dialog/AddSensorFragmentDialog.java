@@ -5,7 +5,6 @@ import java.util.List;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.support.v4.app.DialogFragment;
@@ -22,6 +21,7 @@ import cz.vutbr.fit.iha.adapter.Adapter;
 import cz.vutbr.fit.iha.adapter.device.Facility;
 import cz.vutbr.fit.iha.asynctask.CallbackTask.CallbackTaskListener;
 import cz.vutbr.fit.iha.asynctask.PairRequestTask;
+import cz.vutbr.fit.iha.asynctask.ReloadUninitializedTask;
 import cz.vutbr.fit.iha.controller.Controller;
 
 public class AddSensorFragmentDialog extends TrackDialogFragment {
@@ -44,6 +44,7 @@ public class AddSensorFragmentDialog extends TrackDialogFragment {
 	private Adapter mAdapter;
 	
 	private PairRequestTask mPairRequestTask;
+	private ReloadUninitializedTask mReloadUninitializedTask;
 
 	private static final String TAG = LocationScreenActivity.class.getSimpleName();
 	
@@ -210,8 +211,7 @@ public class AddSensorFragmentDialog extends TrackDialogFragment {
 				if ((millisUntilFinished / 1000) % mIntervalToCheckUninitSensor == 0) {
 					// check if are new uninit sensor
 					Log.d(TAG, "PAIR - check if some uninit sensor");
-					GetUninitializedFacilitiesTask task = new GetUninitializedFacilitiesTask();
-					task.execute(new String[] { mAdapter.getId() });
+					doReloadUninitializedFacilitiesTask(mAdapter.getId());
 				}
 			}
 
@@ -228,44 +228,43 @@ public class AddSensorFragmentDialog extends TrackDialogFragment {
 		startTimerOnButton();
 	}
 
-	/**
-	 * Reload uninitialized facilities
-	 */
-	private class GetUninitializedFacilitiesTask extends AsyncTask<String, Void, Boolean> {
+	public void doReloadUninitializedFacilitiesTask(String adapterId) {
+		mReloadUninitializedTask = new ReloadUninitializedTask(getActivity().getApplicationContext());
 
-		@Override
-		protected Boolean doInBackground(String... adapterIds) {
-			return mController.reloadUninitializedFacilitiesByAdapter(adapterIds[0], true);
-		}
+		mReloadUninitializedTask.setListener(new CallbackTaskListener() {
 
-		@Override
-		protected void onPostExecute(Boolean success) {
-			if (!success) {
-				return;
-			}
-			
-			List<Facility> facilities = mController.getUninitializedFacilities(mAdapter.getId(), false);
-			
-			if (facilities.size() > 0) {
-				if (mCountDownTimer != null) {
-					// Setup variable as true for disable timer
-					mTimerDone = true;
-					mCountDownTimer.cancel();
+			@Override
+			public void onExecute(boolean success) {
+				if (!success) {
+					return;
 				}
-				Log.d(TAG, "Nasel jsem neinicializovane zarizeni !!!!");
 				
-				// go to setup uninit sensor
-				DialogFragment newFragment = new SetupSensorFragmentDialog();
-			    newFragment.show(mActivity.getSupportFragmentManager(), "SetupSensor");
-			    getDialog().dismiss();
-			    
-				//Intent intent = new Intent(AddSensorFragmentDialog.this, SetupSensorActivityDialog.class);
-				//intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-				//intent.putExtras(bundle);
-				//startActivity(intent);
-				//finish();
+				List<Facility> facilities = mController.getUninitializedFacilities(mAdapter.getId(), false);
+				
+				if (facilities.size() > 0) {
+					if (mCountDownTimer != null) {
+						// Setup variable as true for disable timer
+						mTimerDone = true;
+						mCountDownTimer.cancel();
+					}
+					Log.d(TAG, "Nasel jsem neinicializovane zarizeni !!!!");
+					
+					// go to setup uninit sensor
+					DialogFragment newFragment = new SetupSensorFragmentDialog();
+				    newFragment.show(mActivity.getSupportFragmentManager(), "SetupSensor");
+				    getDialog().dismiss();
+				    
+					//Intent intent = new Intent(AddSensorFragmentDialog.this, SetupSensorActivityDialog.class);
+					//intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+					//intent.putExtras(bundle);
+					//startActivity(intent);
+					//finish();
+				}
 			}
-		}
+		
+		});
+		
+		mReloadUninitializedTask.execute(adapterId);
 	}
 	
 }
