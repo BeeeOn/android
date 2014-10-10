@@ -113,7 +113,7 @@ public class SensorWidgetProvider extends AppWidgetProvider {
 			Log.v(TAG, String.format("Using fresh widget (%d) data", widgetId));
 		} else {
 			// NOTE: just temporary solution until it will be showed better on widget
-			widgetData.deviceName = String.format("%s %s", widgetData.deviceName, context.getString(R.string.widget_cached));
+			widgetData.deviceLastUpdate = String.format("%s %s", widgetData.deviceLastUpdate, context.getString(R.string.widget_cached));
 			
 			Log.v(TAG, String.format("Using cached widget (%d) data", widgetId));
 		}
