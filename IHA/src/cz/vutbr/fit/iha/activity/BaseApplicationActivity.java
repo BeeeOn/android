@@ -46,7 +46,7 @@ public abstract class BaseApplicationActivity extends BaseActivity {
 	public static void redirectToLogin(Context context) {
 		Intent intent = new Intent(context, LoginActivity.class);
 		intent.putExtra(LoginActivity.BUNDLE_REDIRECT, true);
-		intent.setFlags(Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS | Intent.FLAG_ACTIVITY_NO_HISTORY);
+		intent.setFlags(Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS | Intent.FLAG_ACTIVITY_NO_HISTORY | Intent.FLAG_ACTIVITY_NEW_TASK);
 
 		context.startActivity(intent);
 	}

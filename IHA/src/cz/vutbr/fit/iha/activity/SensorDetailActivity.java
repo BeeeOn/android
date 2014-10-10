@@ -29,6 +29,9 @@ import cz.vutbr.fit.iha.view.CustomViewPager;
  */
 public class SensorDetailActivity extends BaseApplicationActivity {
 
+	public static final String EXTRA_DEVICE_ID = "device_id";
+	public static final String EXTRA_ADAPTER_ID = "adapter_id";
+	
 	private Controller mController;
 	private List<BaseDevice> mDevices;
 

@@ -161,15 +161,21 @@
     <string name="widget_sensor_title_small">IHA Sensor detail 1x1</string>
     <string name="widget_sensor_title_medium">IHA Sensor detail 2x1</string>
     <string name="widget_sensor_title_large">IHA Sensor detail 3x1</string>
+    <string name="widget_cached">(cached)</string>
     
     <!-- WidgetConfigurationActivity -->
     <string name="widget_configuration_adapter">Adapter:</string>
     <string name="widget_configuration_sensor">Sensor to be shown:</string>
-    <string name="widget_configuration_interval_sensor">Sensor update interval (sec.):</string>
-    <string name="widget_configuration_interval_widget">Widget update interval (sec.):</string>
+    <string name="widget_configuration_interval_sensor">Sensor update interval:</string>
+    <string name="widget_configuration_interval_widget">Widget update interval:</string>
+    
+    <string name="widget_configuration_login_first">You must be logged in first.</string>
+    <string name="widget_configuration_no_adapters">You have no adapters and thus no sensors to use in widget.</string>
+    <string name="widget_configuration_select_adapter">Select adapter from list</string>
+    <string name="widget_configuration_select_device">Select device from list</string>
 
 
-    <!-- ABOUT -->
+    <!-- About -->
     <string name="play_link">market://details?id=cz.vutbr.fit.iha</string>
     <string name="company_email">media@rehivetech.com</string>
     <string name="company_web">http://rehivetech.com/</string>
@@ -194,7 +200,7 @@
         <item quantity="other">%d hours</item>
     </plurals>
     
-    <!-- SETTINGS -->
+    <!-- Settings -->
     <string name="personal">Personal</string>
     <string name="user_profile">User profile</string>
     <string name="units">Units</string>

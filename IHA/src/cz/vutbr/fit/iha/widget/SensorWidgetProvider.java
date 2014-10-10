@@ -6,13 +6,12 @@ import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.RemoteViews;
-import cz.vutbr.fit.iha.Constants;
 import cz.vutbr.fit.iha.R;
+import cz.vutbr.fit.iha.activity.SensorDetailActivity;
 import cz.vutbr.fit.iha.activity.WidgetConfigurationActivity;
 import cz.vutbr.fit.iha.adapter.device.BaseDevice;
 import cz.vutbr.fit.iha.util.Compatibility;
@@ -38,7 +37,8 @@ public class SensorWidgetProvider extends AppWidgetProvider {
 
 		// delete removed widgets settings
 		for (int widgetId : appWidgetIds) {
-			getSettings(context, widgetId).edit().clear().commit();
+			WidgetData widgetData = new WidgetData(widgetId);
+			widgetData.deleteData(context);
 		}
 	}
 
@@ -79,10 +79,9 @@ public class SensorWidgetProvider extends AppWidgetProvider {
 		Log.d(TAG, String.format("[%d-%d] x [%d-%d] -> %s", min_width, max_width, min_height, max_height, name));
 
 		// save layout resource to widget settings
-		SharedPreferences.Editor editor = getSettings(context, appWidgetId).edit();
-		editor.putInt(Constants.WIDGET_PREF_LAYOUT, layout);
-		editor.commit();
-
+		WidgetData widgetData = new WidgetData(appWidgetId);
+		widgetData.saveLayout(context, layout);
+		
 		// force update widget
 		context.startService(WidgetUpdateService.getForceUpdateIntent(context, appWidgetId));
 	}
@@ -94,70 +93,50 @@ public class SensorWidgetProvider extends AppWidgetProvider {
 
 		super.onReceive(context, intent);
 	}
-
-	public static SharedPreferences getSettings(Context context, int widgetId) {
-		// We don't use getting settings from Controller, because widgets are independent and doesn't depend on logged user
-		return context.getSharedPreferences(String.format(Constants.WIDGET_PREF_FILENAME, widgetId), 0);
-	}
-
+	
 	public void updateWidget(Context context, int widgetId, BaseDevice device) {
 		// Log.d(TAG, "updateWidget()");
 		AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
 
-		SharedPreferences settings = getSettings(context, widgetId);
-
-		// set layout resource from settings
-		int layout = settings.getInt(Constants.WIDGET_PREF_LAYOUT, R.layout.widget_sensor);
-		RemoteViews remoteViews = new RemoteViews(context.getPackageName(), layout);
-
-		int icon = 0;
-		String name = "";
-		String value = "";
-		String adapterId = "";
-		String deviceId = "";
+		WidgetData widgetData = new WidgetData(widgetId);
+		widgetData.loadData(context);
 
 		if (device != null) {
-			// Load values from device
-			icon = device.getTypeIconResource();
-			name = device.getName();
-			value = device.getStringValueUnit(context);
-			adapterId = device.getFacility().getAdapterId();
-			deviceId = device.getId();
+			// Get fresh data from device
+			widgetData.deviceIcon = device.getTypeIconResource();
+			widgetData.deviceName = device.getName();
+			widgetData.deviceValue = device.getStringValueUnit(context);
+			widgetData.deviceAdapterId = device.getFacility().getAdapterId();
+			widgetData.deviceId = device.getId();
+			
+			widgetData.saveData(context);
 
-			// Cache these values
-			Log.v(TAG, String.format("Saving widget (%d) data to cache", widgetId));
-
-			settings
-				.edit()
-				.putInt(Constants.WIDGET_PREF_DEVICE_ICON, icon)
-				.putString(Constants.WIDGET_PREF_DEVICE_NAME, name)
-				.putString(Constants.WIDGET_PREF_DEVICE_VALUE, value)
-				.putString(Constants.WIDGET_PREF_DEVICE_ADAPTER_ID, adapterId)
-				.commit();
+			Log.v(TAG, String.format("Using fresh widget (%d) data", widgetId));
 		} else {
-			// Device doesn't exists -> try to load values from cache
-			Log.v(TAG, String.format("Loading widget (%d) data from cache", widgetId));
-
-			icon = settings.getInt(Constants.WIDGET_PREF_DEVICE_ICON, 0);
-			name = settings.getString(Constants.WIDGET_PREF_DEVICE_NAME, context.getString(R.string.placeholder_not_exists));
-			value = settings.getString(Constants.WIDGET_PREF_DEVICE_VALUE, "");
-			adapterId = settings.getString(Constants.WIDGET_PREF_DEVICE_ADAPTER_ID, "");
-			deviceId = settings.getString(Constants.WIDGET_PREF_DEVICE, "");
-
-			name += " (cached)"; // NOTE: just temporary solution until it will be showed better on widget
+			// NOTE: just temporary solution until it will be showed better on widget
+			widgetData.deviceLastUpdate = String.format("%s %s", widgetData.deviceLastUpdate, context.getString(R.string.widget_cached));
+			
+			Log.v(TAG, String.format("Using cached widget (%d) data", widgetId));
 		}
 
-		remoteViews.setImageViewResource(R.id.icon, icon == 0 ? R.drawable.ic_launcher : icon);
-		remoteViews.setTextViewText(R.id.name, name);
-		remoteViews.setTextViewText(R.id.value, value);
+		RemoteViews remoteViews = new RemoteViews(context.getPackageName(), widgetData.layout);
+		remoteViews.setImageViewResource(R.id.icon, widgetData.deviceIcon == 0 ? R.drawable.ic_launcher : widgetData.deviceIcon);
+		remoteViews.setTextViewText(R.id.name, widgetData.deviceName);
+		remoteViews.setTextViewText(R.id.value, widgetData.deviceValue);
+		
+		if (widgetData.layout == R.layout.widget_sensor) {
+			// For classic (= not-small) layout of widget, set also lastUpdate
+			remoteViews.setTextViewText(R.id.last_update, widgetData.deviceLastUpdate);
+		}
 
 		// register an onClickListener
 		PendingIntent pendingIntent;
 		Intent intent;
 
-		// force update on click to icon
+		// force update on click to lastUpdate
 		pendingIntent = WidgetUpdateService.getForceUpdatePendingIntent(context, widgetId);
-		remoteViews.setOnClickPendingIntent(R.id.icon, pendingIntent);
+		remoteViews.setOnClickPendingIntent(R.id.value, pendingIntent);
+		remoteViews.setOnClickPendingIntent(R.id.last_update, pendingIntent);
 
 		// open configuration on click elsewhere
 		intent = new Intent(context, WidgetConfigurationActivity.class);
@@ -167,15 +146,15 @@ public class SensorWidgetProvider extends AppWidgetProvider {
 		pendingIntent = PendingIntent.getActivity(context, widgetId, intent, PendingIntent.FLAG_CANCEL_CURRENT);
 		remoteViews.setOnClickPendingIntent(R.id.layout, pendingIntent);
 
-		// open detail activity on click
-		// FIXME: this is waiting for Leo to allow opening SensorDetail...
-		/*if (adapterId.length() > 0 && deviceId.length() > 0) {
+		// open detail activity on click to icon
+		if (widgetData.deviceAdapterId.length() > 0 && widgetData.deviceId.length() > 0) {
 			intent = new Intent(context, SensorDetailActivity.class);
-			intent.putExtra(Constants.DEVICE_ID, deviceId);
-			intent.putExtra(Constants.ADAPTER_ID, adapterId);
+			intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+			intent.putExtra(SensorDetailActivity.EXTRA_DEVICE_ID, widgetData.deviceId);
+			intent.putExtra(SensorDetailActivity.EXTRA_ADAPTER_ID, widgetData.deviceAdapterId);
 			pendingIntent = PendingIntent.getActivity(context, widgetId, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-			remoteViews.setOnClickPendingIntent(R.id.name, pendingIntent);
-		}*/
+			remoteViews.setOnClickPendingIntent(R.id.icon, pendingIntent);
+		}
 
 		// request widget redraw
 		appWidgetManager.updateAppWidget(widgetId, remoteViews);

@@ -19,7 +19,6 @@
 		        android:id="@+id/adapter_label"
 		        android:layout_width="match_parent"
 		        android:layout_height="wrap_content"
-		        android:paddingBottom="5dp"
 		        android:textAppearance="?android:attr/textAppearanceLarge"
 		       	android:text="@string/widget_configuration_adapter" />
 		    
@@ -31,7 +30,6 @@
 		    <TextView
 		        android:layout_width="match_parent"
 		        android:layout_height="wrap_content"
-		        android:paddingBottom="5dp"
 		        android:textAppearance="?android:attr/textAppearanceLarge"
 		       	android:text="@string/widget_configuration_sensor" />
 		    
@@ -43,31 +41,37 @@
 		    <TextView
 		        android:layout_width="match_parent"
 		        android:layout_height="wrap_content"
-		        android:paddingTop="10dp"
-		        android:paddingBottom="4dp"
 		        android:textAppearance="?android:attr/textAppearanceLarge"
 		       	android:text="@string/widget_configuration_interval_sensor" />
 		    
-		    <EditText
+		    <TextView
 		        android:id="@+id/interval_sensor"
+		        android:layout_marginLeft="15dp"
 		        android:layout_width="match_parent"
-		        android:layout_height="wrap_content"
-		        android:inputType="numberDecimal"
-		        android:enabled="false" />
+		        android:layout_height="40dp"
+		        android:gravity="center_vertical"
+		        android:textAppearance="?android:attr/textAppearanceMedium" />
 		    
 		    <TextView
 		        android:layout_width="match_parent"
 		        android:layout_height="wrap_content"
-		        android:paddingTop="10dp"
-		        android:paddingBottom="4dp"
 		        android:textAppearance="?android:attr/textAppearanceLarge"
 		       	android:text="@string/widget_configuration_interval_widget" />
 		    
-		    <EditText
+		    <TextView
 		        android:id="@+id/interval_widget"
+		        android:layout_marginLeft="15dp"
+		        android:layout_width="match_parent"
+		        android:layout_height="40dp"
+		        android:gravity="center_vertical"
+		        android:textAppearance="?android:attr/textAppearanceMedium" />
+		    
+		    <SeekBar
+		        android:id="@+id/interval_widget_seekbar"
+		        android:layout_marginLeft="15dp"
 		        android:layout_width="match_parent"
 		        android:layout_height="wrap_content"
-		        android:inputType="numberDecimal" />
+		        android:layout_marginTop="5dp" />
 
 		</LinearLayout>
 
