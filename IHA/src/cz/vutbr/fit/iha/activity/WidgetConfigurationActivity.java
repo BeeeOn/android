@@ -3,8 +3,6 @@ package cz.vutbr.fit.iha.activity;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.actionbarsherlock.view.Window;
-
 import android.appwidget.AppWidgetManager;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -15,17 +13,18 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
-import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.SeekBar;
+import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.actionbarsherlock.view.Window;
+
 import cz.vutbr.fit.iha.Constants;
 import cz.vutbr.fit.iha.R;
-import cz.vutbr.fit.iha.activity.SensorDetailFragment.AnActionModeOfEpicProportions;
 import cz.vutbr.fit.iha.adapter.Adapter;
 import cz.vutbr.fit.iha.adapter.device.BaseDevice;
 import cz.vutbr.fit.iha.adapter.device.Facility;
@@ -68,8 +67,6 @@ public class WidgetConfigurationActivity extends BaseActivity {
 			return;
 		}
 		
-		mController = Controller.getInstance(getApplicationContext());
-
 		// if the user press BACK, do not add any widget
 		Intent resultValue = new Intent();
 		resultValue.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, mAppWidgetId);
@@ -81,7 +78,9 @@ public class WidgetConfigurationActivity extends BaseActivity {
 	@Override
 	public void onResume() {
 		super.onResume();
-		
+
+		mController = Controller.getInstance(getApplicationContext());
+
 		mAdapters = mController.getAdapters();
 		if (mAdapters.isEmpty()) {
 			if (!mController.isLoggedIn() && !triedLoginAlready) {
@@ -89,7 +88,7 @@ public class WidgetConfigurationActivity extends BaseActivity {
 				triedLoginAlready = true;
 				Toast.makeText(this, "You must be logged in first.", Toast.LENGTH_LONG).show(); // FIXME: use string from resources
 				BaseApplicationActivity.redirectToLogin(this);
-			} else {
+			} else if (mController.isLoggedIn()) {
 				// Otherwise he is logged in but has no sensors, we quit completely
 				Toast.makeText(this, "You have no adapters and thus no sensors to use in widget.", Toast.LENGTH_LONG).show(); // FIXME: use string from resources
 				finish();
@@ -117,10 +116,16 @@ public class WidgetConfigurationActivity extends BaseActivity {
 		}
 	}
 
+	/**
+	 * Initialize listeners
+	 */
 	private void initLayout() {
 		initButtons();
 		initSpinners();
-
+		initSeekbar();
+	}
+	
+	private void initSeekbar() {
 		final TextView intervalText = (TextView) findViewById(R.id.interval_widget);
 		final SeekBar seekbar = (SeekBar) findViewById(R.id.interval_widget_seekbar);
 		
@@ -147,16 +152,17 @@ public class WidgetConfigurationActivity extends BaseActivity {
 		});
 
 	}
-	
-	/**
-	 * Initialize listeners
-	 */
+
 	private void initButtons() {
 		// Cancel button - close window without adding widget
 		((Button) findViewById(R.id.btn_cancel)).setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				Log.d(TAG, "Cancel clicked");
+				
+				Intent resultValue = new Intent();
+				resultValue.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, mAppWidgetId);
+				setResult(RESULT_CANCELED, resultValue);
 				finish();
 			}
 		});
