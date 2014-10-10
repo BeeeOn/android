@@ -165,8 +165,8 @@
     <!-- WidgetConfigurationActivity -->
     <string name="widget_configuration_adapter">Adapter:</string>
     <string name="widget_configuration_sensor">Sensor to be shown:</string>
-    <string name="widget_configuration_interval_sensor">Sensor update interval (sec.):</string>
-    <string name="widget_configuration_interval_widget">Widget update interval (sec.):</string>
+    <string name="widget_configuration_interval_sensor">Sensor update interval:</string>
+    <string name="widget_configuration_interval_widget">Widget update interval:</string>
 
 
     <!-- ABOUT -->

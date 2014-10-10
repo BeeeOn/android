@@ -15,16 +15,21 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
+import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.SeekBar;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 import cz.vutbr.fit.iha.Constants;
 import cz.vutbr.fit.iha.R;
+import cz.vutbr.fit.iha.activity.SensorDetailFragment.AnActionModeOfEpicProportions;
 import cz.vutbr.fit.iha.adapter.Adapter;
 import cz.vutbr.fit.iha.adapter.device.BaseDevice;
 import cz.vutbr.fit.iha.adapter.device.Facility;
+import cz.vutbr.fit.iha.adapter.device.RefreshInterval;
 import cz.vutbr.fit.iha.controller.Controller;
 import cz.vutbr.fit.iha.widget.SensorWidgetProvider;
 import cz.vutbr.fit.iha.widget.WidgetUpdateService;
@@ -98,8 +103,7 @@ public class WidgetConfigurationActivity extends BaseActivity {
 		if (!isInitialized) {
 			isInitialized = true;
 
-			initButtons();
-			initSpinners();
+			initLayout();
 			loadSettings();
 		}
 	}
@@ -113,6 +117,37 @@ public class WidgetConfigurationActivity extends BaseActivity {
 		}
 	}
 
+	private void initLayout() {
+		initButtons();
+		initSpinners();
+
+		final TextView intervalText = (TextView) findViewById(R.id.interval_widget);
+		final SeekBar seekbar = (SeekBar) findViewById(R.id.interval_widget_seekbar);
+		
+		// Set Max value by length of array with values
+		seekbar.setMax(RefreshInterval.values().length - 1);
+		seekbar.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
+
+			@Override
+			public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+				String interval = RefreshInterval.values()[progress].getStringInterval(WidgetConfigurationActivity.this);
+				intervalText.setText(interval);
+			}
+
+			@Override
+			public void onStartTrackingTouch(SeekBar seekBar) {
+				// Nothing to do here
+			}
+			
+			@Override
+			public void onStopTrackingTouch(SeekBar seekBar) {
+				// Nothing to do here
+			}
+
+		});
+
+	}
+	
 	/**
 	 * Initialize listeners
 	 */
@@ -194,7 +229,7 @@ public class WidgetConfigurationActivity extends BaseActivity {
 			@Override
 			public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 				BaseDevice device = (BaseDevice) parent.getSelectedItem();
-				EditText intervalText = (EditText) findViewById(R.id.interval_sensor);
+				TextView intervalText = (TextView) findViewById(R.id.interval_sensor);
 				intervalText.setText(device.getFacility().getRefresh().getStringInterval(WidgetConfigurationActivity.this));
 				
 				Log.d(TAG, "Selected device " + device.getName());
@@ -202,7 +237,7 @@ public class WidgetConfigurationActivity extends BaseActivity {
 
 			@Override
 			public void onNothingSelected(AdapterView<?> parent) {
-				EditText interval = (EditText) findViewById(R.id.interval_sensor);
+				TextView interval = (TextView) findViewById(R.id.interval_sensor);
 				interval.setText("");
 				
 				Log.d(TAG, "Selected no device ");
@@ -248,10 +283,10 @@ public class WidgetConfigurationActivity extends BaseActivity {
 			}
 		}
 		
-		EditText i = (EditText) findViewById(R.id.interval_widget);
+		SeekBar seekbar = (SeekBar) findViewById(R.id.interval_widget_seekbar);
 		int interval = settings.getInt(Constants.WIDGET_PREF_INTERVAL, WidgetUpdateService.UPDATE_INTERVAL_DEFAULT);
 		interval = Math.max(interval, WidgetUpdateService.UPDATE_INTERVAL_MIN);
-		i.setText(Integer.toString(interval));
+		seekbar.setProgress(RefreshInterval.fromInterval(interval).getIntervalIndex());
 	}
 
 	private boolean saveSettings() {
@@ -274,15 +309,10 @@ public class WidgetConfigurationActivity extends BaseActivity {
 			return false;
 		}
 
-		EditText edit = (EditText) findViewById(R.id.interval_widget);
-		String i = edit.getText().toString();
-		if (i == null || i.length() == 0) {
-			// FIXME: use string from resources
-			Toast.makeText(this, "Set update interval", Toast.LENGTH_LONG).show();
-			return false;
-		}
-
-		int interval = Integer.parseInt(i);
+		
+		SeekBar seekbar = (SeekBar) findViewById(R.id.interval_widget_seekbar);
+		RefreshInterval refresh = RefreshInterval.values()[seekbar.getProgress()];
+		int interval = refresh.getInterval();
 		interval = Math.max(interval, WidgetUpdateService.UPDATE_INTERVAL_MIN);
 
 		editor.putString(Constants.WIDGET_PREF_DEVICE_ADAPTER_ID, adapter.getId());

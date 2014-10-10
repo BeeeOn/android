@@ -128,9 +128,13 @@ public class WidgetUpdateService extends Service {
 		long now = SystemClock.elapsedRealtime();
 
 		Controller controller = Controller.getInstance(getApplicationContext());
-
+		// NOTE: "workaround" for not logged in user
+		Timezone timezone = controller.isLoggedIn() ? Timezone.fromPreferences(controller.getUserSettings()) : Timezone.getDefault();
+		
 		// Reload adapters to have data about Timezone offset
 		controller.reloadAdapters(false);
+		
+		// TODO: reload all widgets with id IN widgetIds
 
 		for (int widgetId : widgetIds) {
 			SharedPreferences settings = SensorWidgetProvider.getSettings(this, widgetId);
@@ -157,14 +161,16 @@ public class WidgetUpdateService extends Service {
 			String deviceId = settings.getString(Constants.WIDGET_PREF_DEVICE, "");
 			BaseDevice device = controller.getDevice(adapterId, deviceId);
 
-			// NOTE: This should use absolute time, because widgets aren't updated so often
-			String lastUpdateDevice = Timezone.fromPreferences(controller.getUserSettings()).formatLastUpdate(device.getFacility().getLastUpdate(), adapter);
-
-			// save last update times of widget and device
-			settings.edit() //
-					.putLong(Constants.WIDGET_PREF_LAST_UPDATE, now) //
-					.putString(Constants.WIDGET_PREF_DEVICE_LAST_UPDATE, lastUpdateDevice) //
-					.commit();
+			if (device != null) {
+				// NOTE: This should use absolute time, because widgets aren't updated so often
+				String lastUpdateDevice = timezone.formatLastUpdate(device.getFacility().getLastUpdate(), adapter);
+	
+				// save last update times of widget and device
+				settings.edit() //
+						.putLong(Constants.WIDGET_PREF_LAST_UPDATE, now) //
+						.putString(Constants.WIDGET_PREF_DEVICE_LAST_UPDATE, lastUpdateDevice) //
+						.commit();
+			}
 
 			// update widget
 			widgetProvider.updateWidget(this, widgetId, device);
