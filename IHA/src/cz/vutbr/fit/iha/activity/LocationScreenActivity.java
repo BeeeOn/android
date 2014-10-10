@@ -807,7 +807,6 @@ public class LocationScreenActivity extends BaseApplicationActivity {
 				// Open activity for adding new facility
 				inBackground = true;
 				Intent intent = new Intent(LocationScreenActivity.this, SetupSensorFragmentDialog.class);
-				intent.putExtra(Constants.ADDSENSOR_COUNT_SENSOR, uninitializedFacilities.size());
 				startActivity(intent);
 				mDialog.dismiss();
 			}

@@ -20,12 +20,10 @@ import com.google.android.gms.common.AccountPicker;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 
-import cz.vutbr.fit.iha.Constants;
 import cz.vutbr.fit.iha.R;
 import cz.vutbr.fit.iha.adapter.Adapter;
 import cz.vutbr.fit.iha.controller.Controller;
 import cz.vutbr.fit.iha.exception.NotImplementedException;
-import cz.vutbr.fit.iha.gcm.GcmHelper;
 import cz.vutbr.fit.iha.network.exception.CommunicationException;
 import cz.vutbr.fit.iha.network.exception.NoConnectionException;
 import cz.vutbr.fit.iha.network.exception.NotRegException;
@@ -449,11 +447,6 @@ public class LoginActivity extends BaseActivity {
 				if (!mDoGoogleLoginRunnable.isStopped()) {
 					if (!isRedirect) {
 						Intent intent = new Intent(mActivity, LocationScreenActivity.class);
-						if (mSignUp) {
-							Bundle bundle = new Bundle();
-							bundle.putBoolean(Constants.NOADAPTER, true);
-							intent.putExtras(bundle);
-						}
 						mActivity.startActivity(intent);
 					}
 					mActivity.finish();

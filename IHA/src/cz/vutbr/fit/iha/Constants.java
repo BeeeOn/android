@@ -70,18 +70,10 @@ public final class Constants {
 	 */
 	public static final String PREF_GCM_REG_ID = "gcm_registration_id";
 	public static final String PREF_GCM_APP_VERSION = "gcm_app_version";
-	
-	/**
-	 * Keys for bundle
-	 */
-	public static final String ADDSENSOR_COUNT_SENSOR = "countofuninitsensor";
-	public static final String CANCEL = "cancel";
-	public static final String NOADAPTER = "noadapter";
 
 	/**
 	 * Project number from the API Console
 	 */
 	public static final String PROJECT_NUMBER = "863203863728";
-
 
 }
