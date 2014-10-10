@@ -7,12 +7,10 @@ import android.appwidget.AppWidgetManager;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.IBinder;
 import android.os.PowerManager;
 import android.os.SystemClock;
 import android.util.Log;
-import cz.vutbr.fit.iha.Constants;
 import cz.vutbr.fit.iha.adapter.Adapter;
 import cz.vutbr.fit.iha.adapter.device.BaseDevice;
 import cz.vutbr.fit.iha.controller.Controller;
@@ -134,42 +132,36 @@ public class WidgetUpdateService extends Service {
 		// Reload adapters to have data about Timezone offset
 		controller.reloadAdapters(false);
 		
+		boolean forceUpdate = intent.getBooleanExtra(EXTRA_FORCE_UPDATE, false); 
+		
 		// TODO: reload all widgets with id IN widgetIds
 
 		for (int widgetId : widgetIds) {
-			SharedPreferences settings = SensorWidgetProvider.getSettings(this, widgetId);
-			int interval = settings.getInt(Constants.WIDGET_PREF_INTERVAL, UPDATE_INTERVAL_DEFAULT);
-			long lastUpdateWidget = settings.getLong(Constants.WIDGET_PREF_LAST_UPDATE, 0);
+			WidgetData widgetData = new WidgetData(widgetId);
+			widgetData.loadData(this);
 
 			// ignore uninitialized widgets
-			if (!settings.getBoolean(Constants.WIDGET_PREF_INITIALIZED, false)) {
+			if (!widgetData.initialized) {
 				Log.v(TAG, String.format("Ignoring widget %d (not initialized)", widgetId));
 				continue;
 			}
 
-			// don't update widgets until their interval elapsed (or will be <1000ms from now) or we have forced update
-			if (!intent.getBooleanExtra(EXTRA_FORCE_UPDATE, false) && ((lastUpdateWidget + interval * 1000) - now > 1000)) {
-				Log.v(TAG, String.format("Ignoring widget %d (not elapsed)", widgetId));
+			// don't update widgets until their interval elapsed or we have force update
+			if (!forceUpdate && !widgetData.isExpired(now)) {
+				Log.v(TAG, String.format("Ignoring widget %d (not expired or forced)", widgetId));
 				continue;
 			}
 
 			Log.v(TAG, String.format("Updating widget %d", widgetId));
 
-			String adapterId = settings.getString(Constants.WIDGET_PREF_DEVICE_ADAPTER_ID, "");
-			Adapter adapter = controller.getAdapter(adapterId);
-
-			String deviceId = settings.getString(Constants.WIDGET_PREF_DEVICE, "");
-			BaseDevice device = controller.getDevice(adapterId, deviceId);
+			Adapter adapter = controller.getAdapter(widgetData.deviceAdapterId);
+			BaseDevice device = controller.getDevice(widgetData.deviceAdapterId, widgetData.deviceId);
 
 			if (device != null) {
 				// NOTE: This should use absolute time, because widgets aren't updated so often
-				String lastUpdateDevice = timezone.formatLastUpdate(device.getFacility().getLastUpdate(), adapter);
-	
-				// save last update times of widget and device
-				settings.edit() //
-						.putLong(Constants.WIDGET_PREF_LAST_UPDATE, now) //
-						.putString(Constants.WIDGET_PREF_DEVICE_LAST_UPDATE, lastUpdateDevice) //
-						.commit();
+				String deviceLastUpdate = timezone.formatLastUpdate(device.getFacility().getLastUpdate(), adapter);
+				
+				widgetData.saveLastUpdate(this, now, deviceLastUpdate);
 			}
 
 			// update widget
@@ -184,23 +176,21 @@ public class WidgetUpdateService extends Service {
 		boolean first = true;
 
 		for (int widgetId : getAllWidgetIds()) {
-			SharedPreferences settings = SensorWidgetProvider.getSettings(this, widgetId);
-			if (!settings.getBoolean(Constants.WIDGET_PREF_INITIALIZED, false)) {
+			WidgetData widgetData = new WidgetData(widgetId);
+			widgetData.loadData(this);
+			
+			if (!widgetData.initialized) {
 				// widget is not added yet (probably only configuration activity is showed)
 				continue;
 			}
 
-			int widgetInterval = settings.getInt(Constants.WIDGET_PREF_INTERVAL, UPDATE_INTERVAL_DEFAULT);
-			long widgetLastUpdate = settings.getLong(Constants.WIDGET_PREF_LAST_UPDATE, 0);
-			long widgetNextUpdate = widgetLastUpdate > 0 ? widgetLastUpdate + widgetInterval * 1000 : now;
-
 			if (first) {
-				minInterval = widgetInterval;
-				nextUpdate = widgetNextUpdate;
+				minInterval = widgetData.interval;
+				nextUpdate = widgetData.getNextUpdate(now);
 				first = false;
 			} else {
-				minInterval = Math.min(minInterval, widgetInterval);
-				nextUpdate = Math.min(nextUpdate, widgetNextUpdate);
+				minInterval = Math.min(minInterval, widgetData.interval);
+				nextUpdate = Math.min(nextUpdate, widgetData.getNextUpdate(now));
 			}
 		}
 

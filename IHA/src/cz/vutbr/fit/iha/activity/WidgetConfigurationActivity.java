@@ -5,7 +5,6 @@ import java.util.List;
 
 import android.appwidget.AppWidgetManager;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -23,7 +22,6 @@ import android.widget.Toast;
 
 import com.actionbarsherlock.view.Window;
 
-import cz.vutbr.fit.iha.Constants;
 import cz.vutbr.fit.iha.R;
 import cz.vutbr.fit.iha.adapter.Adapter;
 import cz.vutbr.fit.iha.adapter.device.BaseDevice;
@@ -31,13 +29,14 @@ import cz.vutbr.fit.iha.adapter.device.Facility;
 import cz.vutbr.fit.iha.adapter.device.RefreshInterval;
 import cz.vutbr.fit.iha.controller.Controller;
 import cz.vutbr.fit.iha.widget.SensorWidgetProvider;
+import cz.vutbr.fit.iha.widget.WidgetData;
 import cz.vutbr.fit.iha.widget.WidgetUpdateService;
 
 public class WidgetConfigurationActivity extends BaseActivity {
 
 	private static final String TAG = WidgetConfigurationActivity.class.getSimpleName();
 
-	private int mAppWidgetId = 0;
+	private WidgetData mWidgetData;
 
 	private List<Adapter> mAdapters = new ArrayList<Adapter>();
 	private List<BaseDevice> mDevices = new ArrayList<BaseDevice>();
@@ -58,18 +57,19 @@ public class WidgetConfigurationActivity extends BaseActivity {
 		Intent intent = getIntent();
 		Bundle extras = intent.getExtras();
 		if (extras != null) {
-			mAppWidgetId = extras.getInt(AppWidgetManager.EXTRA_APPWIDGET_ID, AppWidgetManager.INVALID_APPWIDGET_ID);
+			int appWidgetId = extras.getInt(AppWidgetManager.EXTRA_APPWIDGET_ID, AppWidgetManager.INVALID_APPWIDGET_ID);
+			mWidgetData = new WidgetData(appWidgetId);
 		}
 
 		// no valid ID, so bail out
-		if (mAppWidgetId == AppWidgetManager.INVALID_APPWIDGET_ID) {
+		if (mWidgetData == null || mWidgetData.getWidgetId() == AppWidgetManager.INVALID_APPWIDGET_ID) {
 			finish();
 			return;
 		}
 		
 		// if the user press BACK, do not add any widget
 		Intent resultValue = new Intent();
-		resultValue.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, mAppWidgetId);
+		resultValue.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, mWidgetData.getWidgetId());
 		setResult(RESULT_CANCELED, resultValue);
 
 		setContentView(R.layout.activity_widget_configuration);		
@@ -161,7 +161,7 @@ public class WidgetConfigurationActivity extends BaseActivity {
 				Log.d(TAG, "Cancel clicked");
 				
 				Intent resultValue = new Intent();
-				resultValue.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, mAppWidgetId);
+				resultValue.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, mWidgetData.getWidgetId());
 				setResult(RESULT_CANCELED, resultValue);
 				finish();
 			}
@@ -178,12 +178,12 @@ public class WidgetConfigurationActivity extends BaseActivity {
 
 				Intent firstUpdate = new Intent(WidgetConfigurationActivity.this, SensorWidgetProvider.class);
 				firstUpdate.setAction("android.appwidget.action.APPWIDGET_UPDATE");
-				firstUpdate.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, new int[] { mAppWidgetId });
+				firstUpdate.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, new int[] { mWidgetData.getWidgetId() });
 				WidgetConfigurationActivity.this.sendBroadcast(firstUpdate);
 
 				// return the original widget ID, found in onCreate()
 				Intent resultValue = new Intent();
-				resultValue.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, mAppWidgetId);
+				resultValue.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, mWidgetData.getWidgetId());
 				setResult(RESULT_OK, resultValue);
 				finish();
 			}
@@ -253,12 +253,14 @@ public class WidgetConfigurationActivity extends BaseActivity {
 	}
 
 	private void loadSettings() {
-		SharedPreferences settings = SensorWidgetProvider.getSettings(WidgetConfigurationActivity.this, mAppWidgetId);
+		mWidgetData.loadData(this);
 
 		Spinner spinAdapter = (Spinner) findViewById(R.id.adapter);
 		Spinner spinSensor = (Spinner) findViewById(R.id.sensor);
 		
-		String adapterId = settings.getString(Constants.WIDGET_PREF_DEVICE_ADAPTER_ID, "");
+		String adapterId = mWidgetData.deviceAdapterId;
+		String deviceId = mWidgetData.deviceId;
+		
 		if (!adapterId.isEmpty()) {
 			for (int i = 0; i < mAdapters.size(); i++) {
 				if (mAdapters.get(i).getId().equals(adapterId)) {
@@ -279,10 +281,9 @@ public class WidgetConfigurationActivity extends BaseActivity {
 			}
 		}
 
-		String id = settings.getString(Constants.WIDGET_PREF_DEVICE, "");
-		if (!adapterId.isEmpty() && !id.isEmpty()) {
+		if (!adapterId.isEmpty() && !deviceId.isEmpty()) {
 			for (int i = 0; i < mDevices.size(); i++) {
-				if (mDevices.get(i).getId().equals(id)) {
+				if (mDevices.get(i).getId().equals(deviceId)) {
 					spinSensor.setSelection(i);
 					break;
 				}
@@ -290,15 +291,12 @@ public class WidgetConfigurationActivity extends BaseActivity {
 		}
 		
 		SeekBar seekbar = (SeekBar) findViewById(R.id.interval_widget_seekbar);
-		int interval = settings.getInt(Constants.WIDGET_PREF_INTERVAL, WidgetUpdateService.UPDATE_INTERVAL_DEFAULT);
+		int interval = mWidgetData.interval;
 		interval = Math.max(interval, WidgetUpdateService.UPDATE_INTERVAL_MIN);
 		seekbar.setProgress(RefreshInterval.fromInterval(interval).getIntervalIndex());
 	}
 
 	private boolean saveSettings() {
-		SharedPreferences settings = SensorWidgetProvider.getSettings(WidgetConfigurationActivity.this, mAppWidgetId);
-		SharedPreferences.Editor editor = settings.edit();
-
 		Spinner spinner = (Spinner) findViewById(R.id.adapter);
 		Adapter adapter = (Adapter) spinner.getSelectedItem();
 		if (adapter == null) {
@@ -313,17 +311,15 @@ public class WidgetConfigurationActivity extends BaseActivity {
 			return false;
 		}
 
-		
 		SeekBar seekbar = (SeekBar) findViewById(R.id.interval_widget_seekbar);
 		RefreshInterval refresh = RefreshInterval.values()[seekbar.getProgress()];
 		int interval = refresh.getInterval();
-		interval = Math.max(interval, WidgetUpdateService.UPDATE_INTERVAL_MIN);
-
-		editor.putString(Constants.WIDGET_PREF_DEVICE_ADAPTER_ID, adapter.getId());
-		editor.putString(Constants.WIDGET_PREF_DEVICE, device.getId());
-		editor.putInt(Constants.WIDGET_PREF_INTERVAL, interval);
-		editor.putBoolean(Constants.WIDGET_PREF_INITIALIZED, true);
-		editor.commit();
+		
+		mWidgetData.interval = Math.max(interval, WidgetUpdateService.UPDATE_INTERVAL_MIN);
+		mWidgetData.deviceAdapterId = adapter.getId();
+		mWidgetData.deviceId = device.getId();
+		mWidgetData.initialized = true;
+		mWidgetData.saveData(this);
 
 		return true;
 	}

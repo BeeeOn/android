@@ -37,21 +37,6 @@ public final class Constants {
 	public static final int TYPE_EMMISION = 7; // emmision meter
 
 	/**
-	 * Widget's shared preferences
-	 */
-	public static final String WIDGET_PREF_FILENAME = "widget_%d";
-	public static final String WIDGET_PREF_LAYOUT = "layout";
-	public static final String WIDGET_PREF_INTERVAL = "interval";
-	public static final String WIDGET_PREF_LAST_UPDATE = "lastUpdate";
-	public static final String WIDGET_PREF_INITIALIZED = "initialized";
-	public static final String WIDGET_PREF_DEVICE = "device";
-	public static final String WIDGET_PREF_DEVICE_NAME = "device_name";
-	public static final String WIDGET_PREF_DEVICE_ICON = "device_icon";
-	public static final String WIDGET_PREF_DEVICE_VALUE = "device_value";
-	public static final String WIDGET_PREF_DEVICE_ADAPTER_ID = "device_adapter_id";
-	public static final String WIDGET_PREF_DEVICE_LAST_UPDATE = "device_last_update";
-
-	/**
 	 * Persistence's shared preferences
 	 */
 	public static final String PERSISTENCE_PREF_FILENAME = "persistence_%s";
