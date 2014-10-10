@@ -8,18 +8,22 @@ import cz.vutbr.fit.iha.controller.Controller;
  */
 public class ReloadFacilitiesTask extends CallbackTask<String> {
 	
-	private Context mContext;
+	private final Context mContext;
 	
-	public ReloadFacilitiesTask(Context context) {
+	private final boolean mForceReload;
+	
+	public ReloadFacilitiesTask(Context context, boolean forceReload) {
 		super();
+		
 		mContext = context;
+		mForceReload = forceReload;
 	}
 	
 	@Override
 	protected Boolean doInBackground(String adapterId) {
 		Controller controller = Controller.getInstance(mContext);
 		
-		return controller.reloadFacilitiesByAdapter(adapterId, true);
+		return controller.reloadFacilitiesByAdapter(adapterId, mForceReload);
 	}
 
 }

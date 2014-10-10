@@ -90,7 +90,7 @@ public class ListOfDevices extends SherlockFragment {
 	}
 	
 	private void doReloadFacilitiesTask(String adapterId) {
-		mReloadFacilitiesTask = new ReloadFacilitiesTask(getActivity().getApplicationContext());
+		mReloadFacilitiesTask = new ReloadFacilitiesTask(getActivity().getApplicationContext(), true);
 		
 		mReloadFacilitiesTask.setListener(new CallbackTaskListener() {
 

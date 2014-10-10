@@ -5,7 +5,6 @@ import java.util.List;
 
 import android.appwidget.AppWidgetManager;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -27,6 +26,8 @@ import cz.vutbr.fit.iha.adapter.Adapter;
 import cz.vutbr.fit.iha.adapter.device.BaseDevice;
 import cz.vutbr.fit.iha.adapter.device.Facility;
 import cz.vutbr.fit.iha.adapter.device.RefreshInterval;
+import cz.vutbr.fit.iha.asynctask.CallbackTask.CallbackTaskListener;
+import cz.vutbr.fit.iha.asynctask.ReloadFacilitiesTask;
 import cz.vutbr.fit.iha.controller.Controller;
 import cz.vutbr.fit.iha.widget.SensorWidgetProvider;
 import cz.vutbr.fit.iha.widget.WidgetData;
@@ -46,7 +47,7 @@ public class WidgetConfigurationActivity extends BaseActivity {
 	
 	private Controller mController;
 	
-	private ChangeAdapterTask mChangeAdapterTask;
+	private ReloadFacilitiesTask mReloadFacilitiesTask;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -111,8 +112,8 @@ public class WidgetConfigurationActivity extends BaseActivity {
 	public void onDestroy() {
 		super.onDestroy();
 		
-		if (mChangeAdapterTask != null) {
-			mChangeAdapterTask.cancel(true);
+		if (mReloadFacilitiesTask != null) {
+			mReloadFacilitiesTask.cancel(true);
 		}
 	}
 
@@ -198,26 +199,10 @@ public class WidgetConfigurationActivity extends BaseActivity {
 
 			@Override
 			public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-				Spinner s = (Spinner) findViewById(R.id.sensor);
-				s.setEnabled(false);
-
 				Adapter adapter = mAdapters.get(position);
 				
-				setProgressBarIndeterminateVisibility(true);
-				mChangeAdapterTask = new ChangeAdapterTask();
-				mChangeAdapterTask.execute(new String[] { adapter.getId() });
-				
-				List<Facility> facilities = mController.getFacilitiesByAdapter(adapter.getId());
-				
-				mDevices.clear();
-				for (Facility facility : facilities) {
-					mDevices.addAll(facility.getDevices());
-				}
-				
 				Log.d(TAG, String.format("Selected adapter %s", adapter.getName()));
-
-				ArrayAdapter<?> arrayAdapter = new ArrayAdapter<BaseDevice>(WidgetConfigurationActivity.this, android.R.layout.simple_spinner_dropdown_item, mDevices);
-				s.setAdapter(arrayAdapter);
+				doChangeAdapter(adapter.getId());
 			}
 
 			@Override
@@ -324,32 +309,34 @@ public class WidgetConfigurationActivity extends BaseActivity {
 		return true;
 	}
 	
-	private class ChangeAdapterTask extends AsyncTask<String, Void, Boolean> {
-
-		private String adapterId; 
+	private void doChangeAdapter(final String adapterId) {
+		mReloadFacilitiesTask = new ReloadFacilitiesTask(getApplicationContext(), false);
 		
-		@Override
-		protected Boolean doInBackground(String... adapterIds) {
-			adapterId = adapterIds[0];
-			return mController.reloadFacilitiesByAdapter(adapterId, false);
-		}
+		mReloadFacilitiesTask.setListener(new CallbackTaskListener() {
 
-		@Override
-		protected void onPostExecute(Boolean result) {
-			List<Facility> facilities = mController.getFacilitiesByAdapter(adapterId);
-			
-			mDevices.clear();
-			for (Facility facility : facilities) {
-				mDevices.addAll(facility.getDevices());
+			@Override
+			public void onExecute(boolean success) {
+				List<Facility> facilities = mController.getFacilitiesByAdapter(adapterId);
+				
+				mDevices.clear();
+				for (Facility facility : facilities) {
+					mDevices.addAll(facility.getDevices());
+				}
+				
+				ArrayAdapter<?> arrayAdapter = new ArrayAdapter<BaseDevice>(WidgetConfigurationActivity.this, android.R.layout.simple_spinner_dropdown_item, mDevices);
+				Spinner s = (Spinner) findViewById(R.id.sensor);
+				s.setEnabled(true);
+				s.setAdapter(arrayAdapter);
+				
+				setProgressBarIndeterminateVisibility(false);
 			}
-			
-			ArrayAdapter<?> arrayAdapter = new ArrayAdapter<BaseDevice>(WidgetConfigurationActivity.this, android.R.layout.simple_spinner_dropdown_item, mDevices);
-			Spinner s = (Spinner) findViewById(R.id.sensor);
-			s.setEnabled(true);
-			s.setAdapter(arrayAdapter);
-			
-			setProgressBarIndeterminateVisibility(false);
-		}
+		});
+		
+		Spinner s = (Spinner) findViewById(R.id.sensor);
+		s.setEnabled(false);
+
+		setProgressBarIndeterminateVisibility(true);
+		mReloadFacilitiesTask.execute(adapterId);
 	}
 
 }
