@@ -10,12 +10,12 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.view.Window;
 
 import cz.vutbr.fit.iha.R;
-import cz.vutbr.fit.iha.adapter.Adapter;
 import cz.vutbr.fit.iha.adapter.device.BaseDevice;
 import cz.vutbr.fit.iha.adapter.device.Facility;
 import cz.vutbr.fit.iha.controller.Controller;
@@ -34,13 +34,13 @@ public class SensorDetailActivity extends BaseApplicationActivity {
 	
 	private Controller mController;
 	private List<BaseDevice> mDevices;
-
+	
 	private PagerAdapter mPagerAdapter;
 	private ViewPager mPager;
-	protected int countSensor;
-
-	private String mLocationOfSensorID;
-	private int mSensorPosition;
+	
+	private String mActiveAdapterId;
+	private String mActiveDeviceId;
+	private int mActiveDevicePosition;
 
 	private static final String TAG = SensorDetailActivity.class.getSimpleName();
 
@@ -68,18 +68,36 @@ public class SensorDetailActivity extends BaseApplicationActivity {
 		// ft.replace(R.id.sensor_detail_wraper, fragment);
 		// ft.commit();
 
-		Bundle bundle = getIntent().getExtras();
-		if (bundle != null) {
-			mLocationOfSensorID = bundle.getString("LocationOfSensorID");
-			mSensorPosition = bundle.getInt("SensorPosition");
-
-			mTask = new GetDevicesTask();
-			mTask.execute(new String[] { mLocationOfSensorID });
+		Log.d(TAG, "onCreate()");
+		
+	    Bundle bundle = getIntent().getExtras();
+	    if (bundle != null) {
+	    	mActiveAdapterId = bundle.getString(EXTRA_ADAPTER_ID);
+			mActiveDeviceId = bundle.getString(EXTRA_DEVICE_ID);
+	    } else {
+	    	bundle = savedInstanceState;
+	    	if (bundle != null) {
+	    		mActiveAdapterId = bundle.getString(EXTRA_ADAPTER_ID);
+	    		mActiveDeviceId = bundle.getString(EXTRA_DEVICE_ID);
+	    	}
+	    }
+		
+		if (mActiveAdapterId == null || mActiveDeviceId == null) {
+			Toast.makeText(this, R.string.toast_wrong_or_no_device, Toast.LENGTH_LONG).show();
+			finish();
+			return;
 		}
 	}
 	
 	@Override
-	protected void onAppResume() {}
+	protected void onAppResume() {
+		Log.d(TAG, "onAppResume()");
+		
+		if (mTask == null) {
+			mTask = new GetDevicesTask();
+			mTask.execute(new String[] { mActiveAdapterId, mActiveDeviceId });
+		}
+	}
 
 	@Override
 	protected void onAppPause() {}
@@ -107,19 +125,35 @@ public class SensorDetailActivity extends BaseApplicationActivity {
 	 */
 	private class GetDevicesTask extends AsyncTask<String, Void, List<BaseDevice>> {
 		@Override
-		protected List<BaseDevice> doInBackground(String... locationID) {
-			List<BaseDevice> devices = new ArrayList<BaseDevice>();
+		protected List<BaseDevice> doInBackground(String... dataIds) {
 			
-			Adapter adapter = mController.getActiveAdapter();
-			if (adapter != null) {
-				mController.reloadFacilitiesByAdapter(adapter.getId(), false);
-				List<Facility> facilities = mController.getFacilitiesByLocation(adapter.getId(), locationID[0]);
+			String adapterId = dataIds[0];
+			String deviceId = dataIds[1];
+			
+			mController.reloadAdapters(false);
+			mController.reloadFacilitiesByAdapter(adapterId, false);
+			
+			BaseDevice device = mController.getDevice(adapterId, deviceId);
+			
+			List<BaseDevice> devices = new ArrayList<BaseDevice>();
+			if (device != null) {
+				String locationId = device.getFacility().getLocationId();
+				
+				List<Facility> facilities = mController.getFacilitiesByLocation(adapterId, locationId);
 
 				for (Facility facility : facilities) {
 					devices.addAll(facility.getDevices());
 				}
 				
-				Log.d(TAG, "String:" + devices.toString() + " Size:" + devices.size());
+				// Determine position of wanted device in this list
+				for (int i = 0; i < devices.size(); i++) {
+					if (devices.get(i).getId().equals(device.getId())) {
+						mActiveDevicePosition = i;
+						break;
+					}
+				}
+				
+				Log.d(TAG, String.format("String: %s, Size: %d", devices.toString(), devices.size()));
 			}
 
 			return devices;
@@ -127,8 +161,7 @@ public class SensorDetailActivity extends BaseApplicationActivity {
 
 		@Override
 		protected void onPostExecute(List<BaseDevice> devices) {
-			initLayouts(devices);
-
+			initLayouts(devices);	
 		}
 	}
 
@@ -143,19 +176,16 @@ public class SensorDetailActivity extends BaseApplicationActivity {
 		@Override
 		public SensorDetailFragment getItem(int position) {
 			Log.d(TAG, "Here 2 " + position);
-			return SensorDetailFragment.create(mDevices.get(position).getId(), mDevices.get(position).getFacility().getLocationId(), position, mSensorPosition);
+			return SensorDetailFragment.create(mDevices.get(position).getId(), mDevices.get(position).getFacility().getLocationId(), position, mActiveDevicePosition, mActiveAdapterId);
 		}
 
 		@Override
 		public int getCount() {
-			return countSensor;
+			return mDevices.size();
 		}
 	}
 
 	public void initLayouts(List<BaseDevice> devices) {
-		// Set number of fragments
-		countSensor = devices.size();
-
 		// Set devices
 		mDevices = devices;
 
@@ -166,6 +196,10 @@ public class SensorDetailActivity extends BaseApplicationActivity {
 		mPager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
 			@Override
 			public void onPageSelected(int position) {
+				mActiveDevicePosition = position;
+				mActiveDeviceId = mDevices.get(position).getId();
+				mActiveAdapterId = mDevices.get(position).getFacility().getAdapterId();
+				
 				// When changing pages, reset the action bar actions since they are dependent
 				// on which page is currently active. An alternative approach is to have each
 				// fragment expose actions itself (rather than the activity exposing actions),
@@ -174,8 +208,8 @@ public class SensorDetailActivity extends BaseApplicationActivity {
 			}
 		});
 		((CustomViewPager) mPager).setPagingEnabled(true);
-		mPager.setOffscreenPageLimit(countSensor);
-		mPager.setCurrentItem(mSensorPosition);
+		mPager.setOffscreenPageLimit(mDevices.size());
+		mPager.setCurrentItem(mActiveDevicePosition);
 	}
 
 	public void setEnableSwipe(boolean state) {
@@ -183,6 +217,16 @@ public class SensorDetailActivity extends BaseApplicationActivity {
 	}
 
 	public void setCurrentViewPager() {
-		mPager.setCurrentItem(mSensorPosition);
+		mPager.setCurrentItem(mActiveDevicePosition);
 	}
+	
+	@Override
+	public void onSaveInstanceState(Bundle savedInstanceState) {
+	    savedInstanceState.putString(EXTRA_ADAPTER_ID, mActiveAdapterId);
+	    savedInstanceState.putString(EXTRA_DEVICE_ID, mActiveDeviceId);
+	    
+	    // Always call the superclass so it can save the view hierarchy state
+	    super.onSaveInstanceState(savedInstanceState);
+	}	
+	
 }

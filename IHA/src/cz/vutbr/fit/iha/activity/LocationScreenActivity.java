@@ -578,6 +578,7 @@ public class LocationScreenActivity extends BaseApplicationActivity {
 		}
 
 		String[] adapterId = new String[mCntOfAllDev];
+		String[] deviceId = new String[mCntOfAllDev];
 		String[] title = new String[mCntOfAllDev];
 		String[] value = new String[mCntOfAllDev];
 		String[] unit = new String[mCntOfAllDev];
@@ -592,6 +593,7 @@ public class LocationScreenActivity extends BaseApplicationActivity {
 			relDev = 0;
 			for (BaseDevice device : facility.getDevices()) {
 				adapterId[iDev] = device.getFacility().getAdapterId();
+				deviceId[iDev] = device.getId();
 				title[iDev] = device.getName();
 				value[iDev] = device.getStringValue();
 				unit[iDev] = device.getStringUnit(this);
@@ -642,7 +644,7 @@ public class LocationScreenActivity extends BaseApplicationActivity {
 		};
 		
 		// Update list adapter
-		mSensorAdapter = new SensorListAdapter(this, adapterId, title, value, unit, time, icon, relPos, facSize, mCntOfAllDev > 0,AddSensorListener);
+		mSensorAdapter = new SensorListAdapter(this, adapterId, deviceId, title, value, unit, time, icon, relPos, facSize, mCntOfAllDev > 0, AddSensorListener);
 		mSensorList.setAdapter(mSensorAdapter);
 
 		if (haveDevices) {
@@ -668,9 +670,8 @@ public class LocationScreenActivity extends BaseApplicationActivity {
 					// setSupportProgressBarIndeterminateVisibility(true);
 	
 					Bundle bundle = new Bundle();
-					String myMessage = mActLocID;
-					bundle.putString("LocationOfSensorID", myMessage);
-					bundle.putInt("SensorPosition", position);
+					bundle.putString(SensorDetailActivity.EXTRA_ADAPTER_ID, mSensorAdapter.getAdapterId(position));
+					bundle.putString(SensorDetailActivity.EXTRA_DEVICE_ID, mSensorAdapter.getDeviceId(position));
 					Intent intent = new Intent(LocationScreenActivity.this, SensorDetailActivity.class);
 					intent.putExtras(bundle);
 					startActivityForResult(intent, REQUEST_SENSOR_DETAIL);

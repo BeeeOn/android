@@ -30,6 +30,7 @@ public class SensorListAdapter extends BaseAdapter {
 	// Declare Variables
 	private Context mContext;
 	private String[] mAdapterId;
+	private String[] mDeviceId;
 	private String[] mTitle;
 	private String[] mValue;
 	private String[] mUnit;
@@ -44,9 +45,10 @@ public class SensorListAdapter extends BaseAdapter {
 
 	private final Controller mController;
 
-	public SensorListAdapter(Context context, String[] adapterId, String[] title, String[] value, String[] unit, DateTime[] time, int[] icon, int[] relPos, int[] facSize, boolean showAdd,OnClickListener listener) {
+	public SensorListAdapter(Context context, String[] adapterId, String[] deviceId, String[] title, String[] value, String[] unit, DateTime[] time, int[] icon, int[] relPos, int[] facSize, boolean showAdd,OnClickListener listener) {
 		mContext = context;
 		mAdapterId = adapterId;
+		mDeviceId = deviceId;
 		mTitle = title;
 		mValue = value;
 		mIcon = icon;
@@ -73,6 +75,14 @@ public class SensorListAdapter extends BaseAdapter {
 	@Override
 	public long getItemId(int position) {
 		return position;
+	}
+	
+	public String getAdapterId(int position) {
+		return mAdapterId[position];
+	}
+	
+	public String getDeviceId(int position) {
+		return mDeviceId[position];
 	}
 
 	@Override

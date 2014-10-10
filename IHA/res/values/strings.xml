@@ -92,6 +92,7 @@
 	<string name="toast_no_adapter">You have no registered adapter.</string>
 	<string name="toast_ignore_uninitialized_info">You can add these devices later by clicking on (+)</string>
 	<string name="toast_empty_sensor_name">Fill names of all sensors !</string>
+	<string name="toast_wrong_or_no_device">Wrong or no device selected</string>
     
     <!-- Progress -->
     <string name="progress_signing">Signing to server&#8230;</string>
