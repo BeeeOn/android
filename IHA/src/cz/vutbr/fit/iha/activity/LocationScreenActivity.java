@@ -1,5 +1,6 @@
 package cz.vutbr.fit.iha.activity;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.joda.time.DateTime;
@@ -88,9 +89,6 @@ public class LocationScreenActivity extends BaseApplicationActivity {
 	private ListView mSensorList;
 
 	private CharSequence mTitle;
-
-	private int mCntOfAllDev;
-	private String mActLocID;
 
 	private static boolean inBackground = false;
 	private static boolean isClosing = false;
@@ -572,37 +570,9 @@ public class LocationScreenActivity extends BaseApplicationActivity {
 			}
 		});
 
-		mCntOfAllDev = 0;
+		List<BaseDevice> devices = new ArrayList<BaseDevice>();
 		for (Facility facility : facilities) {
-			mCntOfAllDev += facility.getDevices().size();
-		}
-
-		String[] adapterId = new String[mCntOfAllDev];
-		String[] title = new String[mCntOfAllDev];
-		String[] value = new String[mCntOfAllDev];
-		String[] unit = new String[mCntOfAllDev];
-		DateTime[] time = new DateTime[mCntOfAllDev];
-		int[] icon = new int[mCntOfAllDev];
-		int[] relPos = new int[mCntOfAllDev];
-		int[] facSize = new int[mCntOfAllDev];
-
-		int iDev = 0;
-		int relDev = 0;
-		for (Facility facility : facilities) {
-			relDev = 0;
-			for (BaseDevice device : facility.getDevices()) {
-				adapterId[iDev] = device.getFacility().getAdapterId();
-				title[iDev] = device.getName();
-				value[iDev] = device.getStringValue();
-				unit[iDev] = device.getStringUnit(this);
-				icon[iDev] = device.getTypeIconResource();
-				time[iDev] = device.getFacility().getLastUpdate();
-				relPos[iDev] = relDev + 1;
-				facSize[iDev] = facility.getDevices().size();
-				relDev++;
-				iDev++;
-			}
-			mActLocID = facility.getLocationId();
+			devices.addAll(facility.getDevices());
 		}
 
 		if (mSensorList == null) {
@@ -613,7 +583,7 @@ public class LocationScreenActivity extends BaseApplicationActivity {
 							// (fragment?) first?
 		}
 
-		boolean haveDevices = mCntOfAllDev > 0;
+		boolean haveDevices = devices.size() > 0;
 		boolean haveAdapters = mController.getAdapters().size() > 0;
 		
 		// If no sensors - display text
@@ -625,7 +595,7 @@ public class LocationScreenActivity extends BaseApplicationActivity {
 		// If we have adapters (but we're right now in empty room) show list so we can pull it to refresh
 		mSensorList.setVisibility(haveDevices || haveAdapters ? View.VISIBLE : View.GONE);
 
-		OnClickListener AddSensorListener = new OnClickListener() {
+		OnClickListener addSensorListener = new OnClickListener() {
 			
 			@Override
 			public void onClick(View v) {
@@ -642,7 +612,7 @@ public class LocationScreenActivity extends BaseApplicationActivity {
 		};
 		
 		// Update list adapter
-		mSensorAdapter = new SensorListAdapter(this, adapterId, title, value, unit, time, icon, relPos, facSize, mCntOfAllDev > 0,AddSensorListener);
+		mSensorAdapter = new SensorListAdapter(this, devices, addSensorListener);
 		mSensorList.setAdapter(mSensorAdapter);
 
 		if (haveDevices) {
@@ -650,7 +620,7 @@ public class LocationScreenActivity extends BaseApplicationActivity {
 			mSensorList.setOnItemClickListener(new ListView.OnItemClickListener() {
 				@Override
 				public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-					if (position == mCntOfAllDev) {
+					if (position == mSensorAdapter.getCount() - 1) {
 						Log.d(TAG, "HERE ADD SENSOR +");
 						mController.unignoreUninitialized(mActiveAdapterId);
 	
@@ -667,10 +637,11 @@ public class LocationScreenActivity extends BaseApplicationActivity {
 	
 					// setSupportProgressBarIndeterminateVisibility(true);
 	
+					BaseDevice device = mSensorAdapter.getDevice(position);
+					
 					Bundle bundle = new Bundle();
-					String myMessage = mActLocID;
-					bundle.putString("LocationOfSensorID", myMessage);
-					bundle.putInt("SensorPosition", position);
+					bundle.putString(SensorDetailActivity.EXTRA_ADAPTER_ID, device.getFacility().getAdapterId());
+					bundle.putString(SensorDetailActivity.EXTRA_DEVICE_ID, device.getId());
 					Intent intent = new Intent(LocationScreenActivity.this, SensorDetailActivity.class);
 					intent.putExtras(bundle);
 					startActivityForResult(intent, REQUEST_SENSOR_DETAIL);

@@ -105,11 +105,13 @@ public class SensorDetailFragment extends SherlockFragment {
 	public static final String ARG_CUR_PAGE = "currentpage";
 	public static final String ARG_SEL_PAGE = "selectedpage";
 	public static final String ARG_LOC_ID = "locationid";
+	public static final String ARG_ADAPTER_ID = "adapterid";
 
 	private String mPageNumber;
 	private String mLocationID;
 	private int mCurPageNumber;
 	private int mSelPageNumber;
+	private String mAdapterId;
 
 	private boolean mWasTapLayout = false;
 	private boolean mWasTapGraph = false;
@@ -149,13 +151,14 @@ public class SensorDetailFragment extends SherlockFragment {
 	/**
 	 * Factory method for this fragment class. Constructs a new fragment for the given page number.
 	 */
-	public static SensorDetailFragment create(String IDSensor, String IDLocation, int position, int selPosition) {
+	public static SensorDetailFragment create(String IDSensor, String IDLocation, int position, int selPosition, String adapterId) {
 		SensorDetailFragment fragment = new SensorDetailFragment();
 		Bundle args = new Bundle();
 		args.putString(ARG_PAGE, IDSensor);
 		args.putString(ARG_LOC_ID, IDLocation);
 		args.putInt(ARG_CUR_PAGE, position);
 		args.putInt(ARG_SEL_PAGE, selPosition);
+		args.putString(ARG_ADAPTER_ID, adapterId);
 		fragment.setArguments(args);
 		return fragment;
 	}
@@ -170,6 +173,7 @@ public class SensorDetailFragment extends SherlockFragment {
 		mLocationID = getArguments().getString(ARG_LOC_ID);
 		mSelPageNumber = getArguments().getInt(ARG_SEL_PAGE);
 		mCurPageNumber = getArguments().getInt(ARG_CUR_PAGE);
+		mAdapterId = getArguments().getString(ARG_ADAPTER_ID);
 		Log.d(TAG, "Here 1 " + mCurPageNumber);
 	}
 
@@ -331,7 +335,7 @@ public class SensorDetailFragment extends SherlockFragment {
 		if (mController != null) {
 			Location location = null;
 			
-			Adapter adapter = mController.getActiveAdapter();
+			Adapter adapter = mController.getAdapter(mAdapterId);
 			if (adapter != null) {
 				location = mController.getLocation(adapter.getId(), device.getFacility().getLocationId());
 			}
@@ -615,10 +619,11 @@ public class SensorDetailFragment extends SherlockFragment {
 		protected BaseDevice doInBackground(String... sensorID) {
 
 			BaseDevice device = null;
-			Adapter adapter = mController.getActiveAdapter();
+			Adapter adapter = mController.getAdapter(mAdapterId);
 			if (adapter != null) {
 				device = mController.getDevice(adapter.getId(), sensorID[0]);
-				Log.d(TAG, "ID:" + device.getId() + " Name:" + device.getName());
+				if (device != null)
+					Log.d(TAG, "ID:" + device.getId() + " Name:" + device.getName());
 			}
 
 			return device;
@@ -627,7 +632,7 @@ public class SensorDetailFragment extends SherlockFragment {
 		@Override
 		protected void onPostExecute(BaseDevice device) {
 			mDevice = device; // FIXME: this might be null now...
-			if (!isCancelled()) {
+			if (!isCancelled() && device != null) {
 				initLayout(device);
 			}
 
