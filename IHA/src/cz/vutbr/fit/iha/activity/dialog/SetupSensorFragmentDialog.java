@@ -75,7 +75,7 @@ public class SetupSensorFragmentDialog extends TrackDialogFragment {
 		
 		// Prepare progress dialog
 		mProgress = new ProgressDialog(mActivity);
-		mProgress.setMessage("Saving data...");
+		mProgress.setMessage(getString(R.string.progress_saving_data));
 		mProgress.setCancelable(false);
 		mProgress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
 				
@@ -105,7 +105,7 @@ public class SetupSensorFragmentDialog extends TrackDialogFragment {
 		// Send request
 		mAdapter = mController.getActiveAdapter();
 		if (mAdapter == null) {
-			Toast.makeText(mActivity, getResources().getString(R.string.toast_no_adapter), Toast.LENGTH_LONG).show();
+			Toast.makeText(mActivity, getString(R.string.toast_no_adapter), Toast.LENGTH_LONG).show();
 			//TODO: Ukoncit dialog ?
 			isError = true;
 		}
@@ -116,7 +116,7 @@ public class SetupSensorFragmentDialog extends TrackDialogFragment {
 		//TODO: add control if is only one new facility
 		
 		if (mNewFacilities.isEmpty()){
-			Toast.makeText(mActivity, "There are no uninitialized devices.", Toast.LENGTH_LONG).show();
+			Toast.makeText(mActivity, getString(R.string.toast_no_uninitialized_devices), Toast.LENGTH_LONG).show();
 			//TODO: Kontrolovat jestli se dialog spustil spatne
 			isError = true;
 		}
