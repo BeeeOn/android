@@ -24,7 +24,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/logo"
             android:paddingTop="5px"
-            android:textColor="@color/log_blue2"
+            android:textColor="@color/iha_secundary_pink"
             android:textSize="@dimen/smart_watch_2_text_size_large"
             android:textStyle="bold" />
     </RelativeLayout>
