@@ -181,6 +181,9 @@ public class AddSensorFragmentDialog extends TrackDialogFragment {
 	}
 
 	public void resetPairButton() {
+		// Control if is dialog on screen
+		if(getDialog() == null ) 
+			return;
 		mPosButton.setText(getResources().getString(R.string.addsensor_send_request));
 		mPosButton.setEnabled(true);
 		mPosButton.setOnClickListener(new OnClickListener() {
@@ -224,6 +227,9 @@ public class AddSensorFragmentDialog extends TrackDialogFragment {
 	}
 
 	public void checkUninitSensors() {
+		// Control if is dialog on screen
+		if(getDialog() == null )
+			return;
 		// GOTO next dialog to setup sensors
 		startTimerOnButton();
 	}
