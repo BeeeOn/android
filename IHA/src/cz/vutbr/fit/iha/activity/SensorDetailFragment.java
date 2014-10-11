@@ -59,6 +59,7 @@ import cz.vutbr.fit.iha.adapter.device.Facility;
 import cz.vutbr.fit.iha.adapter.device.RefreshInterval;
 import cz.vutbr.fit.iha.adapter.location.Location;
 import cz.vutbr.fit.iha.controller.Controller;
+import cz.vutbr.fit.iha.pair.LogDataPair;
 import cz.vutbr.fit.iha.util.Timezone;
 
 //import android.widget.LinearLayout;
@@ -126,25 +127,6 @@ public class SensorDetailFragment extends SherlockFragment {
 	private String mDateTimeFormat = "%Y-%m-%d %H:%M:%S";
 	private String mGraphDateTimeFormat = "dd.MM. kk:mm";
 	private float mTempConstant = (float) 1000;
-
-	/**
-	 * Represents "pair" of data required for get device log
-	 */
-	private class LogDataPair {
-		public final BaseDevice device;
-		public final String from;
-		public final String to;
-		public final DataType type;
-		public final DataInterval interval;
-
-		public LogDataPair(final BaseDevice device, final String from, final String to, final DataType type, final DataInterval interval) {
-			this.device = device;
-			this.from = from;
-			this.to = to;
-			this.type = type;
-			this.interval = interval;
-		}
-	}
 
 	/**
 	 * Factory method for this fragment class. Constructs a new fragment for the given page number.
