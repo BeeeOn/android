@@ -58,8 +58,11 @@ import cz.vutbr.fit.iha.adapter.device.DeviceLog.DataType;
 import cz.vutbr.fit.iha.adapter.device.Facility;
 import cz.vutbr.fit.iha.adapter.device.RefreshInterval;
 import cz.vutbr.fit.iha.adapter.location.Location;
+import cz.vutbr.fit.iha.asynctask.CallbackTask.CallbackTaskListener;
+import cz.vutbr.fit.iha.asynctask.SaveDeviceTask;
 import cz.vutbr.fit.iha.controller.Controller;
 import cz.vutbr.fit.iha.pair.LogDataPair;
+import cz.vutbr.fit.iha.pair.SaveDevicePair;
 import cz.vutbr.fit.iha.util.Timezone;
 
 //import android.widget.LinearLayout;
@@ -99,6 +102,7 @@ public class SensorDetailFragment extends SherlockFragment {
 
 	private BaseDevice mDevice;
 
+	private SaveDeviceTask mSaveDeviceTask;
 	private GetDeviceLogTask mGetDeviceLogTask;
 
 	public static final String ARG_PAGE = "page";
@@ -185,6 +189,9 @@ public class SensorDetailFragment extends SherlockFragment {
 
 	@Override
 	public void onStop() {
+		if (mSaveDeviceTask != null) {
+			mSaveDeviceTask.cancel(true);
+		}
 		if (mGetDeviceLogTask != null) {
 			mGetDeviceLogTask.cancel(true);
 		}
@@ -590,27 +597,22 @@ public class SensorDetailFragment extends SherlockFragment {
 	 * ================================= ASYNC TASK ===========================
 	 */
 
-	/**
-	 * Changes selected location and redraws list of adapters there
-	 */
-	private class UpdateDeviceTask extends AsyncTask<SaveDevice, Void, Boolean> {
-		@Override
-		protected Boolean doInBackground(SaveDevice... params) {
-			Log.d(TAG, "ID:" + mDevice.getId() + " Name:" + mDevice.getName());
-			EnumSet<SaveDevice> what = EnumSet.of(params[0]); // method expects exactly one parameter
-			return mController.saveDevice(mDevice, what);
-		}
+	private void doSaveDeviceTask(SaveDevicePair pair) {
+		mSaveDeviceTask = new SaveDeviceTask(getActivity().getApplicationContext());
+		mSaveDeviceTask.setListener(new CallbackTaskListener() {
 
-		@Override
-		protected void onPostExecute(Boolean ret) {
-			if (ret.booleanValue()) {
-				Log.d(TAG, "Success save to server");
-			} else {
-				Log.d(TAG, "Fail save to server");
-				// Show failer toast !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+			@Override
+			public void onExecute(boolean success) {
+				if (success) {
+					Log.d(TAG, "Success save to server");
+				} else {
+					Log.d(TAG, "Fail save to server");
+					// Show failer toast !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+				}
 			}
-		}
-
+		});		
+		
+		mSaveDeviceTask.execute(pair);
 	}
 
 	/**
@@ -675,9 +677,9 @@ public class SensorDetailFragment extends SherlockFragment {
 
 					// Set new name to device
 					mDevice.setName(mNameEdit.getText().toString());
+
 					// Update device to server
-					UpdateDeviceTask task = new UpdateDeviceTask();
-					task.execute(new SaveDevice[] { SaveDevice.SAVE_NAME });
+					doSaveDeviceTask(new SaveDevicePair(mDevice, EnumSet.of(SaveDevice.SAVE_NAME)));
 				}
 				mNameEdit.setVisibility(View.GONE);
 				mName.setVisibility(View.VISIBLE);
@@ -697,8 +699,7 @@ public class SensorDetailFragment extends SherlockFragment {
 
 					Log.d(TAG, "Refresh time " + mDevice.getFacility().getRefresh().getStringInterval(mActivity));
 					// Update device to server
-					UpdateDeviceTask task = new UpdateDeviceTask();
-					task.execute(new SaveDevice[] { SaveDevice.SAVE_REFRESH });
+					doSaveDeviceTask(new SaveDevicePair(mDevice, EnumSet.of(SaveDevice.SAVE_REFRESH)));
 				}
 				break;
 
