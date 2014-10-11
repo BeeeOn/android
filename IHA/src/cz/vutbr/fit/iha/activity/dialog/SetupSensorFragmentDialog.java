@@ -37,9 +37,9 @@ import cz.vutbr.fit.iha.adapter.device.Facility;
 import cz.vutbr.fit.iha.adapter.location.Location;
 import cz.vutbr.fit.iha.adapter.location.Location.DefaultRoom;
 import cz.vutbr.fit.iha.asynctask.CallbackTask.CallbackTaskListener;
-import cz.vutbr.fit.iha.asynctask.SaveDeviceTask;
+import cz.vutbr.fit.iha.asynctask.InitializeFacilityTask;
 import cz.vutbr.fit.iha.controller.Controller;
-import cz.vutbr.fit.iha.pair.DeviceLocationPair;
+import cz.vutbr.fit.iha.pair.InitializeFacilityPair;
 
 public class SetupSensorFragmentDialog extends TrackDialogFragment {
 
@@ -193,15 +193,15 @@ public class SetupSensorFragmentDialog extends TrackDialogFragment {
 				mProgress.show();
 				
 				// Save that facility
-				Log.d(TAG, String.format("SaveDevice - device: %s, loc: %s", newFacility.getId(), location.getId()));
-				doSaveDeviceTask(new DeviceLocationPair(newFacility, location));				
+				Log.d(TAG, String.format("InitializeFacility - facility: %s, loc: %s", newFacility.getId(), location.getId()));
+				doSaveDeviceTask(new InitializeFacilityPair(newFacility, location));				
 			}
 		});
 	    
 	}
 		
-	private void doSaveDeviceTask(DeviceLocationPair pair) {
-		SaveDeviceTask task = new SaveDeviceTask(getActivity().getApplicationContext());
+	private void doSaveDeviceTask(InitializeFacilityPair pair) {
+		InitializeFacilityTask task = new InitializeFacilityTask(getActivity().getApplicationContext());
 		task.setListener(new CallbackTaskListener() {
 
 			@Override
