@@ -78,7 +78,8 @@ public class SensorListAdapter extends BaseAdapter {
 		itemView.setClickable(false);
 		itemView.setOnClickListener(null);
 		ImageView img = (ImageView) itemView.findViewById(R.id.sensor_listview_addsensor_image);
-		img.setOnClickListener(mListener);
+		if(img != null)
+			img.setOnClickListener(mListener);
 		return itemView;
 	}
 
