@@ -1,5 +1,8 @@
 package cz.vutbr.fit.iha.widget;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.app.Service;
@@ -83,6 +86,9 @@ public class WidgetUpdateService extends Service {
 		if (!intent.getBooleanExtra(EXTRA_FORCE_UPDATE, false)) {
 			// set alarm for next update
 			long nextUpdate = calcNextUpdate();
+			
+			Log.d(TAG, String.format("Next update: %d (now: %d)", nextUpdate, SystemClock.elapsedRealtime()));
+			
 			if (nextUpdate > 0)
 				setAlarm(this, nextUpdate);
 		}
@@ -198,11 +204,29 @@ public class WidgetUpdateService extends Service {
 		return first ? 0 : Math.max(nextUpdate, SystemClock.elapsedRealtime() + minInterval * 1000);
 	}
 
-	private int[] getAllWidgetIds() {
-		ComponentName thisWidget = new ComponentName(this, SensorWidgetProvider.class);
+	private List<Integer> getWidgetIds(Class<?> cls) {
+		ComponentName thisWidget = new ComponentName(this, cls);
 		AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(this);
-
-		return appWidgetManager.getAppWidgetIds(thisWidget);
+		
+		List<Integer> arr = new ArrayList<Integer>();
+		for (int i : appWidgetManager.getAppWidgetIds(thisWidget)) {
+			arr.add(i);
+		}
+		return arr; 
+	}
+	
+	private int[] getAllWidgetIds() {
+		List<Integer> ids = new ArrayList<Integer>();
+		ids.addAll(getWidgetIds(SensorWidgetProviderSmall.class));
+		ids.addAll(getWidgetIds(SensorWidgetProviderMedium.class));
+		ids.addAll(getWidgetIds(SensorWidgetProviderLarge.class));
+		
+		int[] arr = new int[ids.size()];
+		for (int i = 0; i < ids.size(); i++) {
+			arr[i] = ids.get(i);
+		}
+		
+		return arr;
 	}
 
 }

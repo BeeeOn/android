@@ -49,7 +49,9 @@ public class SensorWidgetProvider extends AppWidgetProvider {
 		super.onDisabled(context);
 
 		// stop updating service as there are no widgets anymore
-		WidgetUpdateService.stopUpdating(context);
+		// WidgetUpdateService.stopUpdating(context);
+		// NOTE: this works weird... sometimes it call's it when there are still widgets, sometimes it doesn't call it at all 
+		// so we just comment this out and let stopping service to calcNextUpdate method 
 	}
 
 	@Override
