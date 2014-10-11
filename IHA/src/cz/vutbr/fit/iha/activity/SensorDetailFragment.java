@@ -58,7 +58,11 @@ import cz.vutbr.fit.iha.adapter.device.DeviceLog.DataType;
 import cz.vutbr.fit.iha.adapter.device.Facility;
 import cz.vutbr.fit.iha.adapter.device.RefreshInterval;
 import cz.vutbr.fit.iha.adapter.location.Location;
+import cz.vutbr.fit.iha.asynctask.CallbackTask.CallbackTaskListener;
+import cz.vutbr.fit.iha.asynctask.SaveDeviceTask;
 import cz.vutbr.fit.iha.controller.Controller;
+import cz.vutbr.fit.iha.pair.LogDataPair;
+import cz.vutbr.fit.iha.pair.SaveDevicePair;
 import cz.vutbr.fit.iha.util.Timezone;
 
 //import android.widget.LinearLayout;
@@ -98,7 +102,7 @@ public class SensorDetailFragment extends SherlockFragment {
 
 	private BaseDevice mDevice;
 
-	private GetDeviceTask mGetDeviceTask;
+	private SaveDeviceTask mSaveDeviceTask;
 	private GetDeviceLogTask mGetDeviceLogTask;
 
 	public static final String ARG_PAGE = "page";
@@ -127,25 +131,6 @@ public class SensorDetailFragment extends SherlockFragment {
 	private String mDateTimeFormat = "%Y-%m-%d %H:%M:%S";
 	private String mGraphDateTimeFormat = "dd.MM. kk:mm";
 	private float mTempConstant = (float) 1000;
-
-	/**
-	 * Represents "pair" of data required for get device log
-	 */
-	private class LogDataPair {
-		public final BaseDevice device;
-		public final String from;
-		public final String to;
-		public final DataType type;
-		public final DataInterval interval;
-
-		public LogDataPair(final BaseDevice device, final String from, final String to, final DataType type, final DataInterval interval) {
-			this.device = device;
-			this.from = from;
-			this.to = to;
-			this.type = type;
-			this.interval = interval;
-		}
-	}
 
 	/**
 	 * Factory method for this fragment class. Constructs a new fragment for the given page number.
@@ -192,17 +177,20 @@ public class SensorDetailFragment extends SherlockFragment {
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
-
-		mGetDeviceTask = new GetDeviceTask();
-		mGetDeviceTask.execute(new String[] { mPageNumber });
+		
+		mDevice = mController.getDevice(mAdapterId, mPageNumber);
+		if (mDevice != null) {
+			Log.d(TAG, String.format("ID: %s, Name: %s", mDevice.getId(), mDevice.getName()));
+			initLayout(mDevice);
+		}
 
 		Log.d(TAG, "Here 3 " + mCurPageNumber);
 	}
 
 	@Override
 	public void onStop() {
-		if (mGetDeviceTask != null) {
-			mGetDeviceTask.cancel(true);
+		if (mSaveDeviceTask != null) {
+			mSaveDeviceTask.cancel(true);
 		}
 		if (mGetDeviceLogTask != null) {
 			mGetDeviceLogTask.cancel(true);
@@ -609,55 +597,22 @@ public class SensorDetailFragment extends SherlockFragment {
 	 * ================================= ASYNC TASK ===========================
 	 */
 
-	/**
-	 * Changes selected location and redraws list of adapters there
-	 */
-	private class GetDeviceTask extends AsyncTask<String, Void, BaseDevice> {
-		@Override
-		protected BaseDevice doInBackground(String... sensorID) {
+	private void doSaveDeviceTask(SaveDevicePair pair) {
+		mSaveDeviceTask = new SaveDeviceTask(getActivity().getApplicationContext());
+		mSaveDeviceTask.setListener(new CallbackTaskListener() {
 
-			BaseDevice device = null;
-			Adapter adapter = mController.getAdapter(mAdapterId);
-			if (adapter != null) {
-				device = mController.getDevice(adapter.getId(), sensorID[0]);
-				if (device != null)
-					Log.d(TAG, "ID:" + device.getId() + " Name:" + device.getName());
+			@Override
+			public void onExecute(boolean success) {
+				if (success) {
+					Log.d(TAG, "Success save to server");
+				} else {
+					Log.d(TAG, "Fail save to server");
+					// Show failer toast !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+				}
 			}
-
-			return device;
-		}
-
-		@Override
-		protected void onPostExecute(BaseDevice device) {
-			mDevice = device; // FIXME: this might be null now...
-			if (!isCancelled() && device != null) {
-				initLayout(device);
-			}
-
-		}
-	}
-
-	/**
-	 * Changes selected location and redraws list of adapters there
-	 */
-	private class UpdateDeviceTask extends AsyncTask<SaveDevice, Void, Boolean> {
-		@Override
-		protected Boolean doInBackground(SaveDevice... params) {
-			Log.d(TAG, "ID:" + mDevice.getId() + " Name:" + mDevice.getName());
-			EnumSet<SaveDevice> what = EnumSet.of(params[0]); // method expects exactly one parameter
-			return mController.saveDevice(mDevice, what);
-		}
-
-		@Override
-		protected void onPostExecute(Boolean ret) {
-			if (ret.booleanValue()) {
-				Log.d(TAG, "Success save to server");
-			} else {
-				Log.d(TAG, "Fail save to server");
-				// Show failer toast !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-			}
-		}
-
+		});		
+		
+		mSaveDeviceTask.execute(pair);
 	}
 
 	/**
@@ -722,9 +677,9 @@ public class SensorDetailFragment extends SherlockFragment {
 
 					// Set new name to device
 					mDevice.setName(mNameEdit.getText().toString());
+
 					// Update device to server
-					UpdateDeviceTask task = new UpdateDeviceTask();
-					task.execute(new SaveDevice[] { SaveDevice.SAVE_NAME });
+					doSaveDeviceTask(new SaveDevicePair(mDevice, EnumSet.of(SaveDevice.SAVE_NAME)));
 				}
 				mNameEdit.setVisibility(View.GONE);
 				mName.setVisibility(View.VISIBLE);
@@ -744,8 +699,7 @@ public class SensorDetailFragment extends SherlockFragment {
 
 					Log.d(TAG, "Refresh time " + mDevice.getFacility().getRefresh().getStringInterval(mActivity));
 					// Update device to server
-					UpdateDeviceTask task = new UpdateDeviceTask();
-					task.execute(new SaveDevice[] { SaveDevice.SAVE_REFRESH });
+					doSaveDeviceTask(new SaveDevicePair(mDevice, EnumSet.of(SaveDevice.SAVE_REFRESH)));
 				}
 				break;
 

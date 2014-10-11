@@ -1,6 +1,5 @@
 package cz.vutbr.fit.iha.activity;
 
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
@@ -13,6 +12,8 @@ import com.actionbarsherlock.app.SherlockFragment;
 
 import cz.vutbr.fit.iha.R;
 import cz.vutbr.fit.iha.adapter.Adapter;
+import cz.vutbr.fit.iha.asynctask.CallbackTask.CallbackTaskListener;
+import cz.vutbr.fit.iha.asynctask.ReloadFacilitiesTask;
 import cz.vutbr.fit.iha.controller.Controller;
 
 public class ListOfDevices extends SherlockFragment {
@@ -58,8 +59,7 @@ public class ListOfDevices extends SherlockFragment {
 					return;
 				}
 				
-				mReloadFacilitiesTask = new ReloadFacilitiesTask();
-				mReloadFacilitiesTask.execute(new String[] { adapter.getId() });
+				doReloadFacilitiesTask(adapter.getId());
 			}
 		});
 		mSwipeLayout.setColorScheme(R.color.iha_separator, R.color.iha_item_bg, R.color.iha_secundary_pink, R.color.iha_text_color);
@@ -89,22 +89,22 @@ public class ListOfDevices extends SherlockFragment {
 		}
 	}
 	
-	/**
-	 * Reloads facilities by adapter and redraw list of devices in LocationScreenActivity
-	 */
-	private class ReloadFacilitiesTask extends AsyncTask<String, Void, Boolean> {
+	private void doReloadFacilitiesTask(String adapterId) {
+		mReloadFacilitiesTask = new ReloadFacilitiesTask(getActivity().getApplicationContext(), true);
+		
+		mReloadFacilitiesTask.setListener(new CallbackTaskListener() {
 
-		@Override
-		protected Boolean doInBackground(String... adapterIds) {
-			String adapterId = adapterIds[0];
-			return mController.reloadFacilitiesByAdapter(adapterId, true);
-		}
-
-		@Override
-		protected void onPostExecute(Boolean success) {
-			mActivity.redrawDevices();
-			mSwipeLayout.setRefreshing(false);
-		}
+			@Override
+			public void onExecute(boolean success) {
+				mActivity.redrawDevices();
+				mSwipeLayout.setRefreshing(false);
+			}
+		});
+		
+		mReloadFacilitiesTask.execute(adapterId);
 	}
+	
+
+
 
 }

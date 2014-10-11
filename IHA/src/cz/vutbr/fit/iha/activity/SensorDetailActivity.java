@@ -3,7 +3,6 @@ package cz.vutbr.fit.iha.activity;
 import java.util.ArrayList;
 import java.util.List;
 
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
@@ -18,6 +17,8 @@ import com.actionbarsherlock.view.Window;
 import cz.vutbr.fit.iha.R;
 import cz.vutbr.fit.iha.adapter.device.BaseDevice;
 import cz.vutbr.fit.iha.adapter.device.Facility;
+import cz.vutbr.fit.iha.asynctask.CallbackTask.CallbackTaskListener;
+import cz.vutbr.fit.iha.asynctask.ReloadFacilitiesTask;
 import cz.vutbr.fit.iha.controller.Controller;
 import cz.vutbr.fit.iha.view.CustomViewPager;
 
@@ -44,7 +45,7 @@ public class SensorDetailActivity extends BaseApplicationActivity {
 	private String mActiveDeviceId;
 	private int mActiveDevicePosition;
 
-	private GetDevicesTask mTask;
+	private ReloadFacilitiesTask mReloadFacilitiesTask;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -93,9 +94,8 @@ public class SensorDetailActivity extends BaseApplicationActivity {
 	protected void onAppResume() {
 		Log.d(TAG, "onAppResume()");
 		
-		if (mTask == null) {
-			mTask = new GetDevicesTask();
-			mTask.execute(new String[] { mActiveAdapterId, mActiveDeviceId });
+		if (mReloadFacilitiesTask == null) {
+			doReloadFacilitiesTask(mActiveAdapterId);
 		}
 	}
 
@@ -114,36 +114,31 @@ public class SensorDetailActivity extends BaseApplicationActivity {
 
 	@Override
 	public void onStop() {
-		if (mTask != null) {
-			mTask.cancel(true);
+		if (mReloadFacilitiesTask != null) {
+			mReloadFacilitiesTask.cancel(true);
 		}
 		super.onStop();
 	}
 
-	/**
-	 * Changes selected location and redraws list of adapters there
-	 */
-	private class GetDevicesTask extends AsyncTask<String, Void, List<BaseDevice>> {
-		@Override
-		protected List<BaseDevice> doInBackground(String... dataIds) {
-			
-			String adapterId = dataIds[0];
-			String deviceId = dataIds[1];
-			
-			mController.reloadAdapters(false);
-			mController.reloadFacilitiesByAdapter(adapterId, false);
-			
-			BaseDevice device = mController.getDevice(adapterId, deviceId);
-			
-			List<BaseDevice> devices = new ArrayList<BaseDevice>();
-			if (device != null) {
-				String locationId = device.getFacility().getLocationId();
-				
-				List<Facility> facilities = mController.getFacilitiesByLocation(adapterId, locationId);
+	private void doReloadFacilitiesTask(final String adapterId) {
+		mReloadFacilitiesTask = new ReloadFacilitiesTask(this, false);
+		
+		mReloadFacilitiesTask.setListener(new CallbackTaskListener() {
 
+			@Override
+			public void onExecute(boolean success) {
+				BaseDevice device = mController.getDevice(adapterId, mActiveDeviceId);
+				if (device == null) {
+					return;
+				}
+
+				List<Facility> facilities = mController.getFacilitiesByLocation(adapterId, device.getFacility().getLocationId());
+
+				List<BaseDevice> devices = new ArrayList<BaseDevice>();
 				for (Facility facility : facilities) {
 					devices.addAll(facility.getDevices());
 				}
+				mDevices = devices;
 				
 				// Determine position of wanted device in this list
 				for (int i = 0; i < devices.size(); i++) {
@@ -153,16 +148,13 @@ public class SensorDetailActivity extends BaseApplicationActivity {
 					}
 				}
 				
-				Log.d(TAG, String.format("String: %s, Size: %d", devices.toString(), devices.size()));
+				Log.d(TAG, String.format("String: %s, Size: %d", mDevices.toString(), mDevices.size()));
+				initLayouts();
 			}
 
-			return devices;
-		}
+		});
 
-		@Override
-		protected void onPostExecute(List<BaseDevice> devices) {
-			initLayouts(devices);	
-		}
+		mReloadFacilitiesTask.execute(adapterId);
 	}
 
 	/**
@@ -185,10 +177,7 @@ public class SensorDetailActivity extends BaseApplicationActivity {
 		}
 	}
 
-	public void initLayouts(List<BaseDevice> devices) {
-		// Set devices
-		mDevices = devices;
-
+	public void initLayouts() {
 		// Instantiate a ViewPager and a PagerAdapter.
 		mPager = (ViewPager) findViewById(R.id.sensor_detail_wraper);
 		mPagerAdapter = new ScreenSlidePagerAdapter(getSupportFragmentManager());
