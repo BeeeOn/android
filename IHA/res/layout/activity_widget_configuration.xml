@@ -24,8 +24,9 @@
 		    
 		    <Spinner
 		        android:id="@+id/adapter"
+		        android:layout_marginLeft="15dp"
 		        android:layout_width="match_parent"
-		        android:layout_height="wrap_content" />
+		        android:layout_height="50dp" />
 		    
 		    <TextView
 		        android:layout_width="match_parent"
@@ -36,7 +37,10 @@
 		    <Spinner
 		        android:id="@+id/sensor"
 		        android:layout_width="match_parent"
-		        android:layout_height="wrap_content" />
+		        android:layout_height="50dp"
+		        android:layout_gravity="center_vertical"
+		        android:layout_marginLeft="15dp"
+		        android:gravity="center_vertical" />
 		    
 		    <TextView
 		        android:layout_width="match_parent"
@@ -48,7 +52,7 @@
 		        android:id="@+id/interval_sensor"
 		        android:layout_marginLeft="15dp"
 		        android:layout_width="match_parent"
-		        android:layout_height="40dp"
+		        android:layout_height="50dp"
 		        android:gravity="center_vertical"
 		        android:textAppearance="?android:attr/textAppearanceMedium" />
 		    
@@ -62,7 +66,7 @@
 		        android:id="@+id/interval_widget"
 		        android:layout_marginLeft="15dp"
 		        android:layout_width="match_parent"
-		        android:layout_height="40dp"
+		        android:layout_height="50dp"
 		        android:gravity="center_vertical"
 		        android:textAppearance="?android:attr/textAppearanceMedium" />
 		    
