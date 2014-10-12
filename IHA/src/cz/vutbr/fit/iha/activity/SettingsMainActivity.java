@@ -1,8 +1,5 @@
 package cz.vutbr.fit.iha.activity;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
@@ -15,8 +12,6 @@ import com.actionbarsherlock.view.MenuItem;
 
 import cz.vutbr.fit.iha.Constants;
 import cz.vutbr.fit.iha.R;
-import cz.vutbr.fit.iha.adapter.Adapter;
-import cz.vutbr.fit.iha.adapter.location.Location;
 import cz.vutbr.fit.iha.controller.Controller;
 import cz.vutbr.fit.iha.persistence.Persistence;
 import cz.vutbr.fit.iha.util.Timezone;
@@ -29,7 +24,8 @@ public class SettingsMainActivity extends SherlockPreferenceActivity implements 
 	 * keys which are defined in res/xml/preferences.xml
 	 */
 
-	private ListPreference mListPrefAdapter, mListPrefLocation, mListPrefTimezone;
+//	private ListPreference mListPrefAdapter, mListPrefLocation;
+	private ListPreference mListPrefTimezone;
 	private Preference mPrefUnits;
 	private Controller mController;
 	private SharedPreferences mPrefs;
@@ -54,8 +50,8 @@ public class SettingsMainActivity extends SherlockPreferenceActivity implements 
 		// Load the preferences from an XML resource
 		addPreferencesFromResource(R.xml.main_preferences);
 
-		mListPrefAdapter = (ListPreference) findPreference(Constants.PERSISTENCE_PREF_SW2_ADAPTER);
-		mListPrefLocation = (ListPreference) findPreference(Constants.PERSISTENCE_PREF_SW2_LOCATION);
+//		mListPrefAdapter = (ListPreference) findPreference(Constants.PERSISTENCE_PREF_SW2_ADAPTER);
+//		mListPrefLocation = (ListPreference) findPreference(Constants.PERSISTENCE_PREF_SW2_LOCATION);
 
 		mListPrefTimezone = (ListPreference) findPreference(Constants.PERSISTENCE_PREF_TIMEZONE);
 		mListPrefTimezone.setEntries(Timezone.getNamesArray(this));
@@ -86,114 +82,113 @@ public class SettingsMainActivity extends SherlockPreferenceActivity implements 
 	}
 
 	private void redraw() {
-		setDefaultLocAndAdap();
+//		setDefaultLocAndAdap();
 		mListPrefTimezone.setSummary(Timezone.fromPreferences(mController.getUserSettings()).getName(this));
 	}
-
-	// FIXME: This method must use same ActiveAdapter from application,
-	// we can't have in controller more activeAdapters for getting locations and facilities...
-	// Use mController.setActiveAdapter(...) to switch to another adapter
-	private void setDefaultLocAndAdap() {
-		List<Adapter> adapters = mController.getAdapters();
-
-		// no adapter, disable adapter and location ListPreference
-		if (adapters.size() < 1) {
-			mListPrefAdapter.setEnabled(false);
-			mListPrefLocation.setEnabled(false);
-
-			mListPrefLocation.setSummary(R.string.no_location_available);
-			mListPrefAdapter.setSummary(R.string.no_location_available);
-		}
-		// only 1 adapter available, disable adapter choice
-		else if (adapters.size() < 2) {
-
-			mListPrefAdapter.setEnabled(false);
-			Adapter adapter = adapters.get(0);
-
-			mListPrefAdapter.setSummary(adapter.getName());
-
-			setLocationList();
-		}
-		// 2 or more adapters available
-		else {
-			mListPrefAdapter.setEnabled(true);
-
-			// fill lists with data
-			CharSequence[] entries = new CharSequence[adapters.size() + 1];
-			CharSequence[] entryValues = new CharSequence[adapters.size() + 1];
-
-			// add first item as "None" with null value
-			entries[0] = getString(R.string.none);
-			entryValues[0] = "";
-
-			// fill the rest
-			for (int i = 0; i < adapters.size(); i++) {
-				entries[i + 1] = adapters.get(i).getName();
-				entryValues[i + 1] = adapters.get(i).getId();
-			}
-
-			mListPrefAdapter.setEntries(entries);
-			mListPrefAdapter.setEntryValues(entryValues);
-			mListPrefAdapter.setDefaultValue("");
-
-			Adapter adapter = mController.getActiveAdapter();
-			if (adapter != null) {
-				mListPrefAdapter.setSummary(adapter.getName());
-				setLocationList();
-			} else {
-				// set "None" as summary
-				mListPrefAdapter.setSummary(R.string.none);
-				mListPrefLocation.setEnabled(false);
-				mListPrefLocation.setSummary(R.string.none);
-			}
-		}
-
-	}
-
-	private void setLocationList() {
-		mListPrefLocation.setEnabled(true);
-
-		String locId = mPrefs.getString(Constants.PERSISTENCE_PREF_SW2_LOCATION, "");
-		Location loc;
-		// valid
-		Adapter adapter = mController.getActiveAdapter();
-		if (adapter != null && locId != "" && (loc = mController.getLocation(adapter.getId(), locId)) != null) {
-			mListPrefLocation.setSummary(loc.getName());
-		} else {
-			mListPrefLocation.setSummary(R.string.none);
-			mPrefs.edit().putString(Constants.PERSISTENCE_PREF_SW2_LOCATION, "");
-			mPrefs.edit().commit();
-		}
-		List<Location> locations = new ArrayList<Location>();
-		if (adapter != null) {
-			locations = mController.getLocations(adapter.getId());
-		}
-		// no location available
-		if (locations.size() < 1) {
-			mListPrefLocation.setEnabled(false);
-			mListPrefLocation.setSummary(R.string.none);
-		}
-		// 1 and more locations available
-		else {
-			// fill lists with data
-			CharSequence[] entries = new CharSequence[locations.size() + 1];
-			CharSequence[] entryValues = new CharSequence[locations.size() + 1];
-
-			// add first item as "None" with null value
-			entries[0] = getString(R.string.none);
-			entryValues[0] = "";
-
-			// fill the rest
-			for (int i = 0; i < locations.size(); i++) {
-				entries[i + 1] = locations.get(i).getName();
-				entryValues[i + 1] = locations.get(i).getId();
-			}
-
-			mListPrefLocation.setEntries(entries);
-			mListPrefLocation.setEntryValues(entryValues);
-			mListPrefLocation.setDefaultValue("");
-		}
-	}
+	
+//	private void setDefaultLocAndAdap() {
+//		List<Adapter> adapters = mController.getAdapters();
+//
+//		// no adapter, disable adapter and location ListPreference
+//		if (adapters.size() < 1) {
+//			mListPrefAdapter.setEnabled(false);
+//			mListPrefLocation.setEnabled(false);
+//
+//			mListPrefLocation.setSummary(R.string.no_location_available);
+//			mListPrefAdapter.setSummary(R.string.no_location_available);
+//		}
+//		// only 1 adapter available, disable adapter choice
+//		else if (adapters.size() < 2) {
+//
+//			mListPrefAdapter.setEnabled(false);
+//			Adapter adapter = adapters.get(0);
+//
+//			mListPrefAdapter.setSummary(adapter.getName());
+//
+//			setLocationList();
+//		}
+//		// 2 or more adapters available
+//		else {
+//			mListPrefAdapter.setEnabled(true);
+//
+//			// fill lists with data
+//			CharSequence[] entries = new CharSequence[adapters.size() + 1];
+//			CharSequence[] entryValues = new CharSequence[adapters.size() + 1];
+//
+//			// add first item as "None" with null value
+//			entries[0] = getString(R.string.none);
+//			entryValues[0] = "";
+//
+//			// fill the rest
+//			for (int i = 0; i < adapters.size(); i++) {
+//				entries[i + 1] = adapters.get(i).getName();
+//				entryValues[i + 1] = adapters.get(i).getId();
+//			}
+//
+//			mListPrefAdapter.setEntries(entries);
+//			mListPrefAdapter.setEntryValues(entryValues);
+//			mListPrefAdapter.setDefaultValue("");
+//
+//			Adapter adapter = mController.getActiveAdapter();
+//			if (adapter != null) {
+//				mListPrefAdapter.setSummary(adapter.getName());
+//				setLocationList();
+//			} else {
+//				// set "None" as summary
+//				mListPrefAdapter.setSummary(R.string.none);
+//				mListPrefLocation.setEnabled(false);
+//				mListPrefLocation.setSummary(R.string.none);
+//			}
+//		}
+//
+//	}
+//
+//	private void setLocationList() {
+//		mListPrefLocation.setEnabled(true);
+//
+//		String locId = mPrefs.getString(Constants.PERSISTENCE_PREF_SW2_LOCATION, "");
+//		Location loc;
+//		// valid
+//		Adapter adapter = mController.getActiveAdapter();
+//		if (adapter != null && locId != "" && (loc = mController.getLocation(adapter.getId(), locId)) != null) {
+//			mListPrefLocation.setSummary(loc.getName());
+//		} else {
+//			
+//			
+//			mListPrefLocation.setSummary(R.string.none);
+//			mPrefs.edit().putString(Constants.PERSISTENCE_PREF_SW2_LOCATION, "");
+//			mPrefs.edit().commit();
+//		}
+//		List<Location> locations = new ArrayList<Location>();
+//		if (adapter != null) {
+//			locations = mController.getLocations(adapter.getId());
+//		}
+//		// no location available
+//		if (locations.size() < 1) {
+//			mListPrefLocation.setEnabled(false);
+//			mListPrefLocation.setSummary(R.string.none);
+//		}
+//		// 1 and more locations available
+//		else {
+//			// fill lists with data
+//			CharSequence[] entries = new CharSequence[locations.size() + 1];
+//			CharSequence[] entryValues = new CharSequence[locations.size() + 1];
+//
+//			// add first item as "None" with null value
+//			entries[0] = getString(R.string.none);
+//			entryValues[0] = "";
+//
+//			// fill the rest
+//			for (int i = 0; i < locations.size(); i++) {
+//				entries[i + 1] = locations.get(i).getName();
+//				entryValues[i + 1] = locations.get(i).getId();
+//			}
+//
+//			mListPrefLocation.setEntries(entries);
+//			mListPrefLocation.setEntryValues(entryValues);
+//			mListPrefLocation.setDefaultValue("");
+//		}
+//	}
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
@@ -216,6 +211,10 @@ public class SettingsMainActivity extends SherlockPreferenceActivity implements 
 
 	@Override
 	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+//		// if adapter was changed, make location empty ()
+//		if (key == Constants.PERSISTENCE_PREF_SW2_ADAPTER) {
+//			mController.getUserSettings().edit().putString(Constants.PERSISTENCE_PREF_SW2_LOCATION, "").commit();
+//		}
 		redraw();
 	}
 
