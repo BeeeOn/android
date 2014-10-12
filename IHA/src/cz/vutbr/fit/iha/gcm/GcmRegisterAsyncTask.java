@@ -54,10 +54,6 @@ public class GcmRegisterAsyncTask extends AsyncTask<Context, Void, Void> {
 
 		Log.i(GcmHelper.TAG_GCM, "Device registered, attempt number " + String.valueOf(attempt) + " , registration ID=" + mRegId);
 
-		// For this demo: we don't need to send it because the device
-		// will send upstream messages to a server that echo back the
-		// message using the 'from' address in the message.
-
 		// Persist the regID - no need to register again.
 		Controller.getInstance(context.getApplicationContext()).setGCMRegistrationId(mRegId);
 

@@ -72,25 +72,25 @@ public class ControlManagerSmartWatch2 extends ControlManagerBase {
 		mController = Controller.getInstance(mContext.getApplicationContext());
 
 		Intent initialControlIntent;
-
+// FIXME dodelat prihlaseni pokud neni v appce
 		if (!mController.isLoggedIn()) {
-			String lastEmail = mController.getLastEmail();
-			try {
-				// GoogleAuth.getGoogleAuth().execute();
-				mController.startGoogle(false, false); // this is equivalent of upper line but
-			} catch (Exception e) {
+//			String lastEmail = mController.getLastEmail();
+//			try {
+//				// GoogleAuth.getGoogleAuth().execute();
+//				mController.startGoogle(false, false); // this is equivalent of upper line but
+//			} catch (Exception e) {
 				initialControlIntent = new Intent(mContext, TextControl.class);
 				initialControlIntent.putExtra(TextControl.EXTRA_TEXT, mContext.getString(R.string.please_log_in));
 				mCurrentControl = createControl(initialControlIntent);
 				return;
-			}
-			if (!(lastEmail.length() < 1) && !mController.login(lastEmail)) {
-				initialControlIntent = new Intent(mContext, TextControl.class);
-				initialControlIntent.putExtra(TextControl.EXTRA_TEXT, mContext.getString(R.string.please_log_in));
-				mCurrentControl = createControl(initialControlIntent);
-				return;
-			}
-
+//			}
+//			if (!(lastEmail.length() < 1) && !mController.login(lastEmail)) {
+//				initialControlIntent = new Intent(mContext, TextControl.class);
+//				initialControlIntent.putExtra(TextControl.EXTRA_TEXT, mContext.getString(R.string.please_log_in));
+//				mCurrentControl = createControl(initialControlIntent);
+//				return;
+//			}
+//
 		}
 
 		// Try to find default setting

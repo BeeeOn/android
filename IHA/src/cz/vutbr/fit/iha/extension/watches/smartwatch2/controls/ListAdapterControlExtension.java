@@ -84,6 +84,8 @@ public class ListAdapterControlExtension extends ManagedControlExtension {
 
 		data[0] = b1;
 
+		while (mAdapters == null);
+		
 		showLayout(R.layout.sw2_list_title, data);
 		sendListCount(R.id.listView, mAdapters.size());
 
