@@ -27,6 +27,7 @@ public class SettingsMainActivity extends SherlockPreferenceActivity implements 
 //	private ListPreference mListPrefAdapter, mListPrefLocation;
 	private ListPreference mListPrefTimezone;
 	private Preference mPrefUnits;
+	private Preference mPrefGeofence;
 	private Controller mController;
 	private SharedPreferences mPrefs;
 
@@ -66,6 +67,10 @@ public class SettingsMainActivity extends SherlockPreferenceActivity implements 
 		// mAdapterListPref.setOnPreferenceChangeListener(this);
 		// mLocationListPref.setOnPreferenceChangeListener(this);
 
+		mPrefGeofence = findPreference(Constants.KEY_GEOFENCE);
+		Intent intentGeofence = new Intent(this, MapGeofenceActivity.class);
+		mPrefGeofence.setIntent(intentGeofence);
+		
 		redraw();
 	}
 

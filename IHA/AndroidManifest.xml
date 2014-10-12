@@ -9,6 +9,11 @@
         android:minSdkVersion="9"
         android:targetSdkVersion="19" />
 
+    <!-- The Google Maps Android API uses OpenGL ES version 2 to render the map. -->
+    <uses-feature
+        android:glEsVersion="0x00020000"
+        android:required="true" />
+
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.NETWORK" />
@@ -18,6 +23,13 @@
     <uses-permission android:name="android.permission.USE_CREDENTIALS" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
+    <!--
+     The following two permissions are not required to use
+     Google Maps Android API v2, but are recommended.
+    -->
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+
     <!-- Keeps the processor from sleeping when a message is received. -->
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
@@ -25,7 +37,7 @@
     <!--
     Creates a custom permission so only this app can receive its messages. 
     NOTE: the permission *must* be called PACKAGE.permission.C2D_MESSAGE, where 
-    PACKAGE is the application's package name.
+    PACKAGE is the application's package name.
     -->
     <permission
         android:name="cz.vutbr.fit.iha.permission.C2D_MESSAGE"
@@ -44,9 +56,12 @@
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
+        <meta-data
+            android:name="com.google.android.maps.v2.API_KEY"
+            android:value="AIzaSyCa3FraNdK9ToHODmfYComZ2IxyTlCmQxY" />
 
         <activity
-            android:name="cz.vutbr.fit.iha.activity.LoginActivity"
+            android:name=".activity.LoginActivity"
             android:configChanges="orientation"
             android:label="@string/app_name"
             android:theme="@style/Theme.Sherlock.NoActionBar" >
@@ -57,71 +72,75 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="cz.vutbr.fit.iha.activity.LocationScreenActivity"
+            android:name=".activity.LocationScreenActivity"
             android:label="@string/title_activity_location_screen" >
         </activity>
         <activity
-            android:name="cz.vutbr.fit.iha.activity.LocationDetailActivity"
+            android:name=".activity.LocationDetailActivity"
             android:label="@string/title_activity_location_detail_screen" >
         </activity>
         <activity
-            android:name="cz.vutbr.fit.iha.activity.AddSensorActivity"
+            android:name=".activity.AddSensorActivity"
             android:label="@string/title_activity_add_sensor" >
         </activity>
         <activity
-            android:name="cz.vutbr.fit.iha.activity.SensorDetailActivity"
+            android:name=".activity.SensorDetailActivity"
             android:label="@string/title_activity_sensor_detail" >
         </activity>
         <activity
-            android:name="cz.vutbr.fit.iha.activity.LoginFacebookActivity"
+            android:name=".activity.LoginFacebookActivity"
             android:label="@string/title_activity_login_facebook" >
         </activity>
         <activity
-            android:name="cz.vutbr.fit.iha.activity.AddAdapterActivity"
+            android:name=".activity.AddAdapterActivity"
             android:label="@string/title_activity_add_adapter" >
         </activity>
         <activity
-            android:name="cz.vutbr.fit.iha.activity.RegistrationActivity"
+            android:name=".activity.RegistrationActivity"
             android:label="@string/title_activity_registration" >
         </activity>
         <activity
-            android:name="cz.vutbr.fit.iha.activity.WidgetConfigurationActivity"
+            android:name=".activity.WidgetConfigurationActivity"
             android:label="@string/title_activity_widget_configuration" >
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
             </intent-filter>
         </activity>
         <activity
-            android:name="cz.vutbr.fit.iha.activity.dialog.AddSensorFragmentDialog"
+            android:name=".activity.dialog.AddSensorFragmentDialog"
             android:theme="@style/MyDialog" >
         </activity>
         <activity
-            android:name="cz.vutbr.fit.iha.activity.dialog.SetupSensorFragmentDialog"
+            android:name=".activity.dialog.SetupSensorFragmentDialog"
             android:theme="@style/MyDialog" >
         </activity>
-<!--         <activity -->
-<!--             android:name="cz.vutbr.fit.iha.activity.dialog.AddAdapterFragmentDialog" -->
-<!--             android:theme="@android:style/Theme.Dialog"> -->
-<!--         </activity> -->
+        <!-- <activity -->
+        <!-- android:name="cz.vutbr.fit.iha.activity.dialog.AddAdapterFragmentDialog" -->
+        <!-- android:theme="@android:style/Theme.Dialog"> -->
+        <!-- </activity> -->
         <activity
-            android:name="cz.vutbr.fit.iha.activity.dialog.EditLocationActitivityDialog"
+            android:name=".activity.dialog.EditLocationActitivityDialog"
             android:theme="@style/MyDialog" >
         </activity>
         <activity
-            android:name="cz.vutbr.fit.iha.activity.SettingsMainActivity"
+            android:name=".activity.SettingsMainActivity"
             android:label="@string/preference_activity_title" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
             </intent-filter>
         </activity>
         <activity
-            android:name="cz.vutbr.fit.iha.activity.SettingsUnitActivity"
+            android:name=".activity.SettingsUnitActivity"
             android:label="@string/units" >
         </activity>
+        <activity
+            android:name="cz.vutbr.fit.iha.activity.MapGeofenceActivity"
+            android:label="@string/title_activity_map_geofence" >
+        </activity>
 
-        <!--  WIDGETS -->
+        <!-- WIDGETS -->
         <receiver
-            android:name="cz.vutbr.fit.iha.widget.SensorWidgetProviderSmall"
+            android:name=".widget.SensorWidgetProviderSmall"
             android:icon="@drawable/ic_launcher"
             android:label="@string/widget_sensor_title_small" >
             <intent-filter>
@@ -133,7 +152,7 @@
                 android:resource="@xml/widget_provider_small" />
         </receiver>
         <receiver
-            android:name="cz.vutbr.fit.iha.widget.SensorWidgetProviderMedium"
+            android:name=".widget.SensorWidgetProviderMedium"
             android:icon="@drawable/ic_launcher"
             android:label="@string/widget_sensor_title_medium" >
             <intent-filter>
@@ -145,7 +164,7 @@
                 android:resource="@xml/widget_provider_medium" />
         </receiver>
         <receiver
-            android:name="cz.vutbr.fit.iha.widget.SensorWidgetProviderLarge"
+            android:name=".widget.SensorWidgetProviderLarge"
             android:icon="@drawable/ic_launcher"
             android:label="@string/widget_sensor_title_large" >
             <intent-filter>
@@ -158,15 +177,15 @@
         </receiver>
 
         <service
-            android:name="cz.vutbr.fit.iha.widget.WidgetUpdateService"
+            android:name=".widget.WidgetUpdateService"
             android:enabled="true"
             android:exported="false" >
         </service>
-        <service android:name="cz.vutbr.fit.iha.extension.watches.smartwatch2.SW2ExtensionService" />
+        <service android:name=".extension.watches.smartwatch2.SW2ExtensionService" />
 
         <!-- GOOGLE CLOUD MESSAGING -->
         <receiver
-            android:name="cz.vutbr.fit.iha.gcm.GcmBroadcastReceiver"
+            android:name=".gcm.GcmBroadcastReceiver"
             android:permission="com.google.android.c2dm.permission.SEND" >
             <intent-filter>
                 <action android:name="com.google.android.c2dm.intent.RECEIVE" />
@@ -175,7 +194,7 @@
                 <category android:name="cz.vutbr.fit.iha" />
             </intent-filter>
         </receiver>
-        <receiver android:name="cz.vutbr.fit.iha.gcm.UpdateBroadcastReceiver" >
+        <receiver android:name=".gcm.UpdateBroadcastReceiver" >
             <intent-filter>
                 <action android:name="android.intent.action.PACKAGE_REPLACED" />
 
@@ -184,18 +203,18 @@
                     android:scheme="package" />
             </intent-filter>
         </receiver>
-        <receiver android:name="cz.vutbr.fit.iha.gcm.BootBroadcastReceiver" >
+        <receiver android:name=".gcm.BootBroadcastReceiver" >
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
 
-        <service android:name="cz.vutbr.fit.iha.gcm.GcmMessageHandler" />
-        <service android:name="cz.vutbr.fit.iha.gcm.GcmReRegistrationHandler" />
+        <service android:name=".gcm.GcmMessageHandler" />
+        <service android:name=".gcm.GcmReRegistrationHandler" />
 
         <!-- SMARTWATCHES -->
         <receiver
-            android:name="cz.vutbr.fit.iha.extension.watches.smartwatch2.SW2ExtensionReceiver"
+            android:name=".extension.watches.smartwatch2.SW2ExtensionReceiver"
             android:permission="com.sonyericsson.extras.liveware.aef.HOSTAPP_PERMISSION" >
             <intent-filter>
 

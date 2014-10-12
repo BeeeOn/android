@@ -17,6 +17,7 @@
     <string name="title_activity_add_adapter_activity_dialog">AddAdapterActivityDialog</string>
     <string name="title_activity_add_sensor_activity_dialog">AddSensorActivityDialog</string>
     <string name="title_activity_alert_activity_dialog">AlertActivityDialog</string>
+    <string name="title_activity_map_geofence">Geofence areas</string>
 
     <!-- Buttons -->
     <string name="login_login">Login</string>
@@ -66,7 +67,7 @@
     <string name="addsensor_sensor_name_hint">Name of new sensor</string>
     <string name="addsensor_new_location_hint">New location name</string>
     <string name="addadapter_ser_num_hint">Input of serial number</string>
-    
+
     <!-- Toasts -->
     <string name="toast_changeto">\u0020changed to:\u0020</string>
     <string name="toast_new_sensor_added">New sensor was added</string>
@@ -85,16 +86,16 @@
     <string name="toast_something_wrong">Something goes wrong, try it later please</string>
     <string name="toast_check_your_connection_via_browser">Check your connection via browser</string>
     <string name="toast_not_implemented">Not implemented yet!</string>
-	<string name="toast_login_failed">Login failed</string>
-	<string name="toast_adapter_activate_failed">Failed to activate adapter.</string>
-	<string name="toast_adapter_activated">Adapter has been activated.</string>
-	<string name="toast_adapter_removed">Adapter has been removed.</string>
-	<string name="toast_no_adapter">You have no registered adapter.</string>
-	<string name="toast_ignore_uninitialized_info">You can add these devices later by clicking on (+)</string>
-	<string name="toast_empty_sensor_name">Fill names of all sensors !</string>
-	<string name="toast_wrong_or_no_device">Wrong or no device selected</string>
-	<string name="toast_no_uninitialized_devices">There are no uninitialized devices.</string>
-    
+    <string name="toast_login_failed">Login failed</string>
+    <string name="toast_adapter_activate_failed">Failed to activate adapter.</string>
+    <string name="toast_adapter_activated">Adapter has been activated.</string>
+    <string name="toast_adapter_removed">Adapter has been removed.</string>
+    <string name="toast_no_adapter">You have no registered adapter.</string>
+    <string name="toast_ignore_uninitialized_info">You can add these devices later by clicking on (+)</string>
+    <string name="toast_empty_sensor_name">Fill names of all sensors !</string>
+    <string name="toast_wrong_or_no_device">Wrong or no device selected</string>
+    <string name="toast_no_uninitialized_devices">There are no uninitialized devices.</string>
+
     <!-- Progress -->
     <string name="progress_signing">Signing to server&#8230;</string>
     <string name="progress_google">Handshaking with Google&#8230;</string>
@@ -102,7 +103,7 @@
     <string name="progress_loading_adapters">Loading your adapters&#8230;</string>
     <string name="progress_loading_adapter">Loading adapter data&#8230;</string>
     <string name="progress_saving_data">Saving data&#8230;</string>
-    
+
     <!-- NavDrawer -->
     <string name="drawer_open">OPEN</string>
     <string name="drawer_close">CLOSE</string>
@@ -111,16 +112,15 @@
     <string name="no_location">No locations</string>
     <string name="no_custom_view">No custom views</string>
     <string name="no_adapters">You have no adapters</string>
-    
+
     <!-- Add sensor dialog -->
     <string name="addsensor_sending_request">Pair request sending </string>
     <string name="addsensor_send_request">Send pair request  </string>
     <string name="addsensor_active_pair">Active pair mode </string>
-    
     <string name="addadapter_textview_name">Name</string>
     <string name="addadapter_view_setname">Set name</string>
     <string name="addadapter_textview_code">Code</string>
-    
+
     <!-- Others -->
     <string name="action_settings">Settings</string>
     <string name="action_about">About</string>
@@ -133,7 +133,7 @@
     <string name="sen_detail_graph_info">Tap to Active</string>
     <string name="loading_data">Loading data&#8230;</string>
     <string name="no_sensor_cap">NO SENSORS</string>
-    
+
     <!-- Arrays -->
     <string-array name="registration_spinner">
         <item>Facebook</item>
@@ -148,7 +148,7 @@
         <item>Item 5</item>
         <item>Item 6</item>
     </string-array>
-    <string-array name="title_of_main_fragments" >
+    <string-array name="title_of_main_fragments">
         <item>List</item>
         <item>Custom</item>
     </string-array>
@@ -159,24 +159,22 @@
     <string name="placeholder_icon">Icon</string>
     <string name="placeholder_none">Loading</string>
     <string name="placeholder_not_exists">NOT EXISTS</string>
-    
+
     <!-- Widgets -->
     <string name="widget_sensor_title_small">IHA Sensor detail 1x1</string>
     <string name="widget_sensor_title_medium">IHA Sensor detail 2x1</string>
     <string name="widget_sensor_title_large">IHA Sensor detail 3x1</string>
     <string name="widget_cached">(cached)</string>
-    
+
     <!-- WidgetConfigurationActivity -->
     <string name="widget_configuration_adapter">Adapter:</string>
     <string name="widget_configuration_sensor">Sensor to be shown:</string>
     <string name="widget_configuration_interval_sensor">Sensor update interval:</string>
     <string name="widget_configuration_interval_widget">Widget update interval:</string>
-    
     <string name="widget_configuration_login_first">You must be logged in first.</string>
     <string name="widget_configuration_no_adapters">You have no adapters and thus no sensors to use in widget.</string>
     <string name="widget_configuration_select_adapter">Select adapter from list</string>
     <string name="widget_configuration_select_device">Select device from list</string>
-
 
     <!-- About -->
     <string name="play_link">market://details?id=cz.vutbr.fit.iha</string>
@@ -202,7 +200,7 @@
         <item quantity="one">1 hour</item>
         <item quantity="other">%d hours</item>
     </plurals>
-    
+
     <!-- Settings -->
     <string name="personal">Personal</string>
     <string name="user_profile">User profile</string>
@@ -217,7 +215,8 @@
     <string name="default_adapter">Default adapter</string>
     <string name="actual_timezone">Current timezone</string>
     <string name="adapter_timezone">Adapter timezone</string>
-    
+
     <!-- Default names -->
     <string name="adapter_default_name">Adapter #%d</string>
+
 </resources>
