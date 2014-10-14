@@ -212,8 +212,10 @@ public class Network {
 		SSLSocket socket;
 		if (mUseDebugServer) {
 			socket = (SSLSocket) sslContext.getSocketFactory().createSocket(SERVER_ADDR_DEBUG, SERVER_PORT_DEBUG);
+			Log.i("Network", "using port: " + SERVER_PORT_DEBUG);
 		} else {
 			socket = (SSLSocket) sslContext.getSocketFactory().createSocket(SERVER_ADDR_PRODUCTION, SERVER_PORT_PRODUCTION);
+			Log.i("Network", "using port: " + SERVER_PORT_PRODUCTION);
 		}
 
 		HostnameVerifier hv = HttpsURLConnection.getDefaultHostnameVerifier();
@@ -576,8 +578,8 @@ public class Network {
 	 * @throws NoConnectionException
 	 * @throws CommunicationException
 	 */
-	public boolean setDevices(String adapterId, List<BaseDevice> devices) throws NoConnectionException, CommunicationException, FalseException {
-		String messageToSend = XmlCreator.createDevices(mSessionId, adapterId, devices);
+	public boolean setDevices(String adapterId, List<Facility> facilities) throws NoConnectionException, CommunicationException, FalseException {
+		String messageToSend = XmlCreator.createSetDevs(mSessionId, adapterId, facilities);
 		ParsedMessage msg = doRequest(messageToSend);
 
 		if (msg.getState() == State.TRUE) {
@@ -587,7 +589,7 @@ public class Network {
 
 		} else if (msg.getState() == State.RESIGN) {
 			doResign();
-			return setDevices(adapterId, devices);
+			return setDevices(adapterId, facilities);
 		} else if (msg.getState() == State.FALSE) {
 			throw new FalseException(((FalseAnswer) msg.data));
 		} else
@@ -609,7 +611,7 @@ public class Network {
 	 * @throws FalseException
 	 */
 	public boolean setDevice(String adapterId, BaseDevice device, EnumSet<SaveDevice> toSave) throws NoConnectionException, CommunicationException, FalseException {
-		String messageToSend = XmlCreator.createDevice(mSessionId, adapterId, device, toSave);
+		String messageToSend = XmlCreator.createSetDev(mSessionId, adapterId, device, toSave);
 		ParsedMessage msg = doRequest(messageToSend);
 
 		if (msg.getState() == State.TRUE) {
@@ -664,7 +666,7 @@ public class Network {
 	 * @throws FalseException
 	 */
 	public boolean prepareAdapterToListenNewSensors(String adapterId) throws NoConnectionException, CommunicationException, FalseException {
-		String messageToSend = XmlCreator.createAdapterListen(mSessionId, adapterId);
+		String messageToSend = XmlCreator.createAdapterScanMode(mSessionId, adapterId);
 		ParsedMessage msg = doRequest(messageToSend);
 
 		if (msg.getState() == State.TRUE) {
@@ -694,7 +696,7 @@ public class Network {
 	 * @throws FalseException
 	 */
 	public boolean deleteFacility(String adapterId, Facility facility) throws NoConnectionException, CommunicationException, FalseException {
-		String messageToSend = XmlCreator.createDeleteFacility(mSessionId, adapterId, facility);
+		String messageToSend = XmlCreator.createDeleteDevice(mSessionId, adapterId, facility);
 		ParsedMessage msg = doRequest(messageToSend);
 
 		if (msg.getState() == State.TRUE) {
@@ -723,7 +725,7 @@ public class Network {
 	// http://stackoverflow.com/a/509288/1642090
 	@SuppressWarnings("unchecked")
 	public List<Facility> getFacilities(String adapterId, List<Facility> facilities) throws NoConnectionException, CommunicationException, FalseException {
-		String messageToSend = XmlCreator.createGetDevices(mSessionId, adapterId, facilities);
+		String messageToSend = XmlCreator.createGetDevices(mSessionId, facilities);
 		ParsedMessage msg = doRequest(messageToSend);
 
 		List<Facility> result = new ArrayList<Facility>();
@@ -752,7 +754,9 @@ public class Network {
 	 * @throws FalseException
 	 */
 	public Facility getFacility(String adapterId, Facility facility) throws NoConnectionException, CommunicationException, FalseException {
-		String messageToSend = XmlCreator.createGetDevice(mSessionId, adapterId, facility);
+		ArrayList<Facility> list = new ArrayList<Facility>();
+		list.add(facility);
+		String messageToSend = XmlCreator.createGetDevices(mSessionId, list);
 		ParsedMessage msg = doRequest(messageToSend);
 
 		Facility result = null;
@@ -818,7 +822,7 @@ public class Network {
 	 */
 	// http://stackoverflow.com/a/509288/1642090
 	public DeviceLog getLog(String adapterId, BaseDevice device, String from, String to, DataType type, DataInterval interval) throws NoConnectionException, CommunicationException, FalseException {
-		String messageToSend = XmlCreator.createGetLog(mSessionId, adapterId, device.getFacility().getAddress(), device.getType(), from, to, type.getValue(), interval.getValue());
+		String messageToSend = XmlCreator.createGetLog(mSessionId, adapterId, device.getFacility().getAddress(), device.getType().getTypeId(), from, to, type.getValue(), interval.getValue());
 
 		ParsedMessage msg = doRequest(messageToSend);
 
@@ -883,7 +887,7 @@ public class Network {
 	 * @throws CommunicationException
 	 */
 	public boolean updateLocations(String adapterId, List<Location> locations) throws NoConnectionException, CommunicationException, FalseException {
-		String messageToSend = XmlCreator.createUpdateRooms(mSessionId, adapterId, locations);
+		String messageToSend = XmlCreator.createSetRooms(mSessionId, adapterId, locations);
 		ParsedMessage msg = doRequest(messageToSend);
 
 		if (msg.getState() == State.TRUE) {
@@ -912,7 +916,9 @@ public class Network {
 	 * @throws FalseException
 	 */
 	public boolean updateLocation(String adapterId, Location location) throws NoConnectionException, CommunicationException, FalseException {
-		String messageToSend = XmlCreator.createUpdateRoom(mSessionId, adapterId, location);
+		List<Location> list = new ArrayList<Location>();
+		list.add(location);
+		String messageToSend = XmlCreator.createSetRooms(mSessionId, adapterId, list);
 		ParsedMessage msg = doRequest(messageToSend);
 
 		if (msg.getState() == State.TRUE) {
@@ -938,7 +944,7 @@ public class Network {
 	 * @return true room is deleted, false otherwise
 	 */
 	public boolean deleteLocation(String adapterId, Location location) throws NoConnectionException, CommunicationException, FalseException {
-		String messageToSend = XmlCreator.createDelRooms(mSessionId, adapterId, location);
+		String messageToSend = XmlCreator.createDeleteRoom(mSessionId, adapterId, location);
 		ParsedMessage msg = doRequest(messageToSend);
 
 		if (msg.getState() == State.TRUE) {
@@ -957,7 +963,7 @@ public class Network {
 	}
 
 	public Location createLocation(String adapterId, Location location) throws NoConnectionException, CommunicationException, FalseException {
-		String messageToSend = XmlCreator.createAddRooms(mSessionId, adapterId, location);
+		String messageToSend = XmlCreator.createAddRoom(mSessionId, adapterId, location);
 		ParsedMessage msg = doRequest(messageToSend);
 
 		if (msg.getState() == State.ROOMCREATED) {
