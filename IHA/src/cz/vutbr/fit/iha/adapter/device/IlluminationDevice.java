@@ -11,7 +11,7 @@ import cz.vutbr.fit.iha.R;
  */
 public class IlluminationDevice extends BaseDevice {
 
-	private int mValue = Integer.MAX_VALUE;
+	private float mValue = Float.MAX_VALUE;
 
 	@Override
 	public int getType() {
@@ -40,7 +40,7 @@ public class IlluminationDevice extends BaseDevice {
 
 	@Override
 	public int getRawIntValue() {
-		return mValue;
+		return (int)mValue;
 	}
 
 	@Override
@@ -50,11 +50,11 @@ public class IlluminationDevice extends BaseDevice {
 
 	@Override
 	public void setValue(String value) {
-		mValue = Integer.parseInt(value);
+		mValue = Float.parseFloat(value);
 	}
 
 	@Override
 	public String getStringValue() {
-		return Integer.toString(mValue);
+		return Float.toString(mValue);
 	}
 }
