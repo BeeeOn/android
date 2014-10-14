@@ -56,12 +56,12 @@ public class SwitchDevice extends BaseDevice {
 
 	@Override
 	public float getRawFloatValue() {
-		return 0;
+		return Float.NaN;
 	}
 
 	@Override
 	public void setValue(int value) {
-		Integer.toString(value);
+		mValue = (value != 0 ? SWITCH_ON : SWITCH_OFF);
 	}
 
 	/**

@@ -49,7 +49,7 @@ public class StateDevice extends BaseDevice {
 
 	@Override
 	public float getRawFloatValue() {
-		return 0;
+		return Float.NaN;
 	}
 
 	@Override
