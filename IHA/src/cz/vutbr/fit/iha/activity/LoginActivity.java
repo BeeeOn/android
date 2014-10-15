@@ -183,6 +183,7 @@ public class LoginActivity extends BaseActivity {
 				mController.startGoogle(false, true); // do NOT need check returned value, init is called line before
 				progressChangeText(getString(R.string.loading_data));
 				Log.d(TAG, "user aproved, and token is tried to retake.");
+				doGoogleLogin(email);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
