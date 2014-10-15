@@ -73,7 +73,7 @@ public class Network {
 	 * 
 	 */
 	public enum NetworkAction {
-		REMOVE("remove"), ADD("add");
+		REMOVE("0"), ADD("1");
 
 		private final String mAction;
 
@@ -496,7 +496,7 @@ public class Network {
 
 		List<Adapter> result = new ArrayList<Adapter>();
 
-		if (msg.getState() == State.ADAPTERSREADY) {
+		if (msg.getState() == State.ADAPTERS) {
 			Log.i(TAG, msg.getState().getValue());
 
 			result.addAll((List<Adapter>) msg.data);
@@ -1029,7 +1029,7 @@ public class Network {
 
 		List<CustomViewPair> result = new ArrayList<CustomViewPair>();
 
-		if (msg.getState() == State.VIEWSLIST) {
+		if (msg.getState() == State.VIEWS) {
 			Log.i(TAG, msg.getState().getValue());
 
 			result.addAll((List<CustomViewPair>) msg.data);
@@ -1083,7 +1083,7 @@ public class Network {
 	 * @throws CommunicationException
 	 */
 	public boolean updateViews(String viewName, int iconId, HashMap<String, String> devices) throws NoConnectionException, CommunicationException, FalseException {
-		String messageToSend = XmlCreator.createUpdateViews(mSessionId, viewName, iconId, devices);
+		String messageToSend = "";//XmlCreator.createUpdateViews(mSessionId, viewName, iconId, devices);
 		ParsedMessage msg = doRequest(messageToSend);
 
 		if (msg.getState() == State.TRUE) {
@@ -1101,7 +1101,7 @@ public class Network {
 	}
 
 	public boolean updateView(String viewName, int iconId, Facility facility, NetworkAction action) {
-		String messageToSend = XmlCreator.createUpdateView(mSessionId, viewName, iconId, facility, action);
+		String messageToSend = "";//XmlCreator.createSetView(mSessionId, viewName, iconId, facility, action);
 		ParsedMessage msg = doRequest(messageToSend);
 
 		if (msg.getState() == State.TRUE) {
@@ -1130,7 +1130,7 @@ public class Network {
 	 * @throws CommunicationException
 	 */
 	public boolean addConnectionAccounts(String adapterId, HashMap<String, String> userNrole) throws NoConnectionException, CommunicationException, FalseException {
-		String messageToSend = XmlCreator.createAddAccounts(mSessionId, adapterId, userNrole);
+		String messageToSend = "";//XmlCreator.createAddAccounts(mSessionId, adapterId, userNrole);
 		ParsedMessage msg = doRequest(messageToSend);
 
 		if (msg.getState() == State.TRUE) {
@@ -1156,7 +1156,7 @@ public class Network {
 	 * @return
 	 */
 	public boolean addConnectionAccount(String adapterId, String email, User.Role role) {
-		String messageToSend = XmlCreator.createAddAccount(mSessionId, adapterId, email, role);
+		String messageToSend = "";//XmlCreator.createAddAccount(mSessionId, adapterId, email, role);
 		ParsedMessage msg = doRequest(messageToSend);
 
 		if (msg.getState() == State.TRUE) {
@@ -1183,7 +1183,7 @@ public class Network {
 	 * @throws CommunicationException
 	 */
 	public boolean deleteConnectionAccounts(String adapterId, List<String> users) throws NoConnectionException, CommunicationException, FalseException {
-		String messageToSend = XmlCreator.createDelAccounts(mSessionId, adapterId, users);
+		String messageToSend = "";//XmlCreator.createDelAccounts(mSessionId, adapterId, users);
 		ParsedMessage msg = doRequest(messageToSend);
 
 		if (msg.getState() == State.TRUE) {
@@ -1211,7 +1211,7 @@ public class Network {
 	 * @throws FalseException
 	 */
 	public boolean deleteConnectionAccount(String adapterId, User user) throws NoConnectionException, CommunicationException, FalseException {
-		String messageToSend = XmlCreator.createDelAccount(mSessionId, adapterId, user);
+		String messageToSend = "";//XmlCreator.createDelAccount(mSessionId, adapterId, user);
 		ParsedMessage msg = doRequest(messageToSend);
 
 		if (msg.getState() == State.TRUE) {
@@ -1238,12 +1238,12 @@ public class Network {
 	// http://stackoverflow.com/a/509288/1642090
 	@SuppressWarnings("unchecked")
 	public HashMap<String, User> getConnectionAccountList(String adapterId) throws NoConnectionException, CommunicationException, FalseException {
-		String messageToSend = XmlCreator.createGetAccount(mSessionId, adapterId);
+		String messageToSend = XmlCreator.createGetAccounts(mSessionId, adapterId);
 		ParsedMessage msg = doRequest(messageToSend);
 
 		HashMap<String, User> result = new HashMap<String, User>();
 
-		if (msg.getState() == State.ACCOUNTSLIST) {
+		if (msg.getState() == State.ACCOUNTS) {
 			Log.i(TAG, msg.getState().toString());
 
 			result.putAll((HashMap<String, User>) msg.data);
@@ -1267,7 +1267,7 @@ public class Network {
 	 * @throws CommunicationException
 	 */
 	public boolean changeConnectionAccounts(String adapterId, HashMap<String, String> userNrole) throws NoConnectionException, CommunicationException, FalseException {
-		String messageToSend = XmlCreator.createUpdateAccounts(mSessionId, adapterId, userNrole);
+		String messageToSend = "";//XmlCreator.createUpdateAccounts(mSessionId, adapterId, userNrole);
 		ParsedMessage msg = doRequest(messageToSend);
 
 		if (msg.getState() == State.TRUE) {
@@ -1296,7 +1296,7 @@ public class Network {
 	 * @throws FalseException
 	 */
 	public boolean changeConnectionAccount(String adapterId, User user, User.Role role) throws NoConnectionException, CommunicationException, FalseException {
-		String messageToSend = XmlCreator.createUpdateAccount(mSessionId, adapterId, user, role);
+		String messageToSend = "";//XmlCreator.createUpdateAccount(mSessionId, adapterId, user, role);
 		ParsedMessage msg = doRequest(messageToSend);
 
 		if (msg.getState() == State.TRUE) {
@@ -1413,7 +1413,7 @@ public class Network {
 	 * @throws FalseException
 	 */
 	public boolean NotificationRead(String msgid) throws NoConnectionException, CommunicationException, FalseException {
-		String messageToSend = XmlCreator.createNotificaionRead(mSessionId, msgid);
+		String messageToSend = "";//XmlCreator.createNotificaionRead(mSessionId, msgid);
 		ParsedMessage msg = doRequest(messageToSend);
 
 		if (msg.getState() == State.TRUE) {
@@ -1434,7 +1434,7 @@ public class Network {
 	/////////////////////////////////////////////// podminky a akce
 	
 	public Condition setCondition(Condition condition){
-		String messageToSend = XmlCreator.createSetCondition(mSessionId, condition.getName(), XmlCreator.ConditionType.fromValue(condition.getType()), condition.getFuncs());
+		String messageToSend = XmlCreator.createAddCondition(mSessionId, condition.getName(), XmlCreator.ConditionType.fromValue(condition.getType()), condition.getFuncs());
 		ParsedMessage msg = doRequest(messageToSend);
 
 		if (msg.getState() == State.CONDITIONCREATED) {
@@ -1519,7 +1519,7 @@ public class Network {
 	}
 	
 	public boolean updateCondition(Condition condition){
-		String messageToSend = XmlCreator.createUpdateCondition(mSessionId, condition.getName(), XmlCreator.ConditionType.fromValue(condition.getType()), condition.getId(), condition.getFuncs());
+		String messageToSend = XmlCreator.createSetCondition(mSessionId, condition.getName(), XmlCreator.ConditionType.fromValue(condition.getType()), condition.getId(), condition.getFuncs());
 		ParsedMessage msg = doRequest(messageToSend);
 
 		if (msg.getState() == State.TRUE) {
@@ -1557,7 +1557,7 @@ public class Network {
 	}
 	
 	public ComplexAction setAction(ComplexAction action){
-		String messageToSend = XmlCreator.createSetAction(mSessionId, action.getName(), action.getActions());
+		String messageToSend = XmlCreator.createAddAction(mSessionId, action.getName(), action.getActions());
 		ParsedMessage msg = doRequest(messageToSend);
 
 		if (msg.getState() == State.ACTIONCREATED) {
@@ -1622,7 +1622,7 @@ public class Network {
 	}
 	
 	public boolean updateAction(ComplexAction action){
-		String messageToSend = XmlCreator.createUpdateAction(mSessionId, action.getName(), action.getId(), action.getActions());
+		String messageToSend = XmlCreator.createSetAction(mSessionId, action.getName(), action.getId(), action.getActions());
 		ParsedMessage msg = doRequest(messageToSend);
 
 		if (msg.getState() == State.TRUE) {

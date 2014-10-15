@@ -19,26 +19,13 @@ public class ParsedMessage {
 
 	/**
 	 * Constructor
-	 */
-	public ParsedMessage() {
-		mState = null;
-		mSessionId = "";
-		data = null;
-	}
-
-	/**
-	 * Constructor
 	 * 
 	 * @param state
 	 *            of communication (e.g. addview)
-	 * @param sessionId
-	 *            id of actual communication with server
-	 * @param data
-	 *            object with inner data of communication
 	 */
-	public ParsedMessage(XmlParsers.State state, String sessionId, Object data) {
+	public ParsedMessage(XmlParsers.State state) {
 		mState = state;
-		mSessionId = sessionId;
+		mSessionId = "";
 		data = null;
 	}
 

@@ -94,15 +94,22 @@ public class DeviceLog {
 		public DataRow(String row) throws IllegalArgumentException {
 			String[] parts = row.split(DATA_SEPARATOR);
 
-			if (parts.length != 3) {
+			if (parts.length != 2) {
 				Log.e(TAG, String.format("Wrong number of parts (%d) of data: %s", parts.length, row));
 				throw new IllegalArgumentException();
 			}
 
-			this.dateMillis = mFormatter.parseDateTime(String.format("%s %s", parts[0], parts[1])).getMillis();
-			this.value = Float.parseFloat(parts[2]);
+			//TODO: check this conversion
+			//this.dateMillis = mFormatter.parseDateTime(String.format("%s %s", parts[0], parts[1])).getMillis();
+			this.dateMillis = Long.parseLong(parts[0])*1000;
+			this.value = Float.parseFloat(parts[1]);
 		}
 
+		public DataRow(long dateMillis, float value){
+			this.dateMillis = dateMillis;
+			this.value = value;
+		}
+		
 		/**
 		 * Method emulate toString method for debugging
 		 * 
@@ -111,6 +118,8 @@ public class DeviceLog {
 		public String debugString() {
 			return String.format("%s %s\n", mFormatter.print(dateMillis), value);
 		}
+		
+		
 	}
 
 	/**
@@ -216,6 +225,35 @@ public class DeviceLog {
 		if (!Float.isNaN(row.value)) {
 			mMinValue = Math.min(mMinValue, row.value);
 			mMaxValue = Math.max(mMaxValue, row.value);
+		}
+	}
+	
+	/**
+	 * Expand row in time with same value
+	 * @param row
+	 * @param repeat number of rows
+	 * @param interval gap in seconds
+	 * @return
+	 */
+	public List<DataRow> expandDataRow(String row, int repeat, int interval){
+		DataRow first = this.new DataRow(row);
+		List<DataRow> result = new ArrayList<DataRow>();
+		result.add(first);
+		
+		for(int i = 0; i < repeat; i++){
+			result.add(new DataRow(result.get(i).dateMillis + (interval*1000), first.value));
+		}
+		
+		return result;
+	}
+	
+	/**
+	 * Add multiple values (no clear)
+	 * @param rows
+	 */
+	public void addValues(List<DataRow> rows){
+		for(DataRow row : rows){
+			addValue(row);
 		}
 	}
 
