@@ -21,7 +21,7 @@ public class Notification {
 	// private static final String FORMAT = "yyyy-MM-dd HH:mm:ss";
 	private static final String SEPARATOR = "\\s+";
 
-	private DateTimeFormatter mFormatter = DateTimeFormat.forPattern(XmlParsers.DATEFORMAT);
+	private DateTimeFormatter mFormatter = DateTimeFormat.forPattern(XmlParsers.DATEFORMAT).withZoneUTC();
 
 	private final DateTime mDate;
 	private final String mMsgid;

@@ -108,10 +108,9 @@ public enum Timezone {
 	 * @return
 	 */
 	public String formatLastUpdate(DateTime lastUpdate, Adapter adapter) {
-		boolean useLocalTime = this.equals(ACTUAL) || adapter == null;
+		DateTimeZone zone = getDateTimeZone(adapter);
+		
 		boolean isTooOld = lastUpdate.plusHours(23).isBeforeNow();
-				
-		DateTimeZone zone = useLocalTime ? DateTimeZone.getDefault() : DateTimeZone.forOffsetMillis(adapter.getUtcOffsetMillis()); 
 		DateTimeFormatter fmt = isTooOld ? DateTimeFormat.shortDate() : DateTimeFormat.mediumTime();
 		
 		return fmt.withZone(zone).print(lastUpdate);

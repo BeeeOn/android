@@ -13,6 +13,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
 import org.joda.time.format.DateTimeFormat;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
@@ -401,7 +402,7 @@ public class XmlParsers {
 					facility.setNetworkQuality(Integer.parseInt(readText(QUALITY)));
 				else if (nameTag.equals(VALUE)) {
 					String hwupdated = getSecureAttrValue(ns, HWUPDATED);
-					DateTime lastUpdate = hwupdated.isEmpty() ? DateTime.now() : DateTimeFormat.forPattern(DATEFORMAT).parseDateTime(hwupdated);
+					DateTime lastUpdate = hwupdated.isEmpty() ? DateTime.now(DateTimeZone.UTC) : DateTimeFormat.forPattern(DATEFORMAT).withZoneUTC().parseDateTime(hwupdated);
 					facility.setLastUpdate(lastUpdate);
 
 					device.setValue(readText(VALUE));
