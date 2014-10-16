@@ -1,5 +1,6 @@
 package cz.vutbr.fit.iha.asynctask;
 
+import java.util.Locale;
 import java.util.Vector;
 
 import android.content.Context;
@@ -35,6 +36,15 @@ public class RegisterAdapterTask extends CallbackTask<RegisterAdapterPair> {
 		return name;
 	}
 	
+	private String getHexaAdapterName(String id) {
+		try {
+			int number = Integer.parseInt(id);
+			return Integer.toHexString(number).toUpperCase(Locale.getDefault());
+		} catch (NumberFormatException e) {
+			return getUniqueAdapterName();
+		}
+	}
+	
 	@Override
 	protected Boolean doInBackground(RegisterAdapterPair pair) {
 		mController = Controller.getInstance(mContext);
@@ -44,7 +54,8 @@ public class RegisterAdapterTask extends CallbackTask<RegisterAdapterPair> {
 
 		// Set default name for this adapter, if user didn't filled any
 		if (name.isEmpty()) {
-			name = getUniqueAdapterName();
+			// name = getUniqueAdapterName();
+			name = getHexaAdapterName(serialNumber);
 		}
 		
 		return mController.registerAdapter(serialNumber, name);
