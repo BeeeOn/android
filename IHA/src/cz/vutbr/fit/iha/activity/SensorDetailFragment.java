@@ -372,7 +372,7 @@ public class SensorDetailFragment extends SherlockFragment {
 		Timezone timezone = Timezone.fromPreferences(mController.getUserSettings());
 		
 		// Set value of sensor
-		mValue.setText(device.getStringValueUnit(getActivity()));
+		mValue.setText(device.getValue().getStringValueUnit(getActivity()));
 		// Set icon of sensor
 		mIcon.setImageResource(device.getTypeIconResource());
 		// Set time of sensor
@@ -460,7 +460,7 @@ public class SensorDetailFragment extends SherlockFragment {
 					return formatter.print((long) value);
 				}
 
-				return String.format(Locale.getDefault(), "%.1f %s", value, mDevice.getStringUnit(getActivity()));
+				return String.format(Locale.getDefault(), "%.1f %s", value, mDevice.getValue().getStringUnit(getActivity()));
 			}
 		});
 

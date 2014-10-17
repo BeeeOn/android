@@ -213,7 +213,7 @@ public class ListSensorControlExtension extends ManagedControlExtension {
 
 		Bundle valueBundle = new Bundle();
 		valueBundle.putInt(Control.Intents.EXTRA_LAYOUT_REFERENCE, R.id.value);
-		valueBundle.putString(Control.Intents.EXTRA_TEXT, mDevices.get(position).getStringValueUnit(mContext));
+		valueBundle.putString(Control.Intents.EXTRA_TEXT, mDevices.get(position).getValue().getStringValueUnit(mContext));
 
 		item.layoutData = new Bundle[3];
 		item.layoutData[0] = headerBundle;

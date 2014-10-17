@@ -210,7 +210,7 @@ public class GalleryControlExtension extends ManagedControlExtension {
 		// Unit data
 		Bundle unitBundle = new Bundle();
 		unitBundle.putInt(Control.Intents.EXTRA_LAYOUT_REFERENCE, R.id.unit);
-		unitBundle.putString(Control.Intents.EXTRA_TEXT, curDevice.getStringUnit(mContext));
+		unitBundle.putString(Control.Intents.EXTRA_TEXT, curDevice.getValue().getStringUnit(mContext));
 
 		// Battery icon
 		Bundle batteryBundle = new Bundle();
@@ -232,7 +232,7 @@ public class GalleryControlExtension extends ManagedControlExtension {
 		valueBundle.putInt(Control.Intents.EXTRA_LAYOUT_REFERENCE, R.id.value);
 		// valueBundle.putString(Control.Intents.EXTRA_TEXT,
 		// curDevice.getStringValueUnit(mContext));
-		valueBundle.putString(Control.Intents.EXTRA_TEXT, curDevice.getStringValue());
+		valueBundle.putString(Control.Intents.EXTRA_TEXT, curDevice.getValue().getStringValue());
 
 		item.layoutData = new Bundle[6];
 		item.layoutData[0] = headerBundle;

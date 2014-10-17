@@ -11,13 +11,6 @@ import cz.vutbr.fit.iha.R;
  */
 public class UnknownDevice extends BaseDevice {
 
-	private String mValue;
-
-	@Override
-	public void setValue(String value) {
-		mValue = value;
-	}
-
 	@Override
 	public int getType() {
 		return Constants.TYPE_UNKNOWN;
@@ -31,31 +24,6 @@ public class UnknownDevice extends BaseDevice {
 	@Override
 	public int getTypeIconResource() {
 		return R.drawable.dev_unknown;
-	}
-
-	@Override
-	public int getUnitStringResource() {
-		return R.string.dev_unknown_unit;
-	}
-
-	@Override
-	public int getRawIntValue() {
-		return Integer.MAX_VALUE;
-	}
-
-	@Override
-	public float getRawFloatValue() {
-		return Float.NaN;
-	}
-
-	@Override
-	public void setValue(int value) {
-		mValue = Integer.toString(value);
-	}
-
-	@Override
-	public String getStringValue() {
-		return mValue;
 	}
 
 }

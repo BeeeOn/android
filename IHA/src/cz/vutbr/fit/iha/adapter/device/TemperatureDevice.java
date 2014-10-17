@@ -11,14 +11,6 @@ import cz.vutbr.fit.iha.R;
  */
 public class TemperatureDevice extends BaseDevice {
 
-	private float mValue = Float.MAX_VALUE;
-
-	@Override
-	public void setValue(int value) {
-		// TODO: check 100
-		mValue = value / 100f;
-	}
-
 	@Override
 	public int getType() {
 		return Constants.TYPE_TEMPERATURE;
@@ -32,31 +24,6 @@ public class TemperatureDevice extends BaseDevice {
 	@Override
 	public int getTypeIconResource() {
 		return R.drawable.dev_temperature;
-	}
-
-	@Override
-	public int getUnitStringResource() {
-		return R.string.dev_temperature_celsius_unit;
-	}
-
-	@Override
-	public int getRawIntValue() {
-		return (int) mValue;
-	}
-
-	@Override
-	public float getRawFloatValue() {
-		return mValue;
-	}
-
-	@Override
-	public void setValue(String value) {
-		mValue = Float.parseFloat(value);
-	}
-
-	@Override
-	public String getStringValue() {
-		return Float.toString(mValue);
 	}
 
 }

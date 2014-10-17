@@ -107,7 +107,7 @@ public class SensorWidgetProvider extends AppWidgetProvider {
 			// Get fresh data from device
 			widgetData.deviceIcon = device.getTypeIconResource();
 			widgetData.deviceName = device.getName();
-			widgetData.deviceValue = device.getStringValueUnit(context);
+			widgetData.deviceValue = device.getValue().getStringValueUnit(context);
 			widgetData.deviceAdapterId = device.getFacility().getAdapterId();
 			widgetData.deviceId = device.getId();
 			

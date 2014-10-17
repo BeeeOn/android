@@ -336,7 +336,7 @@ public class XmlCreator {
 			serializer.attribute(ns, TYPE, formatType(device.getType()));
 
 			serializer.startTag(ns, VALUE);
-			serializer.text(device.getStringValue());
+			serializer.text(device.getValue().getStringValue());
 			serializer.endTag(ns, VALUE);
 
 			serializer.endTag(ns, DEVICE);
@@ -895,9 +895,9 @@ public class XmlCreator {
 					serializer.text(Integer.toString(facility.getRefresh().getInterval()));
 					serializer.endTag(ns, REFRESH);
 				}
-				if (device.getRawIntValue() != Integer.MAX_VALUE) {
+				if (device.getValue().getRawIntValue() != Integer.MAX_VALUE) {
 					serializer.startTag(ns, VALUE);
-					serializer.text(device.getStringValue());
+					serializer.text(device.getValue().getStringValue());
 					serializer.endTag(ns, VALUE);
 				}
 
@@ -968,9 +968,9 @@ public class XmlCreator {
 				serializer.text(Integer.toString(facility.getRefresh().getInterval()));
 				serializer.endTag(ns, REFRESH);
 			}
-			if (toSave.contains(SaveDevice.SAVE_VALUE) && device.getStringValue() != null && device.getStringValue().length() > 0) {
+			if (toSave.contains(SaveDevice.SAVE_VALUE) && device.getValue().getStringValue() != null && device.getValue().getStringValue().length() > 0) {
 				serializer.startTag(ns, VALUE);
-				serializer.text(device.getStringValue());
+				serializer.text(device.getValue().getStringValue());
 				serializer.endTag(ns, VALUE);
 			}
 

@@ -102,8 +102,8 @@ public class SensorListAdapter extends BaseAdapter {
 		
 		// Set the results into TextViews
 		txtTitle.setText(device.getName());
-		txtValue.setText(device.getStringValue());
-		txtUnit.setText(device.getStringUnit(mContext));
+		txtValue.setText(device.getValue().getStringValue());
+		txtUnit.setText(device.getValue().getStringUnit(mContext));
 		txtTime.setText(String.format("%s %s", mContext.getString(R.string.last_update), lastUpdate));
 		
 		// Set title selected for animation if is text long

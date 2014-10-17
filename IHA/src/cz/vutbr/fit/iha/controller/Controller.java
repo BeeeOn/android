@@ -19,6 +19,8 @@ import cz.vutbr.fit.iha.adapter.device.DeviceLog.DataType;
 import cz.vutbr.fit.iha.adapter.device.Facility;
 import cz.vutbr.fit.iha.adapter.device.StateDevice;
 import cz.vutbr.fit.iha.adapter.device.SwitchDevice;
+import cz.vutbr.fit.iha.adapter.device.values.OnOffValue;
+import cz.vutbr.fit.iha.adapter.device.values.OpenClosedValue;
 import cz.vutbr.fit.iha.adapter.location.Location;
 import cz.vutbr.fit.iha.exception.NotImplementedException;
 import cz.vutbr.fit.iha.household.ActualUser;
@@ -281,12 +283,12 @@ public final class Controller {
 			// In demo mode update facility devices with random values
 			for (BaseDevice device : facility.getDevices()) {
 				if (device instanceof SwitchDevice) {
-					((SwitchDevice) device).setActive(new Random().nextBoolean());
+					((OnOffValue) device.getValue()).setActive(new Random().nextBoolean());
 				} else if (device instanceof StateDevice) {
-					((StateDevice) device).setActive(new Random().nextBoolean());
+					((OpenClosedValue) device.getValue()).setActive(new Random().nextBoolean());
 				} else {
 					int i = new Random().nextInt(100);
-					device.setValue(i);
+					device.getValue().setValue(i);
 				}
 			}
 			return true;

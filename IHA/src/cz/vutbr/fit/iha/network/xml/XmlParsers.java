@@ -405,7 +405,7 @@ public class XmlParsers {
 					DateTime lastUpdate = hwupdated.isEmpty() ? DateTime.now(DateTimeZone.UTC) : DateTimeFormat.forPattern(DATEFORMAT).withZoneUTC().parseDateTime(hwupdated);
 					facility.setLastUpdate(lastUpdate);
 
-					device.setValue(readText(VALUE));
+					device.getValue().setValue(readText(VALUE));
 				} else if (nameTag.equals(LOGGING))
 					facility.setLogging((getSecureAttrValue(ns, ENABLED).equals(INIT_1)) ? true : false);
 			}
