@@ -16,6 +16,7 @@ import cz.vutbr.fit.iha.adapter.device.BaseDevice.SaveDevice;
 import cz.vutbr.fit.iha.adapter.device.DeviceLog;
 import cz.vutbr.fit.iha.adapter.device.DeviceLog.DataInterval;
 import cz.vutbr.fit.iha.adapter.device.DeviceLog.DataType;
+import cz.vutbr.fit.iha.adapter.device.DeviceType;
 import cz.vutbr.fit.iha.adapter.device.Facility;
 import cz.vutbr.fit.iha.adapter.device.StateDevice;
 import cz.vutbr.fit.iha.adapter.device.SwitchDevice;
@@ -583,7 +584,10 @@ public final class Controller {
 		if (facility == null)
 			return null;
 
-		return facility.getDeviceByType(Integer.parseInt(ids[1]));
+		int iType = Integer.parseInt(ids[1]);
+		DeviceType type = DeviceType.fromValue(iType);
+		
+		return facility.getDeviceByType(type);
 	}
 
 	/**

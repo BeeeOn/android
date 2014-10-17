@@ -1,6 +1,5 @@
 package cz.vutbr.fit.iha.adapter.device;
 
-import cz.vutbr.fit.iha.Constants;
 import cz.vutbr.fit.iha.R;
 
 /**
@@ -12,8 +11,8 @@ import cz.vutbr.fit.iha.R;
 public class NoiseDevice extends BaseDevice {
 
 	@Override
-	public int getType() {
-		return Constants.TYPE_NOISE;
+	public DeviceType getType() {
+		return DeviceType.TYPE_NOISE;
 	}
 
 	@Override

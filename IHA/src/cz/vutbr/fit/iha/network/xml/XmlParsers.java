@@ -25,17 +25,11 @@ import cz.vutbr.fit.iha.Constants;
 import cz.vutbr.fit.iha.adapter.Adapter;
 import cz.vutbr.fit.iha.adapter.device.BaseDevice;
 import cz.vutbr.fit.iha.adapter.device.DeviceLog;
-import cz.vutbr.fit.iha.adapter.device.EmissionDevice;
+import cz.vutbr.fit.iha.adapter.device.DeviceType;
 import cz.vutbr.fit.iha.adapter.device.Facility;
-import cz.vutbr.fit.iha.adapter.device.HumidityDevice;
-import cz.vutbr.fit.iha.adapter.device.IlluminationDevice;
-import cz.vutbr.fit.iha.adapter.device.NoiseDevice;
-import cz.vutbr.fit.iha.adapter.device.PressureDevice;
 import cz.vutbr.fit.iha.adapter.device.RefreshInterval;
-import cz.vutbr.fit.iha.adapter.device.StateDevice;
-import cz.vutbr.fit.iha.adapter.device.SwitchDevice;
 import cz.vutbr.fit.iha.adapter.device.TemperatureDevice;
-import cz.vutbr.fit.iha.adapter.device.UnknownDevice;
+import cz.vutbr.fit.iha.adapter.device.values.UnknownValue;
 import cz.vutbr.fit.iha.adapter.location.Location;
 import cz.vutbr.fit.iha.gcm.Notification;
 import cz.vutbr.fit.iha.gcm.Notification.ActionType;
@@ -919,31 +913,18 @@ public class XmlParsers {
 	 */
 	private BaseDevice createDeviceByType(String sType) {
 
+		DeviceType type;
 		if (sType.length() < 3)
-			return new UnknownDevice();
-
-		int iType = Integer.parseInt(sType.replaceAll("0x", ""), 16);
-
-		switch (iType) {
-		case Constants.TYPE_EMMISION:
-			return new EmissionDevice();
-		case Constants.TYPE_HUMIDITY:
-			return new HumidityDevice();
-		case Constants.TYPE_ILLUMINATION:
-			return new IlluminationDevice();
-		case Constants.TYPE_NOISE:
-			return new NoiseDevice();
-		case Constants.TYPE_PRESSURE:
-			return new PressureDevice();
-		case Constants.TYPE_STATE:
-			return new StateDevice();
-		case Constants.TYPE_SWITCH:
-			return new SwitchDevice();
-		case Constants.TYPE_TEMPERATURE:
-			return new TemperatureDevice();
-		default:
-			return new UnknownDevice();
+			type = DeviceType.TYPE_UNKNOWN;
+		else {
+			int iType = Integer.parseInt(sType.replaceAll("0x", ""), 16);
+			type = DeviceType.fromValue(iType);
 		}
+		
+		BaseDevice device = type.createDevice();
+		device.setValue(type.createDeviceValue());
+		
+		return device;
 	}
 
 	// FIXME: check on first use

@@ -40,7 +40,7 @@ public abstract class BaseDevice {
 	 * 
 	 * @return
 	 */
-	public abstract int getType();
+	public abstract DeviceType getType();
 
 	/**
 	 * Get resource for human readable string representing type of this device

@@ -1,6 +1,5 @@
 package cz.vutbr.fit.iha.adapter.device;
 
-import cz.vutbr.fit.iha.Constants;
 import cz.vutbr.fit.iha.R;
 import cz.vutbr.fit.iha.adapter.device.values.OpenClosedValue;
 
@@ -13,8 +12,8 @@ import cz.vutbr.fit.iha.adapter.device.values.OpenClosedValue;
 public class SwitchDevice extends BaseDevice {
 
 	@Override
-	public int getType() {
-		return Constants.TYPE_SWITCH;
+	public DeviceType getType() {
+		return DeviceType.TYPE_ON_OFF;
 	}
 
 	@Override

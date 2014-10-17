@@ -17,6 +17,7 @@ import android.util.Xml;
 import cz.vutbr.fit.iha.Constants;
 import cz.vutbr.fit.iha.adapter.device.BaseDevice;
 import cz.vutbr.fit.iha.adapter.device.BaseDevice.SaveDevice;
+import cz.vutbr.fit.iha.adapter.device.DeviceType;
 import cz.vutbr.fit.iha.adapter.device.Facility;
 import cz.vutbr.fit.iha.adapter.location.Location;
 import cz.vutbr.fit.iha.household.User;
@@ -504,7 +505,7 @@ public class XmlCreator {
 	 *            is time value in seconds that represents nicely e.g. month, week, day, 10 hours, 1 hour, ...
 	 * @return logName message
 	 */
-	public static String createGetLog(String id, String adapterId, String deviceId, int deviceType, String from, String to, String funcType, int interval) {
+	public static String createGetLog(String id, String adapterId, String deviceId, DeviceType deviceType, String from, String to, String funcType, int interval) {
 		XmlSerializer serializer = Xml.newSerializer();
 		StringWriter writer = new StringWriter();
 		try {
@@ -2026,8 +2027,8 @@ public class XmlCreator {
 		}
 	}
 	
-	private static String formatType(int type) {
-		String hex = Integer.toHexString(type);
+	private static String formatType(DeviceType type) {
+		String hex = Integer.toHexString(type.getTypeId());
 		if (hex.length() == 1)
 			hex = "0" + hex;
 

@@ -24,19 +24,6 @@ public final class Constants {
 	public static final String ASSET_LOCATIONS_FILENAME = "locations_%s.xml";
 
 	/**
-	 * Device's types
-	 */
-	public static final int TYPE_UNKNOWN = -1; // unknown device
-	public static final int TYPE_TEMPERATURE = 0; // temperature meter
-	public static final int TYPE_HUMIDITY = 1; // humidity meter
-	public static final int TYPE_PRESSURE = 2; // pressure meter
-	public static final int TYPE_STATE = 3; // state sensor
-	public static final int TYPE_SWITCH = 4; // switch sensor
-	public static final int TYPE_ILLUMINATION = 5; // illumination meter
-	public static final int TYPE_NOISE = 6; // noise meter
-	public static final int TYPE_EMMISION = 7; // emmision meter
-
-	/**
 	 * Persistence's shared preferences
 	 */
 	public static final String PERSISTENCE_PREF_FILENAME = "persistence_%s";
