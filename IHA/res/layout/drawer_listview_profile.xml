@@ -1,20 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    style="?attr/spinnerDropDownItemStyle"
-    android:layout_width="match_parent"
-    android:layout_height="52dp"
+    android:layout_width="fill_parent"
+    android:layout_height="80dp"
     android:background="@color/light_gray"
     android:gravity="center_vertical"
     android:orientation="horizontal"
     android:paddingBottom="2dp"
-    android:paddingLeft="3dp"
+    android:paddingLeft="16dp"
     android:paddingRight="3dp"
     android:paddingTop="2dp" >
 
     <ImageView
         android:id="@+id/icon"
         android:layout_width="wrap_content"
-        android:layout_height="46dp"
+        android:layout_height="52dp"
         android:adjustViewBounds="true" />
 
     <LinearLayout
@@ -23,28 +22,25 @@
         android:layout_gravity="center_vertical"
         android:gravity="left|center"
         android:orientation="vertical"
-        android:paddingLeft="3dp" >
+        android:paddingLeft="16dp" >
 
         <TextView
             android:id="@+id/name"
-            style="?attr/spinnerDropDownItemStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:ellipsize="end"
             android:singleLine="true"
             android:textColor="@color/iha_primary_cyan"
-            android:textSize="20dp"
+            android:textSize="20sp"
             android:textStyle="bold" />
 
         <TextView
             android:id="@+id/email"
-            style="?attr/spinnerDropDownItemStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:ellipsize="end"
             android:singleLine="true"
-            android:textSize="14dp"
-            android:textAppearance="?attr/textAppearanceSmall"
+            android:textSize="16sp"
             android:textColor="@color/iha_text_hint" />
     </LinearLayout>
 

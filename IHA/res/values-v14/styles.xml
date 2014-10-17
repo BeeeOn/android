@@ -12,17 +12,22 @@
         <item name="android:actionBarStyle">@style/IHA.ActionBar</item>
         <item name="android:actionModeCloseButtonStyle">@style/IHA.NoCloseButton</item>
         <item name="windowContentOverlay">@null</item>
+        
+        <item name="android:actionOverflowButtonStyle">@style/IHA.ActionBar.Overflow</item>
+        
     	<item name="android:windowContentOverlay">@null</item>
-    	
+		<item name="android:actionBarSize">56dip</item>
     </style>
 
     
-    <style name="Widget.IHA.ActionBar" parent="Widget.Sherlock.Light.ActionBar">
+    <style name="IHA.ActionBar" parent="@style/Widget.Sherlock.Light.ActionBar">
 	    <item name="android:background">@color/iha_primary_cyan</item>
 	    <item name="android:titleTextStyle">@style/IHA.ActionBar.TitleText</item>
+	    
 	     <!-- Support library compatibility -->
         <item name="titleTextStyle">@style/IHA.ActionBar.TitleText</item>
         <item name="background">@color/iha_primary_cyan</item>
+        
 		
         
     </style>
@@ -35,6 +40,10 @@
     
     <style name="IHA.NoCloseButton" parent="@style/Widget.Sherlock.ActionButton.CloseMode">
         <item name="android:visibility">gone</item>
+    </style>
+    
+    <style name="IHA.ActionBar.Overflow" parent="android:Widget.ActionButton.Overflow">
+        <item name="android:src">@drawable/ic_ab_overflow_compat</item>
     </style>
 
 </resources>

@@ -20,4 +20,5 @@
     <color name="iha_text_color">#de000000</color>
     <color name="iha_text_hint">#89000000</color>
     <color name="iha_separator">#1e000000</color>
+    <color name="iha_drawer_bg">#FFFFFF</color>
 </resources>

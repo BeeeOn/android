@@ -24,9 +24,6 @@ public class SensorListAdapter extends BaseAdapter {
 	private static final int MARGIN_TOP = 10;
 	private static final int MARGIN_BOTTOM = 0;
 	private static final int MARGIN_TOP_M_L = -2;
-	private static final int PADDING_LEFT_RIGHT = 5;
-	private static final int PADDING_TOP = 6;
-	private static final int PADDING_BOTTOM = 5;
 
 	// Declare Variables
 	private Context mContext;
@@ -151,11 +148,6 @@ public class SensorListAdapter extends BaseAdapter {
 		
 		layout.setBackgroundResource(backgroundRes);
 		((LayoutParams) layout.getLayoutParams()).setMargins(left, top, right, bottom);
-
-		// Padding for last device in facility
-		if (isLast) {
-			layout.setPadding((int) scale * PADDING_LEFT_RIGHT, (int) scale * PADDING_TOP, (int) scale * PADDING_LEFT_RIGHT, (int) scale * PADDING_BOTTOM);
-		}
 
 		return itemView;
 	}

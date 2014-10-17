@@ -13,6 +13,8 @@
         <item name="windowContentOverlay">@null</item>
     	<item name="android:windowContentOverlay">@null</item>
     	
+    	<item name="android:actionOverflowButtonStyle">@style/IHA.ActionBar.Overflow</item>
+		<item name="android:actionBarSize">56dip</item>
 
     </style>
     
@@ -48,6 +50,10 @@
 	    <item name="android:windowNoTitle">true</item>
 	    <item name="android:backgroundDimEnabled">true</item>
 	    <item name="android:windowIsFloating">true</item>
+    </style>
+    
+   	<style name="IHA.ActionBar.Overflow" parent="android:Widget.ActionButton.Overflow">
+        <item name="android:src">@drawable/ic_ab_overflow_compat</item>
     </style>
 
 </resources>

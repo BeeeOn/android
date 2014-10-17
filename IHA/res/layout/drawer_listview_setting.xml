@@ -1,28 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    style="?attr/spinnerDropDownItemStyle"
     android:layout_width="match_parent"
-    android:layout_height="28dp"
+    android:layout_height="40dp"
     android:gravity="center_vertical"
     android:orientation="horizontal"
-    android:layout_marginLeft="4dp"
-    android:paddingBottom="2dp"
-    android:paddingLeft="3dp"
-    android:paddingRight="3dp"
-    android:paddingTop="2dp" >
+    android:background="@color/iha_drawer_bg"
+    android:paddingBottom="0dp"
+    android:paddingLeft="16dp"
+    android:paddingRight="16dp"
+    android:paddingTop="0dp" >
 
     <ImageView
         android:id="@+id/icon"
-        android:layout_width="wrap_content"
+        android:layout_width="32dp"
         android:layout_height="wrap_content"
-        android:layout_marginRight="4dp"
+        android:layout_marginRight="16dp"
         android:adjustViewBounds="true" />
 
     <TextView
         android:id="@+id/name"
-        style="?attr/spinnerDropDownItemStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:textSize="14sp"
         android:ellipsize="end"
         android:singleLine="true"
         android:textColor="@color/iha_text_hint" />

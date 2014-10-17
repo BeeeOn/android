@@ -17,7 +17,8 @@
         <item name="actionModeCloseButtonStyle">@style/IHA.NoCloseButton</item>
         <item name="windowContentOverlay">@null</item>
     	<item name="android:windowContentOverlay">@null</item>
-
+    	
+		<item name="actionBarSize">56dip</item>
     </style>
     <!-- Application theme. -->
     <style name="AppTheme" parent="AppBaseTheme">
@@ -30,7 +31,7 @@
         <!-- Support library compatibility -->
         <item name="titleTextStyle">@style/IHA.ActionBar.TitleText</item>
         <item name="background">@color/iha_primary_cyan</item>
-
+        
     </style>
 
     <!-- ActionBar title text -->

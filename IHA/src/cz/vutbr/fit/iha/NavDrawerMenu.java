@@ -356,16 +356,13 @@ public class NavDrawerMenu {
 		Adapter activeAdapter = mController.getActiveAdapter();
 		
 		if (!adapters.isEmpty()) {
-			//if (adapters.size() > 1) {
-				// Adding separator as item (we don't want to let it float as header)
-				mMenuAdapter.addItem(new SeparatorMenuItem());
+			// Adding separator as item (we don't want to let it float as header)
+			mMenuAdapter.addItem(new SeparatorMenuItem());
 	
-				// Adding adapters
-				
-				for (Adapter actAdapter : adapters) {
-					mMenuAdapter.addItem(new AdapterMenuItem(actAdapter.getName(), actAdapter.getRole().name(), activeAdapter.getId().equals(actAdapter.getId()), actAdapter.getId()));
-				}
-			//}
+			// Adding adapters
+			for (Adapter actAdapter : adapters) {
+				mMenuAdapter.addItem(new AdapterMenuItem(actAdapter.getName(), actAdapter.getRole().name(), activeAdapter.getId().equals(actAdapter.getId()), actAdapter.getId()));
+			}
 
 			// Adding separator as item (we don't want to let it float as header)
 			mMenuAdapter.addItem(new SeparatorMenuItem());
