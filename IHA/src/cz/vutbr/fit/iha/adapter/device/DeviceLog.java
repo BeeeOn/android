@@ -164,7 +164,7 @@ public class DeviceLog {
 	 * 
 	 * @return
 	 */
-	public float getMinimumValue() {
+	public float getMinimum() {
 		return mMinValue;
 	}
 
@@ -173,8 +173,17 @@ public class DeviceLog {
 	 * 
 	 * @return
 	 */
-	public float getMaximumValue() {
+	public float getMaximum() {
 		return mMaxValue;
+	}
+	
+	/**
+	 * Return deviation between maximum and minimum value in this log
+	 * 
+	 * @return
+	 */
+	public float getDeviation() {
+		return mMaxValue - mMinValue;
 	}
 
 	/**

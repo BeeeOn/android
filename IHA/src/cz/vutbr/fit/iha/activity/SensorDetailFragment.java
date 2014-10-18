@@ -130,7 +130,6 @@ public class SensorDetailFragment extends SherlockFragment {
 
 	private String mDateTimeFormat = "%Y-%m-%d %H:%M:%S";
 	private String mGraphDateTimeFormat = "dd.MM. kk:mm";
-	private float mTempConstant = (float) 1000;
 
 	/**
 	 * Factory method for this fragment class. Constructs a new fragment for the given page number.
@@ -545,24 +544,13 @@ public class SensorDetailFragment extends SherlockFragment {
 		 // NOTE: This formatter is only for Log, correct timezone from app setting doesn't matter here
 		final DateTimeFormatter formatter = DateTimeFormat.forPattern(mGraphDateTimeFormat); 
 
-		float minimum = log.getMinimumValue();
-		float maximum = log.getMaximumValue();
-		// Temp controll to bigger than 1 000
-		minimum = (float) ((minimum > mTempConstant) ? minimum / 100.0 : minimum);
-		maximum = (float) ((maximum > mTempConstant) ? maximum / 100.0 : maximum);
-		float deviation = maximum - minimum;
-		deviation = (deviation <= 0) ? 1 : deviation;
-		
-		float minLimit = minimum;
-		// float minLimit = (float) (minimum - (deviation * 0.2)); // Don't move minLimit because it cause problems / is ugly
-		float maxLimit = (float) (maximum + (deviation * 0.2));
-		
 		int size = log.getValues().size();
-		Log.d(TAG, String.format("Filling graph with %d values. Min: %.1f, Max: %.1f", size, minimum, maximum));
+		Log.d(TAG, String.format("Filling graph with %d values. Min: %.1f, Max: %.1f", size, log.getMinimum(), log.getMaximum()));
 
 		int begin;
 		GraphView.GraphViewData[] data;
 
+		// Limit amount of showed values
 		if (size > MAX_GRAPH_DATA_COUNT) {
 			data = new GraphView.GraphViewData[MAX_GRAPH_DATA_COUNT];
 			begin = (size - MAX_GRAPH_DATA_COUNT);
@@ -572,24 +560,17 @@ public class SensorDetailFragment extends SherlockFragment {
 		}
 
 		for (int i = begin; i < size; i++) {
-			// for (DeviceLog.DataRow row : log.getValues()) {
 			DeviceLog.DataRow row = log.getValues().get(i);
-			float value = row.value;
-
-			if (Float.isNaN(value)) {
-				value = minLimit;
-			} else if (value > mTempConstant) {
-				value = (float) (value / 100.0);
-			}
 			
+			float value = Float.isNaN(row.value) ? log.getMinimum() : row.value;
 			data[i - begin] = new GraphView.GraphViewData(row.dateMillis, value);
-			Log.v(TAG, String.format("Graph value: date(msec): %s, Value: %.1f (Orig: %.1f)", formatter.print(row.dateMillis), value, row.value));
+			Log.v(TAG, String.format("Graph value: date(msec): %s, Value: %.1f", formatter.print(row.dateMillis), row.value));
 		}
 
 		Log.d(TAG, "Filling graph finished");
 
-		// Set maximum as +20% more than deviation and minimum as -20% deviation
-		mGraphView.setManualYAxisBounds(maxLimit, minLimit);
+		// Set maximum as +10% more than deviation
+		mGraphView.setManualYAxisBounds(log.getMaximum() + log.getDeviation() * 0.1, log.getMinimum());
 		// mGraphView.setViewPort(0, 7);
 		mGraphSeries.resetData(data);
 		mGraphInfo.setText(getView().getResources().getString(R.string.sen_detail_graph_info));
