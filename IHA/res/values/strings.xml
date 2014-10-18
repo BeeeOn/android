@@ -209,6 +209,7 @@
     <string name="units">Units</string>
     <string name="timezone">Timezone</string>
     <string name="temperature">Temperature</string>
+    <string name="noise">Noise</string>
     <string name="connections">Connections</string>
     <string name="smartwatches">Smartwatches</string>
     <string name="choose_default_location">Choose default location</string>

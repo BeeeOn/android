@@ -3,8 +3,6 @@
  */
 package cz.vutbr.fit.iha.adapter.device.units;
 
-import java.util.Locale;
-
 import cz.vutbr.fit.iha.Constants;
 import cz.vutbr.fit.iha.persistence.Persistence;
 
@@ -14,12 +12,10 @@ import cz.vutbr.fit.iha.persistence.Persistence;
  */
 public class DefaultUnitPackages {
 	public static void setDefaultUnits(Persistence persistance, String namespace) {
-		Locale locale = Locale.getDefault();
+		// TODO: udelat prepinac pro ruzne zeme a podle toho nastavit vychozi jednotky, prozatim davam jednotky, ktere pouzivame v CR
+		// Locale locale = Locale.getDefault();
 
-		// TODO udelat prepinac pro ruzne zeme a podle toho nastavit vychozi jednotky
-		// prozatim davam jednotky, ktere pouzivame v CR
-
-		persistance.initializePreference(namespace, Constants.PERSISTENCE_PREF_TEMPERATURE, TemperatureUnit.CELSIUS.getId());
-
+		persistance.initializePreference(namespace, Constants.PERSISTENCE_PREF_TEMPERATURE, TemperatureUnit.getDefault().getId());
+		persistance.initializePreference(namespace, Constants.PERSISTENCE_PREF_NOISE, NoiseUnit.getDefault().getId());
 	}
 }

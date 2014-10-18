@@ -32,7 +32,7 @@ public final class NoiseValue extends BaseDeviceValue {
 	
 	@Override
 	public NoiseUnit getUnit(SharedPreferences prefs) {
-		return NoiseUnit.DEFAULT;
+		return NoiseUnit.fromSettings(prefs);
 	}
 	
 	public int getValue() {

@@ -10,6 +10,7 @@ import com.actionbarsherlock.view.MenuItem;
 
 import cz.vutbr.fit.iha.Constants;
 import cz.vutbr.fit.iha.R;
+import cz.vutbr.fit.iha.adapter.device.units.NoiseUnit;
 import cz.vutbr.fit.iha.adapter.device.units.TemperatureUnit;
 import cz.vutbr.fit.iha.controller.Controller;
 import cz.vutbr.fit.iha.persistence.Persistence;
@@ -23,6 +24,8 @@ public class SettingsUnitActivity extends SherlockPreferenceActivity implements 
 	 */
 
 	private ListPreference mListPrefTemperature;
+	private ListPreference mListPrefNoise;
+	
 	private Controller mController;
 	private SharedPreferences mPrefs;
 
@@ -51,6 +54,12 @@ public class SettingsUnitActivity extends SherlockPreferenceActivity implements 
 		mListPrefTemperature.setEntryValues(TemperatureUnit.getEntryValues());
 		TemperatureUnit actTemp = TemperatureUnit.fromSettings(mController.getUserSettings());
 		mListPrefTemperature.setSummary(actTemp.getNameWithUnit(this));
+		
+		mListPrefNoise = (ListPreference) findPreference(Constants.PERSISTENCE_PREF_NOISE);
+		mListPrefNoise.setEntries(NoiseUnit.getEntries(this));
+		mListPrefNoise.setEntryValues(NoiseUnit.getEntryValues());
+		NoiseUnit actNoise = NoiseUnit.fromSettings(mController.getUserSettings());
+		mListPrefNoise.setSummary(actNoise.getNameWithUnit(this));
 	}
 
 	@Override
@@ -86,8 +95,13 @@ public class SettingsUnitActivity extends SherlockPreferenceActivity implements 
 
 	@Override
 	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-		TemperatureUnit actTemp = TemperatureUnit.fromSettings(mController.getUserSettings());
-		mListPrefTemperature.setSummary(actTemp.getNameWithUnit(this));
+		if (key.equals(Constants.PERSISTENCE_PREF_TEMPERATURE)) {
+			TemperatureUnit actTemp = TemperatureUnit.fromSettings(sharedPreferences);
+			mListPrefTemperature.setSummary(actTemp.getNameWithUnit(this));	
+		} else if (key.equals(Constants.PERSISTENCE_PREF_NOISE)) {
+			NoiseUnit actNoise = NoiseUnit.fromSettings(sharedPreferences);
+			mListPrefNoise.setSummary(actNoise.getNameWithUnit(this));
+		}
 	}
 
 }
