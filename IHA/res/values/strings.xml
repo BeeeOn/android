@@ -4,6 +4,8 @@
     <string name="app_name">IntelligentHomeAnywhere</string>
     <string name="app_id">1411635335720288</string>
 
+    <string name="blank"></string>
+    
     <!-- Titles -->
     <string name="title_activity_location_screen">IHA</string>
     <string name="title_activity_notification">Notification</string>

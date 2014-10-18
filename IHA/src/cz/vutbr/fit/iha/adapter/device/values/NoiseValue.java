@@ -1,6 +1,9 @@
 package cz.vutbr.fit.iha.adapter.device.values;
 
+import android.content.SharedPreferences;
 import cz.vutbr.fit.iha.R;
+import cz.vutbr.fit.iha.adapter.device.units.NoiseUnit;
+import cz.vutbr.fit.iha.util.Utils;
 
 public final class NoiseValue extends BaseDeviceValue {
 
@@ -22,8 +25,14 @@ public final class NoiseValue extends BaseDeviceValue {
 	}
 	
 	@Override
-	public int getUnitResource() {
-		return R.string.dev_noise_unit;
+	public String formatValue(SharedPreferences prefs) {
+		float value = getUnit(prefs).convertValue(mValue);
+		return Utils.formatFloat(value);
+	}
+	
+	@Override
+	public NoiseUnit getUnit(SharedPreferences prefs) {
+		return NoiseUnit.DEFAULT;
 	}
 	
 	public int getValue() {

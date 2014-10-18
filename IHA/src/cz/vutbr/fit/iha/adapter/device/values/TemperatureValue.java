@@ -1,6 +1,9 @@
 package cz.vutbr.fit.iha.adapter.device.values;
 
+import android.content.SharedPreferences;
 import cz.vutbr.fit.iha.R;
+import cz.vutbr.fit.iha.adapter.device.units.TemperatureUnit;
+import cz.vutbr.fit.iha.util.Utils;
 
 public final class TemperatureValue extends BaseDeviceValue {
 
@@ -20,11 +23,6 @@ public final class TemperatureValue extends BaseDeviceValue {
 	public String getStringValue() {
 		return String.valueOf(mValue);
 	}
-	
-	@Override
-	public int getUnitResource() {
-		return R.string.dev_temperature_celsius_unit; // FIXME: remove this
-	}
 
 	@Override
 	public int getIconResource() {
@@ -33,6 +31,17 @@ public final class TemperatureValue extends BaseDeviceValue {
 
 	public float getValue() {
 		return mValue;
+	}
+
+	@Override
+	public TemperatureUnit getUnit(SharedPreferences prefs) {
+		return TemperatureUnit.fromSettings(prefs);
+	}
+	
+	@Override
+	public String formatValue(SharedPreferences prefs) {
+		float value = getUnit(prefs).convertValue(mValue);
+		return Utils.formatFloat(value);
 	}
 	
 }

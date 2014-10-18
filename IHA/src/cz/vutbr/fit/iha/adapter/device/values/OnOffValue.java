@@ -1,6 +1,8 @@
 package cz.vutbr.fit.iha.adapter.device.values;
 
+import android.content.SharedPreferences;
 import cz.vutbr.fit.iha.R;
+import cz.vutbr.fit.iha.adapter.device.units.UnknownUnit;
 
 public class OnOffValue extends BaseEnumValue {
 
@@ -17,10 +19,15 @@ public class OnOffValue extends BaseEnumValue {
 	}
 	
 	@Override
-	public int getUnitResource() {
-		return 0;
+	public UnknownUnit getUnit(SharedPreferences prefs) {
+		return UnknownUnit.EMPTY;
 	}
-
+	
+	@Override
+	public String formatValue(SharedPreferences prefs) {
+		return mValue;
+	}
+	
 	public static final String SWITCH_ON = "ON";
 	public static final String SWITCH_OFF = "OFF";
 

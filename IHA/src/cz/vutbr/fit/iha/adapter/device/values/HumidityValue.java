@@ -1,6 +1,9 @@
 package cz.vutbr.fit.iha.adapter.device.values;
 
+import android.content.SharedPreferences;
 import cz.vutbr.fit.iha.R;
+import cz.vutbr.fit.iha.adapter.device.units.HumidityUnit;
+import cz.vutbr.fit.iha.util.Utils;
 
 public final class HumidityValue extends BaseDeviceValue {
 
@@ -22,8 +25,14 @@ public final class HumidityValue extends BaseDeviceValue {
 	}
 	
 	@Override
-	public int getUnitResource() {
-		return R.string.dev_humidity_unit;
+	public HumidityUnit getUnit(SharedPreferences prefs) {
+		return HumidityUnit.DEFAULT;
+	}
+	
+	@Override
+	public String formatValue(SharedPreferences prefs) {
+		float value = getUnit(prefs).convertValue(mValue);
+		return Utils.formatFloat(value);
 	}
 	
 	public float getValue() {

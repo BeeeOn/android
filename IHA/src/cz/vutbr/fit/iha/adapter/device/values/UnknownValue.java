@@ -1,6 +1,8 @@
 package cz.vutbr.fit.iha.adapter.device.values;
 
+import android.content.SharedPreferences;
 import cz.vutbr.fit.iha.R;
+import cz.vutbr.fit.iha.adapter.device.units.UnknownUnit;
 
 public final class UnknownValue extends BaseDeviceValue {
 
@@ -22,11 +24,16 @@ public final class UnknownValue extends BaseDeviceValue {
 	}
 	
 	@Override
-	public int getUnitResource() {
-		return R.string.dev_unknown_unit;
+	public UnknownUnit getUnit(SharedPreferences prefs) {
+		return UnknownUnit.DEFAULT;
 	}
 	
 	public String getValue() {
+		return mValue;
+	}
+	
+	@Override
+	public String formatValue(SharedPreferences prefs) {
 		return mValue;
 	}
 	

@@ -1,7 +1,9 @@
 package cz.vutbr.fit.iha.adapter.device.values;
 
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import cz.vutbr.fit.iha.R;
+import cz.vutbr.fit.iha.adapter.device.units.UnknownUnit;
 
 public class OpenClosedValue extends BaseEnumValue {
 
@@ -18,10 +20,15 @@ public class OpenClosedValue extends BaseEnumValue {
 	}
 	
 	@Override
-	public int getUnitResource() {
-		return 0;
+	public UnknownUnit getUnit(SharedPreferences prefs) {
+		return UnknownUnit.EMPTY;
 	}
-
+	
+	@Override
+	public String formatValue(SharedPreferences prefs) {
+		return mValue;
+	}
+	
 	public static final String STATE_OPEN = "OPEN";
 	public static final String STATE_CLOSED = "CLOSED";
 

@@ -1,6 +1,9 @@
 package cz.vutbr.fit.iha.adapter.device.values;
 
+import android.content.SharedPreferences;
 import cz.vutbr.fit.iha.R;
+import cz.vutbr.fit.iha.adapter.device.units.EmissionUnit;
+import cz.vutbr.fit.iha.util.Utils;
 
 public final class EmissionValue extends BaseDeviceValue {
 
@@ -22,8 +25,14 @@ public final class EmissionValue extends BaseDeviceValue {
 	}
 	
 	@Override
-	public int getUnitResource() {
-		return R.string.dev_emission_unit;
+	public EmissionUnit getUnit(SharedPreferences prefs) {
+		return EmissionUnit.DEFAULT;
+	}
+	
+	@Override
+	public String formatValue(SharedPreferences prefs) {
+		float value = getUnit(prefs).convertValue(mValue);
+		return Utils.formatFloat(value);
 	}
 	
 	public int getValue() {

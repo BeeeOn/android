@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import cz.vutbr.fit.iha.Constants;
 import cz.vutbr.fit.iha.R;
+import cz.vutbr.fit.iha.util.Utils;
 
 /**
  * Enum for temperature unit
@@ -117,13 +118,15 @@ public enum TemperatureUnit implements IDeviceUnit {
 	}
 
 	// /// CONVERTIONS
-
-	public float convertValue(float value) {
-		return TemperatureUnit.convertCelsius(this, value);
+	
+	@Override
+	public String formatValue(float value) {
+		value = convertValue(value);
+		return Utils.formatFloat(value);
 	}
 	
-	public static float convertCelsius(TemperatureUnit to, float value) {
-		switch (to) {
+	public float convertValue(float value) {
+		switch (this) {
 		case FAHRENHEIT:
 			return value * 9 / 5 + 32;
 		case KELVIN:
