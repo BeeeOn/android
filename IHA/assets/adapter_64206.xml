@@ -5,7 +5,6 @@
 	<dev 
 		init="1" 
 		did="100:00:FF:000:FF0" 
-		vis="1"
 		lid="5555"
 		refresh="5"
 		batt="100"
@@ -13,13 +12,13 @@
 		rssi="52" >
 		<part
 			type="1"
+			vis="1"
 			name="Teplota na okne"
 			val="30" />
 	</dev>
 	<dev 
 		init="1" 
 		did="100:00:FF:000:FF1" 
-		vis="1"
 		lid="5555"
 		refresh="30"
 		batt="100"
@@ -27,13 +26,13 @@
 		rssi="52" >
 		<part
 			type="1"
+			vis="1"
 			name="Teplota u dveri"
 			val="30" />
 	</dev>
 	<dev 
 		init="1" 
 		did="100:00:FF:000:FF2" 
-		vis="1"
 		lid="5555"
 		refresh="30"
 		batt="100"
@@ -41,13 +40,13 @@
 		rssi="52" >
 		<part
 			type="3"
+			vis="1"
 			name="okno"
 			val="OFF" />
 	</dev>
 	<dev 
 		init="1" 
 		did="100:00:FF:000:FF3" 
-		vis="1"
 		lid="5555"
 		refresh="30"
 		batt="100"
@@ -55,13 +54,13 @@
 		rssi="52" >
 		<part
 			type="1"
+			vis="1"
 			name="Balkón"
 			val="ON" />
 	</dev>
 	<dev 
 		init="1" 
 		did="100:00:FF:000:FF4" 
-		vis="1"
 		lid="2222"
 		refresh="30"
 		batt="100"
@@ -69,13 +68,13 @@
 		rssi="52" >
 		<part
 			type="6"
+			vis="1"
 			name="Postel"
 			val="30" />
 	</dev>
 	<dev 
 		init="1" 
 		did="100:00:FF:000:FF5" 
-		vis="1"
 		lid="2222"
 		refresh="30"
 		batt="100"
@@ -83,13 +82,13 @@
 		rssi="52" >
 		<part
 			type="5"
+			vis="1"
 			name="Psaci stul"
 			val="30" />
 	</dev>
 	<dev 
 		init="0" 
 		did="100:00:FF:000:FF6" 
-		vis="1"
 		lid="0"
 		refresh="30"
 		batt="100"
@@ -98,13 +97,13 @@
 		rssi="52" >
 		<part
 			type="7"
+			vis="1"
 			name=""
 			val="30" />
 	</dev>
 	<dev 
 		init="1" 
 		did="100:00:FF:000:FF7" 
-		vis="1"
 		lid="5555"
 		refresh="30"
 		batt="100"
@@ -112,13 +111,13 @@
 		rssi="52" >
 		<part
 			type="4"
+			vis="1"
 			name="ventilator"
 			val="ON" />
 	</dev>
 	<dev 
 		init="1" 
 		did="100:00:FF:000:FF8" 
-		vis="1"
 		lid="5555"
 		refresh="30"
 		batt="100"
@@ -126,13 +125,13 @@
 		rssi="52" >
 		<part
 			type="4"
+			vis="1"
 			name="pocitac"
 			val="OFF" />
 	</dev>
 	<dev 
 		init="1" 
 		did="100:00:FF:000:FF9" 
-		vis="1"
 		lid="5555"
 		refresh="30"
 		batt="100"
@@ -140,13 +139,13 @@
 		rssi="52" >
 		<part
 			type="4"
+			vis="1"
 			name="Lampa u tv"
 			val="ON" />
 	</dev>
 	<dev 
 		init="1" 
 		did="100:00:FF:000:FFA" 
-		vis="1"
 		lid="5555"
 		refresh="30"
 		batt="100"
@@ -154,13 +153,13 @@
 		rssi="52" >
 		<part
 			type="4"
+			vis="1"
 			name="televizor"
 			val="ON" />
 	</dev>
 	<dev 
 		init="1" 
 		did="100:00:FF:000:FFB" 
-		vis="1"
 		lid="4444"
 		refresh="30"
 		batt="100"
@@ -168,13 +167,13 @@
 		rssi="52" >
 		<part
 			type="4"
+			vis="1"
 			name="sporak"
 			val="ON" />
 	</dev>
 	<dev 
 		init="1" 
 		did="100:00:FF:000:FFC" 
-		vis="1"
 		lid="6666"
 		refresh="30"
 		batt="100"
@@ -182,13 +181,13 @@
 		rssi="52" >
 		<part
 			type="1"
+			vis="1"
 			name="osvezovac"
 			val="30" />
 	</dev>
 	<dev 
 		init="1" 
 		did="100:00:FF:000:FFD" 
-		vis="1"
 		lid="6666"
 		refresh="30"
 		batt="100"
@@ -196,6 +195,7 @@
 		rssi="52" >
 		<part
 			type="2"
+			vis="1"
 			name="Tlakomer"
 			val="3000" />
 	</dev>

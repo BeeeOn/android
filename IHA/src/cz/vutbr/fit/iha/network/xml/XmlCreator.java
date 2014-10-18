@@ -42,61 +42,9 @@ import cz.vutbr.fit.iha.network.xml.condition.TimeFunc;
  */
 public class XmlCreator {
 
-	/**
-	 * NameSpace
-	 */
-	public static final String ns = null;
+	private static final String ns = null;
 
-	/**
-	 * Version of communication protocol for google/android device
-	 */
-	public static final String GVER = Constants.COM_VER;
-
-	public static final String COM_ROOT = "com";
-	public static final String ID = "id";
-	public static final String SID = "sid";
-	public static final String AID = "aid";
-	public static final String LID = "lid";
-	public static final String DID = "did";
-	public static final String CID = "cid";
-	public static final String ACID = "acid";
-	public static final String OLDID = "oaid";
-	public static final String NEWID = "naid";
-	public static final String GCMID = "gcmid";
-	public static final String MSGID = "mid";
-
-	public static final String ZERO = "0";
-	public static final String ONE = "1";
-	public static final String STATE = "state";
-	public static final String VERSION = "ver";
-	public static final String USER = "user";
-	public static final String EMAIL = "email";
-	public static final String GTOKEN = "gt";
-	public static final String ADAPTER = "adapter";
-	public static final String ROLE = "role";
-	public static final String FROM = "from";
-	public static final String TO = "to";
-	public static final String ACTION = "act";
-	public static final String ICON = "icon";
-	public static final String TIME = "time";
-	public static final String UTC = "utc";
-	public static final String LOCALE = "loc";
-	public static final String ERRCODE = "errcode";
-	public static final String INTERVAL = "interval";
-	public static final String NOTIFICAION = "notif";
-	public static final String FUNC = "func";
-	public static final String PART = "part";
-	public static final String DEVICE = "dev";
-	public static final String INITIALIZED = "init";
-	public static final String TYPE = "type";
-	public static final String FTYPE = "ftype";
-	public static final String DTYPE = "dtype";
-	public static final String VISIBILITY = "vis";
-	public static final String LOCATION = "loc";
-	public static final String NAME = "name";
-	public static final String REFRESH = "refresh";
-	public static final String BATTERY = "bat";
-	public static final String VALUE = "val";
+	private static final String COM_VER = Constants.COM_VER;
 
 	// states
 	public static final String SIGNIN = "signin";
@@ -203,7 +151,7 @@ public class XmlCreator {
 	 * @since 2.2
 	 */
 	public static String createSignIn(String email, String gtoken, String locale, String gcmid) {
-		return createComAttribsVariant(STATE, SIGNIN, EMAIL, email, GTOKEN, gtoken, LOCALE, locale, GCMID, gcmid);
+		return createComAttribsVariant(Xconstants.STATE, SIGNIN, Xconstants.EMAIL, email, Xconstants.GTOKEN, gtoken, Xconstants.LOCALE, locale, Xconstants.GCMID, gcmid);
 	}
 
 	/**
@@ -217,7 +165,7 @@ public class XmlCreator {
 	 * @since 2.2
 	 */
 	public static String createSignUp(String email, String gtoken) {
-		return createComAttribsVariant(STATE, SIGNUP, EMAIL, email, GTOKEN, gtoken);
+		return createComAttribsVariant(Xconstants.STATE, SIGNUP, Xconstants.EMAIL, email, Xconstants.GTOKEN, gtoken);
 	}
 
 	/**
@@ -233,7 +181,7 @@ public class XmlCreator {
 	 * @since 2.2
 	 */
 	public static String createAddAdapter(String sid, String aid, String adapterName) {
-		return createComAttribsVariant(STATE, ADDADAPTER, SID, sid, AID, aid, NAME, adapterName);
+		return createComAttribsVariant(Xconstants.STATE, ADDADAPTER, Xconstants.SID, sid, Xconstants.AID, aid, Xconstants.NAME, adapterName);
 	}
 
 	/**
@@ -245,7 +193,7 @@ public class XmlCreator {
 	 * @since 2.2
 	 */
 	public static String createGetAdapters(String sid) {
-		return createComAttribsVariant(STATE, GETADAPTERS, SID, sid);
+		return createComAttribsVariant(Xconstants.STATE, GETADAPTERS, Xconstants.SID, sid);
 	}
 
 	/**
@@ -261,11 +209,11 @@ public class XmlCreator {
 	 * @since 2.2
 	 */
 	public static String createReInitAdapter(String sid, String adapterIdOld, String adapterIdNew) {
-		return createComAttribsVariant(STATE, REINITADAPTER, SID, sid, OLDID, adapterIdOld, NEWID, adapterIdNew);
+		return createComAttribsVariant(Xconstants.STATE, REINITADAPTER, Xconstants.SID, sid, Xconstants.OLDID, adapterIdOld, Xconstants.NEWID, adapterIdNew);
 	}
 
 	// ////////////////////////////////////////////////////////////////////////////////////////////////
-	// /////////////////////////////////////DEVICES,LOGS///////////////////////////////////////////////
+	// /////////////////////////////////////Xconstants.DEVICES,LOGS///////////////////////////////////////////////
 	// ////////////////////////////////////////////////////////////////////////////////////////////////
 
 	/**
@@ -279,7 +227,7 @@ public class XmlCreator {
 	 * @since 2.2
 	 */
 	public static String createAdapterScanMode(String sid, String aid) {
-		return createComAttribsVariant(STATE, SCANMODE, SID, sid, AID, aid);
+		return createComAttribsVariant(Xconstants.STATE, SCANMODE, Xconstants.SID, sid, Xconstants.AID, aid);
 	}
 
 	/**
@@ -293,7 +241,7 @@ public class XmlCreator {
 	 * @since 2.2
 	 */
 	public static String createGetAllDevices(String sid, String aid) {
-		return createComAttribsVariant(STATE, GETALLDEVICES, SID, sid, AID, aid);
+		return createComAttribsVariant(Xconstants.STATE, GETALLDEVICES, Xconstants.SID, sid, Xconstants.AID, aid);
 	}
 
 	/**
@@ -307,7 +255,7 @@ public class XmlCreator {
 	 * @since 2.2
 	 */
 	public static String createGetNewDevices(String sid, String aid) {
-		return createComAttribsVariant(STATE, GETNEWDEVICES, SID, sid, AID, aid);
+		return createComAttribsVariant(Xconstants.STATE, GETNEWDEVICES, Xconstants.SID, sid, Xconstants.AID, aid);
 	}
 
 	/**
@@ -329,10 +277,10 @@ public class XmlCreator {
 			serializer.setOutput(writer);
 			serializer.startDocument("UTF-8", null);
 
-			serializer.startTag(ns, COM_ROOT);
-			serializer.attribute(ns, SID, sid);
-			serializer.attribute(ns, STATE, GETDEVICES);
-			serializer.attribute(ns, VERSION, GVER);
+			serializer.startTag(ns, Xconstants.COM_ROOT);
+			serializer.attribute(ns, Xconstants.SID, sid);
+			serializer.attribute(ns, Xconstants.STATE, GETDEVICES);
+			serializer.attribute(ns, Xconstants.VERSION, COM_VER);
 
 			// sort by adapter address
 			Collections.sort(facilities, new AdapterAddressComparator());
@@ -343,23 +291,23 @@ public class XmlCreator {
 				boolean isSameAdapter = aid.equals(facility.getAdapterId());
 				if (!isSameAdapter) { // new adapter
 					if (aid.length() > 0)
-						serializer.endTag(ns, ADAPTER);
+						serializer.endTag(ns, Xconstants.ADAPTER);
 					aid = facility.getAdapterId();
-					serializer.startTag(ns, ADAPTER);
-					serializer.attribute(ns, ID, aid);
+					serializer.startTag(ns, Xconstants.ADAPTER);
+					serializer.attribute(ns, Xconstants.ID, aid);
 				}
-				serializer.startTag(ns, DEVICE);
-				serializer.attribute(ns, ID, facility.getAddress());
+				serializer.startTag(ns, Xconstants.DEVICE);
+				serializer.attribute(ns, Xconstants.ID, facility.getAddress());
 
 				for (BaseDevice device : facility.getDevices()) {
-					serializer.startTag(ns, PART);
-					serializer.attribute(ns, TYPE, Integer.toString(device.getType().getTypeId()));
-					serializer.endTag(ns, PART);
+					serializer.startTag(ns, Xconstants.PART);
+					serializer.attribute(ns, Xconstants.TYPE, Integer.toString(device.getType().getTypeId()));
+					serializer.endTag(ns, Xconstants.PART);
 				}
-				serializer.endTag(ns, DEVICE);
+				serializer.endTag(ns, Xconstants.DEVICE);
 			}
-			serializer.endTag(ns, ADAPTER);
-			serializer.endTag(ns, COM_ROOT);
+			serializer.endTag(ns, Xconstants.ADAPTER);
+			serializer.endTag(ns, Xconstants.COM_ROOT);
 			serializer.endDocument();
 
 			return writer.toString();
@@ -398,20 +346,20 @@ public class XmlCreator {
 			serializer.setOutput(writer);
 			serializer.startDocument("UTF-8", null);
 
-			serializer.startTag(ns, COM_ROOT);
+			serializer.startTag(ns, Xconstants.COM_ROOT);
 
-			serializer.attribute(ns, SID, sid);
-			serializer.attribute(ns, STATE, GETLOG);
-			serializer.attribute(ns, VERSION, GVER);
-			serializer.attribute(ns, FROM, from);
-			serializer.attribute(ns, TO, to);
-			serializer.attribute(ns, FTYPE, funcType);
-			serializer.attribute(ns, INTERVAL, String.valueOf(interval));
-			serializer.attribute(ns, AID, aid);
-			serializer.attribute(ns, DID, did);
-			serializer.attribute(ns, DTYPE, Integer.toString(deviceType));
+			serializer.attribute(ns, Xconstants.SID, sid);
+			serializer.attribute(ns, Xconstants.STATE, GETLOG);
+			serializer.attribute(ns, Xconstants.VERSION, COM_VER);
+			serializer.attribute(ns, Xconstants.FROM, from);
+			serializer.attribute(ns, Xconstants.TO, to);
+			serializer.attribute(ns, Xconstants.FTYPE, funcType);
+			serializer.attribute(ns, Xconstants.INTERVAL, String.valueOf(interval));
+			serializer.attribute(ns, Xconstants.AID, aid);
+			serializer.attribute(ns, Xconstants.DID, did);
+			serializer.attribute(ns, Xconstants.DTYPE, Integer.toString(deviceType));
 
-			serializer.endTag(ns, COM_ROOT);
+			serializer.endTag(ns, Xconstants.COM_ROOT);
 			serializer.endDocument();
 
 			return writer.toString();
@@ -439,35 +387,35 @@ public class XmlCreator {
 			serializer.setOutput(writer);
 			serializer.startDocument("UTF-8", null);
 
-			serializer.startTag(ns, COM_ROOT);
+			serializer.startTag(ns, Xconstants.COM_ROOT);
 
-			serializer.attribute(ns, SID, sid);
-			serializer.attribute(ns, STATE, SETDEVS);
-			serializer.attribute(ns, VERSION, GVER);
-			serializer.attribute(ns, AID, aid);
+			serializer.attribute(ns, Xconstants.SID, sid);
+			serializer.attribute(ns, Xconstants.STATE, SETDEVS);
+			serializer.attribute(ns, Xconstants.VERSION, COM_VER);
+			serializer.attribute(ns, Xconstants.AID, aid);
 
 			for (Facility facility : facilities) {
-				serializer.startTag(ns, DEVICE);
+				serializer.startTag(ns, Xconstants.DEVICE);
 
-				serializer.attribute(ns, INITIALIZED, (facility.isInitialized()) ? ONE : ZERO);
-				serializer.attribute(ns, DID, facility.getAddress());
-				serializer.attribute(ns, VISIBILITY, (facility.getVisibility()) ? ONE : ZERO);
-				serializer.attribute(ns, LID, facility.getLocationId());
-				serializer.attribute(ns, REFRESH, Integer.toString(facility.getRefresh().getInterval()));
+				serializer.attribute(ns, Xconstants.INITIALIZED, (facility.isInitialized()) ? Xconstants.ONE : Xconstants.ZERO);
+				serializer.attribute(ns, Xconstants.DID, facility.getAddress());
+				serializer.attribute(ns, Xconstants.LID, facility.getLocationId());
+				serializer.attribute(ns, Xconstants.REFRESH, Integer.toString(facility.getRefresh().getInterval()));
 
 				for (BaseDevice device : facility.getDevices()) {
-					serializer.startTag(ns, PART);
+					serializer.startTag(ns, Xconstants.PART);
 
-					serializer.attribute(ns, TYPE, Integer.toString(device.getType().getTypeId()));
-					serializer.attribute(ns, NAME, device.getName());
-					serializer.attribute(ns, VALUE, String.valueOf(device.getValue().getDoubleValue()));
+					serializer.attribute(ns, Xconstants.TYPE, Integer.toString(device.getType().getTypeId()));
+//					serializer.attribute(ns, Xconstants.VISIBILITY, (device.getVisibility()) ? Xconstants.ONE : Xconstants.ZERO); //FIXME: after merge
+					serializer.attribute(ns, Xconstants.NAME, device.getName());
+					serializer.attribute(ns, Xconstants.VALUE, String.valueOf(device.getValue().getDoubleValue()));
 
-					serializer.endTag(ns, PART);
+					serializer.endTag(ns, Xconstants.PART);
 				}
-				serializer.endTag(ns, DEVICE);
+				serializer.endTag(ns, Xconstants.DEVICE);
 			}
 
-			serializer.endTag(ns, COM_ROOT);
+			serializer.endTag(ns, Xconstants.COM_ROOT);
 			serializer.endDocument();
 
 			return writer.toString();
@@ -499,41 +447,41 @@ public class XmlCreator {
 			serializer.setOutput(writer);
 			serializer.startDocument("UTF-8", null);
 
-			serializer.startTag(ns, COM_ROOT);
+			serializer.startTag(ns, Xconstants.COM_ROOT);
 
-			serializer.attribute(ns, SID, sid);
-			serializer.attribute(ns, STATE, SETDEVS);
-			serializer.attribute(ns, VERSION, GVER);
-			serializer.attribute(ns, AID, aid);
+			serializer.attribute(ns, Xconstants.SID, sid);
+			serializer.attribute(ns, Xconstants.STATE, SETDEVS);
+			serializer.attribute(ns, Xconstants.VERSION, COM_VER);
+			serializer.attribute(ns, Xconstants.AID, aid);
 
-			serializer.startTag(ns, DEVICE);
+			serializer.startTag(ns, Xconstants.DEVICE);
 
-			// if(toSave.contains(SaveDevice.SAVE_INITIALIZED))
-			serializer.attribute(ns, INITIALIZED, (facility.isInitialized()) ? ONE : ZERO);
+			// if(toSave.contains(SaveDevice.SAVE_Xconstants.INITIALIZED)) //FIXME: after merge
+			serializer.attribute(ns, Xconstants.INITIALIZED, (facility.isInitialized()) ? Xconstants.ONE : Xconstants.ZERO);
 			// send always
-			serializer.attribute(ns, DID, facility.getAddress());
-			if (toSave.contains(SaveDevice.SAVE_VISIBILITY))
-				serializer.attribute(ns, VISIBILITY, (facility.getVisibility()) ? ONE : ZERO);
+			serializer.attribute(ns, Xconstants.DID, facility.getAddress());
 			if (toSave.contains(SaveDevice.SAVE_LOCATION))
-				serializer.attribute(ns, LID, facility.getLocationId());
+				serializer.attribute(ns, Xconstants.LID, facility.getLocationId());
 			if (toSave.contains(SaveDevice.SAVE_REFRESH))
-				serializer.attribute(ns, REFRESH, Integer.toString(facility.getRefresh().getInterval()));
+				serializer.attribute(ns, Xconstants.REFRESH, Integer.toString(facility.getRefresh().getInterval()));
 
 			if (toSave.contains(SaveDevice.SAVE_NAME) || toSave.contains(SaveDevice.SAVE_VALUE)) {
-				serializer.startTag(ns, PART);
+				serializer.startTag(ns, Xconstants.PART);
 				// send always if sensor changed
-				serializer.attribute(ns, TYPE, Integer.toString(device.getType().getTypeId()));
+				serializer.attribute(ns, Xconstants.TYPE, Integer.toString(device.getType().getTypeId()));
+//				if (toSave.contains(SaveDevice.SAVE_VISIBILITY))		//FIXME: afiter merge
+//					serializer.attribute(ns, Xconstants.VISIBILITY, (device.getVisibility()) ? Xconstants.ONE : Xconstants.ZERO);
 				if (toSave.contains(SaveDevice.SAVE_NAME))
-					serializer.attribute(ns, NAME, device.getName());
+					serializer.attribute(ns, Xconstants.NAME, device.getName());
 				if (toSave.contains(SaveDevice.SAVE_VALUE))
-					serializer.attribute(ns, VALUE, String.valueOf(device.getValue().getDoubleValue()));
+					serializer.attribute(ns, Xconstants.VALUE, String.valueOf(device.getValue().getDoubleValue()));
 
-				serializer.endTag(ns, PART);
+				serializer.endTag(ns, Xconstants.PART);
 			}
 
-			serializer.endTag(ns, DEVICE);
+			serializer.endTag(ns, Xconstants.DEVICE);
 
-			serializer.endTag(ns, COM_ROOT);
+			serializer.endTag(ns, Xconstants.COM_ROOT);
 			serializer.endDocument();
 
 			return writer.toString();
@@ -555,7 +503,7 @@ public class XmlCreator {
 	 * @since 2.2
 	 */
 	public static String createSwitch(String sid, String aid, BaseDevice device) {
-		return createComAttribsVariant(STATE, SWITCH, SID, sid, AID, aid, DID, device.getFacility().getAddress(), TYPE, Integer.toString(device.getType()), VALUE, device.getStringValue());
+		return createComAttribsVariant(Xconstants.STATE, SWITCH, Xconstants.SID, sid, Xconstants.AID, aid, Xconstants.DID, device.getFacility().getAddress(), Xconstants.TYPE, Integer.toString(device.getType().getTypeId()), Xconstants.VALUE, String.valueOf(device.getValue().getDoubleValue()));
 	}
 
 	/**
@@ -571,7 +519,7 @@ public class XmlCreator {
 	 * @since 2.2
 	 */
 	public static String createDeleteDevice(String sid, String aid, Facility facility) {
-		return createComAttribsVariant(STATE, DELDEVICE, SID, sid, AID, aid, DID, facility.getAddress());
+		return createComAttribsVariant(Xconstants.STATE, DELDEVICE, Xconstants.SID, sid, Xconstants.AID, aid, Xconstants.DID, facility.getAddress());
 	}
 
 	// ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -591,7 +539,7 @@ public class XmlCreator {
 	 * @since 2.2
 	 */
 	public static String createAddRoom(String sid, String aid, Location location) {
-		return createComAttribsVariant(STATE, ADDROOM, SID, sid, AID, aid, TYPE, Integer.toString(location.getType()), NAME, location.getName());
+		return createComAttribsVariant(Xconstants.STATE, ADDROOM, Xconstants.SID, sid, Xconstants.AID, aid, Xconstants.TYPE, Integer.toString(location.getType()), Xconstants.NAME, location.getName());
 	}
 
 	/**
@@ -613,23 +561,23 @@ public class XmlCreator {
 			serializer.setOutput(writer);
 			serializer.startDocument("UTF-8", null);
 
-			serializer.startTag(ns, COM_ROOT);
+			serializer.startTag(ns, Xconstants.COM_ROOT);
 
-			serializer.attribute(ns, SID, sid);
-			serializer.attribute(ns, STATE, SETROOMS);
-			serializer.attribute(ns, VERSION, GVER);
-			serializer.attribute(ns, AID, aid);
+			serializer.attribute(ns, Xconstants.SID, sid);
+			serializer.attribute(ns, Xconstants.STATE, SETROOMS);
+			serializer.attribute(ns, Xconstants.VERSION, COM_VER);
+			serializer.attribute(ns, Xconstants.AID, aid);
 
 			for (Location location : locations) {
-				serializer.startTag(ns, LOCATION);
+				serializer.startTag(ns, Xconstants.LOCATION);
 
-				serializer.attribute(ns, ID, location.getId());
-				serializer.attribute(ns, TYPE, Integer.toString(location.getType()));
-				serializer.attribute(ns, NAME, location.getName());
+				serializer.attribute(ns, Xconstants.ID, location.getId());
+				serializer.attribute(ns, Xconstants.TYPE, Integer.toString(location.getType()));
+				serializer.attribute(ns, Xconstants.NAME, location.getName());
 
-				serializer.endTag(ns, LOCATION);
+				serializer.endTag(ns, Xconstants.LOCATION);
 			}
-			serializer.endTag(ns, COM_ROOT);
+			serializer.endTag(ns, Xconstants.COM_ROOT);
 			serializer.endDocument();
 
 			return writer.toString();
@@ -651,7 +599,7 @@ public class XmlCreator {
 	 * @since 2.2
 	 */
 	public static String createDeleteRoom(String sid, String aid, Location location) {
-		return createComAttribsVariant(STATE, DELROOM, SID, sid, AID, aid, LID, location.getId());
+		return createComAttribsVariant(Xconstants.STATE, DELROOM, Xconstants.SID, sid, Xconstants.AID, aid, Xconstants.LID, location.getId());
 	}
 
 	/**
@@ -665,7 +613,7 @@ public class XmlCreator {
 	 * @since 2.2
 	 */
 	public static String createGetRooms(String sid, String aid) {
-		return createComAttribsVariant(STATE, GETROOMS, SID, sid, AID, aid);
+		return createComAttribsVariant(Xconstants.STATE, GETROOMS, Xconstants.SID, sid, Xconstants.AID, aid);
 	}
 
 	// ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -693,24 +641,24 @@ public class XmlCreator {
 			serializer.setOutput(writer);
 			serializer.startDocument("UTF-8", null);
 
-			serializer.startTag(ns, COM_ROOT);
+			serializer.startTag(ns, Xconstants.COM_ROOT);
 
-			serializer.attribute(ns, SID, sid);
-			serializer.attribute(ns, STATE, ADDVIEW);
-			serializer.attribute(ns, VERSION, GVER);
-			serializer.attribute(ns, NAME, viewName);
-			serializer.attribute(ns, ICON, Integer.toString(iconNum));
+			serializer.attribute(ns, Xconstants.SID, sid);
+			serializer.attribute(ns, Xconstants.STATE, ADDVIEW);
+			serializer.attribute(ns, Xconstants.VERSION, COM_VER);
+			serializer.attribute(ns, Xconstants.NAME, viewName);
+			serializer.attribute(ns, Xconstants.ICON, Integer.toString(iconNum));
 
 			for (BaseDevice device : devices) {
-				serializer.startTag(ns, DEVICE);
+				serializer.startTag(ns, Xconstants.DEVICE);
 
-				serializer.attribute(ns, AID, device.getFacility().getAdapterId());
-				serializer.attribute(ns, DID, device.getId());
-				serializer.attribute(ns, TYPE, Integer.toString(device.getType()));
-				serializer.endTag(ns, DEVICE);
+				serializer.attribute(ns, Xconstants.AID, device.getFacility().getAdapterId());
+				serializer.attribute(ns, Xconstants.DID, device.getId());
+				serializer.attribute(ns, Xconstants.TYPE, Integer.toString(device.getType().getTypeId()));
+				serializer.endTag(ns, Xconstants.DEVICE);
 			}
 
-			serializer.endTag(ns, COM_ROOT);
+			serializer.endTag(ns, Xconstants.COM_ROOT);
 			serializer.endDocument();
 
 			return writer.toString();
@@ -742,21 +690,21 @@ public class XmlCreator {
 			serializer.setOutput(writer);
 			serializer.startDocument("UTF-8", null);
 
-			serializer.startTag(ns, COM_ROOT);
+			serializer.startTag(ns, Xconstants.COM_ROOT);
 
-			serializer.attribute(ns, SID, sid);
-			serializer.attribute(ns, STATE, SETVIEW);
-			serializer.attribute(ns, VERSION, GVER);
-			serializer.attribute(ns, NAME, viewName);
-			serializer.attribute(ns, ICON, Integer.toString(iconNum));
+			serializer.attribute(ns, Xconstants.SID, sid);
+			serializer.attribute(ns, Xconstants.STATE, SETVIEW);
+			serializer.attribute(ns, Xconstants.VERSION, COM_VER);
+			serializer.attribute(ns, Xconstants.NAME, viewName);
+			serializer.attribute(ns, Xconstants.ICON, Integer.toString(iconNum));
 
-			serializer.startTag(ns, DEVICE);
-			serializer.attribute(ns, AID, device.getFacility().getAdapterId());
-			serializer.attribute(ns, DID, device.getId());
-			serializer.attribute(ns, ACTION, action.getValue());
-			serializer.endTag(ns, DEVICE);
+			serializer.startTag(ns, Xconstants.DEVICE);
+			serializer.attribute(ns, Xconstants.AID, device.getFacility().getAdapterId());
+			serializer.attribute(ns, Xconstants.DID, device.getId());
+			serializer.attribute(ns, Xconstants.ACTION, action.getValue());
+			serializer.endTag(ns, Xconstants.DEVICE);
 
-			serializer.endTag(ns, COM_ROOT);
+			serializer.endTag(ns, Xconstants.COM_ROOT);
 			serializer.endDocument();
 
 			return writer.toString();
@@ -776,7 +724,7 @@ public class XmlCreator {
 	 * @since 2.2
 	 */
 	public static String createDelView(String sid, String viewName) {
-		return createComAttribsVariant(STATE, DELVIEW, SID, sid, NAME, viewName);
+		return createComAttribsVariant(Xconstants.STATE, DELVIEW, Xconstants.SID, sid, Xconstants.NAME, viewName);
 	}
 
 	/**
@@ -788,7 +736,7 @@ public class XmlCreator {
 	 * @since 2.2
 	 */
 	public static String createGetViews(String sid) {
-		return createComAttribsVariant(STATE, GETVIEWS, SID, sid);
+		return createComAttribsVariant(Xconstants.STATE, GETVIEWS, Xconstants.SID, sid);
 	}
 
 	// ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -846,20 +794,20 @@ public class XmlCreator {
 			serializer.setOutput(writer);
 			serializer.startDocument("UTF-8", null);
 
-			serializer.startTag(ns, COM_ROOT);
+			serializer.startTag(ns, Xconstants.COM_ROOT);
 
-			serializer.attribute(ns, SID, sid);
-			serializer.attribute(ns, STATE, DELACCOUNTS);
-			serializer.attribute(ns, VERSION, GVER);
-			serializer.attribute(ns, AID, aid);
+			serializer.attribute(ns, Xconstants.SID, sid);
+			serializer.attribute(ns, Xconstants.STATE, DELACCOUNTS);
+			serializer.attribute(ns, Xconstants.VERSION, COM_VER);
+			serializer.attribute(ns, Xconstants.AID, aid);
 
 			for (User user : users) {
-				serializer.startTag(ns, USER);
-				serializer.attribute(ns, EMAIL, user.getEmail());
-				serializer.endTag(ns, USER);
+				serializer.startTag(ns, Xconstants.USER);
+				serializer.attribute(ns, Xconstants.EMAIL, user.getEmail());
+				serializer.endTag(ns, Xconstants.USER);
 			}
 
-			serializer.endTag(ns, COM_ROOT);
+			serializer.endTag(ns, Xconstants.COM_ROOT);
 			serializer.endDocument();
 
 			return writer.toString();
@@ -879,11 +827,11 @@ public class XmlCreator {
 	 * @since 2.2
 	 */
 	public static String createGetAccounts(String sid, String aid) {
-		return createComAttribsVariant(STATE, GETACCOUNTS, SID, sid, AID, aid);
+		return createComAttribsVariant(Xconstants.STATE, GETACCOUNTS, Xconstants.SID, sid, Xconstants.AID, aid);
 	}
 
 	// ////////////////////////////////////////////////////////////////////////////////////////////////
-	// /////////////////////////////////////TIME///////////////////////////////////////////////////////
+	// /////////////////////////////////////Xconstants.TIME///////////////////////////////////////////////////////
 	// ////////////////////////////////////////////////////////////////////////////////////////////////
 
 	/**
@@ -894,12 +842,12 @@ public class XmlCreator {
 	 * @param aid
 	 *            adapterID of actual adapter
 	 * @param diffToGMT
-	 *            difference to GMT (UTC+0)
+	 *            difference to GMT (Xconstants.UTC+0)
 	 * @return SetTimeZone message
 	 * @since 2.2
 	 */
 	public static String createSetTimeZone(String sid, String aid, int diffToGMT) {
-		return createComAttribsVariant(STATE, SETTIMEZONE, SID, sid, AID, aid, UTC, Integer.toString(diffToGMT));
+		return createComAttribsVariant(Xconstants.STATE, SETTIMEZONE, Xconstants.SID, sid, Xconstants.AID, aid, Xconstants.UTC, Integer.toString(diffToGMT));
 	}
 
 	/**
@@ -913,7 +861,7 @@ public class XmlCreator {
 	 * @since 2.2
 	 */
 	public static String createGetTimeZone(String sid, String aid) {
-		return createComAttribsVariant(STATE, GETTIMEZONE, SID, sid, AID, aid);
+		return createComAttribsVariant(Xconstants.STATE, GETTIMEZONE, Xconstants.SID, sid, Xconstants.AID, aid);
 	}
 
 	// ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -931,11 +879,11 @@ public class XmlCreator {
 	 * @since 2.2
 	 */
 	public static String createSetLocale(String sid, String locale) {
-		return createComAttribsVariant(STATE, SETLOCALE, SID, sid, LOCALE, locale);
+		return createComAttribsVariant(Xconstants.STATE, SETLOCALE, Xconstants.SID, sid, Xconstants.LOCALE, locale);
 	}
 
 	// ////////////////////////////////////////////////////////////////////////////////////////////////
-	// /////////////////////////////////////CONDITIONS,ACTIONS/////////////////////////////////////////
+	// /////////////////////////////////////CONDITIONS,Xconstants.ACTIONS/////////////////////////////////////////
 	// ////////////////////////////////////////////////////////////////////////////////////////////////
 
 	/**
@@ -989,7 +937,7 @@ public class XmlCreator {
 	 * @since 2.2
 	 */
 	public static String createDelCondition(String sid, String cid) {
-		return createComAttribsVariant(STATE, DELCONDITION, SID, sid, CID, cid);
+		return createComAttribsVariant(Xconstants.STATE, DELCONDITION, Xconstants.SID, sid, Xconstants.CID, cid);
 	}
 
 	/**
@@ -1003,7 +951,7 @@ public class XmlCreator {
 	 * @since 2.2
 	 */
 	public static String createGetCondition(String sid, String cid) {
-		return createComAttribsVariant(STATE, GETCONDITION, SID, sid, CID, cid);
+		return createComAttribsVariant(Xconstants.STATE, GETCONDITION, Xconstants.SID, sid, Xconstants.CID, cid);
 	}
 
 	/**
@@ -1015,7 +963,7 @@ public class XmlCreator {
 	 * @since 2.2
 	 */
 	public static String createGetConditions(String sid) {
-		return createComAttribsVariant(STATE, GETCONDITIONS, SID, sid);
+		return createComAttribsVariant(Xconstants.STATE, GETCONDITIONS, Xconstants.SID, sid);
 	}
 
 	/**
@@ -1063,7 +1011,7 @@ public class XmlCreator {
 	 * @since 2.2
 	 */
 	public static String createDelAction(String sid, String acid) {
-		return createComAttribsVariant(STATE, DELACTION, SID, sid, ACID, acid);
+		return createComAttribsVariant(Xconstants.STATE, DELACTION, Xconstants.SID, sid, Xconstants.ACID, acid);
 	}
 
 	/**
@@ -1075,7 +1023,7 @@ public class XmlCreator {
 	 * @since 2.2
 	 */
 	public static String createGetActions(String sid) {
-		return createComAttribsVariant(STATE, GETACTIONS, SID, sid);
+		return createComAttribsVariant(Xconstants.STATE, GETACTIONS, Xconstants.SID, sid);
 	}
 
 	/**
@@ -1089,7 +1037,7 @@ public class XmlCreator {
 	 * @since 2.2
 	 */
 	public static String createGetAction(String sid, String acid) {
-		return createComAttribsVariant(STATE, GETACTION, SID, sid, ACID, acid);
+		return createComAttribsVariant(Xconstants.STATE, GETACTION, Xconstants.SID, sid, Xconstants.ACID, acid);
 	}
 
 	/**
@@ -1105,7 +1053,7 @@ public class XmlCreator {
 	 * @since 2.2
 	 */
 	public static String createConditionPlusAction(String sid, String cid, String acid) {
-		return createComAttribsVariant(STATE, CONDITIONPLUSACTION, SID, sid, CID, cid, ACID, acid);
+		return createComAttribsVariant(Xconstants.STATE, CONDITIONPLUSACTION, Xconstants.SID, sid, Xconstants.CID, cid, Xconstants.ACID, acid);
 	}
 
 	// ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1113,7 +1061,7 @@ public class XmlCreator {
 	// ////////////////////////////////////////////////////////////////////////////////////////////////
 
 	/**
-	 * Method create XML of DelGCMID message (delete google cloud message id)
+	 * Method create XML of DelXconstants.GCMID message (delete google cloud message id)
 	 * 
 	 * @param sid
 	 *            sessionID of user logged in now
@@ -1121,25 +1069,25 @@ public class XmlCreator {
 	 *            of last logged user
 	 * @param gcmid
 	 *            id of google messaging
-	 * @return message DelGCMID
+	 * @return message DelXconstants.GCMID
 	 * @since 2.2
 	 */
 	public static String createDeLGCMID(String sid, String email, String gcmid) {
-		return createComAttribsVariant(STATE, DELGCMID, SID, sid, EMAIL, email, GCMID, gcmid);
+		return createComAttribsVariant(Xconstants.STATE, DELGCMID, Xconstants.SID, sid, Xconstants.EMAIL, email, Xconstants.GCMID, gcmid);
 	}
 
 	/**
-	 * Method create XML of SetGCMID message
+	 * Method create XML of SetXconstants.GCMID message
 	 * 
 	 * @param sid
 	 *            sessionID of user logged in now
 	 * @param gcmid
 	 *            id of google messaging
-	 * @return message SetGCMID
+	 * @return message SetXconstants.GCMID
 	 * @since 2.2
 	 */
 	public static String createSetGCMID(String sid, String gcmid) {
-		return createComAttribsVariant(STATE, SETGCMID, SID, sid, GCMID, gcmid);
+		return createComAttribsVariant(Xconstants.STATE, SETGCMID, Xconstants.SID, sid, Xconstants.GCMID, gcmid);
 	}
 
 	/**
@@ -1151,7 +1099,7 @@ public class XmlCreator {
 	 * @since 2.2
 	 */
 	public static String createGetNotifications(String sid) {
-		return createComAttribsVariant(STATE, GETNOTIFICATIONS, SID, sid);
+		return createComAttribsVariant(Xconstants.STATE, GETNOTIFICATIONS, Xconstants.SID, sid);
 	}
 
 	/**
@@ -1171,17 +1119,17 @@ public class XmlCreator {
 			serializer.setOutput(writer);
 			serializer.startDocument("UTF-8", null);
 
-			serializer.startTag(ns, COM_ROOT);
-			serializer.attribute(ns, ID, sid);
-			serializer.attribute(ns, STATE, NOTIFICATIONREAD);
-			serializer.attribute(ns, VERSION, GVER);
+			serializer.startTag(ns, Xconstants.COM_ROOT);
+			serializer.attribute(ns, Xconstants.SID, sid);
+			serializer.attribute(ns, Xconstants.STATE, NOTIFICATIONREAD);
+			serializer.attribute(ns, Xconstants.VERSION, COM_VER);
 
 			for (String mid : mids) {
-				serializer.startTag(ns, NOTIFICAION);
-				serializer.attribute(ns, MSGID, mid);
-				serializer.endTag(ns, NOTIFICAION);
+				serializer.startTag(ns, Xconstants.NOTIFICAION);
+				serializer.attribute(ns, Xconstants.MSGID, mid);
+				serializer.endTag(ns, Xconstants.NOTIFICAION);
 			}
-			serializer.endTag(ns, COM_ROOT);
+			serializer.endTag(ns, Xconstants.COM_ROOT);
 			serializer.endDocument();
 
 			return writer.toString();
@@ -1203,14 +1151,14 @@ public class XmlCreator {
 			serializer.setOutput(writer);
 //			serializer.startDocument("UTF-8", null);
 
-			serializer.startTag(ns, COM_ROOT);
-			serializer.attribute(ns, VERSION, GVER); // every time use version
+			serializer.startTag(ns, Xconstants.COM_ROOT);
+			serializer.attribute(ns, Xconstants.VERSION, COM_VER); // every time use version
 			
 			for(int i = 0; i < args.length; i+=2){ // take pair of args
 				serializer.attribute(ns, args[i], args[i+1]);
 			}
 
-			serializer.endTag(ns, COM_ROOT);
+			serializer.endTag(ns, Xconstants.COM_ROOT);
 			serializer.endDocument();
 
 			return writer.toString();
@@ -1226,22 +1174,22 @@ public class XmlCreator {
 			serializer.setOutput(writer);
 			serializer.startDocument("UTF-8", null);
 
-			serializer.startTag(ns, COM_ROOT);
+			serializer.startTag(ns, Xconstants.COM_ROOT);
 
-			serializer.attribute(ns, SID, sid);
-			serializer.attribute(ns, STATE, state);
-			serializer.attribute(ns, VERSION, GVER);
-			serializer.attribute(ns, AID, aid);
+			serializer.attribute(ns, Xconstants.SID, sid);
+			serializer.attribute(ns, Xconstants.STATE, state);
+			serializer.attribute(ns, Xconstants.VERSION, COM_VER);
+			serializer.attribute(ns, Xconstants.AID, aid);
 
 			for (Entry<User, User.Role> user : users.entrySet()) {
-				serializer.startTag(ns, USER);
+				serializer.startTag(ns, Xconstants.USER);
 
-				serializer.attribute(ns, EMAIL, user.getKey().getEmail());
-				serializer.attribute(ns, ROLE, user.getValue().getValue());
-				serializer.endTag(ns, USER);
+				serializer.attribute(ns, Xconstants.EMAIL, user.getKey().getEmail());
+				serializer.attribute(ns, Xconstants.ROLE, user.getValue().getValue());
+				serializer.endTag(ns, Xconstants.USER);
 			}
 
-			serializer.endTag(ns, COM_ROOT);
+			serializer.endTag(ns, Xconstants.COM_ROOT);
 			serializer.endDocument();
 
 			return writer.toString();
@@ -1258,115 +1206,115 @@ public class XmlCreator {
 			serializer.setOutput(writer);
 			serializer.startDocument("UTF-8", null);
 
-			serializer.startTag(ns, COM_ROOT);
+			serializer.startTag(ns, Xconstants.COM_ROOT);
 
-			serializer.attribute(ns, SID, sid);
-			serializer.attribute(ns, STATE, state);
-			serializer.attribute(ns, VERSION, GVER);
-			serializer.attribute(ns, NAME, name);
-			serializer.attribute(ns, TYPE, type.getValue());
+			serializer.attribute(ns, Xconstants.SID, sid);
+			serializer.attribute(ns, Xconstants.STATE, state);
+			serializer.attribute(ns, Xconstants.VERSION, COM_VER);
+			serializer.attribute(ns, Xconstants.NAME, name);
+			serializer.attribute(ns, Xconstants.TYPE, type.getValue());
 			if (state.equals(SETCONDITION))
-				serializer.attribute(ns, ID, cid);
+				serializer.attribute(ns, Xconstants.ID, cid);
 
 			for (ConditionFunction func : condFuncs) {
-				serializer.startTag(ns, FUNC);
-				serializer.attribute(ns, TYPE, func.getFuncType().getValue());
+				serializer.startTag(ns, Xconstants.FUNC);
+				serializer.attribute(ns, Xconstants.TYPE, func.getFuncType().getValue());
 
 				switch (func.getFuncType()) {
 				case EQ:
-					serializer.startTag(ns, DEVICE);
-					serializer.attribute(ns, ID, ((EqualFunc) func).getDevice().getId());
-					serializer.attribute(ns, TYPE, Integer.toString(((EqualFunc) func).getDevice().getType()));
-					serializer.endTag(ns, DEVICE);
+					serializer.startTag(ns, Xconstants.DEVICE);
+					serializer.attribute(ns, Xconstants.ID, ((EqualFunc) func).getDevice().getId());
+					serializer.attribute(ns, Xconstants.TYPE, Integer.toString(((EqualFunc) func).getDevice().getType().getTypeId()));
+					serializer.endTag(ns, Xconstants.DEVICE);
 
-					serializer.startTag(ns, VALUE);
+					serializer.startTag(ns, Xconstants.VALUE);
 					serializer.text(((EqualFunc) func).getValue());
-					serializer.endTag(ns, VALUE);
+					serializer.endTag(ns, Xconstants.VALUE);
 					break;
 				case GT:
-					serializer.startTag(ns, DEVICE);
-					serializer.attribute(ns, ID, ((GreaterThanFunc) func).getDevice().getId());
-					serializer.attribute(ns, TYPE, Integer.toString(((GreaterThanFunc) func).getDevice().getType()));
-					serializer.endTag(ns, DEVICE);
+					serializer.startTag(ns, Xconstants.DEVICE);
+					serializer.attribute(ns, Xconstants.ID, ((GreaterThanFunc) func).getDevice().getId());
+					serializer.attribute(ns, Xconstants.TYPE, Integer.toString(((GreaterThanFunc) func).getDevice().getType().getTypeId()));
+					serializer.endTag(ns, Xconstants.DEVICE);
 
-					serializer.startTag(ns, VALUE);
+					serializer.startTag(ns, Xconstants.VALUE);
 					serializer.text(((GreaterThanFunc) func).getValue());
-					serializer.endTag(ns, VALUE);
+					serializer.endTag(ns, Xconstants.VALUE);
 					break;
 				case GE:
-					serializer.startTag(ns, DEVICE);
-					serializer.attribute(ns, ID, ((GreaterEqualFunc) func).getDevice().getId());
-					serializer.attribute(ns, TYPE, Integer.toString(((GreaterEqualFunc) func).getDevice().getType()));
-					serializer.endTag(ns, DEVICE);
+					serializer.startTag(ns, Xconstants.DEVICE);
+					serializer.attribute(ns, Xconstants.ID, ((GreaterEqualFunc) func).getDevice().getId());
+					serializer.attribute(ns, Xconstants.TYPE, Integer.toString(((GreaterEqualFunc) func).getDevice().getType().getTypeId()));
+					serializer.endTag(ns, Xconstants.DEVICE);
 
-					serializer.startTag(ns, VALUE);
+					serializer.startTag(ns, Xconstants.VALUE);
 					serializer.text(((GreaterEqualFunc) func).getValue());
-					serializer.endTag(ns, VALUE);
+					serializer.endTag(ns, Xconstants.VALUE);
 					break;
 				case LT:
-					serializer.startTag(ns, DEVICE);
-					serializer.attribute(ns, ID, ((LesserThanFunc) func).getDevice().getId());
-					serializer.attribute(ns, TYPE, Integer.toString(((LesserThanFunc) func).getDevice().getType()));
-					serializer.endTag(ns, DEVICE);
+					serializer.startTag(ns, Xconstants.DEVICE);
+					serializer.attribute(ns, Xconstants.ID, ((LesserThanFunc) func).getDevice().getId());
+					serializer.attribute(ns, Xconstants.TYPE, Integer.toString(((LesserThanFunc) func).getDevice().getType().getTypeId()));
+					serializer.endTag(ns, Xconstants.DEVICE);
 
-					serializer.startTag(ns, VALUE);
+					serializer.startTag(ns, Xconstants.VALUE);
 					serializer.text(((LesserThanFunc) func).getValue());
-					serializer.endTag(ns, VALUE);
+					serializer.endTag(ns, Xconstants.VALUE);
 					break;
 				case LE:
-					serializer.startTag(ns, DEVICE);
-					serializer.attribute(ns, ID, ((LesserEqualFunc) func).getDevice().getId());
-					serializer.attribute(ns, TYPE, Integer.toString(((LesserEqualFunc) func).getDevice().getType()));
-					serializer.endTag(ns, DEVICE);
+					serializer.startTag(ns, Xconstants.DEVICE);
+					serializer.attribute(ns, Xconstants.ID, ((LesserEqualFunc) func).getDevice().getId());
+					serializer.attribute(ns, Xconstants.TYPE, Integer.toString(((LesserEqualFunc) func).getDevice().getType().getTypeId()));
+					serializer.endTag(ns, Xconstants.DEVICE);
 
-					serializer.startTag(ns, VALUE);
+					serializer.startTag(ns, Xconstants.VALUE);
 					serializer.text(((LesserEqualFunc) func).getValue());
-					serializer.endTag(ns, VALUE);
+					serializer.endTag(ns, Xconstants.VALUE);
 					break;
 				case BTW:
-					serializer.startTag(ns, DEVICE);
-					serializer.attribute(ns, ID, ((BetweenFunc) func).getDevice().getId());
-					serializer.attribute(ns, TYPE, Integer.toString(((BetweenFunc) func).getDevice().getType()));
-					serializer.endTag(ns, DEVICE);
+					serializer.startTag(ns, Xconstants.DEVICE);
+					serializer.attribute(ns, Xconstants.ID, ((BetweenFunc) func).getDevice().getId());
+					serializer.attribute(ns, Xconstants.TYPE, Integer.toString(((BetweenFunc) func).getDevice().getType().getTypeId()));
+					serializer.endTag(ns, Xconstants.DEVICE);
 
-					serializer.startTag(ns, VALUE);
+					serializer.startTag(ns, Xconstants.VALUE);
 					serializer.text(((BetweenFunc) func).getMinValue());
-					serializer.endTag(ns, VALUE);
+					serializer.endTag(ns, Xconstants.VALUE);
 
-					serializer.startTag(ns, VALUE);
+					serializer.startTag(ns, Xconstants.VALUE);
 					serializer.text(((BetweenFunc) func).getMaxValue());
-					serializer.endTag(ns, VALUE);
+					serializer.endTag(ns, Xconstants.VALUE);
 					break;
 				case DP:
-					serializer.startTag(ns, DEVICE);
-					serializer.attribute(ns, ID, ((DewPointFunc) func).getTempDevice().getId());
-					serializer.attribute(ns, TYPE, ((DewPointFunc) func).getTempDevice().getType() + "");
-					serializer.endTag(ns, DEVICE);
+					serializer.startTag(ns, Xconstants.DEVICE);
+					serializer.attribute(ns, Xconstants.ID, ((DewPointFunc) func).getTempDevice().getId());
+					serializer.attribute(ns, Xconstants.TYPE, ((DewPointFunc) func).getTempDevice().getType() + "");
+					serializer.endTag(ns, Xconstants.DEVICE);
 
-					serializer.startTag(ns, DEVICE);
-					serializer.attribute(ns, ID, ((DewPointFunc) func).getHumiDevice().getId());
-					serializer.attribute(ns, TYPE, Integer.toString(((DewPointFunc) func).getHumiDevice().getType()));
-					serializer.endTag(ns, DEVICE);
+					serializer.startTag(ns, Xconstants.DEVICE);
+					serializer.attribute(ns, Xconstants.ID, ((DewPointFunc) func).getHumiDevice().getId());
+					serializer.attribute(ns, Xconstants.TYPE, Integer.toString(((DewPointFunc) func).getHumiDevice().getType().getTypeId()));
+					serializer.endTag(ns, Xconstants.DEVICE);
 					break;
 				case TIME:
-					serializer.startTag(ns, VALUE);
+					serializer.startTag(ns, Xconstants.VALUE);
 					serializer.text(((TimeFunc) func).getTime());
-					serializer.endTag(ns, VALUE);
+					serializer.endTag(ns, Xconstants.VALUE);
 					break;
 				case GEO:
-					serializer.startTag(ns, VALUE);
+					serializer.startTag(ns, Xconstants.VALUE);
 					// FIXME: wait for martin
 					serializer.text("TODO");
-					serializer.endTag(ns, VALUE);
+					serializer.endTag(ns, Xconstants.VALUE);
 					break;
 				default:
 					break;
 				}
 
-				serializer.endTag(ns, FUNC);
+				serializer.endTag(ns, Xconstants.FUNC);
 			}
 
-			serializer.endTag(ns, COM_ROOT);
+			serializer.endTag(ns, Xconstants.COM_ROOT);
 			serializer.endDocument();
 
 			return writer.toString();
@@ -1382,30 +1330,30 @@ public class XmlCreator {
 			serializer.setOutput(writer);
 			serializer.startDocument("UTF-8", null);
 
-			serializer.startTag(ns, COM_ROOT);
+			serializer.startTag(ns, Xconstants.COM_ROOT);
 
-			serializer.attribute(ns, SID, sid);
-			serializer.attribute(ns, STATE, state);
-			serializer.attribute(ns, VERSION, GVER);
-			serializer.attribute(ns, NAME, name);
+			serializer.attribute(ns, Xconstants.SID, sid);
+			serializer.attribute(ns, Xconstants.STATE, state);
+			serializer.attribute(ns, Xconstants.VERSION, COM_VER);
+			serializer.attribute(ns, Xconstants.NAME, name);
 			if (state.equals(SETACTION))
-				serializer.attribute(ns, ACID, actid);
+				serializer.attribute(ns, Xconstants.ACID, actid);
 
 			for (Action action : actions) {
-				serializer.startTag(ns, ACTION);
-				serializer.attribute(ns, TYPE, action.getType().getValue());
+				serializer.startTag(ns, Xconstants.ACTION);
+				serializer.attribute(ns, Xconstants.TYPE, action.getType().getValue());
 
 				if (action.getType() == Action.ActionType.ACTOR) {
-					serializer.startTag(ns, DEVICE);
+					serializer.startTag(ns, Xconstants.DEVICE);
 
-					serializer.attribute(ns, ID, action.getDevice().getId());
-					serializer.attribute(ns, TYPE, Integer.toString(action.getDevice().getType()));
-					serializer.attribute(ns, VALUE, action.getValue());
-					serializer.endTag(ns, DEVICE);
+					serializer.attribute(ns, Xconstants.ID, action.getDevice().getId());
+					serializer.attribute(ns, Xconstants.TYPE, Integer.toString(action.getDevice().getType().getTypeId()));
+					serializer.attribute(ns, Xconstants.VALUE, action.getValue());
+					serializer.endTag(ns, Xconstants.DEVICE);
 				}
-				serializer.endTag(ns, ACTION);
+				serializer.endTag(ns, Xconstants.ACTION);
 			}
-			serializer.endTag(ns, COM_ROOT);
+			serializer.endTag(ns, Xconstants.COM_ROOT);
 			serializer.endDocument();
 
 			return writer.toString();

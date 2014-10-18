@@ -10,9 +10,7 @@ import android.test.AndroidTestCase;
 import android.util.Log;
 import cz.vutbr.fit.iha.activity.LoginActivity;
 import cz.vutbr.fit.iha.adapter.Adapter;
-import cz.vutbr.fit.iha.adapter.device.BaseDevice;
 import cz.vutbr.fit.iha.adapter.device.Facility;
-import cz.vutbr.fit.iha.network.GetGoogleAuth;
 import cz.vutbr.fit.iha.network.Network;
 import cz.vutbr.fit.iha.network.exception.CommunicationException;
 import cz.vutbr.fit.iha.network.exception.NoConnectionException;
@@ -49,10 +47,10 @@ public class NetworkTest extends /*TestCase*/AndroidTestCase {
 		
 		Network net = new Network(getContext(), null, false);
 		LoginActivity la = new LoginActivity();
-		GetGoogleAuth gga = new GetGoogleAuth(la, emails);
-		gga.setDebugToken("token");
+//		GetGoogleAuth gga = new GetGoogleAuth(la, emails);
+//		gga.setDebugToken("token");
 		try {
-			net.signIn(USEREMAIL);
+//			net.signIn(USEREMAIL);
 		} catch (NoConnectionException e) {
 			e.printStackTrace();
 			Log.e(TAG, e.toString());
@@ -71,8 +69,8 @@ public class NetworkTest extends /*TestCase*/AndroidTestCase {
 		
 		Network net = new Network(getContext(), null, false);
 		LoginActivity la = new LoginActivity();
-		GetGoogleAuth gga = new GetGoogleAuth(la, emails);
-		gga.setDebugToken("token");
+//		GetGoogleAuth gga = new GetGoogleAuth(la, emails);
+//		gga.setDebugToken("token");
 		
 		try {
 			net.signUp(USEREMAIL);

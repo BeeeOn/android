@@ -94,10 +94,7 @@ public class Network {
 		}
 	}
 
-	private static final String TAG = Network.class.getSimpleName();
-
-	public static final String SIGNIN = "signin";
-	public static final String SIGNUP = "signup";
+	private static final String TAG = Network.class.getSimpleName();;
 
 	/**
 	 * Name of CA certificate located in assets
@@ -127,6 +124,7 @@ public class Network {
 	private static final String SERVER_CN_CERTIFICATE = "ant-2.fit.vutbr.cz";
 
 	private static final String GoogleExcMessage = "Google token error";
+	private static final int RESIGNCODE = 20;
 
 	private Context mContext;
 	private GoogleAuth mGoogleAuth;
@@ -400,19 +398,13 @@ public class Network {
 		String messageToSend = XmlCreator.createSignIn(userEmail, googleToken, Locale.getDefault().getLanguage(), gcmid);
 		ParsedMessage msg = doRequest(messageToSend);
 
-		if (!msg.getSessionId().isEmpty() && msg.getState() == State.TRUE && ((String) msg.data).equals(SIGNIN)) {
+		if (!msg.getSessionId().isEmpty() && msg.getState() == State.TRUE) {
 			Log.i(TAG, msg.getState().getValue());
 
 			mUser.setSessionId(msg.getSessionId());
 			mSessionId = msg.getSessionId();
 
 			return true;
-		}
-		if (msg.getState() == State.NOTREGA) {
-			throw new NotRegAException();
-		}
-		if (msg.getState() == State.NOTREGB) {
-			throw new NotRegBException();
 		}
 		if (msg.getState() == State.FALSE) {
 			mGoogleAuth.invalidateToken();
@@ -433,7 +425,6 @@ public class Network {
 	 * @throws NoConnectionException
 	 */
 	public boolean signUp(String email) throws CommunicationException, NoConnectionException, FalseException {
-
 		String googleToken = getGoogleToken();
 
 		if (googleToken.length() == 0)
@@ -442,11 +433,8 @@ public class Network {
 		String messageToSend = XmlCreator.createSignUp(email, googleToken);
 		ParsedMessage msg = doRequest(messageToSend);
 
-		if (!msg.getSessionId().isEmpty() && msg.getState() == State.TRUE && ((String) msg.data).equals(SIGNUP)) {
+		if (msg.getState() == State.TRUE) {
 			Log.i(TAG, msg.getState().getValue());
-
-			mUser.setSessionId(msg.getSessionId());
-			mSessionId = msg.getSessionId();
 
 			return true;
 		}
@@ -475,9 +463,13 @@ public class Network {
 			return true;
 		}
 		if (msg.getState() == State.FALSE) {
-			throw new FalseException(((FalseAnswer) msg.data));
-		} else
-			return false;
+			if(((FalseAnswer)msg.data).getErrCode() == RESIGNCODE){
+				doResign();
+				return addAdapter(serialNumber, adapterName);
+			}else
+				throw new FalseException(((FalseAnswer) msg.data));
+		}
+		return false;
 	}
 
 	/**
@@ -500,12 +492,12 @@ public class Network {
 			Log.i(TAG, msg.getState().getValue());
 
 			result.addAll((List<Adapter>) msg.data);
-		} else if (msg.getState() == State.RESIGN) {
-			doResign();
-			return getAdapters();
-
 		} else if (msg.getState() == State.FALSE) {
-			throw new FalseException(((FalseAnswer) msg.data));
+			if(((FalseAnswer)msg.data).getErrCode() == RESIGNCODE){
+				doResign();
+				return getAdapters();
+			}else
+				throw new FalseException(((FalseAnswer) msg.data));
 		}
 		return result;
 	}
@@ -523,17 +515,19 @@ public class Network {
 	public List<Facility> init(String adapterId) throws NoConnectionException, CommunicationException, FalseException {
 		String messageToSend = XmlCreator.createGetAllDevices(mSessionId, adapterId);
 		ParsedMessage msg = doRequest(messageToSend);
+		
 		ArrayList<Facility> result = new ArrayList<Facility>();
 
 		if (msg.getState() == State.ALLDEVICES) {
 			Log.i(TAG, msg.getState().getValue());
 
 			result = (ArrayList<Facility>) msg.data;
-		} else if (msg.getState() == State.RESIGN) {
-			doResign();
-			return init(adapterId);
 		} else if (msg.getState() == State.FALSE) {
-			throw new FalseException(((FalseAnswer) msg.data));
+			if(((FalseAnswer)msg.data).getErrCode() == RESIGNCODE){
+				doResign();
+				return init(adapterId);
+			}else
+				throw new FalseException(((FalseAnswer) msg.data));
 		}
 		return result;
 	}
@@ -558,14 +552,14 @@ public class Network {
 
 			return true;
 
-		} else if (msg.getState() == State.RESIGN) {
-			doResign();
-			return reInitAdapter(oldId, newId);
-
 		} else if (msg.getState() == State.FALSE) {
-			throw new FalseException(((FalseAnswer) msg.data));
-		} else
-			return false;
+			if(((FalseAnswer)msg.data).getErrCode() == RESIGNCODE){
+				doResign();
+				return reInitAdapter(oldId, newId);
+			}else
+				throw new FalseException(((FalseAnswer) msg.data));
+		}
+		return false;
 	}
 
 	// ////////////////////////////////////// zarizeni, logy
@@ -586,14 +580,14 @@ public class Network {
 			Log.d(TAG, msg.getState().getValue());
 
 			return true;
-
-		} else if (msg.getState() == State.RESIGN) {
-			doResign();
-			return setDevices(adapterId, facilities);
 		} else if (msg.getState() == State.FALSE) {
-			throw new FalseException(((FalseAnswer) msg.data));
-		} else
-			return false;
+			if(((FalseAnswer)msg.data).getErrCode() == RESIGNCODE){
+				doResign();
+				return setDevices(adapterId, facilities);
+			}else
+				throw new FalseException(((FalseAnswer) msg.data));
+		}
+		return false;
 	}
 
 	/**
@@ -619,13 +613,14 @@ public class Network {
 
 			return true;
 
-		} else if (msg.getState() == State.RESIGN) {
-			doResign();
-			return setDevice(adapterId, device, toSave);
 		} else if (msg.getState() == State.FALSE) {
-			throw new FalseException(((FalseAnswer) msg.data));
-		} else
-			return false;
+			if(((FalseAnswer)msg.data).getErrCode() == RESIGNCODE){
+				doResign();
+				return setDevice(adapterId, device, toSave);
+			}else
+				throw new FalseException(((FalseAnswer) msg.data));
+		}
+		return false;
 	}
 
 	/**
@@ -647,13 +642,14 @@ public class Network {
 
 			return true;
 
-		} else if (msg.getState() == State.RESIGN) {
-			doResign();
-			return switchState(adapterId, device);
 		} else if (msg.getState() == State.FALSE) {
-			throw new FalseException(((FalseAnswer) msg.data));
-		} else
-			return false;
+			if(((FalseAnswer)msg.data).getErrCode() == RESIGNCODE){
+				doResign();
+				return switchState(adapterId, device);	
+			}else
+				throw new FalseException(((FalseAnswer) msg.data));
+		}
+		return false;
 	}
 
 	/**
@@ -674,13 +670,14 @@ public class Network {
 
 			return true;
 
-		} else if (msg.getState() == State.RESIGN) {
-			doResign();
-			return prepareAdapterToListenNewSensors(adapterId);
 		} else if (msg.getState() == State.FALSE) {
-			throw new FalseException(((FalseAnswer) msg.data));
-		} else
-			return false;
+			if(((FalseAnswer)msg.data).getErrCode() == RESIGNCODE){
+				doResign();
+				return prepareAdapterToListenNewSensors(adapterId);
+			}else
+				throw new FalseException(((FalseAnswer) msg.data));
+		}
+		return false;
 
 	}
 
@@ -704,13 +701,14 @@ public class Network {
 
 			return true;
 
-		} else if (msg.getState() == State.RESIGN) {
-			doResign();
-			return deleteFacility(adapterId, facility);
 		} else if (msg.getState() == State.FALSE) {
-			throw new FalseException(((FalseAnswer) msg.data));
-		} else
-			return false;
+			if(((FalseAnswer)msg.data).getErrCode() == RESIGNCODE){
+				doResign();
+				return deleteFacility(adapterId, facility);
+			}else
+				throw new FalseException(((FalseAnswer) msg.data));
+		}
+		return false;
 	}
 
 	/**
@@ -734,11 +732,12 @@ public class Network {
 			Log.i(TAG, msg.getState().getValue());
 
 			result.addAll((List<Facility>) msg.data);
-		} else if (msg.getState() == State.RESIGN) {
-			doResign();
-			return getFacilities(adapterId, facilities);
 		} else if (msg.getState() == State.FALSE) {
-			throw new FalseException(((FalseAnswer) msg.data));
+			if(((FalseAnswer)msg.data).getErrCode() == RESIGNCODE){
+				doResign();
+				return getFacilities(adapterId, facilities);
+			}else
+				throw new FalseException(((FalseAnswer) msg.data));
 		}
 		return result;
 	}
@@ -768,11 +767,12 @@ public class Network {
 			List<Facility> devices = (List<Facility>) msg.data;
 			if (devices.size() != 0)
 				result = devices.get(0);
-		} else if (msg.getState() == State.RESIGN) {
-			doResign();
-			return getFacility(adapterId, facility);
 		} else if (msg.getState() == State.FALSE) {
-			throw new FalseException(((FalseAnswer) msg.data));
+			if(((FalseAnswer)msg.data).getErrCode() == RESIGNCODE){
+				doResign();
+				return getFacility(adapterId, facility);
+			}else
+				throw new FalseException(((FalseAnswer) msg.data));
 		}
 		return result;
 	}
@@ -798,11 +798,12 @@ public class Network {
 			Log.i(TAG, msg.getState().getValue());
 
 			result.addAll((List<Facility>) msg.data);
-		} else if (msg.getState() == State.RESIGN) {
-			doResign();
-			return getNewFacilities(adapterId);
 		} else if (msg.getState() == State.FALSE) {
-			throw new FalseException(((FalseAnswer) msg.data));
+			if(((FalseAnswer)msg.data).getErrCode() == RESIGNCODE){
+				doResign();
+				return getNewFacilities(adapterId);
+			}else
+				throw new FalseException(((FalseAnswer) msg.data));
 		}
 		return result;
 	}
@@ -834,15 +835,13 @@ public class Network {
 			result = (DeviceLog) msg.data;
 			result.setDataInterval(interval);
 			result.setDataType(type);
-
-		} else if (msg.getState() == State.RESIGN) {
-			doResign();
-			return getLog(adapterId, device, from, to, type, interval);
-
 		} else if (msg.getState() == State.FALSE) {
-			throw new FalseException(((FalseAnswer) msg.data));
+			if(((FalseAnswer)msg.data).getErrCode() == RESIGNCODE){
+				doResign();
+				return getLog(adapterId, device, from, to, type, interval);
+			}else
+				throw new FalseException(((FalseAnswer) msg.data));
 		}
-
 		return result;
 	}
 
@@ -867,12 +866,12 @@ public class Network {
 			Log.i(TAG, msg.getState().getValue());
 
 			result.addAll((List<Location>) msg.data);
-		} else if (msg.getState() == State.RESIGN) {
-			doResign();
-			return getLocations(adapterId);
-
 		} else if (msg.getState() == State.FALSE) {
-			throw new FalseException(((FalseAnswer) msg.data));
+			if(((FalseAnswer)msg.data).getErrCode() == RESIGNCODE){
+				doResign();
+				return getLocations(adapterId);
+			}else
+				throw new FalseException(((FalseAnswer) msg.data));
 		}
 		return result;
 	}
@@ -894,15 +893,14 @@ public class Network {
 			Log.d(TAG, msg.getState().getValue());
 
 			return true;
-
-		} else if (msg.getState() == State.RESIGN) {
-			doResign();
-			return updateLocations(adapterId, locations);
-
 		} else if (msg.getState() == State.FALSE) {
-			throw new FalseException(((FalseAnswer) msg.data));
-		} else
-			return false;
+			if(((FalseAnswer)msg.data).getErrCode() == RESIGNCODE){
+				doResign();
+				return updateLocations(adapterId, locations);
+			}else
+				throw new FalseException(((FalseAnswer) msg.data));
+		}
+		return false;
 	}
 
 	/**
@@ -925,15 +923,14 @@ public class Network {
 			Log.d(TAG, msg.getState().getValue());
 
 			return true;
-
-		} else if (msg.getState() == State.RESIGN) {
-			doResign();
-			return updateLocation(adapterId, location);
-
 		} else if (msg.getState() == State.FALSE) {
-			throw new FalseException(((FalseAnswer) msg.data));
-		} else
-			return false;
+			if(((FalseAnswer)msg.data).getErrCode() == RESIGNCODE){
+				doResign();
+				return updateLocation(adapterId, location);
+			}else
+				throw new FalseException(((FalseAnswer) msg.data));
+		}
+		return false;
 	}
 
 	/**
@@ -951,15 +948,14 @@ public class Network {
 			Log.d(TAG, msg.getState().getValue());
 
 			return true;
-
-		} else if (msg.getState() == State.RESIGN) {
-			doResign();
-			return deleteLocation(adapterId, location);
-
 		} else if (msg.getState() == State.FALSE) {
-			throw new FalseException(((FalseAnswer) msg.data));
-		} else
-			return false;
+			if(((FalseAnswer)msg.data).getErrCode() == RESIGNCODE){
+				doResign();
+				return deleteLocation(adapterId, location);
+			}else
+				throw new FalseException(((FalseAnswer) msg.data));
+		}
+		return false;
 	}
 
 	public Location createLocation(String adapterId, Location location) throws NoConnectionException, CommunicationException, FalseException {
@@ -970,12 +966,12 @@ public class Network {
 			Log.i(TAG, msg.getState().getValue());
 
 			location.setId((String) msg.data);
-		} else if (msg.getState() == State.RESIGN) {
-			doResign();
-			return createLocation(adapterId, location);
-
 		} else if (msg.getState() == State.FALSE) {
-			throw new FalseException(((FalseAnswer) msg.data));
+			if(((FalseAnswer)msg.data).getErrCode() == RESIGNCODE){
+				doResign();
+				return createLocation(adapterId, location);
+			}else
+				throw new FalseException(((FalseAnswer) msg.data));
 		}
 		return location;
 	}
@@ -1003,15 +999,14 @@ public class Network {
 			Log.d(TAG, msg.getState().getValue());
 
 			return true;
-
-		} else if (msg.getState() == State.RESIGN) {
-			doResign();
-			return addView(nameOfView, iconId, devices);
-
 		} else if (msg.getState() == State.FALSE) {
-			throw new FalseException(((FalseAnswer) msg.data));
-		} else
-			return false;
+			if(((FalseAnswer)msg.data).getErrCode() == RESIGNCODE){
+				doResign();
+				return addView(nameOfView, iconId, devices);
+			}else
+				throw new FalseException(((FalseAnswer) msg.data));
+		}
+		return false;
 	}
 
 	/**
@@ -1033,12 +1028,12 @@ public class Network {
 			Log.i(TAG, msg.getState().getValue());
 
 			result.addAll((List<CustomViewPair>) msg.data);
-		} else if (msg.getState() == State.RESIGN) {
-			doResign();
-			return getViews();
-
 		} else if (msg.getState() == State.FALSE) {
-			throw new FalseException(((FalseAnswer) msg.data));
+			if(((FalseAnswer)msg.data).getErrCode() == RESIGNCODE){
+				doResign();
+				return getViews();
+			}else
+				throw new FalseException(((FalseAnswer) msg.data));
 		}
 		return result;
 	}
@@ -1060,15 +1055,14 @@ public class Network {
 			Log.d(TAG, msg.getState().getValue());
 
 			return true;
-
-		} else if (msg.getState() == State.RESIGN) {
-			doResign();
-			return deleteView(viewName);
-
 		} else if (msg.getState() == State.FALSE) {
-			throw new FalseException(((FalseAnswer) msg.data));
-		} else
-			return false;
+			if(((FalseAnswer)msg.data).getErrCode() == RESIGNCODE){
+				doResign();
+				return deleteView(viewName);
+			}else
+				throw new FalseException(((FalseAnswer) msg.data));
+		}
+		return false;
 	}
 
 	/**
@@ -1090,14 +1084,14 @@ public class Network {
 			Log.d(TAG, msg.getState().getValue());
 
 			return true;
-
-		} else if (msg.getState() == State.RESIGN) {
-			doResign();
-			return updateViews(viewName, iconId, devices);
 		} else if (msg.getState() == State.FALSE) {
-			throw new FalseException(((FalseAnswer) msg.data));
-		} else
-			return false;
+			if(((FalseAnswer)msg.data).getErrCode() == RESIGNCODE){
+				doResign();
+				return updateViews(viewName, iconId, devices);
+			}else
+				throw new FalseException(((FalseAnswer) msg.data));
+		}
+		return false;
 	}
 
 	public boolean updateView(String viewName, int iconId, Facility facility, NetworkAction action) {
@@ -1108,14 +1102,14 @@ public class Network {
 			Log.d(TAG, msg.getState().getValue());
 
 			return true;
-
-		} else if (msg.getState() == State.RESIGN) {
-			doResign();
-			return updateView(viewName, iconId, facility, action);
 		} else if (msg.getState() == State.FALSE) {
-			throw new FalseException(((FalseAnswer) msg.data));
-		} else
-			return false;
+			if(((FalseAnswer)msg.data).getErrCode() == RESIGNCODE){
+				doResign();
+				return updateView(viewName, iconId, facility, action);
+			}else
+				throw new FalseException(((FalseAnswer) msg.data));
+		}
+		return false;
 	}
 
 	// ///////////////////////////////////////// ucty
@@ -1137,14 +1131,14 @@ public class Network {
 			Log.d(TAG, msg.getState().getValue());
 
 			return true;
-
-		} else if (msg.getState() == State.RESIGN) {
-			doResign();
-			return addConnectionAccounts(adapterId, userNrole);
 		} else if (msg.getState() == State.FALSE) {
-			throw new FalseException(((FalseAnswer) msg.data));
-		} else
-			return false;
+			if(((FalseAnswer)msg.data).getErrCode() == RESIGNCODE){
+				doResign();
+				return addConnectionAccounts(adapterId, userNrole);
+			}else
+				throw new FalseException(((FalseAnswer) msg.data));
+		}
+		return false;
 	}
 
 	/**
@@ -1163,14 +1157,14 @@ public class Network {
 			Log.d(TAG, msg.getState().getValue());
 
 			return true;
-
-		} else if (msg.getState() == State.RESIGN) {
-			doResign();
-			return addConnectionAccount(adapterId, email, role);
 		} else if (msg.getState() == State.FALSE) {
-			throw new FalseException(((FalseAnswer) msg.data));
-		} else
-			return false;
+			if(((FalseAnswer)msg.data).getErrCode() == RESIGNCODE){
+				doResign();
+				return addConnectionAccount(adapterId, email, role);
+			}else
+				throw new FalseException(((FalseAnswer) msg.data));
+		}
+		return false;
 	}
 
 	/**
@@ -1190,14 +1184,14 @@ public class Network {
 			Log.d(TAG, msg.getState().getValue());
 
 			return true;
-
-		} else if (msg.getState() == State.RESIGN) {
-			doResign();
-			return deleteConnectionAccounts(adapterId, users);
 		} else if (msg.getState() == State.FALSE) {
-			throw new FalseException(((FalseAnswer) msg.data));
-		} else
-			return false;
+			if(((FalseAnswer)msg.data).getErrCode() == RESIGNCODE){
+				doResign();
+				return deleteConnectionAccounts(adapterId, users);
+			}else
+				throw new FalseException(((FalseAnswer) msg.data));
+		}
+		return false;
 	}
 
 	/**
@@ -1218,14 +1212,14 @@ public class Network {
 			Log.d(TAG, msg.getState().getValue());
 
 			return true;
-
-		} else if (msg.getState() == State.RESIGN) {
-			doResign();
-			return deleteConnectionAccount(adapterId, user);
 		} else if (msg.getState() == State.FALSE) {
-			throw new FalseException(((FalseAnswer) msg.data));
-		} else
-			return false;
+			if(((FalseAnswer)msg.data).getErrCode() == RESIGNCODE){
+				doResign();
+				return deleteConnectionAccount(adapterId, user);
+			}else
+				throw new FalseException(((FalseAnswer) msg.data));
+		}
+		return false;
 	}
 
 	/**
@@ -1247,12 +1241,12 @@ public class Network {
 			Log.i(TAG, msg.getState().toString());
 
 			result.putAll((HashMap<String, User>) msg.data);
-		} else if (msg.getState() == State.RESIGN) {
-			doResign();
-			return getConnectionAccountList(adapterId);
-
 		} else if (msg.getState() == State.FALSE) {
-			throw new FalseException(((FalseAnswer) msg.data));
+			if(((FalseAnswer)msg.data).getErrCode() == RESIGNCODE){
+				doResign();
+				return getConnectionAccountList(adapterId);
+			}else
+				throw new FalseException(((FalseAnswer) msg.data));
 		}
 		return result;
 	}
@@ -1274,14 +1268,14 @@ public class Network {
 			Log.d(TAG, msg.getState().toString());
 
 			return true;
-
-		} else if (msg.getState() == State.RESIGN) {
-			doResign();
-			return changeConnectionAccounts(adapterId, userNrole);
 		} else if (msg.getState() == State.FALSE) {
-			throw new FalseException(((FalseAnswer) msg.data));
-		} else
-			return false;
+			if(((FalseAnswer)msg.data).getErrCode() == RESIGNCODE){
+				doResign();
+				return changeConnectionAccounts(adapterId, userNrole);
+			}else
+				throw new FalseException(((FalseAnswer) msg.data));
+		}
+		return false;
 	}
 
 	/**
@@ -1303,14 +1297,14 @@ public class Network {
 			Log.d(TAG, msg.getState().toString());
 
 			return true;
-
-		} else if (msg.getState() == State.RESIGN) {
-			doResign();
-			return changeConnectionAccount(adapterId, user, role);
 		} else if (msg.getState() == State.FALSE) {
-			throw new FalseException(((FalseAnswer) msg.data));
-		} else
-			return false;
+			if(((FalseAnswer)msg.data).getErrCode() == RESIGNCODE){
+				doResign();
+				return changeConnectionAccount(adapterId, user, role);
+			}else
+				throw new FalseException(((FalseAnswer) msg.data));
+		}
+		return false;
 	}
 
 	// //////////////////////////////////////// cas
@@ -1332,15 +1326,14 @@ public class Network {
 			Log.d(TAG, msg.getState().getValue());
 
 			return true;
-
-		} else if (msg.getState() == State.RESIGN) {
-			doResign();
-			return setTimeZone(adapterId, differenceToGMT);
-
 		} else if (msg.getState() == State.FALSE) {
-			throw new FalseException(((FalseAnswer) msg.data));
-		} else
-			return false;
+			if(((FalseAnswer)msg.data).getErrCode() == RESIGNCODE){
+				doResign();
+				return setTimeZone(adapterId, differenceToGMT);
+			}else
+				throw new FalseException(((FalseAnswer) msg.data));
+		}
+		return false;
 	}
 
 	/**
@@ -1358,15 +1351,14 @@ public class Network {
 			Log.i(TAG, msg.getState().getValue());
 
 			return (Integer) msg.data;
-
-		} else if (msg.getState() == State.RESIGN) {
-			doResign();
-			return getTimeZone(adapterId);
-
 		} else if (msg.getState() == State.FALSE) {
-			throw new FalseException(((FalseAnswer) msg.data));
-		} else
-			return 0;
+			if(((FalseAnswer)msg.data).getErrCode() == RESIGNCODE){
+				doResign();
+				return getTimeZone(adapterId);
+			}else
+				throw new FalseException(((FalseAnswer) msg.data));
+		}
+		return 0;
 	}
 
 	// /////////////////////////////////////////// notifikace
@@ -1391,15 +1383,14 @@ public class Network {
 			Log.d(TAG, msg.getState().getValue());
 
 			return true;
-
-		} else if (msg.getState() == State.RESIGN) {
-			doResign();
-			return deleteGCMID(email, gcmid);
-
 		} else if (msg.getState() == State.FALSE) {
-			throw new FalseException(((FalseAnswer) msg.data));
-		} else
-			return false;
+			if(((FalseAnswer)msg.data).getErrCode() == RESIGNCODE){
+				doResign();
+				return deleteGCMID(email, gcmid);
+			}else
+				throw new FalseException(((FalseAnswer) msg.data));
+		}
+		return false;
 	}
 
 	/**
@@ -1420,15 +1411,14 @@ public class Network {
 			Log.d(TAG, msg.getState().getValue());
 
 			return true;
-
-		} else if (msg.getState() == State.RESIGN) {
-			doResign();
-			return NotificationRead(msgid);
-
 		} else if (msg.getState() == State.FALSE) {
-			throw new FalseException(((FalseAnswer) msg.data));
-		} else
-			return false;
+			if(((FalseAnswer)msg.data).getErrCode() == RESIGNCODE){
+				doResign();
+				return NotificationRead(msgid);
+			}else
+				throw new FalseException(((FalseAnswer) msg.data));
+		}
+		return false;
 	}
 
 	/////////////////////////////////////////////// podminky a akce
@@ -1443,15 +1433,14 @@ public class Network {
 			condition.setId((String)msg.data);
 
 			return condition;
-
-		} else if (msg.getState() == State.RESIGN) {
-			doResign();
-			return setCondition(condition);
-
 		} else if (msg.getState() == State.FALSE) {
-			throw new FalseException(((FalseAnswer) msg.data));
-		} else
-			return condition;
+			if(((FalseAnswer)msg.data).getErrCode() == RESIGNCODE){
+				doResign();
+				return setCondition(condition);
+			}else
+				throw new FalseException(((FalseAnswer) msg.data));
+		}
+		return condition;
 	}
 	
 	public boolean connectConditionWithAction(String conditionId, String actionId){
@@ -1462,15 +1451,14 @@ public class Network {
 			Log.d(TAG, msg.getState().getValue());
 
 			return true;
-
-		} else if (msg.getState() == State.RESIGN) {
-			doResign();
-			return connectConditionWithAction(conditionId, actionId);
-
 		} else if (msg.getState() == State.FALSE) {
-			throw new FalseException(((FalseAnswer) msg.data));
-		} else
-			return false;
+			if(((FalseAnswer)msg.data).getErrCode() == RESIGNCODE){
+				doResign();
+				return connectConditionWithAction(conditionId, actionId);
+			}else
+				throw new FalseException(((FalseAnswer) msg.data));
+		}
+		return false;
 	}
 	
 	public Condition getCondition(Condition condition){
@@ -1486,15 +1474,14 @@ public class Network {
 			condition.setFuncs(tmp.getFuncs());
 
 			return condition;
-
-		} else if (msg.getState() == State.RESIGN) {
-			doResign();
-			return getCondition(condition);
-
 		} else if (msg.getState() == State.FALSE) {
-			throw new FalseException(((FalseAnswer) msg.data));
-		} else
-			return condition;
+			if(((FalseAnswer)msg.data).getErrCode() == RESIGNCODE){
+				doResign();
+				return getCondition(condition);
+			}else
+				throw new FalseException(((FalseAnswer) msg.data));
+		}
+		return condition;
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -1508,12 +1495,12 @@ public class Network {
 			Log.i(TAG, msg.getState().getValue());
 
 			result.addAll((List<Condition>) msg.data);
-		} else if (msg.getState() == State.RESIGN) {
-			doResign();
-			return getConditions();
-
 		} else if (msg.getState() == State.FALSE) {
-			throw new FalseException(((FalseAnswer) msg.data));
+			if(((FalseAnswer)msg.data).getErrCode() == RESIGNCODE){
+				doResign();
+				return getConditions();
+			}else
+				throw new FalseException(((FalseAnswer) msg.data));
 		}
 		return result;
 	}
@@ -1526,15 +1513,14 @@ public class Network {
 			Log.d(TAG, msg.getState().getValue());
 
 			return true;
-
-		} else if (msg.getState() == State.RESIGN) {
-			doResign();
-			return updateCondition(condition);
-
 		} else if (msg.getState() == State.FALSE) {
-			throw new FalseException(((FalseAnswer) msg.data));
-		} else
-			return false;
+			if(((FalseAnswer)msg.data).getErrCode() == RESIGNCODE){
+				doResign();
+				return updateCondition(condition);
+			}else
+				throw new FalseException(((FalseAnswer) msg.data));
+		}
+		return false;
 	}
 	
 	public boolean deleteCondition(Condition condition){
@@ -1545,15 +1531,14 @@ public class Network {
 			Log.d(TAG, msg.getState().getValue());
 
 			return true;
-
-		} else if (msg.getState() == State.RESIGN) {
-			doResign();
-			return deleteCondition(condition);
-
 		} else if (msg.getState() == State.FALSE) {
-			throw new FalseException(((FalseAnswer) msg.data));
-		} else
-			return false;
+			if(((FalseAnswer)msg.data).getErrCode() == RESIGNCODE){
+				doResign();
+				return deleteCondition(condition);
+			}else
+				throw new FalseException(((FalseAnswer) msg.data));
+		}
+		return false;
 	}
 	
 	public ComplexAction setAction(ComplexAction action){
@@ -1566,15 +1551,14 @@ public class Network {
 			action.setId((String)msg.data);
 
 			return action;
-
-		} else if (msg.getState() == State.RESIGN) {
-			doResign();
-			return setAction(action);
-
 		} else if (msg.getState() == State.FALSE) {
-			throw new FalseException(((FalseAnswer) msg.data));
-		} else
-			return action;
+			if(((FalseAnswer)msg.data).getErrCode() == RESIGNCODE){
+				doResign();
+				return setAction(action);
+			}else
+				throw new FalseException(((FalseAnswer) msg.data));
+		}
+		return action;
 	}
 
 	@SuppressWarnings("unchecked")
@@ -1588,12 +1572,12 @@ public class Network {
 			Log.i(TAG, msg.getState().getValue());
 
 			result.addAll((List<ComplexAction>) msg.data);
-		} else if (msg.getState() == State.RESIGN) {
-			doResign();
-			return getActions();
-
 		} else if (msg.getState() == State.FALSE) {
-			throw new FalseException(((FalseAnswer) msg.data));
+			if(((FalseAnswer)msg.data).getErrCode() == RESIGNCODE){
+				doResign();
+				return getActions();
+			}else
+				throw new FalseException(((FalseAnswer) msg.data));
 		}
 		return result;
 	}
@@ -1610,15 +1594,14 @@ public class Network {
 			action.setActions(tmp.getActions());
 
 			return action;
-
-		} else if (msg.getState() == State.RESIGN) {
-			doResign();
-			return getAction(action);
-
 		} else if (msg.getState() == State.FALSE) {
-			throw new FalseException(((FalseAnswer) msg.data));
-		} else
-			return action;
+			if(((FalseAnswer)msg.data).getErrCode() == RESIGNCODE){
+				doResign();
+				return getAction(action);
+			}else
+				throw new FalseException(((FalseAnswer) msg.data));
+		}
+		return action;
 	}
 	
 	public boolean updateAction(ComplexAction action){
@@ -1629,15 +1612,14 @@ public class Network {
 			Log.d(TAG, msg.getState().getValue());
 
 			return true;
-
-		} else if (msg.getState() == State.RESIGN) {
-			doResign();
-			return updateAction(action);
-
 		} else if (msg.getState() == State.FALSE) {
-			throw new FalseException(((FalseAnswer) msg.data));
-		} else
-			return false;
+			if(((FalseAnswer)msg.data).getErrCode() == RESIGNCODE){
+				doResign();
+				return updateAction(action);
+			}else
+				throw new FalseException(((FalseAnswer) msg.data));
+		}
+		return false;
 	}
 	
 	public boolean deleteAction(ComplexAction action){
@@ -1648,15 +1630,14 @@ public class Network {
 			Log.d(TAG, msg.getState().getValue());
 
 			return true;
-
-		} else if (msg.getState() == State.RESIGN) {
-			doResign();
-			return deleteAction(action);
-
 		} else if (msg.getState() == State.FALSE) {
-			throw new FalseException(((FalseAnswer) msg.data));
-		} else
-			return false;
+			if(((FalseAnswer)msg.data).getErrCode() == RESIGNCODE){
+				doResign();
+				return deleteAction(action);
+			}else
+				throw new FalseException(((FalseAnswer) msg.data));
+		}
+		return false;
 	}
 	
 }

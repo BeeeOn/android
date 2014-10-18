@@ -9,6 +9,7 @@ import org.joda.time.format.DateTimeFormatter;
 
 import android.os.Bundle;
 import android.util.Log;
+import cz.vutbr.fit.iha.network.xml.Xconstants;
 import cz.vutbr.fit.iha.network.xml.XmlParsers;
 
 /**
@@ -20,8 +21,9 @@ public class Notification {
 	public static final String TAG = Notification.class.getSimpleName();
 	// private static final String FORMAT = "yyyy-MM-dd HH:mm:ss";
 	private static final String SEPARATOR = "\\s+";
+	public static final String DATEFORMAT = "yyyy-MM-dd HH:mm:ss";
 
-	private DateTimeFormatter mFormatter = DateTimeFormat.forPattern(XmlParsers.DATEFORMAT).withZoneUTC();
+	private DateTimeFormatter mFormatter = DateTimeFormat.forPattern(DATEFORMAT).withZoneUTC();
 
 	private final DateTime mDate;
 	private final String mMsgid;
@@ -134,8 +136,17 @@ public class Notification {
 	}
 
 	public enum ActionType {
-		WEB("web"), APP("app"), NONE("none"), SETTINGS("settings"), SETTINGSMAIN("settingsmain"), SETTINGSACCOUNT("settingsaccount"), SETTINGSADAPTER("settingsadapter"), SETTINGSLOCATION(
-				"settingslocation"), OPENADAPTER("adapter"), OPENLOCATION("location"), OPENDEVICE("device");
+		WEB("web"),
+		APP("app"),
+		NONE("none"),
+		SETTINGS("sett"),
+		SETTINGSMAIN("settmain"),
+		SETTINGSACCOUNT("settaccount"),
+		SETTINGSADAPTER("settadapter"),
+		SETTINGSLOCATION("settlocation"),
+		OPENADAPTER("adapter"),
+		OPENLOCATION("location"),
+		OPENDEVICE("device");
 
 		private final String mValue;
 
@@ -157,7 +168,10 @@ public class Notification {
 	}
 
 	public enum NotificationType {
-		INFO("info"), ADVERT("advert"), ALERT("alert"), CONTROL("control");
+		INFO("info"),
+		ADVERT("advert"),
+		ALERT("alert"),
+		CONTROL("control");
 
 		private final String mValue;
 
@@ -273,12 +287,12 @@ public class Notification {
 	}
 
 	protected static Notification parseBundle(Bundle bundle) {
-		String msgid = bundle.getString(XmlParsers.MSGID);
-		String email = bundle.getString(XmlParsers.EMAIL);
-		String time = bundle.getString(XmlParsers.TIME);
-		String type = bundle.getString(XmlParsers.TYPE);
-		String message = bundle.getString(XmlParsers.MESSAGE);
-		String action = bundle.getString(XmlParsers.ACTION);
+		String msgid = bundle.getString(Xconstants.MSGID);
+		String email = bundle.getString(Xconstants.EMAIL);
+		String time = bundle.getString(Xconstants.TIME);
+		String type = bundle.getString(Xconstants.TYPE);
+		String message = bundle.getString(Xconstants.MESSAGE);
+		String action = bundle.getString(Xconstants.ACTION);
 
 		// control validity of message
 		if (msgid == null || email == null || time == null || type == null || action == null || message == null) {
