@@ -511,7 +511,7 @@ public class SensorDetailFragment extends SherlockFragment {
 				beforeMonth.format(mDateTimeFormat), // from
 				now.format(mDateTimeFormat), // to
 				DataType.AVERAGE, // type
-				DataInterval.DAY); // interval
+				DataInterval.HOUR); // interval
 		mGetDeviceLogTask.execute(new LogDataPair[] { pair });
 	}
 
@@ -552,9 +552,11 @@ public class SensorDetailFragment extends SherlockFragment {
 		maximum = (float) ((maximum > mTempConstant) ? maximum / 100.0 : maximum);
 		float deviation = maximum - minimum;
 		deviation = (deviation <= 0) ? 1 : deviation;
-		float minLimit = (float) (minimum - (deviation * 0.2));
+		
+		float minLimit = minimum;
+		// float minLimit = (float) (minimum - (deviation * 0.2)); // Don't move minLimit because it cause problems / is ugly
 		float maxLimit = (float) (maximum + (deviation * 0.2));
-
+		
 		int size = log.getValues().size();
 		Log.d(TAG, String.format("Filling graph with %d values. Min: %.1f, Max: %.1f", size, minimum, maximum));
 
@@ -587,7 +589,7 @@ public class SensorDetailFragment extends SherlockFragment {
 		Log.d(TAG, "Filling graph finished");
 
 		// Set maximum as +20% more than deviation and minimum as -20% deviation
-		mGraphView.setManualYAxisBounds(maxLimit, (minimum > 0) ? minLimit : 0);
+		mGraphView.setManualYAxisBounds(maxLimit, minLimit);
 		// mGraphView.setViewPort(0, 7);
 		mGraphSeries.resetData(data);
 		mGraphInfo.setText(getView().getResources().getString(R.string.sen_detail_graph_info));
