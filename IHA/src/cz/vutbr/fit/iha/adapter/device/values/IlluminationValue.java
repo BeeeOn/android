@@ -1,14 +1,14 @@
 package cz.vutbr.fit.iha.adapter.device.values;
 
-import android.content.SharedPreferences;
 import cz.vutbr.fit.iha.R;
 import cz.vutbr.fit.iha.adapter.device.units.IlluminationUnit;
-import cz.vutbr.fit.iha.util.Utils;
 
 public final class IlluminationValue extends BaseDeviceValue {
 
 	private float mValue = Float.MAX_VALUE;
 
+	private static IlluminationUnit mUnit = new IlluminationUnit();
+	
 	@Override
 	public void setValue(String value) {
 		mValue = Float.parseFloat(value);
@@ -25,18 +25,17 @@ public final class IlluminationValue extends BaseDeviceValue {
 	}
 	
 	@Override
-	public IlluminationUnit getUnit(SharedPreferences prefs) {
-		return IlluminationUnit.DEFAULT;
-	}
-	
-	@Override
-	public String formatValue(SharedPreferences prefs) {
-		float value = getUnit(prefs).convertValue(mValue);
-		return Utils.formatFloat(value);
+	public IlluminationUnit getUnit() {
+		return mUnit;
 	}
 	
 	public float getValue() {
 		return mValue;
 	}
 	
+	@Override
+	public float getFloatValue() {
+		return mValue;
+	}
+
 }

@@ -1,12 +1,13 @@
 package cz.vutbr.fit.iha.adapter.device.values;
 
-import android.content.SharedPreferences;
 import cz.vutbr.fit.iha.R;
-import cz.vutbr.fit.iha.adapter.device.units.UnknownUnit;
+import cz.vutbr.fit.iha.adapter.device.units.BlankUnit;
 
 public class OnOffValue extends BaseEnumValue {
 
 	private String mValue = "";
+	
+	private static BlankUnit mUnit = new BlankUnit();
 	
 	@Override
 	public void setValue(String value) {
@@ -19,15 +20,10 @@ public class OnOffValue extends BaseEnumValue {
 	}
 	
 	@Override
-	public UnknownUnit getUnit(SharedPreferences prefs) {
-		return UnknownUnit.EMPTY;
+	public BlankUnit getUnit() {
+		return mUnit;
 	}
-	
-	@Override
-	public String formatValue(SharedPreferences prefs) {
-		return mValue;
-	}
-	
+		
 	public static final String SWITCH_ON = "ON";
 	public static final String SWITCH_OFF = "OFF";
 
@@ -58,4 +54,9 @@ public class OnOffValue extends BaseEnumValue {
 		return isActive() ? R.drawable.dev_switch_on : R.drawable.dev_switch_off;
 	}
 
+	@Override
+	public float getFloatValue() {
+		return Float.NaN;
+	}
+	
 }

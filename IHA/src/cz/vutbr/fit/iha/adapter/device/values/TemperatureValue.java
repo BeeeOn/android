@@ -1,22 +1,17 @@
 package cz.vutbr.fit.iha.adapter.device.values;
 
-import android.content.SharedPreferences;
 import cz.vutbr.fit.iha.R;
 import cz.vutbr.fit.iha.adapter.device.units.TemperatureUnit;
-import cz.vutbr.fit.iha.util.Utils;
 
 public final class TemperatureValue extends BaseDeviceValue {
 
 	private float mValue = Float.MAX_VALUE;
 	
+	private static TemperatureUnit mUnit = new TemperatureUnit();
+	
 	@Override
 	public void setValue(String value) {
 		mValue = Float.parseFloat(value);
-	}
-
-	public void setValue(int value) {
-		// TODO: check 100
-		mValue = value / 100f;
 	}
 	
 	@Override
@@ -32,16 +27,26 @@ public final class TemperatureValue extends BaseDeviceValue {
 	public float getValue() {
 		return mValue;
 	}
-
-	@Override
-	public TemperatureUnit getUnit(SharedPreferences prefs) {
-		return TemperatureUnit.fromSettings(prefs);
-	}
 	
 	@Override
-	public String formatValue(SharedPreferences prefs) {
-		float value = getUnit(prefs).convertValue(mValue);
-		return Utils.formatFloat(value);
+	public float getFloatValue() {
+		return mValue;
 	}
+
+	@Override
+	public TemperatureUnit getUnit() {
+		return mUnit;
+	}
+	
+	/*@Override
+	public String formatValue(SharedPreferences prefs) {
+		// Get unit which user want to use
+		TemperatureUnit.Item item = mUnit.fromSettings(prefs);
+		
+		// Convert actual value to wanted unit
+		float value = mUnit.convertValue(item, mValue);
+		
+		return Utils.formatFloat(value);
+	}*/
 	
 }

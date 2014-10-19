@@ -1,19 +1,17 @@
 package cz.vutbr.fit.iha.adapter.device.values;
 
-import android.content.SharedPreferences;
-import cz.vutbr.fit.iha.adapter.device.units.IDeviceUnit;
-
+import cz.vutbr.fit.iha.adapter.device.units.BaseUnit;
 
 public abstract class BaseDeviceValue {
 	
-	public abstract IDeviceUnit getUnit(SharedPreferences prefs);
-	
-	public abstract String formatValue(SharedPreferences prefs);
+	public abstract BaseUnit getUnit();
 	
 	public abstract int getIconResource();
 
 	public abstract String getStringValue();
 	
 	public abstract void setValue(String value);
+
+	public abstract float getFloatValue();
 	
 }

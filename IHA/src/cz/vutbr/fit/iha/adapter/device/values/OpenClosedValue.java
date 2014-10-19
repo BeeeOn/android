@@ -1,13 +1,14 @@
 package cz.vutbr.fit.iha.adapter.device.values;
 
-import android.content.SharedPreferences;
 import android.graphics.Color;
 import cz.vutbr.fit.iha.R;
-import cz.vutbr.fit.iha.adapter.device.units.UnknownUnit;
+import cz.vutbr.fit.iha.adapter.device.units.BlankUnit;
 
 public class OpenClosedValue extends BaseEnumValue {
 
 	private String mValue = "";
+	
+	private static BlankUnit mUnit = new BlankUnit();
 	
 	@Override
 	public void setValue(String value) {
@@ -20,13 +21,8 @@ public class OpenClosedValue extends BaseEnumValue {
 	}
 	
 	@Override
-	public UnknownUnit getUnit(SharedPreferences prefs) {
-		return UnknownUnit.EMPTY;
-	}
-	
-	@Override
-	public String formatValue(SharedPreferences prefs) {
-		return mValue;
+	public BlankUnit getUnit() {
+		return mUnit;
 	}
 	
 	public static final String STATE_OPEN = "OPEN";
@@ -66,6 +62,11 @@ public class OpenClosedValue extends BaseEnumValue {
 	@Override
 	public int getIconResource() {
 		return isActive() ? R.drawable.dev_state_open : R.drawable.dev_state_closed;
+	}
+	
+	@Override
+	public float getFloatValue() {
+		return Float.NaN;
 	}
 
 }

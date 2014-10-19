@@ -1,13 +1,13 @@
 package cz.vutbr.fit.iha.adapter.device.values;
 
-import android.content.SharedPreferences;
 import cz.vutbr.fit.iha.R;
 import cz.vutbr.fit.iha.adapter.device.units.PressureUnit;
-import cz.vutbr.fit.iha.util.Utils;
 
 public final class PressureValue extends BaseDeviceValue {
 
 	private int mValue = Integer.MAX_VALUE;
+	
+	private static PressureUnit mUnit = new PressureUnit(); 
 	
 	@Override
 	public void setValue(String value) {
@@ -25,8 +25,8 @@ public final class PressureValue extends BaseDeviceValue {
 	}
 	
 	@Override
-	public PressureUnit getUnit(SharedPreferences prefs) {
-		return PressureUnit.DEFAULT;
+	public PressureUnit getUnit() {
+		return mUnit;
 	}
 	
 	public int getValue() {
@@ -34,9 +34,8 @@ public final class PressureValue extends BaseDeviceValue {
 	}
 	
 	@Override
-	public String formatValue(SharedPreferences prefs) {
-		float value = getUnit(prefs).convertValue(mValue);
-		return Utils.formatFloat(value);
+	public float getFloatValue() {
+		return mValue;
 	}
 	
 }

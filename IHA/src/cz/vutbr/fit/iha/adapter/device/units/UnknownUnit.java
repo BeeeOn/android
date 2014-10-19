@@ -1,41 +1,30 @@
 package cz.vutbr.fit.iha.adapter.device.units;
 
-import android.content.Context;
 import cz.vutbr.fit.iha.R;
-import cz.vutbr.fit.iha.util.Utils;
 
-public enum UnknownUnit implements IDeviceUnit {
-	DEFAULT("-1", R.string.dev_unknown_unit, R.string.dev_unknown_unit),
-	EMPTY("0", R.string.blank, R.string.blank);
+public class UnknownUnit extends BaseUnit {
+	
+	public static final int DEFAULT = 0;
+	
+	public UnknownUnit() {		
+		super();
 
-	private final String mId;
-	private final int mResUnitName;
-	private final int mResUnitShortName;
-
-	private UnknownUnit(String id, int resUnitName, int resUnitShortName) {
-		this.mId = id;
-		this.mResUnitName = resUnitName;
-		this.mResUnitShortName = resUnitShortName;
-	}
-
-	@Override
-	public String getUnit(Context context) {
-		return context.getString(mResUnitShortName);
-	}
-
-	@Override
-	public String getName(Context context) {
-		return context.getString(mResUnitName);
-	}
-
-	@Override
-	public String getNameWithUnit(Context context) {
-		return String.format("%s (%s)", getName(context), getUnit(context));
+		mItems.add(this.new Item(DEFAULT, R.string.dev_unknown_unit, R.string.dev_unknown_unit));
 	}
 	
 	@Override
-	public String formatValue(float value) {
-		return Utils.formatFloat(value);
+	public int getDefaultId() {
+		return DEFAULT;
+	}
+
+	@Override
+	public String getPersistenceKey() {
+		return "";
+	}
+
+	@Override
+	public float convertValue(Item to, float value) {
+		return value;
 	}
 
 }

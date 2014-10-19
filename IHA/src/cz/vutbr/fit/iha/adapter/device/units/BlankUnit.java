@@ -1,29 +1,30 @@
 package cz.vutbr.fit.iha.adapter.device.units;
 
-import android.content.Context;
-import cz.vutbr.fit.iha.util.Utils;
+import cz.vutbr.fit.iha.R;
 
-// FIXME: I think this class shoudln't exists at all
-public class BlankUnit implements IDeviceUnit {
+public class BlankUnit extends BaseUnit {
 	
-	@Override
-	public String getUnit(Context context) {
-		return "";
-	}
+	public static final int DEFAULT = 0;
+	
+	public BlankUnit() {
+		super();
 
-	@Override
-	public String getName(Context context) {
-		return "";
-	}
-
-	@Override
-	public String getNameWithUnit(Context context) {
-		return "";
+		mItems.add(this.new Item(DEFAULT, R.string.blank, R.string.blank));
 	}
 	
 	@Override
-	public String formatValue(float value) {
-		return Utils.formatFloat(value);
+	public int getDefaultId() {
+		return DEFAULT;
+	}
+
+	@Override
+	public String getPersistenceKey() {
+		return "";
+	}
+
+	@Override
+	public float convertValue(Item to, float value) {
+		return value;
 	}
 
 }

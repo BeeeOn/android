@@ -37,7 +37,11 @@ public final class Constants {
 	
 	public static final String PERSISTENCE_PREF_TEMPERATURE = "pref_temperature";
 	public static final String PERSISTENCE_PREF_NOISE = "pref_noise";
-
+	public static final String PERSISTENCE_PREF_EMISSION = "pref_emission";
+	public static final String PERSISTENCE_PREF_HUMIDITY = "pref_humidity";
+	public static final String PERSISTENCE_PREF_ILLUMINATION = "pref_illumination";
+	public static final String PERSISTENCE_PREF_PRESSURE = "pref_pressure";
+	
 	public static final String KEY_UNITS = "key_units";
 	public static final String KEY_GEOFENCE = "key_geofence";
 
