@@ -61,7 +61,7 @@
                  android:layout_width="wrap_content"
                  android:layout_height="wrap_content"
                  android:layout_alignParentBottom="true"
-                 android:text="Last sync: 1.1.1970 00:00"
+                 android:text="Last sync: 00:00"
                  android:textColor="@color/iha_text_hint"
                  android:textSize="10dp" />
 
@@ -72,11 +72,16 @@
                  android:layout_alignParentLeft="true"
                  android:layout_alignParentTop="true"
                  android:layout_marginTop="5dp"
-                 android:text="name"
+                 android:layout_toLeftOf="@+id/valueofsensor"
+                 android:ellipsize="marquee" 
+                 android:marqueeRepeatLimit="marquee_forever"
+                 android:scrollHorizontally="true"
+                 android:singleLine="true"
+                 android:text="nameeeeeeeeeeee"
                  android:textColor="@color/iha_text_color"
                  android:textSize="25dp"
-                 android:textAlignment="viewStart"
                  android:textStyle="normal" />
+
          </RelativeLayout>
 
      </LinearLayout>

@@ -147,8 +147,11 @@ public class NavDrawerMenu {
 						case LOCATION:
 							// Get the title followed by the position
 							Adapter adapter = mController.getActiveAdapter();
-							if (adapter != null)
+							if (adapter != null){
 								changeLocation(mController.getLocation(adapter.getId(), item.getId()), true);
+								redrawMenu();
+							}
+								
 		//aaaaaaaaaa
 							break;
 
@@ -300,6 +303,7 @@ public class NavDrawerMenu {
 		((LocationScreenActivity) mActivity).setActiveLocationID(mActiveLocationId);
 		((LocationScreenActivity) mActivity).redrawDevices();
 
+
 		// mDrawerList.setItemChecked(position, true);
 
 		// Close drawer
@@ -382,7 +386,7 @@ public class NavDrawerMenu {
 				// Adding location
 				for (int i = 0; i < locations.size(); i++) {
 					Location actLoc = locations.get(i);
-					mMenuAdapter.addItem(new LocationMenuItem(actLoc.getName(), actLoc.getIconResource(), false, actLoc.getId()));
+					mMenuAdapter.addItem(new LocationMenuItem(actLoc.getName(), actLoc.getIconResource(), false, actLoc.getId(),(mActiveLocationId == actLoc.getId())?true:false));
 				}
 			} else {
 				mMenuAdapter.addItem(new EmptyMenuItem(mActivity.getResources().getString(R.string.no_location)));

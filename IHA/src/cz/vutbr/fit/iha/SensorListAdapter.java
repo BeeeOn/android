@@ -105,6 +105,9 @@ public class SensorListAdapter extends BaseAdapter {
 		txtValue.setText(device.getStringValue());
 		txtUnit.setText(device.getStringUnit(mContext));
 		txtTime.setText(String.format("%s %s", mContext.getString(R.string.last_update), lastUpdate));
+		
+		// Set title selected for animation if is text long
+		txtTitle.setSelected(true);
 
 		// Set the results into ImageView
 		imgIcon.setImageResource(device.getTypeIconResource());

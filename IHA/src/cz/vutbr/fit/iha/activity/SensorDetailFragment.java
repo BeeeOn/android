@@ -217,6 +217,8 @@ public class SensorDetailFragment extends SherlockFragment {
 		mRefreshTimeText = (TextView) getView().findViewById(R.id.sen_refresh_time_value);
 		// Get SeekBar for refresh time
 		mRefreshTimeValue = (SeekBar) getView().findViewById(R.id.sen_refresh_time_seekBar);
+		// Set title selected for animation if is text long
+		mName.setSelected(true);
 		// Set Max value by length of array with values
 		mRefreshTimeValue.setMax(RefreshInterval.values().length - 1);
 

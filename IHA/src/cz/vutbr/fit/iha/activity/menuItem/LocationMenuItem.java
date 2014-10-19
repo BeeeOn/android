@@ -9,12 +9,14 @@ public class LocationMenuItem extends AbstractMenuItem {
 	private String mName;
 	private int mIconRes;
 	private boolean mTopSeparatorVisible;
+	private boolean mActualLoc;
 
-	public LocationMenuItem(String name, int iconRes, boolean topSeparator, String id) {
+	public LocationMenuItem(String name, int iconRes, boolean topSeparator, String id, boolean actualLoc) {
 		super(id, MenuItemType.LOCATION);
 		mName = name;
 		mIconRes = iconRes;
 		mTopSeparatorVisible = topSeparator;
+		mActualLoc = actualLoc;
 	}
 
 	@Override
@@ -29,6 +31,9 @@ public class LocationMenuItem extends AbstractMenuItem {
 			separatorView.setVisibility(View.VISIBLE);
 		} else {
 			separatorView.setVisibility(View.GONE);
+		}
+		if(mActualLoc) {
+			nameView.setTextColor(view.getResources().getColor(R.color.iha_primary_cyan));
 		}
 	}
 
