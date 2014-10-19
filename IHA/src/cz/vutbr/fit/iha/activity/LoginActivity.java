@@ -6,6 +6,7 @@ import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnCancelListener;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.util.Log;
@@ -237,25 +238,32 @@ public class LoginActivity extends BaseActivity {
 	 * Method cancel running progressBar, thread-safe
 	 */
 	public void progressDismiss() {
-		runOnUiThread(new Runnable() {
-			@Override
-			public void run() {
-				if (mProgress != null && mProgress.isShowing())
-					try {
-						mProgress.dismiss();
-					} catch (Exception e) {
-						Log.d(TAG, "Dialog is not showing, but dialog say that is show :/");
-						e.printStackTrace();
-					}
-
+		if (mProgress != null && mProgress.isShowing()) {
+			try {
+				mProgress.dismiss();
+			} catch (Exception e) {
+				Log.d(TAG, "Dialog is not showing, but dialog say that is show :/");
+				e.printStackTrace();
 			}
-		});
+		}
+		
+		// Enable orientation change again
+		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR);
 	}
 
 	/**
 	 * Method show progress, thread-safe
 	 */
 	private void progressShow() {
+		// Disable orientation change
+		int currentOrientation = getResources().getConfiguration().orientation;
+		if (currentOrientation == Configuration.ORIENTATION_LANDSCAPE) {
+		   setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE);
+		}
+		else {
+		   setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT);
+		}
+		
 		runOnUiThread(new Runnable() {
 			@Override
 			public void run() {
@@ -427,7 +435,6 @@ public class LoginActivity extends BaseActivity {
 					mController.reloadFacilitiesByAdapter(active.getId(), true);
 				}
 
-				progressDismiss();
 				if (!mDoGoogleLoginRunnable.isStopped()) {
 					if (!isRedirect) {
 						Intent intent = new Intent(this, LocationScreenActivity.class);
