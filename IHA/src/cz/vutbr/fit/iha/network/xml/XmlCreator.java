@@ -755,7 +755,7 @@ public class XmlCreator {
 	 * @return AddAcc message
 	 * @since 2.2
 	 */
-	public static String createAddAccounts(String sid, String aid, HashMap<User, User.Role> users) {
+	public static String createAddAccounts(String sid, String aid, ArrayList<User> users) {
 		return createAddSeTAcc(ADDACCOUNTS, sid, aid, users);
 	}
 
@@ -771,7 +771,7 @@ public class XmlCreator {
 	 * @return SetAcc message
 	 * @since 2.2
 	 */
-	public static String createSetAccounts(String sid, String aid, HashMap<User, User.Role> users) {
+	public static String createSetAccounts(String sid, String aid, ArrayList<User> users) {
 		return createAddSeTAcc(SETCCOUNTS, sid, aid, users);
 	}
 
@@ -1167,7 +1167,7 @@ public class XmlCreator {
 		}
 	}
 
-	private static String createAddSeTAcc(String state, String sid, String aid, HashMap<User, User.Role> users) {
+	private static String createAddSeTAcc(String state, String sid, String aid, ArrayList<User> users) {
 		XmlSerializer serializer = Xml.newSerializer();
 		StringWriter writer = new StringWriter();
 		try {
@@ -1181,11 +1181,11 @@ public class XmlCreator {
 			serializer.attribute(ns, Xconstants.VERSION, COM_VER);
 			serializer.attribute(ns, Xconstants.AID, aid);
 
-			for (Entry<User, User.Role> user : users.entrySet()) {
+			for (User user : users) {
 				serializer.startTag(ns, Xconstants.USER);
 
-				serializer.attribute(ns, Xconstants.EMAIL, user.getKey().getEmail());
-				serializer.attribute(ns, Xconstants.ROLE, user.getValue().getValue());
+				serializer.attribute(ns, Xconstants.EMAIL, user.getEmail());
+				serializer.attribute(ns, Xconstants.ROLE, user.getRole().getValue());
 				serializer.endTag(ns, Xconstants.USER);
 			}
 

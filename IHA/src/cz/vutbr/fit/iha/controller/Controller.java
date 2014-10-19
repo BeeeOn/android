@@ -456,13 +456,10 @@ public final class Controller {
 
 		// FIXME: This debug implementation unregisters actual user from adapter, not adapter itself
 
-		ArrayList<String> user = new ArrayList<String>();
-		user.add(mHousehold.user.getEmail());
-
 		boolean result = false;
 
 		try {
-			if (mNetwork.deleteConnectionAccounts(id, user)) {
+			if (mNetwork.deleteAccount(id, mHousehold.user)) {
 				if (mHousehold.activeAdapter != null && mHousehold.activeAdapter.getId().equals(id))
 					mHousehold.activeAdapter = null;
 

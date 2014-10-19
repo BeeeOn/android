@@ -107,7 +107,7 @@ public class FacilitiesModel {
 	
 	private boolean loadFromServer(String adapterId) {
 		try {
-			setFacilitiesByAdapter(adapterId, mNetwork.init(adapterId));
+			setFacilitiesByAdapter(adapterId, mNetwork.initAdapter(adapterId));
 			setLastUpdate(adapterId, DateTime.now());
 			saveToCache(adapterId);
 		} catch (NetworkException e) {
@@ -174,7 +174,7 @@ public class FacilitiesModel {
 			List<Facility> facilities = new ArrayList<Facility>();
 			facilities.add(facility);
 			
-			result = mNetwork.setDevices(facility.getAdapterId(), facilities); //, what); // FIXME: add what, when supported in Network
+			result = mNetwork.updateFacilities(facility.getAdapterId(), facilities); //, what); // FIXME: add what, when supported in Network
 			result = refreshFacility(facility);
 		} catch (NetworkException e) {
 			e.printStackTrace();
@@ -190,7 +190,7 @@ public class FacilitiesModel {
 		boolean result = false;
 
 		try {
-			result = mNetwork.setDevice(facility.getAdapterId(), device, what);
+			result = mNetwork.updateDevice(facility.getAdapterId(), device, what);
 			//result = updateFacility(facility);
 		} catch (NetworkException e) {
 			e.printStackTrace();
