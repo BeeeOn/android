@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -16,9 +15,8 @@ import cz.vutbr.fit.iha.adapter.device.BaseDevice.SaveDevice;
 import cz.vutbr.fit.iha.adapter.device.DeviceLog;
 import cz.vutbr.fit.iha.adapter.device.DeviceLog.DataInterval;
 import cz.vutbr.fit.iha.adapter.device.DeviceLog.DataType;
+import cz.vutbr.fit.iha.adapter.device.DeviceType;
 import cz.vutbr.fit.iha.adapter.device.Facility;
-import cz.vutbr.fit.iha.adapter.device.StateDevice;
-import cz.vutbr.fit.iha.adapter.device.SwitchDevice;
 import cz.vutbr.fit.iha.adapter.location.Location;
 import cz.vutbr.fit.iha.exception.NotImplementedException;
 import cz.vutbr.fit.iha.household.ActualUser;
@@ -279,16 +277,16 @@ public final class Controller {
 	public boolean updateFacility(Facility facility) {
 		if (mDemoMode) {
 			// In demo mode update facility devices with random values
-			for (BaseDevice device : facility.getDevices()) {
+			/*for (BaseDevice device : facility.getDevices()) {
 				if (device instanceof SwitchDevice) {
-					((SwitchDevice) device).setActive(new Random().nextBoolean());
+					((OnOffValue) device.getValue()).setActive(new Random().nextBoolean());
 				} else if (device instanceof StateDevice) {
-					((StateDevice) device).setActive(new Random().nextBoolean());
+					((OpenClosedValue) device.getValue()).setActive(new Random().nextBoolean());
 				} else {
 					int i = new Random().nextInt(100);
-					device.setValue(i);
+					device.getValue().setValue(i);
 				}
-			}
+			}*/
 			return true;
 		}
 
@@ -581,7 +579,10 @@ public final class Controller {
 		if (facility == null)
 			return null;
 
-		return facility.getDeviceByType(Integer.parseInt(ids[1]));
+		int iType = Integer.parseInt(ids[1]);
+		DeviceType type = DeviceType.fromValue(iType);
+		
+		return facility.getDeviceByType(type);
 	}
 
 	/**

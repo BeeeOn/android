@@ -6,4 +6,10 @@
         android:title="@string/temperature" >
     </ListPreference>
 
+    <ListPreference
+        android:dialogTitle="@string/noise"
+        android:key="pref_noise"
+        android:title="@string/noise" >
+    </ListPreference>
+    
 </PreferenceScreen>

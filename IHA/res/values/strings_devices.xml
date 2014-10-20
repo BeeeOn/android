@@ -8,6 +8,14 @@
     <string name="dev_temperature_fahrenheit_unit">°F</string>
     <string name="dev_temperature_kelvin_unit_full">Kelvin</string>
     <string name="dev_temperature_kelvin_unit">K</string>
+    
+    <string name="dev_noise_decibel_unit">dB</string>
+    <string name="dev_noise_decibel_unit_full">Decibel</string>
+    <string name="dev_noise_bel_unit">B</string>
+    <string name="dev_noise_bel_unit_full">Bel</string>
+    <string name="dev_noise_neper_unit">Np</string>
+    <string name="dev_noise_neper_unit_full">Neper</string>    
+    
     <string name="dev_humidity_unit">%</string>
     <string name="dev_pressure_unit">hPa</string>
     <string name="dev_illumination_unit">lux</string>

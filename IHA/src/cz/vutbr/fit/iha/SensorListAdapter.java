@@ -17,6 +17,7 @@ import cz.vutbr.fit.iha.adapter.device.BaseDevice;
 import cz.vutbr.fit.iha.adapter.device.Facility;
 import cz.vutbr.fit.iha.controller.Controller;
 import cz.vutbr.fit.iha.util.Timezone;
+import cz.vutbr.fit.iha.util.UnitsFormatter;
 
 public class SensorListAdapter extends BaseAdapter {
 
@@ -100,17 +101,19 @@ public class SensorListAdapter extends BaseAdapter {
 		Timezone timezone = Timezone.fromPreferences(mController.getUserSettings());
 		String lastUpdate = timezone.formatLastUpdate(facility.getLastUpdate(), adapter);
 		
+		UnitsFormatter fmt = new UnitsFormatter(mController.getUserSettings(), mContext);
+		
 		// Set the results into TextViews
 		txtTitle.setText(device.getName());
-		txtValue.setText(device.getStringValue());
-		txtUnit.setText(device.getStringUnit(mContext));
+		txtValue.setText(fmt.getStringValue(device.getValue()));
+		txtUnit.setText(fmt.getStringUnit(device.getValue()));
 		txtTime.setText(String.format("%s %s", mContext.getString(R.string.last_update), lastUpdate));
 		
 		// Set title selected for animation if is text long
 		txtTitle.setSelected(true);
 
 		// Set the results into ImageView
-		imgIcon.setImageResource(device.getTypeIconResource());
+		imgIcon.setImageResource(device.getIconResource());
 
 		// Set layout with right background
 		LinearLayout layout = (LinearLayout) itemView.findViewById(R.id.layoutofsensor);

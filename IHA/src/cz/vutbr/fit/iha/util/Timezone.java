@@ -21,13 +21,13 @@ import cz.vutbr.fit.iha.adapter.Adapter;
  * 
  */
 public enum Timezone {
-	ACTUAL("0", R.string.actual_timezone), //
-	ADAPTER("1", R.string.adapter_timezone);
+	ACTUAL(0, R.string.actual_timezone), //
+	ADAPTER(1, R.string.adapter_timezone);
 
-	private final String mId;
+	private final int mId;
 	private final int mResName;
 
-	private Timezone(String id, int resName) {
+	private Timezone(int id, int resName) {
 		this.mId = id;
 		this.mResName = resName;
 	}
@@ -42,7 +42,7 @@ public enum Timezone {
 	/**
 	 * @return SharedPreference ID
 	 */
-	public String getId() {
+	public int getId() {
 		return mId;
 	}
 
@@ -72,7 +72,7 @@ public enum Timezone {
 	public static String[] getIdsArray() {
 		List<String> retList = new ArrayList<String>();
 		for (Timezone actTemp : Timezone.values()) {
-			retList.add(actTemp.mId);
+			retList.add(String.valueOf(actTemp.mId));
 		}
 		return retList.toArray(new String[retList.size()]);
 	}
@@ -82,9 +82,9 @@ public enum Timezone {
 	 * 
 	 * @return If the ID exists, it returns Timezone object. Otherwise it returns default timezone option.
 	 */
-	private static Timezone getTimezoneByIdOrDefault(String id) {
+	private static Timezone getTimezoneByIdOrDefault(int id) {
 		for (Timezone actTemp : Timezone.values()) {
-			if (actTemp.mId.equals(id)) {
+			if (actTemp.mId == id) {
 				return actTemp;
 			}
 		}
@@ -92,7 +92,8 @@ public enum Timezone {
 	}
 
 	public static Timezone fromPreferences(SharedPreferences prefs) {
-		return getTimezoneByIdOrDefault(prefs.getString(Constants.PERSISTENCE_PREF_TIMEZONE, getDefault().getId()));
+		String id = prefs.getString(Constants.PERSISTENCE_PREF_TIMEZONE, String.valueOf(getDefault().getId()));
+		return getTimezoneByIdOrDefault(Integer.parseInt(id));
 	}
 
 	public DateTimeZone getDateTimeZone(Adapter adapter) {

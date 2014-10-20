@@ -24,19 +24,6 @@ public final class Constants {
 	public static final String ASSET_LOCATIONS_FILENAME = "locations_%s.xml";
 
 	/**
-	 * Device's types
-	 */
-	public static final int TYPE_UNKNOWN = -1; // unknown device
-	public static final int TYPE_TEMPERATURE = 0; // temperature meter
-	public static final int TYPE_HUMIDITY = 1; // humidity meter
-	public static final int TYPE_PRESSURE = 2; // pressure meter
-	public static final int TYPE_STATE = 3; // state sensor
-	public static final int TYPE_SWITCH = 4; // switch sensor
-	public static final int TYPE_ILLUMINATION = 5; // illumination meter
-	public static final int TYPE_NOISE = 6; // noise meter
-	public static final int TYPE_EMMISION = 7; // emmision meter
-
-	/**
 	 * Persistence's shared preferences
 	 */
 	public static final String PERSISTENCE_PREF_FILENAME = "persistence_%s";
@@ -46,9 +33,15 @@ public final class Constants {
 	public static final String PERSISTENCE_PREF_LAST_LOCATION = "location_%s";
 	public static final String PERSISTENCE_PREF_SW2_ADAPTER = "pref_sw2_adapter";
 	public static final String PERSISTENCE_PREF_SW2_LOCATION = "pref_sw2_location";
-	public static final String PERSISTENCE_PREF_TEMPERATURE = "pref_temperature";
 	public static final String PERSISTENCE_PREF_TIMEZONE = "pref_timezone";
-
+	
+	public static final String PERSISTENCE_PREF_TEMPERATURE = "pref_temperature";
+	public static final String PERSISTENCE_PREF_NOISE = "pref_noise";
+	public static final String PERSISTENCE_PREF_EMISSION = "pref_emission";
+	public static final String PERSISTENCE_PREF_HUMIDITY = "pref_humidity";
+	public static final String PERSISTENCE_PREF_ILLUMINATION = "pref_illumination";
+	public static final String PERSISTENCE_PREF_PRESSURE = "pref_pressure";
+	
 	public static final String KEY_UNITS = "key_units";
 	public static final String KEY_GEOFENCE = "key_geofence";
 

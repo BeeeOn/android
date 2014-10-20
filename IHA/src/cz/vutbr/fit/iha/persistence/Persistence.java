@@ -44,7 +44,7 @@ public class Persistence {
 		// PreferenceManager.setDefaultValues(mContext, name, Context.MODE_PRIVATE, R.xml.main_preferences, true);
 		// PreferenceManager.setDefaultValues(mContext, name, Context.MODE_PRIVATE, R.xml.unit_preferences, true);
 
-		initializePreference(namespace, Constants.PERSISTENCE_PREF_TIMEZONE, Timezone.getDefault().getId());
+		initializePreference(namespace, Constants.PERSISTENCE_PREF_TIMEZONE, String.valueOf(Timezone.getDefault().getId()));
 
 		DefaultUnitPackages.setDefaultUnits(this, namespace);
 	}

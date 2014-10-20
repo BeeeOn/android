@@ -50,6 +50,7 @@ import cz.vutbr.fit.iha.adapter.device.BaseDevice;
 import cz.vutbr.fit.iha.adapter.device.Facility;
 import cz.vutbr.fit.iha.extension.watches.smartwatch2.SW2ExtensionService;
 import cz.vutbr.fit.iha.util.Timezone;
+import cz.vutbr.fit.iha.util.UnitsFormatter;
 
 /**
  * GalleryControl displays a swipeable gallery.
@@ -207,10 +208,12 @@ public class GalleryControlExtension extends ManagedControlExtension {
 		headerBundle.putInt(Control.Intents.EXTRA_LAYOUT_REFERENCE, R.id.gallery_title);
 		headerBundle.putString(Control.Intents.EXTRA_TEXT, curDevice.getName());
 
+		UnitsFormatter fmt = new UnitsFormatter(mController.getUserSettings(), mContext);
+		
 		// Unit data
 		Bundle unitBundle = new Bundle();
 		unitBundle.putInt(Control.Intents.EXTRA_LAYOUT_REFERENCE, R.id.unit);
-		unitBundle.putString(Control.Intents.EXTRA_TEXT, curDevice.getStringUnit(mContext));
+		unitBundle.putString(Control.Intents.EXTRA_TEXT, fmt.getStringUnit(curDevice.getValue()));
 
 		// Battery icon
 		Bundle batteryBundle = new Bundle();
@@ -222,7 +225,7 @@ public class GalleryControlExtension extends ManagedControlExtension {
 		// Icon data
 		Bundle iconBundle = new Bundle();
 		iconBundle.putInt(Control.Intents.EXTRA_LAYOUT_REFERENCE, R.id.thumbnail);
-		iconBundle.putString(Control.Intents.EXTRA_DATA_URI, ExtensionUtils.getUriString(mContext, curDevice.getTypeIconResource()));
+		iconBundle.putString(Control.Intents.EXTRA_DATA_URI, ExtensionUtils.getUriString(mContext, curDevice.getIconResource()));
 		// iconBundle.putString(Control.Intents.EXTRA_DATA_URI, ExtensionUtils
 		// .getUriString(mContext, curDevice
 		// .getTypeIconResource()));
@@ -232,7 +235,7 @@ public class GalleryControlExtension extends ManagedControlExtension {
 		valueBundle.putInt(Control.Intents.EXTRA_LAYOUT_REFERENCE, R.id.value);
 		// valueBundle.putString(Control.Intents.EXTRA_TEXT,
 		// curDevice.getStringValueUnit(mContext));
-		valueBundle.putString(Control.Intents.EXTRA_TEXT, curDevice.getStringValue());
+		valueBundle.putString(Control.Intents.EXTRA_TEXT, curDevice.getValue().getRawValue());
 
 		item.layoutData = new Bundle[6];
 		item.layoutData[0] = headerBundle;

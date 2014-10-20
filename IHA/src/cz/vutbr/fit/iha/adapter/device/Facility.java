@@ -290,9 +290,9 @@ public class Facility {
 		return mDevices;
 	}
 
-	public BaseDevice getDeviceByType(int type) {
+	public BaseDevice getDeviceByType(DeviceType type) {
 		for (BaseDevice device : getDevices()) {
-			if (device.getType() == type) {
+			if (device.getType().equals(type)) {
 				return device;
 			}
 		}

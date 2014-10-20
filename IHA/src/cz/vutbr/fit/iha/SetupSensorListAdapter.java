@@ -47,7 +47,7 @@ public class SetupSensorListAdapter extends BaseAdapter {
 		ImageView img = (ImageView) itemView.findViewById(R.id.setup_sensor_item_icon);
 		mName = (EditText) itemView.findViewById(R.id.setup_sensor_item_name);
 		// Set image resource by sensor type
-		img.setImageResource(mFacility.getDevices().get(position).getTypeIconResource());
+		img.setImageResource(mFacility.getDevices().get(position).getIconResource());
 		
 		// TODO Auto-generated method stub
 		return itemView;

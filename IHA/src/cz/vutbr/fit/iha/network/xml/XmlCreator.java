@@ -17,6 +17,7 @@ import android.util.Xml;
 import cz.vutbr.fit.iha.Constants;
 import cz.vutbr.fit.iha.adapter.device.BaseDevice;
 import cz.vutbr.fit.iha.adapter.device.BaseDevice.SaveDevice;
+import cz.vutbr.fit.iha.adapter.device.DeviceType;
 import cz.vutbr.fit.iha.adapter.device.Facility;
 import cz.vutbr.fit.iha.adapter.location.Location;
 import cz.vutbr.fit.iha.household.User;
@@ -336,7 +337,7 @@ public class XmlCreator {
 			serializer.attribute(ns, TYPE, formatType(device.getType()));
 
 			serializer.startTag(ns, VALUE);
-			serializer.text(device.getStringValue());
+			serializer.text(device.getValue().getRawValue());
 			serializer.endTag(ns, VALUE);
 
 			serializer.endTag(ns, DEVICE);
@@ -504,7 +505,7 @@ public class XmlCreator {
 	 *            is time value in seconds that represents nicely e.g. month, week, day, 10 hours, 1 hour, ...
 	 * @return logName message
 	 */
-	public static String createGetLog(String id, String adapterId, String deviceId, int deviceType, String from, String to, String funcType, int interval) {
+	public static String createGetLog(String id, String adapterId, String deviceId, DeviceType deviceType, String from, String to, String funcType, int interval) {
 		XmlSerializer serializer = Xml.newSerializer();
 		StringWriter writer = new StringWriter();
 		try {
@@ -895,9 +896,9 @@ public class XmlCreator {
 					serializer.text(Integer.toString(facility.getRefresh().getInterval()));
 					serializer.endTag(ns, REFRESH);
 				}
-				if (device.getRawIntValue() != Integer.MAX_VALUE) {
+				if (!device.getValue().getRawValue().isEmpty()) { // FIXME: better check if value is valid
 					serializer.startTag(ns, VALUE);
-					serializer.text(device.getStringValue());
+					serializer.text(device.getValue().getRawValue());
 					serializer.endTag(ns, VALUE);
 				}
 
@@ -968,9 +969,9 @@ public class XmlCreator {
 				serializer.text(Integer.toString(facility.getRefresh().getInterval()));
 				serializer.endTag(ns, REFRESH);
 			}
-			if (toSave.contains(SaveDevice.SAVE_VALUE) && device.getStringValue() != null && device.getStringValue().length() > 0) {
+			if (toSave.contains(SaveDevice.SAVE_VALUE) && device.getValue().getRawValue() != null && device.getValue().getRawValue().length() > 0) {
 				serializer.startTag(ns, VALUE);
-				serializer.text(device.getStringValue());
+				serializer.text(device.getValue().getRawValue());
 				serializer.endTag(ns, VALUE);
 			}
 
@@ -2026,8 +2027,8 @@ public class XmlCreator {
 		}
 	}
 	
-	private static String formatType(int type) {
-		String hex = Integer.toHexString(type);
+	private static String formatType(DeviceType type) {
+		String hex = Integer.toHexString(type.getTypeId());
 		if (hex.length() == 1)
 			hex = "0" + hex;
 

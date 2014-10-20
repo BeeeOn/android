@@ -4,6 +4,8 @@
     <string name="app_name">IntelligentHomeAnywhere</string>
     <string name="app_id">1411635335720288</string>
 
+    <string name="blank"></string>
+    
     <!-- Titles -->
     <string name="title_activity_location_screen">IHA</string>
     <string name="title_activity_notification">Notification</string>
@@ -207,6 +209,7 @@
     <string name="units">Units</string>
     <string name="timezone">Timezone</string>
     <string name="temperature">Temperature</string>
+    <string name="noise">Noise</string>
     <string name="connections">Connections</string>
     <string name="smartwatches">Smartwatches</string>
     <string name="choose_default_location">Choose default location</string>

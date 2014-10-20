@@ -14,10 +14,12 @@ import android.os.IBinder;
 import android.os.PowerManager;
 import android.os.SystemClock;
 import android.util.Log;
+import cz.vutbr.fit.iha.R;
 import cz.vutbr.fit.iha.adapter.Adapter;
 import cz.vutbr.fit.iha.adapter.device.BaseDevice;
 import cz.vutbr.fit.iha.controller.Controller;
 import cz.vutbr.fit.iha.util.Timezone;
+import cz.vutbr.fit.iha.util.UnitsFormatter;
 
 public class WidgetUpdateService extends Service {
 
@@ -164,14 +166,31 @@ public class WidgetUpdateService extends Service {
 			BaseDevice device = controller.getDevice(widgetData.deviceAdapterId, widgetData.deviceId);
 
 			if (device != null) {
-				// NOTE: This should use absolute time, because widgets aren't updated so often
-				String deviceLastUpdate = timezone.formatLastUpdate(device.getFacility().getLastUpdate(), adapter);
+				UnitsFormatter fmt = new UnitsFormatter(controller.getUserSettings(), getApplicationContext());
 				
-				widgetData.saveLastUpdate(this, now, deviceLastUpdate);
+				// Get fresh data from device
+				widgetData.deviceIcon = device.getIconResource();
+				widgetData.deviceName = device.getName();
+				widgetData.deviceValue = fmt.getStringValueUnit(device.getValue());
+				widgetData.deviceAdapterId = device.getFacility().getAdapterId();
+				widgetData.deviceId = device.getId();
+				widgetData.lastUpdate = now;
+				
+				// NOTE: This should use absolute time, because widgets aren't updated so often
+				widgetData.deviceLastUpdate = timezone.formatLastUpdate(device.getFacility().getLastUpdate(), adapter);
+				
+				widgetData.saveData(getApplicationContext());				
+
+				Log.v(TAG, String.format("Using fresh widget (%d) data", widgetId));
+			} else {
+				// NOTE: just temporary solution until it will be showed better on widget
+				widgetData.deviceLastUpdate = String.format("%s %s", widgetData.deviceLastUpdate, getString(R.string.widget_cached));
+				
+				Log.v(TAG, String.format("Using cached widget (%d) data", widgetId));
 			}
 
 			// update widget
-			widgetProvider.updateWidget(this, widgetId, device);
+			widgetProvider.updateWidget(this, widgetData);
 		}
 	}
 

@@ -6,7 +6,6 @@ import java.util.Collections;
 import java.util.EnumSet;
 import java.util.GregorianCalendar;
 import java.util.List;
-import java.util.Locale;
 
 import org.joda.time.DateTimeZone;
 import org.joda.time.format.DateTimeFormat;
@@ -64,6 +63,7 @@ import cz.vutbr.fit.iha.controller.Controller;
 import cz.vutbr.fit.iha.pair.LogDataPair;
 import cz.vutbr.fit.iha.pair.SaveDevicePair;
 import cz.vutbr.fit.iha.util.Timezone;
+import cz.vutbr.fit.iha.util.UnitsFormatter;
 
 //import android.widget.LinearLayout;
 
@@ -371,10 +371,12 @@ public class SensorDetailFragment extends SherlockFragment {
 		Adapter adapter = mController.getAdapter(facility.getAdapterId());
 		Timezone timezone = Timezone.fromPreferences(mController.getUserSettings());
 		
+		UnitsFormatter fmt = new UnitsFormatter(mController.getUserSettings(), getActivity().getApplicationContext());
+		
 		// Set value of sensor
-		mValue.setText(device.getStringValueUnit(getActivity()));
+		mValue.setText(fmt.getStringValueUnit(device.getValue()));
 		// Set icon of sensor
-		mIcon.setImageResource(device.getTypeIconResource());
+		mIcon.setImageResource(device.getIconResource());
 		// Set time of sensor
 		mTime.setText(timezone.formatLastUpdate(facility.getLastUpdate(), adapter));
 		// Set refresh time Text
@@ -382,7 +384,7 @@ public class SensorDetailFragment extends SherlockFragment {
 		// Set refresh time SeekBar
 		mRefreshTimeValue.setProgress(facility.getRefresh().getIntervalIndex());
 		// Add Graph with history data
-		addGraphView(timezone.getDateTimeZone(adapter));
+		addGraphView(timezone.getDateTimeZone(adapter), fmt);
 
 		// Visible all elements
 		visibleAllElements();
@@ -429,7 +431,7 @@ public class SensorDetailFragment extends SherlockFragment {
 
 	}
 
-	private void addGraphView(final DateTimeZone dateTimeZone) {
+	private void addGraphView(final DateTimeZone dateTimeZone, final UnitsFormatter fmt) {
 		mGraphView = new LineGraphView(getView().getContext(), ""); // empty heading
 
 		mGraphView.getGraphViewStyle().setTextSize(getResources().getDimension(R.dimen.textsizesmaller));
@@ -454,13 +456,15 @@ public class SensorDetailFragment extends SherlockFragment {
 					.forPattern(mGraphDateTimeFormat)
 					.withZone(dateTimeZone);
 			
+			final String unit = fmt.getStringUnit(mDevice.getValue());
+			
 			@Override
 			public String formatLabel(double value, boolean isValueX) {
 				if (isValueX) {
 					return formatter.print((long) value);
 				}
 
-				return String.format(Locale.getDefault(), "%.1f %s", value, mDevice.getStringUnit(getActivity()));
+				return String.format("%s %s", fmt.getStringValue(mDevice.getValue(), value), unit);
 			}
 		});
 

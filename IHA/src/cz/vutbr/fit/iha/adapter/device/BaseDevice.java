@@ -3,23 +3,29 @@
  */
 package cz.vutbr.fit.iha.adapter.device;
 
-import android.content.Context;
+import cz.vutbr.fit.iha.adapter.device.values.BaseValue;
+
 
 /**
  * @brief Abstract class for all devices
  * @author Robyer
  */
-public abstract class BaseDevice {
+public class BaseDevice {
 	public static final String ID_SEPARATOR = "---";
 
 	protected Facility mFacility;
 	protected String mName = "";
 	protected boolean mLogging;
-
+	
+	public final DeviceType mType;
+	public final BaseValue mValue;
+	
 	/**
 	 * Class constructor
 	 */
-	public BaseDevice() {
+	public BaseDevice(DeviceType type, BaseValue value) {
+		mType = type;
+		mValue = value;
 	}
 
 	/**
@@ -34,68 +40,30 @@ public abstract class BaseDevice {
 		SAVE_VALUE, // change value of actor device
 	}
 
-	/**
-	 * Get numeric identifier representing type of this device
-	 * 
-	 * @return
-	 */
-	public abstract int getType();
+	public DeviceType getType() {
+		return mType;
+	}
+	
+	public BaseValue getValue() {
+		return mValue;
+	}
+	
+	public void setValue(String value) {
+		mValue.setValue(value);
+	}
 
 	/**
 	 * Get resource for human readable string representing type of this device
 	 * 
 	 * @return
 	 */
-	public abstract int getTypeStringResource();
-
-	/**
-	 * Get resource for unit string of this device
-	 * 
-	 * @return
-	 */
-	public abstract int getUnitStringResource();
-
-	/**
-	 * Get resource for icon representing type of this device
-	 * 
-	 * @return
-	 */
-	public abstract int getTypeIconResource();
-
-	/**
-	 * Get value as a string
-	 * 
-	 * @return value
-	 */
-	public abstract String getStringValue();
-
-	/**
-	 * Get value as a integer if is it possible, zero otherwise
-	 * 
-	 * @return value
-	 */
-	public abstract int getRawIntValue();
-
-	/**
-	 * Get value as a float if it is possible, zero otherwise
-	 * 
-	 * @return value
-	 */
-	public abstract float getRawFloatValue();
-
-	/**
-	 * Setting value via string
-	 * 
-	 * @param value
-	 */
-	public abstract void setValue(String value);
-
-	/**
-	 * Setting value via integer
-	 * 
-	 * @param value
-	 */
-	public abstract void setValue(int value);
+	public int getTypeStringResource() {
+		return mType.getStringResource();
+	}
+	
+	public int getIconResource() {
+		return mValue.getIconResource();
+	}
 
 	public void setFacility(Facility facility) {
 		mFacility = facility;
@@ -103,27 +71,6 @@ public abstract class BaseDevice {
 
 	public Facility getFacility() {
 		return mFacility;
-	}
-
-	/**
-	 * Get value with unit as string
-	 * 
-	 * @param context
-	 * @return
-	 */
-	public String getStringValueUnit(Context context) {
-		return String.format("%s %s", this.getStringValue(), getStringUnit(context));
-	}
-
-	/**
-	 * Get unit as string
-	 * 
-	 * @param context
-	 * @return
-	 */
-	public String getStringUnit(Context context) {
-		int unitRes = getUnitStringResource();
-		return unitRes > 0 ? context.getString(unitRes) : "";
 	}
 
 	/**
@@ -136,7 +83,7 @@ public abstract class BaseDevice {
 		if (mFacility == null)
 			throw new RuntimeException("Device's facility is NULL, WHY!?");
 
-		return mFacility.getAddress() + ID_SEPARATOR + String.valueOf(getType());
+		return mFacility.getAddress() + ID_SEPARATOR + String.valueOf(mType.getTypeId());
 	}
 
 	/**
@@ -186,7 +133,7 @@ public abstract class BaseDevice {
 	 * @return
 	 */
 	public String toDebugString() {
-		return String.format("Name: %s\nLogging: %s\nValue: %s", mName, mLogging, getStringValue());
+		return String.format("Name: %s\nLogging: %s\nValue: %s", mName, mLogging, mValue);
 	}
 
 	/**
@@ -199,7 +146,7 @@ public abstract class BaseDevice {
 		setFacility(newDevice.getFacility());
 		setLogging(newDevice.isLogging());
 		setName(newDevice.getName());
-		setValue(newDevice.getStringValue());
+		mValue.setValue(newDevice.mValue.getRawValue());
 	}
 
 }
