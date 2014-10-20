@@ -8,6 +8,7 @@ import java.util.Map;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Log;
+import cz.vutbr.fit.iha.Constants;
 import cz.vutbr.fit.iha.activity.LoginActivity;
 import cz.vutbr.fit.iha.adapter.Adapter;
 import cz.vutbr.fit.iha.adapter.device.BaseDevice;
@@ -23,6 +24,7 @@ import cz.vutbr.fit.iha.household.ActualUser;
 import cz.vutbr.fit.iha.household.DemoHousehold;
 import cz.vutbr.fit.iha.household.Household;
 import cz.vutbr.fit.iha.household.User;
+import cz.vutbr.fit.iha.household.User.Gender;
 import cz.vutbr.fit.iha.network.GoogleAuth;
 import cz.vutbr.fit.iha.network.Network;
 import cz.vutbr.fit.iha.network.exception.FalseException;
@@ -102,6 +104,11 @@ public final class Controller {
 
 		mDemoMode = demoMode;
 		mController = new Controller(context);
+		
+		if (demoMode) {
+			// Initialize default settings for demo mode, because in demo mode we don't call login()
+			mController.mPersistence.initializeDefaultSettings(mController.mHousehold.user.getEmail());
+		}
 	}
 
 	public static boolean isDemoMode() {
@@ -115,11 +122,11 @@ public final class Controller {
 	}
 
 	public SharedPreferences getUserSettings() throws IllegalStateException {
-		String userId = mHousehold.user.getId();
-		if (userId == null || userId.isEmpty())
+		String userEmail = mHousehold.user.getEmail();
+		if (userEmail == null || userEmail.isEmpty())
 			throw new IllegalStateException("ActualUser is not initialized (logged in) yet");
 
-		return mPersistence.getSettings(userId);
+		return mPersistence.getSettings(userEmail);
 	}
 
 	/** Communication methods ***********************************************/
@@ -133,8 +140,11 @@ public final class Controller {
 	 */
 	public boolean login(String email) throws NetworkException {
 		if (mDemoMode) {
-			// TODO: remember and login automatically to demo next time?
-			// mPersistence.saveLastEmail(...);
+			mHousehold.user.setName("John Doe");
+			mHousehold.user.setEmail(email);
+			mHousehold.user.setGender(Gender.Male);
+			mHousehold.user.setSessionId("123456789");
+
 			mPersistence.initializeDefaultSettings(email);
 			return true;
 		}
@@ -319,7 +329,9 @@ public final class Controller {
 	 */
 	public synchronized Adapter getActiveAdapter() {
 		if (mHousehold.activeAdapter == null) {
-			String lastId = mPersistence.loadActiveAdapter(mHousehold.user.getId());
+			SharedPreferences settings = getUserSettings();
+			
+			String lastId = settings.getString(Constants.PERSISTENCE_PREF_ACTIVE_ADAPTER, "");
 
 			Map<String, Adapter> adapters = mHousehold.adaptersModel.getAdaptersMap();
 			if (!lastId.isEmpty() && adapters.containsKey(lastId)) {
@@ -332,7 +344,7 @@ public final class Controller {
 			}
 
 			if (mHousehold.activeAdapter != null)
-				mPersistence.saveActiveAdapter(mHousehold.user.getId(), mHousehold.activeAdapter.getId());
+				settings.edit().putString(Constants.PERSISTENCE_PREF_ACTIVE_ADAPTER, mHousehold.activeAdapter.getId()).commit();
 		}
 
 		return mHousehold.activeAdapter;
@@ -357,7 +369,7 @@ public final class Controller {
 		Adapter adapter = adapters.get(id);
 		mHousehold.activeAdapter = adapter;
 		Log.d(TAG, String.format("Set active adapter to '%s'", adapter.getName()));
-		mPersistence.saveActiveAdapter(mHousehold.user.getId(), adapter.getId());
+		getUserSettings().edit().putString(Constants.PERSISTENCE_PREF_ACTIVE_ADAPTER, adapter.getId()).commit();
 
 		// Load locations and facilities, if needed
 		reloadLocations(id, forceReload);

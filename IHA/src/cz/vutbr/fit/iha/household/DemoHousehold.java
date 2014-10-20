@@ -3,7 +3,6 @@ package cz.vutbr.fit.iha.household;
 import android.content.Context;
 import cz.vutbr.fit.iha.Constants;
 import cz.vutbr.fit.iha.adapter.Adapter;
-import cz.vutbr.fit.iha.household.User.Gender;
 import cz.vutbr.fit.iha.network.Network;
 import cz.vutbr.fit.iha.network.xml.XmlParsers;
 
@@ -14,22 +13,12 @@ import cz.vutbr.fit.iha.network.xml.XmlParsers;
  */
 public final class DemoHousehold extends Household {
 
+	public static final String DEMO_EMAIL = "demo";
+	
 	public DemoHousehold(Context context, Network network) {
 		super(context, network);
 
-		prepareUser();
 		prepareAdapters();
-	}
-
-	/**
-	 * Prepare logged in user.
-	 */
-	private void prepareUser() {
-		user.setId("demo");
-		user.setName("John Doe");
-		user.setEmail("john@doe.com");
-		user.setGender(Gender.Male);
-		user.setSessionId("123456789");
 	}
 
 	/**

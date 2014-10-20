@@ -14,7 +14,6 @@ import cz.vutbr.fit.iha.util.Utils;
  * 
  */
 public class ActualUser extends User {
-	private String mId;
 	private Bitmap mPicture;
 	private String mPictureUrl;
 	private String mSessionId = "";
@@ -22,17 +21,6 @@ public class ActualUser extends User {
 
 	public ActualUser() {
 		super();
-	}
-
-	public String getId() {
-		if (mId == null) {
-			mId = getEmail();
-		}
-		return mId;
-	}
-
-	public void setId(String id) {
-		mId = id;
 	}
 
 	/**

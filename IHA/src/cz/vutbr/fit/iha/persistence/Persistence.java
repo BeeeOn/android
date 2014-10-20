@@ -110,16 +110,5 @@ public class Persistence {
 	public int loadLastApplicationVersion() {
 		return getSettings(GLOBAL).getInt(Constants.PREF_GCM_APP_VERSION, Integer.MIN_VALUE);
 	}
-	
-
-	// Active adapter
-	
-	public void saveActiveAdapter(String userId, String adapterId) {
-		setString(userId, Constants.PERSISTENCE_PREF_ACTIVE_ADAPTER, adapterId);
-	}
-
-	public String loadActiveAdapter(String userId) {
-		return getSettings(userId).getString(Constants.PERSISTENCE_PREF_ACTIVE_ADAPTER, "");
-	}
 
 }

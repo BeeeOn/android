@@ -104,6 +104,7 @@
     <string name="progress_signup">Registering new user&#8230;</string>
     <string name="progress_loading_adapters">Loading your adapters&#8230;</string>
     <string name="progress_loading_adapter">Loading adapter data&#8230;</string>
+    <string name="progress_loading_demo">Loading demo data&#8230;</string>
     <string name="progress_saving_data">Saving data&#8230;</string>
 
     <!-- NavDrawer -->

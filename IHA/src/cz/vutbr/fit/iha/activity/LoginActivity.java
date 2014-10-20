@@ -23,6 +23,7 @@ import cz.vutbr.fit.iha.R;
 import cz.vutbr.fit.iha.adapter.Adapter;
 import cz.vutbr.fit.iha.controller.Controller;
 import cz.vutbr.fit.iha.exception.NotImplementedException;
+import cz.vutbr.fit.iha.household.DemoHousehold;
 import cz.vutbr.fit.iha.network.exception.CommunicationException;
 import cz.vutbr.fit.iha.network.exception.NoConnectionException;
 import cz.vutbr.fit.iha.network.exception.NotRegException;
@@ -38,7 +39,7 @@ import cz.vutbr.fit.iha.thread.ToastMessageThread;
 public class LoginActivity extends BaseActivity {
 
 	public static final String BUNDLE_REDIRECT = "isRedirect";
-	
+
 	private Controller mController;
 	private ProgressDialog mProgress;
 	private Thread mDoGoogleLoginThread;
@@ -52,7 +53,7 @@ public class LoginActivity extends BaseActivity {
 	private boolean mSignUp = false;
 
 	private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 1;
-	
+
 	private boolean isRedirect = false;
 
 	// ////////////////////////////////////////////////////////////////////////////////////
@@ -63,12 +64,10 @@ public class LoginActivity extends BaseActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_login);
-		
-		// Check if this is redirect (e.g., after connection loss) or classic start 
+
+		// Check if this is redirect (e.g., after connection loss) or classic start
 		Bundle bundle = getIntent().getExtras();
-		if (bundle != null) {
-			isRedirect = bundle.getBoolean(BUNDLE_REDIRECT, false);
-		}
+		isRedirect = (bundle != null && bundle.getBoolean(BUNDLE_REDIRECT, false));
 
 		// Get controller
 		mController = Controller.getInstance(getApplicationContext());
@@ -88,11 +87,11 @@ public class LoginActivity extends BaseActivity {
 			}
 		});
 
-// FIXME commented for release
-//		// try to register GCM
-//		if (mController.getGCMRegistrationId().isEmpty() && GooglePlayServicesUtil.isGooglePlayServicesAvailable(getBaseContext()) == ConnectionResult.SUCCESS) {
-//			GcmHelper.registerGCMInBackground(this);
-//		}
+		// FIXME commented for release
+		// // try to register GCM
+		// if (mController.getGCMRegistrationId().isEmpty() && GooglePlayServicesUtil.isGooglePlayServicesAvailable(getBaseContext()) == ConnectionResult.SUCCESS) {
+		// GcmHelper.registerGCMInBackground(this);
+		// }
 
 		mProgress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
 
@@ -124,14 +123,24 @@ public class LoginActivity extends BaseActivity {
 		((ImageButton) findViewById(R.id.login_btn_demo)).setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				setDemoMode(true);
+				mProgress.setMessage(LoginActivity.this.getString(R.string.progress_loading_demo));
+				mProgress.show();
 
-				if (!isRedirect) {
-					Intent intent = new Intent(LoginActivity.this, LocationScreenActivity.class);
-					startActivity(intent);
-				}
+				new Thread(new Runnable() {
+					@Override
+					public void run() {
+						setDemoMode(true);
+						mController.login(DemoHousehold.DEMO_EMAIL);
 
-				LoginActivity.this.finish();
+						if (!isRedirect) {
+							Intent intent = new Intent(LoginActivity.this, LocationScreenActivity.class);
+							startActivity(intent);
+						}
+
+						mProgress.dismiss();
+						finish();
+					}
+				}).start();
 			}
 		});
 
@@ -147,7 +156,7 @@ public class LoginActivity extends BaseActivity {
 				setDemoMode(false);
 				mProgress.show();
 				beginGoogleAuthRutine(v);
-				//mIgnoreChange = false;
+				// mIgnoreChange = false;
 			}
 		});
 		btnMojeID.setOnClickListener(new OnClickListener() {
@@ -234,12 +243,11 @@ public class LoginActivity extends BaseActivity {
 				if (mProgress != null && mProgress.isShowing())
 					try {
 						mProgress.dismiss();
-					}
-					catch(Exception e) {
+					} catch (Exception e) {
 						Log.d(TAG, "Dialog is not showing, but dialog say that is show :/");
 						e.printStackTrace();
 					}
-						
+
 			}
 		});
 	}
@@ -332,7 +340,7 @@ public class LoginActivity extends BaseActivity {
 			progressDismiss();
 			return;
 		}
-		
+
 		mController.initGoogle(this, email);
 		try {
 			Log.d(TAG, "call google auth execute");
@@ -341,22 +349,22 @@ public class LoginActivity extends BaseActivity {
 
 				@Override
 				public void run() {
-//					String gcmId = mController.getGCMRegistrationId();
-//					// try to register again in 1 second, otherwise register in
-//					// separate thread
-//					if (gcmId.isEmpty()) {
-//						GcmHelper.registerGCMInForeground(LoginActivity.this);
-//						gcmId = mController.getGCMRegistrationId();
-//						// if it still doesn't have GCM ID, try it repeatedly in
-//						// new thread
-//						if (gcmId.isEmpty()) {
-//							GcmHelper.registerGCMInBackground(LoginActivity.this);
-//							Log.e(GcmHelper.TAG_GCM, "GCM ID is not accesible, creating new thread for ");
-//						}
-//					}
-//
-//					Log.i(GcmHelper.TAG_GCM, "GCM ID: " + gcmId);
-					
+					// String gcmId = mController.getGCMRegistrationId();
+					// // try to register again in 1 second, otherwise register in
+					// // separate thread
+					// if (gcmId.isEmpty()) {
+					// GcmHelper.registerGCMInForeground(LoginActivity.this);
+					// gcmId = mController.getGCMRegistrationId();
+					// // if it still doesn't have GCM ID, try it repeatedly in
+					// // new thread
+					// if (gcmId.isEmpty()) {
+					// GcmHelper.registerGCMInBackground(LoginActivity.this);
+					// Log.e(GcmHelper.TAG_GCM, "GCM ID is not accesible, creating new thread for ");
+					// }
+					// }
+					//
+					// Log.i(GcmHelper.TAG_GCM, "GCM ID: " + gcmId);
+
 					if (!mController.startGoogle(true, true)) { // returned value is from doInForeground only
 						Log.e("Login", "exception in ggAuth");
 						return;
@@ -406,7 +414,7 @@ public class LoginActivity extends BaseActivity {
 		try {
 			if (mController.login(email)) {
 				Log.d(TAG, "Login: true");
-				
+
 				// Load all adapters and data for active one on login
 				progressChangeText(getString(R.string.progress_loading_adapters));
 				mController.reloadAdapters(true);
@@ -418,13 +426,14 @@ public class LoginActivity extends BaseActivity {
 					mController.reloadLocations(active.getId(), true);
 					mController.reloadFacilitiesByAdapter(active.getId(), true);
 				}
-				
+
 				progressDismiss();
 				if (!mDoGoogleLoginRunnable.isStopped()) {
 					if (!isRedirect) {
 						Intent intent = new Intent(this, LocationScreenActivity.class);
 						startActivity(intent);
 					}
+
 					finish();
 				}
 			} else {
