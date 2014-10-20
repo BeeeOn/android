@@ -13,7 +13,6 @@ import android.widget.RemoteViews;
 import cz.vutbr.fit.iha.R;
 import cz.vutbr.fit.iha.activity.SensorDetailActivity;
 import cz.vutbr.fit.iha.activity.WidgetConfigurationActivity;
-import cz.vutbr.fit.iha.adapter.device.BaseDevice;
 import cz.vutbr.fit.iha.util.Compatibility;
 
 public class SensorWidgetProvider extends AppWidgetProvider {
@@ -96,30 +95,9 @@ public class SensorWidgetProvider extends AppWidgetProvider {
 		super.onReceive(context, intent);
 	}
 	
-	public void updateWidget(Context context, int widgetId, BaseDevice device) {
+	public void updateWidget(Context context, WidgetData widgetData) {
 		// Log.d(TAG, "updateWidget()");
 		AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
-
-		WidgetData widgetData = new WidgetData(widgetId);
-		widgetData.loadData(context);
-
-		if (device != null) {
-			// Get fresh data from device
-			widgetData.deviceIcon = device.getTypeIconResource();
-			widgetData.deviceName = device.getName();
-			widgetData.deviceValue = device.getValue().getStringValueUnit(context);
-			widgetData.deviceAdapterId = device.getFacility().getAdapterId();
-			widgetData.deviceId = device.getId();
-			
-			widgetData.saveData(context);
-
-			Log.v(TAG, String.format("Using fresh widget (%d) data", widgetId));
-		} else {
-			// NOTE: just temporary solution until it will be showed better on widget
-			widgetData.deviceLastUpdate = String.format("%s %s", widgetData.deviceLastUpdate, context.getString(R.string.widget_cached));
-			
-			Log.v(TAG, String.format("Using cached widget (%d) data", widgetId));
-		}
 
 		RemoteViews remoteViews = new RemoteViews(context.getPackageName(), widgetData.layout);
 		remoteViews.setImageViewResource(R.id.icon, widgetData.deviceIcon == 0 ? R.drawable.ic_launcher : widgetData.deviceIcon);
@@ -130,11 +108,13 @@ public class SensorWidgetProvider extends AppWidgetProvider {
 			// For classic (= not-small) layout of widget, set also lastUpdate
 			remoteViews.setTextViewText(R.id.last_update, widgetData.deviceLastUpdate);
 		}
-
+		
+		int widgetId = widgetData.getWidgetId();
+		
 		// register an onClickListener
 		PendingIntent pendingIntent;
 		Intent intent;
-
+		
 		// force update on click to lastUpdate
 		pendingIntent = WidgetUpdateService.getForceUpdatePendingIntent(context, widgetId);
 		remoteViews.setOnClickPendingIntent(R.id.value, pendingIntent);

@@ -28,8 +28,6 @@ import cz.vutbr.fit.iha.adapter.device.DeviceLog;
 import cz.vutbr.fit.iha.adapter.device.DeviceType;
 import cz.vutbr.fit.iha.adapter.device.Facility;
 import cz.vutbr.fit.iha.adapter.device.RefreshInterval;
-import cz.vutbr.fit.iha.adapter.device.TemperatureDevice;
-import cz.vutbr.fit.iha.adapter.device.values.UnknownValue;
 import cz.vutbr.fit.iha.adapter.location.Location;
 import cz.vutbr.fit.iha.gcm.Notification;
 import cz.vutbr.fit.iha.gcm.Notification.ActionType;
@@ -755,7 +753,7 @@ public class XmlParsers {
 							Facility facilityDP = new Facility();
 							facilityDP.setAddress(getSecureAttrValue(ns, ID));
 							tempoDevice.setFacility(facilityDP);
-							if(tempoDevice instanceof TemperatureDevice){
+							if(tempoDevice.getType().equals(DeviceType.TYPE_TEMPERATURE)){
 								deviceDP_t = tempoDevice;
 							}else{
 								deviceDP_h = tempoDevice;
@@ -912,19 +910,14 @@ public class XmlParsers {
 	 * @return empty object
 	 */
 	private BaseDevice createDeviceByType(String sType) {
-
-		DeviceType type;
-		if (sType.length() < 3)
-			type = DeviceType.TYPE_UNKNOWN;
-		else {
-			int iType = Integer.parseInt(sType.replaceAll("0x", ""), 16);
-			type = DeviceType.fromValue(iType);
+		int iType;
+		if (sType.length() < 3) {
+			iType = -1; // Unknown type
+		} else {
+			iType = Integer.parseInt(sType.replaceAll("0x", ""), 16);
 		}
 		
-		BaseDevice device = type.createDevice();
-		device.setValue(type.createDeviceValue());
-		
-		return device;
+		return DeviceType.createDeviceFromType(iType);
 	}
 
 	// FIXME: check on first use

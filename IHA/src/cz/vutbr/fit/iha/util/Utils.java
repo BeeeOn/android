@@ -1,5 +1,7 @@
 package cz.vutbr.fit.iha.util;
 
+import java.util.Locale;
+
 import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
@@ -64,6 +66,20 @@ final public class Utils {
 		}
 
 		return false;
+	}
+	
+	/**
+	 * Formats float value to String without trailing zeros
+	 * 
+	 * @param f
+	 * @return
+	 */
+	public static String formatFloat(float f) {
+		// NOTE: This trick won't work for values that can't fit into long
+		if (f == (long)f)
+			return String.format(Locale.getDefault(), "%d", (long)f);
+    	else
+    		return String.format(Locale.getDefault(), "%.2f", f);
 	}
 
 }

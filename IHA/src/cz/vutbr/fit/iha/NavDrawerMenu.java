@@ -2,10 +2,7 @@ package cz.vutbr.fit.iha;
 
 import java.util.List;
 
-import com.google.android.gms.internal.cl;
-
 import se.emilsjolander.stickylistheaders.StickyListHeadersListView;
-
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
@@ -20,9 +17,9 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnKeyListener;
 import android.widget.AdapterView;
-import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
+import android.widget.Toast;
 import cz.vutbr.fit.iha.activity.BaseApplicationActivity;
 import cz.vutbr.fit.iha.activity.LocationDetailActivity;
 import cz.vutbr.fit.iha.activity.LocationScreenActivity;
@@ -38,8 +35,8 @@ import cz.vutbr.fit.iha.activity.menuItem.SeparatorMenuItem;
 import cz.vutbr.fit.iha.activity.menuItem.SettingMenuItem;
 import cz.vutbr.fit.iha.adapter.Adapter;
 import cz.vutbr.fit.iha.adapter.location.Location;
-import cz.vutbr.fit.iha.asynctask.SwitchAdapterTask;
 import cz.vutbr.fit.iha.asynctask.CallbackTask.CallbackTaskListener;
+import cz.vutbr.fit.iha.asynctask.SwitchAdapterTask;
 import cz.vutbr.fit.iha.asynctask.UnregisterAdapterTask;
 import cz.vutbr.fit.iha.controller.Controller;
 import cz.vutbr.fit.iha.household.ActualUser;

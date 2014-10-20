@@ -113,12 +113,14 @@ public class WidgetData {
 	 * @param now
 	 * @param deviceLastUpdate
 	 */
-	public void saveLastUpdate(Context context, long lastUpdate, String deviceLastUpdate) {
+	public void saveLastUpdate(Context context, String lastValue, long lastUpdate, String deviceLastUpdate) {
+		this.deviceValue = lastValue;
 		this.lastUpdate = lastUpdate;
 		this.deviceLastUpdate = deviceLastUpdate;
 		
 		getSettings(context) //
 			.edit() //
+			.putString(PREF_DEVICE_VALUE, lastValue) //
 			.putLong(PREF_LAST_UPDATE, lastUpdate) //
 			.putString(PREF_DEVICE_LAST_UPDATE, deviceLastUpdate) //
 			.commit();

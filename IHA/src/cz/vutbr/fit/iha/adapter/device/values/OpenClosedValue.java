@@ -11,37 +11,19 @@ public class OpenClosedValue extends BaseEnumValue {
 	public void setValue(String value) {
 		setActive(value.equalsIgnoreCase(STATE_OPEN));
 	}
-
-	public static final String STATE_OPEN = "OPEN";
-	public static final String STATE_CLOSED = "CLOSED";
-
-	@Override
-	public int getUnitStringResource() {
-		return 0;
-	}
-
-	@Override
-	public int getRawIntValue() {
-		return Integer.MAX_VALUE;
-	}
-
-	@Override
-	public float getRawFloatValue() {
-		return Float.NaN;
-	}
-
-	@Override
-	public void setValue(int value) {
-		mValue = (value != 0 ? STATE_OPEN : STATE_CLOSED);
-	}
-
-	/**
-	 * This method shouldn't be used for this type of device, use getStateStringResource() instead
-	 */
+	
 	@Override
 	public String getStringValue() {
 		return mValue;
 	}
+	
+	@Override
+	public int getUnitResource() {
+		return 0;
+	}
+
+	public static final String STATE_OPEN = "OPEN";
+	public static final String STATE_CLOSED = "CLOSED";
 
 	/**
 	 * Return info about active state of device
@@ -72,6 +54,11 @@ public class OpenClosedValue extends BaseEnumValue {
 	 */
 	public int getStateStringResource() {
 		return isActive() ? R.string.dev_state_value_open : R.string.dev_state_value_closed;
+	}
+	
+	@Override
+	public int getIconResource() {
+		return isActive() ? R.drawable.dev_state_open : R.drawable.dev_state_closed;
 	}
 
 }

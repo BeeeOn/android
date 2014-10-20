@@ -5,22 +5,27 @@ package cz.vutbr.fit.iha.adapter.device;
 
 import cz.vutbr.fit.iha.adapter.device.values.BaseDeviceValue;
 
+
 /**
  * @brief Abstract class for all devices
  * @author Robyer
  */
-public abstract class BaseDevice {
+public class BaseDevice {
 	public static final String ID_SEPARATOR = "---";
 
 	protected Facility mFacility;
 	protected String mName = "";
 	protected boolean mLogging;
-	protected BaseDeviceValue mValue;
-
+	
+	public final DeviceType mType;
+	public final BaseDeviceValue mValue;
+	
 	/**
 	 * Class constructor
 	 */
-	public BaseDevice() {
+	public BaseDevice(DeviceType type, BaseDeviceValue value) {
+		mType = type;
+		mValue = value;
 	}
 
 	/**
@@ -35,27 +40,30 @@ public abstract class BaseDevice {
 		SAVE_VALUE, // change value of actor device
 	}
 
-	/**
-	 * Get numeric identifier representing type of this device
-	 * 
-	 * @return
-	 */
-	public abstract DeviceType getType();
+	public DeviceType getType() {
+		return mType;
+	}
+	
+	public BaseDeviceValue getValue() {
+		return mValue;
+	}
+	
+	public void setValue(String value) {
+		mValue.setValue(value);
+	}
 
 	/**
 	 * Get resource for human readable string representing type of this device
 	 * 
 	 * @return
 	 */
-	public abstract int getTypeStringResource();
-
-	/**
-	 * Get resource for icon representing type of this device
-	 * 
-	 * @return
-	 */
-	public abstract int getTypeIconResource();
-
+	public int getTypeStringResource() {
+		return mType.getStringResource();
+	}
+	
+	public int getIconResource() {
+		return mValue.getIconResource();
+	}
 
 	public void setFacility(Facility facility) {
 		mFacility = facility;
@@ -63,14 +71,6 @@ public abstract class BaseDevice {
 
 	public Facility getFacility() {
 		return mFacility;
-	}
-	
-	public void setValue(BaseDeviceValue value) {
-		mValue = value;
-	}
-	
-	public BaseDeviceValue getValue() {
-		return mValue;
 	}
 
 	/**
@@ -83,7 +83,7 @@ public abstract class BaseDevice {
 		if (mFacility == null)
 			throw new RuntimeException("Device's facility is NULL, WHY!?");
 
-		return mFacility.getAddress() + ID_SEPARATOR + String.valueOf(getType());
+		return mFacility.getAddress() + ID_SEPARATOR + String.valueOf(mType.getTypeId());
 	}
 
 	/**
@@ -133,7 +133,7 @@ public abstract class BaseDevice {
 	 * @return
 	 */
 	public String toDebugString() {
-		return String.format("Name: %s\nLogging: %s\nValue: %s", mName, mLogging, getValue());
+		return String.format("Name: %s\nLogging: %s\nValue: %s", mName, mLogging, mValue);
 	}
 
 	/**
@@ -146,7 +146,7 @@ public abstract class BaseDevice {
 		setFacility(newDevice.getFacility());
 		setLogging(newDevice.isLogging());
 		setName(newDevice.getName());
-		setValue(newDevice.getValue());
+		mValue.setValue(newDevice.mValue.getStringValue());
 	}
 
 }

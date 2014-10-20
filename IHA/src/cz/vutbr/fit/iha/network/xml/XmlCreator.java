@@ -896,7 +896,7 @@ public class XmlCreator {
 					serializer.text(Integer.toString(facility.getRefresh().getInterval()));
 					serializer.endTag(ns, REFRESH);
 				}
-				if (device.getValue().getRawIntValue() != Integer.MAX_VALUE) {
+				if (!device.getValue().getStringValue().isEmpty()) { // FIXME: better check if value is valid
 					serializer.startTag(ns, VALUE);
 					serializer.text(device.getValue().getStringValue());
 					serializer.endTag(ns, VALUE);

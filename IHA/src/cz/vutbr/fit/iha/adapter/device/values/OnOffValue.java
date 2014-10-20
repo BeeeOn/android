@@ -10,37 +10,19 @@ public class OnOffValue extends BaseEnumValue {
 	public void setValue(String value) {
 		setActive(value.equalsIgnoreCase(SWITCH_ON));
 	}
-
-	public static final String SWITCH_ON = "ON";
-	public static final String SWITCH_OFF = "OFF";
-
-	/**
-	 * This method shouldn't be used for this type of device, use getStateStringResource() instead
-	 */
+	
 	@Override
 	public String getStringValue() {
 		return mValue;
 	}
-
+	
 	@Override
-	public int getUnitStringResource() {
+	public int getUnitResource() {
 		return 0;
 	}
 
-	@Override
-	public int getRawIntValue() {
-		return Integer.MAX_VALUE;
-	}
-
-	@Override
-	public float getRawFloatValue() {
-		return Float.NaN;
-	}
-
-	@Override
-	public void setValue(int value) {
-		mValue = (value != 0 ? SWITCH_ON : SWITCH_OFF);
-	}
+	public static final String SWITCH_ON = "ON";
+	public static final String SWITCH_OFF = "OFF";
 
 	/**
 	 * Return info about active state of device
@@ -62,6 +44,11 @@ public class OnOffValue extends BaseEnumValue {
 	 */
 	public int getStateStringResource() {
 		return isActive() ? R.string.dev_switch_value_on : R.string.dev_switch_value_off;
+	}
+	
+	@Override
+	public int getIconResource() {
+		return isActive() ? R.drawable.dev_switch_on : R.drawable.dev_switch_off;
 	}
 
 }

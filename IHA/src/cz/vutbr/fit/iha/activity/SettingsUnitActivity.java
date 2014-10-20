@@ -10,7 +10,7 @@ import com.actionbarsherlock.view.MenuItem;
 
 import cz.vutbr.fit.iha.Constants;
 import cz.vutbr.fit.iha.R;
-import cz.vutbr.fit.iha.adapter.device.units.Temperature;
+import cz.vutbr.fit.iha.adapter.device.units.TemperatureUnit;
 import cz.vutbr.fit.iha.controller.Controller;
 import cz.vutbr.fit.iha.persistence.Persistence;
 
@@ -45,12 +45,12 @@ public class SettingsUnitActivity extends SherlockPreferenceActivity implements 
 
 		// Load the preferences from an XML resource
 		addPreferencesFromResource(R.xml.unit_preferences);
-
+		
 		mListPrefTemperature = (ListPreference) findPreference(Constants.PERSISTENCE_PREF_TEMPERATURE);
-		mListPrefTemperature.setEntries(Temperature.getEntries(this));
-		mListPrefTemperature.setEntryValues(Temperature.getEntryValues());
-		Temperature actTemp = Temperature.getSharedPreferencesOption(mController.getUserSettings());
-		mListPrefTemperature.setSummary(actTemp.getFullNameWithShortName(this));
+		mListPrefTemperature.setEntries(TemperatureUnit.getEntries(this));
+		mListPrefTemperature.setEntryValues(TemperatureUnit.getEntryValues());
+		TemperatureUnit actTemp = TemperatureUnit.fromSettings(mController.getUserSettings());
+		mListPrefTemperature.setSummary(actTemp.getNameWithUnit(this));
 	}
 
 	@Override
@@ -86,8 +86,8 @@ public class SettingsUnitActivity extends SherlockPreferenceActivity implements 
 
 	@Override
 	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-		Temperature actTemp = Temperature.getSharedPreferencesOption(mController.getUserSettings());
-		mListPrefTemperature.setSummary(actTemp.getFullNameWithShortName(this));
+		TemperatureUnit actTemp = TemperatureUnit.fromSettings(mController.getUserSettings());
+		mListPrefTemperature.setSummary(actTemp.getNameWithUnit(this));
 	}
 
 }

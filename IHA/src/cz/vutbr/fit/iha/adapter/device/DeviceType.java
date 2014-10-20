@@ -1,5 +1,6 @@
 package cz.vutbr.fit.iha.adapter.device;
 
+import cz.vutbr.fit.iha.R;
 import cz.vutbr.fit.iha.adapter.device.values.BaseDeviceValue;
 import cz.vutbr.fit.iha.adapter.device.values.EmissionValue;
 import cz.vutbr.fit.iha.adapter.device.values.HumidityValue;
@@ -11,30 +12,35 @@ import cz.vutbr.fit.iha.adapter.device.values.PressureValue;
 import cz.vutbr.fit.iha.adapter.device.values.TemperatureValue;
 import cz.vutbr.fit.iha.adapter.device.values.UnknownValue;
 
-
 /**
  * Device's types
  */
 public enum DeviceType {
 
-	TYPE_UNKNOWN(-1), 		// unknown device
-	TYPE_TEMPERATURE(0), 	// temperature meter
-	TYPE_HUMIDITY(1), 		// humidity meter
-	TYPE_PRESSURE(2), 		// pressure meter
-	TYPE_OPEN_CLOSED(3),	// state sensor
-	TYPE_ON_OFF(4), 		// switch sensor
-	TYPE_ILLUMINATION(5), 	// illumination meter
-	TYPE_NOISE(6), 			// noise meter
-	TYPE_EMISSION(7); 		// emission meter
-	
-	private int mTypeId;
+	TYPE_UNKNOWN(-1, R.string.dev_unknown_type), // unknown device
+	TYPE_TEMPERATURE(0, R.string.dev_temperature_type), // temperature meter
+	TYPE_HUMIDITY(1, R.string.dev_humidity_type), // humidity meter
+	TYPE_PRESSURE(2, R.string.dev_pressure_type), // pressure meter
+	TYPE_OPEN_CLOSED(3, R.string.dev_state_type), // state sensor
+	TYPE_ON_OFF(4, R.string.dev_switch_type), // switch sensor
+	TYPE_ILLUMINATION(5, R.string.dev_illumination_type), // illumination meter
+	TYPE_NOISE(6, R.string.dev_noise_type), // noise meter
+	TYPE_EMISSION(7, R.string.dev_noise_type); // emission meter
 
-	private DeviceType(int id) {
+	private final int mTypeId;
+	private final int mNameRes;
+
+	private DeviceType(int id, int nameRes) {
 		mTypeId = id;
+		mNameRes = nameRes;
 	}
-	
+
 	public int getTypeId() {
 		return mTypeId;
+	}
+	
+	public int getStringResource() {
+		return mNameRes;
 	}
 
 	public static DeviceType fromValue(int value) {
@@ -44,48 +50,34 @@ public enum DeviceType {
 		}
 		return TYPE_UNKNOWN;
 	}
-	
-	public BaseDeviceValue createDeviceValue() {
-		if (this.equals(TYPE_EMISSION)) {
-			return new EmissionValue();
-		} else if (this.equals(TYPE_HUMIDITY)) {
-			return new HumidityValue();
-		} else if (this.equals(TYPE_ILLUMINATION)) {
-			return new IlluminationValue();
-		} else if (this.equals(TYPE_NOISE)) {
-			return new NoiseValue();
-		} else if (this.equals(TYPE_PRESSURE)) {
-			return new PressureValue();
-		} else if (this.equals(TYPE_OPEN_CLOSED)) {
-			return new OpenClosedValue();
-		} else if (this.equals(TYPE_ON_OFF)) {
-			return new OnOffValue();
-		} else if (this.equals(TYPE_TEMPERATURE)) {
-			return new TemperatureValue();
-		} else {
-			return new UnknownValue();
-		}
+
+	public static BaseDevice createDeviceFromType(int typeId) {
+		DeviceType type = DeviceType.fromValue(typeId);
+		BaseDeviceValue value = createDeviceValue(type);
+		
+		return new BaseDevice(type, value);
 	}
 	
-	public BaseDevice createDevice() {
-		if (this.equals(TYPE_EMISSION)) {
-			return new EmissionDevice();
-		} else if (this.equals(TYPE_HUMIDITY)) {
-			return new HumidityDevice();
-		} else if (this.equals(TYPE_ILLUMINATION)) {
-			return new IlluminationDevice();
-		} else if (this.equals(TYPE_NOISE)) {
-			return new NoiseDevice();
-		} else if (this.equals(TYPE_PRESSURE)) {
-			return new PressureDevice();
-		} else if (this.equals(TYPE_OPEN_CLOSED)) {
-			return new StateDevice();
-		} else if (this.equals(TYPE_ON_OFF)) {
-			return new SwitchDevice();
-		} else if (this.equals(TYPE_TEMPERATURE)) {
-			return new TemperatureDevice();
-		} else {
-			return new UnknownDevice();
+	public static BaseDeviceValue createDeviceValue(DeviceType type) {
+		switch (type) {
+		case TYPE_EMISSION:
+			return new EmissionValue();
+		case TYPE_HUMIDITY:
+			return new HumidityValue();
+		case TYPE_ILLUMINATION:
+			return new IlluminationValue();
+		case TYPE_NOISE:
+			return new NoiseValue();
+		case TYPE_PRESSURE:
+			return new PressureValue();
+		case TYPE_OPEN_CLOSED:
+			return new OpenClosedValue();
+		case TYPE_ON_OFF:
+			return new OnOffValue();
+		case TYPE_TEMPERATURE:
+			return new TemperatureValue();
+		default:
+			return new UnknownValue();
 		}
 	}
 
