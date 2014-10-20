@@ -1,6 +1,6 @@
 package cz.vutbr.fit.iha.adapter.device.values;
 
-public abstract class BaseEnumValue extends BaseDeviceValue {
+public abstract class BaseEnumValue extends BaseValue {
 
 	/**
 	 * @return Color depending on active value

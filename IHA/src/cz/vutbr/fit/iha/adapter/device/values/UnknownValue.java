@@ -3,7 +3,7 @@ package cz.vutbr.fit.iha.adapter.device.values;
 import cz.vutbr.fit.iha.R;
 import cz.vutbr.fit.iha.adapter.device.units.UnknownUnit;
 
-public final class UnknownValue extends BaseDeviceValue {
+public final class UnknownValue extends BaseValue {
 
 	private String mValue = "";
 
@@ -30,8 +30,8 @@ public final class UnknownValue extends BaseDeviceValue {
 	}
 
 	@Override
-	public float getFloatValue() {
-		return Float.NaN;
+	public double getDoubleValue() {
+		return Double.NaN;
 	}
 
 }

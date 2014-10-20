@@ -3,7 +3,7 @@
  */
 package cz.vutbr.fit.iha.adapter.device;
 
-import cz.vutbr.fit.iha.adapter.device.values.BaseDeviceValue;
+import cz.vutbr.fit.iha.adapter.device.values.BaseValue;
 
 
 /**
@@ -18,12 +18,12 @@ public class BaseDevice {
 	protected boolean mLogging;
 	
 	public final DeviceType mType;
-	public final BaseDeviceValue mValue;
+	public final BaseValue mValue;
 	
 	/**
 	 * Class constructor
 	 */
-	public BaseDevice(DeviceType type, BaseDeviceValue value) {
+	public BaseDevice(DeviceType type, BaseValue value) {
 		mType = type;
 		mValue = value;
 	}
@@ -44,7 +44,7 @@ public class BaseDevice {
 		return mType;
 	}
 	
-	public BaseDeviceValue getValue() {
+	public BaseValue getValue() {
 		return mValue;
 	}
 	

@@ -64,7 +64,7 @@ public abstract class BaseUnit {
 
 	abstract public int getDefaultId();
 	abstract public String getPersistenceKey();
-	abstract public float convertValue(Item to, float value);
+	abstract public double convertValue(Item to, double value);
 	
 	public Item getDefault() {
 		for (Item item : mItems) {

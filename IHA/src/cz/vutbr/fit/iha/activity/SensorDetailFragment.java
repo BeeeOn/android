@@ -464,7 +464,7 @@ public class SensorDetailFragment extends SherlockFragment {
 					return formatter.print((long) value);
 				}
 
-				return String.format("%s %s", fmt.getStringValue(mDevice.getValue(), (float)value), unit);
+				return String.format("%s %s", fmt.getStringValue(mDevice.getValue(), value), unit);
 			}
 		});
 

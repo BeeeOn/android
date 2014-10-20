@@ -2,7 +2,7 @@ package cz.vutbr.fit.iha.adapter.device.values;
 
 import cz.vutbr.fit.iha.adapter.device.units.BaseUnit;
 
-public abstract class BaseDeviceValue {
+public abstract class BaseValue {
 
 	private String mRawValue = null;
 
@@ -10,7 +10,7 @@ public abstract class BaseDeviceValue {
 
 	public abstract int getIconResource();
 
-	public abstract float getFloatValue();
+	public abstract double getDoubleValue();
 
 	/**
 	 * @return "Raw" string value, which means value given in {@link #setValue(String)} method

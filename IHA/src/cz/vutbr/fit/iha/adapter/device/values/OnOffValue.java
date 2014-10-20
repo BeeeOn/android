@@ -30,8 +30,8 @@ public class OnOffValue extends BaseEnumValue {
 	}
 
 	@Override
-	public float getFloatValue() {
-		return Float.NaN;
+	public double getDoubleValue() {
+		return Double.NaN;
 	}
 
 	private boolean isActive() {

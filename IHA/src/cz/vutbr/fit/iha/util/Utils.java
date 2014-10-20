@@ -30,7 +30,7 @@ final public class Utils {
 
 		Canvas canvas = new Canvas(targetBitmap);
 		Path path = new Path();
-		path.addCircle(((float) targetWidth - 1) / 2, ((float) targetHeight - 1) / 2, (Math.min(((float) targetWidth), ((float) targetHeight)) / 2), Path.Direction.CCW);
+		path.addCircle((targetWidth - 1) / 2, (targetHeight - 1) / 2, (Math.min((targetWidth), (targetHeight)) / 2), Path.Direction.CCW);
 
 		canvas.clipPath(path);
 		Bitmap sourceBitmap = scaleBitmapImage;
@@ -69,17 +69,17 @@ final public class Utils {
 	}
 	
 	/**
-	 * Formats float value to String without trailing zeros
+	 * Formats double value to String without trailing zeros
 	 * 
-	 * @param f
+	 * @param d
 	 * @return
 	 */
-	public static String formatFloat(float f) {
+	public static String formatDouble(double d) {
 		// NOTE: This trick won't work for values that can't fit into long
-		if (f == (long)f)
-			return String.format(Locale.getDefault(), "%d", (long)f);
+		if (d == (long)d)
+			return String.format(Locale.getDefault(), "%d", (long)d);
     	else
-    		return String.format(Locale.getDefault(), "%.2f", f);
+    		return String.format(Locale.getDefault(), "%.2f", d);
 	}
 
 }

@@ -1,7 +1,7 @@
 package cz.vutbr.fit.iha.adapter.device;
 
 import cz.vutbr.fit.iha.R;
-import cz.vutbr.fit.iha.adapter.device.values.BaseDeviceValue;
+import cz.vutbr.fit.iha.adapter.device.values.BaseValue;
 import cz.vutbr.fit.iha.adapter.device.values.EmissionValue;
 import cz.vutbr.fit.iha.adapter.device.values.HumidityValue;
 import cz.vutbr.fit.iha.adapter.device.values.IlluminationValue;
@@ -53,12 +53,12 @@ public enum DeviceType {
 
 	public static BaseDevice createDeviceFromType(int typeId) {
 		DeviceType type = DeviceType.fromValue(typeId);
-		BaseDeviceValue value = createDeviceValue(type);
+		BaseValue value = createDeviceValue(type);
 		
 		return new BaseDevice(type, value);
 	}
 	
-	public static BaseDeviceValue createDeviceValue(DeviceType type) {
+	public static BaseValue createDeviceValue(DeviceType type) {
 		switch (type) {
 		case TYPE_EMISSION:
 			return new EmissionValue();

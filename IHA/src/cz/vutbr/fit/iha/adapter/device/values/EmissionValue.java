@@ -3,7 +3,7 @@ package cz.vutbr.fit.iha.adapter.device.values;
 import cz.vutbr.fit.iha.R;
 import cz.vutbr.fit.iha.adapter.device.units.EmissionUnit;
 
-public final class EmissionValue extends BaseDeviceValue {
+public final class EmissionValue extends BaseValue {
 
 	private int mValue = Integer.MAX_VALUE;
 
@@ -30,7 +30,7 @@ public final class EmissionValue extends BaseDeviceValue {
 	}
 
 	@Override
-	public float getFloatValue() {
+	public double getDoubleValue() {
 		return mValue;
 	}
 

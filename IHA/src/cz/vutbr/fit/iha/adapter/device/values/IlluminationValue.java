@@ -3,16 +3,16 @@ package cz.vutbr.fit.iha.adapter.device.values;
 import cz.vutbr.fit.iha.R;
 import cz.vutbr.fit.iha.adapter.device.units.IlluminationUnit;
 
-public final class IlluminationValue extends BaseDeviceValue {
+public final class IlluminationValue extends BaseValue {
 
-	private float mValue = Float.MAX_VALUE;
+	private double mValue = Double.MAX_VALUE;
 
 	private static IlluminationUnit mUnit = new IlluminationUnit();
 
 	@Override
 	public void setValue(String value) {
 		super.setValue(value);
-		mValue = Float.parseFloat(value);
+		mValue = Double.parseDouble(value);
 	}
 
 	@Override
@@ -25,12 +25,12 @@ public final class IlluminationValue extends BaseDeviceValue {
 		return mUnit;
 	}
 
-	public float getValue() {
+	public double getValue() {
 		return mValue;
 	}
 
 	@Override
-	public float getFloatValue() {
+	public double getDoubleValue() {
 		return mValue;
 	}
 

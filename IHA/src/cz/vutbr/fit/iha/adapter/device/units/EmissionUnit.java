@@ -24,7 +24,7 @@ public class EmissionUnit extends BaseUnit {
 	}
 
 	@Override
-	public float convertValue(Item to, float value) {
+	public double convertValue(Item to, double value) {
 		return value;
 	}
 
