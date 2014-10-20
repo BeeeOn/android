@@ -8,12 +8,8 @@ import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.EnumSet;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map.Entry;
-
 import org.xmlpull.v1.XmlSerializer;
-
 import android.util.Xml;
 import cz.vutbr.fit.iha.Constants;
 import cz.vutbr.fit.iha.adapter.device.AdapterAddressComparator;
@@ -380,7 +376,7 @@ public class XmlCreator {
 	 * @return Partial message
 	 * @since 2.2
 	 */
-	public static String createSetDevs(String sid, String aid, List<Facility> facilities) {
+	public static String createSetDevs(String sid, String aid, List<Facility> facilities, EnumSet<SaveDevice> toSave) {
 		XmlSerializer serializer = Xml.newSerializer();
 		StringWriter writer = new StringWriter();
 		try {
@@ -397,18 +393,23 @@ public class XmlCreator {
 			for (Facility facility : facilities) {
 				serializer.startTag(ns, Xconstants.DEVICE);
 
-				serializer.attribute(ns, Xconstants.INITIALIZED, (facility.isInitialized()) ? Xconstants.ONE : Xconstants.ZERO);
+				if(toSave.contains(SaveDevice.SAVE_INITIALIZED))
+					serializer.attribute(ns, Xconstants.INITIALIZED, (facility.isInitialized()) ? Xconstants.ONE : Xconstants.ZERO);
 				serializer.attribute(ns, Xconstants.DID, facility.getAddress());
-				serializer.attribute(ns, Xconstants.LID, facility.getLocationId());
-				serializer.attribute(ns, Xconstants.REFRESH, Integer.toString(facility.getRefresh().getInterval()));
+				if (toSave.contains(SaveDevice.SAVE_LOCATION))
+					serializer.attribute(ns, Xconstants.LID, facility.getLocationId());
+				if (toSave.contains(SaveDevice.SAVE_REFRESH))
+					serializer.attribute(ns, Xconstants.REFRESH, Integer.toString(facility.getRefresh().getInterval()));
 
 				for (BaseDevice device : facility.getDevices()) {
 					serializer.startTag(ns, Xconstants.PART);
 
 					serializer.attribute(ns, Xconstants.TYPE, Integer.toString(device.getType().getTypeId()));
 //					serializer.attribute(ns, Xconstants.VISIBILITY, (device.getVisibility()) ? Xconstants.ONE : Xconstants.ZERO); //FIXME: after merge
-					serializer.attribute(ns, Xconstants.NAME, device.getName());
-					serializer.attribute(ns, Xconstants.VALUE, String.valueOf(device.getValue().getDoubleValue()));
+					if (toSave.contains(SaveDevice.SAVE_NAME))
+						serializer.attribute(ns, Xconstants.NAME, device.getName());
+					if (toSave.contains(SaveDevice.SAVE_VALUE))
+						serializer.attribute(ns, Xconstants.VALUE, String.valueOf(device.getValue().getDoubleValue()));
 
 					serializer.endTag(ns, Xconstants.PART);
 				}
@@ -456,8 +457,8 @@ public class XmlCreator {
 
 			serializer.startTag(ns, Xconstants.DEVICE);
 
-			// if(toSave.contains(SaveDevice.SAVE_Xconstants.INITIALIZED)) //FIXME: after merge
-			serializer.attribute(ns, Xconstants.INITIALIZED, (facility.isInitialized()) ? Xconstants.ONE : Xconstants.ZERO);
+			if(toSave.contains(SaveDevice.SAVE_INITIALIZED))
+				serializer.attribute(ns, Xconstants.INITIALIZED, (facility.isInitialized()) ? Xconstants.ONE : Xconstants.ZERO);
 			// send always
 			serializer.attribute(ns, Xconstants.DID, facility.getAddress());
 			if (toSave.contains(SaveDevice.SAVE_LOCATION))
@@ -469,7 +470,7 @@ public class XmlCreator {
 				serializer.startTag(ns, Xconstants.PART);
 				// send always if sensor changed
 				serializer.attribute(ns, Xconstants.TYPE, Integer.toString(device.getType().getTypeId()));
-//				if (toSave.contains(SaveDevice.SAVE_VISIBILITY))		//FIXME: afiter merge
+//				if (toSave.contains(SaveDevice.SAVE_VISIBILITY))
 //					serializer.attribute(ns, Xconstants.VISIBILITY, (device.getVisibility()) ? Xconstants.ONE : Xconstants.ZERO);
 				if (toSave.contains(SaveDevice.SAVE_NAME))
 					serializer.attribute(ns, Xconstants.NAME, device.getName());

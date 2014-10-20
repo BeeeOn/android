@@ -38,6 +38,7 @@ public class BaseDevice {
 		SAVE_LOGGING, // change logging of device
 		SAVE_REFRESH, // change refresh interval of facility
 		SAVE_VALUE, // change value of actor device
+		SAVE_INITIALIZED,
 	}
 
 	public DeviceType getType() {

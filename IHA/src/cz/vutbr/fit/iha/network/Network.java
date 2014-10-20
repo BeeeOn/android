@@ -20,7 +20,6 @@ import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
-
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLContext;
@@ -28,7 +27,6 @@ import javax.net.ssl.SSLHandshakeException;
 import javax.net.ssl.SSLSession;
 import javax.net.ssl.SSLSocket;
 import javax.net.ssl.TrustManagerFactory;
-
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -541,8 +539,8 @@ public class Network {
 	 * @throws NoConnectionException
 	 * @throws CommunicationException
 	 */
-	public boolean updateFacilities(String adapterID, List<Facility> facilities) throws NoConnectionException, CommunicationException, FalseException {
-		ParsedMessage msg = doRequest(XmlCreator.createSetDevs(mSessionID, adapterID, facilities));
+	public boolean updateFacilities(String adapterID, List<Facility> facilities, EnumSet<SaveDevice> toSave) throws NoConnectionException, CommunicationException, FalseException {
+		ParsedMessage msg = doRequest(XmlCreator.createSetDevs(mSessionID, adapterID, facilities, toSave));
 
 		if (msg.getState() == State.TRUE)
 			return true;
@@ -671,6 +669,14 @@ public class Network {
 		list.add(facility);
 
 		return getFacilities(adapterID, list).get(0);
+	}
+	
+	public boolean updateFacility(String adapterID, Facility facility, EnumSet<SaveDevice> toSave){
+		
+		ArrayList<Facility> list = new ArrayList<Facility>();
+		list.add(facility);
+		
+		return updateFacilities(adapterID, list, toSave);
 	}
 
 	/**
