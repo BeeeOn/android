@@ -6,29 +6,25 @@ import cz.vutbr.fit.iha.adapter.device.units.NoiseUnit;
 public final class NoiseValue extends BaseDeviceValue {
 
 	private int mValue = Integer.MAX_VALUE;
-	
+
 	private static NoiseUnit mUnit = new NoiseUnit();
 
 	@Override
 	public void setValue(String value) {
+		super.setValue(value);
 		mValue = Integer.parseInt(value);
-	}
-	
-	@Override
-	public String getStringValue() {
-		return String.valueOf(mValue);
 	}
 
 	@Override
 	public int getIconResource() {
 		return R.drawable.dev_noise;
 	}
-	
+
 	@Override
 	public NoiseUnit getUnit() {
 		return mUnit;
 	}
-	
+
 	public int getValue() {
 		return mValue;
 	}

@@ -8,27 +8,23 @@ public final class UnknownValue extends BaseDeviceValue {
 	private String mValue = "";
 
 	private static UnknownUnit mUnit = new UnknownUnit();
-	
+
 	@Override
 	public void setValue(String value) {
+		super.setValue(value);
 		mValue = value;
-	}
-	
-	@Override
-	public String getStringValue() {
-		return mValue;
 	}
 
 	@Override
 	public int getIconResource() {
 		return R.drawable.dev_unknown;
 	}
-	
+
 	@Override
 	public UnknownUnit getUnit() {
 		return mUnit;
 	}
-	
+
 	public String getValue() {
 		return mValue;
 	}

@@ -235,7 +235,7 @@ public class GalleryControlExtension extends ManagedControlExtension {
 		valueBundle.putInt(Control.Intents.EXTRA_LAYOUT_REFERENCE, R.id.value);
 		// valueBundle.putString(Control.Intents.EXTRA_TEXT,
 		// curDevice.getStringValueUnit(mContext));
-		valueBundle.putString(Control.Intents.EXTRA_TEXT, curDevice.getValue().getStringValue());
+		valueBundle.putString(Control.Intents.EXTRA_TEXT, curDevice.getValue().getRawValue());
 
 		item.layoutData = new Bundle[6];
 		item.layoutData[0] = headerBundle;

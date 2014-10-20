@@ -7,24 +7,20 @@ import cz.vutbr.fit.iha.adapter.device.units.BlankUnit;
 public class OpenClosedValue extends BaseEnumValue {
 
 	private String mValue = "";
-	
+
 	private static BlankUnit mUnit = new BlankUnit();
-	
+
 	@Override
 	public void setValue(String value) {
+		super.setValue(value);
 		setActive(value.equalsIgnoreCase(STATE_OPEN));
 	}
-	
-	@Override
-	public String getStringValue() {
-		return mValue;
-	}
-	
+
 	@Override
 	public BlankUnit getUnit() {
 		return mUnit;
 	}
-	
+
 	public static final String STATE_OPEN = "OPEN";
 	public static final String STATE_CLOSED = "CLOSED";
 
@@ -58,12 +54,12 @@ public class OpenClosedValue extends BaseEnumValue {
 	public int getStateStringResource() {
 		return isActive() ? R.string.dev_state_value_open : R.string.dev_state_value_closed;
 	}
-	
+
 	@Override
 	public int getIconResource() {
 		return isActive() ? R.drawable.dev_state_open : R.drawable.dev_state_closed;
 	}
-	
+
 	@Override
 	public float getFloatValue() {
 		return Float.NaN;

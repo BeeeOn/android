@@ -146,7 +146,7 @@ public class BaseDevice {
 		setFacility(newDevice.getFacility());
 		setLogging(newDevice.isLogging());
 		setName(newDevice.getName());
-		mValue.setValue(newDevice.mValue.getStringValue());
+		mValue.setValue(newDevice.mValue.getRawValue());
 	}
 
 }
