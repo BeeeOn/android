@@ -39,7 +39,7 @@ public class SettingsUnitActivity extends SherlockPreferenceActivity implements 
 		ListPreference pref = (ListPreference) findPreference(unit.getPersistenceKey());
 		pref.setEntries(unit.getEntries(this));
 		pref.setEntryValues(unit.getEntryValues());
-		pref.setSummary(unit.fromSettings(mPrefs).getNameWithUnit(this));
+		pref.setSummary(unit.fromSettings(mPrefs).getStringNameUnit(this));
 		
 		mPreferences.put(unit.getPersistenceKey(), pref);
 	}
@@ -105,7 +105,7 @@ public class SettingsUnitActivity extends SherlockPreferenceActivity implements 
 		BaseUnit unit = mUnits.get(key);
 		
 		if (pref != null && unit != null) {
-			String summary = unit.fromSettings(sharedPreferences).getNameWithUnit(this);
+			String summary = unit.fromSettings(sharedPreferences).getStringNameUnit(this);
 			pref.setSummary(summary);
 		}
 	}

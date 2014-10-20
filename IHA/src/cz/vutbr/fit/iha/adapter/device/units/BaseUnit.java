@@ -35,7 +35,7 @@ public abstract class BaseUnit {
 		 *            It can be app context
 		 * @return Short form for unit
 		 */
-		public String getUnit(Context context) {
+		public String getStringUnit(Context context) {
 			return context.getString(mResUnitShortName);
 		}
 
@@ -46,7 +46,7 @@ public abstract class BaseUnit {
 		 *            It can be app context
 		 * @return String which
 		 */
-		public String getName(Context context) {
+		public String getStringName(Context context) {
 			return context.getString(mResUnitName);
 		}
 
@@ -57,8 +57,8 @@ public abstract class BaseUnit {
 		 *            It can be app context
 		 * @return String which
 		 */
-		public String getNameWithUnit(Context context) {
-			return String.format("%s (%s)", getName(context), getUnit(context));
+		public String getStringNameUnit(Context context) {
+			return String.format("%s (%s)", getStringName(context), getStringUnit(context));
 		}	
 	}
 
@@ -81,7 +81,7 @@ public abstract class BaseUnit {
 	public CharSequence[] getEntries(Context context) {
 		List<String> list = new ArrayList<String>();
 		for (Item item : mItems) {
-			list.add(item.getNameWithUnit(context));
+			list.add(item.getStringNameUnit(context));
 		}
 		return list.toArray(new CharSequence[list.size()]);
 	}

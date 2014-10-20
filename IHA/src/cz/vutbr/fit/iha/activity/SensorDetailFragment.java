@@ -456,14 +456,15 @@ public class SensorDetailFragment extends SherlockFragment {
 					.forPattern(mGraphDateTimeFormat)
 					.withZone(dateTimeZone);
 			
+			final String unit = fmt.getStringUnit(mDevice.getValue());
+			
 			@Override
 			public String formatLabel(double value, boolean isValueX) {
 				if (isValueX) {
 					return formatter.print((long) value);
 				}
 
-				// FIXME: Optimize it - not call alllll of that (inside) allll the time
-				return fmt.formatRawValueUnit((float)value, mDevice.getValue());
+				return String.format("%s %s", fmt.getStringValue(mDevice.getValue(), (float)value), unit);
 			}
 		});
 
