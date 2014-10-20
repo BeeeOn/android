@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import cz.vutbr.fit.iha.adapter.device.units.BaseUnit;
 import cz.vutbr.fit.iha.adapter.device.values.BaseDeviceValue;
+import cz.vutbr.fit.iha.adapter.device.values.BaseEnumValue;
 
 public class UnitsFormatter {
 	
@@ -25,6 +26,11 @@ public class UnitsFormatter {
 	}
 	
 	public String getStringValue(BaseDeviceValue item) {
+		if (item instanceof BaseEnumValue) {
+			int resId = ((BaseEnumValue) item).getStateStringResource();
+			return mContext.getString(resId);
+		}
+		
 		return getStringValue(item, item.getFloatValue());
 	}
 	

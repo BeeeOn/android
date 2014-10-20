@@ -1,5 +1,6 @@
 package cz.vutbr.fit.iha.adapter.device.values;
 
+import android.graphics.Color;
 import cz.vutbr.fit.iha.R;
 import cz.vutbr.fit.iha.adapter.device.units.BlankUnit;
 
@@ -33,24 +34,26 @@ public class OnOffValue extends BaseEnumValue {
 		return Float.NaN;
 	}
 
-	/**
-	 * Return info about active state of device
-	 * 
-	 * @return boolean representing active state
-	 */
-	public boolean isActive() {
+	private boolean isActive() {
 		return mValue.equals(SWITCH_ON);
 	}
 
-	public void setActive(boolean on) {
+	private void setActive(boolean on) {
 		mValue = (on ? SWITCH_ON : SWITCH_OFF);
 	}
 
 	/**
-	 * Get resource for human readable string representing state of this device
-	 * 
-	 * @return int
+	 * {@inheritDoc}
 	 */
+	@Override
+	public int getColorByState() {
+		return isActive() ? Color.GREEN : Color.RED;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public int getStateStringResource() {
 		return isActive() ? R.string.dev_switch_value_on : R.string.dev_switch_value_off;
 	}
