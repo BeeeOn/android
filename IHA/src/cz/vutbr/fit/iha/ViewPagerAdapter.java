@@ -6,16 +6,19 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import cz.vutbr.fit.iha.activity.GraphOfSensors;
 import cz.vutbr.fit.iha.activity.ListOfDevices;
+import cz.vutbr.fit.iha.activity.LocationScreenActivity;
 
 public class ViewPagerAdapter extends FragmentPagerAdapter {
 
 	// Declare the number of ViewPager pages
 	final int PAGE_COUNT = 2;
-	private String titles[];;
+	private String titles[];
+	private Context mCtx;
 
 	public ViewPagerAdapter(FragmentManager fm, Context ctx) {
 		super(fm);
 		titles = ctx.getResources().getStringArray(R.array.title_of_main_fragments);
+		mCtx = ctx;
 	}
 
 	@Override
@@ -24,7 +27,7 @@ public class ViewPagerAdapter extends FragmentPagerAdapter {
 
 		// Open FragmentTab2.java
 		case 0:
-			ListOfDevices fragmenttab2 = new ListOfDevices();
+			ListOfDevices fragmenttab2 = new ListOfDevices((LocationScreenActivity) mCtx);
 			return fragmenttab2;
 
 			// Open FragmentTab1.java

@@ -459,8 +459,12 @@ public class NavDrawerMenu {
 		mDrawerTitle = "IHA";
 	}
 
-	public void setIsDraweOpen(boolean value) {
+	public void setIsDrawerOpen(boolean value) {
 		mIsDrawerOpen = value;
+	}
+	
+	public boolean getIsDrawerOpen() {
+		return mIsDrawerOpen;
 	}
 
 	public void cancelAllTasks() {

@@ -1,17 +1,33 @@
 package cz.vutbr.fit.iha.activity;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.View.OnClickListener;
+import android.widget.AdapterView;
+import android.widget.ImageView;
+import android.widget.ListView;
+import android.widget.TextView;
 
 import com.actionbarsherlock.app.SherlockFragment;
 
+import cz.vutbr.fit.iha.NavDrawerMenu;
 import cz.vutbr.fit.iha.R;
+import cz.vutbr.fit.iha.SensorListAdapter;
+import cz.vutbr.fit.iha.activity.dialog.AddSensorFragmentDialog;
 import cz.vutbr.fit.iha.adapter.Adapter;
+import cz.vutbr.fit.iha.adapter.device.BaseDevice;
+import cz.vutbr.fit.iha.adapter.device.Facility;
 import cz.vutbr.fit.iha.asynctask.CallbackTask.CallbackTaskListener;
 import cz.vutbr.fit.iha.asynctask.ReloadFacilitiesTask;
 import cz.vutbr.fit.iha.controller.Controller;
@@ -19,11 +35,31 @@ import cz.vutbr.fit.iha.controller.Controller;
 public class ListOfDevices extends SherlockFragment {
 
 	private static final String TAG = ListOfDevices.class.getSimpleName();
+	private static final String ADD_SENSOR_TAG = "addSensorDialog";
 	public static boolean ready = false;
 	private SwipeRefreshLayout mSwipeLayout;
 	private LocationScreenActivity mActivity;
 	private Controller mController;
 	private ReloadFacilitiesTask mReloadFacilitiesTask;
+	
+	private NavDrawerMenu mNavDrawerMenu;
+	
+	private SensorListAdapter mSensorAdapter;
+	private ListView mSensorList;
+	
+	private Handler mTimeHandler = new Handler();
+	private Runnable mTimeRun;
+	
+	private String mActiveLocationId;
+	private String mActiveAdapterId;
+	private boolean isPaused;
+	
+	public ListOfDevices(LocationScreenActivity context) {
+		mActivity = context;
+	}
+	
+	public ListOfDevices () {
+	}
 
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -103,6 +139,154 @@ public class ListOfDevices extends SherlockFragment {
 		
 		mReloadFacilitiesTask.execute(adapterId);
 	}
+	
+	public boolean redrawDevices() {
+		if (isPaused) {
+			mActivity.setSupportProgressBarIndeterminateVisibility(false);
+			return false;
+		}
+		
+		// TODO: this works, but its not the best solution
+		if (!ListOfDevices.ready) {
+			mTimeRun = new Runnable() {
+				@Override
+				public void run() {
+					redrawDevices();
+					Log.d(TAG, "LifeCycle: getsensors in timer");
+				}
+			};
+			if (!isPaused)
+				mTimeHandler.postDelayed(mTimeRun, 500);
+
+			Log.d(TAG, "LifeCycle: getsensors timer run");
+			return false;
+		}
+		mTimeHandler.removeCallbacks(mTimeRun);
+		Log.d(TAG, "LifeCycle: getsensors timer remove");
+
+		
+		List<Facility> facilities = mController.getFacilitiesByLocation(mActiveAdapterId, mActiveLocationId);
+		
+		Log.d(TAG, "LifeCycle: redraw devices list start");
+
+		mNavDrawerMenu.setDefaultTitle();
+
+		mSensorList = (ListView) getView().findViewById(R.id.listviewofsensors);
+		TextView nosensor = (TextView) getView().findViewById(R.id.nosensorlistview);
+		ImageView addsensor = (ImageView) getView().findViewById(R.id.nosensorlistview_addsensor_image);
+		
+		addsensor.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				Log.d(TAG, "HERE ADD SENSOR +");
+				mController.unignoreUninitialized(mActiveAdapterId);
+
+				DialogFragment newFragment = new AddSensorFragmentDialog();
+			    newFragment.show(mActivity.getSupportFragmentManager(), ADD_SENSOR_TAG);
+				return;
+			}
+		});
+
+		List<BaseDevice> devices = new ArrayList<BaseDevice>();
+		for (Facility facility : facilities) {
+			devices.addAll(facility.getDevices());
+		}
+
+		if (mSensorList == null) {
+			mActivity.setSupportProgressBarIndeterminateVisibility(false);
+			Log.e(TAG, "LifeCycle: bad timing or what?");
+			return false; // TODO: this happens when we're in different activity
+							// (detail), fix that by changing that activity
+							// (fragment?) first?
+		}
+
+		boolean haveDevices = devices.size() > 0;
+		boolean haveAdapters = mController.getAdapters().size() > 0;
+		
+		// If no sensors - display text
+		nosensor.setVisibility(haveDevices ? View.GONE : View.VISIBLE);
+		
+		// If we have no sensors but we have adapters - display add button
+		addsensor.setVisibility(haveDevices || !haveAdapters ? View.GONE : View.VISIBLE);
+		
+		// If we have adapters (but we're right now in empty room) show list so we can pull it to refresh
+		mSensorList.setVisibility(haveDevices || haveAdapters ? View.VISIBLE : View.GONE);
+
+		OnClickListener addSensorListener = new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				Log.d(TAG, "HERE ADD SENSOR +");
+				mController.unignoreUninitialized(mActiveAdapterId);
+
+				//Intent intent = new Intent(LocationScreenActivity.this, AddSensorFragmentDialog.class);
+				//startActivity(intent);
+				
+				DialogFragment newFragment = new AddSensorFragmentDialog();
+			    newFragment.show(mActivity.getSupportFragmentManager(), ADD_SENSOR_TAG);
+			}
+		};
+		
+		// Update list adapter
+		mSensorAdapter = new SensorListAdapter(mActivity, devices, addSensorListener);
+		mSensorList.setAdapter(mSensorAdapter);
+
+		if (haveDevices) {
+			// Capture listview menu item click
+			mSensorList.setOnItemClickListener(new ListView.OnItemClickListener() {
+				@Override
+				public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+					if (position == mSensorAdapter.getCount() - 1) {
+						Log.d(TAG, "HERE ADD SENSOR +");
+						mController.unignoreUninitialized(mActiveAdapterId);
+	
+						//Intent intent = new Intent(LocationScreenActivity.this, AddSensorFragmentDialog.class);
+						//startActivity(intent);
+						
+						DialogFragment newFragment = new AddSensorFragmentDialog();
+					    newFragment.show(mActivity.getSupportFragmentManager(), ADD_SENSOR_TAG);
+						return;
+					}
+	
+					// final BaseDevice selectedItem = devices.get(position);
+	
+					// setSupportProgressBarIndeterminateVisibility(true);
+	
+					BaseDevice device = mSensorAdapter.getDevice(position);
+					
+					Bundle bundle = new Bundle();
+					bundle.putString(SensorDetailActivity.EXTRA_ADAPTER_ID, device.getFacility().getAdapterId());
+					bundle.putString(SensorDetailActivity.EXTRA_DEVICE_ID, device.getId());
+					Intent intent = new Intent(mActivity, SensorDetailActivity.class);
+					intent.putExtras(bundle);
+					startActivity(intent);
+					// finish();
+				}
+			});
+		}
+
+		mActivity.setSupportProgressBarIndeterminateVisibility(false);
+		Log.d(TAG, "LifeCycle: getsensors end");
+		return true;
+	}
+
+	public void setMenu(NavDrawerMenu menu) {
+		mNavDrawerMenu = menu;
+	}
+
+	public void setLocationID(String locID) {
+		mActiveLocationId = locID;
+	}
+
+	public void setAdapterID(String adaID) {
+		mActiveAdapterId = adaID;
+	}
+
+	public void setIsPaused(boolean value) {
+		isPaused = value;
+	}
+
 	
 
 
