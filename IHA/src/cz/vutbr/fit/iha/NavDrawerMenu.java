@@ -389,6 +389,7 @@ public class NavDrawerMenu {
 				mMenuAdapter.addItem(new EmptyMenuItem(mActivity.getResources().getString(R.string.no_location)));
 			}
 	
+			mMenuAdapter.addItem(new SeparatorMenuItem());
 			// Adding custom view header
 			mMenuAdapter.addHeader(new GroupImageMenuItem(mActivity.getResources().getString(R.string.custom_view), R.drawable.add_custom_view, new OnClickListener() {
 	

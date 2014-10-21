@@ -17,7 +17,7 @@
         <item name="actionModeCloseButtonStyle">@style/IHA.NoCloseButton</item>
         <item name="windowContentOverlay">@null</item>
     	<item name="android:windowContentOverlay">@null</item>
-    	
+    	<item name="homeAsUpIndicator">@drawable/ic_ab_up_compat</item>
 		<item name="actionBarSize">56dip</item>
     </style>
     <!-- Application theme. -->

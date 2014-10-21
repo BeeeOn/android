@@ -29,121 +29,105 @@
             android:textIsSelectable="false" />
 
     </LinearLayout>
-    <LinearLayout 
-        android:orientation="vertical"
+    <ScrollView 
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="10dp"
-        android:layout_marginBottom="5dp"
-        android:layout_gravity="center">
-        
-        <TextView
-		    android:id="@+id/addadapter_textview_name"
-		    android:layout_width="wrap_content"
-		    android:layout_height="wrap_content"
-		    android:text="@string/addadapter_textview_name"
-		    android:textColor="@color/iha_text_color" 
-		    android:layout_gravity="left"
-		    android:textIsSelectable="false"
-		    android:textAppearance="?android:attr/textAppearanceMedium" />
-		
-		<EditText
-		    android:id="@+id/addadapter_text_name"
-		    android:layout_width="fill_parent"
-		    android:layout_height="wrap_content"
-		    android:layout_gravity="center"
-		    android:layout_marginLeft="5dp"
-		    android:layout_marginRight="5dp"
-		    android:ems="10"
-		    android:hint="@string/addadapter_view_setname"
-		    android:textColor="@color/iha_primary_cyan"
-		    android:singleLine="true"
-		    android:imeOptions="actionNext" />
-        
-    </LinearLayout>
-    
-    <LinearLayout
-        android:orientation="vertical"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="10dp"
-        android:layout_marginBottom="15dp"
-        android:layout_gravity="center" 
-        >
-         <TextView
-		    android:id="@+id/addadapter_textview_code"
-		    android:layout_width="wrap_content"
-		    android:layout_height="wrap_content"
-		    android:text="@string/addadapter_textview_code"
-		    android:textColor="@color/iha_text_color" 
-		    android:layout_gravity="left"
-		    android:textIsSelectable="false"
-		    android:textAppearance="?android:attr/textAppearanceMedium" />
-    
-    
-	    <LinearLayout 
-	        android:orientation="horizontal"
-	        android:layout_width="match_parent"
-	        android:layout_height="wrap_content"
-	        android:padding="10dp"
-	        android:layout_gravity="center">
-	        
-	        <ImageButton
-			    android:id="@+id/addadapter_qrcode_button"
-			    android:layout_width="wrap_content"
-			    android:layout_height="wrap_content"
-			    android:layout_gravity="center_horizontal"
-			    android:contentDescription="@string/addadapter_qrcode_desc"
-			    android:src="@drawable/qrcode" />
-			
-			<TextView
-			    android:id="@+id/addadapter_or"
-			    android:layout_width="wrap_content"
-			    android:layout_height="wrap_content"
-			    android:text="@string/addsensor_or"
-			    android:textColor="@color/iha_text_hint" 
-			    android:layout_gravity="center"
-			    android:textIsSelectable="false"
-			    android:textAppearance="?android:attr/textAppearanceMedium" />
-			
-			<EditText
-			    android:id="@+id/addadapter_ser_num"
-			    android:layout_width="wrap_content"
-			    android:layout_height="wrap_content"
-			    android:layout_gravity="center"
-			    android:ems="10"
-			    android:hint="@string/addadapter_ser_num_hint"
-			    android:inputType="numberDecimal"
-			    android:textColor="@color/iha_primary_cyan"
-			    android:singleLine="true"
-			    android:imeOptions="actionDone" />
-		
-	    </LinearLayout>
-	</LinearLayout>
-	
-
-	<!-- LinearLayout
-	    android:id="@+id/addadapter_buttons"
-	    android:layout_width="match_parent"
-	    android:layout_height="wrap_content"
-	    android:orientation="horizontal" >
-
-		<Button
-		    android:id="@+id/addadapter_add_button"
-		    android:layout_width="130dp"
-		    android:layout_height="match_parent"
-		    android:layout_marginBottom="5dp"
-		    android:enabled="false"
-		    android:text="@string/notification_add" />
-
-		<Button
-		    android:id="@+id/addadapter_cancel_button"
-		    android:layout_width="130dp"
-		    android:layout_height="match_parent"
-		    android:layout_gravity="right"
-		    android:layout_marginBottom="5dp"
-		    android:text="@string/notification_cancel"/>
-
-	</LinearLayout-->
-
+        android:layout_height="wrap_content">
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+        	android:layout_height="wrap_content"
+            >   
+		    <LinearLayout 
+		        android:orientation="vertical"
+		        android:layout_width="match_parent"
+		        android:layout_height="wrap_content"
+		        android:padding="10dp"
+		        android:layout_marginBottom="5dp"
+		        android:layout_gravity="center">
+		        
+		        <TextView
+				    android:id="@+id/addadapter_textview_name"
+				    android:layout_width="wrap_content"
+				    android:layout_height="wrap_content"
+				    android:text="@string/addadapter_textview_name"
+				    android:textColor="@color/iha_text_color" 
+				    android:layout_gravity="left"
+				    android:textIsSelectable="false"
+				    android:textAppearance="?android:attr/textAppearanceMedium" />
+				
+				<EditText
+				    android:id="@+id/addadapter_text_name"
+				    android:layout_width="fill_parent"
+				    android:layout_height="wrap_content"
+				    android:layout_gravity="center"
+				    android:layout_marginLeft="5dp"
+				    android:layout_marginRight="5dp"
+				    android:ems="10"
+				    android:hint="@string/addadapter_view_setname"
+				    android:textColor="@color/iha_primary_cyan"
+				    android:singleLine="true"
+				    android:imeOptions="actionNext" />
+		        
+		    </LinearLayout>
+		    
+		    <LinearLayout
+		        android:orientation="vertical"
+		        android:layout_width="match_parent"
+		        android:layout_height="wrap_content"
+		        android:padding="10dp"
+		        android:layout_marginBottom="15dp"
+		        android:layout_gravity="center" 
+		        >
+		         <TextView
+				    android:id="@+id/addadapter_textview_code"
+				    android:layout_width="wrap_content"
+				    android:layout_height="wrap_content"
+				    android:text="@string/addadapter_textview_code"
+				    android:textColor="@color/iha_text_color" 
+				    android:layout_gravity="left"
+				    android:textIsSelectable="false"
+				    android:textAppearance="?android:attr/textAppearanceMedium" />
+		    
+		    
+			    <LinearLayout 
+			        android:orientation="horizontal"
+			        android:layout_width="match_parent"
+			        android:layout_height="wrap_content"
+			        android:padding="10dp"
+			        android:layout_gravity="center">
+			        
+			        <ImageButton
+					    android:id="@+id/addadapter_qrcode_button"
+					    android:layout_width="wrap_content"
+					    android:layout_height="wrap_content"
+					    android:layout_gravity="center_horizontal"
+					    android:contentDescription="@string/addadapter_qrcode_desc"
+					    android:src="@drawable/qrcode" />
+					
+					<TextView
+					    android:id="@+id/addadapter_or"
+					    android:layout_width="wrap_content"
+					    android:layout_height="wrap_content"
+					    android:text="@string/addsensor_or"
+					    android:textColor="@color/iha_text_hint" 
+					    android:layout_gravity="center"
+					    android:textIsSelectable="false"
+					    android:textAppearance="?android:attr/textAppearanceMedium" />
+					
+					<EditText
+					    android:id="@+id/addadapter_ser_num"
+					    android:layout_width="wrap_content"
+					    android:layout_height="wrap_content"
+					    android:layout_gravity="center"
+					    android:ems="10"
+					    android:hint="@string/addadapter_ser_num_hint"
+					    android:inputType="numberDecimal"
+					    android:textColor="@color/iha_primary_cyan"
+					    android:singleLine="true"
+					    android:imeOptions="actionDone" />
+				
+			    </LinearLayout>
+			</LinearLayout>
+		</LinearLayout>
+    </ScrollView>
 </LinearLayout>

@@ -35,7 +35,7 @@
             android:layout_height="wrap_content"
             android:ellipsize="end"
             android:singleLine="true"
-            android:textColor="@color/log_blue2"
+            android:textColor="@color/iha_text_color"
             android:textSize="18dp" />
     </LinearLayout>
 

@@ -26,7 +26,7 @@
             android:id="@+id/icon"
             android:layout_width="36dp"
             android:layout_height="wrap_content"
-            android:layout_marginRight="12dp"
+            android:layout_marginRight="12sp"
             android:adjustViewBounds="true" />
 
         <TextView
@@ -36,7 +36,7 @@
             android:ellipsize="end"
             android:singleLine="true"
             android:textColor="@color/iha_text_color"
-            android:textSize="16dp" />
+            android:textSize="16sp" />
     </LinearLayout>
 
 </LinearLayout>
