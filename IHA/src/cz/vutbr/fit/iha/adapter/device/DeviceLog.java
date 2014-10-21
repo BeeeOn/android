@@ -99,8 +99,6 @@ public class DeviceLog {
 				throw new IllegalArgumentException();
 			}
 
-			//TODO: check this conversion
-			//this.dateMillis = mFormatter.parseDateTime(String.format("%s %s", parts[0], parts[1])).getMillis();
 			this.dateMillis = Long.parseLong(parts[0])*1000;
 			this.value = Float.parseFloat(parts[1]);
 		}
@@ -118,7 +116,6 @@ public class DeviceLog {
 		public String debugString() {
 			return String.format("%s %s\n", mFormatter.print(dateMillis), value);
 		}
-		
 		
 	}
 

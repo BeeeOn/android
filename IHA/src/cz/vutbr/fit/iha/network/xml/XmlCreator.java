@@ -405,7 +405,8 @@ public class XmlCreator {
 					serializer.startTag(ns, Xconstants.PART);
 
 					serializer.attribute(ns, Xconstants.TYPE, Integer.toString(device.getType().getTypeId()));
-//					serializer.attribute(ns, Xconstants.VISIBILITY, (device.getVisibility()) ? Xconstants.ONE : Xconstants.ZERO); //FIXME: after merge
+					if (toSave.contains(SaveDevice.SAVE_VISIBILITY))
+						serializer.attribute(ns, Xconstants.VISIBILITY, (device.isVisible()) ? Xconstants.ONE : Xconstants.ZERO);
 					if (toSave.contains(SaveDevice.SAVE_NAME))
 						serializer.attribute(ns, Xconstants.NAME, device.getName());
 					if (toSave.contains(SaveDevice.SAVE_VALUE))

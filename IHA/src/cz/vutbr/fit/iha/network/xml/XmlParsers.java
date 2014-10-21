@@ -341,17 +341,15 @@ public class XmlParsers {
 			facility.setLocationId(getSecureAttrValue(Xconstants.LID));
 			facility.setRefresh(RefreshInterval.fromInterval(getSecureInt(getSecureAttrValue(Xconstants.REFRESH))));
 			facility.setBattery(getSecureInt(getSecureAttrValue(Xconstants.BATTERY)));
-			facility.setLastUpdate(new DateTime((long) getSecureInt(getSecureAttrValue(Xconstants.TIME)) * 1000)); // TODO: check
-																										// this
-			// facility.setInvolveTime(new DateTime((long)getSecureInt(getSecureAttrValue(Xconstants.INVOLVED))*1000)); //FIXME: in
-			// property
+			facility.setLastUpdate(new DateTime((long) getSecureInt(getSecureAttrValue(Xconstants.TIME)) * 1000)); // TODO: check this
+			// facility.setInvolveTime(new DateTime((long)getSecureInt(getSecureAttrValue(Xconstants.INVOLVED))*1000)); //FIXME: in property
 			facility.setNetworkQuality(getSecureInt(getSecureAttrValue(Xconstants.RSSI)));
 
 			mParser.nextTag(); // part tag
 
 			do { // go through parts (devices)
 				BaseDevice device = createDeviceByType(getSecureAttrValue(Xconstants.TYPE));
-				// device.setVisibility(getSecureAttrValue(Xconstants.VISIBILITY)); //FIXME: after merge
+				device.setVisibility(getSecureAttrValue(Xconstants.VISIBILITY).equals(Xconstants.ZERO) ? false : true);
 				device.setName(getSecureAttrValue(Xconstants.NAME));
 				device.setValue(getSecureAttrValue(Xconstants.VALUE));
 				facility.addDevice(device);
@@ -381,7 +379,7 @@ public class XmlParsers {
 		try {
 			do { // TODO: check this stuffs
 				String repeat = getSecureAttrValue(Xconstants.REPEAT);
-				if (repeat.length() > 0) {
+				if (!repeat.isEmpty()) {
 					String interval = getSecureAttrValue(Xconstants.INTERVAL);
 					log.addValues(log.expandDataRow(readText(Xconstants.ROW), Integer.parseInt(repeat), Integer.parseInt(interval)));
 				} else

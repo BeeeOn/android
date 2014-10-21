@@ -615,8 +615,8 @@ public final class Controller {
 	 * @return true on success, false otherwise
 	 */
 	public boolean hideDevice(BaseDevice device) throws NotImplementedException {
-		device.getFacility().setVisibility(false);
-		return saveDevice(device, EnumSet.of(SaveDevice.SAVE_VISIBILITY)); // TODO: this should be for facility, not device
+		device.setVisibility(false);
+		return saveDevice(device, EnumSet.of(SaveDevice.SAVE_VISIBILITY));
 	}
 
 	/**
@@ -628,8 +628,8 @@ public final class Controller {
 	 * @return true on success, false otherwise
 	 */
 	public boolean unhideDevice(BaseDevice device) throws NotImplementedException {
-		device.getFacility().setVisibility(true);
-		return saveDevice(device, EnumSet.of(SaveDevice.SAVE_VISIBILITY)); // TODO: this should be for facility, not device
+		device.setVisibility(true);
+		return saveDevice(device, EnumSet.of(SaveDevice.SAVE_VISIBILITY));
 	}
 
 	/**

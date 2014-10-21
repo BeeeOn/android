@@ -170,11 +170,7 @@ public class FacilitiesModel {
 		boolean result = false;
 
 		try {
-			// FIXME: fix this when better support in Network
-			List<Facility> facilities = new ArrayList<Facility>();
-			facilities.add(facility);
-			
-			result = mNetwork.updateFacilities(facility.getAdapterId(), facilities, what); // FIXME: add what, when supported in Network
+			result = mNetwork.updateFacility(facility.getAdapterId(), facility, what);
 			result = refreshFacility(facility);
 		} catch (NetworkException e) {
 			e.printStackTrace();
