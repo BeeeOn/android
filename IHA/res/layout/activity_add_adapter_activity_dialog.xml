@@ -30,12 +30,14 @@
 
     </LinearLayout>
     <ScrollView 
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent">
         <LinearLayout
             android:orientation="vertical"
             android:layout_width="match_parent"
         	android:layout_height="wrap_content"
+        	android:scrollbars="vertical" 
+    		android:scrollbarAlwaysDrawVerticalTrack="true"
             >   
 		    <LinearLayout 
 		        android:orientation="vertical"
