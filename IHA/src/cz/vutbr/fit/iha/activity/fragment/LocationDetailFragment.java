@@ -1,4 +1,4 @@
-package cz.vutbr.fit.iha.activity;
+package cz.vutbr.fit.iha.activity.fragment;
 
 import android.os.Bundle;
 import android.util.Log;

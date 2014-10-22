@@ -1,4 +1,4 @@
-package cz.vutbr.fit.iha;
+package cz.vutbr.fit.iha.arrayadapter;
 
 import java.util.List;
 
@@ -7,20 +7,24 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.CheckedTextView;
 import android.widget.ImageView;
+import android.widget.TextView;
+import cz.vutbr.fit.iha.R;
+import cz.vutbr.fit.iha.adapter.location.Location;
 
-public class LocationIconAdapter extends ArrayAdapter<Integer> {
+public class LocationArrayAdapter extends ArrayAdapter<Location> {
 
-	private List<Integer> mIcons;
+	private List<Location> mLocations;
 	private int mLayoutResource;
 	private int mDropDownLayoutResource;
 
 	private LayoutInflater mInflater;
 
-	public LocationIconAdapter(Context context, int resource, List<Integer> objects) {
+	public LocationArrayAdapter(Context context, int resource, List<Location> objects) {
 		super(context, resource, objects);
 		mLayoutResource = resource;
-		mIcons = objects;
+		mLocations = objects;
 	}
 
 	@Override
@@ -37,8 +41,12 @@ public class LocationIconAdapter extends ArrayAdapter<Integer> {
 		// LayoutInflater inflater = getLayoutInflater();
 		View row = mInflater.inflate(mDropDownLayoutResource, parent, false);
 
-		ImageView icon = (ImageView) row.findViewById(R.id.custom_spinner_icon_dropdown_icon);
-		icon.setImageResource(mIcons.get(position));
+		CheckedTextView label = (CheckedTextView) row.findViewById(R.id.custom_spinner_dropdown_label);
+		label.setText(mLocations.get(position).getName());
+
+		ImageView icon = (ImageView) row.findViewById(R.id.custom_spinner_dropdown_icon);
+		int id = mLocations.get(position).getIconResource();
+		icon.setImageResource(id);
 
 		return row;
 	}
@@ -48,8 +56,11 @@ public class LocationIconAdapter extends ArrayAdapter<Integer> {
 		// LayoutInflater inflater = getLayoutInflater();
 		View row = mInflater.inflate(mLayoutResource, parent, false);
 
-		ImageView icon = (ImageView) row.findViewById(R.id.custom_spinner_icon_icon);
-		icon.setImageResource(mIcons.get(position));
+		TextView label = (TextView) row.findViewById(R.id.custom_spinner_label);
+		label.setText(mLocations.get(position).getName());
+
+		ImageView icon = (ImageView) row.findViewById(R.id.custom_spinner_icon);
+		icon.setImageResource(mLocations.get(position).getIconResource());
 
 		return row;
 	}

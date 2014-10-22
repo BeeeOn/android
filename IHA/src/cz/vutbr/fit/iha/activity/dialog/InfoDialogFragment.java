@@ -12,7 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
 import cz.vutbr.fit.iha.R;
-import cz.vutbr.fit.iha.activity.TrackDialogFragment;
+import cz.vutbr.fit.iha.base.TrackDialogFragment;
 
 /**
  * About dialog

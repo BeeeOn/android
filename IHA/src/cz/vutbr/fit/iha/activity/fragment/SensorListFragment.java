@@ -1,4 +1,4 @@
-package cz.vutbr.fit.iha.activity;
+package cz.vutbr.fit.iha.activity.fragment;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,33 +12,41 @@ import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnLongClickListener;
 import android.view.ViewGroup;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import com.actionbarsherlock.app.SherlockFragment;
+import com.actionbarsherlock.view.ActionMode;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuItem;
 
-import cz.vutbr.fit.iha.NavDrawerMenu;
 import cz.vutbr.fit.iha.R;
-import cz.vutbr.fit.iha.SensorListAdapter;
+import cz.vutbr.fit.iha.activity.MainActivity;
+import cz.vutbr.fit.iha.activity.SensorDetailActivity;
 import cz.vutbr.fit.iha.activity.dialog.AddSensorFragmentDialog;
+import cz.vutbr.fit.iha.activity.fragment.SensorDetailFragment.AnActionModeOfEpicProportions;
 import cz.vutbr.fit.iha.adapter.Adapter;
 import cz.vutbr.fit.iha.adapter.device.BaseDevice;
 import cz.vutbr.fit.iha.adapter.device.Facility;
+import cz.vutbr.fit.iha.arrayadapter.SensorListAdapter;
 import cz.vutbr.fit.iha.asynctask.CallbackTask.CallbackTaskListener;
 import cz.vutbr.fit.iha.asynctask.ReloadFacilitiesTask;
 import cz.vutbr.fit.iha.controller.Controller;
+import cz.vutbr.fit.iha.menu.NavDrawerMenu;
 
-public class ListOfDevices extends SherlockFragment {
+public class SensorListFragment extends SherlockFragment {
 
-	private static final String TAG = ListOfDevices.class.getSimpleName();
+	private static final String TAG = SensorListFragment.class.getSimpleName();
 	private static final String ADD_SENSOR_TAG = "addSensorDialog";
 	public static boolean ready = false;
 	private SwipeRefreshLayout mSwipeLayout;
-	private LocationScreenActivity mActivity;
+	private MainActivity mActivity;
 	private Controller mController;
 	private ReloadFacilitiesTask mReloadFacilitiesTask;
 	
@@ -54,11 +62,15 @@ public class ListOfDevices extends SherlockFragment {
 	private String mActiveAdapterId;
 	private boolean isPaused;
 	
-	public ListOfDevices(LocationScreenActivity context) {
+
+	//
+	private ActionMode mMode;
+	
+	public SensorListFragment(MainActivity context) {
 		mActivity = context;
 	}
 	
-	public ListOfDevices () {
+	public SensorListFragment () {
 	}
 
 	public void onCreate(Bundle savedInstanceState) {
@@ -79,7 +91,7 @@ public class ListOfDevices extends SherlockFragment {
 		Log.d(TAG, "onActivityCreated()");
 		ready = true;
 
-		mActivity = (LocationScreenActivity) getActivity();
+		mActivity = (MainActivity) getActivity();
 		mController = Controller.getInstance(mActivity.getApplicationContext());
 		
 		// Init swipe-refreshig layout
@@ -147,7 +159,7 @@ public class ListOfDevices extends SherlockFragment {
 		}
 		
 		// TODO: this works, but its not the best solution
-		if (!ListOfDevices.ready) {
+		if (!SensorListFragment.ready) {
 			mTimeRun = new Runnable() {
 				@Override
 				public void run() {
@@ -264,6 +276,13 @@ public class ListOfDevices extends SherlockFragment {
 					// finish();
 				}
 			});
+			mSensorList.setOnItemLongClickListener( new  OnItemLongClickListener() {
+				@Override
+				public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+					mMode = getSherlockActivity().startActionMode(new ActionModeEditSensors());
+					return true;
+				}
+			});
 		}
 
 		mActivity.setSupportProgressBarIndeterminateVisibility(false);
@@ -289,6 +308,49 @@ public class ListOfDevices extends SherlockFragment {
 
 	
 
+	class ActionModeEditSensors implements ActionMode.Callback {
 
+		@Override
+		public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+			menu.add("Hide sensor").setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+			menu.add("Hide facility").setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+			menu.add("Cancel").setIcon(R.drawable.iha_ic_action_cancel).setTitle("Cancel").setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+			return true;
+		}
+
+		@Override
+		public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+			// TODO Auto-generated method stub
+			return false;
+		}
+
+		@Override
+		public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+			// TODO Auto-generated method stub
+			if (item.getTitle().equals("Save")) {
+				// sName.setText(sNameEdit.getText());
+			}
+			// sNameEdit.setVisibility(View.GONE);
+			// sName.setVisibility(View.VISIBLE);
+
+			// sNameEdit.clearFocus();
+			// getSherlockActivity().getCurrentFocus().clearFocus();
+			// InputMethodManager imm = (InputMethodManager) getSystemService(
+			// getBaseContext().INPUT_METHOD_SERVICE);
+			// imm.hideSoftInputFromWindow(mDrawerItemEdit.getWindowToken(), 0);
+			mode.finish();
+			return true;
+		}
+
+		@Override
+		public void onDestroyActionMode(ActionMode mode) {
+			// TODO Auto-generated method stub
+			// sNameEdit.clearFocus();
+			// sNameEdit.setVisibility(View.GONE);
+			// sName.setVisibility(View.VISIBLE);
+			mMode = null;
+
+		}
+	}
 
 }

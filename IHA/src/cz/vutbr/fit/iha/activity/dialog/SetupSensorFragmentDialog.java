@@ -30,25 +30,25 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 import cz.vutbr.fit.iha.R;
-import cz.vutbr.fit.iha.SetupSensorListAdapter;
-import cz.vutbr.fit.iha.activity.LocationScreenActivity;
-import cz.vutbr.fit.iha.activity.TrackDialogFragment;
+import cz.vutbr.fit.iha.activity.MainActivity;
 import cz.vutbr.fit.iha.adapter.Adapter;
 import cz.vutbr.fit.iha.adapter.device.Facility;
 import cz.vutbr.fit.iha.adapter.location.Location;
 import cz.vutbr.fit.iha.adapter.location.Location.DefaultRoom;
+import cz.vutbr.fit.iha.arrayadapter.SetupSensorListAdapter;
 import cz.vutbr.fit.iha.asynctask.CallbackTask.CallbackTaskListener;
 import cz.vutbr.fit.iha.asynctask.InitializeFacilityTask;
+import cz.vutbr.fit.iha.base.TrackDialogFragment;
 import cz.vutbr.fit.iha.controller.Controller;
 import cz.vutbr.fit.iha.pair.InitializeFacilityPair;
 
 public class SetupSensorFragmentDialog extends TrackDialogFragment {
 
-	public LocationScreenActivity mActivity;
+	public MainActivity mActivity;
 	private View mView;
 	private Controller mController;
 
-	private static final String TAG = LocationScreenActivity.class.getSimpleName();
+	private static final String TAG = MainActivity.class.getSimpleName();
 
 	private Adapter mAdapter;
 	private List<Facility> mNewFacilities;
@@ -70,7 +70,7 @@ public class SetupSensorFragmentDialog extends TrackDialogFragment {
 		super.onCreate(savedInstanceState);
 		
 		// Get activity and controller
-		mActivity = (LocationScreenActivity)getActivity();
+		mActivity = (MainActivity)getActivity();
 		mController = Controller.getInstance(mActivity.getApplicationContext());
 		
 		

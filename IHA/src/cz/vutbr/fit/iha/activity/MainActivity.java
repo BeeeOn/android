@@ -21,29 +21,31 @@ import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.view.Window;
 
 import cz.vutbr.fit.iha.Constants;
-import cz.vutbr.fit.iha.NavDrawerMenu;
 import cz.vutbr.fit.iha.R;
 import cz.vutbr.fit.iha.activity.dialog.AddAdapterFragmentDialog;
 import cz.vutbr.fit.iha.activity.dialog.AddSensorFragmentDialog;
 import cz.vutbr.fit.iha.activity.dialog.CustomAlertDialog;
+import cz.vutbr.fit.iha.activity.fragment.SensorListFragment;
 import cz.vutbr.fit.iha.adapter.Adapter;
 import cz.vutbr.fit.iha.adapter.location.Location;
+import cz.vutbr.fit.iha.base.BaseApplicationActivity;
 import cz.vutbr.fit.iha.controller.Controller;
+import cz.vutbr.fit.iha.menu.NavDrawerMenu;
 
 /**
  * Activity class for choosing location
  * 
  * 
  */
-public class LocationScreenActivity extends BaseApplicationActivity {
-	private static final String TAG = LocationScreenActivity.class.getSimpleName();
+public class MainActivity extends BaseApplicationActivity {
+	private static final String TAG = MainActivity.class.getSimpleName();
 
 	private Controller mController;
 
 	private static final String ADD_ADAPTER_TAG = "addAdapterDialog";
 	private static final String ADD_SENSOR_TAG = "addSensorDialog";
 	private NavDrawerMenu mNavDrawerMenu;
-	private ListOfDevices mListDevices;
+	private SensorListFragment mListDevices;
 
 	/**
 	 * Instance save state tags
@@ -67,8 +69,6 @@ public class LocationScreenActivity extends BaseApplicationActivity {
 	 */
 	private CustomAlertDialog mDialog;
 
-	//
-	private ActionMode mMode;
 
 	private boolean backPressed = false;
 
@@ -93,7 +93,7 @@ public class LocationScreenActivity extends BaseApplicationActivity {
 		mNavDrawerMenu.openMenu();
 		mNavDrawerMenu.setIsDrawerOpen(mIsDrawerOpen);
 		
-		mListDevices = new ListOfDevices(this);
+		mListDevices = new SensorListFragment(this);
 		mListDevices.setMenu(mNavDrawerMenu);
 		
 		if (savedInstanceState != null) {
@@ -237,19 +237,18 @@ public class LocationScreenActivity extends BaseApplicationActivity {
 
 		case R.id.action_addadapter: {
 			DialogFragment newFragment = new AddAdapterFragmentDialog();
-		    newFragment.show(getSupportFragmentManager(), "missiles");
-
+		    newFragment.show(getSupportFragmentManager(), ADD_ADAPTER_TAG);
 		    
 			break;
 		}
 		case R.id.action_settings: {
-			Intent intent = new Intent(LocationScreenActivity.this, SettingsMainActivity.class);
+			Intent intent = new Intent(MainActivity.this, SettingsMainActivity.class);
 			startActivity(intent);
 			break;
 		}
 		case R.id.action_logout: {
 			mController.logout();
-			Intent intent = new Intent(LocationScreenActivity.this, LoginActivity.class);
+			Intent intent = new Intent(MainActivity.this, LoginActivity.class);
 			startActivity(intent);
 			this.finish();
 			break;
@@ -260,10 +259,10 @@ public class LocationScreenActivity extends BaseApplicationActivity {
 	}
 
 	protected void renameLocation(final String location, final TextView view) {
-		AlertDialog.Builder builder = new AlertDialog.Builder(LocationScreenActivity.this);
+		AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
 
 		// TODO: use better layout than just single EditText
-		final EditText edit = new EditText(LocationScreenActivity.this);
+		final EditText edit = new EditText(MainActivity.this);
 		edit.setText(location);
 		edit.selectAll();
 		// TODO: show keyboard automatically
@@ -283,7 +282,7 @@ public class LocationScreenActivity extends BaseApplicationActivity {
 
 				String message = saved ? String.format("Location was renamed to '%s'", newName) : "Location wasn't renamed due to error";
 
-				Toast.makeText(LocationScreenActivity.this, message, Toast.LENGTH_LONG).show();
+				Toast.makeText(MainActivity.this, message, Toast.LENGTH_LONG).show();
 
 				// Redraw item in list
 				view.setText(newName);
@@ -294,51 +293,7 @@ public class LocationScreenActivity extends BaseApplicationActivity {
 		dialog.show();
 	}
 
-	class ActionModeEditSensors implements ActionMode.Callback {
-
-		@Override
-		public boolean onCreateActionMode(ActionMode mode, Menu menu) {
-			// TODO Auto-generated method stub
-			menu.add("Save").setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-			menu.add("Cancel").setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
-
-			return true;
-		}
-
-		@Override
-		public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
-			// TODO Auto-generated method stub
-			return false;
-		}
-
-		@Override
-		public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
-			// TODO Auto-generated method stub
-			if (item.getTitle().equals("Save")) {
-				// sName.setText(sNameEdit.getText());
-			}
-			// sNameEdit.setVisibility(View.GONE);
-			// sName.setVisibility(View.VISIBLE);
-
-			// sNameEdit.clearFocus();
-			// getSherlockActivity().getCurrentFocus().clearFocus();
-			// InputMethodManager imm = (InputMethodManager) getSystemService(
-			// getBaseContext().INPUT_METHOD_SERVICE);
-			// imm.hideSoftInputFromWindow(mDrawerItemEdit.getWindowToken(), 0);
-			mode.finish();
-			return true;
-		}
-
-		@Override
-		public void onDestroyActionMode(ActionMode mode) {
-			// TODO Auto-generated method stub
-			// sNameEdit.clearFocus();
-			// sNameEdit.setVisibility(View.GONE);
-			// sName.setVisibility(View.VISIBLE);
-			mMode = null;
-
-		}
-	}
+	
 	
 	public void setActiveAdapterID(String adapterId) {
 		mActiveAdapterId = adapterId;

@@ -8,6 +8,8 @@ import android.support.v4.view.ViewPager;
 import com.actionbarsherlock.view.MenuItem;
 
 import cz.vutbr.fit.iha.R;
+import cz.vutbr.fit.iha.activity.fragment.LocationDetailFragment;
+import cz.vutbr.fit.iha.base.BaseApplicationActivity;
 
 public class LocationDetailActivity extends BaseApplicationActivity {
 	private ViewPager mPager;

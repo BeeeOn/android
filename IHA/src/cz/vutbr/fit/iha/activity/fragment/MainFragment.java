@@ -1,4 +1,4 @@
-package cz.vutbr.fit.iha.activity;
+package cz.vutbr.fit.iha.activity.fragment;
 
 import java.lang.reflect.Field;
 

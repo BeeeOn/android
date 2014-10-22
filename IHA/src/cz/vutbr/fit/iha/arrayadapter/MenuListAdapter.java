@@ -1,4 +1,4 @@
-package cz.vutbr.fit.iha;
+package cz.vutbr.fit.iha.arrayadapter;
 
 import java.util.ArrayList;
 import java.util.List;

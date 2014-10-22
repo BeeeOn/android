@@ -4,9 +4,9 @@ import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import cz.vutbr.fit.iha.activity.GraphOfSensors;
-import cz.vutbr.fit.iha.activity.ListOfDevices;
-import cz.vutbr.fit.iha.activity.LocationScreenActivity;
+import cz.vutbr.fit.iha.activity.MainActivity;
+import cz.vutbr.fit.iha.activity.fragment.CustomViewFragment;
+import cz.vutbr.fit.iha.activity.fragment.SensorListFragment;
 
 public class ViewPagerAdapter extends FragmentPagerAdapter {
 
@@ -27,12 +27,12 @@ public class ViewPagerAdapter extends FragmentPagerAdapter {
 
 		// Open FragmentTab2.java
 		case 0:
-			ListOfDevices fragmenttab2 = new ListOfDevices((LocationScreenActivity) mCtx);
+			SensorListFragment fragmenttab2 = new SensorListFragment((MainActivity) mCtx);
 			return fragmenttab2;
 
 			// Open FragmentTab1.java
 		case 1:
-			GraphOfSensors fragmenttab1 = new GraphOfSensors();
+			CustomViewFragment fragmenttab1 = new CustomViewFragment();
 			return fragmenttab1;
 
 		}

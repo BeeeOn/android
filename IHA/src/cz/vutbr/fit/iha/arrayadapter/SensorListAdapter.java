@@ -1,4 +1,4 @@
-package cz.vutbr.fit.iha;
+package cz.vutbr.fit.iha.arrayadapter;
 
 import java.util.List;
 
@@ -12,6 +12,11 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.TextView;
+import cz.vutbr.fit.iha.R;
+import cz.vutbr.fit.iha.R.drawable;
+import cz.vutbr.fit.iha.R.id;
+import cz.vutbr.fit.iha.R.layout;
+import cz.vutbr.fit.iha.R.string;
 import cz.vutbr.fit.iha.adapter.Adapter;
 import cz.vutbr.fit.iha.adapter.device.BaseDevice;
 import cz.vutbr.fit.iha.adapter.device.Facility;

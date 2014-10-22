@@ -1,4 +1,4 @@
-package cz.vutbr.fit.iha.activity;
+package cz.vutbr.fit.iha.base;
 
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.google.analytics.tracking.android.EasyTracker;

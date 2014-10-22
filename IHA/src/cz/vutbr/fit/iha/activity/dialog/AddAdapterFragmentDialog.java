@@ -16,10 +16,10 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import cz.vutbr.fit.iha.Constants;
 import cz.vutbr.fit.iha.R;
-import cz.vutbr.fit.iha.activity.LocationScreenActivity;
-import cz.vutbr.fit.iha.activity.TrackDialogFragment;
+import cz.vutbr.fit.iha.activity.MainActivity;
 import cz.vutbr.fit.iha.asynctask.CallbackTask.CallbackTaskListener;
 import cz.vutbr.fit.iha.asynctask.RegisterAdapterTask;
+import cz.vutbr.fit.iha.base.TrackDialogFragment;
 import cz.vutbr.fit.iha.controller.Controller;
 import cz.vutbr.fit.iha.pair.RegisterAdapterPair;
 import cz.vutbr.fit.iha.thread.ToastMessageThread;
@@ -28,7 +28,7 @@ public class AddAdapterFragmentDialog extends TrackDialogFragment {
 
 	private static final String TAG = AddAdapterFragmentDialog.class.getSimpleName();
 
-	public LocationScreenActivity mActivity;
+	public MainActivity mActivity;
 	private View mView;
 	private Controller mController;
 	
@@ -39,7 +39,7 @@ public class AddAdapterFragmentDialog extends TrackDialogFragment {
 		super.onCreate(savedInstanceState);
 
 		// Get activity and controller
-		mActivity = (LocationScreenActivity)getActivity();
+		mActivity = (MainActivity)getActivity();
 		mController = Controller.getInstance(mActivity.getApplicationContext());
 
 		// Use the Builder class for convenient dialog construction
@@ -85,7 +85,7 @@ public class AddAdapterFragmentDialog extends TrackDialogFragment {
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
 
-		if (requestCode == 0 && resultCode == LocationScreenActivity.RESULT_OK) {
+		if (requestCode == 0 && resultCode == MainActivity.RESULT_OK) {
 			// Fill scanned code into edit text
 			EditText serialNumberEdit = (EditText) mView.findViewById(R.id.addadapter_ser_num);
 			serialNumberEdit.setText(data.getStringExtra("SCAN_RESULT"));

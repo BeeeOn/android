@@ -1,6 +1,9 @@
-package cz.vutbr.fit.iha;
+package cz.vutbr.fit.iha.menu;
 
 import java.util.List;
+
+import com.actionbarsherlock.view.ActionMode;
+import com.actionbarsherlock.view.Menu;
 
 import se.emilsjolander.stickylistheaders.StickyListHeadersListView;
 import android.content.Intent;
@@ -20,9 +23,12 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.Toast;
-import cz.vutbr.fit.iha.activity.BaseApplicationActivity;
+import cz.vutbr.fit.iha.R;
+import cz.vutbr.fit.iha.R.drawable;
+import cz.vutbr.fit.iha.R.id;
+import cz.vutbr.fit.iha.R.string;
 import cz.vutbr.fit.iha.activity.LocationDetailActivity;
-import cz.vutbr.fit.iha.activity.LocationScreenActivity;
+import cz.vutbr.fit.iha.activity.MainActivity;
 import cz.vutbr.fit.iha.activity.SettingsMainActivity;
 import cz.vutbr.fit.iha.activity.dialog.InfoDialogFragment;
 import cz.vutbr.fit.iha.activity.menuItem.AdapterMenuItem;
@@ -35,9 +41,11 @@ import cz.vutbr.fit.iha.activity.menuItem.SeparatorMenuItem;
 import cz.vutbr.fit.iha.activity.menuItem.SettingMenuItem;
 import cz.vutbr.fit.iha.adapter.Adapter;
 import cz.vutbr.fit.iha.adapter.location.Location;
+import cz.vutbr.fit.iha.arrayadapter.MenuListAdapter;
 import cz.vutbr.fit.iha.asynctask.CallbackTask.CallbackTaskListener;
 import cz.vutbr.fit.iha.asynctask.SwitchAdapterTask;
 import cz.vutbr.fit.iha.asynctask.UnregisterAdapterTask;
+import cz.vutbr.fit.iha.base.BaseApplicationActivity;
 import cz.vutbr.fit.iha.controller.Controller;
 import cz.vutbr.fit.iha.household.ActualUser;
 import cz.vutbr.fit.iha.persistence.Persistence;
@@ -66,12 +74,15 @@ public class NavDrawerMenu {
 	private UnregisterAdapterTask mUnregisterAdapterTask;
 	
 	private MenuListAdapter mMenuAdapter;
+
+	//
+	private ActionMode mMode;
 	
 	public NavDrawerMenu (BaseApplicationActivity activity) {
 		// Set activity
 		mActivity = activity;
 		
-		backPressed = ((LocationScreenActivity) mActivity).getBackPressed();
+		backPressed = ((MainActivity) mActivity).getBackPressed();
 		// Get controller
 		mController = Controller.getInstance(mActivity);
 
@@ -97,7 +108,7 @@ public class NavDrawerMenu {
 			@Override
 			public boolean onKey(View v, int keyCode, KeyEvent event) {
 				if (keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_UP) {
-					backPressed = ((LocationScreenActivity) mActivity).getBackPressed();
+					backPressed = ((MainActivity) mActivity).getBackPressed();
 					Log.d(TAG, "BackPressed = " + String.valueOf(backPressed));
 					if (mDrawerLayout == null) {
 						return false;
@@ -165,17 +176,19 @@ public class NavDrawerMenu {
 						MenuItem item = (MenuItem) mMenuAdapter.getItem(position);
 						switch (item.getType()) {
 						case LOCATION:
+							mMode = mActivity.startActionMode(new ActionModeLocations());
+							/*
 							Bundle bundle = new Bundle();
 							String myMessage = item.getId();
 							bundle.putString("locationID", myMessage);
 							Intent intent = new Intent(mActivity, LocationDetailActivity.class);
 							intent.putExtras(bundle);
-							mActivity.startActivity(intent);
+							mActivity.startActivity(intent);*/
 							break;
 						case ADAPTER:
 							Log.i(TAG, "deleting adapter");
-						
-							doUnregistAdapter(item.getId());
+							mMode = mActivity.startActionMode(new ActionModeAdapters());
+							//doUnregistAdapter(item.getId());
 							break;
 						default:
 							// do nothing
@@ -192,7 +205,7 @@ public class NavDrawerMenu {
 				mDrawerToggle = new ActionBarDrawerToggle(mActivity, mDrawerLayout, R.drawable.ic_drawer, R.string.drawer_open, R.string.drawer_close) {
 
 					public void onDrawerClosed(View view) {
-						backPressed = ((LocationScreenActivity) mActivity).getBackPressed();
+						backPressed = ((MainActivity) mActivity).getBackPressed();
 						if (backPressed)
 							mActivity.onBackPressed();
 						// Set the title on the action when drawer closed
@@ -277,9 +290,9 @@ public class NavDrawerMenu {
 		// no adapters or sensors
 		Log.d("default", "DEFAULT POSITION: Empty adapter or sensor set");
 		// TODO
-		((LocationScreenActivity) mActivity).setActiveAdapterID(mActiveAdapterId);
-		((LocationScreenActivity) mActivity).setActiveLocationID(mActiveLocationId);
-		((LocationScreenActivity) mActivity).redrawDevices();
+		((MainActivity) mActivity).setActiveAdapterID(mActiveAdapterId);
+		((MainActivity) mActivity).setActiveLocationID(mActiveLocationId);
+		((MainActivity) mActivity).redrawDevices();
 	}
 	
 	private void changeLocation(Location location, boolean closeDrawer) {
@@ -296,9 +309,9 @@ public class NavDrawerMenu {
 
 		// TODO
 		
-		((LocationScreenActivity) mActivity).setActiveAdapterID(mActiveAdapterId);
-		((LocationScreenActivity) mActivity).setActiveLocationID(mActiveLocationId);
-		((LocationScreenActivity) mActivity).redrawDevices();
+		((MainActivity) mActivity).setActiveAdapterID(mActiveAdapterId);
+		((MainActivity) mActivity).setActiveLocationID(mActiveLocationId);
+		((MainActivity) mActivity).redrawDevices();
 
 
 		// mDrawerList.setItemChecked(position, true);
@@ -439,7 +452,7 @@ public class NavDrawerMenu {
 		Log.d(TAG, "firtstTap");
 		Toast.makeText(mActivity, mActivity.getString(R.string.toast_tap_again_exit), Toast.LENGTH_SHORT).show();
 		//backPressed = true;
-		((LocationScreenActivity) mActivity).setBackPressed(true);
+		((MainActivity) mActivity).setBackPressed(true);
 		openMenu();
 	}
 
@@ -477,4 +490,72 @@ public class NavDrawerMenu {
 		}
 	}
 	
+	
+	class ActionModeAdapters implements ActionMode.Callback {
+
+		@Override
+		public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+			menu.add("Edit").setShowAsAction(com.actionbarsherlock.view.MenuItem.SHOW_AS_ACTION_ALWAYS);
+			menu.add("Unregist").setShowAsAction(com.actionbarsherlock.view.MenuItem.SHOW_AS_ACTION_IF_ROOM);
+			menu.add("Cancel").setIcon(R.drawable.iha_ic_action_cancel).setTitle("Cancel").setShowAsAction(com.actionbarsherlock.view.MenuItem.SHOW_AS_ACTION_ALWAYS);
+			return true;
+		}
+
+		@Override
+		public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+			// TODO Auto-generated method stub
+			return false;
+		}
+
+
+		@Override
+		public void onDestroyActionMode(ActionMode mode) {
+			// TODO Auto-generated method stub
+			// sNameEdit.clearFocus();
+			// sNameEdit.setVisibility(View.GONE);
+			// sName.setVisibility(View.VISIBLE);
+			mMode = null;
+
+		}
+
+		@Override
+		public boolean onActionItemClicked(ActionMode mode, com.actionbarsherlock.view.MenuItem item) {
+			mode.finish();
+			return true;
+		}
+	}
+	
+	class ActionModeLocations implements ActionMode.Callback {
+
+		@Override
+		public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+			menu.add("Edit").setShowAsAction(com.actionbarsherlock.view.MenuItem.SHOW_AS_ACTION_ALWAYS);
+			//menu.add("Unregist").setShowAsAction(com.actionbarsherlock.view.MenuItem.SHOW_AS_ACTION_IF_ROOM);
+			menu.add("Cancel").setIcon(R.drawable.iha_ic_action_cancel).setTitle("Cancel").setShowAsAction(com.actionbarsherlock.view.MenuItem.SHOW_AS_ACTION_ALWAYS);
+			return true;
+		}
+
+		@Override
+		public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+			// TODO Auto-generated method stub
+			return false;
+		}
+
+
+		@Override
+		public void onDestroyActionMode(ActionMode mode) {
+			// TODO Auto-generated method stub
+			// sNameEdit.clearFocus();
+			// sNameEdit.setVisibility(View.GONE);
+			// sName.setVisibility(View.VISIBLE);
+			mMode = null;
+
+		}
+
+		@Override
+		public boolean onActionItemClicked(ActionMode mode, com.actionbarsherlock.view.MenuItem item) {
+			mode.finish();
+			return true;
+		}
+	}
 }

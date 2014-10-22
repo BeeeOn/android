@@ -1,4 +1,4 @@
-package cz.vutbr.fit.iha.activity;
+package cz.vutbr.fit.iha.activity.fragment;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -46,8 +46,8 @@ import com.jjoe64.graphview.GraphViewSeries;
 import com.jjoe64.graphview.GraphViewSeries.GraphViewSeriesStyle;
 import com.jjoe64.graphview.LineGraphView;
 
-import cz.vutbr.fit.iha.LocationArrayAdapter;
 import cz.vutbr.fit.iha.R;
+import cz.vutbr.fit.iha.activity.SensorDetailActivity;
 import cz.vutbr.fit.iha.adapter.Adapter;
 import cz.vutbr.fit.iha.adapter.device.BaseDevice;
 import cz.vutbr.fit.iha.adapter.device.BaseDevice.SaveDevice;
@@ -57,6 +57,7 @@ import cz.vutbr.fit.iha.adapter.device.DeviceLog.DataType;
 import cz.vutbr.fit.iha.adapter.device.Facility;
 import cz.vutbr.fit.iha.adapter.device.RefreshInterval;
 import cz.vutbr.fit.iha.adapter.location.Location;
+import cz.vutbr.fit.iha.arrayadapter.LocationArrayAdapter;
 import cz.vutbr.fit.iha.asynctask.CallbackTask.CallbackTaskListener;
 import cz.vutbr.fit.iha.asynctask.SaveDeviceTask;
 import cz.vutbr.fit.iha.controller.Controller;

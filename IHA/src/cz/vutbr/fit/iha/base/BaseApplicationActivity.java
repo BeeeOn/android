@@ -1,7 +1,8 @@
-package cz.vutbr.fit.iha.activity;
+package cz.vutbr.fit.iha.base;
 
 import android.content.Context;
 import android.content.Intent;
+import cz.vutbr.fit.iha.activity.LoginActivity;
 import cz.vutbr.fit.iha.controller.Controller;
 
 /**

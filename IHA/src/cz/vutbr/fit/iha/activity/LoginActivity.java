@@ -22,6 +22,7 @@ import com.google.android.gms.common.GooglePlayServicesUtil;
 
 import cz.vutbr.fit.iha.R;
 import cz.vutbr.fit.iha.adapter.Adapter;
+import cz.vutbr.fit.iha.base.BaseActivity;
 import cz.vutbr.fit.iha.controller.Controller;
 import cz.vutbr.fit.iha.exception.NotImplementedException;
 import cz.vutbr.fit.iha.household.DemoHousehold;
@@ -102,7 +103,7 @@ public class LoginActivity extends BaseActivity {
 			mController.initGoogle(this, mController.getLastEmail());
 
 			if (!isRedirect) {
-				Intent intent = new Intent(this, LocationScreenActivity.class);
+				Intent intent = new Intent(this, MainActivity.class);
 				startActivity(intent);
 			}
 
@@ -134,7 +135,7 @@ public class LoginActivity extends BaseActivity {
 						mController.login(DemoHousehold.DEMO_EMAIL);
 
 						if (!isRedirect) {
-							Intent intent = new Intent(LoginActivity.this, LocationScreenActivity.class);
+							Intent intent = new Intent(LoginActivity.this, MainActivity.class);
 							startActivity(intent);
 						}
 
@@ -437,7 +438,7 @@ public class LoginActivity extends BaseActivity {
 
 				if (!mDoGoogleLoginRunnable.isStopped()) {
 					if (!isRedirect) {
-						Intent intent = new Intent(this, LocationScreenActivity.class);
+						Intent intent = new Intent(this, MainActivity.class);
 						startActivity(intent);
 					}
 

@@ -16,18 +16,18 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.Toast;
 import cz.vutbr.fit.iha.R;
-import cz.vutbr.fit.iha.activity.LocationScreenActivity;
-import cz.vutbr.fit.iha.activity.TrackDialogFragment;
+import cz.vutbr.fit.iha.activity.MainActivity;
 import cz.vutbr.fit.iha.adapter.Adapter;
 import cz.vutbr.fit.iha.adapter.device.Facility;
 import cz.vutbr.fit.iha.asynctask.CallbackTask.CallbackTaskListener;
 import cz.vutbr.fit.iha.asynctask.PairRequestTask;
 import cz.vutbr.fit.iha.asynctask.ReloadUninitializedTask;
+import cz.vutbr.fit.iha.base.TrackDialogFragment;
 import cz.vutbr.fit.iha.controller.Controller;
 
 public class AddSensorFragmentDialog extends TrackDialogFragment {
 
-	public LocationScreenActivity mActivity;
+	public MainActivity mActivity;
 	private View mView;
 	private Controller mController;
 
@@ -47,7 +47,7 @@ public class AddSensorFragmentDialog extends TrackDialogFragment {
 	private PairRequestTask mPairRequestTask;
 	private ReloadUninitializedTask mReloadUninitializedTask;
 
-	private static final String TAG = LocationScreenActivity.class.getSimpleName();
+	private static final String TAG = MainActivity.class.getSimpleName();
 	
 	private static final String TIMER_VALUE_PAUSE = "AddSensorTimerValueOnPause";
 	//private static final String TIMER_BOOL_PAUSE = "AddSensorTimerBooleanOnPause";
@@ -59,7 +59,7 @@ public class AddSensorFragmentDialog extends TrackDialogFragment {
 		super.onCreate(savedInstanceState);
 		
 		// Get activity and controller
-		mActivity = (LocationScreenActivity)getActivity();
+		mActivity = (MainActivity)getActivity();
 		mController = Controller.getInstance(mActivity.getApplicationContext());
 		
 		// Use the Builder class for convenient dialog construction

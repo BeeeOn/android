@@ -1,4 +1,4 @@
-package cz.vutbr.fit.iha;
+package cz.vutbr.fit.iha.arrayadapter;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
+import cz.vutbr.fit.iha.R;
 import cz.vutbr.fit.iha.adapter.device.Facility;
 
 public class SetupSensorListAdapter extends BaseAdapter {
