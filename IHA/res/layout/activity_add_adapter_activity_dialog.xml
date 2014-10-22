@@ -6,7 +6,6 @@
     android:minWidth="260dp"
     android:minHeight="200dp"
     android:background="@color/light_gray"
-   
     >
 
     <LinearLayout

@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import cz.vutbr.fit.iha.Constants;
@@ -43,12 +44,11 @@ public class AddAdapterFragmentDialog extends TrackDialogFragment {
 
 		// Use the Builder class for convenient dialog construction
 		AlertDialog.Builder builder = new AlertDialog.Builder(mActivity);
-
+		
 		LayoutInflater inflater = mActivity.getLayoutInflater();
 
 		// Get View
 		mView = inflater.inflate(R.layout.activity_add_adapter_activity_dialog, null);
-
 		// Set on ImageView onClick
 		((ImageButton) mView.findViewById(R.id.addadapter_qrcode_button)).setOnClickListener(new OnClickListener() {
 			@Override
@@ -103,6 +103,7 @@ public class AddAdapterFragmentDialog extends TrackDialogFragment {
 	    
 	    final AlertDialog dialog = (AlertDialog)getDialog();
 
+	    dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
 	    if (dialog != null) {
 	        dialog.getButton(Dialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
 

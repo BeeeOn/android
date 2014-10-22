@@ -11,6 +11,7 @@ import android.support.v4.app.DialogFragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.WindowManager;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.Toast;
@@ -127,7 +128,7 @@ public class AddSensorFragmentDialog extends TrackDialogFragment {
 	    doPairRequestTask(mAdapter.getId());
 	    
 	    final AlertDialog dialog = (AlertDialog)getDialog();
-
+	    dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
 	    if (dialog != null) {
 	    	mPosButton = dialog.getButton(Dialog.BUTTON_POSITIVE);
 	    	mNegButton = dialog.getButton(Dialog.BUTTON_NEGATIVE);

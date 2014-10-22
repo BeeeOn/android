@@ -107,22 +107,6 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".activity.dialog.AddSensorFragmentDialog"
-            android:theme="@style/MyDialog" >
-        </activity>
-        <activity
-            android:name=".activity.dialog.SetupSensorFragmentDialog"
-            android:theme="@style/MyDialog" >
-        </activity>
-        <!-- <activity -->
-        <!-- android:name="cz.vutbr.fit.iha.activity.dialog.AddAdapterFragmentDialog" -->
-        <!-- android:theme="@android:style/Theme.Dialog"> -->
-        <!-- </activity> -->
-        <activity
-            android:name=".activity.dialog.EditLocationActitivityDialog"
-            android:theme="@style/MyDialog" >
-        </activity>
-        <activity
             android:name=".activity.SettingsMainActivity"
             android:label="@string/preference_activity_title" >
             <intent-filter>
