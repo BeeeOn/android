@@ -3,6 +3,7 @@ package cz.vutbr.fit.iha.controller;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Map;
+import java.util.WeakHashMap;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -20,6 +21,8 @@ import cz.vutbr.fit.iha.adapter.location.Location;
 import cz.vutbr.fit.iha.exception.IhaException;
 import cz.vutbr.fit.iha.exception.NetworkError;
 import cz.vutbr.fit.iha.exception.NotImplementedException;
+import cz.vutbr.fit.iha.gcm.INotificationReceiver;
+import cz.vutbr.fit.iha.gcm.Notification;
 import cz.vutbr.fit.iha.household.ActualUser;
 import cz.vutbr.fit.iha.household.Household;
 import cz.vutbr.fit.iha.household.User;
@@ -58,6 +61,9 @@ public final class Controller {
 
 	/** Switch for using demo mode (with example adapter, without server) */
 	private static boolean mDemoMode = false;
+
+	/** Weak map for holding registered notification receivers */
+	private final WeakHashMap<INotificationReceiver, Boolean> mNotificationReceivers = new WeakHashMap<INotificationReceiver, Boolean>();
 
 	/**
 	 * Return singleton instance of this Controller. This is thread-safe.
@@ -282,7 +288,7 @@ public final class Controller {
 
 		return mHousehold.facilitiesModel.refreshFacility(facility, forceReload);
 	}
-	
+
 	/**
 	 * This CAN'T be called on UI thread!
 	 * 
@@ -379,7 +385,8 @@ public final class Controller {
 	}
 
 	/**
-	 * Registers new adapter to server. Automatically reloads list of adapters, set this adapter as active and load all its sensors.
+	 * Registers new adapter to server. Automatically reloads list of adapters, set this adapter as active and load all
+	 * its sensors.
 	 * 
 	 * This CAN'T be called on UI thread!
 	 * 
@@ -750,7 +757,7 @@ public final class Controller {
 		if (mNetwork instanceof Network) {
 			return ((Network) mNetwork).startGoogleAuth(blocking, fetchPhoto);
 		}
-		
+
 		return false;
 	}
 
@@ -765,9 +772,12 @@ public final class Controller {
 		return ""; // FIXME: gcmid
 
 		/*
-		 * String registrationId = mPersistence.loadGCMRegistrationId(); if (registrationId.isEmpty()) { Log.i(TAG, "GCM: Registration not found."); return ""; } // Check if app was updated; if so, it
-		 * must clear the registration ID // since the existing regID is not guaranteed to work with the new // app version. int registeredVersion = mPersistence.loadLastApplicationVersion(); int
-		 * currentVersion = Utils.getAppVersion(mContext); if (registeredVersion != currentVersion) { Log.i(TAG, "GCM: App version changed."); return ""; } return registrationId;
+		 * String registrationId = mPersistence.loadGCMRegistrationId(); if (registrationId.isEmpty()) { Log.i(TAG,
+		 * "GCM: Registration not found."); return ""; } // Check if app was updated; if so, it must clear the
+		 * registration ID // since the existing regID is not guaranteed to work with the new // app version. int
+		 * registeredVersion = mPersistence.loadLastApplicationVersion(); int currentVersion =
+		 * Utils.getAppVersion(mContext); if (registeredVersion != currentVersion) { Log.i(TAG,
+		 * "GCM: App version changed."); return ""; } return registrationId;
 		 */
 	}
 
@@ -800,6 +810,44 @@ public final class Controller {
 	 */
 	public Boolean switchActorValue(Device device) {
 		return mHousehold.facilitiesModel.switchActor(device);
+	}
+		
+	/** Notification methods ************************************************/
+
+	/**
+	 * Register receiver for receiving new notifications.
+	 * 
+	 * @param receiver
+	 */
+	public void registerNotificationReceiver(INotificationReceiver receiver) {
+		mNotificationReceivers.put(receiver, true);
+	}
+
+	/**
+	 * Unregister listener from receiving new notifications.
+	 * 
+	 * @param receiver
+	 */
+	public void unregisterNotificationReceiver(INotificationReceiver receiver) {
+		mNotificationReceivers.remove(receiver);
+	}
+
+	/**
+	 * Sends Notification to all registered receivers.
+	 * 
+	 * <br>
+	 * NOTE: This should be called by some GcmHandler only. Or maybe this should be inside of that class directly and
+	 * Controller should "redirect" (un)registering for calling it there too.
+	 * 
+	 * @param notification
+	 * @return
+	 */
+	public int receiveNotification(Notification notification) {
+		for (INotificationReceiver receiver : mNotificationReceivers.keySet()) {
+			receiver.receiveNotification(notification);
+		}
+
+		return mNotificationReceivers.size();
 	}
 
 }
