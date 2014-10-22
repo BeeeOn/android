@@ -4,13 +4,16 @@ import android.content.Context;
 import android.content.Intent;
 import cz.vutbr.fit.iha.activity.LoginActivity;
 import cz.vutbr.fit.iha.controller.Controller;
+import cz.vutbr.fit.iha.gcm.INotificationReceiver;
+import cz.vutbr.fit.iha.gcm.Notification;
+import cz.vutbr.fit.iha.thread.ToastMessageThread;
 
 /**
  * Abstract parent for activities that requires logged in user
  * 
  * When user is not logged in, it will switch to LoginActivity automatically.
  */
-public abstract class BaseApplicationActivity extends BaseActivity {
+public abstract class BaseApplicationActivity extends BaseActivity implements INotificationReceiver {
 
 	private boolean triedLoginAlready = false;
 
@@ -20,7 +23,9 @@ public abstract class BaseApplicationActivity extends BaseActivity {
 	public void onResume() {
 		super.onResume();
 
-		if (!Controller.getInstance(getApplicationContext()).isLoggedIn()) {
+		Controller controller = Controller.getInstance(getApplicationContext());
+
+		if (!controller.isLoggedIn()) {
 			if (!triedLoginAlready) {
 				triedLoginAlready = true;
 				redirectToLogin(this);
@@ -32,6 +37,8 @@ public abstract class BaseApplicationActivity extends BaseActivity {
 			triedLoginAlready = false;
 		}
 
+		controller.registerNotificationReceiver(this);
+
 		isPaused = false;
 		onAppResume();
 	}
@@ -39,6 +46,9 @@ public abstract class BaseApplicationActivity extends BaseActivity {
 	@Override
 	public void onPause() {
 		super.onPause();
+
+		Controller controller = Controller.getInstance(getApplicationContext());
+		controller.unregisterNotificationReceiver(this);
 
 		isPaused = true;
 		onAppPause();
@@ -61,5 +71,13 @@ public abstract class BaseApplicationActivity extends BaseActivity {
 	 * This is called after onPause()
 	 */
 	protected abstract void onAppPause();
+
+	/**
+	 * Method that receives Notifications.
+	 */
+	public void receiveNotification(Notification notification) {
+		// FIXME: Leo (or someone else?) should implement correct handling of notifications (showing somewhere in activity or something like that?)
+		(new ToastMessageThread(this, notification.getMessage())).start();
+	}
 
 }
