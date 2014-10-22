@@ -177,7 +177,7 @@ public class XmlCreator {
 	 * @since 2.2
 	 */
 	public static String createAddAdapter(String sid, String aid, String adapterName) {
-		return createComAttribsVariant(Xconstants.STATE, ADDADAPTER, Xconstants.SID, sid, Xconstants.AID, aid, Xconstants.NAME, adapterName);
+		return createComAttribsVariant(Xconstants.STATE, ADDADAPTER, Xconstants.SID, sid, Xconstants.AID, aid, Xconstants.ANAME, adapterName);
 	}
 
 	/**
@@ -209,7 +209,7 @@ public class XmlCreator {
 	}
 
 	// ////////////////////////////////////////////////////////////////////////////////////////////////
-	// /////////////////////////////////////Xconstants.DEVICES,LOGS///////////////////////////////////////////////
+	// /////////////////////////////////////DEVICES,LOGS///////////////////////////////////////////////
 	// ////////////////////////////////////////////////////////////////////////////////////////////////
 
 	/**
@@ -505,7 +505,7 @@ public class XmlCreator {
 	 * @since 2.2
 	 */
 	public static String createSwitch(String sid, String aid, BaseDevice device) {
-		return createComAttribsVariant(Xconstants.STATE, SWITCH, Xconstants.SID, sid, Xconstants.AID, aid, Xconstants.DID, device.getFacility().getAddress(), Xconstants.TYPE, Integer.toString(device.getType().getTypeId()), Xconstants.VALUE, String.valueOf(device.getValue().getDoubleValue()));
+		return createComAttribsVariant(Xconstants.STATE, SWITCH, Xconstants.SID, sid, Xconstants.AID, aid, Xconstants.DID, device.getFacility().getAddress(), Xconstants.DTYPE, Integer.toString(device.getType().getTypeId()), Xconstants.VALUE, String.valueOf(device.getValue().getDoubleValue()));
 	}
 
 	/**
@@ -541,7 +541,7 @@ public class XmlCreator {
 	 * @since 2.2
 	 */
 	public static String createAddRoom(String sid, String aid, Location location) {
-		return createComAttribsVariant(Xconstants.STATE, ADDROOM, Xconstants.SID, sid, Xconstants.AID, aid, Xconstants.TYPE, Integer.toString(location.getType()), Xconstants.NAME, location.getName());
+		return createComAttribsVariant(Xconstants.STATE, ADDROOM, Xconstants.SID, sid, Xconstants.AID, aid, Xconstants.LTYPE, Integer.toString(location.getType()), Xconstants.LNAME, location.getName());
 	}
 
 	/**
@@ -833,7 +833,7 @@ public class XmlCreator {
 	}
 
 	// ////////////////////////////////////////////////////////////////////////////////////////////////
-	// /////////////////////////////////////Xconstants.TIME///////////////////////////////////////////////////////
+	// /////////////////////////////////////TIME///////////////////////////////////////////////////////
 	// ////////////////////////////////////////////////////////////////////////////////////////////////
 
 	/**
@@ -885,7 +885,7 @@ public class XmlCreator {
 	}
 
 	// ////////////////////////////////////////////////////////////////////////////////////////////////
-	// /////////////////////////////////////CONDITIONS,Xconstants.ACTIONS/////////////////////////////////////////
+	// /////////////////////////////////////CONDITIONS,ACTIONS/////////////////////////////////////////
 	// ////////////////////////////////////////////////////////////////////////////////////////////////
 
 	/**
@@ -1213,8 +1213,8 @@ public class XmlCreator {
 			serializer.attribute(ns, Xconstants.SID, sid);
 			serializer.attribute(ns, Xconstants.STATE, state);
 			serializer.attribute(ns, Xconstants.VERSION, COM_VER);
-			serializer.attribute(ns, Xconstants.NAME, name);
-			serializer.attribute(ns, Xconstants.TYPE, type.getValue());
+			serializer.attribute(ns, Xconstants.CNAME, name);
+			serializer.attribute(ns, Xconstants.CTYPE, type.getValue());
 			if (state.equals(SETCONDITION))
 				serializer.attribute(ns, Xconstants.ID, cid);
 
@@ -1337,7 +1337,7 @@ public class XmlCreator {
 			serializer.attribute(ns, Xconstants.SID, sid);
 			serializer.attribute(ns, Xconstants.STATE, state);
 			serializer.attribute(ns, Xconstants.VERSION, COM_VER);
-			serializer.attribute(ns, Xconstants.NAME, name);
+			serializer.attribute(ns, Xconstants.ACNAME, name);
 			if (state.equals(SETACTION))
 				serializer.attribute(ns, Xconstants.ACID, actid);
 

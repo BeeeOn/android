@@ -47,9 +47,16 @@ public class Xconstants {
 	public static final String TYPE = "type";
 	public static final String FTYPE = "ftype";
 	public static final String DTYPE = "dtype";
+	public static final String LTYPE = "ltype";
+	public static final String CTYPE = "ctype";
 	public static final String VISIBILITY = "vis";
 	public static final String LOCATION = "loc";
 	public static final String NAME = "name";
+	public static final String ANAME = "aname";
+	public static final String DNAME = "dname";
+	public static final String LNAME = "lname";
+	public static final String CNAME = "cname";
+	public static final String ACNAME = "acname";
 	public static final String REFRESH = "refresh";
 	public static final String BATTERY = "bat";
 	public static final String VALUE = "val";
