@@ -72,7 +72,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".activity.LocationScreenActivity"
+            android:name=".activity.MainActivity"
             android:label="@string/title_activity_location_screen" >
         </activity>
         <activity
