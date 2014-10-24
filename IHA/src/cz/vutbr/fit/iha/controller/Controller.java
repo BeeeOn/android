@@ -168,7 +168,8 @@ public final class Controller {
 			switch (e.getDetail().getErrCode()) {
 			case 0:
 				break;
-			case 1: // bad token or email
+			case 2:
+			case 3: // bad token or email
 				try {
 					// TODO: do this otherway
 					// GoogleAuth ggAuth = GoogleAuth.getGoogleAuth();
@@ -190,7 +191,7 @@ public final class Controller {
 				}
 				break;
 			default:
-				break;
+				throw e;
 			}
 		}
 		return false;

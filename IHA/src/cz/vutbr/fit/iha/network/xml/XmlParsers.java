@@ -142,7 +142,7 @@ public class XmlParsers {
 		switch (state) {
 		case TRUE:
 			// String (sessionID)
-			result.data = getSecureAttrValue(Xconstants.SID);
+			result.setSessionId(getSecureAttrValue(Xconstants.SID));
 			break;
 		case FALSE:
 			// FalseAnswer
@@ -265,10 +265,10 @@ public class XmlParsers {
 		Object trouble = null;
 		int err = getSecureInt(getSecureAttrValue(Xconstants.ERRCODE));
 		if (err == 10) { // TODO: check this with pavel
-			trouble = getFalseMessage6();
+			trouble = getFalseMessage10();
 		}
 		if (err == 17) { // TODO: check this with pavel
-			trouble = getFalseMessage13();
+			trouble = getFalseMessage17();
 		}
 		return new FalseAnswer(readText(Xconstants.COM_ROOT), err, trouble);
 	}
@@ -357,7 +357,7 @@ public class XmlParsers {
 			} while (mParser.nextTag() != XmlPullParser.END_TAG && !mParser.getName().equals(Xconstants.DEVICE));
 
 			result.add(facility);
-			mParser.nextTag(); // dev endtag
+//			mParser.nextTag(); // dev endtag
 
 		} while (mParser.nextTag() != XmlPullParser.END_TAG
 				&& (!mParser.getName().equals(Xconstants.ADAPTER) || !mParser.getName().equals(Xconstants.COM_ROOT)));
@@ -714,7 +714,7 @@ public class XmlParsers {
 	}
 	
 	// ////////////////////////////////////////////////////////////////////////////////////////////////////////
-	// /////////////////////////////////Xconstants.ACTIONS,Xconstants.CONDITIONS/////////////////////////////////////////////////////
+	// /////////////////////////////////ACTIONS,CONDITIONS/////////////////////////////////////////////////////
 	// ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 	// TODO: need to be checked
@@ -794,22 +794,22 @@ public class XmlParsers {
 	 * Method create empty object of device by type
 	 * 
 	 * @param sType
-	 *            string type of device (e.g. 0x03)
+	 *            string type of device
 	 * @return empty object
 	 */
 	private BaseDevice createDeviceByType(String sType) {
 		int iType;
-		if (sType.length() < 3) {
+		if (sType.length() < 1) {
 			iType = -1; // Unknown type
 		} else {
-			iType = Integer.parseInt(sType.replaceAll("0x", ""), 16);
+			iType = Integer.parseInt(sType);
 		}
 		
 		return DeviceType.createDeviceFromType(iType);
 	}
 
 	// FIXME: check on first use
-	List<Facility> getFalseMessage6() throws XmlPullParserException, IOException {
+	List<Facility> getFalseMessage10() throws XmlPullParserException, IOException {
 
 		mParser.nextTag();
 
@@ -854,7 +854,7 @@ public class XmlParsers {
 	}
 
 	// FIXME: check on first use
-	List<User> getFalseMessage13() throws XmlPullParserException, IOException {
+	List<User> getFalseMessage17() throws XmlPullParserException, IOException {
 
 		mParser.nextTag();
 

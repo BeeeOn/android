@@ -409,8 +409,8 @@ public class XmlCreator {
 						serializer.attribute(ns, Xconstants.VISIBILITY, (device.isVisible()) ? Xconstants.ONE : Xconstants.ZERO);
 					if (toSave.contains(SaveDevice.SAVE_NAME))
 						serializer.attribute(ns, Xconstants.NAME, device.getName());
-					if (toSave.contains(SaveDevice.SAVE_VALUE))
-						serializer.attribute(ns, Xconstants.VALUE, String.valueOf(device.getValue().getDoubleValue()));
+//					if (toSave.contains(SaveDevice.SAVE_VALUE))
+//						serializer.attribute(ns, Xconstants.VALUE, String.valueOf(device.getValue().getDoubleValue()));
 
 					serializer.endTag(ns, Xconstants.PART);
 				}

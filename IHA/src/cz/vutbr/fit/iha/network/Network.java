@@ -49,6 +49,7 @@ import cz.vutbr.fit.iha.network.exception.NotRegBException;
 import cz.vutbr.fit.iha.network.xml.CustomViewPair;
 import cz.vutbr.fit.iha.network.xml.FalseAnswer;
 import cz.vutbr.fit.iha.network.xml.ParsedMessage;
+import cz.vutbr.fit.iha.network.xml.Xconstants;
 import cz.vutbr.fit.iha.network.xml.XmlCreator;
 import cz.vutbr.fit.iha.network.xml.XmlParsers;
 import cz.vutbr.fit.iha.network.xml.XmlParsers.State;
@@ -130,6 +131,7 @@ public class Network {
 	private GoogleAuth mGoogleAuth;
 	private ActualUser mUser;
 	private String mSessionID;
+	private String mSecretVar;
 	private boolean mUseDebugServer;
 	private boolean mGoogleReinit;
 	private Controller mController; // FIXME: remove this dependency on controller?
@@ -326,6 +328,7 @@ public class Network {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		mSecretVar = mSessionID;
 		signIn(mUser.getEmail(), mController.getGCMRegistrationId()); // FIXME: gcmid
 	}
 
@@ -349,7 +352,7 @@ public class Network {
 			if (msg.getState() == State.FALSE && ((FalseAnswer) msg.data).getErrCode() == RESIGNCODE) {
 				doResign();
 				// try it one more time
-				result = startCommunication(messageToSend);
+				result = startCommunication(messageToSend.replace(Xconstants.SID + "=\"" + mSecretVar + "\"", Xconstants.SID + "=\"" + mSessionID + "\"")); //FIXME: hot fix
 
 				mLog.d(TAG + " - fromApp", messageToSend);
 				mLog.i(TAG + " - fromSrv", result);
