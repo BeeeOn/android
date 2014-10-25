@@ -372,9 +372,12 @@ public class XmlParsers {
 	 */
 	private DeviceLog parseLogData() throws XmlPullParserException, IOException {
 		mParser.nextTag();
-		mParser.require(XmlPullParser.START_TAG, ns, Xconstants.ROW);
-
+//		mParser.require(XmlPullParser.START_TAG, ns, Xconstants.ROW); // strict solution
+		
 		DeviceLog log = new DeviceLog();
+		
+		if (!mParser.getName().equals(Xconstants.ROW))
+			return log;
 
 		try {
 			do { // TODO: check this stuffs

@@ -1,8 +1,10 @@
 package cz.vutbr.fit.iha.controller;
 
-import java.util.ArrayList;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.EnumSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import android.content.Context;
@@ -731,7 +733,15 @@ public final class Controller {
 		try {
 			Adapter adapter = getAdapter(device.getFacility().getAdapterId());
 			if (adapter != null) {
-				log = mNetwork.getLog(adapter.getId(), device, from, to, type, interval);
+				//FIXME: need revision from rob!!! this should have been done already!!!
+				String format = "yyyy-MM-dd HH:mm:ss";
+				SimpleDateFormat sdf = new SimpleDateFormat(format, Locale.ENGLISH);
+				try {
+					log = mNetwork.getLog(adapter.getId(), device, sdf.parse(from).getTime()+"", sdf.parse(to).getTime()+"", type, interval);
+				} catch (ParseException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
 		} catch (NetworkException e) {
 			e.printStackTrace();
