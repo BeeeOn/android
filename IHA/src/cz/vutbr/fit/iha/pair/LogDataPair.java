@@ -1,5 +1,7 @@
 package cz.vutbr.fit.iha.pair;
 
+import org.joda.time.Interval;
+
 import cz.vutbr.fit.iha.adapter.device.BaseDevice;
 import cz.vutbr.fit.iha.adapter.device.DeviceLog.DataInterval;
 import cz.vutbr.fit.iha.adapter.device.DeviceLog.DataType;
@@ -9,16 +11,14 @@ import cz.vutbr.fit.iha.adapter.device.DeviceLog.DataType;
  */
 public class LogDataPair {
 	public final BaseDevice device;
-	public final String from;
-	public final String to;
+	public final Interval interval;
 	public final DataType type;
-	public final DataInterval interval;
+	public final DataInterval gap;
 
-	public LogDataPair(final BaseDevice device, final String from, final String to, final DataType type, final DataInterval interval) {
+	public LogDataPair(final BaseDevice device, final Interval interval, final DataType type, final DataInterval gap) {
 		this.device = device;
-		this.from = from;
-		this.to = to;
-		this.type = type;
 		this.interval = interval;
+		this.type = type;
+		this.gap = gap;
 	}
 }

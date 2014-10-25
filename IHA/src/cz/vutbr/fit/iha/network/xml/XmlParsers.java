@@ -12,8 +12,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.joda.time.DateTime;
-import org.joda.time.DateTimeZone;
-import org.joda.time.format.DateTimeFormat;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 
@@ -24,6 +22,7 @@ import cz.vutbr.fit.iha.Constants;
 import cz.vutbr.fit.iha.adapter.Adapter;
 import cz.vutbr.fit.iha.adapter.device.BaseDevice;
 import cz.vutbr.fit.iha.adapter.device.DeviceLog;
+import cz.vutbr.fit.iha.adapter.device.DeviceLog.DataRow;
 import cz.vutbr.fit.iha.adapter.device.DeviceType;
 import cz.vutbr.fit.iha.adapter.device.Facility;
 import cz.vutbr.fit.iha.adapter.device.RefreshInterval;
@@ -379,18 +378,22 @@ public class XmlParsers {
 		if (!mParser.getName().equals(Xconstants.ROW))
 			return log;
 
-		try {
-			do { // TODO: check this stuffs
+		do {
+			try {
+				DataRow row = log.new DataRow(readText(Xconstants.ROW));
+				
 				String repeat = getSecureAttrValue(Xconstants.REPEAT);
-				if (!repeat.isEmpty()) {
-					String interval = getSecureAttrValue(Xconstants.INTERVAL);
-					log.addValues(log.expandDataRow(readText(Xconstants.ROW), Integer.parseInt(repeat), Integer.parseInt(interval)));
-				} else
-					log.addValue(log.new DataRow(readText(Xconstants.ROW)));
-			} while (mParser.nextTag() != XmlPullParser.END_TAG && !mParser.getName().equals(Xconstants.COM_ROOT));
-		} catch (IllegalArgumentException e) {
-			throw new RuntimeException(e);
-		}
+				String interval = getSecureAttrValue(Xconstants.INTERVAL);
+				
+				if (!repeat.isEmpty() && !interval.isEmpty()) {
+					log.addValueInterval(row, Integer.parseInt(repeat), Integer.parseInt(interval));
+				} else {
+					log.addValue(row);
+				}
+			} catch (IllegalArgumentException e) {
+				throw new RuntimeException(e);
+			}
+		} while (mParser.nextTag() != XmlPullParser.END_TAG && !mParser.getName().equals(Xconstants.COM_ROOT));
 
 		return log;
 	}

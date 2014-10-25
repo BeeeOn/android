@@ -1,10 +1,7 @@
 package cz.vutbr.fit.iha.controller;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.EnumSet;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 
 import android.content.Context;
@@ -31,6 +28,7 @@ import cz.vutbr.fit.iha.network.GoogleAuth;
 import cz.vutbr.fit.iha.network.Network;
 import cz.vutbr.fit.iha.network.exception.FalseException;
 import cz.vutbr.fit.iha.network.exception.NetworkException;
+import cz.vutbr.fit.iha.pair.LogDataPair;
 import cz.vutbr.fit.iha.persistence.Persistence;
 import cz.vutbr.fit.iha.util.Utils;
 
@@ -722,7 +720,7 @@ public final class Controller {
 	 * @param device
 	 * @return
 	 */
-	public DeviceLog getDeviceLog(BaseDevice device, String from, String to, DataType type, DataInterval interval) {
+	public DeviceLog getDeviceLog(BaseDevice device, LogDataPair pair) {
 		// FIXME: rewrite this method even better - demo mode, caching, etc.
 		DeviceLog log = new DeviceLog(DataType.AVERAGE, DataInterval.RAW);
 
@@ -731,18 +729,7 @@ public final class Controller {
 		}
 
 		try {
-			Adapter adapter = getAdapter(device.getFacility().getAdapterId());
-			if (adapter != null) {
-				//FIXME: need revision from rob!!! this should have been done already!!!
-				String format = "yyyy-MM-dd HH:mm:ss";
-				SimpleDateFormat sdf = new SimpleDateFormat(format, Locale.ENGLISH);
-				try {
-					log = mNetwork.getLog(adapter.getId(), device, sdf.parse(from).getTime()+"", sdf.parse(to).getTime()+"", type, interval);
-				} catch (ParseException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
+			log = mNetwork.getLog(device.getFacility().getAdapterId(), device, pair);
 		} catch (NetworkException e) {
 			e.printStackTrace();
 		}

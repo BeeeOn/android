@@ -20,6 +20,7 @@ import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLContext;
@@ -27,6 +28,7 @@ import javax.net.ssl.SSLHandshakeException;
 import javax.net.ssl.SSLSession;
 import javax.net.ssl.SSLSocket;
 import javax.net.ssl.TrustManagerFactory;
+
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -34,8 +36,6 @@ import cz.vutbr.fit.iha.adapter.Adapter;
 import cz.vutbr.fit.iha.adapter.device.BaseDevice;
 import cz.vutbr.fit.iha.adapter.device.BaseDevice.SaveDevice;
 import cz.vutbr.fit.iha.adapter.device.DeviceLog;
-import cz.vutbr.fit.iha.adapter.device.DeviceLog.DataInterval;
-import cz.vutbr.fit.iha.adapter.device.DeviceLog.DataType;
 import cz.vutbr.fit.iha.adapter.device.Facility;
 import cz.vutbr.fit.iha.adapter.location.Location;
 import cz.vutbr.fit.iha.controller.Controller;
@@ -55,6 +55,7 @@ import cz.vutbr.fit.iha.network.xml.XmlParsers;
 import cz.vutbr.fit.iha.network.xml.XmlParsers.State;
 import cz.vutbr.fit.iha.network.xml.action.ComplexAction;
 import cz.vutbr.fit.iha.network.xml.condition.Condition;
+import cz.vutbr.fit.iha.pair.LogDataPair;
 import cz.vutbr.fit.iha.util.Ilog;
 
 /**
@@ -707,26 +708,31 @@ public class Network {
 	 * 
 	 * @param deviceId
 	 *            id of wanted device
-	 * @param from
-	 *            date from log begin. Based of format YYYY-MM-DD-HH:MM:SS or empty string when wanted the oldest
-	 * @param to
-	 *            date to log end. Based of format YYYY-MM-DD-HH:MM:SS or empty string when wanted the newest
+	 * @param pair
+	 *            data of log (from, to, type, interval)
 	 * @return list of rows with logged data
 	 * @throws NoConnectionException
 	 * @throws CommunicationException
 	 */
 	// http://stackoverflow.com/a/509288/1642090
-	public DeviceLog getLog(String adapterID, BaseDevice device, String from, String to, DataType type, DataInterval interval)
+	public DeviceLog getLog(String adapterID, BaseDevice device, LogDataPair pair)
 			throws NoConnectionException, CommunicationException, FalseException {
-		String msgToSend = XmlCreator.createGetLog(mSessionID, adapterID, device.getFacility().getAddress(), device.getType().getTypeId(), from, to,
-				type.getValue(), interval.getValue());
+		String msgToSend = XmlCreator.createGetLog(
+				mSessionID,
+				adapterID,
+				device.getFacility().getAddress(),
+				device.getType().getTypeId(),
+				String.valueOf(pair.interval.getStartMillis() / 1000),
+				String.valueOf(pair.interval.getEndMillis() / 1000),
+				pair.type.getValue(),
+				pair.gap.getValue());
 
 		ParsedMessage msg = doRequest(msgToSend);
 
 		if (msg.getState() == State.LOGDATA) {
 			DeviceLog result = (DeviceLog) msg.data;
-			result.setDataInterval(interval);
-			result.setDataType(type);
+			result.setDataInterval(pair.gap);
+			result.setDataType(pair.type);
 			return result;
 		}
 		throw new FalseException(((FalseAnswer) msg.data));
