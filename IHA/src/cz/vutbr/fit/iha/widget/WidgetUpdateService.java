@@ -40,34 +40,40 @@ public class WidgetUpdateService extends Service {
 	/** Helpers for managing service updating **/
 
 	public static void startUpdating(Context context, int[] appWidgetIds) {
-		final Intent service = getUpdateIntent(context);
-		service.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, appWidgetIds);
-		context.startService(service);
+		final Intent intent = getUpdateIntent(context);
+		intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, appWidgetIds);
+
+		// Start update service
+		context.startService(intent);
 	}
 
 	public static void stopUpdating(Context context) {
-		final PendingIntent service = getUpdatePendingIntent(context);
-		final AlarmManager m = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-		m.cancel(service);
-		context.stopService(getUpdateIntent(context));
+		// Cancel already planned alarm
+		AlarmManager m = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+		m.cancel(getUpdatePendingIntent(context));
+
+		// Stop update service
+		final Intent intent = getUpdateIntent(context);
+		context.stopService(intent);
 	}
 
-	public static void setAlarm(Context context, long triggerAtMillis) {
-		final PendingIntent service = getUpdatePendingIntent(context);
-		final AlarmManager m = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-		m.set(AlarmManager.ELAPSED_REALTIME, triggerAtMillis, service);
+	private void setAlarm(long triggerAtMillis) {
+		// Set new alarm time
+		Context context = getApplicationContext();
+		AlarmManager m = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+		m.set(AlarmManager.ELAPSED_REALTIME, triggerAtMillis, getUpdatePendingIntent(context));
 	}
 
 	/** Intent factories **/
 
-	public static Intent getUpdateIntent(Context context) {
+	private static Intent getUpdateIntent(Context context) {
 		return new Intent(context, WidgetUpdateService.class);
 	}
 
-	public static PendingIntent getUpdatePendingIntent(Context context) {
+	private static PendingIntent getUpdatePendingIntent(Context context) {
 		final Intent intent = getUpdateIntent(context);
 
-		return PendingIntent.getService(context, 0, intent, PendingIntent.FLAG_CANCEL_CURRENT); // or FLAG_UPDATE_CURRENT?
+		return PendingIntent.getService(context, 0, intent, PendingIntent.FLAG_CANCEL_CURRENT);
 	}
 
 	public static Intent getForceUpdateIntent(Context context, int widgetId) {
@@ -81,7 +87,7 @@ public class WidgetUpdateService extends Service {
 	public static PendingIntent getForceUpdatePendingIntent(Context context, int widgetId) {
 		final Intent intent = getForceUpdateIntent(context, widgetId);
 
-		return PendingIntent.getService(context, widgetId, intent, PendingIntent.FLAG_CANCEL_CURRENT); // or FLAG_UPDATE_CURRENT?
+		return PendingIntent.getService(context, widgetId, intent, PendingIntent.FLAG_CANCEL_CURRENT);
 	}
 
 	/** Service override methods **/
@@ -99,7 +105,7 @@ public class WidgetUpdateService extends Service {
 			Log.d(TAG, String.format("Next update: %d (now: %d)", nextUpdate, SystemClock.elapsedRealtime()));
 
 			if (nextUpdate > 0)
-				setAlarm(this, nextUpdate);
+				setAlarm(nextUpdate);
 		}
 
 		// don't update when screen is off
