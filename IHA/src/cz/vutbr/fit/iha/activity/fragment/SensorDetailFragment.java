@@ -64,6 +64,7 @@ import cz.vutbr.fit.iha.asynctask.SaveFacilityTask;
 import cz.vutbr.fit.iha.controller.Controller;
 import cz.vutbr.fit.iha.pair.LogDataPair;
 import cz.vutbr.fit.iha.pair.SaveDevicePair;
+import cz.vutbr.fit.iha.pair.SaveFacilityPair;
 import cz.vutbr.fit.iha.util.TimeHelper;
 import cz.vutbr.fit.iha.util.UnitsHelper;
 
