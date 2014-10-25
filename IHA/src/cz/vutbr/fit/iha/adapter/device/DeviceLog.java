@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.joda.time.Interval;
-import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
 
 import android.util.Log;
 
@@ -15,10 +13,7 @@ import android.util.Log;
 public class DeviceLog {
 	private static final String TAG = DeviceLog.class.getSimpleName();
 
-	private static final String DATA_FORMAT = "yyyy-MM-dd HH:mm:ss";
 	private static final String DATA_SEPARATOR = "\\s+";
-
-	private DateTimeFormatter mFormatter = DateTimeFormat.forPattern(DATA_FORMAT);
 
 	private List<DataRow> mValues = new ArrayList<DataRow>(); // FIXME: use rather Map
 	private DataType mType;
@@ -46,8 +41,9 @@ public class DeviceLog {
 
 		public static DataType fromValue(String value) {
 			for (DataType item : values()) {
-				if (value.equalsIgnoreCase(item.getValue()))
+				if (value.equalsIgnoreCase(item.getValue())) {
 					return item;
+				}
 			}
 			throw new IllegalArgumentException("Invalid DataType value");
 		}
@@ -73,8 +69,9 @@ public class DeviceLog {
 
 		public static DataInterval fromValue(int value) {
 			for (DataInterval item : values()) {
-				if (value <= item.getValue())
+				if (value <= item.getValue()) {
 					return item;
+				}
 			}
 			throw new IllegalArgumentException("Invalid DataInterval value");
 		}
@@ -94,23 +91,20 @@ public class DeviceLog {
 		public DataRow(String row) throws IllegalArgumentException {
 			String[] parts = row.split(DATA_SEPARATOR);
 
-			if (parts.length != 3) {
+			if (parts.length != 2) {
 				Log.e(TAG, String.format("Wrong number of parts (%d) of data: %s", parts.length, row));
 				throw new IllegalArgumentException();
 			}
 
-			this.dateMillis = mFormatter.parseDateTime(String.format("%s %s", parts[0], parts[1])).getMillis();
-			this.value = Float.parseFloat(parts[2]);
+			this.dateMillis = Long.parseLong(parts[0])*1000;
+			this.value = Float.parseFloat(parts[1]);
 		}
 
-		/**
-		 * Method emulate toString method for debugging
-		 * 
-		 * @return
-		 */
-		public String debugString() {
-			return String.format("%s %s\n", mFormatter.print(dateMillis), value);
+		public DataRow(long dateMillis, float value){
+			this.dateMillis = dateMillis;
+			this.value = value;
 		}
+		
 	}
 
 	/**
@@ -197,8 +191,9 @@ public class DeviceLog {
 		List<DataRow> values = new ArrayList<DataRow>();
 
 		for (DataRow row : mValues) {
-			if (interval.contains(row.dateMillis))
+			if (interval.contains(row.dateMillis)) {
 				values.add(row);
+			}
 		}
 
 		return values;
@@ -218,6 +213,20 @@ public class DeviceLog {
 			mMaxValue = Math.max(mMaxValue, row.value);
 		}
 	}
+	
+	/**
+	 * Add interval of same values.
+	 * 
+	 * @param row
+	 * @param repeat number of rows
+	 * @param interval gap in seconds
+	 * @return
+	 */
+	public void addValueInterval(DataRow row, int repeat, int interval) {
+		for (int i = 0; i <= repeat; i++) {
+			addValue(new DataRow(row.dateMillis + i*(interval * 1000), row.value));
+		}
+	}
 
 	/**
 	 * Clear and set all values.
@@ -227,8 +236,9 @@ public class DeviceLog {
 	public void setValues(List<DataRow> rows) {
 		clearValues();
 
-		for (DataRow row : rows)
+		for (DataRow row : rows) {
 			addValue(row);
+		}
 	}
 
 	public void setDataType(DataType type) {

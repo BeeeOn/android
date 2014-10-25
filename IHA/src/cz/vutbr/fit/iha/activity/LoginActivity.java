@@ -27,6 +27,7 @@ import cz.vutbr.fit.iha.controller.Controller;
 import cz.vutbr.fit.iha.exception.NotImplementedException;
 import cz.vutbr.fit.iha.household.DemoHousehold;
 import cz.vutbr.fit.iha.network.exception.CommunicationException;
+import cz.vutbr.fit.iha.network.exception.FalseException;
 import cz.vutbr.fit.iha.network.exception.NoConnectionException;
 import cz.vutbr.fit.iha.network.exception.NotRegException;
 import cz.vutbr.fit.iha.thread.ToastMessageThread;
@@ -449,7 +450,7 @@ public class LoginActivity extends BaseActivity {
 				errFlag = true;
 				errMessage = "Login failed";
 			}
-		} catch (NotRegException e) {
+		} catch (FalseException e) {
 			e.printStackTrace();
 			if (!mSignUp)
 				doRegisterUser(email);

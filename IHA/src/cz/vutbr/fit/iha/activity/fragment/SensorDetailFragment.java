@@ -1,12 +1,13 @@
 package cz.vutbr.fit.iha.activity.fragment;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Collections;
 import java.util.EnumSet;
-import java.util.GregorianCalendar;
 import java.util.List;
 
+import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
+import org.joda.time.Interval;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
@@ -15,7 +16,6 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.text.format.Time;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -132,7 +132,6 @@ public class SensorDetailFragment extends SherlockFragment {
 
 	private GraphViewSeries mGraphSeries;
 
-	private String mDateTimeFormat = "%Y-%m-%d %H:%M:%S";
 	private String mGraphDateTimeFormat = "dd.MM. kk:mm";
 
 	/**
@@ -512,23 +511,15 @@ public class SensorDetailFragment extends SherlockFragment {
 	}
 
 	private void loadGraphData() {
-		// Get Today
-		Time now = new Time();
-		now.setToNow();
-		// Get before month
-		Time beforeMonth = new Time();
-		Calendar cal = GregorianCalendar.getInstance();
-		cal.add(Calendar.DAY_OF_YEAR, -7);
-
-		beforeMonth.set(cal.get(Calendar.DAY_OF_MONTH), cal.get(Calendar.MONTH), cal.get(Calendar.YEAR));
-
-		Log.d(TAG, "Day: " + cal.get(Calendar.DAY_OF_MONTH) + " Month: " + cal.get(Calendar.MONTH));
-		Log.d(TAG, String.format("Today: %s, beforeDAY month: %s", now.format(mDateTimeFormat), beforeMonth.format(mDateTimeFormat)));
+		DateTime end = DateTime.now(DateTimeZone.UTC);
+		DateTime start = end.minusWeeks(1);
+		
+		Log.d(TAG, String.format("Loading graph data from %s to %s.", start, end));
 
 		mGetDeviceLogTask = new GetDeviceLogTask();
-		LogDataPair pair = new LogDataPair(mDevice, // device
-				beforeMonth.format(mDateTimeFormat), // from
-				now.format(mDateTimeFormat), // to
+		LogDataPair pair = new LogDataPair( //
+				mDevice, // device
+				new Interval(start, end), // interval from-to
 				DataType.AVERAGE, // type
 				DataInterval.HOUR); // interval
 		mGetDeviceLogTask.execute(new LogDataPair[] { pair });
@@ -652,7 +643,7 @@ public class SensorDetailFragment extends SherlockFragment {
 		protected DeviceLog doInBackground(LogDataPair... pairs) {
 			LogDataPair pair = pairs[0]; // expects only one device at a time is sent there
 
-			return mController.getDeviceLog(pair.device, pair.from, pair.to, pair.type, pair.interval);
+			return mController.getDeviceLog(pair.device, pair);
 		}
 
 		@Override

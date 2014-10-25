@@ -16,6 +16,7 @@ public class BaseDevice {
 	protected Facility mFacility;
 	protected String mName = "";
 	protected boolean mLogging;
+	protected boolean mVisibility;
 	
 	public final DeviceType mType;
 	public final BaseValue mValue;
@@ -38,6 +39,7 @@ public class BaseDevice {
 		SAVE_LOGGING, // change logging of device
 		SAVE_REFRESH, // change refresh interval of facility
 		SAVE_VALUE, // change value of actor device
+		SAVE_INITIALIZED,
 	}
 
 	public DeviceType getType() {
@@ -122,6 +124,25 @@ public class BaseDevice {
 		mLogging = logging;
 	}
 
+	/**
+	 * Get visibility of device
+	 * 
+	 * @return true if visible
+	 */
+	public boolean isVisible() {
+		return mVisibility;
+	}
+
+	/**
+	 * Setting visibility of device
+	 * 
+	 * @param visibility
+	 *            true if visible
+	 */
+	public void setVisibility(boolean visibility) {
+		mVisibility = visibility;
+	}
+	
 	@Override
 	public String toString() {
 		return getName();
@@ -133,7 +154,7 @@ public class BaseDevice {
 	 * @return
 	 */
 	public String toDebugString() {
-		return String.format("Name: %s\nLogging: %s\nValue: %s", mName, mLogging, mValue);
+		return String.format("Name: %s\nVisibility: %s\nLogging: %s\nValue: %s", mName, Boolean.toString(mVisibility), mLogging, mValue);
 	}
 
 	/**
@@ -145,6 +166,7 @@ public class BaseDevice {
 	public void replaceData(BaseDevice newDevice) {
 		setFacility(newDevice.getFacility());
 		setLogging(newDevice.isLogging());
+		setVisibility(newDevice.isVisible());
 		setName(newDevice.getName());
 		mValue.setValue(newDevice.mValue.getRawValue());
 	}

@@ -21,7 +21,6 @@ public class Facility {
 	protected int mBattery;
 	protected boolean mLogging;
 	protected String mInvolveTime = "";
-	protected boolean mVisibility;
 	protected int mNetworkQuality;	
 	protected DateTime mLastUpdate;
 	protected final List<BaseDevice> mDevices = new ArrayList<BaseDevice>();
@@ -154,25 +153,6 @@ public class Facility {
 	}
 
 	/**
-	 * Get visibility of facility
-	 * 
-	 * @return true if visible
-	 */
-	public boolean getVisibility() {
-		return mVisibility;
-	}
-
-	/**
-	 * Setting visibility of facility
-	 * 
-	 * @param visibility
-	 *            true if visible
-	 */
-	public void setVisibility(boolean visibility) {
-		mVisibility = visibility;
-	}
-
-	/**
 	 * Returning flag if facility has been initialized yet
 	 * 
 	 * @return
@@ -273,8 +253,8 @@ public class Facility {
 	 * @return
 	 */
 	public String toDebugString() {
-		return String.format("Id: %s\nAdapter: %s\nLocation: %s\nVisibility: %s\nInitialized: %s\nBattery: %s\nLogging: %s\nRefresh: %s\nDevices: %s", getId(), mAdapterId, mLocationId,
-				Boolean.toString(mVisibility), mInitialized, mBattery, mLogging, mRefreshInterval.getInterval(), Integer.toString(mDevices.size()));
+		return String.format("Id: %s\nAdapter: %s\nLocation: %s\nInitialized: %s\nBattery: %s\nLogging: %s\nRefresh: %s\nDevices: %s",
+				getId(), mAdapterId, mLocationId, mInitialized, mBattery, mLogging, mRefreshInterval.getInterval(), Integer.toString(mDevices.size()));
 	}
 
 	public void addDevice(BaseDevice device) {
@@ -316,7 +296,6 @@ public class Facility {
 		setLogging(newFacility.isLogging());
 		setNetworkQuality(newFacility.getNetworkQuality());
 		setRefresh(newFacility.getRefresh());
-		setVisibility(newFacility.getVisibility());
 		setLastUpdate(newFacility.getLastUpdate());
 
 		mDevices.clear();

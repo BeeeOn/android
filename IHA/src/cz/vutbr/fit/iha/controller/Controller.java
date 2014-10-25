@@ -1,6 +1,5 @@
 package cz.vutbr.fit.iha.controller;
 
-import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Map;
@@ -29,6 +28,7 @@ import cz.vutbr.fit.iha.network.GoogleAuth;
 import cz.vutbr.fit.iha.network.Network;
 import cz.vutbr.fit.iha.network.exception.FalseException;
 import cz.vutbr.fit.iha.network.exception.NetworkException;
+import cz.vutbr.fit.iha.pair.LogDataPair;
 import cz.vutbr.fit.iha.persistence.Persistence;
 import cz.vutbr.fit.iha.util.Utils;
 
@@ -168,7 +168,8 @@ public final class Controller {
 			switch (e.getDetail().getErrCode()) {
 			case 0:
 				break;
-			case 1: // bad token or email
+			case 2:
+			case 3: // bad token or email
 				try {
 					// TODO: do this otherway
 					// GoogleAuth ggAuth = GoogleAuth.getGoogleAuth();
@@ -190,7 +191,7 @@ public final class Controller {
 				}
 				break;
 			default:
-				break;
+				throw e;
 			}
 		}
 		return false;
@@ -456,13 +457,10 @@ public final class Controller {
 
 		// FIXME: This debug implementation unregisters actual user from adapter, not adapter itself
 
-		ArrayList<String> user = new ArrayList<String>();
-		user.add(mHousehold.user.getEmail());
-
 		boolean result = false;
 
 		try {
-			if (mNetwork.deleteConnectionAccounts(id, user)) {
+			if (mNetwork.deleteAccount(id, mHousehold.user)) {
 				if (mHousehold.activeAdapter != null && mHousehold.activeAdapter.getId().equals(id))
 					mHousehold.activeAdapter = null;
 
@@ -618,8 +616,8 @@ public final class Controller {
 	 * @return true on success, false otherwise
 	 */
 	public boolean hideDevice(BaseDevice device) throws NotImplementedException {
-		device.getFacility().setVisibility(false);
-		return saveDevice(device, EnumSet.of(SaveDevice.SAVE_VISIBILITY)); // TODO: this should be for facility, not device
+		device.setVisibility(false);
+		return saveDevice(device, EnumSet.of(SaveDevice.SAVE_VISIBILITY));
 	}
 
 	/**
@@ -631,8 +629,8 @@ public final class Controller {
 	 * @return true on success, false otherwise
 	 */
 	public boolean unhideDevice(BaseDevice device) throws NotImplementedException {
-		device.getFacility().setVisibility(true);
-		return saveDevice(device, EnumSet.of(SaveDevice.SAVE_VISIBILITY)); // TODO: this should be for facility, not device
+		device.setVisibility(true);
+		return saveDevice(device, EnumSet.of(SaveDevice.SAVE_VISIBILITY));
 	}
 
 	/**
@@ -722,7 +720,7 @@ public final class Controller {
 	 * @param device
 	 * @return
 	 */
-	public DeviceLog getDeviceLog(BaseDevice device, String from, String to, DataType type, DataInterval interval) {
+	public DeviceLog getDeviceLog(BaseDevice device, LogDataPair pair) {
 		// FIXME: rewrite this method even better - demo mode, caching, etc.
 		DeviceLog log = new DeviceLog(DataType.AVERAGE, DataInterval.RAW);
 
@@ -731,10 +729,7 @@ public final class Controller {
 		}
 
 		try {
-			Adapter adapter = getAdapter(device.getFacility().getAdapterId());
-			if (adapter != null) {
-				log = mNetwork.getLog(adapter.getId(), device, from, to, type, interval);
-			}
+			log = mNetwork.getLog(device.getFacility().getAdapterId(), device, pair);
 		} catch (NetworkException e) {
 			e.printStackTrace();
 		}
