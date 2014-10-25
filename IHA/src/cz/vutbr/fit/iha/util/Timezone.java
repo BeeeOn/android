@@ -28,6 +28,10 @@ public enum Timezone {
 		this.mId = id;
 		this.mResName = resName;
 	}
+	
+	public static String getPersistenceKey() {
+		return Constants.PERSISTENCE_PREF_TIMEZONE;
+	}
 
 	/**
 	 * @return Default timezone unit
@@ -89,7 +93,7 @@ public enum Timezone {
 	}
 
 	public static Timezone fromPreferences(SharedPreferences prefs) {
-		String id = prefs.getString(Constants.PERSISTENCE_PREF_TIMEZONE, String.valueOf(getDefault().getId()));
+		String id = prefs.getString(getPersistenceKey(), String.valueOf(getDefault().getId()));
 		return getTimezoneByIdOrDefault(Integer.parseInt(id));
 	}
 
