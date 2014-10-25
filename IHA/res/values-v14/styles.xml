@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
 
     <!--
         Base application theme for API 14+. This theme completely replaces
@@ -44,6 +44,7 @@
     
     <style name="IHA.ActionBar.Overflow" parent="android:Widget.ActionButton.Overflow">
         <item name="android:src">@drawable/ic_ab_overflow_compat</item>
-    </style>
+    </style> 
+    
 
 </resources>

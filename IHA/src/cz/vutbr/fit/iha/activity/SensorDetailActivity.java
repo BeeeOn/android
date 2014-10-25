@@ -3,6 +3,7 @@ package cz.vutbr.fit.iha.activity;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
@@ -46,8 +47,13 @@ public class SensorDetailActivity extends BaseApplicationActivity {
 	private String mActiveAdapterId;
 	private String mActiveDeviceId;
 	private int mActiveDevicePosition;
+	
+
+	private ProgressDialog mProgress;
 
 	private ReloadFacilitiesTask mReloadFacilitiesTask;
+
+	private boolean mForceReload = false;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -64,12 +70,11 @@ public class SensorDetailActivity extends BaseApplicationActivity {
 		// Get controller
 		mController = Controller.getInstance(getApplicationContext());
 
-		// SensorDetailFragment fragment = new SensorDetailFragment();
-		// fragment.setArguments(getIntent().getExtras());
-		// FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-
-		// ft.replace(R.id.sensor_detail_wraper, fragment);
-		// ft.commit();
+		// Prepare progress dialog
+		mProgress = new ProgressDialog(this);
+		mProgress.setMessage(getString(R.string.progress_saving_data));
+		mProgress.setCancelable(false);
+		mProgress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
 
 		Log.d(TAG, "onCreate()");
 		
@@ -123,14 +128,16 @@ public class SensorDetailActivity extends BaseApplicationActivity {
 	}
 
 	private void doReloadFacilitiesTask(final String adapterId) {
-		mReloadFacilitiesTask = new ReloadFacilitiesTask(this, false);
+		mReloadFacilitiesTask = new ReloadFacilitiesTask(this, mForceReload);
 		
 		mReloadFacilitiesTask.setListener(new CallbackTaskListener() {
 
 			@Override
 			public void onExecute(boolean success) {
+				Log.d(TAG, "Start reload task");
 				BaseDevice device = mController.getDevice(adapterId, mActiveDeviceId);
 				if (device == null) {
+					Log.d(TAG, "Stop reload task");
 					return;
 				}
 
@@ -211,6 +218,10 @@ public class SensorDetailActivity extends BaseApplicationActivity {
 		mPager.setCurrentItem(mActiveDevicePosition);
 	}
 	
+	public ProgressDialog getProgressDialog() {
+		return mProgress;
+	}
+	
 	@Override
 	public void onSaveInstanceState(Bundle savedInstanceState) {
 	    savedInstanceState.putString(EXTRA_ADAPTER_ID, mActiveAdapterId);
@@ -219,5 +230,12 @@ public class SensorDetailActivity extends BaseApplicationActivity {
 	    // Always call the superclass so it can save the view hierarchy state
 	    super.onSaveInstanceState(savedInstanceState);
 	}	
+	
+	public void redraw(){
+		Log.d(TAG, "Start redraw ActiveDevice:"+mActiveDeviceId+" ActiveAdapter:"+mActiveAdapterId);
+		mForceReload  = true;
+		doReloadFacilitiesTask(mActiveAdapterId);
+		
+	}
 	
 }

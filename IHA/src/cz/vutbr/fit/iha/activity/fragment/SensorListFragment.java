@@ -24,13 +24,14 @@ import android.widget.TextView;
 import com.actionbarsherlock.app.SherlockFragment;
 import com.actionbarsherlock.view.ActionMode;
 import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 
 import cz.vutbr.fit.iha.R;
 import cz.vutbr.fit.iha.activity.MainActivity;
 import cz.vutbr.fit.iha.activity.SensorDetailActivity;
 import cz.vutbr.fit.iha.activity.dialog.AddSensorFragmentDialog;
-import cz.vutbr.fit.iha.activity.fragment.SensorDetailFragment.AnActionModeOfEpicProportions;
+import cz.vutbr.fit.iha.activity.fragment.SensorDetailFragment.AnActionModeOfSensorEdit;
 import cz.vutbr.fit.iha.adapter.Adapter;
 import cz.vutbr.fit.iha.adapter.device.BaseDevice;
 import cz.vutbr.fit.iha.adapter.device.Facility;
@@ -39,6 +40,7 @@ import cz.vutbr.fit.iha.asynctask.CallbackTask.CallbackTaskListener;
 import cz.vutbr.fit.iha.asynctask.ReloadFacilitiesTask;
 import cz.vutbr.fit.iha.controller.Controller;
 import cz.vutbr.fit.iha.menu.NavDrawerMenu;
+import cz.vutbr.fit.iha.thread.ToastMessageThread;
 
 public class SensorListFragment extends SherlockFragment {
 
@@ -312,10 +314,14 @@ public class SensorListFragment extends SherlockFragment {
 
 		@Override
 		public boolean onCreateActionMode(ActionMode mode, Menu menu) {
-			menu.add("Hide sensor").setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-			menu.add("Hide facility").setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
-			menu.add("Cancel").setIcon(R.drawable.iha_ic_action_cancel).setTitle("Cancel").setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-			return true;
+			//menu.add("Hide sensor").setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+			//menu.add("Hide facility").setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+			//menu.add("Cancel").setIcon(R.drawable.iha_ic_action_cancel).setTitle("Cancel").setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+			//return true;
+			
+			MenuInflater inflater = mode.getMenuInflater();
+	        inflater.inflate(R.menu.sensorlist_actionmode, menu);
+	        return true;
 		}
 
 		@Override
@@ -326,18 +332,16 @@ public class SensorListFragment extends SherlockFragment {
 
 		@Override
 		public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
-			// TODO Auto-generated method stub
-			if (item.getTitle().equals("Save")) {
-				// sName.setText(sNameEdit.getText());
+			if (item.getTitle().equals(getResources().getString(R.string.action_hide_sensor))) {
+				 //doHideSensorTask(mDeviceHide);
 			}
-			// sNameEdit.setVisibility(View.GONE);
-			// sName.setVisibility(View.VISIBLE);
-
-			// sNameEdit.clearFocus();
-			// getSherlockActivity().getCurrentFocus().clearFocus();
-			// InputMethodManager imm = (InputMethodManager) getSystemService(
-			// getBaseContext().INPUT_METHOD_SERVICE);
-			// imm.hideSoftInputFromWindow(mDrawerItemEdit.getWindowToken(), 0);
+			else if (item.getTitle().equals(getResources().getString(R.string.action_hide_facility))){
+				new ToastMessageThread(mActivity, R.string.toast_not_implemented).start();
+			}
+			else if (item.getTitle().equals(getResources().getString(R.string.action_unregist_facility))){
+				new ToastMessageThread(mActivity, R.string.toast_not_implemented).start();
+			}
+			 
 			mode.finish();
 			return true;
 		}

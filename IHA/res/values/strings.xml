@@ -131,6 +131,10 @@
     <string name="action_addadapter">Add adapter</string>
     <string name="action_addsensor">Add sensor</string>
     <string name="action_logout">Logout</string>
+    <string name="action_hide_sensor">Hide sensor</string>
+    <string name="action_unregist_facility">Unregist facility</string>
+    <string name="action_hide_facility">Hide facility</string>
+    <string name="action_close">Cancel</string>
     <string name="addadapter_qrcode_desc">Get QR code</string>
     <string name="addsensor_new_location_spinner">New location</string>
     <string name="sen_detail_graph_info">Tap to Active</string>

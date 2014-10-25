@@ -64,8 +64,11 @@ public class NavDrawerMenu {
 	private String mDrawerTitle = "IHA";
 	
 	private Location mActiveLocation;
+	
 	private String mActiveLocationId;
 	private String mActiveAdapterId;
+	private String mAdaterIdUnregist;
+	
 	private boolean mIsDrawerOpen;
 	
 	private boolean backPressed = false;
@@ -187,6 +190,7 @@ public class NavDrawerMenu {
 							break;
 						case ADAPTER:
 							Log.i(TAG, "deleting adapter");
+							mAdaterIdUnregist = item.getId();
 							mMode = mActivity.startActionMode(new ActionModeAdapters());
 							//doUnregistAdapter(item.getId());
 							break;
@@ -214,6 +218,7 @@ public class NavDrawerMenu {
 						super.onDrawerClosed(view);
 						Log.d(TAG, "BackPressed - onDrawerClosed " + String.valueOf(backPressed));
 						mIsDrawerOpen = false;
+						finishActinMode();
 					}
 
 					public void onDrawerOpened(View drawerView) {
@@ -244,6 +249,9 @@ public class NavDrawerMenu {
 	public void closeMenu() {
 		mIsDrawerOpen = false;
 		mDrawerLayout.closeDrawer(mDrawerList);
+		if(mMode!= null){
+			mMode.finish();
+		}
 	}
 	
 	public void redrawMenu() {
@@ -517,16 +525,19 @@ public class NavDrawerMenu {
 
 		@Override
 		public void onDestroyActionMode(ActionMode mode) {
-			// TODO Auto-generated method stub
-			// sNameEdit.clearFocus();
-			// sNameEdit.setVisibility(View.GONE);
-			// sName.setVisibility(View.VISIBLE);
 			mMode = null;
 
 		}
 
 		@Override
 		public boolean onActionItemClicked(ActionMode mode, com.actionbarsherlock.view.MenuItem item) {
+			if (item.getTitle().equals("Unregist")) {
+				doUnregistAdapter(mAdaterIdUnregist);
+			}
+			else if (item.getTitle().equals("Edit")) {
+				new ToastMessageThread(mActivity, R.string.toast_not_implemented).start();
+			}
+			
 			mode.finish();
 			return true;
 		}
@@ -551,18 +562,23 @@ public class NavDrawerMenu {
 
 		@Override
 		public void onDestroyActionMode(ActionMode mode) {
-			// TODO Auto-generated method stub
-			// sNameEdit.clearFocus();
-			// sNameEdit.setVisibility(View.GONE);
-			// sName.setVisibility(View.VISIBLE);
 			mMode = null;
 
 		}
 
 		@Override
 		public boolean onActionItemClicked(ActionMode mode, com.actionbarsherlock.view.MenuItem item) {
+			if (item.getTitle().equals("Edit")) {
+				new ToastMessageThread(mActivity, R.string.toast_not_implemented).start();
+			}
 			mode.finish();
 			return true;
 		}
+	}
+
+	public void finishActinMode() {
+		Log.d(TAG, "Close action mode");
+		if(mMode!= null)
+			mMode.finish();
 	}
 }

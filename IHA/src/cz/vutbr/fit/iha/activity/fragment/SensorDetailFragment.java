@@ -60,6 +60,7 @@ import cz.vutbr.fit.iha.adapter.location.Location;
 import cz.vutbr.fit.iha.arrayadapter.LocationArrayAdapter;
 import cz.vutbr.fit.iha.asynctask.CallbackTask.CallbackTaskListener;
 import cz.vutbr.fit.iha.asynctask.SaveDeviceTask;
+import cz.vutbr.fit.iha.asynctask.SaveFacilityTask;
 import cz.vutbr.fit.iha.controller.Controller;
 import cz.vutbr.fit.iha.pair.LogDataPair;
 import cz.vutbr.fit.iha.pair.SaveDevicePair;
@@ -105,6 +106,7 @@ public class SensorDetailFragment extends SherlockFragment {
 
 	private SaveDeviceTask mSaveDeviceTask;
 	private GetDeviceLogTask mGetDeviceLogTask;
+	private SaveFacilityTask mSaveFacilityTask;
 
 	public static final String ARG_PAGE = "page";
 	public static final String ARG_CUR_PAGE = "currentpage";
@@ -241,7 +243,7 @@ public class SensorDetailFragment extends SherlockFragment {
 					mEditMode = EDIT_REFRESH_T;
 					// Disable Swipe
 					mActivity.setEnableSwipe(false);
-					mMode = getSherlockActivity().startActionMode(new AnActionModeOfEpicProportions());
+					mMode = getSherlockActivity().startActionMode(new AnActionModeOfSensorEdit());
 					mLastProgressRefreshTime = seekBar.getProgress();
 				}
 
@@ -310,7 +312,7 @@ public class SensorDetailFragment extends SherlockFragment {
 				mActivity.setEnableSwipe(false);
 
 				mEditMode = EDIT_NAME;
-				mMode = getSherlockActivity().startActionMode(new AnActionModeOfEpicProportions());
+				mMode = getSherlockActivity().startActionMode(new AnActionModeOfSensorEdit());
 				mName.setVisibility(View.GONE);
 				mRectangleName.setVisibility(View.GONE);
 				mNameEdit.setVisibility(View.VISIBLE);
@@ -347,7 +349,7 @@ public class SensorDetailFragment extends SherlockFragment {
 					mActivity.setEnableSwipe(false);
 
 					mEditMode = EDIT_LOC;
-					mMode = getSherlockActivity().startActionMode(new AnActionModeOfEpicProportions());
+					mMode = getSherlockActivity().startActionMode(new AnActionModeOfSensorEdit());
 					mSpinnerLoc.setVisibility(View.VISIBLE);
 					mLocation.setVisibility(View.GONE);
 					mRectangleLoc.setVisibility(View.GONE);
@@ -605,6 +607,10 @@ public class SensorDetailFragment extends SherlockFragment {
 			public void onExecute(boolean success) {
 				if (success) {
 					Log.d(TAG, "Success save to server");
+					if (mActivity.getProgressDialog()!= null)
+						mActivity.getProgressDialog().dismiss();
+					// Change GUI 
+					mActivity.redraw();
 				} else {
 					Log.d(TAG, "Fail save to server");
 					// Show failer toast !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -612,7 +618,29 @@ public class SensorDetailFragment extends SherlockFragment {
 			}
 		});		
 		
+		
+		
 		mSaveDeviceTask.execute(pair);
+	}
+	
+	public void doSaveFacilityTask(SaveFacilityPair pair) {
+		mSaveFacilityTask = new SaveFacilityTask(mActivity);
+		mSaveFacilityTask.setListener(new CallbackTaskListener() {
+			@Override
+			public void onExecute(boolean success) {
+				if (success) {
+					Log.d(TAG, "Success save to server");
+					if (mActivity.getProgressDialog()!= null)
+						mActivity.getProgressDialog().dismiss();
+					// Change GUI 
+					mActivity.redraw();
+				} else {
+					Log.d(TAG, "Fail save to server");
+					// Show failer toast !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+				}
+			}
+		});
+		mSaveFacilityTask.execute(pair);
 	}
 
 	/**
@@ -638,16 +666,10 @@ public class SensorDetailFragment extends SherlockFragment {
 	 */
 
 	// Menu for Action bar mode - edit
-	class AnActionModeOfEpicProportions implements ActionMode.Callback {
+	class AnActionModeOfSensorEdit implements ActionMode.Callback {
 
 		@Override
 		public boolean onCreateActionMode(ActionMode mode, Menu menu) {
-			// TODO Auto-generated method stub
-			// View view =
-			// LayoutInflater.from(mActivity).inflate(R.layout.custom_actionmode_item,
-			// null);
-			// ((Button) view.findViewById(R.id.actionmode_button)).
-			// menu.add("Save").setActionView(view).setIcon(R.drawable.ic_action_accept).setTitle("Save").setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 			menu.add("Save").setIcon(R.drawable.iha_ic_action_accept).setTitle("Save").setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 			menu.add("Cancel").setIcon(R.drawable.iha_ic_action_cancel).setTitle("Cancel").setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 			return true;
@@ -655,13 +677,11 @@ public class SensorDetailFragment extends SherlockFragment {
 
 		@Override
 		public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
-			// TODO Auto-generated method stub
 			return false;
 		}
 
 		@Override
 		public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
-			// TODO Auto-generated method stub
 			InputMethodManager imm = (InputMethodManager) getSherlockActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
 
 			switch (mEditMode) {
@@ -670,6 +690,16 @@ public class SensorDetailFragment extends SherlockFragment {
 				mLocation.setVisibility(View.VISIBLE);
 				mRectangleLoc.setVisibility(View.VISIBLE);
 				mRefreshTimeValue.setEnabled(true);
+				if (item.getTitle().equals("Save")) {
+					// Progress dialog
+					if (mActivity.getProgressDialog()!= null)
+						mActivity.getProgressDialog().show();
+					// Set new location in facility
+					mDevice.getFacility().setLocationId(((Location)mSpinnerLoc.getSelectedItem()).getId());
+					// Update device to server
+					doSaveFacilityTask(new SaveFacilityPair(mDevice.getFacility(), EnumSet.of(SaveDevice.SAVE_LOCATION)));
+					
+				}
 				break;
 			case EDIT_NAME:
 				if (item.getTitle().equals("Save")) {
@@ -696,7 +726,9 @@ public class SensorDetailFragment extends SherlockFragment {
 				} else {
 					// set actual progress
 					mDevice.getFacility().setRefresh(RefreshInterval.values()[mRefreshTimeValue.getProgress()]);
-
+					// Progress dialog
+					if (mActivity.getProgressDialog()!= null)
+						mActivity.getProgressDialog().show();
 					Log.d(TAG, "Refresh time " + mDevice.getFacility().getRefresh().getStringInterval(mActivity));
 					// Update device to server
 					doSaveDeviceTask(new SaveDevicePair(mDevice, EnumSet.of(SaveDevice.SAVE_REFRESH)));
@@ -740,5 +772,7 @@ public class SensorDetailFragment extends SherlockFragment {
 			mRefreshTimeValue.setEnabled(true);
 		}
 	}
+
+
 
 }

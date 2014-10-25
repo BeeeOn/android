@@ -163,6 +163,7 @@ public class MainActivity extends BaseApplicationActivity {
 				mNavDrawerMenu.firstTapBack();
 				backPressed = true;
 			}
+			mNavDrawerMenu.finishActinMode();
 		}
 		return;
 	}
