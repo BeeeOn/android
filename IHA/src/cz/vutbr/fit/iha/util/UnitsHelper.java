@@ -6,12 +6,12 @@ import cz.vutbr.fit.iha.adapter.device.units.BaseUnit;
 import cz.vutbr.fit.iha.adapter.device.values.BaseValue;
 import cz.vutbr.fit.iha.adapter.device.values.BaseEnumValue;
 
-public class UnitsFormatter {
+public class UnitsHelper {
 	
-	private SharedPreferences mPrefs;
-	private Context mContext;
+	private final SharedPreferences mPrefs;
+	private final Context mContext;
 	
-	public UnitsFormatter(SharedPreferences prefs, Context context) {
+	public UnitsHelper(SharedPreferences prefs, Context context) {
 		mPrefs = prefs;
 		mContext = context;
 	}
@@ -20,7 +20,7 @@ public class UnitsFormatter {
 		// FIXME: Fix BaseEnumValue when they will be supported in graphs
 		//if (item instanceof BaseEnumValue) { ... }
 		
-		BaseUnit.Item to = item.getUnit().fromSettings(mPrefs);
+		BaseUnit.Item to = (BaseUnit.Item) item.getUnit().fromSettings(mPrefs);
 		double d = item.getUnit().convertValue(to, value);
 		return Utils.formatDouble(d);
 	}
@@ -35,7 +35,7 @@ public class UnitsFormatter {
 	}
 	
 	public String getStringUnit(BaseValue item) {
-		return item.getUnit().fromSettings(mPrefs).getStringUnit(mContext);
+		return ((BaseUnit.Item) item.getUnit().fromSettings(mPrefs)).getStringUnit(mContext);
 	}
 	
 	public String getStringValueUnit(BaseValue item) {

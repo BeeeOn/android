@@ -10,6 +10,7 @@ import android.appwidget.AppWidgetManager;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.IBinder;
 import android.os.PowerManager;
 import android.os.SystemClock;
@@ -18,8 +19,8 @@ import cz.vutbr.fit.iha.R;
 import cz.vutbr.fit.iha.adapter.Adapter;
 import cz.vutbr.fit.iha.adapter.device.BaseDevice;
 import cz.vutbr.fit.iha.controller.Controller;
-import cz.vutbr.fit.iha.util.Timezone;
-import cz.vutbr.fit.iha.util.UnitsFormatter;
+import cz.vutbr.fit.iha.util.TimeHelper;
+import cz.vutbr.fit.iha.util.UnitsHelper;
 
 public class WidgetUpdateService extends Service {
 
@@ -134,9 +135,19 @@ public class WidgetUpdateService extends Service {
 		long now = SystemClock.elapsedRealtime();
 
 		Controller controller = Controller.getInstance(getApplicationContext());
-		// NOTE: "workaround" for not logged in user
-		Timezone timezone = controller.isLoggedIn() ? Timezone.fromPreferences(controller.getUserSettings()) : Timezone.getDefault();
+
+		TimeHelper timeHelper = null;
+		UnitsHelper unitsHelper = null;
 		
+		try {
+			SharedPreferences userSettings = controller.getUserSettings();
+			
+			unitsHelper = new UnitsHelper(userSettings, getApplicationContext());
+			timeHelper = new TimeHelper(userSettings);
+		} catch (IllegalStateException e) {
+			// No user is logged in so we can't get his settings
+		}
+
 		// Reload adapters to have data about Timezone offset
 		controller.reloadAdapters(false);
 		
@@ -166,19 +177,25 @@ public class WidgetUpdateService extends Service {
 			BaseDevice device = controller.getDevice(widgetData.deviceAdapterId, widgetData.deviceId);
 
 			if (device != null) {
-				UnitsFormatter fmt = new UnitsFormatter(controller.getUserSettings(), getApplicationContext());
-				
 				// Get fresh data from device
 				widgetData.deviceIcon = device.getIconResource();
 				widgetData.deviceName = device.getName();
-				widgetData.deviceValue = fmt.getStringValueUnit(device.getValue());
 				widgetData.deviceAdapterId = device.getFacility().getAdapterId();
 				widgetData.deviceId = device.getId();
 				widgetData.lastUpdate = now;
 				
-				// NOTE: This should use absolute time, because widgets aren't updated so often
-				widgetData.deviceLastUpdate = timezone.formatLastUpdate(device.getFacility().getLastUpdate(), adapter);
+				// Check if we can format device's value (unitsHelper is null when user is not logged in)
+				if (unitsHelper != null) {
+					widgetData.deviceValue = unitsHelper.getStringValueUnit(device.getValue());
+				}
 				
+				// Check if we can format device's last update (timeHelper is null when user is not logged in)
+				if (timeHelper != null) {
+					// NOTE: This should use always absolute time, because widgets aren't updated so often
+					widgetData.deviceLastUpdate = timeHelper.formatLastUpdate(device.getFacility().getLastUpdate(), adapter);
+				}
+				
+				// Save fresh data
 				widgetData.saveData(getApplicationContext());				
 
 				Log.v(TAG, String.format("Using fresh widget (%d) data", widgetId));
@@ -189,7 +206,7 @@ public class WidgetUpdateService extends Service {
 				Log.v(TAG, String.format("Using cached widget (%d) data", widgetId));
 			}
 
-			// update widget
+			// Update widget
 			widgetProvider.updateWidget(this, widgetData);
 		}
 	}
