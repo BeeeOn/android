@@ -50,7 +50,7 @@ import cz.vutbr.fit.iha.adapter.device.BaseDevice;
 import cz.vutbr.fit.iha.adapter.device.Facility;
 import cz.vutbr.fit.iha.extension.watches.smartwatch2.SW2ExtensionService;
 import cz.vutbr.fit.iha.util.TimeHelper;
-import cz.vutbr.fit.iha.util.UnitsFormatter;
+import cz.vutbr.fit.iha.util.UnitsHelper;
 
 /**
  * GalleryControl displays a swipeable gallery.
@@ -208,12 +208,12 @@ public class GalleryControlExtension extends ManagedControlExtension {
 		headerBundle.putInt(Control.Intents.EXTRA_LAYOUT_REFERENCE, R.id.gallery_title);
 		headerBundle.putString(Control.Intents.EXTRA_TEXT, curDevice.getName());
 
-		UnitsFormatter fmt = new UnitsFormatter(mController.getUserSettings(), mContext);
+		UnitsHelper unitsHelper = new UnitsHelper(mController.getUserSettings(), mContext);
 		
 		// Unit data
 		Bundle unitBundle = new Bundle();
 		unitBundle.putInt(Control.Intents.EXTRA_LAYOUT_REFERENCE, R.id.unit);
-		unitBundle.putString(Control.Intents.EXTRA_TEXT, fmt.getStringUnit(curDevice.getValue()));
+		unitBundle.putString(Control.Intents.EXTRA_TEXT, unitsHelper.getStringUnit(curDevice.getValue()));
 
 		// Battery icon
 		Bundle batteryBundle = new Bundle();

@@ -49,7 +49,7 @@ import cz.vutbr.fit.iha.adapter.Adapter;
 import cz.vutbr.fit.iha.adapter.device.BaseDevice;
 import cz.vutbr.fit.iha.adapter.device.Facility;
 import cz.vutbr.fit.iha.extension.watches.smartwatch2.SW2ExtensionService;
-import cz.vutbr.fit.iha.util.UnitsFormatter;
+import cz.vutbr.fit.iha.util.UnitsHelper;
 
 /**
  * ListControlExtension displays a scrollable list, based on a string array. Tapping on list items opens a swipable detail view.
@@ -212,11 +212,11 @@ public class ListSensorControlExtension extends ManagedControlExtension {
 		headerBundle.putInt(Control.Intents.EXTRA_LAYOUT_REFERENCE, R.id.title);
 		headerBundle.putString(Control.Intents.EXTRA_TEXT, mDevices.get(position).getName());
 
-		UnitsFormatter fmt = new UnitsFormatter(mController.getUserSettings(), mContext);
+		UnitsHelper unitsHelper = new UnitsHelper(mController.getUserSettings(), mContext);
 		
 		Bundle valueBundle = new Bundle();
 		valueBundle.putInt(Control.Intents.EXTRA_LAYOUT_REFERENCE, R.id.value);
-		valueBundle.putString(Control.Intents.EXTRA_TEXT, fmt.getStringValueUnit(mDevices.get(position).getValue()));
+		valueBundle.putString(Control.Intents.EXTRA_TEXT, unitsHelper.getStringValueUnit(mDevices.get(position).getValue()));
 
 		item.layoutData = new Bundle[3];
 		item.layoutData[0] = headerBundle;

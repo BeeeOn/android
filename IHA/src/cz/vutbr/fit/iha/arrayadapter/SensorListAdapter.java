@@ -19,7 +19,7 @@ import cz.vutbr.fit.iha.adapter.device.BaseDevice;
 import cz.vutbr.fit.iha.adapter.device.Facility;
 import cz.vutbr.fit.iha.controller.Controller;
 import cz.vutbr.fit.iha.util.TimeHelper;
-import cz.vutbr.fit.iha.util.UnitsFormatter;
+import cz.vutbr.fit.iha.util.UnitsHelper;
 
 public class SensorListAdapter extends BaseAdapter {
 
@@ -103,15 +103,15 @@ public class SensorListAdapter extends BaseAdapter {
 		SharedPreferences userSettings = mController.getUserSettings();
 
 		TimeHelper timeHelper = new TimeHelper(userSettings);
-		String lastUpdate = timeHelper.formatLastUpdate(facility.getLastUpdate(), adapter);
-		
-		UnitsFormatter fmt = new UnitsFormatter(userSettings, mContext);
+		UnitsHelper unitsHelper = new UnitsHelper(userSettings, mContext);
 		
 		// Set the results into TextViews
 		txtTitle.setText(device.getName());
-		txtValue.setText(fmt.getStringValue(device.getValue()));
-		txtUnit.setText(fmt.getStringUnit(device.getValue()));
-		txtTime.setText(String.format("%s %s", mContext.getString(R.string.last_update), lastUpdate));
+		txtValue.setText(unitsHelper.getStringValue(device.getValue()));
+		txtUnit.setText(unitsHelper.getStringUnit(device.getValue()));
+		txtTime.setText(String.format("%s %s",
+				mContext.getString(R.string.last_update),
+				timeHelper.formatLastUpdate(facility.getLastUpdate(), adapter)));
 		
 		// Set title selected for animation if is text long
 		txtTitle.setSelected(true);

@@ -63,7 +63,7 @@ import cz.vutbr.fit.iha.controller.Controller;
 import cz.vutbr.fit.iha.pair.LogDataPair;
 import cz.vutbr.fit.iha.pair.SaveDevicePair;
 import cz.vutbr.fit.iha.util.TimeHelper;
-import cz.vutbr.fit.iha.util.UnitsFormatter;
+import cz.vutbr.fit.iha.util.UnitsHelper;
 
 //import android.widget.LinearLayout;
 
@@ -371,12 +371,12 @@ public class SensorDetailFragment extends SherlockFragment {
 		Facility facility = device.getFacility();
 		Adapter adapter = mController.getAdapter(facility.getAdapterId());
 		
-		UnitsFormatter fmt = new UnitsFormatter(mController.getUserSettings(), getActivity().getApplicationContext());
+		UnitsHelper unitsHelper = new UnitsHelper(mController.getUserSettings(), getActivity().getApplicationContext());
 		TimeHelper timeHelper = new TimeHelper(mController.getUserSettings());
-		DateTimeFormatter dtf = timeHelper.getFormatter(mGraphDateTimeFormat, adapter);
+		DateTimeFormatter fmt = timeHelper.getFormatter(mGraphDateTimeFormat, adapter);
 		
 		// Set value of sensor
-		mValue.setText(fmt.getStringValueUnit(device.getValue()));
+		mValue.setText(unitsHelper.getStringValueUnit(device.getValue()));
 		// Set icon of sensor
 		mIcon.setImageResource(device.getIconResource());
 		// Set time of sensor
@@ -386,7 +386,7 @@ public class SensorDetailFragment extends SherlockFragment {
 		// Set refresh time SeekBar
 		mRefreshTimeValue.setProgress(facility.getRefresh().getIntervalIndex());
 		// Add Graph with history data
-		addGraphView(dtf, fmt);
+		addGraphView(fmt, unitsHelper);
 
 		// Visible all elements
 		visibleAllElements();
@@ -431,7 +431,7 @@ public class SensorDetailFragment extends SherlockFragment {
 
 	}
 
-	private void addGraphView(final DateTimeFormatter dateTimeFormatter, final UnitsFormatter fmt) {
+	private void addGraphView(final DateTimeFormatter fmt, final UnitsHelper unitsHelper) {
 		mGraphView = new LineGraphView(getView().getContext(), ""); // empty heading
 
 		mGraphView.getGraphViewStyle().setTextSize(getResources().getDimension(R.dimen.textsizesmaller));
@@ -452,15 +452,15 @@ public class SensorDetailFragment extends SherlockFragment {
 		mGraphView.setManualYAxisBounds(1.0, 0.0);
 		
 		mGraphView.setCustomLabelFormatter(new CustomLabelFormatter() {
-			final String unit = fmt.getStringUnit(mDevice.getValue());
+			final String unit = unitsHelper.getStringUnit(mDevice.getValue());
 			
 			@Override
 			public String formatLabel(double value, boolean isValueX) {
 				if (isValueX) {
-					return dateTimeFormatter.print((long) value);
+					return fmt.print((long) value);
 				}
 
-				return String.format("%s %s", fmt.getStringValue(mDevice.getValue(), value), unit);
+				return String.format("%s %s", unitsHelper.getStringValue(mDevice.getValue(), value), unit);
 			}
 		});
 
@@ -544,7 +544,7 @@ public class SensorDetailFragment extends SherlockFragment {
 
 	public void fillGraph(DeviceLog log) {
 		 // NOTE: This formatter is only for Log, correct timezone from app setting doesn't matter here
-		final DateTimeFormatter formatter = DateTimeFormat.forPattern(mGraphDateTimeFormat); 
+		final DateTimeFormatter fmt = DateTimeFormat.forPattern(mGraphDateTimeFormat); 
 
 		int size = log.getValues().size();
 		Log.d(TAG, String.format("Filling graph with %d values. Min: %.1f, Max: %.1f", size, log.getMinimum(), log.getMaximum()));
@@ -566,7 +566,7 @@ public class SensorDetailFragment extends SherlockFragment {
 			
 			float value = Float.isNaN(row.value) ? log.getMinimum() : row.value;
 			data[i - begin] = new GraphView.GraphViewData(row.dateMillis, value);
-			Log.v(TAG, String.format("Graph value: date(msec): %s, Value: %.1f", formatter.print(row.dateMillis), row.value));
+			Log.v(TAG, String.format("Graph value: date(msec): %s, Value: %.1f", fmt.print(row.dateMillis), row.value));
 		}
 
 		Log.d(TAG, "Filling graph finished");

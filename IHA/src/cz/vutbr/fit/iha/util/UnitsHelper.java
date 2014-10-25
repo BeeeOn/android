@@ -6,12 +6,12 @@ import cz.vutbr.fit.iha.adapter.device.units.BaseUnit;
 import cz.vutbr.fit.iha.adapter.device.values.BaseValue;
 import cz.vutbr.fit.iha.adapter.device.values.BaseEnumValue;
 
-public class UnitsFormatter {
+public class UnitsHelper {
 	
 	private final SharedPreferences mPrefs;
 	private final Context mContext;
 	
-	public UnitsFormatter(SharedPreferences prefs, Context context) {
+	public UnitsHelper(SharedPreferences prefs, Context context) {
 		mPrefs = prefs;
 		mContext = context;
 	}

@@ -20,7 +20,7 @@ import cz.vutbr.fit.iha.adapter.Adapter;
 import cz.vutbr.fit.iha.adapter.device.BaseDevice;
 import cz.vutbr.fit.iha.controller.Controller;
 import cz.vutbr.fit.iha.util.TimeHelper;
-import cz.vutbr.fit.iha.util.UnitsFormatter;
+import cz.vutbr.fit.iha.util.UnitsHelper;
 
 public class WidgetUpdateService extends Service {
 
@@ -137,12 +137,12 @@ public class WidgetUpdateService extends Service {
 		Controller controller = Controller.getInstance(getApplicationContext());
 
 		TimeHelper timeHelper = null;
-		UnitsFormatter fmt = null;
+		UnitsHelper unitsHelper = null;
 		
 		try {
 			SharedPreferences userSettings = controller.getUserSettings();
 			
-			fmt = new UnitsFormatter(userSettings, getApplicationContext());
+			unitsHelper = new UnitsHelper(userSettings, getApplicationContext());
 			timeHelper = new TimeHelper(userSettings);
 		} catch (IllegalStateException e) {
 			// No user is logged in so we can't get his settings
@@ -185,8 +185,8 @@ public class WidgetUpdateService extends Service {
 				widgetData.lastUpdate = now;
 				
 				// Check if we can format device's value (unitsHelper is null when user is not logged in)
-				if (fmt != null) {
-					widgetData.deviceValue = fmt.getStringValueUnit(device.getValue());
+				if (unitsHelper != null) {
+					widgetData.deviceValue = unitsHelper.getStringValueUnit(device.getValue());
 				}
 				
 				// Check if we can format device's last update (timeHelper is null when user is not logged in)
