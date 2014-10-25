@@ -25,7 +25,10 @@ public class SettingsMainActivity extends SherlockPreferenceActivity implements 
 	 */
 
 //	private ListPreference mListPrefAdapter, mListPrefLocation;
-	private ListPreference mListPrefTimezone;
+	
+	private ListPreference mTimezoneListPref;
+	private Timezone mTimezone;
+	
 	private Preference mPrefUnits;
 	private Preference mPrefGeofence;
 	private Controller mController;
@@ -54,10 +57,11 @@ public class SettingsMainActivity extends SherlockPreferenceActivity implements 
 //		mListPrefAdapter = (ListPreference) findPreference(Constants.PERSISTENCE_PREF_SW2_ADAPTER);
 //		mListPrefLocation = (ListPreference) findPreference(Constants.PERSISTENCE_PREF_SW2_LOCATION);
 
-		mListPrefTimezone = (ListPreference) findPreference(Timezone.getPersistenceKey());
-		mListPrefTimezone.setEntries(Timezone.getNamesArray(this));
-		mListPrefTimezone.setEntryValues(Timezone.getIdsArray());
-		mListPrefTimezone.setSummary(Timezone.fromPreferences(mController.getUserSettings()).getName(this));
+		mTimezone = new Timezone();
+		mTimezoneListPref = (ListPreference) findPreference(mTimezone.getPersistenceKey());
+		mTimezoneListPref.setEntries(mTimezone.getEntries(this));
+		mTimezoneListPref.setEntryValues(mTimezone.getEntryValues());
+		mTimezoneListPref.setSummary(mTimezone.fromSettings(mController.getUserSettings()).getSettingsName(this));
 
 		mPrefUnits = findPreference(Constants.KEY_UNITS);
 		Intent intentUnit = new Intent(this, SettingsUnitActivity.class);
@@ -70,8 +74,6 @@ public class SettingsMainActivity extends SherlockPreferenceActivity implements 
 		mPrefGeofence = findPreference(Constants.KEY_GEOFENCE);
 		Intent intentGeofence = new Intent(this, MapGeofenceActivity.class);
 		mPrefGeofence.setIntent(intentGeofence);
-		
-		redraw();
 	}
 
 	@Override
@@ -86,11 +88,6 @@ public class SettingsMainActivity extends SherlockPreferenceActivity implements 
 		mPrefs.unregisterOnSharedPreferenceChangeListener(this);
 	}
 
-	private void redraw() {
-//		setDefaultLocAndAdap();
-		mListPrefTimezone.setSummary(Timezone.fromPreferences(mController.getUserSettings()).getName(this));
-	}
-	
 //	private void setDefaultLocAndAdap() {
 //		List<Adapter> adapters = mController.getAdapters();
 //
@@ -216,11 +213,20 @@ public class SettingsMainActivity extends SherlockPreferenceActivity implements 
 
 	@Override
 	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+		if (mTimezone != null && key == mTimezone.getPersistenceKey()) {
+			ListPreference pref = mTimezoneListPref;
+			
+			if (pref != null) {
+				String summary = mTimezone.fromSettings(sharedPreferences).getSettingsName(this);
+				pref.setSummary(summary);	
+			}
+		}
+
 //		// if adapter was changed, make location empty ()
 //		if (key == Constants.PERSISTENCE_PREF_SW2_ADAPTER) {
 //			mController.getUserSettings().edit().putString(Constants.PERSISTENCE_PREF_SW2_LOCATION, "").commit();
 //		}
-		redraw();
+//		setDefaultLocAndAdap();
 	}
 
 }

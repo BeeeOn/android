@@ -4,7 +4,9 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import cz.vutbr.fit.iha.Constants;
-import cz.vutbr.fit.iha.adapter.device.units.DefaultUnitPackages;
+import cz.vutbr.fit.iha.adapter.device.units.NoiseUnit;
+import cz.vutbr.fit.iha.adapter.device.units.TemperatureUnit;
+import cz.vutbr.fit.iha.util.SettingsItem;
 import cz.vutbr.fit.iha.util.Timezone;
 
 /**
@@ -13,6 +15,7 @@ import cz.vutbr.fit.iha.util.Timezone;
  * @author Robyer
  */
 public class Persistence {
+
 	/**
 	 * Namespace of global preferences
 	 */
@@ -39,14 +42,29 @@ public class Persistence {
 		return mContext.getSharedPreferences(name, 0);
 	}
 
+	/** INITIALIZATION OF DEFAULT SETTINGS **/
+	
+	private void initItemPreference(String namespace, SettingsItem item, int id) {
+		initializePreference(namespace, item.getPersistenceKey(), String.valueOf(id));
+	}
+	
+	private void initItemDefaultPreference(String namespace, SettingsItem item) {
+		initItemPreference(namespace, item, item.getDefaultId());
+	}
+	
 	public void initializeDefaultSettings(String namespace) {
-		// String name = getPreferencesFilename(namespace);
-		// PreferenceManager.setDefaultValues(mContext, name, Context.MODE_PRIVATE, R.xml.main_preferences, true);
-		// PreferenceManager.setDefaultValues(mContext, name, Context.MODE_PRIVATE, R.xml.unit_preferences, true);
+		initItemDefaultPreference(namespace, new Timezone());
 
-		initializePreference(namespace, Timezone.getPersistenceKey(), String.valueOf(Timezone.getDefault().getId()));
-
-		DefaultUnitPackages.setDefaultUnits(this, namespace);
+		// TODO: use different units based on user Locale, right now we use default values from unit
+		/* Locale locale = Locale.getDefault();
+		if (locale.getCountry() == "en") {
+			initItemPreference(namespace, new TemperatureUnit(), TemperatureUnit.FAHRENHEIT);
+		} else {
+			initItemDefaultPreference(namespace, new TemperatureUnit());
+		} */
+		
+		initItemDefaultPreference(namespace, new TemperatureUnit());
+		initItemDefaultPreference(namespace, new NoiseUnit());
 	}
 
 	/** HELPERS **/

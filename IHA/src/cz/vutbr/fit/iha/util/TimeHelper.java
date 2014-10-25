@@ -24,8 +24,20 @@ public class TimeHelper {
 		mTimezone = Timezone.fromPreferences(prefs).getDateTimeZone(adapter);
 	}*/
 
+	private boolean useLocalTimezone() {
+		Timezone timezone = new Timezone();
+		Timezone.Item item = (Timezone.Item) timezone.fromSettings(mPrefs);
+		return item.getId() == Timezone.ACTUAL;
+	}
+	
+	public DateTimeZone getDateTimeZone(Adapter adapter) {
+		boolean useLocalTime = useLocalTimezone()  || adapter == null;
+		
+		return useLocalTime ? DateTimeZone.getDefault() : DateTimeZone.forOffsetMillis(adapter.getUtcOffsetMillis());
+	}
+	
 	public DateTimeFormatter getFormatter(String pattern, Adapter adapter) {
-		DateTimeZone zone = Timezone.fromPreferences(mPrefs).getDateTimeZone(adapter);
+		DateTimeZone zone = getDateTimeZone(adapter);
 		return DateTimeFormat.forPattern(pattern).withZone(zone); 
 	}
 	
@@ -38,11 +50,10 @@ public class TimeHelper {
 	 * @return
 	 */
 	public String formatLastUpdate(DateTime lastUpdate, Adapter adapter) {
-		DateTimeZone zone = Timezone.fromPreferences(mPrefs).getDateTimeZone(adapter);		
-		
 		boolean isTooOld = lastUpdate.plusHours(23).isBeforeNow();
 		DateTimeFormatter fmt = isTooOld ? DateTimeFormat.shortDate() : DateTimeFormat.mediumTime();
 		
+		DateTimeZone zone = getDateTimeZone(adapter);
 		return fmt.withZone(zone).print(lastUpdate);
 	}
 

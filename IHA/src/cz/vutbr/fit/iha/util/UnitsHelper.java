@@ -20,7 +20,7 @@ public class UnitsHelper {
 		// FIXME: Fix BaseEnumValue when they will be supported in graphs
 		//if (item instanceof BaseEnumValue) { ... }
 		
-		BaseUnit.Item to = item.getUnit().fromSettings(mPrefs);
+		BaseUnit.Item to = (BaseUnit.Item) item.getUnit().fromSettings(mPrefs);
 		double d = item.getUnit().convertValue(to, value);
 		return Utils.formatDouble(d);
 	}
@@ -35,7 +35,7 @@ public class UnitsHelper {
 	}
 	
 	public String getStringUnit(BaseValue item) {
-		return item.getUnit().fromSettings(mPrefs).getStringUnit(mContext);
+		return ((BaseUnit.Item) item.getUnit().fromSettings(mPrefs)).getStringUnit(mContext);
 	}
 	
 	public String getStringValueUnit(BaseValue item) {
