@@ -135,18 +135,11 @@ public class WidgetUpdateService extends Service {
 		long now = SystemClock.elapsedRealtime();
 
 		Controller controller = Controller.getInstance(getApplicationContext());
-
-		TimeHelper timeHelper = null;
-		UnitsHelper unitsHelper = null;
+		SharedPreferences userSettings = controller.getUserSettings();
 		
-		try {
-			SharedPreferences userSettings = controller.getUserSettings();
-			
-			unitsHelper = new UnitsHelper(userSettings, getApplicationContext());
-			timeHelper = new TimeHelper(userSettings);
-		} catch (IllegalStateException e) {
-			// No user is logged in so we can't get his settings
-		}
+		// UserSettings can be null when user is not logged in!
+		UnitsHelper unitsHelper = (userSettings == null) ? null : new UnitsHelper(userSettings, getApplicationContext());
+		TimeHelper timeHelper = (userSettings == null) ? null : new TimeHelper(userSettings);
 
 		// Reload adapters to have data about Timezone offset
 		controller.reloadAdapters(false);

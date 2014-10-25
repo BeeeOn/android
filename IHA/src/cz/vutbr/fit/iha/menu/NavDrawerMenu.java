@@ -264,10 +264,13 @@ public class NavDrawerMenu {
 		Adapter adapter = mController.getActiveAdapter();
 		if (adapter != null) {
 			mActiveAdapterId = adapter.getId();
-			
-			String prefKey = Persistence.getPreferencesLastLocation(adapter.getId());
+
 			SharedPreferences prefs = mController.getUserSettings();
-			Location location = mController.getLocation(adapter.getId(), prefs.getString(prefKey, ""));
+			String prefKey = Persistence.getPreferencesLastLocation(adapter.getId());
+			
+			// UserSettings can be null when user is not logged in!
+			String locationId = (prefs == null) ? "" : prefs.getString(prefKey, "");
+			Location location = mController.getLocation(adapter.getId(), locationId);
 			
 			if (location == null) {
 				// No saved or found location, set first location
@@ -298,11 +301,15 @@ public class NavDrawerMenu {
 	private void changeLocation(Location location, boolean closeDrawer) {
 		// save current location
 		SharedPreferences prefs = mController.getUserSettings();
-		Editor edit = prefs.edit();
-
-		String pref_key = Persistence.getPreferencesLastLocation(mController.getActiveAdapter().getId());
-		edit.putString(pref_key, location.getId());
-		edit.commit();
+		
+		// UserSettings can be null when user is not logged in!
+		if (prefs != null) {
+			Editor edit = prefs.edit();
+	
+			String pref_key = Persistence.getPreferencesLastLocation(mController.getActiveAdapter().getId());
+			edit.putString(pref_key, location.getId());
+			edit.commit();
+		}
 
 		mActiveLocation = location;
 		mActiveLocationId = location.getId();

@@ -37,6 +37,7 @@ import java.util.List;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 
@@ -198,22 +199,29 @@ public class GalleryControlExtension extends ManagedControlExtension {
 		Bundle syncBundle = new Bundle();
 		syncBundle.putInt(Control.Intents.EXTRA_LAYOUT_REFERENCE, R.id.sync_time);
 
+		// UserSettings can be null when user is not logged in!
+		SharedPreferences prefs = mController.getUserSettings();
+		
 		// Last update data
-		TimeHelper dts = new TimeHelper(mController.getUserSettings());
-		String dateTime = dts.formatLastUpdate(curFacility.getLastUpdate(), curAdapter);
-		syncBundle.putString(Control.Intents.EXTRA_TEXT, dateTime);
+		TimeHelper timeHelper = (prefs == null) ? null : new TimeHelper(prefs);
+		if (timeHelper != null) {
+			String dateTime = timeHelper.formatLastUpdate(curFacility.getLastUpdate(), curAdapter);
+			syncBundle.putString(Control.Intents.EXTRA_TEXT, dateTime);
+		}
 
 		// Title data
 		Bundle headerBundle = new Bundle();
 		headerBundle.putInt(Control.Intents.EXTRA_LAYOUT_REFERENCE, R.id.gallery_title);
 		headerBundle.putString(Control.Intents.EXTRA_TEXT, curDevice.getName());
-
-		UnitsHelper unitsHelper = new UnitsHelper(mController.getUserSettings(), mContext);
 		
 		// Unit data
 		Bundle unitBundle = new Bundle();
-		unitBundle.putInt(Control.Intents.EXTRA_LAYOUT_REFERENCE, R.id.unit);
-		unitBundle.putString(Control.Intents.EXTRA_TEXT, unitsHelper.getStringUnit(curDevice.getValue()));
+		
+		UnitsHelper unitsHelper = (prefs == null) ? null : new UnitsHelper(prefs, mContext);
+		if (unitsHelper != null) {
+			unitBundle.putInt(Control.Intents.EXTRA_LAYOUT_REFERENCE, R.id.unit);
+			unitBundle.putString(Control.Intents.EXTRA_TEXT, unitsHelper.getStringUnit(curDevice.getValue()));
+		}
 
 		// Battery icon
 		Bundle batteryBundle = new Bundle();

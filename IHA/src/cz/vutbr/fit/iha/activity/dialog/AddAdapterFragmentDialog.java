@@ -130,8 +130,12 @@ public class AddAdapterFragmentDialog extends TrackDialogFragment {
                 public void onClick(View v)
                 {
 	        		// User cancelled the dialog, remember that
-	        		SharedPreferences settings = mController.getUserSettings();
-	        		settings.edit().putBoolean(Constants.PERSISTENCE_PREF_IGNORE_NO_ADAPTER, true).commit();
+	        		
+	        		// UserSettings can be null when user is not logged in!
+	        		SharedPreferences prefs = mController.getUserSettings();
+	        		if (prefs != null) {
+	        			prefs.edit().putBoolean(Constants.PERSISTENCE_PREF_IGNORE_NO_ADAPTER, true).commit();
+	        		}
 	        		
 	        		dialog.dismiss();
                 }

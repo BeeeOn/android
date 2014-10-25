@@ -100,19 +100,26 @@ public class SensorListAdapter extends BaseAdapter {
 		Facility facility = device.getFacility();
 		Adapter adapter = mController.getAdapter(facility.getAdapterId());
 		
-		SharedPreferences userSettings = mController.getUserSettings();
+		// UserSettings can be null when user is not logged in!
+		SharedPreferences prefs = mController.getUserSettings();
 
-		TimeHelper timeHelper = new TimeHelper(userSettings);
-		UnitsHelper unitsHelper = new UnitsHelper(userSettings, mContext);
+		TimeHelper timeHelper = (prefs == null) ? null : new TimeHelper(prefs);
+		UnitsHelper unitsHelper = (prefs == null) ? null : new UnitsHelper(prefs, mContext);
 		
 		// Set the results into TextViews
 		txtTitle.setText(device.getName());
-		txtValue.setText(unitsHelper.getStringValue(device.getValue()));
-		txtUnit.setText(unitsHelper.getStringUnit(device.getValue()));
-		txtTime.setText(String.format("%s %s",
-				mContext.getString(R.string.last_update),
-				timeHelper.formatLastUpdate(facility.getLastUpdate(), adapter)));
 		
+		if (unitsHelper != null) {
+			txtValue.setText(unitsHelper.getStringValue(device.getValue()));
+			txtUnit.setText(unitsHelper.getStringUnit(device.getValue()));
+		}
+		
+		if (timeHelper != null) {
+			txtTime.setText(String.format("%s %s",
+					mContext.getString(R.string.last_update),
+					timeHelper.formatLastUpdate(facility.getLastUpdate(), adapter)));
+		}
+			
 		// Set title selected for animation if is text long
 		txtTitle.setSelected(true);
 

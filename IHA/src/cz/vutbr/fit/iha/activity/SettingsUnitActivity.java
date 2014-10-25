@@ -62,7 +62,12 @@ public class SettingsUnitActivity extends SherlockPreferenceActivity implements 
 		// Load the preferences from an XML resource
 		addPreferencesFromResource(R.xml.unit_preferences);
 
+		// UserSettings can be null when user is not logged in!
 		mPrefs = mController.getUserSettings();
+		if (mPrefs == null) {
+			finish();
+			return;
+		}
 		
 		initUnit(new TemperatureUnit());
 		initUnit(new NoiseUnit());

@@ -37,6 +37,7 @@ import java.util.List;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 
@@ -212,11 +213,15 @@ public class ListSensorControlExtension extends ManagedControlExtension {
 		headerBundle.putInt(Control.Intents.EXTRA_LAYOUT_REFERENCE, R.id.title);
 		headerBundle.putString(Control.Intents.EXTRA_TEXT, mDevices.get(position).getName());
 
-		UnitsHelper unitsHelper = new UnitsHelper(mController.getUserSettings(), mContext);
-		
 		Bundle valueBundle = new Bundle();
 		valueBundle.putInt(Control.Intents.EXTRA_LAYOUT_REFERENCE, R.id.value);
-		valueBundle.putString(Control.Intents.EXTRA_TEXT, unitsHelper.getStringValueUnit(mDevices.get(position).getValue()));
+		
+		// UserSettings can be null when user is not logged in!
+		SharedPreferences prefs = mController.getUserSettings();
+		UnitsHelper unitsHelper = (prefs == null) ? null : new UnitsHelper(prefs, mContext);
+		if (unitsHelper != null) {
+			valueBundle.putString(Control.Intents.EXTRA_TEXT, unitsHelper.getStringValueUnit(mDevices.get(position).getValue()));
+		}
 
 		item.layoutData = new Bundle[3];
 		item.layoutData[0] = headerBundle;

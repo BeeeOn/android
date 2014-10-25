@@ -93,10 +93,12 @@ public class ControlManagerSmartWatch2 extends ControlManagerBase {
 //
 		}
 
-		// Try to find default setting
+		// UserSettings can be null when user is not logged in!
 		SharedPreferences prefs = mController.getUserSettings();
-		String adapterId = prefs.getString(Constants.PERSISTENCE_PREF_SW2_ADAPTER, null);
-		String strLocation = prefs.getString(Constants.PERSISTENCE_PREF_SW2_LOCATION, null);
+
+		// Try to find default setting
+		String adapterId = (prefs == null) ? "" : prefs.getString(Constants.PERSISTENCE_PREF_SW2_ADAPTER, null);
+		String strLocation = (prefs == null) ? "" : prefs.getString(Constants.PERSISTENCE_PREF_SW2_LOCATION, null);
 
 		Log.v(SW2ExtensionService.LOG_TAG, "Default adapter ID: " + ((adapterId == null) ? "null" : adapterId));
 		Log.v(SW2ExtensionService.LOG_TAG, "Default location: " + ((strLocation == null) ? "null" : strLocation));

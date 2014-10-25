@@ -3,6 +3,7 @@ package cz.vutbr.fit.iha.activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Handler;
@@ -14,7 +15,6 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.actionbarsherlock.view.ActionMode;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
@@ -196,7 +196,9 @@ public class MainActivity extends BaseApplicationActivity {
 	
 	public void checkNoAdapters() {
 		if (mController.getActiveAdapter() == null) {
-			if (!mController.getUserSettings().getBoolean(Constants.PERSISTENCE_PREF_IGNORE_NO_ADAPTER, false)) {
+			// UserSettings can be null when user is not logged in!
+			SharedPreferences prefs = mController.getUserSettings();
+			if (prefs != null && !prefs.getBoolean(Constants.PERSISTENCE_PREF_IGNORE_NO_ADAPTER, false)) {
 				DialogFragment newFragment = new AddAdapterFragmentDialog();
 			    newFragment.show(getSupportFragmentManager(), ADD_ADAPTER_TAG);
 			}

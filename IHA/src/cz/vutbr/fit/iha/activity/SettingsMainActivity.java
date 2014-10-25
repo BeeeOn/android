@@ -49,7 +49,12 @@ public class SettingsMainActivity extends SherlockPreferenceActivity implements 
 		// Use own name for sharedPreferences
 		getPreferenceManager().setSharedPreferencesName(Persistence.getPreferencesFilename(mController.getActualUser().getEmail()));
 
+		// UserSettings can be null when user is not logged in!
 		mPrefs = mController.getUserSettings();
+		if (mPrefs == null) {
+			finish();
+			return;
+		}
 
 		// Load the preferences from an XML resource
 		addPreferencesFromResource(R.xml.main_preferences);
@@ -61,7 +66,7 @@ public class SettingsMainActivity extends SherlockPreferenceActivity implements 
 		mTimezoneListPref = (ListPreference) findPreference(mTimezone.getPersistenceKey());
 		mTimezoneListPref.setEntries(mTimezone.getEntries(this));
 		mTimezoneListPref.setEntryValues(mTimezone.getEntryValues());
-		mTimezoneListPref.setSummary(mTimezone.fromSettings(mController.getUserSettings()).getSettingsName(this));
+		mTimezoneListPref.setSummary(mTimezone.fromSettings(mPrefs).getSettingsName(this));
 
 		mPrefUnits = findPreference(Constants.KEY_UNITS);
 		Intent intentUnit = new Intent(this, SettingsUnitActivity.class);

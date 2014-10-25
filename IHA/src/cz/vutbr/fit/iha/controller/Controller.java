@@ -121,10 +121,16 @@ public final class Controller {
 		return mPersistence.loadLastEmail();
 	}
 
-	public SharedPreferences getUserSettings() throws IllegalStateException {
+	/**
+	 * Get SharedPreferences for actually logged in user
+	 *  
+	 * @return null if user is not logged in
+	 */
+	public SharedPreferences getUserSettings() {
 		String userEmail = mHousehold.user.getEmail();
-		if (userEmail == null || userEmail.isEmpty())
-			throw new IllegalStateException("ActualUser is not initialized (logged in) yet");
+		if (userEmail == null || userEmail.isEmpty()) {
+			return null;
+		}
 
 		return mPersistence.getSettings(userEmail);
 	}
@@ -329,9 +335,10 @@ public final class Controller {
 	 */
 	public synchronized Adapter getActiveAdapter() {
 		if (mHousehold.activeAdapter == null) {
-			SharedPreferences settings = getUserSettings();
+			// UserSettings can be null when user is not logged in!
+			SharedPreferences prefs = getUserSettings();
 			
-			String lastId = settings.getString(Constants.PERSISTENCE_PREF_ACTIVE_ADAPTER, "");
+			String lastId = (prefs == null) ? "" : prefs.getString(Constants.PERSISTENCE_PREF_ACTIVE_ADAPTER, "");
 
 			Map<String, Adapter> adapters = mHousehold.adaptersModel.getAdaptersMap();
 			if (!lastId.isEmpty() && adapters.containsKey(lastId)) {
@@ -343,8 +350,8 @@ public final class Controller {
 				}
 			}
 
-			if (mHousehold.activeAdapter != null)
-				settings.edit().putString(Constants.PERSISTENCE_PREF_ACTIVE_ADAPTER, mHousehold.activeAdapter.getId()).commit();
+			if (mHousehold.activeAdapter != null && prefs != null)
+				prefs.edit().putString(Constants.PERSISTENCE_PREF_ACTIVE_ADAPTER, mHousehold.activeAdapter.getId()).commit();
 		}
 
 		return mHousehold.activeAdapter;
@@ -369,7 +376,12 @@ public final class Controller {
 		Adapter adapter = adapters.get(id);
 		mHousehold.activeAdapter = adapter;
 		Log.d(TAG, String.format("Set active adapter to '%s'", adapter.getName()));
-		getUserSettings().edit().putString(Constants.PERSISTENCE_PREF_ACTIVE_ADAPTER, adapter.getId()).commit();
+		
+		// UserSettings can be null when user is not logged in!
+		SharedPreferences prefs = getUserSettings();
+		if (prefs != null) {
+			prefs.edit().putString(Constants.PERSISTENCE_PREF_ACTIVE_ADAPTER, adapter.getId()).commit();
+		}
 
 		// Load locations and facilities, if needed
 		reloadLocations(id, forceReload);

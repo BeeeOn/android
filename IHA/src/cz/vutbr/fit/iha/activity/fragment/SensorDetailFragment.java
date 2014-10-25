@@ -11,6 +11,7 @@ import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -371,22 +372,36 @@ public class SensorDetailFragment extends SherlockFragment {
 		Facility facility = device.getFacility();
 		Adapter adapter = mController.getAdapter(facility.getAdapterId());
 		
-		UnitsHelper unitsHelper = new UnitsHelper(mController.getUserSettings(), getActivity().getApplicationContext());
-		TimeHelper timeHelper = new TimeHelper(mController.getUserSettings());
-		DateTimeFormatter fmt = timeHelper.getFormatter(mGraphDateTimeFormat, adapter);
+		// UserSettings can be null when user is not logged in!
+		SharedPreferences prefs = mController.getUserSettings();
+		
+		UnitsHelper unitsHelper = (prefs == null) ? null : new UnitsHelper(prefs, getActivity().getApplicationContext());
+		TimeHelper timeHelper = (prefs == null) ? null : new TimeHelper(prefs);
 		
 		// Set value of sensor
-		mValue.setText(unitsHelper.getStringValueUnit(device.getValue()));
+		if (unitsHelper != null) {
+			mValue.setText(unitsHelper.getStringValueUnit(device.getValue()));
+		}
+		
 		// Set icon of sensor
 		mIcon.setImageResource(device.getIconResource());
+
 		// Set time of sensor
-		mTime.setText(timeHelper.formatLastUpdate(facility.getLastUpdate(), adapter));
+		if (timeHelper != null) {
+			mTime.setText(timeHelper.formatLastUpdate(facility.getLastUpdate(), adapter));
+		}
+
 		// Set refresh time Text
 		mRefreshTimeText.setText(" " + facility.getRefresh().getStringInterval(context));
+		
 		// Set refresh time SeekBar
 		mRefreshTimeValue.setProgress(facility.getRefresh().getIntervalIndex());
+		
 		// Add Graph with history data
-		addGraphView(fmt, unitsHelper);
+		if (unitsHelper != null && timeHelper != null) {
+			DateTimeFormatter fmt = timeHelper.getFormatter(mGraphDateTimeFormat, adapter);
+			addGraphView(fmt, unitsHelper);
+		}
 
 		// Visible all elements
 		visibleAllElements();
