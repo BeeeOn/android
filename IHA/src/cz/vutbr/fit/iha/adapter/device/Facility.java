@@ -4,6 +4,8 @@
 package cz.vutbr.fit.iha.adapter.device;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import org.joda.time.DateTime;
@@ -25,6 +27,8 @@ public class Facility {
 	protected DateTime mLastUpdate;
 	protected final List<Device> mDevices = new ArrayList<Device>();
 
+	private boolean mSorted; // optimization to sort values only when needed
+	
 	/**
 	 * Class constructor
 	 */
@@ -260,6 +264,7 @@ public class Facility {
 	public void addDevice(Device device) {
 		device.setFacility(this);
 		mDevices.add(device);
+		mSorted = false;
 	}
 
 	public void clearDevices() {
@@ -267,6 +272,18 @@ public class Facility {
 	}
 
 	public List<Device> getDevices() {
+		if (!mSorted) {
+			mSorted = true;
+			Collections.sort(mDevices, new Comparator<Device>() {
+
+				@Override
+				public int compare(Device lhs, Device rhs) {
+					return lhs.getType().compareTo(rhs.getType());
+				}
+
+			});
+		}
+		
 		return mDevices;
 	}
 
