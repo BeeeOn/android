@@ -1,6 +1,7 @@
 package cz.vutbr.fit.iha.persistence;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -8,6 +9,7 @@ import java.util.Random;
 
 import org.joda.time.DateTime;
 
+import cz.vutbr.fit.iha.IdentifierComparator;
 import cz.vutbr.fit.iha.adapter.location.Location;
 import cz.vutbr.fit.iha.network.Network;
 import cz.vutbr.fit.iha.network.exception.NetworkException;
@@ -43,6 +45,9 @@ public class LocationsModel {
 				locations.add(location);
 			}	
 		}
+		
+		// Sort result locations by id
+		Collections.sort(locations, new IdentifierComparator());
 		
 		return locations;
 	}

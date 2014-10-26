@@ -7,6 +7,7 @@ package cz.vutbr.fit.iha.network.xml;
 import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.EnumSet;
 import java.util.List;
 
@@ -14,7 +15,6 @@ import org.xmlpull.v1.XmlSerializer;
 
 import android.util.Xml;
 import cz.vutbr.fit.iha.Constants;
-import cz.vutbr.fit.iha.adapter.device.AdapterAddressComparator;
 import cz.vutbr.fit.iha.adapter.device.Device;
 import cz.vutbr.fit.iha.adapter.device.Device.SaveDevice;
 import cz.vutbr.fit.iha.adapter.device.Facility;
@@ -281,7 +281,14 @@ public class XmlCreator {
 			serializer.attribute(ns, Xconstants.VERSION, COM_VER);
 
 			// sort by adapter address
-			Collections.sort(facilities, new AdapterAddressComparator());
+			Collections.sort(facilities, new Comparator<Facility>() {
+
+				@Override
+				public int compare(Facility left, Facility right) {
+					return Integer.valueOf(left.getAdapterId()).compareTo(Integer.valueOf(right.getAdapterId()));
+				}
+				
+			});
 
 			String aid = "";
 			for (Facility facility : facilities) {

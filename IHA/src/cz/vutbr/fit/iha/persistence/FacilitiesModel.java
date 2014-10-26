@@ -1,6 +1,7 @@
 package cz.vutbr.fit.iha.persistence;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.List;
@@ -8,6 +9,7 @@ import java.util.Map;
 
 import org.joda.time.DateTime;
 
+import cz.vutbr.fit.iha.IdentifierComparator;
 import cz.vutbr.fit.iha.adapter.device.Device;
 import cz.vutbr.fit.iha.adapter.device.Device.SaveDevice;
 import cz.vutbr.fit.iha.adapter.device.Facility;
@@ -47,6 +49,9 @@ public class FacilitiesModel {
 				}
 			}	
 		}
+		
+		// Sort result facilities by id
+		Collections.sort(facilities, new IdentifierComparator());
 		
 		return facilities;
 	}

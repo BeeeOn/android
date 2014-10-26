@@ -1,8 +1,9 @@
 package cz.vutbr.fit.iha.adapter.location;
 
+import cz.vutbr.fit.iha.IIdentifier;
 import cz.vutbr.fit.iha.R;
 
-public class Location implements Comparable<Location> {
+public class Location implements IIdentifier, Comparable<Location> {
 	/** Represents id of newly created location (not saved on server yet) */
 	public static final String NEW_LOCATION_ID = "-NEW-";
 

@@ -1,12 +1,14 @@
 package cz.vutbr.fit.iha.persistence;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.joda.time.DateTime;
 
+import cz.vutbr.fit.iha.IdentifierComparator;
 import cz.vutbr.fit.iha.adapter.Adapter;
 import cz.vutbr.fit.iha.network.Network;
 import cz.vutbr.fit.iha.network.exception.NetworkException;
@@ -35,6 +37,9 @@ public class AdaptersModel {
 		for (Adapter adapter : mAdapters.values()) {
 			adapters.add(adapter);
 		}
+
+		// Sort result adapters by id
+		Collections.sort(adapters, new IdentifierComparator());
 		
 		return adapters;
 	}

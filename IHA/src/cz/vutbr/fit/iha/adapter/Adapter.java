@@ -3,6 +3,7 @@
  */
 package cz.vutbr.fit.iha.adapter;
 
+import cz.vutbr.fit.iha.IIdentifier;
 import cz.vutbr.fit.iha.household.User;
 
 /**
@@ -10,7 +11,7 @@ import cz.vutbr.fit.iha.household.User;
  * @author ThinkDeep
  * 
  */
-public class Adapter {
+public class Adapter implements IIdentifier {
 	public static final String TAG = Adapter.class.getSimpleName();
 
 	private String mId = "";

@@ -5,16 +5,18 @@ package cz.vutbr.fit.iha.adapter.device;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 import org.joda.time.DateTime;
+
+import cz.vutbr.fit.iha.IIdentifier;
+import cz.vutbr.fit.iha.IdentifierComparator;
 
 /**
  * @brief Facility class which contains own data and devices (sensors, actors)
  * @author Robyer
  */
-public class Facility {
+public class Facility implements IIdentifier {
 	protected String mAddress;
 	protected String mAdapterId;
 	protected String mLocationId;
@@ -274,14 +276,8 @@ public class Facility {
 	public List<Device> getDevices() {
 		if (!mSorted) {
 			mSorted = true;
-			Collections.sort(mDevices, new Comparator<Device>() {
-
-				@Override
-				public int compare(Device lhs, Device rhs) {
-					return lhs.getType().compareTo(rhs.getType());
-				}
-
-			});
+			// Sort devices by id (= by type)
+			Collections.sort(mDevices, new IdentifierComparator());
 		}
 		
 		return mDevices;

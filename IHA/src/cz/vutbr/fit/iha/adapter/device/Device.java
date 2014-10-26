@@ -3,6 +3,7 @@
  */
 package cz.vutbr.fit.iha.adapter.device;
 
+import cz.vutbr.fit.iha.IIdentifier;
 import cz.vutbr.fit.iha.adapter.device.values.BaseValue;
 
 
@@ -10,7 +11,7 @@ import cz.vutbr.fit.iha.adapter.device.values.BaseValue;
  * @brief Abstract class for all devices
  * @author Robyer
  */
-public class Device {
+public class Device implements IIdentifier {
 	public static final String ID_SEPARATOR = "---";
 
 	protected Facility mFacility;
