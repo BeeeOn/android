@@ -443,8 +443,10 @@ public class SensorDetailFragment extends SherlockFragment {
 		mRectangleName.setVisibility(View.VISIBLE);
 		mRectangleLoc.setVisibility(View.VISIBLE);
 		// mSpinnerLoc;
-		mGraphView.setVisibility(View.VISIBLE);
-		mGraphInfo.setVisibility(View.VISIBLE);
+		if (mGraphView != null) {
+			mGraphView.setVisibility(View.VISIBLE);
+			mGraphInfo.setVisibility(View.VISIBLE);
+		}
 
 	}
 
@@ -552,6 +554,10 @@ public class SensorDetailFragment extends SherlockFragment {
 	}
 
 	public void fillGraph(DeviceLog log) {
+		if (mGraphView == null) {
+			return;
+		}
+		
 		 // NOTE: This formatter is only for Log, correct timezone from app setting doesn't matter here
 		final DateTimeFormatter fmt = DateTimeFormat.forPattern(mGraphDateTimeFormat); 
 
