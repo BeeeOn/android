@@ -16,7 +16,7 @@ import android.os.PowerManager;
 import android.os.SystemClock;
 import cz.vutbr.fit.iha.R;
 import cz.vutbr.fit.iha.adapter.Adapter;
-import cz.vutbr.fit.iha.adapter.device.BaseDevice;
+import cz.vutbr.fit.iha.adapter.device.Device;
 import cz.vutbr.fit.iha.controller.Controller;
 import cz.vutbr.fit.iha.util.Log;
 import cz.vutbr.fit.iha.util.TimeHelper;
@@ -171,7 +171,7 @@ public class WidgetUpdateService extends Service {
 			Log.v(TAG, String.format("Updating widget %d", widgetId));
 
 			Adapter adapter = controller.getAdapter(widgetData.deviceAdapterId);
-			BaseDevice device = controller.getDevice(widgetData.deviceAdapterId, widgetData.deviceId);
+			Device device = controller.getDevice(widgetData.deviceAdapterId, widgetData.deviceId);
 
 			if (device != null) {
 				// Get fresh data from device

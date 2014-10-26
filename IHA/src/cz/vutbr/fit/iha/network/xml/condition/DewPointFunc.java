@@ -1,22 +1,22 @@
 package cz.vutbr.fit.iha.network.xml.condition;
 
-import cz.vutbr.fit.iha.adapter.device.BaseDevice;
+import cz.vutbr.fit.iha.adapter.device.Device;
 
 //new drop
 public class DewPointFunc extends ConditionFunction{
-	private BaseDevice mTempDevice;
-	private BaseDevice mHumiDevice;
+	private Device mTempDevice;
+	private Device mHumiDevice;
 	
-	public DewPointFunc(BaseDevice tempDevice, BaseDevice humiDevice){
+	public DewPointFunc(Device tempDevice, Device humiDevice){
 		mTempDevice = tempDevice;
 		mHumiDevice = humiDevice;
 	}
 	
-	public BaseDevice getTempDevice(){
+	public Device getTempDevice(){
 		return mTempDevice;
 	}
 	
-	public BaseDevice getHumiDevice(){
+	public Device getHumiDevice(){
 		return mHumiDevice;
 	}
 }

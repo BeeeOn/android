@@ -23,7 +23,7 @@ public class Facility {
 	protected String mInvolveTime = "";
 	protected int mNetworkQuality;	
 	protected DateTime mLastUpdate;
-	protected final List<BaseDevice> mDevices = new ArrayList<BaseDevice>();
+	protected final List<Device> mDevices = new ArrayList<Device>();
 
 	/**
 	 * Class constructor
@@ -257,7 +257,7 @@ public class Facility {
 				getId(), mAdapterId, mLocationId, mInitialized, mBattery, mLogging, mRefreshInterval.getInterval(), Integer.toString(mDevices.size()));
 	}
 
-	public void addDevice(BaseDevice device) {
+	public void addDevice(Device device) {
 		device.setFacility(this);
 		mDevices.add(device);
 	}
@@ -266,12 +266,12 @@ public class Facility {
 		mDevices.clear();
 	}
 
-	public List<BaseDevice> getDevices() {
+	public List<Device> getDevices() {
 		return mDevices;
 	}
 
-	public BaseDevice getDeviceByType(DeviceType type) {
-		for (BaseDevice device : getDevices()) {
+	public Device getDeviceByType(DeviceType type) {
+		for (Device device : getDevices()) {
 			if (device.getType().equals(type)) {
 				return device;
 			}
@@ -299,9 +299,9 @@ public class Facility {
 		setLastUpdate(newFacility.getLastUpdate());
 
 		mDevices.clear();
-		for (BaseDevice newDevice : newFacility.mDevices) {
+		for (Device newDevice : newFacility.mDevices) {
 			try {
-				BaseDevice device = newDevice.getClass().newInstance();
+				Device device = newDevice.getClass().newInstance();
 				device.replaceData(newDevice);
 				mDevices.add(device);
 			} catch (InstantiationException e) {

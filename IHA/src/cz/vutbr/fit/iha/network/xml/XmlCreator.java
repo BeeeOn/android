@@ -15,8 +15,8 @@ import org.xmlpull.v1.XmlSerializer;
 import android.util.Xml;
 import cz.vutbr.fit.iha.Constants;
 import cz.vutbr.fit.iha.adapter.device.AdapterAddressComparator;
-import cz.vutbr.fit.iha.adapter.device.BaseDevice;
-import cz.vutbr.fit.iha.adapter.device.BaseDevice.SaveDevice;
+import cz.vutbr.fit.iha.adapter.device.Device;
+import cz.vutbr.fit.iha.adapter.device.Device.SaveDevice;
 import cz.vutbr.fit.iha.adapter.device.Facility;
 import cz.vutbr.fit.iha.adapter.location.Location;
 import cz.vutbr.fit.iha.household.User;
@@ -297,7 +297,7 @@ public class XmlCreator {
 				serializer.startTag(ns, Xconstants.DEVICE);
 				serializer.attribute(ns, Xconstants.ID, facility.getAddress());
 
-				for (BaseDevice device : facility.getDevices()) {
+				for (Device device : facility.getDevices()) {
 					serializer.startTag(ns, Xconstants.PART);
 					serializer.attribute(ns, Xconstants.TYPE, Integer.toString(device.getType().getTypeId()));
 					serializer.endTag(ns, Xconstants.PART);
@@ -403,7 +403,7 @@ public class XmlCreator {
 				if (toSave.contains(SaveDevice.SAVE_REFRESH))
 					serializer.attribute(ns, Xconstants.REFRESH, Integer.toString(facility.getRefresh().getInterval()));
 
-				for (BaseDevice device : facility.getDevices()) {
+				for (Device device : facility.getDevices()) {
 					serializer.startTag(ns, Xconstants.PART);
 
 					serializer.attribute(ns, Xconstants.TYPE, Integer.toString(device.getType().getTypeId()));
@@ -442,7 +442,7 @@ public class XmlCreator {
 	 * @return SetDevs message
 	 * @since 2.2
 	 */
-	public static String createSetDev(String sid, String aid, BaseDevice device, EnumSet<SaveDevice> toSave) {
+	public static String createSetDev(String sid, String aid, Device device, EnumSet<SaveDevice> toSave) {
 		XmlSerializer serializer = Xml.newSerializer();
 		StringWriter writer = new StringWriter();
 		try {
@@ -506,7 +506,7 @@ public class XmlCreator {
 	 * @return XML of Switch message
 	 * @since 2.2
 	 */
-	public static String createSwitch(String sid, String aid, BaseDevice device) {
+	public static String createSwitch(String sid, String aid, Device device) {
 		return createComAttribsVariant(Xconstants.STATE, SWITCH, Xconstants.SID, sid, Xconstants.AID, aid, Xconstants.DID, device.getFacility().getAddress(), Xconstants.DTYPE, Integer.toString(device.getType().getTypeId()), Xconstants.VALUE, String.valueOf(device.getValue().getDoubleValue()));
 	}
 
@@ -638,7 +638,7 @@ public class XmlCreator {
 	 * @return addView message
 	 * @since 2.2
 	 */
-	public static String createAddView(String sid, String viewName, int iconNum, List<BaseDevice> devices) {
+	public static String createAddView(String sid, String viewName, int iconNum, List<Device> devices) {
 		XmlSerializer serializer = Xml.newSerializer();
 		StringWriter writer = new StringWriter();
 		try {
@@ -653,7 +653,7 @@ public class XmlCreator {
 			serializer.attribute(ns, Xconstants.NAME, viewName);
 			serializer.attribute(ns, Xconstants.ICON, Integer.toString(iconNum));
 
-			for (BaseDevice device : devices) {
+			for (Device device : devices) {
 				serializer.startTag(ns, Xconstants.DEVICE);
 
 				serializer.attribute(ns, Xconstants.AID, device.getFacility().getAdapterId());
@@ -687,7 +687,7 @@ public class XmlCreator {
 	 * @return updateView message
 	 * @since 2.2
 	 */
-	public static String createSetView(String sid, String viewName, int iconNum, BaseDevice device, NetworkAction action) {
+	public static String createSetView(String sid, String viewName, int iconNum, Device device, NetworkAction action) {
 		XmlSerializer serializer = Xml.newSerializer();
 		StringWriter writer = new StringWriter();
 		try {

@@ -46,7 +46,7 @@ import com.sonyericsson.extras.liveware.extension.util.control.ControlListItem;
 
 import cz.vutbr.fit.iha.R;
 import cz.vutbr.fit.iha.adapter.Adapter;
-import cz.vutbr.fit.iha.adapter.device.BaseDevice;
+import cz.vutbr.fit.iha.adapter.device.Device;
 import cz.vutbr.fit.iha.adapter.device.Facility;
 import cz.vutbr.fit.iha.extension.watches.smartwatch2.SW2ExtensionService;
 import cz.vutbr.fit.iha.util.Log;
@@ -66,7 +66,7 @@ public class GalleryControlExtension extends ManagedControlExtension {
 
 	private String mAdapterId;
 	private String mLocationStr;
-	private List<BaseDevice> mDevices;
+	private List<Device> mDevices;
 
 	/**
 	 * Bundle for menu icons
@@ -89,7 +89,7 @@ public class GalleryControlExtension extends ManagedControlExtension {
 		// setupClickables(context);
 		initializeMenus();
 
-		mDevices = new ArrayList<BaseDevice>();
+		mDevices = new ArrayList<Device>();
 
 		mAdapterId = getIntent().getStringExtra(EXTRA_ADAPTER_ID);
 		mLocationStr = getIntent().getStringExtra(EXTRA_LOCATION_NAME);
@@ -191,7 +191,7 @@ public class GalleryControlExtension extends ManagedControlExtension {
 		item.listItemId = position;
 		item.listItemPosition = position;
 
-		BaseDevice curDevice = mDevices.get(position);
+		Device curDevice = mDevices.get(position);
 		Facility curFacility = curDevice.getFacility();
 		Adapter curAdapter = mController.getAdapter(curFacility.getAdapterId());
 		
@@ -260,7 +260,7 @@ public class GalleryControlExtension extends ManagedControlExtension {
 		Thread thLoc = new Thread(new Runnable() {
 			@Override
 			public void run() {
-				BaseDevice device = mDevices.get(lastPosition);
+				Device device = mDevices.get(lastPosition);
 				if (mController.updateFacility(device.getFacility())) {
 					sendListItem(createControlListItem(lastPosition));
 				}
@@ -275,7 +275,7 @@ public class GalleryControlExtension extends ManagedControlExtension {
 			@Override
 			public void run() {
 
-				mDevices = new ArrayList<BaseDevice>();
+				mDevices = new ArrayList<Device>();
 
 				mController.reloadFacilitiesByAdapter(mAdapterId, true);
 				List<Facility> facilities = mController.getFacilitiesByLocation(mAdapterId, mLocationStr);

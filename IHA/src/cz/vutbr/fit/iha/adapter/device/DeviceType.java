@@ -51,11 +51,11 @@ public enum DeviceType {
 		return TYPE_UNKNOWN;
 	}
 
-	public static BaseDevice createDeviceFromType(int typeId) {
+	public static Device createDeviceFromType(int typeId) {
 		DeviceType type = DeviceType.fromValue(typeId);
 		BaseValue value = createDeviceValue(type);
 		
-		return new BaseDevice(type, value);
+		return new Device(type, value);
 	}
 	
 	public static BaseValue createDeviceValue(DeviceType type) {

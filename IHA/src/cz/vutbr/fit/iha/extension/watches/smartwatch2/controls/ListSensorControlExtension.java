@@ -46,7 +46,7 @@ import com.sonyericsson.extras.liveware.extension.util.control.ControlListItem;
 
 import cz.vutbr.fit.iha.R;
 import cz.vutbr.fit.iha.adapter.Adapter;
-import cz.vutbr.fit.iha.adapter.device.BaseDevice;
+import cz.vutbr.fit.iha.adapter.device.Device;
 import cz.vutbr.fit.iha.adapter.device.Facility;
 import cz.vutbr.fit.iha.extension.watches.smartwatch2.SW2ExtensionService;
 import cz.vutbr.fit.iha.util.Log;
@@ -60,7 +60,7 @@ public class ListSensorControlExtension extends ManagedControlExtension {
 	public static final String EXTRA_ADAPTER_ID = "ADAPTER_ID";
 	public static final String EXTRA_LOCATION_NAME = "LOCATION_NAME";
 
-	private List<BaseDevice> mDevices;
+	private List<Device> mDevices;
 	private String mLocationStr;
 	private Adapter mAdapter;
 	private String mAdapterId;
@@ -86,7 +86,7 @@ public class ListSensorControlExtension extends ManagedControlExtension {
 			return;
 		}
 
-		mDevices = new ArrayList<BaseDevice>();
+		mDevices = new ArrayList<Device>();
 		actualize();
 	}
 
@@ -239,7 +239,7 @@ public class ListSensorControlExtension extends ManagedControlExtension {
 				mController.reloadAdapters(true);
 				mAdapter = mController.getAdapter(mAdapterId);
 				if (mAdapter != null) {
-					mDevices = new ArrayList<BaseDevice>();
+					mDevices = new ArrayList<Device>();
 
 					mController.reloadFacilitiesByAdapter(mAdapterId, true);
 					List<Facility> facilities = mController.getFacilitiesByLocation(mAdapter.getId(), mLocationStr);

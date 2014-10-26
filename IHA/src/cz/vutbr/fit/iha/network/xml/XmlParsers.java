@@ -19,7 +19,7 @@ import android.content.Context;
 import android.util.Xml;
 import cz.vutbr.fit.iha.Constants;
 import cz.vutbr.fit.iha.adapter.Adapter;
-import cz.vutbr.fit.iha.adapter.device.BaseDevice;
+import cz.vutbr.fit.iha.adapter.device.Device;
 import cz.vutbr.fit.iha.adapter.device.DeviceLog;
 import cz.vutbr.fit.iha.adapter.device.DeviceLog.DataRow;
 import cz.vutbr.fit.iha.adapter.device.DeviceType;
@@ -347,7 +347,7 @@ public class XmlParsers {
 			mParser.nextTag(); // part tag
 
 			do { // go through parts (devices)
-				BaseDevice device = createDeviceByType(getSecureAttrValue(Xconstants.TYPE));
+				Device device = createDeviceByType(getSecureAttrValue(Xconstants.TYPE));
 				device.setVisibility(getSecureAttrValue(Xconstants.VISIBILITY).equals(Xconstants.ZERO) ? false : true);
 				device.setName(getSecureAttrValue(Xconstants.NAME));
 				device.setValue(getSecureAttrValue(Xconstants.VALUE));
@@ -591,7 +591,7 @@ public class XmlParsers {
 			switch (type) {
 			case BTW:
 				mParser.nextTag(); // device or value tag
-				BaseDevice deviceBTW = null;
+				Device deviceBTW = null;
 				String tempValue = null;
 				String minValue = "0";
 				String maxValue = "1";
@@ -626,7 +626,7 @@ public class XmlParsers {
 				mParser.nextTag(); // device tag
 
 				String stypeCHG = getSecureAttrValue(Xconstants.TYPE);
-				BaseDevice deviceCHG = createDeviceByType(stypeCHG);
+				Device deviceCHG = createDeviceByType(stypeCHG);
 				Facility facilityCHG = new Facility();
 				facilityCHG.setAddress(getSecureAttrValue(Xconstants.ID));
 				deviceCHG.setFacility(facilityCHG);
@@ -637,9 +637,9 @@ public class XmlParsers {
 				break;
 			case DP:
 				mParser.nextTag(); // device tag
-				BaseDevice tempoDevice = null;
-				BaseDevice deviceDP_t = null;
-				BaseDevice deviceDP_h = null;
+				Device tempoDevice = null;
+				Device deviceDP_t = null;
+				Device deviceDP_h = null;
 				do {
 					if (mParser.getName().equals(Xconstants.DEVICE)) {
 						String stypeDP = getSecureAttrValue(Xconstants.TYPE);
@@ -665,7 +665,7 @@ public class XmlParsers {
 			case LE:
 			case LT:
 				mParser.nextTag(); // device or value tag
-				BaseDevice device = null;
+				Device device = null;
 				String value = null;
 				do {
 					if (mParser.getName().equals(Xconstants.DEVICE)) {
@@ -757,7 +757,7 @@ public class XmlParsers {
 				mParser.nextTag(); // dev tag
 				do {
 					Action action = new Action(type);
-					BaseDevice device = createDeviceByType(getSecureAttrValue(Xconstants.TYPE));
+					Device device = createDeviceByType(getSecureAttrValue(Xconstants.TYPE));
 					Facility facility = new Facility();
 					facility.setAddress(getSecureAttrValue(Xconstants.ID));
 					device.setFacility(facility);
@@ -803,7 +803,7 @@ public class XmlParsers {
 	 *            string type of device
 	 * @return empty object
 	 */
-	private BaseDevice createDeviceByType(String sType) {
+	private Device createDeviceByType(String sType) {
 		int iType;
 		if (sType.length() < 1) {
 			iType = -1; // Unknown type
@@ -829,7 +829,7 @@ public class XmlParsers {
 			Facility facility = null;
 			boolean facilityExists = false;
 
-			BaseDevice device = createDeviceByType(getSecureAttrValue(Xconstants.TYPE));
+			Device device = createDeviceByType(getSecureAttrValue(Xconstants.TYPE));
 
 			String id = getSecureAttrValue(Xconstants.ID);
 			for (Facility fac : result) {

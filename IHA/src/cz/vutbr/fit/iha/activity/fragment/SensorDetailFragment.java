@@ -48,8 +48,8 @@ import com.jjoe64.graphview.LineGraphView;
 import cz.vutbr.fit.iha.R;
 import cz.vutbr.fit.iha.activity.SensorDetailActivity;
 import cz.vutbr.fit.iha.adapter.Adapter;
-import cz.vutbr.fit.iha.adapter.device.BaseDevice;
-import cz.vutbr.fit.iha.adapter.device.BaseDevice.SaveDevice;
+import cz.vutbr.fit.iha.adapter.device.Device;
+import cz.vutbr.fit.iha.adapter.device.Device.SaveDevice;
 import cz.vutbr.fit.iha.adapter.device.DeviceLog;
 import cz.vutbr.fit.iha.adapter.device.DeviceLog.DataInterval;
 import cz.vutbr.fit.iha.adapter.device.DeviceLog.DataType;
@@ -103,7 +103,7 @@ public class SensorDetailFragment extends SherlockFragment {
 
 	private SensorDetailActivity mActivity;
 
-	private BaseDevice mDevice;
+	private Device mDevice;
 
 	private SaveDeviceTask mSaveDeviceTask;
 	private GetDeviceLogTask mGetDeviceLogTask;
@@ -200,7 +200,7 @@ public class SensorDetailFragment extends SherlockFragment {
 		super.onStop();
 	}
 
-	private void initLayout(BaseDevice device) {
+	private void initLayout(Device device) {
 		final Context context = getActivity();// SensorDetailFragment.this.getView().getContext();
 		// Get View for sensor name
 		mName = (TextView) getView().findViewById(R.id.sen_detail_name);

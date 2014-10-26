@@ -22,7 +22,7 @@ import com.actionbarsherlock.view.Window;
 
 import cz.vutbr.fit.iha.R;
 import cz.vutbr.fit.iha.adapter.Adapter;
-import cz.vutbr.fit.iha.adapter.device.BaseDevice;
+import cz.vutbr.fit.iha.adapter.device.Device;
 import cz.vutbr.fit.iha.adapter.device.Facility;
 import cz.vutbr.fit.iha.adapter.device.RefreshInterval;
 import cz.vutbr.fit.iha.asynctask.CallbackTask.CallbackTaskListener;
@@ -42,7 +42,7 @@ public class WidgetConfigurationActivity extends BaseActivity {
 	private WidgetData mWidgetData;
 
 	private List<Adapter> mAdapters = new ArrayList<Adapter>();
-	private List<BaseDevice> mDevices = new ArrayList<BaseDevice>();
+	private List<Device> mDevices = new ArrayList<Device>();
 	
 	private boolean isInitialized = false;
 	private boolean triedLoginAlready = false;
@@ -225,7 +225,7 @@ public class WidgetConfigurationActivity extends BaseActivity {
 
 			@Override
 			public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-				BaseDevice device = (BaseDevice) parent.getSelectedItem();
+				Device device = (Device) parent.getSelectedItem();
 				TextView intervalText = (TextView) findViewById(R.id.interval_sensor);
 				intervalText.setText(device.getFacility().getRefresh().getStringInterval(WidgetConfigurationActivity.this));
 				
@@ -264,7 +264,7 @@ public class WidgetConfigurationActivity extends BaseActivity {
 						mDevices.addAll(facility.getDevices());
 					}
 
-					ArrayAdapter<?> arrayAdapter = new ArrayAdapter<BaseDevice>(WidgetConfigurationActivity.this, android.R.layout.simple_spinner_dropdown_item, mDevices);
+					ArrayAdapter<?> arrayAdapter = new ArrayAdapter<Device>(WidgetConfigurationActivity.this, android.R.layout.simple_spinner_dropdown_item, mDevices);
 					spinSensor.setAdapter(arrayAdapter);					
 
 					break;
@@ -291,7 +291,7 @@ public class WidgetConfigurationActivity extends BaseActivity {
 		}
 		
 		spinner = (Spinner) findViewById(R.id.sensor);
-		BaseDevice device = (BaseDevice) spinner.getSelectedItem();
+		Device device = (Device) spinner.getSelectedItem();
 		if (device == null) {
 			Toast.makeText(this, R.string.widget_configuration_select_device, Toast.LENGTH_LONG).show();
 			return false;
@@ -324,7 +324,7 @@ public class WidgetConfigurationActivity extends BaseActivity {
 					mDevices.addAll(facility.getDevices());
 				}
 				
-				ArrayAdapter<?> arrayAdapter = new ArrayAdapter<BaseDevice>(WidgetConfigurationActivity.this, android.R.layout.simple_spinner_dropdown_item, mDevices);
+				ArrayAdapter<?> arrayAdapter = new ArrayAdapter<Device>(WidgetConfigurationActivity.this, android.R.layout.simple_spinner_dropdown_item, mDevices);
 				Spinner s = (Spinner) findViewById(R.id.sensor);
 				s.setEnabled(true);
 				s.setAdapter(arrayAdapter);

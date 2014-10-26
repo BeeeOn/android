@@ -33,8 +33,8 @@ import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import cz.vutbr.fit.iha.adapter.Adapter;
-import cz.vutbr.fit.iha.adapter.device.BaseDevice;
-import cz.vutbr.fit.iha.adapter.device.BaseDevice.SaveDevice;
+import cz.vutbr.fit.iha.adapter.device.Device;
+import cz.vutbr.fit.iha.adapter.device.Device.SaveDevice;
 import cz.vutbr.fit.iha.adapter.device.DeviceLog;
 import cz.vutbr.fit.iha.adapter.device.Facility;
 import cz.vutbr.fit.iha.adapter.location.Location;
@@ -564,7 +564,7 @@ public class Network {
 	 * @throws CommunicationException
 	 * @throws FalseException
 	 */
-	public boolean updateDevice(String adapterID, BaseDevice device, EnumSet<SaveDevice> toSave) throws NoConnectionException,
+	public boolean updateDevice(String adapterID, Device device, EnumSet<SaveDevice> toSave) throws NoConnectionException,
 			CommunicationException, FalseException {
 		ParsedMessage msg = doRequest(XmlCreator.createSetDev(mSessionID, adapterID, device, toSave));
 
@@ -584,7 +584,7 @@ public class Network {
 	 * @throws CommunicationException
 	 * @throws FalseException
 	 */
-	public boolean switchState(String adapterID, BaseDevice device) throws NoConnectionException, CommunicationException, FalseException {
+	public boolean switchState(String adapterID, Device device) throws NoConnectionException, CommunicationException, FalseException {
 		ParsedMessage msg = doRequest(XmlCreator.createSwitch(mSessionID, adapterID, device));
 
 		if (msg.getState() == State.TRUE)
@@ -713,7 +713,7 @@ public class Network {
 	 * @throws CommunicationException
 	 */
 	// http://stackoverflow.com/a/509288/1642090
-	public DeviceLog getLog(String adapterID, BaseDevice device, LogDataPair pair)
+	public DeviceLog getLog(String adapterID, Device device, LogDataPair pair)
 			throws NoConnectionException, CommunicationException, FalseException {
 		String msgToSend = XmlCreator.createGetLog(
 				mSessionID,
@@ -838,7 +838,7 @@ public class Network {
 	 * @throws NoConnectionException
 	 * @throws CommunicationException
 	 */
-	public boolean addView(String viewName, int iconID, List<BaseDevice> devices) throws NoConnectionException, CommunicationException,
+	public boolean addView(String viewName, int iconID, List<Device> devices) throws NoConnectionException, CommunicationException,
 			FalseException {
 		ParsedMessage msg = doRequest(XmlCreator.createAddView(mSessionID, viewName, iconID, devices));
 

@@ -9,8 +9,8 @@ import android.content.SharedPreferences;
 import cz.vutbr.fit.iha.Constants;
 import cz.vutbr.fit.iha.activity.LoginActivity;
 import cz.vutbr.fit.iha.adapter.Adapter;
-import cz.vutbr.fit.iha.adapter.device.BaseDevice;
-import cz.vutbr.fit.iha.adapter.device.BaseDevice.SaveDevice;
+import cz.vutbr.fit.iha.adapter.device.Device;
+import cz.vutbr.fit.iha.adapter.device.Device.SaveDevice;
 import cz.vutbr.fit.iha.adapter.device.DeviceLog;
 import cz.vutbr.fit.iha.adapter.device.DeviceLog.DataInterval;
 import cz.vutbr.fit.iha.adapter.device.DeviceLog.DataType;
@@ -594,8 +594,8 @@ public final class Controller {
 		return mHousehold.facilitiesModel.getFacility(adapterId, id);
 	}
 
-	public BaseDevice getDevice(String adapterId, String id) {
-		String[] ids = id.split(BaseDevice.ID_SEPARATOR, 2);
+	public Device getDevice(String adapterId, String id) {
+		String[] ids = id.split(Device.ID_SEPARATOR, 2);
 
 		Facility facility = getFacility(adapterId, ids[0]);
 		if (facility == null)
@@ -615,7 +615,7 @@ public final class Controller {
 	 * @param device
 	 * @return true on success, false otherwise
 	 */
-	public boolean hideDevice(BaseDevice device) throws NotImplementedException {
+	public boolean hideDevice(Device device) throws NotImplementedException {
 		device.setVisibility(false);
 		return saveDevice(device, EnumSet.of(SaveDevice.SAVE_VISIBILITY));
 	}
@@ -628,7 +628,7 @@ public final class Controller {
 	 * @param device
 	 * @return true on success, false otherwise
 	 */
-	public boolean unhideDevice(BaseDevice device) throws NotImplementedException {
+	public boolean unhideDevice(Device device) throws NotImplementedException {
 		device.setVisibility(true);
 		return saveDevice(device, EnumSet.of(SaveDevice.SAVE_VISIBILITY));
 	}
@@ -707,7 +707,7 @@ public final class Controller {
 	 *            type of settings to save
 	 * @return true on success, false otherwise
 	 */
-	public boolean saveDevice(BaseDevice device, EnumSet<SaveDevice> what) {
+	public boolean saveDevice(Device device, EnumSet<SaveDevice> what) {
 		// FIXME: fix demoMode
 		return mHousehold.facilitiesModel.saveDevice(device, what);
 	}
@@ -720,7 +720,7 @@ public final class Controller {
 	 * @param device
 	 * @return
 	 */
-	public DeviceLog getDeviceLog(BaseDevice device, LogDataPair pair) {
+	public DeviceLog getDeviceLog(Device device, LogDataPair pair) {
 		// FIXME: rewrite this method even better - demo mode, caching, etc.
 		DeviceLog log = new DeviceLog(DataType.AVERAGE, DataInterval.RAW);
 

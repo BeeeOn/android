@@ -3,7 +3,7 @@ package cz.vutbr.fit.iha.asynctask;
 import java.util.EnumSet;
 
 import android.content.Context;
-import cz.vutbr.fit.iha.adapter.device.BaseDevice.SaveDevice;
+import cz.vutbr.fit.iha.adapter.device.Device.SaveDevice;
 import cz.vutbr.fit.iha.adapter.location.Location;
 import cz.vutbr.fit.iha.controller.Controller;
 import cz.vutbr.fit.iha.pair.InitializeFacilityPair;

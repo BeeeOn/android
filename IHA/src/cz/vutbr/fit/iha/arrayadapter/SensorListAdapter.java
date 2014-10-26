@@ -15,7 +15,7 @@ import android.widget.LinearLayout.LayoutParams;
 import android.widget.TextView;
 import cz.vutbr.fit.iha.R;
 import cz.vutbr.fit.iha.adapter.Adapter;
-import cz.vutbr.fit.iha.adapter.device.BaseDevice;
+import cz.vutbr.fit.iha.adapter.device.Device;
 import cz.vutbr.fit.iha.adapter.device.Facility;
 import cz.vutbr.fit.iha.controller.Controller;
 import cz.vutbr.fit.iha.util.TimeHelper;
@@ -33,11 +33,11 @@ public class SensorListAdapter extends BaseAdapter {
 	private LayoutInflater inflater;
 	private boolean mShowAdd;
 	private OnClickListener mListener;
-	private List<BaseDevice> mDevices;
+	private List<Device> mDevices;
 
 	private final Controller mController;
 
-	public SensorListAdapter(Context context, List<BaseDevice> devices, OnClickListener listener) {
+	public SensorListAdapter(Context context, List<Device> devices, OnClickListener listener) {
 		mContext = context;
 		mController = Controller.getInstance(context.getApplicationContext());
 		mDevices = devices;
@@ -60,7 +60,7 @@ public class SensorListAdapter extends BaseAdapter {
 		return position; // TODO: what's this?
 	}
 	
-	public BaseDevice getDevice(int position) {
+	public Device getDevice(int position) {
 		return mDevices.get(position);
 	}
 
@@ -96,7 +96,7 @@ public class SensorListAdapter extends BaseAdapter {
 		// Locate the ImageView in drawer_list_item.xml
 		ImageView imgIcon = (ImageView) itemView.findViewById(R.id.iconofsensor);
 
-		BaseDevice device = mDevices.get(position);
+		Device device = mDevices.get(position);
 		Facility facility = device.getFacility();
 		Adapter adapter = mController.getAdapter(facility.getAdapterId());
 		
@@ -129,7 +129,7 @@ public class SensorListAdapter extends BaseAdapter {
 		// Set layout with right background
 		LinearLayout layout = (LinearLayout) itemView.findViewById(R.id.layoutofsensor);
 		
-		List<BaseDevice> facDevices = facility.getDevices();
+		List<Device> facDevices = facility.getDevices();
 		if (facDevices.size() == 0) {
 			// This shouldn't happen
 			return itemView;

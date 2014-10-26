@@ -1,16 +1,16 @@
 package cz.vutbr.fit.iha.network.xml.condition;
 
-import cz.vutbr.fit.iha.adapter.device.BaseDevice;
+import cz.vutbr.fit.iha.adapter.device.Device;
 
 //new drop
 public class ChangeFunc extends ConditionFunction{
-	private BaseDevice mDevice;
+	private Device mDevice;
 	
-	public ChangeFunc(BaseDevice device){
+	public ChangeFunc(Device device){
 		mDevice = device;
 	}
 	
-	public BaseDevice getDevice(){
+	public Device getDevice(){
 		return mDevice;
 	}
 }

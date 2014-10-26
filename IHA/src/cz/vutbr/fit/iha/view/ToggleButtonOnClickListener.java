@@ -8,7 +8,7 @@ import android.view.View.OnClickListener;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 import cz.vutbr.fit.iha.R;
-import cz.vutbr.fit.iha.adapter.device.BaseDevice;
+import cz.vutbr.fit.iha.adapter.device.Device;
 
 /**
  * @brief Class for listener of ToggleButtons
@@ -17,14 +17,14 @@ import cz.vutbr.fit.iha.adapter.device.BaseDevice;
  */
 public class ToggleButtonOnClickListener implements OnClickListener {
 
-	private BaseDevice mDevice;
+	private Device mDevice;
 
 	/**
 	 * Constructor
 	 * 
 	 * @param device
 	 */
-	public ToggleButtonOnClickListener(BaseDevice device) {
+	public ToggleButtonOnClickListener(Device device) {
 		mDevice = device;
 	}
 

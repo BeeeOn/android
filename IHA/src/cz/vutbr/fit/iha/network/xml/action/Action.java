@@ -3,7 +3,7 @@
  */
 package cz.vutbr.fit.iha.network.xml.action;
 
-import cz.vutbr.fit.iha.adapter.device.BaseDevice;
+import cz.vutbr.fit.iha.adapter.device.Device;
 
 
 /**
@@ -37,7 +37,7 @@ public class Action {
 	}
 	
 	private ActionType mType;
-	private BaseDevice mDevice;
+	private Device mDevice;
 	private String mValue;
 	
 	/**
@@ -51,11 +51,11 @@ public class Action {
 		return mType;
 	}
 	
-	public void setDevice(BaseDevice device){
+	public void setDevice(Device device){
 		mDevice = device;
 	}
 	
-	public BaseDevice getDevice(){
+	public Device getDevice(){
 		return mDevice;
 	}
 	

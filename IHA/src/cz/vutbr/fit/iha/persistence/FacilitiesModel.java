@@ -8,8 +8,8 @@ import java.util.Map;
 
 import org.joda.time.DateTime;
 
-import cz.vutbr.fit.iha.adapter.device.BaseDevice;
-import cz.vutbr.fit.iha.adapter.device.BaseDevice.SaveDevice;
+import cz.vutbr.fit.iha.adapter.device.Device;
+import cz.vutbr.fit.iha.adapter.device.Device.SaveDevice;
 import cz.vutbr.fit.iha.adapter.device.Facility;
 import cz.vutbr.fit.iha.network.Network;
 import cz.vutbr.fit.iha.network.exception.NetworkException;
@@ -179,7 +179,7 @@ public class FacilitiesModel {
 		return result;
 	}
 	
-	public boolean saveDevice(BaseDevice device, EnumSet<SaveDevice> what) {
+	public boolean saveDevice(Device device, EnumSet<SaveDevice> what) {
 		// FIXME: This should be rewrited somehow
 		Facility facility = device.getFacility();
 

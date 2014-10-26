@@ -30,7 +30,7 @@ import cz.vutbr.fit.iha.activity.MainActivity;
 import cz.vutbr.fit.iha.activity.SensorDetailActivity;
 import cz.vutbr.fit.iha.activity.dialog.AddSensorFragmentDialog;
 import cz.vutbr.fit.iha.adapter.Adapter;
-import cz.vutbr.fit.iha.adapter.device.BaseDevice;
+import cz.vutbr.fit.iha.adapter.device.Device;
 import cz.vutbr.fit.iha.adapter.device.Facility;
 import cz.vutbr.fit.iha.arrayadapter.SensorListAdapter;
 import cz.vutbr.fit.iha.asynctask.CallbackTask.CallbackTaskListener;
@@ -200,7 +200,7 @@ public class SensorListFragment extends SherlockFragment {
 			}
 		});
 
-		List<BaseDevice> devices = new ArrayList<BaseDevice>();
+		List<Device> devices = new ArrayList<Device>();
 		for (Facility facility : facilities) {
 			devices.addAll(facility.getDevices());
 		}
@@ -265,7 +265,7 @@ public class SensorListFragment extends SherlockFragment {
 	
 					// setSupportProgressBarIndeterminateVisibility(true);
 	
-					BaseDevice device = mSensorAdapter.getDevice(position);
+					Device device = mSensorAdapter.getDevice(position);
 					
 					Bundle bundle = new Bundle();
 					bundle.putString(SensorDetailActivity.EXTRA_ADAPTER_ID, device.getFacility().getAdapterId());

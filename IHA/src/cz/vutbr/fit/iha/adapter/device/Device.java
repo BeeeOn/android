@@ -10,7 +10,7 @@ import cz.vutbr.fit.iha.adapter.device.values.BaseValue;
  * @brief Abstract class for all devices
  * @author Robyer
  */
-public class BaseDevice {
+public class Device {
 	public static final String ID_SEPARATOR = "---";
 
 	protected Facility mFacility;
@@ -24,7 +24,7 @@ public class BaseDevice {
 	/**
 	 * Class constructor
 	 */
-	public BaseDevice(DeviceType type, BaseValue value) {
+	public Device(DeviceType type, BaseValue value) {
 		mType = type;
 		mValue = value;
 	}
@@ -163,7 +163,7 @@ public class BaseDevice {
 	 * @param newDevice
 	 *            with data that should be copied
 	 */
-	public void replaceData(BaseDevice newDevice) {
+	public void replaceData(Device newDevice) {
 		setFacility(newDevice.getFacility());
 		setLogging(newDevice.isLogging());
 		setVisibility(newDevice.isVisible());

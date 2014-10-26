@@ -16,7 +16,7 @@ import com.actionbarsherlock.view.Window;
 
 import cz.vutbr.fit.iha.R;
 import cz.vutbr.fit.iha.activity.fragment.SensorDetailFragment;
-import cz.vutbr.fit.iha.adapter.device.BaseDevice;
+import cz.vutbr.fit.iha.adapter.device.Device;
 import cz.vutbr.fit.iha.adapter.device.Facility;
 import cz.vutbr.fit.iha.asynctask.CallbackTask.CallbackTaskListener;
 import cz.vutbr.fit.iha.asynctask.ReloadFacilitiesTask;
@@ -39,7 +39,7 @@ public class SensorDetailActivity extends BaseApplicationActivity {
 	public static final String EXTRA_ADAPTER_ID = "adapter_id";
 	
 	private Controller mController;
-	private List<BaseDevice> mDevices;
+	private List<Device> mDevices;
 	
 	private PagerAdapter mPagerAdapter;
 	private ViewPager mPager;
@@ -135,7 +135,7 @@ public class SensorDetailActivity extends BaseApplicationActivity {
 			@Override
 			public void onExecute(boolean success) {
 				Log.d(TAG, "Start reload task");
-				BaseDevice device = mController.getDevice(adapterId, mActiveDeviceId);
+				Device device = mController.getDevice(adapterId, mActiveDeviceId);
 				if (device == null) {
 					Log.d(TAG, "Stop reload task");
 					return;
@@ -143,7 +143,7 @@ public class SensorDetailActivity extends BaseApplicationActivity {
 
 				List<Facility> facilities = mController.getFacilitiesByLocation(adapterId, device.getFacility().getLocationId());
 
-				List<BaseDevice> devices = new ArrayList<BaseDevice>();
+				List<Device> devices = new ArrayList<Device>();
 				for (Facility facility : facilities) {
 					devices.addAll(facility.getDevices());
 				}
