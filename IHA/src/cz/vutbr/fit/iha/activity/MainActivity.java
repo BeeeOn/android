@@ -9,7 +9,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentTransaction;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -31,6 +30,7 @@ import cz.vutbr.fit.iha.adapter.location.Location;
 import cz.vutbr.fit.iha.base.BaseApplicationActivity;
 import cz.vutbr.fit.iha.controller.Controller;
 import cz.vutbr.fit.iha.menu.NavDrawerMenu;
+import cz.vutbr.fit.iha.util.Log;
 
 /**
  * Activity class for choosing location

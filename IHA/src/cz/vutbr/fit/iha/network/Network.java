@@ -56,7 +56,7 @@ import cz.vutbr.fit.iha.network.xml.XmlParsers.State;
 import cz.vutbr.fit.iha.network.xml.action.ComplexAction;
 import cz.vutbr.fit.iha.network.xml.condition.Condition;
 import cz.vutbr.fit.iha.pair.LogDataPair;
-import cz.vutbr.fit.iha.util.Ilog;
+import cz.vutbr.fit.iha.util.Log;
 
 /**
  * Network service that handles communication with server.
@@ -136,7 +136,6 @@ public class Network {
 	private boolean mUseDebugServer;
 	private boolean mGoogleReinit;
 	private Controller mController; // FIXME: remove this dependency on controller?
-	private Ilog mLog;
 
 	/**
 	 * Constructor.
@@ -147,7 +146,6 @@ public class Network {
 		mContext = context;
 		mController = controller;
 		mUseDebugServer = useDebugServer;
-		mLog = new Ilog(useDebugServer, TAG);
 	}
 
 	public void setUser(ActualUser user) {
@@ -226,12 +224,12 @@ public class Network {
 		SSLSession s = socket.getSession();
 		// FIXME
 		if (!s.isValid())
-			mLog.e("Socket is NOT valid!!!!");
+			Log.e(TAG, "Socket is NOT valid!!!!");
 
 		// Verify that the certificate hostName
 		// This is due to lack of SNI support in the current SSLSocket.
 		if (!hv.verify(SERVER_CN_CERTIFICATE, s)) {
-			mLog.e("Certificate is not VERIFIED!!!");
+			Log.e(TAG, "Certificate is not VERIFIED!!!");
 
 			throw new SSLHandshakeException("Expected CN value:" + SERVER_CN_CERTIFICATE + ", found " + s.getPeerPrincipal());
 		}
@@ -346,8 +344,8 @@ public class Network {
 		try {
 			String result = startCommunication(messageToSend);
 
-			mLog.d(TAG + " - fromApp", messageToSend);
-			mLog.i(TAG + " - fromSrv", result);
+			Log.d(TAG + " - fromApp", messageToSend);
+			Log.i(TAG + " - fromSrv", result);
 
 			msg = new XmlParsers().parseCommunication(result, false);
 			if (msg.getState() == State.FALSE && ((FalseAnswer) msg.data).getErrCode() == RESIGNCODE) {
@@ -355,8 +353,8 @@ public class Network {
 				// try it one more time
 				result = startCommunication(messageToSend.replace(Xconstants.SID + "=\"" + mSecretVar + "\"", Xconstants.SID + "=\"" + mSessionID + "\"")); //FIXME: hot fix
 
-				mLog.d(TAG + " - fromApp", messageToSend);
-				mLog.i(TAG + " - fromSrv", result);
+				Log.d(TAG + " - fromApp", messageToSend);
+				Log.i(TAG + " - fromSrv", result);
 
 				msg = new XmlParsers().parseCommunication(result, false);
 			}

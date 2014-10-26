@@ -9,12 +9,10 @@ import android.os.Handler;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnLongClickListener;
-import android.view.ViewGroup;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ImageView;
@@ -31,7 +29,6 @@ import cz.vutbr.fit.iha.R;
 import cz.vutbr.fit.iha.activity.MainActivity;
 import cz.vutbr.fit.iha.activity.SensorDetailActivity;
 import cz.vutbr.fit.iha.activity.dialog.AddSensorFragmentDialog;
-import cz.vutbr.fit.iha.activity.fragment.SensorDetailFragment.AnActionModeOfSensorEdit;
 import cz.vutbr.fit.iha.adapter.Adapter;
 import cz.vutbr.fit.iha.adapter.device.BaseDevice;
 import cz.vutbr.fit.iha.adapter.device.Facility;
@@ -41,6 +38,7 @@ import cz.vutbr.fit.iha.asynctask.ReloadFacilitiesTask;
 import cz.vutbr.fit.iha.controller.Controller;
 import cz.vutbr.fit.iha.menu.NavDrawerMenu;
 import cz.vutbr.fit.iha.thread.ToastMessageThread;
+import cz.vutbr.fit.iha.util.Log;
 
 public class SensorListFragment extends SherlockFragment {
 

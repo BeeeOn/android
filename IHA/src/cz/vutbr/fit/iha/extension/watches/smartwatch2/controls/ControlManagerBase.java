@@ -34,12 +34,12 @@ package cz.vutbr.fit.iha.extension.watches.smartwatch2.controls;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.util.Log;
 
 import com.sonyericsson.extras.liveware.extension.util.control.ControlExtension;
 import com.sonyericsson.extras.liveware.extension.util.control.ControlTouchEvent;
 
 import cz.vutbr.fit.iha.extension.watches.smartwatch2.SW2ExtensionService;
+import cz.vutbr.fit.iha.util.Log;
 
 /**
  * The phone control manager manages which control to currently show on the display. This class then forwards any life-cycle methods and events events to the running control. This base class only

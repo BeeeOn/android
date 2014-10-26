@@ -2,12 +2,12 @@ package cz.vutbr.fit.iha.gcm;
 
 import android.content.Context;
 import android.os.AsyncTask;
-import android.util.Log;
 
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 
 import cz.vutbr.fit.iha.Constants;
 import cz.vutbr.fit.iha.controller.Controller;
+import cz.vutbr.fit.iha.util.Log;
 
 public class GcmRegisterAsyncTask extends AsyncTask<Context, Void, Void> {
 	/**

@@ -2,19 +2,14 @@ package cz.vutbr.fit.iha.menu;
 
 import java.util.List;
 
-import com.actionbarsherlock.view.ActionMode;
-import com.actionbarsherlock.view.Menu;
-
 import se.emilsjolander.stickylistheaders.StickyListHeadersListView;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.content.res.Configuration;
-import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -23,11 +18,11 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.Toast;
+
+import com.actionbarsherlock.view.ActionMode;
+import com.actionbarsherlock.view.Menu;
+
 import cz.vutbr.fit.iha.R;
-import cz.vutbr.fit.iha.R.drawable;
-import cz.vutbr.fit.iha.R.id;
-import cz.vutbr.fit.iha.R.string;
-import cz.vutbr.fit.iha.activity.LocationDetailActivity;
 import cz.vutbr.fit.iha.activity.MainActivity;
 import cz.vutbr.fit.iha.activity.SettingsMainActivity;
 import cz.vutbr.fit.iha.activity.dialog.InfoDialogFragment;
@@ -50,6 +45,7 @@ import cz.vutbr.fit.iha.controller.Controller;
 import cz.vutbr.fit.iha.household.ActualUser;
 import cz.vutbr.fit.iha.persistence.Persistence;
 import cz.vutbr.fit.iha.thread.ToastMessageThread;
+import cz.vutbr.fit.iha.util.Log;
 
 public class NavDrawerMenu {
 	private static final String TAG = "NavDrawerMenu";

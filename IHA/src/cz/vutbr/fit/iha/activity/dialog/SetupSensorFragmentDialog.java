@@ -11,12 +11,11 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.res.Configuration;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.WindowManager;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
@@ -41,6 +40,7 @@ import cz.vutbr.fit.iha.asynctask.InitializeFacilityTask;
 import cz.vutbr.fit.iha.base.TrackDialogFragment;
 import cz.vutbr.fit.iha.controller.Controller;
 import cz.vutbr.fit.iha.pair.InitializeFacilityPair;
+import cz.vutbr.fit.iha.util.Log;
 
 public class SetupSensorFragmentDialog extends TrackDialogFragment {
 

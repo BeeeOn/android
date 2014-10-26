@@ -12,7 +12,6 @@ import org.json.JSONObject;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
-import android.util.Log;
 
 import com.google.android.gms.auth.GoogleAuthUtil;
 import com.google.android.gms.auth.UserRecoverableAuthException;
@@ -20,6 +19,7 @@ import com.google.android.gms.auth.UserRecoverableAuthException;
 import cz.vutbr.fit.iha.R;
 import cz.vutbr.fit.iha.activity.LoginActivity;
 import cz.vutbr.fit.iha.thread.ToastMessageThread;
+import cz.vutbr.fit.iha.util.Log;
 
 /**
  * Class communicate with Google server Get basic user info and picture if is possible

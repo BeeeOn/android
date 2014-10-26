@@ -9,7 +9,6 @@ import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageButton;
@@ -29,8 +28,8 @@ import cz.vutbr.fit.iha.household.DemoHousehold;
 import cz.vutbr.fit.iha.network.exception.CommunicationException;
 import cz.vutbr.fit.iha.network.exception.FalseException;
 import cz.vutbr.fit.iha.network.exception.NoConnectionException;
-import cz.vutbr.fit.iha.network.exception.NotRegException;
 import cz.vutbr.fit.iha.thread.ToastMessageThread;
+import cz.vutbr.fit.iha.util.Log;
 
 /**
  * First sign in class, controls first activity

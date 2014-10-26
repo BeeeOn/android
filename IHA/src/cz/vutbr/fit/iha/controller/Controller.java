@@ -6,7 +6,6 @@ import java.util.Map;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.util.Log;
 import cz.vutbr.fit.iha.Constants;
 import cz.vutbr.fit.iha.activity.LoginActivity;
 import cz.vutbr.fit.iha.adapter.Adapter;
@@ -30,6 +29,7 @@ import cz.vutbr.fit.iha.network.exception.FalseException;
 import cz.vutbr.fit.iha.network.exception.NetworkException;
 import cz.vutbr.fit.iha.pair.LogDataPair;
 import cz.vutbr.fit.iha.persistence.Persistence;
+import cz.vutbr.fit.iha.util.Log;
 import cz.vutbr.fit.iha.util.Utils;
 
 /**

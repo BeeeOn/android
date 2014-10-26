@@ -4,8 +4,8 @@
 package cz.vutbr.fit.iha.thread;
 
 import android.app.Activity;
-import android.util.Log;
 import android.widget.Toast;
+import cz.vutbr.fit.iha.util.Log;
 
 /**
  * @author ThinkDeep

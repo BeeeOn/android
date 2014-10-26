@@ -8,7 +8,6 @@ import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.NotificationCompat;
-import android.util.Log;
 import android.widget.Toast;
 
 import com.google.android.gms.gcm.GoogleCloudMessaging;
@@ -16,6 +15,7 @@ import com.google.android.gms.gcm.GoogleCloudMessaging;
 import cz.vutbr.fit.iha.R;
 import cz.vutbr.fit.iha.activity.LoginActivity;
 import cz.vutbr.fit.iha.controller.Controller;
+import cz.vutbr.fit.iha.util.Log;
 
 public class GcmMessageHandler extends IntentService {
 

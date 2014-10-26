@@ -1,7 +1,6 @@
 package cz.vutbr.fit.iha.activity.fragment;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,6 +8,7 @@ import android.view.ViewGroup;
 import com.actionbarsherlock.app.SherlockFragment;
 
 import cz.vutbr.fit.iha.R;
+import cz.vutbr.fit.iha.util.Log;
 
 //import cz.vutbr.fit.iha.activity.SensorDetailFragment.GetDeviceTask;
 

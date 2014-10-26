@@ -33,7 +33,7 @@ package cz.vutbr.fit.iha.extension.watches.smartwatch2;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
+import cz.vutbr.fit.iha.util.Log;
 
 /**
  * The extension receiver receives the extension intents and starts the extension service when it arrives.

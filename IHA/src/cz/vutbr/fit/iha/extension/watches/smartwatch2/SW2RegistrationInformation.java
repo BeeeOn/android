@@ -34,7 +34,6 @@ package cz.vutbr.fit.iha.extension.watches.smartwatch2;
 
 import android.content.ContentValues;
 import android.content.Context;
-import android.util.Log;
 
 import com.sonyericsson.extras.liveware.aef.registration.Registration;
 import com.sonyericsson.extras.liveware.extension.util.ExtensionUtils;
@@ -43,6 +42,7 @@ import com.sonyericsson.extras.liveware.extension.util.registration.Registration
 import cz.vutbr.fit.iha.R;
 import cz.vutbr.fit.iha.activity.SettingsMainActivity;
 import cz.vutbr.fit.iha.extension.watches.smartwatch2.controls.ControlManagerSmartWatch2;
+import cz.vutbr.fit.iha.util.Log;
 
 /**
  * Provides information needed during extension registration

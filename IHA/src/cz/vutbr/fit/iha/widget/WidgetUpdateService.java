@@ -14,11 +14,11 @@ import android.content.SharedPreferences;
 import android.os.IBinder;
 import android.os.PowerManager;
 import android.os.SystemClock;
-import android.util.Log;
 import cz.vutbr.fit.iha.R;
 import cz.vutbr.fit.iha.adapter.Adapter;
 import cz.vutbr.fit.iha.adapter.device.BaseDevice;
 import cz.vutbr.fit.iha.controller.Controller;
+import cz.vutbr.fit.iha.util.Log;
 import cz.vutbr.fit.iha.util.TimeHelper;
 import cz.vutbr.fit.iha.util.UnitsHelper;
 
@@ -147,6 +147,10 @@ public class WidgetUpdateService extends Service {
 		boolean forceUpdate = intent.getBooleanExtra(EXTRA_FORCE_UPDATE, false); 
 		
 		// TODO: reload all widgets with id IN widgetIds
+		for (Adapter adapter : controller.getAdapters()) {
+			controller.reloadLocations(adapter.getId(), false);
+			controller.reloadFacilitiesByAdapter(adapter.getId(), false);
+		}
 
 		for (int widgetId : widgetIds) {
 			WidgetData widgetData = new WidgetData(widgetId);

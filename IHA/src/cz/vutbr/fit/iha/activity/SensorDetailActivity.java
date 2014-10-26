@@ -9,7 +9,6 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
 import android.widget.Toast;
 
 import com.actionbarsherlock.view.MenuItem;
@@ -23,6 +22,7 @@ import cz.vutbr.fit.iha.asynctask.CallbackTask.CallbackTaskListener;
 import cz.vutbr.fit.iha.asynctask.ReloadFacilitiesTask;
 import cz.vutbr.fit.iha.base.BaseApplicationActivity;
 import cz.vutbr.fit.iha.controller.Controller;
+import cz.vutbr.fit.iha.util.Log;
 import cz.vutbr.fit.iha.view.CustomViewPager;
 
 /**

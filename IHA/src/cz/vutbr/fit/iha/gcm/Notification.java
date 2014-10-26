@@ -8,9 +8,8 @@ import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
 import android.os.Bundle;
-import android.util.Log;
 import cz.vutbr.fit.iha.network.xml.Xconstants;
-import cz.vutbr.fit.iha.network.xml.XmlParsers;
+import cz.vutbr.fit.iha.util.Log;
 
 /**
  * @author ThinkDeep

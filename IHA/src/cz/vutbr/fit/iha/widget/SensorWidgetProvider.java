@@ -8,12 +8,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.RemoteViews;
 import cz.vutbr.fit.iha.R;
 import cz.vutbr.fit.iha.activity.SensorDetailActivity;
 import cz.vutbr.fit.iha.activity.WidgetConfigurationActivity;
 import cz.vutbr.fit.iha.util.Compatibility;
+import cz.vutbr.fit.iha.util.Log;
 
 public class SensorWidgetProvider extends AppWidgetProvider {
 

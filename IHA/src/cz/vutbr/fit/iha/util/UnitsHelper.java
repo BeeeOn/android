@@ -3,8 +3,8 @@ package cz.vutbr.fit.iha.util;
 import android.content.Context;
 import android.content.SharedPreferences;
 import cz.vutbr.fit.iha.adapter.device.units.BaseUnit;
-import cz.vutbr.fit.iha.adapter.device.values.BaseValue;
 import cz.vutbr.fit.iha.adapter.device.values.BaseEnumValue;
+import cz.vutbr.fit.iha.adapter.device.values.BaseValue;
 
 public class UnitsHelper {
 	

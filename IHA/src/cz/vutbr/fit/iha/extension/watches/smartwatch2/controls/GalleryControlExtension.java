@@ -39,7 +39,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.Log;
 
 import com.sonyericsson.extras.liveware.aef.control.Control;
 import com.sonyericsson.extras.liveware.extension.util.ExtensionUtils;
@@ -50,6 +49,7 @@ import cz.vutbr.fit.iha.adapter.Adapter;
 import cz.vutbr.fit.iha.adapter.device.BaseDevice;
 import cz.vutbr.fit.iha.adapter.device.Facility;
 import cz.vutbr.fit.iha.extension.watches.smartwatch2.SW2ExtensionService;
+import cz.vutbr.fit.iha.util.Log;
 import cz.vutbr.fit.iha.util.TimeHelper;
 import cz.vutbr.fit.iha.util.UnitsHelper;
 

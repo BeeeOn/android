@@ -5,7 +5,7 @@ import java.util.List;
 
 import org.joda.time.Interval;
 
-import android.util.Log;
+import cz.vutbr.fit.iha.util.Log;
 
 /**
  * Represents history of values for device.

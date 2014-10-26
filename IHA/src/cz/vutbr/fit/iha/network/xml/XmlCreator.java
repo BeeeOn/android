@@ -9,7 +9,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.EnumSet;
 import java.util.List;
+
 import org.xmlpull.v1.XmlSerializer;
+
 import android.util.Xml;
 import cz.vutbr.fit.iha.Constants;
 import cz.vutbr.fit.iha.adapter.device.AdapterAddressComparator;

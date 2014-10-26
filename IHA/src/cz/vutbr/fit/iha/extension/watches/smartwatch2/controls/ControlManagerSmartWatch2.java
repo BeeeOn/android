@@ -41,7 +41,6 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.util.Log;
 
 import com.sonyericsson.extras.liveware.aef.control.Control;
 import com.sonyericsson.extras.liveware.extension.util.control.ControlExtension;
@@ -54,6 +53,7 @@ import cz.vutbr.fit.iha.adapter.Adapter;
 import cz.vutbr.fit.iha.adapter.device.Facility;
 import cz.vutbr.fit.iha.controller.Controller;
 import cz.vutbr.fit.iha.extension.watches.smartwatch2.SW2ExtensionService;
+import cz.vutbr.fit.iha.util.Log;
 
 /**
  * The phone control manager manages which control to currently show on the display. This class then forwards any life-cycle methods and events events to the running control. This class handles API

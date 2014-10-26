@@ -3,7 +3,7 @@ package cz.vutbr.fit.iha.gcm;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
+import cz.vutbr.fit.iha.util.Log;
 
 public class BootBroadcastReceiver extends BroadcastReceiver {
 

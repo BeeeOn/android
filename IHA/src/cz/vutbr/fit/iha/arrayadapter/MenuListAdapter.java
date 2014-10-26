@@ -5,13 +5,13 @@ import java.util.List;
 
 import se.emilsjolander.stickylistheaders.StickyListHeadersAdapter;
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.SectionIndexer;
 import cz.vutbr.fit.iha.activity.menuItem.MenuItem;
+import cz.vutbr.fit.iha.util.Log;
 
 /**
  * Class for location left drawer menu

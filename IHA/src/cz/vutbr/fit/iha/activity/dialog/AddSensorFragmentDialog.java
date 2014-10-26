@@ -8,11 +8,10 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.support.v4.app.DialogFragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.WindowManager;
 import android.view.View.OnClickListener;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.Toast;
 import cz.vutbr.fit.iha.R;
@@ -24,6 +23,7 @@ import cz.vutbr.fit.iha.asynctask.PairRequestTask;
 import cz.vutbr.fit.iha.asynctask.ReloadUninitializedTask;
 import cz.vutbr.fit.iha.base.TrackDialogFragment;
 import cz.vutbr.fit.iha.controller.Controller;
+import cz.vutbr.fit.iha.util.Log;
 
 public class AddSensorFragmentDialog extends TrackDialogFragment {
 

@@ -16,7 +16,6 @@ import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 
 import android.content.Context;
-import android.util.Log;
 import android.util.Xml;
 import cz.vutbr.fit.iha.Constants;
 import cz.vutbr.fit.iha.adapter.Adapter;
@@ -44,6 +43,7 @@ import cz.vutbr.fit.iha.network.xml.condition.LesserEqualFunc;
 import cz.vutbr.fit.iha.network.xml.condition.LesserThanFunc;
 import cz.vutbr.fit.iha.network.xml.exception.ComVerMisException;
 import cz.vutbr.fit.iha.network.xml.exception.XmlVerMisException;
+import cz.vutbr.fit.iha.util.Log;
 
 /**
  * @author ThinkDeep

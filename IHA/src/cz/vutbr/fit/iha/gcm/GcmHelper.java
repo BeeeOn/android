@@ -3,7 +3,7 @@ package cz.vutbr.fit.iha.gcm;
 import java.util.concurrent.TimeUnit;
 
 import android.content.Context;
-import android.util.Log;
+import cz.vutbr.fit.iha.util.Log;
 
 public class GcmHelper {
 	public static final String TAG_GCM = "IHA_GCM";
