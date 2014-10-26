@@ -1,6 +1,8 @@
 package cz.vutbr.fit.iha.adapter.device;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import org.joda.time.Interval;
@@ -21,7 +23,18 @@ public class DeviceLog {
 
 	private float mMinValue;
 	private float mMaxValue;
+	
+	private boolean mSorted; // optimization to sort values only when needed 
 
+	public class DataRowComparator implements Comparator<DataRow> {
+
+		@Override
+		public int compare(DataRow lhs, DataRow rhs) {
+			return lhs.dateMillis < rhs.dateMillis ? -1 : lhs.dateMillis > rhs.dateMillis ? 1 : 0;
+		}
+
+	}
+	
 	public enum DataType {
 		MINIMUM("min"), //
 		AVERAGE("avg"), //
@@ -150,6 +163,11 @@ public class DeviceLog {
 	 * @return list of rows or empty list
 	 */
 	public List<DataRow> getValues() {
+		if (!mSorted) {
+			mSorted = true;
+			Collections.sort(mValues, new DataRowComparator());
+		}
+		
 		return mValues;
 	}
 
@@ -189,8 +207,8 @@ public class DeviceLog {
 	 */
 	public List<DataRow> getValues(Interval interval) {
 		List<DataRow> values = new ArrayList<DataRow>();
-
-		for (DataRow row : mValues) {
+		
+		for (DataRow row : getValues()) { // getValues() does sorting
 			if (interval.contains(row.dateMillis)) {
 				values.add(row);
 			}
@@ -206,6 +224,7 @@ public class DeviceLog {
 	 */
 	public void addValue(DataRow row) {
 		mValues.add(row);
+		mSorted = false;
 
 		// Remember min/max values
 		if (!Float.isNaN(row.value)) {
