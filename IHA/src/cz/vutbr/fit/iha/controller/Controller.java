@@ -3,6 +3,7 @@ package cz.vutbr.fit.iha.controller;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -13,9 +14,12 @@ import cz.vutbr.fit.iha.adapter.device.Device;
 import cz.vutbr.fit.iha.adapter.device.Device.SaveDevice;
 import cz.vutbr.fit.iha.adapter.device.DeviceLog;
 import cz.vutbr.fit.iha.adapter.device.DeviceLog.DataInterval;
+import cz.vutbr.fit.iha.adapter.device.DeviceLog.DataRow;
 import cz.vutbr.fit.iha.adapter.device.DeviceLog.DataType;
 import cz.vutbr.fit.iha.adapter.device.DeviceType;
 import cz.vutbr.fit.iha.adapter.device.Facility;
+import cz.vutbr.fit.iha.adapter.device.values.BaseEnumValue;
+import cz.vutbr.fit.iha.adapter.device.values.BaseValue;
 import cz.vutbr.fit.iha.adapter.location.Location;
 import cz.vutbr.fit.iha.exception.NotImplementedException;
 import cz.vutbr.fit.iha.household.ActualUser;
@@ -733,6 +737,37 @@ public final class Controller {
 		DeviceLog log = new DeviceLog(DataType.AVERAGE, DataInterval.RAW);
 
 		if (mDemoMode) {
+			// Generate random values for log in demo mode
+			
+			double lastValue = pair.device.getValue().getDoubleValue();
+			double range = 1 + Math.log(device.getFacility().getRefresh().getInterval());
+			
+			long start = pair.interval.getStartMillis();
+			long end = pair.interval.getEndMillis();
+			
+			Random random = new Random();
+			
+			if (Double.isNaN(lastValue)) {
+				lastValue = random.nextDouble() * 1000;
+			}
+
+			int everyMsecs = Math.max(pair.gap.getValue(), device.getFacility().getRefresh().getInterval()) * 1000;
+			
+			boolean isBinary = (device.getValue() instanceof BaseEnumValue);
+			
+			while (start < end) {
+				if (isBinary) {
+					lastValue = random.nextBoolean() ? 1 : 0;
+				} else {
+					double addvalue = random.nextInt((int)range*1000) / 1000;
+					boolean plus = random.nextBoolean();
+					lastValue = lastValue + addvalue * (plus ? 1 : -1);
+				}
+				
+				log.addValue(log.new DataRow(start, (float)lastValue));
+				start += everyMsecs;
+			}
+			
 			return log;
 		}
 
