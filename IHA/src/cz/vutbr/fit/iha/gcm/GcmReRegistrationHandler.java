@@ -19,8 +19,10 @@ public class GcmReRegistrationHandler extends IntentService {
 
 	@Override
 	protected void onHandleIntent(Intent intent) {
-		Log.i(GcmHelper.TAG_GCM, "Re-registartion GCM");
-		GcmHelper.registerGCMInBackground(getApplicationContext());
+		// FIXME: GCM
+		
+		/*Log.i(GcmHelper.TAG_GCM, "Re-registartion GCM");
+		GcmHelper.registerGCMInBackground(getApplicationContext());*/
 	}
 
 }

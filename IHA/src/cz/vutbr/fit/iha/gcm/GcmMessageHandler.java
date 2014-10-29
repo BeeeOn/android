@@ -34,7 +34,9 @@ public class GcmMessageHandler extends IntentService {
 
 	@Override
 	protected void onHandleIntent(Intent intent) {
-		Bundle extras = intent.getExtras();
+		// FIXME: GCM
+		
+		/*Bundle extras = intent.getExtras();
 
 		GoogleCloudMessaging gcm = GoogleCloudMessaging.getInstance(this);
 
@@ -102,7 +104,7 @@ public class GcmMessageHandler extends IntentService {
 			}
 		}
 
-		GcmBroadcastReceiver.completeWakefulIntent(intent);
+		GcmBroadcastReceiver.completeWakefulIntent(intent);*/
 	}
 
 	public void showToast(final String message) {

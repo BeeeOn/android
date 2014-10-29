@@ -20,6 +20,9 @@ public class GcmRegisterAsyncTask extends AsyncTask<Context, Void, Void> {
 
 	@Override
 	protected Void doInBackground(Context... params) {
+		// FIXME: GCM
+		
+		/*
 		Context context = params[0];
 		if (mGcm == null) {
 			mGcm = GoogleCloudMessaging.getInstance(context);
@@ -32,9 +35,8 @@ public class GcmRegisterAsyncTask extends AsyncTask<Context, Void, Void> {
 				mRegId = mGcm.register(Constants.PROJECT_NUMBER);
 			} catch (Exception e) {
 				Log.e(GcmHelper.TAG_GCM, "Error: attempt n." + String.valueOf(attempt) + " :" + e.getMessage());
-				/*
-				 * No matter how many times you call register, it will always fail and throw an exception on some devices. On these devices we need to get GCM ID this way.
-				 */
+				// No matter how many times you call register, it will always fail and throw an exception on some devices. On these devices we need to get GCM ID this way.
+
 				// final String registrationId =
 				// context.getIntent().getStringExtra(
 				// "registration_id");
@@ -55,7 +57,7 @@ public class GcmRegisterAsyncTask extends AsyncTask<Context, Void, Void> {
 		Log.i(GcmHelper.TAG_GCM, "Device registered, attempt number " + String.valueOf(attempt) + " , registration ID=" + mRegId);
 
 		// Persist the regID - no need to register again.
-		Controller.getInstance(context.getApplicationContext()).setGCMRegistrationId(mRegId);
+		Controller.getInstance(context.getApplicationContext()).setGCMRegistrationId(mRegId);*/
 
 		return null;
 	}

@@ -19,16 +19,18 @@ public class GcmHelper {
 	 * Stores the registration ID and app versionCode in the application's shared preferences.
 	 */
 	public static void registerGCMInBackground(Context context) {
-		new GcmRegisterAsyncTask().execute(context, null, null);
+		// FIXME: GCM
+		//new GcmRegisterAsyncTask().execute(context, null, null);
 	}
 
 	public static void registerGCMInForeground(Context context) {
-		try {
+		// FIXME: GCM
+		/*try {
 			new GcmRegisterAsyncTask().execute(context, null, null).get(MAX_MILLSEC_GCM, TimeUnit.MILLISECONDS);
 		} catch (Exception e) {
 			Log.e(TAG_GCM, "Couldnt get GCM ID in given time.");
 			e.printStackTrace();
-		}
+		}*/
 	}
 
 }

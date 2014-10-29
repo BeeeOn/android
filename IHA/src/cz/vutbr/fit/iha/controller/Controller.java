@@ -158,7 +158,7 @@ public final class Controller {
 		// TODO: catch and throw proper exception
 		// FIXME: after some time there should be picture in ActualUser object, should save to mPersistence
 		try {
-			if (mNetwork.signIn(email, "")) { // FIXME: gcmid
+			if (mNetwork.signIn(email, getGCMRegistrationId())) { // FIXME: gcmid
 				mPersistence.saveLastEmail(email);
 				mPersistence.initializeDefaultSettings(email);
 				return true;
@@ -846,7 +846,9 @@ public final class Controller {
 	 * @return registration ID, or empty string if there is no existing registration ID.
 	 */
 	public String getGCMRegistrationId() {
-		String registrationId = mPersistence.loadGCMRegistrationId();
+		return ""; // FIXME: gcmid
+		
+		/*String registrationId = mPersistence.loadGCMRegistrationId();
 		if (registrationId.isEmpty()) {
 			Log.i(TAG, "GCM: Registration not found.");
 			return "";
@@ -860,7 +862,7 @@ public final class Controller {
 			Log.i(TAG, "GCM: App version changed.");
 			return "";
 		}
-		return registrationId;
+		return registrationId;*/
 	}
 
 	/**
