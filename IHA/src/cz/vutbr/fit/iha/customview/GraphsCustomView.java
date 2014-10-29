@@ -1,4 +1,4 @@
-package cz.vutbr.fit.iha.activity.fragment;
+package cz.vutbr.fit.iha.customview;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,76 +9,32 @@ import org.joda.time.Interval;
 
 import android.content.Context;
 import android.os.AsyncTask;
-import android.os.Bundle;
 import android.util.SparseArray;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ListView;
-
-import com.actionbarsherlock.app.SherlockFragment;
-
-import cz.vutbr.fit.iha.R;
-import cz.vutbr.fit.iha.activity.MainActivity;
 import cz.vutbr.fit.iha.adapter.Adapter;
 import cz.vutbr.fit.iha.adapter.device.Device;
 import cz.vutbr.fit.iha.adapter.device.DeviceLog;
 import cz.vutbr.fit.iha.adapter.device.DeviceLog.DataInterval;
 import cz.vutbr.fit.iha.adapter.device.DeviceLog.DataType;
 import cz.vutbr.fit.iha.adapter.device.Facility;
-import cz.vutbr.fit.iha.arrayadapter.GraphArrayAdapter;
 import cz.vutbr.fit.iha.controller.Controller;
 import cz.vutbr.fit.iha.pair.LogDataPair;
 
-public class CustomViewFragment extends SherlockFragment {
-	
-	private MainActivity mActivity;
-	
-	private SparseArray<List<Device>> mDevices = new SparseArray<List<Device>>();
-	private SparseArray<List<DeviceLog>> mLogs = new SparseArray<List<DeviceLog>>();
-	
-	private View mLayout;
-	
-	private static final String TAG = CustomViewFragment.class.getSimpleName();
+public class GraphsCustomView {
+
+	private static final String TAG = GraphsCustomView.class.getSimpleName();
 	
 	private Context mContext;
 	private Controller mController;
 	
+	private GetDeviceLogTask mGetDeviceLogTask;
 	
-	public CustomViewFragment(MainActivity context) {
-		mActivity = context;
-		mController = Controller.getInstance(mActivity.getApplicationContext());
-	}
-	public CustomViewFragment() {}
-
-	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		View view = inflater.inflate(R.layout.graphofsensors, container, false);
-		
-		mLayout = view;
-		
-		prepareDevices();
-		
-		GetDeviceLogTask getDeviceLogTask = new GetDeviceLogTask();
-		getDeviceLogTask.execute(mDevices.valueAt(0));
-		
-		//redrawCustomView(view);
-		
-		return view;
-	}
+	private SparseArray<List<Device>> mDevices = new SparseArray<List<Device>>();
+	private SparseArray<List<DeviceLog>> mLogs = new SparseArray<List<DeviceLog>>();
 	
-	public boolean redrawCustomView(List<List<DeviceLog>> logs) {
-
-		ListView graphsList = (ListView) mLayout.findViewById(R.id.listviewofgraphs);
-		
-		GraphArrayAdapter adapter = new GraphArrayAdapter(getActivity(), R.layout.custom_graph_item, logs);
-		adapter.setLayoutInflater(getLayoutInflater(null));
-		graphsList.setAdapter(adapter);
-
-		//mActivity.setSupportProgressBarIndeterminateVisibility(false);
-		return true;
+	public GraphsCustomView(Context context) {
+		mContext = context;
+		mController = Controller.getInstance(context);
 	}
-	
 	
 	private void prepareDevices() {
 		for (Adapter adapter : mController.getAdapters()) {
@@ -99,13 +55,11 @@ public class CustomViewFragment extends SherlockFragment {
 	@SuppressWarnings("unchecked")
 	private void prepareLogs() {
 		for (int i=0; i<mDevices.size(); i++) {
-			GetDeviceLogTask getDeviceLogTask = new GetDeviceLogTask();
-			getDeviceLogTask.execute(mDevices.valueAt(i));
+			mGetDeviceLogTask = new GetDeviceLogTask();
+			mGetDeviceLogTask.execute(mDevices.valueAt(i));
 		}
 	}
-	
-	
-	
+
 	private class GetDeviceLogTask extends AsyncTask<List<Device>, Void, List<DeviceLog>> {
 		@Override
 		protected List<DeviceLog> doInBackground(List<Device>... devices) {
@@ -131,12 +85,9 @@ public class CustomViewFragment extends SherlockFragment {
 
 		@Override
 		protected void onPostExecute(List<DeviceLog> logs) {
-			List<List<DeviceLog>> list = new ArrayList<List<DeviceLog>>();
-			list.add(logs);
-			
-			redrawCustomView(list);
+			//fillGraph(logs);
 		}
 
 	}
-
+	
 }

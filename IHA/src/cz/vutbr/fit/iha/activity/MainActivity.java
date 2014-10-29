@@ -257,7 +257,7 @@ public class MainActivity extends BaseApplicationActivity {
 	}
 	
 	public void redrawCustomView() {
-		
+		//return mCustomView.redrawCustomView();
 	}
 	
 	public void setLocationLayout() {
