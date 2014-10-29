@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<com version="2.2" state="rooms"> 
-	<loc id="5555" type="5" name="Obývák" />
-	<loc id="2222" type="2" name="Pokoj" />
-	<loc id="4444" type="4" name="Kuchyňka" />
-	<loc id="6666" type="6" name="Záchůdek" />
+<com ver="2.2" state="rooms"> 
+	<loc id="1" type="2" name="Teplý pokojík" />
+	<loc id="2" type="6" name="Záchůdek" />
 </com>

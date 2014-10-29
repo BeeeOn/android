@@ -581,7 +581,7 @@ public class SensorDetailFragment extends SherlockFragment {
 			
 			float value = Float.isNaN(row.value) ? log.getMinimum() : row.value;
 			data[i - begin] = new GraphView.GraphViewData(row.dateMillis, value);
-			Log.v(TAG, String.format("Graph value: date(msec): %s, Value: %.1f", fmt.print(row.dateMillis), row.value));
+			//Log.v(TAG, String.format("Graph value: date(msec): %s, Value: %.1f", fmt.print(row.dateMillis), row.value));
 		}
 
 		Log.d(TAG, "Filling graph finished");
