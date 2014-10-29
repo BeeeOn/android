@@ -1,202 +1,107 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <com 
-	ver="2.2" 
-	state="alldevices">
+	ver="2.2"
+	state="alldevices"
+	aid="65260">
 	<dev 
 		init="1" 
-		did="100:00:FF:000:FF0" 
-		lid="5555"
-		refresh="5"
-		batt="100"
+		did="101:00:FF:000:FF0" 
+		lid="1"
+		refresh="2"
+		batt="60"
 		time="1377684610"
 		rssi="52" >
 		<part
-			type="1"
+			type="0"
 			vis="1"
-			name="Teplota na okne"
-			val="30" />
-	</dev>
-	<dev 
-		init="1" 
-		did="100:00:FF:000:FF1" 
-		lid="5555"
-		refresh="30"
-		batt="100"
-		time="1377684610"
-		rssi="52" >
-		<part
-			type="1"
-			vis="1"
-			name="Teplota u dveri"
-			val="30" />
-	</dev>
-	<dev 
-		init="1" 
-		did="100:00:FF:000:FF2" 
-		lid="5555"
-		refresh="30"
-		batt="100"
-		time="1377684610"
-		rssi="52" >
-		<part
-			type="3"
-			vis="1"
-			name="okno"
-			val="OFF" />
-	</dev>
-	<dev 
-		init="1" 
-		did="100:00:FF:000:FF3" 
-		lid="5555"
-		refresh="30"
-		batt="100"
-		time="1377684610"
-		rssi="52" >
-		<part
-			type="3"
-			vis="1"
-			name="Balkón"
-			val="ON" />
-	</dev>
-	<dev 
-		init="1" 
-		did="100:00:FF:000:FF4" 
-		lid="2222"
-		refresh="30"
-		batt="100"
-		time="1377684610"
-		rssi="52" >
-		<part
-			type="6"
-			vis="1"
-			name="Postel"
-			val="30" />
-	</dev>
-	<dev 
-		init="1" 
-		did="100:00:FF:000:FF5" 
-		lid="2222"
-		refresh="30"
-		batt="100"
-		time="1377684610"
-		rssi="52" >
-		<part
-			type="5"
-			vis="1"
-			name="Psaci stul"
-			val="30" />
-	</dev>
-	<dev 
-		init="0" 
-		did="100:00:FF:000:FF6" 
-		lid="0"
-		refresh="30"
-		batt="100"
-		time="1377684610"
-		inv="1377684610"
-		rssi="52" >
-		<part
-			type="7"
-			vis="1"
-			name=""
-			val="30" />
-	</dev>
-	<dev 
-		init="1" 
-		did="100:00:FF:000:FF7" 
-		lid="5555"
-		refresh="30"
-		batt="100"
-		time="1377684610"
-		rssi="52" >
-		<part
-			type="4"
-			vis="1"
-			name="ventilator"
-			val="ON" />
-	</dev>
-	<dev 
-		init="1" 
-		did="100:00:FF:000:FF8" 
-		lid="5555"
-		refresh="30"
-		batt="100"
-		time="1377684610"
-		rssi="52" >
-		<part
-			type="4"
-			vis="1"
-			name="pocitac"
-			val="OFF" />
-	</dev>
-	<dev 
-		init="1" 
-		did="100:00:FF:000:FF9" 
-		lid="5555"
-		refresh="30"
-		batt="100"
-		time="1377684610"
-		rssi="52" >
-		<part
-			type="4"
-			vis="1"
-			name="Lampa u tv"
-			val="ON" />
-	</dev>
-	<dev 
-		init="1" 
-		did="100:00:FF:000:FFA" 
-		lid="5555"
-		refresh="30"
-		batt="100"
-		time="1377684610"
-		rssi="52" >
-		<part
-			type="4"
-			vis="1"
-			name="televizor"
-			val="ON" />
-	</dev>
-	<dev 
-		init="1" 
-		did="100:00:FF:000:FFB" 
-		lid="4444"
-		refresh="30"
-		batt="100"
-		time="1377684610"
-		rssi="52" >
-		<part
-			type="4"
-			vis="1"
-			name="sporak"
-			val="ON" />
-	</dev>
-	<dev 
-		init="1" 
-		did="100:00:FF:000:FFC" 
-		lid="6666"
-		refresh="30"
-		batt="100"
-		time="1377684610"
-		rssi="52" >
-		<part
-			type="1"
-			vis="1"
-			name="osvezovac"
-			val="30" />
-	</dev>
-	<dev 
-		init="1" 
-		did="100:00:FF:000:FFD" 
-		lid="6666"
-		refresh="30"
-		batt="100"
-		time="1377684610"
-		rssi="52" >
+			name="Teplota venku"
+			val="15" />
 		<part
 			type="2"
 			vis="1"
-			name="Tlakomer"
-			val="3000" />
+			name="Tlak venku"
+			val="25" />
+	</dev>
+	<dev 
+		init="1" 
+		did="101:00:FF:001:FF0" 
+		lid="1"
+		refresh="1"
+		batt="100"
+		time="1377684610"
+		rssi="52" >
+		<part
+			type="1"
+			vis="1"
+			name="Skrývač (nemám být vidět)"
+			val="25" />
+	</dev>
+	<dev 
+		init="1" 
+		did="101:00:FF:002:FF0" 
+		lid="1"
+		refresh="1"
+		batt="100"
+		time="1377684610"
+		rssi="52" >
+		<part
+			type="-1"
+			vis="1"
+			name="Kdopak jsem?"
+			val="11" />
+	</dev>
+	<dev 
+		init="1" 
+		did="101:00:FF:000:FF1" 
+		lid="2"
+		refresh="30"
+		batt="100"
+		time="1377684610"
+		rssi="52" >
+		<part
+			type="0"
+			vis="1"
+			name="Teplůtka"
+			val="30" />
+		<part
+			type="1"
+			vis="1"
+			name="Vlhkůstka"
+			val="30" />
+		<part
+			type="2"
+			vis="1"
+			name="Tlačič"
+			val="30" />
+		<part
+			type="3"
+			vis="1"
+			name="Okýnko"
+			val="OPEN" />
+		<part
+			type="4"
+			vis="0"
+			name="Žárovička"
+			val="OFF" />
+		<part
+			type="5"
+			vis="0"
+			name="Světelnůstka"
+			val="30" />
+		<part
+			type="6"
+			vis="0"
+			name="Zvučák"
+			val="30" />
+		<part
+			type="7"
+			vis="0"
+			name="Emisák"
+			val="30" />
+		<part
+			type="-1"
+			vis="1"
+			name="Cizák"
+			val="666" />
 	</dev>
 </com>
