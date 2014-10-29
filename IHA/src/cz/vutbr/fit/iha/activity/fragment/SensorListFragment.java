@@ -96,6 +96,9 @@ public class SensorListFragment extends SherlockFragment {
 		
 		// Init swipe-refreshig layout
 		mSwipeLayout = (SwipeRefreshLayout) mActivity.findViewById(R.id.swipe_container);
+		if (mSwipeLayout == null) {
+			return;
+		}
 		mSwipeLayout.setOnRefreshListener(new OnRefreshListener() {
 
 			@Override

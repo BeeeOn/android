@@ -32,7 +32,7 @@ public class ViewPagerAdapter extends FragmentPagerAdapter {
 
 			// Open FragmentTab1.java
 		case 1:
-			CustomViewFragment fragmenttab1 = new CustomViewFragment();
+			CustomViewFragment fragmenttab1 = new CustomViewFragment((MainActivity) mCtx);
 			return fragmenttab1;
 
 		}

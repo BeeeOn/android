@@ -8,6 +8,7 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.content.res.Configuration;
 import android.support.v4.app.ActionBarDrawerToggle;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.view.KeyEvent;
@@ -27,6 +28,7 @@ import cz.vutbr.fit.iha.activity.MainActivity;
 import cz.vutbr.fit.iha.activity.SettingsMainActivity;
 import cz.vutbr.fit.iha.activity.dialog.InfoDialogFragment;
 import cz.vutbr.fit.iha.activity.menuItem.AdapterMenuItem;
+import cz.vutbr.fit.iha.activity.menuItem.CustomViewMenuItem;
 import cz.vutbr.fit.iha.activity.menuItem.EmptyMenuItem;
 import cz.vutbr.fit.iha.activity.menuItem.GroupImageMenuItem;
 import cz.vutbr.fit.iha.activity.menuItem.LocationMenuItem;
@@ -62,6 +64,7 @@ public class NavDrawerMenu {
 	private Location mActiveLocation;
 	
 	private String mActiveLocationId;
+	private String mActiveCustomViewId;
 	private String mActiveAdapterId;
 	private String mAdaterIdUnregist;
 	
@@ -139,6 +142,13 @@ public class NavDrawerMenu {
 
 						case CUSTOM_VIEW:
 							// TODO: otevrit custom view, jeste nedelame s customView, takze pozdeji
+							
+							// TEMP
+							mActiveLocationId = null;
+							mActiveCustomViewId = item.getId();
+							
+							changeCustomView(true);
+							redrawMenu(false);
 							break;
 
 						case SETTING:
@@ -155,8 +165,9 @@ public class NavDrawerMenu {
 							// Get the title followed by the position
 							Adapter adapter = mController.getActiveAdapter();
 							if (adapter != null){
+								mActiveCustomViewId = null;
 								changeLocation(mController.getLocation(adapter.getId(), item.getId()), true);
-								redrawMenu();
+								redrawMenu(true);
 							}
 								
 		//aaaaaaaaaa
@@ -236,7 +247,8 @@ public class NavDrawerMenu {
 
 				openMenu();
 	}
-	
+
+
 	public void openMenu() {
 		mIsDrawerOpen = true;
 		mDrawerLayout.openDrawer(mDrawerList);
@@ -250,8 +262,9 @@ public class NavDrawerMenu {
 		}
 	}
 	
-	public void redrawMenu() {
-		setActiveAdapterAndLocation();
+	public void redrawMenu(boolean isLocation) {
+		if(isLocation)
+			setActiveAdapterAndLocation();
 		
 		mMenuAdapter = getMenuAdapter();
 		mDrawerList.setAdapter(mMenuAdapter);
@@ -302,6 +315,19 @@ public class NavDrawerMenu {
 		((MainActivity) mActivity).redrawDevices();
 	}
 	
+	
+	protected void changeCustomView(boolean closeDrawer) { //(CustomView customView, boolean closeDrawer){
+		//((MainActivity) mActivity).setActiveCustomView(param);
+		((MainActivity) mActivity).setCustomViewLayout();
+		((MainActivity) mActivity).setActiveCustomViewID("tempValeu");
+		((MainActivity) mActivity).redrawCustomView();
+		
+		// Close drawer
+		if (closeDrawer) {
+			closeMenu();
+		}
+	}
+	
 	private void changeLocation(Location location, boolean closeDrawer) {
 		// save current location
 		SharedPreferences prefs = mController.getUserSettings();
@@ -319,13 +345,10 @@ public class NavDrawerMenu {
 		mActiveLocationId = location.getId();
 
 		// TODO
-		
+		((MainActivity) mActivity).setLocationLayout();
 		((MainActivity) mActivity).setActiveAdapterID(mActiveAdapterId);
 		((MainActivity) mActivity).setActiveLocationID(mActiveLocationId);
 		((MainActivity) mActivity).redrawDevices();
-
-
-		// mDrawerList.setItemChecked(position, true);
 
 		// Close drawer
 		if (closeDrawer) {
@@ -341,7 +364,7 @@ public class NavDrawerMenu {
 			@Override
 			public void onExecute(boolean success) {
 				if (success) {
-					redrawMenu();
+					redrawMenu(true);
 				}
 
 				mActivity.setSupportProgressBarIndeterminateVisibility(false);			
@@ -361,7 +384,7 @@ public class NavDrawerMenu {
 			public void onExecute(boolean success) {
 				if(success) {
 					new ToastMessageThread(mActivity, R.string.toast_adapter_removed).start();
-					redrawMenu();
+					redrawMenu((mActiveLocationId == null)?false:true);
 				}
 				mActivity.setSupportProgressBarIndeterminateVisibility(false);
 			}
@@ -425,7 +448,8 @@ public class NavDrawerMenu {
 			}));
 			// Adding custom views
 			// TODO pridat custom views
-			mMenuAdapter.addItem(new EmptyMenuItem(mActivity.getResources().getString(R.string.no_custom_view)));
+			//mMenuAdapter.addItem(new EmptyMenuItem(mActivity.getResources().getString(R.string.no_custom_view)));
+			mMenuAdapter.addItem(new CustomViewMenuItem("Test view",R.drawable.loc_living_room,false,"Custom001",(mActiveCustomViewId != null)?true:false) );
 		} else {
 			// Adding separator as item (we don't want to let it float as header)
 			mMenuAdapter.addItem(new SeparatorMenuItem());

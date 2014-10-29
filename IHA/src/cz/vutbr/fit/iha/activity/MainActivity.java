@@ -8,6 +8,8 @@ import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.view.MotionEvent;
 import android.widget.EditText;
@@ -24,6 +26,7 @@ import cz.vutbr.fit.iha.R;
 import cz.vutbr.fit.iha.activity.dialog.AddAdapterFragmentDialog;
 import cz.vutbr.fit.iha.activity.dialog.AddSensorFragmentDialog;
 import cz.vutbr.fit.iha.activity.dialog.CustomAlertDialog;
+import cz.vutbr.fit.iha.activity.fragment.CustomViewFragment;
 import cz.vutbr.fit.iha.activity.fragment.SensorListFragment;
 import cz.vutbr.fit.iha.adapter.Adapter;
 import cz.vutbr.fit.iha.adapter.location.Location;
@@ -46,11 +49,13 @@ public class MainActivity extends BaseApplicationActivity {
 	private static final String ADD_SENSOR_TAG = "addSensorDialog";
 	private NavDrawerMenu mNavDrawerMenu;
 	private SensorListFragment mListDevices;
+	private CustomViewFragment mCustomView;
 
 	/**
 	 * Instance save state tags
 	 */
 	private static final String LCTN = "lastlocation";
+	private static final String CSTVIEW = "lastcustomView";
 	private static final String ADAPTER_ID = "lastAdapterId";
 	private static final String IS_DRAWER_OPEN = "draweropen";
 
@@ -59,6 +64,7 @@ public class MainActivity extends BaseApplicationActivity {
 	 */
 	private String mActiveLocationId;
 	private String mActiveAdapterId;
+	private String mActiveCustomViewId;
 	private boolean mIsDrawerOpen = false;
 
 	private Handler mTimeHandler = new Handler();
@@ -96,11 +102,14 @@ public class MainActivity extends BaseApplicationActivity {
 		mListDevices = new SensorListFragment(this);
 		mListDevices.setMenu(mNavDrawerMenu);
 		
+		mCustomView = new CustomViewFragment(this);
+		
 		if (savedInstanceState != null) {
 			mIsDrawerOpen = savedInstanceState.getBoolean(IS_DRAWER_OPEN);
 			mNavDrawerMenu.setIsDrawerOpen(mIsDrawerOpen);
 			
 			mActiveLocationId = savedInstanceState.getString(LCTN);
+			mActiveCustomViewId = savedInstanceState.getString(CSTVIEW);
 			mActiveAdapterId = savedInstanceState.getString(ADAPTER_ID);
 			mListDevices.setLocationID(mActiveLocationId);
 			mListDevices.setAdapterID(mActiveAdapterId);
@@ -108,7 +117,7 @@ public class MainActivity extends BaseApplicationActivity {
 		}
 		
 		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-		ft.replace(R.id.content_frame, mListDevices);
+		ft.replace(R.id.content_frame, mListDevices,"Loc");
 		ft.commit();
 	}
 
@@ -117,7 +126,7 @@ public class MainActivity extends BaseApplicationActivity {
 
 		backPressed = false;
 		
-		mNavDrawerMenu.redrawMenu();
+		mNavDrawerMenu.redrawMenu((mActiveCustomViewId == null)?true:false);
 		
 		checkNoAdapters();
 	}
@@ -180,6 +189,7 @@ public class MainActivity extends BaseApplicationActivity {
 	public void onSaveInstanceState(Bundle savedInstanceState) {
 		savedInstanceState.putString(ADAPTER_ID, mActiveAdapterId);
 		savedInstanceState.putString(LCTN, mActiveLocationId);
+		savedInstanceState.putString(CSTVIEW, mActiveCustomViewId);
 		savedInstanceState.putBoolean(IS_DRAWER_OPEN, mNavDrawerMenu.getIsDrawerOpen());
 		super.onSaveInstanceState(savedInstanceState);
 	}
@@ -192,7 +202,30 @@ public class MainActivity extends BaseApplicationActivity {
 	}
 	
 	public void redrawMenu() {
-		mNavDrawerMenu.redrawMenu();
+		mNavDrawerMenu.redrawMenu((mActiveLocationId == null)?false:true);
+	}
+	
+	public void redrawCustomView() {
+		
+	}
+	
+	public void setLocationLayout() {
+		Fragment tmp = getSupportFragmentManager().findFragmentByTag("Loc");
+		if(tmp == null){
+			FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+			ft.replace(R.id.content_frame, mListDevices,"Loc");
+			ft.commit();
+		}
+	}
+	
+	public void setCustomViewLayout() {
+		Log.d(TAG, "Set CustomView layout");
+		Fragment tmp = getSupportFragmentManager().findFragmentByTag("Cus");
+		if(tmp == null){
+			FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+			ft.replace(R.id.content_frame, mCustomView,"Cus");
+			ft.commit();
+		}
 	}
 	
 	public void checkNoAdapters() {
@@ -304,6 +337,10 @@ public class MainActivity extends BaseApplicationActivity {
 
 	public void setActiveLocationID(String locationId) {
 		mActiveLocationId = locationId;
+	}
+	
+	public void setActiveCustomViewID(String customViewId)  {
+		mActiveCustomViewId = customViewId;
 	}
 
 }
