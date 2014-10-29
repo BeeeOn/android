@@ -423,6 +423,8 @@ public class XmlParsers {
 					getSecureInt(getSecureAttrValue(Xconstants.TYPE)));
 			location.setAdapterId(aid);
 			result.add(location);
+			
+			mParser.nextTag(); // loc end tag
 
 		} while (mParser.nextTag() != XmlPullParser.END_TAG && !mParser.getName().equals(Xconstants.COM_ROOT));
 

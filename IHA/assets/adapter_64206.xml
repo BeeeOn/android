@@ -53,7 +53,7 @@
 		time="1377684610"
 		rssi="52" >
 		<part
-			type="1"
+			type="3"
 			vis="1"
 			name="Balkón"
 			val="ON" />
