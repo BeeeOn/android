@@ -694,6 +694,10 @@ public final class Controller {
 	 */
 	public boolean saveFacility(Facility facility, EnumSet<SaveDevice> what) {
 		// FIXME: fix demoMode
+		if (mDemoMode) {
+			return true;
+		}
+		
 		return mHousehold.facilitiesModel.saveFacility(facility, what);
 	}
 
@@ -709,6 +713,10 @@ public final class Controller {
 	 */
 	public boolean saveDevice(Device device, EnumSet<SaveDevice> what) {
 		// FIXME: fix demoMode
+		if (mDemoMode) {
+			return true;
+		}
+
 		return mHousehold.facilitiesModel.saveDevice(device, what);
 	}
 
