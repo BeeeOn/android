@@ -1,8 +1,15 @@
 package cz.vutbr.fit.iha.household;
 
+import java.util.List;
+import java.util.Random;
+
+import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
+
 import android.content.Context;
 import cz.vutbr.fit.iha.Constants;
 import cz.vutbr.fit.iha.adapter.Adapter;
+import cz.vutbr.fit.iha.adapter.device.Facility;
 import cz.vutbr.fit.iha.network.Network;
 import cz.vutbr.fit.iha.network.xml.XmlParsers;
 
@@ -36,7 +43,14 @@ public final class DemoHousehold extends Household {
 				locationsModel.setLocationsByAdapter(adapter.getId(), parser.getDemoLocationsFromAsset(mContext, assetName));
 
 				assetName = String.format(Constants.ASSET_ADAPTER_DATA_FILENAME, adapter.getId());
-				facilitiesModel.setFacilitiesByAdapter(adapter.getId(), parser.getDemoFacilitiesFromAsset(mContext, assetName));
+				List<Facility> facilities = parser.getDemoFacilitiesFromAsset(mContext, assetName);
+				
+				// Set last update time to time between (-26 hours, now>
+				for (Facility facility : facilities) {
+					facility.setLastUpdate(DateTime.now(DateTimeZone.UTC).minusSeconds(new Random().nextInt(60*60*26)));
+				}
+				
+				facilitiesModel.setFacilitiesByAdapter(adapter.getId(), facilities);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
