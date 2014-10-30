@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/scroll"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" >
+    android:layout_height="wrap_content" >
 
-    <ListView
-        android:id="@+id/listviewofgraphs"
+    <LinearLayout
+        android:id="@+id/container"
+        style="?attr/spinnerDropDownItemStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true"
-        android:divider="@null" >
-    </ListView>
+        android:orientation="vertical" >
+    </LinearLayout>
 
-</RelativeLayout>
+</ScrollView>

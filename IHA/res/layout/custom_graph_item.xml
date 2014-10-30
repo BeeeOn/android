@@ -2,22 +2,22 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="horizontal"
-    tools:ignore="UseCompoundDrawables" >
+    android:layout_height="wrap_content"
+    android:layout_margin="10dp"
+    android:background="@drawable/iha_item_solo_bg"
+    android:orientation="vertical"
+    android:padding="10dp" >
 
     <TextView
-	    android:id="@+id/custom_spinner_label"
-	    android:textAppearance="?android:attr/textAppearanceMedium"
-	    android:paddingTop="5dp"
-	    android:paddingBottom="5dp"
-	    android:singleLine="true"
-	    android:textColor="@color/black"
-	    android:layout_width="match_parent"
-	    android:layout_height="wrap_content"/>
-    
+        android:id="@+id/graph_label"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:singleLine="true"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textColor="@color/black" />
+
     <LinearLayout
-        android:id="@+id/custom_spinner_graph"
+        android:id="@+id/graph_layout"
         android:layout_width="match_parent"
         android:layout_height="200dp"
         android:orientation="vertical"
