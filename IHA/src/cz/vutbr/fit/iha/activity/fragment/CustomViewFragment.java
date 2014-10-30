@@ -100,11 +100,11 @@ public class CustomViewFragment extends SherlockFragment {
 		graphView.getGraphViewStyle().setHorizontalLabelsColor(mContext.getResources().getColor(R.color.iha_text_hint));
 		// mGraphView.getGraphViewStyle().setVerticalLabelsWidth(60);
 		// mGraphView.getGraphViewStyle().setNumHorizontalLabels(2);
-		graphView.setBackgroundColor(mContext.getResources().getColor(R.color.alpha_blue));// getResources().getColor(R.color.log_blue2));
+		//graphView.setBackgroundColor(mContext.getResources().getColor(R.color.alpha_blue));// getResources().getColor(R.color.log_blue2));
 
 		graphView.setShowLegend(true);
 		
-		graphView.setDrawBackground(true);
+		graphView.setDrawBackground(false);
 		graphView.setVisibility(View.VISIBLE);
 		// graphView.setAlpha(128);
 
@@ -167,7 +167,7 @@ public class CustomViewFragment extends SherlockFragment {
 		
 		//for (DeviceLog log : logs) {
 	
-			GraphViewSeriesStyle seriesStyle = new GraphViewSeriesStyle(random.nextInt(255*255*255), 2);
+			GraphViewSeriesStyle seriesStyle = new GraphViewSeriesStyle(getResources().getColor((random.nextBoolean())?R.color.iha_primary_cyan:R.color.iha_secundary_pink), 4);
 			
 			//GraphViewSeriesStyle seriesStyleBlue = new GraphViewSeriesStyle(mContext.getResources().getColor(R.color.iha_primary_cyan), 2);
 			// GraphViewSeriesStyle seriesStyleGray = new GraphViewSeriesStyle(getResources().getColor(R.color.light_gray),2);
