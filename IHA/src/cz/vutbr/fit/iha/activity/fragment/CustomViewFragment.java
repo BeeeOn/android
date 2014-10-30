@@ -2,6 +2,7 @@ package cz.vutbr.fit.iha.activity.fragment;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
@@ -81,7 +82,7 @@ public class CustomViewFragment extends SherlockFragment {
 	}
 
 	
-	private void addGraph(String name, int id) {
+	private void addGraph(final Device device) {
 		LayoutInflater inflater = getLayoutInflater(null);
 		
 		//LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -90,7 +91,7 @@ public class CustomViewFragment extends SherlockFragment {
 		LinearLayout graphLayout = (LinearLayout)row.findViewById(R.id.graph_layout);		
 		
 		TextView tv = (TextView)row.findViewById(R.id.graph_label);
-		tv.setText(name);
+		tv.setText(mContext.getString(device.getType().getStringResource()));
 		
 		LineGraphView graphView = new LineGraphView(mContext, ""); // empty heading
 
@@ -101,19 +102,23 @@ public class CustomViewFragment extends SherlockFragment {
 		// mGraphView.getGraphViewStyle().setNumHorizontalLabels(2);
 		graphView.setBackgroundColor(mContext.getResources().getColor(R.color.alpha_blue));// getResources().getColor(R.color.log_blue2));
 
+		graphView.setShowLegend(true);
+		
 		graphView.setDrawBackground(true);
 		graphView.setVisibility(View.VISIBLE);
 		// graphView.setAlpha(128);
 
 		graphLayout.addView(graphView);
-		mGraphs.put(id, graphView);
+		mGraphs.put(device.getType().getTypeId(), graphView);
 		
 		mLayout.addView(row);
 		
-		/*final UnitsHelper unitsHelper = new UnitsHelper(mController.getUserSettings(), mContext);
+		final UnitsHelper unitsHelper = new UnitsHelper(mController.getUserSettings(), mContext);
+		//final TimeHelper timeHelper = new TimeHelper(mController.getUserSettings());
+		final DateTimeFormatter fmt = DateTimeFormat.forPattern(mGraphDateTimeFormat); // FIXME for correct timezone data..
 		
 		graphView.setCustomLabelFormatter(new CustomLabelFormatter() {
-			final String unit = unitsHelper.getStringUnit(mDevice.getValue());
+			final String unit = unitsHelper.getStringUnit(device.getValue());
 			
 			@Override
 			public String formatLabel(double value, boolean isValueX) {
@@ -121,9 +126,9 @@ public class CustomViewFragment extends SherlockFragment {
 					return fmt.print((long) value);
 				}
 
-				return String.format("%s %s", unitsHelper.getStringValue(mDevice.getValue(), value), unit);
+				return String.format("%s %s", unitsHelper.getStringValue(device.getValue(), value), unit);
 			}
-		});*/
+		});
 
 		/*graphLayout.setOnTouchListener(new OnTouchListener() {
 
@@ -151,26 +156,26 @@ public class CustomViewFragment extends SherlockFragment {
 
 	}
 	
-	private void fillGraph(List<DeviceLog> logs, int graphId) {
+	private void fillGraph(DeviceLog log, Device device) {
 
-		GraphView graphView = mGraphs.get(graphId);
+		GraphView graphView = mGraphs.get(device.getType().getTypeId());
 		if (graphView == null) {
 			return;
 		}
 	
-		int seriesId = 0;
-		for (DeviceLog log : logs) {
+		Random random = new Random();
+		
+		//for (DeviceLog log : logs) {
 	
-			GraphViewSeriesStyle seriesStyleBlue = new GraphViewSeriesStyle(mContext.getResources().getColor(R.color.iha_primary_cyan), 2);
+			GraphViewSeriesStyle seriesStyle = new GraphViewSeriesStyle(random.nextInt(255*255*255), 2);
+			
+			//GraphViewSeriesStyle seriesStyleBlue = new GraphViewSeriesStyle(mContext.getResources().getColor(R.color.iha_primary_cyan), 2);
 			// GraphViewSeriesStyle seriesStyleGray = new GraphViewSeriesStyle(getResources().getColor(R.color.light_gray),2);
 
-			GraphViewSeries graphSeries = new GraphViewSeries("Graph " + String.valueOf(seriesId++), seriesStyleBlue, new GraphViewData[] { new GraphView.GraphViewData(0, 0), });
+			GraphViewSeries graphSeries = new GraphViewSeries(device.getName(), seriesStyle, new GraphViewData[] { new GraphView.GraphViewData(0, 0), });
 
 			graphView.addSeries(graphSeries);
 			
-			// NOTE: This formatter is only for Log, correct timezone from app setting doesn't matter here
-			final DateTimeFormatter fmt = DateTimeFormat.forPattern(mGraphDateTimeFormat); 
-
 			int size = log.getValues().size();
 			// Log.d(TAG, String.format("Filling graph with %d values. Min: %.1f, Max: %.1f", size, log.getMinimum(), log.getMaximum()));
 
@@ -191,18 +196,17 @@ public class CustomViewFragment extends SherlockFragment {
 				
 				float value = Float.isNaN(row.value) ? log.getMinimum() : row.value;
 				data[i - begin] = new GraphView.GraphViewData(row.dateMillis, value);
-				Log.v(TAG, String.format("Graph value: date(msec): %s, Value: %.1f", fmt.print(row.dateMillis), row.value));
+				//Log.v(TAG, String.format("Graph value: date(msec): %s, Value: %.1f", fmt.print(row.dateMillis), row.value));
 			}
 
 			// Set maximum as +10% more than deviation
-			graphView.setManualYAxisBounds(log.getMaximum() + log.getDeviation() * 0.1, log.getMinimum());
+			//graphView.setManualYAxisBounds(log.getMaximum() + log.getDeviation() * 0.1, log.getMinimum());
 			// mGraphView.setViewPort(0, 7);
 			graphSeries.resetData(data);
 			//mGraphInfo.setText(getView().getResources().getString(R.string.sen_detail_graph_info));
-		}
+		//}
 		
-		graphView.setManualYAxisBounds(1.0, 0.0);
-		
+		//graphView.setManualYAxisBounds(1.0, 0.0);
 		
 		//graphView.setViewPort(0, 7);
 	}
@@ -223,7 +227,7 @@ public class CustomViewFragment extends SherlockFragment {
 						mDevices.put(device.getType().getTypeId(), devices);
 						
 						DeviceType type = device.getType();
-						addGraph(mContext.getString(type.getStringResource()), type.getTypeId());
+						addGraph(device);
 					}
 					
 					devices.add(device);
@@ -243,39 +247,31 @@ public class CustomViewFragment extends SherlockFragment {
 		}
 	}*/
 	
-	private class GetDeviceLogTask extends AsyncTask<Device, Void, List<DeviceLog>> {
+	private class GetDeviceLogTask extends AsyncTask<Device, Void, DeviceLog> {
 		
 		private int mTypeId = 0;
+		private Device mDevice;
 		
 		@Override
-		protected List<DeviceLog> doInBackground(Device... devices) {
-			Device device = devices[0]; // expects only one device at a time is sent there
-			mTypeId = device.getType().getTypeId();
+		protected DeviceLog doInBackground(Device... devices) {
+			mDevice = devices[0]; // expects only one device at a time is sent there
+			mTypeId = mDevice.getType().getTypeId();
 			
 			DateTime end = DateTime.now(DateTimeZone.UTC);
-			DateTime start = end.minusDays(1);//end.minusWeeks(1);
-			
-			List<DeviceLog> logs = new ArrayList<DeviceLog>();
+			DateTime start = end.minusDays(3);//end.minusWeeks(1);
 			
 			LogDataPair pair = new LogDataPair( //
-					device, // device
+					mDevice, // device
 					new Interval(start, end), // interval from-to
 					DataType.AVERAGE, // type
 					DataInterval.HOUR); // interval
 
-			logs.add(mController.getDeviceLog(pair.device, pair));	
-			
-			return logs;
+			return mController.getDeviceLog(pair.device, pair);	
 		}
 
 		@Override
-		protected void onPostExecute(List<DeviceLog> logs) {
-			//List<List<DeviceLog>> list = new ArrayList<List<DeviceLog>>();
-			//list.add(logs);
-			
-			//redrawCustomView(list);
-
-			fillGraph(logs, mTypeId); // correct id
+		protected void onPostExecute(DeviceLog log) {
+			fillGraph(log, mDevice);
 		}
 
 	}

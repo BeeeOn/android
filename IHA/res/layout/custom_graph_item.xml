@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="10dp"
+    android:layout_marginBottom="5dp"
     android:background="@drawable/iha_item_solo_bg"
     android:orientation="vertical"
     android:padding="10dp" >
@@ -19,8 +19,7 @@
     <LinearLayout
         android:id="@+id/graph_layout"
         android:layout_width="match_parent"
-        android:layout_height="200dp"
-        android:orientation="vertical"
-        android:visibility="visible" />
+        android:layout_height="180dp"
+        android:orientation="vertical" />
 
 </LinearLayout>
