@@ -64,6 +64,7 @@ import cz.vutbr.fit.iha.controller.Controller;
 import cz.vutbr.fit.iha.pair.LogDataPair;
 import cz.vutbr.fit.iha.pair.SaveDevicePair;
 import cz.vutbr.fit.iha.pair.SaveFacilityPair;
+import cz.vutbr.fit.iha.thread.ToastMessageThread;
 import cz.vutbr.fit.iha.util.Log;
 import cz.vutbr.fit.iha.util.TimeHelper;
 import cz.vutbr.fit.iha.util.UnitsHelper;
@@ -603,16 +604,18 @@ public class SensorDetailFragment extends SherlockFragment {
 
 			@Override
 			public void onExecute(boolean success) {
+				if (mActivity.getProgressDialog()!= null)
+					mActivity.getProgressDialog().dismiss();
 				if (success) {
-					Log.d(TAG, "Success save to server");
-					if (mActivity.getProgressDialog()!= null)
-						mActivity.getProgressDialog().dismiss();
+					Log.d(TAG, "Success save to server");					
 					// Change GUI 
 					mActivity.redraw();
 				} else {
 					Log.d(TAG, "Fail save to server");
-					// Show failer toast !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 				}
+				int messageId = success ? R.string.toast_success_save_data : R.string.toast_fail_save_data; 
+				Log.d(TAG, mActivity.getString(messageId));
+				new ToastMessageThread(mActivity, messageId).start();
 			}
 		});		
 		
@@ -626,16 +629,18 @@ public class SensorDetailFragment extends SherlockFragment {
 		mSaveFacilityTask.setListener(new CallbackTaskListener() {
 			@Override
 			public void onExecute(boolean success) {
+				if (mActivity.getProgressDialog()!= null)
+					mActivity.getProgressDialog().dismiss();
 				if (success) {
 					Log.d(TAG, "Success save to server");
-					if (mActivity.getProgressDialog()!= null)
-						mActivity.getProgressDialog().dismiss();
 					// Change GUI 
 					mActivity.redraw();
 				} else {
 					Log.d(TAG, "Fail save to server");
-					// Show failer toast !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 				}
+				int messageId = success ? R.string.toast_success_save_data : R.string.toast_fail_save_data; 
+				Log.d(TAG, mActivity.getString(messageId));
+				new ToastMessageThread(mActivity, messageId).start();
 			}
 		});
 		mSaveFacilityTask.execute(pair);

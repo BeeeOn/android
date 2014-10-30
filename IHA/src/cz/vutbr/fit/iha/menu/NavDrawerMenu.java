@@ -61,7 +61,6 @@ public class NavDrawerMenu {
 	private ActionBarDrawerToggle mDrawerToggle;
 	private String mDrawerTitle = "IHA";
 	
-	private Location mActiveLocation;
 	
 	private String mActiveLocationId;
 	private String mActiveCustomViewId;
@@ -169,8 +168,6 @@ public class NavDrawerMenu {
 								changeLocation(mController.getLocation(adapter.getId(), item.getId()), true);
 								redrawMenu(true);
 							}
-								
-		//aaaaaaaaaa
 							break;
 
 						default:
@@ -187,19 +184,11 @@ public class NavDrawerMenu {
 						switch (item.getType()) {
 						case LOCATION:
 							mMode = mActivity.startActionMode(new ActionModeLocations());
-							/*
-							Bundle bundle = new Bundle();
-							String myMessage = item.getId();
-							bundle.putString("locationID", myMessage);
-							Intent intent = new Intent(mActivity, LocationDetailActivity.class);
-							intent.putExtras(bundle);
-							mActivity.startActivity(intent);*/
 							break;
 						case ADAPTER:
 							Log.i(TAG, "deleting adapter");
 							mAdaterIdUnregist = item.getId();
 							mMode = mActivity.startActionMode(new ActionModeAdapters());
-							//doUnregistAdapter(item.getId());
 							break;
 						default:
 							// do nothing
@@ -210,7 +199,6 @@ public class NavDrawerMenu {
 
 				});
 
-				// getSupportActionBar().setIcon(R.drawable.ic_launcher_white);
 				// ActionBarDrawerToggle ties together the the proper interactions
 				// between the sliding drawer and the action bar app icon
 				mDrawerToggle = new ActionBarDrawerToggle(mActivity, mDrawerLayout, R.drawable.ic_drawer, R.string.drawer_open, R.string.drawer_close) {
@@ -220,8 +208,8 @@ public class NavDrawerMenu {
 						if (backPressed)
 							mActivity.onBackPressed();
 						// Set the title on the action when drawer closed
-						if (mActiveLocation != null)
-							mActivity.getSupportActionBar().setTitle(mActiveLocation.getName());
+						if (mActiveLocationId != null)
+							mActivity.getSupportActionBar().setTitle(mController.getLocation(mController.getActiveAdapter().getId(),mActiveLocationId).getName());
 						super.onDrawerClosed(view);
 						Log.d(TAG, "BackPressed - onDrawerClosed " + String.valueOf(backPressed));
 						mIsDrawerOpen = false;
@@ -262,10 +250,7 @@ public class NavDrawerMenu {
 		}
 	}
 	
-	public void redrawMenu(boolean isLocation) {
-		if(isLocation)
-			setActiveAdapterAndLocation();
-		
+	public void redrawMenu(boolean isLocation) {		
 		mMenuAdapter = getMenuAdapter();
 		mDrawerList.setAdapter(mMenuAdapter);
 
@@ -274,45 +259,6 @@ public class NavDrawerMenu {
 			closeMenu();
 			Log.d(TAG, "LifeCycle: onOrientation");
 		}
-	}
-	
-	public void setActiveAdapterAndLocation() {
-		// Set active adapter and location
-		Adapter adapter = mController.getActiveAdapter();
-		if (adapter != null) {
-			mActiveAdapterId = adapter.getId();
-
-			SharedPreferences prefs = mController.getUserSettings();
-			String prefKey = Persistence.getPreferencesLastLocation(adapter.getId());
-			
-			// UserSettings can be null when user is not logged in!
-			String locationId = (prefs == null) ? "" : prefs.getString(prefKey, "");
-			Location location = mController.getLocation(adapter.getId(), locationId);
-			
-			if (location == null) {
-				// No saved or found location, set first location
-				List<Location> locations = mController.getLocations(adapter.getId());
-
-				if (locations.size() > 0) {
-					Log.d("default", "DEFAULT POSITION: first position selected");
-					location = locations.get(0);
-				}
-			} else {
-				Log.d("default", "DEFAULT POSITION: saved position selected");
-			}
-
-			if (location != null) {
-				changeLocation(location, false);
-				return;
-			}
-		}
-		
-		// no adapters or sensors
-		Log.d("default", "DEFAULT POSITION: Empty adapter or sensor set");
-		// TODO
-		((MainActivity) mActivity).setActiveAdapterID(mActiveAdapterId);
-		((MainActivity) mActivity).setActiveLocationID(mActiveLocationId);
-		((MainActivity) mActivity).redrawDevices();
 	}
 	
 	
@@ -341,7 +287,6 @@ public class NavDrawerMenu {
 			edit.commit();
 		}
 
-		mActiveLocation = location;
 		mActiveLocationId = location.getId();
 
 		// TODO
@@ -364,6 +309,8 @@ public class NavDrawerMenu {
 			@Override
 			public void onExecute(boolean success) {
 				if (success) {
+					((MainActivity)mActivity).setActiveAdapterAndLocation();
+					((MainActivity)mActivity).redrawDevices();
 					redrawMenu(true);
 				}
 
@@ -513,6 +460,15 @@ public class NavDrawerMenu {
 	
 	public boolean getIsDrawerOpen() {
 		return mIsDrawerOpen;
+	}
+	
+	public void setLocationID(String locID) {
+		mActiveLocationId = locID;
+		mActiveCustomViewId = null;
+	}
+
+	public void setAdapterID(String adaID) {
+		mActiveAdapterId = adaID;
 	}
 
 	public void cancelAllTasks() {

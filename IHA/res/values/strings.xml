@@ -97,6 +97,8 @@
     <string name="toast_empty_sensor_name">Fill names of all sensors !</string>
     <string name="toast_wrong_or_no_device">Wrong or no device selected</string>
     <string name="toast_no_uninitialized_devices">There are no uninitialized devices.</string>
+    <string name="toast_success_save_data">Success to save data</string>
+    <string name="toast_fail_save_data">Failed saving data</string>
 
     <!-- Progress -->
     <string name="progress_signing">Signing to server&#8230;</string>
