@@ -53,7 +53,7 @@ public class XmlCreator {
 	public static final String GETADAPTERS = "getadapters";
 
 	public static final String ADDACCOUNTS = "addaccs";
-	public static final String DELACCOUNTS = "delacc";
+	public static final String DELACCOUNTS = "delaccs";
 	public static final String GETACCOUNTS = "getaccs";
 	public static final String SETCCOUNTS = "setaccs";
 	public static final String SCANMODE = "scanmode";

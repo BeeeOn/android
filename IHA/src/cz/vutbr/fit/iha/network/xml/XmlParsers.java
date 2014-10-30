@@ -380,10 +380,11 @@ public class XmlParsers {
 
 		do {
 			try {
-				DataRow row = log.new DataRow(readText(Xconstants.ROW));
 				
 				String repeat = getSecureAttrValue(Xconstants.REPEAT);
 				String interval = getSecureAttrValue(Xconstants.INTERVAL);
+				
+				DataRow row = log.new DataRow(readText(Xconstants.ROW));
 				
 				if (!repeat.isEmpty() && !interval.isEmpty()) {
 					log.addValueInterval(row, Integer.parseInt(repeat), Integer.parseInt(interval));
