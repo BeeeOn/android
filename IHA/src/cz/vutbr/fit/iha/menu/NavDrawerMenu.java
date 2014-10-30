@@ -208,8 +208,13 @@ public class NavDrawerMenu {
 						if (backPressed)
 							mActivity.onBackPressed();
 						// Set the title on the action when drawer closed
-						if (mActiveLocationId != null)
-							mActivity.getSupportActionBar().setTitle(mController.getLocation(mController.getActiveAdapter().getId(),mActiveLocationId).getName());
+						Adapter adapter = mController.getActiveAdapter();
+						if(adapter != null && mActiveLocationId != null) {
+							mActivity.getSupportActionBar().setTitle(mController.getLocation(adapter.getId(),mActiveLocationId).getName());
+						}
+						else {
+							setDefaultTitle();
+						}
 						super.onDrawerClosed(view);
 						Log.d(TAG, "BackPressed - onDrawerClosed " + String.valueOf(backPressed));
 						mIsDrawerOpen = false;
