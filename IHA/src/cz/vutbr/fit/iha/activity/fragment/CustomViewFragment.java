@@ -11,6 +11,7 @@ import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.SparseArray;
@@ -103,6 +104,8 @@ public class CustomViewFragment extends SherlockFragment {
 		//graphView.setBackgroundColor(mContext.getResources().getColor(R.color.alpha_blue));// getResources().getColor(R.color.log_blue2));
 
 		graphView.setShowLegend(true);
+		graphView.setScalable(true);
+		graphView.setScrollable(true);
 		
 		graphView.setDrawBackground(false);
 		graphView.setVisibility(View.VISIBLE);
@@ -163,11 +166,12 @@ public class CustomViewFragment extends SherlockFragment {
 			return;
 		}
 	
-		Random random = new Random();
+		Random random = new Random(); 
+		int color = Color.argb(255, random.nextInt(256), random.nextInt(256), random.nextInt(256));  
 		
 		//for (DeviceLog log : logs) {
 	
-			GraphViewSeriesStyle seriesStyle = new GraphViewSeriesStyle(getResources().getColor((random.nextBoolean())?R.color.iha_primary_cyan:R.color.iha_secundary_pink), 4);
+			GraphViewSeriesStyle seriesStyle = new GraphViewSeriesStyle(color, 4);
 			
 			//GraphViewSeriesStyle seriesStyleBlue = new GraphViewSeriesStyle(mContext.getResources().getColor(R.color.iha_primary_cyan), 2);
 			// GraphViewSeriesStyle seriesStyleGray = new GraphViewSeriesStyle(getResources().getColor(R.color.light_gray),2);
