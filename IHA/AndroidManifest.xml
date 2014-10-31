@@ -27,8 +27,8 @@
      The following two permissions are not required to use
      Google Maps Android API v2, but are recommended.
     -->
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+<!--     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" /> -->
+<!--     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" /> -->
 
     <!-- Keeps the processor from sleeping when a message is received. -->
     <uses-permission android:name="android.permission.WAKE_LOCK" />
