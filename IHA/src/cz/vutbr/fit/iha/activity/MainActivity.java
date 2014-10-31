@@ -10,8 +10,6 @@ import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.DialogFragment;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.view.MotionEvent;
 import android.widget.EditText;
@@ -125,7 +123,7 @@ public class MainActivity extends BaseApplicationActivity {
 			mListDevices.setAdapterID(mActiveAdapterId);
 			mNavDrawerMenu.setLocationID(mActiveLocationId);
 			mNavDrawerMenu.setAdapterID(mActiveAdapterId);
-			mNavDrawerMenu.redrawMenu(true);
+			mNavDrawerMenu.redrawMenu();
 		}
 		
 		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
@@ -138,7 +136,7 @@ public class MainActivity extends BaseApplicationActivity {
 
 		backPressed = false;
 		
-		mNavDrawerMenu.redrawMenu((mActiveCustomViewId == null)?true:false);
+		mNavDrawerMenu.redrawMenu();
 		
 		checkNoAdapters();
 	}
@@ -213,7 +211,7 @@ public class MainActivity extends BaseApplicationActivity {
 		Adapter adapter = mController.getActiveAdapter();
 		if (adapter != null) {
 			mActiveAdapterId = adapter.getId();
-
+			setActiveAdapterID(mActiveAdapterId);
 			SharedPreferences prefs = mController.getUserSettings();
 			String prefKey = Persistence.getPreferencesLastLocation(adapter.getId());
 			
@@ -232,7 +230,13 @@ public class MainActivity extends BaseApplicationActivity {
 			} else {
 				Log.d("default", "DEFAULT POSITION: saved position selected");
 			}
-			mActiveLocationId = location.getId();
+			if (location != null) {
+				mActiveLocationId = location.getId();
+				setActiveLocationID(mActiveLocationId);
+			}
+			else {
+				setActiveLocationID(null);
+			}
 		}
 	}
 
@@ -248,7 +252,8 @@ public class MainActivity extends BaseApplicationActivity {
 	}
 	
 	public void redrawMenu() {
-		mNavDrawerMenu.redrawMenu((mActiveLocationId == null)?false:true);
+		mNavDrawerMenu.redrawMenu();
+		redrawDevices();
 	}
 	
 	public void redrawCustomView() {
@@ -372,10 +377,15 @@ public class MainActivity extends BaseApplicationActivity {
 	
 	public void setActiveAdapterID(String adapterId) {
 		mActiveAdapterId = adapterId;
+		mNavDrawerMenu.setAdapterID(adapterId);
+		mListDevices.setAdapterID(adapterId);
+		
 	}
 
 	public void setActiveLocationID(String locationId) {
 		mActiveLocationId = locationId;
+		mNavDrawerMenu.setLocationID(locationId);
+		mListDevices.setLocationID(locationId);
 	}
 	
 	public void setActiveCustomViewID(String customViewId)  {

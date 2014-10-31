@@ -165,6 +165,7 @@ public class AddAdapterFragmentDialog extends TrackDialogFragment {
 
 				if (success) {
 					AddAdapterFragmentDialog.this.dismiss();
+					mActivity.setActiveAdapterAndLocation();
 					mActivity.redrawMenu();
 					mActivity.checkNoDevices();
 				}

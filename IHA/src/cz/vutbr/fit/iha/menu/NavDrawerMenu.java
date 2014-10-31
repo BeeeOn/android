@@ -53,7 +53,7 @@ public class NavDrawerMenu {
 	private static final String TAG = "NavDrawerMenu";
 	private final static String TAG_INFO = "tag_info";
 	
-	private BaseApplicationActivity mActivity;
+	private MainActivity mActivity;
 	private Controller mController;
 	
 	private DrawerLayout mDrawerLayout;
@@ -79,11 +79,11 @@ public class NavDrawerMenu {
 	//
 	private ActionMode mMode;
 	
-	public NavDrawerMenu (BaseApplicationActivity activity) {
+	public NavDrawerMenu (MainActivity activity) {
 		// Set activity
 		mActivity = activity;
 		
-		backPressed = ((MainActivity) mActivity).getBackPressed();
+		backPressed =  mActivity.getBackPressed();
 		// Get controller
 		mController = Controller.getInstance(mActivity);
 
@@ -147,7 +147,7 @@ public class NavDrawerMenu {
 							mActiveCustomViewId = item.getId();
 							
 							changeCustomView(true);
-							redrawMenu(false);
+							redrawMenu();
 							break;
 
 						case SETTING:
@@ -166,7 +166,7 @@ public class NavDrawerMenu {
 							if (adapter != null){
 								mActiveCustomViewId = null;
 								changeLocation(mController.getLocation(adapter.getId(), item.getId()), true);
-								redrawMenu(true);
+								redrawMenu();
 							}
 							break;
 
@@ -204,7 +204,7 @@ public class NavDrawerMenu {
 				mDrawerToggle = new ActionBarDrawerToggle(mActivity, mDrawerLayout, R.drawable.ic_drawer, R.string.drawer_open, R.string.drawer_close) {
 
 					public void onDrawerClosed(View view) {
-						backPressed = ((MainActivity) mActivity).getBackPressed();
+						backPressed = mActivity.getBackPressed();
 						if (backPressed)
 							mActivity.onBackPressed();
 						// Set the title on the action when drawer closed
@@ -255,10 +255,10 @@ public class NavDrawerMenu {
 		}
 	}
 	
-	public void redrawMenu(boolean isLocation) {		
+	public void redrawMenu() {		
 		mMenuAdapter = getMenuAdapter();
 		mDrawerList.setAdapter(mMenuAdapter);
-
+		
 		if (!mIsDrawerOpen) {
 			// Close drawer
 			closeMenu();
@@ -269,9 +269,9 @@ public class NavDrawerMenu {
 	
 	protected void changeCustomView(boolean closeDrawer) { //(CustomView customView, boolean closeDrawer){
 		//((MainActivity) mActivity).setActiveCustomView(param);
-		((MainActivity) mActivity).setCustomViewLayout();
-		((MainActivity) mActivity).setActiveCustomViewID("tempValeu");
-		((MainActivity) mActivity).redrawCustomView();
+		mActivity.setCustomViewLayout();
+		mActivity.setActiveCustomViewID("tempValeu");
+		mActivity.redrawCustomView();
 		
 		// Close drawer
 		if (closeDrawer) {
@@ -295,10 +295,10 @@ public class NavDrawerMenu {
 		mActiveLocationId = location.getId();
 
 		// TODO
-		((MainActivity) mActivity).setLocationLayout();
-		((MainActivity) mActivity).setActiveAdapterID(mActiveAdapterId);
-		((MainActivity) mActivity).setActiveLocationID(mActiveLocationId);
-		((MainActivity) mActivity).redrawDevices();
+		mActivity.setLocationLayout();
+		mActivity.setActiveAdapterID(mActiveAdapterId);
+		mActivity.setActiveLocationID(mActiveLocationId);
+		mActivity.redrawDevices();
 
 		// Close drawer
 		if (closeDrawer) {
@@ -314,9 +314,9 @@ public class NavDrawerMenu {
 			@Override
 			public void onExecute(boolean success) {
 				if (success) {
-					((MainActivity)mActivity).setActiveAdapterAndLocation();
-					((MainActivity)mActivity).redrawDevices();
-					redrawMenu(true);
+					mActivity.setActiveAdapterAndLocation();
+					mActivity.redrawDevices();
+					redrawMenu();
 				}
 
 				mActivity.setSupportProgressBarIndeterminateVisibility(false);			
@@ -336,7 +336,9 @@ public class NavDrawerMenu {
 			public void onExecute(boolean success) {
 				if(success) {
 					new ToastMessageThread(mActivity, R.string.toast_adapter_removed).start();
-					redrawMenu((mActiveLocationId == null)?false:true);
+					mActivity.setActiveAdapterAndLocation();
+					mActivity.redrawDevices();
+					mActivity.redrawMenu();
 				}
 				mActivity.setSupportProgressBarIndeterminateVisibility(false);
 			}

@@ -60,12 +60,12 @@ public class SensorListFragment extends SherlockFragment {
 	private SensorListAdapter mSensorAdapter;
 	private ListView mSensorList;
 	
-	private Handler mTimeHandler = new Handler();
-	private Runnable mTimeRun;
+	private View mView;
 	
 	private String mActiveLocationId;
 	private String mActiveAdapterId;
 	private boolean isPaused;
+	
 	
 
 	//
@@ -95,9 +95,9 @@ public class SensorListFragment extends SherlockFragment {
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		View view = inflater.inflate(R.layout.listofsensors, container, false);
-		redrawDevices(view);
-		return view;
+		mView = inflater.inflate(R.layout.listofsensors, container, false);
+		redrawDevices();
+		return mView;
 	}
 
 	@Override
@@ -177,7 +177,7 @@ public class SensorListFragment extends SherlockFragment {
 		mReloadFacilitiesTask.execute(adapterId);
 	}
 	
-	public boolean redrawDevices(View view) {
+	public boolean redrawDevices() {
 		if (isPaused) {
 			mActivity.setSupportProgressBarIndeterminateVisibility(false);
 			return false;
@@ -188,9 +188,9 @@ public class SensorListFragment extends SherlockFragment {
 		Log.d(TAG, "LifeCycle: redraw devices list start");
 
 
-		mSensorList = (ListView) view.findViewById(R.id.listviewofsensors);
-		TextView nosensor = (TextView) view.findViewById(R.id.nosensorlistview);
-		ImageView addsensor = (ImageView) view.findViewById(R.id.nosensorlistview_addsensor_image);
+		mSensorList = (ListView) mView.findViewById(R.id.listviewofsensors);
+		TextView nosensor = (TextView) mView.findViewById(R.id.nosensorlistview);
+		ImageView addsensor = (ImageView) mView.findViewById(R.id.nosensorlistview_addsensor_image);
 		
 		addsensor.setOnClickListener(new OnClickListener() {
 			
