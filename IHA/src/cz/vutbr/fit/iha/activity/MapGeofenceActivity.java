@@ -30,7 +30,9 @@ public class MapGeofenceActivity extends SherlockFragmentActivity {
 
 			// Sets the map type to be "hybrid"
 			mMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
-			mMap.setMyLocationEnabled(true);
+		
+			// it needs permission in manifest
+//			mMap.setMyLocationEnabled(true);
 		}
 	}
 	
