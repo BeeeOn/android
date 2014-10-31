@@ -269,7 +269,6 @@ public class NavDrawerMenu {
 	
 	protected void changeCustomView(boolean closeDrawer) { //(CustomView customView, boolean closeDrawer){
 		//((MainActivity) mActivity).setActiveCustomView(param);
-		mActivity.setCustomViewLayout();
 		mActivity.setActiveCustomViewID("tempValeu");
 		mActivity.redrawCustomView();
 		
@@ -295,7 +294,6 @@ public class NavDrawerMenu {
 		mActiveLocationId = location.getId();
 
 		// TODO
-		mActivity.setLocationLayout();
 		mActivity.setActiveAdapterID(mActiveAdapterId);
 		mActivity.setActiveLocationID(mActiveLocationId);
 		mActivity.redrawDevices();

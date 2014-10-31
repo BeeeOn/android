@@ -247,7 +247,12 @@ public class MainActivity extends BaseApplicationActivity {
 		mListDevices.setAdapterID(mActiveAdapterId);
 		mNavDrawerMenu.setLocationID(mActiveLocationId);
 		mNavDrawerMenu.setAdapterID(mActiveAdapterId);
-		setLocationLayout();
+		
+		// set location layout
+		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+		ft.replace(R.id.content_frame, mListDevices,"Loc");
+		ft.commit();
+
 		return true;
 	}
 	
@@ -257,16 +262,10 @@ public class MainActivity extends BaseApplicationActivity {
 	}
 	
 	public void redrawCustomView() {
-		
-	}
-	
-	public void setLocationLayout() {
-		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-		ft.replace(R.id.content_frame, mListDevices,"Loc");
-		ft.commit();
-	}
-	
-	public void setCustomViewLayout() {
+		//return mCustomView.redrawCustomView();
+		mCustomView = new CustomViewFragment(this);
+
+		// set custom view layout
 		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
 		ft.replace(R.id.content_frame, mCustomView,"Cus");
 		ft.commit();
