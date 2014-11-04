@@ -9,6 +9,7 @@ import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -41,6 +42,8 @@ import cz.vutbr.fit.iha.base.TrackDialogFragment;
 import cz.vutbr.fit.iha.controller.Controller;
 import cz.vutbr.fit.iha.pair.InitializeFacilityPair;
 import cz.vutbr.fit.iha.util.Log;
+import cz.vutbr.fit.iha.util.TimeHelper;
+import cz.vutbr.fit.iha.util.UnitsHelper;
 
 public class SetupSensorFragmentDialog extends TrackDialogFragment {
 
@@ -286,8 +289,21 @@ public class SetupSensorFragmentDialog extends TrackDialogFragment {
 			}
 		});
 		
+		
+		// UserSettings can be null when user is not logged in!
+		SharedPreferences prefs = mController.getUserSettings();
+		
+		TimeHelper timeHelper = (prefs == null) ? null : new TimeHelper(prefs);
+		
 		// Set involved time of facility
-		time.setText(String.format("%s %s", time.getText(), mNewFacilities.get(0).getInvolveTime()));
+		if (timeHelper != null) {
+			Facility facility = mNewFacilities.get(0);
+			Adapter adapter = mController.getAdapter(facility.getAdapterId());
+			time.setText(String.format("%s %s", time.getText(), timeHelper.formatLastUpdate(facility.getInvolveTime(), adapter)));
+		}
+		
+		// Set involved time of facility
+		
 
 		// Set adapter to ListView and to Spinner
 		mListOfName.setAdapter(listAdapter);

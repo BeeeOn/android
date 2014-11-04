@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 
@@ -360,10 +361,8 @@ public class XmlParsers {
 			facility.setLocationId(getSecureAttrValue(Xconstants.LID));
 			facility.setRefresh(RefreshInterval.fromInterval(getSecureInt(getSecureAttrValue(Xconstants.REFRESH))));
 			facility.setBattery(getSecureInt(getSecureAttrValue(Xconstants.BATTERY)));
-			facility.setLastUpdate(new DateTime((long) getSecureInt(getSecureAttrValue(Xconstants.TIME)) * 1000)); // TODO:
-																													// check
-																													// this
-			facility.setInvolveTime(new DateTime((long) getSecureInt(getSecureAttrValue(Xconstants.INVOLVED)) * 1000).toString());
+			facility.setLastUpdate(new DateTime((long) getSecureInt(getSecureAttrValue(Xconstants.TIME)) * 1000, DateTimeZone.UTC));
+			facility.setInvolveTime(new DateTime((long) getSecureInt(getSecureAttrValue(Xconstants.INVOLVED)) * 1000, DateTimeZone.UTC));
 			facility.setNetworkQuality(getSecureInt(getSecureAttrValue(Xconstants.RSSI)));
 
 			mParser.nextTag(); // part tag

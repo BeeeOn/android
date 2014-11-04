@@ -56,5 +56,17 @@ public class TimeHelper {
 		DateTimeZone zone = getDateTimeZone(adapter);
 		return fmt.withZone(zone).print(lastUpdate);
 	}
+	
+	/**
+	 * Return string with formatted date time
+	 * 
+	 * @param time
+	 * @param adapter
+	 * 			If null, then it will use local timezone
+	 * @return
+	 */
+	public String formatTime(DateTime time, Adapter adapter) {
+		return DateTimeFormat.shortDateTime().withZone(getDateTimeZone(adapter)).print(time);
+	}
 
 }

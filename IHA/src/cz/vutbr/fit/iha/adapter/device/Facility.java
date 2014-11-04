@@ -24,7 +24,7 @@ public class Facility implements IIdentifier {
 	protected RefreshInterval mRefreshInterval;
 	protected int mBattery;
 	protected boolean mLogging;
-	protected String mInvolveTime = "";
+	protected DateTime mInvolveTime;
 	protected int mNetworkQuality;	
 	protected DateTime mLastUpdate;
 	protected final List<Device> mDevices = new ArrayList<Device>();
@@ -199,7 +199,7 @@ public class Facility implements IIdentifier {
 	 * 
 	 * @return involve time
 	 */
-	public String getInvolveTime() {
+	public DateTime getInvolveTime() {
 		return mInvolveTime;
 	}
 
@@ -208,7 +208,7 @@ public class Facility implements IIdentifier {
 	 * 
 	 * @param involved
 	 */
-	public void setInvolveTime(String involved) {
+	public void setInvolveTime(DateTime involved) {
 		mInvolveTime = involved;
 	}
 
