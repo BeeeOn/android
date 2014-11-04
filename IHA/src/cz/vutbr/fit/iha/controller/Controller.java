@@ -792,7 +792,7 @@ public final class Controller {
 		if (mDemoMode) {
 			return false;
 		}
-
+		//FIXME: hack -> true if you want to add virtual sensor
 		boolean result = false;
 
 		try {

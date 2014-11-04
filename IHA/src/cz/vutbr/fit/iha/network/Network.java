@@ -222,7 +222,7 @@ public class Network {
 		HostnameVerifier hv = HttpsURLConnection.getDefaultHostnameVerifier();
 		socket.setSoTimeout(10000);
 		SSLSession s = socket.getSession();
-		// FIXME
+		// FIXME: nobody knows why
 		if (!s.isValid())
 			Log.e(TAG, "Socket is NOT valid!!!!");
 
@@ -332,10 +332,6 @@ public class Network {
 	}
 
 	private ParsedMessage doRequest(String messageToSend) {
-		// NOTE: This is not needed anymore isAvailible should check this too
-		// if (!checkBackgroundData())
-		// mLog.e("backgrounddata");
-
 		if (!isAvailable())
 			throw new NoConnectionException();
 

@@ -99,12 +99,13 @@ public class XmlParsers {
 			}
 			throw new IllegalArgumentException("Invalid State value");
 		}
-	}	
+	}
 
 	// exception
 	private static final String mComVerMisExcMessage = "Communication version mismatch.";
 
-	public XmlParsers() {}
+	public XmlParsers() {
+	}
 
 	/**
 	 * Method parse message (XML) in communication version
@@ -120,8 +121,8 @@ public class XmlParsers {
 	 *             means XML version mismatch exception
 	 * @throws ParseException
 	 */
-	public ParsedMessage parseCommunication(String xmlInput, boolean namespace) throws XmlPullParserException,
-			IOException, ComVerMisException, XmlVerMisException, ParseException {
+	public ParsedMessage parseCommunication(String xmlInput, boolean namespace) throws XmlPullParserException, IOException, ComVerMisException,
+			XmlVerMisException, ParseException {
 		mParser = Xml.newPullParser();
 		mParser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, namespace);
 
@@ -184,6 +185,12 @@ public class XmlParsers {
 			result.data = parseCondition();
 			break;
 		case DEVICES:
+			//FIXME: this is workaround in v2.2 before demo, will be do better in v2.3
+			String aid = getSecureAttrValue(Xconstants.AID);
+			if(aid.length() > 0){
+				result.data = parseNewFacilities(aid);
+			}
+			else
 			// List<Facility>
 			result.data = parseFacilities();
 			break;
@@ -251,7 +258,7 @@ public class XmlParsers {
 
 		return result;
 	}
-	
+
 	/**
 	 * Method parse inner part of False message
 	 * 
@@ -275,7 +282,7 @@ public class XmlParsers {
 	// ////////////////////////////////////////////////////////////////////////////////////////////////////////
 	// /////////////////////////////////DEVICES, LOGS/////////////////////////////////////////////////////////
 	// ////////////////////////////////////////////////////////////////////////////////////////////////////////
-	
+
 	/**
 	 * Method parse inner part of AllDevice message (old:XML message (using parsePartial()))
 	 * 
@@ -286,8 +293,7 @@ public class XmlParsers {
 	 *             means XML version mismatch exception
 	 * @throws ParseException
 	 */
-	private List<Facility> parseAllFacilities() throws XmlPullParserException, IOException, XmlVerMisException,
-			ParseException {
+	private List<Facility> parseAllFacilities() throws XmlPullParserException, IOException, XmlVerMisException, ParseException {
 
 		String aid = getSecureAttrValue(Xconstants.AID);
 		mParser.nextTag(); // dev start tag
@@ -301,7 +307,21 @@ public class XmlParsers {
 
 		return result;
 	}
-	
+
+	// FIXME: this is hotfix for v2.2 before demo, it will be rearanged in v2.3
+	private List<Facility> parseNewFacilities(String aid) throws XmlPullParserException, IOException, XmlVerMisException, ParseException {
+		mParser.nextTag(); // dev start tag
+
+		List<Facility> result = new ArrayList<Facility>();
+
+		if (!mParser.getName().equals(Xconstants.DEVICE))
+			return result;
+
+		parseInnerDevs(result, aid);
+
+		return result;
+	}
+
 	/**
 	 * Method parse inner part of Device message (old:Partial message (set of device's tag))
 	 * 
@@ -330,7 +350,7 @@ public class XmlParsers {
 
 		return result;
 	}
-	
+
 	private void parseInnerDevs(List<Facility> result, String aid) throws XmlPullParserException, IOException {
 		do { // go through devs (facilities)
 			Facility facility = new Facility();
@@ -340,8 +360,10 @@ public class XmlParsers {
 			facility.setLocationId(getSecureAttrValue(Xconstants.LID));
 			facility.setRefresh(RefreshInterval.fromInterval(getSecureInt(getSecureAttrValue(Xconstants.REFRESH))));
 			facility.setBattery(getSecureInt(getSecureAttrValue(Xconstants.BATTERY)));
-			facility.setLastUpdate(new DateTime((long) getSecureInt(getSecureAttrValue(Xconstants.TIME)) * 1000)); // TODO: check this
-			// facility.setInvolveTime(new DateTime((long)getSecureInt(getSecureAttrValue(Xconstants.INVOLVED))*1000)); //FIXME: in property
+			facility.setLastUpdate(new DateTime((long) getSecureInt(getSecureAttrValue(Xconstants.TIME)) * 1000)); // TODO:
+																													// check
+																													// this
+			facility.setInvolveTime(new DateTime((long) getSecureInt(getSecureAttrValue(Xconstants.INVOLVED)) * 1000).toString());
 			facility.setNetworkQuality(getSecureInt(getSecureAttrValue(Xconstants.RSSI)));
 
 			mParser.nextTag(); // part tag
@@ -356,12 +378,11 @@ public class XmlParsers {
 			} while (mParser.nextTag() != XmlPullParser.END_TAG && !mParser.getName().equals(Xconstants.DEVICE));
 
 			result.add(facility);
-//			mParser.nextTag(); // dev endtag
 
 		} while (mParser.nextTag() != XmlPullParser.END_TAG
 				&& (!mParser.getName().equals(Xconstants.ADAPTER) || !mParser.getName().equals(Xconstants.COM_ROOT)));
 	}
-	
+
 	/**
 	 * Method parse inner part of LogData (old:Content.log) message
 	 * 
@@ -371,21 +392,21 @@ public class XmlParsers {
 	 */
 	private DeviceLog parseLogData() throws XmlPullParserException, IOException {
 		mParser.nextTag();
-//		mParser.require(XmlPullParser.START_TAG, ns, Xconstants.ROW); // strict solution
-		
+		// mParser.require(XmlPullParser.START_TAG, ns, Xconstants.ROW); // strict solution
+
 		DeviceLog log = new DeviceLog();
-		
+
 		if (!mParser.getName().equals(Xconstants.ROW))
 			return log;
 
 		do {
 			try {
-				
+
 				String repeat = getSecureAttrValue(Xconstants.REPEAT);
 				String interval = getSecureAttrValue(Xconstants.INTERVAL);
-				
+
 				DataRow row = log.new DataRow(readText(Xconstants.ROW));
-				
+
 				if (!repeat.isEmpty() && !interval.isEmpty()) {
 					log.addValueInterval(row, Integer.parseInt(repeat), Integer.parseInt(interval));
 				} else {
@@ -402,7 +423,7 @@ public class XmlParsers {
 	// ////////////////////////////////////////////////////////////////////////////////////////////////////////
 	// /////////////////////////////////ROOMS//////////////////////////////////////////////////////////////////
 	// ////////////////////////////////////////////////////////////////////////////////////////////////////////
-	
+
 	/**
 	 * Method parse inner part of Rooms message
 	 * 
@@ -424,7 +445,7 @@ public class XmlParsers {
 					getSecureInt(getSecureAttrValue(Xconstants.TYPE)));
 			location.setAdapterId(aid);
 			result.add(location);
-			
+
 			mParser.nextTag(); // loc end tag
 
 		} while (mParser.nextTag() != XmlPullParser.END_TAG && !mParser.getName().equals(Xconstants.COM_ROOT));
@@ -435,7 +456,7 @@ public class XmlParsers {
 	// ////////////////////////////////////////////////////////////////////////////////////////////////////////
 	// /////////////////////////////////VIEWS//////////////////////////////////////////////////////////////////
 	// ////////////////////////////////////////////////////////////////////////////////////////////////////////
-	
+
 	/**
 	 * Method parse inner part of ViewList message
 	 * 
@@ -458,11 +479,10 @@ public class XmlParsers {
 		return result;
 	}
 
-
 	// ////////////////////////////////////////////////////////////////////////////////////////////////////////
 	// /////////////////////////////////ACCOUNTS///////////////////////////////////////////////////////////////
 	// ////////////////////////////////////////////////////////////////////////////////////////////////////////
-	
+
 	/**
 	 * Method parse inner part of ConAccountList message
 	 * 
@@ -489,7 +509,7 @@ public class XmlParsers {
 
 		return result;
 	}
-	
+
 	// ////////////////////////////////////////////////////////////////////////////////////////////////////////
 	// /////////////////////////////////NOTIFICATIONS//////////////////////////////////////////////////////////
 	// ////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -533,7 +553,9 @@ public class XmlParsers {
 						ActionType settings = ActionType.fromValue(Xconstants.SETTINGS + getSecureAttrValue(Xconstants.TYPE));
 						action.setSlaveType(settings);
 						String stngs = settings.getValue();
-						if (stngs.equals(Xconstants.ADAPTER) || stngs.equals(Xconstants.LOCATION)) { // open adapter or location settings
+						if (stngs.equals(Xconstants.ADAPTER) || stngs.equals(Xconstants.LOCATION)) { // open adapter or
+																										// location
+																										// settings
 							action.setAdapterId(getSecureAttrValue(Xconstants.AID));
 							if (stngs.equals(Xconstants.LOCATION)) // open location settings
 								action.setLocationId(getSecureAttrValue(Xconstants.LID));
@@ -573,7 +595,7 @@ public class XmlParsers {
 
 		return result;
 	}
-	
+
 	// ////////////////////////////////////////////////////////////////////////////////////////////////////////
 	// /////////////////////////////////NOTIFICATIONS//////////////////////////////////////////////////////////
 	// ////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -584,8 +606,9 @@ public class XmlParsers {
 		// mParser.require(XmlPullParser.START_TAG, ns, Xconstants.CONDITION);
 		ArrayList<ConditionFunction> funcs = new ArrayList<ConditionFunction>();
 
-		Condition condition = new Condition("0", "none", getSecureAttrValue(Xconstants.TYPE), funcs); // hope this add filled list
-																							// to object
+		Condition condition = new Condition("0", "none", getSecureAttrValue(Xconstants.TYPE), funcs); // hope this add
+																										// filled list
+		// to object
 		mParser.nextTag(); // func tag
 
 		do {
@@ -721,7 +744,7 @@ public class XmlParsers {
 
 		return condition;
 	}
-	
+
 	// ////////////////////////////////////////////////////////////////////////////////////////////////////////
 	// /////////////////////////////////ACTIONS,CONDITIONS/////////////////////////////////////////////////////
 	// ////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -796,7 +819,7 @@ public class XmlParsers {
 
 		return result;
 	}
-	
+
 	// ///////////////////////////////// OTHER
 
 	/**
@@ -813,7 +836,7 @@ public class XmlParsers {
 		} else {
 			iType = Integer.parseInt(sType);
 		}
-		
+
 		return DeviceType.createDeviceFromType(iType);
 	}
 
@@ -1054,7 +1077,7 @@ public class XmlParsers {
 			adapters = parseAdaptersReady();
 		} catch (Exception e) {
 			Log.e(TAG, e.getMessage(), e);
-		} finally { 
+		} finally {
 			try {
 				if (stream != null)
 					stream.close();
