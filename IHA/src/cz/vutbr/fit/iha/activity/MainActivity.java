@@ -48,6 +48,8 @@ public class MainActivity extends BaseApplicationActivity {
 
 	private static final String ADD_ADAPTER_TAG = "addAdapterDialog";
 	private static final String ADD_SENSOR_TAG = "addSensorDialog";
+	private static final String FRG_TAG_LOC = "Loc";
+	private static final String FRG_TAG_CUS = "Cus";
 	private NavDrawerMenu mNavDrawerMenu;
 	private SensorListFragment mListDevices;
 	private CustomViewFragment mCustomView;
@@ -122,7 +124,12 @@ public class MainActivity extends BaseApplicationActivity {
 		}
 
 		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-		ft.replace(R.id.content_frame, mListDevices, "Loc");
+		if(mActiveLocationId != null){
+			ft.replace(R.id.content_frame, mListDevices, FRG_TAG_LOC);
+		}
+		else if(mActiveCustomViewId != null) {
+			ft.replace(R.id.content_frame, mCustomView, FRG_TAG_CUS);
+		}
 		ft.commit();
 	}
 
@@ -240,7 +247,7 @@ public class MainActivity extends BaseApplicationActivity {
 
 		// set location layout
 		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-		ft.replace(R.id.content_frame, mListDevices, "Loc");
+		ft.replace(R.id.content_frame, mListDevices, FRG_TAG_LOC);
 		ft.commit();
 
 		return true;
@@ -257,7 +264,7 @@ public class MainActivity extends BaseApplicationActivity {
 
 		// set custom view layout
 		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-		ft.replace(R.id.content_frame, mCustomView, "Cus");
+		ft.replace(R.id.content_frame, mCustomView, FRG_TAG_CUS);
 		ft.commit();
 	}
 
@@ -373,10 +380,12 @@ public class MainActivity extends BaseApplicationActivity {
 		mActiveLocationId = locationId;
 		mNavDrawerMenu.setLocationID(locationId);
 		mListDevices.setLocationID(locationId);
+		mActiveCustomViewId = null;
 	}
 
 	public void setActiveCustomViewID(String customViewId) {
 		mActiveCustomViewId = customViewId;
+		mActiveLocationId = null;
 	}
 
 }
