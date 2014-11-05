@@ -100,9 +100,9 @@ public class MainActivity extends BaseApplicationActivity {
 		mNavDrawerMenu.openMenu();
 		mNavDrawerMenu.setIsDrawerOpen(mIsDrawerOpen);
 		
-		mListDevices = new SensorListFragment(this);
+		mListDevices = new SensorListFragment();
 		
-		mCustomView = new CustomViewFragment(this);
+		mCustomView = new CustomViewFragment();
 		
 		if (savedInstanceState != null) {
 			mIsDrawerOpen = savedInstanceState.getBoolean(IS_DRAWER_OPEN);
@@ -241,7 +241,7 @@ public class MainActivity extends BaseApplicationActivity {
 	}
 
 	public boolean redrawDevices() {
-		mListDevices = new SensorListFragment(this); 
+		mListDevices = new SensorListFragment(); 
 		mListDevices.setIsPaused(isPaused);
 		mListDevices.setLocationID(mActiveLocationId);
 		mListDevices.setAdapterID(mActiveAdapterId);
@@ -263,7 +263,7 @@ public class MainActivity extends BaseApplicationActivity {
 	
 	public void redrawCustomView() {
 		//return mCustomView.redrawCustomView();
-		mCustomView = new CustomViewFragment(this);
+		mCustomView = new CustomViewFragment();
 
 		// set custom view layout
 		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();

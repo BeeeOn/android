@@ -2,6 +2,7 @@ package cz.vutbr.fit.iha.activity.fragment;
 
 import java.lang.reflect.Field;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
@@ -13,6 +14,7 @@ import com.actionbarsherlock.app.SherlockFragment;
 
 import cz.vutbr.fit.iha.R;
 import cz.vutbr.fit.iha.ViewPagerAdapter;
+import cz.vutbr.fit.iha.activity.MainActivity;
 
 public class MainFragment extends SherlockFragment {
 
@@ -22,7 +24,7 @@ public class MainFragment extends SherlockFragment {
 		// Locate the ViewPager in viewpager_main.xml
 		ViewPager mViewPager = (ViewPager) view.findViewById(R.id.viewPager);
 		// Set the ViewPagerAdapter into ViewPager
-		mViewPager.setAdapter(new ViewPagerAdapter(getChildFragmentManager(), getSherlockActivity()));
+		mViewPager.setAdapter(new ViewPagerAdapter(getChildFragmentManager(), getSherlockActivity().getApplicationContext()));
 		mViewPager.setCurrentItem(0);
 		return view;
 	}

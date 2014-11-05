@@ -30,7 +30,6 @@ import com.jjoe64.graphview.GraphViewSeries.GraphViewSeriesStyle;
 import com.jjoe64.graphview.LineGraphView;
 
 import cz.vutbr.fit.iha.R;
-import cz.vutbr.fit.iha.activity.MainActivity;
 import cz.vutbr.fit.iha.adapter.Adapter;
 import cz.vutbr.fit.iha.adapter.device.Device;
 import cz.vutbr.fit.iha.adapter.device.DeviceLog;
@@ -45,8 +44,6 @@ import cz.vutbr.fit.iha.util.UnitsHelper;
 
 public class CustomViewFragment extends SherlockFragment {
 	
-	private MainActivity mActivity;
-	
 	private SparseArray<List<Device>> mDevices = new SparseArray<List<Device>>();
 	private SparseArray<List<DeviceLog>> mLogs = new SparseArray<List<DeviceLog>>();
 	private SparseArray<GraphView> mGraphs = new SparseArray<GraphView>();
@@ -57,24 +54,23 @@ public class CustomViewFragment extends SherlockFragment {
 	
 	private static final String TAG = CustomViewFragment.class.getSimpleName();
 	
-	private Context mContext;
 	private Controller mController;
-	
-	
-	public CustomViewFragment(MainActivity context) {
-		mActivity = context;
-		mController = Controller.getInstance(mActivity.getApplicationContext());
-	}
+	private Context mContext;
+
 	public CustomViewFragment() {}
 
 	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		
+		mContext = getActivity().getApplicationContext();
+		mController = Controller.getInstance(mContext);
+	}
+	
+	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.graphofsensors, container, false);
-		
-		if (mContext == null) {
-			mContext = getActivity().getApplicationContext();
-		}
-		
+
 		mLayout = (LinearLayout) view.findViewById(R.id.container);
 
 		prepareDevices();

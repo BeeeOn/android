@@ -4,9 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
@@ -33,13 +31,10 @@ import cz.vutbr.fit.iha.activity.dialog.AddSensorFragmentDialog;
 import cz.vutbr.fit.iha.adapter.Adapter;
 import cz.vutbr.fit.iha.adapter.device.Device;
 import cz.vutbr.fit.iha.adapter.device.Facility;
-import cz.vutbr.fit.iha.adapter.location.Location;
 import cz.vutbr.fit.iha.arrayadapter.SensorListAdapter;
 import cz.vutbr.fit.iha.asynctask.CallbackTask.CallbackTaskListener;
 import cz.vutbr.fit.iha.asynctask.ReloadFacilitiesTask;
 import cz.vutbr.fit.iha.controller.Controller;
-import cz.vutbr.fit.iha.menu.NavDrawerMenu;
-import cz.vutbr.fit.iha.persistence.Persistence;
 import cz.vutbr.fit.iha.thread.ToastMessageThread;
 import cz.vutbr.fit.iha.util.Log;
 
@@ -71,22 +66,22 @@ public class SensorListFragment extends SherlockFragment {
 	//
 	private ActionMode mMode;
 	
-	public SensorListFragment(MainActivity context) {
-		mActivity = context;
-		mController = Controller.getInstance(mActivity.getApplicationContext());
-	}
-	
 	public SensorListFragment () {
 	}
 
+	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		Log.d(TAG, "onCreate()");
 		ready = false;
-		if(mActivity==null)
-			mActivity = (MainActivity) getSherlockActivity();
-		if(mController == null)
-			mController = Controller.getInstance( mActivity);
+
+		if (!(getSherlockActivity() instanceof MainActivity)) {
+			throw new IllegalStateException("Activity holding SensorListFragment must be MainActivity");
+		}
+		
+		mActivity = (MainActivity) getSherlockActivity();
+		mController = Controller.getInstance( mActivity);
+		
 		if (savedInstanceState != null) {
 			mActiveLocationId = savedInstanceState.getString(LCTN);
 			mActiveAdapterId = savedInstanceState.getString(ADAPTER_ID);

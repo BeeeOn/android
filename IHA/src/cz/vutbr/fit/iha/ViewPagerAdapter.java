@@ -13,12 +13,10 @@ public class ViewPagerAdapter extends FragmentPagerAdapter {
 	// Declare the number of ViewPager pages
 	final int PAGE_COUNT = 2;
 	private String titles[];
-	private Context mCtx;
 
-	public ViewPagerAdapter(FragmentManager fm, Context ctx) {
+	public ViewPagerAdapter(FragmentManager fm, Context context) {
 		super(fm);
-		titles = ctx.getResources().getStringArray(R.array.title_of_main_fragments);
-		mCtx = ctx;
+		titles = context.getResources().getStringArray(R.array.title_of_main_fragments);
 	}
 
 	@Override
@@ -27,12 +25,12 @@ public class ViewPagerAdapter extends FragmentPagerAdapter {
 
 		// Open FragmentTab2.java
 		case 0:
-			SensorListFragment fragmenttab2 = new SensorListFragment((MainActivity) mCtx);
+			SensorListFragment fragmenttab2 = new SensorListFragment();
 			return fragmenttab2;
 
 			// Open FragmentTab1.java
 		case 1:
-			CustomViewFragment fragmenttab1 = new CustomViewFragment((MainActivity) mCtx);
+			CustomViewFragment fragmenttab1 = new CustomViewFragment();
 			return fragmenttab1;
 
 		}
