@@ -160,7 +160,7 @@ public class GoogleAuth extends AsyncTask<Void, Void, GoogleAuthState> {
 	protected GoogleAuthState doInBackground(Void... params) {
 		try {
 			mToken = GoogleAuthUtil.getToken(mActivity, mEmail, SCOPE);
-			Log.d(TAG, "Token");
+			Log.d(TAG, mToken);
 
 			fetchInfoFromProfileServer(mToken);
 
@@ -208,7 +208,7 @@ public class GoogleAuth extends AsyncTask<Void, Void, GoogleAuthState> {
 	public boolean doInForeground(boolean fetchPhoto) {
 		try {
 			mToken = GoogleAuthUtil.getToken(mActivity, mEmail, SCOPE);
-			Log.d(TAG, "Token");
+			Log.d(TAG, mToken);
 
 			if (fetchPhoto)
 				fetchInfoFromProfileServer(mToken);

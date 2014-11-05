@@ -272,7 +272,7 @@ public class XmlCreator {
 		StringWriter writer = new StringWriter();
 		try {
 			serializer.setOutput(writer);
-			serializer.startDocument("UTF-8", null);
+//			serializer.startDocument("UTF-8", null);
 
 			serializer.startTag(ns, Xconstants.COM_ROOT);
 			serializer.attribute(ns, Xconstants.SID, sid);
@@ -347,7 +347,7 @@ public class XmlCreator {
 		StringWriter writer = new StringWriter();
 		try {
 			serializer.setOutput(writer);
-			serializer.startDocument("UTF-8", null);
+//			serializer.startDocument("UTF-8", null);
 
 			serializer.startTag(ns, Xconstants.COM_ROOT);
 

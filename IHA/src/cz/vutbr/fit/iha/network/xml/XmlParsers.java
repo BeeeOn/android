@@ -74,7 +74,7 @@ public class XmlParsers {
 		VIEWS("views"), //
 		TIMEZONE("timezone"), //
 		ROOMS("rooms"), //
-		ROOMCREATED("roomcreated"), //
+		ROOMCREATED("roomid"), //
 		NOTIFICATIONS("notifs"), //
 		CONDITIONCREATED("condcreated"), //
 		CONDITION("cond"), //
@@ -344,8 +344,8 @@ public class XmlParsers {
 			parseInnerDevs(result, aid);
 
 			mParser.nextTag(); // adapter endtag
-
-		} while (mParser.nextTag() != XmlPullParser.END_TAG && !mParser.getName().equals(Xconstants.COM_ROOT));
+			//FIXME: check if it works for request from multiple adapters!!!
+		} while (!mParser.getName().equals(Xconstants.COM_ROOT) && mParser.nextTag() != XmlPullParser.END_TAG);
 
 		return result;
 	}

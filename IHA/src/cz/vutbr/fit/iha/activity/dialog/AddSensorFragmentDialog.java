@@ -253,7 +253,8 @@ public class AddSensorFragmentDialog extends TrackDialogFragment {
 					// go to setup uninit sensor
 					DialogFragment newFragment = new SetupSensorFragmentDialog();
 					newFragment.show(mActivity.getSupportFragmentManager(), "SetupSensor");
-					getDialog().dismiss();
+					if(getDialog() != null)
+						getDialog().dismiss();
 
 					// Intent intent = new Intent(AddSensorFragmentDialog.this, SetupSensorActivityDialog.class);
 					// intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);

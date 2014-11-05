@@ -30,7 +30,7 @@ public class InitializeFacilityTask extends CallbackTask<InitializeFacilityPair>
 			pair.facility.setLocationId(newLocation.getId());
 		}
 
-		EnumSet<SaveDevice> what = EnumSet.of(SaveDevice.SAVE_LOCATION, SaveDevice.SAVE_NAME);
+		EnumSet<SaveDevice> what = EnumSet.of(SaveDevice.SAVE_LOCATION, SaveDevice.SAVE_NAME, SaveDevice.SAVE_INITIALIZED);
 
 		return controller.saveFacility(pair.facility, what);
 	}
