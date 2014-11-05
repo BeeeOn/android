@@ -38,6 +38,7 @@ public class AddSensorFragmentDialog extends TrackDialogFragment {
 	private CountDownTimer mCountDownTimer;
 	private boolean mTimerDone = false;
 	private boolean mTimerPause = false;
+	private boolean mFirstUse = true;
 	private int mTimerButtonSec = 30;
 	private int mIntervalToCheckUninitSensor = 2;
 	private int mTimerValue = 0;
@@ -123,7 +124,10 @@ public class AddSensorFragmentDialog extends TrackDialogFragment {
 	public void onStart() {
 		super.onStart();
 
-		doPairRequestTask(mAdapter.getId());
+		// check if some sensors isnt uninit
+		doReloadUninitializedFacilitiesTask(mAdapter.getId());
+		
+		//doPairRequestTask(mAdapter.getId());
 
 		final AlertDialog dialog = (AlertDialog) getDialog();
 		dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
@@ -261,6 +265,11 @@ public class AddSensorFragmentDialog extends TrackDialogFragment {
 					// intent.putExtras(bundle);
 					// startActivity(intent);
 					// finish();
+				} else{
+					if(mFirstUse) {
+						mFirstUse = false;
+						doPairRequestTask(mAdapter.getId());
+					}
 				}
 			}
 

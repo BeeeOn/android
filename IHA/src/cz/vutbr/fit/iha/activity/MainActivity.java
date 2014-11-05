@@ -241,6 +241,10 @@ public class MainActivity extends BaseApplicationActivity {
 				setActiveLocationID(null);
 			}
 		}
+		else {
+			mActiveAdapterId = null;
+			mActiveLocationId = null;
+		}
 	}
 
 	public boolean redrawDevices() {

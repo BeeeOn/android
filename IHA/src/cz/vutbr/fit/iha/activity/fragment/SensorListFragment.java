@@ -162,6 +162,7 @@ public class SensorListFragment extends SherlockFragment {
 			@Override
 			public void onExecute(boolean success) {
 				mActivity.redrawDevices();
+				mActivity.redrawMenu();
 				mSwipeLayout.setRefreshing(false);
 			}
 		});

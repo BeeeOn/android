@@ -51,6 +51,7 @@ public class SetupSensorFragmentDialog extends TrackDialogFragment {
 	private Controller mController;
 
 	private static final String TAG = MainActivity.class.getSimpleName();
+	private static final int NAME_ITEM_HEIGHT = 56;
 
 	private Adapter mAdapter;
 	private List<Facility> mNewFacilities;
@@ -197,7 +198,7 @@ public class SetupSensorFragmentDialog extends TrackDialogFragment {
 
 	}
 
-	private void doSaveDeviceTask(InitializeFacilityPair pair) {
+	private void doSaveDeviceTask(final InitializeFacilityPair pair) {
 		InitializeFacilityTask task = new InitializeFacilityTask(getActivity().getApplicationContext());
 		task.setListener(new CallbackTaskListener() {
 
@@ -209,6 +210,8 @@ public class SetupSensorFragmentDialog extends TrackDialogFragment {
 					Toast.makeText(mActivity, getString(success ? R.string.toast_new_sensor_added : R.string.toast_new_sensor_not_added), Toast.LENGTH_LONG).show();
 					mProgress.cancel();
 					dialog.dismiss();
+					mActivity.setActiveAdapterID(mAdapter.getId());
+					mActivity.setActiveLocationID(pair.location.getId());
 					mActivity.redrawMenu();
 					mActivity.redrawDevices();
 				}
@@ -282,6 +285,9 @@ public class SetupSensorFragmentDialog extends TrackDialogFragment {
 		// Set adapter to ListView and to Spinner
 		mListOfName.setAdapter(listAdapter);
 		mSpinner.setAdapter(dataAdapter);
+		// Set listview height, for all 
+		float scale = mActivity.getResources().getDisplayMetrics().density;
+		mListOfName.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, (int) (scale*NAME_ITEM_HEIGHT*mNewFacilities.get(0).getDevices().size())));
 	}
 
 	/**
