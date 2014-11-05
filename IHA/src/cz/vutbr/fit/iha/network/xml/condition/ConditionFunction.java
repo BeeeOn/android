@@ -1,19 +1,19 @@
 package cz.vutbr.fit.iha.network.xml.condition;
 
 //new drop
-public abstract class ConditionFunction{
+public abstract class ConditionFunction {
 
 	public enum FunctionType {
-		EQ("eq"), 		// equal
-		GT("gt"), 		// greater than
-		GE("ge"), 		// greater or equal
-		LT("lt"), 		// lesser than
-		LE("le"), 		// lesser or equal
-		BTW("btw"), 	// betqween
-		CHG("chg"), 	// change
-		DP("dp"), 		// dew point
-		TIME("time"), 	// time
-		GEO("geo"),		// geofence
+		EQ("eq"), // equal
+		GT("gt"), // greater than
+		GE("ge"), // greater or equal
+		LT("lt"), // lesser than
+		LE("le"), // lesser or equal
+		BTW("btw"), // betqween
+		CHG("chg"), // change
+		DP("dp"), // dew point
+		TIME("time"), // time
+		GEO("geo"), // geofence
 		UNKNOWN("");
 
 		private final String mValue;
@@ -34,12 +34,13 @@ public abstract class ConditionFunction{
 			throw new IllegalArgumentException("Invalid FunctionType value");
 		}
 	}
-	
-	public ConditionFunction(){}
-	
+
+	public ConditionFunction() {
+	}
+
 	protected FunctionType mType;
-	
-	public FunctionType getFuncType(){
+
+	public FunctionType getFuncType() {
 		return mType;
 	}
 }

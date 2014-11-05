@@ -31,7 +31,7 @@ public class AddAdapterFragmentDialog extends TrackDialogFragment {
 	public MainActivity mActivity;
 	private View mView;
 	private Controller mController;
-	
+
 	private RegisterAdapterTask mRegisterAdapterTask;
 
 	@Override
@@ -39,12 +39,12 @@ public class AddAdapterFragmentDialog extends TrackDialogFragment {
 		super.onCreate(savedInstanceState);
 
 		// Get activity and controller
-		mActivity = (MainActivity)getActivity();
+		mActivity = (MainActivity) getActivity();
 		mController = Controller.getInstance(mActivity.getApplicationContext());
 
 		// Use the Builder class for convenient dialog construction
 		AlertDialog.Builder builder = new AlertDialog.Builder(mActivity);
-		
+
 		LayoutInflater inflater = mActivity.getLayoutInflater();
 
 		// Get View
@@ -64,18 +64,16 @@ public class AddAdapterFragmentDialog extends TrackDialogFragment {
 				}
 			}
 		});
-		
+
 		DialogInterface.OnClickListener dummyListener = new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int id) {
-				// Do nothing here because we override this button later to change the close behaviour. 
-                // However, we still need this because on older versions of Android unless we 
-                // pass a handler the button doesn't get instantiated
+				// Do nothing here because we override this button later to change the close behaviour.
+				// However, we still need this because on older versions of Android unless we
+				// pass a handler the button doesn't get instantiated
 			}
 		};
 
-		builder.setView(mView)
-			.setPositiveButton(R.string.notification_add, dummyListener)
-			.setNegativeButton(R.string.notification_cancel, dummyListener);
+		builder.setView(mView).setPositiveButton(R.string.notification_add, dummyListener).setNegativeButton(R.string.notification_cancel, dummyListener);
 
 		// Create the AlertDialog object and return it
 		return builder.create();
@@ -91,75 +89,73 @@ public class AddAdapterFragmentDialog extends TrackDialogFragment {
 			serialNumberEdit.setText(data.getStringExtra("SCAN_RESULT"));
 
 			// And click positive button
-			AlertDialog dialog = (AlertDialog)getDialog();
+			AlertDialog dialog = (AlertDialog) getDialog();
 			dialog.getButton(Dialog.BUTTON_POSITIVE).performClick();
 		}
 	}
-	
+
 	// To prevent automatically closing of dialog - see http://stackoverflow.com/questions/2620444/how-to-prevent-a-dialog-from-closing-when-a-button-is-clicked
 	@Override
 	public void onStart() {
-	    super.onStart();
-	    
-	    final AlertDialog dialog = (AlertDialog)getDialog();
+		super.onStart();
 
-	    dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
-	    if (dialog != null) {
-	        dialog.getButton(Dialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
+		final AlertDialog dialog = (AlertDialog) getDialog();
 
-	        	@Override
-                public void onClick(View v)
-                {
-                	// Try to register adapter
-            		EditText serialNumberEdit = (EditText) mView.findViewById(R.id.addadapter_ser_num);
-            		EditText adapterNameEdit = (EditText) mView.findViewById(R.id.addadapter_text_name);
+		dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
+		if (dialog != null) {
+			dialog.getButton(Dialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
 
-            		if (serialNumberEdit.getTextSize() > 0) {
-            			String serialNumber = serialNumberEdit.getText().toString();
-            			String adapterName = adapterNameEdit.getText().toString();
-            			Log.i(TAG, "seriove cislo: " + serialNumber);
-            			
-            			doRegisterAdapterTask(new RegisterAdapterPair(serialNumber, adapterName));
-            		}
-                }
-            });
-	        
-	        dialog.getButton(Dialog.BUTTON_NEGATIVE).setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					// Try to register adapter
+					EditText serialNumberEdit = (EditText) mView.findViewById(R.id.addadapter_ser_num);
+					EditText adapterNameEdit = (EditText) mView.findViewById(R.id.addadapter_text_name);
 
-	        	@Override
-                public void onClick(View v)
-                {
-	        		// User cancelled the dialog, remember that
-	        		
-	        		// UserSettings can be null when user is not logged in!
-	        		SharedPreferences prefs = mController.getUserSettings();
-	        		if (prefs != null) {
-	        			prefs.edit().putBoolean(Constants.PERSISTENCE_PREF_IGNORE_NO_ADAPTER, true).commit();
-	        		}
-	        		
-	        		dialog.dismiss();
-                }
-            });
-	    }
+					if (serialNumberEdit.getTextSize() > 0) {
+						String serialNumber = serialNumberEdit.getText().toString();
+						String adapterName = adapterNameEdit.getText().toString();
+						Log.i(TAG, "seriove cislo: " + serialNumber);
+
+						doRegisterAdapterTask(new RegisterAdapterPair(serialNumber, adapterName));
+					}
+				}
+			});
+
+			dialog.getButton(Dialog.BUTTON_NEGATIVE).setOnClickListener(new View.OnClickListener() {
+
+				@Override
+				public void onClick(View v) {
+					// User cancelled the dialog, remember that
+
+					// UserSettings can be null when user is not logged in!
+					SharedPreferences prefs = mController.getUserSettings();
+					if (prefs != null) {
+						prefs.edit().putBoolean(Constants.PERSISTENCE_PREF_IGNORE_NO_ADAPTER, true).commit();
+					}
+
+					dialog.dismiss();
+				}
+			});
+		}
 	}
-	
+
 	@Override
 	public void onDestroy() {
 		super.onDestroy();
-		
+
 		if (mRegisterAdapterTask != null) {
 			mRegisterAdapterTask.cancel(true);
 		}
 	}
-	
+
 	public void doRegisterAdapterTask(RegisterAdapterPair pair) {
 		mRegisterAdapterTask = new RegisterAdapterTask(getActivity().getApplicationContext());
-		
+
 		mRegisterAdapterTask.setListener(new CallbackTaskListener() {
 
 			@Override
 			public void onExecute(boolean success) {
-				int messageId = success ? R.string.toast_adapter_activated : R.string.toast_adapter_activate_failed; 
+				int messageId = success ? R.string.toast_adapter_activated : R.string.toast_adapter_activate_failed;
 				Log.d(TAG, mActivity.getString(messageId));
 				new ToastMessageThread(mActivity, messageId).start();
 
@@ -171,9 +167,8 @@ public class AddAdapterFragmentDialog extends TrackDialogFragment {
 				}
 			}
 		});
-		
+
 		mRegisterAdapterTask.execute(pair);
 	}
-
 
 }

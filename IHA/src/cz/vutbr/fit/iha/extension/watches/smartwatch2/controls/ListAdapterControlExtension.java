@@ -84,8 +84,9 @@ public class ListAdapterControlExtension extends ManagedControlExtension {
 
 		data[0] = b1;
 
-		while (mAdapters == null);
-		
+		while (mAdapters == null)
+			;
+
 		showLayout(R.layout.sw2_list_title, data);
 		sendListCount(R.id.listView, mAdapters.size());
 
@@ -154,7 +155,7 @@ public class ListAdapterControlExtension extends ManagedControlExtension {
 		if (clickType == Control.Intents.CLICK_TYPE_SHORT) {
 			Intent intent;
 			String adapterId = mAdapters.get(listItem.listItemPosition).getId();
-//			mController.setActiveAdapter(adapterId, false);
+			// mController.setActiveAdapter(adapterId, false);
 			List<Location> locations = mController.getLocations(adapterId);
 			if (locations.size() < 1) {
 				intent = new Intent(mContext, TextControl.class);

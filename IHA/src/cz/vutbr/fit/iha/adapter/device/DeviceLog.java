@@ -23,8 +23,8 @@ public class DeviceLog {
 
 	private float mMinValue;
 	private float mMaxValue;
-	
-	private boolean mSorted; // optimization to sort values only when needed 
+
+	private boolean mSorted; // optimization to sort values only when needed
 
 	public class DataRowComparator implements Comparator<DataRow> {
 
@@ -34,7 +34,7 @@ public class DeviceLog {
 		}
 
 	}
-	
+
 	public enum DataType {
 		MINIMUM("min"), //
 		AVERAGE("avg"), //
@@ -109,15 +109,15 @@ public class DeviceLog {
 				throw new IllegalArgumentException();
 			}
 
-			this.dateMillis = Long.parseLong(parts[0])*1000;
+			this.dateMillis = Long.parseLong(parts[0]) * 1000;
 			this.value = Float.parseFloat(parts[1]);
 		}
 
-		public DataRow(long dateMillis, float value){
+		public DataRow(long dateMillis, float value) {
 			this.dateMillis = dateMillis;
 			this.value = value;
 		}
-		
+
 	}
 
 	/**
@@ -167,7 +167,7 @@ public class DeviceLog {
 			mSorted = true;
 			Collections.sort(mValues, new DataRowComparator());
 		}
-		
+
 		return mValues;
 	}
 
@@ -188,7 +188,7 @@ public class DeviceLog {
 	public float getMaximum() {
 		return mMaxValue;
 	}
-	
+
 	/**
 	 * Return deviation between maximum and minimum value in this log
 	 * 
@@ -207,7 +207,7 @@ public class DeviceLog {
 	 */
 	public List<DataRow> getValues(Interval interval) {
 		List<DataRow> values = new ArrayList<DataRow>();
-		
+
 		for (DataRow row : getValues()) { // getValues() does sorting
 			if (interval.contains(row.dateMillis)) {
 				values.add(row);
@@ -232,18 +232,20 @@ public class DeviceLog {
 			mMaxValue = Math.max(mMaxValue, row.value);
 		}
 	}
-	
+
 	/**
 	 * Add interval of same values.
 	 * 
 	 * @param row
-	 * @param repeat number of rows
-	 * @param interval gap in seconds
+	 * @param repeat
+	 *            number of rows
+	 * @param interval
+	 *            gap in seconds
 	 * @return
 	 */
 	public void addValueInterval(DataRow row, int repeat, int interval) {
 		for (int i = 0; i <= repeat; i++) {
-			addValue(new DataRow(row.dateMillis + i*(interval * 1000), row.value));
+			addValue(new DataRow(row.dateMillis + i * (interval * 1000), row.value));
 		}
 	}
 

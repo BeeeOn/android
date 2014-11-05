@@ -42,31 +42,29 @@ public class SensorListFragment extends SherlockFragment {
 
 	private static final String TAG = SensorListFragment.class.getSimpleName();
 	private static final String ADD_SENSOR_TAG = "addSensorDialog";
-	
+
 	private static final String LCTN = "lastlocation";
 	private static final String ADAPTER_ID = "lastAdapterId";
-	
+
 	public static boolean ready = false;
 	private SwipeRefreshLayout mSwipeLayout;
 	private MainActivity mActivity;
 	private Controller mController;
 	private ReloadFacilitiesTask mReloadFacilitiesTask;
-	
+
 	private SensorListAdapter mSensorAdapter;
 	private ListView mSensorList;
-	
+
 	private View mView;
-	
+
 	private String mActiveLocationId;
 	private String mActiveAdapterId;
 	private boolean isPaused;
-	
-	
 
 	//
 	private ActionMode mMode;
-	
-	public SensorListFragment () {
+
+	public SensorListFragment() {
 	}
 
 	@Override
@@ -78,16 +76,16 @@ public class SensorListFragment extends SherlockFragment {
 		if (!(getSherlockActivity() instanceof MainActivity)) {
 			throw new IllegalStateException("Activity holding SensorListFragment must be MainActivity");
 		}
-		
+
 		mActivity = (MainActivity) getSherlockActivity();
-		mController = Controller.getInstance( mActivity);
-		
+		mController = Controller.getInstance(mActivity);
+
 		if (savedInstanceState != null) {
 			mActiveLocationId = savedInstanceState.getString(LCTN);
 			mActiveAdapterId = savedInstanceState.getString(ADAPTER_ID);
 		}
 	}
-	
+
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		mView = inflater.inflate(R.layout.listofsensors, container, false);
@@ -101,9 +99,8 @@ public class SensorListFragment extends SherlockFragment {
 		Log.d(TAG, "onActivityCreated()");
 		ready = true;
 
-		//mActivity = (MainActivity) getActivity();
-		
-		
+		// mActivity = (MainActivity) getActivity();
+
 		// Init swipe-refreshig layout
 		mSwipeLayout = (SwipeRefreshLayout) mActivity.findViewById(R.id.swipe_container);
 		if (mSwipeLayout == null) {
@@ -113,19 +110,19 @@ public class SensorListFragment extends SherlockFragment {
 
 			@Override
 			public void onRefresh() {
-				
+
 				Adapter adapter = mController.getActiveAdapter();
 				if (adapter == null) {
 					mSwipeLayout.setRefreshing(false);
 					return;
 				}
-				
+
 				doReloadFacilitiesTask(adapter.getId());
 			}
 		});
 		mSwipeLayout.setColorScheme(R.color.iha_separator, R.color.iha_item_bg, R.color.iha_secundary_pink, R.color.iha_text_color);
 	}
-	
+
 	public void onPause() {
 		super.onPause();
 		Log.d(TAG, "onPause()");
@@ -137,29 +134,29 @@ public class SensorListFragment extends SherlockFragment {
 		Log.d(TAG, "onResume()");
 		ready = true;
 	}
-	
+
 	@Override
 	public void onDestroy() {
 		super.onDestroy();
 		Log.d(TAG, "onDestroy()");
-		
+
 		ready = false;
 
 		if (mReloadFacilitiesTask != null) {
 			mReloadFacilitiesTask.cancel(true);
 		}
 	}
-	
+
 	@Override
 	public void onSaveInstanceState(Bundle savedInstanceState) {
 		savedInstanceState.putString(ADAPTER_ID, mActiveAdapterId);
 		savedInstanceState.putString(LCTN, mActiveLocationId);
 		super.onSaveInstanceState(savedInstanceState);
 	}
-	
+
 	private void doReloadFacilitiesTask(String adapterId) {
 		mReloadFacilitiesTask = new ReloadFacilitiesTask(getActivity().getApplicationContext(), true);
-		
+
 		mReloadFacilitiesTask.setListener(new CallbackTaskListener() {
 
 			@Override
@@ -168,34 +165,33 @@ public class SensorListFragment extends SherlockFragment {
 				mSwipeLayout.setRefreshing(false);
 			}
 		});
-		
+
 		mReloadFacilitiesTask.execute(adapterId);
 	}
-	
+
 	public boolean redrawDevices() {
 		if (isPaused) {
 			mActivity.setSupportProgressBarIndeterminateVisibility(false);
 			return false;
 		}
-		
-		List<Facility> facilities = mController.getFacilitiesByLocation(mActiveAdapterId, mActiveLocationId);
-		
-		Log.d(TAG, "LifeCycle: redraw devices list start");
 
+		List<Facility> facilities = mController.getFacilitiesByLocation(mActiveAdapterId, mActiveLocationId);
+
+		Log.d(TAG, "LifeCycle: redraw devices list start");
 
 		mSensorList = (ListView) mView.findViewById(R.id.listviewofsensors);
 		TextView nosensor = (TextView) mView.findViewById(R.id.nosensorlistview);
 		ImageView addsensor = (ImageView) mView.findViewById(R.id.nosensorlistview_addsensor_image);
-		
+
 		addsensor.setOnClickListener(new OnClickListener() {
-			
+
 			@Override
 			public void onClick(View v) {
 				Log.d(TAG, "HERE ADD SENSOR +");
 				mController.unignoreUninitialized(mActiveAdapterId);
 
 				DialogFragment newFragment = new AddSensorFragmentDialog();
-			    newFragment.show(mActivity.getSupportFragmentManager(), ADD_SENSOR_TAG);
+				newFragment.show(mActivity.getSupportFragmentManager(), ADD_SENSOR_TAG);
 				return;
 			}
 		});
@@ -215,28 +211,28 @@ public class SensorListFragment extends SherlockFragment {
 
 		boolean haveDevices = devices.size() > 0;
 		boolean haveAdapters = mController.getAdapters().size() > 0;
-		
+
 		// If no sensors - display text
 		nosensor.setVisibility(haveDevices ? View.GONE : View.VISIBLE);
-		
+
 		// If we have no sensors but we have adapters - display add button
 		addsensor.setVisibility(haveDevices || !haveAdapters ? View.GONE : View.VISIBLE);
-		
+
 		// If we have adapters (but we're right now in empty room) show list so we can pull it to refresh
 		mSensorList.setVisibility(haveDevices || haveAdapters ? View.VISIBLE : View.GONE);
 
 		OnClickListener addSensorListener = new OnClickListener() {
-			
+
 			@Override
 			public void onClick(View v) {
 				Log.d(TAG, "HERE ADD SENSOR +");
 				mController.unignoreUninitialized(mActiveAdapterId);
-				
+
 				DialogFragment newFragment = new AddSensorFragmentDialog();
-			    newFragment.show(mActivity.getSupportFragmentManager(), ADD_SENSOR_TAG);
+				newFragment.show(mActivity.getSupportFragmentManager(), ADD_SENSOR_TAG);
 			}
 		};
-		
+
 		// Update list adapter
 		mSensorAdapter = new SensorListAdapter(mActivity, devices, addSensorListener);
 		mSensorList.setAdapter(mSensorAdapter);
@@ -249,17 +245,17 @@ public class SensorListFragment extends SherlockFragment {
 					if (position == mSensorAdapter.getCount() - 1) {
 						Log.d(TAG, "HERE ADD SENSOR +");
 						mController.unignoreUninitialized(mActiveAdapterId);
-	
-						//Intent intent = new Intent(LocationScreenActivity.this, AddSensorFragmentDialog.class);
-						//startActivity(intent);
-						
+
+						// Intent intent = new Intent(LocationScreenActivity.this, AddSensorFragmentDialog.class);
+						// startActivity(intent);
+
 						DialogFragment newFragment = new AddSensorFragmentDialog();
-					    newFragment.show(mActivity.getSupportFragmentManager(), ADD_SENSOR_TAG);
+						newFragment.show(mActivity.getSupportFragmentManager(), ADD_SENSOR_TAG);
 						return;
 					}
-	
+
 					Device device = mSensorAdapter.getDevice(position);
-					
+
 					Bundle bundle = new Bundle();
 					bundle.putString(SensorDetailActivity.EXTRA_ADAPTER_ID, device.getFacility().getAdapterId());
 					bundle.putString(SensorDetailActivity.EXTRA_DEVICE_ID, device.getId());
@@ -268,7 +264,7 @@ public class SensorListFragment extends SherlockFragment {
 					startActivity(intent);
 				}
 			});
-			mSensorList.setOnItemLongClickListener( new  OnItemLongClickListener() {
+			mSensorList.setOnItemLongClickListener(new OnItemLongClickListener() {
 				@Override
 				public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
 					mMode = getSherlockActivity().startActionMode(new ActionModeEditSensors());
@@ -294,15 +290,13 @@ public class SensorListFragment extends SherlockFragment {
 		isPaused = value;
 	}
 
-	
-
 	class ActionModeEditSensors implements ActionMode.Callback {
 
 		@Override
-		public boolean onCreateActionMode(ActionMode mode, Menu menu) {			
+		public boolean onCreateActionMode(ActionMode mode, Menu menu) {
 			MenuInflater inflater = mode.getMenuInflater();
-	        inflater.inflate(R.menu.sensorlist_actionmode, menu);
-	        return true;
+			inflater.inflate(R.menu.sensorlist_actionmode, menu);
+			return true;
 		}
 
 		@Override
@@ -314,15 +308,13 @@ public class SensorListFragment extends SherlockFragment {
 		@Override
 		public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
 			if (item.getTitle().equals(getResources().getString(R.string.action_hide_sensor))) {
-				 //doHideSensorTask(mDeviceHide);
-			}
-			else if (item.getTitle().equals(getResources().getString(R.string.action_hide_facility))){
+				// doHideSensorTask(mDeviceHide);
+			} else if (item.getTitle().equals(getResources().getString(R.string.action_hide_facility))) {
+				new ToastMessageThread(mActivity, R.string.toast_not_implemented).start();
+			} else if (item.getTitle().equals(getResources().getString(R.string.action_unregist_facility))) {
 				new ToastMessageThread(mActivity, R.string.toast_not_implemented).start();
 			}
-			else if (item.getTitle().equals(getResources().getString(R.string.action_unregist_facility))){
-				new ToastMessageThread(mActivity, R.string.toast_not_implemented).start();
-			}
-			 
+
 			mode.finish();
 			return true;
 		}

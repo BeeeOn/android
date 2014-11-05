@@ -34,20 +34,19 @@ import cz.vutbr.fit.iha.view.CustomViewPager;
 public class SensorDetailActivity extends BaseApplicationActivity {
 
 	private static final String TAG = SensorDetailActivity.class.getSimpleName();
-	
+
 	public static final String EXTRA_DEVICE_ID = "device_id";
 	public static final String EXTRA_ADAPTER_ID = "adapter_id";
-	
+
 	private Controller mController;
 	private List<Device> mDevices;
-	
+
 	private PagerAdapter mPagerAdapter;
 	private ViewPager mPager;
-	
+
 	private String mActiveAdapterId;
 	private String mActiveDeviceId;
 	private int mActiveDevicePosition;
-	
 
 	private ProgressDialog mProgress;
 
@@ -77,37 +76,38 @@ public class SensorDetailActivity extends BaseApplicationActivity {
 		mProgress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
 
 		Log.d(TAG, "onCreate()");
-		
-	    Bundle bundle = getIntent().getExtras();
-	    if (bundle != null) {
-	    	mActiveAdapterId = bundle.getString(EXTRA_ADAPTER_ID);
+
+		Bundle bundle = getIntent().getExtras();
+		if (bundle != null) {
+			mActiveAdapterId = bundle.getString(EXTRA_ADAPTER_ID);
 			mActiveDeviceId = bundle.getString(EXTRA_DEVICE_ID);
-	    } else {
-	    	bundle = savedInstanceState;
-	    	if (bundle != null) {
-	    		mActiveAdapterId = bundle.getString(EXTRA_ADAPTER_ID);
-	    		mActiveDeviceId = bundle.getString(EXTRA_DEVICE_ID);
-	    	}
-	    }
-		
+		} else {
+			bundle = savedInstanceState;
+			if (bundle != null) {
+				mActiveAdapterId = bundle.getString(EXTRA_ADAPTER_ID);
+				mActiveDeviceId = bundle.getString(EXTRA_DEVICE_ID);
+			}
+		}
+
 		if (mActiveAdapterId == null || mActiveDeviceId == null) {
 			Toast.makeText(this, R.string.toast_wrong_or_no_device, Toast.LENGTH_LONG).show();
 			finish();
 			return;
 		}
 	}
-	
+
 	@Override
 	protected void onAppResume() {
 		Log.d(TAG, "onAppResume()");
-		
+
 		if (mReloadFacilitiesTask == null) {
 			doReloadFacilitiesTask(mActiveAdapterId);
 		}
 	}
 
 	@Override
-	protected void onAppPause() {}
+	protected void onAppPause() {
+	}
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
@@ -129,7 +129,7 @@ public class SensorDetailActivity extends BaseApplicationActivity {
 
 	private void doReloadFacilitiesTask(final String adapterId) {
 		mReloadFacilitiesTask = new ReloadFacilitiesTask(this, mForceReload);
-		
+
 		mReloadFacilitiesTask.setListener(new CallbackTaskListener() {
 
 			@Override
@@ -148,7 +148,7 @@ public class SensorDetailActivity extends BaseApplicationActivity {
 					devices.addAll(facility.getDevices());
 				}
 				mDevices = devices;
-				
+
 				// Determine position of wanted device in this list
 				for (int i = 0; i < devices.size(); i++) {
 					if (devices.get(i).getId().equals(device.getId())) {
@@ -156,7 +156,7 @@ public class SensorDetailActivity extends BaseApplicationActivity {
 						break;
 					}
 				}
-				
+
 				Log.d(TAG, String.format("String: %s, Size: %d", mDevices.toString(), mDevices.size()));
 				initLayouts();
 			}
@@ -197,7 +197,7 @@ public class SensorDetailActivity extends BaseApplicationActivity {
 				mActiveDevicePosition = position;
 				mActiveDeviceId = mDevices.get(position).getId();
 				mActiveAdapterId = mDevices.get(position).getFacility().getAdapterId();
-				
+
 				// When changing pages, reset the action bar actions since they are dependent
 				// on which page is currently active. An alternative approach is to have each
 				// fragment expose actions itself (rather than the activity exposing actions),
@@ -217,25 +217,25 @@ public class SensorDetailActivity extends BaseApplicationActivity {
 	public void setCurrentViewPager() {
 		mPager.setCurrentItem(mActiveDevicePosition);
 	}
-	
+
 	public ProgressDialog getProgressDialog() {
 		return mProgress;
 	}
-	
+
 	@Override
 	public void onSaveInstanceState(Bundle savedInstanceState) {
-	    savedInstanceState.putString(EXTRA_ADAPTER_ID, mActiveAdapterId);
-	    savedInstanceState.putString(EXTRA_DEVICE_ID, mActiveDeviceId);
-	    
-	    // Always call the superclass so it can save the view hierarchy state
-	    super.onSaveInstanceState(savedInstanceState);
-	}	
-	
-	public void redraw(){
-		Log.d(TAG, "Start redraw ActiveDevice:"+mActiveDeviceId+" ActiveAdapter:"+mActiveAdapterId);
-		mForceReload  = true;
-		doReloadFacilitiesTask(mActiveAdapterId);
-		
+		savedInstanceState.putString(EXTRA_ADAPTER_ID, mActiveAdapterId);
+		savedInstanceState.putString(EXTRA_DEVICE_ID, mActiveDeviceId);
+
+		// Always call the superclass so it can save the view hierarchy state
+		super.onSaveInstanceState(savedInstanceState);
 	}
-	
+
+	public void redraw() {
+		Log.d(TAG, "Start redraw ActiveDevice:" + mActiveDeviceId + " ActiveAdapter:" + mActiveAdapterId);
+		mForceReload = true;
+		doReloadFacilitiesTask(mActiveAdapterId);
+
+	}
+
 }

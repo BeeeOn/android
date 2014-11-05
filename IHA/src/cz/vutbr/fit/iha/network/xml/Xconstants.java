@@ -5,7 +5,7 @@ package cz.vutbr.fit.iha.network.xml;
 
 /**
  * @author ThinkDeep
- *
+ * 
  */
 public class Xconstants {
 
@@ -60,7 +60,7 @@ public class Xconstants {
 	public static final String REFRESH = "refresh";
 	public static final String BATTERY = "bat";
 	public static final String VALUE = "val";
-	
+
 	public static final String ROW = "row";
 	public static final String INVOLVED = "inv";
 	public static final String SURNAME = "surname";

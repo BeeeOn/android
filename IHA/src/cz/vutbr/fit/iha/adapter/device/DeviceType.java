@@ -38,7 +38,7 @@ public enum DeviceType {
 	public int getTypeId() {
 		return mTypeId;
 	}
-	
+
 	public int getStringResource() {
 		return mNameRes;
 	}
@@ -54,10 +54,10 @@ public enum DeviceType {
 	public static Device createDeviceFromType(int typeId) {
 		DeviceType type = DeviceType.fromValue(typeId);
 		BaseValue value = createDeviceValue(type);
-		
+
 		return new Device(type, value);
 	}
-	
+
 	public static BaseValue createDeviceValue(DeviceType type) {
 		switch (type) {
 		case TYPE_EMISSION:

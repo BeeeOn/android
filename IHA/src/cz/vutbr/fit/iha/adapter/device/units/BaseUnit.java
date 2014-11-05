@@ -4,11 +4,11 @@ import android.content.Context;
 import cz.vutbr.fit.iha.util.SettingsItem;
 
 public abstract class BaseUnit extends SettingsItem {
-	
+
 	public class Item extends BaseItem {
 		private final int mResUnitName;
 		private final int mResUnitShortName;
-	
+
 		protected Item(int id, int resUnitName, int resUnitShortName) {
 			super(id);
 
@@ -48,7 +48,7 @@ public abstract class BaseUnit extends SettingsItem {
 		public String getStringNameUnit(Context context) {
 			return String.format("%s (%s)", getStringName(context), getStringUnit(context));
 		}
-		
+
 		/**
 		 * {@inheritDoc}
 		 */
@@ -59,5 +59,5 @@ public abstract class BaseUnit extends SettingsItem {
 	}
 
 	abstract public double convertValue(Item to, double value);
-	
+
 }

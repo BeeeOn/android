@@ -54,7 +54,7 @@ public class WidgetData {
 	private SharedPreferences getSettings(Context context) {
 		return context.getSharedPreferences(String.format(PREF_FILENAME, mWidgetId), 0);
 	}
-	
+
 	public int getWidgetId() {
 		return mWidgetId;
 	}
@@ -87,23 +87,23 @@ public class WidgetData {
 	 */
 	public void saveData(Context context) {
 		getSettings(context) //
-			.edit() //
+				.edit() //
 
-			.putInt(PREF_LAYOUT, layout) //
-			.putInt(PREF_INTERVAL, interval) //
-			.putLong(PREF_LAST_UPDATE, lastUpdate) //
-			.putBoolean(PREF_INITIALIZED, initialized) //
+				.putInt(PREF_LAYOUT, layout) //
+				.putInt(PREF_INTERVAL, interval) //
+				.putLong(PREF_LAST_UPDATE, lastUpdate) //
+				.putBoolean(PREF_INITIALIZED, initialized) //
 
-			.putString(PREF_DEVICE_ID, deviceId) //
-			.putString(PREF_DEVICE_NAME, deviceName) //
-			.putInt(PREF_DEVICE_ICON, deviceIcon) //
-			.putString(PREF_DEVICE_VALUE, deviceValue) //
-			.putString(PREF_DEVICE_ADAPTER_ID, deviceAdapterId) //
-			.putString(PREF_DEVICE_LAST_UPDATE, deviceLastUpdate) //
+				.putString(PREF_DEVICE_ID, deviceId) //
+				.putString(PREF_DEVICE_NAME, deviceName) //
+				.putInt(PREF_DEVICE_ICON, deviceIcon) //
+				.putString(PREF_DEVICE_VALUE, deviceValue) //
+				.putString(PREF_DEVICE_ADAPTER_ID, deviceAdapterId) //
+				.putString(PREF_DEVICE_LAST_UPDATE, deviceLastUpdate) //
 
-			.commit();
+				.commit();
 	}
-	
+
 	/**
 	 * Save time of last update of this widget
 	 * 
@@ -117,15 +117,15 @@ public class WidgetData {
 		this.deviceValue = lastValue;
 		this.lastUpdate = lastUpdate;
 		this.deviceLastUpdate = deviceLastUpdate;
-		
+
 		getSettings(context) //
-			.edit() //
-			.putString(PREF_DEVICE_VALUE, lastValue) //
-			.putLong(PREF_LAST_UPDATE, lastUpdate) //
-			.putString(PREF_DEVICE_LAST_UPDATE, deviceLastUpdate) //
-			.commit();
+				.edit() //
+				.putString(PREF_DEVICE_VALUE, lastValue) //
+				.putLong(PREF_LAST_UPDATE, lastUpdate) //
+				.putString(PREF_DEVICE_LAST_UPDATE, deviceLastUpdate) //
+				.commit();
 	}
-	
+
 	/**
 	 * Save layout of this widget
 	 * 
@@ -136,13 +136,12 @@ public class WidgetData {
 	 */
 	public void saveLayout(Context context, int layout) {
 		this.layout = layout;
-		
+
 		getSettings(context) //
-			.edit() //
-			.putInt(PREF_LAYOUT, layout)
-			.commit();
+				.edit() //
+				.putInt(PREF_LAYOUT, layout).commit();
 	}
-	
+
 	/**
 	 * Delete all data of this widget
 	 * 
@@ -151,25 +150,27 @@ public class WidgetData {
 	 */
 	public void deleteData(Context context) {
 		getSettings(context) //
-			.edit() //
-			.clear() //
-			.commit();
+				.edit() //
+				.clear() //
+				.commit();
 	}
 
 	/**
 	 * Checks if widget is expired and should be redrawn
 	 * 
-	 * @param now Actual SystemClock.elapsedRealtime() value to compare
+	 * @param now
+	 *            Actual SystemClock.elapsedRealtime() value to compare
 	 * @return true if next update time is in the past (or <1000ms in future from now)
 	 */
 	public boolean isExpired(long now) {
 		return (lastUpdate + interval * 1000) - now <= 1000;
 	}
-	
+
 	/**
 	 * Calculates time of next update
 	 * 
-	 * @param now Actual SystemClock.elapsedRealtime() value to compare
+	 * @param now
+	 *            Actual SystemClock.elapsedRealtime() value to compare
 	 * @return
 	 */
 	public long getNextUpdate(long now) {

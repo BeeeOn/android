@@ -215,7 +215,7 @@ public class ListSensorControlExtension extends ManagedControlExtension {
 
 		Bundle valueBundle = new Bundle();
 		valueBundle.putInt(Control.Intents.EXTRA_LAYOUT_REFERENCE, R.id.value);
-		
+
 		// UserSettings can be null when user is not logged in!
 		SharedPreferences prefs = mController.getUserSettings();
 		UnitsHelper unitsHelper = (prefs == null) ? null : new UnitsHelper(prefs, mContext);

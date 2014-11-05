@@ -4,15 +4,15 @@ import cz.vutbr.fit.iha.Constants;
 import cz.vutbr.fit.iha.R;
 
 public class EmissionUnit extends BaseUnit {
-	
+
 	public static final int DEFAULT = 0;
-	
+
 	public EmissionUnit() {
 		super();
 
 		mItems.add(this.new Item(DEFAULT, R.string.dev_emission_unit, R.string.dev_emission_unit));
 	}
-	
+
 	@Override
 	public int getDefaultId() {
 		return DEFAULT;

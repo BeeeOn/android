@@ -33,5 +33,5 @@ public final class TemperatureValue extends BaseValue {
 	public TemperatureUnit getUnit() {
 		return mUnit;
 	}
-	
+
 }

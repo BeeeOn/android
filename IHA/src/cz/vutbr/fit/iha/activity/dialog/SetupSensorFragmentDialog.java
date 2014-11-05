@@ -43,7 +43,6 @@ import cz.vutbr.fit.iha.controller.Controller;
 import cz.vutbr.fit.iha.pair.InitializeFacilityPair;
 import cz.vutbr.fit.iha.util.Log;
 import cz.vutbr.fit.iha.util.TimeHelper;
-import cz.vutbr.fit.iha.util.UnitsHelper;
 
 public class SetupSensorFragmentDialog extends TrackDialogFragment {
 
@@ -64,27 +63,25 @@ public class SetupSensorFragmentDialog extends TrackDialogFragment {
 	private Spinner mSpinner;
 	private Spinner mNewIconSpinner;
 	private Button mPosButton;
-	
-	private boolean isError = false;
 
+	private boolean isError = false;
 
 	@Override
 	public Dialog onCreateDialog(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		
+
 		// Get activity and controller
-		mActivity = (MainActivity)getActivity();
+		mActivity = (MainActivity) getActivity();
 		mController = Controller.getInstance(mActivity.getApplicationContext());
-		
-		
+
 		// Prepare progress dialog
 		mProgress = new ProgressDialog(mActivity);
 		mProgress.setMessage(getString(R.string.progress_saving_data));
 		mProgress.setCancelable(false);
 		mProgress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-				
-				// TODO: sent as parameter if we want first uninitialized device or some
-				// device with particular id
+
+		// TODO: sent as parameter if we want first uninitialized device or some
+		// device with particular id
 
 		// Use the Builder class for convenient dialog construction
 		AlertDialog.Builder builder = new AlertDialog.Builder(mActivity);
@@ -96,74 +93,70 @@ public class SetupSensorFragmentDialog extends TrackDialogFragment {
 
 		DialogInterface.OnClickListener dummyListener = new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int id) {
-				// Do nothing here because we override this button later to change the close behaviour. 
-                // However, we still need this because on older versions of Android unless we 
-                // pass a handler the button doesn't get instantiated
+				// Do nothing here because we override this button later to change the close behaviour.
+				// However, we still need this because on older versions of Android unless we
+				// pass a handler the button doesn't get instantiated
 			}
 		};
 
-		builder.setView(mView)
-			.setPositiveButton(R.string.notification_add, dummyListener)
-			.setNegativeButton(R.string.notification_cancel, dummyListener);
+		builder.setView(mView).setPositiveButton(R.string.notification_add, dummyListener).setNegativeButton(R.string.notification_cancel, dummyListener);
 
 		// Send request
 		mAdapter = mController.getActiveAdapter();
 		if (mAdapter == null) {
 			Toast.makeText(mActivity, getString(R.string.toast_no_adapter), Toast.LENGTH_LONG).show();
-			//TODO: Ukoncit dialog ?
+			// TODO: Ukoncit dialog ?
 			isError = true;
 		}
-		
-		//mUnInitDevices = new ArrayList<BaseDevice>();
+
+		// mUnInitDevices = new ArrayList<BaseDevice>();
 
 		mNewFacilities = (List<Facility>) mController.getUninitializedFacilities(mAdapter.getId(), false);
-		//TODO: add control if is only one new facility
-		
-		if (mNewFacilities.isEmpty()){
+		// TODO: add control if is only one new facility
+
+		if (mNewFacilities.isEmpty()) {
 			Toast.makeText(mActivity, getString(R.string.toast_no_uninitialized_devices), Toast.LENGTH_LONG).show();
-			//TODO: Kontrolovat jestli se dialog spustil spatne
+			// TODO: Kontrolovat jestli se dialog spustil spatne
 			isError = true;
 		}
-				
-		
-		
-		if(savedInstanceState != null) {
-			 // Neco na ulozeni ?
+
+		if (savedInstanceState != null) {
+			// Neco na ulozeni ?
 		}
-		
+
 		// Create the AlertDialog object and return it
 		return builder.create();
 
 	}
-	
+
 	@Override
 	public void onStart() {
-	    super.onStart();
-	    
-	    // Get dialog
-	    final AlertDialog dialog = (AlertDialog)getDialog();
-	    
-	    if(isError){
-	    	dialog.dismiss();
-	    	return;
-	    }
-	    dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
-	    // Init GUI elements 
-	    initViews(dialog);
-		
-	    mPosButton = dialog.getButton(Dialog.BUTTON_POSITIVE);
-	    mPosButton.setOnClickListener(new OnClickListener() {
-			
+		super.onStart();
+
+		// Get dialog
+		final AlertDialog dialog = (AlertDialog) getDialog();
+
+		if (isError) {
+			dialog.dismiss();
+			return;
+		}
+		dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
+		// Init GUI elements
+		initViews(dialog);
+
+		mPosButton = dialog.getButton(Dialog.BUTTON_POSITIVE);
+		mPosButton.setOnClickListener(new OnClickListener() {
+
 			@Override
 			public void onClick(View v) {
 				Facility newFacility = mNewFacilities.get(0);
-				
+
 				// Controll if Names arent empty
-				for (int i = 0 ; i < newFacility.getDevices().size();i++) {
+				for (int i = 0; i < newFacility.getDevices().size(); i++) {
 					// Get new names from EditText
 					String name = ((EditText) mListOfName.getChildAt(i).findViewById(R.id.setup_sensor_item_name)).getText().toString();
-					Log.d(TAG, "Name of "+i+" is"+name);
-					if(name.isEmpty()) {
+					Log.d(TAG, "Name of " + i + " is" + name);
+					if (name.isEmpty()) {
 						Toast.makeText(mActivity, getString(R.string.toast_empty_sensor_name), Toast.LENGTH_LONG).show();
 						return;
 					}
@@ -171,7 +164,7 @@ public class SetupSensorFragmentDialog extends TrackDialogFragment {
 					newFacility.getDevices().get(i).setName(name);
 
 				}
-				
+
 				Location location = null;
 				// last location - means new one
 				if (mSpinner.getSelectedItemPosition() == mSpinner.getCount() - 1) {
@@ -187,84 +180,67 @@ public class SetupSensorFragmentDialog extends TrackDialogFragment {
 				} else {
 					location = (Location) mSpinner.getSelectedItem();
 				}
-				
+
 				// Set location to facility
 				newFacility.setLocationId(location.getId());
-				
+
 				// Set that facility was initialized
 				newFacility.setInitialized(true);
 				// Show progress bar for saving
 				mProgress.show();
-				
+
 				// Save that facility
 				Log.d(TAG, String.format("InitializeFacility - facility: %s, loc: %s", newFacility.getId(), location.getId()));
-				doSaveDeviceTask(new InitializeFacilityPair(newFacility, location));				
+				doSaveDeviceTask(new InitializeFacilityPair(newFacility, location));
 			}
 		});
-	    
+
 	}
-		
+
 	private void doSaveDeviceTask(InitializeFacilityPair pair) {
 		InitializeFacilityTask task = new InitializeFacilityTask(getActivity().getApplicationContext());
 		task.setListener(new CallbackTaskListener() {
 
 			@Override
 			public void onExecute(boolean success) {
-				
+
 				AlertDialog dialog = (AlertDialog) getDialog();
-				if(dialog != null)
-				{
+				if (dialog != null) {
 					Toast.makeText(mActivity, getString(success ? R.string.toast_new_sensor_added : R.string.toast_new_sensor_not_added), Toast.LENGTH_LONG).show();
 					mProgress.cancel();
 					dialog.dismiss();
 					mActivity.redrawMenu();
 					mActivity.redrawDevices();
 				}
-				
-				/*if (success) {
-					// Successfuly saved, close this dialog and return back
-					//SetupSensorActivityDialog.this.finish();
-					// controll if more sensor is uninit
-					if (mUnInitDevices.size() > 1) {
-						Bundle bundle = new Bundle();
-						bundle.putInt(Constants.ADDSENSOR_COUNT_SENSOR, mCountOfSensor);
-						// go to setup uninit sensor
-						Intent intent = new Intent(SetupSensorActivityDialog.this, SetupSensorActivityDialog.class);
-						intent.putExtras(bundle);
-						startActivity(intent);
-						return;
-					}
-					if (mUnInitDevices.size() == 1) { // last one
-						// TODO: this only when going from loginscreen, need to review
-						if (mController.isLoggedIn()) {
-							Intent intent = new Intent(SetupSensorActivityDialog.this, LocationScreenActivity.class);
-							startActivity(intent);
-							return;
-						}
-					}
-				}*/
+
+				/*
+				 * if (success) { // Successfuly saved, close this dialog and return back //SetupSensorActivityDialog.this.finish(); // controll if more sensor is uninit if (mUnInitDevices.size() > 1)
+				 * { Bundle bundle = new Bundle(); bundle.putInt(Constants.ADDSENSOR_COUNT_SENSOR, mCountOfSensor); // go to setup uninit sensor Intent intent = new
+				 * Intent(SetupSensorActivityDialog.this, SetupSensorActivityDialog.class); intent.putExtras(bundle); startActivity(intent); return; } if (mUnInitDevices.size() == 1) { // last one //
+				 * TODO: this only when going from loginscreen, need to review if (mController.isLoggedIn()) { Intent intent = new Intent(SetupSensorActivityDialog.this, LocationScreenActivity.class);
+				 * startActivity(intent); return; } } }
+				 */
 			}
-			
+
 		});
 
 		task.execute(pair);
 	}
-		
 
 	private void initViews(AlertDialog dialog) {
 		// Get GUI elements
 		mListOfName = (ListView) dialog.findViewById(R.id.setup_sensor_name_list);
 		mSpinner = (Spinner) dialog.findViewById(R.id.addsensor_spinner_choose_location);
-		mNewLocation = (EditText)  dialog.findViewById(R.id.addsensor_new_location_name);
+		mNewLocation = (EditText) dialog.findViewById(R.id.addsensor_new_location_name);
 		TextView time = (TextView) dialog.findViewById(R.id.setup_sensor_info_text);
-				
+
 		// Create adapter for setting names of new sensors
-		SetupSensorListAdapter listAdapter = new SetupSensorListAdapter(mActivity,mNewFacilities.get(0));
+		SetupSensorListAdapter listAdapter = new SetupSensorListAdapter(mActivity, mNewFacilities.get(0));
 		CustomArrayAdapter dataAdapter = new CustomArrayAdapter(mActivity, R.layout.custom_spinner_item, getLocationsForAddSensorDialog());
-		
+
 		// Set layout to DataAdapter for locations
 		dataAdapter.setDropDownViewResource(R.layout.custom_spinner_dropdown_item);
-		
+
 		// Set listener for hide or unhide layout for add new location
 		mSpinner.setOnItemSelectedListener(new OnItemSelectedListener() {
 
@@ -288,22 +264,20 @@ public class SetupSensorFragmentDialog extends TrackDialogFragment {
 				hideInputForNewLocation(true);
 			}
 		});
-		
-		
+
 		// UserSettings can be null when user is not logged in!
 		SharedPreferences prefs = mController.getUserSettings();
-		
+
 		TimeHelper timeHelper = (prefs == null) ? null : new TimeHelper(prefs);
-		
+
 		// Set involved time of facility
 		if (timeHelper != null) {
 			Facility facility = mNewFacilities.get(0);
 			Adapter adapter = mController.getAdapter(facility.getAdapterId());
 			time.setText(String.format("%s %s", time.getText(), timeHelper.formatLastUpdate(facility.getInvolveTime(), adapter)));
 		}
-		
+
 		// Set involved time of facility
-		
 
 		// Set adapter to ListView and to Spinner
 		mListOfName.setAdapter(listAdapter);
@@ -318,7 +292,7 @@ public class SetupSensorFragmentDialog extends TrackDialogFragment {
 	public List<Location> getLocationsForAddSensorDialog() {
 		// Get locations from adapter
 		List<Location> locations = new ArrayList<Location>();
-		
+
 		Adapter adapter = mController.getActiveAdapter();
 		if (adapter != null) {
 			locations = mController.getLocations(adapter.getId());
@@ -352,56 +326,33 @@ public class SetupSensorFragmentDialog extends TrackDialogFragment {
 
 	/**
 	 * Initialize listeners
-	 *//*
-	private void initButtons() {
-		// Add sensor button - add new name and location for new sensor
-		mAddButton = (Button) findViewById(R.id.addsensor_add);
-		mAddButton.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				if (mNewDevice != null) {
-
-					Location location = null;
-					// last location - means new one
-					if (mSpinner.getSelectedItemPosition() == mSpinner.getCount() - 1) {
-
-						// check new location name
-						if (mNewLocation != null && mNewLocation.length() < 1) {
-							Toast.makeText(getApplicationContext(), getString(R.string.toast_need_sensor_location_name), Toast.LENGTH_LONG).show();
-							return;
-						}
-
-						location = new Location(Location.NEW_LOCATION_ID, mNewLocation.getText().toString(), mNewIconSpinner.getSelectedItemPosition());
-
-					} else {
-						location = (Location) mSpinner.getSelectedItem();
-					}
-
-					// check name
-					if (mName == null || mName.length() < 1) {
-						Toast.makeText(getApplicationContext(), getString(R.string.toast_need_sensor_name), Toast.LENGTH_LONG).show();
-						return;
-					}
-
-					mNewDevice.getFacility().setInitialized(true);
-					mNewDevice.setName(mName.getText().toString());
-					mNewDevice.getFacility().setLocationId(location.getId());
-
-					mProgress.show();
-
-					SaveDeviceTask task = new SaveDeviceTask();
-					task.execute(new DeviceLocationPair[] { new DeviceLocationPair(mNewDevice, location) });
-				}
-			}
-		});
-		mCancelButton = (Button) findViewById(R.id.addsensor_cancel);
-		mCancelButton.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				SetupSensorActivityDialog.this.finish();
-			}
-		});
-	}*/
+	 */
+	/*
+	 * private void initButtons() { // Add sensor button - add new name and location for new sensor mAddButton = (Button) findViewById(R.id.addsensor_add); mAddButton.setOnClickListener(new
+	 * OnClickListener() {
+	 * 
+	 * @Override public void onClick(View v) { if (mNewDevice != null) {
+	 * 
+	 * Location location = null; // last location - means new one if (mSpinner.getSelectedItemPosition() == mSpinner.getCount() - 1) {
+	 * 
+	 * // check new location name if (mNewLocation != null && mNewLocation.length() < 1) { Toast.makeText(getApplicationContext(), getString(R.string.toast_need_sensor_location_name),
+	 * Toast.LENGTH_LONG).show(); return; }
+	 * 
+	 * location = new Location(Location.NEW_LOCATION_ID, mNewLocation.getText().toString(), mNewIconSpinner.getSelectedItemPosition());
+	 * 
+	 * } else { location = (Location) mSpinner.getSelectedItem(); }
+	 * 
+	 * // check name if (mName == null || mName.length() < 1) { Toast.makeText(getApplicationContext(), getString(R.string.toast_need_sensor_name), Toast.LENGTH_LONG).show(); return; }
+	 * 
+	 * mNewDevice.getFacility().setInitialized(true); mNewDevice.setName(mName.getText().toString()); mNewDevice.getFacility().setLocationId(location.getId());
+	 * 
+	 * mProgress.show();
+	 * 
+	 * SaveDeviceTask task = new SaveDeviceTask(); task.execute(new DeviceLocationPair[] { new DeviceLocationPair(mNewDevice, location) }); } } }); mCancelButton = (Button)
+	 * findViewById(R.id.addsensor_cancel); mCancelButton.setOnClickListener(new OnClickListener() {
+	 * 
+	 * @Override public void onClick(View v) { SetupSensorActivityDialog.this.finish(); } }); }
+	 */
 
 	/**
 	 * Method take needed inputs and switch visibility
@@ -448,10 +399,6 @@ public class SetupSensorFragmentDialog extends TrackDialogFragment {
 		return false;
 	}
 
-
-	
-
-
 	class CustomArrayAdapter extends ArrayAdapter<Location> {
 
 		private List<Location> mLocations;
@@ -473,7 +420,7 @@ public class SetupSensorFragmentDialog extends TrackDialogFragment {
 
 		@Override
 		public View getDropDownView(int position, View convertView, ViewGroup parent) {
-			
+
 			LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 			View row = inflater.inflate(mDropDownLayoutResource, parent, false);
 

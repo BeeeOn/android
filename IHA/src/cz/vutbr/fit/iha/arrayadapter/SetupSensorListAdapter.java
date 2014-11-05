@@ -11,17 +11,17 @@ import cz.vutbr.fit.iha.R;
 import cz.vutbr.fit.iha.adapter.device.Facility;
 
 public class SetupSensorListAdapter extends BaseAdapter {
-	
+
 	private Context mContext;
 	private Facility mFacility;
 	private EditText mName;
-	
+
 	private LayoutInflater mInflater;
-	
-	public SetupSensorListAdapter (Context context, Facility facility) {
+
+	public SetupSensorListAdapter(Context context, Facility facility) {
 		mContext = context;
 		mFacility = facility;
-		
+
 	}
 
 	@Override
@@ -49,7 +49,7 @@ public class SetupSensorListAdapter extends BaseAdapter {
 		mName = (EditText) itemView.findViewById(R.id.setup_sensor_item_name);
 		// Set image resource by sensor type
 		img.setImageResource(mFacility.getDevices().get(position).getIconResource());
-		
+
 		// TODO Auto-generated method stub
 		return itemView;
 	}

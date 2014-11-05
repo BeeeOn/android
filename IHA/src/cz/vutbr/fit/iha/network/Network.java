@@ -73,7 +73,7 @@ public class Network {
 	 * 
 	 */
 	public enum NetworkAction {
-		REMOVE("0"),
+		REMOVE("0"), //
 		ADD("1");
 
 		private final String mAction;
@@ -153,9 +153,8 @@ public class Network {
 	}
 
 	/**
-	 * Method for sending data to server via TLS protocol using own TrustManger to be able to trust self-signed
-	 * certificates. CA certificated must be located in assets folder. If no exception is thrown, it returns server
-	 * response.
+	 * Method for sending data to server via TLS protocol using own TrustManger to be able to trust self-signed certificates. CA certificated must be located in assets folder. If no exception is
+	 * thrown, it returns server response.
 	 * 
 	 * @param appContext
 	 *            Application context to get CA certificate from assets
@@ -171,15 +170,14 @@ public class Network {
 	 * @throws NoSuchAlgorithmException
 	 *             Unknown SSL/TLS protocol or unknown TrustManager algorithm (it shouldn't occur)
 	 * @throws KeyManagementException
-	 *             general exception, thrown to indicate an exception during processing an operation concerning key
-	 *             management
+	 *             general exception, thrown to indicate an exception during processing an operation concerning key management
 	 * @throws UnknownHostException
 	 *             *IMPORTANT* Server address or hostName wasn't not found
 	 * @throws SSLHandshakeException
 	 *             *IMPORTANT* TLS handshake failed
 	 */
-	private String startCommunication(String request) throws IOException, CertificateException, KeyStoreException, NoSuchAlgorithmException,
-			KeyManagementException, UnknownHostException, SSLHandshakeException {
+	private String startCommunication(String request) throws IOException, CertificateException, KeyStoreException, NoSuchAlgorithmException, KeyManagementException, UnknownHostException,
+			SSLHandshakeException {
 
 		/*
 		 * opening CA certificate from assets
@@ -274,8 +272,7 @@ public class Network {
 	 *            true is running in same thread, false for start new thread
 	 * @param fetchPhoto
 	 *            true if want download user photo, false if not
-	 * @return true if everything Ok, false when you need to reinit object via call initGoogle(GoogleAuth), or some
-	 *         error
+	 * @return true if everything Ok, false when you need to reinit object via call initGoogle(GoogleAuth), or some error
 	 */
 	public boolean startGoogleAuth(boolean blocking, boolean fetchPhoto) {
 		if (blocking) {
@@ -347,7 +344,7 @@ public class Network {
 			if (msg.getState() == State.FALSE && ((FalseAnswer) msg.data).getErrCode() == RESIGNCODE) {
 				doResign();
 				// try it one more time
-				result = startCommunication(messageToSend.replace(Xconstants.SID + "=\"" + mSecretVar + "\"", Xconstants.SID + "=\"" + mSessionID + "\"")); //FIXME: hot fix
+				result = startCommunication(messageToSend.replace(Xconstants.SID + "=\"" + mSecretVar + "\"", Xconstants.SID + "=\"" + mSessionID + "\"")); // FIXME: hot fix
 
 				Log.d(TAG + " - fromApp", messageToSend);
 				Log.i(TAG + " - fromSrv", result);
@@ -388,8 +385,7 @@ public class Network {
 	// /////////////////////////////////////////////////////////////////////////////////
 
 	/**
-	 * Method signIn user given by its email to server, BUT before calling must call GoogleAuth to get googleToken in it
-	 * and init ActualUser
+	 * Method signIn user given by its email to server, BUT before calling must call GoogleAuth to get googleToken in it and init ActualUser
 	 * 
 	 * @param email
 	 *            of current user
@@ -560,8 +556,7 @@ public class Network {
 	 * @throws CommunicationException
 	 * @throws FalseException
 	 */
-	public boolean updateDevice(String adapterID, Device device, EnumSet<SaveDevice> toSave) throws NoConnectionException,
-			CommunicationException, FalseException {
+	public boolean updateDevice(String adapterID, Device device, EnumSet<SaveDevice> toSave) throws NoConnectionException, CommunicationException, FalseException {
 		ParsedMessage msg = doRequest(XmlCreator.createSetDev(mSessionID, adapterID, device, toSave));
 
 		if (msg.getState() == State.TRUE)
@@ -590,8 +585,7 @@ public class Network {
 	}
 
 	/**
-	 * Method make adapter to special state, when listen for new sensors (e.g. 15s) and wait if some sensors has been
-	 * shaken to connect
+	 * Method make adapter to special state, when listen for new sensors (e.g. 15s) and wait if some sensors has been shaken to connect
 	 * 
 	 * @param adapterID
 	 * @return
@@ -641,8 +635,7 @@ public class Network {
 	 */
 	// http://stackoverflow.com/a/509288/1642090
 	@SuppressWarnings("unchecked")
-	public List<Facility> getFacilities(String adapterID, List<Facility> facilities) throws NoConnectionException, CommunicationException,
-			FalseException {
+	public List<Facility> getFacilities(String adapterID, List<Facility> facilities) throws NoConnectionException, CommunicationException, FalseException {
 		ParsedMessage msg = doRequest(XmlCreator.createGetDevices(mSessionID, facilities));
 
 		if (msg.getState() == State.DEVICES)
@@ -668,12 +661,12 @@ public class Network {
 
 		return getFacilities(adapterID, list).get(0);
 	}
-	
-	public boolean updateFacility(String adapterID, Facility facility, EnumSet<SaveDevice> toSave){
-		
+
+	public boolean updateFacility(String adapterID, Facility facility, EnumSet<SaveDevice> toSave) {
+
 		ArrayList<Facility> list = new ArrayList<Facility>();
 		list.add(facility);
-		
+
 		return updateFacilities(adapterID, list, toSave);
 	}
 
@@ -709,17 +702,9 @@ public class Network {
 	 * @throws CommunicationException
 	 */
 	// http://stackoverflow.com/a/509288/1642090
-	public DeviceLog getLog(String adapterID, Device device, LogDataPair pair)
-			throws NoConnectionException, CommunicationException, FalseException {
-		String msgToSend = XmlCreator.createGetLog(
-				mSessionID,
-				adapterID,
-				device.getFacility().getAddress(),
-				device.getType().getTypeId(),
-				String.valueOf(pair.interval.getStartMillis() / 1000),
-				String.valueOf(pair.interval.getEndMillis() / 1000),
-				pair.type.getValue(),
-				pair.gap.getValue());
+	public DeviceLog getLog(String adapterID, Device device, LogDataPair pair) throws NoConnectionException, CommunicationException, FalseException {
+		String msgToSend = XmlCreator.createGetLog(mSessionID, adapterID, device.getFacility().getAddress(), device.getType().getTypeId(), String.valueOf(pair.interval.getStartMillis() / 1000),
+				String.valueOf(pair.interval.getEndMillis() / 1000), pair.type.getValue(), pair.gap.getValue());
 
 		ParsedMessage msg = doRequest(msgToSend);
 
@@ -834,8 +819,7 @@ public class Network {
 	 * @throws NoConnectionException
 	 * @throws CommunicationException
 	 */
-	public boolean addView(String viewName, int iconID, List<Device> devices) throws NoConnectionException, CommunicationException,
-			FalseException {
+	public boolean addView(String viewName, int iconID, List<Device> devices) throws NoConnectionException, CommunicationException, FalseException {
 		ParsedMessage msg = doRequest(XmlCreator.createAddView(mSessionID, viewName, iconID, devices));
 
 		if (msg.getState() == State.TRUE)
@@ -1018,8 +1002,7 @@ public class Network {
 	/**
 	 * Method set wanted time zone to server
 	 * 
-	 * @NOTE using difference from GMT (UTC+0),
-	 *       https://merlin.fit.vutbr.cz/wiki-iot/index.php/Smarthome_cloud#SetTimeZone
+	 * @NOTE using difference from GMT (UTC+0), https://merlin.fit.vutbr.cz/wiki-iot/index.php/Smarthome_cloud#SetTimeZone
 	 * @param differenceToGMT
 	 * @return
 	 * @throws NoConnectionException
@@ -1099,8 +1082,7 @@ public class Network {
 	// /////////////////////////////////////////////////////////////////////////////////
 
 	public Condition setCondition(Condition condition) {
-		String messageToSend = XmlCreator.createAddCondition(mSessionID, condition.getName(),
-				XmlCreator.ConditionType.fromValue(condition.getType()), condition.getFuncs());
+		String messageToSend = XmlCreator.createAddCondition(mSessionID, condition.getName(), XmlCreator.ConditionType.fromValue(condition.getType()), condition.getFuncs());
 		ParsedMessage msg = doRequest(messageToSend);
 
 		if (msg.getState() == State.CONDITIONCREATED) {
@@ -1143,8 +1125,7 @@ public class Network {
 	}
 
 	public boolean updateCondition(Condition condition) {
-		String messageToSend = XmlCreator.createSetCondition(mSessionID, condition.getName(),
-				XmlCreator.ConditionType.fromValue(condition.getType()), condition.getId(), condition.getFuncs());
+		String messageToSend = XmlCreator.createSetCondition(mSessionID, condition.getName(), XmlCreator.ConditionType.fromValue(condition.getType()), condition.getId(), condition.getFuncs());
 		ParsedMessage msg = doRequest(messageToSend);
 
 		if (msg.getState() == State.TRUE)

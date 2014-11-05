@@ -17,25 +17,25 @@ public class MapGeofenceActivity extends SherlockFragmentActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_map_geofence);
-		
+
 		setSupportProgressBarIndeterminate(true);
 		setProgressBarIndeterminateVisibility(true);
 		getSupportActionBar().setHomeButtonEnabled(true);
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 		getSupportActionBar().setIcon(R.drawable.ic_launcher_white);
-		
+
 		mMap = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map)).getMap();
 
 		if (mMap != null) {
 
 			// Sets the map type to be "hybrid"
 			mMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
-		
+
 			// it needs permission in manifest
-//			mMap.setMyLocationEnabled(true);
+			// mMap.setMyLocationEnabled(true);
 		}
 	}
-	
+
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {

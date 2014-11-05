@@ -4,7 +4,6 @@ import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import cz.vutbr.fit.iha.activity.MainActivity;
 import cz.vutbr.fit.iha.activity.fragment.CustomViewFragment;
 import cz.vutbr.fit.iha.activity.fragment.SensorListFragment;
 

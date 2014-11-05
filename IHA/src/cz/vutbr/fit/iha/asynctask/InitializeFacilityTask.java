@@ -9,14 +9,14 @@ import cz.vutbr.fit.iha.controller.Controller;
 import cz.vutbr.fit.iha.pair.InitializeFacilityPair;
 
 public class InitializeFacilityTask extends CallbackTask<InitializeFacilityPair> {
-	
+
 	private Context mContext;
-	
+
 	public InitializeFacilityTask(Context context) {
 		super();
 		mContext = context;
 	}
-	
+
 	@Override
 	protected Boolean doInBackground(InitializeFacilityPair pair) {
 		Controller controller = Controller.getInstance(mContext);
@@ -29,7 +29,7 @@ public class InitializeFacilityTask extends CallbackTask<InitializeFacilityPair>
 
 			pair.facility.setLocationId(newLocation.getId());
 		}
-	
+
 		EnumSet<SaveDevice> what = EnumSet.of(SaveDevice.SAVE_LOCATION, SaveDevice.SAVE_NAME);
 
 		return controller.saveFacility(pair.facility, what);

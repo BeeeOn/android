@@ -228,7 +228,7 @@ public class ListLocationControlExtension extends ManagedControlExtension {
 		Thread thLoc = new Thread(new Runnable() {
 			@Override
 			public void run() {
- 
+
 				mController.reloadLocations(mAdapterId, mForceUpdate);
 				mAdapter = mController.getAdapter(mAdapterId);
 				mLocations = mController.getLocations(mAdapterId);

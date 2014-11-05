@@ -43,25 +43,25 @@ public class AddSensorFragmentDialog extends TrackDialogFragment {
 	private int mTimerValue = 0;
 
 	private Adapter mAdapter;
-	
+
 	private PairRequestTask mPairRequestTask;
 	private ReloadUninitializedTask mReloadUninitializedTask;
 
 	private static final String TAG = MainActivity.class.getSimpleName();
-	
+
 	private static final String TIMER_VALUE_PAUSE = "AddSensorTimerValueOnPause";
-	//private static final String TIMER_BOOL_PAUSE = "AddSensorTimerBooleanOnPause";
-	
+	// private static final String TIMER_BOOL_PAUSE = "AddSensorTimerBooleanOnPause";
+
 	private static final boolean DEBUG_MODE = false;
 
 	@Override
 	public Dialog onCreateDialog(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		
+
 		// Get activity and controller
-		mActivity = (MainActivity)getActivity();
+		mActivity = (MainActivity) getActivity();
 		mController = Controller.getInstance(mActivity.getApplicationContext());
-		
+
 		// Use the Builder class for convenient dialog construction
 		AlertDialog.Builder builder = new AlertDialog.Builder(mActivity);
 
@@ -72,99 +72,94 @@ public class AddSensorFragmentDialog extends TrackDialogFragment {
 
 		DialogInterface.OnClickListener dummyListener = new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int id) {
-				// Do nothing here because we override this button later to change the close behaviour. 
-                // However, we still need this because on older versions of Android unless we 
-                // pass a handler the button doesn't get instantiated
+				// Do nothing here because we override this button later to change the close behaviour.
+				// However, we still need this because on older versions of Android unless we
+				// pass a handler the button doesn't get instantiated
 			}
 		};
 
-		builder.setView(mView)
-			.setPositiveButton(R.string.notification_add, dummyListener)
-			.setNegativeButton(R.string.notification_cancel, dummyListener);
+		builder.setView(mView).setPositiveButton(R.string.notification_add, dummyListener).setNegativeButton(R.string.notification_cancel, dummyListener);
 
 		// Send request
 		mAdapter = mController.getActiveAdapter();
 		if (mAdapter == null) {
 			Toast.makeText(mActivity, getResources().getString(R.string.toast_no_adapter), Toast.LENGTH_LONG).show();
-			//TODO: Ukoncit dialog ?
+			// TODO: Ukoncit dialog ?
 		}
-		
-		if(savedInstanceState != null) {
+
+		if (savedInstanceState != null) {
 			mTimerButtonSec = savedInstanceState.getInt(TIMER_VALUE_PAUSE);
-			Log.d(TAG, "Timer value: "+mTimerButtonSec);
+			Log.d(TAG, "Timer value: " + mTimerButtonSec);
 		}
-		
+
 		// Create the AlertDialog object and return it
 		return builder.create();
 
 	}
-	
+
 	@Override
-	public void onResume () {
+	public void onResume() {
 		super.onResume();
 		Log.d(TAG, "OnResume AddSensorDialog !!");
 	}
-	
+
 	@Override
-	public void onPause () {
+	public void onPause() {
 		super.onPause();
 		Log.d(TAG, "OnPause AddSensorDialog !!");
 		mTimerDone = true;
 		if (mCountDownTimer != null)
 			mCountDownTimer.cancel();
 	}
-	
+
 	@Override
 	public void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
 		outState.putInt(TIMER_VALUE_PAUSE, mTimerValue);
-		//outState.putBoolean(TIMER_BOOL_PAUSE, true);
+		// outState.putBoolean(TIMER_BOOL_PAUSE, true);
 	}
 
 	@Override
 	public void onStart() {
-	    super.onStart();
-	    
-	    doPairRequestTask(mAdapter.getId());
-	    
-	    final AlertDialog dialog = (AlertDialog)getDialog();
-	    dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
-	    if (dialog != null) {
-	    	mPosButton = dialog.getButton(Dialog.BUTTON_POSITIVE);
-	    	mNegButton = dialog.getButton(Dialog.BUTTON_NEGATIVE);
-	    	
-	    	mPosButton.setOnClickListener(new View.OnClickListener() {
+		super.onStart();
 
-	        	@Override
-                public void onClick(View v)
-                {
-                	// Set to RESEND pair request
-	        		
-                }
-            });
-	        mPosButton.setEnabled(false);
-	        
-	    	mNegButton.setOnClickListener(new View.OnClickListener() {
+		doPairRequestTask(mAdapter.getId());
 
-	        	@Override
-                public void onClick(View v)
-                {
-	        		if(mCountDownTimer != null)
-	        		{
-	        			mTimerDone = true;
-	        			mCountDownTimer.cancel();
-	        		}
-	        		dialog.dismiss();
-                }
-            });
-	    }
-	    
+		final AlertDialog dialog = (AlertDialog) getDialog();
+		dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
+		if (dialog != null) {
+			mPosButton = dialog.getButton(Dialog.BUTTON_POSITIVE);
+			mNegButton = dialog.getButton(Dialog.BUTTON_NEGATIVE);
+
+			mPosButton.setOnClickListener(new View.OnClickListener() {
+
+				@Override
+				public void onClick(View v) {
+					// Set to RESEND pair request
+
+				}
+			});
+			mPosButton.setEnabled(false);
+
+			mNegButton.setOnClickListener(new View.OnClickListener() {
+
+				@Override
+				public void onClick(View v) {
+					if (mCountDownTimer != null) {
+						mTimerDone = true;
+						mCountDownTimer.cancel();
+					}
+					dialog.dismiss();
+				}
+			});
+		}
+
 	}
-	
+
 	private void doPairRequestTask(String adapterId) {
 		// Send First automatic pair request
-	    mPairRequestTask = new PairRequestTask(getActivity().getApplicationContext());
-	    mPairRequestTask.setListener(new CallbackTaskListener() {
+		mPairRequestTask = new PairRequestTask(getActivity().getApplicationContext());
+		mPairRequestTask.setListener(new CallbackTaskListener() {
 
 			@Override
 			public void onExecute(boolean success) {
@@ -183,7 +178,7 @@ public class AddSensorFragmentDialog extends TrackDialogFragment {
 
 	public void resetPairButton() {
 		// Control if is dialog on screen
-		if(getDialog() == null ) 
+		if (getDialog() == null)
 			return;
 		mPosButton.setText(getResources().getString(R.string.addsensor_send_request));
 		mPosButton.setEnabled(true);
@@ -191,10 +186,9 @@ public class AddSensorFragmentDialog extends TrackDialogFragment {
 
 			@Override
 			public void onClick(View v) {
-				if(DEBUG_MODE) {
+				if (DEBUG_MODE) {
 					startTimerOnButton();
-				}
-				else {
+				} else {
 					doPairRequestTask(mAdapter.getId());
 				}
 				mPosButton.setEnabled(false);
@@ -208,10 +202,10 @@ public class AddSensorFragmentDialog extends TrackDialogFragment {
 			public void onTick(long millisUntilFinished) {
 				if (mTimerDone)
 					return;
-				
+
 				mTimerValue = (int) (millisUntilFinished / 1000);
 
-				mPosButton.setText(getResources().getString(R.string.addsensor_active_pair) + " 0:" + (( mTimerValue< 10)? "0":"" )+mTimerValue);
+				mPosButton.setText(getResources().getString(R.string.addsensor_active_pair) + " 0:" + ((mTimerValue < 10) ? "0" : "") + mTimerValue);
 				if ((millisUntilFinished / 1000) % mIntervalToCheckUninitSensor == 0) {
 					// check if are new uninit sensor
 					Log.d(TAG, "PAIR - check if some uninit sensor");
@@ -229,7 +223,7 @@ public class AddSensorFragmentDialog extends TrackDialogFragment {
 
 	public void checkUninitSensors() {
 		// Control if is dialog on screen
-		if(getDialog() == null )
+		if (getDialog() == null)
 			return;
 		// GOTO next dialog to setup sensors
 		startTimerOnButton();
@@ -245,9 +239,9 @@ public class AddSensorFragmentDialog extends TrackDialogFragment {
 				if (!success) {
 					return;
 				}
-				
+
 				List<Facility> facilities = mController.getUninitializedFacilities(mAdapter.getId(), false);
-				
+
 				if (facilities.size() > 0) {
 					if (mCountDownTimer != null) {
 						// Setup variable as true for disable timer
@@ -255,23 +249,23 @@ public class AddSensorFragmentDialog extends TrackDialogFragment {
 						mCountDownTimer.cancel();
 					}
 					Log.d(TAG, "Nasel jsem neinicializovane zarizeni !!!!");
-					
+
 					// go to setup uninit sensor
 					DialogFragment newFragment = new SetupSensorFragmentDialog();
-				    newFragment.show(mActivity.getSupportFragmentManager(), "SetupSensor");
-				    getDialog().dismiss();
-				    
-					//Intent intent = new Intent(AddSensorFragmentDialog.this, SetupSensorActivityDialog.class);
-					//intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-					//intent.putExtras(bundle);
-					//startActivity(intent);
-					//finish();
+					newFragment.show(mActivity.getSupportFragmentManager(), "SetupSensor");
+					getDialog().dismiss();
+
+					// Intent intent = new Intent(AddSensorFragmentDialog.this, SetupSensorActivityDialog.class);
+					// intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+					// intent.putExtras(bundle);
+					// startActivity(intent);
+					// finish();
 				}
 			}
-		
+
 		});
-		
+
 		mReloadUninitializedTask.execute(adapterId);
 	}
-	
+
 }

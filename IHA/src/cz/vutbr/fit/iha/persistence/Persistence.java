@@ -43,26 +43,24 @@ public class Persistence {
 	}
 
 	/** INITIALIZATION OF DEFAULT SETTINGS **/
-	
+
 	private void initItemPreference(String namespace, SettingsItem item, int id) {
 		initializePreference(namespace, item.getPersistenceKey(), String.valueOf(id));
 	}
-	
+
 	private void initItemDefaultPreference(String namespace, SettingsItem item) {
 		initItemPreference(namespace, item, item.getDefaultId());
 	}
-	
+
 	public void initializeDefaultSettings(String namespace) {
 		initItemDefaultPreference(namespace, new Timezone());
 
 		// TODO: use different units based on user Locale, right now we use default values from unit
-		/* Locale locale = Locale.getDefault();
-		if (locale.getCountry() == "en") {
-			initItemPreference(namespace, new TemperatureUnit(), TemperatureUnit.FAHRENHEIT);
-		} else {
-			initItemDefaultPreference(namespace, new TemperatureUnit());
-		} */
-		
+		/*
+		 * Locale locale = Locale.getDefault(); if (locale.getCountry() == "en") { initItemPreference(namespace, new TemperatureUnit(), TemperatureUnit.FAHRENHEIT); } else {
+		 * initItemDefaultPreference(namespace, new TemperatureUnit()); }
+		 */
+
 		initItemDefaultPreference(namespace, new TemperatureUnit());
 		initItemDefaultPreference(namespace, new NoiseUnit());
 	}
@@ -80,7 +78,7 @@ public class Persistence {
 		settings.putInt(key, value);
 		settings.commit();
 	}
-	
+
 	private void setString(String namespace, String key, String value) {
 		Editor settings = getSettings(namespace).edit();
 		settings.putString(key, value);
@@ -101,7 +99,7 @@ public class Persistence {
 	/** DATA MANIPULATION **/
 
 	// Last user
-	
+
 	public void saveLastEmail(String email) {
 		setOrRemoveString(GLOBAL, Constants.PERSISTENCE_PREF_LAST_USER, email);
 	}
@@ -109,22 +107,21 @@ public class Persistence {
 	public String loadLastEmail() {
 		return getSettings(GLOBAL).getString(Constants.PERSISTENCE_PREF_LAST_USER, "");
 	}
-	
-	
+
 	// GCM
-	
+
 	public void saveGCMRegistrationId(String regId) {
 		setString(GLOBAL, Constants.PREF_GCM_REG_ID, regId);
 	}
-	
-	public String loadGCMRegistrationId() { 
+
+	public String loadGCMRegistrationId() {
 		return getSettings(GLOBAL).getString(Constants.PREF_GCM_REG_ID, "");
 	}
-	
+
 	public void saveLastApplicationVersion(int appVersion) {
 		setInt(GLOBAL, Constants.PREF_GCM_APP_VERSION, appVersion);
 	}
-	
+
 	public int loadLastApplicationVersion() {
 		return getSettings(GLOBAL).getInt(Constants.PREF_GCM_APP_VERSION, Integer.MIN_VALUE);
 	}

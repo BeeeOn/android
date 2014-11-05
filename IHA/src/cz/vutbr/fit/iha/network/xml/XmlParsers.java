@@ -64,23 +64,23 @@ public class XmlParsers {
 	 * @author ThinkDeep
 	 */
 	public enum State {
-		ADAPTERS("adapters"),
-		ALLDEVICES("alldevs"),
-		DEVICES("devs"),
-		LOGDATA("logdata"),
-		ACCOUNTS("accounts"),
-		TRUE("true"),
-		FALSE("false"),
-		VIEWS("views"),
-		TIMEZONE("timezone"),
-		ROOMS("rooms"),
-		ROOMCREATED("roomcreated"),
-		NOTIFICATIONS("notifs"),
-		CONDITIONCREATED("condcreated"),
-		CONDITION("cond"),
-		CONDITIONS("conds"),
-		ACTIONCREATED("actcreated"),
-		ACTIONS("acts"),
+		ADAPTERS("adapters"), //
+		ALLDEVICES("alldevs"), //
+		DEVICES("devs"), //
+		LOGDATA("logdata"), //
+		ACCOUNTS("accounts"), //
+		TRUE("true"), //
+		FALSE("false"), //
+		VIEWS("views"), //
+		TIMEZONE("timezone"), //
+		ROOMS("rooms"), //
+		ROOMCREATED("roomcreated"), //
+		NOTIFICATIONS("notifs"), //
+		CONDITIONCREATED("condcreated"), //
+		CONDITION("cond"), //
+		CONDITIONS("conds"), //
+		ACTIONCREATED("actcreated"), //
+		ACTIONS("acts"), //
 		ACTION("act");
 
 		private final String mValue;
@@ -122,8 +122,7 @@ public class XmlParsers {
 	 *             means XML version mismatch exception
 	 * @throws ParseException
 	 */
-	public ParsedMessage parseCommunication(String xmlInput, boolean namespace) throws XmlPullParserException, IOException, ComVerMisException,
-			XmlVerMisException, ParseException {
+	public ParsedMessage parseCommunication(String xmlInput, boolean namespace) throws XmlPullParserException, IOException, ComVerMisException, XmlVerMisException, ParseException {
 		mParser = Xml.newPullParser();
 		mParser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, namespace);
 
@@ -186,14 +185,13 @@ public class XmlParsers {
 			result.data = parseCondition();
 			break;
 		case DEVICES:
-			//FIXME: this is workaround in v2.2 before demo, will be do better in v2.3
+			// FIXME: this is workaround in v2.2 before demo, will be do better in v2.3
 			String aid = getSecureAttrValue(Xconstants.AID);
-			if(aid.length() > 0){
+			if (aid.length() > 0) {
 				result.data = parseNewFacilities(aid);
-			}
-			else
-			// List<Facility>
-			result.data = parseFacilities();
+			} else
+				// List<Facility>
+				result.data = parseFacilities();
 			break;
 		case ALLDEVICES:
 			// List<Facility>
@@ -378,8 +376,7 @@ public class XmlParsers {
 
 			result.add(facility);
 
-		} while (mParser.nextTag() != XmlPullParser.END_TAG
-				&& (!mParser.getName().equals(Xconstants.ADAPTER) || !mParser.getName().equals(Xconstants.COM_ROOT)));
+		} while (mParser.nextTag() != XmlPullParser.END_TAG && (!mParser.getName().equals(Xconstants.ADAPTER) || !mParser.getName().equals(Xconstants.COM_ROOT)));
 	}
 
 	/**
@@ -440,8 +437,7 @@ public class XmlParsers {
 			return result;
 
 		do {
-			Location location = new Location(getSecureAttrValue(Xconstants.ID), getSecureAttrValue(Xconstants.NAME),
-					getSecureInt(getSecureAttrValue(Xconstants.TYPE)));
+			Location location = new Location(getSecureAttrValue(Xconstants.ID), getSecureAttrValue(Xconstants.NAME), getSecureInt(getSecureAttrValue(Xconstants.TYPE)));
 			location.setAdapterId(aid);
 			result.add(location);
 
@@ -524,8 +520,8 @@ public class XmlParsers {
 			return result;
 
 		do {
-			Notification ntfc = new Notification(getSecureAttrValue(Xconstants.MSGID), getSecureAttrValue(Xconstants.TIME),
-					getSecureAttrValue(Xconstants.TYPE), (getSecureAttrValue(Xconstants.READ).equals(Xconstants.ZERO)) ? false : true);
+			Notification ntfc = new Notification(getSecureAttrValue(Xconstants.MSGID), getSecureAttrValue(Xconstants.TIME), getSecureAttrValue(Xconstants.TYPE),
+					(getSecureAttrValue(Xconstants.READ).equals(Xconstants.ZERO)) ? false : true);
 
 			mParser.nextTag();
 

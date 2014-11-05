@@ -59,7 +59,7 @@ public class SensorListAdapter extends BaseAdapter {
 	public long getItemId(int position) {
 		return position; // TODO: what's this?
 	}
-	
+
 	public Device getDevice(int position) {
 		return mDevices.get(position);
 	}
@@ -78,7 +78,7 @@ public class SensorListAdapter extends BaseAdapter {
 		itemView.setClickable(false);
 		itemView.setOnClickListener(null);
 		ImageView img = (ImageView) itemView.findViewById(R.id.sensor_listview_addsensor_image);
-		if(img != null)
+		if (img != null)
 			img.setOnClickListener(mListener);
 		return itemView;
 	}
@@ -99,27 +99,25 @@ public class SensorListAdapter extends BaseAdapter {
 		Device device = mDevices.get(position);
 		Facility facility = device.getFacility();
 		Adapter adapter = mController.getAdapter(facility.getAdapterId());
-		
+
 		// UserSettings can be null when user is not logged in!
 		SharedPreferences prefs = mController.getUserSettings();
 
 		TimeHelper timeHelper = (prefs == null) ? null : new TimeHelper(prefs);
 		UnitsHelper unitsHelper = (prefs == null) ? null : new UnitsHelper(prefs, mContext);
-		
+
 		// Set the results into TextViews
 		txtTitle.setText(device.getName());
-		
+
 		if (unitsHelper != null) {
 			txtValue.setText(unitsHelper.getStringValue(device.getValue()));
 			txtUnit.setText(unitsHelper.getStringUnit(device.getValue()));
 		}
-		
+
 		if (timeHelper != null) {
-			txtTime.setText(String.format("%s %s",
-					mContext.getString(R.string.last_update),
-					timeHelper.formatLastUpdate(facility.getLastUpdate(), adapter)));
+			txtTime.setText(String.format("%s %s", mContext.getString(R.string.last_update), timeHelper.formatLastUpdate(facility.getLastUpdate(), adapter)));
 		}
-			
+
 		// Set title selected for animation if is text long
 		txtTitle.setSelected(true);
 
@@ -128,23 +126,23 @@ public class SensorListAdapter extends BaseAdapter {
 
 		// Set layout with right background
 		LinearLayout layout = (LinearLayout) itemView.findViewById(R.id.layoutofsensor);
-		
+
 		List<Device> facDevices = facility.getDevices();
 		if (facDevices.size() == 0) {
 			// This shouldn't happen
 			return itemView;
 		}
-		
+
 		boolean isFirst = facDevices.get(0).getId().equals(device.getId());
 		boolean isLast = facDevices.get(facDevices.size() - 1).getId().equals(device.getId());
 		boolean isSingle = isFirst && isLast;
 
 		float scale = parent.getResources().getDisplayMetrics().density;
-		
+
 		int left, right, top, bottom, backgroundRes;
 		left = right = (int) scale * MARGIN_LEFT_RIGHT;
 		bottom = (int) scale * MARGIN_BOTTOM;
-		
+
 		if (isSingle) {
 			// SOLO device from FACILITY
 			backgroundRes = R.drawable.iha_item_solo_bg;
@@ -162,7 +160,7 @@ public class SensorListAdapter extends BaseAdapter {
 			backgroundRes = R.drawable.iha_item_midle_bg;
 			top = (int) scale * MARGIN_TOP_M_L;
 		}
-		
+
 		layout.setBackgroundResource(backgroundRes);
 		((LayoutParams) layout.getLayoutParams()).setMargins(left, top, right, bottom);
 

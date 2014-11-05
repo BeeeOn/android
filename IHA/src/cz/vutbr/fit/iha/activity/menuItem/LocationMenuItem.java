@@ -32,7 +32,7 @@ public class LocationMenuItem extends AbstractMenuItem {
 		} else {
 			separatorView.setVisibility(View.GONE);
 		}
-		if(mActualLoc) {
+		if (mActualLoc) {
 			nameView.setTextColor(view.getResources().getColor(R.color.iha_primary_cyan));
 		}
 	}

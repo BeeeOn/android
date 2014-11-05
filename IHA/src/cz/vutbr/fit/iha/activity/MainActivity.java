@@ -76,9 +76,7 @@ public class MainActivity extends BaseApplicationActivity {
 	 */
 	private CustomAlertDialog mDialog;
 
-
 	private boolean backPressed = false;
-
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -93,21 +91,19 @@ public class MainActivity extends BaseApplicationActivity {
 		setSupportProgressBarIndeterminateVisibility(true);
 		getSupportActionBar().setIcon(R.drawable.ic_launcher_white);
 
-		
-
 		// Create NavDrawerMenu
 		mNavDrawerMenu = new NavDrawerMenu(this);
 		mNavDrawerMenu.openMenu();
 		mNavDrawerMenu.setIsDrawerOpen(mIsDrawerOpen);
-		
+
 		mListDevices = new SensorListFragment();
-		
+
 		mCustomView = new CustomViewFragment();
-		
+
 		if (savedInstanceState != null) {
 			mIsDrawerOpen = savedInstanceState.getBoolean(IS_DRAWER_OPEN);
 			mNavDrawerMenu.setIsDrawerOpen(mIsDrawerOpen);
-			
+
 			mActiveLocationId = savedInstanceState.getString(LCTN);
 			mActiveCustomViewId = savedInstanceState.getString(CSTVIEW);
 			mActiveAdapterId = savedInstanceState.getString(ADAPTER_ID);
@@ -115,9 +111,8 @@ public class MainActivity extends BaseApplicationActivity {
 			mListDevices.setAdapterID(mActiveAdapterId);
 			mNavDrawerMenu.setLocationID(mActiveLocationId);
 			mNavDrawerMenu.setAdapterID(mActiveAdapterId);
-			
-		}
-		else {
+
+		} else {
 			setActiveAdapterAndLocation();
 			mListDevices.setLocationID(mActiveLocationId);
 			mListDevices.setAdapterID(mActiveAdapterId);
@@ -125,9 +120,9 @@ public class MainActivity extends BaseApplicationActivity {
 			mNavDrawerMenu.setAdapterID(mActiveAdapterId);
 			mNavDrawerMenu.redrawMenu();
 		}
-		
+
 		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-		ft.replace(R.id.content_frame, mListDevices,"Loc");
+		ft.replace(R.id.content_frame, mListDevices, "Loc");
 		ft.commit();
 	}
 
@@ -135,9 +130,9 @@ public class MainActivity extends BaseApplicationActivity {
 		Log.d(TAG, "onAppResume()");
 
 		backPressed = false;
-		
+
 		mNavDrawerMenu.redrawMenu();
-		
+
 		checkNoAdapters();
 	}
 
@@ -156,7 +151,7 @@ public class MainActivity extends BaseApplicationActivity {
 			mDialog.dismiss();
 		}
 		// Cancel all task if same is running from Menu
-		if(mNavDrawerMenu != null)
+		if (mNavDrawerMenu != null)
 			mNavDrawerMenu.cancelAllTasks();
 	}
 
@@ -168,12 +163,10 @@ public class MainActivity extends BaseApplicationActivity {
 		return super.dispatchTouchEvent(ev);
 	}
 
-	
-
 	@Override
 	public void onBackPressed() {
 		Log.d(TAG, "BackPressed - onBackPressed " + String.valueOf(backPressed));
-		if(mNavDrawerMenu!= null) {
+		if (mNavDrawerMenu != null) {
 			if (backPressed) {
 				// second click
 				mNavDrawerMenu.secondTapBack();
@@ -186,11 +179,11 @@ public class MainActivity extends BaseApplicationActivity {
 		}
 		return;
 	}
-	
+
 	public boolean getBackPressed() {
 		return backPressed;
 	}
-	
+
 	public void setBackPressed(boolean val) {
 		backPressed = val;
 	}
@@ -203,9 +196,7 @@ public class MainActivity extends BaseApplicationActivity {
 		savedInstanceState.putBoolean(IS_DRAWER_OPEN, mNavDrawerMenu.getIsDrawerOpen());
 		super.onSaveInstanceState(savedInstanceState);
 	}
-	
 
-	
 	public void setActiveAdapterAndLocation() {
 		// Set active adapter and location
 		Adapter adapter = mController.getActiveAdapter();
@@ -214,11 +205,11 @@ public class MainActivity extends BaseApplicationActivity {
 			setActiveAdapterID(mActiveAdapterId);
 			SharedPreferences prefs = mController.getUserSettings();
 			String prefKey = Persistence.getPreferencesLastLocation(adapter.getId());
-			
+
 			// UserSettings can be null when user is not logged in!
 			String locationId = (prefs == null) ? "" : prefs.getString(prefKey, "");
 			Location location = mController.getLocation(adapter.getId(), locationId);
-			
+
 			if (location == null) {
 				// No saved or found location, set first location
 				List<Location> locations = mController.getLocations(adapter.getId());
@@ -233,62 +224,61 @@ public class MainActivity extends BaseApplicationActivity {
 			if (location != null) {
 				mActiveLocationId = location.getId();
 				setActiveLocationID(mActiveLocationId);
-			}
-			else {
+			} else {
 				setActiveLocationID(null);
 			}
 		}
 	}
 
 	public boolean redrawDevices() {
-		mListDevices = new SensorListFragment(); 
+		mListDevices = new SensorListFragment();
 		mListDevices.setIsPaused(isPaused);
 		mListDevices.setLocationID(mActiveLocationId);
 		mListDevices.setAdapterID(mActiveAdapterId);
 		mNavDrawerMenu.setLocationID(mActiveLocationId);
 		mNavDrawerMenu.setAdapterID(mActiveAdapterId);
-		
+
 		// set location layout
 		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-		ft.replace(R.id.content_frame, mListDevices,"Loc");
+		ft.replace(R.id.content_frame, mListDevices, "Loc");
 		ft.commit();
 
 		return true;
 	}
-	
+
 	public void redrawMenu() {
 		mNavDrawerMenu.redrawMenu();
 		redrawDevices();
 	}
-	
+
 	public void redrawCustomView() {
-		//return mCustomView.redrawCustomView();
+		// return mCustomView.redrawCustomView();
 		mCustomView = new CustomViewFragment();
 
 		// set custom view layout
 		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-		ft.replace(R.id.content_frame, mCustomView,"Cus");
+		ft.replace(R.id.content_frame, mCustomView, "Cus");
 		ft.commit();
 	}
-	
+
 	public void checkNoAdapters() {
 		if (mController.getActiveAdapter() == null) {
 			// UserSettings can be null when user is not logged in!
 			SharedPreferences prefs = mController.getUserSettings();
 			if (prefs != null && !prefs.getBoolean(Constants.PERSISTENCE_PREF_IGNORE_NO_ADAPTER, false)) {
 				DialogFragment newFragment = new AddAdapterFragmentDialog();
-			    newFragment.show(getSupportFragmentManager(), ADD_ADAPTER_TAG);
+				newFragment.show(getSupportFragmentManager(), ADD_ADAPTER_TAG);
 			}
 		}
 	}
 
 	public void checkNoDevices() {
-		Adapter adapter = mController.getActiveAdapter(); 
+		Adapter adapter = mController.getActiveAdapter();
 		if (adapter != null && mController.getFacilitiesByAdapter(adapter.getId()).isEmpty()) {
 			// Show activity for adding new sensor, when this adapter doesn't have any yet
 			Log.i(TAG, String.format("%s is empty", adapter.getName()));
 			DialogFragment newFragment = new AddSensorFragmentDialog();
-		    newFragment.show(getSupportFragmentManager(), ADD_SENSOR_TAG);
+			newFragment.show(getSupportFragmentManager(), ADD_SENSOR_TAG);
 		}
 	}
 
@@ -316,8 +306,8 @@ public class MainActivity extends BaseApplicationActivity {
 
 		case R.id.action_addadapter: {
 			DialogFragment newFragment = new AddAdapterFragmentDialog();
-		    newFragment.show(getSupportFragmentManager(), ADD_ADAPTER_TAG);
-		    
+			newFragment.show(getSupportFragmentManager(), ADD_ADAPTER_TAG);
+
 			break;
 		}
 		case R.id.action_settings: {
@@ -372,13 +362,11 @@ public class MainActivity extends BaseApplicationActivity {
 		dialog.show();
 	}
 
-	
-	
 	public void setActiveAdapterID(String adapterId) {
 		mActiveAdapterId = adapterId;
 		mNavDrawerMenu.setAdapterID(adapterId);
 		mListDevices.setAdapterID(adapterId);
-		
+
 	}
 
 	public void setActiveLocationID(String locationId) {
@@ -386,8 +374,8 @@ public class MainActivity extends BaseApplicationActivity {
 		mNavDrawerMenu.setLocationID(locationId);
 		mListDevices.setLocationID(locationId);
 	}
-	
-	public void setActiveCustomViewID(String customViewId)  {
+
+	public void setActiveCustomViewID(String customViewId) {
 		mActiveCustomViewId = customViewId;
 	}
 

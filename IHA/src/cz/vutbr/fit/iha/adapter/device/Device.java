@@ -6,7 +6,6 @@ package cz.vutbr.fit.iha.adapter.device;
 import cz.vutbr.fit.iha.IIdentifier;
 import cz.vutbr.fit.iha.adapter.device.values.BaseValue;
 
-
 /**
  * @brief Abstract class for all devices
  * @author Robyer
@@ -18,10 +17,10 @@ public class Device implements IIdentifier {
 	protected String mName = "";
 	protected boolean mLogging;
 	protected boolean mVisibility;
-	
+
 	public final DeviceType mType;
 	public final BaseValue mValue;
-	
+
 	/**
 	 * Class constructor
 	 */
@@ -46,11 +45,11 @@ public class Device implements IIdentifier {
 	public DeviceType getType() {
 		return mType;
 	}
-	
+
 	public BaseValue getValue() {
 		return mValue;
 	}
-	
+
 	public void setValue(String value) {
 		mValue.setValue(value);
 	}
@@ -63,7 +62,7 @@ public class Device implements IIdentifier {
 	public int getTypeStringResource() {
 		return mType.getStringResource();
 	}
-	
+
 	public int getIconResource() {
 		return mValue.getIconResource();
 	}
@@ -143,7 +142,7 @@ public class Device implements IIdentifier {
 	public void setVisibility(boolean visibility) {
 		mVisibility = visibility;
 	}
-	
+
 	@Override
 	public String toString() {
 		return getName();

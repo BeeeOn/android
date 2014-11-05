@@ -1,9 +1,6 @@
 package cz.vutbr.fit.iha.gcm;
 
-import java.util.concurrent.TimeUnit;
-
 import android.content.Context;
-import cz.vutbr.fit.iha.util.Log;
 
 public class GcmHelper {
 	public static final String TAG_GCM = "IHA_GCM";
@@ -20,17 +17,15 @@ public class GcmHelper {
 	 */
 	public static void registerGCMInBackground(Context context) {
 		// FIXME: GCM
-		//new GcmRegisterAsyncTask().execute(context, null, null);
+		// new GcmRegisterAsyncTask().execute(context, null, null);
 	}
 
 	public static void registerGCMInForeground(Context context) {
 		// FIXME: GCM
-		/*try {
-			new GcmRegisterAsyncTask().execute(context, null, null).get(MAX_MILLSEC_GCM, TimeUnit.MILLISECONDS);
-		} catch (Exception e) {
-			Log.e(TAG_GCM, "Couldnt get GCM ID in given time.");
-			e.printStackTrace();
-		}*/
+		/*
+		 * try { new GcmRegisterAsyncTask().execute(context, null, null).get(MAX_MILLSEC_GCM, TimeUnit.MILLISECONDS); } catch (Exception e) { Log.e(TAG_GCM, "Couldnt get GCM ID in given time.");
+		 * e.printStackTrace(); }
+		 */
 	}
 
 }

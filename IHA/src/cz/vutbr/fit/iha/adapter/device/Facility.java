@@ -20,17 +20,17 @@ public class Facility implements IIdentifier {
 	protected String mAddress;
 	protected String mAdapterId;
 	protected String mLocationId;
-	protected boolean mInitialized;	
+	protected boolean mInitialized;
 	protected RefreshInterval mRefreshInterval;
 	protected int mBattery;
 	protected boolean mLogging;
 	protected DateTime mInvolveTime;
-	protected int mNetworkQuality;	
+	protected int mNetworkQuality;
 	protected DateTime mLastUpdate;
 	protected final List<Device> mDevices = new ArrayList<Device>();
 
 	private boolean mSorted; // optimization to sort values only when needed
-	
+
 	/**
 	 * Class constructor
 	 */
@@ -53,7 +53,7 @@ public class Facility implements IIdentifier {
 	/**
 	 * Get last update time
 	 * 
-	 * @return 
+	 * @return
 	 */
 	public DateTime getLastUpdate() {
 		return mLastUpdate;
@@ -62,12 +62,12 @@ public class Facility implements IIdentifier {
 	/**
 	 * Setting last update time
 	 * 
-	 * @param lastUpdate 
+	 * @param lastUpdate
 	 */
 	public void setLastUpdate(DateTime lastUpdate) {
 		mLastUpdate = lastUpdate;
 	}
-	
+
 	/**
 	 * Check if actual value of this sensor is expired
 	 * 
@@ -76,7 +76,7 @@ public class Facility implements IIdentifier {
 	public boolean isExpired() {
 		return mLastUpdate.plusSeconds(mRefreshInterval.getInterval()).isBeforeNow();
 	}
-	
+
 	/**
 	 * Get refresh interval
 	 * 
@@ -259,8 +259,8 @@ public class Facility implements IIdentifier {
 	 * @return
 	 */
 	public String toDebugString() {
-		return String.format("Id: %s\nAdapter: %s\nLocation: %s\nInitialized: %s\nBattery: %s\nLogging: %s\nRefresh: %s\nDevices: %s",
-				getId(), mAdapterId, mLocationId, mInitialized, mBattery, mLogging, mRefreshInterval.getInterval(), Integer.toString(mDevices.size()));
+		return String.format("Id: %s\nAdapter: %s\nLocation: %s\nInitialized: %s\nBattery: %s\nLogging: %s\nRefresh: %s\nDevices: %s", getId(), mAdapterId, mLocationId, mInitialized, mBattery,
+				mLogging, mRefreshInterval.getInterval(), Integer.toString(mDevices.size()));
 	}
 
 	public void addDevice(Device device) {
@@ -279,7 +279,7 @@ public class Facility implements IIdentifier {
 			// Sort devices by id (= by type)
 			Collections.sort(mDevices, new IdentifierComparator());
 		}
-		
+
 		return mDevices;
 	}
 

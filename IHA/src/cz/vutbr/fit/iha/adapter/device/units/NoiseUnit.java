@@ -4,7 +4,7 @@ import cz.vutbr.fit.iha.Constants;
 import cz.vutbr.fit.iha.R;
 
 public class NoiseUnit extends BaseUnit {
-	
+
 	public static final int DECIBEL = 0;
 	public static final int BEL = 1;
 	public static final int NEPER = 2;
@@ -16,7 +16,7 @@ public class NoiseUnit extends BaseUnit {
 		mItems.add(this.new Item(BEL, R.string.dev_noise_bel_unit_full, R.string.dev_noise_bel_unit));
 		mItems.add(this.new Item(NEPER, R.string.dev_noise_neper_unit_full, R.string.dev_noise_neper_unit));
 	}
-	
+
 	@Override
 	public int getDefaultId() {
 		return DECIBEL;

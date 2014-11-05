@@ -22,39 +22,39 @@ import cz.vutbr.fit.iha.pair.LogDataPair;
 public class GraphsCustomView {
 
 	private static final String TAG = GraphsCustomView.class.getSimpleName();
-	
+
 	private Context mContext;
 	private Controller mController;
-	
+
 	private GetDeviceLogTask mGetDeviceLogTask;
-	
+
 	private SparseArray<List<Device>> mDevices = new SparseArray<List<Device>>();
 	private SparseArray<List<DeviceLog>> mLogs = new SparseArray<List<DeviceLog>>();
-	
+
 	public GraphsCustomView(Context context) {
 		mContext = context;
 		mController = Controller.getInstance(context);
 	}
-	
+
 	private void prepareDevices() {
 		for (Adapter adapter : mController.getAdapters()) {
-			for (Facility facility: mController.getFacilitiesByAdapter(adapter.getId())) {
+			for (Facility facility : mController.getFacilitiesByAdapter(adapter.getId())) {
 				for (Device device : facility.getDevices()) {
 					List<Device> devices = mDevices.get(device.getType().getTypeId());
 					if (devices == null) {
 						devices = new ArrayList<Device>();
 						mDevices.put(device.getType().getTypeId(), devices);
 					}
-					
+
 					devices.add(device);
 				}
 			}
 		}
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	private void prepareLogs() {
-		for (int i=0; i<mDevices.size(); i++) {
+		for (int i = 0; i < mDevices.size(); i++) {
 			mGetDeviceLogTask = new GetDeviceLogTask();
 			mGetDeviceLogTask.execute(mDevices.valueAt(i));
 		}
@@ -64,12 +64,12 @@ public class GraphsCustomView {
 		@Override
 		protected List<DeviceLog> doInBackground(List<Device>... devices) {
 			List<Device> list = devices[0]; // expects only one device list at a time is sent there
-			
+
 			DateTime end = DateTime.now(DateTimeZone.UTC);
 			DateTime start = end.minusWeeks(1);
-			
+
 			List<DeviceLog> logs = new ArrayList<DeviceLog>();
-			
+
 			for (Device device : list) {
 				LogDataPair pair = new LogDataPair( //
 						device, // device
@@ -77,17 +77,17 @@ public class GraphsCustomView {
 						DataType.AVERAGE, // type
 						DataInterval.HOUR); // interval
 
-				logs.add(mController.getDeviceLog(pair.device, pair));	
+				logs.add(mController.getDeviceLog(pair.device, pair));
 			}
-			
+
 			return logs;
 		}
 
 		@Override
 		protected void onPostExecute(List<DeviceLog> logs) {
-			//fillGraph(logs);
+			// fillGraph(logs);
 		}
 
 	}
-	
+
 }

@@ -7,16 +7,16 @@ import java.util.ArrayList;
 
 /**
  * @author ThinkDeep
- *
+ * 
  */
 public class Condition {
 
 	private String mId;
 	private String mName;
 	private String mType;
-	
+
 	private ArrayList<ConditionFunction> mFuncs;
-	
+
 	/**
 	 * 
 	 */
@@ -26,8 +26,8 @@ public class Condition {
 		mType = type;
 		mFuncs = functions;
 	}
-	
-	public Condition(String id, String name){
+
+	public Condition(String id, String name) {
 		mId = id;
 		mName = name;
 	}
@@ -40,7 +40,8 @@ public class Condition {
 	}
 
 	/**
-	 * @param mId the mId to set
+	 * @param mId
+	 *            the mId to set
 	 */
 	public void setId(String Id) {
 		this.mId = Id;
@@ -54,7 +55,8 @@ public class Condition {
 	}
 
 	/**
-	 * @param mName the mName to set
+	 * @param mName
+	 *            the mName to set
 	 */
 	public void setName(String Name) {
 		this.mName = Name;
@@ -68,7 +70,8 @@ public class Condition {
 	}
 
 	/**
-	 * @param mType the mType to set
+	 * @param mType
+	 *            the mType to set
 	 */
 	public void setType(String Type) {
 		this.mType = Type;
@@ -82,12 +85,11 @@ public class Condition {
 	}
 
 	/**
-	 * @param mFuncs the mFuncs to set
+	 * @param mFuncs
+	 *            the mFuncs to set
 	 */
 	public void setFuncs(ArrayList<ConditionFunction> Funcs) {
 		this.mFuncs = Funcs;
 	}
-	
-	
 
 }

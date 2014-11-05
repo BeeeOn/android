@@ -7,15 +7,16 @@ import java.util.List;
 
 /**
  * @author ThinkDeep
- *
+ * 
  */
 public class ComplexAction {
-	
+
 	private String mName;
 	private String mId;
 	private List<Action> mActions;
-	
-	public ComplexAction(){}
+
+	public ComplexAction() {
+	}
 
 	/**
 	 * 
@@ -24,7 +25,7 @@ public class ComplexAction {
 		mId = id;
 		mName = name;
 	}
-	
+
 	/**
 	 * @return the mName
 	 */
@@ -33,7 +34,8 @@ public class ComplexAction {
 	}
 
 	/**
-	 * @param mName the mName to set
+	 * @param mName
+	 *            the mName to set
 	 */
 	public void setName(String Name) {
 		this.mName = Name;
@@ -47,7 +49,8 @@ public class ComplexAction {
 	}
 
 	/**
-	 * @param mId the mId to set
+	 * @param mId
+	 *            the mId to set
 	 */
 	public void setId(String Id) {
 		this.mId = Id;
@@ -61,7 +64,8 @@ public class ComplexAction {
 	}
 
 	/**
-	 * @param mActions the mActions to set
+	 * @param mActions
+	 *            the mActions to set
 	 */
 	public void setActions(List<Action> Actions) {
 		this.mActions = Actions;

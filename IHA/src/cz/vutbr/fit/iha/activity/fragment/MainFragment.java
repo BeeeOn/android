@@ -2,7 +2,6 @@ package cz.vutbr.fit.iha.activity.fragment;
 
 import java.lang.reflect.Field;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
@@ -14,7 +13,6 @@ import com.actionbarsherlock.app.SherlockFragment;
 
 import cz.vutbr.fit.iha.R;
 import cz.vutbr.fit.iha.ViewPagerAdapter;
-import cz.vutbr.fit.iha.activity.MainActivity;
 
 public class MainFragment extends SherlockFragment {
 

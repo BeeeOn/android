@@ -2,7 +2,6 @@ package cz.vutbr.fit.iha;
 
 import java.util.Comparator;
 
-
 public class IdentifierComparator implements Comparator<IIdentifier> {
 
 	@Override

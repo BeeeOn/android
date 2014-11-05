@@ -14,12 +14,10 @@ import cz.vutbr.fit.iha.adapter.device.Device;
 import cz.vutbr.fit.iha.adapter.device.Device.SaveDevice;
 import cz.vutbr.fit.iha.adapter.device.DeviceLog;
 import cz.vutbr.fit.iha.adapter.device.DeviceLog.DataInterval;
-import cz.vutbr.fit.iha.adapter.device.DeviceLog.DataRow;
 import cz.vutbr.fit.iha.adapter.device.DeviceLog.DataType;
 import cz.vutbr.fit.iha.adapter.device.DeviceType;
 import cz.vutbr.fit.iha.adapter.device.Facility;
 import cz.vutbr.fit.iha.adapter.device.values.BaseEnumValue;
-import cz.vutbr.fit.iha.adapter.device.values.BaseValue;
 import cz.vutbr.fit.iha.adapter.location.Location;
 import cz.vutbr.fit.iha.exception.NotImplementedException;
 import cz.vutbr.fit.iha.household.ActualUser;
@@ -108,7 +106,7 @@ public final class Controller {
 
 		mDemoMode = demoMode;
 		mController = new Controller(context);
-		
+
 		if (demoMode) {
 			// Initialize default settings for demo mode, because in demo mode we don't call login()
 			mController.mPersistence.initializeDefaultSettings(mController.mHousehold.user.getEmail());
@@ -127,7 +125,7 @@ public final class Controller {
 
 	/**
 	 * Get SharedPreferences for actually logged in user
-	 *  
+	 * 
 	 * @return null if user is not logged in
 	 */
 	public SharedPreferences getUserSettings() {
@@ -298,16 +296,10 @@ public final class Controller {
 	public boolean updateFacility(Facility facility) {
 		if (mDemoMode) {
 			// In demo mode update facility devices with random values
-			/*for (BaseDevice device : facility.getDevices()) {
-				if (device instanceof SwitchDevice) {
-					((OnOffValue) device.getValue()).setActive(new Random().nextBoolean());
-				} else if (device instanceof StateDevice) {
-					((OpenClosedValue) device.getValue()).setActive(new Random().nextBoolean());
-				} else {
-					int i = new Random().nextInt(100);
-					device.getValue().setValue(i);
-				}
-			}*/
+			/*
+			 * for (BaseDevice device : facility.getDevices()) { if (device instanceof SwitchDevice) { ((OnOffValue) device.getValue()).setActive(new Random().nextBoolean()); } else if (device
+			 * instanceof StateDevice) { ((OpenClosedValue) device.getValue()).setActive(new Random().nextBoolean()); } else { int i = new Random().nextInt(100); device.getValue().setValue(i); } }
+			 */
 			return true;
 		}
 
@@ -342,7 +334,7 @@ public final class Controller {
 		if (mHousehold.activeAdapter == null) {
 			// UserSettings can be null when user is not logged in!
 			SharedPreferences prefs = getUserSettings();
-			
+
 			String lastId = (prefs == null) ? "" : prefs.getString(Constants.PERSISTENCE_PREF_ACTIVE_ADAPTER, "");
 
 			Map<String, Adapter> adapters = mHousehold.adaptersModel.getAdaptersMap();
@@ -381,7 +373,7 @@ public final class Controller {
 		Adapter adapter = adapters.get(id);
 		mHousehold.activeAdapter = adapter;
 		Log.d(TAG, String.format("Set active adapter to '%s'", adapter.getName()));
-		
+
 		// UserSettings can be null when user is not logged in!
 		SharedPreferences prefs = getUserSettings();
 		if (prefs != null) {
@@ -607,7 +599,7 @@ public final class Controller {
 
 		int iType = Integer.parseInt(ids[1]);
 		DeviceType type = DeviceType.fromValue(iType);
-		
+
 		return facility.getDeviceByType(type);
 	}
 
@@ -701,7 +693,7 @@ public final class Controller {
 		if (mDemoMode) {
 			return true;
 		}
-		
+
 		return mHousehold.facilitiesModel.saveFacility(facility, what);
 	}
 
@@ -738,36 +730,36 @@ public final class Controller {
 
 		if (mDemoMode) {
 			// Generate random values for log in demo mode
-			
+
 			double lastValue = pair.device.getValue().getDoubleValue();
 			double range = 1 + Math.log(device.getFacility().getRefresh().getInterval());
-			
+
 			long start = pair.interval.getStartMillis();
 			long end = pair.interval.getEndMillis();
-			
+
 			Random random = new Random();
-			
+
 			if (Double.isNaN(lastValue)) {
 				lastValue = random.nextDouble() * 1000;
 			}
 
 			int everyMsecs = Math.max(pair.gap.getValue(), device.getFacility().getRefresh().getInterval()) * 1000;
-			
+
 			boolean isBinary = (device.getValue() instanceof BaseEnumValue);
-			
+
 			while (start < end) {
 				if (isBinary) {
 					lastValue = random.nextBoolean() ? 1 : 0;
 				} else {
-					double addvalue = random.nextInt((int)range*1000) / 1000;
+					double addvalue = random.nextInt((int) range * 1000) / 1000;
 					boolean plus = random.nextBoolean();
 					lastValue = lastValue + addvalue * (plus ? 1 : -1);
 				}
-				
-				log.addValue(log.new DataRow(start, (float)lastValue));
+
+				log.addValue(log.new DataRow(start, (float) lastValue));
 				start += everyMsecs;
 			}
-			
+
 			return log;
 		}
 
@@ -792,7 +784,7 @@ public final class Controller {
 		if (mDemoMode) {
 			return false;
 		}
-		//FIXME: hack -> true if you want to add virtual sensor
+		// FIXME: hack -> true if you want to add virtual sensor
 		boolean result = false;
 
 		try {
@@ -890,22 +882,12 @@ public final class Controller {
 	 */
 	public String getGCMRegistrationId() {
 		return ""; // FIXME: gcmid
-		
-		/*String registrationId = mPersistence.loadGCMRegistrationId();
-		if (registrationId.isEmpty()) {
-			Log.i(TAG, "GCM: Registration not found.");
-			return "";
-		}
-		// Check if app was updated; if so, it must clear the registration ID
-		// since the existing regID is not guaranteed to work with the new
-		// app version.
-		int registeredVersion = mPersistence.loadLastApplicationVersion();
-		int currentVersion = Utils.getAppVersion(mContext);
-		if (registeredVersion != currentVersion) {
-			Log.i(TAG, "GCM: App version changed.");
-			return "";
-		}
-		return registrationId;*/
+
+		/*
+		 * String registrationId = mPersistence.loadGCMRegistrationId(); if (registrationId.isEmpty()) { Log.i(TAG, "GCM: Registration not found."); return ""; } // Check if app was updated; if so, it
+		 * must clear the registration ID // since the existing regID is not guaranteed to work with the new // app version. int registeredVersion = mPersistence.loadLastApplicationVersion(); int
+		 * currentVersion = Utils.getAppVersion(mContext); if (registeredVersion != currentVersion) { Log.i(TAG, "GCM: App version changed."); return ""; } return registrationId;
+		 */
 	}
 
 	/**

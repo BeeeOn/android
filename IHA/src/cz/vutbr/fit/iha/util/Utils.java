@@ -67,7 +67,7 @@ final public class Utils {
 
 		return false;
 	}
-	
+
 	/**
 	 * Formats double value to String without trailing zeros
 	 * 
@@ -76,10 +76,10 @@ final public class Utils {
 	 */
 	public static String formatDouble(double d) {
 		// NOTE: This trick won't work for values that can't fit into long
-		if (d == (long)d)
-			return String.format(Locale.getDefault(), "%d", (long)d);
-    	else
-    		return String.format(Locale.getDefault(), "%.2f", d);
+		if (d == (long) d)
+			return String.format(Locale.getDefault(), "%d", (long) d);
+		else
+			return String.format(Locale.getDefault(), "%.2f", d);
 	}
 
 }

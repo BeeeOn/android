@@ -247,7 +247,7 @@ public class LoginActivity extends BaseActivity {
 				e.printStackTrace();
 			}
 		}
-		
+
 		// Enable orientation change again
 		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR);
 	}
@@ -259,12 +259,11 @@ public class LoginActivity extends BaseActivity {
 		// Disable orientation change
 		int currentOrientation = getResources().getConfiguration().orientation;
 		if (currentOrientation == Configuration.ORIENTATION_LANDSCAPE) {
-		   setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE);
+			setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE);
+		} else {
+			setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT);
 		}
-		else {
-		   setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT);
-		}
-		
+
 		runOnUiThread(new Runnable() {
 			@Override
 			public void run() {

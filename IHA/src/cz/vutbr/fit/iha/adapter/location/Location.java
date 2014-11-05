@@ -71,7 +71,7 @@ public class Location implements IIdentifier, Comparable<Location> {
 	public void setAdapterId(String adapterId) {
 		mAdapterId = adapterId;
 	}
-	
+
 	public String getId() {
 		return mId;
 	}

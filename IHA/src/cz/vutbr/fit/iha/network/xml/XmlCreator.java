@@ -108,8 +108,7 @@ public class XmlCreator {
 	 * 
 	 */
 	public enum ConditionType {
-		AND("and"),
-		OR("or");
+		AND("and"), OR("or");
 
 		private final String mValue;
 
@@ -287,7 +286,7 @@ public class XmlCreator {
 				public int compare(Facility left, Facility right) {
 					return Integer.valueOf(left.getAdapterId()).compareTo(Integer.valueOf(right.getAdapterId()));
 				}
-				
+
 			});
 
 			String aid = "";
@@ -343,8 +342,7 @@ public class XmlCreator {
 	 * @return GetLog message
 	 * @since 2.2
 	 */
-	public static String createGetLog(String sid, String aid, String did, int deviceType, String from, String to,
-			String funcType, int interval) {
+	public static String createGetLog(String sid, String aid, String did, int deviceType, String from, String to, String funcType, int interval) {
 		XmlSerializer serializer = Xml.newSerializer();
 		StringWriter writer = new StringWriter();
 		try {
@@ -402,7 +400,7 @@ public class XmlCreator {
 			for (Facility facility : facilities) {
 				serializer.startTag(ns, Xconstants.DEVICE);
 
-				if(toSave.contains(SaveDevice.SAVE_INITIALIZED))
+				if (toSave.contains(SaveDevice.SAVE_INITIALIZED))
 					serializer.attribute(ns, Xconstants.INITIALIZED, (facility.isInitialized()) ? Xconstants.ONE : Xconstants.ZERO);
 				serializer.attribute(ns, Xconstants.DID, facility.getAddress());
 				if (toSave.contains(SaveDevice.SAVE_LOCATION))
@@ -418,8 +416,8 @@ public class XmlCreator {
 						serializer.attribute(ns, Xconstants.VISIBILITY, (device.isVisible()) ? Xconstants.ONE : Xconstants.ZERO);
 					if (toSave.contains(SaveDevice.SAVE_NAME))
 						serializer.attribute(ns, Xconstants.NAME, device.getName());
-//					if (toSave.contains(SaveDevice.SAVE_VALUE))
-//						serializer.attribute(ns, Xconstants.VALUE, String.valueOf(device.getValue().getDoubleValue()));
+					// if (toSave.contains(SaveDevice.SAVE_VALUE))
+					// serializer.attribute(ns, Xconstants.VALUE, String.valueOf(device.getValue().getDoubleValue()));
 
 					serializer.endTag(ns, Xconstants.PART);
 				}
@@ -467,7 +465,7 @@ public class XmlCreator {
 
 			serializer.startTag(ns, Xconstants.DEVICE);
 
-			if(toSave.contains(SaveDevice.SAVE_INITIALIZED))
+			if (toSave.contains(SaveDevice.SAVE_INITIALIZED))
 				serializer.attribute(ns, Xconstants.INITIALIZED, (facility.isInitialized()) ? Xconstants.ONE : Xconstants.ZERO);
 			// send always
 			serializer.attribute(ns, Xconstants.DID, facility.getAddress());
@@ -480,8 +478,8 @@ public class XmlCreator {
 				serializer.startTag(ns, Xconstants.PART);
 				// send always if sensor changed
 				serializer.attribute(ns, Xconstants.TYPE, Integer.toString(device.getType().getTypeId()));
-//				if (toSave.contains(SaveDevice.SAVE_VISIBILITY))
-//					serializer.attribute(ns, Xconstants.VISIBILITY, (device.getVisibility()) ? Xconstants.ONE : Xconstants.ZERO);
+				// if (toSave.contains(SaveDevice.SAVE_VISIBILITY))
+				// serializer.attribute(ns, Xconstants.VISIBILITY, (device.getVisibility()) ? Xconstants.ONE : Xconstants.ZERO);
 				if (toSave.contains(SaveDevice.SAVE_NAME))
 					serializer.attribute(ns, Xconstants.NAME, device.getName());
 				if (toSave.contains(SaveDevice.SAVE_VALUE))
@@ -514,7 +512,8 @@ public class XmlCreator {
 	 * @since 2.2
 	 */
 	public static String createSwitch(String sid, String aid, Device device) {
-		return createComAttribsVariant(Xconstants.STATE, SWITCH, Xconstants.SID, sid, Xconstants.AID, aid, Xconstants.DID, device.getFacility().getAddress(), Xconstants.DTYPE, Integer.toString(device.getType().getTypeId()), Xconstants.VALUE, String.valueOf(device.getValue().getDoubleValue()));
+		return createComAttribsVariant(Xconstants.STATE, SWITCH, Xconstants.SID, sid, Xconstants.AID, aid, Xconstants.DID, device.getFacility().getAddress(), Xconstants.DTYPE,
+				Integer.toString(device.getType().getTypeId()), Xconstants.VALUE, String.valueOf(device.getValue().getDoubleValue()));
 	}
 
 	/**
@@ -550,7 +549,8 @@ public class XmlCreator {
 	 * @since 2.2
 	 */
 	public static String createAddRoom(String sid, String aid, Location location) {
-		return createComAttribsVariant(Xconstants.STATE, ADDROOM, Xconstants.SID, sid, Xconstants.AID, aid, Xconstants.LTYPE, Integer.toString(location.getType()), Xconstants.LNAME, location.getName());
+		return createComAttribsVariant(Xconstants.STATE, ADDROOM, Xconstants.SID, sid, Xconstants.AID, aid, Xconstants.LTYPE, Integer.toString(location.getType()), Xconstants.LNAME,
+				location.getName());
 	}
 
 	/**
@@ -911,8 +911,7 @@ public class XmlCreator {
 	 * @return AddCond message
 	 * @since 2.2
 	 */
-	public static String createAddCondition(String sid, String name, ConditionType type,
-			ArrayList<ConditionFunction> condFuncs) {
+	public static String createAddCondition(String sid, String name, ConditionType type, ArrayList<ConditionFunction> condFuncs) {
 		return createAddSetCond(ADDCONDITION, sid, name, type, condFuncs, "");
 	}
 
@@ -932,8 +931,7 @@ public class XmlCreator {
 	 * @return SetCond message
 	 * @since 2.2
 	 */
-	public static String createSetCondition(String sid, String name, ConditionType type, String cid,
-			ArrayList<ConditionFunction> condFuncs) {
+	public static String createSetCondition(String sid, String name, ConditionType type, String cid, ArrayList<ConditionFunction> condFuncs) {
 		return createAddSetCond(SETCONDITION, sid, name, type, condFuncs, cid);
 	}
 
@@ -1151,22 +1149,22 @@ public class XmlCreator {
 
 	/************************************* PRIVATE METHODS *********************************************/
 
-	private static String createComAttribsVariant(String... args){
-		if(0 != (args.length % 2)){ // odd
+	private static String createComAttribsVariant(String... args) {
+		if (0 != (args.length % 2)) { // odd
 			throw new RuntimeException("Bad params count");
 		}
-		
+
 		XmlSerializer serializer = Xml.newSerializer();
 		StringWriter writer = new StringWriter();
 		try {
 			serializer.setOutput(writer);
-//			serializer.startDocument("UTF-8", null);
+			// serializer.startDocument("UTF-8", null);
 
 			serializer.startTag(ns, Xconstants.COM_ROOT);
 			serializer.attribute(ns, Xconstants.VERSION, COM_VER); // every time use version
-			
-			for(int i = 0; i < args.length; i+=2){ // take pair of args
-				serializer.attribute(ns, args[i], args[i+1]);
+
+			for (int i = 0; i < args.length; i += 2) { // take pair of args
+				serializer.attribute(ns, args[i], args[i + 1]);
 			}
 
 			serializer.endTag(ns, Xconstants.COM_ROOT);
@@ -1209,8 +1207,7 @@ public class XmlCreator {
 		}
 	}
 
-	private static String createAddSetCond(String state, String sid, String name, ConditionType type,
-			ArrayList<ConditionFunction> condFuncs, String cid) {
+	private static String createAddSetCond(String state, String sid, String name, ConditionType type, ArrayList<ConditionFunction> condFuncs, String cid) {
 		XmlSerializer serializer = Xml.newSerializer();
 		StringWriter writer = new StringWriter();
 		try {

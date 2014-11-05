@@ -23,7 +23,7 @@ public class Adapter implements IIdentifier {
 	public String toString() {
 		return getName();
 	}
-	
+
 	/**
 	 * Debug method
 	 */

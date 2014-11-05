@@ -49,8 +49,8 @@ public class SensorWidgetProvider extends AppWidgetProvider {
 
 		// stop updating service as there are no widgets anymore
 		// WidgetUpdateService.stopUpdating(context);
-		// NOTE: this works weird... sometimes it call's it when there are still widgets, sometimes it doesn't call it at all 
-		// so we just comment this out and let stopping service to calcNextUpdate method 
+		// NOTE: this works weird... sometimes it call's it when there are still widgets, sometimes it doesn't call it at all
+		// so we just comment this out and let stopping service to calcNextUpdate method
 	}
 
 	@Override
@@ -82,7 +82,7 @@ public class SensorWidgetProvider extends AppWidgetProvider {
 		// save layout resource to widget settings
 		WidgetData widgetData = new WidgetData(appWidgetId);
 		widgetData.saveLayout(context, layout);
-		
+
 		// force update widget
 		context.startService(WidgetUpdateService.getForceUpdateIntent(context, appWidgetId));
 	}
@@ -94,7 +94,7 @@ public class SensorWidgetProvider extends AppWidgetProvider {
 
 		super.onReceive(context, intent);
 	}
-	
+
 	public void updateWidget(Context context, WidgetData widgetData) {
 		// Log.d(TAG, "updateWidget()");
 		AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
@@ -103,18 +103,18 @@ public class SensorWidgetProvider extends AppWidgetProvider {
 		remoteViews.setImageViewResource(R.id.icon, widgetData.deviceIcon == 0 ? R.drawable.ic_launcher : widgetData.deviceIcon);
 		remoteViews.setTextViewText(R.id.name, widgetData.deviceName);
 		remoteViews.setTextViewText(R.id.value, widgetData.deviceValue);
-		
+
 		if (widgetData.layout == R.layout.widget_sensor) {
 			// For classic (= not-small) layout of widget, set also lastUpdate
 			remoteViews.setTextViewText(R.id.last_update, widgetData.deviceLastUpdate);
 		}
-		
+
 		int widgetId = widgetData.getWidgetId();
-		
+
 		// register an onClickListener
 		PendingIntent pendingIntent;
 		Intent intent;
-		
+
 		// force update on click to lastUpdate
 		pendingIntent = WidgetUpdateService.getForceUpdatePendingIntent(context, widgetId);
 		remoteViews.setOnClickPendingIntent(R.id.value, pendingIntent);

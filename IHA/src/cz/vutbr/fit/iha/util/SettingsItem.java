@@ -7,16 +7,16 @@ import android.content.Context;
 import android.content.SharedPreferences;
 
 public abstract class SettingsItem {
-	
+
 	protected final List<BaseItem> mItems = new ArrayList<BaseItem>();
 
 	public abstract class BaseItem {
 		private final int mId;
-	
+
 		protected BaseItem(int id) {
 			this.mId = id;
 		}
-		
+
 		/**
 		 * @return SharedPreference ID
 		 */
@@ -28,8 +28,9 @@ public abstract class SettingsItem {
 	}
 
 	abstract public int getDefaultId();
+
 	abstract public String getPersistenceKey();
-	
+
 	public BaseItem getDefault() {
 		for (BaseItem item : mItems) {
 			if (item.getId() == getDefaultId()) {
@@ -38,7 +39,7 @@ public abstract class SettingsItem {
 		}
 		throw new IllegalStateException("There is no item with id = getDefaultId()");
 	}
-	
+
 	/**
 	 * @return List of values to be shown in settings
 	 */
@@ -79,5 +80,5 @@ public abstract class SettingsItem {
 		String id = prefs.getString(getPersistenceKey(), String.valueOf(getDefault().getId()));
 		return getItemById(Integer.parseInt(id));
 	}
-	
+
 }

@@ -43,12 +43,12 @@ public class WidgetConfigurationActivity extends BaseActivity {
 
 	private List<Adapter> mAdapters = new ArrayList<Adapter>();
 	private List<Device> mDevices = new ArrayList<Device>();
-	
+
 	private boolean isInitialized = false;
 	private boolean triedLoginAlready = false;
-	
+
 	private Controller mController;
-	
+
 	private ReloadFacilitiesTask mReloadFacilitiesTask;
 
 	@Override
@@ -56,7 +56,7 @@ public class WidgetConfigurationActivity extends BaseActivity {
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
 		setSupportProgressBarIndeterminate(true);
-		
+
 		Intent intent = getIntent();
 		Bundle extras = intent.getExtras();
 		if (extras != null) {
@@ -69,15 +69,15 @@ public class WidgetConfigurationActivity extends BaseActivity {
 			finish();
 			return;
 		}
-		
+
 		// if the user press BACK, do not add any widget
 		Intent resultValue = new Intent();
 		resultValue.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, mWidgetData.getWidgetId());
 		setResult(RESULT_CANCELED, resultValue);
 
-		setContentView(R.layout.activity_widget_configuration);		
+		setContentView(R.layout.activity_widget_configuration);
 	}
-	
+
 	@Override
 	public void onResume() {
 		super.onResume();
@@ -101,7 +101,7 @@ public class WidgetConfigurationActivity extends BaseActivity {
 		} else {
 			triedLoginAlready = false;
 		}
-		
+
 		if (!isInitialized) {
 			isInitialized = true;
 
@@ -109,11 +109,11 @@ public class WidgetConfigurationActivity extends BaseActivity {
 			loadSettings();
 		}
 	}
-	
+
 	@Override
 	public void onStop() {
 		super.onStop();
-		
+
 		if (mReloadFacilitiesTask != null) {
 			mReloadFacilitiesTask.cancel(true);
 		}
@@ -127,16 +127,16 @@ public class WidgetConfigurationActivity extends BaseActivity {
 		initSpinners();
 		initSeekbar();
 	}
-	
+
 	private void setIntervalWidgetText(int intervalIndex) {
 		TextView intervalText = (TextView) findViewById(R.id.interval_widget);
 		String interval = RefreshInterval.values()[intervalIndex].getStringInterval(WidgetConfigurationActivity.this);
 		intervalText.setText(interval);
 	}
-	
+
 	private void initSeekbar() {
 		SeekBar seekbar = (SeekBar) findViewById(R.id.interval_widget_seekbar);
-		
+
 		// Set Max value by length of array with values
 		seekbar.setMax(RefreshInterval.values().length - 1);
 		seekbar.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
@@ -150,7 +150,7 @@ public class WidgetConfigurationActivity extends BaseActivity {
 			public void onStartTrackingTouch(SeekBar seekBar) {
 				// Nothing to do here
 			}
-			
+
 			@Override
 			public void onStopTrackingTouch(SeekBar seekBar) {
 				// Nothing to do here
@@ -166,7 +166,7 @@ public class WidgetConfigurationActivity extends BaseActivity {
 			@Override
 			public void onClick(View v) {
 				Log.d(TAG, "Cancel clicked");
-				
+
 				Intent resultValue = new Intent();
 				resultValue.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, mWidgetData.getWidgetId());
 				setResult(RESULT_CANCELED, resultValue);
@@ -206,7 +206,7 @@ public class WidgetConfigurationActivity extends BaseActivity {
 			@Override
 			public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 				Adapter adapter = mAdapters.get(position);
-				
+
 				Log.d(TAG, String.format("Selected adapter %s", adapter.getName()));
 				doChangeAdapter(adapter.getId(), "");
 			}
@@ -214,12 +214,12 @@ public class WidgetConfigurationActivity extends BaseActivity {
 			@Override
 			public void onNothingSelected(AdapterView<?> parent) {
 				Log.d(TAG, "Selected no adapter");
-				
+
 				mDevices.clear();
 			}
-			
+
 		});
-		
+
 		s = (Spinner) findViewById(R.id.sensor);
 		s.setOnItemSelectedListener(new OnItemSelectedListener() {
 
@@ -228,7 +228,7 @@ public class WidgetConfigurationActivity extends BaseActivity {
 				Device device = (Device) parent.getSelectedItem();
 				TextView intervalText = (TextView) findViewById(R.id.interval_sensor);
 				intervalText.setText(device.getFacility().getRefresh().getStringInterval(WidgetConfigurationActivity.this));
-				
+
 				Log.d(TAG, String.format("Selected device %s", device.getName()));
 			}
 
@@ -236,7 +236,7 @@ public class WidgetConfigurationActivity extends BaseActivity {
 			public void onNothingSelected(AdapterView<?> parent) {
 				TextView interval = (TextView) findViewById(R.id.interval_sensor);
 				interval.setText("");
-				
+
 				Log.d(TAG, "Selected no device");
 			}
 
@@ -248,7 +248,7 @@ public class WidgetConfigurationActivity extends BaseActivity {
 
 		Spinner spinAdapter = (Spinner) findViewById(R.id.adapter);
 		Spinner spinSensor = (Spinner) findViewById(R.id.sensor);
-		
+
 		String adapterId = mWidgetData.deviceAdapterId;
 		String deviceId = mWidgetData.deviceId;
 
@@ -256,24 +256,24 @@ public class WidgetConfigurationActivity extends BaseActivity {
 			for (int i = 0; i < mAdapters.size(); i++) {
 				if (mAdapters.get(i).getId().equals(adapterId)) {
 					spinAdapter.setSelection(i);
-					
+
 					List<Facility> facilities = mController.getFacilitiesByAdapter(adapterId);
-					
+
 					mDevices.clear();
 					for (Facility facility : facilities) {
 						mDevices.addAll(facility.getDevices());
 					}
 
 					ArrayAdapter<?> arrayAdapter = new ArrayAdapter<Device>(WidgetConfigurationActivity.this, android.R.layout.simple_spinner_dropdown_item, mDevices);
-					spinSensor.setAdapter(arrayAdapter);					
+					spinSensor.setAdapter(arrayAdapter);
 
 					break;
 				}
 			}
-			
+
 			doChangeAdapter(adapterId, deviceId);
 		}
-		
+
 		SeekBar seekbar = (SeekBar) findViewById(R.id.interval_widget_seekbar);
 		int interval = mWidgetData.interval;
 		interval = Math.max(interval, WidgetUpdateService.UPDATE_INTERVAL_MIN);
@@ -289,7 +289,7 @@ public class WidgetConfigurationActivity extends BaseActivity {
 			Toast.makeText(this, R.string.widget_configuration_select_adapter, Toast.LENGTH_LONG).show();
 			return false;
 		}
-		
+
 		spinner = (Spinner) findViewById(R.id.sensor);
 		Device device = (Device) spinner.getSelectedItem();
 		if (device == null) {
@@ -300,7 +300,7 @@ public class WidgetConfigurationActivity extends BaseActivity {
 		SeekBar seekbar = (SeekBar) findViewById(R.id.interval_widget_seekbar);
 		RefreshInterval refresh = RefreshInterval.values()[seekbar.getProgress()];
 		int interval = refresh.getInterval();
-		
+
 		mWidgetData.interval = Math.max(interval, WidgetUpdateService.UPDATE_INTERVAL_MIN);
 		mWidgetData.deviceAdapterId = adapter.getId();
 		mWidgetData.deviceId = device.getId();
@@ -309,26 +309,26 @@ public class WidgetConfigurationActivity extends BaseActivity {
 
 		return true;
 	}
-	
+
 	private void doChangeAdapter(final String adapterId, final String activeDeviceId) {
 		mReloadFacilitiesTask = new ReloadFacilitiesTask(getApplicationContext(), false);
-		
+
 		mReloadFacilitiesTask.setListener(new CallbackTaskListener() {
 
 			@Override
 			public void onExecute(boolean success) {
 				List<Facility> facilities = mController.getFacilitiesByAdapter(adapterId);
-				
+
 				mDevices.clear();
 				for (Facility facility : facilities) {
 					mDevices.addAll(facility.getDevices());
 				}
-				
+
 				ArrayAdapter<?> arrayAdapter = new ArrayAdapter<Device>(WidgetConfigurationActivity.this, android.R.layout.simple_spinner_dropdown_item, mDevices);
 				Spinner s = (Spinner) findViewById(R.id.sensor);
 				s.setEnabled(true);
 				s.setAdapter(arrayAdapter);
-				
+
 				if (!activeDeviceId.isEmpty()) {
 					for (int i = 0; i < mDevices.size(); i++) {
 						if (mDevices.get(i).getId().equals(activeDeviceId)) {
@@ -337,11 +337,11 @@ public class WidgetConfigurationActivity extends BaseActivity {
 						}
 					}
 				}
-				
+
 				setProgressBarIndeterminateVisibility(false);
 			}
 		});
-		
+
 		Spinner s = (Spinner) findViewById(R.id.sensor);
 		s.setEnabled(false);
 

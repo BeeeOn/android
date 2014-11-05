@@ -167,7 +167,7 @@ public class SensorDetailFragment extends SherlockFragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		mActivity = (SensorDetailActivity) getActivity();
-		
+
 		// Get controller
 		mController = Controller.getInstance(mActivity.getApplicationContext());
 
@@ -180,7 +180,7 @@ public class SensorDetailFragment extends SherlockFragment {
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
-		
+
 		mDevice = mController.getDevice(mAdapterId, mPageNumber);
 		if (mDevice != null) {
 			Log.d(TAG, String.format("ID: %s, Name: %s", mDevice.getId(), mDevice.getName()));
@@ -327,16 +327,16 @@ public class SensorDetailFragment extends SherlockFragment {
 		// Set name of location
 		if (mController != null) {
 			Location location = null;
-			
+
 			Adapter adapter = mController.getAdapter(mAdapterId);
 			if (adapter != null) {
 				location = mController.getLocation(adapter.getId(), device.getFacility().getLocationId());
 			}
-			
+
 			if (location != null) {
 				mLocation.setText(location.getName());
 			}
-			
+
 			mLocation.setOnClickListener(new OnClickListener() {
 
 				@Override
@@ -354,7 +354,7 @@ public class SensorDetailFragment extends SherlockFragment {
 					mSpinnerLoc.setVisibility(View.VISIBLE);
 					mLocation.setVisibility(View.GONE);
 					mRectangleLoc.setVisibility(View.GONE);
-					
+
 					// open Spinner
 					mSpinnerLoc.performClick();
 				}
@@ -374,18 +374,18 @@ public class SensorDetailFragment extends SherlockFragment {
 
 		Facility facility = device.getFacility();
 		Adapter adapter = mController.getAdapter(facility.getAdapterId());
-		
+
 		// UserSettings can be null when user is not logged in!
 		SharedPreferences prefs = mController.getUserSettings();
-		
+
 		UnitsHelper unitsHelper = (prefs == null) ? null : new UnitsHelper(prefs, getActivity().getApplicationContext());
 		TimeHelper timeHelper = (prefs == null) ? null : new TimeHelper(prefs);
-		
+
 		// Set value of sensor
 		if (unitsHelper != null) {
 			mValue.setText(unitsHelper.getStringValueUnit(device.getValue()));
 		}
-		
+
 		// Set icon of sensor
 		mIcon.setImageResource(device.getIconResource());
 
@@ -396,10 +396,10 @@ public class SensorDetailFragment extends SherlockFragment {
 
 		// Set refresh time Text
 		mRefreshTimeText.setText(" " + facility.getRefresh().getStringInterval(context));
-		
+
 		// Set refresh time SeekBar
 		mRefreshTimeValue.setProgress(facility.getRefresh().getIntervalIndex());
-		
+
 		// Add Graph with history data
 		if (unitsHelper != null && timeHelper != null) {
 			DateTimeFormatter fmt = timeHelper.getFormatter(mGraphDateTimeFormat, adapter);
@@ -418,7 +418,7 @@ public class SensorDetailFragment extends SherlockFragment {
 		// Log.d(TAG, "GraphLayout width x height " +
 		// mGraphLayout.getLayoutParams().width + " x "+
 		// mGraphLayout.getLayoutParams().height);
-		
+
 		// substitute parameters for left, top, right, bottom
 		params.setMargins((int) ((displaymetrics.widthPixels / 2) - (70 * displaymetrics.density)), (int) ((-120) * displaymetrics.density), 0, 0);
 		mGraphInfo.setLayoutParams(params);
@@ -470,10 +470,10 @@ public class SensorDetailFragment extends SherlockFragment {
 		mGraphSeries = new GraphViewSeries("Graph", seriesStyleBlue, new GraphViewData[] { new GraphView.GraphViewData(0, 0), });
 		mGraphView.addSeries(mGraphSeries);
 		mGraphView.setManualYAxisBounds(1.0, 0.0);
-		
+
 		mGraphView.setCustomLabelFormatter(new CustomLabelFormatter() {
 			final String unit = unitsHelper.getStringUnit(mDevice.getValue());
-			
+
 			@Override
 			public String formatLabel(double value, boolean isValueX) {
 				if (isValueX) {
@@ -516,7 +516,7 @@ public class SensorDetailFragment extends SherlockFragment {
 	private void loadGraphData() {
 		DateTime end = DateTime.now(DateTimeZone.UTC);
 		DateTime start = end.minusWeeks(1);
-		
+
 		Log.d(TAG, String.format("Loading graph data from %s to %s.", start, end));
 
 		mGetDeviceLogTask = new GetDeviceLogTask();
@@ -531,7 +531,7 @@ public class SensorDetailFragment extends SherlockFragment {
 	private List<Location> getLocationsArray() {
 		// Get locations from adapter
 		List<Location> locations = new ArrayList<Location>();
-		
+
 		Adapter adapter = mController.getActiveAdapter();
 		if (adapter != null) {
 			locations = mController.getLocations(adapter.getId());
@@ -558,9 +558,9 @@ public class SensorDetailFragment extends SherlockFragment {
 		if (mGraphView == null) {
 			return;
 		}
-		
-		 // NOTE: This formatter is only for Log, correct timezone from app setting doesn't matter here
-		final DateTimeFormatter fmt = DateTimeFormat.forPattern(mGraphDateTimeFormat); 
+
+		// NOTE: This formatter is only for Log, correct timezone from app setting doesn't matter here
+		final DateTimeFormatter fmt = DateTimeFormat.forPattern(mGraphDateTimeFormat);
 
 		int size = log.getValues().size();
 		Log.d(TAG, String.format("Filling graph with %d values. Min: %.1f, Max: %.1f", size, log.getMinimum(), log.getMaximum()));
@@ -579,10 +579,10 @@ public class SensorDetailFragment extends SherlockFragment {
 
 		for (int i = begin; i < size; i++) {
 			DeviceLog.DataRow row = log.getValues().get(i);
-			
+
 			float value = Float.isNaN(row.value) ? log.getMinimum() : row.value;
 			data[i - begin] = new GraphView.GraphViewData(row.dateMillis, value);
-			//Log.v(TAG, String.format("Graph value: date(msec): %s, Value: %.1f", fmt.print(row.dateMillis), row.value));
+			// Log.v(TAG, String.format("Graph value: date(msec): %s, Value: %.1f", fmt.print(row.dateMillis), row.value));
 		}
 
 		Log.d(TAG, "Filling graph finished");
@@ -604,41 +604,39 @@ public class SensorDetailFragment extends SherlockFragment {
 
 			@Override
 			public void onExecute(boolean success) {
-				if (mActivity.getProgressDialog()!= null)
+				if (mActivity.getProgressDialog() != null)
 					mActivity.getProgressDialog().dismiss();
 				if (success) {
-					Log.d(TAG, "Success save to server");					
-					// Change GUI 
+					Log.d(TAG, "Success save to server");
+					// Change GUI
 					mActivity.redraw();
 				} else {
 					Log.d(TAG, "Fail save to server");
 				}
-				int messageId = success ? R.string.toast_success_save_data : R.string.toast_fail_save_data; 
+				int messageId = success ? R.string.toast_success_save_data : R.string.toast_fail_save_data;
 				Log.d(TAG, mActivity.getString(messageId));
 				new ToastMessageThread(mActivity, messageId).start();
 			}
-		});		
-		
-		
-		
+		});
+
 		mSaveDeviceTask.execute(pair);
 	}
-	
+
 	public void doSaveFacilityTask(SaveFacilityPair pair) {
 		mSaveFacilityTask = new SaveFacilityTask(mActivity);
 		mSaveFacilityTask.setListener(new CallbackTaskListener() {
 			@Override
 			public void onExecute(boolean success) {
-				if (mActivity.getProgressDialog()!= null)
+				if (mActivity.getProgressDialog() != null)
 					mActivity.getProgressDialog().dismiss();
 				if (success) {
 					Log.d(TAG, "Success save to server");
-					// Change GUI 
+					// Change GUI
 					mActivity.redraw();
 				} else {
 					Log.d(TAG, "Fail save to server");
 				}
-				int messageId = success ? R.string.toast_success_save_data : R.string.toast_fail_save_data; 
+				int messageId = success ? R.string.toast_success_save_data : R.string.toast_fail_save_data;
 				Log.d(TAG, mActivity.getString(messageId));
 				new ToastMessageThread(mActivity, messageId).start();
 			}
@@ -695,13 +693,13 @@ public class SensorDetailFragment extends SherlockFragment {
 				mRefreshTimeValue.setEnabled(true);
 				if (item.getTitle().equals("Save")) {
 					// Progress dialog
-					if (mActivity.getProgressDialog()!= null)
+					if (mActivity.getProgressDialog() != null)
 						mActivity.getProgressDialog().show();
 					// Set new location in facility
-					mDevice.getFacility().setLocationId(((Location)mSpinnerLoc.getSelectedItem()).getId());
+					mDevice.getFacility().setLocationId(((Location) mSpinnerLoc.getSelectedItem()).getId());
 					// Update device to server
 					doSaveFacilityTask(new SaveFacilityPair(mDevice.getFacility(), EnumSet.of(SaveDevice.SAVE_LOCATION)));
-					
+
 				}
 				break;
 			case EDIT_NAME:
@@ -730,7 +728,7 @@ public class SensorDetailFragment extends SherlockFragment {
 					// set actual progress
 					mDevice.getFacility().setRefresh(RefreshInterval.values()[mRefreshTimeValue.getProgress()]);
 					// Progress dialog
-					if (mActivity.getProgressDialog()!= null)
+					if (mActivity.getProgressDialog() != null)
 						mActivity.getProgressDialog().show();
 					Log.d(TAG, "Refresh time " + mDevice.getFacility().getRefresh().getStringInterval(mActivity));
 					// Update device to server
@@ -775,7 +773,5 @@ public class SensorDetailFragment extends SherlockFragment {
 			mRefreshTimeValue.setEnabled(true);
 		}
 	}
-
-
 
 }

@@ -8,7 +8,7 @@ public class OpenClosedValue extends BaseEnumValue {
 
 	public static final String STATE_OPEN = "OPEN";
 	public static final String STATE_CLOSED = "CLOSED";
-	
+
 	private String mValue = "";
 
 	private static BlankUnit mUnit = new BlankUnit();
@@ -18,7 +18,7 @@ public class OpenClosedValue extends BaseEnumValue {
 		super.setValue(value);
 		setActive(value.equalsIgnoreCase(STATE_OPEN));
 	}
-	
+
 	@Override
 	public int getIconResource() {
 		return isActive() ? R.drawable.dev_state_open : R.drawable.dev_state_closed;

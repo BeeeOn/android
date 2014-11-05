@@ -135,16 +135,16 @@ public class Notification {
 	}
 
 	public enum ActionType {
-		WEB("web"),
-		APP("app"),
-		NONE("none"),
-		SETTINGS("sett"),
-		SETTINGSMAIN("settmain"),
-		SETTINGSACCOUNT("settaccount"),
-		SETTINGSADAPTER("settadapter"),
-		SETTINGSLOCATION("settlocation"),
-		OPENADAPTER("adapter"),
-		OPENLOCATION("location"),
+		WEB("web"), //
+		APP("app"), //
+		NONE("none"), //
+		SETTINGS("sett"), //
+		SETTINGSMAIN("settmain"), //
+		SETTINGSACCOUNT("settaccount"), //
+		SETTINGSADAPTER("settadapter"), //
+		SETTINGSLOCATION("settlocation"), //
+		OPENADAPTER("adapter"), //
+		OPENLOCATION("location"), //
 		OPENDEVICE("device");
 
 		private final String mValue;
@@ -167,10 +167,7 @@ public class Notification {
 	}
 
 	public enum NotificationType {
-		INFO("info"),
-		ADVERT("advert"),
-		ALERT("alert"),
-		CONTROL("control");
+		INFO("info"), ADVERT("advert"), ALERT("alert"), CONTROL("control");
 
 		private final String mValue;
 

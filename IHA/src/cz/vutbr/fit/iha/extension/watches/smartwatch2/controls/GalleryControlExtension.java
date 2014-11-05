@@ -194,14 +194,14 @@ public class GalleryControlExtension extends ManagedControlExtension {
 		Device curDevice = mDevices.get(position);
 		Facility curFacility = curDevice.getFacility();
 		Adapter curAdapter = mController.getAdapter(curFacility.getAdapterId());
-		
+
 		// Title data
 		Bundle syncBundle = new Bundle();
 		syncBundle.putInt(Control.Intents.EXTRA_LAYOUT_REFERENCE, R.id.sync_time);
 
 		// UserSettings can be null when user is not logged in!
 		SharedPreferences prefs = mController.getUserSettings();
-		
+
 		// Last update data
 		TimeHelper timeHelper = (prefs == null) ? null : new TimeHelper(prefs);
 		if (timeHelper != null) {
@@ -213,10 +213,10 @@ public class GalleryControlExtension extends ManagedControlExtension {
 		Bundle headerBundle = new Bundle();
 		headerBundle.putInt(Control.Intents.EXTRA_LAYOUT_REFERENCE, R.id.gallery_title);
 		headerBundle.putString(Control.Intents.EXTRA_TEXT, curDevice.getName());
-		
+
 		// Unit data
 		Bundle unitBundle = new Bundle();
-		
+
 		UnitsHelper unitsHelper = (prefs == null) ? null : new UnitsHelper(prefs, mContext);
 		if (unitsHelper != null) {
 			unitBundle.putInt(Control.Intents.EXTRA_LAYOUT_REFERENCE, R.id.unit);

@@ -13,13 +13,13 @@ import cz.vutbr.fit.iha.controller.Controller;
 public abstract class BaseApplicationActivity extends BaseActivity {
 
 	private boolean triedLoginAlready = false;
-	
+
 	protected boolean isPaused = false;
-	
+
 	@Override
 	public void onResume() {
 		super.onResume();
-	
+
 		if (!Controller.getInstance(getApplicationContext()).isLoggedIn()) {
 			if (!triedLoginAlready) {
 				triedLoginAlready = true;
@@ -31,19 +31,19 @@ public abstract class BaseApplicationActivity extends BaseActivity {
 		} else {
 			triedLoginAlready = false;
 		}
-		
+
 		isPaused = false;
 		onAppResume();
 	}
-	
+
 	@Override
 	public void onPause() {
 		super.onPause();
-		
+
 		isPaused = true;
 		onAppPause();
 	}
-	
+
 	public static void redirectToLogin(Context context) {
 		Intent intent = new Intent(context, LoginActivity.class);
 		intent.putExtra(LoginActivity.BUNDLE_REDIRECT, true);
@@ -51,12 +51,12 @@ public abstract class BaseApplicationActivity extends BaseActivity {
 
 		context.startActivity(intent);
 	}
-	
+
 	/**
 	 * This is called after onResume(), but only when user is correctly logged in
 	 */
 	protected abstract void onAppResume();
-	
+
 	/**
 	 * This is called after onPause()
 	 */

@@ -10,32 +10,32 @@ import cz.vutbr.fit.iha.controller.Controller;
 import cz.vutbr.fit.iha.pair.RegisterAdapterPair;
 
 public class RegisterAdapterTask extends CallbackTask<RegisterAdapterPair> {
-	
+
 	private Context mContext;
 	private Controller mController;
-	
+
 	public RegisterAdapterTask(Context context) {
 		super();
 		mContext = context;
 	}
-	
+
 	private String getUniqueAdapterName() {
 		Vector<String> adapterNames = new Vector<String>();
-		
+
 		for (Adapter adapter : mController.getAdapters()) {
 			adapterNames.add(adapter.getName());
 		}
-		
+
 		String name = "";
 
-		int number = 1;			
+		int number = 1;
 		do {
 			name = mContext.getString(R.string.adapter_default_name, number++);
 		} while (adapterNames.contains(name));
-		
+
 		return name;
 	}
-	
+
 	private String getHexaAdapterName(String id) {
 		try {
 			int number = Integer.parseInt(id);
@@ -44,11 +44,11 @@ public class RegisterAdapterTask extends CallbackTask<RegisterAdapterPair> {
 			return getUniqueAdapterName();
 		}
 	}
-	
+
 	@Override
 	protected Boolean doInBackground(RegisterAdapterPair pair) {
 		mController = Controller.getInstance(mContext);
-		
+
 		String serialNumber = pair.adapterId;
 		String name = pair.adapterName;
 
@@ -57,7 +57,7 @@ public class RegisterAdapterTask extends CallbackTask<RegisterAdapterPair> {
 			// name = getUniqueAdapterName();
 			name = getHexaAdapterName(serialNumber);
 		}
-		
+
 		return mController.registerAdapter(serialNumber, name);
 	}
 

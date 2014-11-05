@@ -89,9 +89,9 @@ public class WidgetUpdateService extends Service {
 		if (!intent.getBooleanExtra(EXTRA_FORCE_UPDATE, false)) {
 			// set alarm for next update
 			long nextUpdate = calcNextUpdate();
-			
+
 			Log.d(TAG, String.format("Next update: %d (now: %d)", nextUpdate, SystemClock.elapsedRealtime()));
-			
+
 			if (nextUpdate > 0)
 				setAlarm(this, nextUpdate);
 		}
@@ -136,16 +136,16 @@ public class WidgetUpdateService extends Service {
 
 		Controller controller = Controller.getInstance(getApplicationContext());
 		SharedPreferences userSettings = controller.getUserSettings();
-		
+
 		// UserSettings can be null when user is not logged in!
 		UnitsHelper unitsHelper = (userSettings == null) ? null : new UnitsHelper(userSettings, getApplicationContext());
 		TimeHelper timeHelper = (userSettings == null) ? null : new TimeHelper(userSettings);
 
 		// Reload adapters to have data about Timezone offset
 		controller.reloadAdapters(false);
-		
-		boolean forceUpdate = intent.getBooleanExtra(EXTRA_FORCE_UPDATE, false); 
-		
+
+		boolean forceUpdate = intent.getBooleanExtra(EXTRA_FORCE_UPDATE, false);
+
 		// TODO: reload all widgets with id IN widgetIds
 		for (Adapter adapter : controller.getAdapters()) {
 			controller.reloadLocations(adapter.getId(), false);
@@ -180,26 +180,26 @@ public class WidgetUpdateService extends Service {
 				widgetData.deviceAdapterId = device.getFacility().getAdapterId();
 				widgetData.deviceId = device.getId();
 				widgetData.lastUpdate = now;
-				
+
 				// Check if we can format device's value (unitsHelper is null when user is not logged in)
 				if (unitsHelper != null) {
 					widgetData.deviceValue = unitsHelper.getStringValueUnit(device.getValue());
 				}
-				
+
 				// Check if we can format device's last update (timeHelper is null when user is not logged in)
 				if (timeHelper != null) {
 					// NOTE: This should use always absolute time, because widgets aren't updated so often
 					widgetData.deviceLastUpdate = timeHelper.formatLastUpdate(device.getFacility().getLastUpdate(), adapter);
 				}
-				
+
 				// Save fresh data
-				widgetData.saveData(getApplicationContext());				
+				widgetData.saveData(getApplicationContext());
 
 				Log.v(TAG, String.format("Using fresh widget (%d) data", widgetId));
 			} else {
 				// NOTE: just temporary solution until it will be showed better on widget
 				widgetData.deviceLastUpdate = String.format("%s %s", widgetData.deviceLastUpdate, getString(R.string.widget_cached));
-				
+
 				Log.v(TAG, String.format("Using cached widget (%d) data", widgetId));
 			}
 
@@ -217,7 +217,7 @@ public class WidgetUpdateService extends Service {
 		for (int widgetId : getAllWidgetIds()) {
 			WidgetData widgetData = new WidgetData(widgetId);
 			widgetData.loadData(this);
-			
+
 			if (!widgetData.initialized) {
 				// widget is not added yet (probably only configuration activity is showed)
 				continue;
@@ -240,25 +240,25 @@ public class WidgetUpdateService extends Service {
 	private List<Integer> getWidgetIds(Class<?> cls) {
 		ComponentName thisWidget = new ComponentName(this, cls);
 		AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(this);
-		
+
 		List<Integer> arr = new ArrayList<Integer>();
 		for (int i : appWidgetManager.getAppWidgetIds(thisWidget)) {
 			arr.add(i);
 		}
-		return arr; 
+		return arr;
 	}
-	
+
 	private int[] getAllWidgetIds() {
 		List<Integer> ids = new ArrayList<Integer>();
 		ids.addAll(getWidgetIds(SensorWidgetProviderSmall.class));
 		ids.addAll(getWidgetIds(SensorWidgetProviderMedium.class));
 		ids.addAll(getWidgetIds(SensorWidgetProviderLarge.class));
-		
+
 		int[] arr = new int[ids.size()];
 		for (int i = 0; i < ids.size(); i++) {
 			arr[i] = ids.get(i);
 		}
-		
+
 		return arr;
 	}
 

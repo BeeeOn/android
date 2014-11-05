@@ -15,22 +15,22 @@ import cz.vutbr.fit.iha.network.Network;
 import cz.vutbr.fit.iha.network.exception.NetworkException;
 
 public class UninitializedFacilitiesModel {
-	
+
 	private final Network mNetwork;
-	
+
 	private final Map<String, Map<String, Facility>> mFacilities = new HashMap<String, Map<String, Facility>>(); // adapterId => (facilityId => facility)
 	private final Map<String, DateTime> mLastUpdates = new HashMap<String, DateTime>(); // adapterId => lastUpdate of facilities
 	private final Vector<String> mIgnoredFacilities = new Vector<String>(); // adapterId
-	
+
 	private static final int RELOAD_EVERY_SECONDS = 10 * 60;
-	
+
 	public UninitializedFacilitiesModel(Network network) {
 		mNetwork = network;
 	}
-	
+
 	public List<Facility> getUninitializedFacilitiesByAdapter(String adapterId, boolean withIgnored) {
 		List<Facility> facilities = new ArrayList<Facility>();
-		
+
 		Map<String, Facility> adapterFacilities = mFacilities.get(adapterId);
 		if (adapterFacilities != null) {
 			for (Facility facility : adapterFacilities.values()) {
@@ -39,27 +39,27 @@ public class UninitializedFacilitiesModel {
 						facilities.add(facility);
 					}
 				}
-			}	
+			}
 		}
-		
+
 		// Sort result facilities by id
 		Collections.sort(facilities, new IdentifierComparator());
-		
+
 		return facilities;
 	}
-	
+
 	public void ignoreUninitalizedFacilities(String adapterId) {
 		for (Facility facility : getUninitializedFacilitiesByAdapter(adapterId, false)) {
-			mIgnoredFacilities.add(facility.getId());	
+			mIgnoredFacilities.add(facility.getId());
 		}
 	}
-	
+
 	public void unignoreUninitializedFacilities(String adapterId) {
 		for (Facility facility : getUninitializedFacilitiesByAdapter(adapterId, true)) {
 			mIgnoredFacilities.removeElement(facility.getId());
 		}
 	}
-	
+
 	public void setUninitialiyedFacilitiesByAdapter(String adapterId, List<Facility> facilities) {
 		Map<String, Facility> adapterFacilities = mFacilities.get(adapterId);
 		if (adapterFacilities != null) {
@@ -68,21 +68,21 @@ public class UninitializedFacilitiesModel {
 			adapterFacilities = new HashMap<String, Facility>();
 			mFacilities.put(adapterId, adapterFacilities);
 		}
-		
+
 		for (Facility facility : facilities) {
 			adapterFacilities.put(facility.getId(), facility);
 		}
 	}
-	
+
 	private void setLastUpdate(String adapterId, DateTime lastUpdate) {
 		mLastUpdates.put(adapterId, lastUpdate);
 	}
-	
+
 	private boolean isExpired(String adapterId) {
 		DateTime lastUpdate = mLastUpdates.get(adapterId);
 		return lastUpdate == null || lastUpdate.plusSeconds(RELOAD_EVERY_SECONDS).isBeforeNow();
 	}
-	
+
 	public boolean reloadUninitializedFacilitiesByAdapter(String adapterId, boolean forceReload) {
 		if (!forceReload && !isExpired(adapterId)) {
 			return false;
@@ -94,10 +94,10 @@ public class UninitializedFacilitiesModel {
 		} else if (forceReload) {
 			return loadFromCache(adapterId);
 		}
-		
+
 		return false;
 	}
-	
+
 	private boolean loadFromServer(String adapterId) {
 		try {
 			// TODO: Load ignoredUninitializedDevices from some cache
@@ -108,19 +108,19 @@ public class UninitializedFacilitiesModel {
 			e.printStackTrace();
 			return false;
 		}
-		
+
 		return true;
 	}
-	
+
 	private boolean loadFromCache(String adapterId) {
 		// TODO: implement this
 		return false;
-		
+
 		// TODO: Load ignoredUninitializedDevices from some cache
-		//setFacilitiesByAdapter(facilitiesFromCache);
-		//setLastUpdate(adapterId, lastUpdateFromCache);
+		// setFacilitiesByAdapter(facilitiesFromCache);
+		// setLastUpdate(adapterId, lastUpdateFromCache);
 	}
-	
+
 	private void saveToCache(String adapterId) {
 		// TODO: implement this
 		// TODO: Save also ignoredUninitializedDevices to some cache

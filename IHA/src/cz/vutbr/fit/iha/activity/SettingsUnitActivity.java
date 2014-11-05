@@ -28,7 +28,7 @@ public class SettingsUnitActivity extends SherlockPreferenceActivity implements 
 
 	private final Map<String, BaseUnit> mUnits = new HashMap<String, BaseUnit>();
 	private final Map<String, ListPreference> mPreferences = new HashMap<String, ListPreference>();
-	
+
 	private Controller mController;
 	private SharedPreferences mPrefs;
 
@@ -40,10 +40,10 @@ public class SettingsUnitActivity extends SherlockPreferenceActivity implements 
 		pref.setEntries(unit.getEntries(this));
 		pref.setEntryValues(unit.getEntryValues());
 		pref.setSummary(unit.fromSettings(mPrefs).getSettingsName(this));
-		
+
 		mPreferences.put(unit.getPersistenceKey(), pref);
 	}
-	
+
 	// added suppressWarnings because of support of lower version
 	@SuppressWarnings("deprecation")
 	@Override
@@ -68,7 +68,7 @@ public class SettingsUnitActivity extends SherlockPreferenceActivity implements 
 			finish();
 			return;
 		}
-		
+
 		initUnit(new TemperatureUnit());
 		initUnit(new NoiseUnit());
 	}
@@ -108,7 +108,7 @@ public class SettingsUnitActivity extends SherlockPreferenceActivity implements 
 	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
 		ListPreference pref = mPreferences.get(key);
 		BaseUnit unit = mUnits.get(key);
-		
+
 		if (pref != null && unit != null) {
 			String summary = unit.fromSettings(sharedPreferences).getSettingsName(this);
 			pref.setSummary(summary);
