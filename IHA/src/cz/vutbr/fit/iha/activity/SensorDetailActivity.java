@@ -64,7 +64,7 @@ public class SensorDetailActivity extends BaseApplicationActivity {
 		setProgressBarIndeterminateVisibility(true);
 		getSupportActionBar().setHomeButtonEnabled(true);
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-		getSupportActionBar().setIcon(R.drawable.ic_launcher_white);
+		getSupportActionBar().setIcon(R.drawable.ic_launcher_null);
 
 		// Get controller
 		mController = Controller.getInstance(getApplicationContext());

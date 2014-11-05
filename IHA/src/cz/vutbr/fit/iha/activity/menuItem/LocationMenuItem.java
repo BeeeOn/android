@@ -1,5 +1,6 @@
 package cz.vutbr.fit.iha.activity.menuItem;
 
+import android.graphics.Typeface;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -34,6 +35,7 @@ public class LocationMenuItem extends AbstractMenuItem {
 		}
 		if (mActualLoc) {
 			nameView.setTextColor(view.getResources().getColor(R.color.iha_primary_cyan));
+			nameView.setTypeface(null, Typeface.BOLD);
 		}
 	}
 

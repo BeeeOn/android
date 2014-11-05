@@ -44,7 +44,7 @@ public class SettingsMainActivity extends SherlockPreferenceActivity implements 
 
 		getSupportActionBar().setHomeButtonEnabled(true);
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-		getSupportActionBar().setIcon(R.drawable.ic_launcher_white);
+		getSupportActionBar().setIcon(R.drawable.ic_launcher_null);
 
 		// Use own name for sharedPreferences
 		getPreferenceManager().setSharedPreferencesName(Persistence.getPreferencesFilename(mController.getActualUser().getEmail()));

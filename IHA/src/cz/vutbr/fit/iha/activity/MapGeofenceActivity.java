@@ -22,7 +22,7 @@ public class MapGeofenceActivity extends SherlockFragmentActivity {
 		setProgressBarIndeterminateVisibility(true);
 		getSupportActionBar().setHomeButtonEnabled(true);
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-		getSupportActionBar().setIcon(R.drawable.ic_launcher_white);
+		getSupportActionBar().setIcon(R.drawable.ic_launcher_null);
 
 		mMap = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map)).getMap();
 

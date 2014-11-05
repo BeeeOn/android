@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
-    android:layout_height="80dp"
+    android:layout_height="65dp"
     android:background="@color/light_gray"
     android:gravity="center_vertical"
     android:orientation="horizontal"
@@ -13,7 +13,7 @@
     <ImageView
         android:id="@+id/icon"
         android:layout_width="wrap_content"
-        android:layout_height="52dp"
+        android:layout_height="48dp"
         android:adjustViewBounds="true" />
 
     <LinearLayout
@@ -31,7 +31,7 @@
             android:ellipsize="end"
             android:singleLine="true"
             android:textColor="@color/iha_primary_cyan"
-            android:textSize="20sp"
+            android:textSize="16sp"
             android:textStyle="bold" />
 
         <TextView
@@ -40,7 +40,7 @@
             android:layout_height="wrap_content"
             android:ellipsize="end"
             android:singleLine="true"
-            android:textSize="16sp"
+            android:textSize="12sp"
             android:textColor="@color/iha_text_hint" />
     </LinearLayout>
 

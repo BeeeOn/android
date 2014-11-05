@@ -139,6 +139,12 @@ public class MainActivity extends BaseApplicationActivity {
 		backPressed = false;
 
 		mNavDrawerMenu.redrawMenu();
+		//Check whitch fragment is visible and redraw
+		if(mActiveLocationId != null) {
+			redrawDevices();
+		} else if(mActiveCustomViewId != null) {
+			redrawCustomView();
+		}
 
 		checkNoAdapters();
 	}
