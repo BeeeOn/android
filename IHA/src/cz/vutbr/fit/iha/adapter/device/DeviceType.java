@@ -25,7 +25,7 @@ public enum DeviceType {
 	TYPE_ON_OFF(4, R.string.dev_switch_type), // switch sensor
 	TYPE_ILLUMINATION(5, R.string.dev_illumination_type), // illumination meter
 	TYPE_NOISE(6, R.string.dev_noise_type), // noise meter
-	TYPE_EMISSION(7, R.string.dev_noise_type); // emission meter
+	TYPE_EMISSION(7, R.string.dev_emission_type); // emission meter
 
 	private final int mTypeId;
 	private final int mNameRes;
