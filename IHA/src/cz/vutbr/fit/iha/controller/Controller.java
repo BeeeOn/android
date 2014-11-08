@@ -21,7 +21,6 @@ import cz.vutbr.fit.iha.exception.NotImplementedException;
 import cz.vutbr.fit.iha.household.ActualUser;
 import cz.vutbr.fit.iha.household.Household;
 import cz.vutbr.fit.iha.household.User;
-import cz.vutbr.fit.iha.household.User.Gender;
 import cz.vutbr.fit.iha.network.DemoNetwork;
 import cz.vutbr.fit.iha.network.GoogleAuth;
 import cz.vutbr.fit.iha.network.INetwork;
@@ -146,16 +145,6 @@ public final class Controller {
 	 * @throws NetworkException
 	 */
 	public boolean login(String email) throws NetworkException {
-		if (mDemoMode) {
-			mHousehold.user.setName("John Doe");
-			mHousehold.user.setEmail(email);
-			mHousehold.user.setGender(Gender.Male);
-			mHousehold.user.setSessionId("123456789");
-
-			mPersistence.initializeDefaultSettings(email);
-			return true;
-		}
-
 		// TODO: catch and throw proper exception
 		// FIXME: after some time there should be picture in ActualUser object, should save to mPersistence
 		try {
@@ -236,7 +225,7 @@ public final class Controller {
 	 * @return
 	 */
 	public synchronized boolean reloadAdapters(boolean forceReload) {
-		if (mDemoMode || !isLoggedIn()) {
+		if (!isLoggedIn()) {
 			return false;
 		}
 
@@ -251,7 +240,7 @@ public final class Controller {
 	 * @return
 	 */
 	public synchronized boolean reloadLocations(String adapterId, boolean forceReload) {
-		if (mDemoMode || !isLoggedIn()) {
+		if (!isLoggedIn()) {
 			return false;
 		}
 
@@ -266,7 +255,7 @@ public final class Controller {
 	 * @return
 	 */
 	public synchronized boolean reloadFacilitiesByAdapter(String adapterId, boolean forceReload) {
-		if (mDemoMode || !isLoggedIn()) {
+		if (!isLoggedIn()) {
 			return false;
 		}
 
@@ -281,7 +270,7 @@ public final class Controller {
 	 * @return
 	 */
 	public synchronized boolean reloadUninitializedFacilitiesByAdapter(String adapterId, boolean forceReload) {
-		if (mDemoMode || !isLoggedIn()) {
+		if (!isLoggedIn()) {
 			return false;
 		}
 
@@ -295,15 +284,6 @@ public final class Controller {
 	 * @return
 	 */
 	public boolean updateFacility(Facility facility) {
-		if (mDemoMode) {
-			// In demo mode update facility devices with random values
-			/*
-			 * for (BaseDevice device : facility.getDevices()) { if (device instanceof SwitchDevice) { ((OnOffValue) device.getValue()).setActive(new Random().nextBoolean()); } else if (device
-			 * instanceof StateDevice) { ((OpenClosedValue) device.getValue()).setActive(new Random().nextBoolean()); } else { int i = new Random().nextInt(100); device.getValue().setValue(i); } }
-			 */
-			return true;
-		}
-
 		return mHousehold.facilitiesModel.refreshFacility(facility);
 	}
 
@@ -397,10 +377,6 @@ public final class Controller {
 	 * @return true on success, false otherwise
 	 */
 	public boolean registerAdapter(String id, String adapterName) {
-		if (mDemoMode) {
-			return false;
-		}
-
 		boolean result = false;
 
 		try {
@@ -424,10 +400,6 @@ public final class Controller {
 	 */
 	// TODO: review this
 	public boolean registerUser(String email) {
-		if (mDemoMode) {
-			return false;
-		}
-
 		boolean result = false;
 
 		try {
@@ -448,10 +420,6 @@ public final class Controller {
 	 * @return true on success, false otherwise
 	 */
 	public boolean unregisterAdapter(String id) throws NotImplementedException {
-		if (mDemoMode) {
-			return false;
-		}
-
 		// FIXME: This debug implementation unregisters actual user from adapter, not adapter itself
 
 		boolean result = false;
@@ -508,11 +476,7 @@ public final class Controller {
 
 		boolean deleted = false;
 		try {
-			if (mDemoMode) {
-				deleted = true;
-			} else {
-				deleted = mNetwork.deleteLocation(adapter.getId(), location);
-			}
+			deleted = mNetwork.deleteLocation(adapter.getId(), location);
 		} catch (NetworkException e) {
 			e.printStackTrace();
 		}
@@ -537,11 +501,7 @@ public final class Controller {
 
 		boolean saved = false;
 		try {
-			if (mDemoMode) {
-				saved = true;
-			} else {
-				saved = mNetwork.updateLocation(adapter.getId(), location);
-			}
+			saved = mNetwork.updateLocation(adapter.getId(), location);
 		} catch (NetworkException e) {
 			e.printStackTrace();
 		}
@@ -565,11 +525,7 @@ public final class Controller {
 		}
 
 		try {
-			if (mDemoMode) {
-				location.setId(mHousehold.locationsModel.getUnusedLocationId(adapter.getId()));
-			} else {
-				location = mNetwork.createLocation(adapter.getId(), location);
-			}
+			location = mNetwork.createLocation(adapter.getId(), location);
 		} catch (NetworkException e) {
 			e.printStackTrace();
 			location = null;
@@ -690,11 +646,6 @@ public final class Controller {
 	 * @return true on success, false otherwise
 	 */
 	public boolean saveFacility(Facility facility, EnumSet<SaveDevice> what) {
-		// FIXME: fix demoMode
-		if (mDemoMode) {
-			return true;
-		}
-
 		return mHousehold.facilitiesModel.saveFacility(facility, what);
 	}
 
@@ -709,11 +660,6 @@ public final class Controller {
 	 * @return true on success, false otherwise
 	 */
 	public boolean saveDevice(Device device, EnumSet<SaveDevice> what) {
-		// FIXME: fix demoMode
-		if (mDemoMode) {
-			return true;
-		}
-
 		return mHousehold.facilitiesModel.saveDevice(device, what);
 	}
 
@@ -747,9 +693,6 @@ public final class Controller {
 	 * @return result
 	 */
 	public boolean sendPairRequest(String adapterID) {
-		if (mDemoMode) {
-			return false;
-		}
 		// FIXME: hack -> true if you want to add virtual sensor
 		boolean result = false;
 
