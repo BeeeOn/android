@@ -44,7 +44,7 @@ public class UninitializedFacilitiesModel {
 		return facilities;
 	}
 
-	public void setUninitializedFacilitiesByAdapter(String adapterId, List<Facility> facilities) {
+	private void setUninitializedFacilitiesByAdapter(String adapterId, List<Facility> facilities) {
 		Map<String, Facility> adapterFacilities = mFacilities.get(adapterId);
 		if (adapterFacilities != null) {
 			adapterFacilities.clear();

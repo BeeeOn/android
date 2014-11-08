@@ -177,16 +177,15 @@ public interface INetwork {
 	 *            list of facilities to which needed actual data
 	 * @return list of updated facilities fields
 	 */
-	public List<Facility> getFacilities(String adapterID, List<Facility> facilities);
+	public List<Facility> getFacilities(List<Facility> facilities);
 
 	/**
 	 * Method ask server for actual data of one facility
 	 * 
-	 * @param adapterID
 	 * @param facility
 	 * @return
 	 */
-	public Facility getFacility(String adapterID, Facility facility);
+	public Facility getFacility(Facility facility);
 
 	public boolean updateFacility(String adapterID, Facility facility, EnumSet<SaveDevice> toSave);
 

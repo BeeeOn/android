@@ -44,7 +44,7 @@ public class AdaptersModel {
 		return adapters;
 	}
 
-	public void setAdapters(List<Adapter> adapters) {
+	private void setAdapters(List<Adapter> adapters) {
 		mAdapters.clear();
 
 		for (Adapter adapter : adapters) {

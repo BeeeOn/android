@@ -56,7 +56,7 @@ public class FacilitiesModel {
 		return facilities;
 	}
 
-	public void setFacilitiesByAdapter(String adapterId, List<Facility> facilities) {
+	private void setFacilitiesByAdapter(String adapterId, List<Facility> facilities) {
 		Map<String, Facility> adapterFacilities = mFacilities.get(adapterId);
 		if (adapterFacilities != null) {
 			adapterFacilities.clear();
@@ -105,10 +105,31 @@ public class FacilitiesModel {
 
 		return false;
 	}
+	
+	public boolean refreshFacilities(List<Facility> facilities, boolean forceReload) {
+		// Remove not expired facilities
+		for (Facility facility : facilities) {
+			if (!forceReload && !facility.isExpired()) {
+				facilities.remove(facility);
+			}
+		}
+		
+		try {
+			List<Facility> newFacilities = mNetwork.getFacilities(facilities);
+			if (newFacilities == null)
+				return false;
 
-	// TODO: implement method for only refreshing facilities data
-	// public boolean refreshFacilitiesByLocation(String adapterId, String locationId, boolean forceRefresh) {}
-	// public boolean refreshFacility(String adapterId, String locationId, boolean forceRefresh) {}
+			for (Facility newFacility : newFacilities) {
+				updateFacilityInMap(newFacility);
+			}
+
+		} catch (NetworkException e) {
+			e.printStackTrace();
+			return false;
+		}
+		
+		return true;
+	}
 
 	private boolean loadFromServer(String adapterId) {
 		try {
@@ -158,7 +179,7 @@ public class FacilitiesModel {
 	 */
 	public boolean refreshFacility(Facility facility) {
 		try {
-			Facility newFacility = mNetwork.getFacility(facility.getAdapterId(), facility);
+			Facility newFacility = mNetwork.getFacility(facility);
 			if (newFacility == null)
 				return false;
 

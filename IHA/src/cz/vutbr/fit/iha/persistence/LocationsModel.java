@@ -51,7 +51,7 @@ public class LocationsModel {
 		return locations;
 	}
 
-	public void setLocationsByAdapter(String adapterId, List<Location> locations) {
+	private void setLocationsByAdapter(String adapterId, List<Location> locations) {
 		Map<String, Location> adapterLocations = mLocations.get(adapterId);
 		if (adapterLocations != null) {
 			adapterLocations.clear();

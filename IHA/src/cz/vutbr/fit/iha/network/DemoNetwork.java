@@ -258,11 +258,11 @@ public class DemoNetwork implements INetwork {
 	}
 
 	@Override
-	public List<Facility> getFacilities(String adapterId, List<Facility> facilities) {
+	public List<Facility> getFacilities(List<Facility> facilities) {
 		List<Facility> result = new ArrayList<Facility>();
 
 		for (Facility facility : facilities) {
-			Facility newFacility = getFacility(adapterId, facility);
+			Facility newFacility = getFacility(facility.getAdapterId(), facility);
 			if (newFacility != null) {
 				result.add(newFacility);
 			}

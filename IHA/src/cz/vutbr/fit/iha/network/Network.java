@@ -594,7 +594,7 @@ public class Network implements INetwork {
 	 */
 	// http://stackoverflow.com/a/509288/1642090
 	@SuppressWarnings("unchecked")
-	public List<Facility> getFacilities(String adapterID, List<Facility> facilities) throws NoConnectionException, CommunicationException, FalseException {
+	public List<Facility> getFacilities(List<Facility> facilities) throws NoConnectionException, CommunicationException, FalseException {
 		ParsedMessage msg = doRequest(XmlCreator.createGetDevices(mSessionID, facilities));
 
 		if (msg.getState() == State.DEVICES)
@@ -606,19 +606,18 @@ public class Network implements INetwork {
 	/**
 	 * Method ask server for actual data of one facility
 	 * 
-	 * @param adapterID
 	 * @param facility
 	 * @return
 	 * @throws NoConnectionException
 	 * @throws CommunicationException
 	 * @throws FalseException
 	 */
-	public Facility getFacility(String adapterID, Facility facility) throws NoConnectionException, CommunicationException, FalseException {
+	public Facility getFacility(Facility facility) throws NoConnectionException, CommunicationException, FalseException {
 
 		ArrayList<Facility> list = new ArrayList<Facility>();
 		list.add(facility);
 
-		return getFacilities(adapterID, list).get(0);
+		return getFacilities(list).get(0);
 	}
 
 	public boolean updateFacility(String adapterID, Facility facility, EnumSet<SaveDevice> toSave) {
