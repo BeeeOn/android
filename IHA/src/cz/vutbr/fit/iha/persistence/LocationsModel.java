@@ -5,25 +5,24 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
 
 import org.joda.time.DateTime;
 
 import cz.vutbr.fit.iha.IdentifierComparator;
 import cz.vutbr.fit.iha.adapter.location.Location;
-import cz.vutbr.fit.iha.network.Network;
+import cz.vutbr.fit.iha.network.INetwork;
 import cz.vutbr.fit.iha.network.exception.NetworkException;
 
 public class LocationsModel {
 
-	private final Network mNetwork;
+	private final INetwork mNetwork;
 
 	private final Map<String, Map<String, Location>> mLocations = new HashMap<String, Map<String, Location>>(); // adapterId => (locationId => location)
 	private final Map<String, DateTime> mLastUpdates = new HashMap<String, DateTime>(); // adapterId => lastUpdate of location
 
 	private static final int RELOAD_EVERY_SECONDS = 10 * 60;
 
-	public LocationsModel(Network network) {
+	public LocationsModel(INetwork network) {
 		mNetwork = network;
 	}
 
@@ -113,23 +112,6 @@ public class LocationsModel {
 
 	private void saveToCache(String adapterId) {
 		// TODO: implement this
-	}
-
-	/**
-	 * This is used ONLY for DemoMode when saving new location!
-	 * 
-	 * @return unique id of location
-	 */
-	public String getUnusedLocationId(String adapterId) {
-		Map<String, Location> adapterLocations = mLocations.get(adapterId);
-		String id;
-		Random random = new Random();
-
-		do {
-			id = String.valueOf(random.nextInt(1000));
-		} while (adapterLocations != null && adapterLocations.containsKey(id));
-
-		return id;
 	}
 
 	/**

@@ -5,14 +5,14 @@ import cz.vutbr.fit.iha.adapter.device.units.NoiseUnit;
 
 public final class NoiseValue extends BaseValue {
 
-	private int mValue = Integer.MAX_VALUE;
+	private double mValue = Double.NaN;
 
 	private static NoiseUnit mUnit = new NoiseUnit();
 
 	@Override
 	public void setValue(String value) {
 		super.setValue(value);
-		mValue = Integer.parseInt(value);
+		mValue = Double.parseDouble(value);
 	}
 
 	@Override
@@ -25,7 +25,7 @@ public final class NoiseValue extends BaseValue {
 		return mUnit;
 	}
 
-	public int getValue() {
+	public double getValue() {
 		return mValue;
 	}
 

@@ -23,7 +23,6 @@ public class Facility implements IIdentifier {
 	protected boolean mInitialized;
 	protected RefreshInterval mRefreshInterval;
 	protected int mBattery;
-	protected boolean mLogging;
 	protected DateTime mInvolveTime;
 	protected int mNetworkQuality;
 	protected DateTime mLastUpdate;
@@ -44,7 +43,6 @@ public class Facility implements IIdentifier {
 		SAVE_NAME, // rename facility
 		SAVE_LOCATION, // change location
 		SAVE_VISIBILITY, // change visibility //NOTE: sending always
-		SAVE_LOGGING, // change logging on server
 		SAVE_REFRESH, // change refresh interval
 		SAVE_VALUE, // change value (of actor)
 		SAVE_TYPE, // change facility's icon, etc. //NOTE: what? type cannot be changed
@@ -138,24 +136,6 @@ public class Facility implements IIdentifier {
 	 */
 	public void setAdapterId(String adapterId) {
 		mAdapterId = adapterId;
-	}
-
-	/**
-	 * Returning true if there is some logging file for facility
-	 * 
-	 * @return
-	 */
-	public boolean isLogging() {
-		return mLogging;
-	}
-
-	/**
-	 * Setting flag if there is logging file
-	 * 
-	 * @param logging
-	 */
-	public void setLogging(boolean logging) {
-		mLogging = logging;
 	}
 
 	/**
@@ -259,8 +239,8 @@ public class Facility implements IIdentifier {
 	 * @return
 	 */
 	public String toDebugString() {
-		return String.format("Id: %s\nAdapter: %s\nLocation: %s\nInitialized: %s\nBattery: %s\nLogging: %s\nRefresh: %s\nDevices: %s", getId(), mAdapterId, mLocationId, mInitialized, mBattery,
-				mLogging, mRefreshInterval.getInterval(), Integer.toString(mDevices.size()));
+		return String.format("Id: %s\nAdapter: %s\nLocation: %s\nInitialized: %s\nBattery: %s\nRefresh: %s\nDevices: %s", getId(), mAdapterId, mLocationId, mInitialized, mBattery,
+				mRefreshInterval.getInterval(), Integer.toString(mDevices.size()));
 	}
 
 	public void addDevice(Device device) {
@@ -306,7 +286,6 @@ public class Facility implements IIdentifier {
 		setInitialized(newFacility.isInitialized());
 		setInvolveTime(newFacility.getInvolveTime());
 		setLocationId(newFacility.getLocationId());
-		setLogging(newFacility.isLogging());
 		setNetworkQuality(newFacility.getNetworkQuality());
 		setRefresh(newFacility.getRefresh());
 		setLastUpdate(newFacility.getLastUpdate());

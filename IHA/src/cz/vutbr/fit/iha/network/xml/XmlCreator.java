@@ -20,7 +20,7 @@ import cz.vutbr.fit.iha.adapter.device.Device.SaveDevice;
 import cz.vutbr.fit.iha.adapter.device.Facility;
 import cz.vutbr.fit.iha.adapter.location.Location;
 import cz.vutbr.fit.iha.household.User;
-import cz.vutbr.fit.iha.network.Network.NetworkAction;
+import cz.vutbr.fit.iha.network.INetwork.NetworkAction;
 import cz.vutbr.fit.iha.network.xml.action.Action;
 import cz.vutbr.fit.iha.network.xml.condition.BetweenFunc;
 import cz.vutbr.fit.iha.network.xml.condition.ConditionFunction;

@@ -5,7 +5,7 @@ import cz.vutbr.fit.iha.adapter.device.units.IlluminationUnit;
 
 public final class IlluminationValue extends BaseValue {
 
-	private double mValue = Double.MAX_VALUE;
+	private double mValue = Double.NaN;
 
 	private static IlluminationUnit mUnit = new IlluminationUnit();
 

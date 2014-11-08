@@ -24,7 +24,7 @@ import cz.vutbr.fit.iha.adapter.Adapter;
 import cz.vutbr.fit.iha.base.BaseActivity;
 import cz.vutbr.fit.iha.controller.Controller;
 import cz.vutbr.fit.iha.exception.NotImplementedException;
-import cz.vutbr.fit.iha.household.DemoHousehold;
+import cz.vutbr.fit.iha.network.DemoNetwork;
 import cz.vutbr.fit.iha.network.exception.CommunicationException;
 import cz.vutbr.fit.iha.network.exception.FalseException;
 import cz.vutbr.fit.iha.network.exception.NoConnectionException;
@@ -132,7 +132,7 @@ public class LoginActivity extends BaseActivity {
 					@Override
 					public void run() {
 						setDemoMode(true);
-						mController.login(DemoHousehold.DEMO_EMAIL);
+						doLogin(DemoNetwork.DEMO_EMAIL);
 
 						if (!isRedirect) {
 							Intent intent = new Intent(LoginActivity.this, MainActivity.class);
@@ -435,7 +435,7 @@ public class LoginActivity extends BaseActivity {
 					mController.reloadFacilitiesByAdapter(active.getId(), true);
 				}
 
-				if (!mDoGoogleLoginRunnable.isStopped()) {
+				if (mDoGoogleLoginRunnable != null && !mDoGoogleLoginRunnable.isStopped()) {
 					if (!isRedirect) {
 						Intent intent = new Intent(this, MainActivity.class);
 						startActivity(intent);
