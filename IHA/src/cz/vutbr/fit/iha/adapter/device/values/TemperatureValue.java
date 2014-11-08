@@ -5,7 +5,7 @@ import cz.vutbr.fit.iha.adapter.device.units.TemperatureUnit;
 
 public final class TemperatureValue extends BaseValue {
 
-	private double mValue = Double.MAX_VALUE;
+	private double mValue = Double.NaN;
 
 	private static TemperatureUnit mUnit = new TemperatureUnit();
 

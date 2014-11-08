@@ -5,7 +5,7 @@ import cz.vutbr.fit.iha.adapter.device.units.HumidityUnit;
 
 public final class HumidityValue extends BaseValue {
 
-	private double mValue = Double.MAX_VALUE;
+	private double mValue = Double.NaN;
 
 	private static HumidityUnit mUnit = new HumidityUnit();
 

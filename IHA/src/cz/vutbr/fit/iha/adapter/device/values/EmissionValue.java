@@ -5,14 +5,14 @@ import cz.vutbr.fit.iha.adapter.device.units.EmissionUnit;
 
 public final class EmissionValue extends BaseValue {
 
-	private int mValue = Integer.MAX_VALUE;
+	private double mValue = Double.NaN;
 
 	private static EmissionUnit mUnit = new EmissionUnit();
 
 	@Override
 	public void setValue(String value) {
 		super.setValue(value);
-		mValue = Integer.parseInt(value);
+		mValue = Double.parseDouble(value);
 	}
 
 	@Override
@@ -25,7 +25,7 @@ public final class EmissionValue extends BaseValue {
 		return mUnit;
 	}
 
-	public int getValue() {
+	public double getValue() {
 		return mValue;
 	}
 
