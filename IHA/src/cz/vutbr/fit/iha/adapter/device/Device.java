@@ -15,7 +15,6 @@ public class Device implements IIdentifier {
 
 	protected Facility mFacility;
 	protected String mName = "";
-	protected boolean mLogging;
 	protected boolean mVisibility;
 
 	public final DeviceType mType;
@@ -36,7 +35,6 @@ public class Device implements IIdentifier {
 		SAVE_NAME, // change name of device
 		SAVE_LOCATION, // change location of facility
 		SAVE_VISIBILITY, // change visibility of device
-		SAVE_LOGGING, // change logging of device
 		SAVE_REFRESH, // change refresh interval of facility
 		SAVE_VALUE, // change value of actor device
 		SAVE_INITIALIZED,
@@ -106,23 +104,6 @@ public class Device implements IIdentifier {
 		mName = name;
 	}
 
-	/**
-	 * Returning true if there is some logging file for device
-	 * 
-	 * @return
-	 */
-	public boolean isLogging() {
-		return mLogging;
-	}
-
-	/**
-	 * Setting flag if there is logging file
-	 * 
-	 * @param logging
-	 */
-	public void setLogging(boolean logging) {
-		mLogging = logging;
-	}
 
 	/**
 	 * Get visibility of device
@@ -154,7 +135,7 @@ public class Device implements IIdentifier {
 	 * @return
 	 */
 	public String toDebugString() {
-		return String.format("Name: %s\nVisibility: %s\nLogging: %s\nValue: %s", mName, Boolean.toString(mVisibility), mLogging, mValue);
+		return String.format("Name: %s\nVisibility: %s\nValue: %s", mName, Boolean.toString(mVisibility), mValue);
 	}
 
 	/**
@@ -165,7 +146,6 @@ public class Device implements IIdentifier {
 	 */
 	public void replaceData(Device newDevice) {
 		setFacility(newDevice.getFacility());
-		setLogging(newDevice.isLogging());
 		setVisibility(newDevice.isVisible());
 		setName(newDevice.getName());
 		mValue.setValue(newDevice.mValue.getRawValue());
