@@ -132,7 +132,7 @@ public class LoginActivity extends BaseActivity {
 					@Override
 					public void run() {
 						setDemoMode(true);
-						mController.login(DemoNetwork.DEMO_EMAIL);
+						doLogin(DemoNetwork.DEMO_EMAIL);
 
 						if (!isRedirect) {
 							Intent intent = new Intent(LoginActivity.this, MainActivity.class);
@@ -435,7 +435,7 @@ public class LoginActivity extends BaseActivity {
 					mController.reloadFacilitiesByAdapter(active.getId(), true);
 				}
 
-				if (!mDoGoogleLoginRunnable.isStopped()) {
+				if (mDoGoogleLoginRunnable != null && !mDoGoogleLoginRunnable.isStopped()) {
 					if (!isRedirect) {
 						Intent intent = new Intent(this, MainActivity.class);
 						startActivity(intent);
