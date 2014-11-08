@@ -561,32 +561,6 @@ public final class Controller {
 	}
 
 	/**
-	 * Marks device as hidden on server.
-	 * 
-	 * This CAN'T be called on UI thread!
-	 * 
-	 * @param device
-	 * @return true on success, false otherwise
-	 */
-	public boolean hideDevice(Device device) throws NotImplementedException {
-		device.setVisibility(false);
-		return saveDevice(device, EnumSet.of(SaveDevice.SAVE_VISIBILITY));
-	}
-
-	/**
-	 * Marks device as visible on server.
-	 * 
-	 * This CAN'T be called on UI thread!
-	 * 
-	 * @param device
-	 * @return true on success, false otherwise
-	 */
-	public boolean unhideDevice(Device device) throws NotImplementedException {
-		device.setVisibility(true);
-		return saveDevice(device, EnumSet.of(SaveDevice.SAVE_VISIBILITY));
-	}
-
-	/**
 	 * Return list of all uninitialized facilities from adapter
 	 * 
 	 * @param adapterId

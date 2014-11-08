@@ -185,14 +185,13 @@ public class FacilitiesModel {
 	}
 
 	public boolean saveDevice(Device device, EnumSet<SaveDevice> what) {
-		// FIXME: This should be rewrited somehow
 		Facility facility = device.getFacility();
 
 		boolean result = false;
 
 		try {
 			result = mNetwork.updateDevice(facility.getAdapterId(), device, what);
-			// result = updateFacility(facility);
+			result = refreshFacility(facility);
 		} catch (NetworkException e) {
 			e.printStackTrace();
 		}
