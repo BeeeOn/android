@@ -593,26 +593,8 @@ public final class Controller {
 	 * @param withIgnored
 	 * @return List of uninitialized facilities (or empty list)
 	 */
-	public List<Facility> getUninitializedFacilities(String adapterId, boolean withIgnored) {
-		return mHousehold.uninitializedFacilitiesModel.getUninitializedFacilitiesByAdapter(adapterId, withIgnored);
-	}
-
-	/**
-	 * Set all uninitialized facilities from adapter as ignored (won't be returned by calling getUninitializedFacilities)
-	 * 
-	 * @param adapterId
-	 */
-	public void ignoreUninitializedFacilities(String adapterId) {
-		mHousehold.uninitializedFacilitiesModel.ignoreUninitalizedFacilities(adapterId);
-	}
-
-	/**
-	 * Stop ignoring all ignored uninitialized facilities from adapter (will be returned by calling getUninitializedFacilities)
-	 * 
-	 * @param adapterId
-	 */
-	public void unignoreUninitialized(String adapterId) {
-		mHousehold.uninitializedFacilitiesModel.unignoreUninitializedFacilities(adapterId);
+	public List<Facility> getUninitializedFacilities(String adapterId) {
+		return mHousehold.uninitializedFacilitiesModel.getUninitializedFacilitiesByAdapter(adapterId);
 	}
 
 	/**

@@ -169,6 +169,13 @@ public class SensorListFragment extends SherlockFragment {
 
 		mReloadFacilitiesTask.execute(adapterId);
 	}
+	
+	private void showAddSensorFragment() {
+		Log.d(TAG, "HERE ADD SENSOR +");
+
+		DialogFragment newFragment = new AddSensorFragmentDialog();
+		newFragment.show(mActivity.getSupportFragmentManager(), ADD_SENSOR_TAG);
+	}
 
 	public boolean redrawDevices() {
 		if (isPaused) {
@@ -188,12 +195,7 @@ public class SensorListFragment extends SherlockFragment {
 
 			@Override
 			public void onClick(View v) {
-				Log.d(TAG, "HERE ADD SENSOR +");
-				mController.unignoreUninitialized(mActiveAdapterId);
-
-				DialogFragment newFragment = new AddSensorFragmentDialog();
-				newFragment.show(mActivity.getSupportFragmentManager(), ADD_SENSOR_TAG);
-				return;
+				showAddSensorFragment();
 			}
 		});
 
@@ -226,11 +228,7 @@ public class SensorListFragment extends SherlockFragment {
 
 			@Override
 			public void onClick(View v) {
-				Log.d(TAG, "HERE ADD SENSOR +");
-				mController.unignoreUninitialized(mActiveAdapterId);
-
-				DialogFragment newFragment = new AddSensorFragmentDialog();
-				newFragment.show(mActivity.getSupportFragmentManager(), ADD_SENSOR_TAG);
+				showAddSensorFragment();
 			}
 		};
 
@@ -244,14 +242,7 @@ public class SensorListFragment extends SherlockFragment {
 				@Override
 				public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 					if (position == mSensorAdapter.getCount() - 1) {
-						Log.d(TAG, "HERE ADD SENSOR +");
-						mController.unignoreUninitialized(mActiveAdapterId);
-
-						// Intent intent = new Intent(LocationScreenActivity.this, AddSensorFragmentDialog.class);
-						// startActivity(intent);
-
-						DialogFragment newFragment = new AddSensorFragmentDialog();
-						newFragment.show(mActivity.getSupportFragmentManager(), ADD_SENSOR_TAG);
+						showAddSensorFragment();
 						return;
 					}
 

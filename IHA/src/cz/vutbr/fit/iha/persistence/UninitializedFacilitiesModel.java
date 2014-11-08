@@ -20,7 +20,6 @@ public class UninitializedFacilitiesModel {
 
 	private final Map<String, Map<String, Facility>> mFacilities = new HashMap<String, Map<String, Facility>>(); // adapterId => (facilityId => facility)
 	private final Map<String, DateTime> mLastUpdates = new HashMap<String, DateTime>(); // adapterId => lastUpdate of facilities
-	private final Vector<String> mIgnoredFacilities = new Vector<String>(); // adapterId
 
 	private static final int RELOAD_EVERY_SECONDS = 10 * 60;
 
@@ -28,16 +27,14 @@ public class UninitializedFacilitiesModel {
 		mNetwork = network;
 	}
 
-	public List<Facility> getUninitializedFacilitiesByAdapter(String adapterId, boolean withIgnored) {
+	public List<Facility> getUninitializedFacilitiesByAdapter(String adapterId) {
 		List<Facility> facilities = new ArrayList<Facility>();
 
 		Map<String, Facility> adapterFacilities = mFacilities.get(adapterId);
 		if (adapterFacilities != null) {
 			for (Facility facility : adapterFacilities.values()) {
 				if (facility.getAdapterId().equals(adapterId)) {
-					if (withIgnored || !mIgnoredFacilities.contains(facility.getId())) {
-						facilities.add(facility);
-					}
+					facilities.add(facility);
 				}
 			}
 		}
@@ -48,19 +45,7 @@ public class UninitializedFacilitiesModel {
 		return facilities;
 	}
 
-	public void ignoreUninitalizedFacilities(String adapterId) {
-		for (Facility facility : getUninitializedFacilitiesByAdapter(adapterId, false)) {
-			mIgnoredFacilities.add(facility.getId());
-		}
-	}
-
-	public void unignoreUninitializedFacilities(String adapterId) {
-		for (Facility facility : getUninitializedFacilitiesByAdapter(adapterId, true)) {
-			mIgnoredFacilities.removeElement(facility.getId());
-		}
-	}
-
-	public void setUninitialiyedFacilitiesByAdapter(String adapterId, List<Facility> facilities) {
+	public void setUninitializedFacilitiesByAdapter(String adapterId, List<Facility> facilities) {
 		Map<String, Facility> adapterFacilities = mFacilities.get(adapterId);
 		if (adapterFacilities != null) {
 			adapterFacilities.clear();
@@ -100,8 +85,7 @@ public class UninitializedFacilitiesModel {
 
 	private boolean loadFromServer(String adapterId) {
 		try {
-			// TODO: Load ignoredUninitializedDevices from some cache
-			setUninitialiyedFacilitiesByAdapter(adapterId, mNetwork.getNewFacilities(adapterId));
+			setUninitializedFacilitiesByAdapter(adapterId, mNetwork.getNewFacilities(adapterId));
 			setLastUpdate(adapterId, DateTime.now());
 			saveToCache(adapterId);
 		} catch (NetworkException e) {
@@ -116,14 +100,12 @@ public class UninitializedFacilitiesModel {
 		// TODO: implement this
 		return false;
 
-		// TODO: Load ignoredUninitializedDevices from some cache
 		// setFacilitiesByAdapter(facilitiesFromCache);
 		// setLastUpdate(adapterId, lastUpdateFromCache);
 	}
 
 	private void saveToCache(String adapterId) {
 		// TODO: implement this
-		// TODO: Save also ignoredUninitializedDevices to some cache
 	}
 
 }

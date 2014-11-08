@@ -244,7 +244,7 @@ public class AddSensorFragmentDialog extends TrackDialogFragment {
 					return;
 				}
 
-				List<Facility> facilities = mController.getUninitializedFacilities(mAdapter.getId(), false);
+				List<Facility> facilities = mController.getUninitializedFacilities(mAdapter.getId());
 
 				if (facilities.size() > 0) {
 					if (mCountDownTimer != null) {
