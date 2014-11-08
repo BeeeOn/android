@@ -18,7 +18,9 @@ import cz.vutbr.fit.iha.adapter.device.Device.SaveDevice;
 import cz.vutbr.fit.iha.adapter.device.DeviceLog;
 import cz.vutbr.fit.iha.adapter.device.DeviceLog.DataInterval;
 import cz.vutbr.fit.iha.adapter.device.DeviceLog.DataType;
+import cz.vutbr.fit.iha.adapter.device.DeviceType;
 import cz.vutbr.fit.iha.adapter.device.Facility;
+import cz.vutbr.fit.iha.adapter.device.RefreshInterval;
 import cz.vutbr.fit.iha.adapter.device.values.BaseEnumValue;
 import cz.vutbr.fit.iha.adapter.location.Location;
 import cz.vutbr.fit.iha.household.ActualUser;
@@ -88,17 +90,38 @@ public class DemoNetwork implements INetwork {
 		}
 	}
 
-	public boolean isAdapterAllowed(String adapterId) {
+	private boolean isAdapterAllowed(String adapterId) {
 		return getRandomForAdapter(adapterId).nextBoolean();
 	}
 
-	public Random getRandomForAdapter(String adapterId) {
+	private Random getRandomForAdapter(String adapterId) {
 		try {
 			int id = Integer.parseInt(adapterId);
 			return new Random(id);
 		} catch (NumberFormatException e) {
 			return new Random();
 		}
+	}
+
+	private int getNewValue(Device device) {
+		double lastValue = device.getValue().getDoubleValue();
+		double range = 2 + Math.log(device.getFacility().getRefresh().getInterval());
+
+		Random random = new Random();
+
+		if (Double.isNaN(lastValue)) {
+			lastValue = random.nextDouble() * 1000;
+		}
+
+		if (device.getValue() instanceof BaseEnumValue) {
+			lastValue = random.nextBoolean() ? 1 : 0;
+		} else {
+			double addvalue = random.nextInt((int) range * 1000) / 1000;
+			boolean plus = random.nextBoolean();
+			lastValue = lastValue + addvalue * (plus ? 1 : -1);
+		}
+
+		return (int) lastValue;
 	}
 
 	@Override
@@ -147,6 +170,8 @@ public class DemoNetwork implements INetwork {
 		// Use random offset
 		adapter.setUtcOffset(rand.nextInt(24 * 60) - 12 * 60);
 
+		mAdapters.put(adapter.getId(), new AdapterHolder(adapter));
+
 		return true;
 	}
 
@@ -167,9 +192,20 @@ public class DemoNetwork implements INetwork {
 
 		AdapterHolder holder = mAdapters.get(adapterId);
 		if (holder != null) {
-			// Set last update time to time between (-26 hours, now>
+			Random rand = new Random();
+
 			for (Facility facility : holder.facilities.values()) {
-				facility.setLastUpdate(DateTime.now(DateTimeZone.UTC).minusSeconds(new Random().nextInt(60 * 60 * 26)));
+				if (facility.isExpired()) {
+					// Set new random values
+					facility.setBattery(rand.nextInt(101));
+					facility.setLastUpdate(DateTime.now(DateTimeZone.UTC));
+					facility.setNetworkQuality(rand.nextInt(101));
+
+					for (Device device : facility.getDevices()) {
+						device.setValue(String.valueOf(getNewValue(device)));
+					}
+				}
+
 				facilities.add(facility);
 			}
 		}
@@ -196,8 +232,8 @@ public class DemoNetwork implements INetwork {
 
 	@Override
 	public boolean updateDevice(String adapterId, Device device, EnumSet<SaveDevice> toSave) {
-		// TODO Auto-generated method stub
-		return false;
+		// NOTE: this replaces (or add) whole facility, not only device's fields marked as toSave
+		return updateFacility(adapterId, device.getFacility(), toSave);
 	}
 
 	@Override
@@ -252,19 +288,67 @@ public class DemoNetwork implements INetwork {
 			return false;
 		}
 
-		if (!holder.facilities.containsKey(facility.getId())) {
-			return false;
-		}
-
-		// NOTE: this replaces (or add) whole facility, not only fields marked as toSave
+		// NOTE: this replaces (or add, in case of initializing new facility) whole facility, not only fields marked as toSave
 		holder.facilities.put(facility.getId(), facility);
 		return true;
 	}
 
 	@Override
 	public List<Facility> getNewFacilities(String adapterId) {
-		// TODO Auto-generated method stub
-		return new ArrayList<Facility>();
+		List<Facility> facilities = new ArrayList<Facility>();
+
+		AdapterHolder holder = mAdapters.get(adapterId);
+		if (holder == null) {
+			return facilities;
+		}
+
+		Random rand = new Random();
+		if (rand.nextInt(4) == 0) {
+			Facility facility = new Facility();
+
+			facility.setAdapterId(adapterId);
+
+			// Create unique facility id
+			String address;
+			int i = 0;
+			do {
+				address = "10.0.0." + String.valueOf(i++);
+			} while (holder.facilities.containsKey(address));
+
+			facility.setAddress(address);
+			facility.setBattery(rand.nextInt(101));
+			facility.setInitialized(rand.nextBoolean());
+			facility.setInvolveTime(DateTime.now(DateTimeZone.UTC));
+			facility.setLastUpdate(DateTime.now(DateTimeZone.UTC));
+			// facility.setLocationId(locationId); // uninitialized facility has no location
+			facility.setNetworkQuality(rand.nextInt(101));
+
+			RefreshInterval[] refresh = RefreshInterval.values();
+			facility.setRefresh(refresh[rand.nextInt(refresh.length)]);
+
+			// add device
+			int count = rand.nextInt(5);
+			do {
+				// Create unique device type
+				DeviceType[] types = DeviceType.values();
+				int typeId = 0;
+				do {
+					typeId = rand.nextInt(types.length);
+				} while (facility.getDeviceByType(types[typeId]) != null);
+
+				Device device = DeviceType.createDeviceFromType(typeId);
+				device.setFacility(facility);
+				// device.setName(name); // uninitialized device has no name
+				device.setValue(String.valueOf(getNewValue(device)));
+				device.setVisibility(true);
+
+				facility.addDevice(device);
+			} while (--count > 0);
+
+			facilities.add(facility);
+		}
+
+		return facilities;
 	}
 
 	@Override
@@ -273,7 +357,7 @@ public class DemoNetwork implements INetwork {
 		DeviceLog log = new DeviceLog(DataType.AVERAGE, DataInterval.RAW);
 
 		double lastValue = pair.device.getValue().getDoubleValue();
-		double range = 1 + Math.log(device.getFacility().getRefresh().getInterval());
+		double range = 2 + Math.log(device.getFacility().getRefresh().getInterval());
 
 		long start = pair.interval.getStartMillis();
 		long end = pair.interval.getEndMillis();
@@ -419,8 +503,8 @@ public class DemoNetwork implements INetwork {
 
 	@Override
 	public boolean deleteAccount(String adapterId, User user) {
-		// TODO Auto-generated method stub
-		return false;
+		// TODO: Actual implementation deletes adapter, not account...
+		return mAdapters.remove(adapterId) != null;
 	}
 
 	@Override

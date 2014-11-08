@@ -5,15 +5,12 @@ import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.List;
 
-import android.content.Context;
-
 import cz.vutbr.fit.iha.adapter.Adapter;
 import cz.vutbr.fit.iha.adapter.device.Device;
 import cz.vutbr.fit.iha.adapter.device.Device.SaveDevice;
 import cz.vutbr.fit.iha.adapter.device.DeviceLog;
 import cz.vutbr.fit.iha.adapter.device.Facility;
 import cz.vutbr.fit.iha.adapter.location.Location;
-import cz.vutbr.fit.iha.controller.Controller;
 import cz.vutbr.fit.iha.household.ActualUser;
 import cz.vutbr.fit.iha.household.User;
 import cz.vutbr.fit.iha.network.xml.CustomViewPair;
