@@ -13,19 +13,19 @@ import cz.vutbr.fit.iha.IdentifierComparator;
 import cz.vutbr.fit.iha.adapter.device.Device;
 import cz.vutbr.fit.iha.adapter.device.Device.SaveDevice;
 import cz.vutbr.fit.iha.adapter.device.Facility;
-import cz.vutbr.fit.iha.network.Network;
+import cz.vutbr.fit.iha.network.INetwork;
 import cz.vutbr.fit.iha.network.exception.NetworkException;
 
 public class FacilitiesModel {
 
-	private final Network mNetwork;
+	private final INetwork mNetwork;
 
 	private final Map<String, Map<String, Facility>> mFacilities = new HashMap<String, Map<String, Facility>>(); // adapterId => (facilityId => facility)
 	private final Map<String, DateTime> mLastUpdates = new HashMap<String, DateTime>(); // adapterId => lastUpdate of facilities
 
 	private static final int RELOAD_EVERY_SECONDS = 10 * 60;
 
-	public FacilitiesModel(Network network) {
+	public FacilitiesModel(INetwork network) {
 		mNetwork = network;
 	}
 

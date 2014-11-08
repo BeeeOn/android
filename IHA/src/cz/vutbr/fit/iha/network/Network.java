@@ -64,36 +64,7 @@ import cz.vutbr.fit.iha.util.Log;
  * @author ThinkDeep
  * @author Robyer
  */
-public class Network {
-
-	/**
-	 * Action of View messages
-	 * 
-	 * @author ThinkDeep
-	 * 
-	 */
-	public enum NetworkAction {
-		REMOVE("0"), //
-		ADD("1");
-
-		private final String mAction;
-
-		private NetworkAction(String action) {
-			mAction = action;
-		}
-
-		public String getValue() {
-			return mAction;
-		}
-
-		public static NetworkAction fromValue(String value) {
-			for (NetworkAction item : values()) {
-				if (value.equalsIgnoreCase(item.getValue()))
-					return item;
-			}
-			throw new IllegalArgumentException("Invalid NetworkAction value");
-		}
-	}
+public class Network implements INetwork {
 
 	private static final String TAG = Network.class.getSimpleName();;
 
@@ -301,18 +272,6 @@ public class Network {
 		ConnectivityManager connectivityManager = (ConnectivityManager) mContext.getSystemService(Context.CONNECTIVITY_SERVICE);
 		NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
 		return activeNetworkInfo != null && activeNetworkInfo.isConnected();
-	}
-
-	/**
-	 * Method check background data under API 14
-	 * 
-	 * @see APP works without demo data on (2.3.4 tested)
-	 * @return true if is allowed
-	 */
-	@SuppressWarnings("deprecation")
-	public boolean checkBackgroundData() {
-		ConnectivityManager connectivityManager = (ConnectivityManager) mContext.getSystemService(Context.CONNECTIVITY_SERVICE);
-		return connectivityManager.getBackgroundDataSetting();
 	}
 
 	private void doResign() {

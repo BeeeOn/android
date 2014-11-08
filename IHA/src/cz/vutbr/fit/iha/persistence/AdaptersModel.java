@@ -10,12 +10,12 @@ import org.joda.time.DateTime;
 
 import cz.vutbr.fit.iha.IdentifierComparator;
 import cz.vutbr.fit.iha.adapter.Adapter;
-import cz.vutbr.fit.iha.network.Network;
+import cz.vutbr.fit.iha.network.INetwork;
 import cz.vutbr.fit.iha.network.exception.NetworkException;
 
 public class AdaptersModel {
 
-	private final Network mNetwork;
+	private final INetwork mNetwork;
 
 	private final Map<String, Adapter> mAdapters = new HashMap<String, Adapter>();
 
@@ -23,7 +23,7 @@ public class AdaptersModel {
 
 	private static final int RELOAD_EVERY_SECONDS = 10 * 60;
 
-	public AdaptersModel(Network network) {
+	public AdaptersModel(INetwork network) {
 		mNetwork = network;
 	}
 

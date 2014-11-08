@@ -3,7 +3,6 @@ package cz.vutbr.fit.iha.controller;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -17,15 +16,15 @@ import cz.vutbr.fit.iha.adapter.device.DeviceLog.DataInterval;
 import cz.vutbr.fit.iha.adapter.device.DeviceLog.DataType;
 import cz.vutbr.fit.iha.adapter.device.DeviceType;
 import cz.vutbr.fit.iha.adapter.device.Facility;
-import cz.vutbr.fit.iha.adapter.device.values.BaseEnumValue;
 import cz.vutbr.fit.iha.adapter.location.Location;
 import cz.vutbr.fit.iha.exception.NotImplementedException;
 import cz.vutbr.fit.iha.household.ActualUser;
-import cz.vutbr.fit.iha.household.DemoHousehold;
 import cz.vutbr.fit.iha.household.Household;
 import cz.vutbr.fit.iha.household.User;
 import cz.vutbr.fit.iha.household.User.Gender;
+import cz.vutbr.fit.iha.network.DemoNetwork;
 import cz.vutbr.fit.iha.network.GoogleAuth;
+import cz.vutbr.fit.iha.network.INetwork;
 import cz.vutbr.fit.iha.network.Network;
 import cz.vutbr.fit.iha.network.exception.FalseException;
 import cz.vutbr.fit.iha.network.exception.NetworkException;
@@ -53,7 +52,7 @@ public final class Controller {
 	private final Persistence mPersistence;
 
 	/** Network service for communication with server */
-	private final Network mNetwork;
+	private final INetwork mNetwork;
 
 	/** Household object holds logged in user and all adapters and lists which belongs to him */
 	private final Household mHousehold;
@@ -89,9 +88,9 @@ public final class Controller {
 	private Controller(Context context) {
 		mContext = context;
 
-		mNetwork = new Network(mContext, this, Utils.isDebugVersion(context));
+		mNetwork = mDemoMode ? new DemoNetwork(context) : new Network(mContext, this, Utils.isDebugVersion(context));
 		mPersistence = new Persistence(mContext);
-		mHousehold = mDemoMode ? new DemoHousehold(mContext, mNetwork) : new Household(mContext, mNetwork);
+		mHousehold = new Household(mContext, mNetwork);
 		mNetwork.setUser(mHousehold.user);
 	}
 
@@ -179,12 +178,14 @@ public final class Controller {
 					// ggAuth.invalidateToken();
 					// ggAuth.doInForeground((ggAuth.getPictureIMG() == null)? true:false);
 
-					mNetwork.startGoogleAuth(true, getActualUser().isPictureDefault() ? true : false);
+					if (mNetwork instanceof Network) {
+						((Network) mNetwork).startGoogleAuth(true, getActualUser().isPictureDefault() ? true : false);
 
-					// this happen only on first signing (or when someone delete grants on google, or token is old)
-					// while(GoogleAuth.getGoogleAuth().getPictureIMG() == null);
-					while (getActualUser().isPictureDefault())
-						; // FIXME: not sure with this, need to check (first sing in)
+						// this happen only on first signing (or when someone delete grants on google, or token is old)
+						// while(GoogleAuth.getGoogleAuth().getPictureIMG() == null);
+						while (getActualUser().isPictureDefault())
+							; // FIXME: not sure with this, need to check (first sing in)
+					}
 
 					return login(email);
 
@@ -728,41 +729,6 @@ public final class Controller {
 		// FIXME: rewrite this method even better - demo mode, caching, etc.
 		DeviceLog log = new DeviceLog(DataType.AVERAGE, DataInterval.RAW);
 
-		if (mDemoMode) {
-			// Generate random values for log in demo mode
-
-			double lastValue = pair.device.getValue().getDoubleValue();
-			double range = 1 + Math.log(device.getFacility().getRefresh().getInterval());
-
-			long start = pair.interval.getStartMillis();
-			long end = pair.interval.getEndMillis();
-
-			Random random = new Random();
-
-			if (Double.isNaN(lastValue)) {
-				lastValue = random.nextDouble() * 1000;
-			}
-
-			int everyMsecs = Math.max(pair.gap.getValue(), device.getFacility().getRefresh().getInterval()) * 1000;
-
-			boolean isBinary = (device.getValue() instanceof BaseEnumValue);
-
-			while (start < end) {
-				if (isBinary) {
-					lastValue = random.nextBoolean() ? 1 : 0;
-				} else {
-					double addvalue = random.nextInt((int) range * 1000) / 1000;
-					boolean plus = random.nextBoolean();
-					lastValue = lastValue + addvalue * (plus ? 1 : -1);
-				}
-
-				log.addValue(log.new DataRow(start, (float) lastValue));
-				start += everyMsecs;
-			}
-
-			return log;
-		}
-
 		try {
 			log = mNetwork.getLog(device.getFacility().getAdapterId(), device, pair);
 		} catch (NetworkException e) {
@@ -855,7 +821,9 @@ public final class Controller {
 	 * @param email
 	 */
 	public void initGoogle(LoginActivity activity, String email) {
-		mNetwork.initGoogle(new GoogleAuth(activity, email));
+		if (mNetwork instanceof Network) {
+			((Network) mNetwork).initGoogle(new GoogleAuth(activity, email));
+		}
 	}
 
 	/**
@@ -870,7 +838,11 @@ public final class Controller {
 	 * @return -> look at network
 	 */
 	public boolean startGoogle(boolean blocking, boolean fetchPhoto) {
-		return mNetwork.startGoogleAuth(blocking, fetchPhoto);
+		if (mNetwork instanceof Network) {
+			return ((Network) mNetwork).startGoogleAuth(blocking, fetchPhoto);
+		}
+		
+		return false;
 	}
 
 	/**

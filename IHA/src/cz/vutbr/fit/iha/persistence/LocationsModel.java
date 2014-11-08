@@ -11,19 +11,19 @@ import org.joda.time.DateTime;
 
 import cz.vutbr.fit.iha.IdentifierComparator;
 import cz.vutbr.fit.iha.adapter.location.Location;
-import cz.vutbr.fit.iha.network.Network;
+import cz.vutbr.fit.iha.network.INetwork;
 import cz.vutbr.fit.iha.network.exception.NetworkException;
 
 public class LocationsModel {
 
-	private final Network mNetwork;
+	private final INetwork mNetwork;
 
 	private final Map<String, Map<String, Location>> mLocations = new HashMap<String, Map<String, Location>>(); // adapterId => (locationId => location)
 	private final Map<String, DateTime> mLastUpdates = new HashMap<String, DateTime>(); // adapterId => lastUpdate of location
 
 	private static final int RELOAD_EVERY_SECONDS = 10 * 60;
 
-	public LocationsModel(Network network) {
+	public LocationsModel(INetwork network) {
 		mNetwork = network;
 	}
 

@@ -2,7 +2,7 @@ package cz.vutbr.fit.iha.household;
 
 import android.content.Context;
 import cz.vutbr.fit.iha.adapter.Adapter;
-import cz.vutbr.fit.iha.network.Network;
+import cz.vutbr.fit.iha.network.INetwork;
 import cz.vutbr.fit.iha.persistence.AdaptersModel;
 import cz.vutbr.fit.iha.persistence.FacilitiesModel;
 import cz.vutbr.fit.iha.persistence.LocationsModel;
@@ -13,7 +13,7 @@ import cz.vutbr.fit.iha.persistence.UninitializedFacilitiesModel;
  * 
  * @author Robyer
  */
-public class Household {
+public final class Household {
 
 	protected final Context mContext;
 
@@ -32,7 +32,7 @@ public class Household {
 	/** Active adapter. */
 	public Adapter activeAdapter;
 
-	public Household(Context context, Network network) {
+	public Household(Context context, INetwork network) {
 		mContext = context;
 
 		adaptersModel = new AdaptersModel(network);
