@@ -142,6 +142,18 @@ public class WidgetData {
 	}
 
 	/**
+	 * Because we're saving SystemClock.elapsedRealtime() value, which is time since phone boot, it will be incorrect after phone reboot. This method tries to fix that by reseting lastUpdate time when
+	 * it is greater than actual SystemClock.elapsedRealtime() value.
+	 * 
+	 * @param now Actual SystemClock.elapsedRealtime() value
+	 */
+	private void fixLastUpdate(long now) {
+		if (lastUpdate > now) {
+			lastUpdate = 0;
+		}
+	}
+
+	/**
 	 * Checks if widget is expired and should be redrawn
 	 * 
 	 * @param now
@@ -149,6 +161,7 @@ public class WidgetData {
 	 * @return true if next update time is in the past (or <1000ms in future from now)
 	 */
 	public boolean isExpired(long now) {
+		fixLastUpdate(now);
 		return (lastUpdate + interval * 1000) - now <= 1000;
 	}
 
@@ -160,6 +173,7 @@ public class WidgetData {
 	 * @return
 	 */
 	public long getNextUpdate(long now) {
+		fixLastUpdate(now);
 		return lastUpdate > 0 ? lastUpdate + interval * 1000 : now;
 	}
 
