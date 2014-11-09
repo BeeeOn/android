@@ -22,6 +22,7 @@ import cz.vutbr.fit.iha.adapter.device.DeviceType;
 import cz.vutbr.fit.iha.adapter.device.Facility;
 import cz.vutbr.fit.iha.adapter.device.RefreshInterval;
 import cz.vutbr.fit.iha.adapter.device.values.BaseEnumValue;
+import cz.vutbr.fit.iha.adapter.device.values.BaseEnumValue.Item;
 import cz.vutbr.fit.iha.adapter.location.Location;
 import cz.vutbr.fit.iha.household.ActualUser;
 import cz.vutbr.fit.iha.household.User;
@@ -103,25 +104,29 @@ public class DemoNetwork implements INetwork {
 		}
 	}
 
-	private int getNewValue(Device device) {
-		double lastValue = device.getValue().getDoubleValue();
-		double range = 2 + Math.log(device.getFacility().getRefresh().getInterval());
-
+	private void setNewValue(Device device) {
 		Random random = new Random();
-
-		if (Double.isNaN(lastValue)) {
-			lastValue = random.nextDouble() * 1000;
-		}
-
+		
 		if (device.getValue() instanceof BaseEnumValue) {
-			lastValue = random.nextBoolean() ? 1 : 0;
+			BaseEnumValue value = (BaseEnumValue)device.getValue();
+			List<Item> items = value.getEnumItems();
+			Item item = items.get(random.nextInt(items.size()));
+			
+			device.setValue(item.getValue());
 		} else {
+			double lastValue = device.getValue().getDoubleValue();
+			double range = 2 + Math.log(device.getFacility().getRefresh().getInterval());
+
+			if (Double.isNaN(lastValue)) {
+				lastValue = random.nextDouble() * 1000;
+			}
+			
 			double addvalue = random.nextInt((int) range * 1000) / 1000;
 			boolean plus = random.nextBoolean();
 			lastValue = lastValue + addvalue * (plus ? 1 : -1);
+			
+			device.setValue(String.valueOf((int)lastValue));
 		}
-
-		return (int) lastValue;
 	}
 
 	@Override
@@ -202,7 +207,7 @@ public class DemoNetwork implements INetwork {
 					facility.setNetworkQuality(rand.nextInt(101));
 
 					for (Device device : facility.getDevices()) {
-						device.setValue(String.valueOf(getNewValue(device)));
+						setNewValue(device);
 					}
 				}
 
@@ -289,7 +294,7 @@ public class DemoNetwork implements INetwork {
 			newFacility.setNetworkQuality(rand.nextInt(101));
 
 			for (Device device : newFacility.getDevices()) {
-				device.setValue(String.valueOf(getNewValue(device)));
+				setNewValue(device);
 			}
 		}
 
@@ -354,7 +359,7 @@ public class DemoNetwork implements INetwork {
 				Device device = DeviceType.createDeviceFromType(typeId);
 				device.setFacility(facility);
 				// device.setName(name); // uninitialized device has no name
-				device.setValue(String.valueOf(getNewValue(device)));
+				setNewValue(device);
 				device.setVisibility(true);
 
 				facility.addDevice(device);
@@ -385,11 +390,22 @@ public class DemoNetwork implements INetwork {
 
 		int everyMsecs = Math.max(pair.gap.getValue(), device.getFacility().getRefresh().getInterval()) * 1000;
 
-		boolean isBinary = (device.getValue() instanceof BaseEnumValue);
+		boolean isEnum = (device.getValue() instanceof BaseEnumValue);
 
 		while (start < end) {
-			if (isBinary) {
-				lastValue = random.nextBoolean() ? 1 : 0;
+			if (isEnum) {
+				BaseEnumValue value = (BaseEnumValue)device.getValue();
+				List<Item> items = value.getEnumItems();
+				
+				int pos = 0;
+				for (Item item : items) {
+					if (item.getId() == (int)lastValue) {
+						break;
+					}
+					pos++;
+				}
+				pos = (items.size() + pos + (random.nextInt(3) - 1)) % items.size(); // (size + pos + <-1,1>) % size  - first size is because it could end up to "-1"
+				lastValue = items.get(pos).getId();
 			} else {
 				double addvalue = random.nextInt((int) range * 1000) / 1000;
 				boolean plus = random.nextBoolean();

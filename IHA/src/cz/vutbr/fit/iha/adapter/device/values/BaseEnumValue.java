@@ -100,5 +100,9 @@ public abstract class BaseEnumValue extends BaseValue {
 	public int getStateStringResource() {
 		return mValue.getStringResource();
 	}
+	
+	public List<Item> getEnumItems() {
+		return mItems;
+	}
 
 }
