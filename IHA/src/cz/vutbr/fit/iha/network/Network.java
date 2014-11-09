@@ -102,7 +102,7 @@ public class Network implements INetwork {
 	private Context mContext;
 	private GoogleAuth mGoogleAuth;
 	private ActualUser mUser;
-	private String mSessionID;
+	private String mSessionID = "";
 	private String mSecretVar;
 	private boolean mUseDebugServer;
 	private boolean mGoogleReinit;

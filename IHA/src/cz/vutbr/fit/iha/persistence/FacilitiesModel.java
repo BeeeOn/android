@@ -113,7 +113,7 @@ public class FacilitiesModel {
 				facilities.remove(facility);
 			}
 		}
-		
+
 		try {
 			List<Facility> newFacilities = mNetwork.getFacilities(facilities);
 			if (newFacilities == null)
@@ -157,7 +157,6 @@ public class FacilitiesModel {
 	}
 
 	private void updateFacilityInMap(Facility facility) {
-		// TODO: rewrite better?
 		String adapterId = facility.getAdapterId();
 
 		Map<String, Facility> adapterFacilities = mFacilities.get(adapterId);
@@ -166,18 +165,17 @@ public class FacilitiesModel {
 			mFacilities.put(adapterId, adapterFacilities);
 		}
 
-		Facility oldFacility = adapterFacilities.get(facility.getId());
-		if (oldFacility == null) {
-			adapterFacilities.put(facility.getId(), facility);
-		} else {
-			oldFacility.replaceData(facility);
-		}
+		adapterFacilities.put(facility.getId(), facility);
 	}
 
 	/**
 	 * This reloads data of facility from server...
 	 */
-	public boolean refreshFacility(Facility facility) {
+	public boolean refreshFacility(Facility facility, boolean forceReload) {
+		if (!forceReload && !facility.isExpired()) {
+			return false;
+		}
+		
 		try {
 			Facility newFacility = mNetwork.getFacility(facility);
 			if (newFacility == null)
@@ -197,7 +195,7 @@ public class FacilitiesModel {
 
 		try {
 			result = mNetwork.updateFacility(facility.getAdapterId(), facility, what);
-			result = refreshFacility(facility);
+			result = refreshFacility(facility, true);
 		} catch (NetworkException e) {
 			e.printStackTrace();
 		}
@@ -212,7 +210,7 @@ public class FacilitiesModel {
 
 		try {
 			result = mNetwork.updateDevice(facility.getAdapterId(), device, what);
-			result = refreshFacility(facility);
+			result = refreshFacility(facility, true);
 		} catch (NetworkException e) {
 			e.printStackTrace();
 		}

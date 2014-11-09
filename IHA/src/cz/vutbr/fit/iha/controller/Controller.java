@@ -283,8 +283,26 @@ public final class Controller {
 	 * @param facility
 	 * @return
 	 */
-	public boolean updateFacility(Facility facility) {
-		return mHousehold.facilitiesModel.refreshFacility(facility);
+	public boolean updateFacility(Facility facility, boolean forceReload) {
+		if (!isLoggedIn()) {
+			return false;
+		}
+
+		return mHousehold.facilitiesModel.refreshFacility(facility, forceReload);
+	}
+	
+	/**
+	 * This CAN'T be called on UI thread!
+	 * 
+	 * @param facilities
+	 * @return
+	 */
+	public boolean updateFacilities(List<Facility> facilities, boolean forceReload) {
+		if (!isLoggedIn()) {
+			return false;
+		}
+
+		return mHousehold.facilitiesModel.refreshFacilities(facilities, forceReload);
 	}
 
 	/**

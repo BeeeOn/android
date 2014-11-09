@@ -17,7 +17,9 @@ public class WidgetData {
 	private static final String PREF_DEVICE_ICON = "device_icon";
 	private static final String PREF_DEVICE_VALUE = "device_value";
 	private static final String PREF_DEVICE_ADAPTER_ID = "device_adapter_id";
-	private static final String PREF_DEVICE_LAST_UPDATE = "device_last_update";
+	private static final String PREF_DEVICE_LAST_UPDATE_TEXT = "device_last_update_text";
+	private static final String PREF_DEVICE_LAST_UPDATE_TIME = "device_last_update_time";
+	private static final String PREF_DEVICE_REFRESH = "device_refresh";
 
 	private final int mWidgetId;
 
@@ -31,7 +33,9 @@ public class WidgetData {
 	public int deviceIcon;
 	public String deviceValue;
 	public String deviceAdapterId;
-	public String deviceLastUpdate;
+	public long deviceLastUpdateTime;
+	public String deviceLastUpdateText;
+	public int deviceRefresh;
 
 	/**
 	 * Create empty WidgetData object, you must call {@link #loadData(Context)} to fill it
@@ -77,7 +81,9 @@ public class WidgetData {
 		deviceIcon = prefs.getInt(PREF_DEVICE_ICON, 0);
 		deviceValue = prefs.getString(PREF_DEVICE_VALUE, "");
 		deviceAdapterId = prefs.getString(PREF_DEVICE_ADAPTER_ID, "");
-		deviceLastUpdate = prefs.getString(PREF_DEVICE_LAST_UPDATE, "");
+		deviceLastUpdateText = prefs.getString(PREF_DEVICE_LAST_UPDATE_TEXT, "");
+		deviceLastUpdateTime = prefs.getLong(PREF_DEVICE_LAST_UPDATE_TIME, 0);
+		deviceRefresh = prefs.getInt(PREF_DEVICE_REFRESH, 0);
 	}
 
 	/**
@@ -99,30 +105,10 @@ public class WidgetData {
 				.putInt(PREF_DEVICE_ICON, deviceIcon) //
 				.putString(PREF_DEVICE_VALUE, deviceValue) //
 				.putString(PREF_DEVICE_ADAPTER_ID, deviceAdapterId) //
-				.putString(PREF_DEVICE_LAST_UPDATE, deviceLastUpdate) //
+				.putString(PREF_DEVICE_LAST_UPDATE_TEXT, deviceLastUpdateText) //
+				.putLong(PREF_DEVICE_LAST_UPDATE_TIME, deviceLastUpdateTime) //
+				.putInt(PREF_DEVICE_REFRESH, deviceRefresh) //
 
-				.commit();
-	}
-
-	/**
-	 * Save time of last update of this widget
-	 * 
-	 * This also fills lastUpdate and deviceLastUpdate fields automatically
-	 * 
-	 * @param context
-	 * @param now
-	 * @param deviceLastUpdate
-	 */
-	public void saveLastUpdate(Context context, String lastValue, long lastUpdate, String deviceLastUpdate) {
-		this.deviceValue = lastValue;
-		this.lastUpdate = lastUpdate;
-		this.deviceLastUpdate = deviceLastUpdate;
-
-		getSettings(context) //
-				.edit() //
-				.putString(PREF_DEVICE_VALUE, lastValue) //
-				.putLong(PREF_LAST_UPDATE, lastUpdate) //
-				.putString(PREF_DEVICE_LAST_UPDATE, deviceLastUpdate) //
 				.commit();
 	}
 

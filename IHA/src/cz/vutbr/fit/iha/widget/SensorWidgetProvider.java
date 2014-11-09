@@ -106,7 +106,7 @@ public class SensorWidgetProvider extends AppWidgetProvider {
 
 		if (widgetData.layout == R.layout.widget_sensor) {
 			// For classic (= not-small) layout of widget, set also lastUpdate
-			remoteViews.setTextViewText(R.id.last_update, widgetData.deviceLastUpdate);
+			remoteViews.setTextViewText(R.id.last_update, widgetData.deviceLastUpdateText);
 		}
 
 		int widgetId = widgetData.getWidgetId();

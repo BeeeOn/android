@@ -138,17 +138,4 @@ public class Device implements IIdentifier {
 		return String.format("Name: %s\nVisibility: %s\nValue: %s", mName, Boolean.toString(mVisibility), mValue);
 	}
 
-	/**
-	 * Replace all data of this device by data of different device
-	 * 
-	 * @param newDevice
-	 *            with data that should be copied
-	 */
-	public void replaceData(Device newDevice) {
-		setFacility(newDevice.getFacility());
-		setVisibility(newDevice.isVisible());
-		setName(newDevice.getName());
-		mValue.setValue(newDevice.mValue.getRawValue());
-	}
-
 }

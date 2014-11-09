@@ -273,35 +273,4 @@ public class Facility implements IIdentifier {
 		return null;
 	}
 
-	/**
-	 * Replace all data of this facility by data of different facility
-	 * 
-	 * @param newFacility
-	 *            with data that should be copied
-	 */
-	public void replaceData(Facility newFacility) {
-		setAdapterId(newFacility.getAdapterId());
-		setAddress(newFacility.getAddress());
-		setBattery(newFacility.getBattery());
-		setInitialized(newFacility.isInitialized());
-		setInvolveTime(newFacility.getInvolveTime());
-		setLocationId(newFacility.getLocationId());
-		setNetworkQuality(newFacility.getNetworkQuality());
-		setRefresh(newFacility.getRefresh());
-		setLastUpdate(newFacility.getLastUpdate());
-
-		mDevices.clear();
-		for (Device newDevice : newFacility.mDevices) {
-			try {
-				Device device = newDevice.getClass().newInstance();
-				device.replaceData(newDevice);
-				mDevices.add(device);
-			} catch (InstantiationException e) {
-				e.printStackTrace();
-			} catch (IllegalAccessException e) {
-				e.printStackTrace();
-			}
-		}
-	}
-
 }

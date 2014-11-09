@@ -261,7 +261,7 @@ public class GalleryControlExtension extends ManagedControlExtension {
 			@Override
 			public void run() {
 				Device device = mDevices.get(lastPosition);
-				if (mController.updateFacility(device.getFacility())) {
+				if (mController.updateFacility(device.getFacility(), false)) {
 					sendListItem(createControlListItem(lastPosition));
 				}
 

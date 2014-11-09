@@ -262,7 +262,7 @@ public class DemoNetwork implements INetwork {
 		List<Facility> result = new ArrayList<Facility>();
 
 		for (Facility facility : facilities) {
-			Facility newFacility = getFacility(facility.getAdapterId(), facility);
+			Facility newFacility = getFacility(facility);
 			if (newFacility != null) {
 				result.add(newFacility);
 			}
@@ -272,13 +272,28 @@ public class DemoNetwork implements INetwork {
 	}
 
 	@Override
-	public Facility getFacility(String adapterId, Facility facility) {
-		AdapterHolder holder = mAdapters.get(adapterId);
+	public Facility getFacility(Facility facility) {
+		AdapterHolder holder = mAdapters.get(facility.getAdapterId());
 		if (holder == null) {
 			return null;
 		}
+		
+		Random rand = new Random();
 
-		return holder.facilities.get(facility.getId());
+		Facility newFacility = holder.facilities.get(facility.getId());
+
+		if (newFacility.isExpired()) {
+			// Set new random values
+			newFacility.setBattery(rand.nextInt(101));
+			newFacility.setLastUpdate(DateTime.now(DateTimeZone.UTC));
+			newFacility.setNetworkQuality(rand.nextInt(101));
+
+			for (Device device : newFacility.getDevices()) {
+				device.setValue(String.valueOf(getNewValue(device)));
+			}
+		}
+
+		return newFacility;
 	}
 
 	@Override

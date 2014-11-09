@@ -3,6 +3,9 @@ package cz.vutbr.fit.iha.widget;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
+
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.app.Service;
@@ -14,9 +17,12 @@ import android.content.SharedPreferences;
 import android.os.IBinder;
 import android.os.PowerManager;
 import android.os.SystemClock;
+import android.util.SparseArray;
 import cz.vutbr.fit.iha.R;
 import cz.vutbr.fit.iha.adapter.Adapter;
 import cz.vutbr.fit.iha.adapter.device.Device;
+import cz.vutbr.fit.iha.adapter.device.Facility;
+import cz.vutbr.fit.iha.adapter.device.RefreshInterval;
 import cz.vutbr.fit.iha.controller.Controller;
 import cz.vutbr.fit.iha.util.Log;
 import cz.vutbr.fit.iha.util.TimeHelper;
@@ -146,27 +152,45 @@ public class WidgetUpdateService extends Service {
 
 		boolean forceUpdate = intent.getBooleanExtra(EXTRA_FORCE_UPDATE, false);
 
-		// TODO: reload all widgets with id IN widgetIds
-		for (Adapter adapter : controller.getAdapters()) {
-			controller.reloadLocations(adapter.getId(), false);
-			controller.reloadFacilitiesByAdapter(adapter.getId(), false);
-		}
+		SparseArray<WidgetData> widgetsToUpdate = new SparseArray<WidgetData>();
 
+		// Reload facilities data
+		List<Facility> facilities = new ArrayList<Facility>();
 		for (int widgetId : widgetIds) {
 			WidgetData widgetData = new WidgetData(widgetId);
 			widgetData.loadData(this);
 
-			// ignore uninitialized widgets
+			// Ignore uninitialized widgets
 			if (!widgetData.initialized) {
 				Log.v(TAG, String.format("Ignoring widget %d (not initialized)", widgetId));
 				continue;
 			}
 
-			// don't update widgets until their interval elapsed or we have force update
+			// Don't update widgets until their interval elapsed or we have force update
 			if (!forceUpdate && !widgetData.isExpired(now)) {
 				Log.v(TAG, String.format("Ignoring widget %d (not expired or forced)", widgetId));
 				continue;
 			}
+
+			// Remember we're updating this widget
+			widgetsToUpdate.put(widgetId, widgetData);
+
+			// Prepare list of facilities for network request
+			String[] ids = widgetData.deviceId.split(Device.ID_SEPARATOR, 2);
+
+			Facility facility = new Facility();
+			facility.setAdapterId(widgetData.deviceAdapterId);
+			facility.setAddress(ids[0]);
+			facility.setLastUpdate(new DateTime(widgetData.deviceLastUpdateTime, DateTimeZone.UTC));
+			facility.setRefresh(RefreshInterval.fromInterval(widgetData.deviceRefresh));
+
+			facilities.add(facility);
+		}
+		controller.updateFacilities(facilities, forceUpdate);
+
+		for (int i = 0; i < widgetsToUpdate.size(); i++) {
+			WidgetData widgetData = widgetsToUpdate.valueAt(i);
+			int widgetId = widgetData.getWidgetId();
 
 			Log.v(TAG, String.format("Updating widget %d", widgetId));
 
@@ -180,6 +204,8 @@ public class WidgetUpdateService extends Service {
 				widgetData.deviceAdapterId = device.getFacility().getAdapterId();
 				widgetData.deviceId = device.getId();
 				widgetData.lastUpdate = now;
+				widgetData.deviceLastUpdateTime = device.getFacility().getLastUpdate().getMillis();
+				widgetData.deviceRefresh = device.getFacility().getRefresh().getInterval();
 
 				// Check if we can format device's value (unitsHelper is null when user is not logged in)
 				if (unitsHelper != null) {
@@ -189,7 +215,7 @@ public class WidgetUpdateService extends Service {
 				// Check if we can format device's last update (timeHelper is null when user is not logged in)
 				if (timeHelper != null) {
 					// NOTE: This should use always absolute time, because widgets aren't updated so often
-					widgetData.deviceLastUpdate = timeHelper.formatLastUpdate(device.getFacility().getLastUpdate(), adapter);
+					widgetData.deviceLastUpdateText = timeHelper.formatLastUpdate(device.getFacility().getLastUpdate(), adapter);
 				}
 
 				// Save fresh data
@@ -198,7 +224,7 @@ public class WidgetUpdateService extends Service {
 				Log.v(TAG, String.format("Using fresh widget (%d) data", widgetId));
 			} else {
 				// NOTE: just temporary solution until it will be showed better on widget
-				widgetData.deviceLastUpdate = String.format("%s %s", widgetData.deviceLastUpdate, getString(R.string.widget_cached));
+				widgetData.deviceLastUpdateText = String.format("%s %s", widgetData.deviceLastUpdateText, getString(R.string.widget_cached));
 
 				Log.v(TAG, String.format("Using cached widget (%d) data", widgetId));
 			}
