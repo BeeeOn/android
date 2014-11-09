@@ -77,6 +77,7 @@ public abstract class SettingsItem {
 	}
 
 	public BaseItem fromSettings(SharedPreferences prefs) {
+		// NOTE: optimization is to cache this value (e.g. in static attribute of child object - or in some extra object with all settings), and update it automatically when settings is changed...
 		String id = prefs.getString(getPersistenceKey(), String.valueOf(getDefault().getId()));
 		return getItemById(Integer.parseInt(id));
 	}

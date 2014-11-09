@@ -40,34 +40,40 @@ public class WidgetUpdateService extends Service {
 	/** Helpers for managing service updating **/
 
 	public static void startUpdating(Context context, int[] appWidgetIds) {
-		final Intent service = getUpdateIntent(context);
-		service.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, appWidgetIds);
-		context.startService(service);
+		final Intent intent = getUpdateIntent(context);
+		intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, appWidgetIds);
+
+		// Start update service
+		context.startService(intent);
 	}
 
 	public static void stopUpdating(Context context) {
-		final PendingIntent service = getUpdatePendingIntent(context);
-		final AlarmManager m = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-		m.cancel(service);
-		context.stopService(getUpdateIntent(context));
+		// Cancel already planned alarm
+		AlarmManager m = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+		m.cancel(getUpdatePendingIntent(context));
+
+		// Stop update service
+		final Intent intent = getUpdateIntent(context);
+		context.stopService(intent);
 	}
 
-	public static void setAlarm(Context context, long triggerAtMillis) {
-		final PendingIntent service = getUpdatePendingIntent(context);
-		final AlarmManager m = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-		m.set(AlarmManager.ELAPSED_REALTIME, triggerAtMillis, service);
+	private void setAlarm(long triggerAtMillis) {
+		// Set new alarm time
+		Context context = getApplicationContext();
+		AlarmManager m = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+		m.set(AlarmManager.ELAPSED_REALTIME, triggerAtMillis, getUpdatePendingIntent(context));
 	}
 
 	/** Intent factories **/
 
-	public static Intent getUpdateIntent(Context context) {
+	private static Intent getUpdateIntent(Context context) {
 		return new Intent(context, WidgetUpdateService.class);
 	}
 
-	public static PendingIntent getUpdatePendingIntent(Context context) {
+	private static PendingIntent getUpdatePendingIntent(Context context) {
 		final Intent intent = getUpdateIntent(context);
 
-		return PendingIntent.getService(context, 0, intent, PendingIntent.FLAG_CANCEL_CURRENT); // or FLAG_UPDATE_CURRENT?
+		return PendingIntent.getService(context, 0, intent, PendingIntent.FLAG_CANCEL_CURRENT);
 	}
 
 	public static Intent getForceUpdateIntent(Context context, int widgetId) {
@@ -81,7 +87,7 @@ public class WidgetUpdateService extends Service {
 	public static PendingIntent getForceUpdatePendingIntent(Context context, int widgetId) {
 		final Intent intent = getForceUpdateIntent(context, widgetId);
 
-		return PendingIntent.getService(context, widgetId, intent, PendingIntent.FLAG_CANCEL_CURRENT); // or FLAG_UPDATE_CURRENT?
+		return PendingIntent.getService(context, widgetId, intent, PendingIntent.FLAG_CANCEL_CURRENT);
 	}
 
 	/** Service override methods **/
@@ -90,16 +96,20 @@ public class WidgetUpdateService extends Service {
 	public int onStartCommand(final Intent intent, int flags, int startId) {
 		super.onStartCommand(intent, flags, startId);
 
-		Log.v(TAG, String.format("onStartCommand(), startId = %d", startId));
+		boolean forceUpdate = intent.getBooleanExtra(EXTRA_FORCE_UPDATE, false);
 
-		if (!intent.getBooleanExtra(EXTRA_FORCE_UPDATE, false)) {
+		Log.v(TAG, String.format("onStartCommand(), startId = %d, forceUpdate = %b", startId, forceUpdate));
+
+		if (!forceUpdate) {
 			// set alarm for next update
 			long nextUpdate = calcNextUpdate();
 
-			Log.d(TAG, String.format("Next update: %d (now: %d)", nextUpdate, SystemClock.elapsedRealtime()));
-
-			if (nextUpdate > 0)
-				setAlarm(this, nextUpdate);
+			if (nextUpdate > 0) {
+				Log.d(TAG, String.format("Next update in %d seconds", (int) (nextUpdate - SystemClock.elapsedRealtime()) / 1000));
+				setAlarm(nextUpdate);
+			} else {
+				Log.d(TAG, "No planned next update");
+			}
 		}
 
 		// don't update when screen is off
@@ -168,7 +178,7 @@ public class WidgetUpdateService extends Service {
 
 			// Don't update widgets until their interval elapsed or we have force update
 			if (!forceUpdate && !widgetData.isExpired(now)) {
-				Log.v(TAG, String.format("Ignoring widget %d (not expired or forced)", widgetId));
+				Log.v(TAG, String.format("Ignoring widget %d (not expired nor forced)", widgetId));
 				continue;
 			}
 
@@ -191,8 +201,6 @@ public class WidgetUpdateService extends Service {
 		for (int i = 0; i < widgetsToUpdate.size(); i++) {
 			WidgetData widgetData = widgetsToUpdate.valueAt(i);
 			int widgetId = widgetData.getWidgetId();
-
-			Log.v(TAG, String.format("Updating widget %d", widgetId));
 
 			Adapter adapter = controller.getAdapter(widgetData.deviceAdapterId);
 			Device device = controller.getDevice(widgetData.deviceAdapterId, widgetData.deviceId);
@@ -221,12 +229,12 @@ public class WidgetUpdateService extends Service {
 				// Save fresh data
 				widgetData.saveData(getApplicationContext());
 
-				Log.v(TAG, String.format("Using fresh widget (%d) data", widgetId));
+				Log.v(TAG, String.format("Updating widget (%d) with fresh data", widgetId));
 			} else {
 				// NOTE: just temporary solution until it will be showed better on widget
 				widgetData.deviceLastUpdateText = String.format("%s %s", widgetData.deviceLastUpdateText, getString(R.string.widget_cached));
 
-				Log.v(TAG, String.format("Using cached widget (%d) data", widgetId));
+				Log.v(TAG, String.format("Updating widget (%d) with cached data", widgetId));
 			}
 
 			// Update widget
