@@ -88,6 +88,19 @@ public abstract class BaseEnumValue extends BaseValue {
 	}
 	
 	/**
+	 * @param value
+	 * @return Item object with specified double value (= id for now), or mUnknownValue Item
+	 */
+	public Item getItemByDoubleValue(double value) {
+		for (Item item : mItems) {
+			if (item.getId() == (int)value) {
+				return item;
+			}
+		}
+		return mUnknownValue;
+	}
+
+	/**
 	 * @return Color depending on active value
 	 */
 	public int getStateColor() {

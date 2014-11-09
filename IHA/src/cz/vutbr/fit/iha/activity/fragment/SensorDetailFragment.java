@@ -38,7 +38,6 @@ import com.actionbarsherlock.app.SherlockFragment;
 import com.actionbarsherlock.view.ActionMode;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
-import com.jjoe64.graphview.CustomLabelFormatter;
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.GraphView.GraphViewData;
 import com.jjoe64.graphview.GraphViewSeries;
@@ -55,6 +54,7 @@ import cz.vutbr.fit.iha.adapter.device.DeviceLog.DataInterval;
 import cz.vutbr.fit.iha.adapter.device.DeviceLog.DataType;
 import cz.vutbr.fit.iha.adapter.device.Facility;
 import cz.vutbr.fit.iha.adapter.device.RefreshInterval;
+import cz.vutbr.fit.iha.adapter.device.values.BaseEnumValue;
 import cz.vutbr.fit.iha.adapter.location.Location;
 import cz.vutbr.fit.iha.arrayadapter.LocationArrayAdapter;
 import cz.vutbr.fit.iha.asynctask.CallbackTask.CallbackTaskListener;
@@ -65,6 +65,7 @@ import cz.vutbr.fit.iha.pair.LogDataPair;
 import cz.vutbr.fit.iha.pair.SaveDevicePair;
 import cz.vutbr.fit.iha.pair.SaveFacilityPair;
 import cz.vutbr.fit.iha.thread.ToastMessageThread;
+import cz.vutbr.fit.iha.util.GraphViewHelper;
 import cz.vutbr.fit.iha.util.Log;
 import cz.vutbr.fit.iha.util.TimeHelper;
 import cz.vutbr.fit.iha.util.UnitsHelper;
@@ -452,37 +453,29 @@ public class SensorDetailFragment extends SherlockFragment {
 	}
 
 	private void addGraphView(final DateTimeFormatter fmt, final UnitsHelper unitsHelper) {
-		mGraphView = new LineGraphView(getView().getContext(), ""); // empty heading
-
-		mGraphView.getGraphViewStyle().setTextSize(getResources().getDimension(R.dimen.textsizesmaller));
-		mGraphView.getGraphViewStyle().setVerticalLabelsColor(getResources().getColor(R.color.iha_text_hint));
-		mGraphView.getGraphViewStyle().setHorizontalLabelsColor(getResources().getColor(R.color.iha_text_hint));
-		// mGraphView.getGraphViewStyle().setVerticalLabelsWidth(60);
-		// mGraphView.getGraphViewStyle().setNumHorizontalLabels(2);
-		mGraphView.setBackgroundColor(getResources().getColor(R.color.alpha_blue));// getResources().getColor(R.color.log_blue2));
-
-		((LineGraphView) mGraphView).setDrawBackground(true);
+		// Create and set graphView
+		mGraphView = GraphViewHelper.prepareGraphView(getView().getContext(), "", mDevice, fmt, unitsHelper); // empty heading
+		
+		mGraphView.setVisibility(View.GONE);
+		mGraphView.setScrollable(false);
+		mGraphView.setScalable(false);
+		
+		if (mGraphView instanceof LineGraphView) {
+			mGraphView.setBackgroundColor(getResources().getColor(R.color.alpha_blue));// getResources().getColor(R.color.log_blue2));
+			((LineGraphView) mGraphView).setDrawBackground(true);
+		}
 		// graphView.setAlpha(128);
 
+		// Add data series
 		GraphViewSeriesStyle seriesStyleBlue = new GraphViewSeriesStyle(getResources().getColor(R.color.iha_primary_cyan), 2);
 		// GraphViewSeriesStyle seriesStyleGray = new GraphViewSeriesStyle(getResources().getColor(R.color.light_gray),2);
 
 		mGraphSeries = new GraphViewSeries("Graph", seriesStyleBlue, new GraphViewData[] { new GraphView.GraphViewData(0, 0), });
 		mGraphView.addSeries(mGraphSeries);
-		mGraphView.setManualYAxisBounds(1.0, 0.0);
-
-		mGraphView.setCustomLabelFormatter(new CustomLabelFormatter() {
-			final String unit = unitsHelper.getStringUnit(mDevice.getValue());
-
-			@Override
-			public String formatLabel(double value, boolean isValueX) {
-				if (isValueX) {
-					return fmt.print((long) value);
-				}
-
-				return String.format("%s %s", unitsHelper.getStringValue(mDevice.getValue(), value), unit);
-			}
-		});
+		
+		if (!(mDevice.getValue() instanceof BaseEnumValue)) {
+			mGraphView.setManualYAxisBounds(1.0, 0.0);
+		}
 
 		mGraphLayout.addView(mGraphView);
 
@@ -588,7 +581,9 @@ public class SensorDetailFragment extends SherlockFragment {
 		Log.d(TAG, "Filling graph finished");
 
 		// Set maximum as +10% more than deviation
-		mGraphView.setManualYAxisBounds(log.getMaximum() + log.getDeviation() * 0.1, log.getMinimum());
+		if (!(mDevice.getValue() instanceof BaseEnumValue)) {
+			mGraphView.setManualYAxisBounds(log.getMaximum() + log.getDeviation() * 0.1, log.getMinimum());
+		}
 		// mGraphView.setViewPort(0, 7);
 		mGraphSeries.resetData(data);
 		mGraphInfo.setText(getView().getResources().getString(R.string.sen_detail_graph_info));
