@@ -17,8 +17,10 @@ public class UnitsHelper {
 	}
 
 	public String getStringValue(BaseValue item, double value) {
-		// FIXME: Fix BaseEnumValue when they will be supported in graphs
-		// if (item instanceof BaseEnumValue) { ... }
+		if (item instanceof BaseEnumValue) {
+			int resId = ((BaseEnumValue) item).getItemByDoubleValue(value).getStringResource();
+			return mContext.getString(resId);
+		}
 
 		BaseUnit.Item to = (BaseUnit.Item) item.getUnit().fromSettings(mPrefs);
 		double d = item.getUnit().convertValue(to, value);

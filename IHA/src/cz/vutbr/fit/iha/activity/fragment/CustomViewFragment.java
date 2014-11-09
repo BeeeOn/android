@@ -7,7 +7,6 @@ import java.util.Random;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 import org.joda.time.Interval;
-import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
 import android.content.Context;
@@ -22,7 +21,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.actionbarsherlock.app.SherlockFragment;
-import com.jjoe64.graphview.CustomLabelFormatter;
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.GraphView.GraphViewData;
 import com.jjoe64.graphview.GraphViewSeries;
@@ -39,7 +37,9 @@ import cz.vutbr.fit.iha.adapter.device.DeviceType;
 import cz.vutbr.fit.iha.adapter.device.Facility;
 import cz.vutbr.fit.iha.controller.Controller;
 import cz.vutbr.fit.iha.pair.LogDataPair;
+import cz.vutbr.fit.iha.util.GraphViewHelper;
 import cz.vutbr.fit.iha.util.Log;
+import cz.vutbr.fit.iha.util.TimeHelper;
 import cz.vutbr.fit.iha.util.UnitsHelper;
 
 public class CustomViewFragment extends SherlockFragment {
@@ -80,68 +80,33 @@ public class CustomViewFragment extends SherlockFragment {
 	}
 
 	private void addGraph(final Device device) {
-		LayoutInflater inflater = getLayoutInflater(null);
+		// Prepare helpers
+		final UnitsHelper unitsHelper = new UnitsHelper(mController.getUserSettings(), mContext);
+		final TimeHelper timeHelper = new TimeHelper(mController.getUserSettings());
+		final DateTimeFormatter fmt = timeHelper.getFormatter(mGraphDateTimeFormat, null); // Force use local time because we mix data from different adapters
+		
+		// Create and set graphView
+		GraphView graphView = GraphViewHelper.prepareGraphView(mContext, "", device, fmt, unitsHelper); // empty heading
+		graphView.setShowLegend(true);
+		
+		if (graphView instanceof LineGraphView) {
+			((LineGraphView) graphView).setDrawBackground(false);
+		}
 
-		// LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		// Inflate layout
+		LayoutInflater inflater = getLayoutInflater(null);
 		View row = inflater.inflate(R.layout.custom_graph_item, mLayout, false);
 
-		LinearLayout graphLayout = (LinearLayout) row.findViewById(R.id.graph_layout);
-
+		// Set title
 		TextView tv = (TextView) row.findViewById(R.id.graph_label);
 		tv.setText(mContext.getString(device.getType().getStringResource()));
-
-		LineGraphView graphView = new LineGraphView(mContext, ""); // empty heading
-
-		graphView.getGraphViewStyle().setTextSize(mContext.getResources().getDimension(R.dimen.textsizesmaller));
-		graphView.getGraphViewStyle().setVerticalLabelsColor(mContext.getResources().getColor(R.color.iha_text_hint));
-		graphView.getGraphViewStyle().setHorizontalLabelsColor(mContext.getResources().getColor(R.color.iha_text_hint));
-		// mGraphView.getGraphViewStyle().setVerticalLabelsWidth(60);
-		// mGraphView.getGraphViewStyle().setNumHorizontalLabels(2);
-		// graphView.setBackgroundColor(mContext.getResources().getColor(R.color.alpha_blue));// getResources().getColor(R.color.log_blue2));
-
-		graphView.setShowLegend(true);
-		graphView.setScalable(true);
-		graphView.setScrollable(true);
-
-		graphView.setDrawBackground(false);
-		graphView.setVisibility(View.VISIBLE);
-		// graphView.setAlpha(128);
-
-		graphLayout.addView(graphView);
+		
+		// Add graph to layout
+		((LinearLayout) row.findViewById(R.id.graph_layout)).addView(graphView);
 		mGraphs.put(device.getType().getTypeId(), graphView);
 
+		// Add whole item to global layout
 		mLayout.addView(row);
-
-		final UnitsHelper unitsHelper = new UnitsHelper(mController.getUserSettings(), mContext);
-		// final TimeHelper timeHelper = new TimeHelper(mController.getUserSettings());
-		final DateTimeFormatter fmt = DateTimeFormat.forPattern(mGraphDateTimeFormat); // FIXME for correct timezone data..
-
-		graphView.setCustomLabelFormatter(new CustomLabelFormatter() {
-			final String unit = unitsHelper.getStringUnit(device.getValue());
-
-			@Override
-			public String formatLabel(double value, boolean isValueX) {
-				if (isValueX) {
-					return fmt.print((long) value);
-				}
-
-				return String.format("%s %s", unitsHelper.getStringValue(device.getValue(), value), unit);
-			}
-		});
-
-		/*
-		 * graphLayout.setOnTouchListener(new OnTouchListener() {
-		 * 
-		 * @Override public boolean onTouch(View v, MotionEvent event) { // Disable graph if in edit Mode if (mEditMode != EDIT_NONE) return false;
-		 * 
-		 * if (mWasTapGraph) return true;
-		 * 
-		 * mWasTapLayout = false; mWasTapGraph = true;
-		 * 
-		 * Log.d(TAG, "onTouch layout"); graphView.setScrollable(true); graphView.setScalable(true); mActivity.setEnableSwipe(false); mGraphInfo.setVisibility(View.GONE); onTouch(v, event); return
-		 * true; } });
-		 */
-
 	}
 
 	private void fillGraph(DeviceLog log, Device device) {
@@ -187,16 +152,7 @@ public class CustomViewFragment extends SherlockFragment {
 			// Log.v(TAG, String.format("Graph value: date(msec): %s, Value: %.1f", fmt.print(row.dateMillis), row.value));
 		}
 
-		// Set maximum as +10% more than deviation
-		// graphView.setManualYAxisBounds(log.getMaximum() + log.getDeviation() * 0.1, log.getMinimum());
-		// mGraphView.setViewPort(0, 7);
 		graphSeries.resetData(data);
-		// mGraphInfo.setText(getView().getResources().getString(R.string.sen_detail_graph_info));
-		// }
-
-		// graphView.setManualYAxisBounds(1.0, 0.0);
-
-		// graphView.setViewPort(0, 7);
 	}
 
 	private void prepareDevices() {
