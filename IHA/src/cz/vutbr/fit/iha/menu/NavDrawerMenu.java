@@ -411,7 +411,7 @@ public class NavDrawerMenu {
 				@Override
 				public void onClick(View v) {
 					DialogFragment newFragment = new AddAdapterFragmentDialog();
-					newFragment.show(mActivity.getSupportFragmentManager(), mActivity.ADD_ADAPTER_TAG);
+					newFragment.show(mActivity.getSupportFragmentManager(), MainActivity.ADD_ADAPTER_TAG);
 				}
 			}));
 			mMenuAdapter.addItem(new EmptyMenuItem(mActivity.getResources().getString(R.string.no_adapters)));
