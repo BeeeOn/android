@@ -8,6 +8,7 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.content.res.Configuration;
 import android.support.v4.app.ActionBarDrawerToggle;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.view.KeyEvent;
@@ -25,6 +26,7 @@ import com.actionbarsherlock.view.Menu;
 import cz.vutbr.fit.iha.R;
 import cz.vutbr.fit.iha.activity.MainActivity;
 import cz.vutbr.fit.iha.activity.SettingsMainActivity;
+import cz.vutbr.fit.iha.activity.dialog.AddAdapterFragmentDialog;
 import cz.vutbr.fit.iha.activity.dialog.InfoDialogFragment;
 import cz.vutbr.fit.iha.activity.menuItem.AdapterMenuItem;
 import cz.vutbr.fit.iha.activity.menuItem.CustomViewMenuItem;
@@ -404,7 +406,16 @@ public class NavDrawerMenu {
 			// Adding separator as item (we don't want to let it float as header)
 			mMenuAdapter.addItem(new SeparatorMenuItem());
 
+			mMenuAdapter.addHeader(new GroupImageMenuItem(mActivity.getResources().getString(R.string.adapter), R.drawable.add_custom_view, new OnClickListener() {
+
+				@Override
+				public void onClick(View v) {
+					DialogFragment newFragment = new AddAdapterFragmentDialog();
+					newFragment.show(mActivity.getSupportFragmentManager(), mActivity.ADD_ADAPTER_TAG);
+				}
+			}));
 			mMenuAdapter.addItem(new EmptyMenuItem(mActivity.getResources().getString(R.string.no_adapters)));
+			
 		}
 
 		// Adding separator as header
