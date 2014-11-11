@@ -12,7 +12,9 @@ import android.os.Handler;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentTransaction;
 import android.view.MotionEvent;
+import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -35,6 +37,7 @@ import cz.vutbr.fit.iha.controller.Controller;
 import cz.vutbr.fit.iha.menu.NavDrawerMenu;
 import cz.vutbr.fit.iha.persistence.Persistence;
 import cz.vutbr.fit.iha.util.Log;
+
 
 /**
  * Activity class for choosing location
@@ -69,9 +72,13 @@ public class MainActivity extends BaseApplicationActivity {
 	private String mActiveAdapterId;
 	private String mActiveCustomViewId;
 	private boolean mIsDrawerOpen = false;
+	
 
 	private Handler mTimeHandler = new Handler();
 	private Runnable mTimeRun;
+	
+	private boolean mFirstUseApp = true;
+	//private ShowcaseView mSV;
 
 	/**
 	 * Tasks which can be running in this activity and after finishing can try to change GUI -> must be cancelled when activity stop
@@ -131,6 +138,51 @@ public class MainActivity extends BaseApplicationActivity {
 			ft.replace(R.id.content_frame, mCustomView, FRG_TAG_CUS);
 		}
 		ft.commit();
+		
+		// Init tutorial 
+		if(mFirstUseApp) {
+			showTutorial();
+		}
+	}
+
+	private void showTutorial() {
+		// TODO Auto-generated method stub
+		RelativeLayout.LayoutParams lps = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+		lps.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+		lps.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
+		/*
+		int margin = ((Number) (getResources().getDisplayMetrics().density * 12)).intValue();
+		lps.setMargins(margin, margin, margin, margin);
+		ViewTarget target = new ViewTarget(R.id.iconofsensor, this);
+		
+		OnShowcaseEventListener	listener = new OnShowcaseEventListener() {
+			
+			@Override
+			public void onShowcaseViewShow(ShowcaseView showcaseView) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void onShowcaseViewHide(ShowcaseView showcaseView) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void onShowcaseViewDidHide(ShowcaseView showcaseView) {
+				// TODO Auto-generated method stub
+				
+			}
+		}; 
+		
+		mSV = new ShowcaseView.Builder(this, true)
+		.setTarget(target)
+		.setContentTitle("Test title")
+		.setContentText("Content text")
+		.setShowcaseEventListener(listener)
+		.build();
+		mSV.setButtonPosition(lps);*/
 	}
 
 	public void onAppResume() {

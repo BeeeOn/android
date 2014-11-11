@@ -10,7 +10,7 @@ import cz.vutbr.fit.iha.controller.Controller;
  * 
  * When user is not logged in, it will switch to LoginActivity automatically.
  */
-public abstract class BaseApplicationActivity extends BaseActivity {
+public abstract class BaseApplicationActivity extends BaseActivity  {
 
 	private boolean triedLoginAlready = false;
 
