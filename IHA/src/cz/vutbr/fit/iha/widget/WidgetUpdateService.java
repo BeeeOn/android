@@ -21,6 +21,7 @@ import android.util.SparseArray;
 import cz.vutbr.fit.iha.R;
 import cz.vutbr.fit.iha.adapter.Adapter;
 import cz.vutbr.fit.iha.adapter.device.Device;
+import cz.vutbr.fit.iha.adapter.device.DeviceType;
 import cz.vutbr.fit.iha.adapter.device.Facility;
 import cz.vutbr.fit.iha.adapter.device.RefreshInterval;
 import cz.vutbr.fit.iha.controller.Controller;
@@ -79,7 +80,9 @@ public class WidgetUpdateService extends Service {
 	public static Intent getForceUpdateIntent(Context context, int widgetId) {
 		Intent intent = new Intent(context, WidgetUpdateService.class);
 		intent.putExtra(WidgetUpdateService.EXTRA_FORCE_UPDATE, true);
-		intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, new int[] { widgetId });
+		intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, new int[] {
+			widgetId
+		});
 
 		return intent;
 	}
@@ -186,17 +189,25 @@ public class WidgetUpdateService extends Service {
 			widgetsToUpdate.put(widgetId, widgetData);
 
 			// Prepare list of facilities for network request
-			String[] ids = widgetData.deviceId.split(Device.ID_SEPARATOR, 2);
+			if (!widgetData.deviceId.isEmpty() && !widgetData.deviceAdapterId.isEmpty()) {
+				String[] ids = widgetData.deviceId.split(Device.ID_SEPARATOR, 2);
 
-			Facility facility = new Facility();
-			facility.setAdapterId(widgetData.deviceAdapterId);
-			facility.setAddress(ids[0]);
-			facility.setLastUpdate(new DateTime(widgetData.deviceLastUpdateTime, DateTimeZone.UTC));
-			facility.setRefresh(RefreshInterval.fromInterval(widgetData.deviceRefresh));
+				Facility facility = new Facility();
+				facility.setAdapterId(widgetData.deviceAdapterId);
+				facility.setAddress(ids[0]);
+				facility.setLastUpdate(new DateTime(widgetData.deviceLastUpdateTime, DateTimeZone.UTC));
+				facility.setRefresh(RefreshInterval.fromInterval(widgetData.deviceRefresh));
 
-			facilities.add(facility);
+				int type = Integer.parseInt(ids[1]);
+				facility.addDevice(DeviceType.createDeviceFromType(type));
+
+				facilities.add(facility);
+			}
 		}
-		controller.updateFacilities(facilities, forceUpdate);
+
+		if (!facilities.isEmpty()) {
+			controller.updateFacilities(facilities, forceUpdate);
+		}
 
 		for (int i = 0; i < widgetsToUpdate.size(); i++) {
 			WidgetData widgetData = widgetsToUpdate.valueAt(i);
@@ -232,7 +243,8 @@ public class WidgetUpdateService extends Service {
 				Log.v(TAG, String.format("Updating widget (%d) with fresh data", widgetId));
 			} else {
 				// NOTE: just temporary solution until it will be showed better on widget
-				widgetData.deviceLastUpdateText = String.format("%s %s", widgetData.deviceLastUpdateText, getString(R.string.widget_cached));
+				widgetData.deviceLastUpdateText = String
+						.format("%s %s", widgetData.deviceLastUpdateText, getString(R.string.widget_cached));
 
 				Log.v(TAG, String.format("Updating widget (%d) with cached data", widgetId));
 			}
