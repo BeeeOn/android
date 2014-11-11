@@ -1,7 +1,9 @@
 package cz.vutbr.fit.iha.activity.fragment;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 
 import org.joda.time.DateTime;
@@ -33,7 +35,6 @@ import cz.vutbr.fit.iha.adapter.device.Device;
 import cz.vutbr.fit.iha.adapter.device.DeviceLog;
 import cz.vutbr.fit.iha.adapter.device.DeviceLog.DataInterval;
 import cz.vutbr.fit.iha.adapter.device.DeviceLog.DataType;
-import cz.vutbr.fit.iha.adapter.device.DeviceType;
 import cz.vutbr.fit.iha.adapter.device.Facility;
 import cz.vutbr.fit.iha.controller.Controller;
 import cz.vutbr.fit.iha.pair.LogDataPair;
@@ -75,6 +76,7 @@ public class CustomViewFragment extends SherlockFragment {
 		mLayout = (LinearLayout) view.findViewById(R.id.container);
 
 		prepareDevices();
+		loadData();
 
 		return view;
 	}
@@ -83,12 +85,14 @@ public class CustomViewFragment extends SherlockFragment {
 		// Prepare helpers
 		final UnitsHelper unitsHelper = new UnitsHelper(mController.getUserSettings(), mContext);
 		final TimeHelper timeHelper = new TimeHelper(mController.getUserSettings());
-		final DateTimeFormatter fmt = timeHelper.getFormatter(mGraphDateTimeFormat, null); // Force use local time because we mix data from different adapters
-		
+		final DateTimeFormatter fmt = timeHelper.getFormatter(mGraphDateTimeFormat, null); // Force use local time
+																							// because we mix data from
+																							// different adapters
+
 		// Create and set graphView
 		GraphView graphView = GraphViewHelper.prepareGraphView(mContext, "", device, fmt, unitsHelper); // empty heading
 		graphView.setShowLegend(true);
-		
+
 		if (graphView instanceof LineGraphView) {
 			((LineGraphView) graphView).setDrawBackground(false);
 		}
@@ -100,7 +104,7 @@ public class CustomViewFragment extends SherlockFragment {
 		// Set title
 		TextView tv = (TextView) row.findViewById(R.id.graph_label);
 		tv.setText(mContext.getString(device.getType().getStringResource()));
-		
+
 		// Add graph to layout
 		((LinearLayout) row.findViewById(R.id.graph_layout)).addView(graphView);
 		mGraphs.put(device.getType().getTypeId(), graphView);
@@ -123,22 +127,28 @@ public class CustomViewFragment extends SherlockFragment {
 
 		GraphViewSeriesStyle seriesStyle = new GraphViewSeriesStyle(color, 4);
 
-		// GraphViewSeriesStyle seriesStyleBlue = new GraphViewSeriesStyle(mContext.getResources().getColor(R.color.iha_primary_cyan), 2);
-		// GraphViewSeriesStyle seriesStyleGray = new GraphViewSeriesStyle(getResources().getColor(R.color.light_gray),2);
+		// GraphViewSeriesStyle seriesStyleBlue = new
+		// GraphViewSeriesStyle(mContext.getResources().getColor(R.color.iha_primary_cyan), 2);
+		// GraphViewSeriesStyle seriesStyleGray = new
+		// GraphViewSeriesStyle(getResources().getColor(R.color.light_gray),2);
 
-		GraphViewSeries graphSeries = new GraphViewSeries(device.getName(), seriesStyle, new GraphViewData[] { new GraphView.GraphViewData(0, 0), });
+		GraphViewSeries graphSeries = new GraphViewSeries(device.getName(), seriesStyle, new GraphViewData[] {
+			new GraphView.GraphViewData(0, 0),
+		});
 
 		graphView.addSeries(graphSeries);
 
 		int size = log.getValues().size();
-		// Log.d(TAG, String.format("Filling graph with %d values. Min: %.1f, Max: %.1f", size, log.getMinimum(), log.getMaximum()));
+		// Log.d(TAG, String.format("Filling graph with %d values. Min: %.1f, Max: %.1f", size, log.getMinimum(),
+		// log.getMaximum()));
 
 		int begin;
 		GraphView.GraphViewData[] data;
 
 		// Limit amount of showed values
 		/*
-		 * if (size > MAX_GRAPH_DATA_COUNT) { data = new GraphView.GraphViewData[MAX_GRAPH_DATA_COUNT]; begin = (size - MAX_GRAPH_DATA_COUNT); } else {
+		 * if (size > MAX_GRAPH_DATA_COUNT) { data = new GraphView.GraphViewData[MAX_GRAPH_DATA_COUNT]; begin = (size -
+		 * MAX_GRAPH_DATA_COUNT); } else {
 		 */
 		data = new GraphView.GraphViewData[size];
 		begin = 0;
@@ -149,7 +159,8 @@ public class CustomViewFragment extends SherlockFragment {
 
 			float value = Float.isNaN(row.value) ? log.getMinimum() : row.value;
 			data[i - begin] = new GraphView.GraphViewData(row.dateMillis, value);
-			// Log.v(TAG, String.format("Graph value: date(msec): %s, Value: %.1f", fmt.print(row.dateMillis), row.value));
+			// Log.v(TAG, String.format("Graph value: date(msec): %s, Value: %.1f", fmt.print(row.dateMillis),
+			// row.value));
 		}
 
 		graphSeries.resetData(data);
@@ -169,50 +180,62 @@ public class CustomViewFragment extends SherlockFragment {
 					if (devices == null) {
 						devices = new ArrayList<Device>();
 						mDevices.put(device.getType().getTypeId(), devices);
-
-						DeviceType type = device.getType();
 						addGraph(device);
 					}
 
 					devices.add(device);
-
-					GetDeviceLogTask getDeviceLogTask = new GetDeviceLogTask();
-					getDeviceLogTask.execute(device);
 				}
 			}
 		}
 	}
 
-	/*
-	 * @SuppressWarnings("unchecked") private void prepareLogs() { for (int i=0; i<mDevices.size(); i++) { GetDeviceLogTask getDeviceLogTask = new GetDeviceLogTask();
-	 * getDeviceLogTask.execute(mDevices.valueAt(i)); } }
-	 */
+	private void loadData() {
+		for (int i = 0; i < mDevices.size(); i++) {
+			// Load data for this graph
+			List<Device> list = mDevices.valueAt(i);
+			
+			GetDeviceLogTask getDeviceLogTask = new GetDeviceLogTask();
+			getDeviceLogTask.execute(list.toArray(new Device[list.size()]));
+		}
+	}
 
-	private class GetDeviceLogTask extends AsyncTask<Device, Void, DeviceLog> {
+	private class GetDeviceLogTask extends AsyncTask<Device, Void, Map<Device, DeviceLog>> {
 
 		private int mTypeId = 0;
-		private Device mDevice;
-
+		
 		@Override
-		protected DeviceLog doInBackground(Device... devices) {
-			mDevice = devices[0]; // expects only one device at a time is sent there
-			mTypeId = mDevice.getType().getTypeId();
+		protected Map<Device, DeviceLog> doInBackground(Device... devices) {
+			Map<Device, DeviceLog> result = new HashMap<Device, DeviceLog>();
+			
+			// Remember type of graph we're downloading data for
+			mTypeId = devices[0].getType().getTypeId();
+			
+			for (Device device : devices) {
+				DateTime end = DateTime.now(DateTimeZone.UTC);
+				DateTime start = end.minusDays(3);// end.minusWeeks(1);
 
-			DateTime end = DateTime.now(DateTimeZone.UTC);
-			DateTime start = end.minusDays(3);// end.minusWeeks(1);
+				LogDataPair pair = new LogDataPair( //
+						device, // device
+						new Interval(start, end), // interval from-to
+						DataType.AVERAGE, // type
+						DataInterval.HOUR); // interval
+				
+				result.put(device, mController.getDeviceLog(pair.device, pair));
+			}
 
-			LogDataPair pair = new LogDataPair( //
-					mDevice, // device
-					new Interval(start, end), // interval from-to
-					DataType.AVERAGE, // type
-					DataInterval.HOUR); // interval
-
-			return mController.getDeviceLog(pair.device, pair);
+			return result;
 		}
 
 		@Override
-		protected void onPostExecute(DeviceLog log) {
-			fillGraph(log, mDevice);
+		protected void onPostExecute(Map<Device, DeviceLog> logs) {
+			// Fill graph with data
+			for (Map.Entry<Device, DeviceLog> entry : logs.entrySet()) {
+				fillGraph(entry.getValue(), entry.getKey());	
+			}
+			
+			// Hide loading label for this graph
+			GraphView graphView = mGraphs.get(mTypeId);
+			((View) graphView.getParent().getParent()).findViewById(R.id.graph_loading).setVisibility(View.INVISIBLE);
 		}
 
 	}

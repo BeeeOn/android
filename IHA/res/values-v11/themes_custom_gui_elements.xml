@@ -8,8 +8,9 @@
   <style name="_CustomHoloTheme" parent="android:Theme.Holo.Light">
 
     <item name="android:listChoiceIndicatorMultiple">@drawable/customholotheme_btn_check_holo_light</item>
-	<item name="android:seekBarStyle">@style/SeekBarCustomHoloTheme</item>
-	
+	<item name="android:seekBarStyle">@style/IHA.Custom.SeekBar</item>
+	<item name="android:buttonStyle">@style/IHA.Custom.Button</item>
+	<item name="android:imageButtonStyle">@style/IHA.Custom.ImageButton</item>
   </style>
 
 </resources>

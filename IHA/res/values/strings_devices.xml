@@ -24,6 +24,8 @@
     <string name="dev_unknown_unit">"???"</string>
 
     <!-- Types of devices -->
+    <string name="dev_unknown_type">Unknown device</string>
+    <!-- Sensors -->
     <string name="dev_temperature_type">Thermal sensor</string>
     <string name="dev_humidity_type">Hydrometer</string>
     <string name="dev_pressure_type">Barometer</string>
@@ -32,7 +34,8 @@
     <string name="dev_illumination_type">Illumination sensor</string>
     <string name="dev_noise_type">Sound level sensor</string>
     <string name="dev_emission_type">Emission sensor</string>
-    <string name="dev_unknown_type">Unknown device</string>
+    <!-- Actors -->
+    <string name="dev_actor_on_off_type">First actor lets celebrate</string>
 
     <!-- Special values of devices -->
     <string name="dev_state_value_open">Open</string>

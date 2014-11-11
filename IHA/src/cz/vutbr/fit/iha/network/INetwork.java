@@ -63,22 +63,11 @@ public interface INetwork {
 	// /////////////////////////////////////////////////////////////////////////////////
 
 	/**
-	 * Method signIn user given by its email to server, BUT before calling must call GoogleAuth to get googleToken in it and init ActualUser
+	 * Method get UID from server
 	 * 
-	 * @param email
-	 *            of current user
-	 * @return boolean
+	 * @return true if everything successful, false otherwise
 	 */
-	public boolean signIn(String email, String gcmid);
-
-	/**
-	 * Method sign user to server with its email up
-	 * 
-	 * @param email
-	 *            of registering user
-	 * @return true if everything goes well, false otherwise
-	 */
-	public boolean signUp(String email);
+	public String getUID();
 
 	/**
 	 * Method register adapter to server
@@ -153,7 +142,8 @@ public interface INetwork {
 	public boolean switchState(String adapterID, Device device);
 
 	/**
-	 * Method make adapter to special state, when listen for new sensors (e.g. 15s) and wait if some sensors has been shaken to connect
+	 * Method make adapter to special state, when listen for new sensors (e.g. 15s) and wait if some sensors has been
+	 * shaken to connect
 	 * 
 	 * @param adapterID
 	 * @return
@@ -351,7 +341,8 @@ public interface INetwork {
 	/**
 	 * Method set wanted time zone to server
 	 * 
-	 * @NOTE using difference from GMT (UTC+0), https://merlin.fit.vutbr.cz/wiki-iot/index.php/Smarthome_cloud#SetTimeZone
+	 * @NOTE using difference from GMT (UTC+0),
+	 *       https://merlin.fit.vutbr.cz/wiki-iot/index.php/Smarthome_cloud#SetTimeZone
 	 * @param differenceToGMT
 	 * @return
 	 */

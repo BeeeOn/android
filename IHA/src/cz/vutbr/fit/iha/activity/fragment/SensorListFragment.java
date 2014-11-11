@@ -27,6 +27,7 @@ import com.actionbarsherlock.view.MenuItem;
 import cz.vutbr.fit.iha.R;
 import cz.vutbr.fit.iha.activity.MainActivity;
 import cz.vutbr.fit.iha.activity.SensorDetailActivity;
+import cz.vutbr.fit.iha.activity.dialog.AddAdapterFragmentDialog;
 import cz.vutbr.fit.iha.activity.dialog.AddSensorFragmentDialog;
 import cz.vutbr.fit.iha.adapter.Adapter;
 import cz.vutbr.fit.iha.adapter.device.Device;
@@ -41,7 +42,6 @@ import cz.vutbr.fit.iha.util.Log;
 public class SensorListFragment extends SherlockFragment {
 
 	private static final String TAG = SensorListFragment.class.getSimpleName();
-	private static final String ADD_SENSOR_TAG = "addSensorDialog";
 
 	private static final String LCTN = "lastlocation";
 	private static final String ADAPTER_ID = "lastAdapterId";
@@ -170,12 +170,7 @@ public class SensorListFragment extends SherlockFragment {
 		mReloadFacilitiesTask.execute(adapterId);
 	}
 	
-	private void showAddSensorFragment() {
-		Log.d(TAG, "HERE ADD SENSOR +");
-
-		DialogFragment newFragment = new AddSensorFragmentDialog();
-		newFragment.show(mActivity.getSupportFragmentManager(), ADD_SENSOR_TAG);
-	}
+	
 
 	public boolean redrawDevices() {
 		if (isPaused) {
@@ -188,16 +183,10 @@ public class SensorListFragment extends SherlockFragment {
 		Log.d(TAG, "LifeCycle: redraw devices list start");
 
 		mSensorList = (ListView) mView.findViewById(R.id.listviewofsensors);
-		TextView nosensor = (TextView) mView.findViewById(R.id.nosensorlistview);
-		ImageView addsensor = (ImageView) mView.findViewById(R.id.nosensorlistview_addsensor_image);
+		TextView noItem = (TextView) mView.findViewById(R.id.nosensorlistview);
+		ImageView addBtn = (ImageView) mView.findViewById(R.id.nosensorlistview_addsensor_image);
 
-		addsensor.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				showAddSensorFragment();
-			}
-		});
+		
 
 		List<Device> devices = new ArrayList<Device>();
 		for (Facility facility : facilities) {
@@ -214,21 +203,45 @@ public class SensorListFragment extends SherlockFragment {
 
 		boolean haveDevices = devices.size() > 0;
 		boolean haveAdapters = mController.getAdapters().size() > 0;
+		
+		
+		
+		if(!haveAdapters) { // NO Adapter
+			noItem.setVisibility(View.VISIBLE);
+			noItem.setText(R.string.no_adapter_cap);
+			addBtn.setVisibility(View.VISIBLE);
+			mSensorList.setVisibility(View.GONE);
+			addBtn.setOnClickListener(new OnClickListener() {
 
-		// If no sensors - display text
-		nosensor.setVisibility(haveDevices ? View.GONE : View.VISIBLE);
+				@Override
+				public void onClick(View v) {
+					showAddAdapterDialog();
+				}
+			});
+		}
+		else if (!haveDevices) { // Have Adapter but any Devices
+			noItem.setVisibility(View.VISIBLE);
+			addBtn.setVisibility(View.VISIBLE);
+			mSensorList.setVisibility(View.GONE);
+			addBtn.setOnClickListener(new OnClickListener() {
 
-		// If we have no sensors but we have adapters - display add button
-		addsensor.setVisibility(haveDevices || !haveAdapters ? View.GONE : View.VISIBLE);
-
-		// If we have adapters (but we're right now in empty room) show list so we can pull it to refresh
-		mSensorList.setVisibility(haveDevices || haveAdapters ? View.VISIBLE : View.GONE);
+				@Override
+				public void onClick(View v) {
+					showAddSensorDialog();
+				}
+			});
+		}
+		else { // Have adapter and devices
+			noItem.setVisibility(View.GONE);
+			addBtn.setVisibility(View.GONE);
+			mSensorList.setVisibility(View.VISIBLE);
+		}
 
 		OnClickListener addSensorListener = new OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
-				showAddSensorFragment();
+				showAddSensorDialog();
 			}
 		};
 
@@ -242,7 +255,7 @@ public class SensorListFragment extends SherlockFragment {
 				@Override
 				public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 					if (position == mSensorAdapter.getCount() - 1) {
-						showAddSensorFragment();
+						showAddSensorDialog();
 						return;
 					}
 
@@ -270,6 +283,17 @@ public class SensorListFragment extends SherlockFragment {
 		return true;
 	}
 
+	protected void showAddAdapterDialog() {
+		Log.d(TAG, "HERE ADD ADAPTER +");
+		DialogFragment newFragment = new AddAdapterFragmentDialog();
+		newFragment.show(mActivity.getSupportFragmentManager(), MainActivity.ADD_ADAPTER_TAG);
+	}
+	
+	protected void showAddSensorDialog() {
+		Log.d(TAG, "HERE ADD SENSOR +");
+		DialogFragment newFragment = new AddSensorFragmentDialog();
+		newFragment.show(mActivity.getSupportFragmentManager(), MainActivity.ADD_SENSOR_TAG);
+	}
 	public void setLocationID(String locID) {
 		mActiveLocationId = locID;
 	}

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <com 
-	ver="2.2"
+	ver="2.3"
 	state="alldevices"
 	aid="65260">
 	<dev 
@@ -12,7 +12,7 @@
 		time="1377684610"
 		rssi="52" >
 		<part
-			type="0"
+			type="10"
 			vis="1"
 			name="Teplota venku"
 			val="15" />
@@ -59,7 +59,7 @@
 		time="1377684610"
 		rssi="52" >
 		<part
-			type="0"
+			type="10"
 			vis="1"
 			name="Teplůtka"
 			val="30" />
@@ -98,6 +98,11 @@
 			vis="0"
 			name="Emisák"
 			val="30" />
+		<part
+			type="160"
+			vis="1"
+			name="Aktůrek"
+			val="OFF" />
 		<part
 			type="-1"
 			vis="1"

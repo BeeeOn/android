@@ -19,6 +19,8 @@ import cz.vutbr.fit.iha.adapter.device.Device;
 import cz.vutbr.fit.iha.adapter.device.Device.SaveDevice;
 import cz.vutbr.fit.iha.adapter.device.Facility;
 import cz.vutbr.fit.iha.adapter.location.Location;
+import cz.vutbr.fit.iha.exception.IhaException;
+import cz.vutbr.fit.iha.exception.NetworkError;
 import cz.vutbr.fit.iha.household.User;
 import cz.vutbr.fit.iha.network.INetwork.NetworkAction;
 import cz.vutbr.fit.iha.network.xml.action.Action;
@@ -47,6 +49,8 @@ public class XmlCreator {
 	// states
 	public static final String SIGNIN = "signin";
 	public static final String SIGNUP = "signup";
+	
+	public static final String GETUID = "getuid";
 
 	public static final String ADDADAPTER = "addadapter";
 	public static final String REINITADAPTER = "reinitadapter";
@@ -132,44 +136,24 @@ public class XmlCreator {
 	// ////////////////////////////////////////////////////////////////////////////////////////////////
 	// /////////////////////////////////////SIGNIN,SIGNUP,ADAPTERS/////////////////////////////////////
 	// ////////////////////////////////////////////////////////////////////////////////////////////////
-
+	
 	/**
-	 * Method create XML for signIn message
-	 * 
-	 * @param email
-	 *            of user
-	 * @param gtoken
-	 *            token from google
-	 * @param lokale
-	 *            language of App {cs, en, sk}
-	 * @param gcmid
-	 *            google cloud messaging id
-	 * @return XML message
-	 * @since 2.2
+	 * Method create XML for getID message
+	 * @param gid google id
+	 * @param gtoken google token
+	 * @param locale of mobile phone
+	 * @param pid phone id
+	 * @return string with message
 	 */
-	public static String createSignIn(String email, String gtoken, String locale, String gcmid) {
-		return createComAttribsVariant(Xconstants.STATE, SIGNIN, Xconstants.EMAIL, email, Xconstants.GTOKEN, gtoken, Xconstants.LOCALE, locale, Xconstants.GCMID, gcmid);
-	}
-
-	/**
-	 * Method create XML for singUp message
-	 * 
-	 * @param email
-	 *            of user
-	 * @param gtoken
-	 *            token from google
-	 * @return XML message
-	 * @since 2.2
-	 */
-	public static String createSignUp(String email, String gtoken) {
-		return createComAttribsVariant(Xconstants.STATE, SIGNUP, Xconstants.EMAIL, email, Xconstants.GTOKEN, gtoken);
+	public static String createGetUID(String gid, String gtoken, String locale, String pid){
+		return createComAttribsVariant(Xconstants.STATE, GETUID, Xconstants.GID, gid, Xconstants.GTOKEN, gtoken, Xconstants.LOCALE, locale, Xconstants.PID, pid);
 	}
 
 	/**
 	 * Method create XML for AddAdapter message
 	 * 
-	 * @param sid
-	 *            sessionID of user
+	 * @param uid
+	 *            userID of user
 	 * @param aid
 	 *            adapterID of actual adapter
 	 * @param adapterName
@@ -177,27 +161,27 @@ public class XmlCreator {
 	 * @return AddAdapter message
 	 * @since 2.2
 	 */
-	public static String createAddAdapter(String sid, String aid, String adapterName) {
-		return createComAttribsVariant(Xconstants.STATE, ADDADAPTER, Xconstants.SID, sid, Xconstants.AID, aid, Xconstants.ANAME, adapterName);
+	public static String createAddAdapter(String uid, String aid, String adapterName) {
+		return createComAttribsVariant(Xconstants.STATE, ADDADAPTER, Xconstants.UID, uid, Xconstants.AID, aid, Xconstants.ANAME, adapterName);
 	}
 
 	/**
 	 * Method create XML of GetAdapters message
 	 * 
-	 * @param sid
-	 *            sessionID of user
+	 * @param uid
+	 *            userID of user
 	 * @return GetAdapters message
 	 * @since 2.2
 	 */
-	public static String createGetAdapters(String sid) {
-		return createComAttribsVariant(Xconstants.STATE, GETADAPTERS, Xconstants.SID, sid);
+	public static String createGetAdapters(String uid) {
+		return createComAttribsVariant(Xconstants.STATE, GETADAPTERS, Xconstants.UID, uid);
 	}
 
 	/**
 	 * Method create XML for ReInit message
 	 * 
-	 * @param sid
-	 *            sessionID of user
+	 * @param uid
+	 *            userID of user
 	 * @param adapterIdOld
 	 *            old id of adapter
 	 * @param adapterIdNew
@@ -205,8 +189,8 @@ public class XmlCreator {
 	 * @return ReInit message
 	 * @since 2.2
 	 */
-	public static String createReInitAdapter(String sid, String adapterIdOld, String adapterIdNew) {
-		return createComAttribsVariant(Xconstants.STATE, REINITADAPTER, Xconstants.SID, sid, Xconstants.OLDID, adapterIdOld, Xconstants.NEWID, adapterIdNew);
+	public static String createReInitAdapter(String uid, String adapterIdOld, String adapterIdNew) {
+		return createComAttribsVariant(Xconstants.STATE, REINITADAPTER, Xconstants.UID, uid, Xconstants.OLDID, adapterIdOld, Xconstants.NEWID, adapterIdNew);
 	}
 
 	// ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -216,50 +200,50 @@ public class XmlCreator {
 	/**
 	 * Method create XML for AdapterListen message
 	 * 
-	 * @param sid
-	 *            sessionID of user
+	 * @param uid
+	 *            userID of user
 	 * @param aid
 	 *            adapterID of actual adapter
 	 * @return XML of AdapterListen message
 	 * @since 2.2
 	 */
-	public static String createAdapterScanMode(String sid, String aid) {
-		return createComAttribsVariant(Xconstants.STATE, SCANMODE, Xconstants.SID, sid, Xconstants.AID, aid);
+	public static String createAdapterScanMode(String uid, String aid) {
+		return createComAttribsVariant(Xconstants.STATE, SCANMODE, Xconstants.UID, uid, Xconstants.AID, aid);
 	}
 
 	/**
 	 * Method create XML for GetAllDevices message
 	 * 
-	 * @param sid
-	 *            sessionID of user
+	 * @param uid
+	 *            userID of user
 	 * @param aid
 	 *            adapterID of actual adapter
 	 * @return XML of GetAllDevices message
 	 * @since 2.2
 	 */
-	public static String createGetAllDevices(String sid, String aid) {
-		return createComAttribsVariant(Xconstants.STATE, GETALLDEVICES, Xconstants.SID, sid, Xconstants.AID, aid);
+	public static String createGetAllDevices(String uid, String aid) {
+		return createComAttribsVariant(Xconstants.STATE, GETALLDEVICES, Xconstants.UID, uid, Xconstants.AID, aid);
 	}
 
 	/**
 	 * Method create XML for getting uninitialized devices
 	 * 
-	 * @param sid
-	 *            sessionID of user
+	 * @param uid
+	 *            userID of user
 	 * @param aid
 	 *            adapterID of actual adapter
 	 * @return XML of GetNewDevices message
 	 * @since 2.2
 	 */
-	public static String createGetNewDevices(String sid, String aid) {
-		return createComAttribsVariant(Xconstants.STATE, GETNEWDEVICES, Xconstants.SID, sid, Xconstants.AID, aid);
+	public static String createGetNewDevices(String uid, String aid) {
+		return createComAttribsVariant(Xconstants.STATE, GETNEWDEVICES, Xconstants.UID, uid, Xconstants.AID, aid);
 	}
 
 	/**
 	 * Method create XML of GetDevices message
 	 * 
-	 * @param sid
-	 *            sessionID of user
+	 * @param uid
+	 *            userID of user
 	 * @param aid
 	 *            adapterID of actual adapter
 	 * @param facilities
@@ -267,7 +251,9 @@ public class XmlCreator {
 	 * @return update message
 	 * @since 2.2
 	 */
-	public static String createGetDevices(String sid, List<Facility> facilities) {
+	public static String createGetDevices(String uid, List<Facility> facilities) {
+		if(facilities.size() < 1)
+			throw new IllegalArgumentException("Expected more than zero facilities");
 		XmlSerializer serializer = Xml.newSerializer();
 		StringWriter writer = new StringWriter();
 		try {
@@ -275,7 +261,7 @@ public class XmlCreator {
 //			serializer.startDocument("UTF-8", null);
 
 			serializer.startTag(ns, Xconstants.COM_ROOT);
-			serializer.attribute(ns, Xconstants.SID, sid);
+			serializer.attribute(ns, Xconstants.UID, uid);
 			serializer.attribute(ns, Xconstants.STATE, GETDEVICES);
 			serializer.attribute(ns, Xconstants.VERSION, COM_VER);
 
@@ -316,15 +302,15 @@ public class XmlCreator {
 
 			return writer.toString();
 		} catch (Exception e) {
-			throw new RuntimeException(e);
+			throw IhaException.wrap(e, NetworkError.XML);
 		}
 	}
 
 	/**
 	 * Method create XML for GetLog message
 	 * 
-	 * @param sid
-	 *            sessionID of user
+	 * @param uid
+	 *            userID of user
 	 * @param aid
 	 *            adapterID of actual adapter
 	 * @param did
@@ -342,7 +328,7 @@ public class XmlCreator {
 	 * @return GetLog message
 	 * @since 2.2
 	 */
-	public static String createGetLog(String sid, String aid, String did, int deviceType, String from, String to, String funcType, int interval) {
+	public static String createGetLog(String uid, String aid, String did, int deviceType, String from, String to, String funcType, int interval) {
 		XmlSerializer serializer = Xml.newSerializer();
 		StringWriter writer = new StringWriter();
 		try {
@@ -351,7 +337,7 @@ public class XmlCreator {
 
 			serializer.startTag(ns, Xconstants.COM_ROOT);
 
-			serializer.attribute(ns, Xconstants.SID, sid);
+			serializer.attribute(ns, Xconstants.UID, uid);
 			serializer.attribute(ns, Xconstants.STATE, GETLOG);
 			serializer.attribute(ns, Xconstants.VERSION, COM_VER);
 			serializer.attribute(ns, Xconstants.FROM, from);
@@ -367,15 +353,15 @@ public class XmlCreator {
 
 			return writer.toString();
 		} catch (Exception e) {
-			throw new RuntimeException(e);
+			throw IhaException.wrap(e, NetworkError.XML);
 		}
 	}
 
 	/**
 	 * Method create XML of SetDevs message. Almost all fields are optional
 	 * 
-	 * @param sid
-	 *            sessionID of user
+	 * @param uid
+	 *            userID of user
 	 * @param aid
 	 *            adapterID of actual adapter
 	 * @param facilities
@@ -383,7 +369,7 @@ public class XmlCreator {
 	 * @return Partial message
 	 * @since 2.2
 	 */
-	public static String createSetDevs(String sid, String aid, List<Facility> facilities, EnumSet<SaveDevice> toSave) {
+	public static String createSetDevs(String uid, String aid, List<Facility> facilities, EnumSet<SaveDevice> toSave) {
 		XmlSerializer serializer = Xml.newSerializer();
 		StringWriter writer = new StringWriter();
 		try {
@@ -392,7 +378,7 @@ public class XmlCreator {
 
 			serializer.startTag(ns, Xconstants.COM_ROOT);
 
-			serializer.attribute(ns, Xconstants.SID, sid);
+			serializer.attribute(ns, Xconstants.UID, uid);
 			serializer.attribute(ns, Xconstants.STATE, SETDEVS);
 			serializer.attribute(ns, Xconstants.VERSION, COM_VER);
 			serializer.attribute(ns, Xconstants.AID, aid);
@@ -429,15 +415,15 @@ public class XmlCreator {
 
 			return writer.toString();
 		} catch (Exception e) {
-			throw new RuntimeException(e);
+			throw IhaException.wrap(e, NetworkError.XML);
 		}
 	}
 
 	/**
 	 * New method create XML of SetDevs message with only one device in it. toSave parameter must by set properly.
 	 * 
-	 * @param sid
-	 *            sessionID of user
+	 * @param uid
+	 *            userID of user
 	 * @param aid
 	 *            adapterID of actual adapter
 	 * @param device
@@ -447,7 +433,7 @@ public class XmlCreator {
 	 * @return SetDevs message
 	 * @since 2.2
 	 */
-	public static String createSetDev(String sid, String aid, Device device, EnumSet<SaveDevice> toSave) {
+	public static String createSetDev(String uid, String aid, Device device, EnumSet<SaveDevice> toSave) {
 		XmlSerializer serializer = Xml.newSerializer();
 		StringWriter writer = new StringWriter();
 		try {
@@ -458,7 +444,7 @@ public class XmlCreator {
 
 			serializer.startTag(ns, Xconstants.COM_ROOT);
 
-			serializer.attribute(ns, Xconstants.SID, sid);
+			serializer.attribute(ns, Xconstants.UID, uid);
 			serializer.attribute(ns, Xconstants.STATE, SETDEVS);
 			serializer.attribute(ns, Xconstants.VERSION, COM_VER);
 			serializer.attribute(ns, Xconstants.AID, aid);
@@ -495,15 +481,15 @@ public class XmlCreator {
 
 			return writer.toString();
 		} catch (Exception e) {
-			throw new RuntimeException(e);
+			throw IhaException.wrap(e, NetworkError.XML);
 		}
 	}
 
 	/**
 	 * Method create XML for Switch message
 	 * 
-	 * @param sid
-	 *            sessionID of user
+	 * @param uid
+	 *            userID of user
 	 * @param aid
 	 *            adapterID of actual adapter
 	 * @param device
@@ -511,16 +497,16 @@ public class XmlCreator {
 	 * @return XML of Switch message
 	 * @since 2.2
 	 */
-	public static String createSwitch(String sid, String aid, Device device) {
-		return createComAttribsVariant(Xconstants.STATE, SWITCH, Xconstants.SID, sid, Xconstants.AID, aid, Xconstants.DID, device.getFacility().getAddress(), Xconstants.DTYPE,
+	public static String createSwitch(String uid, String aid, Device device) {
+		return createComAttribsVariant(Xconstants.STATE, SWITCH, Xconstants.UID, uid, Xconstants.AID, aid, Xconstants.DID, device.getFacility().getAddress(), Xconstants.DTYPE,
 				Integer.toString(device.getType().getTypeId()), Xconstants.VALUE, String.valueOf(device.getValue().getDoubleValue()));
 	}
 
 	/**
 	 * Method create XML of DelDevice message
 	 * 
-	 * @param sid
-	 *            sessionID of user
+	 * @param uid
+	 *            userID of user
 	 * @param aid
 	 *            adapterID of actual adapter
 	 * @param facility
@@ -528,8 +514,8 @@ public class XmlCreator {
 	 * @return XML of DelDevice message
 	 * @since 2.2
 	 */
-	public static String createDeleteDevice(String sid, String aid, Facility facility) {
-		return createComAttribsVariant(Xconstants.STATE, DELDEVICE, Xconstants.SID, sid, Xconstants.AID, aid, Xconstants.DID, facility.getAddress());
+	public static String createDeleteDevice(String uid, String aid, Facility facility) {
+		return createComAttribsVariant(Xconstants.STATE, DELDEVICE, Xconstants.UID, uid, Xconstants.AID, aid, Xconstants.DID, facility.getAddress());
 	}
 
 	// ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -539,8 +525,8 @@ public class XmlCreator {
 	/**
 	 * Method create XML of AddRoom message
 	 * 
-	 * @param sid
-	 *            sessionID of user
+	 * @param uid
+	 *            userID of user
 	 * @param aid
 	 *            adapterID of actual adapter
 	 * @param location
@@ -548,16 +534,16 @@ public class XmlCreator {
 	 * @return created message
 	 * @since 2.2
 	 */
-	public static String createAddRoom(String sid, String aid, Location location) {
-		return createComAttribsVariant(Xconstants.STATE, ADDROOM, Xconstants.SID, sid, Xconstants.AID, aid, Xconstants.LTYPE, Integer.toString(location.getType()), Xconstants.LNAME,
+	public static String createAddRoom(String uid, String aid, Location location) {
+		return createComAttribsVariant(Xconstants.STATE, ADDROOM, Xconstants.UID, uid, Xconstants.AID, aid, Xconstants.LTYPE, Integer.toString(location.getType()), Xconstants.LNAME,
 				location.getName());
 	}
 
 	/**
 	 * Method create XML of SetRooms message
 	 * 
-	 * @param sid
-	 *            sessionID of user
+	 * @param uid
+	 *            userID of user
 	 * @param aid
 	 *            adapterID of actual adapter
 	 * @param locations
@@ -565,7 +551,7 @@ public class XmlCreator {
 	 * @return message SetRooms
 	 * @since 2.2
 	 */
-	public static String createSetRooms(String sid, String aid, List<Location> locations) {
+	public static String createSetRooms(String uid, String aid, List<Location> locations) {
 		XmlSerializer serializer = Xml.newSerializer();
 		StringWriter writer = new StringWriter();
 		try {
@@ -574,7 +560,7 @@ public class XmlCreator {
 
 			serializer.startTag(ns, Xconstants.COM_ROOT);
 
-			serializer.attribute(ns, Xconstants.SID, sid);
+			serializer.attribute(ns, Xconstants.UID, uid);
 			serializer.attribute(ns, Xconstants.STATE, SETROOMS);
 			serializer.attribute(ns, Xconstants.VERSION, COM_VER);
 			serializer.attribute(ns, Xconstants.AID, aid);
@@ -593,15 +579,15 @@ public class XmlCreator {
 
 			return writer.toString();
 		} catch (Exception e) {
-			throw new RuntimeException(e);
+			throw IhaException.wrap(e, NetworkError.XML);
 		}
 	}
 
 	/**
 	 * Method create XML of DelRoom message
 	 * 
-	 * @param sid
-	 *            sessionID of user
+	 * @param uid
+	 *            userID of user
 	 * @param aid
 	 *            adapterID of actual adapter
 	 * @param location
@@ -609,22 +595,22 @@ public class XmlCreator {
 	 * @return DelRoom message
 	 * @since 2.2
 	 */
-	public static String createDeleteRoom(String sid, String aid, Location location) {
-		return createComAttribsVariant(Xconstants.STATE, DELROOM, Xconstants.SID, sid, Xconstants.AID, aid, Xconstants.LID, location.getId());
+	public static String createDeleteRoom(String uid, String aid, Location location) {
+		return createComAttribsVariant(Xconstants.STATE, DELROOM, Xconstants.UID, uid, Xconstants.AID, aid, Xconstants.LID, location.getId());
 	}
 
 	/**
 	 * Method create XML of GetRooms message
 	 * 
-	 * @param sid
-	 *            sessionID of user
+	 * @param uid
+	 *            userID of user
 	 * @param aid
 	 *            adapterID of actual adapter
 	 * @return message GetRooms
 	 * @since 2.2
 	 */
-	public static String createGetRooms(String sid, String aid) {
-		return createComAttribsVariant(Xconstants.STATE, GETROOMS, Xconstants.SID, sid, Xconstants.AID, aid);
+	public static String createGetRooms(String uid, String aid) {
+		return createComAttribsVariant(Xconstants.STATE, GETROOMS, Xconstants.UID, uid, Xconstants.AID, aid);
 	}
 
 	// ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -634,8 +620,8 @@ public class XmlCreator {
 	/**
 	 * Method create XML of AddView message
 	 * 
-	 * @param sid
-	 *            sessionID of user
+	 * @param uid
+	 *            userID of user
 	 * @param viewName
 	 *            name of custom view (also used as ID)
 	 * @param iconNum
@@ -645,7 +631,7 @@ public class XmlCreator {
 	 * @return addView message
 	 * @since 2.2
 	 */
-	public static String createAddView(String sid, String viewName, int iconNum, List<Device> devices) {
+	public static String createAddView(String uid, String viewName, int iconNum, List<Device> devices) {
 		XmlSerializer serializer = Xml.newSerializer();
 		StringWriter writer = new StringWriter();
 		try {
@@ -654,7 +640,7 @@ public class XmlCreator {
 
 			serializer.startTag(ns, Xconstants.COM_ROOT);
 
-			serializer.attribute(ns, Xconstants.SID, sid);
+			serializer.attribute(ns, Xconstants.UID, uid);
 			serializer.attribute(ns, Xconstants.STATE, ADDVIEW);
 			serializer.attribute(ns, Xconstants.VERSION, COM_VER);
 			serializer.attribute(ns, Xconstants.NAME, viewName);
@@ -674,15 +660,15 @@ public class XmlCreator {
 
 			return writer.toString();
 		} catch (Exception e) {
-			throw new RuntimeException(e);
+			throw IhaException.wrap(e, NetworkError.XML);
 		}
 	}
 
 	/**
 	 * Method create one view to update message
 	 * 
-	 * @param sid
-	 *            sessionID of user
+	 * @param uid
+	 *            userID of user
 	 * @param viewName
 	 *            name of view and also ID
 	 * @param iconNum
@@ -694,7 +680,7 @@ public class XmlCreator {
 	 * @return updateView message
 	 * @since 2.2
 	 */
-	public static String createSetView(String sid, String viewName, int iconNum, Device device, NetworkAction action) {
+	public static String createSetView(String uid, String viewName, int iconNum, Device device, NetworkAction action) {
 		XmlSerializer serializer = Xml.newSerializer();
 		StringWriter writer = new StringWriter();
 		try {
@@ -703,7 +689,7 @@ public class XmlCreator {
 
 			serializer.startTag(ns, Xconstants.COM_ROOT);
 
-			serializer.attribute(ns, Xconstants.SID, sid);
+			serializer.attribute(ns, Xconstants.UID, uid);
 			serializer.attribute(ns, Xconstants.STATE, SETVIEW);
 			serializer.attribute(ns, Xconstants.VERSION, COM_VER);
 			serializer.attribute(ns, Xconstants.NAME, viewName);
@@ -720,34 +706,34 @@ public class XmlCreator {
 
 			return writer.toString();
 		} catch (Exception e) {
-			throw new RuntimeException(e);
+			throw IhaException.wrap(e, NetworkError.XML);
 		}
 	}
 
 	/**
 	 * Method create XML of DelVIew message
 	 * 
-	 * @param sid
-	 *            sessionID of user
+	 * @param uid
+	 *            userID of user
 	 * @param viewName
 	 *            name of view and also ID
 	 * @return DelVIew message
 	 * @since 2.2
 	 */
-	public static String createDelView(String sid, String viewName) {
-		return createComAttribsVariant(Xconstants.STATE, DELVIEW, Xconstants.SID, sid, Xconstants.NAME, viewName);
+	public static String createDelView(String uid, String viewName) {
+		return createComAttribsVariant(Xconstants.STATE, DELVIEW, Xconstants.UID, uid, Xconstants.NAME, viewName);
 	}
 
 	/**
 	 * Method create XML of GetViews message (method added in 1.6 version)
 	 * 
-	 * @param sid
-	 *            sessionID of user
+	 * @param uid
+	 *            userID of user
 	 * @return getViews message
 	 * @since 2.2
 	 */
-	public static String createGetViews(String sid) {
-		return createComAttribsVariant(Xconstants.STATE, GETVIEWS, Xconstants.SID, sid);
+	public static String createGetViews(String uid) {
+		return createComAttribsVariant(Xconstants.STATE, GETVIEWS, Xconstants.UID, uid);
 	}
 
 	// ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -757,8 +743,8 @@ public class XmlCreator {
 	/**
 	 * Method create XML for AddAcount message
 	 * 
-	 * @param sid
-	 *            sessionID of user
+	 * @param uid
+	 *            userID of user
 	 * @param aid
 	 *            adapterID of actual adapter
 	 * @param users
@@ -766,15 +752,15 @@ public class XmlCreator {
 	 * @return AddAcc message
 	 * @since 2.2
 	 */
-	public static String createAddAccounts(String sid, String aid, ArrayList<User> users) {
-		return createAddSeTAcc(ADDACCOUNTS, sid, aid, users);
+	public static String createAddAccounts(String uid, String aid, ArrayList<User> users) {
+		return createAddSeTAcc(ADDACCOUNTS, uid, aid, users);
 	}
 
 	/**
 	 * Method create XML for SetAcount message
 	 * 
-	 * @param sid
-	 *            sessionID of user
+	 * @param uid
+	 *            userID of user
 	 * @param aid
 	 *            adapterID of actual adapter
 	 * @param users
@@ -782,15 +768,15 @@ public class XmlCreator {
 	 * @return SetAcc message
 	 * @since 2.2
 	 */
-	public static String createSetAccounts(String sid, String aid, ArrayList<User> users) {
-		return createAddSeTAcc(SETCCOUNTS, sid, aid, users);
+	public static String createSetAccounts(String uid, String aid, ArrayList<User> users) {
+		return createAddSeTAcc(SETCCOUNTS, uid, aid, users);
 	}
 
 	/**
 	 * Method create XML for DelAcc message
 	 * 
-	 * @param sid
-	 *            sessionID of user
+	 * @param uid
+	 *            userID of user
 	 * @param aid
 	 *            adapterID of actual adapter
 	 * @param users
@@ -798,7 +784,7 @@ public class XmlCreator {
 	 * @return dellAcc message
 	 * @since 2.2
 	 */
-	public static String createDelAccounts(String sid, String aid, List<User> users) {
+	public static String createDelAccounts(String uid, String aid, List<User> users) {
 		XmlSerializer serializer = Xml.newSerializer();
 		StringWriter writer = new StringWriter();
 		try {
@@ -807,7 +793,7 @@ public class XmlCreator {
 
 			serializer.startTag(ns, Xconstants.COM_ROOT);
 
-			serializer.attribute(ns, Xconstants.SID, sid);
+			serializer.attribute(ns, Xconstants.UID, uid);
 			serializer.attribute(ns, Xconstants.STATE, DELACCOUNTS);
 			serializer.attribute(ns, Xconstants.VERSION, COM_VER);
 			serializer.attribute(ns, Xconstants.AID, aid);
@@ -823,22 +809,22 @@ public class XmlCreator {
 
 			return writer.toString();
 		} catch (Exception e) {
-			throw new RuntimeException(e);
+			throw IhaException.wrap(e, NetworkError.XML);
 		}
 	}
 
 	/**
 	 * Method create XML for GetAccs message
 	 * 
-	 * @param sid
-	 *            sessionID of user
+	 * @param uid
+	 *            userID of user
 	 * @param aid
 	 *            adapterID of actual adapter
 	 * @return GetAcc message
 	 * @since 2.2
 	 */
-	public static String createGetAccounts(String sid, String aid) {
-		return createComAttribsVariant(Xconstants.STATE, GETACCOUNTS, Xconstants.SID, sid, Xconstants.AID, aid);
+	public static String createGetAccounts(String uid, String aid) {
+		return createComAttribsVariant(Xconstants.STATE, GETACCOUNTS, Xconstants.UID, uid, Xconstants.AID, aid);
 	}
 
 	// ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -848,8 +834,8 @@ public class XmlCreator {
 	/**
 	 * Method create XML of SetTimeZone message
 	 * 
-	 * @param sid
-	 *            sessionID of user
+	 * @param uid
+	 *            userID of user
 	 * @param aid
 	 *            adapterID of actual adapter
 	 * @param diffToGMT
@@ -857,22 +843,22 @@ public class XmlCreator {
 	 * @return SetTimeZone message
 	 * @since 2.2
 	 */
-	public static String createSetTimeZone(String sid, String aid, int diffToGMT) {
-		return createComAttribsVariant(Xconstants.STATE, SETTIMEZONE, Xconstants.SID, sid, Xconstants.AID, aid, Xconstants.UTC, Integer.toString(diffToGMT));
+	public static String createSetTimeZone(String uid, String aid, int diffToGMT) {
+		return createComAttribsVariant(Xconstants.STATE, SETTIMEZONE, Xconstants.UID, uid, Xconstants.AID, aid, Xconstants.UTC, Integer.toString(diffToGMT));
 	}
 
 	/**
 	 * Method create XML of GetTimeZone message
 	 * 
-	 * @param sid
-	 *            sessionID of user
+	 * @param uid
+	 *            userID of user
 	 * @param aid
 	 *            adapterID of actual adapter
 	 * @return GetTimeZone message
 	 * @since 2.2
 	 */
-	public static String createGetTimeZone(String sid, String aid) {
-		return createComAttribsVariant(Xconstants.STATE, GETTIMEZONE, Xconstants.SID, sid, Xconstants.AID, aid);
+	public static String createGetTimeZone(String uid, String aid) {
+		return createComAttribsVariant(Xconstants.STATE, GETTIMEZONE, Xconstants.UID, uid, Xconstants.AID, aid);
 	}
 
 	// ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -882,15 +868,15 @@ public class XmlCreator {
 	/**
 	 * Method create XML of SetLocale message
 	 * 
-	 * @param sid
-	 *            sessionID of user
+	 * @param uid
+	 *            userID of user
 	 * @param locale
 	 *            of phone
 	 * @return message SetLocale
 	 * @since 2.2
 	 */
-	public static String createSetLocale(String sid, String locale) {
-		return createComAttribsVariant(Xconstants.STATE, SETLOCALE, Xconstants.SID, sid, Xconstants.LOCALE, locale);
+	public static String createSetLocale(String uid, String locale) {
+		return createComAttribsVariant(Xconstants.STATE, SETLOCALE, Xconstants.UID, uid, Xconstants.LOCALE, locale);
 	}
 
 	// ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -900,8 +886,8 @@ public class XmlCreator {
 	/**
 	 * Method create XML of AddCond message
 	 * 
-	 * @param sid
-	 *            sessionID of actual user
+	 * @param uid
+	 *            userID of actual user
 	 * @param name
 	 *            name of condition
 	 * @param type
@@ -911,15 +897,15 @@ public class XmlCreator {
 	 * @return AddCond message
 	 * @since 2.2
 	 */
-	public static String createAddCondition(String sid, String name, ConditionType type, ArrayList<ConditionFunction> condFuncs) {
-		return createAddSetCond(ADDCONDITION, sid, name, type, condFuncs, "");
+	public static String createAddCondition(String uid, String name, ConditionType type, ArrayList<ConditionFunction> condFuncs) {
+		return createAddSetCond(ADDCONDITION, uid, name, type, condFuncs, "");
 	}
 
 	/**
 	 * Method crate XMl of SetCond message
 	 * 
-	 * @param sid
-	 *            sessionID of actual user
+	 * @param uid
+	 *            userID of actual user
 	 * @param name
 	 *            name of condition
 	 * @param type
@@ -931,55 +917,55 @@ public class XmlCreator {
 	 * @return SetCond message
 	 * @since 2.2
 	 */
-	public static String createSetCondition(String sid, String name, ConditionType type, String cid, ArrayList<ConditionFunction> condFuncs) {
-		return createAddSetCond(SETCONDITION, sid, name, type, condFuncs, cid);
+	public static String createSetCondition(String uid, String name, ConditionType type, String cid, ArrayList<ConditionFunction> condFuncs) {
+		return createAddSetCond(SETCONDITION, uid, name, type, condFuncs, cid);
 	}
 
 	/**
 	 * Method create XML of DelCond message
 	 * 
-	 * @param sid
-	 *            sessionID of actual user
+	 * @param uid
+	 *            userID of actual user
 	 * @param cid
 	 *            conditionID to be delete
 	 * @return DelCond message
 	 * @since 2.2
 	 */
-	public static String createDelCondition(String sid, String cid) {
-		return createComAttribsVariant(Xconstants.STATE, DELCONDITION, Xconstants.SID, sid, Xconstants.CID, cid);
+	public static String createDelCondition(String uid, String cid) {
+		return createComAttribsVariant(Xconstants.STATE, DELCONDITION, Xconstants.UID, uid, Xconstants.CID, cid);
 	}
 
 	/**
 	 * Method create XML of GetCond message
 	 * 
-	 * @param sid
-	 *            sessionID of actual user
+	 * @param uid
+	 *            userID of actual user
 	 * @param cid
 	 *            conditionID
 	 * @return GetCond message
 	 * @since 2.2
 	 */
-	public static String createGetCondition(String sid, String cid) {
-		return createComAttribsVariant(Xconstants.STATE, GETCONDITION, Xconstants.SID, sid, Xconstants.CID, cid);
+	public static String createGetCondition(String uid, String cid) {
+		return createComAttribsVariant(Xconstants.STATE, GETCONDITION, Xconstants.UID, uid, Xconstants.CID, cid);
 	}
 
 	/**
 	 * Method create XML of GetConds message
 	 * 
-	 * @param sid
-	 *            sessionID of actual user
+	 * @param uid
+	 *            userID of actual user
 	 * @return GetConds message
 	 * @since 2.2
 	 */
-	public static String createGetConditions(String sid) {
-		return createComAttribsVariant(Xconstants.STATE, GETCONDITIONS, Xconstants.SID, sid);
+	public static String createGetConditions(String uid) {
+		return createComAttribsVariant(Xconstants.STATE, GETCONDITIONS, Xconstants.UID, uid);
 	}
 
 	/**
 	 * Method create XML of AddAct message
 	 * 
-	 * @param sid
-	 *            sessionID of actual user
+	 * @param uid
+	 *            userID of actual user
 	 * @param name
 	 *            name of new action
 	 * @param actions
@@ -987,15 +973,15 @@ public class XmlCreator {
 	 * @return AddAct message
 	 * @since 2.2
 	 */
-	public static String createAddAction(String sid, String name, List<Action> actions) {
-		return createAddSetAct(ADDACTION, sid, name, "", actions);
+	public static String createAddAction(String uid, String name, List<Action> actions) {
+		return createAddSetAct(ADDACTION, uid, name, "", actions);
 	}
 
 	/**
 	 * Method create XML of SetAct message
 	 * 
-	 * @param sid
-	 *            sessionID of actual user
+	 * @param uid
+	 *            userID of actual user
 	 * @param name
 	 *            name of new action
 	 * @param acid
@@ -1005,55 +991,55 @@ public class XmlCreator {
 	 * @return SetAct message
 	 * @since 2.2
 	 */
-	public static String createSetAction(String sid, String name, String acid, List<Action> actions) {
-		return createAddSetAct(SETACTION, sid, name, acid, actions);
+	public static String createSetAction(String uid, String name, String acid, List<Action> actions) {
+		return createAddSetAct(SETACTION, uid, name, acid, actions);
 	}
 
 	/**
 	 * Method create XML of DelAct
 	 * 
-	 * @param sid
-	 *            sessionID of actual user
+	 * @param uid
+	 *            userID of actual user
 	 * @param acid
 	 *            actionID to be removed
 	 * @return DelAct message
 	 * @since 2.2
 	 */
-	public static String createDelAction(String sid, String acid) {
-		return createComAttribsVariant(Xconstants.STATE, DELACTION, Xconstants.SID, sid, Xconstants.ACID, acid);
+	public static String createDelAction(String uid, String acid) {
+		return createComAttribsVariant(Xconstants.STATE, DELACTION, Xconstants.UID, uid, Xconstants.ACID, acid);
 	}
 
 	/**
 	 * Method create XML of GetActs message
 	 * 
-	 * @param sid
-	 *            sessionID of actual user
+	 * @param uid
+	 *            userID of actual user
 	 * @return GetActs message
 	 * @since 2.2
 	 */
-	public static String createGetActions(String sid) {
-		return createComAttribsVariant(Xconstants.STATE, GETACTIONS, Xconstants.SID, sid);
+	public static String createGetActions(String uid) {
+		return createComAttribsVariant(Xconstants.STATE, GETACTIONS, Xconstants.UID, uid);
 	}
 
 	/**
 	 * Method create XML of GetAct message
 	 * 
-	 * @param sid
-	 *            sessionID of actual user
+	 * @param uid
+	 *            userID of actual user
 	 * @param acid
 	 *            actionID
 	 * @return GetAct message
 	 * @since 2.2
 	 */
-	public static String createGetAction(String sid, String acid) {
-		return createComAttribsVariant(Xconstants.STATE, GETACTION, Xconstants.SID, sid, Xconstants.ACID, acid);
+	public static String createGetAction(String uid, String acid) {
+		return createComAttribsVariant(Xconstants.STATE, GETACTION, Xconstants.UID, uid, Xconstants.ACID, acid);
 	}
 
 	/**
 	 * Method create XML of CondAction message
 	 * 
-	 * @param sid
-	 *            sessionID of user
+	 * @param uid
+	 *            userID of user
 	 * @param cid
 	 *            conditionID
 	 * @param acid
@@ -1061,8 +1047,8 @@ public class XmlCreator {
 	 * @return CondAction message
 	 * @since 2.2
 	 */
-	public static String createConditionPlusAction(String sid, String cid, String acid) {
-		return createComAttribsVariant(Xconstants.STATE, CONDITIONPLUSACTION, Xconstants.SID, sid, Xconstants.CID, cid, Xconstants.ACID, acid);
+	public static String createConditionPlusAction(String uid, String cid, String acid) {
+		return createComAttribsVariant(Xconstants.STATE, CONDITIONPLUSACTION, Xconstants.UID, uid, Xconstants.CID, cid, Xconstants.ACID, acid);
 	}
 
 	// ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1072,8 +1058,8 @@ public class XmlCreator {
 	/**
 	 * Method create XML of DelXconstants.GCMID message (delete google cloud message id)
 	 * 
-	 * @param sid
-	 *            sessionID of user logged in now
+	 * @param uid
+	 *            userID of user logged in now
 	 * @param email
 	 *            of last logged user
 	 * @param gcmid
@@ -1081,47 +1067,47 @@ public class XmlCreator {
 	 * @return message DelXconstants.GCMID
 	 * @since 2.2
 	 */
-	public static String createDeLGCMID(String sid, String email, String gcmid) {
-		return createComAttribsVariant(Xconstants.STATE, DELGCMID, Xconstants.SID, sid, Xconstants.EMAIL, email, Xconstants.GCMID, gcmid);
+	public static String createDeLGCMID(String uid, String email, String gcmid) {
+		return createComAttribsVariant(Xconstants.STATE, DELGCMID, Xconstants.UID, uid, Xconstants.EMAIL, email, Xconstants.GCMID, gcmid);
 	}
 
 	/**
 	 * Method create XML of SetXconstants.GCMID message
 	 * 
-	 * @param sid
-	 *            sessionID of user logged in now
+	 * @param uid
+	 *            userID of user logged in now
 	 * @param gcmid
 	 *            id of google messaging
 	 * @return message SetXconstants.GCMID
 	 * @since 2.2
 	 */
-	public static String createSetGCMID(String sid, String gcmid) {
-		return createComAttribsVariant(Xconstants.STATE, SETGCMID, Xconstants.SID, sid, Xconstants.GCMID, gcmid);
+	public static String createSetGCMID(String uid, String gcmid) {
+		return createComAttribsVariant(Xconstants.STATE, SETGCMID, Xconstants.UID, uid, Xconstants.GCMID, gcmid);
 	}
 
 	/**
 	 * Method create XML of GetNotifs message
 	 * 
-	 * @param sid
+	 * @param uid
 	 *            SessionID of user
 	 * @return message GetNotifs
 	 * @since 2.2
 	 */
-	public static String createGetNotifications(String sid) {
-		return createComAttribsVariant(Xconstants.STATE, GETNOTIFICATIONS, Xconstants.SID, sid);
+	public static String createGetNotifications(String uid) {
+		return createComAttribsVariant(Xconstants.STATE, GETNOTIFICATIONS, Xconstants.UID, uid);
 	}
 
 	/**
 	 * Method create XML of NotifRead message
 	 * 
-	 * @param sid
-	 *            sessionID of user
+	 * @param uid
+	 *            userID of user
 	 * @param mids
 	 *            list of gcmID of read notification
 	 * @return message NotifRead
 	 * @since 2.2
 	 */
-	public static String createNotificaionRead(String sid, List<String> mids) {
+	public static String createNotificaionRead(String uid, List<String> mids) {
 		XmlSerializer serializer = Xml.newSerializer();
 		StringWriter writer = new StringWriter();
 		try {
@@ -1129,7 +1115,7 @@ public class XmlCreator {
 			serializer.startDocument("UTF-8", null);
 
 			serializer.startTag(ns, Xconstants.COM_ROOT);
-			serializer.attribute(ns, Xconstants.SID, sid);
+			serializer.attribute(ns, Xconstants.UID, uid);
 			serializer.attribute(ns, Xconstants.STATE, NOTIFICATIONREAD);
 			serializer.attribute(ns, Xconstants.VERSION, COM_VER);
 
@@ -1143,7 +1129,7 @@ public class XmlCreator {
 
 			return writer.toString();
 		} catch (Exception e) {
-			throw new RuntimeException(e);
+			throw IhaException.wrap(e, NetworkError.XML);
 		}
 	}
 
@@ -1172,11 +1158,11 @@ public class XmlCreator {
 
 			return writer.toString();
 		} catch (Exception e) {
-			throw new RuntimeException(e);
+			throw IhaException.wrap(e, NetworkError.XML);
 		}
 	}
 
-	private static String createAddSeTAcc(String state, String sid, String aid, ArrayList<User> users) {
+	private static String createAddSeTAcc(String state, String uid, String aid, ArrayList<User> users) {
 		XmlSerializer serializer = Xml.newSerializer();
 		StringWriter writer = new StringWriter();
 		try {
@@ -1185,7 +1171,7 @@ public class XmlCreator {
 
 			serializer.startTag(ns, Xconstants.COM_ROOT);
 
-			serializer.attribute(ns, Xconstants.SID, sid);
+			serializer.attribute(ns, Xconstants.UID, uid);
 			serializer.attribute(ns, Xconstants.STATE, state);
 			serializer.attribute(ns, Xconstants.VERSION, COM_VER);
 			serializer.attribute(ns, Xconstants.AID, aid);
@@ -1203,11 +1189,11 @@ public class XmlCreator {
 
 			return writer.toString();
 		} catch (Exception e) {
-			throw new RuntimeException(e);
+			throw IhaException.wrap(e, NetworkError.XML);
 		}
 	}
 
-	private static String createAddSetCond(String state, String sid, String name, ConditionType type, ArrayList<ConditionFunction> condFuncs, String cid) {
+	private static String createAddSetCond(String state, String uid, String name, ConditionType type, ArrayList<ConditionFunction> condFuncs, String cid) {
 		XmlSerializer serializer = Xml.newSerializer();
 		StringWriter writer = new StringWriter();
 		try {
@@ -1216,7 +1202,7 @@ public class XmlCreator {
 
 			serializer.startTag(ns, Xconstants.COM_ROOT);
 
-			serializer.attribute(ns, Xconstants.SID, sid);
+			serializer.attribute(ns, Xconstants.UID, uid);
 			serializer.attribute(ns, Xconstants.STATE, state);
 			serializer.attribute(ns, Xconstants.VERSION, COM_VER);
 			serializer.attribute(ns, Xconstants.CNAME, name);
@@ -1327,11 +1313,11 @@ public class XmlCreator {
 
 			return writer.toString();
 		} catch (Exception e) {
-			throw new RuntimeException(e);
+			throw IhaException.wrap(e, NetworkError.XML);
 		}
 	}
 
-	private static String createAddSetAct(String state, String sid, String name, String actid, List<Action> actions) {
+	private static String createAddSetAct(String state, String uid, String name, String actid, List<Action> actions) {
 		XmlSerializer serializer = Xml.newSerializer();
 		StringWriter writer = new StringWriter();
 		try {
@@ -1340,7 +1326,7 @@ public class XmlCreator {
 
 			serializer.startTag(ns, Xconstants.COM_ROOT);
 
-			serializer.attribute(ns, Xconstants.SID, sid);
+			serializer.attribute(ns, Xconstants.UID, uid);
 			serializer.attribute(ns, Xconstants.STATE, state);
 			serializer.attribute(ns, Xconstants.VERSION, COM_VER);
 			serializer.attribute(ns, Xconstants.ACNAME, name);
@@ -1366,7 +1352,7 @@ public class XmlCreator {
 
 			return writer.toString();
 		} catch (Exception e) {
-			throw new RuntimeException(e);
+			throw IhaException.wrap(e, NetworkError.XML);
 		}
 	}
 }

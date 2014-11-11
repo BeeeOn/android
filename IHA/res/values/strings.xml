@@ -114,6 +114,7 @@
     <string name="drawer_close">CLOSE</string>
     <string name="location">Locations</string>
     <string name="custom_view">Custom views</string>
+    <string name="adapter">Adapters</string>
     <string name="no_location">No locations</string>
     <string name="no_custom_view">No custom views</string>
     <string name="no_adapters">You have no adapters</string>
@@ -142,6 +143,7 @@
     <string name="sen_detail_graph_info">Tap to Active</string>
     <string name="loading_data">Loading data&#8230;</string>
     <string name="no_sensor_cap">NO SENSORS</string>
+    <string name="no_adapter_cap">NO ADAPTER</string>
 
     <!-- Arrays -->
     <string-array name="registration_spinner">

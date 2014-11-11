@@ -38,11 +38,19 @@
         <item name="android:visibility">gone</item>
     </style>  
     
-   	<style name="SeekBarCustomHoloTheme" parent="android:Widget.Holo.Light.SeekBar">
+   	<style name="IHA.Custom.SeekBar" parent="android:Widget.Holo.Light.SeekBar">
       <item name="android:progressDrawable">@drawable/customholotheme_scrubber_progress_horizontal_holo_light</item>
       <item name="android:indeterminateDrawable">@drawable/customholotheme_scrubber_progress_horizontal_holo_light</item>
       <item name="android:thumb">@drawable/customholotheme_scrubber_control_selector_holo_light</item>
   	</style>
+  	
+   	<style name="IHA.Custom.Button" parent="android:Widget.Button">
+	  <item name="android:background">@drawable/apptheme_btn_default_holo_light</item>
+  </style>
+
+  <style name="IHA.Custom.ImageButton" parent="android:Widget.ImageButton">
+	  <item name="android:background">@drawable/apptheme_btn_default_holo_light</item>
+  </style>
   	
    	<style name="MyDialog" parent="@android:style/Theme.Holo.Dialog">
         <item name="android:windowIsTranslucent">true</item>

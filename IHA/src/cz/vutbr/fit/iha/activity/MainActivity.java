@@ -49,10 +49,10 @@ public class MainActivity extends BaseApplicationActivity {
 
 	private Controller mController;
 
-	private static final String ADD_ADAPTER_TAG = "addAdapterDialog";
-	private static final String ADD_SENSOR_TAG = "addSensorDialog";
-	private static final String FRG_TAG_LOC = "Loc";
-	private static final String FRG_TAG_CUS = "Cus";
+	public static final String ADD_ADAPTER_TAG = "addAdapterDialog";
+	public static final String ADD_SENSOR_TAG = "addSensorDialog";
+	public static final String FRG_TAG_LOC = "Loc";
+	public static final String FRG_TAG_CUS = "Cus";
 	private NavDrawerMenu mNavDrawerMenu;
 	private SensorListFragment mListDevices;
 	private CustomViewFragment mCustomView;
@@ -192,10 +192,13 @@ public class MainActivity extends BaseApplicationActivity {
 
 		mNavDrawerMenu.redrawMenu();
 		//Check whitch fragment is visible and redraw
-		if(mActiveLocationId != null) {
+		if(mActiveLocationId != null) { // isnt set active location
 			redrawDevices();
-		} else if(mActiveCustomViewId != null) {
+		} else if(mActiveCustomViewId != null) { // isnt set active custom view
 			redrawCustomView();
+		}
+		else { // app is empty 
+			redrawDevices();
 		}
 
 		checkNoAdapters();

@@ -10,8 +10,8 @@ import org.joda.time.DateTime;
 
 import cz.vutbr.fit.iha.IdentifierComparator;
 import cz.vutbr.fit.iha.adapter.device.Facility;
+import cz.vutbr.fit.iha.exception.IhaException;
 import cz.vutbr.fit.iha.network.INetwork;
-import cz.vutbr.fit.iha.network.exception.NetworkException;
 
 public class UninitializedFacilitiesModel {
 
@@ -87,7 +87,7 @@ public class UninitializedFacilitiesModel {
 			setUninitializedFacilitiesByAdapter(adapterId, mNetwork.getNewFacilities(adapterId));
 			setLastUpdate(adapterId, DateTime.now());
 			saveToCache(adapterId);
-		} catch (NetworkException e) {
+		} catch (IhaException e) {
 			e.printStackTrace();
 			return false;
 		}

@@ -24,6 +24,7 @@ import cz.vutbr.fit.iha.adapter.device.RefreshInterval;
 import cz.vutbr.fit.iha.adapter.device.values.BaseEnumValue;
 import cz.vutbr.fit.iha.adapter.device.values.BaseEnumValue.Item;
 import cz.vutbr.fit.iha.adapter.location.Location;
+import cz.vutbr.fit.iha.exception.IhaException;
 import cz.vutbr.fit.iha.household.ActualUser;
 import cz.vutbr.fit.iha.household.User;
 import cz.vutbr.fit.iha.household.User.Gender;
@@ -60,35 +61,6 @@ public class DemoNetwork implements INetwork {
 
 	public DemoNetwork(Context context) {
 		mContext = context;
-
-		try {
-			XmlParsers parser = new XmlParsers();
-
-			String assetName = Constants.ASSET_ADAPTERS_FILENAME;
-			for (Adapter adapter : parser.getDemoAdaptersFromAsset(mContext, assetName)) {
-				mAdapters.put(adapter.getId(), new AdapterHolder(adapter));
-			}
-
-			for (AdapterHolder holder : mAdapters.values()) {
-				assetName = String.format(Constants.ASSET_LOCATIONS_FILENAME, holder.adapter.getId());
-
-				for (Location location : parser.getDemoLocationsFromAsset(mContext, assetName)) {
-					holder.locations.put(location.getId(), location);
-				}
-
-				assetName = String.format(Constants.ASSET_ADAPTER_DATA_FILENAME, holder.adapter.getId());
-				for (Facility facility : parser.getDemoFacilitiesFromAsset(mContext, assetName)) {
-					holder.facilities.put(facility.getId(), facility);
-				}
-
-				// Set last update time to time between (-26 hours, now>
-				for (Facility facility : holder.facilities.values()) {
-					facility.setLastUpdate(DateTime.now(DateTimeZone.UTC).minusSeconds(new Random().nextInt(60 * 60 * 26)));
-				}
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
 	}
 
 	private boolean isAdapterAllowed(String adapterId) {
@@ -140,21 +112,55 @@ public class DemoNetwork implements INetwork {
 	}
 
 	@Override
-	public boolean signIn(String email, String gcmid) {
+	public String getUID() {
+		// This has to return false so signIn() method will be called in Controller
+		// (maybe it will be changed later somehow)
+		return "";
+	}
+
+//	@Override
+	public boolean signIn(String email, String gcmid) throws IhaException {
+		// Set user
 		mUser.setName("John Doe");
 		mUser.setEmail(DEMO_EMAIL);
 		mUser.setGender(Gender.Male);
 		mUser.setPicture(null);
 		mUser.setPictureUrl("");
-		mUser.setSessionId("123456789");
+		mUser.setUserId("123456789");
 
+		// Parse and set initial demo data
+		XmlParsers parser = new XmlParsers();
+
+		String assetName = Constants.ASSET_ADAPTERS_FILENAME;
+		for (Adapter adapter : parser.getDemoAdaptersFromAsset(mContext, assetName)) {
+			mAdapters.put(adapter.getId(), new AdapterHolder(adapter));
+		}
+
+		for (AdapterHolder holder : mAdapters.values()) {
+			assetName = String.format(Constants.ASSET_LOCATIONS_FILENAME, holder.adapter.getId());
+
+			for (Location location : parser.getDemoLocationsFromAsset(mContext, assetName)) {
+				holder.locations.put(location.getId(), location);
+			}
+
+			assetName = String.format(Constants.ASSET_ADAPTER_DATA_FILENAME, holder.adapter.getId());
+			for (Facility facility : parser.getDemoFacilitiesFromAsset(mContext, assetName)) {
+				holder.facilities.put(facility.getId(), facility);
+			}
+
+			// Set last update time to time between (-26 hours, now>
+			for (Facility facility : holder.facilities.values()) {
+				facility.setLastUpdate(DateTime.now(DateTimeZone.UTC).minusSeconds(new Random().nextInt(60 * 60 * 26)));
+			}
+		}
+		
 		return true;
 	}
-
-	@Override
-	public boolean signUp(String email) {
-		return true;
-	}
+//
+//	@Override
+//	public boolean signUp(String email) {
+//		return true;
+//	}
 
 	@Override
 	public boolean addAdapter(String adapterId, String adapterName) {
@@ -243,8 +249,7 @@ public class DemoNetwork implements INetwork {
 
 	@Override
 	public boolean switchState(String adapterId, Device device) {
-		// TODO Auto-generated method stub
-		return false;
+		return true;
 	}
 
 	@Override
@@ -404,7 +409,8 @@ public class DemoNetwork implements INetwork {
 					}
 					pos++;
 				}
-				pos = (items.size() + pos + (random.nextInt(3) - 1)) % items.size(); // (size + pos + <-1,1>) % size  - first size is because it could end up to "-1"
+				// (size + pos + <-1,1>) % size  - first size is because it could end up to "-1"
+				pos = (items.size() + pos + (random.nextInt(3) - 1)) % items.size();
 				lastValue = items.get(pos).getId();
 			} else {
 				double addvalue = random.nextInt((int) range * 1000) / 1000;

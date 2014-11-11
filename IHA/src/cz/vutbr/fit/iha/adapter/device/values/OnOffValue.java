@@ -5,8 +5,8 @@ import cz.vutbr.fit.iha.R;
 
 public class OnOffValue extends BaseEnumValue {
 
-	public static final String SWITCH_ON = "ON";
-	public static final String SWITCH_OFF = "OFF";
+	public static final String SWITCH_ON = "1";
+	public static final String SWITCH_OFF = "0";
 
 	public OnOffValue() {
 		super();

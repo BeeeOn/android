@@ -6,9 +6,12 @@ import java.util.List;
 import android.graphics.Color;
 import cz.vutbr.fit.iha.R;
 import cz.vutbr.fit.iha.adapter.device.units.BlankUnit;
+import cz.vutbr.fit.iha.util.Log;
 
 public abstract class BaseEnumValue extends BaseValue {
 
+	private static final String TAG = BaseEnumValue.class.getSimpleName();
+	
 	protected final List<Item> mItems = new ArrayList<Item>();
 
 	protected final Item mUnknownValue = this.new Item(-1, "", R.drawable.dev_unknown, R.string.dev_unknown_unit, Color.BLACK);
@@ -57,6 +60,11 @@ public abstract class BaseEnumValue extends BaseValue {
 	public void setValue(String value) {
 		super.setValue(value);
 		mValue = getItemByValue(value);
+	}
+	
+	public void setValue(Item item) {
+		super.setValue(item.getValue());
+		mValue = item;
 	}
 
 	@Override
@@ -116,6 +124,33 @@ public abstract class BaseEnumValue extends BaseValue {
 	
 	public List<Item> getEnumItems() {
 		return mItems;
+	}
+
+	private boolean setValueToOffset(int offset) {
+		int pos = mItems.indexOf(mValue);
+		if (pos == -1) {
+			Log.e(TAG, "Item was not found (probably unknown value), we can't use any offset");
+			return false;
+		}
+		
+		if (mItems.size() < 2) {
+			Log.e(TAG, "There are less than 2 items in this value, we can't use any offset");
+			return false;
+		}
+
+		pos = (pos + offset) % mItems.size();
+		setValue(mItems.get(pos));
+		return true;
+	}
+	
+	/** Actors support ****************************************************/
+
+	public boolean setNextValue() {
+		return setValueToOffset(1);
+	}
+	
+	public boolean setPrevValue() {
+		return setValueToOffset(-1);
 	}
 
 }

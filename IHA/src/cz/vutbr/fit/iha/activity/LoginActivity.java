@@ -23,11 +23,11 @@ import cz.vutbr.fit.iha.R;
 import cz.vutbr.fit.iha.adapter.Adapter;
 import cz.vutbr.fit.iha.base.BaseActivity;
 import cz.vutbr.fit.iha.controller.Controller;
+import cz.vutbr.fit.iha.exception.ErrorCode;
+import cz.vutbr.fit.iha.exception.IhaException;
+import cz.vutbr.fit.iha.exception.NetworkError;
 import cz.vutbr.fit.iha.exception.NotImplementedException;
 import cz.vutbr.fit.iha.network.DemoNetwork;
-import cz.vutbr.fit.iha.network.exception.CommunicationException;
-import cz.vutbr.fit.iha.network.exception.FalseException;
-import cz.vutbr.fit.iha.network.exception.NoConnectionException;
 import cz.vutbr.fit.iha.thread.ToastMessageThread;
 import cz.vutbr.fit.iha.util.Log;
 
@@ -448,26 +448,27 @@ public class LoginActivity extends BaseActivity {
 				errFlag = true;
 				errMessage = "Login failed";
 			}
-		} catch (FalseException e) {
+		} catch (IhaException e) {
 			e.printStackTrace();
-			if (!mSignUp)
+			
+			ErrorCode code = e.getErrorCode();
+			if (code instanceof NetworkError && code == NetworkError.NOT_VALID_USER && !mSignUp) {
 				doRegisterUser(email);
-
-		} catch (NoConnectionException e) {
-			e.printStackTrace();
-
-			errFlag = true;
-			errMessage = getString(R.string.toast_internet_connection);
-		} catch (CommunicationException e) {
-			e.printStackTrace();
-
-			errFlag = true;
-			errMessage = getString(R.string.toast_communication_error);
+			} else {
+				errFlag = true;
+				errMessage = e.getTranslatedErrorMessage(this);
+			}
 		} catch (NotImplementedException e) {
 			e.printStackTrace();
+
 			// FIXME: remove in final version
 			errFlag = true;
 			errMessage = getString(R.string.toast_not_implemented);
+		} catch (Exception e) {
+			e.printStackTrace();
+			
+			errFlag = true;
+			errMessage = getString(R.string.toast_login_failed);
 		} finally {
 			progressDismiss();
 			if (errFlag) {
@@ -481,7 +482,7 @@ public class LoginActivity extends BaseActivity {
 		mSignUp = true;
 		progressChangeText(getString(R.string.progress_signup));
 		progressShow();
-		if (mController.registerUser(email)) {
+		if (/*mController.registerUser(email)*/true) {
 			doLogin(email);
 		} else {
 			progressDismiss();
