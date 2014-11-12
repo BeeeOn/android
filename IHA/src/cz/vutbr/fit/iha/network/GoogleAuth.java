@@ -34,6 +34,7 @@ public class GoogleAuth extends AsyncTask<Void, Void, GoogleAuthState> {
 
 	private LoginActivity mActivity;
 	private String mEmail;
+	private String mId;
 	private String mToken;
 	private String mUserName;
 	private String mPictureUrl;
@@ -120,6 +121,22 @@ public class GoogleAuth extends AsyncTask<Void, Void, GoogleAuthState> {
 	}
 
 	/**
+	 * @return the Id
+	 */
+	public String getId() {
+		if(mId != null)
+			return mId;
+		return "";
+	}
+
+	/**
+	 * @param Id the Id to set
+	 */
+	public void setId(String Id) {
+		this.mId = Id;
+	}
+
+	/**
 	 * Getter of token
 	 * 
 	 * @return
@@ -162,7 +179,7 @@ public class GoogleAuth extends AsyncTask<Void, Void, GoogleAuthState> {
 			mToken = GoogleAuthUtil.getToken(mActivity, mEmail, SCOPE);
 			Log.d(TAG, mToken);
 
-			fetchInfoFromProfileServer(mToken);
+			fetchInfoFromProfileServer(mToken, true);
 
 			return GoogleAuthState.eOK;
 		} catch (UserRecoverableAuthException userRecoverableException) {
@@ -210,8 +227,9 @@ public class GoogleAuth extends AsyncTask<Void, Void, GoogleAuthState> {
 			mToken = GoogleAuthUtil.getToken(mActivity, mEmail, SCOPE);
 			Log.d(TAG, mToken);
 
-			if (fetchPhoto)
-				fetchInfoFromProfileServer(mToken);
+			fetchInfoFromProfileServer(mToken, fetchPhoto);
+			
+			Log.d(TAG, mId);
 
 			return true;
 		} catch (UserRecoverableAuthException userRecoverableException) {
@@ -230,6 +248,11 @@ public class GoogleAuth extends AsyncTask<Void, Void, GoogleAuthState> {
 		}
 		return false;
 	}
+	
+	private String getID(String jsonResponse) throws JSONException {
+		JSONObject profile = new JSONObject(jsonResponse);
+		return profile.getString("id");
+	}
 
 	/****************************************************************************************/
 	/* Prevzato z SDK - EXTRAS - SAMPLE - AUTH */
@@ -242,7 +265,7 @@ public class GoogleAuth extends AsyncTask<Void, Void, GoogleAuthState> {
 	 * @throws IOException
 	 * @throws JSONException
 	 */
-	private void fetchInfoFromProfileServer(String token) throws IOException, JSONException {
+	private void fetchInfoFromProfileServer(String token, boolean fetchPhoto) throws IOException, JSONException {
 		URL url = new URL("https://www.googleapis.com/oauth2/v1/userinfo?access_token=" + token);
 		HttpURLConnection con = (HttpURLConnection) url.openConnection();
 		con.setConnectTimeout(10000);
@@ -253,11 +276,12 @@ public class GoogleAuth extends AsyncTask<Void, Void, GoogleAuthState> {
 
 			mUserName = getName(respond);
 			mPictureUrl = getPicture(respond);
+			mId = getID(respond);
 
 			Log.d(TAG, String.format("Hello %s!", mUserName));
 			Log.i(TAG, mPictureUrl);
 			is.close();
-			if (mPictureUrl != null && mPictureUrl.length() > 0) {
+			if (mPictureUrl != null && mPictureUrl.length() > 0 && fetchPhoto) {
 				fetchPictureFromProfileServer(mPictureUrl);
 			}
 

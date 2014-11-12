@@ -16,6 +16,7 @@ import java.security.cert.Certificate;
 import java.security.cert.CertificateException;
 import java.security.cert.CertificateFactory;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.List;
@@ -32,6 +33,7 @@ import javax.net.ssl.TrustManagerFactory;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.Debug;
 import cz.vutbr.fit.iha.adapter.Adapter;
 import cz.vutbr.fit.iha.adapter.device.Device;
 import cz.vutbr.fit.iha.adapter.device.Device.SaveDevice;
@@ -102,7 +104,7 @@ public class Network implements INetwork {
 	private Context mContext;
 	private GoogleAuth mGoogleAuth;
 	private ActualUser mUser;
-	private String mSessionID = "";
+	private String mUserID = "";
 	private String mSecretVar;
 	private boolean mUseDebugServer;
 	private boolean mGoogleReinit;
@@ -113,10 +115,11 @@ public class Network implements INetwork {
 	 * 
 	 * @param context
 	 */
-	public Network(Context context, Controller controller, boolean useDebugServer) {
+	public Network(Context context, Controller controller, String userID, boolean useDebugServer) {
 		mContext = context;
 		mController = controller;
 		mUseDebugServer = useDebugServer;
+		mUserID = userID;
 	}
 
 	public void setUser(ActualUser user) {
@@ -283,7 +286,7 @@ public class Network implements INetwork {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		mSecretVar = mSessionID;
+		mSecretVar = mUserID;
 		signIn(mUser.getEmail(), mController.getGCMRegistrationId()); // FIXME: gcmid
 	}
 
@@ -292,7 +295,8 @@ public class Network implements INetwork {
 			throw new NoConnectionException();
 
 		ParsedMessage msg = null;
-
+//		Debug.startMethodTracing("Support_231");
+//		long ltime = new Date().getTime();
 		try {
 			String result = startCommunication(messageToSend);
 
@@ -303,20 +307,25 @@ public class Network implements INetwork {
 			if (msg.getState() == State.FALSE && ((FalseAnswer) msg.data).getErrCode() == RESIGNCODE) {
 				doResign();
 				// try it one more time
-				result = startCommunication(messageToSend.replace(Xconstants.SID + "=\"" + mSecretVar + "\"", Xconstants.SID + "=\"" + mSessionID + "\"")); // FIXME: hot fix
+				result = startCommunication(messageToSend.replace(Xconstants.SID + "=\"" + mSecretVar + "\"", Xconstants.SID + "=\"" + mUserID + "\"")); // FIXME: hot fix
 
 				Log.d(TAG + " - fromApp", messageToSend);
 				Log.i(TAG + " - fromSrv", result);
 
 				msg = new XmlParsers().parseCommunication(result, false);
 			}
-
+			
 			return msg;
-
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw new CommunicationException(e);
+		}finally{
+//			Debug.stopMethodTracing();
+//			ltime = new Date().getTime() - ltime;
+//			android.util.Log.d("Support_231", ltime+"");
 		}
+		
 	}
 
 	/**
@@ -358,6 +367,7 @@ public class Network implements INetwork {
 	 * @throws NotRegBException
 	 *             if this user is not registered on the server but there is FREE ADAPTER
 	 */
+	@Deprecated
 	public boolean signIn(String email, String gcmid) throws NoConnectionException, CommunicationException, FalseException {
 
 		String googleToken = getGoogleToken();
@@ -366,9 +376,9 @@ public class Network implements INetwork {
 
 		ParsedMessage msg = doRequest(XmlCreator.createSignIn(email, googleToken, Locale.getDefault().getLanguage(), gcmid));
 
-		if (!msg.getSessionId().isEmpty() && msg.getState() == State.TRUE) {
-			mUser.setSessionId(msg.getSessionId());
-			mSessionID = msg.getSessionId();
+		if (!msg.getUserId().isEmpty() && msg.getState() == State.TRUE) {
+			mUser.setUserId(msg.getUserId());
+			mUserID = msg.getUserId();
 			return true;
 		}
 		if (msg.getState() == State.FALSE && ((FalseAnswer) msg.data).getErrCode() == BADTOKENCODE)
@@ -387,6 +397,7 @@ public class Network implements INetwork {
 	 *             including message from server
 	 * @throws NoConnectionException
 	 */
+	@Deprecated
 	public boolean signUp(String email) throws CommunicationException, NoConnectionException, FalseException {
 
 		String googleToken = getGoogleToken();
@@ -404,6 +415,25 @@ public class Network implements INetwork {
 		throw new FalseException(((FalseAnswer) msg.data));
 	}
 
+	public boolean getUID(String email) throws NoConnectionException, CommunicationException, FalseException {
+		String googleToken = getGoogleToken();
+		String googleID = mGoogleAuth.getId(); // TODO: check this - GOOGLE ID
+		if (googleToken.length() == 0)
+			throw new CommunicationException(GoogleExcMessage);
+
+		ParsedMessage msg = doRequest(XmlCreator.createGetUID(googleID, googleToken, Locale.getDefault().getLanguage()));
+
+		if (!msg.getUserId().isEmpty() && msg.getState() == State.UID) {
+			mUser.setUserId(msg.getUserId());
+			mUserID = msg.getUserId();
+			return true;
+		}
+		if (msg.getState() == State.FALSE && ((FalseAnswer) msg.data).getErrCode() == BADTOKENCODE)
+			mGoogleAuth.invalidateToken();
+
+		throw new FalseException(((FalseAnswer) msg.data));
+	}
+	
 	/**
 	 * Method register adapter to server
 	 * 
@@ -414,7 +444,7 @@ public class Network implements INetwork {
 	 * @return true if adapter has been registered, false otherwise
 	 */
 	public boolean addAdapter(String adapterID, String adapterName) {
-		ParsedMessage msg = doRequest(XmlCreator.createAddAdapter(mSessionID, adapterID, adapterName));
+		ParsedMessage msg = doRequest(XmlCreator.createAddAdapter(mUserID, adapterID, adapterName));
 
 		if (msg.getState() == State.TRUE)
 			return true;
@@ -433,7 +463,7 @@ public class Network implements INetwork {
 	// http://stackoverflow.com/a/509288/1642090
 	@SuppressWarnings("unchecked")
 	public List<Adapter> getAdapters() throws NoConnectionException, CommunicationException, FalseException {
-		ParsedMessage msg = doRequest(XmlCreator.createGetAdapters(mSessionID));
+		ParsedMessage msg = doRequest(XmlCreator.createGetAdapters(mUserID));
 
 		if (msg.getState() == State.ADAPTERS)
 			return (List<Adapter>) msg.data;
@@ -452,7 +482,7 @@ public class Network implements INetwork {
 	 */
 	@SuppressWarnings("unchecked")
 	public List<Facility> initAdapter(String adapterID) throws NoConnectionException, CommunicationException, FalseException {
-		ParsedMessage msg = doRequest(XmlCreator.createGetAllDevices(mSessionID, adapterID));
+		ParsedMessage msg = doRequest(XmlCreator.createGetAllDevices(mUserID, adapterID));
 
 		if (msg.getState() == State.ALLDEVICES)
 			return (ArrayList<Facility>) msg.data;
@@ -472,7 +502,7 @@ public class Network implements INetwork {
 	 * @throws CommunicationException
 	 */
 	public boolean reInitAdapter(String oldId, String newId) throws NoConnectionException, CommunicationException, FalseException {
-		ParsedMessage msg = doRequest(XmlCreator.createReInitAdapter(mSessionID, oldId, newId));
+		ParsedMessage msg = doRequest(XmlCreator.createReInitAdapter(mUserID, oldId, newId));
 
 		if (msg.getState() == State.TRUE)
 			return true;
@@ -493,7 +523,7 @@ public class Network implements INetwork {
 	 * @throws CommunicationException
 	 */
 	public boolean updateFacilities(String adapterID, List<Facility> facilities, EnumSet<SaveDevice> toSave) throws NoConnectionException, CommunicationException, FalseException {
-		ParsedMessage msg = doRequest(XmlCreator.createSetDevs(mSessionID, adapterID, facilities, toSave));
+		ParsedMessage msg = doRequest(XmlCreator.createSetDevs(mUserID, adapterID, facilities, toSave));
 
 		if (msg.getState() == State.TRUE)
 			return true;
@@ -516,7 +546,7 @@ public class Network implements INetwork {
 	 * @throws FalseException
 	 */
 	public boolean updateDevice(String adapterID, Device device, EnumSet<SaveDevice> toSave) throws NoConnectionException, CommunicationException, FalseException {
-		ParsedMessage msg = doRequest(XmlCreator.createSetDev(mSessionID, adapterID, device, toSave));
+		ParsedMessage msg = doRequest(XmlCreator.createSetDev(mUserID, adapterID, device, toSave));
 
 		if (msg.getState() == State.TRUE)
 			return true;
@@ -535,7 +565,7 @@ public class Network implements INetwork {
 	 * @throws FalseException
 	 */
 	public boolean switchState(String adapterID, Device device) throws NoConnectionException, CommunicationException, FalseException {
-		ParsedMessage msg = doRequest(XmlCreator.createSwitch(mSessionID, adapterID, device));
+		ParsedMessage msg = doRequest(XmlCreator.createSwitch(mUserID, adapterID, device));
 
 		if (msg.getState() == State.TRUE)
 			return true;
@@ -553,7 +583,7 @@ public class Network implements INetwork {
 	 * @throws FalseException
 	 */
 	public boolean prepareAdapterToListenNewSensors(String adapterID) throws NoConnectionException, CommunicationException, FalseException {
-		ParsedMessage msg = doRequest(XmlCreator.createAdapterScanMode(mSessionID, adapterID));
+		ParsedMessage msg = doRequest(XmlCreator.createAdapterScanMode(mUserID, adapterID));
 
 		if (msg.getState() == State.TRUE)
 			return true;
@@ -574,7 +604,7 @@ public class Network implements INetwork {
 	 * @throws FalseException
 	 */
 	public boolean deleteFacility(String adapterID, Facility facility) throws NoConnectionException, CommunicationException, FalseException {
-		ParsedMessage msg = doRequest(XmlCreator.createDeleteDevice(mSessionID, adapterID, facility));
+		ParsedMessage msg = doRequest(XmlCreator.createDeleteDevice(mUserID, adapterID, facility));
 
 		if (msg.getState() == State.TRUE)
 			return true;
@@ -595,7 +625,7 @@ public class Network implements INetwork {
 	// http://stackoverflow.com/a/509288/1642090
 	@SuppressWarnings("unchecked")
 	public List<Facility> getFacilities(List<Facility> facilities) throws NoConnectionException, CommunicationException, FalseException {
-		ParsedMessage msg = doRequest(XmlCreator.createGetDevices(mSessionID, facilities));
+		ParsedMessage msg = doRequest(XmlCreator.createGetDevices(mUserID, facilities));
 
 		if (msg.getState() == State.DEVICES)
 			return (List<Facility>) msg.data;
@@ -640,7 +670,7 @@ public class Network implements INetwork {
 	 */
 	@SuppressWarnings("unchecked")
 	public List<Facility> getNewFacilities(String adapterID) throws NoConnectionException, CommunicationException, FalseException {
-		ParsedMessage msg = doRequest(XmlCreator.createGetNewDevices(mSessionID, adapterID));
+		ParsedMessage msg = doRequest(XmlCreator.createGetNewDevices(mUserID, adapterID));
 
 		if (msg.getState() == State.DEVICES)
 			return (List<Facility>) msg.data;
@@ -661,7 +691,7 @@ public class Network implements INetwork {
 	 */
 	// http://stackoverflow.com/a/509288/1642090
 	public DeviceLog getLog(String adapterID, Device device, LogDataPair pair) throws NoConnectionException, CommunicationException, FalseException {
-		String msgToSend = XmlCreator.createGetLog(mSessionID, adapterID, device.getFacility().getAddress(), device.getType().getTypeId(), String.valueOf(pair.interval.getStartMillis() / 1000),
+		String msgToSend = XmlCreator.createGetLog(mUserID, adapterID, device.getFacility().getAddress(), device.getType().getTypeId(), String.valueOf(pair.interval.getStartMillis() / 1000),
 				String.valueOf(pair.interval.getEndMillis() / 1000), pair.type.getValue(), pair.gap.getValue());
 
 		ParsedMessage msg = doRequest(msgToSend);
@@ -689,7 +719,7 @@ public class Network implements INetwork {
 	// http://stackoverflow.com/a/509288/1642090
 	@SuppressWarnings("unchecked")
 	public List<Location> getLocations(String adapterID) throws NoConnectionException, CommunicationException, FalseException {
-		ParsedMessage msg = doRequest(XmlCreator.createGetRooms(mSessionID, adapterID));
+		ParsedMessage msg = doRequest(XmlCreator.createGetRooms(mUserID, adapterID));
 
 		if (msg.getState() == State.ROOMS)
 			return (List<Location>) msg.data;
@@ -708,7 +738,7 @@ public class Network implements INetwork {
 	 * @throws CommunicationException
 	 */
 	public boolean updateLocations(String adapterID, List<Location> locations) throws NoConnectionException, CommunicationException, FalseException {
-		ParsedMessage msg = doRequest(XmlCreator.createSetRooms(mSessionID, adapterID, locations));
+		ParsedMessage msg = doRequest(XmlCreator.createSetRooms(mUserID, adapterID, locations));
 
 		if (msg.getState() == State.TRUE)
 			return true;
@@ -742,7 +772,7 @@ public class Network implements INetwork {
 	 * @return true room is deleted, false otherwise
 	 */
 	public boolean deleteLocation(String adapterID, Location location) throws NoConnectionException, CommunicationException, FalseException {
-		ParsedMessage msg = doRequest(XmlCreator.createDeleteRoom(mSessionID, adapterID, location));
+		ParsedMessage msg = doRequest(XmlCreator.createDeleteRoom(mUserID, adapterID, location));
 
 		if (msg.getState() == State.TRUE)
 			return true;
@@ -751,7 +781,7 @@ public class Network implements INetwork {
 	}
 
 	public Location createLocation(String adapterID, Location location) throws NoConnectionException, CommunicationException, FalseException {
-		ParsedMessage msg = doRequest(XmlCreator.createAddRoom(mSessionID, adapterID, location));
+		ParsedMessage msg = doRequest(XmlCreator.createAddRoom(mUserID, adapterID, location));
 
 		if (msg.getState() == State.ROOMCREATED) {
 			location.setId((String) msg.data);
@@ -778,7 +808,7 @@ public class Network implements INetwork {
 	 * @throws CommunicationException
 	 */
 	public boolean addView(String viewName, int iconID, List<Device> devices) throws NoConnectionException, CommunicationException, FalseException {
-		ParsedMessage msg = doRequest(XmlCreator.createAddView(mSessionID, viewName, iconID, devices));
+		ParsedMessage msg = doRequest(XmlCreator.createAddView(mUserID, viewName, iconID, devices));
 
 		if (msg.getState() == State.TRUE)
 			return true;
@@ -797,7 +827,7 @@ public class Network implements INetwork {
 	@SuppressWarnings("unchecked")
 	// FIXME: will be edited by ROB demands
 	public List<CustomViewPair> getViews() throws NoConnectionException, CommunicationException, FalseException {
-		ParsedMessage msg = doRequest(XmlCreator.createGetViews(mSessionID));
+		ParsedMessage msg = doRequest(XmlCreator.createGetViews(mUserID));
 
 		if (msg.getState() == State.VIEWS)
 			return (List<CustomViewPair>) msg.data;
@@ -815,7 +845,7 @@ public class Network implements INetwork {
 	 * @throws CommunicationException
 	 */
 	public boolean deleteView(String viewName) throws NoConnectionException, CommunicationException, FalseException {
-		ParsedMessage msg = doRequest(XmlCreator.createDelView(mSessionID, viewName));
+		ParsedMessage msg = doRequest(XmlCreator.createDelView(mUserID, viewName));
 
 		if (msg.getState() == State.TRUE)
 			return true;
@@ -825,7 +855,7 @@ public class Network implements INetwork {
 
 	// FIXME: will be edited by ROB demands
 	public boolean updateView(String viewName, int iconId, Facility facility, NetworkAction action) {
-		ParsedMessage msg = doRequest(XmlCreator.createSetView(mSessionID, viewName, iconId, null, action));
+		ParsedMessage msg = doRequest(XmlCreator.createSetView(mUserID, viewName, iconId, null, action));
 
 		if (msg.getState() == State.TRUE)
 			return true;
@@ -838,7 +868,7 @@ public class Network implements INetwork {
 	// /////////////////////////////////////////////////////////////////////////////////
 
 	public boolean addAccounts(String adapterID, ArrayList<User> users) throws NoConnectionException, CommunicationException, FalseException {
-		ParsedMessage msg = doRequest(XmlCreator.createAddAccounts(mSessionID, adapterID, users));
+		ParsedMessage msg = doRequest(XmlCreator.createAddAccounts(mUserID, adapterID, users));
 
 		if (msg.getState() == State.TRUE)
 			return true;
@@ -872,7 +902,7 @@ public class Network implements INetwork {
 	 * @throws CommunicationException
 	 */
 	public boolean deleteAccounts(String adapterID, List<User> users) throws NoConnectionException, CommunicationException, FalseException {
-		ParsedMessage msg = doRequest(XmlCreator.createDelAccounts(mSessionID, adapterID, users));
+		ParsedMessage msg = doRequest(XmlCreator.createDelAccounts(mUserID, adapterID, users));
 
 		if (msg.getState() == State.TRUE)
 			return true;
@@ -908,7 +938,7 @@ public class Network implements INetwork {
 	// http://stackoverflow.com/a/509288/1642090
 	@SuppressWarnings("unchecked")
 	public HashMap<String, User> getAccounts(String adapterID) throws NoConnectionException, CommunicationException, FalseException {
-		ParsedMessage msg = doRequest(XmlCreator.createGetAccounts(mSessionID, adapterID));
+		ParsedMessage msg = doRequest(XmlCreator.createGetAccounts(mUserID, adapterID));
 
 		if (msg.getState() == State.ACCOUNTS)
 			return (HashMap<String, User>) msg.data;
@@ -926,7 +956,7 @@ public class Network implements INetwork {
 	 * @throws CommunicationException
 	 */
 	public boolean updateAccounts(String adapterID, ArrayList<User> users) throws NoConnectionException, CommunicationException, FalseException {
-		ParsedMessage msg = doRequest(XmlCreator.createSetAccounts(mSessionID, adapterID, users));
+		ParsedMessage msg = doRequest(XmlCreator.createSetAccounts(mUserID, adapterID, users));
 
 		if (msg.getState() == State.TRUE)
 			return true;
@@ -967,7 +997,7 @@ public class Network implements INetwork {
 	 * @throws CommunicationException
 	 */
 	public boolean setTimeZone(String adapterID, int differenceToGMT) throws NoConnectionException, CommunicationException, FalseException {
-		ParsedMessage msg = doRequest(XmlCreator.createSetTimeZone(mSessionID, adapterID, differenceToGMT));
+		ParsedMessage msg = doRequest(XmlCreator.createSetTimeZone(mUserID, adapterID, differenceToGMT));
 
 		if (msg.getState() == State.TRUE)
 			return true;
@@ -983,7 +1013,7 @@ public class Network implements INetwork {
 	 * @throws CommunicationException
 	 */
 	public int getTimeZone(String adapterID) throws NoConnectionException, CommunicationException, FalseException {
-		ParsedMessage msg = doRequest(XmlCreator.createGetTimeZone(mSessionID, adapterID));
+		ParsedMessage msg = doRequest(XmlCreator.createGetTimeZone(mUserID, adapterID));
 
 		if (msg.getState() == State.TIMEZONE)
 			return (Integer) msg.data;
@@ -1008,7 +1038,7 @@ public class Network implements INetwork {
 	 * @throws FalseException
 	 */
 	public boolean deleteGCMID(String email, String gcmID) throws NoConnectionException, CommunicationException, FalseException {
-		ParsedMessage msg = doRequest(XmlCreator.createDeLGCMID(mSessionID, email, gcmID));
+		ParsedMessage msg = doRequest(XmlCreator.createDeLGCMID(mUserID, email, gcmID));
 
 		if (msg.getState() == State.TRUE)
 			return true;
@@ -1027,7 +1057,7 @@ public class Network implements INetwork {
 	 * @throws FalseException
 	 */
 	public boolean NotificationsRead(ArrayList<String> msgID) throws NoConnectionException, CommunicationException, FalseException {
-		ParsedMessage msg = doRequest(XmlCreator.createNotificaionRead(mSessionID, msgID));
+		ParsedMessage msg = doRequest(XmlCreator.createNotificaionRead(mUserID, msgID));
 
 		if (msg.getState() == State.TRUE)
 			return true;
@@ -1040,7 +1070,7 @@ public class Network implements INetwork {
 	// /////////////////////////////////////////////////////////////////////////////////
 
 	public Condition setCondition(Condition condition) {
-		String messageToSend = XmlCreator.createAddCondition(mSessionID, condition.getName(), XmlCreator.ConditionType.fromValue(condition.getType()), condition.getFuncs());
+		String messageToSend = XmlCreator.createAddCondition(mUserID, condition.getName(), XmlCreator.ConditionType.fromValue(condition.getType()), condition.getFuncs());
 		ParsedMessage msg = doRequest(messageToSend);
 
 		if (msg.getState() == State.CONDITIONCREATED) {
@@ -1051,7 +1081,7 @@ public class Network implements INetwork {
 	}
 
 	public boolean connectConditionWithAction(String conditionID, String actionID) {
-		ParsedMessage msg = doRequest(XmlCreator.createConditionPlusAction(mSessionID, conditionID, actionID));
+		ParsedMessage msg = doRequest(XmlCreator.createConditionPlusAction(mUserID, conditionID, actionID));
 
 		if (msg.getState() == State.TRUE)
 			return true;
@@ -1060,7 +1090,7 @@ public class Network implements INetwork {
 	}
 
 	public Condition getCondition(Condition condition) {
-		ParsedMessage msg = doRequest(XmlCreator.createGetCondition(mSessionID, condition.getId()));
+		ParsedMessage msg = doRequest(XmlCreator.createGetCondition(mUserID, condition.getId()));
 
 		if (msg.getState() == State.CONDITIONCREATED) {
 			Condition cond = (Condition) msg.data;
@@ -1074,7 +1104,7 @@ public class Network implements INetwork {
 
 	@SuppressWarnings("unchecked")
 	public List<Condition> getConditions() {
-		ParsedMessage msg = doRequest(XmlCreator.createGetConditions(mSessionID));
+		ParsedMessage msg = doRequest(XmlCreator.createGetConditions(mUserID));
 
 		if (msg.getState() == State.CONDITIONS)
 			return (List<Condition>) msg.data;
@@ -1083,7 +1113,7 @@ public class Network implements INetwork {
 	}
 
 	public boolean updateCondition(Condition condition) {
-		String messageToSend = XmlCreator.createSetCondition(mSessionID, condition.getName(), XmlCreator.ConditionType.fromValue(condition.getType()), condition.getId(), condition.getFuncs());
+		String messageToSend = XmlCreator.createSetCondition(mUserID, condition.getName(), XmlCreator.ConditionType.fromValue(condition.getType()), condition.getId(), condition.getFuncs());
 		ParsedMessage msg = doRequest(messageToSend);
 
 		if (msg.getState() == State.TRUE)
@@ -1093,7 +1123,7 @@ public class Network implements INetwork {
 	}
 
 	public boolean deleteCondition(Condition condition) {
-		ParsedMessage msg = doRequest(XmlCreator.createDelCondition(mSessionID, condition.getId()));
+		ParsedMessage msg = doRequest(XmlCreator.createDelCondition(mUserID, condition.getId()));
 
 		if (msg.getState() == State.TRUE)
 			return true;
@@ -1102,7 +1132,7 @@ public class Network implements INetwork {
 	}
 
 	public ComplexAction setAction(ComplexAction action) {
-		ParsedMessage msg = doRequest(XmlCreator.createAddAction(mSessionID, action.getName(), action.getActions()));
+		ParsedMessage msg = doRequest(XmlCreator.createAddAction(mUserID, action.getName(), action.getActions()));
 
 		if (msg.getState() == State.ACTIONCREATED) {
 			action.setId((String) msg.data);
@@ -1113,7 +1143,7 @@ public class Network implements INetwork {
 
 	@SuppressWarnings("unchecked")
 	public List<ComplexAction> getActions() {
-		ParsedMessage msg = doRequest(XmlCreator.createGetActions(mSessionID));
+		ParsedMessage msg = doRequest(XmlCreator.createGetActions(mUserID));
 
 		if (msg.getState() == State.ACTIONS)
 			return (List<ComplexAction>) msg.data;
@@ -1121,7 +1151,7 @@ public class Network implements INetwork {
 	}
 
 	public ComplexAction getAction(ComplexAction action) {
-		ParsedMessage msg = doRequest(XmlCreator.createGetCondition(mSessionID, action.getId()));
+		ParsedMessage msg = doRequest(XmlCreator.createGetCondition(mUserID, action.getId()));
 
 		if (msg.getState() == State.ACTION) {
 			ComplexAction act = (ComplexAction) msg.data;
@@ -1132,7 +1162,7 @@ public class Network implements INetwork {
 	}
 
 	public boolean updateAction(ComplexAction action) {
-		String messageToSend = XmlCreator.createSetAction(mSessionID, action.getName(), action.getId(), action.getActions());
+		String messageToSend = XmlCreator.createSetAction(mUserID, action.getName(), action.getId(), action.getActions());
 		ParsedMessage msg = doRequest(messageToSend);
 
 		if (msg.getState() == State.TRUE)
@@ -1142,7 +1172,7 @@ public class Network implements INetwork {
 	}
 
 	public boolean deleteAction(ComplexAction action) {
-		ParsedMessage msg = doRequest(XmlCreator.createDelAction(mSessionID, action.getId()));
+		ParsedMessage msg = doRequest(XmlCreator.createDelAction(mUserID, action.getId()));
 
 		if (msg.getState() == State.TRUE)
 			return true;

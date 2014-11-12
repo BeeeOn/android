@@ -64,24 +64,25 @@ public class XmlParsers {
 	 * @author ThinkDeep
 	 */
 	public enum State {
-		ADAPTERS("adapters"), //
-		ALLDEVICES("alldevs"), //
-		DEVICES("devs"), //
-		LOGDATA("logdata"), //
-		ACCOUNTS("accounts"), //
-		TRUE("true"), //
-		FALSE("false"), //
-		VIEWS("views"), //
-		TIMEZONE("timezone"), //
-		ROOMS("rooms"), //
-		ROOMCREATED("roomid"), //
-		NOTIFICATIONS("notifs"), //
-		CONDITIONCREATED("condcreated"), //
-		CONDITION("cond"), //
-		CONDITIONS("conds"), //
-		ACTIONCREATED("actcreated"), //
-		ACTIONS("acts"), //
-		ACTION("act");
+		ADAPTERS("adapters"),
+		ALLDEVICES("alldevs"),
+		DEVICES("devs"),
+		LOGDATA("logdata"), 
+		ACCOUNTS("accounts"),
+		TRUE("true"), 
+		FALSE("false"), 
+		VIEWS("views"), 
+		TIMEZONE("timezone"), 
+		ROOMS("rooms"), 
+		ROOMCREATED("roomid"), 
+		NOTIFICATIONS("notifs"),
+		CONDITIONCREATED("condcreated"), 
+		CONDITION("cond"), 
+		CONDITIONS("conds"), 
+		ACTIONCREATED("actcreated"), 
+		ACTIONS("acts"), 
+		ACTION("act"),
+		UID("uid");
 
 		private final String mValue;
 
@@ -140,9 +141,12 @@ public class XmlParsers {
 		ParsedMessage result = new ParsedMessage(state);
 
 		switch (state) {
+		case UID:
+			// String (userID)
+			result.setUserId(getSecureAttrValue(Xconstants.UID));
+			break;
 		case TRUE:
-			// String (sessionID)
-			result.setSessionId(getSecureAttrValue(Xconstants.SID));
+			// nothing
 			break;
 		case FALSE:
 			// FalseAnswer
@@ -185,9 +189,10 @@ public class XmlParsers {
 			result.data = parseCondition();
 			break;
 		case DEVICES:
-			// FIXME: this is workaround in v2.2 before demo, will be do better in v2.3
+			// TODO: this is workaround in v2.2 before demo, will be do better in v2.2+ if causing problems
 			String aid = getSecureAttrValue(Xconstants.AID);
 			if (aid.length() > 0) {
+				// List<Facility>
 				result.data = parseNewFacilities(aid);
 			} else
 				// List<Facility>
@@ -302,12 +307,12 @@ public class XmlParsers {
 		if (!mParser.getName().equals(Xconstants.DEVICE))
 			return result;
 
-		parseInnerDevs(result, aid);
+		parseInnerDevs(result, aid, true);
 
 		return result;
 	}
 
-	// FIXME: this is hotfix for v2.2 before demo, it will be rearanged in v2.3
+	// special case of parseFacility
 	private List<Facility> parseNewFacilities(String aid) throws XmlPullParserException, IOException, XmlVerMisException, ParseException {
 		mParser.nextTag(); // dev start tag
 
@@ -316,7 +321,7 @@ public class XmlParsers {
 		if (!mParser.getName().equals(Xconstants.DEVICE))
 			return result;
 
-		parseInnerDevs(result, aid);
+		parseInnerDevs(result, aid, false);
 
 		return result;
 	}
@@ -341,7 +346,7 @@ public class XmlParsers {
 			String aid = getSecureAttrValue(Xconstants.ID);
 			mParser.nextTag(); // dev tag
 
-			parseInnerDevs(result, aid);
+			parseInnerDevs(result, aid, true);
 
 			mParser.nextTag(); // adapter endtag
 			//FIXME: check if it works for request from multiple adapters!!!
@@ -350,11 +355,12 @@ public class XmlParsers {
 		return result;
 	}
 
-	private void parseInnerDevs(List<Facility> result, String aid) throws XmlPullParserException, IOException {
+	private void parseInnerDevs(List<Facility> result, String aid, boolean init) throws XmlPullParserException, IOException {
 		do { // go through devs (facilities)
 			Facility facility = new Facility();
 			facility.setAdapterId(aid);
-			facility.setInitialized(getSecureAttrValue(Xconstants.INITIALIZED).equals(Xconstants.ZERO) ? false : true);
+//			facility.setInitialized(getSecureAttrValue(Xconstants.INITIALIZED).equals(Xconstants.ZERO) ? false : true);
+			facility.setInitialized(init);
 			facility.setAddress(getSecureAttrValue(Xconstants.DID));
 			facility.setLocationId(getSecureAttrValue(Xconstants.LID));
 			facility.setRefresh(RefreshInterval.fromInterval(getSecureInt(getSecureAttrValue(Xconstants.REFRESH))));

@@ -16,7 +16,7 @@ import cz.vutbr.fit.iha.util.Utils;
 public class ActualUser extends User {
 	private Bitmap mPicture;
 	private String mPictureUrl;
-	private String mSessionId = "";
+	private String mUserId = "";
 	private boolean mDefaultPicture = true;
 
 	public ActualUser() {
@@ -79,15 +79,15 @@ public class ActualUser extends User {
 	/**
 	 * @return sessionId
 	 */
-	public String getSessionId() {
-		return mSessionId;
+	public String getUserId() {
+		return mUserId;
 	}
 
 	/**
 	 * @param sessionId
 	 */
-	public void setSessionId(String sessionId) {
-		mSessionId = sessionId;
+	public void setUserId(String sessionId) {
+		mUserId = sessionId;
 	}
 
 	/**
@@ -96,14 +96,14 @@ public class ActualUser extends User {
 	 * @return true if user is logged in, false otherwise
 	 */
 	public boolean isLoggedIn() {
-		return mSessionId.length() > 0;
+		return mUserId.length() > 0;
 	}
 
 	/**
 	 * Logout user (erases his sessionId)
 	 */
 	public void logout() {
-		mSessionId = "";
+		mUserId = "";
 	}
 
 }

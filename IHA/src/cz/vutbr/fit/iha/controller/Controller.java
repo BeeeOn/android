@@ -87,7 +87,7 @@ public final class Controller {
 	private Controller(Context context) {
 		mContext = context;
 
-		mNetwork = mDemoMode ? new DemoNetwork(context) : new Network(mContext, this, Utils.isDebugVersion(context));
+		mNetwork = mDemoMode ? new DemoNetwork(context) : new Network(mContext, this, "userID", Utils.isDebugVersion(context)); //FIXME: ROB: if you have user id, give me, else call put something and call getUID method
 		mPersistence = new Persistence(mContext);
 		mHousehold = new Household(mContext, mNetwork);
 		mNetwork.setUser(mHousehold.user);
@@ -148,7 +148,8 @@ public final class Controller {
 		// TODO: catch and throw proper exception
 		// FIXME: after some time there should be picture in ActualUser object, should save to mPersistence
 		try {
-			if (mNetwork.signIn(email, getGCMRegistrationId())) { // FIXME: gcmid
+			//((Network)mNetwork).getUID(email);
+			if (mNetwork.signIn(email, getGCMRegistrationId())) { // FIXME: gcmid have to be set separate now!!!, and here use getUID if you dont have userID
 				mPersistence.saveLastEmail(email);
 				mPersistence.initializeDefaultSettings(email);
 				return true;
@@ -421,7 +422,7 @@ public final class Controller {
 		boolean result = false;
 
 		try {
-			result = mNetwork.signUp(mHousehold.user.getEmail());
+			result = mNetwork.signUp(mHousehold.user.getEmail()); //FIXME: ROB use getUID instead!
 		} catch (NetworkException e) {
 			e.printStackTrace();
 		}

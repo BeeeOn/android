@@ -146,7 +146,7 @@ public class DemoNetwork implements INetwork {
 		mUser.setGender(Gender.Male);
 		mUser.setPicture(null);
 		mUser.setPictureUrl("");
-		mUser.setSessionId("123456789");
+		mUser.setUserId("123456789");
 
 		return true;
 	}
