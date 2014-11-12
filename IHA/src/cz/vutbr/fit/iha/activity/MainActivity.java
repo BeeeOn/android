@@ -391,6 +391,11 @@ public class MainActivity extends BaseApplicationActivity {
 			startActivity(intent);
 			break;
 		}
+		case R.id.action_intro: {
+			Intent intent = new Intent(MainActivity.this, IntroActivity.class);
+			startActivity(intent);
+			break;
+		}
 		case R.id.action_logout: {
 			mController.logout();
 			Intent intent = new Intent(MainActivity.this, LoginActivity.class);
