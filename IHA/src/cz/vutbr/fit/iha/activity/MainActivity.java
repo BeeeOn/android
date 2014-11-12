@@ -22,6 +22,9 @@ import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.view.Window;
+import com.github.amlcurran.showcaseview.OnShowcaseEventListener;
+import com.github.amlcurran.showcaseview.ShowcaseView;
+import com.github.amlcurran.showcaseview.targets.ViewTarget;
 
 import cz.vutbr.fit.iha.Constants;
 import cz.vutbr.fit.iha.R;
@@ -78,7 +81,7 @@ public class MainActivity extends BaseApplicationActivity {
 	private Runnable mTimeRun;
 	
 	private boolean mFirstUseApp = true;
-	//private ShowcaseView mSV;
+	private ShowcaseView mSV;
 
 	/**
 	 * Tasks which can be running in this activity and after finishing can try to change GUI -> must be cancelled when activity stop
@@ -150,10 +153,10 @@ public class MainActivity extends BaseApplicationActivity {
 		RelativeLayout.LayoutParams lps = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
 		lps.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
 		lps.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
-		/*
+		
 		int margin = ((Number) (getResources().getDisplayMetrics().density * 12)).intValue();
 		lps.setMargins(margin, margin, margin, margin);
-		ViewTarget target = new ViewTarget(R.id.iconofsensor, this);
+		ViewTarget target = new ViewTarget(android.R.id.home, this);
 		
 		OnShowcaseEventListener	listener = new OnShowcaseEventListener() {
 			
@@ -178,11 +181,12 @@ public class MainActivity extends BaseApplicationActivity {
 		
 		mSV = new ShowcaseView.Builder(this, true)
 		.setTarget(target)
-		.setContentTitle("Test title")
-		.setContentText("Content text")
+		.setContentTitle("Open Menu")
+		.setContentText("For switch location tap to Icon and Menu will rise.")
+		//.setStyle(R.style.CustomShowcaseTheme)
 		.setShowcaseEventListener(listener)
 		.build();
-		mSV.setButtonPosition(lps);*/
+		mSV.setButtonPosition(lps);
 	}
 
 	public void onAppResume() {

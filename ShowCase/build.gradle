@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-apply plugin: 'eclipse'
 
 buildscript {
     repositories {
@@ -21,7 +20,7 @@ buildscript {
     }
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:0.13.0'
+        classpath 'com.android.tools.build:gradle:0.12.0'
     }
 }
 
@@ -32,6 +31,7 @@ dependencies {
     repositories {
         mavenCentral()
     }
+    compile 'com.nineoldandroids:library:2.4.0'
 }
 
 android {
