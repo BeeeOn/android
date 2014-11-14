@@ -139,6 +139,7 @@
     <string name="action_hide_facility">Hide facility</string>
     <string name="action_close">Cancel</string>
     <string name="action_intro">Intro</string>
+    <string name="action_intro_dialog">Intro dialog</string>
     <string name="addadapter_qrcode_desc">Get QR code</string>
     <string name="addsensor_new_location_spinner">New location</string>
     <string name="sen_detail_graph_info">Tap to Active</string>

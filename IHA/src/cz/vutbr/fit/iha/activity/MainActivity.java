@@ -31,6 +31,7 @@ import cz.vutbr.fit.iha.R;
 import cz.vutbr.fit.iha.activity.dialog.AddAdapterFragmentDialog;
 import cz.vutbr.fit.iha.activity.dialog.AddSensorFragmentDialog;
 import cz.vutbr.fit.iha.activity.dialog.CustomAlertDialog;
+import cz.vutbr.fit.iha.activity.dialog.IntroFragmentDialog;
 import cz.vutbr.fit.iha.activity.fragment.CustomViewFragment;
 import cz.vutbr.fit.iha.activity.fragment.SensorListFragment;
 import cz.vutbr.fit.iha.adapter.Adapter;
@@ -394,6 +395,11 @@ public class MainActivity extends BaseApplicationActivity {
 		case R.id.action_intro: {
 			Intent intent = new Intent(MainActivity.this, IntroActivity.class);
 			startActivity(intent);
+			break;
+		}
+		case R.id.action_intro_dialog: {
+			DialogFragment newFragment = new IntroFragmentDialog();
+			newFragment.show(getSupportFragmentManager(), "intro_dialog");
 			break;
 		}
 		case R.id.action_logout: {

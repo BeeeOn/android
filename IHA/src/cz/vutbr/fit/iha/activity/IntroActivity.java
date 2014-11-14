@@ -26,7 +26,6 @@ public class IntroActivity extends BaseApplicationActivity {
 		mIndicator = (CirclePageIndicator)findViewById(R.id.intro_indicator);
 		mIndicator.setViewPager(mPager);
 		
-		final float density = getResources().getDisplayMetrics().density;
 		mIndicator.setPageColor(0x88000000);
 		mIndicator.setFillColor(0xFF000000);
 		mIndicator.setStrokeColor(0x88000000);
