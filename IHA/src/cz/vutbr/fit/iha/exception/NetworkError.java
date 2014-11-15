@@ -2,6 +2,12 @@ package cz.vutbr.fit.iha.exception;
 
 public enum NetworkError implements ErrorCode {
 
+	// FROM CLIENT
+	NO_CONNECTION(-1),
+	SERVER_NOT_RESPONDING(-2),
+	COM_PROBLEMS(-3),
+	
+	// FROM SERVER
 	COM_VER_MISMATCH(1),
 	NOT_VALID_USER(2),
 	ADAPTER_NOT_EXISTS(5),
@@ -31,6 +37,14 @@ public enum NetworkError implements ErrorCode {
 	@Override
 	public int getNumber() {
 		return mNumber;
+	}
+	
+	public static NetworkError fromValue(int value) {
+		for (NetworkError item : values()) {
+			if (value == item.getNumber())
+				return item;
+		}
+		throw new IllegalArgumentException("Invalid NetworkError value");
 	}
 
 }

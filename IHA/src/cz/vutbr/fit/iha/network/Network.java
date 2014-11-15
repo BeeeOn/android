@@ -40,6 +40,7 @@ import cz.vutbr.fit.iha.adapter.device.Facility;
 import cz.vutbr.fit.iha.adapter.location.Location;
 import cz.vutbr.fit.iha.controller.Controller;
 import cz.vutbr.fit.iha.exception.NetworkError;
+import cz.vutbr.fit.iha.exception.IhaException;
 import cz.vutbr.fit.iha.household.ActualUser;
 import cz.vutbr.fit.iha.household.User;
 import cz.vutbr.fit.iha.network.exception.CommunicationException;
@@ -289,12 +290,12 @@ public class Network implements INetwork {
 			e.printStackTrace();
 		}
 		mSecretVar = mUserID;
-		signIn(mUser.getEmail(), mController.getGCMRegistrationId()); // FIXME: gcmid
+		getUID(mUser.getEmail());
 	}
 
 	private ParsedMessage doRequest(String messageToSend) {
 		if (!isAvailable())
-			throw new NoConnectionException();
+			throw new IhaException(NetworkError.NO_CONNECTION);
 
 		ParsedMessage msg = null;
 		// Debug.startMethodTracing("Support_231");
@@ -322,7 +323,7 @@ public class Network implements INetwork {
 
 		} catch (Exception e) {
 			e.printStackTrace();
-			throw new CommunicationException(e);
+			throw new IhaException(e, NetworkError.COM_PROBLEMS);
 		} finally {
 			// Debug.stopMethodTracing();
 			// ltime = new Date().getTime() - ltime;
@@ -338,7 +339,7 @@ public class Network implements INetwork {
 	 */
 	private String getGoogleToken() {
 		if (!isAvailable())
-			throw new NoConnectionException();
+			throw new IhaException(NetworkError.NO_CONNECTION);
 
 		String googleToken = "";
 		try {
@@ -417,11 +418,11 @@ public class Network implements INetwork {
 		throw new FalseException(((FalseAnswer) msg.data));
 	}
 
-	public boolean getUID(String email) throws NoConnectionException, CommunicationException, FalseException {
+	public boolean getUID(String email){
 		String googleToken = getGoogleToken();
 		String googleID = mGoogleAuth.getId(); // TODO: check this - GOOGLE ID
 		if (googleToken.length() == 0)
-			throw new CommunicationException(GoogleExcMessage);
+			throw new IhaException(GoogleExcMessage, NetworkError.SERVER_NOT_RESPONDING);
 
 		ParsedMessage msg = doRequest(XmlCreator.createGetUID(googleID, googleToken, Locale.getDefault().getLanguage()));
 
@@ -432,8 +433,9 @@ public class Network implements INetwork {
 		}
 		if (msg.getState() == State.FALSE && ((FalseAnswer) msg.data).getErrCode() == NetworkError.NOT_VALID_USER.getNumber())
 			mGoogleAuth.invalidateToken();
-
-		throw new FalseException(((FalseAnswer) msg.data));
+		
+		FalseAnswer fa = (FalseAnswer) msg.data;
+		throw new IhaException(fa.getErrMessage() ,NetworkError.fromValue(fa.getErrCode()));
 	}
 
 	/**
@@ -452,7 +454,8 @@ public class Network implements INetwork {
 		if (msg.getState() == State.TRUE)
 			return true;
 
-		throw new FalseException(((FalseAnswer) msg.data));
+		FalseAnswer fa = (FalseAnswer) msg.data;
+		throw new IhaException(fa.getErrMessage() ,NetworkError.fromValue(fa.getErrCode()));
 	}
 
 	/**
@@ -466,13 +469,14 @@ public class Network implements INetwork {
 	@Override
 	// http://stackoverflow.com/a/509288/1642090
 	@SuppressWarnings("unchecked")
-	public List<Adapter> getAdapters() throws NoConnectionException, CommunicationException, FalseException {
+	public List<Adapter> getAdapters() {
 		ParsedMessage msg = doRequest(XmlCreator.createGetAdapters(mUserID));
 
 		if (msg.getState() == State.ADAPTERS)
 			return (List<Adapter>) msg.data;
 
-		throw new FalseException(((FalseAnswer) msg.data));
+		FalseAnswer fa = (FalseAnswer) msg.data;
+		throw new IhaException(fa.getErrMessage() ,NetworkError.fromValue(fa.getErrCode()));
 	}
 
 	/**
@@ -486,13 +490,14 @@ public class Network implements INetwork {
 	 */
 	@Override
 	@SuppressWarnings("unchecked")
-	public List<Facility> initAdapter(String adapterID) throws NoConnectionException, CommunicationException, FalseException {
+	public List<Facility> initAdapter(String adapterID){
 		ParsedMessage msg = doRequest(XmlCreator.createGetAllDevices(mUserID, adapterID));
 
 		if (msg.getState() == State.ALLDEVICES)
 			return (ArrayList<Facility>) msg.data;
 
-		throw new FalseException(((FalseAnswer) msg.data));
+		FalseAnswer fa = (FalseAnswer) msg.data;
+		throw new IhaException(fa.getErrMessage() ,NetworkError.fromValue(fa.getErrCode()));
 	}
 
 	/**
@@ -507,13 +512,14 @@ public class Network implements INetwork {
 	 * @throws CommunicationException
 	 */
 	@Override
-	public boolean reInitAdapter(String oldId, String newId) throws NoConnectionException, CommunicationException, FalseException {
+	public boolean reInitAdapter(String oldId, String newId){
 		ParsedMessage msg = doRequest(XmlCreator.createReInitAdapter(mUserID, oldId, newId));
 
 		if (msg.getState() == State.TRUE)
 			return true;
 
-		throw new FalseException(((FalseAnswer) msg.data));
+		FalseAnswer fa = (FalseAnswer) msg.data;
+		throw new IhaException(fa.getErrMessage() ,NetworkError.fromValue(fa.getErrCode()));
 	}
 
 	// /////////////////////////////////////////////////////////////////////////////////
@@ -529,14 +535,14 @@ public class Network implements INetwork {
 	 * @throws CommunicationException
 	 */
 	@Override
-	public boolean updateFacilities(String adapterID, List<Facility> facilities, EnumSet<SaveDevice> toSave) throws NoConnectionException,
-			CommunicationException, FalseException {
+	public boolean updateFacilities(String adapterID, List<Facility> facilities, EnumSet<SaveDevice> toSave){
 		ParsedMessage msg = doRequest(XmlCreator.createSetDevs(mUserID, adapterID, facilities, toSave));
 
 		if (msg.getState() == State.TRUE)
 			return true;
 
-		throw new FalseException(((FalseAnswer) msg.data));
+		FalseAnswer fa = (FalseAnswer) msg.data;
+		throw new IhaException(fa.getErrMessage() ,NetworkError.fromValue(fa.getErrCode())).set(fa.getInfo(), fa.troubleMakers);
 	}
 
 	/**
@@ -554,14 +560,14 @@ public class Network implements INetwork {
 	 * @throws FalseException
 	 */
 	@Override
-	public boolean updateDevice(String adapterID, Device device, EnumSet<SaveDevice> toSave) throws NoConnectionException,
-			CommunicationException, FalseException {
+	public boolean updateDevice(String adapterID, Device device, EnumSet<SaveDevice> toSave){
 		ParsedMessage msg = doRequest(XmlCreator.createSetDev(mUserID, adapterID, device, toSave));
 
 		if (msg.getState() == State.TRUE)
 			return true;
 
-		throw new FalseException(((FalseAnswer) msg.data));
+		FalseAnswer fa = (FalseAnswer) msg.data;
+		throw new IhaException(fa.getErrMessage() ,NetworkError.fromValue(fa.getErrCode())).set(fa.getInfo(), fa.troubleMakers);
 	}
 
 	/**
@@ -575,13 +581,14 @@ public class Network implements INetwork {
 	 * @throws FalseException
 	 */
 	@Override
-	public boolean switchState(String adapterID, Device device) throws NoConnectionException, CommunicationException, FalseException {
+	public boolean switchState(String adapterID, Device device){
 		ParsedMessage msg = doRequest(XmlCreator.createSwitch(mUserID, adapterID, device));
 
 		if (msg.getState() == State.TRUE)
 			return true;
 
-		throw new FalseException(((FalseAnswer) msg.data));
+		FalseAnswer fa = (FalseAnswer) msg.data;
+		throw new IhaException(fa.getErrMessage() ,NetworkError.fromValue(fa.getErrCode())).set(fa.getInfo(), fa.troubleMakers);
 	}
 
 	/**
@@ -595,14 +602,14 @@ public class Network implements INetwork {
 	 * @throws FalseException
 	 */
 	@Override
-	public boolean prepareAdapterToListenNewSensors(String adapterID) throws NoConnectionException, CommunicationException, FalseException {
+	public boolean prepareAdapterToListenNewSensors(String adapterID){
 		ParsedMessage msg = doRequest(XmlCreator.createAdapterScanMode(mUserID, adapterID));
 
 		if (msg.getState() == State.TRUE)
 			return true;
 
-		throw new FalseException(((FalseAnswer) msg.data));
-
+		FalseAnswer fa = (FalseAnswer) msg.data;
+		throw new IhaException(fa.getErrMessage() ,NetworkError.fromValue(fa.getErrCode())).set(fa.getInfo(), fa.troubleMakers);
 	}
 
 	/**
@@ -617,14 +624,14 @@ public class Network implements INetwork {
 	 * @throws FalseException
 	 */
 	@Override
-	public boolean deleteFacility(String adapterID, Facility facility) throws NoConnectionException, CommunicationException, FalseException {
+	public boolean deleteFacility(String adapterID, Facility facility){
 		ParsedMessage msg = doRequest(XmlCreator.createDeleteDevice(mUserID, adapterID, facility));
 
 		if (msg.getState() == State.TRUE)
 			return true;
 
-		throw new FalseException(((FalseAnswer) msg.data));
-
+		FalseAnswer fa = (FalseAnswer) msg.data;
+		throw new IhaException(fa.getErrMessage() ,NetworkError.fromValue(fa.getErrCode())).set(fa.getInfo(), fa.troubleMakers);
 	}
 
 	/**
@@ -639,13 +646,14 @@ public class Network implements INetwork {
 	@Override
 	// http://stackoverflow.com/a/509288/1642090
 	@SuppressWarnings("unchecked")
-	public List<Facility> getFacilities(List<Facility> facilities) throws NoConnectionException, CommunicationException, FalseException {
+	public List<Facility> getFacilities(List<Facility> facilities){
 		ParsedMessage msg = doRequest(XmlCreator.createGetDevices(mUserID, facilities));
 
 		if (msg.getState() == State.DEVICES)
 			return (List<Facility>) msg.data;
 
-		throw new FalseException(((FalseAnswer) msg.data));
+		FalseAnswer fa = (FalseAnswer) msg.data;
+		throw new IhaException(fa.getErrMessage() ,NetworkError.fromValue(fa.getErrCode())).set(fa.getInfo(), fa.troubleMakers);
 	}
 
 	/**
@@ -658,7 +666,7 @@ public class Network implements INetwork {
 	 * @throws FalseException
 	 */
 	@Override
-	public Facility getFacility(Facility facility) throws NoConnectionException, CommunicationException, FalseException {
+	public Facility getFacility(Facility facility){
 
 		ArrayList<Facility> list = new ArrayList<Facility>();
 		list.add(facility);
@@ -687,13 +695,14 @@ public class Network implements INetwork {
 	 */
 	@Override
 	@SuppressWarnings("unchecked")
-	public List<Facility> getNewFacilities(String adapterID) throws NoConnectionException, CommunicationException, FalseException {
+	public List<Facility> getNewFacilities(String adapterID) {
 		ParsedMessage msg = doRequest(XmlCreator.createGetNewDevices(mUserID, adapterID));
 
 		if (msg.getState() == State.DEVICES)
 			return (List<Facility>) msg.data;
 
-		throw new FalseException(((FalseAnswer) msg.data));
+		FalseAnswer fa = (FalseAnswer) msg.data;
+		throw new IhaException(fa.getErrMessage() ,NetworkError.fromValue(fa.getErrCode())).set(fa.getInfo(), fa.troubleMakers);
 	}
 
 	/**
@@ -709,8 +718,7 @@ public class Network implements INetwork {
 	 */
 	// http://stackoverflow.com/a/509288/1642090
 	@Override
-	public DeviceLog getLog(String adapterID, Device device, LogDataPair pair) throws NoConnectionException, CommunicationException,
-			FalseException {
+	public DeviceLog getLog(String adapterID, Device device, LogDataPair pair){
 		String msgToSend = XmlCreator.createGetLog(mUserID, adapterID, device.getFacility().getAddress(), device.getType().getTypeId(),
 				String.valueOf(pair.interval.getStartMillis() / 1000), String.valueOf(pair.interval.getEndMillis() / 1000),
 				pair.type.getValue(), pair.gap.getValue());
@@ -723,7 +731,9 @@ public class Network implements INetwork {
 			result.setDataType(pair.type);
 			return result;
 		}
-		throw new FalseException(((FalseAnswer) msg.data));
+		
+		FalseAnswer fa = (FalseAnswer) msg.data;
+		throw new IhaException(fa.getErrMessage() ,NetworkError.fromValue(fa.getErrCode())).set(fa.getInfo(), fa.troubleMakers);
 	}
 
 	// /////////////////////////////////////////////////////////////////////////////////
@@ -740,14 +750,14 @@ public class Network implements INetwork {
 	@Override
 	// http://stackoverflow.com/a/509288/1642090
 	@SuppressWarnings("unchecked")
-	public List<Location> getLocations(String adapterID) throws NoConnectionException, CommunicationException, FalseException {
+	public List<Location> getLocations(String adapterID){
 		ParsedMessage msg = doRequest(XmlCreator.createGetRooms(mUserID, adapterID));
 
 		if (msg.getState() == State.ROOMS)
 			return (List<Location>) msg.data;
 
-		throw new FalseException(((FalseAnswer) msg.data));
-
+		FalseAnswer fa = (FalseAnswer) msg.data;
+		throw new IhaException(fa.getErrMessage() ,NetworkError.fromValue(fa.getErrCode()));
 	}
 
 	/**
@@ -760,14 +770,14 @@ public class Network implements INetwork {
 	 * @throws CommunicationException
 	 */
 	@Override
-	public boolean updateLocations(String adapterID, List<Location> locations) throws NoConnectionException, CommunicationException,
-			FalseException {
+	public boolean updateLocations(String adapterID, List<Location> locations){
 		ParsedMessage msg = doRequest(XmlCreator.createSetRooms(mUserID, adapterID, locations));
 
 		if (msg.getState() == State.TRUE)
 			return true;
 
-		throw new FalseException(((FalseAnswer) msg.data));
+		FalseAnswer fa = (FalseAnswer) msg.data;
+		throw new IhaException(fa.getErrMessage() ,NetworkError.fromValue(fa.getErrCode()));
 	}
 
 	/**
@@ -781,7 +791,7 @@ public class Network implements INetwork {
 	 * @throws FalseException
 	 */
 	@Override
-	public boolean updateLocation(String adapterID, Location location) throws NoConnectionException, CommunicationException, FalseException {
+	public boolean updateLocation(String adapterID, Location location){
 
 		List<Location> list = new ArrayList<Location>();
 		list.add(location);
@@ -797,25 +807,26 @@ public class Network implements INetwork {
 	 * @return true room is deleted, false otherwise
 	 */
 	@Override
-	public boolean deleteLocation(String adapterID, Location location) throws NoConnectionException, CommunicationException, FalseException {
+	public boolean deleteLocation(String adapterID, Location location){
 		ParsedMessage msg = doRequest(XmlCreator.createDeleteRoom(mUserID, adapterID, location));
 
 		if (msg.getState() == State.TRUE)
 			return true;
 
-		throw new FalseException(((FalseAnswer) msg.data));
+		FalseAnswer fa = (FalseAnswer) msg.data;
+		throw new IhaException(fa.getErrMessage() ,NetworkError.fromValue(fa.getErrCode()));
 	}
 
 	@Override
-	public Location createLocation(String adapterID, Location location) throws NoConnectionException, CommunicationException,
-			FalseException {
+	public Location createLocation(String adapterID, Location location){
 		ParsedMessage msg = doRequest(XmlCreator.createAddRoom(mUserID, adapterID, location));
 
 		if (msg.getState() == State.ROOMCREATED) {
 			location.setId((String) msg.data);
 			return location;
 		}
-		throw new FalseException(((FalseAnswer) msg.data));
+		FalseAnswer fa = (FalseAnswer) msg.data;
+		throw new IhaException(fa.getErrMessage() ,NetworkError.fromValue(fa.getErrCode()));
 	}
 
 	// /////////////////////////////////////////////////////////////////////////////////
@@ -836,14 +847,14 @@ public class Network implements INetwork {
 	 * @throws CommunicationException
 	 */
 	@Override
-	public boolean addView(String viewName, int iconID, List<Device> devices) throws NoConnectionException, CommunicationException,
-			FalseException {
+	public boolean addView(String viewName, int iconID, List<Device> devices){
 		ParsedMessage msg = doRequest(XmlCreator.createAddView(mUserID, viewName, iconID, devices));
 
 		if (msg.getState() == State.TRUE)
 			return true;
 
-		throw new FalseException(((FalseAnswer) msg.data));
+		FalseAnswer fa = (FalseAnswer) msg.data;
+		throw new IhaException(fa.getErrMessage() ,NetworkError.fromValue(fa.getErrCode()));
 	}
 
 	/**
@@ -857,13 +868,14 @@ public class Network implements INetwork {
 	// http://stackoverflow.com/a/509288/1642090
 	@SuppressWarnings("unchecked")
 	// FIXME: will be edited by ROB demands
-	public List<CustomViewPair> getViews() throws NoConnectionException, CommunicationException, FalseException {
+	public List<CustomViewPair> getViews(){
 		ParsedMessage msg = doRequest(XmlCreator.createGetViews(mUserID));
 
 		if (msg.getState() == State.VIEWS)
 			return (List<CustomViewPair>) msg.data;
 
-		throw new FalseException(((FalseAnswer) msg.data));
+		FalseAnswer fa = (FalseAnswer) msg.data;
+		throw new IhaException(fa.getErrMessage() ,NetworkError.fromValue(fa.getErrCode()));
 	}
 
 	/**
@@ -876,13 +888,14 @@ public class Network implements INetwork {
 	 * @throws CommunicationException
 	 */
 	@Override
-	public boolean deleteView(String viewName) throws NoConnectionException, CommunicationException, FalseException {
+	public boolean deleteView(String viewName){
 		ParsedMessage msg = doRequest(XmlCreator.createDelView(mUserID, viewName));
 
 		if (msg.getState() == State.TRUE)
 			return true;
 
-		throw new FalseException(((FalseAnswer) msg.data));
+		FalseAnswer fa = (FalseAnswer) msg.data;
+		throw new IhaException(fa.getErrMessage() ,NetworkError.fromValue(fa.getErrCode()));
 	}
 
 	// FIXME: will be edited by ROB demands
@@ -893,7 +906,8 @@ public class Network implements INetwork {
 		if (msg.getState() == State.TRUE)
 			return true;
 
-		throw new FalseException(((FalseAnswer) msg.data));
+		FalseAnswer fa = (FalseAnswer) msg.data;
+		throw new IhaException(fa.getErrMessage() ,NetworkError.fromValue(fa.getErrCode()));
 	}
 
 	// /////////////////////////////////////////////////////////////////////////////////
@@ -901,14 +915,14 @@ public class Network implements INetwork {
 	// /////////////////////////////////////////////////////////////////////////////////
 
 	@Override
-	public boolean addAccounts(String adapterID, ArrayList<User> users) throws NoConnectionException, CommunicationException,
-			FalseException {
+	public boolean addAccounts(String adapterID, ArrayList<User> users){
 		ParsedMessage msg = doRequest(XmlCreator.createAddAccounts(mUserID, adapterID, users));
 
 		if (msg.getState() == State.TRUE)
 			return true;
 
-		throw new FalseException(((FalseAnswer) msg.data));
+		FalseAnswer fa = (FalseAnswer) msg.data;
+		throw new IhaException(fa.getErrMessage() ,NetworkError.fromValue(fa.getErrCode()));
 	}
 
 	/**
@@ -938,13 +952,14 @@ public class Network implements INetwork {
 	 * @throws CommunicationException
 	 */
 	@Override
-	public boolean deleteAccounts(String adapterID, List<User> users) throws NoConnectionException, CommunicationException, FalseException {
+	public boolean deleteAccounts(String adapterID, List<User> users){
 		ParsedMessage msg = doRequest(XmlCreator.createDelAccounts(mUserID, adapterID, users));
 
 		if (msg.getState() == State.TRUE)
 			return true;
 
-		throw new FalseException(((FalseAnswer) msg.data));
+		FalseAnswer fa = (FalseAnswer) msg.data;
+		throw new IhaException(fa.getErrMessage() ,NetworkError.fromValue(fa.getErrCode()));
 	}
 
 	/**
@@ -958,7 +973,7 @@ public class Network implements INetwork {
 	 * @throws FalseException
 	 */
 	@Override
-	public boolean deleteAccount(String adapterID, User user) throws NoConnectionException, CommunicationException, FalseException {
+	public boolean deleteAccount(String adapterID, User user){
 
 		ArrayList<User> list = new ArrayList<User>();
 		list.add(user);
@@ -976,13 +991,14 @@ public class Network implements INetwork {
 	@Override
 	// http://stackoverflow.com/a/509288/1642090
 	@SuppressWarnings("unchecked")
-	public HashMap<String, User> getAccounts(String adapterID) throws NoConnectionException, CommunicationException, FalseException {
+	public HashMap<String, User> getAccounts(String adapterID){
 		ParsedMessage msg = doRequest(XmlCreator.createGetAccounts(mUserID, adapterID));
 
 		if (msg.getState() == State.ACCOUNTS)
 			return (HashMap<String, User>) msg.data;
 
-		throw new FalseException(((FalseAnswer) msg.data));
+		FalseAnswer fa = (FalseAnswer) msg.data;
+		throw new IhaException(fa.getErrMessage() ,NetworkError.fromValue(fa.getErrCode()));
 	}
 
 	/**
@@ -995,14 +1011,14 @@ public class Network implements INetwork {
 	 * @throws CommunicationException
 	 */
 	@Override
-	public boolean updateAccounts(String adapterID, ArrayList<User> users) throws NoConnectionException, CommunicationException,
-			FalseException {
+	public boolean updateAccounts(String adapterID, ArrayList<User> users){
 		ParsedMessage msg = doRequest(XmlCreator.createSetAccounts(mUserID, adapterID, users));
 
 		if (msg.getState() == State.TRUE)
 			return true;
 
-		throw new FalseException(((FalseAnswer) msg.data));
+		FalseAnswer fa = (FalseAnswer) msg.data;
+		throw new IhaException(fa.getErrMessage() ,NetworkError.fromValue(fa.getErrCode()));
 	}
 
 	/**
@@ -1017,7 +1033,7 @@ public class Network implements INetwork {
 	 * @throws FalseException
 	 */
 	@Override
-	public boolean updateAccount(String adapterID, User user) throws NoConnectionException, CommunicationException, FalseException {
+	public boolean updateAccount(String adapterID, User user){
 
 		ArrayList<User> list = new ArrayList<User>();
 		list.add(user);
@@ -1040,13 +1056,14 @@ public class Network implements INetwork {
 	 * @throws CommunicationException
 	 */
 	@Override
-	public boolean setTimeZone(String adapterID, int differenceToGMT) throws NoConnectionException, CommunicationException, FalseException {
+	public boolean setTimeZone(String adapterID, int differenceToGMT){
 		ParsedMessage msg = doRequest(XmlCreator.createSetTimeZone(mUserID, adapterID, differenceToGMT));
 
 		if (msg.getState() == State.TRUE)
 			return true;
 
-		throw new FalseException(((FalseAnswer) msg.data));
+		FalseAnswer fa = (FalseAnswer) msg.data;
+		throw new IhaException(fa.getErrMessage() ,NetworkError.fromValue(fa.getErrCode()));
 	}
 
 	/**
@@ -1057,13 +1074,14 @@ public class Network implements INetwork {
 	 * @throws CommunicationException
 	 */
 	@Override
-	public int getTimeZone(String adapterID) throws NoConnectionException, CommunicationException, FalseException {
+	public int getTimeZone(String adapterID){
 		ParsedMessage msg = doRequest(XmlCreator.createGetTimeZone(mUserID, adapterID));
 
 		if (msg.getState() == State.TIMEZONE)
 			return (Integer) msg.data;
 
-		throw new FalseException(((FalseAnswer) msg.data));
+		FalseAnswer fa = (FalseAnswer) msg.data;
+		throw new IhaException(fa.getErrMessage() ,NetworkError.fromValue(fa.getErrCode()));
 	}
 
 	// /////////////////////////////////////////////////////////////////////////////////
@@ -1082,13 +1100,14 @@ public class Network implements INetwork {
 	 * @throws CommunicationException
 	 * @throws FalseException
 	 */
-	public boolean deleteGCMID(String email, String gcmID) throws NoConnectionException, CommunicationException, FalseException {
+	public boolean deleteGCMID(String email, String gcmID){
 		ParsedMessage msg = doRequest(XmlCreator.createDeLGCMID(mUserID, email, gcmID));
 
 		if (msg.getState() == State.TRUE)
 			return true;
 
-		throw new FalseException(((FalseAnswer) msg.data));
+		FalseAnswer fa = (FalseAnswer) msg.data;
+		throw new IhaException(fa.getErrMessage() ,NetworkError.fromValue(fa.getErrCode()));
 	}
 
 	/**
@@ -1102,13 +1121,14 @@ public class Network implements INetwork {
 	 * @throws FalseException
 	 */
 	@Override
-	public boolean NotificationsRead(ArrayList<String> msgID) throws NoConnectionException, CommunicationException, FalseException {
+	public boolean NotificationsRead(ArrayList<String> msgID){
 		ParsedMessage msg = doRequest(XmlCreator.createNotificaionRead(mUserID, msgID));
 
 		if (msg.getState() == State.TRUE)
 			return true;
 
-		throw new FalseException(((FalseAnswer) msg.data));
+		FalseAnswer fa = (FalseAnswer) msg.data;
+		throw new IhaException(fa.getErrMessage() ,NetworkError.fromValue(fa.getErrCode()));
 	}
 
 	// /////////////////////////////////////////////////////////////////////////////////
@@ -1125,7 +1145,8 @@ public class Network implements INetwork {
 			condition.setId((String) msg.data);
 			return condition;
 		}
-		throw new FalseException(((FalseAnswer) msg.data));
+		FalseAnswer fa = (FalseAnswer) msg.data;
+		throw new IhaException(fa.getErrMessage() ,NetworkError.fromValue(fa.getErrCode()));
 	}
 
 	@Override
@@ -1135,7 +1156,8 @@ public class Network implements INetwork {
 		if (msg.getState() == State.TRUE)
 			return true;
 
-		throw new FalseException(((FalseAnswer) msg.data));
+		FalseAnswer fa = (FalseAnswer) msg.data;
+		throw new IhaException(fa.getErrMessage() ,NetworkError.fromValue(fa.getErrCode()));
 	}
 
 	@Override
@@ -1149,7 +1171,8 @@ public class Network implements INetwork {
 			condition.setFuncs(cond.getFuncs());
 			return condition;
 		}
-		throw new FalseException(((FalseAnswer) msg.data));
+		FalseAnswer fa = (FalseAnswer) msg.data;
+		throw new IhaException(fa.getErrMessage() ,NetworkError.fromValue(fa.getErrCode()));
 	}
 
 	@Override
@@ -1160,7 +1183,8 @@ public class Network implements INetwork {
 		if (msg.getState() == State.CONDITIONS)
 			return (List<Condition>) msg.data;
 
-		throw new FalseException(((FalseAnswer) msg.data));
+		FalseAnswer fa = (FalseAnswer) msg.data;
+		throw new IhaException(fa.getErrMessage() ,NetworkError.fromValue(fa.getErrCode()));
 	}
 
 	@Override
@@ -1172,7 +1196,8 @@ public class Network implements INetwork {
 		if (msg.getState() == State.TRUE)
 			return true;
 
-		throw new FalseException(((FalseAnswer) msg.data));
+		FalseAnswer fa = (FalseAnswer) msg.data;
+		throw new IhaException(fa.getErrMessage() ,NetworkError.fromValue(fa.getErrCode()));
 	}
 
 	@Override
@@ -1182,7 +1207,8 @@ public class Network implements INetwork {
 		if (msg.getState() == State.TRUE)
 			return true;
 
-		throw new FalseException(((FalseAnswer) msg.data));
+		FalseAnswer fa = (FalseAnswer) msg.data;
+		throw new IhaException(fa.getErrMessage() ,NetworkError.fromValue(fa.getErrCode()));
 	}
 
 	@Override
@@ -1193,7 +1219,8 @@ public class Network implements INetwork {
 			action.setId((String) msg.data);
 			return action;
 		}
-		throw new FalseException(((FalseAnswer) msg.data));
+		FalseAnswer fa = (FalseAnswer) msg.data;
+		throw new IhaException(fa.getErrMessage() ,NetworkError.fromValue(fa.getErrCode()));
 	}
 
 	@Override
@@ -1203,7 +1230,8 @@ public class Network implements INetwork {
 
 		if (msg.getState() == State.ACTIONS)
 			return (List<ComplexAction>) msg.data;
-		throw new FalseException(((FalseAnswer) msg.data));
+		FalseAnswer fa = (FalseAnswer) msg.data;
+		throw new IhaException(fa.getErrMessage() ,NetworkError.fromValue(fa.getErrCode()));
 	}
 
 	@Override
@@ -1215,7 +1243,8 @@ public class Network implements INetwork {
 			action.setActions(act.getActions());
 			return action;
 		}
-		throw new FalseException(((FalseAnswer) msg.data));
+		FalseAnswer fa = (FalseAnswer) msg.data;
+		throw new IhaException(fa.getErrMessage() ,NetworkError.fromValue(fa.getErrCode()));
 	}
 
 	@Override
@@ -1226,7 +1255,8 @@ public class Network implements INetwork {
 		if (msg.getState() == State.TRUE)
 			return true;
 
-		throw new FalseException(((FalseAnswer) msg.data));
+		FalseAnswer fa = (FalseAnswer) msg.data;
+		throw new IhaException(fa.getErrMessage() ,NetworkError.fromValue(fa.getErrCode()));
 	}
 
 	@Override
@@ -1236,7 +1266,8 @@ public class Network implements INetwork {
 		if (msg.getState() == State.TRUE)
 			return true;
 
-		throw new FalseException(((FalseAnswer) msg.data));
+		FalseAnswer fa = (FalseAnswer) msg.data;
+		throw new IhaException(fa.getErrMessage() ,NetworkError.fromValue(fa.getErrCode()));
 	}
 
 }
