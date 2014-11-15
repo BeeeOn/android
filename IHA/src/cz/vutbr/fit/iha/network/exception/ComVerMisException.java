@@ -4,27 +4,29 @@
 package cz.vutbr.fit.iha.network.exception;
 
 /**
+ * CommunicationVersionMismatchException
+ * 
  * @author ThinkDeep
  * 
  */
-public class NotRegAException extends NotRegException {
+public class ComVerMisException extends RuntimeException {
 
 	private static final long serialVersionUID = 1L;
 
-	public NotRegAException() {
+	public ComVerMisException() {
 	}
 
 	/**
 	 * @param detailMessage
 	 */
-	public NotRegAException(String detailMessage) {
+	public ComVerMisException(String detailMessage) {
 		super(detailMessage);
 	}
 
 	/**
 	 * @param throwable
 	 */
-	public NotRegAException(Throwable throwable) {
+	public ComVerMisException(Throwable throwable) {
 		super(throwable);
 	}
 
@@ -32,7 +34,7 @@ public class NotRegAException extends NotRegException {
 	 * @param detailMessage
 	 * @param throwable
 	 */
-	public NotRegAException(String detailMessage, Throwable throwable) {
+	public ComVerMisException(String detailMessage, Throwable throwable) {
 		super(detailMessage, throwable);
 	}
 
