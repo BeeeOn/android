@@ -148,8 +148,8 @@ public final class Controller {
 		// TODO: catch and throw proper exception
 		// FIXME: after some time there should be picture in ActualUser object, should save to mPersistence
 		try {
-			//((Network)mNetwork).getUID(email);
-			if (mNetwork.signIn(email, getGCMRegistrationId())) { // FIXME: gcmid have to be set separate now!!!, and here use getUID if you dont have userID
+			
+			if (((Network)mNetwork).getUID(email) || mNetwork.signIn(email, getGCMRegistrationId())) { // FIXME: gcmid have to be set separate now!!!, and here use getUID if you dont have userID
 				mPersistence.saveLastEmail(email);
 				mPersistence.initializeDefaultSettings(email);
 				return true;
@@ -159,7 +159,7 @@ public final class Controller {
 			switch (e.getDetail().getErrCode()) {
 			case 0:
 				break;
-			case 2:
+			case 2: //FIXME: there are constants of error in Constants.java file
 			case 3: // bad token or email
 				try {
 					// TODO: do this otherway

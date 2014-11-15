@@ -34,6 +34,7 @@ import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Debug;
+import cz.vutbr.fit.iha.Constants;
 import cz.vutbr.fit.iha.adapter.Adapter;
 import cz.vutbr.fit.iha.adapter.device.Device;
 import cz.vutbr.fit.iha.adapter.device.Device.SaveDevice;
@@ -98,7 +99,7 @@ public class Network implements INetwork {
 	private static final String SERVER_CN_CERTIFICATE = "ant-2.fit.vutbr.cz";
 
 	private static final String GoogleExcMessage = "Google token error";
-	private static final int RESIGNCODE = 20;
+	//TODO: delete this
 	private static final int BADTOKENCODE = 2;
 
 	private Context mContext;
@@ -304,7 +305,7 @@ public class Network implements INetwork {
 			Log.i(TAG + " - fromSrv", result);
 
 			msg = new XmlParsers().parseCommunication(result, false);
-			if (msg.getState() == State.FALSE && ((FalseAnswer) msg.data).getErrCode() == RESIGNCODE) {
+			if (msg.getState() == State.FALSE && ((FalseAnswer) msg.data).getErrCode() == Constants.ERR_BAD_UID) {
 				doResign();
 				// try it one more time
 				result = startCommunication(messageToSend.replace(Xconstants.SID + "=\"" + mSecretVar + "\"", Xconstants.SID + "=\"" + mUserID + "\"")); // FIXME: hot fix
@@ -428,7 +429,7 @@ public class Network implements INetwork {
 			mUserID = msg.getUserId();
 			return true;
 		}
-		if (msg.getState() == State.FALSE && ((FalseAnswer) msg.data).getErrCode() == BADTOKENCODE)
+		if (msg.getState() == State.FALSE && ((FalseAnswer) msg.data).getErrCode() == Constants.ERR_NOT_VALID_USER)
 			mGoogleAuth.invalidateToken();
 
 		throw new FalseException(((FalseAnswer) msg.data));
