@@ -345,7 +345,8 @@ public final class Controller {
 			}
 
 			if (mHousehold.activeAdapter != null && prefs != null)
-				prefs.edit().putString(Constants.PERSISTENCE_PREF_ACTIVE_ADAPTER, mHousehold.activeAdapter.getId()).commit();
+				prefs.edit().putString(Constants.PERSISTENCE_PREF_ACTIVE_ADAPTER, mHousehold.activeAdapter.getId())
+						.commit();
 		}
 
 		return mHousehold.activeAdapter;
@@ -769,16 +770,23 @@ public final class Controller {
 	 * @return registration ID, or empty string if there is no existing registration ID.
 	 */
 	public String getGCMRegistrationId() {
-		return ""; // FIXME: gcmid
+		String registrationId = mPersistence.loadGCMRegistrationId();
+		if (registrationId.isEmpty()) {
+			Log.i(TAG, "GCM: Registration not found.");
+			return "";
+		}
+		// Check if app was updated; if so, it must clear the registration ID
+		// since the existing regID is not guaranteed to work with the new
+		// app version.
+		int registeredVersion = mPersistence.loadLastApplicationVersion();
+		int currentVersion = Utils.getAppVersion(mContext);
+		if (registeredVersion != currentVersion) {
+			// TODO poslat na server deleteGcm od akutalniho uzivatele
+			Log.i(TAG, "GCM: App version changed.");
+			return "";
+		}
+		return registrationId;
 
-		/*
-		 * String registrationId = mPersistence.loadGCMRegistrationId(); if (registrationId.isEmpty()) { Log.i(TAG,
-		 * "GCM: Registration not found."); return ""; } // Check if app was updated; if so, it must clear the
-		 * registration ID // since the existing regID is not guaranteed to work with the new // app version. int
-		 * registeredVersion = mPersistence.loadLastApplicationVersion(); int currentVersion =
-		 * Utils.getAppVersion(mContext); if (registeredVersion != currentVersion) { Log.i(TAG,
-		 * "GCM: App version changed."); return ""; } return registrationId;
-		 */
 	}
 
 	/**

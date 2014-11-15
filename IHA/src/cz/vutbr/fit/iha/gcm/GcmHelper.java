@@ -1,6 +1,5 @@
 package cz.vutbr.fit.iha.gcm;
 
-import cz.vutbr.fit.iha.util.Log;
 import android.content.Context;
 import android.os.Handler;
 
@@ -8,8 +7,7 @@ public class GcmHelper {
 	public static final String TAG_GCM = "IHA_GCM";
 
 	/**
-	 * Maximum milliseconds which device will wait in thread for reparation GCM ID. If it isn't registered after this
-	 * time, new thread will be created.
+	 * Maximum attempts to get GCM ID. After reaching this attempts there will be created new thread to get GCM ID.
 	 */
 	private static final int MAX_GCM_ATTEMPTS = 3;
 
@@ -23,7 +21,13 @@ public class GcmHelper {
 		Handler handler = new Handler();
 		handler.post(new GcmRegisterRunnable(context, null));
 	}
-
+	
+	/**
+	 * Registers the application with GCM servers synchronously in the same thread. 
+	 * Cannot be GUI thread because of network communication.
+	 * <p>
+	 * Stores the registration ID and app versionCode in the application's shared preferences.
+	 */
 	public static void registerGCMInForeground(Context context) {
 		registerGCMInForeground(context, MAX_GCM_ATTEMPTS);
 	}

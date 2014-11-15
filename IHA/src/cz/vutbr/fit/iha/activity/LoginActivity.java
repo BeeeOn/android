@@ -27,6 +27,7 @@ import cz.vutbr.fit.iha.exception.ErrorCode;
 import cz.vutbr.fit.iha.exception.IhaException;
 import cz.vutbr.fit.iha.exception.NetworkError;
 import cz.vutbr.fit.iha.exception.NotImplementedException;
+import cz.vutbr.fit.iha.gcm.GcmHelper;
 import cz.vutbr.fit.iha.network.DemoNetwork;
 import cz.vutbr.fit.iha.thread.ToastMessageThread;
 import cz.vutbr.fit.iha.util.Log;
@@ -88,12 +89,6 @@ public class LoginActivity extends BaseActivity {
 				}
 			}
 		});
-
-		// FIXME commented for release
-		// // try to register GCM
-		// if (mController.getGCMRegistrationId().isEmpty() && GooglePlayServicesUtil.isGooglePlayServicesAvailable(getBaseContext()) == ConnectionResult.SUCCESS) {
-		// GcmHelper.registerGCMInBackground(this);
-		// }
 
 		mProgress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
 
@@ -321,7 +316,9 @@ public class LoginActivity extends BaseActivity {
 				doGoogleLogin(Accounts[0]);
 			} else {
 				Log.d(TAG, "On this device are more accounts");
-				Intent intent = AccountPicker.newChooseAccountIntent(null, null, new String[] { "com.google" }, false, null, null, null, null);
+				Intent intent = AccountPicker.newChooseAccountIntent(null, null, new String[] {
+					"com.google"
+				}, false, null, null, null, null);
 				startActivityForResult(intent, GET_GOOGLE_ACCOUNT);
 			}
 		} else {
@@ -357,21 +354,20 @@ public class LoginActivity extends BaseActivity {
 
 				@Override
 				public void run() {
-					// String gcmId = mController.getGCMRegistrationId();
-					// // try to register again in 1 second, otherwise register in
-					// // separate thread
-					// if (gcmId.isEmpty()) {
-					// GcmHelper.registerGCMInForeground(LoginActivity.this);
-					// gcmId = mController.getGCMRegistrationId();
-					// // if it still doesn't have GCM ID, try it repeatedly in
-					// // new thread
-					// if (gcmId.isEmpty()) {
-					// GcmHelper.registerGCMInBackground(LoginActivity.this);
-					// Log.e(GcmHelper.TAG_GCM, "GCM ID is not accesible, creating new thread for ");
-					// }
-					// }
-					//
-					// Log.i(GcmHelper.TAG_GCM, "GCM ID: " + gcmId);
+					String gcmId = mController.getGCMRegistrationId();
+
+					if (gcmId.isEmpty()) {
+						// get GCM ID, you have 3 attempts
+						GcmHelper.registerGCMInForeground(LoginActivity.this);
+						gcmId = mController.getGCMRegistrationId();
+						// if it still doesn't have GCM ID, try it repeatedly in new thread
+						if (gcmId.isEmpty()) {
+							GcmHelper.registerGCMInBackground(LoginActivity.this);
+							Log.e(GcmHelper.TAG_GCM, "GCM ID is not accesible, creating new thread");
+						}
+					}
+
+					Log.i(GcmHelper.TAG_GCM, "GCM ID: " + gcmId);
 
 					if (!mController.startGoogle(true, true)) { // returned value is from doInForeground only
 						Log.e("Login", "exception in ggAuth");

@@ -77,7 +77,7 @@ public class GcmRegisterRunnable implements Runnable {
 		Controller.getInstance(context.getApplicationContext()).setGCMRegistrationId(mRegId);
 
 		// TODO odstranit stare ID (pokud bylo)
-		// TODO odeslat zpravu o novem ID
+		// TODO odeslat zpravu o novem ID serveru
 
 	}
 
