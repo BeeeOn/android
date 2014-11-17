@@ -1208,6 +1208,22 @@ public class Network implements INetwork {
 		throw new IhaException(fa.getErrMessage(), NetworkError.fromValue(fa.getErrCode()));
 	}
 
+	/**
+	 * Method set gcmID to server
+	 * @param email of user
+	 * @param gcmID to be set
+	 * @return true if id has been updated, false otherwise
+	 * FIXME: after merge need to by rewrite
+	 */
+	public boolean setGCMID(String email, String gcmID){
+		ParsedMessage msg = doRequest(XmlCreator.createSetGCMID(mSessionID, gcmID));
+
+		if (msg.getState() == State.TRUE)
+			return true;
+
+		throw new FalseException(((FalseAnswer) msg.data));
+	}
+	
 	// /////////////////////////////////////////////////////////////////////////////////
 	// /////////////////////////////////////CONDITIONS,ACTIONS//////////////////////////
 	// /////////////////////////////////////////////////////////////////////////////////
