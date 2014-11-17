@@ -13,6 +13,9 @@ import cz.vutbr.fit.iha.adapter.device.Facility;
 import cz.vutbr.fit.iha.adapter.location.Location;
 import cz.vutbr.fit.iha.household.ActualUser;
 import cz.vutbr.fit.iha.household.User;
+import cz.vutbr.fit.iha.network.exception.CommunicationException;
+import cz.vutbr.fit.iha.network.exception.FalseException;
+import cz.vutbr.fit.iha.network.exception.NoConnectionException;
 import cz.vutbr.fit.iha.network.xml.CustomViewPair;
 import cz.vutbr.fit.iha.network.xml.action.ComplexAction;
 import cz.vutbr.fit.iha.network.xml.condition.Condition;
@@ -368,6 +371,28 @@ public interface INetwork {
 	 */
 	public boolean NotificationsRead(ArrayList<String> msgID);
 
+	/**
+	 * Method delete old gcmid to avoid fake notifications
+	 * 
+	 * @param email
+	 *            of old/last user of gcmid (app+device id)
+	 * @param gcmID
+	 *            - google cloud message id
+	 * @return true if id has been deleted, false otherwise
+	 * @throws NoConnectionException
+	 * @throws CommunicationException
+	 * @throws FalseException
+	 */
+	public boolean deleteGCMID(String email, String gcmID);
+	
+	/**
+	 * Method set gcmID to server
+	 * @param email of user
+	 * @param gcmID to be set
+	 * @return true if id has been updated, false otherwise
+	 */
+	public boolean setGCMID(String email, String gcmID);
+	
 	// /////////////////////////////////////////////////////////////////////////////////
 	// /////////////////////////////////////CONDITIONS,ACTIONS//////////////////////////
 	// /////////////////////////////////////////////////////////////////////////////////

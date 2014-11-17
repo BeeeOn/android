@@ -1,5 +1,7 @@
 package cz.vutbr.fit.iha.controller;
 
+import java.security.acl.LastOwnerException;
+import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Map;
@@ -8,6 +10,7 @@ import java.util.WeakHashMap;
 import android.content.Context;
 import android.content.SharedPreferences;
 import cz.vutbr.fit.iha.Constants;
+import cz.vutbr.fit.iha.R.string;
 import cz.vutbr.fit.iha.activity.LoginActivity;
 import cz.vutbr.fit.iha.adapter.Adapter;
 import cz.vutbr.fit.iha.adapter.device.Device;
@@ -21,6 +24,7 @@ import cz.vutbr.fit.iha.adapter.location.Location;
 import cz.vutbr.fit.iha.exception.IhaException;
 import cz.vutbr.fit.iha.exception.NetworkError;
 import cz.vutbr.fit.iha.exception.NotImplementedException;
+import cz.vutbr.fit.iha.gcm.GcmHelper;
 import cz.vutbr.fit.iha.gcm.INotificationReceiver;
 import cz.vutbr.fit.iha.gcm.Notification;
 import cz.vutbr.fit.iha.household.ActualUser;
@@ -194,6 +198,24 @@ public final class Controller {
 	 */
 	public boolean logout() {
 		// TODO: also destroy session
+		
+		final String email = getActualUser().getEmail();
+		final String gcmId = getGCMRegistrationId();
+		if (email != null && !gcmId.isEmpty()) {
+			// delete GCM ID from server
+			Thread t = new Thread() {
+				public void run() {
+					try {
+						deleteGCM(email, gcmId);
+					} catch (Exception e) {
+						// do nothing
+						Log.w(GcmHelper.TAG_GCM, "Logout: Delete GCM ID failed: " + e.getLocalizedMessage());
+					}
+				}
+			};
+			t.start();
+		}
+
 		mHousehold.user.logout();
 		mPersistence.saveLastEmail(null);
 
@@ -762,10 +784,15 @@ public final class Controller {
 		return false;
 	}
 
+	// //////////////////////////////////////////////////////////////////////////////////
+	// /// GOOGLE CLOUD MESSAGING (GCM)
+
 	/**
 	 * Gets the current registration ID for application on GCM service.
 	 * <p>
 	 * If result is empty, the app needs to register.
+	 * 
+	 * This CAN'T be called on UI thread!
 	 * 
 	 * @return registration ID, or empty string if there is no existing registration ID.
 	 */
@@ -781,26 +808,70 @@ public final class Controller {
 		int registeredVersion = mPersistence.loadLastApplicationVersion();
 		int currentVersion = Utils.getAppVersion(mContext);
 		if (registeredVersion != currentVersion) {
-			// TODO poslat na server deleteGcm od akutalniho uzivatele
+			// delete actual GCM ID from server
+			ActualUser user;
+			if ((user = getActualUser()) != null) {
+				try {
+					deleteGCM(user.getEmail(), registrationId);
+				} catch (Exception e) {
+					// do nothing
+					Log.w(GcmHelper.TAG_GCM, "getGCMRegistrationId(): Delete GCM ID failed: " + e.getLocalizedMessage());
+				}
+			}
+			mPersistence.saveGCMRegistrationId("");
 			Log.i(TAG, "GCM: App version changed.");
 			return "";
 		}
 		return registrationId;
+	}
 
+	/**
+	 * Delete GCM ID from user
+	 * 
+	 * This CAN'T be called on UI thread!
+	 * 
+	 * @param email
+	 * @param gcmID
+	 */
+	public void deleteGCM(String email, String gcmID) {
+		mNetwork.deleteGCMID(email, gcmID);
 	}
 
 	/**
 	 * Stores the registration ID and app versionCode in the application's {@code SharedPreferences}.
 	 * 
-	 * @param regId
+	 * @param gcmId
 	 *            registration ID
 	 */
-	public void setGCMRegistrationId(String regId) {
+	public void setGCMIdLocal(String gcmId) {
 		int appVersion = Utils.getAppVersion(mContext);
-		Log.i(TAG, "Saving regId on app version " + appVersion);
+		Log.i(TAG, "Saving GCM ID on app version " + appVersion);
 
-		mPersistence.saveGCMRegistrationId(regId);
+		mPersistence.saveGCMRegistrationId(gcmId);
 		mPersistence.saveLastApplicationVersion(appVersion);
+	}
+	
+	/**
+	 * Method set gcmID to server (applied only if there is some user)
+	 * @param gcmID to be set
+	 */
+	public void setGCMIdServer(String gcmID) {
+		String email;
+		if (getActualUser() != null) {
+			email = getActualUser().getEmail();
+		} else if (!getLastEmail().isEmpty()) {
+			email = getLastEmail();
+		} else {
+			// no user, it will be sent in user login
+			return;
+		}
+		
+		try {
+			mNetwork.setGCMID(email, gcmID);
+		} catch (Exception e) {
+			// nothign to do
+			Log.w(GcmHelper.TAG_GCM, "Set GCM ID to server failed.");
+		}
 	}
 
 	public ActualUser getActualUser() {
@@ -856,6 +927,30 @@ public final class Controller {
 		}
 
 		return mNotificationReceivers.size();
+	}
+	
+	/**
+	 * Set notification as read on server side
+	 * 
+	 * This CAN'T be called on UI thread!
+	 * 
+	 * @param msgId
+	 */
+	public void setNotificationRead(String msgId) {
+		ArrayList<String> list = new ArrayList<>();
+		list.add(msgId);
+		setNotificationRead(list);
+	}
+	
+	/**
+	 * Set notifications as read on server side
+	 * 
+	 * This CAN'T be called on UI thread!
+	 * 
+	 * @param msgIds Array of message IDs which will be marked as read
+	 */
+	public void setNotificationRead(ArrayList<String> msgIds) {
+		mNetwork.NotificationsRead(msgIds);
 	}
 
 }
