@@ -17,21 +17,24 @@ public class GcmRegisterRunnable implements Runnable {
 	 */
 	private static final int MIN_SLEEP_TIME_GCM = 5;
 
-	private String mRegId = null;
-	private Context context;
-	private Integer mMaxAttempts;
-	private Controller mController;
+	private String mNewGcmId = null;
+	private final Context mContext;
+	private final Integer mMaxAttempts;
+	private final Controller mController;
+	private final String mOldGcmId;
 
 	/**
 	 * @param context
-	 * @param maxAttempts Maximum attempts to get GCM ID, null for infinity
+	 * @param maxAttempts
+	 *            Maximum attempts to get GCM ID, null for infinity
 	 */
 	public GcmRegisterRunnable(Context context, Integer maxAttempts) {
-		this.context = context;
+		this.mContext = context;
 		this.mMaxAttempts = maxAttempts;
 		this.mController = Controller.getInstance(context);
+		this.mOldGcmId = mController.getGCMRegistrationId();
 	}
-	
+
 	@Override
 	public void run() {
 		// if there is no limit, set lower priority of this thread
@@ -39,18 +42,18 @@ public class GcmRegisterRunnable implements Runnable {
 			// Moves the current Thread into the background
 			android.os.Process.setThreadPriority(android.os.Process.THREAD_PRIORITY_BACKGROUND);
 		}
-		
-		GoogleCloudMessaging gcm = GoogleCloudMessaging.getInstance(context);
+
+		GoogleCloudMessaging gcm = GoogleCloudMessaging.getInstance(mContext);
 		int timeToSleep = MIN_SLEEP_TIME_GCM;
 		int attempt = 0;
-		while (mRegId == null || mRegId == "") {
+		while (mNewGcmId == null || mNewGcmId == "") {
 			if (mMaxAttempts != null && attempt > mMaxAttempts) {
 				break;
 			}
 			attempt++;
-			
+
 			try {
-				mRegId = gcm.register(Constants.PROJECT_NUMBER);
+				mNewGcmId = gcm.register(Constants.PROJECT_NUMBER);
 			} catch (Exception e) {
 				Log.e(GcmHelper.TAG_GCM, "Error: attempt n." + String.valueOf(attempt) + " :" + e.getMessage());
 				/*
@@ -75,14 +78,39 @@ public class GcmRegisterRunnable implements Runnable {
 		}
 
 		Log.i(GcmHelper.TAG_GCM, "Device registered, attempt number " + String.valueOf(attempt) + " , registration ID="
-				+ mRegId);
+				+ mNewGcmId);
 
-		// Persist the regID - no need to register again.
-		Controller.getInstance(context.getApplicationContext()).setGCMRegistrationId(mRegId);
+		// if new GCM ID is different then the old one, delete old on server side and apply new one
+		if (!mOldGcmId.equals(mNewGcmId)) {
 
-		// TODO odstranit stare ID (pokud bylo)
-		// TODO odeslat zpravu o novem ID serveru
+			if (!mOldGcmId.isEmpty()) {
+				final String email = mController.getLastEmail();
+				if (!email.isEmpty()) {
+					Thread t = new Thread() {
+						public void run() {
+							Thread t = new Thread() {
+								public void run() {
+									try {
+										mController.deleteGCM(email, mOldGcmId);
+									} catch (Exception e) {
+										// do nothing
+										Log.w(GcmHelper.TAG_GCM,
+												"Logout: Delete GCM ID failed: " + e.getLocalizedMessage());
+									}
+								}
+							};
+							t.start();
+						}
+					};
+				}
+			}
 
+			// Persist the regID - no need to register again.
+			mController.setGCMIdLocal(mNewGcmId);
+			mController.setGCMIdServer(mNewGcmId);
+			// TODO odeslat zpravu o novem ID serveru
+
+		}
 	}
 
 }
