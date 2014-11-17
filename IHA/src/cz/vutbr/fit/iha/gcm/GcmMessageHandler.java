@@ -67,7 +67,7 @@ public class GcmMessageHandler extends IntentService {
 			// control email if it equals with actual user
 			if (!notification.getEmail().equals(mController.getLastEmail())) {
 				Log.w(GcmHelper.TAG_GCM, notification.getEmail() + " != " + mController.getLastEmail());
-				Log.w(GcmHelper.TAG_GCM, "Notification email wasn't veryfied. Server GCM ID will be deleted.");
+				Log.w(GcmHelper.TAG_GCM, "Notification email wasn't verified. Server GCM ID will be deleted.");
 				
 				final String gcmId = mController.getGCMRegistrationId();
 				if (!notification.getEmail().isEmpty() && !gcmId.isEmpty()) {
