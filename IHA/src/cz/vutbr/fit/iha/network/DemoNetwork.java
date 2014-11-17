@@ -650,4 +650,14 @@ public class DemoNetwork implements INetwork {
 		return false;
 	}
 
+	@Override
+	public boolean deleteGCMID(String email, String gcmID) {
+		return true;
+	}
+
+	@Override
+	public boolean setGCMID(String email, String gcmID) {
+		return true;
+	}
+
 }
