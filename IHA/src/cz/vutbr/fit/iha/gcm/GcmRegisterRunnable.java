@@ -1,6 +1,8 @@
 package cz.vutbr.fit.iha.gcm;
 
 import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.AsyncTask;
 
 import com.google.android.gms.gcm.GoogleCloudMessaging;
@@ -18,6 +20,7 @@ public class GcmRegisterRunnable implements Runnable {
 	private String mRegId = null;
 	private Context context;
 	private Integer mMaxAttempts;
+	private Controller mController;
 
 	/**
 	 * @param context
@@ -26,8 +29,9 @@ public class GcmRegisterRunnable implements Runnable {
 	public GcmRegisterRunnable(Context context, Integer maxAttempts) {
 		this.context = context;
 		this.mMaxAttempts = maxAttempts;
+		this.mController = Controller.getInstance(context);
 	}
-
+	
 	@Override
 	public void run() {
 		// if there is no limit, set lower priority of this thread

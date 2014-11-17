@@ -354,20 +354,6 @@ public class LoginActivity extends BaseActivity {
 
 				@Override
 				public void run() {
-					String gcmId = mController.getGCMRegistrationId();
-
-					if (gcmId.isEmpty()) {
-						// get GCM ID, you have 3 attempts
-						GcmHelper.registerGCMInForeground(LoginActivity.this);
-						gcmId = mController.getGCMRegistrationId();
-						// if it still doesn't have GCM ID, try it repeatedly in new thread
-						if (gcmId.isEmpty()) {
-							GcmHelper.registerGCMInBackground(LoginActivity.this);
-							Log.e(GcmHelper.TAG_GCM, "GCM ID is not accesible, creating new thread");
-						}
-					}
-
-					Log.i(GcmHelper.TAG_GCM, "GCM ID: " + gcmId);
 
 					if (!mController.startGoogle(true, true)) { // returned value is from doInForeground only
 						Log.e("Login", "exception in ggAuth");
@@ -414,9 +400,25 @@ public class LoginActivity extends BaseActivity {
 	private void doLogin(final String email) {
 		String errMessage = null;
 		boolean errFlag = false;
-
+		
 		try {
-			if (mController.login(email)) {
+			
+			String gcmId = mController.getGCMRegistrationId();
+
+			if (gcmId.isEmpty()) {
+				// get GCM ID  3 attempts
+				GcmHelper.registerGCMInForeground(LoginActivity.this);
+				gcmId = mController.getGCMRegistrationId();
+				// if it still doesn't have GCM ID, try it repeatedly in new thread
+				if (gcmId.isEmpty()) {
+					GcmHelper.registerGCMInBackground(LoginActivity.this);
+					Log.e(GcmHelper.TAG_GCM, "GCM ID is not accesible, creating new thread");
+				}
+			}
+
+			Log.i(GcmHelper.TAG_GCM, "GCM ID: " + gcmId);
+			
+			if (mController.login(email, gcmId)) {
 				Log.d(TAG, "Login: true");
 
 				// Load all adapters and data for active one on login
