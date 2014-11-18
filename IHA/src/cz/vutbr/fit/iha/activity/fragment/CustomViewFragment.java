@@ -1,7 +1,9 @@
 package cz.vutbr.fit.iha.activity.fragment;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 
 import org.joda.time.DateTime;
@@ -190,42 +192,50 @@ public class CustomViewFragment extends SherlockFragment {
 	private void loadData() {
 		for (int i = 0; i < mDevices.size(); i++) {
 			// Load data for this graph
-			for (Device device : mDevices.valueAt(i)) {
-				GetDeviceLogTask getDeviceLogTask = new GetDeviceLogTask();
-				getDeviceLogTask.execute(device);
-			}
-
-			// Hide loading label for this graph
-			GraphView graphView = mGraphs.get(mDevices.keyAt(i));
-			((View) graphView.getParent().getParent()).findViewById(R.id.graph_loading).setVisibility(View.INVISIBLE);
+			List<Device> list = mDevices.valueAt(i);
+			
+			GetDeviceLogTask getDeviceLogTask = new GetDeviceLogTask();
+			getDeviceLogTask.execute(list.toArray(new Device[list.size()]));
 		}
 	}
 
-	private class GetDeviceLogTask extends AsyncTask<Device, Void, DeviceLog> {
+	private class GetDeviceLogTask extends AsyncTask<Device, Void, Map<Device, DeviceLog>> {
 
 		private int mTypeId = 0;
-		private Device mDevice;
-
+		
 		@Override
-		protected DeviceLog doInBackground(Device... devices) {
-			mDevice = devices[0]; // expects only one device at a time is sent there
-			mTypeId = mDevice.getType().getTypeId();
+		protected Map<Device, DeviceLog> doInBackground(Device... devices) {
+			Map<Device, DeviceLog> result = new HashMap<Device, DeviceLog>();
+			
+			// Remember type of graph we're downloading data for
+			mTypeId = devices[0].getType().getTypeId();
+			
+			for (Device device : devices) {
+				DateTime end = DateTime.now(DateTimeZone.UTC);
+				DateTime start = end.minusDays(3);// end.minusWeeks(1);
 
-			DateTime end = DateTime.now(DateTimeZone.UTC);
-			DateTime start = end.minusDays(3);// end.minusWeeks(1);
+				LogDataPair pair = new LogDataPair( //
+						device, // device
+						new Interval(start, end), // interval from-to
+						DataType.AVERAGE, // type
+						DataInterval.HOUR); // interval
+				
+				result.put(device, mController.getDeviceLog(pair.device, pair));
+			}
 
-			LogDataPair pair = new LogDataPair( //
-					mDevice, // device
-					new Interval(start, end), // interval from-to
-					DataType.AVERAGE, // type
-					DataInterval.HOUR); // interval
-
-			return mController.getDeviceLog(pair.device, pair);
+			return result;
 		}
 
 		@Override
-		protected void onPostExecute(DeviceLog log) {
-			fillGraph(log, mDevice);
+		protected void onPostExecute(Map<Device, DeviceLog> logs) {
+			// Fill graph with data
+			for (Map.Entry<Device, DeviceLog> entry : logs.entrySet()) {
+				fillGraph(entry.getValue(), entry.getKey());	
+			}
+			
+			// Hide loading label for this graph
+			GraphView graphView = mGraphs.get(mTypeId);
+			((View) graphView.getParent().getParent()).findViewById(R.id.graph_loading).setVisibility(View.INVISIBLE);
 		}
 
 	}
