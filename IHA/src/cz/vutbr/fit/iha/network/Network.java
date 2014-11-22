@@ -103,10 +103,10 @@ public class Network implements INetwork {
 	private GoogleAuth mGoogleAuth;
 	private ActualUser mUser;
 	private String mUserID = "";
-	private String mSecretVar;
+//	private String mSecretVar;
 	private final boolean mUseDebugServer;
 	private boolean mGoogleReinit;
-	private final Controller mController; // FIXME: remove this dependency on controller?
+//	private final Controller mController; // FIXME: remove this dependency on controller?
 
 	/**
 	 * Constructor.
@@ -115,7 +115,7 @@ public class Network implements INetwork {
 	 */
 	public Network(Context context, Controller controller, String userID, boolean useDebugServer) {
 		mContext = context;
-		mController = controller;
+//		mController = controller;
 		mUseDebugServer = useDebugServer;
 		mUserID = userID;
 	}
@@ -280,6 +280,7 @@ public class Network implements INetwork {
 		return activeNetworkInfo != null && activeNetworkInfo.isConnected();
 	}
 
+	@Deprecated
 	private void doResign() {
 		// TODO: maybe use diffrenD way to resign, case stopping of thread,
 		// manage this after implement in the controller
@@ -289,8 +290,8 @@ public class Network implements INetwork {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		mSecretVar = mUserID;
-		getUID(mUser.getEmail());
+//		mSecretVar = mUserID;
+		getUID();
 	}
 
 	private ParsedMessage doRequest(String messageToSend) {
@@ -307,17 +308,17 @@ public class Network implements INetwork {
 			Log.i(TAG + " - fromSrv", result);
 
 			msg = new XmlParsers().parseCommunication(result, false);
-			if (msg.getState() == State.FALSE && ((FalseAnswer) msg.data).getErrCode() == NetworkError.BAD_UID.getNumber()) {
-				doResign();
-				// try it one more time
-				result = startCommunication(messageToSend.replace(Xconstants.SID + "=\"" + mSecretVar + "\"", Xconstants.SID + "=\""
-						+ mUserID + "\"")); // FIXME: hot fix
-
-				Log.d(TAG + " - fromApp", messageToSend);
-				Log.i(TAG + " - fromSrv", result);
-
-				msg = new XmlParsers().parseCommunication(result, false);
-			}
+//			if (msg.getState() == State.FALSE && ((FalseAnswer) msg.data).getErrCode() == NetworkError.BAD_UID.getNumber()) {
+//				doResign();
+//				// try it one more time
+//				result = startCommunication(messageToSend.replace(Xconstants.SID + "=\"" + mSecretVar + "\"", Xconstants.SID + "=\""
+//						+ mUserID + "\"")); // FIXME: hot fix
+//
+//				Log.d(TAG + " - fromApp", messageToSend);
+//				Log.i(TAG + " - fromSrv", result);
+//
+//				msg = new XmlParsers().parseCommunication(result, false);
+//			}
 
 			return msg;
 
@@ -418,7 +419,11 @@ public class Network implements INetwork {
 		throw new FalseException(((FalseAnswer) msg.data));
 	}
 
-	public boolean getUID(String email){
+	/**
+	 * Method get UID from server
+	 * @return true if everything successful, false otherwise
+	 */
+	public boolean getUID(){
 		String googleToken = getGoogleToken();
 		String googleID = mGoogleAuth.getId(); // TODO: check this - GOOGLE ID
 		if (googleToken.length() == 0)
@@ -462,9 +467,6 @@ public class Network implements INetwork {
 	 * Method ask for list of adapters. User has to be sign in before
 	 * 
 	 * @return list of adapters or empty list
-	 * @throws NoConnectionException
-	 * @throws CommunicationException
-	 *             including message from server including message from server
 	 */
 	@Override
 	// http://stackoverflow.com/a/509288/1642090
@@ -485,8 +487,6 @@ public class Network implements INetwork {
 	 * @param adapterID
 	 *            of wanted adapter
 	 * @return Adapter
-	 * @throws NoConnectionException
-	 * @throws CommunicationException
 	 */
 	@Override
 	@SuppressWarnings("unchecked")
@@ -508,8 +508,6 @@ public class Network implements INetwork {
 	 * @param newId
 	 *            new id
 	 * @return true if change has been successfully
-	 * @throws NoConnectionException
-	 * @throws CommunicationException
 	 */
 	@Override
 	public boolean reInitAdapter(String oldId, String newId){
@@ -531,8 +529,6 @@ public class Network implements INetwork {
 	 * 
 	 * @param devices
 	 * @return true if everything goes well, false otherwise
-	 * @throws NoConnectionException
-	 * @throws CommunicationException
 	 */
 	@Override
 	public boolean updateFacilities(String adapterID, List<Facility> facilities, EnumSet<SaveDevice> toSave){
@@ -555,9 +551,6 @@ public class Network implements INetwork {
 	 * @param toSave
 	 *            ENUMSET specified fields to save
 	 * @return true if fields has been updated, false otherwise
-	 * @throws NoConnectionException
-	 * @throws CommunicationException
-	 * @throws FalseException
 	 */
 	@Override
 	public boolean updateDevice(String adapterID, Device device, EnumSet<SaveDevice> toSave){
@@ -576,9 +569,6 @@ public class Network implements INetwork {
 	 * @param adapterID
 	 * @param device
 	 * @return
-	 * @throws NoConnectionException
-	 * @throws CommunicationException
-	 * @throws FalseException
 	 */
 	@Override
 	public boolean switchState(String adapterID, Device device){
@@ -597,9 +587,6 @@ public class Network implements INetwork {
 	 * 
 	 * @param adapterID
 	 * @return
-	 * @throws NoConnectionException
-	 * @throws CommunicationException
-	 * @throws FalseException
 	 */
 	@Override
 	public boolean prepareAdapterToListenNewSensors(String adapterID){
@@ -619,9 +606,6 @@ public class Network implements INetwork {
 	 * @param facility
 	 *            to be deleted
 	 * @return true if is deleted, false otherwise
-	 * @throws NoConnectionException
-	 * @throws CommunicationException
-	 * @throws FalseException
 	 */
 	@Override
 	public boolean deleteFacility(String adapterID, Facility facility){
@@ -640,8 +624,6 @@ public class Network implements INetwork {
 	 * @param facilities
 	 *            list of facilities to which needed actual data
 	 * @return list of updated facilities fields
-	 * @throws NoConnectionException
-	 * @throws CommunicationException
 	 */
 	@Override
 	// http://stackoverflow.com/a/509288/1642090
@@ -661,9 +643,6 @@ public class Network implements INetwork {
 	 * 
 	 * @param facility
 	 * @return
-	 * @throws NoConnectionException
-	 * @throws CommunicationException
-	 * @throws FalseException
 	 */
 	@Override
 	public Facility getFacility(Facility facility){
@@ -684,14 +663,10 @@ public class Network implements INetwork {
 	}
 
 	/**
-	 * TODO: need to test
-	 * 
+	 * Method get new devices
 	 * @param adapterID
 	 * @param facilities
 	 * @return
-	 * @throws NoConnectionException
-	 * @throws CommunicationException
-	 * @throws FalseException
 	 */
 	@Override
 	@SuppressWarnings("unchecked")
@@ -713,8 +688,6 @@ public class Network implements INetwork {
 	 * @param pair
 	 *            data of log (from, to, type, interval)
 	 * @return list of rows with logged data
-	 * @throws NoConnectionException
-	 * @throws CommunicationException
 	 */
 	// http://stackoverflow.com/a/509288/1642090
 	@Override
@@ -744,8 +717,6 @@ public class Network implements INetwork {
 	 * Method call to server for actual list of locations
 	 * 
 	 * @return List with locations
-	 * @throws NoConnectionException
-	 * @throws CommunicationException
 	 */
 	@Override
 	// http://stackoverflow.com/a/509288/1642090
@@ -766,8 +737,6 @@ public class Network implements INetwork {
 	 * @param locations
 	 *            to update
 	 * @return true if everything is OK, false otherwise
-	 * @throws NoConnectionException
-	 * @throws CommunicationException
 	 */
 	@Override
 	public boolean updateLocations(String adapterID, List<Location> locations){
@@ -786,9 +755,6 @@ public class Network implements INetwork {
 	 * @param adapterID
 	 * @param location
 	 * @return
-	 * @throws NoConnectionException
-	 * @throws CommunicationException
-	 * @throws FalseException
 	 */
 	@Override
 	public boolean updateLocation(String adapterID, Location location){
@@ -843,8 +809,6 @@ public class Network implements INetwork {
 	 * @param deviceIds
 	 *            list of devices that are assigned to new view
 	 * @return true if everything goes well, false otherwise
-	 * @throws NoConnectionException
-	 * @throws CommunicationException
 	 */
 	@Override
 	public boolean addView(String viewName, int iconID, List<Device> devices){
@@ -861,8 +825,6 @@ public class Network implements INetwork {
 	 * Method ask for list of all custom views
 	 * 
 	 * @return list of defined custom views
-	 * @throws NoConnectionException
-	 * @throws CommunicationException
 	 */
 	@Override
 	// http://stackoverflow.com/a/509288/1642090
@@ -884,8 +846,6 @@ public class Network implements INetwork {
 	 * @param viewName
 	 *            name of view to erase
 	 * @return true if view has been deleted, false otherwise
-	 * @throws NoConnectionException
-	 * @throws CommunicationException
 	 */
 	@Override
 	public boolean deleteView(String viewName){
@@ -948,8 +908,6 @@ public class Network implements INetwork {
 	 * @param users
 	 *            email of user
 	 * @return true if all users has been deleted, false otherwise
-	 * @throws NoConnectionException
-	 * @throws CommunicationException
 	 */
 	@Override
 	public boolean deleteAccounts(String adapterID, List<User> users){
@@ -968,9 +926,6 @@ public class Network implements INetwork {
 	 * @param adapterID
 	 * @param user
 	 * @return
-	 * @throws NoConnectionException
-	 * @throws CommunicationException
-	 * @throws FalseException
 	 */
 	@Override
 	public boolean deleteAccount(String adapterID, User user){
@@ -985,8 +940,6 @@ public class Network implements INetwork {
 	 * Method ask for list of users of current adapter
 	 * 
 	 * @return Map of users where key is email and value is User object
-	 * @throws NoConnectionException
-	 * @throws CommunicationException
 	 */
 	@Override
 	// http://stackoverflow.com/a/509288/1642090
@@ -1007,8 +960,6 @@ public class Network implements INetwork {
 	 * @param userNrole
 	 *            map with email as key and role as value
 	 * @return true if all accounts has been changed false otherwise
-	 * @throws NoConnectionException
-	 * @throws CommunicationException
 	 */
 	@Override
 	public boolean updateAccounts(String adapterID, ArrayList<User> users){
@@ -1028,9 +979,6 @@ public class Network implements INetwork {
 	 * @param user
 	 * @param role
 	 * @return
-	 * @throws NoConnectionException
-	 * @throws CommunicationException
-	 * @throws FalseException
 	 */
 	@Override
 	public boolean updateAccount(String adapterID, User user){
@@ -1052,8 +1000,6 @@ public class Network implements INetwork {
 	 *       https://merlin.fit.vutbr.cz/wiki-iot/index.php/Smarthome_cloud#SetTimeZone
 	 * @param differenceToGMT
 	 * @return
-	 * @throws NoConnectionException
-	 * @throws CommunicationException
 	 */
 	@Override
 	public boolean setTimeZone(String adapterID, int differenceToGMT){
@@ -1070,8 +1016,6 @@ public class Network implements INetwork {
 	 * Method call to server to get actual time zone
 	 * 
 	 * @return integer in range <-12,12>
-	 * @throws NoConnectionException
-	 * @throws CommunicationException
 	 */
 	@Override
 	public int getTimeZone(String adapterID){
@@ -1096,9 +1040,6 @@ public class Network implements INetwork {
 	 * @param gcmID
 	 *            - google cloud message id
 	 * @return true if id has been deleted, false otherwise
-	 * @throws NoConnectionException
-	 * @throws CommunicationException
-	 * @throws FalseException
 	 */
 	public boolean deleteGCMID(String email, String gcmID){
 		ParsedMessage msg = doRequest(XmlCreator.createDeLGCMID(mUserID, email, gcmID));
@@ -1116,9 +1057,6 @@ public class Network implements INetwork {
 	 * @param msgID
 	 *            id of notification
 	 * @return true if server took flag, false otherwise
-	 * @throws NoConnectionException
-	 * @throws CommunicationException
-	 * @throws FalseException
 	 */
 	@Override
 	public boolean NotificationsRead(ArrayList<String> msgID){

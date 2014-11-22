@@ -152,8 +152,8 @@ public final class Controller {
 			if ((mNetwork instanceof Network) && !((Network)mNetwork).getUID(email)) {
 				return false;
 			}
-			
-			if (mNetwork.signIn(email, getGCMRegistrationId())) { // FIXME: gcmid have to be set separate now!!!, and here use getUID if you dont have userID
+
+			if (((Network)mNetwork).getUID() || mNetwork.signIn(email, getGCMRegistrationId())) { // FIXME: gcmid have to be set separate now!!!, and here use getUID if you dont have userID
 				mPersistence.saveLastEmail(email);
 				mPersistence.initializeDefaultSettings(email);
 				return true;

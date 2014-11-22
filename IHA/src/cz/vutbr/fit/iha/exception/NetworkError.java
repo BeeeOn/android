@@ -6,6 +6,7 @@ public enum NetworkError implements ErrorCode {
 	NO_CONNECTION(-1),
 	SERVER_NOT_RESPONDING(-2),
 	COM_PROBLEMS(-3),
+	XML(-4),
 	
 	// FROM SERVER
 	COM_VER_MISMATCH(1),
