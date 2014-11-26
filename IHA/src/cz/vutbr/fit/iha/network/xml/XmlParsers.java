@@ -988,7 +988,7 @@ public class XmlParsers {
 	 * @param filename
 	 * @return Adapter or null
 	 */
-	public List<Facility> getDemoFacilitiesFromAsset(Context context, String filename) {
+	public List<Facility> getDemoFacilitiesFromAsset(Context context, String filename) throws IhaException {
 		Log.i(TAG, String.format("Loading adapter from asset '%s'", filename));
 		List<Facility> result = null;
 		InputStream stream = null;
@@ -1031,7 +1031,7 @@ public class XmlParsers {
 	 * @param filename
 	 * @return list of locations or empty list
 	 */
-	public List<Location> getDemoLocationsFromAsset(Context context, String filename) {
+	public List<Location> getDemoLocationsFromAsset(Context context, String filename) throws IhaException {
 		Log.i(TAG, String.format("Loading locations from asset '%s'", filename));
 		List<Location> locations = new ArrayList<Location>();
 		InputStream stream = null;
@@ -1072,7 +1072,7 @@ public class XmlParsers {
 	 * @param filename
 	 * @return list of adapters or empty list
 	 */
-	public List<Adapter> getDemoAdaptersFromAsset(Context context, String filename) {
+	public List<Adapter> getDemoAdaptersFromAsset(Context context, String filename) throws IhaException {
 		Log.i(TAG, String.format("Loading adapters from asset '%s'", filename));
 		List<Adapter> adapters = new ArrayList<Adapter>();
 		InputStream stream = null;

@@ -172,6 +172,7 @@ public final class Controller {
 
 				return login(email);
 			}
+			throw IhaException.wrap(e);
 		}
 		return false;
 	}
