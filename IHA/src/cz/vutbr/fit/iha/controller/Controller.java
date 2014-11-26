@@ -17,6 +17,8 @@ import cz.vutbr.fit.iha.adapter.device.DeviceLog.DataType;
 import cz.vutbr.fit.iha.adapter.device.DeviceType;
 import cz.vutbr.fit.iha.adapter.device.Facility;
 import cz.vutbr.fit.iha.adapter.location.Location;
+import cz.vutbr.fit.iha.exception.IhaException;
+import cz.vutbr.fit.iha.exception.NetworkError;
 import cz.vutbr.fit.iha.exception.NotImplementedException;
 import cz.vutbr.fit.iha.household.ActualUser;
 import cz.vutbr.fit.iha.household.Household;
@@ -25,8 +27,6 @@ import cz.vutbr.fit.iha.network.DemoNetwork;
 import cz.vutbr.fit.iha.network.GoogleAuth;
 import cz.vutbr.fit.iha.network.INetwork;
 import cz.vutbr.fit.iha.network.Network;
-import cz.vutbr.fit.iha.network.exception.FalseException;
-import cz.vutbr.fit.iha.network.exception.NetworkException;
 import cz.vutbr.fit.iha.pair.LogDataPair;
 import cz.vutbr.fit.iha.persistence.Persistence;
 import cz.vutbr.fit.iha.util.Log;
@@ -144,51 +144,33 @@ public final class Controller {
 	 * @return true on success, false otherwise
 	 * @throws NetworkException
 	 */
-	public boolean login(String email) throws NetworkException {
+	public boolean login(String email) throws IhaException {
 		// TODO: catch and throw proper exception
 		// FIXME: after some time there should be picture in ActualUser object, should save to mPersistence
 		try {
-			// We don't use UID in demo mode  
-			if ((mNetwork instanceof Network) && !((Network)mNetwork).getUID(email)) {
-				return false;
-			}
-			
-			if (mNetwork.signIn(email, getGCMRegistrationId())) { // FIXME: gcmid have to be set separate now!!!, and here use getUID if you dont have userID
+			if (mNetwork.getUID() || mNetwork.signIn(email, getGCMRegistrationId())) { // FIXME: gcmid have to be set separate now!!!, and here use getUID if you dont have userID
 				mPersistence.saveLastEmail(email);
 				mPersistence.initializeDefaultSettings(email);
 				return true;
 			}
-		} catch (FalseException e) {
-			// FIXME: ROB, do this how you want, this is working code :)
-			switch (e.getDetail().getErrCode()) {
-			case 0:
-				break;
-			case 2: //FIXME: there are constants of error in Constants.java file
-			case 3: // bad token or email
-				try {
-					// TODO: do this otherway
-					// GoogleAuth ggAuth = GoogleAuth.getGoogleAuth();
-					//
-					// ggAuth.invalidateToken();
-					// ggAuth.doInForeground((ggAuth.getPictureIMG() == null)? true:false);
+		} catch (IhaException e) {
+			if (e.getErrorCode() instanceof NetworkError && e.getErrorCode() == NetworkError.NOT_VALID_USER) {
+				// TODO: do this otherway
+				// GoogleAuth ggAuth = GoogleAuth.getGoogleAuth();
+				//
+				// ggAuth.invalidateToken();
+				// ggAuth.doInForeground((ggAuth.getPictureIMG() == null)? true:false);
 
-					if (mNetwork instanceof Network) {
-						((Network) mNetwork).startGoogleAuth(true, getActualUser().isPictureDefault() ? true : false);
+				if (mNetwork instanceof Network) {
+					((Network) mNetwork).startGoogleAuth(true, getActualUser().isPictureDefault() ? true : false);
 
-						// this happen only on first signing (or when someone delete grants on google, or token is old)
-						// while(GoogleAuth.getGoogleAuth().getPictureIMG() == null);
-						while (getActualUser().isPictureDefault())
-							; // FIXME: not sure with this, need to check (first sing in)
-					}
-
-					return login(email);
-
-				} catch (Exception e1) {
-					e1.printStackTrace();
+					// this happen only on first signing (or when someone delete grants on google, or token is old)
+					// while(GoogleAuth.getGoogleAuth().getPictureIMG() == null);
+					while (getActualUser().isPictureDefault())
+						; // FIXME: not sure with this, need to check (first sing in)
 				}
-				break;
-			default:
-				throw e;
+
+				return login(email);
 			}
 		}
 		return false;
@@ -408,7 +390,7 @@ public final class Controller {
 				setActiveAdapter(id, true);
 				result = true;
 			}
-		} catch (NetworkException e) {
+		} catch (IhaException e) {
 			e.printStackTrace();
 		}
 
@@ -427,7 +409,7 @@ public final class Controller {
 
 		try {
 			result = mNetwork.signUp(mHousehold.user.getEmail()); //FIXME: ROB use getUID instead!
-		} catch (NetworkException e) {
+		} catch (IhaException e) {
 			e.printStackTrace();
 		}
 
@@ -442,7 +424,7 @@ public final class Controller {
 	 * @param id
 	 * @return true on success, false otherwise
 	 */
-	public boolean unregisterAdapter(String id) throws NotImplementedException {
+	public boolean unregisterAdapter(String id) {
 		// FIXME: This debug implementation unregisters actual user from adapter, not adapter itself
 
 		boolean result = false;
@@ -455,7 +437,7 @@ public final class Controller {
 				mHousehold.adaptersModel.reloadAdapters(true);
 				result = true;
 			}
-		} catch (NetworkException e) {
+		} catch (IhaException e) {
 			e.printStackTrace();
 		}
 
@@ -500,7 +482,7 @@ public final class Controller {
 		boolean deleted = false;
 		try {
 			deleted = mNetwork.deleteLocation(adapter.getId(), location);
-		} catch (NetworkException e) {
+		} catch (IhaException e) {
 			e.printStackTrace();
 		}
 
@@ -525,7 +507,7 @@ public final class Controller {
 		boolean saved = false;
 		try {
 			saved = mNetwork.updateLocation(adapter.getId(), location);
-		} catch (NetworkException e) {
+		} catch (IhaException e) {
 			e.printStackTrace();
 		}
 
@@ -549,7 +531,7 @@ public final class Controller {
 
 		try {
 			location = mNetwork.createLocation(adapter.getId(), location);
-		} catch (NetworkException e) {
+		} catch (IhaException e) {
 			e.printStackTrace();
 			location = null;
 		}
@@ -656,7 +638,7 @@ public final class Controller {
 
 		try {
 			log = mNetwork.getLog(device.getFacility().getAdapterId(), device, pair);
-		} catch (NetworkException e) {
+		} catch (IhaException e) {
 			e.printStackTrace();
 		}
 
@@ -677,7 +659,7 @@ public final class Controller {
 
 		try {
 			result = mNetwork.prepareAdapterToListenNewSensors(adapterID);
-		} catch (NetworkException e) {
+		} catch (IhaException e) {
 			e.printStackTrace();
 		}
 

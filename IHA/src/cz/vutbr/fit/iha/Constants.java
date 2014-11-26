@@ -55,30 +55,5 @@ public final class Constants {
 	 * Project number from the API Console
 	 */
 	public static final String PROJECT_NUMBER = "863203863728";
-	
-	/**
-	 * Error codes for communication layer
-	 */
-	public static final int ERR_COM_VER_MISMATCH = 1;
-	public static final int ERR_NOT_VALID_USER = 2;
-	public static final int ERR_ADAPTER_NOT_EXISTS = 5;
-	public static final int ERR_ADAPTER_NOT_FREE = 6;
-	public static final int ERR_ADAPTER_HAVE_YET = 7;
-	public static final int ERR_BAD_AGREG_FUNC = 8;
-	public static final int ERR_BAD_INTERVAL = 9;
-	public static final int ERR_NOT_CONSISTENT_SENSOR_ADDR = 10;
-	public static final int ERR_BAD_LOCATION_TYPE = 11;
-	public static final int ERR_DAMAGED_XML = 12;
-	public static final int ERR_NO_SUCH_ENTITY = 13;
-	public static final int ERR_BAD_ICON = 14;
-	public static final int ERR_BAD_ACTION = 15;
-	public static final int ERR_LOW_RIGHTS = 16;
-	public static final int ERR_BAD_EMAIL_OR_ROLE = 17;
-	public static final int ERR_BAD_UTC = 18;
-	public static final int ERR_BAD_ACTOR_VALUE = 19;
-	public static final int ERR_BAD_UID = 20;
-	public static final int ERR_ADA_SERVER_PROBLEM = 100;
-	
-	
-	
+
 }

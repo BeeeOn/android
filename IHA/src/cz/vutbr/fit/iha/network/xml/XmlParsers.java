@@ -27,6 +27,8 @@ import cz.vutbr.fit.iha.adapter.device.DeviceType;
 import cz.vutbr.fit.iha.adapter.device.Facility;
 import cz.vutbr.fit.iha.adapter.device.RefreshInterval;
 import cz.vutbr.fit.iha.adapter.location.Location;
+import cz.vutbr.fit.iha.exception.IhaException;
+import cz.vutbr.fit.iha.exception.NetworkError;
 import cz.vutbr.fit.iha.gcm.Notification;
 import cz.vutbr.fit.iha.gcm.Notification.ActionType;
 import cz.vutbr.fit.iha.household.User;
@@ -42,8 +44,6 @@ import cz.vutbr.fit.iha.network.xml.condition.GreaterEqualFunc;
 import cz.vutbr.fit.iha.network.xml.condition.GreaterThanFunc;
 import cz.vutbr.fit.iha.network.xml.condition.LesserEqualFunc;
 import cz.vutbr.fit.iha.network.xml.condition.LesserThanFunc;
-import cz.vutbr.fit.iha.network.xml.exception.ComVerMisException;
-import cz.vutbr.fit.iha.network.xml.exception.XmlVerMisException;
 import cz.vutbr.fit.iha.util.Log;
 
 /**
@@ -67,20 +67,20 @@ public class XmlParsers {
 		ADAPTERS("adapters"),
 		ALLDEVICES("alldevs"),
 		DEVICES("devs"),
-		LOGDATA("logdata"), 
+		LOGDATA("logdata"),
 		ACCOUNTS("accounts"),
-		TRUE("true"), 
-		FALSE("false"), 
-		VIEWS("views"), 
-		TIMEZONE("timezone"), 
-		ROOMS("rooms"), 
-		ROOMCREATED("roomid"), 
+		TRUE("true"),
+		FALSE("false"),
+		VIEWS("views"),
+		TIMEZONE("timezone"),
+		ROOMS("rooms"),
+		ROOMCREATED("roomid"),
 		NOTIFICATIONS("notifs"),
-		CONDITIONCREATED("condcreated"), 
-		CONDITION("cond"), 
-		CONDITIONS("conds"), 
-		ACTIONCREATED("actcreated"), 
-		ACTIONS("acts"), 
+		CONDITIONCREATED("condcreated"),
+		CONDITION("cond"),
+		CONDITIONS("conds"),
+		ACTIONCREATED("actcreated"),
+		ACTIONS("acts"),
 		ACTION("act"),
 		UID("uid");
 
@@ -103,9 +103,6 @@ public class XmlParsers {
 		}
 	}
 
-	// exception
-	private static final String mComVerMisExcMessage = "Communication version mismatch.";
-
 	public XmlParsers() {
 	}
 
@@ -119,11 +116,10 @@ public class XmlParsers {
 	 * @throws IOException
 	 * @throws ComVerMisException
 	 *             means Communication version mismatch exception
-	 * @throws XmlVerMisException
-	 *             means XML version mismatch exception
 	 * @throws ParseException
 	 */
-	public ParsedMessage parseCommunication(String xmlInput, boolean namespace) throws XmlPullParserException, IOException, ComVerMisException, XmlVerMisException, ParseException {
+	public ParsedMessage parseCommunication(String xmlInput, boolean namespace) throws XmlPullParserException, IOException,
+			ParseException {
 		mParser = Xml.newPullParser();
 		mParser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, namespace);
 
@@ -135,8 +131,11 @@ public class XmlParsers {
 		State state = State.fromValue(getSecureAttrValue(Xconstants.STATE));
 		String version = getSecureAttrValue(Xconstants.VERSION);
 
-		if (!version.equals(COM_VER))
-			throw new ComVerMisException(mComVerMisExcMessage + "Expected: " + COM_VER + " but got: " + version);
+		if (!version.equals(COM_VER)) {
+			throw new IhaException(NetworkError.COM_VER_MISMATCH)
+				.set("Expected", COM_VER)
+				.set("Real", version);
+		}
 
 		ParsedMessage result = new ParsedMessage(state);
 
@@ -293,11 +292,9 @@ public class XmlParsers {
 	 * @return list of facilities
 	 * @throws XmlPullParserException
 	 * @throws IOException
-	 * @throws XmlVerMisException
-	 *             means XML version mismatch exception
 	 * @throws ParseException
 	 */
-	private List<Facility> parseAllFacilities() throws XmlPullParserException, IOException, XmlVerMisException, ParseException {
+	private List<Facility> parseAllFacilities() throws XmlPullParserException, IOException, ParseException {
 
 		String aid = getSecureAttrValue(Xconstants.AID);
 		mParser.nextTag(); // dev start tag
@@ -313,7 +310,7 @@ public class XmlParsers {
 	}
 
 	// special case of parseFacility
-	private List<Facility> parseNewFacilities(String aid) throws XmlPullParserException, IOException, XmlVerMisException, ParseException {
+	private List<Facility> parseNewFacilities(String aid) throws XmlPullParserException, IOException, ParseException {
 		mParser.nextTag(); // dev start tag
 
 		List<Facility> result = new ArrayList<Facility>();
@@ -349,7 +346,7 @@ public class XmlParsers {
 			parseInnerDevs(result, aid, true);
 
 			mParser.nextTag(); // adapter endtag
-			//FIXME: check if it works for request from multiple adapters!!!
+			// FIXME: check if it works for request from multiple adapters!!!
 		} while (!mParser.getName().equals(Xconstants.COM_ROOT) && mParser.nextTag() != XmlPullParser.END_TAG);
 
 		return result;
@@ -359,7 +356,8 @@ public class XmlParsers {
 		do { // go through devs (facilities)
 			Facility facility = new Facility();
 			facility.setAdapterId(aid);
-//			facility.setInitialized(getSecureAttrValue(Xconstants.INITIALIZED).equals(Xconstants.ZERO) ? false : true);
+			// facility.setInitialized(getSecureAttrValue(Xconstants.INITIALIZED).equals(Xconstants.ZERO) ? false :
+			// true);
 			facility.setInitialized(init);
 			facility.setAddress(getSecureAttrValue(Xconstants.DID));
 			facility.setLocationId(getSecureAttrValue(Xconstants.LID));
@@ -382,7 +380,8 @@ public class XmlParsers {
 
 			result.add(facility);
 
-		} while (mParser.nextTag() != XmlPullParser.END_TAG && (!mParser.getName().equals(Xconstants.ADAPTER) || !mParser.getName().equals(Xconstants.COM_ROOT)));
+		} while (mParser.nextTag() != XmlPullParser.END_TAG
+				&& (!mParser.getName().equals(Xconstants.ADAPTER) || !mParser.getName().equals(Xconstants.COM_ROOT)));
 	}
 
 	/**
@@ -415,7 +414,7 @@ public class XmlParsers {
 					log.addValue(row);
 				}
 			} catch (IllegalArgumentException e) {
-				throw new RuntimeException(e);
+				throw IhaException.wrap(e, NetworkError.XML);
 			}
 		} while (mParser.nextTag() != XmlPullParser.END_TAG && !mParser.getName().equals(Xconstants.COM_ROOT));
 
@@ -443,7 +442,8 @@ public class XmlParsers {
 			return result;
 
 		do {
-			Location location = new Location(getSecureAttrValue(Xconstants.ID), getSecureAttrValue(Xconstants.NAME), getSecureInt(getSecureAttrValue(Xconstants.TYPE)));
+			Location location = new Location(getSecureAttrValue(Xconstants.ID), getSecureAttrValue(Xconstants.NAME),
+					getSecureInt(getSecureAttrValue(Xconstants.TYPE)));
 			location.setAdapterId(aid);
 			result.add(location);
 
@@ -526,8 +526,8 @@ public class XmlParsers {
 			return result;
 
 		do {
-			Notification ntfc = new Notification(getSecureAttrValue(Xconstants.MSGID), getSecureAttrValue(Xconstants.TIME), getSecureAttrValue(Xconstants.TYPE),
-					(getSecureAttrValue(Xconstants.READ).equals(Xconstants.ZERO)) ? false : true);
+			Notification ntfc = new Notification(getSecureAttrValue(Xconstants.MSGID), getSecureAttrValue(Xconstants.TIME),
+					getSecureAttrValue(Xconstants.TYPE), (getSecureAttrValue(Xconstants.READ).equals(Xconstants.ZERO)) ? false : true);
 
 			mParser.nextTag();
 
@@ -1000,12 +1000,15 @@ public class XmlParsers {
 			mParser.nextTag();
 
 			String version = getSecureAttrValue(Xconstants.VERSION);
-			if (!version.equals(COM_VER))
-				throw new ComVerMisException(mComVerMisExcMessage + "Expected: " + COM_VER + " but got: " + version);
+			if (!version.equals(COM_VER)) {
+				throw new IhaException(NetworkError.COM_VER_MISMATCH)
+					.set("Expected", COM_VER)
+					.set("Real", version);
+			}
 
 			result = parseAllFacilities();
 		} catch (Exception e) {
-			Log.e(TAG, e.getMessage(), e);
+			e.printStackTrace();
 		} finally {
 			try {
 				if (stream != null)
@@ -1036,12 +1039,15 @@ public class XmlParsers {
 			mParser.nextTag();
 
 			String version = getSecureAttrValue(Xconstants.VERSION);
-			if (!version.equals(COM_VER))
-				throw new ComVerMisException(mComVerMisExcMessage + "Expected: " + COM_VER + " but got: " + version);
+			if (!version.equals(COM_VER)) {
+				throw new IhaException(NetworkError.COM_VER_MISMATCH)
+					.set("Expected", COM_VER)
+					.set("Real", version);
+			}
 
 			locations = parseRooms();
 		} catch (Exception e) {
-			Log.e(TAG, e.getMessage(), e);
+			e.printStackTrace();
 		} finally {
 			try {
 				if (stream != null)
@@ -1072,12 +1078,15 @@ public class XmlParsers {
 			mParser.nextTag();
 
 			String version = getSecureAttrValue(Xconstants.VERSION);
-			if (!version.equals(COM_VER))
-				throw new ComVerMisException(mComVerMisExcMessage + "Expected: " + COM_VER + " but got: " + version);
+			if (!version.equals(COM_VER)) {
+				throw new IhaException(NetworkError.COM_VER_MISMATCH)
+					.set("Expected", COM_VER)
+					.set("Real", version);
+			}
 
 			adapters = parseAdaptersReady();
 		} catch (Exception e) {
-			Log.e(TAG, e.getMessage(), e);
+			e.printStackTrace();
 		} finally {
 			try {
 				if (stream != null)
