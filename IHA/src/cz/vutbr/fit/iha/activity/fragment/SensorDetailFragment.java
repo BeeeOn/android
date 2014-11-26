@@ -638,8 +638,11 @@ public class SensorDetailFragment extends SherlockFragment {
 		}
 		BaseEnumValue val = (BaseEnumValue) value;
 		List<BaseEnumValue.Item> list = val.getEnumItems();
-		int pos = list.indexOf(val);
-		val.setValue(list.get( (pos+1) % list.size() ).getValue());
+		BaseEnumValue.Item item = val.getItemByDoubleValue(val.getDoubleValue());
+		
+		int pos = list.indexOf(item);
+		device.setValue(list.get( (pos+1) % list.size() ).getValue());
+		
 		mActorActionTask = new ActorActionTask(getActivity().getApplicationContext());
 		mActorActionTask.setListener(new CallbackTaskListener() {
 
@@ -657,7 +660,7 @@ public class SensorDetailFragment extends SherlockFragment {
 			}
 			
 		});
-		
+		mActorActionTask.execute(device);
 	}
 
 	private void doSaveDeviceTask(SaveDevicePair pair) {
