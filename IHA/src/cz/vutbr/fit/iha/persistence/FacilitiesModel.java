@@ -13,8 +13,8 @@ import cz.vutbr.fit.iha.IdentifierComparator;
 import cz.vutbr.fit.iha.adapter.device.Device;
 import cz.vutbr.fit.iha.adapter.device.Device.SaveDevice;
 import cz.vutbr.fit.iha.adapter.device.Facility;
+import cz.vutbr.fit.iha.exception.IhaException;
 import cz.vutbr.fit.iha.network.INetwork;
-import cz.vutbr.fit.iha.network.exception.NetworkException;
 
 public class FacilitiesModel {
 
@@ -123,7 +123,7 @@ public class FacilitiesModel {
 				updateFacilityInMap(newFacility);
 			}
 
-		} catch (NetworkException e) {
+		} catch (IhaException e) {
 			e.printStackTrace();
 			return false;
 		}
@@ -136,7 +136,7 @@ public class FacilitiesModel {
 			setFacilitiesByAdapter(adapterId, mNetwork.initAdapter(adapterId));
 			setLastUpdate(adapterId, DateTime.now());
 			saveToCache(adapterId);
-		} catch (NetworkException e) {
+		} catch (IhaException e) {
 			e.printStackTrace();
 			return false;
 		}
@@ -182,7 +182,7 @@ public class FacilitiesModel {
 				return false;
 
 			updateFacilityInMap(facility);
-		} catch (NetworkException e) {
+		} catch (IhaException e) {
 			e.printStackTrace();
 			return false;
 		}
@@ -196,7 +196,7 @@ public class FacilitiesModel {
 		try {
 			result = mNetwork.updateFacility(facility.getAdapterId(), facility, what);
 			result = refreshFacility(facility, true);
-		} catch (NetworkException e) {
+		} catch (IhaException e) {
 			e.printStackTrace();
 		}
 
@@ -211,7 +211,7 @@ public class FacilitiesModel {
 		try {
 			result = mNetwork.updateDevice(facility.getAdapterId(), device, what);
 			result = refreshFacility(facility, true);
-		} catch (NetworkException e) {
+		} catch (IhaException e) {
 			e.printStackTrace();
 		}
 
