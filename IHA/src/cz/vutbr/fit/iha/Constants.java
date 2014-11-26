@@ -14,7 +14,7 @@ public final class Constants {
 	/**
 	 * Network layer version
 	 */
-	public static final String COM_VER = "2.2";
+	public static final String COM_VER = "2.3";
 
 	/**
 	 * Assets with prepared devices and locations for demo mode

@@ -10,7 +10,7 @@ package cz.vutbr.fit.iha.network.xml;
 public class ParsedMessage {
 
 	private XmlParsers.State mState;
-	private String mSessionId;
+	private String mUserId;
 
 	/**
 	 * Inner data of message, basically HashMap or List depend on type of message (state)
@@ -25,7 +25,7 @@ public class ParsedMessage {
 	 */
 	public ParsedMessage(XmlParsers.State state) {
 		mState = state;
-		mSessionId = "";
+		mUserId = "";
 		data = null;
 	}
 
@@ -52,17 +52,17 @@ public class ParsedMessage {
 	 * 
 	 * @return
 	 */
-	public String getSessionId() {
-		return mSessionId;
+	public String getUserId() {
+		return mUserId;
 	}
 
 	/**
 	 * Setter
 	 * 
-	 * @param sessionId
+	 * @param userId
 	 */
-	public void setSessionId(String sessionId) {
-		mSessionId = sessionId;
+	public void setUserId(String userId) {
+		mUserId = userId;
 	}
 
 }

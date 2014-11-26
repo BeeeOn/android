@@ -140,13 +140,20 @@ public class DemoNetwork implements INetwork {
 	}
 
 	@Override
+	public boolean getUID() {
+		// This has to return false so signIn() method will be called in Controller
+		// (maybe it will be changed later somehow)
+		return false;
+	}
+
+	@Override
 	public boolean signIn(String email, String gcmid) {
 		mUser.setName("John Doe");
 		mUser.setEmail(DEMO_EMAIL);
 		mUser.setGender(Gender.Male);
 		mUser.setPicture(null);
 		mUser.setPictureUrl("");
-		mUser.setSessionId("123456789");
+		mUser.setUserId("123456789");
 
 		return true;
 	}
@@ -404,7 +411,8 @@ public class DemoNetwork implements INetwork {
 					}
 					pos++;
 				}
-				pos = (items.size() + pos + (random.nextInt(3) - 1)) % items.size(); // (size + pos + <-1,1>) % size  - first size is because it could end up to "-1"
+				// (size + pos + <-1,1>) % size  - first size is because it could end up to "-1"
+				pos = (items.size() + pos + (random.nextInt(3) - 1)) % items.size();
 				lastValue = items.get(pos).getId();
 			} else {
 				double addvalue = random.nextInt((int) range * 1000) / 1000;
