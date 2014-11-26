@@ -414,7 +414,7 @@ public class XmlParsers {
 					log.addValue(row);
 				}
 			} catch (IllegalArgumentException e) {
-				throw new IhaException(e, NetworkError.XML);
+				throw IhaException.wrap(e, NetworkError.XML);
 			}
 		} while (mParser.nextTag() != XmlPullParser.END_TAG && !mParser.getName().equals(Xconstants.COM_ROOT));
 

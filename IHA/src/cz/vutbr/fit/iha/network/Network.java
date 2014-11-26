@@ -318,8 +318,7 @@ public class Network implements INetwork {
 			return msg;
 
 		} catch (Exception e) {
-			e.printStackTrace();
-			throw new IhaException(e, NetworkError.COM_PROBLEMS);
+			throw IhaException.wrap(e, NetworkError.COM_PROBLEMS);
 		} finally {
 			// Debug.stopMethodTracing();
 			// ltime = new Date().getTime() - ltime;
