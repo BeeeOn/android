@@ -32,7 +32,6 @@ import cz.vutbr.fit.iha.exception.NetworkError;
 import cz.vutbr.fit.iha.gcm.Notification;
 import cz.vutbr.fit.iha.gcm.Notification.ActionType;
 import cz.vutbr.fit.iha.household.User;
-import cz.vutbr.fit.iha.network.exception.ComVerMisException;
 import cz.vutbr.fit.iha.network.xml.action.Action;
 import cz.vutbr.fit.iha.network.xml.action.ComplexAction;
 import cz.vutbr.fit.iha.network.xml.condition.BetweenFunc;
@@ -104,9 +103,6 @@ public class XmlParsers {
 		}
 	}
 
-	// exception
-	private static final String mComVerMisExcMessage = "Communication version mismatch.";
-
 	public XmlParsers() {
 	}
 
@@ -123,7 +119,7 @@ public class XmlParsers {
 	 * @throws ParseException
 	 */
 	public ParsedMessage parseCommunication(String xmlInput, boolean namespace) throws XmlPullParserException, IOException,
-			ComVerMisException, ParseException {
+			ParseException {
 		mParser = Xml.newPullParser();
 		mParser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, namespace);
 
@@ -135,8 +131,11 @@ public class XmlParsers {
 		State state = State.fromValue(getSecureAttrValue(Xconstants.STATE));
 		String version = getSecureAttrValue(Xconstants.VERSION);
 
-		if (!version.equals(COM_VER))
-			throw new ComVerMisException(mComVerMisExcMessage + "Expected: " + COM_VER + " but got: " + version);
+		if (!version.equals(COM_VER)) {
+			throw new IhaException(NetworkError.COM_VER_MISMATCH)
+				.set("Expected", COM_VER)
+				.set("Real", version);
+		}
 
 		ParsedMessage result = new ParsedMessage(state);
 
@@ -1001,8 +1000,11 @@ public class XmlParsers {
 			mParser.nextTag();
 
 			String version = getSecureAttrValue(Xconstants.VERSION);
-			if (!version.equals(COM_VER))
-				throw new ComVerMisException(mComVerMisExcMessage + "Expected: " + COM_VER + " but got: " + version);
+			if (!version.equals(COM_VER)) {
+				throw new IhaException(NetworkError.COM_VER_MISMATCH)
+					.set("Expected", COM_VER)
+					.set("Real", version);
+			}
 
 			result = parseAllFacilities();
 		} catch (Exception e) {
@@ -1037,8 +1039,11 @@ public class XmlParsers {
 			mParser.nextTag();
 
 			String version = getSecureAttrValue(Xconstants.VERSION);
-			if (!version.equals(COM_VER))
-				throw new ComVerMisException(mComVerMisExcMessage + "Expected: " + COM_VER + " but got: " + version);
+			if (!version.equals(COM_VER)) {
+				throw new IhaException(NetworkError.COM_VER_MISMATCH)
+					.set("Expected", COM_VER)
+					.set("Real", version);
+			}
 
 			locations = parseRooms();
 		} catch (Exception e) {
@@ -1073,8 +1078,11 @@ public class XmlParsers {
 			mParser.nextTag();
 
 			String version = getSecureAttrValue(Xconstants.VERSION);
-			if (!version.equals(COM_VER))
-				throw new ComVerMisException(mComVerMisExcMessage + "Expected: " + COM_VER + " but got: " + version);
+			if (!version.equals(COM_VER)) {
+				throw new IhaException(NetworkError.COM_VER_MISMATCH)
+					.set("Expected", COM_VER)
+					.set("Real", version);
+			}
 
 			adapters = parseAdaptersReady();
 		} catch (Exception e) {

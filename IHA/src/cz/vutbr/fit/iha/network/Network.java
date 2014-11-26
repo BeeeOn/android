@@ -39,17 +39,13 @@ import cz.vutbr.fit.iha.adapter.device.DeviceLog;
 import cz.vutbr.fit.iha.adapter.device.Facility;
 import cz.vutbr.fit.iha.adapter.location.Location;
 import cz.vutbr.fit.iha.controller.Controller;
-import cz.vutbr.fit.iha.exception.NetworkError;
 import cz.vutbr.fit.iha.exception.IhaException;
+import cz.vutbr.fit.iha.exception.NetworkError;
 import cz.vutbr.fit.iha.household.ActualUser;
 import cz.vutbr.fit.iha.household.User;
-import cz.vutbr.fit.iha.network.exception.CommunicationException;
-import cz.vutbr.fit.iha.network.exception.FalseException;
-import cz.vutbr.fit.iha.network.exception.NoConnectionException;
 import cz.vutbr.fit.iha.network.xml.CustomViewPair;
 import cz.vutbr.fit.iha.network.xml.FalseAnswer;
 import cz.vutbr.fit.iha.network.xml.ParsedMessage;
-import cz.vutbr.fit.iha.network.xml.Xconstants;
 import cz.vutbr.fit.iha.network.xml.XmlCreator;
 import cz.vutbr.fit.iha.network.xml.XmlParsers;
 import cz.vutbr.fit.iha.network.xml.XmlParsers.State;
@@ -95,7 +91,6 @@ public class Network implements INetwork {
 	 */
 	private static final String SERVER_CN_CERTIFICATE = "ant-2.fit.vutbr.cz";
 
-	private static final String GoogleExcMessage = "Google token error";
 	// TODO: delete this
 	private static final int BADTOKENCODE = 2;
 
@@ -364,18 +359,15 @@ public class Network implements INetwork {
 	 * @param email
 	 *            of current user
 	 * @return boolean
-	 * @throws NoConnectionException
-	 *             if there is no Internet connection
-	 * @throws CommunicationException
-	 *             if there is some problem with certificate, timeout, or other communication problem
+	 * @throws IhaException
 	 */
 	@Override
 	@Deprecated
-	public boolean signIn(String email, String gcmid) throws NoConnectionException, CommunicationException, FalseException {
+	public boolean signIn(String email, String gcmid) throws IhaException {
 
 		String googleToken = getGoogleToken();
 		if (googleToken.length() == 0)
-			throw new CommunicationException(GoogleExcMessage);
+			throw new IhaException(NetworkError.GOOGLE_TOKEN);
 
 		ParsedMessage msg = doRequest(XmlCreator.createSignIn(email, googleToken, Locale.getDefault().getLanguage(), gcmid));
 
@@ -387,7 +379,8 @@ public class Network implements INetwork {
 		if (msg.getState() == State.FALSE && ((FalseAnswer) msg.data).getErrCode() == BADTOKENCODE)
 			mGoogleAuth.invalidateToken();
 
-		throw new FalseException(((FalseAnswer) msg.data));
+		FalseAnswer fa = (FalseAnswer) msg.data;
+		throw new IhaException(fa.getErrMessage(), NetworkError.fromValue(fa.getErrCode()));
 	}
 
 	/**
@@ -396,17 +389,15 @@ public class Network implements INetwork {
 	 * @param email
 	 *            of registering user
 	 * @return true if everything goes well, false otherwise
-	 * @throws CommunicationException
-	 *             including message from server
-	 * @throws NoConnectionException
+	 * @throws IhaException
 	 */
 	@Override
 	@Deprecated
-	public boolean signUp(String email) throws CommunicationException, NoConnectionException, FalseException {
+	public boolean signUp(String email) throws IhaException {
 
 		String googleToken = getGoogleToken();
 		if (googleToken.length() == 0)
-			throw new CommunicationException(GoogleExcMessage);
+			throw new IhaException(NetworkError.GOOGLE_TOKEN);
 
 		ParsedMessage msg = doRequest(XmlCreator.createSignUp(email, googleToken));
 
@@ -416,7 +407,8 @@ public class Network implements INetwork {
 		if (msg.getState() == State.FALSE && ((FalseAnswer) msg.data).getErrCode() == BADTOKENCODE)
 			mGoogleAuth.invalidateToken();
 
-		throw new FalseException(((FalseAnswer) msg.data));
+		FalseAnswer fa = (FalseAnswer) msg.data;
+		throw new IhaException(fa.getErrMessage(), NetworkError.fromValue(fa.getErrCode()));
 	}
 
 	/**
@@ -427,7 +419,7 @@ public class Network implements INetwork {
 		String googleToken = getGoogleToken();
 		String googleID = mGoogleAuth.getId(); // TODO: check this - GOOGLE ID
 		if (googleToken.length() == 0)
-			throw new IhaException(GoogleExcMessage, NetworkError.SERVER_NOT_RESPONDING);
+			throw new IhaException(NetworkError.GOOGLE_TOKEN);
 
 		ParsedMessage msg = doRequest(XmlCreator.createGetUID(googleID, googleToken, Locale.getDefault().getLanguage()));
 
@@ -440,7 +432,7 @@ public class Network implements INetwork {
 			mGoogleAuth.invalidateToken();
 		
 		FalseAnswer fa = (FalseAnswer) msg.data;
-		throw new IhaException(fa.getErrMessage() ,NetworkError.fromValue(fa.getErrCode()));
+		throw new IhaException(fa.getErrMessage(), NetworkError.fromValue(fa.getErrCode()));
 	}
 
 	/**
@@ -460,7 +452,7 @@ public class Network implements INetwork {
 			return true;
 
 		FalseAnswer fa = (FalseAnswer) msg.data;
-		throw new IhaException(fa.getErrMessage() ,NetworkError.fromValue(fa.getErrCode()));
+		throw new IhaException(fa.getErrMessage(), NetworkError.fromValue(fa.getErrCode()));
 	}
 
 	/**
@@ -478,7 +470,7 @@ public class Network implements INetwork {
 			return (List<Adapter>) msg.data;
 
 		FalseAnswer fa = (FalseAnswer) msg.data;
-		throw new IhaException(fa.getErrMessage() ,NetworkError.fromValue(fa.getErrCode()));
+		throw new IhaException(fa.getErrMessage(), NetworkError.fromValue(fa.getErrCode()));
 	}
 
 	/**
@@ -497,7 +489,7 @@ public class Network implements INetwork {
 			return (ArrayList<Facility>) msg.data;
 
 		FalseAnswer fa = (FalseAnswer) msg.data;
-		throw new IhaException(fa.getErrMessage() ,NetworkError.fromValue(fa.getErrCode()));
+		throw new IhaException(fa.getErrMessage(), NetworkError.fromValue(fa.getErrCode()));
 	}
 
 	/**
@@ -517,7 +509,7 @@ public class Network implements INetwork {
 			return true;
 
 		FalseAnswer fa = (FalseAnswer) msg.data;
-		throw new IhaException(fa.getErrMessage() ,NetworkError.fromValue(fa.getErrCode()));
+		throw new IhaException(fa.getErrMessage(), NetworkError.fromValue(fa.getErrCode()));
 	}
 
 	// /////////////////////////////////////////////////////////////////////////////////
@@ -538,7 +530,7 @@ public class Network implements INetwork {
 			return true;
 
 		FalseAnswer fa = (FalseAnswer) msg.data;
-		throw new IhaException(fa.getErrMessage() ,NetworkError.fromValue(fa.getErrCode())).set(fa.getInfo(), fa.troubleMakers);
+		throw new IhaException(fa.getErrMessage(), NetworkError.fromValue(fa.getErrCode())).set(fa.getInfo(), fa.troubleMakers);
 	}
 
 	/**
@@ -560,7 +552,7 @@ public class Network implements INetwork {
 			return true;
 
 		FalseAnswer fa = (FalseAnswer) msg.data;
-		throw new IhaException(fa.getErrMessage() ,NetworkError.fromValue(fa.getErrCode())).set(fa.getInfo(), fa.troubleMakers);
+		throw new IhaException(fa.getErrMessage(), NetworkError.fromValue(fa.getErrCode())).set(fa.getInfo(), fa.troubleMakers);
 	}
 
 	/**
@@ -578,7 +570,7 @@ public class Network implements INetwork {
 			return true;
 
 		FalseAnswer fa = (FalseAnswer) msg.data;
-		throw new IhaException(fa.getErrMessage() ,NetworkError.fromValue(fa.getErrCode())).set(fa.getInfo(), fa.troubleMakers);
+		throw new IhaException(fa.getErrMessage(), NetworkError.fromValue(fa.getErrCode())).set(fa.getInfo(), fa.troubleMakers);
 	}
 
 	/**
@@ -596,7 +588,7 @@ public class Network implements INetwork {
 			return true;
 
 		FalseAnswer fa = (FalseAnswer) msg.data;
-		throw new IhaException(fa.getErrMessage() ,NetworkError.fromValue(fa.getErrCode())).set(fa.getInfo(), fa.troubleMakers);
+		throw new IhaException(fa.getErrMessage(), NetworkError.fromValue(fa.getErrCode())).set(fa.getInfo(), fa.troubleMakers);
 	}
 
 	/**
@@ -615,7 +607,7 @@ public class Network implements INetwork {
 			return true;
 
 		FalseAnswer fa = (FalseAnswer) msg.data;
-		throw new IhaException(fa.getErrMessage() ,NetworkError.fromValue(fa.getErrCode())).set(fa.getInfo(), fa.troubleMakers);
+		throw new IhaException(fa.getErrMessage(), NetworkError.fromValue(fa.getErrCode())).set(fa.getInfo(), fa.troubleMakers);
 	}
 
 	/**
@@ -635,7 +627,7 @@ public class Network implements INetwork {
 			return (List<Facility>) msg.data;
 
 		FalseAnswer fa = (FalseAnswer) msg.data;
-		throw new IhaException(fa.getErrMessage() ,NetworkError.fromValue(fa.getErrCode())).set(fa.getInfo(), fa.troubleMakers);
+		throw new IhaException(fa.getErrMessage(), NetworkError.fromValue(fa.getErrCode())).set(fa.getInfo(), fa.troubleMakers);
 	}
 
 	/**
@@ -677,7 +669,7 @@ public class Network implements INetwork {
 			return (List<Facility>) msg.data;
 
 		FalseAnswer fa = (FalseAnswer) msg.data;
-		throw new IhaException(fa.getErrMessage() ,NetworkError.fromValue(fa.getErrCode())).set(fa.getInfo(), fa.troubleMakers);
+		throw new IhaException(fa.getErrMessage(), NetworkError.fromValue(fa.getErrCode())).set(fa.getInfo(), fa.troubleMakers);
 	}
 
 	/**
@@ -706,7 +698,7 @@ public class Network implements INetwork {
 		}
 		
 		FalseAnswer fa = (FalseAnswer) msg.data;
-		throw new IhaException(fa.getErrMessage() ,NetworkError.fromValue(fa.getErrCode())).set(fa.getInfo(), fa.troubleMakers);
+		throw new IhaException(fa.getErrMessage(), NetworkError.fromValue(fa.getErrCode())).set(fa.getInfo(), fa.troubleMakers);
 	}
 
 	// /////////////////////////////////////////////////////////////////////////////////
@@ -728,7 +720,7 @@ public class Network implements INetwork {
 			return (List<Location>) msg.data;
 
 		FalseAnswer fa = (FalseAnswer) msg.data;
-		throw new IhaException(fa.getErrMessage() ,NetworkError.fromValue(fa.getErrCode()));
+		throw new IhaException(fa.getErrMessage(), NetworkError.fromValue(fa.getErrCode()));
 	}
 
 	/**
@@ -746,7 +738,7 @@ public class Network implements INetwork {
 			return true;
 
 		FalseAnswer fa = (FalseAnswer) msg.data;
-		throw new IhaException(fa.getErrMessage() ,NetworkError.fromValue(fa.getErrCode()));
+		throw new IhaException(fa.getErrMessage(), NetworkError.fromValue(fa.getErrCode()));
 	}
 
 	/**
@@ -780,7 +772,7 @@ public class Network implements INetwork {
 			return true;
 
 		FalseAnswer fa = (FalseAnswer) msg.data;
-		throw new IhaException(fa.getErrMessage() ,NetworkError.fromValue(fa.getErrCode()));
+		throw new IhaException(fa.getErrMessage(), NetworkError.fromValue(fa.getErrCode()));
 	}
 
 	@Override
@@ -792,7 +784,7 @@ public class Network implements INetwork {
 			return location;
 		}
 		FalseAnswer fa = (FalseAnswer) msg.data;
-		throw new IhaException(fa.getErrMessage() ,NetworkError.fromValue(fa.getErrCode()));
+		throw new IhaException(fa.getErrMessage(), NetworkError.fromValue(fa.getErrCode()));
 	}
 
 	// /////////////////////////////////////////////////////////////////////////////////
@@ -818,7 +810,7 @@ public class Network implements INetwork {
 			return true;
 
 		FalseAnswer fa = (FalseAnswer) msg.data;
-		throw new IhaException(fa.getErrMessage() ,NetworkError.fromValue(fa.getErrCode()));
+		throw new IhaException(fa.getErrMessage(), NetworkError.fromValue(fa.getErrCode()));
 	}
 
 	/**
@@ -837,7 +829,7 @@ public class Network implements INetwork {
 			return (List<CustomViewPair>) msg.data;
 
 		FalseAnswer fa = (FalseAnswer) msg.data;
-		throw new IhaException(fa.getErrMessage() ,NetworkError.fromValue(fa.getErrCode()));
+		throw new IhaException(fa.getErrMessage(), NetworkError.fromValue(fa.getErrCode()));
 	}
 
 	/**
@@ -855,7 +847,7 @@ public class Network implements INetwork {
 			return true;
 
 		FalseAnswer fa = (FalseAnswer) msg.data;
-		throw new IhaException(fa.getErrMessage() ,NetworkError.fromValue(fa.getErrCode()));
+		throw new IhaException(fa.getErrMessage(), NetworkError.fromValue(fa.getErrCode()));
 	}
 
 	// FIXME: will be edited by ROB demands
@@ -867,7 +859,7 @@ public class Network implements INetwork {
 			return true;
 
 		FalseAnswer fa = (FalseAnswer) msg.data;
-		throw new IhaException(fa.getErrMessage() ,NetworkError.fromValue(fa.getErrCode()));
+		throw new IhaException(fa.getErrMessage(), NetworkError.fromValue(fa.getErrCode()));
 	}
 
 	// /////////////////////////////////////////////////////////////////////////////////
@@ -882,7 +874,7 @@ public class Network implements INetwork {
 			return true;
 
 		FalseAnswer fa = (FalseAnswer) msg.data;
-		throw new IhaException(fa.getErrMessage() ,NetworkError.fromValue(fa.getErrCode()));
+		throw new IhaException(fa.getErrMessage(), NetworkError.fromValue(fa.getErrCode()));
 	}
 
 	/**
@@ -917,7 +909,7 @@ public class Network implements INetwork {
 			return true;
 
 		FalseAnswer fa = (FalseAnswer) msg.data;
-		throw new IhaException(fa.getErrMessage() ,NetworkError.fromValue(fa.getErrCode()));
+		throw new IhaException(fa.getErrMessage(), NetworkError.fromValue(fa.getErrCode()));
 	}
 
 	/**
@@ -951,7 +943,7 @@ public class Network implements INetwork {
 			return (HashMap<String, User>) msg.data;
 
 		FalseAnswer fa = (FalseAnswer) msg.data;
-		throw new IhaException(fa.getErrMessage() ,NetworkError.fromValue(fa.getErrCode()));
+		throw new IhaException(fa.getErrMessage(), NetworkError.fromValue(fa.getErrCode()));
 	}
 
 	/**
@@ -969,7 +961,7 @@ public class Network implements INetwork {
 			return true;
 
 		FalseAnswer fa = (FalseAnswer) msg.data;
-		throw new IhaException(fa.getErrMessage() ,NetworkError.fromValue(fa.getErrCode()));
+		throw new IhaException(fa.getErrMessage(), NetworkError.fromValue(fa.getErrCode()));
 	}
 
 	/**
@@ -1009,7 +1001,7 @@ public class Network implements INetwork {
 			return true;
 
 		FalseAnswer fa = (FalseAnswer) msg.data;
-		throw new IhaException(fa.getErrMessage() ,NetworkError.fromValue(fa.getErrCode()));
+		throw new IhaException(fa.getErrMessage(), NetworkError.fromValue(fa.getErrCode()));
 	}
 
 	/**
@@ -1025,7 +1017,7 @@ public class Network implements INetwork {
 			return (Integer) msg.data;
 
 		FalseAnswer fa = (FalseAnswer) msg.data;
-		throw new IhaException(fa.getErrMessage() ,NetworkError.fromValue(fa.getErrCode()));
+		throw new IhaException(fa.getErrMessage(), NetworkError.fromValue(fa.getErrCode()));
 	}
 
 	// /////////////////////////////////////////////////////////////////////////////////
@@ -1048,7 +1040,7 @@ public class Network implements INetwork {
 			return true;
 
 		FalseAnswer fa = (FalseAnswer) msg.data;
-		throw new IhaException(fa.getErrMessage() ,NetworkError.fromValue(fa.getErrCode()));
+		throw new IhaException(fa.getErrMessage(), NetworkError.fromValue(fa.getErrCode()));
 	}
 
 	/**
@@ -1066,7 +1058,7 @@ public class Network implements INetwork {
 			return true;
 
 		FalseAnswer fa = (FalseAnswer) msg.data;
-		throw new IhaException(fa.getErrMessage() ,NetworkError.fromValue(fa.getErrCode()));
+		throw new IhaException(fa.getErrMessage(), NetworkError.fromValue(fa.getErrCode()));
 	}
 
 	// /////////////////////////////////////////////////////////////////////////////////
@@ -1084,7 +1076,7 @@ public class Network implements INetwork {
 			return condition;
 		}
 		FalseAnswer fa = (FalseAnswer) msg.data;
-		throw new IhaException(fa.getErrMessage() ,NetworkError.fromValue(fa.getErrCode()));
+		throw new IhaException(fa.getErrMessage(), NetworkError.fromValue(fa.getErrCode()));
 	}
 
 	@Override
@@ -1095,7 +1087,7 @@ public class Network implements INetwork {
 			return true;
 
 		FalseAnswer fa = (FalseAnswer) msg.data;
-		throw new IhaException(fa.getErrMessage() ,NetworkError.fromValue(fa.getErrCode()));
+		throw new IhaException(fa.getErrMessage(), NetworkError.fromValue(fa.getErrCode()));
 	}
 
 	@Override
@@ -1110,7 +1102,7 @@ public class Network implements INetwork {
 			return condition;
 		}
 		FalseAnswer fa = (FalseAnswer) msg.data;
-		throw new IhaException(fa.getErrMessage() ,NetworkError.fromValue(fa.getErrCode()));
+		throw new IhaException(fa.getErrMessage(), NetworkError.fromValue(fa.getErrCode()));
 	}
 
 	@Override
@@ -1122,7 +1114,7 @@ public class Network implements INetwork {
 			return (List<Condition>) msg.data;
 
 		FalseAnswer fa = (FalseAnswer) msg.data;
-		throw new IhaException(fa.getErrMessage() ,NetworkError.fromValue(fa.getErrCode()));
+		throw new IhaException(fa.getErrMessage(), NetworkError.fromValue(fa.getErrCode()));
 	}
 
 	@Override
@@ -1135,7 +1127,7 @@ public class Network implements INetwork {
 			return true;
 
 		FalseAnswer fa = (FalseAnswer) msg.data;
-		throw new IhaException(fa.getErrMessage() ,NetworkError.fromValue(fa.getErrCode()));
+		throw new IhaException(fa.getErrMessage(), NetworkError.fromValue(fa.getErrCode()));
 	}
 
 	@Override
@@ -1146,7 +1138,7 @@ public class Network implements INetwork {
 			return true;
 
 		FalseAnswer fa = (FalseAnswer) msg.data;
-		throw new IhaException(fa.getErrMessage() ,NetworkError.fromValue(fa.getErrCode()));
+		throw new IhaException(fa.getErrMessage(), NetworkError.fromValue(fa.getErrCode()));
 	}
 
 	@Override
@@ -1158,7 +1150,7 @@ public class Network implements INetwork {
 			return action;
 		}
 		FalseAnswer fa = (FalseAnswer) msg.data;
-		throw new IhaException(fa.getErrMessage() ,NetworkError.fromValue(fa.getErrCode()));
+		throw new IhaException(fa.getErrMessage(), NetworkError.fromValue(fa.getErrCode()));
 	}
 
 	@Override
@@ -1169,7 +1161,7 @@ public class Network implements INetwork {
 		if (msg.getState() == State.ACTIONS)
 			return (List<ComplexAction>) msg.data;
 		FalseAnswer fa = (FalseAnswer) msg.data;
-		throw new IhaException(fa.getErrMessage() ,NetworkError.fromValue(fa.getErrCode()));
+		throw new IhaException(fa.getErrMessage(), NetworkError.fromValue(fa.getErrCode()));
 	}
 
 	@Override
@@ -1182,7 +1174,7 @@ public class Network implements INetwork {
 			return action;
 		}
 		FalseAnswer fa = (FalseAnswer) msg.data;
-		throw new IhaException(fa.getErrMessage() ,NetworkError.fromValue(fa.getErrCode()));
+		throw new IhaException(fa.getErrMessage(), NetworkError.fromValue(fa.getErrCode()));
 	}
 
 	@Override
@@ -1194,7 +1186,7 @@ public class Network implements INetwork {
 			return true;
 
 		FalseAnswer fa = (FalseAnswer) msg.data;
-		throw new IhaException(fa.getErrMessage() ,NetworkError.fromValue(fa.getErrCode()));
+		throw new IhaException(fa.getErrMessage(), NetworkError.fromValue(fa.getErrCode()));
 	}
 
 	@Override
@@ -1205,7 +1197,7 @@ public class Network implements INetwork {
 			return true;
 
 		FalseAnswer fa = (FalseAnswer) msg.data;
-		throw new IhaException(fa.getErrMessage() ,NetworkError.fromValue(fa.getErrCode()));
+		throw new IhaException(fa.getErrMessage(), NetworkError.fromValue(fa.getErrCode()));
 	}
 
 }
