@@ -30,7 +30,7 @@ public enum DeviceType {
 	//8 is missing :(
 	TYPE_TEMPERATURE(10, R.string.dev_temperature_type), // temperature meter
 	
-	TYPE_ACTOR_ON_OFF(10, R.string.dev_temperature_type); // test actor
+	TYPE_ACTOR_ON_OFF(160, R.string.dev_temperature_type); // test actor
 
 	private final int mTypeId;
 	private final int mNameRes;
