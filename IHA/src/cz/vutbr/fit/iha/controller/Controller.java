@@ -785,4 +785,8 @@ public final class Controller {
 		return mHousehold.user;
 	}
 
+	public Boolean switchActorValue(Device device) {
+		return mHousehold.facilitiesModel.switchActor(device);
+	}
+
 }

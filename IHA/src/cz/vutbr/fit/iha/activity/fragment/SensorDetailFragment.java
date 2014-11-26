@@ -24,6 +24,7 @@ import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -52,11 +53,15 @@ import cz.vutbr.fit.iha.adapter.device.Device.SaveDevice;
 import cz.vutbr.fit.iha.adapter.device.DeviceLog;
 import cz.vutbr.fit.iha.adapter.device.DeviceLog.DataInterval;
 import cz.vutbr.fit.iha.adapter.device.DeviceLog.DataType;
+import cz.vutbr.fit.iha.adapter.device.DeviceType;
 import cz.vutbr.fit.iha.adapter.device.Facility;
 import cz.vutbr.fit.iha.adapter.device.RefreshInterval;
 import cz.vutbr.fit.iha.adapter.device.values.BaseEnumValue;
+import cz.vutbr.fit.iha.adapter.device.values.BaseValue;
+import cz.vutbr.fit.iha.adapter.device.values.OnOffValue;
 import cz.vutbr.fit.iha.adapter.location.Location;
 import cz.vutbr.fit.iha.arrayadapter.LocationArrayAdapter;
+import cz.vutbr.fit.iha.asynctask.ActorActionTask;
 import cz.vutbr.fit.iha.asynctask.CallbackTask.CallbackTaskListener;
 import cz.vutbr.fit.iha.asynctask.SaveDeviceTask;
 import cz.vutbr.fit.iha.asynctask.SaveFacilityTask;
@@ -89,6 +94,7 @@ public class SensorDetailFragment extends SherlockFragment {
 	private EditText mNameEdit;
 	private TextView mLocation;
 	private TextView mValue;
+	private Button mValueSwitch;
 	private TextView mTime;
 	private ImageView mIcon;
 	private TextView mRefreshTimeText;
@@ -110,12 +116,16 @@ public class SensorDetailFragment extends SherlockFragment {
 	private SaveDeviceTask mSaveDeviceTask;
 	private GetDeviceLogTask mGetDeviceLogTask;
 	private SaveFacilityTask mSaveFacilityTask;
+	private ActorActionTask mActorActionTask;
 
 	public static final String ARG_PAGE = "page";
 	public static final String ARG_CUR_PAGE = "currentpage";
 	public static final String ARG_SEL_PAGE = "selectedpage";
 	public static final String ARG_LOC_ID = "locationid";
 	public static final String ARG_ADAPTER_ID = "adapterid";
+	
+	private UnitsHelper mUnitsHelper;
+	private TimeHelper mTimeHelper;
 
 	private String mPageNumber;
 	private String mLocationID;
@@ -214,6 +224,7 @@ public class SensorDetailFragment extends SherlockFragment {
 		mSpinnerLoc = (Spinner) getView().findViewById(R.id.sen_detail_spinner_choose_location);
 		// Get View for sensor value
 		mValue = (TextView) getView().findViewById(R.id.sen_detail_value);
+		mValueSwitch = (Button) getView().findViewById(R.id.sen_detail_value_switch);
 		// Get View for sensor time
 		mTime = (TextView) getView().findViewById(R.id.sen_detail_time);
 		// Get Image for sensor
@@ -324,6 +335,17 @@ public class SensorDetailFragment extends SherlockFragment {
 				// return true;
 			}
 		});
+		
+		// Set value for Actor
+		mValueSwitch.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				// Disable button
+				mValueSwitch.setEnabled(false);
+				doActorAction(mDevice);
+			}
+		});
 
 		// Set name of location
 		if (mController != null) {
@@ -379,20 +401,21 @@ public class SensorDetailFragment extends SherlockFragment {
 		// UserSettings can be null when user is not logged in!
 		SharedPreferences prefs = mController.getUserSettings();
 
-		UnitsHelper unitsHelper = (prefs == null) ? null : new UnitsHelper(prefs, getActivity().getApplicationContext());
-		TimeHelper timeHelper = (prefs == null) ? null : new TimeHelper(prefs);
+		mUnitsHelper = (prefs == null) ? null : new UnitsHelper(prefs, getActivity().getApplicationContext());
+		mTimeHelper = (prefs == null) ? null : new TimeHelper(prefs);
 
 		// Set value of sensor
-		if (unitsHelper != null) {
-			mValue.setText(unitsHelper.getStringValueUnit(device.getValue()));
+		if (mUnitsHelper != null) {
+			mValue.setText(mUnitsHelper.getStringValueUnit(device.getValue()));
+			mValueSwitch.setText(mUnitsHelper.getStringValueUnit(device.getValue()));
 		}
 
 		// Set icon of sensor
 		mIcon.setImageResource(device.getIconResource());
 
 		// Set time of sensor
-		if (timeHelper != null) {
-			mTime.setText(timeHelper.formatLastUpdate(facility.getLastUpdate(), adapter));
+		if (mTimeHelper != null) {
+			mTime.setText(mTimeHelper.formatLastUpdate(facility.getLastUpdate(), adapter));
 		}
 
 		// Set refresh time Text
@@ -402,9 +425,9 @@ public class SensorDetailFragment extends SherlockFragment {
 		mRefreshTimeValue.setProgress(facility.getRefresh().getIntervalIndex());
 
 		// Add Graph with history data
-		if (unitsHelper != null && timeHelper != null) {
-			DateTimeFormatter fmt = timeHelper.getFormatter(mGraphDateTimeFormat, adapter);
-			addGraphView(fmt, unitsHelper);
+		if (mUnitsHelper != null && mTimeHelper != null) {
+			DateTimeFormatter fmt = mTimeHelper.getFormatter(mGraphDateTimeFormat, adapter);
+			addGraphView(fmt, mUnitsHelper);
 		}
 
 		// Visible all elements
@@ -429,11 +452,24 @@ public class SensorDetailFragment extends SherlockFragment {
 		getSherlockActivity().setSupportProgressBarIndeterminateVisibility(false);
 	}
 
+	
+
 	private void visibleAllElements() {
 		mName.setVisibility(View.VISIBLE);
 		// mNameEdit;
 		mLocation.setVisibility(View.VISIBLE);
-		mValue.setVisibility(View.VISIBLE);
+		switch(mDevice.getType()) {
+			case TYPE_ON_OFF:
+			case TYPE_OPEN_CLOSED:
+				mValueSwitch.setVisibility(View.VISIBLE);
+				mValue.setVisibility(View.GONE);
+				break;
+			default:
+				mValue.setVisibility(View.VISIBLE);
+				break;
+		}
+		
+			
 		mTime.setVisibility(View.VISIBLE);
 		mIcon.setVisibility(View.VISIBLE);
 		mRefreshTimeText.setVisibility(View.VISIBLE);
@@ -592,6 +628,37 @@ public class SensorDetailFragment extends SherlockFragment {
 	/*
 	 * ================================= ASYNC TASK ===========================
 	 */
+	
+	protected void doActorAction(final Device device) {
+		// SET NEW VALUE
+		BaseValue value = device.getValue();
+		if (!(value instanceof BaseEnumValue))
+		{
+			return;
+		}
+		BaseEnumValue val = (BaseEnumValue) value;
+		List<BaseEnumValue.Item> list = val.getEnumItems();
+		int pos = list.indexOf(val);
+		val.setValue(list.get( (pos+1) % list.size() ).getValue());
+		mActorActionTask = new ActorActionTask(getActivity().getApplicationContext());
+		mActorActionTask.setListener(new CallbackTaskListener() {
+
+			@Override
+			public void onExecute(boolean success) {
+				// Get new device
+				mDevice = mController.getDevice(device.getFacility().getAdapterId(), device.getId());
+				
+				// Set new value of sensor
+				if (mUnitsHelper != null) {
+					mValueSwitch.setText(mUnitsHelper.getStringValueUnit(mDevice.getValue()));
+				}
+				// Enable button
+				mValueSwitch.setEnabled(true);
+			}
+			
+		});
+		
+	}
 
 	private void doSaveDeviceTask(SaveDevicePair pair) {
 		mSaveDeviceTask = new SaveDeviceTask(getActivity().getApplicationContext());

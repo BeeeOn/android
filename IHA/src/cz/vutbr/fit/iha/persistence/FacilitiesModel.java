@@ -217,5 +217,21 @@ public class FacilitiesModel {
 
 		return result;
 	}
+	
+	public boolean switchActor(Device device) {
+		Facility facility = device.getFacility();
+
+		boolean result = false;
+
+		try {
+			result = mNetwork.switchState(device.getFacility().getAdapterId(), device);
+			result = mNetwork.updateFacility(facility.getAdapterId(), facility, EnumSet.allOf(SaveDevice.class));
+			result = refreshFacility(facility, true);
+		} catch (IhaException e) {
+			e.printStackTrace();
+		}
+
+		return result;
+	}
 
 }
