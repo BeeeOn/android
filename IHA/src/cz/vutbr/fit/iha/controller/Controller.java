@@ -148,12 +148,7 @@ public final class Controller {
 		// TODO: catch and throw proper exception
 		// FIXME: after some time there should be picture in ActualUser object, should save to mPersistence
 		try {
-			// We don't use UID in demo mode  
-			if ((mNetwork instanceof Network) && !((Network)mNetwork).getUID(email)) {
-				return false;
-			}
-
-			if (((Network)mNetwork).getUID() || mNetwork.signIn(email, getGCMRegistrationId())) { // FIXME: gcmid have to be set separate now!!!, and here use getUID if you dont have userID
+			if (mNetwork.getUID() || mNetwork.signIn(email, getGCMRegistrationId())) { // FIXME: gcmid have to be set separate now!!!, and here use getUID if you dont have userID
 				mPersistence.saveLastEmail(email);
 				mPersistence.initializeDefaultSettings(email);
 				return true;

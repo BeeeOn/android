@@ -1008,7 +1008,7 @@ public class XmlParsers {
 
 			result = parseAllFacilities();
 		} catch (Exception e) {
-			Log.e(TAG, e.getMessage(), e);
+			e.printStackTrace();
 		} finally {
 			try {
 				if (stream != null)
@@ -1047,7 +1047,7 @@ public class XmlParsers {
 
 			locations = parseRooms();
 		} catch (Exception e) {
-			Log.e(TAG, e.getMessage(), e);
+			e.printStackTrace();
 		} finally {
 			try {
 				if (stream != null)
@@ -1086,7 +1086,7 @@ public class XmlParsers {
 
 			adapters = parseAdaptersReady();
 		} catch (Exception e) {
-			Log.e(TAG, e.getMessage(), e);
+			e.printStackTrace();
 		} finally {
 			try {
 				if (stream != null)

@@ -415,6 +415,7 @@ public class Network implements INetwork {
 	 * Method get UID from server
 	 * @return true if everything successful, false otherwise
 	 */
+	@Override
 	public boolean getUID(){
 		String googleToken = getGoogleToken();
 		String googleID = mGoogleAuth.getId(); // TODO: check this - GOOGLE ID
