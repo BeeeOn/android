@@ -464,6 +464,11 @@ public class LoginActivity extends BaseActivity {
 			// FIXME: remove in final version
 			errFlag = true;
 			errMessage = getString(R.string.toast_not_implemented);
+		} catch (Exception e) {
+			e.printStackTrace();
+			
+			errFlag = true;
+			errMessage = getString(R.string.toast_login_failed);
 		} finally {
 			progressDismiss();
 			if (errFlag) {
