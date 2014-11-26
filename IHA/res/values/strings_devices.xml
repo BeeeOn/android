@@ -33,6 +33,8 @@
     <string name="dev_noise_type">Sound level sensor</string>
     <string name="dev_emission_type">Emission sensor</string>
     <string name="dev_unknown_type">Unknown device</string>
+    
+    <string name="dev_actor_on_of">First actor lets celebrate</string>
 
     <!-- Special values of devices -->
     <string name="dev_state_value_open">Open</string>

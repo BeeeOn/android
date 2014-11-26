@@ -6,6 +6,7 @@ import cz.vutbr.fit.iha.adapter.device.values.EmissionValue;
 import cz.vutbr.fit.iha.adapter.device.values.HumidityValue;
 import cz.vutbr.fit.iha.adapter.device.values.IlluminationValue;
 import cz.vutbr.fit.iha.adapter.device.values.NoiseValue;
+import cz.vutbr.fit.iha.adapter.device.values.OnOffActorValue;
 import cz.vutbr.fit.iha.adapter.device.values.OnOffValue;
 import cz.vutbr.fit.iha.adapter.device.values.OpenClosedValue;
 import cz.vutbr.fit.iha.adapter.device.values.PressureValue;
@@ -18,14 +19,18 @@ import cz.vutbr.fit.iha.adapter.device.values.UnknownValue;
 public enum DeviceType {
 
 	TYPE_UNKNOWN(-1, R.string.dev_unknown_type), // unknown device
-	TYPE_TEMPERATURE(0, R.string.dev_temperature_type), // temperature meter
+	
 	TYPE_HUMIDITY(1, R.string.dev_humidity_type), // humidity meter
 	TYPE_PRESSURE(2, R.string.dev_pressure_type), // pressure meter
 	TYPE_OPEN_CLOSED(3, R.string.dev_state_type), // state sensor
 	TYPE_ON_OFF(4, R.string.dev_switch_type), // switch sensor
 	TYPE_ILLUMINATION(5, R.string.dev_illumination_type), // illumination meter
 	TYPE_NOISE(6, R.string.dev_noise_type), // noise meter
-	TYPE_EMISSION(7, R.string.dev_emission_type); // emission meter
+	TYPE_EMISSION(7, R.string.dev_emission_type), // emission meter
+	//8 is missing :(
+	TYPE_TEMPERATURE(10, R.string.dev_temperature_type), // temperature meter
+	
+	TYPE_ACTOR_ON_OFF(10, R.string.dev_temperature_type); // test actor
 
 	private final int mTypeId;
 	private final int mNameRes;
@@ -76,6 +81,8 @@ public enum DeviceType {
 			return new OnOffValue();
 		case TYPE_TEMPERATURE:
 			return new TemperatureValue();
+		case TYPE_ACTOR_ON_OFF:
+			return new OnOffActorValue();
 		default:
 			return new UnknownValue();
 		}
