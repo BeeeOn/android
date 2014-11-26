@@ -12,7 +12,7 @@
 		time="1377684610"
 		rssi="52" >
 		<part
-			type="0"
+			type="10"
 			vis="1"
 			name="Teplota venku"
 			val="15" />
@@ -59,7 +59,7 @@
 		time="1377684610"
 		rssi="52" >
 		<part
-			type="0"
+			type="10"
 			vis="1"
 			name="Teplůtka"
 			val="30" />

@@ -12,7 +12,7 @@
 		time="1377684610"
 		rssi="52" >
 		<part
-			type="1"
+			type="10"
 			vis="1"
 			name="Teplota na okne"
 			val="30" />
@@ -26,7 +26,7 @@
 		time="1377684610"
 		rssi="52" >
 		<part
-			type="1"
+			type="10"
 			vis="1"
 			name="Teplota u dveri"
 			val="30" />
@@ -43,7 +43,7 @@
 			type="3"
 			vis="1"
 			name="okno"
-			val="OFF" />
+			val="CLOSED" />
 	</dev>
 	<dev 
 		init="1" 
