@@ -53,12 +53,12 @@ import cz.vutbr.fit.iha.adapter.device.Device.SaveDevice;
 import cz.vutbr.fit.iha.adapter.device.DeviceLog;
 import cz.vutbr.fit.iha.adapter.device.DeviceLog.DataInterval;
 import cz.vutbr.fit.iha.adapter.device.DeviceLog.DataType;
-import cz.vutbr.fit.iha.adapter.device.DeviceType;
 import cz.vutbr.fit.iha.adapter.device.Facility;
 import cz.vutbr.fit.iha.adapter.device.RefreshInterval;
 import cz.vutbr.fit.iha.adapter.device.values.BaseEnumValue;
 import cz.vutbr.fit.iha.adapter.device.values.BaseValue;
 import cz.vutbr.fit.iha.adapter.device.values.OnOffValue;
+import cz.vutbr.fit.iha.adapter.device.values.OpenClosedValue;
 import cz.vutbr.fit.iha.adapter.location.Location;
 import cz.vutbr.fit.iha.arrayadapter.LocationArrayAdapter;
 import cz.vutbr.fit.iha.asynctask.ActorActionTask;
@@ -458,17 +458,18 @@ public class SensorDetailFragment extends SherlockFragment {
 		mName.setVisibility(View.VISIBLE);
 		// mNameEdit;
 		mLocation.setVisibility(View.VISIBLE);
-		switch(mDevice.getType()) {
-			case TYPE_ON_OFF:
-			case TYPE_OPEN_CLOSED:
+		mValue.setVisibility(View.VISIBLE);
+
+		// Show some controls if this device is an actor
+		if (mDevice.getType().isActor()) {
+			BaseValue value = mDevice.getValue();
+			
+			// For actor values of type on/off, open/closed we show switch button
+			if (value instanceof OnOffValue || value instanceof OpenClosedValue) {
 				mValueSwitch.setVisibility(View.VISIBLE);
 				mValue.setVisibility(View.GONE);
-				break;
-			default:
-				mValue.setVisibility(View.VISIBLE);
-				break;
+			}
 		}
-		
 			
 		mTime.setVisibility(View.VISIBLE);
 		mIcon.setVisibility(View.VISIBLE);
@@ -630,19 +631,19 @@ public class SensorDetailFragment extends SherlockFragment {
 	 */
 	
 	protected void doActorAction(final Device device) {
-		// SET NEW VALUE
-		BaseValue value = device.getValue();
-		if (!(value instanceof BaseEnumValue))
-		{
+		if (!device.getType().isActor()) {
 			return;
 		}
-		BaseEnumValue val = (BaseEnumValue) value;
-		List<BaseEnumValue.Item> list = val.getEnumItems();
-		BaseEnumValue.Item item = val.getItemByDoubleValue(val.getDoubleValue());
-		
-		int pos = list.indexOf(item);
-		device.setValue(list.get( (pos+1) % list.size() ).getValue());
-		
+
+		// SET NEW VALUE
+		BaseValue value = device.getValue();
+		if (value instanceof BaseEnumValue) {
+			((BaseEnumValue)value).setNextValue();
+		} else {
+			Log.e(TAG, "We can't switch actor, which value isn't inherited from BaseEnumValue, yet");
+			return;
+		}
+
 		mActorActionTask = new ActorActionTask(getActivity().getApplicationContext());
 		mActorActionTask.setListener(new CallbackTaskListener() {
 

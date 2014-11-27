@@ -785,6 +785,15 @@ public final class Controller {
 		return mHousehold.user;
 	}
 
+	/**
+	 * Send request to server to switch Actor value.
+	 * 
+	 * This CAN'T be called on UI thread!
+	 * 
+	 * @param device
+	 *            DeviceType of this device must be actor, i.e., device.getType().isActor() must return true.
+	 * @return true on success, false otherwise
+	 */
 	public Boolean switchActorValue(Device device) {
 		return mHousehold.facilitiesModel.switchActor(device);
 	}

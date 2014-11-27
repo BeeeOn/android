@@ -15,9 +15,12 @@ import cz.vutbr.fit.iha.adapter.device.Device.SaveDevice;
 import cz.vutbr.fit.iha.adapter.device.Facility;
 import cz.vutbr.fit.iha.exception.IhaException;
 import cz.vutbr.fit.iha.network.INetwork;
+import cz.vutbr.fit.iha.util.Log;
 
 public class FacilitiesModel {
 
+	private static final String TAG = FacilitiesModel.class.getSimpleName();
+	
 	private final INetwork mNetwork;
 
 	private final Map<String, Map<String, Facility>> mFacilities = new HashMap<String, Map<String, Facility>>(); // adapterId => (facilityId => facility)
@@ -219,6 +222,11 @@ public class FacilitiesModel {
 	}
 	
 	public boolean switchActor(Device device) {
+		if (!device.getType().isActor()) {
+			Log.e(TAG, String.format("Tried to switch NOT-actor device '%s'", device.getName()));
+			return false;
+		}
+		
 		Facility facility = device.getFacility();
 
 		boolean result = false;
