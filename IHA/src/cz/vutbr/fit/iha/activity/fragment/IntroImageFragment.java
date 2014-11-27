@@ -1,4 +1,4 @@
-package cz.vutbr.fit.iha.test;
+package cz.vutbr.fit.iha.activity.fragment;
 
 import cz.vutbr.fit.iha.R;
 import android.graphics.Bitmap;
@@ -15,11 +15,11 @@ import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.TextView;
 
-public final class TestFragment extends Fragment {
+public final class IntroImageFragment extends Fragment {
     private static final String KEY_CONTENT = "TestFragment:Content";
 
-    public static TestFragment newInstance(int resourceImg) {
-        TestFragment fragment = new TestFragment();
+    public static IntroImageFragment newInstance(int resourceImg) {
+        IntroImageFragment fragment = new IntroImageFragment();
 
         fragment.mContent = resourceImg;
 

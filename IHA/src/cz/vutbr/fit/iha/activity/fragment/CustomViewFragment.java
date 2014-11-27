@@ -36,6 +36,7 @@ import cz.vutbr.fit.iha.adapter.device.DeviceLog;
 import cz.vutbr.fit.iha.adapter.device.DeviceLog.DataInterval;
 import cz.vutbr.fit.iha.adapter.device.DeviceLog.DataType;
 import cz.vutbr.fit.iha.adapter.device.Facility;
+import cz.vutbr.fit.iha.base.TrackFragment;
 import cz.vutbr.fit.iha.controller.Controller;
 import cz.vutbr.fit.iha.pair.LogDataPair;
 import cz.vutbr.fit.iha.util.GraphViewHelper;
@@ -43,7 +44,7 @@ import cz.vutbr.fit.iha.util.Log;
 import cz.vutbr.fit.iha.util.TimeHelper;
 import cz.vutbr.fit.iha.util.UnitsHelper;
 
-public class CustomViewFragment extends SherlockFragment {
+public class CustomViewFragment extends TrackFragment {
 
 	private SparseArray<List<Device>> mDevices = new SparseArray<List<Device>>();
 	private SparseArray<List<DeviceLog>> mLogs = new SparseArray<List<DeviceLog>>();

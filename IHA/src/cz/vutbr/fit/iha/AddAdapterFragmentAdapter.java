@@ -1,4 +1,4 @@
-package cz.vutbr.fit.iha.test;
+package cz.vutbr.fit.iha;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -6,11 +6,10 @@ import android.support.v4.app.FragmentPagerAdapter;
 
 import com.viewpagerindicator.IconPagerAdapter;
 
-import cz.vutbr.fit.iha.R;
-import cz.vutbr.fit.iha.activity.dialog.AddAdapterFragmentDialog;
 import cz.vutbr.fit.iha.activity.fragment.AddAdapterFragment;
+import cz.vutbr.fit.iha.activity.fragment.IntroImageFragment;
 
-public class TestFragmentAdapter extends FragmentPagerAdapter implements IconPagerAdapter {
+public class AddAdapterFragmentAdapter extends FragmentPagerAdapter implements IconPagerAdapter {
     protected static final String[] CONTENT = new String[] { "Welcome", "to", "IHA", "Test", };
     protected static final int[] ICONS = new int[] {
             R.drawable.loc_bath_room,
@@ -19,25 +18,22 @@ public class TestFragmentAdapter extends FragmentPagerAdapter implements IconPag
             R.drawable.loc_dinner_room
     };
 
-    private int mCount = CONTENT.length;
+    private int mCount = 4;
 
-    public TestFragmentAdapter(FragmentManager fm) {
+    public AddAdapterFragmentAdapter(FragmentManager fm) {
         super(fm);
     }
 
     @Override
     public Fragment getItem(int position) {
     	switch (position) {
+    	case 0:
+    		return IntroImageFragment.newInstance(R.drawable.dev_emission);
     	case 1:
-    		
-    		break;
+    		return IntroImageFragment.newInstance(R.drawable.dev_state_closed);
     	case 2:
-    		
-    		break;
+    		return IntroImageFragment.newInstance(R.drawable.dev_temperature);
     	case 3:
-    		
-    		break;
-    	case 4:
     		return new AddAdapterFragment();
     	}
 		return null;
@@ -50,7 +46,7 @@ public class TestFragmentAdapter extends FragmentPagerAdapter implements IconPag
 
     @Override
     public CharSequence getPageTitle(int position) {
-      return TestFragmentAdapter.CONTENT[position % CONTENT.length];
+      return AddAdapterFragmentAdapter.CONTENT[position % CONTENT.length];
     }
 
     @Override
