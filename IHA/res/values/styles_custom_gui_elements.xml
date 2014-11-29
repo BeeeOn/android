@@ -3,11 +3,11 @@
 <!-- Generated with http://android-holo-colors.com -->
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
 
-  <style name="CheckBoxCustomHoloTheme" parent="android:Widget.CompoundButton.CheckBox">
+  <style name="IHA.Custom.CheckBox" parent="android:Widget.CompoundButton.CheckBox">
       <item name="android:button">@drawable/customholotheme_btn_check_holo_light</item>
   </style>
   
-  <style name="SeekBarCustomHoloTheme" parent="android:Widget.SeekBar">
+  <style name="IHA.Custom.SeekBar" parent="android:Widget.SeekBar">
       <item name="android:progressDrawable">@drawable/customholotheme_scrubber_progress_horizontal_holo_light</item>
       <item name="android:indeterminateDrawable">@drawable/customholotheme_scrubber_progress_horizontal_holo_light</item>
       <item name="android:minHeight">13dip</item>
@@ -16,6 +16,17 @@
       <item name="android:thumbOffset">16dip</item>
       <item name="android:paddingLeft">16dip</item>
       <item name="android:paddingRight">16dip</item>
+  </style>
+  
+  <style name="IHA.Custom.Button" parent="android:Widget.Button">
+	  <item name="android:background">@drawable/apptheme_btn_default_holo_light</item>
+	  <item name="android:minHeight">48dip</item>
+	  <item name="android:minWidth">64dip</item>
+	  <item name="android:textColor">#000000</item>
+  </style>
+
+  <style name="IHA.Custom.ImageButton" parent="android:Widget.ImageButton">
+	  <item name="android:background">@drawable/apptheme_btn_default_holo_light</item>
   </style>
 
 </resources>

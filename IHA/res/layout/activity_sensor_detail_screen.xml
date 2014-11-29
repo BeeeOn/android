@@ -68,7 +68,7 @@
 	        android:id="@+id/sen_refresh_time_seekBar"
 	        android:layout_width="match_parent"
 	        android:layout_height="wrap_content"
-	        style="@style/SeekBarCustomHoloTheme"
+	        style="@style/IHA.Custom.SeekBar"
 	        android:layout_alignLeft="@+id/sen_detail_icon"
 	        android:layout_below="@+id/sen_detail_icon"
 	        android:layout_marginRight="10dp"
@@ -230,10 +230,13 @@
 		        android:id="@+id/sen_detail_value_switch"
 		        android:layout_width="wrap_content"
 		        android:layout_height="wrap_content"
+		        style="@style/IHA.Custom.Button"
 		        android:maxHeight="20dp"
 		        android:text="ValueSensorSwitch"
-		        android:textColor="@color/iha_secundary_pink"
 		        android:textSize="30dp" 
+		        android:textColor="@color/white"
+		        android:gravity="center_vertical|center_horizontal"
+		        android:layout_gravity="center_vertical|center_horizontal"
 		        android:visibility="gone"/>
 	    </LinearLayout>
 	    
