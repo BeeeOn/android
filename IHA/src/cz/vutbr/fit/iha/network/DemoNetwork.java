@@ -249,8 +249,7 @@ public class DemoNetwork implements INetwork {
 
 	@Override
 	public boolean switchState(String adapterId, Device device) {
-		// TODO Auto-generated method stub
-		return false;
+		return true;
 	}
 
 	@Override

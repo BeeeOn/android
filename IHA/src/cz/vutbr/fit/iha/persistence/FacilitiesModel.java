@@ -15,9 +15,12 @@ import cz.vutbr.fit.iha.adapter.device.Device.SaveDevice;
 import cz.vutbr.fit.iha.adapter.device.Facility;
 import cz.vutbr.fit.iha.exception.IhaException;
 import cz.vutbr.fit.iha.network.INetwork;
+import cz.vutbr.fit.iha.util.Log;
 
 public class FacilitiesModel {
 
+	private static final String TAG = FacilitiesModel.class.getSimpleName();
+	
 	private final INetwork mNetwork;
 
 	private final Map<String, Map<String, Facility>> mFacilities = new HashMap<String, Map<String, Facility>>(); // adapterId => (facilityId => facility)
@@ -210,6 +213,27 @@ public class FacilitiesModel {
 
 		try {
 			result = mNetwork.updateDevice(facility.getAdapterId(), device, what);
+			result = refreshFacility(facility, true);
+		} catch (IhaException e) {
+			e.printStackTrace();
+		}
+
+		return result;
+	}
+	
+	public boolean switchActor(Device device) {
+		if (!device.getType().isActor()) {
+			Log.e(TAG, String.format("Tried to switch NOT-actor device '%s'", device.getName()));
+			return false;
+		}
+		
+		Facility facility = device.getFacility();
+
+		boolean result = false;
+
+		try {
+			result = mNetwork.switchState(device.getFacility().getAdapterId(), device);
+			result = mNetwork.updateFacility(facility.getAdapterId(), facility, EnumSet.allOf(SaveDevice.class));
 			result = refreshFacility(facility, true);
 		} catch (IhaException e) {
 			e.printStackTrace();
