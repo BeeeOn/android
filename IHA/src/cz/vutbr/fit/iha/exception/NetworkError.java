@@ -8,6 +8,7 @@ public enum NetworkError implements ErrorCode {
 	COM_PROBLEMS(-3),
 	XML(-4),
 	GOOGLE_TOKEN(-5),
+	CLOSING_ERROR(-6),
 	
 	// FROM SERVER
 	COM_VER_MISMATCH(1),

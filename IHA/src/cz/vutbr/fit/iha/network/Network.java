@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
 import java.net.UnknownHostException;
 import java.security.KeyManagementException;
 import java.security.KeyStore;
@@ -102,6 +103,13 @@ public class Network implements INetwork {
 	private final boolean mUseDebugServer;
 	private boolean mGoogleReinit;
 //	private final Controller mController; // FIXME: remove this dependency on controller?
+	private static final int SSLTIMEOUT = 35000;
+	
+	private SSLSocket permaSocket = null;
+	private PrintWriter permaWriter = null;
+	private BufferedReader permaReader = null;
+	private static final String EOF = "</com>"; //FIXME: temporary solution
+	private boolean mIsMulti = false;
 
 	/**
 	 * Constructor.
@@ -188,7 +196,7 @@ public class Network implements INetwork {
 		}
 
 		HostnameVerifier hv = HttpsURLConnection.getDefaultHostnameVerifier();
-		socket.setSoTimeout(10000);
+		socket.setSoTimeout(SSLTIMEOUT);
 		SSLSession s = socket.getSession();
 		// FIXME: nobody knows why
 		if (!s.isValid())
@@ -214,6 +222,8 @@ public class Network implements INetwork {
 		String actRecieved = null;
 		while ((actRecieved = r.readLine()) != null) {
 			response.append(actRecieved);
+			if(actRecieved.endsWith(EOF))
+				break;
 		}
 
 		// close socket, writer and reader
@@ -223,6 +233,161 @@ public class Network implements INetwork {
 
 		// return server response
 		return response.toString();
+	}
+	
+	private boolean multiSend(String request) throws IOException{
+		if(permaWriter == null)
+			return false;
+		
+		permaWriter.write(request, 0, request.length());
+		permaWriter.flush();
+		
+		return true;
+	}
+	
+	private String multiRecv() throws IOException{
+		if(permaReader == null)
+			return "";
+		
+		StringBuilder response = new StringBuilder();
+		String actRecieved = null;
+		while ((actRecieved = permaReader.readLine()) != null) {
+			response.append(actRecieved);
+			if(actRecieved.endsWith(EOF))
+				break;
+		}
+		
+		return response.toString();
+	}
+	
+	//TODO: remove
+	public void test(){
+		
+		try {
+			String uid = "101";
+			String aid = "10";
+			
+			mUserID = uid;
+			
+			multiSessionBegin();
+			
+			Log.d("test // get 1", getTimeZone(aid)+"");
+			Log.d("test // set 2", setTimeZone(aid, 360)+"");
+			Log.d("test // get 3", getTimeZone(aid)+"");
+			
+//			multiSend(XmlCreator.createGetTimeZone(uid, aid));
+//			String resp = multiRecv();
+//			
+//			Log.d("TEST one", resp);
+//			multiSend(XmlCreator.createSetTimeZone(uid, aid, 180));
+//			
+//			resp = multiRecv();
+//			Log.d("TEST two", resp);
+//			
+//			multiSend(XmlCreator.createGetTimeZone(uid, aid));
+//			resp = multiRecv();
+//			Log.e("baf", resp);
+
+//			permaSocket.close();
+			multiSessionEnd();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	private void multiInit() throws IOException, CertificateException, KeyStoreException, NoSuchAlgorithmException, KeyManagementException, UnknownHostException,SSLHandshakeException {
+		
+		InputStream inStreamCertTmp = null;
+		inStreamCertTmp = mContext.getAssets().open(ASSEST_CA_CERT);
+		
+		InputStream inStreamCert = new BufferedInputStream(inStreamCertTmp);
+		Certificate ca;
+		try {
+			CertificateFactory cf = CertificateFactory.getInstance("X.509");
+			ca = cf.generateCertificate(inStreamCert);
+		} finally {
+			inStreamCert.close();
+		}
+		// Create a KeyStore containing our trusted CAs
+		String keyStoreType = KeyStore.getDefaultType();
+		KeyStore keyStore = KeyStore.getInstance(keyStoreType);
+		keyStore.load(null, null);
+		keyStore.setCertificateEntry(ALIAS_CA_CERT, ca);
+		
+		// Create a TrustManager that trusts the CAs in our KeyStore
+		String tmfAlgorithm = TrustManagerFactory.getDefaultAlgorithm();
+		TrustManagerFactory tmf = TrustManagerFactory.getInstance(tmfAlgorithm);
+		tmf.init(keyStore);
+		
+		// Create an SSLContext that uses our TrustManager
+		SSLContext sslContext = SSLContext.getInstance("TLS");
+		sslContext.init(null, tmf.getTrustManagers(), null);
+		
+		// Open SSLSocket directly to server
+		if (mUseDebugServer) {
+			permaSocket = (SSLSocket) sslContext.getSocketFactory().createSocket(SERVER_ADDR_DEBUG, SERVER_PORT_DEBUG);
+		} else {
+			permaSocket = (SSLSocket) sslContext.getSocketFactory().createSocket(SERVER_ADDR_PRODUCTION, SERVER_PORT_PRODUCTION);
+		}
+		//perma2 = new Socket("192.168.1.150", 4444);
+		
+		HostnameVerifier hv = HttpsURLConnection.getDefaultHostnameVerifier();
+		//permaSocket.setKeepAlive(true);
+		permaSocket.setSoTimeout(35000);
+		SSLSession s = permaSocket.getSession();
+		// FIXME: nobody knows why
+		if (!s.isValid())
+			Log.e(TAG, "Socket is NOT valid!!!!");
+		
+		// Verify that the certificate hostName
+		// This is due to lack of SNI support in the current SSLSocket.
+		if (!hv.verify(SERVER_CN_CERTIFICATE, s)) {
+			Log.e(TAG, "Certificate is not VERIFIED!!!");
+		
+			throw new SSLHandshakeException("Expected CN value:" + SERVER_CN_CERTIFICATE + ", found " + s.getPeerPrincipal());
+		}
+		
+		// At this point SSLSocket performed certificate verification and
+		// we have performed hostName verification, so it is safe to proceed.
+		permaWriter = new PrintWriter(permaSocket.getOutputStream());
+		permaReader = new BufferedReader(new InputStreamReader(permaSocket.getInputStream()));
+
+	}
+
+	/**
+	 * Method initiate session for multiple use
+	 * @throws IhaException
+	 */
+	public void multiSessionBegin() throws IhaException{
+		try {
+			multiInit();
+			mIsMulti = true;
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw IhaException.wrap(e, NetworkError.COM_PROBLEMS);
+		}
+	}
+	
+	/**
+	 * Method close session to server if it was opened by multiSessionBegin method before
+	 * @throws IhaException
+	 */
+	public void multiSessionEnd() throws IhaException{
+		
+		try {
+			permaWriter.close();
+			permaReader.close();
+			permaSocket.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+			throw IhaException.wrap(e, NetworkError.CLOSING_ERROR);
+		}
+		
+		permaWriter = null;
+		permaReader = null;
+		permaSocket = null;
+		mIsMulti = false;
 	}
 
 	/**
@@ -297,7 +462,12 @@ public class Network implements INetwork {
 		// Debug.startMethodTracing("Support_231");
 		// long ltime = new Date().getTime();
 		try {
-			String result = startCommunication(messageToSend);
+			String result = "";
+			if(mIsMulti){
+				if(multiSend(messageToSend))
+					result = multiRecv();
+			}else
+				result = startCommunication(messageToSend);
 
 			Log.d(TAG + " - fromApp", messageToSend);
 			Log.i(TAG + " - fromSrv", result);
