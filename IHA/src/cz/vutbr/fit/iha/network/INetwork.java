@@ -70,25 +70,6 @@ public interface INetwork {
 	public boolean getUID();
 
 	/**
-	 * Method signIn user given by its email to server, BUT before calling must call GoogleAuth to get googleToken in it
-	 * and init ActualUser
-	 * 
-	 * @param email
-	 *            of current user
-	 * @return boolean
-	 */
-	public boolean signIn(String email, String gcmid);
-
-	/**
-	 * Method sign user to server with its email up
-	 * 
-	 * @param email
-	 *            of registering user
-	 * @return true if everything goes well, false otherwise
-	 */
-	public boolean signUp(String email);
-
-	/**
 	 * Method register adapter to server
 	 * 
 	 * @param adapterID

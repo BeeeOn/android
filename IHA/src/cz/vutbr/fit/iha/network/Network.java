@@ -33,6 +33,7 @@ import javax.net.ssl.TrustManagerFactory;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.telephony.TelephonyManager;
 import cz.vutbr.fit.iha.adapter.Adapter;
 import cz.vutbr.fit.iha.adapter.device.Device;
 import cz.vutbr.fit.iha.adapter.device.Device.SaveDevice;
@@ -521,64 +522,6 @@ public class Network implements INetwork {
 	// /////////////////////////////////////SIGNIN,SIGNUP,ADAPTERS//////////////////////
 	// /////////////////////////////////////////////////////////////////////////////////
 
-	/**
-	 * Method signIn user given by its email to server, BUT before calling must call GoogleAuth to get googleToken in it
-	 * and init ActualUser
-	 * 
-	 * @param email
-	 *            of current user
-	 * @return boolean
-	 * @throws IhaException
-	 */
-	@Override
-	@Deprecated
-	public boolean signIn(String email, String gcmid) throws IhaException {
-
-		String googleToken = getGoogleToken();
-		if (googleToken.length() == 0)
-			throw new IhaException(NetworkError.GOOGLE_TOKEN);
-
-		ParsedMessage msg = doRequest(XmlCreator.createSignIn(email, googleToken, Locale.getDefault().getLanguage(), gcmid));
-
-		if (!msg.getUserId().isEmpty() && msg.getState() == State.TRUE) {
-			mUser.setUserId(msg.getUserId());
-			mUserID = msg.getUserId();
-			return true;
-		}
-		if (msg.getState() == State.FALSE && ((FalseAnswer) msg.data).getErrCode() == BADTOKENCODE)
-			mGoogleAuth.invalidateToken();
-
-		FalseAnswer fa = (FalseAnswer) msg.data;
-		throw new IhaException(fa.getErrMessage(), NetworkError.fromValue(fa.getErrCode()));
-	}
-
-	/**
-	 * Method sign user to server with its email up
-	 * 
-	 * @param email
-	 *            of registering user
-	 * @return true if everything goes well, false otherwise
-	 * @throws IhaException
-	 */
-	@Override
-	@Deprecated
-	public boolean signUp(String email) throws IhaException {
-
-		String googleToken = getGoogleToken();
-		if (googleToken.length() == 0)
-			throw new IhaException(NetworkError.GOOGLE_TOKEN);
-
-		ParsedMessage msg = doRequest(XmlCreator.createSignUp(email, googleToken));
-
-		if (msg.getState() == State.TRUE)
-			return true;
-
-		if (msg.getState() == State.FALSE && ((FalseAnswer) msg.data).getErrCode() == BADTOKENCODE)
-			mGoogleAuth.invalidateToken();
-
-		FalseAnswer fa = (FalseAnswer) msg.data;
-		throw new IhaException(fa.getErrMessage(), NetworkError.fromValue(fa.getErrCode()));
-	}
 
 	/**
 	 * Method get UID from server
@@ -590,8 +533,11 @@ public class Network implements INetwork {
 		String googleID = mGoogleAuth.getId(); // TODO: check this - GOOGLE ID
 		if (googleToken.length() == 0)
 			throw new IhaException(NetworkError.GOOGLE_TOKEN);
+		
+		TelephonyManager tm = (TelephonyManager) mContext.getSystemService(Context.TELEPHONY_SERVICE);
+		String phoneId = tm.getDeviceId();
 
-		ParsedMessage msg = doRequest(XmlCreator.createGetUID(googleID, googleToken, Locale.getDefault().getLanguage()));
+		ParsedMessage msg = doRequest(XmlCreator.createGetUID(googleID, googleToken, Locale.getDefault().getLanguage(), phoneId));
 
 		if (!msg.getUserId().isEmpty() && msg.getState() == State.UID) {
 			mUser.setUserId(msg.getUserId());

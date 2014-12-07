@@ -16,6 +16,7 @@ public class Xconstants {
 	public static final String LID = "lid";
 	public static final String DID = "did";
 	public static final String CID = "cid";
+	public static final String PID = "pid";
 	public static final String ACID = "acid";
 	public static final String OLDID = "oaid";
 	public static final String NEWID = "naid";

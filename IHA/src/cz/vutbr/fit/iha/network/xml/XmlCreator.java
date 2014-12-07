@@ -136,50 +136,17 @@ public class XmlCreator {
 	// ////////////////////////////////////////////////////////////////////////////////////////////////
 	// /////////////////////////////////////SIGNIN,SIGNUP,ADAPTERS/////////////////////////////////////
 	// ////////////////////////////////////////////////////////////////////////////////////////////////
-
-	/**
-	 * Method create XML for signIn message
-	 * 
-	 * @param email
-	 *            of user
-	 * @param gtoken
-	 *            token from google
-	 * @param lokale
-	 *            language of App {cs, en, sk}
-	 * @param gcmid
-	 *            google cloud messaging id
-	 * @return XML message
-	 * @since 2.2
-	 */
-	@Deprecated
-	public static String createSignIn(String email, String gtoken, String locale, String gcmid) {
-		return createComAttribsVariant(Xconstants.STATE, SIGNIN, Xconstants.EMAIL, email, Xconstants.GTOKEN, gtoken, Xconstants.LOCALE, locale, Xconstants.GCMID, gcmid);
-	}
-
-	/**
-	 * Method create XML for singUp message
-	 * 
-	 * @param email
-	 *            of user
-	 * @param gtoken
-	 *            token from google
-	 * @return XML message
-	 * @since 2.2
-	 */
-	@Deprecated
-	public static String createSignUp(String email, String gtoken) {
-		return createComAttribsVariant(Xconstants.STATE, SIGNUP, Xconstants.EMAIL, email, Xconstants.GTOKEN, gtoken);
-	}
 	
 	/**
 	 * Method create XML for getID message
 	 * @param gid google id
 	 * @param gtoken google token
 	 * @param locale of mobile phone
+	 * @param pid phone id
 	 * @return string with message
 	 */
-	public static String createGetUID(String gid, String gtoken, String locale){
-		return createComAttribsVariant(Xconstants.STATE, GETUID, Xconstants.GID, gid, Xconstants.GTOKEN, gtoken, Xconstants.LOCALE, locale);
+	public static String createGetUID(String gid, String gtoken, String locale, String pid){
+		return createComAttribsVariant(Xconstants.STATE, GETUID, Xconstants.GID, gid, Xconstants.GTOKEN, gtoken, Xconstants.LOCALE, locale, Xconstants.PID, pid);
 	}
 
 	/**

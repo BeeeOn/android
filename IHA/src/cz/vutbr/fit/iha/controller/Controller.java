@@ -148,7 +148,7 @@ public final class Controller {
 		// TODO: catch and throw proper exception
 		// FIXME: after some time there should be picture in ActualUser object, should save to mPersistence
 		try {
-			if (mNetwork.getUID() || mNetwork.signIn(email, getGCMRegistrationId())) { // FIXME: gcmid have to be set separate now!!!, and here use getUID if you dont have userID
+			if (mNetwork.getUID()) { // FIXME: gcmid have to be set separate now!!!, and here use getUID if you dont have userID
 				mPersistence.saveLastEmail(email);
 				mPersistence.initializeDefaultSettings(email);
 				return true;
@@ -405,17 +405,17 @@ public final class Controller {
 	 * @return
 	 */
 	// TODO: review this
-	public boolean registerUser(String email) {
-		boolean result = false;
-
-		try {
-			result = mNetwork.signUp(mHousehold.user.getEmail()); //FIXME: ROB use getUID instead!
-		} catch (IhaException e) {
-			e.printStackTrace();
-		}
-
-		return result;
-	}
+//	public boolean registerUser(String email) {
+//		boolean result = false;
+//
+//		try {
+//			result = mNetwork.signUp(mHousehold.user.getEmail()); //FIXME: ROB use getUID instead!
+//		} catch (IhaException e) {
+//			e.printStackTrace();
+//		}
+//
+//		return result;
+//	}
 
 	/**
 	 * FIXME: debug implementation Unregisters adapter from server.

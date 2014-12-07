@@ -482,7 +482,7 @@ public class LoginActivity extends BaseActivity {
 		mSignUp = true;
 		progressChangeText(getString(R.string.progress_signup));
 		progressShow();
-		if (mController.registerUser(email)) {
+		if (/*mController.registerUser(email)*/true) {
 			doLogin(email);
 		} else {
 			progressDismiss();
