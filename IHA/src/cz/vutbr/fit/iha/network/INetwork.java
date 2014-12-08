@@ -67,7 +67,7 @@ public interface INetwork {
 	 * 
 	 * @return true if everything successful, false otherwise
 	 */
-	public boolean getUID();
+	public String getUID();
 
 	/**
 	 * Method register adapter to server

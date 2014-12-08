@@ -33,6 +33,8 @@ import javax.net.ssl.TrustManagerFactory;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.wifi.WifiInfo;
+import android.net.wifi.WifiManager;
 import android.telephony.TelephonyManager;
 import cz.vutbr.fit.iha.adapter.Adapter;
 import cz.vutbr.fit.iha.adapter.device.Device;
@@ -441,6 +443,31 @@ public class Network implements INetwork {
 		return activeNetworkInfo != null && activeNetworkInfo.isConnected();
 	}
 
+	/**
+	 * Method return Mac address of device
+	 * @return
+	 */
+	public String getMAC(){
+		WifiManager wifiManager = (WifiManager) mContext.getSystemService(Context.WIFI_SERVICE);
+
+		if(wifiManager.isWifiEnabled()) {
+		    // WIFI ALREADY ENABLED. GRAB THE MAC ADDRESS HERE
+		    WifiInfo info = wifiManager.getConnectionInfo();
+		    return info.getMacAddress();
+		} else {
+		    // ENABLE THE WIFI FIRST
+		    wifiManager.setWifiEnabled(true);
+
+		    // WIFI IS NOW ENABLED. GRAB THE MAC ADDRESS HERE
+		    WifiInfo info = wifiManager.getConnectionInfo();
+		    String address = info.getMacAddress();
+		    
+		    wifiManager.setWifiEnabled(false);
+		    
+		    return address;
+		}
+	}
+	
 	@Deprecated
 	private void doResign() {
 		// TODO: maybe use diffrenD way to resign, case stopping of thread,
@@ -528,7 +555,7 @@ public class Network implements INetwork {
 	 * @return true if everything successful, false otherwise
 	 */
 	@Override
-	public boolean getUID(){
+	public String getUID(){
 		String googleToken = getGoogleToken();
 		String googleID = mGoogleAuth.getId(); // TODO: check this - GOOGLE ID
 		if (googleToken.length() == 0)
@@ -536,13 +563,17 @@ public class Network implements INetwork {
 		
 		TelephonyManager tm = (TelephonyManager) mContext.getSystemService(Context.TELEPHONY_SERVICE);
 		String phoneId = tm.getDeviceId();
+		
+		phoneId = (phoneId == null) ? getMAC() : phoneId;
+		
+		Log.i("HW ID - IMEI or MAC", phoneId);
 
 		ParsedMessage msg = doRequest(XmlCreator.createGetUID(googleID, googleToken, Locale.getDefault().getLanguage(), phoneId));
 
 		if (!msg.getUserId().isEmpty() && msg.getState() == State.UID) {
 			mUser.setUserId(msg.getUserId());
 			mUserID = msg.getUserId();
-			return true;
+			return mUserID;
 		}
 		if (msg.getState() == State.FALSE && ((FalseAnswer) msg.data).getErrCode() == NetworkError.NOT_VALID_USER.getNumber())
 			mGoogleAuth.invalidateToken();

@@ -148,11 +148,15 @@ public final class Controller {
 		// TODO: catch and throw proper exception
 		// FIXME: after some time there should be picture in ActualUser object, should save to mPersistence
 		try {
-			if (mNetwork.getUID()) { // FIXME: gcmid have to be set separate now!!!, and here use getUID if you dont have userID
+			if (mNetwork.getUID().length() > 0) { // FIXME: gcmid have to be set separate now!!!, and here use getUID if you dont have userID
 				mPersistence.saveLastEmail(email);
 				mPersistence.initializeDefaultSettings(email);
 				return true;
-			}
+			}else
+				if(mNetwork instanceof DemoNetwork){
+					((DemoNetwork) mNetwork).signIn(email, null);
+					return true;
+				}
 		} catch (IhaException e) {
 			if (e.getErrorCode() instanceof NetworkError && e.getErrorCode() == NetworkError.NOT_VALID_USER) {
 				// TODO: do this otherway
