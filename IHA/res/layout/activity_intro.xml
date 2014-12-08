@@ -11,38 +11,58 @@
 		android:layout_height="0dp"
 		android:layout_weight="1"
 	/>
-	<LinearLayout 
+	
+	<LinearLayout
 	    android:layout_width="fill_parent"
 	    android:layout_height="wrap_content"
-	    android:orientation="horizontal"
-	    >
-	    <Button 
-	        android:layout_width="50dp"
-	        android:layout_height="wrap_content"
-	        android:background="@android:color/transparent"
-	        android:text="SKIP"
-	        android:layout_margin="10dp"
-	        android:textSize="16sp"
-	        android:textStyle="bold"
-	        android:textColor="@color/iha_text_color"
-	        android:layout_gravity="center_vertical"/>
+	    android:orientation="vertical" >
 	    <com.viewpagerindicator.CirclePageIndicator
 			android:id="@+id/intro_indicator"
 			android:padding="10dip"
 			android:layout_gravity="center_vertical"
 			android:layout_height="wrap_content"
-			android:layout_width="0dp"
-			android:layout_weight="1"
+			android:layout_width="fill_parent"
 		/>
-	    <Button 
-	        android:layout_width="50dp"
-	        android:layout_height="wrap_content"
-	        android:background="@android:color/transparent"
-	        android:text=">"
-	        android:layout_margin="10dp"
-	        android:textSize="16sp"
-	        android:textColor="@color/iha_text_color"
-	        android:layout_gravity="center_vertical"/>
+	    <LinearLayout 
+		    android:layout_width="fill_parent"
+		    android:layout_height="wrap_content"
+		    android:orientation="horizontal"
+		    >
+		    <Button 
+		        android:id="@+id/add_adapter_skip"
+		        android:layout_width="50dp"
+		        android:layout_height="wrap_content"
+		        android:background="@android:color/transparent"
+		        android:text="SKIP"
+		        android:layout_margin="10dp"
+		        android:textSize="16sp"
+		        android:textStyle="bold"
+		        android:textColor="@color/white"
+		        android:layout_gravity="center_vertical"/>
+		    <Button 
+		        android:id="@+id/add_adapter_cancel"
+		        android:layout_width="0dp"
+		        android:layout_height="wrap_content"
+				android:layout_weight="1"
+		        android:background="@android:color/transparent"
+		        android:text="CANCEL"
+		        android:layout_margin="10dp"
+		        android:textSize="16sp"
+		        android:textStyle="bold"
+		        android:textColor="@color/white"
+		        android:layout_gravity="center_vertical"/>
+		    <Button 
+		        android:id="@+id/add_adapter_next"
+		        android:layout_width="50dp"
+		        android:layout_height="wrap_content"
+		        android:background="@android:color/transparent"
+		        android:text=">"
+		        android:layout_margin="10dp"
+		        android:textSize="16sp"
+		        android:textColor="@color/white"
+		        android:layout_gravity="center_vertical"/>
+		</LinearLayout>
 	</LinearLayout>
+	
 	
 </LinearLayout>

@@ -7,7 +7,7 @@
     android:minWidth="200dp"
     android:orientation="vertical" >
     
-    <LinearLayout
+    <!--  LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/iha_primary_cyan"
@@ -25,7 +25,7 @@
 	        android:textColor="@color/white"
 	        android:textIsSelectable="false" />
     
-    </LinearLayout>
+    </LinearLayout-->
     
     <ScrollView 
         android:layout_width="fill_parent"

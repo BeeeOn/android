@@ -42,7 +42,10 @@
     <!--
     Creates a custom permission so only this app can receive its messages. 
     NOTE: the permission *must* be called PACKAGE.permission.C2D_MESSAGE, where 
-    PACKAGE is the application's package name.
+    PACKAGE is the application's package name.
+
+
+
     -->
     <permission
         android:name="cz.vutbr.fit.iha.permission.C2D_MESSAGE"

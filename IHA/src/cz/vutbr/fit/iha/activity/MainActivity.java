@@ -382,9 +382,10 @@ public class MainActivity extends BaseApplicationActivity {
 			break;
 
 		case R.id.action_addadapter: {
-			DialogFragment newFragment = new AddAdapterFragmentDialog();
-			newFragment.show(getSupportFragmentManager(), ADD_ADAPTER_TAG);
-
+			//DialogFragment newFragment = new AddAdapterFragmentDialog();
+			//newFragment.show(getSupportFragmentManager(), ADD_ADAPTER_TAG);
+			Intent intent = new Intent(MainActivity.this, AddAdapterActivity.class);
+			startActivityForResult(intent, 1000);
 			break;
 		}
 		case R.id.action_settings: {
