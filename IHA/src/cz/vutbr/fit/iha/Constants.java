@@ -55,5 +55,14 @@ public final class Constants {
 	 * Project number from the API Console
 	 */
 	public static final String PROJECT_NUMBER = "863203863728";
+	
+	/**
+	 * GUI constants
+	 */
+	
+	public static final int ADD_ADAPTER_REQUEST_CODE = 1000;
+	public static final int ADD_ADAPTER_CANCELED = 1001;
+	public static final int ADD_ADAPTER_SUCCESS = 1002;
+	 
 
 }

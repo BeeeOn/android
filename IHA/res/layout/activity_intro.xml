@@ -56,7 +56,7 @@
 		        android:layout_width="50dp"
 		        android:layout_height="wrap_content"
 		        android:background="@android:color/transparent"
-		        android:text=">"
+		        android:text="NEXT"
 		        android:layout_margin="10dp"
 		        android:textSize="16sp"
 		        android:textColor="@color/white"

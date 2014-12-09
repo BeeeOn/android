@@ -1,52 +1,42 @@
 package cz.vutbr.fit.iha.activity.fragment;
 
-import android.app.AlertDialog;
-import android.app.Dialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
-import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
-import cz.vutbr.fit.iha.Constants;
 import cz.vutbr.fit.iha.R;
+import cz.vutbr.fit.iha.activity.AddAdapterActivity;
 import cz.vutbr.fit.iha.activity.MainActivity;
-import cz.vutbr.fit.iha.asynctask.CallbackTask.CallbackTaskListener;
-import cz.vutbr.fit.iha.asynctask.RegisterAdapterTask;
-import cz.vutbr.fit.iha.base.BaseActivity;
-import cz.vutbr.fit.iha.base.TrackDialogFragment;
 import cz.vutbr.fit.iha.base.TrackFragment;
 import cz.vutbr.fit.iha.controller.Controller;
-import cz.vutbr.fit.iha.pair.RegisterAdapterPair;
-import cz.vutbr.fit.iha.thread.ToastMessageThread;
 import cz.vutbr.fit.iha.util.Log;
 
 public class AddAdapterFragment extends TrackFragment {
 
 	private static final String TAG = AddAdapterFragment.class.getSimpleName();
 
-	public BaseActivity mActivity;
+	public AddAdapterActivity mActivity;
 	private LinearLayout mLayout;
 	private View mView;
 	private Controller mController;
-
-	private RegisterAdapterTask mRegisterAdapterTask;
+	
+	private EditText mAdapterCode;
+	private EditText mAdapterName;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
 		// Get activity and controller
-		mActivity =  (BaseActivity) getActivity();
+		mActivity =  (AddAdapterActivity) getActivity();
 		mController = Controller.getInstance(mActivity.getApplicationContext());
 
 		return;
@@ -61,6 +51,19 @@ public class AddAdapterFragment extends TrackFragment {
 		initLayout();
 		
 		return mView;
+	}
+	
+	@Override
+	public void setUserVisibleHint(boolean isVisibleToUser) {
+	    super.setUserVisibleHint(isVisibleToUser);
+	    if (isVisibleToUser) {
+	    	Log.d(TAG, "ADD ADAPTER fragment is visible");
+	    	mActivity.setBtnLastPage();
+	    	mActivity.setFragment(this);
+	    	InputMethodManager imm = (InputMethodManager) getSherlockActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+			imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
+	    }
+
 	}
 	
 	private void initLayout() {
@@ -79,6 +82,8 @@ public class AddAdapterFragment extends TrackFragment {
 			}
 		});
 		
+		mAdapterCode = (EditText) mView.findViewById(R.id.addadapter_ser_num);
+		mAdapterName = (EditText) mView.findViewById(R.id.addadapter_text_name);
 	}
 
 
@@ -91,89 +96,16 @@ public class AddAdapterFragment extends TrackFragment {
 			EditText serialNumberEdit = (EditText) mView.findViewById(R.id.addadapter_ser_num);
 			serialNumberEdit.setText(data.getStringExtra("SCAN_RESULT"));
 
-			// And click positive button
-			//AlertDialog dialog = (AlertDialog) getDialog();
-			//dialog.getButton(Dialog.BUTTON_POSITIVE).performClick();
+			//TODO: And click positive button
 		}
 	}
-
-	// To prevent automatically closing of dialog - see http://stackoverflow.com/questions/2620444/how-to-prevent-a-dialog-from-closing-when-a-button-is-clicked
-	@Override
-	public void onStart() {
-		super.onStart();
-
-		//final AlertDialog dialog = (AlertDialog) getDialog();
-		InputMethodManager imm = (InputMethodManager) getSherlockActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-		imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
-		//dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
-		/*if (dialog != null) {
-			dialog.getButton(Dialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
-
-				@Override
-				public void onClick(View v) {
-					// Try to register adapter
-					EditText serialNumberEdit = (EditText) mView.findViewById(R.id.addadapter_ser_num);
-					EditText adapterNameEdit = (EditText) mView.findViewById(R.id.addadapter_text_name);
-
-					if (serialNumberEdit.getTextSize() > 0) {
-						String serialNumber = serialNumberEdit.getText().toString();
-						String adapterName = adapterNameEdit.getText().toString();
-						Log.i(TAG, "seriove cislo: " + serialNumber);
-
-						doRegisterAdapterTask(new RegisterAdapterPair(serialNumber, adapterName));
-					}
-				}
-			});
-
-			dialog.getButton(Dialog.BUTTON_NEGATIVE).setOnClickListener(new View.OnClickListener() {
-
-				@Override
-				public void onClick(View v) {
-					// User cancelled the dialog, remember that
-
-					// UserSettings can be null when user is not logged in!
-					SharedPreferences prefs = mController.getUserSettings();
-					if (prefs != null) {
-						prefs.edit().putBoolean(Constants.PERSISTENCE_PREF_IGNORE_NO_ADAPTER, true).commit();
-					}
-
-					dialog.dismiss();
-				}
-			});
-		}*/
+	
+	public String getAdapterName() {
+		return mAdapterName.getText().toString();
 	}
 
-	@Override
-	public void onDestroy() {
-		super.onDestroy();
-
-		if (mRegisterAdapterTask != null) {
-			mRegisterAdapterTask.cancel(true);
-		}
-	}
-
-	public void doRegisterAdapterTask(RegisterAdapterPair pair) {
-		mRegisterAdapterTask = new RegisterAdapterTask(getActivity().getApplicationContext());
-
-		mRegisterAdapterTask.setListener(new CallbackTaskListener() {
-
-			@Override
-			public void onExecute(boolean success) {
-				int messageId = success ? R.string.toast_adapter_activated : R.string.toast_adapter_activate_failed;
-				Log.d(TAG, mActivity.getString(messageId));
-				new ToastMessageThread(mActivity, messageId).start();
-
-				if (success) {
-					//AddAdapterFragment.this.dismiss();
-					/*
-					mActivity.setActiveAdapterAndLocation();
-					mActivity.redrawMenu();
-					mActivity.checkNoDevices();*/
-				}
-			}
-		});
-
-		mRegisterAdapterTask.execute(pair);
+	public String getAdapterCode() {
+		return mAdapterCode.getText().toString();
 	}
 
 }

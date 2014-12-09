@@ -189,6 +189,24 @@ public class MainActivity extends BaseApplicationActivity {
 		.build();
 		mSV.setButtonPosition(lps);
 	}
+	
+	@Override
+	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+		
+		if(requestCode == Constants.ADD_ADAPTER_REQUEST_CODE ) {
+			Log.d(TAG, "Return from add adapter activity");
+			if(resultCode == Constants.ADD_ADAPTER_CANCELED) {
+				Log.d(TAG, "Activity was canceled");
+			}
+			else if (resultCode == Constants.ADD_ADAPTER_SUCCESS) {
+				// Succes of add adapter -> setActive adapter a redraw ALL
+				Log.d(TAG, "Add adapter succes");
+				setActiveAdapterAndLocation();
+				redrawMenu();
+			}
+		}
+	}
 
 	public void onAppResume() {
 		Log.d(TAG, "onAppResume()");
@@ -385,7 +403,7 @@ public class MainActivity extends BaseApplicationActivity {
 			//DialogFragment newFragment = new AddAdapterFragmentDialog();
 			//newFragment.show(getSupportFragmentManager(), ADD_ADAPTER_TAG);
 			Intent intent = new Intent(MainActivity.this, AddAdapterActivity.class);
-			startActivityForResult(intent, 1000);
+			startActivityForResult(intent, Constants.ADD_ADAPTER_REQUEST_CODE);
 			break;
 		}
 		case R.id.action_settings: {

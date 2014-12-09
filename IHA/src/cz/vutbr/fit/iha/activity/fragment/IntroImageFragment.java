@@ -1,6 +1,9 @@
 package cz.vutbr.fit.iha.activity.fragment;
 
 import cz.vutbr.fit.iha.R;
+import cz.vutbr.fit.iha.activity.AddAdapterActivity;
+import cz.vutbr.fit.iha.util.Log;
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
@@ -50,6 +53,18 @@ public final class IntroImageFragment extends Fragment {
 
         return layout;
     }
+    
+    @Override
+	public void setUserVisibleHint(boolean isVisibleToUser) {
+	    super.setUserVisibleHint(isVisibleToUser);
+	    if (isVisibleToUser) {
+	    	Context mActivity = getActivity();
+	    	if(mActivity instanceof AddAdapterActivity) {
+	    		((AddAdapterActivity)mActivity).resetBtn();
+	    	}
+	    }
+
+	}
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
