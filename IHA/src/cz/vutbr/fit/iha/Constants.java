@@ -77,6 +77,8 @@ public final class Constants {
 	public static final String SETUP_SENSOR_ACT_LOC = "SETUP_SENSOR_ACT_LOC";
 
 	public static final int ADD_SENSOR_SUCCESS = 1008;
+	
+	public static final boolean GUI_DEBUG = true;
 	 
 
 }
