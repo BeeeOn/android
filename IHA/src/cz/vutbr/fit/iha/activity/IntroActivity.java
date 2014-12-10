@@ -6,12 +6,13 @@ import com.viewpagerindicator.PageIndicator;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import cz.vutbr.fit.iha.AddAdapterFragmentAdapter;
+import cz.vutbr.fit.iha.IntroFragmentAdapter;
 import cz.vutbr.fit.iha.R;
 import cz.vutbr.fit.iha.base.BaseApplicationActivity;
 import cz.vutbr.fit.iha.test.TestFragmentAdapter;
 
 public class IntroActivity extends BaseApplicationActivity {
-	private AddAdapterFragmentAdapter mAdapter;
+	private IntroFragmentAdapter mAdapter;
 	private ViewPager mPager;
 	private CirclePageIndicator mIndicator;
 	@Override
@@ -19,7 +20,7 @@ public class IntroActivity extends BaseApplicationActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_intro);
 		
-		mAdapter = new AddAdapterFragmentAdapter(getSupportFragmentManager());
+		mAdapter = new IntroFragmentAdapter(getSupportFragmentManager());
 		
 		mPager = (ViewPager)findViewById(R.id.intro_pager);
 		mPager.setAdapter(mAdapter);
