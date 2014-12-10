@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -16,6 +18,7 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.actionbarsherlock.app.SherlockFragment;
@@ -23,9 +26,13 @@ import com.actionbarsherlock.view.ActionMode;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
+import com.github.amlcurran.showcaseview.OnShowcaseEventListener;
+import com.github.amlcurran.showcaseview.ShowcaseView;
+import com.github.amlcurran.showcaseview.targets.ViewTarget;
 
 import cz.vutbr.fit.iha.Constants;
 import cz.vutbr.fit.iha.R;
+import cz.vutbr.fit.iha.activity.AddAdapterActivity;
 import cz.vutbr.fit.iha.activity.AddSensorActivity;
 import cz.vutbr.fit.iha.activity.MainActivity;
 import cz.vutbr.fit.iha.activity.SensorDetailActivity;
@@ -65,6 +72,12 @@ public class SensorListFragment extends SherlockFragment {
 
 	//
 	private ActionMode mMode;
+	
+	// For tutorial
+	private boolean mFirstUseAddAdapter = true;
+	private boolean mFirstUseAddSensor = true;
+	private ShowcaseView mSV;
+	private RelativeLayout.LayoutParams lps;
 
 	public SensorListFragment() {
 	}
@@ -86,6 +99,13 @@ public class SensorListFragment extends SherlockFragment {
 			mActiveLocationId = savedInstanceState.getString(LCTN);
 			mActiveAdapterId = savedInstanceState.getString(ADAPTER_ID);
 		}
+		// Check if tutoril was showed
+		SharedPreferences prefs = mController.getUserSettings();
+		if (prefs != null) {
+			mFirstUseAddAdapter = prefs.getBoolean(Constants.TUTORIAL_ADD_ADAPTER_SHOWED, true);
+			mFirstUseAddSensor = prefs.getBoolean(Constants.TUTORIAL_ADD_SENSOR_SHOWED, true);
+		}
+		
 	}
 
 	@Override
@@ -220,6 +240,18 @@ public class SensorListFragment extends SherlockFragment {
 					showAddAdapterDialog();
 				}
 			});
+			
+			SharedPreferences prefs = mController.getUserSettings();
+			if (!(prefs != null && !prefs.getBoolean(Constants.PERSISTENCE_PREF_IGNORE_NO_ADAPTER, false))) {
+				// TUTORIAL
+				if(mFirstUseAddAdapter) {
+					showTutorialAddAdapter();
+					if (prefs != null) {
+						prefs.edit().putBoolean(Constants.TUTORIAL_ADD_ADAPTER_SHOWED, false).commit();
+					}
+				}
+			}
+			
 		}
 		else if (!haveDevices) { // Have Adapter but any Devices
 			noItem.setVisibility(View.VISIBLE);
@@ -232,6 +264,13 @@ public class SensorListFragment extends SherlockFragment {
 					showAddSensorDialog();
 				}
 			});
+			if(mFirstUseAddSensor){
+				showTutorialAddSensor();
+				SharedPreferences prefs = mController.getUserSettings();
+				if (prefs != null) {
+					prefs.edit().putBoolean(Constants.TUTORIAL_ADD_SENSOR_SHOWED, false).commit();
+				}
+			}
 		}
 		else { // Have adapter and devices
 			noItem.setVisibility(View.GONE);
@@ -285,16 +324,113 @@ public class SensorListFragment extends SherlockFragment {
 		return true;
 	}
 
+	private void showTutorialAddSensor() {
+		lps = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+		int marginPixel = 15;
+		lps.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+		lps.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
+
+		int margin = ((Number) (getResources().getDisplayMetrics().density * marginPixel)).intValue();
+		lps.setMargins(margin, margin, margin, margin);
+		ViewTarget target = new ViewTarget(mView.findViewById(R.id.nosensorlistview_addsensor_image));
+		
+		OnShowcaseEventListener	listener = new OnShowcaseEventListener() {
+			
+			@Override
+			public void onShowcaseViewShow(ShowcaseView showcaseView) {
+				Log.d(TAG, "OnShowCase show");
+				
+			}
+			
+			@Override
+			public void onShowcaseViewHide(ShowcaseView showcaseView) {
+				Log.d(TAG, "OnShowCase hide");
+				// TODO: Save that ADD ADAPTER was clicked
+				
+			}
+			
+			@Override
+			public void onShowcaseViewDidHide(ShowcaseView showcaseView) {
+				Log.d(TAG, "OnShowCase did hide");
+				
+			}
+		}; 
+		
+		mSV = new ShowcaseView.Builder(mActivity, true)
+		.setTarget(target)
+		.setContentTitle("ADD SENSOR")
+		.setContentText("For add your new sensor, please click on plus.")
+		.setStyle(R.style.CustomShowcaseTheme)
+		.setShowcaseEventListener(listener)
+		.build();
+		mSV.setButtonPosition(lps);
+		mSV.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				Log.d(TAG, "Showcase click");
+			}
+		});
+		
+	}
+
+	private void showTutorialAddAdapter() {
+		lps = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+		int marginPixel = 15;
+		lps.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+		lps.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
+
+		int margin = ((Number) (getResources().getDisplayMetrics().density * marginPixel)).intValue();
+		lps.setMargins(margin, margin, margin, margin);
+		ViewTarget target = new ViewTarget(mView.findViewById(R.id.nosensorlistview_addsensor_image));
+		
+		OnShowcaseEventListener	listener = new OnShowcaseEventListener() {
+			
+			@Override
+			public void onShowcaseViewShow(ShowcaseView showcaseView) {
+				Log.d(TAG, "OnShowCase show");
+				
+			}
+			
+			@Override
+			public void onShowcaseViewHide(ShowcaseView showcaseView) {
+				Log.d(TAG, "OnShowCase hide");
+				// TODO: Save that ADD ADAPTER was clicked
+				
+			}
+			
+			@Override
+			public void onShowcaseViewDidHide(ShowcaseView showcaseView) {
+				Log.d(TAG, "OnShowCase did hide");
+				
+			}
+		}; 
+		
+		mSV = new ShowcaseView.Builder(mActivity, true)
+		.setTarget(target)
+		.setContentTitle("ADD ADAPTER")
+		.setContentText("For add your new adapter, please click on plus.")
+		.setStyle(R.style.CustomShowcaseTheme)
+		.setShowcaseEventListener(listener)
+		.build();
+		mSV.setButtonPosition(lps);
+		mSV.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				Log.d(TAG, "Showcase click");
+			}
+		});
+	}
+
 	protected void showAddAdapterDialog() {
 		Log.d(TAG, "HERE ADD ADAPTER +");
-		DialogFragment newFragment = new AddAdapterFragmentDialog();
-		newFragment.show(mActivity.getSupportFragmentManager(), MainActivity.ADD_ADAPTER_TAG);
+		Intent intent = new Intent(mActivity, AddAdapterActivity.class);
+		mActivity.startActivityForResult(intent, Constants.ADD_ADAPTER_REQUEST_CODE);
 	}
 	
 	protected void showAddSensorDialog() {
 		Log.d(TAG, "HERE ADD SENSOR +");
-		//DialogFragment newFragment = new AddSensorFragmentDialog();
-		//newFragment.show(mActivity.getSupportFragmentManager(), MainActivity.ADD_SENSOR_TAG);
 		Intent intent = new Intent(mActivity, AddSensorActivity.class);
 		mActivity.startActivityForResult(intent, Constants.ADD_SENSOR_REQUEST_CODE);
 	}

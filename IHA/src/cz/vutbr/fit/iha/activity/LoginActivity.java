@@ -4,6 +4,7 @@ import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.content.DialogInterface.OnCancelListener;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
@@ -24,6 +25,7 @@ import com.google.android.gms.common.AccountPicker;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 
+import cz.vutbr.fit.iha.Constants;
 import cz.vutbr.fit.iha.R;
 import cz.vutbr.fit.iha.adapter.Adapter;
 import cz.vutbr.fit.iha.base.BaseActivity;
@@ -66,6 +68,9 @@ public class LoginActivity extends BaseActivity {
 	private ShowcaseView mSV;
 	private RelativeLayout.LayoutParams lps;
 	private int mTutorialClick = 0;
+	
+	// For tutorial
+	private boolean mFirstUse = true;
 
 	private boolean isRedirect = false;
 
@@ -181,7 +186,20 @@ public class LoginActivity extends BaseActivity {
 			}
 		});
 		
-		showTutorial();
+		
+		// TUTORIAL 
+		// Need use default preferences because user isnt ready
+		SharedPreferences prefs = getPreferences(MODE_PRIVATE);
+		if (prefs != null) {
+			mFirstUse = prefs.getBoolean(Constants.TUTORIAL_LOGIN_SHOWED, true);
+		}
+		
+		if(mFirstUse){
+			showTutorial();
+			if(prefs != null) {
+				prefs.edit().putBoolean(Constants.TUTORIAL_LOGIN_SHOWED, false).commit();
+			}
+		}
 
 		Log.i("IHA app starting...", "___________________________________");
 	}

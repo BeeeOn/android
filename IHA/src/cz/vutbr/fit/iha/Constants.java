@@ -79,6 +79,12 @@ public final class Constants {
 	public static final int ADD_SENSOR_SUCCESS = 1008;
 	
 	public static final boolean GUI_DEBUG = true;
+
+	public static final String TUTORIAL_ADD_ADAPTER_SHOWED = "TUTORIAL_ADD_ADAPTER_SHOWED";
+
+	public static final String TUTORIAL_ADD_SENSOR_SHOWED = "TUTORIAL_ADD_SENSOR_SHOWED";
+
+	public static final String TUTORIAL_LOGIN_SHOWED = "TUTORIAL_LOGIN_SHOWED";
 	 
 
 }

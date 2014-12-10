@@ -145,7 +145,7 @@ public class MainActivity extends BaseApplicationActivity {
 		
 		// Init tutorial 
 		if(mFirstUseApp) {
-			showTutorial();
+			//showTutorial();
 		}
 	}
 
@@ -371,10 +371,12 @@ public class MainActivity extends BaseApplicationActivity {
 	public void checkNoAdapters() {
 		if (mController.getActiveAdapter() == null) {
 			// UserSettings can be null when user is not logged in!
+			Log.d(TAG, "CheckNoAdapter");
 			SharedPreferences prefs = mController.getUserSettings();
 			if (prefs != null && !prefs.getBoolean(Constants.PERSISTENCE_PREF_IGNORE_NO_ADAPTER, false)) {
-				DialogFragment newFragment = new AddAdapterFragmentDialog();
-				newFragment.show(getSupportFragmentManager(), ADD_ADAPTER_TAG);
+				Log.d(TAG, "Call ADD ADAPTER");
+				Intent intent = new Intent(MainActivity.this, AddAdapterActivity.class);
+				startActivityForResult(intent, Constants.ADD_ADAPTER_REQUEST_CODE);
 			}
 		}
 	}
