@@ -92,6 +92,10 @@
             android:label="@string/title_activity_add_sensor" >
         </activity>
         <activity
+            android:name=".activity.SetupSensorActivity"
+            android:label="@string/title_activity_add_sensor" >
+        </activity>
+        <activity
             android:name=".activity.SensorDetailActivity"
             android:label="@string/title_activity_sensor_detail" >
         </activity>

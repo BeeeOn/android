@@ -193,7 +193,7 @@ public class MainActivity extends BaseApplicationActivity {
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
-		
+		Log.d(TAG, "Request code "+requestCode);
 		if(requestCode == Constants.ADD_ADAPTER_REQUEST_CODE ) {
 			Log.d(TAG, "Return from add adapter activity");
 			if(resultCode == Constants.ADD_ADAPTER_CANCELED) {
@@ -203,6 +203,16 @@ public class MainActivity extends BaseApplicationActivity {
 				// Succes of add adapter -> setActive adapter a redraw ALL
 				Log.d(TAG, "Add adapter succes");
 				setActiveAdapterAndLocation();
+				redrawMenu();
+			}
+		}
+		else if (requestCode == Constants.ADD_SENSOR_REQUEST_CODE) {
+			Log.d(TAG, "Return from add sensor activity");
+			if(resultCode == Constants.ADD_SENSOR_SUCCESS) {
+				// Set active location
+				mActiveLocationId = data.getExtras().getString(Constants.SETUP_SENSOR_ACT_LOC);
+				Log.d(TAG, "Active locID: "+mActiveLocationId + " adapterID: "+mActiveAdapterId);
+				redrawDevices();
 				redrawMenu();
 			}
 		}
@@ -342,6 +352,8 @@ public class MainActivity extends BaseApplicationActivity {
 	}
 
 	public void redrawMenu() {
+		mNavDrawerMenu.setLocationID(mActiveLocationId);
+		mNavDrawerMenu.setAdapterID(mActiveAdapterId);
 		mNavDrawerMenu.redrawMenu();
 		redrawDevices();
 	}

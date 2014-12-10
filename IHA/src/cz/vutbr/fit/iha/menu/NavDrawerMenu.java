@@ -259,6 +259,17 @@ public class NavDrawerMenu {
 	public void redrawMenu() {
 		mMenuAdapter = getMenuAdapter();
 		mDrawerList.setAdapter(mMenuAdapter);
+		
+		Adapter adapter = mController.getActiveAdapter();
+		Location location = null;
+		if(adapter != null && mActiveLocationId!= null) {
+			location = mController.getLocation(adapter.getId(), mActiveLocationId);
+		}
+		if (adapter != null && location != null) {
+			mActivity.getSupportActionBar().setTitle(location.getName());
+		} else {
+			setDefaultTitle();
+		}
 
 		if (!mIsDrawerOpen) {
 			// Close drawer
@@ -382,7 +393,11 @@ public class NavDrawerMenu {
 				// Adding location
 				for (int i = 0; i < locations.size(); i++) {
 					Location actLoc = locations.get(i);
-					mMenuAdapter.addItem(new LocationMenuItem(actLoc.getName(), actLoc.getIconResource(), false, actLoc.getId(), (mActiveLocationId == actLoc.getId()) ? true : false));
+					boolean boolActLoc = false;
+					if(mActiveLocationId != null ) {
+						boolActLoc = (mActiveLocationId.equals(actLoc.getId())) ? true : false; 
+					}
+					mMenuAdapter.addItem(new LocationMenuItem(actLoc.getName(), actLoc.getIconResource(), false, actLoc.getId(),boolActLoc ));
 				}
 			} else {
 				mMenuAdapter.addItem(new EmptyMenuItem(mActivity.getResources().getString(R.string.no_location)));

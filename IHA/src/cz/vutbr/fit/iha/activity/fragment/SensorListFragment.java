@@ -24,7 +24,9 @@ import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 
+import cz.vutbr.fit.iha.Constants;
 import cz.vutbr.fit.iha.R;
+import cz.vutbr.fit.iha.activity.AddSensorActivity;
 import cz.vutbr.fit.iha.activity.MainActivity;
 import cz.vutbr.fit.iha.activity.SensorDetailActivity;
 import cz.vutbr.fit.iha.activity.dialog.AddAdapterFragmentDialog;
@@ -291,8 +293,10 @@ public class SensorListFragment extends SherlockFragment {
 	
 	protected void showAddSensorDialog() {
 		Log.d(TAG, "HERE ADD SENSOR +");
-		DialogFragment newFragment = new AddSensorFragmentDialog();
-		newFragment.show(mActivity.getSupportFragmentManager(), MainActivity.ADD_SENSOR_TAG);
+		//DialogFragment newFragment = new AddSensorFragmentDialog();
+		//newFragment.show(mActivity.getSupportFragmentManager(), MainActivity.ADD_SENSOR_TAG);
+		Intent intent = new Intent(mActivity, AddSensorActivity.class);
+		mActivity.startActivityForResult(intent, Constants.ADD_SENSOR_REQUEST_CODE);
 	}
 	public void setLocationID(String locID) {
 		mActiveLocationId = locID;
