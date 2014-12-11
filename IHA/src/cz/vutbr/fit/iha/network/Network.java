@@ -1216,12 +1216,13 @@ public class Network implements INetwork {
 	 * FIXME: after merge need to by rewrite
 	 */
 	public boolean setGCMID(String email, String gcmID){
-		ParsedMessage msg = doRequest(XmlCreator.createSetGCMID(mSessionID, gcmID));
+		ParsedMessage msg = doRequest(XmlCreator.createSetGCMID(mUserID, gcmID));
 
 		if (msg.getState() == State.TRUE)
 			return true;
 
-		throw new FalseException(((FalseAnswer) msg.data));
+		FalseAnswer fa = (FalseAnswer) msg.data;
+		throw new IhaException(fa.getErrMessage(), NetworkError.fromValue(fa.getErrCode()));
 	}
 	
 	// /////////////////////////////////////////////////////////////////////////////////
