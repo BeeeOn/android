@@ -63,9 +63,9 @@ public interface INetwork {
 	// /////////////////////////////////////////////////////////////////////////////////
 
 	/**
-	 * Method get UID from server
+	 * Method does logging in/registration of user and return actual communication UID
 	 * 
-	 * @return true if everything successful, false otherwise
+	 * @return UID for actual communication
 	 */
 	public String getUID();
 

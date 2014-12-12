@@ -139,24 +139,23 @@ public final class Controller {
 
 	/**
 	 * Login user by his email (authenticate on server).
+	 *  
+	 * Support is only for Google auth (or demo) and this
+	 *  
+	 * FIXME: This does black magic, Network gets user id automatically from GoogleAuth and ignores given email, etc. 
 	 * 
 	 * @param email
 	 * @return true on success, false otherwise
 	 * @throws NetworkException
 	 */
 	public boolean login(String email) throws IhaException {
-		// TODO: catch and throw proper exception
 		// FIXME: after some time there should be picture in ActualUser object, should save to mPersistence
 		try {
 			if (mNetwork.getUID().length() > 0) { // FIXME: gcmid have to be set separate now!!!, and here use getUID if you dont have userID
 				mPersistence.saveLastEmail(email);
 				mPersistence.initializeDefaultSettings(email);
 				return true;
-			}else
-				if(mNetwork instanceof DemoNetwork){
-					((DemoNetwork) mNetwork).signIn(email, null);
-					return true;
-				}
+			}
 		} catch (IhaException e) {
 			if (e.getErrorCode() instanceof NetworkError && e.getErrorCode() == NetworkError.NOT_VALID_USER) {
 				// TODO: do this otherway

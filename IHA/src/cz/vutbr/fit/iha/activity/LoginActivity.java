@@ -23,9 +23,7 @@ import cz.vutbr.fit.iha.R;
 import cz.vutbr.fit.iha.adapter.Adapter;
 import cz.vutbr.fit.iha.base.BaseActivity;
 import cz.vutbr.fit.iha.controller.Controller;
-import cz.vutbr.fit.iha.exception.ErrorCode;
 import cz.vutbr.fit.iha.exception.IhaException;
-import cz.vutbr.fit.iha.exception.NetworkError;
 import cz.vutbr.fit.iha.exception.NotImplementedException;
 import cz.vutbr.fit.iha.network.DemoNetwork;
 import cz.vutbr.fit.iha.thread.ToastMessageThread;
@@ -52,7 +50,6 @@ public class LoginActivity extends BaseActivity {
 	private static final int GET_GOOGLE_ACCOUNT = 6;
 
 	private boolean mIgnoreChange = false;
-	private boolean mSignUp = false;
 
 	private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 1;
 
@@ -451,13 +448,8 @@ public class LoginActivity extends BaseActivity {
 		} catch (IhaException e) {
 			e.printStackTrace();
 			
-			ErrorCode code = e.getErrorCode();
-			if (code instanceof NetworkError && code == NetworkError.NOT_VALID_USER && !mSignUp) {
-				doRegisterUser(email);
-			} else {
-				errFlag = true;
-				errMessage = e.getTranslatedErrorMessage(this);
-			}
+			errFlag = true;
+			errMessage = e.getTranslatedErrorMessage(this);
 		} catch (NotImplementedException e) {
 			e.printStackTrace();
 
@@ -475,18 +467,6 @@ public class LoginActivity extends BaseActivity {
 				// alternate form: //mActivity.runOnUiThread(new ToastMessageThread(mActivity, errMessage));
 				new ToastMessageThread(this, errMessage).start();
 			}
-		}
-	}
-
-	private void doRegisterUser(final String email) {
-		mSignUp = true;
-		progressChangeText(getString(R.string.progress_signup));
-		progressShow();
-		if (/*mController.registerUser(email)*/true) {
-			doLogin(email);
-		} else {
-			progressDismiss();
-			new ToastMessageThread(this, R.string.toast_something_wrong);
 		}
 	}
 

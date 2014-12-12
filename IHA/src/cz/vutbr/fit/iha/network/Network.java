@@ -468,20 +468,6 @@ public class Network implements INetwork {
 		}
 	}
 	
-	@Deprecated
-	private void doResign() {
-		// TODO: maybe use diffrenD way to resign, case stopping of thread,
-		// manage this after implement in the controller
-		try {
-			// GoogleAuth.getGoogleAuth().doInForeground(false);
-			startGoogleAuth(true, false);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-//		mSecretVar = mUserID;
-		getUID();
-	}
-
 	private ParsedMessage doRequest(String messageToSend) {
 		if (!isAvailable())
 			throw new IhaException(NetworkError.NO_CONNECTION);
@@ -500,20 +486,7 @@ public class Network implements INetwork {
 			Log.d(TAG + " - fromApp", messageToSend);
 			Log.i(TAG + " - fromSrv", result);
 
-			msg = new XmlParsers().parseCommunication(result, false);
-//			if (msg.getState() == State.FALSE && ((FalseAnswer) msg.data).getErrCode() == NetworkError.BAD_UID.getNumber()) {
-//				doResign();
-//				// try it one more time
-//				result = startCommunication(messageToSend.replace(Xconstants.SID + "=\"" + mSecretVar + "\"", Xconstants.SID + "=\""
-//						+ mUserID + "\"")); // FIXME: hot fix
-//
-//				Log.d(TAG + " - fromApp", messageToSend);
-//				Log.i(TAG + " - fromSrv", result);
-//
-//				msg = new XmlParsers().parseCommunication(result, false);
-//			}
-
-			return msg;
+			return new XmlParsers().parseCommunication(result, false);
 
 		} catch (Exception e) {
 			throw IhaException.wrap(e, NetworkError.COM_PROBLEMS);

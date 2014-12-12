@@ -46,6 +46,7 @@ public class DemoNetwork implements INetwork {
 
 	private Context mContext;
 	private ActualUser mUser;
+	private boolean mInitialized = false;
 
 	private class AdapterHolder {
 		public final Adapter adapter;
@@ -100,26 +101,8 @@ public class DemoNetwork implements INetwork {
 			device.setValue(String.valueOf((int)lastValue));
 		}
 	}
-
-	@Override
-	public void setUser(ActualUser user) {
-		mUser = user;
-	}
-
-	@Override
-	public boolean isAvailable() {
-		return true;
-	}
-
-	@Override
-	public String getUID() {
-		// This has to return false so signIn() method will be called in Controller
-		// (maybe it will be changed later somehow)
-		return "";
-	}
-
-//	@Override
-	public boolean signIn(String email, String gcmid) throws IhaException {
+	
+	public void initData() throws IhaException {
 		// Set user
 		mUser.setName("John Doe");
 		mUser.setEmail(DEMO_EMAIL);
@@ -153,14 +136,27 @@ public class DemoNetwork implements INetwork {
 				facility.setLastUpdate(DateTime.now(DateTimeZone.UTC).minusSeconds(new Random().nextInt(60 * 60 * 26)));
 			}
 		}
-		
+	}
+
+	@Override
+	public void setUser(ActualUser user) {
+		mUser = user;
+	}
+
+	@Override
+	public boolean isAvailable() {
 		return true;
 	}
-//
-//	@Override
-//	public boolean signUp(String email) {
-//		return true;
-//	}
+
+	@Override
+	public String getUID() throws IhaException {
+		if (!mInitialized) {
+			initData();
+			mInitialized = true;
+		}
+
+		return mUser.getUserId();
+	}
 
 	@Override
 	public boolean addAdapter(String adapterId, String adapterName) {
