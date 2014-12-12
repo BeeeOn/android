@@ -42,9 +42,6 @@ public abstract class BaseApplicationActivity extends BaseActivity implements IN
 
 		controller.registerNotificationReceiver(this);
 
-		// FIXME: this is just for testing and should be removed soon
-		testingNotifications();
-
 		isPaused = false;
 		onAppResume();
 	}
@@ -89,6 +86,7 @@ public abstract class BaseApplicationActivity extends BaseActivity implements IN
 	/**
 	 * Start thread that creates new notifications at random interval. FIXME: this is just for testing and should be removed soon
 	 */
+	/*
 	public void testingNotifications() {
 		new Thread(new Runnable() {
 
@@ -124,5 +122,6 @@ public abstract class BaseApplicationActivity extends BaseActivity implements IN
 			}
 		}).start();
 	}
+	*/
 
 }

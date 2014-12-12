@@ -3,6 +3,8 @@
  */
 package cz.vutbr.fit.iha.gcm;
 
+import java.util.Calendar;
+
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
@@ -24,7 +26,7 @@ public class Notification {
 
 	private DateTimeFormatter mFormatter = DateTimeFormat.forPattern(DATEFORMAT).withZoneUTC();
 
-	private final DateTime mDate;
+	private final Calendar mDate;
 	private final String mMsgid;
 	private boolean mRead;
 	private final NotificationType mType;
@@ -167,7 +169,10 @@ public class Notification {
 	}
 
 	public enum NotificationType {
-		INFO("info"), ADVERT("advert"), ALERT("alert"), CONTROL("control");
+		INFO("info"),
+		ADVERT("advert"),
+		ALERT("alert"),
+		CONTROL("control");
 
 		private final String mValue;
 
@@ -193,14 +198,21 @@ public class Notification {
 	 */
 	public Notification(String msgid, String time, String type, boolean read) throws IllegalArgumentException {
 		mMsgid = msgid;
-		String[] parts = time.split(SEPARATOR);
+		// String[] parts = time.split(SEPARATOR);
 
-		if (parts.length != 2) {
-			Log.e(TAG, String.format("Wrong number of parts (%d) of data: %s", parts.length, time));
+		// if (parts.length != 2) {
+		// Log.e(TAG, String.format("Wrong number of parts (%d) of data: %s", parts.length, time));
+		// throw new IllegalArgumentException();
+		// }
+
+		/** FIXME opravit timezone */
+		mDate = Calendar.getInstance();
+		try {
+			mDate.setTimeInMillis(Long.valueOf(time));
+		} catch (NumberFormatException e) {
 			throw new IllegalArgumentException();
 		}
 
-		mDate = mFormatter.parseDateTime(String.format("%s %s", parts[0], parts[1]));
 		mType = NotificationType.fromValue(type);
 		mRead = read;
 	}
@@ -219,7 +231,7 @@ public class Notification {
 	/**
 	 * @return the mDate
 	 */
-	public DateTime getDate() {
+	public Calendar getDate() {
 		return mDate;
 	}
 

@@ -403,7 +403,6 @@ public class LoginActivity extends BaseActivity {
 		
 		try {
 			
-			/** FIXME
 			String gcmId = mController.getGCMRegistrationId();
 
 			if (gcmId.isEmpty()) {
@@ -417,7 +416,7 @@ public class LoginActivity extends BaseActivity {
 				}
 			}
 
-			Log.i(GcmHelper.TAG_GCM, "GCM ID: " + gcmId); */
+			Log.i(GcmHelper.TAG_GCM, "GCM ID: " + gcmId); 
 			
 			if (mController. login(email)) {
 				Log.d(TAG, "Login: true");
