@@ -50,6 +50,8 @@ public interface INetwork {
 	}
 
 	public void setUser(ActualUser user);
+	
+	public void setUID(String userId);
 
 	/**
 	 * Checks if Internet connection is available.
@@ -63,11 +65,19 @@ public interface INetwork {
 	// /////////////////////////////////////////////////////////////////////////////////
 
 	/**
-	 * Method does logging in/registration of user and return actual communication UID
+	 * Return actual UID used for communication (= active session)
 	 * 
 	 * @return UID for actual communication
 	 */
 	public String getUID();
+	
+	/**
+	 * Method does logging in/registration of user and load communication UID.
+	 * You can get actual communication UID by calling getUID()
+	 * 
+	 * @return true on success, false or throw exception otherwise
+	 */
+	public boolean loadUID();
 
 	/**
 	 * Method register adapter to server

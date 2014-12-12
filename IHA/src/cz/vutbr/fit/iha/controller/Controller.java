@@ -87,7 +87,7 @@ public final class Controller {
 	private Controller(Context context) {
 		mContext = context;
 
-		mNetwork = mDemoMode ? new DemoNetwork(context) : new Network(mContext, this, "userID", Utils.isDebugVersion(context)); //FIXME: ROB: if you have user id, give me, else call put something and call getUID method
+		mNetwork = mDemoMode ? new DemoNetwork(context) : new Network(mContext, this, Utils.isDebugVersion(context));
 		mPersistence = new Persistence(mContext);
 		mHousehold = new Household(mContext, mNetwork);
 		mNetwork.setUser(mHousehold.user);
@@ -104,11 +104,6 @@ public final class Controller {
 
 		mDemoMode = demoMode;
 		mController = new Controller(context);
-
-		if (demoMode) {
-			// Initialize default settings for demo mode, because in demo mode we don't call login()
-			mController.mPersistence.initializeDefaultSettings(mController.mHousehold.user.getEmail());
-		}
 	}
 
 	public static boolean isDemoMode() {
@@ -151,9 +146,33 @@ public final class Controller {
 	public boolean login(String email) throws IhaException {
 		// FIXME: after some time there should be picture in ActualUser object, should save to mPersistence
 		try {
-			if (mNetwork.getUID().length() > 0) { // FIXME: gcmid have to be set separate now!!!, and here use getUID if you dont have userID
-				mPersistence.saveLastEmail(email);
+			// In demo mode load some init data from sdcard
+			if (mNetwork instanceof DemoNetwork) {
+				((DemoNetwork)mNetwork).initDemoData();
+			}
+			
+			// Load UID from previous session
+			SharedPreferences prefs = getUserSettings();
+			String UID = prefs.getString(Constants.PERSISTENCE_PREF_UID, "");
+			
+			// If no previous session, load fresh UID from server
+			if (UID.isEmpty()) {
+				if (!mNetwork.loadUID())
+					return false;
+				
+				prefs.edit().putString(Constants.PERSISTENCE_PREF_UID, mNetwork.getUID()).commit();
+				
+				// TODO: Do we have user info + photo, now? If so, save it...
+				// mPersistence.saveUserDetails(mHousehold.user);
+				// TODO: Check if ImageURL is same as before, and if not (or if not exists image file), download user image...
+			} else {
+				mNetwork.setUID(UID);
+			}
+			
+			// Do we have session now? Then remember this user
+			if (!mNetwork.getUID().isEmpty()) {
 				mPersistence.initializeDefaultSettings(email);
+				mPersistence.saveLastEmail(email);
 				return true;
 			}
 		} catch (IhaException e) {
@@ -171,6 +190,7 @@ public final class Controller {
 					// while(GoogleAuth.getGoogleAuth().getPictureIMG() == null);
 					while (getActualUser().isPictureDefault())
 						; // FIXME: not sure with this, need to check (first sing in)
+					// FIXME: remove this and rewrite it better
 				}
 
 				return login(email);
@@ -181,26 +201,29 @@ public final class Controller {
 	}
 
 	/**
-	 * Logout user from application (and forget him as last user).
-	 * 
-	 * @return true always
+	 * Destroy user session in network and forget him as last logged in user.
 	 */
-	public boolean logout() {
-		// TODO: also destroy session
-		mHousehold.user.logout();
-		mPersistence.saveLastEmail(null);
+	public void logout() {
+		// TODO: Request to logout from server (discard actual communication UID)
+		
+		// Destroy session
+		mNetwork.setUID("");
+		
+		// Delete session from saved settings
+		getUserSettings().edit().remove(Constants.PERSISTENCE_PREF_UID).commit();
 
-		return true;
+		// Forgot info about last user 
+		mPersistence.saveLastEmail(null);
 	}
 
 	/**
-	 * Checks if user is logged in (with valid session).
+	 * Checks if user is logged in (has session UID).
 	 * 
 	 * @return true if user is logged in, false otherwise
 	 */
 	public boolean isLoggedIn() {
-		// TODO: also check session lifetime
-		return mHousehold.user.isLoggedIn();
+		// TODO: Check session lifetime somehow?
+		return !mNetwork.getUID().isEmpty();
 	}
 
 	public boolean isInternetAvailable() {

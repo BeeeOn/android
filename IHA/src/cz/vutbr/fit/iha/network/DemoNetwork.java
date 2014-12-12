@@ -46,7 +46,7 @@ public class DemoNetwork implements INetwork {
 
 	private Context mContext;
 	private ActualUser mUser;
-	private boolean mInitialized = false;
+	private String mUID;
 
 	private class AdapterHolder {
 		public final Adapter adapter;
@@ -102,14 +102,20 @@ public class DemoNetwork implements INetwork {
 		}
 	}
 	
-	public void initData() throws IhaException {
+	public void setUser(ActualUser user) {
+		mUser = user;
+	}
+	
+	public void initDemoData() throws IhaException {
+		// Erase previous data if exists
+		mAdapters.clear();
+		
 		// Set user
 		mUser.setName("John Doe");
 		mUser.setEmail(DEMO_EMAIL);
 		mUser.setGender(Gender.Male);
 		mUser.setPicture(null);
 		mUser.setPictureUrl("");
-		mUser.setUserId("123456789");
 
 		// Parse and set initial demo data
 		XmlParsers parser = new XmlParsers();
@@ -139,23 +145,24 @@ public class DemoNetwork implements INetwork {
 	}
 
 	@Override
-	public void setUser(ActualUser user) {
-		mUser = user;
-	}
-
-	@Override
 	public boolean isAvailable() {
 		return true;
 	}
 
 	@Override
-	public String getUID() throws IhaException {
-		if (!mInitialized) {
-			initData();
-			mInitialized = true;
-		}
+	public void setUID(String userId) {
+		mUID = userId;
+	}
 
-		return mUser.getUserId();
+	@Override
+	public String getUID() {
+		return mUID;
+	}
+	
+	@Override
+	public boolean loadUID() {
+		mUID = "123456789";
+		return true;
 	}
 
 	@Override

@@ -95,17 +95,12 @@ public class Network implements INetwork {
 	 */
 	private static final String SERVER_CN_CERTIFICATE = "ant-2.fit.vutbr.cz";
 
-	// TODO: delete this
-	private static final int BADTOKENCODE = 2;
-
 	private final Context mContext;
 	private GoogleAuth mGoogleAuth;
 	private ActualUser mUser;
 	private String mUserID = "";
-//	private String mSecretVar;
 	private final boolean mUseDebugServer;
 	private boolean mGoogleReinit;
-//	private final Controller mController; // FIXME: remove this dependency on controller?
 	private static final int SSLTIMEOUT = 35000;
 	
 	private SSLSocket permaSocket = null;
@@ -119,16 +114,19 @@ public class Network implements INetwork {
 	 * 
 	 * @param context
 	 */
-	public Network(Context context, Controller controller, String userID, boolean useDebugServer) {
+	public Network(Context context, Controller controller, boolean useDebugServer) {
 		mContext = context;
-//		mController = controller;
 		mUseDebugServer = useDebugServer;
-		mUserID = userID;
 	}
 
 	@Override
 	public void setUser(ActualUser user) {
 		mUser = user;
+	}
+	
+	@Override
+	public void setUID(String userId) {
+		mUserID = userId;
 	}
 
 	/**
@@ -522,13 +520,21 @@ public class Network implements INetwork {
 	// /////////////////////////////////////SIGNIN,SIGNUP,ADAPTERS//////////////////////
 	// /////////////////////////////////////////////////////////////////////////////////
 
+	/**
+	 * Return actual UID used for communication (= active session)
+	 * @return UID for actual communication
+	 */
+	@Override
+	public String getUID() {
+		return mUserID;
+	}
 
 	/**
-	 * Method get UID from server
+	 * Method load UID from server
 	 * @return true if everything successful, false otherwise
 	 */
 	@Override
-	public String getUID(){
+	public boolean loadUID(){
 		String googleToken = getGoogleToken();
 		String googleID = mGoogleAuth.getId(); // TODO: check this - GOOGLE ID
 		if (googleToken.length() == 0)
@@ -544,9 +550,8 @@ public class Network implements INetwork {
 		ParsedMessage msg = doRequest(XmlCreator.createGetUID(googleID, googleToken, Locale.getDefault().getLanguage(), phoneId));
 
 		if (!msg.getUserId().isEmpty() && msg.getState() == State.UID) {
-			mUser.setUserId(msg.getUserId());
 			mUserID = msg.getUserId();
-			return mUserID;
+			return true;
 		}
 		if (msg.getState() == State.FALSE && ((FalseAnswer) msg.data).getErrCode() == NetworkError.NOT_VALID_USER.getNumber())
 			mGoogleAuth.invalidateToken();
