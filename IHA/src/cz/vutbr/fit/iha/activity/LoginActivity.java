@@ -42,20 +42,19 @@ import cz.vutbr.fit.iha.util.Log;
 public class LoginActivity extends BaseActivity {
 
 	public static final String BUNDLE_REDIRECT = "isRedirect";
-
+	
+	private static final String TAG = LoginActivity.class.getSimpleName();	
+	
+	private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 1;
+	private static final int RESULT_DO_RECOVERABLE_AUTH = 5;
+	private static final int RESULT_GET_GOOGLE_ACCOUNT = 6;
+	
 	private Controller mController;
 	private ProgressDialog mProgress;
-	private StoppableRunnable mLoginRunnable;
-
-	private static final String TAG = LoginActivity.class.getSimpleName();
-	private static final int USER_RECOVERABLE_AUTH = 5;
-	private static final int GET_GOOGLE_ACCOUNT = 6;
-
+	
 	private boolean mIgnoreChange = false;
-
-	private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 1;
-
-	private boolean isRedirect = false;
+	private boolean mLoginCancel = false;
+	private boolean mIsRedirect = false;
 
 	// ////////////////////////////////////////////////////////////////////////////////////
 	// ///////////////// Override METHODS
@@ -68,7 +67,7 @@ public class LoginActivity extends BaseActivity {
 
 		// Check if this is redirect (e.g., after connection loss) or classic start
 		Bundle bundle = getIntent().getExtras();
-		isRedirect = (bundle != null && bundle.getBoolean(BUNDLE_REDIRECT, false));
+		mIsRedirect = (bundle != null && bundle.getBoolean(BUNDLE_REDIRECT, false));
 
 		// Get controller
 		mController = Controller.getInstance(getApplicationContext());
@@ -83,9 +82,7 @@ public class LoginActivity extends BaseActivity {
 
 			@Override
 			public void onCancel(DialogInterface dialog) {
-				if (mLoginRunnable != null) {
-					mLoginRunnable.stop();
-				}
+				mLoginCancel = true;
 			}
 		});
 
@@ -93,7 +90,7 @@ public class LoginActivity extends BaseActivity {
 			// If we're already logged in, continue to location screen
 			Log.d(TAG, "Already logged in, going to locations screen...");
 
-			if (!isRedirect) {
+			if (!mIsRedirect) {
 				Intent intent = new Intent(this, MainActivity.class);
 				startActivity(intent);
 			}
@@ -148,14 +145,12 @@ public class LoginActivity extends BaseActivity {
 		super.onActivityResult(requestCode, resultCode, data);
 		
 		if (resultCode == RESULT_CANCELED) {
-			if (mLoginRunnable != null) {
-				mLoginRunnable.stop();
-			}
+			mLoginCancel = true;
 			progressDismiss();
 			return;
 		}
 
-		if (resultCode == RESULT_OK && (requestCode == USER_RECOVERABLE_AUTH || requestCode == GET_GOOGLE_ACCOUNT)) {
+		if (resultCode == RESULT_OK && (requestCode == RESULT_DO_RECOVERABLE_AUTH || requestCode == RESULT_GET_GOOGLE_ACCOUNT)) {
 			String email = data.getStringExtra(AccountManager.KEY_ACCOUNT_NAME);
 			if (email == null) {
 				Log.d(TAG, "onActivityResult: no email");
@@ -283,7 +278,7 @@ public class LoginActivity extends BaseActivity {
 				doLogin(false, Accounts[0]);
 			} else {
 				Intent intent = AccountPicker.newChooseAccountIntent(null, null, new String[] { "com.google" }, false, null, null, null, null);
-				startActivityForResult(intent, GET_GOOGLE_ACCOUNT);
+				startActivityForResult(intent, RESULT_GET_GOOGLE_ACCOUNT);
 			}
 		} else {
 			// Google Play is missing
@@ -294,23 +289,6 @@ public class LoginActivity extends BaseActivity {
 			mProgress.dismiss();
 		}
 		Log.d(TAG, "Finish GoogleAuthRoutine");
-	}
-
-	private abstract class StoppableRunnable implements Runnable {
-		private volatile boolean mIsStopped = false;
-
-		public boolean isStopped() {
-			return mIsStopped;
-		}
-
-		private void setStopped(boolean isStop) {
-			if (mIsStopped != isStop)
-				mIsStopped = isStop;
-		}
-
-		public void stop() {
-			setStopped(true);
-		}
 	}
 
 	/**
@@ -326,10 +304,10 @@ public class LoginActivity extends BaseActivity {
 			return;
 		}
 		
+		mLoginCancel = false;
 		progressShow();
 		
-		mLoginRunnable = new StoppableRunnable() {
-
+		new Thread(new Runnable() {
 			@Override
 			public void run() {
 				setDemoMode(demoMode);
@@ -376,8 +354,12 @@ public class LoginActivity extends BaseActivity {
 							mController.reloadFacilitiesByAdapter(active.getId(), true);
 						}
 		
-						if (mLoginRunnable != null && !mLoginRunnable.isStopped()) {
-							if (!isRedirect) {
+						if (mLoginCancel) {
+							// User cancelled login so do logout() to be sure it won't try to login automatically next time
+							mController.logout();
+						} else {
+							// Open MainActivity or just this LoginActivity and let it redirect back
+							if (!mIsRedirect) {
 								Intent intent = new Intent(getApplicationContext(), MainActivity.class);
 								startActivity(intent);
 							}
@@ -393,7 +375,7 @@ public class LoginActivity extends BaseActivity {
 					if (errorCode instanceof NetworkError && errorCode == NetworkError.GOOGLE_TRY_AGAIN) {
 						Intent intent = e.get(GoogleAuthHelper.RECOVERABLE_INTENT);
 						if (intent != null) {
-							startActivityForResult(intent, LoginActivity.USER_RECOVERABLE_AUTH);
+							startActivityForResult(intent, LoginActivity.RESULT_DO_RECOVERABLE_AUTH);
 							return;
 						}
 					}
@@ -413,11 +395,7 @@ public class LoginActivity extends BaseActivity {
 					new ToastMessageThread(LoginActivity.this, errMessage).start();
 				}
 			}
-
-		};
-		
-		Thread loginThread = new Thread(mLoginRunnable);
-		loginThread.start();
+		}).start();
 	}
 
 	// ////////////////////////////////////////////////////////////////////////////////////
