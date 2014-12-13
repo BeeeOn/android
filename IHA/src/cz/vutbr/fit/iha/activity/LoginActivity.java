@@ -42,7 +42,6 @@ public class LoginActivity extends BaseActivity {
 
 	private Controller mController;
 	private ProgressDialog mProgress;
-	private Thread mDoGoogleLoginThread;
 	private StoppableRunnable mDoGoogleLoginRunnable;
 
 	private static final String TAG = LoginActivity.class.getSimpleName();
@@ -171,7 +170,7 @@ public class LoginActivity extends BaseActivity {
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
-
+		
 		if (resultCode == RESULT_CANCELED) {
 			if (mDoGoogleLoginRunnable != null) {
 				mDoGoogleLoginRunnable.stop();
@@ -339,13 +338,12 @@ public class LoginActivity extends BaseActivity {
 	 *            of user
 	 */
 	private void doGoogleLogin(final String email) {
-		progressShow();
 		if (!mController.isInternetAvailable()) {
 			Toast.makeText(this, getString(R.string.toast_internet_connection), Toast.LENGTH_LONG).show();
-			progressDismiss();
 			return;
 		}
 
+		progressShow();
 		mController.initGoogle(this, email);
 		try {
 			Log.d(TAG, "call google auth execute");
@@ -381,8 +379,8 @@ public class LoginActivity extends BaseActivity {
 				}
 			};
 
-			mDoGoogleLoginThread = new Thread(mDoGoogleLoginRunnable);
-			mDoGoogleLoginThread.start();
+			Thread doGoogleLoginThread = new Thread(mDoGoogleLoginRunnable);
+			doGoogleLoginThread.start();
 
 		} catch (Exception e) {
 			e.printStackTrace();

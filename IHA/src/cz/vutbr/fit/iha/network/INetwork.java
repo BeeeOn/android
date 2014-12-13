@@ -11,8 +11,8 @@ import cz.vutbr.fit.iha.adapter.device.Device.SaveDevice;
 import cz.vutbr.fit.iha.adapter.device.DeviceLog;
 import cz.vutbr.fit.iha.adapter.device.Facility;
 import cz.vutbr.fit.iha.adapter.location.Location;
-import cz.vutbr.fit.iha.household.ActualUser;
 import cz.vutbr.fit.iha.household.User;
+import cz.vutbr.fit.iha.network.GoogleAuthHelper.GoogleUserInfo;
 import cz.vutbr.fit.iha.network.xml.CustomViewPair;
 import cz.vutbr.fit.iha.network.xml.action.ComplexAction;
 import cz.vutbr.fit.iha.network.xml.condition.Condition;
@@ -48,11 +48,7 @@ public interface INetwork {
 			throw new IllegalArgumentException("Invalid NetworkAction value");
 		}
 	}
-
-	public void setUser(ActualUser user);
 	
-	public void setUID(String userId);
-
 	/**
 	 * Checks if Internet connection is available.
 	 * 
@@ -64,6 +60,10 @@ public interface INetwork {
 	// /////////////////////////////////////SIGNIN,SIGNUP,ADAPTERS//////////////////////
 	// /////////////////////////////////////////////////////////////////////////////////
 
+	GoogleUserInfo getUserInfo();
+	
+	public void setUID(String userId);
+	
 	/**
 	 * Return actual UID used for communication (= active session)
 	 * 
@@ -75,9 +75,10 @@ public interface INetwork {
 	 * Method does logging in/registration of user and load communication UID.
 	 * You can get actual communication UID by calling getUID()
 	 * 
+	 * @param GoogleUserInfo containing a google token and userId
 	 * @return true on success, false or throw exception otherwise
 	 */
-	public boolean loadUID();
+	public boolean loadUID(GoogleUserInfo googleUserInfo);
 
 	/**
 	 * Method register adapter to server

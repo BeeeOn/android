@@ -45,8 +45,8 @@ import cz.vutbr.fit.iha.adapter.location.Location;
 import cz.vutbr.fit.iha.controller.Controller;
 import cz.vutbr.fit.iha.exception.IhaException;
 import cz.vutbr.fit.iha.exception.NetworkError;
-import cz.vutbr.fit.iha.household.ActualUser;
 import cz.vutbr.fit.iha.household.User;
+import cz.vutbr.fit.iha.network.GoogleAuthHelper.GoogleUserInfo;
 import cz.vutbr.fit.iha.network.xml.CustomViewPair;
 import cz.vutbr.fit.iha.network.xml.FalseAnswer;
 import cz.vutbr.fit.iha.network.xml.ParsedMessage;
@@ -96,11 +96,8 @@ public class Network implements INetwork {
 	private static final String SERVER_CN_CERTIFICATE = "ant-2.fit.vutbr.cz";
 
 	private final Context mContext;
-	private GoogleAuth mGoogleAuth;
-	private ActualUser mUser;
 	private String mUserID = "";
 	private final boolean mUseDebugServer;
-	private boolean mGoogleReinit;
 	private static final int SSLTIMEOUT = 35000;
 	
 	private SSLSocket permaSocket = null;
@@ -118,15 +115,16 @@ public class Network implements INetwork {
 		mContext = context;
 		mUseDebugServer = useDebugServer;
 	}
-
-	@Override
-	public void setUser(ActualUser user) {
-		mUser = user;
-	}
 	
 	@Override
 	public void setUID(String userId) {
 		mUserID = userId;
+	}
+	
+	@Override
+	public GoogleUserInfo getUserInfo() {
+		// FIXME
+		return null;
 	}
 
 	/**
@@ -392,44 +390,6 @@ public class Network implements INetwork {
 	}
 
 	/**
-	 * Must be called on start or on reinit
-	 * 
-	 * @param googleAuth
-	 */
-	public void initGoogle(GoogleAuth googleAuth) {
-		mGoogleAuth = googleAuth;
-		mGoogleReinit = false;
-	}
-
-	/**
-	 * Method start downloading data from google
-	 * 
-	 * @param blocking
-	 *            true is running in same thread, false for start new thread
-	 * @param fetchPhoto
-	 *            true if want download user photo, false if not
-	 * @return true if everything Ok, false when you need to reinit object via call initGoogle(GoogleAuth), or some
-	 *         error
-	 */
-	public boolean startGoogleAuth(boolean blocking, boolean fetchPhoto) {
-		if (blocking) {
-			if (mGoogleAuth.doInForeground(fetchPhoto)) {
-				mUser.setName(mGoogleAuth.getUserName());
-				mUser.setEmail(mGoogleAuth.getEmail());
-				mUser.setPicture(mGoogleAuth.getPictureIMG());
-				mUser.setPictureUrl(mGoogleAuth.getPicture());
-				return true;
-			}
-			return false;
-		} else {
-			if (mGoogleReinit)
-				return false;
-			mGoogleAuth.execute();
-		}
-		return true;
-	}
-
-	/**
 	 * Checks if Internet connection is available.
 	 * 
 	 * @return true if available, false otherwise
@@ -470,7 +430,7 @@ public class Network implements INetwork {
 		if (!isAvailable())
 			throw new IhaException(NetworkError.NO_CONNECTION);
 
-		ParsedMessage msg = null;
+		// ParsedMessage msg = null;
 		// Debug.startMethodTracing("Support_231");
 		// long ltime = new Date().getTime();
 		try {
@@ -496,26 +456,6 @@ public class Network implements INetwork {
 
 	}
 
-	/**
-	 * Blocking way to get token
-	 * 
-	 * @return google token
-	 */
-	private String getGoogleToken() {
-		if (!isAvailable())
-			throw new IhaException(NetworkError.NO_CONNECTION);
-
-		String googleToken = "";
-		try {
-			do {
-				googleToken = mGoogleAuth.getToken();
-			} while (googleToken.equalsIgnoreCase(""));
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return googleToken;
-	}
-
 	// /////////////////////////////////////////////////////////////////////////////////
 	// /////////////////////////////////////SIGNIN,SIGNUP,ADAPTERS//////////////////////
 	// /////////////////////////////////////////////////////////////////////////////////
@@ -534,27 +474,21 @@ public class Network implements INetwork {
 	 * @return true if everything successful, false otherwise
 	 */
 	@Override
-	public boolean loadUID(){
-		String googleToken = getGoogleToken();
-		String googleID = mGoogleAuth.getId(); // TODO: check this - GOOGLE ID
-		if (googleToken.length() == 0)
-			throw new IhaException(NetworkError.GOOGLE_TOKEN);
-		
+	public boolean loadUID(GoogleUserInfo googleUserInfo) {
 		TelephonyManager tm = (TelephonyManager) mContext.getSystemService(Context.TELEPHONY_SERVICE);
+		
 		String phoneId = tm.getDeviceId();
+		if (phoneId == null)
+			phoneId = getMAC();
 		
-		phoneId = (phoneId == null) ? getMAC() : phoneId;
-		
-		Log.i("HW ID - IMEI or MAC", phoneId);
+		Log.i(TAG, String.format("HW ID (IMEI or MAC): %s", phoneId));
 
-		ParsedMessage msg = doRequest(XmlCreator.createGetUID(googleID, googleToken, Locale.getDefault().getLanguage(), phoneId));
+		ParsedMessage msg = doRequest(XmlCreator.createGetUID(googleUserInfo.id, googleUserInfo.token, Locale.getDefault().getLanguage(), phoneId));
 
 		if (!msg.getUserId().isEmpty() && msg.getState() == State.UID) {
 			mUserID = msg.getUserId();
 			return true;
 		}
-		if (msg.getState() == State.FALSE && ((FalseAnswer) msg.data).getErrCode() == NetworkError.NOT_VALID_USER.getNumber())
-			mGoogleAuth.invalidateToken();
 		
 		FalseAnswer fa = (FalseAnswer) msg.data;
 		throw new IhaException(fa.getErrMessage(), NetworkError.fromValue(fa.getErrCode()));

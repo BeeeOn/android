@@ -25,10 +25,10 @@ import cz.vutbr.fit.iha.adapter.device.values.BaseEnumValue;
 import cz.vutbr.fit.iha.adapter.device.values.BaseEnumValue.Item;
 import cz.vutbr.fit.iha.adapter.location.Location;
 import cz.vutbr.fit.iha.exception.IhaException;
-import cz.vutbr.fit.iha.household.ActualUser;
 import cz.vutbr.fit.iha.household.User;
 import cz.vutbr.fit.iha.household.User.Gender;
 import cz.vutbr.fit.iha.household.User.Role;
+import cz.vutbr.fit.iha.network.GoogleAuthHelper.GoogleUserInfo;
 import cz.vutbr.fit.iha.network.xml.CustomViewPair;
 import cz.vutbr.fit.iha.network.xml.XmlParsers;
 import cz.vutbr.fit.iha.network.xml.action.ComplexAction;
@@ -45,7 +45,6 @@ public class DemoNetwork implements INetwork {
 	public static final String DEMO_EMAIL = "demo";
 
 	private Context mContext;
-	private ActualUser mUser;
 	private String mUID;
 
 	private class AdapterHolder {
@@ -102,8 +101,9 @@ public class DemoNetwork implements INetwork {
 		}
 	}
 	
-	public void setUser(ActualUser user) {
-		mUser = user;
+	@Override
+	public GoogleUserInfo getUserInfo() {
+		return new GoogleUserInfo("", DEMO_EMAIL, "", "John Doe", "", false, Gender.Male, "", "en");
 	}
 	
 	public void initDemoData() throws IhaException {
@@ -111,11 +111,11 @@ public class DemoNetwork implements INetwork {
 		mAdapters.clear();
 		
 		// Set user
-		mUser.setName("John Doe");
+/*		mUser.setName("John Doe");
 		mUser.setEmail(DEMO_EMAIL);
 		mUser.setGender(Gender.Male);
 		mUser.setPicture(null);
-		mUser.setPictureUrl("");
+		mUser.setPictureUrl(""); */
 
 		// Parse and set initial demo data
 		XmlParsers parser = new XmlParsers();
@@ -160,7 +160,7 @@ public class DemoNetwork implements INetwork {
 	}
 	
 	@Override
-	public boolean loadUID() {
+	public boolean loadUID(GoogleUserInfo googleUserInfo) {
 		mUID = "123456789";
 		return true;
 	}
