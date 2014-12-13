@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import cz.vutbr.fit.iha.adapter.device.units.BaseUnit;
 import cz.vutbr.fit.iha.adapter.device.values.BaseEnumValue;
 import cz.vutbr.fit.iha.adapter.device.values.BaseValue;
+import cz.vutbr.fit.iha.adapter.device.values.UnknownValue;
 
 public class UnitsHelper {
 
@@ -31,6 +32,8 @@ public class UnitsHelper {
 		if (item instanceof BaseEnumValue) {
 			int resId = ((BaseEnumValue) item).getStateStringResource();
 			return mContext.getString(resId);
+		} else if (item instanceof UnknownValue) {
+			return ((UnknownValue) item).getRawValue();
 		}
 
 		return getStringValue(item, item.getDoubleValue());

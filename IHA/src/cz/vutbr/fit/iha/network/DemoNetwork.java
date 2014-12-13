@@ -29,6 +29,7 @@ import cz.vutbr.fit.iha.household.ActualUser;
 import cz.vutbr.fit.iha.household.User;
 import cz.vutbr.fit.iha.household.User.Gender;
 import cz.vutbr.fit.iha.household.User.Role;
+import cz.vutbr.fit.iha.network.GoogleAuthHelper.GoogleUserInfo;
 import cz.vutbr.fit.iha.network.xml.CustomViewPair;
 import cz.vutbr.fit.iha.network.xml.XmlParsers;
 import cz.vutbr.fit.iha.network.xml.action.ComplexAction;
@@ -45,7 +46,7 @@ public class DemoNetwork implements INetwork {
 	public static final String DEMO_EMAIL = "demo";
 
 	private Context mContext;
-	private ActualUser mUser;
+	private String mUID;
 
 	private class AdapterHolder {
 		public final Adapter adapter;
@@ -100,33 +101,22 @@ public class DemoNetwork implements INetwork {
 			device.setValue(String.valueOf((int)lastValue));
 		}
 	}
-
+	
 	@Override
-	public void setUser(ActualUser user) {
-		mUser = user;
+	public GoogleUserInfo getUserInfo() {
+		return new GoogleUserInfo("", DEMO_EMAIL, "", "John Doe", "", false, Gender.Male, "", "en");
 	}
-
-	@Override
-	public boolean isAvailable() {
-		return true;
-	}
-
-	@Override
-	public String getUID() {
-		// This has to return false so signIn() method will be called in Controller
-		// (maybe it will be changed later somehow)
-		return "";
-	}
-
-//	@Override
-	public boolean signIn(String email, String gcmid) throws IhaException {
+	
+	public void initDemoData(ActualUser user) throws IhaException {
+		// Erase previous data if exists
+		mAdapters.clear();
+		
 		// Set user
-		mUser.setName("John Doe");
-		mUser.setEmail(DEMO_EMAIL);
-		mUser.setGender(Gender.Male);
-		mUser.setPicture(null);
-		mUser.setPictureUrl("");
-		mUser.setUserId("123456789");
+		user.setName("John Doe");
+		user.setEmail(DEMO_EMAIL);
+		user.setGender(Gender.Male);
+		user.setPicture(null);
+		user.setPictureUrl("");
 
 		// Parse and set initial demo data
 		XmlParsers parser = new XmlParsers();
@@ -153,14 +143,28 @@ public class DemoNetwork implements INetwork {
 				facility.setLastUpdate(DateTime.now(DateTimeZone.UTC).minusSeconds(new Random().nextInt(60 * 60 * 26)));
 			}
 		}
-		
+	}
+
+	@Override
+	public boolean isAvailable() {
 		return true;
 	}
-//
-//	@Override
-//	public boolean signUp(String email) {
-//		return true;
-//	}
+
+	@Override
+	public void setUID(String userId) {
+		mUID = userId;
+	}
+
+	@Override
+	public String getUID() {
+		return mUID;
+	}
+	
+	@Override
+	public boolean loadUID(GoogleUserInfo googleUserInfo) {
+		mUID = "123456789";
+		return true;
+	}
 
 	@Override
 	public boolean addAdapter(String adapterId, String adapterName) {

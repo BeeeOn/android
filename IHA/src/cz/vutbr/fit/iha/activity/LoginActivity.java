@@ -35,6 +35,7 @@ import cz.vutbr.fit.iha.exception.IhaException;
 import cz.vutbr.fit.iha.exception.NetworkError;
 import cz.vutbr.fit.iha.exception.NotImplementedException;
 import cz.vutbr.fit.iha.network.DemoNetwork;
+import cz.vutbr.fit.iha.network.GoogleAuthHelper;
 import cz.vutbr.fit.iha.thread.ToastMessageThread;
 import cz.vutbr.fit.iha.util.Log;
 
@@ -53,15 +54,13 @@ public class LoginActivity extends BaseActivity {
 
 	private Controller mController;
 	private ProgressDialog mProgress;
-	private Thread mDoGoogleLoginThread;
-	private StoppableRunnable mDoGoogleLoginRunnable;
+	private StoppableRunnable mLoginRunnable;
 
 	private static final String TAG = LoginActivity.class.getSimpleName();
-	public static final int USER_RECOVERABLE_AUTH = 5;
+	private static final int USER_RECOVERABLE_AUTH = 5;
 	private static final int GET_GOOGLE_ACCOUNT = 6;
 
 	private boolean mIgnoreChange = false;
-	private boolean mSignUp = false;
 
 	private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 1;
 	
@@ -97,28 +96,20 @@ public class LoginActivity extends BaseActivity {
 		mProgress.setMessage(getString(R.string.progress_signing));
 		mProgress.setCancelable(true);
 		mProgress.setCanceledOnTouchOutside(false);
+		mProgress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
 		mProgress.setOnCancelListener(new OnCancelListener() {
 
 			@Override
 			public void onCancel(DialogInterface dialog) {
-				if (mDoGoogleLoginRunnable != null) {
-					mDoGoogleLoginRunnable.stop();
+				if (mLoginRunnable != null) {
+					mLoginRunnable.stop();
 				}
 			}
 		});
 
-		// FIXME commented for release
-		// // try to register GCM
-		// if (mController.getGCMRegistrationId().isEmpty() && GooglePlayServicesUtil.isGooglePlayServicesAvailable(getBaseContext()) == ConnectionResult.SUCCESS) {
-		// GcmHelper.registerGCMInBackground(this);
-		// }
-
-		mProgress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-
 		if (mController.isLoggedIn()) {
 			// If we're already logged in, continue to location screen
 			Log.d(TAG, "Already logged in, going to locations screen...");
-			mController.initGoogle(this, mController.getLastEmail());
 
 			if (!isRedirect) {
 				Intent intent = new Intent(this, MainActivity.class);
@@ -130,37 +121,20 @@ public class LoginActivity extends BaseActivity {
 		}
 
 		String lastEmail = mController.getLastEmail();
-		if (lastEmail.length() > 0) {
+		if (lastEmail.length() > 0 && lastEmail != DemoNetwork.DEMO_EMAIL) {
 			// Automatic login with last used e-mail
 			Log.d(TAG, String.format("Automatic login with last used e-mail (%s)...", lastEmail));
-
-			setDemoMode(false);
-			mProgress.show();
-			doGoogleLogin(lastEmail);
+			doLogin(false, lastEmail);
 		}
 
 		// Demo button
 		((ImageButton) findViewById(R.id.login_btn_demo)).setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
+				mIgnoreChange = true;
 				mProgress.setMessage(LoginActivity.this.getString(R.string.progress_loading_demo));
-				mProgress.show();
-
-				new Thread(new Runnable() {
-					@Override
-					public void run() {
-						setDemoMode(true);
-						doLogin(DemoNetwork.DEMO_EMAIL);
-
-						if (!isRedirect) {
-							Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-							startActivity(intent);
-						}
-
-						mProgress.dismiss();
-						finish();
-					}
-				}).start();
+				doLogin(true, DemoNetwork.DEMO_EMAIL);
+				// mIgnoreChange = false;
 			}
 		});
 
@@ -173,9 +147,7 @@ public class LoginActivity extends BaseActivity {
 			@Override
 			public void onClick(View v) {
 				mIgnoreChange = true;
-				setDemoMode(false);
-				mProgress.show();
-				beginGoogleAuthRutine(v);
+				beginGoogleAuthRoutine();
 				// mIgnoreChange = false;
 			}
 		});
@@ -207,39 +179,28 @@ public class LoginActivity extends BaseActivity {
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
-
+		
 		if (resultCode == RESULT_CANCELED) {
-			if (mDoGoogleLoginRunnable != null) {
-				mDoGoogleLoginRunnable.stop();
+			if (mLoginRunnable != null) {
+				mLoginRunnable.stop();
 			}
 			progressDismiss();
 			return;
 		}
 
-		if (requestCode == USER_RECOVERABLE_AUTH && resultCode == RESULT_OK) {
+		if (resultCode == RESULT_OK && (requestCode == USER_RECOVERABLE_AUTH || requestCode == GET_GOOGLE_ACCOUNT)) {
 			String email = data.getStringExtra(AccountManager.KEY_ACCOUNT_NAME);
 			if (email == null) {
 				Log.d(TAG, "onActivityResult: no email");
 				return;
 			}
 			try {
-				mController.initGoogle(this, email);
-				mController.startGoogle(false, true); // do NOT need check returned value, init is called line before
 				progressChangeText(getString(R.string.loading_data));
-				Log.d(TAG, "user aproved, and token is tried to retake.");
-				doGoogleLogin(email);
+				Log.i(TAG, "Do Google login");
+				doLogin(false, email);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-		}
-		if (requestCode == GET_GOOGLE_ACCOUNT && resultCode == RESULT_OK) {
-			String email = data.getStringExtra(AccountManager.KEY_ACCOUNT_NAME);
-			if (email == null) {
-				Log.d(TAG, "onActivityResult: no email");
-				return;
-			}
-			Log.i(TAG, "Go do google login again.");
-			doGoogleLogin(email);
 		}
 	}
 
@@ -429,24 +390,24 @@ public class LoginActivity extends BaseActivity {
 		}
 		return names;
 	}
-
+	
 	/**
 	 * Method start routine to access trough google after button click
-	 * 
-	 * @param v
 	 */
-	private void beginGoogleAuthRutine(View v) {
-		Log.d(TAG, "BEG: Google access func");
+	private void beginGoogleAuthRoutine() {
+		Log.d(TAG, "Start GoogleAuthRoutine");
+		mProgress.show();
+				
 		int resultCode = GooglePlayServicesUtil.isGooglePlayServicesAvailable(getBaseContext());
 		if (resultCode == ConnectionResult.SUCCESS) {
 			// On this device is Google Play, we can proceed
 			Log.d(TAG, "On this device is Google Play, we can proceed");
 			String[] Accounts = this.getAccountNames();
+			Log.d(TAG, String.format("Number of accounts on this device: %d", Accounts.length));
+
 			if (Accounts.length == 1) {
-				Log.d(TAG, "On this device is one account");
-				doGoogleLogin(Accounts[0]);
+				doLogin(false, Accounts[0]);
 			} else {
-				Log.d(TAG, "On this device are more accounts");
 				Intent intent = AccountPicker.newChooseAccountIntent(null, null, new String[] { "com.google" }, false, null, null, null, null);
 				startActivityForResult(intent, GET_GOOGLE_ACCOUNT);
 			}
@@ -458,64 +419,7 @@ public class LoginActivity extends BaseActivity {
 			// 20.8. 2014 Martin changed it to system supported dialog which should solve the problem
 			mProgress.dismiss();
 		}
-		Log.d(TAG, "END: Google access func");
-	}
-
-	/**
-	 * Method create one thread to get google token and than call last logging method
-	 * 
-	 * @param email
-	 *            of user
-	 */
-	private void doGoogleLogin(final String email) {
-		progressShow();
-		if (!mController.isInternetAvailable()) {
-			Toast.makeText(this, getString(R.string.toast_internet_connection), Toast.LENGTH_LONG).show();
-			progressDismiss();
-			return;
-		}
-
-		mController.initGoogle(this, email);
-		try {
-			Log.d(TAG, "call google auth execute");
-
-			mDoGoogleLoginRunnable = new StoppableRunnable() {
-
-				@Override
-				public void run() {
-					// String gcmId = mController.getGCMRegistrationId();
-					// // try to register again in 1 second, otherwise register in
-					// // separate thread
-					// if (gcmId.isEmpty()) {
-					// GcmHelper.registerGCMInForeground(LoginActivity.this);
-					// gcmId = mController.getGCMRegistrationId();
-					// // if it still doesn't have GCM ID, try it repeatedly in
-					// // new thread
-					// if (gcmId.isEmpty()) {
-					// GcmHelper.registerGCMInBackground(LoginActivity.this);
-					// Log.e(GcmHelper.TAG_GCM, "GCM ID is not accesible, creating new thread for ");
-					// }
-					// }
-					//
-					// Log.i(GcmHelper.TAG_GCM, "GCM ID: " + gcmId);
-
-					if (!mController.startGoogle(true, true)) { // returned value is from doInForeground only
-						Log.e("Login", "exception in ggAuth");
-						return;
-					}
-
-					doLogin(email);
-
-					Log.d(TAG, "Finish google auth");
-				}
-			};
-
-			mDoGoogleLoginThread = new Thread(mDoGoogleLoginRunnable);
-			mDoGoogleLoginThread.start();
-
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		Log.d(TAG, "Finish GoogleAuthRoutine");
 	}
 
 	private abstract class StoppableRunnable implements Runnable {
@@ -538,82 +442,102 @@ public class LoginActivity extends BaseActivity {
 	/**
 	 * Last logging method that call controller to proceed access to server
 	 * 
+	 * @param demoMode
 	 * @param email
 	 *            of user
 	 */
-	private void doLogin(final String email) {
-		String errMessage = null;
-		boolean errFlag = false;
-
-		try {
-			if (mController.login(email)) {
-				Log.d(TAG, "Login: true");
-
-				// Load all adapters and data for active one on login
-				progressChangeText(getString(R.string.progress_loading_adapters));
-				mController.reloadAdapters(true);
-
-				Adapter active = mController.getActiveAdapter();
-				if (active != null) {
-					// Load data for active adapter
-					progressChangeText(getString(R.string.progress_loading_adapter));
-					mController.reloadLocations(active.getId(), true);
-					mController.reloadFacilitiesByAdapter(active.getId(), true);
-				}
-
-				if (mDoGoogleLoginRunnable != null && !mDoGoogleLoginRunnable.isStopped()) {
-					if (!isRedirect) {
-						Intent intent = new Intent(this, MainActivity.class);
-						startActivity(intent);
-					}
-
-					finish();
-				}
-			} else {
-				Log.d(TAG, "Login: false");
-				errFlag = true;
-				errMessage = "Login failed";
-			}
-		} catch (IhaException e) {
-			e.printStackTrace();
-			
-			ErrorCode code = e.getErrorCode();
-			if (code instanceof NetworkError && code == NetworkError.NOT_VALID_USER && !mSignUp) {
-				doRegisterUser(email);
-			} else {
-				errFlag = true;
-				errMessage = e.getTranslatedErrorMessage(this);
-			}
-		} catch (NotImplementedException e) {
-			e.printStackTrace();
-
-			// FIXME: remove in final version
-			errFlag = true;
-			errMessage = getString(R.string.toast_not_implemented);
-		} catch (Exception e) {
-			e.printStackTrace();
-			
-			errFlag = true;
-			errMessage = getString(R.string.toast_login_failed);
-		} finally {
-			progressDismiss();
-			if (errFlag) {
-				// alternate form: //mActivity.runOnUiThread(new ToastMessageThread(mActivity, errMessage));
-				new ToastMessageThread(this, errMessage).start();
-			}
+	private void doLogin(final boolean demoMode, final String email) {
+		if (!demoMode && !mController.isInternetAvailable()) {
+			Toast.makeText(this, getString(R.string.toast_internet_connection), Toast.LENGTH_LONG).show();
+			return;
 		}
-	}
-
-	private void doRegisterUser(final String email) {
-		mSignUp = true;
-		progressChangeText(getString(R.string.progress_signup));
+		
 		progressShow();
-		if (/*mController.registerUser(email)*/true) {
-			doLogin(email);
-		} else {
-			progressDismiss();
-			new ToastMessageThread(this, R.string.toast_something_wrong);
-		}
+		
+		mLoginRunnable = new StoppableRunnable() {
+
+			@Override
+			public void run() {
+				setDemoMode(demoMode);
+				
+				if (!demoMode) {
+					// TODO: Some GCM registration here? Or elsewhere?
+					// String gcmId = mController.getGCMRegistrationId();
+					// // try to register again in 1 second, otherwise register in
+					// // separate thread
+					// if (gcmId.isEmpty()) {
+					// GcmHelper.registerGCMInForeground(LoginActivity.this);
+					// gcmId = mController.getGCMRegistrationId();
+					// // if it still doesn't have GCM ID, try it repeatedly in
+					// // new thread
+					// if (gcmId.isEmpty()) {
+					// GcmHelper.registerGCMInBackground(LoginActivity.this);
+					// Log.e(GcmHelper.TAG_GCM, "GCM ID is not accesible, creating new thread for ");
+					// }
+					// }
+					//
+					// Log.i(GcmHelper.TAG_GCM, "GCM ID: " + gcmId);
+				}
+				
+				String errMessage = "Login failed";
+				boolean errFlag = true;
+		
+				try {
+					if (mController.login(email)) {
+						Log.d(TAG, "Login: true");
+						errFlag = false;
+		
+						// Load all adapters and data for active one on login
+						progressChangeText(getString(R.string.progress_loading_adapters));
+						mController.reloadAdapters(true);
+		
+						Adapter active = mController.getActiveAdapter();
+						if (active != null) {
+							// Load data for active adapter
+							progressChangeText(getString(R.string.progress_loading_adapter));
+							mController.reloadLocations(active.getId(), true);
+							mController.reloadFacilitiesByAdapter(active.getId(), true);
+						}
+		
+						if (mLoginRunnable != null && !mLoginRunnable.isStopped()) {
+							if (!isRedirect) {
+								Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+								startActivity(intent);
+							}
+		
+							finish();
+						}
+					}
+				} catch (IhaException e) {
+					ErrorCode errorCode = e.getErrorCode();
+					if (errorCode instanceof NetworkError && errorCode == NetworkError.GOOGLE_TRY_AGAIN) {
+						Intent intent = e.get(GoogleAuthHelper.RECOVERABLE_INTENT);
+						if (intent != null) {
+							startActivityForResult(intent, LoginActivity.USER_RECOVERABLE_AUTH);
+							return;
+						}
+					}
+					
+					e.printStackTrace();
+					errMessage = e.getTranslatedErrorMessage(getApplicationContext());
+				} catch (NotImplementedException e) {
+					e.printStackTrace();
+					errMessage = getString(R.string.toast_not_implemented);
+				} catch (Exception e) {
+					e.printStackTrace();
+					errMessage = getString(R.string.toast_login_failed);
+				}
+
+				progressDismiss();
+				if (errFlag) {
+					new ToastMessageThread(LoginActivity.this, errMessage).start();
+				}
+			}
+
+		};
+		
+		Thread loginThread = new Thread(mLoginRunnable);
+		loginThread.start();
 	}
 
 	// ////////////////////////////////////////////////////////////////////////////////////
