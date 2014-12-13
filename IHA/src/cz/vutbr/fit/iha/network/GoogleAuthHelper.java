@@ -1,6 +1,9 @@
 package cz.vutbr.fit.iha.network;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -24,10 +27,6 @@ public class GoogleAuthHelper {
 	private static final String TAG = GoogleAuthHelper.class.getSimpleName();
 	
 	private static String SCOPE = "oauth2:https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email";
-
-	public enum GoogleAuthState {
-		eOK, eUnknown, eRecorver, eNoConnection
-	}
 	
 	public static class GoogleUserInfo {
 		public final String email;
@@ -54,52 +53,26 @@ public class GoogleAuthHelper {
 	}
 	
 	public static String getToken(LoginActivity activity, String email) {
-		// FIXME this whole method shall be revised and probably rewrited
-		
-		Context context = activity;
-		
-		GoogleAuthState result = GoogleAuthState.eUnknown;
 		String token = "";
 
 		try {
-			token = GoogleAuthUtil.getToken(context, email, SCOPE);
-			Log.d(TAG, token);
-
-			GoogleAuthHelper.fetchInfoFromProfileServer(token, true);
-
-			result = GoogleAuthState.eOK;
+			token = GoogleAuthUtil.getToken(activity, email, SCOPE);
+			Log.d(TAG, String.format("Google token: %s", token));
 		} catch (UserRecoverableAuthException userRecoverableException) {
+			activity.progressDismiss();
 			activity.progressChangeText(activity.getString(R.string.progress_google));
 			activity.startActivityForResult(userRecoverableException.getIntent(), LoginActivity.USER_RECOVERABLE_AUTH);
-			result = GoogleAuthState.eRecorver;
-		} catch (IOException e) {
-			result = GoogleAuthState.eNoConnection;
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		
-		switch (result) {
-		case eOK:
-			activity.progressDismiss();
-			break;
-		case eRecorver:			
-			activity.progressDismiss();
 			new ToastMessageThread(activity, R.string.toast_google_auth).start();
-			break;
-		case eUnknown:
-			activity.progressDismiss();
-			new ToastMessageThread(activity, R.string.toast_something_wrong).start();
-			break;
-		case eNoConnection:
+		} catch (IOException e) {
 			activity.progressDismiss();
 			new ToastMessageThread(activity, R.string.toast_check_your_connection_via_browser).start();
-			break;
-		default:
-			break;
+		} catch (Exception e) {
+			activity.progressDismiss();
+			e.printStackTrace();
+			new ToastMessageThread(activity, R.string.toast_something_wrong).start();
 		}
-		
+
 		return token;
-		
 	}
 	
 	public static void invalidateToken(Context context, String token) {
@@ -114,10 +87,29 @@ public class GoogleAuthHelper {
 	 * @param token
 	 * @return GoogleUserInfo or null
 	 */
-	// TODO: po zavolani tohoto kdyz to hodi google_token exception, tak to invalidovat
 	public static GoogleUserInfo fetchInfoFromProfileServer(String token) throws IhaException {
 		String requestUrl = "https://www.googleapis.com/oauth2/v1/userinfo?access_token=" + token;
-		String response = Utils.fetchStringFromUrl(requestUrl);
+		String response = "";
+		
+		try {
+			URL url = new URL(requestUrl);
+			HttpURLConnection con = (HttpURLConnection) url.openConnection();
+			try {
+				if (con.getResponseCode() == 401) {
+					// Our token is invalid
+					// GoogleAuthUtil.invalidateToken(activity, token); // let invalidation to caller of this method...
+					throw new IhaException("Response 401 Not Authorized", NetworkError.GOOGLE_TOKEN);
+				}
+
+				InputStream in = con.getInputStream();
+				response = Utils.getUtf8StringFromInputStream(in);
+			} finally {
+				con.disconnect();
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
 
 		try {
 			JSONObject profile = new JSONObject(response);

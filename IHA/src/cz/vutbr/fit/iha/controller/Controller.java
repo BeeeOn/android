@@ -7,6 +7,7 @@ import java.util.Map;
 import android.content.Context;
 import android.content.SharedPreferences;
 import cz.vutbr.fit.iha.Constants;
+import cz.vutbr.fit.iha.activity.LoginActivity;
 import cz.vutbr.fit.iha.adapter.Adapter;
 import cz.vutbr.fit.iha.adapter.device.Device;
 import cz.vutbr.fit.iha.adapter.device.Device.SaveDevice;
@@ -143,28 +144,40 @@ public final class Controller {
 	 * @return true on success, false otherwise
 	 * @throws NetworkException
 	 */
-	public boolean login(String email) throws IhaException {
+	public boolean login(LoginActivity activity, String email) throws IhaException {
 		GoogleUserInfo googleUserInfo = null;
+		String token = "";
 		
-		String token = ""; // FIXME
-		
-		boolean googleNetwork = (mNetwork instanceof Network);
-		if (googleNetwork) {
-			googleUserInfo = GoogleAuthHelper.fetchInfoFromProfileServer(token);
-			mHousehold.user.setEmail(email);
-			// ...
-		}
-		
-		// FIXME: after some time there should be picture in ActualUser object, should save to mPersistence
 		try {
-			// In demo mode load some init data from sdcard
-			if (mNetwork instanceof DemoNetwork) {
-				((DemoNetwork)mNetwork).initDemoData();
-			}
-			
+			// Need to set this soon so getUserSettings() will work
+			mHousehold.user.setEmail(email);
+
 			// Load UID from previous session
 			SharedPreferences prefs = getUserSettings();
 			String UID = prefs.getString(Constants.PERSISTENCE_PREF_UID, "");
+			
+			if (mNetwork instanceof Network) {
+				// Get Google token
+				token = GoogleAuthHelper.getToken(activity, email);
+				if (token.isEmpty()) {
+					throw new IhaException(NetworkError.GOOGLE_TOKEN);
+				}
+				
+				// Get user info from Google
+				googleUserInfo = GoogleAuthHelper.fetchInfoFromProfileServer(token);
+				ActualUser user = mHousehold.user;
+				user.setName(googleUserInfo.name);
+				//user.setEmail(email);
+				user.setGender(googleUserInfo.gender);
+				user.setPictureUrl(googleUserInfo.pictureUrl);
+				
+				// TODO: Check if ImageURL is same as before, and if not (or if not exists image file), download user image...
+				user.setPicture(null);
+			} else if (mNetwork instanceof DemoNetwork) {
+				// In demo mode load some init data from sdcard
+				((DemoNetwork)mNetwork).initDemoData(mHousehold.user);
+			}
+
 			
 			// If no previous session, load fresh UID from server
 			if (UID.isEmpty()) {
@@ -175,7 +188,6 @@ public final class Controller {
 				
 				// TODO: Do we have user info + photo, now? If so, save it...
 				// mPersistence.saveUserDetails(mHousehold.user);
-				// TODO: Check if ImageURL is same as before, and if not (or if not exists image file), download user image...
 			} else {
 				mNetwork.setUID(UID);
 			}
@@ -183,18 +195,22 @@ public final class Controller {
 			// Do we have session now? Then remember this user
 			if (!mNetwork.getUID().isEmpty()) {
 				mPersistence.initializeDefaultSettings(email);
-				mPersistence.saveLastEmail(email);
+
+				if (!(mNetwork instanceof DemoNetwork))
+					mPersistence.saveLastEmail(email);
+
 				return true;
 			}
 		} catch (IhaException e) {
+			// Process known and processible error codes (actually only google token error)
 			ErrorCode errorCode = e.getErrorCode();
-			if (errorCode instanceof NetworkError) {
+			if ((mNetwork instanceof Network) && (errorCode instanceof NetworkError)) {
 				if (errorCode == NetworkError.NOT_VALID_USER || errorCode == NetworkError.GOOGLE_TOKEN) {
 					// We have probably used incorrect Google token, invalidate it and try it again
 					GoogleAuthHelper.invalidateToken(mContext, token);
 	
 					// And try it again, hopefully we will have correct token then
-					return login(email);
+					//return login(activity, email);
 				}
 			}
 			throw IhaException.wrap(e);
@@ -212,7 +228,9 @@ public final class Controller {
 		mNetwork.setUID("");
 		
 		// Delete session from saved settings
-		getUserSettings().edit().remove(Constants.PERSISTENCE_PREF_UID).commit();
+		SharedPreferences prefs = getUserSettings();
+		if (prefs != null)
+			prefs.edit().remove(Constants.PERSISTENCE_PREF_UID).commit();
 
 		// Forgot info about last user 
 		mPersistence.saveLastEmail(null);
@@ -225,7 +243,7 @@ public final class Controller {
 	 */
 	public boolean isLoggedIn() {
 		// TODO: Check session lifetime somehow?
-		return mNetwork.getUID().isEmpty();
+		return !mHousehold.user.getEmail().isEmpty() && !mNetwork.getUID().isEmpty();
 	}
 
 	public boolean isInternetAvailable() {

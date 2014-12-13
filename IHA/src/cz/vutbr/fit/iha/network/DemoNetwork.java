@@ -25,6 +25,7 @@ import cz.vutbr.fit.iha.adapter.device.values.BaseEnumValue;
 import cz.vutbr.fit.iha.adapter.device.values.BaseEnumValue.Item;
 import cz.vutbr.fit.iha.adapter.location.Location;
 import cz.vutbr.fit.iha.exception.IhaException;
+import cz.vutbr.fit.iha.household.ActualUser;
 import cz.vutbr.fit.iha.household.User;
 import cz.vutbr.fit.iha.household.User.Gender;
 import cz.vutbr.fit.iha.household.User.Role;
@@ -106,16 +107,16 @@ public class DemoNetwork implements INetwork {
 		return new GoogleUserInfo("", DEMO_EMAIL, "", "John Doe", "", false, Gender.Male, "", "en");
 	}
 	
-	public void initDemoData() throws IhaException {
+	public void initDemoData(ActualUser user) throws IhaException {
 		// Erase previous data if exists
 		mAdapters.clear();
 		
 		// Set user
-/*		mUser.setName("John Doe");
-		mUser.setEmail(DEMO_EMAIL);
-		mUser.setGender(Gender.Male);
-		mUser.setPicture(null);
-		mUser.setPictureUrl(""); */
+		user.setName("John Doe");
+		user.setEmail(DEMO_EMAIL);
+		user.setGender(Gender.Male);
+		user.setPicture(null);
+		user.setPictureUrl("");
 
 		// Parse and set initial demo data
 		XmlParsers parser = new XmlParsers();
