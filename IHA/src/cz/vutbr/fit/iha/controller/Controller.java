@@ -162,15 +162,17 @@ public final class Controller {
 			mNetwork.setUID(UID);
 
 			// Try to do test request with loaded UID to know if we're really logged in or not
-			try {
-				// FIXME: Use some better request
-				mNetwork.getAdapters();
-			} catch (IhaException e) {
-				ErrorCode errorCode = e.getErrorCode();
-				if (errorCode instanceof NetworkError && errorCode == NetworkError.BAD_UID) {
-					// This UID is invalid, load fresh one
-					Log.w(TAG, "UID is invalid, we will load fresh one");
-					UID = "";
+			if (!UID.isEmpty()) {
+				try {
+					// FIXME: Use some better request
+					mNetwork.getAdapters();
+				} catch (IhaException e) {
+					ErrorCode errorCode = e.getErrorCode();
+					if (errorCode instanceof NetworkError && errorCode == NetworkError.BAD_UID) {
+						// This UID is invalid, load fresh one
+						Log.w(TAG, "UID is invalid, we will load fresh one");
+						UID = "";
+					}
 				}
 			}
 			
@@ -271,6 +273,16 @@ public final class Controller {
 
 	public boolean isInternetAvailable() {
 		return mNetwork.isAvailable();
+	}
+	
+	public void beginPersistentConnection() {
+		if (mNetwork instanceof Network)
+			((Network)mNetwork).multiSessionBegin();
+	}
+	
+	public void endPersistentConnection() {
+		if (mNetwork instanceof Network)
+			((Network)mNetwork).multiSessionEnd();
 	}
 
 	/** Reloading data methods **********************************************/
