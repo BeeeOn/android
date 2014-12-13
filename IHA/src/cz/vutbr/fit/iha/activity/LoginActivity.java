@@ -75,6 +75,7 @@ public class LoginActivity extends BaseActivity {
 		mProgress.setMessage(getString(R.string.progress_signing));
 		mProgress.setCancelable(true);
 		mProgress.setCanceledOnTouchOutside(false);
+		mProgress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
 		mProgress.setOnCancelListener(new OnCancelListener() {
 
 			@Override
@@ -84,14 +85,6 @@ public class LoginActivity extends BaseActivity {
 				}
 			}
 		});
-
-		// FIXME commented for release
-		// // try to register GCM
-		// if (mController.getGCMRegistrationId().isEmpty() && GooglePlayServicesUtil.isGooglePlayServicesAvailable(getBaseContext()) == ConnectionResult.SUCCESS) {
-		// GcmHelper.registerGCMInBackground(this);
-		// }
-
-		mProgress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
 
 		if (mController.isLoggedIn()) {
 			// If we're already logged in, continue to location screen
@@ -110,10 +103,7 @@ public class LoginActivity extends BaseActivity {
 		if (lastEmail.length() > 0 && lastEmail != DemoNetwork.DEMO_EMAIL) {
 			// Automatic login with last used e-mail
 			Log.d(TAG, String.format("Automatic login with last used e-mail (%s)...", lastEmail));
-
-			setDemoMode(false);
-			mProgress.show();
-			doGoogleLogin(lastEmail);
+			doLogin(false, lastEmail);
 		}
 
 		// Demo button
@@ -122,8 +112,7 @@ public class LoginActivity extends BaseActivity {
 			public void onClick(View v) {
 				mIgnoreChange = true;
 				mProgress.setMessage(LoginActivity.this.getString(R.string.progress_loading_demo));
-				mProgress.show();
-				doDemoLogin();
+				doLogin(true, DemoNetwork.DEMO_EMAIL);
 				// mIgnoreChange = false;
 			}
 		});
@@ -137,7 +126,6 @@ public class LoginActivity extends BaseActivity {
 			@Override
 			public void onClick(View v) {
 				mIgnoreChange = true;
-				mProgress.show();
 				beginGoogleAuthRoutine();
 				// mIgnoreChange = false;
 			}
@@ -173,7 +161,7 @@ public class LoginActivity extends BaseActivity {
 			try {
 				progressChangeText(getString(R.string.loading_data));
 				Log.i(TAG, "Do Google login");
-				doGoogleLogin(email);
+				doLogin(false, email);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -279,6 +267,8 @@ public class LoginActivity extends BaseActivity {
 	 */
 	private void beginGoogleAuthRoutine() {
 		Log.d(TAG, "Start GoogleAuthRoutine");
+		mProgress.show();
+				
 		int resultCode = GooglePlayServicesUtil.isGooglePlayServicesAvailable(getBaseContext());
 		if (resultCode == ConnectionResult.SUCCESS) {
 			// On this device is Google Play, we can proceed
@@ -287,7 +277,7 @@ public class LoginActivity extends BaseActivity {
 			Log.d(TAG, String.format("Number of accounts on this device: %d", Accounts.length));
 
 			if (Accounts.length == 1) {
-				doGoogleLogin(Accounts[0]);
+				doLogin(false, Accounts[0]);
 			} else {
 				Intent intent = AccountPicker.newChooseAccountIntent(null, null, new String[] { "com.google" }, false, null, null, null, null);
 				startActivityForResult(intent, GET_GOOGLE_ACCOUNT);
@@ -301,76 +291,6 @@ public class LoginActivity extends BaseActivity {
 			mProgress.dismiss();
 		}
 		Log.d(TAG, "Finish GoogleAuthRoutine");
-	}
-
-	private void doDemoLogin() {
-		
-		mLoginRunnable = new StoppableRunnable() {
-
-			@Override
-			public void run() {
-				setDemoMode(true);
-				doLogin(DemoNetwork.DEMO_EMAIL);
-
-				if (!isRedirect) {
-					Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-					startActivity(intent);
-				}
-
-				mProgress.dismiss();
-				finish();
-			}
-		};
-		
-		Thread loginThread = new Thread(mLoginRunnable);
-		loginThread.start();
-	}
-	
-	/**
-	 * Method create one thread to get google token and than call last logging method
-	 * 
-	 * @param email
-	 *            of user
-	 */
-	private void doGoogleLogin(final String email) {
-		if (!mController.isInternetAvailable()) {
-			Toast.makeText(this, getString(R.string.toast_internet_connection), Toast.LENGTH_LONG).show();
-			return;
-		}
-
-		progressShow();
-
-		Log.d(TAG, "Start doGoogleLogin");
-
-		mLoginRunnable = new StoppableRunnable() {
-
-			@Override
-			public void run() {
-				// String gcmId = mController.getGCMRegistrationId();
-				// // try to register again in 1 second, otherwise register in
-				// // separate thread
-				// if (gcmId.isEmpty()) {
-				// GcmHelper.registerGCMInForeground(LoginActivity.this);
-				// gcmId = mController.getGCMRegistrationId();
-				// // if it still doesn't have GCM ID, try it repeatedly in
-				// // new thread
-				// if (gcmId.isEmpty()) {
-				// GcmHelper.registerGCMInBackground(LoginActivity.this);
-				// Log.e(GcmHelper.TAG_GCM, "GCM ID is not accesible, creating new thread for ");
-				// }
-				// }
-				//
-				// Log.i(GcmHelper.TAG_GCM, "GCM ID: " + gcmId);
-
-				setDemoMode(false);
-				doLogin(email);
-
-				Log.d(TAG, "Finish google auth");
-			}
-		};
-
-		Thread loginThread = new Thread(mLoginRunnable);
-		loginThread.start();
 	}
 
 	private abstract class StoppableRunnable implements Runnable {
@@ -393,55 +313,94 @@ public class LoginActivity extends BaseActivity {
 	/**
 	 * Last logging method that call controller to proceed access to server
 	 * 
+	 * @param demoMode
 	 * @param email
 	 *            of user
 	 */
-	private void doLogin(final String email) {
-		String errMessage = "Login failed";
-		boolean errFlag = true;
-
-		try {
-			if (mController.login(this, email)) {
-				Log.d(TAG, "Login: true");
-				errFlag = false;
-
-				// Load all adapters and data for active one on login
-				progressChangeText(getString(R.string.progress_loading_adapters));
-				mController.reloadAdapters(true);
-
-				Adapter active = mController.getActiveAdapter();
-				if (active != null) {
-					// Load data for active adapter
-					progressChangeText(getString(R.string.progress_loading_adapter));
-					mController.reloadLocations(active.getId(), true);
-					mController.reloadFacilitiesByAdapter(active.getId(), true);
-				}
-
-				if (mLoginRunnable != null && !mLoginRunnable.isStopped()) {
-					if (!isRedirect) {
-						Intent intent = new Intent(this, MainActivity.class);
-						startActivity(intent);
-					}
-
-					finish();
-				}
-			}
-		} catch (IhaException e) {
-			e.printStackTrace();
-			errMessage = e.getTranslatedErrorMessage(this);
-		} catch (NotImplementedException e) {
-			e.printStackTrace();
-			errMessage = getString(R.string.toast_not_implemented);
-		} catch (Exception e) {
-			e.printStackTrace();
-			errMessage = getString(R.string.toast_login_failed);
-		} finally {
-			progressDismiss();
-			if (errFlag) {
-				// alternate form: //mActivity.runOnUiThread(new ToastMessageThread(mActivity, errMessage));
-				new ToastMessageThread(this, errMessage).start();
-			}
+	private void doLogin(final boolean demoMode, final String email) {
+		if (!demoMode && !mController.isInternetAvailable()) {
+			Toast.makeText(this, getString(R.string.toast_internet_connection), Toast.LENGTH_LONG).show();
+			return;
 		}
+		
+		progressShow();
+		
+		mLoginRunnable = new StoppableRunnable() {
+
+			@Override
+			public void run() {
+				setDemoMode(demoMode);
+				
+				if (!demoMode) {
+					// TODO: Some GCM registration here? Or elsewhere?
+					// String gcmId = mController.getGCMRegistrationId();
+					// // try to register again in 1 second, otherwise register in
+					// // separate thread
+					// if (gcmId.isEmpty()) {
+					// GcmHelper.registerGCMInForeground(LoginActivity.this);
+					// gcmId = mController.getGCMRegistrationId();
+					// // if it still doesn't have GCM ID, try it repeatedly in
+					// // new thread
+					// if (gcmId.isEmpty()) {
+					// GcmHelper.registerGCMInBackground(LoginActivity.this);
+					// Log.e(GcmHelper.TAG_GCM, "GCM ID is not accesible, creating new thread for ");
+					// }
+					// }
+					//
+					// Log.i(GcmHelper.TAG_GCM, "GCM ID: " + gcmId);
+				}
+				
+				String errMessage = "Login failed";
+				boolean errFlag = true;
+		
+				try {
+					if (mController.login(LoginActivity.this, email)) {
+						Log.d(TAG, "Login: true");
+						errFlag = false;
+		
+						// Load all adapters and data for active one on login
+						progressChangeText(getString(R.string.progress_loading_adapters));
+						mController.reloadAdapters(true);
+		
+						Adapter active = mController.getActiveAdapter();
+						if (active != null) {
+							// Load data for active adapter
+							progressChangeText(getString(R.string.progress_loading_adapter));
+							mController.reloadLocations(active.getId(), true);
+							mController.reloadFacilitiesByAdapter(active.getId(), true);
+						}
+		
+						if (mLoginRunnable != null && !mLoginRunnable.isStopped()) {
+							if (!isRedirect) {
+								Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+								startActivity(intent);
+							}
+		
+							finish();
+						}
+					}
+				} catch (IhaException e) {
+					e.printStackTrace();
+					errMessage = e.getTranslatedErrorMessage(getApplicationContext());
+				} catch (NotImplementedException e) {
+					e.printStackTrace();
+					errMessage = getString(R.string.toast_not_implemented);
+				} catch (Exception e) {
+					e.printStackTrace();
+					errMessage = getString(R.string.toast_login_failed);
+				} finally {
+					progressDismiss();
+					if (errFlag) {
+						// alternate form: //mActivity.runOnUiThread(new ToastMessageThread(mActivity, errMessage));
+						new ToastMessageThread(LoginActivity.this, errMessage).start();
+					}
+				}
+			}
+
+		};
+		
+		Thread loginThread = new Thread(mLoginRunnable);
+		loginThread.start();
 	}
 
 	// ////////////////////////////////////////////////////////////////////////////////////
