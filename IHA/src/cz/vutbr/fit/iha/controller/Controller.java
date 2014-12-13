@@ -136,15 +136,20 @@ public final class Controller {
 	/**
 	 * Login user by his email (authenticate on server).
 	 *  
-	 * Support is only for Google auth (or demo) and this
-	 *  
-	 * FIXME: This does black magic, Network gets user id automatically from GoogleAuth and ignores given email, etc. 
+	 * Currently support only GoogleAuth or demoMode 
 	 * 
 	 * @param email
 	 * @return true on success, false otherwise
-	 * @throws NetworkException
+	 * @throws IhaException
 	 */
-	public boolean login(LoginActivity activity, String email) throws IhaException {
+	public boolean login(String email) throws IhaException {
+		return login(email, true);
+	}
+	
+	/**
+	 * @see {@link Controller#login(LoginActivity, String)}
+	 */
+	private boolean login(String email, boolean canTryAgain) throws IhaException {
 		GoogleUserInfo googleUserInfo = null;
 		String token = "";
 		
@@ -158,10 +163,7 @@ public final class Controller {
 			
 			if (mNetwork instanceof Network) {
 				// Get Google token
-				token = GoogleAuthHelper.getToken(activity, email);
-				if (token.isEmpty()) {
-					throw new IhaException(NetworkError.GOOGLE_TOKEN);
-				}
+				token = GoogleAuthHelper.getToken(mContext, email);
 				
 				// Get user info from Google
 				googleUserInfo = GoogleAuthHelper.fetchInfoFromProfileServer(token);
@@ -209,8 +211,9 @@ public final class Controller {
 					// We have probably used incorrect Google token, invalidate it and try it again
 					GoogleAuthHelper.invalidateToken(mContext, token);
 	
-					// And try it again, hopefully we will have correct token then
-					//return login(activity, email);
+					// And try it again (if we haven't yet), hopefully we will have correct token then
+					if (canTryAgain)
+						return login(email, false);
 				}
 			}
 			throw IhaException.wrap(e);

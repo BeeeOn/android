@@ -13,16 +13,15 @@ import android.content.Context;
 import com.google.android.gms.auth.GoogleAuthUtil;
 import com.google.android.gms.auth.UserRecoverableAuthException;
 
-import cz.vutbr.fit.iha.R;
-import cz.vutbr.fit.iha.activity.LoginActivity;
 import cz.vutbr.fit.iha.exception.IhaException;
 import cz.vutbr.fit.iha.exception.NetworkError;
 import cz.vutbr.fit.iha.household.User.Gender;
-import cz.vutbr.fit.iha.thread.ToastMessageThread;
 import cz.vutbr.fit.iha.util.Log;
 import cz.vutbr.fit.iha.util.Utils;
 
 public class GoogleAuthHelper {
+	
+	public static final String RECOVERABLE_INTENT = "recoverable_intent";
 	
 	private static final String TAG = GoogleAuthHelper.class.getSimpleName();
 	
@@ -52,27 +51,17 @@ public class GoogleAuthHelper {
 		}
 	}
 	
-	public static String getToken(LoginActivity activity, String email) {
-		String token = "";
-
+	public static String getToken(Context context, String email) throws IhaException {
 		try {
-			token = GoogleAuthUtil.getToken(activity, email, SCOPE);
+			String token = GoogleAuthUtil.getToken(context, email, SCOPE);
 			Log.d(TAG, String.format("Google token: %s", token));
-		} catch (UserRecoverableAuthException userRecoverableException) {
-			activity.progressDismiss();
-			activity.progressChangeText(activity.getString(R.string.progress_google));
-			activity.startActivityForResult(userRecoverableException.getIntent(), LoginActivity.USER_RECOVERABLE_AUTH);
-			new ToastMessageThread(activity, R.string.toast_google_auth).start();
-		} catch (IOException e) {
-			activity.progressDismiss();
-			new ToastMessageThread(activity, R.string.toast_check_your_connection_via_browser).start();
+			return token;
+		} catch (UserRecoverableAuthException e) {
+			// Rethrowing this exception with correct intent so LoginActivity could get it and handle it
+			throw IhaException.wrap(e, NetworkError.GOOGLE_TRY_AGAIN).set(RECOVERABLE_INTENT, e.getIntent());
 		} catch (Exception e) {
-			activity.progressDismiss();
-			e.printStackTrace();
-			new ToastMessageThread(activity, R.string.toast_something_wrong).start();
+			throw IhaException.wrap(e, NetworkError.GOOGLE_TOKEN);	
 		}
-
-		return token;
 	}
 	
 	public static void invalidateToken(Context context, String token) {

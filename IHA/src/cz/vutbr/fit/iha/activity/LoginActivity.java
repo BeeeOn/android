@@ -23,9 +23,12 @@ import cz.vutbr.fit.iha.R;
 import cz.vutbr.fit.iha.adapter.Adapter;
 import cz.vutbr.fit.iha.base.BaseActivity;
 import cz.vutbr.fit.iha.controller.Controller;
+import cz.vutbr.fit.iha.exception.ErrorCode;
 import cz.vutbr.fit.iha.exception.IhaException;
+import cz.vutbr.fit.iha.exception.NetworkError;
 import cz.vutbr.fit.iha.exception.NotImplementedException;
 import cz.vutbr.fit.iha.network.DemoNetwork;
+import cz.vutbr.fit.iha.network.GoogleAuthHelper;
 import cz.vutbr.fit.iha.thread.ToastMessageThread;
 import cz.vutbr.fit.iha.util.Log;
 
@@ -45,7 +48,7 @@ public class LoginActivity extends BaseActivity {
 	private StoppableRunnable mLoginRunnable;
 
 	private static final String TAG = LoginActivity.class.getSimpleName();
-	public static final int USER_RECOVERABLE_AUTH = 5;
+	private static final int USER_RECOVERABLE_AUTH = 5;
 	private static final int GET_GOOGLE_ACCOUNT = 6;
 
 	private boolean mIgnoreChange = false;
@@ -354,7 +357,7 @@ public class LoginActivity extends BaseActivity {
 				boolean errFlag = true;
 		
 				try {
-					if (mController.login(LoginActivity.this, email)) {
+					if (mController.login(email)) {
 						Log.d(TAG, "Login: true");
 						errFlag = false;
 		
@@ -380,6 +383,15 @@ public class LoginActivity extends BaseActivity {
 						}
 					}
 				} catch (IhaException e) {
+					ErrorCode errorCode = e.getErrorCode();
+					if (errorCode instanceof NetworkError && errorCode == NetworkError.GOOGLE_TRY_AGAIN) {
+						Intent intent = e.get(GoogleAuthHelper.RECOVERABLE_INTENT);
+						if (intent != null) {
+							startActivityForResult(intent, LoginActivity.USER_RECOVERABLE_AUTH);
+							return;
+						}
+					}
+					
 					e.printStackTrace();
 					errMessage = e.getTranslatedErrorMessage(getApplicationContext());
 				} catch (NotImplementedException e) {
@@ -388,12 +400,11 @@ public class LoginActivity extends BaseActivity {
 				} catch (Exception e) {
 					e.printStackTrace();
 					errMessage = getString(R.string.toast_login_failed);
-				} finally {
-					progressDismiss();
-					if (errFlag) {
-						// alternate form: //mActivity.runOnUiThread(new ToastMessageThread(mActivity, errMessage));
-						new ToastMessageThread(LoginActivity.this, errMessage).start();
-					}
+				}
+
+				progressDismiss();
+				if (errFlag) {
+					new ToastMessageThread(LoginActivity.this, errMessage).start();
 				}
 			}
 
