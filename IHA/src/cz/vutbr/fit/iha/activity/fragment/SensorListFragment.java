@@ -199,8 +199,16 @@ public class SensorListFragment extends SherlockFragment {
 			mActivity.setSupportProgressBarIndeterminateVisibility(false);
 			return false;
 		}
-
-		List<Facility> facilities = mController.getFacilitiesByLocation(mActiveAdapterId, mActiveLocationId);
+		List<Facility> facilities;
+		
+		if(mActiveLocationId.equals(Constants.GUI_MENU_ALL_SENSOR_ID)){
+			// All sensor from adapter
+			facilities = mController.getFacilitiesByAdapter(mActiveAdapterId);
+		}
+		else {
+			// Facilities from one location 
+			facilities = mController.getFacilitiesByLocation(mActiveAdapterId, mActiveLocationId);
+		}
 
 		Log.d(TAG, "LifeCycle: redraw devices list start");
 
