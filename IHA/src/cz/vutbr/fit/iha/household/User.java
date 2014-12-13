@@ -5,13 +5,13 @@ package cz.vutbr.fit.iha.household;
  */
 public class User {
 
-	private String mName;
+	protected String mName = "";
 
-	private String mEmail;
+	protected String mEmail = "";
 
-	private Role mRole;
+	protected Role mRole = Role.Guest;
 
-	private Gender mGender;
+	protected Gender mGender = Gender.Unknown;
 
 	public User() {
 	}
@@ -54,7 +54,16 @@ public class User {
 	}
 
 	public enum Gender {
-		Unknown, Male, Female
+		Unknown, Male, Female;
+		
+		public static final Gender fromString(String value) {
+			if (value.equalsIgnoreCase("male"))
+				return Male;
+			else if (value.equalsIgnoreCase("female"))
+				return Female;
+			else
+				return Unknown;
+		}
 	}
 
 	public String getName() {

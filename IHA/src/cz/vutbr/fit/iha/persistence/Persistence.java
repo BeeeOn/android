@@ -1,11 +1,20 @@
 package cz.vutbr.fit.iha.persistence;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import cz.vutbr.fit.iha.Constants;
 import cz.vutbr.fit.iha.adapter.device.units.NoiseUnit;
 import cz.vutbr.fit.iha.adapter.device.units.TemperatureUnit;
+import cz.vutbr.fit.iha.household.ActualUser;
+import cz.vutbr.fit.iha.household.User.Gender;
 import cz.vutbr.fit.iha.util.SettingsItem;
 import cz.vutbr.fit.iha.util.Timezone;
 
@@ -15,7 +24,7 @@ import cz.vutbr.fit.iha.util.Timezone;
  * @author Robyer
  */
 public class Persistence {
-
+	
 	/**
 	 * Namespace of global preferences
 	 */
@@ -95,6 +104,30 @@ public class Persistence {
 
 		settings.commit();
 	}
+	
+	private void saveBitmap(Bitmap picture, String filename) {
+		File file = new File(mContext.getExternalCacheDir(), filename + ".jpg");
+		
+		OutputStream os = null;
+		try {
+			os = new FileOutputStream(file);
+			picture.compress(Bitmap.CompressFormat.JPEG, 95, os);
+			os.flush();
+			os.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (os != null)
+					os.close();
+			} catch (IOException e) {}
+		}
+	}
+	
+	private Bitmap loadBitmap(String filename) {
+		File file = new File(mContext.getExternalCacheDir(), filename + ".jpg");
+		return BitmapFactory.decodeFile(file.getAbsolutePath());
+	}
 
 	/** DATA MANIPULATION **/
 
@@ -106,6 +139,43 @@ public class Persistence {
 
 	public String loadLastEmail() {
 		return getSettings(GLOBAL).getString(Constants.PERSISTENCE_PREF_LAST_USER, "");
+	}
+	
+	public void saveLastUID(String email, String UID) {
+		setOrRemoveString(email, Constants.PERSISTENCE_PREF_UID, UID);
+	}
+
+	public String loadLastUID(String email) {
+		return getSettings(email).getString(Constants.PERSISTENCE_PREF_UID, "");
+	}
+	
+	public void saveUserDetails(String email, ActualUser user) {
+		getSettings(email) //
+			.edit() //
+			.putString(Constants.PERSISTENCE_PREF_USER_EMAIL, user.getEmail()) //
+			.putString(Constants.PERSISTENCE_PREF_USER_NAME, user.getName()) //
+			.putString(Constants.PERSISTENCE_PREF_USER_GENDER, user.getGender().toString()) //
+			.putString(Constants.PERSISTENCE_PREF_USER_PICTURE, user.getPictureUrl()) //
+			.commit();
+		
+		Bitmap picture = user.getPicture();
+		if (picture != null)
+			saveBitmap(picture, email);
+	}
+
+	public void loadUserDetails(String email, ActualUser user) {
+		SharedPreferences prefs = getSettings(email);
+		
+		user.setEmail(
+			prefs.getString(Constants.PERSISTENCE_PREF_USER_EMAIL, ""));
+		user.setName(
+			prefs.getString(Constants.PERSISTENCE_PREF_USER_NAME, ""));
+		user.setGender(Gender.fromString(
+			prefs.getString(Constants.PERSISTENCE_PREF_USER_GENDER, "")));
+		user.setPictureUrl(
+			prefs.getString(Constants.PERSISTENCE_PREF_USER_PICTURE, ""));
+		
+		user.setPicture(loadBitmap(email));
 	}
 
 	// GCM

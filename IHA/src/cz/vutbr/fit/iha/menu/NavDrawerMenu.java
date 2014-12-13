@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.content.res.Configuration;
+import android.graphics.Bitmap;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.view.GravityCompat;
@@ -350,7 +351,12 @@ public class NavDrawerMenu {
 
 		// Adding profile header
 		ActualUser actUser = mController.getActualUser();
-		mMenuAdapter.addHeader(new ProfileMenuItem(actUser.getName(), actUser.getEmail(), actUser.getPicture(mActivity)));
+
+		Bitmap picture = actUser.getPicture();
+		if (picture == null)
+			picture = actUser.getDefaultPicture(mActivity);
+		
+		mMenuAdapter.addHeader(new ProfileMenuItem(actUser.getName(), actUser.getEmail(), picture));
 
 		List<Adapter> adapters = mController.getAdapters();
 		Adapter activeAdapter = mController.getActiveAdapter();

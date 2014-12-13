@@ -6,6 +6,7 @@ import java.util.Map;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
 import cz.vutbr.fit.iha.Constants;
 import cz.vutbr.fit.iha.activity.LoginActivity;
 import cz.vutbr.fit.iha.adapter.Adapter;
@@ -17,6 +18,7 @@ import cz.vutbr.fit.iha.adapter.device.DeviceLog.DataType;
 import cz.vutbr.fit.iha.adapter.device.DeviceType;
 import cz.vutbr.fit.iha.adapter.device.Facility;
 import cz.vutbr.fit.iha.adapter.location.Location;
+import cz.vutbr.fit.iha.exception.ErrorCode;
 import cz.vutbr.fit.iha.exception.IhaException;
 import cz.vutbr.fit.iha.exception.NetworkError;
 import cz.vutbr.fit.iha.exception.NotImplementedException;
@@ -24,7 +26,8 @@ import cz.vutbr.fit.iha.household.ActualUser;
 import cz.vutbr.fit.iha.household.Household;
 import cz.vutbr.fit.iha.household.User;
 import cz.vutbr.fit.iha.network.DemoNetwork;
-import cz.vutbr.fit.iha.network.GoogleAuth;
+import cz.vutbr.fit.iha.network.GoogleAuthHelper;
+import cz.vutbr.fit.iha.network.GoogleAuthHelper.GoogleUserInfo;
 import cz.vutbr.fit.iha.network.INetwork;
 import cz.vutbr.fit.iha.network.Network;
 import cz.vutbr.fit.iha.pair.LogDataPair;
@@ -87,10 +90,9 @@ public final class Controller {
 	private Controller(Context context) {
 		mContext = context;
 
-		mNetwork = mDemoMode ? new DemoNetwork(context) : new Network(mContext, this, "userID", Utils.isDebugVersion(context)); //FIXME: ROB: if you have user id, give me, else call put something and call getUID method
+		mNetwork = mDemoMode ? new DemoNetwork(context) : new Network(mContext, this, Utils.isDebugVersion(context));
 		mPersistence = new Persistence(mContext);
 		mHousehold = new Household(mContext, mNetwork);
-		mNetwork.setUser(mHousehold.user);
 	}
 
 	/**
@@ -104,11 +106,6 @@ public final class Controller {
 
 		mDemoMode = demoMode;
 		mController = new Controller(context);
-
-		if (demoMode) {
-			// Initialize default settings for demo mode, because in demo mode we don't call login()
-			mController.mPersistence.initializeDefaultSettings(mController.mHousehold.user.getEmail());
-		}
 	}
 
 	public static boolean isDemoMode() {
@@ -140,40 +137,104 @@ public final class Controller {
 	/**
 	 * Login user by his email (authenticate on server).
 	 *  
-	 * Support is only for Google auth (or demo) and this
-	 *  
-	 * FIXME: This does black magic, Network gets user id automatically from GoogleAuth and ignores given email, etc. 
+	 * Currently support only GoogleAuth or demoMode 
 	 * 
 	 * @param email
 	 * @return true on success, false otherwise
-	 * @throws NetworkException
+	 * @throws IhaException
 	 */
 	public boolean login(String email) throws IhaException {
-		// FIXME: after some time there should be picture in ActualUser object, should save to mPersistence
+		return login(email, true);
+	}
+	
+	/**
+	 * @see {@link Controller#login(LoginActivity, String)}
+	 */
+	private boolean login(String email, boolean canTryAgain) throws IhaException {
+		ActualUser user = mHousehold.user;
+		GoogleUserInfo googleUserInfo = null;
+		String token = "";
+		
 		try {
-			if (mNetwork.getUID().length() > 0) { // FIXME: gcmid have to be set separate now!!!, and here use getUID if you dont have userID
-				mPersistence.saveLastEmail(email);
+			// Load UID from previous session
+			String UID = mPersistence.loadLastUID(email);
+			Log.i(TAG, String.format("Loaded cached UID: %s", UID));
+			mNetwork.setUID(UID);
+
+			// Try to do test request with loaded UID to know if we're really logged in or not
+			try {
+				// FIXME: Use some better request
+				mNetwork.getAdapters();
+			} catch (IhaException e) {
+				ErrorCode errorCode = e.getErrorCode();
+				if (errorCode instanceof NetworkError && errorCode == NetworkError.BAD_UID) {
+					// This UID is invalid, load fresh one
+					Log.w(TAG, "UID is invalid, we will load fresh one");
+					UID = "";
+				}
+			}
+			
+			// Load also cached user details
+			mPersistence.loadUserDetails(email, user);
+			
+			if (UID.isEmpty() || user.isEmpty()) {
+				// No previous session or user data, load fresh data from server 
+				if (mNetwork instanceof Network) {
+					// Get Google token
+					token = GoogleAuthHelper.getToken(mContext, email);
+					
+					// Get user info from Google
+					googleUserInfo = GoogleAuthHelper.fetchInfoFromProfileServer(token);
+					
+					// Not loaded picture bitmap or user has new picture (avatarUrl is different)
+					if ((!user.getPictureUrl().isEmpty() && user.getPicture() == null) || !user.getPictureUrl().equals(googleUserInfo.pictureUrl)) {
+						// No or changed picture, let's download it from server
+						Bitmap picture = Utils.fetchImageFromUrl(googleUserInfo.pictureUrl);
+						user.setPicture(picture);
+					}
+					
+					user.setName(googleUserInfo.name);
+					user.setEmail(email);
+					user.setGender(googleUserInfo.gender);
+					user.setPictureUrl(googleUserInfo.pictureUrl);
+				} else if (mNetwork instanceof DemoNetwork) {
+					// In demo mode load some init data from sdcard
+					((DemoNetwork)mNetwork).initDemoData(user);
+				}
+
+				// googleUserInfo must be initialized by code above 
+				if (!mNetwork.loadUID(googleUserInfo))
+					return false;
+				
+				// Save our new UID
+				Log.i(TAG, String.format("Loaded fresh UID: %s", mNetwork.getUID()));
+				mPersistence.saveLastUID(email, mNetwork.getUID());
+				// We have also fresh user detail, save them too
+				mPersistence.saveUserDetails(email, user);
+			}
+			
+			// Do we have session now? Then remember this user
+			if (!mNetwork.getUID().isEmpty()) {
 				mPersistence.initializeDefaultSettings(email);
+
+				// Remember this email to use with auto login (but not in demoMode)
+				if (!(mNetwork instanceof DemoNetwork))
+					mPersistence.saveLastEmail(email);
+
 				return true;
 			}
 		} catch (IhaException e) {
-			if (e.getErrorCode() instanceof NetworkError && e.getErrorCode() == NetworkError.NOT_VALID_USER) {
-				// TODO: do this otherway
-				// GoogleAuth ggAuth = GoogleAuth.getGoogleAuth();
-				//
-				// ggAuth.invalidateToken();
-				// ggAuth.doInForeground((ggAuth.getPictureIMG() == null)? true:false);
-
-				if (mNetwork instanceof Network) {
-					((Network) mNetwork).startGoogleAuth(true, getActualUser().isPictureDefault() ? true : false);
-
-					// this happen only on first signing (or when someone delete grants on google, or token is old)
-					// while(GoogleAuth.getGoogleAuth().getPictureIMG() == null);
-					while (getActualUser().isPictureDefault())
-						; // FIXME: not sure with this, need to check (first sing in)
+			// Process known and processible error codes (actually only google token error)
+			ErrorCode errorCode = e.getErrorCode();
+			if ((mNetwork instanceof Network) && (errorCode instanceof NetworkError)) {
+				if (errorCode == NetworkError.NOT_VALID_USER || errorCode == NetworkError.GOOGLE_TOKEN) {
+					// We have probably used incorrect Google token, invalidate it and try it again
+					GoogleAuthHelper.invalidateToken(mContext, token);
+	
+					// And try it again (if we haven't yet), hopefully we will have correct token then
+					if (canTryAgain)
+						return login(email, false);
 				}
-
-				return login(email);
 			}
 			throw IhaException.wrap(e);
 		}
@@ -181,26 +242,31 @@ public final class Controller {
 	}
 
 	/**
-	 * Logout user from application (and forget him as last user).
-	 * 
-	 * @return true always
+	 * Destroy user session in network and forget him as last logged in user.
 	 */
-	public boolean logout() {
-		// TODO: also destroy session
-		mHousehold.user.logout();
-		mPersistence.saveLastEmail(null);
+	public void logout() {
+		// TODO: Request to logout from server (discard actual communication UID)
+		
+		// Destroy session
+		mNetwork.setUID("");
+		
+		// Delete session from saved settings
+		SharedPreferences prefs = getUserSettings();
+		if (prefs != null)
+			prefs.edit().remove(Constants.PERSISTENCE_PREF_UID).commit();
 
-		return true;
+		// Forgot info about last user 
+		mPersistence.saveLastEmail(null);
 	}
 
 	/**
-	 * Checks if user is logged in (with valid session).
+	 * Checks if user is logged in (has session UID).
 	 * 
 	 * @return true if user is logged in, false otherwise
 	 */
 	public boolean isLoggedIn() {
-		// TODO: also check session lifetime
-		return mHousehold.user.isLoggedIn();
+		// TODO: Check session lifetime somehow?
+		return !mHousehold.user.getEmail().isEmpty() && !mNetwork.getUID().isEmpty();
 	}
 
 	public boolean isInternetAvailable() {
@@ -721,54 +787,21 @@ public final class Controller {
 	}
 
 	/**
-	 * TODO: this is NEW method initializing googleAuth in network
-	 * 
-	 * This CAN'T be called on UI thread!
-	 * 
-	 * @param activity
-	 * @param email
-	 */
-	public void initGoogle(LoginActivity activity, String email) {
-		if (mNetwork instanceof Network) {
-			((Network) mNetwork).initGoogle(new GoogleAuth(activity, email));
-		}
-	}
-
-	/**
-	 * TODO: this is NEW method for start google communication
-	 * 
-	 * This CAN'T be called on UI thread!
-	 * 
-	 * @param blocking
-	 *            -> look at network
-	 * @param fetchPhoto
-	 *            -> look at network
-	 * @return -> look at network
-	 */
-	public boolean startGoogle(boolean blocking, boolean fetchPhoto) {
-		if (mNetwork instanceof Network) {
-			return ((Network) mNetwork).startGoogleAuth(blocking, fetchPhoto);
-		}
-		
-		return false;
-	}
-
-	/**
 	 * Gets the current registration ID for application on GCM service.
 	 * <p>
 	 * If result is empty, the app needs to register.
 	 * 
 	 * @return registration ID, or empty string if there is no existing registration ID.
 	 */
-	public String getGCMRegistrationId() {
+	/*public String getGCMRegistrationId() {
 		return ""; // FIXME: gcmid
 
-		/*
-		 * String registrationId = mPersistence.loadGCMRegistrationId(); if (registrationId.isEmpty()) { Log.i(TAG, "GCM: Registration not found."); return ""; } // Check if app was updated; if so, it
-		 * must clear the registration ID // since the existing regID is not guaranteed to work with the new // app version. int registeredVersion = mPersistence.loadLastApplicationVersion(); int
-		 * currentVersion = Utils.getAppVersion(mContext); if (registeredVersion != currentVersion) { Log.i(TAG, "GCM: App version changed."); return ""; } return registrationId;
-		 */
-	}
+		//
+		// String registrationId = mPersistence.loadGCMRegistrationId(); if (registrationId.isEmpty()) { Log.i(TAG, "GCM: Registration not found."); return ""; } // Check if app was updated; if so, it
+		// must clear the registration ID // since the existing regID is not guaranteed to work with the new // app version. int registeredVersion = mPersistence.loadLastApplicationVersion(); int
+		// currentVersion = Utils.getAppVersion(mContext); if (registeredVersion != currentVersion) { Log.i(TAG, "GCM: App version changed."); return ""; } return registrationId;
+		//
+	}*/
 
 	/**
 	 * Stores the registration ID and app versionCode in the application's {@code SharedPreferences}.
@@ -776,13 +809,13 @@ public final class Controller {
 	 * @param regId
 	 *            registration ID
 	 */
-	public void setGCMRegistrationId(String regId) {
+	/*public void setGCMRegistrationId(String regId) {
 		int appVersion = Utils.getAppVersion(mContext);
 		Log.i(TAG, "Saving regId on app version " + appVersion);
 
 		mPersistence.saveGCMRegistrationId(regId);
 		mPersistence.saveLastApplicationVersion(appVersion);
-	}
+	}*/
 
 	public ActualUser getActualUser() {
 		return mHousehold.user;
