@@ -6,6 +6,7 @@ import java.util.Map;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
 import cz.vutbr.fit.iha.Constants;
 import cz.vutbr.fit.iha.activity.LoginActivity;
 import cz.vutbr.fit.iha.adapter.Adapter;
@@ -150,54 +151,73 @@ public final class Controller {
 	 * @see {@link Controller#login(LoginActivity, String)}
 	 */
 	private boolean login(String email, boolean canTryAgain) throws IhaException {
+		ActualUser user = mHousehold.user;
 		GoogleUserInfo googleUserInfo = null;
 		String token = "";
 		
 		try {
-			// Need to set this soon so getUserSettings() will work
-			mHousehold.user.setEmail(email);
-
 			// Load UID from previous session
-			SharedPreferences prefs = getUserSettings();
-			String UID = prefs.getString(Constants.PERSISTENCE_PREF_UID, "");
-			
-			if (mNetwork instanceof Network) {
-				// Get Google token
-				token = GoogleAuthHelper.getToken(mContext, email);
-				
-				// Get user info from Google
-				googleUserInfo = GoogleAuthHelper.fetchInfoFromProfileServer(token);
-				ActualUser user = mHousehold.user;
-				user.setName(googleUserInfo.name);
-				//user.setEmail(email);
-				user.setGender(googleUserInfo.gender);
-				user.setPictureUrl(googleUserInfo.pictureUrl);
-				
-				// TODO: Check if ImageURL is same as before, and if not (or if not exists image file), download user image...
-				user.setPicture(null);
-			} else if (mNetwork instanceof DemoNetwork) {
-				// In demo mode load some init data from sdcard
-				((DemoNetwork)mNetwork).initDemoData(mHousehold.user);
-			}
+			String UID = mPersistence.loadLastUID(email);
+			Log.i(TAG, String.format("Loaded cached UID: %s", UID));
+			mNetwork.setUID(UID);
 
+			// Try to do test request with loaded UID to know if we're really logged in or not
+			try {
+				// FIXME: Use some better request
+				mNetwork.getAdapters();
+			} catch (IhaException e) {
+				ErrorCode errorCode = e.getErrorCode();
+				if (errorCode instanceof NetworkError && errorCode == NetworkError.BAD_UID) {
+					// This UID is invalid, load fresh one
+					Log.w(TAG, "UID is invalid, we will load fresh one");
+					UID = "";
+				}
+			}
 			
-			// If no previous session, load fresh UID from server
-			if (UID.isEmpty()) {
+			// Load also cached user details
+			mPersistence.loadUserDetails(email, user);
+			
+			if (UID.isEmpty() || user.isEmpty()) {
+				// No previous session or user data, load fresh data from server 
+				if (mNetwork instanceof Network) {
+					// Get Google token
+					token = GoogleAuthHelper.getToken(mContext, email);
+					
+					// Get user info from Google
+					googleUserInfo = GoogleAuthHelper.fetchInfoFromProfileServer(token);
+					
+					// Not loaded picture bitmap or user has new picture (avatarUrl is different)
+					if ((!user.getPictureUrl().isEmpty() && user.getPicture() == null) || !user.getPictureUrl().equals(googleUserInfo.pictureUrl)) {
+						// No or changed picture, let's download it from server
+						Bitmap picture = Utils.fetchImageFromUrl(googleUserInfo.pictureUrl);
+						user.setPicture(picture);
+					}
+					
+					user.setName(googleUserInfo.name);
+					user.setEmail(email);
+					user.setGender(googleUserInfo.gender);
+					user.setPictureUrl(googleUserInfo.pictureUrl);
+				} else if (mNetwork instanceof DemoNetwork) {
+					// In demo mode load some init data from sdcard
+					((DemoNetwork)mNetwork).initDemoData(user);
+				}
+
+				// googleUserInfo must be initialized by code above 
 				if (!mNetwork.loadUID(googleUserInfo))
 					return false;
 				
-				prefs.edit().putString(Constants.PERSISTENCE_PREF_UID, mNetwork.getUID()).commit();
-				
-				// TODO: Do we have user info + photo, now? If so, save it...
-				// mPersistence.saveUserDetails(mHousehold.user);
-			} else {
-				mNetwork.setUID(UID);
+				// Save our new UID
+				Log.i(TAG, String.format("Loaded fresh UID: %s", mNetwork.getUID()));
+				mPersistence.saveLastUID(email, mNetwork.getUID());
+				// We have also fresh user detail, save them too
+				mPersistence.saveUserDetails(email, user);
 			}
 			
 			// Do we have session now? Then remember this user
 			if (!mNetwork.getUID().isEmpty()) {
 				mPersistence.initializeDefaultSettings(email);
 
+				// Remember this email to use with auto login (but not in demoMode)
 				if (!(mNetwork instanceof DemoNetwork))
 					mPersistence.saveLastEmail(email);
 

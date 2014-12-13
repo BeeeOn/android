@@ -21,17 +21,20 @@ public class ActualUser extends User {
 	public ActualUser() {
 		super();
 	}
+	
+	public boolean isEmpty() {
+		return mEmail.isEmpty() || mName.isEmpty() || (mPicture == null && !mPictureUrl.isEmpty());
+	}
 
 	/**
 	 * @return picture url or empty string
 	 */
-	public String getPictureURL() {
+	public String getPictureUrl() {
 		return mPictureUrl;
 	}
 
 	/**
-	 * @param String
-	 *            picture url set
+	 * @param url
 	 */
 	public void setPictureUrl(String url) {
 		mPictureUrl = url;
@@ -44,15 +47,9 @@ public class ActualUser extends User {
 	/**
 	 * Get user picture
 	 * 
-	 * @param context
-	 * @return user picture or default silhouette
+	 * @return user picture or null
 	 */
-	public Bitmap getPicture(Context context) {
-		if (mPicture == null) {
-			mDefaultPicture = true;
-			setPicture(getDefaultPicture(context));
-		} else
-			mDefaultPicture = false;
+	public Bitmap getPicture() {
 		return mPicture;
 	}
 
@@ -62,7 +59,7 @@ public class ActualUser extends User {
 	 * @param context
 	 * @return bitmap with default silhouette
 	 */
-	private Bitmap getDefaultPicture(Context context) {
+	public Bitmap getDefaultPicture(Context context) {
 		return BitmapFactory.decodeResource(context.getResources(), R.drawable.person_silhouette);
 	}
 

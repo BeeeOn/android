@@ -5,13 +5,13 @@ package cz.vutbr.fit.iha.household;
  */
 public class User {
 
-	private String mName = "";
+	protected String mName = "";
 
-	private String mEmail = "";
+	protected String mEmail = "";
 
-	private Role mRole = Role.Guest;
+	protected Role mRole = Role.Guest;
 
-	private Gender mGender = Gender.Unknown;
+	protected Gender mGender = Gender.Unknown;
 
 	public User() {
 	}
