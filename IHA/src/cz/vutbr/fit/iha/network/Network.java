@@ -373,6 +373,8 @@ public class Network implements INetwork {
 	 * @throws IhaException
 	 */
 	public void multiSessionEnd() throws IhaException{
+		if (!mIsMulti)
+			return;
 		
 		try {
 			permaWriter.close();

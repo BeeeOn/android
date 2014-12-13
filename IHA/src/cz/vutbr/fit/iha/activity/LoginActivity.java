@@ -357,6 +357,9 @@ public class LoginActivity extends BaseActivity {
 				boolean errFlag = true;
 		
 				try {
+					mController.beginPersistentConnection();
+					Log.i(TAG, "Login started");
+					
 					if (mController.login(email)) {
 						Log.d(TAG, "Login: true");
 						errFlag = false;
@@ -382,6 +385,9 @@ public class LoginActivity extends BaseActivity {
 							finish();
 						}
 					}
+					
+					Log.i(TAG, "Login finished");
+					mController.endPersistentConnection();
 				} catch (IhaException e) {
 					ErrorCode errorCode = e.getErrorCode();
 					if (errorCode instanceof NetworkError && errorCode == NetworkError.GOOGLE_TRY_AGAIN) {
