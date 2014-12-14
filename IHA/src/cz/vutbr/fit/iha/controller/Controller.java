@@ -1007,7 +1007,7 @@ public final class Controller {
 	 * @param msgId
 	 */
 	public void setNotificationRead(String msgId) {
-		ArrayList<String> list = new ArrayList<>();
+		ArrayList<String> list = new ArrayList<String>();
 		list.add(msgId);
 		setNotificationRead(list);
 	}
