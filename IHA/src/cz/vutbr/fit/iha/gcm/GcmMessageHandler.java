@@ -110,7 +110,8 @@ public class GcmMessageHandler extends IntentService {
 		NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this)
 				.setSmallIcon(R.drawable.ic_launcher_white)
 				.setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.ic_launcher_white_icons))
-				.setWhen(notification.getDate().getTimeInMillis()).setContentTitle(getText(R.string.app_name))
+//				.setWhen(notification.getDate().getTimeInMillis())
+				.setContentTitle(getText(R.string.app_name))
 				.setContentText(notification.getMessage()).setAutoCancel(true);
 
 		// define notification action
