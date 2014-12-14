@@ -231,30 +231,30 @@ public final class Controller {
 				mPersistence.initializeDefaultSettings(email);
 
 				// Remember this email to use with auto login (but not in demoMode)
-				if (!(mNetwork instanceof DemoNetwork))
+				if (!(mNetwork instanceof DemoNetwork)) {
 					mPersistence.saveLastEmail(email);
 
-				/** Send GCM ID to server */
-				final String gcmId = mController.getGCMRegistrationId();
-				if (gcmId.isEmpty()) {
-					GcmHelper.registerGCMInBackground(mContext);
-					Log.e(GcmHelper.TAG_GCM, "GCM ID is not accesible in persistant, creating new thread");
-				} else {
-					// send GCM ID to server
-					Thread t = new Thread() {
-						public void run() {
-							try {
-								mController.setGCMIdServer(gcmId);
-							} catch (Exception e) {
-								// do nothing
-								Log.w(GcmHelper.TAG_GCM,
-										"Login: Sending GCM ID to server failed: " + e.getLocalizedMessage());
+					/** Send GCM ID to server */
+					final String gcmId = mController.getGCMRegistrationId();
+					if (gcmId.isEmpty()) {
+						GcmHelper.registerGCMInBackground(mContext);
+						Log.w(GcmHelper.TAG_GCM, "GCM ID is not accesible in persistant, creating new thread");
+					} else {
+						// send GCM ID to server
+						Thread t = new Thread() {
+							public void run() {
+								try {
+									mController.setGCMIdServer(gcmId);
+								} catch (Exception e) {
+									// do nothing
+									Log.w(GcmHelper.TAG_GCM,
+											"Login: Sending GCM ID to server failed: " + e.getLocalizedMessage());
+								}
 							}
-						}
-					};
-					t.start();
-					mController.setGCMIdLocal(gcmId);
-
+						};
+						t.start();
+						mController.setGCMIdLocal(gcmId);
+					}
 				}
 
 				return true;
