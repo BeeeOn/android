@@ -1095,7 +1095,7 @@ public class Network implements INetwork {
 	 * @return true if id has been deleted, false otherwise
 	 */
 	public boolean deleteGCMID(String email, String gcmID){
-		ParsedMessage msg = doRequest(XmlCreator.createDeLGCMID(mUserID, email, gcmID));
+		ParsedMessage msg = doRequest(XmlCreator.createDeLGCMID(email, gcmID));
 
 		if (msg.getState() == State.TRUE)
 			return true;

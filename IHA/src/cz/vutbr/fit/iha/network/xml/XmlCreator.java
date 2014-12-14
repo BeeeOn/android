@@ -1058,8 +1058,6 @@ public class XmlCreator {
 	/**
 	 * Method create XML of DelXconstants.GCMID message (delete google cloud message id)
 	 * 
-	 * @param uid
-	 *            userID of user logged in now
 	 * @param email
 	 *            of last logged user
 	 * @param gcmid
@@ -1067,8 +1065,8 @@ public class XmlCreator {
 	 * @return message DelXconstants.GCMID
 	 * @since 2.2
 	 */
-	public static String createDeLGCMID(String uid, String email, String gcmid) {
-		return createComAttribsVariant(Xconstants.STATE, DELGCMID, Xconstants.UID, uid, Xconstants.EMAIL, email, Xconstants.GCMID, gcmid);
+	public static String createDeLGCMID(String email, String gcmid) {
+		return createComAttribsVariant(Xconstants.STATE, DELGCMID, Xconstants.EMAIL, email, Xconstants.GCMID, gcmid);
 	}
 
 	/**
