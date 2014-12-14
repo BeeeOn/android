@@ -261,7 +261,13 @@ public class MainActivity extends BaseApplicationActivity {
 		// set location layout
 		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
 		ft.replace(R.id.content_frame, mListDevices, FRG_TAG_LOC);
-		ft.commit();
+		
+		/**
+		 * Changed because of Redmine bug #258
+		 * About dialog -> click on email -> don't choose any client -> back -> crash
+		 */
+		//ft.commit();
+		ft.commitAllowingStateLoss();
 
 		return true;
 	}
