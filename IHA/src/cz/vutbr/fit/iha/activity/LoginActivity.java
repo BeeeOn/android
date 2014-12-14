@@ -261,10 +261,22 @@ public class LoginActivity extends BaseActivity {
 		return names;
 	}
 	
+	private boolean checkInternetConnection() {
+		boolean available = mController.isInternetAvailable(); 
+		if (!available) {
+			progressDismiss();
+			Toast.makeText(this, getString(R.string.toast_internet_connection), Toast.LENGTH_LONG).show();			
+		}
+		return available;
+	}
+	
 	/**
 	 * Method start routine to access trough google after button click
 	 */
 	private void beginGoogleAuthRoutine() {
+		if (!checkInternetConnection())
+			return;
+		
 		Log.d(TAG, "Start GoogleAuthRoutine");
 		mProgress.show();
 				
@@ -300,11 +312,9 @@ public class LoginActivity extends BaseActivity {
 	 *            of user
 	 */
 	private void doLogin(final boolean demoMode, final String email) {
-		if (!demoMode && !mController.isInternetAvailable()) {
-			Toast.makeText(this, getString(R.string.toast_internet_connection), Toast.LENGTH_LONG).show();
+		if (!demoMode && !checkInternetConnection())
 			return;
-		}
-		
+
 		mLoginCancel = false;
 		progressShow();
 		

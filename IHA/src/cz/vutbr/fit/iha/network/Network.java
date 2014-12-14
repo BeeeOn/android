@@ -66,7 +66,7 @@ import cz.vutbr.fit.iha.util.Log;
  */
 public class Network implements INetwork {
 
-	private static final String TAG = Network.class.getSimpleName();;
+	private static final String TAG = Network.class.getSimpleName();
 
 	/**
 	 * Name of CA certificate located in assets
@@ -296,7 +296,6 @@ public class Network implements INetwork {
 	}
 	
 	private void multiInit() throws IOException, CertificateException, KeyStoreException, NoSuchAlgorithmException, KeyManagementException, UnknownHostException,SSLHandshakeException {
-		
 		InputStream inStreamCertTmp = null;
 		inStreamCertTmp = mContext.getAssets().open(ASSEST_CA_CERT);
 		
@@ -358,12 +357,14 @@ public class Network implements INetwork {
 	 * Method initiate session for multiple use
 	 * @throws IhaException
 	 */
-	public void multiSessionBegin() throws IhaException{
+	public void multiSessionBegin() throws IhaException {
+		if (!isAvailable())
+			throw new IhaException(NetworkError.NO_CONNECTION);
+
 		try {
 			multiInit();
 			mIsMulti = true;
 		} catch (Exception e) {
-			e.printStackTrace();
 			throw IhaException.wrap(e, NetworkError.COM_PROBLEMS);
 		}
 	}

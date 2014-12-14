@@ -10,6 +10,8 @@ import java.util.WeakHashMap;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import cz.vutbr.fit.iha.Constants;
 import cz.vutbr.fit.iha.R.string;
 import cz.vutbr.fit.iha.activity.LoginActivity;
@@ -323,8 +325,15 @@ public final class Controller {
 		return !mHousehold.user.getEmail().isEmpty() && !mNetwork.getUID().isEmpty();
 	}
 
+	/**
+	 * Checks if Internet connection is available.
+	 * 
+	 * @return true if available, false otherwise
+	 */
 	public boolean isInternetAvailable() {
-		return mNetwork.isAvailable();
+		ConnectivityManager connectivityManager = (ConnectivityManager) mContext.getSystemService(Context.CONNECTIVITY_SERVICE);
+		NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+		return activeNetworkInfo != null && activeNetworkInfo.isConnected();
 	}
 
 	public void beginPersistentConnection() {
