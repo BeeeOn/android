@@ -108,7 +108,6 @@ public class GcmRegisterRunnable implements Runnable {
 			// Persist the regID - no need to register again.
 			mController.setGCMIdLocal(mNewGcmId);
 			mController.setGCMIdServer(mNewGcmId);
-			// TODO odeslat zpravu o novem ID serveru
 
 		}
 	}

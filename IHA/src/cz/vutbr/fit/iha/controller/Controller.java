@@ -146,8 +146,8 @@ public final class Controller {
 
 	/**
 	 * Login user by his email (authenticate on server).
-	 *  
-	 * Currently support only GoogleAuth or demoMode 
+	 * 
+	 * Currently support only GoogleAuth or demoMode
 	 * 
 	 * @param email
 	 * @return true on success, false otherwise
@@ -156,7 +156,7 @@ public final class Controller {
 	public boolean login(String email) throws IhaException {
 		return login(email, true);
 	}
-	
+
 	/**
 	 * @see {@link Controller#login(LoginActivity, String)}
 	 */
@@ -164,7 +164,7 @@ public final class Controller {
 		ActualUser user = mHousehold.user;
 		GoogleUserInfo googleUserInfo = null;
 		String token = "";
-		
+
 		try {
 			// Load UID from previous session
 			String UID = mPersistence.loadLastUID(email);
@@ -185,46 +185,47 @@ public final class Controller {
 					}
 				}
 			}
-			
+
 			// Load also cached user details
 			mPersistence.loadUserDetails(email, user);
-			
+
 			if (UID.isEmpty() || user.isEmpty()) {
-				// No previous session or user data, load fresh data from server 
+				// No previous session or user data, load fresh data from server
 				if (mNetwork instanceof Network) {
 					// Get Google token
 					token = GoogleAuthHelper.getToken(mContext, email);
-					
+
 					// Get user info from Google
 					googleUserInfo = GoogleAuthHelper.fetchInfoFromProfileServer(token);
-					
+
 					// Not loaded picture bitmap or user has new picture (avatarUrl is different)
-					if ((!user.getPictureUrl().isEmpty() && user.getPicture() == null) || !user.getPictureUrl().equals(googleUserInfo.pictureUrl)) {
+					if ((!user.getPictureUrl().isEmpty() && user.getPicture() == null)
+							|| !user.getPictureUrl().equals(googleUserInfo.pictureUrl)) {
 						// No or changed picture, let's download it from server
 						Bitmap picture = Utils.fetchImageFromUrl(googleUserInfo.pictureUrl);
 						user.setPicture(picture);
 					}
-					
+
 					user.setName(googleUserInfo.name);
 					user.setEmail(email);
 					user.setGender(googleUserInfo.gender);
 					user.setPictureUrl(googleUserInfo.pictureUrl);
 				} else if (mNetwork instanceof DemoNetwork) {
 					// In demo mode load some init data from sdcard
-					((DemoNetwork)mNetwork).initDemoData(user);
+					((DemoNetwork) mNetwork).initDemoData(user);
 				}
 
-				// googleUserInfo must be initialized by code above 
+				// googleUserInfo must be initialized by code above
 				if (!mNetwork.loadUID(googleUserInfo))
 					return false;
-				
+
 				// Save our new UID
 				Log.i(TAG, String.format("Loaded fresh UID: %s", mNetwork.getUID()));
 				mPersistence.saveLastUID(email, mNetwork.getUID());
 				// We have also fresh user detail, save them too
 				mPersistence.saveUserDetails(email, user);
 			}
-			
+
 			// Do we have session now? Then remember this user
 			if (!mNetwork.getUID().isEmpty()) {
 				mPersistence.initializeDefaultSettings(email);
@@ -232,6 +233,29 @@ public final class Controller {
 				// Remember this email to use with auto login (but not in demoMode)
 				if (!(mNetwork instanceof DemoNetwork))
 					mPersistence.saveLastEmail(email);
+
+				/** Send GCM ID to server */
+				final String gcmId = mController.getGCMRegistrationId();
+				if (gcmId.isEmpty()) {
+					GcmHelper.registerGCMInBackground(mContext);
+					Log.e(GcmHelper.TAG_GCM, "GCM ID is not accesible in persistant, creating new thread");
+				} else {
+					// send GCM ID to server
+					Thread t = new Thread() {
+						public void run() {
+							try {
+								mController.setGCMIdServer(gcmId);
+							} catch (Exception e) {
+								// do nothing
+								Log.w(GcmHelper.TAG_GCM,
+										"Login: Sending GCM ID to server failed: " + e.getLocalizedMessage());
+							}
+						}
+					};
+					t.start();
+					mController.setGCMIdLocal(gcmId);
+
+				}
 
 				return true;
 			}
@@ -242,7 +266,7 @@ public final class Controller {
 				if (errorCode == NetworkError.NOT_VALID_USER || errorCode == NetworkError.GOOGLE_TOKEN) {
 					// We have probably used incorrect Google token, invalidate it and try it again
 					GoogleAuthHelper.invalidateToken(mContext, token);
-	
+
 					// And try it again (if we haven't yet), hopefully we will have correct token then
 					if (canTryAgain)
 						return login(email, false);
@@ -258,16 +282,34 @@ public final class Controller {
 	 */
 	public void logout() {
 		// TODO: Request to logout from server (discard actual communication UID)
-		
+
+		// Delete GCM ID on server side
+		final String email = getActualUser().getEmail();
+		final String gcmId = getGCMRegistrationId();
+		if (email != null && !gcmId.isEmpty()) {
+			// delete GCM ID from server
+			Thread t = new Thread() {
+				public void run() {
+					try {
+						deleteGCM(email, gcmId);
+					} catch (Exception e) {
+						// do nothing
+						Log.w(GcmHelper.TAG_GCM, "Logout: Delete GCM ID failed: " + e.getLocalizedMessage());
+					}
+				}
+			};
+			t.start();
+		}
+
 		// Destroy session
 		mNetwork.setUID("");
-		
+
 		// Delete session from saved settings
 		SharedPreferences prefs = getUserSettings();
 		if (prefs != null)
 			prefs.edit().remove(Constants.PERSISTENCE_PREF_UID).commit();
 
-		// Forgot info about last user 
+		// Forgot info about last user
 		mPersistence.saveLastEmail(null);
 	}
 
@@ -284,15 +326,15 @@ public final class Controller {
 	public boolean isInternetAvailable() {
 		return mNetwork.isAvailable();
 	}
-	
+
 	public void beginPersistentConnection() {
 		if (mNetwork instanceof Network)
-			((Network)mNetwork).multiSessionBegin();
+			((Network) mNetwork).multiSessionBegin();
 	}
-	
+
 	public void endPersistentConnection() {
 		if (mNetwork instanceof Network)
-			((Network)mNetwork).multiSessionEnd();
+			((Network) mNetwork).multiSessionEnd();
 	}
 
 	/** Reloading data methods **********************************************/
@@ -498,17 +540,17 @@ public final class Controller {
 	 * @return
 	 */
 	// TODO: review this
-//	public boolean registerUser(String email) {
-//		boolean result = false;
-//
-//		try {
-//			result = mNetwork.signUp(mHousehold.user.getEmail()); //FIXME: ROB use getUID instead!
-//		} catch (IhaException e) {
-//			e.printStackTrace();
-//		}
-//
-//		return result;
-//	}
+	// public boolean registerUser(String email) {
+	// boolean result = false;
+	//
+	// try {
+	// result = mNetwork.signUp(mHousehold.user.getEmail()); //FIXME: ROB use getUID instead!
+	// } catch (IhaException e) {
+	// e.printStackTrace();
+	// }
+	//
+	// return result;
+	// }
 
 	/**
 	 * FIXME: debug implementation Unregisters adapter from server.
@@ -873,10 +915,14 @@ public final class Controller {
 		mPersistence.saveGCMRegistrationId(gcmId);
 		mPersistence.saveLastApplicationVersion(appVersion);
 	}
-	
+
 	/**
 	 * Method set gcmID to server (applied only if there is some user)
-	 * @param gcmID to be set
+	 * 
+	 * This CAN'T be called on UI thread!
+	 * 
+	 * @param gcmID
+	 *            to be set
 	 */
 	public void setGCMIdServer(String gcmID) {
 		String email;
@@ -888,11 +934,12 @@ public final class Controller {
 			// no user, it will be sent in user login
 			return;
 		}
-		
+
 		try {
+			Log.i(GcmHelper.TAG_GCM, "Set GCM ID to server: " + gcmID);
 			mNetwork.setGCMID(email, gcmID);
 		} catch (Exception e) {
-			// nothign to do
+			// nothing to do
 			Log.w(GcmHelper.TAG_GCM, "Set GCM ID to server failed.");
 		}
 	}
@@ -913,7 +960,7 @@ public final class Controller {
 	public Boolean switchActorValue(Device device) {
 		return mHousehold.facilitiesModel.switchActor(device);
 	}
-		
+
 	/** Notification methods ************************************************/
 
 	/**
@@ -951,7 +998,7 @@ public final class Controller {
 
 		return mNotificationReceivers.size();
 	}
-	
+
 	/**
 	 * Set notification as read on server side
 	 * 
@@ -964,13 +1011,14 @@ public final class Controller {
 		list.add(msgId);
 		setNotificationRead(list);
 	}
-	
+
 	/**
 	 * Set notifications as read on server side
 	 * 
 	 * This CAN'T be called on UI thread!
 	 * 
-	 * @param msgIds Array of message IDs which will be marked as read
+	 * @param msgIds
+	 *            Array of message IDs which will be marked as read
 	 */
 	public void setNotificationRead(ArrayList<String> msgIds) {
 		mNetwork.NotificationsRead(msgIds);

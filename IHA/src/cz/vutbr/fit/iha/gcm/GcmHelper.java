@@ -17,9 +17,10 @@ public class GcmHelper {
 	 * Stores the registration ID and app versionCode in the application's shared preferences.
 	 */
 	public static void registerGCMInBackground(Context context) {
-//		new GcmRegisterAsyncTask().execute(context, null, null);
-		Handler handler = new Handler();
-		handler.post(new GcmRegisterRunnable(context, null));
+//		Handler handler = new Handler();
+//		handler.post(new GcmRegisterRunnable(context, null));
+		Thread thread = new Thread(new GcmRegisterRunnable(context, null));
+		thread.start();
 	}
 	
 	/**
