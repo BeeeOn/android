@@ -1,13 +1,17 @@
 package cz.vutbr.fit.iha.controller;
 
+import java.security.acl.LastOwnerException;
+import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Map;
+import java.util.WeakHashMap;
 
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import cz.vutbr.fit.iha.Constants;
+import cz.vutbr.fit.iha.R.string;
 import cz.vutbr.fit.iha.activity.LoginActivity;
 import cz.vutbr.fit.iha.adapter.Adapter;
 import cz.vutbr.fit.iha.adapter.device.Device;
@@ -22,6 +26,9 @@ import cz.vutbr.fit.iha.exception.ErrorCode;
 import cz.vutbr.fit.iha.exception.IhaException;
 import cz.vutbr.fit.iha.exception.NetworkError;
 import cz.vutbr.fit.iha.exception.NotImplementedException;
+import cz.vutbr.fit.iha.gcm.GcmHelper;
+import cz.vutbr.fit.iha.gcm.INotificationReceiver;
+import cz.vutbr.fit.iha.gcm.Notification;
 import cz.vutbr.fit.iha.household.ActualUser;
 import cz.vutbr.fit.iha.household.Household;
 import cz.vutbr.fit.iha.household.User;
@@ -61,6 +68,9 @@ public final class Controller {
 
 	/** Switch for using demo mode (with example adapter, without server) */
 	private static boolean mDemoMode = false;
+
+	/** Weak map for holding registered notification receivers */
+	private final WeakHashMap<INotificationReceiver, Boolean> mNotificationReceivers = new WeakHashMap<INotificationReceiver, Boolean>();
 
 	/**
 	 * Return singleton instance of this Controller. This is thread-safe.
@@ -359,7 +369,7 @@ public final class Controller {
 
 		return mHousehold.facilitiesModel.refreshFacility(facility, forceReload);
 	}
-	
+
 	/**
 	 * This CAN'T be called on UI thread!
 	 * 
@@ -416,7 +426,8 @@ public final class Controller {
 			}
 
 			if (mHousehold.activeAdapter != null && prefs != null)
-				prefs.edit().putString(Constants.PERSISTENCE_PREF_ACTIVE_ADAPTER, mHousehold.activeAdapter.getId()).commit();
+				prefs.edit().putString(Constants.PERSISTENCE_PREF_ACTIVE_ADAPTER, mHousehold.activeAdapter.getId())
+						.commit();
 		}
 
 		return mHousehold.activeAdapter;
@@ -456,7 +467,8 @@ public final class Controller {
 	}
 
 	/**
-	 * Registers new adapter to server. Automatically reloads list of adapters, set this adapter as active and load all its sensors.
+	 * Registers new adapter to server. Automatically reloads list of adapters, set this adapter as active and load all
+	 * its sensors.
 	 * 
 	 * This CAN'T be called on UI thread!
 	 * 
@@ -803,31 +815,87 @@ public final class Controller {
 	 * <p>
 	 * If result is empty, the app needs to register.
 	 * 
+	 * This CAN'T be called on UI thread!
+	 * 
 	 * @return registration ID, or empty string if there is no existing registration ID.
 	 */
-	/*public String getGCMRegistrationId() {
-		return ""; // FIXME: gcmid
+	public String getGCMRegistrationId() {
+		String registrationId = mPersistence.loadGCMRegistrationId();
+		if (registrationId.isEmpty()) {
+			Log.i(TAG, "GCM: Registration not found.");
+			return "";
+		}
+		// Check if app was updated; if so, it must clear the registration ID
+		// since the existing regID is not guaranteed to work with the new
+		// app version.
+		int registeredVersion = mPersistence.loadLastApplicationVersion();
+		int currentVersion = Utils.getAppVersion(mContext);
+		if (registeredVersion != currentVersion) {
+			// delete actual GCM ID from server
+			ActualUser user;
+			if ((user = getActualUser()) != null) {
+				try {
+					deleteGCM(user.getEmail(), registrationId);
+				} catch (Exception e) {
+					// do nothing
+					Log.w(GcmHelper.TAG_GCM, "getGCMRegistrationId(): Delete GCM ID failed: " + e.getLocalizedMessage());
+				}
+			}
+			mPersistence.saveGCMRegistrationId("");
+			Log.i(TAG, "GCM: App version changed.");
+			return "";
+		}
+		return registrationId;
+	}
 
-		//
-		// String registrationId = mPersistence.loadGCMRegistrationId(); if (registrationId.isEmpty()) { Log.i(TAG, "GCM: Registration not found."); return ""; } // Check if app was updated; if so, it
-		// must clear the registration ID // since the existing regID is not guaranteed to work with the new // app version. int registeredVersion = mPersistence.loadLastApplicationVersion(); int
-		// currentVersion = Utils.getAppVersion(mContext); if (registeredVersion != currentVersion) { Log.i(TAG, "GCM: App version changed."); return ""; } return registrationId;
-		//
-	}*/
+	/**
+	 * Delete GCM ID from user
+	 * 
+	 * This CAN'T be called on UI thread!
+	 * 
+	 * @param email
+	 * @param gcmID
+	 */
+	public void deleteGCM(String email, String gcmID) {
+		mNetwork.deleteGCMID(email, gcmID);
+	}
 
 	/**
 	 * Stores the registration ID and app versionCode in the application's {@code SharedPreferences}.
 	 * 
-	 * @param regId
+	 * @param gcmId
 	 *            registration ID
 	 */
-	/*public void setGCMRegistrationId(String regId) {
+	public void setGCMIdLocal(String gcmId) {
 		int appVersion = Utils.getAppVersion(mContext);
-		Log.i(TAG, "Saving regId on app version " + appVersion);
+		Log.i(TAG, "Saving GCM ID on app version " + appVersion);
 
-		mPersistence.saveGCMRegistrationId(regId);
+		mPersistence.saveGCMRegistrationId(gcmId);
 		mPersistence.saveLastApplicationVersion(appVersion);
-	}*/
+	}
+	
+	/**
+	 * Method set gcmID to server (applied only if there is some user)
+	 * @param gcmID to be set
+	 */
+	public void setGCMIdServer(String gcmID) {
+		String email;
+		if (getActualUser() != null) {
+			email = getActualUser().getEmail();
+		} else if (!getLastEmail().isEmpty()) {
+			email = getLastEmail();
+		} else {
+			// no user, it will be sent in user login
+			return;
+		}
+		
+		try {
+			mNetwork.setGCMID(email, gcmID);
+		} catch (Exception e) {
+			// nothign to do
+			Log.w(GcmHelper.TAG_GCM, "Set GCM ID to server failed.");
+		}
+	}
 
 	public ActualUser getActualUser() {
 		return mHousehold.user;
@@ -844,6 +912,68 @@ public final class Controller {
 	 */
 	public Boolean switchActorValue(Device device) {
 		return mHousehold.facilitiesModel.switchActor(device);
+	}
+		
+	/** Notification methods ************************************************/
+
+	/**
+	 * Register receiver for receiving new notifications.
+	 * 
+	 * @param receiver
+	 */
+	public void registerNotificationReceiver(INotificationReceiver receiver) {
+		mNotificationReceivers.put(receiver, true);
+	}
+
+	/**
+	 * Unregister listener from receiving new notifications.
+	 * 
+	 * @param receiver
+	 */
+	public void unregisterNotificationReceiver(INotificationReceiver receiver) {
+		mNotificationReceivers.remove(receiver);
+	}
+
+	/**
+	 * Sends Notification to all registered receivers.
+	 * 
+	 * <br>
+	 * NOTE: This should be called by some GcmHandler only. Or maybe this should be inside of that class directly and
+	 * Controller should "redirect" (un)registering for calling it there too.
+	 * 
+	 * @param notification
+	 * @return
+	 */
+	public int receiveNotification(Notification notification) {
+		for (INotificationReceiver receiver : mNotificationReceivers.keySet()) {
+			receiver.receiveNotification(notification);
+		}
+
+		return mNotificationReceivers.size();
+	}
+	
+	/**
+	 * Set notification as read on server side
+	 * 
+	 * This CAN'T be called on UI thread!
+	 * 
+	 * @param msgId
+	 */
+	public void setNotificationRead(String msgId) {
+		ArrayList<String> list = new ArrayList<>();
+		list.add(msgId);
+		setNotificationRead(list);
+	}
+	
+	/**
+	 * Set notifications as read on server side
+	 * 
+	 * This CAN'T be called on UI thread!
+	 * 
+	 * @param msgIds Array of message IDs which will be marked as read
+	 */
+	public void setNotificationRead(ArrayList<String> msgIds) {
+		mNetwork.NotificationsRead(msgIds);
 	}
 
 }

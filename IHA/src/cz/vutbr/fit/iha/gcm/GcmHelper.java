@@ -1,14 +1,15 @@
 package cz.vutbr.fit.iha.gcm;
 
 import android.content.Context;
+import android.os.Handler;
 
 public class GcmHelper {
 	public static final String TAG_GCM = "IHA_GCM";
 
 	/**
-	 * Maximum milliseconds which device will wait in thread for reparation GCM ID. If it isn't registered after this time, new thread will be created.
+	 * Maximum attempts to get GCM ID. After reaching this attempts there will be created new thread to get GCM ID.
 	 */
-	private static final int MAX_MILLSEC_GCM = 1000;
+	private static final int MAX_GCM_ATTEMPTS = 3;
 
 	/**
 	 * Registers the application with GCM servers asynchronously.
@@ -16,16 +17,24 @@ public class GcmHelper {
 	 * Stores the registration ID and app versionCode in the application's shared preferences.
 	 */
 	public static void registerGCMInBackground(Context context) {
-		// FIXME: GCM
-		// new GcmRegisterAsyncTask().execute(context, null, null);
+//		new GcmRegisterAsyncTask().execute(context, null, null);
+		Handler handler = new Handler();
+		handler.post(new GcmRegisterRunnable(context, null));
 	}
-
+	
+	/**
+	 * Registers the application with GCM servers synchronously in the same thread. 
+	 * Cannot be GUI thread because of network communication.
+	 * <p>
+	 * Stores the registration ID and app versionCode in the application's shared preferences.
+	 */
 	public static void registerGCMInForeground(Context context) {
-		// FIXME: GCM
-		/*
-		 * try { new GcmRegisterAsyncTask().execute(context, null, null).get(MAX_MILLSEC_GCM, TimeUnit.MILLISECONDS); } catch (Exception e) { Log.e(TAG_GCM, "Couldnt get GCM ID in given time.");
-		 * e.printStackTrace(); }
-		 */
+		registerGCMInForeground(context, MAX_GCM_ATTEMPTS);
+	}
+	
+	public static void registerGCMInForeground(Context context, int maxAttempts) {
+		GcmRegisterRunnable gcmReg = new GcmRegisterRunnable(context, maxAttempts);
+		gcmReg.run();
 	}
 
 }

@@ -379,6 +379,28 @@ public interface INetwork {
 	 */
 	public boolean NotificationsRead(ArrayList<String> msgID);
 
+	/**
+	 * Method delete old gcmid to avoid fake notifications
+	 * 
+	 * @param email
+	 *            of old/last user of gcmid (app+device id)
+	 * @param gcmID
+	 *            - google cloud message id
+	 * @return true if id has been deleted, false otherwise
+	 * @throws NoConnectionException
+	 * @throws CommunicationException
+	 * @throws FalseException
+	 */
+	public boolean deleteGCMID(String email, String gcmID);
+	
+	/**
+	 * Method set gcmID to server
+	 * @param email of user
+	 * @param gcmID to be set
+	 * @return true if id has been updated, false otherwise
+	 */
+	public boolean setGCMID(String email, String gcmID);
+	
 	// /////////////////////////////////////////////////////////////////////////////////
 	// /////////////////////////////////////CONDITIONS,ACTIONS//////////////////////////
 	// /////////////////////////////////////////////////////////////////////////////////

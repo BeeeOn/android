@@ -27,6 +27,7 @@ import cz.vutbr.fit.iha.exception.ErrorCode;
 import cz.vutbr.fit.iha.exception.IhaException;
 import cz.vutbr.fit.iha.exception.NetworkError;
 import cz.vutbr.fit.iha.exception.NotImplementedException;
+import cz.vutbr.fit.iha.gcm.GcmHelper;
 import cz.vutbr.fit.iha.network.DemoNetwork;
 import cz.vutbr.fit.iha.network.GoogleAuthHelper;
 import cz.vutbr.fit.iha.thread.ToastMessageThread;
