@@ -58,6 +58,7 @@ public class LoginActivity extends BaseActivity {
 	private static final int RESULT_GET_GOOGLE_ACCOUNT = 6;
 	
 	private Controller mController;
+	private LoginActivity mActivity;
 	private ProgressDialog mProgress;
 	
 	private boolean mIgnoreChange = false;
