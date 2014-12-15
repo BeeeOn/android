@@ -112,7 +112,7 @@ public abstract class BaseApplicationActivity extends BaseActivity implements IN
 					Notification notification = new Notification(String.valueOf(i), "2014-10-22 12:12:12", "info", false);
 					// we need email in notification to check validity
 					notification.setEmail("john@doe.com");
-					notification.setMessage(String.format("Já jsem testovací notifikace è.%d!", i));
+					notification.setMessage(String.format("Jï¿½ jsem testovacï¿½ notifikace ï¿½.%d!", i));
 					// notification.setAction(notification.new Action(action));
 
 					controller.receiveNotification(notification);

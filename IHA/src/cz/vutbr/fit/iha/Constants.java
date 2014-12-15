@@ -61,5 +61,38 @@ public final class Constants {
 	 * Project number from the API Console
 	 */
 	public static final String PROJECT_NUMBER = "863203863728";
+	
+	/**
+	 * GUI constants
+	 */
+	
+	public static final int ADD_ADAPTER_REQUEST_CODE = 1000;
+	public static final int ADD_ADAPTER_CANCELED = 1001;
+	public static final int ADD_ADAPTER_SUCCESS = 1002;
+
+	public static final int ADD_SENSOR_CANCELED = 1003;
+
+	public static final int ADD_SENSOR_REQUEST_CODE = 1004;
+
+	public static final int SETUP_SENSOR_REQUEST_CODE = 1005;
+
+	public static final int SETUP_SENSOR_CANCELED = 1006;
+
+	public static final int SETUP_SENSOR_SUCCESS = 1007;
+	
+	public static final String SETUP_SENSOR_ACT_LOC = "SETUP_SENSOR_ACT_LOC";
+
+	public static final int ADD_SENSOR_SUCCESS = 1008;
+	
+	public static final boolean GUI_DEBUG = true;
+
+	public static final String TUTORIAL_ADD_ADAPTER_SHOWED = "TUTORIAL_ADD_ADAPTER_SHOWED";
+
+	public static final String TUTORIAL_ADD_SENSOR_SHOWED = "TUTORIAL_ADD_SENSOR_SHOWED";
+
+	public static final String TUTORIAL_LOGIN_SHOWED = "TUTORIAL_LOGIN_SHOWED";
+
+	public static final String GUI_MENU_ALL_SENSOR_ID = "GUI_MENU_ALL_SENSOR_ID";
+	 
 
 }

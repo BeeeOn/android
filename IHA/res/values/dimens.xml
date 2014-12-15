@@ -11,4 +11,6 @@
 	
 	<dimen name="custom_spinner_icon_size">35dp</dimen>
 	<dimen name="custom_spinner_icon_size_smaller">30dp</dimen>
+	
+	<dimen name="nav_drawer_width">280dp</dimen>
 </resources>

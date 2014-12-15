@@ -24,7 +24,9 @@ import android.widget.Toast;
 import com.actionbarsherlock.view.ActionMode;
 import com.actionbarsherlock.view.Menu;
 
+import cz.vutbr.fit.iha.Constants;
 import cz.vutbr.fit.iha.R;
+import cz.vutbr.fit.iha.activity.AddAdapterActivity;
 import cz.vutbr.fit.iha.activity.MainActivity;
 import cz.vutbr.fit.iha.activity.SettingsMainActivity;
 import cz.vutbr.fit.iha.activity.dialog.AddAdapterFragmentDialog;
@@ -260,6 +262,20 @@ public class NavDrawerMenu {
 	public void redrawMenu() {
 		mMenuAdapter = getMenuAdapter();
 		mDrawerList.setAdapter(mMenuAdapter);
+		
+		Adapter adapter = mController.getActiveAdapter();
+		Location location = null;
+		if(adapter != null && mActiveLocationId!= null) {
+			location = mController.getLocation(adapter.getId(), mActiveLocationId);
+		}
+		if (adapter != null && location != null) {
+			mActivity.getSupportActionBar().setTitle(location.getName());
+		}
+		else if (adapter != null && mActiveLocationId == Constants.GUI_MENU_ALL_SENSOR_ID){ // All sensors
+			mActivity.getSupportActionBar().setTitle("All sensors");
+		} else {
+			setDefaultTitle();
+		}
 
 		if (!mIsDrawerOpen) {
 			// Close drawer
@@ -284,7 +300,7 @@ public class NavDrawerMenu {
 		SharedPreferences prefs = mController.getUserSettings();
 
 		// UserSettings can be null when user is not logged in!
-		if (prefs != null) {
+		if (prefs != null && location != null) {
 			Editor edit = prefs.edit();
 
 			String pref_key = Persistence.getPreferencesLastLocation(mController.getActiveAdapter().getId());
@@ -292,7 +308,12 @@ public class NavDrawerMenu {
 			edit.commit();
 		}
 
-		mActiveLocationId = location.getId();
+		if(location != null ){
+			mActiveLocationId = location.getId();
+		}
+		else { // All sensors item
+			mActiveLocationId = Constants.GUI_MENU_ALL_SENSOR_ID;
+		}
 
 		// TODO
 		mActivity.setActiveAdapterID(mActiveAdapterId);
@@ -361,9 +382,23 @@ public class NavDrawerMenu {
 		List<Adapter> adapters = mController.getAdapters();
 		Adapter activeAdapter = mController.getActiveAdapter();
 
+		
+		// Adding separator as item (we don't want to let it float as header)
+		mMenuAdapter.addItem(new SeparatorMenuItem());
+
+		mMenuAdapter.addHeader(new GroupImageMenuItem(mActivity.getResources().getString(R.string.adapter), R.drawable.add_custom_view, new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				//DialogFragment newFragment = new AddAdapterFragmentDialog();
+				//newFragment.show(mActivity.getSupportFragmentManager(), MainActivity.ADD_ADAPTER_TAG);
+				Intent intent = new Intent(mActivity, AddAdapterActivity.class);
+				mActivity.startActivityForResult(intent, Constants.ADD_ADAPTER_REQUEST_CODE);
+				}
+			}));
+		
 		if (!adapters.isEmpty()) {
 			// Adding separator as item (we don't want to let it float as header)
-			mMenuAdapter.addItem(new SeparatorMenuItem());
+			//mMenuAdapter.addItem(new SeparatorMenuItem());
 
 			// Adding adapters
 			for (Adapter actAdapter : adapters) {
@@ -384,11 +419,22 @@ public class NavDrawerMenu {
 
 			List<Location> locations = mController.getLocations(activeAdapter != null ? activeAdapter.getId() : "");
 			if (locations.size() > 0) {
-
+				boolean boolActLoc = false;
+				if(locations.size() > 1) {
+					if(mActiveLocationId != null ) {
+						boolActLoc = (mActiveLocationId.equals(Constants.GUI_MENU_ALL_SENSOR_ID)) ? true : false; 
+					}
+					// ALL Sensor from adapter
+					mMenuAdapter.addItem(new LocationMenuItem("All sensors", R.drawable.loc_all, false, Constants.GUI_MENU_ALL_SENSOR_ID,boolActLoc ));
+				}
 				// Adding location
 				for (int i = 0; i < locations.size(); i++) {
 					Location actLoc = locations.get(i);
-					mMenuAdapter.addItem(new LocationMenuItem(actLoc.getName(), actLoc.getIconResource(), false, actLoc.getId(), (mActiveLocationId == actLoc.getId()) ? true : false));
+					boolActLoc = false;
+					if(mActiveLocationId != null ) {
+						boolActLoc = (mActiveLocationId.equals(actLoc.getId())) ? true : false; 
+					}
+					mMenuAdapter.addItem(new LocationMenuItem(actLoc.getName(), actLoc.getIconResource(), false, actLoc.getId(),boolActLoc ));
 				}
 			} else {
 				mMenuAdapter.addItem(new EmptyMenuItem(mActivity.getResources().getString(R.string.no_location)));
@@ -409,17 +455,6 @@ public class NavDrawerMenu {
 			// mMenuAdapter.addItem(new EmptyMenuItem(mActivity.getResources().getString(R.string.no_custom_view)));
 			mMenuAdapter.addItem(new CustomViewMenuItem("Test view", R.drawable.loc_living_room, false, "Custom001", (mActiveCustomViewId != null) ? true : false));
 		} else {
-			// Adding separator as item (we don't want to let it float as header)
-			mMenuAdapter.addItem(new SeparatorMenuItem());
-
-			mMenuAdapter.addHeader(new GroupImageMenuItem(mActivity.getResources().getString(R.string.adapter), R.drawable.add_custom_view, new OnClickListener() {
-
-				@Override
-				public void onClick(View v) {
-					DialogFragment newFragment = new AddAdapterFragmentDialog();
-					newFragment.show(mActivity.getSupportFragmentManager(), MainActivity.ADD_ADAPTER_TAG);
-				}
-			}));
 			mMenuAdapter.addItem(new EmptyMenuItem(mActivity.getResources().getString(R.string.no_adapters)));
 			
 		}

@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/iha_primary_cyan" >
+    
+	<android.support.v4.view.ViewPager
+		android:id="@+id/intro_pager"
+		android:layout_width="fill_parent"
+		android:layout_height="0dp"
+		android:layout_weight="1"
+	/>
+	
+	<LinearLayout
+	    android:layout_width="fill_parent"
+	    android:layout_height="wrap_content"
+	    android:orientation="vertical" >
+	    <com.viewpagerindicator.CirclePageIndicator
+			android:id="@+id/intro_indicator"
+			android:padding="10dip"
+			android:layout_gravity="center_vertical"
+			android:layout_height="wrap_content"
+			android:layout_width="fill_parent"
+		/>
+	    <LinearLayout 
+		    android:layout_width="fill_parent"
+		    android:layout_height="wrap_content"
+		    android:orientation="horizontal"
+		    >
+		    <Button 
+		        android:id="@+id/add_adapter_skip"
+		        android:layout_width="90dp"
+		        android:layout_height="wrap_content"
+		        android:background="@android:color/transparent"
+		        android:text="SKIP"
+		        android:layout_margin="10dp"
+		        android:textSize="16sp"
+		        android:textColor="@color/white"
+		        android:layout_gravity="center_vertical"/>
+		    <Button 
+		        android:id="@+id/add_adapter_cancel"
+		        android:layout_width="0dp"
+		        android:layout_height="wrap_content"
+				android:layout_weight="1"
+		        android:background="@android:color/transparent"
+		        android:text="CANCEL"
+		        android:layout_margin="10dp"
+		        android:textSize="16sp"
+		        android:textStyle="bold"
+		        android:textColor="@color/white"
+		        android:layout_gravity="center_vertical"/>
+		    <Button 
+		        android:id="@+id/add_adapter_next"
+		        android:layout_width="90dp"
+		        android:layout_height="wrap_content"
+		        android:background="@android:color/transparent"
+		        android:text="NEXT"
+		        android:layout_margin="10dp"
+		        android:textSize="16sp"
+		        android:textStyle="bold"
+		        android:textColor="@color/white"
+		        android:layout_gravity="center_vertical"/>
+		</LinearLayout>
+	</LinearLayout>
+	
+	
+</LinearLayout>

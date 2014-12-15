@@ -12,7 +12,9 @@ import android.os.Handler;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentTransaction;
 import android.view.MotionEvent;
+import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -20,12 +22,16 @@ import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.view.Window;
+import com.github.amlcurran.showcaseview.OnShowcaseEventListener;
+import com.github.amlcurran.showcaseview.ShowcaseView;
+import com.github.amlcurran.showcaseview.targets.ViewTarget;
 
 import cz.vutbr.fit.iha.Constants;
 import cz.vutbr.fit.iha.R;
 import cz.vutbr.fit.iha.activity.dialog.AddAdapterFragmentDialog;
 import cz.vutbr.fit.iha.activity.dialog.AddSensorFragmentDialog;
 import cz.vutbr.fit.iha.activity.dialog.CustomAlertDialog;
+import cz.vutbr.fit.iha.activity.dialog.IntroFragmentDialog;
 import cz.vutbr.fit.iha.activity.fragment.CustomViewFragment;
 import cz.vutbr.fit.iha.activity.fragment.SensorListFragment;
 import cz.vutbr.fit.iha.adapter.Adapter;
@@ -35,6 +41,7 @@ import cz.vutbr.fit.iha.controller.Controller;
 import cz.vutbr.fit.iha.menu.NavDrawerMenu;
 import cz.vutbr.fit.iha.persistence.Persistence;
 import cz.vutbr.fit.iha.util.Log;
+
 
 /**
  * Activity class for choosing location
@@ -69,9 +76,13 @@ public class MainActivity extends BaseApplicationActivity {
 	private String mActiveAdapterId;
 	private String mActiveCustomViewId;
 	private boolean mIsDrawerOpen = false;
+	
 
 	private Handler mTimeHandler = new Handler();
 	private Runnable mTimeRun;
+	
+	private boolean mFirstUseApp = true;
+	private ShowcaseView mSV;
 
 	/**
 	 * Tasks which can be running in this activity and after finishing can try to change GUI -> must be cancelled when activity stop
@@ -131,6 +142,80 @@ public class MainActivity extends BaseApplicationActivity {
 			ft.replace(R.id.content_frame, mCustomView, FRG_TAG_CUS);
 		}
 		ft.commit();
+		
+		// Init tutorial 
+		if(mFirstUseApp) {
+			//showTutorial();
+		}
+	}
+
+	private void showTutorial() {
+		// TODO Auto-generated method stub
+		RelativeLayout.LayoutParams lps = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+		lps.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+		lps.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
+		
+		int margin = ((Number) (getResources().getDisplayMetrics().density * 12)).intValue();
+		lps.setMargins(margin, margin, margin, margin);
+		ViewTarget target = new ViewTarget(android.R.id.home, this);
+		
+		OnShowcaseEventListener	listener = new OnShowcaseEventListener() {
+			
+			@Override
+			public void onShowcaseViewShow(ShowcaseView showcaseView) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void onShowcaseViewHide(ShowcaseView showcaseView) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void onShowcaseViewDidHide(ShowcaseView showcaseView) {
+				// TODO Auto-generated method stub
+				
+			}
+		}; 
+		
+		mSV = new ShowcaseView.Builder(this, true)
+		.setTarget(target)
+		.setContentTitle("Open Menu")
+		.setContentText("For switch location tap to Icon and Menu will rise.")
+		//.setStyle(R.style.CustomShowcaseTheme)
+		.setShowcaseEventListener(listener)
+		.build();
+		mSV.setButtonPosition(lps);
+	}
+	
+	@Override
+	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+		Log.d(TAG, "Request code "+requestCode);
+		if(requestCode == Constants.ADD_ADAPTER_REQUEST_CODE ) {
+			Log.d(TAG, "Return from add adapter activity");
+			if(resultCode == Constants.ADD_ADAPTER_CANCELED) {
+				Log.d(TAG, "Activity was canceled");
+			}
+			else if (resultCode == Constants.ADD_ADAPTER_SUCCESS) {
+				// Succes of add adapter -> setActive adapter a redraw ALL
+				Log.d(TAG, "Add adapter succes");
+				setActiveAdapterAndLocation();
+				redrawMenu();
+			}
+		}
+		else if (requestCode == Constants.ADD_SENSOR_REQUEST_CODE) {
+			Log.d(TAG, "Return from add sensor activity");
+			if(resultCode == Constants.ADD_SENSOR_SUCCESS) {
+				// Set active location
+				mActiveLocationId = data.getExtras().getString(Constants.SETUP_SENSOR_ACT_LOC);
+				Log.d(TAG, "Active locID: "+mActiveLocationId + " adapterID: "+mActiveAdapterId);
+				redrawDevices();
+				redrawMenu();
+			}
+		}
 	}
 
 	public void onAppResume() {
@@ -273,6 +358,8 @@ public class MainActivity extends BaseApplicationActivity {
 	}
 
 	public void redrawMenu() {
+		mNavDrawerMenu.setLocationID(mActiveLocationId);
+		mNavDrawerMenu.setAdapterID(mActiveAdapterId);
 		mNavDrawerMenu.redrawMenu();
 		redrawDevices();
 	}
@@ -290,10 +377,12 @@ public class MainActivity extends BaseApplicationActivity {
 	public void checkNoAdapters() {
 		if (mController.getActiveAdapter() == null) {
 			// UserSettings can be null when user is not logged in!
+			Log.d(TAG, "CheckNoAdapter");
 			SharedPreferences prefs = mController.getUserSettings();
 			if (prefs != null && !prefs.getBoolean(Constants.PERSISTENCE_PREF_IGNORE_NO_ADAPTER, false)) {
-				DialogFragment newFragment = new AddAdapterFragmentDialog();
-				newFragment.show(getSupportFragmentManager(), ADD_ADAPTER_TAG);
+				Log.d(TAG, "Call ADD ADAPTER");
+				Intent intent = new Intent(MainActivity.this, AddAdapterActivity.class);
+				startActivityForResult(intent, Constants.ADD_ADAPTER_REQUEST_CODE);
 			}
 		}
 	}
@@ -331,16 +420,27 @@ public class MainActivity extends BaseApplicationActivity {
 			break;
 
 		case R.id.action_addadapter: {
-			DialogFragment newFragment = new AddAdapterFragmentDialog();
-			newFragment.show(getSupportFragmentManager(), ADD_ADAPTER_TAG);
-
+			//DialogFragment newFragment = new AddAdapterFragmentDialog();
+			//newFragment.show(getSupportFragmentManager(), ADD_ADAPTER_TAG);
+			Intent intent = new Intent(MainActivity.this, AddAdapterActivity.class);
+			startActivityForResult(intent, Constants.ADD_ADAPTER_REQUEST_CODE);
 			break;
 		}
 		case R.id.action_settings: {
 			Intent intent = new Intent(MainActivity.this, SettingsMainActivity.class);
 			startActivity(intent);
 			break;
+		}/*
+		case R.id.action_intro: {
+			Intent intent = new Intent(MainActivity.this, IntroActivity.class);
+			startActivity(intent);
+			break;
 		}
+		case R.id.action_intro_dialog: {
+			DialogFragment newFragment = new IntroFragmentDialog();
+			newFragment.show(getSupportFragmentManager(), "intro_dialog");
+			break;
+		}*/
 		case R.id.action_logout: {
 			mController.logout();
 			Intent intent = new Intent(MainActivity.this, LoginActivity.class);
