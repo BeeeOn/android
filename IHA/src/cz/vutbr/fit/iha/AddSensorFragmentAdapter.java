@@ -19,7 +19,7 @@ public class AddSensorFragmentAdapter extends FragmentPagerAdapter implements Ic
             R.drawable.loc_dinner_room
     };
 
-    private int mCount = 4;
+    private int mCount = 3;
 
     public AddSensorFragmentAdapter(FragmentManager fm) {
         super(fm);
@@ -30,14 +30,11 @@ public class AddSensorFragmentAdapter extends FragmentPagerAdapter implements Ic
     	switch (position) {
     	case 0:
     		// Prepare your sensor
-    		return IntroImageFragment.newInstance(R.drawable.dev_emission);
+    		return IntroImageFragment.newInstance(R.drawable.iha_tutorial_as_first_step,"Remove paper from battery");
     	case 1:
     		// After start timer , 
-    		return IntroImageFragment.newInstance(R.drawable.dev_state_closed);
+    		return IntroImageFragment.newInstance(R.drawable.iha_tutorial_as_second_step,"After start timer shake with sensor");
     	case 2:
-    		// shake with your sensor 
-    		return IntroImageFragment.newInstance(R.drawable.dev_temperature);
-    	case 3:
     		// circle timer 
     		return new AddSensorFragment();
     	}

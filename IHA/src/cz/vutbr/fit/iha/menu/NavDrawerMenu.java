@@ -26,6 +26,7 @@ import com.actionbarsherlock.view.Menu;
 
 import cz.vutbr.fit.iha.Constants;
 import cz.vutbr.fit.iha.R;
+import cz.vutbr.fit.iha.activity.AddAdapterActivity;
 import cz.vutbr.fit.iha.activity.MainActivity;
 import cz.vutbr.fit.iha.activity.SettingsMainActivity;
 import cz.vutbr.fit.iha.activity.dialog.AddAdapterFragmentDialog;
@@ -388,8 +389,10 @@ public class NavDrawerMenu {
 		mMenuAdapter.addHeader(new GroupImageMenuItem(mActivity.getResources().getString(R.string.adapter), R.drawable.add_custom_view, new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				DialogFragment newFragment = new AddAdapterFragmentDialog();
-				newFragment.show(mActivity.getSupportFragmentManager(), MainActivity.ADD_ADAPTER_TAG);
+				//DialogFragment newFragment = new AddAdapterFragmentDialog();
+				//newFragment.show(mActivity.getSupportFragmentManager(), MainActivity.ADD_ADAPTER_TAG);
+				Intent intent = new Intent(mActivity, AddAdapterActivity.class);
+				mActivity.startActivityForResult(intent, Constants.ADD_ADAPTER_REQUEST_CODE);
 				}
 			}));
 		
@@ -417,12 +420,13 @@ public class NavDrawerMenu {
 			List<Location> locations = mController.getLocations(activeAdapter != null ? activeAdapter.getId() : "");
 			if (locations.size() > 0) {
 				boolean boolActLoc = false;
-				if(mActiveLocationId != null ) {
-					boolActLoc = (mActiveLocationId.equals(Constants.GUI_MENU_ALL_SENSOR_ID)) ? true : false; 
+				if(locations.size() > 1) {
+					if(mActiveLocationId != null ) {
+						boolActLoc = (mActiveLocationId.equals(Constants.GUI_MENU_ALL_SENSOR_ID)) ? true : false; 
+					}
+					// ALL Sensor from adapter
+					mMenuAdapter.addItem(new LocationMenuItem("All sensors", R.drawable.loc_all, false, Constants.GUI_MENU_ALL_SENSOR_ID,boolActLoc ));
 				}
-				// ALL Sensor from adapter
-				mMenuAdapter.addItem(new LocationMenuItem("All sensors", R.drawable.loc_unknown, false, Constants.GUI_MENU_ALL_SENSOR_ID,boolActLoc ));
-				
 				// Adding location
 				for (int i = 0; i < locations.size(); i++) {
 					Location actLoc = locations.get(i);

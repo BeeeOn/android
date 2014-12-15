@@ -12,7 +12,7 @@
         android:showAsAction="never"
         android:title="@string/action_addadapter"/>
     
-    <item
+    <!-- item
         android:id="@+id/action_intro"
         android:orderInCategory="90"
         android:showAsAction="never"
@@ -23,7 +23,7 @@
         android:orderInCategory="90"
         android:showAsAction="never"
         android:title="@string/action_intro_dialog"
-        android:icon="@drawable/add_sensor_view"/>
+        android:icon="@drawable/add_sensor_view"/-->
     
     <item
         android:id="@+id/action_settings"

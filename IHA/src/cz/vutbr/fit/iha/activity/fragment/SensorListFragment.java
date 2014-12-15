@@ -201,7 +201,10 @@ public class SensorListFragment extends SherlockFragment {
 		}
 		List<Facility> facilities;
 		
-		if(mActiveLocationId.equals(Constants.GUI_MENU_ALL_SENSOR_ID)){
+		if(mActiveLocationId == null){
+			facilities = mController.getFacilitiesByLocation(mActiveAdapterId, mActiveLocationId);
+		}
+		else if(mActiveLocationId.equals(Constants.GUI_MENU_ALL_SENSOR_ID)){
 			// All sensor from adapter
 			facilities = mController.getFacilitiesByAdapter(mActiveAdapterId);
 		}

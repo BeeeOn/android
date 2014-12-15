@@ -1,8 +1,10 @@
 package cz.vutbr.fit.iha.activity;
 
+import com.actionbarsherlock.view.MenuItem;
 import com.viewpagerindicator.CirclePageIndicator;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
@@ -38,6 +40,9 @@ public class AddAdapterActivity extends BaseApplicationActivity {
 	private Button mCancel;
 	private Button mNext;
 	
+
+	private ProgressDialog mProgress;
+	
 	private Activity mActivity;
 	
 	@Override
@@ -68,6 +73,12 @@ public class AddAdapterActivity extends BaseApplicationActivity {
 		mIndicator.setStrokeColor(0x88FFFFFF);
 		
 		initButtons();
+		
+		// Prepare progress dialog
+		mProgress = new ProgressDialog(mActivity);
+		mProgress.setMessage(getString(R.string.progress_saving_data));
+		mProgress.setCancelable(false);
+		mProgress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
 	}
 	
 	
@@ -114,6 +125,8 @@ public class AddAdapterActivity extends BaseApplicationActivity {
 						
 					}
 					else {
+						// Show progress bar for saving
+						mProgress.show();
 						doRegisterAdapterTask(new RegisterAdapterPair(adapterCode, adapterName));
 					}
 				}
@@ -140,6 +153,22 @@ public class AddAdapterActivity extends BaseApplicationActivity {
 		// TODO Auto-generated method stub
 
 	}
+	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+
+		switch (item.getItemId()) {
+		case android.R.id.home:
+			SharedPreferences prefs = mController.getUserSettings();
+			if (prefs != null) {
+				prefs.edit().putBoolean(Constants.PERSISTENCE_PREF_IGNORE_NO_ADAPTER, true).commit();
+			}
+			setResult(Constants.ADD_ADAPTER_CANCELED);
+			finish();
+			break;
+		}
+		return super.onOptionsItemSelected(item);
+	}
 
 
 	public void resetBtn() {
@@ -159,10 +188,11 @@ public class AddAdapterActivity extends BaseApplicationActivity {
 
 			@Override
 			public void onExecute(boolean success) {
+				mProgress.cancel();
 				int messageId = success ? R.string.toast_adapter_activated : R.string.toast_adapter_activate_failed;
 				//Log.d(TAG, this.getString(messageId));
 				new ToastMessageThread(mActivity, messageId).start();
-
+				
 				if (success) {
 					setResult(Constants.ADD_ADAPTER_SUCCESS);
 					finish();

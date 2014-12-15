@@ -424,7 +424,7 @@ public class MainActivity extends BaseApplicationActivity {
 			Intent intent = new Intent(MainActivity.this, SettingsMainActivity.class);
 			startActivity(intent);
 			break;
-		}
+		}/*
 		case R.id.action_intro: {
 			Intent intent = new Intent(MainActivity.this, IntroActivity.class);
 			startActivity(intent);
@@ -434,7 +434,7 @@ public class MainActivity extends BaseApplicationActivity {
 			DialogFragment newFragment = new IntroFragmentDialog();
 			newFragment.show(getSupportFragmentManager(), "intro_dialog");
 			break;
-		}
+		}*/
 		case R.id.action_logout: {
 			mController.logout();
 			Intent intent = new Intent(MainActivity.this, LoginActivity.class);

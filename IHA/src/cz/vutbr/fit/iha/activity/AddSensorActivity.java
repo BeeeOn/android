@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 
+import com.actionbarsherlock.view.MenuItem;
 import com.viewpagerindicator.CirclePageIndicator;
 
 import cz.vutbr.fit.iha.AddSensorFragmentAdapter;
@@ -162,6 +163,18 @@ public class AddSensorActivity extends BaseApplicationActivity {
 	protected void onAppPause() {
 		// TODO Auto-generated method stub
 
+	}
+	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+
+		switch (item.getItemId()) {
+		case android.R.id.home:
+			setResult(Constants.ADD_SENSOR_CANCELED);
+			finish();
+			break;
+		}
+		return super.onOptionsItemSelected(item);
 	}
 
 

@@ -28,13 +28,13 @@ public class IntroFragmentAdapter extends FragmentPagerAdapter implements IconPa
     public Fragment getItem(int position) {
     	switch (position) {
     	case 0:
-    		return IntroImageFragment.newInstance(R.drawable.dev_emission);
+    		return IntroImageFragment.newInstance(R.drawable.dev_emission,"Test 1");
     	case 1:
-    		return IntroImageFragment.newInstance(R.drawable.dev_state_closed);
+    		return IntroImageFragment.newInstance(R.drawable.dev_state_closed,"Test 2");
     	case 2:
-    		return IntroImageFragment.newInstance(R.drawable.dev_temperature);
+    		return IntroImageFragment.newInstance(R.drawable.dev_temperature,"Test 3");
     	case 3:
-    		return IntroImageFragment.newInstance(R.drawable.dev_pressure);
+    		return IntroImageFragment.newInstance(R.drawable.dev_pressure,"Test 4");
     	}
 		return null;
     }
