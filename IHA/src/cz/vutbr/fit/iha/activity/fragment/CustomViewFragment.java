@@ -46,7 +46,7 @@ import cz.vutbr.fit.iha.util.UnitsHelper;
 public class CustomViewFragment extends TrackFragment {
 
 	private SparseArray<List<Device>> mDevices = new SparseArray<List<Device>>();
-	private SparseArray<List<DeviceLog>> mLogs = new SparseArray<List<DeviceLog>>();
+	//private SparseArray<List<DeviceLog>> mLogs = new SparseArray<List<DeviceLog>>();
 	private SparseArray<GraphView> mGraphs = new SparseArray<GraphView>();
 
 	private String mGraphDateTimeFormat = "dd.MM. kk:mm";
@@ -81,14 +81,7 @@ public class CustomViewFragment extends TrackFragment {
 		return view;
 	}
 
-	private void addGraph(final Device device) {
-		// Prepare helpers
-		final UnitsHelper unitsHelper = new UnitsHelper(mController.getUserSettings(), mContext);
-		final TimeHelper timeHelper = new TimeHelper(mController.getUserSettings());
-		final DateTimeFormatter fmt = timeHelper.getFormatter(mGraphDateTimeFormat, null); // Force use local time
-																							// because we mix data from
-																							// different adapters
-
+	private void addGraph(final Device device, final UnitsHelper unitsHelper, final TimeHelper timeHelper, final DateTimeFormatter fmt) {
 		// Create and set graphView
 		GraphView graphView = GraphViewHelper.prepareGraphView(mContext, "", device, fmt, unitsHelper); // empty heading
 		graphView.setShowLegend(true);
@@ -167,24 +160,32 @@ public class CustomViewFragment extends TrackFragment {
 	}
 
 	private void prepareDevices() {
-		for (Adapter adapter : mController.getAdapters()) {
-			Log.d(TAG, String.format("Preparing adapter %s", adapter.getId()));
+		Adapter adapter = mController.getActiveAdapter();
+		if (adapter == null)
+			return;
+		
+		// Prepare helpers
+		final UnitsHelper unitsHelper = new UnitsHelper(mController.getUserSettings(), mContext);
+		final TimeHelper timeHelper = new TimeHelper(mController.getUserSettings());
+		final DateTimeFormatter fmt = timeHelper.getFormatter(mGraphDateTimeFormat, adapter);
+		
+		// Prepare data
+		Log.d(TAG, String.format("Preparing custom view for adapter %s", adapter.getId()));
 
-			for (Facility facility : mController.getFacilitiesByAdapter(adapter.getId())) {
-				Log.d(TAG, String.format("Preparing facility with %d device", facility.getDevices().size()));
+		for (Facility facility : mController.getFacilitiesByAdapter(adapter.getId())) {
+			Log.d(TAG, String.format("Preparing facility with %d devices", facility.getDevices().size()));
 
-				for (Device device : facility.getDevices()) {
-					Log.d(TAG, String.format("Preparing device %s (type %d)", device.getName(), device.getType().getTypeId()));
+			for (Device device : facility.getDevices()) {
+				Log.d(TAG, String.format("Preparing device %s (type %d)", device.getName(), device.getType().getTypeId()));
 
-					List<Device> devices = mDevices.get(device.getType().getTypeId());
-					if (devices == null) {
-						devices = new ArrayList<Device>();
-						mDevices.put(device.getType().getTypeId(), devices);
-						addGraph(device);
-					}
-
-					devices.add(device);
+				List<Device> devices = mDevices.get(device.getType().getTypeId());
+				if (devices == null) {
+					devices = new ArrayList<Device>();
+					mDevices.put(device.getType().getTypeId(), devices);
+					addGraph(device, unitsHelper, timeHelper, fmt);
 				}
+
+				devices.add(device);
 			}
 		}
 	}
