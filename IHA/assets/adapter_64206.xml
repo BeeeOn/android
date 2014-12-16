@@ -70,7 +70,7 @@
 		<part
 			type="6"
 			vis="1"
-			name="Chuvička postýlka"
+			name="Chůvička postýlka"
 			val="30" />
 	</dev>
 	<dev 
@@ -113,7 +113,7 @@
 		<part
 			type="4"
 			vis="1"
-			name="Ventilator"
+			name="Ventilátor"
 			val="ON" />
 	</dev>
 	<dev 
@@ -197,7 +197,7 @@
 		<part
 			type="5"
 			vis="1"
-			name="Svetlo na zachode"
+			name="Světlo na záchodě"
 			val="15" />
 	</dev>
 </com>
