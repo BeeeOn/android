@@ -85,20 +85,16 @@ public class GcmRegisterRunnable implements Runnable {
 				if (!email.isEmpty()) {
 					Thread t = new Thread() {
 						public void run() {
-							Thread t = new Thread() {
-								public void run() {
-									try {
-										mController.deleteGCM(email, mOldGcmId);
-									} catch (Exception e) {
-										// do nothing
-										Log.w(GcmHelper.TAG_GCM,
-												"Logout: Delete GCM ID failed: " + e.getLocalizedMessage());
-									}
-								}
-							};
-							t.start();
+							try {
+								mController.deleteGCM(email, mOldGcmId);
+							} catch (Exception e) {
+								// do nothing
+								Log.w(GcmHelper.TAG_GCM,
+										"Logout: Delete GCM ID failed: " + e.getLocalizedMessage());
+							}
 						}
 					};
+					t.start();
 				}
 			}
 

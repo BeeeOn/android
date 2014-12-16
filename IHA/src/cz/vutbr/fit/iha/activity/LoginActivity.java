@@ -447,26 +447,7 @@ public class LoginActivity extends BaseActivity {
 			@Override
 			public void run() {
 				setDemoMode(demoMode);
-				
-				if (!demoMode) {
-					// TODO: Some GCM registration here? Or elsewhere?
-					// String gcmId = mController.getGCMRegistrationId();
-					// // try to register again in 1 second, otherwise register in
-					// // separate thread
-					// if (gcmId.isEmpty()) {
-					// GcmHelper.registerGCMInForeground(LoginActivity.this);
-					// gcmId = mController.getGCMRegistrationId();
-					// // if it still doesn't have GCM ID, try it repeatedly in
-					// // new thread
-					// if (gcmId.isEmpty()) {
-					// GcmHelper.registerGCMInBackground(LoginActivity.this);
-					// Log.e(GcmHelper.TAG_GCM, "GCM ID is not accesible, creating new thread for ");
-					// }
-					// }
-					//
-					// Log.i(GcmHelper.TAG_GCM, "GCM ID: " + gcmId);
-				}
-				
+
 				String errMessage = "Login failed";
 				boolean errFlag = true;
 		

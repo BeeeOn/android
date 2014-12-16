@@ -234,7 +234,7 @@ public final class Controller {
 				if (!(mNetwork instanceof DemoNetwork)) {
 					mPersistence.saveLastEmail(email);
 
-					/** Send GCM ID to server */
+					// Send GCM ID to server
 					final String gcmId = mController.getGCMRegistrationId();
 					if (gcmId.isEmpty()) {
 						GcmHelper.registerGCMInBackground(mContext);
@@ -247,8 +247,7 @@ public final class Controller {
 									mController.setGCMIdServer(gcmId);
 								} catch (Exception e) {
 									// do nothing
-									Log.w(GcmHelper.TAG_GCM,
-											"Login: Sending GCM ID to server failed: " + e.getLocalizedMessage());
+									Log.w(GcmHelper.TAG_GCM, "Login: Sending GCM ID to server failed: " + e.getLocalizedMessage());
 								}
 							}
 						};
@@ -284,21 +283,23 @@ public final class Controller {
 		// TODO: Request to logout from server (discard actual communication UID)
 
 		// Delete GCM ID on server side
-		final String email = getActualUser().getEmail();
-		final String gcmId = getGCMRegistrationId();
-		if (email != null && !gcmId.isEmpty()) {
-			// delete GCM ID from server
-			Thread t = new Thread() {
-				public void run() {
-					try {
-						deleteGCM(email, gcmId);
-					} catch (Exception e) {
-						// do nothing
-						Log.w(GcmHelper.TAG_GCM, "Logout: Delete GCM ID failed: " + e.getLocalizedMessage());
+		if (!(mNetwork instanceof DemoNetwork)) {
+			final String email = getActualUser().getEmail();
+			final String gcmId = getGCMRegistrationId();
+			if (email != null && !gcmId.isEmpty()) {
+				// delete GCM ID from server
+				Thread t = new Thread() {
+					public void run() {
+						try {
+							deleteGCM(email, gcmId);
+						} catch (Exception e) {
+							// do nothing
+							Log.w(GcmHelper.TAG_GCM, "Logout: Delete GCM ID failed: " + e.getLocalizedMessage());
+						}
 					}
-				}
-			};
-			t.start();
+				};
+				t.start();
+			}
 		}
 
 		// Destroy session
