@@ -1,9 +1,6 @@
 package cz.vutbr.fit.iha.gcm;
 
 import android.content.Context;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
-import android.os.AsyncTask;
 
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 

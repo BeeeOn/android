@@ -1,9 +1,6 @@
 package cz.vutbr.fit.iha.activity;
 
-import java.util.List;
-
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
@@ -19,19 +16,15 @@ import android.widget.Toast;
 
 import com.viewpagerindicator.CirclePageIndicator;
 
-import cz.vutbr.fit.iha.AddSensorFragmentAdapter;
 import cz.vutbr.fit.iha.Constants;
 import cz.vutbr.fit.iha.R;
 import cz.vutbr.fit.iha.SetupSensorFragmentAdapter;
-import cz.vutbr.fit.iha.activity.fragment.AddSensorFragment;
 import cz.vutbr.fit.iha.activity.fragment.SetupSensorFragment;
 import cz.vutbr.fit.iha.adapter.Adapter;
 import cz.vutbr.fit.iha.adapter.device.Facility;
 import cz.vutbr.fit.iha.adapter.location.Location;
 import cz.vutbr.fit.iha.asynctask.CallbackTask.CallbackTaskListener;
 import cz.vutbr.fit.iha.asynctask.InitializeFacilityTask;
-import cz.vutbr.fit.iha.asynctask.PairRequestTask;
-import cz.vutbr.fit.iha.asynctask.ReloadUninitializedTask;
 import cz.vutbr.fit.iha.base.BaseApplicationActivity;
 import cz.vutbr.fit.iha.controller.Controller;
 import cz.vutbr.fit.iha.pair.InitializeFacilityPair;

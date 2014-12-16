@@ -1,12 +1,6 @@
 package cz.vutbr.fit.iha.activity.fragment;
 
-import cz.vutbr.fit.iha.R;
-import cz.vutbr.fit.iha.activity.AddAdapterActivity;
-import cz.vutbr.fit.iha.util.Log;
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.Gravity;
@@ -17,6 +11,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.TextView;
+import cz.vutbr.fit.iha.R;
+import cz.vutbr.fit.iha.activity.AddAdapterActivity;
 
 public final class IntroImageFragment extends Fragment {
     private static final String KEY_CONTENT = "TestFragment:Content";

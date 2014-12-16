@@ -6,7 +6,6 @@ import android.support.v4.app.FragmentPagerAdapter;
 
 import com.viewpagerindicator.IconPagerAdapter;
 
-import cz.vutbr.fit.iha.activity.fragment.AddAdapterFragment;
 import cz.vutbr.fit.iha.activity.fragment.AddSensorFragment;
 import cz.vutbr.fit.iha.activity.fragment.IntroImageFragment;
 

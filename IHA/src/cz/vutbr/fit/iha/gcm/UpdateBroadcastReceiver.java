@@ -1,9 +1,9 @@
 package cz.vutbr.fit.iha.gcm;
 
-import cz.vutbr.fit.iha.util.Log;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import cz.vutbr.fit.iha.util.Log;
 
 public class UpdateBroadcastReceiver extends BroadcastReceiver {
 

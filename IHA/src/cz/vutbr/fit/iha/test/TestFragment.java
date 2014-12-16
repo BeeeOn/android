@@ -1,9 +1,5 @@
 package cz.vutbr.fit.iha.test;
 
-import cz.vutbr.fit.iha.R;
-import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.Gravity;
@@ -13,7 +9,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
-import android.widget.TextView;
 
 public final class TestFragment extends Fragment {
     private static final String KEY_CONTENT = "TestFragment:Content";

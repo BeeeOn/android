@@ -1,15 +1,13 @@
 package cz.vutbr.fit.iha.activity;
 
-import com.viewpagerindicator.CirclePageIndicator;
-import com.viewpagerindicator.PageIndicator;
-
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
-import cz.vutbr.fit.iha.AddAdapterFragmentAdapter;
+
+import com.viewpagerindicator.CirclePageIndicator;
+
 import cz.vutbr.fit.iha.IntroFragmentAdapter;
 import cz.vutbr.fit.iha.R;
 import cz.vutbr.fit.iha.base.BaseApplicationActivity;
-import cz.vutbr.fit.iha.test.TestFragmentAdapter;
 
 public class IntroActivity extends BaseApplicationActivity {
 	private IntroFragmentAdapter mAdapter;

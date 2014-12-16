@@ -1,7 +1,6 @@
 package cz.vutbr.fit.iha.gcm;
 
 import android.content.Context;
-import android.os.Handler;
 
 public class GcmHelper {
 	public static final String TAG_GCM = "IHA_GCM";

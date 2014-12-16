@@ -1,8 +1,8 @@
 package cz.vutbr.fit.iha.gcm;
 
-import cz.vutbr.fit.iha.util.Log;
 import android.app.IntentService;
 import android.content.Intent;
+import cz.vutbr.fit.iha.util.Log;
 
 public class GcmReRegistrationHandler extends IntentService {
 

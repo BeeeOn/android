@@ -5,13 +5,11 @@ package cz.vutbr.fit.iha.gcm;
 
 import java.util.Calendar;
 
-import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
 import android.os.Bundle;
 import cz.vutbr.fit.iha.network.xml.Xconstants;
-import cz.vutbr.fit.iha.util.Log;
 
 /**
  * @author ThinkDeep

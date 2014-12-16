@@ -1,14 +1,14 @@
 package cz.vutbr.fit.iha.activity.dialog;
 
-import com.viewpagerindicator.CirclePageIndicator;
-
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
+
+import com.viewpagerindicator.CirclePageIndicator;
+
 import cz.vutbr.fit.iha.R;
 import cz.vutbr.fit.iha.base.TrackDialogFragment;
 import cz.vutbr.fit.iha.test.TestFragmentAdapter;

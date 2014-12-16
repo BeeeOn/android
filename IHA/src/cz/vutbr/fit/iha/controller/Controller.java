@@ -1,6 +1,5 @@
 package cz.vutbr.fit.iha.controller;
 
-import java.security.acl.LastOwnerException;
 import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
@@ -13,7 +12,6 @@ import android.graphics.Bitmap;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import cz.vutbr.fit.iha.Constants;
-import cz.vutbr.fit.iha.R.string;
 import cz.vutbr.fit.iha.activity.LoginActivity;
 import cz.vutbr.fit.iha.adapter.Adapter;
 import cz.vutbr.fit.iha.adapter.device.Device;

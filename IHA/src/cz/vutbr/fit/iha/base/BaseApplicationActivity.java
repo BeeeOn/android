@@ -1,10 +1,7 @@
 package cz.vutbr.fit.iha.base;
 
-import java.util.Random;
-
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
 import cz.vutbr.fit.iha.activity.LoginActivity;
 import cz.vutbr.fit.iha.controller.Controller;
 import cz.vutbr.fit.iha.gcm.INotificationReceiver;

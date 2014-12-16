@@ -1,8 +1,5 @@
 package cz.vutbr.fit.iha.activity;
 
-import com.actionbarsherlock.view.MenuItem;
-import com.viewpagerindicator.CirclePageIndicator;
-
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.SharedPreferences;
@@ -11,12 +8,16 @@ import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+
+import com.actionbarsherlock.view.MenuItem;
+import com.viewpagerindicator.CirclePageIndicator;
+
 import cz.vutbr.fit.iha.AddAdapterFragmentAdapter;
 import cz.vutbr.fit.iha.Constants;
 import cz.vutbr.fit.iha.R;
 import cz.vutbr.fit.iha.activity.fragment.AddAdapterFragment;
-import cz.vutbr.fit.iha.asynctask.RegisterAdapterTask;
 import cz.vutbr.fit.iha.asynctask.CallbackTask.CallbackTaskListener;
+import cz.vutbr.fit.iha.asynctask.RegisterAdapterTask;
 import cz.vutbr.fit.iha.base.BaseApplicationActivity;
 import cz.vutbr.fit.iha.controller.Controller;
 import cz.vutbr.fit.iha.pair.RegisterAdapterPair;

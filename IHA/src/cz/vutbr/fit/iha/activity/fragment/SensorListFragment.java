@@ -5,9 +5,7 @@ import java.util.List;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.res.Configuration;
 import android.os.Bundle;
-import android.support.v4.app.DialogFragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
 import android.view.LayoutInflater;
@@ -36,8 +34,6 @@ import cz.vutbr.fit.iha.activity.AddAdapterActivity;
 import cz.vutbr.fit.iha.activity.AddSensorActivity;
 import cz.vutbr.fit.iha.activity.MainActivity;
 import cz.vutbr.fit.iha.activity.SensorDetailActivity;
-import cz.vutbr.fit.iha.activity.dialog.AddAdapterFragmentDialog;
-import cz.vutbr.fit.iha.activity.dialog.AddSensorFragmentDialog;
 import cz.vutbr.fit.iha.adapter.Adapter;
 import cz.vutbr.fit.iha.adapter.device.Device;
 import cz.vutbr.fit.iha.adapter.device.Facility;

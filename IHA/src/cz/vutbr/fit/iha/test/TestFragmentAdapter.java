@@ -7,7 +7,6 @@ import android.support.v4.app.FragmentPagerAdapter;
 import com.viewpagerindicator.IconPagerAdapter;
 
 import cz.vutbr.fit.iha.R;
-import cz.vutbr.fit.iha.activity.dialog.AddAdapterFragmentDialog;
 import cz.vutbr.fit.iha.activity.fragment.AddAdapterFragment;
 
 public class TestFragmentAdapter extends FragmentPagerAdapter implements IconPagerAdapter {

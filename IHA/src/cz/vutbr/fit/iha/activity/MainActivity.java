@@ -28,10 +28,8 @@ import com.github.amlcurran.showcaseview.targets.ViewTarget;
 
 import cz.vutbr.fit.iha.Constants;
 import cz.vutbr.fit.iha.R;
-import cz.vutbr.fit.iha.activity.dialog.AddAdapterFragmentDialog;
 import cz.vutbr.fit.iha.activity.dialog.AddSensorFragmentDialog;
 import cz.vutbr.fit.iha.activity.dialog.CustomAlertDialog;
-import cz.vutbr.fit.iha.activity.dialog.IntroFragmentDialog;
 import cz.vutbr.fit.iha.activity.fragment.CustomViewFragment;
 import cz.vutbr.fit.iha.activity.fragment.SensorListFragment;
 import cz.vutbr.fit.iha.adapter.Adapter;

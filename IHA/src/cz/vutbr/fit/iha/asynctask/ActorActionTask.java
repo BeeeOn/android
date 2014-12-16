@@ -3,7 +3,6 @@ package cz.vutbr.fit.iha.asynctask;
 import android.content.Context;
 import cz.vutbr.fit.iha.adapter.device.Device;
 import cz.vutbr.fit.iha.controller.Controller;
-import cz.vutbr.fit.iha.pair.SaveDevicePair;
 
 public class ActorActionTask extends CallbackTask<Device> {
 
