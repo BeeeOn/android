@@ -39,7 +39,14 @@ public class GcmRegisterRunnable implements Runnable {
 			// Moves the current Thread into the background
 			android.os.Process.setThreadPriority(android.os.Process.THREAD_PRIORITY_BACKGROUND);
 		}
-
+	
+		// if there is not Internet connection, locally invalidate and next event will try again to get new GCM ID 
+		if (!mController.isInternetAvailable()) {
+			Log.w(GcmHelper.TAG_GCM, "No Internet, locally invalidate GCM ID");
+			GcmHelper.invalidateLocalGcmId(mController);
+			return;
+		}
+		
 		GoogleCloudMessaging gcm = GoogleCloudMessaging.getInstance(mContext);
 		int timeToSleep = MIN_SLEEP_TIME_GCM;
 		int attempt = 0;

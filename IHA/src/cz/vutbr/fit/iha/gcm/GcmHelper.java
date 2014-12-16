@@ -1,5 +1,6 @@
 package cz.vutbr.fit.iha.gcm;
 
+import cz.vutbr.fit.iha.controller.Controller;
 import android.content.Context;
 
 public class GcmHelper {
@@ -35,6 +36,10 @@ public class GcmHelper {
 	public static void registerGCMInForeground(Context context, int maxAttempts) {
 		GcmRegisterRunnable gcmReg = new GcmRegisterRunnable(context, maxAttempts);
 		gcmReg.run();
+	}
+	
+	public static void invalidateLocalGcmId(Controller controller) {
+		controller.setGCMIdLocal("");
 	}
 
 }
