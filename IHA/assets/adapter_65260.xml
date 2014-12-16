@@ -47,7 +47,7 @@
 		<part
 			type="-1"
 			vis="1"
-			name="Neznámý seznor"
+			name="Neznámý senzor"
 			val="11" />
 	</dev>
 	<dev 
@@ -72,6 +72,11 @@
 			type="4"
 			vis="0"
 			name="Spínač kamna"
+			val="OFF" />
+		<part
+			type="160"
+			vis="1"
+			name="Hlavní přívod el."
 			val="OFF" />
 	</dev>
 	<dev 
