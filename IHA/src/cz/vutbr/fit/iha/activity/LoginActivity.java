@@ -68,9 +68,6 @@ public class LoginActivity extends BaseActivity {
 	private ShowcaseView mSV;
 	private RelativeLayout.LayoutParams lps;
 	private int mTutorialClick = 0;
-	
-	// For tutorial
-	private boolean mFirstUse = true;
 
 	// ////////////////////////////////////////////////////////////////////////////////////
 	// ///////////////// Override METHODS
@@ -88,7 +85,7 @@ public class LoginActivity extends BaseActivity {
 		// Get controller
 		mController = Controller.getInstance(getApplicationContext());
 		
-		mActivity= this;
+		mActivity = this;
 
 		// Prepare progress dialog
 		mProgress = new ProgressDialog(this);
@@ -103,26 +100,6 @@ public class LoginActivity extends BaseActivity {
 				mLoginCancel = true;
 			}
 		});
-
-		if (mController.isLoggedIn()) {
-			// If we're already logged in, continue to location screen
-			Log.d(TAG, "Already logged in, going to locations screen...");
-
-			if (!mIsRedirect) {
-				Intent intent = new Intent(this, MainActivity.class);
-				startActivity(intent);
-			}
-
-			finish();
-			return;
-		}
-
-		String lastEmail = mController.getLastEmail();
-		if (lastEmail.length() > 0 && lastEmail != DemoNetwork.DEMO_EMAIL) {
-			// Automatic login with last used e-mail
-			Log.d(TAG, String.format("Automatic login with last used e-mail (%s)...", lastEmail));
-			doLogin(false, lastEmail);
-		}
 
 		// Demo button
 		((ImageButton) findViewById(R.id.login_btn_demo)).setOnClickListener(new OnClickListener() {
@@ -155,21 +132,37 @@ public class LoginActivity extends BaseActivity {
 			}
 		});
 		
-		
 		// TUTORIAL 
 		// Need use default preferences because user isnt ready
-		SharedPreferences prefs = getPreferences(MODE_PRIVATE);
-		if (prefs != null) {
-			mFirstUse = prefs.getBoolean(Constants.TUTORIAL_LOGIN_SHOWED, true);
-		}
-		
-		if(mFirstUse){
+		SharedPreferences prefs = mController.getGlobalSettings();
+		if (!prefs.getBoolean(Constants.TUTORIAL_LOGIN_SHOWED, false)) {
 			showTutorial();
-			if(prefs != null) {
-				prefs.edit().putBoolean(Constants.TUTORIAL_LOGIN_SHOWED, false).commit();
-			}
+			prefs.edit().putBoolean(Constants.TUTORIAL_LOGIN_SHOWED, true).commit();
+			return; // Don't do auto-login
 		}
 
+		// ALREADY LOGGED IN
+		if (mController.isLoggedIn()) {
+			// If we're already logged in, continue to location screen
+			Log.d(TAG, "Already logged in, going to locations screen...");
+
+			if (!mIsRedirect) {
+				Intent intent = new Intent(this, MainActivity.class);
+				startActivity(intent);
+			}
+
+			finish();
+			return;
+		}
+
+		// AUTOMATIC LOGIN
+		String lastEmail = mController.getLastEmail();
+		if (lastEmail.length() > 0 && lastEmail != DemoNetwork.DEMO_EMAIL) {
+			// Automatic login with last used e-mail
+			Log.d(TAG, String.format("Automatic login with last used e-mail (%s)...", lastEmail));
+			doLogin(false, lastEmail);
+		}
+		
 		Log.i("IHA app starting...", "___________________________________");
 	}
 

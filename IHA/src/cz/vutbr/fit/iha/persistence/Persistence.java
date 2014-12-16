@@ -28,7 +28,7 @@ public class Persistence {
 	/**
 	 * Namespace of global preferences
 	 */
-	private static final String GLOBAL = "global";
+	public static final String GLOBAL = "global";
 
 	private final Context mContext;
 

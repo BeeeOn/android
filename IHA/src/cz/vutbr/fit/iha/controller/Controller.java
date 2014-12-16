@@ -141,6 +141,13 @@ public final class Controller {
 
 		return mPersistence.getSettings(userEmail);
 	}
+	
+	/**
+	 * Get global SharedPreferences for whole application
+	 */
+	public SharedPreferences getGlobalSettings() {
+		return mPersistence.getSettings(Persistence.GLOBAL);
+	}
 
 	/** Communication methods ***********************************************/
 
