@@ -29,19 +29,23 @@
     <string name="dev_temperature_type">Thermal sensor</string>
     <string name="dev_humidity_type">Hydrometer</string>
     <string name="dev_pressure_type">Barometer</string>
-    <string name="dev_state_type">State sensor</string>
-    <string name="dev_switch_type">Switch device</string>
+    <string name="dev_open_closed_type">Open/closed sensor</string>
+    <string name="dev_on_off_type">On/off sensor</string>
     <string name="dev_illumination_type">Illumination sensor</string>
     <string name="dev_noise_type">Sound level sensor</string>
     <string name="dev_emission_type">Emission sensor</string>
     <!-- Actors -->
-    <string name="dev_actor_on_off_type">First actor lets celebrate</string>
+    <string name="dev_actor_on_off_type">On/off actor</string>
+    <string name="dev_actor_push_type">Push actor</string>
+    <string name="dev_actor_toggle_type">Toggle actor</string>
+    <string name="dev_actor_range_type">Range actor</string>
+    <string name="dev_actor_rgb_type">RGB actor</string>
 
     <!-- Special values of devices -->
-    <string name="dev_state_value_open">Open</string>
-    <string name="dev_state_value_closed">Closed</string>
-    <string name="dev_switch_value_on">On</string>
-    <string name="dev_switch_value_off">Off</string>
+    <string name="dev_enum_value_open">Open</string>
+    <string name="dev_enum_value_closed">Closed</string>
+    <string name="dev_enum_value_on">On</string>
+    <string name="dev_enum_value_off">Off</string>
 
     <!-- Names of default locations -->
     <string name="loc_bathroom">Bathroom</string>
