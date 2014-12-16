@@ -14,8 +14,8 @@
 		<part
 			type="10"
 			vis="1"
-			name="Teplota na okne"
-			val="30" />
+			name="Teplota na okně"
+			val="28" />
 	</dev>
 	<dev 
 		init="1" 
@@ -28,7 +28,7 @@
 		<part
 			type="10"
 			vis="1"
-			name="Teplota u dveri"
+			name="Teplota radiátoru"
 			val="30" />
 	</dev>
 	<dev 
@@ -42,7 +42,7 @@
 		<part
 			type="3"
 			vis="1"
-			name="okno"
+			name="Okno ventilačka"
 			val="CLOSED" />
 	</dev>
 	<dev 
@@ -56,7 +56,7 @@
 		<part
 			type="3"
 			vis="1"
-			name="Balkón"
+			name="Balkónové dveře"
 			val="OPEN" />
 	</dev>
 	<dev 
@@ -70,7 +70,7 @@
 		<part
 			type="6"
 			vis="1"
-			name="Postel"
+			name="Chuvička postýlka"
 			val="30" />
 	</dev>
 	<dev 
@@ -84,7 +84,7 @@
 		<part
 			type="5"
 			vis="1"
-			name="Psaci stul"
+			name="Lampička psací stůl"
 			val="30" />
 	</dev>
 	<dev 
@@ -99,7 +99,7 @@
 		<part
 			type="7"
 			vis="1"
-			name=""
+			name="Nový senzor"
 			val="30" />
 	</dev>
 	<dev 
@@ -113,7 +113,7 @@
 		<part
 			type="4"
 			vis="1"
-			name="ventilator"
+			name="Ventilator"
 			val="ON" />
 	</dev>
 	<dev 
@@ -127,7 +127,7 @@
 		<part
 			type="4"
 			vis="1"
-			name="pocitac"
+			name="Počítač"
 			val="OFF" />
 	</dev>
 	<dev 
@@ -155,7 +155,7 @@
 		<part
 			type="160"
 			vis="1"
-			name="televizor"
+			name="Televizor"
 			val="ON" />
 	</dev>
 	<dev 
@@ -169,7 +169,7 @@
 		<part
 			type="4"
 			vis="1"
-			name="sporak"
+			name="Sporák"
 			val="ON" />
 	</dev>
 	<dev 
@@ -181,10 +181,10 @@
 		time="1377684610"
 		rssi="52" >
 		<part
-			type="1"
+			type="7"
 			vis="1"
-			name="osvezovac"
-			val="30" />
+			name="Karma"
+			val="310" />
 	</dev>
 	<dev 
 		init="1" 
@@ -195,9 +195,9 @@
 		time="1377684610"
 		rssi="52" >
 		<part
-			type="2"
+			type="5"
 			vis="1"
-			name="Tlakomer"
-			val="3000" />
+			name="Svetlo na zachode"
+			val="15" />
 	</dev>
 </com>

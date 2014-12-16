@@ -14,12 +14,12 @@
 		<part
 			type="10"
 			vis="1"
-			name="Teplota venku"
-			val="15" />
+			name="Teplota ovzduší"
+			val="35" />
 		<part
 			type="2"
 			vis="1"
-			name="Tlak venku"
+			name="Tlak ovzduší"
 			val="25" />
 	</dev>
 	<dev 
@@ -33,8 +33,8 @@
 		<part
 			type="1"
 			vis="1"
-			name="Skrývač (nemám být vidět)"
-			val="25" />
+			name="Vlhkost půdy"
+			val="50" />
 	</dev>
 	<dev 
 		init="1" 
@@ -47,7 +47,7 @@
 		<part
 			type="-1"
 			vis="1"
-			name="Kdopak jsem?"
+			name="Neznámý seznor"
 			val="11" />
 	</dev>
 	<dev 
@@ -61,52 +61,36 @@
 		<part
 			type="10"
 			vis="1"
-			name="Teplůtka"
-			val="30" />
+			name="Teplota kamen"
+			val="90" />
 		<part
 			type="1"
 			vis="1"
-			name="Vlhkůstka"
-			val="30" />
-		<part
-			type="2"
-			vis="1"
-			name="Tlačič"
-			val="30" />
-		<part
-			type="3"
-			vis="1"
-			name="Okýnko"
-			val="OPEN" />
+			name="Vlhkost u stropu"
+			val="95" />
 		<part
 			type="4"
 			vis="0"
-			name="Žárovička"
+			name="Spínač kamna"
 			val="OFF" />
+	</dev>
+	<dev 
+		init="1" 
+		did="101:00:FF:000:FF2" 
+		lid="2"
+		refresh="30"
+		batt="100"
+		time="1377684610"
+		rssi="52" >
 		<part
 			type="5"
 			vis="0"
-			name="Světelnůstka"
-			val="30" />
-		<part
-			type="6"
-			vis="0"
-			name="Zvučák"
+			name="Osvětlení"
 			val="30" />
 		<part
 			type="7"
 			vis="0"
-			name="Emisák"
+			name="Ovzduší"
 			val="30" />
-		<part
-			type="160"
-			vis="1"
-			name="Aktůrek"
-			val="OFF" />
-		<part
-			type="-1"
-			vis="1"
-			name="Cizák"
-			val="666" />
 	</dev>
 </com>
