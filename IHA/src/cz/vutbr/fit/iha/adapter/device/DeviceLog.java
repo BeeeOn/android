@@ -1,40 +1,21 @@
 package cz.vutbr.fit.iha.adapter.device;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
+import java.util.Map.Entry;
+import java.util.SortedMap;
+import java.util.TreeMap;
 
 import org.joda.time.Interval;
-
-import cz.vutbr.fit.iha.util.Log;
 
 /**
  * Represents history of values for device.
  */
 public class DeviceLog {
-	private static final String TAG = DeviceLog.class.getSimpleName();
-
-	private static final String DATA_SEPARATOR = "\\s+";
-
-	private List<DataRow> mValues = new ArrayList<DataRow>(); // FIXME: use rather Map
-	//private SortedMap<Long, DataRow> mValues = new TreeMap<Long, DataRow>();
+	private SortedMap<Long, Float> mValues = new TreeMap<Long, Float>();
 	private DataType mType;
 	private DataInterval mInterval;
 
 	private float mMinValue;
 	private float mMaxValue;
-
-	private boolean mSorted; // optimization to sort values only when needed
-
-	public class DataRowComparator implements Comparator<DataRow> {
-
-		@Override
-		public int compare(DataRow lhs, DataRow rhs) {
-			return lhs.dateMillis < rhs.dateMillis ? -1 : lhs.dateMillis > rhs.dateMillis ? 1 : 0;
-		}
-
-	}
 
 	public enum DataType {
 		MINIMUM("min"), //
@@ -91,36 +72,6 @@ public class DeviceLog {
 		}
 	}
 
-	public class DataRow {
-		public final long dateMillis;
-		public final float value;
-
-		/**
-		 * Constructor creates new DataRow from string
-		 * 
-		 * @param row
-		 *            from ContentLog message
-		 * @throws IllegalArgumentException
-		 */
-		public DataRow(String row) throws IllegalArgumentException {
-			String[] parts = row.split(DATA_SEPARATOR);
-
-			if (parts.length != 2) {
-				Log.e(TAG, String.format("Wrong number of parts (%d) of data: %s", parts.length, row));
-				throw new IllegalArgumentException();
-			}
-
-			this.dateMillis = Long.parseLong(parts[0]) * 1000;
-			this.value = Float.parseFloat(parts[1]);
-		}
-
-		public DataRow(long dateMillis, float value) {
-			this.dateMillis = dateMillis;
-			this.value = value;
-		}
-
-	}
-
 	/**
 	 * Constructor
 	 */
@@ -159,20 +110,6 @@ public class DeviceLog {
 	}
 
 	/**
-	 * Return all values from log
-	 * 
-	 * @return list of rows or empty list
-	 */
-	public List<DataRow> getValues() {
-		if (!mSorted) {
-			mSorted = true;
-			Collections.sort(mValues, new DataRowComparator());
-		}
-
-		return mValues;
-	}
-
-	/**
 	 * Return minimum value in this log
 	 * 
 	 * @return
@@ -200,22 +137,23 @@ public class DeviceLog {
 	}
 
 	/**
-	 * Return values between start and end date from log
+	 * Return all values from log
 	 * 
-	 * @param start
-	 * @param end
-	 * @return list of rows or empty list
+	 * @return sorted map of rows
 	 */
-	public List<DataRow> getValues(Interval interval) {
-		List<DataRow> values = new ArrayList<DataRow>();
+	public SortedMap<Long, Float> getValues() {
+		return mValues;
+	}
+	
+	/**
+	 * Return values between <start, end) date from log
+	 *
+	 * @param interval
+	 * @return sorted map of rows (or empty map)
+	 */
 
-		for (DataRow row : getValues()) { // getValues() does sorting
-			if (interval.contains(row.dateMillis)) {
-				values.add(row);
-			}
-		}
-
-		return values;
+	public SortedMap<Long, Float> getValues(Interval interval) {
+		return mValues.subMap(interval.getStartMillis(), interval.getEndMillis());
 	}
 
 	/**
@@ -223,43 +161,42 @@ public class DeviceLog {
 	 * 
 	 * @param row
 	 */
-	public void addValue(DataRow row) {
-		mValues.add(row);
-		mSorted = false;
+	public void addValue(Long dateMillis, Float value) {
+		mValues.put(dateMillis, value);
 
 		// Remember min/max values
-		if (!Float.isNaN(row.value)) {
-			mMinValue = Math.min(mMinValue, row.value);
-			mMaxValue = Math.max(mMaxValue, row.value);
+		if (!Float.isNaN(value)) {
+			mMinValue = Math.min(mMinValue, value);
+			mMaxValue = Math.max(mMaxValue, value);
 		}
 	}
 
 	/**
 	 * Add interval of same values.
 	 * 
-	 * @param row
+	 * @param dateMillis
+	 * @param value
 	 * @param repeat
 	 *            number of rows
-	 * @param interval
+	 * @param gap
 	 *            gap in seconds
-	 * @return
 	 */
-	public void addValueInterval(DataRow row, int repeat, int interval) {
+	public void addValueInterval(Long dateMillis, Float value, int repeat, int gap) {
 		for (int i = 0; i <= repeat; i++) {
-			addValue(new DataRow(row.dateMillis + i * (interval * 1000), row.value));
+			addValue(dateMillis + i * (gap * 1000), value);
 		}
 	}
 
 	/**
-	 * Clear and set all values.
+	 * Clear all values and add all rows.
 	 * 
 	 * @param rows
 	 */
-	public void setValues(List<DataRow> rows) {
+	public void setValues(SortedMap<Long, Float> rows) {
 		clearValues();
-
-		for (DataRow row : rows) {
-			addValue(row);
+		
+		for (Entry<Long, Float> entry : rows.entrySet()) {
+			addValue(entry.getKey(), entry.getValue());
 		}
 	}
 

@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.EnumSet;
 import java.util.List;
+import java.util.Map.Entry;
+import java.util.SortedMap;
 
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
@@ -86,9 +88,6 @@ public class SensorDetailFragment extends SherlockFragment {
 	private static final int EDIT_LOC = 2;
 	private static final int EDIT_REFRESH_T = 3;
 
-	// Maximum number of items in graph
-	private static final int MAX_GRAPH_DATA_COUNT = 500;
-
 	// GUI elements
 	private TextView mName;
 	private EditText mNameEdit;
@@ -144,7 +143,8 @@ public class SensorDetailFragment extends SherlockFragment {
 
 	private GraphViewSeries mGraphSeries;
 
-	private String mGraphDateTimeFormat = "dd.MM. kk:mm";
+	private static final String GRAPH_DATE_TIME_FORMAT = "dd.MM. kk:mm";
+	private static final String LOG_DATE_TIME_FORMAT = "yyyy-MM-dd HH:mm:ss";
 
 	/**
 	 * Factory method for this fragment class. Constructs a new fragment for the given page number.
@@ -426,7 +426,7 @@ public class SensorDetailFragment extends SherlockFragment {
 
 		// Add Graph with history data
 		if (mUnitsHelper != null && mTimeHelper != null) {
-			DateTimeFormatter fmt = mTimeHelper.getFormatter(mGraphDateTimeFormat, adapter);
+			DateTimeFormatter fmt = mTimeHelper.getFormatter(GRAPH_DATE_TIME_FORMAT, adapter);
 			addGraphView(fmt, mUnitsHelper);
 		}
 
@@ -547,7 +547,8 @@ public class SensorDetailFragment extends SherlockFragment {
 		DateTime end = DateTime.now(DateTimeZone.UTC);
 		DateTime start = end.minusWeeks(1);
 
-		Log.d(TAG, String.format("Loading graph data from %s to %s.", start, end));
+		DateTimeFormatter fmt = DateTimeFormat.forPattern(LOG_DATE_TIME_FORMAT).withZoneUTC();
+		Log.d(TAG, String.format("Loading graph data from %s to %s.", fmt.print(start), fmt.print(end)));
 
 		mGetDeviceLogTask = new GetDeviceLogTask();
 		LogDataPair pair = new LogDataPair( //
@@ -589,32 +590,24 @@ public class SensorDetailFragment extends SherlockFragment {
 			return;
 		}
 
-		// NOTE: This formatter is only for Log, correct timezone from app setting doesn't matter here
-		final DateTimeFormatter fmt = DateTimeFormat.forPattern(mGraphDateTimeFormat);
-
-		int size = log.getValues().size();
+		SortedMap<Long, Float> values = log.getValues();
+		int size = values.size();
+		GraphView.GraphViewData[] data = new GraphView.GraphViewData[size];
+		
 		Log.d(TAG, String.format("Filling graph with %d values. Min: %.1f, Max: %.1f", size, log.getMinimum(), log.getMaximum()));
 
-		int begin;
-		GraphView.GraphViewData[] data;
+		int i = 0;
+		for (Entry<Long, Float> entry : values.entrySet()) {
+			Long dateMillis = entry.getKey();
+			float value = Float.isNaN(entry.getValue()) ? log.getMinimum() : entry.getValue();
 
-		// Limit amount of showed values
-		if (size > MAX_GRAPH_DATA_COUNT) {
-			data = new GraphView.GraphViewData[MAX_GRAPH_DATA_COUNT];
-			begin = (size - MAX_GRAPH_DATA_COUNT);
-		} else {
-			data = new GraphView.GraphViewData[size];
-			begin = 0;
+			data[i++] = new GraphView.GraphViewData(dateMillis, value);
+			
+			// This shouldn't happen, only when some other thread changes this values object - can it happen?
+			if (i >= size)
+				break;
 		}
-
-		for (int i = begin; i < size; i++) {
-			DeviceLog.DataRow row = log.getValues().get(i);
-
-			float value = Float.isNaN(row.value) ? log.getMinimum() : row.value;
-			data[i - begin] = new GraphView.GraphViewData(row.dateMillis, value);
-			// Log.v(TAG, String.format("Graph value: date(msec): %s, Value: %.1f", fmt.print(row.dateMillis), row.value));
-		}
-
+		
 		Log.d(TAG, "Filling graph finished");
 
 		// Set maximum as +10% more than deviation
@@ -820,7 +813,7 @@ public class SensorDetailFragment extends SherlockFragment {
 
 		@Override
 		public void onDestroyActionMode(ActionMode mode) {
-			// Controll mode and set default values
+			// Control mode and set default values
 			switch (mEditMode) {
 			case EDIT_REFRESH_T:
 				mRefreshTimeValue.setProgress(mLastProgressRefreshTime);

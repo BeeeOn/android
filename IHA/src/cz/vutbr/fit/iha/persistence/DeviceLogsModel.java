@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.SortedMap;
 
 import org.joda.time.Interval;
 import org.joda.time.format.DateTimeFormat;
@@ -23,7 +25,7 @@ public class DeviceLogsModel {
 
 	private static final String TAG = DeviceLogsModel.class.getSimpleName();
 	
-	private DateTimeFormatter fmt = DateTimeFormat.fullDateTime().withZoneUTC();
+	private DateTimeFormatter fmt = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss").withZoneUTC();
 	
 	private final INetwork mNetwork;
 
@@ -40,8 +42,8 @@ public class DeviceLogsModel {
 			mDevicesLogs.put(deviceId, log);
 		} else {
 			// We need to append these values to existing log
-			for (DeviceLog.DataRow row : log.getValues()) {
-				data.addValue(row);
+			for (Entry<Long, Float> entry : log.getValues().entrySet()) {
+				data.addValue(entry.getKey(), entry.getValue());
 			}
 		}
 	}
@@ -49,58 +51,59 @@ public class DeviceLogsModel {
 	private List<Interval> getMissingIntervals(LogDataPair pair) {
 		List<Interval> downloadIntervals = new ArrayList<Interval>();
 		Interval interval = pair.interval;
+		String deviceName = pair.device.getName();
 		
 		Log.d(TAG, String.format("We want interval: %s -> %s", fmt.print(interval.getStart()), fmt.print(interval.getEnd())));
 		
 		if (!mDevicesLogs.containsKey(pair.device.getId())) {
 			// No log for this device, download whole interval
-			Log.d(TAG, String.format("No cached log for device %s", pair.device.getId()));
+			Log.d(TAG, String.format("No cached log for device %s", deviceName));
 			downloadIntervals.add(interval);
 		} else {
 			// We have this DeviceLog with (not necessarily all) values
 			DeviceLog data = mDevicesLogs.get(pair.device.getId());
 			
 			// Values are returned as sorted
-			List<DeviceLog.DataRow> rows = data.getValues();
+			SortedMap<Long, Float> rows = data.getValues();
 			if (rows.isEmpty()) {
 				// No values in this log, download whole interval
-				Log.d(TAG, String.format("We have log, but with no values for device %s", pair.device.getId()));
+				Log.d(TAG, String.format("We have log, but with no values for device %s", deviceName));
 				downloadIntervals.add(interval);
 			} else {
 				// Use pair gap to make sure we won't make useless request when there won't be no new value anyway
 				int gap = pair.gap.getValue() * 1000;
-				
+
 				// Determine missing interval
-				long first = rows.get(0).dateMillis;
-				long last = rows.get(rows.size()-1).dateMillis;
+				long first = rows.firstKey();
+				long last = rows.lastKey();
 				
-				Log.d(TAG, String.format("We have cached: %s -> %s for device %s", fmt.print(first), fmt.print(last), pair.device.getId()));
+				Log.d(TAG, String.format("We have cached: %s -> %s for device %s", fmt.print(first), fmt.print(last), deviceName));
 				
-				Log.d(TAG, String.format("We have log and there are some values for device %s", pair.device.getId()));
-				Log.d(TAG, String.format("Gap: %d ms", gap));
+				Log.d(TAG, String.format("We have log and there are some values for device %s", deviceName));
+				Log.v(TAG, String.format("Gap: %d ms", gap));
 				
 				if (interval.isBefore(first) || interval.isAfter(last)) {
 					// Outside of values in this log, download whole interval
-					Log.d(TAG, String.format("Wanted interval is before or after cached interval for device %s", pair.device.getId()));
+					Log.d(TAG, String.format("Wanted interval is before or after cached interval for device %s", deviceName));
 					downloadIntervals.add(interval);
 					// TODO: remember this new hole?
 				} else {
 					if (interval.contains(first)) {
-						Log.d(TAG, String.format("Wanted interval contains FIRST of cached interval for device %s", pair.device.getId()));
+						Log.d(TAG, String.format("Wanted interval contains FIRST of cached interval for device %s", deviceName));
 						// <start of interval, start of saved data> 
 						Interval cutInterval = new Interval(interval.getStartMillis(), first);
-						Log.d(TAG, String.format("Cut (FIRST) interval: %s -> %s for device %s", fmt.print(cutInterval.getStart()), fmt.print(cutInterval.getEnd()), pair.device.getId()));
-						Log.d(TAG, String.format("Is (FIRST) interval duration: %d > gap: %d ?", cutInterval.toDurationMillis(), gap));
+						Log.v(TAG, String.format("Cut (FIRST) interval: %s -> %s for device %s", fmt.print(cutInterval.getStart()), fmt.print(cutInterval.getEnd()), deviceName));
+						Log.v(TAG, String.format("Is (FIRST) interval duration: %d > gap: %d ?", cutInterval.toDurationMillis(), gap));
 						if (cutInterval.toDurationMillis() > gap)
 							downloadIntervals.add(cutInterval);
 					}
 					
 					if (interval.contains(last)) {
-						Log.d(TAG, String.format("Wanted interval contains LAST of cached interval for device %s", pair.device.getId()));
+						Log.d(TAG, String.format("Wanted interval contains LAST of cached interval for device %s", deviceName));
 						// <end of saved data, end of interval>
 						Interval cutInterval = new Interval(last, interval.getEndMillis());
-						Log.d(TAG, String.format("Cut (LAST) interval: %s -> %s for device %s", fmt.print(cutInterval.getStart()), fmt.print(cutInterval.getEnd()), pair.device.getId()));
-						Log.d(TAG, String.format("Is (LAST) interval duration: %d > gap: %d ?", cutInterval.toDurationMillis(), gap));
+						Log.v(TAG, String.format("Cut (LAST) interval: %s -> %s for device %s", fmt.print(cutInterval.getStart()), fmt.print(cutInterval.getEnd()), deviceName));
+						Log.v(TAG, String.format("Is (LAST) interval duration: %d > gap: %d ?", cutInterval.toDurationMillis(), gap));
 						if (cutInterval.toDurationMillis() > gap)
 							downloadIntervals.add(cutInterval);
 					}
@@ -117,8 +120,8 @@ public class DeviceLogsModel {
 		if (mDevicesLogs.containsKey(pair.device.getId())) {
 			// We have this DeviceLog, lets load wanted values from it
 			DeviceLog data = mDevicesLogs.get(pair.device.getId());
-			for (DeviceLog.DataRow row : data.getValues(pair.interval)) {
-				log.addValue(row);
+			for (Entry<Long, Float> entry : data.getValues(pair.interval).entrySet()) {
+				log.addValue(entry.getKey(), entry.getValue());
 			}
 		}
 		 
@@ -128,9 +131,9 @@ public class DeviceLogsModel {
 	public boolean reloadDeviceLog(LogDataPair pair) {
 		List<Interval> downloadIntervals = getMissingIntervals(pair);
 		
-		Log.i(TAG, String.format("%d missing intervals", downloadIntervals.size()));
+		Log.i(TAG, String.format("%d missing intervals to download for device: %s", downloadIntervals.size(), pair.device.getName()));
 		for (Interval interval : downloadIntervals) {
-			Log.i(TAG, String.format("Missing interval: %s -> %s", fmt.print(interval.getStart()), fmt.print(interval.getEnd())));
+			Log.d(TAG, String.format("Missing interval: %s -> %s for device: %s", fmt.print(interval.getStart()), fmt.print(interval.getEnd()), pair.device.getName()));
 		}
 
 		boolean isDemoNetwork = mNetwork instanceof DemoNetwork;
