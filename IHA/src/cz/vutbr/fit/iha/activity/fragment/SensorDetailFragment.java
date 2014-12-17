@@ -718,7 +718,11 @@ public class SensorDetailFragment extends SherlockFragment {
 		protected DeviceLog doInBackground(LogDataPair... pairs) {
 			LogDataPair pair = pairs[0]; // expects only one device at a time is sent there
 
-			return mController.getDeviceLog(pair.device, pair);
+			// Load log data if needed
+			mController.reloadDeviceLog(pair);
+			
+			// Get loaded log data (TODO: this could be done in gui)
+			return mController.getDeviceLog(pair);
 		}
 
 		@Override

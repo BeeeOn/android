@@ -221,7 +221,11 @@ public class CustomViewFragment extends TrackFragment {
 						DataType.AVERAGE, // type
 						DataInterval.HOUR); // interval
 				
-				result.put(device, mController.getDeviceLog(pair.device, pair));
+				// Load log data if needed
+				mController.reloadDeviceLog(pair);
+				
+				// Get loaded log data (TODO: this could be done in gui)
+				result.put(device, mController.getDeviceLog(pair));
 			}
 
 			return result;

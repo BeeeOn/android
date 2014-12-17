@@ -17,8 +17,6 @@ import cz.vutbr.fit.iha.adapter.Adapter;
 import cz.vutbr.fit.iha.adapter.device.Device;
 import cz.vutbr.fit.iha.adapter.device.Device.SaveDevice;
 import cz.vutbr.fit.iha.adapter.device.DeviceLog;
-import cz.vutbr.fit.iha.adapter.device.DeviceLog.DataInterval;
-import cz.vutbr.fit.iha.adapter.device.DeviceLog.DataType;
 import cz.vutbr.fit.iha.adapter.device.DeviceType;
 import cz.vutbr.fit.iha.adapter.device.Facility;
 import cz.vutbr.fit.iha.adapter.location.Location;
@@ -416,6 +414,20 @@ public final class Controller {
 	/**
 	 * This CAN'T be called on UI thread!
 	 * 
+	 * @param pair
+	 * @return
+	 */
+	public synchronized boolean reloadDeviceLog(LogDataPair pair) {
+		if (!isLoggedIn()) {
+			return false;
+		}
+
+		return mHousehold.deviceLogsModel.reloadDeviceLog(pair);
+	}
+
+	/**
+	 * This CAN'T be called on UI thread!
+	 * 
 	 * @param facility
 	 * @return
 	 */
@@ -778,22 +790,11 @@ public final class Controller {
 	/**
 	 * Return log for device.
 	 * 
-	 * This CAN'T be called on UI thread!
-	 * 
 	 * @param device
 	 * @return
 	 */
-	public DeviceLog getDeviceLog(Device device, LogDataPair pair) {
-		// FIXME: rewrite this method even better - demo mode, caching, etc.
-		DeviceLog log = new DeviceLog(DataType.AVERAGE, DataInterval.RAW);
-
-		try {
-			log = mNetwork.getLog(device.getFacility().getAdapterId(), device, pair);
-		} catch (IhaException e) {
-			e.printStackTrace();
-		}
-
-		return log;
+	public DeviceLog getDeviceLog(LogDataPair pair) {
+		return mHousehold.deviceLogsModel.getDeviceLog(pair);
 	}
 
 	/**

@@ -18,6 +18,7 @@ public class DeviceLog {
 	private static final String DATA_SEPARATOR = "\\s+";
 
 	private List<DataRow> mValues = new ArrayList<DataRow>(); // FIXME: use rather Map
+	//private SortedMap<Long, DataRow> mValues = new TreeMap<Long, DataRow>();
 	private DataType mType;
 	private DataInterval mInterval;
 
