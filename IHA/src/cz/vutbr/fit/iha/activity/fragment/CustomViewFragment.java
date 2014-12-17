@@ -4,7 +4,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Random;
+import java.util.SortedMap;
 
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
@@ -46,7 +48,7 @@ import cz.vutbr.fit.iha.util.UnitsHelper;
 public class CustomViewFragment extends TrackFragment {
 
 	private SparseArray<List<Device>> mDevices = new SparseArray<List<Device>>();
-	//private SparseArray<List<DeviceLog>> mLogs = new SparseArray<List<DeviceLog>>();
+	// private SparseArray<List<DeviceLog>> mLogs = new SparseArray<List<DeviceLog>>();
 	private SparseArray<GraphView> mGraphs = new SparseArray<GraphView>();
 
 	private String mGraphDateTimeFormat = "dd.MM. kk:mm";
@@ -131,30 +133,25 @@ public class CustomViewFragment extends TrackFragment {
 
 		graphView.addSeries(graphSeries);
 
-		int size = log.getValues().size();
-		// Log.d(TAG, String.format("Filling graph with %d values. Min: %.1f, Max: %.1f", size, log.getMinimum(),
-		// log.getMaximum()));
+		SortedMap<Long, Float> values = log.getValues();
+		int size = values.size();
+		GraphView.GraphViewData[] data = new GraphView.GraphViewData[size];
+		
+		Log.d(TAG, String.format("Filling graph with %d values. Min: %.1f, Max: %.1f", size, log.getMinimum(), log.getMaximum()));
 
-		int begin;
-		GraphView.GraphViewData[] data;
+		int i = 0;
+		for (Entry<Long, Float> entry : values.entrySet()) {
+			Long dateMillis = entry.getKey();
+			float value = Float.isNaN(entry.getValue()) ? log.getMinimum() : entry.getValue();
 
-		// Limit amount of showed values
-		/*
-		 * if (size > MAX_GRAPH_DATA_COUNT) { data = new GraphView.GraphViewData[MAX_GRAPH_DATA_COUNT]; begin = (size -
-		 * MAX_GRAPH_DATA_COUNT); } else {
-		 */
-		data = new GraphView.GraphViewData[size];
-		begin = 0;
-		// }
-
-		for (int i = begin; i < size; i++) {
-			DeviceLog.DataRow row = log.getValues().get(i);
-
-			float value = Float.isNaN(row.value) ? log.getMinimum() : row.value;
-			data[i - begin] = new GraphView.GraphViewData(row.dateMillis, value);
-			// Log.v(TAG, String.format("Graph value: date(msec): %s, Value: %.1f", fmt.print(row.dateMillis),
-			// row.value));
+			data[i++] = new GraphView.GraphViewData(dateMillis, value);
+			
+			// This shouldn't happen, only when some other thread changes this values object - can it happen?
+			if (i >= size)
+				break;
 		}
+		
+		Log.d(TAG, "Filling graph finished");
 
 		graphSeries.resetData(data);
 	}
@@ -163,12 +160,12 @@ public class CustomViewFragment extends TrackFragment {
 		Adapter adapter = mController.getActiveAdapter();
 		if (adapter == null)
 			return;
-		
+
 		// Prepare helpers
 		final UnitsHelper unitsHelper = new UnitsHelper(mController.getUserSettings(), mContext);
 		final TimeHelper timeHelper = new TimeHelper(mController.getUserSettings());
 		final DateTimeFormatter fmt = timeHelper.getFormatter(mGraphDateTimeFormat, adapter);
-		
+
 		// Prepare data
 		Log.d(TAG, String.format("Preparing custom view for adapter %s", adapter.getId()));
 
@@ -194,7 +191,7 @@ public class CustomViewFragment extends TrackFragment {
 		for (int i = 0; i < mDevices.size(); i++) {
 			// Load data for this graph
 			List<Device> list = mDevices.valueAt(i);
-			
+
 			GetDeviceLogTask getDeviceLogTask = new GetDeviceLogTask();
 			getDeviceLogTask.execute(list.toArray(new Device[list.size()]));
 		}
@@ -203,14 +200,14 @@ public class CustomViewFragment extends TrackFragment {
 	private class GetDeviceLogTask extends AsyncTask<Device, Void, Map<Device, DeviceLog>> {
 
 		private int mTypeId = 0;
-		
+
 		@Override
 		protected Map<Device, DeviceLog> doInBackground(Device... devices) {
 			Map<Device, DeviceLog> result = new HashMap<Device, DeviceLog>();
-			
+
 			// Remember type of graph we're downloading data for
 			mTypeId = devices[0].getType().getTypeId();
-			
+
 			for (Device device : devices) {
 				DateTime end = DateTime.now(DateTimeZone.UTC);
 				DateTime start = end.minusDays(3);// end.minusWeeks(1);
@@ -220,8 +217,12 @@ public class CustomViewFragment extends TrackFragment {
 						new Interval(start, end), // interval from-to
 						DataType.AVERAGE, // type
 						DataInterval.HOUR); // interval
-				
-				result.put(device, mController.getDeviceLog(pair.device, pair));
+
+				// Load log data if needed
+				mController.reloadDeviceLog(pair);
+
+				// Get loaded log data (TODO: this could be done in gui)
+				result.put(device, mController.getDeviceLog(pair));
 			}
 
 			return result;
@@ -231,9 +232,9 @@ public class CustomViewFragment extends TrackFragment {
 		protected void onPostExecute(Map<Device, DeviceLog> logs) {
 			// Fill graph with data
 			for (Map.Entry<Device, DeviceLog> entry : logs.entrySet()) {
-				fillGraph(entry.getValue(), entry.getKey());	
+				fillGraph(entry.getValue(), entry.getKey());
 			}
-			
+
 			// Hide loading label for this graph
 			GraphView graphView = mGraphs.get(mTypeId);
 			((View) graphView.getParent().getParent()).findViewById(R.id.graph_loading).setVisibility(View.INVISIBLE);

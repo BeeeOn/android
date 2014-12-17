@@ -22,7 +22,6 @@ import cz.vutbr.fit.iha.Constants;
 import cz.vutbr.fit.iha.adapter.Adapter;
 import cz.vutbr.fit.iha.adapter.device.Device;
 import cz.vutbr.fit.iha.adapter.device.DeviceLog;
-import cz.vutbr.fit.iha.adapter.device.DeviceLog.DataRow;
 import cz.vutbr.fit.iha.adapter.device.DeviceType;
 import cz.vutbr.fit.iha.adapter.device.Facility;
 import cz.vutbr.fit.iha.adapter.device.RefreshInterval;
@@ -405,15 +404,25 @@ public class XmlParsers {
 
 				String repeat = getSecureAttrValue(Xconstants.REPEAT);
 				String interval = getSecureAttrValue(Xconstants.INTERVAL);
+				String row = readText(Xconstants.ROW);
+				
+				// Split row data
+				String[] parts = row.split(Xconstants.ROW_DATA_SEPARATOR);
+				if (parts.length != 2) {
+					Log.e(TAG, String.format("Wrong number of parts (%d) of data: %s", parts.length, row));
+					throw new IhaException(NetworkError.XML).set("parts", parts);
+				}
 
-				DataRow row = log.new DataRow(readText(Xconstants.ROW));
+				// Parse values
+				Long dateMillis = Long.parseLong(parts[0]) * 1000;
+				Float value = Float.parseFloat(parts[1]);
 
 				if (!repeat.isEmpty() && !interval.isEmpty()) {
-					log.addValueInterval(row, Integer.parseInt(repeat), Integer.parseInt(interval));
+					log.addValueInterval(dateMillis, value, Integer.parseInt(repeat), Integer.parseInt(interval));
 				} else {
-					log.addValue(row);
+					log.addValue(dateMillis, value);
 				}
-			} catch (IllegalArgumentException e) {
+			} catch (NumberFormatException e) {
 				throw IhaException.wrap(e, NetworkError.XML);
 			}
 		} while (mParser.nextTag() != XmlPullParser.END_TAG && !mParser.getName().equals(Xconstants.COM_ROOT));

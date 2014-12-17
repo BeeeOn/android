@@ -4,6 +4,7 @@ import android.content.Context;
 import cz.vutbr.fit.iha.adapter.Adapter;
 import cz.vutbr.fit.iha.network.INetwork;
 import cz.vutbr.fit.iha.persistence.AdaptersModel;
+import cz.vutbr.fit.iha.persistence.DeviceLogsModel;
 import cz.vutbr.fit.iha.persistence.FacilitiesModel;
 import cz.vutbr.fit.iha.persistence.LocationsModel;
 import cz.vutbr.fit.iha.persistence.UninitializedFacilitiesModel;
@@ -28,6 +29,8 @@ public final class Household {
 	public final FacilitiesModel facilitiesModel;
 
 	public final UninitializedFacilitiesModel uninitializedFacilitiesModel;
+	
+	public final DeviceLogsModel deviceLogsModel;
 
 	/** Active adapter. */
 	public Adapter activeAdapter;
@@ -39,6 +42,7 @@ public final class Household {
 		locationsModel = new LocationsModel(network);
 		facilitiesModel = new FacilitiesModel(network);
 		uninitializedFacilitiesModel = new UninitializedFacilitiesModel(network);
+		deviceLogsModel = new DeviceLogsModel(network);
 	}
 
 }

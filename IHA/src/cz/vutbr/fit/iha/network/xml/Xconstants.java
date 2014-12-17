@@ -77,4 +77,6 @@ public class Xconstants {
 	public static final String SETTINGS = "sett";
 	public static final String CONDITION = "cond";
 	public static final String REPEAT = "repeat";
+	
+	public static final String ROW_DATA_SEPARATOR = "\\s+"; 
 }

@@ -422,7 +422,7 @@ public class DemoNetwork implements INetwork {
 				lastValue = lastValue + addvalue * (plus ? 1 : -1);
 			}
 
-			log.addValue(log.new DataRow(start, (float) lastValue));
+			log.addValue(start, (float) lastValue);
 			start += everyMsecs;
 		}
 
