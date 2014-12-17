@@ -29,10 +29,10 @@ public class AddSensorFragmentAdapter extends FragmentPagerAdapter implements Ic
     	switch (position) {
     	case 0:
     		// Prepare your sensor
-    		return IntroImageFragment.newInstance(R.drawable.iha_tutorial_as_first_step,"Remove paper from battery");
+    		return IntroImageFragment.newInstance(R.drawable.iha_tutorial_as_first_step,"Please pull out battery stripe ");
     	case 1:
     		// After start timer , 
-    		return IntroImageFragment.newInstance(R.drawable.iha_tutorial_as_second_step,"After start timer shake with sensor");
+    		return IntroImageFragment.newInstance(R.drawable.iha_tutorial_as_second_step,"After timer starts, please shake with your sensor shortly");
     	case 2:
     		// circle timer 
     		return new AddSensorFragment();

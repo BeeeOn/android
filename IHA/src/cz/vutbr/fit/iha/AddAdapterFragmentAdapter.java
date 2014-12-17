@@ -28,11 +28,11 @@ public class AddAdapterFragmentAdapter extends FragmentPagerAdapter implements I
     public Fragment getItem(int position) {
     	switch (position) {
     	case 0:
-    		return IntroImageFragment.newInstance(R.drawable.iha_tutorial_aa_first_step,"Plug adapter to AC");
+    		return IntroImageFragment.newInstance(R.drawable.iha_tutorial_aa_first_step,"Please connect your adapter to the AC power");
     	case 1:
-    		return IntroImageFragment.newInstance(R.drawable.iha_tutorial_aa_second_step,"Plug adapter to internet");
+    		return IntroImageFragment.newInstance(R.drawable.iha_tutorial_aa_second_step,"Please connect your adapter to the Internet");
     	case 2:
-    		return IntroImageFragment.newInstance(R.drawable.iha_tutorial_aa_third_step,"Found QR of adapter");
+    		return IntroImageFragment.newInstance(R.drawable.iha_tutorial_aa_third_step,"Please scan QR of your adapter ");
     	case 3:
     		return new AddAdapterFragment();
     	}

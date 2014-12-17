@@ -504,5 +504,9 @@ public class MainActivity extends BaseApplicationActivity {
 		mActiveCustomViewId = customViewId;
 		mActiveLocationId = null;
 	}
+	
+	public NavDrawerMenu getMenu() {
+		return mNavDrawerMenu;
+	}
 
 }

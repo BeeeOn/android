@@ -451,7 +451,7 @@ public class NavDrawerMenu {
 			// Adding custom views
 			// TODO pridat custom views
 			// mMenuAdapter.addItem(new EmptyMenuItem(mActivity.getResources().getString(R.string.no_custom_view)));
-			mMenuAdapter.addItem(new CustomViewMenuItem("Test view", R.drawable.loc_living_room, false, "Custom001", (mActiveCustomViewId != null) ? true : false));
+			mMenuAdapter.addItem(new CustomViewMenuItem("Graph view", R.drawable.loc_living_room, false, "Custom001", (mActiveCustomViewId != null) ? true : false));
 		} else {
 			mMenuAdapter.addItem(new EmptyMenuItem(mActivity.getResources().getString(R.string.no_adapters)));
 			

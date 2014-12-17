@@ -252,6 +252,7 @@ public class SensorListFragment extends SherlockFragment {
 			if (!(prefs != null && !prefs.getBoolean(Constants.PERSISTENCE_PREF_IGNORE_NO_ADAPTER, false))) {
 				// TUTORIAL
 				if(mFirstUseAddAdapter) {
+					mActivity.getMenu().closeMenu();
 					showTutorialAddAdapter();
 					if (prefs != null) {
 						prefs.edit().putBoolean(Constants.TUTORIAL_ADD_ADAPTER_SHOWED, false).commit();
@@ -272,6 +273,7 @@ public class SensorListFragment extends SherlockFragment {
 				}
 			});
 			if(mFirstUseAddSensor){
+				mActivity.getMenu().closeMenu();
 				showTutorialAddSensor();
 				SharedPreferences prefs = mController.getUserSettings();
 				if (prefs != null) {
@@ -366,7 +368,7 @@ public class SensorListFragment extends SherlockFragment {
 		mSV = new ShowcaseView.Builder(mActivity, true)
 		.setTarget(target)
 		.setContentTitle("ADD SENSOR")
-		.setContentText("For add your new sensor, please click on plus.")
+		.setContentText("To add your new sensor, please click on plus.")
 		.setStyle(R.style.CustomShowcaseTheme)
 		.setShowcaseEventListener(listener)
 		.build();
@@ -416,7 +418,7 @@ public class SensorListFragment extends SherlockFragment {
 		mSV = new ShowcaseView.Builder(mActivity, true)
 		.setTarget(target)
 		.setContentTitle("ADD ADAPTER")
-		.setContentText("For add your new adapter, please click on plus.")
+		.setContentText("To add your new adapter, please click on plus.")
 		.setStyle(R.style.CustomShowcaseTheme)
 		.setShowcaseEventListener(listener)
 		.build();

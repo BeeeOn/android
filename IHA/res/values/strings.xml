@@ -124,8 +124,8 @@
     <string name="addsensor_send_request">Send pair request  </string>
     <string name="addsensor_active_pair">Active pair mode </string>
     <string name="addadapter_textview_name">Name</string>
-    <string name="addadapter_view_setname">Set name</string>
-    <string name="addadapter_textview_code">Code</string>
+    <string name="addadapter_view_setname">Set adapter name, e.g. Home</string>
+    <string name="addadapter_textview_code">QR code </string>
 
     <!-- Others -->
     <string name="action_settings">Settings</string>
