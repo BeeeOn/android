@@ -109,6 +109,8 @@ public class GcmRegisterRunnable implements Runnable {
 			mController.setGCMIdLocal(mNewGcmId);
 			mController.setGCMIdServer(mNewGcmId);
 
+		} else {
+			Log.i(GcmHelper.TAG_GCM, "New GCM ID is the same, no need to change");
 		}
 	}
 

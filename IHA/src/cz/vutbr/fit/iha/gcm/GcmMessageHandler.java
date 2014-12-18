@@ -5,6 +5,9 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
+import android.media.RingtoneManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.NotificationCompat;
@@ -107,29 +110,44 @@ public class GcmMessageHandler extends IntentService {
 
 	private void handleNotification(final Notification notification) {
 
-		NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this)
+		NotificationCompat.Builder builder = new NotificationCompat.Builder(this)
 				.setSmallIcon(R.drawable.ic_launcher_white)
 				.setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.ic_launcher_white_icons))
 //				.setWhen(notification.getDate().getTimeInMillis())
+				.setWhen(System.currentTimeMillis())
 				.setContentTitle(getText(R.string.app_name))
 				.setContentText(notification.getMessage()).setAutoCancel(true);
+		
+		NotificationCompat.InboxStyle inboxStyle =
+		        new NotificationCompat.InboxStyle();
+		
+		// vibration
+        builder.setVibrate(new long[] {500});
 
+        // LED
+        builder.setLights(Color.RED, 3000, 3000);
+		
+        // sound
+        Uri uri= RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+        builder.setSound(uri);
+        
 		// define notification action
 		Intent resultIntent = new Intent(this, LoginActivity.class);
 
+		
 		// Because clicking the notification opens a new ("special") activity, there's
 		// no need to create an artificial back stack.
 		PendingIntent resultPendingIntent = PendingIntent.getActivity(this, 0, resultIntent,
 				PendingIntent.FLAG_UPDATE_CURRENT);
 
 		// Set the Notification's Click Behavior
-		mBuilder.setContentIntent(resultPendingIntent);
+		builder.setContentIntent(resultPendingIntent);
 
 		// Gets an instance of the NotificationManager service
 		NotificationManager mNotifyMgr = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
 
 		// Builds the notification and issues it.
-		mNotifyMgr.notify(Integer.valueOf(notification.getMsgid()), mBuilder.build());
+		mNotifyMgr.notify(Integer.valueOf(notification.getMsgid()), builder.build());
 
 		// showToast(notification.getMessage());
 	}

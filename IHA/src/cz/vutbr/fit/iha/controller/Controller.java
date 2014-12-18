@@ -942,6 +942,12 @@ public final class Controller {
 	 */
 	public void setGCMIdServer(String gcmID) {
 		String email;
+		Log.i(GcmHelper.TAG_GCM, "setGcmIdServer");
+		if (isDemoMode()) {
+			Log.i(GcmHelper.TAG_GCM, "DemoMode -> return");
+			return;
+		}
+		
 		if (getActualUser() != null) {
 			email = getActualUser().getEmail();
 		} else if (!getLastEmail().isEmpty()) {
@@ -956,7 +962,7 @@ public final class Controller {
 			mNetwork.setGCMID(email, gcmID);
 		} catch (Exception e) {
 			// nothing to do
-			Log.w(GcmHelper.TAG_GCM, "Set GCM ID to server failed.");
+			Log.e(GcmHelper.TAG_GCM, "Set GCM ID to server failed.");
 		}
 	}
 
