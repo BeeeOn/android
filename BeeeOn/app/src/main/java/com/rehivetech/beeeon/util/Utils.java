@@ -153,4 +153,9 @@ final public class Utils {
 			return String.format(Locale.getDefault(), "%.2f", d);
 	}
 
+	public static boolean isBlackBerry() {
+		final String osName = System.getProperty("os.name");
+		return "qnx".equals(osName);
+	}
+
 }
