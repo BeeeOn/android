@@ -1,5 +1,7 @@
 package cz.vutbr.fit.iha.widget;
 
+import android.appwidget.AppWidgetManager;
+import android.appwidget.AppWidgetProviderInfo;
 import android.content.Context;
 import android.content.SharedPreferences;
 import cz.vutbr.fit.iha.R;
@@ -16,6 +18,7 @@ public class WidgetData {
 	private static final String PREF_DEVICE_NAME = "device_name";
 	private static final String PREF_DEVICE_ICON = "device_icon";
 	private static final String PREF_DEVICE_VALUE = "device_value";
+	private static final String PREF_DEVICE_UNIT = "device_unit";	
 	private static final String PREF_DEVICE_ADAPTER_ID = "device_adapter_id";
 	private static final String PREF_DEVICE_LAST_UPDATE_TEXT = "device_last_update_text";
 	private static final String PREF_DEVICE_LAST_UPDATE_TIME = "device_last_update_time";
@@ -32,6 +35,7 @@ public class WidgetData {
 	public String deviceName;
 	public int deviceIcon;
 	public String deviceValue;
+	public String deviceUnit;
 	public String deviceAdapterId;
 	public long deviceLastUpdateTime;
 	public String deviceLastUpdateText;
@@ -70,8 +74,12 @@ public class WidgetData {
 	 */
 	public void loadData(Context context) {
 		SharedPreferences prefs = getSettings(context);
-
-		layout = prefs.getInt(PREF_LAYOUT, R.layout.widget_sensor);
+		
+		// need to get initial layout, otherwise causing problems
+		AppWidgetManager widgetManager = AppWidgetManager.getInstance(context);				
+		AppWidgetProviderInfo widgetProviderInfo = widgetManager.getAppWidgetInfo(this.getWidgetId());
+		layout = prefs.getInt(PREF_LAYOUT, widgetProviderInfo.initialLayout);		
+		
 		interval = prefs.getInt(PREF_INTERVAL, WidgetUpdateService.UPDATE_INTERVAL_DEFAULT);
 		lastUpdate = prefs.getLong(PREF_LAST_UPDATE, 0);
 		initialized = prefs.getBoolean(PREF_INITIALIZED, false);
@@ -80,6 +88,7 @@ public class WidgetData {
 		deviceName = prefs.getString(PREF_DEVICE_NAME, context.getString(R.string.placeholder_not_exists));
 		deviceIcon = prefs.getInt(PREF_DEVICE_ICON, 0);
 		deviceValue = prefs.getString(PREF_DEVICE_VALUE, "");
+		deviceUnit = prefs.getString(PREF_DEVICE_UNIT, "");
 		deviceAdapterId = prefs.getString(PREF_DEVICE_ADAPTER_ID, "");
 		deviceLastUpdateText = prefs.getString(PREF_DEVICE_LAST_UPDATE_TEXT, "");
 		deviceLastUpdateTime = prefs.getLong(PREF_DEVICE_LAST_UPDATE_TIME, 0);
@@ -104,6 +113,7 @@ public class WidgetData {
 				.putString(PREF_DEVICE_NAME, deviceName) //
 				.putInt(PREF_DEVICE_ICON, deviceIcon) //
 				.putString(PREF_DEVICE_VALUE, deviceValue) //
+				.putString(PREF_DEVICE_UNIT, deviceUnit) //
 				.putString(PREF_DEVICE_ADAPTER_ID, deviceAdapterId) //
 				.putString(PREF_DEVICE_LAST_UPDATE_TEXT, deviceLastUpdateText) //
 				.putLong(PREF_DEVICE_LAST_UPDATE_TIME, deviceLastUpdateTime) //
