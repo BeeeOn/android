@@ -103,6 +103,7 @@ public class SensorWidgetProvider extends AppWidgetProvider {
 		remoteViews.setImageViewResource(R.id.icon, widgetData.deviceIcon == 0 ? R.drawable.ic_launcher : widgetData.deviceIcon);
 		remoteViews.setTextViewText(R.id.name, widgetData.deviceName);
 		remoteViews.setTextViewText(R.id.value, widgetData.deviceValue);
+		remoteViews.setTextViewText(R.id.unit, widgetData.deviceUnit);
 
 		if (widgetData.layout == R.layout.widget_sensor) {
 			// For classic (= not-small) layout of widget, set also lastUpdate

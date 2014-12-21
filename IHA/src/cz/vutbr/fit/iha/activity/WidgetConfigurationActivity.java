@@ -47,6 +47,8 @@ public class WidgetConfigurationActivity extends BaseActivity {
 	private boolean isInitialized = false;
 	private boolean triedLoginAlready = false;
 
+	private WidgetConfigurationActivity context;
+	
 	private Controller mController;
 
 	private ReloadFacilitiesTask mReloadFacilitiesTask;
@@ -57,6 +59,8 @@ public class WidgetConfigurationActivity extends BaseActivity {
 		requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
 		setSupportProgressBarIndeterminate(true);
 
+		context = this;
+		
 		Intent intent = getIntent();
 		Bundle extras = intent.getExtras();
 		if (extras != null) {
@@ -183,11 +187,17 @@ public class WidgetConfigurationActivity extends BaseActivity {
 				if (!saveSettings())
 					return;
 
+				// not working way
+				/*
 				Intent firstUpdate = new Intent(WidgetConfigurationActivity.this, SensorWidgetProvider.class);
 				firstUpdate.setAction("android.appwidget.action.APPWIDGET_UPDATE");
 				firstUpdate.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, new int[] { mWidgetData.getWidgetId() });
 				WidgetConfigurationActivity.this.sendBroadcast(firstUpdate);
+				//*/
 
+				// workaround which is working -> will be replaced in advanced widgets
+				WidgetUpdateService.startUpdating(context, new int[] { mWidgetData.getWidgetId() });				
+				
 				// return the original widget ID, found in onCreate()
 				Intent resultValue = new Intent();
 				resultValue.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, mWidgetData.getWidgetId());

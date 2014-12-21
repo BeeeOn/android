@@ -228,7 +228,8 @@ public class WidgetUpdateService extends Service {
 
 				// Check if we can format device's value (unitsHelper is null when user is not logged in)
 				if (unitsHelper != null) {
-					widgetData.deviceValue = unitsHelper.getStringValueUnit(device.getValue());
+					widgetData.deviceValue = unitsHelper.getStringValue(device.getValue());
+					widgetData.deviceUnit = unitsHelper.getStringUnit(device.getValue());
 				}
 
 				// Check if we can format device's last update (timeHelper is null when user is not logged in)
