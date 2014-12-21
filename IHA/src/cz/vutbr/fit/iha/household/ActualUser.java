@@ -17,6 +17,7 @@ public class ActualUser extends User {
 	private Bitmap mPicture;
 	private String mPictureUrl;
 	private boolean mDefaultPicture = true;
+	private String mGoogleId;
 
 	public ActualUser() {
 		super();
@@ -70,6 +71,20 @@ public class ActualUser extends User {
 	 */
 	public void setPicture(Bitmap picture) {
 		mPicture = Utils.getRoundedShape(picture);
+	}
+	
+	/**
+	 * @return google id or empty string
+	 */
+	public String getGoogleId() {
+		return mGoogleId;
+	}
+
+	/**
+	 * @param googleId
+	 */
+	public void setGoogleId(String googleId) {
+		mGoogleId = googleId;
 	}
 
 }

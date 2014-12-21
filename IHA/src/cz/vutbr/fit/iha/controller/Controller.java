@@ -168,7 +168,7 @@ public final class Controller {
 	private boolean login(String email, boolean canTryAgain) throws IhaException {
 		ActualUser user = mHousehold.user;
 		GoogleUserInfo googleUserInfo = null;
-		String token = "";
+		String googleToken = "";
 
 		try {
 			// Load UID from previous session
@@ -198,10 +198,10 @@ public final class Controller {
 				// No previous session or user data, load fresh data from server
 				if (mNetwork instanceof Network) {
 					// Get Google token
-					token = GoogleAuthHelper.getToken(mContext, email);
+					googleToken = GoogleAuthHelper.getToken(mContext, email);
 
 					// Get user info from Google
-					googleUserInfo = GoogleAuthHelper.fetchInfoFromProfileServer(token);
+					googleUserInfo = GoogleAuthHelper.fetchInfoFromProfileServer(googleToken);
 
 					// Not loaded picture bitmap or user has new picture (avatarUrl is different)
 					if ((!user.getPictureUrl().isEmpty() && user.getPicture() == null)
@@ -215,6 +215,7 @@ public final class Controller {
 					user.setEmail(email);
 					user.setGender(googleUserInfo.gender);
 					user.setPictureUrl(googleUserInfo.pictureUrl);
+					user.setGoogleId(googleUserInfo.id);
 				} else if (mNetwork instanceof DemoNetwork) {
 					// In demo mode load some init data from sdcard
 					((DemoNetwork) mNetwork).initDemoData(user);
@@ -269,7 +270,7 @@ public final class Controller {
 			if ((mNetwork instanceof Network) && (errorCode instanceof NetworkError)) {
 				if (errorCode == NetworkError.NOT_VALID_USER || errorCode == NetworkError.GOOGLE_TOKEN) {
 					// We have probably used incorrect Google token, invalidate it and try it again
-					GoogleAuthHelper.invalidateToken(mContext, token);
+					GoogleAuthHelper.invalidateToken(mContext, googleToken);
 
 					// And try it again (if we haven't yet), hopefully we will have correct token then
 					if (canTryAgain)

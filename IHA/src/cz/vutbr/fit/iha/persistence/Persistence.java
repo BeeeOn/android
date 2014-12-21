@@ -156,6 +156,7 @@ public class Persistence {
 			.putString(Constants.PERSISTENCE_PREF_USER_NAME, user.getName()) //
 			.putString(Constants.PERSISTENCE_PREF_USER_GENDER, user.getGender().toString()) //
 			.putString(Constants.PERSISTENCE_PREF_USER_PICTURE, user.getPictureUrl()) //
+			.putString(Constants.PERSISTENCE_PREF_USER_GOOGLE_ID, user.getGoogleId()) //
 			.commit();
 		
 		Bitmap picture = user.getPicture();
@@ -174,6 +175,8 @@ public class Persistence {
 			prefs.getString(Constants.PERSISTENCE_PREF_USER_GENDER, "")));
 		user.setPictureUrl(
 			prefs.getString(Constants.PERSISTENCE_PREF_USER_PICTURE, ""));
+		user.setGoogleId(
+			prefs.getString(Constants.PERSISTENCE_PREF_USER_GOOGLE_ID, ""));
 		
 		user.setPicture(loadBitmap(email));
 	}

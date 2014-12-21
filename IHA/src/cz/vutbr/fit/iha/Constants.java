@@ -46,6 +46,7 @@ public final class Constants {
 	public static final String PERSISTENCE_PREF_USER_NAME = "user_name";
 	public static final String PERSISTENCE_PREF_USER_GENDER = "user_gender";
 	public static final String PERSISTENCE_PREF_USER_PICTURE = "user_picture";
+	public static final String PERSISTENCE_PREF_USER_GOOGLE_ID = "user_google_id";
 	public static final String PERSISTENCE_PREF_UID = "uid";
 
 	public static final String KEY_UNITS = "key_units";
