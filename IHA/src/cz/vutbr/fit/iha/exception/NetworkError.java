@@ -11,6 +11,9 @@ public enum NetworkError implements ErrorCode {
 	CLOSING_ERROR(-6),
 	GOOGLE_TRY_AGAIN(-7),
 	
+	// UNKNOWN ERROR
+	UNKNOWN(0),
+	
 	// FROM SERVER
 	COM_VER_MISMATCH(1),
 	NOT_VALID_USER(2),
@@ -48,7 +51,7 @@ public enum NetworkError implements ErrorCode {
 			if (value == item.getNumber())
 				return item;
 		}
-		throw new IllegalArgumentException("Invalid NetworkError value");
+		return UNKNOWN;
 	}
 
 }
