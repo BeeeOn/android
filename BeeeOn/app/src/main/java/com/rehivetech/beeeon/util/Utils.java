@@ -4,8 +4,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.StringWriter;
+import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -176,6 +178,15 @@ final public class Utils {
 		}
 
 		return false;
+	}
+
+	public static String uriEncode(final String s) {
+		try {
+			return URLEncoder.encode(s, "UTF-8");
+		} catch (UnsupportedEncodingException e) {
+			/* will never happen for UTF-8 */
+			throw new RuntimeException("failed call encode with UTF-8");
+		}
 	}
 
 	/**
