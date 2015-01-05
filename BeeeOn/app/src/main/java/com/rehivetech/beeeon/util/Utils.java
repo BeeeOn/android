@@ -6,7 +6,20 @@ import java.io.InputStreamReader;
 import java.io.StringWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
+import java.util.Map;
+
+import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicNameValuePair;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import android.content.Context;
 import android.content.pm.PackageInfo;
@@ -107,6 +120,32 @@ final public class Utils {
 		}
 
 		return data;
+	}
+
+	/**
+	 * Fetch JSON content by a HTTP POST request defined by the requestUrl and params given
+	 * as a map of (key, value) pairs. Encoding is solved internally.
+	 * 
+	 * This CAN'T be called on UI thread.
+	 * 
+	 * @param requestUrl
+	 * @param params
+	 * @return
+	 * @throws JSONException
+	 * @throws IOException
+	 */
+	public static JSONObject fetchJsonByPost(String requestUrl, Map<String, String> params) throws JSONException, IOException {
+		final HttpClient client = new DefaultHttpClient();
+		final HttpPost post = new HttpPost(requestUrl);
+		final List<NameValuePair> pairs = new ArrayList<NameValuePair>();
+
+		for(String key : params.keySet())
+			pairs.add(new BasicNameValuePair(key, params.get(key)));
+
+		post.setEntity(new UrlEncodedFormEntity(pairs));
+		final HttpResponse resp = client.execute(post);
+
+		return new JSONObject(getUtf8StringFromInputStream(resp.getEntity().getContent()));
 	}
 
 	/**
