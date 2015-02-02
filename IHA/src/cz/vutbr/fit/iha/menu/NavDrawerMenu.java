@@ -183,7 +183,8 @@ public class NavDrawerMenu {
 				MenuItem item = (MenuItem) mMenuAdapter.getItem(position);
 				switch (item.getType()) {
 				case LOCATION:
-					mMode = mActivity.startActionMode(new ActionModeLocations());
+					if(!item.getId().equals(Constants.GUI_MENU_ALL_SENSOR_ID))
+						mMode = mActivity.startActionMode(new ActionModeLocations());
 					break;
 				case ADAPTER:
 					Log.i(TAG, "deleting adapter");

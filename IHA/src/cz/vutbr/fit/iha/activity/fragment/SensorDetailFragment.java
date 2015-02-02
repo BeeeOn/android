@@ -555,7 +555,7 @@ public class SensorDetailFragment extends SherlockFragment {
 				mDevice, // device
 				new Interval(start, end), // interval from-to
 				DataType.AVERAGE, // type
-				DataInterval.HOUR); // interval
+				(mDevice.getValue() instanceof BaseEnumValue )?DataInterval.RAW:DataInterval.HOUR); // interval
 		mGetDeviceLogTask.execute(new LogDataPair[] { pair });
 	}
 
@@ -649,6 +649,8 @@ public class SensorDetailFragment extends SherlockFragment {
 				if (mUnitsHelper != null) {
 					mValueSwitch.setText(mUnitsHelper.getStringValueUnit(mDevice.getValue()));
 				}
+				// Set icon of sensor
+				mIcon.setImageResource(mDevice.getIconResource());
 				// Enable button
 				mValueSwitch.setEnabled(true);
 			}

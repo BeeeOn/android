@@ -145,6 +145,8 @@ public class SensorListFragment extends SherlockFragment {
 		super.onPause();
 		Log.d(TAG, "onPause()");
 		ready = false;
+		if(mMode != null)
+			mMode.finish();
 	}
 
 	public void onResume() {

@@ -121,7 +121,7 @@ public class AddAdapterActivity extends BaseApplicationActivity {
 					String adapterCode = mFragment.getAdapterCode();
 					Log.d(TAG, "adaName: "+adapterName+" adaCode: "+adapterCode);
 					
-					if(adapterCode.equals("")){
+					if(adapterCode.isEmpty()){
 						// TODO: Please fill AdapterCode
 						
 					}

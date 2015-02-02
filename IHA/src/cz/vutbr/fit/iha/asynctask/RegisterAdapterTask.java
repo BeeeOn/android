@@ -50,8 +50,8 @@ public class RegisterAdapterTask extends CallbackTask<RegisterAdapterPair> {
 		mController = Controller.getInstance(mContext);
 
 		String serialNumber = pair.adapterId;
-		String name = pair.adapterName;
-
+		String name = pair.adapterName.trim();
+		
 		// Set default name for this adapter, if user didn't filled any
 		if (name.isEmpty()) {
 			// name = getUniqueAdapterName();
