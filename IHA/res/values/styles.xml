@@ -14,7 +14,8 @@
     	<item name="android:colorBackground">@color/iha_background</item>
         <!-- Support library compatibility -->
         <item name="actionBarStyle">@style/IHA.ActionBar</item>
-        <item name="actionModeCloseButtonStyle">@style/IHA.NoCloseButton</item>
+        <!-- item name="actionModeCloseButtonStyle">@style/IHA.NoCloseButton</item -->
+        
         <item name="windowContentOverlay">@null</item>
     	<item name="android:windowContentOverlay">@null</item>
     	<item name="homeAsUpIndicator">@drawable/ic_ab_up_compat</item>
@@ -32,6 +33,8 @@
         <item name="titleTextStyle">@style/IHA.ActionBar.TitleText</item>
         <item name="background">@color/iha_primary_cyan</item>
         
+        <item name="actionModeBackground">@color/iha_drawer_bg</item>
+        <item name="actionModeCloseDrawable">@drawable/ic_ab_up_compat</item>
     </style>
     
     <style name="CustomShowcaseTheme" parent="ShowcaseView.Light">

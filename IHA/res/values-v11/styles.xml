@@ -8,7 +8,8 @@
         <!-- API 11 theme customizations can go here. -->
 		<item name="android:windowBackground">@color/iha_background</item>
     	<item name="android:colorBackground">@color/iha_background</item>
-		<item name="android:actionModeCloseButtonStyle">@style/IHA.NoCloseButton</item>
+		<!-- item name="android:actionModeCloseButtonStyle">@style/IHA.NoCloseButton</item-->
+		
         <item name="android:actionBarStyle">@style/IHA.ActionBar</item>
         <item name="windowContentOverlay">@null</item>
     	<item name="android:windowContentOverlay">@null</item>
@@ -25,6 +26,10 @@
         <!-- Support library compatibility -->
         <item name="titleTextStyle">@style/IHA.ActionBar.TitleText</item>
         <item name="background">@color/iha_primary_cyan</item>
+        
+        <item name="android:actionModeBackground">@color/iha_drawer_bg</item>
+        <item name="android:actionModeCloseDrawable">@drawable/ic_ab_up_compat</item>
+        
 
     </style>
 

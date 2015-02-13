@@ -222,6 +222,7 @@ public class MainActivity extends BaseApplicationActivity {
 		backPressed = false;
 
 		mNavDrawerMenu.redrawMenu();
+		mNavDrawerMenu.finishActinMode();
 		//Check whitch fragment is visible and redraw
 		if(mActiveLocationId != null) { // isnt set active location
 			redrawDevices();

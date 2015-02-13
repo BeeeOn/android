@@ -18,4 +18,8 @@ public interface MenuItem {
 	public String getId();
 
 	public MenuItemType getType();
+	
+	public void setIsSelected();
+	
+	public void setNotSelected();
 }

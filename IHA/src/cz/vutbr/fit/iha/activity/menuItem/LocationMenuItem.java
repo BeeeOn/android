@@ -37,11 +37,22 @@ public class LocationMenuItem extends AbstractMenuItem {
 			nameView.setTextColor(view.getResources().getColor(R.color.iha_primary_cyan));
 			nameView.setTypeface(null, Typeface.BOLD);
 		}
+		setMView(view);
 	}
 
 	@Override
 	public int getLayout() {
 		return R.layout.drawer_listview_location;
+	}
+
+	@Override
+	public void setIsSelected() {
+		getMView().setBackgroundColor( getMView().getResources().getColor(R.color.light_gray));
+	}
+
+	@Override
+	public void setNotSelected() {
+		getMView().setBackgroundColor( getMView().getResources().getColor(R.color.iha_drawer_bg));
 	}
 
 }

@@ -78,6 +78,7 @@ public class NavDrawerMenu {
 
 	//
 	private ActionMode mMode;
+	private MenuItem mSelectedMenuItem;
 
 	public NavDrawerMenu(MainActivity activity) {
 		// Set activity
@@ -130,12 +131,12 @@ public class NavDrawerMenu {
 		mDrawerList.setOnItemClickListener(new OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-				MenuItem item = (MenuItem) mMenuAdapter.getItem(position);
-				switch (item.getType()) {
+				mSelectedMenuItem = (MenuItem) mMenuAdapter.getItem(position);
+				switch (mSelectedMenuItem.getType()) {
 				case ADAPTER:
 					// if it is not chosen, switch to selected adapter
-					if (!mController.getActiveAdapter().getId().equals(item.getId())) {
-						doSwitchAdapter(item.getId());
+					if (!mController.getActiveAdapter().getId().equals(mSelectedMenuItem.getId())) {
+						doSwitchAdapter(mSelectedMenuItem.getId());
 					}
 					break;
 
@@ -144,17 +145,17 @@ public class NavDrawerMenu {
 
 					// TEMP
 					mActiveLocationId = null;
-					mActiveCustomViewId = item.getId();
+					mActiveCustomViewId = mSelectedMenuItem.getId();
 
 					changeCustomView(true);
 					redrawMenu();
 					break;
 
 				case SETTING:
-					if (item.getId().equals(cz.vutbr.fit.iha.activity.menuItem.MenuItem.ID_ABOUT)) {
+					if (mSelectedMenuItem.getId().equals(cz.vutbr.fit.iha.activity.menuItem.MenuItem.ID_ABOUT)) {
 						InfoDialogFragment dialog = new InfoDialogFragment();
 						dialog.show(mActivity.getSupportFragmentManager(), TAG_INFO);
-					} else if (item.getId().equals(cz.vutbr.fit.iha.activity.menuItem.MenuItem.ID_SETTINGS)) {
+					} else if (mSelectedMenuItem.getId().equals(cz.vutbr.fit.iha.activity.menuItem.MenuItem.ID_SETTINGS)) {
 						Intent intent = new Intent(mActivity, SettingsMainActivity.class);
 						mActivity.startActivity(intent);
 					}
@@ -165,7 +166,7 @@ public class NavDrawerMenu {
 					Adapter adapter = mController.getActiveAdapter();
 					if (adapter != null) {
 						mActiveCustomViewId = null;
-						changeLocation(mController.getLocation(adapter.getId(), item.getId()), true);
+						changeLocation(mController.getLocation(adapter.getId(), mSelectedMenuItem.getId()), true);
 						redrawMenu();
 					}
 					break;
@@ -180,16 +181,17 @@ public class NavDrawerMenu {
 			@Override
 			public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
 				Log.d(TAG, "Item Long press");
-				MenuItem item = (MenuItem) mMenuAdapter.getItem(position);
-				switch (item.getType()) {
+				mSelectedMenuItem = (MenuItem) mMenuAdapter.getItem(position);
+				switch (mSelectedMenuItem.getType()) {
 				case LOCATION:
-					if(!item.getId().equals(Constants.GUI_MENU_ALL_SENSOR_ID))
+					if(!mSelectedMenuItem.getId().equals(Constants.GUI_MENU_ALL_SENSOR_ID))
 						mMode = mActivity.startActionMode(new ActionModeLocations());
 					break;
 				case ADAPTER:
-					Log.i(TAG, "deleting adapter");
-					mAdaterIdUnregist = item.getId();
+					Log.i(TAG, "Long press - adapter");
+					//mAdaterIdUnregist = item.getId();
 					mMode = mActivity.startActionMode(new ActionModeAdapters());
+					mSelectedMenuItem.setIsSelected();
 					break;
 				default:
 					// do nothing
@@ -536,9 +538,10 @@ public class NavDrawerMenu {
 
 		@Override
 		public boolean onCreateActionMode(ActionMode mode, Menu menu) {
-			menu.add("Edit").setShowAsAction(com.actionbarsherlock.view.MenuItem.SHOW_AS_ACTION_ALWAYS);
-			menu.add("Unregist").setShowAsAction(com.actionbarsherlock.view.MenuItem.SHOW_AS_ACTION_IF_ROOM);
-			menu.add("Cancel").setIcon(R.drawable.iha_ic_action_cancel).setTitle("Cancel").setShowAsAction(com.actionbarsherlock.view.MenuItem.SHOW_AS_ACTION_ALWAYS);
+			menu.add("Edit").setIcon(R.drawable.ic_mode_edit_white_24dp).setShowAsAction(com.actionbarsherlock.view.MenuItem.SHOW_AS_ACTION_ALWAYS);
+			menu.add("Users").setIcon(R.drawable.ic_group_white_24dp).setShowAsAction(com.actionbarsherlock.view.MenuItem.SHOW_AS_ACTION_ALWAYS);
+			menu.add("Unregist").setIcon(R.drawable.ic_delete_white_24dp).setShowAsAction(com.actionbarsherlock.view.MenuItem.SHOW_AS_ACTION_IF_ROOM);
+			//menu.add("Cancel").setIcon(R.drawable.iha_ic_action_cancel).setTitle("Cancel").setShowAsAction(com.actionbarsherlock.view.MenuItem.SHOW_AS_ACTION_ALWAYS);
 			return true;
 		}
 
@@ -551,7 +554,7 @@ public class NavDrawerMenu {
 		@Override
 		public void onDestroyActionMode(ActionMode mode) {
 			mMode = null;
-
+			mSelectedMenuItem.setNotSelected();
 		}
 
 		@Override

@@ -29,4 +29,16 @@ public class SettingMenuItem extends AbstractMenuItem {
 		return R.layout.drawer_listview_setting;
 	}
 
+	@Override
+	public void setIsSelected() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void setNotSelected() {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

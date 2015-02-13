@@ -24,11 +24,22 @@ public class GroupMenuItem extends AbstractMenuItem {
 
 		view.setEnabled(false);
 		view.setOnClickListener(null);
+		setMView(view);
 	}
 
 	@Override
 	public int getLayout() {
 		return R.layout.drawer_listview_group;
+	}
+
+	@Override
+	public void setIsSelected() {
+		getMView().setBackgroundColor( getMView().getResources().getColor(R.color.light_gray));
+	}
+
+	@Override
+	public void setNotSelected() {
+		getMView().setBackgroundColor( getMView().getResources().getColor(R.color.iha_drawer_bg));
 	}
 
 }

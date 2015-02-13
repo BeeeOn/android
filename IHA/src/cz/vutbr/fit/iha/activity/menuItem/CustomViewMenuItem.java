@@ -38,11 +38,22 @@ public class CustomViewMenuItem extends AbstractMenuItem {
 		if (mActualCustomView) {
 			nameView.setTextColor(view.getResources().getColor(R.color.iha_primary_cyan));
 		}
+		setMView(view);
 	}
 
 	@Override
 	public int getLayout() {
 		return R.layout.drawer_listview_custom_view;
+	}
+
+	@Override
+	public void setIsSelected() {
+		getMView().setBackgroundColor( getMView().getResources().getColor(R.color.light_gray));
+	}
+
+	@Override
+	public void setNotSelected() {
+		getMView().setBackgroundColor( getMView().getResources().getColor(R.color.iha_drawer_bg));
 	}
 
 }

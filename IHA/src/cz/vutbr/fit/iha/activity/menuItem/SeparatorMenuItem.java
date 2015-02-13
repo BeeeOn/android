@@ -19,4 +19,16 @@ public class SeparatorMenuItem extends AbstractMenuItem {
 		return R.layout.drawer_listview_separator;
 	}
 
+	@Override
+	public void setIsSelected() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void setNotSelected() {
+		// TODO Auto-generated method stub
+		
+	}
+
 }
