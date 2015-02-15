@@ -832,6 +832,10 @@ public final class Controller {
 	public User getUser(String adapterId, String userId) throws NotImplementedException {
 		throw new NotImplementedException();
 	}
+	
+	public List<User> getUsers(String adapterId) {
+		return new ArrayList<User>(mNetwork.getAccounts(adapterId).values());
+	}
 
 	/**
 	 * Add user to adapter.
@@ -841,8 +845,8 @@ public final class Controller {
 	 * @return
 	 * @throws NotImplementedException
 	 */
-	public boolean addUser(String adapterId, User user) throws NotImplementedException {
-		throw new NotImplementedException();
+	public boolean addUser(String adapterId, User user) {
+		return mNetwork.addAccount(adapterId, user);
 	}
 
 	/**
@@ -853,8 +857,8 @@ public final class Controller {
 	 * @return
 	 * @throws NotImplementedException
 	 */
-	public boolean deleteUser(String adapterId, User user) throws NotImplementedException {
-		throw new NotImplementedException();
+	public boolean deleteUser(String adapterId, User user) {
+		return mNetwork.deleteAccount(adapterId, user);
 	}
 
 	/**
@@ -865,8 +869,8 @@ public final class Controller {
 	 * @return
 	 * @throws NotImplementedException
 	 */
-	public boolean saveUser(String adapterId, User user) throws NotImplementedException {
-		throw new NotImplementedException();
+	public boolean saveUser(String adapterId, User user) {
+		return mNetwork.updateAccount(adapterId, user);
 	}
 
 	/**
