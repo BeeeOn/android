@@ -25,6 +25,7 @@ import com.actionbarsherlock.view.Menu;
 
 import cz.vutbr.fit.iha.Constants;
 import cz.vutbr.fit.iha.R;
+import cz.vutbr.fit.iha.activity.AdapterUsersActivity;
 import cz.vutbr.fit.iha.activity.AddAdapterActivity;
 import cz.vutbr.fit.iha.activity.MainActivity;
 import cz.vutbr.fit.iha.activity.SettingsMainActivity;
@@ -559,9 +560,14 @@ public class NavDrawerMenu {
 
 		@Override
 		public boolean onActionItemClicked(ActionMode mode, com.actionbarsherlock.view.MenuItem item) {
-			if (item.getTitle().equals("Unregist")) {
+			if (item.getTitle().equals("Unregist")) { // UNREGIST ADAPTER
 				doUnregistAdapter(mAdaterIdUnregist);
-			} else if (item.getTitle().equals("Edit")) {
+			} else if (item.getTitle().equals("Users")) { // GO TO USERS OF ADAPTER
+				Intent intent = new Intent(mActivity, AdapterUsersActivity.class);
+				intent.putExtra(Constants.GUI_SELECTED_ADAPTER_ID, mSelectedMenuItem.getId());
+				mActivity.startActivity(intent);
+				
+			} else if (item.getTitle().equals("Edit")) { // RENAME ADAPTER
 				new ToastMessageThread(mActivity, R.string.toast_not_implemented).start();
 			}
 

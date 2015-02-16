@@ -20,6 +20,7 @@
     <string name="title_activity_add_sensor_activity_dialog">AddSensorActivityDialog</string>
     <string name="title_activity_alert_activity_dialog">AlertActivityDialog</string>
     <string name="title_activity_map_geofence">Geofence areas</string>
+    <string name="title_activity_adapter_users">Users of adapter</string>
 
     <!-- Buttons -->
     <string name="login_login">Login</string>
@@ -63,6 +64,9 @@
     <string name="refresh_time">Refresh time: </string>
     <string name="last_update">Last update:</string>
     <string name="sen_graph_label">Graph of history</string>
+    <string name="users_header">Users</string>
+    <string name="users_pending_header">Pending request</string>
+    <string name="add_users_adapter">Add user</string> 
 
     <!-- Hints -->
     <string name="login_user_name_hint">Login/email</string>

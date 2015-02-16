@@ -136,6 +136,10 @@
             android:name="cz.vutbr.fit.iha.activity.MapGeofenceActivity"
             android:label="@string/title_activity_map_geofence" >
         </activity>
+        <activity
+            android:name="cz.vutbr.fit.iha.activity.AdapterUsersActivity"
+            android:label="@string/title_activity_adapter_users" >
+        </activity>
 
         <!-- WIDGETS -->
         <receiver
