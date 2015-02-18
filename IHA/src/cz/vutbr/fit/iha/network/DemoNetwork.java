@@ -549,9 +549,9 @@ public class DemoNetwork implements INetwork {
 	}
 
 	@Override
-	public HashMap<String, User> getAccounts(String adapterId) {
+	public ArrayList<User> getAccounts(String adapterId) {
 		// TODO Auto-generated method stub
-		return new HashMap<String, User>();
+		return new ArrayList<User>();
 	}
 
 	@Override

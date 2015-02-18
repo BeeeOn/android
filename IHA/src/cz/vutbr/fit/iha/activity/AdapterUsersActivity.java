@@ -16,10 +16,16 @@ import android.widget.LinearLayout.LayoutParams;
 import cz.vutbr.fit.iha.Constants;
 import cz.vutbr.fit.iha.R;
 import cz.vutbr.fit.iha.adapter.Adapter;
+import cz.vutbr.fit.iha.adapter.device.Device;
+import cz.vutbr.fit.iha.adapter.device.Facility;
 import cz.vutbr.fit.iha.arrayadapter.UsersListAdapter;
+import cz.vutbr.fit.iha.asynctask.GetAdapterUsersTask;
+import cz.vutbr.fit.iha.asynctask.ReloadFacilitiesTask;
+import cz.vutbr.fit.iha.asynctask.CallbackTask.CallbackTaskListener;
 import cz.vutbr.fit.iha.base.BaseApplicationActivity;
 import cz.vutbr.fit.iha.controller.Controller;
 import cz.vutbr.fit.iha.household.User;
+import cz.vutbr.fit.iha.util.Log;
 
 public class AdapterUsersActivity extends BaseApplicationActivity {
 	
@@ -33,6 +39,8 @@ public class AdapterUsersActivity extends BaseApplicationActivity {
 	
 	private ListView mListActUsers;
 	private ListView mListPenUsers;
+
+	private GetAdapterUsersTask mGetAdapterUsersTask;
 	
 	private static final int NAME_ITEM_HEIGHT = 66;
 	
@@ -54,15 +62,20 @@ public class AdapterUsersActivity extends BaseApplicationActivity {
 		mAdapter = mController.getAdapter(getIntent().getStringExtra(Constants.GUI_SELECTED_ADAPTER_ID));
 		
 		// Get all users for adapter
+		doGetAdapterUsers(mAdapter.getId(), true);
+		
 		//mAdapterUsers = mController.getUsers(mAdapter.getId()); // -> ZATIM NEFUNKCNI 
-		mAdapterUsers = new ArrayList<User>();
-		mAdapterUsers.add(new User("Test 1","pokus@email.com",User.Role.Superuser,User.Gender.Male));
-		mAdapterUsers.add(new User("Test 2","test@email.com",User.Role.Admin,User.Gender.Male));
-		initGUI();
+		//mAdapterUsers = new ArrayList<User>();
+		//mAdapterUsers.add(new User("Test 1","pokus@email.com",User.Role.Superuser,User.Gender.Male));
+		//mAdapterUsers.add(new User("Test 2","test@email.com",User.Role.Admin,User.Gender.Male));
+		
 	}
 	
 
-	private void initGUI() {
+	
+
+
+	private void initLayouts() {
 		// Get elements
 		mListActUsers = (ListView) findViewById(R.id.adapter_users_list);
 		//mListPenUsers = (ListView) findViewById(R.id.adapter_users_pending_list);
@@ -105,6 +118,23 @@ public class AdapterUsersActivity extends BaseApplicationActivity {
 			break;
 		}
 		return super.onOptionsItemSelected(item);
+	}
+	
+	private void doGetAdapterUsers(String adapterId ,boolean forceReload) {
+		mGetAdapterUsersTask = new GetAdapterUsersTask(this, forceReload);
+
+		mGetAdapterUsersTask.setListener(new CallbackTaskListener() {
+
+			@Override
+			public void onExecute(boolean success) {
+				mAdapterUsers = mController.getUsers();
+				
+				initLayouts();
+			}
+
+		});
+
+		mGetAdapterUsersTask.execute(adapterId);
 	}
 
 }

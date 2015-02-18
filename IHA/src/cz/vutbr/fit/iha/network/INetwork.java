@@ -324,7 +324,7 @@ public interface INetwork {
 	 * 
 	 * @return Map of users where key is email and value is User object
 	 */
-	public HashMap<String, User> getAccounts(String adapterID);
+	public ArrayList<User> getAccounts(String adapterID);
 
 	/**
 	 * Method update users roles on server on current adapter

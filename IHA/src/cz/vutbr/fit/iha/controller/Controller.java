@@ -2,6 +2,7 @@ package cz.vutbr.fit.iha.controller;
 
 import java.util.ArrayList;
 import java.util.EnumSet;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.WeakHashMap;
@@ -69,6 +70,8 @@ public final class Controller {
 
 	/** Weak map for holding registered notification receivers */
 	private final WeakHashMap<INotificationReceiver, Boolean> mNotificationReceivers = new WeakHashMap<INotificationReceiver, Boolean>();
+
+	private List<User> mRequestUsers;
 
 	/**
 	 * Return singleton instance of this Controller. This is thread-safe.
@@ -833,8 +836,15 @@ public final class Controller {
 		throw new NotImplementedException();
 	}
 	
-	public List<User> getUsers(String adapterId) {
-		return new ArrayList<User>(mNetwork.getAccounts(adapterId).values());
+	public Boolean reloadAdapterUsers(String adapterId, boolean mForceReload) {
+		mRequestUsers = mNetwork.getAccounts(adapterId);
+		return true;
+	}
+	
+	public List<User> getUsers() {
+		if(mRequestUsers != null)
+			return  mRequestUsers;
+		return null;
 	}
 
 	/**
@@ -1050,5 +1060,7 @@ public final class Controller {
 	public void setNotificationRead(ArrayList<String> msgIds) {
 		mNetwork.NotificationsRead(msgIds);
 	}
+
+	
 
 }

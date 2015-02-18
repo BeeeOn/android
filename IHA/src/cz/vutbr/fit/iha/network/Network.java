@@ -998,11 +998,11 @@ public class Network implements INetwork {
 	@Override
 	// http://stackoverflow.com/a/509288/1642090
 	@SuppressWarnings("unchecked")
-	public HashMap<String, User> getAccounts(String adapterID){
+	public ArrayList<User> getAccounts(String adapterID){
 		ParsedMessage msg = doRequest(XmlCreator.createGetAccounts(mUserID, adapterID));
 
 		if (msg.getState() == State.ACCOUNTS)
-			return (HashMap<String, User>) msg.data;
+			return (ArrayList<User>) msg.data;
 
 		FalseAnswer fa = (FalseAnswer) msg.data;
 		throw new IhaException(fa.getErrMessage(), NetworkError.fromValue(fa.getErrCode()));
