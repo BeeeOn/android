@@ -6,11 +6,11 @@
         android:showAsAction="never"
         android:title="@string/action_refreshlist"></item-->
     
-    <item
+    <!-- item
         android:id="@+id/action_addadapter"
         android:orderInCategory="100"
         android:showAsAction="never"
-        android:title="@string/action_addadapter"/>
+        android:title="@string/action_addadapter"/-->
     
     <!-- item
         android:id="@+id/action_intro"
