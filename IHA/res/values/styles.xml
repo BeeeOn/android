@@ -15,7 +15,8 @@
         <!-- Support library compatibility -->
         <item name="actionBarStyle">@style/IHA.ActionBar</item>
         <!-- item name="actionModeCloseButtonStyle">@style/IHA.NoCloseButton</item -->
-        
+        <item name="actionModeBackground">@color/darkgray</item>
+        <item name="actionModeCloseDrawable">@drawable/ic_ab_up_compat</item>
         <item name="windowContentOverlay">@null</item>
     	<item name="android:windowContentOverlay">@null</item>
     	<item name="homeAsUpIndicator">@drawable/ic_ab_up_compat</item>
