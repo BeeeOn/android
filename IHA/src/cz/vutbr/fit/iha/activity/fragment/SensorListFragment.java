@@ -134,7 +134,7 @@ public class SensorListFragment extends SherlockFragment {
 					mSwipeLayout.setRefreshing(false);
 					return;
 				}
-
+				mActivity.redrawMenu();
 				doReloadFacilitiesTask(adapter.getId());
 			}
 		});
