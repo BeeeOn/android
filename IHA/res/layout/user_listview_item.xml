@@ -31,16 +31,7 @@
              android:layout_gravity="right"
              android:orientation="horizontal"
              android:paddingLeft="10dp" >
-
-             <TextView
-                 android:id="@+id/adapter_user_email"
-                 android:layout_width="wrap_content"
-                 android:layout_height="wrap_content"
-                 android:layout_alignParentBottom="true"
-                 android:text="email@email.cz"
-                 android:textColor="@color/iha_text_hint"
-                 android:textSize="18dp" />
-
+             
              <TextView
                  android:id="@+id/adapter_user_name"
                  android:layout_width="wrap_content"
@@ -54,8 +45,46 @@
                  android:singleLine="true"
                  android:text="Name of user"
                  android:textColor="@color/iha_text_color"
-                 android:textSize="25dp"
+                 android:textSize="24dp"
                  android:textStyle="normal" />
+             
+             <LinearLayout 
+                 android:orientation="horizontal"
+                 android:layout_alignParentLeft="true"
+                 android:layout_alignParentBottom="true"
+                 android:layout_height="wrap_content"
+                 android:layout_width="match_parent"
+                 >
+	             <TextView
+	                 android:id="@+id/adapter_user_role"
+	                 android:layout_width="wrap_content"
+	                 android:layout_height="wrap_content"
+	                 
+	                 android:text="user"
+	                 android:paddingRight="4dp"
+	                 android:textColor="@color/iha_text_hint"
+	                 android:textSize="16dp" />
+	             <TextView
+	                 android:layout_width="wrap_content"
+	                 android:layout_height="wrap_content"
+	                 android:text="-"
+	                 android:paddingRight="4dp"
+	                 android:textColor="@color/iha_text_hint"
+	                 android:textSize="16dp" />
+	             
+	             <TextView
+	                 android:id="@+id/adapter_user_email"
+	                 android:layout_width="wrap_content"
+	                 android:layout_height="wrap_content"
+	                 android:text="email@email.cz"
+	                 android:textColor="@color/iha_text_hint"
+	                 android:textSize="16dp" />
+             </LinearLayout>
+
+            
+             
+
+             
          </RelativeLayout>
 
      </LinearLayout>

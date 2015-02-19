@@ -140,6 +140,10 @@
             android:name="cz.vutbr.fit.iha.activity.AdapterUsersActivity"
             android:label="@string/title_activity_adapter_users" >
         </activity>
+         <activity
+            android:name="cz.vutbr.fit.iha.activity.AddAdapterUserActivity"
+            android:label="@string/title_activity_add_adapter_user" >
+        </activity>
 
         <!-- WIDGETS -->
         <receiver

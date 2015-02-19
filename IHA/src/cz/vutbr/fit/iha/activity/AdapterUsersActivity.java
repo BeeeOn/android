@@ -6,6 +6,7 @@ import java.util.List;
 import com.actionbarsherlock.view.MenuItem;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
@@ -91,6 +92,9 @@ public class AdapterUsersActivity extends BaseApplicationActivity {
 			@Override
 			public void onClick(View v) {
 				// Go to add new user 
+				Intent intent = new Intent(mActivity, AddAdapterUserActivity.class);
+				intent.putExtra(Constants.GUI_SELECTED_ADAPTER_ID, mAdapter.getId());
+				mActivity.startActivity(intent);
 			}
 		});
 	}

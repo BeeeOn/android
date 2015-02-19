@@ -1,5 +1,7 @@
 package cz.vutbr.fit.iha.household;
 
+import cz.vutbr.fit.iha.household.User.Role;
+
 /**
  * Represents single person.
  */
@@ -21,6 +23,11 @@ public class User {
 		mEmail = email;
 		mRole = role;
 		mGender = gender;
+	}
+
+	public User(final String email, final Role role) {
+		mEmail = email;
+		mRole = role;
 	}
 
 	public enum Role {
