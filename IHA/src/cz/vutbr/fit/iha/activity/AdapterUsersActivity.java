@@ -43,7 +43,7 @@ public class AdapterUsersActivity extends BaseApplicationActivity {
 
 	private GetAdapterUsersTask mGetAdapterUsersTask;
 	
-	private static final int NAME_ITEM_HEIGHT = 66;
+	private static final int NAME_ITEM_HEIGHT = 74;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {

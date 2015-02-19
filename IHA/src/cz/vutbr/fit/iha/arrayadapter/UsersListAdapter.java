@@ -81,6 +81,7 @@ public class UsersListAdapter extends BaseAdapter {
 		// Locate the TextViews in drawer_list_item.xml
 		TextView txtNameUser = (TextView) itemView.findViewById(R.id.adapter_user_name);
 		TextView txtEmailUser = (TextView) itemView.findViewById(R.id.adapter_user_email);
+		TextView txtRoleUser = (TextView) itemView.findViewById(R.id.adapter_user_role);
 
 		// Locate the ImageView in drawer_list_item.xml
 		ImageView imgIcon = (ImageView) itemView.findViewById(R.id.iconofsensor);
@@ -89,7 +90,7 @@ public class UsersListAdapter extends BaseAdapter {
 		
 		txtNameUser.setText(user.getName());
 		txtEmailUser.setText(user.getEmail());
-
+		txtRoleUser.setText(user.getRole().toString());
 
 		return itemView;
 	}

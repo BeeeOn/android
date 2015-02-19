@@ -23,18 +23,19 @@
              android:layout_width="wrap_content"
              android:layout_height="56dp"
              android:adjustViewBounds="true"
+             android:layout_marginTop="6dp"
              android:src="@drawable/person_silhouette" />
 
          <RelativeLayout
              android:layout_width="wrap_content"
-             android:layout_height="56dp"
+             android:layout_height="64dp"
              android:layout_gravity="right"
              android:orientation="horizontal"
              android:paddingLeft="10dp" >
              
              <TextView
                  android:id="@+id/adapter_user_name"
-                 android:layout_width="wrap_content"
+                 android:layout_width="fill_parent"
                  android:layout_height="wrap_content"
                  android:layout_alignParentLeft="true"
                  android:layout_alignParentTop="true"
@@ -45,13 +46,14 @@
                  android:singleLine="true"
                  android:text="Name of user"
                  android:textColor="@color/iha_text_color"
-                 android:textSize="24dp"
+                 android:textSize="22dp"
                  android:textStyle="normal" />
              
              <LinearLayout 
-                 android:orientation="horizontal"
+                 android:orientation="vertical"
                  android:layout_alignParentLeft="true"
                  android:layout_alignParentBottom="true"
+                 android:layout_marginTop="2dp"
                  android:layout_height="wrap_content"
                  android:layout_width="match_parent"
                  >
@@ -61,24 +63,27 @@
 	                 android:layout_height="wrap_content"
 	                 
 	                 android:text="user"
-	                 android:paddingRight="4dp"
 	                 android:textColor="@color/iha_text_hint"
-	                 android:textSize="16dp" />
-	             <TextView
+	                 android:textSize="14dp" />
+	             <!-- TextView
 	                 android:layout_width="wrap_content"
 	                 android:layout_height="wrap_content"
 	                 android:text="-"
 	                 android:paddingRight="4dp"
 	                 android:textColor="@color/iha_text_hint"
-	                 android:textSize="16dp" />
+	                 android:textSize="15dp" /-->
 	             
 	             <TextView
 	                 android:id="@+id/adapter_user_email"
-	                 android:layout_width="wrap_content"
+	                 android:layout_width="fill_parent"
 	                 android:layout_height="wrap_content"
 	                 android:text="email@email.cz"
+	                 android:ellipsize="marquee"
+                 	 android:marqueeRepeatLimit="marquee_forever"
+                 	 android:scrollHorizontally="true"
+                 	 android:singleLine="true"
 	                 android:textColor="@color/iha_text_hint"
-	                 android:textSize="16dp" />
+	                 android:textSize="14dp" />
              </LinearLayout>
 
             
