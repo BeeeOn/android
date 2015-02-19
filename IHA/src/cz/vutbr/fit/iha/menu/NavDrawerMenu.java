@@ -539,8 +539,10 @@ public class NavDrawerMenu {
 
 		@Override
 		public boolean onCreateActionMode(ActionMode mode, Menu menu) {
-			menu.add("Edit").setIcon(R.drawable.ic_mode_edit_white_24dp).setShowAsAction(com.actionbarsherlock.view.MenuItem.SHOW_AS_ACTION_ALWAYS);
-			menu.add("Users").setIcon(R.drawable.ic_group_white_24dp).setShowAsAction(com.actionbarsherlock.view.MenuItem.SHOW_AS_ACTION_ALWAYS);
+			if(mController.isUserAllowed(mController.getAdapter(mSelectedMenuItem.getId()).getRole()) ) {
+				menu.add("Edit").setIcon(R.drawable.ic_mode_edit_white_24dp).setShowAsAction(com.actionbarsherlock.view.MenuItem.SHOW_AS_ACTION_ALWAYS);
+				menu.add("Users").setIcon(R.drawable.ic_group_white_24dp).setShowAsAction(com.actionbarsherlock.view.MenuItem.SHOW_AS_ACTION_ALWAYS);
+			}
 			menu.add("Unregist").setIcon(R.drawable.ic_delete_white_24dp).setShowAsAction(com.actionbarsherlock.view.MenuItem.SHOW_AS_ACTION_IF_ROOM);
 			//menu.add("Cancel").setIcon(R.drawable.iha_ic_action_cancel).setTitle("Cancel").setShowAsAction(com.actionbarsherlock.view.MenuItem.SHOW_AS_ACTION_ALWAYS);
 			return true;

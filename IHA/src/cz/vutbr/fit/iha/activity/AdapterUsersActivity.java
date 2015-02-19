@@ -102,8 +102,8 @@ public class AdapterUsersActivity extends BaseApplicationActivity {
 
 	@Override
 	protected void onAppResume() {
-		// TODO Auto-generated method stub
-
+		if(mAdapter != null)
+			doGetAdapterUsers(mAdapter.getId(), true);
 	}
 
 	@Override

@@ -306,10 +306,14 @@ public class SensorListFragment extends SherlockFragment {
 			mSensorList.setOnItemClickListener(new ListView.OnItemClickListener() {
 				@Override
 				public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-					if (position == mSensorAdapter.getCount() - 1) {
-						showAddSensorDialog();
-						return;
+					// IF can user add senzor
+					if(mController.isUserAllowed(mController.getAdapter(mActiveAdapterId).getRole())) {
+						if (position == mSensorAdapter.getCount() - 1) {
+							showAddSensorDialog();
+							return;
+						}
 					}
+					
 
 					Device device = mSensorAdapter.getDevice(position);
 
@@ -321,13 +325,15 @@ public class SensorListFragment extends SherlockFragment {
 					startActivity(intent);
 				}
 			});
-			mSensorList.setOnItemLongClickListener(new OnItemLongClickListener() {
-				@Override
-				public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-					mMode = getSherlockActivity().startActionMode(new ActionModeEditSensors());
-					return true;
-				}
-			});
+			if(mController.isUserAllowed(mController.getAdapter(mActiveAdapterId).getRole())) {
+				mSensorList.setOnItemLongClickListener(new OnItemLongClickListener() {
+					@Override
+					public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+						mMode = getSherlockActivity().startActionMode(new ActionModeEditSensors());
+						return true;
+					}
+				});
+			}
 		}
 
 		mActivity.setSupportProgressBarIndeterminateVisibility(false);
