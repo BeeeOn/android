@@ -325,14 +325,17 @@ public class SensorListFragment extends SherlockFragment {
 					startActivity(intent);
 				}
 			});
-			if(mController.isUserAllowed(mController.getAdapter(mActiveAdapterId).getRole())) {
-				mSensorList.setOnItemLongClickListener(new OnItemLongClickListener() {
-					@Override
-					public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-						mMode = getSherlockActivity().startActionMode(new ActionModeEditSensors());
-						return true;
-					}
-				});
+			Adapter tmpAda = mController.getAdapter(mActiveAdapterId);
+			if(tmpAda != null) {
+				if(mController.isUserAllowed(tmpAda.getRole())) {
+					mSensorList.setOnItemLongClickListener(new OnItemLongClickListener() {
+						@Override
+						public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+							mMode = getSherlockActivity().startActionMode(new ActionModeEditSensors());
+							return true;
+						}
+					});
+				}
 			}
 		}
 

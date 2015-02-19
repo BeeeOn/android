@@ -43,7 +43,9 @@ public class SensorListAdapter extends BaseAdapter {
 		mDevices = devices;
 		mShowAdd = false;
 		if(!devices.isEmpty()) {
-			mShowAdd = mController.isUserAllowed(mController.getAdapter(devices.get(0).getFacility().getAdapterId()).getRole());
+			Adapter tmpAda = mController.getAdapter(devices.get(0).getFacility().getAdapterId());
+			if(tmpAda != null)
+				mShowAdd = mController.isUserAllowed(tmpAda.getRole());
 		}
 		mListener = listener;
 	}

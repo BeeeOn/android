@@ -84,6 +84,7 @@ public class LoginActivity extends BaseActivity {
 
 		// Get controller
 		mController = Controller.getInstance(getApplicationContext());
+		//mController = new Controller(getApplicationContext());
 		
 		mActivity = this;
 
