@@ -1066,7 +1066,7 @@ public final class Controller {
 	 * UCA
 	 */
 	public boolean isUserAllowed(Role role) {
-		if(role.equals(Role.User)){
+		if(role.equals(Role.User) ||role.equals(Role.Guest) ){
 			return false;
 		}
 		return true;
