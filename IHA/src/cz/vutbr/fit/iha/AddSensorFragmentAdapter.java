@@ -32,7 +32,7 @@ public class AddSensorFragmentAdapter extends FragmentPagerAdapter implements Ic
     		return IntroImageFragment.newInstance(R.drawable.iha_tutorial_as_first_step,"Please pull out battery stripe ");
     	case 1:
     		// After start timer , 
-    		return IntroImageFragment.newInstance(R.drawable.iha_tutorial_as_second_step,"After timer starts, please shake with your sensor shortly");
+    		return IntroImageFragment.newInstance(R.drawable.iha_tutorial_as_second_step,"Please shake with new sensor shortly while countdown is running");
     	case 2:
     		// circle timer 
     		return new AddSensorFragment();
