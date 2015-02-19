@@ -469,7 +469,7 @@ public class SensorDetailFragment extends SherlockFragment {
 		mValue.setVisibility(View.VISIBLE);
 
 		// Show some controls if this device is an actor
-		if (mDevice.getType().isActor()) {
+		if (mDevice.getType().isActor() && mController.isUserAllowed(mAdapter.getRole())) {
 			BaseValue value = mDevice.getValue();
 			
 			// For actor values of type on/off, open/closed we show switch button
