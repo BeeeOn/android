@@ -64,7 +64,7 @@ public final class Controller {
 	private final INetwork mNetwork;
 
 	/** Household object holds logged in user and all adapters and lists which belongs to him */
-	private final Household mHousehold;
+	private Household mHousehold;
 
 	/** Switch for using demo mode (with example adapter, without server) */
 	private static boolean mDemoMode = false;
@@ -106,7 +106,7 @@ public final class Controller {
 		mPersistence = new Persistence(mContext);
 		mHousehold = new Household(mContext, mNetwork);
 	}
-
+	
 	/**
 	 * @param context
 	 *            This must be the global Application context.
@@ -322,6 +322,12 @@ public final class Controller {
 
 		// Forgot info about last user
 		mPersistence.saveLastEmail(null);
+		
+		cleanHouseHold();
+	}
+	
+	private void cleanHouseHold() {
+		mHousehold = new Household(mContext, mNetwork);
 	}
 
 	/**
