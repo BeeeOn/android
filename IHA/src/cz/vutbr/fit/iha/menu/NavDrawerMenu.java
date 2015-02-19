@@ -181,6 +181,12 @@ public class NavDrawerMenu {
 
 			@Override
 			public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+				if(mMode != null) {
+					// Action Mode is active and I want change
+					mSelectedMenuItem.setNotSelected();
+					mMode = null;
+				}
+				
 				Log.d(TAG, "Item Long press");
 				mSelectedMenuItem = (MenuItem) mMenuAdapter.getItem(position);
 				switch (mSelectedMenuItem.getType()) {
