@@ -936,7 +936,11 @@ public class Network implements INetwork {
 			return true;
 
 		FalseAnswer fa = (FalseAnswer) msg.data;
-		throw new IhaException(fa.getErrMessage(), NetworkError.fromValue(fa.getErrCode()));
+		String message = fa.getErrMessage() + "\n";
+		for (User u : (ArrayList<User>) fa.troubleMakers){
+			message += u.toDebugString();
+		}
+		throw new IhaException(message, NetworkError.fromValue(fa.getErrCode()));
 	}
 
 	/**

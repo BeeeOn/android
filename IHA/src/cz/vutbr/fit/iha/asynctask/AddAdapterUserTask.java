@@ -4,6 +4,7 @@ import android.content.Context;
 import cz.vutbr.fit.iha.controller.Controller;
 import cz.vutbr.fit.iha.household.User;
 import cz.vutbr.fit.iha.pair.AddUserPair;
+import cz.vutbr.fit.iha.util.Log;
 
 /**
  * Reloads facilities by adapter
@@ -24,8 +25,14 @@ public class AddAdapterUserTask extends CallbackTask<AddUserPair> {
 	@Override
 	protected Boolean doInBackground(AddUserPair pair) {
 		Controller controller = Controller.getInstance(mContext);
-
-		return controller.addUser(pair.adapter.getId(), pair.user);
+		boolean result = false;
+		try{
+			result = controller.addUser(pair.adapter.getId(), pair.user); 
+		}
+		catch(Exception e){
+			Log.e(">/]", e.getMessage()+""); //FIXME: !! message is null? tell user where is problem some days
+		}
+		return result;
 	}
 
 }

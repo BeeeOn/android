@@ -278,7 +278,10 @@ public class XmlParsers {
 		if (err == 17) { // TODO: check this with pavel
 			trouble = getFalseMessage17();
 		}
-		return new FalseAnswer(readText(Xconstants.COM_ROOT), err, trouble);
+		if (err == 3){
+			trouble = getFalseMessage17();
+		}
+		return new FalseAnswer((mParser.getEventType() == XmlPullParser.END_TAG)? "" : readText(Xconstants.COM_ROOT), err, trouble);
 	}
 
 	// ////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -898,7 +901,7 @@ public class XmlParsers {
 	// FIXME: check on first use
 	List<User> getFalseMessage17() throws XmlPullParserException, IOException {
 
-		mParser.nextTag();
+		//mParser.nextTag();
 
 		List<User> result = new ArrayList<User>();
 
