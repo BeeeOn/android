@@ -2,7 +2,6 @@ package cz.vutbr.fit.iha.controller;
 
 import java.util.ArrayList;
 import java.util.EnumSet;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.WeakHashMap;
@@ -64,7 +63,7 @@ public final class Controller {
 	private final INetwork mNetwork;
 
 	/** Household object holds logged in user and all adapters and lists which belongs to him */
-	private Household mHousehold;
+	private final Household mHousehold;
 
 	/** Switch for using demo mode (with example adapter, without server) */
 	private static boolean mDemoMode = false;
@@ -108,14 +107,14 @@ public final class Controller {
 	}
 	
 	/**
+	 * Recreates the actual Controller object to use with different user or demo mode. 
+	 * 
 	 * @param context
 	 *            This must be the global Application context.
 	 * @param demoMode
 	 */
 	public static synchronized void setDemoMode(Context context, boolean demoMode) {
-		if (mDemoMode == demoMode)
-			return;
-
+		// We always need to create a new Controller, due to account switch and first (not) loading of demo
 		mDemoMode = demoMode;
 		mController = new Controller(context);
 	}
@@ -322,12 +321,6 @@ public final class Controller {
 
 		// Forgot info about last user
 		mPersistence.saveLastEmail(null);
-		
-		cleanHouseHold();
-	}
-	
-	private void cleanHouseHold() {
-		mHousehold = new Household(mContext, mNetwork);
 	}
 
 	/**
