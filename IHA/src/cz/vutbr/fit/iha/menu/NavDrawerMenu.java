@@ -561,7 +561,7 @@ public class NavDrawerMenu {
 		@Override
 		public boolean onActionItemClicked(ActionMode mode, com.actionbarsherlock.view.MenuItem item) {
 			if (item.getTitle().equals("Unregist")) { // UNREGIST ADAPTER
-				doUnregistAdapter(mAdaterIdUnregist);
+				doUnregistAdapter(mSelectedMenuItem.getId());
 			} else if (item.getTitle().equals("Users")) { // GO TO USERS OF ADAPTER
 				Intent intent = new Intent(mActivity, AdapterUsersActivity.class);
 				intent.putExtra(Constants.GUI_SELECTED_ADAPTER_ID, mSelectedMenuItem.getId());

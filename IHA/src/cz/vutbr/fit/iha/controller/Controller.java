@@ -31,6 +31,7 @@ import cz.vutbr.fit.iha.gcm.Notification;
 import cz.vutbr.fit.iha.household.ActualUser;
 import cz.vutbr.fit.iha.household.Household;
 import cz.vutbr.fit.iha.household.User;
+import cz.vutbr.fit.iha.household.User.Role;
 import cz.vutbr.fit.iha.network.DemoNetwork;
 import cz.vutbr.fit.iha.network.GoogleAuthHelper;
 import cz.vutbr.fit.iha.network.GoogleAuthHelper.GoogleUserInfo;
@@ -1061,6 +1062,17 @@ public final class Controller {
 		mNetwork.NotificationsRead(msgIds);
 	}
 
+	
+	/**
+	 * UCA
+	 */
+	public boolean isUserAllowed(Role role) {
+		if(role.equals(Role.User)){
+			return false;
+		}
+		return true;
+	}
+	 
 	
 
 }

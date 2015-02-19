@@ -111,7 +111,8 @@ public class SensorDetailFragment extends SherlockFragment {
 	private SensorDetailActivity mActivity;
 
 	private Device mDevice;
-
+	private Adapter mAdapter;
+	
 	private SaveDeviceTask mSaveDeviceTask;
 	private GetDeviceLogTask mGetDeviceLogTask;
 	private SaveFacilityTask mSaveFacilityTask;
@@ -142,6 +143,7 @@ public class SensorDetailFragment extends SherlockFragment {
 	private int mLastProgressRefreshTime;
 
 	private GraphViewSeries mGraphSeries;
+	
 
 	private static final String GRAPH_DATE_TIME_FORMAT = "dd.MM. kk:mm";
 	private static final String LOG_DATE_TIME_FORMAT = "yyyy-MM-dd HH:mm:ss";
@@ -181,6 +183,8 @@ public class SensorDetailFragment extends SherlockFragment {
 
 		// Get controller
 		mController = Controller.getInstance(mActivity.getApplicationContext());
+		
+		mAdapter = mController.getAdapter(mAdapterId);
 
 		View view = inflater.inflate(R.layout.activity_sensor_detail_screen, container, false);
 		Log.d(TAG, String.format("this position: %s , selected item: %s ", mCurPageNumber, mSelPageNumber));
@@ -313,40 +317,43 @@ public class SensorDetailFragment extends SherlockFragment {
 		// Set name of sensor
 		mName.setText(device.getName());
 		mName.setBackgroundColor(Color.TRANSPARENT);
-		mName.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				if (mEditMode != EDIT_NONE)
-					return;
-				// Disable SeekBar
-				mRefreshTimeValue.setEnabled(false);
-				// Disable SwipeGesture
-				mActivity.setEnableSwipe(false);
-
-				mEditMode = EDIT_NAME;
-				mMode = getSherlockActivity().startActionMode(new AnActionModeOfSensorEdit());
-				mName.setVisibility(View.GONE);
-				mRectangleName.setVisibility(View.GONE);
-				mNameEdit.setVisibility(View.VISIBLE);
-				mNameEdit.setText(mName.getText());
-				InputMethodManager imm = (InputMethodManager) getSherlockActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-				imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
-				// return true;
-			}
-		});
+		if(mController.isUserAllowed(mAdapter.getRole())) {
+			mName.setOnClickListener(new OnClickListener() {
+	
+				@Override
+				public void onClick(View v) {
+					if (mEditMode != EDIT_NONE)
+						return;
+					// Disable SeekBar
+					mRefreshTimeValue.setEnabled(false);
+					// Disable SwipeGesture
+					mActivity.setEnableSwipe(false);
+	
+					mEditMode = EDIT_NAME;
+					mMode = getSherlockActivity().startActionMode(new AnActionModeOfSensorEdit());
+					mName.setVisibility(View.GONE);
+					mRectangleName.setVisibility(View.GONE);
+					mNameEdit.setVisibility(View.VISIBLE);
+					mNameEdit.setText(mName.getText());
+					InputMethodManager imm = (InputMethodManager) getSherlockActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+					imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
+					// return true;
+				}
+			});
+		}
 		
-		// Set value for Actor
-		mValueSwitch.setOnClickListener(new OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				// Disable button
-				mValueSwitch.setEnabled(false);
-				doActorAction(mDevice);
-			}
-		});
-
+		if(mController.isUserAllowed(mAdapter.getRole())) {
+			// Set value for Actor
+			mValueSwitch.setOnClickListener(new OnClickListener() {
+				
+				@Override
+				public void onClick(View v) {
+					// Disable button
+					mValueSwitch.setEnabled(false);
+					doActorAction(mDevice);
+				}
+			});
+		}
 		// Set name of location
 		if (mController != null) {
 			Location location = null;
@@ -359,29 +366,30 @@ public class SensorDetailFragment extends SherlockFragment {
 			if (location != null) {
 				mLocation.setText(location.getName());
 			}
-
-			mLocation.setOnClickListener(new OnClickListener() {
-
-				@Override
-				public void onClick(View v) {
-					if (mEditMode != EDIT_NONE)
-						return;
-					// Disable SeekBar
-					mRefreshTimeValue.setEnabled(false);
-
-					// Disable Swipe
-					mActivity.setEnableSwipe(false);
-
-					mEditMode = EDIT_LOC;
-					mMode = getSherlockActivity().startActionMode(new AnActionModeOfSensorEdit());
-					mSpinnerLoc.setVisibility(View.VISIBLE);
-					mLocation.setVisibility(View.GONE);
-					mRectangleLoc.setVisibility(View.GONE);
-
-					// open Spinner
-					mSpinnerLoc.performClick();
-				}
-			});
+			if(mController.isUserAllowed(mAdapter.getRole())) {
+				mLocation.setOnClickListener(new OnClickListener() {
+	
+					@Override
+					public void onClick(View v) {
+						if (mEditMode != EDIT_NONE)
+							return;
+						// Disable SeekBar
+						mRefreshTimeValue.setEnabled(false);
+	
+						// Disable Swipe
+						mActivity.setEnableSwipe(false);
+	
+						mEditMode = EDIT_LOC;
+						mMode = getSherlockActivity().startActionMode(new AnActionModeOfSensorEdit());
+						mSpinnerLoc.setVisibility(View.VISIBLE);
+						mLocation.setVisibility(View.GONE);
+						mRectangleLoc.setVisibility(View.GONE);
+	
+						// open Spinner
+						mSpinnerLoc.performClick();
+					}
+				});
+			}
 		} else {
 			Log.e(TAG, "mController is null (this shouldn't happen)");
 			mLocation.setText(device.getFacility().getLocationId());
@@ -475,12 +483,17 @@ public class SensorDetailFragment extends SherlockFragment {
 		mIcon.setVisibility(View.VISIBLE);
 		mRefreshTimeText.setVisibility(View.VISIBLE);
 		((TextView) getView().findViewById(R.id.sen_refresh_time)).setVisibility(View.VISIBLE);
-		mRefreshTimeValue.setVisibility(View.VISIBLE);
+		
+		if(mController.isUserAllowed(mAdapter.getRole()))
+			mRefreshTimeValue.setVisibility(View.VISIBLE);
+		
 		mGraphLayout.setVisibility(View.VISIBLE);
 		mGraphLabel.setVisibility(View.VISIBLE);
 		// mLayout;
-		mRectangleName.setVisibility(View.VISIBLE);
-		mRectangleLoc.setVisibility(View.VISIBLE);
+		if(mController.isUserAllowed(mAdapter.getRole())) {
+			mRectangleName.setVisibility(View.VISIBLE);
+			mRectangleLoc.setVisibility(View.VISIBLE);
+		}
 		// mSpinnerLoc;
 		if (mGraphView != null) {
 			mGraphView.setVisibility(View.VISIBLE);
