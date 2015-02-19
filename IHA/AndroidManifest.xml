@@ -6,7 +6,7 @@
     android:versionName="1.4.4 debug" >
 
     <uses-sdk
-        android:minSdkVersion="9"
+        android:minSdkVersion="10"
         android:targetSdkVersion="19" />
 
     <!-- The Google Maps Android API uses OpenGL ES version 2 to render the map. -->
