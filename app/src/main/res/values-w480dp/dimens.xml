@@ -1,0 +1,7 @@
+<resources>
+
+    <!--
+    
+    -->
+	<dimen name="nav_drawer_width">320dp</dimen>
+</resources>

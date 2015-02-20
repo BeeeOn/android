@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<com 
+	ver="2.3"
+	state="alldevices"
+	aid="65260">
+	<dev 
+		init="1" 
+		did="101:00:FF:000:FF0" 
+		lid="1"
+		refresh="2"
+		batt="60"
+		time="1377684610"
+		rssi="52" >
+		<part
+			type="10"
+			vis="1"
+			name="Teplota ovzduší"
+			val="35" />
+		<part
+			type="2"
+			vis="1"
+			name="Tlak ovzduší"
+			val="25" />
+	</dev>
+	<dev 
+		init="1" 
+		did="101:00:FF:001:FF0" 
+		lid="1"
+		refresh="1"
+		batt="100"
+		time="1377684610"
+		rssi="52" >
+		<part
+			type="1"
+			vis="1"
+			name="Vlhkost půdy"
+			val="50" />
+	</dev>
+	<dev 
+		init="1" 
+		did="101:00:FF:002:FF0" 
+		lid="1"
+		refresh="1"
+		batt="100"
+		time="1377684610"
+		rssi="52" >
+		<part
+			type="-1"
+			vis="1"
+			name="Neznámý senzor"
+			val="11" />
+	</dev>
+	<dev 
+		init="1" 
+		did="101:00:FF:000:FF1" 
+		lid="2"
+		refresh="30"
+		batt="100"
+		time="1377684610"
+		rssi="52" >
+		<part
+			type="10"
+			vis="1"
+			name="Teplota kamen"
+			val="90" />
+		<part
+			type="1"
+			vis="1"
+			name="Vlhkost u stropu"
+			val="95" />
+		<part
+			type="4"
+			vis="0"
+			name="Spínač kamna"
+			val="OFF" />
+		<part
+			type="160"
+			vis="1"
+			name="Hlavní přívod el."
+			val="OFF" />
+	</dev>
+	<dev 
+		init="1" 
+		did="101:00:FF:000:FF2" 
+		lid="2"
+		refresh="30"
+		batt="100"
+		time="1377684610"
+		rssi="52" >
+		<part
+			type="5"
+			vis="0"
+			name="Osvětlení"
+			val="30" />
+		<part
+			type="7"
+			vis="0"
+			name="Ovzduší"
+			val="30" />
+	</dev>
+</com>

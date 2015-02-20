@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<com ver="2.3" state="rooms"> 
+	<loc id="5555" type="5" name="Obývací pokoj" />
+	<loc id="2222" type="2" name="Ložnice" />
+	<loc id="4444" type="4" name="Kuchyň" />
+	<loc id="6666" type="6" name="WC" />
+</com>

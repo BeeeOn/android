@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="38dp"
+    android:orientation="horizontal"
+    android:background="@color/iha_drawer_bg"
+    android:paddingTop="0dp"
+    android:paddingBottom="0dp"
+    android:paddingLeft="16dp"
+    android:paddingRight="16dp"
+    android:gravity="center_vertical">
+
+    <TextView
+        android:id="@+id/name" 
+        android:layout_width="0px"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:ellipsize="end"
+        android:singleLine="true"
+        android:textColor="@color/iha_text_hint"
+        android:textSize="14sp"
+        android:textStyle="normal" />
+
+    <ImageView
+        android:id="@+id/image"
+        android:layout_width="wrap_content"
+        android:layout_height="30dp"
+        android:layout_marginRight="0dp"
+        android:adjustViewBounds="true"
+        android:clickable="true"
+        android:src="@drawable/ic_mojeid" />
+
+</LinearLayout>

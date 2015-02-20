@@ -1,9 +1,254 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.rehivetech.beeeon">
+    package="com.rehivetech.beeeon"
+    android:installLocation="auto"
+    android:versionCode="28"
+    android:versionName="1.4.3 debug" >
 
-    <application android:allowBackup="true" android:label="@string/app_name"
-        android:icon="@drawable/ic_launcher" android:theme="@style/AppTheme">
+    <uses-sdk
+        android:minSdkVersion="9"
+        android:targetSdkVersion="19" />
 
-    </application>
+    <!-- The Google Maps Android API uses OpenGL ES version 2 to render the map. -->
+    <uses-feature
+        android:glEsVersion="0x00020000"
+        android:required="true" />
+    <uses-feature android:name="android.hardware.telephony" android:required="false"/>
+    
+
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.NETWORK" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.MANAGE_ACCOUNTS" />
+    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
+    <uses-permission android:name="android.permission.USE_CREDENTIALS" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+	<uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
+
+    <!--
+     The following two permissions are not required to use
+     Google Maps Android API v2, but are recommended.
+    -->
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" /> 
+
+    <permission
+        android:name="com.rehivetech.beeeon.permission.MAPS_RECEIVE"
+        android:protectionLevel="signature" />
+    <uses-permission android:name="com.rehivetech.beeeon.permission.MAPS_RECEIVE"/>
+    
+    <!-- Keeps the processor from sleeping when a message is received. -->
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
+
+    <!--
+    Creates a custom permission so only this app can receive its messages. 
+    NOTE: the permission *must* be called PACKAGE.permission.C2D_MESSAGE, where 
+    PACKAGE is the application's package name.
+    -->
+    <permission
+        android:name="com.rehivetech.beeeon.permission.C2D_MESSAGE"
+        android:protectionLevel="signature" />
+
+    <uses-permission android:name="com.rehivetech.beeeon.permission.C2D_MESSAGE" />
+
+    <!-- Sony Smartwatch permission -->
+    <uses-permission android:name="com.sonyericsson.extras.liveware.aef.EXTENSION_PERMISSION" />
+
+    <application
+        android:allowBackup="true"
+        android:icon="@drawable/ic_launcher"
+        android:label="@string/app_name"
+        android:theme="@style/AppTheme" >
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
+        <meta-data
+            android:name="com.google.android.maps.v2.API_KEY"
+            android:value="AIzaSyCa3FraNdK9ToHODmfYComZ2IxyTlCmQxY" />
+
+        <activity
+            android:name=".activity.LoginActivity"
+            android:configChanges="orientation"
+            android:label="@string/app_name"
+            android:theme="@style/Theme.Sherlock.NoActionBar" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".activity.MainActivity"
+            android:label="@string/title_activity_location_screen" >
+        </activity>
+        <activity
+            android:name=".activity.LocationDetailActivity"
+            android:label="@string/title_activity_location_detail_screen" >
+        </activity>
+        <activity
+            android:name=".activity.AddSensorActivity"
+            android:label="@string/title_activity_add_sensor" >
+        </activity>
+        <activity
+            android:name=".activity.SetupSensorActivity"
+            android:label="@string/title_activity_add_sensor" >
+        </activity>
+        <activity
+            android:name=".activity.SensorDetailActivity"
+            android:label="@string/title_activity_sensor_detail" >
+        </activity>
+        <activity
+            android:name=".activity.AddAdapterActivity"
+            android:label="@string/title_activity_add_adapter" >
+        </activity>
+        <activity
+            android:name=".activity.WidgetConfigurationActivity"
+            android:label="@string/title_activity_widget_configuration" >
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".activity.SettingsMainActivity"
+            android:label="@string/preference_activity_title" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".activity.SettingsUnitActivity"
+            android:label="@string/units" >
+        </activity>
+        <activity
+            android:name="com.rehivetech.beeeon.activity.MapGeofenceActivity"
+            android:label="@string/title_activity_map_geofence" >
+        </activity>
+        <activity
+            android:name="com.rehivetech.beeeon.activity.AdapterUsersActivity"
+            android:label="@string/title_activity_adapter_users" >
+        </activity>
+         <activity
+            android:name="com.rehivetech.beeeon.activity.AddAdapterUserActivity"
+            android:label="@string/title_activity_add_adapter_user" >
+        </activity>
+
+        <!-- WIDGETS -->
+        <receiver
+            android:name=".widget.SensorWidgetProviderSmall"
+            android:icon="@drawable/ic_launcher"
+            android:label="@string/widget_sensor_title_small" >
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/widget_provider_small" />
+        </receiver>
+        <receiver
+            android:name=".widget.SensorWidgetProviderMedium"
+            android:icon="@drawable/ic_launcher"
+            android:label="@string/widget_sensor_title_medium" >
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/widget_provider_medium" />
+        </receiver>
+        <receiver
+            android:name=".widget.SensorWidgetProviderLarge"
+            android:icon="@drawable/ic_launcher"
+            android:label="@string/widget_sensor_title_large" >
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/widget_provider_large" />
+        </receiver>
+
+        <service
+            android:name=".widget.WidgetUpdateService"
+            android:enabled="true"
+            android:exported="false" >
+        </service>
+        <service android:name=".extension.watches.smartwatch2.SW2ExtensionService" />
+
+        <!-- GOOGLE CLOUD MESSAGING -->
+        <receiver
+            android:name=".gcm.GcmBroadcastReceiver"
+            android:permission="com.google.android.c2dm.permission.SEND" >
+            <intent-filter>
+                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+                <action android:name="com.google.android.c2dm.intent.REGISTRATION" />
+
+                <category android:name="com.rehivetech.beeeon" />
+            </intent-filter>
+        </receiver>
+        <receiver android:name=".gcm.UpdateBroadcastReceiver" >
+            <intent-filter>
+                <action android:name="android.intent.action.PACKAGE_REPLACED" />
+
+                <data
+                    android:path="com.rehivetech.beeeon"
+                    android:scheme="package" />
+            </intent-filter>
+        </receiver>
+        <receiver android:name=".gcm.BootBroadcastReceiver" >
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
+
+        <service android:name=".gcm.GcmMessageHandler" />
+        <service android:name=".gcm.GcmReRegistrationHandler" />
+
+        <!-- SMARTWATCHES -->
+        <receiver
+            android:name=".extension.watches.smartwatch2.SW2ExtensionReceiver"
+            android:permission="com.sonyericsson.extras.liveware.aef.HOSTAPP_PERMISSION" >
+            <intent-filter>
+
+                <!-- Generic extension intents. -->
+                <action android:name="com.sonyericsson.extras.liveware.aef.registration.EXTENSION_REGISTER_REQUEST" />
+                <action android:name="com.sonyericsson.extras.liveware.aef.registration.ACCESSORY_CONNECTION" />
+                <action android:name="android.intent.action.LOCALE_CHANGED" />
+
+                <!-- Notification intents -->
+                <action android:name="com.sonyericsson.extras.liveware.aef.notification.VIEW_EVENT_DETAIL" />
+                <action android:name="com.sonyericsson.extras.liveware.aef.notification.REFRESH_REQUEST" />
+
+                <!-- Widget intents -->
+                <action android:name="com.sonyericsson.extras.aef.widget.START_REFRESH_IMAGE_REQUEST" />
+                <action android:name="com.sonyericsson.extras.aef.widget.STOP_REFRESH_IMAGE_REQUEST" />
+                <action android:name="com.sonyericsson.extras.aef.widget.ONTOUCH" />
+                <action android:name="com.sonyericsson.extras.liveware.extension.util.widget.scheduled.refresh" />
+
+                <!-- Control intents -->
+                <action android:name="com.sonyericsson.extras.aef.control.START" />
+                <action android:name="com.sonyericsson.extras.aef.control.STOP" />
+                <action android:name="com.sonyericsson.extras.aef.control.PAUSE" />
+                <action android:name="com.sonyericsson.extras.aef.control.RESUME" />
+                <action android:name="com.sonyericsson.extras.aef.control.ERROR" />
+                <action android:name="com.sonyericsson.extras.aef.control.KEY_EVENT" />
+                <action android:name="com.sonyericsson.extras.aef.control.TOUCH_EVENT" />
+                <action android:name="com.sonyericsson.extras.aef.control.SWIPE_EVENT" />
+                <action android:name="com.sonyericsson.extras.aef.control.OBJECT_CLICK_EVENT" />
+                <action android:name="com.sonyericsson.extras.aef.control.LIST_REFERESH_REQUEST" />
+                <action android:name="com.sonyericsson.extras.aef.control.LIST_REQUEST_ITEM" />
+                <action android:name="com.sonyericsson.extras.aef.control.LIST_ITEM_CLICK" />
+                <action android:name="com.sonyericsson.extras.aef.control.LIST_ITEM_SELECTED" />
+                <action android:name="com.sonyericsson.extras.aef.control.MENU_ITEM_SELECTED" />
+                <action android:name="com.sonyericsson.extras.aef.control.MENU_SHOW" />
+            </intent-filter>
+        </receiver>
+    </application>integer
 
 </manifest>

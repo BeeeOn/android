@@ -1,0 +1,16 @@
+<resources>
+
+    <!-- Default screen margins, per the Android Design guidelines. -->
+    <dimen name="activity_horizontal_margin">16dp</dimen>
+    <dimen name="activity_vertical_margin">16dp</dimen>
+	<dimen name="textsize">15sp</dimen>
+	<dimen name="textsizesmaller">11sp</dimen>
+	
+	<!--  Widget margins -->
+	<dimen name="widget_margin">8dp</dimen>
+	
+	<dimen name="custom_spinner_icon_size">35dp</dimen>
+	<dimen name="custom_spinner_icon_size_smaller">30dp</dimen>
+	
+	<dimen name="nav_drawer_width">280dp</dimen>
+</resources>

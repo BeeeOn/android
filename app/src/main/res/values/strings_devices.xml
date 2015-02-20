@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Units of devices -->
+    <string name="dev_temperature_celsius_unit_full">Celsius</string>
+    <string name="dev_temperature_celsius_unit">°C</string>
+    <string name="dev_temperature_fahrenheit_unit_full">Fahrenheit</string>
+    <string name="dev_temperature_fahrenheit_unit">°F</string>
+    <string name="dev_temperature_kelvin_unit_full">Kelvin</string>
+    <string name="dev_temperature_kelvin_unit">K</string>
+    
+    <string name="dev_noise_decibel_unit">dB</string>
+    <string name="dev_noise_decibel_unit_full">Decibel</string>
+    <string name="dev_noise_bel_unit">B</string>
+    <string name="dev_noise_bel_unit_full">Bel</string>
+    <string name="dev_noise_neper_unit">Np</string>
+    <string name="dev_noise_neper_unit_full">Neper</string>    
+    
+    <string name="dev_humidity_unit">%</string>
+    <string name="dev_pressure_unit">hPa</string>
+    <string name="dev_illumination_unit">lux</string>
+    <string name="dev_noise_unit">dB</string>
+    <string name="dev_emission_unit">ppm</string>
+    <string name="dev_unknown_unit"></string>
+
+    <!-- Types of devices -->
+    <string name="dev_unknown_type">Unknown device</string>
+    <!-- Sensors -->
+    <string name="dev_temperature_type">Thermal sensor</string>
+    <string name="dev_humidity_type">Hydrometer</string>
+    <string name="dev_pressure_type">Barometer</string>
+    <string name="dev_open_closed_type">Open/closed sensor</string>
+    <string name="dev_on_off_type">On/off sensor</string>
+    <string name="dev_illumination_type">Illumination sensor</string>
+    <string name="dev_noise_type">Sound level sensor</string>
+    <string name="dev_emission_type">Emission sensor</string>
+    <!-- Actors -->
+    <string name="dev_actor_on_off_type">On/off actor</string>
+    <string name="dev_actor_push_type">Push actor</string>
+    <string name="dev_actor_toggle_type">Toggle actor</string>
+    <string name="dev_actor_range_type">Range actor</string>
+    <string name="dev_actor_rgb_type">RGB actor</string>
+
+    <!-- Special values of devices -->
+    <string name="dev_enum_value_open">Open</string>
+    <string name="dev_enum_value_closed">Closed</string>
+    <string name="dev_enum_value_on">On</string>
+    <string name="dev_enum_value_off">Off</string>
+
+    <!-- Names of default locations -->
+    <string name="loc_bathroom">Bathroom</string>
+    <string name="loc_bedroom">Bedroom</string>
+    <string name="loc_dining_room">Dining room</string>
+    <string name="loc_garden">Garden</string>
+    <string name="loc_kitchen">Kitchen</string>
+    <string name="loc_living_room">Living room</string>
+    <string name="loc_wc">WC</string>
+
+</resources>
