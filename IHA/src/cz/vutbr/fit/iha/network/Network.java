@@ -87,7 +87,7 @@ public class Network implements INetwork {
 	/**
 	 * Address and port of production server
 	 */
-	private static final String SERVER_ADDR_PRODUCTION = "ant-2.fit.vutbr.cz";
+	private static final String SERVER_ADDR_PRODUCTION = "iotpro.fit.vutbr.cz";
 	private static final int SERVER_PORT_PRODUCTION = 4565;
 
 	/**
