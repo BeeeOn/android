@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     
     android:orientation="vertical"
-    android:background="@color/iha_background" >
+    android:background="@color/beeeon_background" >
     
      <LinearLayout
          android:id="@+id/layoutofsensor"
@@ -45,7 +45,7 @@
                  android:scrollHorizontally="true"
                  android:singleLine="true"
                  android:text="Name of user"
-                 android:textColor="@color/iha_text_color"
+                 android:textColor="@color/beeeon_text_color"
                  android:textSize="22dp"
                  android:textStyle="normal" />
              
@@ -63,14 +63,14 @@
 	                 android:layout_height="wrap_content"
 	                 
 	                 android:text="user"
-	                 android:textColor="@color/iha_text_hint"
+	                 android:textColor="@color/beeeon_text_hint"
 	                 android:textSize="14dp" />
 	             <!-- TextView
 	                 android:layout_width="wrap_content"
 	                 android:layout_height="wrap_content"
 	                 android:text="-"
 	                 android:paddingRight="4dp"
-	                 android:textColor="@color/iha_text_hint"
+	                 android:textColor="@color/beeeon_text_hint"
 	                 android:textSize="15dp" /-->
 	             
 	             <TextView
@@ -82,7 +82,7 @@
                  	 android:marqueeRepeatLimit="marquee_forever"
                  	 android:scrollHorizontally="true"
                  	 android:singleLine="true"
-	                 android:textColor="@color/iha_text_hint"
+	                 android:textColor="@color/beeeon_text_hint"
 	                 android:textSize="14dp" />
              </LinearLayout>
 

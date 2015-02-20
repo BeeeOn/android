@@ -17,11 +17,9 @@
      limitations under the License.
 -->
 
-<selector xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:state_pressed="true"
-        android:drawable="@drawable/btn_cab_done_pressed_iha" />
-    <item android:state_focused="true" android:state_enabled="true"
-        android:drawable="@drawable/btn_cab_done_focused_iha" />
-    <item android:state_enabled="true"
-        android:drawable="@drawable/btn_cab_done_default_iha" />
+<selector xmlns:android="http://schemas.android.com/apk/res/android"
+        android:exitFadeDuration="@android:integer/config_mediumAnimTime" >
+    <item android:state_pressed="false" android:state_focused="true" android:drawable="@drawable/list_focused_beeeon" />
+    <item android:state_pressed="true" android:drawable="@drawable/list_pressed_beeeon" />
+    <item android:drawable="@android:color/transparent" />
 </selector>

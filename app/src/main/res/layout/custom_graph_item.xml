@@ -6,7 +6,7 @@
     android:layout_margin="10dp"
     android:layout_marginBottom="5dp"
     android:layout_marginTop="5dp"
-    android:background="@drawable/iha_item_solo_bg"
+    android:background="@drawable/beeeon_item_solo_bg"
     android:orientation="vertical"
     android:padding="10dp" >
 
@@ -33,7 +33,7 @@
         android:layout_marginTop="90dp"
         android:gravity="center"
         android:text="@string/loading_data"
-        android:textColor="@color/iha_secundary_pink"
+        android:textColor="@color/beeeon_secundary_pink"
         android:textSize="20sp"
         android:visibility="visible" />
 

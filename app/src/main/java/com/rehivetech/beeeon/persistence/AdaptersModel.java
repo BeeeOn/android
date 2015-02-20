@@ -10,7 +10,7 @@ import org.joda.time.DateTime;
 
 import com.rehivetech.beeeon.IdentifierComparator;
 import com.rehivetech.beeeon.adapter.Adapter;
-import com.rehivetech.beeeon.exception.IhaException;
+import com.rehivetech.beeeon.exception.AppException;
 import com.rehivetech.beeeon.network.INetwork;
 
 public class AdaptersModel {
@@ -84,7 +84,7 @@ public class AdaptersModel {
 			setAdapters(mNetwork.getAdapters());
 			setLastUpdate(DateTime.now());
 			saveToCache();
-		} catch (IhaException e) {
+		} catch (AppException e) {
 			e.printStackTrace();
 			return false;
 		}

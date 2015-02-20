@@ -9,7 +9,7 @@ import com.viewpagerindicator.IconPagerAdapter;
 import com.rehivetech.beeeon.activity.fragment.IntroImageFragment;
 
 public class IntroFragmentAdapter extends FragmentPagerAdapter implements IconPagerAdapter {
-    protected static final String[] CONTENT = new String[] { "Welcome", "to", "IHA", "Test", };
+    protected static final String[] CONTENT = new String[] { "Welcome", "to", "BeeeOn", "Test", };
     protected static final int[] ICONS = new int[] {
             R.drawable.loc_bath_room,
             R.drawable.loc_garden,

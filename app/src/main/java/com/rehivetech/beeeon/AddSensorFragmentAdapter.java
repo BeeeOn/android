@@ -10,7 +10,7 @@ import com.rehivetech.beeeon.activity.fragment.AddSensorFragment;
 import com.rehivetech.beeeon.activity.fragment.IntroImageFragment;
 
 public class AddSensorFragmentAdapter extends FragmentPagerAdapter implements IconPagerAdapter {
-    protected static final String[] CONTENT = new String[] { "Welcome", "to", "IHA", "Test", };
+    protected static final String[] CONTENT = new String[] { "Welcome", "to", "BeeeOn", "Test", };
     protected static final int[] ICONS = new int[] {
             R.drawable.loc_bath_room,
             R.drawable.loc_garden,
@@ -29,10 +29,10 @@ public class AddSensorFragmentAdapter extends FragmentPagerAdapter implements Ic
     	switch (position) {
     	case 0:
     		// Prepare your sensor
-    		return IntroImageFragment.newInstance(R.drawable.iha_tutorial_as_first_step,"Please pull out battery stripe ");
+    		return IntroImageFragment.newInstance(R.drawable.beeeon_tutorial_as_first_step,"Please pull out battery stripe ");
     	case 1:
     		// After start timer , 
-    		return IntroImageFragment.newInstance(R.drawable.iha_tutorial_as_second_step,"Please shake with new sensor shortly while countdown is running");
+    		return IntroImageFragment.newInstance(R.drawable.beeeon_tutorial_as_second_step,"Please shake with new sensor shortly while countdown is running");
     	case 2:
     		// circle timer 
     		return new AddSensorFragment();

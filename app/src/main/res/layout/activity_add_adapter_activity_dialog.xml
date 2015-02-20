@@ -11,7 +11,7 @@
     <!--LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/iha_primary_cyan"
+        android:background="@color/beeeon_primary_cyan"
         android:orientation="vertical" >
 
         <TextView
@@ -51,7 +51,7 @@
 				    android:layout_width="wrap_content"
 				    android:layout_height="wrap_content"
 				    android:text="@string/addadapter_textview_name"
-				    android:textColor="@color/iha_text_color" 
+				    android:textColor="@color/beeeon_text_color" 
 				    android:layout_gravity="left"
 				    android:textIsSelectable="false"
 				    android:textAppearance="?android:attr/textAppearanceMedium" />
@@ -65,7 +65,7 @@
 				    android:layout_marginRight="5dp"
 				    android:ems="10"
 				    android:hint="@string/addadapter_view_setname"
-				    android:textColor="@color/iha_primary_cyan"
+				    android:textColor="@color/beeeon_primary_cyan"
 				    android:singleLine="true"
 				    android:imeOptions="actionNext" />
 		        
@@ -84,7 +84,7 @@
 				    android:layout_width="wrap_content"
 				    android:layout_height="wrap_content"
 				    android:text="@string/addadapter_textview_code"
-				    android:textColor="@color/iha_text_color" 
+				    android:textColor="@color/beeeon_text_color" 
 				    android:layout_gravity="left"
 				    android:textIsSelectable="false"
 				    android:textAppearance="?android:attr/textAppearanceMedium" />
@@ -110,7 +110,7 @@
 					    android:layout_width="wrap_content"
 					    android:layout_height="wrap_content"
 					    android:text="@string/addsensor_or"
-					    android:textColor="@color/iha_text_hint" 
+					    android:textColor="@color/beeeon_text_hint" 
 					    android:layout_gravity="center"
 					    android:textIsSelectable="false"
 					    android:textAppearance="?android:attr/textAppearanceMedium" />
@@ -123,7 +123,7 @@
 					    android:ems="10"
 					    android:hint="@string/addadapter_ser_num_hint"
 					    android:inputType="numberDecimal"
-					    android:textColor="@color/iha_primary_cyan"
+					    android:textColor="@color/beeeon_primary_cyan"
 					    android:singleLine="true"
 					    android:imeOptions="actionDone" />
 				

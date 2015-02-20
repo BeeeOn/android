@@ -4,7 +4,7 @@ import com.rehivetech.beeeon.controller.Controller;
 import android.content.Context;
 
 public class GcmHelper {
-	public static final String TAG_GCM = "IHA_GCM";
+	public static final String TAG_GCM = "BEEEON_GCM";
 
 	/**
 	 * Maximum attempts to get GCM ID. After reaching this attempts there will be created new thread to get GCM ID.

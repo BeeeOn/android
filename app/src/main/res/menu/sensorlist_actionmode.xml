@@ -20,7 +20,7 @@
         android:id="@+id/action_close"
         android:orderInCategory="250"
         android:showAsAction="always"
-        android:icon="@drawable/iha_ic_action_cancel"
+        android:icon="@drawable/beeeon_ic_action_cancel"
         android:title="@string/action_close"/>
 
 </menu>

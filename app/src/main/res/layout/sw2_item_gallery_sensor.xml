@@ -11,7 +11,7 @@
         android:layout_width="fill_parent"
         android:layout_height="28px"
         android:layout_alignParentTop="true"
-        android:background="@color/iha_primary_cyan" >
+        android:background="@color/beeeon_primary_cyan" >
 
         <ImageView
             android:id="@+id/battery"
@@ -96,7 +96,7 @@
         <!-- android:paddingRight="4px" -->
         <!-- android:singleLine="true" -->
         <!-- android:text="ppp" -->
-        <!-- android:textColor="@color/iha_primary_cyan" -->
+        <!-- android:textColor="@color/beeeon_primary_cyan" -->
         <!-- android:textSize="50px" -->
         <!-- android:textStyle="bold" /> -->
 
@@ -111,7 +111,7 @@
         android:paddingLeft="4px"
         android:paddingRight="4px"
         android:singleLine="true"
-        android:textColor="@color/iha_secundary_pink"
+        android:textColor="@color/beeeon_secundary_pink"
         android:textSize="50px"
         android:textStyle="bold" />
 
@@ -125,7 +125,7 @@
         android:layout_marginTop="30px"
         android:padding="4px"
         android:singleLine="true"
-        android:textColor="@color/iha_secundary_pink"
+        android:textColor="@color/beeeon_secundary_pink"
         android:textSize="55px"
         android:textStyle="bold" />
 

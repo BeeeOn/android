@@ -123,7 +123,7 @@ public class CustomViewFragment extends TrackFragment {
 		GraphViewSeriesStyle seriesStyle = new GraphViewSeriesStyle(color, 4);
 
 		// GraphViewSeriesStyle seriesStyleBlue = new
-		// GraphViewSeriesStyle(mContext.getResources().getColor(R.color.iha_primary_cyan), 2);
+		// GraphViewSeriesStyle(mContext.getResources().getColor(R.color.beeeon_primary_cyan), 2);
 		// GraphViewSeriesStyle seriesStyleGray = new
 		// GraphViewSeriesStyle(getResources().getColor(R.color.light_gray),2);
 

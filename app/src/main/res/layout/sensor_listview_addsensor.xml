@@ -9,7 +9,7 @@
     android:paddingLeft="3dp"
     android:paddingRight="20dp"
     android:gravity="right"
-    android:background="@color/iha_background" >
+    android:background="@color/beeeon_background" >
     
 	<ImageView
         android:id="@+id/sensor_listview_addsensor_image"

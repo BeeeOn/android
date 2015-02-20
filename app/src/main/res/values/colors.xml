@@ -11,14 +11,14 @@
     <color name="log_blue2">#0099cc</color>
     <color name="log_blue1">#33b5e5</color>
     <color name="light_gray">#e7e9ea</color>
-    <color name="iha_background">#d3d6db</color>
+    <color name="beeeon_background">#d3d6db</color>
     <color name="alpha_grey">#7de7e9ea</color>
     <color name="alpha_blue">#7d00bcd4</color>
-    <color name="iha_primary_cyan">#00bcd4</color>
-    <color name="iha_secundary_pink">#ff4081</color>
-    <color name="iha_item_bg">#ffffff</color>
-    <color name="iha_text_color">#de000000</color>
-    <color name="iha_text_hint">#89000000</color>
-    <color name="iha_separator">#1e000000</color>
-    <color name="iha_drawer_bg">#FFFFFF</color>
+    <color name="beeeon_primary_cyan">#00bcd4</color>
+    <color name="beeeon_secundary_pink">#ff4081</color>
+    <color name="beeeon_item_bg">#ffffff</color>
+    <color name="beeeon_text_color">#de000000</color>
+    <color name="beeeon_text_hint">#89000000</color>
+    <color name="beeeon_separator">#1e000000</color>
+    <color name="beeeon_drawer_bg">#FFFFFF</color>
 </resources>

@@ -7,17 +7,17 @@
     -->
     <style name="AppBaseTheme" parent="Theme.Sherlock.Light">
         <!-- API 14 theme customizations can go here. -->
-        <item name="android:windowBackground">@color/iha_background</item>
-    	<item name="android:colorBackground">@color/iha_background</item>
-        <item name="android:actionBarStyle">@style/IHA.ActionBar</item>
-        <!-- item name="android:actionModeCloseButtonStyle">@style/IHA.NoCloseButton</item-->
+        <item name="android:windowBackground">@color/beeeon_background</item>
+    	<item name="android:colorBackground">@color/beeeon_background</item>
+        <item name="android:actionBarStyle">@style/BeeeOn.ActionBar</item>
+        <!-- item name="android:actionModeCloseButtonStyle">@style/BeeeOn.NoCloseButton</item-->
         <item name="android:actionModeBackground">@color/darkgray</item>
         <item name="android:actionModeCloseDrawable">@drawable/ic_ab_up_compat</item>
         <item name="actionBarDivider">@null</item>
     	<item name="android:actionBarDivider">@null</item>
         <item name="windowContentOverlay">@null</item>
         <item name="android:homeAsUpIndicator">@drawable/ic_ab_up_compat</item>
-        <item name="android:actionOverflowButtonStyle">@style/IHA.ActionBar.Overflow</item>
+        <item name="android:actionOverflowButtonStyle">@style/BeeeOn.ActionBar.Overflow</item>
         
         <item name="showcaseViewStyle">@style/CustomShowcaseTheme</item>
         
@@ -26,13 +26,13 @@
     </style>
 
     
-    <style name="IHA.ActionBar" parent="@style/Widget.Sherlock.Light.ActionBar">
-	    <item name="android:background">@color/iha_primary_cyan</item>
-	    <item name="android:titleTextStyle">@style/IHA.ActionBar.TitleText</item>
+    <style name="BeeeOn.ActionBar" parent="@style/Widget.Sherlock.Light.ActionBar">
+	    <item name="android:background">@color/beeeon_primary_cyan</item>
+	    <item name="android:titleTextStyle">@style/BeeeOn.ActionBar.TitleText</item>
 	    
 	     <!-- Support library compatibility -->
-        <item name="titleTextStyle">@style/IHA.ActionBar.TitleText</item>
-        <item name="background">@color/iha_primary_cyan</item>
+        <item name="titleTextStyle">@style/BeeeOn.ActionBar.TitleText</item>
+        <item name="background">@color/beeeon_primary_cyan</item>
         <item name="android:showDividers">none</item>
 		
         <item name="actionBarDivider">@null</item>
@@ -43,29 +43,29 @@
     </style>
 
     <!-- ActionBar title text -->
-    <style name="IHA.ActionBar.TitleText" parent="@style/TextAppearance.Sherlock.Widget.ActionBar.Title">
+    <style name="BeeeOn.ActionBar.TitleText" parent="@style/TextAppearance.Sherlock.Widget.ActionBar.Title">
         <item name="android:textColor">@color/white</item>
         <!-- The textColor property is backward compatible with the Support Library -->
     </style>
     
-    <style name="IHA.NoCloseButton" parent="@style/Widget.Sherlock.ActionButton.CloseMode">
+    <style name="BeeeOn.NoCloseButton" parent="@style/Widget.Sherlock.ActionButton.CloseMode">
         <item name="android:visibility">gone</item>
     </style>
     
-    <style name="IHA.ActionBar.Overflow" parent="android:Widget.ActionButton.Overflow">
+    <style name="BeeeOn.ActionBar.Overflow" parent="android:Widget.ActionButton.Overflow">
         <item name="android:src">@drawable/ic_ab_overflow_compat</item>
     </style> 
     
-    <style name="IHA.Custom.SeekBar" parent="android:Widget.Holo.Light.SeekBar">
+    <style name="BeeeOn.Custom.SeekBar" parent="android:Widget.Holo.Light.SeekBar">
       <item name="android:progressDrawable">@drawable/customholotheme_scrubber_progress_horizontal_holo_light</item>
       <item name="android:indeterminateDrawable">@drawable/customholotheme_scrubber_progress_horizontal_holo_light</item>
       <item name="android:thumb">@drawable/customholotheme_scrubber_control_selector_holo_light</item>
   	</style>
-  	<style name="IHA.Custom.Button" parent="android:Widget.Button">
+  	<style name="BeeeOn.Custom.Button" parent="android:Widget.Button">
 	  <item name="android:background">@drawable/apptheme_btn_default_holo_light</item>
     </style>
 
-    <style name="IHA.Custom.ImageButton" parent="android:Widget.ImageButton">
+    <style name="BeeeOn.Custom.ImageButton" parent="android:Widget.ImageButton">
 	  <item name="android:background">@drawable/apptheme_btn_default_holo_light</item>
     </style>
   

@@ -8,7 +8,7 @@
 	    android:id="@+id/sensordetail_scroll"
 	    android:layout_width="match_parent"
 	    android:layout_height="wrap_content"
-	    android:background="@drawable/iha_item_solo_bg"
+	    android:background="@drawable/beeeon_item_solo_bg"
 	    android:layout_margin="10dp"
 	 	android:paddingBottom="15dp"
 	 	android:layout_gravity="top"
@@ -42,7 +42,7 @@
             android:singleLine="true"
 	        android:gravity="right"
 	        android:text="NameSensor"
-	        android:textColor="@color/iha_text_color"
+	        android:textColor="@color/beeeon_text_color"
 	        android:textSize="35dp"
 	        android:textStyle="normal"
 	        android:visibility="invisible" />
@@ -59,7 +59,7 @@
 	        android:gravity="right"
 	        android:inputType="textCapSentences"
 	        android:text="NameSensor"
-	        android:textColor="@color/iha_text_color"
+	        android:textColor="@color/beeeon_text_color"
 	        android:textSize="35dp"
 	        android:textStyle="normal"
 	        android:visibility="invisible" />
@@ -68,7 +68,7 @@
 	        android:id="@+id/sen_refresh_time_seekBar"
 	        android:layout_width="match_parent"
 	        android:layout_height="wrap_content"
-	        style="@style/IHA.Custom.SeekBar"
+	        style="@style/BeeeOn.Custom.SeekBar"
 	        android:layout_alignLeft="@+id/sen_detail_icon"
 	        android:layout_below="@+id/sen_detail_icon"
 	        android:layout_marginRight="10dp"
@@ -83,7 +83,7 @@
 	        android:layout_below="@+id/sen_detail_icon"
 	        android:layout_marginTop="14dp"
 	        android:text="@string/refresh_time"
-	        android:textColor="@color/iha_primary_cyan"
+	        android:textColor="@color/beeeon_primary_cyan"
 	        android:textSize="18dp" 
 	        android:visibility="invisible"/>
 	    <TextView
@@ -94,7 +94,7 @@
 	        android:layout_below="@+id/sen_detail_icon"
 	        android:layout_marginTop="14dp"
 	        android:text="TextView"
-	        android:textColor="@color/iha_secundary_pink"
+	        android:textColor="@color/beeeon_secundary_pink"
 	        android:textSize="18dp" 
 	        android:visibility="invisible"/>
 	
@@ -113,7 +113,7 @@
 	        android:layout_marginTop="10dp"
 	        android:gravity="right"
 	        android:text="location"
-	        android:textColor="@color/iha_text_hint"
+	        android:textColor="@color/beeeon_text_hint"
 	        android:textSize="25dp"
 	        android:visibility="invisible"/>
 	
@@ -125,7 +125,7 @@
 	        android:layout_below="@+id/sen_refresh_time_seekBar"
 	        android:layout_marginTop="10dp"
 	        android:text="@string/sen_graph_label"
-	        android:textColor="@color/iha_primary_cyan"
+	        android:textColor="@color/beeeon_primary_cyan"
 	        android:textSize="18dp" 
 	        android:visibility="invisible"/>
 	
@@ -150,7 +150,7 @@
 	        android:fitsSystemWindows="true"
 	        android:gravity="center"
 	        android:text="@string/loading_data"
-	        android:textColor="@color/iha_secundary_pink"
+	        android:textColor="@color/beeeon_secundary_pink"
 	        android:textSize="20sp"
 	        android:visibility="invisible" />
 
@@ -203,7 +203,7 @@
 	        android:layout_alignBottom="@+id/sen_refresh_time"
 	        android:layout_alignRight="@+id/sen_detail_value_wrap"
 	        android:text="1.1. 1970"
-	        android:textColor="@color/iha_text_hint"
+	        android:textColor="@color/beeeon_text_hint"
 	        android:textSize="15dp" 
 	        android:visibility="invisible"/>
 
@@ -222,7 +222,7 @@
 		        android:layout_height="wrap_content"
 		        
 		        android:text="ValueSensor"
-		        android:textColor="@color/iha_secundary_pink"
+		        android:textColor="@color/beeeon_secundary_pink"
 		        android:textSize="32dp" 
 		        android:visibility="invisible"/>
 		    
@@ -230,7 +230,7 @@
 		        android:id="@+id/sen_detail_value_switch"
 		        android:layout_width="wrap_content"
 		        android:layout_height="wrap_content"
-		        style="@style/IHA.Custom.Button"
+		        style="@style/BeeeOn.Custom.Button"
 		        android:maxHeight="20dp"
 		        android:text="ValueSensorSwitch"
 		        android:textSize="30dp" 

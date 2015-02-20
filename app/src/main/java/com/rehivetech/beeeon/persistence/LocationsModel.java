@@ -10,7 +10,7 @@ import org.joda.time.DateTime;
 
 import com.rehivetech.beeeon.IdentifierComparator;
 import com.rehivetech.beeeon.adapter.location.Location;
-import com.rehivetech.beeeon.exception.IhaException;
+import com.rehivetech.beeeon.exception.AppException;
 import com.rehivetech.beeeon.network.INetwork;
 
 public class LocationsModel {
@@ -94,7 +94,7 @@ public class LocationsModel {
 			setLocationsByAdapter(adapterId, mNetwork.getLocations(adapterId));
 			setLastUpdate(adapterId, DateTime.now());
 			saveToCache(adapterId);
-		} catch (IhaException e) {
+		} catch (AppException e) {
 			e.printStackTrace();
 			return false;
 		}

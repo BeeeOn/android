@@ -48,7 +48,7 @@
 		      android:textSize="18sp"
 		      android:ellipsize="end"
 		      android:maxLines="1"
-		      android:textColor="@color/iha_secundary_pink"
+		      android:textColor="@color/beeeon_secundary_pink"
 		      android:textStyle="bold"
 		      android:text="@string/placeholder_none" />
 		    
@@ -61,7 +61,7 @@
 		      android:layout_marginLeft="2dp"
 		      android:ellipsize="end"
 		      android:maxLines="1"
-		      android:textColor="@color/iha_secundary_pink"
+		      android:textColor="@color/beeeon_secundary_pink"
 		      />		    
 		</LinearLayout>
 	    

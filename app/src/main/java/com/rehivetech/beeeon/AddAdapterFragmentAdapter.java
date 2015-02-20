@@ -10,7 +10,7 @@ import com.rehivetech.beeeon.activity.fragment.AddAdapterFragment;
 import com.rehivetech.beeeon.activity.fragment.IntroImageFragment;
 
 public class AddAdapterFragmentAdapter extends FragmentPagerAdapter implements IconPagerAdapter {
-    protected static final String[] CONTENT = new String[] { "Welcome", "to", "IHA", "Test", };
+    protected static final String[] CONTENT = new String[] { "Welcome", "to", "BeeeOn", "Test", };
     protected static final int[] ICONS = new int[] {
             R.drawable.loc_bath_room,
             R.drawable.loc_garden,
@@ -28,11 +28,11 @@ public class AddAdapterFragmentAdapter extends FragmentPagerAdapter implements I
     public Fragment getItem(int position) {
     	switch (position) {
     	case 1:
-    		return IntroImageFragment.newInstance(R.drawable.iha_tutorial_aa_first_step,"Please connect your adapter to the AC power");
+    		return IntroImageFragment.newInstance(R.drawable.beeeon_tutorial_aa_first_step,"Please connect your adapter to the AC power");
     	case 0:
-    		return IntroImageFragment.newInstance(R.drawable.iha_tutorial_aa_second_step,"Please connect your adapter to the Internet");
+    		return IntroImageFragment.newInstance(R.drawable.beeeon_tutorial_aa_second_step,"Please connect your adapter to the Internet");
     	case 2:
-    		return IntroImageFragment.newInstance(R.drawable.iha_tutorial_aa_third_step,"In the next step, please give name to your adapter and scan QR code ");
+    		return IntroImageFragment.newInstance(R.drawable.beeeon_tutorial_aa_third_step,"In the next step, please give name to your adapter and scan QR code ");
     	case 3:
     		return new AddAdapterFragment();
     	}

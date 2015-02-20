@@ -14,7 +14,7 @@ import org.joda.time.format.DateTimeFormatter;
 import com.rehivetech.beeeon.adapter.device.DeviceLog;
 import com.rehivetech.beeeon.adapter.device.DeviceLog.DataInterval;
 import com.rehivetech.beeeon.adapter.device.DeviceLog.DataType;
-import com.rehivetech.beeeon.exception.IhaException;
+import com.rehivetech.beeeon.exception.AppException;
 import com.rehivetech.beeeon.network.DemoNetwork;
 import com.rehivetech.beeeon.network.INetwork;
 import com.rehivetech.beeeon.network.Network;
@@ -150,7 +150,7 @@ public class DeviceLogsModel {
 				// Save it
 				saveDeviceLog(downPair.device.getId(), log);
 			}
-		} catch (IhaException e) {
+		} catch (AppException e) {
 			e.printStackTrace();
 			return false;
 		} finally {

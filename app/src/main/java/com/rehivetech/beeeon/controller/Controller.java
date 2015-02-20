@@ -21,7 +21,7 @@ import com.rehivetech.beeeon.adapter.device.DeviceType;
 import com.rehivetech.beeeon.adapter.device.Facility;
 import com.rehivetech.beeeon.adapter.location.Location;
 import com.rehivetech.beeeon.exception.ErrorCode;
-import com.rehivetech.beeeon.exception.IhaException;
+import com.rehivetech.beeeon.exception.AppException;
 import com.rehivetech.beeeon.exception.NetworkError;
 import com.rehivetech.beeeon.exception.NotImplementedException;
 import com.rehivetech.beeeon.gcm.GcmHelper;
@@ -159,16 +159,16 @@ public final class Controller {
 	 * 
 	 * @param email
 	 * @return true on success, false otherwise
-	 * @throws IhaException
+	 * @throws AppException
 	 */
-	public boolean login(String email) throws IhaException {
+	public boolean login(String email) throws AppException {
 		return login(email, true);
 	}
 
 	/**
 	 * @see {@link Controller#login(LoginActivity, String)}
 	 */
-	private boolean login(String email, boolean canTryAgain) throws IhaException {
+	private boolean login(String email, boolean canTryAgain) throws AppException {
 		ActualUser user = mHousehold.user;
 		GoogleUserInfo googleUserInfo = null;
 		String googleToken = "";
@@ -184,7 +184,7 @@ public final class Controller {
 				try {
 					// FIXME: Use some better request
 					mNetwork.getAdapters();
-				} catch (IhaException e) {
+				} catch (AppException e) {
 					ErrorCode errorCode = e.getErrorCode();
 					if (errorCode instanceof NetworkError && errorCode == NetworkError.BAD_UID) {
 						// This UID is invalid, load fresh one
@@ -267,7 +267,7 @@ public final class Controller {
 
 				return true;
 			}
-		} catch (IhaException e) {
+		} catch (AppException e) {
 			// Process known and processible error codes (actually only google token error)
 			ErrorCode errorCode = e.getErrorCode();
 			if ((mNetwork instanceof Network) && (errorCode instanceof NetworkError)) {
@@ -280,7 +280,7 @@ public final class Controller {
 						return login(email, false);
 				}
 			}
-			throw IhaException.wrap(e);
+			throw AppException.wrap(e);
 		}
 		return false;
 	}
@@ -557,7 +557,7 @@ public final class Controller {
 				setActiveAdapter(id, true);
 				result = true;
 			}
-		} catch (IhaException e) {
+		} catch (AppException e) {
 			e.printStackTrace();
 		}
 
@@ -576,7 +576,7 @@ public final class Controller {
 	//
 	// try {
 	// result = mNetwork.signUp(mHousehold.user.getEmail()); //FIXME: ROB use getUID instead!
-	// } catch (IhaException e) {
+	// } catch (AppException e) {
 	// e.printStackTrace();
 	// }
 	//
@@ -604,7 +604,7 @@ public final class Controller {
 				mHousehold.adaptersModel.reloadAdapters(true);
 				result = true;
 			}
-		} catch (IhaException e) {
+		} catch (AppException e) {
 			e.printStackTrace();
 		}
 
@@ -649,7 +649,7 @@ public final class Controller {
 		boolean deleted = false;
 		try {
 			deleted = mNetwork.deleteLocation(adapter.getId(), location);
-		} catch (IhaException e) {
+		} catch (AppException e) {
 			e.printStackTrace();
 		}
 
@@ -674,7 +674,7 @@ public final class Controller {
 		boolean saved = false;
 		try {
 			saved = mNetwork.updateLocation(adapter.getId(), location);
-		} catch (IhaException e) {
+		} catch (AppException e) {
 			e.printStackTrace();
 		}
 
@@ -698,7 +698,7 @@ public final class Controller {
 
 		try {
 			location = mNetwork.createLocation(adapter.getId(), location);
-		} catch (IhaException e) {
+		} catch (AppException e) {
 			e.printStackTrace();
 			location = null;
 		}
@@ -815,7 +815,7 @@ public final class Controller {
 
 		try {
 			result = mNetwork.prepareAdapterToListenNewSensors(adapterID);
-		} catch (IhaException e) {
+		} catch (AppException e) {
 			e.printStackTrace();
 		}
 

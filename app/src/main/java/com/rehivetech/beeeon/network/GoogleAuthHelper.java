@@ -13,7 +13,7 @@ import android.content.Context;
 import com.google.android.gms.auth.GoogleAuthUtil;
 import com.google.android.gms.auth.UserRecoverableAuthException;
 
-import com.rehivetech.beeeon.exception.IhaException;
+import com.rehivetech.beeeon.exception.AppException;
 import com.rehivetech.beeeon.exception.NetworkError;
 import com.rehivetech.beeeon.household.User.Gender;
 import com.rehivetech.beeeon.util.Log;
@@ -51,16 +51,16 @@ public class GoogleAuthHelper {
 		}
 	}
 	
-	public static String getToken(Context context, String email) throws IhaException {
+	public static String getToken(Context context, String email) throws AppException {
 		try {
 			String token = GoogleAuthUtil.getToken(context, email, SCOPE);
 			Log.d(TAG, String.format("Google token: %s", token));
 			return token;
 		} catch (UserRecoverableAuthException e) {
 			// Rethrowing this exception with correct intent so LoginActivity could get it and handle it
-			throw IhaException.wrap(e, NetworkError.GOOGLE_TRY_AGAIN).set(RECOVERABLE_INTENT, e.getIntent());
+			throw AppException.wrap(e, NetworkError.GOOGLE_TRY_AGAIN).set(RECOVERABLE_INTENT, e.getIntent());
 		} catch (Exception e) {
-			throw IhaException.wrap(e, NetworkError.GOOGLE_TOKEN);	
+			throw AppException.wrap(e, NetworkError.GOOGLE_TOKEN);	
 		}
 	}
 	
@@ -76,7 +76,7 @@ public class GoogleAuthHelper {
 	 * @param token
 	 * @return GoogleUserInfo or null
 	 */
-	public static GoogleUserInfo fetchInfoFromProfileServer(String token) throws IhaException {
+	public static GoogleUserInfo fetchInfoFromProfileServer(String token) throws AppException {
 		String requestUrl = "https://www.googleapis.com/oauth2/v1/userinfo?access_token=" + token;
 		String response = "";
 		
@@ -87,7 +87,7 @@ public class GoogleAuthHelper {
 				if (con.getResponseCode() == 401) {
 					// Our token is invalid
 					// GoogleAuthUtil.invalidateToken(activity, token); // let invalidation to caller of this method...
-					throw new IhaException("Response 401 Not Authorized", NetworkError.GOOGLE_TOKEN);
+					throw new AppException("Response 401 Not Authorized", NetworkError.GOOGLE_TOKEN);
 				}
 
 				InputStream in = con.getInputStream();
@@ -123,7 +123,7 @@ public class GoogleAuthHelper {
 				if (errorCode == 401) {
 					// Our token is invalid
 					// GoogleAuthUtil.invalidateToken(activity, token); // let invalidation to caller of this method...
-					throw new IhaException(errorMessage, NetworkError.GOOGLE_TOKEN);
+					throw new AppException(errorMessage, NetworkError.GOOGLE_TOKEN);
 				}
 			}
 		} catch (JSONException e) {

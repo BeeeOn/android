@@ -4,7 +4,7 @@
     android:layout_height="62dp"
     android:gravity="center_vertical"
     android:orientation="horizontal"
-    android:background="@color/iha_drawer_bg"
+    android:background="@color/beeeon_drawer_bg"
     android:paddingBottom="0dp"
     android:paddingLeft="16dp"
     android:paddingRight="16dp"
@@ -25,7 +25,7 @@
             android:layout_height="wrap_content"
             android:ellipsize="end"
             android:singleLine="true"
-            android:textColor="@color/iha_text_color" 
+            android:textColor="@color/beeeon_text_color" 
             android:textSize="16sp"/>
 
         <TextView
@@ -35,7 +35,7 @@
             android:ellipsize="end"
             android:singleLine="true"
             android:textSize="14sp"
-            android:textColor="@color/iha_text_hint" />
+            android:textColor="@color/beeeon_text_hint" />
     </LinearLayout>
 
     <ImageView

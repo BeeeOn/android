@@ -31,7 +31,7 @@ import com.rehivetech.beeeon.adapter.Adapter;
 import com.rehivetech.beeeon.base.BaseActivity;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.exception.ErrorCode;
-import com.rehivetech.beeeon.exception.IhaException;
+import com.rehivetech.beeeon.exception.AppException;
 import com.rehivetech.beeeon.exception.NetworkError;
 import com.rehivetech.beeeon.exception.NotImplementedException;
 import com.rehivetech.beeeon.network.DemoNetwork;
@@ -164,7 +164,7 @@ public class LoginActivity extends BaseActivity {
 			doLogin(false, lastEmail);
 		}
 		
-		Log.i("IHA app starting...", "___________________________________");
+		Log.i("BeeeOn app starting...", "___________________________________");
 	}
 
 	@Override
@@ -481,7 +481,7 @@ public class LoginActivity extends BaseActivity {
 					
 					Log.i(TAG, "Login finished");
 					mController.endPersistentConnection();
-				} catch (IhaException e) {
+				} catch (AppException e) {
 					ErrorCode errorCode = e.getErrorCode();
 					if (errorCode instanceof NetworkError && errorCode == NetworkError.GOOGLE_TRY_AGAIN) {
 						Intent intent = e.get(GoogleAuthHelper.RECOVERABLE_INTENT);

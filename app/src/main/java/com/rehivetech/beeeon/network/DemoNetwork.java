@@ -24,7 +24,7 @@ import com.rehivetech.beeeon.adapter.device.RefreshInterval;
 import com.rehivetech.beeeon.adapter.device.values.BaseEnumValue;
 import com.rehivetech.beeeon.adapter.device.values.BaseEnumValue.Item;
 import com.rehivetech.beeeon.adapter.location.Location;
-import com.rehivetech.beeeon.exception.IhaException;
+import com.rehivetech.beeeon.exception.AppException;
 import com.rehivetech.beeeon.household.ActualUser;
 import com.rehivetech.beeeon.household.User;
 import com.rehivetech.beeeon.household.User.Gender;
@@ -107,7 +107,7 @@ public class DemoNetwork implements INetwork {
 		return new GoogleUserInfo("", DEMO_EMAIL, "", "John Doe", "", false, Gender.Male, "", "en");
 	}
 	
-	public void initDemoData(ActualUser user) throws IhaException {
+	public void initDemoData(ActualUser user) throws AppException {
 		// Erase previous data if exists
 		mAdapters.clear();
 		

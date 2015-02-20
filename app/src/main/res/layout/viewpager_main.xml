@@ -13,7 +13,7 @@
             android:layout_width="fill_parent"
             android:layout_height="30dp"
             android:layout_gravity="top"
-            android:background="@color/iha_primary_cyan" 
+            android:background="@color/beeeon_primary_cyan" 
             
             android:textColor="@color/white">
 

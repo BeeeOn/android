@@ -46,7 +46,7 @@
 	      android:layout_height="wrap_content"	      
 	      android:textSize="13sp"
 	      android:singleLine="true"	      
-	      android:textColor="@color/iha_secundary_pink"
+	      android:textColor="@color/beeeon_secundary_pink"
 	      android:textStyle="bold"
 	      android:text="@string/placeholder_none" />
 	    
@@ -57,7 +57,7 @@
 	      android:gravity="center_vertical"
 	      android:textSize="13sp"
 	      android:layout_marginLeft="2dp"		      
-	      android:textColor="@color/iha_secundary_pink"
+	      android:textColor="@color/beeeon_secundary_pink"
 	      />			    
 	    
     </LinearLayout>               

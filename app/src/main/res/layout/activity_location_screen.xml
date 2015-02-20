@@ -21,7 +21,7 @@
         android:layout_width="@dimen/nav_drawer_width"
         android:layout_height="match_parent"
         android:layout_gravity="start"
-        android:background="@color/iha_drawer_bg"
+        android:background="@color/beeeon_drawer_bg"
         android:choiceMode="singleChoice"
         android:paddingRight="0dp"
         android:dividerHeight="0dp" />

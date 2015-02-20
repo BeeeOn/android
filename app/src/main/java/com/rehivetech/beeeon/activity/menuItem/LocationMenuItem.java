@@ -34,7 +34,7 @@ public class LocationMenuItem extends AbstractMenuItem {
 			separatorView.setVisibility(View.GONE);
 		}
 		if (mActualLoc) {
-			nameView.setTextColor(view.getResources().getColor(R.color.iha_primary_cyan));
+			nameView.setTextColor(view.getResources().getColor(R.color.beeeon_primary_cyan));
 			nameView.setTypeface(null, Typeface.BOLD);
 		}
 		setMView(view);
@@ -52,7 +52,7 @@ public class LocationMenuItem extends AbstractMenuItem {
 
 	@Override
 	public void setNotSelected() {
-		getMView().setBackgroundColor( getMView().getResources().getColor(R.color.iha_drawer_bg));
+		getMView().setBackgroundColor( getMView().getResources().getColor(R.color.beeeon_drawer_bg));
 	}
 
 }

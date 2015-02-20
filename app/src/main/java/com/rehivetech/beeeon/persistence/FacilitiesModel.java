@@ -13,7 +13,7 @@ import com.rehivetech.beeeon.IdentifierComparator;
 import com.rehivetech.beeeon.adapter.device.Device;
 import com.rehivetech.beeeon.adapter.device.Device.SaveDevice;
 import com.rehivetech.beeeon.adapter.device.Facility;
-import com.rehivetech.beeeon.exception.IhaException;
+import com.rehivetech.beeeon.exception.AppException;
 import com.rehivetech.beeeon.network.INetwork;
 import com.rehivetech.beeeon.util.Log;
 
@@ -126,7 +126,7 @@ public class FacilitiesModel {
 				updateFacilityInMap(newFacility);
 			}
 
-		} catch (IhaException e) {
+		} catch (AppException e) {
 			e.printStackTrace();
 			return false;
 		}
@@ -139,7 +139,7 @@ public class FacilitiesModel {
 			setFacilitiesByAdapter(adapterId, mNetwork.initAdapter(adapterId));
 			setLastUpdate(adapterId, DateTime.now());
 			saveToCache(adapterId);
-		} catch (IhaException e) {
+		} catch (AppException e) {
 			e.printStackTrace();
 			return false;
 		}
@@ -185,7 +185,7 @@ public class FacilitiesModel {
 				return false;
 
 			updateFacilityInMap(facility);
-		} catch (IhaException e) {
+		} catch (AppException e) {
 			e.printStackTrace();
 			return false;
 		}
@@ -199,7 +199,7 @@ public class FacilitiesModel {
 		try {
 			result = mNetwork.updateFacility(facility.getAdapterId(), facility, what);
 			result = refreshFacility(facility, true);
-		} catch (IhaException e) {
+		} catch (AppException e) {
 			e.printStackTrace();
 		}
 
@@ -214,7 +214,7 @@ public class FacilitiesModel {
 		try {
 			result = mNetwork.updateDevice(facility.getAdapterId(), device, what);
 			result = refreshFacility(facility, true);
-		} catch (IhaException e) {
+		} catch (AppException e) {
 			e.printStackTrace();
 		}
 
@@ -235,7 +235,7 @@ public class FacilitiesModel {
 			result = mNetwork.switchState(device.getFacility().getAdapterId(), device);
 			result = mNetwork.updateFacility(facility.getAdapterId(), facility, EnumSet.allOf(SaveDevice.class));
 			result = refreshFacility(facility, true);
-		} catch (IhaException e) {
+		} catch (AppException e) {
 			e.printStackTrace();
 		}
 

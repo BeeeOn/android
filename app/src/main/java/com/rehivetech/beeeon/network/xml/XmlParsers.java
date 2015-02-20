@@ -26,7 +26,7 @@ import com.rehivetech.beeeon.adapter.device.DeviceType;
 import com.rehivetech.beeeon.adapter.device.Facility;
 import com.rehivetech.beeeon.adapter.device.RefreshInterval;
 import com.rehivetech.beeeon.adapter.location.Location;
-import com.rehivetech.beeeon.exception.IhaException;
+import com.rehivetech.beeeon.exception.AppException;
 import com.rehivetech.beeeon.exception.NetworkError;
 import com.rehivetech.beeeon.gcm.Notification;
 import com.rehivetech.beeeon.gcm.Notification.ActionType;
@@ -131,7 +131,7 @@ public class XmlParsers {
 		String version = getSecureAttrValue(Xconstants.VERSION);
 
 		if (!version.equals(COM_VER)) {
-			throw new IhaException(NetworkError.COM_VER_MISMATCH)
+			throw new AppException(NetworkError.COM_VER_MISMATCH)
 				.set("Expected", COM_VER)
 				.set("Real", version);
 		}
@@ -413,7 +413,7 @@ public class XmlParsers {
 				String[] parts = row.split(Xconstants.ROW_DATA_SEPARATOR);
 				if (parts.length != 2) {
 					Log.e(TAG, String.format("Wrong number of parts (%d) of data: %s", parts.length, row));
-					throw new IhaException(NetworkError.XML).set("parts", parts);
+					throw new AppException(NetworkError.XML).set("parts", parts);
 				}
 
 				// Parse values
@@ -426,7 +426,7 @@ public class XmlParsers {
 					log.addValue(dateMillis, value);
 				}
 			} catch (NumberFormatException e) {
-				throw IhaException.wrap(e, NetworkError.XML);
+				throw AppException.wrap(e, NetworkError.XML);
 			}
 		} while (mParser.nextTag() != XmlPullParser.END_TAG && !mParser.getName().equals(Xconstants.COM_ROOT));
 
@@ -1000,7 +1000,7 @@ public class XmlParsers {
 	 * @param filename
 	 * @return Adapter or null
 	 */
-	public List<Facility> getDemoFacilitiesFromAsset(Context context, String filename) throws IhaException {
+	public List<Facility> getDemoFacilitiesFromAsset(Context context, String filename) throws AppException {
 		Log.i(TAG, String.format("Loading adapter from asset '%s'", filename));
 		List<Facility> result = null;
 		InputStream stream = null;
@@ -1013,7 +1013,7 @@ public class XmlParsers {
 
 			String version = getSecureAttrValue(Xconstants.VERSION);
 			if (!version.equals(COM_VER)) {
-				throw new IhaException(NetworkError.COM_VER_MISMATCH)
+				throw new AppException(NetworkError.COM_VER_MISMATCH)
 					.set("Expected", COM_VER)
 					.set("Real", version);
 			}
@@ -1043,7 +1043,7 @@ public class XmlParsers {
 	 * @param filename
 	 * @return list of locations or empty list
 	 */
-	public List<Location> getDemoLocationsFromAsset(Context context, String filename) throws IhaException {
+	public List<Location> getDemoLocationsFromAsset(Context context, String filename) throws AppException {
 		Log.i(TAG, String.format("Loading locations from asset '%s'", filename));
 		List<Location> locations = new ArrayList<Location>();
 		InputStream stream = null;
@@ -1056,7 +1056,7 @@ public class XmlParsers {
 
 			String version = getSecureAttrValue(Xconstants.VERSION);
 			if (!version.equals(COM_VER)) {
-				throw new IhaException(NetworkError.COM_VER_MISMATCH)
+				throw new AppException(NetworkError.COM_VER_MISMATCH)
 					.set("Expected", COM_VER)
 					.set("Real", version);
 			}
@@ -1084,7 +1084,7 @@ public class XmlParsers {
 	 * @param filename
 	 * @return list of adapters or empty list
 	 */
-	public List<Adapter> getDemoAdaptersFromAsset(Context context, String filename) throws IhaException {
+	public List<Adapter> getDemoAdaptersFromAsset(Context context, String filename) throws AppException {
 		Log.i(TAG, String.format("Loading adapters from asset '%s'", filename));
 		List<Adapter> adapters = new ArrayList<Adapter>();
 		InputStream stream = null;
@@ -1097,7 +1097,7 @@ public class XmlParsers {
 
 			String version = getSecureAttrValue(Xconstants.VERSION);
 			if (!version.equals(COM_VER)) {
-				throw new IhaException(NetworkError.COM_VER_MISMATCH)
+				throw new AppException(NetworkError.COM_VER_MISMATCH)
 					.set("Expected", COM_VER)
 					.set("Real", version);
 			}

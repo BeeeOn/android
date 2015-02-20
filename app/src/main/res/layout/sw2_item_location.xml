@@ -29,7 +29,7 @@
             android:layout_centerVertical="true"
             android:layout_toRightOf="@+id/thumbnail"
             android:singleLine="true"
-            android:textColor="@color/iha_text_color"
+            android:textColor="@color/beeeon_text_color"
             android:textSize="@dimen/smart_watch_2_text_size_large"
             android:textStyle="bold" />
 

@@ -31,8 +31,8 @@ final public class GraphViewHelper {
 		GraphView graphView = isEnumValue ? new BarGraphView(context, title) : new LineGraphView(context, title);
 		
 		graphView.getGraphViewStyle().setTextSize(context.getResources().getDimension(R.dimen.textsizesmaller));
-		graphView.getGraphViewStyle().setVerticalLabelsColor(context.getResources().getColor(R.color.iha_text_hint));
-		graphView.getGraphViewStyle().setHorizontalLabelsColor(context.getResources().getColor(R.color.iha_text_hint));
+		graphView.getGraphViewStyle().setVerticalLabelsColor(context.getResources().getColor(R.color.beeeon_text_hint));
+		graphView.getGraphViewStyle().setHorizontalLabelsColor(context.getResources().getColor(R.color.beeeon_text_hint));
 		// mGraphView.getGraphViewStyle().setVerticalLabelsWidth(60);
 		// mGraphView.getGraphViewStyle().setNumHorizontalLabels(2);
 		// graphView.setBackgroundColor(mContext.getResources().getColor(R.color.alpha_blue));// getResources().getColor(R.color.log_blue2));

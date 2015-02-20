@@ -10,7 +10,7 @@ import org.joda.time.DateTime;
 
 import com.rehivetech.beeeon.IdentifierComparator;
 import com.rehivetech.beeeon.adapter.device.Facility;
-import com.rehivetech.beeeon.exception.IhaException;
+import com.rehivetech.beeeon.exception.AppException;
 import com.rehivetech.beeeon.network.INetwork;
 
 public class UninitializedFacilitiesModel {
@@ -87,7 +87,7 @@ public class UninitializedFacilitiesModel {
 			setUninitializedFacilitiesByAdapter(adapterId, mNetwork.getNewFacilities(adapterId));
 			setLastUpdate(adapterId, DateTime.now());
 			saveToCache(adapterId);
-		} catch (IhaException e) {
+		} catch (AppException e) {
 			e.printStackTrace();
 			return false;
 		}

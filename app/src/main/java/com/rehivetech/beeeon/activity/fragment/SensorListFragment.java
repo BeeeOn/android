@@ -138,7 +138,7 @@ public class SensorListFragment extends SherlockFragment {
 				doReloadFacilitiesTask(adapter.getId());
 			}
 		});
-		mSwipeLayout.setColorSchemeColors(  R.color.iha_primary_cyan, R.color.iha_text_color,R.color.iha_secundary_pink);
+		mSwipeLayout.setColorSchemeColors(  R.color.beeeon_primary_cyan, R.color.beeeon_text_color,R.color.beeeon_secundary_pink);
 	}
 
 	public void onPause() {

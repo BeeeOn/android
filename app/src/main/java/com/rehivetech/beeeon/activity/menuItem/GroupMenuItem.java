@@ -39,7 +39,7 @@ public class GroupMenuItem extends AbstractMenuItem {
 
 	@Override
 	public void setNotSelected() {
-		getMView().setBackgroundColor( getMView().getResources().getColor(R.color.iha_drawer_bg));
+		getMView().setBackgroundColor( getMView().getResources().getColor(R.color.beeeon_drawer_bg));
 	}
 
 }

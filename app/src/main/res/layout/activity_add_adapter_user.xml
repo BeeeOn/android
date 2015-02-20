@@ -16,7 +16,7 @@
 	            android:layout_width="fill_parent"
 	            android:layout_height="wrap_content"
 	            android:text="@string/add_user_email_header"
-	            android:textColor="@color/iha_text_color" 
+	            android:textColor="@color/beeeon_text_color" 
 			    android:textAppearance="?android:attr/textAppearanceMedium"
 			    android:layout_marginLeft="5dp" />
 
@@ -36,7 +36,7 @@
 	            android:layout_width="fill_parent"
 	            android:layout_height="wrap_content"
 	            android:text="@string/add_user_role_header"
-	            android:textColor="@color/iha_text_color" 
+	            android:textColor="@color/beeeon_text_color" 
 			    android:textAppearance="?android:attr/textAppearanceMedium"
 			    android:layout_marginLeft="5dp" />
 

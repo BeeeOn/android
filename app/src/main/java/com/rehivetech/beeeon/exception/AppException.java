@@ -8,44 +8,44 @@ import java.util.TreeMap;
 import android.content.Context;
 import com.rehivetech.beeeon.R;
 
-public class IhaException extends RuntimeException {
+public class AppException extends RuntimeException {
 
 	private static final long serialVersionUID = 1L;
 
-	public static IhaException wrap(Throwable exception, ErrorCode errorCode) {
-		if (exception instanceof IhaException) {
-			IhaException se = (IhaException) exception;
+	public static AppException wrap(Throwable exception, ErrorCode errorCode) {
+		if (exception instanceof AppException) {
+			AppException se = (AppException) exception;
 			if (errorCode != null && errorCode != se.getErrorCode()) {
-				return new IhaException(exception.getMessage(), exception, errorCode);
+				return new AppException(exception.getMessage(), exception, errorCode);
 			}
 			return se;
 		} else {
-			return new IhaException(exception.getMessage(), exception, errorCode);
+			return new AppException(exception.getMessage(), exception, errorCode);
 		}
 	}
 
-	public static IhaException wrap(Throwable exception) {
+	public static AppException wrap(Throwable exception) {
 		return wrap(exception, null);
 	}
 
 	private ErrorCode mErrorCode;
 	private final Map<String, Object> mProperties = new TreeMap<String, Object>();
 
-	public IhaException(ErrorCode errorCode) {
+	public AppException(ErrorCode errorCode) {
 		mErrorCode = errorCode;
 	}
 
-	public IhaException(String message, ErrorCode errorCode) {
+	public AppException(String message, ErrorCode errorCode) {
 		super(message);
 		mErrorCode = errorCode;
 	}
 
-	public IhaException(Throwable cause, ErrorCode errorCode) {
+	public AppException(Throwable cause, ErrorCode errorCode) {
 		super(cause);
 		mErrorCode = errorCode;
 	}
 
-	public IhaException(String message, Throwable cause, ErrorCode errorCode) {
+	public AppException(String message, Throwable cause, ErrorCode errorCode) {
 		super(message, cause);
 		mErrorCode = errorCode;
 	}
@@ -54,7 +54,7 @@ public class IhaException extends RuntimeException {
 		return mErrorCode;
 	}
 
-	public IhaException setErrorCode(ErrorCode errorCode) {
+	public AppException setErrorCode(ErrorCode errorCode) {
 		mErrorCode = errorCode;
 		return this;
 	}
@@ -68,7 +68,7 @@ public class IhaException extends RuntimeException {
 		return (T) mProperties.get(name);
 	}
 
-	public IhaException set(String name, Object value) {
+	public AppException set(String name, Object value) {
 		mProperties.put(name, value);
 		return this;
 	}

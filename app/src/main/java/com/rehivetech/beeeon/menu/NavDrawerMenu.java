@@ -61,7 +61,7 @@ public class NavDrawerMenu {
 	private DrawerLayout mDrawerLayout;
 	private StickyListHeadersListView mDrawerList;
 	private ActionBarDrawerToggle mDrawerToggle;
-	private String mDrawerTitle = "IHA";
+	private String mDrawerTitle = "BeeeOn";
 
 	private String mActiveLocationId;
 	private String mActiveCustomViewId;
@@ -505,7 +505,7 @@ public class NavDrawerMenu {
 	}
 
 	public void setDefaultTitle() {
-		mDrawerTitle = "IHA";
+		mDrawerTitle = "BeeeOn";
 	}
 
 	public void setIsDrawerOpen(boolean value) {
@@ -544,7 +544,7 @@ public class NavDrawerMenu {
 				menu.add("Users").setIcon(R.drawable.ic_group_white_24dp).setShowAsAction(com.actionbarsherlock.view.MenuItem.SHOW_AS_ACTION_ALWAYS);
 			}
 			menu.add("Unregist").setIcon(R.drawable.ic_delete_white_24dp).setShowAsAction(com.actionbarsherlock.view.MenuItem.SHOW_AS_ACTION_IF_ROOM);
-			//menu.add("Cancel").setIcon(R.drawable.iha_ic_action_cancel).setTitle("Cancel").setShowAsAction(com.actionbarsherlock.view.MenuItem.SHOW_AS_ACTION_ALWAYS);
+			//menu.add("Cancel").setIcon(R.drawable.beeeon_ic_action_cancel).setTitle("Cancel").setShowAsAction(com.actionbarsherlock.view.MenuItem.SHOW_AS_ACTION_ALWAYS);
 			return true;
 		}
 
@@ -584,7 +584,7 @@ public class NavDrawerMenu {
 		public boolean onCreateActionMode(ActionMode mode, Menu menu) {
 			menu.add("Edit").setShowAsAction(com.actionbarsherlock.view.MenuItem.SHOW_AS_ACTION_ALWAYS);
 			// menu.add("Unregist").setShowAsAction(com.actionbarsherlock.view.MenuItem.SHOW_AS_ACTION_IF_ROOM);
-			menu.add("Cancel").setIcon(R.drawable.iha_ic_action_cancel).setTitle("Cancel").setShowAsAction(com.actionbarsherlock.view.MenuItem.SHOW_AS_ACTION_ALWAYS);
+			menu.add("Cancel").setIcon(R.drawable.beeeon_ic_action_cancel).setTitle("Cancel").setShowAsAction(com.actionbarsherlock.view.MenuItem.SHOW_AS_ACTION_ALWAYS);
 			return true;
 		}
 

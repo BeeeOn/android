@@ -150,19 +150,19 @@ public class SensorListAdapter extends BaseAdapter {
 
 		if (isSingle) {
 			// SOLO device from FACILITY
-			backgroundRes = R.drawable.iha_item_solo_bg;
+			backgroundRes = R.drawable.beeeon_item_solo_bg;
 			top = (int) scale * MARGIN_TOP;
 		} else if (isFirst) {
 			// FIRST device from FACILITY
-			backgroundRes = R.drawable.iha_item_first_bg;
+			backgroundRes = R.drawable.beeeon_item_first_bg;
 			top = (int) scale * MARGIN_TOP;
 		} else if (isLast) {
 			// LAST device from FACILITY
-			backgroundRes = R.drawable.iha_item_last_bg;
+			backgroundRes = R.drawable.beeeon_item_last_bg;
 			top = (int) scale * MARGIN_TOP_M_L;
 		} else {
 			// MIDLE device from FACILITY
-			backgroundRes = R.drawable.iha_item_midle_bg;
+			backgroundRes = R.drawable.beeeon_item_midle_bg;
 			top = (int) scale * MARGIN_TOP_M_L;
 		}
 
