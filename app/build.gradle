@@ -8,8 +8,8 @@ android {
         applicationId "com.rehivetech.beeeon"
         minSdkVersion 11
         targetSdkVersion 21
-        versionCode 1
-        versionName "1.0"
+        versionCode 28
+        versionName "1.4.3 debug"
     }
     buildTypes {
         release {
