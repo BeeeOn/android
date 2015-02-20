@@ -67,13 +67,6 @@ public class GcmMessageHandler extends IntentService {
 				return;
 			}
 
-			// FIXME BACKDOORS, DELETE AFTER DEMO NIGHT!!!!!!!!!!!!
-			if (notification.getEmail().equals("santa@claus.com")) {
-				createXmasNotification(notification.getMessage());
-				GcmBroadcastReceiver.completeWakefulIntent(intent);
-				return;
-			}
-
 			// control email if it equals with actual user
 			if (!notification.getEmail().equals(mController.getLastEmail())) {
 				Log.w(GcmHelper.TAG_GCM, notification.getEmail() + " != " + mController.getLastEmail());
@@ -156,51 +149,50 @@ public class GcmMessageHandler extends IntentService {
 		// showToast(notification.getMessage());
 	}
 
-	// FIXME BACKDOOR, AFTER DEMONIGHT DELETE THIS METHOD
-	private void createXmasNotification(String msg) {
-		NotificationCompat.Builder builder = new NotificationCompat.Builder(this)
-				.setSmallIcon(R.drawable.ic_launcher_white)
-				.setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.ic_launcher_white_icons))
-				// .setWhen(notification.getDate().getTimeInMillis())
-				.setWhen(System.currentTimeMillis()).setContentTitle(getText(R.string.app_name))
-				.setContentText(msg).setAutoCancel(true);
-
-		// vibration
-		builder.setVibrate(new long[] {
-			500, 500, 500, 500, 500, 500, 500
-		});
-
-		// LED
-		builder.setLights(Color.RED, 3000, 3000);
-
-		// sound
-		Uri uri = Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.xmas);
-		if (uri == null) {
-			Log.e(GcmHelper.TAG_GCM, "MP3 URI is null");
-		}
-		builder.setSound(uri);
-
-		// define notification action
-		Intent resultIntent = new Intent(this, LoginActivity.class);
-
-		// Because clicking the notification opens a new ("special") activity, there's
-		// no need to create an artificial back stack.
-		PendingIntent resultPendingIntent = PendingIntent.getActivity(this, 0, resultIntent,
-				PendingIntent.FLAG_UPDATE_CURRENT);
-
-		// Set the Notification's Click Behavior
-		builder.setContentIntent(resultPendingIntent);
-
-		// Gets an instance of the NotificationManager service
-		NotificationManager mNotifyMgr = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-
-		// Builds the notification and issues it.
-		mNotifyMgr.notify(9999, builder.build());
-
-		
-		
-		// showToast(notification.getMessage());
-	}
+//	private void createXmasNotification(String msg) {
+//		NotificationCompat.Builder builder = new NotificationCompat.Builder(this)
+//				.setSmallIcon(R.drawable.ic_launcher_white)
+//				.setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.ic_launcher_white_icons))
+//				// .setWhen(notification.getDate().getTimeInMillis())
+//				.setWhen(System.currentTimeMillis()).setContentTitle(getText(R.string.app_name))
+//				.setContentText(msg).setAutoCancel(true);
+//
+//		// vibration
+//		builder.setVibrate(new long[] {
+//			500, 500, 500, 500, 500, 500, 500
+//		});
+//
+//		// LED
+//		builder.setLights(Color.RED, 3000, 3000);
+//
+//		// sound
+//		Uri uri = Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.xmas);
+//		if (uri == null) {
+//			Log.e(GcmHelper.TAG_GCM, "MP3 URI is null");
+//		}
+//		builder.setSound(uri);
+//
+//		// define notification action
+//		Intent resultIntent = new Intent(this, LoginActivity.class);
+//
+//		// Because clicking the notification opens a new ("special") activity, there's
+//		// no need to create an artificial back stack.
+//		PendingIntent resultPendingIntent = PendingIntent.getActivity(this, 0, resultIntent,
+//				PendingIntent.FLAG_UPDATE_CURRENT);
+//
+//		// Set the Notification's Click Behavior
+//		builder.setContentIntent(resultPendingIntent);
+//
+//		// Gets an instance of the NotificationManager service
+//		NotificationManager mNotifyMgr = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+//
+//		// Builds the notification and issues it.
+//		mNotifyMgr.notify(9999, builder.build());
+//
+//		
+//		
+//		// showToast(notification.getMessage());
+//	}
 
 	public void showToast(final String message) {
 		mHandler.post(new Runnable() {
