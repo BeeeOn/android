@@ -6,7 +6,7 @@ android {
 
     defaultConfig {
         applicationId "com.rehivetech.beeeon"
-        minSdkVersion 10
+        minSdkVersion 11
         targetSdkVersion 21
         versionCode 1
         versionName "1.0"
@@ -19,7 +19,22 @@ android {
     }
 }
 
+repositories {
+    maven { url 'http://dl.bintray.com/goncharov/smart-extension-api/' }
+    mavenCentral()
+}
+
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile 'com.android.support:appcompat-v7:21.0.3'
+    compile fileTree(include: ['*.jar'], dir: 'libs')
+    // Support libraries
+    compile 'com.android.support:support-v4:21.0.3'
+    compile 'com.google.android.gms:play-services:6.5.87'
+    // Third-party libraries
+    compile 'com.actionbarsherlock:actionbarsherlock:4.4.0@aar'
+    compile 'se.emilsjolander:stickylistheaders:2.5.2'
+    compile 'fr.avianey.com.viewpagerindicator:library:2.4.1@aar'
+    compile 'com.github.amlcurran.showcaseview:library:5.0.0'
+    compile 'com.sonyericsson.extras.liveware:utils:3.0'
+    compile 'joda-time:joda-time:2.7'
+    compile 'com.nineoldandroids:library:2.4.0'
 }
