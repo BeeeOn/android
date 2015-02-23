@@ -31,12 +31,18 @@ android {
         debug {
             signingConfig signingConfigs.debug
             versionNameSuffix " debug"
+            applicationIdSuffix ".debug"
         }
+
+        debugPlay {
+            signingConfig signingConfigs.release
+            versionNameSuffix " debug"
+        }
+
         release {
             signingConfig signingConfigs.release
-            minifyEnabled true
+            minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-            debuggable false
         }
     }
 }
