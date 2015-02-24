@@ -1,7 +1,7 @@
 apply plugin: 'com.android.application'
 
-Properties props = new Properties()
-props.load(new FileInputStream(file("../keystores/keystore.txt")))
+// Properties props = new Properties()
+// props.load(new FileInputStream(file("../keystores/keystore.txt")))
 
 android {
     compileSdkVersion 21
@@ -19,12 +19,12 @@ android {
         debug {
             storeFile file('../keystores/debug.keystore')
         }
-        release {
+        /*release {
             storeFile file("../keystores/release.keystore")
             storePassword props['pass_store']
             keyAlias "beeeon"
             keyPassword props['pass_alias']
-        }
+        }*/
     }
 
     buildTypes {
@@ -34,16 +34,16 @@ android {
             applicationIdSuffix ".debug"
         }
 
-        debugPlay {
+        /*debugPlay {
             signingConfig signingConfigs.release
             versionNameSuffix " debug"
-        }
+        }*/
 
-        release {
+        /*release {
             signingConfig signingConfigs.release
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-        }
+        }*/
     }
 }
 
@@ -65,7 +65,5 @@ dependencies {
     compile 'com.sonyericsson.extras.liveware:utils:3.0'
     compile 'joda-time:joda-time:2.7'
     compile 'com.github.amlcurran.showcaseview:showcaseview:5.1.1@aar'
-    /*compile('com.jjoe64:graphview:4.0.0') {
-            exclude module: 'appcompat-v7'
-        }*/
+    // compile('com.jjoe64:graphview:4.0.0') { exclude module: 'appcompat-v7' }
 }

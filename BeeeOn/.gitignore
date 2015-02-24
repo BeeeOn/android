@@ -1,3 +1,7 @@
+# Ignore keystores folder except debug.keystore
+keystores/
+!keystores/debug.keystore
+
 # Built application files
 *.apk
 *.ap_
