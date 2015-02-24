@@ -418,13 +418,13 @@ public class MainActivity extends BaseApplicationActivity {
 			mNavDrawerMenu.clickOnHome();
 			break;
 
-		case R.id.action_addadapter: {
+		/*case R.id.action_addadapter: {
 			//DialogFragment newFragment = new AddAdapterFragmentDialog();
 			//newFragment.show(getSupportFragmentManager(), ADD_ADAPTER_TAG);
 			Intent intent = new Intent(MainActivity.this, AddAdapterActivity.class);
 			startActivityForResult(intent, Constants.ADD_ADAPTER_REQUEST_CODE);
 			break;
-		}
+		}*/
 		case R.id.action_settings: {
 			Intent intent = new Intent(MainActivity.this, SettingsMainActivity.class);
 			startActivity(intent);
