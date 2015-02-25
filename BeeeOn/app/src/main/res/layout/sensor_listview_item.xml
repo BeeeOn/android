@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+     style="?attr/spinnerDropDownItemStyle"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    
+    android:orientation="vertical"
+    android:background="@color/beeeon_background" >
+    
+     <LinearLayout
+         android:id="@+id/layoutofsensor"
+         android:layout_width="fill_parent"
+         android:layout_height="wrap_content"
+         android:layout_marginLeft="10dp"
+         android:layout_marginRight="10dp"
+         android:background="@drawable/beeeon_item_solo_bg"
+         android:orientation="horizontal"
+         android:paddingBottom="5dp"
+         android:paddingLeft="5dp"
+         android:paddingTop="5dp" >
+
+         <ImageView
+             android:id="@+id/iconofsensor"
+             android:layout_width="wrap_content"
+             android:layout_height="56dp"
+             android:adjustViewBounds="true"
+             android:src="@drawable/dev_emission" />
+
+         <RelativeLayout
+             android:layout_width="wrap_content"
+             android:layout_height="56dp"
+             android:layout_gravity="right"
+             android:orientation="horizontal"
+             android:paddingLeft="10dp" >
+
+             <TextView
+                 android:id="@+id/valueofsensor"
+                 android:layout_width="wrap_content"
+                 android:layout_height="wrap_content"
+                 android:layout_alignParentBottom="true"
+                 android:layout_toLeftOf="@+id/unitofsensor"
+                 android:text="200"
+                 android:textColor="@color/beeeon_secundary_pink"
+                 android:textSize="34dp"
+                 android:textStyle="bold" />
+
+             <TextView
+                 android:id="@+id/unitofsensor"
+                 android:layout_width="wrap_content"
+                 android:layout_height="wrap_content"
+                 android:layout_alignBaseline="@+id/valueofsensor"
+                 android:layout_alignBottom="@+id/valueofsensor"
+                 android:layout_alignParentRight="true"
+                 android:layout_marginRight="5dp"
+                 android:text="BAR"
+                 android:textColor="@color/beeeon_secundary_pink"
+                 android:textSize="22dp" />
+
+             <TextView
+                 android:id="@+id/timeofsensor"
+                 android:layout_width="wrap_content"
+                 android:layout_height="wrap_content"
+                 android:layout_alignParentBottom="true"
+                 android:text="Last sync: 00:00"
+                 android:textColor="@color/beeeon_text_hint"
+                 android:textSize="10dp" />
+
+             <TextView
+                 android:id="@+id/titleofsensor"
+                 android:layout_width="wrap_content"
+                 android:layout_height="wrap_content"
+                 android:layout_alignParentLeft="true"
+                 android:layout_alignParentTop="true"
+                 android:layout_marginTop="5dp"
+                 android:layout_toLeftOf="@+id/valueofsensor"
+                 android:ellipsize="marquee" 
+                 android:marqueeRepeatLimit="marquee_forever"
+                 android:scrollHorizontally="true"
+                 android:singleLine="true"
+                 android:text="nameeeeeeeeeeee"
+                 android:textColor="@color/beeeon_text_color"
+                 android:textSize="25dp"
+                 android:textStyle="normal" />
+
+         </RelativeLayout>
+
+     </LinearLayout>
+ </LinearLayout>

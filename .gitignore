@@ -1,7 +1,0 @@
-bin
-gen
-doc
-!doc/IHA.doxyfile
-!doc/makefile
-.metadata
-.settings

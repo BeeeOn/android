@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:minWidth="270dp"
+    android:minHeight="170dp"
+    android:background="@color/light_gray"
+    android:padding="5dp"
+    >
+
+	<TextView
+        android:id="@+id/custom_alert_title"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="@string/alert_title"
+	    android:gravity="center_horizontal"
+	    android:paddingBottom="15dp"
+	    android:textColor="@color/beeeon_primary_cyan"
+	    android:textIsSelectable="false"
+	    android:visibility="gone"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
+	
+	<TextView
+	    android:id="@+id/custom_alert_message"
+	    android:layout_width="fill_parent"
+	    android:layout_height="wrap_content"
+	    android:layout_marginBottom="25dp"
+	    android:text="@string/alert_message"
+	    android:textColor="@color/log_blue2" 
+	    android:gravity="center_horizontal"
+	    android:textIsSelectable="false"
+	    android:visibility="gone"
+	    android:textAppearance="?android:attr/textAppearanceMedium" />
+	
+	<LinearLayout 
+	    android:orientation="horizontal"
+	    android:layout_gravity="center_horizontal"
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
+	    android:layout_marginBottom="10dp">
+	    
+	    <Button
+		    android:id="@+id/custom_alert_neutral_button"
+		    android:layout_width="130dp"
+		    android:layout_height="wrap_content"
+		    android:visibility="gone"
+		    android:layout_gravity="center_horizontal"
+		    android:text="@string/alert_neutral" />
+		
+	
+		<Button
+		    android:id="@+id/custom_alert_positive_button"
+		    android:layout_width="130dp"
+		    android:layout_height="wrap_content"
+		    android:visibility="gone"
+		    android:layout_gravity="center_horizontal"
+		    android:text="@string/alert_positive" />
+		    
+	</LinearLayout>
+	
+	
+
+</LinearLayout>

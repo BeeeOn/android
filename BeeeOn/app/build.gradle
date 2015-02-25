@@ -1,0 +1,69 @@
+apply plugin: 'com.android.application'
+
+// Properties props = new Properties()
+// props.load(new FileInputStream(file("../keystores/keystore.txt")))
+
+android {
+    compileSdkVersion 21
+    buildToolsVersion "21.1.2"
+
+    defaultConfig {
+        applicationId "com.rehivetech.beeeon"
+        minSdkVersion 10
+        targetSdkVersion 21
+        versionCode 34
+        versionName "2.0.2"
+    }
+
+    signingConfigs {
+        debug {
+            storeFile file('../keystores/debug.keystore')
+        }
+        /*release {
+            storeFile file("../keystores/release.keystore")
+            storePassword props['pass_store']
+            keyAlias "beeeon"
+            keyPassword props['pass_alias']
+        }*/
+    }
+
+    buildTypes {
+        debug {
+            signingConfig signingConfigs.debug
+            versionNameSuffix " debug"
+            applicationIdSuffix ".debug"
+        }
+
+        /*debugPlay {
+            signingConfig signingConfigs.release
+            versionNameSuffix " debug"
+        }*/
+
+        /*release {
+            signingConfig signingConfigs.release
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }*/
+    }
+}
+
+repositories {
+    flatDir{ dirs 'libs' }
+    maven { url 'http://dl.bintray.com/goncharov/smart-extension-api/' }
+    mavenCentral()
+}
+
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    // Support libraries
+    compile 'com.android.support:support-v4:21.0.3'
+    compile 'com.google.android.gms:play-services:6.5.87'
+    // Third-party libraries
+    compile 'com.actionbarsherlock:actionbarsherlock:4.4.0@aar'
+    compile 'se.emilsjolander:stickylistheaders:2.5.2'
+    compile 'fr.avianey.com.viewpagerindicator:library:2.4.1@aar'
+    compile 'com.sonyericsson.extras.liveware:utils:3.0'
+    compile 'joda-time:joda-time:2.7'
+    compile 'com.github.amlcurran.showcaseview:showcaseview:5.1.1@aar'
+    // compile('com.jjoe64:graphview:4.0.0') { exclude module: 'appcompat-v7' }
+}

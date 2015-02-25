@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<project default="javadoc">
-    <target name="javadoc">
-        <javadoc access="public" author="true" classpath="libs/graphview-3.1.3.jar;libs/android-support-v4.jar" destdir="doc" doctitle="IHA" nodeprecated="false" nodeprecatedlist="false" noindex="false" nonavbar="false" notree="false" packagenames="cz.vutbr.fit.iha.activity,cz.vutbr.fit.iha.adapter.parser,cz.vutbr.fit.iha.adapter.device,cz.vutbr.fit.iha,cz.vutbr.fit.iha.view,cz.vutbr.fit.iha.adapter" source="1.6" sourcepath="src;gen" splitindex="true" use="true" version="true">
-            <link href="file:/...YOURPATH.../IHA/doc/"/>
-        </javadoc>
-    </target>
-</project>

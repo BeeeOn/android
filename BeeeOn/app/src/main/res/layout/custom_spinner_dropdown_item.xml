@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.rehivetech.beeeon.view.CheckableLinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal" >
+    
+    <ImageView
+         android:id="@+id/custom_spinner_dropdown_icon"
+         android:contentDescription="@string/placeholder_icon"
+         android:layout_width="@dimen/custom_spinner_icon_size"
+         android:layout_height="@dimen/custom_spinner_icon_size"
+         android:paddingLeft="5dp"
+         android:paddingRight="5dp"
+         android:src="@drawable/loc_unknown"/>
+    
+    <CheckedTextView
+	    android:id="@+id/custom_spinner_dropdown_label"
+	    style="?android:attr/spinnerDropDownItemStyle"
+	    android:checkMark="?android:attr/listChoiceIndicatorSingle"
+	    android:singleLine="true"
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content"/>
+    
+</com.rehivetech.beeeon.view.CheckableLinearLayout>

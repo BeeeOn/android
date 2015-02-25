@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+     style="?attr/spinnerDropDownItemStyle"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    
+    android:orientation="vertical"
+    android:background="@color/beeeon_background" >
+    
+     <LinearLayout
+         android:id="@+id/layoutofsensor"
+         android:layout_width="fill_parent"
+         android:layout_height="wrap_content"
+         android:layout_marginLeft="10dp"
+         android:layout_marginRight="10dp"
+         android:orientation="horizontal"
+         android:paddingBottom="5dp"
+         android:paddingLeft="5dp"
+         android:paddingTop="5dp" >
+
+         <ImageView
+             android:id="@+id/iconofsensor"
+             android:layout_width="wrap_content"
+             android:layout_height="56dp"
+             android:adjustViewBounds="true"
+             android:layout_marginTop="6dp"
+             android:src="@drawable/person_silhouette" />
+
+         <RelativeLayout
+             android:layout_width="wrap_content"
+             android:layout_height="64dp"
+             android:layout_gravity="right"
+             android:orientation="horizontal"
+             android:paddingLeft="10dp" >
+             
+             <TextView
+                 android:id="@+id/adapter_user_name"
+                 android:layout_width="fill_parent"
+                 android:layout_height="wrap_content"
+                 android:layout_alignParentLeft="true"
+                 android:layout_alignParentTop="true"
+                 android:layout_marginTop="5dp"
+                 android:ellipsize="marquee"
+                 android:marqueeRepeatLimit="marquee_forever"
+                 android:scrollHorizontally="true"
+                 android:singleLine="true"
+                 android:text="Name of user"
+                 android:textColor="@color/beeeon_text_color"
+                 android:textSize="22dp"
+                 android:textStyle="normal" />
+             
+             <LinearLayout 
+                 android:orientation="vertical"
+                 android:layout_alignParentLeft="true"
+                 android:layout_alignParentBottom="true"
+                 android:layout_marginTop="2dp"
+                 android:layout_height="wrap_content"
+                 android:layout_width="match_parent"
+                 >
+	             <TextView
+	                 android:id="@+id/adapter_user_role"
+	                 android:layout_width="wrap_content"
+	                 android:layout_height="wrap_content"
+	                 
+	                 android:text="user"
+	                 android:textColor="@color/beeeon_text_hint"
+	                 android:textSize="14dp" />
+	             <!-- TextView
+	                 android:layout_width="wrap_content"
+	                 android:layout_height="wrap_content"
+	                 android:text="-"
+	                 android:paddingRight="4dp"
+	                 android:textColor="@color/beeeon_text_hint"
+	                 android:textSize="15dp" /-->
+	             
+	             <TextView
+	                 android:id="@+id/adapter_user_email"
+	                 android:layout_width="fill_parent"
+	                 android:layout_height="wrap_content"
+	                 android:text="email@email.cz"
+	                 android:ellipsize="marquee"
+                 	 android:marqueeRepeatLimit="marquee_forever"
+                 	 android:scrollHorizontally="true"
+                 	 android:singleLine="true"
+	                 android:textColor="@color/beeeon_text_hint"
+	                 android:textSize="14dp" />
+             </LinearLayout>
+
+            
+             
+
+             
+         </RelativeLayout>
+
+     </LinearLayout>
+ </LinearLayout>

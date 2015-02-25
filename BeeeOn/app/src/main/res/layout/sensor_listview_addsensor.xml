@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+     style="?attr/spinnerDropDownItemStyle"
+    android:layout_width="match_parent"
+    android:layout_height="66dp"
+    android:orientation="horizontal"
+    android:paddingTop="15dp"
+    android:paddingBottom="0dp"
+    android:paddingLeft="3dp"
+    android:paddingRight="20dp"
+    android:gravity="right"
+    android:background="@color/beeeon_background" >
+    
+	<ImageView
+        android:id="@+id/sensor_listview_addsensor_image"
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"
+        android:adjustViewBounds="true"
+        android:clickable="true"
+        android:src="@drawable/add_custom_view" />
+</LinearLayout>

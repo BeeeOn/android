@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="@dimen/smart_watch_2_control_width"
+    android:layout_height="@dimen/smart_watch_2_control_height"
+    android:background="@color/white"
+    tools:ignore="PxUsage,UselessParent,contentDescription" >
+
+    <RelativeLayout
+        android:id="@+id/header"
+        android:layout_width="fill_parent"
+        android:layout_height="28px"
+        android:layout_alignParentTop="true"
+        android:background="@color/beeeon_primary_cyan" >
+
+        <ImageView
+            android:id="@+id/battery"
+            android:layout_width="30px"
+            android:layout_height="15px"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="2px"
+            android:layout_marginRight="2px" />
+
+        <TextView
+            android:id="@+id/gallery_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:layout_toLeftOf="@id/battery"
+            android:paddingLeft="6px"
+            android:singleLine="true"
+            android:textColor="@color/white"
+            android:textSize="@dimen/smart_watch_2_text_size_medium"
+            android:textStyle="bold" />
+    </RelativeLayout>
+
+    <!-- footer area for logo, unit and sync time -->
+
+    <RelativeLayout
+        android:id="@+id/footer"
+        android:layout_width="fill_parent"
+        android:layout_height="74px"
+        android:layout_alignParentBottom="true" >
+
+        <ImageView
+            android:id="@+id/thumbnail"
+            android:layout_width="75px"
+            android:layout_height="75px"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:clickable="true"
+            android:paddingBottom="4px"
+            android:paddingLeft="4px"
+            android:paddingRight="4px" 
+            />
+
+        <RelativeLayout
+            android:id="@+id/sync_line"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:clickable="true"
+            android:paddingBottom="2px"
+            android:paddingRight="2px" >
+
+            <ImageView
+                android:id="@+id/sync_icon"
+                android:layout_width="@dimen/smart_watch_2_text_size_small"
+                android:layout_height="@dimen/smart_watch_2_text_size_small"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"
+                android:src="@drawable/sync_darkgrey" />
+
+            <TextView
+                android:id="@+id/sync_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_marginLeft="2px"
+                android:layout_toRightOf="@id/sync_icon"
+                android:singleLine="true"
+                android:textColor="@color/darkgray"
+                android:textSize="@dimen/smart_watch_2_text_size_small" />
+        </RelativeLayout>
+
+        <!-- <TextView -->
+        <!-- android:id="@+id/unit" -->
+        <!-- android:layout_width="wrap_content" -->
+        <!-- android:layout_height="wrap_content" -->
+        <!-- android:layout_alignParentRight="true" -->
+        <!-- android:layout_alignParentTop="true" -->
+        <!-- android:paddingLeft="4px" -->
+        <!-- android:paddingRight="4px" -->
+        <!-- android:singleLine="true" -->
+        <!-- android:text="ppp" -->
+        <!-- android:textColor="@color/beeeon_primary_cyan" -->
+        <!-- android:textSize="50px" -->
+        <!-- android:textStyle="bold" /> -->
+
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/unit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_marginTop="90px"
+        android:paddingLeft="4px"
+        android:paddingRight="4px"
+        android:singleLine="true"
+        android:textColor="@color/beeeon_secundary_pink"
+        android:textSize="50px"
+        android:textStyle="bold" />
+
+    <!-- middle area for value -->
+
+    <TextView
+        android:id="@+id/value"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="30px"
+        android:padding="4px"
+        android:singleLine="true"
+        android:textColor="@color/beeeon_secundary_pink"
+        android:textSize="55px"
+        android:textStyle="bold" />
+
+</RelativeLayout>
