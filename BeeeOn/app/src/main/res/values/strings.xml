@@ -259,4 +259,7 @@
     <string name="ada_menu_users">Users of adapter</string>
     <string name="ada_menu_del">Delete adapter</string>
 
+    <string name="action_watchdog">WatchDog</string>
+
+
 </resources>

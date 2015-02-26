@@ -8,6 +8,9 @@ public interface MenuItem {
     public static final String ID_LOGOUT = "id_logout";
 	public static final String ID_UNDEFINED = "id_undefined";
 
+    // TODO test pryc -> presunout do sekce Applications
+    public static final String ID_WATCHDOG = "id_watchdog";
+
 	public enum MenuItemType {
 		ADAPTER, GROUP_IMAGE, GROUP, CUSTOM_VIEW, LOCATION, PROFILE, SEPARATOR, SETTING, EMPTY
 	}

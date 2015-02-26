@@ -127,9 +127,13 @@
             android:name="com.rehivetech.beeeon.activity.AdapterUsersActivity"
             android:label="@string/title_activity_adapter_users" >
         </activity>
-         <activity
+        <activity
             android:name="com.rehivetech.beeeon.activity.AddAdapterUserActivity"
             android:label="@string/title_activity_add_adapter_user" >
+        </activity>
+        <activity
+            android:name=".activity.WatchDogDetailActivity"
+            android:label="@string/action_watchdog" >
         </activity>
 
         <!-- WIDGETS -->
