@@ -47,10 +47,10 @@ public class WatchDogDetailActivity extends BaseApplicationActivity {
             bundle = savedInstanceState;
         }
 
-        LocationArrayAdapter dataAdapter = new LocationArrayAdapter(this, R.layout.custom_spinner_item, getLocationsArray());
+        //LocationArrayAdapter dataAdapter = new LocationArrayAdapter(this, R.layout.custom_spinner_item, getLocationsArray());
 
         Spinner mSpinnerSensor = (Spinner) findViewById(R.id.watchdogDetailSpinnerChooseSensor);
-        mSpinnerSensor.setAdapter(dataAdapter);
+        //mSpinnerSensor.setAdapter(dataAdapter);
     }
 
     @Override
