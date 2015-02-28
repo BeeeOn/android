@@ -2,11 +2,19 @@ package com.rehivetech.beeeon.activity;
 
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Spinner;
 
 import com.rehivetech.beeeon.R;
+import com.rehivetech.beeeon.adapter.Adapter;
+import com.rehivetech.beeeon.adapter.location.Location;
+import com.rehivetech.beeeon.arrayadapter.LocationArrayAdapter;
 import com.rehivetech.beeeon.base.BaseApplicationActivity;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.util.Log;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * Created by Tomáš on 26. 2. 2015.
@@ -38,11 +46,31 @@ public class WatchDogDetailActivity extends BaseApplicationActivity {
         else{
             bundle = savedInstanceState;
         }
+
+        LocationArrayAdapter dataAdapter = new LocationArrayAdapter(this, R.layout.custom_spinner_item, getLocationsArray());
+
+        Spinner mSpinnerSensor = (Spinner) findViewById(R.id.watchdogDetailSpinnerChooseSensor);
+        mSpinnerSensor.setAdapter(dataAdapter);
     }
 
     @Override
     protected void onAppResume() {
 
+    }
+
+    private List<Location> getLocationsArray() {
+        // Get locations from adapter
+        List<Location> locations = new ArrayList<Location>();
+
+        Adapter adapter = mController.getActiveAdapter();
+        if (adapter != null) {
+            locations = mController.getLocations(adapter.getId());
+        }
+
+        // Sort them
+        Collections.sort(locations);
+
+        return locations;
     }
 
     @Override

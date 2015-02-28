@@ -61,7 +61,7 @@ public class WatchDogListAdapter extends BaseAdapter {
 
             holder.ItemIcon = (ImageView) convertView.findViewById(R.id.watchdogItemIcon);
             holder.ItemSensorName = (TextView) convertView.findViewById(R.id.watchdogItemSensorName);
-            holder.ItemOperator = (TextView) convertView.findViewById(R.id.watchdogItemOperator);
+            holder.ItemOperator = (ImageView) convertView.findViewById(R.id.watchdogItemOperator);
             holder.ItemTreshold = (TextView) convertView.findViewById(R.id.watchdogItemTreshold);
             holder.ItemAction = (ImageView) convertView.findViewById(R.id.watchdogItemAction);
             holder.ItemCheckbox = (CheckBox) convertView.findViewById(R.id.watchdogItemSwitch);
@@ -75,7 +75,7 @@ public class WatchDogListAdapter extends BaseAdapter {
         WRule rule = (WRule) this.getItem(position);
 
         holder.ItemSensorName.setText(rule.name);
-        holder.ItemOperator.setText(rule.operator);
+        holder.setItemOperator(rule.operator);
         holder.ItemTreshold.setText(rule.treshold);
         holder.setItemAction(rule.action);
         holder.ItemCheckbox.setChecked(rule.isActive);
@@ -91,11 +91,23 @@ public class WatchDogListAdapter extends BaseAdapter {
     private static class ViewHolder{
         public ImageView ItemIcon;
         public TextView ItemSensorName;
-        public TextView ItemOperator;
+        public ImageView ItemOperator;
         public TextView ItemTreshold;
         public ImageView ItemAction;
         public CheckBox ItemCheckbox;
         //TODO este switch treba pridat
+
+        void setItemOperator(OperatorType type){
+            switch(type){
+                case SMALLER:
+                    ItemOperator.setImageResource(R.drawable.ic_action_previous_item);
+                    break;
+
+                case GREATER:
+                    ItemOperator.setImageResource(R.drawable.ic_action_next_item);
+                    break;
+            }
+        }
 
         void setItemAction(ActionType type){
             switch(type){
@@ -110,17 +122,18 @@ public class WatchDogListAdapter extends BaseAdapter {
         }
     }
 
-    public enum ActionType{ NOTIFICATION, ACTOR_ACTION };
+    public static enum OperatorType{ SMALLER, GREATER };
+    public static enum ActionType{ NOTIFICATION, ACTOR_ACTION };
 
     public static class WRule{
         String name; // TODO pryc -> bude z device->name
-        String operator;
+        OperatorType operator;
         ActionType action;
         //Device device;
         String treshold; // TODO jako nejaka hodnota devicu
         boolean isActive;
 
-        public WRule(String na, String op, ActionType act, String tresh, boolean isAct ){
+        public WRule(String na, OperatorType op, ActionType act, String tresh, boolean isAct ){
             name = na;
             operator = op;
             action = act;
