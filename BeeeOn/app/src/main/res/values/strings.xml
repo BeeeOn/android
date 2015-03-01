@@ -247,5 +247,10 @@
 
     <!-- Default names -->
     <string name="adapter_default_name">Adapter #%d</string>
+    <string name="settings">Settings</string>
+    <string name="save">Save</string>
+    <string name="ada_menu_edit">Edit adapter name</string>
+    <string name="ada_menu_users">Users of adapter</string>
+    <string name="ada_menu_del">Delete adapter</string>
 
 </resources>

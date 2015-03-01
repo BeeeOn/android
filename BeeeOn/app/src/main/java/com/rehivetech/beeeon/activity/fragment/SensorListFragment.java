@@ -6,9 +6,15 @@ import java.util.List;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
+import android.support.v7.app.ActionBarActivity;
+import android.support.v7.view.ActionMode;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -19,11 +25,6 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.actionbarsherlock.app.SherlockFragment;
-import com.actionbarsherlock.view.ActionMode;
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuInflater;
-import com.actionbarsherlock.view.MenuItem;
 import com.github.amlcurran.showcaseview.OnShowcaseEventListener;
 import com.github.amlcurran.showcaseview.ShowcaseView;
 import com.github.amlcurran.showcaseview.targets.ViewTarget;
@@ -44,7 +45,7 @@ import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.thread.ToastMessageThread;
 import com.rehivetech.beeeon.util.Log;
 
-public class SensorListFragment extends SherlockFragment {
+public class SensorListFragment extends Fragment {
 
 	private static final String TAG = SensorListFragment.class.getSimpleName();
 
@@ -84,11 +85,11 @@ public class SensorListFragment extends SherlockFragment {
 		Log.d(TAG, "onCreate()");
 		ready = false;
 
-		if (!(getSherlockActivity() instanceof MainActivity)) {
+		if (!(getActivity() instanceof MainActivity)) {
 			throw new IllegalStateException("Activity holding SensorListFragment must be MainActivity");
 		}
 
-		mActivity = (MainActivity) getSherlockActivity();
+		mActivity = (MainActivity) getActivity();
 		mController = Controller.getInstance(mActivity);
 
 		if (savedInstanceState != null) {
@@ -331,7 +332,7 @@ public class SensorListFragment extends SherlockFragment {
 					mSensorList.setOnItemLongClickListener(new OnItemLongClickListener() {
 						@Override
 						public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-							mMode = getSherlockActivity().startActionMode(new ActionModeEditSensors());
+							mMode =  ((ActionBarActivity) getActivity()).startSupportActionMode(new ActionModeEditSensors());
 							return true;
 						}
 					});

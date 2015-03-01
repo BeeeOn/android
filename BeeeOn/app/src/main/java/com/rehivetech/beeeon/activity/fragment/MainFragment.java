@@ -9,12 +9,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.actionbarsherlock.app.SherlockFragment;
 
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.ViewPagerAdapter;
 
-public class MainFragment extends SherlockFragment {
+public class MainFragment extends Fragment {
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -22,7 +21,7 @@ public class MainFragment extends SherlockFragment {
 		// Locate the ViewPager in viewpager_main.xml
 		ViewPager mViewPager = (ViewPager) view.findViewById(R.id.viewPager);
 		// Set the ViewPagerAdapter into ViewPager
-		mViewPager.setAdapter(new ViewPagerAdapter(getChildFragmentManager(), getSherlockActivity().getApplicationContext()));
+		mViewPager.setAdapter(new ViewPagerAdapter(getChildFragmentManager(), getActivity().getApplicationContext()));
 		mViewPager.setCurrentItem(0);
 		return view;
 	}

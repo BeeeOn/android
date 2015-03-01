@@ -1,14 +1,14 @@
 package com.rehivetech.beeeon.base;
 
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
 
-import com.actionbarsherlock.app.SherlockDialogFragment;
 import com.google.analytics.tracking.android.EasyTracker;
 import com.google.analytics.tracking.android.Fields;
 import com.google.analytics.tracking.android.MapBuilder;
 import com.google.analytics.tracking.android.Tracker;
 
-public abstract class TrackDialogFragment extends SherlockDialogFragment {
+public abstract class TrackDialogFragment extends DialogFragment {
 
 	private Tracker tracker;
 

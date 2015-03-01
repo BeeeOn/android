@@ -4,8 +4,8 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.view.MenuItem;
 
-import com.actionbarsherlock.view.MenuItem;
 
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.activity.fragment.LocationDetailFragment;

@@ -60,7 +60,7 @@ public class AddAdapterFragment extends TrackFragment {
 	    	Log.d(TAG, "ADD ADAPTER fragment is visible");
 	    	mActivity.setBtnLastPage();
 	    	mActivity.setFragment(this);
-	    	InputMethodManager imm = (InputMethodManager) getSherlockActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+	    	InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
 			imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
 	    }
 

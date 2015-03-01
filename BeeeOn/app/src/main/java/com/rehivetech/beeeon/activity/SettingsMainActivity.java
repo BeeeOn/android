@@ -3,13 +3,16 @@ package com.rehivetech.beeeon.activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
+import android.os.Build;
 import android.os.Bundle;
 import android.preference.ListPreference;
 import android.preference.Preference;
+import android.preference.PreferenceActivity;
+import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 
-import com.actionbarsherlock.app.SherlockPreferenceActivity;
-import com.actionbarsherlock.view.MenuItem;
 
+import com.rehivetech.beeeon.ActionBarPreferenceActivity;
 import com.rehivetech.beeeon.Constants;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.controller.Controller;
@@ -19,7 +22,7 @@ import com.rehivetech.beeeon.util.Timezone;
 /**
  * The control preference activity handles the preferences for the control extension.
  */
-public class SettingsMainActivity extends SherlockPreferenceActivity implements OnSharedPreferenceChangeListener {
+public class SettingsMainActivity extends ActionBarPreferenceActivity implements OnSharedPreferenceChangeListener {
 	/**
 	 * keys which are defined in res/xml/preferences.xml
 	 */
@@ -34,17 +37,27 @@ public class SettingsMainActivity extends SherlockPreferenceActivity implements 
 	private Controller mController;
 	private SharedPreferences mPrefs;
 
-	// added suppressWarnings because of support of lower version
-	@SuppressWarnings("deprecation")
+    @Override
+    protected int getPreferencesXmlId() {
+        return R.xml.main_preferences;
+    }
+
+    // added suppressWarnings because of support of lower version
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
 		mController = Controller.getInstance(getApplicationContext());
 
-		getSupportActionBar().setHomeButtonEnabled(true);
-		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-		getSupportActionBar().setIcon(R.drawable.ic_launcher_null);
+        /*
+        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.HONEYCOMB_MR2) {
+            getActionBar().setDisplayHomeAsUpEnabled(true);
+            getActionBar().setHomeButtonEnabled(true);
+            getActionBar().setIcon(R.drawable.ic_launcher_null);
+        }*/
+        final Toolbar toolbar=getToolbar();
+        toolbar.setTitle(R.string.settings);
+
 
 		// Use own name for sharedPreferences
 		getPreferenceManager().setSharedPreferencesName(Persistence.getPreferencesFilename(mController.getActualUser().getEmail()));

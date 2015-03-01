@@ -12,7 +12,11 @@ import android.location.Location;
 import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.view.MenuItemCompat;
+import android.support.v7.widget.SearchView;
 import android.view.KeyEvent;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
@@ -20,9 +24,6 @@ import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 import android.widget.Toast;
 
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuItem;
-import com.actionbarsherlock.view.MenuItem.OnActionExpandListener;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMap.OnMapLongClickListener;
@@ -49,6 +50,7 @@ public class MapGeofenceActivity extends BaseActivity implements OnMapLongClickL
 	private static final int MAXIMUM_RET_ADDRESS = 3;
 
 	private EditText mEditSearch;
+    private SearchView mSearchView;
 
 	private GoogleMap mMap;
 
@@ -70,12 +72,17 @@ public class MapGeofenceActivity extends BaseActivity implements OnMapLongClickL
 	// Create the options menu
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		final MenuItem menuSearch = menu.add(0, 1, 1, R.string.action_search);
+		/*final MenuItem menuSearch = menu.add(0, 1, 1, R.string.action_search);
 		menuSearch.setIcon(R.drawable.action_search).setActionView(R.layout.action_search)
 				.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM | MenuItem.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW);
 
-		mEditSearch = (EditText) menuSearch.getActionView();
+		mEditSearch = (EditText) menuSearch.getActionView();*/
 
+        getMenuInflater().inflate(R.menu.map_menu, menu);
+
+        MenuItem searchItem = menu.findItem(R.id.action_search);
+        mSearchView = (SearchView) MenuItemCompat.getActionView(searchItem);
+/*
 		mEditSearch.setOnEditorActionListener(new OnEditorActionListener() {
 			@Override
 			public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
@@ -103,7 +110,7 @@ public class MapGeofenceActivity extends BaseActivity implements OnMapLongClickL
 			}
 		});
 
-		menuSearch.setOnActionExpandListener(new OnActionExpandListener() {
+		menuSearch.setOnActionExpandListener(new MenuItem.OnActionExpandListener() {
 
 			// Menu Action Collapse
 			@Override
@@ -126,7 +133,7 @@ public class MapGeofenceActivity extends BaseActivity implements OnMapLongClickL
 				return true;
 			}
 		});
-
+*/
 		return true;
 	}
 
@@ -136,6 +143,9 @@ public class MapGeofenceActivity extends BaseActivity implements OnMapLongClickL
 		case android.R.id.home:
 			finish();
 			return true;
+        case R.id.action_search:
+                mSearchView.setIconified(false);
+                return true;
 		}
 		return false;
 	}

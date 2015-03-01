@@ -1,18 +1,18 @@
 package com.rehivetech.beeeon.activity.fragment;
 
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.actionbarsherlock.app.SherlockFragment;
 
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.util.Log;
 
 //import com.rehivetech.beeeon.activity.SensorDetailFragment.GetDeviceTask;
 
-public class LocationDetailFragment extends SherlockFragment {
+public class LocationDetailFragment extends Fragment {
 
 	private static final String TAG = LocationDetailFragment.class.getSimpleName();
 

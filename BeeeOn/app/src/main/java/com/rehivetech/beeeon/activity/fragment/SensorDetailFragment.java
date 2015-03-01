@@ -18,8 +18,14 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v7.app.ActionBarActivity;
+import android.support.v7.view.ActionMode;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -37,10 +43,6 @@ import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import com.actionbarsherlock.app.SherlockFragment;
-import com.actionbarsherlock.view.ActionMode;
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuItem;
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.GraphView.GraphViewData;
 import com.jjoe64.graphview.GraphViewSeries;
@@ -79,7 +81,7 @@ import com.rehivetech.beeeon.util.UnitsHelper;
 
 //import android.widget.LinearLayout;
 
-public class SensorDetailFragment extends SherlockFragment {
+public class SensorDetailFragment extends Fragment {
 
 	private Controller mController;
 	private static final String TAG = SensorDetailFragment.class.getSimpleName();
@@ -260,7 +262,7 @@ public class SensorDetailFragment extends SherlockFragment {
 					mEditMode = EDIT_REFRESH_T;
 					// Disable Swipe
 					mActivity.setEnableSwipe(false);
-					mMode = getSherlockActivity().startActionMode(new AnActionModeOfSensorEdit());
+					mMode =  ((ActionBarActivity) getActivity()).startSupportActionMode(new AnActionModeOfSensorEdit());
 					mLastProgressRefreshTime = seekBar.getProgress();
 				}
 
@@ -330,12 +332,12 @@ public class SensorDetailFragment extends SherlockFragment {
 					mActivity.setEnableSwipe(false);
 	
 					mEditMode = EDIT_NAME;
-					mMode = getSherlockActivity().startActionMode(new AnActionModeOfSensorEdit());
+					mMode =  ((ActionBarActivity) getActivity()).startSupportActionMode(new AnActionModeOfSensorEdit());
 					mName.setVisibility(View.GONE);
 					mRectangleName.setVisibility(View.GONE);
 					mNameEdit.setVisibility(View.VISIBLE);
 					mNameEdit.setText(mName.getText());
-					InputMethodManager imm = (InputMethodManager) getSherlockActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+					InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
 					imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
 					// return true;
 				}
@@ -380,7 +382,7 @@ public class SensorDetailFragment extends SherlockFragment {
 						mActivity.setEnableSwipe(false);
 	
 						mEditMode = EDIT_LOC;
-						mMode = getSherlockActivity().startActionMode(new AnActionModeOfSensorEdit());
+						mMode =  ((ActionBarActivity) getActivity()).startSupportActionMode(new AnActionModeOfSensorEdit());
 						mSpinnerLoc.setVisibility(View.VISIBLE);
 						mLocation.setVisibility(View.GONE);
 						mRectangleLoc.setVisibility(View.GONE);
@@ -457,7 +459,7 @@ public class SensorDetailFragment extends SherlockFragment {
 
 		// Disable progress bar
 		// getActivity().setProgressBarIndeterminateVisibility(false);
-		getSherlockActivity().setSupportProgressBarIndeterminateVisibility(false);
+		getActivity().setProgressBarIndeterminateVisibility(false);
 	}
 
 	
@@ -749,8 +751,12 @@ public class SensorDetailFragment extends SherlockFragment {
 
 		@Override
 		public boolean onCreateActionMode(ActionMode mode, Menu menu) {
-			menu.add("Save").setIcon(R.drawable.beeeon_ic_action_accept).setTitle("Save").setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-			menu.add("Cancel").setIcon(R.drawable.beeeon_ic_action_cancel).setTitle("Cancel").setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+            MenuInflater inflater = mode.getMenuInflater();
+            inflater.inflate(R.menu.sensor_detail_menu, menu);
+
+
+            //menu.add("Save").setIcon(R.drawable.beeeon_ic_action_accept).setTitle("Save").setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+			//menu.add("Cancel").setIcon(R.drawable.beeeon_ic_action_cancel).setTitle("Cancel").setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 			return true;
 		}
 
@@ -761,7 +767,7 @@ public class SensorDetailFragment extends SherlockFragment {
 
 		@Override
 		public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
-			InputMethodManager imm = (InputMethodManager) getSherlockActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+			InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
 
 			switch (mEditMode) {
 			case EDIT_LOC:
@@ -843,7 +849,7 @@ public class SensorDetailFragment extends SherlockFragment {
 			mName.setVisibility(View.VISIBLE);
 			mRectangleName.setVisibility(View.VISIBLE);
 			mNameEdit.clearFocus();
-			InputMethodManager imm = (InputMethodManager) getSherlockActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+			InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
 			imm.hideSoftInputFromWindow(mNameEdit.getWindowToken(), 0);
 			// mRefreshTimeValue.setProgress(mLastProgressRefreshTime);
 			mEditMode = EDIT_NONE;

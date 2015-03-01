@@ -10,9 +10,12 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 
-import com.actionbarsherlock.app.ActionBar;
-import com.actionbarsherlock.app.ActionBar.Tab;
-import com.actionbarsherlock.app.SherlockFragmentActivity;
+//import com.actionbarsherlock.app.ActionBar;
+//import com.actionbarsherlock.app.ActionBar.Tab;
+//import com.actionbarsherlock.app.SherlockFragmentActivity;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBar.Tab;
+import android.support.v7.app.ActionBarActivity;
 
 public class TabsAdapter extends FragmentPagerAdapter implements ActionBar.TabListener, ViewPager.OnPageChangeListener {
 	private final Context mContext;
@@ -30,7 +33,7 @@ public class TabsAdapter extends FragmentPagerAdapter implements ActionBar.TabLi
 		}
 	}
 
-	public TabsAdapter(SherlockFragmentActivity activity, ViewPager pager) {
+	public TabsAdapter(ActionBarActivity activity, ViewPager pager) {
 		super(activity.getSupportFragmentManager());
 		mContext = activity;
 		mActionBar = activity.getSupportActionBar();

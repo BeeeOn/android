@@ -1,11 +1,11 @@
 package com.rehivetech.beeeon.activity;
 
-import com.actionbarsherlock.view.MenuItem;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ArrayAdapter;

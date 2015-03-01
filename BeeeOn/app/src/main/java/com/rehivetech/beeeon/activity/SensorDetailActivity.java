@@ -9,10 +9,10 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.view.MenuItem;
+import android.view.Window;
 import android.widget.Toast;
 
-import com.actionbarsherlock.view.MenuItem;
-import com.actionbarsherlock.view.Window;
 
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.activity.fragment.SensorDetailFragment;
@@ -57,7 +57,7 @@ public class SensorDetailActivity extends BaseApplicationActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
+        supportRequestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
 		setContentView(R.layout.activity_sensor_detail_wraper);
 
 		setSupportProgressBarIndeterminate(true);
@@ -175,7 +175,7 @@ public class SensorDetailActivity extends BaseApplicationActivity {
 		}
 
 		@Override
-		public SensorDetailFragment getItem(int position) {
+		public android.support.v4.app.Fragment getItem(int position) {
 			Log.d(TAG, "Here 2 " + position);
 			return SensorDetailFragment.create(mDevices.get(position).getId(), mDevices.get(position).getFacility().getLocationId(), position, mActiveDevicePosition, mActiveAdapterId);
 		}

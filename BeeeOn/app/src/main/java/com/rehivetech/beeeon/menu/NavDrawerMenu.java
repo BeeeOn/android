@@ -1,8 +1,5 @@
 package com.rehivetech.beeeon.menu;
 
-import java.util.List;
-
-import se.emilsjolander.stickylistheaders.StickyListHeadersListView;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
@@ -10,8 +7,13 @@ import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.view.GravityCompat;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.internal.view.menu.MenuItemImpl;
+import android.support.v7.view.ActionMode;
 import android.view.KeyEvent;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnKeyListener;
@@ -20,8 +22,6 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.Toast;
 
-import com.actionbarsherlock.view.ActionMode;
-import com.actionbarsherlock.view.Menu;
 
 import com.rehivetech.beeeon.Constants;
 import com.rehivetech.beeeon.R;
@@ -50,6 +50,12 @@ import com.rehivetech.beeeon.household.ActualUser;
 import com.rehivetech.beeeon.persistence.Persistence;
 import com.rehivetech.beeeon.thread.ToastMessageThread;
 import com.rehivetech.beeeon.util.Log;
+
+import java.util.List;
+
+import se.emilsjolander.stickylistheaders.StickyListHeadersListView;
+
+import static android.support.v7.view.ActionMode.*;
 
 public class NavDrawerMenu {
 	private static final String TAG = "NavDrawerMenu";
@@ -192,12 +198,12 @@ public class NavDrawerMenu {
 				switch (mSelectedMenuItem.getType()) {
 				case LOCATION:
 					if(!mSelectedMenuItem.getId().equals(Constants.GUI_MENU_ALL_SENSOR_ID))
-						mMode = mActivity.startActionMode(new ActionModeLocations());
+						mMode = mActivity.startSupportActionMode(new ActionModeLocations());
 					break;
 				case ADAPTER:
 					Log.i(TAG, "Long press - adapter");
 					//mAdaterIdUnregist = item.getId();
-					mMode = mActivity.startActionMode(new ActionModeAdapters());
+					mMode = mActivity.startSupportActionMode(new ActionModeAdapters());
 					mSelectedMenuItem.setIsSelected();
 					break;
 				default:
@@ -541,15 +547,20 @@ public class NavDrawerMenu {
 		}
 	}
 
-	class ActionModeAdapters implements ActionMode.Callback {
+	class ActionModeAdapters implements Callback {
 
 		@Override
 		public boolean onCreateActionMode(ActionMode mode, Menu menu) {
-			if(mController.isUserAllowed(mController.getAdapter(mSelectedMenuItem.getId()).getRole()) ) {
-				menu.add("Edit").setIcon(R.drawable.ic_mode_edit_white_24dp).setShowAsAction(com.actionbarsherlock.view.MenuItem.SHOW_AS_ACTION_ALWAYS);
-				menu.add("Users").setIcon(R.drawable.ic_group_white_24dp).setShowAsAction(com.actionbarsherlock.view.MenuItem.SHOW_AS_ACTION_ALWAYS);
+            MenuInflater inflater = mode.getMenuInflater();
+            inflater.inflate(R.menu.adapter_menu, menu);
+
+			if(!mController.isUserAllowed(mController.getAdapter(mSelectedMenuItem.getId()).getRole()) ) {
+                menu.getItem(0).setVisible(false);
+                menu.getItem(1).setVisible(false);
+				//menu.add("Edit").setIcon(R.drawable.ic_mode_edit_white_24dp).setShowAsAction(MenuItemCompat.SHOW_AS_ACTION_ALWAYS);
+				//menu.add("Users").setIcon(R.drawable.ic_group_white_24dp).setShowAsAction(MenuItemCompat.SHOW_AS_ACTION_ALWAYS);
 			}
-			menu.add("Unregist").setIcon(R.drawable.ic_delete_white_24dp).setShowAsAction(com.actionbarsherlock.view.MenuItem.SHOW_AS_ACTION_IF_ROOM);
+			//menu.add("Unregist").setIcon(R.drawable.ic_delete_white_24dp).setShowAsAction(MenuItemCompat.SHOW_AS_ACTION_IF_ROOM);
 			//menu.add("Cancel").setIcon(R.drawable.beeeon_ic_action_cancel).setTitle("Cancel").setShowAsAction(com.actionbarsherlock.view.MenuItem.SHOW_AS_ACTION_ALWAYS);
 			return true;
 		}
@@ -560,37 +571,38 @@ public class NavDrawerMenu {
 			return false;
 		}
 
-		@Override
-		public void onDestroyActionMode(ActionMode mode) {
-			mMode = null;
-			mSelectedMenuItem.setNotSelected();
-		}
-
-		@Override
-		public boolean onActionItemClicked(ActionMode mode, com.actionbarsherlock.view.MenuItem item) {
-			if (item.getTitle().equals("Unregist")) { // UNREGIST ADAPTER
+        @Override
+        public boolean onActionItemClicked(ActionMode actionMode, android.view.MenuItem menuItem) {
+           /*if (item.getTitle().equals("Unregist")) { // UNREGIST ADAPTER
 				doUnregistAdapter(mSelectedMenuItem.getId());
 			} else if (item.getTitle().equals("Users")) { // GO TO USERS OF ADAPTER
 				Intent intent = new Intent(mActivity, AdapterUsersActivity.class);
 				intent.putExtra(Constants.GUI_SELECTED_ADAPTER_ID, mSelectedMenuItem.getId());
 				mActivity.startActivity(intent);
-				
+
 			} else if (item.getTitle().equals("Edit")) { // RENAME ADAPTER
 				new ToastMessageThread(mActivity, R.string.toast_not_implemented).start();
 			}
 
-			mode.finish();
-			return true;
+			mode.finish();*/
+            return true;
+        }
+
+        @Override
+		public void onDestroyActionMode(ActionMode mode) {
+			mMode = null;
+			mSelectedMenuItem.setNotSelected();
 		}
+
 	}
 
-	class ActionModeLocations implements ActionMode.Callback {
+	class ActionModeLocations implements Callback {
 
 		@Override
 		public boolean onCreateActionMode(ActionMode mode, Menu menu) {
-			menu.add("Edit").setShowAsAction(com.actionbarsherlock.view.MenuItem.SHOW_AS_ACTION_ALWAYS);
-			// menu.add("Unregist").setShowAsAction(com.actionbarsherlock.view.MenuItem.SHOW_AS_ACTION_IF_ROOM);
-			menu.add("Cancel").setIcon(R.drawable.beeeon_ic_action_cancel).setTitle("Cancel").setShowAsAction(com.actionbarsherlock.view.MenuItem.SHOW_AS_ACTION_ALWAYS);
+			//menu.add("Edit").setShowAsAction(MenuItemImpl.SHOW_AS_ACTION_ALWAYS);
+			    // menu.add("Unregist").setShowAsAction(com.actionbarsherlock.view.MenuItem.SHOW_AS_ACTION_IF_ROOM);
+			//menu.add("Cancel").setIcon(R.drawable.beeeon_ic_action_cancel).setTitle("Cancel").setShowAsAction(MenuItemImpl.SHOW_AS_ACTION_ALWAYS);
 			return true;
 		}
 
@@ -600,20 +612,22 @@ public class NavDrawerMenu {
 			return false;
 		}
 
-		@Override
+        @Override
+        public boolean onActionItemClicked(ActionMode mode, android.view.MenuItem menuItem) {
+            /*if (item.getTitle().equals("Edit")) {
+				new ToastMessageThread(mActivity, R.string.toast_not_implemented).start();
+			}*/
+            mode.finish();
+            return true;
+        }
+
+
+        @Override
 		public void onDestroyActionMode(ActionMode mode) {
 			mMode = null;
 
 		}
 
-		@Override
-		public boolean onActionItemClicked(ActionMode mode, com.actionbarsherlock.view.MenuItem item) {
-			if (item.getTitle().equals("Edit")) {
-				new ToastMessageThread(mActivity, R.string.toast_not_implemented).start();
-			}
-			mode.finish();
-			return true;
-		}
 	}
 
 	public void finishActinMode() {

@@ -5,11 +5,11 @@ import android.app.ProgressDialog;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 
-import com.actionbarsherlock.view.MenuItem;
 import com.viewpagerindicator.CirclePageIndicator;
 
 import com.rehivetech.beeeon.AddAdapterFragmentAdapter;

@@ -3,14 +3,18 @@ package com.rehivetech.beeeon.activity;
 import java.util.HashMap;
 import java.util.Map;
 
+import android.app.ActionBar;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.os.Bundle;
 import android.preference.ListPreference;
+import android.preference.PreferenceActivity;
+import android.support.v7.app.ActionBarActivity;
+import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 
-import com.actionbarsherlock.app.SherlockPreferenceActivity;
-import com.actionbarsherlock.view.MenuItem;
 
+import com.rehivetech.beeeon.ActionBarPreferenceActivity;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.adapter.device.units.BaseUnit;
 import com.rehivetech.beeeon.adapter.device.units.NoiseUnit;
@@ -21,7 +25,7 @@ import com.rehivetech.beeeon.persistence.Persistence;
 /**
  * The control preference activity handles the preferences for the control extension.
  */
-public class SettingsUnitActivity extends SherlockPreferenceActivity implements OnSharedPreferenceChangeListener {
+public class SettingsUnitActivity extends ActionBarPreferenceActivity implements OnSharedPreferenceChangeListener {
 	/**
 	 * keys which are defined in res/xml/preferences.xml
 	 */
@@ -44,7 +48,12 @@ public class SettingsUnitActivity extends SherlockPreferenceActivity implements 
 		mPreferences.put(unit.getPersistenceKey(), pref);
 	}
 
-	// added suppressWarnings because of support of lower version
+    @Override
+    protected int getPreferencesXmlId() {
+        return R.xml.unit_preferences;
+    }
+
+    // added suppressWarnings because of support of lower version
 	@SuppressWarnings("deprecation")
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -52,9 +61,8 @@ public class SettingsUnitActivity extends SherlockPreferenceActivity implements 
 
 		mController = Controller.getInstance(getApplicationContext());
 
-		getSupportActionBar().setHomeButtonEnabled(true);
-		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-		getSupportActionBar().setIcon(R.drawable.ic_launcher_null);
+        final Toolbar toolbar=getToolbar();
+        toolbar.setTitle(R.string.units);
 
 		// Use own name for sharedPreferences
 		getPreferenceManager().setSharedPreferencesName(Persistence.getPreferencesFilename(mController.getActualUser().getEmail()));

@@ -31,7 +31,7 @@ public class InfoDialogFragment extends TrackDialogFragment {
 	@Override
 	public Dialog onCreateDialog(Bundle savedInstanceState) {
 
-		LayoutInflater factory = LayoutInflater.from(getSherlockActivity());
+		LayoutInflater factory = LayoutInflater.from(getActivity());
 		final View view = factory.inflate(R.layout.fragment_info, null);
 
 		version = (TextView) view.findViewById(R.id.version);
