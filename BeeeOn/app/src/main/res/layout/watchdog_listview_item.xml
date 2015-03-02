@@ -9,7 +9,7 @@
     <ImageView
         android:id="@+id/watchdogItemIcon"
         android:layout_width="40dp"
-        android:layout_height="wrap_content"
+        android:layout_height="40dp"
         android:src="@drawable/dev_temperature"
         android:scaleType="fitCenter"
         android:layout_alignParentLeft="true"
@@ -28,19 +28,22 @@
         android:textColor="@color/beeeon_text_color"
         android:layout_alignParentTop="true"
         android:layout_alignLeft="@+id/watchdogItemOperator"
-        android:layout_alignStart="@+id/watchdogItemOperator" />
+        android:layout_alignStart="@+id/watchdogItemOperator"
+        />
 
     <ImageView
         android:id="@+id/watchdogItemOperator"
-        android:layout_width="20dp"
-        android:layout_height="20dp"
+        android:layout_width="22dp"
+        android:layout_height="22dp"
         android:scaleType="fitCenter"
         android:src="@drawable/ic_action_previous_item"
         android:background="@drawable/oval_cyan"
-        android:layout_below="@id/watchdogItemSensorName"
-        android:layout_toRightOf="@id/watchdogItemIcon"
         android:padding="2dp"
-    />
+        android:layout_below="@+id/watchdogItemSensorName"
+        android:layout_alignBottom="@+id/watchdogItemIcon"
+        android:layout_toRightOf="@+id/watchdogItemIcon"
+        android:layout_toEndOf="@+id/watchdogItemIcon"
+        />
 
     <TextView
         android:id="@+id/watchdogItemTreshold"
@@ -60,6 +63,7 @@
         android:id="@+id/watchdogItemAction"
         android:layout_width="24dp"
         android:layout_height="wrap_content"
+        android:scaleType="fitCenter"
         android:src="@drawable/ic_notification"
         android:layout_toLeftOf="@+id/watchdogItemSwitch"
         android:layout_toStartOf="@+id/watchdogItemSwitch"
