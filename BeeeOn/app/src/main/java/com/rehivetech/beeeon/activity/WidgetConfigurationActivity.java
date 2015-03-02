@@ -55,9 +55,9 @@ public class WidgetConfigurationActivity extends BaseActivity {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
+        requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
 		setSupportProgressBarIndeterminate(true);
+        super.onCreate(savedInstanceState);
 
 		context = this;
 		
