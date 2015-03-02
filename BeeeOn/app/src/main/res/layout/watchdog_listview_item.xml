@@ -66,31 +66,18 @@
         android:layout_centerVertical="true"
         />
 
-    <CheckBox
+    <android.support.v7.widget.SwitchCompat
         android:id="@+id/watchdogItemSwitch"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
-        android:checked="true"
         android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
         android:focusable="false"
         android:focusableInTouchMode="false"
-        android:layout_marginRight="16dp"
     />
-
-
-    <!--
-    <android.support.v7.widget.SwitchCompat
-        android:id="@+id/watchdogItemSwitch"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:layout_marginLeft="16dp"
-    />
-    -->
 
     <!-- separator z navdrawer-->
     <include

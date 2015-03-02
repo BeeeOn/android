@@ -1,9 +1,14 @@
 package com.rehivetech.beeeon.activity.fragment;
 
+import android.support.v4.app.Fragment;
 import android.content.Intent;
 import android.graphics.Rect;
 import android.os.Bundle;
+import android.support.v7.view.ActionMode;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,12 +16,6 @@ import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Toast;
-
-import com.actionbarsherlock.app.SherlockFragment;
-import com.actionbarsherlock.view.ActionMode;
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuInflater;
-import com.actionbarsherlock.view.MenuItem;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.activity.MainActivity;
 import com.rehivetech.beeeon.activity.WatchDogDetailActivity;
@@ -32,7 +31,7 @@ import java.util.List;
 /**
  * Created by Tomáš on 23. 2. 2015.
  */
-public class WatchDogListFragment extends SherlockFragment{
+public class WatchDogListFragment extends Fragment{
     private static final String TAG = WatchDogListFragment.class.getSimpleName();
 
     private static final String ADAPTER_ID = "lastAdapterId";
@@ -57,11 +56,11 @@ public class WatchDogListFragment extends SherlockFragment{
         super.onCreate(savedInstanceState);
         Log.d(TAG, "onCreate()");
 
-        if (!(getSherlockActivity() instanceof MainActivity)) {
+        mActivity = (MainActivity) getActivity();
+        if (!(mActivity instanceof MainActivity)) {
             throw new IllegalStateException("Activity holding SensorListFragment must be MainActivity");
         }
 
-        mActivity = (MainActivity) getSherlockActivity();
         mController = Controller.getInstance(mActivity);
 
         if (savedInstanceState != null) {
@@ -129,7 +128,7 @@ public class WatchDogListFragment extends SherlockFragment{
 
                 // TODO treba zmenit switcher na checkboxy ?
 
-                mMode = getSherlockActivity().startActionMode(new ActionModeEditRules());
+                mMode = mActivity.startSupportActionMode(new ActionModeEditRules());
                 return true;
             }
         });
@@ -168,43 +167,36 @@ public class WatchDogListFragment extends SherlockFragment{
         });
     }
 
-    public void onDestroyActionMode(ActionMode mode) {
-        mMode = null;
-    }
-
     class ActionModeEditRules implements ActionMode.Callback {
-
         @Override
-        public boolean onCreateActionMode(ActionMode mode, Menu menu) {
-            MenuInflater inflater = mode.getMenuInflater();
+        public boolean onCreateActionMode(ActionMode actionMode, Menu menu) {
+            MenuInflater inflater = actionMode.getMenuInflater();
             inflater.inflate(R.menu.watchdoglist_actionmode, menu);
             return true;
         }
 
         @Override
-        public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
-            // TODO Auto-generated method stub
+        public boolean onPrepareActionMode(ActionMode actionMode, Menu menu) {
             return false;
         }
 
         @Override
-        public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
-            if (item.getTitle().equals(getResources().getString(R.string.action_hide_sensor))) {
+        public boolean onActionItemClicked(ActionMode actionMode, MenuItem menuItem) {
+            if (menuItem.getTitle().equals(getResources().getString(R.string.action_hide_sensor))) {
                 // doHideSensorTask(mDeviceHide);
-            } else if (item.getTitle().equals(getResources().getString(R.string.action_hide_facility))) {
+            } else if (menuItem.getTitle().equals(getResources().getString(R.string.action_hide_facility))) {
                 new ToastMessageThread(mActivity, R.string.toast_not_implemented).start();
-            } else if (item.getTitle().equals(getResources().getString(R.string.action_unregist_facility))) {
+            } else if (menuItem.getTitle().equals(getResources().getString(R.string.action_unregist_facility))) {
                 new ToastMessageThread(mActivity, R.string.toast_not_implemented).start();
             }
 
-            mode.finish();
+            actionMode.finish();
             return true;
         }
 
         @Override
-        public void onDestroyActionMode(ActionMode mode) {
+        public void onDestroyActionMode(ActionMode actionMode) {
             mMode = null;
-
         }
     }
 

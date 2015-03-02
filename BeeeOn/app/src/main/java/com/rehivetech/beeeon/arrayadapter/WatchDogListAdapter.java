@@ -2,12 +2,12 @@ package com.rehivetech.beeeon.arrayadapter;
 
 import android.content.Context;
 import android.media.Image;
+import android.support.v7.widget.SwitchCompat;
 import android.text.Layout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -64,7 +64,7 @@ public class WatchDogListAdapter extends BaseAdapter {
             holder.ItemOperator = (ImageView) convertView.findViewById(R.id.watchdogItemOperator);
             holder.ItemTreshold = (TextView) convertView.findViewById(R.id.watchdogItemTreshold);
             holder.ItemAction = (ImageView) convertView.findViewById(R.id.watchdogItemAction);
-            holder.ItemCheckbox = (CheckBox) convertView.findViewById(R.id.watchdogItemSwitch);
+            holder.ItemSwitch = (SwitchCompat) convertView.findViewById(R.id.watchdogItemSwitch);
 
             convertView.setTag(holder);
         }
@@ -78,7 +78,7 @@ public class WatchDogListAdapter extends BaseAdapter {
         holder.setItemOperator(rule.operator);
         holder.ItemTreshold.setText(rule.treshold);
         holder.setItemAction(rule.action);
-        holder.ItemCheckbox.setChecked(rule.isActive);
+        holder.ItemSwitch.setChecked(rule.isActive);
 
         return convertView;
     }
@@ -94,8 +94,7 @@ public class WatchDogListAdapter extends BaseAdapter {
         public ImageView ItemOperator;
         public TextView ItemTreshold;
         public ImageView ItemAction;
-        public CheckBox ItemCheckbox;
-        //TODO este switch treba pridat
+        public SwitchCompat ItemSwitch;
 
         void setItemOperator(OperatorType type){
             switch(type){
