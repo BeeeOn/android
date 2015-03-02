@@ -197,6 +197,10 @@ public final class Controller {
 			// Load also cached user details
 			mPersistence.loadUserDetails(email, user);
 
+            // In demo mode load some init data from sdcard
+            if (mNetwork instanceof DemoNetwork)
+                ((DemoNetwork) mNetwork).initDemoData(user);
+
 			if (UID.isEmpty() || user.isEmpty()) {
 				// No previous session or user data, load fresh data from server
 				if (mNetwork instanceof Network) {
@@ -219,9 +223,6 @@ public final class Controller {
 					user.setGender(googleUserInfo.gender);
 					user.setPictureUrl(googleUserInfo.pictureUrl);
 					user.setGoogleId(googleUserInfo.id);
-				} else if (mNetwork instanceof DemoNetwork) {
-					// In demo mode load some init data from sdcard
-					((DemoNetwork) mNetwork).initDemoData(user);
 				}
 
 				// googleUserInfo must be initialized by code above
