@@ -5,12 +5,12 @@
         AppBaseTheme from BOTH res/values/styles.xml and
         res/values-v11/styles.xml on API 14+ devices.
     -->
-    <style name="AppBaseTheme" parent="@style/Theme.AppCompat.Light">
+    <style name="AppBaseTheme" parent="Theme.AppCompat.Light.DarkActionBar">
         <!-- API 14 theme customizations can go here. -->
         <item name="android:windowBackground">@color/beeeon_background</item>
     	<item name="android:colorBackground">@color/beeeon_background</item>
         <item name="android:actionBarStyle">@style/BeeeOn.ActionBar</item>
-        <item name="actionBarTabStyle">@style/BeeeOn.ActionBar</item>
+        <!--item name="actionBarTabStyle">@style/BeeeOn.ActionBar</item-->
         <!-- item name="android:actionModeCloseButtonStyle">@style/BeeeOn.NoCloseButton</item-->
         <item name="android:actionModeBackground">@color/darkgray</item>
         <item name="actionModeBackground">@color/darkgray</item>
@@ -19,7 +19,6 @@
         <item name="actionBarDivider">@null</item>
     	<item name="android:actionBarDivider">@null</item>
         <item name="android:windowContentOverlay">@null</item>
-        <!--item name="android:homeAsUpIndicator">@drawable/ic_ab_up_compat</item-->
         <!--item name="android:actionOverflowButtonStyle">@style/BeeeOn.ActionBar.Overflow</item-->
         
         <item name="showcaseViewStyle">@style/CustomShowcaseTheme</item>
@@ -28,14 +27,17 @@
         <!-- colorPrimary is used for the default action bar background -->
         <item name="colorPrimary">@color/beeeon_primary_cyan</item>
         <!-- colorPrimaryDark is used for the status bar -->
-        <item name="colorPrimaryDark">@color/beeeon_primary_cyan</item>
+        <item name="colorPrimaryDark">@color/beeeon_primary_cyan_dark</item>
         <item name="android:textColorPrimary">@color/white</item>
-        <item name="android:textColorSecondary">@color/beeeon_text_color</item>
+        <item name="android:textColorSecondary">@color/beeeon_text_hint</item>
 
         <!-- colorAccent is used as the default value for colorControlActivated, which is used to tint widgets -->
-        <item name="colorAccent">@color/beeeon_primary_cyan</item>
+        <item name="colorAccent">@color/beeeon_secundary_pink</item>
 
         <!-- there can also be set colorControlNormal, colorControlActivated colorControlHighlight, and colorSwitchThumbNormal. -->
+        <item name="colorControlNormal">#c5c5c5</item>
+        <item name="colorControlActivated">@color/beeeon_secundary_pink</item>
+        <item name="colorControlHighlight">@color/beeeon_primary_cyan_light</item>
     </style>
 
     
@@ -97,7 +99,15 @@
      <style name="CustomText" parent="TextAppearance.ShowcaseView.Detail">
          <item name="android:textColor">#fff</item>
      </style>
-     
-    
+
+    <style
+        name="settingsTheme"
+        parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="colorPrimary">@color/beeeon_primary_cyan</item>
+        <item name="colorAccent">@color/beeeon_secundary_pink</item>
+        <item name="android:textColorPrimary">@color/white</item>
+        <item name="android:textColor">@color/beeeon_text_color</item>
+        <item name="android:textColorSecondary">@color/beeeon_text_hint</item>
+    </style>
 
 </resources>

@@ -70,7 +70,7 @@ public class SettingsMainActivity extends ActionBarPreferenceActivity implements
 		}
 
 		// Load the preferences from an XML resource
-		addPreferencesFromResource(R.xml.main_preferences);
+		//addPreferencesFromResource(R.xml.main_preferences);
 
 		// mListPrefAdapter = (ListPreference) findPreference(Constants.PERSISTENCE_PREF_SW2_ADAPTER);
 		// mListPrefLocation = (ListPreference) findPreference(Constants.PERSISTENCE_PREF_SW2_LOCATION);

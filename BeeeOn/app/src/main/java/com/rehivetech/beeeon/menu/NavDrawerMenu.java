@@ -555,13 +555,9 @@ public class NavDrawerMenu {
             inflater.inflate(R.menu.adapter_menu, menu);
 
 			if(!mController.isUserAllowed(mController.getAdapter(mSelectedMenuItem.getId()).getRole()) ) {
-                menu.getItem(0).setVisible(false);
-                menu.getItem(1).setVisible(false);
-				//menu.add("Edit").setIcon(R.drawable.ic_mode_edit_white_24dp).setShowAsAction(MenuItemCompat.SHOW_AS_ACTION_ALWAYS);
-				//menu.add("Users").setIcon(R.drawable.ic_group_white_24dp).setShowAsAction(MenuItemCompat.SHOW_AS_ACTION_ALWAYS);
+                menu.getItem(0).setVisible(false);// EDIT
+                menu.getItem(1).setVisible(false);// USERS
 			}
-			//menu.add("Unregist").setIcon(R.drawable.ic_delete_white_24dp).setShowAsAction(MenuItemCompat.SHOW_AS_ACTION_IF_ROOM);
-			//menu.add("Cancel").setIcon(R.drawable.beeeon_ic_action_cancel).setTitle("Cancel").setShowAsAction(com.actionbarsherlock.view.MenuItem.SHOW_AS_ACTION_ALWAYS);
 			return true;
 		}
 
@@ -572,19 +568,20 @@ public class NavDrawerMenu {
 		}
 
         @Override
-        public boolean onActionItemClicked(ActionMode actionMode, android.view.MenuItem menuItem) {
-           /*if (item.getTitle().equals("Unregist")) { // UNREGIST ADAPTER
+        public boolean onActionItemClicked(ActionMode mode, android.view.MenuItem item) {
+            Log.d(TAG,"ActionMode Adapter - item id: "+ item.getItemId());
+           if (item.getItemId() == R.id.ada_menu_del) { // UNREGIST ADAPTER
 				doUnregistAdapter(mSelectedMenuItem.getId());
-			} else if (item.getTitle().equals("Users")) { // GO TO USERS OF ADAPTER
+			} else if (item.getItemId() == R.id.ada_menu_users) { // GO TO USERS OF ADAPTER
 				Intent intent = new Intent(mActivity, AdapterUsersActivity.class);
 				intent.putExtra(Constants.GUI_SELECTED_ADAPTER_ID, mSelectedMenuItem.getId());
 				mActivity.startActivity(intent);
 
-			} else if (item.getTitle().equals("Edit")) { // RENAME ADAPTER
+			} else if (item.getItemId() == R.id.ada_menu_edit) { // RENAME ADAPTER
 				new ToastMessageThread(mActivity, R.string.toast_not_implemented).start();
 			}
 
-			mode.finish();*/
+			mode.finish();
             return true;
         }
 
