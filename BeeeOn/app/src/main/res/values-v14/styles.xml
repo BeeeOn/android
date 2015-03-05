@@ -9,21 +9,23 @@
         <!-- API 14 theme customizations can go here. -->
         <item name="android:windowBackground">@color/beeeon_background</item>
     	<item name="android:colorBackground">@color/beeeon_background</item>
-        <item name="android:actionBarStyle">@style/BeeeOn.ActionBar</item>
-        <!--item name="actionBarTabStyle">@style/BeeeOn.ActionBar</item-->
+
         <!-- item name="android:actionModeCloseButtonStyle">@style/BeeeOn.NoCloseButton</item-->
         <item name="android:actionModeBackground">@color/darkgray</item>
         <item name="actionModeBackground">@color/darkgray</item>
 
-        <item name="android:actionModeCloseDrawable">@drawable/ic_ab_up_compat</item>
         <item name="actionBarDivider">@null</item>
     	<item name="android:actionBarDivider">@null</item>
         <item name="android:windowContentOverlay">@null</item>
         <!--item name="android:actionOverflowButtonStyle">@style/BeeeOn.ActionBar.Overflow</item-->
-        
+
+        <item name="windowActionModeOverlay">true</item>
+
         <item name="showcaseViewStyle">@style/CustomShowcaseTheme</item>
 
 		<item name="android:actionBarSize">56dip</item>
+
+
         <!-- colorPrimary is used for the default action bar background -->
         <item name="colorPrimary">@color/beeeon_primary_cyan</item>
         <!-- colorPrimaryDark is used for the status bar -->
@@ -38,31 +40,17 @@
         <item name="colorControlNormal">#c5c5c5</item>
         <item name="colorControlActivated">@color/beeeon_secundary_pink</item>
         <item name="colorControlHighlight">@color/beeeon_primary_cyan_light</item>
+
+        <item name="windowActionBar">false</item>
+        <item name="drawerArrowStyle">@style/DrawerArrowStyle</item>
     </style>
 
-    
-    <style name="BeeeOn.ActionBar" parent="@style/Widget.AppCompat.ActionBar">
-	    <item name="android:background">@color/beeeon_primary_cyan</item>
-	    <item name="android:titleTextStyle">@style/BeeeOn.ActionBar.TitleText</item>
-	    
-	     <!-- Support library compatibility -->
-        <item name="titleTextStyle">@style/BeeeOn.ActionBar.TitleText</item>
-        <item name="background">@color/beeeon_primary_cyan</item>
-        <item name="android:showDividers">none</item>
-		
-        <item name="actionBarDivider">@null</item>
-    	<item name="android:actionBarDivider">@null</item>
-        <item name="android:listDivider">@null</item>
-        <item name="backgroundSplit">@null</item>
-        <item name="android:backgroundSplit">@null</item>
+
+    <style name="DrawerArrowStyle" parent="Widget.AppCompat.DrawerArrowToggle">
+        <item name="spinBars">true</item>
+        <item name="color">@android:color/white</item>
     </style>
 
-    <!-- ActionBar title text -->
-    <style name="BeeeOn.ActionBar.TitleText" parent="@style/TextAppearance.AppCompat.Widget.ActionBar.Title">
-        <item name="android:textColor">@color/white</item>
-        <item name="android:textColorPrimary">@color/white</item>
-        <!-- The textColor property is backward compatible with the Support Library -->
-    </style>
     
     <style name="BeeeOn.NoCloseButton" parent="@style/Widget.AppCompat.ActionButton.CloseMode">
         <item name="android:visibility">gone</item>

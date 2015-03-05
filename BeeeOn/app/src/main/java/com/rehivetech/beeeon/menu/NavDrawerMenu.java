@@ -5,12 +5,13 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
-import android.support.v4.app.ActionBarDrawerToggle;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.internal.view.menu.MenuItemImpl;
 import android.support.v7.view.ActionMode;
+import android.support.v7.widget.Toolbar;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -20,6 +21,7 @@ import android.view.View.OnKeyListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 
@@ -60,8 +62,9 @@ import static android.support.v7.view.ActionMode.*;
 public class NavDrawerMenu {
 	private static final String TAG = "NavDrawerMenu";
 	private final static String TAG_INFO = "tag_info";
+    private final Toolbar mToolbar;
 
-	private MainActivity mActivity;
+    private MainActivity mActivity;
 	private Controller mController;
 
 	private DrawerLayout mDrawerLayout;
@@ -86,10 +89,12 @@ public class NavDrawerMenu {
 	//
 	private ActionMode mMode;
 	private MenuItem mSelectedMenuItem;
+    private RelativeLayout mDrawerRelLay;
 
-	public NavDrawerMenu(MainActivity activity) {
+    public NavDrawerMenu(MainActivity activity, Toolbar toolbar) {
 		// Set activity
 		mActivity = activity;
+        mToolbar = toolbar;
 
 		backPressed = mActivity.getBackPressed();
 		// Get controller
@@ -106,11 +111,15 @@ public class NavDrawerMenu {
 		mDrawerLayout = (DrawerLayout) mActivity.findViewById(R.id.drawer_layout);
 		// Locate ListView in activity_location_screen.xml
 		mDrawerList = (StickyListHeadersListView) mActivity.findViewById(R.id.listview_drawer);
+        // Locate relative layout
+        mDrawerRelLay = (RelativeLayout) mActivity.findViewById(R.id.relative_layout_drawer);
 	}
 
 	private void settingsMenu() {
 		// Set a custom shadow that overlays the main content when the drawer opens
-		mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
+		//mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
+
+
 
 		mDrawerLayout.setOnKeyListener(new OnKeyListener() {
 
@@ -215,9 +224,11 @@ public class NavDrawerMenu {
 
 		});
 
+
+
 		// ActionBarDrawerToggle ties together the the proper interactions
 		// between the sliding drawer and the action bar app icon
-		mDrawerToggle = new ActionBarDrawerToggle(mActivity, mDrawerLayout, R.drawable.ic_drawer, R.string.drawer_open, R.string.drawer_close) {
+        mDrawerToggle = new ActionBarDrawerToggle(mActivity,mDrawerLayout,mToolbar,R.string.drawer_open,R.string.drawer_close) {
 
 			public void onDrawerClosed(View view) {
 				backPressed = mActivity.getBackPressed();
@@ -253,8 +264,8 @@ public class NavDrawerMenu {
 		mDrawerToggle.syncState();
 
 		// Enable ActionBar app icon to behave as action to toggle nav drawer
-		mActivity.getSupportActionBar().setHomeButtonEnabled(true);
-		mActivity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+		//mActivity.getSupportActionBar().setHomeButtonEnabled(true);
+		//mActivity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 		mActivity.setSupportProgressBarIndeterminateVisibility(false);
 
 		openMenu();
@@ -262,12 +273,12 @@ public class NavDrawerMenu {
 
 	public void openMenu() {
 		mIsDrawerOpen = true;
-		mDrawerLayout.openDrawer(mDrawerList);
+		mDrawerLayout.openDrawer(mDrawerRelLay);
 	}
 
 	public void closeMenu() {
 		mIsDrawerOpen = false;
-		mDrawerLayout.closeDrawer(mDrawerList);
+		mDrawerLayout.closeDrawer(mDrawerRelLay);
 		if (mMode != null) {
 			mMode.finish();
 		}

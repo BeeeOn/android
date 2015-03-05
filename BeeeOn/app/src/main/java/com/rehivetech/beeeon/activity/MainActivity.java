@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -65,6 +66,7 @@ public class MainActivity extends BaseApplicationActivity {
 	private NavDrawerMenu mNavDrawerMenu;
 	private SensorListFragment mListDevices;
 	private CustomViewFragment mCustomView;
+    private Toolbar mToolbar;
 
 	/**
 	 * Instance save state tags
@@ -102,15 +104,21 @@ public class MainActivity extends BaseApplicationActivity {
 		supportRequestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
 		setContentView(R.layout.activity_location_screen);
 
+        mToolbar = (Toolbar) findViewById(R.id.toolbar);
+        if (mToolbar != null) {
+            mToolbar.setTitle("Navigation Drawer");
+            setSupportActionBar(mToolbar);
+        }
+
 		// Get controller
 		mController = Controller.getInstance(this);
 
 		setSupportProgressBarIndeterminate(true);
 		setSupportProgressBarIndeterminateVisibility(true);
-		getSupportActionBar().setIcon(R.drawable.ic_launcher_white);
+		//getSupportActionBar().setIcon(R.drawable.ic_launcher_white);
 
 		// Create NavDrawerMenu
-		mNavDrawerMenu = new NavDrawerMenu(this);
+		mNavDrawerMenu = new NavDrawerMenu(this,mToolbar);
 		mNavDrawerMenu.openMenu();
 		mNavDrawerMenu.setIsDrawerOpen(mIsDrawerOpen);
 
