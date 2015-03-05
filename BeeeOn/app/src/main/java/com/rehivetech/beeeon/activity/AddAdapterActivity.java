@@ -5,6 +5,7 @@ import android.app.ProgressDialog;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
+import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -45,12 +46,20 @@ public class AddAdapterActivity extends BaseApplicationActivity {
 	private ProgressDialog mProgress;
 	
 	private Activity mActivity;
-	
-	@Override
+    private Toolbar mToolbar;
+
+    @Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_intro);
-		
+
+        mToolbar = (Toolbar) findViewById(R.id.toolbar);
+        if (mToolbar != null) {
+            mToolbar.setTitle(R.string.title_activity_add_adapter);
+            setSupportActionBar(mToolbar);
+        }
+        getSupportActionBar().setHomeButtonEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 		// Get controller
 		mController = Controller.getInstance(this);
 		
@@ -58,10 +67,7 @@ public class AddAdapterActivity extends BaseApplicationActivity {
 		
 		mAdapter = new AddAdapterFragmentAdapter(getSupportFragmentManager());
 
-		getSupportActionBar().setHomeButtonEnabled(true);
-		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-		getSupportActionBar().setIcon(R.drawable.ic_launcher_null);
-		
+
 		mPager = (ViewPager)findViewById(R.id.intro_pager);
 		mPager.setAdapter(mAdapter);
 		mPager.setOffscreenPageLimit(mAdapter.getCount());

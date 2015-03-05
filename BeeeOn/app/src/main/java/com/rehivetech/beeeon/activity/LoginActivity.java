@@ -133,14 +133,7 @@ public class LoginActivity extends BaseActivity {
 			}
 		});
 		
-		// TUTORIAL 
-		// Need use default preferences because user isnt ready
-		SharedPreferences prefs = mController.getGlobalSettings();
-		if (!prefs.getBoolean(Constants.TUTORIAL_LOGIN_SHOWED, false)) {
-			showTutorial();
-			prefs.edit().putBoolean(Constants.TUTORIAL_LOGIN_SHOWED, true).commit();
-			return; // Don't do auto-login
-		}
+
 
 		// ALREADY LOGGED IN
 		if (mController.isLoggedIn()) {

@@ -3,6 +3,7 @@ package com.rehivetech.beeeon.activity.fragment;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.Toolbar;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -42,7 +43,7 @@ public final class IntroImageFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-    	TextView text = new TextView(getActivity());
+        TextView text = new TextView(getActivity());
     	text.setPadding(20, 20, 20, 20);
     	text.setText(mText);
     	text.setGravity(Gravity.CENTER_HORIZONTAL);

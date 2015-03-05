@@ -9,6 +9,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.Window;
 import android.widget.Toast;
@@ -53,18 +54,24 @@ public class SensorDetailActivity extends BaseApplicationActivity {
 	private ReloadFacilitiesTask mReloadFacilitiesTask;
 
 	private boolean mForceReload = false;
+    private Toolbar mToolbar;
 
-	@Override
+    @Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
         supportRequestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
 		setContentView(R.layout.activity_sensor_detail_wraper);
 
+        mToolbar = (Toolbar) findViewById(R.id.toolbar);
+        if (mToolbar != null) {
+            mToolbar.setTitle(R.string.title_activity_sensor_detail);
+            setSupportActionBar(mToolbar);
+        }
+        
 		setSupportProgressBarIndeterminate(true);
 		setProgressBarIndeterminateVisibility(true);
 		getSupportActionBar().setHomeButtonEnabled(true);
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-		getSupportActionBar().setIcon(R.drawable.ic_launcher_null);
 
 		// Get controller
 		mController = Controller.getInstance(getApplicationContext());

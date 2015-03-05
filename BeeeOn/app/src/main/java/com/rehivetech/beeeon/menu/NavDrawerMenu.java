@@ -117,8 +117,6 @@ public class NavDrawerMenu {
 
 	private void settingsMenu() {
 		// Set a custom shadow that overlays the main content when the drawer opens
-		//mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
-
 
 
 		mDrawerLayout.setOnKeyListener(new OnKeyListener() {
@@ -263,9 +261,6 @@ public class NavDrawerMenu {
 		mDrawerLayout.setDrawerListener(mDrawerToggle);
 		mDrawerToggle.syncState();
 
-		// Enable ActionBar app icon to behave as action to toggle nav drawer
-		//mActivity.getSupportActionBar().setHomeButtonEnabled(true);
-		//mActivity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 		mActivity.setSupportProgressBarIndeterminateVisibility(false);
 
 		openMenu();

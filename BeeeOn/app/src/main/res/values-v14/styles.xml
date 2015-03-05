@@ -8,7 +8,7 @@
     <style name="AppBaseTheme" parent="Theme.AppCompat.Light.DarkActionBar">
         <!-- API 14 theme customizations can go here. -->
         <item name="android:windowBackground">@color/beeeon_background</item>
-    	<item name="android:colorBackground">@color/beeeon_background</item>
+    	<item name="android:colorBackground">@color/darkgray</item>
 
         <!-- item name="android:actionModeCloseButtonStyle">@style/BeeeOn.NoCloseButton</item-->
         <item name="android:actionModeBackground">@color/darkgray</item>
@@ -37,7 +37,7 @@
         <item name="colorAccent">@color/beeeon_secundary_pink</item>
 
         <!-- there can also be set colorControlNormal, colorControlActivated colorControlHighlight, and colorSwitchThumbNormal. -->
-        <item name="colorControlNormal">#c5c5c5</item>
+        <item name="colorControlNormal">@color/white</item>
         <item name="colorControlActivated">@color/beeeon_secundary_pink</item>
         <item name="colorControlHighlight">@color/beeeon_primary_cyan_light</item>
 
@@ -51,14 +51,7 @@
         <item name="color">@android:color/white</item>
     </style>
 
-    
-    <style name="BeeeOn.NoCloseButton" parent="@style/Widget.AppCompat.ActionButton.CloseMode">
-        <item name="android:visibility">gone</item>
-    </style>
-    
-    <style name="BeeeOn.ActionBar.Overflow" parent="android:Widget.ActionButton.Overflow">
-        <item name="android:src">@drawable/ic_ab_overflow_compat</item>
-    </style> 
+
     
     <style name="BeeeOn.Custom.SeekBar" parent="android:Widget.Holo.Light.SeekBar">
       <item name="android:progressDrawable">@drawable/customholotheme_scrubber_progress_horizontal_holo_light</item>
@@ -88,10 +81,10 @@
          <item name="android:textColor">#fff</item>
      </style>
 
-    <style
-        name="settingsTheme"
-        parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="settingsTheme" parent="Theme.AppCompat.Light.DarkActionBar">
         <item name="colorPrimary">@color/beeeon_primary_cyan</item>
+        <!-- colorPrimaryDark is used for the status bar -->
+        <item name="colorPrimaryDark">@color/beeeon_primary_cyan_dark</item>
         <item name="colorAccent">@color/beeeon_secundary_pink</item>
         <item name="android:textColorPrimary">@color/white</item>
         <item name="android:textColor">@color/beeeon_text_color</item>

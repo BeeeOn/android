@@ -1,12 +1,11 @@
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <style name="AppBaseTheme" parent="Theme.AppCompat.Light">
+    <style name="AppBaseTheme" parent="Theme.AppCompat.Light.DarkActionBar">
 
         <item name="android:windowBackground">@color/beeeon_background</item>
-    	<item name="android:colorBackground">@color/beeeon_background</item>
+    	<item name="android:colorBackground">@color/darkgray</item>
 
         <item name="actionModeBackground">@color/darkgray</item>
-        <item name="actionModeCloseDrawable">@drawable/ic_ab_up_compat</item>
 
         <item name="windowActionBar">false</item>
         <item name="drawerArrowStyle">@style/DrawerArrowStyle</item>
@@ -25,7 +24,7 @@
         <item name="colorAccent">@color/beeeon_secundary_pink</item>
 
         <!-- there can also be set colorControlNormal, colorControlActivated colorControlHighlight, and colorSwitchThumbNormal. -->
-        <item name="colorControlNormal">#c5c5c5</item>
+        <item name="colorControlNormal">@color/white</item>
         <item name="colorControlActivated">@color/beeeon_secundary_pink</item>
         <item name="colorControlHighlight">@color/beeeon_primary_cyan_light</item>
 
@@ -61,20 +60,15 @@
         <item name="sv_buttonText">Next</item>
      </style>
 
-    <!-- ActionBar title text -->
-    <style name="BeeeOn.ActionBar.TitleText" parent="@style/TextAppearance.AppCompat.Widget.ActionBar.Title">
-        <item name="android:textColor">@color/white</item>
-        <!-- The textColor property is backward compatible with the Support Library -->
-    </style>
 
-    <!-- ActionBar tabs text -->
-    <style name="MyActionBarTabText"  parent="Widget.AppCompat.Light.ActionBar.TabText">
-        <item name="android:textColor">@color/white</item>
-        <!-- The textColor property is backward compatible with the Support Library -->
-    </style>
-    
-    <style name="BeeeOn.NoCloseButton" parent="Widget.AppCompat.ActionButton.CloseMode">
-        <item name="android:visibility">gone</item>
+    <style name="settingsTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="colorPrimary">@color/beeeon_primary_cyan</item>
+        <!-- colorPrimaryDark is used for the status bar -->
+        <item name="colorPrimaryDark">@color/beeeon_primary_cyan_dark</item>
+        <item name="colorAccent">@color/beeeon_secundary_pink</item>
+        <item name="android:textColorPrimary">@color/white</item>
+        <item name="android:textColor">@color/beeeon_text_color</item>
+        <item name="android:textColorSecondary">@color/beeeon_text_hint</item>
     </style>
 
     <style name="MyDialog" parent="@android:style/Theme.Dialog">

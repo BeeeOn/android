@@ -6,6 +6,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
+import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -51,11 +52,18 @@ public class AddSensorActivity extends BaseApplicationActivity {
 	private boolean mFirstUse = true;
 	
 	private Activity mActivity;
-	
-	@Override
+    private Toolbar mToolbar;
+
+    @Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_intro);
+
+        mToolbar = (Toolbar) findViewById(R.id.toolbar);
+        if (mToolbar != null) {
+            mToolbar.setTitle(R.string.title_activity_add_sensor);
+            setSupportActionBar(mToolbar);
+        }
 		
 		// Get controller
 		mController = Controller.getInstance(this);
@@ -67,7 +75,6 @@ public class AddSensorActivity extends BaseApplicationActivity {
 
 		getSupportActionBar().setHomeButtonEnabled(true);
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-		getSupportActionBar().setIcon(R.drawable.ic_launcher_null);
 		
 		mPager = (ViewPager)findViewById(R.id.intro_pager);
 		mPager.setAdapter(mAdapter);
