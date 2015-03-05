@@ -306,6 +306,12 @@ public class SensorListFragment extends Fragment {
 
         fab.setOnClickListener(addSensorListener);
 
+        // IF can user add senzor
+        if(!mController.isUserAllowed(mController.getAdapter(mActiveAdapterId).getRole())) {
+            // Hide button
+            fab.hide();
+        }
+
 		// Update list adapter
 		mSensorAdapter = new SensorListAdapter(mActivity, devices);
 		mSensorList.setAdapter(mSensorAdapter);
@@ -315,14 +321,7 @@ public class SensorListFragment extends Fragment {
 			mSensorList.setOnItemClickListener(new ListView.OnItemClickListener() {
 				@Override
 				public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-					// IF can user add senzor
-					if(mController.isUserAllowed(mController.getAdapter(mActiveAdapterId).getRole())) {
-						if (position == mSensorAdapter.getCount() - 1) {
-							showAddSensorDialog();
-							return;
-						}
-					}
-					
+
 
 					Device device = mSensorAdapter.getDevice(position);
 
