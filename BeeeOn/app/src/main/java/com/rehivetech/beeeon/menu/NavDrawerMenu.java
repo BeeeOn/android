@@ -129,10 +129,10 @@ public class NavDrawerMenu {
 					if (mDrawerLayout == null) {
 						return false;
 					}
-					if (mDrawerLayout.isDrawerOpen(mDrawerList) && !backPressed) {
+					if (mDrawerLayout.isDrawerOpen(mDrawerRelLay) && !backPressed) {
 						firstTapBack();
 						return true;
-					} else if (mDrawerLayout.isDrawerOpen(mDrawerList) && backPressed) {
+					} else if (mDrawerLayout.isDrawerOpen(mDrawerRelLay) && backPressed) {
 						secondTapBack();
 						return true;
 					}
