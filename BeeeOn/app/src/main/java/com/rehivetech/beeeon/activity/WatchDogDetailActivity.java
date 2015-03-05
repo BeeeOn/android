@@ -1,6 +1,7 @@
 package com.rehivetech.beeeon.activity;
 
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Spinner;
 
@@ -25,14 +26,21 @@ public class WatchDogDetailActivity extends BaseApplicationActivity {
     private Controller mController;
 
     private View mView;
+    private Toolbar mToolbar;
+
 
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_watchdog_detail);
 
+        mToolbar = (Toolbar) findViewById(R.id.toolbar);
+        if (mToolbar != null) {
+            mToolbar.setTitle(R.string.action_watchdog);
+            setSupportActionBar(mToolbar);
+        }
+
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setIcon(R.drawable.ic_launcher_null);
 
         // Get controller
         mController = Controller.getInstance(getApplicationContext());
@@ -49,7 +57,7 @@ public class WatchDogDetailActivity extends BaseApplicationActivity {
 
         //LocationArrayAdapter dataAdapter = new LocationArrayAdapter(this, R.layout.custom_spinner_item, getLocationsArray());
 
-        Spinner mSpinnerSensor = (Spinner) findViewById(R.id.watchdogDetailSpinnerChooseSensor);
+        //Spinner mSpinnerSensor = (Spinner) findViewById(R.id.watchdogDetailSpinnerChooseSensor);
         //mSpinnerSensor.setAdapter(dataAdapter);
     }
 
