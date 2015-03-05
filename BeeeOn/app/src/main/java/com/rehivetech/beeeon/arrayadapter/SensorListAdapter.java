@@ -37,22 +37,15 @@ public class SensorListAdapter extends BaseAdapter {
 
 	private final Controller mController;
 
-	public SensorListAdapter(Context context, List<Device> devices, OnClickListener listener) {
+	public SensorListAdapter(Context context, List<Device> devices) {
 		mContext = context;
 		mController = Controller.getInstance(context.getApplicationContext());
 		mDevices = devices;
-		mShowAdd = false;
-		if(!devices.isEmpty()) {
-			Adapter tmpAda = mController.getAdapter(devices.get(0).getFacility().getAdapterId());
-			if(tmpAda != null)
-				mShowAdd = mController.isUserAllowed(tmpAda.getRole());
-		}
-		mListener = listener;
 	}
 
 	@Override
 	public int getCount() {
-		return mDevices.size() + (mShowAdd ? 1 : 0);
+		return mDevices.size();
 	}
 
 	@Override
@@ -71,21 +64,7 @@ public class SensorListAdapter extends BaseAdapter {
 
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
-		if (position < mDevices.size()) {
-			return addItem(position, convertView, parent);
-		}
-		return addAddSensor(convertView, parent);
-	}
-
-	private View addAddSensor(View convertView, ViewGroup parent) {
-		inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		final View itemView = inflater.inflate(R.layout.sensor_listview_addsensor, parent, false);
-		itemView.setClickable(false);
-		itemView.setOnClickListener(null);
-		ImageView img = (ImageView) itemView.findViewById(R.id.sensor_listview_addsensor_image);
-		if (img != null)
-			img.setOnClickListener(mListener);
-		return itemView;
+		return addItem(position, convertView, parent);
 	}
 
 	private View addItem(int position, View convertView, ViewGroup parent) {

@@ -18,6 +18,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ImageView;
@@ -29,6 +30,8 @@ import com.github.amlcurran.showcaseview.OnShowcaseEventListener;
 import com.github.amlcurran.showcaseview.ShowcaseView;
 import com.github.amlcurran.showcaseview.targets.ViewTarget;
 
+import com.melnykov.fab.FloatingActionButton;
+import com.melnykov.fab.ScrollDirectionListener;
 import com.rehivetech.beeeon.Constants;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.activity.AddAdapterActivity;
@@ -218,6 +221,9 @@ public class SensorListFragment extends Fragment {
 		TextView noItem = (TextView) mView.findViewById(R.id.nosensorlistview);
 		ImageView addBtn = (ImageView) mView.findViewById(R.id.nosensorlistview_addsensor_image);
 
+
+        FloatingActionButton fab = (FloatingActionButton) mView.findViewById(R.id.fab);
+        fab.attachToListView(mSensorList);
 		
 
 		List<Device> devices = new ArrayList<Device>();
@@ -298,8 +304,10 @@ public class SensorListFragment extends Fragment {
 			}
 		};
 
+        fab.setOnClickListener(addSensorListener);
+
 		// Update list adapter
-		mSensorAdapter = new SensorListAdapter(mActivity, devices, addSensorListener);
+		mSensorAdapter = new SensorListAdapter(mActivity, devices);
 		mSensorList.setAdapter(mSensorAdapter);
 
 		if (haveDevices) {
