@@ -60,6 +60,7 @@ public class WatchDogListAdapter extends BaseAdapter {
             holder = new ViewHolder();
 
             holder.ItemIcon = (ImageView) convertView.findViewById(R.id.watchdogItemIcon);
+            holder.ItemRuleName = (TextView) convertView.findViewById(R.id.watchdogItemRuleName);
             holder.ItemSensorName = (TextView) convertView.findViewById(R.id.watchdogItemSensorName);
             holder.ItemOperator = (ImageView) convertView.findViewById(R.id.watchdogItemOperator);
             holder.ItemTreshold = (TextView) convertView.findViewById(R.id.watchdogItemTreshold);
@@ -74,7 +75,8 @@ public class WatchDogListAdapter extends BaseAdapter {
 
         WRule rule = (WRule) this.getItem(position);
 
-        holder.ItemSensorName.setText(rule.name);
+        holder.ItemRuleName.setText(rule.ruleName);
+        holder.ItemSensorName.setText(rule.sensorName);
         holder.setItemOperator(rule.operator);
         holder.ItemTreshold.setText(rule.treshold);
         holder.setItemAction(rule.action);
@@ -90,6 +92,7 @@ public class WatchDogListAdapter extends BaseAdapter {
 
     private static class ViewHolder{
         public ImageView ItemIcon;
+        public TextView ItemRuleName;
         public TextView ItemSensorName;
         public ImageView ItemOperator;
         public TextView ItemTreshold;
@@ -125,15 +128,17 @@ public class WatchDogListAdapter extends BaseAdapter {
     public static enum ActionType{ NOTIFICATION, ACTOR_ACTION };
 
     public static class WRule{
-        String name; // TODO pryc -> bude z device->name
+        String ruleName;
+        String sensorName; // TODO pryc -> bude z device->name
         OperatorType operator;
         ActionType action;
         //Device device;
         String treshold; // TODO jako nejaka hodnota devicu
         boolean isActive;
 
-        public WRule(String na, OperatorType op, ActionType act, String tresh, boolean isAct ){
-            name = na;
+        public WRule(String ru, String na, OperatorType op, ActionType act, String tresh, boolean isAct ){
+            ruleName = ru;
+            sensorName = na;
             operator = op;
             action = act;
             treshold = tresh;

@@ -106,10 +106,10 @@ public class WatchDogListFragment extends Fragment{
 
         // pokusny seznam
         List<WatchDogListAdapter.WRule> rulesList = new ArrayList<>();
-        rulesList.add(new WatchDogListAdapter.WRule("První senzor", WatchDogListAdapter.OperatorType.GREATER, WatchDogListAdapter.ActionType.ACTOR_ACTION, "30°C", true));
-        rulesList.add(new WatchDogListAdapter.WRule("Druhý senzor", WatchDogListAdapter.OperatorType.SMALLER, WatchDogListAdapter.ActionType.NOTIFICATION, "90%", true));
-        rulesList.add(new WatchDogListAdapter.WRule("Třetí senzor", WatchDogListAdapter.OperatorType.SMALLER, WatchDogListAdapter.ActionType.ACTOR_ACTION, "60LUX", false));
-        rulesList.add(new WatchDogListAdapter.WRule("Čtvrtý senzor", WatchDogListAdapter.OperatorType.GREATER, WatchDogListAdapter.ActionType.NOTIFICATION, "30°C", true));
+        rulesList.add(new WatchDogListAdapter.WRule("Hlídání ohně", "První senzor", WatchDogListAdapter.OperatorType.GREATER, WatchDogListAdapter.ActionType.ACTOR_ACTION, "30°C", true));
+        rulesList.add(new WatchDogListAdapter.WRule("Hlídání smradu", "Druhý senzor", WatchDogListAdapter.OperatorType.SMALLER, WatchDogListAdapter.ActionType.NOTIFICATION, "90%", true));
+        rulesList.add(new WatchDogListAdapter.WRule("Hlídání dětí", "Třetí senzor", WatchDogListAdapter.OperatorType.SMALLER, WatchDogListAdapter.ActionType.ACTOR_ACTION, "60LUX", false));
+        rulesList.add(new WatchDogListAdapter.WRule("Hlídání cen", "Čtvrtý senzor", WatchDogListAdapter.OperatorType.GREATER, WatchDogListAdapter.ActionType.NOTIFICATION, "30°C", true));
 
         mWatchDogAdapter = new WatchDogListAdapter(mActivity, rulesList, getActivity().getLayoutInflater());
 

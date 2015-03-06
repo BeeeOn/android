@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="72dp"
+    android:layout_height="88dp"
     android:paddingTop="16dp"
     android:background="@color/white"
 >
@@ -16,17 +16,28 @@
         android:layout_alignParentStart="true"
         android:layout_marginRight="16dp"
         android:layout_marginLeft="16dp"
-        android:layout_centerVertical="true"
+        />
+
+    <TextView
+        android:id="@+id/watchdogItemRuleName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Název pravidla"
+        android:textSize="16sp"
+        android:textColor="@color/beeeon_text_color"
+        android:layout_alignParentTop="true"
+        android:layout_alignLeft="@+id/watchdogItemOperator"
+        android:layout_alignStart="@+id/watchdogItemOperator"
         />
 
     <TextView
         android:id="@+id/watchdogItemSensorName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Teplota v koupelně"
+        android:text="Název senzoru"
         android:textSize="14sp"
-        android:textColor="@color/beeeon_text_color"
-        android:layout_alignParentTop="true"
+        android:textColor="@color/beeeon_text_hint"
+        android:layout_below="@+id/watchdogItemRuleName"
         android:layout_alignLeft="@+id/watchdogItemOperator"
         android:layout_alignStart="@+id/watchdogItemOperator"
         />
@@ -40,7 +51,6 @@
         android:background="@drawable/oval_cyan"
         android:padding="2dp"
         android:layout_below="@+id/watchdogItemSensorName"
-        android:layout_alignBottom="@+id/watchdogItemIcon"
         android:layout_toRightOf="@+id/watchdogItemIcon"
         android:layout_toEndOf="@+id/watchdogItemIcon"
         />
@@ -53,11 +63,14 @@
         android:textStyle="bold"
         android:text="30°C"
         android:textSize="14sp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginStart="16dp"
+        android:gravity="center_vertical"
+        android:layout_marginLeft="8dp"
+        android:layout_marginStart="8dp"
         android:layout_below="@+id/watchdogItemSensorName"
         android:layout_toRightOf="@+id/watchdogItemOperator"
-        android:layout_toEndOf="@+id/watchdogItemOperator" />
+        android:layout_toEndOf="@+id/watchdogItemOperator"
+        android:layout_alignBottom="@+id/watchdogItemOperator"
+        />
 
     <ImageView
         android:id="@+id/watchdogItemAction"
@@ -73,12 +86,13 @@
     <android.support.v7.widget.SwitchCompat
         android:id="@+id/watchdogItemSwitch"
         android:layout_width="wrap_content"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_centerVertical="true"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:padding="8dp"
         android:focusable="false"
         android:focusableInTouchMode="false"
     />
