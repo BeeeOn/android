@@ -4,6 +4,7 @@ package com.rehivetech.beeeon.activity;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -41,11 +42,18 @@ public class AddAdapterUserActivity extends BaseApplicationActivity {
 	private AddAdapterUserTask mAddAdapterUserTask;
 	
 	private ProgressDialog mProgress;
-	
-	@Override
+    private Toolbar mToolbar;
+
+    @Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_add_adapter_user);
+
+        mToolbar = (Toolbar) findViewById(R.id.toolbar);
+        if (mToolbar != null) {
+            mToolbar.setTitle(R.string.app_name);
+            setSupportActionBar(mToolbar);
+        }
 		
 		// Get controller
 		mController = Controller.getInstance(this);
@@ -54,7 +62,6 @@ public class AddAdapterUserActivity extends BaseApplicationActivity {
 		
 		getSupportActionBar().setHomeButtonEnabled(true);
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-		getSupportActionBar().setIcon(R.drawable.ic_launcher_null);
 		
 		// Prepare progress dialog
 		mProgress = new ProgressDialog(this);

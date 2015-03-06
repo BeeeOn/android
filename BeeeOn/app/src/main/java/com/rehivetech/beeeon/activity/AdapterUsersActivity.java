@@ -8,6 +8,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -44,11 +45,18 @@ public class AdapterUsersActivity extends BaseApplicationActivity {
 	private GetAdapterUsersTask mGetAdapterUsersTask;
 	
 	private static final int NAME_ITEM_HEIGHT = 74;
-	
-	@Override
+    private Toolbar mToolbar;
+
+    @Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_adapter_users);
+
+        mToolbar = (Toolbar) findViewById(R.id.toolbar);
+        if (mToolbar != null) {
+            mToolbar.setTitle(R.string.app_name);
+            setSupportActionBar(mToolbar);
+        }
 		
 		// Get controller
 		mController = Controller.getInstance(this);
@@ -57,7 +65,6 @@ public class AdapterUsersActivity extends BaseApplicationActivity {
 		
 		getSupportActionBar().setHomeButtonEnabled(true);
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-		getSupportActionBar().setIcon(R.drawable.ic_launcher_null);
 		
 		// Get selected adapter
 		mAdapter = mController.getAdapter(getIntent().getStringExtra(Constants.GUI_SELECTED_ADAPTER_ID));
