@@ -14,9 +14,11 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.SearchView;
+import android.support.v7.widget.Toolbar;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.Window;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
@@ -38,10 +40,11 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.base.BaseActivity;
+import com.rehivetech.beeeon.base.BaseApplicationActivity;
 import com.rehivetech.beeeon.geofence.SimpleGeofence;
 import com.rehivetech.beeeon.util.Log;
 
-public class MapGeofenceActivity extends BaseActivity implements OnMapLongClickListener, OnMarkerDragListener,
+public class MapGeofenceActivity extends BaseApplicationActivity implements OnMapLongClickListener, OnMarkerDragListener,
 		OnMapReadyCallback {
 
 	private static final String TAG = "geofence";
@@ -53,17 +56,25 @@ public class MapGeofenceActivity extends BaseActivity implements OnMapLongClickL
     private SearchView mSearchView;
 
 	private GoogleMap mMap;
+    private Toolbar mToolbar;
 
-	@Override
+    @Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+        supportRequestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
 		setContentView(R.layout.activity_map_geofence);
+
+        mToolbar = (Toolbar) findViewById(R.id.toolbar);
+        if (mToolbar != null) {
+            mToolbar.setTitle(R.string.title_activity_map_geofence);
+            setSupportActionBar(mToolbar);
+        }
 
 		setSupportProgressBarIndeterminate(true);
 		setProgressBarIndeterminateVisibility(true);
 		getSupportActionBar().setHomeButtonEnabled(true);
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-		getSupportActionBar().setIcon(R.drawable.ic_launcher_null);
+		//getSupportActionBar().setIcon(R.drawable.ic_launcher_null);
 
 		((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map)).getMapAsync(this);
 
@@ -156,7 +167,9 @@ public class MapGeofenceActivity extends BaseActivity implements OnMapLongClickL
 		this.mMap = map;
 		mMap.setMyLocationEnabled(true);
 
-		mMap.setOnMapLongClickListener(this);
+        mMap.getUiSettings().setMapToolbarEnabled(true);
+
+        mMap.setOnMapLongClickListener(this);
 
 		// Sets the map type to be "hybrid"
 		mMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
@@ -205,7 +218,17 @@ public class MapGeofenceActivity extends BaseActivity implements OnMapLongClickL
 		// more operations on the circle...
 	}
 
-	// An AsyncTask class for accessing the GeoCoding Web Service
+    @Override
+    protected void onAppResume() {
+
+    }
+
+    @Override
+    protected void onAppPause() {
+
+    }
+
+    // An AsyncTask class for accessing the GeoCoding Web Service
 	private class GeocoderTask extends AsyncTask<String, Void, List<Address>> {
 
 		@Override

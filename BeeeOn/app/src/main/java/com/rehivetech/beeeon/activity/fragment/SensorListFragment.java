@@ -224,7 +224,7 @@ public class SensorListFragment extends Fragment {
 
         FloatingActionButton fab = (FloatingActionButton) mView.findViewById(R.id.fab);
         fab.attachToListView(mSensorList);
-		
+		fab.show();
 
 		List<Device> devices = new ArrayList<Device>();
 		for (Facility facility : facilities) {
