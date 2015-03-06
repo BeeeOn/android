@@ -306,10 +306,16 @@ public class SensorListFragment extends Fragment {
 
         fab.setOnClickListener(addSensorListener);
 
-        // IF can user add senzor
-        if(!mController.isUserAllowed(mController.getAdapter(mActiveAdapterId).getRole())) {
+        if(mController.getAdapter(mActiveAdapterId) != null) {
+            // IF can user add senzor
+            if (!mController.isUserAllowed(mController.getAdapter(mActiveAdapterId).getRole())) {
+                // Hide button
+                fab.hide();
+            }
+        }
+        else {
             // Hide button
-            fab.hide();
+            fab.hide(false);
         }
 
 		// Update list adapter

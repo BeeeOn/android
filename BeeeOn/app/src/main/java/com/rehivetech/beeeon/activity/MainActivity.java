@@ -106,7 +106,7 @@ public class MainActivity extends BaseApplicationActivity {
 
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         if (mToolbar != null) {
-            mToolbar.setTitle("Navigation Drawer");
+            mToolbar.setTitle(R.string.app_name);
             setSupportActionBar(mToolbar);
         }
 
