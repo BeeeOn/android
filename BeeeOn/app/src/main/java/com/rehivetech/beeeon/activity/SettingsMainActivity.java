@@ -228,7 +228,7 @@ public class SettingsMainActivity extends ActionBarPreferenceActivity implements
 
 	@Override
 	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-		if (mTimezone != null && key == mTimezone.getPersistenceKey()) {
+		if (mTimezone != null && key.equals(mTimezone.getPersistenceKey())) {
 			ListPreference pref = mTimezoneListPref;
 
 			if (pref != null) {

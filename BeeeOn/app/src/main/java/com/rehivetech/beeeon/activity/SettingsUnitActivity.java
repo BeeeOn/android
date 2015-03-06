@@ -67,8 +67,6 @@ public class SettingsUnitActivity extends ActionBarPreferenceActivity implements
 		// Use own name for sharedPreferences
 		getPreferenceManager().setSharedPreferencesName(Persistence.getPreferencesFilename(mController.getActualUser().getEmail()));
 
-		// Load the preferences from an XML resource
-		addPreferencesFromResource(R.xml.unit_preferences);
 
 		// UserSettings can be null when user is not logged in!
 		mPrefs = mController.getUserSettings();
