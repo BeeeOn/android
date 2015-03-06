@@ -1,9 +1,7 @@
 package com.rehivetech.beeeon.arrayadapter;
 
 import android.content.Context;
-import android.media.Image;
 import android.support.v7.widget.SwitchCompat;
-import android.text.Layout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,11 +10,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.rehivetech.beeeon.R;
-import com.rehivetech.beeeon.adapter.device.Device;
+import com.rehivetech.beeeon.adapter.WatchDogRule;
+import com.rehivetech.beeeon.controller.Controller;
+import com.rehivetech.beeeon.util.UnitsHelper;
 
-import org.w3c.dom.Text;
-
-import java.util.Enumeration;
 import java.util.List;
 
 /**
@@ -25,12 +22,14 @@ import java.util.List;
 public class WatchDogListAdapter extends BaseAdapter {
 
     Context mContext;
+    Controller mController;
     LayoutInflater mInflater;
-    List<WRule> mRules;
+    List<WatchDogRule> mRules;
 
 
-    public WatchDogListAdapter(Context context, List<WRule> rules, LayoutInflater inflater){
+    public WatchDogListAdapter(Context context, List<WatchDogRule> rules, LayoutInflater inflater){
         mContext = context;
+        mController = Controller.getInstance(mContext);
         mInflater = inflater;
         mRules = rules;
     }
@@ -73,19 +72,22 @@ public class WatchDogListAdapter extends BaseAdapter {
             holder = (ViewHolder) convertView.getTag();
         }
 
-        WRule rule = (WRule) this.getItem(position);
+        WatchDogRule rule = (WatchDogRule) this.getItem(position);
 
-        holder.ItemRuleName.setText(rule.ruleName);
-        holder.ItemSensorName.setText(rule.sensorName);
-        holder.setItemOperator(rule.operator);
-        holder.ItemTreshold.setText(rule.treshold);
-        holder.setItemAction(rule.action);
-        holder.ItemSwitch.setChecked(rule.isActive);
+        holder.ItemIcon.setImageResource(rule.getDevice().getIconResource());
+        holder.ItemRuleName.setText(rule.getName());
+        holder.ItemSensorName.setText(rule.getDevice().getName());
+        holder.setItemOperator(rule.getOperator());
+
+        UnitsHelper unitsHelper = new UnitsHelper(mController.getUserSettings(), mContext);
+        holder.ItemTreshold.setText(unitsHelper.getStringValueUnit(rule.getTreshold()));
+        holder.setItemAction(rule.getAction());
+        holder.ItemSwitch.setChecked(rule.getIsActive());
 
         return convertView;
     }
 
-    public void updateData(List<WRule> data){
+    public void updateData(List<WatchDogRule> data){
         this.mRules = data;
         notifyDataSetChanged();
     }
@@ -99,7 +101,7 @@ public class WatchDogListAdapter extends BaseAdapter {
         public ImageView ItemAction;
         public SwitchCompat ItemSwitch;
 
-        void setItemOperator(OperatorType type){
+        void setItemOperator(WatchDogRule.OperatorType type){
             switch(type){
                 case SMALLER:
                     ItemOperator.setImageResource(R.drawable.ic_action_previous_item);
@@ -111,7 +113,7 @@ public class WatchDogListAdapter extends BaseAdapter {
             }
         }
 
-        void setItemAction(ActionType type){
+        void setItemAction(WatchDogRule.ActionType type){
             switch(type){
                 case NOTIFICATION:
                     ItemAction.setImageResource(R.drawable.ic_notification);
@@ -121,28 +123,6 @@ public class WatchDogListAdapter extends BaseAdapter {
                     ItemAction.setImageResource(R.drawable.ic_shutdown);
                 break;
             }
-        }
-    }
-
-    public static enum OperatorType{ SMALLER, GREATER };
-    public static enum ActionType{ NOTIFICATION, ACTOR_ACTION };
-
-    public static class WRule{
-        String ruleName;
-        String sensorName; // TODO pryc -> bude z device->name
-        OperatorType operator;
-        ActionType action;
-        //Device device;
-        String treshold; // TODO jako nejaka hodnota devicu
-        boolean isActive;
-
-        public WRule(String ru, String na, OperatorType op, ActionType act, String tresh, boolean isAct ){
-            ruleName = ru;
-            sensorName = na;
-            operator = op;
-            action = act;
-            treshold = tresh;
-            isActive = isAct;
         }
     }
 }

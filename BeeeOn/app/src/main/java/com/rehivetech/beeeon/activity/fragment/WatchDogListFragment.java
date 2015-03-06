@@ -15,11 +15,16 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.Toast;
+
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.activity.MainActivity;
 import com.rehivetech.beeeon.activity.WatchDogDetailActivity;
-import com.rehivetech.beeeon.adapter.Adapter;
+import com.rehivetech.beeeon.adapter.WatchDogRule;
+import com.rehivetech.beeeon.adapter.device.Device;
+import com.rehivetech.beeeon.adapter.device.DeviceType;
+import com.rehivetech.beeeon.adapter.device.units.HumidityUnit;
+import com.rehivetech.beeeon.adapter.device.values.HumidityValue;
+import com.rehivetech.beeeon.adapter.device.values.TemperatureValue;
 import com.rehivetech.beeeon.arrayadapter.WatchDogListAdapter;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.thread.ToastMessageThread;
@@ -27,6 +32,7 @@ import com.rehivetech.beeeon.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 /**
  * Created by Tomáš on 23. 2. 2015.
@@ -105,11 +111,27 @@ public class WatchDogListFragment extends Fragment{
         mWatchDogListView = (ListView) mView.findViewById(R.id.watchdogListView);
 
         // pokusny seznam
+        /*
         List<WatchDogListAdapter.WRule> rulesList = new ArrayList<>();
-        rulesList.add(new WatchDogListAdapter.WRule("Hlídání ohně", "První senzor", WatchDogListAdapter.OperatorType.GREATER, WatchDogListAdapter.ActionType.ACTOR_ACTION, "30°C", true));
-        rulesList.add(new WatchDogListAdapter.WRule("Hlídání smradu", "Druhý senzor", WatchDogListAdapter.OperatorType.SMALLER, WatchDogListAdapter.ActionType.NOTIFICATION, "90%", true));
-        rulesList.add(new WatchDogListAdapter.WRule("Hlídání dětí", "Třetí senzor", WatchDogListAdapter.OperatorType.SMALLER, WatchDogListAdapter.ActionType.ACTOR_ACTION, "60LUX", false));
-        rulesList.add(new WatchDogListAdapter.WRule("Hlídání cen", "Čtvrtý senzor", WatchDogListAdapter.OperatorType.GREATER, WatchDogListAdapter.ActionType.NOTIFICATION, "30°C", true));
+        rulesList.add(new WatchDogListAdapter.WRule("Hlídání ohně", "První senzor", WatchDogRule.OperatorType.GREATER, WatchDogRule.ActionType.ACTOR_ACTION, "30°C", true));
+        rulesList.add(new WatchDogListAdapter.WRule("Hlídání smradu", "Druhý senzor", WatchDogRule.OperatorType.SMALLER, WatchDogRule.ActionType.NOTIFICATION, "90%", true));
+        rulesList.add(new WatchDogListAdapter.WRule("Hlídání dětí", "Třetí senzor", WatchDogRule.OperatorType.SMALLER, WatchDogRule.ActionType.ACTOR_ACTION, "60LUX", false));
+        rulesList.add(new WatchDogListAdapter.WRule("Hlídání cen", "Čtvrtý senzor", WatchDogRule.OperatorType.GREATER, WatchDogRule.ActionType.NOTIFICATION, "30°C", true));
+        //*/
+
+        HumidityValue val = new HumidityValue();
+        val.setValue("50");
+        Device dev = new Device(DeviceType.TYPE_HUMIDITY, val);
+        dev.setName("Vlhkostní sensor");
+
+        TemperatureValue val1 = new TemperatureValue();
+        val1.setValue("32");
+
+        List<WatchDogRule> rulesList = new ArrayList<>();
+        rulesList.add(new WatchDogRule("1", "Hlídání ohně", dev, WatchDogRule.OperatorType.GREATER, WatchDogRule.ActionType.ACTOR_ACTION, val1, false));
+        rulesList.add(new WatchDogRule("2", "Hlídání smradu", dev, WatchDogRule.OperatorType.SMALLER, WatchDogRule.ActionType.NOTIFICATION, val, true));
+        rulesList.add(new WatchDogRule("3", "Hlídání dětí", dev, WatchDogRule.OperatorType.GREATER, WatchDogRule.ActionType.NOTIFICATION, val1, true));
+        rulesList.add(new WatchDogRule("4", "Hlídání cen", dev, WatchDogRule.OperatorType.SMALLER, WatchDogRule.ActionType.ACTOR_ACTION, val, false));
 
         mWatchDogAdapter = new WatchDogListAdapter(mActivity, rulesList, getActivity().getLayoutInflater());
 
