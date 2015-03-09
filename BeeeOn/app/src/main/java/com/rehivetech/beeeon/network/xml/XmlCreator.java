@@ -4,16 +4,8 @@
 
 package com.rehivetech.beeeon.network.xml;
 
-import java.io.StringWriter;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.EnumSet;
-import java.util.List;
-
-import org.xmlpull.v1.XmlSerializer;
-
 import android.util.Xml;
+
 import com.rehivetech.beeeon.Constants;
 import com.rehivetech.beeeon.adapter.device.Device;
 import com.rehivetech.beeeon.adapter.device.Device.SaveDevice;
@@ -34,6 +26,15 @@ import com.rehivetech.beeeon.network.xml.condition.LesserEqualFunc;
 import com.rehivetech.beeeon.network.xml.condition.LesserThanFunc;
 import com.rehivetech.beeeon.network.xml.condition.TimeFunc;
 
+import org.xmlpull.v1.XmlSerializer;
+
+import java.io.StringWriter;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.EnumSet;
+import java.util.List;
+
 /**
  * Class for creating XML messages
  * 
@@ -47,8 +48,6 @@ public class XmlCreator {
 	private static final String COM_VER = Constants.COM_VER;
 
 	// states
-	public static final String SIGNIN = "signin";
-	public static final String SIGNUP = "signup";
 	
 	public static final String GETUID = "getuid";
 
@@ -102,6 +101,12 @@ public class XmlCreator {
 	public static final String GETACTION = "getact";
 	public static final String ADDACTION = "addact";
 	public static final String DELACTION = "delact";
+
+    public static final String ADDALG = "addalg";
+    public static final String GETALG = "getalg";
+    public static final String GETALGS =  "getlags";
+    public static final String SETALG = "setalg";
+    public static final String DELALG = "delalg";
 
 	// end of states
 
@@ -244,8 +249,6 @@ public class XmlCreator {
 	 * 
 	 * @param uid
 	 *            userID of user
-	 * @param aid
-	 *            adapterID of actual adapter
 	 * @param facilities
 	 *            facilities with devices to update
 	 * @return update message
@@ -1130,6 +1133,104 @@ public class XmlCreator {
 			throw AppException.wrap(e, NetworkError.XML);
 		}
 	}
+
+    /**
+     * Method create message for creating new rule or editing the old one
+     * @param uid
+     * @param name
+     * @param aid
+     * @param type
+     * @param devices
+     *          list of devices in right position for algorithm
+     * @param params
+     *          list of strings with additional params for new rule
+     * @return
+     */
+    public static String createAddSetAlgor(String uid, String name, String aid, int type, List<Device> devices, List<String> params, Boolean state){
+        XmlSerializer serializer = Xml.newSerializer();
+        StringWriter writer = new StringWriter();
+        try {
+            serializer.setOutput(writer);
+            serializer.startDocument("UTF-8", null);
+
+            serializer.startTag(ns, Xconstants.COM_ROOT);
+
+            serializer.attribute(ns, Xconstants.UID, uid);
+            if(state == null)
+                serializer.attribute(ns, Xconstants.STATE, ADDALG);
+            else {
+                serializer.attribute(ns, Xconstants.STATE, SETALG);
+                serializer.attribute(ns, Xconstants.ENABLE, (state.booleanValue()) ? "1" : "0");
+            }
+
+            serializer.attribute(ns, Xconstants.VERSION, COM_VER);
+            serializer.attribute(ns, Xconstants.ALGNAME, name);
+            serializer.attribute(ns, Xconstants.AID, aid);
+            serializer.attribute(ns, Xconstants.ATYPE, Integer.toString(type));
+
+            int i = 1;
+            for(Device device : devices){
+                serializer.startTag(ns, Xconstants.DEVICE);
+                serializer.attribute(ns, Xconstants.ID, device.getId());
+                serializer.attribute(ns, Xconstants.TYPE, device.getType().toString());
+                serializer.attribute(ns, Xconstants.POSITION, Integer.toString(i++));
+                serializer.endTag(ns, Xconstants.DEVICE);
+            }
+            i=1;
+
+            for(String param : params) {
+                serializer.startTag(ns, Xconstants.PARAM);
+                serializer.attribute(ns, Xconstants.POSITION, Integer.toString(i++));
+                serializer.text(param);
+                serializer.endTag(ns, Xconstants.PARAM);
+            }
+
+            serializer.endTag(ns, Xconstants.COM_ROOT);
+            serializer.endDocument();
+
+            return writer.toString();
+        } catch (Exception e) {
+            throw AppException.wrap(e, NetworkError.XML);
+        }
+    }
+
+
+    public static String createAddAlgor(String uid, String name, String aid, int type, List<Device> devices, List<String> params){
+        return createAddSetAlgor(uid, name, aid, type, devices, params, null);
+    }
+
+    public static String createSetAlgor(String uid, String name, String aid, int type, boolean enable, List<Device> devices, List<String>params){
+        return createAddSetAlgor(uid, name, aid, type, devices, params, enable);
+    }
+
+    /**
+     * Method return message with demands for specific rule
+     * @param uid
+     * @param algid
+     * @return
+     */
+    public static String createGetAlg(String uid, String algid){
+        return createComAttribsVariant(Xconstants.STATE, GETALG, Xconstants.UID, uid, Xconstants.ALGID, algid);
+    }
+
+    /**
+     * Method returns message with demands for all rules of user
+     * @param uid
+     * @return
+     */
+    public static String createGetAlgs(String uid){
+        return createComAttribsVariant(Xconstants.STATE, GETALGS, Xconstants.UID, uid);
+    }
+
+    /**
+     * Method returns message with demands for delete specific rule
+     * @param uid
+     * @param algid
+     * @return
+     */
+    public static String createDelAlg(String uid, String algid){
+        return createComAttribsVariant(Xconstants.STATE, DELALG, Xconstants.UID, uid, Xconstants.ALGID, algid);
+    }
 
 	/************************************* PRIVATE METHODS *********************************************/
 

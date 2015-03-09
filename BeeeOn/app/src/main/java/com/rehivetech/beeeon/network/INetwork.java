@@ -13,6 +13,7 @@ import com.rehivetech.beeeon.adapter.location.Location;
 import com.rehivetech.beeeon.household.User;
 import com.rehivetech.beeeon.network.GoogleAuthHelper.GoogleUserInfo;
 import com.rehivetech.beeeon.network.xml.CustomViewPair;
+import com.rehivetech.beeeon.network.xml.WatchDog;
 import com.rehivetech.beeeon.network.xml.action.ComplexAction;
 import com.rehivetech.beeeon.network.xml.condition.Condition;
 import com.rehivetech.beeeon.pair.LogDataPair;
@@ -425,5 +426,19 @@ public interface INetwork {
 	public boolean updateAction(ComplexAction action);
 
 	public boolean deleteAction(ComplexAction action);
+
+    // /////////////////////////////////////////////////////////////////////////////////
+    // /////////////////////////////////////ALGORITHMS//////////////////////////////////
+    // /////////////////////////////////////////////////////////////////////////////////
+
+    public boolean addWatchDog(WatchDog watchDog, String AdapterID);
+
+    public WatchDog getWatchDog(String watchDogId);
+
+    public HashMap<String, String> getAlgorithms();
+
+    public boolean updateWatchDog(WatchDog watchDog, String AdapterId);
+
+    public boolean deleteWatchDog(WatchDog watchDog);
 
 }

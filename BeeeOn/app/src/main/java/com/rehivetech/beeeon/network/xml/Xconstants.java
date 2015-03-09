@@ -24,6 +24,7 @@ public class Xconstants {
 	public static final String MSGID = "mid";
 	public static final String GID = "gid";
 	public static final String UID = "uid";
+    public static final String ALGID = "algid";
 	public static final String ZERO = "0";
 	public static final String ONE = "1";
 	public static final String STATE = "state";
@@ -52,6 +53,7 @@ public class Xconstants {
 	public static final String DTYPE = "dtype";
 	public static final String LTYPE = "ltype";
 	public static final String CTYPE = "ctype";
+    public static final String ATYPE = "atype";
 	public static final String VISIBILITY = "vis";
 	public static final String LOCATION = "loc";
 	public static final String NAME = "name";
@@ -60,6 +62,7 @@ public class Xconstants {
 	public static final String LNAME = "lname";
 	public static final String CNAME = "cname";
 	public static final String ACNAME = "acname";
+    public static final String ALGNAME = "algname";
 	public static final String REFRESH = "refresh";
 	public static final String BATTERY = "bat";
 	public static final String VALUE = "val";
@@ -77,6 +80,11 @@ public class Xconstants {
 	public static final String SETTINGS = "sett";
 	public static final String CONDITION = "cond";
 	public static final String REPEAT = "repeat";
+
+    public static final String POSITION = "pos";
+    public static final String PARAM = "par";
+    public static final String ENABLE = "enable";
+    public static final String ALGORITHM = "alg";
 	
 	public static final String ROW_DATA_SEPARATOR = "\\s+"; 
 }

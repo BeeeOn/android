@@ -3,21 +3,9 @@
  */
 package com.rehivetech.beeeon.network.xml;
 
-import java.io.BufferedInputStream;
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.List;
-
-import org.joda.time.DateTime;
-import org.joda.time.DateTimeZone;
-import org.xmlpull.v1.XmlPullParser;
-import org.xmlpull.v1.XmlPullParserException;
-
 import android.content.Context;
 import android.util.Xml;
+
 import com.rehivetech.beeeon.Constants;
 import com.rehivetech.beeeon.adapter.Adapter;
 import com.rehivetech.beeeon.adapter.device.Device;
@@ -44,6 +32,21 @@ import com.rehivetech.beeeon.network.xml.condition.GreaterThanFunc;
 import com.rehivetech.beeeon.network.xml.condition.LesserEqualFunc;
 import com.rehivetech.beeeon.network.xml.condition.LesserThanFunc;
 import com.rehivetech.beeeon.util.Log;
+
+import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
+import org.xmlpull.v1.XmlPullParser;
+import org.xmlpull.v1.XmlPullParserException;
+
+import java.io.BufferedInputStream;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.TreeMap;
 
 /**
  * @author ThinkDeep
@@ -81,7 +84,10 @@ public class XmlParsers {
 		ACTIONCREATED("actcreated"),
 		ACTIONS("acts"),
 		ACTION("act"),
-		UID("uid");
+		UID("uid"),
+        ALGCREATED("algcreated"),
+        ALGORITHM("alg"),
+        ALGORITHMS("algs");
 
 		private final String mValue;
 
@@ -113,7 +119,6 @@ public class XmlParsers {
 	 * @return
 	 * @throws XmlPullParserException
 	 * @throws IOException
-	 * @throws ComVerMisException
 	 *             means Communication version mismatch exception
 	 * @throws ParseException
 	 */
@@ -166,6 +171,19 @@ public class XmlParsers {
 			// String (locationID)
 			result.data = getSecureAttrValue(Xconstants.LID);
 			break;
+        case ALGCREATED:
+            // String (AlgorithmID)
+            result.data = getSecureAttrValue(Xconstants.ALGID);
+            break;
+        case ALGORITHM:
+            getSecureAttrValue(Xconstants.ATYPE); // not used yet
+            // WatchDog
+            result.data = parseWatchDog((getSecureAttrValue(Xconstants.ENABLE).equals("1"))?true:false);
+            break;
+        case ALGORITHMS:
+            // HashMap<String,String> (ID,NAME)
+            result.data = parseAlgorithms();
+            break;
 		case VIEWS:
 			// List<CustomViewPair>
 			result.data = parseViewsList(); // TODO: PENDING (need ROB)
@@ -832,6 +850,58 @@ public class XmlParsers {
 
 		return result;
 	}
+
+    private WatchDog parseWatchDog(boolean enabled) throws XmlPullParserException, IOException{
+        mParser.nextTag();
+
+        WatchDog watchDog = new WatchDog();
+        watchDog.setEnabled(enabled);
+
+        TreeMap<String, Device> tDevices = new TreeMap<>();
+        TreeMap<String, String> tParams = new TreeMap<>();
+
+        if(!mParser.getName().equals(Xconstants.DEVICE) && !mParser.getName().equals(Xconstants.PARAM))
+            return watchDog;
+
+        do{
+            String position = getSecureAttrValue(Xconstants.POSITION);
+
+            if(mParser.getName().equals(Xconstants.DEVICE)){
+                Device device = createDeviceByType(getSecureAttrValue(Xconstants.TYPE));
+                Facility facility = new Facility();
+                facility.setAddress(getSecureAttrValue(Xconstants.ID)); // FIXME: how to connect with existing facilities in controller
+                device.setFacility(facility);
+
+                tDevices.put(position, device);
+
+                mParser.nextTag();
+            }else{
+                tParams.put(position, readText(Xconstants.PARAM));
+            }
+
+        }while(mParser.nextTag() != XmlPullParser.END_TAG && !mParser.getName().equals(Xconstants.COM_ROOT));
+
+        watchDog.setDevices(new ArrayList<>(tDevices.values()));
+        watchDog.setParams(new ArrayList<>(tParams.values()));
+
+        return watchDog;
+    }
+
+    private HashMap<String, String> parseAlgorithms() throws XmlPullParserException, IOException{
+        mParser.nextTag();
+
+        HashMap<String, String> result = new HashMap<>();
+
+        if(!mParser.getName().equals(Xconstants.ALGORITHM))
+            return result;
+
+        do{
+            result.put(getSecureAttrValue(Xconstants.ID), getSecureAttrValue(Xconstants.NAME));
+            mParser.nextTag();
+        }while(mParser.nextTag() != XmlPullParser.END_TAG && !mParser.getName().equals(Xconstants.COM_ROOT));
+
+        return result;
+    }
 
 	// ///////////////////////////////// OTHER
 

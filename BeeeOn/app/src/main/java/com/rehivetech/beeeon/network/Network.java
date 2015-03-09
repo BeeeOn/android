@@ -1,5 +1,35 @@
 package com.rehivetech.beeeon.network;
 
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.net.wifi.WifiInfo;
+import android.net.wifi.WifiManager;
+import android.telephony.TelephonyManager;
+
+import com.rehivetech.beeeon.adapter.Adapter;
+import com.rehivetech.beeeon.adapter.device.Device;
+import com.rehivetech.beeeon.adapter.device.Device.SaveDevice;
+import com.rehivetech.beeeon.adapter.device.DeviceLog;
+import com.rehivetech.beeeon.adapter.device.Facility;
+import com.rehivetech.beeeon.adapter.location.Location;
+import com.rehivetech.beeeon.controller.Controller;
+import com.rehivetech.beeeon.exception.AppException;
+import com.rehivetech.beeeon.exception.NetworkError;
+import com.rehivetech.beeeon.household.User;
+import com.rehivetech.beeeon.network.GoogleAuthHelper.GoogleUserInfo;
+import com.rehivetech.beeeon.network.xml.CustomViewPair;
+import com.rehivetech.beeeon.network.xml.FalseAnswer;
+import com.rehivetech.beeeon.network.xml.ParsedMessage;
+import com.rehivetech.beeeon.network.xml.WatchDog;
+import com.rehivetech.beeeon.network.xml.XmlCreator;
+import com.rehivetech.beeeon.network.xml.XmlParsers;
+import com.rehivetech.beeeon.network.xml.XmlParsers.State;
+import com.rehivetech.beeeon.network.xml.action.ComplexAction;
+import com.rehivetech.beeeon.network.xml.condition.Condition;
+import com.rehivetech.beeeon.pair.LogDataPair;
+import com.rehivetech.beeeon.util.Log;
+
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -29,36 +59,6 @@ import javax.net.ssl.SSLHandshakeException;
 import javax.net.ssl.SSLSession;
 import javax.net.ssl.SSLSocket;
 import javax.net.ssl.TrustManagerFactory;
-
-import android.content.Context;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
-import android.net.wifi.WifiInfo;
-import android.net.wifi.WifiManager;
-import android.telephony.TelephonyManager;
-import com.rehivetech.beeeon.adapter.Adapter;
-import com.rehivetech.beeeon.adapter.device.Device;
-import com.rehivetech.beeeon.adapter.device.Device.SaveDevice;
-import com.rehivetech.beeeon.adapter.device.DeviceLog;
-import com.rehivetech.beeeon.adapter.device.Facility;
-import com.rehivetech.beeeon.adapter.location.Location;
-import com.rehivetech.beeeon.controller.Controller;
-import com.rehivetech.beeeon.exception.AppException;
-import com.rehivetech.beeeon.exception.NetworkError;
-import com.rehivetech.beeeon.household.User;
-import com.rehivetech.beeeon.network.GoogleAuthHelper.GoogleUserInfo;
-import com.rehivetech.beeeon.network.xml.CustomViewPair;
-import com.rehivetech.beeeon.network.xml.FalseAnswer;
-import com.rehivetech.beeeon.network.xml.ParsedMessage;
-import com.rehivetech.beeeon.network.xml.XmlCreator;
-import com.rehivetech.beeeon.network.xml.XmlParsers;
-import com.rehivetech.beeeon.network.xml.XmlParsers.State;
-import com.rehivetech.beeeon.network.xml.action.ComplexAction;
-import com.rehivetech.beeeon.network.xml.condition.Condition;
-import com.rehivetech.beeeon.pair.LogDataPair;
-import com.rehivetech.beeeon.util.Log;
-
-import org.xmlpull.v1.XmlPullParserException;
 
 /**
  * Network service that handles communication with server.
@@ -133,9 +133,6 @@ public class Network implements INetwork {
 	 * Method for sending data to server via TLS protocol using own TrustManger to be able to trust self-signed
 	 * certificates. CA certificated must be located in assets folder. If no exception is thrown, it returns server
 	 * response.
-	 * 
-	 * @param appContext
-	 *            Application context to get CA certificate from assets
 	 * @param request
 	 *            Request to server to be sent
 	 * @return Response from server
@@ -582,8 +579,10 @@ public class Network implements INetwork {
 
 	/**
 	 * Method send updated fields of devices
-	 * 
-	 * @param devices
+	 *
+	 * @param adapterID
+     * @param facilities
+     * @param toSave
 	 * @return true if everything goes well, false otherwise
 	 */
 	@Override
@@ -721,7 +720,6 @@ public class Network implements INetwork {
 	/**
 	 * Method get new devices
 	 * @param adapterID
-	 * @param facilities
 	 * @return
 	 */
 	@Override
@@ -738,8 +736,10 @@ public class Network implements INetwork {
 
 	/**
 	 * Method ask for data of logs
-	 * 
-	 * @param deviceId
+	 *
+     * @param adapterID
+     *
+	 * @param device
 	 *            id of wanted device
 	 * @param pair
 	 *            data of log (from, to, type, interval)
@@ -862,7 +862,7 @@ public class Network implements INetwork {
 	 *            name of new custom view
 	 * @param iconID
 	 *            icon that is assigned to the new view
-	 * @param deviceIds
+	 * @param devices
 	 *            list of devices that are assigned to new view
 	 * @return true if everything goes well, false otherwise
 	 */
@@ -949,8 +949,7 @@ public class Network implements INetwork {
 	 * Method add new user to adapter
 	 * 
 	 * @param adapterID
-	 * @param email
-	 * @param role
+	 * @param user
 	 * @return
 	 */
 	@Override
@@ -1017,8 +1016,8 @@ public class Network implements INetwork {
 	/**
 	 * Method update users roles on server on current adapter
 	 * 
-	 * @param userNrole
-	 *            map with email as key and role as value
+	 * @param adapterID
+     * @param users
 	 * @return true if all accounts has been changed false otherwise
 	 */
 	@Override
@@ -1037,7 +1036,6 @@ public class Network implements INetwork {
 	 * 
 	 * @param adapterID
 	 * @param user
-	 * @param role
 	 * @return
 	 */
 	@Override
@@ -1284,5 +1282,63 @@ public class Network implements INetwork {
 		FalseAnswer fa = (FalseAnswer) msg.data;
 		throw new AppException(fa.getErrMessage(), NetworkError.fromValue(fa.getErrCode()));
 	}
+
+    @Override
+    public boolean addWatchDog(WatchDog watchDog, String AdapterID){
+        ParsedMessage msg = doRequest(XmlCreator.createAddAlgor(mUserID, watchDog.getName(), AdapterID, watchDog.getType(), watchDog.getDevices(), watchDog.getParams()));
+
+        if (msg.getState() == State.ALGCREATED) {
+            watchDog.setId((String) msg.data);
+            return true;
+        }
+
+        FalseAnswer fa = (FalseAnswer) msg.data;
+        throw new AppException(fa.getErrMessage(), NetworkError.fromValue(fa.getErrCode()));
+    }
+
+    @Override
+    public WatchDog getWatchDog(String watchDogId){
+        ParsedMessage msg = doRequest(XmlCreator.createGetAlg(mUserID, watchDogId));
+
+        if(msg.getState() == State.ALGORITHM){
+            return (WatchDog) msg.data;
+        }
+
+        FalseAnswer fa = (FalseAnswer) msg.data;
+        throw new AppException(fa.getErrMessage(), NetworkError.fromValue(fa.getErrCode()));
+    }
+
+    @Override
+    public HashMap<String, String> getAlgorithms(){
+        ParsedMessage msg = doRequest(XmlCreator.createGetAlgs(mUserID));
+
+        if(msg.getState() == State.ALGORITHMS)
+            return (HashMap<String, String>) msg.data;
+
+        FalseAnswer fa = (FalseAnswer) msg.data;
+        throw new AppException(fa.getErrMessage(), NetworkError.fromValue(fa.getErrCode()));
+    }
+
+    @Override
+    public boolean updateWatchDog(WatchDog watchDog, String AdapterId){
+        ParsedMessage msg = doRequest(XmlCreator.createSetAlgor(mUserID, watchDog.getName(), AdapterId, watchDog.getType(), watchDog.isEnabled(), watchDog.getDevices(), watchDog.getParams()));
+
+        if(msg.getState() == State.TRUE)
+            return true;
+
+        FalseAnswer fa = (FalseAnswer) msg.data;
+        throw new AppException(fa.getErrMessage(), NetworkError.fromValue(fa.getErrCode()));
+    }
+
+    @Override
+    public boolean deleteWatchDog(WatchDog watchDog){
+        ParsedMessage msg = doRequest(XmlCreator.createDelAlg(mUserID, watchDog.getId()));
+
+        if(msg.getState() == State.TRUE)
+            return true;
+
+        FalseAnswer fa = (FalseAnswer) msg.data;
+        throw new AppException(fa.getErrMessage(), NetworkError.fromValue(fa.getErrCode()));
+    }
 
 }
