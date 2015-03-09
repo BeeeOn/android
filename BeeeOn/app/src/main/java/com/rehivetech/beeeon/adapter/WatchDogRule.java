@@ -8,16 +8,14 @@ public class WatchDogRule implements IIdentifier {
     public static enum OperatorType{ SMALLER, GREATER }
     public static enum ActionType{ NOTIFICATION, ACTOR_ACTION }
 
-    // TODO prepsat vsechny public na protected
-
-    public String mAdapterId;
-    public String mId = "";
-    public String mName = "";
-    public Device mDevice;
-    public OperatorType mOperator;
-    public ActionType mAction;
-    public BaseValue mTreshold;         // TODO asi nejaka jiny typ nez string
-    public boolean mIsActive;
+    protected String mAdapterId;
+    protected String mId = "";
+    protected String mName = "";
+    protected Device mDevice;
+    protected OperatorType mOperator;
+    protected ActionType mAction;
+    protected BaseValue mTreshold;
+    protected boolean mIsActive;
 
     public WatchDogRule(String id, String name, Device dev, OperatorType op, ActionType ac, BaseValue tresh, boolean act) {
         setId(id);

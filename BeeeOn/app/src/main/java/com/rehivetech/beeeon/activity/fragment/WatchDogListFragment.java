@@ -2,27 +2,25 @@ package com.rehivetech.beeeon.activity.fragment;
 
 import android.support.v4.app.Fragment;
 import android.content.Intent;
-import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.v7.view.ActionMode;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.TextView;
 
+import com.melnykov.fab.FloatingActionButton;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.activity.MainActivity;
-import com.rehivetech.beeeon.activity.WatchDogDetailActivity;
+import com.rehivetech.beeeon.activity.WatchDogEditRuleActivity;
 import com.rehivetech.beeeon.adapter.WatchDogRule;
 import com.rehivetech.beeeon.adapter.device.Device;
 import com.rehivetech.beeeon.adapter.device.DeviceType;
-import com.rehivetech.beeeon.adapter.device.units.HumidityUnit;
 import com.rehivetech.beeeon.adapter.device.values.HumidityValue;
 import com.rehivetech.beeeon.adapter.device.values.TemperatureValue;
 import com.rehivetech.beeeon.arrayadapter.WatchDogListAdapter;
@@ -32,7 +30,6 @@ import com.rehivetech.beeeon.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 /**
  * Created by Tomáš on 23. 2. 2015.
@@ -110,14 +107,22 @@ public class WatchDogListFragment extends Fragment{
     private void redrawRules() {
         mWatchDogListView = (ListView) mView.findViewById(R.id.watchdogListView);
 
-        // pokusny seznam
-        /*
-        List<WatchDogListAdapter.WRule> rulesList = new ArrayList<>();
-        rulesList.add(new WatchDogListAdapter.WRule("Hlídání ohně", "První senzor", WatchDogRule.OperatorType.GREATER, WatchDogRule.ActionType.ACTOR_ACTION, "30°C", true));
-        rulesList.add(new WatchDogListAdapter.WRule("Hlídání smradu", "Druhý senzor", WatchDogRule.OperatorType.SMALLER, WatchDogRule.ActionType.NOTIFICATION, "90%", true));
-        rulesList.add(new WatchDogListAdapter.WRule("Hlídání dětí", "Třetí senzor", WatchDogRule.OperatorType.SMALLER, WatchDogRule.ActionType.ACTOR_ACTION, "60LUX", false));
-        rulesList.add(new WatchDogListAdapter.WRule("Hlídání cen", "Čtvrtý senzor", WatchDogRule.OperatorType.GREATER, WatchDogRule.ActionType.NOTIFICATION, "30°C", true));
-        //*/
+        // ---- when listview is empty
+        TextView emptyView = (TextView) mView.findViewById(R.id.watchdogListEmpty);
+        mWatchDogListView.setEmptyView(emptyView);
+
+        // ---- floating action button
+        FloatingActionButton fab = (FloatingActionButton) mView.findViewById(R.id.fab);
+        fab.attachToListView(mWatchDogListView);
+        fab.show();
+
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(mActivity, WatchDogEditRuleActivity.class);
+                startActivity(intent);
+            }
+        });
 
         HumidityValue val = new HumidityValue();
         val.setValue("50");
@@ -132,6 +137,12 @@ public class WatchDogListFragment extends Fragment{
         rulesList.add(new WatchDogRule("2", "Hlídání smradu", dev, WatchDogRule.OperatorType.SMALLER, WatchDogRule.ActionType.NOTIFICATION, val, true));
         rulesList.add(new WatchDogRule("3", "Hlídání dětí", dev, WatchDogRule.OperatorType.GREATER, WatchDogRule.ActionType.NOTIFICATION, val1, true));
         rulesList.add(new WatchDogRule("4", "Hlídání cen", dev, WatchDogRule.OperatorType.SMALLER, WatchDogRule.ActionType.ACTOR_ACTION, val, false));
+        rulesList.add(new WatchDogRule("5", "Hlídání cen", dev, WatchDogRule.OperatorType.SMALLER, WatchDogRule.ActionType.ACTOR_ACTION, val, false));
+        rulesList.add(new WatchDogRule("6", "Hlídání cen", dev, WatchDogRule.OperatorType.SMALLER, WatchDogRule.ActionType.ACTOR_ACTION, val, false));
+        rulesList.add(new WatchDogRule("7", "Hlídání cen", dev, WatchDogRule.OperatorType.SMALLER, WatchDogRule.ActionType.ACTOR_ACTION, val, false));
+        rulesList.add(new WatchDogRule("8", "Hlídání cen", dev, WatchDogRule.OperatorType.SMALLER, WatchDogRule.ActionType.ACTOR_ACTION, val, false));
+        rulesList.add(new WatchDogRule("9", "Hlídání cen", dev, WatchDogRule.OperatorType.SMALLER, WatchDogRule.ActionType.ACTOR_ACTION, val, false));
+        rulesList.add(new WatchDogRule("10", "Hlídání cen", dev, WatchDogRule.OperatorType.SMALLER, WatchDogRule.ActionType.ACTOR_ACTION, val, false));
 
         mWatchDogAdapter = new WatchDogListAdapter(mActivity, rulesList, getActivity().getLayoutInflater());
 
@@ -139,7 +150,7 @@ public class WatchDogListFragment extends Fragment{
         mWatchDogListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent intent = new Intent(mActivity, WatchDogDetailActivity.class);
+                Intent intent = new Intent(mActivity, WatchDogEditRuleActivity.class);
                 startActivity(intent);
             }
         });
@@ -151,39 +162,6 @@ public class WatchDogListFragment extends Fragment{
                 // TODO treba zmenit switcher na checkboxy ?
 
                 mMode = mActivity.startSupportActionMode(new ActionModeEditRules());
-                return true;
-            }
-        });
-
-        ImageView addButton = (ImageView) mView.findViewById(R.id.watchdogAddButton);
-        addButton.setOnTouchListener(new View.OnTouchListener() {
-            private Rect rect;
-            public boolean onTouch(View v, MotionEvent event) {
-                ImageView img = (ImageView) v;
-                switch(event.getAction()){
-                    case MotionEvent.ACTION_DOWN:
-                        img.setImageResource(R.drawable.ic_add_pressed);
-                        rect = new Rect(v.getLeft(), v.getTop(), v.getRight(), v.getBottom());
-                        break;
-
-                    case MotionEvent.ACTION_CANCEL:
-                    case MotionEvent.ACTION_OUTSIDE:
-                        img.setImageResource(R.drawable.ic_add);
-                        break;
-
-                    case MotionEvent.ACTION_UP:
-                        img.setImageResource(R.drawable.ic_add);
-                        // this way, cause some devices don't accept ACTION_CANCEL
-                        if (rect.contains(v.getLeft() + (int) event.getX(), v.getTop() + (int) event.getY())) {
-                            // zapne aktivitu
-                            Intent intent = new Intent(mActivity, WatchDogDetailActivity.class);
-                            startActivity(intent);
-                            // v.performClick(); // is possible to create default OnClickListener
-                        }
-                        break;
-                    default:
-                        return v.onTouchEvent(event);
-                }
                 return true;
             }
         });

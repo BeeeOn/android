@@ -132,7 +132,7 @@
             android:label="@string/title_activity_add_adapter_user" >
         </activity>
         <activity
-            android:name=".activity.WatchDogDetailActivity"
+            android:name=".activity.WatchDogEditRuleActivity"
             android:label="@string/action_watchdog" >
         </activity>
 

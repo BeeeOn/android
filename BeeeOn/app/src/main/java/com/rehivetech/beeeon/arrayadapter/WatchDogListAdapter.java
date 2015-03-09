@@ -1,6 +1,7 @@
 package com.rehivetech.beeeon.arrayadapter;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.support.v7.widget.SwitchCompat;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,6 +26,8 @@ public class WatchDogListAdapter extends BaseAdapter {
     Controller mController;
     LayoutInflater mInflater;
     List<WatchDogRule> mRules;
+    SharedPreferences mPrefs;
+    UnitsHelper mUnitsHelper;
 
 
     public WatchDogListAdapter(Context context, List<WatchDogRule> rules, LayoutInflater inflater){
@@ -32,6 +35,10 @@ public class WatchDogListAdapter extends BaseAdapter {
         mController = Controller.getInstance(mContext);
         mInflater = inflater;
         mRules = rules;
+
+        // UserSettings can be null when user is not logged in!
+        mPrefs = mController.getUserSettings();
+        mUnitsHelper = (mPrefs == null) ? null : new UnitsHelper(mPrefs, mContext);
     }
 
     @Override
@@ -53,6 +60,7 @@ public class WatchDogListAdapter extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
         ViewHolder holder;
 
+        // when first time inflating layout (not when scrolling)
         if(convertView == null){
             convertView = mInflater.inflate(R.layout.watchdog_listview_item, parent, false);
 
@@ -69,9 +77,11 @@ public class WatchDogListAdapter extends BaseAdapter {
             convertView.setTag(holder);
         }
         else{
+            // when we've inflated enough layouts, we just take them from memory
             holder = (ViewHolder) convertView.getTag();
         }
 
+        // set values of item
         WatchDogRule rule = (WatchDogRule) this.getItem(position);
 
         holder.ItemIcon.setImageResource(rule.getDevice().getIconResource());
@@ -79,8 +89,9 @@ public class WatchDogListAdapter extends BaseAdapter {
         holder.ItemSensorName.setText(rule.getDevice().getName());
         holder.setItemOperator(rule.getOperator());
 
-        UnitsHelper unitsHelper = new UnitsHelper(mController.getUserSettings(), mContext);
-        holder.ItemTreshold.setText(unitsHelper.getStringValueUnit(rule.getTreshold()));
+        // sets value if unitsHelper otherwise raw value
+        holder.ItemTreshold.setText(mUnitsHelper != null ? mUnitsHelper.getStringValueUnit(rule.getTreshold()) : String.valueOf(rule.getTreshold().getDoubleValue()));
+
         holder.setItemAction(rule.getAction());
         holder.ItemSwitch.setChecked(rule.getIsActive());
 
