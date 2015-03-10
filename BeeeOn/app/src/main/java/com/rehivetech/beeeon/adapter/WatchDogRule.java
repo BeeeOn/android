@@ -15,16 +15,19 @@ public class WatchDogRule implements IIdentifier {
     protected OperatorType mOperator;
     protected ActionType mAction;
     protected BaseValue mTreshold;
-    protected boolean mIsActive;
+    protected boolean mEnabled;
 
-    public WatchDogRule(String id, String name, Device dev, OperatorType op, ActionType ac, BaseValue tresh, boolean act) {
+    // TODO udelat constructor bez parametru
+
+    public WatchDogRule(String id, String adapterId, String name, Device dev, OperatorType op, ActionType ac, BaseValue tresh, boolean act) {
         setId(id);
+        setAdapterId(adapterId);
         setName(name);
         setDevice(dev);
         setOperator(op);
         setAction(ac);
         setTreshold(tresh);
-        setIsActive(act);
+        setEnabled(act);
     }
 
     @Override
@@ -35,12 +38,20 @@ public class WatchDogRule implements IIdentifier {
         mId = id;
     }
 
-    // getter & setter for Device
-    public void setDevice(Device device) {
-        mDevice = device;
+    // getter & setter for Adapter
+    public String getAdapterId() {
+        return mAdapterId;
     }
+    public void setAdapterId(String adapterId) {
+        mAdapterId = adapterId;
+    }
+
+    // getter & setter for Device
     public Device getDevice() {
         return mDevice;
+    }
+    public void setDevice(Device device) {
+        mDevice = device;
     }
 
     // getter & setter for Name
@@ -76,10 +87,10 @@ public class WatchDogRule implements IIdentifier {
     }
 
     // getter & setter for IsActive
-    public boolean getIsActive() {
-        return mIsActive;
+    public boolean getEnabled() {
+        return mEnabled;
     }
-    public void setIsActive(boolean mIsActive) {
-        this.mIsActive = mIsActive;
+    public void setEnabled(boolean mIsActive) {
+        this.mEnabled = mIsActive;
     }
 }

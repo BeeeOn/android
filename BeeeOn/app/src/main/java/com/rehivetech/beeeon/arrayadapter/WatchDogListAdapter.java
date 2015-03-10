@@ -51,6 +51,10 @@ public class WatchDogListAdapter extends BaseAdapter {
         return mRules.get(position);
     }
 
+    public WatchDogRule getRule(int position){
+        return mRules.get(position);
+    }
+
     @Override
     public long getItemId(int position) {
         return position;
@@ -93,7 +97,7 @@ public class WatchDogListAdapter extends BaseAdapter {
         holder.ItemTreshold.setText(mUnitsHelper != null ? mUnitsHelper.getStringValueUnit(rule.getTreshold()) : String.valueOf(rule.getTreshold().getDoubleValue()));
 
         holder.setItemAction(rule.getAction());
-        holder.ItemSwitch.setChecked(rule.getIsActive());
+        holder.ItemSwitch.setChecked(rule.getEnabled());
 
         return convertView;
     }

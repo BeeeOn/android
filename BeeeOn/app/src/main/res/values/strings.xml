@@ -107,6 +107,8 @@
     <string name="toast_no_uninitialized_devices">There are no uninitialized devices.</string>
     <string name="toast_success_save_data">Data saved successfully</string>
     <string name="toast_fail_save_data">Failed saving data</string>
+    <string name="toast_wrong_or_no_watchdog_rule">Wrong or no WatchDog rule selected</string>
+
 
     <!-- Progress -->
     <string name="progress_signing">Signing to server&#8230;</string>
@@ -272,5 +274,7 @@
     <string name="watchdog_rule_name">Rule name</string>
     <string name="watchdog_if">If</string>
     <string name="notification_text">Notification text</string>
+    
+    <string name="rule_menu_del">Delete</string>
 
 </resources>

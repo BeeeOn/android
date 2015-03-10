@@ -115,31 +115,22 @@
                     android:textColor="@color/white"
                     android:textStyle="bold"
                     android:textSize="12dp"
-                    android:background="@drawable/oval_pink"
+                    android:background="@drawable/oval_gray"
                     android:text="@string/watchdog_if"
                     />
 
-                <TextView
-                    android:id="@+id/watchdogDetailSensorText"
-                    android:layout_marginLeft="16dp"
-                    android:layout_marginStart="16dp"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_vertical"
-                    android:layout_toRightOf="@+id/watchdogAddIfText"
-                    android:layout_toEndOf="@id/watchdogAddIfText"
-                    android:layout_alignTop="@id/watchdogAddIfText"
-                    android:text="@string/sensor_text"
-                    />
-
+                <!-- this margin 11dp cause spinner item has 5dp padding -->
                 <Spinner
                     android:id="@+id/watchdog_edit_sensor_spinner"
                     android:layout_width="wrap_content"
-                    android:layout_height="40dp"
-                    android:layout_below="@+id/watchdogDetailSensorText"
-                    android:layout_alignLeft="@+id/watchdogDetailSensorText"
-                    android:layout_alignStart="@+id/watchdogDetailSensorText"
-                    />
+                    android:layout_height="50dp"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginBottom="8dp"
+                    android:layout_toRightOf="@+id/watchdogAddIfText"
+                    android:layout_toEndOf="@id/watchdogAddIfText"
+                    android:layout_alignTop="@id/watchdogAddIfText" />
+
             </RelativeLayout>
 
             <!-- treshold field -->
@@ -152,7 +143,10 @@
                 android:paddingEnd="16dp"
                 >
 
-                <!-- previous item must be first cause comparing in java code -->
+                <!--
+                  - ic_action_previous_item must be first cause comparing in java code
+                   - margin less cause the shadow
+                -->
                 <com.melnykov.fab.FloatingActionButton
                     xmlns:fab="http://schemas.android.com/apk/res-auto"
                     android:id="@+id/watchdog_edit_greatless"
@@ -162,8 +156,9 @@
                     fab:fab_colorNormal="@color/beeeon_secundary_pink"
                     fab:fab_colorPressed="@color/black"
                     fab:fab_colorRipple="@color/beeeon_secundary_pink"
-                    android:layout_marginLeft="50dp"
-                    android:layout_marginStart="50dp"
+                    android:layout_marginLeft="44dp"
+                    android:layout_marginStart="44dp"
+                    android:layout_marginTop="2dp"
                     />
 
                 <TextView
@@ -237,7 +232,7 @@
                     android:textSize="10dp"
                     android:gravity="center"
                     android:text="Then"
-                    android:background="@drawable/oval_pink"
+                    android:background="@drawable/oval_gray"
                     />
 
                 <LinearLayout

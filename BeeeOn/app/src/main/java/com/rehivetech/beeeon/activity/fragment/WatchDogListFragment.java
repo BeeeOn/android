@@ -69,6 +69,9 @@ public class WatchDogListFragment extends Fragment{
         if (savedInstanceState != null) {
             mActiveAdapterId = savedInstanceState.getString(ADAPTER_ID);
         }
+        else{
+            mActiveAdapterId = mController.getActiveAdapter().getId();
+        }
 
         // TODO tutorial zobrazit pri prvnim pouziti
     }
@@ -132,17 +135,19 @@ public class WatchDogListFragment extends Fragment{
         TemperatureValue val1 = new TemperatureValue();
         val1.setValue("32");
 
+
+
         List<WatchDogRule> rulesList = new ArrayList<>();
-        rulesList.add(new WatchDogRule("1", "Hlídání ohně", dev, WatchDogRule.OperatorType.GREATER, WatchDogRule.ActionType.ACTOR_ACTION, val1, false));
-        rulesList.add(new WatchDogRule("2", "Hlídání smradu", dev, WatchDogRule.OperatorType.SMALLER, WatchDogRule.ActionType.NOTIFICATION, val, true));
-        rulesList.add(new WatchDogRule("3", "Hlídání dětí", dev, WatchDogRule.OperatorType.GREATER, WatchDogRule.ActionType.NOTIFICATION, val1, true));
-        rulesList.add(new WatchDogRule("4", "Hlídání cen", dev, WatchDogRule.OperatorType.SMALLER, WatchDogRule.ActionType.ACTOR_ACTION, val, false));
-        rulesList.add(new WatchDogRule("5", "Hlídání cen", dev, WatchDogRule.OperatorType.SMALLER, WatchDogRule.ActionType.ACTOR_ACTION, val, false));
-        rulesList.add(new WatchDogRule("6", "Hlídání cen", dev, WatchDogRule.OperatorType.SMALLER, WatchDogRule.ActionType.ACTOR_ACTION, val, false));
-        rulesList.add(new WatchDogRule("7", "Hlídání cen", dev, WatchDogRule.OperatorType.SMALLER, WatchDogRule.ActionType.ACTOR_ACTION, val, false));
-        rulesList.add(new WatchDogRule("8", "Hlídání cen", dev, WatchDogRule.OperatorType.SMALLER, WatchDogRule.ActionType.ACTOR_ACTION, val, false));
-        rulesList.add(new WatchDogRule("9", "Hlídání cen", dev, WatchDogRule.OperatorType.SMALLER, WatchDogRule.ActionType.ACTOR_ACTION, val, false));
-        rulesList.add(new WatchDogRule("10", "Hlídání cen", dev, WatchDogRule.OperatorType.SMALLER, WatchDogRule.ActionType.ACTOR_ACTION, val, false));
+        rulesList.add(new WatchDogRule("1", mActiveAdapterId, "Hlídání ohně", dev, WatchDogRule.OperatorType.GREATER, WatchDogRule.ActionType.ACTOR_ACTION, val1, false));
+        rulesList.add(new WatchDogRule("2", mActiveAdapterId, "Hlídání smradu", dev, WatchDogRule.OperatorType.SMALLER, WatchDogRule.ActionType.NOTIFICATION, val, true));
+        rulesList.add(new WatchDogRule("3", mActiveAdapterId, "Hlídání dětí", dev, WatchDogRule.OperatorType.GREATER, WatchDogRule.ActionType.NOTIFICATION, val1, true));
+        rulesList.add(new WatchDogRule("4", mActiveAdapterId, "Hlídání cen", dev, WatchDogRule.OperatorType.SMALLER, WatchDogRule.ActionType.ACTOR_ACTION, val, false));
+        rulesList.add(new WatchDogRule("5", mActiveAdapterId, "Hlídání cen", dev, WatchDogRule.OperatorType.SMALLER, WatchDogRule.ActionType.ACTOR_ACTION, val, false));
+        rulesList.add(new WatchDogRule("6", mActiveAdapterId, "Hlídání cen", dev, WatchDogRule.OperatorType.SMALLER, WatchDogRule.ActionType.ACTOR_ACTION, val, false));
+        rulesList.add(new WatchDogRule("7", mActiveAdapterId, "Hlídání cen", dev, WatchDogRule.OperatorType.SMALLER, WatchDogRule.ActionType.ACTOR_ACTION, val, false));
+        rulesList.add(new WatchDogRule("8", mActiveAdapterId, "Hlídání cen", dev, WatchDogRule.OperatorType.SMALLER, WatchDogRule.ActionType.ACTOR_ACTION, val, false));
+        rulesList.add(new WatchDogRule("9", mActiveAdapterId, "Hlídání cen", dev, WatchDogRule.OperatorType.SMALLER, WatchDogRule.ActionType.ACTOR_ACTION, val, false));
+        rulesList.add(new WatchDogRule("10", mActiveAdapterId, "Hlídání cen", dev, WatchDogRule.OperatorType.SMALLER, WatchDogRule.ActionType.ACTOR_ACTION, val, false));
 
         mWatchDogAdapter = new WatchDogListAdapter(mActivity, rulesList, getActivity().getLayoutInflater());
 
@@ -150,7 +155,14 @@ public class WatchDogListFragment extends Fragment{
         mWatchDogListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                WatchDogRule rule = mWatchDogAdapter.getRule(position);
+
+                Bundle bundle = new Bundle();
+                bundle.putString(WatchDogEditRuleActivity.EXTRA_ADAPTER_ID, rule.getAdapterId());
+                bundle.putString(WatchDogEditRuleActivity.EXTRA_RULE_ID, rule.getId());
+
                 Intent intent = new Intent(mActivity, WatchDogEditRuleActivity.class);
+                intent.putExtras(bundle);
                 startActivity(intent);
             }
         });
