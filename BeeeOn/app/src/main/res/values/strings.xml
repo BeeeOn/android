@@ -22,6 +22,7 @@
     <string name="title_activity_map_geofence">Geofence areas</string>
     <string name="title_activity_adapter_users">Users of adapter</string>
     <string name="title_activity_add_adapter_user">Add new user</string>
+    <string name="title_activity_setup_sensor">Setup sensor</string>
 
     <!-- Buttons -->
     <string name="login_login">Login</string>

@@ -2,11 +2,14 @@ package com.rehivetech.beeeon.activity;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -60,11 +63,18 @@ public class SetupSensorActivity extends BaseApplicationActivity {
 	private boolean mFirstUse = true;
 	
 	private Activity mActivity;
-	
-	@Override
+    private Toolbar mToolbar;
+
+    @Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_intro);
+
+        mToolbar = (Toolbar) findViewById(R.id.toolbar);
+        if (mToolbar != null) {
+            mToolbar.setTitle(R.string.title_activity_setup_sensor);
+            setSupportActionBar(mToolbar);
+        }
 		
 		// Get controller
 		mController = Controller.getInstance(this);
@@ -76,7 +86,6 @@ public class SetupSensorActivity extends BaseApplicationActivity {
 
 		getSupportActionBar().setHomeButtonEnabled(true);
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-		getSupportActionBar().setIcon(R.drawable.ic_launcher_null);
 		
 		mPager = (ViewPager)findViewById(R.id.intro_pager);
 		mPager.setAdapter(mAdapter);
@@ -228,6 +237,9 @@ public class SetupSensorActivity extends BaseApplicationActivity {
 						Intent intent = new Intent();
 						intent.putExtra(Constants.SETUP_SENSOR_ACT_LOC, pair.location.getId());
 						setResult(Constants.SETUP_SENSOR_SUCCESS,intent);
+                        //HIDE keyboard
+                        InputMethodManager imm = (InputMethodManager) mActivity.getSystemService(Context.INPUT_METHOD_SERVICE);
+                        imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
 						finish();
 					}
 					
