@@ -2,6 +2,7 @@ package com.rehivetech.beeeon.activity;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
@@ -9,6 +10,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 
 import com.viewpagerindicator.CirclePageIndicator;
@@ -202,6 +204,8 @@ public class AddAdapterActivity extends BaseApplicationActivity {
 				
 				if (success) {
 					setResult(Constants.ADD_ADAPTER_SUCCESS);
+                    InputMethodManager imm = (InputMethodManager) mActivity.getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
 					finish();
 				}
 			}
