@@ -3,6 +3,7 @@ package com.rehivetech.beeeon.activity.fragment;
 import android.support.v4.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.view.ActionMode;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -18,6 +19,7 @@ import com.melnykov.fab.FloatingActionButton;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.activity.MainActivity;
 import com.rehivetech.beeeon.activity.WatchDogEditRuleActivity;
+import com.rehivetech.beeeon.adapter.Adapter;
 import com.rehivetech.beeeon.adapter.WatchDogRule;
 import com.rehivetech.beeeon.adapter.device.Device;
 import com.rehivetech.beeeon.adapter.device.DeviceType;
@@ -32,13 +34,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by Tomáš on 23. 2. 2015.
+ * Fragment for list of rules for algorithm WatchDog
+ * @author mlyko
  */
 public class WatchDogListFragment extends Fragment{
     private static final String TAG = WatchDogListFragment.class.getSimpleName();
 
     private static final String ADAPTER_ID = "lastAdapterId";
 
+    private SwipeRefreshLayout mSwipeLayout;
     private MainActivity mActivity;
     private Controller mController;
     private ListView mWatchDogListView;
@@ -47,14 +51,13 @@ public class WatchDogListFragment extends Fragment{
     private String mActiveAdapterId;
 
     private View mView;
-
-    // mod actionbaru
     private ActionMode mMode;
 
     /**
      * Initialize variables
      * @param savedInstanceState
      */
+    @Override
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         Log.d(TAG, "onCreate()");
@@ -70,6 +73,7 @@ public class WatchDogListFragment extends Fragment{
             mActiveAdapterId = savedInstanceState.getString(ADAPTER_ID);
         }
         else{
+            // TODO v seznamu sensoru je adapter nastavovan z MainActivity
             mActiveAdapterId = mController.getActiveAdapter().getId();
         }
 
@@ -83,16 +87,48 @@ public class WatchDogListFragment extends Fragment{
      * @param savedInstanceState
      * @return View
      */
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
         mView = inflater.inflate(R.layout.fragment_watchdog, container, false);
         redrawRules();
         return mView;
     }
 
+    /**
+     * Init swipe-refreshing
+     * @param savedInstanceState
+     */
+    @Override
     public void onActivityCreated(Bundle savedInstanceState){
         super.onActivityCreated(savedInstanceState);
+        Log.d(TAG, "onActivityCreated()");
+
+        // Init swipe-refreshig layout
+        mSwipeLayout = (SwipeRefreshLayout) mActivity.findViewById(R.id.swipe_container);
+        if (mSwipeLayout == null) {
+            return;
+        }
+        mSwipeLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+
+            @Override
+            public void onRefresh() {
+
+                Adapter adapter = mController.getActiveAdapter();
+                if (adapter == null) {
+                    mSwipeLayout.setRefreshing(false);
+                    return;
+                }
+                // TODO add reload async task
+                // mActivity.redrawMenu();
+                //doReloadFacilitiesTask(adapter.getId());
+            }
+        });
+        mSwipeLayout.setColorSchemeColors(  R.color.beeeon_primary_cyan, R.color.beeeon_text_color,R.color.beeeon_secundary_pink);
     }
 
+    /**
+     * Finish actionMode
+     */
     public void onPause() {
         super.onPause();
         Log.d(TAG, "onPause()");
@@ -102,16 +138,35 @@ public class WatchDogListFragment extends Fragment{
         }
     }
 
+    /**
+     * Cancels async task
+     */
+    public void onDestroy(){
+        super.onDestroy();
+        Log.d(TAG, "onDestroy()");
+
+        // TODO cancel async task here
+        /*
+        if (mReloadFacilitiesTask != null) {
+            mReloadFacilitiesTask.cancel(true);
+        }
+        //*/
+    }
+
+    @Override
     public void onSaveInstanceState(Bundle savedInstanceState){
         savedInstanceState.putString(ADAPTER_ID, mActiveAdapterId);
         super.onSaveInstanceState(savedInstanceState);
     }
 
+    /**
+     * Redraw GUI rules
+     */
     private void redrawRules() {
-        mWatchDogListView = (ListView) mView.findViewById(R.id.watchdogListView);
+        mWatchDogListView = (ListView) mView.findViewById(R.id.watchdog_list);
 
         // ---- when listview is empty
-        TextView emptyView = (TextView) mView.findViewById(R.id.watchdogListEmpty);
+        TextView emptyView = (TextView) mView.findViewById(R.id.watchdog_list_empty);
         mWatchDogListView.setEmptyView(emptyView);
 
         // ---- floating action button
@@ -134,8 +189,6 @@ public class WatchDogListFragment extends Fragment{
 
         TemperatureValue val1 = new TemperatureValue();
         val1.setValue("32");
-
-
 
         List<WatchDogRule> rulesList = new ArrayList<>();
         rulesList.add(new WatchDogRule("1", mActiveAdapterId, "Hlídání ohně", dev, WatchDogRule.OperatorType.GREATER, WatchDogRule.ActionType.ACTOR_ACTION, val1, false));

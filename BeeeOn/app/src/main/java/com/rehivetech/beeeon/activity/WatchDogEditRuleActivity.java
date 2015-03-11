@@ -38,7 +38,10 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-
+/**
+ * Activity for creation and editation of watchdog rule
+ * @author mlyko
+ */
 public class WatchDogEditRuleActivity extends BaseApplicationActivity {
     private static final String TAG = WatchDogEditRuleActivity.class.getSimpleName();
 
@@ -49,9 +52,9 @@ public class WatchDogEditRuleActivity extends BaseApplicationActivity {
     private String mActiveAdapterId;
     private String mActiveRuleId;
 
+
     private Controller mController;
     private Toolbar mToolbar;
-
     private boolean mIsNew = false;
     private WatchDogRule mRule;
     private Adapter mAdapter;

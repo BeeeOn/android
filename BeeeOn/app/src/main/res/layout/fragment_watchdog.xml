@@ -1,28 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:fab="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
 >
 
-    <!--
     <android.support.v4.widget.SwipeRefreshLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/swipeRefreshLayout"
+        android:id="@+id/swipe_container"
         >
-    -->
-
         <ListView
-            android:id="@+id/watchdogListView"
+            android:id="@+id/watchdog_list"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:divider="@null"
             android:dividerHeight="0dp"
         />
+    </android.support.v4.widget.SwipeRefreshLayout>
 
         <TextView
-            android:id="@+id/watchdogListEmpty"
+            android:id="@+id/watchdog_list_empty"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/no_rules_cap"
@@ -33,7 +32,17 @@
         />
 
     <!-- floating action button -->
-    <include layout="@layout/include_floating_action_button" />
+    <com.melnykov.fab.FloatingActionButton
+        android:id="@+id/fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_add_white_24dp"
+        fab:fab_colorNormal="@color/beeeon_secundary_pink"
+        fab:fab_colorPressed="@color/black"
+        fab:fab_colorRipple="@color/beeeon_secundary_pink"
+        android:layout_margin="16dp"
+        android:layout_gravity="end|bottom"
+        />
 
     <!-- experimental - toolbar shadow -->
     <View
@@ -41,9 +50,5 @@
         android:layout_height="6dp"
         android:background="@drawable/toolbar_dropshadow"
         />
-
-    <!--
-    </android.support.v4.widget.SwipeRefreshLayout>
-    -->
 
 </FrameLayout>
