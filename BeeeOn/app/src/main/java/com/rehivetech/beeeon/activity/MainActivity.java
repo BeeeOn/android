@@ -40,6 +40,7 @@ import com.rehivetech.beeeon.activity.dialog.AddSensorFragmentDialog;
 import com.rehivetech.beeeon.activity.dialog.CustomAlertDialog;
 import com.rehivetech.beeeon.activity.fragment.CustomViewFragment;
 import com.rehivetech.beeeon.activity.fragment.SensorListFragment;
+import com.rehivetech.beeeon.activity.fragment.WatchDogListFragment;
 import com.rehivetech.beeeon.adapter.Adapter;
 import com.rehivetech.beeeon.adapter.location.Location;
 import com.rehivetech.beeeon.base.BaseApplicationActivity;
@@ -62,10 +63,12 @@ public class MainActivity extends BaseApplicationActivity {
 	public static final String ADD_ADAPTER_TAG = "addAdapterDialog";
 	public static final String ADD_SENSOR_TAG = "addSensorDialog";
 	public static final String FRG_TAG_LOC = "Loc";
-	public static final String FRG_TAG_CUS = "Cus";
+    public static final String FRG_TAG_CUS = "Cus";
+    public static final String FRG_TAG_WAT = "WAT";
 	private NavDrawerMenu mNavDrawerMenu;
 	private SensorListFragment mListDevices;
 	private CustomViewFragment mCustomView;
+    private WatchDogListFragment mWatchDogApp;
     private Toolbar mToolbar;
 
 	/**
@@ -97,7 +100,7 @@ public class MainActivity extends BaseApplicationActivity {
 
 	private boolean backPressed = false;
 
-	@Override
+    @Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		supportRequestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
@@ -122,8 +125,8 @@ public class MainActivity extends BaseApplicationActivity {
 		mNavDrawerMenu.setIsDrawerOpen(mIsDrawerOpen);
 
 		mListDevices = new SensorListFragment();
-
-		mCustomView = new CustomViewFragment();
+        mCustomView = new CustomViewFragment();
+        mWatchDogApp = new WatchDogListFragment();
 
 		if (savedInstanceState != null) {
 			mIsDrawerOpen = savedInstanceState.getBoolean(IS_DRAWER_OPEN);
@@ -149,9 +152,12 @@ public class MainActivity extends BaseApplicationActivity {
 		if(mActiveMenuId.equals(Constants.GUI_MENU_CONTROL)){
 			ft.replace(R.id.content_frame, mListDevices, FRG_TAG_LOC);
 		}
-		else if(mActiveMenuId.equals(Constants.GUI_MENU_DASHBOARD)) {
-			ft.replace(R.id.content_frame, mCustomView, FRG_TAG_CUS);
-		}
+        else if(mActiveMenuId.equals(Constants.GUI_MENU_DASHBOARD)) {
+            ft.replace(R.id.content_frame, mCustomView, FRG_TAG_CUS);
+        }
+        else if(mActiveMenuId.equals(Constants.GUI_MENU_WATCHDOG)) {
+            ft.replace(R.id.content_frame, mWatchDogApp, FRG_TAG_WAT);
+        }
 		ft.commit();
 		
 		// Init tutorial 
@@ -341,6 +347,10 @@ public class MainActivity extends BaseApplicationActivity {
         else if(mActiveMenuId.equals(Constants.GUI_MENU_DASHBOARD)) {
             mCustomView = new CustomViewFragment();
             ft.replace(R.id.content_frame, mCustomView, FRG_TAG_CUS);
+        }
+        else if(mActiveMenuId.equals(Constants.GUI_MENU_WATCHDOG)){
+            mWatchDogApp = new WatchDogListFragment();
+            ft.replace(R.id.content_frame, mWatchDogApp, FRG_TAG_WAT);
         }
 		ft.commitAllowingStateLoss();
 

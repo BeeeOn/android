@@ -30,6 +30,10 @@ public class WatchDogRule implements IIdentifier {
         setEnabled(act);
     }
 
+    public WatchDogRule(){
+
+    }
+
     @Override
     public String getId() {
         return mId;

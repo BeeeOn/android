@@ -9,6 +9,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -129,19 +130,23 @@ public class WatchDogEditRuleActivity extends BaseApplicationActivity {
         mUnitsHelper = (mPrefs == null) ? null : new UnitsHelper(mPrefs, this);
 
         // get watchdog rule
-        // TODO ziskat ze site
-        HumidityValue val = new HumidityValue();
-        val.setValue("50");
-        Device dev = new Device(DeviceType.TYPE_HUMIDITY, val);
-        dev.setName("Vlhkostní sensor");
+        if(!mIsNew) {
+            // hide keyboard when editing
+            getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
 
-        if(!mIsNew)
+            // TODO ziskat ze site
+            HumidityValue val = new HumidityValue();
+            val.setValue("50");
+            Device dev = new Device(DeviceType.TYPE_HUMIDITY, val);
+            dev.setName("Vlhkostní sensor");
             mRule = new WatchDogRule("2", mActiveAdapterId, "Hlídání smradu", dev, WatchDogRule.OperatorType.GREATER, WatchDogRule.ActionType.NOTIFICATION, val, false);
-
-
-        if(mRule != null){
-            initLayout(mRule);
         }
+        else{
+            mRule = new WatchDogRule();
+        }
+
+        if(mRule != null)
+            initLayout(mRule);
     }
 
     private List<Device> getDevicesArray(){
@@ -159,8 +164,7 @@ public class WatchDogEditRuleActivity extends BaseApplicationActivity {
     }
 
     private void initLayout(WatchDogRule rule) {
-        //mFacilities = mController.getFacilitiesByAdapter(mController.getActiveAdapter().getId());
-
+        // init gui elements
         mRuleName = (EditText) findViewById(R.id.watchdog_edit_name);
         mRuleEnabled = (SwitchCompat) findViewById(R.id.watchdog_edit_switch);
         mSensorSpinner = (Spinner) findViewById(R.id.watchdog_edit_sensor_spinner);
@@ -169,7 +173,7 @@ public class WatchDogEditRuleActivity extends BaseApplicationActivity {
         mRuleTresholdUnit = (TextView) findViewById(R.id.watchdog_edit_treshold_unit);
         mActionType = (RadioGroup) findViewById(R.id.watchdog_edit_action_radiogroup);
 
-        // set layout components
+        // set values
         mRuleName.setText(rule.getName());
         mRuleEnabled.setChecked(rule.getEnabled());
         setGreatLess(rule.getOperator(), mGreatLessButton);
@@ -178,11 +182,12 @@ public class WatchDogEditRuleActivity extends BaseApplicationActivity {
             mRuleTreshold.setText(mUnitsHelper.getStringValue(rule.getTreshold()));
             mRuleTresholdUnit.setText(mUnitsHelper.getStringUnit(rule.getTreshold()));
         }
-        else{
+        else {
             mRuleTreshold.setText(String.valueOf(rule.getTreshold().getDoubleValue()));
             mRuleTresholdUnit.setText("?");
         }
 
+        // ----- prepare list of available devices
         final DeviceArrayAdapter dataAdapter = new DeviceArrayAdapter(this, R.layout.custom_spinner2_item, getDevicesArray(), getLocationsArray());
         dataAdapter.setLayoutInflater(getLayoutInflater());
         dataAdapter.setDropDownViewResource(R.layout.custom_spinner2_dropdown_item);
