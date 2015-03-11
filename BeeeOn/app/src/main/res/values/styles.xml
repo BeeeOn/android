@@ -3,7 +3,7 @@
     <style name="AppBaseTheme" parent="Theme.AppCompat.Light.DarkActionBar">
 
         <item name="android:windowBackground">@color/beeeon_background</item>
-    	<item name="android:colorBackground">@color/darkgray</item>
+    	<item name="android:colorBackground">@color/beeeon_light_gray</item>
 
         <item name="actionModeBackground">@color/darkgray</item>
 

@@ -23,4 +23,5 @@
     <color name="beeeon_text_hint">#727272</color>
     <color name="beeeon_separator">#B6B6B6</color>
     <color name="beeeon_drawer_bg">#FFFFFF</color>
+    <color name="beeeon_light_gray">#f0f0f0</color>
 </resources>
