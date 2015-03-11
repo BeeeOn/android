@@ -96,6 +96,8 @@ public final class Constants {
 	public static final String GUI_MENU_ALL_SENSOR_ID = "GUI_MENU_ALL_SENSOR_ID";
 
 	public static final String GUI_SELECTED_ADAPTER_ID = "GUI_SELECTED_ADAPTER_ID";
-	 
+    public static final String GUI_MENU_CONTROL = "GUI_MENU_CONTROL";
+    public static final String GUI_MENU_DASHBOARD = "GUI_MENU_DASHBOARD";
+    public static final String GUI_MENU_WATCHDOG = "GUI_MENU_WATCHDOG";
 
 }

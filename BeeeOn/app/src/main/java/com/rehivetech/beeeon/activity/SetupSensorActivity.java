@@ -245,9 +245,9 @@ public class SetupSensorActivity extends BaseApplicationActivity {
 					
 					//dialog.dismiss();
 					//mActivity.setActiveAdapterID(mAdapter.getId());
-					//mActivity.setActiveLocationID(pair.location.getId());
+					//mActivity.setActiveMenuID(pair.location.getId());
 					//mActivity.redrawMenu();
-					//mActivity.redrawDevices();
+					//mActivity.redrawMainFragment();
 				//}
 			}
 

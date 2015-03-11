@@ -126,6 +126,11 @@
     <string name="no_location">No locations</string>
     <string name="no_custom_view">No custom views</string>
     <string name="no_adapters">You have no adapters</string>
+    <string name="menu_managment">Managment</string>
+    <string name="menu_control">Control</string>
+    <string name="menu_dashboard">Dashboard</string>
+    <string name="menu_applications">Applications</string>
+    <string name="menu_watchdog">Watchdog</string>
 
     <!-- Add sensor dialog -->
     <string name="addsensor_sending_request">Pair request sending </string>

@@ -18,7 +18,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ImageView;
@@ -31,7 +30,6 @@ import com.github.amlcurran.showcaseview.ShowcaseView;
 import com.github.amlcurran.showcaseview.targets.ViewTarget;
 
 import com.melnykov.fab.FloatingActionButton;
-import com.melnykov.fab.ScrollDirectionListener;
 import com.rehivetech.beeeon.Constants;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.activity.AddAdapterActivity;
@@ -185,7 +183,7 @@ public class SensorListFragment extends Fragment {
 
 			@Override
 			public void onExecute(boolean success) {
-				mActivity.redrawDevices();
+				mActivity.redrawMainFragment();
 				mActivity.redrawMenu();
 				mSwipeLayout.setRefreshing(false);
 			}
@@ -203,17 +201,10 @@ public class SensorListFragment extends Fragment {
 		}
 		List<Facility> facilities;
 		
-		if(mActiveLocationId == null){
-			facilities = mController.getFacilitiesByLocation(mActiveAdapterId, mActiveLocationId);
-		}
-		else if(mActiveLocationId.equals(Constants.GUI_MENU_ALL_SENSOR_ID)){
+
 			// All sensor from adapter
 			facilities = mController.getFacilitiesByAdapter(mActiveAdapterId);
-		}
-		else {
-			// Facilities from one location 
-			facilities = mController.getFacilitiesByLocation(mActiveAdapterId, mActiveLocationId);
-		}
+
 
 		Log.d(TAG, "LifeCycle: redraw devices list start");
 
@@ -468,7 +459,7 @@ public class SensorListFragment extends Fragment {
 		Intent intent = new Intent(mActivity, AddSensorActivity.class);
 		mActivity.startActivityForResult(intent, Constants.ADD_SENSOR_REQUEST_CODE);
 	}
-	public void setLocationID(String locID) {
+	public void setMenuID(String locID) {
 		mActiveLocationId = locID;
 	}
 

@@ -71,7 +71,7 @@ public class MainActivity extends BaseApplicationActivity {
 	/**
 	 * Instance save state tags
 	 */
-	private static final String LCTN = "lastlocation";
+	private static final String LAST_MENU_ID = "lastMenuId";
 	private static final String CSTVIEW = "lastcustomView";
 	private static final String ADAPTER_ID = "lastAdapterId";
 	private static final String IS_DRAWER_OPEN = "draweropen";
@@ -79,9 +79,8 @@ public class MainActivity extends BaseApplicationActivity {
 	/**
 	 * saved instance states
 	 */
-	private String mActiveLocationId;
+	private String mActiveMenuId;
 	private String mActiveAdapterId;
-	private String mActiveCustomViewId;
 	private boolean mIsDrawerOpen = false;
 	
 
@@ -130,28 +129,27 @@ public class MainActivity extends BaseApplicationActivity {
 			mIsDrawerOpen = savedInstanceState.getBoolean(IS_DRAWER_OPEN);
 			mNavDrawerMenu.setIsDrawerOpen(mIsDrawerOpen);
 
-			mActiveLocationId = savedInstanceState.getString(LCTN);
-			mActiveCustomViewId = savedInstanceState.getString(CSTVIEW);
+			mActiveMenuId = savedInstanceState.getString(LAST_MENU_ID);
 			mActiveAdapterId = savedInstanceState.getString(ADAPTER_ID);
-			mListDevices.setLocationID(mActiveLocationId);
+			mListDevices.setMenuID(mActiveMenuId);
 			mListDevices.setAdapterID(mActiveAdapterId);
-			mNavDrawerMenu.setLocationID(mActiveLocationId);
+			mNavDrawerMenu.setActiveMenuID(mActiveMenuId);
 			mNavDrawerMenu.setAdapterID(mActiveAdapterId);
 
 		} else {
 			setActiveAdapterAndLocation();
-			mListDevices.setLocationID(mActiveLocationId);
+			mListDevices.setMenuID(mActiveMenuId);
 			mListDevices.setAdapterID(mActiveAdapterId);
-			mNavDrawerMenu.setLocationID(mActiveLocationId);
+			mNavDrawerMenu.setActiveMenuID(mActiveMenuId);
 			mNavDrawerMenu.setAdapterID(mActiveAdapterId);
 			mNavDrawerMenu.redrawMenu();
 		}
 
 		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-		if(mActiveLocationId != null){
+		if(mActiveMenuId.equals(Constants.GUI_MENU_CONTROL)){
 			ft.replace(R.id.content_frame, mListDevices, FRG_TAG_LOC);
 		}
-		else if(mActiveCustomViewId != null) {
+		else if(mActiveMenuId.equals(Constants.GUI_MENU_DASHBOARD)) {
 			ft.replace(R.id.content_frame, mCustomView, FRG_TAG_CUS);
 		}
 		ft.commit();
@@ -223,9 +221,9 @@ public class MainActivity extends BaseApplicationActivity {
 			Log.d(TAG, "Return from add sensor activity");
 			if(resultCode == Constants.ADD_SENSOR_SUCCESS) {
 				// Set active location
-				mActiveLocationId = data.getExtras().getString(Constants.SETUP_SENSOR_ACT_LOC);
-				Log.d(TAG, "Active locID: "+mActiveLocationId + " adapterID: "+mActiveAdapterId);
-				redrawDevices();
+				String res = data.getExtras().getString(Constants.SETUP_SENSOR_ACT_LOC);
+				Log.d(TAG, "Active locID: "+res + " adapterID: "+mActiveAdapterId);
+				redrawMainFragment();
 				redrawMenu();
 			}
 		}
@@ -239,14 +237,8 @@ public class MainActivity extends BaseApplicationActivity {
 		mNavDrawerMenu.redrawMenu();
 		mNavDrawerMenu.finishActinMode();
 		//Check whitch fragment is visible and redraw
-		if(mActiveLocationId != null) { // isnt set active location
-			redrawDevices();
-		} else if(mActiveCustomViewId != null) { // isnt set active custom view
-			redrawCustomView();
-		}
-		else { // app is empty 
-			redrawDevices();
-		}
+
+        redrawMainFragment();
 
 		checkNoAdapters();
 	}
@@ -306,8 +298,7 @@ public class MainActivity extends BaseApplicationActivity {
 	@Override
 	public void onSaveInstanceState(Bundle savedInstanceState) {
 		savedInstanceState.putString(ADAPTER_ID, mActiveAdapterId);
-		savedInstanceState.putString(LCTN, mActiveLocationId);
-		savedInstanceState.putString(CSTVIEW, mActiveCustomViewId);
+		savedInstanceState.putString(LAST_MENU_ID, mActiveMenuId);
 		savedInstanceState.putBoolean(IS_DRAWER_OPEN, mNavDrawerMenu.getIsDrawerOpen());
 		super.onSaveInstanceState(savedInstanceState);
 	}
@@ -321,72 +312,48 @@ public class MainActivity extends BaseApplicationActivity {
 			SharedPreferences prefs = mController.getUserSettings();
 			String prefKey = Persistence.getPreferencesLastLocation(adapter.getId());
 
-			// UserSettings can be null when user is not logged in!
-			String locationId = (prefs == null) ? "" : prefs.getString(prefKey, "");
-			Location location = mController.getLocation(adapter.getId(), locationId);
-
-			if (location == null) {
-				// No saved or found location, set first location
-				List<Location> locations = mController.getLocations(adapter.getId());
-
-				if (locations.size() > 0) {
-					Log.d("default", "DEFAULT POSITION: first position selected");
-					location = locations.get(0);
-				}
+			if (mActiveMenuId != null) {
+				setActiveMenuID(mActiveMenuId);
 			} else {
-				Log.d("default", "DEFAULT POSITION: saved position selected");
-			}
-			if (location != null) {
-				mActiveLocationId = location.getId();
-				setActiveLocationID(mActiveLocationId);
-			} else {
-				setActiveLocationID(null);
+				setActiveMenuID(Constants.GUI_MENU_CONTROL);
 			}
 		}
 		else {
 			mActiveAdapterId = null;
-			mActiveLocationId = null;
+			mActiveMenuId = null;
 		}
 	}
 
-	public boolean redrawDevices() {
-		mListDevices = new SensorListFragment();
-		mListDevices.setIsPaused(isPaused);
-		mListDevices.setLocationID(mActiveLocationId);
-		mListDevices.setAdapterID(mActiveAdapterId);
-		mNavDrawerMenu.setLocationID(mActiveLocationId);
-		mNavDrawerMenu.setAdapterID(mActiveAdapterId);
-
-		// set location layout
+	public boolean redrawMainFragment() {
+        // set location layout
 		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-		ft.replace(R.id.content_frame, mListDevices, FRG_TAG_LOC);
-		
-		/**
-		 * Changed because of Redmine bug #258
-		 * About dialog -> click on email -> don't choose any client -> back -> crash
-		 */
-		//ft.commit();
+
+        if(mActiveMenuId.equals(Constants.GUI_MENU_CONTROL)){
+            mListDevices = new SensorListFragment();
+            mListDevices.setIsPaused(isPaused);
+            mListDevices.setMenuID(mActiveMenuId);
+            mListDevices.setAdapterID(mActiveAdapterId);
+            mNavDrawerMenu.setActiveMenuID(mActiveMenuId);
+            mNavDrawerMenu.setAdapterID(mActiveAdapterId);
+
+            ft.replace(R.id.content_frame, mListDevices, FRG_TAG_LOC);
+        }
+        else if(mActiveMenuId.equals(Constants.GUI_MENU_DASHBOARD)) {
+            mCustomView = new CustomViewFragment();
+            ft.replace(R.id.content_frame, mCustomView, FRG_TAG_CUS);
+        }
 		ft.commitAllowingStateLoss();
 
 		return true;
 	}
 
 	public void redrawMenu() {
-		mNavDrawerMenu.setLocationID(mActiveLocationId);
+		mNavDrawerMenu.setActiveMenuID(mActiveMenuId);
 		mNavDrawerMenu.setAdapterID(mActiveAdapterId);
 		mNavDrawerMenu.redrawMenu();
-		redrawDevices();
+		redrawMainFragment();
 	}
 
-	public void redrawCustomView() {
-		// return mCustomView.redrawCustomView();
-		mCustomView = new CustomViewFragment();
-
-		// set custom view layout
-		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-		ft.replace(R.id.content_frame, mCustomView, FRG_TAG_CUS);
-		ft.commit();
-	}
 
 	public void checkNoAdapters() {
 		if (mController.getActiveAdapter() == null) {
@@ -509,17 +476,12 @@ public class MainActivity extends BaseApplicationActivity {
 
 	}
 
-	public void setActiveLocationID(String locationId) {
-		mActiveLocationId = locationId;
-		mNavDrawerMenu.setLocationID(locationId);
-		mListDevices.setLocationID(locationId);
-		mActiveCustomViewId = null;
+	public void setActiveMenuID(String id) {
+		mActiveMenuId = id;
+		mNavDrawerMenu.setActiveMenuID(id);
+		mListDevices.setMenuID(id);
 	}
 
-	public void setActiveCustomViewID(String customViewId) {
-		mActiveCustomViewId = customViewId;
-		mActiveLocationId = null;
-	}
 	
 	public NavDrawerMenu getMenu() {
 		return mNavDrawerMenu;

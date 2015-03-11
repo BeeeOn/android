@@ -211,9 +211,9 @@ public class SetupSensorFragmentDialog extends TrackDialogFragment {
 					mProgress.cancel();
 					dialog.dismiss();
 					mActivity.setActiveAdapterID(mAdapter.getId());
-					mActivity.setActiveLocationID(pair.location.getId());
+					mActivity.setActiveMenuID(pair.location.getId());
 					mActivity.redrawMenu();
-					mActivity.redrawDevices();
+					mActivity.redrawMainFragment();
 				}
 
 				/*

@@ -6,10 +6,7 @@ import android.content.SharedPreferences.Editor;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v4.view.GravityCompat;
-import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.internal.view.menu.MenuItemImpl;
 import android.support.v7.view.ActionMode;
 import android.support.v7.widget.Toolbar;
 import android.view.KeyEvent;
@@ -33,16 +30,15 @@ import com.rehivetech.beeeon.activity.MainActivity;
 import com.rehivetech.beeeon.activity.SettingsMainActivity;
 import com.rehivetech.beeeon.activity.dialog.InfoDialogFragment;
 import com.rehivetech.beeeon.activity.menuItem.AdapterMenuItem;
-import com.rehivetech.beeeon.activity.menuItem.CustomViewMenuItem;
 import com.rehivetech.beeeon.activity.menuItem.EmptyMenuItem;
 import com.rehivetech.beeeon.activity.menuItem.GroupImageMenuItem;
+import com.rehivetech.beeeon.activity.menuItem.GroupMenuItem;
 import com.rehivetech.beeeon.activity.menuItem.LocationMenuItem;
 import com.rehivetech.beeeon.activity.menuItem.MenuItem;
 import com.rehivetech.beeeon.activity.menuItem.ProfileMenuItem;
 import com.rehivetech.beeeon.activity.menuItem.SeparatorMenuItem;
 import com.rehivetech.beeeon.activity.menuItem.SettingMenuItem;
 import com.rehivetech.beeeon.adapter.Adapter;
-import com.rehivetech.beeeon.adapter.location.Location;
 import com.rehivetech.beeeon.arrayadapter.MenuListAdapter;
 import com.rehivetech.beeeon.asynctask.CallbackTask.CallbackTaskListener;
 import com.rehivetech.beeeon.asynctask.SwitchAdapterTask;
@@ -72,8 +68,7 @@ public class NavDrawerMenu {
 	private ActionBarDrawerToggle mDrawerToggle;
 	private String mDrawerTitle = "BeeeOn";
 
-	private String mActiveLocationId;
-	private String mActiveCustomViewId;
+	private String mActiveItem;
 	private String mActiveAdapterId;
 	private String mAdaterIdUnregist;
 
@@ -116,11 +111,7 @@ public class NavDrawerMenu {
 	}
 
 	private void settingsMenu() {
-		// Set a custom shadow that overlays the main content when the drawer opens
-
-
 		mDrawerLayout.setOnKeyListener(new OnKeyListener() {
-
 			@Override
 			public boolean onKey(View v, int keyCode, KeyEvent event) {
 				if (keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_UP) {
@@ -153,18 +144,14 @@ public class NavDrawerMenu {
 						doSwitchAdapter(mSelectedMenuItem.getId());
 					}
 					break;
-
-				case CUSTOM_VIEW:
-					// TODO: otevrit custom view, jeste nedelame s customView, takze pozdeji
-
-					// TEMP
-					mActiveLocationId = null;
-					mActiveCustomViewId = mSelectedMenuItem.getId();
-
-					changeCustomView(true);
-					redrawMenu();
-					break;
-
+                case LOCATION:
+                    // Get the title followed by the position
+                    Adapter adapter = mController.getActiveAdapter();
+                    if (adapter != null) {
+                        changeMenuItem(mSelectedMenuItem.getId(), true);
+                        redrawMenu();
+                    }
+                    break;
 				case SETTING:
 					if (mSelectedMenuItem.getId().equals(com.rehivetech.beeeon.activity.menuItem.MenuItem.ID_ABOUT)) {
 						InfoDialogFragment dialog = new InfoDialogFragment();
@@ -172,16 +159,6 @@ public class NavDrawerMenu {
 					} else if (mSelectedMenuItem.getId().equals(com.rehivetech.beeeon.activity.menuItem.MenuItem.ID_SETTINGS)) {
 						Intent intent = new Intent(mActivity, SettingsMainActivity.class);
 						mActivity.startActivity(intent);
-					}
-					break;
-
-				case LOCATION:
-					// Get the title followed by the position
-					Adapter adapter = mController.getActiveAdapter();
-					if (adapter != null) {
-						mActiveCustomViewId = null;
-						changeLocation(mController.getLocation(adapter.getId(), mSelectedMenuItem.getId()), true);
-						redrawMenu();
 					}
 					break;
 
@@ -204,12 +181,10 @@ public class NavDrawerMenu {
 				mSelectedMenuItem = (MenuItem) mMenuAdapter.getItem(position);
 				switch (mSelectedMenuItem.getType()) {
 				case LOCATION:
-					if(!mSelectedMenuItem.getId().equals(Constants.GUI_MENU_ALL_SENSOR_ID))
-						mMode = mActivity.startSupportActionMode(new ActionModeLocations());
+
 					break;
 				case ADAPTER:
 					Log.i(TAG, "Long press - adapter");
-					//mAdaterIdUnregist = item.getId();
 					mMode = mActivity.startSupportActionMode(new ActionModeAdapters());
 					mSelectedMenuItem.setIsSelected();
 					break;
@@ -222,8 +197,6 @@ public class NavDrawerMenu {
 
 		});
 
-
-
 		// ActionBarDrawerToggle ties together the the proper interactions
 		// between the sliding drawer and the action bar app icon
         mDrawerToggle = new ActionBarDrawerToggle(mActivity,mDrawerLayout,mToolbar,R.string.drawer_open,R.string.drawer_close) {
@@ -234,12 +207,17 @@ public class NavDrawerMenu {
 					mActivity.onBackPressed();
 				// Set the title on the action when drawer closed
 				Adapter adapter = mController.getActiveAdapter();
-				Location location = null;
-				if(adapter != null && mActiveLocationId!= null) {
-					location = mController.getLocation(adapter.getId(), mActiveLocationId);
-				}
-				if (adapter != null && location != null) {
-					mActivity.getSupportActionBar().setTitle(location.getName());
+
+				if (adapter != null && mActiveItem != null) {
+                    if(mActiveItem.equals(Constants.GUI_MENU_CONTROL)) {
+                        mActivity.getSupportActionBar().setTitle(mActivity.getString(R.string.menu_control));
+                    }
+                    else if (mActiveItem.equals(Constants.GUI_MENU_DASHBOARD)) {
+                        mActivity.getSupportActionBar().setTitle(mActivity.getString(R.string.menu_dashboard));
+                    }
+                    else if(mActiveItem.equals(Constants.GUI_MENU_WATCHDOG)) {
+                        mActivity.getSupportActionBar().setTitle(mActivity.getString(R.string.menu_watchdog));
+                    }
 				} else {
 					setDefaultTitle();
 				}
@@ -284,15 +262,17 @@ public class NavDrawerMenu {
 		mDrawerList.setAdapter(mMenuAdapter);
 		
 		Adapter adapter = mController.getActiveAdapter();
-		Location location = null;
-		if(adapter != null && mActiveLocationId!= null) {
-			location = mController.getLocation(adapter.getId(), mActiveLocationId);
-		}
-		if (adapter != null && location != null) {
-			mActivity.getSupportActionBar().setTitle(location.getName());
-		}
-		else if (adapter != null && mActiveLocationId == Constants.GUI_MENU_ALL_SENSOR_ID){ // All sensors
-			mActivity.getSupportActionBar().setTitle("All sensors");
+
+		if (adapter != null && mActiveItem !=null ) {
+            if(mActiveItem.equals(Constants.GUI_MENU_CONTROL)) {
+                mActivity.getSupportActionBar().setTitle(mActivity.getString(R.string.menu_control));
+            }
+            else if (mActiveItem.equals(Constants.GUI_MENU_DASHBOARD)) {
+                mActivity.getSupportActionBar().setTitle(mActivity.getString(R.string.menu_dashboard));
+            }
+            else if(mActiveItem.equals(Constants.GUI_MENU_WATCHDOG)) {
+                mActivity.getSupportActionBar().setTitle(mActivity.getString(R.string.menu_watchdog));
+            }
 		} else {
 			setDefaultTitle();
 		}
@@ -304,41 +284,24 @@ public class NavDrawerMenu {
 		}
 	}
 
-	protected void changeCustomView(boolean closeDrawer) { // (CustomView customView, boolean closeDrawer){
-		// ((MainActivity) mActivity).setActiveCustomView(param);
-		mActivity.setActiveCustomViewID("tempValeu");
-		mActivity.redrawCustomView();
-
-		// Close drawer
-		if (closeDrawer) {
-			closeMenu();
-		}
-	}
-
-	private void changeLocation(Location location, boolean closeDrawer) {
+	private void changeMenuItem(String ID, boolean closeDrawer) {
 		// save current location
 		SharedPreferences prefs = mController.getUserSettings();
 
 		// UserSettings can be null when user is not logged in!
-		if (prefs != null && location != null) {
+		if (prefs != null && ID != null) {
 			Editor edit = prefs.edit();
 
 			String pref_key = Persistence.getPreferencesLastLocation(mController.getActiveAdapter().getId());
-			edit.putString(pref_key, location.getId());
+			edit.putString(pref_key, ID);
 			edit.commit();
 		}
 
-		if(location != null ){
-			mActiveLocationId = location.getId();
-		}
-		else { // All sensors item
-			mActiveLocationId = Constants.GUI_MENU_ALL_SENSOR_ID;
-		}
-
+        mActiveItem = ID;
 		// TODO
 		mActivity.setActiveAdapterID(mActiveAdapterId);
-		mActivity.setActiveLocationID(mActiveLocationId);
-		mActivity.redrawDevices();
+		mActivity.setActiveMenuID(mActiveItem);
+		mActivity.redrawMainFragment();
 
 		// Close drawer
 		if (closeDrawer) {
@@ -355,7 +318,7 @@ public class NavDrawerMenu {
 			public void onExecute(boolean success) {
 				if (success) {
 					mActivity.setActiveAdapterAndLocation();
-					mActivity.redrawDevices();
+					mActivity.redrawMainFragment();
 					redrawMenu();
 				}
 
@@ -377,7 +340,7 @@ public class NavDrawerMenu {
 				if (success) {
 					new ToastMessageThread(mActivity, R.string.toast_adapter_removed).start();
 					mActivity.setActiveAdapterAndLocation();
-					mActivity.redrawDevices();
+					mActivity.redrawMainFragment();
 					mActivity.redrawMenu();
 				}
 				mActivity.setSupportProgressBarIndeterminateVisibility(false);
@@ -409,8 +372,6 @@ public class NavDrawerMenu {
 		mMenuAdapter.addHeader(new GroupImageMenuItem(mActivity.getResources().getString(R.string.adapter), R.drawable.add_custom_view, new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				//DialogFragment newFragment = new AddAdapterFragmentDialog();
-				//newFragment.show(mActivity.getSupportFragmentManager(), MainActivity.ADD_ADAPTER_TAG);
 				Intent intent = new Intent(mActivity, AddAdapterActivity.class);
 				mActivity.startActivityForResult(intent, Constants.ADD_ADAPTER_REQUEST_CODE);
 				}
@@ -418,7 +379,6 @@ public class NavDrawerMenu {
 		
 		if (!adapters.isEmpty()) {
 			// Adding separator as item (we don't want to let it float as header)
-			//mMenuAdapter.addItem(new SeparatorMenuItem());
 
 			// Adding adapters
 			for (Adapter actAdapter : adapters) {
@@ -427,6 +387,22 @@ public class NavDrawerMenu {
 
 			// Adding separator as item (we don't want to let it float as header)
 			mMenuAdapter.addItem(new SeparatorMenuItem());
+
+
+            // MANAGMENT
+            mMenuAdapter.addHeader(new GroupMenuItem(mActivity.getResources().getString(R.string.menu_managment)));
+            mMenuAdapter.addItem(new LocationMenuItem(mActivity.getString(R.string.menu_control),R.drawable.loc_all,false,Constants.GUI_MENU_CONTROL,false));
+            mMenuAdapter.addItem(new LocationMenuItem(mActivity.getString(R.string.menu_dashboard),R.drawable.loc_all,false,Constants.GUI_MENU_DASHBOARD,false));
+
+            mMenuAdapter.addItem( new SeparatorMenuItem());
+            // APPLICATIONS
+            mMenuAdapter.addHeader(new GroupMenuItem(mActivity.getResources().getString(R.string.menu_applications)));
+            mMenuAdapter.addItem(new LocationMenuItem(mActivity.getString(R.string.menu_watchdog),R.drawable.loc_all,false,Constants.GUI_MENU_WATCHDOG,false));
+
+
+
+            /*
+
 
 			// Adding location header
 			mMenuAdapter.addHeader(new GroupImageMenuItem(mActivity.getResources().getString(R.string.location), R.drawable.add_custom_view, new OnClickListener() {
@@ -474,6 +450,7 @@ public class NavDrawerMenu {
 			// TODO pridat custom views
 			// mMenuAdapter.addItem(new EmptyMenuItem(mActivity.getResources().getString(R.string.no_custom_view)));
 			mMenuAdapter.addItem(new CustomViewMenuItem("Graph view", R.drawable.loc_living_room, false, "Custom001", (mActiveCustomViewId != null) ? true : false));
+			*/
 		} else {
 			mMenuAdapter.addItem(new EmptyMenuItem(mActivity.getResources().getString(R.string.no_adapters)));
 			
@@ -485,7 +462,7 @@ public class NavDrawerMenu {
 		// Adding settings, about etc.
 		mMenuAdapter.addItem(new SettingMenuItem(mActivity.getResources().getString(R.string.action_settings), R.drawable.settings, com.rehivetech.beeeon.activity.menuItem.MenuItem.ID_SETTINGS));
 		mMenuAdapter.addItem(new SettingMenuItem(mActivity.getResources().getString(R.string.action_about), R.drawable.info, com.rehivetech.beeeon.activity.menuItem.MenuItem.ID_ABOUT));
-
+        mMenuAdapter.addItem(new SettingMenuItem(mActivity.getString(R.string.action_logout), R.drawable.info,MenuItem.ID_UNDEFINED));
 		// menuAdapter.log();
 		return mMenuAdapter;
 	}
@@ -534,9 +511,8 @@ public class NavDrawerMenu {
 		return mIsDrawerOpen;
 	}
 
-	public void setLocationID(String locID) {
-		mActiveLocationId = locID;
-		mActiveCustomViewId = null;
+	public void setActiveMenuID(String id) {
+		mActiveItem = id;
 	}
 
 	public void setAdapterID(String adaID) {
