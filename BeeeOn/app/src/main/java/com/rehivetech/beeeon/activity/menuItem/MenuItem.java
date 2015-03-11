@@ -5,6 +5,7 @@ import android.view.View;
 public interface MenuItem {
 	public static final String ID_SETTINGS = "id_settings";
 	public static final String ID_ABOUT = "id_about";
+    public static final String ID_LOGOUT = "id_logout";
 	public static final String ID_UNDEFINED = "id_undefined";
 
 	public enum MenuItemType {

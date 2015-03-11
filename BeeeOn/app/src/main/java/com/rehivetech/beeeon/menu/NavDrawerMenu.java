@@ -26,6 +26,7 @@ import com.rehivetech.beeeon.Constants;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.activity.AdapterUsersActivity;
 import com.rehivetech.beeeon.activity.AddAdapterActivity;
+import com.rehivetech.beeeon.activity.LoginActivity;
 import com.rehivetech.beeeon.activity.MainActivity;
 import com.rehivetech.beeeon.activity.SettingsMainActivity;
 import com.rehivetech.beeeon.activity.dialog.InfoDialogFragment;
@@ -159,7 +160,9 @@ public class NavDrawerMenu {
 					} else if (mSelectedMenuItem.getId().equals(com.rehivetech.beeeon.activity.menuItem.MenuItem.ID_SETTINGS)) {
 						Intent intent = new Intent(mActivity, SettingsMainActivity.class);
 						mActivity.startActivity(intent);
-					}
+					} else if (mSelectedMenuItem.getId().equals(MenuItem.ID_LOGOUT)) {
+                        mActivity.logout();
+                    }
 					break;
 
 				default:
@@ -169,33 +172,33 @@ public class NavDrawerMenu {
 		});
 		mDrawerList.setOnItemLongClickListener(new OnItemLongClickListener() {
 
-			@Override
-			public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-				if(mMode != null) {
-					// Action Mode is active and I want change
-					mSelectedMenuItem.setNotSelected();
-					mMode = null;
-				}
-				
-				Log.d(TAG, "Item Long press");
-				mSelectedMenuItem = (MenuItem) mMenuAdapter.getItem(position);
-				switch (mSelectedMenuItem.getType()) {
-				case LOCATION:
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                if (mMode != null) {
+                    // Action Mode is active and I want change
+                    mSelectedMenuItem.setNotSelected();
+                    mMode = null;
+                }
 
-					break;
-				case ADAPTER:
-					Log.i(TAG, "Long press - adapter");
-					mMode = mActivity.startSupportActionMode(new ActionModeAdapters());
-					mSelectedMenuItem.setIsSelected();
-					break;
-				default:
-					// do nothing
-					break;
-				}
-				return true;
-			}
+                Log.d(TAG, "Item Long press");
+                mSelectedMenuItem = (MenuItem) mMenuAdapter.getItem(position);
+                switch (mSelectedMenuItem.getType()) {
+                    case LOCATION:
 
-		});
+                        break;
+                    case ADAPTER:
+                        Log.i(TAG, "Long press - adapter");
+                        mMode = mActivity.startSupportActionMode(new ActionModeAdapters());
+                        mSelectedMenuItem.setIsSelected();
+                        break;
+                    default:
+                        // do nothing
+                        break;
+                }
+                return true;
+            }
+
+        });
 
 		// ActionBarDrawerToggle ties together the the proper interactions
 		// between the sliding drawer and the action bar app icon
@@ -462,7 +465,7 @@ public class NavDrawerMenu {
 		// Adding settings, about etc.
 		mMenuAdapter.addItem(new SettingMenuItem(mActivity.getResources().getString(R.string.action_settings), R.drawable.settings, com.rehivetech.beeeon.activity.menuItem.MenuItem.ID_SETTINGS));
 		mMenuAdapter.addItem(new SettingMenuItem(mActivity.getResources().getString(R.string.action_about), R.drawable.info, com.rehivetech.beeeon.activity.menuItem.MenuItem.ID_ABOUT));
-        mMenuAdapter.addItem(new SettingMenuItem(mActivity.getString(R.string.action_logout), R.drawable.info,MenuItem.ID_UNDEFINED));
+        mMenuAdapter.addItem(new SettingMenuItem(mActivity.getString(R.string.action_logout), R.drawable.info,MenuItem.ID_LOGOUT));
 		// menuAdapter.log();
 		return mMenuAdapter;
 	}

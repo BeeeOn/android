@@ -387,8 +387,8 @@ public class MainActivity extends BaseApplicationActivity {
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		MenuInflater inflater = getMenuInflater();
-		inflater.inflate(R.menu.location_screen, menu);
+		//MenuInflater inflater = getMenuInflater();
+		//inflater.inflate(R.menu.location_screen, menu);
 		return true;
 	}
 
@@ -399,36 +399,6 @@ public class MainActivity extends BaseApplicationActivity {
 		case android.R.id.home:
 			mNavDrawerMenu.clickOnHome();
 			break;
-
-		/*case R.id.action_addadapter: {
-			//DialogFragment newFragment = new AddAdapterFragmentDialog();
-			//newFragment.show(getSupportFragmentManager(), ADD_ADAPTER_TAG);
-			Intent intent = new Intent(MainActivity.this, AddAdapterActivity.class);
-			startActivityForResult(intent, Constants.ADD_ADAPTER_REQUEST_CODE);
-			break;
-		}*/
-		case R.id.action_settings: {
-			Intent intent = new Intent(MainActivity.this, SettingsMainActivity.class);
-			startActivity(intent);
-			break;
-		}/*
-		case R.id.action_intro: {
-			Intent intent = new Intent(MainActivity.this, IntroActivity.class);
-			startActivity(intent);
-			break;
-		}
-		case R.id.action_intro_dialog: {
-			DialogFragment newFragment = new IntroFragmentDialog();
-			newFragment.show(getSupportFragmentManager(), "intro_dialog");
-			break;
-		}*/
-		case R.id.action_logout: {
-			mController.logout();
-			Intent intent = new Intent(MainActivity.this, LoginActivity.class);
-			startActivity(intent);
-			this.finish();
-			break;
-		}
 		}
 
 		return super.onOptionsItemSelected(item);
@@ -481,6 +451,13 @@ public class MainActivity extends BaseApplicationActivity {
 		mNavDrawerMenu.setActiveMenuID(id);
 		mListDevices.setMenuID(id);
 	}
+
+    public void logout() {
+        mController.logout();
+        Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+        startActivity(intent);
+        this.finish();
+    }
 
 	
 	public NavDrawerMenu getMenu() {
