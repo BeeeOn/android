@@ -6,6 +6,4 @@
     android:minWidth="270dp"
     android:padding="10dp"
     android:background="@color/light_gray">
-    
-
 </LinearLayout>
