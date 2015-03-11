@@ -10,7 +10,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.RadioGroup;
@@ -181,9 +180,6 @@ public class WatchDogEditRuleActivity extends BaseApplicationActivity {
             mRuleTresholdUnit.setText("?");
         }
 
-        String[] DayOfWeek = {"Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"};
-
-
         final DeviceArrayAdapter dataAdapter = new DeviceArrayAdapter(this, R.layout.custom_spinner2_item, getDevicesArray(), getLocationsArray());
         dataAdapter.setLayoutInflater(getLayoutInflater());
         dataAdapter.setDropDownViewResource(R.layout.custom_spinner2_dropdown_item);
@@ -193,7 +189,6 @@ public class WatchDogEditRuleActivity extends BaseApplicationActivity {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 Device selectedDevice = dataAdapter.getItem(position);
-
                 mRuleTresholdUnit.setText(mUnitsHelper.getStringUnit(selectedDevice.getValue()));
             }
 
@@ -203,9 +198,6 @@ public class WatchDogEditRuleActivity extends BaseApplicationActivity {
             }
         });
 
-
-//        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, R.layout.custom_spinner2_dropdown_item, R.id.custom_spinner_dropdown_label, DayOfWeek);
-//        mSensorSpinner.setAdapter(adapter);
 
         // changing mIsValueLess onClick
         // TODO make value not boolean but OperatorType
@@ -228,7 +220,7 @@ public class WatchDogEditRuleActivity extends BaseApplicationActivity {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
                 RelativeLayout NotifLayout = (RelativeLayout) findViewById(R.id.watchdog_detail_notification);
-                RelativeLayout ActionLayout = (RelativeLayout) findViewById(R.id.watchdog_detail_actor);
+                RelativeLayout ActionLayout = (RelativeLayout) findViewById(R.id.watchdog_edit_actor_layout);
 
                 switch(checkedId){
                     case R.id.watchdog_edit_notification:

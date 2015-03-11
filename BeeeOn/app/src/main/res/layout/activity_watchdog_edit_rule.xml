@@ -108,7 +108,7 @@
                 >
 
                 <TextView
-                    android:id="@+id/watchdogAddIfText"
+                    android:id="@+id/watchdog_edit_if_icon"
                     android:layout_width="30dp"
                     android:layout_height="30dp"
                     android:gravity="center"
@@ -119,17 +119,16 @@
                     android:text="@string/watchdog_if"
                     />
 
-                <!-- this margin 11dp cause spinner item has 5dp padding -->
                 <Spinner
                     android:id="@+id/watchdog_edit_sensor_spinner"
                     android:layout_width="wrap_content"
-                    android:layout_height="50dp"
+                    android:layout_height="40dp"
                     android:layout_marginLeft="16dp"
                     android:layout_marginStart="16dp"
                     android:layout_marginBottom="8dp"
-                    android:layout_toRightOf="@+id/watchdogAddIfText"
-                    android:layout_toEndOf="@id/watchdogAddIfText"
-                    android:layout_alignTop="@id/watchdogAddIfText" />
+                    android:layout_toRightOf="@+id/watchdog_edit_if_icon"
+                    android:layout_toEndOf="@id/watchdog_edit_if_icon"
+                    android:layout_alignTop="@id/watchdog_edit_if_icon" />
 
             </RelativeLayout>
 
@@ -145,7 +144,7 @@
 
                 <!--
                   - ic_action_previous_item must be first cause comparing in java code
-                   - margin less cause the shadow
+                   - margin is less cause the shadow
                 -->
                 <com.melnykov.fab.FloatingActionButton
                     xmlns:fab="http://schemas.android.com/apk/res-auto"
@@ -162,7 +161,7 @@
                     />
 
                 <TextView
-                    android:id="@+id/watchdogDetailTresholdText"
+                    android:id="@+id/watchdog_edit_treshold_text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/treshold_value"
@@ -179,7 +178,7 @@
                     android:textStyle="bold"
                     android:textSize="24sp"
                     android:gravity="center_horizontal"
-                    android:layout_below="@+id/watchdogDetailTresholdText"
+                    android:layout_below="@+id/watchdog_edit_treshold_text"
                     android:layout_toRightOf="@+id/watchdog_edit_greatless"
                     android:layout_toEndOf="@+id/watchdog_edit_greatless"
                     android:layout_marginLeft="16dp"
@@ -224,7 +223,7 @@
                 >
 
                 <TextView
-                    android:id="@+id/watchdogAddThenText"
+                    android:id="@+id/watchdog_edit_then_icon"
                     android:layout_width="30dp"
                     android:layout_height="30dp"
                     android:textColor="@color/white"
@@ -242,9 +241,9 @@
                     android:layout_marginLeft="16dp"
                     android:layout_marginStart="16dp"
                     android:gravity="center_vertical"
-                    android:layout_toRightOf="@+id/watchdogAddThenText"
-                    android:layout_toEndOf="@id/watchdogAddThenText"
-                    android:layout_alignTop="@id/watchdogAddThenText"
+                    android:layout_toRightOf="@+id/watchdog_edit_then_icon"
+                    android:layout_toEndOf="@id/watchdog_edit_then_icon"
+                    android:layout_alignTop="@id/watchdog_edit_then_icon"
                     >
 
                     <!-- group of action types -->
@@ -290,7 +289,7 @@
                 />
 
             <ImageView
-                android:id="@+id/watchdogDetailActionIcon"
+                android:id="@+id/watchdog_edit_action_icon"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
                 android:padding="3dp"
@@ -303,14 +302,14 @@
             <TextView
                 android:layout_marginLeft="16dp"
                 android:layout_marginStart="16dp"
-                android:id="@+id/watchdogDetailActionText"
+                android:id="@+id/watchdog_edit_action_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical"
-                android:layout_toRightOf="@+id/watchdogDetailActionIcon"
-                android:layout_toEndOf="@id/watchdogDetailActionIcon"
-                android:layout_alignBottom="@id/watchdogDetailActionIcon"
-                android:layout_alignTop="@id/watchdogDetailActionIcon"
+                android:layout_toRightOf="@+id/watchdog_edit_action_icon"
+                android:layout_toEndOf="@id/watchdog_edit_action_icon"
+                android:layout_alignBottom="@id/watchdog_edit_action_icon"
+                android:layout_alignTop="@id/watchdog_edit_action_icon"
                 android:text="@string/notification_text"
                 android:layout_marginRight="16dp"
                 android:layout_marginEnd="16dp"
@@ -324,9 +323,9 @@
                 android:textSize="24sp"
                 android:textStyle="bold"
                 android:textColor="@color/beeeon_secundary_pink"
-                android:layout_below="@id/watchdogDetailActionText"
-                android:layout_alignLeft="@id/watchdogDetailActionText"
-                android:layout_alignStart="@id/watchdogDetailActionText"
+                android:layout_below="@id/watchdog_edit_action_text"
+                android:layout_alignLeft="@id/watchdog_edit_action_text"
+                android:layout_alignStart="@id/watchdog_edit_action_text"
                 android:layout_marginRight="16dp"
                 android:layout_marginEnd="16dp"
                 />
@@ -334,7 +333,7 @@
 
         <!-- actor -->
         <RelativeLayout
-            android:id="@+id/watchdog_detail_actor"
+            android:id="@+id/watchdog_edit_actor_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
@@ -352,7 +351,7 @@
                 />
 
             <ImageView
-                android:id="@+id/watchdogDetailActorIcon"
+                android:id="@+id/watchdog_edit_actor_icon"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
                 android:padding="3dp"
@@ -363,15 +362,15 @@
                 />
 
             <TextView
-                android:id="@+id/watchdogDetailActorText"
+                android:id="@+id/watchdog_edit_actor_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/watchdog_actor_change_state"
                 android:gravity="center_vertical"
-                android:layout_toRightOf="@+id/watchdogDetailActorIcon"
-                android:layout_toEndOf="@id/watchdogDetailActorIcon"
-                android:layout_alignBottom="@id/watchdogDetailActorIcon"
-                android:layout_alignTop="@id/watchdogDetailActorIcon"
+                android:layout_toRightOf="@+id/watchdog_edit_actor_icon"
+                android:layout_toEndOf="@id/watchdog_edit_actor_icon"
+                android:layout_alignBottom="@id/watchdog_edit_actor_icon"
+                android:layout_alignTop="@id/watchdog_edit_actor_icon"
                 android:layout_marginLeft="16dp"
                 android:layout_marginStart="16dp"
                 android:layout_marginEnd="16dp"
@@ -382,8 +381,8 @@
                 android:id="@+id/watchdog_edit_actor_spinner"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
-                android:layout_below="@id/watchdogDetailActorText"
-                android:layout_alignLeft="@id/watchdogDetailActorText"
+                android:layout_below="@id/watchdog_edit_actor_text"
+                android:layout_alignLeft="@id/watchdog_edit_actor_text"
                 android:entries="@array/user_role"
                 android:layout_marginEnd="16dp"
                 android:layout_marginRight="16dp"
@@ -396,7 +395,10 @@
             android:layout_height="1px"
             android:src="@color/beeeon_separator"
             android:layout_marginTop="16dp"
+            android:layout_marginLeft="62dp"
+            android:layout_marginStart="62dp"
             />
+
     </LinearLayout>
     </ScrollView>
 </LinearLayout>
