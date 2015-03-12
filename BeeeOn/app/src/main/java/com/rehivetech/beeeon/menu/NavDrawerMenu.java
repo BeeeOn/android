@@ -166,6 +166,7 @@ public class NavDrawerMenu {
 					break;
 
 				default:
+                    Log.d(TAG,"other");
 					break;
 				}
 			}
@@ -363,7 +364,12 @@ public class NavDrawerMenu {
 		if (picture == null)
 			picture = actUser.getDefaultPicture(mActivity);
 		
-		mMenuAdapter.addHeader(new ProfileMenuItem(actUser.getName(), actUser.getEmail(), picture));
+		mMenuAdapter.addHeader(new ProfileMenuItem(actUser.getName(), actUser.getEmail(), picture, new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d(TAG, "OnClick - profile");
+            }
+        }));
 
 		List<Adapter> adapters = mController.getAdapters();
 		Adapter activeAdapter = mController.getActiveAdapter();

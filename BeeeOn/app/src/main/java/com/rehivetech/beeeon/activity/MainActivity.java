@@ -146,7 +146,10 @@ public class MainActivity extends BaseApplicationActivity {
 		}
 
 		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-		if(mActiveMenuId.equals(Constants.GUI_MENU_CONTROL)){
+        if(mActiveMenuId == null) {
+            ft.replace(R.id.content_frame, mListDevices, FRG_TAG_LOC);
+        }
+		else if(mActiveMenuId.equals(Constants.GUI_MENU_CONTROL)){
 			ft.replace(R.id.content_frame, mListDevices, FRG_TAG_LOC);
 		}
 		else if(mActiveMenuId.equals(Constants.GUI_MENU_DASHBOARD)) {
