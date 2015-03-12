@@ -7,6 +7,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
+import android.text.AlteredCharSequence;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -67,7 +68,7 @@ public class AddAdapterActivity extends BaseApplicationActivity {
 		
 		mActivity = this;
 		
-		mAdapter = new AddAdapterFragmentAdapter(getSupportFragmentManager());
+		mAdapter = new AddAdapterFragmentAdapter(getSupportFragmentManager(),mActivity);
 
 
 		mPager = (ViewPager)findViewById(R.id.intro_pager);
@@ -121,10 +122,10 @@ public class AddAdapterActivity extends BaseApplicationActivity {
 			
 			@Override
 			public void onClick(View v) {
-				if(mNext.getText().equals("NEXT")){
+				if(mNext.getText().equals(mActivity.getString(R.string.tutorial_next))){
 					mPager.setCurrentItem(mPager.getCurrentItem()+1);
 				}
-				else if (mNext.getText().equals("ADD")) {
+				else if (mNext.getText().equals(mActivity.getString(R.string.tutorial_add))) {
 					String adapterName = mFragment.getAdapterName();
 					String adapterCode = mFragment.getAdapterCode();
 					Log.d(TAG, "adaName: "+adapterName+" adaCode: "+adapterCode);
@@ -147,7 +148,7 @@ public class AddAdapterActivity extends BaseApplicationActivity {
 	
 	public void setBtnLastPage() {
 		mSkip.setVisibility(View.INVISIBLE);
-		mNext.setText("ADD");
+		mNext.setText(mActivity.getString(R.string.tutorial_add));
 	}
 
 
@@ -182,7 +183,7 @@ public class AddAdapterActivity extends BaseApplicationActivity {
 
 	public void resetBtn() {
 		mSkip.setVisibility(View.VISIBLE);
-		mNext.setText("NEXT");
+		mNext.setText(mActivity.getString(R.string.tutorial_next));
 	}
 
 

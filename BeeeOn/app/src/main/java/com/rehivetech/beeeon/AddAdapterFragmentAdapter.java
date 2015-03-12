@@ -1,5 +1,6 @@
 package com.rehivetech.beeeon;
 
+import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -17,22 +18,24 @@ public class AddAdapterFragmentAdapter extends FragmentPagerAdapter implements I
             R.drawable.loc_wc,
             R.drawable.loc_dinner_room
     };
+    private final Context mActivity;
 
     private int mCount = 4;
 
-    public AddAdapterFragmentAdapter(FragmentManager fm) {
+    public AddAdapterFragmentAdapter(FragmentManager fm,Context context) {
         super(fm);
+        mActivity = context;
     }
 
     @Override
     public Fragment getItem(int position) {
     	switch (position) {
+        case 0:
+            return IntroImageFragment.newInstance(R.drawable.beeeon_tutorial_aa_second_step,mActivity.getString(R.string.tut_add_adapter_text_1));
     	case 1:
-    		return IntroImageFragment.newInstance(R.drawable.beeeon_tutorial_aa_first_step,"Please connect your adapter to the AC power");
-    	case 0:
-    		return IntroImageFragment.newInstance(R.drawable.beeeon_tutorial_aa_second_step,"Please connect your adapter to the Internet");
+    		return IntroImageFragment.newInstance(R.drawable.beeeon_tutorial_aa_first_step,mActivity.getString(R.string.tut_add_adapter_text_2));
     	case 2:
-    		return IntroImageFragment.newInstance(R.drawable.beeeon_tutorial_aa_third_step,"In the next step, please give name to your adapter and scan QR code ");
+    		return IntroImageFragment.newInstance(R.drawable.beeeon_tutorial_aa_third_step,mActivity.getString(R.string.tut_add_adapter_text_3));
     	case 3:
     		return new AddAdapterFragment();
     	}

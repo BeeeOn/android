@@ -305,16 +305,7 @@ public class SensorDetailFragment extends Fragment {
 				return false;
 			}
 		});
-		/*
-		 * mLayoutScroll.setOnTouchListener(new OnTouchListener() {
-		 * 
-		 * @Override public boolean onTouch(View v, MotionEvent event) { // Disable graph if in edit Mode if (mEditMode != EDIT_NONE) return false;
-		 * 
-		 * if (mWasTapLayout) return true;
-		 * 
-		 * mWasTapLayout = true; mWasTapGraph = false; if (mGraphView != null) { mGraphView.setScalable(false); mGraphView.setScrollable(false); mActivity.setEnableSwipe(true);
-		 * mGraphInfo.setVisibility(View.VISIBLE); onTouch(v, event); return true; } return false; } });
-		 */
+
 
 		// Set name of sensor
 		mName.setText(device.getName());
@@ -445,20 +436,16 @@ public class SensorDetailFragment extends Fragment {
 
 		DisplayMetrics displaymetrics = new DisplayMetrics();
 		getActivity().getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
-		// int height = displaymetrics.heightPixels;
-		// int width = displaymetrics.widthPixels;
+
 
 		RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) mGraphInfo.getLayoutParams();
-		// Log.d(TAG, "GraphLayout width x height " +
-		// mGraphLayout.getLayoutParams().width + " x "+
-		// mGraphLayout.getLayoutParams().height);
+
 
 		// substitute parameters for left, top, right, bottom
 		params.setMargins((int) ((displaymetrics.widthPixels / 2) - (70 * displaymetrics.density)), (int) ((-120) * displaymetrics.density), 0, 0);
 		mGraphInfo.setLayoutParams(params);
 
 		// Disable progress bar
-		// getActivity().setProgressBarIndeterminateVisibility(false);
 		getActivity().setProgressBarIndeterminateVisibility(false);
 	}
 
@@ -753,10 +740,6 @@ public class SensorDetailFragment extends Fragment {
 		public boolean onCreateActionMode(ActionMode mode, Menu menu) {
             MenuInflater inflater = mode.getMenuInflater();
             inflater.inflate(R.menu.sensor_detail_menu, menu);
-
-
-            //menu.add("Save").setIcon(R.drawable.beeeon_ic_action_accept).setTitle("Save").setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-			//menu.add("Cancel").setIcon(R.drawable.beeeon_ic_action_cancel).setTitle("Cancel").setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 			return true;
 		}
 

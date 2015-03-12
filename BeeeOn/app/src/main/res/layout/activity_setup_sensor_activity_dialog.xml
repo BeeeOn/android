@@ -5,27 +5,6 @@
     android:background="@color/light_gray"
     android:orientation="vertical" >
 
-    <!-- LinearLayout
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/beeeon_primary_cyan"
-        android:minHeight="30dp"
-        android:orientation="vertical" >
-
-        <TextView
-            android:id="@+id/addsensor_add_sensor"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:gravity="center_horizontal"
-            android:paddingBottom="15dp"
-            android:paddingTop="5dp"
-            android:text="@string/addsensor_setup_sensor"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:textColor="@color/white"
-            android:textIsSelectable="false" />
-    </LinearLayout-->
-
     <ScrollView 
         android:layout_width="fill_parent"
         android:layout_height="fill_parent">

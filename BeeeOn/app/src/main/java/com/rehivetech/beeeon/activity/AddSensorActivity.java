@@ -71,7 +71,7 @@ public class AddSensorActivity extends BaseApplicationActivity {
 		
 		mActivity = this;
 		
-		mAdapter = new AddSensorFragmentAdapter(getSupportFragmentManager());
+		mAdapter = new AddSensorFragmentAdapter(getSupportFragmentManager(),mActivity);
 
 		getSupportActionBar().setHomeButtonEnabled(true);
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -104,8 +104,6 @@ public class AddSensorActivity extends BaseApplicationActivity {
 				Log.d(TAG, "Setup sensor success");
 				setResult(Constants.ADD_SENSOR_SUCCESS, data);
 				finish();
-				//setActiveAdapterAndLocation();
-				//redrawMenu();
 			}
 		}
 	}
@@ -141,10 +139,10 @@ public class AddSensorActivity extends BaseApplicationActivity {
 			
 			@Override
 			public void onClick(View v) {
-				if(mNext.getText().equals("NEXT")){
+				if(mNext.getText().equals(mActivity.getString(R.string.tutorial_next))){
 					mPager.setCurrentItem(mPager.getCurrentItem()+1);
 				}
-				else if (mNext.getText().equals("SEND PAIR")) {
+				else if (mNext.getText().equals(mActivity.getString(R.string.addsensor_send_pair))) {
 					doPairRequestTask(mPairAdapter.getId());
 					mNext.setEnabled(false);
 				}
@@ -156,7 +154,7 @@ public class AddSensorActivity extends BaseApplicationActivity {
 	
 	public void setBtnLastPage() {
 		mSkip.setVisibility(View.INVISIBLE);
-		mNext.setText("SEND PAIR");
+		mNext.setText(mActivity.getString(R.string.addsensor_send_pair));
 	}
 
 
@@ -187,7 +185,7 @@ public class AddSensorActivity extends BaseApplicationActivity {
 
 	public void resetBtn() {
 		mSkip.setVisibility(View.VISIBLE);
-		mNext.setText("NEXT");
+		mNext.setText(mActivity.getString(R.string.tutorial_next));
 	}
 
 
@@ -270,7 +268,7 @@ public class AddSensorActivity extends BaseApplicationActivity {
 
 
 	public void resetBtnPair() {
-		mNext.setText("SEND PAIR");
+		mNext.setText(mActivity.getString(R.string.addsensor_send_pair));
 		mNext.setEnabled(true);
 	}
 

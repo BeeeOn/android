@@ -1,5 +1,6 @@
 package com.rehivetech.beeeon;
 
+import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -17,11 +18,13 @@ public class AddSensorFragmentAdapter extends FragmentPagerAdapter implements Ic
             R.drawable.loc_wc,
             R.drawable.loc_dinner_room
     };
+    private final Context mActivity;
 
     private int mCount = 3;
 
-    public AddSensorFragmentAdapter(FragmentManager fm) {
+    public AddSensorFragmentAdapter(FragmentManager fm,Context context) {
         super(fm);
+        mActivity = context;
     }
 
     @Override
@@ -29,10 +32,10 @@ public class AddSensorFragmentAdapter extends FragmentPagerAdapter implements Ic
     	switch (position) {
     	case 0:
     		// Prepare your sensor
-    		return IntroImageFragment.newInstance(R.drawable.beeeon_tutorial_as_first_step,"Please pull out battery stripe ");
+    		return IntroImageFragment.newInstance(R.drawable.beeeon_tutorial_as_first_step,mActivity.getString(R.string.tut_add_sensor_text_1));
     	case 1:
     		// After start timer , 
-    		return IntroImageFragment.newInstance(R.drawable.beeeon_tutorial_as_second_step,"Please shake with new sensor shortly while countdown is running");
+    		return IntroImageFragment.newInstance(R.drawable.beeeon_tutorial_as_second_step,mActivity.getString(R.string.tut_add_sensor_text_2));
     	case 2:
     		// circle timer 
     		return new AddSensorFragment();

@@ -8,26 +8,6 @@
     android:background="@color/light_gray"
     >
 
-    <!--LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/beeeon_primary_cyan"
-        android:orientation="vertical" >
-
-        <TextView
-            android:id="@+id/addadapter_add_adapter"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:gravity="center_horizontal"
-            android:paddingBottom="15dp"
-            android:paddingTop="5dp"
-            android:text="@string/addadapter_add_adapter"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:textColor="@color/white"
-            android:textIsSelectable="false" />
-
-    </LinearLayout-->
     <ScrollView 
         android:layout_width="fill_parent"
         android:layout_height="fill_parent">

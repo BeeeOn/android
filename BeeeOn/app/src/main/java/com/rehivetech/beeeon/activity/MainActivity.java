@@ -202,8 +202,8 @@ public class MainActivity extends BaseApplicationActivity {
 		
 		mSV = new ShowcaseView.Builder(this, true)
 		.setTarget(target)
-		.setContentTitle("Open Menu")
-		.setContentText("For switch location tap to Icon and Menu will rise.")
+		.setContentTitle(getString(R.string.tutorial_open_menu))
+		.setContentText(getString(R.string.tutorial_open_menu_text))
 		//.setStyle(R.style.CustomShowcaseTheme)
 		.setShowcaseEventListener(listener)
 		.build();
@@ -415,41 +415,6 @@ public class MainActivity extends BaseApplicationActivity {
 		}
 
 		return super.onOptionsItemSelected(item);
-	}
-
-	protected void renameLocation(final String location, final TextView view) {
-		AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
-
-		// TODO: use better layout than just single EditText
-		final EditText edit = new EditText(MainActivity.this);
-		edit.setText(location);
-		edit.selectAll();
-		// TODO: show keyboard automatically
-
-		builder.setCancelable(false).setView(edit).setTitle("Rename location").setNegativeButton("Cancel", null).setPositiveButton("Rename", new DialogInterface.OnClickListener() {
-
-			@Override
-			public void onClick(DialogInterface dialog, int which) {
-				String newName = edit.getText().toString();
-
-				// TODO: show loading while saving new name to
-				// server (+ use asynctask)
-				Location location = new Location(); // FIXME: get that original location from somewhere
-				location.setName(newName);
-
-				boolean saved = mController.saveLocation(location);
-
-				String message = saved ? String.format("Location was renamed to '%s'", newName) : "Location wasn't renamed due to error";
-
-				Toast.makeText(MainActivity.this, message, Toast.LENGTH_LONG).show();
-
-				// Redraw item in list
-				view.setText(newName);
-			}
-		});
-
-		AlertDialog dialog = builder.create();
-		dialog.show();
 	}
 
 	public void setActiveAdapterID(String adapterId) {

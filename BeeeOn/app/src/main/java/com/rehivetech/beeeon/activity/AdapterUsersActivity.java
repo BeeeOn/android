@@ -71,17 +71,7 @@ public class AdapterUsersActivity extends BaseApplicationActivity {
 		
 		// Get all users for adapter
 		doGetAdapterUsers(mAdapter.getId(), true);
-		
-		//mAdapterUsers = mController.getUsers(mAdapter.getId()); // -> ZATIM NEFUNKCNI 
-		//mAdapterUsers = new ArrayList<User>();
-		//mAdapterUsers.add(new User("Test 1","pokus@email.com",User.Role.Superuser,User.Gender.Male));
-		//mAdapterUsers.add(new User("Test 2","test@email.com",User.Role.Admin,User.Gender.Male));
-		
 	}
-	
-
-	
-
 
 	private void initLayouts() {
 		// Get elements

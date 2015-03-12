@@ -49,12 +49,6 @@ public class SettingsMainActivity extends ActionBarPreferenceActivity implements
 
 		mController = Controller.getInstance(getApplicationContext());
 
-        /*
-        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.HONEYCOMB_MR2) {
-            getActionBar().setDisplayHomeAsUpEnabled(true);
-            getActionBar().setHomeButtonEnabled(true);
-            getActionBar().setIcon(R.drawable.ic_launcher_null);
-        }*/
         final Toolbar toolbar=getToolbar();
         toolbar.setTitle(R.string.settings);
 
@@ -103,109 +97,6 @@ public class SettingsMainActivity extends ActionBarPreferenceActivity implements
 		mPrefs.unregisterOnSharedPreferenceChangeListener(this);
 	}
 
-	// private void setDefaultLocAndAdap() {
-	// List<Adapter> adapters = mController.getAdapters();
-	//
-	// // no adapter, disable adapter and location ListPreference
-	// if (adapters.size() < 1) {
-	// mListPrefAdapter.setEnabled(false);
-	// mListPrefLocation.setEnabled(false);
-	//
-	// mListPrefLocation.setSummary(R.string.no_location_available);
-	// mListPrefAdapter.setSummary(R.string.no_location_available);
-	// }
-	// // only 1 adapter available, disable adapter choice
-	// else if (adapters.size() < 2) {
-	//
-	// mListPrefAdapter.setEnabled(false);
-	// Adapter adapter = adapters.get(0);
-	//
-	// mListPrefAdapter.setSummary(adapter.getName());
-	//
-	// setLocationList();
-	// }
-	// // 2 or more adapters available
-	// else {
-	// mListPrefAdapter.setEnabled(true);
-	//
-	// // fill lists with data
-	// CharSequence[] entries = new CharSequence[adapters.size() + 1];
-	// CharSequence[] entryValues = new CharSequence[adapters.size() + 1];
-	//
-	// // add first item as "None" with null value
-	// entries[0] = getString(R.string.none);
-	// entryValues[0] = "";
-	//
-	// // fill the rest
-	// for (int i = 0; i < adapters.size(); i++) {
-	// entries[i + 1] = adapters.get(i).getName();
-	// entryValues[i + 1] = adapters.get(i).getId();
-	// }
-	//
-	// mListPrefAdapter.setEntries(entries);
-	// mListPrefAdapter.setEntryValues(entryValues);
-	// mListPrefAdapter.setDefaultValue("");
-	//
-	// Adapter adapter = mController.getActiveAdapter();
-	// if (adapter != null) {
-	// mListPrefAdapter.setSummary(adapter.getName());
-	// setLocationList();
-	// } else {
-	// // set "None" as summary
-	// mListPrefAdapter.setSummary(R.string.none);
-	// mListPrefLocation.setEnabled(false);
-	// mListPrefLocation.setSummary(R.string.none);
-	// }
-	// }
-	//
-	// }
-	//
-	// private void setLocationList() {
-	// mListPrefLocation.setEnabled(true);
-	//
-	// String locId = mPrefs.getString(Constants.PERSISTENCE_PREF_SW2_LOCATION, "");
-	// Location loc;
-	// // valid
-	// Adapter adapter = mController.getActiveAdapter();
-	// if (adapter != null && locId != "" && (loc = mController.getLocation(adapter.getId(), locId)) != null) {
-	// mListPrefLocation.setSummary(loc.getName());
-	// } else {
-	//
-	//
-	// mListPrefLocation.setSummary(R.string.none);
-	// mPrefs.edit().putString(Constants.PERSISTENCE_PREF_SW2_LOCATION, "");
-	// mPrefs.edit().commit();
-	// }
-	// List<Location> locations = new ArrayList<Location>();
-	// if (adapter != null) {
-	// locations = mController.getLocations(adapter.getId());
-	// }
-	// // no location available
-	// if (locations.size() < 1) {
-	// mListPrefLocation.setEnabled(false);
-	// mListPrefLocation.setSummary(R.string.none);
-	// }
-	// // 1 and more locations available
-	// else {
-	// // fill lists with data
-	// CharSequence[] entries = new CharSequence[locations.size() + 1];
-	// CharSequence[] entryValues = new CharSequence[locations.size() + 1];
-	//
-	// // add first item as "None" with null value
-	// entries[0] = getString(R.string.none);
-	// entryValues[0] = "";
-	//
-	// // fill the rest
-	// for (int i = 0; i < locations.size(); i++) {
-	// entries[i + 1] = locations.get(i).getName();
-	// entryValues[i + 1] = locations.get(i).getId();
-	// }
-	//
-	// mListPrefLocation.setEntries(entries);
-	// mListPrefLocation.setEntryValues(entryValues);
-	// mListPrefLocation.setDefaultValue("");
-	// }
-	// }
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
@@ -217,15 +108,6 @@ public class SettingsMainActivity extends ActionBarPreferenceActivity implements
 		return false;
 	}
 
-	// @Override
-	// public boolean onPreferenceChange(Preference preference, Object newValue)
-	// {
-	//
-	// setDefaultLocAndAdap();
-	//
-	// return true;
-	// }
-
 	@Override
 	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
 		if (mTimezone != null && key.equals(mTimezone.getPersistenceKey())) {
@@ -236,12 +118,6 @@ public class SettingsMainActivity extends ActionBarPreferenceActivity implements
 				pref.setSummary(summary);
 			}
 		}
-
-		// // if adapter was changed, make location empty ()
-		// if (key == Constants.PERSISTENCE_PREF_SW2_ADAPTER) {
-		// mController.getUserSettings().edit().putString(Constants.PERSISTENCE_PREF_SW2_LOCATION, "").commit();
-		// }
-		// setDefaultLocAndAdap();
 	}
 
 }

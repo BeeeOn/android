@@ -184,7 +184,7 @@ public class SetupSensorActivity extends BaseApplicationActivity {
 	
 	public void setBtnLastPage() {
 		mSkip.setVisibility(View.INVISIBLE);
-		mNext.setText("SEND PAIR");
+		mNext.setText(mActivity.getString(R.string.addsensor_send_pair));
 	}
 
 

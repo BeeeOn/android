@@ -74,7 +74,6 @@ public class MapGeofenceActivity extends BaseApplicationActivity implements OnMa
 		setProgressBarIndeterminateVisibility(true);
 		getSupportActionBar().setHomeButtonEnabled(true);
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-		//getSupportActionBar().setIcon(R.drawable.ic_launcher_null);
 
 		((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map)).getMapAsync(this);
 
@@ -83,11 +82,6 @@ public class MapGeofenceActivity extends BaseApplicationActivity implements OnMa
 	// Create the options menu
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		/*final MenuItem menuSearch = menu.add(0, 1, 1, R.string.action_search);
-		menuSearch.setIcon(R.drawable.action_search).setActionView(R.layout.action_search)
-				.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM | MenuItem.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW);
-
-		mEditSearch = (EditText) menuSearch.getActionView();*/
 
         getMenuInflater().inflate(R.menu.map_menu, menu);
 

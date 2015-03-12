@@ -141,6 +141,7 @@
     <string name="addadapter_textview_name">Name</string>
     <string name="addadapter_view_setname">Set adapter name, e.g. Home</string>
     <string name="addadapter_textview_code">QR code </string>
+    <string name="addsensor_send_pair">SEND PAIR</string>
 
     <!-- Others -->
     <string name="action_settings">Settings</string>
@@ -269,6 +270,18 @@
     <string name="tut_add_adapter_text">To add your new adapter, please click on plus.</string>
     <string name="tut_add_sensor_header">ADD SENSOR</string>
     <string name="tut_add_sensor_text">To add your new sensor, please click on plus.</string>
+    
+    <string name="tutorial_next">NEXT</string>
+    <string name="tutorial_add">ADD</string>
+
+    <string name="tutorial_open_menu">Open Menu</string>
+    <string name="tutorial_open_menu_text">For switch location tap to Icon and Menu will rise.</string>
+    <!-- Help in Add dialogs -->
+    <string name="tut_add_adapter_text_1">Please connect your adapter to the Internet</string>
+    <string name="tut_add_adapter_text_2">Please connect your adapter to the AC power</string>
+    <string name="tut_add_adapter_text_3">In the next step, please give name to your adapter and scan QR code</string>
+    <string name="tut_add_sensor_text_1">Please pull out battery stripe</string>
+    <string name="tut_add_sensor_text_2">Please shake with new sensor shortly while countdown is running</string>
 
 
     <!-- WatchDog -->
