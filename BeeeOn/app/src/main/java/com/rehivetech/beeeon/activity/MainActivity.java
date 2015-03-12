@@ -336,8 +336,16 @@ public class MainActivity extends BaseApplicationActivity {
 	public boolean redrawMainFragment() {
         // set location layout
 		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        if(mActiveMenuId == null) {
+            mListDevices = new SensorListFragment();
+            mListDevices.setIsPaused(isPaused);
+            mListDevices.setMenuID(mActiveMenuId);
+            mListDevices.setAdapterID(mActiveAdapterId);
+            mNavDrawerMenu.setActiveMenuID(mActiveMenuId);
+            mNavDrawerMenu.setAdapterID(mActiveAdapterId);
 
-        if(mActiveMenuId.equals(Constants.GUI_MENU_CONTROL)){
+            ft.replace(R.id.content_frame, mListDevices, FRG_TAG_LOC);
+        } else if(mActiveMenuId.equals(Constants.GUI_MENU_CONTROL)){
             mListDevices = new SensorListFragment();
             mListDevices.setIsPaused(isPaused);
             mListDevices.setMenuID(mActiveMenuId);
