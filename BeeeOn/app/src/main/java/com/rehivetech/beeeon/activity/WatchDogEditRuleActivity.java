@@ -3,15 +3,12 @@ package com.rehivetech.beeeon.activity;
 import android.app.ProgressDialog;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.support.v7.app.ActionBar;
 import android.support.v7.widget.SwitchCompat;
 import android.support.v7.widget.Toolbar;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.EditText;
@@ -29,9 +26,7 @@ import com.rehivetech.beeeon.adapter.WatchDogRule;
 import com.rehivetech.beeeon.adapter.device.Device;
 import com.rehivetech.beeeon.adapter.device.DeviceType;
 import com.rehivetech.beeeon.adapter.device.Facility;
-import com.rehivetech.beeeon.adapter.device.units.IlluminationUnit;
 import com.rehivetech.beeeon.adapter.device.values.HumidityValue;
-import com.rehivetech.beeeon.adapter.device.values.IlluminationValue;
 import com.rehivetech.beeeon.adapter.location.Location;
 import com.rehivetech.beeeon.arrayadapter.DeviceArrayAdapter;
 import com.rehivetech.beeeon.asynctask.ReloadFacilitiesTask;
@@ -53,6 +48,7 @@ public class WatchDogEditRuleActivity extends BaseApplicationActivity {
 
     public static final String EXTRA_ADAPTER_ID = "adapter_id";
     public static final String EXTRA_RULE_ID = "rule_id";
+    public static final String EXTRA_IS_NEW ="rule_is_new";
 
     // extras
     private String mActiveAdapterId;
@@ -106,12 +102,14 @@ public class WatchDogEditRuleActivity extends BaseApplicationActivity {
         if(bundle != null){
             mActiveAdapterId = bundle.getString(EXTRA_ADAPTER_ID);
             mActiveRuleId = bundle.getString(EXTRA_RULE_ID);
+            mIsNew = false;
         }
         else{
             bundle = savedInstanceState;
             if (bundle != null) {
                 mActiveAdapterId = bundle.getString(EXTRA_ADAPTER_ID);
                 mActiveRuleId = bundle.getString(EXTRA_RULE_ID);
+                mIsNew = bundle.getBoolean(EXTRA_IS_NEW);
             }
             else{
                 mIsNew = true;
@@ -312,6 +310,7 @@ public class WatchDogEditRuleActivity extends BaseApplicationActivity {
     public void onSaveInstanceState(Bundle savedInstanceState) {
         savedInstanceState.putString(EXTRA_ADAPTER_ID, mActiveAdapterId);
         savedInstanceState.putString(EXTRA_RULE_ID, mActiveRuleId);
+        savedInstanceState.putBoolean(EXTRA_IS_NEW, mIsNew);
 
         // Always call the superclass so it can save the view hierarchy state
         super.onSaveInstanceState(savedInstanceState);

@@ -109,13 +109,13 @@
 
                 <TextView
                     android:id="@+id/watchdog_edit_if_icon"
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
-                    android:gravity="center"
+                    android:layout_width="35dp"
+                    android:layout_height="35dp"
                     android:textColor="@color/white"
                     android:textStyle="bold"
                     android:textSize="12dp"
-                    android:background="@drawable/oval_darkgray"
+                    android:gravity="center"
+                    android:background="@drawable/oval_pink"
                     android:text="@string/watchdog_if"
                     />
 
@@ -123,8 +123,8 @@
                     android:id="@+id/watchdog_edit_sensor_spinner"
                     android:layout_width="wrap_content"
                     android:layout_height="40dp"
-                    android:layout_marginLeft="16dp"
-                    android:layout_marginStart="16dp"
+                    android:layout_marginLeft="11dp"
+                    android:layout_marginStart="11dp"
                     android:layout_marginBottom="8dp"
                     android:layout_toRightOf="@+id/watchdog_edit_if_icon"
                     android:layout_toEndOf="@id/watchdog_edit_if_icon"
@@ -152,12 +152,13 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:src="@drawable/ic_action_previous_item"
-                    fab:fab_colorNormal="@color/beeeon_secundary_pink"
+                    fab:fab_colorNormal="@color/darkgray"
+                    fab:fab_type="mini"
                     fab:fab_colorPressed="@color/black"
                     fab:fab_colorRipple="@color/beeeon_secundary_pink"
                     android:layout_marginLeft="44dp"
                     android:layout_marginStart="44dp"
-                    android:layout_marginTop="2dp"
+                    android:layout_below="@+id/watchdog_edit_treshold_text"
                     />
 
                 <TextView
@@ -224,22 +225,22 @@
 
                 <TextView
                     android:id="@+id/watchdog_edit_then_icon"
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
+                    android:layout_width="35dp"
+                    android:layout_height="35dp"
                     android:textColor="@color/white"
                     android:textStyle="bold"
-                    android:textSize="10dp"
+                    android:textSize="12dp"
                     android:gravity="center"
                     android:text="Then"
-                    android:background="@drawable/oval_darkgray"
+                    android:background="@drawable/oval_pink"
                     />
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:layout_marginLeft="16dp"
-                    android:layout_marginStart="16dp"
+                    android:layout_marginLeft="11dp"
+                    android:layout_marginStart="11dp"
                     android:gravity="center_vertical"
                     android:layout_toRightOf="@+id/watchdog_edit_then_icon"
                     android:layout_toEndOf="@id/watchdog_edit_then_icon"
