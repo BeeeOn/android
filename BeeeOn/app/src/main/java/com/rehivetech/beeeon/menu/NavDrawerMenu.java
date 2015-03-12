@@ -411,58 +411,6 @@ public class NavDrawerMenu {
             mMenuAdapter.addHeader(new GroupMenuItem(mActivity.getResources().getString(R.string.menu_applications)));
             mMenuAdapter.addItem(new LocationMenuItem(mActivity.getString(R.string.menu_watchdog), R.drawable.ic_app_watchdog, false, Constants.GUI_MENU_WATCHDOG, false));
 
-
-
-            /*
-
-
-			// Adding location header
-			mMenuAdapter.addHeader(new GroupImageMenuItem(mActivity.getResources().getString(R.string.location), R.drawable.add_custom_view, new OnClickListener() {
-
-				@Override
-				public void onClick(View v) {
-					Toast.makeText(mActivity, "Not implemented yet", Toast.LENGTH_SHORT).show();
-				}
-			}));
-
-			List<Location> locations = mController.getLocations(activeAdapter != null ? activeAdapter.getId() : "");
-			if (locations.size() > 0) {
-				boolean boolActLoc = false;
-				if(locations.size() > 1) {
-					if(mActiveLocationId != null ) {
-						boolActLoc = (mActiveLocationId.equals(Constants.GUI_MENU_ALL_SENSOR_ID)) ? true : false; 
-					}
-					// ALL Sensor from adapter
-					mMenuAdapter.addItem(new LocationMenuItem("All sensors", R.drawable.loc_all, false, Constants.GUI_MENU_ALL_SENSOR_ID,boolActLoc ));
-				}
-				// Adding location
-				for (int i = 0; i < locations.size(); i++) {
-					Location actLoc = locations.get(i);
-					boolActLoc = false;
-					if(mActiveLocationId != null ) {
-						boolActLoc = (mActiveLocationId.equals(actLoc.getId())) ? true : false; 
-					}
-					mMenuAdapter.addItem(new LocationMenuItem(actLoc.getName(), actLoc.getIconResource(), false, actLoc.getId(),boolActLoc ));
-				}
-			} else {
-				mMenuAdapter.addItem(new EmptyMenuItem(mActivity.getResources().getString(R.string.no_location)));
-			}
-
-			mMenuAdapter.addItem(new SeparatorMenuItem());
-			// Adding custom view header
-			mMenuAdapter.addHeader(new GroupImageMenuItem(mActivity.getResources().getString(R.string.custom_view), R.drawable.add_custom_view, new OnClickListener() {
-
-				@Override
-				public void onClick(View v) {
-					// TODO doplnit spusteni dialogu pro vytvoreni custom view
-					Toast.makeText(mActivity, "Not implemented yet", Toast.LENGTH_SHORT).show();
-				}
-			}));
-			// Adding custom views
-			// TODO pridat custom views
-			// mMenuAdapter.addItem(new EmptyMenuItem(mActivity.getResources().getString(R.string.no_custom_view)));
-			mMenuAdapter.addItem(new CustomViewMenuItem("Graph view", R.drawable.loc_living_room, false, "Custom001", (mActiveCustomViewId != null) ? true : false));
-			*/
 		} else {
 			mMenuAdapter.addItem(new EmptyMenuItem(mActivity.getResources().getString(R.string.no_adapters)));
 			
@@ -475,7 +423,6 @@ public class NavDrawerMenu {
 		mMenuAdapter.addItem(new SettingMenuItem(mActivity.getResources().getString(R.string.action_settings), R.drawable.settings, com.rehivetech.beeeon.activity.menuItem.MenuItem.ID_SETTINGS));
 		mMenuAdapter.addItem(new SettingMenuItem(mActivity.getResources().getString(R.string.action_about), R.drawable.info, com.rehivetech.beeeon.activity.menuItem.MenuItem.ID_ABOUT));
         mMenuAdapter.addItem(new SettingMenuItem(mActivity.getString(R.string.action_logout), R.drawable.info,MenuItem.ID_LOGOUT));
-		// menuAdapter.log();
 		return mMenuAdapter;
 	}
 
@@ -583,40 +530,6 @@ public class NavDrawerMenu {
 		public void onDestroyActionMode(ActionMode mode) {
 			mMode = null;
 			mSelectedMenuItem.setNotSelected();
-		}
-
-	}
-
-	class ActionModeLocations implements Callback {
-
-		@Override
-		public boolean onCreateActionMode(ActionMode mode, Menu menu) {
-			//menu.add("Edit").setShowAsAction(MenuItemImpl.SHOW_AS_ACTION_ALWAYS);
-			    // menu.add("Unregist").setShowAsAction(com.actionbarsherlock.view.MenuItem.SHOW_AS_ACTION_IF_ROOM);
-			//menu.add("Cancel").setIcon(R.drawable.beeeon_ic_action_cancel).setTitle("Cancel").setShowAsAction(MenuItemImpl.SHOW_AS_ACTION_ALWAYS);
-			return true;
-		}
-
-		@Override
-		public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
-			// TODO Auto-generated method stub
-			return false;
-		}
-
-        @Override
-        public boolean onActionItemClicked(ActionMode mode, android.view.MenuItem menuItem) {
-            /*if (item.getTitle().equals("Edit")) {
-				new ToastMessageThread(mActivity, R.string.toast_not_implemented).start();
-			}*/
-            mode.finish();
-            return true;
-        }
-
-
-        @Override
-		public void onDestroyActionMode(ActionMode mode) {
-			mMode = null;
-
 		}
 
 	}

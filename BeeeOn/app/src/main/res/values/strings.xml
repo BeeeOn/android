@@ -129,7 +129,7 @@
     <string name="no_custom_view">No custom views</string>
     <string name="no_adapters">You have no adapters</string>
     <string name="menu_managment">Managment</string>
-    <string name="menu_control">Control</string>
+    <string name="menu_control">Overview</string>
     <string name="menu_dashboard">Dashboard</string>
     <string name="menu_applications">Applications</string>
     <string name="menu_watchdog">Watchdog</string>
@@ -261,6 +261,14 @@
     <string name="ada_menu_edit">Edit adapter name</string>
     <string name="ada_menu_users">Users of adapter</string>
     <string name="ada_menu_del">Delete adapter</string>
+    <string name="sensor_menu_del">Remove sensor</string>
+
+
+    <!-- Tutorial -->
+    <string name="tut_add_adapter_header">ADD ADAPTER</string>
+    <string name="tut_add_adapter_text">To add your new adapter, please click on plus.</string>
+    <string name="tut_add_sensor_header">ADD SENSOR</string>
+    <string name="tut_add_sensor_text">To add your new sensor, please click on plus.</string>
 
 
     <!-- WatchDog -->

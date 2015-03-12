@@ -39,6 +39,7 @@ import com.rehivetech.beeeon.activity.SensorDetailActivity;
 import com.rehivetech.beeeon.adapter.Adapter;
 import com.rehivetech.beeeon.adapter.device.Device;
 import com.rehivetech.beeeon.adapter.device.Facility;
+import com.rehivetech.beeeon.adapter.location.Location;
 import com.rehivetech.beeeon.arrayadapter.SensorListAdapter;
 import com.rehivetech.beeeon.asynctask.CallbackTask.CallbackTaskListener;
 import com.rehivetech.beeeon.asynctask.ReloadFacilitiesTask;
@@ -76,8 +77,10 @@ public class SensorListFragment extends Fragment {
 	private boolean mFirstUseAddSensor = true;
 	private ShowcaseView mSV;
 	private RelativeLayout.LayoutParams lps;
+    private Device mSelectedItem;
+    private int mSelectedItemPos;
 
-	public SensorListFragment() {
+    public SensorListFragment() {
 	}
 
 	@Override
@@ -200,11 +203,7 @@ public class SensorListFragment extends Fragment {
 			return false;
 		}
 		List<Facility> facilities;
-		
-
-			// All sensor from adapter
-			facilities = mController.getFacilitiesByAdapter(mActiveAdapterId);
-
+        List<Location> locations;
 
 		Log.d(TAG, "LifeCycle: redraw devices list start");
 
@@ -217,9 +216,15 @@ public class SensorListFragment extends Fragment {
         fab.attachToListView(mSensorList);
 		fab.show();
 
-		List<Device> devices = new ArrayList<Device>();
-		for (Facility facility : facilities) {
-			devices.addAll(facility.getDevices());
+        // All locations on adapter
+        locations = mController.getLocations(mActiveAdapterId);
+
+        List<Device> devices = new ArrayList<Device>();
+		for (Location loc : locations) {
+            // all facilities from actual location
+            facilities = mController.getFacilitiesByLocation(mActiveAdapterId,loc.getId());
+            for(Facility fac : facilities)
+			devices.addAll(fac.getDevices());
 		}
 
 		if (mSensorList == null) {
@@ -310,7 +315,7 @@ public class SensorListFragment extends Fragment {
         }
 
 		// Update list adapter
-		mSensorAdapter = new SensorListAdapter(mActivity, devices);
+		mSensorAdapter = new SensorListAdapter(mActivity, devices,true);
 		mSensorList.setAdapter(mSensorAdapter);
 
 		if (haveDevices) {
@@ -318,9 +323,7 @@ public class SensorListFragment extends Fragment {
 			mSensorList.setOnItemClickListener(new ListView.OnItemClickListener() {
 				@Override
 				public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
-
-					Device device = mSensorAdapter.getDevice(position);
+                    Device device = mSensorAdapter.getDevice(position);
 
 					Bundle bundle = new Bundle();
 					bundle.putString(SensorDetailActivity.EXTRA_ADAPTER_ID, device.getFacility().getAdapterId());
@@ -337,6 +340,9 @@ public class SensorListFragment extends Fragment {
 						@Override
 						public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
 							mMode =  ((ActionBarActivity) getActivity()).startSupportActionMode(new ActionModeEditSensors());
+                            mSelectedItem = mSensorAdapter.getDevice(position);
+                            mSelectedItemPos = position;
+                            setSensorSelected();
 							return true;
 						}
 					});
@@ -349,7 +355,15 @@ public class SensorListFragment extends Fragment {
 		return true;
 	}
 
-	private void showTutorialAddSensor() {
+    private void setSensorSelected() {
+        mSensorList.getChildAt(mSelectedItemPos).findViewById(R.id.layoutofsensor).setBackgroundColor(mActivity.getResources().getColor(R.color.light_gray));
+    }
+
+    private void setSensorUnselected() {
+        mSensorList.getChildAt(mSelectedItemPos).findViewById(R.id.layoutofsensor).setBackgroundColor(mActivity.getResources().getColor(R.color.white));
+    }
+
+    private void showTutorialAddSensor() {
 		lps = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
 		int marginPixel = 15;
 		lps.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
@@ -383,8 +397,8 @@ public class SensorListFragment extends Fragment {
 		
 		mSV = new ShowcaseView.Builder(mActivity, true)
 		.setTarget(target)
-		.setContentTitle("ADD SENSOR")
-		.setContentText("To add your new sensor, please click on plus.")
+		.setContentTitle(mActivity.getString(R.string.tut_add_sensor_header))
+		.setContentText(mActivity.getString(R.string.tut_add_sensor_text))
 		.setStyle(R.style.CustomShowcaseTheme)
 		.setShowcaseEventListener(listener)
 		.build();
@@ -433,8 +447,8 @@ public class SensorListFragment extends Fragment {
 		
 		mSV = new ShowcaseView.Builder(mActivity, true)
 		.setTarget(target)
-		.setContentTitle("ADD ADAPTER")
-		.setContentText("To add your new adapter, please click on plus.")
+		.setContentTitle(mActivity.getString(R.string.tut_add_adapter_header))
+		.setContentText(mActivity.getString(R.string.tut_add_adapter_text))
 		.setStyle(R.style.CustomShowcaseTheme)
 		.setShowcaseEventListener(listener)
 		.build();
@@ -488,12 +502,8 @@ public class SensorListFragment extends Fragment {
 
 		@Override
 		public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
-			if (item.getTitle().equals(getResources().getString(R.string.action_hide_sensor))) {
-				// doHideSensorTask(mDeviceHide);
-			} else if (item.getTitle().equals(getResources().getString(R.string.action_hide_facility))) {
-				new ToastMessageThread(mActivity, R.string.toast_not_implemented).start();
-			} else if (item.getTitle().equals(getResources().getString(R.string.action_unregist_facility))) {
-				new ToastMessageThread(mActivity, R.string.toast_not_implemented).start();
+			if (item.getItemId() == R.id.sensor_menu_del) {
+				// doRemoveSensorTask(mFacilityRemove);
 			}
 
 			mode.finish();
@@ -502,6 +512,9 @@ public class SensorListFragment extends Fragment {
 
 		@Override
 		public void onDestroyActionMode(ActionMode mode) {
+            setSensorUnselected();
+            mSelectedItem = null;
+            mSelectedItemPos = 0;
 			mMode = null;
 
 		}

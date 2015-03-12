@@ -17,6 +17,7 @@ import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.adapter.Adapter;
 import com.rehivetech.beeeon.adapter.device.Device;
 import com.rehivetech.beeeon.adapter.device.Facility;
+import com.rehivetech.beeeon.adapter.location.Location;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.util.TimeHelper;
 import com.rehivetech.beeeon.util.UnitsHelper;
@@ -31,16 +32,17 @@ public class SensorListAdapter extends BaseAdapter {
 	// Declare Variables
 	private Context mContext;
 	private LayoutInflater inflater;
-	private boolean mShowAdd;
+	private boolean mShowHeader;
 	private OnClickListener mListener;
 	private List<Device> mDevices;
 
 	private final Controller mController;
 
-	public SensorListAdapter(Context context, List<Device> devices) {
+	public SensorListAdapter(Context context, List<Device> devices, boolean header) {
 		mContext = context;
 		mController = Controller.getInstance(context.getApplicationContext());
 		mDevices = devices;
+        mShowHeader = header;
 	}
 
 	@Override
@@ -76,6 +78,9 @@ public class SensorListAdapter extends BaseAdapter {
 		TextView txtValue = (TextView) itemView.findViewById(R.id.valueofsensor);
 		TextView txtUnit = (TextView) itemView.findViewById(R.id.unitofsensor);
 		TextView txtTime = (TextView) itemView.findViewById(R.id.timeofsensor);
+
+        // Separators
+        View sepMidle = itemView.findViewById(R.id.sensor_sep_midle);
 
 		// Locate the ImageView in drawer_list_item.xml
 		ImageView imgIcon = (ImageView) itemView.findViewById(R.id.iconofsensor);
@@ -117,36 +122,37 @@ public class SensorListAdapter extends BaseAdapter {
 			return itemView;
 		}
 
+
+
 		boolean isFirst = facDevices.get(0).getId().equals(device.getId());
 		boolean isLast = facDevices.get(facDevices.size() - 1).getId().equals(device.getId());
 		boolean isSingle = isFirst && isLast;
+        boolean isFirstInLoc = mController.getFacilitiesByLocation(adapter.getId(),facility.getLocationId()).get(0).equals(facility);
 
-		float scale = parent.getResources().getDisplayMetrics().density;
+        // IF is this facility first facility in location
+        if(isFirstInLoc && isFirst) {
+            itemView.findViewById(R.id.sensor_header).setVisibility(View.VISIBLE);
+            Location loc = mController.getLocation(adapter.getId(), facility.getLocationId());
+            if(loc == null) {
+                // This shouldn't happen
+                return itemView;
+            }
+            ((TextView)itemView.findViewById(R.id.sensor_header_text)).setText(loc.getName());
+        }
 
-		int left, right, top, bottom, backgroundRes;
-		left = right = (int) scale * MARGIN_LEFT_RIGHT;
-		bottom = (int) scale * MARGIN_BOTTOM;
-
-		if (isSingle) {
+		if (isSingle && !isFirstInLoc) {
 			// SOLO device from FACILITY
-			backgroundRes = R.drawable.beeeon_item_solo_bg;
-			top = (int) scale * MARGIN_TOP;
-		} else if (isFirst) {
+		} else if(isSingle && isFirstInLoc) {
+            // SOLO device from FACILITY
+        } else if (isFirst) {
 			// FIRST device from FACILITY
-			backgroundRes = R.drawable.beeeon_item_first_bg;
-			top = (int) scale * MARGIN_TOP;
+            sepMidle.setVisibility(View.GONE);
 		} else if (isLast) {
 			// LAST device from FACILITY
-			backgroundRes = R.drawable.beeeon_item_last_bg;
-			top = (int) scale * MARGIN_TOP_M_L;
 		} else {
 			// MIDLE device from FACILITY
-			backgroundRes = R.drawable.beeeon_item_midle_bg;
-			top = (int) scale * MARGIN_TOP_M_L;
+            sepMidle.setVisibility(View.GONE);
 		}
-
-		layout.setBackgroundResource(backgroundRes);
-		((LayoutParams) layout.getLayoutParams()).setMargins(left, top, right, bottom);
 
 		return itemView;
 	}
