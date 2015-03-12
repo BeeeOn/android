@@ -10,7 +10,7 @@ import com.rehivetech.beeeon.adapter.device.values.BaseValue;
  * @brief Abstract class for all devices
  * @author Robyer
  */
-public class Device implements IIdentifier {
+public class Device implements IIdentifier, Comparable<Device> {
 	public static final String ID_SEPARATOR = "---";
 
 	protected Facility mFacility;
@@ -28,7 +28,12 @@ public class Device implements IIdentifier {
 		mValue = value;
 	}
 
-	/**
+    @Override
+    public int compareTo(Device another) {
+        return getName().compareTo(another.getName());
+    }
+
+    /**
 	 * Represents settings of device which could be saved to server
 	 */
 	public enum SaveDevice {

@@ -107,6 +107,8 @@
     <string name="toast_no_uninitialized_devices">There are no uninitialized devices.</string>
     <string name="toast_success_save_data">Data saved successfully</string>
     <string name="toast_fail_save_data">Failed saving data</string>
+    <string name="toast_wrong_or_no_watchdog_rule">Wrong or no WatchDog rule selected</string>
+
 
     <!-- Progress -->
     <string name="progress_signing">Signing to server&#8230;</string>
@@ -160,6 +162,7 @@
     <string name="loading_data">Loading data&#8230;</string>
     <string name="no_sensor_cap">NO SENSORS</string>
     <string name="no_adapter_cap">NO ADAPTER</string>
+    <string name="no_rules_cap">NO RULES</string>
 
     <!-- Arrays -->
     <string-array name="registration_spinner">
@@ -258,5 +261,20 @@
     <string name="ada_menu_edit">Edit adapter name</string>
     <string name="ada_menu_users">Users of adapter</string>
     <string name="ada_menu_del">Delete adapter</string>
+
+
+    <!-- WatchDog -->
+    <string name="action_watchdog">WatchDog</string>
+    <string name="watchdog_rule">WatchDog Rule</string>
+    <string name="sensor_text">Sensor</string>
+    <string name="treshold_value">Treshold value</string>
+    <string name="watchdog_actor_change_state">Change actor\'s state</string>
+    <string name="watchdog_notification_send">Send notification</string>
+    <string name="watchdog_activate_rule">Set this rule active</string>
+    <string name="watchdog_rule_name">Rule name</string>
+    <string name="watchdog_if">If</string>
+    <string name="notification_text">Notification text</string>
+    
+    <string name="rule_menu_del">Delete</string>
 
 </resources>

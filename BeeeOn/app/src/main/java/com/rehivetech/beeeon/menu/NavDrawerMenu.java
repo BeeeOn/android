@@ -26,11 +26,11 @@ import com.rehivetech.beeeon.Constants;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.activity.AdapterUsersActivity;
 import com.rehivetech.beeeon.activity.AddAdapterActivity;
-import com.rehivetech.beeeon.activity.LoginActivity;
 import com.rehivetech.beeeon.activity.MainActivity;
 import com.rehivetech.beeeon.activity.SettingsMainActivity;
 import com.rehivetech.beeeon.activity.dialog.InfoDialogFragment;
 import com.rehivetech.beeeon.activity.menuItem.AdapterMenuItem;
+import com.rehivetech.beeeon.activity.menuItem.ApplicationMenuItem;
 import com.rehivetech.beeeon.activity.menuItem.EmptyMenuItem;
 import com.rehivetech.beeeon.activity.menuItem.GroupImageMenuItem;
 import com.rehivetech.beeeon.activity.menuItem.GroupMenuItem;
@@ -153,6 +153,9 @@ public class NavDrawerMenu {
                         redrawMenu();
                     }
                     break;
+
+
+
 				case SETTING:
 					if (mSelectedMenuItem.getId().equals(com.rehivetech.beeeon.activity.menuItem.MenuItem.ID_ABOUT)) {
 						InfoDialogFragment dialog = new InfoDialogFragment();
@@ -400,13 +403,13 @@ public class NavDrawerMenu {
 
             // MANAGMENT
             mMenuAdapter.addHeader(new GroupMenuItem(mActivity.getResources().getString(R.string.menu_managment)));
-            mMenuAdapter.addItem(new LocationMenuItem(mActivity.getString(R.string.menu_control),R.drawable.loc_all,false,Constants.GUI_MENU_CONTROL,false));
+            mMenuAdapter.addItem(new LocationMenuItem(mActivity.getString(R.string.menu_control), R.drawable.loc_all, false, Constants.GUI_MENU_CONTROL, false));
             mMenuAdapter.addItem(new LocationMenuItem(mActivity.getString(R.string.menu_dashboard),R.drawable.loc_all,false,Constants.GUI_MENU_DASHBOARD,false));
 
             mMenuAdapter.addItem( new SeparatorMenuItem());
             // APPLICATIONS
             mMenuAdapter.addHeader(new GroupMenuItem(mActivity.getResources().getString(R.string.menu_applications)));
-            mMenuAdapter.addItem(new LocationMenuItem(mActivity.getString(R.string.menu_watchdog),R.drawable.loc_all,false,Constants.GUI_MENU_WATCHDOG,false));
+            mMenuAdapter.addItem(new LocationMenuItem(mActivity.getString(R.string.menu_watchdog), R.drawable.ic_app_watchdog, false, Constants.GUI_MENU_WATCHDOG, false));
 
 
 

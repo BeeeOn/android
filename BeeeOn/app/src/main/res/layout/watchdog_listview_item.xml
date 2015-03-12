@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="88dp"
+    android:paddingTop="16dp"
+    android:background="@color/white"
+>
+
+    <ImageView
+        android:id="@+id/watchdogItemIcon"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:src="@drawable/dev_temperature"
+        android:scaleType="fitCenter"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginRight="16dp"
+        android:layout_marginLeft="16dp"
+        />
+
+    <TextView
+        android:id="@+id/watchdogItemRuleName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Název pravidla"
+        android:textSize="16sp"
+        android:gravity="top"
+        android:textColor="@color/beeeon_text_color"
+        android:layout_alignParentTop="true"
+        android:layout_alignLeft="@+id/watchdogItemOperator"
+        android:layout_alignStart="@+id/watchdogItemOperator"
+        />
+
+    <TextView
+        android:id="@+id/watchdogItemSensorName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Název senzoru"
+        android:textSize="14sp"
+        android:textColor="@color/beeeon_text_hint"
+        android:layout_below="@+id/watchdogItemRuleName"
+        android:layout_alignLeft="@+id/watchdogItemOperator"
+        android:layout_alignStart="@+id/watchdogItemOperator"
+        />
+
+    <ImageView
+        android:id="@+id/watchdogItemOperator"
+        android:layout_width="22dp"
+        android:layout_height="22dp"
+        android:scaleType="fitCenter"
+        android:src="@drawable/ic_action_previous_item"
+        android:background="@drawable/oval_cyan"
+        android:padding="2dp"
+        android:layout_below="@+id/watchdogItemSensorName"
+        android:layout_toRightOf="@+id/watchdogItemIcon"
+        android:layout_toEndOf="@+id/watchdogItemIcon"
+        />
+
+    <TextView
+        android:id="@+id/watchdogItemTreshold"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/beeeon_secundary_pink"
+        android:textStyle="bold"
+        android:text="30°C"
+        android:textSize="14sp"
+        android:gravity="center_vertical"
+        android:layout_marginLeft="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_below="@+id/watchdogItemSensorName"
+        android:layout_toRightOf="@+id/watchdogItemOperator"
+        android:layout_toEndOf="@+id/watchdogItemOperator"
+        android:layout_alignBottom="@+id/watchdogItemOperator"
+        />
+
+    <ImageView
+        android:id="@+id/watchdogItemAction"
+        android:layout_width="24dp"
+        android:layout_height="wrap_content"
+        android:scaleType="fitCenter"
+        android:src="@drawable/ic_notification"
+        android:layout_toLeftOf="@+id/watchdogItemSwitch"
+        android:layout_toStartOf="@+id/watchdogItemSwitch"
+        android:layout_centerVertical="true"
+        />
+
+    <android.support.v7.widget.SwitchCompat
+        android:id="@+id/watchdogItemSwitch"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:padding="8dp"
+        android:focusable="false"
+        android:focusableInTouchMode="false"
+    />
+
+    <!-- separator z navdrawer-->
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:src="@color/beeeon_separator"
+        android:layout_alignParentBottom="true"
+        />
+
+
+</RelativeLayout>
