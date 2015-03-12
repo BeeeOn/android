@@ -11,13 +11,4 @@
         android:icon="@drawable/ic_action_discard"
         android:title="@string/rule_menu_del"
         />
-
-    <item
-        android:id="@+id/action_close"
-        android:orderInCategory="250"
-        app:showAsAction="always"
-        android:icon="@drawable/beeeon_ic_action_cancel"
-        android:title="@string/action_close"
-        />
-
 </menu>
