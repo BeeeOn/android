@@ -210,6 +210,9 @@ public class DemoNetwork implements INetwork {
 			Random rand = new Random();
 
 			for (Facility facility : holder.facilities.values()) {
+				if (!facility.isInitialized())
+					continue;
+				
 				if (facility.isExpired()) {
 					// Set new random values
 					facility.setBattery(rand.nextInt(101));
@@ -277,7 +280,7 @@ public class DemoNetwork implements INetwork {
 
 		for (Facility facility : facilities) {
 			Facility newFacility = getFacility(facility);
-			if (newFacility != null) {
+			if (newFacility != null && newFacility.isInitialized()) {
 				result.add(newFacility);
 			}
 		}
