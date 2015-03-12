@@ -7,6 +7,9 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.widget.SwitchCompat;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
@@ -26,7 +29,9 @@ import com.rehivetech.beeeon.adapter.WatchDogRule;
 import com.rehivetech.beeeon.adapter.device.Device;
 import com.rehivetech.beeeon.adapter.device.DeviceType;
 import com.rehivetech.beeeon.adapter.device.Facility;
+import com.rehivetech.beeeon.adapter.device.units.IlluminationUnit;
 import com.rehivetech.beeeon.adapter.device.values.HumidityValue;
+import com.rehivetech.beeeon.adapter.device.values.IlluminationValue;
 import com.rehivetech.beeeon.adapter.location.Location;
 import com.rehivetech.beeeon.arrayadapter.DeviceArrayAdapter;
 import com.rehivetech.beeeon.asynctask.ReloadFacilitiesTask;
@@ -141,12 +146,23 @@ public class WatchDogEditRuleActivity extends BaseApplicationActivity {
             dev.setName("Vlhkostní sensor");
             mRule = new WatchDogRule("2", mActiveAdapterId, "Hlídání smradu", dev, WatchDogRule.OperatorType.GREATER, WatchDogRule.ActionType.NOTIFICATION, val, false);
         }
+        /*
         else{
-            mRule = new WatchDogRule();
+            IlluminationValue val = new IlluminationValue();
+            val.setValue("50");
+            Device dev = new Device(DeviceType.TYPE_ILLUMINATION, val);
+            dev.setName("Vlhkostní sensor");
+
+            mRule = new WatchDogRule("5", mActiveAdapterId, "", dev, WatchDogRule.OperatorType.GREATER, WatchDogRule.ActionType.NOTIFICATION, val, true);
+        }
+        //*/
+
+        initLayout();
+
+        if(mRule != null){
+            setValues();
         }
 
-        if(mRule != null)
-            initLayout(mRule);
     }
 
     private List<Device> getDevicesArray(){
@@ -163,7 +179,38 @@ public class WatchDogEditRuleActivity extends BaseApplicationActivity {
         return devices;
     }
 
-    private void initLayout(WatchDogRule rule) {
+    private void setValues(){
+        // set values
+        mRuleName.setText(mRule.getName());
+        mRuleEnabled.setChecked(mRule.getEnabled());
+        setGreatLess(mRule.getOperator(), mGreatLessButton);
+
+        if(mUnitsHelper != null){
+            mRuleTreshold.setText(mUnitsHelper.getStringValue(mRule.getTreshold()));
+            mRuleTresholdUnit.setText(mUnitsHelper.getStringUnit(mRule.getTreshold()));
+        }
+        else {
+            mRuleTreshold.setText(String.valueOf(mRule.getTreshold().getDoubleValue()));
+            mRuleTresholdUnit.setText("?");
+        }
+    }
+
+    private List<Location> getLocationsArray() {
+        // Get locations from adapter
+        List<Location> locations = new ArrayList<Location>();
+
+        Adapter adapter = mController.getActiveAdapter();
+        if (adapter != null) {
+            locations = mController.getLocations(adapter.getId());
+        }
+
+        // Sort them
+        Collections.sort(locations);
+
+        return locations;
+    }
+
+    private void initLayout() {
         // init gui elements
         mRuleName = (EditText) findViewById(R.id.watchdog_edit_name);
         mRuleEnabled = (SwitchCompat) findViewById(R.id.watchdog_edit_switch);
@@ -172,20 +219,6 @@ public class WatchDogEditRuleActivity extends BaseApplicationActivity {
         mRuleTreshold = (EditText) findViewById(R.id.watchdog_edit_treshold);
         mRuleTresholdUnit = (TextView) findViewById(R.id.watchdog_edit_treshold_unit);
         mActionType = (RadioGroup) findViewById(R.id.watchdog_edit_action_radiogroup);
-
-        // set values
-        mRuleName.setText(rule.getName());
-        mRuleEnabled.setChecked(rule.getEnabled());
-        setGreatLess(rule.getOperator(), mGreatLessButton);
-
-        if(mUnitsHelper != null){
-            mRuleTreshold.setText(mUnitsHelper.getStringValue(rule.getTreshold()));
-            mRuleTresholdUnit.setText(mUnitsHelper.getStringUnit(rule.getTreshold()));
-        }
-        else {
-            mRuleTreshold.setText(String.valueOf(rule.getTreshold().getDoubleValue()));
-            mRuleTresholdUnit.setText("?");
-        }
 
         // ----- prepare list of available devices
         final DeviceArrayAdapter dataAdapter = new DeviceArrayAdapter(this, R.layout.custom_spinner2_item, getDevicesArray(), getLocationsArray());
@@ -245,21 +278,6 @@ public class WatchDogEditRuleActivity extends BaseApplicationActivity {
         });
     }
 
-    private List<Location> getLocationsArray() {
-        // Get locations from adapter
-        List<Location> locations = new ArrayList<Location>();
-
-        Adapter adapter = mController.getActiveAdapter();
-        if (adapter != null) {
-            locations = mController.getLocations(adapter.getId());
-        }
-
-        // Sort them
-        Collections.sort(locations);
-
-        return locations;
-    }
-
     /*
     private WatchDogRule.OperatorType changeOperator(WatchDogRule.OperatorType op){
         return WatchDogRule.OperatorType.values()[(WatchDogRule.OperatorType.ordinal()+1) % WatchDogRule.OperatorType.values().length];
@@ -300,33 +318,35 @@ public class WatchDogEditRuleActivity extends BaseApplicationActivity {
     }
 
     /**
-     * Sets actionbar as two buttons layout -> Done, Cancel
+     * Sets actionbar with X instead of <- button
      */
     private void setActionBarLayout(){
-        // set actionMode with done and cancel button
-        final LayoutInflater inflater = (LayoutInflater) getSupportActionBar().getThemedContext().getSystemService(LAYOUT_INFLATER_SERVICE);
-        final View customActionBarView = inflater.inflate(R.layout.actionbar_add_activity, null);
-        customActionBarView.findViewById(R.id.actionbar_done).setOnClickListener(
-                new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        // Done
-
-                    }
-                });
-        customActionBarView.findViewById(R.id.actionbar_cancel).setOnClickListener(
-                new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        // "Cancel"
-                        finish();
-                    }
-                });
-
-        // Show the custom action bar view and hide the normal Home icon and title.
-        final ActionBar actionBar = getSupportActionBar();
-        actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM, ActionBar.DISPLAY_SHOW_CUSTOM);
-        actionBar.setCustomView(customActionBarView, new ActionBar.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeButtonEnabled(true);
+        getSupportActionBar().setTitle(""); // hide title
+        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_action_cancel);
     }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.watchdog_edit_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                break;
+            case R.id.wat_menu_save:
+                finish();
+                break;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
 }
 
