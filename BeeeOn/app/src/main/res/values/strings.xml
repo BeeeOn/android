@@ -9,8 +9,8 @@
     <!-- Titles -->
     <string name="title_activity_location_screen">BeeeOn</string>
     <string name="title_activity_notification">Notification</string>
-    <string name="title_activity_add_sensor">Add Sensor</string>
-    <string name="title_activity_sensor_detail">Sensor Detail</string>
+    <string name="title_activity_add_sensor">Add Device</string>
+    <string name="title_activity_sensor_detail">Device Detail</string>
     <string name="title_activity_add_adapter">Add Adapter</string>
     <string name="title_activity_registration">Registration</string>
     <string name="title_activity_login_facebook">Facebook</string>
@@ -22,7 +22,7 @@
     <string name="title_activity_map_geofence">Geofence areas</string>
     <string name="title_activity_adapter_users">Users of adapter</string>
     <string name="title_activity_add_adapter_user">Add new user</string>
-    <string name="title_activity_setup_sensor">Setup sensor</string>
+    <string name="title_activity_setup_sensor">Setup device</string>
 
     <!-- Buttons -->
     <string name="login_login">Login</string>
@@ -32,11 +32,11 @@
     <string name="alert_positive">OK</string>
 
     <!-- New sensor dialog -->
-    <string name="notification_title">New sensors</string>
+    <string name="notification_title">New device</string>
 
     <plurals name="notification_new_sensors">
-        <item quantity="one">One uninitialized sensor found at your home.</item>
-        <item quantity="other">%d uninitialized sensors found at your home.</item>
+        <item quantity="one">One uninitialized device found at your home.</item>
+        <item quantity="other">%d uninitialized device found at your home.</item>
     </plurals>
 
     <string name="notification_ingore">Ignore</string>
@@ -46,16 +46,16 @@
     <!-- Labels -->
     <string name="login_app_name">BeeeOn</string>
     <string name="login_or_use">or use</string>
-    <string name="addsensor_add_sensor">Add sensor</string>
-    <string name="addsensor_setup_sensor">Setup facility</string>
+    <string name="addsensor_add_sensor">Add device</string>
+    <string name="addsensor_setup_sensor">Setup device</string>
     <string name="addsensor_or">or</string>
     <string name="sensordetail_last_value">Last value:\u0020</string>
     <string name="sensordetail_refresh_time">Refresh inteval: </string>
     <string name="sensordetail_battery_state">Battery state</string>
     <string name="update_needed">Please update application</string>
-    <string name="addsensor_type">Type of sensor:</string>
-    <string name="setup_sensor_info_text">Please, setup your new facility which was activated at </string>
-    <string name="setup_sensor_header_names">Sensors names</string>
+    <string name="addsensor_type">Type of device:</string>
+    <string name="setup_sensor_info_text">Please, setup your new device which was activated at </string>
+    <string name="setup_sensor_header_names">Sensor names</string>
     <string name="setup_sensor_set_name">Set name of sensor</string>
     <string name="setup_sensor_header_location">Location</string>
     <string name="addadapter_add_adapter">Add adapter</string>
@@ -76,12 +76,12 @@
     <string name="login_user_name_hint">Login/email</string>
     <string name="addsensor_sensor_name_hint">Name of new sensor</string>
     <string name="addsensor_new_location_hint">New location name</string>
-    <string name="addadapter_ser_num_hint">Input of serial number</string>
+    <string name="addadapter_ser_num_hint">Serial number</string>
 
     <!-- Toasts -->
     <string name="toast_changeto">\u0020changed to:\u0020</string>
-    <string name="toast_new_sensor_added">New sensor was added</string>
-    <string name="toast_new_sensor_not_added">Error when adding sensor</string>
+    <string name="toast_new_sensor_added">New device was added</string>
+    <string name="toast_new_sensor_not_added">Error when adding device</string>
     <string name="toast_need_sensor_name">Write name of sensor please</string>
     <string name="toast_need_sensor_location_name">Write name of new location please</string>
     <string name="toast_bad_password">Wrong name or password</string>
@@ -102,7 +102,7 @@
     <string name="toast_adapter_removed">Adapter has been removed.</string>
     <string name="toast_no_adapter">You have no registered adapter.</string>
     <string name="toast_ignore_uninitialized_info">You can add these devices later by clicking on (+)</string>
-    <string name="toast_empty_sensor_name">Fill names of all sensors !</string>
+    <string name="toast_empty_sensor_name">Fill names of all sensors!</string>
     <string name="toast_wrong_or_no_device">Wrong or no device selected</string>
     <string name="toast_no_uninitialized_devices">There are no uninitialized devices.</string>
     <string name="toast_success_save_data">Data saved successfully</string>
@@ -135,7 +135,7 @@
     <string name="menu_watchdog">Watchdog</string>
 
     <!-- Add sensor dialog -->
-    <string name="addsensor_sending_request">Pair request sending </string>
+    <string name="addsensor_sending_request">Sending pair request </string>
     <string name="addsensor_send_request">Send pair request  </string>
     <string name="addsensor_active_pair">Active pair mode </string>
     <string name="addadapter_textview_name">Name</string>
@@ -149,11 +149,11 @@
     <string name="action_search">Search</string>
     <string name="action_refreshlist">Refresh list</string>
     <string name="action_addadapter">Add adapter</string>
-    <string name="action_addsensor">Add sensor</string>
+    <string name="action_addsensor">Add device</string>
     <string name="action_logout">Logout</string>
     <string name="action_hide_sensor">Hide sensor</string>
-    <string name="action_unregist_facility">Unregist facility</string>
-    <string name="action_hide_facility">Hide facility</string>
+    <string name="action_unregist_facility">Remove device</string>
+    <string name="action_hide_facility">Hide device</string>
     <string name="action_close">Cancel</string>
     <string name="action_intro">Intro</string>
     <string name="action_intro_dialog">Intro dialog</string>
@@ -161,9 +161,9 @@
     <string name="addsensor_new_location_spinner">New location</string>
     <string name="sen_detail_graph_info">Tap to Active</string>
     <string name="loading_data">Loading data&#8230;</string>
-    <string name="no_sensor_cap">NO SENSORS</string>
+    <string name="no_sensor_cap">NO DEVICE</string>
     <string name="no_adapter_cap">NO ADAPTER</string>
-    <string name="no_rules_cap">NO RULES</string>
+    <string name="no_rules_cap">NO RULE</string>
 
     <!-- Arrays -->
     <string-array name="registration_spinner">
@@ -199,18 +199,18 @@
     <string name="placeholder_not_exists">NOT EXISTS</string>
 
     <!-- Widgets -->
-    <string name="widget_sensor_title_small">BeeeOn Sensor detail 1x1</string>
-    <string name="widget_sensor_title_medium">BeeeOn Sensor detail 2x1</string>
-    <string name="widget_sensor_title_large">BeeeOn Sensor detail 3x1</string>
+    <string name="widget_sensor_title_small">BeeeOn device 1x1</string>
+    <string name="widget_sensor_title_medium">BeeeOn device 2x1</string>
+    <string name="widget_sensor_title_large">BeeeOn device 3x1</string>
     <string name="widget_cached">(cached)</string>
 
     <!-- WidgetConfigurationActivity -->
     <string name="widget_configuration_adapter">Adapter:</string>
-    <string name="widget_configuration_sensor">Sensor to be shown:</string>
-    <string name="widget_configuration_interval_sensor">Sensor update interval:</string>
+    <string name="widget_configuration_sensor">Device to be shown:</string>
+    <string name="widget_configuration_interval_sensor">Device update interval:</string>
     <string name="widget_configuration_interval_widget">Widget update interval:</string>
     <string name="widget_configuration_login_first">You must be logged in first.</string>
-    <string name="widget_configuration_no_adapters">You have no adapters and thus no sensors to use in widget.</string>
+    <string name="widget_configuration_no_adapters">You have no adapters and thus no device to show in widget.</string>
     <string name="widget_configuration_select_adapter">Select adapter from list</string>
     <string name="widget_configuration_select_device">Select device from list</string>
 
@@ -262,14 +262,14 @@
     <string name="ada_menu_edit">Edit adapter name</string>
     <string name="ada_menu_users">Users of adapter</string>
     <string name="ada_menu_del">Delete adapter</string>
-    <string name="sensor_menu_del">Remove sensor</string>
+    <string name="sensor_menu_del">Remove device</string>
 
 
     <!-- Tutorial -->
     <string name="tut_add_adapter_header">ADD ADAPTER</string>
     <string name="tut_add_adapter_text">To add your new adapter, please click on plus.</string>
-    <string name="tut_add_sensor_header">ADD SENSOR</string>
-    <string name="tut_add_sensor_text">To add your new sensor, please click on plus.</string>
+    <string name="tut_add_sensor_header">ADD DEVICE</string>
+    <string name="tut_add_sensor_text">To add your new device, please click on plus.</string>
     
     <string name="tutorial_next">NEXT</string>
     <string name="tutorial_add">ADD</string>
@@ -281,13 +281,13 @@
     <string name="tut_add_adapter_text_2">Please connect your adapter to the AC power</string>
     <string name="tut_add_adapter_text_3">In the next step, please give name to your adapter and scan QR code</string>
     <string name="tut_add_sensor_text_1">Please pull out battery stripe</string>
-    <string name="tut_add_sensor_text_2">Please shake with new sensor shortly while countdown is running</string>
+    <string name="tut_add_sensor_text_2">Please shake with new sensor shortly while countdown is running or push pair button on actor</string>
 
 
     <!-- WatchDog -->
     <string name="action_watchdog">WatchDog</string>
     <string name="watchdog_rule">WatchDog Rule</string>
-    <string name="sensor_text">Sensor</string>
+    <string name="sensor_text">Device</string>
     <string name="treshold_value">Treshold value</string>
     <string name="watchdog_actor_change_state">Change actor\'s state</string>
     <string name="watchdog_notification_send">Send notification</string>

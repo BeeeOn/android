@@ -1,0 +1,301 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">BeeeOn</string>
+    <string name="app_id">1411635335720288</string>
+
+    <string name="blank"></string>
+    
+    <!-- Titles -->
+    <string name="title_activity_location_screen">BeeeOn</string>
+    <string name="title_activity_notification">Notifikace</string>
+    <string name="title_activity_add_sensor">Přidání zařízení</string>
+    <string name="title_activity_sensor_detail">Detail zařízení</string>
+    <string name="title_activity_add_adapter">Přidání adaptéru</string>
+    <string name="title_activity_registration">Registrace</string>
+    <string name="title_activity_login_facebook">Facebook</string>
+    <string name="title_activity_widget_configuration">Konfigurace widgetu</string>
+    <string name="title_activity_location_detail_screen">Detail umístění</string>
+    <string name="title_activity_add_adapter_activity_dialog">DialogAktivityPřidáváníAdaptéru</string>
+    <string name="title_activity_add_sensor_activity_dialog">DialogAktivityPřidáváníZařízení</string>
+    <string name="title_activity_alert_activity_dialog">DialogAktivityUpozornění</string>
+    <string name="title_activity_map_geofence">Oblasti Geofence</string>
+    <string name="title_activity_adapter_users">Uživatelé adaptéru</string>
+    <string name="title_activity_add_adapter_user">Přidání nového uživatele</string>
+    <string name="title_activity_setup_sensor">Nastavení zařízení</string>
+
+    <!-- Buttons -->
+    <string name="login_login">Přihlášení</string>
+    <string name="login_demo">Demo mód</string>
+    <string name="registration_button">Registrace</string>
+    <string name="alert_neutral">Klikni</string>
+    <string name="alert_positive">OK</string>
+
+    <!-- New sensor dialog -->
+    <string name="notification_title">Nové zařízení</string>
+
+    <plurals name="notification_new_sensors">
+        <item quantity="one">Nalezen jedno neinicializované zařízení ve Vaší domácnosti.</item>
+        <item quantity="other">Nalezeno %d neinicializovaných zařízení ve Vaší domácnosti.</item>
+    </plurals>
+
+    <string name="notification_ingore">Ignoruj</string>
+    <string name="notification_add">Přidej</string>
+    <string name="notification_cancel">Zruš</string>
+
+    <!-- Labels -->
+    <string name="login_app_name">BeeeOn</string>
+    <string name="login_or_use">nebo použijte</string>
+    <string name="addsensor_add_sensor">Přidejte zařízení</string>
+    <string name="addsensor_setup_sensor">Nastavte zařízení</string>
+    <string name="addsensor_or">nebo</string>
+    <string name="sensordetail_last_value">Poslední hodnota:\u0020</string>
+    <string name="sensordetail_refresh_time">Interval obnovy: </string>
+    <string name="sensordetail_battery_state">Stav baterie</string>
+    <string name="update_needed">Prosím aktualizujte aplikaci</string>
+    <string name="addsensor_type">Typ senzoru:</string>
+    <string name="setup_sensor_info_text">Prosím, nastavte zařízení inicializované v </string>
+    <string name="setup_sensor_header_names">Název senzoru</string>
+    <string name="setup_sensor_set_name">Nastavte název senzoru</string>
+    <string name="setup_sensor_header_location">Umístění</string>
+    <string name="addadapter_add_adapter">Přidejte adaptér</string>
+    <string name="registration_label">Nový účet</string>
+    <string name="registration_serial_number">Pro adaptér se seriovým číslem:</string>
+    <string name="alert_title">Název</string>
+    <string name="alert_message">Zpráva</string>
+    <string name="refresh_time">Interval obnovy: </string>
+    <string name="last_update">Poslední aktualizace:</string>
+    <string name="sen_graph_label">Graf</string>
+    <string name="users_header">Uživatelé</string>
+    <string name="users_pending_header">Čekající požadavek</string>
+    <string name="add_users_adapter">Přidej uživatele</string> 
+    <string name="add_user_email_header">Email</string>
+    <string name="add_user_role_header">Role</string>
+
+    <!-- Hints -->
+    <string name="login_user_name_hint">Login/email</string>
+    <string name="addsensor_sensor_name_hint">Název nového senzoru</string>
+    <string name="addsensor_new_location_hint">Název nového umístění</string>
+    <string name="addadapter_ser_num_hint">Sériové číslo adaptéru</string>
+
+    <!-- Toasts -->
+    <string name="toast_changeto">\u0020změněno na:\u0020</string>
+    <string name="toast_new_sensor_added">Nové zařízení bylo přidáno</string>
+    <string name="toast_new_sensor_not_added">Chyba při přidávání zařízení</string>
+    <string name="toast_need_sensor_name">Napište jméno senzoru</string>
+    <string name="toast_need_sensor_location_name">Napište jméno umístění</string>
+    <string name="toast_bad_password">Špatné jméno nebo heslo</string>
+    <string name="toast_connecting_to_server">Připojuji se na server &#8230;</string>
+    <string name="toast_welcome_text">Vítejte </string>
+    <string name="toast_play_missing">GooglePlay chybí nebo je zastaralé</string>
+    <string name="toast_internet_connection">Prosím aktivujte připojení k Internetu</string>
+    <string name="toast_no_unregistered_adapter">K dispozici není žádný neregistrovaný adaptér</string>
+    <string name="toast_communication_error">Nastal problém v komunikaci, zkuste to později</string>
+    <string name="toast_tap_again_exit">Stiskněte zpět dvakrát pro opuštění aplikace</string>
+    <string name="toast_google_auth">Google autentizace</string>
+    <string name="toast_something_wrong">Nastala neznámá chyba, zkuste to později</string>
+    <string name="toast_check_your_connection_via_browser">Zkontrolujte připojení s použitím webového prohlížeče</string>
+    <string name="toast_not_implemented">Bude implementováno v příští verzi!</string>
+    <string name="toast_login_failed">Přihlášení selhalo</string>
+    <string name="toast_adapter_activate_failed">Selhalo přidání adaptéru.</string>
+    <string name="toast_adapter_activated">Adaptér byl aktivován.</string>
+    <string name="toast_adapter_removed">Adaptér byl odstraněn.</string>
+    <string name="toast_no_adapter">Nemáte žádný registrovaný adaptér.</string>
+    <string name="toast_ignore_uninitialized_info">Později můžete přidat další zařízení tukňutím na (+)</string>
+    <string name="toast_empty_sensor_name">Vyplňte názvy všech senzorů!</string>
+    <string name="toast_wrong_or_no_device">Vybrali jste špatné nebo žádné zařízení</string>
+    <string name="toast_no_uninitialized_devices">Nejsou k dispozici žádné neinicializované zařízení.</string>
+    <string name="toast_success_save_data">Data byla úspěšně uložena</string>
+    <string name="toast_fail_save_data">Uložení dat selhalo</string>
+    <string name="toast_wrong_or_no_watchdog_rule">Vybrali jste špatné nebo žádné pravidlo</string>
+
+
+    <!-- Progress -->
+    <string name="progress_signing">Přihlášení k serveru&#8230;</string>
+    <string name="progress_google">Přenášení dat s Googlem&#8230;</string>
+    <string name="progress_signup">Registruji nového uživatele&#8230;</string>
+    <string name="progress_loading_adapters">Nahrávám Vaše adaptéry&#8230;</string>
+    <string name="progress_loading_adapter">Nahrávám data adaptérů&#8230;</string>
+    <string name="progress_loading_demo">Nahrávám demo data&#8230;</string>
+    <string name="progress_saving_data">Ukládám data&#8230;</string>
+
+    <!-- NavDrawer -->
+    <string name="drawer_open">Otevři</string>
+    <string name="drawer_close">Zavři</string>
+    <string name="location">Umístění</string>
+    <string name="custom_view">Uživatelský pohled</string>
+    <string name="adapter">Adaptéry</string>
+    <string name="no_location">Žádná umístění</string>
+    <string name="no_custom_view">Uživatelský pohled není k dispozici</string>
+    <string name="no_adapters">Nemáte žádné adaptéry</string>
+    <string name="menu_managment">Správa</string>
+    <string name="menu_control">Přehled</string>
+    <string name="menu_dashboard">Tabule</string>
+    <string name="menu_applications">Aplikace</string>
+    <string name="menu_watchdog">Hlídač</string>
+
+    <!-- Add sensor dialog -->
+    <string name="addsensor_sending_request">Posílám párovací požadavek </string>
+    <string name="addsensor_send_request">Pošli párovací požadavek  </string>
+    <string name="addsensor_active_pair">Párovací režim je aktivní </string>
+    <string name="addadapter_textview_name">Název</string>
+    <string name="addadapter_view_setname">Nastavte jméno adaptéru, např. Doma</string>
+    <string name="addadapter_textview_code">QR kód</string>
+    <string name="addsensor_send_pair">ZAHAJ PÁROVÁNÍ</string>
+
+    <!-- Others -->
+    <string name="action_settings">Nastavení</string>
+    <string name="action_about">O aplikaci</string>
+    <string name="action_search">Hledání</string>
+    <string name="action_refreshlist">Seznam obnovy</string>
+    <string name="action_addadapter">Přidání adaptéru</string>
+    <string name="action_addsensor">Přidání zařízení</string>
+    <string name="action_logout">Odhlášení</string>
+    <string name="action_hide_sensor">Skryj zařízení</string>
+    <string name="action_unregist_facility">Odstraň zařízení</string>
+    <string name="action_hide_facility">Skryj zařízení</string>
+    <string name="action_close">Zruš</string>
+    <string name="action_intro">Představení</string>
+    <string name="action_intro_dialog">Úvodní dialog</string>
+    <string name="addadapter_qrcode_desc">Získání QR kódu</string>
+    <string name="addsensor_new_location_spinner">Nové umístění</string>
+    <string name="sen_detail_graph_info">Aktivujte dotykem</string>
+    <string name="loading_data">Nahrávám data&#8230;</string>
+    <string name="no_sensor_cap">ŽÁDNÉ ZAŘÍZENÍ</string>
+    <string name="no_adapter_cap">ŽÁDNÝ ADAPTÉR</string>
+    <string name="no_rules_cap">ŽÁDNÉ PRAVIDLO</string>
+
+    <!-- Arrays -->
+    <string-array name="registration_spinner">
+        <item>Facebook</item>
+        <item>Google</item>
+        <item>MojeID</item>
+    </string-array>
+    <string-array name="items">
+        <item>Položka 1</item>
+        <item>Položka 2</item>
+        <item>Položka 3</item>
+        <item>Položka 4</item>
+        <item>Položka 5</item>
+        <item>Položka 6</item>
+    </string-array>
+    <string-array name="title_of_main_fragments">
+        <item>Seznam</item>
+        <item>Vlastní</item>
+    </string-array>
+    <string-array name="user_role">
+        <item>SuperUživatel</item>
+        <item>Administrátor</item>
+        <item>Uživatel</item>
+        <item>Host</item>
+    </string-array>
+    
+
+    <string name="log_sc_or">nebo</string>
+
+    <!-- Placeholders -->
+    <string name="placeholder_icon">Ikona</string>
+    <string name="placeholder_none">Nahrávám</string>
+    <string name="placeholder_not_exists">NEEXISTUJE</string>
+
+    <!-- Widgets -->
+    <string name="widget_sensor_title_small">BeeeOn zařízení 1x1</string>
+    <string name="widget_sensor_title_medium">BeeeOn zařízení 2x1</string>
+    <string name="widget_sensor_title_large">BeeeOn zařízení 3x1</string>
+    <string name="widget_cached">(cached)</string>
+
+    <!-- WidgetConfigurationActivity -->
+    <string name="widget_configuration_adapter">Adaptér</string>
+    <string name="widget_configuration_sensor">Zařízení pro zobrazení</string>
+    <string name="widget_configuration_interval_sensor">Interval aktualizace zařízení</string>
+    <string name="widget_configuration_interval_widget">Interval aktualizace widgetu</string>
+    <string name="widget_configuration_login_first">Musíte být nejprve přihlášeni v BeeeOn.</string>
+    <string name="widget_configuration_no_adapters">Nemáte adaptéry a proto nemůžete nastavit widget.</string>
+    <string name="widget_configuration_select_adapter">Vyberte adaptér ze seznamu</string>
+    <string name="widget_configuration_select_device">Vyberte zařízení ze seznamu</string>
+
+    <!-- About -->
+    <string name="play_link">market://details?id=com.rehivetech.beeeon</string>
+    <string name="company_email">media@rehivetech.com</string>
+    <string name="company_web">http://rehivetech.com/</string>
+    <string name="copyright">\u00A9 2014-15 RehiveTech. Všechna práva vyhrazena.</string>
+    <string name="version">Verze</string>
+    <string name="logo">Logo</string>
+    <string name="rate">Hodnocení</string>
+    <string name="ok">OK</string>
+    <string name="website">Webová stránka</string>
+
+    <!-- Refresh intervals -->
+    <plurals name="interval_seconds">
+        <item quantity="one">1 sekunda</item>
+        <item quantity="other">%d sekund</item>
+    </plurals>
+    <plurals name="interval_minutes">
+        <item quantity="one">1 minuta</item>
+        <item quantity="other">%d minut</item>
+    </plurals>
+    <plurals name="interval_hours">
+        <item quantity="one">1 hodina</item>
+        <item quantity="other">%d hodin</item>
+    </plurals>
+
+    <!-- Settings -->
+    <string name="personal">Osobní</string>
+    <string name="user_profile">Uživatelský profil</string>
+    <string name="units">Jednotky</string>
+    <string name="timezone">Časové pásmo</string>
+    <string name="temperature">Teplota</string>
+    <string name="noise">Hluk</string>
+    <string name="connections">Připojení</string>
+    <string name="smartwatches">Smartwatch-hodinky</string>
+    <string name="choose_default_location">Zvolte výchozí umístění</string>
+    <string name="choose_default_adapter">Zvolte výchozí adaptér</string>
+    <string name="default_location">Výchozí umístění</string>
+    <string name="default_adapter">Výchozí adaptér</string>
+    <string name="actual_timezone">Aktuální časové pásmo</string>
+    <string name="adapter_timezone">Časové pásmo adaptéru</string>
+
+    <!-- Default names -->
+    <string name="adapter_default_name">Adaptér #%d</string>
+    <string name="settings">Nastavení</string>
+    <string name="save">Ulož</string>
+    <string name="ada_menu_edit">Editace názvu adaptéru</string>
+    <string name="ada_menu_users">Uživatelé adaptéru</string>
+    <string name="ada_menu_del">Odstraň adaptér</string>
+    <string name="sensor_menu_del">Odstraň zařízení</string>
+
+
+    <!-- Tutorial -->
+    <string name="tut_add_adapter_header">PŘIDEJ ADAPTÉR</string>
+    <string name="tut_add_adapter_text">Dotkněte se plus, abyste přidali adaptér.</string>
+    <string name="tut_add_sensor_header">PŘIDEJ SENSOR</string>
+    <string name="tut_add_sensor_text">Dotkněte se plus, abyste přidali zařízení.</string>
+    
+    <string name="tutorial_next">DALŠÍ</string>
+    <string name="tutorial_add">PŘIDEJ</string>
+
+    <string name="tutorial_open_menu">Otevřete Menu</string>
+    <string name="tutorial_open_menu_text">Dotkněte se Ikony a objeví se Menu.</string>
+    <!-- Help in Add dialogs -->
+    <string name="tut_add_adapter_text_1">Zapojte adaptér do Internetu</string>
+    <string name="tut_add_adapter_text_2">Zapojte adaptér do elektrické sítě</string>
+    <string name="tut_add_adapter_text_3">V následujícím kroku zadejte název adaptéru a naskenujte QR kód</string>
+    <string name="tut_add_sensor_text_1">Vytáhněte izolační proužek baterií ze senzoru nebo zapojte aktor do el. sítě</string>
+    <string name="tut_add_sensor_text_2">Během odpočítávání zatřeste krátce ze senzorem nebo stiskněte párovací tlačítko na aktoru</string>
+
+
+    <!-- WatchDog -->
+    <string name="action_watchdog">Hlídač</string>
+    <string name="watchdog_rule">Pravidlo hlídače</string>
+    <string name="sensor_text">Senzor</string>
+    <string name="treshold_value">Prahová hodnota</string>
+    <string name="watchdog_actor_change_state">Změň stav aktoru</string>
+    <string name="watchdog_notification_send">Pošli notifikaci</string>
+    <string name="watchdog_activate_rule">Aktivuj pravidlo</string>
+    <string name="watchdog_rule_name">Název pravidla</string>
+    <string name="watchdog_if">Pokud</string>
+    <string name="notification_text">Text notifikace</string>
+    
+    <string name="rule_menu_del">Smaž</string>
+
+</resources>
