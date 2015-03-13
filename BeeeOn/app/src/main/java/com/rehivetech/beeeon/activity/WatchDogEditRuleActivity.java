@@ -63,6 +63,7 @@ public class WatchDogEditRuleActivity extends BaseApplicationActivity {
     private boolean mIsValueLess = true;        // value for View FAB
     private UnitsHelper mUnitsHelper;
 
+    private List<Location> mLocations;
     private List<Facility> mFacilities;
     private ReloadFacilitiesTask mReloadFacilitiesTask;
 
@@ -87,7 +88,9 @@ public class WatchDogEditRuleActivity extends BaseApplicationActivity {
         if (mToolbar != null) {
             mToolbar.setTitle(R.string.watchdog_rule);
             setSupportActionBar(mToolbar);
-            setActionBarLayout();
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setHomeButtonEnabled(true);
+            getSupportActionBar().setTitle(""); // hide title
         }
 
         // Prepare progress dialog
@@ -116,6 +119,11 @@ public class WatchDogEditRuleActivity extends BaseApplicationActivity {
             }
         }
 
+        // when adding rule x instead of <-
+        if(mIsNew){
+            getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_action_cancel);
+        }
+
         // TODO muze byt adapter null?
         if (!mIsNew && (mActiveAdapterId == null || mActiveRuleId == null)) {
             Toast.makeText(this, R.string.toast_wrong_or_no_watchdog_rule, Toast.LENGTH_LONG).show();
@@ -132,6 +140,16 @@ public class WatchDogEditRuleActivity extends BaseApplicationActivity {
         mPrefs = mController.getUserSettings();
         mUnitsHelper = (mPrefs == null) ? null : new UnitsHelper(mPrefs, this);
 
+        // get all locations for spinners
+        mLocations = mController.getLocations(mAdapter.getId());
+
+        // facilities get by cycling through all locations
+        mFacilities = new ArrayList<Facility>();
+        for(Location loc : mLocations){
+            List<Facility> tempFac = mController.getFacilitiesByLocation(mAdapter.getId(), loc.getId());
+            mFacilities.addAll(tempFac);
+        }
+
         // get watchdog rule
         if(!mIsNew) {
             // hide keyboard when editing
@@ -144,16 +162,7 @@ public class WatchDogEditRuleActivity extends BaseApplicationActivity {
             dev.setName("Vlhkostní sensor");
             mRule = new WatchDogRule("2", mActiveAdapterId, "Hlídání smradu", dev, WatchDogRule.OperatorType.GREATER, WatchDogRule.ActionType.NOTIFICATION, val, false);
         }
-        /*
-        else{
-            IlluminationValue val = new IlluminationValue();
-            val.setValue("50");
-            Device dev = new Device(DeviceType.TYPE_ILLUMINATION, val);
-            dev.setName("Vlhkostní sensor");
 
-            mRule = new WatchDogRule("5", mActiveAdapterId, "", dev, WatchDogRule.OperatorType.GREATER, WatchDogRule.ActionType.NOTIFICATION, val, true);
-        }
-        //*/
 
         initLayout();
 
@@ -163,20 +172,23 @@ public class WatchDogEditRuleActivity extends BaseApplicationActivity {
 
     }
 
-    private List<Device> getDevicesArray(){
-        List<Facility> facilities = new ArrayList<Facility>();
-        facilities = mController.getFacilitiesByAdapter(mAdapter.getId());
 
+    private List<Device> getDevicesArray(boolean onlyActors){
         List<Device> devices = new ArrayList<Device>();
-        for(Facility facility : facilities){
-            devices.addAll(facility.getDevices());
-        }
+        for(Facility facility : mFacilities)
+            for (Device device : facility.getDevices()) {
+                if (onlyActors && !device.getType().isActor()) {
+                    continue;
+                }
 
-        // Sort them
-        Collections.sort(devices);
+                devices.add(device);
+            }
         return devices;
     }
 
+    /**
+     * Fills gui elements with values
+     */
     private void setValues(){
         // set values
         mRuleName.setText(mRule.getName());
@@ -193,21 +205,9 @@ public class WatchDogEditRuleActivity extends BaseApplicationActivity {
         }
     }
 
-    private List<Location> getLocationsArray() {
-        // Get locations from adapter
-        List<Location> locations = new ArrayList<Location>();
-
-        Adapter adapter = mController.getActiveAdapter();
-        if (adapter != null) {
-            locations = mController.getLocations(adapter.getId());
-        }
-
-        // Sort them
-        Collections.sort(locations);
-
-        return locations;
-    }
-
+    /**
+     * Initializes GUI elements to work
+     */
     private void initLayout() {
         // init gui elements
         mRuleName = (EditText) findViewById(R.id.watchdog_edit_name);
@@ -219,7 +219,7 @@ public class WatchDogEditRuleActivity extends BaseApplicationActivity {
         mActionType = (RadioGroup) findViewById(R.id.watchdog_edit_action_radiogroup);
 
         // ----- prepare list of available devices
-        final DeviceArrayAdapter dataAdapter = new DeviceArrayAdapter(this, R.layout.custom_spinner2_item, getDevicesArray(), getLocationsArray());
+        final DeviceArrayAdapter dataAdapter = new DeviceArrayAdapter(this, R.layout.custom_spinner2_item, getDevicesArray(false), mLocations);
         dataAdapter.setLayoutInflater(getLayoutInflater());
         dataAdapter.setDropDownViewResource(R.layout.custom_spinner2_dropdown_item);
         mSensorSpinner.setAdapter(dataAdapter);
@@ -252,7 +252,6 @@ public class WatchDogEditRuleActivity extends BaseApplicationActivity {
 
         // TODO udelat nejak,ze ziskat pres parametry + asi include layout pro to
         EditText notificationText = (EditText) findViewById(R.id.watchdog_edit_notification_text);
-        Spinner actorSpinner = (Spinner) findViewById(R.id.watchdog_edit_actor_spinner);
 
         // changing specified layout when checked
         mActionType.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
@@ -261,7 +260,7 @@ public class WatchDogEditRuleActivity extends BaseApplicationActivity {
                 RelativeLayout NotifLayout = (RelativeLayout) findViewById(R.id.watchdog_detail_notification);
                 RelativeLayout ActionLayout = (RelativeLayout) findViewById(R.id.watchdog_edit_actor_layout);
 
-                switch(checkedId){
+                switch (checkedId) {
                     case R.id.watchdog_edit_notification:
                         NotifLayout.setVisibility(View.VISIBLE);
                         ActionLayout.setVisibility(View.GONE);
@@ -274,6 +273,15 @@ public class WatchDogEditRuleActivity extends BaseApplicationActivity {
                 }
             }
         });
+
+
+        // ------- choose actor
+        Spinner actorSpinner = (Spinner) findViewById(R.id.watchdog_edit_actor_spinner);
+
+        final DeviceArrayAdapter actorAdapter = new DeviceArrayAdapter(this, R.layout.custom_spinner2_item, getDevicesArray(true), mLocations);
+        actorAdapter.setLayoutInflater(getLayoutInflater());
+        actorAdapter.setDropDownViewResource(R.layout.custom_spinner2_dropdown_item);
+        actorSpinner.setAdapter(actorAdapter);
     }
 
     /*
@@ -316,15 +324,6 @@ public class WatchDogEditRuleActivity extends BaseApplicationActivity {
         super.onSaveInstanceState(savedInstanceState);
     }
 
-    /**
-     * Sets actionbar with X instead of <- button
-     */
-    private void setActionBarLayout(){
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setHomeButtonEnabled(true);
-        getSupportActionBar().setTitle(""); // hide title
-        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_action_cancel);
-    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
