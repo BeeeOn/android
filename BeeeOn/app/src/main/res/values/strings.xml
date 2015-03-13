@@ -32,11 +32,11 @@
     <string name="alert_positive">OK</string>
 
     <!-- New sensor dialog -->
-    <string name="notification_title">New device</string>
+    <string name="notification_title">New sensor</string>
 
     <plurals name="notification_new_sensors">
-        <item quantity="one">One uninitialized device found at your home.</item>
-        <item quantity="other">%d uninitialized device found at your home.</item>
+        <item quantity="one">One uninitialized sensor found at your home</item>
+        <item quantity="other">%d uninitialized sensors found at your home</item>
     </plurals>
 
     <string name="notification_ingore">Ignore</string>
@@ -49,22 +49,22 @@
     <string name="addsensor_add_sensor">Add device</string>
     <string name="addsensor_setup_sensor">Setup device</string>
     <string name="addsensor_or">or</string>
-    <string name="sensordetail_last_value">Last value:\u0020</string>
+    <string name="sensordetail_last_value">Last value: \u0020</string>
     <string name="sensordetail_refresh_time">Refresh inteval: </string>
     <string name="sensordetail_battery_state">Battery state</string>
     <string name="update_needed">Please update application</string>
-    <string name="addsensor_type">Type of device:</string>
+    <string name="addsensor_type">Type of device: </string>
     <string name="setup_sensor_info_text">Please, setup your new device which was activated at </string>
     <string name="setup_sensor_header_names">Sensor names</string>
     <string name="setup_sensor_set_name">Set name of sensor</string>
     <string name="setup_sensor_header_location">Location</string>
     <string name="addadapter_add_adapter">Add adapter</string>
     <string name="registration_label">New account</string>
-    <string name="registration_serial_number">For adapter with serial number:</string>
-    <string name="alert_title">Title</string>
+    <string name="registration_serial_number">For adapter with serial number: </string>
+    <string name="alert_title">Title</string>                                 
     <string name="alert_message">Message</string>
     <string name="refresh_time">Refresh time: </string>
-    <string name="last_update">Last update:</string>
+    <string name="last_update">Last update: </string>
     <string name="sen_graph_label">Graph of history</string>
     <string name="users_header">Users</string>
     <string name="users_pending_header">Pending request</string>
@@ -79,7 +79,7 @@
     <string name="addadapter_ser_num_hint">Serial number</string>
 
     <!-- Toasts -->
-    <string name="toast_changeto">\u0020changed to:\u0020</string>
+    <string name="toast_changeto">\u0020changed to: \u0020</string>
     <string name="toast_new_sensor_added">New device was added</string>
     <string name="toast_new_sensor_not_added">Error when adding device</string>
     <string name="toast_need_sensor_name">Write name of sensor please</string>
@@ -97,14 +97,14 @@
     <string name="toast_check_your_connection_via_browser">Check your connection via browser</string>
     <string name="toast_not_implemented">Not implemented yet!</string>
     <string name="toast_login_failed">Login failed</string>
-    <string name="toast_adapter_activate_failed">Failed to activate adapter.</string>
-    <string name="toast_adapter_activated">Adapter has been activated.</string>
-    <string name="toast_adapter_removed">Adapter has been removed.</string>
-    <string name="toast_no_adapter">You have no registered adapter.</string>
+    <string name="toast_adapter_activate_failed">Failed to activate adapter</string>
+    <string name="toast_adapter_activated">Adapter has been activated</string>
+    <string name="toast_adapter_removed">Adapter has been removed</string>
+    <string name="toast_no_adapter">You have no registered adapter</string>
     <string name="toast_ignore_uninitialized_info">You can add these devices later by clicking on (+)</string>
-    <string name="toast_empty_sensor_name">Fill names of all sensors!</string>
+    <string name="toast_empty_sensor_name">Fill names of all sensors</string>
     <string name="toast_wrong_or_no_device">Wrong or no device selected</string>
-    <string name="toast_no_uninitialized_devices">There are no uninitialized devices.</string>
+    <string name="toast_no_uninitialized_devices">There are no uninitialized devices</string>
     <string name="toast_success_save_data">Data saved successfully</string>
     <string name="toast_fail_save_data">Failed saving data</string>
     <string name="toast_wrong_or_no_watchdog_rule">Wrong or no WatchDog rule selected</string>
@@ -149,7 +149,7 @@
     <string name="action_search">Search</string>
     <string name="action_refreshlist">Refresh list</string>
     <string name="action_addadapter">Add adapter</string>
-    <string name="action_addsensor">Add device</string>
+    <string name="action_addsensor">Add sensor</string>
     <string name="action_logout">Logout</string>
     <string name="action_hide_sensor">Hide sensor</string>
     <string name="action_unregist_facility">Remove device</string>
@@ -205,20 +205,20 @@
     <string name="widget_cached">(cached)</string>
 
     <!-- WidgetConfigurationActivity -->
-    <string name="widget_configuration_adapter">Adapter:</string>
-    <string name="widget_configuration_sensor">Device to be shown:</string>
-    <string name="widget_configuration_interval_sensor">Device update interval:</string>
-    <string name="widget_configuration_interval_widget">Widget update interval:</string>
-    <string name="widget_configuration_login_first">You must be logged in first.</string>
-    <string name="widget_configuration_no_adapters">You have no adapters and thus no device to show in widget.</string>
+    <string name="widget_configuration_adapter">Adapter: </string>
+    <string name="widget_configuration_sensor">Device to be shown: </string>
+    <string name="widget_configuration_interval_sensor">Device update interval: </string>
+    <string name="widget_configuration_interval_widget">Widget update interval: </string>
+    <string name="widget_configuration_login_first">You must be logged in first</string>
+    <string name="widget_configuration_no_adapters">You have no adapters and thus no device to show in widget</string>
     <string name="widget_configuration_select_adapter">Select adapter from list</string>
     <string name="widget_configuration_select_device">Select device from list</string>
 
     <!-- About -->
     <string name="play_link">market://details?id=com.rehivetech.beeeon</string>
-    <string name="company_email">media@rehivetech.com</string>
+    <string name="company_email">info@BeeeOn.com</string>
     <string name="company_web">http://rehivetech.com/</string>
-    <string name="copyright">\u00A9 2014-15 RehiveTech. All rights reserved</string>
+    <string name="copyright">\u00A9 2014-15 RehiveTech. All rights reserved.</string>
     <string name="version">Version</string>
     <string name="logo">Logo</string>
     <string name="rate">Rate</string>
@@ -267,15 +267,15 @@
 
     <!-- Tutorial -->
     <string name="tut_add_adapter_header">ADD ADAPTER</string>
-    <string name="tut_add_adapter_text">To add your new adapter, please click on plus.</string>
+    <string name="tut_add_adapter_text">To add your new adapter, please click on plus</string>
     <string name="tut_add_sensor_header">ADD DEVICE</string>
-    <string name="tut_add_sensor_text">To add your new device, please click on plus.</string>
+    <string name="tut_add_sensor_text">To add your new device, please click on plus</string>
     
     <string name="tutorial_next">NEXT</string>
     <string name="tutorial_add">ADD</string>
 
     <string name="tutorial_open_menu">Open Menu</string>
-    <string name="tutorial_open_menu_text">For switch location tap to Icon and Menu will rise.</string>
+    <string name="tutorial_open_menu_text">For switch location tap to Icon and Menu will rise</string>
     <!-- Help in Add dialogs -->
     <string name="tut_add_adapter_text_1">Please connect your adapter to the Internet</string>
     <string name="tut_add_adapter_text_2">Please connect your adapter to the AC power</string>

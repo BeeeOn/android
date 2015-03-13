@@ -2,7 +2,7 @@
 <resources>
 
     <!-- Units of devices -->
-    <string name="dev_temperature_celsius_unit_full">Celsius</string>
+    <string name="dev_temperature_celsius_unit_full">Celzius</string>
     <string name="dev_temperature_celsius_unit">°C</string>
     <string name="dev_temperature_fahrenheit_unit_full">Fahrenheit</string>
     <string name="dev_temperature_fahrenheit_unit">°F</string>
@@ -24,38 +24,38 @@
     <string name="dev_unknown_unit"></string>
 
     <!-- Types of devices -->
-    <string name="dev_unknown_type">Neznámé zařízení</string>
+    <string name="dev_unknown_type">Neznáme zariadenie</string>
     <!-- Sensors -->
     <string name="dev_temperature_type">Senzor teploty</string>
-    <string name="dev_humidity_type">Sensor vlhkosti</string>
-    <string name="dev_pressure_type">Sensor tlaku</string>
-    <string name="dev_open_closed_type">Sensor otevření/zavření</string>
-    <string name="dev_on_off_type">Sensor zapnutí/vypnutí</string>
-    <string name="dev_illumination_type">Sensor osvětlení</string>
-    <string name="dev_noise_type">Sensor hluku</string>
-    <string name="dev_emission_type">Sensor emisí</string>
+    <string name="dev_humidity_type">Senzor vlhkosti</string>
+    <string name="dev_pressure_type">Senzor tlaku</string>
+    <string name="dev_open_closed_type">Senzor otvorenia/zatvorenie</string>
+    <string name="dev_on_off_type">Senzor zapnutia/vypnutia</string>
+    <string name="dev_illumination_type">Senzor osvetlenia</string>
+    <string name="dev_noise_type">Senzor hluku</string>
+    <string name="dev_emission_type">Senzor emisií</string>
     <!-- Actors -->
-    <string name="dev_actor_on_off_type">Zapnuto/vypnuto aktor</string>
+    <string name="dev_actor_on_off_type">Zapnuté/vypnuté aktor</string>
     <string name="dev_actor_push_type">Dotykový aktor</string>
-    <string name="dev_actor_toggle_type">Přepínací aktor</string>
+    <string name="dev_actor_toggle_type">Prepínací aktor</string>
     <string name="dev_actor_range_type">Rozsahový aktor</string>
     <string name="dev_actor_rgb_type">RGB aktor</string>
 
     <!-- Special values of devices -->
-    <string name="dev_enum_value_open">Otevřeno</string>
-    <string name="dev_enum_value_closed">Zavřeno</string>
-    <string name="dev_enum_value_on">Zapnuto</string>
-    <string name="dev_enum_value_off">Vypnuto</string>
+    <string name="dev_enum_value_open">Otvorené</string>
+    <string name="dev_enum_value_closed">Zatvorené</string>
+    <string name="dev_enum_value_on">Zapnuté</string>
+    <string name="dev_enum_value_off">Vypnuté</string>
 
     <!-- Names of default locations -->
-    <string name="loc_bathroom">Koupelna</string>
-    <string name="loc_bedroom">Ložnice</string>
-    <string name="loc_dining_room">Jídelna</string>
-    <string name="loc_garden">Zahrada</string>
-    <string name="loc_kitchen">Kuchyň</string>
-    <string name="loc_living_room">Obývací pokoj</string>
+    <string name="loc_bathroom">Kúpeľna</string>
+    <string name="loc_bedroom">Spáľňa</string>
+    <string name="loc_dining_room">Jedáleň</string>
+    <string name="loc_garden">Záhrada</string>
+    <string name="loc_kitchen">Kuchyňa</string>
+    <string name="loc_living_room">Obývacia izba</string>
     <string name="loc_wc">WC</string>
-    <string name="loc_loft">Podkroví</string>
+    <string name="loc_loft">Podkrovie</string>
     <string name="loc_cellar">Sklep</string>
 
 </resources>

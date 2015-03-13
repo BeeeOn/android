@@ -26,16 +26,16 @@
     <!-- Types of devices -->
     <string name="dev_unknown_type">Unknown device</string>
     <!-- Sensors -->
-    <string name="dev_temperature_type">Thermal sensor</string>
-    <string name="dev_humidity_type">Hydrometer</string>
+    <string name="dev_temperature_type">Thermometer</string>
+    <string name="dev_humidity_type">Hygrometer</string>
     <string name="dev_pressure_type">Barometer</string>
     <string name="dev_open_closed_type">Open/closed sensor</string>
-    <string name="dev_on_off_type">On/off sensor</string>
-    <string name="dev_illumination_type">Illumination sensor</string>
-    <string name="dev_noise_type">Sound level sensor</string>
-    <string name="dev_emission_type">Emission sensor</string>
+    <string name="dev_on_off_type">On/Off sensor</string>
+    <string name="dev_illumination_type">Photometer</string>
+    <string name="dev_noise_type">Sound meter</string>
+    <string name="dev_emission_type">Emission meter</string>
     <!-- Actors -->
-    <string name="dev_actor_on_off_type">On/off actor</string>
+    <string name="dev_actor_on_off_type">On/Off actor</string>
     <string name="dev_actor_push_type">Push actor</string>
     <string name="dev_actor_toggle_type">Toggle actor</string>
     <string name="dev_actor_range_type">Range actor</string>
