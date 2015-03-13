@@ -154,6 +154,11 @@ public class SensorListAdapter extends BaseAdapter {
             sepMidle.setVisibility(View.GONE);
 		}
 
+        // IF is last in list
+        if(position == getCount()-1) {
+            itemView.findViewById(R.id.sensor_last_item).setVisibility(View.VISIBLE);
+        }
+
 		return itemView;
 	}
 

@@ -18,6 +18,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ImageView;
@@ -29,7 +30,6 @@ import com.github.amlcurran.showcaseview.OnShowcaseEventListener;
 import com.github.amlcurran.showcaseview.ShowcaseView;
 import com.github.amlcurran.showcaseview.targets.ViewTarget;
 
-import com.melnykov.fab.FloatingActionButton;
 import com.rehivetech.beeeon.Constants;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.activity.AddAdapterActivity;
@@ -47,6 +47,8 @@ import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.thread.ToastMessageThread;
 import com.rehivetech.beeeon.util.Log;
 
+import net.i2p.android.ext.floatingactionbutton.FloatingActionsMenu;
+
 public class SensorListFragment extends Fragment {
 
 	private static final String TAG = SensorListFragment.class.getSimpleName();
@@ -62,6 +64,7 @@ public class SensorListFragment extends Fragment {
 
 	private SensorListAdapter mSensorAdapter;
 	private ListView mSensorList;
+    private FloatingActionsMenu mFAM;
 
 	private View mView;
 
@@ -211,10 +214,13 @@ public class SensorListFragment extends Fragment {
 		TextView noItem = (TextView) mView.findViewById(R.id.nosensorlistview);
 		ImageView addBtn = (ImageView) mView.findViewById(R.id.nosensorlistview_addsensor_image);
 
+        mFAM = (FloatingActionsMenu) mView.findViewById(R.id.multiple_actions);
 
-        FloatingActionButton fab = (FloatingActionButton) mView.findViewById(R.id.fab);
-        fab.attachToListView(mSensorList);
-		fab.show();
+
+
+        //FloatingActionButton fab = (FloatingActionButton) mView.findViewById(R.id.fab);
+        //fab.attachToListView(mSensorList);
+		//fab.show();
 
         // All locations on adapter
         locations = mController.getLocations(mActiveAdapterId);
@@ -292,6 +298,7 @@ public class SensorListFragment extends Fragment {
 			mSensorList.setVisibility(View.VISIBLE);
 		}
 
+        // Listener for add dialogs
 		OnClickListener addSensorListener = new OnClickListener() {
 
 			@Override
@@ -299,19 +306,26 @@ public class SensorListFragment extends Fragment {
 				showAddSensorDialog();
 			}
 		};
-
-        fab.setOnClickListener(addSensorListener);
+        OnClickListener addAdapterListener = new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showAddAdapterDialog();
+            }
+        };
+        // Buttons in floating menu
+        mFAM.findViewById(R.id.fab_add_sensor).setOnClickListener(addSensorListener);
+        mFAM.findViewById(R.id.fab_add_adapter).setOnClickListener(addAdapterListener);
 
         if(mController.getAdapter(mActiveAdapterId) != null) {
             // IF can user add senzor
             if (!mController.isUserAllowed(mController.getAdapter(mActiveAdapterId).getRole())) {
                 // Hide button
-                fab.hide();
+                mFAM.findViewById(R.id.fab_add_sensor).setVisibility(View.GONE);
             }
         }
         else {
             // Hide button
-            fab.hide(false);
+            mFAM.findViewById(R.id.fab_add_sensor).setVisibility(View.GONE);
         }
 
 		// Update list adapter
@@ -356,11 +370,23 @@ public class SensorListFragment extends Fragment {
 	}
 
     private void setSensorSelected() {
-        mSensorList.getChildAt(mSelectedItemPos).findViewById(R.id.layoutofsensor).setBackgroundColor(mActivity.getResources().getColor(R.color.light_gray));
+        getViewByPosition(mSelectedItemPos,mSensorList).findViewById(R.id.layoutofsensor).setBackgroundColor(mActivity.getResources().getColor(R.color.light_gray));
     }
 
     private void setSensorUnselected() {
-        mSensorList.getChildAt(mSelectedItemPos).findViewById(R.id.layoutofsensor).setBackgroundColor(mActivity.getResources().getColor(R.color.white));
+        getViewByPosition(mSelectedItemPos,mSensorList).findViewById(R.id.layoutofsensor).setBackgroundColor(mActivity.getResources().getColor(R.color.white));
+    }
+
+    public View getViewByPosition(int pos, ListView listView) {
+        final int firstListItemPosition = listView.getFirstVisiblePosition();
+        final int lastListItemPosition = firstListItemPosition + listView.getChildCount() - 1;
+
+        if (pos < firstListItemPosition || pos > lastListItemPosition ) {
+            return listView.getAdapter().getView(pos, null, listView);
+        } else {
+            final int childIndex = pos - firstListItemPosition;
+            return listView.getChildAt(childIndex);
+        }
     }
 
     private void showTutorialAddSensor() {

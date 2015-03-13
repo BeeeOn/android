@@ -45,7 +45,7 @@
 	        android:src="@drawable/add_custom_view" />
     </LinearLayout>
 
-    <com.melnykov.fab.FloatingActionButton
+    <!--com.melnykov.fab.FloatingActionButton
         android:id="@+id/fab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -57,7 +57,40 @@
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
         android:layout_margin="16dp"
-        android:layout_gravity="right|bottom" />
+        android:layout_gravity="right|bottom" /-->
+
+
+    <net.i2p.android.ext.floatingactionbutton.FloatingActionsMenu
+        android:id="@+id/multiple_actions"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end|bottom"
+        fab:fab_addButtonColorNormal="@color/beeeon_secundary_pink"
+        fab:fab_addButtonColorPressed="@color/beeeon_secundary_pink_pressed"
+        fab:fab_addButtonPlusIconColor="@color/white"
+        fab:fab_labelStyle="@style/menu_labels_style"
+        android:layout_marginBottom="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginEnd="16dp">
+        <net.i2p.android.ext.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fab_add_adapter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            fab:fab_title="@+string/action_addadapter"
+            fab:fab_size="mini"
+            fab:fab_icon="@drawable/ic_add_white_24dp"
+            fab:fab_colorNormal="@color/beeeon_secundary_pink"
+            fab:fab_colorPressed="@color/beeeon_secundary_pink_pressed"/>
+        <net.i2p.android.ext.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fab_add_sensor"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            fab:fab_title="@+string/action_addsensor"
+            fab:fab_size="mini"
+            fab:fab_icon="@drawable/ic_add_white_24dp"
+            fab:fab_colorNormal="@color/beeeon_secundary_pink"
+            fab:fab_colorPressed="@color/beeeon_secundary_pink_pressed"/>
+    </net.i2p.android.ext.floatingactionbutton.FloatingActionsMenu>
 
 
 </FrameLayout>

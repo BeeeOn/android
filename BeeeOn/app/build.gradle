@@ -60,6 +60,7 @@ dependencies {
     compile 'com.google.android.gms:play-services:6.5.87'
     // Third-party libraries
     compile 'com.melnykov:floatingactionbutton:1.2.0'
+    compile 'net.i2p.android.ext:floatingactionbutton:1.8.0'
     compile 'com.android.support:appcompat-v7:21.0.3'
     compile 'se.emilsjolander:stickylistheaders:2.5.2'
     compile 'fr.avianey.com.viewpagerindicator:library:2.4.1@aar'

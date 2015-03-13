@@ -18,6 +18,7 @@
     <color name="beeeon_primary_cyan_dark">#0097A7</color>
     <color name="beeeon_primary_cyan_light">#B2EBF2</color>
     <color name="beeeon_secundary_pink">#ff4081</color>
+    <color name="beeeon_secundary_pink_pressed">#ec407a</color>
     <color name="beeeon_item_bg">#ffffff</color>
     <color name="beeeon_text_color">#212121</color>
     <color name="beeeon_text_hint">#727272</color>

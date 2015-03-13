@@ -381,17 +381,9 @@ public class NavDrawerMenu {
 		// Adding separator as item (we don't want to let it float as header)
 		mMenuAdapter.addItem(new SeparatorMenuItem());
 
-		mMenuAdapter.addHeader(new GroupImageMenuItem(mActivity.getResources().getString(R.string.adapter), R.drawable.add_custom_view, new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				Intent intent = new Intent(mActivity, AddAdapterActivity.class);
-				mActivity.startActivityForResult(intent, Constants.ADD_ADAPTER_REQUEST_CODE);
-				}
-			}));
+		mMenuAdapter.addHeader(new GroupMenuItem(mActivity.getResources().getString(R.string.adapter)));
 		
 		if (!adapters.isEmpty()) {
-			// Adding separator as item (we don't want to let it float as header)
-
 			// Adding adapters
 			for (Adapter actAdapter : adapters) {
 				mMenuAdapter.addItem(new AdapterMenuItem(actAdapter.getName(), actAdapter.getRole().name(), activeAdapter.getId().equals(actAdapter.getId()), actAdapter.getId()));
