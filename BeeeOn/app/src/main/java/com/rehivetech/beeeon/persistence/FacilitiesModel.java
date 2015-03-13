@@ -206,6 +206,19 @@ public class FacilitiesModel {
 		return result;
 	}
 
+    public boolean delFacility(Facility facility) {
+        boolean result = false;
+        String adapterId = facility.getAdapterId();
+        try {
+            result = mNetwork.deleteFacility(adapterId,facility);
+            result = refreshFacilities(getFacilitiesByAdapter(adapterId), true);
+        } catch (AppException e) {
+            e.printStackTrace();
+        }
+
+        return result;
+    }
+
 	public boolean saveDevice(Device device, EnumSet<SaveDevice> what) {
 		Facility facility = device.getFacility();
 

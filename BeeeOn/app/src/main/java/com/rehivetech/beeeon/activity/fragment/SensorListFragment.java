@@ -18,7 +18,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ImageView;
@@ -43,8 +42,9 @@ import com.rehivetech.beeeon.adapter.location.Location;
 import com.rehivetech.beeeon.arrayadapter.SensorListAdapter;
 import com.rehivetech.beeeon.asynctask.CallbackTask.CallbackTaskListener;
 import com.rehivetech.beeeon.asynctask.ReloadFacilitiesTask;
+import com.rehivetech.beeeon.asynctask.RemoveFacilityTask;
 import com.rehivetech.beeeon.controller.Controller;
-import com.rehivetech.beeeon.thread.ToastMessageThread;
+import com.rehivetech.beeeon.pair.DelFacilityPair;
 import com.rehivetech.beeeon.util.Log;
 
 import net.i2p.android.ext.floatingactionbutton.FloatingActionsMenu;
@@ -82,6 +82,7 @@ public class SensorListFragment extends Fragment {
 	private RelativeLayout.LayoutParams lps;
     private Device mSelectedItem;
     private int mSelectedItemPos;
+    private RemoveFacilityTask mRemoveFacilityTask;
 
     public SensorListFragment() {
 	}
@@ -182,24 +183,6 @@ public class SensorListFragment extends Fragment {
 		super.onSaveInstanceState(savedInstanceState);
 	}
 
-	private void doReloadFacilitiesTask(String adapterId) {
-		mReloadFacilitiesTask = new ReloadFacilitiesTask(getActivity().getApplicationContext(), true);
-
-		mReloadFacilitiesTask.setListener(new CallbackTaskListener() {
-
-			@Override
-			public void onExecute(boolean success) {
-				mActivity.redrawMainFragment();
-				mActivity.redrawMenu();
-				mSwipeLayout.setRefreshing(false);
-			}
-		});
-
-		mReloadFacilitiesTask.execute(adapterId);
-	}
-	
-	
-
 	public boolean redrawDevices() {
 		if (isPaused) {
 			mActivity.setSupportProgressBarIndeterminateVisibility(false);
@@ -215,12 +198,6 @@ public class SensorListFragment extends Fragment {
 		ImageView addBtn = (ImageView) mView.findViewById(R.id.nosensorlistview_addsensor_image);
 
         mFAM = (FloatingActionsMenu) mView.findViewById(R.id.multiple_actions);
-
-
-
-        //FloatingActionButton fab = (FloatingActionButton) mView.findViewById(R.id.fab);
-        //fab.attachToListView(mSensorList);
-		//fab.show();
 
         // All locations on adapter
         locations = mController.getLocations(mActiveAdapterId);
@@ -511,6 +488,43 @@ public class SensorListFragment extends Fragment {
 		isPaused = value;
 	}
 
+
+    private void doReloadFacilitiesTask(String adapterId) {
+        mReloadFacilitiesTask = new ReloadFacilitiesTask(getActivity().getApplicationContext(), true);
+
+        mReloadFacilitiesTask.setListener(new CallbackTaskListener() {
+
+            @Override
+            public void onExecute(boolean success) {
+                mActivity.redrawMainFragment();
+                mActivity.redrawMenu();
+                mSwipeLayout.setRefreshing(false);
+            }
+        });
+
+        mReloadFacilitiesTask.execute(adapterId);
+    }
+
+    private void doRemoveFacilityTask(Facility facility) {
+        mRemoveFacilityTask = new RemoveFacilityTask(getActivity().getApplicationContext(),true);
+        DelFacilityPair pair = new DelFacilityPair(facility.getId(), facility.getAdapterId());
+
+        mRemoveFacilityTask.setListener(new CallbackTaskListener() {
+            @Override
+            public void onExecute(boolean success) {
+                mActivity.redrawMainFragment();
+                mActivity.redrawMenu();
+                if(success) {
+                    // Hlaska o uspechu
+                }
+                else {
+                    // Hlaska o neuspechu
+                }
+            }
+        });
+        mRemoveFacilityTask.execute(pair);
+    }
+
 	class ActionModeEditSensors implements ActionMode.Callback {
 
 		@Override
@@ -529,7 +543,7 @@ public class SensorListFragment extends Fragment {
 		@Override
 		public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
 			if (item.getItemId() == R.id.sensor_menu_del) {
-				// doRemoveSensorTask(mFacilityRemove);
+				doRemoveFacilityTask(mSelectedItem.getFacility());
 			}
 
 			mode.finish();

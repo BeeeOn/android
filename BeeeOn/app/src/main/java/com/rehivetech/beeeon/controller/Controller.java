@@ -792,6 +792,14 @@ public final class Controller {
 		return mHousehold.facilitiesModel.saveDevice(device, what);
 	}
 
+    /**
+     * Delete facility
+     *
+     */
+    public boolean delFacility(Facility facility) {
+        return mHousehold.facilitiesModel.delFacility(facility);
+    }
+
 	/**
 	 * Return log for device.
 	 * 
