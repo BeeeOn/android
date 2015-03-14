@@ -324,5 +324,6 @@
     <string name="NetworkError___NO_SUCH_ENTITY">no such entity</string>
     <string name="NetworkError___SERVER_NOT_RESPONDING">server not responding</string>
     <string name="NetworkError___XML">XML problem</string>
+    <string name="unknown_error">Unknown error</string>
 
 </resources>
