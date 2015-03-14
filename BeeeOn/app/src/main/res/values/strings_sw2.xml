@@ -3,13 +3,10 @@
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
     <!-- Title of preference activity -->
     <string name="preference_activity_title">Settings</string>
-    <!-- Name of extension, shown in preferences -->
-    <string name="configuration_text">Sample control settings</string>
+
     <!-- Menu option shown in preferences -->
     <string name="preference_set_default_location">Set default location</string>
     <string name="preference_set_default_adapter">Set default adapter</string>
-    <!-- Read me text shown in dialog -->
-    <string name="preference_option_read_me_txt">The Advanced Control Extension uses API v2 features to display scrollable lists and a swipeable gallery. The Extension overrides the Back button to navigate back to previous control extension screens.  </string>
 
     <string name="choose_adapter">Choose adapter:</string>
     <string name="choose_location">Choose location:</string>

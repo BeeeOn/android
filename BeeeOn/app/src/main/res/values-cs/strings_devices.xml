@@ -27,15 +27,15 @@
     <string name="dev_unknown_type">Neznámé zařízení</string>
     <!-- Sensors -->
     <string name="dev_temperature_type">Senzor teploty</string>
-    <string name="dev_humidity_type">Sensor vlhkosti</string>
-    <string name="dev_pressure_type">Sensor tlaku</string>
-    <string name="dev_open_closed_type">Sensor otevření/zavření</string>
-    <string name="dev_on_off_type">Sensor zapnutí/vypnutí</string>
-    <string name="dev_illumination_type">Sensor osvětlení</string>
-    <string name="dev_noise_type">Sensor hluku</string>
-    <string name="dev_emission_type">Sensor emisí</string>
+    <string name="dev_humidity_type">Senzor vlhkosti</string>
+    <string name="dev_pressure_type">Senzor tlaku</string>
+    <string name="dev_open_closed_type">Senzor otevření/zavření</string>
+    <string name="dev_on_off_type">Senzor zapnutí/vypnutí</string>
+    <string name="dev_illumination_type">Senzor osvětlení</string>
+    <string name="dev_noise_type">Senzor hluku</string>
+    <string name="dev_emission_type">Senzor emisí</string>
     <!-- Actors -->
-    <string name="dev_actor_on_off_type">Zapnuto/vypnuto aktor</string>
+    <string name="dev_actor_on_off_type">Zapnutý/vypnutý aktor</string>
     <string name="dev_actor_push_type">Dotykový aktor</string>
     <string name="dev_actor_toggle_type">Přepínací aktor</string>
     <string name="dev_actor_range_type">Rozsahový aktor</string>

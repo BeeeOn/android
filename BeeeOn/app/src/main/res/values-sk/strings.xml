@@ -2,7 +2,6 @@
 <resources>
 
     <string name="app_name">BeeeOn</string>
-    <string name="app_id">1411635335720288</string>
 
     <string name="blank"></string>
     
@@ -15,10 +14,6 @@
     <string name="title_activity_registration">Registrácia</string>
     <string name="title_activity_login_facebook">Facebook</string>
     <string name="title_activity_widget_configuration">Konfigurácia widgetu</string>
-    <string name="title_activity_location_detail_screen">Detail umiestnenia</string>
-    <string name="title_activity_add_adapter_activity_dialog">DialogAktivityPridávaniaAdaptéru</string>
-    <string name="title_activity_add_sensor_activity_dialog">DialogAktivityPridávaniaZariadenia</string>
-    <string name="title_activity_alert_activity_dialog">DialogAktivityUpozornenia</string>
     <string name="title_activity_map_geofence">Oblasti Geofence</string>
     <string name="title_activity_adapter_users">Užívatelia adaptéru</string>
     <string name="title_activity_add_adapter_user">Pridanie nového užívateľa</string>
@@ -214,7 +209,6 @@
     <string name="widget_configuration_select_device">Vyberte zariadenie zo zoznamu</string>
 
     <!-- About -->
-    <string name="play_link">market://details?id=com.rehivetech.beeeon</string>
     <string name="company_email">info@BeeeOn.com</string>
     <string name="company_web">http://rehivetech.com/</string>
     <string name="copyright">\u00A9 2014-15 RehiveTech. Všetky práva vyhradené.</string>
@@ -305,7 +299,6 @@
     <string name="no_location_available">Nie je k dispozícií umiestenie.</string>
     <string name="no_adapter_available">Nie je k dispozícií žiadny adaptér</string>
     <string name="loc_cellar">Pivnica</string>
-    <string name="configuration_text">Vzorové nastavenie ovládania</string>
     <string name="choose_sensor">Zvoľte senzor:</string>
     <string name="choose_location">Zvoľte umiestnenie:</string>
     <string name="choose_adapter">Zvoľte adaptér:</string>
