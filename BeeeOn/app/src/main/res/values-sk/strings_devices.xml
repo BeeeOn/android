@@ -29,13 +29,13 @@
     <string name="dev_temperature_type">Senzor teploty</string>
     <string name="dev_humidity_type">Senzor vlhkosti</string>
     <string name="dev_pressure_type">Senzor tlaku</string>
-    <string name="dev_open_closed_type">Senzor otvorenia/zatvorenie</string>
+    <string name="dev_open_closed_type">Senzor otvorenia/zatvorenia</string>
     <string name="dev_on_off_type">Senzor zapnutia/vypnutia</string>
     <string name="dev_illumination_type">Senzor osvetlenia</string>
     <string name="dev_noise_type">Senzor hluku</string>
     <string name="dev_emission_type">Senzor emisií</string>
     <!-- Actors -->
-    <string name="dev_actor_on_off_type">Zapnuté/vypnuté aktor</string>
+    <string name="dev_actor_on_off_type">Zapnutý/vypnutý aktor</string>
     <string name="dev_actor_push_type">Dotykový aktor</string>
     <string name="dev_actor_toggle_type">Prepínací aktor</string>
     <string name="dev_actor_range_type">Rozsahový aktor</string>
@@ -56,6 +56,5 @@
     <string name="loc_living_room">Obývacia izba</string>
     <string name="loc_wc">WC</string>
     <string name="loc_loft">Podkrovie</string>
-    <string name="loc_cellar">Sklep</string>
 
 </resources>

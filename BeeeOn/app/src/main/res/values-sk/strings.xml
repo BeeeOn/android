@@ -39,13 +39,13 @@
         <item quantity="other">Nájdených viacero (%d) neinicializovaných senzorov vo Vašej domácnosti</item>
     </plurals>
 
-    <string name="notification_ingore">Ignoruj</string>
-    <string name="notification_add">Pridaj</string>
-    <string name="notification_cancel">Zruš</string>
+    <string name="notification_ingore">Ignorovať</string>
+    <string name="notification_add">Pridajte</string>
+    <string name="notification_cancel">Zrušiť</string>
 
     <!-- Labels -->
     <string name="login_app_name">BeeeOn</string>
-    <string name="login_or_use">alebo použijte</string>
+    <string name="login_or_use">alebo použite</string>
     <string name="addsensor_add_sensor">Pridajte senzor</string>
     <string name="addsensor_setup_sensor">Nastavte senzor</string>
     <string name="addsensor_or">alebo</string>
@@ -85,28 +85,28 @@
     <string name="toast_need_sensor_name">Napíšte názov senzoru</string>
     <string name="toast_need_sensor_location_name">Napíšte názov umiestnenia</string>
     <string name="toast_bad_password">Nesprávne meno alebo heslo</string>
-    <string name="toast_connecting_to_server">Pripájam sa server &#8230;</string>
-    <string name="toast_welcome_text">Vítajte </string>
+    <string name="toast_connecting_to_server">Pripájam sa na server &#8230;</string>
+    <string name="toast_welcome_text">Vitajte</string>
     <string name="toast_play_missing">GooglePlay chýba alebo je zastaralé</string>
     <string name="toast_internet_connection">Prosím aktivujte pripojenie k Internetu</string>
     <string name="toast_no_unregistered_adapter">K dispozici nie je žiadny neregistrovaný adaptér</string>
     <string name="toast_communication_error">Nastal problém v komunikácií, skúste to neskôr</string>
-    <string name="toast_tap_again_exit">Stisknite nazad dvakrát pre opustenie aplikácie</string>
+    <string name="toast_tap_again_exit">Stisknite späť dvakrát pre opustenie aplikácie</string>
     <string name="toast_google_auth">Google autentizácia</string>
     <string name="toast_something_wrong">Nastala neznámá chyba, skúste to neskôr</string>
-    <string name="toast_check_your_connection_via_browser">Zkontrolujte pripojenie s použitím webového prohliadača</string>
+    <string name="toast_check_your_connection_via_browser">Zkontrolujte pripojenie s použitím webového prehliadača</string>
     <string name="toast_not_implemented">Kontaktujte Lea!</string>      <!-- Bude implementované v ďalšej verzii -->
-    <string name="toast_login_failed">Prilásenie zlýhalo</string>
-    <string name="toast_adapter_activate_failed">Zlýhalo pridanie adaptéru</string>
+    <string name="toast_login_failed">Prilásenie zlyhalo</string>
+    <string name="toast_adapter_activate_failed">Zlyhalo pridanie adaptéru</string>
     <string name="toast_adapter_activated">Adaptér bol aktivovaný</string>
     <string name="toast_adapter_removed">Adaptér bol odstránený</string>
     <string name="toast_no_adapter">Nemáte žiaden registrovaný adaptér</string>
-    <string name="toast_ignore_uninitialized_info">Neskôr môžte pridat ďalšie zariadenie ťukňutím na (+)</string>
+    <string name="toast_ignore_uninitialized_info">Neskôr môžete pridať ďalšie zariadenie ťukňutím na (+)</string>
     <string name="toast_empty_sensor_name">Vyplňte názvy všetkých senzorov</string>
     <string name="toast_wrong_or_no_device">Vybrali ste nesprávne alebo žiadne zariadenie</string>
-    <string name="toast_no_uninitialized_devices">K dispozici nie sú žádné neinicializované zariadenia</string>
+    <string name="toast_no_uninitialized_devices">K dispozici nie sú žiadne neinicializované zariadenia</string>
     <string name="toast_success_save_data">Údaje boli úspešne uložené</string>
-    <string name="toast_fail_save_data">Uloženie údajov zlýhalo</string>
+    <string name="toast_fail_save_data">Uloženie údajov zlyhalo</string>
     <string name="toast_wrong_or_no_watchdog_rule">Vybrali ste nesprávne alebo žiadne pravidlo</string>
 
 
@@ -115,9 +115,9 @@
     <string name="progress_google">Prenášanie dát s Googlom&#8230;</string>
     <string name="progress_signup">Registrujem nového užívateľa&#8230;</string>
     <string name="progress_loading_adapters">Nahrávam Vaše adaptéry&#8230;</string>
-    <string name="progress_loading_adapter">Nahrávam data adaptérov&#8230;</string>
-    <string name="progress_loading_demo">Nahrávam demo data&#8230;</string>
-    <string name="progress_saving_data">Ukladám data&#8230;</string>
+    <string name="progress_loading_adapter">Nahrávam dáta adaptérov&#8230;</string>
+    <string name="progress_loading_demo">Nahrávam demo dáta&#8230;</string>
+    <string name="progress_saving_data">Ukladám dáta&#8230;</string>
 
     <!-- NavDrawer -->
     <string name="drawer_open">Otvor</string>
@@ -151,16 +151,16 @@
     <string name="action_addadapter">Pridanie adaptéru</string>
     <string name="action_addsensor">Pridanie senzoru</string>
     <string name="action_logout">Odhlásenie</string>
-    <string name="action_hide_sensor">Skry senzor</string>
-    <string name="action_unregist_facility">Odstráň zariadenie</string>
-    <string name="action_hide_facility">Skry zariadenie</string>
-    <string name="action_close">Zruš</string>
+    <string name="action_hide_sensor">Skryť senzor</string>
+    <string name="action_unregist_facility">Odstráňiť zariadenie</string>
+    <string name="action_hide_facility">Skryť zariadenie</string>
+    <string name="action_close">Zrušiť</string>
     <string name="action_intro">Prednastavenie</string>
     <string name="action_intro_dialog">Úvodný dialóg</string>
     <string name="addadapter_qrcode_desc">Získanie QR kódu</string>
     <string name="addsensor_new_location_spinner">Nové umiestnenie</string>
     <string name="sen_detail_graph_info">Aktivujte dotykom</string>
-    <string name="loading_data">Nahrávam data&#8230;</string>
+    <string name="loading_data">Nahrávam dáta&#8230;</string>
     <string name="no_sensor_cap">ŽIADNY SENZOR</string>
     <string name="no_adapter_cap">ŽIADNY ADAPTÉR</string>
     <string name="no_rules_cap">ŽIADNE PRAVIDLO</string>
@@ -258,11 +258,11 @@
     <!-- Default names -->
     <string name="adapter_default_name">Adaptér #%d</string>
     <string name="settings">Nastavenie</string>
-    <string name="save">Ulož</string>
+    <string name="save">Uložiť</string>
     <string name="ada_menu_edit">Editácia názvu adaptéru</string>
-    <string name="ada_menu_users">Používatelia adaptéru</string>
-    <string name="ada_menu_del">Odstraň adaptér</string>
-    <string name="sensor_menu_del">Odstraň zariadenie</string>
+    <string name="ada_menu_users">Užívatelia adaptéru</string>
+    <string name="ada_menu_del">Odstrániť adaptér</string>
+    <string name="sensor_menu_del">Odstrániť zariadenie</string>
 
 
     <!-- Tutorial -->
@@ -271,7 +271,7 @@
     <string name="tut_add_sensor_header">PRIDAJ SENSOR</string>
     <string name="tut_add_sensor_text">Dotknite sa plus (+) pre pridanie zariadenia</string>
     
-    <string name="tutorial_next">ĎALŠÍ</string>
+    <string name="tutorial_next">ĎALŠIE</string>
     <string name="tutorial_add">PRIDAJ</string>
 
     <string name="tutorial_open_menu">Otvorte Menu</string>
@@ -279,9 +279,9 @@
     <!-- Help in Add dialogs -->
     <string name="tut_add_adapter_text_1">Zapojte adaptér do Internetu</string>
     <string name="tut_add_adapter_text_2">Zapojte adaptér do elektrickej siete</string>
-    <string name="tut_add_adapter_text_3">V následujúcom kroku zadajte název adaptéru a naskenujte QR kód</string>
-    <string name="tut_add_sensor_text_1">Vytiahnite izolačný prúžok batérií zo senzoru alebo zapojte aktor do el. sítě</string>
-    <string name="tut_add_sensor_text_2">Behom odpočítavania zatraste krátko so senzorom alebo stisknite párovacie tlačítko na aktoru</string>
+    <string name="tut_add_adapter_text_3">V následujúcom kroku zadajte názov adaptéru a naskenujte QR kód</string>
+    <string name="tut_add_sensor_text_1">Vytiahnite izolačný prúžok batérií zo senzoru alebo zapojte aktor do el. siete</string>
+    <string name="tut_add_sensor_text_2">Počas odpočítavania zatraste krátko so senzorom alebo stisknite párovacie tlačítko na aktore</string>
 
 
     <!-- WatchDog -->
@@ -289,13 +289,33 @@
     <string name="watchdog_rule">Pravidlo sledovača</string>
     <string name="sensor_text">Senzor</string>
     <string name="treshold_value">Prahová hodnota</string>
-    <string name="watchdog_actor_change_state">Zmeň stav aktoru</string>
-    <string name="watchdog_notification_send">Pošli notifikáciu</string>
+    <string name="watchdog_actor_change_state">Zmeniť stav aktoru</string>
+    <string name="watchdog_notification_send">Pošlať notifikáciu</string>
     <string name="watchdog_activate_rule">Aktivuj pravidlo</string>
     <string name="watchdog_rule_name">Názov pravidla</string>
     <string name="watchdog_if">Ak</string>
     <string name="notification_text">Text notifikácie</string>
     
-    <string name="rule_menu_del">Zmaž</string>
+    <string name="rule_menu_del">Zmazať</string>
+    <string name="preference_set_default_location">Nastaviť predvolené umiestnenie</string>
+    <string name="preference_set_default_adapter">Nastaviť predvolený adaptér</string>
+    <string name="preference_activity_title">Nastavenia</string>
+    <string name="please_log_in">Prosím prihláste sa</string>
+    <string name="none">nič</string>
+    <string name="no_sensor_available">Nie je dostupný žiadny senzor</string>
+    <string name="no_location_available_def_adapter">Nie je k dispozícií umiestnenie predvoleného adaptéru.</string>
+    <string name="no_location_available">Nie je k dispozícií umiestenie.</string>
+    <string name="no_adapter_available">Nie je k dispozícií žiadny adaptér</string>
+    <string name="loc_cellar">Pivnica</string>
+    <string name="configuration_text">Vzorové nastavenie ovládania</string>
+    <string name="choose_sensor">Zvoľte senzor:</string>
+    <string name="choose_location">Zvoľte umiestnenie:</string>
+    <string name="choose_adapter">Zvoľte adaptér:</string>
+    <string name="adausr_menu_edit">Editovať užívateľa</string>
+    <string name="adausr_menu_del">Odstrániť užívateľa</string>
+    <string name="adapter_user_title_change_role">Zmeniť užívateľskú úlohu</string>
+    <string name="adapter_isnt_set">Nastavte východzí adaptér</string>
+    <string name="adapter_doest_exist">Východzí adaptér už neexistuje. Nastavte nový východzí adaptér.</string>
+    <string name="unknown_error">Neznáma chyba</string>
 
 </resources>
