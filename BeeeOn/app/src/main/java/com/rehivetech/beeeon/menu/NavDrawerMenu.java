@@ -395,8 +395,8 @@ public class NavDrawerMenu {
 
             // MANAGMENT
             mMenuAdapter.addHeader(new GroupMenuItem(mActivity.getResources().getString(R.string.menu_managment)));
-            mMenuAdapter.addItem(new LocationMenuItem(mActivity.getString(R.string.menu_control), R.drawable.loc_all, false, Constants.GUI_MENU_CONTROL, false));
-            mMenuAdapter.addItem(new LocationMenuItem(mActivity.getString(R.string.menu_dashboard),R.drawable.loc_all,false,Constants.GUI_MENU_DASHBOARD,false));
+            mMenuAdapter.addItem(new LocationMenuItem(mActivity.getString(R.string.menu_control), R.drawable.loc_living_room, false, Constants.GUI_MENU_CONTROL, false));
+            mMenuAdapter.addItem(new LocationMenuItem(mActivity.getString(R.string.menu_dashboard),R.drawable.loc_garden,false,Constants.GUI_MENU_DASHBOARD,false));
 
             mMenuAdapter.addItem( new SeparatorMenuItem());
             // APPLICATIONS
