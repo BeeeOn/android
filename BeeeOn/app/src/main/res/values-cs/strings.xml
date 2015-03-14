@@ -8,15 +8,15 @@
     <!-- Titles -->
     <string name="title_activity_location_screen">BeeeOn</string>
     <string name="title_activity_notification">Notifikace</string>
-    <string name="title_activity_add_sensor">Přidání zařízení</string>
+    <string name="title_activity_add_sensor">Přidat nové zařízení</string>
     <string name="title_activity_sensor_detail">Detail zařízení</string>
-    <string name="title_activity_add_adapter">Přidání adaptéru</string>
+    <string name="title_activity_add_adapter">Přidat adaptéru</string>
     <string name="title_activity_registration">Registrace</string>
     <string name="title_activity_login_facebook">Facebook</string>
     <string name="title_activity_widget_configuration">Konfigurace widgetu</string>
     <string name="title_activity_map_geofence">Oblasti Geofence</string>
     <string name="title_activity_adapter_users">Uživatelé adaptéru</string>
-    <string name="title_activity_add_adapter_user">Přidání nového uživatele</string>
+    <string name="title_activity_add_adapter_user">Přidat nového uživatele</string>
     <string name="title_activity_setup_sensor">Nastavení zařízení</string>
 
     <!-- Buttons -->
@@ -45,7 +45,7 @@
     <string name="addsensor_setup_sensor">Nastavte senzor</string>
     <string name="addsensor_or">nebo</string>
     <string name="sensordetail_last_value">Poslední hodnota: \u0020</string>
-    <string name="sensordetail_refresh_time">Interval obnovy: </string>
+    <string name="sensordetail_refresh_time">Interval aktualizace hodnot:</string>
     <string name="sensordetail_battery_state">Stav baterie</string>
     <string name="update_needed">Prosím aktualizujte aplikaci</string>
     <string name="addsensor_type">Typ senzoru: </string>
@@ -58,11 +58,10 @@
     <string name="registration_serial_number">Pro adaptér se seriovým číslem: </string>
     <string name="alert_title">Název</string>
     <string name="alert_message">Zpráva</string>
-    <string name="refresh_time">Interval obnovy: </string>
+    <string name="refresh_time">Interval aktualizace hodnot:</string>
     <string name="last_update">Aktualizace: </string>
     <string name="sen_graph_label">Graf</string>
     <string name="users_header">Uživatelé</string>
-    <string name="users_pending_header">Čekající požadavek</string>
     <string name="add_users_adapter">Přidat uživatele</string>
     <string name="add_user_email_header">Email</string>
     <string name="add_user_role_header">Role</string>
@@ -79,18 +78,18 @@
     <string name="toast_changeto">\u0020změněno na: \u0020</string>
     <string name="toast_new_sensor_added">Nové zařízení bylo přidáno</string>
     <string name="toast_new_sensor_not_added">Chyba při přidávání zařízení</string>
-    <string name="toast_need_sensor_name">Napište název senzoru</string>
-    <string name="toast_need_sensor_location_name">Napište název umístění</string>
-    <string name="toast_bad_password">Špatné jméno nebo heslo</string>
+    <string name="toast_need_sensor_name">Zadejte název senzoru</string>
+    <string name="toast_need_sensor_location_name">Zadejte název umístění</string>
+    <string name="toast_bad_password">Nesprávné jméno nebo heslo</string>
     <string name="toast_connecting_to_server">Připojuji se na server &#8230;</string>
     <string name="toast_welcome_text">Vítejte </string>
-    <string name="toast_play_missing">Google Play chybí nebo je zastaralé</string>
+    <string name="toast_play_missing">Google Play není dostupné nebo je zastaralé</string>
     <string name="toast_internet_connection">Prosím aktivujte připojení k Internetu</string>
     <string name="toast_no_unregistered_adapter">K dispozici není žádný neregistrovaný adaptér</string>
-    <string name="toast_communication_error">Nastal problém v komunikaci, zkuste to později</string>
-    <string name="toast_tap_again_exit">Stiskněte zpět dvakrát pro opuštění aplikace</string>
+    <string name="toast_communication_error">Nastal problém v komunikaci, opakujte akci později</string>
+    <string name="toast_tap_again_exit">Pro opuštění aplikace stiskněte dvakrát tlačítko zpět</string>
     <string name="toast_google_auth">Google autentizace</string>
-    <string name="toast_something_wrong">Nastala neznámá chyba, zkuste to později</string>
+    <string name="toast_something_wrong">Nastala neznámá chyba, opakujte akci později</string>
     <string name="toast_check_your_connection_via_browser">Zkontrolujte připojení s použitím webového prohlížeče</string>
     <string name="toast_not_implemented">Bude implementováno v příští verzi!</string>
     <string name="toast_login_failed">Přihlášení selhalo</string>
@@ -100,11 +99,11 @@
     <string name="toast_no_adapter">Nemáte žádný registrovaný adaptér</string>
     <string name="toast_ignore_uninitialized_info">Později můžete přidat další zařízení klepnutím na (+)</string>
     <string name="toast_empty_sensor_name">Vyplňte názvy všech senzorů</string>
-    <string name="toast_wrong_or_no_device">Vybrali jste špatné nebo žádné zařízení</string>
+    <string name="toast_wrong_or_no_device">Nebylo zadáno žádné zařízení nebo je zvolené zařízení nesprávné</string>
     <string name="toast_no_uninitialized_devices">Nejsou k dispozici žádné neinicializované zařízení</string>
     <string name="toast_success_save_data">Údaje byly úspěšně uloženy</string>
     <string name="toast_fail_save_data">Uložení údajů selhalo</string>
-    <string name="toast_wrong_or_no_watchdog_rule">Vybrali jste špatné nebo žádné pravidlo</string>
+    <string name="toast_wrong_or_no_watchdog_rule">Nebylo zadáno žádné pravidlo nebo je zvolené pravidlo nesprávné</string>
 
 
     <!-- Progress -->
@@ -206,8 +205,7 @@
     <string name="widget_configuration_sensor">Zařízení pro zobrazení:</string>
     <string name="widget_configuration_interval_sensor">Interval aktualizace zařízení:</string>
     <string name="widget_configuration_interval_widget">Interval aktualizace widgetu:</string>
-    <string name="widget_configuration_login_first">Musíte být nejprve přihlášeni v BeeeOn</string>
-    <string name="widget_configuration_no_adapters">Nemáte adaptéry a proto nemůžete nastavit widget</string>
+    <string name="widget_configuration_no_adapters">K nastavení widgetu je nutné být uživatelem adaptéru</string>
     <string name="widget_configuration_select_adapter">Vyberte adaptér ze seznamu</string>
     <string name="widget_configuration_select_device">Vyberte zařízení ze seznamu</string>
 
@@ -265,21 +263,20 @@
 
     <!-- Tutorial -->
     <string name="tut_add_adapter_header">PŘIDAT ADAPTÉR</string>
-    <string name="tut_add_adapter_text">Dotkněte se plus (+), abyste přidali adaptér</string>
-    <string name="tut_add_sensor_header">PŘIDAT SENSOR</string>
-    <string name="tut_add_sensor_text">Dotkněte se plus, abyste přidali zařízení</string>
-    
+    <string name="tut_add_adapter_text">Pro přidání adaptéru klepněte na plus (+)</string>
+    <string name="tut_add_sensor_header">PŘIDAT SENZOR</string>
+
     <string name="tutorial_next">DALŠÍ</string>
     <string name="tutorial_add">PŘIDAT</string>
 
-    <string name="tutorial_open_menu">Otevřít menu</string>
-    <string name="tutorial_open_menu_text">Klepnutím na ikonu otevřete menu</string>
+    <string name="tutorial_open_menu">Zobrazit nabídku</string>
+    <string name="tutorial_open_menu_text">Klepnutím na ikonu zobrazíte nabídku</string>
     <!-- Help in Add dialogs -->
     <string name="tut_add_adapter_text_1">Zapojte adaptér do Internetu</string>
     <string name="tut_add_adapter_text_2">Zapojte adaptér do elektrické sítě</string>
     <string name="tut_add_adapter_text_3">V následujícím kroku zadejte název adaptéru a naskenujte QR kód</string>
-    <string name="tut_add_sensor_text_1">Vytáhněte izolační proužek baterií ze sensoru nebo zapojte aktor do el. sítě</string>
-    <string name="tut_add_sensor_text_2">Během odpočítávání zatřeste krátce se sensorem nebo stiskněte párovací tlačítko na aktoru</string>
+    <string name="tut_add_sensor_text_1">Vytáhněte izolační proužek baterií ze senzoru nebo zapojte aktor do elektrické sítě</string>
+    <string name="tut_add_sensor_text_2">Během odpočítávání krátce zatřeste se senzorem nebo stiskněte párovací tlačítko na aktoru</string>
 
 
     <!-- WatchDog -->
@@ -296,8 +293,8 @@
     
     <string name="rule_menu_del">Smazat</string>
     <string name="adapter_isnt_set">Nastavit výchozí adaptér</string>
-    <string name="adapter_doest_exist">Výchozí adaptér neexistuje. Nastavte nový výchozí.</string>
-    <string name="choose_adapter">Vyberte adapter:</string>
+    <string name="adapter_doest_exist">Výchozí adaptér neexistuje. Nastavte nový výchozí adaptér.</string>
+    <string name="choose_adapter">Vyberte adaptér:</string>
     <string name="choose_location">Vyberte umístění:</string>
     <string name="choose_sensor">Vyberte senzor:</string>
     <string name="no_adapter_available">Žádný dostupný adaptér</string>
@@ -306,9 +303,13 @@
     <string name="preference_set_default_location">Nastavit výchozí umístění</string>
     <string name="preference_set_default_adapter">Nastavit výchozí adaptér</string>
     <string name="preference_activity_title">Nastavení</string>
-    <string name="please_log_in">Přihlašte se</string>
-    <string name="none">Nic</string>
+    <string name="please_log_in">Přihlašte se prosím</string>
     <string name="no_sensor_available">Žádný dostupný senzor</string>
     <string name="no_location_available_def_adapter">Žádné dostupné umístění pro výchozí adaptér</string>
+    <string name="widget_configuration_login_first">Je vyžadováno přihlášení v BeeeOn</string>
+    <string name="users_pending_header">Žádost o přidání</string>
+    <string name="tut_add_sensor_text">Pro přidání nového zařízení klepněte na plus (+)</string>
+    <string name="title_activity_location_detail_screen">Detail umístění</string>
+    <string name="none">Žádný</string>
 
 </resources>
