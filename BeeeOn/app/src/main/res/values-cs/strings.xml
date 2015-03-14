@@ -64,7 +64,7 @@
     <string name="alert_title">Název</string>
     <string name="alert_message">Zpráva</string>
     <string name="refresh_time">Interval obnovy: </string>
-    <string name="last_update">Poslední aktualizace: </string>
+    <string name="last_update">Aktualizace: </string>
     <string name="sen_graph_label">Graf</string>
     <string name="users_header">Uživatelé</string>
     <string name="users_pending_header">Čekající požadavek</string>

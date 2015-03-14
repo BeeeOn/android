@@ -64,7 +64,7 @@
     <string name="alert_title">Názov</string>
     <string name="alert_message">Správa</string>
     <string name="refresh_time">Interval obnovy: </string>
-    <string name="last_update">Posledná aktualizácia: </string>
+    <string name="last_update">Aktualizácia: </string>
     <string name="sen_graph_label">Graf</string>
     <string name="users_header">Užívatelia</string>
     <string name="users_pending_header">Čakajúci požiadavok</string>
@@ -150,7 +150,7 @@
     <string name="action_refreshlist">Obnov zoznam</string>
     <string name="action_addadapter">Pridanie adaptéru</string>
     <string name="action_addsensor">Pridanie senzoru</string>
-    <string name="action_logout">Oddhlásenie</string>
+    <string name="action_logout">Odhlásenie</string>
     <string name="action_hide_sensor">Skry senzor</string>
     <string name="action_unregist_facility">Odstráň zariadenie</string>
     <string name="action_hide_facility">Skry zariadenie</string>
