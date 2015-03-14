@@ -53,7 +53,7 @@ public class UsersListAdapter extends BaseAdapter {
 
 	@Override
 	public Object getItem(int position) {
-		return mUsers.get(position).getName();
+		return mUsers.get(position);
 	}
 
 	@Override

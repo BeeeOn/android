@@ -101,7 +101,7 @@ public class AddAdapterUserActivity extends BaseApplicationActivity {
 					return;
 				}
 				mProgress.show();
-				User newUser = new User( mEmail.getText().toString(), User.Role.fromString(mRole.getSelectedItem().toString()));
+				User newUser = new User( mEmail.getText().toString(), User.Role.fromString(Constants.USER_ROLE[(int)mRole.getSelectedItemId()]));
 				AddUserPair pair  = new AddUserPair(mAdapter, newUser);
 				
 				doAddAdapterUserTask(pair);

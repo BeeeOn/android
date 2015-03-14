@@ -865,7 +865,11 @@ public final class Controller {
 	 * @throws NotImplementedException
 	 */
 	public boolean addUser(String adapterId, User user) {
-		return mNetwork.addAccount(adapterId, user);
+        try {
+            return mNetwork.addAccount(adapterId, user);
+        } catch (AppException e) {
+            return  false;
+        }
 	}
 
 	/**
@@ -877,7 +881,11 @@ public final class Controller {
 	 * @throws NotImplementedException
 	 */
 	public boolean deleteUser(String adapterId, User user) {
-		return mNetwork.deleteAccount(adapterId, user);
+        try {
+            return mNetwork.deleteAccount(adapterId, user);
+        } catch (AppException e) {
+            return  false;
+        }
 	}
 
 	/**
@@ -889,7 +897,11 @@ public final class Controller {
 	 * @throws NotImplementedException
 	 */
 	public boolean saveUser(String adapterId, User user) {
-		return mNetwork.updateAccount(adapterId, user);
+        try {
+            return mNetwork.updateAccount(adapterId, user);
+        } catch (AppException e) {
+            return  false;
+        }
 	}
 
 	/**

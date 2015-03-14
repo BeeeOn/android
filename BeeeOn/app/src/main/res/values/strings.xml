@@ -71,6 +71,7 @@
     <string name="add_users_adapter">Add user</string> 
     <string name="add_user_email_header">Email</string>
     <string name="add_user_role_header">Role</string>
+    <string name="adapter_user_title_change_role">Change user role</string>
 
     <!-- Hints -->
     <string name="login_user_name_hint">Login/email</string>
@@ -263,6 +264,8 @@
     <string name="ada_menu_users">Users of adapter</string>
     <string name="ada_menu_del">Delete adapter</string>
     <string name="sensor_menu_del">Remove device</string>
+    <string name="adausr_menu_edit">Edit user</string>
+    <string name="adausr_menu_del">Remove user</string>
 
 
     <!-- Tutorial -->
