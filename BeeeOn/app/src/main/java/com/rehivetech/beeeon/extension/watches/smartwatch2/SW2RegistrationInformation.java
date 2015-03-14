@@ -104,7 +104,7 @@ public class SW2RegistrationInformation extends RegistrationInformation {
 		ContentValues values = new ContentValues();
 
 		values.put(Registration.ExtensionColumns.CONFIGURATION_ACTIVITY, SettingsMainActivity.class.getName());
-		values.put(Registration.ExtensionColumns.CONFIGURATION_TEXT, mContext.getString(R.string.configuration_text));
+//		values.put(Registration.ExtensionColumns.CONFIGURATION_TEXT, mContext.getString(R.string.configuration_text));
 		values.put(Registration.ExtensionColumns.NAME, mContext.getString(R.string.app_name));
 		values.put(Registration.ExtensionColumns.EXTENSION_KEY, SW2ExtensionService.EXTENSION_KEY);
 		values.put(Registration.ExtensionColumns.HOST_APP_ICON_URI, iconHostapp);

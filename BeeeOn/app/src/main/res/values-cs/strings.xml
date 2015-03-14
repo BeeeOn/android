@@ -14,7 +14,7 @@
     <string name="title_activity_registration">Registrace</string>
     <string name="title_activity_login_facebook">Facebook</string>
     <string name="title_activity_widget_configuration">Konfigurace widgetu</string>
-    <string name="title_activity_map_geofence">Oblasti Geofence</string>
+    <string name="title_activity_map_geofence">Lokalizační oblasti</string>
     <string name="title_activity_adapter_users">Uživatelé adaptéru</string>
     <string name="title_activity_add_adapter_user">Přidat nového uživatele</string>
     <string name="title_activity_setup_sensor">Nastavení zařízení</string>
@@ -269,10 +269,10 @@
     <string name="tutorial_next">DALŠÍ</string>
     <string name="tutorial_add">PŘIDAT</string>
 
-    <string name="tutorial_open_menu">Zobrazit nabídku</string>
-    <string name="tutorial_open_menu_text">Klepnutím na ikonu zobrazíte nabídku</string>
+    <string name="tutorial_open_menu">Otevřte nabídku</string>
+    <string name="tutorial_open_menu_text">Klepnutím na ikonu zobrazíte nabídku umístění</string>
     <!-- Help in Add dialogs -->
-    <string name="tut_add_adapter_text_1">Zapojte adaptér do Internetu</string>
+    <string name="tut_add_adapter_text_1">Připojte adaptér k internetové síti</string>
     <string name="tut_add_adapter_text_2">Zapojte adaptér do elektrické sítě</string>
     <string name="tut_add_adapter_text_3">V následujícím kroku zadejte název adaptéru a naskenujte QR kód</string>
     <string name="tut_add_sensor_text_1">Vytáhněte izolační proužek baterií ze senzoru nebo zapojte aktor do elektrické sítě</string>
@@ -310,6 +310,5 @@
     <string name="users_pending_header">Žádost o přidání</string>
     <string name="tut_add_sensor_text">Pro přidání nového zařízení klepněte na plus (+)</string>
     <string name="title_activity_location_detail_screen">Detail umístění</string>
-    <string name="none">Žádný</string>
 
 </resources>

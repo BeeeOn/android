@@ -200,7 +200,7 @@
 
     <!-- WidgetConfigurationActivity -->
     <string name="widget_configuration_adapter">Adaptér:</string>
-    <string name="widget_configuration_sensor">Zariadenie pre zobrazenie</string>
+    <string name="widget_configuration_sensor">Zariadenie pre zobrazenie:</string>
     <string name="widget_configuration_interval_sensor">Interval aktualizácie zariadenia:</string>
     <string name="widget_configuration_interval_widget">Interval aktualizácie widgetu:</string>
     <string name="widget_configuration_login_first">Najskôr je potrebné sa prihlásiť v BeeeOn</string>
@@ -307,33 +307,9 @@
     <string name="adapter_user_title_change_role">Zmeniť užívateľskú úlohu</string>
     <string name="adapter_isnt_set">Nastavte východzí adaptér</string>
     <string name="adapter_doest_exist">Východzí adaptér už neexistuje. Nastavte nový východzí adaptér.</string>
-    <string name="unknown_error">Neznáma chyba</string>
-    <string name="none">Nič</string>
     <string name="toast_not_implemented">Bude implementované v budúcej verzii!</string>
     <string name="add_user_role_header">Úloha</string>
-    <string name="NetworkError___XML">Problém s XML</string>
-    <string name="NetworkError___SERVER_NOT_RESPONDING">Server neodpovedá</string>
-    <string name="NetworkError___NO_SUCH_ENTITY">Neexistuje entita k zmene (zmenené pok rukami)</string>
-    <string name="NetworkError___NO_CONNECTION">Nie je dostupné pripojenie k internetu</string>
-    <string name="NetworkError___NOT_VALID_USER">Zlý token alebo email</string>
-    <string name="NetworkError___NOT_CONSISTENT_SENSOR_ADDR">Zlý ID/TYP -> errMessage obsahuje hlavičku s ID a TYPom</string>
-    <string name="NetworkError___LOW_RIGHTS">Zlé práva (užívateľ nemá práva)</string>
-    <string name="NetworkError___GOOGLE_TOKEN">Neplatný Google token</string>
-    <string name="NetworkError___DAMAGED_XML">Poškodené xml (partial)</string>
-    <string name="NetworkError___COM_VER_MISMATCH">Zlá verzia komunikačného protokolu</string>
-    <string name="NetworkError___COM_PROBLEMS">Komunikačný problém</string>
-    <string name="NetworkError___BAD_UTC">Zlé utc</string>
-    <string name="NetworkError___BAD_UID">Zlé sessionID náhrada za ReSign</string>
-    <string name="NetworkError___BAD_LOCATION_TYPE">Zlý typ miestnosti</string>
-    <string name="NetworkError___BAD_INTERVAL">Zlý interval</string>
-    <string name="NetworkError___BAD_ICON">Zlá ikona</string>
-    <string name="NetworkError___BAD_EMAIL_OR_ROLE">Zlý EMAIL/ÚLOHA -> errMessage obsahuje hlavičku EMAIL a ULOHA</string>
-    <string name="NetworkError___BAD_AGREG_FUNC">Zlý typ agregačnej funkcie</string>
-    <string name="NetworkError___BAD_ACTOR_VALUE">Zlá hodnota aktora</string>
-    <string name="NetworkError___BAD_ACTION">Zlá akcia</string>
-    <string name="NetworkError___ADA_SERVER_PROBLEM">Problém na strane ada_servera</string>
-    <string name="NetworkError___ADAPTER_NOT_FREE">Zlé sériové číslo adaptéru</string>
-    <string name="NetworkError___ADAPTER_NOT_EXISTS">Zlé sériové číslo adaptéru</string>
-    <string name="NetworkError___ADAPTER_HAVE_YET">Zlé sériové číslo adaptéru</string>
+
+    <string name="title_activity_location_detail_screen">Detail umiestnenia</string>
 
 </resources>
