@@ -28,7 +28,7 @@
     <string name="login_login">Prihlásenie</string>
     <string name="login_demo">Demo mód</string>
     <string name="registration_button">Registrácia</string>
-    <string name="alert_neutral">Klikni</string>
+    <string name="alert_neutral">Kliknite</string>
     <string name="alert_positive">OK</string>
 
     <!-- New sensor dialog -->
@@ -68,9 +68,8 @@
     <string name="sen_graph_label">Graf</string>
     <string name="users_header">Užívatelia</string>
     <string name="users_pending_header">Čakajúci požiadavok</string>
-    <string name="add_users_adapter">Pridaj uživateľa</string> 
+    <string name="add_users_adapter">Pridajte uživateľa</string>
     <string name="add_user_email_header">Email</string>
-    <string name="add_user_role_header">Rola</string>
 
     <!-- Hints -->
     <string name="login_user_name_hint">Login/email</string>
@@ -89,22 +88,22 @@
     <string name="toast_welcome_text">Vitajte</string>
     <string name="toast_play_missing">GooglePlay chýba alebo je zastaralé</string>
     <string name="toast_internet_connection">Prosím aktivujte pripojenie k Internetu</string>
-    <string name="toast_no_unregistered_adapter">K dispozici nie je žiadny neregistrovaný adaptér</string>
+    <string name="toast_no_unregistered_adapter">K dispozicií nie je žiadny neregistrovaný adaptér</string>
     <string name="toast_communication_error">Nastal problém v komunikácií, skúste to neskôr</string>
     <string name="toast_tap_again_exit">Stisknite späť dvakrát pre opustenie aplikácie</string>
     <string name="toast_google_auth">Google autentizácia</string>
     <string name="toast_something_wrong">Nastala neznámá chyba, skúste to neskôr</string>
     <string name="toast_check_your_connection_via_browser">Zkontrolujte pripojenie s použitím webového prehliadača</string>
-    <string name="toast_not_implemented">Kontaktujte Lea!</string>      <!-- Bude implementované v ďalšej verzii -->
-    <string name="toast_login_failed">Prilásenie zlyhalo</string>
+    <!-- Bude implementované v ďalšej verzii -->
+    <string name="toast_login_failed">Prihlásenie zlyhalo</string>
     <string name="toast_adapter_activate_failed">Zlyhalo pridanie adaptéru</string>
     <string name="toast_adapter_activated">Adaptér bol aktivovaný</string>
     <string name="toast_adapter_removed">Adaptér bol odstránený</string>
     <string name="toast_no_adapter">Nemáte žiaden registrovaný adaptér</string>
-    <string name="toast_ignore_uninitialized_info">Neskôr môžete pridať ďalšie zariadenie ťukňutím na (+)</string>
+    <string name="toast_ignore_uninitialized_info">Neskôr môžete pridať ďalšie zariadenie ťuknutím na (+)</string>
     <string name="toast_empty_sensor_name">Vyplňte názvy všetkých senzorov</string>
     <string name="toast_wrong_or_no_device">Vybrali ste nesprávne alebo žiadne zariadenie</string>
-    <string name="toast_no_uninitialized_devices">K dispozici nie sú žiadne neinicializované zariadenia</string>
+    <string name="toast_no_uninitialized_devices">K dispozicií nie sú žiadne neinicializované zariadenia</string>
     <string name="toast_success_save_data">Údaje boli úspešne uložené</string>
     <string name="toast_fail_save_data">Uloženie údajov zlyhalo</string>
     <string name="toast_wrong_or_no_watchdog_rule">Vybrali ste nesprávne alebo žiadne pravidlo</string>
@@ -112,7 +111,7 @@
 
     <!-- Progress -->
     <string name="progress_signing">Prihlásenie k serveru&#8230;</string>
-    <string name="progress_google">Prenášanie dát s Googlom&#8230;</string>
+    <string name="progress_google">Prenášanie dát s Google&#8230;</string>
     <string name="progress_signup">Registrujem nového užívateľa&#8230;</string>
     <string name="progress_loading_adapters">Nahrávam Vaše adaptéry&#8230;</string>
     <string name="progress_loading_adapter">Nahrávam dáta adaptérov&#8230;</string>
@@ -120,8 +119,8 @@
     <string name="progress_saving_data">Ukladám dáta&#8230;</string>
 
     <!-- NavDrawer -->
-    <string name="drawer_open">Otvor</string>
-    <string name="drawer_close">Zatvor</string>
+    <string name="drawer_open">Otvoriť</string>
+    <string name="drawer_close">Zatvoriť</string>
     <string name="location">Umiestnenie</string>
     <string name="custom_view">Užívateľský pohľad</string>
     <string name="adapter">Adaptéry</string>
@@ -136,12 +135,12 @@
 
     <!-- Add sensor dialog -->
     <string name="addsensor_sending_request">Posielam párovací požiadavok </string>
-    <string name="addsensor_send_request">Pošli párovací požiadavok  </string>
+    <string name="addsensor_send_request">Pošlite párovací požiadavok</string>
     <string name="addsensor_active_pair">Párovací režim je aktívny </string>
     <string name="addadapter_textview_name">Názov</string>
     <string name="addadapter_view_setname">Nastavte názov adaptéru, napr. Doma</string>
     <string name="addadapter_textview_code">QR kód</string>
-    <string name="addsensor_send_pair">SPUSŤ PÁROVÁNIE</string>
+    <string name="addsensor_send_pair">SPUSŤITE PÁROVÁNIE</string>
 
     <!-- Others -->
     <string name="action_settings">Nastavenie</string>
@@ -205,10 +204,10 @@
     <string name="widget_cached">(cached)</string>
 
     <!-- WidgetConfigurationActivity -->
-    <string name="widget_configuration_adapter">Adaptér</string>
+    <string name="widget_configuration_adapter">Adaptér:</string>
     <string name="widget_configuration_sensor">Zariadenie pre zobrazenie</string>
-    <string name="widget_configuration_interval_sensor">Interval aktualizácie zariadenia</string>
-    <string name="widget_configuration_interval_widget">Interval aktualizácie widgetu</string>
+    <string name="widget_configuration_interval_sensor">Interval aktualizácie zariadenia:</string>
+    <string name="widget_configuration_interval_widget">Interval aktualizácie widgetu:</string>
     <string name="widget_configuration_login_first">Najskôr je potrebné sa prihlásiť v BeeeOn</string>
     <string name="widget_configuration_no_adapters">Nemáte adaptéry a preto nemôžete nastaviť widget</string>
     <string name="widget_configuration_select_adapter">Vyberte adaptér zo zoznamu</string>
@@ -218,7 +217,7 @@
     <string name="play_link">market://details?id=com.rehivetech.beeeon</string>
     <string name="company_email">info@BeeeOn.com</string>
     <string name="company_web">http://rehivetech.com/</string>
-    <string name="copyright">\u00A9 2014-15 RehiveTech. Všetky páva vyhradené.</string>
+    <string name="copyright">\u00A9 2014-15 RehiveTech. Všetky práva vyhradené.</string>
     <string name="version">Verzia</string>
     <string name="logo">Logo</string>
     <string name="rate">Hodnotenie</string>
@@ -246,7 +245,7 @@
     <string name="timezone">Časové pásmo</string>
     <string name="temperature">Teplota</string>
     <string name="noise">Hluk</string>
-    <string name="connections">Pripojenie</string>
+    <string name="connections">Pripojenia</string>
     <string name="smartwatches">Smartwatch-hodinky</string>
     <string name="choose_default_location">Zvoľte východzie umiestnenie</string>
     <string name="choose_default_adapter">Zvoľte východzí adaptér</string>
@@ -266,22 +265,22 @@
 
 
     <!-- Tutorial -->
-    <string name="tut_add_adapter_header">PRIDAJ ADAPTÉR</string>
+    <string name="tut_add_adapter_header">PRIDAJTE ADAPTÉR</string>
     <string name="tut_add_adapter_text">Dotknite sa plus (+) pre pridanie adaptéru</string>
-    <string name="tut_add_sensor_header">PRIDAJ SENSOR</string>
+    <string name="tut_add_sensor_header">PRIDAJTE SENSOR</string>
     <string name="tut_add_sensor_text">Dotknite sa plus (+) pre pridanie zariadenia</string>
     
     <string name="tutorial_next">ĎALŠIE</string>
     <string name="tutorial_add">PRIDAJ</string>
 
-    <string name="tutorial_open_menu">Otvorte Menu</string>
-    <string name="tutorial_open_menu_text">Dotknite sa Ikony a objaví sa Menu</string>
+    <string name="tutorial_open_menu">Otvorte menu</string>
+    <string name="tutorial_open_menu_text">Dotknite sa Ikony a objaví sa menu</string>
     <!-- Help in Add dialogs -->
     <string name="tut_add_adapter_text_1">Zapojte adaptér do Internetu</string>
     <string name="tut_add_adapter_text_2">Zapojte adaptér do elektrickej siete</string>
     <string name="tut_add_adapter_text_3">V následujúcom kroku zadajte názov adaptéru a naskenujte QR kód</string>
     <string name="tut_add_sensor_text_1">Vytiahnite izolačný prúžok batérií zo senzoru alebo zapojte aktor do el. siete</string>
-    <string name="tut_add_sensor_text_2">Počas odpočítavania zatraste krátko so senzorom alebo stisknite párovacie tlačítko na aktore</string>
+    <string name="tut_add_sensor_text_2">Počas odpočítavania zatraste krátko so senzorom alebo stisknite párovacie tlačidlo na aktore</string>
 
 
     <!-- WatchDog -->
@@ -301,7 +300,6 @@
     <string name="preference_set_default_adapter">Nastaviť predvolený adaptér</string>
     <string name="preference_activity_title">Nastavenia</string>
     <string name="please_log_in">Prosím prihláste sa</string>
-    <string name="none">nič</string>
     <string name="no_sensor_available">Nie je dostupný žiadny senzor</string>
     <string name="no_location_available_def_adapter">Nie je k dispozícií umiestnenie predvoleného adaptéru.</string>
     <string name="no_location_available">Nie je k dispozícií umiestenie.</string>
@@ -317,5 +315,32 @@
     <string name="adapter_isnt_set">Nastavte východzí adaptér</string>
     <string name="adapter_doest_exist">Východzí adaptér už neexistuje. Nastavte nový východzí adaptér.</string>
     <string name="unknown_error">Neznáma chyba</string>
+    <string name="none">Nič</string>
+    <string name="toast_not_implemented">Bude implementované v budúcej verzii!</string>
+    <string name="add_user_role_header">Úloha</string>
+    <string name="NetworkError___XML">Problém s XML</string>
+    <string name="NetworkError___SERVER_NOT_RESPONDING">Server neodpovedá</string>
+    <string name="NetworkError___NO_SUCH_ENTITY">Neexistuje entita k zmene (zmenené pok rukami)</string>
+    <string name="NetworkError___NO_CONNECTION">Nie je dostupné pripojenie k internetu</string>
+    <string name="NetworkError___NOT_VALID_USER">Zlý token alebo email</string>
+    <string name="NetworkError___NOT_CONSISTENT_SENSOR_ADDR">Zlý ID/TYP -> errMessage obsahuje hlavičku s ID a TYPom</string>
+    <string name="NetworkError___LOW_RIGHTS">Zlé práva (užívateľ nemá práva)</string>
+    <string name="NetworkError___GOOGLE_TOKEN">Neplatný Google token</string>
+    <string name="NetworkError___DAMAGED_XML">Poškodené xml (partial)</string>
+    <string name="NetworkError___COM_VER_MISMATCH">Zlá verzia komunikačného protokolu</string>
+    <string name="NetworkError___COM_PROBLEMS">Komunikačný problém</string>
+    <string name="NetworkError___BAD_UTC">Zlé utc</string>
+    <string name="NetworkError___BAD_UID">Zlé sessionID náhrada za ReSign</string>
+    <string name="NetworkError___BAD_LOCATION_TYPE">Zlý typ miestnosti</string>
+    <string name="NetworkError___BAD_INTERVAL">Zlý interval</string>
+    <string name="NetworkError___BAD_ICON">Zlá ikona</string>
+    <string name="NetworkError___BAD_EMAIL_OR_ROLE">Zlý EMAIL/ÚLOHA -> errMessage obsahuje hlavičku EMAIL a ULOHA</string>
+    <string name="NetworkError___BAD_AGREG_FUNC">Zlý typ agregačnej funkcie</string>
+    <string name="NetworkError___BAD_ACTOR_VALUE">Zlá hodnota aktora</string>
+    <string name="NetworkError___BAD_ACTION">Zlá akcia</string>
+    <string name="NetworkError___ADA_SERVER_PROBLEM">Problém na strane ada_servera</string>
+    <string name="NetworkError___ADAPTER_NOT_FREE">Zlé sériové číslo adaptéru</string>
+    <string name="NetworkError___ADAPTER_NOT_EXISTS">Zlé sériové číslo adaptéru</string>
+    <string name="NetworkError___ADAPTER_HAVE_YET">Zlé sériové číslo adaptéru</string>
 
 </resources>
