@@ -10,8 +10,8 @@ android {
         applicationId "com.rehivetech.beeeon"
         minSdkVersion 10
         targetSdkVersion 21
-        versionCode 34
-        versionName "2.0.2"
+        versionCode 35
+        versionName "2.0.0"
         signingConfig signingConfigs.debug
     }
     signingConfigs {
@@ -32,16 +32,16 @@ android {
             applicationIdSuffix ".debug"
         }
 
-        /*debugPlay {
-            signingConfig signingConfigs.release
+        debugPlay {
+//            signingConfig signingConfigs.release
             versionNameSuffix " debug"
-        }*/
+        }
 
-        /*release {
-            signingConfig signingConfigs.release
+        release {
+//            signingConfig signingConfigs.release
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-        }*/
+        }
     }
     productFlavors {
     }
