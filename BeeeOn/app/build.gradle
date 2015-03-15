@@ -30,17 +30,20 @@ android {
             signingConfig signingConfigs.debug
             versionNameSuffix " debug"
             applicationIdSuffix ".debug"
+            resValue "string", "app_name", "BeeeOn (debug)"
         }
 
         debugPlay {
 //            signingConfig signingConfigs.release
             versionNameSuffix " debug"
+            resValue "string", "app_name", "BeeeOn (alpha)"
         }
 
         release {
 //            signingConfig signingConfigs.release
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            resValue "string", "app_name", "BeeeOn"
         }
     }
     productFlavors {

@@ -1,10 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
-    <string name="app_name">BeeeOn</string>
-    <string name="app_id" translatable="false">1411635335720288</string>
-
-    <string name="blank"></string>
+    <string name="blank" translatable="false"></string>
     
     <!-- Titles -->
     <string name="title_activity_location_screen">BeeeOn</string>

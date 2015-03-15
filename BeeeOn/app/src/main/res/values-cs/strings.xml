@@ -1,9 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
-    <string name="app_name">BeeeOn</string>
-
-    <string name="blank"></string>
     
     <!-- Titles -->
     <string name="title_activity_location_screen">BeeeOn</string>
@@ -222,14 +218,17 @@
     <!-- Refresh intervals -->
     <plurals name="interval_seconds">
         <item quantity="one">1 sekunda</item>
+		<item quantity="few">%d sekundy</item>
         <item quantity="other">%d sekund</item>
     </plurals>
     <plurals name="interval_minutes">
         <item quantity="one">1 minuta</item>
+		<item quantity="few">%d minuty</item>
         <item quantity="other">%d minut</item>
     </plurals>
     <plurals name="interval_hours">
         <item quantity="one">1 hodina</item>
+		<item quantity="few">1 hodiny</item>
         <item quantity="other">%d hodin</item>
     </plurals>
 
@@ -288,7 +287,7 @@
     <string name="watchdog_notification_send">Poslat notifikaci</string>
     <string name="watchdog_activate_rule">Aktivovat pravidlo</string>
     <string name="watchdog_rule_name">Název pravidla</string>
-    <string name="watchdog_if">Pokud</string>
+    <string name="watchdog_if">Když</string>
     <string name="notification_text">Text notifikace</string>
     
     <string name="rule_menu_del">Smazat</string>

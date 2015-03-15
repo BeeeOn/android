@@ -1,10 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">BeeeOn</string>
-
-    <string name="blank"></string>
-    
     <!-- Titles -->
     <string name="title_activity_location_screen">BeeeOn</string>
     <string name="title_activity_notification">Notifikácia</string>
