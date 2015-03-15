@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="unknown_error">Unknown error</string>
+    <string name="error_message">Error #%1$d: %2$s</string>
+
     <string name="NetworkError___ADAPTER_HAVE_YET">wrong serial number of adapter</string>
     <string name="NetworkError___ADAPTER_NOT_EXISTS">wrong serial number of adapter</string>
     <string name="NetworkError___ADAPTER_NOT_FREE">wrong serial number of adapter</string>

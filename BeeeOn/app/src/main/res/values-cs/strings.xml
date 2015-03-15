@@ -299,7 +299,6 @@
     <string name="choose_sensor">Vyberte senzor:</string>
     <string name="no_adapter_available">Žádný dostupný adaptér</string>
     <string name="no_location_available">Žádné dostupné umístění</string>
-    <string name="unknown_error">Neznámá chyba</string>
     <string name="preference_set_default_location">Nastavit výchozí umístění</string>
     <string name="preference_set_default_adapter">Nastavit výchozí adaptér</string>
     <string name="preference_activity_title">Nastavení</string>

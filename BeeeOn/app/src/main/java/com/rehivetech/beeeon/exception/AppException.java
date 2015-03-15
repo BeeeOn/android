@@ -108,11 +108,12 @@ public class AppException extends RuntimeException {
 		int resId = 0;
 
 		if (mErrorCode != null) {
-			String key = mErrorCode.getClass().getSimpleName() + "__" + mErrorCode;
+			String key = mErrorCode.getClass().getSimpleName() + "___" + mErrorCode;
 			resId = context.getResources().getIdentifier(key, "string", context.getPackageName());
 		}
 
-		return context.getString(resId != 0 ? resId : R.string.unknown_error);
+        String errorMessage = context.getString(resId > 0 ? resId : R.string.unknown_error);
+        return context.getString(R.string.error_message, mErrorCode.getNumber(), errorMessage);
 	}
 
 }

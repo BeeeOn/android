@@ -441,15 +441,15 @@ public class LoginActivity extends BaseActivity {
 				try {
 					mController.beginPersistentConnection();
 					Log.i(TAG, "Login started");
-					
+
 					if (mController.login(email)) {
 						Log.d(TAG, "Login: true");
 						errFlag = false;
-		
+
 						// Load all adapters and data for active one on login
 						progressChangeText(getString(R.string.progress_loading_adapters));
 						mController.reloadAdapters(true);
-		
+
 						Adapter active = mController.getActiveAdapter();
 						if (active != null) {
 							// Load data for active adapter
@@ -457,7 +457,7 @@ public class LoginActivity extends BaseActivity {
 							mController.reloadLocations(active.getId(), true);
 							mController.reloadFacilitiesByAdapter(active.getId(), true);
 						}
-		
+
 						if (mLoginCancel) {
 							// User cancelled login so do logout() to be sure it won't try to login automatically next time
 							mController.logout();
@@ -467,13 +467,12 @@ public class LoginActivity extends BaseActivity {
 								Intent intent = new Intent(getApplicationContext(), MainActivity.class);
 								startActivity(intent);
 							}
-		
+
 							finish();
 						}
 					}
-					
+
 					Log.i(TAG, "Login finished");
-					mController.endPersistentConnection();
 				} catch (AppException e) {
 					ErrorCode errorCode = e.getErrorCode();
 					if (errorCode instanceof NetworkError && errorCode == NetworkError.GOOGLE_TRY_AGAIN) {
@@ -492,7 +491,9 @@ public class LoginActivity extends BaseActivity {
 				} catch (Exception e) {
 					e.printStackTrace();
 					errMessage = getString(R.string.toast_login_failed);
-				}
+				} finally {
+                    mController.endPersistentConnection();
+                }
 
 				progressDismiss();
 				if (errFlag) {
