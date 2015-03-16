@@ -22,7 +22,7 @@ public class LocationDetailActivity extends BaseApplicationActivity {
 
 		getSupportActionBar().setHomeButtonEnabled(true);
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-		getSupportActionBar().setIcon(R.drawable.ic_launcher_white);
+		getSupportActionBar().setIcon(R.drawable.beeeon_logo_white);
 		LocationDetailFragment fragment = new LocationDetailFragment();
 		fragment.setArguments(getIntent().getExtras());
 		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();

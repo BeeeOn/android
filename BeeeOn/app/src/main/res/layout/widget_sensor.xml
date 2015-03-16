@@ -12,7 +12,7 @@
       android:layout_height="72dp"
       android:layout_gravity="center"
       android:padding="4dp"
-      android:src="@drawable/ic_launcher"
+      android:src="@drawable/beeeon_logo"
       android:contentDescription="@string/placeholder_icon" />
 
     <LinearLayout 

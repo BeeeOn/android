@@ -100,7 +100,7 @@ public class SensorWidgetProvider extends AppWidgetProvider {
 		AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
 
 		RemoteViews remoteViews = new RemoteViews(context.getPackageName(), widgetData.layout);
-		remoteViews.setImageViewResource(R.id.icon, widgetData.deviceIcon == 0 ? R.drawable.ic_launcher : widgetData.deviceIcon);
+		remoteViews.setImageViewResource(R.id.icon, widgetData.deviceIcon == 0 ? R.drawable.beeeon_logo : widgetData.deviceIcon);
 		remoteViews.setTextViewText(R.id.name, widgetData.deviceName);
 		remoteViews.setTextViewText(R.id.value, widgetData.deviceValue);
 		remoteViews.setTextViewText(R.id.unit, widgetData.deviceUnit);

@@ -117,7 +117,7 @@ public class MainActivity extends BaseApplicationActivity {
 
 		setSupportProgressBarIndeterminate(true);
 		setSupportProgressBarIndeterminateVisibility(true);
-		//getSupportActionBar().setIcon(R.drawable.ic_launcher_white);
+		//getSupportActionBar().setIcon(R.drawable.beeeon_logo_white);
 
 		// Create NavDrawerMenu
 		mNavDrawerMenu = new NavDrawerMenu(this,mToolbar);

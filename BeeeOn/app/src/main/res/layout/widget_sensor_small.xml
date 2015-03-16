@@ -28,7 +28,7 @@
       android:layout_gravity="center_horizontal|top"      
       android:padding="2dp"
       android:layout_weight="1"
-      android:src="@drawable/ic_launcher"
+      android:src="@drawable/beeeon_logo"
       android:contentDescription="@string/placeholder_icon" />
 
     <LinearLayout 

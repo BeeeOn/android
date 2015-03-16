@@ -111,8 +111,8 @@ public class GcmMessageHandler extends IntentService {
 	private void handleNotification(final Notification notification) {
 
 		NotificationCompat.Builder builder = new NotificationCompat.Builder(this)
-				.setSmallIcon(R.drawable.ic_launcher_white)
-				.setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.ic_launcher_white_icons))
+				.setSmallIcon(R.drawable.beeeon_logo_white)
+				.setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.beeeon_logo_white_icons))
 				// .setWhen(notification.getDate().getTimeInMillis())
 				.setWhen(System.currentTimeMillis()).setContentTitle(getText(R.string.app_name))
 				.setContentText(notification.getMessage()).setAutoCancel(true);
@@ -152,8 +152,8 @@ public class GcmMessageHandler extends IntentService {
 //BACKDOOR, AFTER DEMONIGHT DELETE THIS METHOD
 //	private void createXmasNotification(String msg) {
 //		NotificationCompat.Builder builder = new NotificationCompat.Builder(this)
-//				.setSmallIcon(R.drawable.ic_launcher_white)
-//				.setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.ic_launcher_white_icons))
+//				.setSmallIcon(R.drawable.beeeon_logo_white)
+//				.setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.beeeon_logo_white_icons))
 //				// .setWhen(notification.getDate().getTimeInMillis())
 //				.setWhen(System.currentTimeMillis()).setContentTitle(getText(R.string.app_name))
 //				.setContentText(msg).setAutoCancel(true);

@@ -37,7 +37,7 @@
             android:contentDescription="@string/logo"
             android:gravity="center"
             android:padding="10dp"
-            android:src="@drawable/ic_launcher" >
+            android:src="@drawable/beeeon_logo" >
         </ImageView>
 
         <TextView
