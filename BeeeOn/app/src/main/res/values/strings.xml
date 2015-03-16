@@ -127,6 +127,7 @@
     <string name="menu_dashboard">Dashboard</string>
     <string name="menu_applications">Applications</string>
     <string name="menu_watchdog">Watchdog</string>
+    <string name="menu_profile">Account info</string>
 
     <!-- Add sensor dialog -->
     <string name="addsensor_sending_request">Sending pair request </string>
@@ -158,6 +159,10 @@
     <string name="no_sensor_cap">NO DEVICE</string>
     <string name="no_adapter_cap">NO ADAPTER</string>
     <string name="no_rules_cap">NO RULE</string>
+    <string name="gam_category_senzors">Senzors</string>
+    <string name="gam_category_friends">Friends</string>
+    <string name="gam_category_app">Application</string>
+    <string name="gam_level">Level</string>
 
     <!-- Arrays -->
     <string-array name="registration_spinner">

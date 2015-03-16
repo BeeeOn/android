@@ -1,7 +1,57 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:orientation="vertical"
               android:layout_width="match_parent"
               android:layout_height="match_parent">
 
-</LinearLayout>
+  <RelativeLayout
+    android:layout_width="fill_parent"
+    android:layout_height="50dp"
+    android:layout_margin="10dp">
+
+    <ImageView
+      android:id="@+id/profile_image"
+      android:layout_alignParentStart="true"
+      android:layout_alignParentLeft="true"
+      android:layout_width="40dp"
+      android:layout_height="40dp"
+      />
+
+    <TextView
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:id="@+id/profile_name"
+      android:textSize="16sp"
+      android:gravity="top"
+      android:textColor="@color/beeeon_text_color"
+      android:layout_alignParentTop="true"
+      android:layout_toRightOf="@+id/profile_image"
+      android:layout_toEndOf="@+id/profile_image"
+      android:layout_marginLeft="10dp"
+      android:layout_marginStart="10dp"
+      />
+
+    <TextView
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:id="@+id/profile_detail"
+      android:textSize="14sp"
+      android:textColor="@color/beeeon_text_hint"
+      android:layout_below="@+id/profile_name"
+      android:layout_alignStart="@+id/profile_name"
+      android:layout_alignLeft="@+id/profile_name"
+      />
+
+    </RelativeLayout>
+
+
+  <ListView
+    android:id="@+id/gam_category_list"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:divider="@null"
+    android:dividerHeight="0dp"
+    android:paddingTop="60dp"
+    />
+
+</RelativeLayout>

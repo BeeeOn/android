@@ -1,7 +1,90 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:orientation="vertical"
               android:layout_width="match_parent"
-              android:layout_height="match_parent">
+              android:layout_height="60dp"
+              android:layout_marginTop="5dp"
+              android:layout_marginBottom="5dp">
 
-</LinearLayout>
+  <ImageView
+    android:layout_width="40dp"
+    android:layout_height="40dp"
+    android:src="@drawable/ic_launcher"
+    android:id="@+id/profile_category_icon"
+    android:layout_alignParentStart="true"
+    android:layout_alignParentLeft="true"
+    android:layout_marginLeft="16dp"
+    android:scaleType="fitCenter"
+    android:layout_centerVertical="true"
+    />
+
+  <TextView
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:id="@+id/profile_category_name"
+    android:textColor="@color/beeeon_primary_cyan"
+    android:textSize="18sp"
+    android:layout_toRightOf="@+id/profile_category_icon"
+    android:layout_toEndOf="@+id/profile_category_icon"
+    android:layout_marginLeft="10dp"
+    android:layout_marginStart="10dp"
+    android:paddingTop="10dp"
+    android:gravity="top"
+    />
+
+  <ProgressBar
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:id="@+id/profile_catalog_progress"
+    android:layout_below="@+id/profile_category_name"
+    android:layout_toRightOf="@+id/profile_category_icon"
+    android:layout_toEndOf="@+id/profile_category_icon"
+    android:layout_marginLeft="10dp"
+    android:layout_marginStart="10dp"
+    android:layout_marginRight="70dp"
+    android:layout_marginEnd="70dp"
+    style="@android:style/Widget.ProgressBar.Horizontal"
+    android:progressDrawable="@drawable/customholotheme_scrubber_progress_horizontal_holo_light"
+    />
+
+  <RelativeLayout
+    android:layout_width="60dp"
+    android:layout_height="wrap_content"
+    android:layout_alignParentRight="true"
+    android:layout_alignParentEnd="true"
+    android:layout_marginRight="10dp"
+    android:layout_marginEnd="10dp"
+    android:layout_centerVertical="true"
+    >
+
+    <TextView
+      android:id="@+id/profile_category_points"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:textColor="@color/beeeon_secundary_pink"
+      android:textSize="26sp"
+      android:textStyle="bold"
+      android:layout_centerHorizontal="true"
+      />
+
+    <TextView
+      android:id="@+id/profile_category_done"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:textSize="14sp"
+      android:textColor="@color/beeeon_text_hint"
+      android:layout_below="@+id/profile_category_points"
+      android:layout_centerHorizontal="true"
+      />
+
+    </RelativeLayout>
+
+
+  <ImageView
+    android:layout_width="match_parent"
+    android:layout_height="1px"
+    android:src="@color/beeeon_separator"
+    android:layout_alignParentBottom="true"
+    />
+
+</RelativeLayout>

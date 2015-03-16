@@ -99,6 +99,7 @@ public final class Constants {
     public static final String GUI_MENU_CONTROL = "GUI_MENU_CONTROL";
     public static final String GUI_MENU_DASHBOARD = "GUI_MENU_DASHBOARD";
     public static final String GUI_MENU_WATCHDOG = "GUI_MENU_WATCHDOG";
+  public static final String GUI_MENU_PROFILE = "GUI_MENU_PROFILE";
 
     public static final String[] USER_ROLE = {"Superuser","Admin","User","Guest"};
 

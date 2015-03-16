@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.view.ActionMode;
@@ -29,6 +30,8 @@ import com.rehivetech.beeeon.activity.AddAdapterActivity;
 import com.rehivetech.beeeon.activity.MainActivity;
 import com.rehivetech.beeeon.activity.SettingsMainActivity;
 import com.rehivetech.beeeon.activity.dialog.InfoDialogFragment;
+import com.rehivetech.beeeon.activity.fragment.ProfileDetailFragment;
+import com.rehivetech.beeeon.activity.fragment.WatchDogListFragment;
 import com.rehivetech.beeeon.activity.menuItem.AdapterMenuItem;
 import com.rehivetech.beeeon.activity.menuItem.ApplicationMenuItem;
 import com.rehivetech.beeeon.activity.menuItem.EmptyMenuItem;
@@ -56,9 +59,10 @@ import se.emilsjolander.stickylistheaders.StickyListHeadersListView;
 
 import static android.support.v7.view.ActionMode.*;
 
-public class NavDrawerMenu {
+public class NavDrawerMenu   {
 	private static final String TAG = "NavDrawerMenu";
 	private final static String TAG_INFO = "tag_info";
+  public static final String FRG_TAG_PRO = "PRO";
     private final Toolbar mToolbar;
 
     private MainActivity mActivity;
@@ -225,6 +229,9 @@ public class NavDrawerMenu {
                     else if(mActiveItem.equals(Constants.GUI_MENU_WATCHDOG)) {
                         mActivity.getSupportActionBar().setTitle(mActivity.getString(R.string.menu_watchdog));
                     }
+                    else if(mActiveItem.equals(Constants.GUI_MENU_PROFILE)) {
+                      mActivity.getSupportActionBar().setTitle(mActivity.getString(R.string.menu_profile));
+                    }
 				} else {
 					setDefaultTitle();
 				}
@@ -279,6 +286,9 @@ public class NavDrawerMenu {
             }
             else if(mActiveItem.equals(Constants.GUI_MENU_WATCHDOG)) {
                 mActivity.getSupportActionBar().setTitle(mActivity.getString(R.string.menu_watchdog));
+            }
+            else if(mActiveItem.equals(Constants.GUI_MENU_PROFILE)) {
+              mActivity.getSupportActionBar().setTitle(mActivity.getString(R.string.menu_profile));
             }
 		} else {
 			setDefaultTitle();
@@ -370,7 +380,14 @@ public class NavDrawerMenu {
 		mMenuAdapter.addHeader(new ProfileMenuItem(actUser.getName(), actUser.getEmail(), picture, new OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d(TAG, "OnClick - profile");
+              closeMenu();
+
+              FragmentTransaction fm = mActivity.getSupportFragmentManager().beginTransaction();
+              ProfileDetailFragment f = new ProfileDetailFragment();
+              fm.replace(R.id.content_frame, f, FRG_TAG_PRO);
+              fm.commit();
+              mActiveItem = Constants.GUI_MENU_PROFILE;
+              mActivity.getSupportActionBar().setTitle(mActivity.getString(R.string.menu_profile));
             }
         }));
 
