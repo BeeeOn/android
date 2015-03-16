@@ -10,7 +10,7 @@
     <string name="title_activity_registration">Registrace</string>
     <string name="title_activity_login_facebook">Facebook</string>
     <string name="title_activity_widget_configuration">Konfigurace widgetu</string>
-    <string name="title_activity_map_geofence">Lokalizační oblasti</string>
+    <string name="title_activity_map_geofence">Oblasti Geofence</string>
     <string name="title_activity_adapter_users">Uživatelé adaptéru</string>
     <string name="title_activity_add_adapter_user">Přidat nového uživatele</string>
     <string name="title_activity_setup_sensor">Nastavení zařízení</string>
@@ -41,7 +41,7 @@
     <string name="addsensor_setup_sensor">Nastavte senzor</string>
     <string name="addsensor_or">nebo</string>
     <string name="sensordetail_last_value">Poslední hodnota: \u0020</string>
-    <string name="sensordetail_refresh_time">Interval aktualizace hodnot:</string>
+    <string name="sensordetail_refresh_time">Interval aktualizace:</string>
     <string name="sensordetail_battery_state">Stav baterie</string>
     <string name="update_needed">Prosím aktualizujte aplikaci</string>
     <string name="addsensor_type">Typ senzoru: </string>
@@ -54,9 +54,9 @@
     <string name="registration_serial_number">Pro adaptér se seriovým číslem: </string>
     <string name="alert_title">Název</string>
     <string name="alert_message">Zpráva</string>
-    <string name="refresh_time">Interval aktualizace hodnot:</string>
+    <string name="refresh_time">Interval aktualizace:</string>
     <string name="last_update">Aktualizace: </string>
-    <string name="sen_graph_label">Graf</string>
+    <string name="sen_graph_label">Graf hodnot</string>
     <string name="users_header">Uživatelé</string>
     <string name="add_users_adapter">Přidat uživatele</string>
     <string name="add_user_email_header">Email</string>
@@ -120,7 +120,7 @@
     <string name="no_location">Žádná umístění</string>
     <string name="no_custom_view">Uživatelský pohled není k dispozici</string>
     <string name="no_adapters">Nemáte žádné adaptéry</string>
-    <string name="menu_managment">Správa</string>
+    <string name="menu_managment">Správa domácnosti</string>
     <string name="menu_control">Přehled</string>
     <string name="menu_dashboard">Tabule</string>
     <string name="menu_applications">Aplikace</string>
@@ -136,7 +136,7 @@
     <string name="addsensor_send_pair">ZAHÁJIT PÁROVÁNÍ</string>
 
     <!-- Others -->
-    <string name="action_settings">Nastavení</string>
+    <string name="action_settings">Nastavení aplikace</string>
     <string name="action_about">O aplikaci</string>
     <string name="action_search">Hledání</string>
     <string name="action_refreshlist">Obnovit seznam</string>
