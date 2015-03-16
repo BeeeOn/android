@@ -1,6 +1,6 @@
 # Ignore keystores folder except debug.keystore
-keystores/
-!keystores/debug.keystore
+**/keystores/*
+!**/keystores/debug.keystore
 
 # Built application files
 *.apk
@@ -13,12 +13,12 @@ keystores/
 *.class
 
 # Generated files
-bin/
-gen/
+**/bin/
+**/gen/
 
 # Ignore gradle files
-.gradle/
-build/
+**/.gradle/
+**/build/
 
 # Local configuration file (sdk path, etc)
 local.properties
@@ -28,12 +28,12 @@ local.properties
 Thumbs.db
 
 # Intellij IDEA (see https://intellij-support.jetbrains.com/entries/23393067)
-.idea/workspace.xml
-.idea/tasks.xml
-.idea/libraries
-.idea/dictionaries
-.idea/datasources.xml
-.idea/dataSources.ids
+**/.idea/workspace.xml
+**/.idea/tasks.xml
+**/.idea/libraries/
+**/.idea/dictionaries/
+**/.idea/datasources.xml
+**/.idea/dataSources.ids
 
 # Don't ignore the iml, ipr project files, ignore the *.iws specifics
 !*.iml
