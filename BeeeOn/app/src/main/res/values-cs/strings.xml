@@ -125,6 +125,7 @@
     <string name="menu_dashboard">Tabule</string>
     <string name="menu_applications">Aplikace</string>
     <string name="menu_watchdog">Hlídač</string>
+	<string name="menu_profile">Detaily účtu</string>
 
     <!-- Add sensor dialog -->
     <string name="addsensor_sending_request">Posílám párovací požadavek </string>
@@ -156,6 +157,10 @@
     <string name="no_sensor_cap">ŽÁDNÝ SENZOR</string>
     <string name="no_adapter_cap">ŽÁDNÝ ADAPTÉR</string>
     <string name="no_rules_cap">ŽÁDNÉ PRAVIDLO</string>
+	<string name="gam_category_senzors">Senzory</string>
+	<string name="gam_category_friends">Přátelé</string>
+	<string name="gam_category_app">Aplikace</string>
+	<string name="gam_level">Úroveň</string>
 
     <!-- Arrays -->
     <string-array name="registration_spinner">
