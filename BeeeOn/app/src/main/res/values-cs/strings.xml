@@ -55,7 +55,7 @@
     <string name="alert_title">Název</string>
     <string name="alert_message">Zpráva</string>
     <string name="refresh_time">Interval aktualizace:</string>
-    <string name="last_update">Aktualizace: </string>
+    <string name="last_update">Aktualizováno: </string>
     <string name="sen_graph_label">Graf hodnot</string>
     <string name="users_header">Uživatelé</string>
     <string name="add_users_adapter">Přidat uživatele</string>

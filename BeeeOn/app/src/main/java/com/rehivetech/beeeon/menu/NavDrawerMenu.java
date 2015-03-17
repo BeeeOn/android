@@ -412,8 +412,8 @@ public class NavDrawerMenu   {
 
             // MANAGMENT
             mMenuAdapter.addHeader(new GroupMenuItem(mActivity.getResources().getString(R.string.menu_managment)));
-            mMenuAdapter.addItem(new LocationMenuItem(mActivity.getString(R.string.menu_control), R.drawable.loc_living_room, false, Constants.GUI_MENU_CONTROL, false));
-            mMenuAdapter.addItem(new LocationMenuItem(mActivity.getString(R.string.menu_dashboard),R.drawable.loc_garden,false,Constants.GUI_MENU_DASHBOARD,false));
+            mMenuAdapter.addItem(new LocationMenuItem(mActivity.getString(R.string.menu_control), R.drawable.ic_overview, false, Constants.GUI_MENU_CONTROL, false));
+            mMenuAdapter.addItem(new LocationMenuItem(mActivity.getString(R.string.menu_dashboard),R.drawable.ic_dashboard,false,Constants.GUI_MENU_DASHBOARD,false));
 
             mMenuAdapter.addItem( new SeparatorMenuItem());
             // APPLICATIONS
@@ -431,7 +431,7 @@ public class NavDrawerMenu   {
 		// Adding settings, about etc.
 		mMenuAdapter.addItem(new SettingMenuItem(mActivity.getResources().getString(R.string.action_settings), R.drawable.settings, com.rehivetech.beeeon.activity.menuItem.MenuItem.ID_SETTINGS));
 		mMenuAdapter.addItem(new SettingMenuItem(mActivity.getResources().getString(R.string.action_about), R.drawable.info, com.rehivetech.beeeon.activity.menuItem.MenuItem.ID_ABOUT));
-        mMenuAdapter.addItem(new SettingMenuItem(mActivity.getString(R.string.action_logout), R.drawable.info,MenuItem.ID_LOGOUT));
+        mMenuAdapter.addItem(new SettingMenuItem(mActivity.getString(R.string.action_logout), R.drawable.logout,MenuItem.ID_LOGOUT));
 		return mMenuAdapter;
 	}
 
