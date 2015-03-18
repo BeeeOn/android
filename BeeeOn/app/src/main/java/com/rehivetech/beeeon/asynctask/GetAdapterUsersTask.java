@@ -8,14 +8,11 @@ import com.rehivetech.beeeon.controller.Controller;
  */
 public class GetAdapterUsersTask extends CallbackTask<String> {
 
-	private final Context mContext;
-
 	private final boolean mForceReload;
 
 	public GetAdapterUsersTask(Context context, boolean forceReload) {
-		super();
+		super(context);
 
-		mContext = context;
 		mForceReload = forceReload;
 	}
 

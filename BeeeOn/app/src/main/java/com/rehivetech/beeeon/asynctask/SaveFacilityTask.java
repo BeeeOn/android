@@ -6,11 +6,8 @@ import com.rehivetech.beeeon.pair.SaveFacilityPair;
 
 public class SaveFacilityTask extends CallbackTask<SaveFacilityPair> {
 
-	private Context mContext;
-
 	public SaveFacilityTask(Context context) {
-		super();
-		mContext = context;
+		super(context);
 	}
 
 	@Override
