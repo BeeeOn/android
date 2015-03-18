@@ -13,6 +13,8 @@ import android.view.View.OnClickListener;
 import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.Toast;
+
 import com.rehivetech.beeeon.Constants;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.activity.MainActivity;
@@ -21,7 +23,6 @@ import com.rehivetech.beeeon.asynctask.RegisterAdapterTask;
 import com.rehivetech.beeeon.base.TrackDialogFragment;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.pair.RegisterAdapterPair;
-import com.rehivetech.beeeon.thread.ToastMessageThread;
 import com.rehivetech.beeeon.util.Log;
 
 public class AddAdapterFragmentDialog extends TrackDialogFragment {
@@ -157,7 +158,7 @@ public class AddAdapterFragmentDialog extends TrackDialogFragment {
 			public void onExecute(boolean success) {
 				int messageId = success ? R.string.toast_adapter_activated : R.string.toast_adapter_activate_failed;
 				Log.d(TAG, mActivity.getString(messageId));
-				new ToastMessageThread(mActivity, messageId).start();
+				Toast.makeText(mActivity, messageId, Toast.LENGTH_LONG).show();
 
 				if (success) {
 					AddAdapterFragmentDialog.this.dismiss();

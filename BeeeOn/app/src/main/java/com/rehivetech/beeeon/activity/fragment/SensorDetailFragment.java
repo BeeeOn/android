@@ -42,6 +42,7 @@ import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.GraphView.GraphViewData;
@@ -73,7 +74,6 @@ import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.pair.LogDataPair;
 import com.rehivetech.beeeon.pair.SaveDevicePair;
 import com.rehivetech.beeeon.pair.SaveFacilityPair;
-import com.rehivetech.beeeon.thread.ToastMessageThread;
 import com.rehivetech.beeeon.util.GraphViewHelper;
 import com.rehivetech.beeeon.util.Log;
 import com.rehivetech.beeeon.util.TimeHelper;
@@ -678,7 +678,7 @@ public class SensorDetailFragment extends Fragment {
 				}
 				int messageId = success ? R.string.toast_success_save_data : R.string.toast_fail_save_data;
 				Log.d(TAG, mActivity.getString(messageId));
-				new ToastMessageThread(mActivity, messageId).start();
+				Toast.makeText(mActivity, messageId, Toast.LENGTH_LONG).show();
 			}
 		});
 
@@ -701,7 +701,7 @@ public class SensorDetailFragment extends Fragment {
 				}
 				int messageId = success ? R.string.toast_success_save_data : R.string.toast_fail_save_data;
 				Log.d(TAG, mActivity.getString(messageId));
-				new ToastMessageThread(mActivity, messageId).start();
+				Toast.makeText(mActivity, messageId, Toast.LENGTH_LONG).show();
 			}
 		});
 		mSaveFacilityTask.execute(pair);

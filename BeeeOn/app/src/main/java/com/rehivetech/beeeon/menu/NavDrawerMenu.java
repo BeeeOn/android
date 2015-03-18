@@ -26,16 +26,12 @@ import android.widget.Toast;
 import com.rehivetech.beeeon.Constants;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.activity.AdapterUsersActivity;
-import com.rehivetech.beeeon.activity.AddAdapterActivity;
 import com.rehivetech.beeeon.activity.MainActivity;
 import com.rehivetech.beeeon.activity.SettingsMainActivity;
 import com.rehivetech.beeeon.activity.dialog.InfoDialogFragment;
 import com.rehivetech.beeeon.activity.fragment.ProfileDetailFragment;
-import com.rehivetech.beeeon.activity.fragment.WatchDogListFragment;
 import com.rehivetech.beeeon.activity.menuItem.AdapterMenuItem;
-import com.rehivetech.beeeon.activity.menuItem.ApplicationMenuItem;
 import com.rehivetech.beeeon.activity.menuItem.EmptyMenuItem;
-import com.rehivetech.beeeon.activity.menuItem.GroupImageMenuItem;
 import com.rehivetech.beeeon.activity.menuItem.GroupMenuItem;
 import com.rehivetech.beeeon.activity.menuItem.LocationMenuItem;
 import com.rehivetech.beeeon.activity.menuItem.MenuItem;
@@ -50,7 +46,6 @@ import com.rehivetech.beeeon.asynctask.UnregisterAdapterTask;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.household.ActualUser;
 import com.rehivetech.beeeon.persistence.Persistence;
-import com.rehivetech.beeeon.thread.ToastMessageThread;
 import com.rehivetech.beeeon.util.Log;
 
 import java.util.List;
@@ -355,7 +350,7 @@ public class NavDrawerMenu   {
 			@Override
 			public void onExecute(boolean success) {
 				if (success) {
-					new ToastMessageThread(mActivity, R.string.toast_adapter_removed).start();
+					Toast.makeText(mActivity, R.string.toast_adapter_removed, Toast.LENGTH_LONG).show();
 					mActivity.setActiveAdapterAndLocation();
 					mActivity.redrawMainFragment();
 					mActivity.redrawMenu();
@@ -528,7 +523,7 @@ public class NavDrawerMenu   {
 				mActivity.startActivity(intent);
 
 			} else if (item.getItemId() == R.id.ada_menu_edit) { // RENAME ADAPTER
-				new ToastMessageThread(mActivity, R.string.toast_not_implemented).start();
+			   Toast.makeText(mActivity, R.string.toast_not_implemented, Toast.LENGTH_LONG).show();
 			}
 
 			mode.finish();

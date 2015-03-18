@@ -6,7 +6,6 @@ import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnCancelListener;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.os.Bundle;
@@ -25,7 +24,6 @@ import com.google.android.gms.common.AccountPicker;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 
-import com.rehivetech.beeeon.Constants;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.adapter.Adapter;
 import com.rehivetech.beeeon.base.BaseActivity;
@@ -36,7 +34,6 @@ import com.rehivetech.beeeon.exception.NetworkError;
 import com.rehivetech.beeeon.exception.NotImplementedException;
 import com.rehivetech.beeeon.network.DemoNetwork;
 import com.rehivetech.beeeon.network.GoogleAuthHelper;
-import com.rehivetech.beeeon.thread.ToastMessageThread;
 import com.rehivetech.beeeon.util.Log;
 
 /**
@@ -497,7 +494,14 @@ public class LoginActivity extends BaseActivity {
 
 				progressDismiss();
 				if (errFlag) {
-					new ToastMessageThread(LoginActivity.this, errMessage).start();
+					final Toast toast = Toast.makeText(LoginActivity.this, errMessage, Toast.LENGTH_LONG);
+
+					runOnUiThread(new Runnable() {
+						@Override
+						public void run() {
+							toast.show();
+						}
+					});
 				}
 			}
 		}).start();
