@@ -1,14 +1,11 @@
 package com.rehivetech.beeeon;
 
-import android.content.Intent;
 import android.test.ActivityInstrumentationTestCase2;
 import android.view.KeyEvent;
 
 import com.rehivetech.beeeon.activity.LoginActivity;
 import com.rehivetech.beeeon.util.Log;
 import com.robotium.solo.Solo;
-
-import static android.support.v4.app.ActivityCompat.startActivity;
 
 // ActivityInstrumentationTestCase2 ... class provides methods and activities to interact with the app
 public class RobotiumTest extends ActivityInstrumentationTestCase2<LoginActivity>{

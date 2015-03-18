@@ -1,6 +1,5 @@
 package com.rehivetech.beeeon.activity;
 
-import java.util.ArrayList;
 import java.util.List;
 
 
@@ -18,9 +17,6 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.CheckBox;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.RadioButton;
@@ -207,9 +203,6 @@ public class AdapterUsersActivity extends BaseApplicationActivity {
                 if(success) {
                     // Hlaska o uspechu
                 }
-                else {
-                    // Hlaska o neuspechu
-                }
             }
         });
         mRemoveUserTask.execute(pair);
@@ -226,9 +219,6 @@ public class AdapterUsersActivity extends BaseApplicationActivity {
                 doGetAdapterUsers(mAdapter.getId(), true);
                 if(success) {
                     // Hlaska o uspechu
-                }
-                else {
-                    // Hlaska o neuspechu
                 }
                 mSelectedItem = null;
                 mSelectedItemPos = 0;

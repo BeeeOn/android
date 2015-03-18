@@ -10,14 +10,11 @@ import com.rehivetech.beeeon.pair.DelFacilityPair;
  */
 public class RemoveFacilityTask extends CallbackTask<DelFacilityPair> {
 
-	private final Context mContext;
-
 	private final boolean mForceReload;
 
 	public RemoveFacilityTask(Context context, boolean forceReload) {
-		super();
+		super(context);
 
-		mContext = context;
 		mForceReload = forceReload;
 	}
 

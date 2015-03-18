@@ -38,8 +38,6 @@ public class AddAdapterFragment extends TrackFragment {
 		// Get activity and controller
 		mActivity =  (AddAdapterActivity) getActivity();
 		mController = Controller.getInstance(mActivity.getApplicationContext());
-
-		return;
 	}
 	
 	@Override

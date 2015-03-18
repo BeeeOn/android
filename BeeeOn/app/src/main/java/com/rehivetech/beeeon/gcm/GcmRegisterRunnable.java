@@ -50,7 +50,7 @@ public class GcmRegisterRunnable implements Runnable {
 		GoogleCloudMessaging gcm = GoogleCloudMessaging.getInstance(mContext);
 		int timeToSleep = MIN_SLEEP_TIME_GCM;
 		int attempt = 0;
-		while (mNewGcmId == null || mNewGcmId == "") {
+		while (mNewGcmId == null || mNewGcmId.isEmpty()) {
 			if (mMaxAttempts != null && attempt > mMaxAttempts) {
 				break;
 			}

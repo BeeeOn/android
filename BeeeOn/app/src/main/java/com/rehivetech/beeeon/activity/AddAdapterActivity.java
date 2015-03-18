@@ -7,12 +7,12 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
-import android.text.AlteredCharSequence;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.viewpagerindicator.CirclePageIndicator;
 
@@ -25,7 +25,6 @@ import com.rehivetech.beeeon.asynctask.RegisterAdapterTask;
 import com.rehivetech.beeeon.base.BaseApplicationActivity;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.pair.RegisterAdapterPair;
-import com.rehivetech.beeeon.thread.ToastMessageThread;
 import com.rehivetech.beeeon.util.Log;
 
 public class AddAdapterActivity extends BaseApplicationActivity {
@@ -199,11 +198,10 @@ public class AddAdapterActivity extends BaseApplicationActivity {
 			@Override
 			public void onExecute(boolean success) {
 				mProgress.cancel();
-				int messageId = success ? R.string.toast_adapter_activated : R.string.toast_adapter_activate_failed;
-				//Log.d(TAG, this.getString(messageId));
-				new ToastMessageThread(mActivity, messageId).start();
-				
+
 				if (success) {
+					Toast.makeText(mActivity, R.string.toast_adapter_activated, Toast.LENGTH_LONG).show();
+
 					setResult(Constants.ADD_ADAPTER_SUCCESS);
                     InputMethodManager imm = (InputMethodManager) mActivity.getSystemService(Context.INPUT_METHOD_SERVICE);
                     imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);

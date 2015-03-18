@@ -3,24 +3,16 @@ package com.rehivetech.beeeon.arrayadapter;
 import java.util.List;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.LinearLayout.LayoutParams;
 import android.widget.TextView;
 import com.rehivetech.beeeon.R;
-import com.rehivetech.beeeon.adapter.Adapter;
-import com.rehivetech.beeeon.adapter.device.Device;
-import com.rehivetech.beeeon.adapter.device.Facility;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.household.User;
-import com.rehivetech.beeeon.util.TimeHelper;
-import com.rehivetech.beeeon.util.UnitsHelper;
 
 public class UsersListAdapter extends BaseAdapter {
 

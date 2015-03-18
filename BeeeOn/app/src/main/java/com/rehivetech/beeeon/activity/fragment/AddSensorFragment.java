@@ -62,8 +62,6 @@ public class AddSensorFragment extends TrackFragment {
 			mTimerButtonSec = savedInstanceState.getInt(TIMER_VALUE_PAUSE);
 			Log.d(TAG, "Timer value: " + mTimerButtonSec);
 		}
-
-		return ;
 	}
 	
 	@Override

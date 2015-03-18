@@ -5,11 +5,8 @@ import com.rehivetech.beeeon.controller.Controller;
 
 public class PairRequestTask extends CallbackTask<String> {
 
-	private Context mContext;
-
 	public PairRequestTask(Context context) {
-		super();
-		mContext = context;
+		super(context);
 	}
 
 	@Override

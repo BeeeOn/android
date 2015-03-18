@@ -23,7 +23,7 @@ final public class Utils {
 	 * Private constructor to avoid instantiation.
 	 */
 	private Utils() {
-	};
+	}
 
 	public static Bitmap getRoundedShape(Bitmap scaleBitmapImage) {
 		int targetWidth = 200;

@@ -11,12 +11,10 @@ import com.rehivetech.beeeon.pair.RegisterAdapterPair;
 
 public class RegisterAdapterTask extends CallbackTask<RegisterAdapterPair> {
 
-	private Context mContext;
 	private Controller mController;
 
 	public RegisterAdapterTask(Context context) {
-		super();
-		mContext = context;
+		super(context);
 	}
 
 	private String getUniqueAdapterName() {

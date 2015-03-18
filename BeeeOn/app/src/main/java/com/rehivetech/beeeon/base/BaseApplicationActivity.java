@@ -2,11 +2,12 @@ package com.rehivetech.beeeon.base;
 
 import android.content.Context;
 import android.content.Intent;
+import android.widget.Toast;
+
 import com.rehivetech.beeeon.activity.LoginActivity;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.gcm.INotificationReceiver;
 import com.rehivetech.beeeon.gcm.Notification;
-import com.rehivetech.beeeon.thread.ToastMessageThread;
 
 /**
  * Abstract parent for activities that requires logged in user
@@ -75,9 +76,14 @@ public abstract class BaseApplicationActivity extends BaseActivity implements IN
 	/**
 	 * Method that receives Notifications.
 	 */
-	public void receiveNotification(Notification notification) {
+	public void receiveNotification(final Notification notification) {
 		// FIXME: Leo (or someone else?) should implement correct handling of notifications (showing somewhere in activity or something like that?)
-		(new ToastMessageThread(this, notification.getMessage())).start();
+		runOnUiThread(new Runnable() {
+			@Override
+			public void run() {
+				Toast.makeText(BaseApplicationActivity.this, notification.getMessage(), Toast.LENGTH_LONG).show();
+			}
+		});
 	}
 
 	/**
@@ -109,7 +115,7 @@ public abstract class BaseApplicationActivity extends BaseActivity implements IN
 					Notification notification = new Notification(String.valueOf(i), "2014-10-22 12:12:12", "info", false);
 					// we need email in notification to check validity
 					notification.setEmail("john@doe.com");
-					notification.setMessage(String.format("J� jsem testovac� notifikace �.%d!", i));
+					notification.setMessage(String.format("I am testing notification #%d!", i));
 					// notification.setAction(notification.new Action(action));
 
 					controller.receiveNotification(notification);

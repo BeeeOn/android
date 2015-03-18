@@ -5,14 +5,11 @@ import com.rehivetech.beeeon.controller.Controller;
 
 public class SwitchAdapterTask extends CallbackTask<String> {
 
-	private Context mContext;
-
 	private boolean mForceReload;
 
 	public SwitchAdapterTask(Context context, boolean forceReload) {
-		super();
+		super(context);
 
-		mContext = context;
 		mForceReload = forceReload;
 	}
 
