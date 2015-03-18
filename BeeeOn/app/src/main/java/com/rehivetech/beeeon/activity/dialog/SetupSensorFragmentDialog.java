@@ -207,7 +207,10 @@ public class SetupSensorFragmentDialog extends TrackDialogFragment {
 
 				AlertDialog dialog = (AlertDialog) getDialog();
 				if (dialog != null) {
-					Toast.makeText(mActivity, getString(success ? R.string.toast_new_sensor_added : R.string.toast_new_sensor_not_added), Toast.LENGTH_LONG).show();
+					if (success) {
+						Toast.makeText(mActivity, R.string.toast_new_sensor_added, Toast.LENGTH_LONG).show();
+					}
+
 					mProgress.cancel();
 					dialog.dismiss();
 					mActivity.setActiveAdapterID(mAdapter.getId());

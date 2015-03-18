@@ -156,11 +156,9 @@ public class AddAdapterFragmentDialog extends TrackDialogFragment {
 
 			@Override
 			public void onExecute(boolean success) {
-				int messageId = success ? R.string.toast_adapter_activated : R.string.toast_adapter_activate_failed;
-				Log.d(TAG, mActivity.getString(messageId));
-				Toast.makeText(mActivity, messageId, Toast.LENGTH_LONG).show();
-
 				if (success) {
+					Toast.makeText(mActivity, R.string.toast_adapter_activated, Toast.LENGTH_LONG).show();
+
 					AddAdapterFragmentDialog.this.dismiss();
 					mActivity.setActiveAdapterAndLocation();
 					mActivity.redrawMenu();

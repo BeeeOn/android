@@ -203,9 +203,6 @@ public class AdapterUsersActivity extends BaseApplicationActivity {
                 if(success) {
                     // Hlaska o uspechu
                 }
-                else {
-                    // Hlaska o neuspechu
-                }
             }
         });
         mRemoveUserTask.execute(pair);
@@ -222,9 +219,6 @@ public class AdapterUsersActivity extends BaseApplicationActivity {
                 doGetAdapterUsers(mAdapter.getId(), true);
                 if(success) {
                     // Hlaska o uspechu
-                }
-                else {
-                    // Hlaska o neuspechu
                 }
                 mSelectedItem = null;
                 mSelectedItemPos = 0;

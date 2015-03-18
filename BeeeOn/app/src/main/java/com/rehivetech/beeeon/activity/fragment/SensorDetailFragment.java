@@ -673,12 +673,10 @@ public class SensorDetailFragment extends Fragment {
 					Log.d(TAG, "Success save to server");
 					// Change GUI
 					mActivity.redraw();
+					Toast.makeText(mActivity, R.string.toast_success_save_data, Toast.LENGTH_LONG).show();
 				} else {
 					Log.d(TAG, "Fail save to server");
 				}
-				int messageId = success ? R.string.toast_success_save_data : R.string.toast_fail_save_data;
-				Log.d(TAG, mActivity.getString(messageId));
-				Toast.makeText(mActivity, messageId, Toast.LENGTH_LONG).show();
 			}
 		});
 
@@ -692,16 +690,15 @@ public class SensorDetailFragment extends Fragment {
 			public void onExecute(boolean success) {
 				if (mActivity.getProgressDialog() != null)
 					mActivity.getProgressDialog().dismiss();
+
 				if (success) {
 					Log.d(TAG, "Success save to server");
 					// Change GUI
 					mActivity.redraw();
+					Toast.makeText(mActivity, R.string.toast_success_save_data, Toast.LENGTH_LONG).show();
 				} else {
 					Log.d(TAG, "Fail save to server");
 				}
-				int messageId = success ? R.string.toast_success_save_data : R.string.toast_fail_save_data;
-				Log.d(TAG, mActivity.getString(messageId));
-				Toast.makeText(mActivity, messageId, Toast.LENGTH_LONG).show();
 			}
 		});
 		mSaveFacilityTask.execute(pair);

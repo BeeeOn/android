@@ -231,9 +231,10 @@ public class SetupSensorActivity extends BaseApplicationActivity {
 
 				//AlertDialog dialog = (AlertDialog) getDialog();
 				//if (dialog != null) {
-					Toast.makeText(mActivity, getString(success ? R.string.toast_new_sensor_added : R.string.toast_new_sensor_not_added), Toast.LENGTH_LONG).show();
 					mProgress.cancel();
 					if(success){
+						Toast.makeText(mActivity, R.string.toast_new_sensor_added, Toast.LENGTH_LONG).show();
+
 						Intent intent = new Intent();
 						intent.putExtra(Constants.SETUP_SENSOR_ACT_LOC, pair.location.getId());
 						setResult(Constants.SETUP_SENSOR_SUCCESS,intent);

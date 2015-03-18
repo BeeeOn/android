@@ -198,11 +198,10 @@ public class AddAdapterActivity extends BaseApplicationActivity {
 			@Override
 			public void onExecute(boolean success) {
 				mProgress.cancel();
-				int messageId = success ? R.string.toast_adapter_activated : R.string.toast_adapter_activate_failed;
-				//Log.d(TAG, this.getString(messageId));
-				Toast.makeText(mActivity, messageId, Toast.LENGTH_LONG).show();
-				
+
 				if (success) {
+					Toast.makeText(mActivity, R.string.toast_adapter_activated, Toast.LENGTH_LONG).show();
+
 					setResult(Constants.ADD_ADAPTER_SUCCESS);
                     InputMethodManager imm = (InputMethodManager) mActivity.getSystemService(Context.INPUT_METHOD_SERVICE);
                     imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
