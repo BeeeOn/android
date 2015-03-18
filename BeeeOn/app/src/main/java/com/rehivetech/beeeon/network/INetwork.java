@@ -70,6 +70,8 @@ public interface INetwork {
 	 * @return UID for actual communication
 	 */
 	public String getUID();
+
+    public String getBT();
 	
 	/**
 	 * Method does logging in/registration of user and load communication UID.
@@ -430,4 +432,5 @@ public interface INetwork {
 
     public boolean deleteWatchDog(WatchDog watchDog);
 
+    public boolean passBorder(String regionId, String type);
 }

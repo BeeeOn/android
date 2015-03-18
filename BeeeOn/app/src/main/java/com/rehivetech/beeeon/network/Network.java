@@ -472,6 +472,9 @@ public class Network implements INetwork {
 		return mUserID;
 	}
 
+    @Override
+    public String getBT() { return mBT; }
+
     /**
      * Method load UID from server
      * @return true if everything successful, false otherwise
@@ -1349,6 +1352,17 @@ public class Network implements INetwork {
     @Override
     public boolean deleteWatchDog(WatchDog watchDog){
         ParsedMessage msg = doRequest(XmlCreator.createDelAlg(mBT, watchDog.getId()));
+
+        if(msg.getState() == State.TRUE)
+            return true;
+
+        FalseAnswer fa = (FalseAnswer) msg.data;
+        throw new AppException(fa.getErrMessage(), NetworkError.fromValue(fa.getErrCode()));
+    }
+
+    @Override
+    public boolean passBorder(String regionId, String type){
+        ParsedMessage msg = doRequest(XmlCreator.createPassBorder(mBT, regionId, type));
 
         if(msg.getState() == State.TRUE)
             return true;

@@ -51,6 +51,7 @@ public class XmlCreator {
 	
 	public static final String GETUID = "getuid";
     public static final String GETBT =  "getbt";
+    public static final String PASSBORDER = "passborder";
 
 	public static final String ADDADAPTER = "addadapter";
 	public static final String REINITADAPTER = "reinitadapter";
@@ -1265,6 +1266,17 @@ public class XmlCreator {
      */
     public static String createGetBT(String uid,  String locale, String pid){
         return createComAttribsVariant(Xconstants.STATE, GETBT, Xconstants.UID, uid, Xconstants.LOCALE, locale, Xconstants.PID, pid);
+    }
+
+    /**
+     * Method create message for PassBorder event
+     * @param bt
+     * @param rid
+     * @param type
+     * @return
+     */
+    public static String createPassBorder(String bt, String rid, String type){
+        return  createComAttribsVariant(Xconstants.STATE, PASSBORDER, Xconstants.BT, bt, Xconstants.RID, rid, Xconstants.TYPE, type);
     }
 
 	/************************************* PRIVATE METHODS *********************************************/

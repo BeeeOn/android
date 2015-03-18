@@ -26,6 +26,7 @@ public class Xconstants {
 	public static final String GID = "gid";
 	public static final String UID = "uid";
     public static final String ALGID = "algid";
+    public static final String RID = "rid";
 	public static final String ZERO = "0";
 	public static final String ONE = "1";
 	public static final String STATE = "state";

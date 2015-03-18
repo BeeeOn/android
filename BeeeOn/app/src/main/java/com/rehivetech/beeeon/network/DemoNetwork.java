@@ -157,6 +157,9 @@ public class DemoNetwork implements INetwork {
 		mUID = userId;
 	}
 
+    @Override
+    public String getBT() { return ""; }
+
 	@Override
 	public String getUID() {
 		return mUID;
@@ -686,4 +689,7 @@ public class DemoNetwork implements INetwork {
 
     @Override
     public boolean addWatchDog(WatchDog watchDog, String AdapterID){return true;}
+
+    @Override
+    public boolean passBorder(String regionId, String type) {return true;}
 }
