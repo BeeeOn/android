@@ -378,7 +378,7 @@ public class SetupSensorFragmentDialog extends TrackDialogFragment {
 			// Prepare list of icons
 			List<Integer> iconsList = new ArrayList<Integer>();
 			for (int rIcon : Location.icons) {
-				iconsList.add(Integer.valueOf(rIcon));
+				iconsList.add(rIcon);
 			}
 
 			// first call need to add adapter

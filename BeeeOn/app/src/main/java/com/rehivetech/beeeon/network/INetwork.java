@@ -2,7 +2,6 @@ package com.rehivetech.beeeon.network;
 
 import java.util.ArrayList;
 import java.util.EnumSet;
-import java.util.HashMap;
 import java.util.List;
 
 import com.rehivetech.beeeon.adapter.Adapter;

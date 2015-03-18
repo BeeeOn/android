@@ -1,9 +1,5 @@
 package com.rehivetech.beeeon.activity;
 
-import java.util.List;
-
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
@@ -13,15 +9,11 @@ import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.ViewGroup;
 import android.view.Window;
-import android.widget.EditText;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
-import android.widget.Toast;
 
 /*
 import com.actionbarsherlock.view.Menu;
@@ -42,7 +34,6 @@ import com.rehivetech.beeeon.activity.fragment.CustomViewFragment;
 import com.rehivetech.beeeon.activity.fragment.SensorListFragment;
 import com.rehivetech.beeeon.activity.fragment.WatchDogListFragment;
 import com.rehivetech.beeeon.adapter.Adapter;
-import com.rehivetech.beeeon.adapter.location.Location;
 import com.rehivetech.beeeon.base.BaseApplicationActivity;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.menu.NavDrawerMenu;
@@ -293,7 +284,6 @@ public class MainActivity extends BaseApplicationActivity {
 			}
 			mNavDrawerMenu.finishActinMode();
 		}
-		return;
 	}
 
 	public boolean getBackPressed() {

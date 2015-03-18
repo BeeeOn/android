@@ -93,8 +93,7 @@ public class AppException extends RuntimeException {
 			}
 			s.println("\t-------------------------------");
 			StackTraceElement[] trace = getStackTrace();
-			for (int i = 0; i < trace.length; i++)
-				s.println("\tat " + trace[i]);
+			for (StackTraceElement aTrace : trace) s.println("\tat " + aTrace);
 
 			Throwable ourCause = getCause();
 			if (ourCause != null) {

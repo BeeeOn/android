@@ -1,6 +1,5 @@
 package com.rehivetech.beeeon.activity;
 
-import java.util.ArrayList;
 import java.util.List;
 
 
@@ -18,9 +17,6 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.CheckBox;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.RadioButton;

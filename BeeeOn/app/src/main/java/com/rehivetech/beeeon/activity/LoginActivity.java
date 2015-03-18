@@ -148,7 +148,7 @@ public class LoginActivity extends BaseActivity {
 
 		// AUTOMATIC LOGIN
 		String lastEmail = mController.getLastEmail();
-		if (lastEmail.length() > 0 && lastEmail != DemoNetwork.DEMO_EMAIL) {
+		if (lastEmail.length() > 0 && !lastEmail.equals(DemoNetwork.DEMO_EMAIL)) {
 			// Automatic login with last used e-mail
 			Log.d(TAG, String.format("Automatic login with last used e-mail (%s)...", lastEmail));
 			doLogin(false, lastEmail);
