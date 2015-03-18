@@ -1,9 +1,5 @@
 package com.rehivetech.beeeon.network;
 
-import java.util.ArrayList;
-import java.util.EnumSet;
-import java.util.List;
-
 import com.rehivetech.beeeon.adapter.Adapter;
 import com.rehivetech.beeeon.adapter.device.Device;
 import com.rehivetech.beeeon.adapter.device.Device.SaveDevice;
@@ -17,6 +13,10 @@ import com.rehivetech.beeeon.network.xml.WatchDog;
 import com.rehivetech.beeeon.network.xml.action.ComplexAction;
 import com.rehivetech.beeeon.network.xml.condition.Condition;
 import com.rehivetech.beeeon.pair.LogDataPair;
+
+import java.util.ArrayList;
+import java.util.EnumSet;
+import java.util.List;
 
 public interface INetwork {
 
@@ -75,10 +75,12 @@ public interface INetwork {
 	 * Method does logging in/registration of user and load communication UID.
 	 * You can get actual communication UID by calling getUID()
 	 * 
-	 * @param GoogleUserInfo containing a google token and userId
+	 * @param googleUserInfo containing a google token and userId
 	 * @return true on success, false or throw exception otherwise
 	 */
 	public boolean loadUID(GoogleUserInfo googleUserInfo);
+
+    public boolean SignIn();
 
 	/**
 	 * Method register adapter to server
@@ -124,8 +126,7 @@ public interface INetwork {
 
 	/**
 	 * Method send updated fields of devices
-	 * 
-	 * @param devices
+	 *
 	 * @return true if everything goes well, false otherwise
 	 */
 	public boolean updateFacilities(String adapterID, List<Facility> facilities, EnumSet<SaveDevice> toSave);
@@ -194,16 +195,13 @@ public interface INetwork {
 	 * TODO: need to test
 	 * 
 	 * @param adapterID
-	 * @param facilities
 	 * @return
 	 */
 	public List<Facility> getNewFacilities(String adapterID);
 
 	/**
 	 * Method ask for data of logs
-	 * 
-	 * @param deviceId
-	 *            id of wanted device
+	 *
 	 * @param pair
 	 *            data of log (from, to, type, interval)
 	 * @return list of rows with logged data
@@ -261,8 +259,6 @@ public interface INetwork {
 	 *            name of new custom view
 	 * @param iconID
 	 *            icon that is assigned to the new view
-	 * @param deviceIds
-	 *            list of devices that are assigned to new view
 	 * @return true if everything goes well, false otherwise
 	 */
 	public boolean addView(String viewName, int iconID, List<Device> devices);
@@ -295,8 +291,6 @@ public interface INetwork {
 	 * Method add new user to adapter
 	 * 
 	 * @param adapterID
-	 * @param email
-	 * @param role
 	 * @return
 	 */
 	public boolean addAccount(String adapterID, User user);
@@ -328,8 +322,7 @@ public interface INetwork {
 
 	/**
 	 * Method update users roles on server on current adapter
-	 * 
-	 * @param userNrole
+	 *
 	 *            map with email as key and role as value
 	 * @return true if all accounts has been changed false otherwise
 	 */
@@ -340,7 +333,6 @@ public interface INetwork {
 	 * 
 	 * @param adapterID
 	 * @param user
-	 * @param role
 	 * @return
 	 */
 	public boolean updateAccount(String adapterID, User user);
@@ -387,9 +379,6 @@ public interface INetwork {
 	 * @param gcmID
 	 *            - google cloud message id
 	 * @return true if id has been deleted, false otherwise
-	 * @throws NoConnectionException
-	 * @throws CommunicationException
-	 * @throws FalseException
 	 */
 	public boolean deleteGCMID(String email, String gcmID);
 	
@@ -433,9 +422,9 @@ public interface INetwork {
 
     public boolean addWatchDog(WatchDog watchDog, String AdapterID);
 
-    public WatchDog getWatchDog(String watchDogId);
+    public ArrayList<WatchDog> getWatchDogs(ArrayList<String> watchDogIds);
 
-    public HashMap<String, String> getAlgorithms();
+    public ArrayList<WatchDog> getAllWatchDogs(String adapterID);
 
     public boolean updateWatchDog(WatchDog watchDog, String AdapterId);
 

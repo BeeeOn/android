@@ -10,6 +10,7 @@ package com.rehivetech.beeeon.network.xml;
 public class Xconstants {
 
 	public static final String COM_ROOT = "com";
+    public static final String BT =  "bt";
 	public static final String ID = "id";
 	public static final String SID = "sid";
 	public static final String AID = "aid";

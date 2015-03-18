@@ -1,16 +1,7 @@
 package com.rehivetech.beeeon.network;
 
-import java.util.ArrayList;
-import java.util.EnumSet;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
-
-import org.joda.time.DateTime;
-import org.joda.time.DateTimeZone;
-
 import android.content.Context;
+
 import com.rehivetech.beeeon.Constants;
 import com.rehivetech.beeeon.adapter.Adapter;
 import com.rehivetech.beeeon.adapter.device.Device;
@@ -31,10 +22,21 @@ import com.rehivetech.beeeon.household.User.Gender;
 import com.rehivetech.beeeon.household.User.Role;
 import com.rehivetech.beeeon.network.GoogleAuthHelper.GoogleUserInfo;
 import com.rehivetech.beeeon.network.xml.CustomViewPair;
+import com.rehivetech.beeeon.network.xml.WatchDog;
 import com.rehivetech.beeeon.network.xml.XmlParsers;
 import com.rehivetech.beeeon.network.xml.action.ComplexAction;
 import com.rehivetech.beeeon.network.xml.condition.Condition;
 import com.rehivetech.beeeon.pair.LogDataPair;
+
+import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
+
+import java.util.ArrayList;
+import java.util.EnumSet;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Random;
 
 /**
  * Network service that handles communication in demo mode.
@@ -667,4 +669,21 @@ public class DemoNetwork implements INetwork {
 		return true;
 	}
 
+    @Override
+    public boolean SignIn(){return true;}
+
+    @Override
+    public ArrayList<WatchDog> getAllWatchDogs(String adapterID){return null;}
+
+    @Override
+    public ArrayList<WatchDog> getWatchDogs(ArrayList<String> watchDogIds){return null;}
+
+    @Override
+    public boolean updateWatchDog(WatchDog watchDog, String AdapterId){return true;}
+
+    @Override
+    public boolean deleteWatchDog(WatchDog watchDog){return true;}
+
+    @Override
+    public boolean addWatchDog(WatchDog watchDog, String AdapterID){return true;}
 }
