@@ -549,17 +549,13 @@ public final class Controller {
 	 * @param id
 	 * @return true on success, false otherwise
 	 */
-	public boolean registerAdapter(String id, String adapterName) {
+	public boolean registerAdapter(String id, String adapterName){
 		boolean result = false;
 
-		try {
-			if (mNetwork.addAdapter(id, adapterName)) {
-				mHousehold.adaptersModel.reloadAdapters(true);
-				setActiveAdapter(id, true);
-				result = true;
-			}
-		} catch (AppException e) {
-			e.printStackTrace();
+		if (mNetwork.addAdapter(id, adapterName)) {
+			mHousehold.adaptersModel.reloadAdapters(true);
+			setActiveAdapter(id, true);
+			result = true;
 		}
 
 		return result;
@@ -572,17 +568,9 @@ public final class Controller {
 	 * @return
 	 */
 	// TODO: review this
-	// public boolean registerUser(String email) {
-	// boolean result = false;
-	//
-	// try {
-	// result = mNetwork.signUp(mHousehold.user.getEmail()); //FIXME: ROB use getUID instead!
-	// } catch (AppException e) {
-	// e.printStackTrace();
-	// }
-	//
-	// return result;
-	// }
+	/*public boolean registerUser(String email) {
+		return mNetwork.signUp(mHousehold.user.getEmail()); //FIXME: ROB use getUID instead!
+	}*/
 
 	/**
 	 * FIXME: debug implementation Unregisters adapter from server.
@@ -595,21 +583,15 @@ public final class Controller {
 	public boolean unregisterAdapter(String id) {
 		// FIXME: This debug implementation unregisters actual user from adapter, not adapter itself
 
-		boolean result = false;
+		if (mNetwork.deleteAccount(id, mHousehold.user)) {
+			if (mHousehold.activeAdapter != null && mHousehold.activeAdapter.getId().equals(id))
+				mHousehold.activeAdapter = null;
 
-		try {
-			if (mNetwork.deleteAccount(id, mHousehold.user)) {
-				if (mHousehold.activeAdapter != null && mHousehold.activeAdapter.getId().equals(id))
-					mHousehold.activeAdapter = null;
-
-				mHousehold.adaptersModel.reloadAdapters(true);
-				result = true;
-			}
-		} catch (AppException e) {
-			e.printStackTrace();
+			mHousehold.adaptersModel.reloadAdapters(true);
+			return true;
 		}
 
-		return result;
+		return false;
 	}
 
 	/** Location methods ****************************************************/
@@ -647,12 +629,7 @@ public final class Controller {
 			return false;
 		}
 
-		boolean deleted = false;
-		try {
-			deleted = mNetwork.deleteLocation(adapter.getId(), location);
-		} catch (AppException e) {
-			e.printStackTrace();
-		}
+		boolean deleted = mNetwork.deleteLocation(adapter.getId(), location);
 
 		// Location was deleted on server, remove it from adapter too
 		return deleted && mHousehold.locationsModel.deleteLocation(adapter.getId(), location.getId());
@@ -672,12 +649,7 @@ public final class Controller {
 			return false;
 		}
 
-		boolean saved = false;
-		try {
-			saved = mNetwork.updateLocation(adapter.getId(), location);
-		} catch (AppException e) {
-			e.printStackTrace();
-		}
+		boolean saved = mNetwork.updateLocation(adapter.getId(), location);
 
 		// Location was updated on server, update it to adapter too
 		return saved && mHousehold.locationsModel.updateLocation(adapter.getId(), location);
@@ -697,12 +669,7 @@ public final class Controller {
 			return null;
 		}
 
-		try {
-			location = mNetwork.createLocation(adapter.getId(), location);
-		} catch (AppException e) {
-			e.printStackTrace();
-			location = null;
-		}
+		location = mNetwork.createLocation(adapter.getId(), location);
 
 		// Location was saved on server, save it to adapter too
 		return (location != null && mHousehold.locationsModel.addLocation(adapter.getId(), location)) ? location : null;
@@ -820,15 +787,7 @@ public final class Controller {
 	 */
 	public boolean sendPairRequest(String adapterID) {
 		// FIXME: hack -> true if you want to add virtual sensor
-		boolean result = false;
-
-		try {
-			result = mNetwork.prepareAdapterToListenNewSensors(adapterID);
-		} catch (AppException e) {
-			e.printStackTrace();
-		}
-
-		return result;
+		return mNetwork.prepareAdapterToListenNewSensors(adapterID);
 	}
 
 	/** User methods ********************************************************/
@@ -865,11 +824,7 @@ public final class Controller {
 	 * @throws NotImplementedException
 	 */
 	public boolean addUser(String adapterId, User user) {
-        try {
-            return mNetwork.addAccount(adapterId, user);
-        } catch (AppException e) {
-            return  false;
-        }
+		return mNetwork.addAccount(adapterId, user);
 	}
 
 	/**
@@ -881,11 +836,7 @@ public final class Controller {
 	 * @throws NotImplementedException
 	 */
 	public boolean deleteUser(String adapterId, User user) {
-        try {
-            return mNetwork.deleteAccount(adapterId, user);
-        } catch (AppException e) {
-            return  false;
-        }
+		return mNetwork.deleteAccount(adapterId, user);
 	}
 
 	/**
@@ -897,11 +848,7 @@ public final class Controller {
 	 * @throws NotImplementedException
 	 */
 	public boolean saveUser(String adapterId, User user) {
-        try {
-            return mNetwork.updateAccount(adapterId, user);
-        } catch (AppException e) {
-            return  false;
-        }
+		return mNetwork.updateAccount(adapterId, user);
 	}
 
 	/**
