@@ -35,6 +35,7 @@ import com.rehivetech.beeeon.exception.NotImplementedException;
 import com.rehivetech.beeeon.network.DemoNetwork;
 import com.rehivetech.beeeon.network.GoogleAuthHelper;
 import com.rehivetech.beeeon.util.Log;
+import com.rehivetech.beeeon.util.Utils;
 
 /**
  * First sign in class, controls first activity
@@ -52,6 +53,7 @@ public class LoginActivity extends BaseActivity {
 	private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 1;
 	private static final int RESULT_DO_RECOVERABLE_AUTH = 5;
 	private static final int RESULT_GET_GOOGLE_ACCOUNT = 6;
+	private static final int RESULT_DO_WEBLOGIN = 7;
 	
 	private Controller mController;
 	private LoginActivity mActivity;
@@ -160,11 +162,25 @@ public class LoginActivity extends BaseActivity {
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
-		
+
+		Log.d(TAG, "onActivityResult: " + requestCode + ", " + resultCode + ", " + data.toString());
+
 		if (resultCode == RESULT_CANCELED) {
 			mLoginCancel = true;
 			progressDismiss();
 			return;
+		}
+
+		if(resultCode == RESULT_OK && requestCode == RESULT_DO_WEBLOGIN) {
+			String token = data.getStringExtra("google.token");
+			if(token == null) {
+				Log.d(TAG, "no google.token received");
+				return;
+			}
+
+			progressChangeText(getString(R.string.loading_data));
+			Log.i(TAG, "Access Google by token");
+			doLoginByToken(token);
 		}
 
 		if (resultCode == RESULT_OK && (requestCode == RESULT_DO_RECOVERABLE_AUTH || requestCode == RESULT_GET_GOOGLE_ACCOUNT)) {
@@ -386,6 +402,22 @@ public class LoginActivity extends BaseActivity {
 		if (!checkInternetConnection())
 			return;
 		
+		if(Utils.isBlackBerry())
+			beginBlackBerryGoogleAuth();
+		else
+			beginAndroidGoogleAuth();
+	}
+
+	private void beginBlackBerryGoogleAuth() {
+		Log.d(TAG, "Start BlackBerryGoogleAuth");
+
+		final Intent intent = new Intent(getApplicationContext(), BlackBerryLoginActivity.class);
+		startActivityForResult(intent, RESULT_DO_WEBLOGIN);
+
+		Log.d(TAG, "Finish BlackBerryGoogleAuth");
+	}
+
+	private void beginAndroidGoogleAuth() {
 		Log.d(TAG, "Start GoogleAuthRoutine");
 		mProgress.show();
 				
@@ -411,6 +443,41 @@ public class LoginActivity extends BaseActivity {
 			mProgress.dismiss();
 		}
 		Log.d(TAG, "Finish GoogleAuthRoutine");
+	}
+
+	private void doLoginByToken(final String token) {
+		Log.i(TAG, "LoginByToken started");
+
+		mLoginCancel = false;
+		progressShow();
+
+		new Thread(new Runnable() {
+			@Override
+			public void run() {
+				mController.beginPersistentConnection();
+				mController.assignToken(token);
+				progressChangeText(getString(R.string.progress_loading_adapters));
+				mController.reloadAdapters(true);
+
+				Adapter active = mController.getActiveAdapter();
+				if (active != null) {
+					// Load data for active adapter
+					progressChangeText(getString(R.string.progress_loading_adapter));
+					mController.reloadLocations(active.getId(), true);
+					mController.reloadFacilitiesByAdapter(active.getId(), true);
+				}
+
+				if (!mIsRedirect) {
+					Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+					startActivity(intent);
+				}
+
+				finish();
+				Log.i(TAG, "Login finished");
+
+				progressDismiss();
+			}
+		}).start();
 	}
 
 	/**
