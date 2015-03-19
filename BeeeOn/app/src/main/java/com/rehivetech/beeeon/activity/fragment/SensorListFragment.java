@@ -476,6 +476,7 @@ public class SensorListFragment extends Fragment {
 		Intent intent = new Intent(mActivity, AddSensorActivity.class);
 		mActivity.startActivityForResult(intent, Constants.ADD_SENSOR_REQUEST_CODE);
 	}
+
 	public void setMenuID(String locID) {
 		mActiveLocationId = locID;
 	}
@@ -487,7 +488,6 @@ public class SensorListFragment extends Fragment {
 	public void setIsPaused(boolean value) {
 		isPaused = value;
 	}
-
 
     private void doReloadFacilitiesTask(String adapterId) {
         mReloadFacilitiesTask = new ReloadFacilitiesTask(getActivity().getApplicationContext(), true);
