@@ -165,6 +165,34 @@ public final class Controller {
 		return login(email, true);
 	}
 
+	public boolean assignToken(String token) {
+		final ActualUser user = mHousehold.user;
+		final GoogleUserInfo googleInfo = GoogleAuthHelper.fetchInfoFromProfileServer(token);
+
+		Log.d(TAG, "name: " + googleInfo.name);
+		Log.d(TAG, "email: " + googleInfo.email);
+		Log.d(TAG, "gender: " + googleInfo.gender);
+		Log.d(TAG, "picture: " + googleInfo.pictureUrl);
+		Log.d(TAG, "gid: " + googleInfo.id);
+
+		mPersistence.loadUserDetails(googleInfo.email, user);
+		Bitmap picture = Utils.fetchImageFromUrl(googleInfo.pictureUrl);
+		user.setPicture(picture);
+
+		user.setName(googleInfo.name);
+		user.setEmail(googleInfo.email);
+		user.setGender(googleInfo.gender);
+		user.setPictureUrl(googleInfo.pictureUrl);
+		user.setGoogleId(googleInfo.id);
+
+		if (!mNetwork.loadUID(googleInfo))
+			return false;
+
+		Log.i(TAG, String.format("Loaded fresh UID: %s", mNetwork.getUID()));
+
+		return true;
+	}
+
 	/**
 	 * @see {@link Controller#login(LoginActivity, String)}
 	 */
