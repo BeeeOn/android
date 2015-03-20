@@ -171,10 +171,11 @@ public class LoginActivity extends BaseActivity {
 			return;
 		}
 
-		if(resultCode == RESULT_OK && requestCode == RESULT_DO_WEBLOGIN) {
+		if (resultCode == RESULT_OK && requestCode == RESULT_DO_WEBLOGIN) {
 			String token = data.getStringExtra(WebLoginActivity.TOKEN_VALUE);
-			if(token == null) {
+			if (token == null) {
 				Log.d(TAG, "no token received");
+				progressDismiss();
 				return;
 			}
 
@@ -187,6 +188,7 @@ public class LoginActivity extends BaseActivity {
 			String email = data.getStringExtra(AccountManager.KEY_ACCOUNT_NAME);
 			if (email == null) {
 				Log.d(TAG, "onActivityResult: no email");
+				progressDismiss();
 				return;
 			}
 			try {
@@ -410,7 +412,7 @@ public class LoginActivity extends BaseActivity {
 		if (!checkInternetConnection())
 			return;
 		
-		if(!isGoogleLoginAvailable())
+		if (!isGoogleLoginAvailable())
 			beginWebLoginAuth();
 		else
 			beginAndroidGoogleAuth();
@@ -418,6 +420,7 @@ public class LoginActivity extends BaseActivity {
 
 	private void beginWebLoginAuth() {
 		Log.d(TAG, "Start WebLoginAuth");
+		mProgress.show();
 
 		final String redirect = "http://localhost";
 		final String googleId = "863203863728-i8u7m601c85uq70v7g5jtdcjesr8dnqm.apps.googleusercontent.com";
