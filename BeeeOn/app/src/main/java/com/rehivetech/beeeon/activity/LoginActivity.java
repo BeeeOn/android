@@ -172,9 +172,9 @@ public class LoginActivity extends BaseActivity {
 		}
 
 		if(resultCode == RESULT_OK && requestCode == RESULT_DO_WEBLOGIN) {
-			String token = data.getStringExtra("google.token");
+			String token = data.getStringExtra(WebLoginActivity.TOKEN_VALUE);
 			if(token == null) {
-				Log.d(TAG, "no google.token received");
+				Log.d(TAG, "no token received");
 				return;
 			}
 
@@ -411,7 +411,26 @@ public class LoginActivity extends BaseActivity {
 	private void beginBlackBerryGoogleAuth() {
 		Log.d(TAG, "Start BlackBerryGoogleAuth");
 
+		final String redirect = "http://localhost";
+		final String googleId = "863203863728-i8u7m601c85uq70v7g5jtdcjesr8dnqm.apps.googleusercontent.com";
+		final String googleSecret = "ZEv4V6XBqCSRDbPtmHLZDLoR";
+		final String tokenUrl = "https://accounts.google.com/o/oauth2/token";
+
+		StringBuilder url = new StringBuilder();
+		url.append("https://accounts.google.com/o/oauth2/auth?client_id=");
+		url.append(Utils.uriEncode(googleId));
+		url.append("&scope=openid%20email%20profile");
+		url.append("&redirect_uri=");
+		url.append(Utils.uriEncode(redirect));
+		url.append("&state=foobar");
+		url.append("&response_type=code");
+
 		final Intent intent = new Intent(getApplicationContext(), WebLoginActivity.class);
+		intent.putExtra(WebLoginActivity.LOGIN_URL, url.toString());
+		intent.putExtra(WebLoginActivity.CLIENT_ID, googleId);
+		intent.putExtra(WebLoginActivity.CLIENT_SECRET, googleSecret);
+		intent.putExtra(WebLoginActivity.REDIRECT_URI, redirect);
+		intent.putExtra(WebLoginActivity.GRANT_TYPE, "authorization_code");
 		startActivityForResult(intent, RESULT_DO_WEBLOGIN);
 
 		Log.d(TAG, "Finish BlackBerryGoogleAuth");

@@ -27,6 +27,13 @@ import java.util.Map;
  */
 public class WebLoginActivity extends BaseActivity {
 
+	public static final String TOKEN_VALUE = "token.value";
+	public static final String LOGIN_URL = "login.url";
+	public static final String CLIENT_ID = "client.id";
+	public static final String CLIENT_SECRET = "client.secret";
+	public static final String REDIRECT_URI = "redirect.uri";
+	public static final String GRANT_TYPE = "grant.type";
+
 	private static final String TAG = LoginActivity.class.getSimpleName();
 
 	public WebLoginActivity() {
@@ -56,7 +63,7 @@ public class WebLoginActivity extends BaseActivity {
 			}
 
 			final Intent data = new Intent();
-			data.putExtra("google.token", token);
+			data.putExtra(TOKEN_VALUE, token);
 			activity.setResult(RESULT_OK, data);
 			activity.finish();
 
@@ -64,12 +71,18 @@ public class WebLoginActivity extends BaseActivity {
 		}
 	}
 
+	private String getExtraNonNull(String key) {
+		if(getIntent().hasExtra(key))
+			return getIntent().getStringExtra(key);
+
+		throw new NullPointerException("Missing key '" + key + "' for web login");
+	}
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		final String googleId = "863203863728-i8u7m601c85uq70v7g5jtdcjesr8dnqm.apps.googleusercontent.com";
-		final String redirect = "http://localhost";
+		final String loginUrl = getExtraNonNull(LOGIN_URL);
 		final WebView webview = new WebView(this);
 		final Context context = getBaseContext();
 
@@ -80,17 +93,8 @@ public class WebLoginActivity extends BaseActivity {
 		webview.getSettings().setJavaScriptEnabled(true);
 		webview.setNetworkAvailable(true);
 
-		StringBuilder url = new StringBuilder();
-		url.append("https://accounts.google.com/o/oauth2/auth?client_id=");
-		url.append(Utils.uriEncode(googleId));
-		url.append("&scope=openid%20email%20profile");
-		url.append("&redirect_uri=");
-		url.append(Utils.uriEncode(redirect));
-		url.append("&state=foobar");
-		url.append("&response_type=code");
-
-		Log.d(TAG, "loading URL " + url.toString());
-		webview.loadUrl(url.toString());
+		Log.d(TAG, "loading URL " + loginUrl);
+		webview.loadUrl(loginUrl.toString());
 
 		webview.setWebViewClient(new WebViewClient() {
 			boolean done = false;
@@ -99,7 +103,7 @@ public class WebLoginActivity extends BaseActivity {
 			public void onPageFinished(WebView view, String url) {
 				if(url.startsWith(redirect) && !done) {
 					done = true;
-					finishBlackBerryGoogleAuth(context, view, url);
+					finishWebLoginAuth(context, view, url);
 				}
 			}
 
@@ -110,7 +114,7 @@ public class WebLoginActivity extends BaseActivity {
 
 					if(errorCode == -2 && failingUrl.startsWith(redirect)) {
 						Log.e(TAG, "ignoring errorCode: " + errorCode + " and failingUrl: " + failingUrl);
-						finishBlackBerryGoogleAuth(context, view, failingUrl);
+						finishWebLoginAuth(context, view, failingUrl);
 					}
 					else {
 						Log.e(TAG, "received errorCode: " + errorCode + " and failingUrl: " + failingUrl);
@@ -122,27 +126,24 @@ public class WebLoginActivity extends BaseActivity {
 		});
 	}
 
-	private void finishBlackBerryGoogleAuth(final Context context, final WebView view, final String url) throws AppException {
-		final String googleId = "863203863728-i8u7m601c85uq70v7g5jtdcjesr8dnqm.apps.googleusercontent.com";
-		final String googleSecret = "ZEv4V6XBqCSRDbPtmHLZDLoR";
-		final String redirect = "http://localhost";
-		final String tokenUrl = "https://accounts.google.com/o/oauth2/token";
-
+	private void finishWebLoginAuth(final Context context, final WebView view, final String url) throws AppException {
 		final Uri parsed = Uri.parse(url);
 		final String code = parsed.getQueryParameter("code");
 
+		final String clientId = getExtraNonNull(CLIENT_ID);
+		final String clientSecret = getExtraNonNull(CLIENT_SECRET);
+
 		final Map<String, String> params = new HashMap<String, String>(8);
 		params.put("code", code);
-		params.put("client_id", googleId);
-		params.put("client_secret", googleSecret);
-		params.put("redirect_uri", redirect);
-		params.put("grant_type", "authorization_code");
+		params.put("client_id", clientId);
+		params.put("client_secret", clientSecret);
+		params.put("redirect_uri", getExtraNonNull(REDIRECT_URI));
+		params.put("grant_type", getExtraNonNull(GRANT_TYPE));
 
 		Log.d(TAG, "url: " + url);
 		Log.d(TAG, "code: " + code);
-		Log.d(TAG, "client_id: " + googleId);
-		Log.d(TAG, "client_secret: " + googleSecret);
-		Log.d(TAG, "redirect_uri: " + redirect);
+		Log.d(TAG, "client_id: " + clientId);
+		Log.d(TAG, "client_secret: " + clientSecret);
 
 		view.setVisibility(View.INVISIBLE);
 
