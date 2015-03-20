@@ -16,6 +16,7 @@ import com.rehivetech.beeeon.adapter.location.Location;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.exception.AppException;
 import com.rehivetech.beeeon.exception.NetworkError;
+import com.rehivetech.beeeon.household.ActualUser;
 import com.rehivetech.beeeon.household.User;
 import com.rehivetech.beeeon.network.GoogleAuthHelper.GoogleUserInfo;
 import com.rehivetech.beeeon.network.xml.CustomViewPair;
@@ -428,7 +429,19 @@ public class Network implements INetwork {
 		    return address;
 		}
 	}
-	
+
+    public String getPhoneID(){
+        TelephonyManager tm = (TelephonyManager) mContext.getSystemService(Context.TELEPHONY_SERVICE);
+
+        String phoneId = tm.getDeviceId();
+        if (phoneId == null)
+            phoneId = getMAC();
+
+        Log.i(TAG, String.format("HW ID (IMEI or MAC): %s", phoneId));
+
+        return phoneId;
+    }
+
 	private ParsedMessage doRequest(String messageToSend) {
 		if (!isAvailable())
 			throw new AppException(NetworkError.NO_CONNECTION);
@@ -475,17 +488,25 @@ public class Network implements INetwork {
     @Override
     public String getBT() { return mBT; }
 
-    /**
-     * Method load UID from server
-     * @return true if everything successful, false otherwise
-     */
     @Override
-    public boolean loadUID(GoogleUserInfo googleUserInfo) {
+    public boolean logMeByGoogle(GoogleUserInfo googleUserInfo){
+        return signMeByGoogle(googleUserInfo, false);
+    }
 
-        ParsedMessage msg = doRequest(XmlCreator.createGetUID(googleUserInfo.id, googleUserInfo.token));
+    @Override
+    public boolean registerMeByGoogle(GoogleUserInfo googleUserInfo){
+        return signMeByGoogle(googleUserInfo, true);
+    }
 
-        if (!msg.getUserId().isEmpty() && msg.getState() == State.UID) {
-            mUserID = msg.getUserId();
+    private boolean signMeByGoogle(GoogleUserInfo googleUserInfo, boolean register){
+        int action = 0;
+        if(!register)
+            action = 1;
+
+        ParsedMessage msg = doRequest(XmlCreator.createSignMe(Locale.getDefault().getLanguage(), getPhoneID(), 1, action, googleUserInfo.id, googleUserInfo.token));
+
+        if (!msg.getUserId().isEmpty() && msg.getState() == State.BT) {
+            mBT = (String) msg.data;
             return true;
         }
 
@@ -494,21 +515,37 @@ public class Network implements INetwork {
     }
 
     @Override
-    public boolean SignIn(){
-        TelephonyManager tm = (TelephonyManager) mContext.getSystemService(Context.TELEPHONY_SERVICE);
+    public boolean logMeByName(String username, String password){
+        return signMeByName(username, password, false);
+    }
 
-        String phoneId = tm.getDeviceId();
-        if (phoneId == null)
-            phoneId = getMAC();
+    @Override
+    public boolean registerMeByName(String username, String password){
+        return signMeByName(username, password, true);
+    }
 
-        Log.i(TAG, String.format("HW ID (IMEI or MAC): %s", phoneId));
+    public boolean signMeByName(String username, String password, boolean register){
+        int action = 0;
+        if(!register)
+            action = 1;
 
-        ParsedMessage msg = doRequest(XmlCreator.createGetBT(mUserID, Locale.getDefault().getLanguage(), phoneId));
+        ParsedMessage msg = doRequest(XmlCreator.createSignMe(Locale.getDefault().getLanguage(), getPhoneID(), 0, action, username, password));
 
         if (!msg.getUserId().isEmpty() && msg.getState() == State.BT) {
             mBT = (String) msg.data;
             return true;
         }
+
+        FalseAnswer fa = (FalseAnswer) msg.data;
+        throw new AppException(fa.getErrMessage(), NetworkError.fromValue(fa.getErrCode()));
+    }
+
+    @Override
+    public ActualUser loadUserInfo(){
+        ParsedMessage msg = doRequest(XmlCreator.createGetUserInfo(mBT));
+
+        if (msg.getState() == State.USERINFO)
+            return (ActualUser)msg.data;
 
         FalseAnswer fa = (FalseAnswer) msg.data;
         throw new AppException(fa.getErrMessage(), NetworkError.fromValue(fa.getErrCode()));

@@ -13,6 +13,7 @@ public class WatchDog {
     private int mtype = 1; // temporary solution
     private String mId;
     private String mName;
+    private String mAdapterId;
 
     private ArrayList<Device> mDevices;
     private ArrayList<String> mParams;
@@ -71,6 +72,15 @@ public class WatchDog {
 
     public String getName(){
         return mName;
+    }
+
+
+    public String getAdapterId() {
+        return mAdapterId;
+    }
+
+    public void setAdapterId(String AdapterId) {
+        this.mAdapterId = AdapterId;
     }
 
     WatchDog(){};

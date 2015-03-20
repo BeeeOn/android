@@ -164,12 +164,16 @@ public class DemoNetwork implements INetwork {
 	public String getUID() {
 		return mUID;
 	}
-	
-	@Override
-	public boolean loadUID(GoogleUserInfo googleUserInfo) {
-		mUID = "123456789";
-		return true;
-	}
+
+    public ActualUser loadUserInfo(){ return new ActualUser();}
+
+    public boolean logMeByName(String username, String password){return true;}
+
+    public boolean logMeByGoogle(GoogleUserInfo googleUserInfo){return true;}
+
+    public boolean registerMeByName(String username, String password){return true;}
+
+    public boolean registerMeByGoogle(GoogleUserInfo googleUserInfo) {return true;}
 
 	@Override
 	public boolean addAdapter(String adapterId, String adapterName) {
@@ -671,9 +675,6 @@ public class DemoNetwork implements INetwork {
 	public boolean setGCMID(String email, String gcmID) {
 		return true;
 	}
-
-    @Override
-    public boolean SignIn(){return true;}
 
     @Override
     public ArrayList<WatchDog> getAllWatchDogs(String adapterID){return null;}

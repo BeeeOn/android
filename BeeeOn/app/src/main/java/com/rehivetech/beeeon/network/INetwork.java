@@ -6,6 +6,7 @@ import com.rehivetech.beeeon.adapter.device.Device.SaveDevice;
 import com.rehivetech.beeeon.adapter.device.DeviceLog;
 import com.rehivetech.beeeon.adapter.device.Facility;
 import com.rehivetech.beeeon.adapter.location.Location;
+import com.rehivetech.beeeon.household.ActualUser;
 import com.rehivetech.beeeon.household.User;
 import com.rehivetech.beeeon.network.GoogleAuthHelper.GoogleUserInfo;
 import com.rehivetech.beeeon.network.xml.CustomViewPair;
@@ -65,24 +66,53 @@ public interface INetwork {
 	public void setUID(String userId);
 	
 	/**
-	 * Return actual UID used for communication (= active session)
-	 * 
-	 * @return UID for actual communication
-	 */
-	public String getUID();
+     * FIXME: it will be removed!! do not use it anymore
+     *
+     * @return UID for actual communication
+     */
+    public String getUID();
 
+    /**
+     * It is beeeon-token used for communication
+     * @return BT of actual user
+     */
     public String getBT();
-	
-	/**
-	 * Method does logging in/registration of user and load communication UID.
-	 * You can get actual communication UID by calling getUID()
-	 * 
-	 * @param googleUserInfo containing a google token and userId
-	 * @return true on success, false or throw exception otherwise
-	 */
-	public boolean loadUID(GoogleUserInfo googleUserInfo);
 
-    public boolean SignIn();
+    /**
+     * Download information about actual user from server
+     * @return ActualUser object with data from server
+     */
+    public ActualUser loadUserInfo();
+
+    /**
+     * Method log in user by his name and password
+     * @param username login name
+     * @param password password of user
+     * @return true if user has been logged in, false otherwise
+     */
+    public boolean logMeByName(String username, String password);
+
+    /**
+     * Method log in user by his google id
+     * @param googleUserInfo google data of user (id, token)
+     * @return true if user has been logged in, false otherwise
+     */
+    public boolean logMeByGoogle(GoogleUserInfo googleUserInfo);
+
+    /**
+     * Method register user to server by his name and login
+     * @param username new user name
+     * @param password new password
+     * @return true if user has beed added to database, false otherwise
+     */
+    public boolean registerMeByName(String username, String password);
+
+    /**
+     * Method register user to server by his google data
+     * @param googleUserInfo google data of user (id, token)
+     * @return true if user has been added to database, false otherwise
+     */
+    public boolean registerMeByGoogle(GoogleUserInfo googleUserInfo);
 
 	/**
 	 * Method register adapter to server

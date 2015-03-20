@@ -18,6 +18,7 @@ import com.rehivetech.beeeon.exception.AppException;
 import com.rehivetech.beeeon.exception.NetworkError;
 import com.rehivetech.beeeon.gcm.Notification;
 import com.rehivetech.beeeon.gcm.Notification.ActionType;
+import com.rehivetech.beeeon.household.ActualUser;
 import com.rehivetech.beeeon.household.User;
 import com.rehivetech.beeeon.network.xml.action.Action;
 import com.rehivetech.beeeon.network.xml.action.ComplexAction;
@@ -83,9 +84,9 @@ public class XmlParsers {
 		ACTIONCREATED("actcreated"),
 		ACTIONS("acts"),
 		ACTION("act"),
-		UID("uid"),
         BT("bt"),
         ALGCREATED("algcreated"),
+        USERINFO("userinfo"),
         ALGORITHMS("algs");
 
 		private final String mValue;
@@ -143,9 +144,16 @@ public class XmlParsers {
 		ParsedMessage result = new ParsedMessage(state);
 
 		switch (state) {
-		case UID:
+		case USERINFO:
 			// String (userID)
-			result.setUserId(getSecureAttrValue(Xconstants.UID));
+            ActualUser user = new ActualUser();
+            user.setName(getSecureAttrValue(Xconstants.NAME));
+            user.setSurname(getSecureAttrValue(Xconstants.SURNAME));
+            user.setEmail(getSecureAttrValue(Xconstants.EMAIL));
+            user.setGender(User.Gender.fromString(getSecureInt(getSecureAttrValue(Xconstants.GENDER))>0?"male":"female"));
+            user.setPictureUrl(getSecureAttrValue(Xconstants.IMGURL));
+
+			result.data = user;
 			break;
         case BT:
             // String (BeeeonToken)
@@ -851,6 +859,7 @@ public class XmlParsers {
 	}
 
     private ArrayList<WatchDog> parseWatchDog() throws XmlPullParserException, IOException{
+        String aid = getSecureAttrValue(Xconstants.AID);
         mParser.nextTag();
 
         ArrayList<WatchDog> result = new ArrayList<>();
@@ -860,6 +869,7 @@ public class XmlParsers {
 
         do{
             WatchDog watchDog = new WatchDog(getSecureInt(getSecureAttrValue(Xconstants.ATYPE)));
+            watchDog.setAdapterId(aid);
             watchDog.setEnabled((getSecureInt(getSecureAttrValue(Xconstants.ENABLE)) > 0)?true:false);
             watchDog.setName(getSecureAttrValue(Xconstants.NAME));
 
@@ -891,6 +901,8 @@ public class XmlParsers {
 
             watchDog.setDevices(new ArrayList<>(tDevices.values()));
             watchDog.setParams(new ArrayList<>(tParams.values()));
+
+            result.add(watchDog);
 
         }while(mParser.nextTag() != XmlPullParser.END_TAG && !mParser.getName().equals(Xconstants.COM_ROOT));
 

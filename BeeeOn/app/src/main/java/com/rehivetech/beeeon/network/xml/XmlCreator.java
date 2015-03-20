@@ -52,6 +52,8 @@ public class XmlCreator {
 	public static final String GETUID = "getuid";
     public static final String GETBT =  "getbt";
     public static final String PASSBORDER = "passborder";
+    public static final String SIGNME = "signme";
+    public static final String GETUSERINFO ="getuserinfo";
 
 	public static final String ADDADAPTER = "addadapter";
 	public static final String REINITADAPTER = "reinitadapter";
@@ -143,15 +145,9 @@ public class XmlCreator {
 	// ////////////////////////////////////////////////////////////////////////////////////////////////
 	// /////////////////////////////////////SIGNIN,SIGNUP,ADAPTERS/////////////////////////////////////
 	// ////////////////////////////////////////////////////////////////////////////////////////////////
-	
-	/**
-	 * Method create XML for getID message
-	 * @param gid google id
-	 * @param gtoken google token
-	 * @return string with message
-	 */
-	public static String createGetUID(String gid, String gtoken){
-		return createComAttribsVariant(Xconstants.STATE, GETUID, Xconstants.GID, gid, Xconstants.GTOKEN, gtoken);
+
+	public static String createGetUserInfo(String bt){
+		return createComAttribsVariant(Xconstants.STATE, GETUSERINFO, Xconstants.BT, bt);
 	}
 
 	/**
@@ -1258,14 +1254,35 @@ public class XmlCreator {
     }
 
     /**
-     * Method ask for Beeeon-Token (sessionID)
-     * @param uid permanent id of user
+     * Method create message for registration of new user (if action parameter is 0), or log in, existing one (action is 1)
      * @param locale locale of phone
      * @param pid phone id (ie. emei)
+     * @param service type of provider (0-login/password,1-google,2-facebook,etc)
+     * @param action of action is 0, user want to signUp, if 1 then user will be signedIn
+     * @param args list of params
+     *             service 0 - username, password
+     *             service 1 - googleId, googleToken
+     *
      * @return
      */
-    public static String createGetBT(String uid,  String locale, String pid){
-        return createComAttribsVariant(Xconstants.STATE, GETBT, Xconstants.UID, uid, Xconstants.LOCALE, locale, Xconstants.PID, pid);
+    public static String createSignMe(String locale, String pid, int service, int action, String... args){
+        switch(service){
+            case 0:
+                if(args.length != 2)
+                    throw new RuntimeException("Bad params count");
+
+                return createComAttribsVariant(Xconstants.STATE, SIGNME, Xconstants.LOCALE, locale, Xconstants.PID, pid, Xconstants.SIGNACTION, Integer.toString(action), Xconstants.SERVICE, Integer.toString(service), Xconstants.GID, args[0], Xconstants.GTOKEN, args[1]);
+            case 1:
+                if(args.length != 2)
+                    throw new RuntimeException("Bad params count");
+
+                return createComAttribsVariant(Xconstants.STATE, SIGNME, Xconstants.LOCALE, locale, Xconstants.PID, pid, Xconstants.SIGNACTION, Integer.toString(action), Xconstants.SERVICE, Integer.toString(service), Xconstants.GID, args[0], Xconstants.GTOKEN, args[1]);
+            case 2:
+                break;
+            default:
+                break;
+        }
+        return "";
     }
 
     /**

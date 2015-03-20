@@ -259,12 +259,13 @@ public final class Controller {
 				}
 
 				// googleUserInfo must be initialized by code above
-				if (!mNetwork.loadUID(googleUserInfo))
+				if (!mNetwork.logMeByGoogle(googleUserInfo))
 					return false;
 
+                //FIXME: ROB, there is no more UID, it wiil be removed from network layer soon, use BT instead
 				// Save our new UID
-				Log.i(TAG, String.format("Loaded fresh UID: %s", mNetwork.getUID()));
-				mPersistence.saveLastUID(email, mNetwork.getUID());
+				Log.i(TAG, String.format("Loaded fresh UID: %s", mNetwork.getBT()));
+				mPersistence.saveLastUID(email, mNetwork.getBT());
 				// We have also fresh user detail, save them too
 				mPersistence.saveUserDetails(email, user);
 			}

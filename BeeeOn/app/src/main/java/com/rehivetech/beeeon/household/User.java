@@ -10,6 +10,8 @@ public class User {
 
 	protected String mName = "";
 
+    protected String nSurname = "";
+
 	protected String mEmail = "";
 
 	protected Role mRole = Role.Guest;
@@ -86,7 +88,15 @@ public class User {
 		mName = name;
 	}
 
-	public String getEmail() {
+    public String getSurname() {
+        return nSurname;
+    }
+
+    public void setSurname(String surname) {
+        this.nSurname = surname;
+    }
+
+    public String getEmail() {
 		return mEmail;
 	}
 
