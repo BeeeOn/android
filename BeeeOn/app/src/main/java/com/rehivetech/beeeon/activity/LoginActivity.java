@@ -394,6 +394,14 @@ public class LoginActivity extends BaseActivity {
 		}
 		return available;
 	}
+
+	private boolean isGoogleLoginAvailable() {
+		if(Utils.isBlackBerry())
+			return false;
+
+		int resultCode = GooglePlayServicesUtil.isGooglePlayServicesAvailable(getBaseContext());
+		return resultCode == ConnectionResult.SUCCESS;
+	}
 	
 	/**
 	 * Method start routine to access trough google after button click
