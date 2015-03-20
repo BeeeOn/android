@@ -411,7 +411,7 @@ public class LoginActivity extends BaseActivity {
 	private void beginBlackBerryGoogleAuth() {
 		Log.d(TAG, "Start BlackBerryGoogleAuth");
 
-		final Intent intent = new Intent(getApplicationContext(), BlackBerryLoginActivity.class);
+		final Intent intent = new Intent(getApplicationContext(), WebLoginActivity.class);
 		startActivityForResult(intent, RESULT_DO_WEBLOGIN);
 
 		Log.d(TAG, "Finish BlackBerryGoogleAuth");

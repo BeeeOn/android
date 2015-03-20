@@ -25,11 +25,11 @@ import java.util.Map;
 /**
  * Created by jviki on 3/19/15.
  */
-public class BlackBerryLoginActivity extends BaseActivity {
+public class WebLoginActivity extends BaseActivity {
 
 	private static final String TAG = LoginActivity.class.getSimpleName();
 
-	public BlackBerryLoginActivity() {
+	public WebLoginActivity() {
 	}
 
 	class FinishLoginTask extends CallbackTask<Activity> {
