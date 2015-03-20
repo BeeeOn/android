@@ -35,6 +35,7 @@ import com.rehivetech.beeeon.exception.NotImplementedException;
 import com.rehivetech.beeeon.network.DemoNetwork;
 import com.rehivetech.beeeon.network.GoogleAuthHelper;
 import com.rehivetech.beeeon.util.Log;
+import com.rehivetech.beeeon.util.Utils;
 
 /**
  * First sign in class, controls first activity
@@ -52,6 +53,7 @@ public class LoginActivity extends BaseActivity {
 	private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 1;
 	private static final int RESULT_DO_RECOVERABLE_AUTH = 5;
 	private static final int RESULT_GET_GOOGLE_ACCOUNT = 6;
+	private static final int RESULT_DO_WEBLOGIN = 7;
 	
 	private Controller mController;
 	private LoginActivity mActivity;
@@ -160,17 +162,33 @@ public class LoginActivity extends BaseActivity {
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
-		
+
+		Log.d(TAG, String.format("onActivityResult: %d, %d", requestCode, resultCode));
+
 		if (resultCode == RESULT_CANCELED) {
 			mLoginCancel = true;
 			progressDismiss();
 			return;
 		}
 
+		if (resultCode == RESULT_OK && requestCode == RESULT_DO_WEBLOGIN) {
+			String token = data.getStringExtra(WebLoginActivity.TOKEN_VALUE);
+			if (token == null) {
+				Log.d(TAG, "no token received");
+				progressDismiss();
+				return;
+			}
+
+			progressChangeText(getString(R.string.loading_data));
+			Log.i(TAG, "Access Google by token");
+			doLoginByToken(token);
+		}
+
 		if (resultCode == RESULT_OK && (requestCode == RESULT_DO_RECOVERABLE_AUTH || requestCode == RESULT_GET_GOOGLE_ACCOUNT)) {
 			String email = data.getStringExtra(AccountManager.KEY_ACCOUNT_NAME);
 			if (email == null) {
 				Log.d(TAG, "onActivityResult: no email");
+				progressDismiss();
 				return;
 			}
 			try {
@@ -378,6 +396,14 @@ public class LoginActivity extends BaseActivity {
 		}
 		return available;
 	}
+
+	private boolean isGoogleLoginAvailable() {
+		if(Utils.isBlackBerry())
+			return false;
+
+		int resultCode = GooglePlayServicesUtil.isGooglePlayServicesAvailable(getBaseContext());
+		return resultCode == ConnectionResult.SUCCESS;
+	}
 	
 	/**
 	 * Method start routine to access trough google after button click
@@ -386,31 +412,94 @@ public class LoginActivity extends BaseActivity {
 		if (!checkInternetConnection())
 			return;
 		
+		if (!isGoogleLoginAvailable())
+			beginWebLoginAuth();
+		else
+			beginAndroidGoogleAuth();
+	}
+
+	private void beginWebLoginAuth() {
+		Log.d(TAG, "Start WebLoginAuth");
+		mProgress.show();
+
+		final String redirect = "http://localhost";
+		final String googleId = "863203863728-i8u7m601c85uq70v7g5jtdcjesr8dnqm.apps.googleusercontent.com";
+		final String googleSecret = "ZEv4V6XBqCSRDbPtmHLZDLoR";
+		final String tokenUrl = "https://accounts.google.com/o/oauth2/token";
+
+		StringBuilder url = new StringBuilder();
+		url.append("https://accounts.google.com/o/oauth2/auth?client_id=");
+		url.append(Utils.uriEncode(googleId));
+		url.append("&scope=openid%20email%20profile");
+		url.append("&redirect_uri=");
+		url.append(Utils.uriEncode(redirect));
+		url.append("&state=foobar");
+		url.append("&response_type=code");
+
+		final Intent intent = new Intent(getApplicationContext(), WebLoginActivity.class);
+		intent.putExtra(WebLoginActivity.LOGIN_URL, url.toString());
+		intent.putExtra(WebLoginActivity.TOKEN_URL, tokenUrl);
+		intent.putExtra(WebLoginActivity.CLIENT_ID, googleId);
+		intent.putExtra(WebLoginActivity.CLIENT_SECRET, googleSecret);
+		intent.putExtra(WebLoginActivity.REDIRECT_URI, redirect);
+		intent.putExtra(WebLoginActivity.GRANT_TYPE, "authorization_code");
+		startActivityForResult(intent, RESULT_DO_WEBLOGIN);
+
+		Log.d(TAG, "Finish WebLoginAuth");
+	}
+
+	private void beginAndroidGoogleAuth() {
 		Log.d(TAG, "Start GoogleAuthRoutine");
 		mProgress.show();
 				
-		int resultCode = GooglePlayServicesUtil.isGooglePlayServicesAvailable(getBaseContext());
-		if (resultCode == ConnectionResult.SUCCESS) {
-			// On this device is Google Play, we can proceed
-			Log.d(TAG, "On this device is Google Play, we can proceed");
-			String[] Accounts = this.getAccountNames();
-			Log.d(TAG, String.format("Number of accounts on this device: %d", Accounts.length));
+		// On this device is Google Play, we can proceed
+		Log.d(TAG, "On this device is Google Play, we can proceed");
+		String[] Accounts = this.getAccountNames();
+		Log.d(TAG, String.format("Number of accounts on this device: %d", Accounts.length));
 
-			if (Accounts.length == 1) {
-				doLogin(false, Accounts[0]);
-			} else {
-				Intent intent = AccountPicker.newChooseAccountIntent(null, null, new String[] { "com.google" }, false, null, null, null, null);
-				startActivityForResult(intent, RESULT_GET_GOOGLE_ACCOUNT);
-			}
+		if (Accounts.length == 1) {
+			doLogin(false, Accounts[0]);
 		} else {
-			// Google Play is missing
-			Log.d(TAG, "Google Play Services is missing or not allowed");
-
-			GooglePlayServicesUtil.getErrorDialog(resultCode, this, PLAY_SERVICES_RESOLUTION_REQUEST).show();
-			// 20.8. 2014 Martin changed it to system supported dialog which should solve the problem
-			mProgress.dismiss();
+			Intent intent = AccountPicker.newChooseAccountIntent(null, null, new String[] { "com.google" }, false, null, null, null, null);
+			startActivityForResult(intent, RESULT_GET_GOOGLE_ACCOUNT);
 		}
+
 		Log.d(TAG, "Finish GoogleAuthRoutine");
+	}
+
+	private void doLoginByToken(final String token) {
+		Log.i(TAG, "LoginByToken started");
+
+		mLoginCancel = false;
+		progressShow();
+
+		new Thread(new Runnable() {
+			@Override
+			public void run() {
+				mController.beginPersistentConnection();
+				mController.assignToken(token);
+				progressChangeText(getString(R.string.progress_loading_adapters));
+				mController.reloadAdapters(true);
+
+				Adapter active = mController.getActiveAdapter();
+				if (active != null) {
+					// Load data for active adapter
+					progressChangeText(getString(R.string.progress_loading_adapter));
+					mController.reloadLocations(active.getId(), true);
+					mController.reloadFacilitiesByAdapter(active.getId(), true);
+				}
+
+				if (!mIsRedirect) {
+					Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+					startActivity(intent);
+				}
+
+				finish();
+				Log.i(TAG, "Login finished");
+
+				progressDismiss();
+			}
+		}).start();
 	}
 
 	/**
