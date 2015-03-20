@@ -410,14 +410,14 @@ public class LoginActivity extends BaseActivity {
 		if (!checkInternetConnection())
 			return;
 		
-		if(Utils.isBlackBerry())
-			beginBlackBerryGoogleAuth();
+		if(!isGoogleLoginAvailable())
+			beginWebLoginAuth();
 		else
 			beginAndroidGoogleAuth();
 	}
 
-	private void beginBlackBerryGoogleAuth() {
-		Log.d(TAG, "Start BlackBerryGoogleAuth");
+	private void beginWebLoginAuth() {
+		Log.d(TAG, "Start WebLoginAuth");
 
 		final String redirect = "http://localhost";
 		final String googleId = "863203863728-i8u7m601c85uq70v7g5jtdcjesr8dnqm.apps.googleusercontent.com";
@@ -441,34 +441,25 @@ public class LoginActivity extends BaseActivity {
 		intent.putExtra(WebLoginActivity.GRANT_TYPE, "authorization_code");
 		startActivityForResult(intent, RESULT_DO_WEBLOGIN);
 
-		Log.d(TAG, "Finish BlackBerryGoogleAuth");
+		Log.d(TAG, "Finish WebLoginAuth");
 	}
 
 	private void beginAndroidGoogleAuth() {
 		Log.d(TAG, "Start GoogleAuthRoutine");
 		mProgress.show();
 				
-		int resultCode = GooglePlayServicesUtil.isGooglePlayServicesAvailable(getBaseContext());
-		if (resultCode == ConnectionResult.SUCCESS) {
-			// On this device is Google Play, we can proceed
-			Log.d(TAG, "On this device is Google Play, we can proceed");
-			String[] Accounts = this.getAccountNames();
-			Log.d(TAG, String.format("Number of accounts on this device: %d", Accounts.length));
+		// On this device is Google Play, we can proceed
+		Log.d(TAG, "On this device is Google Play, we can proceed");
+		String[] Accounts = this.getAccountNames();
+		Log.d(TAG, String.format("Number of accounts on this device: %d", Accounts.length));
 
-			if (Accounts.length == 1) {
-				doLogin(false, Accounts[0]);
-			} else {
-				Intent intent = AccountPicker.newChooseAccountIntent(null, null, new String[] { "com.google" }, false, null, null, null, null);
-				startActivityForResult(intent, RESULT_GET_GOOGLE_ACCOUNT);
-			}
+		if (Accounts.length == 1) {
+			doLogin(false, Accounts[0]);
 		} else {
-			// Google Play is missing
-			Log.d(TAG, "Google Play Services is missing or not allowed");
-
-			GooglePlayServicesUtil.getErrorDialog(resultCode, this, PLAY_SERVICES_RESOLUTION_REQUEST).show();
-			// 20.8. 2014 Martin changed it to system supported dialog which should solve the problem
-			mProgress.dismiss();
+			Intent intent = AccountPicker.newChooseAccountIntent(null, null, new String[] { "com.google" }, false, null, null, null, null);
+			startActivityForResult(intent, RESULT_GET_GOOGLE_ACCOUNT);
 		}
+
 		Log.d(TAG, "Finish GoogleAuthRoutine");
 	}
 
