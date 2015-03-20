@@ -29,12 +29,13 @@ public class WebLoginActivity extends BaseActivity {
 
 	public static final String TOKEN_VALUE = "token.value";
 	public static final String LOGIN_URL = "login.url";
+	public static final String TOKEN_URL = "token.url";
 	public static final String CLIENT_ID = "client.id";
 	public static final String CLIENT_SECRET = "client.secret";
 	public static final String REDIRECT_URI = "redirect.uri";
 	public static final String GRANT_TYPE = "grant.type";
 
-	private static final String TAG = LoginActivity.class.getSimpleName();
+	private static final String TAG = WebLoginActivity.class.getSimpleName();
 
 	public WebLoginActivity() {
 	}
@@ -56,7 +57,7 @@ public class WebLoginActivity extends BaseActivity {
 
 			try {
 				tokenJson = Utils.fetchJsonByPost(url, params);
-				Log.d(TAG, "received: " + tokenJson.toString());
+				Log.d(TAG, String.format("received: %s", tokenJson.toString()));
 				token = tokenJson.getString("access_token");
 			}  catch (Exception e) {
 				throw new AppException(e, NetworkError.GOOGLE_TOKEN);
@@ -75,13 +76,14 @@ public class WebLoginActivity extends BaseActivity {
 		if(getIntent().hasExtra(key))
 			return getIntent().getStringExtra(key);
 
-		throw new NullPointerException("Missing key '" + key + "' for web login");
+		throw new NullPointerException(String.format("Missing key '%s' for web login", key));
 	}
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
+		final String redirect = getExtraNonNull(REDIRECT_URI);
 		final String loginUrl = getExtraNonNull(LOGIN_URL);
 		final WebView webview = new WebView(this);
 		final Context context = getBaseContext();
@@ -93,7 +95,7 @@ public class WebLoginActivity extends BaseActivity {
 		webview.getSettings().setJavaScriptEnabled(true);
 		webview.setNetworkAvailable(true);
 
-		Log.d(TAG, "loading URL " + loginUrl);
+		Log.d(TAG, String.format("loading URL %s", loginUrl));
 		webview.loadUrl(loginUrl.toString());
 
 		webview.setWebViewClient(new WebViewClient() {
@@ -112,13 +114,12 @@ public class WebLoginActivity extends BaseActivity {
 				if(!done) {
 					done = true;
 
-					if(errorCode == -2 && failingUrl.startsWith(redirect)) {
-						Log.e(TAG, "ignoring errorCode: " + errorCode + " and failingUrl: " + failingUrl);
+					if((errorCode == ERROR_HOST_LOOKUP || errorCode == ERROR_CONNECT) && failingUrl.startsWith(redirect)) {
+						Log.w(TAG, String.format("ignoring errorCode: %d and failingUrl: %s", errorCode, failingUrl));
 						finishWebLoginAuth(context, view, failingUrl);
 					}
 					else {
-						Log.e(TAG, "received errorCode: " + errorCode + " and failingUrl: " + failingUrl);
-						Log.e(TAG, "description: " + description);
+						Log.e(TAG, String.format("received errorCode: %d and failingUrl: %s\ndescription: %s", errorCode, failingUrl, description));
 						finish();
 					}
 				}
@@ -132,6 +133,7 @@ public class WebLoginActivity extends BaseActivity {
 
 		final String clientId = getExtraNonNull(CLIENT_ID);
 		final String clientSecret = getExtraNonNull(CLIENT_SECRET);
+		final String tokenUrl = getExtraNonNull(TOKEN_URL);
 
 		final Map<String, String> params = new HashMap<String, String>(8);
 		params.put("code", code);
@@ -140,10 +142,10 @@ public class WebLoginActivity extends BaseActivity {
 		params.put("redirect_uri", getExtraNonNull(REDIRECT_URI));
 		params.put("grant_type", getExtraNonNull(GRANT_TYPE));
 
-		Log.d(TAG, "url: " + url);
-		Log.d(TAG, "code: " + code);
-		Log.d(TAG, "client_id: " + clientId);
-		Log.d(TAG, "client_secret: " + clientSecret);
+		Log.d(TAG, String.format("url: %s", url));
+		Log.d(TAG, String.format("code: %s", code));
+		Log.d(TAG, String.format("client_id: %s", clientId));
+		Log.d(TAG, String.format("client_secret: %s", clientSecret));
 
 		view.setVisibility(View.INVISIBLE);
 

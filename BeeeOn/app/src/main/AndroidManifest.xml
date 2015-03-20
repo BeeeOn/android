@@ -76,7 +76,7 @@
             </intent-filter>
         </activity>
 		<activity
-			android:name=".activity.BlackBerryLoginActivity"
+			android:name=".activity.WebLoginActivity"
 			android:label="@string/title_activity_location_screen" >
 		</activity>
         <activity

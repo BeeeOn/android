@@ -163,7 +163,7 @@ public class LoginActivity extends BaseActivity {
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
 
-		Log.d(TAG, "onActivityResult: " + requestCode + ", " + resultCode + ", " + data.toString());
+		Log.d(TAG, String.format("onActivityResult: %d, %d", requestCode, resultCode));
 
 		if (resultCode == RESULT_CANCELED) {
 			mLoginCancel = true;
@@ -435,6 +435,7 @@ public class LoginActivity extends BaseActivity {
 
 		final Intent intent = new Intent(getApplicationContext(), WebLoginActivity.class);
 		intent.putExtra(WebLoginActivity.LOGIN_URL, url.toString());
+		intent.putExtra(WebLoginActivity.TOKEN_URL, tokenUrl);
 		intent.putExtra(WebLoginActivity.CLIENT_ID, googleId);
 		intent.putExtra(WebLoginActivity.CLIENT_SECRET, googleSecret);
 		intent.putExtra(WebLoginActivity.REDIRECT_URI, redirect);
