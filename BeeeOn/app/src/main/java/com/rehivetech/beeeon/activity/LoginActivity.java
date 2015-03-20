@@ -191,13 +191,10 @@ public class LoginActivity extends BaseActivity {
 				progressDismiss();
 				return;
 			}
-			try {
-				progressChangeText(getString(R.string.loading_data));
-				Log.i(TAG, "Do Google login");
-				doLogin(false, email);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
+
+			progressChangeText(getString(R.string.loading_data));
+			Log.i(TAG, "Do Google login");
+			doLogin(false, email);
 		}
 	}
 
@@ -253,7 +250,7 @@ public class LoginActivity extends BaseActivity {
 			@Override
 			public void onShowcaseViewHide(ShowcaseView showcaseView) {
 				Log.d(TAG, "OnShowCase hide");
-				if(mTutorialClick == 1){
+				if (mTutorialClick == 1){
 					ViewTarget target = new ViewTarget(R.id.login_btn_mojeid, mActivity);
 					mSV = new ShowcaseView.Builder(mActivity, true)
 					.setTarget(target)
@@ -280,7 +277,7 @@ public class LoginActivity extends BaseActivity {
 					mTutorialClick++;
 					// TODO: Save that MojeID acount was clicked
 				}
-				else if(mTutorialClick == 3) {
+				else if (mTutorialClick == 3) {
 					// TODO: Save that Demo mode was clicked
 					
 				}
@@ -398,7 +395,7 @@ public class LoginActivity extends BaseActivity {
 	}
 
 	private boolean isGoogleLoginAvailable() {
-		if(Utils.isBlackBerry())
+		if (Utils.isBlackBerry())
 			return false;
 
 		int resultCode = GooglePlayServicesUtil.isGooglePlayServicesAvailable(getBaseContext());
@@ -494,10 +491,9 @@ public class LoginActivity extends BaseActivity {
 					startActivity(intent);
 				}
 
-				finish();
 				Log.i(TAG, "Login finished");
-
 				progressDismiss();
+				finish();
 			}
 		}).start();
 	}
@@ -554,7 +550,9 @@ public class LoginActivity extends BaseActivity {
 								startActivity(intent);
 							}
 
+							progressDismiss();
 							finish();
+							return;
 						}
 					}
 
