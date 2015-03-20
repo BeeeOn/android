@@ -6,7 +6,7 @@
     <string name="title_activity_notification">Notifikace</string>
     <string name="title_activity_add_sensor">Přidat nové zařízení</string>
     <string name="title_activity_sensor_detail">Detail zařízení</string>
-    <string name="title_activity_add_adapter">Přidat adaptéru</string>
+    <string name="title_activity_add_adapter">Přidat adaptér</string>
     <string name="title_activity_registration">Registrace</string>
     <string name="title_activity_login_facebook">Facebook</string>
     <string name="title_activity_widget_configuration">Konfigurace widgetu</string>
