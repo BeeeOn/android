@@ -4,10 +4,7 @@ import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
-import android.content.DialogInterface.OnCancelListener;
 import android.content.Intent;
-import android.content.pm.ActivityInfo;
-import android.content.res.Configuration;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -28,6 +25,7 @@ import com.rehivetech.beeeon.exception.NetworkError;
 import com.rehivetech.beeeon.exception.NotImplementedException;
 import com.rehivetech.beeeon.network.DemoNetwork;
 import com.rehivetech.beeeon.network.GoogleAuthHelper;
+import com.rehivetech.beeeon.util.BetterProgressDialog;
 import com.rehivetech.beeeon.util.Log;
 import com.rehivetech.beeeon.util.Utils;
 
@@ -51,7 +49,7 @@ public class LoginActivity extends BaseActivity {
 	
 	private Controller mController;
 	private LoginActivity mActivity;
-	private ProgressDialog mProgress;
+	private BetterProgressDialog mProgress;
 	
 	private boolean mIgnoreChange = false;
 
@@ -77,14 +75,13 @@ public class LoginActivity extends BaseActivity {
 		
 		mActivity = this;
 
-		// Prepare progress dialog
-		mProgress = new ProgressDialog(this);
-		mProgress.setMessage(getString(R.string.progress_signing));
+		// Prepare progressDialog
+		mProgress = new BetterProgressDialog(this);
+		mProgress.setMessageResource(R.string.progress_signing);
 		mProgress.setCancelable(true);
 		mProgress.setCanceledOnTouchOutside(false);
 		mProgress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-		mProgress.setOnCancelListener(new OnCancelListener() {
-
+		mProgress.setOnCancelListener(new DialogInterface.OnCancelListener() {
 			@Override
 			public void onCancel(DialogInterface dialog) {
 				mLoginCancel = true;
@@ -96,7 +93,7 @@ public class LoginActivity extends BaseActivity {
 			@Override
 			public void onClick(View v) {
 				mIgnoreChange = true;
-				mProgress.setMessage(LoginActivity.this.getString(R.string.progress_loading_demo));
+				mProgress.setMessageResource(R.string.progress_loading_demo);
 				doLogin(true, DemoNetwork.DEMO_EMAIL);
 				// mIgnoreChange = false;
 			}
@@ -157,7 +154,7 @@ public class LoginActivity extends BaseActivity {
 
 		if (resultCode == RESULT_CANCELED) {
 			mLoginCancel = true;
-			progressDismiss();
+			mProgress.dismiss();
 			return;
 		}
 
@@ -165,11 +162,11 @@ public class LoginActivity extends BaseActivity {
 			String token = data.getStringExtra(WebLoginActivity.TOKEN_VALUE);
 			if (token == null) {
 				Log.d(TAG, "no token received");
-				progressDismiss();
+				mProgress.dismiss();
 				return;
 			}
 
-			progressChangeText(getString(R.string.loading_data));
+			mProgress.setMessageResource(R.string.loading_data);
 			Log.i(TAG, "Access Google by token");
 			doLoginByToken(token);
 		}
@@ -178,11 +175,11 @@ public class LoginActivity extends BaseActivity {
 			String email = data.getStringExtra(AccountManager.KEY_ACCOUNT_NAME);
 			if (email == null) {
 				Log.d(TAG, "onActivityResult: no email");
-				progressDismiss();
+				mProgress.dismiss();
 				return;
 			}
 
-			progressChangeText(getString(R.string.loading_data));
+			mProgress.setMessageResource(R.string.loading_data);
 			Log.i(TAG, "Do Google login");
 			doLogin(false, email);
 		}
@@ -194,15 +191,6 @@ public class LoginActivity extends BaseActivity {
 		finish();
 	}
 
-	@Override
-	public void onConfigurationChanged(Configuration newConfig) {
-		Log.d(TAG, "Ignore change orientation ?");
-		// ignore orientation change
-		if (!mIgnoreChange) {
-			super.onConfigurationChanged(newConfig);
-		}
-	}
-
 	// ////////////////////////////////////////////////////////////////////////////////////
 	// ///////////////// Custom METHODS
 	// ////////////////////////////////////////////////////////////////////////////////////
@@ -211,60 +199,6 @@ public class LoginActivity extends BaseActivity {
 		// After changing demo mode must be controller reloaded
 		Controller.setDemoMode(getApplicationContext(), demoMode);
 		mController = Controller.getInstance(getApplicationContext());
-	}
-
-	/**
-	 * Method cancel running progressBar, thread-safe
-	 */
-	public void progressDismiss() {
-		if (mProgress != null && mProgress.isShowing()) {
-			try {
-				mProgress.dismiss();
-			} catch (Exception e) {
-				Log.d(TAG, "Dialog is not showing, but dialog say that is show :/");
-				e.printStackTrace();
-			}
-		}
-
-		// Enable orientation change again
-		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR);
-	}
-
-	/**
-	 * Method show progress, thread-safe
-	 */
-	private void progressShow() {
-		// Disable orientation change
-		int currentOrientation = getResources().getConfiguration().orientation;
-		if (currentOrientation == Configuration.ORIENTATION_LANDSCAPE) {
-			setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE);
-		} else {
-			setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT);
-		}
-
-		runOnUiThread(new Runnable() {
-			@Override
-			public void run() {
-				if (mProgress != null)
-					mProgress.show();
-			}
-		});
-	}
-
-	/**
-	 * Method set new text to progress, thread-safe
-	 * 
-	 * @param message
-	 *            to show
-	 */
-	public void progressChangeText(final String message) {
-		runOnUiThread(new Runnable() {
-			@Override
-			public void run() {
-				if (mProgress != null)
-					mProgress.setMessage(message);
-			}
-		});
 	}
 
 	/**
@@ -285,7 +219,7 @@ public class LoginActivity extends BaseActivity {
 	private boolean checkInternetConnection() {
 		boolean available = mController.isInternetAvailable(); 
 		if (!available) {
-			progressDismiss();
+			mProgress.dismiss();
 			Toast.makeText(this, getString(R.string.toast_internet_connection), Toast.LENGTH_LONG).show();			
 		}
 		return available;
@@ -365,20 +299,20 @@ public class LoginActivity extends BaseActivity {
 		Log.i(TAG, "LoginByToken started");
 
 		mLoginCancel = false;
-		progressShow();
+		mProgress.show();
 
 		new Thread(new Runnable() {
 			@Override
 			public void run() {
 				mController.beginPersistentConnection();
 				mController.assignToken(token);
-				progressChangeText(getString(R.string.progress_loading_adapters));
+				mProgress.setMessageResource(R.string.progress_loading_adapters);
 				mController.reloadAdapters(true);
 
 				Adapter active = mController.getActiveAdapter();
 				if (active != null) {
 					// Load data for active adapter
-					progressChangeText(getString(R.string.progress_loading_adapter));
+					mProgress.setMessageResource(R.string.progress_loading_adapter);
 					mController.reloadLocations(active.getId(), true);
 					mController.reloadFacilitiesByAdapter(active.getId(), true);
 				}
@@ -389,7 +323,7 @@ public class LoginActivity extends BaseActivity {
 				}
 
 				Log.i(TAG, "Login finished");
-				progressDismiss();
+				mProgress.dismiss();
 				finish();
 			}
 		}).start();
@@ -407,7 +341,7 @@ public class LoginActivity extends BaseActivity {
 			return;
 
 		mLoginCancel = false;
-		progressShow();
+		mProgress.show();
 		
 		new Thread(new Runnable() {
 			@Override
@@ -426,13 +360,13 @@ public class LoginActivity extends BaseActivity {
 						errFlag = false;
 
 						// Load all adapters and data for active one on login
-						progressChangeText(getString(R.string.progress_loading_adapters));
+						mProgress.setMessageResource(R.string.progress_loading_adapters);
 						mController.reloadAdapters(true);
 
 						Adapter active = mController.getActiveAdapter();
 						if (active != null) {
 							// Load data for active adapter
-							progressChangeText(getString(R.string.progress_loading_adapter));
+							mProgress.setMessageResource(R.string.progress_loading_adapter);
 							mController.reloadLocations(active.getId(), true);
 							mController.reloadFacilitiesByAdapter(active.getId(), true);
 						}
@@ -447,7 +381,7 @@ public class LoginActivity extends BaseActivity {
 								startActivity(intent);
 							}
 
-							progressDismiss();
+							mProgress.dismiss();
 							finish();
 							return;
 						}
@@ -476,7 +410,7 @@ public class LoginActivity extends BaseActivity {
                     mController.endPersistentConnection();
                 }
 
-				progressDismiss();
+				mProgress.dismiss();
 				if (errFlag) {
 					final Toast toast = Toast.makeText(LoginActivity.this, errMessage, Toast.LENGTH_LONG);
 
@@ -500,4 +434,5 @@ public class LoginActivity extends BaseActivity {
 		Toast.makeText(v.getContext(), "Not Implemented yet", Toast.LENGTH_LONG).show();
 		return false;
 	}
+
 }
