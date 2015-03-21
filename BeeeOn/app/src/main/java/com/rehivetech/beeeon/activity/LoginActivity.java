@@ -11,25 +11,19 @@ import android.content.res.Configuration;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.ViewGroup;
 import android.widget.ImageButton;
-import android.widget.RelativeLayout;
 import android.widget.Toast;
 
-import com.github.amlcurran.showcaseview.OnShowcaseEventListener;
-import com.github.amlcurran.showcaseview.ShowcaseView;
-import com.github.amlcurran.showcaseview.targets.ViewTarget;
 import com.google.android.gms.auth.GoogleAuthUtil;
 import com.google.android.gms.common.AccountPicker;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
-
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.adapter.Adapter;
 import com.rehivetech.beeeon.base.BaseActivity;
 import com.rehivetech.beeeon.controller.Controller;
-import com.rehivetech.beeeon.exception.ErrorCode;
 import com.rehivetech.beeeon.exception.AppException;
+import com.rehivetech.beeeon.exception.ErrorCode;
 import com.rehivetech.beeeon.exception.NetworkError;
 import com.rehivetech.beeeon.exception.NotImplementedException;
 import com.rehivetech.beeeon.network.DemoNetwork;
@@ -63,10 +57,6 @@ public class LoginActivity extends BaseActivity {
 
 	private boolean mLoginCancel = false;
 	private boolean mIsRedirect = false;
-
-	private ShowcaseView mSV;
-	private RelativeLayout.LayoutParams lps;
-	private int mTutorialClick = 0;
 
 	// ////////////////////////////////////////////////////////////////////////////////////
 	// ///////////////// Override METHODS
@@ -216,99 +206,6 @@ public class LoginActivity extends BaseActivity {
 	// ////////////////////////////////////////////////////////////////////////////////////
 	// ///////////////// Custom METHODS
 	// ////////////////////////////////////////////////////////////////////////////////////
-	
-	
-	private void showTutorial() {
-		// TODO Auto-generated method stub
-		lps = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-		int marginPixel = 0;
-		int currentOrientation = getResources().getConfiguration().orientation;
-		if (currentOrientation == Configuration.ORIENTATION_LANDSCAPE) {
-			lps.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
-			lps.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
-			marginPixel = 15;
-		}
-		else{
-			lps.addRule(RelativeLayout.ALIGN_PARENT_TOP);
-			lps.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
-			marginPixel= 40;
-		}
-		
-		
-		int margin = ((Number) (getResources().getDisplayMetrics().density * marginPixel)).intValue();
-		lps.setMargins(margin, margin, margin, margin);
-		ViewTarget target_google = new ViewTarget(R.id.login_btn_google, this);
-		
-		OnShowcaseEventListener	listener = new OnShowcaseEventListener() {
-			
-			@Override
-			public void onShowcaseViewShow(ShowcaseView showcaseView) {
-				Log.d(TAG, "OnShowCase show");
-				
-			}
-			
-			@Override
-			public void onShowcaseViewHide(ShowcaseView showcaseView) {
-				Log.d(TAG, "OnShowCase hide");
-				if (mTutorialClick == 1){
-					ViewTarget target = new ViewTarget(R.id.login_btn_mojeid, mActivity);
-					mSV = new ShowcaseView.Builder(mActivity, true)
-					.setTarget(target)
-					.setContentTitle("MojeID account")
-					.setContentText("You can login by your MojeID account.")
-					.setStyle(R.style.CustomShowcaseTheme_Next)
-					.setShowcaseEventListener(this)
-					.build();
-					mSV.setButtonPosition(lps);
-					mTutorialClick++;
-					// TODO: Save that Google acount was clicked
-					
-				}
-				else if (mTutorialClick==2){
-					ViewTarget target = new ViewTarget(R.id.login_btn_demo, mActivity);
-					mSV = new ShowcaseView.Builder(mActivity, true)
-					.setTarget(target)
-					.setContentTitle("Demo mode")
-					.setContentText("You can try Demo house.")
-					.setStyle(R.style.CustomShowcaseTheme)
-					.setShowcaseEventListener(this)
-					.build();
-					mSV.setButtonPosition(lps);
-					mTutorialClick++;
-					// TODO: Save that MojeID acount was clicked
-				}
-				else if (mTutorialClick == 3) {
-					// TODO: Save that Demo mode was clicked
-					
-				}
-				
-			}
-			
-			@Override
-			public void onShowcaseViewDidHide(ShowcaseView showcaseView) {
-				Log.d(TAG, "OnShowCase did hide");
-				
-			}
-		}; 
-		
-		mTutorialClick = 1;
-		mSV = new ShowcaseView.Builder(mActivity, true)
-		.setTarget(target_google)
-		.setContentTitle("Google account")
-		.setContentText("You can login by your Google account.")
-		.setStyle(R.style.CustomShowcaseTheme_Next)
-		.setShowcaseEventListener(listener)
-		.build();
-		mSV.setButtonPosition(lps);
-		mSV.setOnClickListener(new OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				Log.d(TAG, "Showcase click");
-			}
-		});
-	}
-	
 
 	protected void setDemoMode(boolean demoMode) {
 		// After changing demo mode must be controller reloaded

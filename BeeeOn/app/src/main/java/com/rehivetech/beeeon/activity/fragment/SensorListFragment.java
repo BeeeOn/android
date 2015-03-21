@@ -1,8 +1,5 @@
 package com.rehivetech.beeeon.activity.fragment;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -22,12 +19,7 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
-
-import com.github.amlcurran.showcaseview.OnShowcaseEventListener;
-import com.github.amlcurran.showcaseview.ShowcaseView;
-import com.github.amlcurran.showcaseview.targets.ViewTarget;
 
 import com.rehivetech.beeeon.Constants;
 import com.rehivetech.beeeon.R;
@@ -46,8 +38,12 @@ import com.rehivetech.beeeon.asynctask.RemoveFacilityTask;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.pair.DelFacilityPair;
 import com.rehivetech.beeeon.util.Log;
+import com.rehivetech.beeeon.util.TutorialHelper;
 
 import net.i2p.android.ext.floatingactionbutton.FloatingActionsMenu;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class SensorListFragment extends Fragment {
 
@@ -78,8 +74,7 @@ public class SensorListFragment extends Fragment {
 	// For tutorial
 	private boolean mFirstUseAddAdapter = true;
 	private boolean mFirstUseAddSensor = true;
-	private ShowcaseView mSV;
-	private RelativeLayout.LayoutParams lps;
+
     private Device mSelectedItem;
     private int mSelectedItemPos;
     private RemoveFacilityTask mRemoveFacilityTask;
@@ -241,7 +236,7 @@ public class SensorListFragment extends Fragment {
 				// TUTORIAL
 				if(mFirstUseAddAdapter && !mController.isDemoMode()) {
 					mActivity.getMenu().closeMenu();
-					showTutorialAddAdapter();
+					TutorialHelper.showAddAdapterTutorial(mActivity, mView);
 					if (prefs != null) {
 						prefs.edit().putBoolean(Constants.TUTORIAL_ADD_ADAPTER_SHOWED, false).commit();
 					}
@@ -262,7 +257,7 @@ public class SensorListFragment extends Fragment {
 			});
 			if(mFirstUseAddSensor && !mController.isDemoMode()){
 				mActivity.getMenu().closeMenu();
-				showTutorialAddSensor();
+				TutorialHelper.showAddSensorTutorial(mActivity, mView);
 				SharedPreferences prefs = mController.getUserSettings();
 				if (prefs != null) {
 					prefs.edit().putBoolean(Constants.TUTORIAL_ADD_SENSOR_SHOWED, false).commit();
@@ -365,105 +360,6 @@ public class SensorListFragment extends Fragment {
             return listView.getChildAt(childIndex);
         }
     }
-
-    private void showTutorialAddSensor() {
-		lps = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-		int marginPixel = 15;
-		lps.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
-		lps.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
-
-		int margin = ((Number) (getResources().getDisplayMetrics().density * marginPixel)).intValue();
-		lps.setMargins(margin, margin, margin, margin);
-		ViewTarget target = new ViewTarget(mView.findViewById(R.id.nosensorlistview_addsensor_image));
-		
-		OnShowcaseEventListener	listener = new OnShowcaseEventListener() {
-			
-			@Override
-			public void onShowcaseViewShow(ShowcaseView showcaseView) {
-				Log.d(TAG, "OnShowCase show");
-				
-			}
-			
-			@Override
-			public void onShowcaseViewHide(ShowcaseView showcaseView) {
-				Log.d(TAG, "OnShowCase hide");
-				// TODO: Save that ADD ADAPTER was clicked
-				
-			}
-			
-			@Override
-			public void onShowcaseViewDidHide(ShowcaseView showcaseView) {
-				Log.d(TAG, "OnShowCase did hide");
-				
-			}
-		}; 
-		
-		mSV = new ShowcaseView.Builder(mActivity, true)
-		.setTarget(target)
-		.setContentTitle(mActivity.getString(R.string.tut_add_sensor_header))
-		.setContentText(mActivity.getString(R.string.tut_add_sensor_text))
-		.setStyle(R.style.CustomShowcaseTheme)
-		.setShowcaseEventListener(listener)
-		.build();
-		mSV.setButtonPosition(lps);
-		mSV.setOnClickListener(new OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				Log.d(TAG, "Showcase click");
-			}
-		});
-		
-	}
-
-	private void showTutorialAddAdapter() {
-		lps = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-		int marginPixel = 15;
-		lps.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
-		lps.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
-
-		int margin = ((Number) (getResources().getDisplayMetrics().density * marginPixel)).intValue();
-		lps.setMargins(margin, margin, margin, margin);
-		ViewTarget target = new ViewTarget(mView.findViewById(R.id.nosensorlistview_addsensor_image));
-		
-		OnShowcaseEventListener	listener = new OnShowcaseEventListener() {
-			
-			@Override
-			public void onShowcaseViewShow(ShowcaseView showcaseView) {
-				Log.d(TAG, "OnShowCase show");
-				
-			}
-			
-			@Override
-			public void onShowcaseViewHide(ShowcaseView showcaseView) {
-				Log.d(TAG, "OnShowCase hide");
-				// TODO: Save that ADD ADAPTER was clicked
-				
-			}
-			
-			@Override
-			public void onShowcaseViewDidHide(ShowcaseView showcaseView) {
-				Log.d(TAG, "OnShowCase did hide");
-				
-			}
-		}; 
-		
-		mSV = new ShowcaseView.Builder(mActivity, true)
-		.setTarget(target)
-		.setContentTitle(mActivity.getString(R.string.tut_add_adapter_header))
-		.setContentText(mActivity.getString(R.string.tut_add_adapter_text))
-		.setStyle(R.style.CustomShowcaseTheme)
-		.setShowcaseEventListener(listener)
-		.build();
-		mSV.setButtonPosition(lps);
-		mSV.setOnClickListener(new OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				Log.d(TAG, "Showcase click");
-			}
-		});
-	}
 
 	protected void showAddAdapterDialog() {
 		Log.d(TAG, "HERE ADD ADAPTER +");
