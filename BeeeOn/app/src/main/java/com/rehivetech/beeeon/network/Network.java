@@ -3,9 +3,6 @@ package com.rehivetech.beeeon.network;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.net.wifi.WifiInfo;
-import android.net.wifi.WifiManager;
-import android.telephony.TelephonyManager;
 
 import com.rehivetech.beeeon.adapter.Adapter;
 import com.rehivetech.beeeon.adapter.device.Device;
@@ -30,6 +27,7 @@ import com.rehivetech.beeeon.network.xml.action.ComplexAction;
 import com.rehivetech.beeeon.network.xml.condition.Condition;
 import com.rehivetech.beeeon.pair.LogDataPair;
 import com.rehivetech.beeeon.util.Log;
+import com.rehivetech.beeeon.util.Utils;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
@@ -405,42 +403,6 @@ public class Network implements INetwork {
 		return activeNetworkInfo != null && activeNetworkInfo.isConnected();
 	}
 
-	/**
-	 * Method return Mac address of device
-	 * @return
-	 */
-	public String getMAC(){
-		WifiManager wifiManager = (WifiManager) mContext.getSystemService(Context.WIFI_SERVICE);
-
-		if(wifiManager.isWifiEnabled()) {
-		    // WIFI ALREADY ENABLED. GRAB THE MAC ADDRESS HERE
-		    WifiInfo info = wifiManager.getConnectionInfo();
-		    return info.getMacAddress();
-		} else {
-		    // ENABLE THE WIFI FIRST
-		    wifiManager.setWifiEnabled(true);
-
-		    // WIFI IS NOW ENABLED. GRAB THE MAC ADDRESS HERE
-		    WifiInfo info = wifiManager.getConnectionInfo();
-		    String address = info.getMacAddress();
-		    
-		    wifiManager.setWifiEnabled(false);
-		    
-		    return address;
-		}
-	}
-
-    public String getPhoneID(){
-        TelephonyManager tm = (TelephonyManager) mContext.getSystemService(Context.TELEPHONY_SERVICE);
-
-        String phoneId = tm.getDeviceId();
-        if (phoneId == null)
-            phoneId = getMAC();
-
-        Log.i(TAG, String.format("HW ID (IMEI or MAC): %s", phoneId));
-
-        return phoneId;
-    }
 
 	private ParsedMessage doRequest(String messageToSend) {
 		if (!isAvailable())
@@ -503,7 +465,7 @@ public class Network implements INetwork {
         if(!register)
             action = 1;
 
-        ParsedMessage msg = doRequest(XmlCreator.createSignMe(Locale.getDefault().getLanguage(), getPhoneID(), 1, action, googleUserInfo.id, googleUserInfo.token));
+        ParsedMessage msg = doRequest(XmlCreator.createSignMe(Locale.getDefault().getLanguage(), Utils.getPhoneID(mContext), 1, action, googleUserInfo.id, googleUserInfo.token));
 
         if (!msg.getUserId().isEmpty() && msg.getState() == State.BT) {
             mBT = (String) msg.data;
@@ -529,7 +491,7 @@ public class Network implements INetwork {
         if(!register)
             action = 1;
 
-        ParsedMessage msg = doRequest(XmlCreator.createSignMe(Locale.getDefault().getLanguage(), getPhoneID(), 0, action, username, password));
+        ParsedMessage msg = doRequest(XmlCreator.createSignMe(Locale.getDefault().getLanguage(), Utils.getPhoneID(mContext), 0, action, username, password));
 
         if (!msg.getUserId().isEmpty() && msg.getState() == State.BT) {
             mBT = (String) msg.data;
