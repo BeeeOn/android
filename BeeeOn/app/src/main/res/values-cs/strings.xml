@@ -180,13 +180,11 @@
         <item>Seznam</item>
         <item>Vlastní</item>
     </string-array>
-    <string-array name="user_role">
-        <item>SuperUživatel</item>
-        <item>Administrátor</item>
-        <item>Uživatel</item>
-        <item>Host</item>
-    </string-array>
-    
+
+	<string name="user_role_superuser">Vlastník</string>
+	<string name="user_role_admin">Administrátor</string>
+	<string name="user_role_user">Uživatel</string>
+	<string name="user_role_guest">Host</string>
 
     <string name="log_sc_or">nebo</string>
 

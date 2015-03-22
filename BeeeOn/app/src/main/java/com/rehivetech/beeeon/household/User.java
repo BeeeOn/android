@@ -1,5 +1,6 @@
 package com.rehivetech.beeeon.household;
 
+import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.household.User.Role;
 
 /**
@@ -31,20 +32,24 @@ public class User {
 	}
 
 	public enum Role {
-		Guest("guest"), // can only read adapter and devices' data
-		User("user"), // = guest + can switch state of switch devices
-		Admin("admin"), // = user + can change devices' settings (rename, logging, refresh,...)
-		Superuser("superuser"); // = admin + can change whole adapter's settings (devices, users,...)
+		Guest("guest", R.string.user_role_guest), // can only read adapter and devices' data
+		User("user", R.string.user_role_user), // = guest + can switch state of switch devices
+		Admin("admin", R.string.user_role_admin), // = user + can change devices' settings (rename, logging, refresh,...)
+		Superuser("superuser", R.string.user_role_superuser); // = admin + can change whole adapter's settings (devices, users,...)
 
 		private final String mRole;
+		private final int mStringRes;
 
-		private Role(String role) {
+		private Role(String role, int stringRes) {
 			mRole = role;
+			mStringRes = stringRes;
 		}
 
 		public String getValue() {
 			return mRole;
 		}
+
+		public int getStringResource() { return mStringRes; }
 
 		public static Role fromString(final String role) {
 			if (role.equalsIgnoreCase("superuser")) {

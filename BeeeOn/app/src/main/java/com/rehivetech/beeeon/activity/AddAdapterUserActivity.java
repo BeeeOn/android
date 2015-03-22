@@ -23,6 +23,9 @@ import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.household.User;
 import com.rehivetech.beeeon.pair.AddUserPair;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class AddAdapterUserActivity extends BaseApplicationActivity {
 	
 	protected static final String TAG = "AddAdapterUserActivity";
@@ -78,8 +81,13 @@ public class AddAdapterUserActivity extends BaseApplicationActivity {
 		mEmail = (EditText) findViewById(R.id.add_user_email);
 		mRole = (Spinner) findViewById(R.id.add_user_role);
 		mBtn = (Button) findViewById(R.id.add_user_adapter_save);
-		
-		ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.user_role, android.R.layout.simple_spinner_item);
+
+		List<CharSequence> roles = new ArrayList<>();
+		for (User.Role role : User.Role.values()) {
+			roles.add(getString(role.getStringResource()));
+		}
+
+		ArrayAdapter<CharSequence> adapter = new ArrayAdapter(this, android.R.layout.simple_spinner_item, roles);
 		// Specify the layout to use when the list of choices appears
 		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 		// Apply the adapter to the spinner
@@ -100,7 +108,10 @@ public class AddAdapterUserActivity extends BaseApplicationActivity {
 					return;
 				}
 				mProgress.show();
-				User newUser = new User( mEmail.getText().toString(), User.Role.fromString(Constants.USER_ROLE[(int)mRole.getSelectedItemId()]));
+				User newUser = new User();
+				newUser.setEmail(mEmail.getText().toString());
+				newUser.setRole(User.Role.values()[mRole.getSelectedItemPosition()]);
+
 				AddUserPair pair  = new AddUserPair(mAdapter, newUser);
 				
 				doAddAdapterUserTask(pair);

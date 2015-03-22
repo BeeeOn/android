@@ -183,13 +183,11 @@
         <item>List</item>
         <item>Custom</item>
     </string-array>
-    <string-array name="user_role">
-        <item>Superuser</item>
-        <item>Admin</item>
-        <item>User</item>
-        <item>Guest</item>
-    </string-array>
-    
+
+	<string name="user_role_superuser">Owner</string>
+	<string name="user_role_admin">Admin</string>
+	<string name="user_role_user">User</string>
+	<string name="user_role_guest">Guest</string>
 
     <string name="log_sc_or">or</string>
 

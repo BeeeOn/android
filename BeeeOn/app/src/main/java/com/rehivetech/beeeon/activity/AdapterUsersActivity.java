@@ -271,22 +271,19 @@ public class AdapterUsersActivity extends BaseApplicationActivity {
         mLayoutDialog = (ScrollView) inflater.inflate(R.layout.beeeon_checkbox,null);
 
         ViewGroup checkboxContainer = (ViewGroup) mLayoutDialog.findViewById(R.id.checkbox_container);
-        String[] roles = getResources().getStringArray(R.array.user_role);
 
         mGroup = new RadioGroup(mActivity);
         int margin = ((Number) (getResources().getDisplayMetrics().density * 16)).intValue();
 
+		for (User.Role role : User.Role.values()) {
+			RadioButton item = new RadioButton(this);
+			item.setText(getString(role.getStringResource()));
+			item.setPadding(margin,margin,margin,margin);
 
-
-        for (int i = 0; i < roles.length; i++) {
-            RadioButton item = new RadioButton(this);
-            item.setText(roles[i]);
-            item.setPadding(margin,margin,margin,margin);
-
-            mGroup.addView(item);
-            if(Constants.USER_ROLE[i].equalsIgnoreCase(mSelectedItem.getRole().getValue()))
-                mGroup.check(item.getId());
-        }
+			mGroup.addView(item);
+			if (role == mSelectedItem.getRole())
+				mGroup.check(item.getId());
+		}
         checkboxContainer.addView(mGroup);
 
 
@@ -297,10 +294,9 @@ public class AdapterUsersActivity extends BaseApplicationActivity {
         builder.setPositiveButton(R.string.save, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
                 // User clicked OK button
-                String[] roles = getResources().getStringArray(R.array.user_role);
-                for (int i = 0; i < roles.length; i++) {
-                    if(roles[i].equalsIgnoreCase(((RadioButton)mLayoutDialog.findViewById(mGroup.getCheckedRadioButtonId())).getText().toString()))
-                        mSelectedItem.setRole(User.Role.fromString(Constants.USER_ROLE[i]));
+				for (User.Role role : User.Role.values()) {
+                    if (role == (User.Role) mLayoutDialog.findViewById(mGroup.getCheckedRadioButtonId()).getTag())
+                        mSelectedItem.setRole(role);
                 }
                 doEditUserTask(mSelectedItem);
             }
