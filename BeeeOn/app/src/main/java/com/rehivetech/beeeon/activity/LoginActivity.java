@@ -42,20 +42,15 @@ public class LoginActivity extends BaseActivity {
 	public static final String BUNDLE_REDIRECT = "isRedirect";
 	
 	private static final String TAG = LoginActivity.class.getSimpleName();	
-	
-	private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 1;
+
 	private static final int RESULT_DO_RECOVERABLE_AUTH = 5;
 	private static final int RESULT_GET_GOOGLE_ACCOUNT = 6;
 	private static final int RESULT_DO_WEBLOGIN = 7;
 	
 	private Controller mController;
-	private LoginActivity mActivity;
 	private BetterProgressDialog mProgress;
-	
-	private boolean mIgnoreChange = false;
 
 	private boolean mLoginCancel = false;
-	private boolean mIsRedirect = false;
 
 	// ////////////////////////////////////////////////////////////////////////////////////
 	// ///////////////// Override METHODS
@@ -66,15 +61,8 @@ public class LoginActivity extends BaseActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_login);
 
-		// Check if this is redirect (e.g., after connection loss) or classic start
-		Bundle bundle = getIntent().getExtras();
-		mIsRedirect = (bundle != null && bundle.getBoolean(BUNDLE_REDIRECT, false));
-
 		// Get controller
 		mController = Controller.getInstance(getApplicationContext());
-		//mController = new Controller(getApplicationContext());
-		
-		mActivity = this;
 
 		// Prepare progressDialog
 		mProgress = new BetterProgressDialog(this);
@@ -93,10 +81,8 @@ public class LoginActivity extends BaseActivity {
 		((ImageButton) findViewById(R.id.login_btn_demo)).setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				mIgnoreChange = true;
 				mProgress.setMessageResource(R.string.progress_loading_demo);
 				doLogin(true, DemoNetwork.DEMO_EMAIL);
-				// mIgnoreChange = false;
 			}
 		});
 
@@ -108,9 +94,7 @@ public class LoginActivity extends BaseActivity {
 		btnGoogle.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				mIgnoreChange = true;
 				beginGoogleAuthRoutine();
-				// mIgnoreChange = false;
 			}
 		});
 		btnMojeID.setOnClickListener(new OnClickListener() {
@@ -127,12 +111,7 @@ public class LoginActivity extends BaseActivity {
 			// If we're already logged in, continue to location screen
 			Log.d(TAG, "Already logged in, going to locations screen...");
 
-			if (!mIsRedirect) {
-				Intent intent = new Intent(this, MainActivity.class);
-				startActivity(intent);
-			}
-
-			finish();
+			onLoggedIn(); // finishes this activity
 			return;
 		}
 
@@ -308,14 +287,8 @@ public class LoginActivity extends BaseActivity {
 					mController.reloadFacilitiesByAdapter(active.getId(), true);
 				}
 
-				if (!mIsRedirect) {
-					Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-					startActivity(intent);
-				}
-
 				Log.i(TAG, "Login finished");
-				mProgress.dismiss();
-				finish();
+				onLoggedIn(); // finishes this activity
 			}
 		}).start();
 	}
@@ -367,13 +340,7 @@ public class LoginActivity extends BaseActivity {
 							mController.logout();
 						} else {
 							// Open MainActivity or just this LoginActivity and let it redirect back
-							if (!mIsRedirect) {
-								Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-								startActivity(intent);
-							}
-
-							mProgress.dismiss();
-							finish();
+							onLoggedIn(); // finishes this activity
 							return;
 						}
 					}
@@ -414,6 +381,22 @@ public class LoginActivity extends BaseActivity {
 				}
 			}
 		}).start();
+	}
+
+	/**
+	 * Finish this activity, dismiss progressDialog and if it's not redirect (set in Intent as BUNDLE_REDIRECT) then also start MainActivity
+	 */
+	private void onLoggedIn() {
+		mProgress.dismiss();
+
+		// Check if this is redirect (e.g., after connection loss) or classic start
+		Bundle bundle = getIntent().getExtras();
+		if (bundle != null && bundle.getBoolean(BUNDLE_REDIRECT, false)) {
+			Intent intent = new Intent(this, MainActivity.class);
+			startActivity(intent);
+		}
+
+		finish();
 	}
 
 	// ////////////////////////////////////////////////////////////////////////////////////
