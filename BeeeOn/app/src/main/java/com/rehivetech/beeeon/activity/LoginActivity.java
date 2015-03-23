@@ -275,7 +275,7 @@ public class LoginActivity extends BaseActivity {
 				boolean errFlag = true;
 
 				try {
-					mController.beginPersistentConnection();
+					// mController.beginPersistentConnection(); // FIXME: it doesn't work right now
 					Log.i(TAG, "Login started");
 
 					// Here is authProvider already filled with needed parameters so we can send them to the server

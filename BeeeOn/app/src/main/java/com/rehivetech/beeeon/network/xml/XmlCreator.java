@@ -15,6 +15,7 @@ import com.rehivetech.beeeon.exception.AppException;
 import com.rehivetech.beeeon.exception.NetworkError;
 import com.rehivetech.beeeon.household.User;
 import com.rehivetech.beeeon.network.INetwork.NetworkAction;
+import com.rehivetech.beeeon.network.authentication.GoogleAuthProvider;
 import com.rehivetech.beeeon.network.authentication.IAuthProvider;
 import com.rehivetech.beeeon.network.xml.action.Action;
 import com.rehivetech.beeeon.network.xml.condition.BetweenFunc;
@@ -1280,6 +1281,13 @@ public class XmlCreator {
 			serializer.attribute(ns, Xconstants.PID, pid);
 			serializer.attribute(ns, Xconstants.SIGNACTION, Integer.toString(action));
 
+			// FIXME: workaround for actual implementation of protocol... should be deleted
+			if (authProvider instanceof GoogleAuthProvider) {
+				serializer.attribute(ns, Xconstants.SERVICE, "1");
+				serializer.attribute(ns, Xconstants.GTOKEN, authProvider.getParameters().get(GoogleAuthProvider.PARAMETER_TOKEN));
+			}
+
+			/*
 			// FIXME: this is just prototype of my provider thought, rework it as you need
 			serializer.attribute(ns, Xconstants.SERVICE, authProvider.getProviderName());
 			serializer.startTag(ns, "parameters");
@@ -1292,6 +1300,7 @@ public class XmlCreator {
 			}
 			serializer.endTag(ns, "parameters");
 			// FIXME: end
+			*/
 
 			serializer.endTag(ns, Xconstants.COM_ROOT);
 			serializer.endDocument();
