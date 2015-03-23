@@ -1,5 +1,8 @@
 package com.rehivetech.beeeon.activity.fragment;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -17,9 +20,10 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemLongClickListener;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+
+import com.melnykov.fab.FloatingActionButton;
 
 import com.rehivetech.beeeon.Constants;
 import com.rehivetech.beeeon.R;
@@ -27,11 +31,13 @@ import com.rehivetech.beeeon.activity.AddAdapterActivity;
 import com.rehivetech.beeeon.activity.AddSensorActivity;
 import com.rehivetech.beeeon.activity.MainActivity;
 import com.rehivetech.beeeon.activity.SensorDetailActivity;
+import com.rehivetech.beeeon.activity.listItem.LocationListItem;
+import com.rehivetech.beeeon.activity.listItem.SensorListItem;
 import com.rehivetech.beeeon.adapter.Adapter;
 import com.rehivetech.beeeon.adapter.device.Device;
 import com.rehivetech.beeeon.adapter.device.Facility;
 import com.rehivetech.beeeon.adapter.location.Location;
-import com.rehivetech.beeeon.arrayadapter.SensorListAdapter;
+import com.rehivetech.beeeon.arrayadapter.SenListAdapter;
 import com.rehivetech.beeeon.asynctask.CallbackTask.CallbackTaskListener;
 import com.rehivetech.beeeon.asynctask.ReloadFacilitiesTask;
 import com.rehivetech.beeeon.asynctask.RemoveFacilityTask;
@@ -40,10 +46,9 @@ import com.rehivetech.beeeon.pair.DelFacilityPair;
 import com.rehivetech.beeeon.util.Log;
 import com.rehivetech.beeeon.util.TutorialHelper;
 
-import net.i2p.android.ext.floatingactionbutton.FloatingActionsMenu;
 
-import java.util.ArrayList;
-import java.util.List;
+
+import se.emilsjolander.stickylistheaders.StickyListHeadersListView;
 
 public class SensorListFragment extends Fragment {
 
@@ -58,9 +63,12 @@ public class SensorListFragment extends Fragment {
 	private Controller mController;
 	private ReloadFacilitiesTask mReloadFacilitiesTask;
 
-	private SensorListAdapter mSensorAdapter;
-	private ListView mSensorList;
-    private FloatingActionsMenu mFAM;
+	private SenListAdapter mSensorAdapter;
+	private StickyListHeadersListView mSensorList;
+    private FloatingActionButton mFAM;
+	private ArrayList<Integer> mFABMenuIcon = new ArrayList<>();
+	private ArrayList<String> mFABMenuLabels = new ArrayList<>();
+
 
 	private View mView;
 
@@ -188,21 +196,28 @@ public class SensorListFragment extends Fragment {
 
 		Log.d(TAG, "LifeCycle: redraw devices list start");
 
-		mSensorList = (ListView) mView.findViewById(R.id.listviewofsensors);
+		mSensorList = (StickyListHeadersListView) mView.findViewById(R.id.listviewofsensors);
 		TextView noItem = (TextView) mView.findViewById(R.id.nosensorlistview);
-		ImageView addBtn = (ImageView) mView.findViewById(R.id.nosensorlistview_addsensor_image);
 
-        mFAM = (FloatingActionsMenu) mView.findViewById(R.id.multiple_actions);
+		mSensorAdapter = new SenListAdapter(mActivity);
+
+        mFAM = (FloatingActionButton) mView.findViewById(R.id.fab);
 
         // All locations on adapter
         locations = mController.getLocations(mActiveAdapterId);
 
         List<Device> devices = new ArrayList<Device>();
 		for (Location loc : locations) {
+			mSensorAdapter.addHeader(new LocationListItem(loc.getName(),loc.getIconResource(),loc.getId()));
             // all facilities from actual location
             facilities = mController.getFacilitiesByLocation(mActiveAdapterId,loc.getId());
-            for(Facility fac : facilities)
-			devices.addAll(fac.getDevices());
+            for(Facility fac : facilities) {
+				for(int x = 0; x < fac.getDevices().size(); x++) {
+					Device dev = fac.getDevices().get(x);
+					mSensorAdapter.addItem(new SensorListItem(dev,dev.getId(),mActivity,(x==(fac.getDevices().size()-1))?true:false));
+				}
+				devices.addAll(fac.getDevices());
+			}
 		}
 
 		if (mSensorList == null) {
@@ -215,22 +230,16 @@ public class SensorListFragment extends Fragment {
 
 		boolean haveDevices = devices.size() > 0;
 		boolean haveAdapters = mController.getAdapters().size() > 0;
-		
-		
-		
+
+		// Buttons in floating menu
+
 		if(!haveAdapters) { // NO Adapter
 			noItem.setVisibility(View.VISIBLE);
 			noItem.setText(R.string.no_adapter_cap);
-			addBtn.setVisibility(View.VISIBLE);
 			mSensorList.setVisibility(View.GONE);
-			addBtn.setOnClickListener(new OnClickListener() {
+			mFABMenuIcon.add(R.drawable.ic_add_white_24dp);
+			mFABMenuLabels.add(mActivity.getString(R.string.action_addadapter));
 
-				@Override
-				public void onClick(View v) {
-					showAddAdapterDialog();
-				}
-			});
-			
 			SharedPreferences prefs = mController.getUserSettings();
 			if (!(prefs != null && !prefs.getBoolean(Constants.PERSISTENCE_PREF_IGNORE_NO_ADAPTER, false))) {
 				// TUTORIAL
@@ -246,15 +255,9 @@ public class SensorListFragment extends Fragment {
 		}
 		else if (!haveDevices) { // Have Adapter but any Devices
 			noItem.setVisibility(View.VISIBLE);
-			addBtn.setVisibility(View.VISIBLE);
 			mSensorList.setVisibility(View.GONE);
-			addBtn.setOnClickListener(new OnClickListener() {
-
-				@Override
-				public void onClick(View v) {
-					showAddSensorDialog();
-				}
-			});
+			mFABMenuIcon.add(R.drawable.ic_add_white_24dp);
+			mFABMenuLabels.add(mActivity.getString(R.string.action_addsensor));
 			if(mFirstUseAddSensor && !mController.isDemoMode()){
 				mActivity.getMenu().closeMenu();
 				TutorialHelper.showAddSensorTutorial(mActivity, mView);
@@ -266,43 +269,39 @@ public class SensorListFragment extends Fragment {
 		}
 		else { // Have adapter and devices
 			noItem.setVisibility(View.GONE);
-			addBtn.setVisibility(View.GONE);
 			mSensorList.setVisibility(View.VISIBLE);
+			mFABMenuIcon.add(R.drawable.ic_add_white_24dp);
+			mFABMenuIcon.add(R.drawable.ic_add_white_24dp);
+			mFABMenuLabels.add(mActivity.getString(R.string.action_addadapter));
+			mFABMenuLabels.add(mActivity.getString(R.string.action_addsensor));
 		}
 
         // Listener for add dialogs
-		OnClickListener addSensorListener = new OnClickListener() {
-
+		OnClickListener fabMenuListener = new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				showAddSensorDialog();
+				if (mFABMenuLabels.get(v.getId()).equals(mActivity.getString(R.string.action_addsensor))) {
+					showAddSensorDialog();
+				}
+				else if (mFABMenuLabels.get(v.getId()).equals(mActivity.getString(R.string.action_addadapter))) {
+					showAddAdapterDialog();
+				}
+				Log.d(TAG, "FAB MENU HERE " + v.getId());
 			}
 		};
-        OnClickListener addAdapterListener = new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showAddAdapterDialog();
-            }
-        };
-        // Buttons in floating menu
-        mFAM.findViewById(R.id.fab_add_sensor).setOnClickListener(addSensorListener);
-        mFAM.findViewById(R.id.fab_add_adapter).setOnClickListener(addAdapterListener);
 
-        if(mController.getAdapter(mActiveAdapterId) != null) {
-            // IF can user add senzor
-            if (!mController.isUserAllowed(mController.getAdapter(mActiveAdapterId).getRole())) {
-                // Hide button
-                mFAM.findViewById(R.id.fab_add_sensor).setVisibility(View.GONE);
-            }
-        }
-        else {
-            // Hide button
-            mFAM.findViewById(R.id.fab_add_sensor).setVisibility(View.GONE);
-        }
+		mFAM.setMenuItems(convertToInt(mFABMenuIcon), mFABMenuLabels.toArray(new String[mFABMenuLabels.size()]),
+				R.style.fab_item_menu,fabMenuListener, getResources().getDrawable(R.drawable.ic_action_cancel));
+		mFAM.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				Log.d(TAG,"FAB BTN HER");
+				mFAM.triggerMenu(90);
+			}
+		});
 
-		// Update list adapter
-		mSensorAdapter = new SensorListAdapter(mActivity, devices,true);
 		mSensorList.setAdapter(mSensorAdapter);
+		mFAM.attachToListView(mSensorList.getWrappedList());
 
 		if (haveDevices) {
 			// Capture listview menu item click
@@ -328,7 +327,7 @@ public class SensorListFragment extends Fragment {
 							mMode =  ((ActionBarActivity) getActivity()).startSupportActionMode(new ActionModeEditSensors());
                             mSelectedItem = mSensorAdapter.getDevice(position);
                             mSelectedItemPos = position;
-                            setSensorSelected();
+                            mSensorAdapter.getItem(mSelectedItemPos).setIsSelected();
 							return true;
 						}
 					});
@@ -341,25 +340,14 @@ public class SensorListFragment extends Fragment {
 		return true;
 	}
 
-    private void setSensorSelected() {
-        getViewByPosition(mSelectedItemPos,mSensorList).findViewById(R.id.layoutofsensor).setBackgroundColor(mActivity.getResources().getColor(R.color.light_gray));
-    }
-
-    private void setSensorUnselected() {
-        getViewByPosition(mSelectedItemPos,mSensorList).findViewById(R.id.layoutofsensor).setBackgroundColor(mActivity.getResources().getColor(R.color.white));
-    }
-
-    public View getViewByPosition(int pos, ListView listView) {
-        final int firstListItemPosition = listView.getFirstVisiblePosition();
-        final int lastListItemPosition = firstListItemPosition + listView.getChildCount() - 1;
-
-        if (pos < firstListItemPosition || pos > lastListItemPosition ) {
-            return listView.getAdapter().getView(pos, null, listView);
-        } else {
-            final int childIndex = pos - firstListItemPosition;
-            return listView.getChildAt(childIndex);
-        }
-    }
+	private int[] convertToInt(ArrayList<Integer> IntegerList) {
+		int s = IntegerList.size();
+		int[] intArray = new int[s];
+		for (int i = 0; i < s; i++) {
+			intArray[i] = IntegerList.get(i).intValue();
+		}
+		return  intArray;
+	}
 
 	protected void showAddAdapterDialog() {
 		Log.d(TAG, "HERE ADD ADAPTER +");
@@ -448,7 +436,7 @@ public class SensorListFragment extends Fragment {
 
 		@Override
 		public void onDestroyActionMode(ActionMode mode) {
-            setSensorUnselected();
+			mSensorAdapter.getItem(mSelectedItemPos).setNotSelected();
             mSelectedItem = null;
             mSelectedItemPos = 0;
 			mMode = null;

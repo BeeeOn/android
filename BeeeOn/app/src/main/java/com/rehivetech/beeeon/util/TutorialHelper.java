@@ -115,7 +115,7 @@ public class TutorialHelper {
 
 		int margin = ((Number) (activity.getResources().getDisplayMetrics().density * marginPixel)).intValue();
 		lps.setMargins(margin, margin, margin, margin);
-		ViewTarget target = new ViewTarget(layout.findViewById(R.id.nosensorlistview_addsensor_image));
+		ViewTarget target = new ViewTarget(layout.findViewById(R.id.fab));
 
 		OnShowcaseEventListener	listener = new OnShowcaseEventListener() {
 
@@ -165,7 +165,7 @@ public class TutorialHelper {
 
 		int margin = ((Number) (activity.getResources().getDisplayMetrics().density * marginPixel)).intValue();
 		lps.setMargins(margin, margin, margin, margin);
-		ViewTarget target = new ViewTarget(layout.findViewById(R.id.nosensorlistview_addsensor_image));
+		ViewTarget target = new ViewTarget(layout.findViewById(R.id.fab));
 
 		OnShowcaseEventListener	listener = new OnShowcaseEventListener() {
 

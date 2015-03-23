@@ -3,24 +3,7 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:orientation="vertical" >
-    <LinearLayout
-        android:id="@+id/sensor_header"
-        android:layout_width="fill_parent"
-        android:layout_height="48dp"
-        android:clickable="false"
-        android:visibility="gone">
-        <TextView
-            android:id="@+id/sensor_header_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="16dp"
-            android:textColor="@color/beeeon_text_hint"
-            android:layout_gravity="center_vertical"
-            android:textSize="16dp"
-            android:text="Location"/>
-        </LinearLayout>
 
-    
      <LinearLayout
          android:id="@+id/layoutofsensor"
          android:layout_width="fill_parent"
@@ -104,9 +87,4 @@
         android:clickable="false"
         android:id="@+id/sensor_sep_midle"
         />
-    <View
-        android:id="@+id/sensor_last_item"
-        android:layout_width="fill_parent"
-        android:layout_height="80dp"
-        android:visibility="gone"/>
  </LinearLayout>
