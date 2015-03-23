@@ -380,12 +380,14 @@ public class NavDrawerMenu   {
 		mMenuAdapter.addHeader(new ProfileMenuItem(actUser.getName(), actUser.getEmail(), picture, new OnClickListener() {
             @Override
             public void onClick(View v) {
-              closeMenu();
+        	closeMenu();
 
-              FragmentTransaction fm = mActivity.getSupportFragmentManager().beginTransaction();
-              ProfileDetailFragment f = new ProfileDetailFragment();
-              fm.replace(R.id.content_frame, f, FRG_TAG_PRO);
-              fm.commit();
+            ProfileDetailFragment f = new ProfileDetailFragment();
+			mActivity.getSupportFragmentManager()
+				.beginTransaction()
+                .replace(R.id.content_frame, f, FRG_TAG_PRO)
+				.addToBackStack(FRG_TAG_PRO)
+				.commit();
               mActiveItem = Constants.GUI_MENU_PROFILE;
               mActivity.getSupportActionBar().setTitle(mActivity.getString(R.string.menu_profile));
             }

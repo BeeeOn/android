@@ -135,6 +135,10 @@
             android:name=".activity.WatchDogEditRuleActivity"
             android:label="@string/action_watchdog" >
         </activity>
+		<activity
+			android:name=".activity.AchievementOverviewActivity"
+			android:label="@string/title_activity_achievement_overview" >
+		</activity>
 
         <!-- WIDGETS -->
         <receiver

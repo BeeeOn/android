@@ -16,6 +16,7 @@
     <string name="title_activity_adapter_users">Users of adapter</string>
     <string name="title_activity_add_adapter_user">Add new user</string>
     <string name="title_activity_setup_sensor">Setup device</string>
+	<string name="title_activity_achievement_overview">Achievement overview</string>
 
     <!-- Buttons -->
     <string name="login_login">Login</string>
@@ -284,6 +285,7 @@
     <string name="tut_add_sensor_text_1">Please pull out battery stripe</string>
     <string name="tut_add_sensor_text_2">Please shake with new sensor shortly while countdown is running or push pair button on actor</string>
 
+	<!-- Achivements -->
 
     <!-- WatchDog -->
     <string name="action_watchdog">WatchDog</string>

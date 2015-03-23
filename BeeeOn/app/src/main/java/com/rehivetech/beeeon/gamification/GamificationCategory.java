@@ -11,11 +11,9 @@ public class GamificationCategory implements IIdentifier {
   private int mComplete;
   private int mTotal;
 
-  public GamificationCategory(String id, String name, int complete, int total) {
+  public GamificationCategory(String id, String name) {
     setId(id);
     setName(name);
-    setDone(complete);
-    setTotal(total);
   }
 
   public String getName() {return mName;}

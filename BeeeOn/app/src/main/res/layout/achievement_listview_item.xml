@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+			  android:orientation="vertical"
+			  android:layout_width="fill_parent"
+			  android:layout_height="70dp">
+
+	<TextView
+		android:id="@+id/achievement_list_name"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:textSize="18sp"
+		android:layout_marginLeft="10dp"
+		android:layout_marginStart="10dp"
+		android:paddingTop="5dp"
+		android:gravity="top"
+		android:textColor="@color/beeeon_primary_cyan"
+		/>
+
+	<ImageView
+		android:id="@+id/achievement_list_tick"
+		android:layout_width="12sp"
+		android:layout_height="12sp"
+		android:layout_marginLeft="10dp"
+		android:layout_marginStart="10dp"
+		android:layout_marginTop="4dp"
+		android:layout_below="@+id/achievement_list_name"
+		android:background="@drawable/ic_action_done"/>
+
+	<TextView
+		android:id="@+id/achievement_list_description"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:textSize="14sp"
+		android:paddingRight="60dp"
+		android:paddingEnd="60dp"
+		android:paddingLeft="4dp"
+		android:layout_toRightOf="@+id/achievement_list_tick"
+		android:layout_toEndOf="@+id/achievement_list_tick"
+		android:layout_below="@+id/achievement_list_name"
+		android:textColor="@color/beeeon_text_hint"/>
+
+	<RelativeLayout
+		android:layout_width="55dp"
+		android:layout_height="wrap_content"
+		android:layout_alignParentRight="true"
+		android:layout_alignParentEnd="true"
+		android:layout_marginRight="10dp"
+		android:layout_marginTop="5dp">
+
+		<TextView
+			android:id="@+id/achievement_list_points"
+			android:layout_width="46dp"
+			android:layout_height="40dp"
+			android:textColor="@color/white"
+			android:textSize="26sp"
+			android:textStyle="bold"
+			android:gravity="center"
+			android:layout_centerHorizontal="true"
+			android:background="@drawable/hexagon_gray"
+			/>
+
+		<TextView
+			android:id="@+id/achievement_list_date"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:textColor="@color/beeeon_text_hint"
+			android:textSize="12sp"
+			android:layout_centerHorizontal="true"
+			android:layout_below="@+id/achievement_list_points"/>
+
+	</RelativeLayout>
+
+	<ImageView
+		android:layout_width="match_parent"
+		android:layout_height="1px"
+		android:src="@color/beeeon_separator"
+		android:layout_alignParentBottom="true"
+		/>
+
+</RelativeLayout>
