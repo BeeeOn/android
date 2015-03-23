@@ -3,6 +3,8 @@ package com.rehivetech.beeeon.gcm;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.rehivetech.beeeon.controller.Controller;
+import com.rehivetech.beeeon.util.Utils;
+
 import android.content.Context;
 
 public class GcmHelper {
@@ -21,7 +23,7 @@ public class GcmHelper {
 	public static void registerGCMInBackground(Context context) {
 //		Handler handler = new Handler();
 //		handler.post(new GcmRegisterRunnable(context, null));
-		if (GooglePlayServicesUtil.isGooglePlayServicesAvailable(context) != ConnectionResult.SUCCESS) {
+		if (!Utils.isGooglePlayServicesAvailable(context)) {
 			return;
 		}
 		Thread thread = new Thread(new GcmRegisterRunnable(context, null));
@@ -39,7 +41,7 @@ public class GcmHelper {
 	}
 	
 	public static void registerGCMInForeground(Context context, int maxAttempts) {
-		if (GooglePlayServicesUtil.isGooglePlayServicesAvailable(context) != ConnectionResult.SUCCESS) {
+		if (!Utils.isGooglePlayServicesAvailable(context)) {
 			return;
 		}
 		GcmRegisterRunnable gcmReg = new GcmRegisterRunnable(context, maxAttempts);

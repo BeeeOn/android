@@ -1,5 +1,29 @@
 package com.rehivetech.beeeon.util;
 
+import android.content.Context;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager.NameNotFoundException;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Path;
+import android.graphics.Rect;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GooglePlayServicesUtil;
+
+import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicNameValuePair;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -12,27 +36,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-
-import org.apache.http.HttpResponse;
-import org.apache.http.NameValuePair;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.message.BasicNameValuePair;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import android.content.Context;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager.NameNotFoundException;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
-import android.graphics.Path;
-import android.graphics.Rect;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 
 final public class Utils {
 
@@ -208,6 +211,27 @@ final public class Utils {
 	public static boolean isBlackBerry() {
 		final String osName = System.getProperty("os.name");
 		return "qnx".equals(osName);
+	}
+
+	/**
+	 * Checks if Google Play Services are available on this device.
+	 * Automatically return false if this device is running BlackBerry.
+	 *
+	 * @param context
+	 * @return true if available, false otherwise
+	 */
+	public static boolean isGooglePlayServicesAvailable(Context context) {
+		if (isBlackBerry())
+			return false;
+
+		try {
+			int resultCode = GooglePlayServicesUtil.isGooglePlayServicesAvailable(context);
+			return resultCode == ConnectionResult.SUCCESS;
+		} catch (Exception e) {
+			// NOTE: Ignore exception (probably only class not found one), because we just want the true/false result
+		}
+
+		return false;
 	}
 
 	/**
