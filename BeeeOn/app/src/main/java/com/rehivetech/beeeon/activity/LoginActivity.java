@@ -217,7 +217,7 @@ public class LoginActivity extends BaseActivity {
 	}
 	
 	private boolean checkInternetConnection() {
-		boolean available = mController.isInternetAvailable(); 
+		boolean available = Utils.isInternetAvailable(this);
 		if (!available) {
 			mProgress.dismiss();
 			Toast.makeText(this, getString(R.string.toast_internet_connection), Toast.LENGTH_LONG).show();			

@@ -362,17 +362,6 @@ public final class Controller {
 		return !mHousehold.user.getEmail().isEmpty() && !mNetwork.getUID().isEmpty();
 	}
 
-	/**
-	 * Checks if Internet connection is available.
-	 * 
-	 * @return true if available, false otherwise
-	 */
-	public boolean isInternetAvailable() {
-		ConnectivityManager connectivityManager = (ConnectivityManager) mContext.getSystemService(Context.CONNECTIVITY_SERVICE);
-		NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
-		return activeNetworkInfo != null && activeNetworkInfo.isConnected();
-	}
-
 	public void beginPersistentConnection() {
 		if (mNetwork instanceof Network)
 			((Network) mNetwork).multiSessionBegin();

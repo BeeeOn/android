@@ -31,6 +31,8 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Path;
 import android.graphics.Rect;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 
 final public class Utils {
 
@@ -206,6 +208,18 @@ final public class Utils {
 	public static boolean isBlackBerry() {
 		final String osName = System.getProperty("os.name");
 		return "qnx".equals(osName);
+	}
+
+	/**
+	 * Checks if Internet connection is available.
+	 *
+	 * @param context
+	 * @return true if available, false otherwise
+	 */
+	public static boolean isInternetAvailable(Context context) {
+		ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+		NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+		return activeNetworkInfo != null && activeNetworkInfo.isConnected();
 	}
 
 }
