@@ -33,9 +33,7 @@ public class MainFragment extends Fragment {
 			Field childFragmentManager = Fragment.class.getDeclaredField("mChildFragmentManager");
 			childFragmentManager.setAccessible(true);
 			childFragmentManager.set(this, null);
-		} catch (NoSuchFieldException e) {
-			throw new RuntimeException(e);
-		} catch (IllegalAccessException e) {
+		} catch (NoSuchFieldException | IllegalAccessException e) {
 			throw new RuntimeException(e);
 		}
 	}

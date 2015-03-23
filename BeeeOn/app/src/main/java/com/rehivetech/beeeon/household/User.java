@@ -63,7 +63,7 @@ public class User {
 	public enum Gender {
 		Unknown, Male, Female;
 		
-		public static final Gender fromString(String value) {
+		public static Gender fromString(String value) {
 			if (value.equalsIgnoreCase("male"))
 				return Male;
 			else if (value.equalsIgnoreCase("female"))

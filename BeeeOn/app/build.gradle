@@ -4,16 +4,29 @@ apply plugin: 'com.android.application'
 // props.load(new FileInputStream(file("../keystores/keystore.txt")))
 
 android {
-    compileSdkVersion 21
+    compileSdkVersion 22
     buildToolsVersion "21.1.2"
     defaultConfig {
         applicationId "com.rehivetech.beeeon"
         minSdkVersion 10
-        targetSdkVersion 21
-        versionCode 37
-        versionName "2.1.2"
+        targetSdkVersion 22
+        versionCode 38
+        versionName "2.1.3"
         signingConfig signingConfigs.debug
     }
+
+/**
+ * Uncoment if you want to suppress translation control during exporting signed APK
+ */
+	/*
+	lintOptions {
+		checkReleaseBuilds false
+		// Or, if you prefer, you can continue to check for errors in release builds,
+		// but continue the build even when errors are found:
+		abortOnError false
+	}
+	*/
+
     signingConfigs {
         debug {
             storeFile file('../keystores/debug.keystore')
@@ -59,12 +72,12 @@ repositories {
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     // Support libraries
-    compile 'com.android.support:support-v4:21.0.3'
+    compile 'com.android.support:support-v4:22.0.0'
     compile 'com.google.android.gms:play-services:6.5.87'
+	compile 'com.android.support:appcompat-v7:22.0.0'
     // Third-party libraries
-    compile 'com.melnykov:floatingactionbutton:1.2.0'
+    compile 'com.melnykov:fab:1.2.0@aar'
     compile 'net.i2p.android.ext:floatingactionbutton:1.8.0'
-    compile 'com.android.support:appcompat-v7:21.0.3'
     compile 'se.emilsjolander:stickylistheaders:2.5.2'
     compile 'fr.avianey.com.viewpagerindicator:library:2.4.1@aar'
     compile 'com.sonyericsson.extras.liveware:utils:3.0'

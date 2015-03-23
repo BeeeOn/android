@@ -4,40 +4,30 @@ import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
-import android.content.DialogInterface.OnCancelListener;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.content.pm.ActivityInfo;
-import android.content.res.Configuration;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.ViewGroup;
 import android.widget.ImageButton;
-import android.widget.RelativeLayout;
 import android.widget.Toast;
 
-import com.github.amlcurran.showcaseview.OnShowcaseEventListener;
-import com.github.amlcurran.showcaseview.ShowcaseView;
-import com.github.amlcurran.showcaseview.targets.ViewTarget;
 import com.google.android.gms.auth.GoogleAuthUtil;
 import com.google.android.gms.common.AccountPicker;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
-
-import com.rehivetech.beeeon.Constants;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.adapter.Adapter;
 import com.rehivetech.beeeon.base.BaseActivity;
 import com.rehivetech.beeeon.controller.Controller;
-import com.rehivetech.beeeon.exception.ErrorCode;
 import com.rehivetech.beeeon.exception.AppException;
+import com.rehivetech.beeeon.exception.ErrorCode;
 import com.rehivetech.beeeon.exception.NetworkError;
 import com.rehivetech.beeeon.exception.NotImplementedException;
 import com.rehivetech.beeeon.network.DemoNetwork;
 import com.rehivetech.beeeon.network.GoogleAuthHelper;
-import com.rehivetech.beeeon.thread.ToastMessageThread;
+import com.rehivetech.beeeon.util.BetterProgressDialog;
 import com.rehivetech.beeeon.util.Log;
+import com.rehivetech.beeeon.util.Utils;
 
 /**
  * First sign in class, controls first activity
@@ -55,19 +45,16 @@ public class LoginActivity extends BaseActivity {
 	private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 1;
 	private static final int RESULT_DO_RECOVERABLE_AUTH = 5;
 	private static final int RESULT_GET_GOOGLE_ACCOUNT = 6;
+	private static final int RESULT_DO_WEBLOGIN = 7;
 	
 	private Controller mController;
 	private LoginActivity mActivity;
-	private ProgressDialog mProgress;
+	private BetterProgressDialog mProgress;
 	
 	private boolean mIgnoreChange = false;
 
 	private boolean mLoginCancel = false;
 	private boolean mIsRedirect = false;
-
-	private ShowcaseView mSV;
-	private RelativeLayout.LayoutParams lps;
-	private int mTutorialClick = 0;
 
 	// ////////////////////////////////////////////////////////////////////////////////////
 	// ///////////////// Override METHODS
@@ -88,14 +75,13 @@ public class LoginActivity extends BaseActivity {
 		
 		mActivity = this;
 
-		// Prepare progress dialog
-		mProgress = new ProgressDialog(this);
-		mProgress.setMessage(getString(R.string.progress_signing));
+		// Prepare progressDialog
+		mProgress = new BetterProgressDialog(this);
+		mProgress.setMessageResource(R.string.progress_signing);
 		mProgress.setCancelable(true);
 		mProgress.setCanceledOnTouchOutside(false);
 		mProgress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-		mProgress.setOnCancelListener(new OnCancelListener() {
-
+		mProgress.setOnCancelListener(new DialogInterface.OnCancelListener() {
 			@Override
 			public void onCancel(DialogInterface dialog) {
 				mLoginCancel = true;
@@ -107,7 +93,7 @@ public class LoginActivity extends BaseActivity {
 			@Override
 			public void onClick(View v) {
 				mIgnoreChange = true;
-				mProgress.setMessage(LoginActivity.this.getString(R.string.progress_loading_demo));
+				mProgress.setMessageResource(R.string.progress_loading_demo);
 				doLogin(true, DemoNetwork.DEMO_EMAIL);
 				// mIgnoreChange = false;
 			}
@@ -151,7 +137,7 @@ public class LoginActivity extends BaseActivity {
 
 		// AUTOMATIC LOGIN
 		String lastEmail = mController.getLastEmail();
-		if (lastEmail.length() > 0 && lastEmail != DemoNetwork.DEMO_EMAIL) {
+		if (lastEmail.length() > 0 && !lastEmail.equals(DemoNetwork.DEMO_EMAIL)) {
 			// Automatic login with last used e-mail
 			Log.d(TAG, String.format("Automatic login with last used e-mail (%s)...", lastEmail));
 			doLogin(false, lastEmail);
@@ -163,26 +149,39 @@ public class LoginActivity extends BaseActivity {
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
-		
+
+		Log.d(TAG, String.format("onActivityResult: %d, %d", requestCode, resultCode));
+
 		if (resultCode == RESULT_CANCELED) {
 			mLoginCancel = true;
-			progressDismiss();
+			mProgress.dismiss();
 			return;
+		}
+
+		if (resultCode == RESULT_OK && requestCode == RESULT_DO_WEBLOGIN) {
+			String token = data.getStringExtra(WebLoginActivity.TOKEN_VALUE);
+			if (token == null) {
+				Log.d(TAG, "no token received");
+				mProgress.dismiss();
+				return;
+			}
+
+			mProgress.setMessageResource(R.string.loading_data);
+			Log.i(TAG, "Access Google by token");
+			doLoginByToken(token);
 		}
 
 		if (resultCode == RESULT_OK && (requestCode == RESULT_DO_RECOVERABLE_AUTH || requestCode == RESULT_GET_GOOGLE_ACCOUNT)) {
 			String email = data.getStringExtra(AccountManager.KEY_ACCOUNT_NAME);
 			if (email == null) {
 				Log.d(TAG, "onActivityResult: no email");
+				mProgress.dismiss();
 				return;
 			}
-			try {
-				progressChangeText(getString(R.string.loading_data));
-				Log.i(TAG, "Do Google login");
-				doLogin(false, email);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
+
+			mProgress.setMessageResource(R.string.loading_data);
+			Log.i(TAG, "Do Google login");
+			doLogin(false, email);
 		}
 	}
 
@@ -192,170 +191,14 @@ public class LoginActivity extends BaseActivity {
 		finish();
 	}
 
-	@Override
-	public void onConfigurationChanged(Configuration newConfig) {
-		Log.d(TAG, "Ignore change orientation ?");
-		// ignore orientation change
-		if (!mIgnoreChange) {
-			super.onConfigurationChanged(newConfig);
-		}
-	}
-
 	// ////////////////////////////////////////////////////////////////////////////////////
 	// ///////////////// Custom METHODS
 	// ////////////////////////////////////////////////////////////////////////////////////
-	
-	
-	private void showTutorial() {
-		// TODO Auto-generated method stub
-		lps = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-		int marginPixel = 0;
-		int currentOrientation = getResources().getConfiguration().orientation;
-		if (currentOrientation == Configuration.ORIENTATION_LANDSCAPE) {
-			lps.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
-			lps.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
-			marginPixel = 15;
-		}
-		else{
-			lps.addRule(RelativeLayout.ALIGN_PARENT_TOP);
-			lps.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
-			marginPixel= 40;
-		}
-		
-		
-		int margin = ((Number) (getResources().getDisplayMetrics().density * marginPixel)).intValue();
-		lps.setMargins(margin, margin, margin, margin);
-		ViewTarget target_google = new ViewTarget(R.id.login_btn_google, this);
-		
-		OnShowcaseEventListener	listener = new OnShowcaseEventListener() {
-			
-			@Override
-			public void onShowcaseViewShow(ShowcaseView showcaseView) {
-				Log.d(TAG, "OnShowCase show");
-				
-			}
-			
-			@Override
-			public void onShowcaseViewHide(ShowcaseView showcaseView) {
-				Log.d(TAG, "OnShowCase hide");
-				if(mTutorialClick == 1){
-					ViewTarget target = new ViewTarget(R.id.login_btn_mojeid, mActivity);
-					mSV = new ShowcaseView.Builder(mActivity, true)
-					.setTarget(target)
-					.setContentTitle("MojeID account")
-					.setContentText("You can login by your MojeID account.")
-					.setStyle(R.style.CustomShowcaseTheme_Next)
-					.setShowcaseEventListener(this)
-					.build();
-					mSV.setButtonPosition(lps);
-					mTutorialClick++;
-					// TODO: Save that Google acount was clicked
-					
-				}
-				else if (mTutorialClick==2){
-					ViewTarget target = new ViewTarget(R.id.login_btn_demo, mActivity);
-					mSV = new ShowcaseView.Builder(mActivity, true)
-					.setTarget(target)
-					.setContentTitle("Demo mode")
-					.setContentText("You can try Demo house.")
-					.setStyle(R.style.CustomShowcaseTheme)
-					.setShowcaseEventListener(this)
-					.build();
-					mSV.setButtonPosition(lps);
-					mTutorialClick++;
-					// TODO: Save that MojeID acount was clicked
-				}
-				else if(mTutorialClick == 3) {
-					// TODO: Save that Demo mode was clicked
-					
-				}
-				
-			}
-			
-			@Override
-			public void onShowcaseViewDidHide(ShowcaseView showcaseView) {
-				Log.d(TAG, "OnShowCase did hide");
-				
-			}
-		}; 
-		
-		mTutorialClick = 1;
-		mSV = new ShowcaseView.Builder(mActivity, true)
-		.setTarget(target_google)
-		.setContentTitle("Google account")
-		.setContentText("You can login by your Google account.")
-		.setStyle(R.style.CustomShowcaseTheme_Next)
-		.setShowcaseEventListener(listener)
-		.build();
-		mSV.setButtonPosition(lps);
-		mSV.setOnClickListener(new OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				Log.d(TAG, "Showcase click");
-			}
-		});
-	}
-	
 
 	protected void setDemoMode(boolean demoMode) {
 		// After changing demo mode must be controller reloaded
 		Controller.setDemoMode(getApplicationContext(), demoMode);
 		mController = Controller.getInstance(getApplicationContext());
-	}
-
-	/**
-	 * Method cancel running progressBar, thread-safe
-	 */
-	public void progressDismiss() {
-		if (mProgress != null && mProgress.isShowing()) {
-			try {
-				mProgress.dismiss();
-			} catch (Exception e) {
-				Log.d(TAG, "Dialog is not showing, but dialog say that is show :/");
-				e.printStackTrace();
-			}
-		}
-
-		// Enable orientation change again
-		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR);
-	}
-
-	/**
-	 * Method show progress, thread-safe
-	 */
-	private void progressShow() {
-		// Disable orientation change
-		int currentOrientation = getResources().getConfiguration().orientation;
-		if (currentOrientation == Configuration.ORIENTATION_LANDSCAPE) {
-			setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE);
-		} else {
-			setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT);
-		}
-
-		runOnUiThread(new Runnable() {
-			@Override
-			public void run() {
-				if (mProgress != null)
-					mProgress.show();
-			}
-		});
-	}
-
-	/**
-	 * Method set new text to progress, thread-safe
-	 * 
-	 * @param message
-	 *            to show
-	 */
-	public void progressChangeText(final String message) {
-		runOnUiThread(new Runnable() {
-			@Override
-			public void run() {
-				if (mProgress != null)
-					mProgress.setMessage(message);
-			}
-		});
 	}
 
 	/**
@@ -374,9 +217,9 @@ public class LoginActivity extends BaseActivity {
 	}
 	
 	private boolean checkInternetConnection() {
-		boolean available = mController.isInternetAvailable(); 
+		boolean available = Utils.isInternetAvailable(this);
 		if (!available) {
-			progressDismiss();
+			mProgress.dismiss();
 			Toast.makeText(this, getString(R.string.toast_internet_connection), Toast.LENGTH_LONG).show();			
 		}
 		return available;
@@ -389,31 +232,93 @@ public class LoginActivity extends BaseActivity {
 		if (!checkInternetConnection())
 			return;
 		
+		if (!Utils.isGooglePlayServicesAvailable(this))
+			beginWebLoginAuth();
+		else
+			beginAndroidGoogleAuth();
+	}
+
+	private void beginWebLoginAuth() {
+		Log.d(TAG, "Start WebLoginAuth");
+		mProgress.show();
+
+		final String redirect = "http://localhost";
+		final String googleId = "863203863728-i8u7m601c85uq70v7g5jtdcjesr8dnqm.apps.googleusercontent.com";
+		final String googleSecret = "ZEv4V6XBqCSRDbPtmHLZDLoR";
+		final String tokenUrl = "https://accounts.google.com/o/oauth2/token";
+
+		StringBuilder url = new StringBuilder();
+		url.append("https://accounts.google.com/o/oauth2/auth?client_id=");
+		url.append(Utils.uriEncode(googleId));
+		url.append("&scope=openid%20email%20profile");
+		url.append("&redirect_uri=");
+		url.append(Utils.uriEncode(redirect));
+		url.append("&state=foobar");
+		url.append("&response_type=code");
+
+		final Intent intent = new Intent(getApplicationContext(), WebLoginActivity.class);
+		intent.putExtra(WebLoginActivity.LOGIN_URL, url.toString());
+		intent.putExtra(WebLoginActivity.TOKEN_URL, tokenUrl);
+		intent.putExtra(WebLoginActivity.CLIENT_ID, googleId);
+		intent.putExtra(WebLoginActivity.CLIENT_SECRET, googleSecret);
+		intent.putExtra(WebLoginActivity.REDIRECT_URI, redirect);
+		intent.putExtra(WebLoginActivity.GRANT_TYPE, "authorization_code");
+		startActivityForResult(intent, RESULT_DO_WEBLOGIN);
+
+		Log.d(TAG, "Finish WebLoginAuth");
+	}
+
+	private void beginAndroidGoogleAuth() {
 		Log.d(TAG, "Start GoogleAuthRoutine");
 		mProgress.show();
 				
-		int resultCode = GooglePlayServicesUtil.isGooglePlayServicesAvailable(getBaseContext());
-		if (resultCode == ConnectionResult.SUCCESS) {
-			// On this device is Google Play, we can proceed
-			Log.d(TAG, "On this device is Google Play, we can proceed");
-			String[] Accounts = this.getAccountNames();
-			Log.d(TAG, String.format("Number of accounts on this device: %d", Accounts.length));
+		// On this device is Google Play, we can proceed
+		Log.d(TAG, "On this device is Google Play, we can proceed");
+		String[] Accounts = this.getAccountNames();
+		Log.d(TAG, String.format("Number of accounts on this device: %d", Accounts.length));
 
-			if (Accounts.length == 1) {
-				doLogin(false, Accounts[0]);
-			} else {
-				Intent intent = AccountPicker.newChooseAccountIntent(null, null, new String[] { "com.google" }, false, null, null, null, null);
-				startActivityForResult(intent, RESULT_GET_GOOGLE_ACCOUNT);
-			}
+		if (Accounts.length == 1) {
+			doLogin(false, Accounts[0]);
 		} else {
-			// Google Play is missing
-			Log.d(TAG, "Google Play Services is missing or not allowed");
-
-			GooglePlayServicesUtil.getErrorDialog(resultCode, this, PLAY_SERVICES_RESOLUTION_REQUEST).show();
-			// 20.8. 2014 Martin changed it to system supported dialog which should solve the problem
-			mProgress.dismiss();
+			Intent intent = AccountPicker.newChooseAccountIntent(null, null, new String[] { "com.google" }, false, null, null, null, null);
+			startActivityForResult(intent, RESULT_GET_GOOGLE_ACCOUNT);
 		}
+
 		Log.d(TAG, "Finish GoogleAuthRoutine");
+	}
+
+	private void doLoginByToken(final String token) {
+		Log.i(TAG, "LoginByToken started");
+
+		mLoginCancel = false;
+		mProgress.show();
+
+		new Thread(new Runnable() {
+			@Override
+			public void run() {
+				mController.beginPersistentConnection();
+				mController.assignToken(token);
+				mProgress.setMessageResource(R.string.progress_loading_adapters);
+				mController.reloadAdapters(true);
+
+				Adapter active = mController.getActiveAdapter();
+				if (active != null) {
+					// Load data for active adapter
+					mProgress.setMessageResource(R.string.progress_loading_adapter);
+					mController.reloadLocations(active.getId(), true);
+					mController.reloadFacilitiesByAdapter(active.getId(), true);
+				}
+
+				if (!mIsRedirect) {
+					Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+					startActivity(intent);
+				}
+
+				Log.i(TAG, "Login finished");
+				mProgress.dismiss();
+				finish();
+			}
+		}).start();
 	}
 
 	/**
@@ -428,7 +333,7 @@ public class LoginActivity extends BaseActivity {
 			return;
 
 		mLoginCancel = false;
-		progressShow();
+		mProgress.show();
 		
 		new Thread(new Runnable() {
 			@Override
@@ -447,13 +352,13 @@ public class LoginActivity extends BaseActivity {
 						errFlag = false;
 
 						// Load all adapters and data for active one on login
-						progressChangeText(getString(R.string.progress_loading_adapters));
+						mProgress.setMessageResource(R.string.progress_loading_adapters);
 						mController.reloadAdapters(true);
 
 						Adapter active = mController.getActiveAdapter();
 						if (active != null) {
 							// Load data for active adapter
-							progressChangeText(getString(R.string.progress_loading_adapter));
+							mProgress.setMessageResource(R.string.progress_loading_adapter);
 							mController.reloadLocations(active.getId(), true);
 							mController.reloadFacilitiesByAdapter(active.getId(), true);
 						}
@@ -468,7 +373,9 @@ public class LoginActivity extends BaseActivity {
 								startActivity(intent);
 							}
 
+							mProgress.dismiss();
 							finish();
+							return;
 						}
 					}
 
@@ -495,9 +402,16 @@ public class LoginActivity extends BaseActivity {
                     mController.endPersistentConnection();
                 }
 
-				progressDismiss();
+				mProgress.dismiss();
 				if (errFlag) {
-					new ToastMessageThread(LoginActivity.this, errMessage).start();
+					final Toast toast = Toast.makeText(LoginActivity.this, errMessage, Toast.LENGTH_LONG);
+
+					runOnUiThread(new Runnable() {
+						@Override
+						public void run() {
+							toast.show();
+						}
+					});
 				}
 			}
 		}).start();
@@ -512,4 +426,5 @@ public class LoginActivity extends BaseActivity {
 		Toast.makeText(v.getContext(), "Not Implemented yet", Toast.LENGTH_LONG).show();
 		return false;
 	}
+
 }

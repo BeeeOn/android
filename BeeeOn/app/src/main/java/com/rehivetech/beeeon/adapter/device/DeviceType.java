@@ -78,9 +78,7 @@ public enum DeviceType {
 		try {
 			// Try to create and return new BaseValue object
 			return type.getValueClass().newInstance();
-		} catch (InstantiationException e) {
-			e.printStackTrace();
-		} catch (IllegalAccessException e) {
+		} catch (InstantiationException | IllegalAccessException e) {
 			e.printStackTrace();
 		}
 

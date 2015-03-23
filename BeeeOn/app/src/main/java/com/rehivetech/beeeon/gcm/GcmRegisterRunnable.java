@@ -7,6 +7,7 @@ import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.rehivetech.beeeon.Constants;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.util.Log;
+import com.rehivetech.beeeon.util.Utils;
 
 public class GcmRegisterRunnable implements Runnable {
 	/**
@@ -41,7 +42,7 @@ public class GcmRegisterRunnable implements Runnable {
 		}
 	
 		// if there is not Internet connection, locally invalidate and next event will try again to get new GCM ID 
-		if (!mController.isInternetAvailable()) {
+		if (!Utils.isInternetAvailable(mContext)) {
 			Log.w(GcmHelper.TAG_GCM, "No Internet, locally invalidate GCM ID");
 			GcmHelper.invalidateLocalGcmId(mController);
 			return;
@@ -50,7 +51,7 @@ public class GcmRegisterRunnable implements Runnable {
 		GoogleCloudMessaging gcm = GoogleCloudMessaging.getInstance(mContext);
 		int timeToSleep = MIN_SLEEP_TIME_GCM;
 		int attempt = 0;
-		while (mNewGcmId == null || mNewGcmId == "") {
+		while (mNewGcmId == null || mNewGcmId.isEmpty()) {
 			if (mMaxAttempts != null && attempt > mMaxAttempts) {
 				break;
 			}

@@ -31,7 +31,6 @@ import com.rehivetech.beeeon.base.BaseActivity;
 import com.rehivetech.beeeon.base.BaseApplicationActivity;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.util.Log;
-import com.rehivetech.beeeon.widget.SensorWidgetProvider;
 import com.rehivetech.beeeon.widget.WidgetData;
 import com.rehivetech.beeeon.widget.WidgetUpdateService;
 

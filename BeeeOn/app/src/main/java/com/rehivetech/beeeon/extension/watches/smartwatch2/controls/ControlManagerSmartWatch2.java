@@ -297,19 +297,7 @@ public class ControlManagerSmartWatch2 extends ControlManagerBase {
 				Log.w(SW2ExtensionService.LOG_TAG, "Created object not a ManagedControlException");
 			}
 
-		} catch (SecurityException e) {
-			Log.w(SW2ExtensionService.LOG_TAG, "ControlManager: Failed in creating control", e);
-		} catch (NoSuchMethodException e) {
-			Log.w(SW2ExtensionService.LOG_TAG, "ControlManager: Failed in creating control", e);
-		} catch (IllegalArgumentException e) {
-			Log.w(SW2ExtensionService.LOG_TAG, "ControlManager: Failed in creating control", e);
-		} catch (InstantiationException e) {
-			Log.w(SW2ExtensionService.LOG_TAG, "ControlManager: Failed in creating control", e);
-		} catch (IllegalAccessException e) {
-			Log.w(SW2ExtensionService.LOG_TAG, "ControlManager: Failed in creating control", e);
-		} catch (InvocationTargetException e) {
-			Log.w(SW2ExtensionService.LOG_TAG, "ControlManager: Failed in creating control", e);
-		} catch (ClassNotFoundException e) {
+		} catch (SecurityException | ClassNotFoundException | InvocationTargetException | IllegalAccessException | InstantiationException | IllegalArgumentException | NoSuchMethodException e) {
 			Log.w(SW2ExtensionService.LOG_TAG, "ControlManager: Failed in creating control", e);
 		}
 		return null;

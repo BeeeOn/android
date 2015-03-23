@@ -36,7 +36,6 @@ import com.rehivetech.beeeon.util.Log;
 import com.rehivetech.beeeon.util.UnitsHelper;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 /**

@@ -117,7 +117,7 @@ public final class GeofenceUtils {
     public final static int CONNECTION_FAILURE_RESOLUTION_REQUEST = 9000;
 
     // A string of length 0, used to clear out input fields
-    public static final String EMPTY_STRING = new String();
+    public static final String EMPTY_STRING = "";
 
     public static final CharSequence GEOFENCE_ID_DELIMITER = ",";
 

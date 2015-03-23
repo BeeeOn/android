@@ -1019,11 +1019,7 @@ public class XmlParsers {
 			}
 
 			result = parseAllFacilities();
-		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (XmlPullParserException e) {
-			e.printStackTrace();
-		} catch (ParseException e) {
+		} catch (IOException | XmlPullParserException | ParseException e) {
 			e.printStackTrace();
 		} finally {
 			try {
@@ -1062,9 +1058,7 @@ public class XmlParsers {
 			}
 
 			locations = parseRooms();
-		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (XmlPullParserException e) {
+		} catch (IOException | XmlPullParserException e) {
 			e.printStackTrace();
 		} finally {
 			try {
@@ -1103,9 +1097,7 @@ public class XmlParsers {
 			}
 
 			adapters = parseAdaptersReady();
-		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (XmlPullParserException e) {
+		} catch (IOException | XmlPullParserException e) {
 			e.printStackTrace();
 		} finally {
 			try {

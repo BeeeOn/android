@@ -5,11 +5,8 @@ import com.rehivetech.beeeon.controller.Controller;
 
 public class ReloadUninitializedTask extends CallbackTask<String> {
 
-	private Context mContext;
-
 	public ReloadUninitializedTask(Context context) {
-		super();
-		mContext = context;
+		super(context);
 	}
 
 	@Override

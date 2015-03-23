@@ -10,11 +10,8 @@ import com.rehivetech.beeeon.pair.InitializeFacilityPair;
 
 public class InitializeFacilityTask extends CallbackTask<InitializeFacilityPair> {
 
-	private Context mContext;
-
 	public InitializeFacilityTask(Context context) {
-		super();
-		mContext = context;
+		super(context);
 	}
 
 	@Override

@@ -6,11 +6,8 @@ import com.rehivetech.beeeon.pair.SaveDevicePair;
 
 public class SaveDeviceTask extends CallbackTask<SaveDevicePair> {
 
-	private Context mContext;
-
 	public SaveDeviceTask(Context context) {
-		super();
-		mContext = context;
+		super(context);
 	}
 
 	@Override

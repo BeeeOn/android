@@ -6,11 +6,8 @@ import com.rehivetech.beeeon.controller.Controller;
 
 public class ActorActionTask extends CallbackTask<Device> {
 
-	private Context mContext;
-
 	public ActorActionTask(Context context) {
-		super();
-		mContext = context;
+		super(context);
 	}
 
 	@Override

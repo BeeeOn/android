@@ -23,8 +23,8 @@ final public class GraphViewHelper {
 	 * Private constructor to avoid instantiation.
 	 */
 	private GraphViewHelper() {
-	};
-	
+	}
+
 	public static GraphView prepareGraphView(final Context context, final String title, final Device device, final DateTimeFormatter fmt, final UnitsHelper unitsHelper) {
 		boolean isEnumValue = device.getValue() instanceof BaseEnumValue;
 		

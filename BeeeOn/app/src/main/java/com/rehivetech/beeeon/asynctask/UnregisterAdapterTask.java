@@ -5,12 +5,8 @@ import com.rehivetech.beeeon.controller.Controller;
 
 public class UnregisterAdapterTask extends CallbackTask<String> {
 
-	private Context mContext;
-
 	public UnregisterAdapterTask(Context context) {
-		super();
-
-		mContext = context;
+		super(context);
 	}
 
 	@Override

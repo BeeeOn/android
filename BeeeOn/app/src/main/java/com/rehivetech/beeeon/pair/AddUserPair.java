@@ -1,10 +1,6 @@
 package com.rehivetech.beeeon.pair;
 
-import java.util.EnumSet;
-
 import com.rehivetech.beeeon.adapter.Adapter;
-import com.rehivetech.beeeon.adapter.device.Device;
-import com.rehivetech.beeeon.adapter.device.Device.SaveDevice;
 import com.rehivetech.beeeon.household.User;
 
 /**

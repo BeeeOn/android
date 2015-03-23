@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.melnykov.fab.FloatingActionButton;
 import com.rehivetech.beeeon.R;
@@ -27,7 +28,6 @@ import com.rehivetech.beeeon.adapter.device.values.HumidityValue;
 import com.rehivetech.beeeon.adapter.device.values.TemperatureValue;
 import com.rehivetech.beeeon.arrayadapter.WatchDogListAdapter;
 import com.rehivetech.beeeon.controller.Controller;
-import com.rehivetech.beeeon.thread.ToastMessageThread;
 import com.rehivetech.beeeon.util.Log;
 
 import java.util.ArrayList;
@@ -250,9 +250,9 @@ public class WatchDogListFragment extends Fragment{
             if (menuItem.getTitle().equals(getResources().getString(R.string.action_hide_sensor))) {
                 // doHideSensorTask(mDeviceHide);
             } else if (menuItem.getTitle().equals(getResources().getString(R.string.action_hide_facility))) {
-                new ToastMessageThread(mActivity, R.string.toast_not_implemented).start();
+				Toast.makeText(mActivity, R.string.toast_not_implemented, Toast.LENGTH_LONG).show();
             } else if (menuItem.getTitle().equals(getResources().getString(R.string.action_unregist_facility))) {
-                new ToastMessageThread(mActivity, R.string.toast_not_implemented).start();
+				Toast.makeText(mActivity, R.string.toast_not_implemented, Toast.LENGTH_LONG).show();
             }
 
             actionMode.finish();

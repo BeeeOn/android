@@ -10,14 +10,11 @@ import com.rehivetech.beeeon.pair.UserPair;
  */
 public class EditUserTask extends CallbackTask<UserPair> {
 
-	private final Context mContext;
-
 	private final boolean mForceReload;
 
 	public EditUserTask(Context context, boolean forceReload) {
-		super();
+		super(context);
 
-		mContext = context;
 		mForceReload = forceReload;
 	}
 

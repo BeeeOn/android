@@ -1,13 +1,5 @@
 package com.rehivetech.beeeon.util;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.StringWriter;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.util.Locale;
-
 import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
@@ -16,6 +8,34 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Path;
 import android.graphics.Rect;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GooglePlayServicesUtil;
+
+import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicNameValuePair;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.StringWriter;
+import java.io.UnsupportedEncodingException;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLEncoder;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 
 final public class Utils {
 
@@ -23,7 +43,7 @@ final public class Utils {
 	 * Private constructor to avoid instantiation.
 	 */
 	private Utils() {
-	};
+	}
 
 	public static Bitmap getRoundedShape(Bitmap scaleBitmapImage) {
 		int targetWidth = 200;
@@ -110,6 +130,32 @@ final public class Utils {
 	}
 
 	/**
+	 * Fetch JSON content by a HTTP POST request defined by the requestUrl and params given
+	 * as a map of (key, value) pairs. Encoding is solved internally.
+	 * 
+	 * This CAN'T be called on UI thread.
+	 * 
+	 * @param requestUrl
+	 * @param params
+	 * @return
+	 * @throws JSONException
+	 * @throws IOException
+	 */
+	public static JSONObject fetchJsonByPost(String requestUrl, Map<String, String> params) throws JSONException, IOException {
+		final HttpClient client = new DefaultHttpClient();
+		final HttpPost post = new HttpPost(requestUrl);
+		final List<NameValuePair> pairs = new ArrayList<NameValuePair>();
+
+		for(String key : params.keySet())
+			pairs.add(new BasicNameValuePair(key, params.get(key)));
+
+		post.setEntity(new UrlEncodedFormEntity(pairs));
+		final HttpResponse resp = client.execute(post);
+
+		return new JSONObject(getUtf8StringFromInputStream(resp.getEntity().getContent()));
+	}
+
+	/**
 	 * @return Application's version code from the {@code PackageManager}.
 	 */
 	public static int getAppVersion(Context context) {
@@ -139,6 +185,15 @@ final public class Utils {
 		return false;
 	}
 
+	public static String uriEncode(final String s) {
+		try {
+			return URLEncoder.encode(s, "UTF-8");
+		} catch (UnsupportedEncodingException e) {
+			/* will never happen for UTF-8 */
+			throw new RuntimeException("failed call encode with UTF-8");
+		}
+	}
+
 	/**
 	 * Formats double value to String without trailing zeros
 	 * 
@@ -151,6 +206,44 @@ final public class Utils {
 			return String.format(Locale.getDefault(), "%d", (long) d);
 		else
 			return String.format(Locale.getDefault(), "%.2f", d);
+	}
+
+	public static boolean isBlackBerry() {
+		final String osName = System.getProperty("os.name");
+		return "qnx".equals(osName);
+	}
+
+	/**
+	 * Checks if Google Play Services are available on this device.
+	 * Automatically return false if this device is running BlackBerry.
+	 *
+	 * @param context
+	 * @return true if available, false otherwise
+	 */
+	public static boolean isGooglePlayServicesAvailable(Context context) {
+		if (isBlackBerry())
+			return false;
+
+		try {
+			int resultCode = GooglePlayServicesUtil.isGooglePlayServicesAvailable(context);
+			return resultCode == ConnectionResult.SUCCESS;
+		} catch (Exception e) {
+			// NOTE: Ignore exception (probably only class not found one), because we just want the true/false result
+		}
+
+		return false;
+	}
+
+	/**
+	 * Checks if Internet connection is available.
+	 *
+	 * @param context
+	 * @return true if available, false otherwise
+	 */
+	public static boolean isInternetAvailable(Context context) {
+		ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+		NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+		return activeNetworkInfo != null && activeNetworkInfo.isConnected();
 	}
 
 }
