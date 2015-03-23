@@ -34,7 +34,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 	}
 
 	protected static SimpleGeofence cursorToGeofence(Cursor cursor) throws IllegalFormatException {
-		return new SimpleGeofence(cursor.getString(cursor.getColumnIndexOrThrow(GeofenceEntry.COLUMN_GEO_ID)),
+		// FIXME: SimpleGeofence does not have constructor with these parameters
+		return new SimpleGeofence(// cursor.getString(cursor.getColumnIndexOrThrow(GeofenceEntry.COLUMN_GEO_ID)),
 				cursor.getDouble(cursor.getColumnIndexOrThrow(GeofenceEntry.COLUMN_LAT)),
 				cursor.getDouble(cursor.getColumnIndexOrThrow(GeofenceEntry.COLUMN_LONG)),
 				cursor.getFloat(cursor.getColumnIndexOrThrow(GeofenceEntry.COLUMN_RADIUS)));
