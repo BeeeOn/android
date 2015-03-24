@@ -1135,10 +1135,16 @@ public final class Controller {
 			return false;
 		}
 
-		boolean saved = mNetwork.updateWatchDog(watchdog, adapter.getId());
+		// TODO should it be here?
+		watchdog.setAdapterId(adapter.getId());
 
 		// watchdog was updated on server, update it to adapter too
-		return saved && mHousehold.watchDogsModel.updateWatchDog(adapter.getId(), watchdog);
+		if(watchdog.getId() != null){
+			return mNetwork.updateWatchDog(watchdog, adapter.getId()) && mHousehold.watchDogsModel.updateWatchDog(adapter.getId(), watchdog);
+		}
+		else{
+			return mNetwork.addWatchDog(watchdog, adapter.getId()) && mHousehold.watchDogsModel.addWatchDog(adapter.getId(), watchdog);
+		}
 	}
 
 	public boolean deleteWatchDog(WatchDog watchdog) {

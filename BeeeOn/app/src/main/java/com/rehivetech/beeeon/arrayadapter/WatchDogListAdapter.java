@@ -34,6 +34,7 @@ public class WatchDogListAdapter extends BaseAdapter {
     SharedPreferences mPrefs;
     UnitsHelper mUnitsHelper;
 
+    View.OnClickListener mSwitchOnClickListener;
 
     public WatchDogListAdapter(Context context, LayoutInflater inflater){
         mContext = context;
@@ -44,6 +45,10 @@ public class WatchDogListAdapter extends BaseAdapter {
         // UserSettings can be null when user is not logged in!
         mPrefs = mController.getUserSettings();
         mUnitsHelper = (mPrefs == null) ? null : new UnitsHelper(mPrefs, mContext);
+    }
+
+    public void setSwitchOnclickListener(View.OnClickListener clickListener){
+        mSwitchOnClickListener = clickListener;
     }
 
     @Override
@@ -90,52 +95,32 @@ public class WatchDogListAdapter extends BaseAdapter {
             holder = (ViewHolder) convertView.getTag();
         }
 
-        // set values of item
+        // sets position of WatchDog object to retrieve it outside from the adapter
+        holder.ItemSwitch.setTag(position);
+
         final WatchDog rule = (WatchDog) this.getItem(position);
 
-        /*
-        holder.ItemIcon.setImageResource(rule.getDevice().getIconResource());
-        holder.ItemRuleName.setText(rule.getName());
-        holder.ItemSensorName.setText(rule.getDevice().getName());
-        holder.setItemOperator(rule.getOperator());
-
-        // sets value if unitsHelper otherwise raw value
-        holder.ItemTreshold.setText(mUnitsHelper != null ? mUnitsHelper.getStringValueUnit(rule.getTreshold()) : String.valueOf(rule.getTreshold().getDoubleValue()));
-
-        holder.setItemAction(rule.getAction());
-        */
-
+        holder.ItemAction.setImageResource(rule.getActionIconResource());
         holder.ItemRuleName.setText(rule.getName());
         holder.ItemSwitch.setChecked(rule.isEnabled());
-
-        holder.ItemSwitch.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(mContext, String.format("This should be async probably (%s)", rule.getName()), Toast.LENGTH_SHORT).show();
-                SwitchCompat sw = (SwitchCompat) v;
-                rule.setEnabled(sw.isChecked());
-                mController.saveWatchDog(rule);
-            }
-        });
+        if(mSwitchOnClickListener != null) {
+            holder.ItemSwitch.setOnClickListener(mSwitchOnClickListener);
+        }
 
         List<Device> devices = rule.getDevices();
         if(devices.size() > 0){
             Device deviceFirst = mController.getDevice(rule.getAdapterId(), devices.get(0).getId());
-            if(deviceFirst == null){
-                // TODO ?
-            }
+            if(deviceFirst == null) return convertView;
 
+            holder.ItemOperator.setImageResource(rule.getOperatorIconResource());
             holder.ItemIcon.setImageResource(deviceFirst.getIconResource());
             holder.ItemSensorName.setText(deviceFirst.getName());
-            holder.ItemAction.setImageResource(rule.getActionIconResource());
-            holder.ItemOperator.setImageResource(rule.getOperatorIconResource());
 
-            if(mUnitsHelper != null){
+            if (mUnitsHelper != null) {
                 BaseValue valueObj = DeviceType.createDeviceValue(deviceFirst.getType());
                 valueObj.setValue(rule.getParams().get(WatchDog.PAR_TRESHOLD));
                 holder.ItemTreshold.setText(mUnitsHelper.getStringValueUnit(valueObj));
-            }
-            else{
+            } else {
                 holder.ItemTreshold.setText(rule.getParams().get(WatchDog.PAR_TRESHOLD));
             }
         }

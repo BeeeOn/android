@@ -64,15 +64,18 @@ public class WatchDogEditRuleActivity extends BaseApplicationActivity {
 
     private Controller mController;
     private Toolbar mToolbar;
-    private boolean mIsNew = false;
-    private WatchDog mWatchDog;
+    private Menu mOptionsMenu;
+    private ProgressDialog mProgress;
     private Adapter mAdapter;
-    private boolean mIsValueLess = false;        // value for View FAB
     private UnitsHelper mUnitsHelper;
+    private SharedPreferences mPrefs;
 
     private List<Location> mLocations;
     private List<Facility> mFacilities;
-    private ProgressDialog mProgress;
+
+    private boolean mIsValueLess = false;        // value for View FAB
+    private boolean mIsNew = false;
+    private WatchDog mWatchDog;
 
     // async tasks
     private ReloadFacilitiesTask mReloadFacilitiesTask;
@@ -87,14 +90,13 @@ public class WatchDogEditRuleActivity extends BaseApplicationActivity {
     private Spinner mSensorSpinner;
     private FloatingActionButton mGreatLessButton;
     private EditText mRuleTreshold;
-    private SharedPreferences mPrefs;
-
     private EditText mNotificationText;
 
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_watchdog_edit_rule);
+        Log.d(TAG, "onCreate()");
 
         // prepare toolbar
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -112,8 +114,6 @@ public class WatchDogEditRuleActivity extends BaseApplicationActivity {
         mProgress.setMessage(getString(R.string.progress_saving_data));
         mProgress.setCancelable(false);
         mProgress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-
-        Log.d(TAG, "onCreate()");
 
         Bundle bundle = getIntent().getExtras();
         if(bundle != null){
@@ -133,7 +133,7 @@ public class WatchDogEditRuleActivity extends BaseApplicationActivity {
             }
         }
 
-        // TODO muze byt adapter null?
+        // if we want detail of some rule, we need id and adapter
         if (!mIsNew && (mActiveAdapterId == null || mActiveRuleId == null)) {
             Toast.makeText(this, R.string.toast_wrong_or_no_watchdog_rule, Toast.LENGTH_LONG).show();
             finish();
@@ -172,70 +172,11 @@ public class WatchDogEditRuleActivity extends BaseApplicationActivity {
             }
         }
         else{
-            // TODO create empty class
             mWatchDog = new WatchDog();
         }
 
         initLayout();
-
-        if(mWatchDog.getId() != null) setValues();
-    }
-
-
-    private List<Device> getDevicesArray(int type){
-        List<Device> devices = new ArrayList<Device>();
-        for(Facility facility : mFacilities)
-            for (Device device : facility.getDevices()) {
-                if (type == DEVICES_ACTORS && !device.getType().isActor()) {
-                    continue;
-                }
-                else if(type == DEVICES_SENSORS && device.getType().isActor()) {
-                    continue;
-                }
-
-                devices.add(device);
-            }
-        return devices;
-    }
-
-
-    /**
-     * Fills gui elements with values
-     */
-    private void setValues(){
-        mRuleName.setText(mWatchDog.getName());
-        mRuleEnabled.setChecked(mWatchDog.isEnabled());
-        mRuleTreshold.setText(mWatchDog.getParams().get(WatchDog.PAR_TRESHOLD));
-
-        // TODO revise
-        Device firstDev = mController.getDevice(mWatchDog.getAdapterId(), mWatchDog.getDevices().get(0).getId());
-        int index = getIndexFromList(firstDev.getId(), getDevicesArray(DEVICES_SENSORS));
-        if(index > -1) mSensorSpinner.setSelection(index);
-
-        switch(mWatchDog.getType()){
-            case WatchDog.ACTION_NOTIFICATION:
-                mActionType.check(R.id.watchdog_edit_notification);
-                mNotificationText.setText(mWatchDog.getParams().get(WatchDog.PAR_ACTION_VALUE));
-                break;
-
-            case WatchDog.ACTION_ACTOR:
-                mActionType.check(R.id.watchdog_edit_actor);
-                // TODO - vybrat actor
-                break;
-        }
-
-        setGreatLess(mWatchDog.getParams().get(WatchDog.PAR_OPERATOR), mGreatLessButton);
-    }
-
-    private <T extends IIdentifier> int getIndexFromList(String id, List<T> list) {
-        int index = 0;
-        for (T tempObj : list) {
-            if (tempObj.getId().equalsIgnoreCase(id)) {
-                return index;
-            }
-            index++;
-        }
-        return -1;
+        setValues();
     }
 
     /**
@@ -323,6 +264,37 @@ public class WatchDogEditRuleActivity extends BaseApplicationActivity {
         actorSpinner.setAdapter(actorAdapter);
     }
 
+    /**
+     * Fills gui elements with values
+     */
+    private void setValues(){
+        // if this is new watchdog, we don't set anything
+        if(mWatchDog.getId() == null) return;
+
+        mRuleName.setText(mWatchDog.getName());
+        mRuleEnabled.setChecked(mWatchDog.isEnabled());
+        mRuleTreshold.setText(mWatchDog.getParams().get(WatchDog.PAR_TRESHOLD));
+
+        // TODO revise when new protocol version
+        Device firstDev = mController.getDevice(mWatchDog.getAdapterId(), mWatchDog.getDevices().get(0).getId());
+        int index = getIndexFromList(firstDev.getId(), getDevicesArray(DEVICES_SENSORS));
+        if(index > -1) mSensorSpinner.setSelection(index);
+
+        switch(mWatchDog.getType()){
+            case WatchDog.ACTION_NOTIFICATION:
+                mActionType.check(R.id.watchdog_edit_notification);
+                mNotificationText.setText(mWatchDog.getParams().get(WatchDog.PAR_ACTION_VALUE));
+                break;
+
+            case WatchDog.ACTION_ACTOR:
+                mActionType.check(R.id.watchdog_edit_actor);
+                // TODO - vybrat actor
+                break;
+        }
+
+        setGreatLess(mWatchDog.getParams().get(WatchDog.PAR_OPERATOR), mGreatLessButton);
+    }
+
     private void setGreatLess(String operator, FloatingActionButton glButton) {
         switch(operator){
             case WatchDog.OPERATOR_GT:
@@ -365,12 +337,17 @@ public class WatchDogEditRuleActivity extends BaseApplicationActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.watchdog_edit_menu, menu);
+        mOptionsMenu = menu;
 
-        if(mIsNew) {
-            MenuItem deleteActionButton = menu.findItem(R.id.wat_menu_delete);
-            deleteActionButton.setVisible(false);
-        }
+        onUpdateOptionsMenu();
         return true;
+    }
+
+    private void onUpdateOptionsMenu(){
+        if(mOptionsMenu == null) return;
+
+        MenuItem deleteActionButton = mOptionsMenu.findItem(R.id.wat_menu_delete);
+        deleteActionButton.setVisible(mIsNew ? false : true);
     }
 
     /**
@@ -380,7 +357,6 @@ public class WatchDogEditRuleActivity extends BaseApplicationActivity {
      */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-
         switch (item.getItemId()) {
             case android.R.id.home:
                 finish();
@@ -410,22 +386,14 @@ public class WatchDogEditRuleActivity extends BaseApplicationActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private static boolean isTextEmpty(EditText etText) {
-        return etText.getText().toString().trim().length() == 0;
-    }
+    // ---------- ASYNC TASKS ---------- //
 
     /**
      * Async task for saving watchdog
      * TODO revise this
      */
     private void doSaveWatchDogTask(){
-
-        if(isTextEmpty(mRuleName)){
-            mRuleName.setError("This must be filled!");
-            return;
-        }
-        if(isTextEmpty(mRuleTreshold)){
-            mRuleTreshold.setError("This must be filled!");
+        if(!validateInput(mRuleName, "This must be filled!") || !validateInput(mRuleTreshold, "This must be filled!")){
             return;
         }
 
@@ -450,12 +418,16 @@ public class WatchDogEditRuleActivity extends BaseApplicationActivity {
             newParams.add(par_notif_text);
         mWatchDog.setParams(newParams);
 
+        mProgress.show();
 
         // TODO check if data were changed ???
         mSaveWatchDogTask = new SaveWatchDogTask(this);
         mSaveWatchDogTask.setListener(new CallbackTask.CallbackTaskListener() {
             @Override
             public void onExecute(boolean success) {
+                mIsNew = false;
+                onUpdateOptionsMenu();
+                if (mProgress != null) mProgress.dismiss();
                 Toast.makeText(WatchDogEditRuleActivity.this, getResources().getString(success ? R.string.toast_success_save_data : R.string.toast_fail_save_data), Toast.LENGTH_LONG).show();
             }
         });
@@ -478,6 +450,60 @@ public class WatchDogEditRuleActivity extends BaseApplicationActivity {
             }
         });
         mRemoveWatchDogTask.execute(pair);
+    }
+
+    // ---------- HELPER FUNCTIONS ---------- //
+    /**
+     * Helper function from getting position of object from list of objects
+     * @param id
+     * @param list
+     * @param <T>
+     * @return
+     */
+    private <T extends IIdentifier> int getIndexFromList(String id, List<T> list) {
+        int index = 0;
+        for (T tempObj : list) {
+            if (tempObj.getId().equalsIgnoreCase(id)) {
+                return index;
+            }
+            index++;
+        }
+        return -1;
+    }
+
+    /**
+     * Helper function for getting type of devices from list of facilities
+     * @param type DEVICES_ALL | DEVICES_ACTORS | DEVICES_SENSORS
+     * @return
+     */
+    private List<Device> getDevicesArray(int type){
+        List<Device> devices = new ArrayList<Device>();
+        for(Facility facility : mFacilities)
+            for (Device device : facility.getDevices()) {
+                if (type == DEVICES_ACTORS && !device.getType().isActor()) {
+                    continue;
+                }
+                else if(type == DEVICES_SENSORS && device.getType().isActor()) {
+                    continue;
+                }
+
+                devices.add(device);
+            }
+        return devices;
+    }
+
+    /**
+     * ¨Helper function for validating EditText
+     * @param eText
+     * @param msg
+     * @return
+     */
+    private static boolean validateInput(EditText eText, String msg){
+        if(eText.getText().toString().trim().length() == 0){
+            eText.setError(msg);
+            return false;
+        }
+        return true;
     }
 }
 

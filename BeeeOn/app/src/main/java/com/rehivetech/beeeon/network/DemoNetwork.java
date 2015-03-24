@@ -742,7 +742,8 @@ public class DemoNetwork implements INetwork {
 
 		// Set new location id
 		watchDog.setId(watchdogId);
-		return holder.watchdogs.put(watchdogId, watchDog) != null;
+		holder.watchdogs.put(watchdogId, watchDog);
+		return true;
 	}
 
     @Override

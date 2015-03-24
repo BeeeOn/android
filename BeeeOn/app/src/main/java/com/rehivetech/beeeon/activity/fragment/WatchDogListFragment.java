@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.view.ActionMode;
+import android.support.v7.widget.SwitchCompat;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -13,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -21,20 +23,17 @@ import com.rehivetech.beeeon.activity.MainActivity;
 import com.rehivetech.beeeon.activity.WatchDogEditRuleActivity;
 import com.rehivetech.beeeon.adapter.Adapter;
 import com.rehivetech.beeeon.adapter.WatchDog;
-import com.rehivetech.beeeon.adapter.device.Device;
-import com.rehivetech.beeeon.adapter.device.Facility;
 import com.rehivetech.beeeon.arrayadapter.WatchDogListAdapter;
 import com.rehivetech.beeeon.asynctask.CallbackTask;
 import com.rehivetech.beeeon.asynctask.ReloadWatchDogsTask;
 import com.rehivetech.beeeon.asynctask.RemoveWatchDogTask;
+import com.rehivetech.beeeon.asynctask.SaveWatchDogTask;
 import com.rehivetech.beeeon.controller.Controller;
-import com.rehivetech.beeeon.pair.DelFacilityPair;
 import com.rehivetech.beeeon.pair.DelWatchDogPair;
 import com.rehivetech.beeeon.util.Log;
 
 import net.i2p.android.ext.floatingactionbutton.FloatingActionButton;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -58,9 +57,12 @@ public class WatchDogListFragment extends Fragment{
 
     private View mView;
     private ActionMode mMode;
+    ProgressBar mProgressBar;
 
     private ReloadWatchDogsTask mReloadWatchDogTask;
     private RemoveWatchDogTask mRemoveWatchDogTask;
+    private SaveWatchDogTask mSaveWatchDogTask;
+
     private WatchDog mSelectedItem;
     private int mSelectedItemPos;
 
@@ -77,7 +79,6 @@ public class WatchDogListFragment extends Fragment{
         if (!(mActivity instanceof MainActivity)) {
             throw new IllegalStateException("Activity holding SensorListFragment must be MainActivity");
         }
-
         mController = Controller.getInstance(mActivity);
 
         if (savedInstanceState != null) {
@@ -98,6 +99,7 @@ public class WatchDogListFragment extends Fragment{
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
         mView = inflater.inflate(R.layout.fragment_watchdog, container, false);
+        mProgressBar = (ProgressBar) mActivity.findViewById(R.id.toolbar_progress);
         initLayout();
         redrawRules();
         return mView;
@@ -147,6 +149,9 @@ public class WatchDogListFragment extends Fragment{
         if(mMode != null) {
             mMode.finish();
         }
+
+        // always hide progressbar
+        mProgressBar.setVisibility(View.GONE);
     }
 
     /**
@@ -158,6 +163,14 @@ public class WatchDogListFragment extends Fragment{
 
         if (mReloadWatchDogTask != null) {
             mReloadWatchDogTask.cancel(true);
+        }
+
+        if(mRemoveWatchDogTask != null){
+            mRemoveWatchDogTask.cancel(true);
+        }
+
+        if(mSaveWatchDogTask != null){
+            mSaveWatchDogTask.cancel(true);
         }
     }
 
@@ -174,6 +187,22 @@ public class WatchDogListFragment extends Fragment{
         mWatchDogListView = (ListView) mView.findViewById(R.id.watchdog_list);
         mWatchDogAdapter = new WatchDogListAdapter(mActivity, getActivity().getLayoutInflater());
         mWatchDogListView.setAdapter(mWatchDogAdapter);
+
+        // onclicklistener for Switch button in one row
+        mWatchDogAdapter.setSwitchOnclickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int objPosition = (int) v.getTag();
+                WatchDog watchDog = (WatchDog) mWatchDogAdapter.getItem(objPosition);
+                if(watchDog == null) return;
+
+                // so that progress bar can be seen
+                if(mMode != null) mMode.finish();
+
+                SwitchCompat sw = (SwitchCompat) v;
+                doSaveWatchDogTask(watchDog, sw);
+            }
+        });
 
         // when listview is empty
         TextView emptyView = (TextView) mView.findViewById(R.id.watchdog_list_empty);
@@ -201,6 +230,7 @@ public class WatchDogListFragment extends Fragment{
 
                 Intent intent = new Intent(mActivity, WatchDogEditRuleActivity.class);
                 intent.putExtras(bundle);
+
                 startActivity(intent);
             }
         });
@@ -227,6 +257,32 @@ public class WatchDogListFragment extends Fragment{
     }
 
     // ----- ASYNC TASKS ----- //
+    private void doSaveWatchDogTask(WatchDog watchDog, final SwitchCompat sw){
+        // disable so that nobody can change it now
+        sw.setEnabled(false);
+        //Make progress bar appear when you need it
+        mProgressBar.setVisibility(View.VISIBLE);
+        // other option is to set Swipe refreshing
+        //mSwipeLayout.setRefreshing(true);
+
+        watchDog.setEnabled(sw.isChecked());
+
+        mSaveWatchDogTask = new SaveWatchDogTask(mActivity);
+        mSaveWatchDogTask.setListener(new CallbackTask.CallbackTaskListener() {
+            @Override
+            public void onExecute(boolean success) {
+                //Toast.makeText(mActivity, getResources().getString(success ? R.string.toast_success_save_data : R.string.toast_fail_save_data), Toast.LENGTH_LONG).show();
+                sw.setEnabled(true);
+                //Make progress bar disappear
+                mProgressBar.setVisibility(View.GONE);
+                // other option is to set Swipe refreshing
+                //mSwipeLayout.setRefreshing(false);
+            }
+        });
+
+        mSaveWatchDogTask.execute(watchDog);
+    }
+
     /**
      * Async task for reloading fresh watchdog data
      * @param adapterId
@@ -257,7 +313,7 @@ public class WatchDogListFragment extends Fragment{
             @Override
             public void onExecute(boolean success) {
                 Toast.makeText(mActivity, getResources().getString(success ? R.string.toast_delete_success : R.string.toast_delete_fail), Toast.LENGTH_SHORT).show();
-                if(success){
+                if (success) {
                     redrawRules();
                 }
             }

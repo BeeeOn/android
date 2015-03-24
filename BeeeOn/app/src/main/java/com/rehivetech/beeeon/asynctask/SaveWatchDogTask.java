@@ -1,6 +1,7 @@
 package com.rehivetech.beeeon.asynctask;
 
 import android.content.Context;
+import android.os.SystemClock;
 
 import com.rehivetech.beeeon.adapter.WatchDog;
 import com.rehivetech.beeeon.controller.Controller;
@@ -15,7 +16,6 @@ public class SaveWatchDogTask extends CallbackTask<WatchDog> {
 	@Override
 	protected Boolean doInBackground(WatchDog data) {
 		Controller controller = Controller.getInstance(mContext);
-
 		return controller.saveWatchDog(data);
 	}
 

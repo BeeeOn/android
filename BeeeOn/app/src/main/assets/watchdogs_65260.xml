@@ -3,15 +3,19 @@
 	ver="2.3"
 	state="algs"
 	aid="65260">
-	<alg id="5" atype="3" enable="1" name="algoritmusek">
-		<dev id="12345" type="1" pos="1"/>
-		<par pos="1">42</par>
-		<par pos="2">Hoří mi dům</par>
+	<alg id="2" atype="1" enable="0" name="hlídání smradu">
+		<dev id="101:00:FF:000:FF1" type="10" pos="1"/>
+		<par pos="1">101:00:FF:000:FF1</par>
+		<par pos="2">gt</par>
+		<par pos="3">20</par>
+		<par pos="4">smrdí, smrdí, smrdí, to to smrdí!</par>
 	</alg>
 
-	<alg id="5" atype="3" enable="1" name="algoritmusek333">
-		<dev id="63465" type="1" pos="1"/>
-		<par pos="1">42</par>
-		<par pos="2">Hoří mi dům</par>
+	<alg id="99" atype="1" enable="1" name="toto je muj algoritmus">
+		<dev id="101:00:FF:000:FF2" type="5" pos="1"/>
+		<par pos="1">101:00:FF:000:FF2</par>
+		<par pos="2">lt</par>
+		<par pos="3">200</par>
+		<par pos="4">hele, děje se něco?</par>
 	</alg>
 </com>
