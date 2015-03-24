@@ -11,7 +11,6 @@ import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.activity.AchievementOverviewActivity;
@@ -36,7 +35,7 @@ public class ProfileDetailFragment extends Fragment {
   	private GamCategoryListAdapter mCategoryListAdapter;
 
 	private TextView userName;
-  	private TextView userDetail;
+  	private TextView userLevel;
   	private ImageView userImage;
   	private ListView mCategoryList;
 	private TextView mPoints;
@@ -60,7 +59,7 @@ public class ProfileDetailFragment extends Fragment {
     	// Inflate the layout for this fragment
     	mView = inflater.inflate(R.layout.profile_detail, container, false);
     	userName = (TextView) mView.findViewById(R.id.profile_name);
-    	userDetail = (TextView) mView.findViewById(R.id.profile_detail);
+    	userLevel = (TextView) mView.findViewById(R.id.profile_detail);
     	userImage = (ImageView) mView.findViewById(R.id.profile_image);
     	mCategoryList = (ListView) mView.findViewById(R.id.gam_category_list);
 		mPoints = (TextView) mView.findViewById(R.id.profile_points);
@@ -83,9 +82,10 @@ public class ProfileDetailFragment extends Fragment {
   	}
 
   	private void redrawCategories() {
+		// list of all achievements (probably downloaded from server)
 		final AchievementList achievementList = new AchievementList();
 
-		userDetail.setText(getString(R.string.gam_level) + " " + achievementList.getLevel());
+		userLevel.setText(getString(R.string.gam_level) + " " + achievementList.getLevel());
 		mPoints.setText(String.valueOf(achievementList.getTotalPoints()));
 
 		List<GamificationCategory> rulesList = new ArrayList<>();
@@ -107,7 +107,7 @@ public class ProfileDetailFragment extends Fragment {
 
 				Intent intent = new Intent(getActivity(), AchievementOverviewActivity.class);
 				intent.putExtras(bundle);
-				intent.putExtra("achievementList", achievementList);
+				intent.putExtra("achievementList", achievementList); // list of all achievements
 				startActivity(intent);
 			}
 		});

@@ -73,7 +73,7 @@ public class AchievementListAdapter extends BaseAdapter implements Filterable{
 		holder.achievementPoints.setText(String.valueOf(achievement.getPoints()));
 //		holder.achievementDate.setText("10/5/15");
 		if(achievement.isDone()) {
-			setBg(holder.achievementPoints, convertView.getResources().getDrawable(R.drawable.hexagon_cyan));
+			setBg(holder.achievementPoints, convertView.getResources().getDrawable(R.drawable.hexagon_cyan, null));
 			holder.achievementName.setTextColor(convertView.getResources().getColor(R.color.beeeon_primary_cyan));
 			holder.achievementDescription.setTextColor(convertView.getResources().getColor(R.color.beeeon_secundary_pink));
 			holder.achievementDate.setText(achievement.getDate());
@@ -81,7 +81,7 @@ public class AchievementListAdapter extends BaseAdapter implements Filterable{
 			holder.achievementTick.setVisibility(View.VISIBLE);
 		}
 		else {
-			setBg(holder.achievementPoints, convertView.getResources().getDrawable(R.drawable.hexagon_gray));
+			setBg(holder.achievementPoints, convertView.getResources().getDrawable(R.drawable.hexagon_gray, null));
 			holder.achievementName.setTextColor(convertView.getResources().getColor(R.color.beeeon_text_color));
 			holder.achievementDescription.setTextColor(convertView.getResources().getColor(R.color.beeeon_text_hint));
 			holder.achievementDate.setVisibility(View.INVISIBLE);
@@ -92,8 +92,8 @@ public class AchievementListAdapter extends BaseAdapter implements Filterable{
 	}
 
 	/** Sets background from Java.
-	 * Made bcs setBackground works from API 16 and more
-	 * and setBackgroundDrawable is market as deprecated.
+	 * Made bcs setBackground works from API 16 and higher
+	 * and setBackgroundDrawable is marked as deprecated.
 	 */
 	@SuppressWarnings("deprecation")
 	private static void setBg(TextView view, Drawable image) {
@@ -118,6 +118,9 @@ public class AchievementListAdapter extends BaseAdapter implements Filterable{
 	/** Filter for specific category.
 	 * Goes through all (downloaded) achievements and returns
 	 * the ones belonging to @param constraint (categoryId)
+	 * Filtered achievements are ordered by date they were obtained
+	 * (from newest to oldest) and the not completed ones are
+	 * taken to the very end of this list.
 	 */
 	private class ItemFilter extends Filter {
 		@Override
@@ -136,7 +139,7 @@ public class AchievementListAdapter extends BaseAdapter implements Filterable{
 			for (int i = 0; i < count; i++) {
 				achievement = list.get(i);
 				if (achievement.getCategory().contains(categoryId)) {
-						nlist.add(achievement);
+					nlist.add(achievement);
 				}
 			}
 			Collections.sort(nlist);
