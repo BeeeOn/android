@@ -73,7 +73,7 @@ public class AchievementListAdapter extends BaseAdapter implements Filterable{
 		holder.achievementPoints.setText(String.valueOf(achievement.getPoints()));
 //		holder.achievementDate.setText("10/5/15");
 		if(achievement.isDone()) {
-			setBg(holder.achievementPoints, convertView.getResources().getDrawable(R.drawable.hexagon_cyan, null));
+			setBg(holder.achievementPoints, convertView.getResources().getDrawable(R.drawable.hexagon_cyan));
 			holder.achievementName.setTextColor(convertView.getResources().getColor(R.color.beeeon_primary_cyan));
 			holder.achievementDescription.setTextColor(convertView.getResources().getColor(R.color.beeeon_secundary_pink));
 			holder.achievementDate.setText(achievement.getDate());
@@ -81,7 +81,7 @@ public class AchievementListAdapter extends BaseAdapter implements Filterable{
 			holder.achievementTick.setVisibility(View.VISIBLE);
 		}
 		else {
-			setBg(holder.achievementPoints, convertView.getResources().getDrawable(R.drawable.hexagon_gray, null));
+			setBg(holder.achievementPoints, convertView.getResources().getDrawable(R.drawable.hexagon_gray));
 			holder.achievementName.setTextColor(convertView.getResources().getColor(R.color.beeeon_text_color));
 			holder.achievementDescription.setTextColor(convertView.getResources().getColor(R.color.beeeon_text_hint));
 			holder.achievementDate.setVisibility(View.INVISIBLE);

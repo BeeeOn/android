@@ -71,7 +71,7 @@ public class GamCategoryListAdapter extends BaseAdapter {
 
 		// colors stars with pink gained in concrete category (0-3)
 		for(int i = 1; i <= mAchievementList.getStarsCount(category.getId()); i++)
-			setBg(holder.categoryStars[i], convertView.getResources().getDrawable(R.drawable.star_pink, null));
+			setBg(holder.categoryStars[i], convertView.getResources().getDrawable(R.drawable.star_pink));
 
     	return convertView;
   	}
