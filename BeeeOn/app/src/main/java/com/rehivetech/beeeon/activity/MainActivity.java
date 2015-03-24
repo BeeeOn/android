@@ -243,8 +243,7 @@ public class MainActivity extends BaseApplicationActivity {
 
 		mNavDrawerMenu.redrawMenu();
 		mNavDrawerMenu.finishActinMode();
-		//Check whitch fragment is visible and redraw
-
+		// Redraw Main Fragment
         redrawMainFragment();
 
 		checkNoAdapters();
@@ -409,20 +408,16 @@ public class MainActivity extends BaseApplicationActivity {
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		//MenuInflater inflater = getMenuInflater();
-		//inflater.inflate(R.menu.location_screen, menu);
 		return true;
 	}
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-
 		switch (item.getItemId()) {
 		case android.R.id.home:
 			mNavDrawerMenu.clickOnHome();
 			break;
 		}
-
 		return super.onOptionsItemSelected(item);
 	}
 
@@ -445,10 +440,8 @@ public class MainActivity extends BaseApplicationActivity {
         startActivity(intent);
         this.finish();
     }
-
 	
 	public NavDrawerMenu getMenu() {
 		return mNavDrawerMenu;
 	}
-
 }
