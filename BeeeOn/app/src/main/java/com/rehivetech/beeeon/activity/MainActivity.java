@@ -31,6 +31,7 @@ import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.activity.dialog.AddSensorFragmentDialog;
 import com.rehivetech.beeeon.activity.dialog.CustomAlertDialog;
 import com.rehivetech.beeeon.activity.fragment.CustomViewFragment;
+import com.rehivetech.beeeon.activity.fragment.ProfileDetailFragment;
 import com.rehivetech.beeeon.activity.fragment.SensorListFragment;
 import com.rehivetech.beeeon.activity.fragment.WatchDogListFragment;
 import com.rehivetech.beeeon.adapter.Adapter;
@@ -56,10 +57,12 @@ public class MainActivity extends BaseApplicationActivity {
 	public static final String FRG_TAG_LOC = "Loc";
     public static final String FRG_TAG_CUS = "Cus";
     public static final String FRG_TAG_WAT = "WAT";
+	private static final String FRG_TAG_PRF = "PRF";
 	private NavDrawerMenu mNavDrawerMenu;
 	private SensorListFragment mListDevices;
 	private CustomViewFragment mCustomView;
     private WatchDogListFragment mWatchDogApp;
+	private ProfileDetailFragment mProfileFrag;
     private Toolbar mToolbar;
 
 	/**
@@ -69,6 +72,7 @@ public class MainActivity extends BaseApplicationActivity {
 	private static final String CSTVIEW = "lastcustomView";
 	private static final String ADAPTER_ID = "lastAdapterId";
 	private static final String IS_DRAWER_OPEN = "draweropen";
+
 
 	/**
 	 * saved instance states
@@ -91,7 +95,7 @@ public class MainActivity extends BaseApplicationActivity {
 
 	private boolean backPressed = false;
 
-    @Override
+	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		supportRequestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
@@ -108,7 +112,6 @@ public class MainActivity extends BaseApplicationActivity {
 
 		setSupportProgressBarIndeterminate(true);
 		setSupportProgressBarIndeterminateVisibility(true);
-		//getSupportActionBar().setIcon(R.drawable.beeeon_logo_white);
 
 		// Create NavDrawerMenu
 		mNavDrawerMenu = new NavDrawerMenu(this,mToolbar);
@@ -118,6 +121,7 @@ public class MainActivity extends BaseApplicationActivity {
 		mListDevices = new SensorListFragment();
         mCustomView = new CustomViewFragment();
         mWatchDogApp = new WatchDogListFragment();
+		mProfileFrag = new ProfileDetailFragment();
 
 		if (savedInstanceState != null) {
 			mIsDrawerOpen = savedInstanceState.getBoolean(IS_DRAWER_OPEN);
@@ -140,7 +144,7 @@ public class MainActivity extends BaseApplicationActivity {
 		}
 
 		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        if(mActiveMenuId == null) {
+        if(mActiveMenuId == null) { // Default screen
             ft.replace(R.id.content_frame, mListDevices, FRG_TAG_LOC);
         }
 		else if(mActiveMenuId.equals(Constants.GUI_MENU_CONTROL)){
@@ -152,6 +156,9 @@ public class MainActivity extends BaseApplicationActivity {
         else if(mActiveMenuId.equals(Constants.GUI_MENU_WATCHDOG)) {
             ft.replace(R.id.content_frame, mWatchDogApp, FRG_TAG_WAT);
         }
+		else if (mActiveMenuId.equals(Constants.GUI_MENU_PROFILE)){
+			ft.replace(R.id.content_frame, mProfileFrag, FRG_TAG_PRF);
+		}
 		ft.commit();
 		
 		// Init tutorial 
@@ -353,6 +360,10 @@ public class MainActivity extends BaseApplicationActivity {
             mWatchDogApp = new WatchDogListFragment();
             ft.replace(R.id.content_frame, mWatchDogApp, FRG_TAG_WAT);
         }
+		else if (mActiveMenuId.equals(Constants.GUI_MENU_PROFILE)){
+			mProfileFrag = new ProfileDetailFragment();
+			ft.replace(R.id.content_frame, mProfileFrag, FRG_TAG_PRF);
+		}
 		ft.commitAllowingStateLoss();
 
 		return true;
