@@ -153,8 +153,6 @@ public class NavDrawerMenu   {
                     }
                     break;
 
-
-
 				case SETTING:
 					if (mSelectedMenuItem.getId().equals(com.rehivetech.beeeon.activity.menuItem.MenuItem.ID_ABOUT)) {
 						InfoDialogFragment dialog = new InfoDialogFragment();
@@ -375,8 +373,8 @@ public class NavDrawerMenu   {
 		mMenuAdapter.addHeader(new ProfileMenuItem(actUser.getName(), actUser.getEmail(), picture, new OnClickListener() {
             @Override
             public void onClick(View v) {
-        	closeMenu();
-
+        	changeMenuItem(Constants.GUI_MENU_PROFILE,true);
+			/*
             ProfileDetailFragment f = new ProfileDetailFragment();
 			mActivity.getSupportFragmentManager()
 				.beginTransaction()
@@ -384,7 +382,7 @@ public class NavDrawerMenu   {
 				.addToBackStack(FRG_TAG_PRO)
 				.commit();
               mActiveItem = Constants.GUI_MENU_PROFILE;
-              mActivity.getSupportActionBar().setTitle(mActivity.getString(R.string.menu_profile));
+              mActivity.getSupportActionBar().setTitle(mActivity.getString(R.string.menu_profile));*/
             }
         }));
 
