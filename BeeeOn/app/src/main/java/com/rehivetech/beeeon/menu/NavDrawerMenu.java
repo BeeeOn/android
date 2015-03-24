@@ -374,15 +374,6 @@ public class NavDrawerMenu   {
             @Override
             public void onClick(View v) {
         	changeMenuItem(Constants.GUI_MENU_PROFILE,true);
-			/*
-            ProfileDetailFragment f = new ProfileDetailFragment();
-			mActivity.getSupportFragmentManager()
-				.beginTransaction()
-                .replace(R.id.content_frame, f, FRG_TAG_PRO)
-				.addToBackStack(FRG_TAG_PRO)
-				.commit();
-              mActiveItem = Constants.GUI_MENU_PROFILE;
-              mActivity.getSupportActionBar().setTitle(mActivity.getString(R.string.menu_profile));*/
             }
         }));
 
