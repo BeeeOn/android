@@ -62,7 +62,13 @@ public final class Constants {
 	 * Project number from the API Console
 	 */
 	public static final String PROJECT_NUMBER = "72175563561";
-	
+
+	/**
+	 * Google web login constants
+	 */
+	public static final String WEB_LOGIN_CLIENT_ID = "72175563561-ustmn77c152m6o819sf3htgrhch3rjcq.apps.googleusercontent.com";
+	public static final String WEB_LOGIN_SECRET = "NzG3qF8v6I0V0Xfe37GeeZq0";
+
 	/**
 	 * GUI constants
 	 */
