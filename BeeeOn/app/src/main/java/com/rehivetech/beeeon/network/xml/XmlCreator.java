@@ -1162,8 +1162,7 @@ public class XmlCreator {
 	 * @since 2.2
 	 */
 	public static String createDeLGCMID(String userId, String gcmid) {
-		// FIXME: fix userId tag
-		return createComAttribsVariant(Xconstants.STATE, DELGCMID, Xconstants.USER, userId, Xconstants.GCMID, gcmid);
+		return createComAttribsVariant(Xconstants.STATE, DELGCMID, Xconstants.UID, userId, Xconstants.GCMID, gcmid);
 	}
 
 	/**

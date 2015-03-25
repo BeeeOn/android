@@ -1140,12 +1140,11 @@ public class Network implements INetwork {
 
 	/**
 	 * Method set gcmID to server
-	 * @param userId of user
 	 * @param gcmID to be set
 	 * @return true if id has been updated, false otherwise
 	 * FIXME: after merge need to by rewrite
 	 */
-	public boolean setGCMID(String userId, String gcmID){
+	public boolean setGCMID(String gcmID){
 		ParsedMessage msg = doRequest(XmlCreator.createSetGCMID(mBT, gcmID));
 
 		if (msg.getState() == State.TRUE)

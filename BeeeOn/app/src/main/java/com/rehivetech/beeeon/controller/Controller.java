@@ -954,7 +954,7 @@ public final class Controller {
 		try {
 			Log.i(GcmHelper.TAG_GCM, "Set GCM ID to server: " + gcmID);
 			if (mNetwork instanceof Network) {
-				((Network) mNetwork).setGCMID(userId, gcmID);
+				((Network) mNetwork).setGCMID(gcmID);
 			}
 		} catch (Exception e) {
 			// nothing to do
