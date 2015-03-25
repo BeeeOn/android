@@ -14,6 +14,7 @@ public enum NetworkError implements ErrorCode {
 	// FROM SERVER
 	COM_VER_MISMATCH(1),
 	NOT_VALID_USER(2),
+	USER_EXISTS(3),
 	ADAPTER_NOT_EXISTS(5),
 	ADAPTER_NOT_FREE(6),
 	ADAPTER_HAVE_YET(7),
@@ -29,7 +30,14 @@ public enum NetworkError implements ErrorCode {
 	BAD_EMAIL_OR_ROLE(17),
 	BAD_UTC(18),
 	BAD_ACTOR_VALUE(19),
-	BAD_UID(20),
+	BAD_BT(20),
+	IMPROPER_PSWD(21),
+	IMPROPER_NAME_OR_EMAIL(22),
+	PENDING_USER(23),
+	USER_NOT_EXISTS(24),
+	BAD_PSWD(25),
+	SUSPECT_USER(26),
+	INVALID_PROVIDER(27),
 	ADA_SERVER_PROBLEM(100);
 
 	private final int mNumber;
