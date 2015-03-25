@@ -10,7 +10,7 @@
     <string name="title_activity_registration">Registrace</string>
     <string name="title_activity_login_facebook">Facebook</string>
     <string name="title_activity_widget_configuration">Konfigurace widgetu</string>
-    <string name="title_activity_map_geofence">Oblasti Geofence</string>
+    <string name="title_activity_map_geofence">Geolokační oblasti</string>
     <string name="title_activity_adapter_users">Uživatelé adaptéru</string>
     <string name="title_activity_add_adapter_user">Přidat nového uživatele</string>
     <string name="title_activity_setup_sensor">Nastavení zařízení</string>

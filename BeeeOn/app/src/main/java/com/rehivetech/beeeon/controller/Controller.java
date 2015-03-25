@@ -27,6 +27,7 @@ import com.rehivetech.beeeon.exception.NotImplementedException;
 import com.rehivetech.beeeon.gcm.GcmHelper;
 import com.rehivetech.beeeon.gcm.INotificationReceiver;
 import com.rehivetech.beeeon.gcm.Notification;
+import com.rehivetech.beeeon.geofence.SimpleGeofence;
 import com.rehivetech.beeeon.household.ActualUser;
 import com.rehivetech.beeeon.household.Household;
 import com.rehivetech.beeeon.household.User;
@@ -37,6 +38,7 @@ import com.rehivetech.beeeon.network.GoogleAuthHelper.GoogleUserInfo;
 import com.rehivetech.beeeon.network.INetwork;
 import com.rehivetech.beeeon.network.Network;
 import com.rehivetech.beeeon.pair.LogDataPair;
+import com.rehivetech.beeeon.persistence.GeofenceModel;
 import com.rehivetech.beeeon.persistence.Persistence;
 import com.rehivetech.beeeon.util.Log;
 import com.rehivetech.beeeon.util.Utils;
@@ -73,6 +75,8 @@ public final class Controller {
 
 	private List<User> mRequestUsers;
 
+	private GeofenceModel mGeofenceModel;
+
 	/**
 	 * Return singleton instance of this Controller. This is thread-safe.
 	 * 
@@ -104,6 +108,7 @@ public final class Controller {
 		mNetwork = mDemoMode ? new DemoNetwork(context) : new Network(mContext, this, Utils.isDebugVersion(context));
 		mPersistence = new Persistence(mContext);
 		mHousehold = new Household(mContext, mNetwork);
+		mGeofenceModel = new GeofenceModel(mContext);
 	}
 	
 	/**
@@ -1056,7 +1061,17 @@ public final class Controller {
 		}
 		return true;
 	}
-	 
-	
+
+	/**
+	 * @return List of geofences. If no geofence is registered, empty list is returned.
+	 */
+	public List<SimpleGeofence> getAllGeofences() {
+		// FIXME prepsat na UserID az bude v controlleru pristupne
+		return mGeofenceModel.getAllGeofences(getActualUser().getGoogleId());
+	}
+
+	public void addGeofence(SimpleGeofence geofence) {
+		mGeofenceModel.addGeofence(getActualUser().getGoogleId(), geofence);
+	}
 
 }

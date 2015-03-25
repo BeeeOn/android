@@ -27,8 +27,9 @@ public class SimpleGeofence {
 	private final double mLatitude;
 	private final double mLongitude;
 	private final float mRadius;
-	private long mExpirationDuration;
-	private int mTransitionType;
+	private final String mName;
+	private final long mExpirationDuration;
+	private final int mTransitionType;
 
 	/**
 	 * @param latitude   Latitude of the Geofence's center. The value is not checked for validity.
@@ -39,6 +40,8 @@ public class SimpleGeofence {
 	 * @param transition Type of Geofence transition. The value is not checked for validity.
 	 */
 	public SimpleGeofence(
+			String id,
+			String name,
 			double latitude,
 			double longitude,
 			float radius,
@@ -47,7 +50,10 @@ public class SimpleGeofence {
 		// Set the instance fields from the constructor
 
 		// An identifier for the geofence
-		this.mId = createGeofenceId();
+		this.mId = id;
+
+		// Name of geofence
+		this.mName = name;
 
 		// Center of the geofence
 		this.mLatitude = latitude;
@@ -71,11 +77,32 @@ public class SimpleGeofence {
 	 * @param radius    Radius of the geofence circle. The value is not checked for validity
 	 */
 	public SimpleGeofence(
+			String name,
 			double latitude,
 			double longitude,
 			float radius) {
 		// Call default constructor and set default values
-		this(latitude, longitude, radius, Geofence.NEVER_EXPIRE,
+		this(createGeofenceId(), name, latitude, longitude, radius, Geofence.NEVER_EXPIRE,
+				Geofence.GEOFENCE_TRANSITION_ENTER | Geofence.GEOFENCE_TRANSITION_EXIT);
+	}
+
+	/**
+	 * Constructor for getting instance from database. Transition is set to enter and exit transition.
+	 * Expiration is set to never expire.
+	 *
+	 * @param id        Geofence ID from database
+	 * @param latitude  Latitude of the Geofence's center. The value is not checked for validity.
+	 * @param longitude Longitude of the Geofence's center. The value is not checked for validity.
+	 * @param radius    Radius of the geofence circle. The value is not checked for validity
+	 */
+	public SimpleGeofence(
+			String id,
+			String name,
+			double latitude,
+			double longitude,
+			float radius) {
+		// Call default constructor and set default values
+		this(id, name, latitude, longitude, radius, Geofence.NEVER_EXPIRE,
 				Geofence.GEOFENCE_TRANSITION_ENTER | Geofence.GEOFENCE_TRANSITION_EXIT);
 	}
 
@@ -88,10 +115,10 @@ public class SimpleGeofence {
 	 */
 	private static String createGeofenceId() {
 		final String timestamp = String.valueOf(System.currentTimeMillis());
-		//FIXME
+
+		//FIXME dodelat po mergi s Petrovou vrstvou (metoda v Utils pro ziskani ID)
 		final String deviceId = "";
 		final String separator = "_";
-
 
 		return deviceId + separator + timestamp;
 	}
@@ -104,6 +131,16 @@ public class SimpleGeofence {
 	public String getId() {
 		return mId;
 	}
+
+	/**
+	 * Get the geofence name
+	 *
+	 * @return A latitude value
+	 */
+	public String getName() {
+		return mName;
+	}
+
 
 	/**
 	 * Get the geofence latitude
