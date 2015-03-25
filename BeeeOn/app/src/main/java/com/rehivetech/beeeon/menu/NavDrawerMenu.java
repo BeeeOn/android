@@ -398,13 +398,13 @@ public class NavDrawerMenu   {
 
             // MANAGMENT
             mMenuAdapter.addHeader(new GroupMenuItem(mActivity.getResources().getString(R.string.menu_managment)));
-            mMenuAdapter.addItem(new LocationMenuItem(mActivity.getString(R.string.menu_control), R.drawable.ic_overview, false, Constants.GUI_MENU_CONTROL, false));
-            mMenuAdapter.addItem(new LocationMenuItem(mActivity.getString(R.string.menu_dashboard),R.drawable.ic_dashboard,false,Constants.GUI_MENU_DASHBOARD,false));
+            mMenuAdapter.addItem(new LocationMenuItem(mActivity.getString(R.string.menu_control), R.drawable.ic_overview, false, Constants.GUI_MENU_CONTROL, (mActiveItem != null)? mActiveItem.equals(Constants.GUI_MENU_CONTROL):true));
+            mMenuAdapter.addItem(new LocationMenuItem(mActivity.getString(R.string.menu_dashboard),R.drawable.ic_dashboard,false,Constants.GUI_MENU_DASHBOARD,(mActiveItem != null)? mActiveItem.equals(Constants.GUI_MENU_DASHBOARD):false));
 
             mMenuAdapter.addItem( new SeparatorMenuItem());
             // APPLICATIONS
             mMenuAdapter.addHeader(new GroupMenuItem(mActivity.getResources().getString(R.string.menu_applications)));
-            mMenuAdapter.addItem(new LocationMenuItem(mActivity.getString(R.string.menu_watchdog), R.drawable.ic_app_watchdog, false, Constants.GUI_MENU_WATCHDOG, false));
+            mMenuAdapter.addItem(new LocationMenuItem(mActivity.getString(R.string.menu_watchdog), R.drawable.ic_app_watchdog, false, Constants.GUI_MENU_WATCHDOG, (mActiveItem != null)?mActiveItem.equals(Constants.GUI_MENU_WATCHDOG):false));
 
 		} else {
 			mMenuAdapter.addItem(new EmptyMenuItem(mActivity.getResources().getString(R.string.no_adapters)));
