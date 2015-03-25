@@ -26,7 +26,6 @@ import com.rehivetech.beeeon.household.User.Role;
 import com.rehivetech.beeeon.network.DemoNetwork;
 import com.rehivetech.beeeon.network.INetwork;
 import com.rehivetech.beeeon.network.Network;
-import com.rehivetech.beeeon.network.authentication.GoogleAuthProvider;
 import com.rehivetech.beeeon.network.authentication.IAuthProvider;
 import com.rehivetech.beeeon.pair.LogDataPair;
 import com.rehivetech.beeeon.persistence.GeofenceModel;
@@ -217,7 +216,7 @@ public final class Controller {
 			loadUserData(userId);
 		} catch (AppException e) {
 			ErrorCode errorCode = e.getErrorCode();
-			if (errorCode instanceof NetworkError && errorCode == NetworkError.BAD_UID) {
+			if (errorCode instanceof NetworkError && errorCode == NetworkError.BAD_BT) {
 				// This BT is invalid, delete it
 				Log.w(TAG, "BT is invalid, we will load fresh one");
 

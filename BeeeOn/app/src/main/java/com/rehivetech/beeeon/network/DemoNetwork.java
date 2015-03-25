@@ -173,6 +173,15 @@ public class DemoNetwork implements INetwork {
 	}
 
 	@Override
+	public boolean addProvider(IAuthProvider authProvider){return true;}
+
+	@Override
+	public boolean removeProvider(String providerName){return true;}
+
+	@Override
+	public boolean deleteMyAccount(){return true;}
+
+	@Override
 	public boolean addAdapter(String adapterId, String adapterName) {
 		if (!isAdapterAllowed(adapterId)) {
 			return false;

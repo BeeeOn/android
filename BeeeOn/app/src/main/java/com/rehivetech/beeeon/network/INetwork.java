@@ -98,6 +98,26 @@ public interface INetwork {
     public boolean registerMe(IAuthProvider authProvider);
 
 	/**
+	 * Method add new provider information (join your accounts) to your account
+	 * @param authProvider
+	 * @return true if everything is ok, false otherwise
+	 */
+	public boolean addProvider(IAuthProvider authProvider);
+
+	/**
+	 * Method remove one of your provider from your account
+	 * @param providerName
+	 * @return
+	 */
+	public boolean removeProvider(String providerName);
+
+	/**
+	 * Method remove all providers, so remove whole account from system
+	 * @return
+	 */
+	public boolean deleteMyAccount();
+
+	/**
 	 * Method register adapter to server
 	 * 
 	 * @param adapterID

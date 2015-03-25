@@ -463,6 +463,39 @@ public class Network implements INetwork {
         throw new AppException(fa.getErrMessage(), NetworkError.fromValue(fa.getErrCode()));
     }
 
+	@Override
+	public boolean addProvider(IAuthProvider authProvider){
+		ParsedMessage msg = doRequest(XmlCreator.createJoinAccount(mBT, authProvider));
+
+		if (msg.getState() == State.TRUE)
+			return true;
+
+		FalseAnswer fa = (FalseAnswer) msg.data;
+		throw new AppException(fa.getErrMessage(), NetworkError.fromValue(fa.getErrCode()));
+	}
+
+	@Override
+	public boolean removeProvider(String providerName){
+		ParsedMessage msg = doRequest(XmlCreator.createCutAccount(mBT, providerName));
+
+		if (msg.getState() == State.TRUE)
+			return true;
+
+		FalseAnswer fa = (FalseAnswer) msg.data;
+		throw new AppException(fa.getErrMessage(), NetworkError.fromValue(fa.getErrCode()));
+	}
+
+	@Override
+	public boolean deleteMyAccount(){
+		ParsedMessage msg = doRequest(XmlCreator.createCutAccount(mBT, "all"));
+
+		if (msg.getState() == State.TRUE)
+			return true;
+
+		FalseAnswer fa = (FalseAnswer) msg.data;
+		throw new AppException(fa.getErrMessage(), NetworkError.fromValue(fa.getErrCode()));
+	}
+
     @Override
     public User loadUserInfo(){
         ParsedMessage msg = doRequest(XmlCreator.createGetUserInfo(mBT));

@@ -15,7 +15,6 @@ import com.rehivetech.beeeon.exception.AppException;
 import com.rehivetech.beeeon.exception.NetworkError;
 import com.rehivetech.beeeon.household.User;
 import com.rehivetech.beeeon.network.INetwork.NetworkAction;
-import com.rehivetech.beeeon.network.authentication.GoogleAuthProvider;
 import com.rehivetech.beeeon.network.authentication.IAuthProvider;
 import com.rehivetech.beeeon.network.xml.action.Action;
 import com.rehivetech.beeeon.network.xml.condition.BetweenFunc;
@@ -51,12 +50,12 @@ public class XmlCreator {
 	private static final String COM_VER = Constants.COM_VER;
 
 	// states
-	
-	public static final String GETUID = "getuid";
-    public static final String GETBT =  "getbt";
+
     public static final String PASSBORDER = "passborder";
     public static final String SIGNME = "signme";
     public static final String GETUSERINFO ="getuserinfo";
+	public static final String JOINACCOUNT = "joinaccount";
+	public static final String CUTACCOUNT = "cutaccount";
 
 	public static final String ADDADAPTER = "addadapter";
 	public static final String REINITADAPTER = "reinitadapter";
@@ -148,6 +147,101 @@ public class XmlCreator {
 	// ////////////////////////////////////////////////////////////////////////////////////////////////
 	// /////////////////////////////////////SIGNIN,SIGNUP,ADAPTERS/////////////////////////////////////
 	// ////////////////////////////////////////////////////////////////////////////////////////////////
+
+	/**
+	 * Method create message for registration of new user (if action parameter is 0), or log in, existing one (action is 1)
+	 * @param locale locale of phone
+	 * @param pid phone id (ie. emei)
+	 * @param action of action is 0, user want to signUp, if 1 then user will be signedIn
+	 * @param authProvider provider of authentication with parameters to send
+	 *
+	 * @return
+	 */
+	public static String createSignMe(String locale, String pid, int action, IAuthProvider authProvider) {
+		XmlSerializer serializer = Xml.newSerializer();
+		StringWriter writer = new StringWriter();
+		try {
+			serializer.setOutput(writer);
+			// serializer.startDocument("UTF-8", null);
+
+			serializer.startTag(ns, Xconstants.COM_ROOT);
+			serializer.attribute(ns, Xconstants.VERSION, COM_VER); // every time use version
+
+			serializer.attribute(ns, Xconstants.STATE, SIGNME);
+			serializer.attribute(ns, Xconstants.LOCALE, locale);
+			serializer.attribute(ns, Xconstants.PID, pid);
+			serializer.attribute(ns, Xconstants.SIGNACTION, Integer.toString(action));
+
+			// NOTE: Ok, i did it like that, but i do not like it
+			serializer.attribute(ns, Xconstants.SERVICE, authProvider.getProviderName());
+
+			serializer.startTag(ns, Xconstants.PARAM);
+			for (Map.Entry<String, String> entry : authProvider.getParameters().entrySet()) {
+				String key = entry.getKey();
+				String value = entry.getValue();
+
+				if (key != null && value != null)
+					serializer.attribute(ns, key, value);
+			}
+			serializer.endTag(ns, Xconstants.PARAM);
+
+			serializer.endTag(ns, Xconstants.COM_ROOT);
+			serializer.endDocument();
+
+			return writer.toString();
+		} catch (Exception e) {
+			throw AppException.wrap(e, NetworkError.XML);
+		}
+	}
+
+	/**
+	 * Method create message for joining new provider to actual user
+	 * @param authProvider provider of authentication with parameters to send
+	 *
+	 * @return
+	 */
+	public static String createJoinAccount(String bt, IAuthProvider authProvider) {
+		XmlSerializer serializer = Xml.newSerializer();
+		StringWriter writer = new StringWriter();
+		try {
+			serializer.setOutput(writer);
+			// serializer.startDocument("UTF-8", null);
+
+			serializer.startTag(ns, Xconstants.COM_ROOT);
+			serializer.attribute(ns, Xconstants.VERSION, COM_VER); // every time use version
+
+			serializer.attribute(ns, Xconstants.STATE, JOINACCOUNT);
+			serializer.attribute(ns, Xconstants.BT, bt);
+			serializer.attribute(ns, Xconstants.SERVICE, authProvider.getProviderName());
+
+			serializer.startTag(ns, Xconstants.PARAM);
+			for (Map.Entry<String, String> entry : authProvider.getParameters().entrySet()) {
+				String key = entry.getKey();
+				String value = entry.getValue();
+
+				if (key != null && value != null)
+					serializer.attribute(ns, key, value);
+			}
+			serializer.endTag(ns, Xconstants.PARAM);
+
+			serializer.endTag(ns, Xconstants.COM_ROOT);
+			serializer.endDocument();
+
+			return writer.toString();
+		} catch (Exception e) {
+			throw AppException.wrap(e, NetworkError.XML);
+		}
+	}
+
+	/**
+	 * Method create message for removing part of account (or whole account)
+	 * @param bt
+	 * @param providerName name of service (beeeon, google, facebook, ...)
+	 * @return
+	 */
+	public static String createCutAccount(String bt, String providerName){
+		return createComAttribsVariant(Xconstants.STATE, CUTACCOUNT, Xconstants.BT, bt, Xconstants.SERVICE, providerName);
+	}
 
 	public static String createGetUserInfo(String bt){
 		return createComAttribsVariant(Xconstants.STATE, GETUSERINFO, Xconstants.BT, bt);
@@ -1146,7 +1240,7 @@ public class XmlCreator {
      *          list of strings with additional params for new rule
      * @return
      */
-    public static String createAddSetAlgor(String bt, String name, String aid, int type, List<Device> devices, List<String> params, Boolean state){
+    public static String createAddSetAlgor(String bt, String name, String aid, int type, List<String> devices, List<String> params, Boolean state){
         XmlSerializer serializer = Xml.newSerializer();
         StringWriter writer = new StringWriter();
         try {
@@ -1169,10 +1263,11 @@ public class XmlCreator {
             serializer.attribute(ns, Xconstants.ATYPE, Integer.toString(type));
 
             int i = 1;
-            for(Device device : devices){
+            for(String device : devices){
                 serializer.startTag(ns, Xconstants.DEVICE);
-                serializer.attribute(ns, Xconstants.ID, device.getId());
-                serializer.attribute(ns, Xconstants.TYPE, device.getType().toString());
+				String[] id_type = device.split(Device.ID_SEPARATOR);
+                serializer.attribute(ns, Xconstants.ID, id_type[0]);
+                serializer.attribute(ns, Xconstants.TYPE, id_type[1]);
                 serializer.attribute(ns, Xconstants.POSITION, Integer.toString(i++));
                 serializer.endTag(ns, Xconstants.DEVICE);
             }
@@ -1195,11 +1290,11 @@ public class XmlCreator {
     }
 
 
-    public static String createAddAlgor(String bt, String name, String aid, int type, List<Device> devices, List<String> params){
+    public static String createAddAlgor(String bt, String name, String aid, int type, List<String> devices, List<String> params){
         return createAddSetAlgor(bt, name, aid, type, devices, params, null);
     }
 
-    public static String createSetAlgor(String bt, String name, String aid, int type, boolean enable, List<Device> devices, List<String>params){
+    public static String createSetAlgor(String bt, String name, String aid, int type, boolean enable, List<String> devices, List<String>params){
         return createAddSetAlgor(bt, name, aid, type, devices, params, enable);
     }
 
@@ -1255,60 +1350,6 @@ public class XmlCreator {
      */
     public static String createDelAlg(String bt, String algid){
         return createComAttribsVariant(Xconstants.STATE, DELALG, Xconstants.BT, bt, Xconstants.ALGID, algid);
-    }
-
-    /**
-     * Method create message for registration of new user (if action parameter is 0), or log in, existing one (action is 1)
-     * @param locale locale of phone
-     * @param pid phone id (ie. emei)
-     * @param action of action is 0, user want to signUp, if 1 then user will be signedIn
-     * @param authProvider provider of authentication with parameters to send
-     *
-     * @return
-     */
-    public static String createSignMe(String locale, String pid, int action, IAuthProvider authProvider) {
-		XmlSerializer serializer = Xml.newSerializer();
-		StringWriter writer = new StringWriter();
-		try {
-			serializer.setOutput(writer);
-			// serializer.startDocument("UTF-8", null);
-
-			serializer.startTag(ns, Xconstants.COM_ROOT);
-			serializer.attribute(ns, Xconstants.VERSION, COM_VER); // every time use version
-
-			serializer.attribute(ns, Xconstants.STATE, SIGNME);
-			serializer.attribute(ns, Xconstants.LOCALE, locale);
-			serializer.attribute(ns, Xconstants.PID, pid);
-			serializer.attribute(ns, Xconstants.SIGNACTION, Integer.toString(action));
-
-			// FIXME: workaround for actual implementation of protocol... should be deleted
-			if (authProvider instanceof GoogleAuthProvider) {
-				serializer.attribute(ns, Xconstants.SERVICE, "1");
-				serializer.attribute(ns, Xconstants.GTOKEN, authProvider.getParameters().get(GoogleAuthProvider.PARAMETER_TOKEN));
-			}
-
-			/*
-			// FIXME: this is just prototype of my provider thought, rework it as you need
-			serializer.attribute(ns, Xconstants.SERVICE, authProvider.getProviderName());
-			serializer.startTag(ns, "parameters");
-			for (Map.Entry<String, String> entry : authProvider.getParameters().entrySet()) {
-				String key = entry.getKey();
-				String value = entry.getValue();
-
-				if (key != null && value != null)
-					serializer.attribute(ns, key, value);
-			}
-			serializer.endTag(ns, "parameters");
-			// FIXME: end
-			*/
-
-			serializer.endTag(ns, Xconstants.COM_ROOT);
-			serializer.endDocument();
-
-			return writer.toString();
-		} catch (Exception e) {
-			throw AppException.wrap(e, NetworkError.XML);
-		}
     }
 
     /**

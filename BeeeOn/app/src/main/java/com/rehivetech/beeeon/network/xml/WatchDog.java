@@ -1,7 +1,5 @@
 package com.rehivetech.beeeon.network.xml;
 
-import com.rehivetech.beeeon.adapter.device.Device;
-
 import java.util.ArrayList;
 
 /**
@@ -15,7 +13,7 @@ public class WatchDog {
     private String mName;
     private String mAdapterId;
 
-    private ArrayList<Device> mDevices;
+    private ArrayList<String> mDevices;
     private ArrayList<String> mParams;
 
     public boolean isEnabled(){
@@ -34,11 +32,11 @@ public class WatchDog {
         mtype = type;
     }
 
-    public ArrayList<Device> getDevices(){
+    public ArrayList<String> getDevices(){
         return mDevices;
     }
 
-    public void AddDevice(Device device){
+    public void AddDevice(String device){
         mDevices.add(device);
     }
 
@@ -50,7 +48,7 @@ public class WatchDog {
         mParams.add(param);
     }
 
-    public void setDevices(ArrayList<Device> devices){
+    public void setDevices(ArrayList<String> devices){
         mDevices = devices;
     }
 

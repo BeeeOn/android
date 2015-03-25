@@ -872,27 +872,24 @@ public class XmlParsers {
 
         do{
             WatchDog watchDog = new WatchDog(getSecureInt(getSecureAttrValue(Xconstants.ATYPE)));
+			watchDog.setId(getSecureAttrValue(Xconstants.ID));
             watchDog.setAdapterId(aid);
             watchDog.setEnabled((getSecureInt(getSecureAttrValue(Xconstants.ENABLE)) > 0)?true:false);
             watchDog.setName(getSecureAttrValue(Xconstants.NAME));
 
-            TreeMap<String, Device> tDevices = new TreeMap<>();
+            TreeMap<String, String> tDevices = new TreeMap<>();
             TreeMap<String, String> tParams = new TreeMap<>();
 
             mParser.nextTag();
 
             if(!mParser.getName().equals(Xconstants.DEVICE) && !mParser.getName().equals(Xconstants.PARAM))
-                ;//TODO do something
+                Log.e(TAG, "someone send bad xml");//TODO do something
 
             do{
                 String position = getSecureAttrValue(Xconstants.POSITION);
 
                 if(mParser.getName().equals(Xconstants.DEVICE)){
-                    Device device = createDeviceByType(getSecureAttrValue(Xconstants.TYPE));
-                    Facility facility = new Facility();
-                    facility.setAddress(getSecureAttrValue(Xconstants.ID)); // FIXME: how to connect with existing facilities in controller
-                    device.setFacility(facility);
-
+					String device = getSecureAttrValue(Xconstants.ID) + Device.ID_SEPARATOR + getSecureAttrValue(Xconstants.TYPE);
                     tDevices.put(position, device);
 
                     mParser.nextTag();
