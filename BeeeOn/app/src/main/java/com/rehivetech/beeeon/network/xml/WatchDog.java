@@ -13,6 +13,9 @@ public class WatchDog {
     private String mName;
     private String mAdapterId;
 
+	private String mGeoRegionId;
+	private String mGeoDirectionType;
+
     private ArrayList<String> mDevices;
     private ArrayList<String> mParams;
 
@@ -72,7 +75,6 @@ public class WatchDog {
         return mName;
     }
 
-
     public String getAdapterId() {
         return mAdapterId;
     }
@@ -80,6 +82,22 @@ public class WatchDog {
     public void setAdapterId(String AdapterId) {
         this.mAdapterId = AdapterId;
     }
+
+	public String getGeoDirectionType() {
+		return mGeoDirectionType;
+	}
+
+	public void setGeoDirectionType(String GeoDirectionType) {
+		this.mGeoDirectionType = GeoDirectionType;
+	}
+
+	public String getGeoRegionId() {
+		return mGeoRegionId;
+	}
+
+	public void setGeoRegionId(String GeoRegionId) {
+		this.mGeoRegionId = GeoRegionId;
+	}
 
     WatchDog(){};
 

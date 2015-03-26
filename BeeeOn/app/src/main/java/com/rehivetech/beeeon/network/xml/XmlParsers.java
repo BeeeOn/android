@@ -882,7 +882,7 @@ public class XmlParsers {
 
             mParser.nextTag();
 
-            if(!mParser.getName().equals(Xconstants.DEVICE) && !mParser.getName().equals(Xconstants.PARAM))
+            if(!mParser.getName().equals(Xconstants.DEVICE) && !mParser.getName().equals(Xconstants.PARAM) && !mParser.getName().equals(Xconstants.GEOFENCE))
                 Log.e(TAG, "someone send bad xml");//TODO do something
 
             do{
@@ -893,9 +893,12 @@ public class XmlParsers {
                     tDevices.put(position, device);
 
                     mParser.nextTag();
-                }else{
+                }else if(mParser.getName().equals(Xconstants.DEVICE)){
                     tParams.put(position, readText(Xconstants.PARAM));
-                }
+                }else{
+					watchDog.setGeoRegionId(getSecureAttrValue(Xconstants.RID));
+					watchDog.setGeoDirectionType(getSecureAttrValue(Xconstants.TYPE));
+				}
 
             }while(mParser.nextTag() != XmlPullParser.END_TAG && !mParser.getName().equals(Xconstants.ALGORITHM));
 

@@ -1283,7 +1283,7 @@ public class Network implements INetwork {
 
     @Override
     public boolean addWatchDog(WatchDog watchDog, String AdapterID){
-        ParsedMessage msg = doRequest(XmlCreator.createAddAlgor(mBT, watchDog.getName(), AdapterID, watchDog.getType(), watchDog.getDevices(), watchDog.getParams()));
+        ParsedMessage msg = doRequest(XmlCreator.createAddAlgor(mBT, watchDog.getName(), AdapterID, watchDog.getType(), watchDog.getDevices(), watchDog.getParams(), watchDog.getGeoRegionId(), watchDog.getGeoDirectionType()));
 
         if (msg.getState() == State.ALGCREATED) {
             watchDog.setId((String) msg.data);
@@ -1320,7 +1320,7 @@ public class Network implements INetwork {
 
     @Override
     public boolean updateWatchDog(WatchDog watchDog, String AdapterId){
-        ParsedMessage msg = doRequest(XmlCreator.createSetAlgor(mBT, watchDog.getName(), AdapterId, watchDog.getType(), watchDog.isEnabled(), watchDog.getDevices(), watchDog.getParams()));
+        ParsedMessage msg = doRequest(XmlCreator.createSetAlgor(mBT, watchDog.getName(), AdapterId, watchDog.getType(), watchDog.isEnabled(), watchDog.getDevices(), watchDog.getParams(), watchDog.getGeoRegionId(), watchDog.getGeoDirectionType()));
 
         if(msg.getState() == State.TRUE)
             return true;

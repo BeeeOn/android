@@ -91,6 +91,7 @@ public class Xconstants {
     public static final String SERVICE = "srv";
     public static final String SIGNACTION = "ac";
     public static final String IMGURL = "imgurl";
+	public static final String GEOFENCE = "geo";
 	
 	public static final String ROW_DATA_SEPARATOR = "\\s+"; 
 }
