@@ -49,6 +49,9 @@ public final class Constants {
 	public static final String PERSISTENCE_PREF_USER_GOOGLE_ID = "user_google_id";
 	public static final String PERSISTENCE_PREF_UID = "uid";
 
+	public static final String PERSISTANCE_PREF_LOGIN_FACEBOOK = "login_facebook";
+	public static final String PERSISTANCE_PREF_LOGIN_TWITTER = "login_twitter";
+
 	public static final String KEY_UNITS = "key_units";
 	public static final String KEY_GEOFENCE = "key_geofence";
 

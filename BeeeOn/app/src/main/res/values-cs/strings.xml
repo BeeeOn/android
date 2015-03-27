@@ -157,10 +157,12 @@
     <string name="no_sensor_cap">ŽÁDNÝ SENZOR</string>
     <string name="no_adapter_cap">ŽÁDNÝ ADAPTÉR</string>
     <string name="no_rules_cap">ŽÁDNÉ PRAVIDLO</string>
-	<string name="gam_category_senzors">Senzory</string>
-	<string name="gam_category_friends">Přátelé</string>
-	<string name="gam_category_app">Aplikace</string>
-	<string name="gam_level">Úroveň</string>
+	<string name="profile_category_senzors">Senzory</string>
+	<string name="profile_category_friends">Přátelé</string>
+	<string name="profile_category_app">Aplikace</string>
+	<string name="profile_level">Úroveň</string>
+	<string name="profile_more_accounts">Další účty</string>
+	<string name="profile_new_account">Propojit s vybranou sítí</string>
 
     <!-- Arrays -->
     <string-array name="registration_spinner">

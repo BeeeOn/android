@@ -1,8 +1,10 @@
 package com.rehivetech.beeeon.gamification;
 
+import android.content.SharedPreferences;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
+import android.widget.ShareActionProvider;
 
 import com.rehivetech.beeeon.IIdentifier;
 import com.rehivetech.beeeon.util.Log;
@@ -29,8 +31,8 @@ public class AchievementListItem implements IIdentifier, Comparable<AchievementL
 		setCategory(categoryId);
 		setName(name);
 		setDescription(description);
-		setDate(date);
 		setPoints(points);
+		setDate(date);
 	}
 
 	private AchievementListItem(Parcel in) {

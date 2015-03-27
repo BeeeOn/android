@@ -5,9 +5,10 @@
               android:layout_height="match_parent">
 
   <RelativeLayout
+	  android:id="@+id/profile_user_info"
     android:layout_width="fill_parent"
     android:layout_height="50dp"
-    android:layout_margin="10dp">
+	android:layout_margin="10dp">
 
     <ImageView
       android:id="@+id/profile_image"
@@ -61,13 +62,80 @@
     </RelativeLayout>
 
 
+	<RelativeLayout
+		android:id="@+id/profile_more"
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
+		android:layout_below="@id/profile_user_info">
+
+		<com.melnykov.fab.FloatingActionButton
+			android:id="@+id/profile_more_arrow"
+			xmlns:fab="http://schemas.android.com/apk/res-auto"
+			android:src="@drawable/ic_action_next_item"
+			fab:fab_colorNormal="@color/darkgray"
+			fab:fab_type="mini"
+			fab:fab_shadow="false"
+			fab:fab_colorPressed="@color/black"
+			fab:fab_colorRipple="@color/beeeon_secundary_pink"
+			android:layout_width="20dp"
+			android:layout_height="20dp"
+			android:layout_marginLeft="10dp"
+			android:layout_marginStart="10dp"
+			android:visibility="invisible"
+			/>
+
+		<TextView
+			android:id="@+id/profile_more_text"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_marginLeft="10dp"
+			android:layout_marginStart="10dp"
+			android:text="@string/profile_more_accounts"
+			android:textSize="16sp"
+			android:textColor="@color/beeeon_text_color"
+			android:layout_toRightOf="@+id/profile_more_arrow"
+			android:layout_toEndOf="@+id/profile_more_arrow"
+			/>
+
+		<com.melnykov.fab.FloatingActionButton
+			android:id="@+id/profile_more_add"
+			xmlns:fab="http://schemas.android.com/apk/res-auto"
+			android:src="@drawable/ic_add_white_24dp"
+			fab:fab_colorNormal="@color/beeeon_secundary_pink"
+			fab:fab_type="mini"
+			fab:fab_shadow="false"
+			fab:fab_colorPressed="@color/black"
+			fab:fab_colorRipple="@color/beeeon_secundary_pink"
+			android:layout_width="40dp"
+			android:layout_height="40dp"
+			android:layout_marginRight="20dp"
+			android:layout_marginEnd="20dp"
+			android:layout_alignParentEnd="true"
+			android:layout_alignParentRight="true"
+			android:visibility="invisible"
+			/>
+
+		<!-- Facebook, Twitter etc..
+		     Hidden by default, shown only after click on profile_more_text -->
+		<RelativeLayout
+			android:id="@+id/profile_more_accounts"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_marginLeft="40dp"
+			android:layout_marginStart="40dp"
+			android:visibility="invisible">
+
+		</RelativeLayout>
+
+	</RelativeLayout>
+
   <ListView
     android:id="@+id/gam_category_list"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+	android:layout_below="@id/profile_more"
     android:divider="@null"
     android:dividerHeight="0dp"
-    android:paddingTop="60dp"
     />
 
 </RelativeLayout>

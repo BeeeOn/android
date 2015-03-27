@@ -2,18 +2,18 @@ package com.rehivetech.beeeon.activity;
 
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.Window;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.arrayadapter.AchievementListAdapter;
 import com.rehivetech.beeeon.base.BaseApplicationActivity;
+import com.rehivetech.beeeon.gamification.Achievement;
 import com.rehivetech.beeeon.gamification.AchievementList;
+import com.rehivetech.beeeon.gamification.AchievementListItem;
 import com.rehivetech.beeeon.util.Log;
 
 /**
@@ -62,6 +62,21 @@ public class AchievementOverviewActivity extends BaseApplicationActivity {
 		ListView achievementList = (ListView) findViewById(R.id.achievement_list);
 		mAchievementListAdapter = new AchievementListAdapter(this, this.getLayoutInflater(), mCategoryId, mAchievements);
 		achievementList.setAdapter(mAchievementListAdapter);
+		achievementList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+				AchievementListItem achievementItem = mAchievementListAdapter.getItem(position);
+				new Achievement(achievementItem);
+			}
+		});
+		achievementList.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+			@Override
+			public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+				AchievementListItem achievementItem = mAchievementListAdapter.getItem(position);
+				Toast.makeText(getApplicationContext(), achievementItem.getName(), Toast.LENGTH_LONG).show();
+				return true;
+			}
+		});
 	}
 
 	@Override
