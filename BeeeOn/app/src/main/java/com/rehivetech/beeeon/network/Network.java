@@ -16,6 +16,7 @@ import java.security.NoSuchAlgorithmException;
 import java.security.cert.Certificate;
 import java.security.cert.CertificateException;
 import java.security.cert.CertificateFactory;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
@@ -56,6 +57,8 @@ import com.rehivetech.beeeon.network.xml.action.ComplexAction;
 import com.rehivetech.beeeon.network.xml.condition.Condition;
 import com.rehivetech.beeeon.pair.LogDataPair;
 import com.rehivetech.beeeon.util.Log;
+
+import org.xmlpull.v1.XmlPullParserException;
 
 /**
  * Network service that handles communication with server.
@@ -437,18 +440,18 @@ public class Network implements INetwork {
 		// long ltime = new Date().getTime();
 		try {
 			String result = "";
-			if(mIsMulti){
-				if(multiSend(messageToSend))
+			if (mIsMulti) {
+				if (multiSend(messageToSend))
 					result = multiRecv();
-			}else
+			} else {
 				result = startCommunication(messageToSend);
+			}
 
 			Log.d(TAG + " - fromApp", messageToSend);
 			Log.i(TAG + " - fromSrv", result);
 
 			return new XmlParsers().parseCommunication(result, false);
-
-		} catch (Exception e) {
+		} catch (IOException | CertificateException | NoSuchAlgorithmException | XmlPullParserException | ParseException | KeyStoreException | KeyManagementException e) {
 			throw AppException.wrap(e, NetworkError.COM_PROBLEMS);
 		} finally {
 			// Debug.stopMethodTracing();
