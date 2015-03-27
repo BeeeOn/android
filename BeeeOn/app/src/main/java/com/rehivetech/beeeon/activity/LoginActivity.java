@@ -403,14 +403,14 @@ public class LoginActivity extends BaseActivity {
 
 				mProgress.dismiss();
 				if (errFlag) {
-					final Toast toast = Toast.makeText(LoginActivity.this, errMessage, Toast.LENGTH_LONG);
+					/*final Toast toast = Toast.makeText(LoginActivity.this, errMessage, Toast.LENGTH_LONG);
 
 					runOnUiThread(new Runnable() {
 						@Override
 						public void run() {
 							toast.show();
 						}
-					});
+					});*/
 				}
 			}
 		}).start();

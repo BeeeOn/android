@@ -20,6 +20,7 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemLongClickListener;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -140,7 +141,7 @@ public class SensorListFragment extends Fragment {
 
 			@Override
 			public void onRefresh() {
-
+				Log.d(TAG,"Refreshing list of sensors");
 				Adapter adapter = mController.getActiveAdapter();
 				if (adapter == null) {
 					mSwipeLayout.setRefreshing(false);
@@ -196,8 +197,22 @@ public class SensorListFragment extends Fragment {
 
 		Log.d(TAG, "LifeCycle: redraw devices list start");
 
+
+		// get UI elements
+		mSwipeLayout = (SwipeRefreshLayout) mView.findViewById(R.id.swipe_container);
 		mSensorList = (StickyListHeadersListView) mView.findViewById(R.id.listviewofsensors);
 		TextView noItem = (TextView) mView.findViewById(R.id.nosensorlistview);
+		Button refreshBtn = (Button) mView.findViewById(R.id.sensor_list_refresh_btn);
+
+
+
+		refreshBtn.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				Adapter adapter = mController.getActiveAdapter();
+				doReloadFacilitiesTask(adapter.getId());
+			}
+		});
 
 		mSensorAdapter = new SenListAdapter(mActivity);
 
@@ -234,9 +249,14 @@ public class SensorListFragment extends Fragment {
 		// Buttons in floating menu
 
 		if(!haveAdapters) { // NO Adapter
+			// Set right visibility
 			noItem.setVisibility(View.VISIBLE);
 			noItem.setText(R.string.no_adapter_cap);
+			refreshBtn.setVisibility(View.VISIBLE);
 			mSensorList.setVisibility(View.GONE);
+			if (mSwipeLayout != null)
+				mSwipeLayout.setVisibility(View.GONE);
+			// FAB
 			mFABMenuIcon.add(R.drawable.ic_add_white_24dp);
 			mFABMenuLabels.add(mActivity.getString(R.string.action_addadapter));
 
@@ -254,9 +274,16 @@ public class SensorListFragment extends Fragment {
 			
 		}
 		else if (!haveDevices) { // Have Adapter but any Devices
+			// Set right visibility
 			noItem.setVisibility(View.VISIBLE);
+			refreshBtn.setVisibility(View.VISIBLE);
 			mSensorList.setVisibility(View.GONE);
+			if (mSwipeLayout != null)
+				mSwipeLayout.setVisibility(View.GONE);
+			// FAB
 			mFABMenuIcon.add(R.drawable.ic_add_white_24dp);
+			mFABMenuIcon.add(R.drawable.ic_add_white_24dp);
+			mFABMenuLabels.add(mActivity.getString(R.string.action_addadapter));
 			mFABMenuLabels.add(mActivity.getString(R.string.action_addsensor));
 			if(mFirstUseAddSensor && !mController.isDemoMode()){
 				mActivity.getMenu().closeMenu();
@@ -269,7 +296,11 @@ public class SensorListFragment extends Fragment {
 		}
 		else { // Have adapter and devices
 			noItem.setVisibility(View.GONE);
+			refreshBtn.setVisibility(View.GONE);
 			mSensorList.setVisibility(View.VISIBLE);
+			if (mSwipeLayout != null)
+				mSwipeLayout.setVisibility(View.VISIBLE);
+			// FAB
 			mFABMenuIcon.add(R.drawable.ic_add_white_24dp);
 			mFABMenuIcon.add(R.drawable.ic_add_white_24dp);
 			mFABMenuLabels.add(mActivity.getString(R.string.action_addadapter));
@@ -443,5 +474,4 @@ public class SensorListFragment extends Fragment {
 
 		}
 	}
-
 }
