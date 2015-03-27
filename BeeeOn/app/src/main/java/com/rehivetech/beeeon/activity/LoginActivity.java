@@ -391,7 +391,7 @@ public class LoginActivity extends BaseActivity {
 
 		// Check if this is redirect (e.g., after connection loss) or classic start
 		Bundle bundle = getIntent().getExtras();
-		if (bundle == null || bundle.getBoolean(BUNDLE_REDIRECT, false)) {
+		if (bundle == null || !bundle.getBoolean(BUNDLE_REDIRECT, false)) {
 			Intent intent = new Intent(this, MainActivity.class);
 			startActivity(intent);
 		}
