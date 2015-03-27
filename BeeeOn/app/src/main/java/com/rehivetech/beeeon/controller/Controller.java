@@ -28,7 +28,6 @@ import com.rehivetech.beeeon.gcm.GcmHelper;
 import com.rehivetech.beeeon.gcm.INotificationReceiver;
 import com.rehivetech.beeeon.gcm.Notification;
 import com.rehivetech.beeeon.geofence.SimpleGeofence;
-import com.rehivetech.beeeon.household.ActualUser;
 import com.rehivetech.beeeon.household.Household;
 import com.rehivetech.beeeon.household.User;
 import com.rehivetech.beeeon.household.User.Role;
@@ -171,7 +170,7 @@ public final class Controller {
 	}
 
 	public boolean assignToken(String token) {
-		final ActualUser user = mHousehold.user;
+		final User user = mHousehold.user;
 		final GoogleUserInfo googleInfo = GoogleAuthHelper.fetchInfoFromProfileServer(token);
 
 		Log.d(TAG, "name: " + googleInfo.name);
@@ -202,7 +201,7 @@ public final class Controller {
 	 * @see {@link Controller#login(LoginActivity, String)}
 	 */
 	private boolean login(String email, boolean canTryAgain) throws AppException {
-		ActualUser user = mHousehold.user;
+		User user = mHousehold.user;
 		GoogleUserInfo googleUserInfo = null;
 		String googleToken = "";
 
@@ -896,7 +895,7 @@ public final class Controller {
 		int currentVersion = Utils.getAppVersion(mContext);
 		if (registeredVersion != currentVersion) {
 			// delete actual GCM ID from server
-			ActualUser user;
+			User user;
 			if ((user = getActualUser()) != null) {
 				try {
 					deleteGCM(user.getEmail(), registrationId);
@@ -972,7 +971,7 @@ public final class Controller {
 		}
 	}
 
-	public ActualUser getActualUser() {
+	public User getActualUser() {
 		return mHousehold.user;
 	}
 

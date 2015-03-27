@@ -19,7 +19,7 @@ public final class Household {
 	protected final Context mContext;
 
 	/** Logged in user. */
-	public final ActualUser user = new ActualUser();
+	public final User user = new User();
 
 	/** List of adapters that this user has access to (either as owner, user or guest). */
 	public final AdaptersModel adaptersModel;

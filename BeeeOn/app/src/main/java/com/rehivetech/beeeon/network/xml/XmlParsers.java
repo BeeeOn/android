@@ -18,7 +18,6 @@ import com.rehivetech.beeeon.exception.AppException;
 import com.rehivetech.beeeon.exception.NetworkError;
 import com.rehivetech.beeeon.gcm.Notification;
 import com.rehivetech.beeeon.gcm.Notification.ActionType;
-import com.rehivetech.beeeon.household.ActualUser;
 import com.rehivetech.beeeon.household.User;
 import com.rehivetech.beeeon.network.xml.action.Action;
 import com.rehivetech.beeeon.network.xml.action.ComplexAction;
@@ -146,8 +145,9 @@ public class XmlParsers {
 		switch (state) {
 		case USERINFO:
 			// String (userID)
-            ActualUser user = new ActualUser();
-            user.setName(getSecureAttrValue(Xconstants.NAME));
+            User user = new User();
+			user.setId(getSecureAttrValue(Xconstants.ID));
+			user.setName(getSecureAttrValue(Xconstants.NAME));
             user.setSurname(getSecureAttrValue(Xconstants.SURNAME));
             user.setEmail(getSecureAttrValue(Xconstants.EMAIL));
             user.setGender(User.Gender.fromString(getSecureInt(getSecureAttrValue(Xconstants.GENDER))>0?"male":"female"));
@@ -534,13 +534,16 @@ public class XmlParsers {
 
 		List<User> result = new ArrayList<User>();
 		do {
-			String email = getSecureAttrValue(Xconstants.EMAIL);
-			String name = String.format("%s %s", getSecureAttrValue(Xconstants.NAME), getSecureAttrValue(Xconstants.SURNAME));
+			User user = new User();
+			user.setId(getSecureAttrValue(Xconstants.ID));
+			user.setEmail(getSecureAttrValue(Xconstants.EMAIL));
+			user.setName(getSecureAttrValue(Xconstants.NAME));
+			user.setSurname(getSecureAttrValue(Xconstants.SURNAME));
+			user.setRole(User.Role.fromString(getSecureAttrValue(Xconstants.ROLE)));
+			user.setGender(getSecureAttrValue(Xconstants.GENDER).equals(Xconstants.ZERO) ? User.Gender.Female : User.Gender.Male);
+			user.setPictureUrl(getSecureAttrValue(Xconstants.IMGURL));
 
-			User.Role role = User.Role.fromString(getSecureAttrValue(Xconstants.ROLE));
-			User.Gender gender = getSecureAttrValue(Xconstants.GENDER).equals(Xconstants.ZERO) ? User.Gender.Female : User.Gender.Male;
-
-			result.add(new User(name, email, role, gender));
+			result.add(user);
 			mParser.nextTag();
 
 		} while (mParser.nextTag() != XmlPullParser.END_TAG && !mParser.getName().equals(Xconstants.COM_ROOT));
@@ -986,8 +989,14 @@ public class XmlParsers {
 			return result;
 
 		do {
-			User user = new User("", getSecureAttrValue(Xconstants.EMAIL), User.Role.fromString(getSecureAttrValue(Xconstants.ROLE)),
-					getSecureAttrValue(Xconstants.GENDER).equals(Xconstants.ZERO) ? User.Gender.Female : User.Gender.Male);
+			User user = new User();
+			user.setId(getSecureAttrValue(Xconstants.ID));
+			user.setEmail(getSecureAttrValue(Xconstants.EMAIL));
+			user.setName(getSecureAttrValue(Xconstants.NAME));
+			user.setSurname(getSecureAttrValue(Xconstants.SURNAME));
+			user.setRole(User.Role.fromString(getSecureAttrValue(Xconstants.ROLE)));
+			user.setGender(getSecureAttrValue(Xconstants.GENDER).equals(Xconstants.ZERO) ? User.Gender.Female : User.Gender.Male);
+			user.setPictureUrl(getSecureAttrValue(Xconstants.IMGURL));
 
 			result.add(user);
 			mParser.nextTag();

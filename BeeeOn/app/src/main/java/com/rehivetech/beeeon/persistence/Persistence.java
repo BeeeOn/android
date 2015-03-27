@@ -1,22 +1,23 @@
 package com.rehivetech.beeeon.persistence;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
-
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+
 import com.rehivetech.beeeon.Constants;
 import com.rehivetech.beeeon.adapter.device.units.NoiseUnit;
 import com.rehivetech.beeeon.adapter.device.units.TemperatureUnit;
-import com.rehivetech.beeeon.household.ActualUser;
+import com.rehivetech.beeeon.household.User;
 import com.rehivetech.beeeon.household.User.Gender;
 import com.rehivetech.beeeon.util.SettingsItem;
 import com.rehivetech.beeeon.util.Timezone;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 
 /**
  * Persistence service that handles caching data on this device.
@@ -149,14 +150,15 @@ public class Persistence {
 		return getSettings(email).getString(Constants.PERSISTENCE_PREF_UID, "");
 	}
 	
-	public void saveUserDetails(String email, ActualUser user) {
+	public void saveUserDetails(String email, User user) {
 		getSettings(email) //
 			.edit() //
+			.putString(Constants.PERSISTENCE_PREF_USER_ID, user.getId()) //
 			.putString(Constants.PERSISTENCE_PREF_USER_EMAIL, user.getEmail()) //
 			.putString(Constants.PERSISTENCE_PREF_USER_NAME, user.getName()) //
+			.putString(Constants.PERSISTENCE_PREF_USER_SURNAME, user.getSurname()) //
 			.putString(Constants.PERSISTENCE_PREF_USER_GENDER, user.getGender().toString()) //
 			.putString(Constants.PERSISTENCE_PREF_USER_PICTURE, user.getPictureUrl()) //
-			.putString(Constants.PERSISTENCE_PREF_USER_GOOGLE_ID, user.getGoogleId()) //
 			.commit();
 		
 		Bitmap picture = user.getPicture();
@@ -164,19 +166,15 @@ public class Persistence {
 			saveBitmap(picture, email);
 	}
 
-	public void loadUserDetails(String email, ActualUser user) {
+	public void loadUserDetails(String email, User user) {
 		SharedPreferences prefs = getSettings(email);
 		
-		user.setEmail(
-			prefs.getString(Constants.PERSISTENCE_PREF_USER_EMAIL, ""));
-		user.setName(
-			prefs.getString(Constants.PERSISTENCE_PREF_USER_NAME, ""));
-		user.setGender(Gender.fromString(
-			prefs.getString(Constants.PERSISTENCE_PREF_USER_GENDER, "")));
-		user.setPictureUrl(
-			prefs.getString(Constants.PERSISTENCE_PREF_USER_PICTURE, ""));
-		user.setGoogleId(
-			prefs.getString(Constants.PERSISTENCE_PREF_USER_GOOGLE_ID, ""));
+		user.setId(prefs.getString(Constants.PERSISTENCE_PREF_USER_ID, ""));
+		user.setEmail(prefs.getString(Constants.PERSISTENCE_PREF_USER_EMAIL, ""));
+		user.setName(prefs.getString(Constants.PERSISTENCE_PREF_USER_NAME, ""));
+		user.setSurname(prefs.getString(Constants.PERSISTENCE_PREF_USER_SURNAME, ""));
+		user.setGender(Gender.fromString(prefs.getString(Constants.PERSISTENCE_PREF_USER_GENDER, "")));
+		user.setPictureUrl(prefs.getString(Constants.PERSISTENCE_PREF_USER_PICTURE, ""));
 		
 		user.setPicture(loadBitmap(email));
 	}

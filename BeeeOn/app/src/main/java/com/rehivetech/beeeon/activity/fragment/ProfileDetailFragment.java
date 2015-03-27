@@ -38,7 +38,7 @@ import com.rehivetech.beeeon.arrayadapter.GamCategoryListAdapter;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.gamification.AchievementList;
 import com.rehivetech.beeeon.gamification.GamificationCategory;
-import com.rehivetech.beeeon.household.ActualUser;
+import com.rehivetech.beeeon.household.User;
 import com.rehivetech.beeeon.util.Log;
 
 import java.util.ArrayList;
@@ -52,7 +52,7 @@ public class ProfileDetailFragment extends Fragment {
   	private static final String TAG = ProfileDetailFragment.class.getSimpleName();
   	private View mView;
   	private Controller mController;
-  	private ActualUser actUser;
+  	private User actUser;
 	private SharedPreferences mPrefs;
   	private GamCategoryListAdapter mCategoryListAdapter;
 	public CallbackManager mFacebookCallbackManager;
@@ -126,7 +126,7 @@ public class ProfileDetailFragment extends Fragment {
 	    Bitmap picture = actUser.getPicture();
 	    if (picture == null)
 	    	picture = actUser.getDefaultPicture(getActivity());
-	    userName.setText(actUser.getName());
+	    userName.setText(actUser.getFullName());
 	    userImage.setImageBitmap(picture);
 
 		//GUI components for social networks accounts

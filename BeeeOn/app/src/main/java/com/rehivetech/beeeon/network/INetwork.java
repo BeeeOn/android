@@ -6,7 +6,6 @@ import com.rehivetech.beeeon.adapter.device.Device.SaveDevice;
 import com.rehivetech.beeeon.adapter.device.DeviceLog;
 import com.rehivetech.beeeon.adapter.device.Facility;
 import com.rehivetech.beeeon.adapter.location.Location;
-import com.rehivetech.beeeon.household.ActualUser;
 import com.rehivetech.beeeon.household.User;
 import com.rehivetech.beeeon.network.GoogleAuthHelper.GoogleUserInfo;
 import com.rehivetech.beeeon.network.xml.CustomViewPair;
@@ -80,9 +79,9 @@ public interface INetwork {
 
     /**
      * Download information about actual user from server
-     * @return ActualUser object with data from server
+     * @return User object with data from server
      */
-    public ActualUser loadUserInfo();
+    public User loadUserInfo();
 
     /**
      * Method log in user by his name and password

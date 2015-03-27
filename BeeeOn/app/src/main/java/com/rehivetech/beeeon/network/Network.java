@@ -13,7 +13,6 @@ import com.rehivetech.beeeon.adapter.location.Location;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.exception.AppException;
 import com.rehivetech.beeeon.exception.NetworkError;
-import com.rehivetech.beeeon.household.ActualUser;
 import com.rehivetech.beeeon.household.User;
 import com.rehivetech.beeeon.network.GoogleAuthHelper.GoogleUserInfo;
 import com.rehivetech.beeeon.network.xml.CustomViewPair;
@@ -503,11 +502,11 @@ public class Network implements INetwork {
     }
 
     @Override
-    public ActualUser loadUserInfo(){
+    public User loadUserInfo(){
         ParsedMessage msg = doRequest(XmlCreator.createGetUserInfo(mBT));
 
         if (msg.getState() == State.USERINFO)
-            return (ActualUser)msg.data;
+            return (User)msg.data;
 
         FalseAnswer fa = (FalseAnswer) msg.data;
         throw new AppException(fa.getErrMessage(), NetworkError.fromValue(fa.getErrCode()));
