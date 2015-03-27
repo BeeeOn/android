@@ -26,7 +26,7 @@ public class GoogleAuthProvider implements IAuthProvider {
 	public static final int PROVIDER_ID = 201;
 
 	public static final String PROVIDER_NAME = "google";
-	public static final String PARAMETER_TOKEN = "token";
+	public static final String PARAMETER_TOKEN = "gt";
 
 	private static final String SCOPE = "oauth2:https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email";
 
