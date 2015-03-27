@@ -48,6 +48,7 @@
     <string name="dev_enum_value_off">Vypnuto</string>
 
     <!-- Names of default locations -->
+	<string name="loc_none">- Nezařazené -</string>
     <string name="loc_bathroom">Koupelna</string>
     <string name="loc_bedroom">Ložnice</string>
     <string name="loc_dining_room">Jídelna</string>

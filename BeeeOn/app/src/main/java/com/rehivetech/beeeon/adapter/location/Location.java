@@ -7,6 +7,12 @@ public class Location implements IIdentifier, Comparable<Location> {
 	/** Represents id of newly created location (not saved on server yet) */
 	public static final String NEW_LOCATION_ID = "-NEW-";
 
+	/** Represents id of "no location" (on server it is represented as empty id) */
+	public static final String NO_LOCATION_ID = "";
+
+	/** Represents type (= icon) of "no location" */
+	public static final int NO_LOCATION_TYPE = 0;
+
 	protected String mAdapterId;
 	protected String mId = "";
 	protected String mName = "";

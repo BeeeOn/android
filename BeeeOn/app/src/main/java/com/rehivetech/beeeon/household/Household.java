@@ -39,7 +39,7 @@ public final class Household {
 		mContext = context;
 
 		adaptersModel = new AdaptersModel(network);
-		locationsModel = new LocationsModel(network);
+		locationsModel = new LocationsModel(network, context);
 		facilitiesModel = new FacilitiesModel(network);
 		uninitializedFacilitiesModel = new UninitializedFacilitiesModel(network);
 		deviceLogsModel = new DeviceLogsModel(network);
