@@ -17,39 +17,70 @@ public class Location implements IIdentifier, Comparable<Location> {
 	protected String mId = "";
 	protected String mName = "";
 	protected int mType;
+	protected LocationIcon mIcon = LocationIcon.UNKNOWN;
 
-	public static final int[] icons = { R.drawable.loc_unknown, // 0
-			R.drawable.loc_bath_room, // 1
-			R.drawable.loc_bed_room, // 2
-			R.drawable.loc_garden, // 3
-			R.drawable.loc_dinner_room, // 4
-			R.drawable.loc_living_room, // 5
-			R.drawable.loc_wc, // 6
-	};
+	/** Represents location icon. */
+	public static enum LocationIcon {
+		UNKNOWN(0, R.drawable.loc_unknown),
+		BATHROOM(1, R.drawable.loc_bath_room),
+		BEDROOM(2, R.drawable.loc_bed_room),
+		GARDEN(3, R.drawable.loc_garden),
+		DINING_ROOM(4, R.drawable.loc_dinner_room),
+		LIVING_ROOM(5, R.drawable.loc_living_room),
+		WC(6, R.drawable.loc_wc);
 
-	/**
-	 * Represents single default room.
-	 */
-	public static final class DefaultRoom {
-		public final int type; // Icon type
-		public final int rName; // Name resource
+		private final int mId;
+		private final int mIconRes;
 
-		public DefaultRoom(final int type, final int rName) {
-			this.type = type;
-			this.rName = rName;
+		private LocationIcon(final int id, final int iconRes) {
+			mId = id;
+			mIconRes = iconRes;
+		}
+
+		public int getId() {
+			return mId;
+		}
+
+		public int getIconResource() {
+			return mIconRes;
+		}
+
+		public static LocationIcon fromValue(int value) {
+			for (LocationIcon item : values()) {
+				if (value == item.getId())
+					return item;
+			}
+			return LocationIcon.UNKNOWN;
 		}
 	}
 
 	/**
-	 * List of default rooms - icons and their names.
+	 * Represents default location.
 	 */
-	public static DefaultRoom defaults[] = { new DefaultRoom(1, R.string.loc_bathroom), // 1
-			new DefaultRoom(2, R.string.loc_bedroom), // 2
-			new DefaultRoom(3, R.string.loc_garden), // 3
-			new DefaultRoom(4, R.string.loc_dining_room), // 4
-			new DefaultRoom(5, R.string.loc_living_room), // 5
-			new DefaultRoom(6, R.string.loc_wc), // 6
-	};
+	public static enum DefaultLocation {
+		BATHROOM(1, R.string.loc_bathroom),
+		BEDROOM(2, R.string.loc_bedroom),
+		GARDEN(3, R.string.loc_garden),
+		DINING_ROOM(4, R.string.loc_dining_room),
+		LIVING_ROOM(5, R.string.loc_living_room),
+		WC(6, R.string.loc_wc);
+
+		private final int mType;
+		private final int mTitleRes;
+
+		private DefaultLocation(final int type, final int titleRes) {
+			mType = type;
+			mTitleRes = titleRes;
+		}
+
+		public int getType() {
+			return mType;
+		}
+
+		public int getTitleResource() {
+			return mTitleRes;
+		}
+	}
 
 	public Location() {
 	}
@@ -100,13 +131,11 @@ public class Location implements IIdentifier, Comparable<Location> {
 
 	public void setType(int type) {
 		mType = type;
+		mIcon = LocationIcon.fromValue(type);
 	}
 
 	public int getIconResource() {
-		if (mType < 0 || mType >= icons.length)
-			return icons[0];
-		else
-			return icons[mType];
+		return mIcon.getIconResource();
 	}
 
 	@Override

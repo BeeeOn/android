@@ -29,7 +29,7 @@ import com.rehivetech.beeeon.activity.SetupSensorActivity;
 import com.rehivetech.beeeon.adapter.Adapter;
 import com.rehivetech.beeeon.adapter.device.Facility;
 import com.rehivetech.beeeon.adapter.location.Location;
-import com.rehivetech.beeeon.adapter.location.Location.DefaultRoom;
+import com.rehivetech.beeeon.adapter.location.Location.DefaultLocation;
 import com.rehivetech.beeeon.arrayadapter.SetupSensorListAdapter;
 import com.rehivetech.beeeon.base.TrackFragment;
 import com.rehivetech.beeeon.controller.Controller;
@@ -182,8 +182,8 @@ public class SetupSensorFragment extends TrackFragment {
 		}
 
 		// Add "missing" default rooms
-		for (DefaultRoom room : Location.defaults) {
-			String name = getString(room.rName);
+		for (DefaultLocation room : DefaultLocation.values()) {
+			String name = getString(room.getTitleResource());
 
 			boolean found = false;
 			for (Location location : locations) {
@@ -194,7 +194,7 @@ public class SetupSensorFragment extends TrackFragment {
 			}
 
 			if (!found) {
-				locations.add(new Location(Location.NEW_LOCATION_ID, name, room.type));
+				locations.add(new Location(Location.NEW_LOCATION_ID, name, room.getTitleResource()));
 			}
 		}
 
@@ -225,8 +225,8 @@ public class SetupSensorFragment extends TrackFragment {
 
 			// Prepare list of icons
 			List<Integer> iconsList = new ArrayList<Integer>();
-			for (int rIcon : Location.icons) {
-				iconsList.add(rIcon);
+			for (Location.LocationIcon icon : Location.LocationIcon.values()) {
+				iconsList.add(icon.getIconResource());
 			}
 
 			// first call need to add adapter

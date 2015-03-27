@@ -1,9 +1,5 @@
 package com.rehivetech.beeeon.activity.dialog;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
@@ -29,12 +25,13 @@ import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.activity.MainActivity;
 import com.rehivetech.beeeon.adapter.Adapter;
 import com.rehivetech.beeeon.adapter.device.Facility;
 import com.rehivetech.beeeon.adapter.location.Location;
-import com.rehivetech.beeeon.adapter.location.Location.DefaultRoom;
+import com.rehivetech.beeeon.adapter.location.Location.DefaultLocation;
 import com.rehivetech.beeeon.arrayadapter.SetupSensorListAdapter;
 import com.rehivetech.beeeon.asynctask.CallbackTask.CallbackTaskListener;
 import com.rehivetech.beeeon.asynctask.InitializeFacilityTask;
@@ -43,6 +40,10 @@ import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.pair.InitializeFacilityPair;
 import com.rehivetech.beeeon.util.Log;
 import com.rehivetech.beeeon.util.TimeHelper;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 public class SetupSensorFragmentDialog extends TrackDialogFragment {
 
@@ -308,8 +309,8 @@ public class SetupSensorFragmentDialog extends TrackDialogFragment {
 		}
 
 		// Add "missing" default rooms
-		for (DefaultRoom room : Location.defaults) {
-			String name = getString(room.rName);
+		for (DefaultLocation room : DefaultLocation.values()) {
+			String name = getString(room.getTitleResource());
 
 			boolean found = false;
 			for (Location location : locations) {
@@ -320,7 +321,7 @@ public class SetupSensorFragmentDialog extends TrackDialogFragment {
 			}
 
 			if (!found) {
-				locations.add(new Location(Location.NEW_LOCATION_ID, name, room.type));
+				locations.add(new Location(Location.NEW_LOCATION_ID, name, room.getType()));
 			}
 		}
 
@@ -380,8 +381,8 @@ public class SetupSensorFragmentDialog extends TrackDialogFragment {
 
 			// Prepare list of icons
 			List<Integer> iconsList = new ArrayList<Integer>();
-			for (int rIcon : Location.icons) {
-				iconsList.add(rIcon);
+			for (Location.LocationIcon icon : Location.LocationIcon.values()) {
+				iconsList.add(icon.getIconResource());
 			}
 
 			// first call need to add adapter
