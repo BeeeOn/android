@@ -1,5 +1,6 @@
 package com.rehivetech.beeeon.activity;
 
+import android.app.ProgressDialog;
 import android.content.res.Configuration;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBar;
@@ -17,9 +18,11 @@ import android.widget.EditText;
 import android.widget.SeekBar;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.rehivetech.beeeon.Constants;
 import com.rehivetech.beeeon.R;
+import com.rehivetech.beeeon.activity.fragment.SensorDetailFragment;
 import com.rehivetech.beeeon.adapter.Adapter;
 import com.rehivetech.beeeon.adapter.device.Device;
 import com.rehivetech.beeeon.adapter.device.Facility;
@@ -27,21 +30,38 @@ import com.rehivetech.beeeon.adapter.device.RefreshInterval;
 import com.rehivetech.beeeon.adapter.location.Location;
 import com.rehivetech.beeeon.arrayadapter.LocationArrayAdapter;
 import com.rehivetech.beeeon.arrayadapter.LocationIconAdapter;
+import com.rehivetech.beeeon.asynctask.CallbackTask;
+import com.rehivetech.beeeon.asynctask.SaveDeviceTask;
+import com.rehivetech.beeeon.asynctask.SaveFacilityTask;
 import com.rehivetech.beeeon.base.BaseApplicationActivity;
 import com.rehivetech.beeeon.controller.Controller;
+import com.rehivetech.beeeon.pair.SaveDevicePair;
+import com.rehivetech.beeeon.pair.SaveFacilityPair;
 import com.rehivetech.beeeon.util.Log;
+import com.sonyericsson.extras.liveware.aef.registration.Registration;
 
 import org.w3c.dom.Text;
 
 import java.util.ArrayList;
+import java.util.EnumSet;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 public class SensorEditActivity extends BaseApplicationActivity {
 
 	public static final String EXTRA_DEVICE_ID = "device_id";
+	private static final String TAG = SensorEditActivity.class.getSimpleName();
 
 	private Toolbar mToolbar;
 	private String mDeviceId;
+	private SensorEditActivity mActivity;
+	private SaveDeviceTask mSaveDeviceTask;
+	private SaveFacilityTask mSaveFacilityTask;
+	private ProgressDialog mProgress;
+	private Controller mController;
+	private PlaceholderFragment mFragment;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -56,12 +76,21 @@ public class SensorEditActivity extends BaseApplicationActivity {
 		if(mDeviceId == null && savedInstanceState != null) {
 			mDeviceId = savedInstanceState.getString(EXTRA_DEVICE_ID);
 		}
-		PlaceholderFragment fragment = new PlaceholderFragment();
-		fragment.setDeviceID(mDeviceId);
-		getSupportFragmentManager().beginTransaction()
-					.replace(R.id.container, fragment)
+		mFragment = new PlaceholderFragment();
+		mFragment.setDeviceID(mDeviceId);
+		if(savedInstanceState == null) {
+			getSupportFragmentManager().beginTransaction()
+					.replace(R.id.container, mFragment)
 					.commit();
+		}
+		mActivity = this;
+		mController = Controller.getInstance(mActivity);
 
+		// Prepare progress dialog
+		mProgress = new ProgressDialog(this);
+		mProgress.setMessage(getString(R.string.progress_saving_data));
+		mProgress.setCancelable(false);
+		mProgress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
 
 		getSupportActionBar().setHomeButtonEnabled(true);
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -92,7 +121,41 @@ public class SensorEditActivity extends BaseApplicationActivity {
 
 		//noinspection SimplifiableIfStatement
 		if (id == R.id.action_save) {
+			Set<Device.SaveDevice> what = new HashSet<>() ;
+			Adapter adapter = mController.getActiveAdapter();
+			if(adapter == null)
+				return  false;
+			Device device = mController.getDevice(adapter.getId(),mDeviceId);
+			Facility facility = device.getFacility();
+
+			if(!mFragment.getName().equals(device.getName())) {
+				what.add(Device.SaveDevice.SAVE_NAME);
+				device.setName(mFragment.getName());
+			}
+			if(!mFragment.getLocationId().equals(facility.getLocationId())) {
+				what.add(Device.SaveDevice.SAVE_LOCATION);
+				if(mFragment.isSetNewRoom()) {
+					// Create new room
+					Location location = new Location(Location.NEW_LOCATION_ID, mFragment.getNewLocName(),mFragment.getNewLocIcon());
+					// Send request for new loc ..
+					//TODO: !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+				} else {
+					facility.setLocationId(mFragment.getLocationId());
+				}
+			}
+			if(!mFragment.getRefreshTime().equals(facility.getRefresh())) {
+				what.add(Device.SaveDevice.SAVE_REFRESH);
+				facility.setRefresh(mFragment.getRefreshTime());
+			}
+
+
+			doSaveFacilityTask(new SaveFacilityPair(facility,EnumSet.copyOf(what)));
+
 			return true;
+		}
+		else if (id == R.id.home){
+			setResult(Constants.EDIT_SENSOR_CANCELED);
+			finish();
 		}
 
 		return super.onOptionsItemSelected(item);
@@ -106,6 +169,58 @@ public class SensorEditActivity extends BaseApplicationActivity {
 	@Override
 	protected void onAppPause() {
 
+	}
+
+	public ProgressDialog getProgressDialog() {
+		return mProgress;
+	}
+
+	/*
+	 * ASYNC TASK - SAVE
+	 */
+
+	private void doSaveDeviceTask(SaveDevicePair pair) {
+		mSaveDeviceTask = new SaveDeviceTask(mActivity);
+		mSaveDeviceTask.setListener(new CallbackTask.CallbackTaskListener() {
+
+			@Override
+			public void onExecute(boolean success) {
+				if (mActivity.getProgressDialog() != null)
+					mActivity.getProgressDialog().dismiss();
+				if (success) {
+					Log.d(TAG, "Success save to server");
+					Toast.makeText(mActivity, R.string.toast_success_save_data, Toast.LENGTH_LONG).show();
+					setResult(Constants.EDIT_SENSOR_SUCCESS);
+					finish();
+				} else {
+					Log.d(TAG, "Fail save to server");
+					Toast.makeText(mActivity, R.string.toast_fail_save_data, Toast.LENGTH_LONG).show();
+				}
+			}
+		});
+
+		mSaveDeviceTask.execute(pair);
+	}
+
+	public void doSaveFacilityTask(SaveFacilityPair pair) {
+		mSaveFacilityTask = new SaveFacilityTask(mActivity);
+		mSaveFacilityTask.setListener(new CallbackTask.CallbackTaskListener() {
+			@Override
+			public void onExecute(boolean success) {
+				if (mActivity.getProgressDialog() != null)
+					mActivity.getProgressDialog().dismiss();
+				if (success) {
+					Log.d(TAG, "Success save to server");
+					Toast.makeText(mActivity, R.string.toast_success_save_data, Toast.LENGTH_LONG).show();
+					setResult(Constants.EDIT_SENSOR_SUCCESS);
+					finish();
+				} else {
+					Log.d(TAG, "Fail save to server");
+					Toast.makeText(mActivity, R.string.toast_fail_save_data, Toast.LENGTH_LONG).show();
+				}
+			}
+		});
+		mSaveFacilityTask.execute(pair);
 	}
 
 	/**
@@ -276,6 +391,30 @@ public class SensorEditActivity extends BaseApplicationActivity {
 
 		public void setDeviceID(String deviceId) {
 			mDeviceID = deviceId;
+		}
+
+		public RefreshInterval getRefreshTime() {
+			return RefreshInterval.values()[mRefreshTime.getProgress()];
+		}
+
+		public String getLocationId() {
+			return ((Location)mSpinner.getAdapter().getItem(mSpinner.getSelectedItemPosition())).getId();
+		}
+
+		public String getName() {
+			return mName.getText().toString();
+		}
+
+		public String getNewLocName() {
+			return mNewLocName.getText().toString();
+		}
+
+		public int getNewLocIcon() {
+			return ((Integer)mNewIconSpinner.getAdapter().getItem(mNewIconSpinner.getSelectedItemPosition())).intValue();
+		}
+
+		public boolean isSetNewRoom() {
+			return ((Location)mSpinner.getAdapter().getItem(mSpinner.getSelectedItemPosition())).getId().equals("0");
 		}
 	}
 }

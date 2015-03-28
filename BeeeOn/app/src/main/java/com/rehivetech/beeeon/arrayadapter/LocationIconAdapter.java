@@ -35,6 +35,11 @@ public class LocationIconAdapter extends ArrayAdapter<Integer> {
 	}
 
 	@Override
+	public Integer getItem(int position) {
+		return mIcons.get(position);
+	}
+
+	@Override
 	public int getCount() {
 		return mIcons.size();
 	}

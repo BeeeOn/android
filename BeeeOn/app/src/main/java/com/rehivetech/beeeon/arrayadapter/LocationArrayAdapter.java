@@ -42,6 +42,11 @@ public class LocationArrayAdapter extends ArrayAdapter<Location> {
 	}
 
 	@Override
+	public Location getItem(int position) {
+		return mLocations.get(position);
+	}
+
+	@Override
 	public void setDropDownViewResource(int resource) {
 		mDropDownLayoutResource = resource;
 	}

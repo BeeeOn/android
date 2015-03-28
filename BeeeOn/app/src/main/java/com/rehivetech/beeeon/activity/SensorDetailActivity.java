@@ -78,11 +78,7 @@ public class SensorDetailActivity extends BaseApplicationActivity {
 		// Get controller
 		mController = Controller.getInstance(getApplicationContext());
 
-		// Prepare progress dialog
-		mProgress = new ProgressDialog(this);
-		mProgress.setMessage(getString(R.string.progress_saving_data));
-		mProgress.setCancelable(false);
-		mProgress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+
 
 		Log.d(TAG, "onCreate()");
 
@@ -242,9 +238,7 @@ public class SensorDetailActivity extends BaseApplicationActivity {
 		mPager.setCurrentItem(mActiveDevicePosition);
 	}
 
-	public ProgressDialog getProgressDialog() {
-		return mProgress;
-	}
+
 
 	public ViewPager getPager() {
 		return mPager;

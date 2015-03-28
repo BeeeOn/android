@@ -541,49 +541,7 @@ public class SensorDetailFragment extends Fragment {
 		mActorActionTask.execute(device);
 	}
 
-	private void doSaveDeviceTask(SaveDevicePair pair) {
-		mSaveDeviceTask = new SaveDeviceTask(getActivity().getApplicationContext());
-		mSaveDeviceTask.setListener(new CallbackTaskListener() {
 
-			@Override
-			public void onExecute(boolean success) {
-				if (mActivity.getProgressDialog() != null)
-					mActivity.getProgressDialog().dismiss();
-				if (success) {
-					Log.d(TAG, "Success save to server");
-
-					// Change GUI
-					mActivity.redraw();
-					Toast.makeText(mActivity, R.string.toast_success_save_data, Toast.LENGTH_LONG).show();
-				} else {
-					Log.d(TAG, "Fail save to server");
-				}
-			}
-		});
-
-		mSaveDeviceTask.execute(pair);
-	}
-
-	public void doSaveFacilityTask(SaveFacilityPair pair) {
-		mSaveFacilityTask = new SaveFacilityTask(mActivity);
-		mSaveFacilityTask.setListener(new CallbackTaskListener() {
-			@Override
-			public void onExecute(boolean success) {
-				if (mActivity.getProgressDialog() != null)
-					mActivity.getProgressDialog().dismiss();
-
-				if (success) {
-					Log.d(TAG, "Success save to server");
-					// Change GUI
-					mActivity.redraw();
-					Toast.makeText(mActivity, R.string.toast_success_save_data, Toast.LENGTH_LONG).show();
-				} else {
-					Log.d(TAG, "Fail save to server");
-				}
-			}
-		});
-		mSaveFacilityTask.execute(pair);
-	}
 
 	public void setSensorID(String id) {
 		mDeviceID = id;
