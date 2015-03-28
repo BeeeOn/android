@@ -16,15 +16,15 @@
     <string name="NetworkError___BAD_INTERVAL">bad interval</string>
     <string name="NetworkError___BAD_ICON">bad icon</string>
     <string name="NetworkError___BAD_EMAIL_OR_ROLE">bad email/role</string>
-    <string name="NetworkError___COM_PROBLEMS">communication problem</string>
     <string name="NetworkError___COM_VER_MISMATCH">bad version of protocol</string>
     <string name="NetworkError___DAMAGED_XML">damaged xml</string>
-    <string name="NetworkError___GOOGLE_TOKEN">inlavid google token</string>
     <string name="NetworkError___LOW_RIGHTS">low rights</string>
     <string name="NetworkError___NOT_CONSISTENT_SENSOR_ADDR">bad sensor ID/type </string>
     <string name="NetworkError___NOT_VALID_USER">bad token/email</string>
-    <string name="NetworkError___NO_CONNECTION">no connection</string>
     <string name="NetworkError___NO_SUCH_ENTITY">no such entity</string>
-    <string name="NetworkError___SERVER_NOT_RESPONDING">server not responding</string>
-    <string name="NetworkError___XML">XML problem</string>
+
+	<string name="NetworkError___NO_CONNECTION">no connection</string>
+	<string name="NetworkError___SERVER_NOT_RESPONDING">server not responding</string>
+	<string name="NetworkError___COM_PROBLEMS">communication problem</string>
+	<string name="NetworkError___XML">XML problem</string>
 </resources>

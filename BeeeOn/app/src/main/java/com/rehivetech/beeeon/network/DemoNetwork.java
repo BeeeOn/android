@@ -19,7 +19,7 @@ import com.rehivetech.beeeon.exception.AppException;
 import com.rehivetech.beeeon.household.User;
 import com.rehivetech.beeeon.household.User.Gender;
 import com.rehivetech.beeeon.household.User.Role;
-import com.rehivetech.beeeon.network.GoogleAuthHelper.GoogleUserInfo;
+import com.rehivetech.beeeon.network.authentication.IAuthProvider;
 import com.rehivetech.beeeon.network.xml.CustomViewPair;
 import com.rehivetech.beeeon.network.xml.WatchDog;
 import com.rehivetech.beeeon.network.xml.XmlParsers;
@@ -44,10 +44,12 @@ import java.util.Random;
  */
 public class DemoNetwork implements INetwork {
 
-	public static final String DEMO_EMAIL = "demo";
+	public static final String DEMO_USER_ID = "demo";
+	private static final String DEMO_USER_BT = "12345";
 
 	private Context mContext;
-	private String mUID;
+	private User mUser;
+	private String mBT;
 
 	private class AdapterHolder {
 		public final Adapter adapter;
@@ -103,21 +105,15 @@ public class DemoNetwork implements INetwork {
 		}
 	}
 	
-	@Override
-	public GoogleUserInfo getUserInfo() {
-		return new GoogleUserInfo("", DEMO_EMAIL, "", "John Doe", "", false, Gender.Male, "", "en");
-	}
-	
-	public void initDemoData(User user) throws AppException {
+	public void initDemoData() throws AppException {
 		// Erase previous data if exists
 		mAdapters.clear();
 		
 		// Set user
-		user.setName("John Doe");
-		user.setEmail(DEMO_EMAIL);
-		user.setGender(Gender.Male);
-		user.setPicture(null);
-		user.setPictureUrl("");
+		mUser = new User(DEMO_USER_ID, "John", "Doe", "john@doe.com", Gender.Male, Role.Superuser);
+
+		// Set session token
+		mBT = DEMO_USER_BT;
 
 		// Parse and set initial demo data
 		XmlParsers parser = new XmlParsers();
@@ -151,28 +147,30 @@ public class DemoNetwork implements INetwork {
 		return true;
 	}
 
-	@Override
-	public void setUID(String userId) {
-		mUID = userId;
-	}
-
     @Override
-    public String getBT() { return ""; }
-
-	@Override
-	public String getUID() {
-		return mUID;
+    public String getBT() {
+		return mBT;
 	}
 
-    public User loadUserInfo(){ return new User();}
+	@Override
+	public void setBT(String token) {
+		mBT = token;
+	}
 
-    public boolean logMeByName(String username, String password){return true;}
+	@Override
+    public User loadUserInfo() {
+		return mUser;
+	}
 
-    public boolean logMeByGoogle(GoogleUserInfo googleUserInfo){return true;}
+	@Override
+	public boolean loginMe(IAuthProvider authProvider) {
+		return true;
+	}
 
-    public boolean registerMeByName(String username, String password){return true;}
-
-    public boolean registerMeByGoogle(GoogleUserInfo googleUserInfo) {return true;}
+	@Override
+	public boolean registerMe(IAuthProvider authProvider) {
+		return true;
+	}
 
 	@Override
 	public boolean addAdapter(String adapterId, String adapterName) {
@@ -665,31 +663,33 @@ public class DemoNetwork implements INetwork {
 		return false;
 	}
 
-	@Override
-	public boolean deleteGCMID(String email, String gcmID) {
-		return true;
-	}
-
-	@Override
-	public boolean setGCMID(String email, String gcmID) {
-		return true;
+    @Override
+    public ArrayList<WatchDog> getAllWatchDogs(String adapterID) {
+		return null;
 	}
 
     @Override
-    public ArrayList<WatchDog> getAllWatchDogs(String adapterID){return null;}
+    public ArrayList<WatchDog> getWatchDogs(ArrayList<String> watchDogIds) {
+		return null;
+	}
 
     @Override
-    public ArrayList<WatchDog> getWatchDogs(ArrayList<String> watchDogIds){return null;}
+    public boolean updateWatchDog(WatchDog watchDog, String AdapterId) {
+		return true;
+	}
 
     @Override
-    public boolean updateWatchDog(WatchDog watchDog, String AdapterId){return true;}
+    public boolean deleteWatchDog(WatchDog watchDog) {
+		return true;
+	}
 
     @Override
-    public boolean deleteWatchDog(WatchDog watchDog){return true;}
+    public boolean addWatchDog(WatchDog watchDog, String AdapterID) {
+		return true;
+	}
 
     @Override
-    public boolean addWatchDog(WatchDog watchDog, String AdapterID){return true;}
-
-    @Override
-    public boolean passBorder(String regionId, String type) {return true;}
+    public boolean passBorder(String regionId, String type) {
+		return true;
+	}
 }

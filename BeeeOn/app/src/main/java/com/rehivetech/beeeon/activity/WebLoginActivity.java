@@ -9,25 +9,22 @@ import android.view.View;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
-import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.asynctask.CallbackTask;
 import com.rehivetech.beeeon.base.BaseActivity;
 import com.rehivetech.beeeon.exception.AppException;
-import com.rehivetech.beeeon.exception.NetworkError;
+import com.rehivetech.beeeon.network.authentication.GoogleAuthProvider;
 import com.rehivetech.beeeon.util.Log;
 import com.rehivetech.beeeon.util.Utils;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * Created by jviki on 3/19/15.
- */
 public class WebLoginActivity extends BaseActivity {
 
-	public static final String TOKEN_VALUE = "token.value";
 	public static final String LOGIN_URL = "login.url";
 	public static final String TOKEN_URL = "token.url";
 	public static final String CLIENT_ID = "client.id";
@@ -38,38 +35,6 @@ public class WebLoginActivity extends BaseActivity {
 	private static final String TAG = WebLoginActivity.class.getSimpleName();
 
 	public WebLoginActivity() {
-	}
-
-	class FinishLoginTask extends CallbackTask<Activity> {
-		final String url;
-		final Map<String, String> params;
-
-		public FinishLoginTask(final Context context, final String url, Map<String, String> params) {
-			super(context);
-			this.url = url;
-			this.params = params;
-		}
-
-		@Override
-		protected Boolean doInBackground(Activity activity) {
-			JSONObject tokenJson = null;
-			final String token;
-
-			try {
-				tokenJson = Utils.fetchJsonByPost(url, params);
-				Log.d(TAG, String.format("received: %s", tokenJson.toString()));
-				token = tokenJson.getString("access_token");
-			}  catch (Exception e) {
-				throw new AppException(e, NetworkError.GOOGLE_TOKEN);
-			}
-
-			final Intent data = new Intent();
-			data.putExtra(TOKEN_VALUE, token);
-			activity.setResult(RESULT_OK, data);
-			activity.finish();
-
-			return true;
-		}
 	}
 
 	private String getExtraNonNull(String key) {
@@ -103,7 +68,7 @@ public class WebLoginActivity extends BaseActivity {
 
 			@Override
 			public void onPageFinished(WebView view, String url) {
-				if(url.startsWith(redirect) && !done) {
+				if (url.startsWith(redirect) && !done) {
 					done = true;
 					finishWebLoginAuth(context, view, url);
 				}
@@ -111,7 +76,7 @@ public class WebLoginActivity extends BaseActivity {
 
 			@Override
 			public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
-				if(!done) {
+				if (!done) {
 					done = true;
 
 					if ((errorCode == ERROR_HOST_LOOKUP || errorCode == ERROR_CONNECT) && failingUrl.startsWith(redirect)) {
@@ -119,6 +84,9 @@ public class WebLoginActivity extends BaseActivity {
 						finishWebLoginAuth(context, view, failingUrl);
 					} else {
 						Log.e(TAG, String.format("received errorCode: %d and failingUrl: %s\ndescription: %s", errorCode, failingUrl, description));
+
+						// Report error to caller
+						setResult(LoginActivity.RESULT_ERROR);
 						finish();
 					}
 				}
@@ -135,6 +103,7 @@ public class WebLoginActivity extends BaseActivity {
 
 		final String code = parsed.getQueryParameter("code");
 		if (code == null) {
+			setResult(LoginActivity.RESULT_ERROR);
 			finish();
 			return;
 		}
@@ -158,12 +127,47 @@ public class WebLoginActivity extends BaseActivity {
 		tokenTask.setListener(new CallbackTask.CallbackTaskListener() {
 			@Override
 			public void onExecute(boolean success) {
-				setResult(RESULT_OK);
+				if (success) {
+					final Intent data = new Intent();
+					data.putExtra(GoogleAuthProvider.PARAMETER_TOKEN, tokenTask.mToken);
+
+					// Report success to caller
+					setResult(LoginActivity.RESULT_AUTH, data);
+				} else {
+					// Report error to caller
+					setResult(LoginActivity.RESULT_ERROR);
+				}
 				finish();
 			}
 		});
 
 		tokenTask.execute(this);
+	}
+
+	class FinishLoginTask extends CallbackTask<Activity> {
+		final String url;
+		final Map<String, String> params;
+
+		private String mToken = "";
+
+		public FinishLoginTask(final Context context, final String url, Map<String, String> params) {
+			super(context);
+			this.url = url;
+			this.params = params;
+		}
+
+		@Override
+		protected Boolean doInBackground(Activity activity) {
+			try {
+				JSONObject tokenJson = Utils.fetchJsonByPost(url, params);
+				Log.d(TAG, String.format("received: %s", tokenJson.toString()));
+				mToken = tokenJson.getString("access_token");
+				return true;
+			}  catch (IOException | JSONException e) {
+				e.printStackTrace();
+			}
+			return false;
+		}
 	}
 
 }

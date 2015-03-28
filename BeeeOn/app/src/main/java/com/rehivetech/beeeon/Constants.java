@@ -27,7 +27,6 @@ public final class Constants {
 	 * Persistence's shared preferences
 	 */
 	public static final String PERSISTENCE_PREF_FILENAME = "persistence_%s";
-	public static final String PERSISTENCE_PREF_LAST_USER = "last_user";
 	public static final String PERSISTENCE_PREF_ACTIVE_ADAPTER = "active_adapter";
 	public static final String PERSISTENCE_PREF_IGNORE_NO_ADAPTER = "ignore_no_adapter";
 	public static final String PERSISTENCE_PREF_LAST_LOCATION = "location_%s";
@@ -42,14 +41,17 @@ public final class Constants {
 	public static final String PERSISTENCE_PREF_ILLUMINATION = "pref_illumination";
 	public static final String PERSISTENCE_PREF_PRESSURE = "pref_pressure";
 
+	public static final String PERSISTENCE_PREF_LAST_USER_ID = "last_user_id";
+	public static final String PERSISTENCE_PREF_LAST_AUTH_PROVIDER = "last_auth_provider";
+	public static final String PERSISTENCE_PREF_LAST_AUTH_PARAMETER = "last_auth_parameter";
+
+	public static final String PERSISTENCE_PREF_USER_BT = "user_bt";
 	public static final String PERSISTENCE_PREF_USER_ID = "user_id";
 	public static final String PERSISTENCE_PREF_USER_EMAIL = "user_email";
 	public static final String PERSISTENCE_PREF_USER_NAME = "user_name";
 	public static final String PERSISTENCE_PREF_USER_SURNAME = "user_surname";
 	public static final String PERSISTENCE_PREF_USER_GENDER = "user_gender";
 	public static final String PERSISTENCE_PREF_USER_PICTURE = "user_picture";
-	public static final String PERSISTENCE_PREF_USER_GOOGLE_ID = "user_google_id";
-	public static final String PERSISTENCE_PREF_UID = "uid";
 
 	public static final String PERSISTANCE_PREF_LOGIN_FACEBOOK = "login_facebook";
 	public static final String PERSISTANCE_PREF_LOGIN_TWITTER = "login_twitter";
@@ -77,7 +79,7 @@ public final class Constants {
 	/**
 	 * GUI constants
 	 */
-	
+
 	public static final int ADD_ADAPTER_REQUEST_CODE = 1000;
 	public static final int EDIT_SENSOR_REQUEST_CODE = 1001;
 	public static final int ADD_SENSOR_REQUEST_CODE = 1002;
@@ -95,8 +97,6 @@ public final class Constants {
 
 	public static final String SETUP_SENSOR_ACT_LOC = "SETUP_SENSOR_ACT_LOC";
 
-
-	
 	public static final boolean GUI_DEBUG = true;
 
 	public static final String TUTORIAL_ADD_ADAPTER_SHOWED = "TUTORIAL_ADD_ADAPTER_SHOWED";
@@ -108,10 +108,15 @@ public final class Constants {
 	public static final String GUI_MENU_ALL_SENSOR_ID = "GUI_MENU_ALL_SENSOR_ID";
 
 	public static final String GUI_SELECTED_ADAPTER_ID = "GUI_SELECTED_ADAPTER_ID";
-    public static final String GUI_MENU_CONTROL = "GUI_MENU_CONTROL";
-    public static final String GUI_MENU_DASHBOARD = "GUI_MENU_DASHBOARD";
-    public static final String GUI_MENU_WATCHDOG = "GUI_MENU_WATCHDOG";
-  	public static final String GUI_MENU_PROFILE = "GUI_MENU_PROFILE";
+
+	public static final String GUI_MENU_CONTROL = "GUI_MENU_CONTROL";
+
+	public static final String GUI_MENU_DASHBOARD = "GUI_MENU_DASHBOARD";
+
+	public static final String GUI_MENU_WATCHDOG = "GUI_MENU_WATCHDOG";
+
+	public static final String GUI_MENU_PROFILE = "GUI_MENU_PROFILE";
+
 	public static final String GUI_EDIT_SENSOR_ID = "GUI_EDIT_SENSOR_ID";
 
 }

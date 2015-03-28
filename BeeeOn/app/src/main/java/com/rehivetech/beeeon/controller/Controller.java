@@ -1,18 +1,10 @@
 package com.rehivetech.beeeon.controller;
 
-import java.util.ArrayList;
-import java.util.EnumSet;
-import java.util.List;
-import java.util.Map;
-import java.util.WeakHashMap;
-
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
+
 import com.rehivetech.beeeon.Constants;
-import com.rehivetech.beeeon.activity.LoginActivity;
 import com.rehivetech.beeeon.adapter.Adapter;
 import com.rehivetech.beeeon.adapter.device.Device;
 import com.rehivetech.beeeon.adapter.device.Device.SaveDevice;
@@ -20,8 +12,8 @@ import com.rehivetech.beeeon.adapter.device.DeviceLog;
 import com.rehivetech.beeeon.adapter.device.DeviceType;
 import com.rehivetech.beeeon.adapter.device.Facility;
 import com.rehivetech.beeeon.adapter.location.Location;
-import com.rehivetech.beeeon.exception.ErrorCode;
 import com.rehivetech.beeeon.exception.AppException;
+import com.rehivetech.beeeon.exception.ErrorCode;
 import com.rehivetech.beeeon.exception.NetworkError;
 import com.rehivetech.beeeon.exception.NotImplementedException;
 import com.rehivetech.beeeon.gcm.GcmHelper;
@@ -32,15 +24,21 @@ import com.rehivetech.beeeon.household.Household;
 import com.rehivetech.beeeon.household.User;
 import com.rehivetech.beeeon.household.User.Role;
 import com.rehivetech.beeeon.network.DemoNetwork;
-import com.rehivetech.beeeon.network.GoogleAuthHelper;
-import com.rehivetech.beeeon.network.GoogleAuthHelper.GoogleUserInfo;
 import com.rehivetech.beeeon.network.INetwork;
 import com.rehivetech.beeeon.network.Network;
+import com.rehivetech.beeeon.network.authentication.GoogleAuthProvider;
+import com.rehivetech.beeeon.network.authentication.IAuthProvider;
 import com.rehivetech.beeeon.pair.LogDataPair;
 import com.rehivetech.beeeon.persistence.GeofenceModel;
 import com.rehivetech.beeeon.persistence.Persistence;
 import com.rehivetech.beeeon.util.Log;
 import com.rehivetech.beeeon.util.Utils;
+
+import java.util.ArrayList;
+import java.util.EnumSet;
+import java.util.List;
+import java.util.Map;
+import java.util.WeakHashMap;
 
 /**
  * Core of application (used as singleton), provides methods and access to all data and household.
@@ -129,8 +127,12 @@ public final class Controller {
 
 	/** Persistence methods *************************************************/
 
-	public String getLastEmail() {
-		return mPersistence.loadLastEmail();
+	public IAuthProvider getLastAuthProvider() {
+		return mPersistence.loadLastAuthProvider();
+	}
+
+	public String getLastUserId() {
+		return mPersistence.loadLastUserId();
 	}
 
 	/**
@@ -139,12 +141,12 @@ public final class Controller {
 	 * @return null if user is not logged in
 	 */
 	public SharedPreferences getUserSettings() {
-		String userEmail = mHousehold.user.getEmail();
-		if (userEmail == null || userEmail.isEmpty()) {
+		String userId = mHousehold.user.getId();
+		if (userId == null || userId.isEmpty()) {
 			return null;
 		}
 
-		return mPersistence.getSettings(userEmail);
+		return mPersistence.getSettings(userId);
 	}
 	
 	/**
@@ -156,167 +158,128 @@ public final class Controller {
 
 	/** Communication methods ***********************************************/
 
-	/**
-	 * Login user by his email (authenticate on server).
-	 * 
-	 * Currently support only GoogleAuth or demoMode
-	 * 
-	 * @param email
-	 * @return true on success, false otherwise
-	 * @throws AppException
-	 */
-	public boolean login(String email) throws AppException {
-		return login(email, true);
+	public void loadUserData(String userId) {
+		// Load cached user details
+		mPersistence.loadUserDetails(userId, mHousehold.user);
+
+		// Load user data from server
+		User user = mNetwork.loadUserInfo();
+
+		if (!user.getId().equals(userId)) {
+			// UserId from server is not same as the cached one
+			Log.e(TAG, String.format("UserId from server (%s) is not same as the cached one (%s)", user.getId(), userId));
+			// So save the correct one
+			mPersistence.saveLastUserId(user.getId());
+		}
+
+		// If we have no or changed picture, lets download it from server
+		if (!user.getPictureUrl().isEmpty() && (user.getPicture() == null || !mHousehold.user.getPictureUrl().equals(user.getPictureUrl()))) {
+			try {
+				Bitmap picture = Utils.fetchImageFromUrl(user.getPictureUrl());
+				user.setPicture(picture);
+			} catch (Exception e) {
+				// TODO: do something better
+			}
+		}
+
+		// Copy user data
+		mHousehold.user.setId(user.getId());
+		mHousehold.user.setRole(user.getRole());
+		mHousehold.user.setName(user.getName());
+		mHousehold.user.setSurname(user.getSurname());
+		mHousehold.user.setGender(user.getGender());
+		mHousehold.user.setEmail(user.getEmail());
+		mHousehold.user.setPictureUrl(user.getPictureUrl());
+		mHousehold.user.setPicture(user.getPicture());
+
+		// We have fresh user details, save them to cache
+		mPersistence.saveUserDetails(userId, mHousehold.user);
 	}
 
-	public boolean assignToken(String token) {
-		final User user = mHousehold.user;
-		final GoogleUserInfo googleInfo = GoogleAuthHelper.fetchInfoFromProfileServer(token);
+	public boolean autoLogin() {
+		// Load BT from previous session
+		String userId = mPersistence.loadLastUserId();
+		String bt = mPersistence.loadLastBT(userId);
 
-		Log.d(TAG, "name: " + googleInfo.name);
-		Log.d(TAG, "email: " + googleInfo.email);
-		Log.d(TAG, "gender: " + googleInfo.gender);
-		Log.d(TAG, "picture: " + googleInfo.pictureUrl);
-		Log.d(TAG, "gid: " + googleInfo.id);
-
-		mPersistence.loadUserDetails(googleInfo.email, user);
-		Bitmap picture = Utils.fetchImageFromUrl(googleInfo.pictureUrl);
-		user.setPicture(picture);
-
-		user.setName(googleInfo.name);
-		user.setEmail(googleInfo.email);
-		user.setGender(googleInfo.gender);
-		user.setPictureUrl(googleInfo.pictureUrl);
-		user.setGoogleId(googleInfo.id);
-
-		if (!mNetwork.loadUID(googleInfo))
+		if (bt.isEmpty())
 			return false;
 
-		Log.i(TAG, String.format("Loaded fresh UID: %s", mNetwork.getUID()));
+		mNetwork.setBT(bt);
+
+		// Try to do test request with loaded BT to know if we're really logged in or not
+		try {
+			// In demo mode load some init data from sdcard
+			if (mNetwork instanceof DemoNetwork) {
+				((DemoNetwork) mNetwork).initDemoData();
+			}
+
+			// Always load user data
+			loadUserData(userId);
+		} catch (AppException e) {
+			ErrorCode errorCode = e.getErrorCode();
+			if (errorCode instanceof NetworkError && errorCode == NetworkError.BAD_UID) {
+				// This BT is invalid, delete it
+				Log.w(TAG, "BT is invalid, we will load fresh one");
+
+				mNetwork.setBT(null);
+				mPersistence.saveLastBT(userId, null);
+				return false;
+			}
+			throw AppException.wrap(e);
+		}
 
 		return true;
 	}
 
 	/**
-	 * @see {@link Controller#login(LoginActivity, String)}
+	 * Login user with any authProvider (authenticate on server).
+	 * 
+	 * @param authProvider
+	 * @return true on success, false otherwise
+	 * @throws AppException
 	 */
-	private boolean login(String email, boolean canTryAgain) throws AppException {
-		User user = mHousehold.user;
-		GoogleUserInfo googleUserInfo = null;
-		String googleToken = "";
-
-		try {
-			// Load UID from previous session
-			String UID = mPersistence.loadLastUID(email);
-			Log.i(TAG, String.format("Loaded cached UID: %s", UID));
-			mNetwork.setUID(UID);
-
-			// Try to do test request with loaded UID to know if we're really logged in or not
-			if (!UID.isEmpty()) {
-				try {
-					// FIXME: Use some better request
-					mNetwork.getAdapters();
-				} catch (AppException e) {
-					ErrorCode errorCode = e.getErrorCode();
-					if (errorCode instanceof NetworkError && errorCode == NetworkError.BAD_UID) {
-						// This UID is invalid, load fresh one
-						Log.w(TAG, "UID is invalid, we will load fresh one");
-						UID = "";
-					}
-				}
-			}
-
-			// Load also cached user details
-			mPersistence.loadUserDetails(email, user);
-
-            // In demo mode load some init data from sdcard
-            if (mNetwork instanceof DemoNetwork)
-                ((DemoNetwork) mNetwork).initDemoData(user);
-
-			if (UID.isEmpty() || user.isEmpty()) {
-				// No previous session or user data, load fresh data from server
-				if (mNetwork instanceof Network) {
-					// Get Google token
-					googleToken = GoogleAuthHelper.getToken(mContext, email);
-
-					// Get user info from Google
-					googleUserInfo = GoogleAuthHelper.fetchInfoFromProfileServer(googleToken);
-
-					// Not loaded picture bitmap or user has new picture (avatarUrl is different)
-					if ((!user.getPictureUrl().isEmpty() && user.getPicture() == null)
-							|| !user.getPictureUrl().equals(googleUserInfo.pictureUrl)) {
-						// No or changed picture, let's download it from server
-						Bitmap picture = Utils.fetchImageFromUrl(googleUserInfo.pictureUrl);
-						user.setPicture(picture);
-					}
-
-					user.setName(googleUserInfo.name);
-					user.setEmail(email);
-					user.setGender(googleUserInfo.gender);
-					user.setPictureUrl(googleUserInfo.pictureUrl);
-					user.setGoogleId(googleUserInfo.id);
-				}
-
-				// googleUserInfo must be initialized by code above
-				if (!mNetwork.logMeByGoogle(googleUserInfo))
-					return false;
-
-                //FIXME: ROB, there is no more UID, it wiil be removed from network layer soon, use BT instead
-				// Save our new UID
-				Log.i(TAG, String.format("Loaded fresh UID: %s", mNetwork.getBT()));
-				mPersistence.saveLastUID(email, mNetwork.getBT());
-				// We have also fresh user detail, save them too
-				mPersistence.saveUserDetails(email, user);
-			}
-
-			// Do we have session now? Then remember this user
-			if (!mNetwork.getUID().isEmpty()) {
-				mPersistence.initializeDefaultSettings(email);
-
-				// Remember this email to use with auto login (but not in demoMode)
-				if (!(mNetwork instanceof DemoNetwork)) {
-					mPersistence.saveLastEmail(email);
-
-					// Send GCM ID to server
-					final String gcmId = mController.getGCMRegistrationId();
-					if (gcmId.isEmpty()) {
-						GcmHelper.registerGCMInBackground(mContext);
-						Log.w(GcmHelper.TAG_GCM, "GCM ID is not accesible in persistant, creating new thread");
-					} else {
-						// send GCM ID to server
-						Thread t = new Thread() {
-							public void run() {
-								try {
-									mController.setGCMIdServer(gcmId);
-								} catch (Exception e) {
-									// do nothing
-									Log.w(GcmHelper.TAG_GCM, "Login: Sending GCM ID to server failed: " + e.getLocalizedMessage());
-								}
-							}
-						};
-						t.start();
-						mController.setGCMIdLocal(gcmId);
-					}
-				}
-
-				return true;
-			}
-		} catch (AppException e) {
-			// Process known and processible error codes (actually only google token error)
-			ErrorCode errorCode = e.getErrorCode();
-			if ((mNetwork instanceof Network) && (errorCode instanceof NetworkError)) {
-				if (errorCode == NetworkError.NOT_VALID_USER || errorCode == NetworkError.GOOGLE_TOKEN) {
-					// We have probably used incorrect Google token, invalidate it and try it again
-					GoogleAuthHelper.invalidateToken(mContext, googleToken);
-
-					// And try it again (if we haven't yet), hopefully we will have correct token then
-					if (canTryAgain)
-						return login(email, false);
-				}
-			}
-			throw AppException.wrap(e);
+	public boolean login(IAuthProvider authProvider) throws AppException {
+		// In demo mode load some init data from sdcard
+		if (mNetwork instanceof DemoNetwork) {
+			((DemoNetwork) mNetwork).initDemoData();
 		}
-		return false;
+
+		// We don't have beeeon-token yet, try to login
+		mNetwork.loginMe(authProvider); // throws exception on error
+
+		// Load user data so we will know our userId
+		loadUserData(null);
+
+		String bt = mNetwork.getBT();
+
+		// Do we have session now?
+		if (bt.isEmpty()) {
+			Log.e(TAG, "BeeeOn token wasn't received. We are not logged in.");
+			return false;
+		}
+
+		String userId = mHousehold.user.getId();
+		if (userId.isEmpty()) {
+			Log.e(TAG, "UserId wasn't received. We can't continue with login.");
+			return false;
+		}
+
+		// Save our new BT
+		Log.i(TAG, String.format("Loaded for user '%s' fresh new BT: %s", userId, mNetwork.getBT()));
+		mPersistence.saveLastBT(userId, mNetwork.getBT());
+
+		// Then remember this user
+		mPersistence.initializeDefaultSettings(userId);
+
+		// Remember this email to use with auto login (but not in demoMode)
+		if (!(mNetwork instanceof DemoNetwork)) {
+			mPersistence.saveLastUserId(mHousehold.user.getId());
+			mPersistence.saveLastAuthProvider(authProvider);
+
+			registerGCM();
+		}
+
+		return true;
 	}
 
 	/**
@@ -327,14 +290,14 @@ public final class Controller {
 
 		// Delete GCM ID on server side
 		if (!(mNetwork instanceof DemoNetwork)) {
-			final String email = getActualUser().getEmail();
+			final String id = getActualUser().getId();
 			final String gcmId = getGCMRegistrationId();
-			if (email != null && !gcmId.isEmpty()) {
+			if (id != null && !gcmId.isEmpty()) {
 				// delete GCM ID from server
 				Thread t = new Thread() {
 					public void run() {
 						try {
-							deleteGCM(email, gcmId);
+							deleteGCM(id, gcmId);
 						} catch (Exception e) {
 							// do nothing
 							Log.w(GcmHelper.TAG_GCM, "Logout: Delete GCM ID failed: " + e.getLocalizedMessage());
@@ -346,15 +309,16 @@ public final class Controller {
 		}
 
 		// Destroy session
-		mNetwork.setUID("");
+		mNetwork.setBT("");
 
 		// Delete session from saved settings
 		SharedPreferences prefs = getUserSettings();
 		if (prefs != null)
-			prefs.edit().remove(Constants.PERSISTENCE_PREF_UID).commit();
+			prefs.edit().remove(Constants.PERSISTENCE_PREF_USER_BT).commit();
 
 		// Forgot info about last user
-		mPersistence.saveLastEmail(null);
+		mPersistence.saveLastAuthProvider(null);
+		mPersistence.saveLastUserId(null);
 	}
 
 	/**
@@ -364,7 +328,7 @@ public final class Controller {
 	 */
 	public boolean isLoggedIn() {
 		// TODO: Check session lifetime somehow?
-		return !mHousehold.user.getEmail().isEmpty() && !mNetwork.getUID().isEmpty();
+		return !mNetwork.getBT().isEmpty();
 	}
 
 	public void beginPersistentConnection() {
@@ -726,7 +690,6 @@ public final class Controller {
 	 * Return list of all uninitialized facilities from adapter
 	 * 
 	 * @param adapterId
-	 * @param withIgnored
 	 * @return List of uninitialized facilities (or empty list)
 	 */
 	public List<Facility> getUninitializedFacilities(String adapterId) {
@@ -736,7 +699,7 @@ public final class Controller {
 	/**
 	 * Return list of all facilities by location from adapter
 	 * 
-	 * @param location
+	 * @param locationId
 	 * @return List of facilities (or empty list)
 	 */
 	public List<Facility> getFacilitiesByLocation(String adapterId, String locationId) {
@@ -792,7 +755,7 @@ public final class Controller {
 	/**
 	 * Return log for device.
 	 * 
-	 * @param device
+	 * @param pair
 	 * @return
 	 */
 	public DeviceLog getDeviceLog(LogDataPair pair) {
@@ -804,12 +767,12 @@ public final class Controller {
 	 * 
 	 * This CAN'T be called on UI thread!
 	 * 
-	 * @param stringID
+	 * @param adapterId
 	 * @return result
 	 */
-	public boolean sendPairRequest(String adapterID) {
+	public boolean sendPairRequest(String adapterId) {
 		// FIXME: hack -> true if you want to add virtual sensor
-		return mNetwork.prepareAdapterToListenNewSensors(adapterID);
+		return mNetwork.prepareAdapterToListenNewSensors(adapterId);
 	}
 
 	/** User methods ********************************************************/
@@ -873,6 +836,29 @@ public final class Controller {
 		return mNetwork.updateAccount(adapterId, user);
 	}
 
+	private void registerGCM() {
+		// Send GCM ID to server
+		final String gcmId = mController.getGCMRegistrationId();
+		if (gcmId.isEmpty()) {
+			GcmHelper.registerGCMInBackground(mContext);
+			Log.w(GcmHelper.TAG_GCM, "GCM ID is not accessible in persistence, creating new thread");
+		} else {
+			// send GCM ID to server
+			Thread t = new Thread() {
+				public void run() {
+					try {
+						mController.setGCMIdServer(gcmId);
+					} catch (Exception e) {
+						// do nothing
+						Log.w(GcmHelper.TAG_GCM, "Login: Sending GCM ID to server failed: " + e.getLocalizedMessage());
+					}
+				}
+			};
+			t.start();
+			mController.setGCMIdLocal(gcmId);
+		}
+	}
+
 	/**
 	 * Gets the current registration ID for application on GCM service.
 	 * <p>
@@ -916,11 +902,13 @@ public final class Controller {
 	 * 
 	 * This CAN'T be called on UI thread!
 	 * 
-	 * @param email
+	 * @param userId
 	 * @param gcmID
 	 */
-	public void deleteGCM(String email, String gcmID) {
-		mNetwork.deleteGCMID(email, gcmID);
+	public void deleteGCM(String userId, String gcmID) {
+		if (mNetwork instanceof Network) {
+			((Network) mNetwork).deleteGCMID(userId, gcmID);
+		}
 	}
 
 	/**
@@ -946,25 +934,29 @@ public final class Controller {
 	 *            to be set
 	 */
 	public void setGCMIdServer(String gcmID) {
-		String email;
 		Log.i(GcmHelper.TAG_GCM, "setGcmIdServer");
 		if (isDemoMode()) {
 			Log.i(GcmHelper.TAG_GCM, "DemoMode -> return");
 			return;
 		}
-		
+
+		String userId;
 		if (getActualUser() != null) {
-			email = getActualUser().getEmail();
-		} else if (!getLastEmail().isEmpty()) {
-			email = getLastEmail();
+			userId = getActualUser().getId();
 		} else {
+			userId = getLastUserId();
+		}
+
+		if (userId.isEmpty()) {
 			// no user, it will be sent in user login
 			return;
 		}
 
 		try {
 			Log.i(GcmHelper.TAG_GCM, "Set GCM ID to server: " + gcmID);
-			mNetwork.setGCMID(email, gcmID);
+			if (mNetwork instanceof Network) {
+				((Network) mNetwork).setGCMID(userId, gcmID);
+			}
 		} catch (Exception e) {
 			// nothing to do
 			Log.e(GcmHelper.TAG_GCM, "Set GCM ID to server failed.");
@@ -1056,7 +1048,7 @@ public final class Controller {
 	 * UCA
 	 */
 	public boolean isUserAllowed(Role role) {
-		if(role.equals(Role.User) ||role.equals(Role.Guest) ){
+		if (role.equals(Role.User) ||role.equals(Role.Guest)) {
 			return false;
 		}
 		return true;
@@ -1066,12 +1058,11 @@ public final class Controller {
 	 * @return List of geofences. If no geofence is registered, empty list is returned.
 	 */
 	public List<SimpleGeofence> getAllGeofences() {
-		// FIXME prepsat na UserID az bude v controlleru pristupne
-		return mGeofenceModel.getAllGeofences(getActualUser().getGoogleId());
+		return mGeofenceModel.getAllGeofences(getActualUser().getId());
 	}
 
 	public void addGeofence(SimpleGeofence geofence) {
-		mGeofenceModel.addGeofence(getActualUser().getGoogleId(), geofence);
+		mGeofenceModel.addGeofence(getActualUser().getId(), geofence);
 	}
 
 }

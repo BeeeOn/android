@@ -7,7 +7,6 @@
     <string name="NetworkError___NOT_VALID_USER">Zlý token alebo email</string>
     <string name="NetworkError___NOT_CONSISTENT_SENSOR_ADDR">Zlý ID/TYP -> errMessage obsahuje hlavičku s ID a TYPom</string>
     <string name="NetworkError___LOW_RIGHTS">Zlé práva (užívateľ nemá práva)</string>
-    <string name="NetworkError___GOOGLE_TOKEN">Neplatný Google token</string>
     <string name="NetworkError___DAMAGED_XML">Poškodené xml (partial)</string>
     <string name="NetworkError___COM_VER_MISMATCH">Zlá verzia komunikačného protokolu</string>
     <string name="NetworkError___COM_PROBLEMS">Komunikačný problém</string>

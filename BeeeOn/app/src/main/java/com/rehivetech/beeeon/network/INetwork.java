@@ -7,7 +7,7 @@ import com.rehivetech.beeeon.adapter.device.DeviceLog;
 import com.rehivetech.beeeon.adapter.device.Facility;
 import com.rehivetech.beeeon.adapter.location.Location;
 import com.rehivetech.beeeon.household.User;
-import com.rehivetech.beeeon.network.GoogleAuthHelper.GoogleUserInfo;
+import com.rehivetech.beeeon.network.authentication.IAuthProvider;
 import com.rehivetech.beeeon.network.xml.CustomViewPair;
 import com.rehivetech.beeeon.network.xml.WatchDog;
 import com.rehivetech.beeeon.network.xml.action.ComplexAction;
@@ -60,58 +60,42 @@ public interface INetwork {
 	// /////////////////////////////////////SIGNIN,SIGNUP,ADAPTERS//////////////////////
 	// /////////////////////////////////////////////////////////////////////////////////
 
-	GoogleUserInfo getUserInfo();
-	
-	public void setUID(String userId);
-	
-	/**
-     * FIXME: it will be removed!! do not use it anymore
-     *
-     * @return UID for actual communication
-     */
-    public String getUID();
-
     /**
-     * It is beeeon-token used for communication
+     * Return beeeon-token used for communication
+	 *
      * @return BT of actual user
      */
     public String getBT();
 
+	/**
+	 * Set beeeon-token for communication
+	 *
+	 * @return
+	 */
+	public void setBT(String token);
+
     /**
      * Download information about actual user from server
+	 *
      * @return User object with data from server
      */
     public User loadUserInfo();
 
     /**
-     * Method log in user by his name and password
-     * @param username login name
-     * @param password password of user
-     * @return true if user has been logged in, false otherwise
+     * Method log in user by specified provider
+	 *
+     * @param authProvider provider object with data for authentication
+     * @return true if user has been logged in with this provider, false otherwise
      */
-    public boolean logMeByName(String username, String password);
+    public boolean loginMe(IAuthProvider authProvider);
 
     /**
-     * Method log in user by his google id
-     * @param googleUserInfo google data of user (id, token)
-     * @return true if user has been logged in, false otherwise
+     * Method register user to server by specified provider
+	 *
+	 * @param authProvider provider object with data for authentication
+     * @return true if user has beed added to database with this provider, false otherwise
      */
-    public boolean logMeByGoogle(GoogleUserInfo googleUserInfo);
-
-    /**
-     * Method register user to server by his name and login
-     * @param username new user name
-     * @param password new password
-     * @return true if user has beed added to database, false otherwise
-     */
-    public boolean registerMeByName(String username, String password);
-
-    /**
-     * Method register user to server by his google data
-     * @param googleUserInfo google data of user (id, token)
-     * @return true if user has been added to database, false otherwise
-     */
-    public boolean registerMeByGoogle(GoogleUserInfo googleUserInfo);
+    public boolean registerMe(IAuthProvider authProvider);
 
 	/**
 	 * Method register adapter to server
@@ -402,25 +386,6 @@ public interface INetwork {
 	 */
 	public boolean NotificationsRead(ArrayList<String> msgID);
 
-	/**
-	 * Method delete old gcmid to avoid fake notifications
-	 * 
-	 * @param email
-	 *            of old/last user of gcmid (app+device id)
-	 * @param gcmID
-	 *            - google cloud message id
-	 * @return true if id has been deleted, false otherwise
-	 */
-	public boolean deleteGCMID(String email, String gcmID);
-	
-	/**
-	 * Method set gcmID to server
-	 * @param email of user
-	 * @param gcmID to be set
-	 * @return true if id has been updated, false otherwise
-	 */
-	public boolean setGCMID(String email, String gcmID);
-	
 	// /////////////////////////////////////////////////////////////////////////////////
 	// /////////////////////////////////////CONDITIONS,ACTIONS//////////////////////////
 	// /////////////////////////////////////////////////////////////////////////////////

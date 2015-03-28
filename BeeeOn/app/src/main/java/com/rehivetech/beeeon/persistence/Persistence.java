@@ -6,11 +6,14 @@ import android.content.SharedPreferences.Editor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
+import com.google.android.gms.cast.Cast;
 import com.rehivetech.beeeon.Constants;
 import com.rehivetech.beeeon.adapter.device.units.NoiseUnit;
 import com.rehivetech.beeeon.adapter.device.units.TemperatureUnit;
 import com.rehivetech.beeeon.household.User;
 import com.rehivetech.beeeon.household.User.Gender;
+import com.rehivetech.beeeon.network.authentication.IAuthProvider;
+import com.rehivetech.beeeon.util.Log;
 import com.rehivetech.beeeon.util.SettingsItem;
 import com.rehivetech.beeeon.util.Timezone;
 
@@ -18,6 +21,8 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 
 /**
  * Persistence service that handles caching data on this device.
@@ -25,7 +30,8 @@ import java.io.OutputStream;
  * @author Robyer
  */
 public class Persistence {
-	
+	private static final String TAG = Persistence.class.getSimpleName();
+
 	/**
 	 * Namespace of global preferences
 	 */
@@ -134,24 +140,53 @@ public class Persistence {
 
 	// Last user
 
-	public void saveLastEmail(String email) {
-		setOrRemoveString(GLOBAL, Constants.PERSISTENCE_PREF_LAST_USER, email);
+	public void saveLastUserId(String userId) {
+		setOrRemoveString(GLOBAL, Constants.PERSISTENCE_PREF_LAST_USER_ID, userId);
 	}
 
-	public String loadLastEmail() {
-		return getSettings(GLOBAL).getString(Constants.PERSISTENCE_PREF_LAST_USER, "");
-	}
-	
-	public void saveLastUID(String email, String UID) {
-		setOrRemoveString(email, Constants.PERSISTENCE_PREF_UID, UID);
+	public String loadLastUserId() {
+		return getSettings(GLOBAL).getString(Constants.PERSISTENCE_PREF_LAST_USER_ID, "");
 	}
 
-	public String loadLastUID(String email) {
-		return getSettings(email).getString(Constants.PERSISTENCE_PREF_UID, "");
+	public void saveLastAuthProvider(IAuthProvider authProvider) {
+		setOrRemoveString(GLOBAL, Constants.PERSISTENCE_PREF_LAST_AUTH_PROVIDER, authProvider != null ? authProvider.getClass().getName() : null);
+		setOrRemoveString(GLOBAL, Constants.PERSISTENCE_PREF_LAST_AUTH_PARAMETER, authProvider != null ? authProvider.getPrimaryParameter() : null);
+	}
+
+	public IAuthProvider loadLastAuthProvider() {
+		String className = getSettings(GLOBAL).getString(Constants.PERSISTENCE_PREF_LAST_AUTH_PROVIDER, "");
+		String parameter = getSettings(GLOBAL).getString(Constants.PERSISTENCE_PREF_LAST_AUTH_PARAMETER, "");
+
+		// Return null if we have no className found
+		if (className.isEmpty())
+			return null;
+
+		IAuthProvider provider = null;
+		try {
+			// Try to create provider class from last saved provider
+			Class<?> cl = Class.forName(className);
+			Constructor<?> ctor = cl.getConstructor((Class<?>[]) null);
+
+			// Create instance and set primary parameter
+			provider = (IAuthProvider) ctor.newInstance();
+			provider.setPrimaryParameter(parameter);
+		} catch (ClassNotFoundException | NoSuchMethodException | InvocationTargetException | InstantiationException | IllegalAccessException | ClassCastException e) {
+			Log.e(TAG, String.format("Cant create IAuthProvider class '%s' with parameter '%s'", className, parameter));
+		}
+
+		return provider;
 	}
 	
-	public void saveUserDetails(String email, User user) {
-		getSettings(email) //
+	public void saveLastBT(String userId, String BT) {
+		setOrRemoveString(userId, Constants.PERSISTENCE_PREF_USER_BT, BT);
+	}
+
+	public String loadLastBT(String userId) {
+		return getSettings(userId).getString(Constants.PERSISTENCE_PREF_USER_BT, "");
+	}
+	
+	public void saveUserDetails(String userId, User user) {
+		getSettings(userId) //
 			.edit() //
 			.putString(Constants.PERSISTENCE_PREF_USER_ID, user.getId()) //
 			.putString(Constants.PERSISTENCE_PREF_USER_EMAIL, user.getEmail()) //
@@ -163,12 +198,12 @@ public class Persistence {
 		
 		Bitmap picture = user.getPicture();
 		if (picture != null)
-			saveBitmap(picture, email);
+			saveBitmap(picture, userId);
 	}
 
-	public void loadUserDetails(String email, User user) {
-		SharedPreferences prefs = getSettings(email);
-		
+	public void loadUserDetails(String userId, User user) {
+		SharedPreferences prefs = getSettings(userId);
+
 		user.setId(prefs.getString(Constants.PERSISTENCE_PREF_USER_ID, ""));
 		user.setEmail(prefs.getString(Constants.PERSISTENCE_PREF_USER_EMAIL, ""));
 		user.setName(prefs.getString(Constants.PERSISTENCE_PREF_USER_NAME, ""));
@@ -176,7 +211,7 @@ public class Persistence {
 		user.setGender(Gender.fromString(prefs.getString(Constants.PERSISTENCE_PREF_USER_GENDER, "")));
 		user.setPictureUrl(prefs.getString(Constants.PERSISTENCE_PREF_USER_PICTURE, ""));
 		
-		user.setPicture(loadBitmap(email));
+		user.setPicture(loadBitmap(userId));
 	}
 
 	// GCM

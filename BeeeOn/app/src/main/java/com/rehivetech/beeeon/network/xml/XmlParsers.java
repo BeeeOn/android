@@ -146,11 +146,11 @@ public class XmlParsers {
 		case USERINFO:
 			// String (userID)
             User user = new User();
-			user.setId(getSecureAttrValue(Xconstants.ID));
+			user.setId(getSecureAttrValue(Xconstants.UID));
 			user.setName(getSecureAttrValue(Xconstants.NAME));
             user.setSurname(getSecureAttrValue(Xconstants.SURNAME));
             user.setEmail(getSecureAttrValue(Xconstants.EMAIL));
-            user.setGender(User.Gender.fromString(getSecureInt(getSecureAttrValue(Xconstants.GENDER))>0?"male":"female"));
+            user.setGender(User.Gender.fromString(getSecureAttrValue(Xconstants.GENDER)));
             user.setPictureUrl(getSecureAttrValue(Xconstants.IMGURL));
 
 			result.data = user;

@@ -27,6 +27,5 @@
 	<string name="NetworkError___SERVER_NOT_RESPONDING">Server neodpovídá.\n\nZkuste to prosím znovu.</string>
 	<string name="NetworkError___COM_PROBLEMS">Nastal neznámý komunikační problém.\n\nZkuste to prosím později.</string>
 	<string name="NetworkError___XML">Nastal problém během parsování XML.\n\nZkuste to prosím znovu.</string>
-	<string name="NetworkError___GOOGLE_TOKEN">Byl zadán neplatný Google token.\n\nZkuste to prosím znovu.</string>
 
 </resources>

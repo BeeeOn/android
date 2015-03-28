@@ -14,7 +14,7 @@ import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.exception.AppException;
 import com.rehivetech.beeeon.exception.NetworkError;
 import com.rehivetech.beeeon.household.User;
-import com.rehivetech.beeeon.network.GoogleAuthHelper.GoogleUserInfo;
+import com.rehivetech.beeeon.network.authentication.IAuthProvider;
 import com.rehivetech.beeeon.network.xml.CustomViewPair;
 import com.rehivetech.beeeon.network.xml.FalseAnswer;
 import com.rehivetech.beeeon.network.xml.ParsedMessage;
@@ -27,6 +27,8 @@ import com.rehivetech.beeeon.network.xml.condition.Condition;
 import com.rehivetech.beeeon.pair.LogDataPair;
 import com.rehivetech.beeeon.util.Log;
 import com.rehivetech.beeeon.util.Utils;
+
+import org.xmlpull.v1.XmlPullParserException;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
@@ -49,6 +51,7 @@ import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.HttpsURLConnection;
@@ -96,7 +99,6 @@ public class Network implements INetwork {
 	private static final String SERVER_CN_CERTIFICATE = "ant-2.fit.vutbr.cz";
 
 	private final Context mContext;
-	private String mUserID = "";
     private String mBT = "";
 	private final boolean mUseDebugServer;
 	private static final int SSLTIMEOUT = 35000;
@@ -117,17 +119,6 @@ public class Network implements INetwork {
 		mUseDebugServer = useDebugServer;
 	}
 	
-	@Override
-	public void setUID(String userId) {
-		mUserID = userId;
-	}
-	
-	@Override
-	public GoogleUserInfo getUserInfo() {
-		// FIXME
-		return null;
-	}
-
 	/**
 	 * Method for sending data to server via TLS protocol using own TrustManger to be able to trust self-signed
 	 * certificates. CA certificated must be located in assets folder. If no exception is thrown, it returns server
@@ -264,8 +255,6 @@ public class Network implements INetwork {
 			String uid = "101";
 			String aid = "10";
 			
-			mUserID = uid;
-			
 			multiSessionBegin();
 			
 			Log.d("test // get 1", getTimeZone(aid)+"");
@@ -380,8 +369,8 @@ public class Network implements INetwork {
 			permaReader.close();
 			permaSocket.close();
 		} catch (IOException e) {
+			// We can't do anything with this error, and we don't have to anyway
 			e.printStackTrace();
-			throw AppException.wrap(e, NetworkError.CLOSING_ERROR);
 		}
 		
 		permaWriter = null;
@@ -437,62 +426,35 @@ public class Network implements INetwork {
 	// /////////////////////////////////////SIGNIN,SIGNUP,ADAPTERS//////////////////////
 	// /////////////////////////////////////////////////////////////////////////////////
 
-	/**
-	 * Return actual UID used for communication (= active session)
-	 * @return UID for actual communication
-	 */
-	@Override
-	public String getUID() {
-		return mUserID;
+    @Override
+    public String getBT() {
+		return mBT;
 	}
 
-    @Override
-    public String getBT() { return mBT; }
+	@Override
+	public void setBT(String token) {
+		mBT = token;
+	}
 
-    @Override
-    public boolean logMeByGoogle(GoogleUserInfo googleUserInfo){
-        return signMeByGoogle(googleUserInfo, false);
+	@Override
+    public boolean loginMe(IAuthProvider authProvider){
+        return signMe(authProvider, false);
     }
 
     @Override
-    public boolean registerMeByGoogle(GoogleUserInfo googleUserInfo){
-        return signMeByGoogle(googleUserInfo, true);
+    public boolean registerMe(IAuthProvider authProvider) {
+        return signMe(authProvider, true);
     }
 
-    private boolean signMeByGoogle(GoogleUserInfo googleUserInfo, boolean register){
-        int action = 0;
-        if(!register)
-            action = 1;
+    private boolean signMe(IAuthProvider authProvider, boolean register) {
+		// Check existence of authProvider parameters
+		Map<String, String> parameters = authProvider.getParameters();
+		if (parameters == null || parameters.isEmpty())
+			throw new IllegalArgumentException(String.format("IAuthProvider '%s' provided no parameters.", authProvider.getProviderName()));
 
-        ParsedMessage msg = doRequest(XmlCreator.createSignMe(Locale.getDefault().getLanguage(), Utils.getPhoneID(mContext), 1, action, googleUserInfo.id, googleUserInfo.token));
+        ParsedMessage msg = doRequest(XmlCreator.createSignMe(Locale.getDefault().getLanguage(), Utils.getPhoneID(mContext), register ? 0 : 1, authProvider));
 
-        if (!msg.getUserId().isEmpty() && msg.getState() == State.BT) {
-            mBT = (String) msg.data;
-            return true;
-        }
-
-        FalseAnswer fa = (FalseAnswer) msg.data;
-        throw new AppException(fa.getErrMessage(), NetworkError.fromValue(fa.getErrCode()));
-    }
-
-    @Override
-    public boolean logMeByName(String username, String password){
-        return signMeByName(username, password, false);
-    }
-
-    @Override
-    public boolean registerMeByName(String username, String password){
-        return signMeByName(username, password, true);
-    }
-
-    public boolean signMeByName(String username, String password, boolean register){
-        int action = 0;
-        if(!register)
-            action = 1;
-
-        ParsedMessage msg = doRequest(XmlCreator.createSignMe(Locale.getDefault().getLanguage(), Utils.getPhoneID(mContext), 0, action, username, password));
-
-        if (!msg.getUserId().isEmpty() && msg.getState() == State.BT) {
+        if (msg.getState() == State.BT) {
             mBT = (String) msg.data;
             return true;
         }
@@ -1109,14 +1071,14 @@ public class Network implements INetwork {
 	/**
 	 * Method delete old gcmid to avoid fake notifications
 	 * 
-	 * @param email
+	 * @param userId
 	 *            of old/last user of gcmid (app+device id)
 	 * @param gcmID
 	 *            - google cloud message id
 	 * @return true if id has been deleted, false otherwise
 	 */
-	public boolean deleteGCMID(String email, String gcmID){
-		ParsedMessage msg = doRequest(XmlCreator.createDeLGCMID(email, gcmID));
+	public boolean deleteGCMID(String userId, String gcmID){
+		ParsedMessage msg = doRequest(XmlCreator.createDeLGCMID(userId, gcmID));
 
 		if (msg.getState() == State.TRUE)
 			return true;
@@ -1145,12 +1107,12 @@ public class Network implements INetwork {
 
 	/**
 	 * Method set gcmID to server
-	 * @param email of user
+	 * @param userId of user
 	 * @param gcmID to be set
 	 * @return true if id has been updated, false otherwise
 	 * FIXME: after merge need to by rewrite
 	 */
-	public boolean setGCMID(String email, String gcmID){
+	public boolean setGCMID(String userId, String gcmID){
 		ParsedMessage msg = doRequest(XmlCreator.createSetGCMID(mBT, gcmID));
 
 		if (msg.getState() == State.TRUE)

@@ -15,6 +15,7 @@ import com.rehivetech.beeeon.exception.AppException;
 import com.rehivetech.beeeon.exception.NetworkError;
 import com.rehivetech.beeeon.household.User;
 import com.rehivetech.beeeon.network.INetwork.NetworkAction;
+import com.rehivetech.beeeon.network.authentication.IAuthProvider;
 import com.rehivetech.beeeon.network.xml.action.Action;
 import com.rehivetech.beeeon.network.xml.condition.BetweenFunc;
 import com.rehivetech.beeeon.network.xml.condition.ConditionFunction;
@@ -34,6 +35,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.EnumSet;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Class for creating XML messages
@@ -1057,15 +1059,16 @@ public class XmlCreator {
 	/**
 	 * Method create XML of DelXconstants.GCMID message (delete google cloud message id)
 	 * 
-	 * @param email
+	 * @param userId
 	 *            of last logged user
 	 * @param gcmid
 	 *            id of google messaging
 	 * @return message DelXconstants.GCMID
 	 * @since 2.2
 	 */
-	public static String createDeLGCMID(String email, String gcmid) {
-		return createComAttribsVariant(Xconstants.STATE, DELGCMID, Xconstants.EMAIL, email, Xconstants.GCMID, gcmid);
+	public static String createDeLGCMID(String userId, String gcmid) {
+		// FIXME: fix userId tag
+		return createComAttribsVariant(Xconstants.STATE, DELGCMID, Xconstants.USER, userId, Xconstants.GCMID, gcmid);
 	}
 
 	/**
@@ -1257,32 +1260,46 @@ public class XmlCreator {
      * Method create message for registration of new user (if action parameter is 0), or log in, existing one (action is 1)
      * @param locale locale of phone
      * @param pid phone id (ie. emei)
-     * @param service type of provider (0-login/password,1-google,2-facebook,etc)
      * @param action of action is 0, user want to signUp, if 1 then user will be signedIn
-     * @param args list of params
-     *             service 0 - username, password
-     *             service 1 - googleId, googleToken
+     * @param authProvider provider of authentication with parameters to send
      *
      * @return
      */
-    public static String createSignMe(String locale, String pid, int service, int action, String... args){
-        switch(service){
-            case 0:
-                if(args.length != 2)
-                    throw new RuntimeException("Bad params count");
+    public static String createSignMe(String locale, String pid, int action, IAuthProvider authProvider) {
+		XmlSerializer serializer = Xml.newSerializer();
+		StringWriter writer = new StringWriter();
+		try {
+			serializer.setOutput(writer);
+			// serializer.startDocument("UTF-8", null);
 
-                return createComAttribsVariant(Xconstants.STATE, SIGNME, Xconstants.LOCALE, locale, Xconstants.PID, pid, Xconstants.SIGNACTION, Integer.toString(action), Xconstants.SERVICE, Integer.toString(service), Xconstants.GID, args[0], Xconstants.GTOKEN, args[1]);
-            case 1:
-                if(args.length != 2)
-                    throw new RuntimeException("Bad params count");
+			serializer.startTag(ns, Xconstants.COM_ROOT);
+			serializer.attribute(ns, Xconstants.VERSION, COM_VER); // every time use version
 
-                return createComAttribsVariant(Xconstants.STATE, SIGNME, Xconstants.LOCALE, locale, Xconstants.PID, pid, Xconstants.SIGNACTION, Integer.toString(action), Xconstants.SERVICE, Integer.toString(service), Xconstants.GID, args[0], Xconstants.GTOKEN, args[1]);
-            case 2:
-                break;
-            default:
-                break;
-        }
-        return "";
+			serializer.attribute(ns, Xconstants.STATE, SIGNME);
+			serializer.attribute(ns, Xconstants.LOCALE, locale);
+			serializer.attribute(ns, Xconstants.PID, pid);
+			serializer.attribute(ns, Xconstants.SIGNACTION, Integer.toString(action));
+
+			// FIXME: this is just prototype of my provider thought, rework it as you need
+			serializer.attribute(ns, Xconstants.SERVICE, authProvider.getProviderName());
+			serializer.startTag(ns, "parameters");
+			for (Map.Entry<String, String> entry : authProvider.getParameters().entrySet()) {
+				String key = entry.getKey();
+				String value = entry.getValue();
+
+				if (key != null && value != null)
+					serializer.attribute(ns, key, value);
+			}
+			serializer.endTag(ns, "parameters");
+			// FIXME: end
+
+			serializer.endTag(ns, Xconstants.COM_ROOT);
+			serializer.endDocument();
+
+			return writer.toString();
+		} catch (Exception e) {
+			throw AppException.wrap(e, NetworkError.XML);
+		}
     }
 
     /**

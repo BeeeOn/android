@@ -74,7 +74,7 @@ public class ControlManagerSmartWatch2 extends ControlManagerBase {
 		Intent initialControlIntent;
 		// FIXME dodelat prihlaseni pokud neni v appce
 		if (!mController.isLoggedIn()) {
-			// String lastEmail = mController.getLastEmail();
+			// String lastEmail = mController.getLastAuthProvider();
 			// try {
 			// // GoogleAuth.getGoogleAuth().execute();
 			// mController.startGoogle(false, false); // this is equivalent of upper line but
