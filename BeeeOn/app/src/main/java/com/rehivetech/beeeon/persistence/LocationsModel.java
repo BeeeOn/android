@@ -98,15 +98,10 @@ public class LocationsModel {
 		return false;
 	}
 
-	private boolean loadFromServer(String adapterId) {
-		try {
-			setLocationsByAdapter(adapterId, mNetwork.getLocations(adapterId));
-			setLastUpdate(adapterId, DateTime.now());
-			saveToCache(adapterId);
-		} catch (AppException e) {
-			e.printStackTrace();
-			return false;
-		}
+	private boolean loadFromServer(String adapterId) throws AppException {
+		setLocationsByAdapter(adapterId, mNetwork.getLocations(adapterId));
+		setLastUpdate(adapterId, DateTime.now());
+		saveToCache(adapterId);
 
 		return true;
 	}

@@ -25,6 +25,7 @@ import com.rehivetech.beeeon.adapter.device.DeviceType;
 import com.rehivetech.beeeon.adapter.device.Facility;
 import com.rehivetech.beeeon.adapter.device.RefreshInterval;
 import com.rehivetech.beeeon.controller.Controller;
+import com.rehivetech.beeeon.exception.AppException;
 import com.rehivetech.beeeon.util.Log;
 import com.rehivetech.beeeon.util.TimeHelper;
 import com.rehivetech.beeeon.util.UnitsHelper;
@@ -206,7 +207,11 @@ public class WidgetUpdateService extends Service {
 		}
 
 		if (!facilities.isEmpty()) {
-			controller.updateFacilities(facilities, forceUpdate);
+			try {
+				controller.updateFacilities(facilities, forceUpdate);
+			} catch (AppException e) {
+				e.printStackTrace(); // Nothing to do here
+			}
 		}
 
 		for (int i = 0; i < widgetsToUpdate.size(); i++) {
