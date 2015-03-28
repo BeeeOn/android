@@ -40,6 +40,7 @@ import com.rehivetech.beeeon.adapter.device.Facility;
 import com.rehivetech.beeeon.adapter.location.Location;
 import com.rehivetech.beeeon.arrayadapter.SenListAdapter;
 import com.rehivetech.beeeon.asynctask.CallbackTask.CallbackTaskListener;
+import com.rehivetech.beeeon.asynctask.FullReloadTask;
 import com.rehivetech.beeeon.asynctask.ReloadFacilitiesTask;
 import com.rehivetech.beeeon.asynctask.RemoveFacilityTask;
 import com.rehivetech.beeeon.controller.Controller;
@@ -87,8 +88,9 @@ public class SensorListFragment extends Fragment {
     private Device mSelectedItem;
     private int mSelectedItemPos;
     private RemoveFacilityTask mRemoveFacilityTask;
+	private FullReloadTask mFullReloadTask;
 
-    public SensorListFragment() {
+	public SensorListFragment() {
 	}
 
 	@Override
@@ -148,7 +150,7 @@ public class SensorListFragment extends Fragment {
 					return;
 				}
 				mActivity.redrawMenu();
-				doReloadFacilitiesTask(adapter.getId());
+				doReloadFacilitiesTask(adapter.getId(), true);
 			}
 		});
 		mSwipeLayout.setColorSchemeColors(  R.color.beeeon_primary_cyan, R.color.beeeon_text_color,R.color.beeeon_secundary_pink);
@@ -204,15 +206,24 @@ public class SensorListFragment extends Fragment {
 		TextView noItem = (TextView) mView.findViewById(R.id.nosensorlistview);
 		Button refreshBtn = (Button) mView.findViewById(R.id.sensor_list_refresh_btn);
 
-
-
-		refreshBtn.setOnClickListener(new OnClickListener() {
+		// REFRESH listener
+		OnClickListener refreshNoAdapter = new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				doFullReloadTask(true);
+			}
+		};
+		OnClickListener refreshNoSensor = new OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				Adapter adapter = mController.getActiveAdapter();
-				doReloadFacilitiesTask(adapter.getId());
+				if(adapter != null) {
+					doReloadFacilitiesTask(adapter.getId(), true);
+				} else {
+					doFullReloadTask(true);
+				}
 			}
-		});
+		};
 
 		mSensorAdapter = new SenListAdapter(mActivity);
 
@@ -259,6 +270,7 @@ public class SensorListFragment extends Fragment {
 			// FAB
 			mFABMenuIcon.add(R.drawable.ic_add_white_24dp);
 			mFABMenuLabels.add(mActivity.getString(R.string.action_addadapter));
+			refreshBtn.setOnClickListener(refreshNoAdapter);
 
 			SharedPreferences prefs = mController.getUserSettings();
 			if (!(prefs != null && !prefs.getBoolean(Constants.PERSISTENCE_PREF_IGNORE_NO_ADAPTER, false))) {
@@ -281,6 +293,8 @@ public class SensorListFragment extends Fragment {
 			mSensorList.setVisibility(View.GONE);
 			if (mSwipeLayout != null)
 				mSwipeLayout.setVisibility(View.GONE);
+
+			refreshBtn.setOnClickListener(refreshNoSensor);
 			// FAB
 			mFABMenuIcon.add(R.drawable.ic_add_white_24dp);
 			mFABMenuIcon.add(R.drawable.ic_add_white_24dp);
@@ -406,13 +420,16 @@ public class SensorListFragment extends Fragment {
 		isPaused = value;
 	}
 
-    private void doReloadFacilitiesTask(String adapterId) {
-        mReloadFacilitiesTask = new ReloadFacilitiesTask(getActivity().getApplicationContext(), true);
+    private void doReloadFacilitiesTask(String adapterId, boolean forceRefresh) {
+        mReloadFacilitiesTask = new ReloadFacilitiesTask(getActivity().getApplicationContext(), forceRefresh);
 
         mReloadFacilitiesTask.setListener(new CallbackTaskListener() {
 
             @Override
             public void onExecute(boolean success) {
+				if (!success)
+					return;
+
                 mActivity.redrawMainFragment();
                 mActivity.redrawMenu();
                 mSwipeLayout.setRefreshing(false);
@@ -421,6 +438,23 @@ public class SensorListFragment extends Fragment {
 
         mReloadFacilitiesTask.execute(adapterId);
     }
+
+	private void doFullReloadTask(boolean forceRefresh) {
+		mFullReloadTask = new FullReloadTask(getActivity().getApplicationContext(), forceRefresh);
+
+		mFullReloadTask.setListener(new CallbackTaskListener() {
+			@Override
+			public void onExecute(boolean success) {
+				if (!success)
+					return;
+
+				mActivity.setActiveAdapterAndLocation();
+				mActivity.redrawMenu();
+			}
+		});
+
+		mFullReloadTask.execute();
+	}
 
     private void doRemoveFacilityTask(Facility facility) {
         mRemoveFacilityTask = new RemoveFacilityTask(getActivity().getApplicationContext(),true);
@@ -431,7 +465,7 @@ public class SensorListFragment extends Fragment {
             public void onExecute(boolean success) {
                 mActivity.redrawMainFragment();
                 mActivity.redrawMenu();
-                if(success) {
+                if (success) {
                     // Hlaska o uspechu
                 }
                 else {
