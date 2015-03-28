@@ -105,6 +105,18 @@ public final class Controller {
 		mPersistence = new Persistence(mContext);
 		mHousehold = new Household(mContext, mNetwork);
 		mGeofenceModel = new GeofenceModel(mContext);
+
+		// Load previous user
+		String userId = mPersistence.loadLastUserId();
+		if (!userId.isEmpty()) {
+			mHousehold.user.setId(userId);
+			// Load rest of user details (if available)
+			mPersistence.loadUserDetails(userId, mHousehold.user);
+			// Finally load BT (session)
+			String bt = mPersistence.loadLastBT(userId);
+			if (!bt.isEmpty())
+				mNetwork.setBT(bt);
+		}
 	}
 	
 	/**
@@ -142,6 +154,7 @@ public final class Controller {
 	public SharedPreferences getUserSettings() {
 		String userId = mHousehold.user.getId();
 		if (userId == null || userId.isEmpty()) {
+			Log.e(TAG, "getUserSettings() with no loaded userId");
 			return null;
 		}
 
@@ -157,28 +170,35 @@ public final class Controller {
 
 	/** Communication methods ***********************************************/
 
+	/**
+	 * Load user data from server and save them to cache.
+	 *
+	 * @param userId can be null when this is first login
+	 */
 	public void loadUserData(String userId) {
-		// Load cached user details
-		mPersistence.loadUserDetails(userId, mHousehold.user);
+		// Load cached user details, if this is not first login
+		if (userId != null) {
+			mPersistence.loadUserDetails(userId, mHousehold.user);
+		}
 
 		// Load user data from server
 		User user = mNetwork.loadUserInfo();
 
 		if (!user.getId().equals(userId)) {
-			// UserId from server is not same as the cached one
-			Log.e(TAG, String.format("UserId from server (%s) is not same as the cached one (%s)", user.getId(), userId));
-			// So save the correct one
+			// UserId from server is not same as the cached one (or this is first login)
+			if (userId != null) {
+				Log.e(TAG, String.format("UserId from server (%s) is not same as the cached one (%s).", user.getId(), userId));
+			} else {
+				Log.d(TAG, String.format("Loaded userId from server (%s), this is first login.", user.getId()));
+			}
+			// So save the correct userId
 			mPersistence.saveLastUserId(user.getId());
 		}
 
 		// If we have no or changed picture, lets download it from server
 		if (!user.getPictureUrl().isEmpty() && (user.getPicture() == null || !mHousehold.user.getPictureUrl().equals(user.getPictureUrl()))) {
-			try {
-				Bitmap picture = Utils.fetchImageFromUrl(user.getPictureUrl());
-				user.setPicture(picture);
-			} catch (Exception e) {
-				// TODO: do something better
-			}
+			Bitmap picture = Utils.fetchImageFromUrl(user.getPictureUrl());
+			user.setPicture(picture);
 		}
 
 		// Copy user data
@@ -192,42 +212,7 @@ public final class Controller {
 		mHousehold.user.setPicture(user.getPicture());
 
 		// We have fresh user details, save them to cache
-		mPersistence.saveUserDetails(userId, mHousehold.user);
-	}
-
-	public boolean autoLogin() {
-		// Load BT from previous session
-		String userId = mPersistence.loadLastUserId();
-		String bt = mPersistence.loadLastBT(userId);
-
-		if (bt.isEmpty())
-			return false;
-
-		mNetwork.setBT(bt);
-
-		// Try to do test request with loaded BT to know if we're really logged in or not
-		try {
-			// In demo mode load some init data from sdcard
-			if (mNetwork instanceof DemoNetwork) {
-				((DemoNetwork) mNetwork).initDemoData();
-			}
-
-			// Always load user data
-			loadUserData(userId);
-		} catch (AppException e) {
-			ErrorCode errorCode = e.getErrorCode();
-			if (errorCode instanceof NetworkError && errorCode == NetworkError.BAD_BT) {
-				// This BT is invalid, delete it
-				Log.w(TAG, "BT is invalid, we will load fresh one");
-
-				mNetwork.setBT(null);
-				mPersistence.saveLastBT(userId, null);
-				return false;
-			}
-			throw AppException.wrap(e);
-		}
-
-		return true;
+		mPersistence.saveUserDetails(user.getId(), mHousehold.user);
 	}
 
 	/**

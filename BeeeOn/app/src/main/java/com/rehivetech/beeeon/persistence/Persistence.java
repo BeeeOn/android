@@ -204,12 +204,12 @@ public class Persistence {
 	public void loadUserDetails(String userId, User user) {
 		SharedPreferences prefs = getSettings(userId);
 
-		user.setId(prefs.getString(Constants.PERSISTENCE_PREF_USER_ID, ""));
-		user.setEmail(prefs.getString(Constants.PERSISTENCE_PREF_USER_EMAIL, ""));
-		user.setName(prefs.getString(Constants.PERSISTENCE_PREF_USER_NAME, ""));
-		user.setSurname(prefs.getString(Constants.PERSISTENCE_PREF_USER_SURNAME, ""));
-		user.setGender(Gender.fromString(prefs.getString(Constants.PERSISTENCE_PREF_USER_GENDER, "")));
-		user.setPictureUrl(prefs.getString(Constants.PERSISTENCE_PREF_USER_PICTURE, ""));
+		user.setId(prefs.getString(Constants.PERSISTENCE_PREF_USER_ID, user.getId()));
+		user.setEmail(prefs.getString(Constants.PERSISTENCE_PREF_USER_EMAIL, user.getEmail()));
+		user.setName(prefs.getString(Constants.PERSISTENCE_PREF_USER_NAME, user.getName()));
+		user.setSurname(prefs.getString(Constants.PERSISTENCE_PREF_USER_SURNAME, user.getSurname()));
+		user.setGender(Gender.fromString(prefs.getString(Constants.PERSISTENCE_PREF_USER_GENDER, user.getGender().toString())));
+		user.setPictureUrl(prefs.getString(Constants.PERSISTENCE_PREF_USER_PICTURE, user.getPictureUrl()));
 		
 		user.setPicture(loadBitmap(userId));
 	}
