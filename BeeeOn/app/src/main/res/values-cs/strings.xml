@@ -103,7 +103,7 @@
 	<string name="toast_achievement_title">Achievement odemknut!</string>
 
     <!-- Progress -->
-    <string name="progress_signing">Přihlášení k serveru&#8230;</string>
+    <string name="progress_signing">Přihlašuji&#8230;</string>
     <string name="progress_google">Přenášení dat s Googlem&#8230;</string>
     <string name="progress_signup">Registruji nového uživatele&#8230;</string>
     <string name="progress_loading_adapters">Nahrávám Vaše adaptéry&#8230;</string>

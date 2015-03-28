@@ -111,7 +111,7 @@
 	<string name="toast_achievement_title">Achievement unlocked!</string>
 
     <!-- Progress -->
-    <string name="progress_signing">Signing to server&#8230;</string>
+	<string name="progress_signing">Logging in&#8230;</string>
     <string name="progress_google">Handshaking with Google&#8230;</string>
     <string name="progress_signup">Registering new user&#8230;</string>
     <string name="progress_loading_adapters">Loading your adapters&#8230;</string>

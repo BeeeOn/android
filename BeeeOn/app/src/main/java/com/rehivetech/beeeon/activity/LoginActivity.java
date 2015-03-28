@@ -63,7 +63,6 @@ public class LoginActivity extends BaseActivity {
 
 		// Prepare progressDialog
 		mProgress = new BetterProgressDialog(this);
-		mProgress.setMessageResource(R.string.progress_signing);
 		mProgress.setCancelable(true);
 		mProgress.setCanceledOnTouchOutside(false);
 		mProgress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
@@ -236,6 +235,7 @@ public class LoginActivity extends BaseActivity {
 		}
 
 		mLoginCancel = false;
+		mProgress.setMessageResource(R.string.progress_signing);
 		mProgress.show();
 
 		new Thread(new Runnable() {
@@ -263,8 +263,8 @@ public class LoginActivity extends BaseActivity {
 	private void onLoginPrepared(final IAuthProvider authProvider) {
 		final boolean demoMode = (authProvider instanceof DemoAuthProvider);
 
+		mProgress.setMessageResource(R.string.progress_signing);
 		mProgress.show();
-		mProgress.setMessageResource(demoMode ? R.string.progress_loading_demo : R.string.loading_data);
 
 		new Thread(new Runnable() {
 			@Override

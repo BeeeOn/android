@@ -101,7 +101,7 @@
 
 
     <!-- Progress -->
-    <string name="progress_signing">Prihlásenie k serveru&#8230;</string>
+    <string name="progress_signing">Prihlásuji&#8230;</string>
     <string name="progress_google">Prenášanie dát s Google&#8230;</string>
     <string name="progress_signup">Registrujem nového užívateľa&#8230;</string>
     <string name="progress_loading_adapters">Nahrávam Vaše adaptéry&#8230;</string>
