@@ -10,7 +10,7 @@
     <string name="title_activity_registration">Registrace</string>
     <string name="title_activity_login_facebook">Facebook</string>
     <string name="title_activity_widget_configuration">Konfigurace widgetu</string>
-    <string name="title_activity_map_geofence">Oblasti Geofence</string>
+    <string name="title_activity_map_geofence">Geolokační oblasti</string>
     <string name="title_activity_adapter_users">Uživatelé adaptéru</string>
     <string name="title_activity_add_adapter_user">Přidat nového uživatele</string>
     <string name="title_activity_setup_sensor">Nastavení zařízení</string>
@@ -42,7 +42,7 @@
     <string name="addsensor_or">nebo</string>
     <string name="sensordetail_last_value">Poslední hodnota: \u0020</string>
     <string name="sensordetail_refresh_time">Interval aktualizace:</string>
-    <string name="sensordetail_battery_state">Stav baterie</string>
+    <string name="sensordetail_battery_label">Stav baterie</string>
     <string name="update_needed">Prosím aktualizujte aplikaci</string>
     <string name="addsensor_type">Typ senzoru: </string>
     <string name="setup_sensor_info_text">Prosím, nastavte senzor inicializován v</string>
@@ -182,13 +182,11 @@
         <item>Seznam</item>
         <item>Vlastní</item>
     </string-array>
-    <string-array name="user_role">
-        <item>SuperUživatel</item>
-        <item>Administrátor</item>
-        <item>Uživatel</item>
-        <item>Host</item>
-    </string-array>
-    
+
+	<string name="user_role_superuser">Vlastník</string>
+	<string name="user_role_admin">Administrátor</string>
+	<string name="user_role_user">Uživatel</string>
+	<string name="user_role_guest">Host</string>
 
     <string name="log_sc_or">nebo</string>
 
@@ -315,5 +313,6 @@
     <string name="users_pending_header">Žádost o přidání</string>
     <string name="tut_add_sensor_text">Pro přidání nového zařízení klepněte na plus (+)</string>
     <string name="title_activity_location_detail_screen">Detail umístění</string>
+	<string name="sensor_name_label">Name of sensor</string>
 
 </resources>

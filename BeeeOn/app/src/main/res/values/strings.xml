@@ -45,9 +45,12 @@
     <string name="addsensor_add_sensor">Add device</string>
     <string name="addsensor_setup_sensor">Setup device</string>
     <string name="addsensor_or">or</string>
-    <string name="sensordetail_last_value">Last value: \u0020</string>
-    <string name="sensordetail_refresh_time">Refresh inteval: </string>
-    <string name="sensordetail_battery_state">Battery state</string>
+    <string name="sensordetail_last_value">Last value \u0020</string>
+    <string name="sensordetail_refresh_time">Refresh inteval </string>
+    <string name="sensordetail_battery_label">Battery state</string>
+	<string name="sensordetail_location_label">Location</string>
+	<string name="sensordetail_last_update_label">Last update</string>
+	<string name="sensordetail_signal_label">Signal state</string>
     <string name="update_needed">Please update application</string>
     <string name="addsensor_type">Type of device: </string>
     <string name="setup_sensor_info_text">Please, setup your new device which was activated at </string>
@@ -59,7 +62,7 @@
     <string name="registration_serial_number">For adapter with serial number: </string>
     <string name="alert_title">Title</string>                                 
     <string name="alert_message">Message</string>
-    <string name="refresh_time">Refresh time: </string>
+    <string name="refresh_time">Refresh time </string>
     <string name="last_update">Last update: </string>
     <string name="sen_graph_label">Graph of history</string>
     <string name="users_header">Users</string>
@@ -187,13 +190,11 @@
         <item>List</item>
         <item>Custom</item>
     </string-array>
-    <string-array name="user_role">
-        <item>Superuser</item>
-        <item>Admin</item>
-        <item>User</item>
-        <item>Guest</item>
-    </string-array>
-    
+
+	<string name="user_role_superuser">Owner</string>
+	<string name="user_role_admin">Admin</string>
+	<string name="user_role_user">User</string>
+	<string name="user_role_guest">Guest</string>
 
     <string name="log_sc_or">or</string>
 
@@ -304,6 +305,9 @@
     <string name="notification_text">Notification text</string>
     
     <string name="rule_menu_del">Delete</string>
+	<string name="title_activity_sensor_edit">Edit sensor</string>
+	<string name="hello_world">Hello world!</string>
+	<string name="sensor_name_label">Name of sensor</string>
 
 
 </resources>

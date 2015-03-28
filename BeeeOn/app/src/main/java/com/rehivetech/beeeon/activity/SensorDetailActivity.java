@@ -5,7 +5,9 @@ import java.util.List;
 
 import android.app.ProgressDialog;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
@@ -38,6 +40,7 @@ public class SensorDetailActivity extends BaseApplicationActivity {
 
 	public static final String EXTRA_DEVICE_ID = "device_id";
 	public static final String EXTRA_ADAPTER_ID = "adapter_id";
+	public static final String EXTRA_ACTIVE_POS = "act_device_pos";
 
 	private Controller mController;
 	private List<Device> mDevices;
@@ -88,11 +91,13 @@ public class SensorDetailActivity extends BaseApplicationActivity {
 		if (bundle != null) {
 			mActiveAdapterId = bundle.getString(EXTRA_ADAPTER_ID);
 			mActiveDeviceId = bundle.getString(EXTRA_DEVICE_ID);
-		} else {
+		}
+		if(savedInstanceState != null ){
 			bundle = savedInstanceState;
 			if (bundle != null) {
 				mActiveAdapterId = bundle.getString(EXTRA_ADAPTER_ID);
 				mActiveDeviceId = bundle.getString(EXTRA_DEVICE_ID);
+				mActiveDevicePosition = bundle.getInt(EXTRA_ACTIVE_POS);
 			}
 		}
 
@@ -176,7 +181,8 @@ public class SensorDetailActivity extends BaseApplicationActivity {
 	/**
 	 * A simple pager adapter that represents 5 {@link ScreenSlidePageFragment} objects, in sequence.
 	 */
-	private class ScreenSlidePagerAdapter extends FragmentStatePagerAdapter {
+	public class ScreenSlidePagerAdapter extends FragmentStatePagerAdapter {
+
 		public ScreenSlidePagerAdapter(FragmentManager fragmentManager) {
 			super(fragmentManager);
 		}
@@ -184,13 +190,24 @@ public class SensorDetailActivity extends BaseApplicationActivity {
 		@Override
 		public android.support.v4.app.Fragment getItem(int position) {
 			Log.d(TAG, "Here 2 " + position);
-			return SensorDetailFragment.create(mDevices.get(position).getId(), mDevices.get(position).getFacility().getLocationId(), position, mActiveDevicePosition, mActiveAdapterId);
+			SensorDetailFragment fragment = new SensorDetailFragment();
+			fragment.setSensorID(mDevices.get(position).getId());
+			fragment.setLocationID(mDevices.get(position).getFacility().getLocationId());
+			fragment.setPosition(position);
+			fragment.setSelectedPosition(mActiveDevicePosition);
+			fragment.setAdapterID(mActiveAdapterId);
+			fragment.setFragmentAdapter(this);
+
+			return fragment;
+			//return SensorDetailFragment.create(mDevices.get(position).getId(), mDevices.get(position).getFacility().getLocationId(), position, mActiveDevicePosition, mActiveAdapterId);
 		}
 
 		@Override
 		public int getCount() {
 			return mDevices.size();
 		}
+
+
 	}
 
 	public void initLayouts() {
@@ -210,6 +227,7 @@ public class SensorDetailActivity extends BaseApplicationActivity {
 				// fragment expose actions itself (rather than the activity exposing actions),
 				// but for simplicity, the activity provides the actions in this sample.
 				// invalidateOptionsMenu();
+
 			}
 		});
 		((CustomViewPager) mPager).setPagingEnabled(true);
@@ -229,10 +247,15 @@ public class SensorDetailActivity extends BaseApplicationActivity {
 		return mProgress;
 	}
 
+	public ViewPager getPager() {
+		return mPager;
+	}
+
 	@Override
 	public void onSaveInstanceState(Bundle savedInstanceState) {
 		savedInstanceState.putString(EXTRA_ADAPTER_ID, mActiveAdapterId);
 		savedInstanceState.putString(EXTRA_DEVICE_ID, mActiveDeviceId);
+		savedInstanceState.putInt(EXTRA_ACTIVE_POS,mActiveDevicePosition);
 
 		// Always call the superclass so it can save the view hierarchy state
 		super.onSaveInstanceState(savedInstanceState);

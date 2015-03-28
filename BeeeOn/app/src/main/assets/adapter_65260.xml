@@ -36,21 +36,7 @@
 			name="Vlhkost půdy"
 			val="50" />
 	</dev>
-	<dev 
-		init="1" 
-		did="101:00:FF:002:FF0" 
-		lid="1"
-		refresh="1"
-		batt="100"
-		time="1377684610"
-		rssi="52" >
-		<part
-			type="-1"
-			vis="1"
-			name="Neznámý senzor"
-			val="11" />
-	</dev>
-	<dev 
+	<dev
 		init="1" 
 		did="101:00:FF:000:FF1" 
 		lid="2"

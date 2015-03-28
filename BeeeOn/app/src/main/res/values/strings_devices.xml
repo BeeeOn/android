@@ -48,7 +48,8 @@
     <string name="dev_enum_value_off">Off</string>
 
     <!-- Names of default locations -->
-    <string name="loc_bathroom">Bathroom</string>
+	<string name="loc_none">- None -</string>
+	<string name="loc_bathroom">Bathroom</string>
     <string name="loc_bedroom">Bedroom</string>
     <string name="loc_dining_room">Dining room</string>
     <string name="loc_garden">Garden</string>

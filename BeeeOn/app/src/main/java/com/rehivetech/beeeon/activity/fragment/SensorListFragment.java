@@ -20,6 +20,7 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemLongClickListener;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -39,6 +40,7 @@ import com.rehivetech.beeeon.adapter.device.Facility;
 import com.rehivetech.beeeon.adapter.location.Location;
 import com.rehivetech.beeeon.arrayadapter.SenListAdapter;
 import com.rehivetech.beeeon.asynctask.CallbackTask.CallbackTaskListener;
+import com.rehivetech.beeeon.asynctask.FullReloadTask;
 import com.rehivetech.beeeon.asynctask.ReloadFacilitiesTask;
 import com.rehivetech.beeeon.asynctask.RemoveFacilityTask;
 import com.rehivetech.beeeon.controller.Controller;
@@ -86,8 +88,9 @@ public class SensorListFragment extends Fragment {
     private Device mSelectedItem;
     private int mSelectedItemPos;
     private RemoveFacilityTask mRemoveFacilityTask;
+	private FullReloadTask mFullReloadTask;
 
-    public SensorListFragment() {
+	public SensorListFragment() {
 	}
 
 	@Override
@@ -140,14 +143,14 @@ public class SensorListFragment extends Fragment {
 
 			@Override
 			public void onRefresh() {
-
+				Log.d(TAG,"Refreshing list of sensors");
 				Adapter adapter = mController.getActiveAdapter();
 				if (adapter == null) {
 					mSwipeLayout.setRefreshing(false);
 					return;
 				}
 				mActivity.redrawMenu();
-				doReloadFacilitiesTask(adapter.getId());
+				doReloadFacilitiesTask(adapter.getId(), true);
 			}
 		});
 		mSwipeLayout.setColorSchemeColors(  R.color.beeeon_primary_cyan, R.color.beeeon_text_color,R.color.beeeon_secundary_pink);
@@ -196,8 +199,31 @@ public class SensorListFragment extends Fragment {
 
 		Log.d(TAG, "LifeCycle: redraw devices list start");
 
+
+		// get UI elements
+		mSwipeLayout = (SwipeRefreshLayout) mView.findViewById(R.id.swipe_container);
 		mSensorList = (StickyListHeadersListView) mView.findViewById(R.id.listviewofsensors);
 		TextView noItem = (TextView) mView.findViewById(R.id.nosensorlistview);
+		Button refreshBtn = (Button) mView.findViewById(R.id.sensor_list_refresh_btn);
+
+		// REFRESH listener
+		OnClickListener refreshNoAdapter = new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				doFullReloadTask(true);
+			}
+		};
+		OnClickListener refreshNoSensor = new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				Adapter adapter = mController.getActiveAdapter();
+				if(adapter != null) {
+					doReloadFacilitiesTask(adapter.getId(), true);
+				} else {
+					doFullReloadTask(true);
+				}
+			}
+		};
 
 		mSensorAdapter = new SenListAdapter(mActivity);
 
@@ -234,16 +260,23 @@ public class SensorListFragment extends Fragment {
 		// Buttons in floating menu
 
 		if(!haveAdapters) { // NO Adapter
+			// Set right visibility
 			noItem.setVisibility(View.VISIBLE);
 			noItem.setText(R.string.no_adapter_cap);
+			refreshBtn.setVisibility(View.VISIBLE);
 			mSensorList.setVisibility(View.GONE);
+			if (mSwipeLayout != null)
+				mSwipeLayout.setVisibility(View.GONE);
+			// FAB
 			mFABMenuIcon.add(R.drawable.ic_add_white_24dp);
 			mFABMenuLabels.add(mActivity.getString(R.string.action_addadapter));
+			refreshBtn.setOnClickListener(refreshNoAdapter);
 
 			SharedPreferences prefs = mController.getUserSettings();
 			if (!(prefs != null && !prefs.getBoolean(Constants.PERSISTENCE_PREF_IGNORE_NO_ADAPTER, false))) {
 				// TUTORIAL
 				if(mFirstUseAddAdapter && !mController.isDemoMode()) {
+					mFirstUseAddAdapter = false;
 					mActivity.getMenu().closeMenu();
 					TutorialHelper.showAddAdapterTutorial(mActivity, mView);
 					if (prefs != null) {
@@ -254,11 +287,21 @@ public class SensorListFragment extends Fragment {
 			
 		}
 		else if (!haveDevices) { // Have Adapter but any Devices
+			// Set right visibility
 			noItem.setVisibility(View.VISIBLE);
+			refreshBtn.setVisibility(View.VISIBLE);
 			mSensorList.setVisibility(View.GONE);
+			if (mSwipeLayout != null)
+				mSwipeLayout.setVisibility(View.GONE);
+
+			refreshBtn.setOnClickListener(refreshNoSensor);
+			// FAB
 			mFABMenuIcon.add(R.drawable.ic_add_white_24dp);
+			mFABMenuIcon.add(R.drawable.ic_add_white_24dp);
+			mFABMenuLabels.add(mActivity.getString(R.string.action_addadapter));
 			mFABMenuLabels.add(mActivity.getString(R.string.action_addsensor));
 			if(mFirstUseAddSensor && !mController.isDemoMode()){
+				mFirstUseAddSensor = false;
 				mActivity.getMenu().closeMenu();
 				TutorialHelper.showAddSensorTutorial(mActivity, mView);
 				SharedPreferences prefs = mController.getUserSettings();
@@ -269,7 +312,11 @@ public class SensorListFragment extends Fragment {
 		}
 		else { // Have adapter and devices
 			noItem.setVisibility(View.GONE);
+			refreshBtn.setVisibility(View.GONE);
 			mSensorList.setVisibility(View.VISIBLE);
+			if (mSwipeLayout != null)
+				mSwipeLayout.setVisibility(View.VISIBLE);
+			// FAB
 			mFABMenuIcon.add(R.drawable.ic_add_white_24dp);
 			mFABMenuIcon.add(R.drawable.ic_add_white_24dp);
 			mFABMenuLabels.add(mActivity.getString(R.string.action_addadapter));
@@ -373,13 +420,16 @@ public class SensorListFragment extends Fragment {
 		isPaused = value;
 	}
 
-    private void doReloadFacilitiesTask(String adapterId) {
-        mReloadFacilitiesTask = new ReloadFacilitiesTask(getActivity().getApplicationContext(), true);
+    private void doReloadFacilitiesTask(String adapterId, boolean forceRefresh) {
+        mReloadFacilitiesTask = new ReloadFacilitiesTask(getActivity().getApplicationContext(), forceRefresh);
 
         mReloadFacilitiesTask.setListener(new CallbackTaskListener() {
 
             @Override
             public void onExecute(boolean success) {
+				if (!success)
+					return;
+
                 mActivity.redrawMainFragment();
                 mActivity.redrawMenu();
                 mSwipeLayout.setRefreshing(false);
@@ -388,6 +438,23 @@ public class SensorListFragment extends Fragment {
 
         mReloadFacilitiesTask.execute(adapterId);
     }
+
+	private void doFullReloadTask(boolean forceRefresh) {
+		mFullReloadTask = new FullReloadTask(getActivity().getApplicationContext(), forceRefresh);
+
+		mFullReloadTask.setListener(new CallbackTaskListener() {
+			@Override
+			public void onExecute(boolean success) {
+				if (!success)
+					return;
+
+				mActivity.setActiveAdapterAndLocation();
+				mActivity.redrawMenu();
+			}
+		});
+
+		mFullReloadTask.execute();
+	}
 
     private void doRemoveFacilityTask(Facility facility) {
         mRemoveFacilityTask = new RemoveFacilityTask(getActivity().getApplicationContext(),true);
@@ -398,7 +465,7 @@ public class SensorListFragment extends Fragment {
             public void onExecute(boolean success) {
                 mActivity.redrawMainFragment();
                 mActivity.redrawMenu();
-                if(success) {
+                if (success) {
                     // Hlaska o uspechu
                 }
                 else {
@@ -443,5 +510,4 @@ public class SensorListFragment extends Fragment {
 
 		}
 	}
-
 }

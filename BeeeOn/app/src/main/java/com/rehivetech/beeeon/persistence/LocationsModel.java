@@ -1,5 +1,7 @@
 package com.rehivetech.beeeon.persistence;
 
+import android.content.Context;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -9,6 +11,7 @@ import java.util.Map;
 import org.joda.time.DateTime;
 
 import com.rehivetech.beeeon.IdentifierComparator;
+import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.adapter.location.Location;
 import com.rehivetech.beeeon.exception.AppException;
 import com.rehivetech.beeeon.network.INetwork;
@@ -16,14 +19,16 @@ import com.rehivetech.beeeon.network.INetwork;
 public class LocationsModel {
 
 	private final INetwork mNetwork;
+	private final Context mContext;
 
 	private final Map<String, Map<String, Location>> mLocations = new HashMap<String, Map<String, Location>>(); // adapterId => (locationId => location)
 	private final Map<String, DateTime> mLastUpdates = new HashMap<String, DateTime>(); // adapterId => lastUpdate of location
 
 	private static final int RELOAD_EVERY_SECONDS = 10 * 60;
 
-	public LocationsModel(INetwork network) {
+	public LocationsModel(INetwork network, Context context) {
 		mNetwork = network;
+		mContext = context;
 	}
 
 	public Location getLocation(String adapterId, String id) {
@@ -47,6 +52,10 @@ public class LocationsModel {
 
 		// Sort result locations by id
 		Collections.sort(locations, new IdentifierComparator());
+
+		// Add "no location" for devices without location
+		Location noneLocation = new Location(Location.NO_LOCATION_ID, mContext.getString(R.string.loc_none), Location.NO_LOCATION_TYPE);
+		locations.add(noneLocation);
 
 		return locations;
 	}

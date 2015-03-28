@@ -22,8 +22,9 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_centerInParent="true"
+		android:gravity="center"
         android:orientation="vertical"
         >
         <TextView
@@ -36,6 +37,13 @@
 	        android:visibility="gone"
 	        android:textColor="@color/darkgray"
 	        />
+		<Button
+			android:id="@+id/sensor_list_refresh_btn"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_gravity="center"
+			android:visibility="gone"
+			android:text="@string/action_refreshlist"/>
     </LinearLayout>
 
     <com.melnykov.fab.FloatingActionButton

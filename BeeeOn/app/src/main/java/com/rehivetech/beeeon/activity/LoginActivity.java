@@ -15,6 +15,7 @@ import com.google.android.gms.auth.GoogleAuthUtil;
 import com.google.android.gms.common.AccountPicker;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
+import com.rehivetech.beeeon.Constants;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.adapter.Adapter;
 import com.rehivetech.beeeon.base.BaseActivity;
@@ -41,20 +42,15 @@ public class LoginActivity extends BaseActivity {
 	public static final String BUNDLE_REDIRECT = "isRedirect";
 	
 	private static final String TAG = LoginActivity.class.getSimpleName();	
-	
-	private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 1;
+
 	private static final int RESULT_DO_RECOVERABLE_AUTH = 5;
 	private static final int RESULT_GET_GOOGLE_ACCOUNT = 6;
 	private static final int RESULT_DO_WEBLOGIN = 7;
 	
 	private Controller mController;
-	private LoginActivity mActivity;
 	private BetterProgressDialog mProgress;
-	
-	private boolean mIgnoreChange = false;
 
 	private boolean mLoginCancel = false;
-	private boolean mIsRedirect = false;
 
 	// ////////////////////////////////////////////////////////////////////////////////////
 	// ///////////////// Override METHODS
@@ -65,15 +61,8 @@ public class LoginActivity extends BaseActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_login);
 
-		// Check if this is redirect (e.g., after connection loss) or classic start
-		Bundle bundle = getIntent().getExtras();
-		mIsRedirect = (bundle != null && bundle.getBoolean(BUNDLE_REDIRECT, false));
-
 		// Get controller
 		mController = Controller.getInstance(getApplicationContext());
-		//mController = new Controller(getApplicationContext());
-		
-		mActivity = this;
 
 		// Prepare progressDialog
 		mProgress = new BetterProgressDialog(this);
@@ -92,10 +81,8 @@ public class LoginActivity extends BaseActivity {
 		((ImageButton) findViewById(R.id.login_btn_demo)).setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				mIgnoreChange = true;
 				mProgress.setMessageResource(R.string.progress_loading_demo);
 				doLogin(true, DemoNetwork.DEMO_EMAIL);
-				// mIgnoreChange = false;
 			}
 		});
 
@@ -107,9 +94,7 @@ public class LoginActivity extends BaseActivity {
 		btnGoogle.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				mIgnoreChange = true;
 				beginGoogleAuthRoutine();
-				// mIgnoreChange = false;
 			}
 		});
 		btnMojeID.setOnClickListener(new OnClickListener() {
@@ -126,12 +111,7 @@ public class LoginActivity extends BaseActivity {
 			// If we're already logged in, continue to location screen
 			Log.d(TAG, "Already logged in, going to locations screen...");
 
-			if (!mIsRedirect) {
-				Intent intent = new Intent(this, MainActivity.class);
-				startActivity(intent);
-			}
-
-			finish();
+			onLoggedIn(); // finishes this activity
 			return;
 		}
 
@@ -243,13 +223,11 @@ public class LoginActivity extends BaseActivity {
 		mProgress.show();
 
 		final String redirect = "http://localhost";
-		final String googleId = "863203863728-i8u7m601c85uq70v7g5jtdcjesr8dnqm.apps.googleusercontent.com";
-		final String googleSecret = "ZEv4V6XBqCSRDbPtmHLZDLoR";
 		final String tokenUrl = "https://accounts.google.com/o/oauth2/token";
 
 		StringBuilder url = new StringBuilder();
 		url.append("https://accounts.google.com/o/oauth2/auth?client_id=");
-		url.append(Utils.uriEncode(googleId));
+		url.append(Utils.uriEncode(Constants.WEB_LOGIN_CLIENT_ID));
 		url.append("&scope=openid%20email%20profile");
 		url.append("&redirect_uri=");
 		url.append(Utils.uriEncode(redirect));
@@ -259,8 +237,8 @@ public class LoginActivity extends BaseActivity {
 		final Intent intent = new Intent(getApplicationContext(), WebLoginActivity.class);
 		intent.putExtra(WebLoginActivity.LOGIN_URL, url.toString());
 		intent.putExtra(WebLoginActivity.TOKEN_URL, tokenUrl);
-		intent.putExtra(WebLoginActivity.CLIENT_ID, googleId);
-		intent.putExtra(WebLoginActivity.CLIENT_SECRET, googleSecret);
+		intent.putExtra(WebLoginActivity.CLIENT_ID, Constants.WEB_LOGIN_CLIENT_ID);
+		intent.putExtra(WebLoginActivity.CLIENT_SECRET, Constants.WEB_LOGIN_SECRET);
 		intent.putExtra(WebLoginActivity.REDIRECT_URI, redirect);
 		intent.putExtra(WebLoginActivity.GRANT_TYPE, "authorization_code");
 		startActivityForResult(intent, RESULT_DO_WEBLOGIN);
@@ -309,14 +287,8 @@ public class LoginActivity extends BaseActivity {
 					mController.reloadFacilitiesByAdapter(active.getId(), true);
 				}
 
-				if (!mIsRedirect) {
-					Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-					startActivity(intent);
-				}
-
 				Log.i(TAG, "Login finished");
-				mProgress.dismiss();
-				finish();
+				onLoggedIn(); // finishes this activity
 			}
 		}).start();
 	}
@@ -368,13 +340,7 @@ public class LoginActivity extends BaseActivity {
 							mController.logout();
 						} else {
 							// Open MainActivity or just this LoginActivity and let it redirect back
-							if (!mIsRedirect) {
-								Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-								startActivity(intent);
-							}
-
-							mProgress.dismiss();
-							finish();
+							onLoggedIn(); // finishes this activity
 							return;
 						}
 					}
@@ -404,17 +370,33 @@ public class LoginActivity extends BaseActivity {
 
 				mProgress.dismiss();
 				if (errFlag) {
-					final Toast toast = Toast.makeText(LoginActivity.this, errMessage, Toast.LENGTH_LONG);
+					/*final Toast toast = Toast.makeText(LoginActivity.this, errMessage, Toast.LENGTH_LONG);
 
 					runOnUiThread(new Runnable() {
 						@Override
 						public void run() {
 							toast.show();
 						}
-					});
+					});*/
 				}
 			}
 		}).start();
+	}
+
+	/**
+	 * Finish this activity, dismiss progressDialog and if it's not redirect (set in Intent as BUNDLE_REDIRECT) then also start MainActivity
+	 */
+	private void onLoggedIn() {
+		mProgress.dismiss();
+
+		// Check if this is redirect (e.g., after connection loss) or classic start
+		Bundle bundle = getIntent().getExtras();
+		if (bundle == null || !bundle.getBoolean(BUNDLE_REDIRECT, false)) {
+			Intent intent = new Intent(this, MainActivity.class);
+			startActivity(intent);
+		}
+
+		finish();
 	}
 
 	// ////////////////////////////////////////////////////////////////////////////////////
