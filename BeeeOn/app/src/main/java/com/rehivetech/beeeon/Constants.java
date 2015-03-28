@@ -74,22 +74,23 @@ public final class Constants {
 	 */
 	
 	public static final int ADD_ADAPTER_REQUEST_CODE = 1000;
-	public static final int ADD_ADAPTER_CANCELED = 1001;
-	public static final int ADD_ADAPTER_SUCCESS = 1002;
+	public static final int EDIT_SENSOR_REQUEST_CODE = 1001;
+	public static final int ADD_SENSOR_REQUEST_CODE = 1002;
+	public static final int SETUP_SENSOR_REQUEST_CODE = 1003;
 
-	public static final int ADD_SENSOR_CANCELED = 1003;
+	public static final int ADD_ADAPTER_SUCCESS = 1020;
+	public static final int SETUP_SENSOR_SUCCESS = 1021;
+	public static final int ADD_SENSOR_SUCCESS = 1022;
+	public static final int EDIT_SENSOR_SUCCESS = 1023;
 
-	public static final int ADD_SENSOR_REQUEST_CODE = 1004;
+	public static final int ADD_ADAPTER_CANCELED = 1040;
+	public static final int ADD_SENSOR_CANCELED = 1041;
+	public static final int SETUP_SENSOR_CANCELED = 1042;
+	public static final int EDIT_SENSOR_CANCELED = 1043;
 
-	public static final int SETUP_SENSOR_REQUEST_CODE = 1005;
-
-	public static final int SETUP_SENSOR_CANCELED = 1006;
-
-	public static final int SETUP_SENSOR_SUCCESS = 1007;
-	
 	public static final String SETUP_SENSOR_ACT_LOC = "SETUP_SENSOR_ACT_LOC";
 
-	public static final int ADD_SENSOR_SUCCESS = 1008;
+
 	
 	public static final boolean GUI_DEBUG = true;
 
@@ -105,6 +106,7 @@ public final class Constants {
     public static final String GUI_MENU_CONTROL = "GUI_MENU_CONTROL";
     public static final String GUI_MENU_DASHBOARD = "GUI_MENU_DASHBOARD";
     public static final String GUI_MENU_WATCHDOG = "GUI_MENU_WATCHDOG";
-  public static final String GUI_MENU_PROFILE = "GUI_MENU_PROFILE";
+  	public static final String GUI_MENU_PROFILE = "GUI_MENU_PROFILE";
+	public static final String GUI_EDIT_SENSOR_ID = "GUI_EDIT_SENSOR_ID";
 
 }

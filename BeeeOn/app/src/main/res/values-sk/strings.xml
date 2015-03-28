@@ -305,5 +305,6 @@
     <string name="add_user_role_header">Úloha</string>
 
     <string name="title_activity_location_detail_screen">Detail umiestnenia</string>
+	<string name="sensor_name_label">Name of sensor</string>
 
 </resources>

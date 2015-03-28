@@ -42,7 +42,7 @@
     <string name="addsensor_or">nebo</string>
     <string name="sensordetail_last_value">Poslední hodnota: \u0020</string>
     <string name="sensordetail_refresh_time">Interval aktualizace:</string>
-    <string name="sensordetail_battery_state">Stav baterie</string>
+    <string name="sensordetail_battery_label">Stav baterie</string>
     <string name="update_needed">Prosím aktualizujte aplikaci</string>
     <string name="addsensor_type">Typ senzoru: </string>
     <string name="setup_sensor_info_text">Prosím, nastavte senzor inicializován v</string>
@@ -311,5 +311,6 @@
     <string name="users_pending_header">Žádost o přidání</string>
     <string name="tut_add_sensor_text">Pro přidání nového zařízení klepněte na plus (+)</string>
     <string name="title_activity_location_detail_screen">Detail umístění</string>
+	<string name="sensor_name_label">Name of sensor</string>
 
 </resources>

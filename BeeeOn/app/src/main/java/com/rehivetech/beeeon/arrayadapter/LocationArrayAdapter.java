@@ -1,5 +1,7 @@
 package com.rehivetech.beeeon.arrayadapter;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import android.content.Context;
@@ -11,20 +13,32 @@ import android.widget.CheckedTextView;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.rehivetech.beeeon.R;
+import com.rehivetech.beeeon.adapter.Adapter;
 import com.rehivetech.beeeon.adapter.location.Location;
+import com.rehivetech.beeeon.controller.Controller;
 
 public class LocationArrayAdapter extends ArrayAdapter<Location> {
 
+	private final Controller mController;
+	private Context mActivity;
 	private List<Location> mLocations;
-	private int mLayoutResource;
 	private int mDropDownLayoutResource;
-
-	private LayoutInflater mInflater;
+	private int mViewLayoutResource;
 
 	public LocationArrayAdapter(Context context, int resource, List<Location> objects) {
 		super(context, resource, objects);
-		mLayoutResource = resource;
+		mViewLayoutResource = resource;
 		mLocations = objects;
+		mController = Controller.getInstance(context);
+		mActivity = context;
+	}
+
+	public LocationArrayAdapter(Context context, int resource) {
+		super(context,resource,new ArrayList<Location>());
+		mViewLayoutResource = resource;
+		mActivity = context;
+		mController = Controller.getInstance(context);
+		mLocations = getLocations();
 	}
 
 	@Override
@@ -32,14 +46,16 @@ public class LocationArrayAdapter extends ArrayAdapter<Location> {
 		mDropDownLayoutResource = resource;
 	}
 
-	public void setLayoutInflater(LayoutInflater li) {
-		mInflater = li;
+	@Override
+	public int getCount() {
+		return mLocations.size();
 	}
 
 	@Override
 	public View getDropDownView(int position, View convertView, ViewGroup parent) {
-		// LayoutInflater inflater = getLayoutInflater();
-		View row = mInflater.inflate(mDropDownLayoutResource, parent, false);
+
+		LayoutInflater inflater = (LayoutInflater) mActivity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		View row = inflater.inflate(mDropDownLayoutResource, parent, false);
 
 		CheckedTextView label = (CheckedTextView) row.findViewById(R.id.custom_spinner_dropdown_label);
 		label.setText(mLocations.get(position).getName());
@@ -53,8 +69,8 @@ public class LocationArrayAdapter extends ArrayAdapter<Location> {
 
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
-		// LayoutInflater inflater = getLayoutInflater();
-		View row = mInflater.inflate(mLayoutResource, parent, false);
+		LayoutInflater inflater = (LayoutInflater) mActivity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		View row = inflater.inflate(mViewLayoutResource, parent, false);
 
 		TextView label = (TextView) row.findViewById(R.id.custom_spinner_label);
 		label.setText(mLocations.get(position).getName());
@@ -63,6 +79,41 @@ public class LocationArrayAdapter extends ArrayAdapter<Location> {
 		icon.setImageResource(mLocations.get(position).getIconResource());
 
 		return row;
+	}
+
+	public List<Location> getLocations() {
+		// Get locations from adapter
+		List<Location> locations = new ArrayList<Location>();
+
+		Adapter adapter = mController.getActiveAdapter();
+		if (adapter != null) {
+			locations = mController.getLocations(adapter.getId());
+		}
+
+		// Add "missing" default rooms
+		for (Location.DefaultLocation room : Location.DefaultLocation.values()) {
+			String name = mActivity.getString(room.getTitleResource());
+
+			boolean found = false;
+			for (Location location : locations) {
+				if (location.getName().equals(name)) {
+					found = true;
+					break;
+				}
+			}
+
+			if (!found) {
+				locations.add(new Location(Location.NEW_LOCATION_ID, name, room.getType()));
+			}
+		}
+
+		// Sort them
+		Collections.sort(locations);
+
+		// Add "New location" item
+		locations.add(new Location(Location.NEW_LOCATION_ID, mActivity.getString(R.string.addsensor_new_location_spinner), 0));
+
+		return locations;
 	}
 
 }

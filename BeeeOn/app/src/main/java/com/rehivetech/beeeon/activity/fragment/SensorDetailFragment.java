@@ -2,7 +2,6 @@ package com.rehivetech.beeeon.activity.fragment;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.EnumSet;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.SortedMap;
@@ -13,34 +12,22 @@ import org.joda.time.Interval;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
-import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.ActionBarActivity;
-import android.support.v7.view.ActionMode;
-import android.util.DisplayMetrics;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
-import android.widget.ScrollView;
-import android.widget.SeekBar;
-import android.widget.SeekBar.OnSeekBarChangeListener;
-import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -50,24 +37,25 @@ import com.jjoe64.graphview.GraphViewSeries;
 import com.jjoe64.graphview.GraphViewSeries.GraphViewSeriesStyle;
 import com.jjoe64.graphview.LineGraphView;
 
+import com.melnykov.fab.FloatingActionButton;
+import com.rehivetech.beeeon.Constants;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.activity.SensorDetailActivity;
+import com.rehivetech.beeeon.activity.SensorEditActivity;
 import com.rehivetech.beeeon.adapter.Adapter;
 import com.rehivetech.beeeon.adapter.device.Device;
-import com.rehivetech.beeeon.adapter.device.Device.SaveDevice;
 import com.rehivetech.beeeon.adapter.device.DeviceLog;
 import com.rehivetech.beeeon.adapter.device.DeviceLog.DataInterval;
 import com.rehivetech.beeeon.adapter.device.DeviceLog.DataType;
 import com.rehivetech.beeeon.adapter.device.Facility;
-import com.rehivetech.beeeon.adapter.device.RefreshInterval;
 import com.rehivetech.beeeon.adapter.device.values.BaseEnumValue;
 import com.rehivetech.beeeon.adapter.device.values.BaseValue;
 import com.rehivetech.beeeon.adapter.device.values.OnOffValue;
 import com.rehivetech.beeeon.adapter.device.values.OpenClosedValue;
 import com.rehivetech.beeeon.adapter.location.Location;
-import com.rehivetech.beeeon.arrayadapter.LocationArrayAdapter;
 import com.rehivetech.beeeon.asynctask.ActorActionTask;
 import com.rehivetech.beeeon.asynctask.CallbackTask.CallbackTaskListener;
+import com.rehivetech.beeeon.asynctask.ReloadFacilitiesTask;
 import com.rehivetech.beeeon.asynctask.SaveDeviceTask;
 import com.rehivetech.beeeon.asynctask.SaveFacilityTask;
 import com.rehivetech.beeeon.controller.Controller;
@@ -79,36 +67,33 @@ import com.rehivetech.beeeon.util.Log;
 import com.rehivetech.beeeon.util.TimeHelper;
 import com.rehivetech.beeeon.util.UnitsHelper;
 
-//import android.widget.LinearLayout;
-
 public class SensorDetailFragment extends Fragment {
 
 	private Controller mController;
 	private static final String TAG = SensorDetailFragment.class.getSimpleName();
 	private static final int EDIT_NONE = 0;
-	private static final int EDIT_NAME = 1;
-	private static final int EDIT_LOC = 2;
-	private static final int EDIT_REFRESH_T = 3;
+
+	public static final String ARG_SEN_ID = "sensorid";
+	public static final String ARG_CUR_PAGE = "currentpage";
+	public static final String ARG_SEL_PAGE = "selectedpage";
+	public static final String ARG_LOC_ID = "locationid";
+	public static final String ARG_ADAPTER_ID = "adapterid";
 
 	// GUI elements
 	private TextView mName;
-	private EditText mNameEdit;
 	private TextView mLocation;
 	private TextView mValue;
 	private Button mValueSwitch;
 	private TextView mTime;
 	private ImageView mIcon;
 	private TextView mRefreshTimeText;
-	private SeekBar mRefreshTimeValue;
+	private FloatingActionButton mFABedit;
 	private TextView mGraphLabel;
 	private LinearLayout mGraphLayout;
-	private ScrollView mLayoutScroll;
-	private RelativeLayout mLayoutRelative;
-	private RelativeLayout mRectangleName;
-	private RelativeLayout mRectangleLoc;
-	private Spinner mSpinnerLoc;
 	private GraphView mGraphView;
 	private TextView mGraphInfo;
+	private TextView mBattery;
+	private TextView mSignal;
 
 	private SensorDetailActivity mActivity;
 
@@ -119,51 +104,29 @@ public class SensorDetailFragment extends Fragment {
 	private GetDeviceLogTask mGetDeviceLogTask;
 	private SaveFacilityTask mSaveFacilityTask;
 	private ActorActionTask mActorActionTask;
-
-	public static final String ARG_PAGE = "page";
-	public static final String ARG_CUR_PAGE = "currentpage";
-	public static final String ARG_SEL_PAGE = "selectedpage";
-	public static final String ARG_LOC_ID = "locationid";
-	public static final String ARG_ADAPTER_ID = "adapterid";
 	
 	private UnitsHelper mUnitsHelper;
 	private TimeHelper mTimeHelper;
 
-	private String mPageNumber;
+	private String mDeviceID;
 	private String mLocationID;
 	private int mCurPageNumber;
 	private int mSelPageNumber;
 	private String mAdapterId;
 
-	private boolean mWasTapLayout = false;
 	private boolean mWasTapGraph = false;
 	private int mEditMode = EDIT_NONE;
-
-	//
-	private ActionMode mMode;
-
-	private int mLastProgressRefreshTime;
 
 	private GraphViewSeries mGraphSeries;
 	
 
 	private static final String GRAPH_DATE_TIME_FORMAT = "dd.MM. kk:mm";
 	private static final String LOG_DATE_TIME_FORMAT = "yyyy-MM-dd HH:mm:ss";
+	private SwipeRefreshLayout mSwipeLayout;
+	private View mView;
+	private SensorDetailActivity.ScreenSlidePagerAdapter mFragmentAdapter;
+	private ReloadFacilitiesTask mReloadFacilitiesTask;
 
-	/**
-	 * Factory method for this fragment class. Constructs a new fragment for the given page number.
-	 */
-	public static SensorDetailFragment create(String IDSensor, String IDLocation, int position, int selPosition, String adapterId) {
-		SensorDetailFragment fragment = new SensorDetailFragment();
-		Bundle args = new Bundle();
-		args.putString(ARG_PAGE, IDSensor);
-		args.putString(ARG_LOC_ID, IDLocation);
-		args.putInt(ARG_CUR_PAGE, position);
-		args.putInt(ARG_SEL_PAGE, selPosition);
-		args.putString(ARG_ADAPTER_ID, adapterId);
-		fragment.setArguments(args);
-		return fragment;
-	}
 
 	public SensorDetailFragment() {
 	}
@@ -171,40 +134,61 @@ public class SensorDetailFragment extends Fragment {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		mPageNumber = getArguments().getString(ARG_PAGE);
-		mLocationID = getArguments().getString(ARG_LOC_ID);
-		mSelPageNumber = getArguments().getInt(ARG_SEL_PAGE);
-		mCurPageNumber = getArguments().getInt(ARG_CUR_PAGE);
-		mAdapterId = getArguments().getString(ARG_ADAPTER_ID);
-		Log.d(TAG, "Here 1 " + mCurPageNumber);
+		Log.d(TAG, "OnCreate - Here 1 " + mCurPageNumber);
+		mActivity = (SensorDetailActivity) getActivity();
+		mController = Controller.getInstance(mActivity);
+		mAdapter = mController.getAdapter(mAdapterId);
 	}
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		mActivity = (SensorDetailActivity) getActivity();
-
-		// Get controller
-		mController = Controller.getInstance(mActivity.getApplicationContext());
-		
-		mAdapter = mController.getAdapter(mAdapterId);
-
-		View view = inflater.inflate(R.layout.activity_sensor_detail_screen, container, false);
+		Log.d(TAG,"OnCreateView");
+		mView = inflater.inflate(R.layout.activity_sensor_detail_screen, container, false);
 		Log.d(TAG, String.format("this position: %s , selected item: %s ", mCurPageNumber, mSelPageNumber));
-
-		return view;
+		return mView;
 	}
 
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
-
-		mDevice = mController.getDevice(mAdapterId, mPageNumber);
+		if(savedInstanceState != null) {
+			mDeviceID = savedInstanceState.getString(ARG_SEN_ID);
+			mAdapterId = savedInstanceState.getString(ARG_ADAPTER_ID);
+			mLocationID = savedInstanceState.getString(ARG_LOC_ID);
+			mSelPageNumber = savedInstanceState.getInt(ARG_SEL_PAGE);
+			mCurPageNumber = savedInstanceState.getInt(ARG_CUR_PAGE);
+			mAdapter = mController.getAdapter(mAdapterId);
+			mActivity = (SensorDetailActivity) getActivity();
+		}
+		Log.d(TAG,"OnActivityCreated");
+		mDevice = mController.getDevice(mAdapterId, mDeviceID);
 		if (mDevice != null) {
 			Log.d(TAG, String.format("ID: %s, Name: %s", mDevice.getId(), mDevice.getName()));
 			initLayout(mDevice);
 		}
 
 		Log.d(TAG, "Here 3 " + mCurPageNumber);
+	}
+
+	@Override
+	public void onSaveInstanceState(Bundle savedInstanceState) {
+		savedInstanceState.putString(ARG_SEN_ID,mDeviceID);
+		savedInstanceState.putString(ARG_ADAPTER_ID,mAdapterId);
+		savedInstanceState.putString(ARG_LOC_ID,mLocationID);
+		savedInstanceState.putInt(ARG_CUR_PAGE,mCurPageNumber);
+		savedInstanceState.putInt(ARG_SEL_PAGE,mSelPageNumber);
+		// Always call the superclass so it can save the view hierarchy state
+		super.onSaveInstanceState(savedInstanceState);
+	}
+
+	@Override
+	public void setUserVisibleHint(boolean isVisibleToUser) {
+		super.setUserVisibleHint(isVisibleToUser);
+		if (isVisibleToUser) {
+			Log.d(TAG,"This fragment is visible - dev "+ mDeviceID);
+			doReloadFacilitiesTask(mAdapterId);
+		}
+
 	}
 
 	@Override
@@ -219,90 +203,44 @@ public class SensorDetailFragment extends Fragment {
 	}
 
 	private void initLayout(Device device) {
-		final Context context = getActivity();// SensorDetailFragment.this.getView().getContext();
 		// Get View for sensor name
-		mName = (TextView) getView().findViewById(R.id.sen_detail_name);
-		mNameEdit = (EditText) getView().findViewById(R.id.sen_detail_name_edit);
-		mRectangleName = (RelativeLayout) getView().findViewById(R.id.sen_rectangle_name);
+		mName = (TextView) mView.findViewById(R.id.sen_detail_name);
 		// Get View for sensor location
-		mLocation = (TextView) getView().findViewById(R.id.sen_detail_loc_name);
-		mRectangleLoc = (RelativeLayout) getView().findViewById(R.id.sen_rectangle_loc);
-		mSpinnerLoc = (Spinner) getView().findViewById(R.id.sen_detail_spinner_choose_location);
+		mLocation = (TextView) mView.findViewById(R.id.sen_detail_loc_name);
 		// Get View for sensor value
-		mValue = (TextView) getView().findViewById(R.id.sen_detail_value);
-		mValueSwitch = (Button) getView().findViewById(R.id.sen_detail_value_switch);
+		mValue = (TextView) mView.findViewById(R.id.sen_detail_value);
+		mValueSwitch = (Button) mView.findViewById(R.id.sen_detail_value_switch);
+		// Get FAB for edit
+		mFABedit = (FloatingActionButton) mView.findViewById(R.id.sen_detail_edit_fab);
 		// Get View for sensor time
-		mTime = (TextView) getView().findViewById(R.id.sen_detail_time);
+		mTime = (TextView) mView.findViewById(R.id.sen_detail_time);
 		// Get Image for sensor
-		mIcon = (ImageView) getView().findViewById(R.id.sen_detail_icon);
+		mIcon = (ImageView) mView.findViewById(R.id.sen_detail_icon);
 		// Get TextView for refresh time
-		mRefreshTimeText = (TextView) getView().findViewById(R.id.sen_refresh_time_value);
-		// Get SeekBar for refresh time
-		mRefreshTimeValue = (SeekBar) getView().findViewById(R.id.sen_refresh_time_seekBar);
+		mRefreshTimeText = (TextView) mView.findViewById(R.id.sen_refresh_time_value);
+		// Get battery value
+		mBattery = (TextView) mView.findViewById(R.id.sen_detail_battery_value);
+		// Get signal value
+		mSignal = (TextView) mView.findViewById(R.id.sen_detail_signal_value);
 		// Set title selected for animation if is text long
 		mName.setSelected(true);
 		mLocation.setSelected(true);
-		// Set Max value by length of array with values
-		mRefreshTimeValue.setMax(RefreshInterval.values().length - 1);
 
-		mRefreshTimeValue.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
 
-			public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-				String interval = RefreshInterval.values()[progress].getStringInterval(context);
-				mRefreshTimeText.setText(" " + interval);
-			}
-
-			@Override
-			public void onStartTrackingTouch(SeekBar seekBar) {
-				// Set variable if this first touch
-				if (mEditMode != EDIT_NONE)
-					return;
-
-				if (mEditMode != EDIT_REFRESH_T) {
-					mEditMode = EDIT_REFRESH_T;
-					// Disable Swipe
-					mActivity.setEnableSwipe(false);
-					mMode =  ((ActionBarActivity) getActivity()).startSupportActionMode(new AnActionModeOfSensorEdit());
-					mLastProgressRefreshTime = seekBar.getProgress();
-				}
-
-			}
-
-			@Override
-			public void onStopTrackingTouch(SeekBar seekBar) {
-				String interval = RefreshInterval.values()[seekBar.getProgress()].getStringInterval(context);
-				Log.d(TAG, String.format("Stop select value %s", interval));
-			}
-		});
 		// Get LinearLayout for graph
-		mGraphLayout = (LinearLayout) getView().findViewById(R.id.sen_graph_layout);
-		mGraphLabel = (TextView) getView().findViewById(R.id.sen_graph_name);
-		mGraphInfo = (TextView) getView().findViewById(R.id.sen_graph_info);
-		// Get RelativeLayout of detail
-		mLayoutRelative = (RelativeLayout) getView().findViewById(R.id.sensordetail_scroll);
-		mLayoutScroll = (ScrollView) getView().findViewById(R.id.sensordetail_layout);
-		mLayoutRelative.setOnTouchListener(new OnTouchListener() {
+		mGraphLayout = (LinearLayout) mView.findViewById(R.id.sen_graph_layout);
+		mGraphLabel = (TextView) mView.findViewById(R.id.sen_graph_name);
+		//mGraphInfo = (TextView) getView().findViewById(R.id.sen_graph_info);
 
+
+		mFABedit.setOnClickListener(new OnClickListener() {
 			@Override
-			public boolean onTouch(View v, MotionEvent event) {
-				// Disable graph if in edit Mode
-				if (mEditMode != EDIT_NONE)
-					return false;
-
-				if (mWasTapLayout)
-					return true;
-
-				mWasTapLayout = true;
-				mWasTapGraph = false;
-				if (mGraphView != null) {
-					mGraphView.setScalable(false);
-					mGraphView.setScrollable(false);
-					mActivity.setEnableSwipe(true);
-					mGraphInfo.setVisibility(View.VISIBLE);
-					onTouch(v, event);
-					return true;
-				}
-				return false;
+			public void onClick(View v) {
+				// go to edit senzor
+				Log.d(TAG,"Click - edit senzor");
+				Intent intent = new Intent(mActivity, SensorEditActivity.class);
+				intent.putExtra(Constants.GUI_EDIT_SENSOR_ID, mDeviceID);
+				mActivity.startActivityForResult(intent, Constants.EDIT_SENSOR_REQUEST_CODE);
 			}
 		});
 
@@ -311,28 +249,7 @@ public class SensorDetailFragment extends Fragment {
 		mName.setText(device.getName());
 		mName.setBackgroundColor(Color.TRANSPARENT);
 		if(mController.isUserAllowed(mAdapter.getRole())) {
-			mName.setOnClickListener(new OnClickListener() {
-	
-				@Override
-				public void onClick(View v) {
-					if (mEditMode != EDIT_NONE)
-						return;
-					// Disable SeekBar
-					mRefreshTimeValue.setEnabled(false);
-					// Disable SwipeGesture
-					mActivity.setEnableSwipe(false);
-	
-					mEditMode = EDIT_NAME;
-					mMode =  ((ActionBarActivity) getActivity()).startSupportActionMode(new AnActionModeOfSensorEdit());
-					mName.setVisibility(View.GONE);
-					mRectangleName.setVisibility(View.GONE);
-					mNameEdit.setVisibility(View.VISIBLE);
-					mNameEdit.setText(mName.getText());
-					InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-					imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
-					// return true;
-				}
-			});
+
 		}
 		
 		if(mController.isUserAllowed(mAdapter.getRole())) {
@@ -360,41 +277,12 @@ public class SensorDetailFragment extends Fragment {
 				mLocation.setText(location.getName());
 			}
 			if(mController.isUserAllowed(mAdapter.getRole())) {
-				mLocation.setOnClickListener(new OnClickListener() {
-	
-					@Override
-					public void onClick(View v) {
-						if (mEditMode != EDIT_NONE)
-							return;
-						// Disable SeekBar
-						mRefreshTimeValue.setEnabled(false);
-	
-						// Disable Swipe
-						mActivity.setEnableSwipe(false);
-	
-						mEditMode = EDIT_LOC;
-						mMode =  ((ActionBarActivity) getActivity()).startSupportActionMode(new AnActionModeOfSensorEdit());
-						mSpinnerLoc.setVisibility(View.VISIBLE);
-						mLocation.setVisibility(View.GONE);
-						mRectangleLoc.setVisibility(View.GONE);
-	
-						// open Spinner
-						mSpinnerLoc.performClick();
-					}
-				});
+
 			}
 		} else {
 			Log.e(TAG, "mController is null (this shouldn't happen)");
 			mLocation.setText(device.getFacility().getLocationId());
 		}
-
-		// Set locations to spinner
-		LocationArrayAdapter dataAdapter = new LocationArrayAdapter(this.getActivity(), R.layout.custom_spinner_item, getLocationsArray());
-		dataAdapter.setLayoutInflater(getLayoutInflater(null));
-		dataAdapter.setDropDownViewResource(R.layout.custom_spinner_dropdown_item);
-
-		mSpinnerLoc.setAdapter(dataAdapter);
-		mSpinnerLoc.setSelection(getLocationsIndexFromArray(getLocationsArray()));
 
 		Facility facility = device.getFacility();
 		Adapter adapter = mController.getAdapter(facility.getAdapterId());
@@ -408,7 +296,6 @@ public class SensorDetailFragment extends Fragment {
 		// Set value of sensor
 		if (mUnitsHelper != null) {
 			mValue.setText(mUnitsHelper.getStringValueUnit(device.getValue()));
-			mValueSwitch.setText(mUnitsHelper.getStringValueUnit(device.getValue()));
 		}
 
 		// Set icon of sensor
@@ -420,42 +307,36 @@ public class SensorDetailFragment extends Fragment {
 		}
 
 		// Set refresh time Text
-		mRefreshTimeText.setText(" " + facility.getRefresh().getStringInterval(context));
+		mRefreshTimeText.setText(facility.getRefresh().getStringInterval(mActivity));
 
-		// Set refresh time SeekBar
-		mRefreshTimeValue.setProgress(facility.getRefresh().getIntervalIndex());
 
 		// Add Graph with history data
 		if (mUnitsHelper != null && mTimeHelper != null) {
 			DateTimeFormatter fmt = mTimeHelper.getFormatter(GRAPH_DATE_TIME_FORMAT, adapter);
-			addGraphView(fmt, mUnitsHelper);
+			//addGraphView(fmt, mUnitsHelper);
 		}
+
+		// Set battery
+		mBattery.setText(facility.getBattery() + "%");
+
+		// Set signal
+		mSignal.setText(facility.getNetworkQuality()+"%");
 
 		// Visible all elements
 		visibleAllElements();
-
-		DisplayMetrics displaymetrics = new DisplayMetrics();
-		getActivity().getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
-
-
-		RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) mGraphInfo.getLayoutParams();
-
-
-		// substitute parameters for left, top, right, bottom
-		params.setMargins((int) ((displaymetrics.widthPixels / 2) - (70 * displaymetrics.density)), (int) ((-120) * displaymetrics.density), 0, 0);
-		mGraphInfo.setLayoutParams(params);
 
 		// Disable progress bar
 		getActivity().setProgressBarIndeterminateVisibility(false);
 	}
 
-	
-
 	private void visibleAllElements() {
-		mName.setVisibility(View.VISIBLE);
-		// mNameEdit;
-		mLocation.setVisibility(View.VISIBLE);
-		mValue.setVisibility(View.VISIBLE);
+		mView.findViewById(R.id.sen_header).setVisibility(View.VISIBLE);
+		mView.findViewById(R.id.sen_first_section).setVisibility(View.VISIBLE);
+		mView.findViewById(R.id.sen_second_section).setVisibility(View.VISIBLE);
+		mView.findViewById(R.id.sen_third_section).setVisibility(View.VISIBLE);
+		mView.findViewById(R.id.sen_sep_1).setVisibility(View.VISIBLE);
+		mView.findViewById(R.id.sen_sep_2).setVisibility(View.VISIBLE);
+
 
 		// Show some controls if this device is an actor
 		if (mDevice.getType().isActor() && mController.isUserAllowed(mAdapter.getRole())) {
@@ -464,30 +345,32 @@ public class SensorDetailFragment extends Fragment {
 			// For actor values of type on/off, open/closed we show switch button
 			if (value instanceof OnOffValue || value instanceof OpenClosedValue) {
 				mValueSwitch.setVisibility(View.VISIBLE);
-				mValue.setVisibility(View.GONE);
 			}
 		}
-			
-		mTime.setVisibility(View.VISIBLE);
-		mIcon.setVisibility(View.VISIBLE);
-		mRefreshTimeText.setVisibility(View.VISIBLE);
-		((TextView) getView().findViewById(R.id.sen_refresh_time)).setVisibility(View.VISIBLE);
-		
-		if(mController.isUserAllowed(mAdapter.getRole()))
-			mRefreshTimeValue.setVisibility(View.VISIBLE);
-		
-		mGraphLayout.setVisibility(View.VISIBLE);
-		mGraphLabel.setVisibility(View.VISIBLE);
-		// mLayout;
+
 		if(mController.isUserAllowed(mAdapter.getRole())) {
-			mRectangleName.setVisibility(View.VISIBLE);
-			mRectangleLoc.setVisibility(View.VISIBLE);
+			mFABedit.setVisibility(View.VISIBLE);
 		}
+
+		// Init swipe-refreshig layout
+		mSwipeLayout = (SwipeRefreshLayout) mView.findViewById(R.id.swipe_container);
+		mSwipeLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+
+			@Override
+			public void onRefresh() {
+				Log.d(TAG, "Refreshing list of sensors");
+				mSwipeLayout.setRefreshing(false);
+				doReloadFacilitiesTask(mAdapterId);
+				//mActivity.getPager().getAdapter().notifyDataSetChanged();
+			}
+		});
+		mSwipeLayout.setColorSchemeColors(  R.color.beeeon_primary_cyan, R.color.beeeon_text_color,R.color.beeeon_secundary_pink);
+
 		// mSpinnerLoc;
-		if (mGraphView != null) {
+		/*if (mGraphView != null) {
 			mGraphView.setVisibility(View.VISIBLE);
 			mGraphInfo.setVisibility(View.VISIBLE);
-		}
+		}*/
 
 	}
 
@@ -529,7 +412,7 @@ public class SensorDetailFragment extends Fragment {
 				if (mWasTapGraph)
 					return true;
 
-				mWasTapLayout = false;
+
 				mWasTapGraph = true;
 
 				Log.d(TAG, "onTouch layout");
@@ -646,15 +529,12 @@ public class SensorDetailFragment extends Fragment {
 			public void onExecute(boolean success) {
 				// Get new device
 				mDevice = mController.getDevice(device.getFacility().getAdapterId(), device.getId());
-				
-				// Set new value of sensor
-				if (mUnitsHelper != null) {
-					mValueSwitch.setText(mUnitsHelper.getStringValueUnit(mDevice.getValue()));
-				}
+
 				// Set icon of sensor
 				mIcon.setImageResource(mDevice.getIconResource());
 				// Enable button
 				mValueSwitch.setEnabled(true);
+				mValue.setText(mUnitsHelper.getStringValueUnit(mDevice.getValue()));
 			}
 			
 		});
@@ -671,6 +551,7 @@ public class SensorDetailFragment extends Fragment {
 					mActivity.getProgressDialog().dismiss();
 				if (success) {
 					Log.d(TAG, "Success save to server");
+
 					// Change GUI
 					mActivity.redraw();
 					Toast.makeText(mActivity, R.string.toast_success_save_data, Toast.LENGTH_LONG).show();
@@ -704,6 +585,30 @@ public class SensorDetailFragment extends Fragment {
 		mSaveFacilityTask.execute(pair);
 	}
 
+	public void setSensorID(String id) {
+		mDeviceID = id;
+	}
+
+	public void setLocationID(String locationId) {
+		mLocationID = locationId;
+	}
+
+	public void setPosition(int position) {
+		mCurPageNumber = position;
+	}
+
+	public void setSelectedPosition(int mActiveDevicePosition) {
+		mSelPageNumber = mActiveDevicePosition;
+	}
+
+	public void setAdapterID(String mActiveAdapterId) {
+		mAdapterId = mActiveAdapterId;
+	}
+
+	public void setFragmentAdapter(SensorDetailActivity.ScreenSlidePagerAdapter screenSlidePagerAdapter) {
+		mFragmentAdapter = screenSlidePagerAdapter;
+	}
+
 	/**
 	 * Changes selected location and redraws list of adapters there
 	 */
@@ -726,116 +631,30 @@ public class SensorDetailFragment extends Fragment {
 
 	}
 
-	/*
-	 * ============================= ACTION MODE ==============================
-	 */
+	private void doReloadFacilitiesTask(final String adapterId) {
+		mReloadFacilitiesTask = new ReloadFacilitiesTask(mActivity, true);
+		Log.d(TAG, "Fragment - Create reload task");
+		mReloadFacilitiesTask.setListener(new CallbackTaskListener() {
 
-	// Menu for Action bar mode - edit
-	class AnActionModeOfSensorEdit implements ActionMode.Callback {
-
-		@Override
-		public boolean onCreateActionMode(ActionMode mode, Menu menu) {
-            MenuInflater inflater = mode.getMenuInflater();
-            inflater.inflate(R.menu.sensor_detail_menu, menu);
-			return true;
-		}
-
-		@Override
-		public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
-			return false;
-		}
-
-		@Override
-		public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
-			InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-
-			switch (mEditMode) {
-			case EDIT_LOC:
-				mSpinnerLoc.setVisibility(View.GONE);
-				mLocation.setVisibility(View.VISIBLE);
-				mRectangleLoc.setVisibility(View.VISIBLE);
-				mRefreshTimeValue.setEnabled(true);
-				if (item.getTitle().equals("Save")) {
-					// Progress dialog
-					if (mActivity.getProgressDialog() != null)
-						mActivity.getProgressDialog().show();
-					// Set new location in facility
-					mDevice.getFacility().setLocationId(((Location) mSpinnerLoc.getSelectedItem()).getId());
-					// Update device to server
-					doSaveFacilityTask(new SaveFacilityPair(mDevice.getFacility(), EnumSet.of(SaveDevice.SAVE_LOCATION)));
-
+			@Override
+			public void onExecute(boolean success) {
+				if(!success){
+					Log.d(TAG,"Fragment - Reload faild");
+					return;
 				}
-				break;
-			case EDIT_NAME:
-				if (item.getTitle().equals("Save")) {
-					mName.setText(mNameEdit.getText());
-
-					// Set new name to device
-					mDevice.setName(mNameEdit.getText().toString());
-
-					// Update device to server
-					doSaveDeviceTask(new SaveDevicePair(mDevice, EnumSet.of(SaveDevice.SAVE_NAME)));
+				Log.d(TAG, "Fragment - Start reload task");
+				mDevice = mController.getDevice(adapterId, mDeviceID);
+				if (mDevice == null) {
+					Log.d(TAG, "Fragment - Stop reload task");
+					return;
 				}
-				mNameEdit.setVisibility(View.GONE);
-				mName.setVisibility(View.VISIBLE);
-				mRectangleName.setVisibility(View.VISIBLE);
-
-				mNameEdit.clearFocus();
-				imm.hideSoftInputFromWindow(mNameEdit.getWindowToken(), 0);
-				mRefreshTimeValue.setEnabled(true);
-				break;
-			case EDIT_REFRESH_T:
-				// Was clicked on cancel
-				if (item.getTitle().equals("Cancel")) {
-					mRefreshTimeValue.setProgress(mLastProgressRefreshTime);
-				} else {
-					// set actual progress
-					mDevice.getFacility().setRefresh(RefreshInterval.values()[mRefreshTimeValue.getProgress()]);
-					// Progress dialog
-					if (mActivity.getProgressDialog() != null)
-						mActivity.getProgressDialog().show();
-					Log.d(TAG, "Refresh time " + mDevice.getFacility().getRefresh().getStringInterval(mActivity));
-					// Update device to server
-					doSaveDeviceTask(new SaveDevicePair(mDevice, EnumSet.of(SaveDevice.SAVE_REFRESH)));
-				}
-				break;
-
-			default:
-				break;
-
+				initLayout(mDevice);
 			}
 
-			mEditMode = EDIT_NONE;
-			// enable SeekBar
+		});
 
-			mode.finish();
-			return true;
-		}
-
-		@Override
-		public void onDestroyActionMode(ActionMode mode) {
-			// Control mode and set default values
-			switch (mEditMode) {
-			case EDIT_REFRESH_T:
-				mRefreshTimeValue.setProgress(mLastProgressRefreshTime);
-				break;
-			}
-			mActivity.setEnableSwipe(true);
-
-			mSpinnerLoc.setVisibility(View.GONE);
-			mLocation.setVisibility(View.VISIBLE);
-			mRectangleLoc.setVisibility(View.VISIBLE);
-			mNameEdit.setVisibility(View.GONE);
-			mName.setVisibility(View.VISIBLE);
-			mRectangleName.setVisibility(View.VISIBLE);
-			mNameEdit.clearFocus();
-			InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-			imm.hideSoftInputFromWindow(mNameEdit.getWindowToken(), 0);
-			// mRefreshTimeValue.setProgress(mLastProgressRefreshTime);
-			mEditMode = EDIT_NONE;
-			// enable SeekBar
-			mRefreshTimeValue.setEnabled(true);
-		}
+		mReloadFacilitiesTask.execute(adapterId);
 	}
+
 
 }
