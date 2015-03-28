@@ -7,6 +7,9 @@ public enum NetworkError implements ErrorCode {
 	SERVER_NOT_RESPONDING(-2),
 	COM_PROBLEMS(-3),
 	XML(-4),
+	SOCKET_PROBLEM(-5),
+	INVALID_CERTIFICATE(-6),
+	UNKNOWN_HOST(-7),
 	
 	// UNKNOWN ERROR
 	UNKNOWN(0),
