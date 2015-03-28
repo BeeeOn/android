@@ -426,29 +426,37 @@ public class Network implements INetwork {
 
 	@Override
     public boolean loginMe(IAuthProvider authProvider){
-        return signMe(authProvider, false);
-    }
-
-    @Override
-    public boolean registerMe(IAuthProvider authProvider) {
-        return signMe(authProvider, true);
-    }
-
-    private boolean signMe(IAuthProvider authProvider, boolean register) {
 		// Check existence of authProvider parameters
 		Map<String, String> parameters = authProvider.getParameters();
 		if (parameters == null || parameters.isEmpty())
 			throw new IllegalArgumentException(String.format("IAuthProvider '%s' provided no parameters.", authProvider.getProviderName()));
 
-        ParsedMessage msg = doRequest(XmlCreator.createSignMe(Locale.getDefault().getLanguage(), Utils.getPhoneID(mContext), register ? 0 : 1, authProvider));
+		ParsedMessage msg = doRequest(XmlCreator.createSignIn(Locale.getDefault().getLanguage(), Utils.getPhoneID(mContext), authProvider));
 
-        if (msg.getState() == State.BT) {
-            mBT = (String) msg.data;
-            return true;
-        }
+		if (msg.getState() == State.BT) {
+			mBT = (String) msg.data;
+			return true;
+		}
 
-        FalseAnswer fa = (FalseAnswer) msg.data;
-        throw new AppException(fa.getErrMessage(), NetworkError.fromValue(fa.getErrCode()));
+		FalseAnswer fa = (FalseAnswer) msg.data;
+		throw new AppException(fa.getErrMessage(), NetworkError.fromValue(fa.getErrCode()));
+    }
+
+    @Override
+    public boolean registerMe(IAuthProvider authProvider) {
+		// Check existence of authProvider parameters
+		Map<String, String> parameters = authProvider.getParameters();
+		if (parameters == null || parameters.isEmpty())
+			throw new IllegalArgumentException(String.format("IAuthProvider '%s' provided no parameters.", authProvider.getProviderName()));
+
+		ParsedMessage msg = doRequest(XmlCreator.createSignUp(authProvider));
+
+		if (msg.getState() == State.TRUE) {
+			return true;
+		}
+
+		FalseAnswer fa = (FalseAnswer) msg.data;
+		throw new AppException(fa.getErrMessage(), NetworkError.fromValue(fa.getErrCode()));
     }
 
 	@Override

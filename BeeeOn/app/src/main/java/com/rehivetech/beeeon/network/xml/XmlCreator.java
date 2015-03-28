@@ -52,7 +52,8 @@ public class XmlCreator {
 	// states
 
     public static final String PASSBORDER = "passborder";
-    public static final String SIGNME = "signme";
+    public static final String SIGNIN = "signin";
+	public static final String SIGNUP = "signup";
     public static final String GETUSERINFO ="getuserinfo";
 	public static final String JOINACCOUNT = "joinaccount";
 	public static final String CUTACCOUNT = "cutaccount";
@@ -118,9 +119,9 @@ public class XmlCreator {
 
 	/**
 	 * Type of condition
-	 * 
+	 *
 	 * @author ThinkDeep
-	 * 
+	 *
 	 */
 	public enum ConditionType {
 		AND("and"), OR("or");
@@ -149,15 +150,11 @@ public class XmlCreator {
 	// ////////////////////////////////////////////////////////////////////////////////////////////////
 
 	/**
-	 * Method create message for registration of new user (if action parameter is 0), or log in, existing one (action is 1)
-	 * @param locale locale of phone
-	 * @param pid phone id (ie. emei)
-	 * @param action of action is 0, user want to signUp, if 1 then user will be signedIn
+	 * Method create message for registration of new user
 	 * @param authProvider provider of authentication with parameters to send
-	 *
 	 * @return
 	 */
-	public static String createSignMe(String locale, String pid, int action, IAuthProvider authProvider) {
+	public static String createSignUp(IAuthProvider authProvider) {
 		XmlSerializer serializer = Xml.newSerializer();
 		StringWriter writer = new StringWriter();
 		try {
@@ -167,10 +164,50 @@ public class XmlCreator {
 			serializer.startTag(ns, Xconstants.COM_ROOT);
 			serializer.attribute(ns, Xconstants.VERSION, COM_VER); // every time use version
 
-			serializer.attribute(ns, Xconstants.STATE, SIGNME);
+			serializer.attribute(ns, Xconstants.STATE, SIGNUP);
+
+			// NOTE: Ok, i did it like that, but i do not like it
+			serializer.attribute(ns, Xconstants.SERVICE, authProvider.getProviderName());
+
+			serializer.startTag(ns, Xconstants.PARAM);
+			for (Map.Entry<String, String> entry : authProvider.getParameters().entrySet()) {
+				String key = entry.getKey();
+				String value = entry.getValue();
+
+				if (key != null && value != null)
+					serializer.attribute(ns, key, value);
+			}
+			serializer.endTag(ns, Xconstants.PARAM);
+
+			serializer.endTag(ns, Xconstants.COM_ROOT);
+			serializer.endDocument();
+
+			return writer.toString();
+		} catch (Exception e) {
+			throw AppException.wrap(e, NetworkError.XML);
+		}
+	}
+
+	/**
+	 * Method create message for login
+	 * @param locale localization of phone
+	 * @param pid unique id of phone
+	 * @param authProvider provider of authentication with parameters to send
+	 * @return
+	 */
+	public static String createSignIn(String locale, String pid, IAuthProvider authProvider) {
+		XmlSerializer serializer = Xml.newSerializer();
+		StringWriter writer = new StringWriter();
+		try {
+			serializer.setOutput(writer);
+			// serializer.startDocument("UTF-8", null);
+
+			serializer.startTag(ns, Xconstants.COM_ROOT);
+			serializer.attribute(ns, Xconstants.VERSION, COM_VER); // every time use version
+
+			serializer.attribute(ns, Xconstants.STATE, SIGNIN);
 			serializer.attribute(ns, Xconstants.LOCALE, locale);
 			serializer.attribute(ns, Xconstants.PID, pid);
-			serializer.attribute(ns, Xconstants.SIGNACTION, Integer.toString(action));
 
 			// NOTE: Ok, i did it like that, but i do not like it
 			serializer.attribute(ns, Xconstants.SERVICE, authProvider.getProviderName());
