@@ -66,7 +66,7 @@ public class AchievementOverviewActivity extends BaseApplicationActivity {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 				AchievementListItem achievementItem = mAchievementListAdapter.getItem(position);
-				new Achievement(achievementItem);
+				new Achievement(achievementItem).show(getApplicationContext());
 			}
 		});
 		achievementList.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {

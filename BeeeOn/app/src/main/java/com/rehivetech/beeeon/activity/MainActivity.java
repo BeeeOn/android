@@ -14,6 +14,7 @@ import android.view.MotionEvent;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 /*
 import com.actionbarsherlock.view.Menu;
@@ -22,6 +23,12 @@ import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.view.Window;
 */
 
+import com.facebook.CallbackManager;
+import com.facebook.FacebookCallback;
+import com.facebook.FacebookException;
+import com.facebook.FacebookSdk;
+import com.facebook.login.LoginManager;
+import com.facebook.login.LoginResult;
 import com.github.amlcurran.showcaseview.OnShowcaseEventListener;
 import com.github.amlcurran.showcaseview.ShowcaseView;
 import com.github.amlcurran.showcaseview.targets.ViewTarget;
@@ -95,6 +102,8 @@ public class MainActivity extends BaseApplicationActivity {
 
 	private boolean backPressed = false;
 
+	public CallbackManager mFacebookCallbackManager;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -160,6 +169,20 @@ public class MainActivity extends BaseApplicationActivity {
 			ft.replace(R.id.content_frame, mProfileFrag, FRG_TAG_PRF);
 		}
 		ft.commit();
+
+
+		FacebookSdk.sdkInitialize(this);
+		mFacebookCallbackManager = CallbackManager.Factory.create();
+		LoginManager.getInstance().registerCallback(mFacebookCallbackManager,new FacebookCallback<LoginResult>() {
+			@Override
+			public void onSuccess(LoginResult loginResult) {
+				Log.d(TAG, "FB: " + loginResult.getAccessToken());
+			}
+			@Override
+			public void onCancel() {}
+			@Override
+			public void onError(FacebookException exception) {}
+		});
 		
 		// Init tutorial 
 		if(mFirstUseApp) {
@@ -211,6 +234,8 @@ public class MainActivity extends BaseApplicationActivity {
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
+
+		mFacebookCallbackManager.onActivityResult(requestCode, resultCode, data);
 		Log.d(TAG, "Request code "+requestCode);
 		if(requestCode == Constants.ADD_ADAPTER_REQUEST_CODE ) {
 			Log.d(TAG, "Return from add adapter activity");

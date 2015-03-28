@@ -116,7 +116,7 @@ public class AchievementList implements Parcelable {
 		rulesList.add(new AchievementListItem("10", "0", "Explorer", "Explore all options in BeeeOn application.", 10, null));
 		rulesList.add(new AchievementListItem("11", "0", "Achievement", "Get an achievement.", 5, null));
 		rulesList.add(new AchievementListItem("12", "0", "Master of BeeeOn", "Get all achievements.", 30, null));
-		rulesList.add(new AchievementListItem("13", "0", "All the nice statistics", "Look at our beautiful graphs.", 15, "1.1.2014"));
+		rulesList.add(new AchievementListItem("13", "0", "All the nice statistics", "Look at my balls. Look!", 15, "1.1.2014"));
 		rulesList.add(new AchievementListItem("14", "0", "Always at your hand", "Set your own widget.", 10, "20.6.2015"));
 		rulesList.add(new AchievementListItem("15", "0", "Level up!", "Reach level 2.", 10, "22.5.2015"));
 		rulesList.add(new AchievementListItem("16", "0", "Level 10", "Reach level 10.", 20, null));

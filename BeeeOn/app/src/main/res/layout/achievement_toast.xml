@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+			android:id="@+id/achievement_toast_root"
+			android:orientation="horizontal"
+			android:layout_width="fill_parent"
+			android:layout_height="wrap_content"
+			android:layout_marginRight="10dp"
+			android:layout_marginLeft="10dp"
+			android:padding="5dp"
+			android:layout_alignParentBottom="true"
+			android:layout_centerHorizontal="true"
+			android:background="@drawable/achievement_toast_border"
+
+			android:shadowColor="@color/beeeon_text_color"
+			android:shadowDx="0"
+			android:shadowDy="0"
+			android:shadowRadius="10">
+
+	<RelativeLayout
+		android:id="@+id/achievement_toast_text"
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
+		android:layout_marginLeft="5dp"
+		android:layout_marginRight="5dp">
+
+		<TextView
+			android:id="@+id/achievement_toast_title"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:text="@string/toast_achievement_title"
+			android:textColor="@color/white"
+			android:textSize="16sp"
+			android:layout_centerHorizontal="true"/>
+
+		<TextView
+			android:id="@+id/achievement_toast_name"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_below="@+id/achievement_toast_title"
+			android:textSize="20sp"
+			android:textColor="@color/beeeon_primary_cyan_light"
+			android:layout_centerHorizontal="true"/>
+		</RelativeLayout>
+
+	<TextView
+		android:id="@+id/achievement_toast_points"
+		android:layout_width="46dp"
+		android:layout_height="40dp"
+		android:textColor="@color/white"
+		android:gravity="center"
+		android:textSize="26sp"
+		android:background="@drawable/hexagon_cyan"
+		android:textStyle="bold"
+		android:layout_gravity="center_vertical"/>
+
+</LinearLayout>

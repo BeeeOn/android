@@ -100,7 +100,7 @@
     <string name="toast_success_save_data">Údaje byly úspěšně uloženy</string>
     <string name="toast_fail_save_data">Uložení údajů selhalo</string>
     <string name="toast_wrong_or_no_watchdog_rule">Nebylo zadáno žádné pravidlo nebo je zvolené pravidlo nesprávné</string>
-
+	<string name="toast_achievement_title">Achievement odemknut!</string>
 
     <!-- Progress -->
     <string name="progress_signing">Přihlášení k serveru&#8230;</string>

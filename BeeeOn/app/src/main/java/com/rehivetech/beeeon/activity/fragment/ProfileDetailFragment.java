@@ -18,7 +18,18 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.facebook.AccessToken;
+import com.facebook.AccessTokenTracker;
+import com.facebook.CallbackManager;
+import com.facebook.FacebookCallback;
+import com.facebook.FacebookException;
+import com.facebook.FacebookSdk;
+import com.facebook.Profile;
+import com.facebook.ProfileTracker;
+import com.facebook.login.LoginManager;
+import com.facebook.login.LoginResult;
 import com.melnykov.fab.FloatingActionButton;
 import com.rehivetech.beeeon.Constants;
 import com.rehivetech.beeeon.R;
@@ -31,6 +42,7 @@ import com.rehivetech.beeeon.household.ActualUser;
 import com.rehivetech.beeeon.util.Log;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -43,6 +55,7 @@ public class ProfileDetailFragment extends Fragment {
   	private ActualUser actUser;
 	private SharedPreferences mPrefs;
   	private GamCategoryListAdapter mCategoryListAdapter;
+	public CallbackManager mFacebookCallbackManager;
 
 	// GUI
 	private TextView userName;
@@ -74,7 +87,7 @@ public class ProfileDetailFragment extends Fragment {
   	public void onCreate(Bundle savedInstanceState){
 	    super.onCreate(savedInstanceState);
 	    Log.d(TAG, "onCreate()");
-  	}
+	}
 
   	@Override
   	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -117,7 +130,7 @@ public class ProfileDetailFragment extends Fragment {
 	    userImage.setImageBitmap(picture);
 
 		//GUI components for social networks accounts
-		if(notregistredNetworks != 0) {// more known networks to by added
+		if(notregistredNetworks > 0) {// more known networks to by added
 			mMoreAdd.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
@@ -160,16 +173,16 @@ public class ProfileDetailFragment extends Fragment {
 		mCategoryList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-				GamificationCategory category = mCategoryListAdapter.getItem(position);
+			GamificationCategory category = mCategoryListAdapter.getItem(position);
 
-				Bundle bundle = new Bundle();
-				bundle.putString(AchievementOverviewActivity.EXTRA_CATEGORY_ID, category.getId());
-				bundle.putString(AchievementOverviewActivity.EXTRA_CATEGORY_NAME, category.getName());
+			Bundle bundle = new Bundle();
+			bundle.putString(AchievementOverviewActivity.EXTRA_CATEGORY_ID, category.getId());
+			bundle.putString(AchievementOverviewActivity.EXTRA_CATEGORY_NAME, category.getName());
 
-				Intent intent = new Intent(getActivity(), AchievementOverviewActivity.class);
-				intent.putExtras(bundle);
-				intent.putExtra("achievementList", achievementList); // list of all achievements
-				startActivity(intent);
+			Intent intent = new Intent(getActivity(), AchievementOverviewActivity.class);
+			intent.putExtras(bundle);
+			intent.putExtra("achievementList", achievementList); // list of all achievements
+			startActivity(intent);
 			}
 		});
   	}
@@ -194,8 +207,8 @@ public class ProfileDetailFragment extends Fragment {
 
 	private void rotate(float start, float end) {
 		final RotateAnimation rotateAnim = new RotateAnimation(0.0f, end,
-				RotateAnimation.RELATIVE_TO_SELF, 0.5f,
-				RotateAnimation.RELATIVE_TO_SELF, 0.5f);
+			RotateAnimation.RELATIVE_TO_SELF, 0.5f,
+			RotateAnimation.RELATIVE_TO_SELF, 0.5f);
 
 		rotateAnim.setDuration(100);
 		rotateAnim.setFillAfter(true);
@@ -213,7 +226,6 @@ public class ProfileDetailFragment extends Fragment {
   	}
 
 	private class SocialNetworkDialog extends DialogFragment {
-
 		@Override
 		public Dialog onCreateDialog(Bundle savedInstanceState) {
 			AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
@@ -222,21 +234,18 @@ public class ProfileDetailFragment extends Fragment {
 					public void onClick(DialogInterface dialog, int which) {
 						switch (which) {
 							case 0:
-								Log.d(TAG, "Facebook");
+								LoginManager.getInstance().logInWithReadPermissions(getActivity(), Arrays.asList("public_profile"));
 								break;
 							case 1:
-								Log.d(TAG, "Twitter");
+								Toast.makeText(getActivity(), "Not implemented yet", Toast.LENGTH_LONG).show();
 								break;
 						}
 					}
 				})
 				.setNegativeButton(R.string.action_close, new DialogInterface.OnClickListener() {
-					public void onClick(DialogInterface dialog, int id) {
-					}
+					public void onClick(DialogInterface dialog, int id) {}
 				});
 			return builder.create();
-
 		}
-
 	}
 }
