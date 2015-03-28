@@ -34,7 +34,7 @@ public abstract class CallbackTask<Params> extends AsyncTask<Params, Void, Boole
 	protected final Boolean doInBackground(Params... params) {
 		Boolean success = false;
 		try {
-			success = doInBackground(params[0]);
+			success = doInBackground(params.length > 0 ? params[0] : null);
 		} catch (AppException e) {
 			mException = e;
 		}
