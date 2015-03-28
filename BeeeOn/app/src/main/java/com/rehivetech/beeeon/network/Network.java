@@ -388,7 +388,7 @@ public class Network implements INetwork {
 	 * @return
 	 * @throws AppException with error NetworkError.NO_CONNECTION, NetworkError.XML, NetworkError.UNKNOWN_HOST, NetworkError.INVALID_CERTIFICATE or NetworkError.SOCKET_PROBLEM
 	 */
-	private ParsedMessage doRequest(String messageToSend) throws AppException {
+	private synchronized ParsedMessage doRequest(String messageToSend) throws AppException {
 		if (!isAvailable())
 			throw new AppException(NetworkError.NO_CONNECTION);
 
