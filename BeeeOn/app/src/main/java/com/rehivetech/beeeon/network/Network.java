@@ -1290,8 +1290,8 @@ public class Network implements INetwork {
 	}
 
     @Override
-    public boolean addWatchDog(WatchDog watchDog, String AdapterID){
-        ParsedMessage msg = doRequest(XmlCreator.createAddAlgor(mBT, watchDog.getName(), AdapterID, watchDog.getType(), watchDog.getDevices(), watchDog.getParams(), watchDog.getGeoRegionId(), watchDog.getGeoDirectionType()));
+    public boolean addWatchDog(WatchDog watchDog, String adapterId){
+        ParsedMessage msg = doRequest(XmlCreator.createAddAlgor(mBT, watchDog.getName(), adapterId, watchDog.getType(), watchDog.getDevices(), watchDog.getParams(), watchDog.getGeoRegionId(), watchDog.getGeoDirectionType()));
 
         if (msg.getState() == State.ALGCREATED) {
             watchDog.setId((String) msg.data);
@@ -1303,8 +1303,8 @@ public class Network implements INetwork {
     }
 
     @Override
-    public ArrayList<WatchDog> getWatchDogs(ArrayList<String> watchDogIds){
-        ParsedMessage msg = doRequest(XmlCreator.createGetAlgs(mBT, watchDogIds));
+    public ArrayList<WatchDog> getWatchDogs(ArrayList<String> watchDogIds, String adapterId){
+        ParsedMessage msg = doRequest(XmlCreator.createGetAlgs(mBT, adapterId, watchDogIds));
 
         if(msg.getState() == State.ALGORITHMS){
             return (ArrayList<WatchDog>) msg.data;

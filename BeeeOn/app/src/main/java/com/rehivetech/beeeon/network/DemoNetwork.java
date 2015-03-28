@@ -678,7 +678,7 @@ public class DemoNetwork implements INetwork {
 	}
 
     @Override
-    public ArrayList<WatchDog> getWatchDogs(ArrayList<String> watchDogIds) {
+    public ArrayList<WatchDog> getWatchDogs(ArrayList<String> watchDogIds, String adapterId) {
 		return null;
 	}
 

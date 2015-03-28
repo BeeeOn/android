@@ -1337,10 +1337,11 @@ public class XmlCreator {
     /**
      * Method return message with demands for specific rules
      * @param bt
+	 * @param aid
      * @param algids
      * @return
      */
-    public static String createGetAlgs(String bt, ArrayList<String> algids){
+    public static String createGetAlgs(String bt, String aid, ArrayList<String> algids){
         XmlSerializer serializer = Xml.newSerializer();
         StringWriter writer = new StringWriter();
         try {
@@ -1349,10 +1350,10 @@ public class XmlCreator {
 
             serializer.startTag(ns, Xconstants.COM_ROOT);
 
-            serializer.attribute(ns, Xconstants.BT, bt);
+			serializer.attribute(ns, Xconstants.VERSION, COM_VER);
+			serializer.attribute(ns, Xconstants.BT, bt);
             serializer.attribute(ns, Xconstants.STATE, GETALGS);
-
-            serializer.attribute(ns, Xconstants.VERSION, COM_VER);
+			serializer.attribute(ns, Xconstants.AID, aid);
 
             for(String algId : algids){
                 serializer.startTag(ns, Xconstants.ALGORITHM);
