@@ -65,7 +65,7 @@ public class GoogleAuthProvider implements IAuthProvider {
 	}
 
 	@Override
-	public void prepareAuth(LoginActivity activity) {
+	public void prepareAuth(final LoginActivity activity) {
 		if (!Utils.isGooglePlayServicesAvailable(activity))
 			webloginAuth(activity);
 		else
@@ -96,7 +96,7 @@ public class GoogleAuthProvider implements IAuthProvider {
 		return names;
 	}
 
-	private void webloginAuth(LoginActivity activity) {
+	private void webloginAuth(final LoginActivity activity) {
 		Log.d(TAG, "Start webloginAuth");
 
 		final String redirect = "http://localhost";
@@ -123,7 +123,7 @@ public class GoogleAuthProvider implements IAuthProvider {
 		activity.startActivityForResult(intent, PROVIDER_ID);
 	}
 
-	private void androidAuth(LoginActivity activity) {
+	private void androidAuth(final LoginActivity activity) {
 		Log.d(TAG, "Start androidAuth");
 
 		if (mEmail.isEmpty()) {
@@ -142,25 +142,31 @@ public class GoogleAuthProvider implements IAuthProvider {
 		}
 
 		if (!mEmail.isEmpty()) {
-			try {
-				// Load token from Google server and save it
-				String token = GoogleAuthUtil.getToken(activity, mEmail, SCOPE);
-				mParameters.put(PARAMETER_TOKEN, token);
+			new Thread(new Runnable() {
+				@Override
+				public void run() {
+					try {
+						// Load token from Google server and save it
+						String token = GoogleAuthUtil.getToken(activity, mEmail, SCOPE);
+						mParameters.put(PARAMETER_TOKEN, token);
 
-				Intent data = new Intent();
-				data.putExtra(PARAMETER_TOKEN, token);
+						Intent data = new Intent();
+						data.putExtra(PARAMETER_TOKEN, token);
 
-				// Report success to caller
-				activity.onActivityResult(PROVIDER_ID, LoginActivity.RESULT_AUTH, data);
-			} catch (UserRecoverableAuthException e) {
-				Intent intent = e.getIntent();
-				if (intent != null) {
-					activity.startActivityForResult(intent, PROVIDER_ID);
+						// Report success to caller
+						activity.onActivityResult(PROVIDER_ID, LoginActivity.RESULT_AUTH, data);
+					} catch (UserRecoverableAuthException e) {
+						Intent intent = e.getIntent();
+						if (intent != null) {
+							activity.startActivityForResult(intent, PROVIDER_ID);
+						}
+					} catch (GoogleAuthException | IOException e) {
+						// Return error to caller
+						activity.onActivityResult(PROVIDER_ID, LoginActivity.RESULT_ERROR, null);
+					}
 				}
-			} catch (GoogleAuthException | IOException e) {
-				// Return error to caller
-				activity.onActivityResult(PROVIDER_ID, LoginActivity.RESULT_ERROR, null);
-			}
+			}).start();
+
 			return;
 		}
 

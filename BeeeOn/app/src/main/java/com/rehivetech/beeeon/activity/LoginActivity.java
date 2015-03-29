@@ -238,26 +238,7 @@ public class LoginActivity extends BaseActivity {
 		mProgress.setMessageResource(R.string.progress_signing);
 		mProgress.show();
 
-		new Thread(new Runnable() {
-			@Override
-			public void run() {
-				try {
-					authProvider.prepareAuth(LoginActivity.this);
-				} catch (final AppException e) {
-					// FIXME: do we want to catch exceptions from prepareAuth at all? hm, maybe yes...
-					ErrorCode errorCode = e.getErrorCode();
-
-					mProgress.dismiss();
-
-					runOnUiThread(new Runnable() {
-						@Override
-						public void run() {
-							Toast.makeText(LoginActivity.this, e.getTranslatedErrorMessage(getApplicationContext()), Toast.LENGTH_LONG).show();
-						}
-					});
-				}
-			}
-		}).start();
+		authProvider.prepareAuth(LoginActivity.this);
 	}
 
 	private void onLoginPrepared(final IAuthProvider authProvider) {

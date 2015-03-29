@@ -33,6 +33,9 @@ public interface IAuthProvider {
 	/**
 	 * Do steps required for filling the parameters map (e.g. open login dialog to set login/password or load Google auth token).
 	 * AuthProvider will provide the result via calling activity.onActivityResult(), read description in each AuthProvider to know what data receive/handle and how.
+	 * AuthProvider must NOT throw any exceptions in this method. They won't be catch by caller.
+	 *
+	 * This will be called (probably) on UI thread so Provider must start the separate thread by itself.
 	 */
 	public void prepareAuth(LoginActivity activity);
 
