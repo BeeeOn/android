@@ -82,7 +82,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".activity.WebLoginActivity"
+            android:name=".activity.WebAuthActivity"
             android:label="@string/title_activity_location_screen" >
         </activity>
         <activity

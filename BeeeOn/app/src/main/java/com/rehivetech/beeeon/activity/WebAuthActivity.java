@@ -12,7 +12,7 @@ import com.rehivetech.beeeon.base.BaseActivity;
 import com.rehivetech.beeeon.network.authentication.GoogleAuthProvider;
 import com.rehivetech.beeeon.network.authentication.IAuthProvider;
 
-public class WebLoginActivity extends BaseActivity {
+public class WebAuthActivity extends BaseActivity {
 
 	public static final String EXTRA_PROVIDER_ID = "provider_id";
 

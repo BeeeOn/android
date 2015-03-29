@@ -16,7 +16,7 @@ import com.google.android.gms.auth.UserRecoverableAuthException;
 import com.google.android.gms.common.AccountPicker;
 import com.rehivetech.beeeon.Constants;
 import com.rehivetech.beeeon.activity.LoginActivity;
-import com.rehivetech.beeeon.activity.WebLoginActivity;
+import com.rehivetech.beeeon.activity.WebAuthActivity;
 import com.rehivetech.beeeon.exception.AppException;
 import com.rehivetech.beeeon.util.Log;
 import com.rehivetech.beeeon.util.Utils;
@@ -111,8 +111,8 @@ public class GoogleAuthProvider implements IAuthProvider {
 	private void webloginAuth(final LoginActivity activity) {
 		Log.d(TAG, "Start webloginAuth");
 
-		final Intent intent = new Intent(activity, WebLoginActivity.class);
-		intent.putExtra(WebLoginActivity.EXTRA_PROVIDER_ID, PROVIDER_ID);
+		final Intent intent = new Intent(activity, WebAuthActivity.class);
+		intent.putExtra(WebAuthActivity.EXTRA_PROVIDER_ID, PROVIDER_ID);
 
 		// Start activity and let user login via web
 		activity.startActivityForResult(intent, PROVIDER_ID);
@@ -172,13 +172,13 @@ public class GoogleAuthProvider implements IAuthProvider {
 		private static final String REDIRECT_URL = "http://localhost";
 		private static final String TOKEN_URL = "https://accounts.google.com/o/oauth2/token";
 
-		private final WebLoginActivity mActivity;
+		private final WebAuthActivity mActivity;
 
 		private boolean done = false;
 
 		private FinishLoginTask mFinishLoginTask;
 
-		public GoogleWebViewClient(final WebLoginActivity activity, final WebView webView) {
+		public GoogleWebViewClient(final WebAuthActivity activity, final WebView webView) {
 			mActivity = activity;
 
 			webView.setWebViewClient(this);
