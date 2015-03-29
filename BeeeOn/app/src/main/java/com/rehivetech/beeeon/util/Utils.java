@@ -1,5 +1,6 @@
 package com.rehivetech.beeeon.util;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
@@ -13,6 +14,7 @@ import android.net.NetworkInfo;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.telephony.TelephonyManager;
+import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
@@ -289,6 +291,21 @@ final public class Utils {
 		Log.i(Utils.class.getSimpleName(), String.format("HW ID (IMEI or MAC): %s", phoneId));
 
 		return phoneId;
+	}
+
+	/**
+	 * Helper for showing toasts from any thread.
+	 *
+	 * @param activity
+	 * @param message
+	 */
+	public static void showToastOnUiThread(final Activity activity, final String message, final int duration) {
+		activity.runOnUiThread(new Runnable() {
+			@Override
+			public void run() {
+				Toast.makeText(activity, message, duration).show();
+			}
+		});
 	}
 
 }

@@ -89,6 +89,7 @@
     <string name="toast_check_your_connection_via_browser">Zkontrolujte připojení s použitím webového prohlížeče</string>
     <string name="toast_not_implemented">Bude implementováno v příští verzi!</string>
     <string name="toast_login_failed">Přihlášení selhalo</string>
+    <string name="toast_auth_provider_error">Nastala chyba během procesu autorizace</string>
     <string name="toast_adapter_activate_failed">Selhalo přidání adaptéru</string>
     <string name="toast_adapter_activated">Adaptér byl aktivován</string>
     <string name="toast_adapter_removed">Adaptér byl odstraněn</string>

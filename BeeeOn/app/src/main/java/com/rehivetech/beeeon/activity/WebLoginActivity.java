@@ -15,6 +15,7 @@ import android.widget.ProgressBar;
 import com.rehivetech.beeeon.base.BaseActivity;
 import com.rehivetech.beeeon.exception.AppException;
 import com.rehivetech.beeeon.network.authentication.GoogleAuthProvider;
+import com.rehivetech.beeeon.network.authentication.IAuthProvider;
 import com.rehivetech.beeeon.util.Log;
 import com.rehivetech.beeeon.util.Utils;
 
@@ -120,7 +121,7 @@ public class WebLoginActivity extends BaseActivity {
 						Log.e(TAG, String.format("received errorCode: %d and failingUrl: %s\ndescription: %s", errorCode, failingUrl, description));
 
 						// Report error to caller
-						setResult(LoginActivity.RESULT_ERROR);
+						setResult(IAuthProvider.RESULT_ERROR);
 						finish();
 					}
 				}
@@ -139,7 +140,7 @@ public class WebLoginActivity extends BaseActivity {
 
 		final String code = parsed.getQueryParameter("code");
 		if (code == null) {
-			setResult(LoginActivity.RESULT_ERROR);
+			setResult(IAuthProvider.RESULT_ERROR);
 			finish();
 			return;
 		}
@@ -196,13 +197,13 @@ public class WebLoginActivity extends BaseActivity {
 		protected void onPostExecute(String token) {
 			if (!token.isEmpty()) {
 				final Intent data = new Intent();
-				data.putExtra(GoogleAuthProvider.PARAMETER_TOKEN, token);
+				data.putExtra(GoogleAuthProvider.AUTH_INTENT_DATA_TOKEN, token);
 
 				// Report success to caller
-				setResult(LoginActivity.RESULT_AUTH, data);
+				setResult(IAuthProvider.RESULT_AUTH, data);
 			} else {
 				// Report error to caller
-				setResult(LoginActivity.RESULT_ERROR);
+				setResult(IAuthProvider.RESULT_ERROR);
 			}
 			WebLoginActivity.this.finish();
 		}

@@ -1,6 +1,6 @@
 package com.rehivetech.beeeon.network.authentication;
 
-import android.app.Activity;
+import android.content.Intent;
 
 import com.rehivetech.beeeon.activity.LoginActivity;
 
@@ -29,11 +29,16 @@ public class DemoAuthProvider implements IAuthProvider {
 
 	@Override
 	public void setPrimaryParameter(String parameter) {
-		// nothing to do here
+		return;
+	}
+
+	@Override
+	public boolean loadAuthIntent(Intent data) {
+		return true;
 	}
 
 	@Override
 	public void prepareAuth(LoginActivity activity) {
-		activity.onActivityResult(PROVIDER_ID, Activity.RESULT_OK, null);
+		activity.onActivityResult(PROVIDER_ID, IAuthProvider.RESULT_AUTH, null);
 	}
 }

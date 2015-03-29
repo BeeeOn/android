@@ -1,10 +1,26 @@
 package com.rehivetech.beeeon.network.authentication;
 
+import android.content.Intent;
+
 import com.rehivetech.beeeon.activity.LoginActivity;
 
 import java.util.Map;
 
 public interface IAuthProvider {
+
+	// Result codes
+
+	/** Provider has all data he needs and they are given via Intent object */
+	public static final int RESULT_AUTH = 100;
+
+	/** User cancelled authorization process */
+	public static final int RESULT_CANCEL = 101;
+
+	/** Error happened during authorization process */
+	public static final int RESULT_ERROR = 102;
+
+
+	// Interface methods
 
 	/**
 	 * @return identifier for the provider as server knows it to correctly identify this login service.
@@ -29,6 +45,14 @@ public interface IAuthProvider {
 	 * @param parameter
 	 */
 	public void setPrimaryParameter(String parameter);
+
+	/**
+	 * Loads the data from the RESULT_AUTH activity result.
+	 *
+	 * @param data
+	 * @return true when this provider has authorization parameters correctly loaded; false when given data aren't correct/expected.
+	 */
+	public boolean loadAuthIntent(Intent data);
 
 	/**
 	 * Do steps required for filling the parameters map (e.g. open login dialog to set login/password or load Google auth token).

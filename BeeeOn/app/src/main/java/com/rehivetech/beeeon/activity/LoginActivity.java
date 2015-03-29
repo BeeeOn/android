@@ -1,6 +1,8 @@
 package com.rehivetech.beeeon.activity;
 
 import android.accounts.AccountManager;
+import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -35,10 +37,6 @@ import com.rehivetech.beeeon.util.Utils;
 public class LoginActivity extends BaseActivity {
 
 	public static final String BUNDLE_REDIRECT = "isRedirect";
-
-	public static final int RESULT_AUTH = 100;
-	public static final int RESULT_CANCEL = 101;
-	public static final int RESULT_ERROR = 102;
 	
 	private static final String TAG = LoginActivity.class.getSimpleName();
 	
@@ -121,85 +119,70 @@ public class LoginActivity extends BaseActivity {
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
 
-		Log.d(TAG, String.format("onActivityResult: %d, %d", requestCode, resultCode));
+		// Prepare correct authProvider object
+		IAuthProvider authProvider = null;
 
-		// FIXME: here LoginActivity need to get the result from Auth providers...  They need to specify somehow (at least comments) what values they will return here
-		// probably they should have some method to load the intent that is sent here...
-
-		// Probably instead of calling onLoginPrepared from authProvider we will call it from here. So authProvider will communicate with this activity only by this onActivityResult... yes!
-
-		/*if (resultCode == RESULT_CANCELED) {
-			mLoginCancel = true;
-			mProgress.dismiss();
-			return;
-		}*/
-
-		// FIXME: how to determine the provider this message is from? Probably load it from data? ... so some factory method for data Intent?
-		// What if this intent is not from out provider but from some Google services?
-
-		// IAuthProvider authProvider = null;
-
-		// RequestCode identifies Provider - auth providers must respect that and use it in startActivityForResult(providerId)
+		// RequestCode uniquely identifies authProvider - all providers must respect that and use it in startActivityForResult(providerId)
 		switch (requestCode) {
 			case GoogleAuthProvider.PROVIDER_ID: {
-				// Using GoogleAuthProvider
-				// authProvider = new GoogleAuthProvider();
-
-				switch (resultCode) {
-					case RESULT_CANCELED:
-					case RESULT_CANCEL: {
-						Log.d(TAG, "Received RESULT_CANCEL from GoogleAuthProvider");
-						mLoginCancel = true;
-						mProgress.dismiss();
-						break;
-					}
-					case RESULT_ERROR: {
-						Log.d(TAG, "Received RESULT_ERROR from GoogleAuthProvider");
-						mLoginCancel = true;
-						mProgress.dismiss();
-						// TODO: notify error?
-						break;
-					}
-					case RESULT_OK: {
-						// This result can go from Google Play Services intent, lets guess what the result is
-						// (before it was used as RESULT_DO_RECOVERABLE_AUTH and RESULT_GET_GOOGLE_ACCOUNT
-						String email = data.getStringExtra(AccountManager.KEY_ACCOUNT_NAME);
-						if (email == null) {
-							Log.d(TAG, "onActivityResult: no email");
-							mProgress.dismiss();
-							return;
-						}
-
-						GoogleAuthProvider provider = new GoogleAuthProvider();
-						provider.setLoginEmail(email);
-
-						prepareLogin(provider);
-						break;
-					}
-					case RESULT_AUTH: {
-						String token = data.getStringExtra(GoogleAuthProvider.PARAMETER_TOKEN);
-						if (token == null) {
-							Log.d(TAG, "no token received");
-							mProgress.dismiss();
-							return;
-						}
-
-						GoogleAuthProvider provider = new GoogleAuthProvider(token);
-						onLoginPrepared(provider);
-						break;
-					}
-				}
-
+				authProvider = new GoogleAuthProvider();
 				break;
 			}
 			case DemoAuthProvider.PROVIDER_ID: {
-				// Using DemoAuthProvider
-				IAuthProvider provider = new DemoAuthProvider();
+				authProvider = new DemoAuthProvider();
+				break;
+			}
+			default: {
+				Log.e(TAG, String.format("Unknown requestCode (%d)", requestCode));
+				return;
+			}
+		}
 
-				// We don't expect any errors or cancel here, so just call the result
-				// FIXME: really?
-				onLoginPrepared(provider);
+		// Process the result
+		switch (resultCode) {
+			case Activity.RESULT_CANCELED:
+			case IAuthProvider.RESULT_CANCEL: {
+				Log.d(TAG, "Received RESULT_CANCEL from authProvider");
+				mLoginCancel = true;
+				mProgress.dismiss();
+				break;
+			}
+			case IAuthProvider.RESULT_ERROR: {
+				Log.e(TAG, "Received RESULT_ERROR from authProvider");
+				mLoginCancel = true;
+				mProgress.dismiss();
 
+				// Show common error message
+				String message = getString(R.string.toast_auth_provider_error);
+				Utils.showToastOnUiThread(this, message, Toast.LENGTH_LONG);
+				break;
+			}
+			case Activity.RESULT_OK: {
+				// This result can go from Google Play Services intent as the choose of user account
+				if (authProvider instanceof GoogleAuthProvider) {
+					String email = data.getStringExtra(AccountManager.KEY_ACCOUNT_NAME);
+					if (email == null) {
+						Log.w(TAG, "Received RESULT_OK from GoogleAuthProvider but without email");
+						mLoginCancel = true;
+						mProgress.dismiss();
+						return;
+					}
+
+					// Set given e-mail as parameter and repeat authProcess of getting token
+					authProvider.setPrimaryParameter(email);
+					authProvider.prepareAuth(this);
+				}
+				break;
+			}
+			case IAuthProvider.RESULT_AUTH: {
+				if (!authProvider.loadAuthIntent(data)) {
+					Log.e(TAG, "Received RESULT_AUTH but authProvider can't load the required data");
+					mProgress.dismiss();
+					return;
+				}
+
+				// Authorization parameters are prepared
+				onAuthPrepared(authProvider);
 				break;
 			}
 		}
@@ -241,7 +224,7 @@ public class LoginActivity extends BaseActivity {
 		authProvider.prepareAuth(LoginActivity.this);
 	}
 
-	private void onLoginPrepared(final IAuthProvider authProvider) {
+	private void onAuthPrepared(final IAuthProvider authProvider) {
 		final boolean demoMode = (authProvider instanceof DemoAuthProvider);
 
 		mProgress.setMessageResource(R.string.progress_signing);
@@ -291,8 +274,6 @@ public class LoginActivity extends BaseActivity {
 					ErrorCode errorCode = e.getErrorCode();
 
 					if (errorCode instanceof NetworkError) {
-						// TODO: move this to GoogleAuthProvider... or to LoginActivity?
-
 						switch ((NetworkError) errorCode) {
 							case NOT_VALID_USER: {
 								// Server denied our credentials (e.g. Google token, or email+password)
@@ -325,15 +306,7 @@ public class LoginActivity extends BaseActivity {
 				}
 
 				if (errFlag) {
-					final String toastMessage = errMessage;
-
-					runOnUiThread(new Runnable() {
-						@Override
-						public void run() {
-							final Toast toast = Toast.makeText(LoginActivity.this, toastMessage, Toast.LENGTH_LONG);
-							toast.show();
-						}
-					});
+					Utils.showToastOnUiThread(LoginActivity.this, errMessage, Toast.LENGTH_LONG);
 				}
 
 				mProgress.dismiss();

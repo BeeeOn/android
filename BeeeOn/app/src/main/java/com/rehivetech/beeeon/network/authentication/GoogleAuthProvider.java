@@ -25,24 +25,17 @@ public class GoogleAuthProvider implements IAuthProvider {
 	// This ID must be unique amongst all providers
 	public static final int PROVIDER_ID = 201;
 
-	public static final String PROVIDER_NAME = "google";
-	public static final String PARAMETER_TOKEN = "gt";
+	private static final String PROVIDER_NAME = "google";
+
+	private static final String PARAMETER_TOKEN = "gt";
+
+	public static final String AUTH_INTENT_DATA_TOKEN = "token"; // FIXME: should be private
 
 	private static final String SCOPE = "oauth2:https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email";
 
 	private static Map<String, String> mParameters = new HashMap<>();
 
 	private String mEmail = "";
-
-	public GoogleAuthProvider() {}
-
-	public GoogleAuthProvider(String token) {
-		mParameters.put(PARAMETER_TOKEN, token);
-	}
-
-	public void setLoginEmail(String email) {
-		mEmail = email;
-	}
 
 	@Override
 	public String getProviderName() {
@@ -56,12 +49,22 @@ public class GoogleAuthProvider implements IAuthProvider {
 
 	@Override
 	public String getPrimaryParameter() {
-		return "";
+		return mEmail;
 	}
 
 	@Override
 	public void setPrimaryParameter(String parameter) {
-		// nothing to do here
+		mEmail = parameter;
+	}
+
+	@Override
+	public boolean loadAuthIntent(Intent data) {
+		String token = data.getStringExtra(AUTH_INTENT_DATA_TOKEN);
+		if (token == null)
+			return false;
+
+		mParameters.put(PARAMETER_TOKEN, token);
+		return true;
 	}
 
 	@Override
@@ -148,13 +151,12 @@ public class GoogleAuthProvider implements IAuthProvider {
 					try {
 						// Load token from Google server and save it
 						String token = GoogleAuthUtil.getToken(activity, mEmail, SCOPE);
-						mParameters.put(PARAMETER_TOKEN, token);
 
 						Intent data = new Intent();
-						data.putExtra(PARAMETER_TOKEN, token);
+						data.putExtra(AUTH_INTENT_DATA_TOKEN, token);
 
 						// Report success to caller
-						activity.onActivityResult(PROVIDER_ID, LoginActivity.RESULT_AUTH, data);
+						activity.onActivityResult(PROVIDER_ID, IAuthProvider.RESULT_AUTH, data);
 					} catch (UserRecoverableAuthException e) {
 						Intent intent = e.getIntent();
 						if (intent != null) {
@@ -162,7 +164,7 @@ public class GoogleAuthProvider implements IAuthProvider {
 						}
 					} catch (GoogleAuthException | IOException e) {
 						// Return error to caller
-						activity.onActivityResult(PROVIDER_ID, LoginActivity.RESULT_ERROR, null);
+						activity.onActivityResult(PROVIDER_ID, IAuthProvider.RESULT_ERROR, null);
 					}
 				}
 			}).start();
@@ -171,6 +173,6 @@ public class GoogleAuthProvider implements IAuthProvider {
 		}
 
 		// Return error to LoginActivity
-		activity.onActivityResult(PROVIDER_ID, LoginActivity.RESULT_ERROR, null);
+		activity.onActivityResult(PROVIDER_ID, IAuthProvider.RESULT_ERROR, null);
 	}
 }
