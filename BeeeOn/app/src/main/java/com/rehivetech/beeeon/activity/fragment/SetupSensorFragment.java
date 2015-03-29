@@ -30,6 +30,8 @@ import com.rehivetech.beeeon.adapter.Adapter;
 import com.rehivetech.beeeon.adapter.device.Facility;
 import com.rehivetech.beeeon.adapter.location.Location;
 import com.rehivetech.beeeon.adapter.location.Location.DefaultLocation;
+import com.rehivetech.beeeon.arrayadapter.LocationArrayAdapter;
+import com.rehivetech.beeeon.arrayadapter.LocationIconAdapter;
 import com.rehivetech.beeeon.arrayadapter.SetupSensorListAdapter;
 import com.rehivetech.beeeon.base.TrackFragment;
 import com.rehivetech.beeeon.controller.Controller;
@@ -116,7 +118,7 @@ public class SetupSensorFragment extends TrackFragment {
 
 		// Create adapter for setting names of new sensors
 		SetupSensorListAdapter listAdapter = new SetupSensorListAdapter(mActivity, mNewFacilities.get(0));
-		CustomArrayAdapter dataAdapter = new CustomArrayAdapter(mActivity, R.layout.custom_spinner_item, getLocationsForAddSensorDialog());
+		LocationArrayAdapter dataAdapter = new LocationArrayAdapter(mActivity, R.layout.custom_spinner_item);
 
 		// Set layout to DataAdapter for locations
 		dataAdapter.setDropDownViewResource(R.layout.custom_spinner_dropdown_item);
@@ -230,7 +232,7 @@ public class SetupSensorFragment extends TrackFragment {
 			}
 
 			// first call need to add adapter
-			CustomIconArrayAdapter iconAdapter = new CustomIconArrayAdapter(mActivity, R.layout.custom_spinner_icon_item, iconsList);
+			LocationIconAdapter iconAdapter = new LocationIconAdapter(mActivity, R.layout.custom_spinner_icon_item);
 			iconAdapter.setDropDownViewResource(R.layout.custom_spinner_icon_dropdown_item);
 			mNewIconSpinner.setAdapter(iconAdapter);
 		}
@@ -253,98 +255,6 @@ public class SetupSensorFragment extends TrackFragment {
 		return false;
 	}
 
-	class CustomArrayAdapter extends ArrayAdapter<Location> {
-
-		private List<Location> mLocations;
-		private int mLayoutResource;
-		private int mDropDownLayoutResource;
-		private Context mContext;
-
-		public CustomArrayAdapter(Context context, int resource, List<Location> objects) {
-			super(context, resource, objects);
-			mContext = context;
-			mLayoutResource = resource;
-			mLocations = objects;
-		}
-
-		@Override
-		public void setDropDownViewResource(int resource) {
-			mDropDownLayoutResource = resource;
-		}
-
-		@Override
-		public View getDropDownView(int position, View convertView, ViewGroup parent) {
-
-			LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-			View row = inflater.inflate(mDropDownLayoutResource, parent, false);
-
-			CheckedTextView label = (CheckedTextView) row.findViewById(R.id.custom_spinner_dropdown_label);
-			label.setText(mLocations.get(position).getName());
-
-			ImageView icon = (ImageView) row.findViewById(R.id.custom_spinner_dropdown_icon);
-			int id = mLocations.get(position).getIconResource();
-			icon.setImageResource(id);
-
-			return row;
-		}
-
-		@Override
-		public View getView(int position, View convertView, ViewGroup parent) {
-			LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-			View row = inflater.inflate(mLayoutResource, parent, false);
-
-			TextView label = (TextView) row.findViewById(R.id.custom_spinner_label);
-			label.setText(mLocations.get(position).getName());
-
-			ImageView icon = (ImageView) row.findViewById(R.id.custom_spinner_icon);
-			icon.setImageResource(mLocations.get(position).getIconResource());
-
-			return row;
-		}
-	}
-
-	class CustomIconArrayAdapter extends ArrayAdapter<Integer> {
-
-		private List<Integer> mIcons;
-		private int mLayoutResource;
-		private int mDropDownLayoutResource;
-		private Context mContext;
-
-		public CustomIconArrayAdapter(Context context, int resource, List<Integer> objects) {
-			super(context, resource, objects);
-			mLayoutResource = resource;
-			mIcons = objects;
-			mContext = context;
-		}
-
-		@Override
-		public void setDropDownViewResource(int resource) {
-			mDropDownLayoutResource = resource;
-		}
-
-		@Override
-		public View getDropDownView(int position, View convertView, ViewGroup parent) {
-			LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-			View row = inflater.inflate(mDropDownLayoutResource, parent, false);
-
-			ImageView icon = (ImageView) row.findViewById(R.id.custom_spinner_icon_dropdown_icon);
-			icon.setImageResource(mIcons.get(position));
-
-			return row;
-		}
-
-		@Override
-		public View getView(int position, View convertView, ViewGroup parent) {
-			LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-			View row = inflater.inflate(mLayoutResource, parent, false);
-
-			ImageView icon = (ImageView) row.findViewById(R.id.custom_spinner_icon_icon);
-			icon.setImageResource(mIcons.get(position));
-
-			return row;
-		}
-
-	}
 
 	public Spinner getSpinner() {
 		return mSpinner;
