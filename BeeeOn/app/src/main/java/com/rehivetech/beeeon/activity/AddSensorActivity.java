@@ -22,7 +22,7 @@ import com.rehivetech.beeeon.adapter.Adapter;
 import com.rehivetech.beeeon.adapter.device.Facility;
 import com.rehivetech.beeeon.asynctask.CallbackTask.CallbackTaskListener;
 import com.rehivetech.beeeon.asynctask.PairRequestTask;
-import com.rehivetech.beeeon.asynctask.ReloadUninitializedTask;
+import com.rehivetech.beeeon.asynctask.ReloadUninitializedFacilitiesTask;
 import com.rehivetech.beeeon.base.BaseApplicationActivity;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.util.Log;
@@ -40,7 +40,7 @@ public class AddSensorActivity extends BaseApplicationActivity {
 	private AddSensorFragment mFragment;
 	
 
-	private ReloadUninitializedTask mReloadUninitializedTask;
+	private ReloadUninitializedFacilitiesTask mReloadUninitializedFacilitiesTask;
 
 	private PairRequestTask mPairRequestTask;
 	
@@ -193,10 +193,10 @@ public class AddSensorActivity extends BaseApplicationActivity {
 		mFragment = fragment;
 	}
 	
-	public void doReloadUninitializedFacilitiesTask(String adapterId) {
-		mReloadUninitializedTask = new ReloadUninitializedTask(mActivity.getApplicationContext());
+	public void doReloadUninitializedFacilitiesTask(String adapterId, boolean forceReload) {
+		mReloadUninitializedFacilitiesTask = new ReloadUninitializedFacilitiesTask(mActivity.getApplicationContext(), forceReload);
 
-		mReloadUninitializedTask.setListener(new CallbackTaskListener() {
+		mReloadUninitializedFacilitiesTask.setListener(new CallbackTaskListener() {
 
 			@Override
 			public void onExecute(boolean success) {
@@ -228,7 +228,7 @@ public class AddSensorActivity extends BaseApplicationActivity {
 
 		});
 
-		mReloadUninitializedTask.execute(adapterId);
+		mReloadUninitializedFacilitiesTask.execute(adapterId);
 	}
 	
 	private void doPairRequestTask(String adapterId) {
@@ -255,15 +255,15 @@ public class AddSensorActivity extends BaseApplicationActivity {
 	public void onDestroy() {
 		super.onDestroy();
 
-		if (mReloadUninitializedTask != null) {
-			mReloadUninitializedTask.cancel(true);
+		if (mReloadUninitializedFacilitiesTask != null) {
+			mReloadUninitializedFacilitiesTask.cancel(true);
 		}
 	}
 
 
 	public void checkUnInitSensor() {
 		Log.d(TAG, "Send if some uninit facility");
-		doReloadUninitializedFacilitiesTask(mPairAdapter.getId());
+		doReloadUninitializedFacilitiesTask(mPairAdapter.getId(), true);
 	}
 
 

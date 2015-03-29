@@ -20,7 +20,7 @@ import com.rehivetech.beeeon.adapter.Adapter;
 import com.rehivetech.beeeon.adapter.device.Facility;
 import com.rehivetech.beeeon.asynctask.CallbackTask.CallbackTaskListener;
 import com.rehivetech.beeeon.asynctask.PairRequestTask;
-import com.rehivetech.beeeon.asynctask.ReloadUninitializedTask;
+import com.rehivetech.beeeon.asynctask.ReloadUninitializedFacilitiesTask;
 import com.rehivetech.beeeon.base.TrackDialogFragment;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.util.Log;
@@ -46,7 +46,7 @@ public class AddSensorFragmentDialog extends TrackDialogFragment {
 	private Adapter mAdapter;
 
 	private PairRequestTask mPairRequestTask;
-	private ReloadUninitializedTask mReloadUninitializedTask;
+	private ReloadUninitializedFacilitiesTask mReloadUninitializedFacilitiesTask;
 
 	private static final String TAG = MainActivity.class.getSimpleName();
 
@@ -125,7 +125,7 @@ public class AddSensorFragmentDialog extends TrackDialogFragment {
 		super.onStart();
 
 		// check if some sensors isnt uninit
-		doReloadUninitializedFacilitiesTask(mAdapter.getId());
+		doReloadUninitializedFacilitiesTask(mAdapter.getId(), true);
 		
 		//doPairRequestTask(mAdapter.getId());
 
@@ -213,7 +213,7 @@ public class AddSensorFragmentDialog extends TrackDialogFragment {
 				if ((millisUntilFinished / 1000) % mIntervalToCheckUninitSensor == 0) {
 					// check if are new uninit sensor
 					Log.d(TAG, "PAIR - check if some uninit sensor");
-					doReloadUninitializedFacilitiesTask(mAdapter.getId());
+					doReloadUninitializedFacilitiesTask(mAdapter.getId(), true);
 				}
 			}
 
@@ -233,10 +233,10 @@ public class AddSensorFragmentDialog extends TrackDialogFragment {
 		startTimerOnButton();
 	}
 
-	public void doReloadUninitializedFacilitiesTask(String adapterId) {
-		mReloadUninitializedTask = new ReloadUninitializedTask(getActivity().getApplicationContext());
+	public void doReloadUninitializedFacilitiesTask(String adapterId, boolean forceReload) {
+		mReloadUninitializedFacilitiesTask = new ReloadUninitializedFacilitiesTask(getActivity().getApplicationContext(), forceReload);
 
-		mReloadUninitializedTask.setListener(new CallbackTaskListener() {
+		mReloadUninitializedFacilitiesTask.setListener(new CallbackTaskListener() {
 
 			@Override
 			public void onExecute(boolean success) {
@@ -275,7 +275,7 @@ public class AddSensorFragmentDialog extends TrackDialogFragment {
 
 		});
 
-		mReloadUninitializedTask.execute(adapterId);
+		mReloadUninitializedFacilitiesTask.execute(adapterId);
 	}
 
 }

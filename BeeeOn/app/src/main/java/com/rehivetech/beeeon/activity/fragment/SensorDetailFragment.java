@@ -186,7 +186,7 @@ public class SensorDetailFragment extends Fragment {
 		super.setUserVisibleHint(isVisibleToUser);
 		if (isVisibleToUser) {
 			Log.d(TAG,"This fragment is visible - dev "+ mDeviceID);
-			doReloadFacilitiesTask(mAdapterId);
+			doReloadFacilitiesTask(mAdapterId, false);
 		}
 
 	}
@@ -360,7 +360,7 @@ public class SensorDetailFragment extends Fragment {
 			public void onRefresh() {
 				Log.d(TAG, "Refreshing list of sensors");
 				mSwipeLayout.setRefreshing(false);
-				doReloadFacilitiesTask(mAdapterId);
+				doReloadFacilitiesTask(mAdapterId, true);
 				//mActivity.getPager().getAdapter().notifyDataSetChanged();
 			}
 		});
@@ -631,15 +631,15 @@ public class SensorDetailFragment extends Fragment {
 
 	}
 
-	private void doReloadFacilitiesTask(final String adapterId) {
-		mReloadFacilitiesTask = new ReloadFacilitiesTask(mActivity, true);
-		Log.d(TAG, "Fragment - Create reload task");
+	private void doReloadFacilitiesTask(final String adapterId, final boolean forceRefresh) {
+		mReloadFacilitiesTask = new ReloadFacilitiesTask(mActivity, forceRefresh);
+
 		mReloadFacilitiesTask.setListener(new CallbackTaskListener() {
 
 			@Override
 			public void onExecute(boolean success) {
 				if(!success){
-					Log.d(TAG,"Fragment - Reload faild");
+					Log.d(TAG,"Fragment - Reload failed");
 					return;
 				}
 				Log.d(TAG, "Fragment - Start reload task");

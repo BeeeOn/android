@@ -5,17 +5,10 @@ import android.content.Context;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.pair.UserPair;
 
-/**
- * Reloads facilities by adapter
- */
 public class EditUserTask extends CallbackTask<UserPair> {
 
-	private final boolean mForceReload;
-
-	public EditUserTask(Context context, boolean forceReload) {
+	public EditUserTask(Context context) {
 		super(context);
-
-		mForceReload = forceReload;
 	}
 
 	@Override

@@ -5,17 +5,10 @@ import android.content.Context;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.pair.DelFacilityPair;
 
-/**
- * Reloads facilities by adapter
- */
 public class RemoveFacilityTask extends CallbackTask<DelFacilityPair> {
 
-	private final boolean mForceReload;
-
-	public RemoveFacilityTask(Context context, boolean forceReload) {
+	public RemoveFacilityTask(Context context) {
 		super(context);
-
-		mForceReload = forceReload;
 	}
 
 	@Override

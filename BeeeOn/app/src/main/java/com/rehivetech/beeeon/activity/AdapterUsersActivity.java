@@ -28,7 +28,7 @@ import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.adapter.Adapter;
 import com.rehivetech.beeeon.arrayadapter.UsersListAdapter;
 import com.rehivetech.beeeon.asynctask.EditUserTask;
-import com.rehivetech.beeeon.asynctask.GetAdapterUsersTask;
+import com.rehivetech.beeeon.asynctask.ReloadAdapterUsersTask;
 import com.rehivetech.beeeon.asynctask.CallbackTask.CallbackTaskListener;
 import com.rehivetech.beeeon.asynctask.RemoveUserTask;
 import com.rehivetech.beeeon.base.BaseApplicationActivity;
@@ -51,7 +51,7 @@ public class AdapterUsersActivity extends BaseApplicationActivity {
 	private ListView mListActUsers;
 	private ListView mListPenUsers;
 
-	private GetAdapterUsersTask mGetAdapterUsersTask;
+	private ReloadAdapterUsersTask mReloadAdapterUsersTask;
 	
 	private static final int NAME_ITEM_HEIGHT = 74;
     private Toolbar mToolbar;
@@ -88,7 +88,7 @@ public class AdapterUsersActivity extends BaseApplicationActivity {
 		mAdapter = mController.getAdapter(getIntent().getStringExtra(Constants.GUI_SELECTED_ADAPTER_ID));
 		
 		// Get all users for adapter
-		doGetAdapterUsers(mAdapter.getId(), true);
+		doReloadAdapterUsersTask(mAdapter.getId(), false);
 	}
 
 	private void initLayouts() {
@@ -130,7 +130,7 @@ public class AdapterUsersActivity extends BaseApplicationActivity {
 	@Override
 	protected void onAppResume() {
 		if(mAdapter != null)
-			doGetAdapterUsers(mAdapter.getId(), true);
+			doReloadAdapterUsersTask(mAdapter.getId(), false);
 	}
 
 	@Override
@@ -173,10 +173,10 @@ public class AdapterUsersActivity extends BaseApplicationActivity {
         }
     }
 	
-	private void doGetAdapterUsers(String adapterId ,boolean forceReload) {
-		mGetAdapterUsersTask = new GetAdapterUsersTask(this, forceReload);
+	private void doReloadAdapterUsersTask(String adapterId, boolean forceReload) {
+		mReloadAdapterUsersTask = new ReloadAdapterUsersTask(this, forceReload);
 
-		mGetAdapterUsersTask.setListener(new CallbackTaskListener() {
+		mReloadAdapterUsersTask.setListener(new CallbackTaskListener() {
 
 			@Override
 			public void onExecute(boolean success) {
@@ -187,19 +187,19 @@ public class AdapterUsersActivity extends BaseApplicationActivity {
 
 		});
 
-		mGetAdapterUsersTask.execute(adapterId);
+		mReloadAdapterUsersTask.execute(adapterId);
 	}
 
 
     private void doRemoveUserTask(User user) {
-        mRemoveUserTask = new RemoveUserTask(getApplicationContext(),true);
+        mRemoveUserTask = new RemoveUserTask(getApplicationContext());
         UserPair pair = new UserPair(user, mAdapter.getId());
 
         mRemoveUserTask.setListener(new CallbackTaskListener() {
             @Override
             public void onExecute(boolean success) {
                 // Get all users for adapter
-                doGetAdapterUsers(mAdapter.getId(), true);
+                doReloadAdapterUsersTask(mAdapter.getId(), true);
                 if(success) {
                     // Hlaska o uspechu
                 }
@@ -209,14 +209,14 @@ public class AdapterUsersActivity extends BaseApplicationActivity {
     }
 
     private void doEditUserTask(User user) {
-        mEditUserTask = new EditUserTask(getApplicationContext(),true);
+        mEditUserTask = new EditUserTask(getApplicationContext());
         UserPair pair = new UserPair(user, mAdapter.getId());
 
         mEditUserTask.setListener(new CallbackTaskListener() {
             @Override
             public void onExecute(boolean success) {
                 // Get all users for adapter
-                doGetAdapterUsers(mAdapter.getId(), true);
+                doReloadAdapterUsersTask(mAdapter.getId(), true);
                 if(success) {
                     // Hlaska o uspechu
                 }

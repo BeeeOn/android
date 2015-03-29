@@ -193,13 +193,13 @@ public class SetupSensorFragmentDialog extends TrackDialogFragment {
 
 				// Save that facility
 				Log.d(TAG, String.format("InitializeFacility - facility: %s, loc: %s", newFacility.getId(), location.getId()));
-				doSaveDeviceTask(new InitializeFacilityPair(newFacility, location));
+				doInitializeFacilityTask(new InitializeFacilityPair(newFacility, location));
 			}
 		});
 
 	}
 
-	private void doSaveDeviceTask(final InitializeFacilityPair pair) {
+	private void doInitializeFacilityTask(final InitializeFacilityPair pair) {
 		InitializeFacilityTask task = new InitializeFacilityTask(getActivity().getApplicationContext());
 		task.setListener(new CallbackTaskListener() {
 

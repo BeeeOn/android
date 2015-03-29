@@ -175,7 +175,7 @@ public class SetupSensorActivity extends BaseApplicationActivity {
 
 				// Save that facility
 				Log.d(TAG, String.format("InitializeFacility - facility: %s, loc: %s", newFacility.getId(), location.getId()));
-				doSaveDeviceTask(new InitializeFacilityPair(newFacility, location));
+				doInitializeFacilityTask(new InitializeFacilityPair(newFacility, location));
 			}
 		});
 		
@@ -222,7 +222,7 @@ public class SetupSensorActivity extends BaseApplicationActivity {
 		}
 	}
 	
-	private void doSaveDeviceTask(final InitializeFacilityPair pair) {
+	private void doInitializeFacilityTask(final InitializeFacilityPair pair) {
 		mTask = new InitializeFacilityTask(mActivity.getApplicationContext());
 		mTask.setListener(new CallbackTaskListener() {
 

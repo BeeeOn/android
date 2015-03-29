@@ -457,7 +457,7 @@ public class SensorListFragment extends Fragment {
 	}
 
     private void doRemoveFacilityTask(Facility facility) {
-        mRemoveFacilityTask = new RemoveFacilityTask(getActivity().getApplicationContext(),true);
+        mRemoveFacilityTask = new RemoveFacilityTask(getActivity().getApplicationContext());
         DelFacilityPair pair = new DelFacilityPair(facility.getId(), facility.getAdapterId());
 
         mRemoveFacilityTask.setListener(new CallbackTaskListener() {

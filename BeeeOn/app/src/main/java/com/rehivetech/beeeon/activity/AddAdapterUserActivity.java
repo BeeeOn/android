@@ -120,7 +120,7 @@ public class AddAdapterUserActivity extends BaseApplicationActivity {
 	}
 	
 	protected void doAddAdapterUserTask(AddUserPair pair) {
-		mAddAdapterUserTask = new AddAdapterUserTask(mActivity, true);
+		mAddAdapterUserTask = new AddAdapterUserTask(mActivity);
 
 		mAddAdapterUserTask.setListener(new CallbackTaskListener() {
 

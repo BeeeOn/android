@@ -6,7 +6,7 @@ import com.rehivetech.beeeon.adapter.Adapter;
 import com.rehivetech.beeeon.controller.Controller;
 
 /**
- * Reloads all data
+ * Reloads list of adapters and then locations and facilities for active adapter.
  */
 public class FullReloadTask extends CallbackTask<Void> {
 

@@ -4,7 +4,7 @@ import android.content.Context;
 import com.rehivetech.beeeon.controller.Controller;
 
 /**
- * Reloads facilities by adapter
+ * Reloads locations and facilities by adapter.
  */
 public class ReloadFacilitiesTask extends CallbackTask<String> {
 
@@ -20,7 +20,7 @@ public class ReloadFacilitiesTask extends CallbackTask<String> {
 	protected Boolean doInBackground(String adapterId) {
 		Controller controller = Controller.getInstance(mContext);
 
-		controller.reloadLocations(adapterId,mForceReload);
+		controller.reloadLocations(adapterId, mForceReload);
 		controller.reloadFacilitiesByAdapter(adapterId, mForceReload);
 
 		return true;

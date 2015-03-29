@@ -5,7 +5,6 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.view.ActionMode;
@@ -29,7 +28,6 @@ import com.rehivetech.beeeon.activity.AdapterUsersActivity;
 import com.rehivetech.beeeon.activity.MainActivity;
 import com.rehivetech.beeeon.activity.SettingsMainActivity;
 import com.rehivetech.beeeon.activity.dialog.InfoDialogFragment;
-import com.rehivetech.beeeon.activity.fragment.ProfileDetailFragment;
 import com.rehivetech.beeeon.activity.menuItem.AdapterMenuItem;
 import com.rehivetech.beeeon.activity.menuItem.EmptyMenuItem;
 import com.rehivetech.beeeon.activity.menuItem.GroupMenuItem;
@@ -141,7 +139,7 @@ public class NavDrawerMenu   {
 				case ADAPTER:
 					// if it is not chosen, switch to selected adapter
 					if (!mController.getActiveAdapter().getId().equals(mSelectedMenuItem.getId())) {
-						doSwitchAdapter(mSelectedMenuItem.getId());
+						doSwitchAdapterTask(mSelectedMenuItem.getId());
 					}
 					break;
                 case LOCATION:
@@ -319,7 +317,7 @@ public class NavDrawerMenu   {
 		}
 	}
 
-	private void doSwitchAdapter(String adapterId) {
+	private void doSwitchAdapterTask(String adapterId) {
 		mSwitchAdapterTask = new SwitchAdapterTask(mActivity, false);
 
 		mSwitchAdapterTask.setListener(new CallbackTaskListener() {
@@ -340,7 +338,7 @@ public class NavDrawerMenu   {
 		mSwitchAdapterTask.execute(adapterId);
 	}
 
-	private void doUnregistAdapter(String adapterId) {
+	private void doUnregisterAdapterTask(String adapterId) {
 		mUnregisterAdapterTask = new UnregisterAdapterTask(mActivity);
 
 		mUnregisterAdapterTask.setListener(new CallbackTaskListener() {
@@ -507,7 +505,7 @@ public class NavDrawerMenu   {
         public boolean onActionItemClicked(ActionMode mode, android.view.MenuItem item) {
             Log.d(TAG,"ActionMode Adapter - item id: "+ item.getItemId());
            if (item.getItemId() == R.id.ada_menu_del) { // UNREGIST ADAPTER
-				doUnregistAdapter(mSelectedMenuItem.getId());
+				doUnregisterAdapterTask(mSelectedMenuItem.getId());
 			} else if (item.getItemId() == R.id.ada_menu_users) { // GO TO USERS OF ADAPTER
 				Intent intent = new Intent(mActivity, AdapterUsersActivity.class);
 				intent.putExtra(Constants.GUI_SELECTED_ADAPTER_ID, mSelectedMenuItem.getId());

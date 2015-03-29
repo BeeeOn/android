@@ -56,7 +56,6 @@ public class SensorDetailActivity extends BaseApplicationActivity {
 
 	private ReloadFacilitiesTask mReloadFacilitiesTask;
 
-	private boolean mForceReload = false;
     private Toolbar mToolbar;
 
     @Override
@@ -113,7 +112,7 @@ public class SensorDetailActivity extends BaseApplicationActivity {
 		Log.d(TAG, "onAppResume()");
 
 		if (mReloadFacilitiesTask == null) {
-			doReloadFacilitiesTask(mActiveAdapterId);
+			doReloadFacilitiesTask(mActiveAdapterId, false);
 		}
 	}
 
@@ -139,8 +138,8 @@ public class SensorDetailActivity extends BaseApplicationActivity {
 		super.onStop();
 	}
 
-	private void doReloadFacilitiesTask(final String adapterId) {
-		mReloadFacilitiesTask = new ReloadFacilitiesTask(this, mForceReload);
+	private void doReloadFacilitiesTask(final String adapterId, final boolean forceReload) {
+		mReloadFacilitiesTask = new ReloadFacilitiesTask(this, forceReload);
 
 		mReloadFacilitiesTask.setListener(new CallbackTaskListener() {
 
@@ -179,7 +178,7 @@ public class SensorDetailActivity extends BaseApplicationActivity {
 	}
 
 	/**
-	 * A simple pager adapter that represents 5 {@link ScreenSlidePageFragment} objects, in sequence.
+	 * A simple pager adapter that represents 5 {@link SensorDetailFragment} objects, in sequence.
 	 */
 	public class ScreenSlidePagerAdapter extends FragmentStatePagerAdapter {
 
@@ -263,9 +262,7 @@ public class SensorDetailActivity extends BaseApplicationActivity {
 
 	public void redraw() {
 		Log.d(TAG, "Start redraw ActiveDevice:" + mActiveDeviceId + " ActiveAdapter:" + mActiveAdapterId);
-		mForceReload = true;
-		doReloadFacilitiesTask(mActiveAdapterId);
-
+		doReloadFacilitiesTask(mActiveAdapterId, true);
 	}
 
 }
