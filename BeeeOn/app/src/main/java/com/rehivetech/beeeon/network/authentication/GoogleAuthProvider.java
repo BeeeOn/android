@@ -4,6 +4,11 @@ import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
+import android.os.AsyncTask;
+import android.view.View;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
 
 import com.google.android.gms.auth.GoogleAuthException;
 import com.google.android.gms.auth.GoogleAuthUtil;
@@ -12,8 +17,12 @@ import com.google.android.gms.common.AccountPicker;
 import com.rehivetech.beeeon.Constants;
 import com.rehivetech.beeeon.activity.LoginActivity;
 import com.rehivetech.beeeon.activity.WebLoginActivity;
+import com.rehivetech.beeeon.exception.AppException;
 import com.rehivetech.beeeon.util.Log;
 import com.rehivetech.beeeon.util.Utils;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -29,7 +38,7 @@ public class GoogleAuthProvider implements IAuthProvider {
 
 	private static final String PARAMETER_TOKEN = "gt";
 
-	public static final String AUTH_INTENT_DATA_TOKEN = "token"; // FIXME: should be private
+	private static final String AUTH_INTENT_DATA_TOKEN = "token";
 
 	private static final String SCOPE = "oauth2:https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email";
 
@@ -102,25 +111,8 @@ public class GoogleAuthProvider implements IAuthProvider {
 	private void webloginAuth(final LoginActivity activity) {
 		Log.d(TAG, "Start webloginAuth");
 
-		final String redirect = "http://localhost";
-		final String tokenUrl = "https://accounts.google.com/o/oauth2/token";
-
-		StringBuilder url = new StringBuilder();
-		url.append("https://accounts.google.com/o/oauth2/auth?client_id=");
-		url.append(Utils.uriEncode(Constants.WEB_LOGIN_CLIENT_ID));
-		url.append("&scope=openid%20email%20profile");
-		url.append("&redirect_uri=");
-		url.append(Utils.uriEncode(redirect));
-		url.append("&state=foobar");
-		url.append("&response_type=code");
-
 		final Intent intent = new Intent(activity, WebLoginActivity.class);
-		intent.putExtra(WebLoginActivity.LOGIN_URL, url.toString());
-		intent.putExtra(WebLoginActivity.TOKEN_URL, tokenUrl);
-		intent.putExtra(WebLoginActivity.CLIENT_ID, Constants.WEB_LOGIN_CLIENT_ID);
-		intent.putExtra(WebLoginActivity.CLIENT_SECRET, Constants.WEB_LOGIN_SECRET);
-		intent.putExtra(WebLoginActivity.REDIRECT_URI, redirect);
-		intent.putExtra(WebLoginActivity.GRANT_TYPE, "authorization_code");
+		intent.putExtra(WebLoginActivity.EXTRA_PROVIDER_ID, PROVIDER_ID);
 
 		// Start activity and let user login via web
 		activity.startActivityForResult(intent, PROVIDER_ID);
@@ -175,4 +167,140 @@ public class GoogleAuthProvider implements IAuthProvider {
 		// Return error to LoginActivity
 		activity.onActivityResult(PROVIDER_ID, IAuthProvider.RESULT_ERROR, null);
 	}
+
+	public static class GoogleWebViewClient extends WebViewClient implements IWebAuthProvider {
+		private static final String REDIRECT_URL = "http://localhost";
+		private static final String TOKEN_URL = "https://accounts.google.com/o/oauth2/token";
+
+		private final WebLoginActivity mActivity;
+
+		private boolean done = false;
+
+		private FinishLoginTask mFinishLoginTask;
+
+		public GoogleWebViewClient(final WebLoginActivity activity, final WebView webView) {
+			mActivity = activity;
+
+			webView.setWebViewClient(this);
+
+			StringBuilder url = new StringBuilder();
+			url.append("https://accounts.google.com/o/oauth2/auth?client_id=");
+			url.append(Utils.uriEncode(Constants.WEB_LOGIN_CLIENT_ID));
+			url.append("&scope=openid%20email%20profile");
+			url.append("&redirect_uri=");
+			url.append(Utils.uriEncode(REDIRECT_URL));
+			url.append("&state=foobar");
+			url.append("&response_type=code");
+
+			webView.loadUrl(url.toString());
+		}
+
+		@Override
+		public void onPageFinished(WebView view, String url) {
+			boolean isRedirectPage = url.startsWith(REDIRECT_URL);
+
+			// Hide webView when it is redirect page or user is done with logging in
+			view.setVisibility(isRedirectPage || done ? View.INVISIBLE : View.VISIBLE);
+
+			if (isRedirectPage && !done) {
+				// This is page we're looking for
+				done = true;
+				finishWebLoginAuth(url);
+			}
+		}
+
+		@Override
+		public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
+			// On any error (either expected or unexpected) we are closing this activity, so we hide webView immediately
+			view.setVisibility(View.INVISIBLE);
+
+			if (!done) {
+				done = true;
+
+				if ((errorCode == ERROR_HOST_LOOKUP || errorCode == ERROR_CONNECT) && failingUrl.startsWith(REDIRECT_URL)) {
+					Log.w(TAG, String.format("ignoring errorCode: %d and failingUrl: %s", errorCode, failingUrl));
+					finishWebLoginAuth(failingUrl);
+				} else {
+					Log.e(TAG, String.format("received errorCode: %d and failingUrl: %s\ndescription: %s", errorCode, failingUrl, description));
+
+					// Report error to caller
+					mActivity.setResult(IAuthProvider.RESULT_ERROR);
+					mActivity.finish();
+				}
+			}
+		}
+
+		@Override
+		public void onActivityStop() {
+			if (mFinishLoginTask != null) {
+				mFinishLoginTask.cancel(true);
+			}
+		}
+
+		private void finishWebLoginAuth(final String url) throws AppException {
+			final Uri parsed = Uri.parse(url);
+
+			final String error = parsed.getQueryParameter("error");
+			if (error != null)
+				Log.e(TAG, String.format("received error: %s", error));
+
+			final String code = parsed.getQueryParameter("code");
+			if (code == null) {
+				mActivity.setResult(IAuthProvider.RESULT_ERROR);
+				mActivity.finish();
+				return;
+			}
+
+			mFinishLoginTask = new FinishLoginTask(code);
+			mFinishLoginTask.execute();
+		}
+
+		private class FinishLoginTask extends AsyncTask<Void, Void, String> {
+			private final String mCode;
+
+			public FinishLoginTask(final String code) {
+				mCode = code;
+			}
+
+			@Override
+			protected String doInBackground(Void... nothing) {
+				// Prepare parameters for Google request
+				final Map<String, String> params = new HashMap<String, String>(8);
+				params.put("code", mCode);
+				params.put("client_id", Constants.WEB_LOGIN_CLIENT_ID);
+				params.put("client_secret", Constants.WEB_LOGIN_SECRET);
+				params.put("redirect_uri", REDIRECT_URL);
+				params.put("grant_type", "authorization_code");
+
+				String token = "";
+				try {
+					JSONObject tokenJson = Utils.fetchJsonByPost(TOKEN_URL, params);
+					Log.d(TAG, String.format("received: %s", tokenJson.toString()));
+					token = tokenJson.getString("access_token");
+				}  catch (IOException | JSONException e) {
+					e.printStackTrace();
+				}
+				return token;
+			}
+
+			@Override
+			protected void onPostExecute(String token) {
+				if (!token.isEmpty()) {
+					final Intent data = new Intent();
+					data.putExtra(GoogleAuthProvider.AUTH_INTENT_DATA_TOKEN, token);
+
+					// Report success to caller
+					mActivity.setResult(IAuthProvider.RESULT_AUTH, data);
+				} else {
+					// Report error to caller
+					mActivity.setResult(IAuthProvider.RESULT_ERROR);
+				}
+
+				mActivity.finish();
+			}
+
+		}
+
+	}
+
 }

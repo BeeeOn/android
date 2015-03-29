@@ -63,4 +63,14 @@ public interface IAuthProvider {
 	 */
 	public void prepareAuth(LoginActivity activity);
 
+	/**
+	 * Interface for providers using WebLoginActivity.
+	 */
+	public interface IWebAuthProvider {
+		/**
+		 * This is called when in parent WebLoginActivity is called onStop method.
+		 */
+		public void onActivityStop();
+	}
+
 }
