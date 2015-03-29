@@ -1,9 +1,9 @@
 package com.rehivetech.beeeon.activity;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.View;
@@ -12,7 +12,6 @@ import android.webkit.WebViewClient;
 import android.widget.FrameLayout;
 import android.widget.ProgressBar;
 
-import com.rehivetech.beeeon.asynctask.CallbackTask;
 import com.rehivetech.beeeon.base.BaseActivity;
 import com.rehivetech.beeeon.exception.AppException;
 import com.rehivetech.beeeon.network.authentication.GoogleAuthProvider;
@@ -36,6 +35,8 @@ public class WebLoginActivity extends BaseActivity {
 	public static final String GRANT_TYPE = "grant.type";
 
 	private static final String TAG = WebLoginActivity.class.getSimpleName();
+
+	private FinishLoginTask mFinishLoginTask;
 
 	private String getExtraNonNull(String key) {
 		if (getIntent().hasExtra(key))
@@ -156,50 +157,54 @@ public class WebLoginActivity extends BaseActivity {
 		params.put("redirect_uri", redirectUri);
 		params.put("grant_type", grantType);
 
-		final FinishLoginTask tokenTask = new FinishLoginTask(context, tokenUrl, params);
-		tokenTask.setListener(new CallbackTask.CallbackTaskListener() {
-			@Override
-			public void onExecute(boolean success) {
-				if (success) {
-					final Intent data = new Intent();
-					data.putExtra(GoogleAuthProvider.PARAMETER_TOKEN, tokenTask.mToken);
-
-					// Report success to caller
-					setResult(LoginActivity.RESULT_AUTH, data);
-				} else {
-					// Report error to caller
-					setResult(LoginActivity.RESULT_ERROR);
-				}
-				finish();
-			}
-		});
-
-		tokenTask.execute(this);
+		mFinishLoginTask = new FinishLoginTask(tokenUrl, params);
+		mFinishLoginTask.execute();
 	}
 
-	class FinishLoginTask extends CallbackTask<Activity> {
-		final String url;
-		final Map<String, String> params;
+	@Override
+	public void onStop() {
+		super.onStop();
 
-		private String mToken = "";
+		if (mFinishLoginTask != null) {
+			mFinishLoginTask.cancel(true);
+		}
+	}
 
-		public FinishLoginTask(final Context context, final String url, Map<String, String> params) {
-			super(context);
-			this.url = url;
-			this.params = params;
+	private class FinishLoginTask extends AsyncTask<Void, Void, String> {
+		private final String mUrl;
+		private final Map<String, String> mParams;
+
+		public FinishLoginTask(final String url, Map<String, String> params) {
+			mUrl = url;
+			mParams = params;
 		}
 
 		@Override
-		protected Boolean doInBackground(Activity activity) {
+		protected String doInBackground(Void... params) {
+			String token = "";
 			try {
-				JSONObject tokenJson = Utils.fetchJsonByPost(url, params);
+				JSONObject tokenJson = Utils.fetchJsonByPost(mUrl, mParams);
 				Log.d(TAG, String.format("received: %s", tokenJson.toString()));
-				mToken = tokenJson.getString("access_token");
-				return true;
+				token = tokenJson.getString("access_token");
 			}  catch (IOException | JSONException e) {
 				e.printStackTrace();
 			}
-			return false;
+			return token;
+		}
+
+		@Override
+		protected void onPostExecute(String token) {
+			if (!token.isEmpty()) {
+				final Intent data = new Intent();
+				data.putExtra(GoogleAuthProvider.PARAMETER_TOKEN, token);
+
+				// Report success to caller
+				setResult(LoginActivity.RESULT_AUTH, data);
+			} else {
+				// Report error to caller
+				setResult(LoginActivity.RESULT_ERROR);
+			}
+			WebLoginActivity.this.finish();
 		}
 	}
 
