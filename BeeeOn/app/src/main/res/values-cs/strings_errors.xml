@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-	<string name="unknown_error">Unknown error</string>
+	<string name="unknown_error">Neznámá chyba</string>
 	<string name="error_message">Chyba č.%1$d: %2$s</string>
 
 	<string name="NetworkError___COM_VER_MISMATCH">Verze vaší aplikace již není podporována.\n\nStáhněte si prosím novou verzi aplikace.</string>
@@ -30,6 +30,7 @@
 	<string name="NetworkError___BAD_PSWD">Zadané heslo není správné.</string>
 	<string name="NetworkError___SUSPECT_USER">Tento uživatelský účet je dočasně zablokován.</string>
 	<string name="NetworkError___INVALID_PROVIDER">Tento poskytovatel není k dispozici.</string>
+	<string name="NetworkError___INVALID_REQUEST">Tento typ požadavku není na serveru podporován.</string>
 	
 	<string name="NetworkError___NO_CONNECTION">Není dostupné připojení k Internetu.\n\nZkontrolujte vaše nastavení.</string>
 	<string name="NetworkError___SERVER_NOT_RESPONDING">Server neodpovídá.\n\nZkuste to prosím znovu.</string>

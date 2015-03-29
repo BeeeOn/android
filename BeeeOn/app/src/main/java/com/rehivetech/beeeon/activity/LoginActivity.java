@@ -19,7 +19,6 @@ import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.exception.AppException;
 import com.rehivetech.beeeon.exception.ErrorCode;
 import com.rehivetech.beeeon.exception.NetworkError;
-import com.rehivetech.beeeon.exception.NotImplementedException;
 import com.rehivetech.beeeon.network.authentication.DemoAuthProvider;
 import com.rehivetech.beeeon.network.authentication.GoogleAuthProvider;
 import com.rehivetech.beeeon.network.authentication.IAuthProvider;
@@ -182,7 +181,7 @@ public class LoginActivity extends BaseActivity {
 				}
 
 				// Authorization parameters are prepared
-				onAuthPrepared(authProvider);
+				doLogin(authProvider);
 				break;
 			}
 		}
@@ -224,8 +223,8 @@ public class LoginActivity extends BaseActivity {
 		authProvider.prepareAuth(LoginActivity.this);
 	}
 
-	private void onAuthPrepared(final IAuthProvider authProvider) {
-		final boolean demoMode = (authProvider instanceof DemoAuthProvider);
+	private void doLogin(final IAuthProvider authProvider) {
+		Log.d(TAG, "doLogin()");
 
 		mProgress.setMessageResource(R.string.progress_signing);
 		mProgress.show();
@@ -233,9 +232,9 @@ public class LoginActivity extends BaseActivity {
 		new Thread(new Runnable() {
 			@Override
 			public void run() {
-				setDemoMode(demoMode);
+				setDemoMode(authProvider instanceof DemoAuthProvider);
 
-				String errMessage = "Login failed";
+				String errMessage = getString(R.string.toast_login_failed);
 				boolean errFlag = true;
 
 				try {
@@ -244,7 +243,7 @@ public class LoginActivity extends BaseActivity {
 
 					// Here is authProvider already filled with needed parameters so we can send them to the server
 					if (mController.login(authProvider)) {
-						Log.d(TAG, "Login: true");
+						Log.d(TAG, "Login successful");
 						errFlag = false;
 
 						// Load all adapters and data for active one on login
@@ -275,10 +274,18 @@ public class LoginActivity extends BaseActivity {
 
 					if (errorCode instanceof NetworkError) {
 						switch ((NetworkError) errorCode) {
+							case USER_NOT_EXISTS: {
+								// User is not registered on server yet, show registration question dialog
+								runOnUiThread(new Runnable() {
+									@Override
+									public void run() {
+										showRegisterDialog(authProvider);
+									}
+								});
+								return;
+							}
 							case NOT_VALID_USER: {
 								// Server denied our credentials (e.g. Google token, or email+password)
-								// FIXME: this will be changed when new error messages are available
-
 								if (authProvider instanceof GoogleAuthProvider) {
 									// Probably wrong Google token so invalidate the token and then try it again
 									if (Utils.isGooglePlayServicesAvailable(LoginActivity.this)) {
@@ -295,12 +302,8 @@ public class LoginActivity extends BaseActivity {
 
 					e.printStackTrace();
 					errMessage = e.getTranslatedErrorMessage(getApplicationContext());
-				} catch (NotImplementedException e) {
-					e.printStackTrace();
-					errMessage = getString(R.string.toast_not_implemented);
 				} catch (Exception e) {
 					e.printStackTrace();
-					errMessage = getString(R.string.toast_login_failed);
 				} finally {
 					mController.endPersistentConnection();
 				}
@@ -312,6 +315,79 @@ public class LoginActivity extends BaseActivity {
 				mProgress.dismiss();
 			}
 		}).start();
+	}
+
+	private void doRegister(final IAuthProvider authProvider) {
+		Log.d(TAG, "doRegister()");
+
+		mProgress.setMessageResource(R.string.progress_signup);
+		mProgress.show();
+
+		new Thread(new Runnable() {
+			@Override
+			public void run() {
+				setDemoMode(authProvider instanceof DemoAuthProvider);
+
+				String errMessage = getString(R.string.toast_registration_failed);
+				boolean errFlag = true;
+
+				try {
+					// Here is authProvider already filled with needed parameters so we can send them to the server
+					if (mController.register(authProvider)) {
+						Log.d(TAG, "Register successful");
+						errFlag = false;
+
+						// Finish registration by start logging in
+						if (!mLoginCancel) {
+							doLogin(authProvider);
+						}
+
+						return;
+					}
+				} catch (AppException e) {
+					ErrorCode errorCode = e.getErrorCode();
+
+					// TODO: handle some known exceptions
+
+					e.printStackTrace();
+					errMessage = e.getTranslatedErrorMessage(getApplicationContext());
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+
+				if (errFlag) {
+					Utils.showToastOnUiThread(LoginActivity.this, errMessage, Toast.LENGTH_LONG);
+				}
+
+				mProgress.dismiss();
+			}
+		}).start();
+	}
+
+	private void showRegisterDialog(final IAuthProvider authProvider) {
+		DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				switch (which){
+					case DialogInterface.BUTTON_POSITIVE:
+						doRegister(authProvider);
+						break;
+
+					case DialogInterface.BUTTON_NEGATIVE:
+						mLoginCancel = true;
+						mProgress.dismiss();
+						break;
+				}
+			}
+		};
+
+		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+		builder
+				.setTitle(R.string.dialog_register_new_account_title)
+				.setMessage(R.string.dialog_register_new_account_message)
+				.setPositiveButton(android.R.string.yes, dialogClickListener)
+				.setNegativeButton(android.R.string.no, dialogClickListener)
+				.show();
 	}
 
 	/**

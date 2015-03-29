@@ -41,7 +41,8 @@ public enum NetworkError implements ErrorCode {
 	BAD_PSWD(25),
 	SUSPECT_USER(26),
 	INVALID_PROVIDER(27),
-	ADA_SERVER_PROBLEM(100);
+	ADA_SERVER_PROBLEM(100),
+	INVALID_REQUEST(999);
 
 	private final int mNumber;
 

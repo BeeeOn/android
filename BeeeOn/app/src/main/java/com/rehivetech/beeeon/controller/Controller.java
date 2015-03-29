@@ -217,7 +217,7 @@ public final class Controller {
 
 	/**
 	 * Login user with any authProvider (authenticate on server).
-	 * 
+	 *
 	 * @param authProvider
 	 * @return true on success, false otherwise
 	 * @throws AppException
@@ -264,6 +264,18 @@ public final class Controller {
 		}
 
 		return true;
+	}
+
+	/**
+	 * Register user with any authProvider (authenticate on server).
+	 *
+	 * @param authProvider
+	 * @return true on success, false otherwise
+	 * @throws AppException
+	 */
+	public boolean register(IAuthProvider authProvider) throws AppException {
+		// We don't have beeeon-token yet, try to login
+		return mNetwork.registerMe(authProvider); // throws exception on error
 	}
 
 	/**

@@ -89,6 +89,7 @@
     <string name="toast_check_your_connection_via_browser">Zkontrolujte připojení s použitím webového prohlížeče</string>
     <string name="toast_not_implemented">Bude implementováno v příští verzi!</string>
     <string name="toast_login_failed">Přihlášení selhalo</string>
+	<string name="toast_registration_failed">Registrace selhala</string>
     <string name="toast_auth_provider_error">Nastala chyba během procesu autorizace</string>
     <string name="toast_adapter_activate_failed">Selhalo přidání adaptéru</string>
     <string name="toast_adapter_activated">Adaptér byl aktivován</string>
@@ -315,5 +316,7 @@
     <string name="tut_add_sensor_text">Pro přidání nového zařízení klepněte na plus (+)</string>
     <string name="title_activity_location_detail_screen">Detail umístění</string>
 	<string name="sensor_name_label">Name of sensor</string>
+	<string name="dialog_register_new_account_message">Ještě nemáte vytvořený BeeeOn účet, přejete si jej vytvořit nyní?</string>
+	<string name="dialog_register_new_account_title">Nezaregistrováno</string>
 
 </resources>

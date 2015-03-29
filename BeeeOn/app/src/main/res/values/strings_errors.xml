@@ -30,6 +30,7 @@
 	<string name="NetworkError___BAD_PSWD">bad password</string>
 	<string name="NetworkError___SUSPECT_USER">this account is temporary locked</string>
 	<string name="NetworkError___INVALID_PROVIDER">this provider is not valid</string>
+	<string name="NetworkError___INVALID_REQUEST">not supported by server</string>
 
 	<string name="NetworkError___NO_CONNECTION">no connection</string>
 	<string name="NetworkError___SERVER_NOT_RESPONDING">server not responding</string>

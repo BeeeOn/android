@@ -42,8 +42,8 @@
     <string name="addsensor_or">alebo</string>
     <string name="sensordetail_last_value">Posledná hodnota: \u0020</string>
     <string name="sensordetail_refresh_time">Interval obnovy: </string>
-    <string name="sensordetail_battery_state">Stav batérie</string>
-    <string name="update_needed">Prosím aktualizujte aplikáciu</string>
+	<string name="sensordetail_battery_label">Stav batérie</string>
+	<string name="update_needed">Prosím aktualizujte aplikáciu</string>
     <string name="addsensor_type">Typ senzoru: </string>
     <string name="setup_sensor_info_text">Prosím, nastavte senzor inicializovaný v </string>
     <string name="setup_sensor_header_names">Názov senzoru</string>
@@ -304,7 +304,7 @@
     <string name="toast_not_implemented">Bude implementované v budúcej verzii!</string>
     <string name="add_user_role_header">Úloha</string>
 
-    <string name="title_activity_location_detail_screen">Detail umiestnenia</string>
+	<string name="title_activity_location_detail_screen">Detail umiestnenia</string>
 	<string name="sensor_name_label">Name of sensor</string>
 
 </resources>
