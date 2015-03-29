@@ -5,9 +5,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.View;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.FrameLayout;
+import android.widget.ProgressBar;
 
 import com.rehivetech.beeeon.asynctask.CallbackTask;
 import com.rehivetech.beeeon.base.BaseActivity;
@@ -34,14 +37,11 @@ public class WebLoginActivity extends BaseActivity {
 
 	private static final String TAG = WebLoginActivity.class.getSimpleName();
 
-	public WebLoginActivity() {
-	}
-
 	private String getExtraNonNull(String key) {
 		if (getIntent().hasExtra(key))
 			return getIntent().getStringExtra(key);
 
-		throw new NullPointerException(String.format("Missing key '%s' for web login", key));
+		throw new IllegalStateException(String.format("Missing key '%s' for web login", key));
 	}
 
 	@Override
@@ -50,38 +50,71 @@ public class WebLoginActivity extends BaseActivity {
 
 		final String redirect = getExtraNonNull(REDIRECT_URI);
 		final String loginUrl = getExtraNonNull(LOGIN_URL);
-		final WebView webview = new WebView(this);
-		final Context context = getBaseContext();
+
+		WebView webView = initWebView(redirect, loginUrl);
+		ProgressBar progressBar = initProgressBar();
+
+		FrameLayout layout = new FrameLayout(this);
+		layout.addView(progressBar);
+		layout.addView(webView);
+		setContentView(layout);
 
 		setResult(RESULT_CANCELED);
+	}
 
-		setContentView(webview);
-		webview.setVisibility(View.VISIBLE);
-		webview.getSettings().setJavaScriptEnabled(true);
-		webview.setNetworkAvailable(true);
+	private ProgressBar initProgressBar() {
+		ProgressBar progressBar = new ProgressBar(this, null, android.R.attr.progressBarStyleLarge);
+
+		FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(
+				FrameLayout.LayoutParams.WRAP_CONTENT,
+				FrameLayout.LayoutParams.WRAP_CONTENT,
+				Gravity.CENTER);
+
+		progressBar.setLayoutParams(params);
+		progressBar.setIndeterminate(true);
+		progressBar.setVisibility(View.VISIBLE);
+
+		return progressBar;
+	}
+
+	private WebView initWebView(final String redirect, final String loginUrl) {
+		WebView webView = new WebView(this);
+
+		webView.setVisibility(View.INVISIBLE);
+		webView.getSettings().setJavaScriptEnabled(true);
+		webView.setNetworkAvailable(true);
 
 		Log.d(TAG, String.format("loading URL %s", loginUrl));
-		webview.loadUrl(loginUrl.toString());
+		webView.loadUrl(loginUrl.toString());
 
-		webview.setWebViewClient(new WebViewClient() {
+		webView.setWebViewClient(new WebViewClient() {
 			boolean done = false;
 
 			@Override
 			public void onPageFinished(WebView view, String url) {
-				if (url.startsWith(redirect) && !done) {
+				boolean isRedirectPage = url.startsWith(redirect);
+
+				// Hide webView when it is redirect page or user is done with logging in
+				view.setVisibility(isRedirectPage || done ? View.INVISIBLE : View.VISIBLE);
+
+				if (isRedirectPage && !done) {
+					// This is page we're looking for
 					done = true;
-					finishWebLoginAuth(context, view, url);
+					finishWebLoginAuth(WebLoginActivity.this, url);
 				}
 			}
 
 			@Override
 			public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
+				// On any error (either expected or unexpected) we are closing this activity, so we hide webView immediately
+				view.setVisibility(View.INVISIBLE);
+
 				if (!done) {
 					done = true;
 
 					if ((errorCode == ERROR_HOST_LOOKUP || errorCode == ERROR_CONNECT) && failingUrl.startsWith(redirect)) {
 						Log.w(TAG, String.format("ignoring errorCode: %d and failingUrl: %s", errorCode, failingUrl));
-						finishWebLoginAuth(context, view, failingUrl);
+						finishWebLoginAuth(WebLoginActivity.this, failingUrl);
 					} else {
 						Log.e(TAG, String.format("received errorCode: %d and failingUrl: %s\ndescription: %s", errorCode, failingUrl, description));
 
@@ -92,9 +125,11 @@ public class WebLoginActivity extends BaseActivity {
 				}
 			}
 		});
+
+		return webView;
 	}
 
-	private void finishWebLoginAuth(final Context context, final WebView view, final String url) throws AppException {
+	private void finishWebLoginAuth(final Context context, final String url) throws AppException {
 		final Uri parsed = Uri.parse(url);
 
 		final String error = parsed.getQueryParameter("error");
@@ -120,8 +155,6 @@ public class WebLoginActivity extends BaseActivity {
 		params.put("client_secret", clientSecret);
 		params.put("redirect_uri", redirectUri);
 		params.put("grant_type", grantType);
-
-		view.setVisibility(View.INVISIBLE);
 
 		final FinishLoginTask tokenTask = new FinishLoginTask(context, tokenUrl, params);
 		tokenTask.setListener(new CallbackTask.CallbackTaskListener() {
