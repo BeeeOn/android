@@ -3,28 +3,23 @@ package com.rehivetech.beeeon.activity.fragment;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.series.BarGraphSeries;
 import com.jjoe64.graphview.series.BaseSeries;
 import com.jjoe64.graphview.series.DataPoint;
 import com.jjoe64.graphview.series.LineGraphSeries;
-
 import com.melnykov.fab.FloatingActionButton;
 import com.rehivetech.beeeon.Constants;
 import com.rehivetech.beeeon.R;
@@ -49,8 +44,6 @@ import com.rehivetech.beeeon.asynctask.SaveDeviceTask;
 import com.rehivetech.beeeon.asynctask.SaveFacilityTask;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.pair.LogDataPair;
-import com.rehivetech.beeeon.pair.SaveDevicePair;
-import com.rehivetech.beeeon.pair.SaveFacilityPair;
 import com.rehivetech.beeeon.util.GraphViewHelper;
 import com.rehivetech.beeeon.util.Log;
 import com.rehivetech.beeeon.util.TimeHelper;
@@ -62,10 +55,6 @@ import org.joda.time.Interval;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.EnumSet;
-import java.util.List;
 import java.util.Map.Entry;
 import java.util.SortedMap;
 import java.util.concurrent.TimeUnit;
@@ -401,7 +390,7 @@ public class SensorDetailFragment extends Fragment {
 		mGraphSeries.setTitle("Graph");
 
 		// Add data series
-		mGraphView.addSeries(mGraphSeries);
+//		mGraphView.addSeries(mGraphSeries);
 /*
 		mGraphInfo.setOnTouchListener(new OnTouchListener() {
 
@@ -461,8 +450,9 @@ public class SensorDetailFragment extends Fragment {
 			mGraphView.getViewport().setMaxY(log.getMaximum() + log.getDeviation() * 0.1);
 			mGraphView.getViewport().setMinY(log.getMinimum());
 		}
+		mGraphView.removeAllSeries();
 		mGraphSeries.resetData(data);
-		Log.d(TAG,"series values:"+Integer.toString(values.size()));
+		mGraphView.addSeries(mGraphSeries);
 		mGraphView.getViewport().setXAxisBoundsManual(true);
 		if (values.size() > 100 && mGraphSeries instanceof BarGraphSeries) {
 			mGraphView.getViewport().setMaxX(mGraphSeries.getHighestValueX());
@@ -470,6 +460,7 @@ public class SensorDetailFragment extends Fragment {
 		}
 
 		mGraphView.setLoading(false);
+		mGraphView.animateY(2000);
 		//mGraphInfo.setText(getView().getResources().getString(R.string.sen_detail_graph_info));
 	}
 
