@@ -9,9 +9,11 @@
     <ImageView
          android:id="@+id/custom_spinner2_icon"
          android:contentDescription="@string/placeholder_icon"
-         android:layout_width="@dimen/custom_spinner_icon_size"
-         android:layout_height="@dimen/custom_spinner_icon_size"
-         android:layout_marginRight="5dp"
+         android:layout_width="34dp"
+         android:layout_height="34dp"
+         android:layout_marginRight="8dp"
+         android:layout_marginEnd="8dp"
+         android:paddingTop="4dp"
          android:scaleType="fitStart"
          android:src="@drawable/dev_unknown"
         />
@@ -28,7 +30,7 @@
             android:singleLine="true"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="12sp"
+            android:textSize="14sp"
             />
 
         <TextView

@@ -7,17 +7,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.adapter.WatchDog;
-import com.rehivetech.beeeon.adapter.WatchDogRule;
 import com.rehivetech.beeeon.adapter.device.Device;
+import com.rehivetech.beeeon.adapter.device.DeviceType;
 import com.rehivetech.beeeon.adapter.device.values.BaseValue;
-import com.rehivetech.beeeon.adapter.device.values.TemperatureValue;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.util.UnitsHelper;
 
@@ -114,35 +112,32 @@ public class WatchDogListAdapter extends BaseAdapter {
             @Override
             public void onClick(View v) {
                 Toast.makeText(mContext, String.format("This should be async probably (%s)", rule.getName()), Toast.LENGTH_SHORT).show();
+                SwitchCompat sw = (SwitchCompat) v;
+                rule.setEnabled(sw.isChecked());
                 mController.saveWatchDog(rule);
             }
         });
 
         List<Device> devices = rule.getDevices();
         if(devices.size() > 0){
-            Device deviceFirst = devices.get(0);
+            Device deviceFirst = mController.getDevice(rule.getAdapterId(), devices.get(0).getId());
+            if(deviceFirst == null){
+                // TODO ?
+            }
 
             holder.ItemIcon.setImageResource(deviceFirst.getIconResource());
             holder.ItemSensorName.setText(deviceFirst.getName());
-
-            if(rule.getType() > 0) {
-                holder.ItemAction.setImageResource(rule.getActionIconResource());
-            }
-
-      //      deviceFirst.getValue().setValue();
-
-            /*
-            deviceFirst.mValue.getUnit()
+            holder.ItemAction.setImageResource(rule.getActionIconResource());
+            holder.ItemOperator.setImageResource(rule.getOperatorIconResource());
 
             if(mUnitsHelper != null){
-                mUnitsHelper.
+                BaseValue valueObj = DeviceType.createDeviceValue(deviceFirst.getType());
+                valueObj.setValue(rule.getParams().get(WatchDog.PAR_TRESHOLD));
+                holder.ItemTreshold.setText(mUnitsHelper.getStringValueUnit(valueObj));
             }
-            */
-
-            ArrayList<String> params = rule.getParams();
-
-            // TODO units helper
-            holder.ItemTreshold.setText(rule.getParams().get(WatchDog.PAR_TRESHOLD));
+            else{
+                holder.ItemTreshold.setText(rule.getParams().get(WatchDog.PAR_TRESHOLD));
+            }
         }
 
         return convertView;
@@ -161,17 +156,5 @@ public class WatchDogListAdapter extends BaseAdapter {
         public TextView ItemTreshold;
         public ImageView ItemAction;
         public SwitchCompat ItemSwitch;
-
-        void setItemOperator(WatchDog.OperatorType type){
-            switch(type){
-                case SMALLER:
-                    ItemOperator.setImageResource(R.drawable.ic_action_previous_item);
-                    break;
-
-                case GREATER:
-                    ItemOperator.setImageResource(R.drawable.ic_action_next_item);
-                    break;
-            }
-        }
     }
 }

@@ -312,6 +312,8 @@
     <string name="notification_text">Notification text</string>
     
     <string name="rule_menu_del">Delete</string>
+    <string name="rule_delete_dialog">Opravdu chcete smazat pravidlo?</string>
+    
 	<string name="title_activity_sensor_edit">Edit sensor</string>
 	<string name="sensor_name_label">Name of sensor</string>
 

@@ -1118,6 +1118,17 @@ public final class Controller {
 		return mHousehold.watchDogsModel.reloadWatchDogsByAdapter(adapterId, forceReload);
 	}
 
+	public boolean addWatchDog(WatchDog watchdog){
+		Adapter adapter = getActiveAdapter();
+		if (adapter == null) {
+			return false;
+		}
+
+		boolean saved = mNetwork.addWatchDog(watchdog, adapter.getId());
+
+		return saved && mHousehold.watchDogsModel.addWatchDog(adapter.getId(), watchdog);
+	}
+
 	public boolean saveWatchDog(WatchDog watchdog) {
 		Adapter adapter = getActiveAdapter();
 		if (adapter == null) {

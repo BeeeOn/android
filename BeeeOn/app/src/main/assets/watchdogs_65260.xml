@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <com
 	ver="2.3"
-	state="algs">
+	state="algs"
+	aid="65260">
 	<alg id="5" atype="3" enable="1" name="algoritmusek">
 		<dev id="12345" type="1" pos="1"/>
 		<par pos="1">42</par>

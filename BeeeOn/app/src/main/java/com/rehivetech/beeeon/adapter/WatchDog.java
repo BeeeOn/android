@@ -10,21 +10,24 @@ import java.util.ArrayList;
  * Created by ThinkDeep on 8.3.2015.
  */
 public class WatchDog implements IIdentifier {
-    public enum OperatorType{ SMALLER, GREATER }
-    public enum ActionType{ UNKNOWN,  NOTIFICATION, ACTOR_ACTION }
 
-    public static final int OP_SMALLER = 0;
-    public static final int OP_GREATER = 1;
+    // TODO make as separated enum table
+    public static final String OPERATOR_GT = "gt";
+    public static final String OPERATOR_LT = "lt";
 
+    // types of possible actions which watchdog cane make
     public static final int ACTION_UNKNOWN = 0;
     public static final int ACTION_NOTIFICATION = 1;
     public static final int ACTION_ACTOR = 2;
 
-    public static final int PAR_OPERATOR = 2;
-    public static final int PAR_TRESHOLD = 0;
-    public static final int PAR_ACTION_VALUE = 1;
+    // types of parameters (TODO should be as enum class in the future)
+    public static final int PAR_DEV_ID = 0; // TODO preskocit zatim parametr s ID senzoru
+    public static final int PAR_OPERATOR = 1;
+    public static final int PAR_TRESHOLD = 2;
+    public static final int PAR_ACTION_VALUE = 3;
 
     public static final int[] actionIcons = {
+            R.drawable.ic_unknown,
             R.drawable.ic_notification,
             R.drawable.ic_shutdown
     };
@@ -48,7 +51,7 @@ public class WatchDog implements IIdentifier {
 
     public String getId(){
         return mId;
-    };
+    }
 
     public void setId(String Id){
         mId = Id;
@@ -151,5 +154,18 @@ public class WatchDog implements IIdentifier {
             return actionIcons[0];
         else
             return actionIcons[mType];
+    }
+
+    public int getOperatorIconResource(){
+        String operator = this.getParams().get(WatchDog.PAR_OPERATOR);
+        switch(operator){
+            case OPERATOR_LT:
+                return R.drawable.ic_action_previous_item;
+
+            default:
+            case OPERATOR_GT:
+                return R.drawable.ic_action_next_item;
+        }
+
     }
 }

@@ -22,10 +22,12 @@ import com.rehivetech.beeeon.household.User.Role;
 import com.rehivetech.beeeon.network.authentication.IAuthProvider;
 import com.rehivetech.beeeon.network.xml.CustomViewPair;
 import com.rehivetech.beeeon.adapter.WatchDog;
+import com.rehivetech.beeeon.network.xml.XmlCreator;
 import com.rehivetech.beeeon.network.xml.XmlParsers;
 import com.rehivetech.beeeon.network.xml.action.ComplexAction;
 import com.rehivetech.beeeon.network.xml.condition.Condition;
 import com.rehivetech.beeeon.pair.LogDataPair;
+import com.rehivetech.beeeon.util.Log;
 
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
@@ -43,6 +45,7 @@ import java.util.Random;
  * @author Robyer
  */
 public class DemoNetwork implements INetwork {
+	private static final String TAG = DemoNetwork.class.getSimpleName();
 
 	public static final String DEMO_USER_ID = "demo";
 	private static final String DEMO_USER_BT = "12345";
@@ -698,18 +701,48 @@ public class DemoNetwork implements INetwork {
 	}
 
     @Override
-    public boolean updateWatchDog(WatchDog watchDog, String AdapterId) {
+    public boolean updateWatchDog(WatchDog watchDog, String AdapterId){
+		AdapterHolder holder = mAdapters.get(AdapterId);
+		if (holder == null) {
+			return false;
+		}
+
+		if (!holder.watchdogs.containsKey(watchDog.getId())) {
+			return false;
+		}
+
+		// NOTE: this replaces (or add) whole facility, not only fields marked as toSave
+		holder.watchdogs.put(watchDog.getId(), watchDog);
 		return true;
 	}
 
     @Override
-    public boolean deleteWatchDog(WatchDog watchDog) {
-		return true;
+    public boolean deleteWatchDog(WatchDog watchDog){
+		AdapterHolder holder = mAdapters.get(watchDog.getAdapterId());
+		if (holder == null) {
+			return false;
+		}
+
+		return holder.watchdogs.remove(watchDog.getId()) != null;
 	}
 
     @Override
-    public boolean addWatchDog(WatchDog watchDog, String AdapterID) {
-		return true;
+    public boolean addWatchDog(WatchDog watchDog, String AdapterID){
+		AdapterHolder holder = mAdapters.get(AdapterID);
+		if (holder == null) {
+			return false;
+		}
+
+		// Create unique watchdog id
+		String watchdogId;
+		int i = 0;
+		do {
+			watchdogId = String.valueOf(i++);
+		} while (holder.watchdogs.containsKey(watchdogId));
+
+		// Set new location id
+		watchDog.setId(watchdogId);
+		return holder.watchdogs.put(watchdogId, watchDog) != null;
 	}
 
     @Override

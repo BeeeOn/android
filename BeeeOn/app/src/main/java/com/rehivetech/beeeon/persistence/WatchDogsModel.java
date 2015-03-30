@@ -1,6 +1,8 @@
 package com.rehivetech.beeeon.persistence;
 
+import com.rehivetech.beeeon.IIdentifier;
 import com.rehivetech.beeeon.IdentifierComparator;
+import com.rehivetech.beeeon.adapter.device.Facility;
 import com.rehivetech.beeeon.exception.AppException;
 import com.rehivetech.beeeon.network.INetwork;
 import com.rehivetech.beeeon.adapter.WatchDog;
@@ -65,8 +67,6 @@ public class WatchDogsModel {
 		}
 
 		for (WatchDog watchdog : watchdogs) {
-			// we need to set adapterId, cause server returns without it
-			watchdog.setAdapterId(adapterId);
 			adapterWatchDogs.put(watchdog.getId(), watchdog);
 		}
 	}
@@ -154,10 +154,10 @@ public class WatchDogsModel {
 	}
 
 	/**
-	 * Adds new location to list of locations.
-	 *
-	 * @param location
-	 * @return false if there is already location with this id
+	 * Adds new WatchDog to list of objects
+	 * @param adapterId
+	 * @param watchdog
+	 * @return
 	 */
 	public boolean addWatchDog(String adapterId, WatchDog watchdog) {
 		// TODO: review and refactor, this is just copied from Adapter

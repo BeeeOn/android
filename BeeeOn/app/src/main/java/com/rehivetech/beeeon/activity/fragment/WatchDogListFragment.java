@@ -16,22 +16,25 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.melnykov.fab.FloatingActionButton;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.activity.MainActivity;
 import com.rehivetech.beeeon.activity.WatchDogEditRuleActivity;
 import com.rehivetech.beeeon.adapter.Adapter;
 import com.rehivetech.beeeon.adapter.WatchDog;
+import com.rehivetech.beeeon.adapter.device.Device;
+import com.rehivetech.beeeon.adapter.device.Facility;
 import com.rehivetech.beeeon.arrayadapter.WatchDogListAdapter;
 import com.rehivetech.beeeon.asynctask.CallbackTask;
 import com.rehivetech.beeeon.asynctask.ReloadWatchDogsTask;
 import com.rehivetech.beeeon.asynctask.RemoveWatchDogTask;
 import com.rehivetech.beeeon.controller.Controller;
+import com.rehivetech.beeeon.pair.DelFacilityPair;
+import com.rehivetech.beeeon.pair.DelWatchDogPair;
 import com.rehivetech.beeeon.util.Log;
 
-import java.util.ArrayList;
 import net.i2p.android.ext.floatingactionbutton.FloatingActionButton;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -56,7 +59,10 @@ public class WatchDogListFragment extends Fragment{
     private View mView;
     private ActionMode mMode;
 
-    private boolean isFirstLoading = true;
+    private ReloadWatchDogsTask mReloadWatchDogTask;
+    private RemoveWatchDogTask mRemoveWatchDogTask;
+    private WatchDog mSelectedItem;
+    private int mSelectedItemPos;
 
     /**
      * Initialize variables
@@ -78,11 +84,8 @@ public class WatchDogListFragment extends Fragment{
             mActiveAdapterId = savedInstanceState.getString(ADAPTER_ID);
         }
         else{
-            // TODO v seznamu sensoru je adapter nastavovan z MainActivity
             mActiveAdapterId = mController.getActiveAdapter().getId();
         }
-
-        // TODO tutorial zobrazit pri prvnim pouziti
     }
 
     /**
@@ -96,6 +99,7 @@ public class WatchDogListFragment extends Fragment{
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
         mView = inflater.inflate(R.layout.fragment_watchdog, container, false);
         initLayout();
+        redrawRules();
         return mView;
     }
 
@@ -123,25 +127,14 @@ public class WatchDogListFragment extends Fragment{
                     mSwipeLayout.setRefreshing(false);
                     return;
                 }
-                // TODO add reload async task
-                // mActivity.redrawMenu();
-                doReloadWatchDogsTask(adapter.getId());
+                doReloadWatchDogsTask(adapter.getId(), true);
             }
         });
 
         mSwipeLayout.setColorSchemeColors(R.color.beeeon_primary_cyan, R.color.beeeon_text_color, R.color.beeeon_secundary_pink);
 
         // if we don't have any data first time, try to reload
-        // TODO resolve it
-        if(isFirstLoading){ // && mWatchDogs == null
-            mSwipeLayout.post(new Runnable() {
-                public void run() {
-                    mSwipeLayout.setRefreshing(true);
-                    doReloadWatchDogsTask(mActiveAdapterId);
-                }
-            });
-            isFirstLoading = false;
-        }
+        doReloadWatchDogsTask(mActiveAdapterId, false);
     }
 
     /**
@@ -157,18 +150,15 @@ public class WatchDogListFragment extends Fragment{
     }
 
     /**
-     * Cancels async task
+     * Cancels async task before destroing fragment
      */
     public void onDestroy(){
         super.onDestroy();
         Log.d(TAG, "onDestroy()");
 
-        // TODO cancel async task here
-        /*
-        if (mReloadFacilitiesTask != null) {
-            mReloadFacilitiesTask.cancel(true);
+        if (mReloadWatchDogTask != null) {
+            mReloadWatchDogTask.cancel(true);
         }
-        //*/
     }
 
     @Override
@@ -177,34 +167,20 @@ public class WatchDogListFragment extends Fragment{
         super.onSaveInstanceState(savedInstanceState);
     }
 
-    public void doReloadWatchDogsTask(String adapterId){
-        ReloadWatchDogsTask mRel = new ReloadWatchDogsTask(getActivity().getApplicationContext(), true);
-
-        mRel.setListener(new CallbackTask.CallbackTaskListener() {
-            @Override
-            public void onExecute(boolean success) {
-                redrawRules();
-                mSwipeLayout.setRefreshing(false);
-            }
-        });
-
-        mRel.execute(adapterId);
-    }
-
+    /**
+     * Sets empty elements for design without filling with data
+     */
     private void initLayout() {
         mWatchDogListView = (ListView) mView.findViewById(R.id.watchdog_list);
         mWatchDogAdapter = new WatchDogListAdapter(mActivity, getActivity().getLayoutInflater());
         mWatchDogListView.setAdapter(mWatchDogAdapter);
 
-        // ---- when listview is empty
+        // when listview is empty
         TextView emptyView = (TextView) mView.findViewById(R.id.watchdog_list_empty);
         mWatchDogListView.setEmptyView(emptyView);
 
-        // ---- floating action button
+        // add new watchdog rule
         FloatingActionButton fab = (FloatingActionButton) mView.findViewById(R.id.fab);
-        fab.attachToListView(mWatchDogListView);
-        fab.show();
-
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -213,7 +189,7 @@ public class WatchDogListFragment extends Fragment{
             }
         });
 
-        // ----- onitemclick
+        // switch activity to detail
         mWatchDogListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -229,62 +205,99 @@ public class WatchDogListFragment extends Fragment{
             }
         });
 
-        // ---- on long click
+        // shows actionMode with delete option
         mWatchDogListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-
-                // TODO treba zmenit switcher na checkboxy ?
-
                 mMode = mActivity.startSupportActionMode(new ActionModeEditRules());
+                mSelectedItem = mWatchDogAdapter.getRule(position);
+                mSelectedItemPos = position;
+                setRuleSelected();
                 return true;
             }
         });
-
-        // ---- on switch checked
-        //mWatchDogAdapter.onCheckedChanged();
-
-        redrawRules();
     }
 
     /**
-     * Redraw GUI rules
+     * Redraw GUI rules, called asynchronously (callback) when new data available
      */
     private void redrawRules() {
         mWatchDogs = mController.getAllWatchDogs(mActiveAdapterId);
-
-        Log.d(TAG, String.format("watchdogs length: %d", mWatchDogs.size()));
-        for(WatchDog w : mWatchDogs ){
-            Log.d(TAG, String.format("Watch: %s", w.getName()));
-        }
-
         mWatchDogAdapter.updateData(mWatchDogs);
-
-        /*
-        HumidityValue val = new HumidityValue();
-        val.setValue("50");
-        Device dev = new Device(DeviceType.TYPE_HUMIDITY, val);
-        dev.setName("Vlhkost ve sklepě");
-
-        TemperatureValue val1 = new TemperatureValue();
-        val1.setValue("32");
-
-        List<WatchDogRule> rulesList = new ArrayList<>();
-        rulesList.add(new WatchDogRule("1", mActiveAdapterId, "Hlídání ohně", dev, WatchDogRule.OperatorType.GREATER, WatchDogRule.ActionType.ACTOR_ACTION, val1, false));
-        rulesList.add(new WatchDogRule("2", mActiveAdapterId, "Hlídání smradu", dev, WatchDogRule.OperatorType.SMALLER, WatchDogRule.ActionType.NOTIFICATION, val, true));
-        rulesList.add(new WatchDogRule("3", mActiveAdapterId, "Hlídání dětí", dev, WatchDogRule.OperatorType.GREATER, WatchDogRule.ActionType.NOTIFICATION, val1, true));
-        rulesList.add(new WatchDogRule("4", mActiveAdapterId, "Hlídání cen", dev, WatchDogRule.OperatorType.SMALLER, WatchDogRule.ActionType.ACTOR_ACTION, val, false));
-        rulesList.add(new WatchDogRule("5", mActiveAdapterId, "Hlídání cen", dev, WatchDogRule.OperatorType.SMALLER, WatchDogRule.ActionType.ACTOR_ACTION, val, false));
-        rulesList.add(new WatchDogRule("6", mActiveAdapterId, "Hlídání cen", dev, WatchDogRule.OperatorType.SMALLER, WatchDogRule.ActionType.ACTOR_ACTION, val, false));
-        rulesList.add(new WatchDogRule("7", mActiveAdapterId, "Hlídání cen", dev, WatchDogRule.OperatorType.SMALLER, WatchDogRule.ActionType.ACTOR_ACTION, val, false));
-        rulesList.add(new WatchDogRule("8", mActiveAdapterId, "Hlídání cen", dev, WatchDogRule.OperatorType.SMALLER, WatchDogRule.ActionType.ACTOR_ACTION, val, false));
-        rulesList.add(new WatchDogRule("9", mActiveAdapterId, "Hlídání cen", dev, WatchDogRule.OperatorType.SMALLER, WatchDogRule.ActionType.ACTOR_ACTION, val, false));
-        rulesList.add(new WatchDogRule("10", mActiveAdapterId, "Hlídání cen", dev, WatchDogRule.OperatorType.SMALLER, WatchDogRule.ActionType.ACTOR_ACTION, val, false));
-        mWatchDogAdapter = new WatchDogListAdapter(mActivity, rulesList, getActivity().getLayoutInflater());
-
-        //*/
     }
 
+    // ----- ASYNC TASKS ----- //
+    /**
+     * Async task for reloading fresh watchdog data
+     * @param adapterId
+     */
+    public void doReloadWatchDogsTask(String adapterId, boolean forceReload){
+        mReloadWatchDogTask = new ReloadWatchDogsTask(mActivity, forceReload);
+
+        mReloadWatchDogTask.setListener(new CallbackTask.CallbackTaskListener() {
+            @Override
+            public void onExecute(boolean success) {
+                redrawRules();
+                mSwipeLayout.setRefreshing(false);
+            }
+        });
+
+        mReloadWatchDogTask.execute(adapterId);
+    }
+
+    /**
+     * Async task for deleting watchDog
+     * @param watchdog
+     */
+    private void doRemoveWatchDogTask(WatchDog watchdog) {
+        mRemoveWatchDogTask = new RemoveWatchDogTask(mActivity, false);
+        DelWatchDogPair pair = new DelWatchDogPair(watchdog.getId(), watchdog.getAdapterId());
+
+        mRemoveWatchDogTask.setListener(new CallbackTask.CallbackTaskListener() {
+            @Override
+            public void onExecute(boolean success) {
+                Toast.makeText(mActivity, getResources().getString(success ? R.string.toast_delete_success : R.string.toast_delete_fail), Toast.LENGTH_SHORT).show();
+                if(success){
+                    redrawRules();
+                }
+            }
+        });
+        mRemoveWatchDogTask.execute(pair);
+    }
+
+    // ----- HELPERS + ACTIONMODE ----- //
+
+    /**
+     * Changes color of selected item row
+     */
+    private void setRuleSelected() {
+        getViewByPosition(mSelectedItemPos, mWatchDogListView).findViewById(R.id.watchdog_item_layout).setBackgroundColor(mActivity.getResources().getColor(R.color.light_gray));
+    }
+    private void setRuleUnselected() {
+        getViewByPosition(mSelectedItemPos, mWatchDogListView).findViewById(R.id.watchdog_item_layout).setBackgroundColor(mActivity.getResources().getColor(R.color.white));
+    }
+
+    /**
+     * Helper for getting item from listView
+     * @param pos
+     * @param listView
+     * @return
+     */
+    public View getViewByPosition(int pos, ListView listView) {
+        final int firstListItemPosition = listView.getFirstVisiblePosition();
+        final int lastListItemPosition = firstListItemPosition + listView.getChildCount() - 1;
+
+        if (pos < firstListItemPosition || pos > lastListItemPosition ) {
+            return listView.getAdapter().getView(pos, null, listView);
+        } else {
+            final int childIndex = pos - firstListItemPosition;
+            return listView.getChildAt(childIndex);
+        }
+    }
+
+    /**
+     * Class for managing when longclicked on item (ActionMode)
+     */
     class ActionModeEditRules implements ActionMode.Callback {
         @Override
         public boolean onCreateActionMode(ActionMode actionMode, Menu menu) {
@@ -300,39 +313,20 @@ public class WatchDogListFragment extends Fragment{
 
         @Override
         public boolean onActionItemClicked(ActionMode actionMode, MenuItem menuItem) {
-            /*if (menuItem.getTitle().equals(getResources().getString(R.string.action_hide_sensor))) {
-                // doHideSensorTask(mDeviceHide);
-            } else if (menuItem.getTitle().equals(getResources().getString(R.string.action_hide_facility))) {
-				Toast.makeText(mActivity, R.string.toast_not_implemented, Toast.LENGTH_LONG).show();
-            } else if (menuItem.getTitle().equals(getResources().getString(R.string.action_unregist_facility))) {
-				Toast.makeText(mActivity, R.string.toast_not_implemented, Toast.LENGTH_LONG).show();
-            }
-            //*/
-/*
             if(menuItem.getItemId() == R.id.action_delete){
-
-                RemoveWatchDogTask task = new RemoveWatchDogTask(mActivity, false);
-                task.setListener(new CallbackTask.CallbackTaskListener() {
-                    @Override
-                    public void onExecute(boolean success) {
-                        Toast.makeText(mActivity, "Deleting watchdog...", Toast.LENGTH_SHORT).show();
-                    }
-                });
+                doRemoveWatchDogTask(mSelectedItem);
             }
-            task.execute(pair);
-
-            //*/
-            Toast.makeText(mActivity, "Deleting watchdog...", Toast.LENGTH_SHORT).show();
-
-
+            
             actionMode.finish();
             return true;
         }
 
         @Override
         public void onDestroyActionMode(ActionMode actionMode) {
+            setRuleUnselected();
+            mSelectedItem = null;
+            mSelectedItemPos = 0;
             mMode = null;
         }
     }
-
 }
