@@ -122,21 +122,21 @@
 				  - ic_aciton_next_item must be first cause comparing in java code
 				  - margin is less cause the shadow
 				-->
-
-				<net.i2p.android.ext.floatingactionbutton.FloatingActionButton
+				<com.melnykov.fab.FloatingActionButton
 					xmlns:fab="http://schemas.android.com/apk/res-auto"
 					android:id="@+id/watchdog_edit_greatless"
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
-					fab:fab_size="mini"
-					fab:fab_icon="@drawable/ic_action_next_item"
+					android:src="@drawable/ic_action_next_item"
+					fab:fab_type="mini"
 					fab:fab_colorNormal="@color/beeeon_primary_cyan_dark"
 					fab:fab_colorPressed="@color/beeeon_primary_cyan"
+					fab:fab_colorRipple="@color/beeeon_primary_cyan"
 					android:layout_alignParentTop="true"
-					android:layout_marginLeft="62dp"
-					android:layout_marginStart="62dp"
+					android:layout_marginLeft="70dp"
+					android:layout_marginStart="70dp"
+					android:layout_marginBottom="16dp"
 					/>
-
 
 				<EditText
 					android:id="@+id/watchdog_edit_treshold"
@@ -146,12 +146,12 @@
 					android:textColor="@color/beeeon_secundary_pink"
 					android:textSize="16sp"
 					android:gravity="center_horizontal"
-					android:layout_centerVertical="true"
 					android:layout_toRightOf="@+id/watchdog_edit_greatless"
 					android:layout_toEndOf="@+id/watchdog_edit_greatless"
 					android:hint="@string/treshold_value"
 					android:layout_marginLeft="16dp"
 					android:layout_marginStart="16dp"
+					android:layout_marginBottom="16dp"
 					android:layout_marginRight="4dp"
 					/>
 
@@ -162,19 +162,19 @@
 					android:textColor="@color/beeeon_secundary_pink"
 					android:textStyle="bold"
 					android:textSize="16sp"
-					android:layout_centerVertical="true"
-
 					android:layout_toRightOf="@+id/watchdog_edit_treshold"
-					android:layout_toEndOf="@+id/watchdog_edit_treshold"
+					android:layout_alignBaseline="@+id/watchdog_edit_treshold"
 					/>
 			</RelativeLayout>
 
-			<!-- separator -->
+			<!--
+				- separator
+				- because of retarded shadow in FAB, marginTop not here but in FAB
+			-->
             <ImageView
                 android:layout_width="match_parent"
                 android:layout_height="1px"
                 android:src="@color/beeeon_separator"
-                android:layout_marginTop="16dp"
                 android:layout_marginBottom="16dp"
                 android:layout_marginLeft="72dp"
                 android:layout_marginStart="72dp"

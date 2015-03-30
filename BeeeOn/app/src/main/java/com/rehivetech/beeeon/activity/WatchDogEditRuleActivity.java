@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
@@ -21,8 +22,16 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.melnykov.fab.FloatingActionButton;
+import com.rehivetech.beeeon.Constants;
 import com.rehivetech.beeeon.IIdentifier;
 import com.rehivetech.beeeon.R;
+import com.rehivetech.beeeon.activity.menuItem.AdapterMenuItem;
+import com.rehivetech.beeeon.activity.menuItem.ApplicationMenuItem;
+import com.rehivetech.beeeon.activity.menuItem.GroupMenuItem;
+import com.rehivetech.beeeon.activity.menuItem.LocationMenuItem;
+import com.rehivetech.beeeon.activity.menuItem.SeparatorMenuItem;
+import com.rehivetech.beeeon.activity.menuItem.SettingMenuItem;
 import com.rehivetech.beeeon.adapter.Adapter;
 import com.rehivetech.beeeon.adapter.WatchDog;
 import com.rehivetech.beeeon.adapter.device.Device;
@@ -72,6 +81,10 @@ public class WatchDogEditRuleActivity extends BaseApplicationActivity {
 
     private List<Location> mLocations;
     private List<Facility> mFacilities;
+
+    // TODO??
+    private List<Device> _sensors;
+    private List<Device> _actors;
 
     private boolean mIsValueLess = false;        // value for View FAB
     private boolean mIsNew = false;
@@ -193,6 +206,7 @@ public class WatchDogEditRuleActivity extends BaseApplicationActivity {
         mActionType = (RadioGroup) findViewById(R.id.watchdog_edit_action_radiogroup);
 
         // ----- prepare list of available devices
+
         final DeviceArrayAdapter dataAdapter = new DeviceArrayAdapter(this, R.layout.custom_spinner2_item, getDevicesArray(DEVICES_SENSORS), mLocations);
         dataAdapter.setLayoutInflater(getLayoutInflater());
         dataAdapter.setDropDownViewResource(R.layout.custom_spinner2_dropdown_item);
@@ -211,6 +225,49 @@ public class WatchDogEditRuleActivity extends BaseApplicationActivity {
             }
         });
 
+        //*/
+
+    /*
+        final MenuListAdapter mMenuAdapter = new MenuListAdapter(this);
+
+        mMenuAdapter.addItem(new AdapterMenuItem(mAdapter.getName(), mAdapter.getRole().name(), true, mAdapter.getId()));
+
+        mMenuAdapter.addItem(new SettingMenuItem(getResources().getString(R.string.action_about), R.drawable.info, com.rehivetech.beeeon.activity.menuItem.MenuItem.ID_ABOUT));
+        mMenuAdapter.addItem(new SettingMenuItem(getString(R.string.action_logout), R.drawable.logout, com.rehivetech.beeeon.activity.menuItem.MenuItem.ID_LOGOUT));
+        mMenuAdapter.addItem(new SeparatorMenuItem());
+        mMenuAdapter.addHeader(new GroupMenuItem(getResources().getString(R.string.menu_applications)));
+        mMenuAdapter.addItem(new ApplicationMenuItem(getString(R.string.menu_watchdog), R.drawable.ic_app_watchdog, false, Constants.GUI_MENU_WATCHDOG, true));
+
+        mSensorSpinner.setAdapter(mMenuAdapter);
+
+
+        mSensorSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                com.rehivetech.beeeon.activity.menuItem.MenuItem selected = (com.rehivetech.beeeon.activity.menuItem.MenuItem) mMenuAdapter.getItem(position);
+
+                switch(selected.getType()){
+                    case ADAPTER:
+                        Toast.makeText(WatchDogEditRuleActivity.this, "vybral sis adapter", Toast.LENGTH_SHORT).show();
+                        break;
+
+                    case SETTING:
+                        Toast.makeText(WatchDogEditRuleActivity.this, "SETTING", Toast.LENGTH_SHORT).show();
+                        break;
+
+                    case APPLICATION:
+                        Toast.makeText(WatchDogEditRuleActivity.this, "APPLICATION", Toast.LENGTH_SHORT).show();
+                        break;
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
+        //*/
 
         // TODO make value not boolean but OperatorType
         mGreatLessButton.setOnClickListener(new View.OnClickListener() {
@@ -224,10 +281,6 @@ public class WatchDogEditRuleActivity extends BaseApplicationActivity {
 
         // TODO udelat nejak,ze ziskat pres parametry + asi include layout pro to
         mNotificationText = (EditText) findViewById(R.id.watchdog_edit_notification_text);
-
-        // TODO put away when completed in protocol
-        RadioButton tempActionActor = (RadioButton) findViewById(R.id.watchdog_edit_actor);
-        tempActionActor.setEnabled(false);
 
         // changing specified layout when checked
         mActionType.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
@@ -254,7 +307,6 @@ public class WatchDogEditRuleActivity extends BaseApplicationActivity {
         RadioButton radioNotification = (RadioButton) findViewById(R.id.watchdog_edit_notification);
         radioNotification.setChecked(true);
 
-
         // ------- choose actor
         Spinner actorSpinner = (Spinner) findViewById(R.id.watchdog_edit_actor_spinner);
 
@@ -276,7 +328,7 @@ public class WatchDogEditRuleActivity extends BaseApplicationActivity {
         mRuleTreshold.setText(mWatchDog.getParams().get(WatchDog.PAR_TRESHOLD));
 
         // TODO revise when new protocol version
-        Device firstDev = mController.getDevice(mWatchDog.getAdapterId(), mWatchDog.getDevices().get(0).getId());
+        Device firstDev = mController.getDevice(mWatchDog.getAdapterId(), mWatchDog.getDevices().get(0));
         int index = getIndexFromList(firstDev.getId(), getDevicesArray(DEVICES_SENSORS));
         if(index > -1) mSensorSpinner.setSelection(index);
 
@@ -398,10 +450,11 @@ public class WatchDogEditRuleActivity extends BaseApplicationActivity {
         }
 
         // TODO check it
-        ArrayList<Device> devs = new ArrayList<>();
+        ArrayList<String> devsIds = new ArrayList<>();
+
         Device selectedDevice = getDevicesArray(DEVICES_SENSORS).get(mSensorSpinner.getSelectedItemPosition());
-        devs.add(selectedDevice);
-        mWatchDog.setDevices(devs);
+        devsIds.add(selectedDevice.getId());
+        mWatchDog.setDevices(devsIds);
 
         mWatchDog.setName(mRuleName.getText().toString());
         mWatchDog.setEnabled(mRuleEnabled.isChecked());
@@ -425,9 +478,11 @@ public class WatchDogEditRuleActivity extends BaseApplicationActivity {
         mSaveWatchDogTask.setListener(new CallbackTask.CallbackTaskListener() {
             @Override
             public void onExecute(boolean success) {
-                mIsNew = false;
-                onUpdateOptionsMenu();
                 if (mProgress != null) mProgress.dismiss();
+                if(success){
+                    mIsNew = false;
+                    onUpdateOptionsMenu();
+                }
                 Toast.makeText(WatchDogEditRuleActivity.this, getResources().getString(success ? R.string.toast_success_save_data : R.string.toast_fail_save_data), Toast.LENGTH_LONG).show();
             }
         });
@@ -477,7 +532,15 @@ public class WatchDogEditRuleActivity extends BaseApplicationActivity {
      * @return
      */
     private List<Device> getDevicesArray(int type){
+        if(type == DEVICES_ACTORS && _actors != null) {
+            return _actors;
+        }
+        else if(type == DEVICES_SENSORS && _sensors != null) {
+            return _sensors;
+        }
+
         List<Device> devices = new ArrayList<Device>();
+
         for(Facility facility : mFacilities)
             for (Device device : facility.getDevices()) {
                 if (type == DEVICES_ACTORS && !device.getType().isActor()) {
@@ -489,6 +552,14 @@ public class WatchDogEditRuleActivity extends BaseApplicationActivity {
 
                 devices.add(device);
             }
+
+        if(type == DEVICES_ACTORS) {
+            _actors = devices;
+        }
+        else if(type == DEVICES_SENSORS) {
+            _sensors = devices;
+        }
+
         return devices;
     }
 

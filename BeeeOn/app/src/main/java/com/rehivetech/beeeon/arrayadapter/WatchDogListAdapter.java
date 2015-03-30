@@ -107,9 +107,9 @@ public class WatchDogListAdapter extends BaseAdapter {
             holder.ItemSwitch.setOnClickListener(mSwitchOnClickListener);
         }
 
-        List<Device> devices = rule.getDevices();
-        if(devices.size() > 0){
-            Device deviceFirst = mController.getDevice(rule.getAdapterId(), devices.get(0).getId());
+        List<String> devicesIds = rule.getDevices();
+        if(devicesIds.size() > 0){
+            Device deviceFirst = mController.getDevice(rule.getAdapterId(), devicesIds.get(0));
             if(deviceFirst == null) return convertView;
 
             holder.ItemOperator.setImageResource(rule.getOperatorIconResource());

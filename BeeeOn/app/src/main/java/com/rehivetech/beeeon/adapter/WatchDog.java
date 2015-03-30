@@ -113,26 +113,6 @@ public class WatchDog implements IIdentifier {
         mParams.add(param);
     }
 
-    public String getId(){
-        return mId;
-    }
-
-    public void setName(String name){
-        mName = name;
-    }
-
-    public String getName(){
-        return mName;
-    }
-
-    public String getAdapterId() {
-        return mAdapterId;
-    }
-
-    public void setAdapterId(String AdapterId) {
-        this.mAdapterId = AdapterId;
-    }
-
 	public String getGeoDirectionType() {
 		return mGeoDirectionType;
 	}

@@ -4,7 +4,7 @@
     xmlns:fab="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
->
+    >
 
     <android.support.v4.widget.SwipeRefreshLayout
         android:layout_width="match_parent"
@@ -17,31 +17,36 @@
             android:layout_height="match_parent"
             android:divider="@null"
             android:dividerHeight="0dp"
-        />
+            android:paddingBottom="96dp"
+            android:clipToPadding="false"
+            />
     </android.support.v4.widget.SwipeRefreshLayout>
 
-        <TextView
-            android:id="@+id/watchdog_list_empty"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/no_rules_cap"
-            android:layout_gravity="center"
-            android:textSize="24sp"
-            android:visibility="gone"
-            android:textColor="@color/darkgray"
+    <TextView
+        android:id="@+id/watchdog_list_empty"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/no_rules_cap"
+        android:layout_gravity="center"
+        android:textSize="24sp"
+        android:visibility="gone"
+        android:textColor="@color/darkgray"
         />
 
     <!-- floating action button -->
     <com.melnykov.fab.FloatingActionButton
+        xmlns:fab="http://schemas.android.com/apk/res-auto"
         android:id="@+id/fab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="end|bottom"
         android:src="@drawable/ic_add_white_24dp"
         fab:fab_colorNormal="@color/beeeon_secundary_pink"
-        fab:fab_colorPressed="@color/black"
         fab:fab_colorRipple="@color/beeeon_secundary_pink"
-        android:layout_margin="16dp"
-        android:layout_gravity="end|bottom"
+        fab:fab_colorPressed="@color/black"
+        android:layout_marginBottom="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginEnd="16dp"
         />
 
     <!-- experimental - toolbar shadow -->

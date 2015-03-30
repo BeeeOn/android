@@ -18,6 +18,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.melnykov.fab.FloatingActionButton;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.activity.MainActivity;
 import com.rehivetech.beeeon.activity.WatchDogEditRuleActivity;
@@ -31,8 +32,6 @@ import com.rehivetech.beeeon.asynctask.SaveWatchDogTask;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.pair.DelWatchDogPair;
 import com.rehivetech.beeeon.util.Log;
-
-import net.i2p.android.ext.floatingactionbutton.FloatingActionButton;
 
 import java.util.List;
 

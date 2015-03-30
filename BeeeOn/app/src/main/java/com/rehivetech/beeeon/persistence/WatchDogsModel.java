@@ -160,14 +160,17 @@ public class WatchDogsModel {
 	 * @return
 	 */
 	public boolean addWatchDog(String adapterId, WatchDog watchdog) {
-		// TODO: review and refactor, this is just copied from Adapter
-		Map<String, WatchDog> adapterLocations = mWatchDogs.get(adapterId);
+		// TODO check if it's ok this way
+		Map<String, WatchDog> adapterWatchDogs = mWatchDogs.get(adapterId);
+		if(adapterWatchDogs == null){
+			mWatchDogs.put(adapterId, new HashMap<String, WatchDog>());
+			adapterWatchDogs = mWatchDogs.get(adapterId);
+		}
 
-		// TODO: check/create adapterLocations object
-		if (adapterLocations.containsKey(watchdog.getId()))
+		if (adapterWatchDogs.containsKey(watchdog.getId()))
 			return false;
 
-		adapterLocations.put(watchdog.getId(), watchdog);
+		adapterWatchDogs.put(watchdog.getId(), watchdog);
 		return true;
 	}
 }

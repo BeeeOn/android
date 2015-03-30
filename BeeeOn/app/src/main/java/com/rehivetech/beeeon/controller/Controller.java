@@ -6,6 +6,7 @@ import android.graphics.Bitmap;
 
 import com.rehivetech.beeeon.Constants;
 import com.rehivetech.beeeon.adapter.Adapter;
+import com.rehivetech.beeeon.adapter.WatchDog;
 import com.rehivetech.beeeon.adapter.device.Device;
 import com.rehivetech.beeeon.adapter.device.Device.SaveDevice;
 import com.rehivetech.beeeon.adapter.device.DeviceLog;
@@ -1097,38 +1098,50 @@ public final class Controller {
 	public void delBT() {
 		mNetwork.setBT("");
 	}
-
-	// ------- watchDog
-
+	
+	/**
+	 * Return list of watchdogs from a adapter
+	 * @param adapterId
+	 * @return
+	 */
 	public List<WatchDog> getAllWatchDogs(String adapterId){
 		return mHousehold.watchDogsModel.getWatchDogsByAdapter(adapterId);
 	}
 
+	/**
+	 * Returns a watchdog by parameters
+	 * @param adapterId
+	 * @param id
+	 * @return
+	 */
 	public WatchDog getWatchDog(String adapterId, String id) {
 		return mHousehold.watchDogsModel.getWatchDog(adapterId, id);
 	}
 
-
-
+	/**
+	 * Reloads watchdogs
+	 *
+	 * This CAN'T be called on UI thread!
+	 *
+	 * @param adapterId
+	 * @param forceReload
+	 * @return
+	 */
 	public synchronized boolean reloadWatchDogs(String adapterId, boolean forceReload) {
 		if (!isLoggedIn()) {
 			return false;
 		}
-
 		return mHousehold.watchDogsModel.reloadWatchDogsByAdapter(adapterId, forceReload);
 	}
 
-	public boolean addWatchDog(WatchDog watchdog){
-		Adapter adapter = getActiveAdapter();
-		if (adapter == null) {
-			return false;
-		}
-
-		boolean saved = mNetwork.addWatchDog(watchdog, adapter.getId());
-
-		return saved && mHousehold.watchDogsModel.addWatchDog(adapter.getId(), watchdog);
-	}
-
+	/**
+	 * Either edits or creates new watchdog
+	 *
+	 * This CAN'T be called on UI thread!
+	 *
+	 * @param watchdog
+	 * @return
+	 */
 	public boolean saveWatchDog(WatchDog watchdog) {
 		Adapter adapter = getActiveAdapter();
 		if (adapter == null) {
@@ -1138,24 +1151,33 @@ public final class Controller {
 		// TODO should it be here?
 		watchdog.setAdapterId(adapter.getId());
 
-		// watchdog was updated on server, update it to adapter too
+		// if watchdog has ID, edit id
 		if(watchdog.getId() != null){
+			// first tries to update on server, then in persistence
 			return mNetwork.updateWatchDog(watchdog, adapter.getId()) && mHousehold.watchDogsModel.updateWatchDog(adapter.getId(), watchdog);
 		}
 		else{
+			// first tries to add on server, then in persistence
 			return mNetwork.addWatchDog(watchdog, adapter.getId()) && mHousehold.watchDogsModel.addWatchDog(adapter.getId(), watchdog);
 		}
 	}
 
+	/**
+	 * Delete a watchdog
+	 *
+	 * This CAN'T be called on UI thread!
+	 *
+	 * @param watchdog
+	 * @return
+	 */
 	public boolean deleteWatchDog(WatchDog watchdog) {
 		Adapter adapter = getActiveAdapter();
 		if (adapter == null) {
 			return false;
 		}
-
+		// delete from server
 		boolean deleted = mNetwork.deleteWatchDog(watchdog);
-
-		// Location was deleted on server, remove it from adapter too
+		// watchdog was deleted on server, remove it from adapter too
 		return deleted && mHousehold.watchDogsModel.deleteWatchDog(adapter.getId(), watchdog.getId());
 	}
 }
