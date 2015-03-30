@@ -149,7 +149,7 @@ public class SensorListFragment extends Fragment {
 					mSwipeLayout.setRefreshing(false);
 					return;
 				}
-				mActivity.redrawMenu();
+				mActivity.redraw();
 				doReloadFacilitiesTask(adapter.getId(), true);
 			}
 		});
@@ -430,8 +430,7 @@ public class SensorListFragment extends Fragment {
 				if (!success)
 					return;
 
-                mActivity.redrawMainFragment();
-                mActivity.redrawMenu();
+                mActivity.redraw();
                 mSwipeLayout.setRefreshing(false);
             }
         });
@@ -448,8 +447,8 @@ public class SensorListFragment extends Fragment {
 				if (!success)
 					return;
 
-				mActivity.setActiveAdapterAndLocation();
-				mActivity.redrawMenu();
+				mActivity.setActiveAdapterAndMenu();
+				mActivity.redraw();
 			}
 		});
 
@@ -463,8 +462,7 @@ public class SensorListFragment extends Fragment {
         mRemoveFacilityTask.setListener(new CallbackTaskListener() {
             @Override
             public void onExecute(boolean success) {
-                mActivity.redrawMainFragment();
-                mActivity.redrawMenu();
+                mActivity.redraw();
                 if (success) {
                     // Hlaska o uspechu
                 }

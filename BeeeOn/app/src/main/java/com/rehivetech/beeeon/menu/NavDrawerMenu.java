@@ -325,7 +325,7 @@ public class NavDrawerMenu   {
 			@Override
 			public void onExecute(boolean success) {
 				if (success) {
-					mActivity.setActiveAdapterAndLocation();
+					mActivity.setActiveAdapterAndMenu();
 					mActivity.redrawMainFragment();
 					redrawMenu();
 				}
@@ -347,9 +347,8 @@ public class NavDrawerMenu   {
 			public void onExecute(boolean success) {
 				if (success) {
 					Toast.makeText(mActivity, R.string.toast_adapter_removed, Toast.LENGTH_LONG).show();
-					mActivity.setActiveAdapterAndLocation();
-					mActivity.redrawMainFragment();
-					mActivity.redrawMenu();
+					mActivity.setActiveAdapterAndMenu();
+					mActivity.redraw();
 				}
 				mActivity.setSupportProgressBarIndeterminateVisibility(false);
 			}

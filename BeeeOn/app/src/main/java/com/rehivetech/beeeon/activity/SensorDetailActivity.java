@@ -131,6 +131,9 @@ public class SensorDetailActivity extends BaseApplicationActivity {
 
 	@Override
 	protected void onAppPause() {
+		if (mReloadFacilitiesTask != null) {
+			mReloadFacilitiesTask.cancel(true);
+		}
 	}
 
 	@Override
@@ -211,7 +214,6 @@ public class SensorDetailActivity extends BaseApplicationActivity {
 			fragment.setFragmentAdapter(this);
 
 			return fragment;
-			//return SensorDetailFragment.create(mDevices.get(position).getId(), mDevices.get(position).getFacility().getLocationId(), position, mActiveDevicePosition, mActiveAdapterId);
 		}
 
 		@Override
@@ -269,11 +271,6 @@ public class SensorDetailActivity extends BaseApplicationActivity {
 
 		// Always call the superclass so it can save the view hierarchy state
 		super.onSaveInstanceState(savedInstanceState);
-	}
-
-	public void redraw() {
-		Log.d(TAG, "Start redraw ActiveDevice:" + mActiveDeviceId + " ActiveAdapter:" + mActiveAdapterId);
-		doReloadFacilitiesTask(mActiveAdapterId, true);
 	}
 
 }

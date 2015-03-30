@@ -170,47 +170,6 @@ public class SetupSensorFragment extends TrackFragment {
 	}
 
 	/**
-	 * Helper method to prepare list of locations (from adapter + defaults)
-	 * 
-	 * @return list of Location
-	 */
-	public List<Location> getLocationsForAddSensorDialog() {
-		// Get locations from adapter
-		List<Location> locations = new ArrayList<Location>();
-
-		Adapter adapter = mController.getActiveAdapter();
-		if (adapter != null) {
-			locations = mController.getLocations(adapter.getId());
-		}
-
-		// Add "missing" default rooms
-		for (DefaultLocation room : DefaultLocation.values()) {
-			String name = getString(room.getTitleResource());
-
-			boolean found = false;
-			for (Location location : locations) {
-				if (location.getName().equals(name)) {
-					found = true;
-					break;
-				}
-			}
-
-			if (!found) {
-				locations.add(new Location(Location.NEW_LOCATION_ID, name, room.getTitleResource()));
-			}
-		}
-
-		// Sort them
-		Collections.sort(locations);
-
-		// Add "New location" item
-		locations.add(new Location(Location.NEW_LOCATION_ID, getString(R.string.addsensor_new_location_spinner), 0));
-
-		return locations;
-	}
-
-
-	/**
 	 * Method take needed inputs and switch visibility
 	 * 
 	 * @param hide

@@ -14,7 +14,6 @@ import android.view.MotionEvent;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.RelativeLayout;
-import android.widget.Toast;
 
 /*
 import com.actionbarsherlock.view.Menu;
@@ -42,6 +41,8 @@ import com.rehivetech.beeeon.activity.fragment.ProfileDetailFragment;
 import com.rehivetech.beeeon.activity.fragment.SensorListFragment;
 import com.rehivetech.beeeon.activity.fragment.WatchDogListFragment;
 import com.rehivetech.beeeon.adapter.Adapter;
+import com.rehivetech.beeeon.asynctask.CallbackTask;
+import com.rehivetech.beeeon.asynctask.FullReloadTask;
 import com.rehivetech.beeeon.base.BaseApplicationActivity;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.menu.NavDrawerMenu;
@@ -103,6 +104,7 @@ public class MainActivity extends BaseApplicationActivity {
 	private boolean backPressed = false;
 
 	public CallbackManager mFacebookCallbackManager;
+	private FullReloadTask mFullReloadTask;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -144,7 +146,7 @@ public class MainActivity extends BaseApplicationActivity {
 			mNavDrawerMenu.setAdapterID(mActiveAdapterId);
 
 		} else {
-			setActiveAdapterAndLocation();
+			setActiveAdapterAndMenu();
 			mListDevices.setMenuID(mActiveMenuId);
 			mListDevices.setAdapterID(mActiveAdapterId);
 			mNavDrawerMenu.setActiveMenuID(mActiveMenuId);
@@ -169,6 +171,20 @@ public class MainActivity extends BaseApplicationActivity {
 			ft.replace(R.id.content_frame, mProfileFrag, FRG_TAG_PRF);
 		}
 		ft.commit();
+
+
+		// ASYN TASK - Reload all data, if wasnt download in login activity
+		mFullReloadTask = new FullReloadTask(this,false);
+		mFullReloadTask.setListener(new CallbackTask.CallbackTaskListener() {
+			@Override
+			public void onExecute(boolean success) {
+				// Redraw Activity - probably list of sensors
+				Log.d(TAG,"After reload task - go to redraw mainActivity");
+				setActiveAdapterAndMenu();
+				redraw();
+			}
+		});
+		mFullReloadTask.execute();
 
 
 		FacebookSdk.sdkInitialize(this);
@@ -245,8 +261,8 @@ public class MainActivity extends BaseApplicationActivity {
 			else if (resultCode == Constants.ADD_ADAPTER_SUCCESS) {
 				// Succes of add adapter -> setActive adapter a redraw ALL
 				Log.d(TAG, "Add adapter succes");
-				setActiveAdapterAndLocation();
-				redrawMenu();
+				setActiveAdapterAndMenu();
+				redraw();
 			}
 		}
 		else if (requestCode == Constants.ADD_SENSOR_REQUEST_CODE) {
@@ -255,8 +271,7 @@ public class MainActivity extends BaseApplicationActivity {
 				// Set active location
 				String res = data.getExtras().getString(Constants.SETUP_SENSOR_ACT_LOC);
 				Log.d(TAG, "Active locID: "+res + " adapterID: "+mActiveAdapterId);
-				redrawMainFragment();
-				redrawMenu();
+				redraw();
 			}
 		}
 	}
@@ -269,7 +284,7 @@ public class MainActivity extends BaseApplicationActivity {
 		mNavDrawerMenu.redrawMenu();
 		mNavDrawerMenu.finishActinMode();
 		// Redraw Main Fragment
-        redrawMainFragment();
+        redraw();
 
 		checkNoAdapters();
 	}
@@ -291,6 +306,8 @@ public class MainActivity extends BaseApplicationActivity {
 		// Cancel all task if same is running from Menu
 		if (mNavDrawerMenu != null)
 			mNavDrawerMenu.cancelAllTasks();
+		if(mFullReloadTask != null)
+			mFullReloadTask.cancel(true);
 	}
 
 	@Override
@@ -333,7 +350,7 @@ public class MainActivity extends BaseApplicationActivity {
 		super.onSaveInstanceState(savedInstanceState);
 	}
 
-	public void setActiveAdapterAndLocation() {
+	public void setActiveAdapterAndMenu() {
 		// Set active adapter and location
 		Adapter adapter = mController.getActiveAdapter();
 		if (adapter != null) {
@@ -393,7 +410,8 @@ public class MainActivity extends BaseApplicationActivity {
 		return true;
 	}
 
-	public void redrawMenu() {
+	public void redraw() {
+		Log.d(TAG,"REDRAW - activeMenu: "+mActiveMenuId +" activeAdapter: "+mActiveAdapterId);
 		mNavDrawerMenu.setActiveMenuID(mActiveMenuId);
 		mNavDrawerMenu.setAdapterID(mActiveAdapterId);
 		mNavDrawerMenu.redrawMenu();

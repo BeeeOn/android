@@ -172,7 +172,17 @@ public class SensorEditActivity extends BaseApplicationActivity {
 
 	@Override
 	protected void onAppPause() {
+		if(mProgress != null)
+			mProgress.dismiss();
+	}
 
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		if(mSaveDeviceTask != null)
+			mSaveDeviceTask.cancel(true);
+		if(mSaveFacilityTask != null)
+			mSaveFacilityTask.cancel(true);
 	}
 
 	public ProgressDialog getProgressDialog() {
