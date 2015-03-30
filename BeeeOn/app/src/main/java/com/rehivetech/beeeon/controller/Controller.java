@@ -1055,7 +1055,7 @@ public final class Controller {
 		}
 		return true;
 	}
-
+	
 	/**
 	 * @return List of geofences. If no geofence is registered, empty list is returned.
 	 */
@@ -1096,5 +1096,20 @@ public final class Controller {
 
 	public void delBT() {
 		mNetwork.setBT("");
+	}
+
+	// ------- watchDog
+
+	public List<WatchDog> getWatchDogs(String adapterId){
+		return mHousehold.watchDogsModel.getWatchDogsByAdapter(adapterId);
+	}
+
+
+	public synchronized boolean reloadWatchDogs(String adapterId, boolean forceReload) {
+		if (!isLoggedIn()) {
+			return false;
+		}
+
+		return mHousehold.watchDogsModel.reloadWatchDogsByAdapter(adapterId, forceReload);
 	}
 }

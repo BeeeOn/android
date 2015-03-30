@@ -9,7 +9,7 @@ import com.rehivetech.beeeon.adapter.location.Location;
 import com.rehivetech.beeeon.household.User;
 import com.rehivetech.beeeon.network.authentication.IAuthProvider;
 import com.rehivetech.beeeon.network.xml.CustomViewPair;
-import com.rehivetech.beeeon.network.xml.WatchDog;
+import com.rehivetech.beeeon.adapter.WatchDog;
 import com.rehivetech.beeeon.network.xml.action.ComplexAction;
 import com.rehivetech.beeeon.network.xml.condition.Condition;
 import com.rehivetech.beeeon.pair.LogDataPair;

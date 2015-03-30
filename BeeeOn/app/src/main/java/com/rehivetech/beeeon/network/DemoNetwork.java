@@ -21,7 +21,7 @@ import com.rehivetech.beeeon.household.User.Gender;
 import com.rehivetech.beeeon.household.User.Role;
 import com.rehivetech.beeeon.network.authentication.IAuthProvider;
 import com.rehivetech.beeeon.network.xml.CustomViewPair;
-import com.rehivetech.beeeon.network.xml.WatchDog;
+import com.rehivetech.beeeon.adapter.WatchDog;
 import com.rehivetech.beeeon.network.xml.XmlParsers;
 import com.rehivetech.beeeon.network.xml.action.ComplexAction;
 import com.rehivetech.beeeon.network.xml.condition.Condition;
@@ -55,6 +55,7 @@ public class DemoNetwork implements INetwork {
 		public final Adapter adapter;
 		public final Map<String, Location> locations = new HashMap<String, Location>();
 		public final Map<String, Facility> facilities = new HashMap<String, Facility>();
+		public final Map<String, WatchDog> watchdogs = new HashMap<String, WatchDog>();
 
 		public AdapterHolder(Adapter adapter) {
 			this.adapter = adapter;
@@ -128,6 +129,12 @@ public class DemoNetwork implements INetwork {
 
 			for (Location location : parser.getDemoLocationsFromAsset(mContext, assetName)) {
 				holder.locations.put(location.getId(), location);
+			}
+
+			assetName = String.format(Constants.ASSET_WATCHDOGS_FILENAME, holder.adapter.getId());
+
+			for (WatchDog watchdog : parser.getDemoWatchDogsFromAsset(mContext, assetName)) {
+				holder.watchdogs.put(watchdog.getId(), watchdog);
 			}
 
 			assetName = String.format(Constants.ASSET_ADAPTER_DATA_FILENAME, holder.adapter.getId());
@@ -673,8 +680,17 @@ public class DemoNetwork implements INetwork {
 	}
 
     @Override
-    public ArrayList<WatchDog> getAllWatchDogs(String adapterID) {
-		return null;
+    public ArrayList<WatchDog> getAllWatchDogs(String adapterID){
+		ArrayList<WatchDog> watchdogs = new ArrayList<WatchDog>();
+
+		AdapterHolder holder = mAdapters.get(adapterID);
+		if (holder != null) {
+			for (WatchDog watchdog : holder.watchdogs.values()) {
+				watchdogs.add(watchdog);
+			}
+		}
+
+		return watchdogs;
 	}
 
     @Override

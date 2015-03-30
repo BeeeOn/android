@@ -11,7 +11,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.rehivetech.beeeon.R;
+import com.rehivetech.beeeon.adapter.WatchDog;
 import com.rehivetech.beeeon.adapter.WatchDogRule;
+import com.rehivetech.beeeon.adapter.device.Device;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.util.UnitsHelper;
 
@@ -25,12 +27,12 @@ public class WatchDogListAdapter extends BaseAdapter {
     Context mContext;
     Controller mController;
     LayoutInflater mInflater;
-    List<WatchDogRule> mRules;
+    List<WatchDog> mRules;
     SharedPreferences mPrefs;
     UnitsHelper mUnitsHelper;
 
 
-    public WatchDogListAdapter(Context context, List<WatchDogRule> rules, LayoutInflater inflater){
+    public WatchDogListAdapter(Context context, List<WatchDog> rules, LayoutInflater inflater){
         mContext = context;
         mController = Controller.getInstance(mContext);
         mInflater = inflater;
@@ -51,7 +53,7 @@ public class WatchDogListAdapter extends BaseAdapter {
         return mRules.get(position);
     }
 
-    public WatchDogRule getRule(int position){
+    public WatchDog getRule(int position){
         return mRules.get(position);
     }
 
@@ -86,8 +88,9 @@ public class WatchDogListAdapter extends BaseAdapter {
         }
 
         // set values of item
-        WatchDogRule rule = (WatchDogRule) this.getItem(position);
+        WatchDog rule = (WatchDog) this.getItem(position);
 
+        /*
         holder.ItemIcon.setImageResource(rule.getDevice().getIconResource());
         holder.ItemRuleName.setText(rule.getName());
         holder.ItemSensorName.setText(rule.getDevice().getName());
@@ -97,12 +100,24 @@ public class WatchDogListAdapter extends BaseAdapter {
         holder.ItemTreshold.setText(mUnitsHelper != null ? mUnitsHelper.getStringValueUnit(rule.getTreshold()) : String.valueOf(rule.getTreshold().getDoubleValue()));
 
         holder.setItemAction(rule.getAction());
-        holder.ItemSwitch.setChecked(rule.getEnabled());
+        */
+
+        holder.ItemRuleName.setText(rule.getName());
+        holder.ItemSwitch.setChecked(rule.isEnabled());
+
+        List<Device> devs = rule.getDevices();
+        if(devs.size() > 0){
+            Device devPrimary = devs.get(0);
+
+            holder.ItemIcon.setImageResource(devPrimary.getIconResource());
+            holder.ItemSensorName.setText(devPrimary.getName());
+
+        }
 
         return convertView;
     }
 
-    public void updateData(List<WatchDogRule> data){
+    public void updateData(List<WatchDog> data){
         this.mRules = data;
         notifyDataSetChanged();
     }
@@ -116,7 +131,7 @@ public class WatchDogListAdapter extends BaseAdapter {
         public ImageView ItemAction;
         public SwitchCompat ItemSwitch;
 
-        void setItemOperator(WatchDogRule.OperatorType type){
+        void setItemOperator(WatchDog.OperatorType type){
             switch(type){
                 case SMALLER:
                     ItemOperator.setImageResource(R.drawable.ic_action_previous_item);
@@ -128,7 +143,7 @@ public class WatchDogListAdapter extends BaseAdapter {
             }
         }
 
-        void setItemAction(WatchDogRule.ActionType type){
+        void setItemAction(WatchDog.ActionType type){
             switch(type){
                 case NOTIFICATION:
                     ItemAction.setImageResource(R.drawable.ic_notification);

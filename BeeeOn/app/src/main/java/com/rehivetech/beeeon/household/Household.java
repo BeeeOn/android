@@ -8,6 +8,7 @@ import com.rehivetech.beeeon.persistence.DeviceLogsModel;
 import com.rehivetech.beeeon.persistence.FacilitiesModel;
 import com.rehivetech.beeeon.persistence.LocationsModel;
 import com.rehivetech.beeeon.persistence.UninitializedFacilitiesModel;
+import com.rehivetech.beeeon.persistence.WatchDogsModel;
 
 /**
  * Represents "household" for logged user with all adapters and custom lists.
@@ -32,6 +33,8 @@ public final class Household {
 	
 	public final DeviceLogsModel deviceLogsModel;
 
+	public final WatchDogsModel watchDogsModel;
+
 	/** Active adapter. */
 	public Adapter activeAdapter;
 
@@ -43,6 +46,7 @@ public final class Household {
 		facilitiesModel = new FacilitiesModel(network);
 		uninitializedFacilitiesModel = new UninitializedFacilitiesModel(network);
 		deviceLogsModel = new DeviceLogsModel(network);
+		watchDogsModel = new WatchDogsModel(network);
 	}
 
 }

@@ -21,12 +21,10 @@ import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.activity.MainActivity;
 import com.rehivetech.beeeon.activity.WatchDogEditRuleActivity;
 import com.rehivetech.beeeon.adapter.Adapter;
-import com.rehivetech.beeeon.adapter.WatchDogRule;
-import com.rehivetech.beeeon.adapter.device.Device;
-import com.rehivetech.beeeon.adapter.device.DeviceType;
-import com.rehivetech.beeeon.adapter.device.values.HumidityValue;
-import com.rehivetech.beeeon.adapter.device.values.TemperatureValue;
+import com.rehivetech.beeeon.adapter.WatchDog;
 import com.rehivetech.beeeon.arrayadapter.WatchDogListAdapter;
+import com.rehivetech.beeeon.asynctask.CallbackTask;
+import com.rehivetech.beeeon.asynctask.ReloadWatchDogsTask;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.util.Log;
 
@@ -47,6 +45,8 @@ public class WatchDogListFragment extends Fragment{
     private Controller mController;
     private ListView mWatchDogListView;
     private WatchDogListAdapter mWatchDogAdapter;
+
+    List<WatchDog> mWatchDogs;
 
     private String mActiveAdapterId;
 
@@ -90,7 +90,7 @@ public class WatchDogListFragment extends Fragment{
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
         mView = inflater.inflate(R.layout.fragment_watchdog, container, false);
-        redrawRules();
+        initLayout();
         return mView;
     }
 
@@ -119,11 +119,12 @@ public class WatchDogListFragment extends Fragment{
                     return;
                 }
                 // TODO add reload async task
-                // mActivity.redraw();
-                //doReloadFacilitiesTask(adapter.getId());
+                // mActivity.redrawMenu();
+                doReloadWatchDogsTask(adapter.getId());
             }
         });
-        mSwipeLayout.setColorSchemeColors(  R.color.beeeon_primary_cyan, R.color.beeeon_text_color,R.color.beeeon_secundary_pink);
+
+        mSwipeLayout.setColorSchemeColors(R.color.beeeon_primary_cyan, R.color.beeeon_text_color, R.color.beeeon_secundary_pink);
     }
 
     /**
@@ -159,10 +160,21 @@ public class WatchDogListFragment extends Fragment{
         super.onSaveInstanceState(savedInstanceState);
     }
 
-    /**
-     * Redraw GUI rules
-     */
-    private void redrawRules() {
+    public void doReloadWatchDogsTask(String adapterId){
+        ReloadWatchDogsTask mRel = new ReloadWatchDogsTask(getActivity().getApplicationContext(), true);
+
+        mRel.setListener(new CallbackTask.CallbackTaskListener() {
+            @Override
+            public void onExecute(boolean success) {
+                redrawRules();
+                mSwipeLayout.setRefreshing(false);
+            }
+        });
+
+        mRel.execute(adapterId);
+    }
+
+    private void initLayout() {
         mWatchDogListView = (ListView) mView.findViewById(R.id.watchdog_list);
 
         // ---- when listview is empty
@@ -182,33 +194,11 @@ public class WatchDogListFragment extends Fragment{
             }
         });
 
-        HumidityValue val = new HumidityValue();
-        val.setValue("50");
-        Device dev = new Device(DeviceType.TYPE_HUMIDITY, val);
-        dev.setName("Vlhkostní sensor");
-
-        TemperatureValue val1 = new TemperatureValue();
-        val1.setValue("32");
-
-        List<WatchDogRule> rulesList = new ArrayList<>();
-        rulesList.add(new WatchDogRule("1", mActiveAdapterId, "Hlídání ohně", dev, WatchDogRule.OperatorType.GREATER, WatchDogRule.ActionType.ACTOR_ACTION, val1, false));
-        rulesList.add(new WatchDogRule("2", mActiveAdapterId, "Hlídání smradu", dev, WatchDogRule.OperatorType.SMALLER, WatchDogRule.ActionType.NOTIFICATION, val, true));
-        rulesList.add(new WatchDogRule("3", mActiveAdapterId, "Hlídání dětí", dev, WatchDogRule.OperatorType.GREATER, WatchDogRule.ActionType.NOTIFICATION, val1, true));
-        rulesList.add(new WatchDogRule("4", mActiveAdapterId, "Hlídání cen", dev, WatchDogRule.OperatorType.SMALLER, WatchDogRule.ActionType.ACTOR_ACTION, val, false));
-        rulesList.add(new WatchDogRule("5", mActiveAdapterId, "Hlídání cen", dev, WatchDogRule.OperatorType.SMALLER, WatchDogRule.ActionType.ACTOR_ACTION, val, false));
-        rulesList.add(new WatchDogRule("6", mActiveAdapterId, "Hlídání cen", dev, WatchDogRule.OperatorType.SMALLER, WatchDogRule.ActionType.ACTOR_ACTION, val, false));
-        rulesList.add(new WatchDogRule("7", mActiveAdapterId, "Hlídání cen", dev, WatchDogRule.OperatorType.SMALLER, WatchDogRule.ActionType.ACTOR_ACTION, val, false));
-        rulesList.add(new WatchDogRule("8", mActiveAdapterId, "Hlídání cen", dev, WatchDogRule.OperatorType.SMALLER, WatchDogRule.ActionType.ACTOR_ACTION, val, false));
-        rulesList.add(new WatchDogRule("9", mActiveAdapterId, "Hlídání cen", dev, WatchDogRule.OperatorType.SMALLER, WatchDogRule.ActionType.ACTOR_ACTION, val, false));
-        rulesList.add(new WatchDogRule("10", mActiveAdapterId, "Hlídání cen", dev, WatchDogRule.OperatorType.SMALLER, WatchDogRule.ActionType.ACTOR_ACTION, val, false));
-
-        mWatchDogAdapter = new WatchDogListAdapter(mActivity, rulesList, getActivity().getLayoutInflater());
-
-        mWatchDogListView.setAdapter(mWatchDogAdapter);
+        // ----- onitemclick
         mWatchDogListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                WatchDogRule rule = mWatchDogAdapter.getRule(position);
+                WatchDog rule = mWatchDogAdapter.getRule(position);
 
                 Bundle bundle = new Bundle();
                 bundle.putString(WatchDogEditRuleActivity.EXTRA_ADAPTER_ID, rule.getAdapterId());
@@ -230,6 +220,47 @@ public class WatchDogListFragment extends Fragment{
                 return true;
             }
         });
+
+        redrawRules();
+    }
+
+    /**
+     * Redraw GUI rules
+     */
+    private void redrawRules() {
+        mWatchDogs = mController.getWatchDogs(mActiveAdapterId);
+
+        Log.d(TAG, String.format("watchdogs length: %d", mWatchDogs.size()));
+        for(WatchDog w : mWatchDogs ){
+            Log.d(TAG, String.format("Watch: %s", w.getName()));
+        }
+
+        /*
+        HumidityValue val = new HumidityValue();
+        val.setValue("50");
+        Device dev = new Device(DeviceType.TYPE_HUMIDITY, val);
+        dev.setName("Vlhkost ve sklepě");
+
+        TemperatureValue val1 = new TemperatureValue();
+        val1.setValue("32");
+
+        List<WatchDogRule> rulesList = new ArrayList<>();
+        rulesList.add(new WatchDogRule("1", mActiveAdapterId, "Hlídání ohně", dev, WatchDogRule.OperatorType.GREATER, WatchDogRule.ActionType.ACTOR_ACTION, val1, false));
+        rulesList.add(new WatchDogRule("2", mActiveAdapterId, "Hlídání smradu", dev, WatchDogRule.OperatorType.SMALLER, WatchDogRule.ActionType.NOTIFICATION, val, true));
+        rulesList.add(new WatchDogRule("3", mActiveAdapterId, "Hlídání dětí", dev, WatchDogRule.OperatorType.GREATER, WatchDogRule.ActionType.NOTIFICATION, val1, true));
+        rulesList.add(new WatchDogRule("4", mActiveAdapterId, "Hlídání cen", dev, WatchDogRule.OperatorType.SMALLER, WatchDogRule.ActionType.ACTOR_ACTION, val, false));
+        rulesList.add(new WatchDogRule("5", mActiveAdapterId, "Hlídání cen", dev, WatchDogRule.OperatorType.SMALLER, WatchDogRule.ActionType.ACTOR_ACTION, val, false));
+        rulesList.add(new WatchDogRule("6", mActiveAdapterId, "Hlídání cen", dev, WatchDogRule.OperatorType.SMALLER, WatchDogRule.ActionType.ACTOR_ACTION, val, false));
+        rulesList.add(new WatchDogRule("7", mActiveAdapterId, "Hlídání cen", dev, WatchDogRule.OperatorType.SMALLER, WatchDogRule.ActionType.ACTOR_ACTION, val, false));
+        rulesList.add(new WatchDogRule("8", mActiveAdapterId, "Hlídání cen", dev, WatchDogRule.OperatorType.SMALLER, WatchDogRule.ActionType.ACTOR_ACTION, val, false));
+        rulesList.add(new WatchDogRule("9", mActiveAdapterId, "Hlídání cen", dev, WatchDogRule.OperatorType.SMALLER, WatchDogRule.ActionType.ACTOR_ACTION, val, false));
+        rulesList.add(new WatchDogRule("10", mActiveAdapterId, "Hlídání cen", dev, WatchDogRule.OperatorType.SMALLER, WatchDogRule.ActionType.ACTOR_ACTION, val, false));
+        mWatchDogAdapter = new WatchDogListAdapter(mActivity, rulesList, getActivity().getLayoutInflater());
+
+        //*/
+
+        mWatchDogAdapter = new WatchDogListAdapter(mActivity, mWatchDogs, getActivity().getLayoutInflater());
+        mWatchDogListView.setAdapter(mWatchDogAdapter);
     }
 
     class ActionModeEditRules implements ActionMode.Callback {

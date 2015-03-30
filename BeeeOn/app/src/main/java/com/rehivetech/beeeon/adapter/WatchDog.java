@@ -1,11 +1,16 @@
-package com.rehivetech.beeeon.network.xml;
+package com.rehivetech.beeeon.adapter;
+
+import com.rehivetech.beeeon.IIdentifier;
+import com.rehivetech.beeeon.adapter.device.Device;
 
 import java.util.ArrayList;
 
 /**
  * Created by ThinkDeep on 8.3.2015.
  */
-public class WatchDog {
+public class WatchDog implements IIdentifier {
+    public static enum OperatorType{ SMALLER, GREATER }
+    public static enum ActionType{ NOTIFICATION, ACTOR_ACTION }
 
     private boolean mEnabled = true;
     private int mtype = 1; // temporary solution
@@ -18,6 +23,14 @@ public class WatchDog {
 
     private ArrayList<String> mDevices;
     private ArrayList<String> mParams;
+
+    public String getAdapterId(){
+        return mAdapterId;
+    }
+
+    public void setAdapterId(String adapterId){
+        mAdapterId = adapterId;
+    }
 
     public boolean isEnabled(){
         return mEnabled;
@@ -101,8 +114,10 @@ public class WatchDog {
 
     WatchDog(){};
 
-    WatchDog(int type){
+    public WatchDog(int type){
         mtype = type;
     }
+
+
 
 }
