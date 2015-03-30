@@ -43,6 +43,7 @@ import com.rehivetech.beeeon.adapter.device.values.OpenClosedValue;
 import com.rehivetech.beeeon.adapter.location.Location;
 import com.rehivetech.beeeon.asynctask.ActorActionTask;
 import com.rehivetech.beeeon.asynctask.CallbackTask.CallbackTaskListener;
+import com.rehivetech.beeeon.asynctask.GetDeviceLogTask;
 import com.rehivetech.beeeon.asynctask.ReloadFacilitiesTask;
 import com.rehivetech.beeeon.asynctask.SaveDeviceTask;
 import com.rehivetech.beeeon.asynctask.SaveFacilityTask;
@@ -428,21 +429,7 @@ public class SensorDetailFragment extends Fragment {
 		});*/
 	}
 
-	private void loadGraphData() {
-		DateTime end = DateTime.now(DateTimeZone.UTC);
-		DateTime start = end.minusWeeks(1);
 
-		DateTimeFormatter fmt = DateTimeFormat.forPattern(LOG_DATE_TIME_FORMAT).withZoneUTC();
-		Log.d(TAG, String.format("Loading graph data from %s to %s.", fmt.print(start), fmt.print(end)));
-
-		mGetDeviceLogTask = new GetDeviceLogTask();
-		LogDataPair pair = new LogDataPair( //
-				mDevice, // device
-				new Interval(start, end), // interval from-to
-				DataType.AVERAGE, // type
-				(mDevice.getValue() instanceof BaseEnumValue )?DataInterval.RAW:DataInterval.HOUR); // interval
-		mGetDeviceLogTask.execute(new LogDataPair[] { pair });
-	}
 
 	public void fillGraph(DeviceLog log) {
 		if (mGraphView == null) {
@@ -451,7 +438,6 @@ public class SensorDetailFragment extends Fragment {
 
 		SortedMap<Long, Float> values = log.getValues();
 		int size = values.size();
-//		int size = 100;
 		DataPoint[] data = new DataPoint[size];
 
 		Log.d(TAG, String.format("Filling graph with %d values. Min: %.1f, Max: %.1f", size, log.getMinimum(), log.getMaximum()));
@@ -487,10 +473,34 @@ public class SensorDetailFragment extends Fragment {
 		//mGraphInfo.setText(getView().getResources().getString(R.string.sen_detail_graph_info));
 	}
 
+	public void setSensorID(String id) {
+		mDeviceID = id;
+	}
+
+	public void setLocationID(String locationId) {
+		mLocationID = locationId;
+	}
+
+	public void setPosition(int position) {
+		mCurPageNumber = position;
+	}
+
+	public void setSelectedPosition(int mActiveDevicePosition) {
+		mSelPageNumber = mActiveDevicePosition;
+	}
+
+	public void setAdapterID(String mActiveAdapterId) {
+		mAdapterId = mActiveAdapterId;
+	}
+
+	public void setFragmentAdapter(SensorDetailActivity.ScreenSlidePagerAdapter screenSlidePagerAdapter) {
+		mFragmentAdapter = screenSlidePagerAdapter;
+	}
+
 	/*
 	 * ================================= ASYNC TASK ===========================
 	 */
-	
+
 	protected void doActorAction(final Device device) {
 		if (!device.getType().isActor()) {
 			return;
@@ -519,60 +529,12 @@ public class SensorDetailFragment extends Fragment {
 				mValueSwitch.setEnabled(true);
 				mValue.setText(mUnitsHelper.getStringValueUnit(mDevice.getValue()));
 			}
-			
+
 		});
 		mActorActionTask.execute(device);
 	}
 
-
-
-	public void setSensorID(String id) {
-		mDeviceID = id;
-	}
-
-	public void setLocationID(String locationId) {
-		mLocationID = locationId;
-	}
-
-	public void setPosition(int position) {
-		mCurPageNumber = position;
-	}
-
-	public void setSelectedPosition(int mActiveDevicePosition) {
-		mSelPageNumber = mActiveDevicePosition;
-	}
-
-	public void setAdapterID(String mActiveAdapterId) {
-		mAdapterId = mActiveAdapterId;
-	}
-
-	public void setFragmentAdapter(SensorDetailActivity.ScreenSlidePagerAdapter screenSlidePagerAdapter) {
-		mFragmentAdapter = screenSlidePagerAdapter;
-	}
-
-	/**
-	 * Changes selected location and redraws list of adapters there
-	 */
-	private class GetDeviceLogTask extends AsyncTask<LogDataPair, Void, DeviceLog> {
-		@Override
-		protected DeviceLog doInBackground(LogDataPair... pairs) {
-			LogDataPair pair = pairs[0]; // expects only one device at a time is sent there
-
-			// Load log data if needed
-			mController.reloadDeviceLog(pair);
-			
-			// Get loaded log data (TODO: this could be done in gui)
-			return mController.getDeviceLog(pair);
-		}
-
-		@Override
-		protected void onPostExecute(DeviceLog log) {
-			fillGraph(log);
-		}
-
-	}
-
-	private void doReloadFacilitiesTask(final String adapterId, final boolean forceRefresh) {
+	protected void doReloadFacilitiesTask(final String adapterId, final boolean forceRefresh) {
 		mReloadFacilitiesTask = new ReloadFacilitiesTask(mActivity, forceRefresh);
 
 		mReloadFacilitiesTask.setListener(new CallbackTaskListener() {
@@ -590,7 +552,7 @@ public class SensorDetailFragment extends Fragment {
 					return;
 				}
 				initLayout(mDevice);
-				loadGraphData();
+				doLoadGraphData();
 			}
 
 		});
@@ -598,5 +560,26 @@ public class SensorDetailFragment extends Fragment {
 		mReloadFacilitiesTask.execute(adapterId);
 	}
 
+	protected void doLoadGraphData() {
+		DateTime end = DateTime.now(DateTimeZone.UTC);
+		DateTime start = end.minusWeeks(1);
+
+		DateTimeFormatter fmt = DateTimeFormat.forPattern(LOG_DATE_TIME_FORMAT).withZoneUTC();
+		Log.d(TAG, String.format("Loading graph data from %s to %s.", fmt.print(start), fmt.print(end)));
+
+		mGetDeviceLogTask = new GetDeviceLogTask(mActivity);
+		LogDataPair pair = new LogDataPair( //
+				mDevice, // device
+				new Interval(start, end), // interval from-to
+				DataType.AVERAGE, // type
+				(mDevice.getValue() instanceof BaseEnumValue )?DataInterval.RAW:DataInterval.HOUR); // interval
+		mGetDeviceLogTask.setListener(new GetDeviceLogTask.CallbackLogTaskListener() {
+			@Override
+			public void onExecute(DeviceLog result) {
+				fillGraph(result);
+			}
+		});
+		mGetDeviceLogTask.execute(new LogDataPair[] { pair });
+	}
 
 }
