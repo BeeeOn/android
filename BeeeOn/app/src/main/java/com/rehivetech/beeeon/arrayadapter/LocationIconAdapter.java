@@ -12,15 +12,15 @@ import android.widget.ImageView;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.adapter.location.Location;
 
-public class LocationIconAdapter extends ArrayAdapter<Integer> {
+public class LocationIconAdapter extends ArrayAdapter<Location.LocationIcon> {
 
-	private List<Integer> mIcons;
+	private List<Location.LocationIcon> mIcons;
 	private int mLayoutResource;
 	private int mDropDownLayoutResource;
 	private Context mActivity;
 
 
-	public LocationIconAdapter(Context context, int resource, List<Integer> objects) {
+	public LocationIconAdapter(Context context, int resource, List<Location.LocationIcon> objects) {
 		super(context, resource, objects);
 		mLayoutResource = resource;
 		mIcons = objects;
@@ -28,14 +28,14 @@ public class LocationIconAdapter extends ArrayAdapter<Integer> {
 	}
 
 	public LocationIconAdapter(Context context, int resource) {
-		super(context, resource, new ArrayList<Integer>());
+		super(context, resource, new ArrayList<Location.LocationIcon>());
 		mLayoutResource = resource;
 		mIcons = getIconArray();
 		mActivity = context;
 	}
 
 	@Override
-	public Integer getItem(int position) {
+	public Location.LocationIcon getItem(int position) {
 		return mIcons.get(position);
 	}
 
@@ -55,7 +55,7 @@ public class LocationIconAdapter extends ArrayAdapter<Integer> {
 		View row = inflater.inflate(mDropDownLayoutResource, parent, false);
 
 		ImageView icon = (ImageView) row.findViewById(R.id.custom_spinner_icon_dropdown_icon);
-		icon.setImageResource(mIcons.get(position));
+		icon.setImageResource(mIcons.get(position).getIconResource());
 
 		return row;
 	}
@@ -66,16 +66,16 @@ public class LocationIconAdapter extends ArrayAdapter<Integer> {
 		View row = inflater.inflate(mLayoutResource, parent, false);
 
 		ImageView icon = (ImageView) row.findViewById(R.id.custom_spinner_icon_icon);
-		icon.setImageResource(mIcons.get(position));
+		icon.setImageResource(mIcons.get(position).getIconResource());
 
 		return row;
 	}
 
-	public List<Integer> getIconArray() {
+	public List<Location.LocationIcon> getIconArray() {
 		// Prepare list of icons
-		List<Integer> iconsList = new ArrayList<Integer>();
+		List<Location.LocationIcon> iconsList = new ArrayList<Location.LocationIcon>();
 		for (Location.LocationIcon icon : Location.LocationIcon.values()) {
-			iconsList.add(icon.getIconResource());
+			iconsList.add(icon);
 		}
 		return iconsList;
 	}

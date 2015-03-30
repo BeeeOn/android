@@ -33,10 +33,12 @@ import com.rehivetech.beeeon.arrayadapter.LocationIconAdapter;
 import com.rehivetech.beeeon.asynctask.CallbackTask;
 import com.rehivetech.beeeon.asynctask.SaveDeviceTask;
 import com.rehivetech.beeeon.asynctask.SaveFacilityTask;
+import com.rehivetech.beeeon.asynctask.SaveFacilityWithNewLocTask;
 import com.rehivetech.beeeon.base.BaseApplicationActivity;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.pair.SaveDevicePair;
 import com.rehivetech.beeeon.pair.SaveFacilityPair;
+import com.rehivetech.beeeon.pair.SaveFacilityWithNewLocPair;
 import com.rehivetech.beeeon.util.Log;
 import com.sonyericsson.extras.liveware.aef.registration.Registration;
 
@@ -62,6 +64,7 @@ public class SensorEditActivity extends BaseApplicationActivity {
 	private ProgressDialog mProgress;
 	private Controller mController;
 	private PlaceholderFragment mFragment;
+	private SaveFacilityWithNewLocTask mSaveFacilityWithNewLocTask;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -132,28 +135,29 @@ public class SensorEditActivity extends BaseApplicationActivity {
 				what.add(Device.SaveDevice.SAVE_NAME);
 				device.setName(mFragment.getName());
 			}
-			if(!mFragment.getLocationId().equals(facility.getLocationId())) {
-				what.add(Device.SaveDevice.SAVE_LOCATION);
-				if(mFragment.isSetNewRoom()) {
-					// Create new room
-					Location location = new Location(Location.NEW_LOCATION_ID, mFragment.getNewLocName(),mFragment.getNewLocIcon());
-					// Send request for new loc ..
-					//TODO: !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-				} else {
-					facility.setLocationId(mFragment.getLocationId());
-				}
-			}
+
 			if(!mFragment.getRefreshTime().equals(facility.getRefresh())) {
 				what.add(Device.SaveDevice.SAVE_REFRESH);
 				facility.setRefresh(mFragment.getRefreshTime());
 			}
-
-
-			doSaveFacilityTask(new SaveFacilityPair(facility,EnumSet.copyOf(what)));
+			if(!mFragment.getLocationId().equals(facility.getLocationId())) {
+				what.add(Device.SaveDevice.SAVE_LOCATION);
+				if(mFragment.isSetNewRoom()) {
+					// Create new room
+					Location location = new Location(Location.NEW_LOCATION_ID, mFragment.getNewLocName(),mFragment.getNewLocIcon().getId());
+					// Send request for new loc ..
+					doSaveFacilityWithNewLocation(new SaveFacilityWithNewLocPair(facility,location,EnumSet.copyOf(what)));
+					return true;
+				} else {
+					facility.setLocationId(mFragment.getLocationId());
+				}
+			}
+			if(!mFragment.isSetNewRoom())
+				doSaveFacilityTask(new SaveFacilityPair(facility,EnumSet.copyOf(what)));
 
 			return true;
 		}
-		else if (id == R.id.home){
+		else if (id == android.R.id.home){
 			setResult(Constants.EDIT_SENSOR_CANCELED);
 			finish();
 		}
@@ -179,10 +183,10 @@ public class SensorEditActivity extends BaseApplicationActivity {
 	 * ASYNC TASK - SAVE
 	 */
 
-	private void doSaveDeviceTask(SaveDevicePair pair) {
-		mSaveDeviceTask = new SaveDeviceTask(mActivity);
-		mSaveDeviceTask.setListener(new CallbackTask.CallbackTaskListener() {
-
+	private void doSaveFacilityWithNewLocation(SaveFacilityWithNewLocPair pair) {
+		mProgress.show();
+		mSaveFacilityWithNewLocTask = new SaveFacilityWithNewLocTask(mActivity);
+		mSaveFacilityWithNewLocTask.setListener(new CallbackTask.CallbackTaskListener() {
 			@Override
 			public void onExecute(boolean success) {
 				if (mActivity.getProgressDialog() != null)
@@ -198,11 +202,12 @@ public class SensorEditActivity extends BaseApplicationActivity {
 				}
 			}
 		});
+		mSaveFacilityWithNewLocTask.execute(pair);
 
-		mSaveDeviceTask.execute(pair);
 	}
 
 	public void doSaveFacilityTask(SaveFacilityPair pair) {
+		mProgress.show();
 		mSaveFacilityTask = new SaveFacilityTask(mActivity);
 		mSaveFacilityTask.setListener(new CallbackTask.CallbackTaskListener() {
 			@Override
@@ -409,12 +414,12 @@ public class SensorEditActivity extends BaseApplicationActivity {
 			return mNewLocName.getText().toString();
 		}
 
-		public int getNewLocIcon() {
-			return ((Integer)mNewIconSpinner.getAdapter().getItem(mNewIconSpinner.getSelectedItemPosition())).intValue();
+		public Location.LocationIcon getNewLocIcon() {
+			return (Location.LocationIcon)mNewIconSpinner.getAdapter().getItem(mNewIconSpinner.getSelectedItemPosition());
 		}
 
 		public boolean isSetNewRoom() {
-			return ((Location)mSpinner.getAdapter().getItem(mSpinner.getSelectedItemPosition())).getId().equals("0");
+			return ((Location)mSpinner.getAdapter().getItem(mSpinner.getSelectedItemPosition())).getId().equals(Location.NEW_LOCATION_ID);
 		}
 	}
 }

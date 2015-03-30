@@ -444,32 +444,6 @@ public class SensorDetailFragment extends Fragment {
 		mGetDeviceLogTask.execute(new LogDataPair[] { pair });
 	}
 
-	private List<Location> getLocationsArray() {
-		// Get locations from adapter
-		List<Location> locations = new ArrayList<Location>();
-
-		Adapter adapter = mController.getActiveAdapter();
-		if (adapter != null) {
-			locations = mController.getLocations(adapter.getId());
-		}
-
-		// Sort them
-		Collections.sort(locations);
-
-		return locations;
-	}
-
-	private int getLocationsIndexFromArray(List<Location> locations) {
-		int index = 0;
-		for (Location room : locations) {
-			if (room.getId().equalsIgnoreCase(mLocationID)) {
-				return index;
-			}
-			index++;
-		}
-		return index;
-	}
-
 	public void fillGraph(DeviceLog log) {
 		if (mGraphView == null) {
 			return;
