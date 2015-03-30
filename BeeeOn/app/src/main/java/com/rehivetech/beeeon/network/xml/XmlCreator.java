@@ -1276,7 +1276,7 @@ public class XmlCreator {
      *          list of strings with additional params for new rule
      * @return
      */
-    public static String createAddSetAlgor(String bt, String name, String aid, int type, List<String> devices, List<String> params, String regionId, String geoType, Boolean state){
+    public static String createAddSetAlgor(String bt, String name, String algId, String aid, int type, List<String> devices, List<String> params, String regionId, String geoType, Boolean state){
         XmlSerializer serializer = Xml.newSerializer();
         StringWriter writer = new StringWriter();
         try {
@@ -1291,6 +1291,7 @@ public class XmlCreator {
             else {
                 serializer.attribute(ns, Xconstants.STATE, SETALG);
                 serializer.attribute(ns, Xconstants.ENABLE, (state.booleanValue()) ? "1" : "0");
+				serializer.attribute(ns, Xconstants.ALGID, algId);
             }
 
             serializer.attribute(ns, Xconstants.VERSION, COM_VER);
@@ -1327,11 +1328,11 @@ public class XmlCreator {
 
 
     public static String createAddAlgor(String bt, String name, String aid, int type, List<String> devices, List<String> params, String regionId, String geoType){
-        return createAddSetAlgor(bt, name, aid, type, devices, params, regionId, geoType, null);
+        return createAddSetAlgor(bt, name, null, aid, type, devices, params, regionId, geoType, null);
     }
 
-    public static String createSetAlgor(String bt, String name, String aid, int type, boolean enable, List<String> devices, List<String>params, String regionId, String geoType){
-        return createAddSetAlgor(bt, name, aid, type, devices, params, regionId, geoType, enable);
+    public static String createSetAlgor(String bt, String name, String algId, String aid, int type, boolean enable, List<String> devices, List<String>params, String regionId, String geoType){
+        return createAddSetAlgor(bt, name, algId, aid, type, devices, params, regionId, geoType, enable);
     }
 
     /**
