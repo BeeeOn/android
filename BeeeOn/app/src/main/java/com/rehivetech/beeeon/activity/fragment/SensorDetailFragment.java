@@ -1,17 +1,5 @@
 package com.rehivetech.beeeon.activity.fragment;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map.Entry;
-import java.util.SortedMap;
-
-import org.joda.time.DateTime;
-import org.joda.time.DateTimeZone;
-import org.joda.time.Interval;
-import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
-
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
@@ -32,10 +20,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.jjoe64.graphview.GraphView;
-import com.jjoe64.graphview.GraphView.GraphViewData;
-import com.jjoe64.graphview.GraphViewSeries;
-import com.jjoe64.graphview.GraphViewSeries.GraphViewSeriesStyle;
-import com.jjoe64.graphview.LineGraphView;
+import com.jjoe64.graphview.series.BarGraphSeries;
+import com.jjoe64.graphview.series.BaseSeries;
+import com.jjoe64.graphview.series.DataPoint;
+import com.jjoe64.graphview.series.LineGraphSeries;
 
 import com.melnykov.fab.FloatingActionButton;
 import com.rehivetech.beeeon.Constants;
@@ -67,6 +55,20 @@ import com.rehivetech.beeeon.util.Log;
 import com.rehivetech.beeeon.util.TimeHelper;
 import com.rehivetech.beeeon.util.UnitsHelper;
 
+import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
+import org.joda.time.Interval;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.EnumSet;
+import java.util.List;
+import java.util.Map.Entry;
+import java.util.SortedMap;
+import java.util.concurrent.TimeUnit;
+
 public class SensorDetailFragment extends Fragment {
 
 	private Controller mController;
@@ -91,7 +93,6 @@ public class SensorDetailFragment extends Fragment {
 	private TextView mGraphLabel;
 	private LinearLayout mGraphLayout;
 	private GraphView mGraphView;
-	private TextView mGraphInfo;
 	private TextView mBattery;
 	private TextView mSignal;
 
@@ -117,7 +118,7 @@ public class SensorDetailFragment extends Fragment {
 	private boolean mWasTapGraph = false;
 	private int mEditMode = EDIT_NONE;
 
-	private GraphViewSeries mGraphSeries;
+	private BaseSeries<DataPoint>  mGraphSeries;
 	
 
 	private static final String GRAPH_DATE_TIME_FORMAT = "dd.MM. kk:mm";
@@ -222,15 +223,12 @@ public class SensorDetailFragment extends Fragment {
 		mBattery = (TextView) mView.findViewById(R.id.sen_detail_battery_value);
 		// Get signal value
 		mSignal = (TextView) mView.findViewById(R.id.sen_detail_signal_value);
+		// Get graphView
+		mGraphView = (GraphView) mView.findViewById(R.id.sen_graph);
+
 		// Set title selected for animation if is text long
 		mName.setSelected(true);
 		mLocation.setSelected(true);
-
-
-		// Get LinearLayout for graph
-		mGraphLayout = (LinearLayout) mView.findViewById(R.id.sen_graph_layout);
-		mGraphLabel = (TextView) mView.findViewById(R.id.sen_graph_name);
-		//mGraphInfo = (TextView) getView().findViewById(R.id.sen_graph_info);
 
 
 		mFABedit.setOnClickListener(new OnClickListener() {
@@ -322,6 +320,12 @@ public class SensorDetailFragment extends Fragment {
 		// Set signal
 		mSignal.setText(facility.getNetworkQuality()+"%");
 
+		// Add Graph
+		if (mUnitsHelper != null && mTimeHelper != null) {
+			DateTimeFormatter fmt = mTimeHelper.getFormatter(GRAPH_DATE_TIME_FORMAT, adapter);
+			addGraphView(fmt, mUnitsHelper);
+		}
+
 		// Visible all elements
 		visibleAllElements();
 
@@ -376,32 +380,29 @@ public class SensorDetailFragment extends Fragment {
 
 	private void addGraphView(final DateTimeFormatter fmt, final UnitsHelper unitsHelper) {
 		// Create and set graphView
-		mGraphView = GraphViewHelper.prepareGraphView(getView().getContext(), "", mDevice, fmt, unitsHelper); // empty heading
-		
-		mGraphView.setVisibility(View.GONE);
-		mGraphView.setScrollable(false);
-		mGraphView.setScalable(false);
-		
-		if (mGraphView instanceof LineGraphView) {
-			mGraphView.setBackgroundColor(getResources().getColor(R.color.alpha_blue));// getResources().getColor(R.color.log_blue2));
-			((LineGraphView) mGraphView).setDrawBackground(true);
+		GraphViewHelper.prepareGraphView(mGraphView, getView().getContext(), mDevice, fmt, unitsHelper); // empty heading
+
+		//mGraphView.setVisibility(View.GONE);
+		mGraphView.getViewport().setScrollable(false);
+		mGraphView.getViewport().setScalable(false);
+
+		if (mDevice.getValue() instanceof BaseEnumValue) {
+			mGraphSeries = new BarGraphSeries<>(new DataPoint[]{new DataPoint(0, 0), new DataPoint(1,1)});
+			((BarGraphSeries) mGraphSeries).setSpacing(30);
+		} else {
+			mGraphSeries =  new LineGraphSeries<>(new DataPoint[]{new DataPoint(0, 0), new DataPoint(1,1)});
+			((LineGraphSeries)mGraphSeries).setBackgroundColor(getResources().getColor(R.color.alpha_blue));
+			((LineGraphSeries)mGraphSeries).setDrawBackground(true);
+			((LineGraphSeries) mGraphSeries).setThickness(2);
+//			((LineGraphSeries) mGraphSeries).setDrawCubicLine(true);
 		}
-		// graphView.setAlpha(128);
+		mGraphSeries.setColor(getResources().getColor(R.color.beeeon_primary_cyan));
+		mGraphSeries.setTitle("Graph");
 
 		// Add data series
-		GraphViewSeriesStyle seriesStyleBlue = new GraphViewSeriesStyle(getResources().getColor(R.color.beeeon_primary_cyan), 2);
-		// GraphViewSeriesStyle seriesStyleGray = new GraphViewSeriesStyle(getResources().getColor(R.color.light_gray),2);
-
-		mGraphSeries = new GraphViewSeries("Graph", seriesStyleBlue, new GraphViewData[] { new GraphView.GraphViewData(0, 0), });
 		mGraphView.addSeries(mGraphSeries);
-		
-		if (!(mDevice.getValue() instanceof BaseEnumValue)) {
-			mGraphView.setManualYAxisBounds(1.0, 0.0);
-		}
-
-		mGraphLayout.addView(mGraphView);
-
-		mGraphLayout.setOnTouchListener(new OnTouchListener() {
+/*
+		mGraphInfo.setOnTouchListener(new OnTouchListener() {
 
 			@Override
 			public boolean onTouch(View v, MotionEvent event) {
@@ -412,20 +413,19 @@ public class SensorDetailFragment extends Fragment {
 				if (mWasTapGraph)
 					return true;
 
-
+				mWasTapLayout = false;
 				mWasTapGraph = true;
 
 				Log.d(TAG, "onTouch layout");
-				mGraphView.setScrollable(true);
-				mGraphView.setScalable(true);
+				mGraphView.getViewport().setScrollable(true);
+				mGraphView.getViewport().setScalable(true);
 				mActivity.setEnableSwipe(false);
 				mGraphInfo.setVisibility(View.GONE);
+//				mGraphView.animateY(2000);
 				onTouch(v, event);
 				return true;
 			}
-		});
-
-		loadGraphData();
+		});*/
 	}
 
 	private void loadGraphData() {
@@ -451,8 +451,9 @@ public class SensorDetailFragment extends Fragment {
 
 		SortedMap<Long, Float> values = log.getValues();
 		int size = values.size();
-		GraphView.GraphViewData[] data = new GraphView.GraphViewData[size];
-		
+//		int size = 100;
+		DataPoint[] data = new DataPoint[size];
+
 		Log.d(TAG, String.format("Filling graph with %d values. Min: %.1f, Max: %.1f", size, log.getMinimum(), log.getMaximum()));
 
 		int i = 0;
@@ -460,22 +461,30 @@ public class SensorDetailFragment extends Fragment {
 			Long dateMillis = entry.getKey();
 			float value = Float.isNaN(entry.getValue()) ? log.getMinimum() : entry.getValue();
 
-			data[i++] = new GraphView.GraphViewData(dateMillis, value);
-			
+			data[i++] = new DataPoint(dateMillis, value);
+
 			// This shouldn't happen, only when some other thread changes this values object - can it happen?
 			if (i >= size)
 				break;
 		}
-		
+
 		Log.d(TAG, "Filling graph finished");
 
 		// Set maximum as +10% more than deviation
 		if (!(mDevice.getValue() instanceof BaseEnumValue)) {
-			mGraphView.setManualYAxisBounds(log.getMaximum() + log.getDeviation() * 0.1, log.getMinimum());
+			mGraphView.getViewport().setMaxY(log.getMaximum() + log.getDeviation() * 0.1);
+			mGraphView.getViewport().setMinY(log.getMinimum());
 		}
-		// mGraphView.setViewPort(0, 7);
 		mGraphSeries.resetData(data);
-		mGraphInfo.setText(getView().getResources().getString(R.string.sen_detail_graph_info));
+		Log.d(TAG,"series values:"+Integer.toString(values.size()));
+		mGraphView.getViewport().setXAxisBoundsManual(true);
+		if (values.size() > 100 && mGraphSeries instanceof BarGraphSeries) {
+			mGraphView.getViewport().setMaxX(mGraphSeries.getHighestValueX());
+			mGraphView.getViewport().setMinX(mGraphSeries.getHighestValueX() - TimeUnit.HOURS.toMillis(1));
+		}
+
+		mGraphView.setLoading(false);
+		//mGraphInfo.setText(getView().getResources().getString(R.string.sen_detail_graph_info));
 	}
 
 	/*
@@ -581,6 +590,7 @@ public class SensorDetailFragment extends Fragment {
 					return;
 				}
 				initLayout(mDevice);
+				loadGraphData();
 			}
 
 		});

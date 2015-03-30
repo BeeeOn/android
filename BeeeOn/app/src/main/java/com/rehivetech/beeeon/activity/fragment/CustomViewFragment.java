@@ -1,18 +1,5 @@
 package com.rehivetech.beeeon.activity.fragment;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Random;
-import java.util.SortedMap;
-
-import org.joda.time.DateTime;
-import org.joda.time.DateTimeZone;
-import org.joda.time.Interval;
-import org.joda.time.format.DateTimeFormatter;
-
 import android.content.Context;
 import android.graphics.Color;
 import android.os.AsyncTask;
@@ -25,11 +12,11 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.jjoe64.graphview.GraphView;
-import com.jjoe64.graphview.GraphView.GraphViewData;
-import com.jjoe64.graphview.GraphViewSeries;
-import com.jjoe64.graphview.GraphViewSeries.GraphViewSeriesStyle;
-import com.jjoe64.graphview.LineGraphView;
-
+import com.jjoe64.graphview.LegendView;
+import com.jjoe64.graphview.series.BarGraphSeries;
+import com.jjoe64.graphview.series.BaseSeries;
+import com.jjoe64.graphview.series.DataPoint;
+import com.jjoe64.graphview.series.LineGraphSeries;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.adapter.Adapter;
 import com.rehivetech.beeeon.adapter.device.Device;
@@ -37,6 +24,7 @@ import com.rehivetech.beeeon.adapter.device.DeviceLog;
 import com.rehivetech.beeeon.adapter.device.DeviceLog.DataInterval;
 import com.rehivetech.beeeon.adapter.device.DeviceLog.DataType;
 import com.rehivetech.beeeon.adapter.device.Facility;
+import com.rehivetech.beeeon.adapter.device.values.BaseEnumValue;
 import com.rehivetech.beeeon.base.TrackFragment;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.pair.LogDataPair;
@@ -45,11 +33,25 @@ import com.rehivetech.beeeon.util.Log;
 import com.rehivetech.beeeon.util.TimeHelper;
 import com.rehivetech.beeeon.util.UnitsHelper;
 
+import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
+import org.joda.time.Interval;
+import org.joda.time.format.DateTimeFormatter;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Random;
+import java.util.SortedMap;
+
 public class CustomViewFragment extends TrackFragment {
 
 	private SparseArray<List<Device>> mDevices = new SparseArray<List<Device>>();
 	// private SparseArray<List<DeviceLog>> mLogs = new SparseArray<List<DeviceLog>>();
 	private SparseArray<GraphView> mGraphs = new SparseArray<GraphView>();
+	private SparseArray<LegendView> mLegends = new SparseArray<>();
 
 	private String mGraphDateTimeFormat = "dd.MM. kk:mm";
 
@@ -84,25 +86,22 @@ public class CustomViewFragment extends TrackFragment {
 	}
 
 	private void addGraph(final Device device, final UnitsHelper unitsHelper, final TimeHelper timeHelper, final DateTimeFormatter fmt) {
-		// Create and set graphView
-		GraphView graphView = GraphViewHelper.prepareGraphView(mContext, "", device, fmt, unitsHelper); // empty heading
-		graphView.setShowLegend(true);
-
-		if (graphView instanceof LineGraphView) {
-			((LineGraphView) graphView).setDrawBackground(false);
-		}
-
 		// Inflate layout
 		LayoutInflater inflater = getLayoutInflater(null);
 		View row = inflater.inflate(R.layout.custom_graph_item, mLayout, false);
+		// Create and set graphView
+		GraphView graphView = (GraphView) row.findViewById(R.id.graph);
+		GraphViewHelper.prepareGraphView(graphView, mContext, device, fmt, unitsHelper); // empty heading
+		LegendView legend = (LegendView) row.findViewById(R.id.legend);
+		legend.setDrawBackground(true);
+		legend.setIconRound(10f);
 
 		// Set title
 		TextView tv = (TextView) row.findViewById(R.id.graph_label);
 		tv.setText(mContext.getString(device.getType().getStringResource()));
 
-		// Add graph to layout
-		((LinearLayout) row.findViewById(R.id.graph_layout)).addView(graphView);
 		mGraphs.put(device.getType().getTypeId(), graphView);
+		mLegends.put(device.getType().getTypeId(), legend);
 
 		// Add whole item to global layout
 		mLayout.addView(row);
@@ -120,22 +119,34 @@ public class CustomViewFragment extends TrackFragment {
 
 		// for (DeviceLog log : logs) {
 
-		GraphViewSeriesStyle seriesStyle = new GraphViewSeriesStyle(color, 4);
-
 		// GraphViewSeriesStyle seriesStyleBlue = new
 		// GraphViewSeriesStyle(mContext.getResources().getColor(R.color.beeeon_primary_cyan), 2);
 		// GraphViewSeriesStyle seriesStyleGray = new
 		// GraphViewSeriesStyle(getResources().getColor(R.color.light_gray),2);
 
-		GraphViewSeries graphSeries = new GraphViewSeries(device.getName(), seriesStyle, new GraphViewData[] {
-			new GraphView.GraphViewData(0, 0),
-		});
+		BaseSeries<DataPoint> graphSeries;
+		if (device.getValue() instanceof BaseEnumValue) {
+			graphSeries = new BarGraphSeries<>(new DataPoint[]{new DataPoint(0, 0),});
+		} else {
+			graphSeries = new LineGraphSeries<>(new DataPoint[]{new DataPoint(0, 0),});
+			((LineGraphSeries)graphSeries).setThickness(4);
+			((LineGraphSeries)graphSeries).setDrawCubicLine(true);
+		}
+		graphSeries.setTitle(device.getName());
+		graphSeries.setColor(color);
 
 		graphView.addSeries(graphSeries);
 
+		LegendView legend = mLegends.get(device.getType().getTypeId());
+		legend.initLegendSeries(graphView.getSeries());
+		legend.setDrawBackground(false);
+		legend.setSeriesPosition(LegendView.SeriesPosition.HORIZONTAL);
+		legend.invalidate();
+
+
 		SortedMap<Long, Float> values = log.getValues();
 		int size = values.size();
-		GraphView.GraphViewData[] data = new GraphView.GraphViewData[size];
+		DataPoint[] data = new DataPoint[size];
 		
 		Log.d(TAG, String.format("Filling graph with %d values. Min: %.1f, Max: %.1f", size, log.getMinimum(), log.getMaximum()));
 
@@ -144,7 +155,7 @@ public class CustomViewFragment extends TrackFragment {
 			Long dateMillis = entry.getKey();
 			float value = Float.isNaN(entry.getValue()) ? log.getMinimum() : entry.getValue();
 
-			data[i++] = new GraphView.GraphViewData(dateMillis, value);
+			data[i++] = new DataPoint(dateMillis, value);
 			
 			// This shouldn't happen, only when some other thread changes this values object - can it happen?
 			if (i >= size)
@@ -154,6 +165,8 @@ public class CustomViewFragment extends TrackFragment {
 		Log.d(TAG, "Filling graph finished");
 
 		graphSeries.resetData(data);
+		graphView.getViewport().setXAxisBoundsManual(true);
+
 	}
 
 	private void prepareDevices() {
@@ -237,7 +250,8 @@ public class CustomViewFragment extends TrackFragment {
 
 			// Hide loading label for this graph
 			GraphView graphView = mGraphs.get(mTypeId);
-			((View) graphView.getParent().getParent()).findViewById(R.id.graph_loading).setVisibility(View.INVISIBLE);
+			graphView.setLoading(false);
+			graphView.animateY(2000);
 		}
 
 	}

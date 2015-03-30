@@ -295,7 +295,7 @@
 		<!-- GRAPH CONTENT -->
 		<LinearLayout
 			android:layout_width="match_parent"
-			android:layout_height="228dp"
+			android:layout_height="248dp"
 			android:layout_below="@+id/sen_sep_2"
 			android:id="@+id/sen_third_section"
 			android:orientation="vertical"
@@ -311,15 +311,13 @@
 				android:textColor="@color/beeeon_text_hint"
 				android:textSize="14sp"/>
 
-			<LinearLayout
-				android:id="@+id/sen_graph_layout"
+			<com.jjoe64.graphview.GraphView
+				android:id="@+id/sen_graph"
 				android:layout_width="match_parent"
-				android:layout_height="180dp"
+				android:layout_height="200dp"
 				android:layout_below="@id/sen_graph_name"
 				android:orientation="vertical"
-				android:visibility="visible">
-
-			</LinearLayout>
+				android:visibility="visible"/>
 		</LinearLayout>
 	</RelativeLayout>
 </ScrollView>
