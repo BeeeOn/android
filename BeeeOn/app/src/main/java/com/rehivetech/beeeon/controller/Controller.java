@@ -184,21 +184,24 @@ public final class Controller {
 		// Load user data from server
 		User user = mNetwork.loadUserInfo();
 
-		if (!user.getId().equals(userId)) {
-			// UserId from server is not same as the cached one (or this is first login)
-			if (userId != null) {
-				Log.e(TAG, String.format("UserId from server (%s) is not same as the cached one (%s).", user.getId(), userId));
-			} else {
-				Log.d(TAG, String.format("Loaded userId from server (%s), this is first login.", user.getId()));
+		// Eventually save correct userId and download picture if changed (but not in demoMode)
+		if (!(mNetwork instanceof DemoNetwork)) {
+			if (!user.getId().equals(userId)) {
+				// UserId from server is not same as the cached one (or this is first login)
+				if (userId != null) {
+					Log.e(TAG, String.format("UserId from server (%s) is not same as the cached one (%s).", user.getId(), userId));
+				} else {
+					Log.d(TAG, String.format("Loaded userId from server (%s), this is first login.", user.getId()));
+				}
+				// So save the correct userId
+				mPersistence.saveLastUserId(user.getId());
 			}
-			// So save the correct userId
-			mPersistence.saveLastUserId(user.getId());
-		}
 
-		// If we have no or changed picture, lets download it from server
-		if (!user.getPictureUrl().isEmpty() && (user.getPicture() == null || !mHousehold.user.getPictureUrl().equals(user.getPictureUrl()))) {
-			Bitmap picture = Utils.fetchImageFromUrl(user.getPictureUrl());
-			user.setPicture(picture);
+			// If we have no or changed picture, lets download it from server
+			if (!user.getPictureUrl().isEmpty() && (user.getPicture() == null || !mHousehold.user.getPictureUrl().equals(user.getPictureUrl()))) {
+				Bitmap picture = Utils.fetchImageFromUrl(user.getPictureUrl());
+				user.setPicture(picture);
+			}
 		}
 
 		// Copy user data
@@ -211,8 +214,10 @@ public final class Controller {
 		mHousehold.user.setPictureUrl(user.getPictureUrl());
 		mHousehold.user.setPicture(user.getPicture());
 
-		// We have fresh user details, save them to cache
-		mPersistence.saveUserDetails(user.getId(), mHousehold.user);
+		// We have fresh user details, save them to cache (but not in demoMode)
+		if (!(mNetwork instanceof DemoNetwork)) {
+			mPersistence.saveUserDetails(user.getId(), mHousehold.user);
+		}
 	}
 
 	/**
