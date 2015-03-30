@@ -7,12 +7,11 @@
     <string name="NetworkError___NOT_VALID_USER">Zlý token alebo email</string>
     <string name="NetworkError___NOT_CONSISTENT_SENSOR_ADDR">Zlý ID/TYP -> errMessage obsahuje hlavičku s ID a TYPom</string>
     <string name="NetworkError___LOW_RIGHTS">Zlé práva (užívateľ nemá práva)</string>
-    <string name="NetworkError___GOOGLE_TOKEN">Neplatný Google token</string>
     <string name="NetworkError___DAMAGED_XML">Poškodené xml (partial)</string>
     <string name="NetworkError___COM_VER_MISMATCH">Zlá verzia komunikačného protokolu</string>
     <string name="NetworkError___COM_PROBLEMS">Komunikačný problém</string>
     <string name="NetworkError___BAD_UTC">Zlé utc</string>
-    <string name="NetworkError___BAD_UID">Zlé sessionID náhrada za ReSign</string>
+    <string name="NetworkError___BAD_BT">Zlé sessionID náhrada za ReSign</string>
     <string name="NetworkError___BAD_LOCATION_TYPE">Zlý typ miestnosti</string>
     <string name="NetworkError___BAD_INTERVAL">Zlý interval</string>
     <string name="NetworkError___BAD_ICON">Zlá ikona</string>
@@ -24,4 +23,14 @@
     <string name="NetworkError___ADAPTER_NOT_FREE">Zlé sériové číslo adaptéru</string>
     <string name="NetworkError___ADAPTER_NOT_EXISTS">Zlé sériové číslo adaptéru</string>
     <string name="NetworkError___ADAPTER_HAVE_YET">Zlé sériové číslo adaptéru</string>
+
+	<string name="NetworkError___USER_EXISTS">Zadané prihlasovacie meno je už obsadené.</string>
+	<string name="NetworkError___IMPROPER_PSWD">Zadané heslo nie je dostatočně bezpečné.</string>
+	<string name="NetworkError___IMPROPER_NAME_OR_EMAIL">Zadané meno alebo email nie je vhodný.</string>
+	<string name="NetworkError___PENDING_USER">Aktivujte prosím Vás svôj účet.</string>
+	<string name="NetworkError___USER_NOT_EXISTS">Zadané uživateľské meno neexistuje.</string>
+	<string name="NetworkError___BAD_PSWD">Zadané heslo nie je správne.</string>
+	<string name="NetworkError___SUSPECT_USER">Tento uživateľský účet je dočasne zablokovaný.</string>
+	<string name="NetworkError___INVALID_PROVIDER">Tento poskytovateľ nie je k dispozícii.</string>
+
 </resources>

@@ -47,9 +47,8 @@ public abstract class CallbackTask<Params> extends AsyncTask<Params, Void, Boole
 	protected final void onPostExecute(Boolean success) {
 		mListener.onExecute(success);
 
-		if (mNotifyErrors && !success) {
-			String errorMessage = mException != null ? mException.getTranslatedErrorMessage(mContext) : mContext.getString(R.string.unknown_error);
-			Toast.makeText(mContext, errorMessage, Toast.LENGTH_LONG).show();
+		if (mNotifyErrors && mException != null) {
+			Toast.makeText(mContext, mException.getTranslatedErrorMessage(mContext), Toast.LENGTH_LONG).show();
 		}
 	}
 

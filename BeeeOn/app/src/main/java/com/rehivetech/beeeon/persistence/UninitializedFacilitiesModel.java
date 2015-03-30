@@ -67,7 +67,7 @@ public class UninitializedFacilitiesModel {
 		return lastUpdate == null || lastUpdate.plusSeconds(RELOAD_EVERY_SECONDS).isBeforeNow();
 	}
 
-	public boolean reloadUninitializedFacilitiesByAdapter(String adapterId, boolean forceReload) {
+	public boolean reloadUninitializedFacilitiesByAdapter(String adapterId, boolean forceReload) throws AppException {
 		if (!forceReload && !isExpired(adapterId)) {
 			return false;
 		}
@@ -82,15 +82,10 @@ public class UninitializedFacilitiesModel {
 		return false;
 	}
 
-	private boolean loadFromServer(String adapterId) {
-		try {
-			setUninitializedFacilitiesByAdapter(adapterId, mNetwork.getNewFacilities(adapterId));
-			setLastUpdate(adapterId, DateTime.now());
-			saveToCache(adapterId);
-		} catch (AppException e) {
-			e.printStackTrace();
-			return false;
-		}
+	private boolean loadFromServer(String adapterId) throws AppException {
+		setUninitializedFacilitiesByAdapter(adapterId, mNetwork.getNewFacilities(adapterId));
+		setLastUpdate(adapterId, DateTime.now());
+		saveToCache(adapterId);
 
 		return true;
 	}

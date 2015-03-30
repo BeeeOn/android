@@ -1,5 +1,35 @@
 package com.rehivetech.beeeon.network;
 
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+
+import com.rehivetech.beeeon.adapter.Adapter;
+import com.rehivetech.beeeon.adapter.device.Device;
+import com.rehivetech.beeeon.adapter.device.Device.SaveDevice;
+import com.rehivetech.beeeon.adapter.device.DeviceLog;
+import com.rehivetech.beeeon.adapter.device.Facility;
+import com.rehivetech.beeeon.adapter.location.Location;
+import com.rehivetech.beeeon.controller.Controller;
+import com.rehivetech.beeeon.exception.AppException;
+import com.rehivetech.beeeon.exception.NetworkError;
+import com.rehivetech.beeeon.household.User;
+import com.rehivetech.beeeon.network.authentication.IAuthProvider;
+import com.rehivetech.beeeon.network.xml.CustomViewPair;
+import com.rehivetech.beeeon.network.xml.FalseAnswer;
+import com.rehivetech.beeeon.network.xml.ParsedMessage;
+import com.rehivetech.beeeon.network.xml.WatchDog;
+import com.rehivetech.beeeon.network.xml.XmlCreator;
+import com.rehivetech.beeeon.network.xml.XmlParsers;
+import com.rehivetech.beeeon.network.xml.XmlParsers.State;
+import com.rehivetech.beeeon.network.xml.action.ComplexAction;
+import com.rehivetech.beeeon.network.xml.condition.Condition;
+import com.rehivetech.beeeon.pair.LogDataPair;
+import com.rehivetech.beeeon.util.Log;
+import com.rehivetech.beeeon.util.Utils;
+
+import org.xmlpull.v1.XmlPullParserException;
+
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -8,6 +38,8 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
+import java.io.Writer;
+import java.net.Socket;
 import java.net.UnknownHostException;
 import java.security.KeyManagementException;
 import java.security.KeyStore;
@@ -21,44 +53,14 @@ import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLContext;
-import javax.net.ssl.SSLHandshakeException;
 import javax.net.ssl.SSLSession;
 import javax.net.ssl.SSLSocket;
 import javax.net.ssl.TrustManagerFactory;
-
-import android.content.Context;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
-import android.net.wifi.WifiInfo;
-import android.net.wifi.WifiManager;
-import android.telephony.TelephonyManager;
-import com.rehivetech.beeeon.adapter.Adapter;
-import com.rehivetech.beeeon.adapter.device.Device;
-import com.rehivetech.beeeon.adapter.device.Device.SaveDevice;
-import com.rehivetech.beeeon.adapter.device.DeviceLog;
-import com.rehivetech.beeeon.adapter.device.Facility;
-import com.rehivetech.beeeon.adapter.location.Location;
-import com.rehivetech.beeeon.controller.Controller;
-import com.rehivetech.beeeon.exception.AppException;
-import com.rehivetech.beeeon.exception.NetworkError;
-import com.rehivetech.beeeon.household.User;
-import com.rehivetech.beeeon.network.GoogleAuthHelper.GoogleUserInfo;
-import com.rehivetech.beeeon.network.xml.CustomViewPair;
-import com.rehivetech.beeeon.network.xml.FalseAnswer;
-import com.rehivetech.beeeon.network.xml.ParsedMessage;
-import com.rehivetech.beeeon.network.xml.XmlCreator;
-import com.rehivetech.beeeon.network.xml.XmlParsers;
-import com.rehivetech.beeeon.network.xml.XmlParsers.State;
-import com.rehivetech.beeeon.network.xml.action.ComplexAction;
-import com.rehivetech.beeeon.network.xml.condition.Condition;
-import com.rehivetech.beeeon.pair.LogDataPair;
-import com.rehivetech.beeeon.util.Log;
-
-import org.xmlpull.v1.XmlPullParserException;
 
 /**
  * Network service that handles communication with server.
@@ -98,14 +100,14 @@ public class Network implements INetwork {
 	private static final String SERVER_CN_CERTIFICATE = "ant-2.fit.vutbr.cz";
 
 	private final Context mContext;
-	private String mUserID = "";
+    private String mBT = "";
 	private final boolean mUseDebugServer;
 	private static final int SSLTIMEOUT = 35000;
 	
 	private SSLSocket permaSocket = null;
 	private PrintWriter permaWriter = null;
 	private BufferedReader permaReader = null;
-	private static final String EOF = "</com>"; //FIXME: temporary solution
+	private static final String EOF = ">"; //FIXME: temporary solution
 	private boolean mIsMulti = false;
 
 	/**
@@ -117,281 +119,254 @@ public class Network implements INetwork {
 		mContext = context;
 		mUseDebugServer = useDebugServer;
 	}
-	
-	@Override
-	public void setUID(String userId) {
-		mUserID = userId;
-	}
-	
-	@Override
-	public GoogleUserInfo getUserInfo() {
-		// FIXME
-		return null;
-	}
 
 	/**
-	 * Method for sending data to server via TLS protocol using own TrustManger to be able to trust self-signed
-	 * certificates. CA certificated must be located in assets folder. If no exception is thrown, it returns server
-	 * response.
-	 * 
-	 * @param appContext
-	 *            Application context to get CA certificate from assets
+	 * Send request to server.
+	 *
+	 * @param w
+	 * @param closeWriter
 	 * @param request
-	 *            Request to server to be sent
-	 * @return Response from server
-	 * @throws IOException
-	 *             Can't read CA certificate from assets, can't read InputStream or can't write OutputStream.
-	 * @throws CertificateException
-	 *             Unknown certificate format (default X.509), can't generate CA certificate (it shouldn't occur)
-	 * @throws KeyStoreException
-	 *             Bad type of KeyStore, can't set CA certificate to KeyStore
-	 * @throws NoSuchAlgorithmException
-	 *             Unknown SSL/TLS protocol or unknown TrustManager algorithm (it shouldn't occur)
-	 * @throws KeyManagementException
-	 *             general exception, thrown to indicate an exception during processing an operation concerning key
-	 *             management
-	 * @throws UnknownHostException
-	 *             *IMPORTANT* Server address or hostName wasn't not found
-	 * @throws SSLHandshakeException
-	 *             *IMPORTANT* TLS handshake failed
+	 * @throws AppException with error NetworkError.SOCKET_PROBLEM
 	 */
-	private String startCommunication(String request) throws IOException, CertificateException, KeyStoreException,
-			NoSuchAlgorithmException, KeyManagementException, UnknownHostException, SSLHandshakeException {
-
-		/*
-		 * opening CA certificate from assets
-		 */
-		InputStream inStreamCertTmp = null;
-
-		inStreamCertTmp = mContext.getAssets().open(ASSEST_CA_CERT);
-
-		InputStream inStreamCert = new BufferedInputStream(inStreamCertTmp);
-		Certificate ca;
+	public void sendRequest(final Writer w, final String request, final boolean closeWriter) throws AppException {
+		// Send request
 		try {
-			CertificateFactory cf = CertificateFactory.getInstance("X.509");
-			ca = cf.generateCertificate(inStreamCert);
+			w.write(request, 0, request.length());
+			w.flush();
+		} catch (IOException e) {
+			throw AppException.wrap(e, NetworkError.SOCKET_PROBLEM);
 		} finally {
-			inStreamCert.close();
+			if (closeWriter) {
+				try {
+					w.close();
+				} catch (IOException e) {
+					e.printStackTrace(); // Nothing we can do here
+				}
+			}
 		}
-		// Create a KeyStore containing our trusted CAs
-		String keyStoreType = KeyStore.getDefaultType();
-		KeyStore keyStore = KeyStore.getInstance(keyStoreType);
-		keyStore.load(null, null);
-		keyStore.setCertificateEntry(ALIAS_CA_CERT, ca);
-
-		// Create a TrustManager that trusts the CAs in our KeyStore
-		String tmfAlgorithm = TrustManagerFactory.getDefaultAlgorithm();
-		TrustManagerFactory tmf = TrustManagerFactory.getInstance(tmfAlgorithm);
-		tmf.init(keyStore);
-
-		// Create an SSLContext that uses our TrustManager
-		SSLContext sslContext = SSLContext.getInstance("TLS");
-		sslContext.init(null, tmf.getTrustManagers(), null);
-
-		// Open SSLSocket directly to server
-		SSLSocket socket;
-		if (mUseDebugServer) {
-			socket = (SSLSocket) sslContext.getSocketFactory().createSocket(SERVER_ADDR_DEBUG, SERVER_PORT_DEBUG);
-		} else {
-			socket = (SSLSocket) sslContext.getSocketFactory().createSocket(SERVER_ADDR_PRODUCTION, SERVER_PORT_PRODUCTION);
-		}
-
-		HostnameVerifier hv = HttpsURLConnection.getDefaultHostnameVerifier();
-		socket.setSoTimeout(SSLTIMEOUT);
-		SSLSession s = socket.getSession();
-		// FIXME: nobody knows why
-		if (!s.isValid())
-			Log.e(TAG, "Socket is NOT valid!!!!");
-
-		// Verify that the certificate hostName
-		// This is due to lack of SNI support in the current SSLSocket.
-		if (!hv.verify(SERVER_CN_CERTIFICATE, s)) {
-			Log.e(TAG, "Certificate is not VERIFIED!!!");
-
-			throw new SSLHandshakeException("Expected CN value:" + SERVER_CN_CERTIFICATE + ", found " + s.getPeerPrincipal());
-		}
-
-		// At this point SSLSocket performed certificate verification and
-		// we have performed hostName verification, so it is safe to proceed.
-		BufferedWriter w = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
-		BufferedReader r = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-
-		w.write(request, 0, request.length());
-		w.flush();
-
-		StringBuilder response = new StringBuilder();
-		String actRecieved = null;
-		while ((actRecieved = r.readLine()) != null) {
-			response.append(actRecieved);
-			if(actRecieved.endsWith(EOF))
-				break;
-		}
-
-		// close socket, writer and reader
-		w.close();
-		r.close();
-		socket.close();
-
-		// return server response
-		return response.toString();
-	}
-	
-	private boolean multiSend(String request) throws IOException{
-		if(permaWriter == null)
-			return false;
-		
-		permaWriter.write(request, 0, request.length());
-		permaWriter.flush();
-		
-		return true;
-	}
-	
-	private String multiRecv() throws IOException{
-		if(permaReader == null)
-			return "";
-		
-		StringBuilder response = new StringBuilder();
-		String actRecieved = null;
-		while ((actRecieved = permaReader.readLine()) != null) {
-			response.append(actRecieved);
-			if(actRecieved.endsWith(EOF))
-				break;
-		}
-		
-		return response.toString();
-	}
-	
-	//TODO: remove
-	public void test(){
-		
-		try {
-			String uid = "101";
-			String aid = "10";
-			
-			mUserID = uid;
-			
-			multiSessionBegin();
-			
-			Log.d("test // get 1", getTimeZone(aid)+"");
-			Log.d("test // set 2", setTimeZone(aid, 360)+"");
-			Log.d("test // get 3", getTimeZone(aid)+"");
-			
-//			multiSend(XmlCreator.createGetTimeZone(uid, aid));
-//			String resp = multiRecv();
-//			
-//			Log.d("TEST one", resp);
-//			multiSend(XmlCreator.createSetTimeZone(uid, aid, 180));
-//			
-//			resp = multiRecv();
-//			Log.d("TEST two", resp);
-//			
-//			multiSend(XmlCreator.createGetTimeZone(uid, aid));
-//			resp = multiRecv();
-//			Log.e("baf", resp);
-
-//			permaSocket.close();
-			multiSessionEnd();
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
-	
-	private void multiInit() throws IOException, CertificateException, KeyStoreException, NoSuchAlgorithmException, KeyManagementException, UnknownHostException,SSLHandshakeException {
-		InputStream inStreamCertTmp = null;
-		inStreamCertTmp = mContext.getAssets().open(ASSEST_CA_CERT);
-		
-		InputStream inStreamCert = new BufferedInputStream(inStreamCertTmp);
-		Certificate ca;
-		try {
-			CertificateFactory cf = CertificateFactory.getInstance("X.509");
-			ca = cf.generateCertificate(inStreamCert);
-		} finally {
-			inStreamCert.close();
-		}
-		// Create a KeyStore containing our trusted CAs
-		String keyStoreType = KeyStore.getDefaultType();
-		KeyStore keyStore = KeyStore.getInstance(keyStoreType);
-		keyStore.load(null, null);
-		keyStore.setCertificateEntry(ALIAS_CA_CERT, ca);
-		
-		// Create a TrustManager that trusts the CAs in our KeyStore
-		String tmfAlgorithm = TrustManagerFactory.getDefaultAlgorithm();
-		TrustManagerFactory tmf = TrustManagerFactory.getInstance(tmfAlgorithm);
-		tmf.init(keyStore);
-		
-		// Create an SSLContext that uses our TrustManager
-		SSLContext sslContext = SSLContext.getInstance("TLS");
-		sslContext.init(null, tmf.getTrustManagers(), null);
-		
-		// Open SSLSocket directly to server
-		if (mUseDebugServer) {
-			permaSocket = (SSLSocket) sslContext.getSocketFactory().createSocket(SERVER_ADDR_DEBUG, SERVER_PORT_DEBUG);
-		} else {
-			permaSocket = (SSLSocket) sslContext.getSocketFactory().createSocket(SERVER_ADDR_PRODUCTION, SERVER_PORT_PRODUCTION);
-		}
-		//perma2 = new Socket("192.168.1.150", 4444);
-		
-		HostnameVerifier hv = HttpsURLConnection.getDefaultHostnameVerifier();
-		//permaSocket.setKeepAlive(true);
-		permaSocket.setSoTimeout(35000);
-		SSLSession s = permaSocket.getSession();
-		// FIXME: nobody knows why
-		if (!s.isValid())
-			Log.e(TAG, "Socket is NOT valid!!!!");
-		
-		// Verify that the certificate hostName
-		// This is due to lack of SNI support in the current SSLSocket.
-		if (!hv.verify(SERVER_CN_CERTIFICATE, s)) {
-			Log.e(TAG, "Certificate is not VERIFIED!!!");
-		
-			throw new SSLHandshakeException("Expected CN value:" + SERVER_CN_CERTIFICATE + ", found " + s.getPeerPrincipal());
-		}
-		
-		// At this point SSLSocket performed certificate verification and
-		// we have performed hostName verification, so it is safe to proceed.
-		permaWriter = new PrintWriter(permaSocket.getOutputStream());
-		permaReader = new BufferedReader(new InputStreamReader(permaSocket.getInputStream()));
-
 	}
 
 	/**
-	 * Method initiate session for multiple use
-	 * @throws AppException
+	 * Recive response from server.
+	 *
+	 * @param r
+	 * @param closeReader
+	 * @return response
+	 * @throws AppException with error NetworkError.SOCKET_PROBLEM
 	 */
-	public void multiSessionBegin() throws AppException {
+	public String receiveResponse(final BufferedReader r, final boolean closeReader) throws AppException {
+		// Receive response
+		StringBuilder response = new StringBuilder();
+		try {
+			String actRecieved = null;
+			while ((actRecieved = r.readLine()) != null) {
+				response.append(actRecieved);
+				if (actRecieved.endsWith(EOF))
+					break;
+			}
+		} catch (IOException e) {
+			throw AppException.wrap(e, NetworkError.SOCKET_PROBLEM);
+		} finally {
+			// If we use persistent connection, don't close the socket and objects
+			if (closeReader) {
+				try {
+					r.close();
+				} catch (IOException e) {
+					e.printStackTrace(); // Nothing we can do here
+				}
+			}
+		}
+
+		return response.toString();
+	}
+
+	/**
+	 * Method for communicating with server.
+	 *
+	 * @param request
+	 * @return
+	 * @throws AppException with error NetworkError.UNKNOWN_HOST, NetworkError.INVALID_CERTIFICATE or NetworkError.SOCKET_PROBLEM
+	 */
+	private String startCommunication(String request) throws AppException {
+		// Init socket
+		Socket socket;
+		if (mIsMulti) {
+			socket = permaSocket; // Reuse existing socket
+		} else {
+			socket = initSocket(); // Init new socket for this request
+		}
+
+		// At this point SSLSocket performed certificate verification and
+		// we have performed hostName verification, so it is safe to proceed.
+		Writer w;
+		BufferedReader r;
+		if (mIsMulti) {
+			// Reuse existing objects
+			w = permaWriter;
+			r = permaReader;
+		} else {
+			// Init new writer/reader for this request
+			try {
+				w = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
+				r = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+			} catch (IOException e) {
+				// Error when getting socket's output/input stream
+				throw AppException.wrap(e, NetworkError.SOCKET_PROBLEM);
+			}
+		}
+
+		// Send request (and close writer if not multi session)
+		sendRequest(w, request, !mIsMulti);
+
+		// Receive response (and close reader if not multi session)
+		String response = receiveResponse(r, !mIsMulti);
+
+		// Close socket if not multi session
+		if (!mIsMulti) {
+			try {
+				socket.close();
+			} catch (IOException e) {
+				e.printStackTrace(); // Nothing we can do here
+			}
+		}
+
+		// Return server response
+		return response;
+	}
+
+	/**
+	 * Method for initializing socket for sending data to server via TLS protocol using own TrustManger to be able to trust self-signed
+	 * certificates. CA certificated must be located in assets folder.
+	 *
+	 * @return Initialized socket or throws exception
+	 * @throws AppException with error NetworkError.UNKNOWN_HOST, NetworkError.INVALID_CERTIFICATE or NetworkError.SOCKET_PROBLEM
+	 */
+	private SSLSocket initSocket() {
+		try {
+			// Open CA certificate from assets
+			InputStream inStreamCertTmp = mContext.getAssets().open(ASSEST_CA_CERT);
+			InputStream inStreamCert = new BufferedInputStream(inStreamCertTmp);
+			Certificate ca;
+			try {
+				CertificateFactory cf = CertificateFactory.getInstance("X.509");
+				ca = cf.generateCertificate(inStreamCert);
+			} finally {
+				inStreamCert.close();
+			}
+			// Create a KeyStore containing our trusted CAs
+			String keyStoreType = KeyStore.getDefaultType();
+			KeyStore keyStore = KeyStore.getInstance(keyStoreType);
+			keyStore.load(null, null);
+			keyStore.setCertificateEntry(ALIAS_CA_CERT, ca);
+
+			// Create a TrustManager that trusts the CAs in our KeyStore
+			String tmfAlgorithm = TrustManagerFactory.getDefaultAlgorithm();
+			TrustManagerFactory tmf = TrustManagerFactory.getInstance(tmfAlgorithm);
+			tmf.init(keyStore);
+
+			// Create an SSLContext that uses our TrustManager
+			SSLContext sslContext = SSLContext.getInstance("TLS");
+			sslContext.init(null, tmf.getTrustManagers(), null);
+
+			// Open SSLSocket directly to server
+			SSLSocket socket = null;
+			if (mUseDebugServer) {
+				socket = (SSLSocket) sslContext.getSocketFactory().createSocket(SERVER_ADDR_DEBUG, SERVER_PORT_DEBUG);
+			} else {
+				socket = (SSLSocket) sslContext.getSocketFactory().createSocket(SERVER_ADDR_PRODUCTION, SERVER_PORT_PRODUCTION);
+			}
+
+			HostnameVerifier hv = HttpsURLConnection.getDefaultHostnameVerifier();
+			//socket.setKeepAlive(true);
+			socket.setSoTimeout(SSLTIMEOUT);
+			SSLSession s = socket.getSession();
+			if (!s.isValid())
+				Log.e(TAG, "Socket is not valid! TLS handshake failed.");
+
+			// Verify that the certificate hostName
+			// This is due to lack of SNI support in the current SSLSocket.
+			if (!hv.verify(SERVER_CN_CERTIFICATE, s)) {
+				throw new AppException("Certificate is not verified!", NetworkError.INVALID_CERTIFICATE)
+						.set("Expected CN", SERVER_CN_CERTIFICATE)
+						.set("Found CN", s.getPeerPrincipal());
+			}
+			return socket;
+		} catch (UnknownHostException e) {
+			// UnknownHostException - Server address or hostName wasn't not found
+			throw AppException.wrap(e, NetworkError.UNKNOWN_HOST);
+		} catch (KeyManagementException | NoSuchAlgorithmException | KeyStoreException | CertificateException | IOException e) {
+			// IOException - Can't read CA certificate from assets or can't create new socket
+			// CertificateException - Unknown certificate format (default X.509), can't generate CA certificate (it shouldn't occur)
+			// KeyStoreException - Bad type of KeyStore, can't set CA certificate to KeyStore
+			// NoSuchAlgorithmException - Unknown SSL/TLS protocol or unknown TrustManager algorithm (it shouldn't occur)
+			// KeyManagementException - general exception, thrown to indicate an exception during processing an operation concerning key management
+			throw AppException.wrap(e, NetworkError.SOCKET_PROBLEM);
+		}
+	}
+
+	/**
+	 * Method initialize perma-Socket/Reader/Writer for doing more requests to server with this single connection
+	 * On success set mIsMulti = true, on failure call MultiSessionEnd and throw AppException
+	 * @throws AppException with error NetworkError.NO_CONNECTION or NetworkError.SOCKET_PROBLEM
+	 */
+	public synchronized void multiSessionBegin() throws AppException {
 		if (!isAvailable())
 			throw new AppException(NetworkError.NO_CONNECTION);
 
+		if (mIsMulti)
+			return;
+
 		try {
-			multiInit();
+			permaSocket = initSocket();
+
+			// At this point SSLSocket performed certificate verification and
+			// we have performed hostName verification, so it is safe to proceed.
+			permaWriter = new PrintWriter(permaSocket.getOutputStream());
+			permaReader = new BufferedReader(new InputStreamReader(permaSocket.getInputStream()));
+
 			mIsMulti = true;
-		} catch (Exception e) {
-			throw AppException.wrap(e, NetworkError.COM_PROBLEMS);
+		} catch (IOException e) {
+			// Close any opened socket/writer/reader
+			multiSessionEnd();
+
+			throw AppException.wrap(e, NetworkError.SOCKET_PROBLEM);
 		}
 	}
 	
 	/**
-	 * Method close session to server if it was opened by multiSessionBegin method before
-	 * @throws AppException
+	 * Method close any opened perma-Socket/Reader/Writer if it was opened by multiSessionBegin() before
+	 * Also set mIsMulti = false
 	 */
-	public void multiSessionEnd() throws AppException{
-		if (!mIsMulti)
-			return;
-		
-		try {
-			permaWriter.close();
-			permaReader.close();
-			permaSocket.close();
-		} catch (IOException e) {
-			e.printStackTrace();
-			throw AppException.wrap(e, NetworkError.CLOSING_ERROR);
-		}
-		
-		permaWriter = null;
-		permaReader = null;
-		permaSocket = null;
+	public synchronized void multiSessionEnd() {
 		mIsMulti = false;
+
+		// Securely close socket
+		if (permaSocket != null) {
+			try {
+				permaSocket.close();
+			} catch (IOException e) {
+				e.printStackTrace(); // Nothing we can do here
+			} finally {
+				permaSocket = null;
+			}
+		}
+
+		// Close writer
+		if (permaWriter != null) {
+			permaWriter.close();
+			permaWriter = null;
+		}
+
+		// Securely close reader
+		if (permaReader != null) {
+			try {
+				permaReader.close();
+			} catch (IOException e) {
+				e.printStackTrace(); // Nothing we can do here
+			} finally {
+				permaReader = null;
+			}
+		}
 	}
 
 	/**
@@ -407,31 +382,13 @@ public class Network implements INetwork {
 	}
 
 	/**
-	 * Method return Mac address of device
+	 * Send request to server and return parsedMessage or throw exception on error.
+	 *
+	 * @param messageToSend
 	 * @return
+	 * @throws AppException with error NetworkError.NO_CONNECTION, NetworkError.XML, NetworkError.UNKNOWN_HOST, NetworkError.INVALID_CERTIFICATE or NetworkError.SOCKET_PROBLEM
 	 */
-	public String getMAC(){
-		WifiManager wifiManager = (WifiManager) mContext.getSystemService(Context.WIFI_SERVICE);
-
-		if(wifiManager.isWifiEnabled()) {
-		    // WIFI ALREADY ENABLED. GRAB THE MAC ADDRESS HERE
-		    WifiInfo info = wifiManager.getConnectionInfo();
-		    return info.getMacAddress();
-		} else {
-		    // ENABLE THE WIFI FIRST
-		    wifiManager.setWifiEnabled(true);
-
-		    // WIFI IS NOW ENABLED. GRAB THE MAC ADDRESS HERE
-		    WifiInfo info = wifiManager.getConnectionInfo();
-		    String address = info.getMacAddress();
-		    
-		    wifiManager.setWifiEnabled(false);
-		    
-		    return address;
-		}
-	}
-	
-	private ParsedMessage doRequest(String messageToSend) {
+	private synchronized ParsedMessage doRequest(String messageToSend) throws AppException {
 		if (!isAvailable())
 			throw new AppException(NetworkError.NO_CONNECTION);
 
@@ -439,65 +396,112 @@ public class Network implements INetwork {
 		// Debug.startMethodTracing("Support_231");
 		// long ltime = new Date().getTime();
 		try {
-			String result = "";
-			if (mIsMulti) {
-				if (multiSend(messageToSend))
-					result = multiRecv();
-			} else {
-				result = startCommunication(messageToSend);
-			}
-
-			Log.d(TAG + " - fromApp", messageToSend);
-			Log.i(TAG + " - fromSrv", result);
+			Log.d(TAG + " fromApp >>", messageToSend);
+			String result = startCommunication(messageToSend);
+			Log.i(TAG + " << fromSrv", result);
 
 			return new XmlParsers().parseCommunication(result, false);
-		} catch (IOException | CertificateException | NoSuchAlgorithmException | XmlPullParserException | ParseException | KeyStoreException | KeyManagementException e) {
-			throw AppException.wrap(e, NetworkError.COM_PROBLEMS);
+		} catch (IOException | XmlPullParserException | ParseException e) {
+			throw AppException.wrap(e, NetworkError.XML);
 		} finally {
 			// Debug.stopMethodTracing();
 			// ltime = new Date().getTime() - ltime;
 			// android.util.Log.d("Support_231", ltime+"");
 		}
-
 	}
 
 	// /////////////////////////////////////////////////////////////////////////////////
 	// /////////////////////////////////////SIGNIN,SIGNUP,ADAPTERS//////////////////////
 	// /////////////////////////////////////////////////////////////////////////////////
 
-	/**
-	 * Return actual UID used for communication (= active session)
-	 * @return UID for actual communication
-	 */
-	@Override
-	public String getUID() {
-		return mUserID;
+    @Override
+    public String getBT() {
+		return mBT;
 	}
 
-	/**
-	 * Method load UID from server
-	 * @return true if everything successful, false otherwise
-	 */
 	@Override
-	public boolean loadUID(GoogleUserInfo googleUserInfo) {
-		TelephonyManager tm = (TelephonyManager) mContext.getSystemService(Context.TELEPHONY_SERVICE);
-		
-		String phoneId = tm.getDeviceId();
-		if (phoneId == null)
-			phoneId = getMAC();
-		
-		Log.i(TAG, String.format("HW ID (IMEI or MAC): %s", phoneId));
+	public void setBT(String token) {
+		mBT = token;
+	}
 
-		ParsedMessage msg = doRequest(XmlCreator.createGetUID(googleUserInfo.id, googleUserInfo.token, Locale.getDefault().getLanguage(), phoneId));
+	@Override
+    public boolean loginMe(IAuthProvider authProvider){
+		// Check existence of authProvider parameters
+		Map<String, String> parameters = authProvider.getParameters();
+		if (parameters == null || parameters.isEmpty())
+			throw new IllegalArgumentException(String.format("IAuthProvider '%s' provided no parameters.", authProvider.getProviderName()));
 
-		if (!msg.getUserId().isEmpty() && msg.getState() == State.UID) {
-			mUserID = msg.getUserId();
+		ParsedMessage msg = doRequest(XmlCreator.createSignIn(Locale.getDefault().getLanguage(), Utils.getPhoneID(mContext), authProvider));
+
+		if (msg.getState() == State.BT) {
+			mBT = (String) msg.data;
 			return true;
 		}
-		
+
+		FalseAnswer fa = (FalseAnswer) msg.data;
+		throw new AppException(fa.getErrMessage(), NetworkError.fromValue(fa.getErrCode()));
+    }
+
+    @Override
+    public boolean registerMe(IAuthProvider authProvider) {
+		// Check existence of authProvider parameters
+		Map<String, String> parameters = authProvider.getParameters();
+		if (parameters == null || parameters.isEmpty())
+			throw new IllegalArgumentException(String.format("IAuthProvider '%s' provided no parameters.", authProvider.getProviderName()));
+
+		ParsedMessage msg = doRequest(XmlCreator.createSignUp(authProvider));
+
+		if (msg.getState() == State.TRUE) {
+			return true;
+		}
+
+		FalseAnswer fa = (FalseAnswer) msg.data;
+		throw new AppException(fa.getErrMessage(), NetworkError.fromValue(fa.getErrCode()));
+    }
+
+	@Override
+	public boolean addProvider(IAuthProvider authProvider){
+		ParsedMessage msg = doRequest(XmlCreator.createJoinAccount(mBT, authProvider));
+
+		if (msg.getState() == State.TRUE)
+			return true;
+
 		FalseAnswer fa = (FalseAnswer) msg.data;
 		throw new AppException(fa.getErrMessage(), NetworkError.fromValue(fa.getErrCode()));
 	}
+
+	@Override
+	public boolean removeProvider(String providerName){
+		ParsedMessage msg = doRequest(XmlCreator.createCutAccount(mBT, providerName));
+
+		if (msg.getState() == State.TRUE)
+			return true;
+
+		FalseAnswer fa = (FalseAnswer) msg.data;
+		throw new AppException(fa.getErrMessage(), NetworkError.fromValue(fa.getErrCode()));
+	}
+
+	@Override
+	public boolean deleteMyAccount(){
+		ParsedMessage msg = doRequest(XmlCreator.createCutAccount(mBT, "all"));
+
+		if (msg.getState() == State.TRUE)
+			return true;
+
+		FalseAnswer fa = (FalseAnswer) msg.data;
+		throw new AppException(fa.getErrMessage(), NetworkError.fromValue(fa.getErrCode()));
+	}
+
+    @Override
+    public User loadUserInfo(){
+        ParsedMessage msg = doRequest(XmlCreator.createGetUserInfo(mBT));
+
+        if (msg.getState() == State.USERINFO)
+            return (User)msg.data;
+
+        FalseAnswer fa = (FalseAnswer) msg.data;
+        throw new AppException(fa.getErrMessage(), NetworkError.fromValue(fa.getErrCode()));
+    }
 
 	/**
 	 * Method register adapter to server
@@ -510,7 +514,7 @@ public class Network implements INetwork {
 	 */
 	@Override
 	public boolean addAdapter(String adapterID, String adapterName) {
-		ParsedMessage msg = doRequest(XmlCreator.createAddAdapter(mUserID, adapterID, adapterName));
+		ParsedMessage msg = doRequest(XmlCreator.createAddAdapter(mBT, adapterID, adapterName));
 
 		if (msg.getState() == State.TRUE)
 			return true;
@@ -528,7 +532,7 @@ public class Network implements INetwork {
 	// http://stackoverflow.com/a/509288/1642090
 	@SuppressWarnings("unchecked")
 	public List<Adapter> getAdapters() {
-		ParsedMessage msg = doRequest(XmlCreator.createGetAdapters(mUserID));
+		ParsedMessage msg = doRequest(XmlCreator.createGetAdapters(mBT));
 
 		if (msg.getState() == State.ADAPTERS)
 			return (List<Adapter>) msg.data;
@@ -547,7 +551,7 @@ public class Network implements INetwork {
 	@Override
 	@SuppressWarnings("unchecked")
 	public List<Facility> initAdapter(String adapterID){
-		ParsedMessage msg = doRequest(XmlCreator.createGetAllDevices(mUserID, adapterID));
+		ParsedMessage msg = doRequest(XmlCreator.createGetAllDevices(mBT, adapterID));
 
 		if (msg.getState() == State.ALLDEVICES)
 			return (ArrayList<Facility>) msg.data;
@@ -567,7 +571,7 @@ public class Network implements INetwork {
 	 */
 	@Override
 	public boolean reInitAdapter(String oldId, String newId){
-		ParsedMessage msg = doRequest(XmlCreator.createReInitAdapter(mUserID, oldId, newId));
+		ParsedMessage msg = doRequest(XmlCreator.createReInitAdapter(mBT, oldId, newId));
 
 		if (msg.getState() == State.TRUE)
 			return true;
@@ -582,13 +586,15 @@ public class Network implements INetwork {
 
 	/**
 	 * Method send updated fields of devices
-	 * 
-	 * @param devices
+	 *
+	 * @param adapterID
+     * @param facilities
+     * @param toSave
 	 * @return true if everything goes well, false otherwise
 	 */
 	@Override
 	public boolean updateFacilities(String adapterID, List<Facility> facilities, EnumSet<SaveDevice> toSave){
-		ParsedMessage msg = doRequest(XmlCreator.createSetDevs(mUserID, adapterID, facilities, toSave));
+		ParsedMessage msg = doRequest(XmlCreator.createSetDevs(mBT, adapterID, facilities, toSave));
 
 		if (msg.getState() == State.TRUE)
 			return true;
@@ -610,7 +616,7 @@ public class Network implements INetwork {
 	 */
 	@Override
 	public boolean updateDevice(String adapterID, Device device, EnumSet<SaveDevice> toSave){
-		ParsedMessage msg = doRequest(XmlCreator.createSetDev(mUserID, adapterID, device, toSave));
+		ParsedMessage msg = doRequest(XmlCreator.createSetDev(mBT, adapterID, device, toSave));
 
 		if (msg.getState() == State.TRUE)
 			return true;
@@ -628,7 +634,7 @@ public class Network implements INetwork {
 	 */
 	@Override
 	public boolean switchState(String adapterID, Device device){
-		ParsedMessage msg = doRequest(XmlCreator.createSwitch(mUserID, adapterID, device));
+		ParsedMessage msg = doRequest(XmlCreator.createSwitch(mBT, adapterID, device));
 
 		if (msg.getState() == State.TRUE)
 			return true;
@@ -646,7 +652,7 @@ public class Network implements INetwork {
 	 */
 	@Override
 	public boolean prepareAdapterToListenNewSensors(String adapterID){
-		ParsedMessage msg = doRequest(XmlCreator.createAdapterScanMode(mUserID, adapterID));
+		ParsedMessage msg = doRequest(XmlCreator.createAdapterScanMode(mBT, adapterID));
 
 		if (msg.getState() == State.TRUE)
 			return true;
@@ -665,7 +671,7 @@ public class Network implements INetwork {
 	 */
 	@Override
 	public boolean deleteFacility(String adapterID, Facility facility){
-		ParsedMessage msg = doRequest(XmlCreator.createDeleteDevice(mUserID, adapterID, facility));
+		ParsedMessage msg = doRequest(XmlCreator.createDeleteDevice(mBT, adapterID, facility));
 
 		if (msg.getState() == State.TRUE)
 			return true;
@@ -685,7 +691,7 @@ public class Network implements INetwork {
 	// http://stackoverflow.com/a/509288/1642090
 	@SuppressWarnings("unchecked")
 	public List<Facility> getFacilities(List<Facility> facilities){
-		ParsedMessage msg = doRequest(XmlCreator.createGetDevices(mUserID, facilities));
+		ParsedMessage msg = doRequest(XmlCreator.createGetDevices(mBT, facilities));
 
 		if (msg.getState() == State.DEVICES)
 			return (List<Facility>) msg.data;
@@ -721,13 +727,12 @@ public class Network implements INetwork {
 	/**
 	 * Method get new devices
 	 * @param adapterID
-	 * @param facilities
 	 * @return
 	 */
 	@Override
 	@SuppressWarnings("unchecked")
 	public List<Facility> getNewFacilities(String adapterID) {
-		ParsedMessage msg = doRequest(XmlCreator.createGetNewDevices(mUserID, adapterID));
+		ParsedMessage msg = doRequest(XmlCreator.createGetNewDevices(mBT, adapterID));
 
 		if (msg.getState() == State.DEVICES)
 			return (List<Facility>) msg.data;
@@ -738,8 +743,10 @@ public class Network implements INetwork {
 
 	/**
 	 * Method ask for data of logs
-	 * 
-	 * @param deviceId
+	 *
+     * @param adapterID
+     *
+	 * @param device
 	 *            id of wanted device
 	 * @param pair
 	 *            data of log (from, to, type, interval)
@@ -748,7 +755,7 @@ public class Network implements INetwork {
 	// http://stackoverflow.com/a/509288/1642090
 	@Override
 	public DeviceLog getLog(String adapterID, Device device, LogDataPair pair){
-		String msgToSend = XmlCreator.createGetLog(mUserID, adapterID, device.getFacility().getAddress(), device.getType().getTypeId(),
+		String msgToSend = XmlCreator.createGetLog(mBT, adapterID, device.getFacility().getAddress(), device.getType().getTypeId(),
 				String.valueOf(pair.interval.getStartMillis() / 1000), String.valueOf(pair.interval.getEndMillis() / 1000),
 				pair.type.getValue(), pair.gap.getValue());
 
@@ -778,7 +785,7 @@ public class Network implements INetwork {
 	// http://stackoverflow.com/a/509288/1642090
 	@SuppressWarnings("unchecked")
 	public List<Location> getLocations(String adapterID){
-		ParsedMessage msg = doRequest(XmlCreator.createGetRooms(mUserID, adapterID));
+		ParsedMessage msg = doRequest(XmlCreator.createGetRooms(mBT, adapterID));
 
 		if (msg.getState() == State.ROOMS)
 			return (List<Location>) msg.data;
@@ -796,7 +803,7 @@ public class Network implements INetwork {
 	 */
 	@Override
 	public boolean updateLocations(String adapterID, List<Location> locations){
-		ParsedMessage msg = doRequest(XmlCreator.createSetRooms(mUserID, adapterID, locations));
+		ParsedMessage msg = doRequest(XmlCreator.createSetRooms(mBT, adapterID, locations));
 
 		if (msg.getState() == State.TRUE)
 			return true;
@@ -830,7 +837,7 @@ public class Network implements INetwork {
 	 */
 	@Override
 	public boolean deleteLocation(String adapterID, Location location){
-		ParsedMessage msg = doRequest(XmlCreator.createDeleteRoom(mUserID, adapterID, location));
+		ParsedMessage msg = doRequest(XmlCreator.createDeleteRoom(mBT, adapterID, location));
 
 		if (msg.getState() == State.TRUE)
 			return true;
@@ -841,7 +848,7 @@ public class Network implements INetwork {
 
 	@Override
 	public Location createLocation(String adapterID, Location location){
-		ParsedMessage msg = doRequest(XmlCreator.createAddRoom(mUserID, adapterID, location));
+		ParsedMessage msg = doRequest(XmlCreator.createAddRoom(mBT, adapterID, location));
 
 		if (msg.getState() == State.ROOMCREATED) {
 			location.setId((String) msg.data);
@@ -862,13 +869,13 @@ public class Network implements INetwork {
 	 *            name of new custom view
 	 * @param iconID
 	 *            icon that is assigned to the new view
-	 * @param deviceIds
+	 * @param devices
 	 *            list of devices that are assigned to new view
 	 * @return true if everything goes well, false otherwise
 	 */
 	@Override
 	public boolean addView(String viewName, int iconID, List<Device> devices){
-		ParsedMessage msg = doRequest(XmlCreator.createAddView(mUserID, viewName, iconID, devices));
+		ParsedMessage msg = doRequest(XmlCreator.createAddView(mBT, viewName, iconID, devices));
 
 		if (msg.getState() == State.TRUE)
 			return true;
@@ -887,7 +894,7 @@ public class Network implements INetwork {
 	@SuppressWarnings("unchecked")
 	// FIXME: will be edited by ROB demands
 	public List<CustomViewPair> getViews(){
-		ParsedMessage msg = doRequest(XmlCreator.createGetViews(mUserID));
+		ParsedMessage msg = doRequest(XmlCreator.createGetViews(mBT));
 
 		if (msg.getState() == State.VIEWS)
 			return (List<CustomViewPair>) msg.data;
@@ -905,7 +912,7 @@ public class Network implements INetwork {
 	 */
 	@Override
 	public boolean deleteView(String viewName){
-		ParsedMessage msg = doRequest(XmlCreator.createDelView(mUserID, viewName));
+		ParsedMessage msg = doRequest(XmlCreator.createDelView(mBT, viewName));
 
 		if (msg.getState() == State.TRUE)
 			return true;
@@ -917,7 +924,7 @@ public class Network implements INetwork {
 	// FIXME: will be edited by ROB demands
 	@Override
 	public boolean updateView(String viewName, int iconId, Facility facility, NetworkAction action) {
-		ParsedMessage msg = doRequest(XmlCreator.createSetView(mUserID, viewName, iconId, null, action));
+		ParsedMessage msg = doRequest(XmlCreator.createSetView(mBT, viewName, iconId, null, action));
 
 		if (msg.getState() == State.TRUE)
 			return true;
@@ -932,7 +939,7 @@ public class Network implements INetwork {
 
 	@Override
 	public boolean addAccounts(String adapterID, ArrayList<User> users){
-		ParsedMessage msg = doRequest(XmlCreator.createAddAccounts(mUserID, adapterID, users));
+		ParsedMessage msg = doRequest(XmlCreator.createAddAccounts(mBT, adapterID, users));
 
 		if (msg.getState() == State.TRUE)
 			return true;
@@ -949,8 +956,7 @@ public class Network implements INetwork {
 	 * Method add new user to adapter
 	 * 
 	 * @param adapterID
-	 * @param email
-	 * @param role
+	 * @param user
 	 * @return
 	 */
 	@Override
@@ -971,7 +977,7 @@ public class Network implements INetwork {
 	 */
 	@Override
 	public boolean deleteAccounts(String adapterID, List<User> users){
-		ParsedMessage msg = doRequest(XmlCreator.createDelAccounts(mUserID, adapterID, users));
+		ParsedMessage msg = doRequest(XmlCreator.createDelAccounts(mBT, adapterID, users));
 
 		if (msg.getState() == State.TRUE)
 			return true;
@@ -1005,7 +1011,7 @@ public class Network implements INetwork {
 	// http://stackoverflow.com/a/509288/1642090
 	@SuppressWarnings("unchecked")
 	public ArrayList<User> getAccounts(String adapterID){
-		ParsedMessage msg = doRequest(XmlCreator.createGetAccounts(mUserID, adapterID));
+		ParsedMessage msg = doRequest(XmlCreator.createGetAccounts(mBT, adapterID));
 
 		if (msg.getState() == State.ACCOUNTS)
 			return (ArrayList<User>) msg.data;
@@ -1017,13 +1023,13 @@ public class Network implements INetwork {
 	/**
 	 * Method update users roles on server on current adapter
 	 * 
-	 * @param userNrole
-	 *            map with email as key and role as value
+	 * @param adapterID
+     * @param users
 	 * @return true if all accounts has been changed false otherwise
 	 */
 	@Override
 	public boolean updateAccounts(String adapterID, ArrayList<User> users){
-		ParsedMessage msg = doRequest(XmlCreator.createSetAccounts(mUserID, adapterID, users));
+		ParsedMessage msg = doRequest(XmlCreator.createSetAccounts(mBT, adapterID, users));
 
 		if (msg.getState() == State.TRUE)
 			return true;
@@ -1037,7 +1043,6 @@ public class Network implements INetwork {
 	 * 
 	 * @param adapterID
 	 * @param user
-	 * @param role
 	 * @return
 	 */
 	@Override
@@ -1063,7 +1068,7 @@ public class Network implements INetwork {
 	 */
 	@Override
 	public boolean setTimeZone(String adapterID, int differenceToGMT){
-		ParsedMessage msg = doRequest(XmlCreator.createSetTimeZone(mUserID, adapterID, differenceToGMT));
+		ParsedMessage msg = doRequest(XmlCreator.createSetTimeZone(mBT, adapterID, differenceToGMT));
 
 		if (msg.getState() == State.TRUE)
 			return true;
@@ -1079,7 +1084,7 @@ public class Network implements INetwork {
 	 */
 	@Override
 	public int getTimeZone(String adapterID){
-		ParsedMessage msg = doRequest(XmlCreator.createGetTimeZone(mUserID, adapterID));
+		ParsedMessage msg = doRequest(XmlCreator.createGetTimeZone(mBT, adapterID));
 
 		if (msg.getState() == State.TIMEZONE)
 			return (Integer) msg.data;
@@ -1095,14 +1100,14 @@ public class Network implements INetwork {
 	/**
 	 * Method delete old gcmid to avoid fake notifications
 	 * 
-	 * @param email
+	 * @param userId
 	 *            of old/last user of gcmid (app+device id)
 	 * @param gcmID
 	 *            - google cloud message id
 	 * @return true if id has been deleted, false otherwise
 	 */
-	public boolean deleteGCMID(String email, String gcmID){
-		ParsedMessage msg = doRequest(XmlCreator.createDeLGCMID(email, gcmID));
+	public boolean deleteGCMID(String userId, String gcmID){
+		ParsedMessage msg = doRequest(XmlCreator.createDeLGCMID(userId, gcmID));
 
 		if (msg.getState() == State.TRUE)
 			return true;
@@ -1120,7 +1125,7 @@ public class Network implements INetwork {
 	 */
 	@Override
 	public boolean NotificationsRead(ArrayList<String> msgID){
-		ParsedMessage msg = doRequest(XmlCreator.createNotificaionRead(mUserID, msgID));
+		ParsedMessage msg = doRequest(XmlCreator.createNotificaionRead(mBT, msgID));
 
 		if (msg.getState() == State.TRUE)
 			return true;
@@ -1131,13 +1136,12 @@ public class Network implements INetwork {
 
 	/**
 	 * Method set gcmID to server
-	 * @param email of user
 	 * @param gcmID to be set
 	 * @return true if id has been updated, false otherwise
 	 * FIXME: after merge need to by rewrite
 	 */
-	public boolean setGCMID(String email, String gcmID){
-		ParsedMessage msg = doRequest(XmlCreator.createSetGCMID(mUserID, gcmID));
+	public boolean setGCMID(String gcmID){
+		ParsedMessage msg = doRequest(XmlCreator.createSetGCMID(mBT, gcmID));
 
 		if (msg.getState() == State.TRUE)
 			return true;
@@ -1152,7 +1156,7 @@ public class Network implements INetwork {
 
 	@Override
 	public Condition setCondition(Condition condition) {
-		String messageToSend = XmlCreator.createAddCondition(mUserID, condition.getName(),
+		String messageToSend = XmlCreator.createAddCondition(mBT, condition.getName(),
 				XmlCreator.ConditionType.fromValue(condition.getType()), condition.getFuncs());
 		ParsedMessage msg = doRequest(messageToSend);
 
@@ -1166,7 +1170,7 @@ public class Network implements INetwork {
 
 	@Override
 	public boolean connectConditionWithAction(String conditionID, String actionID) {
-		ParsedMessage msg = doRequest(XmlCreator.createConditionPlusAction(mUserID, conditionID, actionID));
+		ParsedMessage msg = doRequest(XmlCreator.createConditionPlusAction(mBT, conditionID, actionID));
 
 		if (msg.getState() == State.TRUE)
 			return true;
@@ -1177,7 +1181,7 @@ public class Network implements INetwork {
 
 	@Override
 	public Condition getCondition(Condition condition) {
-		ParsedMessage msg = doRequest(XmlCreator.createGetCondition(mUserID, condition.getId()));
+		ParsedMessage msg = doRequest(XmlCreator.createGetCondition(mBT, condition.getId()));
 
 		if (msg.getState() == State.CONDITIONCREATED) {
 			Condition cond = (Condition) msg.data;
@@ -1193,7 +1197,7 @@ public class Network implements INetwork {
 	@Override
 	@SuppressWarnings("unchecked")
 	public List<Condition> getConditions() {
-		ParsedMessage msg = doRequest(XmlCreator.createGetConditions(mUserID));
+		ParsedMessage msg = doRequest(XmlCreator.createGetConditions(mBT));
 
 		if (msg.getState() == State.CONDITIONS)
 			return (List<Condition>) msg.data;
@@ -1204,7 +1208,7 @@ public class Network implements INetwork {
 
 	@Override
 	public boolean updateCondition(Condition condition) {
-		String messageToSend = XmlCreator.createSetCondition(mUserID, condition.getName(),
+		String messageToSend = XmlCreator.createSetCondition(mBT, condition.getName(),
 				XmlCreator.ConditionType.fromValue(condition.getType()), condition.getId(), condition.getFuncs());
 		ParsedMessage msg = doRequest(messageToSend);
 
@@ -1217,7 +1221,7 @@ public class Network implements INetwork {
 
 	@Override
 	public boolean deleteCondition(Condition condition) {
-		ParsedMessage msg = doRequest(XmlCreator.createDelCondition(mUserID, condition.getId()));
+		ParsedMessage msg = doRequest(XmlCreator.createDelCondition(mBT, condition.getId()));
 
 		if (msg.getState() == State.TRUE)
 			return true;
@@ -1228,7 +1232,7 @@ public class Network implements INetwork {
 
 	@Override
 	public ComplexAction setAction(ComplexAction action) {
-		ParsedMessage msg = doRequest(XmlCreator.createAddAction(mUserID, action.getName(), action.getActions()));
+		ParsedMessage msg = doRequest(XmlCreator.createAddAction(mBT, action.getName(), action.getActions()));
 
 		if (msg.getState() == State.ACTIONCREATED) {
 			action.setId((String) msg.data);
@@ -1241,7 +1245,7 @@ public class Network implements INetwork {
 	@Override
 	@SuppressWarnings("unchecked")
 	public List<ComplexAction> getActions() {
-		ParsedMessage msg = doRequest(XmlCreator.createGetActions(mUserID));
+		ParsedMessage msg = doRequest(XmlCreator.createGetActions(mBT));
 
 		if (msg.getState() == State.ACTIONS)
 			return (List<ComplexAction>) msg.data;
@@ -1251,7 +1255,7 @@ public class Network implements INetwork {
 
 	@Override
 	public ComplexAction getAction(ComplexAction action) {
-		ParsedMessage msg = doRequest(XmlCreator.createGetCondition(mUserID, action.getId()));
+		ParsedMessage msg = doRequest(XmlCreator.createGetCondition(mBT, action.getId()));
 
 		if (msg.getState() == State.ACTION) {
 			ComplexAction act = (ComplexAction) msg.data;
@@ -1264,7 +1268,7 @@ public class Network implements INetwork {
 
 	@Override
 	public boolean updateAction(ComplexAction action) {
-		String messageToSend = XmlCreator.createSetAction(mUserID, action.getName(), action.getId(), action.getActions());
+		String messageToSend = XmlCreator.createSetAction(mBT, action.getName(), action.getId(), action.getActions());
 		ParsedMessage msg = doRequest(messageToSend);
 
 		if (msg.getState() == State.TRUE)
@@ -1276,7 +1280,7 @@ public class Network implements INetwork {
 
 	@Override
 	public boolean deleteAction(ComplexAction action) {
-		ParsedMessage msg = doRequest(XmlCreator.createDelAction(mUserID, action.getId()));
+		ParsedMessage msg = doRequest(XmlCreator.createDelAction(mBT, action.getId()));
 
 		if (msg.getState() == State.TRUE)
 			return true;
@@ -1284,5 +1288,75 @@ public class Network implements INetwork {
 		FalseAnswer fa = (FalseAnswer) msg.data;
 		throw new AppException(fa.getErrMessage(), NetworkError.fromValue(fa.getErrCode()));
 	}
+
+    @Override
+    public boolean addWatchDog(WatchDog watchDog, String adapterId){
+        ParsedMessage msg = doRequest(XmlCreator.createAddAlgor(mBT, watchDog.getName(), adapterId, watchDog.getType(), watchDog.getDevices(), watchDog.getParams(), watchDog.getGeoRegionId(), watchDog.getGeoDirectionType()));
+
+        if (msg.getState() == State.ALGCREATED) {
+            watchDog.setId((String) msg.data);
+            return true;
+        }
+
+        FalseAnswer fa = (FalseAnswer) msg.data;
+        throw new AppException(fa.getErrMessage(), NetworkError.fromValue(fa.getErrCode()));
+    }
+
+    @Override
+    public ArrayList<WatchDog> getWatchDogs(ArrayList<String> watchDogIds, String adapterId){
+        ParsedMessage msg = doRequest(XmlCreator.createGetAlgs(mBT, adapterId, watchDogIds));
+
+        if(msg.getState() == State.ALGORITHMS){
+            return (ArrayList<WatchDog>) msg.data;
+        }
+
+        FalseAnswer fa = (FalseAnswer) msg.data;
+        throw new AppException(fa.getErrMessage(), NetworkError.fromValue(fa.getErrCode()));
+    }
+
+    @Override
+    public ArrayList<WatchDog> getAllWatchDogs(String adapterID){
+        ParsedMessage msg = doRequest(XmlCreator.createGetAllAlgs(mBT, adapterID));
+
+        if(msg.getState() == State.ALGORITHMS){
+            return (ArrayList<WatchDog>) msg.data;
+        }
+
+        FalseAnswer fa = (FalseAnswer) msg.data;
+        throw new AppException(fa.getErrMessage(), NetworkError.fromValue(fa.getErrCode()));
+    }
+
+    @Override
+    public boolean updateWatchDog(WatchDog watchDog, String AdapterId){
+        ParsedMessage msg = doRequest(XmlCreator.createSetAlgor(mBT, watchDog.getName(), AdapterId, watchDog.getType(), watchDog.isEnabled(), watchDog.getDevices(), watchDog.getParams(), watchDog.getGeoRegionId(), watchDog.getGeoDirectionType()));
+
+        if(msg.getState() == State.TRUE)
+            return true;
+
+        FalseAnswer fa = (FalseAnswer) msg.data;
+        throw new AppException(fa.getErrMessage(), NetworkError.fromValue(fa.getErrCode()));
+    }
+
+    @Override
+    public boolean deleteWatchDog(WatchDog watchDog){
+        ParsedMessage msg = doRequest(XmlCreator.createDelAlg(mBT, watchDog.getId()));
+
+        if(msg.getState() == State.TRUE)
+            return true;
+
+        FalseAnswer fa = (FalseAnswer) msg.data;
+        throw new AppException(fa.getErrMessage(), NetworkError.fromValue(fa.getErrCode()));
+    }
+
+    @Override
+    public boolean passBorder(String regionId, String type){
+        ParsedMessage msg = doRequest(XmlCreator.createPassBorder(mBT, regionId, type));
+
+        if(msg.getState() == State.TRUE)
+            return true;
+
+        FalseAnswer fa = (FalseAnswer) msg.data;
+        throw new AppException(fa.getErrMessage(), NetworkError.fromValue(fa.getErrCode()));
+    }
 
 }

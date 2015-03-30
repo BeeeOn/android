@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<com ver="2.3" state="rooms"> 
+<com ver="2.4" state="rooms">
 	<loc id="1" type="3" name="Skleník" />
 	<loc id="2" type="1" name="Sauna" />
 </com>

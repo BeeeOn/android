@@ -52,7 +52,7 @@ public class SettingsMainActivity extends ActionBarPreferenceActivity implements
 
 
 		// Use own name for sharedPreferences
-		getPreferenceManager().setSharedPreferencesName(Persistence.getPreferencesFilename(mController.getActualUser().getEmail()));
+		getPreferenceManager().setSharedPreferencesName(Persistence.getPreferencesFilename(mController.getActualUser().getId()));
 
 		// UserSettings can be null when user is not logged in!
 		mPrefs = mController.getUserSettings();

@@ -94,7 +94,7 @@ public class FacilitiesModel {
 		return lastUpdate == null || lastUpdate.plusSeconds(RELOAD_EVERY_SECONDS).isBeforeNow();
 	}
 
-	public boolean reloadFacilitiesByAdapter(String adapterId, boolean forceReload) {
+	public boolean reloadFacilitiesByAdapter(String adapterId, boolean forceReload) throws AppException {
 		if (!forceReload && !isExpired(adapterId)) {
 			return false;
 		}
@@ -109,7 +109,7 @@ public class FacilitiesModel {
 		return false;
 	}
 	
-	public boolean refreshFacilities(List<Facility> facilities, boolean forceReload) {
+	public boolean refreshFacilities(List<Facility> facilities, boolean forceReload) throws AppException {
 		// Remove not expired facilities
 		for (Facility facility : facilities) {
 			if (!forceReload && !facility.isExpired()) {
@@ -117,32 +117,21 @@ public class FacilitiesModel {
 			}
 		}
 
-		try {
-			List<Facility> newFacilities = mNetwork.getFacilities(facilities);
-			if (newFacilities == null)
-				return false;
-
-			for (Facility newFacility : newFacilities) {
-				updateFacilityInMap(newFacility);
-			}
-
-		} catch (AppException e) {
-			e.printStackTrace();
+		List<Facility> newFacilities = mNetwork.getFacilities(facilities);
+		if (newFacilities == null)
 			return false;
+
+		for (Facility newFacility : newFacilities) {
+			updateFacilityInMap(newFacility);
 		}
-		
+
 		return true;
 	}
 
-	private boolean loadFromServer(String adapterId) {
-		try {
-			setFacilitiesByAdapter(adapterId, mNetwork.initAdapter(adapterId));
-			setLastUpdate(adapterId, DateTime.now());
-			saveToCache(adapterId);
-		} catch (AppException e) {
-			e.printStackTrace();
-			return false;
-		}
+	private boolean loadFromServer(String adapterId) throws AppException {
+		setFacilitiesByAdapter(adapterId, mNetwork.initAdapter(adapterId));
+		setLastUpdate(adapterId, DateTime.now());
+		saveToCache(adapterId);
 
 		return true;
 	}
@@ -174,67 +163,45 @@ public class FacilitiesModel {
 	/**
 	 * This reloads data of facility from server...
 	 */
-	public boolean refreshFacility(Facility facility, boolean forceReload) {
+	public boolean refreshFacility(Facility facility, boolean forceReload) throws AppException {
 		if (!forceReload && !facility.isExpired()) {
 			return false;
 		}
 		
-		try {
-			Facility newFacility = mNetwork.getFacility(facility);
-			if (newFacility == null)
-				return false;
-
-			updateFacilityInMap(facility);
-		} catch (AppException e) {
-			e.printStackTrace();
+		Facility newFacility = mNetwork.getFacility(facility);
+		if (newFacility == null)
 			return false;
-		}
+
+		updateFacilityInMap(facility);
 
 		return true;
 	}
 
-	public boolean saveFacility(Facility facility, EnumSet<SaveDevice> what) {
-		boolean result = false;
+	public boolean saveFacility(Facility facility, EnumSet<SaveDevice> what) throws AppException {
+		mNetwork.updateFacility(facility.getAdapterId(), facility, what);
+		refreshFacility(facility, true);
 
-		try {
-			result = mNetwork.updateFacility(facility.getAdapterId(), facility, what);
-			result = refreshFacility(facility, true);
-		} catch (AppException e) {
-			e.printStackTrace();
-		}
-
-		return result;
+		return true;
 	}
 
-    public boolean delFacility(Facility facility) {
-        boolean result = false;
+    public boolean delFacility(Facility facility) throws AppException {
         String adapterId = facility.getAdapterId();
-        try {
-            result = mNetwork.deleteFacility(adapterId,facility);
-            result = refreshFacilities(getFacilitiesByAdapter(adapterId), true);
-        } catch (AppException e) {
-            e.printStackTrace();
-        }
+		mNetwork.deleteFacility(adapterId,facility);
+        refreshFacilities(getFacilitiesByAdapter(adapterId), true);
 
-        return result;
+        return true;
     }
 
-	public boolean saveDevice(Device device, EnumSet<SaveDevice> what) {
+	public boolean saveDevice(Device device, EnumSet<SaveDevice> what) throws AppException {
 		Facility facility = device.getFacility();
 
-		boolean result = false;
+		mNetwork.updateDevice(facility.getAdapterId(), device, what);
+		refreshFacility(facility, true);
 
-		try {
-			result = mNetwork.updateDevice(facility.getAdapterId(), device, what);
-			result = refreshFacility(facility, true);
-		} catch (AppException e) {
-			e.printStackTrace();
-		}
-
-		return result;
+		return true;
 	}
 	
-	public boolean switchActor(Device device) {
+	public boolean switchActor(Device device) throws AppException {
 		if (!device.getType().isActor()) {
 			Log.e(TAG, String.format("Tried to switch NOT-actor device '%s'", device.getName()));
 			return false;
@@ -242,17 +209,11 @@ public class FacilitiesModel {
 		
 		Facility facility = device.getFacility();
 
-		boolean result = false;
+		mNetwork.switchState(device.getFacility().getAdapterId(), device);
+		mNetwork.updateFacility(facility.getAdapterId(), facility, EnumSet.allOf(SaveDevice.class));
+		refreshFacility(facility, true);
 
-		try {
-			result = mNetwork.switchState(device.getFacility().getAdapterId(), device);
-			result = mNetwork.updateFacility(facility.getAdapterId(), facility, EnumSet.allOf(SaveDevice.class));
-			result = refreshFacility(facility, true);
-		} catch (AppException e) {
-			e.printStackTrace();
-		}
-
-		return result;
+		return true;
 	}
 
 }

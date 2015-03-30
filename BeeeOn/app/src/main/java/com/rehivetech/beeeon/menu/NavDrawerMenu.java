@@ -42,7 +42,7 @@ import com.rehivetech.beeeon.asynctask.CallbackTask.CallbackTaskListener;
 import com.rehivetech.beeeon.asynctask.SwitchAdapterTask;
 import com.rehivetech.beeeon.asynctask.UnregisterAdapterTask;
 import com.rehivetech.beeeon.controller.Controller;
-import com.rehivetech.beeeon.household.ActualUser;
+import com.rehivetech.beeeon.household.User;
 import com.rehivetech.beeeon.persistence.Persistence;
 import com.rehivetech.beeeon.util.Log;
 
@@ -362,13 +362,13 @@ public class NavDrawerMenu   {
 		mMenuAdapter = new MenuListAdapter(mActivity);
 
 		// Adding profile header
-		ActualUser actUser = mController.getActualUser();
+		User actUser = mController.getActualUser();
 
 		Bitmap picture = actUser.getPicture();
 		if (picture == null)
 			picture = actUser.getDefaultPicture(mActivity);
 		
-		mMenuAdapter.addHeader(new ProfileMenuItem(actUser.getName(), actUser.getEmail(), picture, new OnClickListener() {
+		mMenuAdapter.addHeader(new ProfileMenuItem(actUser.getFullName(), actUser.getEmail(), picture, new OnClickListener() {
             @Override
             public void onClick(View v) {
         	changeMenuItem(Constants.GUI_MENU_PROFILE,true);

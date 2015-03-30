@@ -97,6 +97,8 @@
     <string name="toast_check_your_connection_via_browser">Check your connection via browser</string>
     <string name="toast_not_implemented">Not implemented yet!</string>
     <string name="toast_login_failed">Login failed</string>
+	<string name="toast_registration_failed">Registration failed</string>
+	<string name="toast_auth_provider_error">Error during authorization process</string>
     <string name="toast_adapter_activate_failed">Failed to activate adapter</string>
     <string name="toast_adapter_activated">Adapter has been activated</string>
     <string name="toast_adapter_removed">Adapter has been removed</string>
@@ -111,7 +113,7 @@
 	<string name="toast_achievement_title">Achievement unlocked!</string>
 
     <!-- Progress -->
-    <string name="progress_signing">Signing to server&#8230;</string>
+	<string name="progress_signing">Logging in&#8230;</string>
     <string name="progress_google">Handshaking with Google&#8230;</string>
     <string name="progress_signup">Registering new user&#8230;</string>
     <string name="progress_loading_adapters">Loading your adapters&#8230;</string>
@@ -308,6 +310,9 @@
 	<string name="title_activity_sensor_edit">Edit sensor</string>
 	<string name="hello_world">Hello world!</string>
 	<string name="sensor_name_label">Name of sensor</string>
+
+	<string name="dialog_register_new_account_title">Not registered</string>
+	<string name="dialog_register_new_account_message">You don\'t have a BeeeOn account yet, do you want to create it now?</string>
 
 
 </resources>

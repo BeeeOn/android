@@ -64,7 +64,7 @@ public class AdaptersModel {
 		return mLastUpdate == null || mLastUpdate.plusSeconds(RELOAD_EVERY_SECONDS).isBeforeNow();
 	}
 
-	public boolean reloadAdapters(boolean forceReload) {
+	public boolean reloadAdapters(boolean forceReload) throws AppException {
 		if (!forceReload && !isExpired()) {
 			return false;
 		}
@@ -79,16 +79,10 @@ public class AdaptersModel {
 		return false;
 	}
 
-	private boolean loadFromServer() {
-		try {
-			setAdapters(mNetwork.getAdapters());
-			setLastUpdate(DateTime.now());
-			saveToCache();
-		} catch (AppException e) {
-			e.printStackTrace();
-			return false;
-		}
-
+	private boolean loadFromServer() throws AppException {
+		setAdapters(mNetwork.getAdapters());
+		setLastUpdate(DateTime.now());
+		saveToCache();
 		return true;
 	}
 

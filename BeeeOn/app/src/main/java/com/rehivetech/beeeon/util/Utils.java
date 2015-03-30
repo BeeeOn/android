@@ -1,5 +1,6 @@
 package com.rehivetech.beeeon.util;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
@@ -10,6 +11,10 @@ import android.graphics.Path;
 import android.graphics.Rect;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.wifi.WifiInfo;
+import android.net.wifi.WifiManager;
+import android.telephony.TelephonyManager;
+import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
@@ -244,6 +249,63 @@ final public class Utils {
 		ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
 		NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
 		return activeNetworkInfo != null && activeNetworkInfo.isConnected();
+	}
+
+	/**
+	 * Method return Mac address of device
+	 * @return
+	 */
+	public static String getMAC(Context context){
+		WifiManager wifiManager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
+
+		if(wifiManager.isWifiEnabled()) {
+			// WIFI ALREADY ENABLED. GRAB THE MAC ADDRESS HERE
+			WifiInfo info = wifiManager.getConnectionInfo();
+			return info.getMacAddress();
+		} else {
+			// ENABLE THE WIFI FIRST
+			wifiManager.setWifiEnabled(true);
+
+			// WIFI IS NOW ENABLED. GRAB THE MAC ADDRESS HERE
+			WifiInfo info = wifiManager.getConnectionInfo();
+			String address = info.getMacAddress();
+
+			wifiManager.setWifiEnabled(false);
+
+			return address;
+		}
+	}
+
+
+	/**
+	 * Method returns DeviceId (phone is device) or Mac address
+	 * @return
+	 */
+	public static String getPhoneID(Context context){
+		TelephonyManager tm = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
+
+		String phoneId = tm.getDeviceId();
+		if (phoneId == null)
+			phoneId = getMAC(context);
+
+		Log.i(Utils.class.getSimpleName(), String.format("HW ID (IMEI or MAC): %s", phoneId));
+
+		return phoneId;
+	}
+
+	/**
+	 * Helper for showing toasts from any thread.
+	 *
+	 * @param activity
+	 * @param message
+	 */
+	public static void showToastOnUiThread(final Activity activity, final String message, final int duration) {
+		activity.runOnUiThread(new Runnable() {
+			@Override
+			public void run() {
+				Toast.makeText(activity, message, duration).show();
+			}
+		});
 	}
 
 }

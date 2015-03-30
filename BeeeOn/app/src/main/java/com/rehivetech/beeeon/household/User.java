@@ -1,32 +1,48 @@
 package com.rehivetech.beeeon.household;
 
+import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+
 import com.rehivetech.beeeon.R;
-import com.rehivetech.beeeon.household.User.Role;
+import com.rehivetech.beeeon.util.Utils;
 
 /**
  * Represents single person.
  */
 public class User {
 
-	protected String mName = "";
+	private String mId = "";
 
-	protected String mEmail = "";
+	private String mName = "";
 
-	protected Role mRole = Role.Guest;
+    private String mSurname = "";
 
-	protected Gender mGender = Gender.Unknown;
+	private String mEmail = "";
 
-	public User() {
-	}
+	private Role mRole = Role.Guest;
 
-	public User(final String name, final String email, final Role role, final Gender gender) {
+	private Gender mGender = Gender.Unknown;
+
+	private Bitmap mPicture = null;
+
+	private String mPictureUrl = "";
+
+	private boolean mDefaultPicture = true;
+
+	public User() {}
+
+	public User(final String id, final String name, final String surname, final String email, final Gender gender, final Role role) {
+		mId = id;
 		mName = name;
+		mSurname = surname;
 		mEmail = email;
-		mRole = role;
 		mGender = gender;
+		mRole = role;
 	}
 
-	public User(final String email, final Role role) {
+	public User(final String id, final String email, final Role role) {
+		mId = id;
 		mEmail = email;
 		mRole = role;
 	}
@@ -78,6 +94,18 @@ public class User {
 		}
 	}
 
+	public String getId() {
+		return mId;
+	}
+
+	public void setId(String id) {
+		this.mId = id;
+	}
+
+	public String getFullName() {
+		return String.format("%s %s", mName, mSurname).trim();
+	}
+
 	public String getName() {
 		return mName;
 	}
@@ -86,7 +114,15 @@ public class User {
 		mName = name;
 	}
 
-	public String getEmail() {
+    public String getSurname() {
+        return mSurname;
+    }
+
+    public void setSurname(String surname) {
+        this.mSurname = surname;
+    }
+
+    public String getEmail() {
 		return mEmail;
 	}
 
@@ -110,8 +146,42 @@ public class User {
 		mGender = gender;
 	}
 
+	public boolean isEmpty() {
+		return mId.isEmpty() || mEmail.isEmpty() || mName.isEmpty() || (mPicture == null && !mPictureUrl.isEmpty());
+	}
+
+	/**
+	 * @return picture url or empty string
+	 */
+	public String getPictureUrl() {
+		return mPictureUrl;
+	}
+
+	public void setPictureUrl(String url) {
+		mPictureUrl = url;
+	}
+
+	/**
+	 * @param context
+	 * @return bitmap with default silhouette
+	 */
+	public Bitmap getDefaultPicture(Context context) {
+		return BitmapFactory.decodeResource(context.getResources(), R.drawable.person_silhouette);
+	}
+
+	/**
+	 * @return user picture bitmap or null
+	 */
+	public Bitmap getPicture() {
+		return mPicture;
+	}
+
+	public void setPicture(Bitmap picture) {
+		mPicture = Utils.getRoundedShape(picture);
+	}
+
 	public String toDebugString() {
-		return String.format("Email: %s\nRole: %s\nName: %s\nGender: %s", mEmail, mRole, mName, mGender);
+		return String.format("Id: %s\nEmail: %s\nRole: %s\nName: %s\nGender: %s", mId, mEmail, mRole, mName, mGender);
 	}
 
 }

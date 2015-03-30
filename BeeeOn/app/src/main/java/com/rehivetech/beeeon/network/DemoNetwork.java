@@ -1,16 +1,7 @@
 package com.rehivetech.beeeon.network;
 
-import java.util.ArrayList;
-import java.util.EnumSet;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
-
-import org.joda.time.DateTime;
-import org.joda.time.DateTimeZone;
-
 import android.content.Context;
+
 import com.rehivetech.beeeon.Constants;
 import com.rehivetech.beeeon.adapter.Adapter;
 import com.rehivetech.beeeon.adapter.device.Device;
@@ -25,16 +16,26 @@ import com.rehivetech.beeeon.adapter.device.values.BaseEnumValue;
 import com.rehivetech.beeeon.adapter.device.values.BaseEnumValue.Item;
 import com.rehivetech.beeeon.adapter.location.Location;
 import com.rehivetech.beeeon.exception.AppException;
-import com.rehivetech.beeeon.household.ActualUser;
 import com.rehivetech.beeeon.household.User;
 import com.rehivetech.beeeon.household.User.Gender;
 import com.rehivetech.beeeon.household.User.Role;
-import com.rehivetech.beeeon.network.GoogleAuthHelper.GoogleUserInfo;
+import com.rehivetech.beeeon.network.authentication.IAuthProvider;
 import com.rehivetech.beeeon.network.xml.CustomViewPair;
+import com.rehivetech.beeeon.network.xml.WatchDog;
 import com.rehivetech.beeeon.network.xml.XmlParsers;
 import com.rehivetech.beeeon.network.xml.action.ComplexAction;
 import com.rehivetech.beeeon.network.xml.condition.Condition;
 import com.rehivetech.beeeon.pair.LogDataPair;
+
+import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
+
+import java.util.ArrayList;
+import java.util.EnumSet;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Random;
 
 /**
  * Network service that handles communication in demo mode.
@@ -43,10 +44,12 @@ import com.rehivetech.beeeon.pair.LogDataPair;
  */
 public class DemoNetwork implements INetwork {
 
-	public static final String DEMO_EMAIL = "demo";
+	public static final String DEMO_USER_ID = "demo";
+	private static final String DEMO_USER_BT = "12345";
 
 	private Context mContext;
-	private String mUID;
+	private User mUser;
+	private String mBT;
 
 	private class AdapterHolder {
 		public final Adapter adapter;
@@ -102,21 +105,15 @@ public class DemoNetwork implements INetwork {
 		}
 	}
 	
-	@Override
-	public GoogleUserInfo getUserInfo() {
-		return new GoogleUserInfo("", DEMO_EMAIL, "", "John Doe", "", false, Gender.Male, "", "en");
-	}
-	
-	public void initDemoData(ActualUser user) throws AppException {
+	public void initDemoData() throws AppException {
 		// Erase previous data if exists
 		mAdapters.clear();
 		
 		// Set user
-		user.setName("John Doe");
-		user.setEmail(DEMO_EMAIL);
-		user.setGender(Gender.Male);
-		user.setPicture(null);
-		user.setPictureUrl("");
+		mUser = new User(DEMO_USER_ID, "John", "Doe", "john@doe.com", Gender.Male, Role.Superuser);
+
+		// Set session token
+		mBT = DEMO_USER_BT;
 
 		// Parse and set initial demo data
 		XmlParsers parser = new XmlParsers();
@@ -150,21 +147,39 @@ public class DemoNetwork implements INetwork {
 		return true;
 	}
 
-	@Override
-	public void setUID(String userId) {
-		mUID = userId;
+    @Override
+    public String getBT() {
+		return mBT;
 	}
 
 	@Override
-	public String getUID() {
-		return mUID;
+	public void setBT(String token) {
+		mBT = token;
 	}
-	
+
 	@Override
-	public boolean loadUID(GoogleUserInfo googleUserInfo) {
-		mUID = "123456789";
+    public User loadUserInfo() {
+		return mUser;
+	}
+
+	@Override
+	public boolean loginMe(IAuthProvider authProvider) {
 		return true;
 	}
+
+	@Override
+	public boolean registerMe(IAuthProvider authProvider) {
+		return true;
+	}
+
+	@Override
+	public boolean addProvider(IAuthProvider authProvider){return true;}
+
+	@Override
+	public boolean removeProvider(String providerName){return true;}
+
+	@Override
+	public boolean deleteMyAccount(){return true;}
 
 	@Override
 	public boolean addAdapter(String adapterId, String adapterName) {
@@ -657,14 +672,33 @@ public class DemoNetwork implements INetwork {
 		return false;
 	}
 
-	@Override
-	public boolean deleteGCMID(String email, String gcmID) {
+    @Override
+    public ArrayList<WatchDog> getAllWatchDogs(String adapterID) {
+		return null;
+	}
+
+    @Override
+    public ArrayList<WatchDog> getWatchDogs(ArrayList<String> watchDogIds, String adapterId) {
+		return null;
+	}
+
+    @Override
+    public boolean updateWatchDog(WatchDog watchDog, String AdapterId) {
 		return true;
 	}
 
-	@Override
-	public boolean setGCMID(String email, String gcmID) {
+    @Override
+    public boolean deleteWatchDog(WatchDog watchDog) {
 		return true;
 	}
 
+    @Override
+    public boolean addWatchDog(WatchDog watchDog, String AdapterID) {
+		return true;
+	}
+
+    @Override
+    public boolean passBorder(String regionId, String type) {
+		return true;
+	}
 }

@@ -80,7 +80,7 @@ public class UsersListAdapter extends BaseAdapter {
 
 		User user = mUsers.get(position);
 		
-		txtNameUser.setText(user.getName());
+		txtNameUser.setText(user.getFullName());
 		txtEmailUser.setText(user.getEmail());
 		txtRoleUser.setText(user.getRole().toString());
 

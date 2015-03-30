@@ -1,7 +1,8 @@
 package com.rehivetech.beeeon.activity;
 
-import android.accounts.Account;
 import android.accounts.AccountManager;
+import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -11,11 +12,6 @@ import android.view.View.OnClickListener;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
-import com.google.android.gms.auth.GoogleAuthUtil;
-import com.google.android.gms.common.AccountPicker;
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GooglePlayServicesUtil;
-import com.rehivetech.beeeon.Constants;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.adapter.Adapter;
 import com.rehivetech.beeeon.base.BaseActivity;
@@ -23,9 +19,9 @@ import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.exception.AppException;
 import com.rehivetech.beeeon.exception.ErrorCode;
 import com.rehivetech.beeeon.exception.NetworkError;
-import com.rehivetech.beeeon.exception.NotImplementedException;
-import com.rehivetech.beeeon.network.DemoNetwork;
-import com.rehivetech.beeeon.network.GoogleAuthHelper;
+import com.rehivetech.beeeon.network.authentication.DemoAuthProvider;
+import com.rehivetech.beeeon.network.authentication.GoogleAuthProvider;
+import com.rehivetech.beeeon.network.authentication.IAuthProvider;
 import com.rehivetech.beeeon.util.BetterProgressDialog;
 import com.rehivetech.beeeon.util.Log;
 import com.rehivetech.beeeon.util.Utils;
@@ -35,17 +31,13 @@ import com.rehivetech.beeeon.util.Utils;
  * 
  * @author ThinkDeep
  * @author Leopold Podmolik
- * 
+ * @author Robyer
  */
 public class LoginActivity extends BaseActivity {
 
 	public static final String BUNDLE_REDIRECT = "isRedirect";
 	
-	private static final String TAG = LoginActivity.class.getSimpleName();	
-
-	private static final int RESULT_DO_RECOVERABLE_AUTH = 5;
-	private static final int RESULT_GET_GOOGLE_ACCOUNT = 6;
-	private static final int RESULT_DO_WEBLOGIN = 7;
+	private static final String TAG = LoginActivity.class.getSimpleName();
 	
 	private Controller mController;
 	private BetterProgressDialog mProgress;
@@ -61,12 +53,13 @@ public class LoginActivity extends BaseActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_login);
 
+		Log.i("BeeeOn app starting...", "___________________________________");
+
 		// Get controller
 		mController = Controller.getInstance(getApplicationContext());
 
 		// Prepare progressDialog
 		mProgress = new BetterProgressDialog(this);
-		mProgress.setMessageResource(R.string.progress_signing);
 		mProgress.setCancelable(true);
 		mProgress.setCanceledOnTouchOutside(false);
 		mProgress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
@@ -82,7 +75,7 @@ public class LoginActivity extends BaseActivity {
 			@Override
 			public void onClick(View v) {
 				mProgress.setMessageResource(R.string.progress_loading_demo);
-				doLogin(true, DemoNetwork.DEMO_EMAIL);
+				prepareLogin(new DemoAuthProvider());
 			}
 		});
 
@@ -94,74 +87,103 @@ public class LoginActivity extends BaseActivity {
 		btnGoogle.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				beginGoogleAuthRoutine();
+				prepareLogin(new GoogleAuthProvider());
 			}
 		});
 		btnMojeID.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				getMojeIDAccessFromServer(v);
+				Toast.makeText(v.getContext(), "Not Implemented yet", Toast.LENGTH_LONG).show();
+				// prepareLogin(new MojeIdAuthProvider());
 			}
 		});
-		
 
-
-		// ALREADY LOGGED IN
+		// Check already logged in user
 		if (mController.isLoggedIn()) {
-			// If we're already logged in, continue to location screen
 			Log.d(TAG, "Already logged in, going to locations screen...");
-
 			onLoggedIn(); // finishes this activity
 			return;
 		}
 
-		// AUTOMATIC LOGIN
-		String lastEmail = mController.getLastEmail();
-		if (lastEmail.length() > 0 && !lastEmail.equals(DemoNetwork.DEMO_EMAIL)) {
-			// Automatic login with last used e-mail
-			Log.d(TAG, String.format("Automatic login with last used e-mail (%s)...", lastEmail));
-			doLogin(false, lastEmail);
+		// Do automatic login if we have remembered last logged in user
+		IAuthProvider lastAuthProvider = mController.getLastAuthProvider();
+		if (lastAuthProvider != null && !(lastAuthProvider instanceof DemoAuthProvider)) {
+			// Automatic login with last used provider
+			Log.d(TAG, String.format("Automatic login with last provider '%s' and user '%s'...", lastAuthProvider.getProviderName(), lastAuthProvider.getPrimaryParameter()));
+			prepareLogin(lastAuthProvider);
 		}
-		
-		Log.i("BeeeOn app starting...", "___________________________________");
 	}
 
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
 
-		Log.d(TAG, String.format("onActivityResult: %d, %d", requestCode, resultCode));
+		// Prepare correct authProvider object
+		IAuthProvider authProvider = null;
 
-		if (resultCode == RESULT_CANCELED) {
-			mLoginCancel = true;
-			mProgress.dismiss();
-			return;
-		}
-
-		if (resultCode == RESULT_OK && requestCode == RESULT_DO_WEBLOGIN) {
-			String token = data.getStringExtra(WebLoginActivity.TOKEN_VALUE);
-			if (token == null) {
-				Log.d(TAG, "no token received");
-				mProgress.dismiss();
+		// RequestCode uniquely identifies authProvider - all providers must respect that and use it in startActivityForResult(providerId)
+		switch (requestCode) {
+			case GoogleAuthProvider.PROVIDER_ID: {
+				authProvider = new GoogleAuthProvider();
+				break;
+			}
+			case DemoAuthProvider.PROVIDER_ID: {
+				authProvider = new DemoAuthProvider();
+				break;
+			}
+			default: {
+				Log.e(TAG, String.format("Unknown requestCode (%d)", requestCode));
 				return;
 			}
-
-			mProgress.setMessageResource(R.string.loading_data);
-			Log.i(TAG, "Access Google by token");
-			doLoginByToken(token);
 		}
 
-		if (resultCode == RESULT_OK && (requestCode == RESULT_DO_RECOVERABLE_AUTH || requestCode == RESULT_GET_GOOGLE_ACCOUNT)) {
-			String email = data.getStringExtra(AccountManager.KEY_ACCOUNT_NAME);
-			if (email == null) {
-				Log.d(TAG, "onActivityResult: no email");
+		// Process the result
+		switch (resultCode) {
+			case Activity.RESULT_CANCELED:
+			case IAuthProvider.RESULT_CANCEL: {
+				Log.d(TAG, "Received RESULT_CANCEL from authProvider");
+				mLoginCancel = true;
 				mProgress.dismiss();
-				return;
+				break;
 			}
+			case IAuthProvider.RESULT_ERROR: {
+				Log.e(TAG, "Received RESULT_ERROR from authProvider");
+				mLoginCancel = true;
+				mProgress.dismiss();
 
-			mProgress.setMessageResource(R.string.loading_data);
-			Log.i(TAG, "Do Google login");
-			doLogin(false, email);
+				// Show common error message
+				String message = getString(R.string.toast_auth_provider_error);
+				Utils.showToastOnUiThread(this, message, Toast.LENGTH_LONG);
+				break;
+			}
+			case Activity.RESULT_OK: {
+				// This result can go from Google Play Services intent as the choose of user account
+				if (authProvider instanceof GoogleAuthProvider) {
+					String email = data.getStringExtra(AccountManager.KEY_ACCOUNT_NAME);
+					if (email == null) {
+						Log.w(TAG, "Received RESULT_OK from GoogleAuthProvider but without email");
+						mLoginCancel = true;
+						mProgress.dismiss();
+						return;
+					}
+
+					// Set given e-mail as parameter and repeat authProcess of getting token
+					authProvider.setPrimaryParameter(email);
+					authProvider.prepareAuth(this);
+				}
+				break;
+			}
+			case IAuthProvider.RESULT_AUTH: {
+				if (!authProvider.loadAuthIntent(data)) {
+					Log.e(TAG, "Received RESULT_AUTH but authProvider can't load the required data");
+					mProgress.dismiss();
+					return;
+				}
+
+				// Authorization parameters are prepared
+				doLogin(authProvider);
+				break;
+			}
 		}
 	}
 
@@ -182,145 +204,46 @@ public class LoginActivity extends BaseActivity {
 	}
 
 	/**
-	 * Method mine users account names
-	 * 
-	 * @return array of names to choose
-	 */
-	private String[] getAccountNames() {
-		AccountManager mAccountManager = AccountManager.get(this);
-		Account[] accounts = mAccountManager.getAccountsByType(GoogleAuthUtil.GOOGLE_ACCOUNT_TYPE);
-		String[] names = new String[accounts.length];
-		for (int i = 0; i < names.length; i++) {
-			names[i] = accounts[i].name;
-		}
-		return names;
-	}
-	
-	private boolean checkInternetConnection() {
-		boolean available = Utils.isInternetAvailable(this);
-		if (!available) {
-			mProgress.dismiss();
-			Toast.makeText(this, getString(R.string.toast_internet_connection), Toast.LENGTH_LONG).show();			
-		}
-		return available;
-	}
-	
-	/**
-	 * Method start routine to access trough google after button click
-	 */
-	private void beginGoogleAuthRoutine() {
-		if (!checkInternetConnection())
-			return;
-		
-		if (!Utils.isGooglePlayServicesAvailable(this))
-			beginWebLoginAuth();
-		else
-			beginAndroidGoogleAuth();
-	}
-
-	private void beginWebLoginAuth() {
-		Log.d(TAG, "Start WebLoginAuth");
-		mProgress.show();
-
-		final String redirect = "http://localhost";
-		final String tokenUrl = "https://accounts.google.com/o/oauth2/token";
-
-		StringBuilder url = new StringBuilder();
-		url.append("https://accounts.google.com/o/oauth2/auth?client_id=");
-		url.append(Utils.uriEncode(Constants.WEB_LOGIN_CLIENT_ID));
-		url.append("&scope=openid%20email%20profile");
-		url.append("&redirect_uri=");
-		url.append(Utils.uriEncode(redirect));
-		url.append("&state=foobar");
-		url.append("&response_type=code");
-
-		final Intent intent = new Intent(getApplicationContext(), WebLoginActivity.class);
-		intent.putExtra(WebLoginActivity.LOGIN_URL, url.toString());
-		intent.putExtra(WebLoginActivity.TOKEN_URL, tokenUrl);
-		intent.putExtra(WebLoginActivity.CLIENT_ID, Constants.WEB_LOGIN_CLIENT_ID);
-		intent.putExtra(WebLoginActivity.CLIENT_SECRET, Constants.WEB_LOGIN_SECRET);
-		intent.putExtra(WebLoginActivity.REDIRECT_URI, redirect);
-		intent.putExtra(WebLoginActivity.GRANT_TYPE, "authorization_code");
-		startActivityForResult(intent, RESULT_DO_WEBLOGIN);
-
-		Log.d(TAG, "Finish WebLoginAuth");
-	}
-
-	private void beginAndroidGoogleAuth() {
-		Log.d(TAG, "Start GoogleAuthRoutine");
-		mProgress.show();
-				
-		// On this device is Google Play, we can proceed
-		Log.d(TAG, "On this device is Google Play, we can proceed");
-		String[] Accounts = this.getAccountNames();
-		Log.d(TAG, String.format("Number of accounts on this device: %d", Accounts.length));
-
-		if (Accounts.length == 1) {
-			doLogin(false, Accounts[0]);
-		} else {
-			Intent intent = AccountPicker.newChooseAccountIntent(null, null, new String[] { "com.google" }, false, null, null, null, null);
-			startActivityForResult(intent, RESULT_GET_GOOGLE_ACCOUNT);
-		}
-
-		Log.d(TAG, "Finish GoogleAuthRoutine");
-	}
-
-	private void doLoginByToken(final String token) {
-		Log.i(TAG, "LoginByToken started");
-
-		mLoginCancel = false;
-		mProgress.show();
-
-		new Thread(new Runnable() {
-			@Override
-			public void run() {
-				mController.beginPersistentConnection();
-				mController.assignToken(token);
-				mProgress.setMessageResource(R.string.progress_loading_adapters);
-				mController.reloadAdapters(true);
-
-				Adapter active = mController.getActiveAdapter();
-				if (active != null) {
-					// Load data for active adapter
-					mProgress.setMessageResource(R.string.progress_loading_adapter);
-					mController.reloadLocations(active.getId(), true);
-					mController.reloadFacilitiesByAdapter(active.getId(), true);
-				}
-
-				Log.i(TAG, "Login finished");
-				onLoggedIn(); // finishes this activity
-			}
-		}).start();
-	}
-
-	/**
 	 * Last logging method that call controller to proceed access to server
-	 * 
-	 * @param demoMode
-	 * @param email
-	 *            of user
+	 *
+	 * @param authProvider to login with
 	 */
-	private void doLogin(final boolean demoMode, final String email) {
-		if (!demoMode && !checkInternetConnection())
+	private void prepareLogin(final IAuthProvider authProvider) {
+		final boolean demoMode = (authProvider instanceof DemoAuthProvider);
+		if (!demoMode && !Utils.isInternetAvailable(this)) {
+			mProgress.dismiss();
+			Toast.makeText(this, getString(R.string.toast_internet_connection), Toast.LENGTH_LONG).show();
 			return;
+		}
 
 		mLoginCancel = false;
+		mProgress.setMessageResource(R.string.progress_signing);
 		mProgress.show();
-		
+
+		authProvider.prepareAuth(LoginActivity.this);
+	}
+
+	private void doLogin(final IAuthProvider authProvider) {
+		Log.d(TAG, "doLogin()");
+
+		mProgress.setMessageResource(R.string.progress_signing);
+		mProgress.show();
+
 		new Thread(new Runnable() {
 			@Override
 			public void run() {
-				setDemoMode(demoMode);
+				setDemoMode(authProvider instanceof DemoAuthProvider);
 
-				String errMessage = "Login failed";
+				String errMessage = getString(R.string.toast_login_failed);
 				boolean errFlag = true;
-		
+
 				try {
 					mController.beginPersistentConnection();
 					Log.i(TAG, "Login started");
 
-					if (mController.login(email)) {
-						Log.d(TAG, "Login: true");
+					// Here is authProvider already filled with needed parameters so we can send them to the server
+					if (mController.login(authProvider)) {
+						Log.d(TAG, "Login successful");
 						errFlag = false;
 
 						// Load all adapters and data for active one on login
@@ -348,39 +271,123 @@ public class LoginActivity extends BaseActivity {
 					Log.i(TAG, "Login finished");
 				} catch (AppException e) {
 					ErrorCode errorCode = e.getErrorCode();
-					if (errorCode instanceof NetworkError && errorCode == NetworkError.GOOGLE_TRY_AGAIN) {
-						Intent intent = e.get(GoogleAuthHelper.RECOVERABLE_INTENT);
-						if (intent != null) {
-							startActivityForResult(intent, LoginActivity.RESULT_DO_RECOVERABLE_AUTH);
-							return;
+
+					if (errorCode instanceof NetworkError) {
+						switch ((NetworkError) errorCode) {
+							case USER_NOT_EXISTS: {
+								// User is not registered on server yet, show registration question dialog
+								runOnUiThread(new Runnable() {
+									@Override
+									public void run() {
+										showRegisterDialog(authProvider);
+									}
+								});
+								return;
+							}
+							case NOT_VALID_USER: {
+								// Server denied our credentials (e.g. Google token, or email+password)
+								if (authProvider instanceof GoogleAuthProvider) {
+									// Probably wrong Google token so invalidate the token and then try it again
+									if (Utils.isGooglePlayServicesAvailable(LoginActivity.this)) {
+										((GoogleAuthProvider) authProvider).invalidateToken(LoginActivity.this);
+
+										// FIXME: try it again somehow (if we haven't tried it yet)
+									}
+								}
+
+								break;
+							}
 						}
 					}
-					
+
 					e.printStackTrace();
 					errMessage = e.getTranslatedErrorMessage(getApplicationContext());
-				} catch (NotImplementedException e) {
-					e.printStackTrace();
-					errMessage = getString(R.string.toast_not_implemented);
 				} catch (Exception e) {
 					e.printStackTrace();
-					errMessage = getString(R.string.toast_login_failed);
 				} finally {
-                    mController.endPersistentConnection();
-                }
+					mController.endPersistentConnection();
+				}
+
+				if (errFlag) {
+					Utils.showToastOnUiThread(LoginActivity.this, errMessage, Toast.LENGTH_LONG);
+				}
 
 				mProgress.dismiss();
-				if (errFlag) {
-					/*final Toast toast = Toast.makeText(LoginActivity.this, errMessage, Toast.LENGTH_LONG);
-
-					runOnUiThread(new Runnable() {
-						@Override
-						public void run() {
-							toast.show();
-						}
-					});*/
-				}
 			}
 		}).start();
+	}
+
+	private void doRegister(final IAuthProvider authProvider) {
+		Log.d(TAG, "doRegister()");
+
+		mProgress.setMessageResource(R.string.progress_signup);
+		mProgress.show();
+
+		new Thread(new Runnable() {
+			@Override
+			public void run() {
+				setDemoMode(authProvider instanceof DemoAuthProvider);
+
+				String errMessage = getString(R.string.toast_registration_failed);
+				boolean errFlag = true;
+
+				try {
+					// Here is authProvider already filled with needed parameters so we can send them to the server
+					if (mController.register(authProvider)) {
+						Log.d(TAG, "Register successful");
+						errFlag = false;
+
+						// Finish registration by start logging in
+						if (!mLoginCancel) {
+							doLogin(authProvider);
+						}
+
+						return;
+					}
+				} catch (AppException e) {
+					ErrorCode errorCode = e.getErrorCode();
+
+					// TODO: handle some known exceptions
+
+					e.printStackTrace();
+					errMessage = e.getTranslatedErrorMessage(getApplicationContext());
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+
+				if (errFlag) {
+					Utils.showToastOnUiThread(LoginActivity.this, errMessage, Toast.LENGTH_LONG);
+				}
+
+				mProgress.dismiss();
+			}
+		}).start();
+	}
+
+	private void showRegisterDialog(final IAuthProvider authProvider) {
+		DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				switch (which){
+					case DialogInterface.BUTTON_POSITIVE:
+						doRegister(authProvider);
+						break;
+
+					case DialogInterface.BUTTON_NEGATIVE:
+						mLoginCancel = true;
+						mProgress.dismiss();
+						break;
+				}
+			}
+		};
+
+		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+		builder
+				.setTitle(R.string.dialog_register_new_account_title)
+				.setMessage(R.string.dialog_register_new_account_message)
+				.setPositiveButton(android.R.string.yes, dialogClickListener)
+				.setNegativeButton(android.R.string.no, dialogClickListener)
+				.show();
 	}
 
 	/**
@@ -397,16 +404,6 @@ public class LoginActivity extends BaseActivity {
 		}
 
 		finish();
-	}
-
-	// ////////////////////////////////////////////////////////////////////////////////////
-	// ///////////////// TODO METHODS
-	// ////////////////////////////////////////////////////////////////////////////////////
-
-	private boolean getMojeIDAccessFromServer(View v) {
-		// TODO: get access via mojeID
-		Toast.makeText(v.getContext(), "Not Implemented yet", Toast.LENGTH_LONG).show();
-		return false;
 	}
 
 }

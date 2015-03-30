@@ -3,21 +3,9 @@
  */
 package com.rehivetech.beeeon.network.xml;
 
-import java.io.BufferedInputStream;
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.List;
-
-import org.joda.time.DateTime;
-import org.joda.time.DateTimeZone;
-import org.xmlpull.v1.XmlPullParser;
-import org.xmlpull.v1.XmlPullParserException;
-
 import android.content.Context;
 import android.util.Xml;
+
 import com.rehivetech.beeeon.Constants;
 import com.rehivetech.beeeon.adapter.Adapter;
 import com.rehivetech.beeeon.adapter.device.Device;
@@ -44,6 +32,20 @@ import com.rehivetech.beeeon.network.xml.condition.GreaterThanFunc;
 import com.rehivetech.beeeon.network.xml.condition.LesserEqualFunc;
 import com.rehivetech.beeeon.network.xml.condition.LesserThanFunc;
 import com.rehivetech.beeeon.util.Log;
+
+import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
+import org.xmlpull.v1.XmlPullParser;
+import org.xmlpull.v1.XmlPullParserException;
+
+import java.io.BufferedInputStream;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.TreeMap;
 
 /**
  * @author ThinkDeep
@@ -81,7 +83,10 @@ public class XmlParsers {
 		ACTIONCREATED("actcreated"),
 		ACTIONS("acts"),
 		ACTION("act"),
-		UID("uid");
+        BT("bt"),
+        ALGCREATED("algcreated"),
+        USERINFO("userinfo"),
+        ALGORITHMS("algs");
 
 		private final String mValue;
 
@@ -113,7 +118,6 @@ public class XmlParsers {
 	 * @return
 	 * @throws XmlPullParserException
 	 * @throws IOException
-	 * @throws ComVerMisException
 	 *             means Communication version mismatch exception
 	 * @throws ParseException
 	 */
@@ -139,10 +143,22 @@ public class XmlParsers {
 		ParsedMessage result = new ParsedMessage(state);
 
 		switch (state) {
-		case UID:
+		case USERINFO:
 			// String (userID)
-			result.setUserId(getSecureAttrValue(Xconstants.UID));
+            User user = new User();
+			user.setId(getSecureAttrValue(Xconstants.UID));
+			user.setName(getSecureAttrValue(Xconstants.NAME));
+            user.setSurname(getSecureAttrValue(Xconstants.SURNAME));
+            user.setEmail(getSecureAttrValue(Xconstants.EMAIL));
+            user.setGender(User.Gender.fromString(getSecureAttrValue(Xconstants.GENDER)));
+            user.setPictureUrl(getSecureAttrValue(Xconstants.IMGURL));
+
+			result.data = user;
 			break;
+        case BT:
+            // String (BeeeonToken)
+            result.data = getSecureAttrValue(Xconstants.BT);
+            break;
 		case TRUE:
 			// nothing
 			break;
@@ -166,6 +182,15 @@ public class XmlParsers {
 			// String (locationID)
 			result.data = getSecureAttrValue(Xconstants.LID);
 			break;
+        case ALGCREATED:
+            // String (AlgorithmID)
+            result.data = getSecureAttrValue(Xconstants.ALGID);
+            break;
+        case ALGORITHMS:
+            getSecureAttrValue(Xconstants.ATYPE); // not used yet
+            // ArrayList<WatchDog>
+            result.data = parseWatchDog();
+            break;
 		case VIEWS:
 			// List<CustomViewPair>
 			result.data = parseViewsList(); // TODO: PENDING (need ROB)
@@ -509,13 +534,16 @@ public class XmlParsers {
 
 		List<User> result = new ArrayList<User>();
 		do {
-			String email = getSecureAttrValue(Xconstants.EMAIL);
-			String name = String.format("%s %s", getSecureAttrValue(Xconstants.NAME), getSecureAttrValue(Xconstants.SURNAME));
+			User user = new User();
+			user.setId(getSecureAttrValue(Xconstants.ID));
+			user.setEmail(getSecureAttrValue(Xconstants.EMAIL));
+			user.setName(getSecureAttrValue(Xconstants.NAME));
+			user.setSurname(getSecureAttrValue(Xconstants.SURNAME));
+			user.setRole(User.Role.fromString(getSecureAttrValue(Xconstants.ROLE)));
+			user.setGender(getSecureAttrValue(Xconstants.GENDER).equals(Xconstants.ZERO) ? User.Gender.Female : User.Gender.Male);
+			user.setPictureUrl(getSecureAttrValue(Xconstants.IMGURL));
 
-			User.Role role = User.Role.fromString(getSecureAttrValue(Xconstants.ROLE));
-			User.Gender gender = getSecureAttrValue(Xconstants.GENDER).equals(Xconstants.ZERO) ? User.Gender.Female : User.Gender.Male;
-
-			result.add(new User(name, email, role, gender));
+			result.add(user);
 			mParser.nextTag();
 
 		} while (mParser.nextTag() != XmlPullParser.END_TAG && !mParser.getName().equals(Xconstants.COM_ROOT));
@@ -833,6 +861,57 @@ public class XmlParsers {
 		return result;
 	}
 
+    private ArrayList<WatchDog> parseWatchDog() throws XmlPullParserException, IOException{
+        String aid = getSecureAttrValue(Xconstants.AID);
+        mParser.nextTag();
+
+        ArrayList<WatchDog> result = new ArrayList<>();
+
+        if(!mParser.getName().equals(Xconstants.ALGORITHM))
+            return result;
+
+        do{
+            WatchDog watchDog = new WatchDog(getSecureInt(getSecureAttrValue(Xconstants.ATYPE)));
+			watchDog.setId(getSecureAttrValue(Xconstants.ID));
+            watchDog.setAdapterId(aid);
+            watchDog.setEnabled((getSecureInt(getSecureAttrValue(Xconstants.ENABLE)) > 0)?true:false);
+            watchDog.setName(getSecureAttrValue(Xconstants.NAME));
+
+            TreeMap<String, String> tDevices = new TreeMap<>();
+            TreeMap<String, String> tParams = new TreeMap<>();
+
+            mParser.nextTag();
+
+            if(!mParser.getName().equals(Xconstants.DEVICE) && !mParser.getName().equals(Xconstants.PARAM) && !mParser.getName().equals(Xconstants.GEOFENCE))
+                Log.e(TAG, "someone send bad xml");//TODO do something
+
+            do{
+                String position = getSecureAttrValue(Xconstants.POSITION);
+
+                if(mParser.getName().equals(Xconstants.DEVICE)){
+					String device = getSecureAttrValue(Xconstants.ID) + Device.ID_SEPARATOR + getSecureAttrValue(Xconstants.TYPE);
+                    tDevices.put(position, device);
+
+                    mParser.nextTag();
+                }else if(mParser.getName().equals(Xconstants.DEVICE)){
+                    tParams.put(position, readText(Xconstants.PARAM));
+                }else{
+					watchDog.setGeoRegionId(getSecureAttrValue(Xconstants.RID));
+					watchDog.setGeoDirectionType(getSecureAttrValue(Xconstants.TYPE));
+				}
+
+            }while(mParser.nextTag() != XmlPullParser.END_TAG && !mParser.getName().equals(Xconstants.ALGORITHM));
+
+            watchDog.setDevices(new ArrayList<>(tDevices.values()));
+            watchDog.setParams(new ArrayList<>(tParams.values()));
+
+            result.add(watchDog);
+
+        }while(mParser.nextTag() != XmlPullParser.END_TAG && !mParser.getName().equals(Xconstants.COM_ROOT));
+
+        return result;
+    }
+
 	// ///////////////////////////////// OTHER
 
 	/**
@@ -910,8 +989,14 @@ public class XmlParsers {
 			return result;
 
 		do {
-			User user = new User("", getSecureAttrValue(Xconstants.EMAIL), User.Role.fromString(getSecureAttrValue(Xconstants.ROLE)),
-					getSecureAttrValue(Xconstants.GENDER).equals(Xconstants.ZERO) ? User.Gender.Female : User.Gender.Male);
+			User user = new User();
+			user.setId(getSecureAttrValue(Xconstants.ID));
+			user.setEmail(getSecureAttrValue(Xconstants.EMAIL));
+			user.setName(getSecureAttrValue(Xconstants.NAME));
+			user.setSurname(getSecureAttrValue(Xconstants.SURNAME));
+			user.setRole(User.Role.fromString(getSecureAttrValue(Xconstants.ROLE)));
+			user.setGender(getSecureAttrValue(Xconstants.GENDER).equals(Xconstants.ZERO) ? User.Gender.Female : User.Gender.Male);
+			user.setPictureUrl(getSecureAttrValue(Xconstants.IMGURL));
 
 			result.add(user);
 			mParser.nextTag();

@@ -1,9 +1,5 @@
 package com.rehivetech.beeeon.network;
 
-import java.util.ArrayList;
-import java.util.EnumSet;
-import java.util.List;
-
 import com.rehivetech.beeeon.adapter.Adapter;
 import com.rehivetech.beeeon.adapter.device.Device;
 import com.rehivetech.beeeon.adapter.device.Device.SaveDevice;
@@ -11,11 +7,16 @@ import com.rehivetech.beeeon.adapter.device.DeviceLog;
 import com.rehivetech.beeeon.adapter.device.Facility;
 import com.rehivetech.beeeon.adapter.location.Location;
 import com.rehivetech.beeeon.household.User;
-import com.rehivetech.beeeon.network.GoogleAuthHelper.GoogleUserInfo;
+import com.rehivetech.beeeon.network.authentication.IAuthProvider;
 import com.rehivetech.beeeon.network.xml.CustomViewPair;
+import com.rehivetech.beeeon.network.xml.WatchDog;
 import com.rehivetech.beeeon.network.xml.action.ComplexAction;
 import com.rehivetech.beeeon.network.xml.condition.Condition;
 import com.rehivetech.beeeon.pair.LogDataPair;
+
+import java.util.ArrayList;
+import java.util.EnumSet;
+import java.util.List;
 
 public interface INetwork {
 
@@ -59,25 +60,62 @@ public interface INetwork {
 	// /////////////////////////////////////SIGNIN,SIGNUP,ADAPTERS//////////////////////
 	// /////////////////////////////////////////////////////////////////////////////////
 
-	GoogleUserInfo getUserInfo();
-	
-	public void setUID(String userId);
-	
+    /**
+     * Return beeeon-token used for communication
+	 *
+     * @return BT of actual user
+     */
+    public String getBT();
+
 	/**
-	 * Return actual UID used for communication (= active session)
-	 * 
-	 * @return UID for actual communication
+	 * Set beeeon-token for communication
+	 *
+	 * @return
 	 */
-	public String getUID();
-	
+	public void setBT(String token);
+
+    /**
+     * Download information about actual user from server
+	 *
+     * @return User object with data from server
+     */
+    public User loadUserInfo();
+
+    /**
+     * Method log in user by specified provider
+	 *
+     * @param authProvider provider object with data for authentication
+     * @return true if user has been logged in with this provider, false otherwise
+     */
+    public boolean loginMe(IAuthProvider authProvider);
+
+    /**
+     * Method register user to server by specified provider
+	 *
+	 * @param authProvider provider object with data for authentication
+     * @return true if user has beed added to database with this provider, false otherwise
+     */
+    public boolean registerMe(IAuthProvider authProvider);
+
 	/**
-	 * Method does logging in/registration of user and load communication UID.
-	 * You can get actual communication UID by calling getUID()
-	 * 
-	 * @param GoogleUserInfo containing a google token and userId
-	 * @return true on success, false or throw exception otherwise
+	 * Method add new provider information (join your accounts) to your account
+	 * @param authProvider
+	 * @return true if everything is ok, false otherwise
 	 */
-	public boolean loadUID(GoogleUserInfo googleUserInfo);
+	public boolean addProvider(IAuthProvider authProvider);
+
+	/**
+	 * Method remove one of your provider from your account
+	 * @param providerName
+	 * @return
+	 */
+	public boolean removeProvider(String providerName);
+
+	/**
+	 * Method remove all providers, so remove whole account from system
+	 * @return
+	 */
+	public boolean deleteMyAccount();
 
 	/**
 	 * Method register adapter to server
@@ -123,8 +161,7 @@ public interface INetwork {
 
 	/**
 	 * Method send updated fields of devices
-	 * 
-	 * @param devices
+	 *
 	 * @return true if everything goes well, false otherwise
 	 */
 	public boolean updateFacilities(String adapterID, List<Facility> facilities, EnumSet<SaveDevice> toSave);
@@ -193,16 +230,13 @@ public interface INetwork {
 	 * TODO: need to test
 	 * 
 	 * @param adapterID
-	 * @param facilities
 	 * @return
 	 */
 	public List<Facility> getNewFacilities(String adapterID);
 
 	/**
 	 * Method ask for data of logs
-	 * 
-	 * @param deviceId
-	 *            id of wanted device
+	 *
 	 * @param pair
 	 *            data of log (from, to, type, interval)
 	 * @return list of rows with logged data
@@ -260,8 +294,6 @@ public interface INetwork {
 	 *            name of new custom view
 	 * @param iconID
 	 *            icon that is assigned to the new view
-	 * @param deviceIds
-	 *            list of devices that are assigned to new view
 	 * @return true if everything goes well, false otherwise
 	 */
 	public boolean addView(String viewName, int iconID, List<Device> devices);
@@ -294,8 +326,6 @@ public interface INetwork {
 	 * Method add new user to adapter
 	 * 
 	 * @param adapterID
-	 * @param email
-	 * @param role
 	 * @return
 	 */
 	public boolean addAccount(String adapterID, User user);
@@ -327,8 +357,7 @@ public interface INetwork {
 
 	/**
 	 * Method update users roles on server on current adapter
-	 * 
-	 * @param userNrole
+	 *
 	 *            map with email as key and role as value
 	 * @return true if all accounts has been changed false otherwise
 	 */
@@ -339,7 +368,6 @@ public interface INetwork {
 	 * 
 	 * @param adapterID
 	 * @param user
-	 * @param role
 	 * @return
 	 */
 	public boolean updateAccount(String adapterID, User user);
@@ -378,28 +406,6 @@ public interface INetwork {
 	 */
 	public boolean NotificationsRead(ArrayList<String> msgID);
 
-	/**
-	 * Method delete old gcmid to avoid fake notifications
-	 * 
-	 * @param email
-	 *            of old/last user of gcmid (app+device id)
-	 * @param gcmID
-	 *            - google cloud message id
-	 * @return true if id has been deleted, false otherwise
-	 * @throws NoConnectionException
-	 * @throws CommunicationException
-	 * @throws FalseException
-	 */
-	public boolean deleteGCMID(String email, String gcmID);
-	
-	/**
-	 * Method set gcmID to server
-	 * @param email of user
-	 * @param gcmID to be set
-	 * @return true if id has been updated, false otherwise
-	 */
-	public boolean setGCMID(String email, String gcmID);
-	
 	// /////////////////////////////////////////////////////////////////////////////////
 	// /////////////////////////////////////CONDITIONS,ACTIONS//////////////////////////
 	// /////////////////////////////////////////////////////////////////////////////////
@@ -426,4 +432,19 @@ public interface INetwork {
 
 	public boolean deleteAction(ComplexAction action);
 
+    // /////////////////////////////////////////////////////////////////////////////////
+    // /////////////////////////////////////ALGORITHMS//////////////////////////////////
+    // /////////////////////////////////////////////////////////////////////////////////
+
+    public boolean addWatchDog(WatchDog watchDog, String AdapterID);
+
+    public ArrayList<WatchDog> getWatchDogs(ArrayList<String> watchDogIds, String adapterID);
+
+    public ArrayList<WatchDog> getAllWatchDogs(String adapterID);
+
+    public boolean updateWatchDog(WatchDog watchDog, String AdapterId);
+
+    public boolean deleteWatchDog(WatchDog watchDog);
+
+    public boolean passBorder(String regionId, String type);
 }
