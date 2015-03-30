@@ -65,7 +65,8 @@ public class WatchDogsModel {
 		}
 
 		for (WatchDog watchdog : watchdogs) {
-			watchdog.setAdapterId(adapterId);			// we need to set adapterId, cause server returns without it
+			// we need to set adapterId, cause server returns without it
+			watchdog.setAdapterId(adapterId);
 			adapterWatchDogs.put(watchdog.getId(), watchdog);
 		}
 	}

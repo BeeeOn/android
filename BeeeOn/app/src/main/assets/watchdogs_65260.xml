@@ -7,4 +7,10 @@
 		<par pos="1">42</par>
 		<par pos="2">Hoří mi dům</par>
 	</alg>
+
+	<alg id="5" atype="3" enable="1" name="algoritmusek333">
+		<dev id="63465" type="1" pos="1"/>
+		<par pos="1">42</par>
+		<par pos="2">Hoří mi dům</par>
+	</alg>
 </com>

@@ -2,27 +2,31 @@
 <com
 	ver="2.3"
 	state="algs">
-	<alg id="5" atype="3" enable="1" name="algoritmusek">
+	<alg id="5" atype="1" enable="1" name="algoritmusek">
 		<dev id="100:00:FF:000:FF1" type="1" pos="1"/>
-		<par pos="1">42</par>
-		<par pos="2">Hoří mi dům</par>
+		<par pos="1">30</par>
+		<par pos="2">notifikace 1</par>
+		<par pos="3">1</par>
 	</alg>
 
-	<alg id="99" atype="3" enable="1" name="toto je muj algoritmus">
+	<alg id="99" atype="2" enable="0" name="toto je muj algoritmus">
 		<dev id="100:00:FF:000:FF4" type="1" pos="1"/>
-		<par pos="1">42</par>
+		<par pos="1">20</par>
 		<par pos="2">Hoří mi dům</par>
+		<par pos="3">0</par>
 	</alg>
 
-	<alg id="54" atype="3" enable="1" name="algoritmus 4">
+	<alg id="54" atype="2" enable="0" name="algoritmus 4">
 		<dev id="100:00:FF:000:FF3" type="1" pos="1"/>
+		<par pos="2">ahoj blabla</par>
 		<par pos="1">42</par>
-		<par pos="2">Hoří mi dům</par>
+		<par pos="3">0</par>
 	</alg>
 
-	<alg id="6" atype="3" enable="1" name="alg5">
+	<alg id="6" atype="1" enable="1" name="alg5">
 		<dev id="100:00:FF:000:FF2" type="1" pos="1"/>
-		<par pos="1">42</par>
-		<par pos="2">Hoří mi dům</par>
+		<par pos="1">11</par>
+		<par pos="2">smrdí ti z tlamy</par>
+		<par pos="3">1</par>
 	</alg>
 </com>

@@ -132,7 +132,6 @@ public class DemoNetwork implements INetwork {
 			}
 
 			assetName = String.format(Constants.ASSET_WATCHDOGS_FILENAME, holder.adapter.getId());
-
 			for (WatchDog watchdog : parser.getDemoWatchDogsFromAsset(mContext, assetName)) {
 				holder.watchdogs.put(watchdog.getId(), watchdog);
 			}

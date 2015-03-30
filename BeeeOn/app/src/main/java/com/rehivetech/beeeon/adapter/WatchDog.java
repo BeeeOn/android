@@ -1,6 +1,7 @@
 package com.rehivetech.beeeon.adapter;
 
 import com.rehivetech.beeeon.IIdentifier;
+import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.adapter.device.Device;
 
 import java.util.ArrayList;
@@ -9,11 +10,27 @@ import java.util.ArrayList;
  * Created by ThinkDeep on 8.3.2015.
  */
 public class WatchDog implements IIdentifier {
-    public static enum OperatorType{ SMALLER, GREATER }
-    public static enum ActionType{ NOTIFICATION, ACTOR_ACTION }
+    public enum OperatorType{ SMALLER, GREATER }
+    public enum ActionType{ UNKNOWN,  NOTIFICATION, ACTOR_ACTION }
+
+    public static final int OP_SMALLER = 0;
+    public static final int OP_GREATER = 1;
+
+    public static final int ACTION_UNKNOWN = 0;
+    public static final int ACTION_NOTIFICATION = 1;
+    public static final int ACTION_ACTOR = 2;
+
+    public static final int PAR_OPERATOR = 2;
+    public static final int PAR_TRESHOLD = 0;
+    public static final int PAR_ACTION_VALUE = 1;
+
+    public static final int[] actionIcons = {
+            R.drawable.ic_notification,
+            R.drawable.ic_shutdown
+    };
 
     private boolean mEnabled = true;
-    private int mtype = 1; // temporary solution
+    private int mType = 1; // temporary solution
     private String mId;
     private String mName;
     private String mAdapterId;
@@ -24,12 +41,33 @@ public class WatchDog implements IIdentifier {
     private ArrayList<String> mDevices;
     private ArrayList<String> mParams;
 
+    public WatchDog(){}
+    public WatchDog(int type){
+        mType = type;
+    }
+
+    public String getId(){
+        return mId;
+    };
+
+    public void setId(String Id){
+        mId = Id;
+    }
+
     public String getAdapterId(){
         return mAdapterId;
     }
 
     public void setAdapterId(String adapterId){
         mAdapterId = adapterId;
+    }
+
+    public String getName(){
+        return mName;
+    }
+
+    public void setName(String name){
+        mName = name;
     }
 
     public boolean isEnabled(){
@@ -41,15 +79,19 @@ public class WatchDog implements IIdentifier {
     }
 
     public int getType(){
-        return mtype;
+        return mType;
     }
 
     public void setType(int type){
-        mtype = type;
+        mType = type;
     }
 
     public ArrayList<String> getDevices(){
         return mDevices;
+    }
+
+    public void setDevices(ArrayList<String> devices){
+        mDevices = devices;
     }
 
     public void AddDevice(String device){
@@ -60,20 +102,12 @@ public class WatchDog implements IIdentifier {
         return mParams;
     }
 
-    public void AddParam(String param){
-        mParams.add(param);
-    }
-
-    public void setDevices(ArrayList<String> devices){
-        mDevices = devices;
-    }
-
     public void setParams(ArrayList<String> params){
         mParams = params;
     }
 
-    public void setId(String Id){
-        mId = Id;
+    public void AddParam(String param) {
+        mParams.add(param);
     }
 
     public String getId(){
@@ -112,12 +146,10 @@ public class WatchDog implements IIdentifier {
 		this.mGeoRegionId = GeoRegionId;
 	}
 
-    WatchDog(){};
-
-    public WatchDog(int type){
-        mtype = type;
+    public int getActionIconResource(){
+        if(mType < 0 || mType >= actionIcons.length)
+            return actionIcons[0];
+        else
+            return actionIcons[mType];
     }
-
-
-
 }

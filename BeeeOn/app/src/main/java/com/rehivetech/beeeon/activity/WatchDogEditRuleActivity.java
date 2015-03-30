@@ -22,6 +22,7 @@ import android.widget.Toast;
 import com.melnykov.fab.FloatingActionButton;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.adapter.Adapter;
+import com.rehivetech.beeeon.adapter.WatchDog;
 import com.rehivetech.beeeon.adapter.WatchDogRule;
 import com.rehivetech.beeeon.adapter.device.Device;
 import com.rehivetech.beeeon.adapter.device.DeviceType;
@@ -29,7 +30,9 @@ import com.rehivetech.beeeon.adapter.device.Facility;
 import com.rehivetech.beeeon.adapter.device.values.HumidityValue;
 import com.rehivetech.beeeon.adapter.location.Location;
 import com.rehivetech.beeeon.arrayadapter.DeviceArrayAdapter;
+import com.rehivetech.beeeon.asynctask.CallbackTask;
 import com.rehivetech.beeeon.asynctask.ReloadFacilitiesTask;
+import com.rehivetech.beeeon.asynctask.SaveWatchDogTask;
 import com.rehivetech.beeeon.base.BaseApplicationActivity;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.util.Log;
@@ -43,21 +46,19 @@ import java.util.List;
  * @author mlyko
  */
 public class WatchDogEditRuleActivity extends BaseApplicationActivity {
-    private static final String TAG = WatchDogEditRuleActivity.class.getSimpleName();
-
     public static final String EXTRA_ADAPTER_ID = "adapter_id";
     public static final String EXTRA_RULE_ID = "rule_id";
     public static final String EXTRA_IS_NEW ="rule_is_new";
-
+    private static final String TAG = WatchDogEditRuleActivity.class.getSimpleName();
     // extras
     private String mActiveAdapterId;
     private String mActiveRuleId;
-
 
     private Controller mController;
     private Toolbar mToolbar;
     private boolean mIsNew = false;
     private WatchDogRule mRule;
+    private WatchDog mWatchDog;
     private Adapter mAdapter;
     private boolean mIsValueLess = true;        // value for View FAB
     private UnitsHelper mUnitsHelper;
@@ -68,6 +69,8 @@ public class WatchDogEditRuleActivity extends BaseApplicationActivity {
 
     private ProgressDialog mProgress;
 
+    private SaveWatchDogTask mSaveWatchDogTask;
+
     // GUI elements
     private RadioGroup mActionType;
     private EditText mRuleName;
@@ -77,6 +80,9 @@ public class WatchDogEditRuleActivity extends BaseApplicationActivity {
     private FloatingActionButton mGreatLessButton;
     private EditText mRuleTreshold;
     private SharedPreferences mPrefs;
+
+    private EditText mNotificationText;
+
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -154,21 +160,16 @@ public class WatchDogEditRuleActivity extends BaseApplicationActivity {
             // hide keyboard when editing
             getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
 
-            // TODO ziskat ze site
-            HumidityValue val = new HumidityValue();
-            val.setValue("50");
-            Device dev = new Device(DeviceType.TYPE_HUMIDITY, val);
-            dev.setName("Vlhkostní sensor");
-            mRule = new WatchDogRule("2", mActiveAdapterId, "Hlídání smradu", dev, WatchDogRule.OperatorType.GREATER, WatchDogRule.ActionType.NOTIFICATION, val, false);
+            mWatchDog = mController.getWatchDog(mAdapter.getId(), mActiveRuleId);
+            if(mWatchDog == null){
+                Toast.makeText(this, R.string.toast_something_wrong, Toast.LENGTH_LONG).show();
+                finish();
+                return;
+            }
         }
-
 
         initLayout();
-
-        if(mRule != null){
-            setValues();
-        }
-
+        if(mWatchDog != null) setValues();
     }
 
 
@@ -189,9 +190,24 @@ public class WatchDogEditRuleActivity extends BaseApplicationActivity {
      * Fills gui elements with values
      */
     private void setValues(){
-        // set values
-        mRuleName.setText(mRule.getName());
-        mRuleEnabled.setChecked(mRule.getEnabled());
+        mRuleName.setText(mWatchDog.getName());
+        mRuleEnabled.setChecked(mWatchDog.isEnabled());
+        mRuleTreshold.setText(mWatchDog.getParams().get(WatchDog.PAR_TRESHOLD));
+
+        switch(mWatchDog.getType()){
+            case WatchDog.ACTION_NOTIFICATION:
+                mActionType.check(R.id.watchdog_edit_notification);
+                mNotificationText.setText(mWatchDog.getParams().get(WatchDog.PAR_ACTION_VALUE));
+
+                break;
+
+            case WatchDog.ACTION_ACTOR:
+                mActionType.check(R.id.watchdog_edit_actor);
+                // TODO - vybrat actor
+                break;
+        }
+
+        /*
         setGreatLess(mRule.getOperator(), mGreatLessButton);
 
         if(mUnitsHelper != null){
@@ -202,6 +218,7 @@ public class WatchDogEditRuleActivity extends BaseApplicationActivity {
             mRuleTreshold.setText(String.valueOf(mRule.getTreshold().getDoubleValue()));
             mRuleTresholdUnit.setText("?");
         }
+        */
     }
 
     /**
@@ -250,7 +267,7 @@ public class WatchDogEditRuleActivity extends BaseApplicationActivity {
 
 
         // TODO udelat nejak,ze ziskat pres parametry + asi include layout pro to
-        EditText notificationText = (EditText) findViewById(R.id.watchdog_edit_notification_text);
+        mNotificationText = (EditText) findViewById(R.id.watchdog_edit_notification_text);
 
         // changing specified layout when checked
         mActionType.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
@@ -345,5 +362,21 @@ public class WatchDogEditRuleActivity extends BaseApplicationActivity {
         return super.onOptionsItemSelected(item);
     }
 
+
+    /**
+     * TODO vymslet
+     */
+    private void doSaveWatchDogTask(){
+        // TODO check if data were changed ???
+        mSaveWatchDogTask = new SaveWatchDogTask(this);
+        mSaveWatchDogTask.setListener(new CallbackTask.CallbackTaskListener() {
+            @Override
+            public void onExecute(boolean success) {
+                Toast.makeText(WatchDogEditRuleActivity.this, String.valueOf(success), Toast.LENGTH_LONG).show();
+            }
+        });
+
+        mSaveWatchDogTask.execute(mWatchDog);
+    }
 }
 

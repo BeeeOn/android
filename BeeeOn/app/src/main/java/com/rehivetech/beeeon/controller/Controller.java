@@ -1100,9 +1100,14 @@ public final class Controller {
 
 	// ------- watchDog
 
-	public List<WatchDog> getWatchDogs(String adapterId){
+	public List<WatchDog> getAllWatchDogs(String adapterId){
 		return mHousehold.watchDogsModel.getWatchDogsByAdapter(adapterId);
 	}
+
+	public WatchDog getWatchDog(String adapterId, String id) {
+		return mHousehold.watchDogsModel.getWatchDog(adapterId, id);
+	}
+
 
 
 	public synchronized boolean reloadWatchDogs(String adapterId, boolean forceReload) {
@@ -1111,5 +1116,29 @@ public final class Controller {
 		}
 
 		return mHousehold.watchDogsModel.reloadWatchDogsByAdapter(adapterId, forceReload);
+	}
+
+	public boolean saveWatchDog(WatchDog watchdog) {
+		Adapter adapter = getActiveAdapter();
+		if (adapter == null) {
+			return false;
+		}
+
+		boolean saved = mNetwork.updateWatchDog(watchdog, adapter.getId());
+
+		// watchdog was updated on server, update it to adapter too
+		return saved && mHousehold.watchDogsModel.updateWatchDog(adapter.getId(), watchdog);
+	}
+
+	public boolean deleteWatchDog(WatchDog watchdog) {
+		Adapter adapter = getActiveAdapter();
+		if (adapter == null) {
+			return false;
+		}
+
+		boolean deleted = mNetwork.deleteWatchDog(watchdog);
+
+		// Location was deleted on server, remove it from adapter too
+		return deleted && mHousehold.watchDogsModel.deleteWatchDog(adapter.getId(), watchdog.getId());
 	}
 }
