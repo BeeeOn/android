@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * Design pattern Singleton
  * @author Jan Lamacz
  */
 public class AchievementList implements Parcelable {
@@ -20,12 +21,21 @@ public class AchievementList implements Parcelable {
 	private int mTotalPoints = 0;
 
 	private AchievementListItem listItem;
+	private static AchievementList mInstance;
 
-	//
-	public AchievementList() {
+	private AchievementList() {
 		Log.d(TAG, "constructor");
-		mAchievementList = loadAllAchievements();
+		if(mAchievementList == null)
+		  mAchievementList = loadAllAchievements();
 		recountValues();
+	}
+
+	public static AchievementList getInstance() {
+		Log.d(TAG, "new instance");
+		if(mInstance == null) {
+			mInstance = new AchievementList();
+		}
+		return mInstance;
 	}
 
 	// Parcel constructor called when passing this object over activities
@@ -37,6 +47,10 @@ public class AchievementList implements Parcelable {
 
 	public List<AchievementListItem> getAchievements() {
 		return  mAchievementList;
+	}
+
+	public AchievementListItem getItem(int id) {
+		return mAchievementList.get(id);
 	}
 
 	public int getTotalAchievements(String category) {
@@ -104,24 +118,25 @@ public class AchievementList implements Parcelable {
 
 		// TODO Download this list from server
 		List<AchievementListItem> rulesList = new ArrayList<>();
-		rulesList.add(new AchievementListItem("1", "2", "Getting started", "Activate your first adapter.", 10, "20.5.2015"));
+		rulesList.add(new AchievementListItem("0", "1", "Unknown", "Out of ideas.", 0, "29.3.2015"));
+		rulesList.add(new AchievementListItem("1", "2", "Getting started", "Activate your first adapter.", 10, "20.3.2015"));
 		rulesList.add(new AchievementListItem("2", "2", "It's hot in there!", "Activate your first temperature sensor.", 20, null));
-		rulesList.add(new AchievementListItem("3", "1", "Connected", "Pair your account with Facebook.", 0, "15.4.2015"));
-		rulesList.add(new AchievementListItem("4", "1", "Sharing the news", "Share status via BeeeOn.", 10, null));
+		rulesList.add(new AchievementListItem("3", "1", "Connected", "Pair your account with Facebook.", 0, null));
+		rulesList.add(new AchievementListItem("4", "1", "Share with the world", "Share status via BeeeOn.", 10, null));
 		rulesList.add(new AchievementListItem("5", "1", "Twice more fun", "Invite your friends to household.", 5, null));
 		rulesList.add(new AchievementListItem("6", "1", "One big family", "Have 5 or more people in your household.", 15, null));
-		rulesList.add(new AchievementListItem("7", "0", "Guarding the household", "Set your first watchdog.", 25, "12.5.2015"));
+		rulesList.add(new AchievementListItem("7", "0", "Guarding the household", "Set your first watchdog.", 25, "12.3.2015"));
 		rulesList.add(new AchievementListItem("8", "0", "It's my choice", "Set your own custom view.", 0, null));
-		rulesList.add(new AchievementListItem("9", "0", "Leader of the pack", "Set 5 or more watchdogs.", 15, "14.5.2015"));
+		rulesList.add(new AchievementListItem("9", "0", "Leader of the pack", "Set 5 or more watchdogs.", 15, "14.3.2015"));
 		rulesList.add(new AchievementListItem("10", "0", "Explorer", "Explore all options in BeeeOn application.", 10, null));
 		rulesList.add(new AchievementListItem("11", "0", "Achievement", "Get an achievement.", 5, null));
 		rulesList.add(new AchievementListItem("12", "0", "Master of BeeeOn", "Get all achievements.", 30, null));
 		rulesList.add(new AchievementListItem("13", "0", "All the nice statistics", "Look at my balls. Look!", 15, "1.1.2014"));
-		rulesList.add(new AchievementListItem("14", "0", "Always at your hand", "Set your own widget.", 10, "20.6.2015"));
-		rulesList.add(new AchievementListItem("15", "0", "Level up!", "Reach level 2.", 10, "22.5.2015"));
+		rulesList.add(new AchievementListItem("14", "0", "Always at your hand", "Set your own widget.", 10, "27.3.2015"));
+		rulesList.add(new AchievementListItem("15", "0", "Level up!", "Reach level 2.", 10, "28.3.2015"));
 		rulesList.add(new AchievementListItem("16", "0", "Level 10", "Reach level 10.", 20, null));
-		rulesList.add(new AchievementListItem("17", "2", "Getting bigger", "Activate your second adapter.", 10, "11.5.2015"));
-		rulesList.add(new AchievementListItem("18", "2", "Measure them all!", "Activate your fifth temperature sensor.", 20, "12.5.2015"));
+		rulesList.add(new AchievementListItem("17", "2", "Getting bigger", "Activate your second adapter.", 10, "11.3.2015"));
+		rulesList.add(new AchievementListItem("18", "2", "Measure them all!", "Activate your fifth temperature sensor.", 20, "12.3.2015"));
 
 		return rulesList;
 	}

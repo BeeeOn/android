@@ -1,17 +1,18 @@
 package com.rehivetech.beeeon.gamification;
 
-import android.content.SharedPreferences;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
-import android.widget.ShareActionProvider;
 
 import com.rehivetech.beeeon.IIdentifier;
+import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.util.Log;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 
 /**
  * @author Jan Lamacz
@@ -25,6 +26,8 @@ public class AchievementListItem implements IIdentifier, Comparable<AchievementL
 	private String mDescription;
 	private String mDate;
 	private int mPoints;
+
+	private SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy", Locale.getDefault());
 
 	public AchievementListItem(String id, String categoryId, String name, String description, int points, String date) {
 		setId(id);
@@ -50,8 +53,25 @@ public class AchievementListItem implements IIdentifier, Comparable<AchievementL
 
 	public boolean isDone() {return mDate != null;}
 
-	public String getDate() {return mDate;}
 	public void setDate(String date) {this.mDate = date;}
+	public Date getTime() {
+		try{return dateFormat.parse(this.mDate);}
+		catch (ParseException e) {Log.e(TAG, "Date parse Exception!");return null;}
+	}
+
+	public String getDate() {
+		Calendar today = Calendar.getInstance();
+		Calendar compare = Calendar.getInstance();
+		compare.setTime(getTime());
+		if(today.get(Calendar.YEAR) == compare.get(Calendar.YEAR)) {
+			if(today.get(Calendar.DAY_OF_YEAR) == compare.get(Calendar.DAY_OF_YEAR))
+				return "Today";
+			compare.add(Calendar.DAY_OF_YEAR, 1);
+			if(today.get(Calendar.DAY_OF_YEAR) == compare.get(Calendar.DAY_OF_YEAR))
+				return "Yesterday";
+		}
+		return mDate;
+	}
 
 	public int getPoints() {return mPoints;}
 	public void setPoints(int points) {this.mPoints = points;}
@@ -70,15 +90,8 @@ public class AchievementListItem implements IIdentifier, Comparable<AchievementL
 			return 1;
 		else if(!another.isDone())	// Another isn't complete -> to start
 			return -1;
-		try{
-			SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
-			Date date1 = sdf.parse(getDate());
-			Date date2 = sdf.parse(another.getDate());
-			return date2.compareTo(date1);
-		}catch(ParseException ex){
-			Log.e(TAG, "Sorting exception");
-			return 1;
-		}
+		else
+			return another.getTime().compareTo(getTime());
 	}
 
 	@Override

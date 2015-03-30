@@ -35,6 +35,7 @@ import com.github.amlcurran.showcaseview.targets.ViewTarget;
 
 import com.rehivetech.beeeon.Constants;
 import com.rehivetech.beeeon.R;
+import com.rehivetech.beeeon.achievements.FbLoginAchievement;
 import com.rehivetech.beeeon.activity.dialog.AddSensorFragmentDialog;
 import com.rehivetech.beeeon.activity.dialog.CustomAlertDialog;
 import com.rehivetech.beeeon.activity.fragment.CustomViewFragment;
@@ -175,9 +176,7 @@ public class MainActivity extends BaseApplicationActivity {
 		mFacebookCallbackManager = CallbackManager.Factory.create();
 		LoginManager.getInstance().registerCallback(mFacebookCallbackManager,new FacebookCallback<LoginResult>() {
 			@Override
-			public void onSuccess(LoginResult loginResult) {
-				Log.d(TAG, "FB: " + loginResult.getAccessToken());
-			}
+			public void onSuccess(LoginResult loginResult) {new FbLoginAchievement(getApplicationContext(),loginResult);}
 			@Override
 			public void onCancel() {}
 			@Override

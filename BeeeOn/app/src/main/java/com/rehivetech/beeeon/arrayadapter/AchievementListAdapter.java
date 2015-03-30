@@ -71,7 +71,6 @@ public class AchievementListAdapter extends BaseAdapter implements Filterable{
 		holder.achievementName.setText(achievement.getName());
 		holder.achievementDescription.setText(achievement.getDescription());
 		holder.achievementPoints.setText(String.valueOf(achievement.getPoints()));
-//		holder.achievementDate.setText("10/5/15");
 		if(achievement.isDone()) {
 			setBg(holder.achievementPoints, convertView.getResources().getDrawable(R.drawable.hexagon_cyan));
 			holder.achievementName.setTextColor(convertView.getResources().getColor(R.color.beeeon_primary_cyan));
@@ -155,7 +154,6 @@ public class AchievementListAdapter extends BaseAdapter implements Filterable{
 			mFilteredList = (ArrayList<AchievementListItem>) results.values;
 			notifyDataSetChanged();
 		}
-
 	}
 
 	private static class ViewHolder{

@@ -284,6 +284,10 @@
     <string name="tut_add_sensor_text_1">Vytáhněte izolační proužek baterií ze senzoru nebo zapojte aktor do elektrické sítě</string>
     <string name="tut_add_sensor_text_2">Během odpočítávání krátce zatřeste se senzorem nebo stiskněte párovací tlačítko na aktoru</string>
 
+	<!-- Achievements -->
+	<string name="downloading_data">Stahuji data &#8230;</string>
+	<string name="logout_success">Odhlášení proběhlo úspěšně</string>
+	<string name="achievement_share_msg"> jsem odemknul tento nový achievement!</string>
 
     <!-- WatchDog -->
     <string name="action_watchdog">Hlídač</string>

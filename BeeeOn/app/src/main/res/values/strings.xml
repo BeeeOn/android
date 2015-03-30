@@ -293,6 +293,11 @@
     <string name="tut_add_sensor_text_2">Please shake with new sensor shortly while countdown is running or push pair button on actor</string>
 
 	<!-- Achivements -->
+	<string name="downloading_data">Downloading data &#8230;</string>
+	<string name="logout_success">Successfully logged out</string>
+	<string name="achievement_share_msg"> I just unlocked this new achievement!</string>
+	<string name="achievement_share_url">http://www.beeeon.com</string>
+	<string name="achievement_share_img">http://www.fit.vutbr.cz/images/logo_fit.png</string>
 
     <!-- WatchDog -->
     <string name="action_watchdog">WatchDog</string>

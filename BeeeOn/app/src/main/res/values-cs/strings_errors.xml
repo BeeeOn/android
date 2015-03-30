@@ -31,10 +31,10 @@
 	<string name="NetworkError___SUSPECT_USER">Tento uživatelský účet je dočasně zablokován.</string>
 	<string name="NetworkError___INVALID_PROVIDER">Tento poskytovatel není k dispozici.</string>
 	<string name="NetworkError___INVALID_REQUEST">Tento typ požadavku není na serveru podporován.</string>
-	
+
 	<string name="NetworkError___NO_CONNECTION">Není dostupné připojení k Internetu.\n\nZkontrolujte vaše nastavení.</string>
+	<string name="NetworkError___SHORT_NO_CONNECTION">Nelze se připojit</string>
 	<string name="NetworkError___SERVER_NOT_RESPONDING">Server neodpovídá.\n\nZkuste to prosím znovu.</string>
 	<string name="NetworkError___COM_PROBLEMS">Nastal neznámý komunikační problém.\n\nZkuste to prosím později.</string>
 	<string name="NetworkError___XML">Nastal problém během parsování XML.\n\nZkuste to prosím znovu.</string>
-
 </resources>
