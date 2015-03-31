@@ -5,11 +5,14 @@ import android.view.View;
 
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.helper.DateAsXAxisLabelFormatter;
+import com.jjoe64.graphview.helper.StaticLabelsFormatter;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.adapter.device.Device;
 import com.rehivetech.beeeon.adapter.device.values.BaseEnumValue;
 
 import org.joda.time.format.DateTimeFormatter;
+
+import java.util.List;
 
 final public class GraphViewHelper {
 
@@ -34,11 +37,24 @@ final public class GraphViewHelper {
 		graphView.setVisibility(View.VISIBLE);
 
 		if (isEnumValue) {
-			graphView.getGridLabelRenderer().setNumVerticalLabels(2);
+			graphView.getViewport().setYAxisBoundsManual(true);
+			graphView.getViewport().setMaxY(1.1d);
+			BaseEnumValue value = (BaseEnumValue) device.getValue();
+			List<BaseEnumValue.Item> enumItems = value.getEnumItems();
+			String[] verlabels = new String[enumItems.size()];
+			int i = 0;
+			for (BaseEnumValue.Item item : enumItems) {
+				verlabels[i++] = context.getString(item.getStringResource());
+			}
+			DateAsXAxisLabelFormatter labelFormatter = new DateAsXAxisLabelFormatter(context,"HH:mm","dd.MM.yy");
+			StaticLabelsFormatter staticLabelsFormatter = new StaticLabelsFormatter(graphView,labelFormatter);
+			staticLabelsFormatter.setVerticalLabels(verlabels);
+			graphView.getGridLabelRenderer().setLabelFormatter(staticLabelsFormatter);
+		} else {
+			final String unit = " "+unitsHelper.getStringUnit(device.getValue());
+			graphView.getGridLabelRenderer().setLabelFormatter(new DateAsXAxisLabelFormatter(context, "HH:mm","dd.MM.yy",unit));
 		}
 
-		final String unit = " "+unitsHelper.getStringUnit(device.getValue());
-		graphView.getGridLabelRenderer().setLabelFormatter(new DateAsXAxisLabelFormatter(context, "HH:mm","dd.MM.yy",unit));
 	}
 
 }

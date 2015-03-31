@@ -445,11 +445,6 @@ public class SensorDetailFragment extends Fragment {
 
 		Log.d(TAG, "Filling graph finished");
 
-		// Set maximum as +10% more than deviation
-		if (!(mDevice.getValue() instanceof BaseEnumValue)) {
-			mGraphView.getViewport().setMaxY(log.getMaximum() + log.getDeviation() * 0.1);
-			mGraphView.getViewport().setMinY(log.getMinimum());
-		}
 		mGraphView.removeAllSeries();
 		mGraphSeries.resetData(data);
 		mGraphView.addSeries(mGraphSeries);
