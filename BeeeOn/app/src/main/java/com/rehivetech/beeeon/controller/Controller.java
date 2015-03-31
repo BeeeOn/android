@@ -20,6 +20,7 @@ import com.rehivetech.beeeon.gcm.GcmHelper;
 import com.rehivetech.beeeon.gcm.INotificationReceiver;
 import com.rehivetech.beeeon.gcm.Notification;
 import com.rehivetech.beeeon.geofence.SimpleGeofence;
+import com.rehivetech.beeeon.geofence.TransitionType;
 import com.rehivetech.beeeon.household.Household;
 import com.rehivetech.beeeon.household.User;
 import com.rehivetech.beeeon.household.User.Role;
@@ -1060,6 +1061,20 @@ public final class Controller {
 	 */
 	public List<SimpleGeofence> getAllGeofences() {
 		return mGeofenceModel.getAllGeofences(getActualUser().getId());
+	}
+
+	/**
+	 * Control if actual user has the geofence registered.
+	 *
+	 * @param geofenceId Geofence ID which is unique per user for all devices
+	 * @return <code>True</code> if actual user has geofence registered. <code>False</code> otherwise.
+	 */
+	public boolean hasActualUserGeofence(String geofenceId) {
+		return mGeofenceModel.exist(getActualUser().getId(), geofenceId);
+	}
+
+	public void setPassBorder(String geofenceId, TransitionType type) {
+		mNetwork.passBorder(geofenceId, type.getString());
 	}
 
 	public void addGeofence(SimpleGeofence geofence) {

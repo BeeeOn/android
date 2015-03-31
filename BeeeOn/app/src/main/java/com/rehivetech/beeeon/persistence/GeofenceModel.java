@@ -93,8 +93,29 @@ public class GeofenceModel {
 		while (cursor.moveToNext()) {
 			geofenceList.add(cursorToGeofence(cursor));
 		}
+		cursor.close();
 
 		return geofenceList;
+	}
+
+	public boolean exist(String userId, String geofenceId) {
+		SQLiteDatabase db = DatabaseHelper.getInstance(mContext).getReadableDatabase();
+
+		Cursor cursor = db.query(GeofenceEntry.TABLE_NAME, // table
+				null, // column names
+				GeofenceEntry.COLUMN_USER_ID + " = ? AND " + GeofenceEntry.COLUMN_GEO_ID + " = ?", //  selections
+				new String[]{userId, geofenceId}, // selections args
+				null, //  group by
+				null, //  having
+				null, //  order by
+				null); //  limit
+
+		// first item exist?
+		boolean exist = cursor.moveToNext();
+
+		cursor.close();
+
+		return exist;
 	}
 
 	public void addGeofence(String userId, SimpleGeofence geofence) {

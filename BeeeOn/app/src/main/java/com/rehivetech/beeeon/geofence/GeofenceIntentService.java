@@ -3,20 +3,21 @@ package com.rehivetech.beeeon.geofence;
 import android.app.IntentService;
 import android.content.Intent;
 import android.os.Handler;
-import android.widget.Toast;
 
 import com.google.android.gms.location.Geofence;
 import com.google.android.gms.location.GeofencingEvent;
+import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.util.Log;
 
 import java.util.List;
 
 /**
-* Created by Martin on 17. 3. 2015.
-*/
+ * Created by Martin on 17. 3. 2015.
+ */
 public class GeofenceIntentService extends IntentService {
 
 	public final String TAG = GeofenceIntentService.this.getClass().getSimpleName();
+	private Handler handler;
 
 	public GeofenceIntentService() {
 		super("geofence");
@@ -40,25 +41,22 @@ public class GeofenceIntentService extends IntentService {
 				geofenceTransition == Geofence.GEOFENCE_TRANSITION_EXIT) {
 			List<Geofence> triggeringGeofences = geofencingEvent.getTriggeringGeofences();
 
-			sendGeofencesToServer(triggeringGeofences);
+			TransitionType type = TransitionType.fromInt(geofenceTransition);
+			sendGeofencesToServer(triggeringGeofences, type);
 		} else {
 			// Log the error.
 			Log.e(TAG, "Wrong transititon type");
 		}
 	}
 
-	private void sendGeofencesToServer(List<Geofence> triggeringGeofences) {
+	private void sendGeofencesToServer(List<Geofence> triggeringGeofences, TransitionType type) {
 		Log.i(TAG, "Sending geofence to server");
-		//TODO odeslat zpravu na server
-		handler.post(new Runnable() {
-			@Override
-			public void run() {
-				Toast.makeText(getApplicationContext(), "JSEM TAM", Toast.LENGTH_LONG).show();
+		for (Geofence actFence : triggeringGeofences) {
+			if (Controller.getInstance(this).hasActualUserGeofence(actFence.getRequestId())) {
+				Controller.getInstance(this).setPassBorder(actFence.getRequestId(), type);
 			}
-		});
+		}
 	}
-
-	private Handler handler;
 
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
