@@ -13,6 +13,7 @@ import android.widget.LinearLayout.LayoutParams;
 import android.widget.TextView;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.activity.AddAdapterActivity;
+import com.rehivetech.beeeon.activity.IntroActivity;
 
 public final class IntroImageFragment extends Fragment {
     private static final String KEY_CONTENT = "TestFragment:Content";
@@ -73,6 +74,15 @@ public final class IntroImageFragment extends Fragment {
 	    	if(mActivity instanceof AddAdapterActivity) {
 	    		((AddAdapterActivity)mActivity).resetBtn();
 	    	}
+			else if (mActivity instanceof IntroActivity) {
+				if(((IntroActivity)mActivity).isLastFragment())
+				{
+					((IntroActivity)mActivity).setLastFragmentBtn();
+				}
+				else {
+					((IntroActivity)mActivity).resetBtn();
+				}
+			}
 	    }
 
 	}

@@ -1,5 +1,6 @@
 package com.rehivetech.beeeon;
 
+import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -9,49 +10,43 @@ import com.viewpagerindicator.IconPagerAdapter;
 import com.rehivetech.beeeon.activity.fragment.IntroImageFragment;
 
 public class IntroFragmentAdapter extends FragmentPagerAdapter implements IconPagerAdapter {
-    protected static final String[] CONTENT = new String[] { "Welcome", "to", "BeeeOn", "Test", };
-    protected static final int[] ICONS = new int[] {
-            R.drawable.loc_bath_room,
-            R.drawable.loc_garden,
-            R.drawable.loc_wc,
-            R.drawable.loc_dinner_room
-    };
 
-    private int mCount = 4;
+    private int mCount = 5;
+	private final Context mActivity;
 
-    public IntroFragmentAdapter(FragmentManager fm) {
+    public IntroFragmentAdapter(FragmentManager fm,Context context) {
         super(fm);
+		mActivity = context;
     }
 
     @Override
     public Fragment getItem(int position) {
     	switch (position) {
     	case 0:
-    		return IntroImageFragment.newInstance(R.drawable.dev_emission,"Test 1");
+    		return IntroImageFragment.newInstance(R.drawable.beeeon_logo_white_icons,mActivity.getString(R.string.tut_intro_text_1));
     	case 1:
-    		return IntroImageFragment.newInstance(R.drawable.dev_state_closed,"Test 2");
+    		return IntroImageFragment.newInstance(R.drawable.dev_state_closed,mActivity.getString(R.string.tut_intro_text_2));
     	case 2:
-    		return IntroImageFragment.newInstance(R.drawable.dev_temperature,"Test 3");
+    		return IntroImageFragment.newInstance(R.drawable.dev_temperature,mActivity.getString(R.string.tut_intro_text_3));
     	case 3:
-    		return IntroImageFragment.newInstance(R.drawable.dev_pressure,"Test 4");
-    	}
+    		return IntroImageFragment.newInstance(R.drawable.dev_pressure,mActivity.getString(R.string.tut_intro_text_4));
+		case 4:
+			return IntroImageFragment.newInstance(R.drawable.dev_pressure,mActivity.getString(R.string.tut_intro_text_5));
+
+		}
 		return null;
     }
 
-    @Override
+	@Override
+	public int getIconResId(int i) {
+		return 0;
+	}
+
+	@Override
     public int getCount() {
         return mCount;
     }
 
-    @Override
-    public CharSequence getPageTitle(int position) {
-      return IntroFragmentAdapter.CONTENT[position % CONTENT.length];
-    }
-
-    @Override
-    public int getIconResId(int index) {
-      return ICONS[index % ICONS.length];
-    }
 
     public void setCount(int count) {
         if (count > 0 && count <= 10) {

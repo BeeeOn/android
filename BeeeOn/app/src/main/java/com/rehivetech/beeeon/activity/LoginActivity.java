@@ -6,12 +6,14 @@ import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
+import com.rehivetech.beeeon.Constants;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.adapter.Adapter;
 import com.rehivetech.beeeon.base.BaseActivity;
@@ -57,6 +59,16 @@ public class LoginActivity extends BaseActivity {
 
 		// Get controller
 		mController = Controller.getInstance(getApplicationContext());
+
+		// Intro to app
+		SharedPreferences prefs = getPreferences( MODE_PRIVATE);
+		if(prefs != null && prefs.getBoolean(Constants.GUI_INTRO_PLAY,true)) {
+			prefs.edit().putBoolean(Constants.GUI_INTRO_PLAY,false).commit();
+			Intent intent = new Intent(this, IntroActivity.class);
+			startActivity(intent);
+			return;
+		}
+
 
 		// Prepare progressDialog
 		mProgress = new BetterProgressDialog(this);

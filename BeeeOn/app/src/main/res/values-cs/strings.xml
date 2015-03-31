@@ -10,7 +10,6 @@
     <string name="title_activity_registration">Registrace</string>
     <string name="title_activity_login_facebook">Facebook</string>
     <string name="title_activity_widget_configuration">Konfigurace widgetu</string>
-    <string name="title_activity_location_detail_screen">Detaily polohy</string>
     <string name="title_activity_map_geofence">Geolokační oblasti</string>
     <string name="title_activity_adapter_users">Uživatelé adaptéru</string>
     <string name="title_activity_add_adapter_user">Přidat nového uživatele</string>
@@ -278,7 +277,7 @@
     <string name="tut_add_adapter_header">PŘIDAT ADAPTÉR</string>
     <string name="tut_add_adapter_text">Pro přidání adaptéru klepněte na plus (+)</string>
     <string name="tut_add_sensor_header">PŘIDAT SENZOR</string>
-        <string name="tut_add_sensor_text">Pro přidání zařízení klepněte na plus (+)</string>
+    <string name="tut_add_sensor_text">Pro přidání zařízení klepněte na plus (+)</string>
 
     <string name="tutorial_next">DALŠÍ</string>
     <string name="tutorial_add">PŘIDAT</string>
@@ -325,6 +324,7 @@
     <string name="no_sensor_available">Žádný dostupný senzor</string>
     <string name="no_location_available_def_adapter">Žádné dostupné umístění pro výchozí adaptér</string>
     <string name="users_pending_header">Žádost o přidání</string>
+    <string name="title_activity_location_detail_screen">Detail umístění</string>
 	<string name="sensor_name_label">Name of sensor</string>
 	<string name="dialog_register_new_account_title">Nezaregistrováno</string>
 	<string name="dialog_register_new_account_message">Ještě nemáte vytvořený BeeeOn účet, přejete si jej vytvořit nyní?</string>
