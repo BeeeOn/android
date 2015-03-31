@@ -325,5 +325,6 @@
 	<string name="delete_geofence">Delete geofence</string>
 	<string name="unit_meter_short">m</string>
 
+    <string name="devices">Devices</string>
 
 </resources>

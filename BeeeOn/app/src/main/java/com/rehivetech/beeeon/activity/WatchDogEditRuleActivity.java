@@ -23,30 +23,28 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.melnykov.fab.FloatingActionButton;
-import com.rehivetech.beeeon.Constants;
 import com.rehivetech.beeeon.IIdentifier;
 import com.rehivetech.beeeon.R;
-import com.rehivetech.beeeon.activity.menuItem.AdapterMenuItem;
-import com.rehivetech.beeeon.activity.menuItem.ApplicationMenuItem;
-import com.rehivetech.beeeon.activity.menuItem.GroupMenuItem;
-import com.rehivetech.beeeon.activity.menuItem.LocationMenuItem;
-import com.rehivetech.beeeon.activity.menuItem.SeparatorMenuItem;
-import com.rehivetech.beeeon.activity.menuItem.SettingMenuItem;
+import com.rehivetech.beeeon.activity.spinnerItem.DeviceSpinnerItem;
+import com.rehivetech.beeeon.activity.spinnerItem.SpinnerItem;
 import com.rehivetech.beeeon.adapter.Adapter;
 import com.rehivetech.beeeon.adapter.WatchDog;
 import com.rehivetech.beeeon.adapter.device.Device;
 import com.rehivetech.beeeon.adapter.device.Facility;
 import com.rehivetech.beeeon.adapter.location.Location;
 import com.rehivetech.beeeon.arrayadapter.DeviceArrayAdapter;
+import com.rehivetech.beeeon.arrayadapter.SpinnerMultiAdapter;
 import com.rehivetech.beeeon.asynctask.CallbackTask;
 import com.rehivetech.beeeon.asynctask.ReloadFacilitiesTask;
 import com.rehivetech.beeeon.asynctask.RemoveWatchDogTask;
 import com.rehivetech.beeeon.asynctask.SaveWatchDogTask;
 import com.rehivetech.beeeon.base.BaseApplicationActivity;
 import com.rehivetech.beeeon.controller.Controller;
+import com.rehivetech.beeeon.geofence.SimpleGeofence;
 import com.rehivetech.beeeon.pair.DelWatchDogPair;
 import com.rehivetech.beeeon.util.Log;
 import com.rehivetech.beeeon.util.UnitsHelper;
+import com.rehivetech.beeeon.util.Utils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -81,6 +79,7 @@ public class WatchDogEditRuleActivity extends BaseApplicationActivity {
 
     private List<Location> mLocations;
     private List<Facility> mFacilities;
+    private List<SimpleGeofence> mGeofences;
 
     // TODO??
     private List<Device> _sensors;
@@ -172,6 +171,11 @@ public class WatchDogEditRuleActivity extends BaseApplicationActivity {
             mFacilities.addAll(tempFac);
         }
 
+        // get all geofence areas
+        // TODO
+        //mGeofences = mController.getAllGeofences();
+        //Log.d(TAG, "pocet = " + String.valueOf(mGeofences.size()));
+
         // get watchdog rule
         if(!mIsNew) {
             // hide keyboard when editing
@@ -206,7 +210,7 @@ public class WatchDogEditRuleActivity extends BaseApplicationActivity {
         mActionType = (RadioGroup) findViewById(R.id.watchdog_edit_action_radiogroup);
 
         // ----- prepare list of available devices
-
+/*
         final DeviceArrayAdapter dataAdapter = new DeviceArrayAdapter(this, R.layout.custom_spinner2_item, getDevicesArray(DEVICES_SENSORS), mLocations);
         dataAdapter.setLayoutInflater(getLayoutInflater());
         dataAdapter.setDropDownViewResource(R.layout.custom_spinner2_dropdown_item);
@@ -227,36 +231,40 @@ public class WatchDogEditRuleActivity extends BaseApplicationActivity {
 
         //*/
 
-    /*
-        final MenuListAdapter mMenuAdapter = new MenuListAdapter(this);
+        final SpinnerMultiAdapter spinnerMultiAdapter = new SpinnerMultiAdapter(this);
+        // devices
+        spinnerMultiAdapter.addHeader(getString(R.string.devices));
+        for(Device dev : getDevicesArray(DEVICES_SENSORS)){
+            Location loc = Utils.getFromList(dev.getFacility().getLocationId(), mLocations);
+            spinnerMultiAdapter.addItem(new DeviceSpinnerItem(dev, loc, dev.getId(), this));
+        }
 
-        mMenuAdapter.addItem(new AdapterMenuItem(mAdapter.getName(), mAdapter.getRole().name(), true, mAdapter.getId()));
+        // geofence areas
+        spinnerMultiAdapter.addHeader(getString(R.string.title_activity_map_geofence));
+        for(Device dev : getDevicesArray(DEVICES_SENSORS)){
+            Location loc = Utils.getFromList(dev.getFacility().getLocationId(), mLocations);
+            spinnerMultiAdapter.addItem(new DeviceSpinnerItem(dev, loc, dev.getId(), this));
+        }
 
-        mMenuAdapter.addItem(new SettingMenuItem(getResources().getString(R.string.action_about), R.drawable.info, com.rehivetech.beeeon.activity.menuItem.MenuItem.ID_ABOUT));
-        mMenuAdapter.addItem(new SettingMenuItem(getString(R.string.action_logout), R.drawable.logout, com.rehivetech.beeeon.activity.menuItem.MenuItem.ID_LOGOUT));
-        mMenuAdapter.addItem(new SeparatorMenuItem());
-        mMenuAdapter.addHeader(new GroupMenuItem(getResources().getString(R.string.menu_applications)));
-        mMenuAdapter.addItem(new ApplicationMenuItem(getString(R.string.menu_watchdog), R.drawable.ic_app_watchdog, false, Constants.GUI_MENU_WATCHDOG, true));
-
-        mSensorSpinner.setAdapter(mMenuAdapter);
-
+        mSensorSpinner.setAdapter(spinnerMultiAdapter);
+        // because first is header
+        mSensorSpinner.setSelection(SpinnerMultiAdapter.FIRST_ITEM_POS);
 
         mSensorSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                com.rehivetech.beeeon.activity.menuItem.MenuItem selected = (com.rehivetech.beeeon.activity.menuItem.MenuItem) mMenuAdapter.getItem(position);
+                SpinnerItem selected = spinnerMultiAdapter.getItem(position);
 
                 switch(selected.getType()){
-                    case ADAPTER:
-                        Toast.makeText(WatchDogEditRuleActivity.this, "vybral sis adapter", Toast.LENGTH_SHORT).show();
+                    case DEVICE:
+                        if(mUnitsHelper != null){
+                            Device selectedDevice = (Device) selected.getObject();
+                            mRuleTresholdUnit.setText(mUnitsHelper.getStringUnit(selectedDevice.getValue()));
+                        }
                         break;
 
-                    case SETTING:
+                    case GEOFENCE:
                         Toast.makeText(WatchDogEditRuleActivity.this, "SETTING", Toast.LENGTH_SHORT).show();
-                        break;
-
-                    case APPLICATION:
-                        Toast.makeText(WatchDogEditRuleActivity.this, "APPLICATION", Toast.LENGTH_SHORT).show();
                         break;
                 }
             }
@@ -266,8 +274,6 @@ public class WatchDogEditRuleActivity extends BaseApplicationActivity {
 
             }
         });
-
-        //*/
 
         // TODO make value not boolean but OperatorType
         mGreatLessButton.setOnClickListener(new View.OnClickListener() {
@@ -330,7 +336,7 @@ public class WatchDogEditRuleActivity extends BaseApplicationActivity {
         // TODO revise when new protocol version
         Device firstDev = mController.getDevice(mWatchDog.getAdapterId(), mWatchDog.getDevices().get(0));
         int index = getIndexFromList(firstDev.getId(), getDevicesArray(DEVICES_SENSORS));
-        if(index > -1) mSensorSpinner.setSelection(index);
+        mSensorSpinner.setSelection(index > -1 ? index : SpinnerMultiAdapter.FIRST_ITEM_POS);
 
         switch(mWatchDog.getType()){
             case WatchDog.ACTION_NOTIFICATION:
