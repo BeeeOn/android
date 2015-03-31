@@ -4,6 +4,7 @@ import com.rehivetech.beeeon.IIdentifier;
 import com.rehivetech.beeeon.R;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * Created by ThinkDeep on 8.3.2015.
@@ -32,11 +33,11 @@ public class WatchDog implements IIdentifier {
 
     private boolean mEnabled = true;
     private int mType = TYPE_SENSOR;
+    private WatchDogBaseType mOperatorType;
     private String mId;
     private String mName;
-    private String mAdapterId;
 
-    private WatchDogBaseType mOperatorType;
+    private String mAdapterId;
 
 	private String mGeoRegionId;
 	private String mGeoDirectionType;
@@ -45,20 +46,22 @@ public class WatchDog implements IIdentifier {
     private ArrayList<String> mParams;
 
     public WatchDog(int type){
-        mType = type;
-        switch(mType){
+        setOperatorType(type);
+    }
+
+    public void setOperatorType(int operatorType) {
+        mType = operatorType;
+        switch(operatorType){
             default:
             case TYPE_SENSOR:
                 mOperatorType = new WatchDogSensorType();
                 break;
-            /*
+
             case TYPE_GEOFENCE:
-                mOperatorType = new WatchDogSensorType();
+                mOperatorType = new WatchDogGeofenceType();
                 break;
-            //*/
         }
     }
-
     public WatchDogBaseType getOperatorType(){
         return mOperatorType;
     }
@@ -121,12 +124,13 @@ public class WatchDog implements IIdentifier {
 
     public void setParams(ArrayList<String> params){
         mParams = params;
-        getOperatorType().setParams(mParams);
-        getOperatorType().setByType(this.getParams().get(WatchDog.PAR_OPERATOR));
+        getOperatorType().setByType(getParam(WatchDog.PAR_OPERATOR));
     }
 
-    public void AddParam(String param) {
-        mParams.add(param);
+    public String getParam(int pos){
+        if(this.getParams() == null || this.getParams().size() <= pos) return null;
+
+        return this.getParams().get(pos);
     }
 
 	public String getGeoDirectionType() {
@@ -145,17 +149,28 @@ public class WatchDog implements IIdentifier {
 		this.mGeoRegionId = GeoRegionId;
 	}
 
-    public String getParam(int pos){
-        if(this.getParams().size() <= pos) return null;
-
-        return this.getParams().get(pos);
+    /**
+     * Set action type
+     * @param act ACTION_NOTIFICATION || ACITON_ACTOR
+     */
+    public void setAction(String act){
+        this.getParams().set(PAR_ACTION_TYPE, act);
     }
 
-    public int getActionIconResource(){
+    /**
+     * Returns parameter for action type
+     * @return default NOTIFICATION
+     */
+    public String getAction(){
         String action = getParam(PAR_ACTION_TYPE);
         if(action == null) action = ACTION_NOTIFICATION;
 
-        switch(action){
+        return action;
+    }
+
+
+    public int getActionIconResource(){
+        switch(getAction()){
             case ACTION_ACTOR:
                 return actionIcons[1];
 

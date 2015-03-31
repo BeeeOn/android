@@ -1,5 +1,15 @@
 package com.rehivetech.beeeon.adapter.watchdog;
 
+import android.content.SharedPreferences;
+import android.view.View;
+import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.TextView;
+
+import com.melnykov.fab.FloatingActionButton;
+import com.rehivetech.beeeon.activity.spinnerItem.SpinnerItem;
+import com.rehivetech.beeeon.util.UnitsHelper;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -7,6 +17,7 @@ import java.util.Arrays;
  * @author mlyko
  */
 public abstract class WatchDogBaseType {
+	protected UnitsHelper mUnitsHelper;
 
 	public enum WatchDogOperatorType{
 		SENSOR, GEOFENCE
@@ -21,16 +32,15 @@ public abstract class WatchDogBaseType {
 		mType = type;
 	}
 
-	public abstract int[] getAllIcons();
+	public void setUnitsHelper(UnitsHelper uHelper){
+		mUnitsHelper = uHelper;
+	}
 
+	public abstract int[] getAllIcons();
 	public abstract String[] getAllCodes();
 
 	public WatchDogOperatorType getType(){
 		return mType;
-	}
-
-	public void setParams(ArrayList<String> params) {
-		mParams = params;
 	}
 
 	public int getIndex(){
@@ -66,4 +76,16 @@ public abstract class WatchDogBaseType {
 		return getAllIcons()[mIndex % getAllIcons().length];
 	}
 
+	public void setupGUI(SpinnerItem selected, FloatingActionButton operatorButton, EditText ruleTreshold, TextView ruleTresholdUnit){
+		// sets default icon for this type
+		operatorButton.setImageResource(getIconResource());
+
+		operatorButton.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				ImageButton img = (ImageButton) v;
+				img.setImageResource(next().getIconResource());
+			}
+		});
+	}
 }

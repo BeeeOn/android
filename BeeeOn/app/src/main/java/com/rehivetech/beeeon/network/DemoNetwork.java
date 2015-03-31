@@ -709,7 +709,7 @@ public class DemoNetwork implements INetwork {
 			return false;
 		}
 
-		// NOTE: this replaces (or add) whole facility, not only fields marked as toSave
+		// NOTE: this replaces (or add) whole watchdog, not only fields marked as toSave
 		holder.watchdogs.put(watchDog.getId(), watchDog);
 		return true;
 	}

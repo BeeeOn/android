@@ -8,6 +8,7 @@
     android:layout_height="wrap_content"
     android:id="@+id/toolbar"
     android:minHeight="?attr/actionBarSize"
+	app:titleMarginStart="16dp"
     android:background="?attr/colorPrimary">
 
 	<ProgressBar

@@ -20,6 +20,7 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -50,43 +51,8 @@ import com.rehivetech.beeeon.util.Utils;
 import java.util.ArrayList;
 import java.util.List;
 
-/*
-interface WatchDogOperator{
-    public enum WatchDogOperatorType{
-        SENSOR, GEOFENCE
-    }
+// TODO probably create some interface for watchdogActionTypes so that there does not need to be switch everywhere for that
 
-    public WatchDogOperatorType getType();
-
-    //public void onChanged(SpinnerItem item);
-
-    public View.OnClickListener getOperatorButtonClickListener(boolean opState);
-};
-
-class GeofenceOperator implements WatchDogOperator{
-
-    public static final int[] geofenceOperators = {
-            R.drawable.ic_in,
-            R.drawable.ic_out
-    };
-
-    @Override
-    public WatchDogOperatorType getType() {
-        return WatchDogOperatorType.GEOFENCE;
-    }
-
-    @Override
-    public View.OnClickListener getOperatorButtonClickListener(final boolean opState) {
-        return new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ImageButton img = (ImageButton) v;
-                img.setImageResource(opState ? R.drawable.ic_out : R.drawable.ic_in);
-                //opState = !opState;
-            }
-    };
-}
-//*/
 
 /**
  * Activity for creation and editation of watchdog rule
@@ -127,6 +93,7 @@ public class WatchDogEditRuleActivity extends BaseApplicationActivity {
     private boolean mIsValueLess = false;        // value for View FAB
     private boolean mIsNew = false;
     private WatchDog mWatchDog;
+    private String mWatchDogAction;
 
     // async tasks
     private ReloadFacilitiesTask mReloadFacilitiesTask;
@@ -194,7 +161,7 @@ public class WatchDogEditRuleActivity extends BaseApplicationActivity {
             return;
         }
 
-        // get controller
+        // get controllern
         mController = Controller.getInstance(this);
         // get adapter
         mAdapter = mActiveAdapterId == null ? mController.getActiveAdapter() : mController.getAdapter(mActiveAdapterId);
@@ -227,6 +194,9 @@ public class WatchDogEditRuleActivity extends BaseApplicationActivity {
         else{
             mWatchDog = new WatchDog(WatchDog.TYPE_SENSOR);
         }
+
+        // needs to set units helper if want to use it
+        mWatchDog.getOperatorType().setUnitsHelper(mUnitsHelper);
 
         // hide keyboard
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
@@ -268,8 +238,6 @@ public class WatchDogEditRuleActivity extends BaseApplicationActivity {
         }
 
         mIfItemSpinner.setAdapter(mSpinnerMultiAdapter);
-        mIfItemSpinner.setSelection(mSpinnerMultiAdapter.getRealPosition(0));
-
         mIfItemSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -277,13 +245,16 @@ public class WatchDogEditRuleActivity extends BaseApplicationActivity {
 
                 switch (selected.getType()) {
                     case DEVICE:
-                        setupSensorWatchdog(selected);
+                        mWatchDog.setOperatorType(WatchDog.TYPE_SENSOR);
                         break;
 
                     case GEOFENCE:
-                        setupGeofenceWatchdog(selected);
+                        mWatchDog.setOperatorType(WatchDog.TYPE_GEOFENCE);
                         break;
                 }
+
+                // setup gui based on type
+                mWatchDog.getOperatorType().setupGUI(selected, mOperatorButton, mRuleTreshold, mRuleTresholdUnit);
             }
 
             @Override
@@ -291,6 +262,11 @@ public class WatchDogEditRuleActivity extends BaseApplicationActivity {
 
             }
         });
+
+        // setup gui based on type in default position
+        int defaultPos = mSpinnerMultiAdapter.getRealPosition(0);
+        mIfItemSpinner.setSelection(defaultPos);
+        mWatchDog.getOperatorType().setupGUI(mSpinnerMultiAdapter.getItem(defaultPos), mOperatorButton, mRuleTreshold, mRuleTresholdUnit);
 
         // changing specified layout when checked
         mActionType.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
@@ -303,19 +279,24 @@ public class WatchDogEditRuleActivity extends BaseApplicationActivity {
                     case R.id.watchdog_edit_notification:
                         NotifLayout.setVisibility(View.VISIBLE);
                         ActionLayout.setVisibility(View.GONE);
+                        mWatchDogAction = WatchDog.ACTION_NOTIFICATION;
                         break;
 
                     case R.id.watchdog_edit_actor:
                         NotifLayout.setVisibility(View.GONE);
                         ActionLayout.setVisibility(View.VISIBLE);
+                        mWatchDogAction = WatchDog.ACTION_ACTOR;
                         break;
                 }
             }
         });
 
-        // first checked
-        RadioButton radioNotification = (RadioButton) findViewById(R.id.watchdog_edit_notification);
-        radioNotification.setChecked(true);
+        // ------- choose action type if not loaded
+        if(mIsNew){
+            // first checked
+            RadioButton radioNotification = (RadioButton) findViewById(R.id.watchdog_edit_notification);
+            radioNotification.setChecked(true);
+        }
 
         // ------- choose actor
         final DeviceArrayAdapter actorAdapter = new DeviceArrayAdapter(this, R.layout.custom_spinner2_item, getDevicesArray(DEVICES_ACTORS), mLocations);
@@ -323,44 +304,6 @@ public class WatchDogEditRuleActivity extends BaseApplicationActivity {
         actorAdapter.setDropDownViewResource(R.layout.custom_spinner2_dropdown_item);
         mActorSpinner.setAdapter(actorAdapter);
     }
-
-    private void setupSensorWatchdog(SpinnerItem selected){
-        mOperatorButton.setImageResource(mWatchDog.getOperatorType().getIconResource());
-        mRuleTreshold.setVisibility(View.VISIBLE);
-        mRuleTresholdUnit.setVisibility(View.VISIBLE);
-        // senzors can have only numbers
-        mRuleTreshold.setInputType(InputType.TYPE_CLASS_NUMBER);
-
-        if(mUnitsHelper != null){
-            Device selectedDevice = (Device) selected.getObject();
-            mRuleTresholdUnit.setText(mUnitsHelper.getStringUnit(selectedDevice.getValue()));
-        }
-
-        mOperatorButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ImageButton img = (ImageButton) v;
-                img.setImageResource(mWatchDog.getOperatorType().next().getIconResource());
-            }
-        });
-    }
-
-    private void setupGeofenceWatchdog(SpinnerItem selected){
-        mOperatorButton.setImageResource(mWatchDog.getOperatorType().getIconResource());
-        mRuleTreshold.setVisibility(View.GONE);
-        mRuleTresholdUnit.setVisibility(View.GONE);
-
-        SimpleGeofence selectedGeofence = (SimpleGeofence) selected.getObject();
-
-        mOperatorButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ImageButton img = (ImageButton) v;
-                img.setImageResource(mWatchDog.getOperatorType().next().getIconResource());
-            }
-        });
-    }
-
 
     /**
      * Fills gui elements with values
@@ -373,31 +316,32 @@ public class WatchDogEditRuleActivity extends BaseApplicationActivity {
         mRuleEnabled.setChecked(mWatchDog.isEnabled());
         mRuleTreshold.setText(mWatchDog.getParams().get(WatchDog.PAR_TRESHOLD));
 
+        // set spinner in the "IF" section
         int index = Utils.getObjectIndexFromList(mWatchDog.getDevices().get(0), getDevicesArray(DEVICES_SENSORS));
         if(index > -1) mIfItemSpinner.setSelection(mSpinnerMultiAdapter.getRealPosition(index));
 
-        // TODO toto je spatne nemuze byt typ
-
-        mActionType.check(R.id.watchdog_edit_notification);
-        String par_value = mWatchDog.getParam(WatchDog.PAR_ACTION_VALUE);
-        if(par_value != null) mNotificationText.setText(par_value);
-        /*
-        switch(mWatchDog.getType()){
+        // get parameter action value
+        String par_action_value = mWatchDog.getParam(WatchDog.PAR_ACTION_VALUE);
+        // based on action type set different part of GUI
+        switch(mWatchDog.getAction()){
             case WatchDog.ACTION_NOTIFICATION:
                 mActionType.check(R.id.watchdog_edit_notification);
-                mNotificationText.setText(mWatchDog.getParams().get(WatchDog.PAR_ACTION_VALUE));
+                if(par_action_value != null) mNotificationText.setText(par_action_value);
                 break;
 
             case WatchDog.ACTION_ACTOR:
                 mActionType.check(R.id.watchdog_edit_actor);
-                // TODO - vybrat actor
+                int actorIndex = par_action_value == null ? -1 : Utils.getObjectIndexFromList(par_action_value, getDevicesArray(DEVICES_ACTORS));
+                if(actorIndex > -1) mActorSpinner.setSelection(actorIndex);
                 break;
         }
-        //*/
 
-        // TODO obecne
-        mWatchDog.getOperatorType().setByType(mWatchDog.getParams().get(WatchDog.PAR_OPERATOR));
-        mOperatorButton.setImageResource(mWatchDog.getOperatorType().getIconResource());
+        // setup operators icon
+        String par_operator = mWatchDog.getParam(WatchDog.PAR_OPERATOR);
+        if(par_operator != null){
+            mWatchDog.getOperatorType().setByType(par_operator);
+            mOperatorButton.setImageResource(mWatchDog.getOperatorType().getIconResource());
+        }
     }
 
     @Override
@@ -478,21 +422,26 @@ public class WatchDogEditRuleActivity extends BaseApplicationActivity {
      * TODO revise this
      */
     private void doSaveWatchDogTask(){
-        if(!validateInput(mRuleName, "This must be filled!") || !validateInput(mRuleTreshold, "This must be filled!")){
+        if(!validateInput(mRuleName, "This must be filled!")){
             return;
         }
 
         ArrayList<String> devsIds = new ArrayList<>();
-        ArrayList<String> newParams = new ArrayList<String>();
+        ArrayList<String> newParams = new ArrayList<>();
 
         SpinnerItem selected = mSpinnerMultiAdapter.getItem(mIfItemSpinner.getSelectedItemPosition());
         switch(selected.getType()){
             case DEVICE:
+
+                if(!validateInput(mRuleTreshold, "This must be filled!")) return;
+
                 Device selectedDevice = (Device) selected.getObject();
                 devsIds.add(selectedDevice.getId());
                 newParams.add(selectedDevice.getId());
             break;
 
+            case GEOFENCE:
+                // TODO
             default:
                 Toast.makeText(this, "NOT IMPLEMENTED", Toast.LENGTH_LONG).show();
                 return;
@@ -502,8 +451,18 @@ public class WatchDogEditRuleActivity extends BaseApplicationActivity {
         newParams.add(mWatchDog.getOperatorType().getCode());
         // treshold
         newParams.add(mRuleTreshold.getText().toString());
-        // notification text
-        newParams.add(mNotificationText.getText().toString());
+        // action type
+        newParams.add(mWatchDogAction);
+        switch(mWatchDogAction){
+            case WatchDog.ACTION_ACTOR:
+                Device selectedActor = getDevicesArray(DEVICES_ACTORS).get(mActorSpinner.getSelectedItemPosition());
+                newParams.add(selectedActor.getId());
+                break;
+
+            case WatchDog.ACTION_NOTIFICATION:
+                newParams.add(mNotificationText.getText().toString());
+                break;
+        }
 
         mWatchDog.setParams(newParams);
         mWatchDog.setDevices(devsIds);
@@ -519,11 +478,16 @@ public class WatchDogEditRuleActivity extends BaseApplicationActivity {
             @Override
             public void onExecute(boolean success) {
                 if (mProgress != null) mProgress.dismiss();
+                Toast.makeText(WatchDogEditRuleActivity.this, getResources().getString(success ? R.string.toast_success_save_data : R.string.toast_fail_save_data), Toast.LENGTH_LONG).show();
+                /*
                 if(success){
                     mIsNew = false;
                     onUpdateOptionsMenu();
                 }
-                Toast.makeText(WatchDogEditRuleActivity.this, getResources().getString(success ? R.string.toast_success_save_data : R.string.toast_fail_save_data), Toast.LENGTH_LONG).show();
+                //*/
+
+                // when new rule, close after done
+                if(mIsNew) finish();
             }
         });
 

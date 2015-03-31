@@ -27,6 +27,6 @@
 		<par pos="2">lt</par>
 		<par pos="3">11</par>
 		<par pos="4">act</par>
-		<par pos="5">100:00:FF:000:FF0---10</par>
+		<par pos="5">100:00:FF:000:FFA---160</par>
 	</alg>
 </com>

@@ -8,7 +8,7 @@
 	>
 
 	<!-- toolbar -->
-	<include layout="@layout/beeon_toolbar"/>
+	<include layout="@layout/beeeon_toolbar"/>
 
 	<!-- shadow -->
 	<View
@@ -46,6 +46,7 @@
 					android:layout_centerVertical="true"
 					android:layout_alignParentStart="true"
 					android:layout_alignParentLeft="true"
+					android:paddingRight="8dp"
 					android:checked="true"
 					/>
 
@@ -57,9 +58,8 @@
 					android:textStyle="bold"
 					android:gravity="bottom"
 					android:singleLine="true"
-					android:layout_marginLeft="68dp"
-					android:layout_marginStart="68dp"
-					android:layout_marginRight="16dp"
+					android:layout_marginLeft="52dp"
+					android:layout_marginStart="52dp"
 					android:hint="@string/watchdog_rule_name"
 					/>
 			</RelativeLayout>
@@ -247,7 +247,6 @@
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
 				android:layout_marginTop="16dp"
-				android:visibility="gone"
 				>
 
 				<!-- separator -->
@@ -289,8 +288,8 @@
 					android:layout_height="wrap_content"
 					android:textSize="16sp"
 					android:layout_below="@id/watchdog_edit_action_text"
-					android:layout_alignLeft="@id/watchdog_edit_action_text"
-					android:layout_alignStart="@id/watchdog_edit_action_text"
+					android:layout_marginLeft="70dp"
+					android:layout_marginStart="70dp"
 					android:layout_marginRight="16dp"
 					android:layout_marginEnd="16dp"
 					/>
