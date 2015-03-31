@@ -15,7 +15,7 @@ public class GeofenceEntry implements BaseColumns {
 	public static final String COLUMN_LONG = "long";
 	public static final String COLUMN_RADIUS = "radius";
 
-	public static String CREATE_TABLE =
+	public static final String CREATE_TABLE =
 			"CREATE TABLE " + TABLE_NAME + "(" +
 					_ID + " integer primary key autoincrement, " +
 					COLUMN_GEO_ID + " TEXT," +

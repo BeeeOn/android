@@ -255,7 +255,7 @@ final public class Utils {
 	 * Method return Mac address of device
 	 * @return
 	 */
-	public static String getMAC(Context context){
+	private static String getMAC(Context context){
 		WifiManager wifiManager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
 
 		if(wifiManager.isWifiEnabled()) {

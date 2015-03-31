@@ -16,7 +16,10 @@
 
 package com.rehivetech.beeeon.geofence;
 
+import android.content.Context;
+
 import com.google.android.gms.location.Geofence;
+import com.rehivetech.beeeon.util.Utils;
 
 /**
  * A single Geofence object, defined by its center (latitude and longitude position) and radius.
@@ -80,9 +83,10 @@ public class SimpleGeofence {
 			String name,
 			double latitude,
 			double longitude,
-			float radius) {
+			float radius,
+			Context context) {
 		// Call default constructor and set default values
-		this(createGeofenceId(), name, latitude, longitude, radius, Geofence.NEVER_EXPIRE,
+		this(createGeofenceId(context), name, latitude, longitude, radius, Geofence.NEVER_EXPIRE,
 				Geofence.GEOFENCE_TRANSITION_ENTER | Geofence.GEOFENCE_TRANSITION_EXIT);
 	}
 
@@ -113,11 +117,9 @@ public class SimpleGeofence {
 	 *
 	 * @return Unique geofence ID per user. Ex. deviceId_timestamp
 	 */
-	private static String createGeofenceId() {
+	private static String createGeofenceId(Context context) {
 		final String timestamp = String.valueOf(System.currentTimeMillis());
-
-		//FIXME dodelat po mergi s Petrovou vrstvou (metoda v Utils pro ziskani ID)
-		final String deviceId = "";
+		final String deviceId = Utils.getPhoneID(context);
 		final String separator = "_";
 
 		return deviceId + separator + timestamp;
