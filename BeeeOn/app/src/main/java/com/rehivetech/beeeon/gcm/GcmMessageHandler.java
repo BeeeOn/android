@@ -68,18 +68,18 @@ public class GcmMessageHandler extends IntentService {
 			}
 
 			// control email if it equals with actual user
-			if (!notification.getEmail().equals(mController.getLastAuthProvider())) {
-				Log.w(GcmHelper.TAG_GCM, notification.getEmail() + " != " + mController.getLastAuthProvider());
-				Log.w(GcmHelper.TAG_GCM, "Notification email wasn't verified. Server GCM ID will be deleted.");
+			if (!notification.getUserId().equals(mController.getActualUser().getId())) {
+				Log.w(GcmHelper.TAG_GCM, notification.getUserId() + " != " + mController.getLastUserId());
+				Log.w(GcmHelper.TAG_GCM, "Notification user ID wasn't verified. Server GCM ID will be deleted.");
 
 				final String gcmId = mController.getGCMRegistrationId();
-				if (!notification.getEmail().isEmpty() && !gcmId.isEmpty()) {
+				if (!notification.getUserId().isEmpty() && !gcmId.isEmpty()) {
 					Thread t = new Thread() {
 						public void run() {
 							Thread t = new Thread() {
 								public void run() {
 									try {
-										mController.deleteGCM(notification.getEmail(), gcmId);
+										mController.deleteGCM(notification.getUserId(), gcmId);
 									} catch (Exception e) {
 										// do nothing
 										Log.w(GcmHelper.TAG_GCM,
@@ -93,7 +93,7 @@ public class GcmMessageHandler extends IntentService {
 				}
 			}
 
-			// EVERYTHING VERYFIED SUCCESFULY, MAKE ACTION HERE
+			// EVERYTHING VERIFIED SUCCESSFULLY, MAKE ACTION HERE
 			else {
 				Log.i(GcmHelper.TAG_GCM, "Received : (" + messageType + ")  " + notification.getMessage());
 

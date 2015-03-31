@@ -29,7 +29,7 @@ public class Notification {
 	private boolean mRead;
 	private final NotificationType mType;
 	private Action mAction;
-	private String mEmail = null;
+	private String mUserId = null;
 	private String mMessage;
 
 	public class Action {
@@ -218,12 +218,12 @@ public class Notification {
 	/**
 	 * @return Email if notification was received by GCM. Null otherwise.
 	 */
-	public String getEmail() {
-		return mEmail;
+	public String getUserId() {
+		return mUserId;
 	}
 
-	public void setEmail(String email) {
-		mEmail = email;
+	public void setUserId(String userId) {
+		mUserId = userId;
 	}
 
 	/**
@@ -294,20 +294,21 @@ public class Notification {
 
 	protected static Notification parseBundle(Bundle bundle) {
 		String msgid = bundle.getString(Xconstants.MSGID);
-		String email = bundle.getString(Xconstants.EMAIL);
+		// FIXME po predelani na nove notifikace s novym tagem pro userId predelat tag (prozatim se to posila v tagu)
+		String userId = bundle.getString(Xconstants.EMAIL);
 		String time = bundle.getString(Xconstants.TIME);
 		String type = bundle.getString(Xconstants.TYPE);
 		String message = bundle.getString(Xconstants.MESSAGE);
 		String action = bundle.getString(Xconstants.ACTION);
 
 		// control validity of message
-		if (msgid == null || email == null || time == null || type == null || action == null || message == null) {
+		if (msgid == null || userId == null || time == null || type == null || action == null || message == null) {
 			return null;
 		}
 
 		Notification notification = new Notification(msgid, time, type, false);
 		// we need email in notification to check validity
-		notification.setEmail(email);
+		notification.setUserId(userId);
 		notification.setMessage(message);
 		notification.setAction(notification.new Action(action));
 
