@@ -281,14 +281,10 @@ public class MapGeofenceActivity extends BaseApplicationActivity implements Resu
 			}
 		}
 
-//		drawAllGeofences();
+		drawAllGeofences();
 	}
 
 	public void drawAllGeofences() {
-		// TODO smazat po zavedeni z kontroleru
-		SimpleGeofence fence = new SimpleGeofence("Brno", 49.195060, 16.606837, 500);
-		drawGeofence(fence);
-
 		List<SimpleGeofence> geofences = Controller.getInstance(this).getAllGeofences();
 		for (SimpleGeofence actFence : geofences) {
 			drawGeofence(actFence);
@@ -383,8 +379,7 @@ public class MapGeofenceActivity extends BaseApplicationActivity implements Resu
 		if (status.isSuccess()) {
 			Log.i(TAG, "Geoefence added");
 			drawGeofence(mAddGeofence);
-			// FIXME opravit ukldaani do databaze
-//			Controller.getInstance(this).addGeofence(mAddGeofence);
+			Controller.getInstance(this).addGeofence(mAddGeofence);
 			mAddGeofence = null;
 
 			// Update state and save in shared preferences.

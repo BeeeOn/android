@@ -19,10 +19,10 @@ public class GeofenceEntry implements BaseColumns {
 			"CREATE TABLE " + TABLE_NAME + "(" +
 					_ID + " integer primary key autoincrement, " +
 					COLUMN_GEO_ID + " TEXT," +
-					COLUMN_USER_ID + "TEXT," +
+					COLUMN_USER_ID + " TEXT," +
 					COLUMN_NAME + " TEXT," +
 					COLUMN_LONG + " REAL," +
-					COLUMN_LAT + " REAL" +
+					COLUMN_LAT + " REAL," +
 					COLUMN_RADIUS + " REAL" +
 					");";
 }

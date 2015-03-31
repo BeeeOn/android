@@ -9,6 +9,7 @@ import android.support.annotation.Nullable;
 import com.rehivetech.beeeon.geofence.SimpleGeofence;
 import com.rehivetech.beeeon.persistence.database.DatabaseHelper;
 import com.rehivetech.beeeon.persistence.database.entry.GeofenceEntry;
+import com.rehivetech.beeeon.util.Log;
 
 import java.util.ArrayList;
 import java.util.IllegalFormatException;
@@ -18,6 +19,8 @@ import java.util.List;
  * Created by Martin on 24. 3. 2015.
  */
 public class GeofenceModel {
+
+	private static final String TAG = GeofenceModel.class.getSimpleName();
 
 	Context mContext;
 
@@ -57,6 +60,7 @@ public class GeofenceModel {
 	}
 
 	public void deleteGeofence(String userId, String geofenceId) {
+		Log.d(TAG, "Deleting geofence: " + geofenceId);
 		SQLiteDatabase db = DatabaseHelper.getInstance(mContext).getWritableDatabase();
 
 		db.delete(geofenceId, GeofenceEntry.COLUMN_GEO_ID + " = ?" + " and " +
@@ -94,6 +98,7 @@ public class GeofenceModel {
 	}
 
 	public void addGeofence(String userId, SimpleGeofence geofence) {
+		Log.d(TAG, "Adding geofence to DB: " + geofence.getId());
 		ContentValues values = new ContentValues();
 
 		values.put(GeofenceEntry.COLUMN_USER_ID, userId);
