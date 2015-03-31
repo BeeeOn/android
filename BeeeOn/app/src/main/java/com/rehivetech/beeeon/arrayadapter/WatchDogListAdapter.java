@@ -9,10 +9,9 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.rehivetech.beeeon.R;
-import com.rehivetech.beeeon.adapter.WatchDog;
+import com.rehivetech.beeeon.adapter.watchdog.WatchDog;
 import com.rehivetech.beeeon.adapter.device.Device;
 import com.rehivetech.beeeon.adapter.device.DeviceType;
 import com.rehivetech.beeeon.adapter.device.values.BaseValue;
@@ -100,19 +99,14 @@ public class WatchDogListAdapter extends BaseAdapter {
 
         final WatchDog rule = (WatchDog) this.getItem(position);
 
-        holder.ItemAction.setImageResource(rule.getActionIconResource());
         holder.ItemRuleName.setText(rule.getName());
-        holder.ItemSwitch.setChecked(rule.isEnabled());
-        if(mSwitchOnClickListener != null) {
-            holder.ItemSwitch.setOnClickListener(mSwitchOnClickListener);
-        }
 
         List<String> devicesIds = rule.getDevices();
         if(devicesIds.size() > 0){
             Device deviceFirst = mController.getDevice(rule.getAdapterId(), devicesIds.get(0));
             if(deviceFirst == null) return convertView;
 
-            holder.ItemOperator.setImageResource(rule.getOperatorIconResource());
+            holder.ItemOperator.setImageResource(rule.getOperatorType().getIconResource());
             holder.ItemIcon.setImageResource(deviceFirst.getIconResource());
             holder.ItemSensorName.setText(deviceFirst.getName());
 
@@ -123,6 +117,13 @@ public class WatchDogListAdapter extends BaseAdapter {
             } else {
                 holder.ItemTreshold.setText(rule.getParams().get(WatchDog.PAR_TRESHOLD));
             }
+        }
+
+        holder.ItemAction.setImageResource(rule.getActionIconResource());
+
+        holder.ItemSwitch.setChecked(rule.isEnabled());
+        if(mSwitchOnClickListener != null) {
+            holder.ItemSwitch.setOnClickListener(mSwitchOnClickListener);
         }
 
         return convertView;

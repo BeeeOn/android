@@ -97,7 +97,7 @@
 					/>
 
 				<Spinner
-					android:id="@+id/watchdog_edit_sensor_spinner"
+					android:id="@+id/watchdog_edit_if_item_spinner"
 					android:layout_width="match_parent"
 					android:layout_height="wrap_content"
 					android:layout_marginLeft="16dp"
@@ -126,7 +126,7 @@
 				-->
 				<com.melnykov.fab.FloatingActionButton
 					xmlns:fab="http://schemas.android.com/apk/res-auto"
-					android:id="@+id/watchdog_edit_greatless"
+					android:id="@+id/watchdog_edit_operator"
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
 					android:src="@drawable/ic_action_next_item"
@@ -148,8 +148,8 @@
 					android:textColor="@color/beeeon_secundary_pink"
 					android:textSize="16sp"
 					android:gravity="center_horizontal"
-					android:layout_toRightOf="@+id/watchdog_edit_greatless"
-					android:layout_toEndOf="@+id/watchdog_edit_greatless"
+					android:layout_toRightOf="@+id/watchdog_edit_operator"
+					android:layout_toEndOf="@+id/watchdog_edit_operator"
 					android:hint="@string/treshold_value"
 					android:layout_marginLeft="16dp"
 					android:layout_marginStart="16dp"
@@ -355,8 +355,6 @@
 				android:layout_height="1px"
 				android:src="@color/beeeon_separator"
 				android:layout_marginTop="16dp"
-				android:layout_marginLeft="62dp"
-				android:layout_marginStart="62dp"
 				/>
 
 		</LinearLayout>

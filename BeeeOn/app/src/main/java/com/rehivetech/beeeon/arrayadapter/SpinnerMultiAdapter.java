@@ -5,21 +5,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.SectionIndexer;
 
-import com.rehivetech.beeeon.R;
-import com.rehivetech.beeeon.activity.listItem.ListItem;
-import com.rehivetech.beeeon.activity.listItem.SensorListItem;
-import com.rehivetech.beeeon.activity.spinnerItem.DeviceSpinnerItem;
 import com.rehivetech.beeeon.activity.spinnerItem.HeaderSpinnerItem;
 import com.rehivetech.beeeon.activity.spinnerItem.SpinnerItem;
-import com.rehivetech.beeeon.adapter.device.Device;
-import com.rehivetech.beeeon.util.Log;
+
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.TreeSet;
 
-import se.emilsjolander.stickylistheaders.StickyListHeadersAdapter;
 
 /**
  * Class for spinner of multi objects
@@ -27,12 +21,11 @@ import se.emilsjolander.stickylistheaders.StickyListHeadersAdapter;
 public class SpinnerMultiAdapter extends BaseAdapter{
 	private static final String TAG = SpinnerMultiAdapter.class.getSimpleName();
 
-	// when used with header first, this should be first item
-	public static final int FIRST_ITEM_POS = 1; 	// TODO change it dynamically - based on addHeader
-
 	private final Context mContext;
 	private LayoutInflater mInflater;
 	private List<SpinnerItem> mSpinnerItem;
+	private TreeSet<Integer> mHeaderSet = new TreeSet<Integer>();
+
 
 	public SpinnerMultiAdapter(Context context) {
 		mContext = context;
@@ -46,6 +39,7 @@ public class SpinnerMultiAdapter extends BaseAdapter{
 
 	public void addHeader(String name) {
 		addItem(new HeaderSpinnerItem(name));
+		mHeaderSet.add(mSpinnerItem.size() -1);
 	}
 	
 	@Override
@@ -74,5 +68,19 @@ public class SpinnerMultiAdapter extends BaseAdapter{
 		convertView = mInflater.inflate(mSpinnerItem.get(position).getLayout(), parent, false);
 		mSpinnerItem.get(position).setView(convertView);
 		return convertView;
+	}
+
+	/**
+	 * Because we can have headers, this gets item position without headers
+	 * @param position
+	 * @return real item position
+	 */
+	public int getRealPosition(int position){
+		int tempPos = position;
+		for(int i = 0; i <= position; i++){
+			if(mHeaderSet.contains(i)) tempPos++;
+		}
+
+		return tempPos;
 	}
 }

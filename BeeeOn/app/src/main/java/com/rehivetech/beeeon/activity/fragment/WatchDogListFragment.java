@@ -23,7 +23,7 @@ import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.activity.MainActivity;
 import com.rehivetech.beeeon.activity.WatchDogEditRuleActivity;
 import com.rehivetech.beeeon.adapter.Adapter;
-import com.rehivetech.beeeon.adapter.WatchDog;
+import com.rehivetech.beeeon.adapter.watchdog.WatchDog;
 import com.rehivetech.beeeon.arrayadapter.WatchDogListAdapter;
 import com.rehivetech.beeeon.asynctask.CallbackTask;
 import com.rehivetech.beeeon.asynctask.ReloadWatchDogsTask;
@@ -209,6 +209,8 @@ public class WatchDogListFragment extends Fragment{
 
         // add new watchdog rule
         FloatingActionButton fab = (FloatingActionButton) mView.findViewById(R.id.fab);
+        fab.attachToListView(mWatchDogListView);
+
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

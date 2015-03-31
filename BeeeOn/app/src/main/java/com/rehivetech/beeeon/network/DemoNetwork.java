@@ -21,13 +21,11 @@ import com.rehivetech.beeeon.household.User.Gender;
 import com.rehivetech.beeeon.household.User.Role;
 import com.rehivetech.beeeon.network.authentication.IAuthProvider;
 import com.rehivetech.beeeon.network.xml.CustomViewPair;
-import com.rehivetech.beeeon.adapter.WatchDog;
-import com.rehivetech.beeeon.network.xml.XmlCreator;
+import com.rehivetech.beeeon.adapter.watchdog.WatchDog;
 import com.rehivetech.beeeon.network.xml.XmlParsers;
 import com.rehivetech.beeeon.network.xml.action.ComplexAction;
 import com.rehivetech.beeeon.network.xml.condition.Condition;
 import com.rehivetech.beeeon.pair.LogDataPair;
-import com.rehivetech.beeeon.util.Log;
 
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;

@@ -1,8 +1,7 @@
-package com.rehivetech.beeeon.adapter;
+package com.rehivetech.beeeon.adapter.watchdog;
 
 import com.rehivetech.beeeon.IIdentifier;
 import com.rehivetech.beeeon.R;
-import com.rehivetech.beeeon.adapter.device.Device;
 
 import java.util.ArrayList;
 
@@ -10,33 +9,34 @@ import java.util.ArrayList;
  * Created by ThinkDeep on 8.3.2015.
  */
 public class WatchDog implements IIdentifier {
-
-    // TODO make as separated enum table
-    public static final String OPERATOR_GT = "gt";
-    public static final String OPERATOR_LT = "lt";
+    public static final int TYPE_SENSOR = 1;
+    public static final int TYPE_QUALITY_OF_LIFE = 2; // TODO not sure if usable here (specified on page)
+    public static final int TYPE_GEOFENCE = 3;
 
     // types of possible actions which watchdog cane make
-    public static final int ACTION_UNKNOWN = 0;
-    public static final int ACTION_NOTIFICATION = 1;
-    public static final int ACTION_ACTOR = 2;
+    public static final String ACTION_NOTIFICATION = "notif";
+    public static final String ACTION_ACTOR = "act";
 
-    // types of parameters (TODO should be as enum class in the future)
-    public static final int PAR_DEV_ID = 0; // TODO preskocit zatim parametr s ID senzoru
-    public static final int PAR_OPERATOR = 1;
-    public static final int PAR_TRESHOLD = 2;
-    public static final int PAR_ACTION_VALUE = 3;
-
+    // icons of possible actions
     public static final int[] actionIcons = {
-            R.drawable.ic_unknown,
-            R.drawable.ic_notification,
-            R.drawable.ic_shutdown
+        R.drawable.ic_notification,
+        R.drawable.ic_shutdown
     };
 
+    // types of parameters (TODO should be as enum class in the future)
+    public static final int PAR_DEV_ID = 0;
+    public static final int PAR_OPERATOR = 1;
+    public static final int PAR_TRESHOLD = 2;
+    public static final int PAR_ACTION_TYPE = 3;
+    public static final int PAR_ACTION_VALUE = 4;
+
     private boolean mEnabled = true;
-    private int mType = 1; // temporary solution
+    private int mType = TYPE_SENSOR;
     private String mId;
     private String mName;
     private String mAdapterId;
+
+    private WatchDogBaseType mOperatorType;
 
 	private String mGeoRegionId;
 	private String mGeoDirectionType;
@@ -44,9 +44,23 @@ public class WatchDog implements IIdentifier {
     private ArrayList<String> mDevices;
     private ArrayList<String> mParams;
 
-    public WatchDog(){}
     public WatchDog(int type){
         mType = type;
+        switch(mType){
+            default:
+            case TYPE_SENSOR:
+                mOperatorType = new WatchDogSensorType();
+                break;
+            /*
+            case TYPE_GEOFENCE:
+                mOperatorType = new WatchDogSensorType();
+                break;
+            //*/
+        }
+    }
+
+    public WatchDogBaseType getOperatorType(){
+        return mOperatorType;
     }
 
     public String getId(){
@@ -107,6 +121,8 @@ public class WatchDog implements IIdentifier {
 
     public void setParams(ArrayList<String> params){
         mParams = params;
+        getOperatorType().setParams(mParams);
+        getOperatorType().setByType(this.getParams().get(WatchDog.PAR_OPERATOR));
     }
 
     public void AddParam(String param) {
@@ -129,23 +145,23 @@ public class WatchDog implements IIdentifier {
 		this.mGeoRegionId = GeoRegionId;
 	}
 
-    public int getActionIconResource(){
-        if(mType < 0 || mType >= actionIcons.length)
-            return actionIcons[0];
-        else
-            return actionIcons[mType];
+    public String getParam(int pos){
+        if(this.getParams().size() <= pos) return null;
+
+        return this.getParams().get(pos);
     }
 
-    public int getOperatorIconResource(){
-        String operator = this.getParams().get(WatchDog.PAR_OPERATOR);
-        switch(operator){
-            case OPERATOR_LT:
-                return R.drawable.ic_action_previous_item;
+    public int getActionIconResource(){
+        String action = getParam(PAR_ACTION_TYPE);
+        if(action == null) action = ACTION_NOTIFICATION;
+
+        switch(action){
+            case ACTION_ACTOR:
+                return actionIcons[1];
 
             default:
-            case OPERATOR_GT:
-                return R.drawable.ic_action_next_item;
+            case ACTION_NOTIFICATION:
+                return actionIcons[0];
         }
-
     }
 }
