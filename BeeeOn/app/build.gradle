@@ -84,7 +84,7 @@ dependencies {
     compile 'com.sonyericsson.extras.liveware:utils:3.0'
     compile 'joda-time:joda-time:2.7'
     compile 'com.github.amlcurran.showcaseview:showcaseview:5.1.1@aar'
-    // compile('com.jjoe64:graphview:4.0.0') { exclude module: 'appcompat-v7' }
+   	compile('com.jjoe64:graphview:4.0.1') { exclude module: 'appcompat-v7' }
     // Libraries for testing
     androidTestCompile 'com.jayway.android.robotium:robotium-solo:5.3.1'
 }

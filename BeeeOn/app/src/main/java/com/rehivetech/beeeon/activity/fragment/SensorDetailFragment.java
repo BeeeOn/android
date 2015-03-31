@@ -1,42 +1,25 @@
 package com.rehivetech.beeeon.activity.fragment;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map.Entry;
-import java.util.SortedMap;
-
-import org.joda.time.DateTime;
-import org.joda.time.DateTimeZone;
-import org.joda.time.Interval;
-import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
-
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.jjoe64.graphview.GraphView;
-import com.jjoe64.graphview.GraphView.GraphViewData;
-import com.jjoe64.graphview.GraphViewSeries;
-import com.jjoe64.graphview.GraphViewSeries.GraphViewSeriesStyle;
-import com.jjoe64.graphview.LineGraphView;
-
+import com.jjoe64.graphview.series.BarGraphSeries;
+import com.jjoe64.graphview.series.BaseSeries;
+import com.jjoe64.graphview.series.DataPoint;
+import com.jjoe64.graphview.series.LineGraphSeries;
 import com.melnykov.fab.FloatingActionButton;
 import com.rehivetech.beeeon.Constants;
 import com.rehivetech.beeeon.R;
@@ -55,17 +38,26 @@ import com.rehivetech.beeeon.adapter.device.values.OpenClosedValue;
 import com.rehivetech.beeeon.adapter.location.Location;
 import com.rehivetech.beeeon.asynctask.ActorActionTask;
 import com.rehivetech.beeeon.asynctask.CallbackTask.CallbackTaskListener;
+import com.rehivetech.beeeon.asynctask.GetDeviceLogTask;
 import com.rehivetech.beeeon.asynctask.ReloadFacilitiesTask;
 import com.rehivetech.beeeon.asynctask.SaveDeviceTask;
 import com.rehivetech.beeeon.asynctask.SaveFacilityTask;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.pair.LogDataPair;
-import com.rehivetech.beeeon.pair.SaveDevicePair;
-import com.rehivetech.beeeon.pair.SaveFacilityPair;
 import com.rehivetech.beeeon.util.GraphViewHelper;
 import com.rehivetech.beeeon.util.Log;
 import com.rehivetech.beeeon.util.TimeHelper;
 import com.rehivetech.beeeon.util.UnitsHelper;
+
+import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
+import org.joda.time.Interval;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
+
+import java.util.Map.Entry;
+import java.util.SortedMap;
+import java.util.concurrent.TimeUnit;
 
 public class SensorDetailFragment extends Fragment {
 
@@ -91,7 +83,6 @@ public class SensorDetailFragment extends Fragment {
 	private TextView mGraphLabel;
 	private LinearLayout mGraphLayout;
 	private GraphView mGraphView;
-	private TextView mGraphInfo;
 	private TextView mBattery;
 	private TextView mSignal;
 
@@ -117,7 +108,7 @@ public class SensorDetailFragment extends Fragment {
 	private boolean mWasTapGraph = false;
 	private int mEditMode = EDIT_NONE;
 
-	private GraphViewSeries mGraphSeries;
+	private BaseSeries<DataPoint>  mGraphSeries;
 	
 
 	private static final String GRAPH_DATE_TIME_FORMAT = "dd.MM. kk:mm";
@@ -222,15 +213,12 @@ public class SensorDetailFragment extends Fragment {
 		mBattery = (TextView) mView.findViewById(R.id.sen_detail_battery_value);
 		// Get signal value
 		mSignal = (TextView) mView.findViewById(R.id.sen_detail_signal_value);
+		// Get graphView
+		mGraphView = (GraphView) mView.findViewById(R.id.sen_graph);
+
 		// Set title selected for animation if is text long
 		mName.setSelected(true);
 		mLocation.setSelected(true);
-
-
-		// Get LinearLayout for graph
-		mGraphLayout = (LinearLayout) mView.findViewById(R.id.sen_graph_layout);
-		mGraphLabel = (TextView) mView.findViewById(R.id.sen_graph_name);
-		//mGraphInfo = (TextView) getView().findViewById(R.id.sen_graph_info);
 
 
 		mFABedit.setOnClickListener(new OnClickListener() {
@@ -322,6 +310,12 @@ public class SensorDetailFragment extends Fragment {
 		// Set signal
 		mSignal.setText(facility.getNetworkQuality()+"%");
 
+		// Add Graph
+		if (mUnitsHelper != null && mTimeHelper != null) {
+			DateTimeFormatter fmt = mTimeHelper.getFormatter(GRAPH_DATE_TIME_FORMAT, adapter);
+			addGraphView(fmt, mUnitsHelper);
+		}
+
 		// Visible all elements
 		visibleAllElements();
 
@@ -376,32 +370,29 @@ public class SensorDetailFragment extends Fragment {
 
 	private void addGraphView(final DateTimeFormatter fmt, final UnitsHelper unitsHelper) {
 		// Create and set graphView
-		mGraphView = GraphViewHelper.prepareGraphView(getView().getContext(), "", mDevice, fmt, unitsHelper); // empty heading
-		
-		mGraphView.setVisibility(View.GONE);
-		mGraphView.setScrollable(false);
-		mGraphView.setScalable(false);
-		
-		if (mGraphView instanceof LineGraphView) {
-			mGraphView.setBackgroundColor(getResources().getColor(R.color.alpha_blue));// getResources().getColor(R.color.log_blue2));
-			((LineGraphView) mGraphView).setDrawBackground(true);
+		GraphViewHelper.prepareGraphView(mGraphView, getView().getContext(), mDevice, fmt, unitsHelper); // empty heading
+
+		//mGraphView.setVisibility(View.GONE);
+		mGraphView.getViewport().setScrollable(false);
+		mGraphView.getViewport().setScalable(false);
+
+		if (mDevice.getValue() instanceof BaseEnumValue) {
+			mGraphSeries = new BarGraphSeries<>(new DataPoint[]{new DataPoint(0, 0), new DataPoint(1,1)});
+			((BarGraphSeries) mGraphSeries).setSpacing(30);
+		} else {
+			mGraphSeries =  new LineGraphSeries<>(new DataPoint[]{new DataPoint(0, 0), new DataPoint(1,1)});
+			((LineGraphSeries)mGraphSeries).setBackgroundColor(getResources().getColor(R.color.alpha_blue));
+			((LineGraphSeries)mGraphSeries).setDrawBackground(true);
+			((LineGraphSeries) mGraphSeries).setThickness(2);
+//			((LineGraphSeries) mGraphSeries).setDrawCubicLine(true);
 		}
-		// graphView.setAlpha(128);
+		mGraphSeries.setColor(getResources().getColor(R.color.beeeon_primary_cyan));
+		mGraphSeries.setTitle("Graph");
 
 		// Add data series
-		GraphViewSeriesStyle seriesStyleBlue = new GraphViewSeriesStyle(getResources().getColor(R.color.beeeon_primary_cyan), 2);
-		// GraphViewSeriesStyle seriesStyleGray = new GraphViewSeriesStyle(getResources().getColor(R.color.light_gray),2);
-
-		mGraphSeries = new GraphViewSeries("Graph", seriesStyleBlue, new GraphViewData[] { new GraphView.GraphViewData(0, 0), });
-		mGraphView.addSeries(mGraphSeries);
-		
-		if (!(mDevice.getValue() instanceof BaseEnumValue)) {
-			mGraphView.setManualYAxisBounds(1.0, 0.0);
-		}
-
-		mGraphLayout.addView(mGraphView);
-
-		mGraphLayout.setOnTouchListener(new OnTouchListener() {
+//		mGraphView.addSeries(mGraphSeries);
+/*
+		mGraphInfo.setOnTouchListener(new OnTouchListener() {
 
 			@Override
 			public boolean onTouch(View v, MotionEvent event) {
@@ -412,63 +403,22 @@ public class SensorDetailFragment extends Fragment {
 				if (mWasTapGraph)
 					return true;
 
-
+				mWasTapLayout = false;
 				mWasTapGraph = true;
 
 				Log.d(TAG, "onTouch layout");
-				mGraphView.setScrollable(true);
-				mGraphView.setScalable(true);
+				mGraphView.getViewport().setScrollable(true);
+				mGraphView.getViewport().setScalable(true);
 				mActivity.setEnableSwipe(false);
 				mGraphInfo.setVisibility(View.GONE);
+//				mGraphView.animateY(2000);
 				onTouch(v, event);
 				return true;
 			}
-		});
-
-		loadGraphData();
+		});*/
 	}
 
-	private void loadGraphData() {
-		DateTime end = DateTime.now(DateTimeZone.UTC);
-		DateTime start = end.minusWeeks(1);
 
-		DateTimeFormatter fmt = DateTimeFormat.forPattern(LOG_DATE_TIME_FORMAT).withZoneUTC();
-		Log.d(TAG, String.format("Loading graph data from %s to %s.", fmt.print(start), fmt.print(end)));
-
-		mGetDeviceLogTask = new GetDeviceLogTask();
-		LogDataPair pair = new LogDataPair( //
-				mDevice, // device
-				new Interval(start, end), // interval from-to
-				DataType.AVERAGE, // type
-				(mDevice.getValue() instanceof BaseEnumValue )?DataInterval.RAW:DataInterval.HOUR); // interval
-		mGetDeviceLogTask.execute(new LogDataPair[] { pair });
-	}
-
-	private List<Location> getLocationsArray() {
-		// Get locations from adapter
-		List<Location> locations = new ArrayList<Location>();
-
-		Adapter adapter = mController.getActiveAdapter();
-		if (adapter != null) {
-			locations = mController.getLocations(adapter.getId());
-		}
-
-		// Sort them
-		Collections.sort(locations);
-
-		return locations;
-	}
-
-	private int getLocationsIndexFromArray(List<Location> locations) {
-		int index = 0;
-		for (Location room : locations) {
-			if (room.getId().equalsIgnoreCase(mLocationID)) {
-				return index;
-			}
-			index++;
-		}
-		return index;
-	}
 
 	public void fillGraph(DeviceLog log) {
 		if (mGraphView == null) {
@@ -477,8 +427,8 @@ public class SensorDetailFragment extends Fragment {
 
 		SortedMap<Long, Float> values = log.getValues();
 		int size = values.size();
-		GraphView.GraphViewData[] data = new GraphView.GraphViewData[size];
-		
+		DataPoint[] data = new DataPoint[size];
+
 		Log.d(TAG, String.format("Filling graph with %d values. Min: %.1f, Max: %.1f", size, log.getMinimum(), log.getMaximum()));
 
 		int i = 0;
@@ -486,28 +436,62 @@ public class SensorDetailFragment extends Fragment {
 			Long dateMillis = entry.getKey();
 			float value = Float.isNaN(entry.getValue()) ? log.getMinimum() : entry.getValue();
 
-			data[i++] = new GraphView.GraphViewData(dateMillis, value);
-			
+			data[i++] = new DataPoint(dateMillis, value);
+
 			// This shouldn't happen, only when some other thread changes this values object - can it happen?
 			if (i >= size)
 				break;
 		}
-		
+
 		Log.d(TAG, "Filling graph finished");
 
 		// Set maximum as +10% more than deviation
 		if (!(mDevice.getValue() instanceof BaseEnumValue)) {
-			mGraphView.setManualYAxisBounds(log.getMaximum() + log.getDeviation() * 0.1, log.getMinimum());
+			mGraphView.getViewport().setMaxY(log.getMaximum() + log.getDeviation() * 0.1);
+			mGraphView.getViewport().setMinY(log.getMinimum());
 		}
-		// mGraphView.setViewPort(0, 7);
+		mGraphView.removeAllSeries();
 		mGraphSeries.resetData(data);
-		mGraphInfo.setText(getView().getResources().getString(R.string.sen_detail_graph_info));
+		mGraphView.addSeries(mGraphSeries);
+		mGraphView.getViewport().setXAxisBoundsManual(true);
+		if (values.size() > 100 && mGraphSeries instanceof BarGraphSeries) {
+			mGraphView.getViewport().setMaxX(mGraphSeries.getHighestValueX());
+			mGraphView.getViewport().setMinX(mGraphSeries.getHighestValueX() - TimeUnit.HOURS.toMillis(1));
+		}
+
+		mGraphView.setLoading(false);
+		mGraphView.animateY(2000);
+		//mGraphInfo.setText(getView().getResources().getString(R.string.sen_detail_graph_info));
+	}
+
+	public void setSensorID(String id) {
+		mDeviceID = id;
+	}
+
+	public void setLocationID(String locationId) {
+		mLocationID = locationId;
+	}
+
+	public void setPosition(int position) {
+		mCurPageNumber = position;
+	}
+
+	public void setSelectedPosition(int mActiveDevicePosition) {
+		mSelPageNumber = mActiveDevicePosition;
+	}
+
+	public void setAdapterID(String mActiveAdapterId) {
+		mAdapterId = mActiveAdapterId;
+	}
+
+	public void setFragmentAdapter(SensorDetailActivity.ScreenSlidePagerAdapter screenSlidePagerAdapter) {
+		mFragmentAdapter = screenSlidePagerAdapter;
 	}
 
 	/*
 	 * ================================= ASYNC TASK ===========================
 	 */
-	
+
 	protected void doActorAction(final Device device) {
 		if (!device.getType().isActor()) {
 			return;
@@ -536,102 +520,12 @@ public class SensorDetailFragment extends Fragment {
 				mValueSwitch.setEnabled(true);
 				mValue.setText(mUnitsHelper.getStringValueUnit(mDevice.getValue()));
 			}
-			
+
 		});
 		mActorActionTask.execute(device);
 	}
 
-	private void doSaveDeviceTask(SaveDevicePair pair) {
-		mSaveDeviceTask = new SaveDeviceTask(getActivity().getApplicationContext());
-		mSaveDeviceTask.setListener(new CallbackTaskListener() {
-
-			@Override
-			public void onExecute(boolean success) {
-				if (mActivity.getProgressDialog() != null)
-					mActivity.getProgressDialog().dismiss();
-				if (success) {
-					Log.d(TAG, "Success save to server");
-
-					// Change GUI
-					mActivity.redraw();
-					Toast.makeText(mActivity, R.string.toast_success_save_data, Toast.LENGTH_LONG).show();
-				} else {
-					Log.d(TAG, "Fail save to server");
-				}
-			}
-		});
-
-		mSaveDeviceTask.execute(pair);
-	}
-
-	public void doSaveFacilityTask(SaveFacilityPair pair) {
-		mSaveFacilityTask = new SaveFacilityTask(mActivity);
-		mSaveFacilityTask.setListener(new CallbackTaskListener() {
-			@Override
-			public void onExecute(boolean success) {
-				if (mActivity.getProgressDialog() != null)
-					mActivity.getProgressDialog().dismiss();
-
-				if (success) {
-					Log.d(TAG, "Success save to server");
-					// Change GUI
-					mActivity.redraw();
-					Toast.makeText(mActivity, R.string.toast_success_save_data, Toast.LENGTH_LONG).show();
-				} else {
-					Log.d(TAG, "Fail save to server");
-				}
-			}
-		});
-		mSaveFacilityTask.execute(pair);
-	}
-
-	public void setSensorID(String id) {
-		mDeviceID = id;
-	}
-
-	public void setLocationID(String locationId) {
-		mLocationID = locationId;
-	}
-
-	public void setPosition(int position) {
-		mCurPageNumber = position;
-	}
-
-	public void setSelectedPosition(int mActiveDevicePosition) {
-		mSelPageNumber = mActiveDevicePosition;
-	}
-
-	public void setAdapterID(String mActiveAdapterId) {
-		mAdapterId = mActiveAdapterId;
-	}
-
-	public void setFragmentAdapter(SensorDetailActivity.ScreenSlidePagerAdapter screenSlidePagerAdapter) {
-		mFragmentAdapter = screenSlidePagerAdapter;
-	}
-
-	/**
-	 * Changes selected location and redraws list of adapters there
-	 */
-	private class GetDeviceLogTask extends AsyncTask<LogDataPair, Void, DeviceLog> {
-		@Override
-		protected DeviceLog doInBackground(LogDataPair... pairs) {
-			LogDataPair pair = pairs[0]; // expects only one device at a time is sent there
-
-			// Load log data if needed
-			mController.reloadDeviceLog(pair);
-			
-			// Get loaded log data (TODO: this could be done in gui)
-			return mController.getDeviceLog(pair);
-		}
-
-		@Override
-		protected void onPostExecute(DeviceLog log) {
-			fillGraph(log);
-		}
-
-	}
-
-	private void doReloadFacilitiesTask(final String adapterId, final boolean forceRefresh) {
+	protected void doReloadFacilitiesTask(final String adapterId, final boolean forceRefresh) {
 		mReloadFacilitiesTask = new ReloadFacilitiesTask(mActivity, forceRefresh);
 
 		mReloadFacilitiesTask.setListener(new CallbackTaskListener() {
@@ -649,6 +543,7 @@ public class SensorDetailFragment extends Fragment {
 					return;
 				}
 				initLayout(mDevice);
+				doLoadGraphData();
 			}
 
 		});
@@ -656,5 +551,26 @@ public class SensorDetailFragment extends Fragment {
 		mReloadFacilitiesTask.execute(adapterId);
 	}
 
+	protected void doLoadGraphData() {
+		DateTime end = DateTime.now(DateTimeZone.UTC);
+		DateTime start = end.minusWeeks(1);
+
+		DateTimeFormatter fmt = DateTimeFormat.forPattern(LOG_DATE_TIME_FORMAT).withZoneUTC();
+		Log.d(TAG, String.format("Loading graph data from %s to %s.", fmt.print(start), fmt.print(end)));
+
+		mGetDeviceLogTask = new GetDeviceLogTask(mActivity);
+		LogDataPair pair = new LogDataPair( //
+				mDevice, // device
+				new Interval(start, end), // interval from-to
+				DataType.AVERAGE, // type
+				(mDevice.getValue() instanceof BaseEnumValue )?DataInterval.RAW:DataInterval.HOUR); // interval
+		mGetDeviceLogTask.setListener(new GetDeviceLogTask.CallbackLogTaskListener() {
+			@Override
+			public void onExecute(DeviceLog result) {
+				fillGraph(result);
+			}
+		});
+		mGetDeviceLogTask.execute(new LogDataPair[] { pair });
+	}
 
 }

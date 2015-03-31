@@ -119,7 +119,7 @@ public class WatchDogListFragment extends Fragment{
                     return;
                 }
                 // TODO add reload async task
-                // mActivity.redrawMenu();
+                // mActivity.redraw();
                 //doReloadFacilitiesTask(adapter.getId());
             }
         });

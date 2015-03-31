@@ -159,7 +159,7 @@ public class SetupSensorActivity extends BaseApplicationActivity {
 						return;
 					}
 
-					location = new Location(Location.NEW_LOCATION_ID, mNewLocation.getText().toString(), mNewIconSpinner.getSelectedItemPosition());
+					location = new Location(Location.NEW_LOCATION_ID, mNewLocation.getText().toString(), ((Location.LocationIcon)mNewIconSpinner.getAdapter().getItem(mNewIconSpinner.getSelectedItemPosition())).getId());
 
 				} else {
 					location = (Location) mSpinner.getSelectedItem();
@@ -229,8 +229,6 @@ public class SetupSensorActivity extends BaseApplicationActivity {
 			@Override
 			public void onExecute(boolean success) {
 
-				//AlertDialog dialog = (AlertDialog) getDialog();
-				//if (dialog != null) {
 					mProgress.cancel();
 					if(success){
 						Toast.makeText(mActivity, R.string.toast_new_sensor_added, Toast.LENGTH_LONG).show();
@@ -243,13 +241,6 @@ public class SetupSensorActivity extends BaseApplicationActivity {
                         imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
 						finish();
 					}
-					
-					//dialog.dismiss();
-					//mActivity.setActiveAdapterID(mAdapter.getId());
-					//mActivity.setActiveMenuID(pair.location.getId());
-					//mActivity.redrawMenu();
-					//mActivity.redrawMainFragment();
-				//}
 			}
 
 		});

@@ -160,8 +160,8 @@ public class AddAdapterFragmentDialog extends TrackDialogFragment {
 					Toast.makeText(mActivity, R.string.toast_adapter_activated, Toast.LENGTH_LONG).show();
 
 					AddAdapterFragmentDialog.this.dismiss();
-					mActivity.setActiveAdapterAndLocation();
-					mActivity.redrawMenu();
+					mActivity.setActiveAdapterAndMenu();
+					mActivity.redraw();
 					mActivity.checkNoDevices();
 				}
 			}

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.v4.app.FragmentManager;
@@ -17,6 +18,7 @@ import android.view.Window;
 import android.widget.Toast;
 
 
+import com.rehivetech.beeeon.Constants;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.activity.fragment.SensorDetailFragment;
 import com.rehivetech.beeeon.adapter.device.Device;
@@ -78,11 +80,7 @@ public class SensorDetailActivity extends BaseApplicationActivity {
 		// Get controller
 		mController = Controller.getInstance(getApplicationContext());
 
-		// Prepare progress dialog
-		mProgress = new ProgressDialog(this);
-		mProgress.setMessage(getString(R.string.progress_saving_data));
-		mProgress.setCancelable(false);
-		mProgress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+
 
 		Log.d(TAG, "onCreate()");
 
@@ -108,6 +106,21 @@ public class SensorDetailActivity extends BaseApplicationActivity {
 	}
 
 	@Override
+	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+		if(requestCode == Constants.EDIT_SENSOR_REQUEST_CODE ) {
+			Log.d(TAG, "Return from add adapter activity");
+			if(resultCode == Constants.EDIT_SENSOR_CANCELED) {
+				Log.d(TAG, "Activity was canceled");
+			}
+			else if (resultCode == Constants.EDIT_SENSOR_SUCCESS) {
+				Log.d(TAG, "Edit sensor succes");
+				doReloadFacilitiesTask(mActiveAdapterId, false);
+			}
+		}
+	}
+
+	@Override
 	protected void onAppResume() {
 		Log.d(TAG, "onAppResume()");
 
@@ -118,6 +131,9 @@ public class SensorDetailActivity extends BaseApplicationActivity {
 
 	@Override
 	protected void onAppPause() {
+		if (mReloadFacilitiesTask != null) {
+			mReloadFacilitiesTask.cancel(true);
+		}
 	}
 
 	@Override
@@ -198,7 +214,6 @@ public class SensorDetailActivity extends BaseApplicationActivity {
 			fragment.setFragmentAdapter(this);
 
 			return fragment;
-			//return SensorDetailFragment.create(mDevices.get(position).getId(), mDevices.get(position).getFacility().getLocationId(), position, mActiveDevicePosition, mActiveAdapterId);
 		}
 
 		@Override
@@ -242,9 +257,7 @@ public class SensorDetailActivity extends BaseApplicationActivity {
 		mPager.setCurrentItem(mActiveDevicePosition);
 	}
 
-	public ProgressDialog getProgressDialog() {
-		return mProgress;
-	}
+
 
 	public ViewPager getPager() {
 		return mPager;
@@ -258,11 +271,6 @@ public class SensorDetailActivity extends BaseApplicationActivity {
 
 		// Always call the superclass so it can save the view hierarchy state
 		super.onSaveInstanceState(savedInstanceState);
-	}
-
-	public void redraw() {
-		Log.d(TAG, "Start redraw ActiveDevice:" + mActiveDeviceId + " ActiveAdapter:" + mActiveAdapterId);
-		doReloadFacilitiesTask(mActiveAdapterId, true);
 	}
 
 }

@@ -216,17 +216,8 @@ public class SetupSensorFragmentDialog extends TrackDialogFragment {
 					dialog.dismiss();
 					mActivity.setActiveAdapterID(mAdapter.getId());
 					mActivity.setActiveMenuID(pair.location.getId());
-					mActivity.redrawMenu();
-					mActivity.redrawMainFragment();
+					mActivity.redraw();
 				}
-
-				/*
-				 * if (success) { // Successfuly saved, close this dialog and return back //SetupSensorActivityDialog.this.finish(); // controll if more sensor is uninit if (mUnInitDevices.size() > 1)
-				 * { Bundle bundle = new Bundle(); bundle.putInt(Constants.ADDSENSOR_COUNT_SENSOR, mCountOfSensor); // go to setup uninit sensor Intent intent = new
-				 * Intent(SetupSensorActivityDialog.this, SetupSensorActivityDialog.class); intent.putExtras(bundle); startActivity(intent); return; } if (mUnInitDevices.size() == 1) { // last one //
-				 * TODO: this only when going from loginscreen, need to review if (mController.isLoggedIn()) { Intent intent = new Intent(SetupSensorActivityDialog.this, LocationScreenActivity.class);
-				 * startActivity(intent); return; } } }
-				 */
 			}
 
 		});
