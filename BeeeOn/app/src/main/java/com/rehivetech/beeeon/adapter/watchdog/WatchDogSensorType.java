@@ -25,7 +25,7 @@ public class WatchDogSensorType extends WatchDogBaseType {
 			"lt"
 	};
 
-	WatchDogSensorType(){
+	public WatchDogSensorType(){
 		super(WatchDogOperatorType.SENSOR);
 	}
 

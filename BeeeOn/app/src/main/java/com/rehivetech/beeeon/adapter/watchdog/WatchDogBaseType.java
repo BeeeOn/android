@@ -20,14 +20,14 @@ public abstract class WatchDogBaseType {
 	protected UnitsHelper mUnitsHelper;
 
 	public enum WatchDogOperatorType{
-		SENSOR, GEOFENCE
+		SENSOR,
+		GEOFENCE
 	}
 
 	public int mIndex;
 	private WatchDogOperatorType mType;
-	private ArrayList<String> mParams;
 
-	WatchDogBaseType(WatchDogOperatorType type){
+	public WatchDogBaseType(WatchDogOperatorType type){
 		mIndex = 0;
 		mType = type;
 	}

@@ -34,6 +34,9 @@ import com.rehivetech.beeeon.adapter.watchdog.WatchDog;
 import com.rehivetech.beeeon.adapter.device.Device;
 import com.rehivetech.beeeon.adapter.device.Facility;
 import com.rehivetech.beeeon.adapter.location.Location;
+import com.rehivetech.beeeon.adapter.watchdog.WatchDogBaseType;
+import com.rehivetech.beeeon.adapter.watchdog.WatchDogGeofenceType;
+import com.rehivetech.beeeon.adapter.watchdog.WatchDogSensorType;
 import com.rehivetech.beeeon.arrayadapter.DeviceArrayAdapter;
 import com.rehivetech.beeeon.arrayadapter.SpinnerMultiAdapter;
 import com.rehivetech.beeeon.asynctask.CallbackTask;
@@ -94,6 +97,7 @@ public class WatchDogEditRuleActivity extends BaseApplicationActivity {
     private boolean mIsNew = false;
     private WatchDog mWatchDog;
     private String mWatchDogAction;
+    private WatchDogBaseType mWatchDogOperator;
 
     // async tasks
     private ReloadFacilitiesTask mReloadFacilitiesTask;
@@ -195,8 +199,10 @@ public class WatchDogEditRuleActivity extends BaseApplicationActivity {
             mWatchDog = new WatchDog(WatchDog.TYPE_SENSOR);
         }
 
+        mWatchDogOperator = mWatchDog.getOperatorType();
+
         // needs to set units helper if want to use it
-        mWatchDog.getOperatorType().setUnitsHelper(mUnitsHelper);
+        mWatchDogOperator.setUnitsHelper(mUnitsHelper);
 
         // hide keyboard
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
@@ -238,8 +244,8 @@ public class WatchDogEditRuleActivity extends BaseApplicationActivity {
         }
 
         // TODO delete (for testing reasons)
-        //SimpleGeofence x = new SimpleGeofence("564", "banan", 451, 563, 10);
-        //mSpinnerMultiAdapter.addItem(new GeofenceSpinnerItem(x, x.getId(), this));
+        SimpleGeofence x = new SimpleGeofence("564", "banan", 451, 563, 10);
+        mSpinnerMultiAdapter.addItem(new GeofenceSpinnerItem(x, x.getId(), this));
 
         mIfItemSpinner.setAdapter(mSpinnerMultiAdapter);
         mIfItemSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -249,17 +255,17 @@ public class WatchDogEditRuleActivity extends BaseApplicationActivity {
 
                 switch (selected.getType()) {
                     case DEVICE:
-                        mWatchDog.setOperatorType(WatchDog.TYPE_SENSOR);
+                        mWatchDogOperator = new WatchDogSensorType();
                         break;
 
                     case GEOFENCE:
-                        mWatchDog.setOperatorType(WatchDog.TYPE_GEOFENCE);
+                        mWatchDogOperator = new WatchDogGeofenceType();
                         break;
                 }
                 // we need to refresh UnitHelper cause setOperator destroys it
-                mWatchDog.getOperatorType().setUnitsHelper(mUnitsHelper);
+                mWatchDogOperator.setUnitsHelper(mUnitsHelper);
                 // setup gui based on type
-                mWatchDog.getOperatorType().setupGUI(selected, mOperatorButton, mRuleTreshold, mRuleTresholdUnit);
+                mWatchDogOperator.setupGUI(selected, mOperatorButton, mRuleTreshold, mRuleTresholdUnit);
             }
 
             @Override
@@ -271,7 +277,7 @@ public class WatchDogEditRuleActivity extends BaseApplicationActivity {
         // setup gui based on type in default position
         int defaultPos = mSpinnerMultiAdapter.getRealPosition(0);
         mIfItemSpinner.setSelection(defaultPos);
-        mWatchDog.getOperatorType().setupGUI(mSpinnerMultiAdapter.getItem(defaultPos), mOperatorButton, mRuleTreshold, mRuleTresholdUnit);
+        mWatchDogOperator.setupGUI(mSpinnerMultiAdapter.getItem(defaultPos), mOperatorButton, mRuleTreshold, mRuleTresholdUnit);
 
         // changing specified layout when checked
         mActionType.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
@@ -344,8 +350,8 @@ public class WatchDogEditRuleActivity extends BaseApplicationActivity {
         // setup operators icon
         String par_operator = mWatchDog.getParam(WatchDog.PAR_OPERATOR);
         if(par_operator != null){
-            mWatchDog.getOperatorType().setByType(par_operator);
-            mOperatorButton.setImageResource(mWatchDog.getOperatorType().getIconResource());
+            mWatchDogOperator.setByType(par_operator);
+            mOperatorButton.setImageResource(mWatchDogOperator.getIconResource());
         }
     }
 
@@ -446,13 +452,14 @@ public class WatchDogEditRuleActivity extends BaseApplicationActivity {
 
             case GEOFENCE:
                 // TODO
+
             default:
                 Toast.makeText(this, "NOT IMPLEMENTED", Toast.LENGTH_LONG).show();
                 return;
         }
 
         // operator
-        newParams.add(mWatchDog.getOperatorType().getCode());
+        newParams.add(mWatchDogOperator.getCode());
         // treshold
         newParams.add(mRuleTreshold.getText().toString());
         // action type
@@ -473,6 +480,7 @@ public class WatchDogEditRuleActivity extends BaseApplicationActivity {
                 break;
         }
 
+        mWatchDog.setOperatorType(mWatchDogOperator);
         mWatchDog.setParams(newParams);
         mWatchDog.setDevices(devsIds);
 

@@ -24,7 +24,7 @@ public class WatchDogGeofenceType extends WatchDogBaseType {
 			"out"
 	};
 
-	WatchDogGeofenceType(){
+	public WatchDogGeofenceType(){
 		super(WatchDogOperatorType.GEOFENCE);
 	}
 
