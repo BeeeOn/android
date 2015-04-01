@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.SwitchCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -75,7 +76,7 @@ public class SensorDetailFragment extends Fragment {
 	private TextView mName;
 	private TextView mLocation;
 	private TextView mValue;
-	private Button mValueSwitch;
+	private SwitchCompat mValueSwitch;
 	private TextView mTime;
 	private ImageView mIcon;
 	private TextView mRefreshTimeText;
@@ -200,7 +201,7 @@ public class SensorDetailFragment extends Fragment {
 		mLocation = (TextView) mView.findViewById(R.id.sen_detail_loc_name);
 		// Get View for sensor value
 		mValue = (TextView) mView.findViewById(R.id.sen_detail_value);
-		mValueSwitch = (Button) mView.findViewById(R.id.sen_detail_value_switch);
+		mValueSwitch = (SwitchCompat) mView.findViewById(R.id.sen_detail_value_switch);
 		// Get FAB for edit
 		mFABedit = (FloatingActionButton) mView.findViewById(R.id.sen_detail_edit_fab);
 		// Get View for sensor time
@@ -251,6 +252,7 @@ public class SensorDetailFragment extends Fragment {
 					doActorAction(mDevice);
 				}
 			});
+
 		}
 		// Set name of location
 		if (mController != null) {
@@ -284,6 +286,12 @@ public class SensorDetailFragment extends Fragment {
 		// Set value of sensor
 		if (mUnitsHelper != null) {
 			mValue.setText(mUnitsHelper.getStringValueUnit(device.getValue()));
+			BaseValue val = mDevice.getValue();
+			if (val instanceof OnOffValue) {
+				boolean isOn = ((OnOffValue) val).isActiveValue(OnOffValue.ON);
+				mValueSwitch.setChecked(isOn);
+			}
+
 		}
 
 		// Set icon of sensor

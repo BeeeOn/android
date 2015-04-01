@@ -38,10 +38,9 @@
                 android:id="@+id/listview_drawer"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@color/beeeon_drawer_bg"
-                android:choiceMode="singleChoice"
-                android:paddingRight="0dp"
-                android:dividerHeight="0dp" />
+				android:divider="@null"
+				android:dividerHeight="0dp"  >
+			</se.emilsjolander.stickylistheaders.StickyListHeadersListView>
         </RelativeLayout>
 
     </android.support.v4.widget.DrawerLayout>

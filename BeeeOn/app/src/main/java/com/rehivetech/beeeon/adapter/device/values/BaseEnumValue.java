@@ -153,4 +153,8 @@ public abstract class BaseEnumValue extends BaseValue {
 		return setValueToOffset(-1);
 	}
 
+	public boolean isActiveValue(String value) {
+		return mValue.getValue().equalsIgnoreCase(value);
+	}
+
 }

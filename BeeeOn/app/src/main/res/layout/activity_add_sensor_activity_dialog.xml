@@ -12,7 +12,7 @@
         android:id="@+id/add_sensor_time"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:text="Automatic send pair"
+        android:text="@string/addsensor_sending_request"
         android:gravity="center_vertical|center_horizontal"
         android:textSize="20dp"/>
 

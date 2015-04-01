@@ -798,7 +798,7 @@ public final class Controller {
 	public List<User> getUsers() {
 		if(mRequestUsers != null)
 			return  mRequestUsers;
-		return null;
+		return new ArrayList<User>();
 	}
 
 	/**

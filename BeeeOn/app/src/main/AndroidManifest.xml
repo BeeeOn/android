@@ -150,6 +150,12 @@
 			android:label="@string/title_activity_achievement_overview" >
 		</activity>
 		<activity
+			android:name=".activity.SensorEditActivity"
+			android:label="@string/title_activity_sensor_edit" />
+		<activity
+			android:name=".activity.IntroActivity"
+			android:label="@string/app_name" />
+		<activity
 			android:name="com.facebook.FacebookActivity"
 			android:configChanges=
 				  "keyboard|keyboardHidden|screenLayout|screenSize|orientation"
@@ -276,14 +282,7 @@
             </intent-filter>
         </receiver>
 
-        <activity
-            android:name=".activity.SensorEditActivity"
-            android:label="@string/title_activity_sensor_edit"
-            android:parentActivityName=".base.BaseActivity" >
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.rehivetech.beeeon.base.BaseActivity" />
-        </activity>
+
     </application>
 
 </manifest>
