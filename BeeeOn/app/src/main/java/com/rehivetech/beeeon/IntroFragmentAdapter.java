@@ -25,13 +25,13 @@ public class IntroFragmentAdapter extends FragmentPagerAdapter implements IconPa
     	case 0:
     		return IntroImageFragment.newInstance(R.drawable.beeeon_logo_white_icons,mActivity.getString(R.string.tut_intro_text_1));
     	case 1:
-    		return IntroImageFragment.newInstance(R.drawable.dev_state_closed,mActivity.getString(R.string.tut_intro_text_2));
+    		return IntroImageFragment.newInstance(R.drawable.beeeon_tutorial_intro_2,mActivity.getString(R.string.tut_intro_text_2));
     	case 2:
-    		return IntroImageFragment.newInstance(R.drawable.dev_temperature,mActivity.getString(R.string.tut_intro_text_3));
+    		return IntroImageFragment.newInstance(R.drawable.beeeon_tutorial_intro_3,mActivity.getString(R.string.tut_intro_text_3));
     	case 3:
-    		return IntroImageFragment.newInstance(R.drawable.dev_pressure,mActivity.getString(R.string.tut_intro_text_4));
+    		return IntroImageFragment.newInstance(R.drawable.beeeon_tutorial_intro_4,mActivity.getString(R.string.tut_intro_text_4));
 		case 4:
-			return IntroImageFragment.newInstance(R.drawable.dev_pressure,mActivity.getString(R.string.tut_intro_text_5));
+			return IntroImageFragment.newInstance(R.drawable.beeeon_tutorial_intro_5,mActivity.getString(R.string.tut_intro_text_5));
 
 		}
 		return null;
@@ -47,11 +47,4 @@ public class IntroFragmentAdapter extends FragmentPagerAdapter implements IconPa
         return mCount;
     }
 
-
-    public void setCount(int count) {
-        if (count > 0 && count <= 10) {
-            mCount = count;
-            notifyDataSetChanged();
-        }
-    }
 }

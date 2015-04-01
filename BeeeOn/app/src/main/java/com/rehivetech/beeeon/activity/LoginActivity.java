@@ -60,15 +60,6 @@ public class LoginActivity extends BaseActivity {
 		// Get controller
 		mController = Controller.getInstance(getApplicationContext());
 
-		// Intro to app
-		SharedPreferences prefs = getPreferences( MODE_PRIVATE);
-		if(prefs != null && prefs.getBoolean(Constants.GUI_INTRO_PLAY,true)) {
-			prefs.edit().putBoolean(Constants.GUI_INTRO_PLAY,false).commit();
-			Intent intent = new Intent(this, IntroActivity.class);
-			startActivity(intent);
-			return;
-		}
-
 
 		// Prepare progressDialog
 		mProgress = new BetterProgressDialog(this);
@@ -109,6 +100,16 @@ public class LoginActivity extends BaseActivity {
 				// prepareLogin(new MojeIdAuthProvider());
 			}
 		});
+
+		// Intro to app
+		SharedPreferences prefs = getPreferences( MODE_PRIVATE);
+		if(prefs != null && prefs.getBoolean(Constants.GUI_INTRO_PLAY,true)) {
+			Log.d(TAG,"Go to INTRO");
+			prefs.edit().putBoolean(Constants.GUI_INTRO_PLAY,false).commit();
+			Intent intent = new Intent(this, IntroActivity.class);
+			startActivity(intent);
+			return;
+		}
 
 		// Check already logged in user
 		if (mController.isLoggedIn()) {

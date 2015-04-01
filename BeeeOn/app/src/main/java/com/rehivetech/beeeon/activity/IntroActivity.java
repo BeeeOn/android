@@ -5,13 +5,14 @@ import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.widget.Button;
 
+import com.rehivetech.beeeon.base.BaseActivity;
 import com.viewpagerindicator.CirclePageIndicator;
 
 import com.rehivetech.beeeon.IntroFragmentAdapter;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.base.BaseApplicationActivity;
 
-public class IntroActivity extends BaseApplicationActivity {
+public class IntroActivity extends BaseActivity {
 	private IntroFragmentAdapter mAdapter;
 	private ViewPager mPager;
 	private CirclePageIndicator mIndicator;
@@ -64,16 +65,6 @@ public class IntroActivity extends BaseApplicationActivity {
 
 	public boolean isLastFragment() {
 		return (mPager.getCurrentItem() == (mPager.getAdapter().getCount()-1));
-	}
-
-	@Override
-	protected void onAppResume() {
-		// TODO Auto-generated method stub
-	}
-
-	@Override
-	protected void onAppPause() {
-		// TODO Auto-generated method stub
 	}
 
 	public void resetBtn() {
