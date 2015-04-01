@@ -306,5 +306,6 @@
 
 	<string name="title_activity_location_detail_screen">Detail umiestnenia</string>
 	<string name="sensor_name_label">Name of sensor</string>
+    <string name="actor_required">Je potrebné vybrať aktor</string>
 
 </resources>

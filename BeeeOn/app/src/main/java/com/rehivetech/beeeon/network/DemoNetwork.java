@@ -21,7 +21,7 @@ import com.rehivetech.beeeon.household.User.Gender;
 import com.rehivetech.beeeon.household.User.Role;
 import com.rehivetech.beeeon.network.authentication.IAuthProvider;
 import com.rehivetech.beeeon.network.xml.CustomViewPair;
-import com.rehivetech.beeeon.network.xml.WatchDog;
+import com.rehivetech.beeeon.adapter.watchdog.WatchDog;
 import com.rehivetech.beeeon.network.xml.XmlParsers;
 import com.rehivetech.beeeon.network.xml.action.ComplexAction;
 import com.rehivetech.beeeon.network.xml.condition.Condition;
@@ -43,6 +43,7 @@ import java.util.Random;
  * @author Robyer
  */
 public class DemoNetwork implements INetwork {
+	private static final String TAG = DemoNetwork.class.getSimpleName();
 
 	public static final String DEMO_USER_ID = "demo";
 	private static final String DEMO_USER_BT = "12345";
@@ -55,6 +56,7 @@ public class DemoNetwork implements INetwork {
 		public final Adapter adapter;
 		public final Map<String, Location> locations = new HashMap<String, Location>();
 		public final Map<String, Facility> facilities = new HashMap<String, Facility>();
+		public final Map<String, WatchDog> watchdogs = new HashMap<String, WatchDog>();
 
 		public AdapterHolder(Adapter adapter) {
 			this.adapter = adapter;
@@ -128,6 +130,11 @@ public class DemoNetwork implements INetwork {
 
 			for (Location location : parser.getDemoLocationsFromAsset(mContext, assetName)) {
 				holder.locations.put(location.getId(), location);
+			}
+
+			assetName = String.format(Constants.ASSET_WATCHDOGS_FILENAME, holder.adapter.getId());
+			for (WatchDog watchdog : parser.getDemoWatchDogsFromAsset(mContext, assetName)) {
+				holder.watchdogs.put(watchdog.getId(), watchdog);
 			}
 
 			assetName = String.format(Constants.ASSET_ADAPTER_DATA_FILENAME, holder.adapter.getId());
@@ -673,8 +680,17 @@ public class DemoNetwork implements INetwork {
 	}
 
     @Override
-    public ArrayList<WatchDog> getAllWatchDogs(String adapterID) {
-		return null;
+    public ArrayList<WatchDog> getAllWatchDogs(String adapterID){
+		ArrayList<WatchDog> watchdogs = new ArrayList<WatchDog>();
+
+		AdapterHolder holder = mAdapters.get(adapterID);
+		if (holder != null) {
+			for (WatchDog watchdog : holder.watchdogs.values()) {
+				watchdogs.add(watchdog);
+			}
+		}
+
+		return watchdogs;
 	}
 
     @Override
@@ -683,17 +699,48 @@ public class DemoNetwork implements INetwork {
 	}
 
     @Override
-    public boolean updateWatchDog(WatchDog watchDog, String AdapterId) {
+    public boolean updateWatchDog(WatchDog watchDog, String AdapterId){
+		AdapterHolder holder = mAdapters.get(AdapterId);
+		if (holder == null) {
+			return false;
+		}
+
+		if (!holder.watchdogs.containsKey(watchDog.getId())) {
+			return false;
+		}
+
+		// NOTE: this replaces (or add) whole watchdog, not only fields marked as toSave
+		holder.watchdogs.put(watchDog.getId(), watchDog);
 		return true;
 	}
 
     @Override
-    public boolean deleteWatchDog(WatchDog watchDog) {
-		return true;
+    public boolean deleteWatchDog(WatchDog watchDog){
+		AdapterHolder holder = mAdapters.get(watchDog.getAdapterId());
+		if (holder == null) {
+			return false;
+		}
+
+		return holder.watchdogs.remove(watchDog.getId()) != null;
 	}
 
     @Override
-    public boolean addWatchDog(WatchDog watchDog, String AdapterID) {
+    public boolean addWatchDog(WatchDog watchDog, String AdapterID){
+		AdapterHolder holder = mAdapters.get(AdapterID);
+		if (holder == null) {
+			return false;
+		}
+
+		// Create unique watchdog id
+		String watchdogId;
+		int i = 0;
+		do {
+			watchdogId = String.valueOf(i++);
+		} while (holder.watchdogs.containsKey(watchdogId));
+
+		// Set new location id
+		watchDog.setId(watchdogId);
+		holder.watchdogs.put(watchdogId, watchDog);
 		return true;
 	}
 

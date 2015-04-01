@@ -18,6 +18,7 @@ import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
+import com.rehivetech.beeeon.IIdentifier;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
@@ -308,4 +309,35 @@ final public class Utils {
 		});
 	}
 
+	/**
+	 * For getting index in array so that we can set selected object to spinner or etc.
+	 * @param id object Id
+	 * @param objects list of objects with the same type
+	 * @param <T>
+	 * @return index or -1 if not found
+	 */
+	public static <T extends IIdentifier> int getObjectIndexFromList(String id, List<T> objects){
+		int index = 0;
+		for(T tempObj : objects) {
+			if(tempObj.getId().equals(id)) return index;
+			index++;
+		}
+		return -1;
+	}
+
+	/**
+	 * For getting objects from lists (Location / Facility / etc)
+	 * @param id
+	 * @param objects
+	 * @param <T>
+	 * @return
+	 */
+	public static <T extends IIdentifier> T getFromList(String id, List<T> objects){
+		for(T tempObj : objects){
+			if(tempObj.getId().equals(id)) return tempObj;
+		}
+		return null;
+	}
+
+	
 }

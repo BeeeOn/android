@@ -8,6 +8,7 @@ import android.util.Xml;
 
 import com.rehivetech.beeeon.Constants;
 import com.rehivetech.beeeon.adapter.Adapter;
+import com.rehivetech.beeeon.adapter.watchdog.WatchDog;
 import com.rehivetech.beeeon.adapter.device.Device;
 import com.rehivetech.beeeon.adapter.device.DeviceLog;
 import com.rehivetech.beeeon.adapter.device.DeviceType;
@@ -893,7 +894,7 @@ public class XmlParsers {
                     tDevices.put(position, device);
 
                     mParser.nextTag();
-                }else if(mParser.getName().equals(Xconstants.DEVICE)){
+                }else if(mParser.getName().equals(Xconstants.PARAM)){
                     tParams.put(position, readText(Xconstants.PARAM));
                 }else{
 					watchDog.setGeoRegionId(getSecureAttrValue(Xconstants.RID));
@@ -1175,5 +1176,37 @@ public class XmlParsers {
 			}
 		}
 		return adapters;
+	}
+
+	public List<WatchDog> getDemoWatchDogsFromAsset(Context context, String filename) throws AppException {
+		Log.i(TAG, String.format("Loading watchdog from asset '%s'", filename));
+		List<WatchDog> watchdogs = new ArrayList<WatchDog>();
+		InputStream stream = null;
+		try {
+			stream = new BufferedInputStream(context.getAssets().open(filename));
+			mParser = Xml.newPullParser();
+			mParser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false);
+			mParser.setInput(stream, null);
+			mParser.nextTag();
+
+			String version = getSecureAttrValue(Xconstants.VERSION);
+			if (!version.equals(COM_VER)) {
+				throw new AppException(NetworkError.COM_VER_MISMATCH)
+						.set("Expected", COM_VER)
+						.set("Real", version);
+			}
+
+			watchdogs = parseWatchDog();
+		} catch (IOException | XmlPullParserException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (stream != null)
+					stream.close();
+			} catch (IOException ioe) {
+				Log.e(TAG, ioe.getMessage(), ioe);
+			}
+		}
+		return watchdogs;
 	}
 }

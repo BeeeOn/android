@@ -22,6 +22,7 @@ public final class Constants {
 	public static final String ASSET_ADAPTERS_FILENAME = "adapters.xml";
 	public static final String ASSET_ADAPTER_DATA_FILENAME = "adapter_%s.xml";
 	public static final String ASSET_LOCATIONS_FILENAME = "locations_%s.xml";
+	public static final String ASSET_WATCHDOGS_FILENAME = "watchdogs_%s.xml";
 
 	/**
 	 * Persistence's shared preferences

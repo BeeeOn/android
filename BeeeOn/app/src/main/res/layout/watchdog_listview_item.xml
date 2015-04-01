@@ -4,6 +4,7 @@
     android:layout_height="88dp"
     android:paddingTop="16dp"
     android:background="@color/white"
+    android:id="@+id/watchdog_item_layout"
 >
 
     <ImageView
@@ -46,7 +47,7 @@
         android:layout_width="22dp"
         android:layout_height="22dp"
         android:scaleType="fitCenter"
-        android:src="@drawable/ic_action_previous_item"
+        android:src="@drawable/ic_action_next_item"
         android:background="@drawable/oval_cyan"
         android:padding="2dp"
         android:layout_below="@+id/watchdogItemSensorName"
@@ -75,7 +76,6 @@
         android:layout_width="24dp"
         android:layout_height="wrap_content"
         android:scaleType="fitCenter"
-        android:src="@drawable/ic_notification"
         android:layout_toLeftOf="@+id/watchdogItemSwitch"
         android:layout_toStartOf="@+id/watchdogItemSwitch"
         android:layout_centerVertical="true"

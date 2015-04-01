@@ -107,7 +107,9 @@
     <string name="toast_fail_save_data">Uložení údajů selhalo</string>
     <string name="toast_wrong_or_no_watchdog_rule">Nebylo zadáno žádné pravidlo nebo je zvolené pravidlo nesprávné</string>
 	<string name="toast_achievement_title">Achievement odemknut!</string>
-
+    <string name="toast_delete_fail">Nepodařilo se smazat</string>
+    <string name="toast_delete_success">Smazáno</string>
+	
     <!-- Progress -->
     <string name="progress_signing">Přihlašuji&#8230;</string>
     <string name="progress_google">Přenášení dat s Googlem&#8230;</string>
@@ -299,7 +301,7 @@
     <string name="action_watchdog">Hlídač</string>
     <string name="watchdog_rule">Pravidlo hlídače</string>
     <string name="sensor_text">Senzor</string>
-    <string name="treshold_value">Prahová hodnota</string>
+    <string name="treshold_value">Hodnota</string>
     <string name="watchdog_actor_change_state">Změnit stav aktoru</string>
     <string name="watchdog_notification_send">Poslat notifikaci</string>
     <string name="watchdog_activate_rule">Aktivovat pravidlo</string>
@@ -326,4 +328,7 @@
 	<string name="dialog_register_new_account_title">Nezaregistrováno</string>
 	<string name="dialog_register_new_account_message">Ještě nemáte vytvořený BeeeOn účet, přejete si jej vytvořit nyní?</string>
 
+    <string name="actor_required">Je potřeba vybrat aktor</string>
+
+	
 </resources>
