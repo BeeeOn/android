@@ -66,7 +66,6 @@
     <string name="add_users_adapter">Přidat uživatele</string>
     <string name="add_user_email_header">Email</string>
     <string name="add_user_role_header">Role</string>
-    <string name="adapter_user_title_change_role">Změna role</string>
     <string name="adapter_user_title_change_role">Změnit roli uživatele</string>
 
     <!-- Hints -->
@@ -322,10 +321,7 @@
     <string name="please_log_in">Přihlašte se prosím</string>
     <string name="no_sensor_available">Žádný dostupný senzor</string>
     <string name="no_location_available_def_adapter">Žádné dostupné umístění pro výchozí adaptér</string>
-    <string name="widget_configuration_login_first">Je vyžadováno přihlášení v BeeeOn</string>
     <string name="users_pending_header">Žádost o přidání</string>
-    <string name="tut_add_sensor_text">Pro přidání nového zařízení klepněte na plus (+)</string>
-    <string name="title_activity_location_detail_screen">Detail umístění</string>
 	<string name="sensor_name_label">Name of sensor</string>
 	<string name="dialog_register_new_account_title">Nezaregistrováno</string>
 	<string name="dialog_register_new_account_message">Ještě nemáte vytvořený BeeeOn účet, přejete si jej vytvořit nyní?</string>
