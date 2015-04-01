@@ -113,6 +113,8 @@ public class AddAdapterActivity extends BaseApplicationActivity {
 					prefs.edit().putBoolean(Constants.PERSISTENCE_PREF_IGNORE_NO_ADAPTER, true).commit();
 				}
 				setResult(Constants.ADD_ADAPTER_CANCELED);
+				InputMethodManager imm = (InputMethodManager) mActivity.getSystemService(Context.INPUT_METHOD_SERVICE);
+				imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
 				finish();
 			}
 		});
@@ -131,7 +133,7 @@ public class AddAdapterActivity extends BaseApplicationActivity {
 					
 					if(adapterCode.isEmpty()){
 						// TODO: Please fill AdapterCode
-						
+						Toast.makeText(mActivity, R.string.addadapter_fill_code, Toast.LENGTH_LONG).show();
 					}
 					else {
 						// Show progress bar for saving

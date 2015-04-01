@@ -338,5 +338,7 @@
 	<string name="rule_delete_dialog">Please confirm rule removal.</string>
 	<string name="toast_delete_fail">Unable to remove</string>
 	<string name="toast_delete_success">Successfully removed.</string>
+	<string name="addadapter_fill_name">Please fill adaper name</string>
+	<string name="addadapter_fill_code">Please fill adapter code</string>
 
 </resources>

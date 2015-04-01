@@ -34,7 +34,7 @@
 	        android:layout_gravity="center"
 			android:textAlignment="center"
 	        android:text="@string/no_sensor_cap"
-	        android:textSize="40dp"
+	        android:textSize="24sp"
 	        android:visibility="gone"
 	        android:textColor="@color/darkgray"
 	        />

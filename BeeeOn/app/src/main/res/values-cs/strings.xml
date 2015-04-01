@@ -339,6 +339,8 @@
 	<string name="name">Název</string>
 	<string name="rule_delete_dialog">Prosím potvrďte odstranění pravidla.</string>
 	<string name="title_activity_sensor_edit">Editace zařízení</string>
+	<string name="addadapter_fill_name">Please fill adaper name</string>
+	<string name="addadapter_fill_code">Please fill adapter code</string>
 
 
 </resources>

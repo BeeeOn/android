@@ -116,10 +116,8 @@ public class SetupSensorActivity extends BaseApplicationActivity {
 			
 			@Override
 			public void onClick(View v) {
-				//SharedPreferences prefs = mController.getUserSettings();
-				//if (prefs != null) {
-				//	prefs.edit().putBoolean(Constants.PERSISTENCE_PREF_IGNORE_NO_ADAPTER, true).commit();
-				//}
+				InputMethodManager imm = (InputMethodManager) mActivity.getSystemService(Context.INPUT_METHOD_SERVICE);
+				imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
 				setResult(Constants.ADD_SENSOR_CANCELED);
 				finish();
 			}

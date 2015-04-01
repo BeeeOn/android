@@ -3,6 +3,7 @@ package com.rehivetech.beeeon.activity;
 import java.util.List;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
@@ -10,6 +11,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 
 import com.viewpagerindicator.CirclePageIndicator;
@@ -126,11 +128,9 @@ public class AddSensorActivity extends BaseApplicationActivity {
 			
 			@Override
 			public void onClick(View v) {
-				//SharedPreferences prefs = mController.getUserSettings();
-				//if (prefs != null) {
-				//	prefs.edit().putBoolean(Constants.PERSISTENCE_PREF_IGNORE_NO_ADAPTER, true).commit();
-				//}
 				setResult(Constants.ADD_SENSOR_CANCELED);
+				InputMethodManager imm = (InputMethodManager) mActivity.getSystemService(Context.INPUT_METHOD_SERVICE);
+				imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
 				finish();
 			}
 		});
@@ -211,12 +211,8 @@ public class AddSensorActivity extends BaseApplicationActivity {
 					Log.d(TAG, "Nasel jsem neinicializovane zarizeni !!!!");
 					mFragment.stopTimer();
 					// go to setup uninit sensor
-
 					 Intent intent = new Intent(mActivity, SetupSensorActivity.class);
-					// intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-					// intent.putExtras(bundle);
 					 startActivityForResult(intent, Constants.SETUP_SENSOR_REQUEST_CODE);
-					// finish();
 				} else{
 					if(mFirstUse) {
 						mFirstUse = false;
