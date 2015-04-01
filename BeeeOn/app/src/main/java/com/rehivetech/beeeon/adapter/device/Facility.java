@@ -3,14 +3,14 @@
  */
 package com.rehivetech.beeeon.adapter.device;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import com.rehivetech.beeeon.IIdentifier;
+import com.rehivetech.beeeon.NameIdentifierComparator;
 
 import org.joda.time.DateTime;
 
-import com.rehivetech.beeeon.IIdentifier;
-import com.rehivetech.beeeon.IdentifierComparator;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * @brief Facility class which contains own data and devices (sensors, actors)
@@ -257,7 +257,7 @@ public class Facility implements IIdentifier {
 		if (!mSorted) {
 			mSorted = true;
 			// Sort devices by id (= by type)
-			Collections.sort(mDevices, new IdentifierComparator());
+			Collections.sort(mDevices, new NameIdentifierComparator());
 		}
 
 		return mDevices;

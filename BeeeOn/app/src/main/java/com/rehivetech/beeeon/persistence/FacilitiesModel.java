@@ -1,14 +1,5 @@
 package com.rehivetech.beeeon.persistence;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.EnumSet;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import org.joda.time.DateTime;
-
 import com.rehivetech.beeeon.IdentifierComparator;
 import com.rehivetech.beeeon.adapter.device.Device;
 import com.rehivetech.beeeon.adapter.device.Device.SaveDevice;
@@ -16,6 +7,15 @@ import com.rehivetech.beeeon.adapter.device.Facility;
 import com.rehivetech.beeeon.exception.AppException;
 import com.rehivetech.beeeon.network.INetwork;
 import com.rehivetech.beeeon.util.Log;
+
+import org.joda.time.DateTime;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.EnumSet;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class FacilitiesModel {
 

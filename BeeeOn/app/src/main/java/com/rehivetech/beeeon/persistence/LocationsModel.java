@@ -2,19 +2,19 @@ package com.rehivetech.beeeon.persistence;
 
 import android.content.Context;
 
+import com.rehivetech.beeeon.NameIdentifierComparator;
+import com.rehivetech.beeeon.R;
+import com.rehivetech.beeeon.adapter.location.Location;
+import com.rehivetech.beeeon.exception.AppException;
+import com.rehivetech.beeeon.network.INetwork;
+
+import org.joda.time.DateTime;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import org.joda.time.DateTime;
-
-import com.rehivetech.beeeon.IdentifierComparator;
-import com.rehivetech.beeeon.R;
-import com.rehivetech.beeeon.adapter.location.Location;
-import com.rehivetech.beeeon.exception.AppException;
-import com.rehivetech.beeeon.network.INetwork;
 
 public class LocationsModel {
 
@@ -51,7 +51,7 @@ public class LocationsModel {
 		}
 
 		// Sort result locations by id
-		Collections.sort(locations, new IdentifierComparator());
+		Collections.sort(locations, new NameIdentifierComparator());
 
 		// Add "no location" for devices without location
 		Location noneLocation = new Location(Location.NO_LOCATION_ID, mContext.getString(R.string.loc_none), Location.NO_LOCATION_TYPE);

@@ -26,6 +26,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.rehivetech.beeeon.NameIdentifierComparator;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.activity.MainActivity;
 import com.rehivetech.beeeon.adapter.Adapter;
@@ -317,7 +318,7 @@ public class SetupSensorFragmentDialog extends TrackDialogFragment {
 		}
 
 		// Sort them
-		Collections.sort(locations);
+		Collections.sort(locations, new NameIdentifierComparator());
 
 		// Add "New location" item
 		locations.add(new Location(Location.NEW_LOCATION_ID, getString(R.string.addsensor_new_location_spinner), 0));

@@ -1,10 +1,11 @@
 package com.rehivetech.beeeon.adapter;
 
 import com.rehivetech.beeeon.IIdentifier;
+import com.rehivetech.beeeon.INameIdentifier;
 import com.rehivetech.beeeon.adapter.device.Device;
 import com.rehivetech.beeeon.adapter.device.values.BaseValue;
 
-public class WatchDogRule implements IIdentifier {
+public class WatchDogRule implements IIdentifier, INameIdentifier {
     public static enum OperatorType{ SMALLER, GREATER }
     public static enum ActionType{ NOTIFICATION, ACTOR_ACTION }
 

@@ -3,7 +3,7 @@
  */
 package com.rehivetech.beeeon.adapter;
 
-import com.rehivetech.beeeon.IIdentifier;
+import com.rehivetech.beeeon.INameIdentifier;
 import com.rehivetech.beeeon.household.User;
 
 /**
@@ -11,7 +11,7 @@ import com.rehivetech.beeeon.household.User;
  * @author ThinkDeep
  * 
  */
-public class Adapter implements IIdentifier {
+public class Adapter implements INameIdentifier {
 	public static final String TAG = Adapter.class.getSimpleName();
 
 	private String mId = "";

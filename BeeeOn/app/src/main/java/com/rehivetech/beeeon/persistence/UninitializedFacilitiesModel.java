@@ -1,17 +1,17 @@
 package com.rehivetech.beeeon.persistence;
 
+import com.rehivetech.beeeon.IdentifierComparator;
+import com.rehivetech.beeeon.adapter.device.Facility;
+import com.rehivetech.beeeon.exception.AppException;
+import com.rehivetech.beeeon.network.INetwork;
+
+import org.joda.time.DateTime;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import org.joda.time.DateTime;
-
-import com.rehivetech.beeeon.IdentifierComparator;
-import com.rehivetech.beeeon.adapter.device.Facility;
-import com.rehivetech.beeeon.exception.AppException;
-import com.rehivetech.beeeon.network.INetwork;
 
 public class UninitializedFacilitiesModel {
 

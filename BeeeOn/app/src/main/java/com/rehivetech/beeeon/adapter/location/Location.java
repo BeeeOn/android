@@ -1,9 +1,9 @@
 package com.rehivetech.beeeon.adapter.location;
 
-import com.rehivetech.beeeon.IIdentifier;
+import com.rehivetech.beeeon.INameIdentifier;
 import com.rehivetech.beeeon.R;
 
-public class Location implements IIdentifier, Comparable<Location> {
+public class Location implements INameIdentifier {
 	/** Represents id of newly created location (not saved on server yet) */
 	public static final String NEW_LOCATION_ID = "-NEW-";
 
@@ -141,10 +141,5 @@ public class Location implements IIdentifier, Comparable<Location> {
 	@Override
 	public String toString() {
 		return getName();
-	}
-
-	@Override
-	public int compareTo(Location another) {
-		return getName().compareTo(another.getName());
 	}
 }
