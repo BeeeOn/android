@@ -244,8 +244,8 @@ public class WatchDogEditRuleActivity extends BaseApplicationActivity {
         }
 
         // TODO delete (for testing reasons)
-        SimpleGeofence x = new SimpleGeofence("564", "banan", 451, 563, 10);
-        mSpinnerMultiAdapter.addItem(new GeofenceSpinnerItem(x, x.getId(), this));
+        //SimpleGeofence x = new SimpleGeofence("564", "banan", 451, 563, 10);
+        //mSpinnerMultiAdapter.addItem(new GeofenceSpinnerItem(x, x.getId(), this));
 
         mIfItemSpinner.setAdapter(mSpinnerMultiAdapter);
         mIfItemSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {

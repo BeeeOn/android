@@ -81,7 +81,7 @@ public class WatchDogListAdapter extends BaseAdapter {
 
             holder.ItemIcon = (ImageView) convertView.findViewById(R.id.watchdogItemIcon);
             holder.ItemRuleName = (TextView) convertView.findViewById(R.id.watchdogItemRuleName);
-            holder.ItemSensorName = (TextView) convertView.findViewById(R.id.watchdogItemSensorName);
+            holder.ItemSubLabel = (TextView) convertView.findViewById(R.id.watchdogItemSensorName);
             holder.ItemOperator = (ImageView) convertView.findViewById(R.id.watchdogItemOperator);
             holder.ItemTreshold = (TextView) convertView.findViewById(R.id.watchdogItemTreshold);
             holder.ItemAction = (ImageView) convertView.findViewById(R.id.watchdogItemAction);
@@ -101,24 +101,37 @@ public class WatchDogListAdapter extends BaseAdapter {
 
         holder.ItemRuleName.setText(rule.getName());
 
-        List<String> devicesIds = rule.getDevices();
-        if(devicesIds.size() > 0){
-            Device deviceFirst = mController.getDevice(rule.getAdapterId(), devicesIds.get(0));
-            if(deviceFirst == null) return convertView;
+        switch(rule.getType()){
+            case WatchDog.TYPE_SENSOR:
+                List<String> devicesIds = rule.getDevices();
+                if(devicesIds.size() > 0){
+                    Device deviceFirst = mController.getDevice(rule.getAdapterId(), devicesIds.get(0));
+                    if(deviceFirst == null) return convertView;
 
-            holder.ItemOperator.setImageResource(rule.getOperatorType().getIconResource());
-            holder.ItemIcon.setImageResource(deviceFirst.getIconResource());
-            holder.ItemSensorName.setText(deviceFirst.getName());
+                    holder.ItemIcon.setImageResource(deviceFirst.getIconResource());
+                    holder.ItemSubLabel.setText(deviceFirst.getName());
 
-            if (mUnitsHelper != null) {
-                BaseValue valueObj = DeviceType.createDeviceValue(deviceFirst.getType());
-                valueObj.setValue(rule.getParams().get(WatchDog.PAR_TRESHOLD));
-                holder.ItemTreshold.setText(mUnitsHelper.getStringValueUnit(valueObj));
-            } else {
-                holder.ItemTreshold.setText(rule.getParams().get(WatchDog.PAR_TRESHOLD));
-            }
+                    String par_treshold = rule.getParam(WatchDog.PAR_TRESHOLD);
+                    if(par_treshold != null) {
+                        if (mUnitsHelper != null) {
+                            BaseValue valueObj = DeviceType.createDeviceValue(deviceFirst.getType());
+                            valueObj.setValue(par_treshold);
+                            holder.ItemTreshold.setText(mUnitsHelper.getStringValueUnit(valueObj));
+                        } else {
+                            holder.ItemTreshold.setText(par_treshold);
+                        }
+                    }
+                }
+                break;
+
+            case WatchDog.TYPE_GEOFENCE:
+                holder.ItemIcon.setImageResource(R.drawable.dev_geofence);
+
+                //holder.ItemSubLabel.setText(deviceFirst.getName());
+                break;
         }
 
+        holder.ItemOperator.setImageResource(rule.getOperatorType().getIconResource());
         holder.ItemAction.setImageResource(rule.getActionIconResource());
 
         holder.ItemSwitch.setChecked(rule.isEnabled());
@@ -137,7 +150,7 @@ public class WatchDogListAdapter extends BaseAdapter {
     private static class ViewHolder{
         public ImageView ItemIcon;
         public TextView ItemRuleName;
-        public TextView ItemSensorName;
+        public TextView ItemSubLabel;
         public ImageView ItemOperator;
         public TextView ItemTreshold;
         public ImageView ItemAction;
