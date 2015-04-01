@@ -43,7 +43,7 @@ public enum DeviceType {
 	private final Class<? extends BaseValue> mValueClass;
 	private final boolean mIsActor;
 
-	private int mRawTypeId;
+	private String mRawTypeId;
 	private int mOffset;
 
 	private DeviceType(int id, int nameRes, boolean isActor, Class<? extends BaseValue> valueClass) {
@@ -88,18 +88,18 @@ public enum DeviceType {
 		}
 
 		// Remember original raw value we've received it
-		result.setRawTypeId(iValue);
+		result.setRawTypeId(value);
 		// Set offset of this deviceType // TODO: maybe this should be in Device object instead?
 		result.setOffset(offset); // TODO: do we have to remember it anyway?
 
 		return result;
 	}
 
-	private void setRawTypeId(final int value) {
+	private void setRawTypeId(final String value) {
 		mRawTypeId = value;
 	}
 
-	public int getRawTypeId() {
+	public String getRawTypeId() {
 		return mRawTypeId;
 	}
 

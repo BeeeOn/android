@@ -82,7 +82,7 @@ public class Device implements INameIdentifier {
 		if (mFacility == null)
 			throw new RuntimeException("Device's facility is null!");
 
-		return mFacility.getAddress() + ID_SEPARATOR + String.valueOf(mType.getRawTypeId());
+		return mFacility.getAddress() + ID_SEPARATOR + mType.getRawTypeId();
 	}
 
 	/**
