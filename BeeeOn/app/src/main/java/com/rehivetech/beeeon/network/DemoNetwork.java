@@ -378,10 +378,10 @@ public class DemoNetwork implements INetwork {
 			do {
 				// Create unique device type
 				DeviceType[] types = DeviceType.values();
-				int typeId = 0;
+				String typeId = "0";
 				do {
-					typeId = rand.nextInt(types.length);
-				} while (facility.getDeviceByType(types[typeId]) != null);
+					typeId = String.valueOf(rand.nextInt(types.length));
+				} while (facility.getDeviceByType(DeviceType.fromValue(typeId)) != null);
 
 				Device device = DeviceType.createDeviceFromType(typeId);
 				device.setFacility(facility);

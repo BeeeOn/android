@@ -199,8 +199,7 @@ public class WidgetUpdateService extends Service {
 				facility.setLastUpdate(new DateTime(widgetData.deviceLastUpdateTime, DateTimeZone.UTC));
 				facility.setRefresh(RefreshInterval.fromInterval(widgetData.deviceRefresh));
 
-				int type = Integer.parseInt(ids[1]);
-				facility.addDevice(DeviceType.createDeviceFromType(type));
+				facility.addDevice(DeviceType.createDeviceFromType(ids[1]));
 
 				facilities.add(facility);
 			}

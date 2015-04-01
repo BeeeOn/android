@@ -683,8 +683,7 @@ public final class Controller {
 		if (facility == null)
 			return null;
 
-		int iType = Integer.parseInt(ids[1]);
-		DeviceType type = DeviceType.fromValue(iType);
+		DeviceType type = DeviceType.fromValue(ids[1]);
 
 		return facility.getDeviceByType(type);
 	}

@@ -43,6 +43,9 @@ public enum DeviceType {
 	private final Class<? extends BaseValue> mValueClass;
 	private final boolean mIsActor;
 
+	private int mRawTypeId;
+	private int mOffset;
+
 	private DeviceType(int id, int nameRes, boolean isActor, Class<? extends BaseValue> valueClass) {
 		mTypeId = id;
 		mNameRes = nameRes;
@@ -66,12 +69,46 @@ public enum DeviceType {
 		return mValueClass;
 	}
 
-	public static DeviceType fromValue(int value) {
+	public static DeviceType fromValue(String value) {
+		DeviceType result = TYPE_UNKNOWN;
+
+		// Get integer representation of the given string value
+		int iValue = value.isEmpty() ? -1 : Integer.parseInt(value);
+
+		// Separate combined value to type and offset
+		int type = iValue % 256;
+		int offset = iValue / 256;
+
+		// Get the DeviceType object based on type number
 		for (DeviceType item : values()) {
-			if (value == item.getTypeId())
-				return item;
+			if (type == item.getTypeId()) {
+				result = item;
+				break;
+			}
 		}
-		return TYPE_UNKNOWN;
+
+		// Remember original raw value we've received it
+		result.setRawTypeId(iValue);
+		// Set offset of this deviceType // TODO: maybe this should be in Device object instead?
+		result.setOffset(offset); // TODO: do we have to remember it anyway?
+
+		return result;
+	}
+
+	private void setRawTypeId(final int value) {
+		mRawTypeId = value;
+	}
+
+	public int getRawTypeId() {
+		return mRawTypeId;
+	}
+
+	private void setOffset(final int offset) {
+		mOffset = offset;
+	}
+
+	public int getOffset() {
+		return mOffset;
 	}
 
 	public static BaseValue createDeviceValue(DeviceType type) {
@@ -86,7 +123,7 @@ public enum DeviceType {
 		return new UnknownValue();
 	}
 
-	public static Device createDeviceFromType(int typeId) {
+	public static Device createDeviceFromType(String typeId) {
 		DeviceType type = fromValue(typeId);
 		BaseValue value = createDeviceValue(type);
 

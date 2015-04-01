@@ -74,16 +74,15 @@ public class Device implements INameIdentifier {
 	}
 
 	/**
-	 * Get unique identifier of device
+	 * Get unique identifier of device (address of facility + raw type value with offset)
 	 * 
 	 * @return id
 	 */
 	public String getId() {
-		// TODO: what if there will be more devices with same type for one facility?
 		if (mFacility == null)
-			throw new RuntimeException("Device's facility is NULL, WHY!?");
+			throw new RuntimeException("Device's facility is null!");
 
-		return mFacility.getAddress() + ID_SEPARATOR + String.valueOf(mType.getTypeId());
+		return mFacility.getAddress() + ID_SEPARATOR + String.valueOf(mType.getRawTypeId());
 	}
 
 	/**
