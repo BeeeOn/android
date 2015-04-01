@@ -755,7 +755,7 @@ public class Network implements INetwork {
 	// http://stackoverflow.com/a/509288/1642090
 	@Override
 	public DeviceLog getLog(String adapterID, Device device, LogDataPair pair){
-		String msgToSend = XmlCreator.createGetLog(mBT, adapterID, device.getFacility().getAddress(), device.getType().getRawTypeId(),
+		String msgToSend = XmlCreator.createGetLog(mBT, adapterID, device.getFacility().getAddress(), device.getRawTypeId(),
 				String.valueOf(pair.interval.getStartMillis() / 1000), String.valueOf(pair.interval.getEndMillis() / 1000),
 				pair.type.getValue(), pair.gap.getValue());
 

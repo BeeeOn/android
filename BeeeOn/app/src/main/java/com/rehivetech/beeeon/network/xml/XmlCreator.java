@@ -424,7 +424,7 @@ public class XmlCreator {
 
 				for (Device device : facility.getDevices()) {
 					serializer.startTag(ns, Xconstants.PART);
-					serializer.attribute(ns, Xconstants.TYPE, device.getType().getRawTypeId());
+					serializer.attribute(ns, Xconstants.TYPE, device.getRawTypeId());
 					serializer.endTag(ns, Xconstants.PART);
 				}
 				serializer.endTag(ns, Xconstants.DEVICE);
@@ -530,7 +530,7 @@ public class XmlCreator {
 				for (Device device : facility.getDevices()) {
 					serializer.startTag(ns, Xconstants.PART);
 
-					serializer.attribute(ns, Xconstants.TYPE, device.getType().getRawTypeId());
+					serializer.attribute(ns, Xconstants.TYPE, device.getRawTypeId());
 					if (toSave.contains(SaveDevice.SAVE_VISIBILITY))
 						serializer.attribute(ns, Xconstants.VISIBILITY, (device.isVisible()) ? Xconstants.ONE : Xconstants.ZERO);
 					if (toSave.contains(SaveDevice.SAVE_NAME))
@@ -596,7 +596,7 @@ public class XmlCreator {
 			if (toSave.contains(SaveDevice.SAVE_NAME) || toSave.contains(SaveDevice.SAVE_VALUE)) {
 				serializer.startTag(ns, Xconstants.PART);
 				// send always if sensor changed
-				serializer.attribute(ns, Xconstants.TYPE, device.getType().getRawTypeId());
+				serializer.attribute(ns, Xconstants.TYPE, device.getRawTypeId());
 				// if (toSave.contains(SaveDevice.SAVE_VISIBILITY))
 				// serializer.attribute(ns, Xconstants.VISIBILITY, (device.getVisibility()) ? Xconstants.ONE : Xconstants.ZERO);
 				if (toSave.contains(SaveDevice.SAVE_NAME))
@@ -632,7 +632,7 @@ public class XmlCreator {
 	 */
 	public static String createSwitch(String bt, String aid, Device device) {
 		return createComAttribsVariant(Xconstants.STATE, SWITCH, Xconstants.BT, bt, Xconstants.AID, aid, Xconstants.DID, device.getFacility().getAddress(), Xconstants.DTYPE,
-				device.getType().getRawTypeId(), Xconstants.VALUE, String.valueOf(device.getValue().getDoubleValue()));
+				device.getRawTypeId(), Xconstants.VALUE, String.valueOf(device.getValue().getDoubleValue()));
 	}
 
 	/**
@@ -784,7 +784,7 @@ public class XmlCreator {
 
 				serializer.attribute(ns, Xconstants.AID, device.getFacility().getAdapterId());
 				serializer.attribute(ns, Xconstants.DID, device.getId());
-				serializer.attribute(ns, Xconstants.TYPE, device.getType().getRawTypeId());
+				serializer.attribute(ns, Xconstants.TYPE, device.getRawTypeId());
 				serializer.endTag(ns, Xconstants.DEVICE);
 			}
 
@@ -1486,7 +1486,7 @@ public class XmlCreator {
 				case EQ:
 					serializer.startTag(ns, Xconstants.DEVICE);
 					serializer.attribute(ns, Xconstants.ID, ((EqualFunc) func).getDevice().getId());
-					serializer.attribute(ns, Xconstants.TYPE, ((EqualFunc) func).getDevice().getType().getRawTypeId());
+					serializer.attribute(ns, Xconstants.TYPE, ((EqualFunc) func).getDevice().getRawTypeId());
 					serializer.endTag(ns, Xconstants.DEVICE);
 
 					serializer.startTag(ns, Xconstants.VALUE);
@@ -1496,7 +1496,7 @@ public class XmlCreator {
 				case GT:
 					serializer.startTag(ns, Xconstants.DEVICE);
 					serializer.attribute(ns, Xconstants.ID, ((GreaterThanFunc) func).getDevice().getId());
-					serializer.attribute(ns, Xconstants.TYPE, ((GreaterThanFunc) func).getDevice().getType().getRawTypeId());
+					serializer.attribute(ns, Xconstants.TYPE, ((GreaterThanFunc) func).getDevice().getRawTypeId());
 					serializer.endTag(ns, Xconstants.DEVICE);
 
 					serializer.startTag(ns, Xconstants.VALUE);
@@ -1506,7 +1506,7 @@ public class XmlCreator {
 				case GE:
 					serializer.startTag(ns, Xconstants.DEVICE);
 					serializer.attribute(ns, Xconstants.ID, ((GreaterEqualFunc) func).getDevice().getId());
-					serializer.attribute(ns, Xconstants.TYPE, ((GreaterEqualFunc) func).getDevice().getType().getRawTypeId());
+					serializer.attribute(ns, Xconstants.TYPE, ((GreaterEqualFunc) func).getDevice().getRawTypeId());
 					serializer.endTag(ns, Xconstants.DEVICE);
 
 					serializer.startTag(ns, Xconstants.VALUE);
@@ -1516,7 +1516,7 @@ public class XmlCreator {
 				case LT:
 					serializer.startTag(ns, Xconstants.DEVICE);
 					serializer.attribute(ns, Xconstants.ID, ((LesserThanFunc) func).getDevice().getId());
-					serializer.attribute(ns, Xconstants.TYPE, ((LesserThanFunc) func).getDevice().getType().getRawTypeId());
+					serializer.attribute(ns, Xconstants.TYPE, ((LesserThanFunc) func).getDevice().getRawTypeId());
 					serializer.endTag(ns, Xconstants.DEVICE);
 
 					serializer.startTag(ns, Xconstants.VALUE);
@@ -1526,7 +1526,7 @@ public class XmlCreator {
 				case LE:
 					serializer.startTag(ns, Xconstants.DEVICE);
 					serializer.attribute(ns, Xconstants.ID, ((LesserEqualFunc) func).getDevice().getId());
-					serializer.attribute(ns, Xconstants.TYPE, ((LesserEqualFunc) func).getDevice().getType().getRawTypeId());
+					serializer.attribute(ns, Xconstants.TYPE, ((LesserEqualFunc) func).getDevice().getRawTypeId());
 					serializer.endTag(ns, Xconstants.DEVICE);
 
 					serializer.startTag(ns, Xconstants.VALUE);
@@ -1536,7 +1536,7 @@ public class XmlCreator {
 				case BTW:
 					serializer.startTag(ns, Xconstants.DEVICE);
 					serializer.attribute(ns, Xconstants.ID, ((BetweenFunc) func).getDevice().getId());
-					serializer.attribute(ns, Xconstants.TYPE, ((BetweenFunc) func).getDevice().getType().getRawTypeId());
+					serializer.attribute(ns, Xconstants.TYPE, ((BetweenFunc) func).getDevice().getRawTypeId());
 					serializer.endTag(ns, Xconstants.DEVICE);
 
 					serializer.startTag(ns, Xconstants.VALUE);
@@ -1555,7 +1555,7 @@ public class XmlCreator {
 
 					serializer.startTag(ns, Xconstants.DEVICE);
 					serializer.attribute(ns, Xconstants.ID, ((DewPointFunc) func).getHumiDevice().getId());
-					serializer.attribute(ns, Xconstants.TYPE, ((DewPointFunc) func).getHumiDevice().getType().getRawTypeId());
+					serializer.attribute(ns, Xconstants.TYPE, ((DewPointFunc) func).getHumiDevice().getRawTypeId());
 					serializer.endTag(ns, Xconstants.DEVICE);
 					break;
 				case TIME:
@@ -1609,7 +1609,7 @@ public class XmlCreator {
 					serializer.startTag(ns, Xconstants.DEVICE);
 
 					serializer.attribute(ns, Xconstants.ID, action.getDevice().getId());
-					serializer.attribute(ns, Xconstants.TYPE, action.getDevice().getType().getRawTypeId());
+					serializer.attribute(ns, Xconstants.TYPE, action.getDevice().getRawTypeId());
 					serializer.attribute(ns, Xconstants.VALUE, action.getValue());
 					serializer.endTag(ns, Xconstants.DEVICE);
 				}

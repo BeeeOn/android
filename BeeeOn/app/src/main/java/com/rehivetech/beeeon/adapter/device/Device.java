@@ -17,15 +17,20 @@ public class Device implements INameIdentifier {
 	protected String mName = "";
 	protected boolean mVisibility;
 
-	public final DeviceType mType;
 	public final BaseValue mValue;
+
+	public final DeviceType mType;
+	public final String mRawTypeId;
+	public final int mOffset;
 
 	/**
 	 * Class constructor
 	 */
-	public Device(DeviceType type, BaseValue value) {
+	public Device(DeviceType type, BaseValue value, String rawTypeId, int offset) {
 		mType = type;
 		mValue = value;
+		mRawTypeId = rawTypeId;
+		mOffset = offset;
 	}
 
     /**
@@ -74,7 +79,7 @@ public class Device implements INameIdentifier {
 	}
 
 	/**
-	 * Get unique identifier of device (address of facility + raw type value with offset)
+	 * Get unique identifier of device (address of facility + raw type id containing offset)
 	 * 
 	 * @return id
 	 */
@@ -82,7 +87,15 @@ public class Device implements INameIdentifier {
 		if (mFacility == null)
 			throw new RuntimeException("Device's facility is null!");
 
-		return mFacility.getAddress() + ID_SEPARATOR + mType.getRawTypeId();
+		return mFacility.getAddress() + ID_SEPARATOR + getRawTypeId();
+	}
+
+	public String getRawTypeId() {
+		return mRawTypeId;
+	}
+
+	public int getOffset() {
+		return mOffset;
 	}
 
 	/**
