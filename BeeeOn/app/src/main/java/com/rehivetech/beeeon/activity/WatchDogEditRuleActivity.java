@@ -260,11 +260,11 @@ public class WatchDogEditRuleActivity extends BaseApplicationActivity {
 
                 switch (selected.getType()) {
                     case DEVICE:
-                        mWatchDogOperator = new WatchDogSensorType();
+                        mWatchDogOperator = new WatchDogSensorType(mWatchDogOperator.getIndex());
                         break;
 
                     case GEOFENCE:
-                        mWatchDogOperator = new WatchDogGeofenceType();
+                        mWatchDogOperator = new WatchDogGeofenceType(mWatchDogOperator.getIndex());
                         break;
                 }
                 // we need to refresh UnitHelper cause setOperator destroys it
@@ -282,7 +282,8 @@ public class WatchDogEditRuleActivity extends BaseApplicationActivity {
         // setup gui based on type in default position
         int defaultPos = mSpinnerMultiAdapter.getRealPosition(0);
         mIfItemSpinner.setSelection(defaultPos);
-        mWatchDogOperator.setupGUI(mSpinnerMultiAdapter.getItem(defaultPos), mOperatorButton, mRuleTreshold, mRuleTresholdUnit);
+        // TODO not necessary cause called in onItemSelected
+        //mWatchDogOperator.setupGUI(mSpinnerMultiAdapter.getItem(defaultPos), mOperatorButton, mRuleTreshold, mRuleTresholdUnit);
 
         // changing specified layout when checked
         mActionType.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {

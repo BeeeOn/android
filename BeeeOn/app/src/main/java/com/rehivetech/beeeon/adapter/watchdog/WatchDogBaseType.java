@@ -27,8 +27,8 @@ public abstract class WatchDogBaseType {
 	public int mIndex;
 	private WatchDogOperatorType mType;
 
-	public WatchDogBaseType(WatchDogOperatorType type){
-		mIndex = 0;
+	public WatchDogBaseType(WatchDogOperatorType type, int index){
+		mIndex = index;
 		mType = type;
 	}
 
@@ -76,7 +76,8 @@ public abstract class WatchDogBaseType {
 	}
 
 	public int getIconResource(){
-		return getAllIcons()[mIndex % getAllIcons().length];
+		int index = mIndex % getAllIcons().length;
+		return getAllIcons()[index];
 	}
 
 	public void setupGUI(SpinnerItem selected, FloatingActionButton operatorButton, EditText ruleTreshold, TextView ruleTresholdUnit){

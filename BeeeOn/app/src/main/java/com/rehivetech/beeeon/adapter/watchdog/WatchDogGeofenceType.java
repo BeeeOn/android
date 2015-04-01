@@ -25,7 +25,10 @@ public class WatchDogGeofenceType extends WatchDogBaseType {
 	};
 
 	public WatchDogGeofenceType(){
-		super(WatchDogOperatorType.GEOFENCE);
+		super(WatchDogOperatorType.GEOFENCE, 0);
+	}
+	public WatchDogGeofenceType(int index){
+		super(WatchDogOperatorType.GEOFENCE, index);
 	}
 
 	@Override
