@@ -7,6 +7,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.support.annotation.Nullable;
 
 import com.rehivetech.beeeon.geofence.SimpleGeofence;
+import com.rehivetech.beeeon.network.DemoNetwork;
 import com.rehivetech.beeeon.persistence.database.DatabaseHelper;
 import com.rehivetech.beeeon.persistence.database.entry.GeofenceEntry;
 import com.rehivetech.beeeon.util.Log;
@@ -63,7 +64,7 @@ public class GeofenceModel {
 		Log.d(TAG, "Deleting geofence: " + geofenceId);
 		SQLiteDatabase db = DatabaseHelper.getInstance(mContext).getWritableDatabase();
 
-		db.delete(geofenceId, GeofenceEntry.COLUMN_GEO_ID + " = ?" + " and " +
+		db.delete(GeofenceEntry.TABLE_NAME, GeofenceEntry.COLUMN_GEO_ID + " = ?" + " and " +
 						GeofenceEntry.COLUMN_USER_ID + " = ?", //  selections
 				new String[]{geofenceId, userId});
 
@@ -116,6 +117,16 @@ public class GeofenceModel {
 		cursor.close();
 
 		return exist;
+	}
+
+	public void deleteDemoData() {
+		Log.d(TAG, "Deleting all geofence demo data.");
+		SQLiteDatabase db = DatabaseHelper.getInstance(mContext).getWritableDatabase();
+
+		db.delete(GeofenceEntry.TABLE_NAME, GeofenceEntry.COLUMN_USER_ID + " = ?" ,
+				new String[]{DemoNetwork.DEMO_USER_ID});
+
+		db.close();
 	}
 
 	public void addGeofence(String userId, SimpleGeofence geofence) {

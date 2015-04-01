@@ -296,8 +296,8 @@
 	<string name="downloading_data">Downloading data &#8230;</string>
 	<string name="logout_success">Successfully logged out</string>
 	<string name="achievement_share_msg"> I just unlocked this new achievement!</string>
-	<string name="achievement_share_url">http://www.beeeon.com</string>
-	<string name="achievement_share_img">http://www.fit.vutbr.cz/images/logo_fit.png</string>
+	<string name="achievement_share_url" translatable="false">http://www.beeeon.com</string>
+	<string name="achievement_share_img" translatable="false">http://www.fit.vutbr.cz/images/logo_fit.png</string>
 
     <!-- WatchDog -->
     <string name="action_watchdog">WatchDog</string>
@@ -319,7 +319,9 @@
 	<string name="dialog_register_new_account_message">You don\'t have a BeeeOn account yet, do you want to create it now?</string>
 	<string name="name">Name</string>
 	<string name="add_new_geofence_area">Add new geofence area</string>
-	<string name="radius">Radius (m)</string>
+	<string name="radius">Radius</string>
+	<string name="delete_geofence">Delete geofence</string>
+	<string name="unit_meter_short">m</string>
 
 
 </resources>

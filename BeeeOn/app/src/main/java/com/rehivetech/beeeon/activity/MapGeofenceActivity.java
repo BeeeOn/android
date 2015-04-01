@@ -11,9 +11,12 @@ import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.view.MenuItemCompat;
+import android.support.v7.app.ActionBarActivity;
+import android.support.v7.view.ActionMode;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.Window;
 import android.widget.EditText;
@@ -47,7 +50,9 @@ import com.rehivetech.beeeon.util.Log;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.WeakHashMap;
 
 public class MapGeofenceActivity extends BaseApplicationActivity implements ResultCallback<Status>, OnMapLongClickListener,
 		OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, GeofenceDialogFragment.GeofenceCrateCallback {
@@ -61,6 +66,10 @@ public class MapGeofenceActivity extends BaseApplicationActivity implements Resu
 	private SearchView mSearchView;
 	private GoogleMap mMap;
 	private Toolbar mToolbar;
+
+	private ActionMode mActionMode;
+
+	private HashMap<Marker, SimpleGeofence> mMarkers = new HashMap<>();
 
 	private static final String TAG_DIALOG_ADD_GEOFENCE = "geofenceDialog";
 
@@ -183,6 +192,11 @@ public class MapGeofenceActivity extends BaseApplicationActivity implements Resu
 	}
 
 	private void addGeofence(SimpleGeofence geofence) {
+		// if demo mode just save it to database
+		if (Controller.getInstance(this).isDemoMode()) {
+			Controller.getInstance(this).addGeofence(geofence);
+			return;
+		}
 		if (!mGoogleApiClient.isConnected()) {
 			Log.e(TAG, "Google Api Client is not connected");
 			return;
@@ -279,6 +293,21 @@ public class MapGeofenceActivity extends BaseApplicationActivity implements Resu
 			}
 		}
 
+		mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+			@Override
+			public boolean onMarkerClick(Marker marker) {
+				marker.showInfoWindow();
+				SimpleGeofence fence = mMarkers.get(marker);
+				if (fence != null) {
+					Toast.makeText(MapGeofenceActivity.this, "Click", Toast.LENGTH_SHORT).show();
+					mActionMode =  startSupportActionMode(new ActionModeGeofence(fence));
+				} else {
+					Toast.makeText(MapGeofenceActivity.this, "Null", Toast.LENGTH_SHORT).show();
+				}
+				return true;
+			}
+		});
+
 		drawAllGeofences();
 	}
 
@@ -298,9 +327,10 @@ public class MapGeofenceActivity extends BaseApplicationActivity implements Resu
 				new MarkerOptions()
 						.position(new LatLng(fence.getLatitude(), fence.getLongitude()))
 						.title(fence.getName())
-//						.snippet("Radius: " + fence.getRadius())
+						.snippet(getString(R.string.radius) + ": " + fence.getRadius() + " " +getString(R.string.unit_meter_short))
 		);
-		marker.showInfoWindow();
+
+		mMarkers.put(marker, fence);
 
 		// Instantiates a new CircleOptions object + center/radius
 		CircleOptions circleOptions = new CircleOptions().center(new LatLng(fence.getLatitude(), fence.getLongitude()))
@@ -351,7 +381,7 @@ public class MapGeofenceActivity extends BaseApplicationActivity implements Resu
 	public void onMapLongClick(LatLng pos) {
 		GeofenceDialogFragment newFragment = GeofenceDialogFragment.newInstance(
 				pos.latitude, pos.longitude);
-		newFragment.show(getSupportFragmentManager(), TAG_DIALOG_ADD_GEOFENCE );
+		newFragment.show(getSupportFragmentManager(), TAG_DIALOG_ADD_GEOFENCE);
 	}
 
 //	@Override
@@ -475,6 +505,43 @@ public class MapGeofenceActivity extends BaseApplicationActivity implements Resu
 				if (i == 0)
 					mMap.animateCamera(CameraUpdateFactory.newLatLng(latLng));
 			}
+		}
+	}
+
+	class ActionModeGeofence implements ActionMode.Callback {
+
+		SimpleGeofence mGeofence;
+
+		ActionModeGeofence (SimpleGeofence fence) {
+			mGeofence = fence;
+		}
+
+		@Override
+		public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+			MenuInflater inflater = mode.getMenuInflater();
+			inflater.inflate(R.menu.geofence_actionmode, menu);
+			return true;
+		}
+
+		@Override
+		public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+			return false;
+		}
+
+		@Override
+		public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+			if (item.getItemId() == R.id.geofence_menu_del) {
+				// TODO
+				Toast.makeText(MapGeofenceActivity.this, "deleting " + mGeofence.getName(), Toast.LENGTH_SHORT).show();
+			}
+
+			mode.finish();
+			return true;
+		}
+
+		@Override
+		public void onDestroyActionMode(ActionMode mode) {
+			mActionMode = null;
 		}
 	}
 }

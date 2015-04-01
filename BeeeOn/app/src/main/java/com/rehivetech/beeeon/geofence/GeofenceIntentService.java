@@ -33,6 +33,11 @@ public class GeofenceIntentService extends IntentService {
 			return;
 		}
 
+		// v demo modu neodesilat
+		if (Controller.getInstance(this).isDemoMode()) {
+			return;
+		}
+
 		// Get the transition type.
 		int geofenceTransition = geofencingEvent.getGeofenceTransition();
 
@@ -50,10 +55,11 @@ public class GeofenceIntentService extends IntentService {
 	}
 
 	private void sendGeofencesToServer(List<Geofence> triggeringGeofences, final TransitionType type) {
-		Log.i(TAG, "Sending geofence to server");
+		Log.i(TAG, "Sending new geofence to server");
 		for (Geofence fence : triggeringGeofences) {
 			final Geofence actFence = fence;
 			if (Controller.getInstance(this).hasActualUserGeofence(actFence.getRequestId())) {
+				Log.i(TAG, "Actual user is allowed to acces this geofence.");
 				Thread t = new Thread() {
 					public void run() {
 						Thread t = new Thread() {

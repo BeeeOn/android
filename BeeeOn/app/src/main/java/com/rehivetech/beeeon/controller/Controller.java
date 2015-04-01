@@ -231,6 +231,7 @@ public final class Controller {
 	public boolean login(IAuthProvider authProvider) throws AppException {
 		// In demo mode load some init data from sdcard
 		if (mNetwork instanceof DemoNetwork) {
+			mGeofenceModel.deleteDemoData();
 			((DemoNetwork) mNetwork).initDemoData();
 		}
 
@@ -1070,6 +1071,7 @@ public final class Controller {
 	 * @return <code>True</code> if actual user has geofence registered. <code>False</code> otherwise.
 	 */
 	public boolean hasActualUserGeofence(String geofenceId) {
+		Log.i(TAG, "Geofence: Control if passed geofence is for actual user");
 		return mGeofenceModel.exist(getActualUser().getId(), geofenceId);
 	}
 
