@@ -1,14 +1,12 @@
 package com.rehivetech.beeeon.gcm;
 
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GooglePlayServicesUtil;
+import android.content.Context;
+
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.util.Utils;
 
-import android.content.Context;
-
 public class GcmHelper {
-	public static final String TAG_GCM = "BEEEON_GCM";
+	public static final String TAG_GCM = "BEEEON_GCM: ";
 
 	/**
 	 * Maximum attempts to get GCM ID. After reaching this attempts there will be created new thread to get GCM ID.
@@ -17,7 +15,7 @@ public class GcmHelper {
 
 	/**
 	 * Registers the application with GCM servers asynchronously.
-	 * <p>
+	 * <p/>
 	 * Stores the registration ID and app versionCode in the application's shared preferences.
 	 */
 	public static void registerGCMInBackground(Context context) {
@@ -29,17 +27,17 @@ public class GcmHelper {
 		Thread thread = new Thread(new GcmRegisterRunnable(context, null));
 		thread.start();
 	}
-	
+
 	/**
-	 * Registers the application with GCM servers synchronously in the same thread. 
+	 * Registers the application with GCM servers synchronously in the same thread.
 	 * Cannot be GUI thread because of network communication.
-	 * <p>
+	 * <p/>
 	 * Stores the registration ID and app versionCode in the application's shared preferences.
 	 */
 	public static void registerGCMInForeground(Context context) {
 		registerGCMInForeground(context, MAX_GCM_ATTEMPTS);
 	}
-	
+
 	public static void registerGCMInForeground(Context context, int maxAttempts) {
 		if (!Utils.isGooglePlayServicesAvailable(context)) {
 			return;
@@ -47,7 +45,7 @@ public class GcmHelper {
 		GcmRegisterRunnable gcmReg = new GcmRegisterRunnable(context, maxAttempts);
 		gcmReg.run();
 	}
-	
+
 	public static void invalidateLocalGcmId(Controller controller) {
 		controller.setGCMIdLocal("");
 	}

@@ -6,10 +6,11 @@ import android.content.Intent;
 import com.rehivetech.beeeon.util.Log;
 
 public class BootBroadcastReceiver extends BroadcastReceiver {
+	public static final String TAG = BootBroadcastReceiver.class.getSimpleName();
 
 	@Override
 	public void onReceive(Context context, Intent intent) {
-		Log.i(GcmHelper.TAG_GCM, "Booting finished, starting service for re-registering GCM ID.");
+		Log.i(TAG, GcmHelper.TAG_GCM + "Booting finished, starting service for re-registering GCM ID.");
 		context.startService(new Intent(context, GcmReRegistrationHandler.class));
 	}
 }

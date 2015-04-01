@@ -1,195 +1,34 @@
 /**
- * 
+ *
  */
 package com.rehivetech.beeeon.gcm;
 
-import java.util.Calendar;
+import android.os.Bundle;
+
+import com.rehivetech.beeeon.network.xml.Xconstants;
 
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
-import android.os.Bundle;
-import com.rehivetech.beeeon.network.xml.Xconstants;
+import java.util.Calendar;
 
 /**
  * @author ThinkDeep
- * 
  */
 public class Notification {
 
 	public static final String TAG = Notification.class.getSimpleName();
+	public static final String DATEFORMAT = "yyyy-MM-dd HH:mm:ss";
 	// private static final String FORMAT = "yyyy-MM-dd HH:mm:ss";
 	private static final String SEPARATOR = "\\s+";
-	public static final String DATEFORMAT = "yyyy-MM-dd HH:mm:ss";
-
-	private DateTimeFormatter mFormatter = DateTimeFormat.forPattern(DATEFORMAT).withZoneUTC();
-
 	private final Calendar mDate;
 	private final String mMsgid;
-	private boolean mRead;
 	private final NotificationType mType;
+	private DateTimeFormatter mFormatter = DateTimeFormat.forPattern(DATEFORMAT).withZoneUTC();
+	private boolean mRead;
 	private Action mAction;
 	private String mUserId = null;
 	private String mMessage;
-
-	public class Action {
-		// web or app
-		private final ActionType mMasterType;
-		// app sub types
-		private ActionType mSlaveType = ActionType.NONE;
-		// if web
-		private String mURL;
-		// if app + adapter
-		private String mAdapterId;
-		// if app + adapter + location
-		private String mLocationId;
-		// if app + adapter + device
-		private String mDeviceId;
-
-		public Action(String masterType) {
-			mMasterType = ActionType.fromValue(masterType);
-		}
-
-		/**
-		 * @return the mMasterType
-		 */
-		public ActionType getMasterType() {
-			return mMasterType;
-		}
-
-		/**
-		 * @return the mSlaveType
-		 */
-		public ActionType getSlaveType() {
-			return mSlaveType;
-		}
-
-		/**
-		 * @param mSlaveType
-		 *            the mSlaveType to set
-		 */
-		public void setSlaveType(ActionType SlaveType) {
-			this.mSlaveType = SlaveType;
-		}
-
-		/**
-		 * @return the mURL
-		 */
-		public String getURL() {
-			return mURL;
-		}
-
-		/**
-		 * @param mURL
-		 *            the mURL to set
-		 */
-		public void setURL(String URL) {
-			this.mURL = URL;
-		}
-
-		/**
-		 * @return the mAdapterId
-		 */
-		public String getAdapterId() {
-			return mAdapterId;
-		}
-
-		/**
-		 * @param mAdapterId
-		 *            the mAdapterId to set
-		 */
-		public void setAdapterId(String AdapterId) {
-			this.mAdapterId = AdapterId;
-		}
-
-		/**
-		 * @return the mLocationId
-		 */
-		public String getLocationId() {
-			return mLocationId;
-		}
-
-		/**
-		 * @param mLocationId
-		 *            the mLocationId to set
-		 */
-		public void setLocationId(String LocationId) {
-			this.mLocationId = LocationId;
-		}
-
-		/**
-		 * @return the mDeviceId
-		 */
-		public String getDeviceId() {
-			return mDeviceId;
-		}
-
-		/**
-		 * @param mDeviceId
-		 *            the mDeviceId to set
-		 */
-		public void setDeviceId(String DeviceId) {
-			this.mDeviceId = DeviceId;
-		}
-
-	}
-
-	public enum ActionType {
-		WEB("web"), //
-		APP("app"), //
-		NONE("none"), //
-		SETTINGS("sett"), //
-		SETTINGSMAIN("settmain"), //
-		SETTINGSACCOUNT("settaccount"), //
-		SETTINGSADAPTER("settadapter"), //
-		SETTINGSLOCATION("settlocation"), //
-		OPENADAPTER("adapter"), //
-		OPENLOCATION("location"), //
-		OPENDEVICE("device");
-
-		private final String mValue;
-
-		ActionType(String value) {
-			mValue = value;
-		}
-
-		public String getValue() {
-			return mValue;
-		}
-
-		public static ActionType fromValue(String value) {
-			for (ActionType item : values()) {
-				if (value.equalsIgnoreCase(item.getValue()))
-					return item;
-			}
-			throw new IllegalArgumentException("Invalid State value");
-		}
-	}
-
-	public enum NotificationType {
-		INFO("info"),
-		ADVERT("advert"),
-		ALERT("alert"),
-		CONTROL("control");
-
-		private final String mValue;
-
-		NotificationType(String value) {
-			mValue = value;
-		}
-
-		public String getValue() {
-			return mValue;
-		}
-
-		public static NotificationType fromValue(String value) {
-			for (NotificationType item : values()) {
-				if (value.equalsIgnoreCase(item.getValue()))
-					return item;
-			}
-			throw new IllegalArgumentException("Invalid State value");
-		}
-	}
 
 	/**
 	 * Constructor
@@ -213,6 +52,29 @@ public class Notification {
 
 		mType = NotificationType.fromValue(type);
 		mRead = read;
+	}
+
+	protected static Notification parseBundle(Bundle bundle) {
+		String msgid = bundle.getString(Xconstants.MSGID);
+		// FIXME po predelani na nove notifikace s novym tagem pro userId predelat tag (prozatim se to posila v tagu)
+		String userId = bundle.getString(Xconstants.EMAIL);
+		String time = bundle.getString(Xconstants.TIME);
+		String type = bundle.getString(Xconstants.TYPE);
+		String message = bundle.getString(Xconstants.MESSAGE);
+		String action = bundle.getString(Xconstants.ACTION);
+
+		// control validity of message
+		if (msgid == null || userId == null || time == null || type == null || action == null || message == null) {
+			return null;
+		}
+
+		Notification notification = new Notification(msgid, time, type, false);
+		// we need email in notification to check validity
+		notification.setUserId(userId);
+		notification.setMessage(message);
+		notification.setAction(notification.new Action(action));
+
+		return notification;
 	}
 
 	/**
@@ -248,8 +110,7 @@ public class Notification {
 	}
 
 	/**
-	 * @param mRead
-	 *            the mRead to set
+	 * @param mRead the mRead to set
 	 */
 	public void setRead(boolean Read) {
 		this.mRead = Read;
@@ -270,8 +131,7 @@ public class Notification {
 	}
 
 	/**
-	 * @param mAction
-	 *            the mAction to set
+	 * @param mAction the mAction to set
 	 */
 	public void setAction(Action Action) {
 		this.mAction = Action;
@@ -285,34 +145,164 @@ public class Notification {
 	}
 
 	/**
-	 * @param mMessage
-	 *            the mMessage to set
+	 * @param mMessage the mMessage to set
 	 */
 	public void setMessage(String Message) {
 		this.mMessage = Message;
 	}
 
-	protected static Notification parseBundle(Bundle bundle) {
-		String msgid = bundle.getString(Xconstants.MSGID);
-		// FIXME po predelani na nove notifikace s novym tagem pro userId predelat tag (prozatim se to posila v tagu)
-		String userId = bundle.getString(Xconstants.EMAIL);
-		String time = bundle.getString(Xconstants.TIME);
-		String type = bundle.getString(Xconstants.TYPE);
-		String message = bundle.getString(Xconstants.MESSAGE);
-		String action = bundle.getString(Xconstants.ACTION);
+	public enum ActionType {
+		WEB("web"), //
+		APP("app"), //
+		NONE("none"), //
+		SETTINGS("sett"), //
+		SETTINGSMAIN("settmain"), //
+		SETTINGSACCOUNT("settaccount"), //
+		SETTINGSADAPTER("settadapter"), //
+		SETTINGSLOCATION("settlocation"), //
+		OPENADAPTER("adapter"), //
+		OPENLOCATION("location"), //
+		OPENDEVICE("device");
 
-		// control validity of message
-		if (msgid == null || userId == null || time == null || type == null || action == null || message == null) {
-			return null;
+		private final String mValue;
+
+		ActionType(String value) {
+			mValue = value;
 		}
 
-		Notification notification = new Notification(msgid, time, type, false);
-		// we need email in notification to check validity
-		notification.setUserId(userId);
-		notification.setMessage(message);
-		notification.setAction(notification.new Action(action));
+		public static ActionType fromValue(String value) {
+			for (ActionType item : values()) {
+				if (value.equalsIgnoreCase(item.getValue()))
+					return item;
+			}
+			throw new IllegalArgumentException("Invalid State value");
+		}
 
-		return notification;
+		public String getValue() {
+			return mValue;
+		}
+	}
+
+	public enum NotificationType {
+		INFO("info"),
+		ADVERT("advert"),
+		ALERT("alert"),
+		CONTROL("control");
+
+		private final String mValue;
+
+		NotificationType(String value) {
+			mValue = value;
+		}
+
+		public static NotificationType fromValue(String value) {
+			for (NotificationType item : values()) {
+				if (value.equalsIgnoreCase(item.getValue()))
+					return item;
+			}
+			throw new IllegalArgumentException("Invalid State value");
+		}
+
+		public String getValue() {
+			return mValue;
+		}
+	}
+
+	public class Action {
+		// web or app
+		private final ActionType mMasterType;
+		// app sub types
+		private ActionType mSlaveType = ActionType.NONE;
+		// if web
+		private String mURL;
+		// if app + adapter
+		private String mAdapterId;
+		// if app + adapter + location
+		private String mLocationId;
+		// if app + adapter + device
+		private String mDeviceId;
+
+		public Action(String masterType) {
+			mMasterType = ActionType.fromValue(masterType);
+		}
+
+		/**
+		 * @return the mMasterType
+		 */
+		public ActionType getMasterType() {
+			return mMasterType;
+		}
+
+		/**
+		 * @return the mSlaveType
+		 */
+		public ActionType getSlaveType() {
+			return mSlaveType;
+		}
+
+		/**
+		 * @param mSlaveType the mSlaveType to set
+		 */
+		public void setSlaveType(ActionType SlaveType) {
+			this.mSlaveType = SlaveType;
+		}
+
+		/**
+		 * @return the mURL
+		 */
+		public String getURL() {
+			return mURL;
+		}
+
+		/**
+		 * @param mURL the mURL to set
+		 */
+		public void setURL(String URL) {
+			this.mURL = URL;
+		}
+
+		/**
+		 * @return the mAdapterId
+		 */
+		public String getAdapterId() {
+			return mAdapterId;
+		}
+
+		/**
+		 * @param mAdapterId the mAdapterId to set
+		 */
+		public void setAdapterId(String AdapterId) {
+			this.mAdapterId = AdapterId;
+		}
+
+		/**
+		 * @return the mLocationId
+		 */
+		public String getLocationId() {
+			return mLocationId;
+		}
+
+		/**
+		 * @param mLocationId the mLocationId to set
+		 */
+		public void setLocationId(String LocationId) {
+			this.mLocationId = LocationId;
+		}
+
+		/**
+		 * @return the mDeviceId
+		 */
+		public String getDeviceId() {
+			return mDeviceId;
+		}
+
+		/**
+		 * @param mDeviceId the mDeviceId to set
+		 */
+		public void setDeviceId(String DeviceId) {
+			this.mDeviceId = DeviceId;
+		}
+
 	}
 
 }

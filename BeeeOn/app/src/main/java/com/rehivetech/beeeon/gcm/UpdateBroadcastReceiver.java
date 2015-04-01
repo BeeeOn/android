@@ -7,9 +7,11 @@ import com.rehivetech.beeeon.util.Log;
 
 public class UpdateBroadcastReceiver extends BroadcastReceiver {
 
+	public static final String TAG = UpdateBroadcastReceiver.class.getSimpleName();
+
 	@Override
 	public void onReceive(Context context, Intent intent) {
-		Log.i(GcmHelper.TAG_GCM, "App updated, starting service for re-registering GCM ID.");
+		Log.i(TAG, GcmHelper.TAG_GCM + "App updated, starting service for re-registering GCM ID.");
 		context.startService(new Intent(context, GcmReRegistrationHandler.class));
 	}
 }

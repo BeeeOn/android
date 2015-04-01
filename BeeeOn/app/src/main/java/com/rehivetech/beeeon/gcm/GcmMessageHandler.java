@@ -14,13 +14,14 @@ import android.support.v4.app.NotificationCompat;
 import android.widget.Toast;
 
 import com.google.android.gms.gcm.GoogleCloudMessaging;
-
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.activity.LoginActivity;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.util.Log;
 
 public class GcmMessageHandler extends IntentService {
+
+	public static final String TAG = GcmMessageHandler.class.getSimpleName();
 
 	private Handler mHandler;
 	private Controller mController;
@@ -48,29 +49,29 @@ public class GcmMessageHandler extends IntentService {
 
 		if (extras == null || extras.isEmpty() || messageType == null || messageType.isEmpty()) {
 			GcmBroadcastReceiver.completeWakefulIntent(intent);
-			Log.w(GcmHelper.TAG_GCM, "Null notification");
+			Log.w(TAG, GcmHelper.TAG_GCM + "Null notification");
 			return;
 		}
 
 		if (GoogleCloudMessaging.MESSAGE_TYPE_SEND_ERROR.equals(messageType)) {
-			Log.w(GcmHelper.TAG_GCM, "Send error: " + extras.toString());
+			Log.w(TAG, GcmHelper.TAG_GCM + "Send error: " + extras.toString());
 		} else if (GoogleCloudMessaging.MESSAGE_TYPE_DELETED.equals(messageType)) {
-			Log.w(GcmHelper.TAG_GCM, "Deleted messages on server: " + extras.toString());
+			Log.w(TAG, GcmHelper.TAG_GCM + "Deleted messages on server: " + extras.toString());
 			// If it's a regular GCM message, do some work.
 		} else if (GoogleCloudMessaging.MESSAGE_TYPE_MESSAGE.equals(messageType)) {
 			final Notification notification = Notification.parseBundle(extras);
 
 			// control if message was valid
 			if (notification == null) {
-				Log.e(GcmHelper.TAG_GCM, "Invalid message. Some of compulsory values was missing.");
+				Log.e(TAG, GcmHelper.TAG_GCM + "Invalid message. Some of compulsory values was missing.");
 				GcmBroadcastReceiver.completeWakefulIntent(intent);
 				return;
 			}
 
 			// control email if it equals with actual user
 			if (!notification.getUserId().equals(mController.getActualUser().getId())) {
-				Log.w(GcmHelper.TAG_GCM, notification.getUserId() + " != " + mController.getLastUserId());
-				Log.w(GcmHelper.TAG_GCM, "Notification user ID wasn't verified. Server GCM ID will be deleted.");
+				Log.w(TAG, GcmHelper.TAG_GCM + notification.getUserId() + " != " + mController.getLastUserId());
+				Log.w(TAG, GcmHelper.TAG_GCM + "Notification user ID wasn't verified. Server GCM ID will be deleted.");
 
 				final String gcmId = mController.getGCMRegistrationId();
 				if (!notification.getUserId().isEmpty() && !gcmId.isEmpty()) {
@@ -82,7 +83,7 @@ public class GcmMessageHandler extends IntentService {
 										mController.deleteGCM(notification.getUserId(), gcmId);
 									} catch (Exception e) {
 										// do nothing
-										Log.w(GcmHelper.TAG_GCM,
+										Log.w(TAG, GcmHelper.TAG_GCM +
 												"Logout: Delete GCM ID failed: " + e.getLocalizedMessage());
 									}
 								}
@@ -95,11 +96,11 @@ public class GcmMessageHandler extends IntentService {
 
 			// EVERYTHING VERIFIED SUCCESSFULLY, MAKE ACTION HERE
 			else {
-				Log.i(GcmHelper.TAG_GCM, "Received : (" + messageType + ")  " + notification.getMessage());
+				Log.i(TAG, GcmHelper.TAG_GCM + "Received : (" + messageType + ")  " + notification.getMessage());
 
 				// pass notification to controller
 				int notifRec = mController.receiveNotification(notification);
-				Log.i(GcmHelper.TAG_GCM, "Controller passed notification to " + notifRec + " reciever(s).");
+				Log.i(TAG, GcmHelper.TAG_GCM + "Controller passed notification to " + notifRec + " reciever(s).");
 
 				handleNotification(notification);
 			}
@@ -113,13 +114,13 @@ public class GcmMessageHandler extends IntentService {
 		NotificationCompat.Builder builder = new NotificationCompat.Builder(this)
 				.setSmallIcon(R.drawable.beeeon_logo_white)
 				.setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.beeeon_logo_white_icons))
-				// .setWhen(notification.getDate().getTimeInMillis())
+						// .setWhen(notification.getDate().getTimeInMillis())
 				.setWhen(System.currentTimeMillis()).setContentTitle(getText(R.string.app_name))
 				.setContentText(notification.getMessage()).setAutoCancel(true);
 
 		// vibration
-		builder.setVibrate(new long[] {
-			500
+		builder.setVibrate(new long[]{
+				500
 		});
 
 		// LED
