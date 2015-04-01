@@ -366,9 +366,7 @@ public class NavDrawerMenu   {
         }));
 
 		List<Adapter> adapters = mController.getAdapters();
-		Adapter activeAdapter = mController.getActiveAdapter();
-		if(activeAdapter == null)
-			return mMenuAdapter;
+
 		
 		// Adding separator as item (we don't want to let it float as header)
 		mMenuAdapter.addItem(new SeparatorMenuItem());
@@ -376,6 +374,9 @@ public class NavDrawerMenu   {
 		mMenuAdapter.addHeader(new GroupMenuItem(mActivity.getResources().getString(R.string.adapter)));
 		
 		if (!adapters.isEmpty()) {
+			Adapter activeAdapter = mController.getActiveAdapter();
+			if(activeAdapter == null)
+				return mMenuAdapter;
 			// Adding adapters
 			for (Adapter actAdapter : adapters) {
 				mMenuAdapter.addItem(new AdapterMenuItem(actAdapter.getName(), actAdapter.getRole().name(), activeAdapter.getId().equals(actAdapter.getId()), actAdapter.getId()));
