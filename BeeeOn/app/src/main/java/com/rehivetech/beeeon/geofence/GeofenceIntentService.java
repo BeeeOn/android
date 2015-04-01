@@ -59,17 +59,13 @@ public class GeofenceIntentService extends IntentService {
 		for (Geofence fence : triggeringGeofences) {
 			final Geofence actFence = fence;
 			if (Controller.getInstance(this).hasActualUserGeofence(actFence.getRequestId())) {
-				Log.i(TAG, "Actual user is allowed to acces this geofence.");
+				Log.i(TAG, "Actual user is allowed to access this geofence.");
 				Thread t = new Thread() {
 					public void run() {
-						Thread t = new Thread() {
-							public void run() {
-								Controller.getInstance(GeofenceIntentService.this).setPassBorder(actFence.getRequestId(), type);
-							}
-						};
-						t.start();
+						Controller.getInstance(GeofenceIntentService.this).setPassBorder(actFence.getRequestId(), type);
 					}
 				};
+				t.start();
 
 			}
 		}
