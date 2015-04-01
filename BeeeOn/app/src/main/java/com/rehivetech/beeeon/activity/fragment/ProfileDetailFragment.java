@@ -4,7 +4,6 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
@@ -21,7 +20,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.melnykov.fab.FloatingActionButton;
-import com.rehivetech.beeeon.Constants;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.activity.AchievementOverviewActivity;
 import com.rehivetech.beeeon.arrayadapter.GamCategoryListAdapter;
@@ -30,6 +28,7 @@ import com.rehivetech.beeeon.gamification.AchievementList;
 import com.rehivetech.beeeon.gamification.GamificationCategory;
 import com.rehivetech.beeeon.household.User;
 import com.rehivetech.beeeon.socialNetworks.Facebook;
+import com.rehivetech.beeeon.socialNetworks.Twitter;
 import com.rehivetech.beeeon.util.Log;
 
 import java.util.ArrayList;
@@ -44,8 +43,8 @@ import java.util.Observer;
 public class ProfileDetailFragment extends Fragment implements Observer {
   	private static final String TAG = ProfileDetailFragment.class.getSimpleName();
   	private User actUser;
-	private SharedPreferences mPrefs;
   	private GamCategoryListAdapter mCategoryListAdapter;
+	private View mView;
 
 	// GUI
 	private TextView userName;
@@ -60,16 +59,14 @@ public class ProfileDetailFragment extends Fragment implements Observer {
 
 	// SocialNetworks
 	private boolean showMoreAccounts = false;
-	private final int totalNetworks = 2;
+	private final int totalNetworks = 3;
 	private ArrayList<CharSequence> socialNetworks = new ArrayList<>();
-	private String FBlogin;
-	private String TWlogin;
 	private Facebook mFb;
+	private Twitter mTw;
 	private TextView mFbName;
 
 	public ProfileDetailFragment() {
 		Controller controller = Controller.getInstance(getActivity());
-		mPrefs = controller.getUserSettings();
 	    actUser = controller.getActualUser();
   	}
 
@@ -85,7 +82,7 @@ public class ProfileDetailFragment extends Fragment implements Observer {
     	Log.d(TAG, "onCreateView()");
 
     	// Inflate the layout for this fragment
-		View mView = inflater.inflate(R.layout.profile_detail, container, false);
+		mView = inflater.inflate(R.layout.profile_detail, container, false);
     	userName = (TextView) mView.findViewById(R.id.profile_name);
     	userLevel = (TextView) mView.findViewById(R.id.profile_detail);
     	userImage = (ImageView) mView.findViewById(R.id.profile_image);
@@ -96,39 +93,14 @@ public class ProfileDetailFragment extends Fragment implements Observer {
 		mMoreVisible = (RelativeLayout) mView.findViewById(R.id.profile_more_accounts);
 		mMoreLayout = (RelativeLayout) mView.findViewById(R.id.profile_more);
 
-		RelativeLayout fbLayout = (RelativeLayout) mView.findViewById(R.id.profile_facebook);
-		RelativeLayout twLayout = (RelativeLayout) mView.findViewById(R.id.profile_twitter);
-		ViewGroup.LayoutParams fbPar = fbLayout.getLayoutParams();
-		ViewGroup.LayoutParams twPar = twLayout.getLayoutParams();
-
-		// Shared preferences
-		FBlogin = mPrefs.getString(Constants.PERSISTANCE_PREF_LOGIN_FACEBOOK,null);
-		TWlogin = mPrefs.getString(Constants.PERSISTANCE_PREF_LOGIN_TWITTER,null);
-		if(FBlogin == null) {
-			fbLayout.setVisibility(View.INVISIBLE);
-			fbPar.height = 0;
-			socialNetworks.add("Facebook");
-		}
-		else {
-			mFbName = (TextView) mView.findViewById(R.id.profile_facebook_name);
-			fbLayout.setVisibility(View.VISIBLE);
-			fbPar.height = 70;
-			mFb = Facebook.getInstance();
-			mFb.addObserver(this);
-			mFb.downloadUserData();
-		}
-		if(TWlogin == null) {
-			twLayout.setVisibility(View.INVISIBLE);
-			twPar.height = 0;
-			socialNetworks.add("Twitter");
-		}
-		else {
-			twLayout.setVisibility(View.VISIBLE);
-			twPar.height = 70;
-		}
+		mFb = Facebook.getInstance(getActivity());
+		mTw = Twitter.getInstance(getActivity());
+		setNetworksView();
+		socialNetworks.add("Forget FB (only for now)");
 
 		setMoreVisibility();
     	redrawCategories();
+
     	return mView;
   	}
 
@@ -221,6 +193,34 @@ public class ProfileDetailFragment extends Fragment implements Observer {
 		}
 	}
 
+	private void setNetworksView() {
+		RelativeLayout fbLayout = (RelativeLayout) mView.findViewById(R.id.profile_facebook);
+		RelativeLayout twLayout = (RelativeLayout) mView.findViewById(R.id.profile_twitter);
+		ViewGroup.LayoutParams fbPar = fbLayout.getLayoutParams();
+		ViewGroup.LayoutParams twPar = twLayout.getLayoutParams();
+		if(!mFb.isPaired()) {
+			fbLayout.setVisibility(View.INVISIBLE);
+			fbPar.height = 0;
+			socialNetworks.add("Facebook");
+		}
+		else {
+			mFbName = (TextView) mView.findViewById(R.id.profile_facebook_name);
+			fbLayout.setVisibility(View.VISIBLE);
+			fbPar.height = 70;
+			mFb.addObserver(this);
+			mFb.downloadUserData();
+		}
+		if(!mTw.isPaired()) {
+			twLayout.setVisibility(View.INVISIBLE);
+			twPar.height = 0;
+			socialNetworks.add("Twitter");
+		}
+		else {
+			twLayout.setVisibility(View.VISIBLE);
+			twPar.height = 70;
+		}
+	}
+
 	/**
 	 * Rotates arrow that shows and hides additional info
 	 * about connected social networks.
@@ -245,17 +245,28 @@ public class ProfileDetailFragment extends Fragment implements Observer {
 	    Log.d(TAG, "onDestroy()");
   	}
 
+	/**
+	 * Redraws Facebook icons after user has logged in,
+	 * so it is visible immediately
+	 */
+	public void updateFacebookLoginView() {
+		setNetworksView();
+		setMoreVisibility();
+	}
+
 	/** Observer.
 	 * Waits until *Facebook* downloads data about user
 	 * and changes this data in view.
 	 */
 	@Override
 	public void update(Observable observable, Object o) {
-		Log.d(TAG, "Facebook "+o.toString()+" downloaded");
+		Log.d(TAG, "Facebook new data: "+o.toString());
 		if(o.toString().equals("userName"))
 			fbSetOnClickLogout();
-		else if(o.toString().equals("connect_error"))
-			mFbName.setText(getResources().getString(R.string.NetworkError___SHORT_NO_CONNECTION));
+		else if(o.toString().equals("connect_error")) {
+			if(isAdded()) mFbName.setText(getResources().getString(R.string.NetworkError___SHORT_NO_CONNECTION));
+			else mFbName.setText("No connection"); // falls when trying to get resources
+		}
 		else if(o.toString().equals("not_logged"))
 			fbSetOnClickLogin();
 //		else if(o.toString().equals("profilePicture"))
@@ -267,7 +278,7 @@ public class ProfileDetailFragment extends Fragment implements Observer {
 		mFbName.setOnLongClickListener(new View.OnLongClickListener() {
 			@Override
 			public boolean onLongClick(View view) {
-				mFb.logOut(getActivity());
+				mFb.logOut();
 				fbSetOnClickLogin();
 				return true;
 			}
@@ -276,7 +287,7 @@ public class ProfileDetailFragment extends Fragment implements Observer {
 
 	private void fbSetOnClickLogin() {
 		if(isAdded()) mFbName.setText(getResources().getString(R.string.login_login));
-		else mFbName.setText("LogIn");
+		else mFbName.setText("Login"); // workaround against exceptions
 		mFbName.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
@@ -297,11 +308,15 @@ public class ProfileDetailFragment extends Fragment implements Observer {
 				.setItems(socialNetworks.toArray(new CharSequence[socialNetworks.size()]),
 						new DialogInterface.OnClickListener() {
 							public void onClick(DialogInterface dialog, int which) {
-								if (which == 0 && FBlogin == null)
+								if (which == 0 && !mFb.isPaired())
 									mFb.logIn(getActivity());
-								if (which == 1 && FBlogin == null ||
-									which == 0 && FBlogin != null)
+								if (which == 1 && !mFb.isPaired() ||
+										which == 0 && mFb.isPaired())
 									Toast.makeText(getActivity(), "Not implemented yet", Toast.LENGTH_LONG).show();
+								if (which == 1 && mFb.isPaired()) { // just for testing, will be removed
+									mFb.forget();
+									updateFacebookLoginView();
+								}
 							}
 						})
 				.setNegativeButton(R.string.action_close, new DialogInterface.OnClickListener() {

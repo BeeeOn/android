@@ -1,8 +1,9 @@
 package com.rehivetech.beeeon.socialNetworks;
 
-import android.app.Activity;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.net.Uri;
+import android.os.SystemClock;
 import android.support.v4.app.FragmentActivity;
 import android.widget.Toast;
 
@@ -12,7 +13,9 @@ import com.facebook.GraphResponse;
 import com.facebook.login.LoginManager;
 import com.facebook.share.model.ShareLinkContent;
 import com.facebook.share.widget.ShareDialog;
+import com.rehivetech.beeeon.Constants;
 import com.rehivetech.beeeon.R;
+import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.util.Log;
 
 import org.json.JSONException;
@@ -30,25 +33,33 @@ public class Facebook extends Observable {
 	private static final String TAG = Facebook.class.getSimpleName();
 
 	private static Facebook mInstance;
+	private Context mContext;
+	private SharedPreferences mPrefs;
 
 	// Facebook user variables
 	private String mUserName;
+	private String mAccessToken;
 
-	private Facebook() {
+	private Facebook(Context context) {
+		mContext = context;
+		mPrefs = Controller.getInstance(mContext).getUserSettings();
+		mAccessToken = mPrefs.getString(Constants.PERSISTANCE_PREF_LOGIN_FACEBOOK, null);
 	}
 
-	public static Facebook getInstance() {
+	public static Facebook getInstance(Context context) {
 		if(mInstance == null) {
-			mInstance = new Facebook();
+			mInstance = new Facebook(context);
 		}
 		return mInstance;
 	}
 
 	public String getUserName() {return mUserName;}
+	public void setToken(String token) {this.mAccessToken = token;}
+	public boolean isPaired() {return mAccessToken != null;}
 
-	public void logOut(Context context) {
+	public void logOut() {
 		if(mUserName != null)
-		  Toast.makeText(context, context.getString(R.string.logout_success), Toast.LENGTH_LONG).show();
+		  Toast.makeText(mContext, mContext.getString(R.string.logout_success), Toast.LENGTH_LONG).show();
 		LoginManager.getInstance().logOut();
 		mUserName = null;
 	}
@@ -57,10 +68,18 @@ public class Facebook extends Observable {
 		LoginManager.getInstance().logInWithReadPermissions(activity, Arrays.asList("public_profile"));
 	}
 
+	// just for testing
+	public void forget() {
+		//TODO remove this function
+		mPrefs.edit().putString(Constants.PERSISTANCE_PREF_LOGIN_FACEBOOK, null).apply();
+		mUserName = null;
+		mAccessToken = null;
+	}
+
 	public void downloadUserData() {
 		if(mUserName != null) {
 			Log.d(TAG, "Not downloading data, already done before");
-//			return;
+			return;
 		}
 		AccessToken token = AccessToken.getCurrentAccessToken();
 		GraphRequest request = GraphRequest.newMeRequest(token,new GraphRequest.GraphJSONObjectCallback() {
@@ -92,7 +111,7 @@ public class Facebook extends Observable {
 		if (ShareDialog.canShow(ShareLinkContent.class)) {
 			return new ShareLinkContent.Builder()
 					.setContentTitle(title)
-					.setContentDescription(date + context.getString(R.string.achievement_share_msg))
+					.setContentDescription(date + " " + context.getString(R.string.achievement_share_msg))
 					.setContentUrl(Uri.parse(context.getString(R.string.achievement_share_url)))
 					.setImageUrl(Uri.parse(context.getString(R.string.achievement_share_img)))
 					.build();

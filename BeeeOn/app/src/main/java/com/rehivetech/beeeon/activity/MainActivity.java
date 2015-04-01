@@ -180,12 +180,16 @@ public class MainActivity extends BaseApplicationActivity {
 
 
 
-
+		// Facebook sdk needs to be initialised in Activity, but its used in Profile Fragment
+		// Registering callback for facebook log in
 		FacebookSdk.sdkInitialize(this);
 		mFacebookCallbackManager = CallbackManager.Factory.create();
 		LoginManager.getInstance().registerCallback(mFacebookCallbackManager,new FacebookCallback<LoginResult>() {
 			@Override
-			public void onSuccess(LoginResult loginResult) {new FbLoginAchievement(getApplicationContext(),loginResult);}
+			public void onSuccess(LoginResult loginResult) {
+				new FbLoginAchievement(getApplicationContext(),loginResult);
+				mProfileFrag.updateFacebookLoginView();
+			}
 			@Override
 			public void onCancel() {}
 			@Override

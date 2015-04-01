@@ -292,7 +292,8 @@
     <string name="tut_add_sensor_text_1">Please pull out battery stripe</string>
     <string name="tut_add_sensor_text_2">Please shake with new sensor shortly while countdown is running or push pair button on actor</string>
 
-	<!-- Achivements -->
+	<!-- Achievements -->
+	<string name="share_title">Share this event</string>
 	<string name="downloading_data">Downloading data &#8230;</string>
 	<string name="logout_success">Successfully logged out</string>
 	<string name="achievement_share_msg"> I just unlocked this new achievement!</string>

@@ -1,12 +1,17 @@
 package com.rehivetech.beeeon.activity;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
@@ -22,12 +27,16 @@ import com.rehivetech.beeeon.gamification.AchievementListItem;
 import com.rehivetech.beeeon.socialNetworks.Facebook;
 import com.rehivetech.beeeon.util.Log;
 
+import java.util.ArrayList;
+
 /**
  * @author Jan Lamacz
  */
 public class AchievementOverviewActivity extends BaseApplicationActivity {
 	private static final String TAG = AchievementOverviewActivity.class.getSimpleName();
 //	private static final String PARCEL_ACHIEVEMENT = "achievementList";
+
+	private ArrayList<CharSequence> socialNetworks = new ArrayList<>();
 
 	// extras
 	public static final String EXTRA_CATEGORY_NAME = "category_name";
@@ -45,7 +54,7 @@ public class AchievementOverviewActivity extends BaseApplicationActivity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_achievement_overview);
-		mFb = Facebook.getInstance();
+		mFb = Facebook.getInstance(getApplicationContext());
 
 		Bundle bundle = getIntent().getExtras();
 		if(bundle != null){
@@ -70,6 +79,8 @@ public class AchievementOverviewActivity extends BaseApplicationActivity {
 			getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 		}
 
+		socialNetworks.add("Google Plus");
+		socialNetworks.add("Facebook");
 		setFbShareCallback();
 		setOnClickListeners();
 	}
@@ -83,7 +94,10 @@ public class AchievementOverviewActivity extends BaseApplicationActivity {
 		mShareDialog = new ShareDialog(this);
 		mShareDialog.registerCallback(mCallbackManager, new FacebookCallback<Sharer.Result>() {
 			@Override
-			public void onSuccess(Sharer.Result shareResult) {new FbShareAchievement(getApplicationContext());}
+			public void onSuccess(Sharer.Result shareResult) {
+				if(shareResult.getPostId() != null) // null is if 'cancel' is hit
+					new FbShareAchievement(getApplicationContext());
+			}
 			@Override
 			public void onCancel() {Log.d(TAG, "FB: canceled");}
 			@Override
@@ -116,8 +130,7 @@ public class AchievementOverviewActivity extends BaseApplicationActivity {
 			public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
 				AchievementListItem achievementItem = mAchievementListAdapter.getItem(position);
 				if(achievementItem.isDone()) {
-					mShareDialog
-							.show(mFb.shareAchievement(getApplicationContext(), achievementItem.getName(), achievementItem.getDate()));
+					new NetworkChooseDialog(achievementItem.getName(), achievementItem.getDate()).show(getSupportFragmentManager(), TAG);
 					return true;
 				}
 				else
@@ -126,6 +139,9 @@ public class AchievementOverviewActivity extends BaseApplicationActivity {
 		});
 	}
 
+	/**
+	 * Callback for Facebook sharing dialog, handles the response
+	 */
 	@Override
 	protected void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
@@ -153,6 +169,35 @@ public class AchievementOverviewActivity extends BaseApplicationActivity {
 				finish();
 				return true;
 			default: return super.onOptionsItemSelected(item);
+		}
+	}
+
+	public class NetworkChooseDialog extends DialogFragment {
+		private String name;
+		private String date;
+		public NetworkChooseDialog(String name, String date) {
+			this.name = name;
+			this.date = date;
+		}
+		@Override
+		public Dialog onCreateDialog(Bundle savedInstanceState) {
+			AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+			builder.setTitle(R.string.share_title)
+					.setItems(socialNetworks.toArray(new CharSequence[socialNetworks.size()]),
+							new DialogInterface.OnClickListener() {
+								public void onClick(DialogInterface dialog, int which) {
+									if (which == 0)
+										Toast.makeText(getActivity(), "Not implemented yet", Toast.LENGTH_LONG).show();
+									if (which == 1)
+										mShareDialog
+												.show(mFb.shareAchievement(getApplicationContext(), name, date));
+								}
+							})
+					.setNegativeButton(R.string.action_close, new DialogInterface.OnClickListener() {
+						public void onClick(DialogInterface dialog, int id) {
+						}
+					});
+			return builder.create();
 		}
 	}
 }

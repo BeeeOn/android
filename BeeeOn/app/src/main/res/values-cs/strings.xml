@@ -293,6 +293,7 @@
     <string name="tut_add_sensor_text_2">Během odpočítávání krátce zatřeste se senzorem nebo stiskněte párovací tlačítko na aktoru</string>
 
 	<!-- Achievements -->
+	<string name="share_title">Sdílet tuto událost</string>
 	<string name="downloading_data">Stahuji data &#8230;</string>
 	<string name="logout_success">Odhlášení proběhlo úspěšně</string>
 	<string name="achievement_share_msg"> Odemknul jsem tento nový achievement!</string>
