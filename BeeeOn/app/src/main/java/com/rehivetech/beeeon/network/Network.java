@@ -107,7 +107,7 @@ public class Network implements INetwork {
 	private SSLSocket permaSocket = null;
 	private PrintWriter permaWriter = null;
 	private BufferedReader permaReader = null;
-	private static final String EOF = ">"; //FIXME: temporary solution
+	private static final String EOF = "</com>"; //FIXME: temporary solution (new version)
 	private boolean mIsMulti = false;
 
 	/**
