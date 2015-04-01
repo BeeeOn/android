@@ -40,6 +40,8 @@ public class GoogleAuthProvider implements IAuthProvider {
 
 	private static final String AUTH_INTENT_DATA_TOKEN = "token";
 
+	private static final String AUTH_INTENT_DATA_EMAIL = "email";
+
 	private static final String SCOPE = "oauth2:https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email";
 
 	private static Map<String, String> mParameters = new HashMap<>();
@@ -68,6 +70,10 @@ public class GoogleAuthProvider implements IAuthProvider {
 
 	@Override
 	public boolean loadAuthIntent(Intent data) {
+		String email = data.getStringExtra(AUTH_INTENT_DATA_EMAIL);
+		if (email != null)
+			mEmail = email;
+
 		String token = data.getStringExtra(AUTH_INTENT_DATA_TOKEN);
 		if (token == null)
 			return false;
@@ -121,8 +127,24 @@ public class GoogleAuthProvider implements IAuthProvider {
 	private void androidAuth(final LoginActivity activity) {
 		Log.d(TAG, "Start androidAuth");
 
+		String[] accounts = this.getAccountNames(activity);
+		if (!mEmail.isEmpty()) {
+			// Check if this e-mail still exists on this device
+			boolean found = false;
+			for (String account : accounts) {
+				if (account.equalsIgnoreCase(mEmail)) {
+					found = true;
+					break;
+				}
+			}
+
+			// If this email was not found, delete it and let user choose the one again
+			if (!found)
+				mEmail = "";
+		}
+
 		if (mEmail.isEmpty()) {
-			String[] accounts = this.getAccountNames(activity);
+
 			Log.d(TAG, String.format("Found number of accounts on this device: %d", accounts.length));
 
 			if (accounts.length == 1) {
@@ -146,6 +168,9 @@ public class GoogleAuthProvider implements IAuthProvider {
 
 						Intent data = new Intent();
 						data.putExtra(AUTH_INTENT_DATA_TOKEN, token);
+
+						// Remember also primary email this provider was started with
+						data.putExtra(AUTH_INTENT_DATA_EMAIL, mEmail);
 
 						// Report success to caller
 						activity.onActivityResult(PROVIDER_ID, IAuthProvider.RESULT_AUTH, data);
