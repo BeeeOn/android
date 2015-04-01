@@ -84,7 +84,10 @@ public class WatchDogListFragment extends Fragment{
             mActiveAdapterId = savedInstanceState.getString(ADAPTER_ID);
         }
         else{
-            mActiveAdapterId = mController.getActiveAdapter().getId();
+			Adapter adapter = mController.getActiveAdapter();
+			if(adapter == null)
+				return;
+            mActiveAdapterId = adapter.getId();
         }
     }
 

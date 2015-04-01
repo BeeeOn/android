@@ -170,6 +170,11 @@ public class WatchDogEditRuleActivity extends BaseApplicationActivity {
         // get adapter
         mAdapter = mActiveAdapterId == null ? mController.getActiveAdapter() : mController.getAdapter(mActiveAdapterId);
 
+		if(mAdapter == null ) {
+			//TODO: neocekova chyba
+			return;
+		}
+
         // UserSettings can be null when user is not logged in!
         mPrefs = mController.getUserSettings();
         mUnitsHelper = (mPrefs == null) ? null : new UnitsHelper(mPrefs, this);

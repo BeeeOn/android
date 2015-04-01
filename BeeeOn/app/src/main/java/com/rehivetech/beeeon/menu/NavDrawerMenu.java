@@ -135,16 +135,18 @@ public class NavDrawerMenu   {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 				mSelectedMenuItem = (MenuItem) mMenuAdapter.getItem(position);
+				Adapter adapter = mController.getActiveAdapter();
 				switch (mSelectedMenuItem.getType()) {
 				case ADAPTER:
+					if(adapter == null)
+						break;
 					// if it is not chosen, switch to selected adapter
-					if (!mController.getActiveAdapter().getId().equals(mSelectedMenuItem.getId())) {
+					if (!adapter.getId().equals(mSelectedMenuItem.getId())) {
 						doSwitchAdapterTask(mSelectedMenuItem.getId());
 					}
 					break;
                 case LOCATION:
                     // Get the title followed by the position
-                    Adapter adapter = mController.getActiveAdapter();
                     if (adapter != null) {
                         changeMenuItem(mSelectedMenuItem.getId(), true);
                         redrawMenu();
@@ -293,17 +295,6 @@ public class NavDrawerMenu   {
 	}
 
 	private void changeMenuItem(String ID, boolean closeDrawer) {
-		// save current location
-		SharedPreferences prefs = mController.getUserSettings();
-
-		// UserSettings can be null when user is not logged in!
-		if (prefs != null && ID != null && mController.getActiveAdapter() != null) {
-			Editor edit = prefs.edit();
-
-			String pref_key = Persistence.getPreferencesLastLocation(mController.getActiveAdapter().getId());
-			edit.putString(pref_key, ID);
-			edit.commit();
-		}
 
         mActiveItem = ID;
 		// TODO
@@ -376,7 +367,8 @@ public class NavDrawerMenu   {
 
 		List<Adapter> adapters = mController.getAdapters();
 		Adapter activeAdapter = mController.getActiveAdapter();
-
+		if(activeAdapter == null)
+			return mMenuAdapter;
 		
 		// Adding separator as item (we don't want to let it float as header)
 		mMenuAdapter.addItem(new SeparatorMenuItem());

@@ -286,7 +286,10 @@ public class SensorEditActivity extends BaseApplicationActivity {
 			// Get activity
 			mActivity = (SensorEditActivity) getActivity();
 			mController = Controller.getInstance(mActivity);
-			mDevice = mController.getDevice(mController.getActiveAdapter().getId(), mDeviceID);
+			Adapter adapter = mController.getActiveAdapter();
+			if(adapter == null)
+				return;
+			mDevice = mController.getDevice(adapter.getId(), mDeviceID);
 			mFacility = mDevice.getFacility();
 			mLocationId = mFacility.getLocationId();
 			mAdapter = mController.getAdapter(mFacility.getAdapterId());
