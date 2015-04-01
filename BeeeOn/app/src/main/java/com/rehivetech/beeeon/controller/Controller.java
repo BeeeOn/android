@@ -1073,7 +1073,15 @@ public final class Controller {
 		return mGeofenceModel.exist(getActualUser().getId(), geofenceId);
 	}
 
+	/**
+	 *
+	 * This CAN'T be called on UI thread!
+	 *
+	 * @param geofenceId Geofence ID which is unique per user for all devices
+	 * @param type
+	 */
 	public void setPassBorder(String geofenceId, TransitionType type) {
+		Log.i(TAG, "Passing geofence and seding to server");
 		mNetwork.passBorder(geofenceId, type.getString());
 	}
 

@@ -207,4 +207,5 @@ public class SimpleGeofence {
 				.setExpirationDuration(mExpirationDuration)
 				.build();
 	}
+
 }

@@ -38,6 +38,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.rehivetech.beeeon.R;
+import com.rehivetech.beeeon.activity.dialog.GeofenceDialogFragment;
 import com.rehivetech.beeeon.base.BaseApplicationActivity;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.geofence.GeofenceIntentService;
@@ -48,8 +49,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MapGeofenceActivity extends BaseApplicationActivity implements ResultCallback<Status>, OnMapLongClickListener, OnMarkerDragListener,
-		OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
+public class MapGeofenceActivity extends BaseApplicationActivity implements ResultCallback<Status>, OnMapLongClickListener,
+		OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, GeofenceDialogFragment.GeofenceCrateCallback {
 
 	private static final String TAG = MapGeofenceActivity.class.getSimpleName();
 
@@ -60,6 +61,8 @@ public class MapGeofenceActivity extends BaseApplicationActivity implements Resu
 	private SearchView mSearchView;
 	private GoogleMap mMap;
 	private Toolbar mToolbar;
+
+	private static final String TAG_DIALOG_ADD_GEOFENCE = "geofenceDialog";
 
 	/**
 	 * Only one geofence can be added in time. If it is null, no geofence is adding.
@@ -218,11 +221,6 @@ public class MapGeofenceActivity extends BaseApplicationActivity implements Resu
 
 		GeofencingRequest.Builder builder = new GeofencingRequest.Builder();
 
-		// The INITIAL_TRIGGER_ENTER flag indicates that geofencing service should trigger a
-		// GEOFENCE_TRANSITION_ENTER notification when the geofence is added and if the device
-		// is already inside that geofence.
-		// builder.setInitialTrigger(GeofencingRequest.INITIAL_TRIGGER_ENTER);
-
 		// Add the geofences to be monitored by geofencing service.
 		builder.addGeofences(geofenceList);
 
@@ -254,7 +252,7 @@ public class MapGeofenceActivity extends BaseApplicationActivity implements Resu
 
 		// Sets the map type to be "hybrid"
 		mMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
-		mMap.setOnMarkerDragListener(this);
+//		mMap.setOnMarkerDragListener(this);
 
 		// trying to zoom to actual position
 		LocationManager locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
@@ -296,13 +294,13 @@ public class MapGeofenceActivity extends BaseApplicationActivity implements Resu
 			Log.e(TAG, "Geofence is null.");
 			return;
 		}
-		mMap.addMarker(
+		Marker marker = mMap.addMarker(
 				new MarkerOptions()
 						.position(new LatLng(fence.getLatitude(), fence.getLongitude()))
 						.title(fence.getName())
 //						.snippet("Radius: " + fence.getRadius())
-		)
-				.showInfoWindow();
+		);
+		marker.showInfoWindow();
 
 		// Instantiates a new CircleOptions object + center/radius
 		CircleOptions circleOptions = new CircleOptions().center(new LatLng(fence.getLatitude(), fence.getLongitude()))
@@ -334,14 +332,14 @@ public class MapGeofenceActivity extends BaseApplicationActivity implements Resu
 	public void onConnectionFailed(ConnectionResult result) {
 		// Refer to the javadoc for ConnectionResult to see what error codes might be returned in
 		// onConnectionFailed.
-		Log.i(TAG, "Connection failed: ConnectionResult.getErrorCode() = " + result.getErrorCode());
+		Log.e(TAG, "Google Api Connection failed: ConnectionResult.getErrorCode() = " + result.getErrorCode());
 	}
 
 	@Override
 	public void onConnectionSuspended(int cause) {
 		// The connection to Google Play services was lost for some reason. We call connect() to
 		// attempt to re-establish the connection.
-		Log.i(TAG, "Connection suspended");
+		Log.w(TAG, "Google Api Connection suspended");
 		mGoogleApiClient.connect();
 	}
 
@@ -351,28 +349,28 @@ public class MapGeofenceActivity extends BaseApplicationActivity implements Resu
 
 	@Override
 	public void onMapLongClick(LatLng pos) {
-		Toast.makeText(this, "Long Click", Toast.LENGTH_LONG).show();
-		SimpleGeofence geofence = new SimpleGeofence("ahoj", pos.latitude, pos.longitude, 100);
-		addGeofence(geofence);
+		GeofenceDialogFragment newFragment = GeofenceDialogFragment.newInstance(
+				pos.latitude, pos.longitude);
+		newFragment.show(getSupportFragmentManager(), TAG_DIALOG_ADD_GEOFENCE );
 	}
 
-	@Override
-	public void onMarkerDrag(Marker arg0) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void onMarkerDragEnd(Marker arg0) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void onMarkerDragStart(Marker arg0) {
-		// TODO Auto-generated method stub
-
-	}
+//	@Override
+//	public void onMarkerDrag(Marker arg0) {
+//		// TODO Auto-generated method stub
+//
+//	}
+//
+//	@Override
+//	public void onMarkerDragEnd(Marker arg0) {
+//		// TODO Auto-generated method stub
+//
+//	}
+//
+//	@Override
+//	public void onMarkerDragStart(Marker arg0) {
+//		// TODO Auto-generated method stub
+//
+//	}
 
 	@Override
 	public void onResult(Status status) {
@@ -417,6 +415,12 @@ public class MapGeofenceActivity extends BaseApplicationActivity implements Resu
 	public void onStop() {
 		super.onStop();
 		mGoogleApiClient.disconnect();
+	}
+
+	@Override
+	public void onCreateGeofence(String name, int radius, double lat, double lon) {
+		SimpleGeofence geofence = new SimpleGeofence(name, lat, lon, radius, this);
+		addGeofence(geofence);
 	}
 
 	// An AsyncTask class for accessing the GeoCoding Web Service

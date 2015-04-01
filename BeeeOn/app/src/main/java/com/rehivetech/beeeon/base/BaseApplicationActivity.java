@@ -85,46 +85,4 @@ public abstract class BaseApplicationActivity extends BaseActivity implements IN
 			}
 		});
 	}
-
-	/**
-	 * Start thread that creates new notifications at random interval. FIXME: this is just for testing and should be removed soon
-	 */
-	/*
-	public void testingNotifications() {
-		new Thread(new Runnable() {
-
-			@Override
-			public void run() {
-				Log.d("BaseApplicationActivity", "Starting thread for dummy notification");
-				Controller controller = Controller.getInstance(BaseApplicationActivity.this);
-				Random random = new Random();
-
-				for (int i = 1; i <= 10; i++) {
-					int secs = 5 + random.nextInt(10);
-					try {
-						Thread.sleep(secs * 1000);
-					} catch (InterruptedException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-
-						// break();
-					}
-
-					Log.d("BaseApplicationActivity", "Creating new dummy notification");
-
-					Notification notification = new Notification(String.valueOf(i), "2014-10-22 12:12:12", "info", false);
-					// we need email in notification to check validity
-					notification.setEmail("john@doe.com");
-					notification.setMessage(String.format("I am testing notification #%d!", i));
-					// notification.setAction(notification.new Action(action));
-
-					controller.receiveNotification(notification);
-				}
-
-				Log.d("BaseApplicationActivity", "Stopped thread for dummy notification");
-			}
-		}).start();
-	}
-	*/
-
 }

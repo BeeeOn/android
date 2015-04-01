@@ -49,11 +49,22 @@ public class GeofenceIntentService extends IntentService {
 		}
 	}
 
-	private void sendGeofencesToServer(List<Geofence> triggeringGeofences, TransitionType type) {
+	private void sendGeofencesToServer(List<Geofence> triggeringGeofences, final TransitionType type) {
 		Log.i(TAG, "Sending geofence to server");
-		for (Geofence actFence : triggeringGeofences) {
+		for (Geofence fence : triggeringGeofences) {
+			final Geofence actFence = fence;
 			if (Controller.getInstance(this).hasActualUserGeofence(actFence.getRequestId())) {
-				Controller.getInstance(this).setPassBorder(actFence.getRequestId(), type);
+				Thread t = new Thread() {
+					public void run() {
+						Thread t = new Thread() {
+							public void run() {
+								Controller.getInstance(GeofenceIntentService.this).setPassBorder(actFence.getRequestId(), type);
+							}
+						};
+						t.start();
+					}
+				};
+
 			}
 		}
 	}
