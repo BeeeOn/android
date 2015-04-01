@@ -137,7 +137,6 @@ public class GeofenceDialogFragment extends DialogFragment {
 				.create();
 	}
 
-
 	public interface GeofenceCrateCallback {
 		void onCreateGeofence(String name, int radius, double lat, double lon);
 	}

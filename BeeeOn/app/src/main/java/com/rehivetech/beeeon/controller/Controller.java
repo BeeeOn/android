@@ -1090,6 +1090,10 @@ public final class Controller {
 		mGeofenceModel.addGeofence(getActualUser().getId(), geofence);
 	}
 
+	public void deleteGeofence(SimpleGeofence geofence) {
+		mGeofenceModel.deleteGeofence(getActualUser().getId(), geofence.getId());
+	}
+
 	public void delBT() {
 		mNetwork.setBT("");
 	}

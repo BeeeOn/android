@@ -11,7 +11,6 @@ import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.view.MenuItemCompat;
-import android.support.v7.app.ActionBarActivity;
 import android.support.v7.view.ActionMode;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
@@ -32,7 +31,6 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMap.OnMapLongClickListener;
-import com.google.android.gms.maps.GoogleMap.OnMarkerDragListener;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.Circle;
@@ -52,7 +50,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.WeakHashMap;
 
 public class MapGeofenceActivity extends BaseApplicationActivity implements ResultCallback<Status>, OnMapLongClickListener,
 		OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, GeofenceDialogFragment.GeofenceCrateCallback {
@@ -61,18 +58,14 @@ public class MapGeofenceActivity extends BaseApplicationActivity implements Resu
 
 	private static final float MAP_ZOOM = 17.5F;
 	private static final int MAXIMUM_RET_ADDRESS = 3;
+	private static final String TAG_DIALOG_ADD_GEOFENCE = "geofenceDialog";
 	GoogleApiClient mGoogleApiClient;
 	private EditText mEditSearch;
 	private SearchView mSearchView;
 	private GoogleMap mMap;
 	private Toolbar mToolbar;
-
 	private ActionMode mActionMode;
-
-	private HashMap<Marker, SimpleGeofence> mMarkers = new HashMap<>();
-
-	private static final String TAG_DIALOG_ADD_GEOFENCE = "geofenceDialog";
-
+	private HashMap<Marker, GeofenceHolder> mMarkers = new HashMap<>();
 	/**
 	 * Only one geofence can be added in time. If it is null, no geofence is adding.
 	 */
@@ -195,6 +188,7 @@ public class MapGeofenceActivity extends BaseApplicationActivity implements Resu
 		// if demo mode just save it to database
 		if (Controller.getInstance(this).isDemoMode()) {
 			Controller.getInstance(this).addGeofence(geofence);
+			drawGeofence(geofence);
 			return;
 		}
 		if (!mGoogleApiClient.isConnected()) {
@@ -223,6 +217,20 @@ public class MapGeofenceActivity extends BaseApplicationActivity implements Resu
 			Log.e(TAG, "Invalid location permission. " +
 					"You need to use ACCESS_FINE_LOCATION with geofences", securityException);
 		}
+	}
+
+	public void deleteGeofence(GeofenceHolder holder) {
+		List<String> geofenceIds = new ArrayList<>();
+		geofenceIds.add(holder.getGeofence().getId());
+
+		if (!Controller.getInstance(this).isDemoMode()) {
+			LocationServices.GeofencingApi.removeGeofences(mGoogleApiClient, geofenceIds);
+		}
+
+		Controller.getInstance(this).deleteGeofence(holder.getGeofence());
+
+		holder.getMarker().setVisible(false);
+		holder.getCircle().setVisible(false);
 	}
 
 	/**
@@ -297,12 +305,9 @@ public class MapGeofenceActivity extends BaseApplicationActivity implements Resu
 			@Override
 			public boolean onMarkerClick(Marker marker) {
 				marker.showInfoWindow();
-				SimpleGeofence fence = mMarkers.get(marker);
-				if (fence != null) {
-					Toast.makeText(MapGeofenceActivity.this, "Click", Toast.LENGTH_SHORT).show();
-					mActionMode =  startSupportActionMode(new ActionModeGeofence(fence));
-				} else {
-					Toast.makeText(MapGeofenceActivity.this, "Null", Toast.LENGTH_SHORT).show();
+				GeofenceHolder fenceHolder = mMarkers.get(marker);
+				if (fenceHolder != null) {
+					mActionMode = startSupportActionMode(new ActionModeGeofence(fenceHolder));
 				}
 				return true;
 			}
@@ -327,10 +332,9 @@ public class MapGeofenceActivity extends BaseApplicationActivity implements Resu
 				new MarkerOptions()
 						.position(new LatLng(fence.getLatitude(), fence.getLongitude()))
 						.title(fence.getName())
-						.snippet(getString(R.string.radius) + ": " + fence.getRadius() + " " +getString(R.string.unit_meter_short))
+						.snippet(getString(R.string.radius) + ": " + fence.getRadius() + " " + getString(R.string.unit_meter_short))
 		);
 
-		mMarkers.put(marker, fence);
 
 		// Instantiates a new CircleOptions object + center/radius
 		CircleOptions circleOptions = new CircleOptions().center(new LatLng(fence.getLatitude(), fence.getLongitude()))
@@ -338,6 +342,9 @@ public class MapGeofenceActivity extends BaseApplicationActivity implements Resu
 
 		// Get back the mutable Circle
 		Circle circle = mMap.addCircle(circleOptions);
+
+		GeofenceHolder fenceHolder = new GeofenceHolder(circle, marker, fence);
+		mMarkers.put(marker, fenceHolder);
 	}
 
 	@Override
@@ -510,10 +517,10 @@ public class MapGeofenceActivity extends BaseApplicationActivity implements Resu
 
 	class ActionModeGeofence implements ActionMode.Callback {
 
-		SimpleGeofence mGeofence;
+		GeofenceHolder mHolder;
 
-		ActionModeGeofence (SimpleGeofence fence) {
-			mGeofence = fence;
+		ActionModeGeofence(GeofenceHolder holder) {
+			mHolder = holder;
 		}
 
 		@Override
@@ -531,8 +538,7 @@ public class MapGeofenceActivity extends BaseApplicationActivity implements Resu
 		@Override
 		public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
 			if (item.getItemId() == R.id.geofence_menu_del) {
-				// TODO
-				Toast.makeText(MapGeofenceActivity.this, "deleting " + mGeofence.getName(), Toast.LENGTH_SHORT).show();
+				deleteGeofence(mHolder);
 			}
 
 			mode.finish();
@@ -542,6 +548,30 @@ public class MapGeofenceActivity extends BaseApplicationActivity implements Resu
 		@Override
 		public void onDestroyActionMode(ActionMode mode) {
 			mActionMode = null;
+		}
+	}
+
+	public class GeofenceHolder {
+		private Circle mCircle;
+		private Marker mMarker;
+		private SimpleGeofence mGeofence;
+
+		public GeofenceHolder(Circle circle, Marker marker, SimpleGeofence geofence) {
+			this.mCircle = circle;
+			this.mMarker = marker;
+			this.mGeofence = geofence;
+		}
+
+		public Marker getMarker() {
+			return mMarker;
+		}
+
+		public SimpleGeofence getGeofence() {
+			return mGeofence;
+		}
+
+		public Circle getCircle() {
+			return mCircle;
 		}
 	}
 }
