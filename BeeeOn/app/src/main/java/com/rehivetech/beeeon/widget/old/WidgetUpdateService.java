@@ -1,4 +1,4 @@
-package com.rehivetech.beeeon.widget;
+package com.rehivetech.beeeon.widget.old;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -150,7 +150,7 @@ public class WidgetUpdateService extends Service {
 			widgetIds = getAllWidgetIds();
 		}
 
-		SensorWidgetProvider widgetProvider = new SensorWidgetProvider();
+		OldSensorWidgetProvider widgetProvider = new OldSensorWidgetProvider();
 		long now = SystemClock.elapsedRealtime();
 
 		Controller controller = Controller.getInstance(this);
@@ -165,12 +165,12 @@ public class WidgetUpdateService extends Service {
 
 		boolean forceUpdate = intent.getBooleanExtra(EXTRA_FORCE_UPDATE, false);
 
-		SparseArray<WidgetData> widgetsToUpdate = new SparseArray<WidgetData>();
+		SparseArray<OldWidgetData> widgetsToUpdate = new SparseArray<OldWidgetData>();
 
 		// Reload facilities data
 		List<Facility> facilities = new ArrayList<Facility>();
 		for (int widgetId : widgetIds) {
-			WidgetData widgetData = new WidgetData(widgetId);
+			OldWidgetData widgetData = new OldWidgetData(widgetId);
 			widgetData.loadData(this);
 
 			// Ignore uninitialized widgets
@@ -213,7 +213,7 @@ public class WidgetUpdateService extends Service {
 		}
 
 		for (int i = 0; i < widgetsToUpdate.size(); i++) {
-			WidgetData widgetData = widgetsToUpdate.valueAt(i);
+			OldWidgetData widgetData = widgetsToUpdate.valueAt(i);
 			int widgetId = widgetData.getWidgetId();
 
 			Adapter adapter = controller.getAdaptersModel().getAdapter(widgetData.deviceAdapterId);
@@ -247,8 +247,7 @@ public class WidgetUpdateService extends Service {
 				Log.v(TAG, String.format("Updating widget (%d) with fresh data", widgetId));
 			} else {
 				// NOTE: just temporary solution until it will be showed better on widget
-				widgetData.deviceLastUpdateText = String
-						.format("%s %s", widgetData.deviceLastUpdateText, getString(R.string.widget_cached));
+				widgetData.deviceLastUpdateText = String.format("%s %s", widgetData.deviceLastUpdateText, getString(R.string.widget_cached));
 
 				Log.v(TAG, String.format("Updating widget (%d) with cached data", widgetId));
 			}
@@ -265,7 +264,7 @@ public class WidgetUpdateService extends Service {
 		boolean first = true;
 
 		for (int widgetId : getAllWidgetIds()) {
-			WidgetData widgetData = new WidgetData(widgetId);
+			OldWidgetData widgetData = new OldWidgetData(widgetId);
 			widgetData.loadData(this);
 
 			if (!widgetData.initialized) {
@@ -300,9 +299,9 @@ public class WidgetUpdateService extends Service {
 
 	private int[] getAllWidgetIds() {
 		List<Integer> ids = new ArrayList<Integer>();
-		ids.addAll(getWidgetIds(SensorWidgetProviderSmall.class));
-		ids.addAll(getWidgetIds(SensorWidgetProviderMedium.class));
-		ids.addAll(getWidgetIds(SensorWidgetProviderLarge.class));
+		ids.addAll(getWidgetIds(OldSensorWidgetProviderSmall.class));
+		ids.addAll(getWidgetIds(OldSensorWidgetProviderMedium.class));
+		ids.addAll(getWidgetIds(OldSensorWidgetProviderLarge.class));
 
 		int[] arr = new int[ids.size()];
 		for (int i = 0; i < ids.size(); i++) {

@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="match_parent"
+	android:layout_height="@dimen/widget_height"
+	android:background="@drawable/widget_bg"
+	android:id="@+id/layout"
+	>
+
+	<LinearLayout
+		android:id="@+id/widget_header"
+		android:orientation="horizontal"
+		android:layout_width="match_parent"
+		android:layout_height="48dp"
+		android:gravity="center_horizontal|left"
+		android:background="@drawable/widget_inside_bg"
+		android:layout_alignParentTop="true"
+		>
+
+
+		<ImageView
+			android:id="@+id/icon"
+			android:layout_width="48dp"
+			android:layout_height="match_parent"
+			android:paddingLeft="8dp"
+			android:paddingStart="8dp"
+			android:scaleType="fitCenter"
+			android:layout_gravity="center"
+			android:src="@drawable/dev_unknown"
+			android:contentDescription="@string/placeholder_icon"
+			/>
+
+		<TextView
+			android:id="@+id/name"
+			android:layout_width="0dp"
+			android:layout_height="match_parent"
+			android:layout_weight="0.5"
+			android:gravity="center_vertical"
+			android:textSize="16sp"
+			android:layout_marginLeft="16dp"
+			android:layout_marginStart="16dp"
+			android:textStyle="bold"
+			android:singleLine="true"
+			android:ellipsize="marquee"
+			android:textColor="@color/white"
+			android:text="@string/placeholder_none"
+			/>
+
+		<ImageView
+			style="@style/AppWidget.ActionButton"
+			android:id="@+id/refresh"
+			android:layout_width="wrap_content"
+			android:layout_height="match_parent"
+			android:src="@drawable/ic_action_refresh"
+			android:contentDescription="@string/placeholder_icon"
+			/>
+
+		<ImageView
+			style="@style/AppWidget.ActionButton.Overflow"
+			android:id="@+id/options"
+			android:layout_width="wrap_content"
+			android:layout_height="match_parent"
+			android:contentDescription="@string/placeholder_icon"
+			/>
+
+	</LinearLayout>
+
+	<!-- shadow -->
+	<ImageView
+		android:layout_width="match_parent"
+		android:layout_height="6dp"
+		android:src="@drawable/toolbar_dropshadow"
+		android:layout_below="@id/widget_header"
+		/>
+
+	<LinearLayout
+		android:layout_below="@id/widget_header"
+		android:orientation="horizontal"
+		android:layout_width="wrap_content"
+		android:layout_height="match_parent"
+		android:gravity="center_vertical"
+		android:paddingLeft="8dp"
+		android:paddingRight="8dp"
+		>
+		<TextView
+			android:id="@+id/value"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:textSize="@dimen/widget_value_size"
+			android:singleLine="true"
+			android:textColor="@color/beeeon_secundary_pink"
+			android:textStyle="bold"
+			android:text="@string/placeholder_none"
+			/>
+
+		<TextView
+			android:id="@+id/unit"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:textSize="20sp"
+			android:layout_marginLeft="2dp"
+			android:layout_marginStart="2dp"
+			android:textColor="@color/beeeon_secundary_pink"
+			/>
+	</LinearLayout>
+
+
+	<TextView
+		android:paddingRight="8dp"
+		android:paddingEnd="8dp"
+		android:layout_below="@+id/widget_header"
+		android:id="@+id/last_update"
+		android:layout_width="wrap_content"
+		android:layout_height="match_parent"
+		android:gravity="center_vertical"
+		android:lines="1"
+		android:textSize="12sp"
+		android:textColor="@color/darkgray"
+		android:text="@string/placeholder_none"
+		android:layout_alignParentBottom="true"
+		android:layout_alignParentRight="true"
+		android:layout_alignParentEnd="true"
+		/>
+
+</RelativeLayout>

@@ -110,7 +110,7 @@
             android:label="@string/title_activity_add_adapter" >
         </activity>
         <activity
-            android:name=".activity.WidgetConfigurationActivity"
+            android:name=".widget.WidgetConfigurationActivity"
             android:label="@string/title_activity_widget_configuration" >
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
@@ -168,9 +168,39 @@
 				  android:name="com.facebook.FacebookContentProvider"
 				  android:exported="true"/>
 
-        <!-- WIDGETS -->
+
+		<!-- WIDGETS -->
+
+        <!-- list widget -->
         <receiver
-            android:name=".widget.SensorWidgetProviderSmall"
+            android:name=".widget.location.WidgetLocationListProvider"
+            android:label="@string/widget_location_list_title"
+            android:icon="@mipmap/ic_launcher"
+            android:enabled="@bool/is_api_11"
+            >
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/widget_provider_location"
+            />
+        </receiver>
+
+        <service android:name=".widget.WidgetService" />
+
+        <!-- TODO bude v service taky enabled?? -->
+        <service
+            android:name=".widget.WidgetListService"
+            android:permission="android.permission.BIND_REMOTEVIEWS"
+            android:exported="false"
+            android:enabled="@bool/is_api_11"
+        />
+
+
+        <receiver
+            android:name=".widget.sensor.WidgetSensorProvider"
             android:icon="@mipmap/ic_launcher"
             android:label="@string/widget_sensor_title_small" >
             <intent-filter>
@@ -181,8 +211,9 @@
                 android:name="android.appwidget.provider"
                 android:resource="@xml/widget_provider_small" />
         </receiver>
+
         <receiver
-            android:name=".widget.SensorWidgetProviderMedium"
+            android:name=".widget.sensor.WidgetSensorProviderMedium"
             android:icon="@mipmap/ic_launcher"
             android:label="@string/widget_sensor_title_medium" >
             <intent-filter>
@@ -194,7 +225,7 @@
                 android:resource="@xml/widget_provider_medium" />
         </receiver>
         <receiver
-            android:name=".widget.SensorWidgetProviderLarge"
+            android:name=".widget.sensor.WidgetSensorProviderLarge"
             android:icon="@mipmap/ic_launcher"
             android:label="@string/widget_sensor_title_large" >
             <intent-filter>
@@ -207,7 +238,7 @@
         </receiver>
 
         <service
-            android:name=".widget.WidgetUpdateService"
+            android:name=".widget.old.WidgetUpdateService"
             android:enabled="true"
             android:exported="false" >
         </service>

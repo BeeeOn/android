@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/widget_bg"
+    android:id="@+id/layout"
+    >
+
+    <LinearLayout
+        android:id="@+id/widget_header"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:gravity="center_horizontal|left"
+        android:background="@drawable/widget_inside_bg"
+        android:layout_alignParentTop="true"
+        >
+
+        <ImageView
+            android:id="@+id/icon"
+            android:layout_width="48dp"
+            android:layout_height="match_parent"
+            android:paddingLeft="8dp"
+            android:paddingStart="8dp"
+            android:scaleType="fitCenter"
+            android:layout_gravity="center"
+            android:src="@drawable/loc_unknown"
+            android:contentDescription="@string/placeholder_icon"
+            />
+
+        <TextView
+            android:id="@+id/name"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.5"
+            android:gravity="center_vertical"
+            android:textSize="16sp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginStart="16dp"
+            android:textStyle="bold"
+            android:singleLine="true"
+            android:ellipsize="marquee"
+            android:textColor="@color/white"
+            android:text="@string/placeholder_none"
+            />
+
+        <ImageView
+            style="@style/AppWidget.ActionButton"
+            android:id="@+id/refresh"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:src="@drawable/ic_action_refresh"
+            android:contentDescription="@string/placeholder_icon"
+            />
+
+        <ImageView
+            style="@style/AppWidget.ActionButton.Overflow"
+            android:id="@+id/options"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:contentDescription="@string/placeholder_icon"
+            />
+    </LinearLayout>
+
+    <ListView
+        android:layout_below="@id/widget_header"
+        android:id="@+id/widget_sensor_list_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:divider="@null"
+        />
+    <TextView
+        android:id="@+id/empty_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:background="@drawable/widget_bg"
+        android:textStyle="bold"
+        android:text="@string/widget_location_list_empty"
+        android:textSize="16sp"
+        android:layout_below="@id/widget_header"
+        android:textColor="@color/beeeon_text_hint"
+        />
+
+
+    <!-- shadow below header -->
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="6dp"
+        android:src="@drawable/toolbar_dropshadow"
+        android:layout_below="@id/widget_header"
+        />
+
+</RelativeLayout>

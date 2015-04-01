@@ -44,7 +44,7 @@
     <string name="sensordetail_last_value">Poslední hodnota: \u0020</string>
     <string name="sensordetail_refresh_time">Interval aktualizace</string>
     <string name="sensordetail_battery_label">Stav baterie</string>
-    	<string name="sensordetail_location_label">Umístění</string>
+    <string name="sensordetail_location_label">Umístění</string>
 	<string name="sensordetail_last_update_label">Poslední aktualizace</string>
 	<string name="sensordetail_signal_label">Stav signálu</string>
     <string name="update_needed">Prosím aktualizujte aplikaci</string>
@@ -207,6 +207,7 @@
     <string name="widget_sensor_title_medium">BeeeOn zařízení 2x1</string>
     <string name="widget_sensor_title_large">BeeeOn zařízení 3x1</string>
     <string name="widget_cached">(cached)</string>
+    <string name="widget_location_list_title">BeeeOn lokace</string>
 
     <!-- WidgetConfigurationActivity -->
     <string name="widget_configuration_adapter">Brána:</string>
@@ -217,6 +218,9 @@
     <string name="widget_configuration_no_adapters">K nastavení widgetu je nutné být uživatelem brány</string>
     <string name="widget_configuration_select_adapter">Vyberte bránu ze seznamu</string>
     <string name="widget_configuration_select_device">Vyberte zařízení ze seznamu</string>
+
+    <!-- location widget -->
+    <string name="widget_configuration_location">Umístění</string>
 
     <!-- About -->
     <string name="company_email">info@BeeeOn.com</string>
@@ -331,6 +335,10 @@
 
     <string name="actor_required">Je potřeba vybrat aktor</string>
 	<string name="add_new_geofence_area">Přidat novou oblast</string>
+
+    <string name="action_done">Hotovo</string>
+    <string name="widget_location_list_empty">Prázdná lokace</string>
+	
 	<string name="delete_geofence">Odstranit oblast</string>
 	<string name="devices">Zařízení</string>
 	<string name="name">Název</string>

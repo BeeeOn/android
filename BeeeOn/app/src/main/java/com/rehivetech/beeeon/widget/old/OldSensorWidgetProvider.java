@@ -1,4 +1,4 @@
-package com.rehivetech.beeeon.widget;
+package com.rehivetech.beeeon.widget.old;
 
 import android.annotation.TargetApi;
 import android.app.PendingIntent;
@@ -11,13 +11,12 @@ import android.os.Bundle;
 import android.widget.RemoteViews;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.activity.SensorDetailActivity;
-import com.rehivetech.beeeon.activity.WidgetConfigurationActivity;
 import com.rehivetech.beeeon.util.Compatibility;
 import com.rehivetech.beeeon.util.Log;
 
-public class SensorWidgetProvider extends AppWidgetProvider {
+public class OldSensorWidgetProvider extends AppWidgetProvider {
 
-	private static final String TAG = SensorWidgetProvider.class.getSimpleName();
+	private static final String TAG = OldSensorWidgetProvider.class.getSimpleName();
 
 	@Override
 	public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
@@ -36,7 +35,7 @@ public class SensorWidgetProvider extends AppWidgetProvider {
 
 		// delete removed widgets settings
 		for (int widgetId : appWidgetIds) {
-			WidgetData widgetData = new WidgetData(widgetId);
+			OldWidgetData widgetData = new OldWidgetData(widgetId);
 			widgetData.deleteData(context);
 		}
 	}
@@ -69,18 +68,18 @@ public class SensorWidgetProvider extends AppWidgetProvider {
 		String name;
 		if (min_width >= 110) {
 			// width of 2 or more cells
-			layout = R.layout.widget_sensor;
-			name = "widget_sensor.xml";
+			layout = R.layout.widget_sensor_2x1;
+			name = "widget_sensor_2x1.xml";
 		} else {
 			// width of 1 cell
-			layout = R.layout.widget_sensor_small;
-			name = "widget_sensor_small.xml";
+			layout = R.layout.widget_sensor_1x1;
+			name = "widget_sensor_1x1.xml";
 		}
 
 		Log.d(TAG, String.format("[%d-%d] x [%d-%d] -> %s", min_width, max_width, min_height, max_height, name));
 
 		// save layout resource to widget settings
-		WidgetData widgetData = new WidgetData(appWidgetId);
+		OldWidgetData widgetData = new OldWidgetData(appWidgetId);
 		widgetData.saveLayout(context, layout);
 
 		// force update widget
@@ -95,8 +94,8 @@ public class SensorWidgetProvider extends AppWidgetProvider {
 		super.onReceive(context, intent);
 	}
 
-	public void updateWidget(Context context, WidgetData widgetData) {
-		// Log.d(TAG, "updateWidget()");
+	public void updateWidget(Context context, OldWidgetData widgetData) {
+		// Log.d(TAG, "buildLayout()");
 		AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
 
 		RemoteViews remoteViews = new RemoteViews(context.getPackageName(), widgetData.layout);
@@ -105,7 +104,7 @@ public class SensorWidgetProvider extends AppWidgetProvider {
 		remoteViews.setTextViewText(R.id.value, widgetData.deviceValue);
 		remoteViews.setTextViewText(R.id.unit, widgetData.deviceUnit);
 
-		if (widgetData.layout == R.layout.widget_sensor) {
+		if (widgetData.layout == R.layout.widget_sensor_2x1) {
 			// For classic (= not-small) layout of widget, set also lastUpdate
 			remoteViews.setTextViewText(R.id.last_update, widgetData.deviceLastUpdateText);
 		}
@@ -122,7 +121,7 @@ public class SensorWidgetProvider extends AppWidgetProvider {
 		remoteViews.setOnClickPendingIntent(R.id.last_update, pendingIntent);
 
 		// open configuration on click elsewhere
-		intent = new Intent(context, WidgetConfigurationActivity.class);
+		intent = new Intent(context, OldWidgetConfigurationActivity.class);
 		intent.setAction(AppWidgetManager.ACTION_APPWIDGET_CONFIGURE);
 		intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 		intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, widgetId);

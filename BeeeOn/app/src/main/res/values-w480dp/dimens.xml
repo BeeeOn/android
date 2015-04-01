@@ -4,4 +4,7 @@
     
     -->
 	<dimen name="nav_drawer_width">320dp</dimen>
+
+    <dimen name="widget_height">-1dp</dimen>
+
 </resources>

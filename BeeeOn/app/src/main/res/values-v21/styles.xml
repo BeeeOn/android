@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<style name="AppWidget.ActionButton" parent="@style/Widget.AppCompat.ActionButton" />
+
+	<style name="AppWidget.ActionButton.Overflow" parent="@style/Widget.AppCompat.ActionButton.Overflow" />
+</resources>

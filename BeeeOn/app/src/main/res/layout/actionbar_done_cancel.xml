@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal"
+    android:divider="?android:attr/dividerVertical"
+    android:showDividers="middle"
+    android:dividerPadding="12dp">
+
+    <FrameLayout
+        style="@style/Widget.AppCompat.ActionButton"
+        android:id="@+id/actionbar_cancel"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1">
+
+        <TextView style="@style/Widget.AppCompat.ActionBar.TabText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:paddingRight="20dp"
+            android:drawableLeft="@drawable/ic_action_cancel"
+            android:drawablePadding="8dp"
+            android:gravity="center_vertical"
+            android:textAllCaps="true"
+            android:text="@string/action_close" />
+    </FrameLayout>
+
+    <FrameLayout
+        style="@style/Widget.AppCompat.ActionButton"
+        android:id="@+id/actionbar_done"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1">
+
+        <TextView style="@style/Widget.AppCompat.ActionBar.TabText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:paddingRight="20dp"
+            android:drawableLeft="@drawable/ic_action_accept"
+            android:textAllCaps="true"
+            android:drawablePadding="8dp"
+            android:gravity="center_vertical"
+            android:text="@string/action_done" />
+    </FrameLayout>
+
+</LinearLayout>

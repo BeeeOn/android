@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="56dp"
+    android:background="@color/white"
+    android:id="@+id/widget_loc_item"
+    >
+
+    <ImageView
+        android:id="@+id/widget_loc_item_icon"
+        android:layout_width="40dp"
+        android:layout_height="match_parent"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:paddingLeft="8dp"
+        android:paddingStart="8dp"
+        android:scaleType="fitCenter"
+        android:src="@drawable/dev_unknown"
+        />
+
+    <TextView
+        android:id="@+id/widget_loc_item_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:text="Vlhkost v koupelně"
+        android:textColor="@color/beeeon_text_color"
+        android:textSize="16sp"
+        android:layout_marginLeft="48dp"
+        android:layout_marginStart="48dp"
+        android:paddingTop="8dp"
+        android:layout_toStartOf="@+id/widget_loc_item_value"
+        android:layout_toLeftOf="@+id/widget_loc_item_value"
+        />
+
+    <TextView
+        android:id="@+id/widget_loc_item_update"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/widget_loc_item_name"
+        android:layout_alignStart="@+id/widget_loc_item_name"
+        android:layout_toStartOf="@+id/widget_loc_item_value"
+        android:layout_toLeftOf="@+id/widget_loc_item_value"
+        android:layout_below="@+id/widget_loc_item_name"
+        android:textColor="@color/beeeon_text_hint"
+        android:text="20.12.2014"
+        android:textSize="14sp"
+        />
+
+    <TextView
+        android:id="@+id/widget_loc_item_value"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:paddingEnd="8dp"
+        android:paddingLeft="8dp"
+        android:paddingRight="8dp"
+        android:text="30°C"
+        android:textColor="@color/beeeon_secundary_pink"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        />
+
+    <!-- separator -->
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:layout_alignParentBottom="true"
+        android:src="@color/beeeon_separator" />
+
+</RelativeLayout>

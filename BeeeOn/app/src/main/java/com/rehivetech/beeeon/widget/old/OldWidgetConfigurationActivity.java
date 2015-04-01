@@ -1,4 +1,4 @@
-package com.rehivetech.beeeon.activity;
+package com.rehivetech.beeeon.widget.old;
 
 import android.appwidget.AppWidgetManager;
 import android.content.Intent;
@@ -27,8 +27,6 @@ import com.rehivetech.beeeon.household.device.Device;
 import com.rehivetech.beeeon.household.device.Facility;
 import com.rehivetech.beeeon.household.device.RefreshInterval;
 import com.rehivetech.beeeon.util.Log;
-import com.rehivetech.beeeon.widget.WidgetData;
-import com.rehivetech.beeeon.widget.WidgetUpdateService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,7 +35,9 @@ public class WidgetConfigurationActivity extends BaseActivity {
 
 	private static final String TAG = WidgetConfigurationActivity.class.getSimpleName();
 
-	private WidgetData mWidgetData;
+	private static final String TAG = OldWidgetConfigurationActivity.class.getSimpleName();
+
+	private OldWidgetData mWidgetData;
 
 	private List<Adapter> mAdapters = new ArrayList<Adapter>();
 	private List<Device> mDevices = new ArrayList<Device>();
@@ -45,7 +45,7 @@ public class WidgetConfigurationActivity extends BaseActivity {
 	private boolean isInitialized = false;
 	private boolean triedLoginAlready = false;
 
-	private WidgetConfigurationActivity context;
+	private OldWidgetConfigurationActivity context;
 	
 	private Controller mController;
 
@@ -63,7 +63,7 @@ public class WidgetConfigurationActivity extends BaseActivity {
 		Bundle extras = intent.getExtras();
 		if (extras != null) {
 			int appWidgetId = extras.getInt(AppWidgetManager.EXTRA_APPWIDGET_ID, AppWidgetManager.INVALID_APPWIDGET_ID);
-			mWidgetData = new WidgetData(appWidgetId);
+			mWidgetData = new OldWidgetData(appWidgetId);
 		}
 
 		// no valid ID, so bail out
@@ -77,7 +77,7 @@ public class WidgetConfigurationActivity extends BaseActivity {
 		resultValue.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, mWidgetData.getWidgetId());
 		setResult(RESULT_CANCELED, resultValue);
 
-		setContentView(R.layout.activity_widget_configuration);
+		setContentView(R.layout.activity_widget_configuration_old);
 	}
 
 	@Override
@@ -132,7 +132,7 @@ public class WidgetConfigurationActivity extends BaseActivity {
 
 	private void setIntervalWidgetText(int intervalIndex) {
 		TextView intervalText = (TextView) findViewById(R.id.interval_widget);
-		String interval = RefreshInterval.values()[intervalIndex].getStringInterval(WidgetConfigurationActivity.this);
+		String interval = RefreshInterval.values()[intervalIndex].getStringInterval(OldWidgetConfigurationActivity.this);
 		intervalText.setText(interval);
 	}
 
@@ -235,7 +235,7 @@ public class WidgetConfigurationActivity extends BaseActivity {
 			public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 				Device device = (Device) parent.getSelectedItem();
 				TextView intervalText = (TextView) findViewById(R.id.interval_sensor);
-				intervalText.setText(device.getFacility().getRefresh().getStringInterval(WidgetConfigurationActivity.this));
+				intervalText.setText(device.getFacility().getRefresh().getStringInterval(OldWidgetConfigurationActivity.this));
 
 				Log.d(TAG, String.format("Selected device %s", device.getName()));
 			}
@@ -272,7 +272,7 @@ public class WidgetConfigurationActivity extends BaseActivity {
 						mDevices.addAll(facility.getDevices());
 					}
 
-					ArrayAdapter<?> arrayAdapter = new ArrayAdapter<Device>(WidgetConfigurationActivity.this, android.R.layout.simple_spinner_dropdown_item, mDevices);
+					ArrayAdapter<?> arrayAdapter = new ArrayAdapter<Device>(OldWidgetConfigurationActivity.this, android.R.layout.simple_spinner_dropdown_item, mDevices);
 					spinSensor.setAdapter(arrayAdapter);
 
 					break;
@@ -332,7 +332,7 @@ public class WidgetConfigurationActivity extends BaseActivity {
 					mDevices.addAll(facility.getDevices());
 				}
 
-				ArrayAdapter<?> arrayAdapter = new ArrayAdapter<Device>(WidgetConfigurationActivity.this, android.R.layout.simple_spinner_dropdown_item, mDevices);
+				ArrayAdapter<?> arrayAdapter = new ArrayAdapter<Device>(OldWidgetConfigurationActivity.this, android.R.layout.simple_spinner_dropdown_item, mDevices);
 				Spinner s = (Spinner) findViewById(R.id.sensor);
 				s.setEnabled(true);
 				s.setAdapter(arrayAdapter);
