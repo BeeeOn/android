@@ -1,5 +1,6 @@
 package com.rehivetech.beeeon.adapter.device.values;
 
+import com.rehivetech.beeeon.adapter.device.DeviceType;
 import com.rehivetech.beeeon.adapter.device.units.BaseUnit;
 
 public abstract class BaseValue {
@@ -33,6 +34,18 @@ public abstract class BaseValue {
 	 */
 	public void setValue(String value) {
 		mRawValue = value;
+	}
+
+	public static BaseValue createFromDeviceType(DeviceType type) {
+		try {
+			// Try to create and return new BaseValue object
+			return type.getValueClass().newInstance();
+		} catch (InstantiationException | IllegalAccessException e) {
+			e.printStackTrace();
+		}
+
+		// If creation failed, create UnknownValue object
+		return new UnknownValue();
 	}
 
 }

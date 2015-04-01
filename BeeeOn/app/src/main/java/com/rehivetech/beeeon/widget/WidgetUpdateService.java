@@ -21,7 +21,6 @@ import android.util.SparseArray;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.adapter.Adapter;
 import com.rehivetech.beeeon.adapter.device.Device;
-import com.rehivetech.beeeon.adapter.device.DeviceType;
 import com.rehivetech.beeeon.adapter.device.Facility;
 import com.rehivetech.beeeon.adapter.device.RefreshInterval;
 import com.rehivetech.beeeon.controller.Controller;
@@ -199,7 +198,7 @@ public class WidgetUpdateService extends Service {
 				facility.setLastUpdate(new DateTime(widgetData.deviceLastUpdateTime, DateTimeZone.UTC));
 				facility.setRefresh(RefreshInterval.fromInterval(widgetData.deviceRefresh));
 
-				facility.addDevice(DeviceType.createDeviceFromType(ids[1]));
+				facility.addDevice(Device.createFromDeviceTypeId(ids[1]));
 
 				facilities.add(facility);
 			}

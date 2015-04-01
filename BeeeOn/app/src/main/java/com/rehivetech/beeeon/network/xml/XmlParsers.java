@@ -398,7 +398,7 @@ public class XmlParsers {
 			mParser.nextTag(); // part tag
 
 			do { // go through parts (devices)
-				Device device = DeviceType.createDeviceFromType(getSecureAttrValue(Xconstants.TYPE));
+				Device device = Device.createFromDeviceTypeId(getSecureAttrValue(Xconstants.TYPE));
 				device.setVisibility(getSecureAttrValue(Xconstants.VISIBILITY).equals(Xconstants.ZERO) ? false : true);
 				device.setName(getSecureAttrValue(Xconstants.NAME));
 				device.setValue(getSecureAttrValue(Xconstants.VALUE));
@@ -666,7 +666,7 @@ public class XmlParsers {
 				do {
 					if (mParser.getName().equals(Xconstants.DEVICE)) {
 						String stypeBTW = getSecureAttrValue(Xconstants.TYPE); // device type
-						deviceBTW = DeviceType.createDeviceFromType(stypeBTW);
+						deviceBTW = Device.createFromDeviceTypeId(stypeBTW);
 						Facility facilityBTW = new Facility();
 						facilityBTW.setAddress(getSecureAttrValue(Xconstants.ID));
 						deviceBTW.setFacility(facilityBTW);
@@ -694,7 +694,7 @@ public class XmlParsers {
 				mParser.nextTag(); // device tag
 
 				String stypeCHG = getSecureAttrValue(Xconstants.TYPE);
-				Device deviceCHG = DeviceType.createDeviceFromType(stypeCHG);
+				Device deviceCHG = Device.createFromDeviceTypeId(stypeCHG);
 				Facility facilityCHG = new Facility();
 				facilityCHG.setAddress(getSecureAttrValue(Xconstants.ID));
 				deviceCHG.setFacility(facilityCHG);
@@ -711,7 +711,7 @@ public class XmlParsers {
 				do {
 					if (mParser.getName().equals(Xconstants.DEVICE)) {
 						String stypeDP = getSecureAttrValue(Xconstants.TYPE);
-						tempoDevice = DeviceType.createDeviceFromType(stypeDP);
+						tempoDevice = Device.createFromDeviceTypeId(stypeDP);
 						Facility facilityDP = new Facility();
 						facilityDP.setAddress(getSecureAttrValue(Xconstants.ID));
 						tempoDevice.setFacility(facilityDP);
@@ -738,7 +738,7 @@ public class XmlParsers {
 				do {
 					if (mParser.getName().equals(Xconstants.DEVICE)) {
 						String stype = getSecureAttrValue(Xconstants.TYPE);
-						device = DeviceType.createDeviceFromType(stype);
+						device = Device.createFromDeviceTypeId(stype);
 						Facility facility = new Facility();
 						facility.setAddress(getSecureAttrValue(Xconstants.ID));
 						device.setFacility(facility);
@@ -825,7 +825,7 @@ public class XmlParsers {
 				mParser.nextTag(); // dev tag
 				do {
 					Action action = new Action(type);
-					Device device = DeviceType.createDeviceFromType(getSecureAttrValue(Xconstants.TYPE));
+					Device device = Device.createFromDeviceTypeId(getSecureAttrValue(Xconstants.TYPE));
 					Facility facility = new Facility();
 					facility.setAddress(getSecureAttrValue(Xconstants.ID));
 					device.setFacility(facility);
@@ -930,7 +930,7 @@ public class XmlParsers {
 			Facility facility = null;
 			boolean facilityExists = false;
 
-			Device device = DeviceType.createDeviceFromType(getSecureAttrValue(Xconstants.TYPE));
+			Device device = Device.createFromDeviceTypeId(getSecureAttrValue(Xconstants.TYPE));
 
 			String id = getSecureAttrValue(Xconstants.ID);
 			for (Facility fac : result) {

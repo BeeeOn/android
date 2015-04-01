@@ -65,14 +65,14 @@ public enum DeviceType {
 		return mIsActor;
 	}
 
-	private Class<? extends BaseValue> getValueClass() {
+	public Class<? extends BaseValue> getValueClass() {
 		return mValueClass;
 	}
 
-	public static DeviceType fromValue(int value) {
+	public static DeviceType fromTypeId(int typeId) {
 		// Get the DeviceType object based on type number
 		for (DeviceType item : values()) {
-			if (value == item.getTypeId()) {
+			if (typeId == item.getTypeId()) {
 				return item;
 			}
 		}
@@ -84,39 +84,7 @@ public enum DeviceType {
 		if (value.isEmpty())
 			return TYPE_UNKNOWN;
 
-		return fromValue(Integer.parseInt(value));
-	}
-
-	public static BaseValue createDeviceValue(DeviceType type) {
-		try {
-			// Try to create and return new BaseValue object
-			return type.getValueClass().newInstance();
-		} catch (InstantiationException | IllegalAccessException e) {
-			e.printStackTrace();
-		}
-
-		// If creation failed, create UnknownValue object
-		return new UnknownValue();
-	}
-
-	public static Device createDeviceFromType(String typeId) {
-		int iType = -1; // unknown type
-		int offset = 0; // default offset
-
-		if (!typeId.isEmpty()) {
-			// Get integer representation of the given string value
-			int value = Integer.parseInt(typeId);
-
-			// Separate combined value to type and offset
-			iType = value % 256;
-			offset = value / 256;
-		}
-
-		DeviceType type = fromValue(iType);
-		BaseValue value = createDeviceValue(type);
-
-		// Create device object with DeviceType, BaseValue, original raw value of type, and offset
-		return new Device(type, value, typeId, offset);
+		return fromTypeId(Integer.parseInt(value));
 	}
 
 }

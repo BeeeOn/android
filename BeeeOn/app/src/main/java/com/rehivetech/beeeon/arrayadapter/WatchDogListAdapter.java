@@ -13,7 +13,6 @@ import android.widget.TextView;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.adapter.watchdog.WatchDog;
 import com.rehivetech.beeeon.adapter.device.Device;
-import com.rehivetech.beeeon.adapter.device.DeviceType;
 import com.rehivetech.beeeon.adapter.device.values.BaseValue;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.util.UnitsHelper;
@@ -114,7 +113,7 @@ public class WatchDogListAdapter extends BaseAdapter {
                     String par_treshold = rule.getParam(WatchDog.PAR_TRESHOLD);
                     if(par_treshold != null) {
                         if (mUnitsHelper != null) {
-                            BaseValue valueObj = DeviceType.createDeviceValue(deviceFirst.getType());
+                            BaseValue valueObj = BaseValue.createFromDeviceType(deviceFirst.getType());
                             valueObj.setValue(par_treshold);
                             holder.ItemTreshold.setText(mUnitsHelper.getStringValueUnit(valueObj));
                         } else {

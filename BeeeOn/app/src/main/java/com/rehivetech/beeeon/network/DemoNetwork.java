@@ -390,7 +390,7 @@ public class DemoNetwork implements INetwork {
 					typeId = String.valueOf(rand.nextInt(types.length));
 				} while (facility.getDeviceByType(DeviceType.fromValue(typeId)) != null);
 
-				Device device = DeviceType.createDeviceFromType(typeId);
+				Device device = Device.createFromDeviceTypeId(typeId);
 				device.setFacility(facility);
 				// device.setName(name); // uninitialized device has no name
 				setNewValue(device);

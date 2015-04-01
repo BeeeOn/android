@@ -33,6 +33,26 @@ public class Device implements INameIdentifier {
 		mOffset = offset;
 	}
 
+	public static Device createFromDeviceTypeId(String typeId) {
+		int iType = -1; // unknown type
+		int offset = 0; // default offset
+
+		if (!typeId.isEmpty()) {
+			// Get integer representation of the given string value
+			int value = Integer.parseInt(typeId);
+
+			// Separate combined value to type and offset
+			iType = value % 256;
+			offset = value / 256;
+		}
+
+		DeviceType type = DeviceType.fromTypeId(iType);
+		BaseValue value = BaseValue.createFromDeviceType(type);
+
+		// Create device object with DeviceType, BaseValue, original raw value of type, and offset
+		return new Device(type, value, typeId, offset);
+	}
+
     /**
 	 * Represents settings of device which could be saved to server
 	 */
