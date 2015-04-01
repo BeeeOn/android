@@ -5,7 +5,7 @@
     android:orientation="vertical"
     android:background="@color/beeeon_primary_cyan" >
 
-    <include layout="@layout/beeon_toolbar" />
+    <include layout="@layout/beeeon_toolbar" />
     
 	<android.support.v4.view.ViewPager
 		android:id="@+id/intro_pager"

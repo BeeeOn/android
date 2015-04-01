@@ -8,7 +8,7 @@
     >
 
     <!-- toolbar -->
-    <include layout="@layout/beeon_toolbar" />
+    <include layout="@layout/beeeon_toolbar" />
 
     <!-- subheader -->
     <RelativeLayout
