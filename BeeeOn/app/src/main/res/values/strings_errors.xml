@@ -37,4 +37,7 @@
 	<string name="NetworkError___COM_PROBLEMS">communication problem</string>
 	<string name="NetworkError___XML">XML problem</string>
 	<string name="NetworkError___SHORT_NO_CONNECTION">No connection</string>
+	<string name="NetworkError___SOCKET_PROBLEM">cannot create socket</string>
+	<string name="NetworkError___INVALID_CERTIFICATE">invalidate certificate</string>
+	<string name="NetworkError___UNKNOWN_HOST">unknow host</string>
 </resources>

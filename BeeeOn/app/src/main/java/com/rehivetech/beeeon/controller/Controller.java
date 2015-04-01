@@ -1089,4 +1089,7 @@ public final class Controller {
 		mGeofenceModel.addGeofence(getActualUser().getId(), geofence);
 	}
 
+	public void delBT() {
+		mNetwork.setBT("");
+	}
 }

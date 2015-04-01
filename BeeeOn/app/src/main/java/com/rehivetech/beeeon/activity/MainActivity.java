@@ -14,6 +14,7 @@ import android.view.MotionEvent;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 /*
 import com.actionbarsherlock.view.Menu;
@@ -46,6 +47,9 @@ import com.rehivetech.beeeon.asynctask.CallbackTask;
 import com.rehivetech.beeeon.asynctask.FullReloadTask;
 import com.rehivetech.beeeon.base.BaseApplicationActivity;
 import com.rehivetech.beeeon.controller.Controller;
+import com.rehivetech.beeeon.exception.AppException;
+import com.rehivetech.beeeon.exception.ErrorCode;
+import com.rehivetech.beeeon.exception.NetworkError;
 import com.rehivetech.beeeon.menu.NavDrawerMenu;
 import com.rehivetech.beeeon.persistence.Persistence;
 import com.rehivetech.beeeon.util.Log;
@@ -174,18 +178,7 @@ public class MainActivity extends BaseApplicationActivity {
 		ft.commit();
 
 
-		// ASYN TASK - Reload all data, if wasnt download in login activity
-		mFullReloadTask = new FullReloadTask(this,false);
-		mFullReloadTask.setListener(new CallbackTask.CallbackTaskListener() {
-			@Override
-			public void onExecute(boolean success) {
-				// Redraw Activity - probably list of sensors
-				Log.d(TAG,"After reload task - go to redraw mainActivity");
-				setActiveAdapterAndMenu();
-				redraw();
-			}
-		});
-		mFullReloadTask.execute();
+
 
 
 		FacebookSdk.sdkInitialize(this);
@@ -279,6 +272,34 @@ public class MainActivity extends BaseApplicationActivity {
 		Log.d(TAG, "onAppResume()");
 
 		backPressed = false;
+
+		// ASYN TASK - Reload all data, if wasnt download in login activity
+		mFullReloadTask = new FullReloadTask(this,false);
+		mFullReloadTask.setNotifyErrors(false);
+		mFullReloadTask.setListener(new CallbackTask.CallbackTaskListener() {
+			@Override
+			public void onExecute(boolean success) {
+				if(!success) {
+					AppException e = mFullReloadTask.getException();
+					ErrorCode errCode = e.getErrorCode();
+					if(errCode != null) {
+						if (errCode instanceof NetworkError && errCode == NetworkError.BAD_BT ) {
+							mController.delBT();
+							finish();
+							Intent intent = new Intent(MainActivity.this,LoginActivity.class);
+							startActivity(intent);
+							return;
+						}
+						Toast.makeText(MainActivity.this, e.getTranslatedErrorMessage(MainActivity.this), Toast.LENGTH_LONG).show();
+					}
+				}
+				// Redraw Activity - probably list of sensors
+				Log.d(TAG,"After reload task - go to redraw mainActivity");
+				setActiveAdapterAndMenu();
+				redraw();
+			}
+		});
+		mFullReloadTask.execute();
 
 		mNavDrawerMenu.redrawMenu();
 		mNavDrawerMenu.finishActinMode();
