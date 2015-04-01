@@ -40,7 +40,7 @@
     <string name="login_app_name">BeeeOn</string>
     <string name="login_or_use">nebo použijte</string>
     <string name="addsensor_add_sensor">Přidat senzor</string>
-    <string name="addsensor_setup_sensor">Nastavte senzor</string>
+    <string name="addsensor_setup_sensor">Nastavte zařízení</string>
     <string name="addsensor_or">nebo</string>
     <string name="sensordetail_last_value">Poslední hodnota: \u0020</string>
     <string name="sensordetail_refresh_time">Interval aktualizace:</string>
@@ -49,7 +49,7 @@
 	<string name="sensordetail_last_update_label">Poslední aktualizace</string>
 	<string name="sensordetail_signal_label">Stav signálu</string>
     <string name="update_needed">Prosím aktualizujte aplikaci</string>
-    <string name="addsensor_type">Typ senzoru: </string>
+    <string name="addsensor_type">Typ zařízení:</string>
     <string name="setup_sensor_info_text">Prosím, nastavte senzor inicializován v</string>
     <string name="setup_sensor_header_names">Název senzoru</string>
     <string name="setup_sensor_set_name">Nastavte název senzoru</string>
@@ -107,7 +107,7 @@
     <string name="toast_fail_save_data">Uložení údajů selhalo</string>
     <string name="toast_wrong_or_no_watchdog_rule">Nebylo zadáno žádné pravidlo nebo je zvolené pravidlo nesprávné</string>
 	<string name="toast_achievement_title">Achievement odemknut!</string>
-    <string name="toast_delete_fail">Nepodařilo se smazat</string>
+    <string name="toast_delete_fail">Nepodařilo se odstranit</string>
     <string name="toast_delete_success">Smazáno</string>
 	
     <!-- Progress -->
@@ -310,7 +310,7 @@
     <string name="watchdog_if">Když</string>
     <string name="notification_text">Text notifikace</string>
     
-    <string name="rule_menu_del">Smazat</string>
+    <string name="rule_menu_del">Odstranit</string>
     <string name="adapter_isnt_set">Nastavit výchozí adaptér</string>
     <string name="adapter_doest_exist">Výchozí adaptér neexistuje. Nastavte nový výchozí adaptér.</string>
     <string name="choose_adapter">Vyberte adaptér:</string>
@@ -330,6 +330,15 @@
 	<string name="dialog_register_new_account_message">Ještě nemáte vytvořený BeeeOn účet, přejete si jej vytvořit nyní?</string>
 
     <string name="actor_required">Je potřeba vybrat aktor</string>
+	<string name="NetworkError___INVALID_CERTIFICATE">Neplatný certifikát.</string>
+	<string name="NetworkError___SOCKET_PROBLEM">Nelze vytvořit soket.</string>
+	<string name="NetworkError___UNKNOWN_HOST">Neznámý uživatel.</string>
+	<string name="add_new_geofence_area">Přidat nové geolokační oblasti.</string>
+	<string name="delete_geofence">Odstranit geolokaci</string>
+	<string name="devices">Zařízení</string>
+	<string name="name">Název</string>
+	<string name="rule_delete_dialog">Prosím potvrďte odstranění pravidla.</string>
+	<string name="title_activity_sensor_edit">Editace zařízení</string>
 
-	
+
 </resources>

@@ -14,7 +14,7 @@
     
     
     <string name="adapter_isnt_set">Set default adapter</string>
-    <string name="adapter_doest_exist">Default adapter doesn\'t exist anymore. Set new default adapter.</string>
+    <string name="adapter_doest_exist">Default adapter no longer exists. Set new default adapter.</string>
     <string name="no_location_available_def_adapter">No location available in default adapter.</string>
     
     <string name="please_log_in">Please Log In</string>

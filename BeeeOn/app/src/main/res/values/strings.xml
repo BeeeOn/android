@@ -2,7 +2,7 @@
 <resources>
     <string name="blank" translatable="false"></string>
 
-	<string name="facebook_app_id">868028889921254</string>
+	<string name="facebook_app_id" translatable="false">868028889921254</string>
     
     <!-- Titles -->
     <string name="title_activity_location_screen">BeeeOn</string>
@@ -16,8 +16,8 @@
     <string name="title_activity_location_detail_screen">Location Detail</string>
     <string name="title_activity_map_geofence">Geofence areas</string>
     <string name="title_activity_adapter_users">Users of adapter</string>
-    <string name="title_activity_add_adapter_user">Add new user</string>
-    <string name="title_activity_setup_sensor">Setup device</string>
+    <string name="title_activity_add_adapter_user">Add New User</string>
+    <string name="title_activity_setup_sensor">Device Setup</string>
 	<string name="title_activity_achievement_overview">Achievement overview</string>
 
     <!-- Buttons -->
@@ -104,7 +104,7 @@
     <string name="toast_adapter_removed">Adapter has been removed</string>
     <string name="toast_no_adapter">You have no registered adapter</string>
     <string name="toast_ignore_uninitialized_info">You can add these devices later by clicking on (+)</string>
-    <string name="toast_empty_sensor_name">Fill names of all sensors</string>
+    <string name="toast_empty_sensor_name">Please fill names of all sensors</string>
     <string name="toast_wrong_or_no_device">Wrong or no device selected</string>
     <string name="toast_no_uninitialized_devices">There are no uninitialized devices</string>
     <string name="toast_success_save_data">Data saved successfully</string>
@@ -268,7 +268,7 @@
     <string name="save">Save</string>
     <string name="ada_menu_edit">Edit adapter name</string>
     <string name="ada_menu_users">Users of adapter</string>
-    <string name="ada_menu_del">Delete adapter</string>
+    <string name="ada_menu_del">Remove adapter</string>
     <string name="sensor_menu_del">Remove device</string>
     <string name="adausr_menu_edit">Edit user</string>
     <string name="adausr_menu_del">Remove user</string>
@@ -311,12 +311,11 @@
     <string name="watchdog_rule_name">Rule name</string>
     <string name="watchdog_if">If</string>
     <string name="notification_text">Notification text</string>
-    <string name="actor_required">Actor required</string>
+    <string name="actor_required">Please select actor</string>
     
-    <string name="rule_menu_del">Delete</string>
-    <string name="rule_delete_dialog">Opravdu chcete smazat pravidlo?</string>
-    
-	<string name="title_activity_sensor_edit">Edit sensor</string>
+    <string name="rule_menu_del">Remove</string>
+
+	<string name="title_activity_sensor_edit">Device Edit</string>
 	<string name="sensor_name_label">Name of sensor</string>
 
 	<string name="dialog_register_new_account_title">Not registered</string>
@@ -324,9 +323,12 @@
 	<string name="name">Name</string>
 	<string name="add_new_geofence_area">Add new geofence area</string>
 	<string name="radius">Radius</string>
-	<string name="delete_geofence">Delete geofence</string>
-	<string name="unit_meter_short">m</string>
+	<string name="delete_geofence">Remove geofence</string>
+	<string name="unit_meter_short" translatable="false">m</string>
 
     <string name="devices">Devices</string>
+	<string name="rule_delete_dialog">Please confirm rule removal.</string>
+	<string name="toast_delete_fail">Unable to remove</string>
+	<string name="toast_delete_success">Successfully removed.</string>
 
 </resources>

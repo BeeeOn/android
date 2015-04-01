@@ -283,7 +283,7 @@
     <string name="watchdog_if">Ak</string>
     <string name="notification_text">Text notifikácie</string>
     
-    <string name="rule_menu_del">Zmazať</string>
+    <string name="rule_menu_del">Odstraniť</string>
     <string name="preference_set_default_location">Nastaviť predvolené umiestnenie</string>
     <string name="preference_set_default_adapter">Nastaviť predvolený adaptér</string>
     <string name="preference_activity_title">Nastavenia</string>
