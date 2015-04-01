@@ -62,6 +62,14 @@ public class SpinnerMultiAdapter extends BaseAdapter{
 		return position;
 	}
 
+
+	public View getDropDownView(int position, View convertView, ViewGroup parent){
+		// TODO optimalizovat s pouzitim recaklovanych convertview?
+		convertView = mInflater.inflate(mSpinnerItem.get(position).getDropDownLayout(), parent, false);
+		mSpinnerItem.get(position).setDropDownView(convertView);
+		return convertView;
+	}
+
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 		// TODO recycle convertView

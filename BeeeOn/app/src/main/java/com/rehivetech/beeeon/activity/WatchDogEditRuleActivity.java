@@ -237,6 +237,10 @@ public class WatchDogEditRuleActivity extends BaseApplicationActivity {
             mSpinnerMultiAdapter.addItem(new GeofenceSpinnerItem(geo, geo.getId(), this));
         }
 
+        // TODO delete (for testing reasons)
+        //SimpleGeofence x = new SimpleGeofence("564", "banan", 451, 563, 10);
+        //mSpinnerMultiAdapter.addItem(new GeofenceSpinnerItem(x, x.getId(), this));
+
         mIfItemSpinner.setAdapter(mSpinnerMultiAdapter);
         mIfItemSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -252,7 +256,8 @@ public class WatchDogEditRuleActivity extends BaseApplicationActivity {
                         mWatchDog.setOperatorType(WatchDog.TYPE_GEOFENCE);
                         break;
                 }
-
+                // we need to refresh UnitHelper cause setOperator destroys it
+                mWatchDog.getOperatorType().setUnitsHelper(mUnitsHelper);
                 // setup gui based on type
                 mWatchDog.getOperatorType().setupGUI(selected, mOperatorButton, mRuleTreshold, mRuleTresholdUnit);
             }
@@ -432,7 +437,6 @@ public class WatchDogEditRuleActivity extends BaseApplicationActivity {
         SpinnerItem selected = mSpinnerMultiAdapter.getItem(mIfItemSpinner.getSelectedItemPosition());
         switch(selected.getType()){
             case DEVICE:
-
                 if(!validateInput(mRuleTreshold, "This must be filled!")) return;
 
                 Device selectedDevice = (Device) selected.getObject();
@@ -454,13 +458,18 @@ public class WatchDogEditRuleActivity extends BaseApplicationActivity {
         // action type
         newParams.add(mWatchDogAction);
         switch(mWatchDogAction){
-            case WatchDog.ACTION_ACTOR:
-                Device selectedActor = getDevicesArray(DEVICES_ACTORS).get(mActorSpinner.getSelectedItemPosition());
-                newParams.add(selectedActor.getId());
-                break;
-
             case WatchDog.ACTION_NOTIFICATION:
                 newParams.add(mNotificationText.getText().toString());
+                break;
+
+            case WatchDog.ACTION_ACTOR:
+                if(mActorSpinner.getSelectedItem() == null){
+                    Toast.makeText(this, getString(R.string.actor_required), Toast.LENGTH_LONG).show();
+                    return;
+                }
+
+                Device selectedActor = getDevicesArray(DEVICES_ACTORS).get(mActorSpinner.getSelectedItemPosition());
+                newParams.add(selectedActor.getId());
                 break;
         }
 

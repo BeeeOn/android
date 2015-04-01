@@ -310,6 +310,7 @@
     <string name="watchdog_rule_name">Rule name</string>
     <string name="watchdog_if">If</string>
     <string name="notification_text">Notification text</string>
+    <string name="actor_required">Actor required</string>
     
     <string name="rule_menu_del">Delete</string>
     <string name="rule_delete_dialog">Opravdu chcete smazat pravidlo?</string>

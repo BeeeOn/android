@@ -328,4 +328,7 @@
 	<string name="dialog_register_new_account_title">Nezaregistrováno</string>
 	<string name="dialog_register_new_account_message">Ještě nemáte vytvořený BeeeOn účet, přejete si jej vytvořit nyní?</string>
 
+    <string name="actor_required">Je potřeba vybrat aktor</string>
+
+	
 </resources>

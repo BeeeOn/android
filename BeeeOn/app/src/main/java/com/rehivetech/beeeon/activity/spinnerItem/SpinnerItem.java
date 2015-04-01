@@ -9,10 +9,12 @@ public interface SpinnerItem {
 		HEADER, DEVICE, GEOFENCE
 	}
 
+	public void setDropDownView(View view);
 	public void setView(View view);
 
 	public Object getObject();
 
+	public int getDropDownLayout();
 	public int getLayout();
 
 	public String getId();

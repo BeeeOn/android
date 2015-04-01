@@ -35,6 +35,9 @@ public abstract class WatchDogBaseType {
 	public void setUnitsHelper(UnitsHelper uHelper){
 		mUnitsHelper = uHelper;
 	}
+	public UnitsHelper getUnitsHelper(){
+		return mUnitsHelper;
+	}
 
 	public abstract int[] getAllIcons();
 	public abstract String[] getAllCodes();

@@ -62,6 +62,7 @@ public class WatchDog implements IIdentifier {
                 break;
         }
     }
+
     public WatchDogBaseType getOperatorType(){
         return mOperatorType;
     }
