@@ -72,7 +72,8 @@ public class AddSensorFragment extends TrackFragment {
 		
 		return mView;
 	}
-	
+
+
 	@Override
 	public void setUserVisibleHint(boolean isVisibleToUser) {
 	    super.setUserVisibleHint(isVisibleToUser);
