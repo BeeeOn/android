@@ -297,7 +297,7 @@ public class NavDrawerMenu   {
 		SharedPreferences prefs = mController.getUserSettings();
 
 		// UserSettings can be null when user is not logged in!
-		if (prefs != null && ID != null) {
+		if (prefs != null && ID != null && mController.getActiveAdapter() != null) {
 			Editor edit = prefs.edit();
 
 			String pref_key = Persistence.getPreferencesLastLocation(mController.getActiveAdapter().getId());

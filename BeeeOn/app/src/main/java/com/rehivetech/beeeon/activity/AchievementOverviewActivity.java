@@ -117,13 +117,7 @@ public class AchievementOverviewActivity extends BaseApplicationActivity {
 		mAchievementListAdapter = new AchievementListAdapter(this, this.getLayoutInflater(), mCategoryId, mAchievements);
 		achievementList.setAdapter(mAchievementListAdapter);
 		// TODO Think about possible action after short click
-//		achievementList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//			@Override
-//			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//				AchievementListItem achievementItem = mAchievementListAdapter.getItem(position);
-//				new Achievement(achievementItem).show(getApplicationContext());
-//			}
-//		});
+		achievementList.setOnItemClickListener(null);
 		achievementList.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
 			// TODO choose between sharing on Facebook and Twitter
 			@Override

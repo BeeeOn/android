@@ -59,7 +59,7 @@ public class ProfileDetailFragment extends Fragment implements Observer {
 
 	// SocialNetworks
 	private boolean showMoreAccounts = false;
-	private final int totalNetworks = 3;
+	private final int totalNetworks = 2;
 	private ArrayList<CharSequence> socialNetworks = new ArrayList<>();
 	private Facebook mFb;
 	private Twitter mTw;
@@ -96,9 +96,8 @@ public class ProfileDetailFragment extends Fragment implements Observer {
 		mFb = Facebook.getInstance(getActivity());
 		mTw = Twitter.getInstance(getActivity());
 		setNetworksView();
-		socialNetworks.add("Forget FB (only for now)");
 
-		setMoreVisibility();
+		setMoreButtonVisibility();
     	redrawCategories();
 
     	return mView;
@@ -132,7 +131,7 @@ public class ProfileDetailFragment extends Fragment implements Observer {
 				@Override
 				public void onClick(View v) {
 					showMoreAccounts = !showMoreAccounts;
-					setMoreVisibility();
+					setMoreButtonVisibility();
 				}
 			});
 			mMoreArrow.setVisibility(View.VISIBLE);
@@ -173,7 +172,7 @@ public class ProfileDetailFragment extends Fragment implements Observer {
 		});
   	}
 
-	private void setMoreVisibility() {
+	private void setMoreButtonVisibility() {
 		if(socialNetworks.size() == totalNetworks) { //none social network is paired
 			mMoreArrow.setVisibility(View.INVISIBLE);
 			mMoreVisible.setVisibility(View.INVISIBLE);
@@ -205,6 +204,7 @@ public class ProfileDetailFragment extends Fragment implements Observer {
 		}
 		else {
 			mFbName = (TextView) mView.findViewById(R.id.profile_facebook_name);
+			if(mFb.getUserName() != null) mFbName.setText(mFb.getUserName());
 			fbLayout.setVisibility(View.VISIBLE);
 			fbPar.height = 70;
 			mFb.addObserver(this);
@@ -251,7 +251,7 @@ public class ProfileDetailFragment extends Fragment implements Observer {
 	 */
 	public void updateFacebookLoginView() {
 		setNetworksView();
-		setMoreVisibility();
+		setMoreButtonVisibility();
 	}
 
 	/** Observer.
@@ -313,10 +313,6 @@ public class ProfileDetailFragment extends Fragment implements Observer {
 								if (which == 1 && !mFb.isPaired() ||
 										which == 0 && mFb.isPaired())
 									Toast.makeText(getActivity(), "Not implemented yet", Toast.LENGTH_LONG).show();
-								if (which == 1 && mFb.isPaired()) { // just for testing, will be removed
-									mFb.forget();
-									updateFacebookLoginView();
-								}
 							}
 						})
 				.setNegativeButton(R.string.action_close, new DialogInterface.OnClickListener() {
