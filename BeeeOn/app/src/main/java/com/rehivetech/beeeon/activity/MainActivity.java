@@ -301,6 +301,7 @@ public class MainActivity extends BaseApplicationActivity {
 				Log.d(TAG,"After reload task - go to redraw mainActivity");
 				setActiveAdapterAndMenu();
 				redraw();
+				checkNoAdapters();
 			}
 		});
 		mFullReloadTask.execute();
@@ -310,7 +311,7 @@ public class MainActivity extends BaseApplicationActivity {
 		// Redraw Main Fragment
         redraw();
 
-		checkNoAdapters();
+
 	}
 
 	public void onAppPause() {
