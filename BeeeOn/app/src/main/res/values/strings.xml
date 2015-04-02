@@ -283,7 +283,7 @@
 	<string name="tut_intro_text_2">BeeeOn hardware consists of sensors, actors (if purchased) and adapter.</string>
 	<string name="tut_intro_text_3">Sensor measures values such as temperature, actor controls devices such as ON/OFF switch.</string>
 	<string name="tut_intro_text_4">Adapter collects data from sensors.</string>
-	<string name="tut_intro_text_5">Mobile app allows you to control your home from anywhere, anytime.</string>
+	<string name="tut_intro_text_5">Mobile app provides monitoring and control from anywhere, anytime.</string>
     
     <string name="tutorial_next">NEXT</string>
     <string name="tutorial_add">ADD</string>
@@ -332,9 +332,9 @@
 	<string name="radius">Radius</string>
 	<string name="delete_geofence">Delete geofence</string>
 	<string name="unit_meter_short">m</string>
-	<string name="tutorial_go_to_app">CONTINUE</string>
+	<string name="tutorial_go_to_app">START</string>
 
-    <string name="devices">Devices</string>
+    <string name="devices">Remove geofence</string>
 	<string name="rule_delete_dialog">Please confirm rule removal.</string>
 	<string name="toast_delete_fail">Unable to remove</string>
 	<string name="toast_delete_success">Successfully removed.</string>
