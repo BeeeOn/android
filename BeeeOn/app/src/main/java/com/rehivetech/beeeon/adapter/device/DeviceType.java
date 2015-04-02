@@ -43,9 +43,6 @@ public enum DeviceType {
 	private final Class<? extends BaseValue> mValueClass;
 	private final boolean mIsActor;
 
-	private String mRawTypeId;
-	private int mOffset;
-
 	private DeviceType(int id, int nameRes, boolean isActor, Class<? extends BaseValue> valueClass) {
 		mTypeId = id;
 		mNameRes = nameRes;

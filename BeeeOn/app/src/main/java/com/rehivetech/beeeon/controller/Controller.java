@@ -682,9 +682,23 @@ public final class Controller {
 		if (facility == null)
 			return null;
 
-		DeviceType type = DeviceType.fromValue(ids[1]);
+		// FIXME: cleanup this after demo
 
-		return facility.getDeviceByType(type);
+		int iType = -1; // unknown type
+		int offset = 0; // default offset
+
+		if (!ids[1].isEmpty()) {
+			// Get integer representation of the given string value
+			int value = Integer.parseInt(ids[1]);
+
+			// Separate combined value to type and offset
+			iType = value % 256;
+			offset = value / 256;
+		}
+
+		DeviceType type = DeviceType.fromTypeId(iType);
+
+		return facility.getDeviceByType(type, offset);
 	}
 
 	/**

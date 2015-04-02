@@ -387,8 +387,9 @@ public class DemoNetwork implements INetwork {
 				DeviceType[] types = DeviceType.values();
 				String typeId = "0";
 				do {
+					// FIXME: cleanup/rework this after demo
 					typeId = String.valueOf(rand.nextInt(types.length));
-				} while (facility.getDeviceByType(DeviceType.fromValue(typeId)) != null);
+				} while (facility.getDeviceByType(DeviceType.fromValue(typeId), 0) != null);
 
 				Device device = Device.createFromDeviceTypeId(typeId);
 				device.setFacility(facility);

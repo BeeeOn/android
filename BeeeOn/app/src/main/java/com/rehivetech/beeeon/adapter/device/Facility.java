@@ -263,9 +263,9 @@ public class Facility implements IIdentifier {
 		return mDevices;
 	}
 
-	public Device getDeviceByType(DeviceType type) {
+	public Device getDeviceByType(DeviceType type, int offset) {
 		for (Device device : getDevices()) {
-			if (device.getType().equals(type)) {
+			if (device.getType().equals(type) && device.getOffset() == offset) {
 				return device;
 			}
 		}
