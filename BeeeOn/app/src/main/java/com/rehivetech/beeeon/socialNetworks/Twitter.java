@@ -34,5 +34,8 @@ public class Twitter {
 	}
 
 	public String getUserName() {return mUserName;}
-	public boolean isPaired() {return mAccessToken != null;}
+	public boolean isPaired() {
+//		return true;
+		return mAccessToken != null;
+	}
 }

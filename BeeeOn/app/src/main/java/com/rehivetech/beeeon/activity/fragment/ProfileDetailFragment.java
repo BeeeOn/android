@@ -8,6 +8,7 @@ import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
+import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -45,6 +46,7 @@ public class ProfileDetailFragment extends Fragment implements Observer {
   	private User actUser;
   	private GamCategoryListAdapter mCategoryListAdapter;
 	private View mView;
+	int mDisplayPixel;
 
 	// GUI
 	private TextView userName;
@@ -80,6 +82,10 @@ public class ProfileDetailFragment extends Fragment implements Observer {
   	public View onCreateView(LayoutInflater inflater, ViewGroup container,
                            Bundle savedInstanceState) {
     	Log.d(TAG, "onCreateView()");
+
+		DisplayMetrics metrics = new DisplayMetrics();
+		getActivity().getWindowManager().getDefaultDisplay().getMetrics(metrics);
+		mDisplayPixel = (int) metrics.density;
 
     	// Inflate the layout for this fragment
 		mView = inflater.inflate(R.layout.profile_detail, container, false);
@@ -141,7 +147,6 @@ public class ProfileDetailFragment extends Fragment implements Observer {
   	}
 
   	private void redrawCategories() {
-		// list of all achievements (.probably. downloaded from server)
 		final AchievementList achievementList = AchievementList.getInstance();
 
 		userLevel.setText(getString(R.string.profile_level) + " " + achievementList.getLevel());
@@ -166,7 +171,6 @@ public class ProfileDetailFragment extends Fragment implements Observer {
 
 			Intent intent = new Intent(getActivity(), AchievementOverviewActivity.class);
 			intent.putExtras(bundle);
-//			intent.putExtra("achievementList", achievementList); // list of all achievements
 			startActivity(intent);
 			}
 		});
@@ -179,12 +183,12 @@ public class ProfileDetailFragment extends Fragment implements Observer {
 		}
 		else {	//at least one network is connected, allow to show the profile
 			if (showMoreAccounts) { // SHOW info
-				mMoreLayout.getLayoutParams().height = 60+((totalNetworks-socialNetworks.size())*70);
+				mMoreLayout.getLayoutParams().height = (mDisplayPixel*60)+((totalNetworks-socialNetworks.size())*(mDisplayPixel*55));
 				mMoreLayout.requestLayout();
 				mMoreVisible.setVisibility(View.VISIBLE);
 				rotate(90);
 			} else { // HIDE info
-				mMoreLayout.getLayoutParams().height = 60;
+				mMoreLayout.getLayoutParams().height = 60*mDisplayPixel;
 				mMoreLayout.requestLayout();
 				mMoreVisible.setVisibility(View.INVISIBLE);
 				rotate(0);
@@ -197,6 +201,7 @@ public class ProfileDetailFragment extends Fragment implements Observer {
 		RelativeLayout twLayout = (RelativeLayout) mView.findViewById(R.id.profile_twitter);
 		ViewGroup.LayoutParams fbPar = fbLayout.getLayoutParams();
 		ViewGroup.LayoutParams twPar = twLayout.getLayoutParams();
+
 		if(!mFb.isPaired()) {
 			fbLayout.setVisibility(View.INVISIBLE);
 			fbPar.height = 0;
@@ -206,7 +211,7 @@ public class ProfileDetailFragment extends Fragment implements Observer {
 			mFbName = (TextView) mView.findViewById(R.id.profile_facebook_name);
 			if(mFb.getUserName() != null) mFbName.setText(mFb.getUserName());
 			fbLayout.setVisibility(View.VISIBLE);
-			fbPar.height = 70;
+			fbPar.height = 60*mDisplayPixel;
 			mFb.addObserver(this);
 			mFb.downloadUserData();
 		}
@@ -217,7 +222,7 @@ public class ProfileDetailFragment extends Fragment implements Observer {
 		}
 		else {
 			twLayout.setVisibility(View.VISIBLE);
-			twPar.height = 70;
+			twPar.height = 60*mDisplayPixel;
 		}
 	}
 
@@ -269,8 +274,6 @@ public class ProfileDetailFragment extends Fragment implements Observer {
 		}
 		else if(o.toString().equals("not_logged"))
 			fbSetOnClickLogin();
-//		else if(o.toString().equals("profilePicture"))
-//			mFbName.setText(mFb.getUserPicture());
 	}
 
 	private void fbSetOnClickLogout() {
