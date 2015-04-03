@@ -4,11 +4,12 @@ import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.appwidget.AppWidgetManager;
+import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.IBinder;
-import android.os.PowerManager;
 import android.os.SystemClock;
 import android.util.SparseArray;
 
@@ -16,6 +17,7 @@ import com.rehivetech.beeeon.adapter.device.Facility;
 import com.rehivetech.beeeon.adapter.location.Location;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.util.Log;
+import com.rehivetech.beeeon.widget.clock.WidgetClockProvider;
 import com.rehivetech.beeeon.widget.location.WidgetLocationListProvider;
 import com.rehivetech.beeeon.widget.sensor.WidgetSensorProvider;
 
@@ -30,15 +32,15 @@ public class WidgetService extends Service {
     private final static String TAG = WidgetService.class.getSimpleName();
 
     private static final String EXTRA_FORCE_UPDATE = "com.rehivetech.beeeon.forceUpdate";
+    private static final String EXTRA_STANDBY = "com.rehivetech.beeeon.standby";
 
     public static final int UPDATE_INTERVAL_DEFAULT = 10; // in seconds
-    public static final int UPDATE_INTERVAL_MIN = 1; // in seconds
-
-    public static boolean ScreenFilterRegistered = false;
+    public static final int UPDATE_INTERVAL_MIN = 5; // in seconds
 
     private Context mContext;
     private Controller mController;
     private AppWidgetManager mAppWidgetManager;
+    private BroadcastReceiver mBroadcastBridge;
 
     // list of available widgets
     public static SparseArray<WidgetData> awailableWidgets = new SparseArray<WidgetData>();
@@ -46,27 +48,9 @@ public class WidgetService extends Service {
     public static List<Facility> usedFacilities = new ArrayList<Facility>();
     public static List<Location> usedLocations = new ArrayList<Location>();
 
-    private static boolean isLoggedInLast = false;
-    private static boolean isLoginStateChanged = true;
-
-    /**
-     * !!! If we have any new widget, we need to add it here so that it keeps updating. !!!
-     * @return array of widget ids
-     */
-    public int[] getAllIds() {
-        List<Integer> ids = new ArrayList<Integer>();
-
-        // here need to add all widget providers
-        ids.addAll(getWidgetIds(WidgetLocationListProvider.class));
-        ids.addAll(getWidgetIds(WidgetSensorProvider.class));
-
-        int[] arr = new int[ids.size()];
-        for (int i = 0; i < ids.size(); i++) {
-            arr[i] = ids.get(i);
-        }
-
-        return arr;
-    }
+    // variables for checking if user go logged out / in
+    private boolean isLoggedInLast = false;
+    private boolean isLoginStateChanged = true;
 
     /**
      * Place to start the service from widget provider
@@ -157,10 +141,29 @@ public class WidgetService extends Service {
         return intent;
     }
 
+    /**
+     * Force pending intent
+     * @param context
+     * @param widgetId
+     * @return
+     */
     public static PendingIntent getForceUpdatePendingIntent(Context context, int widgetId) {
         final Intent intent = getForceUpdateIntent(context, widgetId);
 
         return PendingIntent.getService(context, widgetId, intent, PendingIntent.FLAG_CANCEL_CURRENT);
+    }
+
+    /**
+     * Intent for putting service asleep
+     * @param context
+     * @param standby
+     * @return
+     */
+    public static Intent getStandByIntent(Context context, boolean standby){
+        Intent intent = new Intent(context, WidgetService.class);
+        intent.putExtra(WidgetService.EXTRA_STANDBY, standby);
+
+        return intent;
     }
 
     @Override
@@ -170,6 +173,13 @@ public class WidgetService extends Service {
         mContext = getApplicationContext();
         mAppWidgetManager = AppWidgetManager.getInstance(mContext);
         mController = Controller.getInstance(mContext);
+
+        boolean isStandBy = intent.getBooleanExtra(EXTRA_STANDBY, false);
+        if(isStandBy){
+            Log.d(TAG, "is standby...");
+            stopAlarm(mContext);
+            return START_STICKY;
+        }
 
         boolean forceUpdate = intent.getBooleanExtra(EXTRA_FORCE_UPDATE, false);
 
@@ -184,30 +194,53 @@ public class WidgetService extends Service {
                 setAlarm(nextUpdate);
             } else {
                 Log.d(TAG, "No planned next update");
+                stopSelf();
+                return START_STICKY;
             }
         }
 
-        // don't update when screen is off
-        // TODO nejakou jinou metodou, protoze zde je to deprecated
-        PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
-        if (!pm.isScreenOn()) {
-            Log.v(TAG, "Screen is off, exiting...");
-            stopSelf();
-            return START_NOT_STICKY;
-        }
+        // initializes receiver for screen on/off + time ticking (only once)
+        initializeBroadcastBridge();
 
         new Thread(new Runnable() {
             @Override
             public void run() {
                 updateWidgets(intent);
-                stopSelf();
             }
         }).start();
 
-
-        return START_NOT_STICKY;
+        // TODO should be start_sticky or start_not_sticky (was)
+        return START_STICKY;
     }
 
+    /**
+     * Creates broadcast receiver which bridges broadcasts to appwidgets for handling time and screen
+     * No operation if already initialized
+     */
+    private void initializeBroadcastBridge() {
+        if(mBroadcastBridge == null){
+            Log.d(TAG, "registeringBroadcastReceiver()");
+            IntentFilter filter = new IntentFilter();
+            filter.addAction(Intent.ACTION_SCREEN_ON);
+            filter.addAction(Intent.ACTION_SCREEN_OFF);
+            filter.addAction(Intent.ACTION_TIME_TICK);
+            filter.addAction(Intent.ACTION_TIMEZONE_CHANGED);
+            filter.addAction(Intent.ACTION_TIME_CHANGED);
+            mBroadcastBridge = new WidgetBridgeBroadcastReceiver();
+            registerReceiver(mBroadcastBridge, filter);
+        }
+    }
+
+    @Override
+    public void onDestroy(){
+        super.onDestroy();
+
+        if(mBroadcastBridge != null){
+            Log.d(TAG, "UNregistering");
+            unregisterReceiver(mBroadcastBridge);
+            mBroadcastBridge = null;
+        }
+    }
 
     /**
      * Method calls all widgets which needs to be updated
@@ -218,6 +251,7 @@ public class WidgetService extends Service {
 
         // check login state and for one cycle set flag
         if((mController.isLoggedIn() && !isLoggedInLast) || (!mController.isLoggedIn() && isLoggedInLast)){
+            Log.d(TAG, "change state!");
             isLoginStateChanged = true;
             isLoggedInLast = mController.isLoggedIn();
         }
@@ -422,6 +456,28 @@ public class WidgetService extends Service {
         }
         return arr;
     }
+
+
+    /**
+     * !!! If we have any new widget, we need to add it here so that it keeps updating. !!!
+     * @return array of widget ids
+     */
+    public int[] getAllIds() {
+        List<Integer> ids = new ArrayList<Integer>();
+
+        // here need to add all widget providers
+        ids.addAll(getWidgetIds(WidgetClockProvider.class));
+        ids.addAll(getWidgetIds(WidgetLocationListProvider.class));
+        ids.addAll(getWidgetIds(WidgetSensorProvider.class));
+
+        int[] arr = new int[ids.size()];
+        for (int i = 0; i < ids.size(); i++) {
+            arr[i] = ids.get(i);
+        }
+
+        return arr;
+    }
+
 
     @Override
     public IBinder onBind(Intent intent) {

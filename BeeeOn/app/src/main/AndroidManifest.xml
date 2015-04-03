@@ -66,9 +66,9 @@
         <meta-data
             android:name="com.google.android.maps.v2.API_KEY"
             android:value="AIzaSyBCTLpegGSezAdXYuZOLxqzQe1eW9kYvlM" />
-		<meta-data
-			android:name="com.facebook.sdk.ApplicationId"
-			android:value="@string/facebook_app_id"/>
+        <meta-data
+            android:name="com.facebook.sdk.ApplicationId"
+            android:value="@string/facebook_app_id" />
 
         <activity
             android:name=".activity.LoginActivity"
@@ -174,18 +174,16 @@
         <!-- list widget -->
         <receiver
             android:name=".widget.location.WidgetLocationListProvider"
-            android:label="@string/widget_location_list_title"
-            android:icon="@mipmap/ic_launcher"
             android:enabled="@bool/is_api_11"
-            >
+            android:icon="@mipmap/ic_launcher"
+            android:label="@string/widget_location_list_title" >
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
             </intent-filter>
 
             <meta-data
                 android:name="android.appwidget.provider"
-                android:resource="@xml/widget_provider_location"
-            />
+                android:resource="@xml/widget_location_provider_info" />
         </receiver>
 
         <service android:name=".widget.WidgetService" />
@@ -193,11 +191,20 @@
         <!-- TODO bude v service taky enabled?? -->
         <service
             android:name=".widget.WidgetListService"
-            android:permission="android.permission.BIND_REMOTEVIEWS"
-            android:exported="false"
             android:enabled="@bool/is_api_11"
-        />
+            android:exported="false"
+            android:permission="android.permission.BIND_REMOTEVIEWS" />
 
+        <receiver android:name=".widget.clock.WidgetClockProvider" >
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+                <action android:name="com.rehivetech.beeeon.ACTION_TIME_CHANGED" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/widget_clock_provider_info" />
+        </receiver>
 
         <receiver
             android:name=".widget.sensor.WidgetSensorProvider"
@@ -209,9 +216,8 @@
 
             <meta-data
                 android:name="android.appwidget.provider"
-                android:resource="@xml/widget_provider_small" />
+                android:resource="@xml/widget_small_provider_info" />
         </receiver>
-
         <receiver
             android:name=".widget.sensor.WidgetSensorProviderMedium"
             android:icon="@mipmap/ic_launcher"
@@ -222,7 +228,7 @@
 
             <meta-data
                 android:name="android.appwidget.provider"
-                android:resource="@xml/widget_provider_medium" />
+                android:resource="@xml/widget_medium_provider_info" />
         </receiver>
         <receiver
             android:name=".widget.sensor.WidgetSensorProviderLarge"
@@ -234,7 +240,7 @@
 
             <meta-data
                 android:name="android.appwidget.provider"
-                android:resource="@xml/widget_provider_large" />
+                android:resource="@xml/widget_large_provider_info" />
         </receiver>
 
         <service

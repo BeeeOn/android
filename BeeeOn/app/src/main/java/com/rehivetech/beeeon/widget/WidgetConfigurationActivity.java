@@ -20,6 +20,8 @@ import com.rehivetech.beeeon.adapter.Adapter;
 import com.rehivetech.beeeon.base.BaseApplicationActivity;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.util.Log;
+import com.rehivetech.beeeon.widget.clock.WidgetClockConfiguration;
+import com.rehivetech.beeeon.widget.clock.WidgetClockData;
 import com.rehivetech.beeeon.widget.location.WidgetLocationConfiguration;
 import com.rehivetech.beeeon.widget.location.WidgetLocationData;
 import com.rehivetech.beeeon.widget.sensor.WidgetSensorConfiguration;
@@ -82,6 +84,11 @@ public class WidgetConfigurationActivity extends ActionBarActivity {
 
         // ------------ add here awailable widgets
         switch(mWidgetShortClassName){
+            case ".WidgetClockProvider":
+                mWidgetData = new WidgetClockData(appWidgetId);
+                mWidgetConfiguration = new WidgetClockConfiguration(mWidgetData, this);
+                break;
+
             case ".WidgetLocationListProvider":
                 mWidgetData = new WidgetLocationData(appWidgetId);
                 mWidgetConfiguration = new WidgetLocationConfiguration(mWidgetData, this);

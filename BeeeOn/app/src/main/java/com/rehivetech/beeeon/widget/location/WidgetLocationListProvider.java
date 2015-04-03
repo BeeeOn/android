@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
 import android.os.SystemClock;
+import android.widget.Toast;
 
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.activity.SensorDetailActivity;
@@ -70,7 +71,7 @@ public class WidgetLocationListProvider extends WidgetProvider {
         // OnCLickListener
         Intent clickIntent = new Intent(mContext, WidgetLocationListProvider.class);
         clickIntent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
-        clickIntent.putExtra(mWidgetManager.EXTRA_APPWIDGET_IDS, getAllIds(mContext, mWidgetManager)); // TODO -> allWidgetIds
+        clickIntent.putExtra(mWidgetManager.EXTRA_APPWIDGET_IDS, getAllIds(mContext)); // TODO -> allWidgetIds
 
         PendingIntent pendingIntent = PendingIntent.getBroadcast(mContext, 0, clickIntent, PendingIntent.FLAG_UPDATE_CURRENT);
         mRemoteViews.setOnClickPendingIntent(R.id.name, pendingIntent);
@@ -161,11 +162,4 @@ public class WidgetLocationListProvider extends WidgetProvider {
         // update widget
         mWidgetManager.updateAppWidget(mWidgetId, mRemoteViews);
     }
-
-    // or use WidgetService.getWidgetIds(WidgetLocationListProvider.class, mContext, mWidgetManager).toArray()
-    private int[] getAllIds(Context context, AppWidgetManager mAppWidgetManager) {
-        ComponentName thisWidget = new ComponentName(context, WidgetLocationListProvider.class);
-        return mAppWidgetManager.getAppWidgetIds(thisWidget);
-    }
-
 }

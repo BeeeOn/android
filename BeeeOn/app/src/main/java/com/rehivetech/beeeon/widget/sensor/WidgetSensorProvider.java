@@ -62,6 +62,7 @@ public class WidgetSensorProvider extends WidgetProvider{
         }
     }
 
+    @Override
     public boolean prepare(){
         Log.d(TAG, String.format("prepare(%d)", mWidgetId));
         // Prepare list of facilities for network request
@@ -80,7 +81,7 @@ public class WidgetSensorProvider extends WidgetProvider{
             facility.setLastUpdate(new DateTime(mWidgetData.deviceLastUpdateTime, DateTimeZone.UTC));
             facility.setRefresh(RefreshInterval.fromInterval(mWidgetData.deviceRefresh));
 
-            facility.addDevice(DeviceType.createDeviceFromType(ids[1]));
+            facility.addDevice(Device.createFromDeviceTypeId(ids[1]));
 
             //WidgetService.usedFacilities.put(facility.getId(), facility);
             WidgetService.usedFacilities.add(facility);

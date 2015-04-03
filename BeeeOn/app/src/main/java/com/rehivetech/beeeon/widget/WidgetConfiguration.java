@@ -150,7 +150,6 @@ abstract public class WidgetConfiguration {
      * !!! Starts the service !!!
      */
     public void startWidgetOk(){
-        // workaround which is working -> will be replaced in advanced widgets
         WidgetService.startUpdating(mActivity, new int[] { mWidgetData.getWidgetId() });
     }
 

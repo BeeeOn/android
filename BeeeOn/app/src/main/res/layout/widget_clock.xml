@@ -1,0 +1,92 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+				android:layout_width="match_parent"
+				android:layout_height="match_parent"
+				android:padding="@dimen/widget_margin"
+				>
+
+	<LinearLayout
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_centerHorizontal="true"
+		android:id="@+id/widget_clock_time_layout"
+		>
+
+		<TextView
+			android:id="@+id/widget_clock_hours"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:textSize="70sp"
+			android:textStyle="bold"
+			android:text="25"
+			android:textColor="@color/beeeon_primary_cyan"
+			/>
+
+		<TextView
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:textSize="70sp"
+			android:text=":"
+			android:textColor="@color/beeeon_primary_cyan"
+			/>
+
+		<TextView
+			android:id="@+id/widget_clock_minutes"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:textSize="70sp"
+			android:textStyle="bold"
+			android:text="00"
+			android:textColor="@color/beeeon_primary_cyan"
+			/>
+
+	</LinearLayout>
+
+
+	<TextView
+		android:id="@+id/widget_clock_day_of_week"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:text="pátek"
+		android:textAllCaps="true"
+		android:layout_below="@+id/widget_clock_time_layout"
+		android:layout_alignRight="@+id/widget_clock_time_layout"
+		android:textColor="@color/beeeon_secundary_pink"
+		android:textSize="14sp"
+		/>
+
+	<TextView
+		android:id="@+id/widget_clock_date"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:textSize="16sp"
+		android:text="3.2"
+		android:textStyle="bold"
+		android:layout_below="@+id/widget_clock_day_of_week"
+		android:layout_alignRight="@+id/widget_clock_day_of_week"
+		android:textColor="@color/beeeon_secundary_pink"
+		/>
+
+	<TextView
+		android:id="@+id/widget_clock_temperature_in_label"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:text="Uvnitř"
+		android:textSize="14sp"
+		android:textColor="@color/beeeon_secundary_pink"
+		android:layout_above="@+id/widget_clock_date"
+		android:layout_alignLeft="@+id/widget_clock_time_layout"
+		android:layout_alignStart="@+id/widget_clock_time_layout"/>
+
+	<TextView
+		android:id="@+id/widget_clock_temperature_in"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:text="25°C"
+		android:textColor="@color/beeeon_secundary_pink"
+		android:textSize="20sp"
+		android:textStyle="bold"
+		android:layout_alignTop="@+id/widget_clock_date"
+		android:layout_alignLeft="@+id/widget_clock_temperature_in_label"
+		android:layout_alignStart="@+id/widget_clock_temperature_in_label"/>
+
+</RelativeLayout>
