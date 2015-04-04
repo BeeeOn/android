@@ -10,6 +10,7 @@ import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.controller.Controller;
@@ -58,6 +59,7 @@ public class AchievementListAdapter extends BaseAdapter implements Filterable{
 			holder.achievementPoints = (TextView) convertView.findViewById(R.id.achievement_list_points);
 			holder.achievementDate = (TextView) convertView.findViewById(R.id.achievement_list_date);
 			holder.achievementTick = (ImageView) convertView.findViewById(R.id.achievement_list_tick);
+			holder.achievementShare = (ImageView) convertView.findViewById(R.id.achievement_list_share);
 			convertView.setTag(holder);
 		}
 		else{
@@ -78,13 +80,21 @@ public class AchievementListAdapter extends BaseAdapter implements Filterable{
 			holder.achievementDate.setText(achievement.getDate());
 			holder.achievementDate.setVisibility(View.VISIBLE);
 			holder.achievementTick.setVisibility(View.VISIBLE);
+			holder.achievementShare.setVisibility(View.VISIBLE);
+			holder.achievementShare.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View view) {
+					Toast.makeText(mContext, "Prepare to share!", Toast.LENGTH_LONG).show();
+				}
+			});
 		}
 		else {
 			setBg(holder.achievementPoints, convertView.getResources().getDrawable(R.drawable.hexagon_gray));
 			holder.achievementName.setTextColor(convertView.getResources().getColor(R.color.beeeon_text_color));
 			holder.achievementDescription.setTextColor(convertView.getResources().getColor(R.color.beeeon_text_hint));
 			holder.achievementDate.setVisibility(View.INVISIBLE);
-			holder.achievementTick.setVisibility(View.INVISIBLE);
+			holder.achievementTick.setVisibility(View.GONE);
+			holder.achievementShare.setVisibility(View.GONE);
 		}
 
 		return convertView;
@@ -162,5 +172,6 @@ public class AchievementListAdapter extends BaseAdapter implements Filterable{
 		public TextView achievementPoints;
 		public TextView achievementDate;
 		public ImageView achievementTick;
+		public ImageView achievementShare;
 	}
 }

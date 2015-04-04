@@ -10,6 +10,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -116,21 +117,21 @@ public class AchievementOverviewActivity extends BaseApplicationActivity {
 
 		mAchievementListAdapter = new AchievementListAdapter(this, this.getLayoutInflater(), mCategoryId, mAchievements);
 		achievementList.setAdapter(mAchievementListAdapter);
-		// TODO Think about possible action after short click
-		achievementList.setOnItemClickListener(null);
-		achievementList.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-			// TODO choose between sharing on Facebook and Twitter
-			@Override
-			public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-				AchievementListItem achievementItem = mAchievementListAdapter.getItem(position);
-				if(achievementItem.isDone()) {
-					new NetworkChooseDialog(achievementItem.getName(), achievementItem.getDate()).show(getSupportFragmentManager(), TAG);
-					return true;
-				}
-				else
-					return false;
-			}
-		});
+		achievementList.setClickable(false);
+		achievementList.setFocusable(false);
+		achievementList.setSelector(android.R.color.transparent);
+//		achievementList.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+//			@Override
+//			public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+//				AchievementListItem achievementItem = mAchievementListAdapter.getItem(position);
+//				if(achievementItem.isDone()) {
+//					new NetworkChooseDialog(achievementItem.getName(), achievementItem.getDate()).show(getSupportFragmentManager(), TAG);
+//					return true;
+//				}
+//				else
+//					return false;
+//			}
+//		});
 	}
 
 	/**
