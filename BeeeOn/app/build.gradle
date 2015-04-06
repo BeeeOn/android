@@ -54,6 +54,7 @@ android {
 
 		beta_ant2 {
 			resValue "string", "app_name", "BeeeOn (beta-ant2)"
+			applicationIdSuffix ".beta_ant2"
 		}
 
         beta_iotpro {
