@@ -6,7 +6,6 @@ import android.graphics.Bitmap;
 
 import com.rehivetech.beeeon.Constants;
 import com.rehivetech.beeeon.exception.AppException;
-import com.rehivetech.beeeon.exception.NotImplementedException;
 import com.rehivetech.beeeon.geofence.TransitionType;
 import com.rehivetech.beeeon.household.adapter.Adapter;
 import com.rehivetech.beeeon.household.user.User;
@@ -438,10 +437,9 @@ public final class Controller {
 	 * @param adapterId
 	 * @param userId
 	 * @return
-	 * @throws NotImplementedException
 	 */
-	public User getUser(String adapterId, String userId) throws NotImplementedException {
-		throw new NotImplementedException();
+	public User getUser(String adapterId, String userId) {
+		throw new IllegalStateException("Not implemented");
 	}
 
 
@@ -463,7 +461,6 @@ public final class Controller {
 	 * @param adapterId
 	 * @param user
 	 * @return
-	 * @throws NotImplementedException
 	 */
 	public boolean addUser(String adapterId, User user) {
 		return mNetwork.addAccount(adapterId, user);
@@ -475,7 +472,6 @@ public final class Controller {
 	 * @param adapterId
 	 * @param user
 	 * @return
-	 * @throws NotImplementedException
 	 */
 	public boolean deleteUser(String adapterId, User user) {
 		return mNetwork.deleteAccount(adapterId, user);
@@ -487,7 +483,6 @@ public final class Controller {
 	 * @param adapterId
 	 * @param user
 	 * @return
-	 * @throws NotImplementedException
 	 */
 	public boolean saveUser(String adapterId, User user) {
 		return mNetwork.updateAccount(adapterId, user);
