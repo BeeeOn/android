@@ -97,7 +97,7 @@ public final class Controller {
 	private Controller(Context context) {
 		mContext = context;
 
-		mNetwork = mDemoMode ? new DemoNetwork(context) : new Network(mContext, this, Utils.isDebugVersion(context));
+		mNetwork = mDemoMode ? new DemoNetwork(context) : new Network(mContext, Utils.isDebugVersion(context));
 		mPersistence = new Persistence(mContext);
 		mHousehold = new Household(mContext, mNetwork);
 

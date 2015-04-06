@@ -115,8 +115,9 @@ public class Network implements INetwork {
 	 * Constructor.
 	 * 
 	 * @param context
+	 * @param useDebugServer
 	 */
-	public Network(Context context, Controller controller, boolean useDebugServer) {
+	public Network(Context context, boolean useDebugServer) {
 		mContext = context;
 		mUseDebugServer = useDebugServer;
 	}
