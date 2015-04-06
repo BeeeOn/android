@@ -34,7 +34,7 @@ public class GeofenceIntentService extends IntentService {
 		}
 
 		// v demo modu neodesilat
-		if (Controller.getInstance(this).isDemoMode()) {
+		if (Controller.isDemoMode()) {
 			return;
 		}
 

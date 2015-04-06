@@ -186,7 +186,7 @@ public class MapGeofenceActivity extends BaseApplicationActivity implements Resu
 
 	private void addGeofence(SimpleGeofence geofence) {
 		// if demo mode just save it to database
-		if (Controller.getInstance(this).isDemoMode()) {
+		if (Controller.isDemoMode()) {
 			Controller.getInstance(this).addGeofence(geofence);
 			drawGeofence(geofence);
 			return;
@@ -223,7 +223,7 @@ public class MapGeofenceActivity extends BaseApplicationActivity implements Resu
 		List<String> geofenceIds = new ArrayList<>();
 		geofenceIds.add(holder.getGeofence().getId());
 
-		if (!Controller.getInstance(this).isDemoMode()) {
+		if (!Controller.isDemoMode()) {
 			LocationServices.GeofencingApi.removeGeofences(mGoogleApiClient, geofenceIds);
 		}
 

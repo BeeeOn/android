@@ -949,7 +949,7 @@ public final class Controller {
 	 */
 	public void setGCMIdServer(String gcmID) {
 		Log.i(GcmHelper.TAG_GCM, "setGcmIdServer");
-		if (isDemoMode()) {
+		if (mDemoMode) {
 			Log.i(GcmHelper.TAG_GCM, "DemoMode -> return");
 			return;
 		}
