@@ -42,7 +42,7 @@ import com.rehivetech.beeeon.activity.fragment.CustomViewFragment;
 import com.rehivetech.beeeon.activity.fragment.ProfileDetailFragment;
 import com.rehivetech.beeeon.activity.fragment.SensorListFragment;
 import com.rehivetech.beeeon.activity.fragment.WatchDogListFragment;
-import com.rehivetech.beeeon.adapter.Adapter;
+import com.rehivetech.beeeon.household.adapter.Adapter;
 import com.rehivetech.beeeon.asynctask.CallbackTask;
 import com.rehivetech.beeeon.asynctask.FullReloadTask;
 import com.rehivetech.beeeon.base.BaseApplicationActivity;
@@ -288,7 +288,6 @@ public class MainActivity extends BaseApplicationActivity {
 					ErrorCode errCode = e.getErrorCode();
 					if(errCode != null) {
 						if (errCode instanceof NetworkError && errCode == NetworkError.BAD_BT ) {
-							mController.delBT();
 							finish();
 							Intent intent = new Intent(MainActivity.this,LoginActivity.class);
 							startActivity(intent);
@@ -459,7 +458,7 @@ public class MainActivity extends BaseApplicationActivity {
 
 	public void checkNoDevices() {
 		Adapter adapter = mController.getActiveAdapter();
-		if (adapter != null && mController.getFacilitiesByAdapter(adapter.getId()).isEmpty()) {
+		if (adapter != null && mController.getFacilitiesModel().getFacilitiesByAdapter(adapter.getId()).isEmpty()) {
 			// Show activity for adding new sensor, when this adapter doesn't have any yet
 			Log.i(TAG, String.format("%s is empty", adapter.getName()));
 			DialogFragment newFragment = new AddSensorFragmentDialog();

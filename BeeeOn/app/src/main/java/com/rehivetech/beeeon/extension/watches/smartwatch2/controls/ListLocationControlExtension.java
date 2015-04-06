@@ -32,23 +32,23 @@ Copyright (c) 2011-2013, Sony Mobile Communications AB
 
 package com.rehivetech.beeeon.extension.watches.smartwatch2.controls;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
+import com.rehivetech.beeeon.R;
+import com.rehivetech.beeeon.extension.watches.smartwatch2.SW2ExtensionService;
+import com.rehivetech.beeeon.household.adapter.Adapter;
+import com.rehivetech.beeeon.household.device.Facility;
+import com.rehivetech.beeeon.household.location.Location;
+import com.rehivetech.beeeon.persistence.LocationsModel;
+import com.rehivetech.beeeon.util.Log;
 import com.sonyericsson.extras.liveware.aef.control.Control;
 import com.sonyericsson.extras.liveware.extension.util.ExtensionUtils;
 import com.sonyericsson.extras.liveware.extension.util.control.ControlListItem;
 
-import com.rehivetech.beeeon.R;
-import com.rehivetech.beeeon.adapter.Adapter;
-import com.rehivetech.beeeon.adapter.device.Facility;
-import com.rehivetech.beeeon.adapter.location.Location;
-import com.rehivetech.beeeon.extension.watches.smartwatch2.SW2ExtensionService;
-import com.rehivetech.beeeon.util.Log;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * ListControlExtension displays a scrollable list, based on a string array. Tapping on list items opens a swipable detail view.
@@ -182,7 +182,7 @@ public class ListLocationControlExtension extends ManagedControlExtension {
 			// intent.putExtra(GalleryTestControl.EXTRA_INITIAL_POSITION,
 			// listItem.listItemPosition);
 			// mControlManager.startControl(intent);
-			List<Facility> facilities = mController.getFacilitiesByLocation(mAdapter.getId(), mLocations.get(listItem.listItemPosition).getId());
+			List<Facility> facilities = mController.getFacilitiesModel().getFacilitiesByLocation(mAdapter.getId(), mLocations.get(listItem.listItemPosition).getId());
 			Intent intent;
 			if (facilities.size() < 1) {
 				intent = new Intent(mContext, TextControl.class);
@@ -229,9 +229,11 @@ public class ListLocationControlExtension extends ManagedControlExtension {
 			@Override
 			public void run() {
 
-				mController.reloadLocations(mAdapterId, mForceUpdate);
-				mAdapter = mController.getAdapter(mAdapterId);
-				mLocations = mController.getLocations(mAdapterId);
+				mAdapter = mController.getAdaptersModel().getAdapter(mAdapterId);
+
+				LocationsModel locationsModel = mController.getLocationsModel();
+				locationsModel.reloadLocationsByAdapter(mAdapterId, mForceUpdate);
+				mLocations = locationsModel.getLocationsByAdapter(mAdapterId);
 
 				mForceUpdate = true;
 

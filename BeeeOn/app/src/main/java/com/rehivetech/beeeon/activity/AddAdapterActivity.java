@@ -110,7 +110,7 @@ public class AddAdapterActivity extends BaseApplicationActivity {
 			public void onClick(View v) {
 				SharedPreferences prefs = mController.getUserSettings();
 				if (prefs != null) {
-					prefs.edit().putBoolean(Constants.PERSISTENCE_PREF_IGNORE_NO_ADAPTER, true).commit();
+					prefs.edit().putBoolean(Constants.PERSISTENCE_PREF_IGNORE_NO_ADAPTER, true).apply();
 				}
 				setResult(Constants.ADD_ADAPTER_CANCELED);
 				InputMethodManager imm = (InputMethodManager) mActivity.getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -172,7 +172,7 @@ public class AddAdapterActivity extends BaseApplicationActivity {
 		case android.R.id.home:
 			SharedPreferences prefs = mController.getUserSettings();
 			if (prefs != null) {
-				prefs.edit().putBoolean(Constants.PERSISTENCE_PREF_IGNORE_NO_ADAPTER, true).commit();
+				prefs.edit().putBoolean(Constants.PERSISTENCE_PREF_IGNORE_NO_ADAPTER, true).apply();
 			}
 			setResult(Constants.ADD_ADAPTER_CANCELED);
 			finish();

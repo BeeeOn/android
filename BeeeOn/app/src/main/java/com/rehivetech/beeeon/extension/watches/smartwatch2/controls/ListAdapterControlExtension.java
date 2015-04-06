@@ -43,8 +43,8 @@ import com.sonyericsson.extras.liveware.extension.util.ExtensionUtils;
 import com.sonyericsson.extras.liveware.extension.util.control.ControlListItem;
 
 import com.rehivetech.beeeon.R;
-import com.rehivetech.beeeon.adapter.Adapter;
-import com.rehivetech.beeeon.adapter.location.Location;
+import com.rehivetech.beeeon.household.adapter.Adapter;
+import com.rehivetech.beeeon.household.location.Location;
 import com.rehivetech.beeeon.extension.watches.smartwatch2.SW2ExtensionService;
 import com.rehivetech.beeeon.util.Log;
 
@@ -156,7 +156,7 @@ public class ListAdapterControlExtension extends ManagedControlExtension {
 			Intent intent;
 			String adapterId = mAdapters.get(listItem.listItemPosition).getId();
 			// mController.setActiveAdapter(adapterId, false);
-			List<Location> locations = mController.getLocations(adapterId);
+			List<Location> locations = mController.getLocationsModel().getLocationsByAdapter(adapterId);
 			if (locations.size() < 1) {
 				intent = new Intent(mContext, TextControl.class);
 				intent.putExtra(TextControl.EXTRA_TEXT, mContext.getString(R.string.no_location_available));
@@ -193,7 +193,7 @@ public class ListAdapterControlExtension extends ManagedControlExtension {
 			@Override
 			public void run() {
 
-				mAdapters = mController.getAdapters();
+				mAdapters = mController.getAdaptersModel().getAdapters();
 
 				resume();
 

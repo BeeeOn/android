@@ -10,7 +10,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import com.rehivetech.beeeon.R;
-import com.rehivetech.beeeon.adapter.location.Location;
+import com.rehivetech.beeeon.household.location.Location;
 
 public class LocationIconAdapter extends ArrayAdapter<Location.LocationIcon> {
 

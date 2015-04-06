@@ -15,12 +15,12 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import com.rehivetech.beeeon.Constants;
 import com.rehivetech.beeeon.R;
-import com.rehivetech.beeeon.adapter.Adapter;
-import com.rehivetech.beeeon.asynctask.AddAdapterUserTask;
+import com.rehivetech.beeeon.household.adapter.Adapter;
+import com.rehivetech.beeeon.asynctask.AddUserTask;
 import com.rehivetech.beeeon.asynctask.CallbackTask.CallbackTaskListener;
 import com.rehivetech.beeeon.base.BaseApplicationActivity;
 import com.rehivetech.beeeon.controller.Controller;
-import com.rehivetech.beeeon.household.User;
+import com.rehivetech.beeeon.household.user.User;
 import com.rehivetech.beeeon.pair.AddUserPair;
 
 import java.util.ArrayList;
@@ -41,7 +41,7 @@ public class AddAdapterUserActivity extends BaseApplicationActivity {
 	private EditText mEmail;
 	private Button mBtn;
 
-	private AddAdapterUserTask mAddAdapterUserTask;
+	private AddUserTask mAddUserTask;
 	
 	private ProgressDialog mProgress;
     private Toolbar mToolbar;
@@ -72,7 +72,7 @@ public class AddAdapterUserActivity extends BaseApplicationActivity {
 		mProgress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
 		
 		// Get selected adapter
-		mAdapter = mController.getAdapter(getIntent().getStringExtra(Constants.GUI_SELECTED_ADAPTER_ID));
+		mAdapter = mController.getAdaptersModel().getAdapter(getIntent().getStringExtra(Constants.GUI_SELECTED_ADAPTER_ID));
 		
 		initLayout();
 	}
@@ -120,9 +120,9 @@ public class AddAdapterUserActivity extends BaseApplicationActivity {
 	}
 	
 	protected void doAddAdapterUserTask(AddUserPair pair) {
-		mAddAdapterUserTask = new AddAdapterUserTask(mActivity);
+		mAddUserTask = new AddUserTask(mActivity);
 
-		mAddAdapterUserTask.setListener(new CallbackTaskListener() {
+		mAddUserTask.setListener(new CallbackTaskListener() {
 
 			@Override
 			public void onExecute(boolean success) {
@@ -132,7 +132,7 @@ public class AddAdapterUserActivity extends BaseApplicationActivity {
 
 		});
 
-		mAddAdapterUserTask.execute(pair);
+		mAddUserTask.execute(pair);
 	}
 
 	/*

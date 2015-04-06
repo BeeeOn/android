@@ -2,7 +2,7 @@ package com.rehivetech.beeeon.asynctask;
 
 import android.content.Context;
 
-import com.rehivetech.beeeon.adapter.Adapter;
+import com.rehivetech.beeeon.household.adapter.Adapter;
 import com.rehivetech.beeeon.controller.Controller;
 
 /**
@@ -22,12 +22,12 @@ public class FullReloadTask extends CallbackTask<Void> {
 	protected Boolean doInBackground(Void nothing) {
 		Controller controller = Controller.getInstance(mContext);
 
-		controller.reloadAdapters(mForceReload);
+		controller.getAdaptersModel().reloadAdapters(mForceReload);
 		Adapter active = controller.getActiveAdapter();
 		if (active != null) {
 			// Load data for active adapter
-			controller.reloadLocations(active.getId(), mForceReload);
-			controller.reloadFacilitiesByAdapter(active.getId(), mForceReload);
+			controller.getLocationsModel().reloadLocationsByAdapter(active.getId(), mForceReload);
+			controller.getFacilitiesModel().reloadFacilitiesByAdapter(active.getId(), mForceReload);
 		}
 
 		return true;

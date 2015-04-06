@@ -6,9 +6,7 @@ import java.util.List;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
@@ -21,8 +19,8 @@ import android.widget.Toast;
 import com.rehivetech.beeeon.Constants;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.activity.fragment.SensorDetailFragment;
-import com.rehivetech.beeeon.adapter.device.Device;
-import com.rehivetech.beeeon.adapter.device.Facility;
+import com.rehivetech.beeeon.household.device.Device;
+import com.rehivetech.beeeon.household.device.Facility;
 import com.rehivetech.beeeon.asynctask.CallbackTask.CallbackTaskListener;
 import com.rehivetech.beeeon.asynctask.ReloadFacilitiesTask;
 import com.rehivetech.beeeon.base.BaseApplicationActivity;
@@ -78,7 +76,7 @@ public class SensorDetailActivity extends BaseApplicationActivity {
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
 		// Get controller
-		mController = Controller.getInstance(getApplicationContext());
+		mController = Controller.getInstance(this);
 
 
 
@@ -162,13 +160,13 @@ public class SensorDetailActivity extends BaseApplicationActivity {
 			@Override
 			public void onExecute(boolean success) {
 				Log.d(TAG, "Start reload task");
-				Device device = mController.getDevice(adapterId, mActiveDeviceId);
+				Device device = mController.getFacilitiesModel().getDevice(adapterId, mActiveDeviceId);
 				if (device == null) {
 					Log.d(TAG, "Stop reload task");
 					return;
 				}
 
-				List<Facility> facilities = mController.getFacilitiesByLocation(adapterId, device.getFacility().getLocationId());
+				List<Facility> facilities = mController.getFacilitiesModel().getFacilitiesByLocation(adapterId, device.getFacility().getLocationId());
 
 				List<Device> devices = new ArrayList<Device>();
 				for (Facility facility : facilities) {

@@ -1,10 +1,8 @@
 package com.rehivetech.beeeon.activity.fragment;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
-import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
@@ -13,11 +11,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.CheckedTextView;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.ListView;
@@ -26,10 +21,9 @@ import android.widget.TextView;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.activity.MainActivity;
 import com.rehivetech.beeeon.activity.SetupSensorActivity;
-import com.rehivetech.beeeon.adapter.Adapter;
-import com.rehivetech.beeeon.adapter.device.Facility;
-import com.rehivetech.beeeon.adapter.location.Location;
-import com.rehivetech.beeeon.adapter.location.Location.DefaultLocation;
+import com.rehivetech.beeeon.household.adapter.Adapter;
+import com.rehivetech.beeeon.household.device.Facility;
+import com.rehivetech.beeeon.household.location.Location;
 import com.rehivetech.beeeon.arrayadapter.LocationArrayAdapter;
 import com.rehivetech.beeeon.arrayadapter.LocationIconAdapter;
 import com.rehivetech.beeeon.arrayadapter.SetupSensorListAdapter;
@@ -68,14 +62,14 @@ public class SetupSensorFragment extends TrackFragment {
 
 		// Get activity and controller
 		mActivity = (SetupSensorActivity) getActivity();
-		mController = Controller.getInstance(mActivity.getApplicationContext());
+		mController = Controller.getInstance(mActivity);
 
 		mAdapter = mController.getActiveAdapter();
 		if(mAdapter == null) {
 			// CHYBA
 			return;
 		}
-		mNewFacilities = mController.getUninitializedFacilities(mAdapter.getId());
+		mNewFacilities = mController.getUninitializedFacilitiesModel().getUninitializedFacilitiesByAdapter(mAdapter.getId());
 
 		// TODO: sent as parameter if we want first uninitialized device or some
 		// device with particular id
@@ -159,7 +153,7 @@ public class SetupSensorFragment extends TrackFragment {
 		// Set involved time of facility
 		if (timeHelper != null) {
 			Facility facility = mNewFacilities.get(0);
-			Adapter adapter = mController.getAdapter(facility.getAdapterId());
+			Adapter adapter = mController.getAdaptersModel().getAdapter(facility.getAdapterId());
 			time.setText(String.format("%s %s", time.getText(), timeHelper.formatLastUpdate(facility.getInvolveTime(), adapter)));
 		}
 

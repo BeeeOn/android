@@ -2,10 +2,10 @@ package com.rehivetech.beeeon.util;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import com.rehivetech.beeeon.adapter.device.units.BaseUnit;
-import com.rehivetech.beeeon.adapter.device.values.BaseEnumValue;
-import com.rehivetech.beeeon.adapter.device.values.BaseValue;
-import com.rehivetech.beeeon.adapter.device.values.UnknownValue;
+import com.rehivetech.beeeon.household.device.units.BaseUnit;
+import com.rehivetech.beeeon.household.device.values.BaseEnumValue;
+import com.rehivetech.beeeon.household.device.values.BaseValue;
+import com.rehivetech.beeeon.household.device.values.UnknownValue;
 
 public class UnitsHelper {
 

@@ -20,8 +20,8 @@ import com.rehivetech.beeeon.AddSensorFragmentAdapter;
 import com.rehivetech.beeeon.Constants;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.activity.fragment.AddSensorFragment;
-import com.rehivetech.beeeon.adapter.Adapter;
-import com.rehivetech.beeeon.adapter.device.Facility;
+import com.rehivetech.beeeon.household.adapter.Adapter;
+import com.rehivetech.beeeon.household.device.Facility;
 import com.rehivetech.beeeon.asynctask.CallbackTask.CallbackTaskListener;
 import com.rehivetech.beeeon.asynctask.PairRequestTask;
 import com.rehivetech.beeeon.asynctask.ReloadUninitializedFacilitiesTask;
@@ -204,7 +204,7 @@ public class AddSensorActivity extends BaseApplicationActivity {
 					return;
 				}
 
-				List<Facility> facilities = mController.getUninitializedFacilities(mPairAdapter.getId());
+				List<Facility> facilities = mController.getUninitializedFacilitiesModel().getUninitializedFacilitiesByAdapter(mPairAdapter.getId());
 
 				if (facilities.size() > 0) {
 					mFragment.stopTimer();

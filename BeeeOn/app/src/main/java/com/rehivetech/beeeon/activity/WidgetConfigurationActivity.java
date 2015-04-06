@@ -21,10 +21,10 @@ import android.widget.Toast;
 
 
 import com.rehivetech.beeeon.R;
-import com.rehivetech.beeeon.adapter.Adapter;
-import com.rehivetech.beeeon.adapter.device.Device;
-import com.rehivetech.beeeon.adapter.device.Facility;
-import com.rehivetech.beeeon.adapter.device.RefreshInterval;
+import com.rehivetech.beeeon.household.adapter.Adapter;
+import com.rehivetech.beeeon.household.device.Device;
+import com.rehivetech.beeeon.household.device.Facility;
+import com.rehivetech.beeeon.household.device.RefreshInterval;
 import com.rehivetech.beeeon.asynctask.CallbackTask.CallbackTaskListener;
 import com.rehivetech.beeeon.asynctask.ReloadFacilitiesTask;
 import com.rehivetech.beeeon.base.BaseActivity;
@@ -85,9 +85,9 @@ public class WidgetConfigurationActivity extends BaseActivity {
 	public void onResume() {
 		super.onResume();
 
-		mController = Controller.getInstance(getApplicationContext());
+		mController = Controller.getInstance(this);
 
-		mAdapters = mController.getAdapters();
+		mAdapters = mController.getAdaptersModel().getAdapters();
 		if (mAdapters.isEmpty()) {
 			if (!mController.isLoggedIn() && !triedLoginAlready) {
 				// If user is not logged in we redirect to LoginActivity
@@ -266,7 +266,7 @@ public class WidgetConfigurationActivity extends BaseActivity {
 				if (mAdapters.get(i).getId().equals(adapterId)) {
 					spinAdapter.setSelection(i);
 
-					List<Facility> facilities = mController.getFacilitiesByAdapter(adapterId);
+					List<Facility> facilities = mController.getFacilitiesModel().getFacilitiesByAdapter(adapterId);
 
 					mDevices.clear();
 					for (Facility facility : facilities) {
@@ -326,7 +326,7 @@ public class WidgetConfigurationActivity extends BaseActivity {
 
 			@Override
 			public void onExecute(boolean success) {
-				List<Facility> facilities = mController.getFacilitiesByAdapter(adapterId);
+				List<Facility> facilities = mController.getFacilitiesModel().getFacilitiesByAdapter(adapterId);
 
 				mDevices.clear();
 				for (Facility facility : facilities) {

@@ -7,7 +7,6 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.widget.SwitchCompat;
 import android.support.v7.widget.Toolbar;
-import android.text.InputType;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -15,12 +14,10 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
-import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -29,14 +26,14 @@ import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.activity.spinnerItem.DeviceSpinnerItem;
 import com.rehivetech.beeeon.activity.spinnerItem.GeofenceSpinnerItem;
 import com.rehivetech.beeeon.activity.spinnerItem.SpinnerItem;
-import com.rehivetech.beeeon.adapter.Adapter;
-import com.rehivetech.beeeon.adapter.watchdog.WatchDog;
-import com.rehivetech.beeeon.adapter.device.Device;
-import com.rehivetech.beeeon.adapter.device.Facility;
-import com.rehivetech.beeeon.adapter.location.Location;
-import com.rehivetech.beeeon.adapter.watchdog.WatchDogBaseType;
-import com.rehivetech.beeeon.adapter.watchdog.WatchDogGeofenceType;
-import com.rehivetech.beeeon.adapter.watchdog.WatchDogSensorType;
+import com.rehivetech.beeeon.household.adapter.Adapter;
+import com.rehivetech.beeeon.household.watchdog.WatchDog;
+import com.rehivetech.beeeon.household.device.Device;
+import com.rehivetech.beeeon.household.device.Facility;
+import com.rehivetech.beeeon.household.location.Location;
+import com.rehivetech.beeeon.household.watchdog.WatchDogBaseType;
+import com.rehivetech.beeeon.household.watchdog.WatchDogGeofenceType;
+import com.rehivetech.beeeon.household.watchdog.WatchDogSensorType;
 import com.rehivetech.beeeon.arrayadapter.DeviceArrayAdapter;
 import com.rehivetech.beeeon.arrayadapter.SpinnerMultiAdapter;
 import com.rehivetech.beeeon.asynctask.CallbackTask;
@@ -168,7 +165,7 @@ public class WatchDogEditRuleActivity extends BaseApplicationActivity {
         // get controllern
         mController = Controller.getInstance(this);
         // get adapter
-        mAdapter = mActiveAdapterId == null ? mController.getActiveAdapter() : mController.getAdapter(mActiveAdapterId);
+        mAdapter = mActiveAdapterId == null ? mController.getActiveAdapter() : mController.getAdaptersModel().getAdapter(mActiveAdapterId);
 
 		if(mAdapter == null ) {
 			//TODO: neocekova chyba
@@ -180,20 +177,21 @@ public class WatchDogEditRuleActivity extends BaseApplicationActivity {
         mUnitsHelper = (mPrefs == null) ? null : new UnitsHelper(mPrefs, this);
 
         // get all locations for spinners
-        mLocations = mController.getLocations(mAdapter.getId());
+        mLocations = mController.getLocationsModel().getLocationsByAdapter(mAdapter.getId());
         // get all geofence areas
-        mGeofences = mController.getAllGeofences();
+		String userId = mController.getActualUser().getId();
+        mGeofences = mController.getGeofenceModel().getAllGeofences(userId);
 
         // facilities get by cycling through all locations
         mFacilities = new ArrayList<Facility>();
         for(Location loc : mLocations){
-            List<Facility> tempFac = mController.getFacilitiesByLocation(mAdapter.getId(), loc.getId());
+            List<Facility> tempFac = mController.getFacilitiesModel().getFacilitiesByLocation(mAdapter.getId(), loc.getId());
             mFacilities.addAll(tempFac);
         }
 
         // get watchdog rule
         if(!mIsNew) {
-            mWatchDog = mController.getWatchDog(mAdapter.getId(), mActiveRuleId);
+            mWatchDog = mController.getWatchDogsModel().getWatchDog(mAdapter.getId(), mActiveRuleId);
             if(mWatchDog == null){
                 Toast.makeText(this, R.string.toast_something_wrong, Toast.LENGTH_LONG).show();
                 finish();

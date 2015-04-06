@@ -1,6 +1,6 @@
 package com.rehivetech.beeeon.network.xml.condition;
 
-import com.rehivetech.beeeon.adapter.device.Device;
+import com.rehivetech.beeeon.household.device.Device;
 
 //new drop
 public class LesserEqualFunc extends ConditionFunction {

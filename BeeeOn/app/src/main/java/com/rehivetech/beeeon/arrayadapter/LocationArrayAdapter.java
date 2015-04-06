@@ -11,8 +11,8 @@ import android.widget.TextView;
 
 import com.rehivetech.beeeon.NameIdentifierComparator;
 import com.rehivetech.beeeon.R;
-import com.rehivetech.beeeon.adapter.Adapter;
-import com.rehivetech.beeeon.adapter.location.Location;
+import com.rehivetech.beeeon.household.adapter.Adapter;
+import com.rehivetech.beeeon.household.location.Location;
 import com.rehivetech.beeeon.controller.Controller;
 
 import java.util.ArrayList;
@@ -94,7 +94,7 @@ public class LocationArrayAdapter extends ArrayAdapter<Location> {
 
 		Adapter adapter = mController.getActiveAdapter();
 		if (adapter != null) {
-			locations = mController.getLocations(adapter.getId());
+			locations = mController.getLocationsModel().getLocationsByAdapter(adapter.getId());
 		}
 
 		// Add "missing" default rooms

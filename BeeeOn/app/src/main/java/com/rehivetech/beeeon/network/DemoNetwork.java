@@ -3,25 +3,25 @@ package com.rehivetech.beeeon.network;
 import android.content.Context;
 
 import com.rehivetech.beeeon.Constants;
-import com.rehivetech.beeeon.adapter.Adapter;
-import com.rehivetech.beeeon.adapter.device.Device;
-import com.rehivetech.beeeon.adapter.device.Device.SaveDevice;
-import com.rehivetech.beeeon.adapter.device.DeviceLog;
-import com.rehivetech.beeeon.adapter.device.DeviceLog.DataInterval;
-import com.rehivetech.beeeon.adapter.device.DeviceLog.DataType;
-import com.rehivetech.beeeon.adapter.device.DeviceType;
-import com.rehivetech.beeeon.adapter.device.Facility;
-import com.rehivetech.beeeon.adapter.device.RefreshInterval;
-import com.rehivetech.beeeon.adapter.device.values.BaseEnumValue;
-import com.rehivetech.beeeon.adapter.device.values.BaseEnumValue.Item;
-import com.rehivetech.beeeon.adapter.location.Location;
+import com.rehivetech.beeeon.household.adapter.Adapter;
+import com.rehivetech.beeeon.household.device.Device;
+import com.rehivetech.beeeon.household.device.Device.SaveDevice;
+import com.rehivetech.beeeon.household.device.DeviceLog;
+import com.rehivetech.beeeon.household.device.DeviceLog.DataInterval;
+import com.rehivetech.beeeon.household.device.DeviceLog.DataType;
+import com.rehivetech.beeeon.household.device.DeviceType;
+import com.rehivetech.beeeon.household.device.Facility;
+import com.rehivetech.beeeon.household.device.RefreshInterval;
+import com.rehivetech.beeeon.household.device.values.BaseEnumValue;
+import com.rehivetech.beeeon.household.device.values.BaseEnumValue.Item;
+import com.rehivetech.beeeon.household.location.Location;
 import com.rehivetech.beeeon.exception.AppException;
-import com.rehivetech.beeeon.household.User;
-import com.rehivetech.beeeon.household.User.Gender;
-import com.rehivetech.beeeon.household.User.Role;
+import com.rehivetech.beeeon.household.user.User;
+import com.rehivetech.beeeon.household.user.User.Gender;
+import com.rehivetech.beeeon.household.user.User.Role;
 import com.rehivetech.beeeon.network.authentication.IAuthProvider;
 import com.rehivetech.beeeon.network.xml.CustomViewPair;
-import com.rehivetech.beeeon.adapter.watchdog.WatchDog;
+import com.rehivetech.beeeon.household.watchdog.WatchDog;
 import com.rehivetech.beeeon.network.xml.XmlParsers;
 import com.rehivetech.beeeon.network.xml.action.ComplexAction;
 import com.rehivetech.beeeon.network.xml.condition.Condition;
@@ -162,6 +162,11 @@ public class DemoNetwork implements INetwork {
 	@Override
 	public void setBT(String token) {
 		mBT = token;
+	}
+
+	@Override
+	public boolean hasBT() {
+		return !mBT.isEmpty();
 	}
 
 	@Override
@@ -472,7 +477,7 @@ public class DemoNetwork implements INetwork {
 	@Override
 	public boolean updateLocations(String adapterId, List<Location> locations) {
 		for (Location location : locations) {
-			if (!updateLocation(adapterId, location)) {
+			if (!updateLocation(location)) {
 				return false;
 			}
 		}
@@ -481,8 +486,8 @@ public class DemoNetwork implements INetwork {
 	}
 
 	@Override
-	public boolean updateLocation(String adapterId, Location location) {
-		AdapterHolder holder = mAdapters.get(adapterId);
+	public boolean updateLocation(Location location) {
+		AdapterHolder holder = mAdapters.get(location.getAdapterId());
 		if (holder == null) {
 			return false;
 		}
@@ -497,8 +502,8 @@ public class DemoNetwork implements INetwork {
 	}
 
 	@Override
-	public boolean deleteLocation(String adapterId, Location location) {
-		AdapterHolder holder = mAdapters.get(adapterId);
+	public boolean deleteLocation(Location location) {
+		AdapterHolder holder = mAdapters.get(location.getAdapterId());
 		if (holder == null) {
 			return false;
 		}
@@ -507,8 +512,8 @@ public class DemoNetwork implements INetwork {
 	}
 
 	@Override
-	public Location createLocation(String adapterId, Location location) {
-		AdapterHolder holder = mAdapters.get(adapterId);
+	public Location createLocation(Location location) {
+		AdapterHolder holder = mAdapters.get(location.getAdapterId());
 		if (holder == null) {
 			return null;
 		}

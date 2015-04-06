@@ -3,8 +3,7 @@ package com.rehivetech.beeeon.asynctask;
 import android.content.Context;
 import android.os.AsyncTask;
 
-import com.rehivetech.beeeon.activity.fragment.SensorDetailFragment;
-import com.rehivetech.beeeon.adapter.device.DeviceLog;
+import com.rehivetech.beeeon.household.device.DeviceLog;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.pair.LogDataPair;
 
@@ -24,8 +23,8 @@ public class GetDeviceLogTask extends AsyncTask<LogDataPair, Void, DeviceLog> {
 		LogDataPair pair = pairs[0]; // expects only one device at a time is sent there
 		Controller controller = Controller.getInstance(mContext);
 		// Load log data if needed
-		controller.reloadDeviceLog(pair);
-		return controller.getDeviceLog(pair);
+		controller.getDeviceLogsModel().reloadDeviceLog(pair);
+		return controller.getDeviceLogsModel().getDeviceLog(pair);
 	}
 
 	@Override

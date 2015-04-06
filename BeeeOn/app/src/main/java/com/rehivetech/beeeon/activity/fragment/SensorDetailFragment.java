@@ -11,7 +11,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -26,17 +25,17 @@ import com.rehivetech.beeeon.Constants;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.activity.SensorDetailActivity;
 import com.rehivetech.beeeon.activity.SensorEditActivity;
-import com.rehivetech.beeeon.adapter.Adapter;
-import com.rehivetech.beeeon.adapter.device.Device;
-import com.rehivetech.beeeon.adapter.device.DeviceLog;
-import com.rehivetech.beeeon.adapter.device.DeviceLog.DataInterval;
-import com.rehivetech.beeeon.adapter.device.DeviceLog.DataType;
-import com.rehivetech.beeeon.adapter.device.Facility;
-import com.rehivetech.beeeon.adapter.device.values.BaseEnumValue;
-import com.rehivetech.beeeon.adapter.device.values.BaseValue;
-import com.rehivetech.beeeon.adapter.device.values.OnOffValue;
-import com.rehivetech.beeeon.adapter.device.values.OpenClosedValue;
-import com.rehivetech.beeeon.adapter.location.Location;
+import com.rehivetech.beeeon.household.adapter.Adapter;
+import com.rehivetech.beeeon.household.device.Device;
+import com.rehivetech.beeeon.household.device.DeviceLog;
+import com.rehivetech.beeeon.household.device.DeviceLog.DataInterval;
+import com.rehivetech.beeeon.household.device.DeviceLog.DataType;
+import com.rehivetech.beeeon.household.device.Facility;
+import com.rehivetech.beeeon.household.device.values.BaseEnumValue;
+import com.rehivetech.beeeon.household.device.values.BaseValue;
+import com.rehivetech.beeeon.household.device.values.OnOffValue;
+import com.rehivetech.beeeon.household.device.values.OpenClosedValue;
+import com.rehivetech.beeeon.household.location.Location;
 import com.rehivetech.beeeon.asynctask.ActorActionTask;
 import com.rehivetech.beeeon.asynctask.CallbackTask.CallbackTaskListener;
 import com.rehivetech.beeeon.asynctask.GetDeviceLogTask;
@@ -129,7 +128,7 @@ public class SensorDetailFragment extends Fragment {
 		Log.d(TAG, "OnCreate - Here 1 " + mCurPageNumber);
 		mActivity = (SensorDetailActivity) getActivity();
 		mController = Controller.getInstance(mActivity);
-		mAdapter = mController.getAdapter(mAdapterId);
+		mAdapter = mController.getAdaptersModel().getAdapter(mAdapterId);
 	}
 
 	@Override
@@ -149,11 +148,11 @@ public class SensorDetailFragment extends Fragment {
 			mLocationID = savedInstanceState.getString(ARG_LOC_ID);
 			mSelPageNumber = savedInstanceState.getInt(ARG_SEL_PAGE);
 			mCurPageNumber = savedInstanceState.getInt(ARG_CUR_PAGE);
-			mAdapter = mController.getAdapter(mAdapterId);
+			mAdapter = mController.getAdaptersModel().getAdapter(mAdapterId);
 			mActivity = (SensorDetailActivity) getActivity();
 		}
 		Log.d(TAG,"OnActivityCreated");
-		mDevice = mController.getDevice(mAdapterId, mDeviceID);
+		mDevice = mController.getFacilitiesModel().getDevice(mAdapterId, mDeviceID);
 		if (mDevice != null) {
 			Log.d(TAG, String.format("ID: %s, Name: %s", mDevice.getId(), mDevice.getName()));
 			initLayout(mDevice);
@@ -258,9 +257,9 @@ public class SensorDetailFragment extends Fragment {
 		if (mController != null) {
 			Location location = null;
 
-			Adapter adapter = mController.getAdapter(mAdapterId);
+			Adapter adapter = mController.getAdaptersModel().getAdapter(mAdapterId);
 			if (adapter != null) {
-				location = mController.getLocation(adapter.getId(), device.getFacility().getLocationId());
+				location = mController.getLocationsModel().getLocation(adapter.getId(), device.getFacility().getLocationId());
 			}
 
 			if (location != null) {
@@ -275,7 +274,7 @@ public class SensorDetailFragment extends Fragment {
 		}
 
 		Facility facility = device.getFacility();
-		Adapter adapter = mController.getAdapter(facility.getAdapterId());
+		Adapter adapter = mController.getAdaptersModel().getAdapter(facility.getAdapterId());
 
 		// UserSettings can be null when user is not logged in!
 		SharedPreferences prefs = mController.getUserSettings();
@@ -515,7 +514,7 @@ public class SensorDetailFragment extends Fragment {
 			@Override
 			public void onExecute(boolean success) {
 				// Get new device
-				mDevice = mController.getDevice(device.getFacility().getAdapterId(), device.getId());
+				mDevice = mController.getFacilitiesModel().getDevice(device.getFacility().getAdapterId(), device.getId());
 
 				// Set icon of sensor
 				mIcon.setImageResource(mDevice.getIconResource());
@@ -540,7 +539,7 @@ public class SensorDetailFragment extends Fragment {
 					return;
 				}
 				Log.d(TAG, "Fragment - Start reload task");
-				mDevice = mController.getDevice(adapterId, mDeviceID);
+				mDevice = mController.getFacilitiesModel().getDevice(adapterId, mDeviceID);
 				if (mDevice == null) {
 					Log.d(TAG, "Fragment - Stop reload task");
 					return;

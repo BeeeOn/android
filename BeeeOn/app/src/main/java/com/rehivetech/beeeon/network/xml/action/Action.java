@@ -3,7 +3,7 @@
  */
 package com.rehivetech.beeeon.network.xml.action;
 
-import com.rehivetech.beeeon.adapter.device.Device;
+import com.rehivetech.beeeon.household.device.Device;
 
 /**
  * @author ThinkDeep

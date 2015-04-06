@@ -16,8 +16,8 @@ import android.widget.Button;
 import android.widget.Toast;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.activity.MainActivity;
-import com.rehivetech.beeeon.adapter.Adapter;
-import com.rehivetech.beeeon.adapter.device.Facility;
+import com.rehivetech.beeeon.household.adapter.Adapter;
+import com.rehivetech.beeeon.household.device.Facility;
 import com.rehivetech.beeeon.asynctask.CallbackTask.CallbackTaskListener;
 import com.rehivetech.beeeon.asynctask.PairRequestTask;
 import com.rehivetech.beeeon.asynctask.ReloadUninitializedFacilitiesTask;
@@ -61,7 +61,7 @@ public class AddSensorFragmentDialog extends TrackDialogFragment {
 
 		// Get activity and controller
 		mActivity = (MainActivity) getActivity();
-		mController = Controller.getInstance(mActivity.getApplicationContext());
+		mController = Controller.getInstance(mActivity);
 
 		// Use the Builder class for convenient dialog construction
 		AlertDialog.Builder builder = new AlertDialog.Builder(mActivity);
@@ -244,7 +244,7 @@ public class AddSensorFragmentDialog extends TrackDialogFragment {
 					return;
 				}
 
-				List<Facility> facilities = mController.getUninitializedFacilities(mAdapter.getId());
+				List<Facility> facilities = mController.getUninitializedFacilitiesModel().getUninitializedFacilitiesByAdapter(mAdapter.getId());
 
 				if (facilities.size() > 0) {
 					if (mCountDownTimer != null) {

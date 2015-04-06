@@ -23,9 +23,9 @@ import com.rehivetech.beeeon.Constants;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.SetupSensorFragmentAdapter;
 import com.rehivetech.beeeon.activity.fragment.SetupSensorFragment;
-import com.rehivetech.beeeon.adapter.Adapter;
-import com.rehivetech.beeeon.adapter.device.Facility;
-import com.rehivetech.beeeon.adapter.location.Location;
+import com.rehivetech.beeeon.household.adapter.Adapter;
+import com.rehivetech.beeeon.household.device.Facility;
+import com.rehivetech.beeeon.household.location.Location;
 import com.rehivetech.beeeon.asynctask.CallbackTask.CallbackTaskListener;
 import com.rehivetech.beeeon.asynctask.InitializeFacilityTask;
 import com.rehivetech.beeeon.base.BaseApplicationActivity;
@@ -131,7 +131,7 @@ public class SetupSensorActivity extends BaseApplicationActivity {
 				mListOfName = mFragment.getListOfName();
 				mNewLocation = mFragment.getNewLocation();
 				mNewIconSpinner = mFragment.getNewIconSpinner();
-				Facility newFacility = mController.getUninitializedFacilities(mPairAdapter.getId()).get(0);
+				Facility newFacility = mController.getUninitializedFacilitiesModel().getUninitializedFacilitiesByAdapter(mPairAdapter.getId()).get(0);
 
 				// Controll if Names arent empty
 				for (int i = 0; i < newFacility.getDevices().size(); i++) {

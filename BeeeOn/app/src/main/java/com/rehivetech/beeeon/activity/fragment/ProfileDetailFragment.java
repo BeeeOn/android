@@ -27,7 +27,7 @@ import com.rehivetech.beeeon.arrayadapter.GamCategoryListAdapter;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.gamification.AchievementList;
 import com.rehivetech.beeeon.gamification.GamificationCategory;
-import com.rehivetech.beeeon.household.User;
+import com.rehivetech.beeeon.household.user.User;
 import com.rehivetech.beeeon.socialNetworks.Facebook;
 import com.rehivetech.beeeon.socialNetworks.Twitter;
 import com.rehivetech.beeeon.util.Log;

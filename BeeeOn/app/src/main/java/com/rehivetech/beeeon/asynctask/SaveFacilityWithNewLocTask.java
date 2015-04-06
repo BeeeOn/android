@@ -2,13 +2,9 @@ package com.rehivetech.beeeon.asynctask;
 
 import android.content.Context;
 
-import com.rehivetech.beeeon.adapter.device.Device.SaveDevice;
-import com.rehivetech.beeeon.adapter.location.Location;
+import com.rehivetech.beeeon.household.location.Location;
 import com.rehivetech.beeeon.controller.Controller;
-import com.rehivetech.beeeon.pair.InitializeFacilityPair;
 import com.rehivetech.beeeon.pair.SaveFacilityWithNewLocPair;
-
-import java.util.EnumSet;
 
 public class SaveFacilityWithNewLocTask extends CallbackTask<SaveFacilityWithNewLocPair> {
 
@@ -22,14 +18,14 @@ public class SaveFacilityWithNewLocTask extends CallbackTask<SaveFacilityWithNew
 
 		if (pair.location.getId().equals(Location.NEW_LOCATION_ID)) {
 			// We need to save new location to server first
-			Location newLocation = controller.addLocation(pair.location);
+			Location newLocation = controller.getLocationsModel().createLocation(pair.location);
 			if (newLocation == null)
 				return false;
 
 			pair.facility.setLocationId(newLocation.getId());
 		}
 
-		return controller.saveFacility(pair.facility, pair.what);
+		return controller.getFacilitiesModel().saveFacility(pair.facility, pair.what);
 	}
 
 }

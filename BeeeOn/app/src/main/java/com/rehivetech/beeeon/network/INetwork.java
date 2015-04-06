@@ -1,15 +1,15 @@
 package com.rehivetech.beeeon.network;
 
-import com.rehivetech.beeeon.adapter.Adapter;
-import com.rehivetech.beeeon.adapter.device.Device;
-import com.rehivetech.beeeon.adapter.device.Device.SaveDevice;
-import com.rehivetech.beeeon.adapter.device.DeviceLog;
-import com.rehivetech.beeeon.adapter.device.Facility;
-import com.rehivetech.beeeon.adapter.location.Location;
-import com.rehivetech.beeeon.household.User;
+import com.rehivetech.beeeon.household.adapter.Adapter;
+import com.rehivetech.beeeon.household.device.Device;
+import com.rehivetech.beeeon.household.device.Device.SaveDevice;
+import com.rehivetech.beeeon.household.device.DeviceLog;
+import com.rehivetech.beeeon.household.device.Facility;
+import com.rehivetech.beeeon.household.location.Location;
+import com.rehivetech.beeeon.household.user.User;
 import com.rehivetech.beeeon.network.authentication.IAuthProvider;
 import com.rehivetech.beeeon.network.xml.CustomViewPair;
-import com.rehivetech.beeeon.adapter.watchdog.WatchDog;
+import com.rehivetech.beeeon.household.watchdog.WatchDog;
 import com.rehivetech.beeeon.network.xml.action.ComplexAction;
 import com.rehivetech.beeeon.network.xml.condition.Condition;
 import com.rehivetech.beeeon.pair.LogDataPair;
@@ -73,6 +73,12 @@ public interface INetwork {
 	 * @return
 	 */
 	public void setBT(String token);
+
+	/**
+	 * Check if beeeon-token is present (but does NOT check if it is still valid on server)
+	 * @return
+	 */
+	public boolean hasBT();
 
     /**
      * Download information about actual user from server
@@ -265,23 +271,21 @@ public interface INetwork {
 
 	/**
 	 * Method call to server to update location
-	 * 
-	 * @param adapterID
+	 *
 	 * @param location
 	 * @return
 	 */
-	public boolean updateLocation(String adapterID, Location location);
+	public boolean updateLocation(Location location);
 
 	/**
 	 * Method call to server and delete location
-	 * 
+	 *
 	 * @param location
-	 *            to delete
 	 * @return true room is deleted, false otherwise
 	 */
-	public boolean deleteLocation(String adapterID, Location location);
+	public boolean deleteLocation(Location location);
 
-	public Location createLocation(String adapterID, Location location);
+	public Location createLocation(Location location);
 
 	// /////////////////////////////////////////////////////////////////////////////////
 	// /////////////////////////////////////VIEWS///////////////////////////////////////

@@ -19,10 +19,10 @@ import android.os.PowerManager;
 import android.os.SystemClock;
 import android.util.SparseArray;
 import com.rehivetech.beeeon.R;
-import com.rehivetech.beeeon.adapter.Adapter;
-import com.rehivetech.beeeon.adapter.device.Device;
-import com.rehivetech.beeeon.adapter.device.Facility;
-import com.rehivetech.beeeon.adapter.device.RefreshInterval;
+import com.rehivetech.beeeon.household.adapter.Adapter;
+import com.rehivetech.beeeon.household.device.Device;
+import com.rehivetech.beeeon.household.device.Facility;
+import com.rehivetech.beeeon.household.device.RefreshInterval;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.exception.AppException;
 import com.rehivetech.beeeon.util.Log;
@@ -153,7 +153,7 @@ public class WidgetUpdateService extends Service {
 		SensorWidgetProvider widgetProvider = new SensorWidgetProvider();
 		long now = SystemClock.elapsedRealtime();
 
-		Controller controller = Controller.getInstance(getApplicationContext());
+		Controller controller = Controller.getInstance(this);
 		SharedPreferences userSettings = controller.getUserSettings();
 
 		// UserSettings can be null when user is not logged in!
@@ -161,7 +161,7 @@ public class WidgetUpdateService extends Service {
 		TimeHelper timeHelper = (userSettings == null) ? null : new TimeHelper(userSettings);
 
 		// Reload adapters to have data about Timezone offset
-		controller.reloadAdapters(false);
+		controller.getAdaptersModel().reloadAdapters(false);
 
 		boolean forceUpdate = intent.getBooleanExtra(EXTRA_FORCE_UPDATE, false);
 
@@ -206,7 +206,7 @@ public class WidgetUpdateService extends Service {
 
 		if (!facilities.isEmpty()) {
 			try {
-				controller.updateFacilities(facilities, forceUpdate);
+				controller.getFacilitiesModel().refreshFacilities(facilities, forceUpdate);
 			} catch (AppException e) {
 				e.printStackTrace(); // Nothing to do here
 			}
@@ -216,8 +216,8 @@ public class WidgetUpdateService extends Service {
 			WidgetData widgetData = widgetsToUpdate.valueAt(i);
 			int widgetId = widgetData.getWidgetId();
 
-			Adapter adapter = controller.getAdapter(widgetData.deviceAdapterId);
-			Device device = controller.getDevice(widgetData.deviceAdapterId, widgetData.deviceId);
+			Adapter adapter = controller.getAdaptersModel().getAdapter(widgetData.deviceAdapterId);
+			Device device = controller.getFacilitiesModel().getDevice(widgetData.deviceAdapterId, widgetData.deviceId);
 
 			if (device != null) {
 				// Get fresh data from device

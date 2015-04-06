@@ -1,9 +1,6 @@
 package com.rehivetech.beeeon.activity;
 
 import android.app.ProgressDialog;
-import android.content.res.Configuration;
-import android.support.v7.app.ActionBarActivity;
-import android.support.v7.app.ActionBar;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -12,7 +9,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.os.Build;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.SeekBar;
@@ -22,12 +18,11 @@ import android.widget.Toast;
 
 import com.rehivetech.beeeon.Constants;
 import com.rehivetech.beeeon.R;
-import com.rehivetech.beeeon.activity.fragment.SensorDetailFragment;
-import com.rehivetech.beeeon.adapter.Adapter;
-import com.rehivetech.beeeon.adapter.device.Device;
-import com.rehivetech.beeeon.adapter.device.Facility;
-import com.rehivetech.beeeon.adapter.device.RefreshInterval;
-import com.rehivetech.beeeon.adapter.location.Location;
+import com.rehivetech.beeeon.household.adapter.Adapter;
+import com.rehivetech.beeeon.household.device.Device;
+import com.rehivetech.beeeon.household.device.Facility;
+import com.rehivetech.beeeon.household.device.RefreshInterval;
+import com.rehivetech.beeeon.household.location.Location;
 import com.rehivetech.beeeon.arrayadapter.LocationArrayAdapter;
 import com.rehivetech.beeeon.arrayadapter.LocationIconAdapter;
 import com.rehivetech.beeeon.asynctask.CallbackTask;
@@ -36,18 +31,12 @@ import com.rehivetech.beeeon.asynctask.SaveFacilityTask;
 import com.rehivetech.beeeon.asynctask.SaveFacilityWithNewLocTask;
 import com.rehivetech.beeeon.base.BaseApplicationActivity;
 import com.rehivetech.beeeon.controller.Controller;
-import com.rehivetech.beeeon.pair.SaveDevicePair;
 import com.rehivetech.beeeon.pair.SaveFacilityPair;
 import com.rehivetech.beeeon.pair.SaveFacilityWithNewLocPair;
 import com.rehivetech.beeeon.util.Log;
-import com.sonyericsson.extras.liveware.aef.registration.Registration;
 
-import org.w3c.dom.Text;
-
-import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -87,7 +76,7 @@ public class SensorEditActivity extends BaseApplicationActivity {
 					.commit();
 		}
 		mActivity = this;
-		mController = Controller.getInstance(mActivity);
+		mController = Controller.getInstance(this);
 
 		// Prepare progress dialog
 		mProgress = new ProgressDialog(this);
@@ -128,7 +117,7 @@ public class SensorEditActivity extends BaseApplicationActivity {
 			Adapter adapter = mController.getActiveAdapter();
 			if(adapter == null)
 				return  false;
-			Device device = mController.getDevice(adapter.getId(),mDeviceId);
+			Device device = mController.getFacilitiesModel().getDevice(adapter.getId(),mDeviceId);
 			Facility facility = device.getFacility();
 
 			if(!mFragment.getName().equals(device.getName())) {
@@ -289,10 +278,10 @@ public class SensorEditActivity extends BaseApplicationActivity {
 			Adapter adapter = mController.getActiveAdapter();
 			if(adapter == null)
 				return;
-			mDevice = mController.getDevice(adapter.getId(), mDeviceID);
+			mDevice = mController.getFacilitiesModel().getDevice(adapter.getId(), mDeviceID);
 			mFacility = mDevice.getFacility();
 			mLocationId = mFacility.getLocationId();
-			mAdapter = mController.getAdapter(mFacility.getAdapterId());
+			mAdapter = mController.getAdaptersModel().getAdapter(mFacility.getAdapterId());
 			initLayout();
 			if(savedInstanceState != null) {
 				mName.setText(savedInstanceState.getString(EXTRA_ACT_NAME));

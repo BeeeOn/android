@@ -25,15 +25,15 @@ import android.widget.ScrollView;
 
 import com.rehivetech.beeeon.Constants;
 import com.rehivetech.beeeon.R;
-import com.rehivetech.beeeon.adapter.Adapter;
+import com.rehivetech.beeeon.household.adapter.Adapter;
 import com.rehivetech.beeeon.arrayadapter.UsersListAdapter;
 import com.rehivetech.beeeon.asynctask.EditUserTask;
-import com.rehivetech.beeeon.asynctask.ReloadAdapterUsersTask;
+import com.rehivetech.beeeon.asynctask.ReloadUsersTask;
 import com.rehivetech.beeeon.asynctask.CallbackTask.CallbackTaskListener;
 import com.rehivetech.beeeon.asynctask.RemoveUserTask;
 import com.rehivetech.beeeon.base.BaseApplicationActivity;
 import com.rehivetech.beeeon.controller.Controller;
-import com.rehivetech.beeeon.household.User;
+import com.rehivetech.beeeon.household.user.User;
 import com.rehivetech.beeeon.pair.UserPair;
 
 import net.i2p.android.ext.floatingactionbutton.FloatingActionButton;
@@ -51,7 +51,7 @@ public class AdapterUsersActivity extends BaseApplicationActivity {
 	private ListView mListActUsers;
 	private ListView mListPenUsers;
 
-	private ReloadAdapterUsersTask mReloadAdapterUsersTask;
+	private ReloadUsersTask mReloadUsersTask;
 	
 	private static final int NAME_ITEM_HEIGHT = 74;
     private Toolbar mToolbar;
@@ -85,7 +85,7 @@ public class AdapterUsersActivity extends BaseApplicationActivity {
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 		
 		// Get selected adapter
-		mAdapter = mController.getAdapter(getIntent().getStringExtra(Constants.GUI_SELECTED_ADAPTER_ID));
+		mAdapter = mController.getAdaptersModel().getAdapter(getIntent().getStringExtra(Constants.GUI_SELECTED_ADAPTER_ID));
 		
 		// Get all users for adapter
 		doReloadAdapterUsersTask(mAdapter.getId(), false);
@@ -173,21 +173,21 @@ public class AdapterUsersActivity extends BaseApplicationActivity {
         }
     }
 	
-	private void doReloadAdapterUsersTask(String adapterId, boolean forceReload) {
-		mReloadAdapterUsersTask = new ReloadAdapterUsersTask(this, forceReload);
+	private void doReloadAdapterUsersTask(final String adapterId, boolean forceReload) {
+		mReloadUsersTask = new ReloadUsersTask(this, forceReload);
 
-		mReloadAdapterUsersTask.setListener(new CallbackTaskListener() {
+		mReloadUsersTask.setListener(new CallbackTaskListener() {
 
 			@Override
 			public void onExecute(boolean success) {
-				mAdapterUsers = mController.getUsers();
+				mAdapterUsers = mController.getUsersModel().getUsersByAdapter(adapterId);
 				
 				initLayouts();
 			}
 
 		});
 
-		mReloadAdapterUsersTask.execute(adapterId);
+		mReloadUsersTask.execute(adapterId);
 	}
 
 

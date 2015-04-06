@@ -7,13 +7,13 @@ package com.rehivetech.beeeon.network.xml;
 import android.util.Xml;
 
 import com.rehivetech.beeeon.Constants;
-import com.rehivetech.beeeon.adapter.device.Device;
-import com.rehivetech.beeeon.adapter.device.Device.SaveDevice;
-import com.rehivetech.beeeon.adapter.device.Facility;
-import com.rehivetech.beeeon.adapter.location.Location;
+import com.rehivetech.beeeon.household.device.Device;
+import com.rehivetech.beeeon.household.device.Device.SaveDevice;
+import com.rehivetech.beeeon.household.device.Facility;
+import com.rehivetech.beeeon.household.location.Location;
 import com.rehivetech.beeeon.exception.AppException;
 import com.rehivetech.beeeon.exception.NetworkError;
-import com.rehivetech.beeeon.household.User;
+import com.rehivetech.beeeon.household.user.User;
 import com.rehivetech.beeeon.network.INetwork.NetworkAction;
 import com.rehivetech.beeeon.network.authentication.IAuthProvider;
 import com.rehivetech.beeeon.network.xml.action.Action;
@@ -660,15 +660,13 @@ public class XmlCreator {
 	 * 
 	 * @param bt
 	 *            userID of user
-	 * @param aid
-	 *            adapterID of actual adapter
 	 * @param location
 	 *            to create
 	 * @return created message
 	 * @since 2.2
 	 */
-	public static String createAddRoom(String bt, String aid, Location location) {
-		return createComAttribsVariant(Xconstants.STATE, ADDROOM, Xconstants.BT, bt, Xconstants.AID, aid, Xconstants.LTYPE, Integer.toString(location.getType()), Xconstants.LNAME,
+	public static String createAddRoom(String bt, Location location) {
+		return createComAttribsVariant(Xconstants.STATE, ADDROOM, Xconstants.BT, bt, Xconstants.AID, location.getAdapterId(), Xconstants.LTYPE, Integer.toString(location.getType()), Xconstants.LNAME,
 				location.getName());
 	}
 
@@ -721,15 +719,13 @@ public class XmlCreator {
 	 * 
 	 * @param bt
 	 *            userID of user
-	 * @param aid
-	 *            adapterID of actual adapter
-	 * @param location
-	 *            to delete
+	 * @param lid
+	 *            locationID of location to delete
 	 * @return DelRoom message
 	 * @since 2.2
 	 */
-	public static String createDeleteRoom(String bt, String aid, Location location) {
-		return createComAttribsVariant(Xconstants.STATE, DELROOM, Xconstants.BT, bt, Xconstants.AID, aid, Xconstants.LID, location.getId());
+	public static String createDeleteRoom(String bt, Location location) {
+		return createComAttribsVariant(Xconstants.STATE, DELROOM, Xconstants.BT, bt, Xconstants.AID, location.getAdapterId(), Xconstants.LID, location.getId());
 	}
 
 	/**

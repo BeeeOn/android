@@ -15,7 +15,7 @@ import android.widget.Toast;
 
 import com.rehivetech.beeeon.Constants;
 import com.rehivetech.beeeon.R;
-import com.rehivetech.beeeon.adapter.Adapter;
+import com.rehivetech.beeeon.household.adapter.Adapter;
 import com.rehivetech.beeeon.base.BaseActivity;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.exception.AppException;
@@ -58,7 +58,7 @@ public class LoginActivity extends BaseActivity {
 		Log.i("BeeeOn app starting...", "___________________________________");
 
 		// Get controller
-		mController = Controller.getInstance(getApplicationContext());
+		mController = Controller.getInstance(this);
 
 
 		// Prepare progressDialog
@@ -105,7 +105,7 @@ public class LoginActivity extends BaseActivity {
 		SharedPreferences prefs = getPreferences( MODE_PRIVATE);
 		if(prefs != null && prefs.getBoolean(Constants.GUI_INTRO_PLAY,true)) {
 			Log.d(TAG,"Go to INTRO");
-			prefs.edit().putBoolean(Constants.GUI_INTRO_PLAY,false).commit();
+			prefs.edit().putBoolean(Constants.GUI_INTRO_PLAY,false).apply();
 			Intent intent = new Intent(this, IntroActivity.class);
 			startActivity(intent);
 			return;
@@ -213,7 +213,7 @@ public class LoginActivity extends BaseActivity {
 	protected void setDemoMode(boolean demoMode) {
 		// After changing demo mode must be controller reloaded
 		Controller.setDemoMode(getApplicationContext(), demoMode);
-		mController = Controller.getInstance(getApplicationContext());
+		mController = Controller.getInstance(this);
 	}
 
 	/**
@@ -261,14 +261,14 @@ public class LoginActivity extends BaseActivity {
 
 						// Load all adapters and data for active one on login
 						mProgress.setMessageResource(R.string.progress_loading_adapters);
-						mController.reloadAdapters(true);
+						mController.getAdaptersModel().reloadAdapters(true);
 
 						Adapter active = mController.getActiveAdapter();
 						if (active != null) {
 							// Load data for active adapter
 							mProgress.setMessageResource(R.string.progress_loading_adapter);
-							mController.reloadLocations(active.getId(), true);
-							mController.reloadFacilitiesByAdapter(active.getId(), true);
+							mController.getLocationsModel().reloadLocationsByAdapter(active.getId(), true);
+							mController.getFacilitiesModel().reloadFacilitiesByAdapter(active.getId(), true);
 						}
 
 						if (mLoginCancel) {

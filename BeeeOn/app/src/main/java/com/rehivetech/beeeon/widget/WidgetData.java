@@ -119,7 +119,7 @@ public class WidgetData {
 				.putLong(PREF_DEVICE_LAST_UPDATE_TIME, deviceLastUpdateTime) //
 				.putInt(PREF_DEVICE_REFRESH, deviceRefresh) //
 
-				.commit();
+				.apply();
 	}
 
 	/**
@@ -135,7 +135,7 @@ public class WidgetData {
 
 		getSettings(context) //
 				.edit() //
-				.putInt(PREF_LAYOUT, layout).commit();
+				.putInt(PREF_LAYOUT, layout).apply();
 	}
 
 	/**
@@ -148,7 +148,7 @@ public class WidgetData {
 		getSettings(context) //
 				.edit() //
 				.clear() //
-				.commit();
+				.apply();
 	}
 
 	/**

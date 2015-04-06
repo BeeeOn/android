@@ -41,7 +41,7 @@ public class AddAdapterFragmentDialog extends TrackDialogFragment {
 
 		// Get activity and controller
 		mActivity = (MainActivity) getActivity();
-		mController = Controller.getInstance(mActivity.getApplicationContext());
+		mController = Controller.getInstance(mActivity);
 
 		// Use the Builder class for convenient dialog construction
 		AlertDialog.Builder builder = new AlertDialog.Builder(mActivity);
@@ -131,7 +131,7 @@ public class AddAdapterFragmentDialog extends TrackDialogFragment {
 					// UserSettings can be null when user is not logged in!
 					SharedPreferences prefs = mController.getUserSettings();
 					if (prefs != null) {
-						prefs.edit().putBoolean(Constants.PERSISTENCE_PREF_IGNORE_NO_ADAPTER, true).commit();
+						prefs.edit().putBoolean(Constants.PERSISTENCE_PREF_IGNORE_NO_ADAPTER, true).apply();
 					}
 
 					dialog.dismiss();

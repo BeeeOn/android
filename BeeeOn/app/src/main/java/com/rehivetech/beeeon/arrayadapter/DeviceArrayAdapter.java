@@ -9,8 +9,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.rehivetech.beeeon.R;
-import com.rehivetech.beeeon.adapter.device.Device;
-import com.rehivetech.beeeon.adapter.location.Location;
+import com.rehivetech.beeeon.household.device.Device;
+import com.rehivetech.beeeon.household.location.Location;
 
 import java.util.List;
 

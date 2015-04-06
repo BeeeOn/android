@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.widget.Toast;
 
 import com.rehivetech.beeeon.activity.LoginActivity;
-import com.rehivetech.beeeon.adapter.location.Location;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.gcm.INotificationReceiver;
 import com.rehivetech.beeeon.gcm.Notification;
@@ -27,7 +26,7 @@ public abstract class BaseApplicationActivity extends BaseActivity implements IN
 	public void onResume() {
 		super.onResume();
 
-		Controller controller = Controller.getInstance(getApplicationContext());
+		Controller controller = Controller.getInstance(this);
 
 		if (!controller.isLoggedIn()) {
 			if (!triedLoginAlready) {
@@ -41,7 +40,7 @@ public abstract class BaseApplicationActivity extends BaseActivity implements IN
 			triedLoginAlready = false;
 		}
 
-		controller.registerNotificationReceiver(this);
+		controller.getGcmModel().registerNotificationReceiver(this);
 
 		isPaused = false;
 		onAppResume();
@@ -51,8 +50,8 @@ public abstract class BaseApplicationActivity extends BaseActivity implements IN
 	public void onPause() {
 		super.onPause();
 
-		Controller controller = Controller.getInstance(getApplicationContext());
-		controller.unregisterNotificationReceiver(this);
+		Controller controller = Controller.getInstance(this);
+		controller.getGcmModel().unregisterNotificationReceiver(this);
 
 		isPaused = true;
 		onAppPause();

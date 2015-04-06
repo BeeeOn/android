@@ -9,8 +9,7 @@ import android.widget.SectionIndexer;
 
 import com.rehivetech.beeeon.activity.listItem.ListItem;
 import com.rehivetech.beeeon.activity.listItem.SensorListItem;
-import com.rehivetech.beeeon.activity.menuItem.MenuItem;
-import com.rehivetech.beeeon.adapter.device.Device;
+import com.rehivetech.beeeon.household.device.Device;
 import com.rehivetech.beeeon.util.Log;
 
 import java.util.ArrayList;

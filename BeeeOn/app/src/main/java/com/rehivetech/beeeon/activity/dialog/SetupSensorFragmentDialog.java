@@ -29,10 +29,10 @@ import android.widget.Toast;
 import com.rehivetech.beeeon.NameIdentifierComparator;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.activity.MainActivity;
-import com.rehivetech.beeeon.adapter.Adapter;
-import com.rehivetech.beeeon.adapter.device.Facility;
-import com.rehivetech.beeeon.adapter.location.Location;
-import com.rehivetech.beeeon.adapter.location.Location.DefaultLocation;
+import com.rehivetech.beeeon.household.adapter.Adapter;
+import com.rehivetech.beeeon.household.device.Facility;
+import com.rehivetech.beeeon.household.location.Location;
+import com.rehivetech.beeeon.household.location.Location.DefaultLocation;
 import com.rehivetech.beeeon.arrayadapter.SetupSensorListAdapter;
 import com.rehivetech.beeeon.asynctask.CallbackTask.CallbackTaskListener;
 import com.rehivetech.beeeon.asynctask.InitializeFacilityTask;
@@ -75,7 +75,7 @@ public class SetupSensorFragmentDialog extends TrackDialogFragment {
 
 		// Get activity and controller
 		mActivity = (MainActivity) getActivity();
-		mController = Controller.getInstance(mActivity.getApplicationContext());
+		mController = Controller.getInstance(mActivity);
 
 		// Prepare progress dialog
 		mProgress = new ProgressDialog(mActivity);
@@ -114,7 +114,7 @@ public class SetupSensorFragmentDialog extends TrackDialogFragment {
 
 		// mUnInitDevices = new ArrayList<BaseDevice>();
 
-		mNewFacilities = (List<Facility>) mController.getUninitializedFacilities(mAdapter.getId());
+		mNewFacilities = (List<Facility>) mController.getUninitializedFacilitiesModel().getUninitializedFacilitiesByAdapter(mAdapter.getId());
 		// TODO: add control if is only one new facility
 
 		if (mNewFacilities.isEmpty()) {
@@ -272,7 +272,7 @@ public class SetupSensorFragmentDialog extends TrackDialogFragment {
 		// Set involved time of facility
 		if (timeHelper != null) {
 			Facility facility = mNewFacilities.get(0);
-			Adapter adapter = mController.getAdapter(facility.getAdapterId());
+			Adapter adapter = mController.getAdaptersModel().getAdapter(facility.getAdapterId());
 			time.setText(String.format("%s %s", time.getText(), timeHelper.formatLastUpdate(facility.getInvolveTime(), adapter)));
 		}
 
@@ -297,7 +297,7 @@ public class SetupSensorFragmentDialog extends TrackDialogFragment {
 
 		Adapter adapter = mController.getActiveAdapter();
 		if (adapter != null) {
-			locations = mController.getLocations(adapter.getId());
+			locations = mController.getLocationsModel().getLocationsByAdapter(adapter.getId());
 		}
 
 		// Add "missing" default rooms

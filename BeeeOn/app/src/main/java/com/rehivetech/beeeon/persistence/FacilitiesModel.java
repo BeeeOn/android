@@ -1,9 +1,10 @@
 package com.rehivetech.beeeon.persistence;
 
 import com.rehivetech.beeeon.IdentifierComparator;
-import com.rehivetech.beeeon.adapter.device.Device;
-import com.rehivetech.beeeon.adapter.device.Device.SaveDevice;
-import com.rehivetech.beeeon.adapter.device.Facility;
+import com.rehivetech.beeeon.household.device.Device;
+import com.rehivetech.beeeon.household.device.Device.SaveDevice;
+import com.rehivetech.beeeon.household.device.DeviceType;
+import com.rehivetech.beeeon.household.device.Facility;
 import com.rehivetech.beeeon.exception.AppException;
 import com.rehivetech.beeeon.network.INetwork;
 import com.rehivetech.beeeon.util.Log;
@@ -32,6 +33,12 @@ public class FacilitiesModel {
 		mNetwork = network;
 	}
 
+	/**
+	 * Return facility by ID.
+	 *
+	 * @param id
+	 * @return facility or null if no facility is found
+	 */
 	public Facility getFacility(String adapterId, String id) {
 		Map<String, Facility> adapterFacilities = mFacilities.get(adapterId);
 		if (adapterFacilities == null) {
@@ -41,6 +48,45 @@ public class FacilitiesModel {
 		return adapterFacilities.get(id);
 	}
 
+	/**
+	 * Return device by ID
+	 *
+	 * @param adapterId
+	 * @param id
+	 * @return
+	 */
+	public Device getDevice(String adapterId, String id) {
+		String[] ids = id.split(Device.ID_SEPARATOR, 2);
+
+		Facility facility = getFacility(adapterId, ids[0]);
+		if (facility == null)
+			return null;
+
+		// FIXME: cleanup this after demo
+
+		int iType = -1; // unknown type
+		int offset = 0; // default offset
+
+		if (!ids[1].isEmpty()) {
+			// Get integer representation of the given string value
+			int value = Integer.parseInt(ids[1]);
+
+			// Separate combined value to type and offset
+			iType = value % 256;
+			offset = value / 256;
+		}
+
+		DeviceType type = DeviceType.fromTypeId(iType);
+
+		return facility.getDeviceByType(type, offset);
+	}
+
+	/**
+	 * Return list of all facilities from adapter
+	 *
+	 * @param adapterId
+	 * @return List of facilities (or empty list)
+	 */
 	public List<Facility> getFacilitiesByAdapter(String adapterId) {
 		List<Facility> facilities = new ArrayList<Facility>();
 
@@ -73,6 +119,12 @@ public class FacilitiesModel {
 		}
 	}
 
+	/**
+	 * Return list of all facilities by location from adapter
+	 *
+	 * @param locationId
+	 * @return List of facilities (or empty list)
+	 */
 	public List<Facility> getFacilitiesByLocation(String adapterId, String locationId) {
 		List<Facility> facilities = new ArrayList<Facility>();
 
@@ -94,7 +146,14 @@ public class FacilitiesModel {
 		return lastUpdate == null || lastUpdate.plusSeconds(RELOAD_EVERY_SECONDS).isBeforeNow();
 	}
 
-	public boolean reloadFacilitiesByAdapter(String adapterId, boolean forceReload) throws AppException {
+	/**
+	 * This CAN'T be called on UI thread!
+	 *
+	 * @param adapterId
+	 * @param forceReload
+	 * @return
+	 */
+	public synchronized boolean reloadFacilitiesByAdapter(String adapterId, boolean forceReload) throws AppException {
 		if (!forceReload && !isExpired(adapterId)) {
 			return false;
 		}
@@ -108,7 +167,13 @@ public class FacilitiesModel {
 
 		return false;
 	}
-	
+
+	/**
+	 * This CAN'T be called on UI thread!
+	 *
+	 * @param facilities
+	 * @return
+	 */
 	public boolean refreshFacilities(List<Facility> facilities, boolean forceReload) throws AppException {
 		// Remove not expired facilities
 		for (Facility facility : facilities) {
@@ -162,6 +227,10 @@ public class FacilitiesModel {
 
 	/**
 	 * This reloads data of facility from server...
+	 * This CAN'T be called on UI thread!
+	 *
+	 * @param facility
+	 * @return
 	 */
 	public boolean refreshFacility(Facility facility, boolean forceReload) throws AppException {
 		if (!forceReload && !facility.isExpired()) {
@@ -177,6 +246,16 @@ public class FacilitiesModel {
 		return true;
 	}
 
+	/**
+	 * Save specified settings of facility to server.
+	 *
+	 * This CAN'T be called on UI thread!
+	 *
+	 * @param facility
+	 * @param what
+	 *            type of settings to save
+	 * @return true on success, false otherwise
+	 */
 	public boolean saveFacility(Facility facility, EnumSet<SaveDevice> what) throws AppException {
 		mNetwork.updateFacility(facility.getAdapterId(), facility, what);
 		refreshFacility(facility, true);
@@ -184,7 +263,12 @@ public class FacilitiesModel {
 		return true;
 	}
 
-    public boolean delFacility(Facility facility) throws AppException {
+	/**
+	 * Delete facility
+	 *
+	 * This CAN'T be called on UI thread!
+	 */
+	public boolean deleteFacility(Facility facility) throws AppException {
         String adapterId = facility.getAdapterId();
 		mNetwork.deleteFacility(adapterId,facility);
         refreshFacilities(getFacilitiesByAdapter(adapterId), true);
@@ -192,6 +276,16 @@ public class FacilitiesModel {
         return true;
     }
 
+	/**
+	 * Save specified settings of device to server.
+	 *
+	 * This CAN'T be called on UI thread!
+	 *
+	 * @param device
+	 * @param what
+	 *            type of settings to save
+	 * @return true on success, false otherwise
+	 */
 	public boolean saveDevice(Device device, EnumSet<SaveDevice> what) throws AppException {
 		Facility facility = device.getFacility();
 
@@ -200,7 +294,16 @@ public class FacilitiesModel {
 
 		return true;
 	}
-	
+
+	/**
+	 * Send request to server to switch Actor value.
+	 *
+	 * This CAN'T be called on UI thread!
+	 *
+	 * @param device
+	 *            DeviceType of this device must be actor, i.e., device.getType().isActor() must return true.
+	 * @return true on success, false otherwise
+	 */
 	public boolean switchActor(Device device) throws AppException {
 		if (!device.getType().isActor()) {
 			Log.e(TAG, String.format("Tried to switch NOT-actor device '%s'", device.getName()));

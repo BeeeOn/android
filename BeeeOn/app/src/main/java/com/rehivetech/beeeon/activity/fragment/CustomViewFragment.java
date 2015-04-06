@@ -1,6 +1,5 @@
 package com.rehivetech.beeeon.activity.fragment;
 
-import android.content.Context;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -18,13 +17,13 @@ import com.jjoe64.graphview.series.BaseSeries;
 import com.jjoe64.graphview.series.DataPoint;
 import com.jjoe64.graphview.series.LineGraphSeries;
 import com.rehivetech.beeeon.R;
-import com.rehivetech.beeeon.adapter.Adapter;
-import com.rehivetech.beeeon.adapter.device.Device;
-import com.rehivetech.beeeon.adapter.device.DeviceLog;
-import com.rehivetech.beeeon.adapter.device.DeviceLog.DataInterval;
-import com.rehivetech.beeeon.adapter.device.DeviceLog.DataType;
-import com.rehivetech.beeeon.adapter.device.Facility;
-import com.rehivetech.beeeon.adapter.device.values.BaseEnumValue;
+import com.rehivetech.beeeon.household.adapter.Adapter;
+import com.rehivetech.beeeon.household.device.Device;
+import com.rehivetech.beeeon.household.device.DeviceLog;
+import com.rehivetech.beeeon.household.device.DeviceLog.DataInterval;
+import com.rehivetech.beeeon.household.device.DeviceLog.DataType;
+import com.rehivetech.beeeon.household.device.Facility;
+import com.rehivetech.beeeon.household.device.values.BaseEnumValue;
 import com.rehivetech.beeeon.base.TrackFragment;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.pair.LogDataPair;
@@ -60,7 +59,6 @@ public class CustomViewFragment extends TrackFragment {
 	private static final String TAG = CustomViewFragment.class.getSimpleName();
 
 	private Controller mController;
-	private Context mContext;
 
 	public CustomViewFragment() {
 	}
@@ -69,8 +67,7 @@ public class CustomViewFragment extends TrackFragment {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		mContext = getActivity().getApplicationContext();
-		mController = Controller.getInstance(mContext);
+		mController = Controller.getInstance(getActivity());
 	}
 
 	@Override
@@ -91,14 +88,14 @@ public class CustomViewFragment extends TrackFragment {
 		View row = inflater.inflate(R.layout.custom_graph_item, mLayout, false);
 		// Create and set graphView
 		GraphView graphView = (GraphView) row.findViewById(R.id.graph);
-		GraphViewHelper.prepareGraphView(graphView, mContext, device, fmt, unitsHelper); // empty heading
+		GraphViewHelper.prepareGraphView(graphView, getActivity(), device, fmt, unitsHelper); // empty heading
 		LegendView legend = (LegendView) row.findViewById(R.id.legend);
 		legend.setDrawBackground(true);
 		legend.setIconRound(10f);
 
 		// Set title
 		TextView tv = (TextView) row.findViewById(R.id.graph_label);
-		tv.setText(mContext.getString(device.getType().getStringResource()));
+		tv.setText(getString(device.getType().getStringResource()));
 
 		mGraphs.put(device.getType().getTypeId(), graphView);
 		mLegends.put(device.getType().getTypeId(), legend);
@@ -175,14 +172,14 @@ public class CustomViewFragment extends TrackFragment {
 			return;
 
 		// Prepare helpers
-		final UnitsHelper unitsHelper = new UnitsHelper(mController.getUserSettings(), mContext);
+		final UnitsHelper unitsHelper = new UnitsHelper(mController.getUserSettings(), getActivity());
 		final TimeHelper timeHelper = new TimeHelper(mController.getUserSettings());
 		final DateTimeFormatter fmt = timeHelper.getFormatter(mGraphDateTimeFormat, adapter);
 
 		// Prepare data
 		Log.d(TAG, String.format("Preparing custom view for adapter %s", adapter.getId()));
 
-		for (Facility facility : mController.getFacilitiesByAdapter(adapter.getId())) {
+		for (Facility facility : mController.getFacilitiesModel().getFacilitiesByAdapter(adapter.getId())) {
 			Log.d(TAG, String.format("Preparing facility with %d devices", facility.getDevices().size()));
 
 			for (Device device : facility.getDevices()) {
@@ -232,10 +229,10 @@ public class CustomViewFragment extends TrackFragment {
 						DataInterval.HOUR); // interval
 
 				// Load log data if needed
-				mController.reloadDeviceLog(pair);
+				mController.getDeviceLogsModel().reloadDeviceLog(pair);
 
 				// Get loaded log data (TODO: this could be done in gui)
-				result.put(device, mController.getDeviceLog(pair));
+				result.put(device, mController.getDeviceLogsModel().getDeviceLog(pair));
 			}
 
 			return result;

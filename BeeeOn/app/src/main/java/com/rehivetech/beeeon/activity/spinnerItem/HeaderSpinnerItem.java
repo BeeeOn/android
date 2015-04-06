@@ -1,13 +1,9 @@
 package com.rehivetech.beeeon.activity.spinnerItem;
 
-import android.content.Context;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.rehivetech.beeeon.R;
-import com.rehivetech.beeeon.adapter.device.Device;
-import com.rehivetech.beeeon.adapter.location.Location;
 
 public class HeaderSpinnerItem extends AbstractSpinnerItem {
 	private String mName;

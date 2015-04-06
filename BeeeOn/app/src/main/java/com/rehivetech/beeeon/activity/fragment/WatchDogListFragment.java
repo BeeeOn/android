@@ -22,8 +22,8 @@ import com.melnykov.fab.FloatingActionButton;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.activity.MainActivity;
 import com.rehivetech.beeeon.activity.WatchDogEditRuleActivity;
-import com.rehivetech.beeeon.adapter.Adapter;
-import com.rehivetech.beeeon.adapter.watchdog.WatchDog;
+import com.rehivetech.beeeon.household.adapter.Adapter;
+import com.rehivetech.beeeon.household.watchdog.WatchDog;
 import com.rehivetech.beeeon.arrayadapter.WatchDogListAdapter;
 import com.rehivetech.beeeon.asynctask.CallbackTask;
 import com.rehivetech.beeeon.asynctask.ReloadWatchDogsTask;
@@ -256,7 +256,7 @@ public class WatchDogListFragment extends Fragment{
      * Redraw GUI rules, called asynchronously (callback) when new data available
      */
     private void redrawRules() {
-        mWatchDogs = mController.getAllWatchDogs(mActiveAdapterId);
+        mWatchDogs = mController.getWatchDogsModel().getWatchDogsByAdapter(mActiveAdapterId);
         mWatchDogAdapter.updateData(mWatchDogs);
     }
 

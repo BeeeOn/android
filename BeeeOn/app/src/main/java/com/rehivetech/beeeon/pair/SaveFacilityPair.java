@@ -2,8 +2,8 @@ package com.rehivetech.beeeon.pair;
 
 import java.util.EnumSet;
 
-import com.rehivetech.beeeon.adapter.device.Device.SaveDevice;
-import com.rehivetech.beeeon.adapter.device.Facility;
+import com.rehivetech.beeeon.household.device.Device.SaveDevice;
+import com.rehivetech.beeeon.household.device.Facility;
 
 /**
  * Represents pair of device and location for saving it to server

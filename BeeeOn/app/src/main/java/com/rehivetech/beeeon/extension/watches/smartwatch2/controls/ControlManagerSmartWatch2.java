@@ -49,8 +49,8 @@ import com.sonyericsson.extras.liveware.extension.util.control.ControlObjectClic
 
 import com.rehivetech.beeeon.Constants;
 import com.rehivetech.beeeon.R;
-import com.rehivetech.beeeon.adapter.Adapter;
-import com.rehivetech.beeeon.adapter.device.Facility;
+import com.rehivetech.beeeon.household.adapter.Adapter;
+import com.rehivetech.beeeon.household.device.Facility;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.extension.watches.smartwatch2.SW2ExtensionService;
 import com.rehivetech.beeeon.util.Log;
@@ -69,7 +69,7 @@ public class ControlManagerSmartWatch2 extends ControlManagerBase {
 		super(context, packageName);
 		mControlStack = new Stack<Intent>();
 
-		mController = Controller.getInstance(mContext.getApplicationContext());
+		mController = Controller.getInstance(mContext);
 
 		Intent initialControlIntent;
 		// FIXME dodelat prihlaseni pokud neni v appce
@@ -107,13 +107,13 @@ public class ControlManagerSmartWatch2 extends ControlManagerBase {
 		if (adapterId != null) {
 			Controller controller = Controller.getInstance(mContext);
 
-			controller.reloadAdapters(false);
-			Adapter adapter = controller.getAdapter(adapterId);
+			controller.getAdaptersModel().reloadAdapters(false);
+			Adapter adapter = controller.getAdaptersModel().getAdapter(adapterId);
 			// if default adapter is defined
 			if (adapter != null) {
 				if (strLocation != null) {
-					controller.reloadFacilitiesByAdapter(adapter.getId(), false);
-					List<Facility> sensors = controller.getFacilitiesByLocation(adapter.getId(), strLocation);
+					controller.getFacilitiesModel().reloadFacilitiesByAdapter(adapter.getId(), false);
+					List<Facility> sensors = controller.getFacilitiesModel().getFacilitiesByLocation(adapter.getId(), strLocation);
 					if (sensors != null) {
 						Intent intent = new Intent(mContext, ListSensorControlExtension.class);
 						intent.putExtra(ListSensorControlExtension.EXTRA_ADAPTER_ID, adapter.getId());
@@ -129,7 +129,7 @@ public class ControlManagerSmartWatch2 extends ControlManagerBase {
 			}
 		}
 
-		List<Adapter> adapters = mController.getAdapters();
+		List<Adapter> adapters = mController.getAdaptersModel().getAdapters();
 		if (adapters.size() < 1) {
 			initialControlIntent = new Intent(mContext, TextControl.class);
 			initialControlIntent.putExtra(TextControl.EXTRA_TEXT, mContext.getString(R.string.no_adapter_available));

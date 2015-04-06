@@ -3,6 +3,7 @@ package com.rehivetech.beeeon.asynctask;
 import android.content.Context;
 
 import com.rehivetech.beeeon.controller.Controller;
+import com.rehivetech.beeeon.household.adapter.Adapter;
 import com.rehivetech.beeeon.pair.DelFacilityPair;
 import com.rehivetech.beeeon.pair.DelWatchDogPair;
 
@@ -23,6 +24,11 @@ public class RemoveWatchDogTask extends CallbackTask<DelWatchDogPair> {
 	protected Boolean doInBackground(DelWatchDogPair pair) {
 		Controller controller = Controller.getInstance(mContext);
 
-		return controller.deleteWatchDog(controller.getWatchDog(pair.adapterID, pair.watchdogID));
+		Adapter adapter = controller.getActiveAdapter();
+		if (adapter == null) {
+			return false;
+		}
+
+		return controller.getWatchDogsModel().deleteWatchDog(controller.getWatchDogsModel().getWatchDog(pair.adapterID, pair.watchdogID));
 	}
 }

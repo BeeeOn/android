@@ -2,15 +2,14 @@ package com.rehivetech.beeeon.activity.listItem;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.graphics.Typeface;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.rehivetech.beeeon.R;
-import com.rehivetech.beeeon.adapter.Adapter;
-import com.rehivetech.beeeon.adapter.device.Device;
-import com.rehivetech.beeeon.adapter.device.Facility;
+import com.rehivetech.beeeon.household.adapter.Adapter;
+import com.rehivetech.beeeon.household.device.Device;
+import com.rehivetech.beeeon.household.device.Facility;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.util.TimeHelper;
 import com.rehivetech.beeeon.util.UnitsHelper;
@@ -26,7 +25,7 @@ public class SensorListItem extends AbstractListItem {
 		mDevice = device;
 		mSeparatorVisible = separator;
 		mContext = context;
-		mController = Controller.getInstance(context.getApplicationContext());
+		mController = Controller.getInstance(context);
 
 	}
 
@@ -60,7 +59,7 @@ public class SensorListItem extends AbstractListItem {
 		}
 
 		Facility facility = mDevice.getFacility();
-		Adapter adapter = mController.getAdapter(facility.getAdapterId());
+		Adapter adapter = mController.getAdaptersModel().getAdapter(facility.getAdapterId());
 
 		if (timeHelper != null) {
 			txtTime.setText(String.format("%s %s", mContext.getString(R.string.last_update), timeHelper.formatLastUpdate(facility.getLastUpdate(), adapter)));

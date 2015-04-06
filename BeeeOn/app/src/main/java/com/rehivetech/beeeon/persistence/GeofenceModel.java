@@ -7,7 +7,9 @@ import android.database.sqlite.SQLiteDatabase;
 import android.support.annotation.Nullable;
 
 import com.rehivetech.beeeon.geofence.SimpleGeofence;
+import com.rehivetech.beeeon.geofence.TransitionType;
 import com.rehivetech.beeeon.network.DemoNetwork;
+import com.rehivetech.beeeon.network.INetwork;
 import com.rehivetech.beeeon.persistence.database.DatabaseHelper;
 import com.rehivetech.beeeon.persistence.database.entry.GeofenceEntry;
 import com.rehivetech.beeeon.util.Log;
@@ -23,9 +25,11 @@ public class GeofenceModel {
 
 	private static final String TAG = GeofenceModel.class.getSimpleName();
 
+	INetwork mNetwork;
 	Context mContext;
 
-	public GeofenceModel(Context context) {
+	public GeofenceModel(INetwork network, Context context) {
+		mNetwork = network;
 		mContext = context;
 	}
 
@@ -99,6 +103,13 @@ public class GeofenceModel {
 		return geofenceList;
 	}
 
+	/**
+	 * Control if actual user has the geofence registered.
+	 *
+	 * @param userId
+	 * @param geofenceId Geofence ID which is unique per user for all devices
+	 * @return <code>True</code> if actual user has geofence registered. <code>False</code> otherwise.
+	 */
 	public boolean exist(String userId, String geofenceId) {
 		SQLiteDatabase db = DatabaseHelper.getInstance(mContext).getReadableDatabase();
 
@@ -145,6 +156,18 @@ public class GeofenceModel {
 		db.insert(GeofenceEntry.TABLE_NAME, null, values);
 
 		db.close();
+	}
+
+
+	/**
+	 * This CAN'T be called on UI thread!
+	 *
+	 * @param geofenceId Geofence ID which is unique per user for all devices
+	 * @param type
+	 */
+	public void setPassBorder(String geofenceId, TransitionType type) {
+		Log.i(TAG, "Passing geofence and seding to server");
+		mNetwork.passBorder(geofenceId, type.getString());
 	}
 
 }

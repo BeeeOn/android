@@ -34,7 +34,7 @@ public class GcmMessageHandler extends IntentService {
 	public void onCreate() {
 		super.onCreate();
 		mHandler = new Handler();
-		mController = Controller.getInstance(getApplicationContext());
+		mController = Controller.getInstance(this);
 	}
 
 	@Override
@@ -68,38 +68,19 @@ public class GcmMessageHandler extends IntentService {
 				return;
 			}
 
-			// control email if it equals with actual user
-			if (!notification.getUserId().equals(mController.getActualUser().getId())) {
-				Log.w(TAG, GcmHelper.TAG_GCM + notification.getUserId() + " != " + mController.getLastUserId());
+			// control userId if it equals with actual user
+			String userId = mController.getActualUser().getId();
+			if (!notification.getUserId().equals(userId)) {
+				Log.w(TAG, GcmHelper.TAG_GCM + notification.getUserId() + " != " + userId);
 				Log.w(TAG, GcmHelper.TAG_GCM + "Notification user ID wasn't verified. Server GCM ID will be deleted.");
 
-				final String gcmId = mController.getGCMRegistrationId();
-				if (!notification.getUserId().isEmpty() && !gcmId.isEmpty()) {
-					Thread t = new Thread() {
-						public void run() {
-							Thread t = new Thread() {
-								public void run() {
-									try {
-										mController.deleteGCM(notification.getUserId(), gcmId);
-									} catch (Exception e) {
-										// do nothing
-										Log.w(TAG, GcmHelper.TAG_GCM +
-												"Logout: Delete GCM ID failed: " + e.getLocalizedMessage());
-									}
-								}
-							};
-							t.start();
-						}
-					};
-				}
-			}
-
-			// EVERYTHING VERIFIED SUCCESSFULLY, MAKE ACTION HERE
-			else {
+				mController.getGcmModel().deleteGCM(notification.getUserId(), null);
+			} else {
+				// EVERYTHING VERIFIED SUCCESSFULLY, MAKE ACTION HERE
 				Log.i(TAG, GcmHelper.TAG_GCM + "Received : (" + messageType + ")  " + notification.getMessage());
 
 				// pass notification to controller
-				int notifRec = mController.receiveNotification(notification);
+				int notifRec = mController.getGcmModel().receiveNotification(notification);
 				Log.i(TAG, GcmHelper.TAG_GCM + "Controller passed notification to " + notifRec + " reciever(s).");
 
 				handleNotification(notification);

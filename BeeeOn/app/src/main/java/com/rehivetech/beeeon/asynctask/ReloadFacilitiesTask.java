@@ -20,8 +20,8 @@ public class ReloadFacilitiesTask extends CallbackTask<String> {
 	protected Boolean doInBackground(String adapterId) {
 		Controller controller = Controller.getInstance(mContext);
 
-		controller.reloadLocations(adapterId, mForceReload);
-		controller.reloadFacilitiesByAdapter(adapterId, mForceReload);
+		controller.getLocationsModel().reloadLocationsByAdapter(adapterId, mForceReload);
+		controller.getFacilitiesModel().reloadFacilitiesByAdapter(adapterId, mForceReload);
 
 		return true;
 	}

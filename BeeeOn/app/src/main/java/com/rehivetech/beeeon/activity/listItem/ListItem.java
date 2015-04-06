@@ -2,8 +2,6 @@ package com.rehivetech.beeeon.activity.listItem;
 
 import android.view.View;
 
-import com.rehivetech.beeeon.adapter.device.Device;
-
 public interface ListItem {
 	public static final String ID_UNDEFINED = "id_undefined";
 

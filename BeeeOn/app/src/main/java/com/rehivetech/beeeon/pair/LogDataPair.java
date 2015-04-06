@@ -2,9 +2,9 @@ package com.rehivetech.beeeon.pair;
 
 import org.joda.time.Interval;
 
-import com.rehivetech.beeeon.adapter.device.Device;
-import com.rehivetech.beeeon.adapter.device.DeviceLog.DataInterval;
-import com.rehivetech.beeeon.adapter.device.DeviceLog.DataType;
+import com.rehivetech.beeeon.household.device.Device;
+import com.rehivetech.beeeon.household.device.DeviceLog.DataInterval;
+import com.rehivetech.beeeon.household.device.DeviceLog.DataType;
 
 /**
  * Represents "pair" of data required for get device log

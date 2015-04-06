@@ -6,8 +6,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.rehivetech.beeeon.R;
-import com.rehivetech.beeeon.adapter.device.Device;
-import com.rehivetech.beeeon.adapter.location.Location;
 import com.rehivetech.beeeon.geofence.SimpleGeofence;
 
 public class GeofenceSpinnerItem extends AbstractSpinnerItem {

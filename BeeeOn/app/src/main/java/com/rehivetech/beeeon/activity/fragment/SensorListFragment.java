@@ -34,10 +34,10 @@ import com.rehivetech.beeeon.activity.MainActivity;
 import com.rehivetech.beeeon.activity.SensorDetailActivity;
 import com.rehivetech.beeeon.activity.listItem.LocationListItem;
 import com.rehivetech.beeeon.activity.listItem.SensorListItem;
-import com.rehivetech.beeeon.adapter.Adapter;
-import com.rehivetech.beeeon.adapter.device.Device;
-import com.rehivetech.beeeon.adapter.device.Facility;
-import com.rehivetech.beeeon.adapter.location.Location;
+import com.rehivetech.beeeon.household.adapter.Adapter;
+import com.rehivetech.beeeon.household.device.Device;
+import com.rehivetech.beeeon.household.device.Facility;
+import com.rehivetech.beeeon.household.location.Location;
 import com.rehivetech.beeeon.arrayadapter.SenListAdapter;
 import com.rehivetech.beeeon.asynctask.CallbackTask.CallbackTaskListener;
 import com.rehivetech.beeeon.asynctask.FullReloadTask;
@@ -230,13 +230,13 @@ public class SensorListFragment extends Fragment {
         mFAM = (FloatingActionButton) mView.findViewById(R.id.fab);
 
         // All locations on adapter
-        locations = mController.getLocations(mActiveAdapterId);
+        locations = mController.getLocationsModel().getLocationsByAdapter(mActiveAdapterId);
 
         List<Device> devices = new ArrayList<Device>();
 		for (Location loc : locations) {
 			mSensorAdapter.addHeader(new LocationListItem(loc.getName(),loc.getIconResource(),loc.getId()));
             // all facilities from actual location
-            facilities = mController.getFacilitiesByLocation(mActiveAdapterId,loc.getId());
+            facilities = mController.getFacilitiesModel().getFacilitiesByLocation(mActiveAdapterId,loc.getId());
             for(Facility fac : facilities) {
 				for(int x = 0; x < fac.getDevices().size(); x++) {
 					Device dev = fac.getDevices().get(x);
@@ -255,7 +255,7 @@ public class SensorListFragment extends Fragment {
 		}
 
 		boolean haveDevices = devices.size() > 0;
-		boolean haveAdapters = mController.getAdapters().size() > 0;
+		boolean haveAdapters = mController.getAdaptersModel().getAdapters().size() > 0;
 
 		// Buttons in floating menu
 
@@ -275,12 +275,12 @@ public class SensorListFragment extends Fragment {
 			SharedPreferences prefs = mController.getUserSettings();
 			if (!(prefs != null && !prefs.getBoolean(Constants.PERSISTENCE_PREF_IGNORE_NO_ADAPTER, false))) {
 				// TUTORIAL
-				if(mFirstUseAddAdapter && !mController.isDemoMode()) {
+				if(mFirstUseAddAdapter && !Controller.isDemoMode()) {
 					mFirstUseAddAdapter = false;
 					mActivity.getMenu().closeMenu();
 					TutorialHelper.showAddAdapterTutorial(mActivity, mView);
 					if (prefs != null) {
-						prefs.edit().putBoolean(Constants.TUTORIAL_ADD_ADAPTER_SHOWED, false).commit();
+						prefs.edit().putBoolean(Constants.TUTORIAL_ADD_ADAPTER_SHOWED, false).apply();
 					}
 				}
 			}
@@ -300,13 +300,13 @@ public class SensorListFragment extends Fragment {
 			mFABMenuIcon.add(R.drawable.ic_add_white_24dp);
 			mFABMenuLabels.add(mActivity.getString(R.string.action_addadapter));
 			mFABMenuLabels.add(mActivity.getString(R.string.action_addsensor));
-			if(mFirstUseAddSensor && !mController.isDemoMode()){
+			if(mFirstUseAddSensor && !Controller.isDemoMode()){
 				mFirstUseAddSensor = false;
 				mActivity.getMenu().closeMenu();
 				TutorialHelper.showAddSensorTutorial(mActivity, mView);
 				SharedPreferences prefs = mController.getUserSettings();
 				if (prefs != null) {
-					prefs.edit().putBoolean(Constants.TUTORIAL_ADD_SENSOR_SHOWED, false).commit();
+					prefs.edit().putBoolean(Constants.TUTORIAL_ADD_SENSOR_SHOWED, false).apply();
 				}
 			}
 		}
@@ -365,7 +365,7 @@ public class SensorListFragment extends Fragment {
 					startActivity(intent);
 				}
 			});
-			Adapter tmpAda = mController.getAdapter(mActiveAdapterId);
+			Adapter tmpAda = mController.getAdaptersModel().getAdapter(mActiveAdapterId);
 			if(tmpAda != null) {
 				if(mController.isUserAllowed(tmpAda.getRole())) {
 					mSensorList.setOnItemLongClickListener(new OnItemLongClickListener() {
