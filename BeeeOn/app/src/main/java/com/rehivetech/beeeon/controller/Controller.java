@@ -383,19 +383,6 @@ public final class Controller {
 			((Network) mNetwork).multiSessionEnd();
 	}
 
-	/** Reloading data methods **********************************************/
-
-	/**
-	 * This CAN'T be called on UI thread!
-	 *
-	 * @param adapterId
-	 * @param forceReload
-	 * @return
-	 */
-	public synchronized boolean reloadLocations(String adapterId, boolean forceReload) {
-		return mLocationsModel.reloadLocationsByAdapter(adapterId, forceReload);
-	}
-
 	/**
 	 * Return active adapter.
 	 *
@@ -453,7 +440,7 @@ public final class Controller {
 		}
 
 		// Load locations and facilities, if needed
-		reloadLocations(id, forceReload);
+		mLocationsModel.reloadLocationsByAdapter(id, forceReload);
 		mFacilitiesModel.reloadFacilitiesByAdapter(id, forceReload);
 
 		return true;
@@ -482,25 +469,6 @@ public final class Controller {
 	}
 
 	/** Location methods ****************************************************/
-
-	/**
-	 * Return location from active adapter by id.
-	 *
-	 * @param id
-	 * @return Location if found, null otherwise.
-	 */
-	public Location getLocation(String adapterId, String id) {
-		return mLocationsModel.getLocation(adapterId, id);
-	}
-
-	/**
-	 * Return list of locations from active adapter.
-	 *
-	 * @return List of locations (or empty list)
-	 */
-	public List<Location> getLocations(String adapterId) {
-		return mLocationsModel.getLocationsByAdapter(adapterId);
-	}
 
 	/**
 	 * Deletes location from server.

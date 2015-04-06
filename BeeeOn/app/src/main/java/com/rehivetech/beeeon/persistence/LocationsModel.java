@@ -31,6 +31,12 @@ public class LocationsModel {
 		mContext = context;
 	}
 
+	/**
+	 * Return location from active adapter by id.
+	 *
+	 * @param id
+	 * @return Location if found, null otherwise.
+	 */
 	public Location getLocation(String adapterId, String id) {
 		Map<String, Location> adapterLocations = mLocations.get(adapterId);
 		if (adapterLocations == null) {
@@ -40,6 +46,11 @@ public class LocationsModel {
 		return adapterLocations.get(id);
 	}
 
+	/**
+	 * Return list of locations from active adapter.
+	 *
+	 * @return List of locations (or empty list)
+	 */
 	public List<Location> getLocationsByAdapter(String adapterId) {
 		List<Location> locations = new ArrayList<Location>();
 
@@ -83,7 +94,14 @@ public class LocationsModel {
 		return lastUpdate == null || lastUpdate.plusSeconds(RELOAD_EVERY_SECONDS).isBeforeNow();
 	}
 
-	public boolean reloadLocationsByAdapter(String adapterId, boolean forceReload) {
+	/**
+	 * This CAN'T be called on UI thread!
+	 *
+	 * @param adapterId
+	 * @param forceReload
+	 * @return
+	 */
+	public synchronized boolean reloadLocationsByAdapter(String adapterId, boolean forceReload) {
 		if (!forceReload && !isExpired(adapterId)) {
 			return false;
 		}

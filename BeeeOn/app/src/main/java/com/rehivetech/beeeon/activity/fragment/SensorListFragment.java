@@ -230,7 +230,7 @@ public class SensorListFragment extends Fragment {
         mFAM = (FloatingActionButton) mView.findViewById(R.id.fab);
 
         // All locations on adapter
-        locations = mController.getLocations(mActiveAdapterId);
+        locations = mController.getLocationsModel().getLocationsByAdapter(mActiveAdapterId);
 
         List<Device> devices = new ArrayList<Device>();
 		for (Location loc : locations) {

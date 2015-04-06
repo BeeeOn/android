@@ -297,7 +297,7 @@ public class SetupSensorFragmentDialog extends TrackDialogFragment {
 
 		Adapter adapter = mController.getActiveAdapter();
 		if (adapter != null) {
-			locations = mController.getLocations(adapter.getId());
+			locations = mController.getLocationsModel().getLocationsByAdapter(adapter.getId());
 		}
 
 		// Add "missing" default rooms

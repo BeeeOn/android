@@ -259,7 +259,7 @@ public class SensorDetailFragment extends Fragment {
 
 			Adapter adapter = mController.getAdaptersModel().getAdapter(mAdapterId);
 			if (adapter != null) {
-				location = mController.getLocation(adapter.getId(), device.getFacility().getLocationId());
+				location = mController.getLocationsModel().getLocation(adapter.getId(), device.getFacility().getLocationId());
 			}
 
 			if (location != null) {

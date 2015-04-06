@@ -177,7 +177,7 @@ public class WatchDogEditRuleActivity extends BaseApplicationActivity {
         mUnitsHelper = (mPrefs == null) ? null : new UnitsHelper(mPrefs, this);
 
         // get all locations for spinners
-        mLocations = mController.getLocations(mAdapter.getId());
+        mLocations = mController.getLocationsModel().getLocationsByAdapter(mAdapter.getId());
         // get all geofence areas
 		String userId = mController.getActualUser().getId();
         mGeofences = mController.getGeofenceModel().getAllGeofences(userId);
