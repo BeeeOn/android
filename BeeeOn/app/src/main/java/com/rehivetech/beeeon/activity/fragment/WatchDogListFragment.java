@@ -256,7 +256,7 @@ public class WatchDogListFragment extends Fragment{
      * Redraw GUI rules, called asynchronously (callback) when new data available
      */
     private void redrawRules() {
-        mWatchDogs = mController.getAllWatchDogs(mActiveAdapterId);
+        mWatchDogs = mController.getWatchDogsModel().getWatchDogsByAdapter(mActiveAdapterId);
         mWatchDogAdapter.updateData(mWatchDogs);
     }
 

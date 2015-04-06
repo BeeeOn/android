@@ -21,7 +21,7 @@ public class ReloadWatchDogsTask extends CallbackTask<String> {
 	protected Boolean doInBackground(String adapterId) {
 		Controller controller = Controller.getInstance(mContext);
 
-		return controller.reloadWatchDogs(adapterId, mForceReload);
+		return controller.getWatchDogsModel().reloadWatchDogsByAdapter(adapterId, mForceReload);
 	}
 
 }

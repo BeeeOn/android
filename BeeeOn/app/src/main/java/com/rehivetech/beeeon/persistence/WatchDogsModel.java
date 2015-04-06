@@ -28,6 +28,12 @@ public class WatchDogsModel {
 		mNetwork = network;
 	}
 
+	/**
+	 * Returns a watchdog by parameters
+	 * @param adapterId
+	 * @param id
+	 * @return
+	 */
 	public WatchDog getWatchDog(String adapterId, String id) {
 		Map<String, WatchDog> adapterWatchDogs = mWatchDogs.get(adapterId);
 		if (adapterWatchDogs == null) {
@@ -37,6 +43,11 @@ public class WatchDogsModel {
 		return adapterWatchDogs.get(id);
 	}
 
+	/**
+	 * Return list of watchdogs from a adapter
+	 * @param adapterId
+	 * @return
+	 */
 	public List<WatchDog> getWatchDogsByAdapter(String adapterId) {
 		List<WatchDog> watchdogs = new ArrayList<WatchDog>();
 
@@ -78,6 +89,15 @@ public class WatchDogsModel {
 		return lastUpdate == null || lastUpdate.plusSeconds(RELOAD_EVERY_SECONDS).isBeforeNow();
 	}
 
+	/**
+	 * Reloads watchdogs
+	 *
+	 * This CAN'T be called on UI thread!
+	 *
+	 * @param adapterId
+	 * @param forceReload
+	 * @return
+	 */
 	public boolean reloadWatchDogsByAdapter(String adapterId, boolean forceReload) {
 		if (!forceReload && !isExpired(adapterId)) {
 			return false;

@@ -23,6 +23,6 @@ public class RemoveWatchDogTask extends CallbackTask<DelWatchDogPair> {
 	protected Boolean doInBackground(DelWatchDogPair pair) {
 		Controller controller = Controller.getInstance(mContext);
 
-		return controller.deleteWatchDog(controller.getWatchDog(pair.adapterID, pair.watchdogID));
+		return controller.deleteWatchDog(controller.getWatchDogsModel().getWatchDog(pair.adapterID, pair.watchdogID));
 	}
 }

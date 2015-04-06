@@ -1082,38 +1082,6 @@ public final class Controller {
 	}
 
 	/**
-	 * Return list of watchdogs from a adapter
-	 * @param adapterId
-	 * @return
-	 */
-	public List<WatchDog> getAllWatchDogs(String adapterId){
-		return mWatchDogsModel.getWatchDogsByAdapter(adapterId);
-	}
-
-	/**
-	 * Returns a watchdog by parameters
-	 * @param adapterId
-	 * @param id
-	 * @return
-	 */
-	public WatchDog getWatchDog(String adapterId, String id) {
-		return mWatchDogsModel.getWatchDog(adapterId, id);
-	}
-
-	/**
-	 * Reloads watchdogs
-	 *
-	 * This CAN'T be called on UI thread!
-	 *
-	 * @param adapterId
-	 * @param forceReload
-	 * @return
-	 */
-	public synchronized boolean reloadWatchDogs(String adapterId, boolean forceReload) {
-		return mWatchDogsModel.reloadWatchDogsByAdapter(adapterId, forceReload);
-	}
-
-	/**
 	 * Either edits or creates new watchdog
 	 *
 	 * This CAN'T be called on UI thread!
@@ -1121,6 +1089,7 @@ public final class Controller {
 	 * @param watchdog
 	 * @return
 	 */
+	// FIXME: Tom, move this into WatchDogsModel and then use call via controller.getWatchDogsModel().yourMethod();
 	public boolean saveWatchDog(WatchDog watchdog) {
 		Adapter adapter = getActiveAdapter();
 		if (adapter == null) {
@@ -1149,6 +1118,7 @@ public final class Controller {
 	 * @param watchdog
 	 * @return
 	 */
+	// FIXME: Tom, move this into WatchDogsModel and then use call via controller.getWatchDogsModel().yourMethod();
 	public boolean deleteWatchDog(WatchDog watchdog) {
 		Adapter adapter = getActiveAdapter();
 		if (adapter == null) {

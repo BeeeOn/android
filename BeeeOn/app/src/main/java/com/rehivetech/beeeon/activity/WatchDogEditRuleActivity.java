@@ -191,7 +191,7 @@ public class WatchDogEditRuleActivity extends BaseApplicationActivity {
 
         // get watchdog rule
         if(!mIsNew) {
-            mWatchDog = mController.getWatchDog(mAdapter.getId(), mActiveRuleId);
+            mWatchDog = mController.getWatchDogsModel().getWatchDog(mAdapter.getId(), mActiveRuleId);
             if(mWatchDog == null){
                 Toast.makeText(this, R.string.toast_something_wrong, Toast.LENGTH_LONG).show();
                 finish();
