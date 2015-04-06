@@ -29,7 +29,7 @@ public class GcmRegisterRunnable implements Runnable {
 		this.mContext = context;
 		this.mMaxAttempts = maxAttempts;
 		this.mController = Controller.getInstance(context);
-		this.mOldGcmId = mController.getGCMRegistrationId();
+		this.mOldGcmId = mController.getGcmModel().getGCMRegistrationId();
 	}
 
 	@Override
@@ -86,27 +86,11 @@ public class GcmRegisterRunnable implements Runnable {
 
 		// if new GCM ID is different then the old one, delete old on server side and apply new one
 		if (!mOldGcmId.equals(mNewGcmId)) {
-
-			if (!mOldGcmId.isEmpty()) {
-				final String userId = mController.getLastUserId();
-				if (!userId.isEmpty()) {
-					Thread t = new Thread() {
-						public void run() {
-							try {
-								mController.deleteGCM(userId, mOldGcmId);
-							} catch (Exception e) {
-								// do nothing
-								Log.w(TAG, GcmHelper.TAG_GCM + "Logout: Delete GCM ID failed: " + e.getLocalizedMessage());
-							}
-						}
-					};
-					t.start();
-				}
-			}
+			mController.getGcmModel().deleteGCM(mController.getLastUserId(), mOldGcmId);
 
 			// Persist the regID - no need to register again.
-			mController.setGCMIdLocal(mNewGcmId);
-			mController.setGCMIdServer(mNewGcmId);
+			mController.getGcmModel().setGCMIdLocal(mNewGcmId);
+			mController.getGcmModel().setGCMIdServer(mNewGcmId);
 
 		} else {
 			Log.i(TAG, GcmHelper.TAG_GCM + "New GCM ID is the same, no need to change");

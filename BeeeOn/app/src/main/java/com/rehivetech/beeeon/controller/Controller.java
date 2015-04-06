@@ -7,12 +7,10 @@ import android.graphics.Bitmap;
 import com.rehivetech.beeeon.Constants;
 import com.rehivetech.beeeon.exception.AppException;
 import com.rehivetech.beeeon.exception.NotImplementedException;
-import com.rehivetech.beeeon.gcm.GcmHelper;
 import com.rehivetech.beeeon.gcm.INotificationReceiver;
 import com.rehivetech.beeeon.gcm.Notification;
 import com.rehivetech.beeeon.geofence.TransitionType;
 import com.rehivetech.beeeon.household.adapter.Adapter;
-import com.rehivetech.beeeon.household.location.Location;
 import com.rehivetech.beeeon.household.user.User;
 import com.rehivetech.beeeon.household.user.User.Role;
 import com.rehivetech.beeeon.household.watchdog.WatchDog;
@@ -23,6 +21,7 @@ import com.rehivetech.beeeon.network.authentication.IAuthProvider;
 import com.rehivetech.beeeon.persistence.AdaptersModel;
 import com.rehivetech.beeeon.persistence.DeviceLogsModel;
 import com.rehivetech.beeeon.persistence.FacilitiesModel;
+import com.rehivetech.beeeon.persistence.GcmModel;
 import com.rehivetech.beeeon.persistence.GeofenceModel;
 import com.rehivetech.beeeon.persistence.LocationsModel;
 import com.rehivetech.beeeon.persistence.Persistence;
@@ -79,6 +78,7 @@ public final class Controller {
 	private final DeviceLogsModel mDeviceLogsModel;
 	private final WatchDogsModel mWatchDogsModel;
 	private final GeofenceModel mGeofenceModel;
+	private final GcmModel mGcmModel;
 
 	/**
 	 * Return singleton instance of this Controller. This is thread-safe.
@@ -119,6 +119,7 @@ public final class Controller {
 		mDeviceLogsModel = new DeviceLogsModel(mNetwork);
 		mWatchDogsModel = new WatchDogsModel(mNetwork);
 		mGeofenceModel = new GeofenceModel(mContext);
+		mGcmModel = new GcmModel(mContext, mNetwork, mPersistence, mUser);
 
 		// Load previous user
 		String userId = mPersistence.loadLastUserId();
@@ -176,6 +177,10 @@ public final class Controller {
 
 	public WatchDogsModel getWatchDogsModel() {
 		return mWatchDogsModel;
+	}
+
+	public GcmModel getGcmModel() {
+		return mGcmModel;
 	}
 
 	/** Persistence methods *************************************************/
@@ -307,7 +312,7 @@ public final class Controller {
 			mPersistence.saveLastUserId(mUser.getId());
 			mPersistence.saveLastAuthProvider(authProvider);
 
-			registerGCM();
+			mGcmModel.registerGCM();
 		}
 
 		return true;
@@ -329,27 +334,10 @@ public final class Controller {
 	 * Destroy user session in network and forget him as last logged in user.
 	 */
 	public void logout() {
-		// TODO: Request to logout from server (discard actual communication UID)
+		// TODO: Request to logout from server (discard actual BT)
 
-		// Delete GCM ID on server side
-		if (!(mNetwork instanceof DemoNetwork)) {
-			final String id = mUser.getId();
-			final String gcmId = getGCMRegistrationId();
-			if (!id.isEmpty() && !gcmId.isEmpty()) {
-				// delete GCM ID from server
-				Thread t = new Thread() {
-					public void run() {
-						try {
-							deleteGCM(id, gcmId);
-						} catch (Exception e) {
-							// do nothing
-							Log.w(GcmHelper.TAG_GCM, "Logout: Delete GCM ID failed: " + e.getLocalizedMessage());
-						}
-					}
-				};
-				t.start();
-			}
-		}
+		// Delete GCM id on server side
+		mGcmModel.deleteGCM(mUser.getId(), null);
 
 		// Destroy session
 		mNetwork.setBT("");
@@ -509,123 +497,6 @@ public final class Controller {
 	 */
 	public boolean saveUser(String adapterId, User user) {
 		return mNetwork.updateAccount(adapterId, user);
-	}
-
-	private void registerGCM() {
-		// Send GCM ID to server
-		final String gcmId = sController.getGCMRegistrationId();
-		if (gcmId.isEmpty()) {
-			GcmHelper.registerGCMInBackground(mContext);
-			Log.w(GcmHelper.TAG_GCM, "GCM ID is not accessible in persistence, creating new thread");
-		} else {
-			// send GCM ID to server
-			Thread t = new Thread() {
-				public void run() {
-					try {
-						sController.setGCMIdServer(gcmId);
-					} catch (Exception e) {
-						// do nothing
-						Log.w(GcmHelper.TAG_GCM, "Login: Sending GCM ID to server failed: " + e.getLocalizedMessage());
-					}
-				}
-			};
-			t.start();
-			sController.setGCMIdLocal(gcmId);
-		}
-	}
-
-	/**
-	 * Gets the current registration ID for application on GCM service.
-	 * <p>
-	 * If result is empty, the app needs to register.
-	 *
-	 * This CAN'T be called on UI thread!
-	 *
-	 * @return registration ID, or empty string if there is no existing registration ID.
-	 */
-	public String getGCMRegistrationId() {
-		String registrationId = mPersistence.loadGCMRegistrationId();
-		if (registrationId.isEmpty()) {
-			Log.i(TAG, "GCM: Registration not found.");
-			return "";
-		}
-		// Check if app was updated; if so, it must clear the registration ID
-		// since the existing regID is not guaranteed to work with the new
-		// app version.
-		int registeredVersion = mPersistence.loadLastApplicationVersion();
-		int currentVersion = Utils.getAppVersion(mContext);
-		if (registeredVersion != currentVersion) {
-			// delete actual GCM ID from server
-			try {
-				deleteGCM(mUser.getId(), registrationId);
-			} catch (Exception e) {
-				// do nothing
-				Log.w(GcmHelper.TAG_GCM, "getGCMRegistrationId(): Delete GCM ID failed: " + e.getLocalizedMessage());
-			}
-			mPersistence.saveGCMRegistrationId("");
-			Log.i(TAG, "GCM: App version changed.");
-			return "";
-		}
-		return registrationId;
-	}
-
-	/**
-	 * Delete GCM ID from user
-	 *
-	 * This CAN'T be called on UI thread!
-	 *
-	 * @param userId
-	 * @param gcmID
-	 */
-	public void deleteGCM(String userId, String gcmID) {
-		if (mNetwork instanceof Network) {
-			((Network) mNetwork).deleteGCMID(userId, gcmID);
-		}
-	}
-
-	/**
-	 * Stores the registration ID and app versionCode in the application's {@code SharedPreferences}.
-	 *
-	 * @param gcmId
-	 *            registration ID
-	 */
-	public void setGCMIdLocal(String gcmId) {
-		int appVersion = Utils.getAppVersion(mContext);
-		Log.i(TAG, "Saving GCM ID on app version " + appVersion);
-
-		mPersistence.saveGCMRegistrationId(gcmId);
-		mPersistence.saveLastApplicationVersion(appVersion);
-	}
-
-	/**
-	 * Method set gcmID to server (applied only if there is some user)
-	 *
-	 * This CAN'T be called on UI thread!
-	 *
-	 * @param gcmID
-	 *            to be set
-	 */
-	public void setGCMIdServer(String gcmID) {
-		Log.i(GcmHelper.TAG_GCM, "setGcmIdServer");
-		if (sDemoMode) {
-			Log.i(GcmHelper.TAG_GCM, "DemoMode -> return");
-			return;
-		}
-
-		if (mUser.getId().isEmpty()) {
-			// no user, it will be sent in user login
-			return;
-		}
-
-		try {
-			Log.i(GcmHelper.TAG_GCM, "Set GCM ID to server: " + gcmID);
-			if (mNetwork instanceof Network) {
-				((Network) mNetwork).setGCMID(gcmID);
-			}
-		} catch (Exception e) {
-			// nothing to do
-			Log.e(GcmHelper.TAG_GCM, "Set GCM ID to server failed.");
-		}
 	}
 
 	public User getActualUser() {
