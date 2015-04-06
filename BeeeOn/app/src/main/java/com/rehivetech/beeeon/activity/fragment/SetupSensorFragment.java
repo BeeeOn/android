@@ -69,7 +69,7 @@ public class SetupSensorFragment extends TrackFragment {
 			// CHYBA
 			return;
 		}
-		mNewFacilities = mController.getUninitializedFacilities(mAdapter.getId());
+		mNewFacilities = mController.getUninitializedFacilitiesModel().getUninitializedFacilitiesByAdapter(mAdapter.getId());
 
 		// TODO: sent as parameter if we want first uninitialized device or some
 		// device with particular id

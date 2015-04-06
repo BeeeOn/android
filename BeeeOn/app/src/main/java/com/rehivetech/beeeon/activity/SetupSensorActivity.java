@@ -131,7 +131,7 @@ public class SetupSensorActivity extends BaseApplicationActivity {
 				mListOfName = mFragment.getListOfName();
 				mNewLocation = mFragment.getNewLocation();
 				mNewIconSpinner = mFragment.getNewIconSpinner();
-				Facility newFacility = mController.getUninitializedFacilities(mPairAdapter.getId()).get(0);
+				Facility newFacility = mController.getUninitializedFacilitiesModel().getUninitializedFacilitiesByAdapter(mPairAdapter.getId()).get(0);
 
 				// Controll if Names arent empty
 				for (int i = 0; i < newFacility.getDevices().size(); i++) {

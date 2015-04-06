@@ -204,7 +204,7 @@ public class AddSensorActivity extends BaseApplicationActivity {
 					return;
 				}
 
-				List<Facility> facilities = mController.getUninitializedFacilities(mPairAdapter.getId());
+				List<Facility> facilities = mController.getUninitializedFacilitiesModel().getUninitializedFacilitiesByAdapter(mPairAdapter.getId());
 
 				if (facilities.size() > 0) {
 					mFragment.stopTimer();

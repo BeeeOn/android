@@ -427,17 +427,6 @@ public final class Controller {
 	/**
 	 * This CAN'T be called on UI thread!
 	 *
-	 * @param adapterId
-	 * @param forceReload
-	 * @return
-	 */
-	public synchronized boolean reloadUninitializedFacilitiesByAdapter(String adapterId, boolean forceReload) {
-		return mUninitializedFacilitiesModel.reloadUninitializedFacilitiesByAdapter(adapterId, forceReload);
-	}
-
-	/**
-	 * This CAN'T be called on UI thread!
-	 *
 	 * @param pair
 	 * @return
 	 */
@@ -707,16 +696,6 @@ public final class Controller {
 		DeviceType type = DeviceType.fromTypeId(iType);
 
 		return facility.getDeviceByType(type, offset);
-	}
-
-	/**
-	 * Return list of all uninitialized facilities from adapter
-	 *
-	 * @param adapterId
-	 * @return List of uninitialized facilities (or empty list)
-	 */
-	public List<Facility> getUninitializedFacilities(String adapterId) {
-		return mUninitializedFacilitiesModel.getUninitializedFacilitiesByAdapter(adapterId);
 	}
 
 	/**

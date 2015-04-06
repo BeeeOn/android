@@ -26,6 +26,12 @@ public class UninitializedFacilitiesModel {
 		mNetwork = network;
 	}
 
+	/**
+	 * Return list of all uninitialized facilities from adapter
+	 *
+	 * @param adapterId
+	 * @return List of uninitialized facilities (or empty list)
+	 */
 	public List<Facility> getUninitializedFacilitiesByAdapter(String adapterId) {
 		List<Facility> facilities = new ArrayList<Facility>();
 
@@ -67,7 +73,14 @@ public class UninitializedFacilitiesModel {
 		return lastUpdate == null || lastUpdate.plusSeconds(RELOAD_EVERY_SECONDS).isBeforeNow();
 	}
 
-	public boolean reloadUninitializedFacilitiesByAdapter(String adapterId, boolean forceReload) throws AppException {
+	/**
+	 * This CAN'T be called on UI thread!
+	 *
+	 * @param adapterId
+	 * @param forceReload
+	 * @return
+	 */
+	public synchronized boolean reloadUninitializedFacilitiesByAdapter(String adapterId, boolean forceReload) throws AppException {
 		if (!forceReload && !isExpired(adapterId)) {
 			return false;
 		}

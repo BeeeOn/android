@@ -17,7 +17,7 @@ public class ReloadUninitializedFacilitiesTask extends CallbackTask<String> {
 	protected Boolean doInBackground(String adapterId) {
 		Controller controller = Controller.getInstance(mContext);
 
-		return controller.reloadUninitializedFacilitiesByAdapter(adapterId, mForceReload);
+		return controller.getUninitializedFacilitiesModel().reloadUninitializedFacilitiesByAdapter(adapterId, mForceReload);
 	}
 
 }

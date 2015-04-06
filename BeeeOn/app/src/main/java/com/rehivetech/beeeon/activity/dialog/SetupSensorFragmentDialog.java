@@ -114,7 +114,7 @@ public class SetupSensorFragmentDialog extends TrackDialogFragment {
 
 		// mUnInitDevices = new ArrayList<BaseDevice>();
 
-		mNewFacilities = (List<Facility>) mController.getUninitializedFacilities(mAdapter.getId());
+		mNewFacilities = (List<Facility>) mController.getUninitializedFacilitiesModel().getUninitializedFacilitiesByAdapter(mAdapter.getId());
 		// TODO: add control if is only one new facility
 
 		if (mNewFacilities.isEmpty()) {
