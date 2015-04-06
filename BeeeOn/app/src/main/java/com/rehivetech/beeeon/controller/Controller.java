@@ -23,12 +23,11 @@ import com.rehivetech.beeeon.persistence.GeofenceModel;
 import com.rehivetech.beeeon.persistence.LocationsModel;
 import com.rehivetech.beeeon.persistence.Persistence;
 import com.rehivetech.beeeon.persistence.UninitializedFacilitiesModel;
+import com.rehivetech.beeeon.persistence.UsersModel;
 import com.rehivetech.beeeon.persistence.WatchDogsModel;
 import com.rehivetech.beeeon.util.Log;
 import com.rehivetech.beeeon.util.Utils;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -55,8 +54,6 @@ public final class Controller {
 	/** Network service for communication with server */
 	private final INetwork mNetwork;
 
-	private List<User> mRequestUsers;
-
 	/** Active user object */
 	private final User mUser;
 
@@ -72,6 +69,7 @@ public final class Controller {
 	private final WatchDogsModel mWatchDogsModel;
 	private final GeofenceModel mGeofenceModel;
 	private final GcmModel mGcmModel;
+	private final UsersModel mUsersModel;
 
 	/**
 	 * Return singleton instance of this Controller. This is thread-safe.
@@ -113,6 +111,7 @@ public final class Controller {
 		mWatchDogsModel = new WatchDogsModel(mNetwork);
 		mGeofenceModel = new GeofenceModel(mContext);
 		mGcmModel = new GcmModel(mContext, mNetwork, mPersistence, mUser);
+		mUsersModel = new UsersModel(mNetwork);
 
 		// Load previous user
 		String userId = mPersistence.loadLastUserId();
@@ -174,6 +173,10 @@ public final class Controller {
 
 	public GcmModel getGcmModel() {
 		return mGcmModel;
+	}
+
+	public UsersModel getUsersModel() {
+		return mUsersModel;
 	}
 
 	/** Persistence methods *************************************************/
@@ -426,65 +429,6 @@ public final class Controller {
 		mFacilitiesModel.reloadFacilitiesByAdapter(id, forceReload);
 
 		return true;
-	}
-
-	/** User methods ********************************************************/
-
-	/**
-	 * Get user by ID from adapter.
-	 *
-	 * @param adapterId
-	 * @param userId
-	 * @return
-	 */
-	public User getUser(String adapterId, String userId) {
-		throw new IllegalStateException("Not implemented");
-	}
-
-
-	// FIXME: all these user methods move to model!!!
-	public Boolean reloadAdapterUsers(String adapterId, boolean mForceReload) {
-		mRequestUsers = mNetwork.getAccounts(adapterId);
-		return true;
-	}
-
-	public List<User> getUsers() {
-		if(mRequestUsers != null)
-			return  mRequestUsers;
-		return new ArrayList<User>();
-	}
-
-	/**
-	 * Add user to adapter.
-	 *
-	 * @param adapterId
-	 * @param user
-	 * @return
-	 */
-	public boolean addUser(String adapterId, User user) {
-		return mNetwork.addAccount(adapterId, user);
-	}
-
-	/**
-	 * Delete user from adapter.
-	 *
-	 * @param adapterId
-	 * @param user
-	 * @return
-	 */
-	public boolean deleteUser(String adapterId, User user) {
-		return mNetwork.deleteAccount(adapterId, user);
-	}
-
-	/**
-	 * Save user settings to adapter.
-	 *
-	 * @param adapterId
-	 * @param user
-	 * @return
-	 */
-	public boolean saveUser(String adapterId, User user) {
-		return mNetwork.updateAccount(adapterId, user);
 	}
 
 	public User getActualUser() {

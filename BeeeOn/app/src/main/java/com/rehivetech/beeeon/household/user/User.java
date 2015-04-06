@@ -4,13 +4,15 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
+import com.rehivetech.beeeon.IIdentifier;
+import com.rehivetech.beeeon.INameIdentifier;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.util.Utils;
 
 /**
  * Represents single person.
  */
-public class User {
+public class User implements INameIdentifier {
 
 	private String mId = "";
 

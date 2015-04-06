@@ -28,7 +28,7 @@ import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.household.adapter.Adapter;
 import com.rehivetech.beeeon.arrayadapter.UsersListAdapter;
 import com.rehivetech.beeeon.asynctask.EditUserTask;
-import com.rehivetech.beeeon.asynctask.ReloadAdapterUsersTask;
+import com.rehivetech.beeeon.asynctask.ReloadUsersTask;
 import com.rehivetech.beeeon.asynctask.CallbackTask.CallbackTaskListener;
 import com.rehivetech.beeeon.asynctask.RemoveUserTask;
 import com.rehivetech.beeeon.base.BaseApplicationActivity;
@@ -51,7 +51,7 @@ public class AdapterUsersActivity extends BaseApplicationActivity {
 	private ListView mListActUsers;
 	private ListView mListPenUsers;
 
-	private ReloadAdapterUsersTask mReloadAdapterUsersTask;
+	private ReloadUsersTask mReloadUsersTask;
 	
 	private static final int NAME_ITEM_HEIGHT = 74;
     private Toolbar mToolbar;
@@ -173,21 +173,21 @@ public class AdapterUsersActivity extends BaseApplicationActivity {
         }
     }
 	
-	private void doReloadAdapterUsersTask(String adapterId, boolean forceReload) {
-		mReloadAdapterUsersTask = new ReloadAdapterUsersTask(this, forceReload);
+	private void doReloadAdapterUsersTask(final String adapterId, boolean forceReload) {
+		mReloadUsersTask = new ReloadUsersTask(this, forceReload);
 
-		mReloadAdapterUsersTask.setListener(new CallbackTaskListener() {
+		mReloadUsersTask.setListener(new CallbackTaskListener() {
 
 			@Override
 			public void onExecute(boolean success) {
-				mAdapterUsers = mController.getUsers();
+				mAdapterUsers = mController.getUsersModel().getUsersByAdapter(adapterId);
 				
 				initLayouts();
 			}
 
 		});
 
-		mReloadAdapterUsersTask.execute(adapterId);
+		mReloadUsersTask.execute(adapterId);
 	}
 
 

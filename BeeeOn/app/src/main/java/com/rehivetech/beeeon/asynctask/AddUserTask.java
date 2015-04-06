@@ -4,9 +4,9 @@ import android.content.Context;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.pair.AddUserPair;
 
-public class AddAdapterUserTask extends CallbackTask<AddUserPair> {
+public class AddUserTask extends CallbackTask<AddUserPair> {
 
-	public AddAdapterUserTask(Context context) {
+	public AddUserTask(Context context) {
 		super(context);
 	}
 
@@ -14,7 +14,7 @@ public class AddAdapterUserTask extends CallbackTask<AddUserPair> {
 	protected Boolean doInBackground(AddUserPair pair) {
 		Controller controller = Controller.getInstance(mContext);
 
-		return controller.addUser(pair.adapter.getId(), pair.user);
+		return controller.getUsersModel().addUser(pair.adapter.getId(), pair.user);
 	}
 
 }

@@ -3,11 +3,11 @@ package com.rehivetech.beeeon.asynctask;
 import android.content.Context;
 import com.rehivetech.beeeon.controller.Controller;
 
-public class ReloadAdapterUsersTask extends CallbackTask<String> {
+public class ReloadUsersTask extends CallbackTask<String> {
 
 	private final boolean mForceReload;
 
-	public ReloadAdapterUsersTask(Context context, boolean forceReload) {
+	public ReloadUsersTask(Context context, boolean forceReload) {
 		super(context);
 
 		mForceReload = forceReload;
@@ -17,7 +17,7 @@ public class ReloadAdapterUsersTask extends CallbackTask<String> {
 	protected Boolean doInBackground(String adapterId) {
 		Controller controller = Controller.getInstance(mContext);
 
-		return controller.reloadAdapterUsers(adapterId, mForceReload);
+		return controller.getUsersModel().reloadUsersByAdapter(adapterId, mForceReload);
 	}
 
 }

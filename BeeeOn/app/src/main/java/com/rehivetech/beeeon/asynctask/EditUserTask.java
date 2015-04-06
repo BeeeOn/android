@@ -15,7 +15,7 @@ public class EditUserTask extends CallbackTask<UserPair> {
 	protected Boolean doInBackground(UserPair pair) {
 		Controller controller = Controller.getInstance(mContext);
 
-		return controller.saveUser(pair.adapterID, pair.user);
+		return controller.getUsersModel().updateUser(pair.adapterID, pair.user);
 	}
 
 }
