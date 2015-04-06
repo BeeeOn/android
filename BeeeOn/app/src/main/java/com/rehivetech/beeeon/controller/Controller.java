@@ -156,6 +156,36 @@ public final class Controller {
 		return sDemoMode;
 	}
 
+	/** Model getters *******************************************************/
+
+	public GeofenceModel getGeofenceModel() {
+		return mGeofenceModel;
+	}
+
+	public AdaptersModel getAdaptersModel() {
+		return mAdaptersModel;
+	}
+
+	public LocationsModel getLocationsModel() {
+		return mLocationsModel;
+	}
+
+	public FacilitiesModel getFacilitiesModel() {
+		return mFacilitiesModel;
+	}
+
+	public UninitializedFacilitiesModel getUninitializedFacilitiesModel() {
+		return mUninitializedFacilitiesModel;
+	}
+
+	public DeviceLogsModel getDeviceLogsModel() {
+		return mDeviceLogsModel;
+	}
+
+	public WatchDogsModel getWatchDogsModel() {
+		return mWatchDogsModel;
+	}
+
 	/** Persistence methods *************************************************/
 
 	public IAuthProvider getLastAuthProvider() {
