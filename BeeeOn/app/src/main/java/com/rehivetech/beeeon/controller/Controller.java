@@ -6,13 +6,13 @@ import android.graphics.Bitmap;
 
 import com.rehivetech.beeeon.Constants;
 import com.rehivetech.beeeon.adapter.Adapter;
-import com.rehivetech.beeeon.adapter.watchdog.WatchDog;
 import com.rehivetech.beeeon.adapter.device.Device;
 import com.rehivetech.beeeon.adapter.device.Device.SaveDevice;
 import com.rehivetech.beeeon.adapter.device.DeviceLog;
 import com.rehivetech.beeeon.adapter.device.DeviceType;
 import com.rehivetech.beeeon.adapter.device.Facility;
 import com.rehivetech.beeeon.adapter.location.Location;
+import com.rehivetech.beeeon.adapter.watchdog.WatchDog;
 import com.rehivetech.beeeon.exception.AppException;
 import com.rehivetech.beeeon.exception.NotImplementedException;
 import com.rehivetech.beeeon.gcm.GcmHelper;
@@ -28,7 +28,6 @@ import com.rehivetech.beeeon.network.INetwork;
 import com.rehivetech.beeeon.network.Network;
 import com.rehivetech.beeeon.network.authentication.IAuthProvider;
 import com.rehivetech.beeeon.pair.LogDataPair;
-import com.rehivetech.beeeon.persistence.GeofenceModel;
 import com.rehivetech.beeeon.persistence.Persistence;
 import com.rehivetech.beeeon.util.Log;
 import com.rehivetech.beeeon.util.Utils;
@@ -71,8 +70,6 @@ public final class Controller {
 
 	private List<User> mRequestUsers;
 
-	private GeofenceModel mGeofenceModel;
-
 	/**
 	 * Return singleton instance of this Controller. This is thread-safe.
 	 * 
@@ -103,7 +100,6 @@ public final class Controller {
 		mNetwork = mDemoMode ? new DemoNetwork(context) : new Network(mContext, this, Utils.isDebugVersion(context));
 		mPersistence = new Persistence(mContext);
 		mHousehold = new Household(mContext, mNetwork);
-		mGeofenceModel = new GeofenceModel(mContext);
 
 		// Load previous user
 		String userId = mPersistence.loadLastUserId();
@@ -229,7 +225,7 @@ public final class Controller {
 	public boolean login(IAuthProvider authProvider) throws AppException {
 		// In demo mode load some init data from sdcard
 		if (mNetwork instanceof DemoNetwork) {
-			mGeofenceModel.deleteDemoData();
+			mHousehold.geofenceModel.deleteDemoData();
 			((DemoNetwork) mNetwork).initDemoData();
 		}
 
@@ -1072,7 +1068,7 @@ public final class Controller {
 	 * @return List of geofences. If no geofence is registered, empty list is returned.
 	 */
 	public List<SimpleGeofence> getAllGeofences() {
-		return mGeofenceModel.getAllGeofences(getActualUser().getId());
+		return mHousehold.geofenceModel.getAllGeofences(getActualUser().getId());
 	}
 
 	/**
@@ -1083,7 +1079,7 @@ public final class Controller {
 	 */
 	public boolean hasActualUserGeofence(String geofenceId) {
 		Log.i(TAG, "Geofence: Control if passed geofence is for actual user");
-		return mGeofenceModel.exist(getActualUser().getId(), geofenceId);
+		return mHousehold.geofenceModel.exist(getActualUser().getId(), geofenceId);
 	}
 
 	/**
@@ -1099,11 +1095,11 @@ public final class Controller {
 	}
 
 	public void addGeofence(SimpleGeofence geofence) {
-		mGeofenceModel.addGeofence(getActualUser().getId(), geofence);
+		mHousehold.geofenceModel.addGeofence(getActualUser().getId(), geofence);
 	}
 
 	public void deleteGeofence(SimpleGeofence geofence) {
-		mGeofenceModel.deleteGeofence(getActualUser().getId(), geofence.getId());
+		mHousehold.geofenceModel.deleteGeofence(getActualUser().getId(), geofence.getId());
 	}
 
 	public void delBT() {

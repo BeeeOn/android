@@ -6,6 +6,7 @@ import com.rehivetech.beeeon.network.INetwork;
 import com.rehivetech.beeeon.persistence.AdaptersModel;
 import com.rehivetech.beeeon.persistence.DeviceLogsModel;
 import com.rehivetech.beeeon.persistence.FacilitiesModel;
+import com.rehivetech.beeeon.persistence.GeofenceModel;
 import com.rehivetech.beeeon.persistence.LocationsModel;
 import com.rehivetech.beeeon.persistence.UninitializedFacilitiesModel;
 import com.rehivetech.beeeon.persistence.WatchDogsModel;
@@ -35,6 +36,8 @@ public final class Household {
 
 	public final WatchDogsModel watchDogsModel;
 
+	public final GeofenceModel geofenceModel;
+
 	/** Active adapter. */
 	public Adapter activeAdapter;
 
@@ -47,6 +50,7 @@ public final class Household {
 		uninitializedFacilitiesModel = new UninitializedFacilitiesModel(network);
 		deviceLogsModel = new DeviceLogsModel(network);
 		watchDogsModel = new WatchDogsModel(network);
+		geofenceModel = new GeofenceModel(context);
 	}
 
 }
