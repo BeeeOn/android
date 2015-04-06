@@ -1,6 +1,5 @@
 package com.rehivetech.beeeon.activity.fragment;
 
-import android.content.Context;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -18,13 +17,13 @@ import com.jjoe64.graphview.series.BaseSeries;
 import com.jjoe64.graphview.series.DataPoint;
 import com.jjoe64.graphview.series.LineGraphSeries;
 import com.rehivetech.beeeon.R;
-import com.rehivetech.beeeon.adapter.Adapter;
-import com.rehivetech.beeeon.adapter.device.Device;
-import com.rehivetech.beeeon.adapter.device.DeviceLog;
-import com.rehivetech.beeeon.adapter.device.DeviceLog.DataInterval;
-import com.rehivetech.beeeon.adapter.device.DeviceLog.DataType;
-import com.rehivetech.beeeon.adapter.device.Facility;
-import com.rehivetech.beeeon.adapter.device.values.BaseEnumValue;
+import com.rehivetech.beeeon.household.adapter.Adapter;
+import com.rehivetech.beeeon.household.device.Device;
+import com.rehivetech.beeeon.household.device.DeviceLog;
+import com.rehivetech.beeeon.household.device.DeviceLog.DataInterval;
+import com.rehivetech.beeeon.household.device.DeviceLog.DataType;
+import com.rehivetech.beeeon.household.device.Facility;
+import com.rehivetech.beeeon.household.device.values.BaseEnumValue;
 import com.rehivetech.beeeon.base.TrackFragment;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.pair.LogDataPair;

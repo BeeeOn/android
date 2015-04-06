@@ -1,8 +1,6 @@
 package com.rehivetech.beeeon.menu;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.content.SharedPreferences.Editor;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -36,14 +34,13 @@ import com.rehivetech.beeeon.activity.menuItem.MenuItem;
 import com.rehivetech.beeeon.activity.menuItem.ProfileMenuItem;
 import com.rehivetech.beeeon.activity.menuItem.SeparatorMenuItem;
 import com.rehivetech.beeeon.activity.menuItem.SettingMenuItem;
-import com.rehivetech.beeeon.adapter.Adapter;
+import com.rehivetech.beeeon.household.adapter.Adapter;
 import com.rehivetech.beeeon.arrayadapter.MenuListAdapter;
 import com.rehivetech.beeeon.asynctask.CallbackTask.CallbackTaskListener;
 import com.rehivetech.beeeon.asynctask.SwitchAdapterTask;
 import com.rehivetech.beeeon.asynctask.UnregisterAdapterTask;
 import com.rehivetech.beeeon.controller.Controller;
-import com.rehivetech.beeeon.household.User;
-import com.rehivetech.beeeon.persistence.Persistence;
+import com.rehivetech.beeeon.household.user.User;
 import com.rehivetech.beeeon.util.Log;
 
 import java.util.List;

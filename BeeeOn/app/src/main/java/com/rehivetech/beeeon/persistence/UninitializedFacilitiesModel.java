@@ -1,7 +1,7 @@
 package com.rehivetech.beeeon.persistence;
 
 import com.rehivetech.beeeon.IdentifierComparator;
-import com.rehivetech.beeeon.adapter.device.Facility;
+import com.rehivetech.beeeon.household.device.Facility;
 import com.rehivetech.beeeon.exception.AppException;
 import com.rehivetech.beeeon.network.INetwork;
 

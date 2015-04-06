@@ -2,7 +2,7 @@ package com.rehivetech.beeeon.asynctask;
 
 import android.content.Context;
 
-import com.rehivetech.beeeon.adapter.Adapter;
+import com.rehivetech.beeeon.household.adapter.Adapter;
 import com.rehivetech.beeeon.controller.Controller;
 
 /**

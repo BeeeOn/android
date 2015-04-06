@@ -10,7 +10,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.activity.AddSensorActivity;
-import com.rehivetech.beeeon.adapter.Adapter;
+import com.rehivetech.beeeon.household.adapter.Adapter;
 import com.rehivetech.beeeon.base.TrackFragment;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.util.Log;

@@ -1,10 +1,8 @@
 package com.rehivetech.beeeon.activity.fragment;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
-import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
@@ -13,11 +11,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.CheckedTextView;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.ListView;
@@ -26,10 +21,9 @@ import android.widget.TextView;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.activity.MainActivity;
 import com.rehivetech.beeeon.activity.SetupSensorActivity;
-import com.rehivetech.beeeon.adapter.Adapter;
-import com.rehivetech.beeeon.adapter.device.Facility;
-import com.rehivetech.beeeon.adapter.location.Location;
-import com.rehivetech.beeeon.adapter.location.Location.DefaultLocation;
+import com.rehivetech.beeeon.household.adapter.Adapter;
+import com.rehivetech.beeeon.household.device.Facility;
+import com.rehivetech.beeeon.household.location.Location;
 import com.rehivetech.beeeon.arrayadapter.LocationArrayAdapter;
 import com.rehivetech.beeeon.arrayadapter.LocationIconAdapter;
 import com.rehivetech.beeeon.arrayadapter.SetupSensorListAdapter;

@@ -11,9 +11,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.rehivetech.beeeon.R;
-import com.rehivetech.beeeon.adapter.watchdog.WatchDog;
-import com.rehivetech.beeeon.adapter.device.Device;
-import com.rehivetech.beeeon.adapter.device.values.BaseValue;
+import com.rehivetech.beeeon.household.watchdog.WatchDog;
+import com.rehivetech.beeeon.household.device.Device;
+import com.rehivetech.beeeon.household.device.values.BaseValue;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.util.UnitsHelper;
 

@@ -6,12 +6,11 @@ import android.content.SharedPreferences.Editor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
-import com.google.android.gms.cast.Cast;
 import com.rehivetech.beeeon.Constants;
-import com.rehivetech.beeeon.adapter.device.units.NoiseUnit;
-import com.rehivetech.beeeon.adapter.device.units.TemperatureUnit;
-import com.rehivetech.beeeon.household.User;
-import com.rehivetech.beeeon.household.User.Gender;
+import com.rehivetech.beeeon.household.device.units.NoiseUnit;
+import com.rehivetech.beeeon.household.device.units.TemperatureUnit;
+import com.rehivetech.beeeon.household.user.User;
+import com.rehivetech.beeeon.household.user.User.Gender;
 import com.rehivetech.beeeon.network.authentication.IAuthProvider;
 import com.rehivetech.beeeon.util.Log;
 import com.rehivetech.beeeon.util.SettingsItem;

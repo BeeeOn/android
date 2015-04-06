@@ -3,8 +3,7 @@ package com.rehivetech.beeeon.asynctask;
 import android.content.Context;
 import android.os.AsyncTask;
 
-import com.rehivetech.beeeon.activity.fragment.SensorDetailFragment;
-import com.rehivetech.beeeon.adapter.device.DeviceLog;
+import com.rehivetech.beeeon.household.device.DeviceLog;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.pair.LogDataPair;
 

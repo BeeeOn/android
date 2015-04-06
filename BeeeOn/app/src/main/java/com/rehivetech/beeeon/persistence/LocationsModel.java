@@ -4,7 +4,7 @@ import android.content.Context;
 
 import com.rehivetech.beeeon.NameIdentifierComparator;
 import com.rehivetech.beeeon.R;
-import com.rehivetech.beeeon.adapter.location.Location;
+import com.rehivetech.beeeon.household.location.Location;
 import com.rehivetech.beeeon.exception.AppException;
 import com.rehivetech.beeeon.network.INetwork;
 

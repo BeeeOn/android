@@ -11,9 +11,9 @@ import org.joda.time.Interval;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
-import com.rehivetech.beeeon.adapter.device.DeviceLog;
-import com.rehivetech.beeeon.adapter.device.DeviceLog.DataInterval;
-import com.rehivetech.beeeon.adapter.device.DeviceLog.DataType;
+import com.rehivetech.beeeon.household.device.DeviceLog;
+import com.rehivetech.beeeon.household.device.DeviceLog.DataInterval;
+import com.rehivetech.beeeon.household.device.DeviceLog.DataType;
 import com.rehivetech.beeeon.exception.AppException;
 import com.rehivetech.beeeon.network.DemoNetwork;
 import com.rehivetech.beeeon.network.INetwork;

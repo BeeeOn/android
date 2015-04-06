@@ -5,7 +5,7 @@ import java.util.Vector;
 
 import android.content.Context;
 import com.rehivetech.beeeon.R;
-import com.rehivetech.beeeon.adapter.Adapter;
+import com.rehivetech.beeeon.household.adapter.Adapter;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.pair.RegisterAdapterPair;
 

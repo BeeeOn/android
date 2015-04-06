@@ -3,8 +3,8 @@ package com.rehivetech.beeeon.asynctask;
 import java.util.EnumSet;
 
 import android.content.Context;
-import com.rehivetech.beeeon.adapter.device.Device.SaveDevice;
-import com.rehivetech.beeeon.adapter.location.Location;
+import com.rehivetech.beeeon.household.device.Device.SaveDevice;
+import com.rehivetech.beeeon.household.location.Location;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.pair.InitializeFacilityPair;
 

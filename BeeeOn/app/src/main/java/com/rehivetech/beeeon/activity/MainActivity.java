@@ -42,7 +42,7 @@ import com.rehivetech.beeeon.activity.fragment.CustomViewFragment;
 import com.rehivetech.beeeon.activity.fragment.ProfileDetailFragment;
 import com.rehivetech.beeeon.activity.fragment.SensorListFragment;
 import com.rehivetech.beeeon.activity.fragment.WatchDogListFragment;
-import com.rehivetech.beeeon.adapter.Adapter;
+import com.rehivetech.beeeon.household.adapter.Adapter;
 import com.rehivetech.beeeon.asynctask.CallbackTask;
 import com.rehivetech.beeeon.asynctask.FullReloadTask;
 import com.rehivetech.beeeon.base.BaseApplicationActivity;

@@ -11,8 +11,8 @@ import android.widget.TextView;
 
 import com.rehivetech.beeeon.NameIdentifierComparator;
 import com.rehivetech.beeeon.R;
-import com.rehivetech.beeeon.adapter.Adapter;
-import com.rehivetech.beeeon.adapter.location.Location;
+import com.rehivetech.beeeon.household.adapter.Adapter;
+import com.rehivetech.beeeon.household.location.Location;
 import com.rehivetech.beeeon.controller.Controller;
 
 import java.util.ArrayList;

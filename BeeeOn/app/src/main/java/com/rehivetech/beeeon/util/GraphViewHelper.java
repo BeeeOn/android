@@ -7,8 +7,8 @@ import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.helper.DateAsXAxisLabelFormatter;
 import com.jjoe64.graphview.helper.StaticLabelsFormatter;
 import com.rehivetech.beeeon.R;
-import com.rehivetech.beeeon.adapter.device.Device;
-import com.rehivetech.beeeon.adapter.device.values.BaseEnumValue;
+import com.rehivetech.beeeon.household.device.Device;
+import com.rehivetech.beeeon.household.device.values.BaseEnumValue;
 
 import org.joda.time.format.DateTimeFormatter;
 

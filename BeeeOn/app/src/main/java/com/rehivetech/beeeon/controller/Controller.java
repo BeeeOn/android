@@ -5,14 +5,14 @@ import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 
 import com.rehivetech.beeeon.Constants;
-import com.rehivetech.beeeon.adapter.Adapter;
-import com.rehivetech.beeeon.adapter.device.Device;
-import com.rehivetech.beeeon.adapter.device.Device.SaveDevice;
-import com.rehivetech.beeeon.adapter.device.DeviceLog;
-import com.rehivetech.beeeon.adapter.device.DeviceType;
-import com.rehivetech.beeeon.adapter.device.Facility;
-import com.rehivetech.beeeon.adapter.location.Location;
-import com.rehivetech.beeeon.adapter.watchdog.WatchDog;
+import com.rehivetech.beeeon.household.adapter.Adapter;
+import com.rehivetech.beeeon.household.device.Device;
+import com.rehivetech.beeeon.household.device.Device.SaveDevice;
+import com.rehivetech.beeeon.household.device.DeviceLog;
+import com.rehivetech.beeeon.household.device.DeviceType;
+import com.rehivetech.beeeon.household.device.Facility;
+import com.rehivetech.beeeon.household.location.Location;
+import com.rehivetech.beeeon.household.watchdog.WatchDog;
 import com.rehivetech.beeeon.exception.AppException;
 import com.rehivetech.beeeon.exception.NotImplementedException;
 import com.rehivetech.beeeon.gcm.GcmHelper;
@@ -20,8 +20,8 @@ import com.rehivetech.beeeon.gcm.INotificationReceiver;
 import com.rehivetech.beeeon.gcm.Notification;
 import com.rehivetech.beeeon.geofence.SimpleGeofence;
 import com.rehivetech.beeeon.geofence.TransitionType;
-import com.rehivetech.beeeon.household.User;
-import com.rehivetech.beeeon.household.User.Role;
+import com.rehivetech.beeeon.household.user.User;
+import com.rehivetech.beeeon.household.user.User.Role;
 import com.rehivetech.beeeon.network.DemoNetwork;
 import com.rehivetech.beeeon.network.INetwork;
 import com.rehivetech.beeeon.network.Network;
@@ -74,19 +74,19 @@ public final class Controller {
 	private List<User> mRequestUsers;
 
 	/** Active user object */
-	public final User mUser;
+	private final User mUser;
 
 	/** Active adapter */
-	public Adapter mActiveAdapter;
+	private Adapter mActiveAdapter;
 
 	/** Models for keeping and handling data */
-	public final AdaptersModel mAdaptersModel;
-	public final LocationsModel mLocationsModel;
-	public final FacilitiesModel mFacilitiesModel;
-	public final UninitializedFacilitiesModel mUninitializedFacilitiesModel;
-	public final DeviceLogsModel mDeviceLogsModel;
-	public final WatchDogsModel mWatchDogsModel;
-	public final GeofenceModel mGeofenceModel;
+	private final AdaptersModel mAdaptersModel;
+	private final LocationsModel mLocationsModel;
+	private final FacilitiesModel mFacilitiesModel;
+	private final UninitializedFacilitiesModel mUninitializedFacilitiesModel;
+	private final DeviceLogsModel mDeviceLogsModel;
+	private final WatchDogsModel mWatchDogsModel;
+	private final GeofenceModel mGeofenceModel;
 
 	/**
 	 * Return singleton instance of this Controller. This is thread-safe.

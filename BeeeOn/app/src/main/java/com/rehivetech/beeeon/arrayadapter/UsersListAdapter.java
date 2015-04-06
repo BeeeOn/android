@@ -12,7 +12,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.controller.Controller;
-import com.rehivetech.beeeon.household.User;
+import com.rehivetech.beeeon.household.user.User;
 
 public class UsersListAdapter extends BaseAdapter {
 

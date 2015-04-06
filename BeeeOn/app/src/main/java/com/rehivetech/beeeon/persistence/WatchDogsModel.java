@@ -3,7 +3,7 @@ package com.rehivetech.beeeon.persistence;
 import com.rehivetech.beeeon.IdentifierComparator;
 import com.rehivetech.beeeon.exception.AppException;
 import com.rehivetech.beeeon.network.INetwork;
-import com.rehivetech.beeeon.adapter.watchdog.WatchDog;
+import com.rehivetech.beeeon.household.watchdog.WatchDog;
 
 import org.joda.time.DateTime;
 

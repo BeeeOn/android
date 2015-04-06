@@ -1,7 +1,7 @@
 package com.rehivetech.beeeon.pair;
 
-import com.rehivetech.beeeon.adapter.device.Facility;
-import com.rehivetech.beeeon.adapter.location.Location;
+import com.rehivetech.beeeon.household.device.Facility;
+import com.rehivetech.beeeon.household.location.Location;
 
 /**
  * Represents pair of device and location for saving it to server

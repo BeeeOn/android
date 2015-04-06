@@ -44,9 +44,9 @@ import com.sonyericsson.extras.liveware.extension.util.ExtensionUtils;
 import com.sonyericsson.extras.liveware.extension.util.control.ControlListItem;
 
 import com.rehivetech.beeeon.R;
-import com.rehivetech.beeeon.adapter.Adapter;
-import com.rehivetech.beeeon.adapter.device.Facility;
-import com.rehivetech.beeeon.adapter.location.Location;
+import com.rehivetech.beeeon.household.adapter.Adapter;
+import com.rehivetech.beeeon.household.device.Facility;
+import com.rehivetech.beeeon.household.location.Location;
 import com.rehivetech.beeeon.extension.watches.smartwatch2.SW2ExtensionService;
 import com.rehivetech.beeeon.util.Log;
 

@@ -13,9 +13,9 @@ import android.view.MenuItem;
 
 import com.rehivetech.beeeon.ActionBarPreferenceActivity;
 import com.rehivetech.beeeon.R;
-import com.rehivetech.beeeon.adapter.device.units.BaseUnit;
-import com.rehivetech.beeeon.adapter.device.units.NoiseUnit;
-import com.rehivetech.beeeon.adapter.device.units.TemperatureUnit;
+import com.rehivetech.beeeon.household.device.units.BaseUnit;
+import com.rehivetech.beeeon.household.device.units.NoiseUnit;
+import com.rehivetech.beeeon.household.device.units.TemperatureUnit;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.persistence.Persistence;
 

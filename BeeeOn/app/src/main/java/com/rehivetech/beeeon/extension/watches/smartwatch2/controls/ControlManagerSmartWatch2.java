@@ -49,8 +49,8 @@ import com.sonyericsson.extras.liveware.extension.util.control.ControlObjectClic
 
 import com.rehivetech.beeeon.Constants;
 import com.rehivetech.beeeon.R;
-import com.rehivetech.beeeon.adapter.Adapter;
-import com.rehivetech.beeeon.adapter.device.Facility;
+import com.rehivetech.beeeon.household.adapter.Adapter;
+import com.rehivetech.beeeon.household.device.Facility;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.extension.watches.smartwatch2.SW2ExtensionService;
 import com.rehivetech.beeeon.util.Log;

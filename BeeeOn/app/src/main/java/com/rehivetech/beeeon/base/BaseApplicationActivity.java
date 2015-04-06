@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.widget.Toast;
 
 import com.rehivetech.beeeon.activity.LoginActivity;
-import com.rehivetech.beeeon.adapter.location.Location;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.gcm.INotificationReceiver;
 import com.rehivetech.beeeon.gcm.Notification;

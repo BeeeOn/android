@@ -15,12 +15,12 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import com.rehivetech.beeeon.Constants;
 import com.rehivetech.beeeon.R;
-import com.rehivetech.beeeon.adapter.Adapter;
+import com.rehivetech.beeeon.household.adapter.Adapter;
 import com.rehivetech.beeeon.asynctask.AddAdapterUserTask;
 import com.rehivetech.beeeon.asynctask.CallbackTask.CallbackTaskListener;
 import com.rehivetech.beeeon.base.BaseApplicationActivity;
 import com.rehivetech.beeeon.controller.Controller;
-import com.rehivetech.beeeon.household.User;
+import com.rehivetech.beeeon.household.user.User;
 import com.rehivetech.beeeon.pair.AddUserPair;
 
 import java.util.ArrayList;

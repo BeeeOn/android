@@ -1,15 +1,15 @@
 package com.rehivetech.beeeon.network;
 
-import com.rehivetech.beeeon.adapter.Adapter;
-import com.rehivetech.beeeon.adapter.device.Device;
-import com.rehivetech.beeeon.adapter.device.Device.SaveDevice;
-import com.rehivetech.beeeon.adapter.device.DeviceLog;
-import com.rehivetech.beeeon.adapter.device.Facility;
-import com.rehivetech.beeeon.adapter.location.Location;
-import com.rehivetech.beeeon.household.User;
+import com.rehivetech.beeeon.household.adapter.Adapter;
+import com.rehivetech.beeeon.household.device.Device;
+import com.rehivetech.beeeon.household.device.Device.SaveDevice;
+import com.rehivetech.beeeon.household.device.DeviceLog;
+import com.rehivetech.beeeon.household.device.Facility;
+import com.rehivetech.beeeon.household.location.Location;
+import com.rehivetech.beeeon.household.user.User;
 import com.rehivetech.beeeon.network.authentication.IAuthProvider;
 import com.rehivetech.beeeon.network.xml.CustomViewPair;
-import com.rehivetech.beeeon.adapter.watchdog.WatchDog;
+import com.rehivetech.beeeon.household.watchdog.WatchDog;
 import com.rehivetech.beeeon.network.xml.action.ComplexAction;
 import com.rehivetech.beeeon.network.xml.condition.Condition;
 import com.rehivetech.beeeon.pair.LogDataPair;

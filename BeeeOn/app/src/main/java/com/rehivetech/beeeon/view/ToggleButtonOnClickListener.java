@@ -8,7 +8,7 @@ import android.view.View.OnClickListener;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 import com.rehivetech.beeeon.R;
-import com.rehivetech.beeeon.adapter.device.Device;
+import com.rehivetech.beeeon.household.device.Device;
 
 /**
  * @brief Class for listener of ToggleButtons

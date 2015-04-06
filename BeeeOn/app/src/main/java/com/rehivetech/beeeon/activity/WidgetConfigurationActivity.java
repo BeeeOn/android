@@ -21,10 +21,10 @@ import android.widget.Toast;
 
 
 import com.rehivetech.beeeon.R;
-import com.rehivetech.beeeon.adapter.Adapter;
-import com.rehivetech.beeeon.adapter.device.Device;
-import com.rehivetech.beeeon.adapter.device.Facility;
-import com.rehivetech.beeeon.adapter.device.RefreshInterval;
+import com.rehivetech.beeeon.household.adapter.Adapter;
+import com.rehivetech.beeeon.household.device.Device;
+import com.rehivetech.beeeon.household.device.Facility;
+import com.rehivetech.beeeon.household.device.RefreshInterval;
 import com.rehivetech.beeeon.asynctask.CallbackTask.CallbackTaskListener;
 import com.rehivetech.beeeon.asynctask.ReloadFacilitiesTask;
 import com.rehivetech.beeeon.base.BaseActivity;

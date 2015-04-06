@@ -1,7 +1,7 @@
 package com.rehivetech.beeeon.asynctask;
 
 import android.content.Context;
-import com.rehivetech.beeeon.adapter.device.Device;
+import com.rehivetech.beeeon.household.device.Device;
 import com.rehivetech.beeeon.controller.Controller;
 
 public class ActorActionTask extends CallbackTask<Device> {
