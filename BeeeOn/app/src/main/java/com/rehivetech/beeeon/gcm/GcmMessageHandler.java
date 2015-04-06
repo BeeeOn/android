@@ -69,8 +69,9 @@ public class GcmMessageHandler extends IntentService {
 			}
 
 			// control userId if it equals with actual user
-			if (!notification.getUserId().equals(mController.getActualUser().getId())) {
-				Log.w(TAG, GcmHelper.TAG_GCM + notification.getUserId() + " != " + mController.getLastUserId());
+			String userId = mController.getActualUser().getId();
+			if (!notification.getUserId().equals(userId)) {
+				Log.w(TAG, GcmHelper.TAG_GCM + notification.getUserId() + " != " + userId);
 				Log.w(TAG, GcmHelper.TAG_GCM + "Notification user ID wasn't verified. Server GCM ID will be deleted.");
 
 				mController.getGcmModel().deleteGCM(notification.getUserId(), null);

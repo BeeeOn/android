@@ -185,10 +185,6 @@ public final class Controller {
 		return mPersistence.loadLastAuthProvider();
 	}
 
-	public String getLastUserId() {
-		return mPersistence.loadLastUserId();
-	}
-
 	/**
 	 * Get SharedPreferences for actually logged in user
 	 *

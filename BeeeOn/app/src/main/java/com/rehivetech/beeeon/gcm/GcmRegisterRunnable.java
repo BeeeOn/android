@@ -86,7 +86,7 @@ public class GcmRegisterRunnable implements Runnable {
 
 		// if new GCM ID is different then the old one, delete old on server side and apply new one
 		if (!mOldGcmId.equals(mNewGcmId)) {
-			mController.getGcmModel().deleteGCM(mController.getLastUserId(), mOldGcmId);
+			mController.getGcmModel().deleteGCM(mController.getActualUser().getId(), mOldGcmId);
 
 			// Persist the regID - no need to register again.
 			mController.getGcmModel().setGCMIdLocal(mNewGcmId);
