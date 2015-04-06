@@ -5,6 +5,12 @@ import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 
 import com.rehivetech.beeeon.Constants;
+import com.rehivetech.beeeon.exception.AppException;
+import com.rehivetech.beeeon.exception.NotImplementedException;
+import com.rehivetech.beeeon.gcm.GcmHelper;
+import com.rehivetech.beeeon.gcm.INotificationReceiver;
+import com.rehivetech.beeeon.gcm.Notification;
+import com.rehivetech.beeeon.geofence.TransitionType;
 import com.rehivetech.beeeon.household.adapter.Adapter;
 import com.rehivetech.beeeon.household.device.Device;
 import com.rehivetech.beeeon.household.device.Device.SaveDevice;
@@ -12,16 +18,9 @@ import com.rehivetech.beeeon.household.device.DeviceLog;
 import com.rehivetech.beeeon.household.device.DeviceType;
 import com.rehivetech.beeeon.household.device.Facility;
 import com.rehivetech.beeeon.household.location.Location;
-import com.rehivetech.beeeon.household.watchdog.WatchDog;
-import com.rehivetech.beeeon.exception.AppException;
-import com.rehivetech.beeeon.exception.NotImplementedException;
-import com.rehivetech.beeeon.gcm.GcmHelper;
-import com.rehivetech.beeeon.gcm.INotificationReceiver;
-import com.rehivetech.beeeon.gcm.Notification;
-import com.rehivetech.beeeon.geofence.SimpleGeofence;
-import com.rehivetech.beeeon.geofence.TransitionType;
 import com.rehivetech.beeeon.household.user.User;
 import com.rehivetech.beeeon.household.user.User.Role;
+import com.rehivetech.beeeon.household.watchdog.WatchDog;
 import com.rehivetech.beeeon.network.DemoNetwork;
 import com.rehivetech.beeeon.network.INetwork;
 import com.rehivetech.beeeon.network.Network;
@@ -1071,24 +1070,6 @@ public final class Controller {
 	}
 
 	/**
-	 * @return List of geofences. If no geofence is registered, empty list is returned.
-	 */
-	public List<SimpleGeofence> getAllGeofences() {
-		return mGeofenceModel.getAllGeofences(mUser.getId());
-	}
-
-	/**
-	 * Control if actual user has the geofence registered.
-	 *
-	 * @param geofenceId Geofence ID which is unique per user for all devices
-	 * @return <code>True</code> if actual user has geofence registered. <code>False</code> otherwise.
-	 */
-	public boolean hasActualUserGeofence(String geofenceId) {
-		Log.i(TAG, "Geofence: Control if passed geofence is for actual user");
-		return mGeofenceModel.exist(mUser.getId(), geofenceId);
-	}
-
-	/**
 	 *
 	 * This CAN'T be called on UI thread!
 	 *
@@ -1098,14 +1079,6 @@ public final class Controller {
 	public void setPassBorder(String geofenceId, TransitionType type) {
 		Log.i(TAG, "Passing geofence and seding to server");
 		mNetwork.passBorder(geofenceId, type.getString());
-	}
-
-	public void addGeofence(SimpleGeofence geofence) {
-		mGeofenceModel.addGeofence(mUser.getId(), geofence);
-	}
-
-	public void deleteGeofence(SimpleGeofence geofence) {
-		mGeofenceModel.deleteGeofence(mUser.getId(), geofence.getId());
 	}
 
 	/**

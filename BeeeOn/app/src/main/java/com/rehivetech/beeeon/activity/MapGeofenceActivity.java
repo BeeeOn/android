@@ -44,6 +44,7 @@ import com.rehivetech.beeeon.base.BaseApplicationActivity;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.geofence.GeofenceIntentService;
 import com.rehivetech.beeeon.geofence.SimpleGeofence;
+import com.rehivetech.beeeon.persistence.GeofenceModel;
 import com.rehivetech.beeeon.util.Log;
 
 import java.io.IOException;
@@ -185,9 +186,12 @@ public class MapGeofenceActivity extends BaseApplicationActivity implements Resu
 	}
 
 	private void addGeofence(SimpleGeofence geofence) {
+		Controller controller = Controller.getInstance(this);
+		String userId = controller.getActualUser().getId();
+
 		// if demo mode just save it to database
 		if (Controller.isDemoMode()) {
-			Controller.getInstance(this).addGeofence(geofence);
+			controller.getGeofenceModel().addGeofence(userId, geofence);
 			drawGeofence(geofence);
 			return;
 		}
@@ -227,7 +231,10 @@ public class MapGeofenceActivity extends BaseApplicationActivity implements Resu
 			LocationServices.GeofencingApi.removeGeofences(mGoogleApiClient, geofenceIds);
 		}
 
-		Controller.getInstance(this).deleteGeofence(holder.getGeofence());
+		Controller controller = Controller.getInstance(this);
+		String userId = controller.getActualUser().getId();
+
+		controller.getGeofenceModel().deleteGeofence(userId, holder.getGeofence().getId());
 
 		holder.getMarker().setVisible(false);
 		holder.getCircle().setVisible(false);
@@ -317,7 +324,11 @@ public class MapGeofenceActivity extends BaseApplicationActivity implements Resu
 	}
 
 	public void drawAllGeofences() {
-		List<SimpleGeofence> geofences = Controller.getInstance(this).getAllGeofences();
+		Controller controller = Controller.getInstance(this);
+
+		String userId = controller.getActualUser().getId();
+		List<SimpleGeofence> geofences = controller.getGeofenceModel().getAllGeofences(userId);
+
 		for (SimpleGeofence actFence : geofences) {
 			drawGeofence(actFence);
 		}
@@ -412,9 +423,12 @@ public class MapGeofenceActivity extends BaseApplicationActivity implements Resu
 	@Override
 	public void onResult(Status status) {
 		if (status.isSuccess()) {
+			Controller controller = Controller.getInstance(this);
+			String userId = controller.getActualUser().getId();
+
 			Log.i(TAG, "Geoefence added");
 			drawGeofence(mAddGeofence);
-			Controller.getInstance(this).addGeofence(mAddGeofence);
+			controller.getGeofenceModel().addGeofence(userId, mAddGeofence);
 			mAddGeofence = null;
 
 			// Update state and save in shared preferences.

@@ -99,6 +99,13 @@ public class GeofenceModel {
 		return geofenceList;
 	}
 
+	/**
+	 * Control if actual user has the geofence registered.
+	 *
+	 * @param userId
+	 * @param geofenceId Geofence ID which is unique per user for all devices
+	 * @return <code>True</code> if actual user has geofence registered. <code>False</code> otherwise.
+	 */
 	public boolean exist(String userId, String geofenceId) {
 		SQLiteDatabase db = DatabaseHelper.getInstance(mContext).getReadableDatabase();
 
