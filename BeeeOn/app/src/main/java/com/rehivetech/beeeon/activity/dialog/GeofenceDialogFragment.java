@@ -10,6 +10,7 @@ import android.support.v4.app.DialogFragment;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import com.rehivetech.beeeon.R;
 
@@ -28,9 +29,10 @@ public class GeofenceDialogFragment extends DialogFragment {
 	 * Define minimum radius in meters
 	 */
 	private static final int MIN_RADIUS = 10;
-	Button mButtonMinus, mButtonPlus;
-	EditText mName, mRadius;
-	double mLong, mLat;
+	private Button mButtonMinus, mButtonPlus;
+	private EditText mName, mRadius;
+	private TextView mRadiusTitle;
+	private double mLong, mLat;
 	private GeofenceCrateCallback mCallback;
 
 	public GeofenceDialogFragment() {
@@ -76,6 +78,9 @@ public class GeofenceDialogFragment extends DialogFragment {
 
 		mName = (EditText) view.findViewById(R.id.geofence_name);
 		mRadius = (EditText) view.findViewById(R.id.geofence_radius_input);
+
+		mRadiusTitle = (TextView) view.findViewById(R.id.geofence_radius_title);
+		mRadiusTitle.setText(getString(R.string.radius) + " (" + getString(R.string.unit_meter_short) + ")");
 
 		mButtonMinus.setOnClickListener(new View.OnClickListener() {
 			@Override

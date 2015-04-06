@@ -1,6 +1,7 @@
 package com.rehivetech.beeeon.activity;
 
 import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.location.Address;
@@ -18,7 +19,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.Window;
-import android.widget.EditText;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -28,14 +29,17 @@ import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.Geofence;
 import com.google.android.gms.location.GeofencingRequest;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMap.OnMapLongClickListener;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.Circle;
 import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.rehivetech.beeeon.R;
@@ -44,7 +48,6 @@ import com.rehivetech.beeeon.base.BaseApplicationActivity;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.geofence.GeofenceIntentService;
 import com.rehivetech.beeeon.geofence.SimpleGeofence;
-import com.rehivetech.beeeon.persistence.GeofenceModel;
 import com.rehivetech.beeeon.util.Log;
 
 import java.io.IOException;
@@ -60,13 +63,16 @@ public class MapGeofenceActivity extends BaseApplicationActivity implements Resu
 	private static final float MAP_ZOOM = 17.5F;
 	private static final int MAXIMUM_RET_ADDRESS = 3;
 	private static final String TAG_DIALOG_ADD_GEOFENCE = "geofenceDialog";
-	GoogleApiClient mGoogleApiClient;
-	private EditText mEditSearch;
-	private SearchView mSearchView;
+	private static final int GEOFENCE_BOUND_PADDING = 50;
+	private GoogleApiClient mGoogleApiClient;
 	private GoogleMap mMap;
 	private Toolbar mToolbar;
 	private ActionMode mActionMode;
 	private HashMap<Marker, GeofenceHolder> mMarkers = new HashMap<>();
+	private SearchView mSearchView;
+	private MenuItem mSearchItem;
+	private boolean mIsAnimated = false;
+
 	/**
 	 * Only one geofence can be added in time. If it is null, no geofence is adding.
 	 */
@@ -87,8 +93,9 @@ public class MapGeofenceActivity extends BaseApplicationActivity implements Resu
 			setSupportActionBar(mToolbar);
 		}
 
-		setSupportProgressBarIndeterminate(true);
-		setProgressBarIndeterminateVisibility(true);
+//		setSupportProgressBarIndeterminate(true);
+//		setSupportProgressBarIndeterminateVisibility(true);
+
 		getSupportActionBar().setHomeButtonEnabled(true);
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
@@ -97,67 +104,124 @@ public class MapGeofenceActivity extends BaseApplicationActivity implements Resu
 		buildGoogleApiClient();
 	}
 
+
+	@Override
+	public void onMapReady(GoogleMap map) {
+		// it needs permission in manifest
+		this.mMap = map;
+		mMap.setMyLocationEnabled(true);
+
+		mMap.getUiSettings().setMapToolbarEnabled(true);
+
+		mMap.setOnMapLongClickListener(this);
+
+		// Sets the map type to be "hybrid"
+		mMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
+//		mMap.setOnMarkerDragListener(this);
+
+		mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+			@Override
+			public boolean onMarkerClick(Marker marker) {
+				marker.showInfoWindow();
+				GeofenceHolder fenceHolder = mMarkers.get(marker);
+				if (fenceHolder != null) {
+					mActionMode = startSupportActionMode(new ActionModeGeofence(fenceHolder));
+				}
+				return true;
+			}
+		});
+
+		drawAllGeofences();
+
+		mMap.setOnMapLoadedCallback(new GoogleMap.OnMapLoadedCallback() {
+			@Override
+			public void onMapLoaded() {
+				if (!mIsAnimated) {
+					initialZoom();
+					mIsAnimated = true;
+				}
+			}
+		});
+
+		setSupportProgressBarIndeterminateVisibility(false);
+	}
+
+	private void initialZoom() {
+		LocationManager locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+		Criteria criteria = new Criteria();
+		String provider = locationManager.getBestProvider(criteria, false);
+		Location location = null;
+		if (provider != null) {
+			location = locationManager.getLastKnownLocation(provider);
+		}
+
+		// if there is any geofence, zoom to it
+		if (mMarkers.size() == 1) {
+			Log.i(TAG, "One marker found, zooming to it.");
+			for (GeofenceHolder actHolder : mMarkers.values()) {
+				mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(actHolder.getMarker().getPosition(), MAP_ZOOM));
+			}
+
+		}
+		else if (mMarkers.size() > 1) {
+			Log.i(TAG, "Markers found, zooming to it.");
+			zoomActualGeofences();
+		}
+		// if there is no geofence, zoom to actual position if available
+		else if (location != null) {
+			LatLng actlatLng = new LatLng(location.getLatitude(), location.getLongitude());
+			mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(actlatLng, MAP_ZOOM));
+		}
+		// if location is not
+		else {
+			Log.d(TAG, "Location is not accesible.");
+		}
+	}
+
+	private void zoomActualGeofences() {
+		LatLngBounds.Builder builder = new LatLngBounds.Builder();
+		for (GeofenceHolder actHolder : mMarkers.values()) {
+			builder.include(actHolder.getMarker().getPosition());
+		}
+		LatLngBounds bounds = builder.build();
+		CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, GEOFENCE_BOUND_PADDING);
+		mMap.animateCamera(cu);
+	}
+
 	// Create the options menu
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 
 		getMenuInflater().inflate(R.menu.map_menu, menu);
 
-		MenuItem searchItem = menu.findItem(R.id.action_search);
-		mSearchView = (SearchView) MenuItemCompat.getActionView(searchItem);
 
-/*
-		mEditSearch.setOnEditorActionListener(new OnEditorActionListener() {
+		// Get the SearchView and set the searchable configuration
+		mSearchItem = menu.findItem(R.id.action_search);
+		mSearchView = (SearchView) MenuItemCompat.getActionView(mSearchItem);
+
+		mSearchView.setSubmitButtonEnabled(true);
+
+		mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
 			@Override
-			public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-				boolean handled = false;
-				if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-					handled = true;
+			public boolean onQueryTextSubmit(String s) {
+				new GeocoderTask().execute(s);
 
-					String searchString = mEditSearch.getText().toString();
-					Log.d(TAG, "Request for: " + searchString);
-					if (searchString != null && !searchString.isEmpty()) {
-						Log.d(TAG, "Not null");
-						new GeocoderTask().execute(searchString);
-					}
-
-					// hide keyboard
-					InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-					imm.hideSoftInputFromWindow(mEditSearch.getWindowToken(), 0);
-
-					// hide action mode
-					menuSearch.collapseActionView();
-
-					Toast.makeText(MapGeofenceActivity.this, "Searching", Toast.LENGTH_SHORT).show();
-				}
-				return handled;
-			}
-		});
-
-		menuSearch.setOnActionExpandListener(new MenuItem.OnActionExpandListener() {
-
-			// Menu Action Collapse
-			@Override
-			public boolean onMenuItemActionCollapse(MenuItem item) {
-				// Empty EditText to remove text
-				mEditSearch.setText("");
-				mEditSearch.clearFocus();
-				return true;
-			}
-
-			// Menu Action Expand
-			@Override
-			public boolean onMenuItemActionExpand(MenuItem item) {
-				// Focus on EditText
-				mEditSearch.requestFocus();
-
-				// Force the keyboard to show on EditText focus
+				// hide keyboard
 				InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-				imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
+				imm.hideSoftInputFromWindow(mSearchView.getWindowToken(), 0);
+
+				MenuItemCompat.collapseActionView(mSearchItem);
+
+//				setSupportProgressBarIndeterminateVisibility(true);
 				return true;
 			}
+
+			@Override
+			public boolean onQueryTextChange(String s) {
+				return false;
+			}
 		});
-*/
+
 		return true;
 	}
 
@@ -167,9 +231,9 @@ public class MapGeofenceActivity extends BaseApplicationActivity implements Resu
 			case android.R.id.home:
 				finish();
 				return true;
-			case R.id.action_search:
-				mSearchView.setIconified(false);
-				return true;
+//			case R.id.action_search:
+////				mSearchView.setIconified(false);
+//				return true;
 		}
 		return false;
 	}
@@ -223,7 +287,7 @@ public class MapGeofenceActivity extends BaseApplicationActivity implements Resu
 		}
 	}
 
-	public void deleteGeofence(GeofenceHolder holder) {
+	private void deleteGeofence(GeofenceHolder holder) {
 		List<String> geofenceIds = new ArrayList<>();
 		geofenceIds.add(holder.getGeofence().getId());
 
@@ -269,61 +333,7 @@ public class MapGeofenceActivity extends BaseApplicationActivity implements Resu
 				FLAG_UPDATE_CURRENT);
 	}
 
-	@Override
-	public void onMapReady(GoogleMap map) {
-		// it needs permission in manifest
-		this.mMap = map;
-		mMap.setMyLocationEnabled(true);
-
-		mMap.getUiSettings().setMapToolbarEnabled(true);
-
-		mMap.setOnMapLongClickListener(this);
-
-		// Sets the map type to be "hybrid"
-		mMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
-//		mMap.setOnMarkerDragListener(this);
-
-		// trying to zoom to actual position
-		LocationManager locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
-		Criteria criteria = new Criteria();
-
-		String provider = locationManager.getBestProvider(criteria, false);
-		if (provider != null) {
-			Location location = locationManager.getLastKnownLocation(provider);
-			if (location != null) {
-
-				LatLng actlatLng = new LatLng(location.getLatitude(), location.getLongitude());
-				mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(actlatLng, MAP_ZOOM));
-
-				// CameraPosition INIT = new CameraPosition.Builder()
-				// .target(actlatLng)
-				// .zoom(MAP_ZOOM)
-				// .bearing(300F) // orientation
-				// .tilt(50F) // viewing angle
-				// .build();
-				//
-				// mMap.animateCamera(CameraUpdateFactory.newCameraPosition(INIT));
-			} else {
-				Log.d(TAG, "Location is not accesible.");
-			}
-		}
-
-		mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
-			@Override
-			public boolean onMarkerClick(Marker marker) {
-				marker.showInfoWindow();
-				GeofenceHolder fenceHolder = mMarkers.get(marker);
-				if (fenceHolder != null) {
-					mActionMode = startSupportActionMode(new ActionModeGeofence(fenceHolder));
-				}
-				return true;
-			}
-		});
-
-		drawAllGeofences();
-	}
-
-	public void drawAllGeofences() {
+	private void drawAllGeofences() {
 		Controller controller = Controller.getInstance(this);
 
 		String userId = controller.getActualUser().getId();
@@ -334,7 +344,7 @@ public class MapGeofenceActivity extends BaseApplicationActivity implements Resu
 		}
 	}
 
-	public void drawGeofence(SimpleGeofence fence) {
+	private void drawGeofence(SimpleGeofence fence) {
 		if (fence == null) {
 			Log.e(TAG, "Geofence is null.");
 			return;
@@ -344,12 +354,14 @@ public class MapGeofenceActivity extends BaseApplicationActivity implements Resu
 						.position(new LatLng(fence.getLatitude(), fence.getLongitude()))
 						.title(fence.getName())
 						.snippet(getString(R.string.radius) + ": " + fence.getRadius() + " " + getString(R.string.unit_meter_short))
-		);
+						.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_CYAN)));
+
 
 
 		// Instantiates a new CircleOptions object + center/radius
 		CircleOptions circleOptions = new CircleOptions().center(new LatLng(fence.getLatitude(), fence.getLongitude()))
-				.radius(fence.getRadius()).fillColor(R.color.beeeon_primary_cyan_dark).strokeColor(Color.TRANSPARENT).strokeWidth(2);
+				.radius(fence.getRadius()).fillColor(R.color.beeeon_secundary_pink)
+				.strokeColor(Color.TRANSPARENT).strokeWidth(2);
 
 		// Get back the mutable Circle
 		Circle circle = mMap.addCircle(circleOptions);
@@ -516,15 +528,12 @@ public class MapGeofenceActivity extends BaseApplicationActivity implements Resu
 						.format("%s, %s", address.getMaxAddressLineIndex() > 0 ? address.getAddressLine(0) : "",
 								address.getCountryName());
 
-				MarkerOptions markerOptions = new MarkerOptions();
-				markerOptions.position(latLng);
-				markerOptions.title(addressText);
-
-				mMap.addMarker(markerOptions);
+//				setSupportProgressBarIndeterminateVisibility(false);
 
 				// Locate the first location
-				if (i == 0)
-					mMap.animateCamera(CameraUpdateFactory.newLatLng(latLng));
+				if (i == 0) {
+					mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, MAP_ZOOM));
+				}
 			}
 		}
 	}
