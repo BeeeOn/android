@@ -20,7 +20,6 @@ import com.rehivetech.beeeon.gcm.INotificationReceiver;
 import com.rehivetech.beeeon.gcm.Notification;
 import com.rehivetech.beeeon.geofence.SimpleGeofence;
 import com.rehivetech.beeeon.geofence.TransitionType;
-import com.rehivetech.beeeon.household.Household;
 import com.rehivetech.beeeon.household.User;
 import com.rehivetech.beeeon.household.User.Role;
 import com.rehivetech.beeeon.network.DemoNetwork;
@@ -28,7 +27,14 @@ import com.rehivetech.beeeon.network.INetwork;
 import com.rehivetech.beeeon.network.Network;
 import com.rehivetech.beeeon.network.authentication.IAuthProvider;
 import com.rehivetech.beeeon.pair.LogDataPair;
+import com.rehivetech.beeeon.persistence.AdaptersModel;
+import com.rehivetech.beeeon.persistence.DeviceLogsModel;
+import com.rehivetech.beeeon.persistence.FacilitiesModel;
+import com.rehivetech.beeeon.persistence.GeofenceModel;
+import com.rehivetech.beeeon.persistence.LocationsModel;
 import com.rehivetech.beeeon.persistence.Persistence;
+import com.rehivetech.beeeon.persistence.UninitializedFacilitiesModel;
+import com.rehivetech.beeeon.persistence.WatchDogsModel;
 import com.rehivetech.beeeon.util.Log;
 import com.rehivetech.beeeon.util.Utils;
 
@@ -59,9 +65,6 @@ public final class Controller {
 	/** Network service for communication with server */
 	private final INetwork mNetwork;
 
-	/** Household object holds logged in user and all adapters and lists which belongs to him */
-	private final Household mHousehold;
-
 	/** Switch for using demo mode (with example adapter, without server) */
 	private static boolean mDemoMode = false;
 
@@ -69,6 +72,21 @@ public final class Controller {
 	private final WeakHashMap<INotificationReceiver, Boolean> mNotificationReceivers = new WeakHashMap<INotificationReceiver, Boolean>();
 
 	private List<User> mRequestUsers;
+
+	/** Active user object */
+	public final User mUser;
+
+	/** Active adapter */
+	public Adapter mActiveAdapter;
+
+	/** Models for keeping and handling data */
+	public final AdaptersModel mAdaptersModel;
+	public final LocationsModel mLocationsModel;
+	public final FacilitiesModel mFacilitiesModel;
+	public final UninitializedFacilitiesModel mUninitializedFacilitiesModel;
+	public final DeviceLogsModel mDeviceLogsModel;
+	public final WatchDogsModel mWatchDogsModel;
+	public final GeofenceModel mGeofenceModel;
 
 	/**
 	 * Return singleton instance of this Controller. This is thread-safe.
@@ -97,24 +115,33 @@ public final class Controller {
 	private Controller(Context context) {
 		mContext = context;
 
-		mNetwork = mDemoMode ? new DemoNetwork(context) : new Network(mContext, Utils.isDebugVersion(context));
+		mNetwork = mDemoMode ? new DemoNetwork(mContext) : new Network(mContext, Utils.isDebugVersion(mContext));
 		mPersistence = new Persistence(mContext);
-		mHousehold = new Household(mContext, mNetwork);
+		mUser = new User();
+
+		// Create models
+		mAdaptersModel = new AdaptersModel(mNetwork);
+		mLocationsModel = new LocationsModel(mNetwork, mContext);
+		mFacilitiesModel = new FacilitiesModel(mNetwork);
+		mUninitializedFacilitiesModel = new UninitializedFacilitiesModel(mNetwork);
+		mDeviceLogsModel = new DeviceLogsModel(mNetwork);
+		mWatchDogsModel = new WatchDogsModel(mNetwork);
+		mGeofenceModel = new GeofenceModel(mContext);
 
 		// Load previous user
 		String userId = mPersistence.loadLastUserId();
 		if (!userId.isEmpty()) {
-			mHousehold.user.setId(userId);
+			mUser.setId(userId);
 			// Load rest of user details (if available)
-			mPersistence.loadUserDetails(userId, mHousehold.user);
+			mPersistence.loadUserDetails(userId, mUser);
 			// Finally load BT (session) - we can call it directly like that because here we doesn't care whether it's empty because it's empty since Network creation
 			mNetwork.setBT(mPersistence.loadLastBT(userId));
 		}
 	}
-	
+
 	/**
-	 * Recreates the actual Controller object to use with different user or demo mode. 
-	 * 
+	 * Recreates the actual Controller object to use with different user or demo mode.
+	 *
 	 * @param context
 	 *            This must be the global Application context.
 	 * @param demoMode
@@ -141,11 +168,11 @@ public final class Controller {
 
 	/**
 	 * Get SharedPreferences for actually logged in user
-	 * 
+	 *
 	 * @return null if user is not logged in
 	 */
 	public SharedPreferences getUserSettings() {
-		String userId = mHousehold.user.getId();
+		String userId = mUser.getId();
 		if (userId.isEmpty()) {
 			Log.e(TAG, "getUserSettings() with no loaded userId");
 			return null;
@@ -153,7 +180,7 @@ public final class Controller {
 
 		return mPersistence.getSettings(userId);
 	}
-	
+
 	/**
 	 * Get global SharedPreferences for whole application
 	 */
@@ -171,7 +198,7 @@ public final class Controller {
 	public void loadUserData(String userId) {
 		// Load cached user details, if this is not first login
 		if (userId != null) {
-			mPersistence.loadUserDetails(userId, mHousehold.user);
+			mPersistence.loadUserDetails(userId, mUser);
 		}
 
 		// Load user data from server
@@ -191,25 +218,25 @@ public final class Controller {
 			}
 
 			// If we have no or changed picture, lets download it from server
-			if (!user.getPictureUrl().isEmpty() && (user.getPicture() == null || !mHousehold.user.getPictureUrl().equals(user.getPictureUrl()))) {
+			if (!user.getPictureUrl().isEmpty() && (user.getPicture() == null || !mUser.getPictureUrl().equals(user.getPictureUrl()))) {
 				Bitmap picture = Utils.fetchImageFromUrl(user.getPictureUrl());
 				user.setPicture(picture);
 			}
 		}
 
 		// Copy user data
-		mHousehold.user.setId(user.getId());
-		mHousehold.user.setRole(user.getRole());
-		mHousehold.user.setName(user.getName());
-		mHousehold.user.setSurname(user.getSurname());
-		mHousehold.user.setGender(user.getGender());
-		mHousehold.user.setEmail(user.getEmail());
-		mHousehold.user.setPictureUrl(user.getPictureUrl());
-		mHousehold.user.setPicture(user.getPicture());
+		mUser.setId(user.getId());
+		mUser.setRole(user.getRole());
+		mUser.setName(user.getName());
+		mUser.setSurname(user.getSurname());
+		mUser.setGender(user.getGender());
+		mUser.setEmail(user.getEmail());
+		mUser.setPictureUrl(user.getPictureUrl());
+		mUser.setPicture(user.getPicture());
 
 		// We have fresh user details, save them to cache (but not in demoMode)
 		if (!(mNetwork instanceof DemoNetwork)) {
-			mPersistence.saveUserDetails(user.getId(), mHousehold.user);
+			mPersistence.saveUserDetails(user.getId(), mUser);
 		}
 	}
 
@@ -223,7 +250,7 @@ public final class Controller {
 	public boolean login(IAuthProvider authProvider) throws AppException {
 		// In demo mode load some init data from sdcard
 		if (mNetwork instanceof DemoNetwork) {
-			mHousehold.geofenceModel.deleteDemoData();
+			mGeofenceModel.deleteDemoData();
 			((DemoNetwork) mNetwork).initDemoData();
 		}
 
@@ -239,7 +266,7 @@ public final class Controller {
 			return false;
 		}
 
-		String userId = mHousehold.user.getId();
+		String userId = mUser.getId();
 		if (userId.isEmpty()) {
 			Log.e(TAG, "UserId wasn't received. We can't continue with login.");
 			return false;
@@ -255,7 +282,7 @@ public final class Controller {
 
 		// Remember this email to use with auto login (but not in demoMode)
 		if (!(mNetwork instanceof DemoNetwork)) {
-			mPersistence.saveLastUserId(mHousehold.user.getId());
+			mPersistence.saveLastUserId(mUser.getId());
 			mPersistence.saveLastAuthProvider(authProvider);
 
 			registerGCM();
@@ -284,7 +311,7 @@ public final class Controller {
 
 		// Delete GCM ID on server side
 		if (!(mNetwork instanceof DemoNetwork)) {
-			final String id = mHousehold.user.getId();
+			final String id = mUser.getId();
 			final String gcmId = getGCMRegistrationId();
 			if (!id.isEmpty() && !gcmId.isEmpty()) {
 				// delete GCM ID from server
@@ -317,7 +344,7 @@ public final class Controller {
 
 	/**
 	 * Checks if user is logged in (Network has beeeon-token for communication).
-	 * 
+	 *
 	 * @return true if user is logged in, false otherwise
 	 */
 	public boolean isLoggedIn() {
@@ -338,144 +365,144 @@ public final class Controller {
 
 	/**
 	 * This CAN'T be called on UI thread!
-	 * 
+	 *
 	 * @param forceReload
 	 * @return
 	 */
 	public synchronized boolean reloadAdapters(boolean forceReload) {
-		return mHousehold.adaptersModel.reloadAdapters(forceReload);
+		return mAdaptersModel.reloadAdapters(forceReload);
 	}
 
 	/**
 	 * This CAN'T be called on UI thread!
-	 * 
+	 *
 	 * @param adapterId
 	 * @param forceReload
 	 * @return
 	 */
 	public synchronized boolean reloadLocations(String adapterId, boolean forceReload) {
-		return mHousehold.locationsModel.reloadLocationsByAdapter(adapterId, forceReload);
+		return mLocationsModel.reloadLocationsByAdapter(adapterId, forceReload);
 	}
 
 	/**
 	 * This CAN'T be called on UI thread!
-	 * 
+	 *
 	 * @param adapterId
 	 * @param forceReload
 	 * @return
 	 */
 	public synchronized boolean reloadFacilitiesByAdapter(String adapterId, boolean forceReload) {
-		return mHousehold.facilitiesModel.reloadFacilitiesByAdapter(adapterId, forceReload);
+		return mFacilitiesModel.reloadFacilitiesByAdapter(adapterId, forceReload);
 	}
 
 	/**
 	 * This CAN'T be called on UI thread!
-	 * 
+	 *
 	 * @param adapterId
 	 * @param forceReload
 	 * @return
 	 */
 	public synchronized boolean reloadUninitializedFacilitiesByAdapter(String adapterId, boolean forceReload) {
-		return mHousehold.uninitializedFacilitiesModel.reloadUninitializedFacilitiesByAdapter(adapterId, forceReload);
+		return mUninitializedFacilitiesModel.reloadUninitializedFacilitiesByAdapter(adapterId, forceReload);
 	}
 
 	/**
 	 * This CAN'T be called on UI thread!
-	 * 
+	 *
 	 * @param pair
 	 * @return
 	 */
 	public synchronized boolean reloadDeviceLog(LogDataPair pair) {
-		return mHousehold.deviceLogsModel.reloadDeviceLog(pair);
+		return mDeviceLogsModel.reloadDeviceLog(pair);
 	}
 
 	/**
 	 * This CAN'T be called on UI thread!
-	 * 
+	 *
 	 * @param facility
 	 * @return
 	 */
 	public boolean updateFacility(Facility facility, boolean forceReload) {
-		return mHousehold.facilitiesModel.refreshFacility(facility, forceReload);
+		return mFacilitiesModel.refreshFacility(facility, forceReload);
 	}
 
 	/**
 	 * This CAN'T be called on UI thread!
-	 * 
+	 *
 	 * @param facilities
 	 * @return
 	 */
 	public boolean updateFacilities(List<Facility> facilities, boolean forceReload) {
-		return mHousehold.facilitiesModel.refreshFacilities(facilities, forceReload);
+		return mFacilitiesModel.refreshFacilities(facilities, forceReload);
 	}
 
 	/**
 	 * Return all adapters that this logged in user has access to.
-	 * 
+	 *
 	 * @return List of adapters
 	 */
 	public List<Adapter> getAdapters() {
-		return mHousehold.adaptersModel.getAdapters();
+		return mAdaptersModel.getAdapters();
 	}
 
 	/**
 	 * Return adapter by his ID.
-	 * 
+	 *
 	 * @param id
 	 * @return Adapter if found, null otherwise
 	 */
 	public Adapter getAdapter(String id) {
-		return mHousehold.adaptersModel.getAdapter(id);
+		return mAdaptersModel.getAdapter(id);
 	}
 
 	/**
 	 * Return active adapter.
-	 * 
+	 *
 	 * @return active adapter, or first adapter, or null if there are no adapters
 	 */
 	public synchronized Adapter getActiveAdapter() {
-		if (mHousehold.activeAdapter == null) {
+		if (mActiveAdapter == null) {
 			// UserSettings can be null when user is not logged in!
 			SharedPreferences prefs = getUserSettings();
 
 			String lastId = (prefs == null) ? "" : prefs.getString(Constants.PERSISTENCE_PREF_ACTIVE_ADAPTER, "");
 
-			Map<String, Adapter> adapters = mHousehold.adaptersModel.getAdaptersMap();
+			Map<String, Adapter> adapters = mAdaptersModel.getAdaptersMap();
 			if (!lastId.isEmpty() && adapters.containsKey(lastId)) {
-				mHousehold.activeAdapter = adapters.get(lastId);
+				mActiveAdapter = adapters.get(lastId);
 			} else {
 				for (Adapter adapter : adapters.values()) {
-					mHousehold.activeAdapter = adapter;
+					mActiveAdapter = adapter;
 					break;
 				}
 			}
 
-			if (mHousehold.activeAdapter != null && prefs != null)
-				prefs.edit().putString(Constants.PERSISTENCE_PREF_ACTIVE_ADAPTER, mHousehold.activeAdapter.getId())
+			if (mActiveAdapter != null && prefs != null)
+				prefs.edit().putString(Constants.PERSISTENCE_PREF_ACTIVE_ADAPTER, mActiveAdapter.getId())
 						.commit();
 		}
 
-		return mHousehold.activeAdapter;
+		return mActiveAdapter;
 	}
 
 	/**
 	 * Sets active adapter and load all locations and facilities, if needed (or if forceReload = true)
-	 * 
+	 *
 	 * This CAN'T be called on UI thread!
-	 * 
+	 *
 	 * @param id
 	 * @param forceReload
 	 * @return true on success, false if there is no adapter with this id
 	 */
 	public synchronized boolean setActiveAdapter(String id, boolean forceReload) {
-		Map<String, Adapter> adapters = mHousehold.adaptersModel.getAdaptersMap();
+		Map<String, Adapter> adapters = mAdaptersModel.getAdaptersMap();
 		if (!adapters.containsKey(id)) {
 			Log.d(TAG, String.format("Can't set active adapter to '%s'", id));
 			return false;
 		}
 
 		Adapter adapter = adapters.get(id);
-		mHousehold.activeAdapter = adapter;
+		mActiveAdapter = adapter;
 		Log.d(TAG, String.format("Set active adapter to '%s'", adapter.getName()));
 
 		// UserSettings can be null when user is not logged in!
@@ -494,9 +521,9 @@ public final class Controller {
 	/**
 	 * Registers new adapter to server. Automatically reloads list of adapters, set this adapter as active and load all
 	 * its sensors.
-	 * 
+	 *
 	 * This CAN'T be called on UI thread!
-	 * 
+	 *
 	 * @param id
 	 * @return true on success, false otherwise
 	 */
@@ -504,7 +531,7 @@ public final class Controller {
 		boolean result = false;
 
 		if (mNetwork.addAdapter(id, adapterName)) {
-			mHousehold.adaptersModel.reloadAdapters(true);
+			mAdaptersModel.reloadAdapters(true);
 			setActiveAdapter(id, true);
 			result = true;
 		}
@@ -514,20 +541,20 @@ public final class Controller {
 
 	/**
 	 * FIXME: debug implementation Unregisters adapter from server.
-	 * 
+	 *
 	 * This CAN'T be called on UI thread!
-	 * 
+	 *
 	 * @param id
 	 * @return true on success, false otherwise
 	 */
 	public boolean unregisterAdapter(String id) {
 		// FIXME: This debug implementation unregisters actual user from adapter, not adapter itself
 
-		if (mNetwork.deleteAccount(id, mHousehold.user)) {
-			if (mHousehold.activeAdapter != null && mHousehold.activeAdapter.getId().equals(id))
-				mHousehold.activeAdapter = null;
+		if (mNetwork.deleteAccount(id, mUser)) {
+			if (mActiveAdapter != null && mActiveAdapter.getId().equals(id))
+				mActiveAdapter = null;
 
-			mHousehold.adaptersModel.reloadAdapters(true);
+			mAdaptersModel.reloadAdapters(true);
 			return true;
 		}
 
@@ -538,28 +565,28 @@ public final class Controller {
 
 	/**
 	 * Return location from active adapter by id.
-	 * 
+	 *
 	 * @param id
 	 * @return Location if found, null otherwise.
 	 */
 	public Location getLocation(String adapterId, String id) {
-		return mHousehold.locationsModel.getLocation(adapterId, id);
+		return mLocationsModel.getLocation(adapterId, id);
 	}
 
 	/**
 	 * Return list of locations from active adapter.
-	 * 
+	 *
 	 * @return List of locations (or empty list)
 	 */
 	public List<Location> getLocations(String adapterId) {
-		return mHousehold.locationsModel.getLocationsByAdapter(adapterId);
+		return mLocationsModel.getLocationsByAdapter(adapterId);
 	}
 
 	/**
 	 * Deletes location from server.
-	 * 
+	 *
 	 * This CAN'T be called on UI thread!
-	 * 
+	 *
 	 * @param location
 	 * @return
 	 */
@@ -572,14 +599,14 @@ public final class Controller {
 		boolean deleted = mNetwork.deleteLocation(adapter.getId(), location);
 
 		// Location was deleted on server, remove it from adapter too
-		return deleted && mHousehold.locationsModel.deleteLocation(adapter.getId(), location.getId());
+		return deleted && mLocationsModel.deleteLocation(adapter.getId(), location.getId());
 	}
 
 	/**
 	 * Save changed location to server.
-	 * 
+	 *
 	 * This CAN'T be called on UI thread!
-	 * 
+	 *
 	 * @param location
 	 * @return new location object or null on error
 	 */
@@ -592,14 +619,14 @@ public final class Controller {
 		boolean saved = mNetwork.updateLocation(adapter.getId(), location);
 
 		// Location was updated on server, update it to adapter too
-		return saved && mHousehold.locationsModel.updateLocation(adapter.getId(), location);
+		return saved && mLocationsModel.updateLocation(adapter.getId(), location);
 	}
 
 	/**
 	 * Create and add new location to server.
-	 * 
+	 *
 	 * This CAN'T be called on UI thread!
-	 * 
+	 *
 	 * @param location
 	 * @return new location object or null on error
 	 */
@@ -612,19 +639,19 @@ public final class Controller {
 		location = mNetwork.createLocation(adapter.getId(), location);
 
 		// Location was saved on server, save it to adapter too
-		return (location != null && mHousehold.locationsModel.addLocation(adapter.getId(), location)) ? location : null;
+		return (location != null && mLocationsModel.addLocation(adapter.getId(), location)) ? location : null;
 	}
 
 	/** Facilities methods **************************************************/
 
 	/**
 	 * Return facility by ID.
-	 * 
+	 *
 	 * @param id
 	 * @return facility or null if no facility is found
 	 */
 	public Facility getFacility(String adapterId, String id) {
-		return mHousehold.facilitiesModel.getFacility(adapterId, id);
+		return mFacilitiesModel.getFacility(adapterId, id);
 	}
 
 	public Device getDevice(String adapterId, String id) {
@@ -655,60 +682,60 @@ public final class Controller {
 
 	/**
 	 * Return list of all uninitialized facilities from adapter
-	 * 
+	 *
 	 * @param adapterId
 	 * @return List of uninitialized facilities (or empty list)
 	 */
 	public List<Facility> getUninitializedFacilities(String adapterId) {
-		return mHousehold.uninitializedFacilitiesModel.getUninitializedFacilitiesByAdapter(adapterId);
+		return mUninitializedFacilitiesModel.getUninitializedFacilitiesByAdapter(adapterId);
 	}
 
 	/**
 	 * Return list of all facilities by location from adapter
-	 * 
+	 *
 	 * @param locationId
 	 * @return List of facilities (or empty list)
 	 */
 	public List<Facility> getFacilitiesByLocation(String adapterId, String locationId) {
-		return mHousehold.facilitiesModel.getFacilitiesByLocation(adapterId, locationId);
+		return mFacilitiesModel.getFacilitiesByLocation(adapterId, locationId);
 	}
 
 	/**
 	 * Return list of all facilities from adapter
-	 * 
+	 *
 	 * @param adapterId
 	 * @return List of facilities (or empty list)
 	 */
 	public List<Facility> getFacilitiesByAdapter(String adapterId) {
-		return mHousehold.facilitiesModel.getFacilitiesByAdapter(adapterId);
+		return mFacilitiesModel.getFacilitiesByAdapter(adapterId);
 	}
 
 	/**
 	 * Save specified settings of facility to server.
-	 * 
+	 *
 	 * This CAN'T be called on UI thread!
-	 * 
+	 *
 	 * @param facility
 	 * @param what
 	 *            type of settings to save
 	 * @return true on success, false otherwise
 	 */
 	public boolean saveFacility(Facility facility, EnumSet<SaveDevice> what) {
-		return mHousehold.facilitiesModel.saveFacility(facility, what);
+		return mFacilitiesModel.saveFacility(facility, what);
 	}
 
 	/**
 	 * Save specified settings of device to server.
-	 * 
+	 *
 	 * This CAN'T be called on UI thread!
-	 * 
+	 *
 	 * @param device
 	 * @param what
 	 *            type of settings to save
 	 * @return true on success, false otherwise
 	 */
 	public boolean saveDevice(Device device, EnumSet<SaveDevice> what) {
-		return mHousehold.facilitiesModel.saveDevice(device, what);
+		return mFacilitiesModel.saveDevice(device, what);
 	}
 
     /**
@@ -716,24 +743,24 @@ public final class Controller {
      *
      */
     public boolean delFacility(Facility facility) {
-        return mHousehold.facilitiesModel.delFacility(facility);
+        return mFacilitiesModel.delFacility(facility);
     }
 
 	/**
 	 * Return log for device.
-	 * 
+	 *
 	 * @param pair
 	 * @return
 	 */
 	public DeviceLog getDeviceLog(LogDataPair pair) {
-		return mHousehold.deviceLogsModel.getDeviceLog(pair);
+		return mDeviceLogsModel.getDeviceLog(pair);
 	}
 
 	/**
 	 * Send pair request
-	 * 
+	 *
 	 * This CAN'T be called on UI thread!
-	 * 
+	 *
 	 * @param adapterId
 	 * @return result
 	 */
@@ -746,7 +773,7 @@ public final class Controller {
 
 	/**
 	 * Get user by ID from adapter.
-	 * 
+	 *
 	 * @param adapterId
 	 * @param userId
 	 * @return
@@ -755,12 +782,14 @@ public final class Controller {
 	public User getUser(String adapterId, String userId) throws NotImplementedException {
 		throw new NotImplementedException();
 	}
-	
+
+
+	// FIXME: all these user methods move to model!!!
 	public Boolean reloadAdapterUsers(String adapterId, boolean mForceReload) {
 		mRequestUsers = mNetwork.getAccounts(adapterId);
 		return true;
 	}
-	
+
 	public List<User> getUsers() {
 		if(mRequestUsers != null)
 			return  mRequestUsers;
@@ -769,7 +798,7 @@ public final class Controller {
 
 	/**
 	 * Add user to adapter.
-	 * 
+	 *
 	 * @param adapterId
 	 * @param user
 	 * @return
@@ -781,7 +810,7 @@ public final class Controller {
 
 	/**
 	 * Delete user from adapter.
-	 * 
+	 *
 	 * @param adapterId
 	 * @param user
 	 * @return
@@ -793,7 +822,7 @@ public final class Controller {
 
 	/**
 	 * Save user settings to adapter.
-	 * 
+	 *
 	 * @param adapterId
 	 * @param user
 	 * @return
@@ -830,9 +859,9 @@ public final class Controller {
 	 * Gets the current registration ID for application on GCM service.
 	 * <p>
 	 * If result is empty, the app needs to register.
-	 * 
+	 *
 	 * This CAN'T be called on UI thread!
-	 * 
+	 *
 	 * @return registration ID, or empty string if there is no existing registration ID.
 	 */
 	public String getGCMRegistrationId() {
@@ -849,7 +878,7 @@ public final class Controller {
 		if (registeredVersion != currentVersion) {
 			// delete actual GCM ID from server
 			try {
-				deleteGCM(mHousehold.user.getId(), registrationId);
+				deleteGCM(mUser.getId(), registrationId);
 			} catch (Exception e) {
 				// do nothing
 				Log.w(GcmHelper.TAG_GCM, "getGCMRegistrationId(): Delete GCM ID failed: " + e.getLocalizedMessage());
@@ -863,9 +892,9 @@ public final class Controller {
 
 	/**
 	 * Delete GCM ID from user
-	 * 
+	 *
 	 * This CAN'T be called on UI thread!
-	 * 
+	 *
 	 * @param userId
 	 * @param gcmID
 	 */
@@ -877,7 +906,7 @@ public final class Controller {
 
 	/**
 	 * Stores the registration ID and app versionCode in the application's {@code SharedPreferences}.
-	 * 
+	 *
 	 * @param gcmId
 	 *            registration ID
 	 */
@@ -891,9 +920,9 @@ public final class Controller {
 
 	/**
 	 * Method set gcmID to server (applied only if there is some user)
-	 * 
+	 *
 	 * This CAN'T be called on UI thread!
-	 * 
+	 *
 	 * @param gcmID
 	 *            to be set
 	 */
@@ -904,7 +933,7 @@ public final class Controller {
 			return;
 		}
 
-		if (mHousehold.user.getId().isEmpty()) {
+		if (mUser.getId().isEmpty()) {
 			// no user, it will be sent in user login
 			return;
 		}
@@ -921,27 +950,27 @@ public final class Controller {
 	}
 
 	public User getActualUser() {
-		return mHousehold.user;
+		return mUser;
 	}
 
 	/**
 	 * Send request to server to switch Actor value.
-	 * 
+	 *
 	 * This CAN'T be called on UI thread!
-	 * 
+	 *
 	 * @param device
 	 *            DeviceType of this device must be actor, i.e., device.getType().isActor() must return true.
 	 * @return true on success, false otherwise
 	 */
 	public Boolean switchActorValue(Device device) {
-		return mHousehold.facilitiesModel.switchActor(device);
+		return mFacilitiesModel.switchActor(device);
 	}
 
 	/** Notification methods ************************************************/
 
 	/**
 	 * Register receiver for receiving new notifications.
-	 * 
+	 *
 	 * @param receiver
 	 */
 	public void registerNotificationReceiver(INotificationReceiver receiver) {
@@ -950,7 +979,7 @@ public final class Controller {
 
 	/**
 	 * Unregister listener from receiving new notifications.
-	 * 
+	 *
 	 * @param receiver
 	 */
 	public void unregisterNotificationReceiver(INotificationReceiver receiver) {
@@ -959,11 +988,11 @@ public final class Controller {
 
 	/**
 	 * Sends Notification to all registered receivers.
-	 * 
+	 *
 	 * <br>
 	 * NOTE: This should be called by some GcmHandler only. Or maybe this should be inside of that class directly and
 	 * Controller should "redirect" (un)registering for calling it there too.
-	 * 
+	 *
 	 * @param notification
 	 * @return
 	 */
@@ -977,9 +1006,9 @@ public final class Controller {
 
 	/**
 	 * Set notification as read on server side
-	 * 
+	 *
 	 * This CAN'T be called on UI thread!
-	 * 
+	 *
 	 * @param msgId
 	 */
 	public void setNotificationRead(String msgId) {
@@ -990,9 +1019,9 @@ public final class Controller {
 
 	/**
 	 * Set notifications as read on server side
-	 * 
+	 *
 	 * This CAN'T be called on UI thread!
-	 * 
+	 *
 	 * @param msgIds
 	 *            Array of message IDs which will be marked as read
 	 */
@@ -1000,7 +1029,7 @@ public final class Controller {
 		mNetwork.NotificationsRead(msgIds);
 	}
 
-	
+
 	/**
 	 * UCA
 	 */
@@ -1010,12 +1039,12 @@ public final class Controller {
 		}
 		return true;
 	}
-	
+
 	/**
 	 * @return List of geofences. If no geofence is registered, empty list is returned.
 	 */
 	public List<SimpleGeofence> getAllGeofences() {
-		return mHousehold.geofenceModel.getAllGeofences(mHousehold.user.getId());
+		return mGeofenceModel.getAllGeofences(mUser.getId());
 	}
 
 	/**
@@ -1026,7 +1055,7 @@ public final class Controller {
 	 */
 	public boolean hasActualUserGeofence(String geofenceId) {
 		Log.i(TAG, "Geofence: Control if passed geofence is for actual user");
-		return mHousehold.geofenceModel.exist(mHousehold.user.getId(), geofenceId);
+		return mGeofenceModel.exist(mUser.getId(), geofenceId);
 	}
 
 	/**
@@ -1042,11 +1071,11 @@ public final class Controller {
 	}
 
 	public void addGeofence(SimpleGeofence geofence) {
-		mHousehold.geofenceModel.addGeofence(mHousehold.user.getId(), geofence);
+		mGeofenceModel.addGeofence(mUser.getId(), geofence);
 	}
 
 	public void deleteGeofence(SimpleGeofence geofence) {
-		mHousehold.geofenceModel.deleteGeofence(mHousehold.user.getId(), geofence.getId());
+		mGeofenceModel.deleteGeofence(mUser.getId(), geofence.getId());
 	}
 
 	/**
@@ -1055,7 +1084,7 @@ public final class Controller {
 	 * @return
 	 */
 	public List<WatchDog> getAllWatchDogs(String adapterId){
-		return mHousehold.watchDogsModel.getWatchDogsByAdapter(adapterId);
+		return mWatchDogsModel.getWatchDogsByAdapter(adapterId);
 	}
 
 	/**
@@ -1065,7 +1094,7 @@ public final class Controller {
 	 * @return
 	 */
 	public WatchDog getWatchDog(String adapterId, String id) {
-		return mHousehold.watchDogsModel.getWatchDog(adapterId, id);
+		return mWatchDogsModel.getWatchDog(adapterId, id);
 	}
 
 	/**
@@ -1078,7 +1107,7 @@ public final class Controller {
 	 * @return
 	 */
 	public synchronized boolean reloadWatchDogs(String adapterId, boolean forceReload) {
-		return mHousehold.watchDogsModel.reloadWatchDogsByAdapter(adapterId, forceReload);
+		return mWatchDogsModel.reloadWatchDogsByAdapter(adapterId, forceReload);
 	}
 
 	/**
@@ -1101,11 +1130,11 @@ public final class Controller {
 		// if watchdog has ID, edit id
 		if(watchdog.getId() != null){
 			// first tries to update on server, then in persistence
-			return mNetwork.updateWatchDog(watchdog, adapter.getId()) && mHousehold.watchDogsModel.updateWatchDog(adapter.getId(), watchdog);
+			return mNetwork.updateWatchDog(watchdog, adapter.getId()) && mWatchDogsModel.updateWatchDog(adapter.getId(), watchdog);
 		}
 		else{
 			// first tries to add on server, then in persistence
-			return mNetwork.addWatchDog(watchdog, adapter.getId()) && mHousehold.watchDogsModel.addWatchDog(adapter.getId(), watchdog);
+			return mNetwork.addWatchDog(watchdog, adapter.getId()) && mWatchDogsModel.addWatchDog(adapter.getId(), watchdog);
 		}
 	}
 
@@ -1125,6 +1154,6 @@ public final class Controller {
 		// delete from server
 		boolean deleted = mNetwork.deleteWatchDog(watchdog);
 		// watchdog was deleted on server, remove it from adapter too
-		return deleted && mHousehold.watchDogsModel.deleteWatchDog(adapter.getId(), watchdog.getId());
+		return deleted && mWatchDogsModel.deleteWatchDog(adapter.getId(), watchdog.getId());
 	}
 }
