@@ -7,8 +7,6 @@ import android.graphics.Bitmap;
 import com.rehivetech.beeeon.Constants;
 import com.rehivetech.beeeon.exception.AppException;
 import com.rehivetech.beeeon.exception.NotImplementedException;
-import com.rehivetech.beeeon.gcm.INotificationReceiver;
-import com.rehivetech.beeeon.gcm.Notification;
 import com.rehivetech.beeeon.geofence.TransitionType;
 import com.rehivetech.beeeon.household.adapter.Adapter;
 import com.rehivetech.beeeon.household.user.User;
@@ -33,7 +31,6 @@ import com.rehivetech.beeeon.util.Utils;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.WeakHashMap;
 
 /**
  * Core of application (used as singleton), provides methods and access to all data and household.
@@ -58,9 +55,6 @@ public final class Controller {
 
 	/** Network service for communication with server */
 	private final INetwork mNetwork;
-
-	/** Weak map for holding registered notification receivers */
-	private final WeakHashMap<INotificationReceiver, Boolean> mNotificationReceivers = new WeakHashMap<INotificationReceiver, Boolean>();
 
 	private List<User> mRequestUsers;
 
@@ -502,70 +496,6 @@ public final class Controller {
 	public User getActualUser() {
 		return mUser;
 	}
-
-	/** Notification methods ************************************************/
-
-	/**
-	 * Register receiver for receiving new notifications.
-	 *
-	 * @param receiver
-	 */
-	public void registerNotificationReceiver(INotificationReceiver receiver) {
-		mNotificationReceivers.put(receiver, true);
-	}
-
-	/**
-	 * Unregister listener from receiving new notifications.
-	 *
-	 * @param receiver
-	 */
-	public void unregisterNotificationReceiver(INotificationReceiver receiver) {
-		mNotificationReceivers.remove(receiver);
-	}
-
-	/**
-	 * Sends Notification to all registered receivers.
-	 *
-	 * <br>
-	 * NOTE: This should be called by some GcmHandler only. Or maybe this should be inside of that class directly and
-	 * Controller should "redirect" (un)registering for calling it there too.
-	 *
-	 * @param notification
-	 * @return
-	 */
-	public int receiveNotification(Notification notification) {
-		for (INotificationReceiver receiver : mNotificationReceivers.keySet()) {
-			receiver.receiveNotification(notification);
-		}
-
-		return mNotificationReceivers.size();
-	}
-
-	/**
-	 * Set notification as read on server side
-	 *
-	 * This CAN'T be called on UI thread!
-	 *
-	 * @param msgId
-	 */
-	public void setNotificationRead(String msgId) {
-		ArrayList<String> list = new ArrayList<String>();
-		list.add(msgId);
-		setNotificationRead(list);
-	}
-
-	/**
-	 * Set notifications as read on server side
-	 *
-	 * This CAN'T be called on UI thread!
-	 *
-	 * @param msgIds
-	 *            Array of message IDs which will be marked as read
-	 */
-	public void setNotificationRead(ArrayList<String> msgIds) {
-		mNetwork.NotificationsRead(msgIds);
-	}
-
 
 	/**
 	 * UCA

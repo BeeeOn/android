@@ -5,11 +5,16 @@ import android.content.Context;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.exception.AppException;
 import com.rehivetech.beeeon.gcm.GcmHelper;
+import com.rehivetech.beeeon.gcm.INotificationReceiver;
+import com.rehivetech.beeeon.gcm.Notification;
 import com.rehivetech.beeeon.household.user.User;
 import com.rehivetech.beeeon.network.INetwork;
 import com.rehivetech.beeeon.network.Network;
 import com.rehivetech.beeeon.util.Log;
 import com.rehivetech.beeeon.util.Utils;
+
+import java.util.ArrayList;
+import java.util.WeakHashMap;
 
 public class GcmModel {
 
@@ -19,6 +24,9 @@ public class GcmModel {
 	private final INetwork mNetwork;
 	private final Persistence mPersistence;
 	private final User mUser;
+
+	/** Weak map for holding registered notification receivers */
+	private final WeakHashMap<INotificationReceiver, Boolean> mNotificationReceivers = new WeakHashMap<INotificationReceiver, Boolean>();
 
 	public GcmModel(Context context, INetwork network, Persistence persistence, User user) {
 		mContext = context;
@@ -153,6 +161,70 @@ public class GcmModel {
 			// nothing to do
 			Log.e(TAG, GcmHelper.TAG_GCM + "Set GCM ID to server failed.");
 		}
+	}
+
+
+	/** Notification methods ************************************************/
+
+	/**
+	 * Register receiver for receiving new notifications.
+	 *
+	 * @param receiver
+	 */
+	public void registerNotificationReceiver(INotificationReceiver receiver) {
+		mNotificationReceivers.put(receiver, true);
+	}
+
+	/**
+	 * Unregister listener from receiving new notifications.
+	 *
+	 * @param receiver
+	 */
+	public void unregisterNotificationReceiver(INotificationReceiver receiver) {
+		mNotificationReceivers.remove(receiver);
+	}
+
+	/**
+	 * Sends Notification to all registered receivers.
+	 *
+	 * <br>
+	 * NOTE: This should be called by some GcmHandler only. Or maybe this should be inside of that class directly and
+	 * Controller should "redirect" (un)registering for calling it there too.
+	 *
+	 * @param notification
+	 * @return
+	 */
+	public int receiveNotification(Notification notification) {
+		for (INotificationReceiver receiver : mNotificationReceivers.keySet()) {
+			receiver.receiveNotification(notification);
+		}
+
+		return mNotificationReceivers.size();
+	}
+
+	/**
+	 * Set notification as read on server side
+	 *
+	 * This CAN'T be called on UI thread!
+	 *
+	 * @param msgId
+	 */
+	public void setNotificationRead(String msgId) {
+		ArrayList<String> list = new ArrayList<String>();
+		list.add(msgId);
+		setNotificationRead(list);
+	}
+
+	/**
+	 * Set notifications as read on server side
+	 *
+	 * This CAN'T be called on UI thread!
+	 *
+	 * @param msgIds
+	 *            Array of message IDs which will be marked as read
+	 */
+	public void setNotificationRead(ArrayList<String> msgIds) {
+		mNetwork.NotificationsRead(msgIds);
 	}
 
 }

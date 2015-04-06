@@ -79,7 +79,7 @@ public class GcmMessageHandler extends IntentService {
 				Log.i(TAG, GcmHelper.TAG_GCM + "Received : (" + messageType + ")  " + notification.getMessage());
 
 				// pass notification to controller
-				int notifRec = mController.receiveNotification(notification);
+				int notifRec = mController.getGcmModel().receiveNotification(notification);
 				Log.i(TAG, GcmHelper.TAG_GCM + "Controller passed notification to " + notifRec + " reciever(s).");
 
 				handleNotification(notification);

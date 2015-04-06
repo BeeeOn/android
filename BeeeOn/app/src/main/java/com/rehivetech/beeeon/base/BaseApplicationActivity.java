@@ -40,7 +40,7 @@ public abstract class BaseApplicationActivity extends BaseActivity implements IN
 			triedLoginAlready = false;
 		}
 
-		controller.registerNotificationReceiver(this);
+		controller.getGcmModel().registerNotificationReceiver(this);
 
 		isPaused = false;
 		onAppResume();
@@ -51,7 +51,7 @@ public abstract class BaseApplicationActivity extends BaseActivity implements IN
 		super.onPause();
 
 		Controller controller = Controller.getInstance(this);
-		controller.unregisterNotificationReceiver(this);
+		controller.getGcmModel().unregisterNotificationReceiver(this);
 
 		isPaused = true;
 		onAppPause();
