@@ -9,7 +9,6 @@ import com.rehivetech.beeeon.exception.AppException;
 import com.rehivetech.beeeon.household.adapter.Adapter;
 import com.rehivetech.beeeon.household.user.User;
 import com.rehivetech.beeeon.household.user.User.Role;
-import com.rehivetech.beeeon.household.watchdog.WatchDog;
 import com.rehivetech.beeeon.network.DemoNetwork;
 import com.rehivetech.beeeon.network.INetwork;
 import com.rehivetech.beeeon.network.Network;
@@ -440,52 +439,4 @@ public final class Controller {
 		return true;
 	}
 
-	/**
-	 * Either edits or creates new watchdog
-	 *
-	 * This CAN'T be called on UI thread!
-	 *
-	 * @param watchdog
-	 * @return
-	 */
-	// FIXME: Tom, move this into WatchDogsModel and then use call via controller.getWatchDogsModel().yourMethod();
-	public boolean saveWatchDog(WatchDog watchdog) {
-		Adapter adapter = getActiveAdapter();
-		if (adapter == null) {
-			return false;
-		}
-
-		// TODO should it be here?
-		watchdog.setAdapterId(adapter.getId());
-
-		// if watchdog has ID, edit id
-		if(watchdog.getId() != null){
-			// first tries to update on server, then in persistence
-			return mNetwork.updateWatchDog(watchdog, adapter.getId()) && mWatchDogsModel.updateWatchDog(adapter.getId(), watchdog);
-		}
-		else{
-			// first tries to add on server, then in persistence
-			return mNetwork.addWatchDog(watchdog, adapter.getId()) && mWatchDogsModel.addWatchDog(adapter.getId(), watchdog);
-		}
-	}
-
-	/**
-	 * Delete a watchdog
-	 *
-	 * This CAN'T be called on UI thread!
-	 *
-	 * @param watchdog
-	 * @return
-	 */
-	// FIXME: Tom, move this into WatchDogsModel and then use call via controller.getWatchDogsModel().yourMethod();
-	public boolean deleteWatchDog(WatchDog watchdog) {
-		Adapter adapter = getActiveAdapter();
-		if (adapter == null) {
-			return false;
-		}
-		// delete from server
-		boolean deleted = mNetwork.deleteWatchDog(watchdog);
-		// watchdog was deleted on server, remove it from adapter too
-		return deleted && mWatchDogsModel.deleteWatchDog(adapter.getId(), watchdog.getId());
-	}
 }

@@ -2,8 +2,8 @@ package com.rehivetech.beeeon.persistence;
 
 import com.rehivetech.beeeon.IdentifierComparator;
 import com.rehivetech.beeeon.exception.AppException;
-import com.rehivetech.beeeon.network.INetwork;
 import com.rehivetech.beeeon.household.watchdog.WatchDog;
+import com.rehivetech.beeeon.network.INetwork;
 
 import org.joda.time.DateTime;
 
@@ -138,57 +138,70 @@ public class WatchDogsModel {
 		// TODO: implement this
 	}
 
-	/**
-	 * Updates watchdog in list of WatchDogs
-	 * @param adapterId
-	 * @param watchdog
-	 * @return
-	 */
-	public boolean updateWatchDog(String adapterId, WatchDog watchdog) {
-		Map<String, WatchDog> adapterWatchDogs = mWatchDogs.get(adapterId);
+	private void updateWatchDogInMap(WatchDog watchdog) {
+		String adapterId = watchdog.getAdapterId();
 
-		// TODO: check/create adapterLocations object
-		if (!adapterWatchDogs.containsKey(watchdog.getId())) {
-			// //Log.w(TAG, String.format("Can't update location with id=%s. It doesn't exists.", location.getId()));
-			return false;
+		Map<String, WatchDog> adapterWatchDogs = mWatchDogs.get(adapterId);
+		if (adapterWatchDogs == null) {
+			adapterWatchDogs = new HashMap<String, WatchDog>();
+			mWatchDogs.put(adapterId, adapterWatchDogs);
 		}
 
 		adapterWatchDogs.put(watchdog.getId(), watchdog);
-		return true;
-
 	}
 
 	/**
-	 * Removes location from list of locations.
+	 * Updates watchdog in list of WatchDogs
 	 *
-	 * @param id
-	 * @return false when there wasn't location with this id
+	 * @param watchdog
+	 * @return
 	 */
-	public boolean deleteWatchDog(String adapterId, String id) {
-		// TODO: review and refactor, this is just copied from Adapter
-		// TODO: check/create adapterLocations object
-		Map<String, WatchDog> adapterWatchDogs = mWatchDogs.get(adapterId);
-		return adapterWatchDogs.remove(id) != null;
+	public boolean updateWatchDog(WatchDog watchdog) {
+		if (mNetwork.updateWatchDog(watchdog, watchdog.getAdapterId())) {
+			// Location was updated on server, update it in map too
+			updateWatchDogInMap(watchdog);
+			return true;
+		}
+
+		return false;
+	}
+
+	/**
+	 * Delete a watchdog
+	 *
+	 * This CAN'T be called on UI thread!
+	 *
+	 * @param watchdog
+	 * @return
+	 */
+	public boolean deleteWatchDog(WatchDog watchdog) {
+		// delete from server
+		if (mNetwork.deleteWatchDog(watchdog)) {
+			// watchdog was deleted on server, remove it from adapter too
+			Map<String, WatchDog> adapterWatchDogs = mWatchDogs.get(watchdog.getAdapterId());
+			if (adapterWatchDogs != null)
+				adapterWatchDogs.remove(watchdog.getId());
+
+			return true;
+		}
+
+		return false;
 	}
 
 	/**
 	 * Adds new WatchDog to list of objects
-	 * @param adapterId
+	 *
 	 * @param watchdog
 	 * @return
 	 */
-	public boolean addWatchDog(String adapterId, WatchDog watchdog) {
-		// TODO check if it's ok this way
-		Map<String, WatchDog> adapterWatchDogs = mWatchDogs.get(adapterId);
-		if(adapterWatchDogs == null){
-			mWatchDogs.put(adapterId, new HashMap<String, WatchDog>());
-			adapterWatchDogs = mWatchDogs.get(adapterId);
+	public boolean addWatchDog(WatchDog watchdog) {
+		if (mNetwork.addWatchDog(watchdog, watchdog.getAdapterId())) {
+			// WatchDog was updated on server, update it in map too
+			updateWatchDogInMap(watchdog);
+			return true;
 		}
 
-		if (adapterWatchDogs.containsKey(watchdog.getId()))
-			return false;
-
-		adapterWatchDogs.put(watchdog.getId(), watchdog);
-		return true;
+		return false;
 	}
+
 }
