@@ -423,62 +423,29 @@ public final class Controller {
 	 * @return true on success, false if there is no adapter with this id
 	 */
 	public synchronized boolean setActiveAdapter(String id, boolean forceReload) {
+		// UserSettings can be null when user is not logged in!
+		SharedPreferences prefs = getUserSettings();
+		if (prefs != null) {
+			// Save it whether adapter below will be loaded or not
+			prefs.edit().putString(Constants.PERSISTENCE_PREF_ACTIVE_ADAPTER, id).commit();
+		}
+
+		// Find specified adapter
 		Map<String, Adapter> adapters = mAdaptersModel.getAdaptersMap();
-		if (!adapters.containsKey(id)) {
+		mActiveAdapter = adapters.get(id);
+
+		if (mActiveAdapter == null) {
 			Log.d(TAG, String.format("Can't set active adapter to '%s'", id));
 			return false;
 		}
 
-		Adapter adapter = adapters.get(id);
-		mActiveAdapter = adapter;
-		Log.d(TAG, String.format("Set active adapter to '%s'", adapter.getName()));
-
-		// UserSettings can be null when user is not logged in!
-		SharedPreferences prefs = getUserSettings();
-		if (prefs != null) {
-			prefs.edit().putString(Constants.PERSISTENCE_PREF_ACTIVE_ADAPTER, adapter.getId()).commit();
-		}
+		Log.d(TAG, String.format("Set active adapter to '%s'", mActiveAdapter.getName()));
 
 		// Load locations and facilities, if needed
 		mLocationsModel.reloadLocationsByAdapter(id, forceReload);
 		mFacilitiesModel.reloadFacilitiesByAdapter(id, forceReload);
 
 		return true;
-	}
-
-	/**
-	 * FIXME: debug implementation Unregisters adapter from server.
-	 *
-	 * This CAN'T be called on UI thread!
-	 *
-	 * @param id
-	 * @return true on success, false otherwise
-	 */
-	public boolean unregisterAdapter(String id) {
-		// FIXME: This debug implementation unregisters actual user from adapter, not adapter itself
-
-		if (mNetwork.deleteAccount(id, mUser)) {
-			if (mActiveAdapter != null && mActiveAdapter.getId().equals(id))
-				mActiveAdapter = null;
-
-			mAdaptersModel.reloadAdapters(true);
-			return true;
-		}
-
-		return false;
-	}
-
-	/**
-	 * Send pair request
-	 *
-	 * This CAN'T be called on UI thread!
-	 *
-	 * @param adapterId
-	 * @return result
-	 */
-	public boolean sendPairRequest(String adapterId) {
-		// FIXME: hack -> true if you want to add virtual sensor
-		return mNetwork.prepareAdapterToListenNewSensors(adapterId);
 	}
 
 	/** User methods ********************************************************/
