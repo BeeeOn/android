@@ -143,7 +143,7 @@ public class MapGeofenceActivity extends BaseApplicationActivity implements Resu
 			}
 		});
 
-		setSupportProgressBarIndeterminateVisibility(false);
+//		setSupportProgressBarIndeterminateVisibility(false);
 	}
 
 	private void initialZoom() {
@@ -360,7 +360,7 @@ public class MapGeofenceActivity extends BaseApplicationActivity implements Resu
 
 		// Instantiates a new CircleOptions object + center/radius
 		CircleOptions circleOptions = new CircleOptions().center(new LatLng(fence.getLatitude(), fence.getLongitude()))
-				.radius(fence.getRadius()).fillColor(R.color.beeeon_secundary_pink)
+				.radius(fence.getRadius()).fillColor(getResources().getColor(R.color.beeeon_secundary_pink_transparent))
 				.strokeColor(Color.TRANSPARENT).strokeWidth(2);
 
 		// Get back the mutable Circle
