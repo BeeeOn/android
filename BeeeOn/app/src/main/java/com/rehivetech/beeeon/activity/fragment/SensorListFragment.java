@@ -280,7 +280,7 @@ public class SensorListFragment extends Fragment {
 					mActivity.getMenu().closeMenu();
 					TutorialHelper.showAddAdapterTutorial(mActivity, mView);
 					if (prefs != null) {
-						prefs.edit().putBoolean(Constants.TUTORIAL_ADD_ADAPTER_SHOWED, false).commit();
+						prefs.edit().putBoolean(Constants.TUTORIAL_ADD_ADAPTER_SHOWED, false).apply();
 					}
 				}
 			}
@@ -306,7 +306,7 @@ public class SensorListFragment extends Fragment {
 				TutorialHelper.showAddSensorTutorial(mActivity, mView);
 				SharedPreferences prefs = mController.getUserSettings();
 				if (prefs != null) {
-					prefs.edit().putBoolean(Constants.TUTORIAL_ADD_SENSOR_SHOWED, false).commit();
+					prefs.edit().putBoolean(Constants.TUTORIAL_ADD_SENSOR_SHOWED, false).apply();
 				}
 			}
 		}

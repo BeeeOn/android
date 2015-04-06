@@ -338,7 +338,7 @@ public final class Controller {
 		// Delete session from saved settings
 		SharedPreferences prefs = getUserSettings();
 		if (prefs != null)
-			prefs.edit().remove(Constants.PERSISTENCE_PREF_USER_BT).commit();
+			prefs.edit().remove(Constants.PERSISTENCE_PREF_USER_BT).apply();
 
 		// Forgot info about last user
 		mPersistence.saveLastAuthProvider(null);
@@ -387,8 +387,7 @@ public final class Controller {
 			}
 
 			if (mActiveAdapter != null && prefs != null)
-				prefs.edit().putString(Constants.PERSISTENCE_PREF_ACTIVE_ADAPTER, mActiveAdapter.getId())
-						.commit();
+				prefs.edit().putString(Constants.PERSISTENCE_PREF_ACTIVE_ADAPTER, mActiveAdapter.getId()).apply();
 		}
 
 		return mActiveAdapter;
@@ -408,7 +407,7 @@ public final class Controller {
 		SharedPreferences prefs = getUserSettings();
 		if (prefs != null) {
 			// Save it whether adapter below will be loaded or not
-			prefs.edit().putString(Constants.PERSISTENCE_PREF_ACTIVE_ADAPTER, id).commit();
+			prefs.edit().putString(Constants.PERSISTENCE_PREF_ACTIVE_ADAPTER, id).apply();
 		}
 
 		// Find specified adapter

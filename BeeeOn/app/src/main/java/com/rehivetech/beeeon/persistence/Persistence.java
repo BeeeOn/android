@@ -91,13 +91,13 @@ public class Persistence {
 	private void setInt(String namespace, String key, int value) {
 		Editor settings = getSettings(namespace).edit();
 		settings.putInt(key, value);
-		settings.commit();
+		settings.apply();
 	}
 
 	private void setString(String namespace, String key, String value) {
 		Editor settings = getSettings(namespace).edit();
 		settings.putString(key, value);
-		settings.commit();
+		settings.apply();
 	}
 
 	private void setOrRemoveString(String namespace, String key, String value) {
@@ -108,7 +108,7 @@ public class Persistence {
 		else
 			settings.putString(key, value);
 
-		settings.commit();
+		settings.apply();
 	}
 	
 	private void saveBitmap(Bitmap picture, String filename) {
@@ -193,7 +193,7 @@ public class Persistence {
 			.putString(Constants.PERSISTENCE_PREF_USER_SURNAME, user.getSurname()) //
 			.putString(Constants.PERSISTENCE_PREF_USER_GENDER, user.getGender().toString()) //
 			.putString(Constants.PERSISTENCE_PREF_USER_PICTURE, user.getPictureUrl()) //
-			.commit();
+			.apply();
 		
 		Bitmap picture = user.getPicture();
 		if (picture != null)

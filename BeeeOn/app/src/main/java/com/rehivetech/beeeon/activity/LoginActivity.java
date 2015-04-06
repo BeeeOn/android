@@ -105,7 +105,7 @@ public class LoginActivity extends BaseActivity {
 		SharedPreferences prefs = getPreferences( MODE_PRIVATE);
 		if(prefs != null && prefs.getBoolean(Constants.GUI_INTRO_PLAY,true)) {
 			Log.d(TAG,"Go to INTRO");
-			prefs.edit().putBoolean(Constants.GUI_INTRO_PLAY,false).commit();
+			prefs.edit().putBoolean(Constants.GUI_INTRO_PLAY,false).apply();
 			Intent intent = new Intent(this, IntroActivity.class);
 			startActivity(intent);
 			return;
