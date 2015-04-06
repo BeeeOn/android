@@ -343,10 +343,6 @@ public final class Controller {
 	 * @return
 	 */
 	public synchronized boolean reloadAdapters(boolean forceReload) {
-		if (!isLoggedIn()) {
-			return false;
-		}
-
 		return mHousehold.adaptersModel.reloadAdapters(forceReload);
 	}
 
@@ -358,10 +354,6 @@ public final class Controller {
 	 * @return
 	 */
 	public synchronized boolean reloadLocations(String adapterId, boolean forceReload) {
-		if (!isLoggedIn()) {
-			return false;
-		}
-
 		return mHousehold.locationsModel.reloadLocationsByAdapter(adapterId, forceReload);
 	}
 
@@ -373,10 +365,6 @@ public final class Controller {
 	 * @return
 	 */
 	public synchronized boolean reloadFacilitiesByAdapter(String adapterId, boolean forceReload) {
-		if (!isLoggedIn()) {
-			return false;
-		}
-
 		return mHousehold.facilitiesModel.reloadFacilitiesByAdapter(adapterId, forceReload);
 	}
 
@@ -388,10 +376,6 @@ public final class Controller {
 	 * @return
 	 */
 	public synchronized boolean reloadUninitializedFacilitiesByAdapter(String adapterId, boolean forceReload) {
-		if (!isLoggedIn()) {
-			return false;
-		}
-
 		return mHousehold.uninitializedFacilitiesModel.reloadUninitializedFacilitiesByAdapter(adapterId, forceReload);
 	}
 
@@ -402,10 +386,6 @@ public final class Controller {
 	 * @return
 	 */
 	public synchronized boolean reloadDeviceLog(LogDataPair pair) {
-		if (!isLoggedIn()) {
-			return false;
-		}
-
 		return mHousehold.deviceLogsModel.reloadDeviceLog(pair);
 	}
 
@@ -416,10 +396,6 @@ public final class Controller {
 	 * @return
 	 */
 	public boolean updateFacility(Facility facility, boolean forceReload) {
-		if (!isLoggedIn()) {
-			return false;
-		}
-
 		return mHousehold.facilitiesModel.refreshFacility(facility, forceReload);
 	}
 
@@ -430,10 +406,6 @@ public final class Controller {
 	 * @return
 	 */
 	public boolean updateFacilities(List<Facility> facilities, boolean forceReload) {
-		if (!isLoggedIn()) {
-			return false;
-		}
-
 		return mHousehold.facilitiesModel.refreshFacilities(facilities, forceReload);
 	}
 
@@ -1106,9 +1078,6 @@ public final class Controller {
 	 * @return
 	 */
 	public synchronized boolean reloadWatchDogs(String adapterId, boolean forceReload) {
-		if (!isLoggedIn()) {
-			return false;
-		}
 		return mHousehold.watchDogsModel.reloadWatchDogsByAdapter(adapterId, forceReload);
 	}
 

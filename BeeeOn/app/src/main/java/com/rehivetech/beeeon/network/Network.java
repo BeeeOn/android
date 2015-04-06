@@ -389,15 +389,31 @@ public class Network implements INetwork {
 	}
 
 	/**
+	 * Just call's {@link #doRequest(String, boolean)} with checkBT = true
+	 *
+	 * @see {#doRequest}
+	 */
+	private ParsedMessage doRequest(String messageToSend) throws AppException {
+		return doRequest(messageToSend, true);
+	}
+
+	/**
 	 * Send request to server and return parsedMessage or throw exception on error.
 	 *
 	 * @param messageToSend
+	 * @param checkBT - when true and BT is not present in Network, then throws AppException with NetworkError.BAD_BT
+	 *                - this logically must be false for requests like register or login, which doesn't require BT for working
 	 * @return
-	 * @throws AppException with error NetworkError.NO_CONNECTION, NetworkError.XML, NetworkError.UNKNOWN_HOST, NetworkError.INVALID_CERTIFICATE or NetworkError.SOCKET_PROBLEM
+	 * @throws AppException with error NetworkError.NO_CONNECTION, NetworkError.BAD_BT, NetworkError.XML, NetworkError.UNKNOWN_HOST, NetworkError.INVALID_CERTIFICATE or NetworkError.SOCKET_PROBLEM
 	 */
-	private synchronized ParsedMessage doRequest(String messageToSend) throws AppException {
+	private synchronized ParsedMessage doRequest(String messageToSend, boolean checkBT) throws AppException {
+		// Check internet connection
 		if (!isAvailable())
 			throw new AppException(NetworkError.NO_CONNECTION);
+
+		// Check existence of BT
+		if (checkBT && !hasBT())
+			throw new AppException(NetworkError.BAD_BT);
 
 		// ParsedMessage msg = null;
 		// Debug.startMethodTracing("Support_231");
@@ -460,13 +476,13 @@ public class Network implements INetwork {
 	}
 
 	@Override
-    public boolean loginMe(IAuthProvider authProvider){
+    public boolean loginMe(IAuthProvider authProvider) {
 		// Check existence of authProvider parameters
 		Map<String, String> parameters = authProvider.getParameters();
 		if (parameters == null || parameters.isEmpty())
 			throw new IllegalArgumentException(String.format("IAuthProvider '%s' provided no parameters.", authProvider.getProviderName()));
 
-		ParsedMessage msg = doRequest(XmlCreator.createSignIn(Locale.getDefault().getLanguage(), Utils.getPhoneID(mContext), authProvider));
+		ParsedMessage msg = doRequest(XmlCreator.createSignIn(Locale.getDefault().getLanguage(), Utils.getPhoneID(mContext), authProvider), false);
 
 		if (msg.getState() == State.BT) {
 			mBT = (String) msg.data;
@@ -483,7 +499,7 @@ public class Network implements INetwork {
 		if (parameters == null || parameters.isEmpty())
 			throw new IllegalArgumentException(String.format("IAuthProvider '%s' provided no parameters.", authProvider.getProviderName()));
 
-		ParsedMessage msg = doRequest(XmlCreator.createSignUp(authProvider));
+		ParsedMessage msg = doRequest(XmlCreator.createSignUp(authProvider), false);
 
 		if (msg.getState() == State.TRUE) {
 			return true;
