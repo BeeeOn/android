@@ -4,6 +4,7 @@ import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 
+import com.rehivetech.beeeon.BuildConfig;
 import com.rehivetech.beeeon.adapter.Adapter;
 import com.rehivetech.beeeon.adapter.device.Device;
 import com.rehivetech.beeeon.adapter.device.Device.SaveDevice;
@@ -234,6 +235,16 @@ public class Network implements INetwork {
 		return response;
 	}
 
+	private SSLSocket createSocket(SSLContext sslContext) throws IOException {
+		if (BuildConfig.BUILD_TYPE.equals("debug") || BuildConfig.BUILD_TYPE.equals("alpha")) {
+			return (SSLSocket) sslContext.getSocketFactory().createSocket(SERVER_ADDR_DEBUG, SERVER_PORT_DEBUG);
+		} else if (BuildConfig.BUILD_TYPE.equals("beta_ant2")) {
+			return (SSLSocket) sslContext.getSocketFactory().createSocket(SERVER_ADDR_DEBUG, SERVER_PORT_PRODUCTION);
+		} else {
+			return (SSLSocket) sslContext.getSocketFactory().createSocket(SERVER_ADDR_PRODUCTION, SERVER_PORT_PRODUCTION);
+		}
+	}
+
 	/**
 	 * Method for initializing socket for sending data to server via TLS protocol using own TrustManger to be able to trust self-signed
 	 * certificates. CA certificated must be located in assets folder.
@@ -269,12 +280,8 @@ public class Network implements INetwork {
 			sslContext.init(null, tmf.getTrustManagers(), null);
 
 			// Open SSLSocket directly to server
-			SSLSocket socket = null;
-			if (mUseDebugServer) {
-				socket = (SSLSocket) sslContext.getSocketFactory().createSocket(SERVER_ADDR_DEBUG, SERVER_PORT_DEBUG);
-			} else {
-				socket = (SSLSocket) sslContext.getSocketFactory().createSocket(SERVER_ADDR_PRODUCTION, SERVER_PORT_PRODUCTION);
-			}
+			SSLSocket socket = createSocket(sslContext);
+
 
 			HostnameVerifier hv = HttpsURLConnection.getDefaultHostnameVerifier();
 			//socket.setKeepAlive(true);
