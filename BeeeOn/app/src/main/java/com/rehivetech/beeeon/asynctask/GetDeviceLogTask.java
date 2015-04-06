@@ -23,8 +23,8 @@ public class GetDeviceLogTask extends AsyncTask<LogDataPair, Void, DeviceLog> {
 		LogDataPair pair = pairs[0]; // expects only one device at a time is sent there
 		Controller controller = Controller.getInstance(mContext);
 		// Load log data if needed
-		controller.reloadDeviceLog(pair);
-		return controller.getDeviceLog(pair);
+		controller.getDeviceLogsModel().reloadDeviceLog(pair);
+		return controller.getDeviceLogsModel().getDeviceLog(pair);
 	}
 
 	@Override

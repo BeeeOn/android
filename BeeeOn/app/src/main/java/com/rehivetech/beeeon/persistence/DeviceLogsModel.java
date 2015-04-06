@@ -114,6 +114,12 @@ public class DeviceLogsModel {
 		return downloadIntervals;
 	}
 
+	/**
+	 * Return log for device.
+	 *
+	 * @param pair
+	 * @return
+	 */
 	public DeviceLog getDeviceLog(LogDataPair pair) {
 		DeviceLog log = new DeviceLog(DataType.AVERAGE, DataInterval.RAW);
 		
@@ -128,7 +134,13 @@ public class DeviceLogsModel {
 		return log;
 	}
 
-	public boolean reloadDeviceLog(LogDataPair pair) throws AppException {
+	/**
+	 * This CAN'T be called on UI thread!
+	 *
+	 * @param pair
+	 * @return
+	 */
+	public synchronized boolean reloadDeviceLog(LogDataPair pair) throws AppException {
 		List<Interval> downloadIntervals = getMissingIntervals(pair);
 		
 		Log.i(TAG, String.format("%d missing intervals to download for device: %s", downloadIntervals.size(), pair.device.getName()));

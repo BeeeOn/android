@@ -14,7 +14,6 @@ import com.rehivetech.beeeon.geofence.TransitionType;
 import com.rehivetech.beeeon.household.adapter.Adapter;
 import com.rehivetech.beeeon.household.device.Device;
 import com.rehivetech.beeeon.household.device.Device.SaveDevice;
-import com.rehivetech.beeeon.household.device.DeviceLog;
 import com.rehivetech.beeeon.household.device.DeviceType;
 import com.rehivetech.beeeon.household.device.Facility;
 import com.rehivetech.beeeon.household.location.Location;
@@ -25,7 +24,6 @@ import com.rehivetech.beeeon.network.DemoNetwork;
 import com.rehivetech.beeeon.network.INetwork;
 import com.rehivetech.beeeon.network.Network;
 import com.rehivetech.beeeon.network.authentication.IAuthProvider;
-import com.rehivetech.beeeon.pair.LogDataPair;
 import com.rehivetech.beeeon.persistence.AdaptersModel;
 import com.rehivetech.beeeon.persistence.DeviceLogsModel;
 import com.rehivetech.beeeon.persistence.FacilitiesModel;
@@ -427,16 +425,6 @@ public final class Controller {
 	/**
 	 * This CAN'T be called on UI thread!
 	 *
-	 * @param pair
-	 * @return
-	 */
-	public synchronized boolean reloadDeviceLog(LogDataPair pair) {
-		return mDeviceLogsModel.reloadDeviceLog(pair);
-	}
-
-	/**
-	 * This CAN'T be called on UI thread!
-	 *
 	 * @param facility
 	 * @return
 	 */
@@ -753,16 +741,6 @@ public final class Controller {
     public boolean delFacility(Facility facility) {
         return mFacilitiesModel.delFacility(facility);
     }
-
-	/**
-	 * Return log for device.
-	 *
-	 * @param pair
-	 * @return
-	 */
-	public DeviceLog getDeviceLog(LogDataPair pair) {
-		return mDeviceLogsModel.getDeviceLog(pair);
-	}
 
 	/**
 	 * Send pair request

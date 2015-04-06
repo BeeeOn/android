@@ -229,10 +229,10 @@ public class CustomViewFragment extends TrackFragment {
 						DataInterval.HOUR); // interval
 
 				// Load log data if needed
-				mController.reloadDeviceLog(pair);
+				mController.getDeviceLogsModel().reloadDeviceLog(pair);
 
 				// Get loaded log data (TODO: this could be done in gui)
-				result.put(device, mController.getDeviceLog(pair));
+				result.put(device, mController.getDeviceLogsModel().getDeviceLog(pair));
 			}
 
 			return result;
