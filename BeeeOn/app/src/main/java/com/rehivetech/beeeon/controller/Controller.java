@@ -278,7 +278,7 @@ public final class Controller {
 		loadUserData(null);
 
 		// Do we have session now?
-		if (mNetwork.hasBT()) {
+		if (!mNetwork.hasBT()) {
 			Log.e(TAG, "BeeeOn token wasn't received. We are not logged in.");
 			return false;
 		}
