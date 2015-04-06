@@ -417,6 +417,29 @@ public class Network implements INetwork {
 		}
 	}
 
+	/**
+	 * Return new AppException based on error code from parsed False message from server.
+	 *
+	 * @param msg must be message with getState() State.FALSE
+	 * @return AppException object with correct error code set
+	 * @throws IllegalStateException when message is not of State.FALSE
+	 */
+	private AppException processFalse(ParsedMessage msg) throws IllegalStateException {
+		// Check validity of this message
+		if (msg.getState() != State.FALSE)
+			throw new IllegalStateException("ParsedMessage is not State.FALSE");
+
+		// Parse FalseAnswer data from this message
+		FalseAnswer fa = (FalseAnswer) msg.data;
+
+		// Delete BT when we receive error saying that it is invalid
+		if (fa.getErrCode() == NetworkError.BAD_BT.getNumber())
+			mBT = "";
+
+		// Throw AppException for the caller
+		return new AppException(fa.getErrMessage(), NetworkError.fromValue(fa.getErrCode()));
+	}
+
 	// /////////////////////////////////////////////////////////////////////////////////
 	// /////////////////////////////////////SIGNIN,SIGNUP,ADAPTERS//////////////////////
 	// /////////////////////////////////////////////////////////////////////////////////
@@ -450,8 +473,7 @@ public class Network implements INetwork {
 			return true;
 		}
 
-		FalseAnswer fa = (FalseAnswer) msg.data;
-		throw new AppException(fa.getErrMessage(), NetworkError.fromValue(fa.getErrCode()));
+		throw processFalse(msg);
     }
 
     @Override
@@ -467,8 +489,7 @@ public class Network implements INetwork {
 			return true;
 		}
 
-		FalseAnswer fa = (FalseAnswer) msg.data;
-		throw new AppException(fa.getErrMessage(), NetworkError.fromValue(fa.getErrCode()));
+		throw processFalse(msg);
     }
 
 	@Override
@@ -478,8 +499,7 @@ public class Network implements INetwork {
 		if (msg.getState() == State.TRUE)
 			return true;
 
-		FalseAnswer fa = (FalseAnswer) msg.data;
-		throw new AppException(fa.getErrMessage(), NetworkError.fromValue(fa.getErrCode()));
+		throw processFalse(msg);
 	}
 
 	@Override
@@ -489,8 +509,7 @@ public class Network implements INetwork {
 		if (msg.getState() == State.TRUE)
 			return true;
 
-		FalseAnswer fa = (FalseAnswer) msg.data;
-		throw new AppException(fa.getErrMessage(), NetworkError.fromValue(fa.getErrCode()));
+		throw processFalse(msg);
 	}
 
 	@Override
@@ -500,8 +519,7 @@ public class Network implements INetwork {
 		if (msg.getState() == State.TRUE)
 			return true;
 
-		FalseAnswer fa = (FalseAnswer) msg.data;
-		throw new AppException(fa.getErrMessage(), NetworkError.fromValue(fa.getErrCode()));
+		throw processFalse(msg);
 	}
 
     @Override
@@ -511,8 +529,7 @@ public class Network implements INetwork {
         if (msg.getState() == State.USERINFO)
             return (User)msg.data;
 
-        FalseAnswer fa = (FalseAnswer) msg.data;
-        throw new AppException(fa.getErrMessage(), NetworkError.fromValue(fa.getErrCode()));
+		throw processFalse(msg);
     }
 
 	/**
@@ -531,8 +548,7 @@ public class Network implements INetwork {
 		if (msg.getState() == State.TRUE)
 			return true;
 
-		FalseAnswer fa = (FalseAnswer) msg.data;
-		throw new AppException(fa.getErrMessage(), NetworkError.fromValue(fa.getErrCode()));
+		throw processFalse(msg);
 	}
 
 	/**
@@ -549,8 +565,7 @@ public class Network implements INetwork {
 		if (msg.getState() == State.ADAPTERS)
 			return (List<Adapter>) msg.data;
 
-		FalseAnswer fa = (FalseAnswer) msg.data;
-		throw new AppException(fa.getErrMessage(), NetworkError.fromValue(fa.getErrCode()));
+		throw processFalse(msg);
 	}
 
 	/**
@@ -568,8 +583,7 @@ public class Network implements INetwork {
 		if (msg.getState() == State.ALLDEVICES)
 			return (ArrayList<Facility>) msg.data;
 
-		FalseAnswer fa = (FalseAnswer) msg.data;
-		throw new AppException(fa.getErrMessage(), NetworkError.fromValue(fa.getErrCode()));
+		throw processFalse(msg);
 	}
 
 	/**
@@ -588,8 +602,7 @@ public class Network implements INetwork {
 		if (msg.getState() == State.TRUE)
 			return true;
 
-		FalseAnswer fa = (FalseAnswer) msg.data;
-		throw new AppException(fa.getErrMessage(), NetworkError.fromValue(fa.getErrCode()));
+		throw processFalse(msg);
 	}
 
 	// /////////////////////////////////////////////////////////////////////////////////
@@ -611,8 +624,7 @@ public class Network implements INetwork {
 		if (msg.getState() == State.TRUE)
 			return true;
 
-		FalseAnswer fa = (FalseAnswer) msg.data;
-		throw new AppException(fa.getErrMessage(), NetworkError.fromValue(fa.getErrCode())).set(fa.getInfo(), fa.troubleMakers);
+		throw processFalse(msg);
 	}
 
 	/**
@@ -633,8 +645,7 @@ public class Network implements INetwork {
 		if (msg.getState() == State.TRUE)
 			return true;
 
-		FalseAnswer fa = (FalseAnswer) msg.data;
-		throw new AppException(fa.getErrMessage(), NetworkError.fromValue(fa.getErrCode())).set(fa.getInfo(), fa.troubleMakers);
+		throw processFalse(msg);
 	}
 
 	/**
@@ -651,8 +662,7 @@ public class Network implements INetwork {
 		if (msg.getState() == State.TRUE)
 			return true;
 
-		FalseAnswer fa = (FalseAnswer) msg.data;
-		throw new AppException(fa.getErrMessage(), NetworkError.fromValue(fa.getErrCode())).set(fa.getInfo(), fa.troubleMakers);
+		throw processFalse(msg);
 	}
 
 	/**
@@ -669,8 +679,7 @@ public class Network implements INetwork {
 		if (msg.getState() == State.TRUE)
 			return true;
 
-		FalseAnswer fa = (FalseAnswer) msg.data;
-		throw new AppException(fa.getErrMessage(), NetworkError.fromValue(fa.getErrCode())).set(fa.getInfo(), fa.troubleMakers);
+		throw processFalse(msg);
 	}
 
 	/**
@@ -688,8 +697,7 @@ public class Network implements INetwork {
 		if (msg.getState() == State.TRUE)
 			return true;
 
-		FalseAnswer fa = (FalseAnswer) msg.data;
-		throw new AppException(fa.getErrMessage(), NetworkError.fromValue(fa.getErrCode())).set(fa.getInfo(), fa.troubleMakers);
+		throw processFalse(msg);
 	}
 
 	/**
@@ -708,8 +716,7 @@ public class Network implements INetwork {
 		if (msg.getState() == State.DEVICES)
 			return (List<Facility>) msg.data;
 
-		FalseAnswer fa = (FalseAnswer) msg.data;
-		throw new AppException(fa.getErrMessage(), NetworkError.fromValue(fa.getErrCode())).set(fa.getInfo(), fa.troubleMakers);
+		throw processFalse(msg);
 	}
 
 	/**
@@ -749,8 +756,7 @@ public class Network implements INetwork {
 		if (msg.getState() == State.DEVICES)
 			return (List<Facility>) msg.data;
 
-		FalseAnswer fa = (FalseAnswer) msg.data;
-		throw new AppException(fa.getErrMessage(), NetworkError.fromValue(fa.getErrCode())).set(fa.getInfo(), fa.troubleMakers);
+		throw processFalse(msg);
 	}
 
 	/**
@@ -779,9 +785,8 @@ public class Network implements INetwork {
 			result.setDataType(pair.type);
 			return result;
 		}
-		
-		FalseAnswer fa = (FalseAnswer) msg.data;
-		throw new AppException(fa.getErrMessage(), NetworkError.fromValue(fa.getErrCode())).set(fa.getInfo(), fa.troubleMakers);
+
+		throw processFalse(msg);
 	}
 
 	// /////////////////////////////////////////////////////////////////////////////////
@@ -802,8 +807,7 @@ public class Network implements INetwork {
 		if (msg.getState() == State.ROOMS)
 			return (List<Location>) msg.data;
 
-		FalseAnswer fa = (FalseAnswer) msg.data;
-		throw new AppException(fa.getErrMessage(), NetworkError.fromValue(fa.getErrCode()));
+		throw processFalse(msg);
 	}
 
 	/**
@@ -820,8 +824,7 @@ public class Network implements INetwork {
 		if (msg.getState() == State.TRUE)
 			return true;
 
-		FalseAnswer fa = (FalseAnswer) msg.data;
-		throw new AppException(fa.getErrMessage(), NetworkError.fromValue(fa.getErrCode()));
+		throw processFalse(msg);
 	}
 
 	/**
@@ -854,8 +857,7 @@ public class Network implements INetwork {
 		if (msg.getState() == State.TRUE)
 			return true;
 
-		FalseAnswer fa = (FalseAnswer) msg.data;
-		throw new AppException(fa.getErrMessage(), NetworkError.fromValue(fa.getErrCode()));
+		throw processFalse(msg);
 	}
 
 	@Override
@@ -866,8 +868,8 @@ public class Network implements INetwork {
 			location.setId((String) msg.data);
 			return location;
 		}
-		FalseAnswer fa = (FalseAnswer) msg.data;
-		throw new AppException(fa.getErrMessage(), NetworkError.fromValue(fa.getErrCode()));
+
+		throw processFalse(msg);
 	}
 
 	// /////////////////////////////////////////////////////////////////////////////////
@@ -892,8 +894,7 @@ public class Network implements INetwork {
 		if (msg.getState() == State.TRUE)
 			return true;
 
-		FalseAnswer fa = (FalseAnswer) msg.data;
-		throw new AppException(fa.getErrMessage(), NetworkError.fromValue(fa.getErrCode()));
+		throw processFalse(msg);
 	}
 
 	/**
@@ -911,8 +912,7 @@ public class Network implements INetwork {
 		if (msg.getState() == State.VIEWS)
 			return (List<CustomViewPair>) msg.data;
 
-		FalseAnswer fa = (FalseAnswer) msg.data;
-		throw new AppException(fa.getErrMessage(), NetworkError.fromValue(fa.getErrCode()));
+		throw processFalse(msg);
 	}
 
 	/**
@@ -929,8 +929,7 @@ public class Network implements INetwork {
 		if (msg.getState() == State.TRUE)
 			return true;
 
-		FalseAnswer fa = (FalseAnswer) msg.data;
-		throw new AppException(fa.getErrMessage(), NetworkError.fromValue(fa.getErrCode()));
+		throw processFalse(msg);
 	}
 
 	// FIXME: will be edited by ROB demands
@@ -941,8 +940,7 @@ public class Network implements INetwork {
 		if (msg.getState() == State.TRUE)
 			return true;
 
-		FalseAnswer fa = (FalseAnswer) msg.data;
-		throw new AppException(fa.getErrMessage(), NetworkError.fromValue(fa.getErrCode()));
+		throw processFalse(msg);
 	}
 
 	// /////////////////////////////////////////////////////////////////////////////////
@@ -956,12 +954,16 @@ public class Network implements INetwork {
 		if (msg.getState() == State.TRUE)
 			return true;
 
+		AppException e = processFalse(msg);
+
+		// TODO: This should be made universal, but I don't understand how the troubleMakers work and on what it depends... (Robyer)
 		FalseAnswer fa = (FalseAnswer) msg.data;
-		String message = fa.getErrMessage() + "\n";
+		String troubleUsers = "";
 		for (User u : (ArrayList<User>) fa.troubleMakers){
-			message += u.toDebugString();
+			troubleUsers += u.toDebugString() + "\n";
 		}
-		throw new AppException(message, NetworkError.fromValue(fa.getErrCode()));
+
+		throw AppException.wrap(e).set("Trouble users", troubleUsers);
 	}
 
 	/**
@@ -994,8 +996,7 @@ public class Network implements INetwork {
 		if (msg.getState() == State.TRUE)
 			return true;
 
-		FalseAnswer fa = (FalseAnswer) msg.data;
-		throw new AppException(fa.getErrMessage(), NetworkError.fromValue(fa.getErrCode()));
+		throw processFalse(msg);
 	}
 
 	/**
@@ -1028,8 +1029,7 @@ public class Network implements INetwork {
 		if (msg.getState() == State.ACCOUNTS)
 			return (ArrayList<User>) msg.data;
 
-		FalseAnswer fa = (FalseAnswer) msg.data;
-		throw new AppException(fa.getErrMessage(), NetworkError.fromValue(fa.getErrCode()));
+		throw processFalse(msg);
 	}
 
 	/**
@@ -1046,8 +1046,7 @@ public class Network implements INetwork {
 		if (msg.getState() == State.TRUE)
 			return true;
 
-		FalseAnswer fa = (FalseAnswer) msg.data;
-		throw new AppException(fa.getErrMessage(), NetworkError.fromValue(fa.getErrCode()));
+		throw processFalse(msg);
 	}
 
 	/**
@@ -1085,8 +1084,7 @@ public class Network implements INetwork {
 		if (msg.getState() == State.TRUE)
 			return true;
 
-		FalseAnswer fa = (FalseAnswer) msg.data;
-		throw new AppException(fa.getErrMessage(), NetworkError.fromValue(fa.getErrCode()));
+		throw processFalse(msg);
 	}
 
 	/**
@@ -1101,8 +1099,7 @@ public class Network implements INetwork {
 		if (msg.getState() == State.TIMEZONE)
 			return (Integer) msg.data;
 
-		FalseAnswer fa = (FalseAnswer) msg.data;
-		throw new AppException(fa.getErrMessage(), NetworkError.fromValue(fa.getErrCode()));
+		throw processFalse(msg);
 	}
 
 	// /////////////////////////////////////////////////////////////////////////////////
@@ -1124,8 +1121,7 @@ public class Network implements INetwork {
 		if (msg.getState() == State.TRUE)
 			return true;
 
-		FalseAnswer fa = (FalseAnswer) msg.data;
-		throw new AppException(fa.getErrMessage(), NetworkError.fromValue(fa.getErrCode()));
+		throw processFalse(msg);
 	}
 
 	/**
@@ -1142,8 +1138,7 @@ public class Network implements INetwork {
 		if (msg.getState() == State.TRUE)
 			return true;
 
-		FalseAnswer fa = (FalseAnswer) msg.data;
-		throw new AppException(fa.getErrMessage(), NetworkError.fromValue(fa.getErrCode()));
+		throw processFalse(msg);
 	}
 
 	/**
@@ -1158,8 +1153,7 @@ public class Network implements INetwork {
 		if (msg.getState() == State.TRUE)
 			return true;
 
-		FalseAnswer fa = (FalseAnswer) msg.data;
-		throw new AppException(fa.getErrMessage(), NetworkError.fromValue(fa.getErrCode()));
+		throw processFalse(msg);
 	}
 	
 	// /////////////////////////////////////////////////////////////////////////////////
@@ -1176,8 +1170,8 @@ public class Network implements INetwork {
 			condition.setId((String) msg.data);
 			return condition;
 		}
-		FalseAnswer fa = (FalseAnswer) msg.data;
-		throw new AppException(fa.getErrMessage(), NetworkError.fromValue(fa.getErrCode()));
+
+		throw processFalse(msg);
 	}
 
 	@Override
@@ -1187,8 +1181,7 @@ public class Network implements INetwork {
 		if (msg.getState() == State.TRUE)
 			return true;
 
-		FalseAnswer fa = (FalseAnswer) msg.data;
-		throw new AppException(fa.getErrMessage(), NetworkError.fromValue(fa.getErrCode()));
+		throw processFalse(msg);
 	}
 
 	@Override
@@ -1202,8 +1195,8 @@ public class Network implements INetwork {
 			condition.setFuncs(cond.getFuncs());
 			return condition;
 		}
-		FalseAnswer fa = (FalseAnswer) msg.data;
-		throw new AppException(fa.getErrMessage(), NetworkError.fromValue(fa.getErrCode()));
+
+		throw processFalse(msg);
 	}
 
 	@Override
@@ -1214,8 +1207,7 @@ public class Network implements INetwork {
 		if (msg.getState() == State.CONDITIONS)
 			return (List<Condition>) msg.data;
 
-		FalseAnswer fa = (FalseAnswer) msg.data;
-		throw new AppException(fa.getErrMessage(), NetworkError.fromValue(fa.getErrCode()));
+		throw processFalse(msg);
 	}
 
 	@Override
@@ -1227,8 +1219,7 @@ public class Network implements INetwork {
 		if (msg.getState() == State.TRUE)
 			return true;
 
-		FalseAnswer fa = (FalseAnswer) msg.data;
-		throw new AppException(fa.getErrMessage(), NetworkError.fromValue(fa.getErrCode()));
+		throw processFalse(msg);
 	}
 
 	@Override
@@ -1238,8 +1229,7 @@ public class Network implements INetwork {
 		if (msg.getState() == State.TRUE)
 			return true;
 
-		FalseAnswer fa = (FalseAnswer) msg.data;
-		throw new AppException(fa.getErrMessage(), NetworkError.fromValue(fa.getErrCode()));
+		throw processFalse(msg);
 	}
 
 	@Override
@@ -1250,8 +1240,8 @@ public class Network implements INetwork {
 			action.setId((String) msg.data);
 			return action;
 		}
-		FalseAnswer fa = (FalseAnswer) msg.data;
-		throw new AppException(fa.getErrMessage(), NetworkError.fromValue(fa.getErrCode()));
+
+		throw processFalse(msg);
 	}
 
 	@Override
@@ -1261,8 +1251,8 @@ public class Network implements INetwork {
 
 		if (msg.getState() == State.ACTIONS)
 			return (List<ComplexAction>) msg.data;
-		FalseAnswer fa = (FalseAnswer) msg.data;
-		throw new AppException(fa.getErrMessage(), NetworkError.fromValue(fa.getErrCode()));
+
+		throw processFalse(msg);
 	}
 
 	@Override
@@ -1274,8 +1264,8 @@ public class Network implements INetwork {
 			action.setActions(act.getActions());
 			return action;
 		}
-		FalseAnswer fa = (FalseAnswer) msg.data;
-		throw new AppException(fa.getErrMessage(), NetworkError.fromValue(fa.getErrCode()));
+
+		throw processFalse(msg);
 	}
 
 	@Override
@@ -1286,8 +1276,7 @@ public class Network implements INetwork {
 		if (msg.getState() == State.TRUE)
 			return true;
 
-		FalseAnswer fa = (FalseAnswer) msg.data;
-		throw new AppException(fa.getErrMessage(), NetworkError.fromValue(fa.getErrCode()));
+		throw processFalse(msg);
 	}
 
 	@Override
@@ -1297,8 +1286,7 @@ public class Network implements INetwork {
 		if (msg.getState() == State.TRUE)
 			return true;
 
-		FalseAnswer fa = (FalseAnswer) msg.data;
-		throw new AppException(fa.getErrMessage(), NetworkError.fromValue(fa.getErrCode()));
+		throw processFalse(msg);
 	}
 
     @Override
@@ -1310,8 +1298,7 @@ public class Network implements INetwork {
             return true;
         }
 
-        FalseAnswer fa = (FalseAnswer) msg.data;
-        throw new AppException(fa.getErrMessage(), NetworkError.fromValue(fa.getErrCode()));
+		throw processFalse(msg);
     }
 
     @Override
@@ -1322,8 +1309,7 @@ public class Network implements INetwork {
             return (ArrayList<WatchDog>) msg.data;
         }
 
-        FalseAnswer fa = (FalseAnswer) msg.data;
-        throw new AppException(fa.getErrMessage(), NetworkError.fromValue(fa.getErrCode()));
+		throw processFalse(msg);
     }
 
     @Override
@@ -1334,8 +1320,7 @@ public class Network implements INetwork {
             return (ArrayList<WatchDog>) msg.data;
         }
 
-        FalseAnswer fa = (FalseAnswer) msg.data;
-        throw new AppException(fa.getErrMessage(), NetworkError.fromValue(fa.getErrCode()));
+		throw processFalse(msg);
     }
 
     @Override
@@ -1345,8 +1330,7 @@ public class Network implements INetwork {
         if(msg.getState() == State.TRUE)
             return true;
 
-        FalseAnswer fa = (FalseAnswer) msg.data;
-        throw new AppException(fa.getErrMessage(), NetworkError.fromValue(fa.getErrCode()));
+		throw processFalse(msg);
     }
 
     @Override
@@ -1356,8 +1340,7 @@ public class Network implements INetwork {
         if(msg.getState() == State.TRUE)
             return true;
 
-        FalseAnswer fa = (FalseAnswer) msg.data;
-        throw new AppException(fa.getErrMessage(), NetworkError.fromValue(fa.getErrCode()));
+		throw processFalse(msg);
     }
 
     @Override
@@ -1367,8 +1350,7 @@ public class Network implements INetwork {
         if(msg.getState() == State.TRUE)
             return true;
 
-        FalseAnswer fa = (FalseAnswer) msg.data;
-        throw new AppException(fa.getErrMessage(), NetworkError.fromValue(fa.getErrCode()));
+		throw processFalse(msg);
     }
 
 }

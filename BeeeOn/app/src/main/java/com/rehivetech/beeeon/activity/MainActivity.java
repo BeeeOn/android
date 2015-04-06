@@ -288,7 +288,6 @@ public class MainActivity extends BaseApplicationActivity {
 					ErrorCode errCode = e.getErrorCode();
 					if(errCode != null) {
 						if (errCode instanceof NetworkError && errCode == NetworkError.BAD_BT ) {
-							mController.delBT();
 							finish();
 							Intent intent = new Intent(MainActivity.this,LoginActivity.class);
 							startActivity(intent);

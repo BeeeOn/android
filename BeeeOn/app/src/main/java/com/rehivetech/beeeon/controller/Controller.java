@@ -107,10 +107,8 @@ public final class Controller {
 			mHousehold.user.setId(userId);
 			// Load rest of user details (if available)
 			mPersistence.loadUserDetails(userId, mHousehold.user);
-			// Finally load BT (session)
-			String bt = mPersistence.loadLastBT(userId);
-			if (!bt.isEmpty())
-				mNetwork.setBT(bt);
+			// Finally load BT (session) - we can call it directly like that because here we doesn't care whether it's empty because it's empty since Network creation
+			mNetwork.setBT(mPersistence.loadLastBT(userId));
 		}
 	}
 	
@@ -1079,10 +1077,6 @@ public final class Controller {
 		mHousehold.geofenceModel.deleteGeofence(mHousehold.user.getId(), geofence.getId());
 	}
 
-	public void delBT() {
-		mNetwork.setBT("");
-	}
-	
 	/**
 	 * Return list of watchdogs from a adapter
 	 * @param adapterId
