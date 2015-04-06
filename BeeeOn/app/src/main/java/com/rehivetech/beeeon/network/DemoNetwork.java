@@ -477,7 +477,7 @@ public class DemoNetwork implements INetwork {
 	@Override
 	public boolean updateLocations(String adapterId, List<Location> locations) {
 		for (Location location : locations) {
-			if (!updateLocation(adapterId, location)) {
+			if (!updateLocation(location)) {
 				return false;
 			}
 		}
@@ -486,8 +486,8 @@ public class DemoNetwork implements INetwork {
 	}
 
 	@Override
-	public boolean updateLocation(String adapterId, Location location) {
-		AdapterHolder holder = mAdapters.get(adapterId);
+	public boolean updateLocation(Location location) {
+		AdapterHolder holder = mAdapters.get(location.getAdapterId());
 		if (holder == null) {
 			return false;
 		}
@@ -502,8 +502,8 @@ public class DemoNetwork implements INetwork {
 	}
 
 	@Override
-	public boolean deleteLocation(String adapterId, Location location) {
-		AdapterHolder holder = mAdapters.get(adapterId);
+	public boolean deleteLocation(Location location) {
+		AdapterHolder holder = mAdapters.get(location.getAdapterId());
 		if (holder == null) {
 			return false;
 		}
@@ -512,8 +512,8 @@ public class DemoNetwork implements INetwork {
 	}
 
 	@Override
-	public Location createLocation(String adapterId, Location location) {
-		AdapterHolder holder = mAdapters.get(adapterId);
+	public Location createLocation(Location location) {
+		AdapterHolder holder = mAdapters.get(location.getAdapterId());
 		if (holder == null) {
 			return null;
 		}

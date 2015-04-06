@@ -660,15 +660,13 @@ public class XmlCreator {
 	 * 
 	 * @param bt
 	 *            userID of user
-	 * @param aid
-	 *            adapterID of actual adapter
 	 * @param location
 	 *            to create
 	 * @return created message
 	 * @since 2.2
 	 */
-	public static String createAddRoom(String bt, String aid, Location location) {
-		return createComAttribsVariant(Xconstants.STATE, ADDROOM, Xconstants.BT, bt, Xconstants.AID, aid, Xconstants.LTYPE, Integer.toString(location.getType()), Xconstants.LNAME,
+	public static String createAddRoom(String bt, Location location) {
+		return createComAttribsVariant(Xconstants.STATE, ADDROOM, Xconstants.BT, bt, Xconstants.AID, location.getAdapterId(), Xconstants.LTYPE, Integer.toString(location.getType()), Xconstants.LNAME,
 				location.getName());
 	}
 
@@ -721,15 +719,13 @@ public class XmlCreator {
 	 * 
 	 * @param bt
 	 *            userID of user
-	 * @param aid
-	 *            adapterID of actual adapter
-	 * @param location
-	 *            to delete
+	 * @param lid
+	 *            locationID of location to delete
 	 * @return DelRoom message
 	 * @since 2.2
 	 */
-	public static String createDeleteRoom(String bt, String aid, Location location) {
-		return createComAttribsVariant(Xconstants.STATE, DELROOM, Xconstants.BT, bt, Xconstants.AID, aid, Xconstants.LID, location.getId());
+	public static String createDeleteRoom(String bt, Location location) {
+		return createComAttribsVariant(Xconstants.STATE, DELROOM, Xconstants.BT, bt, Xconstants.AID, location.getAdapterId(), Xconstants.LID, location.getId());
 	}
 
 	/**

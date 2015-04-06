@@ -271,23 +271,21 @@ public interface INetwork {
 
 	/**
 	 * Method call to server to update location
-	 * 
-	 * @param adapterID
+	 *
 	 * @param location
 	 * @return
 	 */
-	public boolean updateLocation(String adapterID, Location location);
+	public boolean updateLocation(Location location);
 
 	/**
 	 * Method call to server and delete location
-	 * 
+	 *
 	 * @param location
-	 *            to delete
 	 * @return true room is deleted, false otherwise
 	 */
-	public boolean deleteLocation(String adapterID, Location location);
+	public boolean deleteLocation(Location location);
 
-	public Location createLocation(String adapterID, Location location);
+	public Location createLocation(Location location);
 
 	// /////////////////////////////////////////////////////////////////////////////////
 	// /////////////////////////////////////VIEWS///////////////////////////////////////

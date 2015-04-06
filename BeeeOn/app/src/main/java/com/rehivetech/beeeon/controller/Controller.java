@@ -468,68 +468,6 @@ public final class Controller {
 		return false;
 	}
 
-	/** Location methods ****************************************************/
-
-	/**
-	 * Deletes location from server.
-	 *
-	 * This CAN'T be called on UI thread!
-	 *
-	 * @param location
-	 * @return
-	 */
-	public boolean deleteLocation(Location location) {
-		Adapter adapter = getActiveAdapter();
-		if (adapter == null) {
-			return false;
-		}
-
-		boolean deleted = mNetwork.deleteLocation(adapter.getId(), location);
-
-		// Location was deleted on server, remove it from adapter too
-		return deleted && mLocationsModel.deleteLocation(adapter.getId(), location.getId());
-	}
-
-	/**
-	 * Save changed location to server.
-	 *
-	 * This CAN'T be called on UI thread!
-	 *
-	 * @param location
-	 * @return new location object or null on error
-	 */
-	public boolean saveLocation(Location location) {
-		Adapter adapter = getActiveAdapter();
-		if (adapter == null) {
-			return false;
-		}
-
-		boolean saved = mNetwork.updateLocation(adapter.getId(), location);
-
-		// Location was updated on server, update it to adapter too
-		return saved && mLocationsModel.updateLocation(adapter.getId(), location);
-	}
-
-	/**
-	 * Create and add new location to server.
-	 *
-	 * This CAN'T be called on UI thread!
-	 *
-	 * @param location
-	 * @return new location object or null on error
-	 */
-	public Location addLocation(Location location) {
-		Adapter adapter = getActiveAdapter();
-		if (adapter == null) {
-			return null;
-		}
-
-		location = mNetwork.createLocation(adapter.getId(), location);
-
-		// Location was saved on server, save it to adapter too
-		return (location != null && mLocationsModel.addLocation(adapter.getId(), location)) ? location : null;
-	}
-
 	/**
 	 * Send pair request
 	 *

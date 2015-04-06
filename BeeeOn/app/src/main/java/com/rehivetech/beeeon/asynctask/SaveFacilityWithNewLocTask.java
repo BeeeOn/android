@@ -18,7 +18,7 @@ public class SaveFacilityWithNewLocTask extends CallbackTask<SaveFacilityWithNew
 
 		if (pair.location.getId().equals(Location.NEW_LOCATION_ID)) {
 			// We need to save new location to server first
-			Location newLocation = controller.addLocation(pair.location);
+			Location newLocation = controller.getLocationsModel().createLocation(pair.location);
 			if (newLocation == null)
 				return false;
 

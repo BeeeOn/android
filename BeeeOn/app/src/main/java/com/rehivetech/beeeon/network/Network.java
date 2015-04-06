@@ -845,30 +845,28 @@ public class Network implements INetwork {
 
 	/**
 	 * Method call to server to update location
-	 * 
-	 * @param adapterID
+	 *
 	 * @param location
 	 * @return
 	 */
 	@Override
-	public boolean updateLocation(String adapterID, Location location){
+	public boolean updateLocation(Location location){
 
 		List<Location> list = new ArrayList<Location>();
 		list.add(location);
 
-		return updateLocations(adapterID, list);
+		return updateLocations(location.getAdapterId(), list);
 	}
 
 	/**
 	 * Method call to server and delete location
-	 * 
+	 *
 	 * @param location
-	 *            to delete
 	 * @return true room is deleted, false otherwise
 	 */
 	@Override
-	public boolean deleteLocation(String adapterID, Location location){
-		ParsedMessage msg = doRequest(XmlCreator.createDeleteRoom(mBT, adapterID, location));
+	public boolean deleteLocation(Location location){
+		ParsedMessage msg = doRequest(XmlCreator.createDeleteRoom(mBT, location));
 
 		if (msg.getState() == State.TRUE)
 			return true;
@@ -877,8 +875,8 @@ public class Network implements INetwork {
 	}
 
 	@Override
-	public Location createLocation(String adapterID, Location location){
-		ParsedMessage msg = doRequest(XmlCreator.createAddRoom(mBT, adapterID, location));
+	public Location createLocation(Location location){
+		ParsedMessage msg = doRequest(XmlCreator.createAddRoom(mBT, location));
 
 		if (msg.getState() == State.ROOMCREATED) {
 			location.setId((String) msg.data);

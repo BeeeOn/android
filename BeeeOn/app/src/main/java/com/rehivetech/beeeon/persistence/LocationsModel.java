@@ -4,6 +4,8 @@ import android.content.Context;
 
 import com.rehivetech.beeeon.NameIdentifierComparator;
 import com.rehivetech.beeeon.R;
+import com.rehivetech.beeeon.household.adapter.Adapter;
+import com.rehivetech.beeeon.household.device.Facility;
 import com.rehivetech.beeeon.household.location.Location;
 import com.rehivetech.beeeon.exception.AppException;
 import com.rehivetech.beeeon.network.INetwork;
@@ -136,56 +138,70 @@ public class LocationsModel {
 		// TODO: implement this
 	}
 
-	/**
-	 * Updates location in list of locations.
-	 * 
-	 * @param location
-	 * @return
-	 */
-	public boolean updateLocation(String adapterId, Location location) {
-		// TODO: review and refactor, this is just copied from Adapter
-		Map<String, Location> adapterLocations = mLocations.get(adapterId);
+	private void updateLocationInMap(Location location) {
+		String adapterId = location.getAdapterId();
 
-		// TODO: check/create adapterLocations object
-		if (!adapterLocations.containsKey(location.getId())) {
-			// //Log.w(TAG, String.format("Can't update location with id=%s. It doesn't exists.", location.getId()));
-			return false;
+		Map<String, Location> adapterLocations = mLocations.get(adapterId);
+		if (adapterLocations == null) {
+			adapterLocations = new HashMap<String, Location>();
+			mLocations.put(adapterId, adapterLocations);
 		}
 
 		adapterLocations.put(location.getId(), location);
-		return true;
-
 	}
 
 	/**
-	 * Removes location from list of locations.
-	 * 
-	 * @param id
-	 * @return false when there wasn't location with this id
-	 */
-	public boolean deleteLocation(String adapterId, String id) {
-		// TODO: review and refactor, this is just copied from Adapter
-		// TODO: check/create adapterLocations object
-		Map<String, Location> adapterLocations = mLocations.get(adapterId);
-		return adapterLocations.remove(id) != null;
-	}
-
-	/**
-	 * Adds new location to list of locations.
-	 * 
+	 * Save changed location to server and update it in list of locations.
+	 *
 	 * @param location
-	 * @return false if there is already location with this id
+	 * @return
 	 */
-	public boolean addLocation(String adapterId, Location location) {
-		// TODO: review and refactor, this is just copied from Adapter
-		Map<String, Location> adapterLocations = mLocations.get(adapterId);
+	public boolean updateLocation(Location location) {
+		if (mNetwork.updateLocation(location)) {
+			// Location was updated on server, update it in map too
+			updateLocationInMap(location);
+			return true;
+		}
 
-		// TODO: check/create adapterLocations object
-		if (adapterLocations.containsKey(location.getId()))
-			return false;
+		return false;
+	}
 
-		adapterLocations.put(location.getId(), location);
-		return true;
+	/**
+	 * Deletes location from server and from list of locations.
+	 *
+	 * This CAN'T be called on UI thread!
+	 *
+	 * @param location
+	 * @return
+	 */
+	public boolean deleteLocation(Location location) {
+		if (mNetwork.deleteLocation(location)) {
+			// Location was deleted on server, remove it from map too
+			Map<String, Location> adapterLocations = mLocations.get(location.getAdapterId());
+			if (adapterLocations != null)
+				adapterLocations.remove(location.getId());
+			return true;
+		}
+
+		return false;
+	}
+
+	/**
+	 * Create and add new location to server and to list of locations.
+	 *
+	 * This CAN'T be called on UI thread!
+	 *
+	 * @param location
+	 * @return Location on success, null otherwise
+	 */
+	public Location createLocation(Location location) {
+		Location newLocation = mNetwork.createLocation(location);
+		if (newLocation != null) {
+			// Location was updated on server, update it in map too
+			updateLocationInMap(newLocation);
+		}
+
+		return newLocation;
 	}
 
 }

@@ -20,7 +20,7 @@ public class InitializeFacilityTask extends CallbackTask<InitializeFacilityPair>
 
 		if (pair.location.getId().equals(Location.NEW_LOCATION_ID)) {
 			// We need to save new location to server first
-			Location newLocation = controller.addLocation(pair.location);
+			Location newLocation = controller.getLocationsModel().createLocation(pair.location);
 			if (newLocation == null)
 				return false;
 
