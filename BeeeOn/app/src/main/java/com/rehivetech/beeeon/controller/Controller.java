@@ -148,7 +148,7 @@ public final class Controller {
 	 */
 	public SharedPreferences getUserSettings() {
 		String userId = mHousehold.user.getId();
-		if (userId == null || userId.isEmpty()) {
+		if (userId.isEmpty()) {
 			Log.e(TAG, "getUserSettings() with no loaded userId");
 			return null;
 		}
@@ -287,9 +287,9 @@ public final class Controller {
 
 		// Delete GCM ID on server side
 		if (!(mNetwork instanceof DemoNetwork)) {
-			final String id = getActualUser().getId();
+			final String id = mHousehold.user.getId();
 			final String gcmId = getGCMRegistrationId();
-			if (id != null && !gcmId.isEmpty()) {
+			if (!id.isEmpty() && !gcmId.isEmpty()) {
 				// delete GCM ID from server
 				Thread t = new Thread() {
 					public void run() {
@@ -543,17 +543,6 @@ public final class Controller {
 
 		return result;
 	}
-
-	/**
-	 * This CAN'T be called on UI thread!
-	 * 
-	 * @param email
-	 * @return
-	 */
-	// TODO: review this
-	/*public boolean registerUser(String email) {
-		return mNetwork.signUp(mHousehold.user.getEmail()); //FIXME: ROB use getUID instead!
-	}*/
 
 	/**
 	 * FIXME: debug implementation Unregisters adapter from server.
@@ -891,14 +880,11 @@ public final class Controller {
 		int currentVersion = Utils.getAppVersion(mContext);
 		if (registeredVersion != currentVersion) {
 			// delete actual GCM ID from server
-			User user;
-			if ((user = getActualUser()) != null) {
-				try {
-					deleteGCM(user.getEmail(), registrationId);
-				} catch (Exception e) {
-					// do nothing
-					Log.w(GcmHelper.TAG_GCM, "getGCMRegistrationId(): Delete GCM ID failed: " + e.getLocalizedMessage());
-				}
+			try {
+				deleteGCM(mHousehold.user.getId(), registrationId);
+			} catch (Exception e) {
+				// do nothing
+				Log.w(GcmHelper.TAG_GCM, "getGCMRegistrationId(): Delete GCM ID failed: " + e.getLocalizedMessage());
 			}
 			mPersistence.saveGCMRegistrationId("");
 			Log.i(TAG, "GCM: App version changed.");
@@ -950,14 +936,7 @@ public final class Controller {
 			return;
 		}
 
-		String userId;
-		if (getActualUser() != null) {
-			userId = getActualUser().getId();
-		} else {
-			userId = getLastUserId();
-		}
-
-		if (userId.isEmpty()) {
+		if (mHousehold.user.getId().isEmpty()) {
 			// no user, it will be sent in user login
 			return;
 		}
@@ -1068,7 +1047,7 @@ public final class Controller {
 	 * @return List of geofences. If no geofence is registered, empty list is returned.
 	 */
 	public List<SimpleGeofence> getAllGeofences() {
-		return mHousehold.geofenceModel.getAllGeofences(getActualUser().getId());
+		return mHousehold.geofenceModel.getAllGeofences(mHousehold.user.getId());
 	}
 
 	/**
@@ -1079,7 +1058,7 @@ public final class Controller {
 	 */
 	public boolean hasActualUserGeofence(String geofenceId) {
 		Log.i(TAG, "Geofence: Control if passed geofence is for actual user");
-		return mHousehold.geofenceModel.exist(getActualUser().getId(), geofenceId);
+		return mHousehold.geofenceModel.exist(mHousehold.user.getId(), geofenceId);
 	}
 
 	/**
@@ -1095,11 +1074,11 @@ public final class Controller {
 	}
 
 	public void addGeofence(SimpleGeofence geofence) {
-		mHousehold.geofenceModel.addGeofence(getActualUser().getId(), geofence);
+		mHousehold.geofenceModel.addGeofence(mHousehold.user.getId(), geofence);
 	}
 
 	public void deleteGeofence(SimpleGeofence geofence) {
-		mHousehold.geofenceModel.deleteGeofence(getActualUser().getId(), geofence.getId());
+		mHousehold.geofenceModel.deleteGeofence(mHousehold.user.getId(), geofence.getId());
 	}
 
 	public void delBT() {
