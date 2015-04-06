@@ -11,6 +11,7 @@ import com.rehivetech.beeeon.adapter.device.Device.SaveDevice;
 import com.rehivetech.beeeon.adapter.device.DeviceLog;
 import com.rehivetech.beeeon.adapter.device.Facility;
 import com.rehivetech.beeeon.adapter.location.Location;
+import com.rehivetech.beeeon.adapter.watchdog.WatchDog;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.exception.AppException;
 import com.rehivetech.beeeon.exception.NetworkError;
@@ -19,7 +20,6 @@ import com.rehivetech.beeeon.network.authentication.IAuthProvider;
 import com.rehivetech.beeeon.network.xml.CustomViewPair;
 import com.rehivetech.beeeon.network.xml.FalseAnswer;
 import com.rehivetech.beeeon.network.xml.ParsedMessage;
-import com.rehivetech.beeeon.adapter.watchdog.WatchDog;
 import com.rehivetech.beeeon.network.xml.XmlCreator;
 import com.rehivetech.beeeon.network.xml.XmlParsers;
 import com.rehivetech.beeeon.network.xml.XmlParsers.State;
@@ -429,6 +429,11 @@ public class Network implements INetwork {
 	@Override
 	public void setBT(String token) {
 		mBT = token;
+	}
+
+	@Override
+	public boolean hasBT() {
+		return !mBT.isEmpty();
 	}
 
 	@Override

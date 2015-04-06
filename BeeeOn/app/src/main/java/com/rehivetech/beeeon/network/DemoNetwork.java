@@ -165,6 +165,11 @@ public class DemoNetwork implements INetwork {
 	}
 
 	@Override
+	public boolean hasBT() {
+		return !mBT.isEmpty();
+	}
+
+	@Override
     public User loadUserInfo() {
 		return mUser;
 	}

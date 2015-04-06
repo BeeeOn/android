@@ -74,6 +74,12 @@ public interface INetwork {
 	 */
 	public void setBT(String token);
 
+	/**
+	 * Check if beeeon-token is present (but does NOT check if it is still valid on server)
+	 * @return
+	 */
+	public boolean hasBT();
+
     /**
      * Download information about actual user from server
 	 *

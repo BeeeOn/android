@@ -235,10 +235,8 @@ public final class Controller {
 		// Load user data so we will know our userId
 		loadUserData(null);
 
-		String bt = mNetwork.getBT();
-
 		// Do we have session now?
-		if (bt.isEmpty()) {
+		if (mNetwork.hasBT()) {
 			Log.e(TAG, "BeeeOn token wasn't received. We are not logged in.");
 			return false;
 		}
@@ -250,8 +248,9 @@ public final class Controller {
 		}
 
 		// Save our new BT
-		Log.i(TAG, String.format("Loaded for user '%s' fresh new BT: %s", userId, mNetwork.getBT()));
-		mPersistence.saveLastBT(userId, mNetwork.getBT());
+		String bt = mNetwork.getBT();
+		Log.i(TAG, String.format("Loaded for user '%s' fresh new BT: %s", userId, bt));
+		mPersistence.saveLastBT(userId, bt);
 
 		// Then remember this user
 		mPersistence.initializeDefaultSettings(userId);
@@ -319,13 +318,12 @@ public final class Controller {
 	}
 
 	/**
-	 * Checks if user is logged in (has session UID).
+	 * Checks if user is logged in (Network has beeeon-token for communication).
 	 * 
 	 * @return true if user is logged in, false otherwise
 	 */
 	public boolean isLoggedIn() {
-		// TODO: Check session lifetime somehow?
-		return !mNetwork.getBT().isEmpty();
+		return mNetwork.hasBT();
 	}
 
 	public void beginPersistentConnection() {
