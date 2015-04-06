@@ -362,7 +362,7 @@ public class NavDrawerMenu   {
             }
         }));
 
-		List<Adapter> adapters = mController.getAdapters();
+		List<Adapter> adapters = mController.getAdaptersModel().getAdapters();
 
 		
 		// Adding separator as item (we don't want to let it float as header)
@@ -477,7 +477,7 @@ public class NavDrawerMenu   {
             MenuInflater inflater = mode.getMenuInflater();
             inflater.inflate(R.menu.adapter_menu, menu);
 
-			if(!mController.isUserAllowed(mController.getAdapter(mSelectedMenuItem.getId()).getRole()) ) {
+			if(!mController.isUserAllowed(mController.getAdaptersModel().getAdapter(mSelectedMenuItem.getId()).getRole()) ) {
                 menu.getItem(0).setVisible(false);// EDIT
                 menu.getItem(1).setVisible(false);// USERS
 			}

@@ -388,41 +388,12 @@ public final class Controller {
 	/**
 	 * This CAN'T be called on UI thread!
 	 *
-	 * @param forceReload
-	 * @return
-	 */
-	public synchronized boolean reloadAdapters(boolean forceReload) {
-		return mAdaptersModel.reloadAdapters(forceReload);
-	}
-
-	/**
-	 * This CAN'T be called on UI thread!
-	 *
 	 * @param adapterId
 	 * @param forceReload
 	 * @return
 	 */
 	public synchronized boolean reloadLocations(String adapterId, boolean forceReload) {
 		return mLocationsModel.reloadLocationsByAdapter(adapterId, forceReload);
-	}
-
-	/**
-	 * Return all adapters that this logged in user has access to.
-	 *
-	 * @return List of adapters
-	 */
-	public List<Adapter> getAdapters() {
-		return mAdaptersModel.getAdapters();
-	}
-
-	/**
-	 * Return adapter by his ID.
-	 *
-	 * @param id
-	 * @return Adapter if found, null otherwise
-	 */
-	public Adapter getAdapter(String id) {
-		return mAdaptersModel.getAdapter(id);
 	}
 
 	/**
@@ -486,27 +457,6 @@ public final class Controller {
 		mFacilitiesModel.reloadFacilitiesByAdapter(id, forceReload);
 
 		return true;
-	}
-
-	/**
-	 * Registers new adapter to server. Automatically reloads list of adapters, set this adapter as active and load all
-	 * its sensors.
-	 *
-	 * This CAN'T be called on UI thread!
-	 *
-	 * @param id
-	 * @return true on success, false otherwise
-	 */
-	public boolean registerAdapter(String id, String adapterName){
-		boolean result = false;
-
-		if (mNetwork.addAdapter(id, adapterName)) {
-			mAdaptersModel.reloadAdapters(true);
-			setActiveAdapter(id, true);
-			result = true;
-		}
-
-		return result;
 	}
 
 	/**

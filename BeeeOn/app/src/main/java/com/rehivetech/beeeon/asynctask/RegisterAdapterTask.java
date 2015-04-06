@@ -8,7 +8,11 @@ import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.household.adapter.Adapter;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.pair.RegisterAdapterPair;
+import com.rehivetech.beeeon.persistence.AdaptersModel;
 
+/**
+ * Registers new adapter. It automatically reloads list of adapters and then we set this adapter as active which also load all its sensors.
+ */
 public class RegisterAdapterTask extends CallbackTask<RegisterAdapterPair> {
 
 	private Controller mController;
@@ -20,7 +24,7 @@ public class RegisterAdapterTask extends CallbackTask<RegisterAdapterPair> {
 	private String getUniqueAdapterName() {
 		Vector<String> adapterNames = new Vector<String>();
 
-		for (Adapter adapter : mController.getAdapters()) {
+		for (Adapter adapter : mController.getAdaptersModel().getAdapters()) {
 			adapterNames.add(adapter.getName());
 		}
 
@@ -56,7 +60,13 @@ public class RegisterAdapterTask extends CallbackTask<RegisterAdapterPair> {
 			name = getHexaAdapterName(serialNumber);
 		}
 
-		return mController.registerAdapter(serialNumber, name);
+		// Register new adapter and set it as active
+		if (mController.getAdaptersModel().registerAdapter(serialNumber, name)) {
+			mController.setActiveAdapter(serialNumber, true);
+			return true;
+		}
+
+		return false;
 	}
 
 }

@@ -193,7 +193,7 @@ public class GalleryControlExtension extends ManagedControlExtension {
 
 		Device curDevice = mDevices.get(position);
 		Facility curFacility = curDevice.getFacility();
-		Adapter curAdapter = mController.getAdapter(curFacility.getAdapterId());
+		Adapter curAdapter = mController.getAdaptersModel().getAdapter(curFacility.getAdapterId());
 
 		// Title data
 		Bundle syncBundle = new Bundle();

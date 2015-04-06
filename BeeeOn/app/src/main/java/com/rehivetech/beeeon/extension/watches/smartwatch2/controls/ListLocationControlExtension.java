@@ -230,7 +230,7 @@ public class ListLocationControlExtension extends ManagedControlExtension {
 			public void run() {
 
 				mController.reloadLocations(mAdapterId, mForceUpdate);
-				mAdapter = mController.getAdapter(mAdapterId);
+				mAdapter = mController.getAdaptersModel().getAdapter(mAdapterId);
 				mLocations = mController.getLocations(mAdapterId);
 
 				mForceUpdate = true;

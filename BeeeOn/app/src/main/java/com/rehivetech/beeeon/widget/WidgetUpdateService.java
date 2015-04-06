@@ -161,7 +161,7 @@ public class WidgetUpdateService extends Service {
 		TimeHelper timeHelper = (userSettings == null) ? null : new TimeHelper(userSettings);
 
 		// Reload adapters to have data about Timezone offset
-		controller.reloadAdapters(false);
+		controller.getAdaptersModel().reloadAdapters(false);
 
 		boolean forceUpdate = intent.getBooleanExtra(EXTRA_FORCE_UPDATE, false);
 
@@ -216,7 +216,7 @@ public class WidgetUpdateService extends Service {
 			WidgetData widgetData = widgetsToUpdate.valueAt(i);
 			int widgetId = widgetData.getWidgetId();
 
-			Adapter adapter = controller.getAdapter(widgetData.deviceAdapterId);
+			Adapter adapter = controller.getAdaptersModel().getAdapter(widgetData.deviceAdapterId);
 			Device device = controller.getFacilitiesModel().getDevice(widgetData.deviceAdapterId, widgetData.deviceId);
 
 			if (device != null) {

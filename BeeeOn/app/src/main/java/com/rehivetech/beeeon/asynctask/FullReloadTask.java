@@ -22,7 +22,7 @@ public class FullReloadTask extends CallbackTask<Void> {
 	protected Boolean doInBackground(Void nothing) {
 		Controller controller = Controller.getInstance(mContext);
 
-		controller.reloadAdapters(mForceReload);
+		controller.getAdaptersModel().reloadAdapters(mForceReload);
 		Adapter active = controller.getActiveAdapter();
 		if (active != null) {
 			// Load data for active adapter

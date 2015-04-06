@@ -72,7 +72,7 @@ public class AddAdapterUserActivity extends BaseApplicationActivity {
 		mProgress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
 		
 		// Get selected adapter
-		mAdapter = mController.getAdapter(getIntent().getStringExtra(Constants.GUI_SELECTED_ADAPTER_ID));
+		mAdapter = mController.getAdaptersModel().getAdapter(getIntent().getStringExtra(Constants.GUI_SELECTED_ADAPTER_ID));
 		
 		initLayout();
 	}

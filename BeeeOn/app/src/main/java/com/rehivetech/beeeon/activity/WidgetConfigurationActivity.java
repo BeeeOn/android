@@ -87,7 +87,7 @@ public class WidgetConfigurationActivity extends BaseActivity {
 
 		mController = Controller.getInstance(this);
 
-		mAdapters = mController.getAdapters();
+		mAdapters = mController.getAdaptersModel().getAdapters();
 		if (mAdapters.isEmpty()) {
 			if (!mController.isLoggedIn() && !triedLoginAlready) {
 				// If user is not logged in we redirect to LoginActivity

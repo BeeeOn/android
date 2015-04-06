@@ -59,7 +59,7 @@ public class SensorListItem extends AbstractListItem {
 		}
 
 		Facility facility = mDevice.getFacility();
-		Adapter adapter = mController.getAdapter(facility.getAdapterId());
+		Adapter adapter = mController.getAdaptersModel().getAdapter(facility.getAdapterId());
 
 		if (timeHelper != null) {
 			txtTime.setText(String.format("%s %s", mContext.getString(R.string.last_update), timeHelper.formatLastUpdate(facility.getLastUpdate(), adapter)));

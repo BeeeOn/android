@@ -128,7 +128,7 @@ public class SensorDetailFragment extends Fragment {
 		Log.d(TAG, "OnCreate - Here 1 " + mCurPageNumber);
 		mActivity = (SensorDetailActivity) getActivity();
 		mController = Controller.getInstance(mActivity);
-		mAdapter = mController.getAdapter(mAdapterId);
+		mAdapter = mController.getAdaptersModel().getAdapter(mAdapterId);
 	}
 
 	@Override
@@ -148,7 +148,7 @@ public class SensorDetailFragment extends Fragment {
 			mLocationID = savedInstanceState.getString(ARG_LOC_ID);
 			mSelPageNumber = savedInstanceState.getInt(ARG_SEL_PAGE);
 			mCurPageNumber = savedInstanceState.getInt(ARG_CUR_PAGE);
-			mAdapter = mController.getAdapter(mAdapterId);
+			mAdapter = mController.getAdaptersModel().getAdapter(mAdapterId);
 			mActivity = (SensorDetailActivity) getActivity();
 		}
 		Log.d(TAG,"OnActivityCreated");
@@ -257,7 +257,7 @@ public class SensorDetailFragment extends Fragment {
 		if (mController != null) {
 			Location location = null;
 
-			Adapter adapter = mController.getAdapter(mAdapterId);
+			Adapter adapter = mController.getAdaptersModel().getAdapter(mAdapterId);
 			if (adapter != null) {
 				location = mController.getLocation(adapter.getId(), device.getFacility().getLocationId());
 			}
@@ -274,7 +274,7 @@ public class SensorDetailFragment extends Fragment {
 		}
 
 		Facility facility = device.getFacility();
-		Adapter adapter = mController.getAdapter(facility.getAdapterId());
+		Adapter adapter = mController.getAdaptersModel().getAdapter(facility.getAdapterId());
 
 		// UserSettings can be null when user is not logged in!
 		SharedPreferences prefs = mController.getUserSettings();

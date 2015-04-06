@@ -281,7 +281,7 @@ public class SensorEditActivity extends BaseApplicationActivity {
 			mDevice = mController.getFacilitiesModel().getDevice(adapter.getId(), mDeviceID);
 			mFacility = mDevice.getFacility();
 			mLocationId = mFacility.getLocationId();
-			mAdapter = mController.getAdapter(mFacility.getAdapterId());
+			mAdapter = mController.getAdaptersModel().getAdapter(mFacility.getAdapterId());
 			initLayout();
 			if(savedInstanceState != null) {
 				mName.setText(savedInstanceState.getString(EXTRA_ACT_NAME));

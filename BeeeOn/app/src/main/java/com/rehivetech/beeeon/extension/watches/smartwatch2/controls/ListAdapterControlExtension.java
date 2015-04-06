@@ -193,7 +193,7 @@ public class ListAdapterControlExtension extends ManagedControlExtension {
 			@Override
 			public void run() {
 
-				mAdapters = mController.getAdapters();
+				mAdapters = mController.getAdaptersModel().getAdapters();
 
 				resume();
 

@@ -31,6 +31,11 @@ public class AdaptersModel {
 		return mAdapters;
 	}
 
+	/**
+	 * Return all adapters that this logged in user has access to.
+	 *
+	 * @return List of adapters
+	 */
 	public List<Adapter> getAdapters() {
 		List<Adapter> adapters = new ArrayList<Adapter>();
 
@@ -52,6 +57,12 @@ public class AdaptersModel {
 		}
 	}
 
+	/**
+	 * Return adapter by his ID.
+	 *
+	 * @param id
+	 * @return Adapter if found, null otherwise
+	 */
 	public Adapter getAdapter(String id) {
 		return mAdapters.get(id);
 	}
@@ -64,7 +75,31 @@ public class AdaptersModel {
 		return mLastUpdate == null || mLastUpdate.plusSeconds(RELOAD_EVERY_SECONDS).isBeforeNow();
 	}
 
-	public boolean reloadAdapters(boolean forceReload) throws AppException {
+	/**
+	 * Registers new adapter. This automatically reloads list of adapters.
+	 *
+	 * This CAN'T be called on UI thread!
+	 *
+	 * @param id
+	 * @param name
+	 * @return true on success, false otherwise
+	 */
+	public boolean registerAdapter(String id, String name) {
+		if (mNetwork.isAvailable() && mNetwork.addAdapter(id, name)) {
+			reloadAdapters(true); // TODO: do this somehow better? Like load data only for this registered adapter as answer from server?
+			return true;
+		}
+
+		return false;
+	}
+
+	/**
+	 * This CAN'T be called on UI thread!
+	 *
+	 * @param forceReload
+	 * @return
+	 */
+	public synchronized boolean reloadAdapters(boolean forceReload) throws AppException {
 		if (!forceReload && !isExpired()) {
 			return false;
 		}

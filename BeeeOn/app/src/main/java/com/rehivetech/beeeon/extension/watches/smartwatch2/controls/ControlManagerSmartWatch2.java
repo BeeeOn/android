@@ -107,8 +107,8 @@ public class ControlManagerSmartWatch2 extends ControlManagerBase {
 		if (adapterId != null) {
 			Controller controller = Controller.getInstance(mContext);
 
-			controller.reloadAdapters(false);
-			Adapter adapter = controller.getAdapter(adapterId);
+			controller.getAdaptersModel().reloadAdapters(false);
+			Adapter adapter = controller.getAdaptersModel().getAdapter(adapterId);
 			// if default adapter is defined
 			if (adapter != null) {
 				if (strLocation != null) {
@@ -129,7 +129,7 @@ public class ControlManagerSmartWatch2 extends ControlManagerBase {
 			}
 		}
 
-		List<Adapter> adapters = mController.getAdapters();
+		List<Adapter> adapters = mController.getAdaptersModel().getAdapters();
 		if (adapters.size() < 1) {
 			initialControlIntent = new Intent(mContext, TextControl.class);
 			initialControlIntent.putExtra(TextControl.EXTRA_TEXT, mContext.getString(R.string.no_adapter_available));

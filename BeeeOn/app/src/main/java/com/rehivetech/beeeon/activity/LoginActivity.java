@@ -261,7 +261,7 @@ public class LoginActivity extends BaseActivity {
 
 						// Load all adapters and data for active one on login
 						mProgress.setMessageResource(R.string.progress_loading_adapters);
-						mController.reloadAdapters(true);
+						mController.getAdaptersModel().reloadAdapters(true);
 
 						Adapter active = mController.getActiveAdapter();
 						if (active != null) {

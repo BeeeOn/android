@@ -255,7 +255,7 @@ public class SensorListFragment extends Fragment {
 		}
 
 		boolean haveDevices = devices.size() > 0;
-		boolean haveAdapters = mController.getAdapters().size() > 0;
+		boolean haveAdapters = mController.getAdaptersModel().getAdapters().size() > 0;
 
 		// Buttons in floating menu
 
@@ -365,7 +365,7 @@ public class SensorListFragment extends Fragment {
 					startActivity(intent);
 				}
 			});
-			Adapter tmpAda = mController.getAdapter(mActiveAdapterId);
+			Adapter tmpAda = mController.getAdaptersModel().getAdapter(mActiveAdapterId);
 			if(tmpAda != null) {
 				if(mController.isUserAllowed(tmpAda.getRole())) {
 					mSensorList.setOnItemLongClickListener(new OnItemLongClickListener() {

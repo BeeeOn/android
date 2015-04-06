@@ -165,7 +165,7 @@ public class WatchDogEditRuleActivity extends BaseApplicationActivity {
         // get controllern
         mController = Controller.getInstance(this);
         // get adapter
-        mAdapter = mActiveAdapterId == null ? mController.getActiveAdapter() : mController.getAdapter(mActiveAdapterId);
+        mAdapter = mActiveAdapterId == null ? mController.getActiveAdapter() : mController.getAdaptersModel().getAdapter(mActiveAdapterId);
 
 		if(mAdapter == null ) {
 			//TODO: neocekova chyba

@@ -85,7 +85,7 @@ public class AdapterUsersActivity extends BaseApplicationActivity {
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 		
 		// Get selected adapter
-		mAdapter = mController.getAdapter(getIntent().getStringExtra(Constants.GUI_SELECTED_ADAPTER_ID));
+		mAdapter = mController.getAdaptersModel().getAdapter(getIntent().getStringExtra(Constants.GUI_SELECTED_ADAPTER_ID));
 		
 		// Get all users for adapter
 		doReloadAdapterUsersTask(mAdapter.getId(), false);

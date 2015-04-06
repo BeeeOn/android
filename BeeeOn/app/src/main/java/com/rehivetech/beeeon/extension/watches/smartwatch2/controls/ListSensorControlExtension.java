@@ -236,8 +236,8 @@ public class ListSensorControlExtension extends ManagedControlExtension {
 			@Override
 			public void run() {
 
-				mController.reloadAdapters(true);
-				mAdapter = mController.getAdapter(mAdapterId);
+				mController.getAdaptersModel().reloadAdapters(true);
+				mAdapter = mController.getAdaptersModel().getAdapter(mAdapterId);
 				if (mAdapter != null) {
 					mDevices = new ArrayList<Device>();
 

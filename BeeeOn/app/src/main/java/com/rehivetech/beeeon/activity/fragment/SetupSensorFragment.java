@@ -153,7 +153,7 @@ public class SetupSensorFragment extends TrackFragment {
 		// Set involved time of facility
 		if (timeHelper != null) {
 			Facility facility = mNewFacilities.get(0);
-			Adapter adapter = mController.getAdapter(facility.getAdapterId());
+			Adapter adapter = mController.getAdaptersModel().getAdapter(facility.getAdapterId());
 			time.setText(String.format("%s %s", time.getText(), timeHelper.formatLastUpdate(facility.getInvolveTime(), adapter)));
 		}
 
