@@ -25,7 +25,7 @@ public class SaveFacilityWithNewLocTask extends CallbackTask<SaveFacilityWithNew
 			pair.facility.setLocationId(newLocation.getId());
 		}
 
-		return controller.saveFacility(pair.facility, pair.what);
+		return controller.getFacilitiesModel().saveFacility(pair.facility, pair.what);
 	}
 
 }

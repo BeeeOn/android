@@ -152,7 +152,7 @@ public class SensorDetailFragment extends Fragment {
 			mActivity = (SensorDetailActivity) getActivity();
 		}
 		Log.d(TAG,"OnActivityCreated");
-		mDevice = mController.getDevice(mAdapterId, mDeviceID);
+		mDevice = mController.getFacilitiesModel().getDevice(mAdapterId, mDeviceID);
 		if (mDevice != null) {
 			Log.d(TAG, String.format("ID: %s, Name: %s", mDevice.getId(), mDevice.getName()));
 			initLayout(mDevice);
@@ -514,7 +514,7 @@ public class SensorDetailFragment extends Fragment {
 			@Override
 			public void onExecute(boolean success) {
 				// Get new device
-				mDevice = mController.getDevice(device.getFacility().getAdapterId(), device.getId());
+				mDevice = mController.getFacilitiesModel().getDevice(device.getFacility().getAdapterId(), device.getId());
 
 				// Set icon of sensor
 				mIcon.setImageResource(mDevice.getIconResource());
@@ -539,7 +539,7 @@ public class SensorDetailFragment extends Fragment {
 					return;
 				}
 				Log.d(TAG, "Fragment - Start reload task");
-				mDevice = mController.getDevice(adapterId, mDeviceID);
+				mDevice = mController.getFacilitiesModel().getDevice(adapterId, mDeviceID);
 				if (mDevice == null) {
 					Log.d(TAG, "Fragment - Stop reload task");
 					return;

@@ -179,7 +179,7 @@ public class CustomViewFragment extends TrackFragment {
 		// Prepare data
 		Log.d(TAG, String.format("Preparing custom view for adapter %s", adapter.getId()));
 
-		for (Facility facility : mController.getFacilitiesByAdapter(adapter.getId())) {
+		for (Facility facility : mController.getFacilitiesModel().getFacilitiesByAdapter(adapter.getId())) {
 			Log.d(TAG, String.format("Preparing facility with %d devices", facility.getDevices().size()));
 
 			for (Device device : facility.getDevices()) {

@@ -12,10 +12,6 @@ import com.rehivetech.beeeon.gcm.INotificationReceiver;
 import com.rehivetech.beeeon.gcm.Notification;
 import com.rehivetech.beeeon.geofence.TransitionType;
 import com.rehivetech.beeeon.household.adapter.Adapter;
-import com.rehivetech.beeeon.household.device.Device;
-import com.rehivetech.beeeon.household.device.Device.SaveDevice;
-import com.rehivetech.beeeon.household.device.DeviceType;
-import com.rehivetech.beeeon.household.device.Facility;
 import com.rehivetech.beeeon.household.location.Location;
 import com.rehivetech.beeeon.household.user.User;
 import com.rehivetech.beeeon.household.user.User.Role;
@@ -36,7 +32,6 @@ import com.rehivetech.beeeon.util.Log;
 import com.rehivetech.beeeon.util.Utils;
 
 import java.util.ArrayList;
-import java.util.EnumSet;
 import java.util.List;
 import java.util.Map;
 import java.util.WeakHashMap;
@@ -412,37 +407,6 @@ public final class Controller {
 	}
 
 	/**
-	 * This CAN'T be called on UI thread!
-	 *
-	 * @param adapterId
-	 * @param forceReload
-	 * @return
-	 */
-	public synchronized boolean reloadFacilitiesByAdapter(String adapterId, boolean forceReload) {
-		return mFacilitiesModel.reloadFacilitiesByAdapter(adapterId, forceReload);
-	}
-
-	/**
-	 * This CAN'T be called on UI thread!
-	 *
-	 * @param facility
-	 * @return
-	 */
-	public boolean updateFacility(Facility facility, boolean forceReload) {
-		return mFacilitiesModel.refreshFacility(facility, forceReload);
-	}
-
-	/**
-	 * This CAN'T be called on UI thread!
-	 *
-	 * @param facilities
-	 * @return
-	 */
-	public boolean updateFacilities(List<Facility> facilities, boolean forceReload) {
-		return mFacilitiesModel.refreshFacilities(facilities, forceReload);
-	}
-
-	/**
 	 * Return all adapters that this logged in user has access to.
 	 *
 	 * @return List of adapters
@@ -519,7 +483,7 @@ public final class Controller {
 
 		// Load locations and facilities, if needed
 		reloadLocations(id, forceReload);
-		reloadFacilitiesByAdapter(id, forceReload);
+		mFacilitiesModel.reloadFacilitiesByAdapter(id, forceReload);
 
 		return true;
 	}
@@ -647,100 +611,6 @@ public final class Controller {
 		// Location was saved on server, save it to adapter too
 		return (location != null && mLocationsModel.addLocation(adapter.getId(), location)) ? location : null;
 	}
-
-	/** Facilities methods **************************************************/
-
-	/**
-	 * Return facility by ID.
-	 *
-	 * @param id
-	 * @return facility or null if no facility is found
-	 */
-	public Facility getFacility(String adapterId, String id) {
-		return mFacilitiesModel.getFacility(adapterId, id);
-	}
-
-	public Device getDevice(String adapterId, String id) {
-		String[] ids = id.split(Device.ID_SEPARATOR, 2);
-
-		Facility facility = getFacility(adapterId, ids[0]);
-		if (facility == null)
-			return null;
-
-		// FIXME: cleanup this after demo
-
-		int iType = -1; // unknown type
-		int offset = 0; // default offset
-
-		if (!ids[1].isEmpty()) {
-			// Get integer representation of the given string value
-			int value = Integer.parseInt(ids[1]);
-
-			// Separate combined value to type and offset
-			iType = value % 256;
-			offset = value / 256;
-		}
-
-		DeviceType type = DeviceType.fromTypeId(iType);
-
-		return facility.getDeviceByType(type, offset);
-	}
-
-	/**
-	 * Return list of all facilities by location from adapter
-	 *
-	 * @param locationId
-	 * @return List of facilities (or empty list)
-	 */
-	public List<Facility> getFacilitiesByLocation(String adapterId, String locationId) {
-		return mFacilitiesModel.getFacilitiesByLocation(adapterId, locationId);
-	}
-
-	/**
-	 * Return list of all facilities from adapter
-	 *
-	 * @param adapterId
-	 * @return List of facilities (or empty list)
-	 */
-	public List<Facility> getFacilitiesByAdapter(String adapterId) {
-		return mFacilitiesModel.getFacilitiesByAdapter(adapterId);
-	}
-
-	/**
-	 * Save specified settings of facility to server.
-	 *
-	 * This CAN'T be called on UI thread!
-	 *
-	 * @param facility
-	 * @param what
-	 *            type of settings to save
-	 * @return true on success, false otherwise
-	 */
-	public boolean saveFacility(Facility facility, EnumSet<SaveDevice> what) {
-		return mFacilitiesModel.saveFacility(facility, what);
-	}
-
-	/**
-	 * Save specified settings of device to server.
-	 *
-	 * This CAN'T be called on UI thread!
-	 *
-	 * @param device
-	 * @param what
-	 *            type of settings to save
-	 * @return true on success, false otherwise
-	 */
-	public boolean saveDevice(Device device, EnumSet<SaveDevice> what) {
-		return mFacilitiesModel.saveDevice(device, what);
-	}
-
-    /**
-     * Delete facility
-     *
-     */
-    public boolean delFacility(Facility facility) {
-        return mFacilitiesModel.delFacility(facility);
-    }
 
 	/**
 	 * Send pair request
@@ -937,19 +807,6 @@ public final class Controller {
 
 	public User getActualUser() {
 		return mUser;
-	}
-
-	/**
-	 * Send request to server to switch Actor value.
-	 *
-	 * This CAN'T be called on UI thread!
-	 *
-	 * @param device
-	 *            DeviceType of this device must be actor, i.e., device.getType().isActor() must return true.
-	 * @return true on success, false otherwise
-	 */
-	public Boolean switchActorValue(Device device) {
-		return mFacilitiesModel.switchActor(device);
 	}
 
 	/** Notification methods ************************************************/

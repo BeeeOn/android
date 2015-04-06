@@ -160,13 +160,13 @@ public class SensorDetailActivity extends BaseApplicationActivity {
 			@Override
 			public void onExecute(boolean success) {
 				Log.d(TAG, "Start reload task");
-				Device device = mController.getDevice(adapterId, mActiveDeviceId);
+				Device device = mController.getFacilitiesModel().getDevice(adapterId, mActiveDeviceId);
 				if (device == null) {
 					Log.d(TAG, "Stop reload task");
 					return;
 				}
 
-				List<Facility> facilities = mController.getFacilitiesByLocation(adapterId, device.getFacility().getLocationId());
+				List<Facility> facilities = mController.getFacilitiesModel().getFacilitiesByLocation(adapterId, device.getFacility().getLocationId());
 
 				List<Device> devices = new ArrayList<Device>();
 				for (Facility facility : facilities) {

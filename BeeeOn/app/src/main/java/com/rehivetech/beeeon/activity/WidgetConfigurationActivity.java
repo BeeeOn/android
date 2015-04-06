@@ -266,7 +266,7 @@ public class WidgetConfigurationActivity extends BaseActivity {
 				if (mAdapters.get(i).getId().equals(adapterId)) {
 					spinAdapter.setSelection(i);
 
-					List<Facility> facilities = mController.getFacilitiesByAdapter(adapterId);
+					List<Facility> facilities = mController.getFacilitiesModel().getFacilitiesByAdapter(adapterId);
 
 					mDevices.clear();
 					for (Facility facility : facilities) {
@@ -326,7 +326,7 @@ public class WidgetConfigurationActivity extends BaseActivity {
 
 			@Override
 			public void onExecute(boolean success) {
-				List<Facility> facilities = mController.getFacilitiesByAdapter(adapterId);
+				List<Facility> facilities = mController.getFacilitiesModel().getFacilitiesByAdapter(adapterId);
 
 				mDevices.clear();
 				for (Facility facility : facilities) {

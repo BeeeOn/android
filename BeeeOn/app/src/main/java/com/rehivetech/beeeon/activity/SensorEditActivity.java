@@ -117,7 +117,7 @@ public class SensorEditActivity extends BaseApplicationActivity {
 			Adapter adapter = mController.getActiveAdapter();
 			if(adapter == null)
 				return  false;
-			Device device = mController.getDevice(adapter.getId(),mDeviceId);
+			Device device = mController.getFacilitiesModel().getDevice(adapter.getId(),mDeviceId);
 			Facility facility = device.getFacility();
 
 			if(!mFragment.getName().equals(device.getName())) {
@@ -278,7 +278,7 @@ public class SensorEditActivity extends BaseApplicationActivity {
 			Adapter adapter = mController.getActiveAdapter();
 			if(adapter == null)
 				return;
-			mDevice = mController.getDevice(adapter.getId(), mDeviceID);
+			mDevice = mController.getFacilitiesModel().getDevice(adapter.getId(), mDeviceID);
 			mFacility = mDevice.getFacility();
 			mLocationId = mFacility.getLocationId();
 			mAdapter = mController.getAdapter(mFacility.getAdapterId());

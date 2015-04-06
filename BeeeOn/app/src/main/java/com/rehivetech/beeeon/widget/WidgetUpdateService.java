@@ -206,7 +206,7 @@ public class WidgetUpdateService extends Service {
 
 		if (!facilities.isEmpty()) {
 			try {
-				controller.updateFacilities(facilities, forceUpdate);
+				controller.getFacilitiesModel().refreshFacilities(facilities, forceUpdate);
 			} catch (AppException e) {
 				e.printStackTrace(); // Nothing to do here
 			}
@@ -217,7 +217,7 @@ public class WidgetUpdateService extends Service {
 			int widgetId = widgetData.getWidgetId();
 
 			Adapter adapter = controller.getAdapter(widgetData.deviceAdapterId);
-			Device device = controller.getDevice(widgetData.deviceAdapterId, widgetData.deviceId);
+			Device device = controller.getFacilitiesModel().getDevice(widgetData.deviceAdapterId, widgetData.deviceId);
 
 			if (device != null) {
 				// Get fresh data from device

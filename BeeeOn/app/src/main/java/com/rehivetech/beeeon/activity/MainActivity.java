@@ -458,7 +458,7 @@ public class MainActivity extends BaseApplicationActivity {
 
 	public void checkNoDevices() {
 		Adapter adapter = mController.getActiveAdapter();
-		if (adapter != null && mController.getFacilitiesByAdapter(adapter.getId()).isEmpty()) {
+		if (adapter != null && mController.getFacilitiesModel().getFacilitiesByAdapter(adapter.getId()).isEmpty()) {
 			// Show activity for adding new sensor, when this adapter doesn't have any yet
 			Log.i(TAG, String.format("%s is empty", adapter.getName()));
 			DialogFragment newFragment = new AddSensorFragmentDialog();

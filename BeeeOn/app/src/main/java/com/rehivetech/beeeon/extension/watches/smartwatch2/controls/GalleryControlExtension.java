@@ -261,7 +261,7 @@ public class GalleryControlExtension extends ManagedControlExtension {
 			@Override
 			public void run() {
 				Device device = mDevices.get(lastPosition);
-				if (mController.updateFacility(device.getFacility(), false)) {
+				if (mController.getFacilitiesModel().refreshFacility(device.getFacility(), false)) {
 					sendListItem(createControlListItem(lastPosition));
 				}
 
@@ -277,8 +277,8 @@ public class GalleryControlExtension extends ManagedControlExtension {
 
 				mDevices = new ArrayList<Device>();
 
-				mController.reloadFacilitiesByAdapter(mAdapterId, true);
-				List<Facility> facilities = mController.getFacilitiesByLocation(mAdapterId, mLocationStr);
+				mController.getFacilitiesModel().reloadFacilitiesByAdapter(mAdapterId, true);
+				List<Facility> facilities = mController.getFacilitiesModel().getFacilitiesByLocation(mAdapterId, mLocationStr);
 				for (Facility facility : facilities) {
 					mDevices.addAll(facility.getDevices());
 				}

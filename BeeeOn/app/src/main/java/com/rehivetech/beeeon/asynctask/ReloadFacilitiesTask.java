@@ -21,7 +21,7 @@ public class ReloadFacilitiesTask extends CallbackTask<String> {
 		Controller controller = Controller.getInstance(mContext);
 
 		controller.reloadLocations(adapterId, mForceReload);
-		controller.reloadFacilitiesByAdapter(adapterId, mForceReload);
+		controller.getFacilitiesModel().reloadFacilitiesByAdapter(adapterId, mForceReload);
 
 		return true;
 	}

@@ -236,7 +236,7 @@ public class SensorListFragment extends Fragment {
 		for (Location loc : locations) {
 			mSensorAdapter.addHeader(new LocationListItem(loc.getName(),loc.getIconResource(),loc.getId()));
             // all facilities from actual location
-            facilities = mController.getFacilitiesByLocation(mActiveAdapterId,loc.getId());
+            facilities = mController.getFacilitiesModel().getFacilitiesByLocation(mActiveAdapterId,loc.getId());
             for(Facility fac : facilities) {
 				for(int x = 0; x < fac.getDevices().size(); x++) {
 					Device dev = fac.getDevices().get(x);

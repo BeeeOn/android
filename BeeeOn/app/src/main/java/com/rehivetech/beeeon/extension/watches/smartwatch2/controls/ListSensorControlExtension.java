@@ -241,8 +241,8 @@ public class ListSensorControlExtension extends ManagedControlExtension {
 				if (mAdapter != null) {
 					mDevices = new ArrayList<Device>();
 
-					mController.reloadFacilitiesByAdapter(mAdapterId, true);
-					List<Facility> facilities = mController.getFacilitiesByLocation(mAdapter.getId(), mLocationStr);
+					mController.getFacilitiesModel().reloadFacilitiesByAdapter(mAdapterId, true);
+					List<Facility> facilities = mController.getFacilitiesModel().getFacilitiesByLocation(mAdapter.getId(), mLocationStr);
 					for (Facility facility : facilities) {
 						mDevices.addAll(facility.getDevices());
 					}

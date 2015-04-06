@@ -185,7 +185,7 @@ public class WatchDogEditRuleActivity extends BaseApplicationActivity {
         // facilities get by cycling through all locations
         mFacilities = new ArrayList<Facility>();
         for(Location loc : mLocations){
-            List<Facility> tempFac = mController.getFacilitiesByLocation(mAdapter.getId(), loc.getId());
+            List<Facility> tempFac = mController.getFacilitiesModel().getFacilitiesByLocation(mAdapter.getId(), loc.getId());
             mFacilities.addAll(tempFac);
         }
 

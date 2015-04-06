@@ -27,7 +27,7 @@ public class FullReloadTask extends CallbackTask<Void> {
 		if (active != null) {
 			// Load data for active adapter
 			controller.reloadLocations(active.getId(), mForceReload);
-			controller.reloadFacilitiesByAdapter(active.getId(), mForceReload);
+			controller.getFacilitiesModel().reloadFacilitiesByAdapter(active.getId(), mForceReload);
 		}
 
 		return true;

@@ -104,7 +104,7 @@ public class WatchDogListAdapter extends BaseAdapter {
             case WatchDog.TYPE_SENSOR:
                 List<String> devicesIds = rule.getDevices();
                 if(devicesIds.size() > 0){
-                    Device deviceFirst = mController.getDevice(rule.getAdapterId(), devicesIds.get(0));
+                    Device deviceFirst = mController.getFacilitiesModel().getDevice(rule.getAdapterId(), devicesIds.get(0));
                     if(deviceFirst == null) return convertView;
 
                     holder.ItemIcon.setImageResource(deviceFirst.getIconResource());

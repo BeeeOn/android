@@ -112,8 +112,8 @@ public class ControlManagerSmartWatch2 extends ControlManagerBase {
 			// if default adapter is defined
 			if (adapter != null) {
 				if (strLocation != null) {
-					controller.reloadFacilitiesByAdapter(adapter.getId(), false);
-					List<Facility> sensors = controller.getFacilitiesByLocation(adapter.getId(), strLocation);
+					controller.getFacilitiesModel().reloadFacilitiesByAdapter(adapter.getId(), false);
+					List<Facility> sensors = controller.getFacilitiesModel().getFacilitiesByLocation(adapter.getId(), strLocation);
 					if (sensors != null) {
 						Intent intent = new Intent(mContext, ListSensorControlExtension.class);
 						intent.putExtra(ListSensorControlExtension.EXTRA_ADAPTER_ID, adapter.getId());
