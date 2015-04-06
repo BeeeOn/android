@@ -78,7 +78,7 @@ public class SensorDetailActivity extends BaseApplicationActivity {
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
 		// Get controller
-		mController = Controller.getInstance(getApplicationContext());
+		mController = Controller.getInstance(this);
 
 
 

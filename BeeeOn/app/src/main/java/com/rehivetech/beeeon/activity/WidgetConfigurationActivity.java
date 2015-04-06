@@ -85,7 +85,7 @@ public class WidgetConfigurationActivity extends BaseActivity {
 	public void onResume() {
 		super.onResume();
 
-		mController = Controller.getInstance(getApplicationContext());
+		mController = Controller.getInstance(this);
 
 		mAdapters = mController.getAdapters();
 		if (mAdapters.isEmpty()) {

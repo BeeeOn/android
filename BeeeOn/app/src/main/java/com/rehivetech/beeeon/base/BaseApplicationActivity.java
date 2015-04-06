@@ -27,7 +27,7 @@ public abstract class BaseApplicationActivity extends BaseActivity implements IN
 	public void onResume() {
 		super.onResume();
 
-		Controller controller = Controller.getInstance(getApplicationContext());
+		Controller controller = Controller.getInstance(this);
 
 		if (!controller.isLoggedIn()) {
 			if (!triedLoginAlready) {
@@ -51,7 +51,7 @@ public abstract class BaseApplicationActivity extends BaseActivity implements IN
 	public void onPause() {
 		super.onPause();
 
-		Controller controller = Controller.getInstance(getApplicationContext());
+		Controller controller = Controller.getInstance(this);
 		controller.unregisterNotificationReceiver(this);
 
 		isPaused = true;

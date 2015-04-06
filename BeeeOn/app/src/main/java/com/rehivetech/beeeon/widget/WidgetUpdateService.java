@@ -153,7 +153,7 @@ public class WidgetUpdateService extends Service {
 		SensorWidgetProvider widgetProvider = new SensorWidgetProvider();
 		long now = SystemClock.elapsedRealtime();
 
-		Controller controller = Controller.getInstance(getApplicationContext());
+		Controller controller = Controller.getInstance(this);
 		SharedPreferences userSettings = controller.getUserSettings();
 
 		// UserSettings can be null when user is not logged in!

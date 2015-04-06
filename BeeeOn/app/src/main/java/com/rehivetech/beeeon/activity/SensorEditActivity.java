@@ -87,7 +87,7 @@ public class SensorEditActivity extends BaseApplicationActivity {
 					.commit();
 		}
 		mActivity = this;
-		mController = Controller.getInstance(mActivity);
+		mController = Controller.getInstance(this);
 
 		// Prepare progress dialog
 		mProgress = new ProgressDialog(this);

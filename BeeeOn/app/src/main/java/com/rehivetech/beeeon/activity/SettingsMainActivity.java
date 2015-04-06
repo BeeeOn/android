@@ -45,7 +45,7 @@ public class SettingsMainActivity extends ActionBarPreferenceActivity implements
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		mController = Controller.getInstance(getApplicationContext());
+		mController = Controller.getInstance(this);
 
         final Toolbar toolbar=getToolbar();
         toolbar.setTitle(R.string.settings);

@@ -69,7 +69,7 @@ public class ManagedControlExtension extends ControlExtension {
 		super(context, hostAppPackageName);
 		this.mIntent = intent;
 		mControlManager = controlManager;
-		mController = Controller.getInstance(mContext.getApplicationContext());
+		mController = Controller.getInstance(mContext);
 	}
 
 	/**

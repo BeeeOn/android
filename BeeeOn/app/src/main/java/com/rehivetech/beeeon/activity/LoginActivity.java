@@ -58,7 +58,7 @@ public class LoginActivity extends BaseActivity {
 		Log.i("BeeeOn app starting...", "___________________________________");
 
 		// Get controller
-		mController = Controller.getInstance(getApplicationContext());
+		mController = Controller.getInstance(this);
 
 
 		// Prepare progressDialog
@@ -213,7 +213,7 @@ public class LoginActivity extends BaseActivity {
 	protected void setDemoMode(boolean demoMode) {
 		// After changing demo mode must be controller reloaded
 		Controller.setDemoMode(getApplicationContext(), demoMode);
-		mController = Controller.getInstance(getApplicationContext());
+		mController = Controller.getInstance(this);
 	}
 
 	/**

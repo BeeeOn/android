@@ -34,7 +34,7 @@ public class GcmMessageHandler extends IntentService {
 	public void onCreate() {
 		super.onCreate();
 		mHandler = new Handler();
-		mController = Controller.getInstance(getApplicationContext());
+		mController = Controller.getInstance(this);
 	}
 
 	@Override

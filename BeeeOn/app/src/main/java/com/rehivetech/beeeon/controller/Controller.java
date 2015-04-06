@@ -77,14 +77,13 @@ public final class Controller {
 	 * Return singleton instance of this Controller. This is thread-safe.
 	 * 
 	 * @param context
-	 *            This must be the global application context.
 	 * @return singleton instance of controller
 	 */
 	public static Controller getInstance(Context context) {
 		if (mController == null) {
 			synchronized (Controller.class) {
 				if (mController == null) {
-					mController = new Controller(context);
+					mController = new Controller(context.getApplicationContext());
 				}
 			}
 		}

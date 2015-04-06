@@ -32,7 +32,7 @@ public class UsersListAdapter extends BaseAdapter {
 
 	public UsersListAdapter(Context context, List<User> users, OnClickListener listener) {
 		mContext = context;
-		mController = Controller.getInstance(context.getApplicationContext());
+		mController = Controller.getInstance(mContext);
 		mUsers = users;
 		//mShowAdd = !devices.isEmpty();
 		mListener = listener;

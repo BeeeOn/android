@@ -26,7 +26,7 @@ public class SensorListItem extends AbstractListItem {
 		mDevice = device;
 		mSeparatorVisible = separator;
 		mContext = context;
-		mController = Controller.getInstance(context.getApplicationContext());
+		mController = Controller.getInstance(context);
 
 	}
 

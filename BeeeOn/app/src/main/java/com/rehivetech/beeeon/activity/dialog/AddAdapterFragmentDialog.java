@@ -41,7 +41,7 @@ public class AddAdapterFragmentDialog extends TrackDialogFragment {
 
 		// Get activity and controller
 		mActivity = (MainActivity) getActivity();
-		mController = Controller.getInstance(mActivity.getApplicationContext());
+		mController = Controller.getInstance(mActivity);
 
 		// Use the Builder class for convenient dialog construction
 		AlertDialog.Builder builder = new AlertDialog.Builder(mActivity);

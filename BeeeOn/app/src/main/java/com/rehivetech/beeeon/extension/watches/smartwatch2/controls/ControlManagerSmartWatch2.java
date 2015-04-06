@@ -69,7 +69,7 @@ public class ControlManagerSmartWatch2 extends ControlManagerBase {
 		super(context, packageName);
 		mControlStack = new Stack<Intent>();
 
-		mController = Controller.getInstance(mContext.getApplicationContext());
+		mController = Controller.getInstance(mContext);
 
 		Intent initialControlIntent;
 		// FIXME dodelat prihlaseni pokud neni v appce

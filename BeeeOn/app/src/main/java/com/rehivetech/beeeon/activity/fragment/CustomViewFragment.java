@@ -60,7 +60,6 @@ public class CustomViewFragment extends TrackFragment {
 	private static final String TAG = CustomViewFragment.class.getSimpleName();
 
 	private Controller mController;
-	private Context mContext;
 
 	public CustomViewFragment() {
 	}
@@ -69,8 +68,7 @@ public class CustomViewFragment extends TrackFragment {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		mContext = getActivity().getApplicationContext();
-		mController = Controller.getInstance(mContext);
+		mController = Controller.getInstance(getActivity());
 	}
 
 	@Override
@@ -91,14 +89,14 @@ public class CustomViewFragment extends TrackFragment {
 		View row = inflater.inflate(R.layout.custom_graph_item, mLayout, false);
 		// Create and set graphView
 		GraphView graphView = (GraphView) row.findViewById(R.id.graph);
-		GraphViewHelper.prepareGraphView(graphView, mContext, device, fmt, unitsHelper); // empty heading
+		GraphViewHelper.prepareGraphView(graphView, getActivity(), device, fmt, unitsHelper); // empty heading
 		LegendView legend = (LegendView) row.findViewById(R.id.legend);
 		legend.setDrawBackground(true);
 		legend.setIconRound(10f);
 
 		// Set title
 		TextView tv = (TextView) row.findViewById(R.id.graph_label);
-		tv.setText(mContext.getString(device.getType().getStringResource()));
+		tv.setText(getString(device.getType().getStringResource()));
 
 		mGraphs.put(device.getType().getTypeId(), graphView);
 		mLegends.put(device.getType().getTypeId(), legend);
@@ -175,7 +173,7 @@ public class CustomViewFragment extends TrackFragment {
 			return;
 
 		// Prepare helpers
-		final UnitsHelper unitsHelper = new UnitsHelper(mController.getUserSettings(), mContext);
+		final UnitsHelper unitsHelper = new UnitsHelper(mController.getUserSettings(), getActivity());
 		final TimeHelper timeHelper = new TimeHelper(mController.getUserSettings());
 		final DateTimeFormatter fmt = timeHelper.getFormatter(mGraphDateTimeFormat, adapter);
 

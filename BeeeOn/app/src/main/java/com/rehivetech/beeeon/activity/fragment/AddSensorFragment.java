@@ -49,7 +49,7 @@ public class AddSensorFragment extends TrackFragment {
 
 		// Get activity and controller
 		mActivity = (AddSensorActivity) getActivity();
-		mController = Controller.getInstance(mActivity.getApplicationContext());
+		mController = Controller.getInstance(mActivity);
 
 		// Send request
 		mAdapter = mController.getActiveAdapter();

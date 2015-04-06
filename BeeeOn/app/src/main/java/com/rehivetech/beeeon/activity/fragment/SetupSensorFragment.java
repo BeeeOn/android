@@ -68,7 +68,7 @@ public class SetupSensorFragment extends TrackFragment {
 
 		// Get activity and controller
 		mActivity = (SetupSensorActivity) getActivity();
-		mController = Controller.getInstance(mActivity.getApplicationContext());
+		mController = Controller.getInstance(mActivity);
 
 		mAdapter = mController.getActiveAdapter();
 		if(mAdapter == null) {
