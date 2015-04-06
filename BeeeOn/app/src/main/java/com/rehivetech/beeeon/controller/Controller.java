@@ -6,7 +6,6 @@ import android.graphics.Bitmap;
 
 import com.rehivetech.beeeon.Constants;
 import com.rehivetech.beeeon.exception.AppException;
-import com.rehivetech.beeeon.geofence.TransitionType;
 import com.rehivetech.beeeon.household.adapter.Adapter;
 import com.rehivetech.beeeon.household.user.User;
 import com.rehivetech.beeeon.household.user.User.Role;
@@ -109,7 +108,7 @@ public final class Controller {
 		mUninitializedFacilitiesModel = new UninitializedFacilitiesModel(mNetwork);
 		mDeviceLogsModel = new DeviceLogsModel(mNetwork);
 		mWatchDogsModel = new WatchDogsModel(mNetwork);
-		mGeofenceModel = new GeofenceModel(mContext);
+		mGeofenceModel = new GeofenceModel(mNetwork, mContext);
 		mGcmModel = new GcmModel(mContext, mNetwork, mPersistence, mUser);
 		mUsersModel = new UsersModel(mNetwork);
 
@@ -439,18 +438,6 @@ public final class Controller {
 			return false;
 		}
 		return true;
-	}
-
-	/**
-	 *
-	 * This CAN'T be called on UI thread!
-	 *
-	 * @param geofenceId Geofence ID which is unique per user for all devices
-	 * @param type
-	 */
-	public void setPassBorder(String geofenceId, TransitionType type) {
-		Log.i(TAG, "Passing geofence and seding to server");
-		mNetwork.passBorder(geofenceId, type.getString());
 	}
 
 	/**
