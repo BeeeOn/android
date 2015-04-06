@@ -54,7 +54,10 @@ public final class Controller {
 	public static final String TAG = Controller.class.getSimpleName();
 
 	/** This singleton instance. */
-	private static Controller mController;
+	private static Controller sController;
+
+	/** Switch for using demo mode (with example adapter, without server) */
+	private static boolean sDemoMode = false;
 
 	/** Application context */
 	private final Context mContext;
@@ -64,9 +67,6 @@ public final class Controller {
 
 	/** Network service for communication with server */
 	private final INetwork mNetwork;
-
-	/** Switch for using demo mode (with example adapter, without server) */
-	private static boolean mDemoMode = false;
 
 	/** Weak map for holding registered notification receivers */
 	private final WeakHashMap<INotificationReceiver, Boolean> mNotificationReceivers = new WeakHashMap<INotificationReceiver, Boolean>();
@@ -95,15 +95,15 @@ public final class Controller {
 	 * @return singleton instance of controller
 	 */
 	public static Controller getInstance(Context context) {
-		if (mController == null) {
+		if (sController == null) {
 			synchronized (Controller.class) {
-				if (mController == null) {
-					mController = new Controller(context.getApplicationContext());
+				if (sController == null) {
+					sController = new Controller(context.getApplicationContext());
 				}
 			}
 		}
 
-		return mController;
+		return sController;
 	}
 
 	/**
@@ -115,7 +115,7 @@ public final class Controller {
 	private Controller(Context context) {
 		mContext = context;
 
-		mNetwork = mDemoMode ? new DemoNetwork(mContext) : new Network(mContext, Utils.isDebugVersion(mContext));
+		mNetwork = sDemoMode ? new DemoNetwork(mContext) : new Network(mContext, Utils.isDebugVersion(mContext));
 		mPersistence = new Persistence(mContext);
 		mUser = new User();
 
@@ -148,12 +148,12 @@ public final class Controller {
 	 */
 	public static synchronized void setDemoMode(Context context, boolean demoMode) {
 		// We always need to create a new Controller, due to account switch and first (not) loading of demo
-		mDemoMode = demoMode;
-		mController = new Controller(context);
+		sDemoMode = demoMode;
+		sController = new Controller(context);
 	}
 
 	public static boolean isDemoMode() {
-		return mDemoMode;
+		return sDemoMode;
 	}
 
 	/** Persistence methods *************************************************/
@@ -834,7 +834,7 @@ public final class Controller {
 
 	private void registerGCM() {
 		// Send GCM ID to server
-		final String gcmId = mController.getGCMRegistrationId();
+		final String gcmId = sController.getGCMRegistrationId();
 		if (gcmId.isEmpty()) {
 			GcmHelper.registerGCMInBackground(mContext);
 			Log.w(GcmHelper.TAG_GCM, "GCM ID is not accessible in persistence, creating new thread");
@@ -843,7 +843,7 @@ public final class Controller {
 			Thread t = new Thread() {
 				public void run() {
 					try {
-						mController.setGCMIdServer(gcmId);
+						sController.setGCMIdServer(gcmId);
 					} catch (Exception e) {
 						// do nothing
 						Log.w(GcmHelper.TAG_GCM, "Login: Sending GCM ID to server failed: " + e.getLocalizedMessage());
@@ -851,7 +851,7 @@ public final class Controller {
 				}
 			};
 			t.start();
-			mController.setGCMIdLocal(gcmId);
+			sController.setGCMIdLocal(gcmId);
 		}
 	}
 
@@ -928,7 +928,7 @@ public final class Controller {
 	 */
 	public void setGCMIdServer(String gcmID) {
 		Log.i(GcmHelper.TAG_GCM, "setGcmIdServer");
-		if (mDemoMode) {
+		if (sDemoMode) {
 			Log.i(GcmHelper.TAG_GCM, "DemoMode -> return");
 			return;
 		}
