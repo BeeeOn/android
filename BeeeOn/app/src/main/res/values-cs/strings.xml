@@ -341,6 +341,14 @@
 	<string name="title_activity_sensor_edit">Editace zařízení</string>
 	<string name="addadapter_fill_name">Vyplňte název adaptéru</string>
 	<string name="addadapter_fill_code">Vyplňte kód</string>
+	<string name="tut_intro_text_1">Vítejte v BeeeOn inteligentní domácnosti. Tutorial Vám představí BeeeOn komponenty a aplikaci.</string>
+	<string name="tut_intro_text_2">BeeeOn komponenty jsou bezdrátová zařízení (např. senzor) a adaptér.</string>
+	<string name="tut_intro_text_3">Senzory měří hodnoty (např. teplotu), aktory nastavují požadované hodnoty.</string>
+	<string name="tut_intro_text_4">Adaptér sbírá data z bezdrátových zařízení.</string>
+	<string name="tut_intro_text_5">Mobilní aplikace poskytuje sledování a konfiguraci domácnosti odkukoliv a kdykoliv.</string>
+	<string name="tutorial_go_to_app">START</string>
+	<string name="tutorial_skip">VYNECHAT</string>
+	<string name="radius">Rádius</string>
 
 
 </resources>

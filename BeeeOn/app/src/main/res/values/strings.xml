@@ -279,10 +279,10 @@
     <string name="tut_add_adapter_text">To add your new adapter, please click on plus</string>
     <string name="tut_add_sensor_header">ADD DEVICE</string>
     <string name="tut_add_sensor_text">To add your new device, please click on plus</string>
-	<string name="tut_intro_text_1">Welcome to BeeeOn intelligent home control. The tutorial will explain you BeeeOn hardware as well as this application.</string>
-	<string name="tut_intro_text_2">BeeeOn hardware consists of sensors, actors (if purchased) and adapter.</string>
+	<string name="tut_intro_text_1">Welcome to BeeeOn intelligent home control. The tutorial will explain you BeeeOn components and this application.</string>
+	<string name="tut_intro_text_2">BeeeOn components include wireless devices (e.g. sensors) and adapter.</string>
 	<string name="tut_intro_text_3">Sensor measures values such as temperature, actor controls devices such as ON/OFF switch.</string>
-	<string name="tut_intro_text_4">Adapter collects data from sensors.</string>
+	<string name="tut_intro_text_4">Adapter collects data from wireless devices.</string>
 	<string name="tut_intro_text_5">Mobile app provides monitoring and control from anywhere, anytime.</string>
     
     <string name="tutorial_next">NEXT</string>
@@ -331,7 +331,7 @@
 
 	<string name="radius">Radius</string>
 	<string name="delete_geofence">Delete geofence</string>
-	<string name="unit_meter_short">m</string>
+	<string name="unit_meter_short" translatable="false">m</string>
 	<string name="tutorial_go_to_app">START</string>
 
     <string name="devices">Remove geofence</string>
