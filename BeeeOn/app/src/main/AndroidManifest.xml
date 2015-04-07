@@ -199,6 +199,8 @@
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
                 <action android:name="com.rehivetech.beeeon.ACTION_TIME_CHANGED" />
+                <action android:name="com.rehivetech.beeeon.ACTION_SCREEN_ON" />
+                <action android:name="com.rehivetech.beeeon.ACTION_LOCALE_CHANGED" />
             </intent-filter>
 
             <meta-data

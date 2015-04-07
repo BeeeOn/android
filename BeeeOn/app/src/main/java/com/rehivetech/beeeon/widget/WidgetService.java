@@ -13,12 +13,16 @@ import android.os.IBinder;
 import android.os.SystemClock;
 import android.util.SparseArray;
 
+import com.rehivetech.beeeon.adapter.device.Device;
 import com.rehivetech.beeeon.adapter.device.Facility;
 import com.rehivetech.beeeon.adapter.location.Location;
+import com.rehivetech.beeeon.asynctask.ActorActionTask;
+import com.rehivetech.beeeon.asynctask.CallbackTask;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.util.Log;
 import com.rehivetech.beeeon.widget.clock.WidgetClockProvider;
 import com.rehivetech.beeeon.widget.location.WidgetLocationListProvider;
+import com.rehivetech.beeeon.widget.sensor.WidgetSensorData;
 import com.rehivetech.beeeon.widget.sensor.WidgetSensorProvider;
 
 import java.lang.reflect.InvocationTargetException;
@@ -33,6 +37,8 @@ public class WidgetService extends Service {
 
     private static final String EXTRA_FORCE_UPDATE = "com.rehivetech.beeeon.forceUpdate";
     private static final String EXTRA_STANDBY = "com.rehivetech.beeeon.standby";
+
+    private static final String EXTRA_ACTOR_CHANGE = "com.rehivetech.beeeon.actor_change";
 
     public static final int UPDATE_INTERVAL_DEFAULT = 10; // in seconds
     public static final int UPDATE_INTERVAL_MIN = 5; // in seconds
@@ -166,6 +172,21 @@ public class WidgetService extends Service {
         return intent;
     }
 
+    public static Intent getActorChangeIntent(Context context, int widgetId){
+        Intent intent = new Intent(context, WidgetService.class);
+        intent.putExtra(WidgetService.EXTRA_ACTOR_CHANGE, true);
+        intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, new int[]{
+                widgetId
+        });
+
+        return intent;
+    }
+
+    public static PendingIntent getActorChangePendingIntent(Context context, int widgetId) {
+        final Intent intent = getActorChangeIntent(context, widgetId);
+        return PendingIntent.getService(context, widgetId, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+    }
+
     @Override
     public int onStartCommand(final Intent intent, int flags, int startId) {
         super.onStartCommand(intent, flags, startId);
@@ -174,18 +195,34 @@ public class WidgetService extends Service {
         mAppWidgetManager = AppWidgetManager.getInstance(mContext);
         mController = Controller.getInstance(mContext);
 
-        boolean isStandBy = intent.getBooleanExtra(EXTRA_STANDBY, false);
-        if(isStandBy){
-            Log.d(TAG, "is standby...");
-            stopAlarm(mContext);
-            return START_STICKY;
+        boolean isActorChange = false, isStandBy = false, isForceUpdate = false;
+
+        if(intent != null) {
+            // async task for changing widget actor
+            isActorChange = intent.getBooleanExtra(EXTRA_ACTOR_CHANGE, false);
+            if (isActorChange) {
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        changeWidgetActor(intent);
+                    }
+                }).start();
+            }
+
+            // if standby, stop alarm (leaves service running though)
+            isStandBy = intent.getBooleanExtra(EXTRA_STANDBY, false);
+            if (isStandBy) {
+                Log.d(TAG, "is standby...");
+                stopAlarm(mContext);
+                return START_STICKY;
+            }
+
+            isForceUpdate = intent.getBooleanExtra(EXTRA_FORCE_UPDATE, false);
         }
 
-        boolean forceUpdate = intent.getBooleanExtra(EXTRA_FORCE_UPDATE, false);
+        Log.v(TAG, String.format("onStartCommand(intent = %b), startId = %d, standby = %b, actorchange = %b, forceUpdate = %b", (intent == null), startId, isStandBy, isActorChange, isForceUpdate));
 
-        Log.v(TAG, String.format("onStartCommand(), startId = %d, forceUpdate = %b", startId, forceUpdate));
-
-        if (!forceUpdate) {
+        if (!isForceUpdate) {
             // set alarm for next update
             long nextUpdate = calcNextUpdate();
 
@@ -194,7 +231,8 @@ public class WidgetService extends Service {
                 setAlarm(nextUpdate);
             } else {
                 Log.d(TAG, "No planned next update");
-                stopSelf();
+                //stopSelf();
+                WidgetService.stopUpdating(mContext);
                 return START_STICKY;
             }
         }
@@ -226,6 +264,7 @@ public class WidgetService extends Service {
             filter.addAction(Intent.ACTION_TIME_TICK);
             filter.addAction(Intent.ACTION_TIMEZONE_CHANGED);
             filter.addAction(Intent.ACTION_TIME_CHANGED);
+            filter.addAction(Intent.ACTION_LOCALE_CHANGED);
             mBroadcastBridge = new WidgetBridgeBroadcastReceiver();
             registerReceiver(mBroadcastBridge, filter);
         }
@@ -243,11 +282,52 @@ public class WidgetService extends Service {
     }
 
     /**
+     * Actor task
+     * @param intent  id of widgets
+     */
+    private void changeWidgetActor(Intent intent) {
+        Log.d(TAG, "changeWidgetActor()");
+        int[] allWidgetIds;
+
+        if(intent != null){
+            allWidgetIds = intent.getIntArrayExtra(mAppWidgetManager.EXTRA_APPWIDGET_IDS);
+        }
+        else{
+            allWidgetIds = new int[]{};
+        }
+
+        if(allWidgetIds == null || allWidgetIds.length == 0){
+            Log.d(TAG, "No Widget Ids !!");
+            return;
+        }
+
+        for(int widgetId : allWidgetIds){
+            // TODO toto je spatne
+            final WidgetSensorData widgetData = (WidgetSensorData) getWidgetData(widgetId);
+            final Device dev = mController.getDevice(widgetData.adapterId, widgetData.deviceId);
+
+            ActorActionTask mActorActionTask = new ActorActionTask(mContext.getApplicationContext());
+            mActorActionTask.setListener(new CallbackTask.CallbackTaskListener() {
+                @Override
+                public void onExecute(boolean success) {
+                    widgetData.widgetProvider.asyncTask(mContext, widgetData, dev);
+                }
+            });
+
+            mActorActionTask.execute(dev);
+        }
+
+    }
+
+    /**
      * Method calls all widgets which needs to be updated
      * @param intent
      */
     private void updateWidgets(Intent intent) {
         Log.d(TAG, "updateWidgets()");
+
+        int[] allWidgetIds;
+        boolean isForceUpdate;
 
         // check login state and for one cycle set flag
         if((mController.isLoggedIn() && !isLoggedInLast) || (!mController.isLoggedIn() && isLoggedInLast)){
@@ -256,14 +336,21 @@ public class WidgetService extends Service {
             isLoggedInLast = mController.isLoggedIn();
         }
 
-        int[] allWidgetIds = intent.getIntArrayExtra(mAppWidgetManager.EXTRA_APPWIDGET_IDS);
+        if(intent != null){
+            allWidgetIds = intent.getIntArrayExtra(mAppWidgetManager.EXTRA_APPWIDGET_IDS);
+            isForceUpdate = intent.getBooleanExtra(EXTRA_FORCE_UPDATE, false);
+        }
+        else{
+            allWidgetIds = new int[]{};
+            isForceUpdate = false;
+        }
+
         if(allWidgetIds == null || allWidgetIds.length == 0){
             allWidgetIds = getAllIds();
         }
 
         if(allWidgetIds.length == 0) Log.d(TAG, "No Widget Ids !!");
 
-        boolean forceUpdate = intent.getBooleanExtra(EXTRA_FORCE_UPDATE, false);
         long timeNow = SystemClock.elapsedRealtime();
         SparseArray<WidgetData> widgetsToUpdate = new SparseArray<>();
 
@@ -291,13 +378,13 @@ public class WidgetService extends Service {
             }
 
             // Don't update widgets until their interval elapsed or we have force update
-            if (!forceUpdate && !widgetData.isExpired(timeNow)) {
+            if (!isForceUpdate && !widgetData.isExpired(timeNow)) {
                 Log.v(TAG, String.format("Ignoring widget %d (not expired nor forced)", widgetId));
                 continue;
             }
 
             // initializes variables, sets remoteViews & helper variables for operations
-            if(forceUpdate || !widgetData.widgetProvider.initialized) {
+            if(isForceUpdate || !widgetData.widgetProvider.initialized) {
                 widgetData.widgetProvider.initialize(mContext, widgetData);
             }
 
@@ -330,7 +417,7 @@ public class WidgetService extends Service {
 		}
 
         if (!WidgetService.usedFacilities.isEmpty()) {
-            mController.updateFacilities(WidgetService.usedFacilities, forceUpdate);
+            mController.updateFacilities(WidgetService.usedFacilities, isForceUpdate);
         }
 
         for (int i = 0; i < widgetsToUpdate.size(); i++) {

@@ -41,46 +41,55 @@ import java.util.Locale;
 public class WidgetClockProvider extends WidgetProvider {
 	private static final String TAG = WidgetClockProvider.class.getSimpleName();
 
-	private static final String weekDays[] = new DateFormatSymbols().getWeekdays();
+	private static String weekDays[] = reloadWeekDays();
 
 	protected WidgetClockData mWidgetData;
+
+	private static String[] reloadWeekDays(){
+		return new DateFormatSymbols().getShortWeekdays();
+	}
 
 	@Override
 	public void onReceive(Context context, Intent intent) {
 		String action = intent.getAction();
+		Log.d(TAG, action);
+
 		if (action.equals(WidgetBridgeBroadcastReceiver.ACTION_TIME_CHANGED) || action.equals(WidgetBridgeBroadcastReceiver.ACTION_SCREEN_ON)) {
-			for(int widgetId : getAllIds(context)) {
-				onUpdateClock(context, widgetId);
-			}
+			onUpdateClock(context);
+		}
+		else if(action.equals(WidgetBridgeBroadcastReceiver.ACTION_LOCALE_CHANGED)){
+			weekDays = reloadWeekDays();
 		}
 
 		super.onReceive(context, intent);
 	}
 
 	/**
-	 * !! CAN'T USE CLASS PROPERTIES !!
-	 *
 	 * Updates widget's time asynchroningly to sensor updates
 	 * Updates always on time broadcasts
 	 * @param context
 	 */
-	public void onUpdateClock(Context context, int widgetId) {
-		Log.d(TAG, String.format("onUpdateClock(%d)", widgetId));
-		RemoteViews rv = new RemoteViews(context.getPackageName(), R.layout.widget_clock);
+	public void onUpdateClock(Context context) {
 		AppWidgetManager widgetManager = AppWidgetManager.getInstance(context);
-
 		Calendar cal = Calendar.getInstance(context.getResources().getConfiguration().locale);
-	// TODO je to nutne?
+		// TODO je to nutne?
 		cal.setTime(new Date());
 
-		rv.setTextViewText(R.id.widget_clock_hours, String.format("%02d", cal.get(Calendar.HOUR_OF_DAY)));
-		rv.setTextViewText(R.id.widget_clock_minutes, String.format("%02d", cal.get(Calendar.MINUTE)));
+		for(int widgetId : getAllIds(context)) {
+			Log.d(TAG, String.format("onUpdateClock(%d)", widgetId));
 
-		rv.setTextViewText(R.id.widget_clock_date, DateTimeFormat.shortDate().print(cal.getTimeInMillis()));
-		rv.setTextViewText(R.id.widget_clock_day_of_week, weekDays[cal.get(Calendar.DAY_OF_WEEK)]);
+			// tries to get initialized first
+			mRemoteViews = (mRemoteViews != null) ? mRemoteViews : new RemoteViews(context.getPackageName(), R.layout.widget_clock);
 
-		// request widget redraw
-		widgetManager.updateAppWidget(widgetId, rv);
+			mRemoteViews.setTextViewText(R.id.widget_clock_hours, String.format("%02d", cal.get(Calendar.HOUR_OF_DAY)));
+			mRemoteViews.setTextViewText(R.id.widget_clock_minutes, String.format("%02d", cal.get(Calendar.MINUTE)));
+
+			mRemoteViews.setTextViewText(R.id.widget_clock_date, DateTimeFormat.shortDate().print(cal.getTimeInMillis()));
+			mRemoteViews.setTextViewText(R.id.widget_clock_day_of_week, weekDays[cal.get(Calendar.DAY_OF_WEEK)]);
+
+			// request widget redraw
+			widgetManager.updateAppWidget(widgetId, mRemoteViews);
+		}
 	}
 
 
@@ -88,6 +97,13 @@ public class WidgetClockProvider extends WidgetProvider {
 	public void initialize(Context context, WidgetData data) {
 		super.initialize(context, data);
 		mWidgetData = (WidgetClockData) data;
+
+		// updates clock
+		onUpdateClock(mContext);
+
+		if(mWidgetData.adapterId.length() > 0 && mWidgetData.deviceId.length() > 0){
+			mRemoteViews.setOnClickPendingIntent(R.id.widget_clock_temperature_in, startDetailActivityPendingIntent(mContext, mWidgetId, mWidgetData.adapterId, mWidgetData.deviceId));
+		}
 	}
 
 	@Override
@@ -114,12 +130,13 @@ public class WidgetClockProvider extends WidgetProvider {
 			//WidgetService.usedFacilities.put(facility.getId(), facility);
 			WidgetService.usedFacilities.add(facility);
 		}
+
 		return true;
 	}
 
 	@Override
 	public void changeData() {
-		long now = SystemClock.elapsedRealtime();
+		long timeNow = SystemClock.elapsedRealtime();
 		Controller controller = Controller.getInstance(mContext);
 		SharedPreferences userSettings = controller.getUserSettings();
 		// UserSettings can be null when user is not logged in!
@@ -136,7 +153,7 @@ public class WidgetClockProvider extends WidgetProvider {
 			mWidgetData.deviceName = device.getName();
 			mWidgetData.adapterId = device.getFacility().getAdapterId();
 			mWidgetData.deviceId = device.getId();
-			mWidgetData.lastUpdate = now;
+			mWidgetData.lastUpdate = timeNow;
 			mWidgetData.deviceLastUpdateTime = device.getFacility().getLastUpdate().getMillis();
 			mWidgetData.deviceRefresh = device.getFacility().getRefresh().getInterval();
 
@@ -169,6 +186,7 @@ public class WidgetClockProvider extends WidgetProvider {
 	@Override
 	public void setValues() {
 		mRemoteViews.setTextViewText(R.id.widget_clock_temperature_in, String.format("%s %s", mWidgetData.deviceValue, mWidgetData.deviceUnit));
+
 		// request widget redraw
 		mWidgetManager.updateAppWidget(mWidgetId, mRemoteViews);
 	}

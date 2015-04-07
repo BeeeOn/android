@@ -24,6 +24,7 @@ public class WidgetSensorData extends WidgetData {
     public String deviceName;
     public int deviceIcon;
     public String deviceValue;
+    public String deviceValueType;
     public String deviceUnit;
     public long deviceLastUpdateTime;
     public String deviceLastUpdateText;

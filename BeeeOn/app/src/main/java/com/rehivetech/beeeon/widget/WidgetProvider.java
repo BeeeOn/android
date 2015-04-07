@@ -8,13 +8,17 @@ import android.appwidget.AppWidgetProviderInfo;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Build;
 import android.widget.RemoteViews;
 
 import com.rehivetech.beeeon.R;
+import com.rehivetech.beeeon.activity.SensorDetailActivity;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.util.Compatibility;
 import com.rehivetech.beeeon.util.Log;
+import com.rehivetech.beeeon.util.TimeHelper;
+import com.rehivetech.beeeon.util.UnitsHelper;
 
 abstract public class WidgetProvider extends AppWidgetProvider {
     private static String TAG = WidgetProvider.class.getSimpleName();
@@ -25,7 +29,6 @@ abstract public class WidgetProvider extends AppWidgetProvider {
     public static int WIDGET_3_CELLS = 180;
 
     public boolean initialized = false;
-    public boolean loggedIn = false;
 
     // variables available only in prepare(), changeData() and setValues() methods
     protected Context mContext;
@@ -34,6 +37,9 @@ abstract public class WidgetProvider extends AppWidgetProvider {
     protected AppWidgetProviderInfo mWidgetProviderInfo;
     protected int mWidgetId;
     protected RemoteViews mRemoteViews;
+    protected SharedPreferences mUserSettings;
+    protected UnitsHelper mUnitsHelper;
+    protected TimeHelper mTimeHelper;
 
     protected PendingIntent mConfigurationPendingIntent;
     protected PendingIntent mRefreshPendingIntent;
@@ -52,7 +58,7 @@ abstract public class WidgetProvider extends AppWidgetProvider {
     @Override
     public void onDisabled(Context context){
         Log.d(TAG, "onDisabled()");
-        WidgetService.stopUpdating(context);
+        //WidgetService.stopUpdating(context);
     }
 
     @Override
@@ -66,8 +72,8 @@ abstract public class WidgetProvider extends AppWidgetProvider {
             WidgetData widgetData = WidgetService.getWidgetData(widgetId, context);
             if(widgetData == null) continue;
 
-            WidgetService.deleteWidgetData(widgetData);
             widgetData.deleteData(context);
+            WidgetService.deleteWidgetData(widgetData);
         }
     }
 
@@ -95,6 +101,10 @@ abstract public class WidgetProvider extends AppWidgetProvider {
         mController = Controller.getInstance(context);
         mRemoteViews = new RemoteViews(context.getPackageName(), data.layout);
 
+        mUserSettings = mController.getUserSettings();
+        mUnitsHelper = (mUserSettings == null) ? null : new UnitsHelper(mUserSettings, mContext.getApplicationContext());
+        mTimeHelper = (mUserSettings == null) ? null : new TimeHelper(mUserSettings);
+
         // refresh onclick
         mRefreshPendingIntent = WidgetService.getForceUpdatePendingIntent(mContext, mWidgetId);
 
@@ -108,16 +118,28 @@ abstract public class WidgetProvider extends AppWidgetProvider {
         initialized = true;
     }
 
-    public void whenUserLogin() {
-    }
-
     public abstract boolean prepare();
 
     public abstract void changeData();
 
     public abstract void setValues();
 
+    public void whenUserLogin() {
+    }
+
     public void whenUserLogout() {
+    }
+
+    public void asyncTask(Context context, WidgetData data, Object obj){
+
+    }
+
+    protected PendingIntent startDetailActivityPendingIntent(Context context, int requestCode, String adapterId, String deviceId) {
+        Intent intent = new Intent(context, SensorDetailActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.putExtra(SensorDetailActivity.EXTRA_DEVICE_ID, deviceId);
+        intent.putExtra(SensorDetailActivity.EXTRA_ADAPTER_ID, adapterId);
+        return PendingIntent.getActivity(context, requestCode, intent, PendingIntent.FLAG_UPDATE_CURRENT);
     }
 
     // or use WidgetService.getWidgetIds(WidgetLocationListProvider.class, mContext, mWidgetManager).toArray()
@@ -138,6 +160,24 @@ abstract public class WidgetProvider extends AppWidgetProvider {
         }
         else{
             mRemoteViews.setRemoteAdapter(mWidgetId, R.id.widget_sensor_list_view, remoteViewsFactoryIntent);
+        }
+    }
+
+    /**
+     * Sets switchcompat (imageview)
+     * @param state
+     * @param rv
+     */
+    public void setSwitchChecked(boolean state, RemoteViews rv){
+        rv.setImageViewResource(R.id.widget_switchcompat, state ? R.drawable.switch_on : R.drawable.switch_off);
+    }
+
+    public void setSwitchDisabled(boolean disabled, boolean fallbackState, RemoteViews rv){
+        if(disabled == true){
+            rv.setImageViewResource(R.id.widget_switchcompat, R.drawable.switch_disabled);
+        }
+        else{
+            setSwitchChecked(fallbackState, rv);
         }
     }
 

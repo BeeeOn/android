@@ -1,25 +1,25 @@
 package com.rehivetech.beeeon.widget.sensor;
 
 import android.annotation.TargetApi;
-import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.SystemClock;
+import android.view.View;
+import android.widget.RemoteViews;
 
 import com.rehivetech.beeeon.R;
-import com.rehivetech.beeeon.activity.SensorDetailActivity;
 import com.rehivetech.beeeon.adapter.Adapter;
 import com.rehivetech.beeeon.adapter.device.Device;
-import com.rehivetech.beeeon.adapter.device.DeviceType;
 import com.rehivetech.beeeon.adapter.device.Facility;
 import com.rehivetech.beeeon.adapter.device.RefreshInterval;
+import com.rehivetech.beeeon.adapter.device.values.BaseValue;
+import com.rehivetech.beeeon.adapter.device.values.OnOffValue;
+import com.rehivetech.beeeon.adapter.device.values.OpenClosedValue;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.util.Log;
-import com.rehivetech.beeeon.util.TimeHelper;
 import com.rehivetech.beeeon.util.UnitsHelper;
 import com.rehivetech.beeeon.util.Utils;
 import com.rehivetech.beeeon.widget.WidgetData;
@@ -39,7 +39,7 @@ public class WidgetSensorProvider extends WidgetProvider{
     protected Device mDevice;
 
     @Override
-    public void initialize(Context context, WidgetData data){
+    public void initialize(Context context, WidgetData data) {
         super.initialize(context, data);
         mWidgetData = (WidgetSensorData) data;
 
@@ -53,13 +53,39 @@ public class WidgetSensorProvider extends WidgetProvider{
 
         // open detail activity on click to icon
         if (mWidgetData.adapterId.length() > 0 && mWidgetData.deviceId.length() > 0) {
-            Intent intent = new Intent(mContext, SensorDetailActivity.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            intent.putExtra(SensorDetailActivity.EXTRA_DEVICE_ID, mWidgetData.deviceId);
-            intent.putExtra(SensorDetailActivity.EXTRA_ADAPTER_ID, mWidgetData.adapterId);
-            PendingIntent pendingIntent = PendingIntent.getActivity(mContext, mWidgetId, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-            mRemoteViews.setOnClickPendingIntent(R.id.icon, pendingIntent);
+            mRemoteViews.setOnClickPendingIntent(R.id.icon, startDetailActivityPendingIntent(mContext, mWidgetId, mWidgetData.adapterId, mWidgetData.deviceId));
         }
+    }
+
+    @Override
+    public void asyncTask(Context context, WidgetData data, Object obj) {
+        Log.d(TAG, "asyncTask()");
+
+        WidgetSensorData widgetData = (WidgetSensorData) data;
+        Device dev = (Device) obj;
+
+        AppWidgetManager mWidgetManager = AppWidgetManager.getInstance(context);
+        RemoteViews rv = new RemoteViews(context.getPackageName(), data.layout);
+        Controller controller = Controller.getInstance(context);
+        SharedPreferences prefs = controller.getUserSettings();
+        UnitsHelper uh = (prefs == null) ? null : new UnitsHelper(prefs, context.getApplicationContext());
+
+        // TODO temporary
+        if(widgetData.deviceValue.equals(context.getString(R.string.dev_enum_value_on))){
+           setSwitchChecked(false, rv);
+        }
+        // is set to "off"
+        else if(widgetData.deviceValue.equals(context.getString(R.string.dev_enum_value_off))) {
+           setSwitchChecked(true, rv);
+        }
+
+        Log.d(TAG, uh.getStringValueUnit(dev.getValue()));
+
+        widgetData.deviceValue = uh.getStringValueUnit(dev.getValue());
+        widgetData.saveData(context);
+
+        // request widget redraw
+        mWidgetManager.updateAppWidget(data.getWidgetId(), rv);
     }
 
     @Override
@@ -81,25 +107,32 @@ public class WidgetSensorProvider extends WidgetProvider{
             facility.setLastUpdate(new DateTime(mWidgetData.deviceLastUpdateTime, DateTimeZone.UTC));
             facility.setRefresh(RefreshInterval.fromInterval(mWidgetData.deviceRefresh));
 
-            facility.addDevice(Device.createFromDeviceTypeId(ids[1]));
+            Device dev = Device.createFromDeviceTypeId(ids[1]);
+            facility.addDevice(dev);
 
             //WidgetService.usedFacilities.put(facility.getId(), facility);
             WidgetService.usedFacilities.add(facility);
+
+            if(dev.getType().isActor()){
+                BaseValue value = dev.getValue();
+
+                if(value instanceof OnOffValue || value instanceof OpenClosedValue){
+                    mRemoteViews.setViewVisibility(R.id.widget_viewstub_on_off, View.VISIBLE);
+                    mRemoteViews.setOnClickPendingIntent(R.id.widget_switchcompat, WidgetService.getActorChangePendingIntent(mContext, mWidgetId));
+                }
+            }
+            else{
+                mRemoteViews.setViewVisibility(R.id.widget_viewstub_value, View.VISIBLE);
+            }
         }
         return true;
     }
 
     public void changeData() {
-        long now = SystemClock.elapsedRealtime();
-        Controller controller = Controller.getInstance(mContext);
-        SharedPreferences userSettings = controller.getUserSettings();
-        // UserSettings can be null when user is not logged in!
-        UnitsHelper unitsHelper = (userSettings == null) ? null : new UnitsHelper(userSettings, mContext);
-        TimeHelper timeHelper = (userSettings == null) ? null : new TimeHelper(userSettings);
+        long timeNow = SystemClock.elapsedRealtime();
 
-        Adapter adapter = controller.getAdapter(mWidgetData.adapterId);
-
-        Device device = controller.getDevice(mWidgetData.adapterId, mWidgetData.deviceId);
+        Adapter adapter = mController.getAdapter(mWidgetData.adapterId);
+        Device device = mController.getDevice(mWidgetData.adapterId, mWidgetData.deviceId);
 
         if (device != null) {
             // Get fresh data from device
@@ -107,20 +140,20 @@ public class WidgetSensorProvider extends WidgetProvider{
             mWidgetData.deviceName = device.getName();
             mWidgetData.adapterId = device.getFacility().getAdapterId();
             mWidgetData.deviceId = device.getId();
-            mWidgetData.lastUpdate = now;
+            mWidgetData.lastUpdate = timeNow;
             mWidgetData.deviceLastUpdateTime = device.getFacility().getLastUpdate().getMillis();
             mWidgetData.deviceRefresh = device.getFacility().getRefresh().getInterval();
 
             // Check if we can format device's value (unitsHelper is null when user is not logged in)
-            if (unitsHelper != null) {
-                mWidgetData.deviceValue = unitsHelper.getStringValue(device.getValue());
-                mWidgetData.deviceUnit = unitsHelper.getStringUnit(device.getValue());
+            if (mUnitsHelper != null) {
+                mWidgetData.deviceValue = mUnitsHelper.getStringValue(device.getValue());
+                mWidgetData.deviceUnit = mUnitsHelper.getStringUnit(device.getValue());
             }
 
             // Check if we can format device's last update (timeHelper is null when user is not logged in)
-            if (timeHelper != null) {
+            if (mTimeHelper != null) {
                 // NOTE: This should use always absolute time, because widgets aren't updated so often
-                mWidgetData.deviceLastUpdateText = timeHelper.formatLastUpdate(device.getFacility().getLastUpdate(), adapter);
+                mWidgetData.deviceLastUpdateText = mTimeHelper.formatLastUpdate(device.getFacility().getLastUpdate(), adapter);
             }
 
             // Save fresh data
@@ -143,8 +176,19 @@ public class WidgetSensorProvider extends WidgetProvider{
 
         mRemoteViews.setImageViewResource(R.id.icon, mWidgetData.deviceIcon == 0 ? R.drawable.dev_unknown : mWidgetData.deviceIcon);
         mRemoteViews.setTextViewText(R.id.name, mWidgetData.deviceName);
-        mRemoteViews.setTextViewText(R.id.value, mWidgetData.deviceValue);
-        mRemoteViews.setTextViewText(R.id.unit, mWidgetData.deviceUnit);
+
+        // TODO temporary solution
+        if(mWidgetData.deviceValue.equals(mContext.getString(R.string.dev_enum_value_on))) {
+            setSwitchChecked(true, mRemoteViews);
+        }
+        else if(mWidgetData.deviceValue.equals(mContext.getString(R.string.dev_enum_value_off))) {
+            setSwitchChecked(false, mRemoteViews);
+        }
+        else {
+            mRemoteViews.setTextViewText(R.id.value, mWidgetData.deviceValue);
+            mRemoteViews.setTextViewText(R.id.unit, mWidgetData.deviceUnit);
+        }
+
 
         switch(mWidgetData.layout){
             case R.layout.widget_sensor_3x1:

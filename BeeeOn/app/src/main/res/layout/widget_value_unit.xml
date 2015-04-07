@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:id="@+id/widget_viewstub_value"
+	android:orientation="horizontal"
+	android:layout_width="wrap_content"
+	android:layout_height="match_parent"
+	android:gravity="center"
+	>
+
+	<TextView
+		android:id="@+id/value"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:textSize="12sp"
+		android:singleLine="true"
+		android:textColor="@color/beeeon_secundary_pink"
+		android:textStyle="bold"
+		android:text="@string/placeholder_none"
+		/>
+
+	<TextView
+		android:id="@+id/unit"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:textSize="12sp"
+		android:layout_marginLeft="2dp"
+		android:layout_marginStart="2dp"
+		android:textColor="@color/beeeon_secundary_pink"
+		/>
+</LinearLayout>

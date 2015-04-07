@@ -51,33 +51,22 @@
         android:src="@drawable/toolbar_dropshadow"
         />
 
-    <LinearLayout
-        android:orientation="horizontal"
+    <!-- invisible layouts for value or actor .. inflated programatically -->
+    <ViewStub
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="0.3"
         android:gravity="center"
-        >
-        <TextView
-            android:id="@+id/value"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="12sp"
-            android:singleLine="true"
-            android:textColor="@color/beeeon_secundary_pink"
-            android:textStyle="bold"
-            android:text="@string/placeholder_none"
-            />
+        android:id="@+id/widget_viewstub_value"
+        android:layout="@layout/widget_value_unit"
+    />
 
-        <TextView
-            android:id="@+id/unit"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="12sp"
-            android:layout_marginLeft="2dp"
-            android:layout_marginStart="2dp"
-            android:textColor="@color/beeeon_secundary_pink"
-            />
-
-    </LinearLayout>
+    <ViewStub
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.3"
+        android:gravity="center"
+        android:id="@+id/widget_viewstub_on_off"
+        android:layout="@layout/widget_switchcompat"
+        />
 </LinearLayout>
