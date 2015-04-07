@@ -335,10 +335,10 @@
 	<string name="tutorial_go_to_app">START</string>
 
     <string name="devices">Remove geofence</string>
-	<string name="rule_delete_dialog">Please confirm rule removal.</string>
+	<string name="rule_delete_dialog">Please confirm rule removal</string>
 	<string name="toast_delete_fail">Unable to remove</string>
-	<string name="toast_delete_success">Successfully removed.</string>
-	<string name="addadapter_fill_name">Please fill adaper name</string>
+	<string name="toast_delete_success">Successfully removed</string>
+	<string name="addadapter_fill_name">Please fill adapter name</string>
 	<string name="addadapter_fill_code">Please fill adapter code</string>
 
 </resources>

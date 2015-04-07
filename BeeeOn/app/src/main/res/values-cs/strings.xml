@@ -27,8 +27,8 @@
     <string name="notification_title">Nový senzor</string>
 
     <plurals name="notification_new_sensors">
-        <item quantity="one">Nalezen jeden neinicializovaný sensor ve Vaší domácnosti</item>
-        <item quantity="other">Nalezeno vícero (%d) neinicializovaných senzorů ve Vaší domácnosti</item>
+        <item quantity="one">Nalezen jeden neinicializovaný sensor v domácnosti</item>
+        <item quantity="other">Nalezeno vícero (%d) neinicializovaných senzorů v domácnosti</item>
     </plurals>
 
     <string name="notification_ingore">Ignorovat</string>
@@ -113,7 +113,7 @@
     <string name="progress_signing">Přihlašuji&#8230;</string>
     <string name="progress_google">Přenášení dat s Googlem&#8230;</string>
     <string name="progress_signup">Registruji nového uživatele&#8230;</string>
-    <string name="progress_loading_adapters">Nahrávám Vaše adaptéry&#8230;</string>
+    <string name="progress_loading_adapters">Nahrávám adaptéry&#8230;</string>
     <string name="progress_loading_adapter">Nahrávám data adaptérů&#8230;</string>
     <string name="progress_loading_demo">Nahrávám demo data&#8230;</string>
     <string name="progress_saving_data">Ukládám data&#8230;</string>
@@ -330,17 +330,17 @@
 	<string name="dialog_register_new_account_message">Ještě nemáte vytvořený BeeeOn účet, přejete si jej vytvořit nyní?</string>
 
     <string name="actor_required">Je potřeba vybrat aktor</string>
-	<string name="NetworkError___INVALID_CERTIFICATE">Neplatný certifikát.</string>
-	<string name="NetworkError___SOCKET_PROBLEM">Nelze vytvořit soket.</string>
-	<string name="NetworkError___UNKNOWN_HOST">Neznámý uživatel.</string>
-	<string name="add_new_geofence_area">Přidat nové geolokační oblasti.</string>
-	<string name="delete_geofence">Odstranit geolokaci</string>
+	<string name="NetworkError___INVALID_CERTIFICATE">Neplatný certifikát</string>
+	<string name="NetworkError___SOCKET_PROBLEM">Nelze vytvořit soket</string>
+	<string name="NetworkError___UNKNOWN_HOST">Neznámý uživatel</string>
+	<string name="add_new_geofence_area">Přidat novou oblast</string>
+	<string name="delete_geofence">Odstranit oblast</string>
 	<string name="devices">Zařízení</string>
 	<string name="name">Název</string>
-	<string name="rule_delete_dialog">Prosím potvrďte odstranění pravidla.</string>
+	<string name="rule_delete_dialog">Prosím potvrďte odstranění pravidla</string>
 	<string name="title_activity_sensor_edit">Editace zařízení</string>
-	<string name="addadapter_fill_name">Please fill adaper name</string>
-	<string name="addadapter_fill_code">Please fill adapter code</string>
+	<string name="addadapter_fill_name">Vyplňte název adaptéru</string>
+	<string name="addadapter_fill_code">Vyplňte kód</string>
 
 
 </resources>
