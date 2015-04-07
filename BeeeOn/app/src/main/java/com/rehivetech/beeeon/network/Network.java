@@ -107,7 +107,8 @@ public class Network implements INetwork {
 	private SSLSocket permaSocket = null;
 	private PrintWriter permaWriter = null;
 	private BufferedReader permaReader = null;
-	private static final String EOF = "</com>"; //FIXME: temporary solution (new version)
+	private static final String EOF = "</com>\n"; //FIXME: temporary solution (new version)
+	private static final String SERVER_EOF = "<com></com>";
 	private boolean mIsMulti = false;
 
 	/**
@@ -215,7 +216,8 @@ public class Network implements INetwork {
 				throw AppException.wrap(e, NetworkError.SOCKET_PROBLEM);
 			}
 		}
-
+		
+		request += SERVER_EOF ;
 		// Send request (and close writer if not multi session)
 		sendRequest(w, request, !mIsMulti);
 
