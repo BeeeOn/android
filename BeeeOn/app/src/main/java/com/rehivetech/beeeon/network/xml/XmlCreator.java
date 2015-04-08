@@ -40,9 +40,9 @@ import java.util.Map;
 
 /**
  * Class for creating XML messages
- * 
+ *
  * @author ThinkDeep
- * 
+ *
  */
 public class XmlCreator {
 
@@ -52,10 +52,10 @@ public class XmlCreator {
 
 	// states
 
-    public static final String PASSBORDER = "passborder";
-    public static final String SIGNIN = "signin";
+	public static final String PASSBORDER = "passborder";
+	public static final String SIGNIN = "signin";
 	public static final String SIGNUP = "signup";
-    public static final String GETUSERINFO ="getuserinfo";
+	public static final String GETUSERINFO ="getuserinfo";
 	public static final String JOINACCOUNT = "joinaccount";
 	public static final String CUTACCOUNT = "cutaccount";
 
@@ -110,11 +110,11 @@ public class XmlCreator {
 	public static final String ADDACTION = "addact";
 	public static final String DELACTION = "delact";
 
-    public static final String ADDALG = "addalg";
-    public static final String GETALLALGS = "getallalgs";
-    public static final String GETALGS =  "getlags";
-    public static final String SETALG = "setalg";
-    public static final String DELALG = "delalg";
+	public static final String ADDALG = "addalg";
+	public static final String GETALLALGS = "getallalgs";
+	public static final String GETALGS =  "getlags";
+	public static final String SETALG = "setalg";
+	public static final String DELALG = "delalg";
 
 	// end of states
 
@@ -287,7 +287,7 @@ public class XmlCreator {
 
 	/**
 	 * Method create XML for AddAdapter message
-	 * 
+	 *
 	 * @param bt
 	 *            userID of user
 	 * @param aid
@@ -303,7 +303,7 @@ public class XmlCreator {
 
 	/**
 	 * Method create XML of GetAdapters message
-	 * 
+	 *
 	 * @param bt
 	 *            userID of user
 	 * @return GetAdapters message
@@ -315,7 +315,7 @@ public class XmlCreator {
 
 	/**
 	 * Method create XML for ReInit message
-	 * 
+	 *
 	 * @param bt
 	 *            userID of user
 	 * @param adapterIdOld
@@ -335,7 +335,7 @@ public class XmlCreator {
 
 	/**
 	 * Method create XML for AdapterListen message
-	 * 
+	 *
 	 * @param bt
 	 *            userID of user
 	 * @param aid
@@ -349,7 +349,7 @@ public class XmlCreator {
 
 	/**
 	 * Method create XML for GetAllDevices message
-	 * 
+	 *
 	 * @param bt
 	 *            userID of user
 	 * @param aid
@@ -363,7 +363,7 @@ public class XmlCreator {
 
 	/**
 	 * Method create XML for getting uninitialized devices
-	 * 
+	 *
 	 * @param bt
 	 *            userID of user
 	 * @param aid
@@ -377,7 +377,7 @@ public class XmlCreator {
 
 	/**
 	 * Method create XML of GetDevices message
-	 * 
+	 *
 	 * @param bt
 	 *            userID of user
 	 * @param facilities
@@ -439,7 +439,7 @@ public class XmlCreator {
 
 	/**
 	 * Method create XML for GetLog message
-	 * 
+	 *
 	 * @param bt
 	 *            userID of user
 	 * @param aid
@@ -484,7 +484,7 @@ public class XmlCreator {
 
 	/**
 	 * Method create XML of SetDevs message. Almost all fields are optional
-	 * 
+	 *
 	 * @param bt
 	 *            userID of user
 	 * @param aid
@@ -540,7 +540,7 @@ public class XmlCreator {
 
 	/**
 	 * New method create XML of SetDevs message with only one device in it. toSave parameter must by set properly.
-	 * 
+	 *
 	 * @param bt
 	 *            userID of user
 	 * @param aid
@@ -600,7 +600,7 @@ public class XmlCreator {
 
 	/**
 	 * Method create XML for Switch message
-	 * 
+	 *
 	 * @param bt
 	 *            userID of user
 	 * @param aid
@@ -617,7 +617,7 @@ public class XmlCreator {
 
 	/**
 	 * Method create XML of DelDevice message
-	 * 
+	 *
 	 * @param bt
 	 *            userID of user
 	 * @param aid
@@ -637,7 +637,7 @@ public class XmlCreator {
 
 	/**
 	 * Method create XML of AddRoom message
-	 * 
+	 *
 	 * @param bt
 	 *            userID of user
 	 * @param location
@@ -652,7 +652,7 @@ public class XmlCreator {
 
 	/**
 	 * Method create XML of SetRooms message
-	 * 
+	 *
 	 * @param bt
 	 *            userID of user
 	 * @param aid
@@ -691,7 +691,7 @@ public class XmlCreator {
 
 	/**
 	 * Method create XML of DelRoom message
-	 * 
+	 *
 	 * @param bt
 	 *            userID of user
 	 * @param lid
@@ -705,7 +705,7 @@ public class XmlCreator {
 
 	/**
 	 * Method create XML of GetRooms message
-	 * 
+	 *
 	 * @param bt
 	 *            userID of user
 	 * @param aid
@@ -723,7 +723,7 @@ public class XmlCreator {
 
 	/**
 	 * Method create XML of AddView message
-	 * 
+	 *
 	 * @param bt
 	 *            userID of user
 	 * @param viewName
@@ -764,7 +764,7 @@ public class XmlCreator {
 
 	/**
 	 * Method create one view to update message
-	 * 
+	 *
 	 * @param bt
 	 *            userID of user
 	 * @param viewName
@@ -804,7 +804,7 @@ public class XmlCreator {
 
 	/**
 	 * Method create XML of DelVIew message
-	 * 
+	 *
 	 * @param bt
 	 *            userID of user
 	 * @param viewName
@@ -818,7 +818,7 @@ public class XmlCreator {
 
 	/**
 	 * Method create XML of GetViews message (method added in 1.6 version)
-	 * 
+	 *
 	 * @param bt
 	 *            userID of user
 	 * @return getViews message
@@ -834,7 +834,7 @@ public class XmlCreator {
 
 	/**
 	 * Method create XML for AddAcount message
-	 * 
+	 *
 	 * @param bt
 	 *            userID of user
 	 * @param aid
@@ -850,7 +850,7 @@ public class XmlCreator {
 
 	/**
 	 * Method create XML for SetAcount message
-	 * 
+	 *
 	 * @param bt
 	 *            userID of user
 	 * @param aid
@@ -866,7 +866,7 @@ public class XmlCreator {
 
 	/**
 	 * Method create XML for DelAcc message
-	 * 
+	 *
 	 * @param bt
 	 *            userID of user
 	 * @param aid
@@ -901,7 +901,7 @@ public class XmlCreator {
 
 	/**
 	 * Method create XML for GetAccs message
-	 * 
+	 *
 	 * @param bt
 	 *            userID of user
 	 * @param aid
@@ -919,7 +919,7 @@ public class XmlCreator {
 
 	/**
 	 * Method create XML of SetTimeZone message
-	 * 
+	 *
 	 * @param bt
 	 *            userID of user
 	 * @param aid
@@ -935,7 +935,7 @@ public class XmlCreator {
 
 	/**
 	 * Method create XML of GetTimeZone message
-	 * 
+	 *
 	 * @param bt
 	 *            userID of user
 	 * @param aid
@@ -953,7 +953,7 @@ public class XmlCreator {
 
 	/**
 	 * Method create XML of SetLocale message
-	 * 
+	 *
 	 * @param bt
 	 *            userID of user
 	 * @param locale
@@ -971,7 +971,7 @@ public class XmlCreator {
 
 	/**
 	 * Method create XML of AddCond message
-	 * 
+	 *
 	 * @param bt
 	 *            userID of actual user
 	 * @param name
@@ -989,7 +989,7 @@ public class XmlCreator {
 
 	/**
 	 * Method crate XMl of SetCond message
-	 * 
+	 *
 	 * @param bt
 	 *            userID of actual user
 	 * @param name
@@ -1009,7 +1009,7 @@ public class XmlCreator {
 
 	/**
 	 * Method create XML of DelCond message
-	 * 
+	 *
 	 * @param bt
 	 *            userID of actual user
 	 * @param cid
@@ -1023,7 +1023,7 @@ public class XmlCreator {
 
 	/**
 	 * Method create XML of GetCond message
-	 * 
+	 *
 	 * @param bt
 	 *            userID of actual user
 	 * @param cid
@@ -1037,7 +1037,7 @@ public class XmlCreator {
 
 	/**
 	 * Method create XML of GetConds message
-	 * 
+	 *
 	 * @param bt
 	 *            userID of actual user
 	 * @return GetConds message
@@ -1049,7 +1049,7 @@ public class XmlCreator {
 
 	/**
 	 * Method create XML of AddAct message
-	 * 
+	 *
 	 * @param bt
 	 *            userID of actual user
 	 * @param name
@@ -1065,7 +1065,7 @@ public class XmlCreator {
 
 	/**
 	 * Method create XML of SetAct message
-	 * 
+	 *
 	 * @param bt
 	 *            userID of actual user
 	 * @param name
@@ -1083,7 +1083,7 @@ public class XmlCreator {
 
 	/**
 	 * Method create XML of DelAct
-	 * 
+	 *
 	 * @param bt
 	 *            userID of actual user
 	 * @param acid
@@ -1097,7 +1097,7 @@ public class XmlCreator {
 
 	/**
 	 * Method create XML of GetActs message
-	 * 
+	 *
 	 * @param bt
 	 *            userID of actual user
 	 * @return GetActs message
@@ -1109,7 +1109,7 @@ public class XmlCreator {
 
 	/**
 	 * Method create XML of GetAct message
-	 * 
+	 *
 	 * @param bt
 	 *            userID of actual user
 	 * @param acid
@@ -1123,7 +1123,7 @@ public class XmlCreator {
 
 	/**
 	 * Method create XML of CondAction message
-	 * 
+	 *
 	 * @param bt
 	 *            userID of user
 	 * @param cid
@@ -1143,7 +1143,7 @@ public class XmlCreator {
 
 	/**
 	 * Method create XML of DelXconstants.GCMID message (delete google cloud message id)
-	 * 
+	 *
 	 * @param userId
 	 *            of last logged user
 	 * @param gcmid
@@ -1157,7 +1157,7 @@ public class XmlCreator {
 
 	/**
 	 * Method create XML of SetXconstants.GCMID message
-	 * 
+	 *
 	 * @param bt
 	 *            userID of user logged in now
 	 * @param gcmid
@@ -1171,7 +1171,7 @@ public class XmlCreator {
 
 	/**
 	 * Method create XML of GetNotifs message
-	 * 
+	 *
 	 * @param bt
 	 *            SessionID of user
 	 * @return message GetNotifs
@@ -1183,7 +1183,7 @@ public class XmlCreator {
 
 	/**
 	 * Method create XML of NotifRead message
-	 * 
+	 *
 	 * @param bt
 	 *            userID of user
 	 * @param mids
@@ -1213,130 +1213,130 @@ public class XmlCreator {
 		}
 	}
 
-    /**
-     * Method create message for creating new rule or editing the old one
-     * @param bt
-     * @param name
-     * @param aid
-     * @param type
-     * @param devices
-     *          list of devices in right position for algorithm
-     * @param params
-     *          list of strings with additional params for new rule
-     * @return
-     */
-    public static String createAddSetAlgor(String bt, String name, String algId, String aid, int type, List<String> devices, List<String> params, String regionId, String geoType, Boolean state){
-        StringWriter writer = new StringWriter();
-        try {
+	/**
+	 * Method create message for creating new rule or editing the old one
+	 * @param bt
+	 * @param name
+	 * @param aid
+	 * @param type
+	 * @param devices
+	 *          list of devices in right position for algorithm
+	 * @param params
+	 *          list of strings with additional params for new rule
+	 * @return
+	 */
+	public static String createAddSetAlgor(String bt, String name, String algId, String aid, int type, List<String> devices, List<String> params, String regionId, String geoType, Boolean state){
+		StringWriter writer = new StringWriter();
+		try {
 			XmlSerializer serializer = beginXml(writer);
 
 			serializer.attribute(ns, Xconstants.BT, bt);
-            if(state == null)
-                serializer.attribute(ns, Xconstants.STATE, ADDALG);
-            else {
-                serializer.attribute(ns, Xconstants.STATE, SETALG);
-                serializer.attribute(ns, Xconstants.ENABLE, (state.booleanValue()) ? "1" : "0");
+			if(state == null)
+				serializer.attribute(ns, Xconstants.STATE, ADDALG);
+			else {
+				serializer.attribute(ns, Xconstants.STATE, SETALG);
+				serializer.attribute(ns, Xconstants.ENABLE, (state.booleanValue()) ? "1" : "0");
 				serializer.attribute(ns, Xconstants.ALGID, algId);
-            }
+			}
 
-            serializer.attribute(ns, Xconstants.ALGNAME, name);
-            serializer.attribute(ns, Xconstants.AID, aid);
-            serializer.attribute(ns, Xconstants.ATYPE, Integer.toString(type));
+			serializer.attribute(ns, Xconstants.ALGNAME, name);
+			serializer.attribute(ns, Xconstants.AID, aid);
+			serializer.attribute(ns, Xconstants.ATYPE, Integer.toString(type));
 
-            int i = 1;
-            for(String device : devices){
-                serializer.startTag(ns, Xconstants.DEVICE);
+			int i = 1;
+			for(String device : devices){
+				serializer.startTag(ns, Xconstants.DEVICE);
 				String[] id_type = device.split(Device.ID_SEPARATOR);
-                serializer.attribute(ns, Xconstants.ID, id_type[0]);
-                serializer.attribute(ns, Xconstants.TYPE, id_type[1]);
-                serializer.attribute(ns, Xconstants.POSITION, Integer.toString(i++));
-                serializer.endTag(ns, Xconstants.DEVICE);
-            }
-            i=1;
+				serializer.attribute(ns, Xconstants.ID, id_type[0]);
+				serializer.attribute(ns, Xconstants.TYPE, id_type[1]);
+				serializer.attribute(ns, Xconstants.POSITION, Integer.toString(i++));
+				serializer.endTag(ns, Xconstants.DEVICE);
+			}
+			i=1;
 
-            for(String param : params) {
-                serializer.startTag(ns, Xconstants.PARAM);
-                serializer.attribute(ns, Xconstants.POSITION, Integer.toString(i++));
-                serializer.text(param);
-                serializer.endTag(ns, Xconstants.PARAM);
-            }
+			for(String param : params) {
+				serializer.startTag(ns, Xconstants.PARAM);
+				serializer.attribute(ns, Xconstants.POSITION, Integer.toString(i++));
+				serializer.text(param);
+				serializer.endTag(ns, Xconstants.PARAM);
+			}
 
 			endXml(serializer);
 
-            return writer.toString();
-        } catch (Exception e) {
-            throw AppException.wrap(e, NetworkError.XML);
-        }
-    }
+			return writer.toString();
+		} catch (Exception e) {
+			throw AppException.wrap(e, NetworkError.XML);
+		}
+	}
 
 
-    public static String createAddAlgor(String bt, String name, String aid, int type, List<String> devices, List<String> params, String regionId, String geoType){
-        return createAddSetAlgor(bt, name, null, aid, type, devices, params, regionId, geoType, null);
-    }
+	public static String createAddAlgor(String bt, String name, String aid, int type, List<String> devices, List<String> params, String regionId, String geoType){
+		return createAddSetAlgor(bt, name, null, aid, type, devices, params, regionId, geoType, null);
+	}
 
-    public static String createSetAlgor(String bt, String name, String algId, String aid, int type, boolean enable, List<String> devices, List<String>params, String regionId, String geoType){
-        return createAddSetAlgor(bt, name, algId, aid, type, devices, params, regionId, geoType, enable);
-    }
+	public static String createSetAlgor(String bt, String name, String algId, String aid, int type, boolean enable, List<String> devices, List<String>params, String regionId, String geoType){
+		return createAddSetAlgor(bt, name, algId, aid, type, devices, params, regionId, geoType, enable);
+	}
 
-    /**
-     * Method return message with demands for specific rules
-     * @param bt
+	/**
+	 * Method return message with demands for specific rules
+	 * @param bt
 	 * @param aid
-     * @param algids
-     * @return
-     */
-    public static String createGetAlgs(String bt, String aid, ArrayList<String> algids){
-        StringWriter writer = new StringWriter();
-        try {
+	 * @param algids
+	 * @return
+	 */
+	public static String createGetAlgs(String bt, String aid, ArrayList<String> algids){
+		StringWriter writer = new StringWriter();
+		try {
 			XmlSerializer serializer = beginXml(writer);
 
 			serializer.attribute(ns, Xconstants.BT, bt);
-            serializer.attribute(ns, Xconstants.STATE, GETALGS);
+			serializer.attribute(ns, Xconstants.STATE, GETALGS);
 			serializer.attribute(ns, Xconstants.AID, aid);
 
-            for(String algId : algids){
-                serializer.startTag(ns, Xconstants.ALGORITHM);
-                serializer.attribute(ns, Xconstants.ID, algId);
-                serializer.endTag(ns, Xconstants.ALGORITHM);
-            }
+			for(String algId : algids){
+				serializer.startTag(ns, Xconstants.ALGORITHM);
+				serializer.attribute(ns, Xconstants.ID, algId);
+				serializer.endTag(ns, Xconstants.ALGORITHM);
+			}
 
 			endXml(serializer);
 
-            return writer.toString();
-        } catch (Exception e) {
-            throw AppException.wrap(e, NetworkError.XML);
-        }
-    }
+			return writer.toString();
+		} catch (Exception e) {
+			throw AppException.wrap(e, NetworkError.XML);
+		}
+	}
 
-    /**
-     * Method returns message with demands for all rules of user on specific adapter
-     * @param bt
-     * @return
-     */
-    public static String createGetAllAlgs(String bt, String aid){
-        return createComAttribsVariant(Xconstants.STATE, GETALLALGS, Xconstants.BT, bt, Xconstants.AID, aid);
-    }
+	/**
+	 * Method returns message with demands for all rules of user on specific adapter
+	 * @param bt
+	 * @return
+	 */
+	public static String createGetAllAlgs(String bt, String aid){
+		return createComAttribsVariant(Xconstants.STATE, GETALLALGS, Xconstants.BT, bt, Xconstants.AID, aid);
+	}
 
-    /**
-     * Method returns message with demands for delete specific rule
-     * @param bt
-     * @param algid
-     * @return
-     */
-    public static String createDelAlg(String bt, String algid){
-        return createComAttribsVariant(Xconstants.STATE, DELALG, Xconstants.BT, bt, Xconstants.ALGID, algid);
-    }
+	/**
+	 * Method returns message with demands for delete specific rule
+	 * @param bt
+	 * @param algid
+	 * @return
+	 */
+	public static String createDelAlg(String bt, String algid){
+		return createComAttribsVariant(Xconstants.STATE, DELALG, Xconstants.BT, bt, Xconstants.ALGID, algid);
+	}
 
-    /**
-     * Method create message for PassBorder event
-     * @param bt
-     * @param rid
-     * @param type
-     * @return
-     */
-    public static String createPassBorder(String bt, String rid, String type){
-        return  createComAttribsVariant(Xconstants.STATE, PASSBORDER, Xconstants.BT, bt, Xconstants.RID, rid, Xconstants.TYPE, type);
-    }
+	/**
+	 * Method create message for PassBorder event
+	 * @param bt
+	 * @param rid
+	 * @param type
+	 * @return
+	 */
+	public static String createPassBorder(String bt, String rid, String type){
+		return  createComAttribsVariant(Xconstants.STATE, PASSBORDER, Xconstants.BT, bt, Xconstants.RID, rid, Xconstants.TYPE, type);
+	}
 
 	/************************************* PRIVATE METHODS *********************************************/
 

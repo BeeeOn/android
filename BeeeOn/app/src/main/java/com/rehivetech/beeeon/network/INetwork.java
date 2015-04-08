@@ -22,9 +22,9 @@ public interface INetwork {
 
 	/**
 	 * Action of View messages
-	 * 
+	 *
 	 * @author ThinkDeep
-	 * 
+	 *
 	 */
 	public enum NetworkAction {
 		REMOVE("0"), //
@@ -48,10 +48,10 @@ public interface INetwork {
 			throw new IllegalArgumentException("Invalid NetworkAction value");
 		}
 	}
-	
+
 	/**
 	 * Checks if Internet connection is available.
-	 * 
+	 *
 	 * @return true if available, false otherwise
 	 */
 	public boolean isAvailable();
@@ -60,12 +60,12 @@ public interface INetwork {
 	// /////////////////////////////////////SIGNIN,SIGNUP,ADAPTERS//////////////////////
 	// /////////////////////////////////////////////////////////////////////////////////
 
-    /**
-     * Return beeeon-token used for communication
+	/**
+	 * Return beeeon-token used for communication
 	 *
-     * @return BT of actual user
-     */
-    public String getBT();
+	 * @return BT of actual user
+	 */
+	public String getBT();
 
 	/**
 	 * Set beeeon-token for communication
@@ -80,28 +80,28 @@ public interface INetwork {
 	 */
 	public boolean hasBT();
 
-    /**
-     * Download information about actual user from server
+	/**
+	 * Download information about actual user from server
 	 *
-     * @return User object with data from server
-     */
-    public User loadUserInfo();
+	 * @return User object with data from server
+	 */
+	public User loadUserInfo();
 
-    /**
-     * Method log in user by specified provider
-	 *
-     * @param authProvider provider object with data for authentication
-     * @return true if user has been logged in with this provider, false otherwise
-     */
-    public boolean loginMe(IAuthProvider authProvider);
-
-    /**
-     * Method register user to server by specified provider
+	/**
+	 * Method log in user by specified provider
 	 *
 	 * @param authProvider provider object with data for authentication
-     * @return true if user has beed added to database with this provider, false otherwise
-     */
-    public boolean registerMe(IAuthProvider authProvider);
+	 * @return true if user has been logged in with this provider, false otherwise
+	 */
+	public boolean loginMe(IAuthProvider authProvider);
+
+	/**
+	 * Method register user to server by specified provider
+	 *
+	 * @param authProvider provider object with data for authentication
+	 * @return true if user has beed added to database with this provider, false otherwise
+	 */
+	public boolean registerMe(IAuthProvider authProvider);
 
 	/**
 	 * Method add new provider information (join your accounts) to your account
@@ -125,7 +125,7 @@ public interface INetwork {
 
 	/**
 	 * Method register adapter to server
-	 * 
+	 *
 	 * @param adapterID
 	 *            adapter id
 	 * @param adapterName
@@ -136,14 +136,14 @@ public interface INetwork {
 
 	/**
 	 * Method ask for list of adapters. User has to be sign in before
-	 * 
+	 *
 	 * @return list of adapters or empty list
 	 */
 	public List<Adapter> getAdapters();
 
 	/**
 	 * Method ask for whole adapter data
-	 * 
+	 *
 	 * @param adapterID
 	 *            of wanted adapter
 	 * @return Adapter
@@ -152,7 +152,7 @@ public interface INetwork {
 
 	/**
 	 * Method change adapter id
-	 * 
+	 *
 	 * @param oldId
 	 *            id to be changed
 	 * @param newId
@@ -174,7 +174,7 @@ public interface INetwork {
 
 	/**
 	 * Method send wanted fields of device to server
-	 * 
+	 *
 	 * @param adapterID
 	 *            id of adapter
 	 * @param device
@@ -187,7 +187,7 @@ public interface INetwork {
 
 	/**
 	 * Method toggle or set actor to new value
-	 * 
+	 *
 	 * @param adapterID
 	 * @param device
 	 * @return
@@ -197,7 +197,7 @@ public interface INetwork {
 	/**
 	 * Method make adapter to special state, when listen for new sensors (e.g. 15s) and wait if some sensors has been
 	 * shaken to connect
-	 * 
+	 *
 	 * @param adapterID
 	 * @return
 	 */
@@ -205,7 +205,7 @@ public interface INetwork {
 
 	/**
 	 * Method delete facility from server
-	 * 
+	 *
 	 * @param adapterID
 	 * @param facility
 	 *            to be deleted
@@ -215,7 +215,7 @@ public interface INetwork {
 
 	/**
 	 * Method ask for actual data of facilities
-	 * 
+	 *
 	 * @param facilities
 	 *            list of facilities to which needed actual data
 	 * @return list of updated facilities fields
@@ -224,7 +224,7 @@ public interface INetwork {
 
 	/**
 	 * Method ask server for actual data of one facility
-	 * 
+	 *
 	 * @param facility
 	 * @return
 	 */
@@ -234,7 +234,7 @@ public interface INetwork {
 
 	/**
 	 * TODO: need to test
-	 * 
+	 *
 	 * @param adapterID
 	 * @return
 	 */
@@ -255,14 +255,14 @@ public interface INetwork {
 
 	/**
 	 * Method call to server for actual list of locations
-	 * 
+	 *
 	 * @return List with locations
 	 */
 	public List<Location> getLocations(String adapterID);
 
 	/**
 	 * Method call to server to update location
-	 * 
+	 *
 	 * @param locations
 	 *            to update
 	 * @return true if everything is OK, false otherwise
@@ -293,7 +293,7 @@ public interface INetwork {
 
 	/**
 	 * Method send newly created custom view
-	 * 
+	 *
 	 * @param viewName
 	 *            name of new custom view
 	 * @param iconID
@@ -304,14 +304,14 @@ public interface INetwork {
 
 	/**
 	 * Method ask for list of all custom views
-	 * 
+	 *
 	 * @return list of defined custom views
 	 */
 	public List<CustomViewPair> getViews();
 
 	/**
 	 * Method delete whole custom view from server
-	 * 
+	 *
 	 * @param viewName
 	 *            name of view to erase
 	 * @return true if view has been deleted, false otherwise
@@ -328,7 +328,7 @@ public interface INetwork {
 
 	/**
 	 * Method add new user to adapter
-	 * 
+	 *
 	 * @param adapterID
 	 * @return
 	 */
@@ -336,7 +336,7 @@ public interface INetwork {
 
 	/**
 	 * Method delete users from actual adapter
-	 * 
+	 *
 	 * @param users
 	 *            email of user
 	 * @return true if all users has been deleted, false otherwise
@@ -345,7 +345,7 @@ public interface INetwork {
 
 	/**
 	 * Method delete on user from adapter
-	 * 
+	 *
 	 * @param adapterID
 	 * @param user
 	 * @return
@@ -354,7 +354,7 @@ public interface INetwork {
 
 	/**
 	 * Method ask for list of users of current adapter
-	 * 
+	 *
 	 * @return Map of users where key is email and value is User object
 	 */
 	public ArrayList<User> getAccounts(String adapterID);
@@ -369,7 +369,7 @@ public interface INetwork {
 
 	/**
 	 * Method update users role on adapter
-	 * 
+	 *
 	 * @param adapterID
 	 * @param user
 	 * @return
@@ -382,7 +382,7 @@ public interface INetwork {
 
 	/**
 	 * Method set wanted time zone to server
-	 * 
+	 *
 	 * @NOTE using difference from GMT (UTC+0),
 	 *       https://merlin.fit.vutbr.cz/wiki-iot/index.php/Smarthome_cloud#SetTimeZone
 	 * @param differenceToGMT
@@ -392,7 +392,7 @@ public interface INetwork {
 
 	/**
 	 * Method call to server to get actual time zone
-	 * 
+	 *
 	 * @return integer in range <-12,12>
 	 */
 	public int getTimeZone(String adapterID);
@@ -403,7 +403,7 @@ public interface INetwork {
 
 	/**
 	 * Method set read flag to notification on server
-	 * 
+	 *
 	 * @param msgID
 	 *            id of notification
 	 * @return true if server took flag, false otherwise
@@ -436,19 +436,19 @@ public interface INetwork {
 
 	public boolean deleteAction(ComplexAction action);
 
-    // /////////////////////////////////////////////////////////////////////////////////
-    // /////////////////////////////////////ALGORITHMS//////////////////////////////////
-    // /////////////////////////////////////////////////////////////////////////////////
+	// /////////////////////////////////////////////////////////////////////////////////
+	// /////////////////////////////////////ALGORITHMS//////////////////////////////////
+	// /////////////////////////////////////////////////////////////////////////////////
 
-    public boolean addWatchDog(WatchDog watchDog, String AdapterID);
+	public boolean addWatchDog(WatchDog watchDog, String AdapterID);
 
-    public ArrayList<WatchDog> getWatchDogs(ArrayList<String> watchDogIds, String adapterID);
+	public ArrayList<WatchDog> getWatchDogs(ArrayList<String> watchDogIds, String adapterID);
 
-    public ArrayList<WatchDog> getAllWatchDogs(String adapterID);
+	public ArrayList<WatchDog> getAllWatchDogs(String adapterID);
 
-    public boolean updateWatchDog(WatchDog watchDog, String AdapterId);
+	public boolean updateWatchDog(WatchDog watchDog, String AdapterId);
 
-    public boolean deleteWatchDog(WatchDog watchDog);
+	public boolean deleteWatchDog(WatchDog watchDog);
 
-    public boolean passBorder(String regionId, String type);
+	public boolean passBorder(String regionId, String type);
 }

@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package com.rehivetech.beeeon.network.xml;
 
@@ -50,7 +50,7 @@ import java.util.TreeMap;
 
 /**
  * @author ThinkDeep
- * 
+ *
  */
 public class XmlParsers {
 
@@ -62,7 +62,7 @@ public class XmlParsers {
 
 	/**
 	 * Represents states of communication (from server to app)
-	 * 
+	 *
 	 * @author ThinkDeep
 	 */
 	public enum State {
@@ -84,10 +84,10 @@ public class XmlParsers {
 		ACTIONCREATED("actcreated"),
 		ACTIONS("acts"),
 		ACTION("act"),
-        BT("bt"),
-        ALGCREATED("algcreated"),
-        USERINFO("userinfo"),
-        ALGORITHMS("algs");
+		BT("bt"),
+		ALGCREATED("algcreated"),
+		USERINFO("userinfo"),
+		ALGORITHMS("algs");
 
 		private final String mValue;
 
@@ -113,7 +113,7 @@ public class XmlParsers {
 
 	/**
 	 * Method parse message (XML) in communication version
-	 * 
+	 *
 	 * @param xmlInput
 	 * @param namespace
 	 * @return
@@ -146,20 +146,20 @@ public class XmlParsers {
 		switch (state) {
 		case USERINFO:
 			// String (userID)
-            User user = new User();
+			User user = new User();
 			user.setId(getSecureAttrValue(Xconstants.UID));
 			user.setName(getSecureAttrValue(Xconstants.NAME));
-            user.setSurname(getSecureAttrValue(Xconstants.SURNAME));
-            user.setEmail(getSecureAttrValue(Xconstants.EMAIL));
-            user.setGender(User.Gender.fromString(getSecureAttrValue(Xconstants.GENDER)));
-            user.setPictureUrl(getSecureAttrValue(Xconstants.IMGURL));
+			user.setSurname(getSecureAttrValue(Xconstants.SURNAME));
+			user.setEmail(getSecureAttrValue(Xconstants.EMAIL));
+			user.setGender(User.Gender.fromString(getSecureAttrValue(Xconstants.GENDER)));
+			user.setPictureUrl(getSecureAttrValue(Xconstants.IMGURL));
 
 			result.data = user;
 			break;
-        case BT:
-            // String (BeeeonToken)
-            result.data = getSecureAttrValue(Xconstants.BT);
-            break;
+		case BT:
+			// String (BeeeonToken)
+			result.data = getSecureAttrValue(Xconstants.BT);
+			break;
 		case TRUE:
 			// nothing
 			break;
@@ -183,15 +183,15 @@ public class XmlParsers {
 			// String (locationID)
 			result.data = getSecureAttrValue(Xconstants.LID);
 			break;
-        case ALGCREATED:
-            // String (AlgorithmID)
-            result.data = getSecureAttrValue(Xconstants.ALGID);
-            break;
-        case ALGORITHMS:
-            getSecureAttrValue(Xconstants.ATYPE); // not used yet
-            // ArrayList<WatchDog>
-            result.data = parseWatchDog();
-            break;
+		case ALGCREATED:
+			// String (AlgorithmID)
+			result.data = getSecureAttrValue(Xconstants.ALGID);
+			break;
+		case ALGORITHMS:
+			getSecureAttrValue(Xconstants.ATYPE); // not used yet
+			// ArrayList<WatchDog>
+			result.data = parseWatchDog();
+			break;
 		case VIEWS:
 			// List<CustomViewPair>
 			result.data = parseViewsList(); // TODO: PENDING (need ROB)
@@ -259,7 +259,7 @@ public class XmlParsers {
 
 	/**
 	 * Method parse inner part of AdaptersReady message
-	 * 
+	 *
 	 * @return List of adapters (contains only Id, name, and user role)
 	 * @throws XmlPullParserException
 	 * @throws IOException
@@ -289,7 +289,7 @@ public class XmlParsers {
 
 	/**
 	 * Method parse inner part of False message
-	 * 
+	 *
 	 * @return FalseAnswer
 	 * @throws XmlPullParserException
 	 * @throws IOException
@@ -316,7 +316,7 @@ public class XmlParsers {
 
 	/**
 	 * Method parse inner part of AllDevice message (old:XML message (using parsePartial()))
-	 * 
+	 *
 	 * @return list of facilities
 	 * @throws XmlPullParserException
 	 * @throws IOException
@@ -353,7 +353,7 @@ public class XmlParsers {
 
 	/**
 	 * Method parse inner part of Device message (old:Partial message (set of device's tag))
-	 * 
+	 *
 	 * @return List of facilities
 	 * @throws XmlPullParserException
 	 * @throws IOException
@@ -414,7 +414,7 @@ public class XmlParsers {
 
 	/**
 	 * Method parse inner part of LogData (old:Content.log) message
-	 * 
+	 *
 	 * @return List with ContentRow objects
 	 * @throws XmlPullParserException
 	 * @throws IOException
@@ -434,7 +434,7 @@ public class XmlParsers {
 				String repeat = getSecureAttrValue(Xconstants.REPEAT);
 				String interval = getSecureAttrValue(Xconstants.INTERVAL);
 				String row = readText(Xconstants.ROW);
-				
+
 				// Split row data
 				String[] parts = row.split(Xconstants.ROW_DATA_SEPARATOR);
 				if (parts.length != 2) {
@@ -465,7 +465,7 @@ public class XmlParsers {
 
 	/**
 	 * Method parse inner part of Rooms message
-	 * 
+	 *
 	 * @return list of locations
 	 * @throws XmlPullParserException
 	 * @throws IOException
@@ -498,7 +498,7 @@ public class XmlParsers {
 
 	/**
 	 * Method parse inner part of ViewList message
-	 * 
+	 *
 	 * @return list of CustomViewPairs
 	 * @throws XmlPullParserException
 	 * @throws IOException
@@ -524,7 +524,7 @@ public class XmlParsers {
 
 	/**
 	 * Method parse inner part of ConAccountList message
-	 * 
+	 *
 	 * @return list of users
 	 * @throws XmlPullParserException
 	 * @throws IOException
@@ -862,56 +862,56 @@ public class XmlParsers {
 		return result;
 	}
 
-    private ArrayList<WatchDog> parseWatchDog() throws XmlPullParserException, IOException{
-        String aid = getSecureAttrValue(Xconstants.AID);
-        mParser.nextTag();
+	private ArrayList<WatchDog> parseWatchDog() throws XmlPullParserException, IOException{
+		String aid = getSecureAttrValue(Xconstants.AID);
+		mParser.nextTag();
 
-        ArrayList<WatchDog> result = new ArrayList<>();
+		ArrayList<WatchDog> result = new ArrayList<>();
 
-        if(!mParser.getName().equals(Xconstants.ALGORITHM))
-            return result;
+		if(!mParser.getName().equals(Xconstants.ALGORITHM))
+			return result;
 
-        do{
-            WatchDog watchDog = new WatchDog(getSecureInt(getSecureAttrValue(Xconstants.ATYPE)));
+		do{
+			WatchDog watchDog = new WatchDog(getSecureInt(getSecureAttrValue(Xconstants.ATYPE)));
 			watchDog.setId(getSecureAttrValue(Xconstants.ID));
-            watchDog.setAdapterId(aid);
-            watchDog.setEnabled((getSecureInt(getSecureAttrValue(Xconstants.ENABLE)) > 0)?true:false);
-            watchDog.setName(getSecureAttrValue(Xconstants.NAME));
+			watchDog.setAdapterId(aid);
+			watchDog.setEnabled((getSecureInt(getSecureAttrValue(Xconstants.ENABLE)) > 0)?true:false);
+			watchDog.setName(getSecureAttrValue(Xconstants.NAME));
 
-            TreeMap<String, String> tDevices = new TreeMap<>();
-            TreeMap<String, String> tParams = new TreeMap<>();
+			TreeMap<String, String> tDevices = new TreeMap<>();
+			TreeMap<String, String> tParams = new TreeMap<>();
 
-            mParser.nextTag();
+			mParser.nextTag();
 
-            if(!mParser.getName().equals(Xconstants.DEVICE) && !mParser.getName().equals(Xconstants.PARAM) && !mParser.getName().equals(Xconstants.GEOFENCE))
-                Log.e(TAG, "someone send bad xml");//TODO do something
+			if(!mParser.getName().equals(Xconstants.DEVICE) && !mParser.getName().equals(Xconstants.PARAM) && !mParser.getName().equals(Xconstants.GEOFENCE))
+				Log.e(TAG, "someone send bad xml");//TODO do something
 
-            do{
-                String position = getSecureAttrValue(Xconstants.POSITION);
+			do{
+				String position = getSecureAttrValue(Xconstants.POSITION);
 
-                if(mParser.getName().equals(Xconstants.DEVICE)){
+				if(mParser.getName().equals(Xconstants.DEVICE)){
 					String device = getSecureAttrValue(Xconstants.ID) + Device.ID_SEPARATOR + getSecureAttrValue(Xconstants.TYPE);
-                    tDevices.put(position, device);
+					tDevices.put(position, device);
 
-                    mParser.nextTag();
-                }else if(mParser.getName().equals(Xconstants.PARAM)){
-                    tParams.put(position, readText(Xconstants.PARAM));
-                }else{
+					mParser.nextTag();
+				}else if(mParser.getName().equals(Xconstants.PARAM)){
+					tParams.put(position, readText(Xconstants.PARAM));
+				}else{
 					watchDog.setGeoRegionId(getSecureAttrValue(Xconstants.RID));
 					watchDog.setGeoDirectionType(getSecureAttrValue(Xconstants.TYPE));
 				}
 
-            }while(mParser.nextTag() != XmlPullParser.END_TAG && !mParser.getName().equals(Xconstants.ALGORITHM));
+			}while(mParser.nextTag() != XmlPullParser.END_TAG && !mParser.getName().equals(Xconstants.ALGORITHM));
 
-            watchDog.setDevices(new ArrayList<>(tDevices.values()));
-            watchDog.setParams(new ArrayList<>(tParams.values()));
+			watchDog.setDevices(new ArrayList<>(tDevices.values()));
+			watchDog.setParams(new ArrayList<>(tParams.values()));
 
-            result.add(watchDog);
+			result.add(watchDog);
 
-        }while(mParser.nextTag() != XmlPullParser.END_TAG && !mParser.getName().equals(Xconstants.COM_ROOT));
+		}while(mParser.nextTag() != XmlPullParser.END_TAG && !mParser.getName().equals(Xconstants.COM_ROOT));
 
-        return result;
-    }
+		return result;
+	}
 
 	// ///////////////////////////////// OTHER
 
@@ -993,7 +993,7 @@ public class XmlParsers {
 
 	/**
 	 * Skips whole element and sub-elements.
-	 * 
+	 *
 	 * @throws XmlPullParserException
 	 * @throws IOException
 	 */
@@ -1018,7 +1018,7 @@ public class XmlParsers {
 
 	/**
 	 * Read text value of some element.
-	 * 
+	 *
 	 * @param tag
 	 * @return value of element
 	 * @throws IOException
@@ -1039,7 +1039,7 @@ public class XmlParsers {
 
 	/**
 	 * Method change null result value to empty string (mParser and namespace is included)
-	 * 
+	 *
 	 * @param name
 	 *            of the attribute
 	 * @return parsed attribute or empty string
@@ -1051,7 +1051,7 @@ public class XmlParsers {
 
 	/**
 	 * Method return integer value of string, or zero if length is 0
-	 * 
+	 *
 	 * @param value
 	 * @return integer value of zero if length is 0
 	 */
@@ -1063,7 +1063,7 @@ public class XmlParsers {
 
 	/**
 	 * Factory for parsing adapter from asset.
-	 * 
+	 *
 	 * @param context
 	 * @param filename
 	 * @return Adapter or null
@@ -1102,7 +1102,7 @@ public class XmlParsers {
 
 	/**
 	 * Factory for parsing locations from asset.
-	 * 
+	 *
 	 * @param context
 	 * @param filename
 	 * @return list of locations or empty list
@@ -1141,7 +1141,7 @@ public class XmlParsers {
 
 	/**
 	 * Factory for parsing list of adapters from asset
-	 * 
+	 *
 	 * @param context
 	 * @param filename
 	 * @return list of adapters or empty list

@@ -64,7 +64,7 @@ import javax.net.ssl.TrustManagerFactory;
 
 /**
  * Network service that handles communication with server.
- * 
+ *
  * @author ThinkDeep
  * @author Robyer
  */
@@ -100,10 +100,10 @@ public class Network implements INetwork {
 	private static final String SERVER_CN_CERTIFICATE = "ant-2.fit.vutbr.cz";
 
 	private final Context mContext;
-    private String mBT = "";
+	private String mBT = "";
 	private final boolean mUseDebugServer;
 	private static final int SSLTIMEOUT = 35000;
-	
+
 	private SSLSocket permaSocket = null;
 	private PrintWriter permaWriter = null;
 	private BufferedReader permaReader = null;
@@ -112,7 +112,7 @@ public class Network implements INetwork {
 
 	/**
 	 * Constructor.
-	 * 
+	 *
 	 * @param context
 	 * @param useDebugServer
 	 */
@@ -338,7 +338,7 @@ public class Network implements INetwork {
 			throw AppException.wrap(e, NetworkError.SOCKET_PROBLEM);
 		}
 	}
-	
+
 	/**
 	 * Method close any opened perma-Socket/Reader/Writer if it was opened by multiSessionBegin() before
 	 * Also set mIsMulti = false
@@ -377,7 +377,7 @@ public class Network implements INetwork {
 
 	/**
 	 * Checks if Internet connection is available.
-	 * 
+	 *
 	 * @return true if available, false otherwise
 	 */
 	@Override
@@ -459,8 +459,8 @@ public class Network implements INetwork {
 	// /////////////////////////////////////SIGNIN,SIGNUP,ADAPTERS//////////////////////
 	// /////////////////////////////////////////////////////////////////////////////////
 
-    @Override
-    public String getBT() {
+	@Override
+	public String getBT() {
 		return mBT;
 	}
 
@@ -475,7 +475,7 @@ public class Network implements INetwork {
 	}
 
 	@Override
-    public boolean loginMe(IAuthProvider authProvider) {
+	public boolean loginMe(IAuthProvider authProvider) {
 		// Check existence of authProvider parameters
 		Map<String, String> parameters = authProvider.getParameters();
 		if (parameters == null || parameters.isEmpty())
@@ -489,10 +489,10 @@ public class Network implements INetwork {
 		}
 
 		throw processFalse(msg);
-    }
+	}
 
-    @Override
-    public boolean registerMe(IAuthProvider authProvider) {
+	@Override
+	public boolean registerMe(IAuthProvider authProvider) {
 		// Check existence of authProvider parameters
 		Map<String, String> parameters = authProvider.getParameters();
 		if (parameters == null || parameters.isEmpty())
@@ -505,7 +505,7 @@ public class Network implements INetwork {
 		}
 
 		throw processFalse(msg);
-    }
+	}
 
 	@Override
 	public boolean addProvider(IAuthProvider authProvider){
@@ -537,19 +537,19 @@ public class Network implements INetwork {
 		throw processFalse(msg);
 	}
 
-    @Override
-    public User loadUserInfo(){
-        ParsedMessage msg = doRequest(XmlCreator.createGetUserInfo(mBT));
+	@Override
+	public User loadUserInfo(){
+		ParsedMessage msg = doRequest(XmlCreator.createGetUserInfo(mBT));
 
-        if (msg.getState() == State.USERINFO)
-            return (User)msg.data;
+		if (msg.getState() == State.USERINFO)
+			return (User)msg.data;
 
 		throw processFalse(msg);
-    }
+	}
 
 	/**
 	 * Method register adapter to server
-	 * 
+	 *
 	 * @param adapterID
 	 *            adapter id
 	 * @param adapterName
@@ -568,7 +568,7 @@ public class Network implements INetwork {
 
 	/**
 	 * Method ask for list of adapters. User has to be sign in before
-	 * 
+	 *
 	 * @return list of adapters or empty list
 	 */
 	@Override
@@ -585,7 +585,7 @@ public class Network implements INetwork {
 
 	/**
 	 * Method ask for whole adapter data
-	 * 
+	 *
 	 * @param adapterID
 	 *            of wanted adapter
 	 * @return Adapter
@@ -603,7 +603,7 @@ public class Network implements INetwork {
 
 	/**
 	 * Method change adapter id
-	 * 
+	 *
 	 * @param oldId
 	 *            id to be changed
 	 * @param newId
@@ -628,8 +628,8 @@ public class Network implements INetwork {
 	 * Method send updated fields of devices
 	 *
 	 * @param adapterID
-     * @param facilities
-     * @param toSave
+	 * @param facilities
+	 * @param toSave
 	 * @return true if everything goes well, false otherwise
 	 */
 	@Override
@@ -644,7 +644,7 @@ public class Network implements INetwork {
 
 	/**
 	 * Method send wanted fields of device to server
-	 * 
+	 *
 	 * @param adapterID
 	 *            id of adapter
 	 * @param device
@@ -665,7 +665,7 @@ public class Network implements INetwork {
 
 	/**
 	 * Method toggle or set actor to new value
-	 * 
+	 *
 	 * @param adapterID
 	 * @param device
 	 * @return
@@ -683,7 +683,7 @@ public class Network implements INetwork {
 	/**
 	 * Method make adapter to special state, when listen for new sensors (e.g. 15s) and wait if some sensors has been
 	 * shaken to connect
-	 * 
+	 *
 	 * @param adapterID
 	 * @return
 	 */
@@ -699,7 +699,7 @@ public class Network implements INetwork {
 
 	/**
 	 * Method delete facility from server
-	 * 
+	 *
 	 * @param adapterID
 	 * @param facility
 	 *            to be deleted
@@ -717,7 +717,7 @@ public class Network implements INetwork {
 
 	/**
 	 * Method ask for actual data of facilities
-	 * 
+	 *
 	 * @param facilities
 	 *            list of facilities to which needed actual data
 	 * @return list of updated facilities fields
@@ -736,7 +736,7 @@ public class Network implements INetwork {
 
 	/**
 	 * Method ask server for actual data of one facility
-	 * 
+	 *
 	 * @param facility
 	 * @return
 	 */
@@ -777,8 +777,8 @@ public class Network implements INetwork {
 	/**
 	 * Method ask for data of logs
 	 *
-     * @param adapterID
-     *
+	 * @param adapterID
+	 *
 	 * @param device
 	 *            id of wanted device
 	 * @param pair
@@ -810,7 +810,7 @@ public class Network implements INetwork {
 
 	/**
 	 * Method call to server for actual list of locations
-	 * 
+	 *
 	 * @return List with locations
 	 */
 	@Override
@@ -827,7 +827,7 @@ public class Network implements INetwork {
 
 	/**
 	 * Method call to server to update location
-	 * 
+	 *
 	 * @param locations
 	 *            to update
 	 * @return true if everything is OK, false otherwise
@@ -891,7 +891,7 @@ public class Network implements INetwork {
 
 	/**
 	 * Method send newly created custom view
-	 * 
+	 *
 	 * @param viewName
 	 *            name of new custom view
 	 * @param iconID
@@ -912,7 +912,7 @@ public class Network implements INetwork {
 
 	/**
 	 * Method ask for list of all custom views
-	 * 
+	 *
 	 * @return list of defined custom views
 	 */
 	@Override
@@ -930,7 +930,7 @@ public class Network implements INetwork {
 
 	/**
 	 * Method delete whole custom view from server
-	 * 
+	 *
 	 * @param viewName
 	 *            name of view to erase
 	 * @return true if view has been deleted, false otherwise
@@ -981,7 +981,7 @@ public class Network implements INetwork {
 
 	/**
 	 * Method add new user to adapter
-	 * 
+	 *
 	 * @param adapterID
 	 * @param user
 	 * @return
@@ -997,7 +997,7 @@ public class Network implements INetwork {
 
 	/**
 	 * Method delete users from actual adapter
-	 * 
+	 *
 	 * @param users
 	 *            email of user
 	 * @return true if all users has been deleted, false otherwise
@@ -1014,7 +1014,7 @@ public class Network implements INetwork {
 
 	/**
 	 * Method delete on user from adapter
-	 * 
+	 *
 	 * @param adapterID
 	 * @param user
 	 * @return
@@ -1030,7 +1030,7 @@ public class Network implements INetwork {
 
 	/**
 	 * Method ask for list of users of current adapter
-	 * 
+	 *
 	 * @return Map of users where key is email and value is User object
 	 */
 	@Override
@@ -1047,9 +1047,9 @@ public class Network implements INetwork {
 
 	/**
 	 * Method update users roles on server on current adapter
-	 * 
+	 *
 	 * @param adapterID
-     * @param users
+	 * @param users
 	 * @return true if all accounts has been changed false otherwise
 	 */
 	@Override
@@ -1064,7 +1064,7 @@ public class Network implements INetwork {
 
 	/**
 	 * Method update users role on adapter
-	 * 
+	 *
 	 * @param adapterID
 	 * @param user
 	 * @return
@@ -1084,7 +1084,7 @@ public class Network implements INetwork {
 
 	/**
 	 * Method set wanted time zone to server
-	 * 
+	 *
 	 * @NOTE using difference from GMT (UTC+0),
 	 *       https://merlin.fit.vutbr.cz/wiki-iot/index.php/Smarthome_cloud#SetTimeZone
 	 * @param differenceToGMT
@@ -1102,7 +1102,7 @@ public class Network implements INetwork {
 
 	/**
 	 * Method call to server to get actual time zone
-	 * 
+	 *
 	 * @return integer in range <-12,12>
 	 */
 	@Override
@@ -1121,7 +1121,7 @@ public class Network implements INetwork {
 
 	/**
 	 * Method delete old gcmid to avoid fake notifications
-	 * 
+	 *
 	 * @param userId
 	 *            of old/last user of gcmid (app+device id)
 	 * @param gcmID
@@ -1139,7 +1139,7 @@ public class Network implements INetwork {
 
 	/**
 	 * Method set read flag to notification on server
-	 * 
+	 *
 	 * @param msgID
 	 *            id of notification
 	 * @return true if server took flag, false otherwise
@@ -1168,7 +1168,7 @@ public class Network implements INetwork {
 
 		throw processFalse(msg);
 	}
-	
+
 	// /////////////////////////////////////////////////////////////////////////////////
 	// /////////////////////////////////////CONDITIONS,ACTIONS//////////////////////////
 	// /////////////////////////////////////////////////////////////////////////////////
@@ -1302,68 +1302,68 @@ public class Network implements INetwork {
 		throw processFalse(msg);
 	}
 
-    @Override
-    public boolean addWatchDog(WatchDog watchDog, String adapterId){
-        ParsedMessage msg = doRequest(XmlCreator.createAddAlgor(mBT, watchDog.getName(), adapterId, watchDog.getType(), watchDog.getDevices(), watchDog.getParams(), watchDog.getGeoRegionId(), watchDog.getGeoDirectionType()));
+	@Override
+	public boolean addWatchDog(WatchDog watchDog, String adapterId){
+		ParsedMessage msg = doRequest(XmlCreator.createAddAlgor(mBT, watchDog.getName(), adapterId, watchDog.getType(), watchDog.getDevices(), watchDog.getParams(), watchDog.getGeoRegionId(), watchDog.getGeoDirectionType()));
 
-        if (msg.getState() == State.ALGCREATED) {
-            watchDog.setId((String) msg.data);
-            return true;
-        }
-
-		throw processFalse(msg);
-    }
-
-    @Override
-    public ArrayList<WatchDog> getWatchDogs(ArrayList<String> watchDogIds, String adapterId){
-        ParsedMessage msg = doRequest(XmlCreator.createGetAlgs(mBT, adapterId, watchDogIds));
-
-        if(msg.getState() == State.ALGORITHMS){
-            return (ArrayList<WatchDog>) msg.data;
-        }
+		if (msg.getState() == State.ALGCREATED) {
+			watchDog.setId((String) msg.data);
+			return true;
+		}
 
 		throw processFalse(msg);
-    }
+	}
 
-    @Override
-    public ArrayList<WatchDog> getAllWatchDogs(String adapterID){
-        ParsedMessage msg = doRequest(XmlCreator.createGetAllAlgs(mBT, adapterID));
+	@Override
+	public ArrayList<WatchDog> getWatchDogs(ArrayList<String> watchDogIds, String adapterId){
+		ParsedMessage msg = doRequest(XmlCreator.createGetAlgs(mBT, adapterId, watchDogIds));
 
-        if(msg.getState() == State.ALGORITHMS){
-            return (ArrayList<WatchDog>) msg.data;
-        }
-
-		throw processFalse(msg);
-    }
-
-    @Override
-    public boolean updateWatchDog(WatchDog watchDog, String AdapterId){
-        ParsedMessage msg = doRequest(XmlCreator.createSetAlgor(mBT, watchDog.getName(), watchDog.getId(), AdapterId, watchDog.getType(), watchDog.isEnabled(), watchDog.getDevices(), watchDog.getParams(), watchDog.getGeoRegionId(), watchDog.getGeoDirectionType()));
-
-        if(msg.getState() == State.TRUE)
-            return true;
+		if(msg.getState() == State.ALGORITHMS){
+			return (ArrayList<WatchDog>) msg.data;
+		}
 
 		throw processFalse(msg);
-    }
+	}
 
-    @Override
-    public boolean deleteWatchDog(WatchDog watchDog){
-        ParsedMessage msg = doRequest(XmlCreator.createDelAlg(mBT, watchDog.getId()));
+	@Override
+	public ArrayList<WatchDog> getAllWatchDogs(String adapterID){
+		ParsedMessage msg = doRequest(XmlCreator.createGetAllAlgs(mBT, adapterID));
 
-        if(msg.getState() == State.TRUE)
-            return true;
-
-		throw processFalse(msg);
-    }
-
-    @Override
-    public boolean passBorder(String regionId, String type){
-        ParsedMessage msg = doRequest(XmlCreator.createPassBorder(mBT, regionId, type));
-
-        if(msg.getState() == State.TRUE)
-            return true;
+		if(msg.getState() == State.ALGORITHMS){
+			return (ArrayList<WatchDog>) msg.data;
+		}
 
 		throw processFalse(msg);
-    }
+	}
+
+	@Override
+	public boolean updateWatchDog(WatchDog watchDog, String AdapterId){
+		ParsedMessage msg = doRequest(XmlCreator.createSetAlgor(mBT, watchDog.getName(), watchDog.getId(), AdapterId, watchDog.getType(), watchDog.isEnabled(), watchDog.getDevices(), watchDog.getParams(), watchDog.getGeoRegionId(), watchDog.getGeoDirectionType()));
+
+		if(msg.getState() == State.TRUE)
+			return true;
+
+		throw processFalse(msg);
+	}
+
+	@Override
+	public boolean deleteWatchDog(WatchDog watchDog){
+		ParsedMessage msg = doRequest(XmlCreator.createDelAlg(mBT, watchDog.getId()));
+
+		if(msg.getState() == State.TRUE)
+			return true;
+
+		throw processFalse(msg);
+	}
+
+	@Override
+	public boolean passBorder(String regionId, String type){
+		ParsedMessage msg = doRequest(XmlCreator.createPassBorder(mBT, regionId, type));
+
+		if(msg.getState() == State.TRUE)
+			return true;
+
+		throw processFalse(msg);
+	}
 
 }
