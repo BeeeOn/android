@@ -7,12 +7,12 @@ package com.rehivetech.beeeon.network.xml;
 import android.util.Xml;
 
 import com.rehivetech.beeeon.Constants;
+import com.rehivetech.beeeon.exception.AppException;
+import com.rehivetech.beeeon.exception.NetworkError;
 import com.rehivetech.beeeon.household.device.Device;
 import com.rehivetech.beeeon.household.device.Device.SaveDevice;
 import com.rehivetech.beeeon.household.device.Facility;
 import com.rehivetech.beeeon.household.location.Location;
-import com.rehivetech.beeeon.exception.AppException;
-import com.rehivetech.beeeon.exception.NetworkError;
 import com.rehivetech.beeeon.household.user.User;
 import com.rehivetech.beeeon.network.INetwork.NetworkAction;
 import com.rehivetech.beeeon.network.authentication.IAuthProvider;
@@ -29,6 +29,7 @@ import com.rehivetech.beeeon.network.xml.condition.TimeFunc;
 
 import org.xmlpull.v1.XmlSerializer;
 
+import java.io.IOException;
 import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -145,6 +146,24 @@ public class XmlCreator {
 		}
 	}
 
+	private static XmlSerializer beginXml(StringWriter writer) throws IOException {
+		XmlSerializer serializer = Xml.newSerializer();
+
+		serializer.setOutput(writer);
+		serializer.startDocument("UTF-8", null);
+
+		serializer.startTag(ns, Xconstants.COM_ROOT);
+		serializer.attribute(ns, Xconstants.VERSION, COM_VER); // every time use version
+
+		return serializer;
+	}
+
+	private static void endXml(XmlSerializer serializer) throws IOException {
+		serializer.text("");
+		serializer.endTag(ns, Xconstants.COM_ROOT);
+		serializer.endDocument();
+	}
+
 	// ////////////////////////////////////////////////////////////////////////////////////////////////
 	// /////////////////////////////////////SIGNIN,SIGNUP,ADAPTERS/////////////////////////////////////
 	// ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -155,14 +174,9 @@ public class XmlCreator {
 	 * @return
 	 */
 	public static String createSignUp(IAuthProvider authProvider) {
-		XmlSerializer serializer = Xml.newSerializer();
 		StringWriter writer = new StringWriter();
 		try {
-			serializer.setOutput(writer);
-			serializer.startDocument("UTF-8", null);
-
-			serializer.startTag(ns, Xconstants.COM_ROOT);
-			serializer.attribute(ns, Xconstants.VERSION, COM_VER); // every time use version
+			XmlSerializer serializer = beginXml(writer);
 
 			serializer.attribute(ns, Xconstants.STATE, SIGNUP);
 
@@ -179,9 +193,7 @@ public class XmlCreator {
 			}
 			serializer.endTag(ns, Xconstants.PARAM);
 
-			serializer.text("");
-			serializer.endTag(ns, Xconstants.COM_ROOT);
-			serializer.endDocument();
+			endXml(serializer);
 
 			return writer.toString();
 		} catch (Exception e) {
@@ -197,14 +209,9 @@ public class XmlCreator {
 	 * @return
 	 */
 	public static String createSignIn(String locale, String pid, IAuthProvider authProvider) {
-		XmlSerializer serializer = Xml.newSerializer();
 		StringWriter writer = new StringWriter();
 		try {
-			serializer.setOutput(writer);
-			serializer.startDocument("UTF-8", null);
-
-			serializer.startTag(ns, Xconstants.COM_ROOT);
-			serializer.attribute(ns, Xconstants.VERSION, COM_VER); // every time use version
+			XmlSerializer serializer = beginXml(writer);
 
 			serializer.attribute(ns, Xconstants.STATE, SIGNIN);
 			serializer.attribute(ns, Xconstants.LOCALE, locale);
@@ -223,9 +230,7 @@ public class XmlCreator {
 			}
 			serializer.endTag(ns, Xconstants.PARAM);
 
-			serializer.text("");
-			serializer.endTag(ns, Xconstants.COM_ROOT);
-			serializer.endDocument();
+			endXml(serializer);
 
 			return writer.toString();
 		} catch (Exception e) {
@@ -240,14 +245,9 @@ public class XmlCreator {
 	 * @return
 	 */
 	public static String createJoinAccount(String bt, IAuthProvider authProvider) {
-		XmlSerializer serializer = Xml.newSerializer();
 		StringWriter writer = new StringWriter();
 		try {
-			serializer.setOutput(writer);
-			serializer.startDocument("UTF-8", null);
-
-			serializer.startTag(ns, Xconstants.COM_ROOT);
-			serializer.attribute(ns, Xconstants.VERSION, COM_VER); // every time use version
+			XmlSerializer serializer = beginXml(writer);
 
 			serializer.attribute(ns, Xconstants.STATE, JOINACCOUNT);
 			serializer.attribute(ns, Xconstants.BT, bt);
@@ -263,9 +263,7 @@ public class XmlCreator {
 			}
 			serializer.endTag(ns, Xconstants.PARAM);
 
-			serializer.text("");
-			serializer.endTag(ns, Xconstants.COM_ROOT);
-			serializer.endDocument();
+			endXml(serializer);
 
 			return writer.toString();
 		} catch (Exception e) {
@@ -390,13 +388,10 @@ public class XmlCreator {
 	public static String createGetDevices(String bt, List<Facility> facilities) {
 		if(facilities.size() < 1)
 			throw new IllegalArgumentException("Expected more than zero facilities");
-		XmlSerializer serializer = Xml.newSerializer();
 		StringWriter writer = new StringWriter();
 		try {
-			serializer.setOutput(writer);
-			serializer.startDocument("UTF-8", null);
+			XmlSerializer serializer = beginXml(writer);
 
-			serializer.startTag(ns, Xconstants.COM_ROOT);
 			serializer.attribute(ns, Xconstants.BT, bt);
 			serializer.attribute(ns, Xconstants.STATE, GETDEVICES);
 			serializer.attribute(ns, Xconstants.VERSION, COM_VER);
@@ -434,9 +429,7 @@ public class XmlCreator {
 			}
 			serializer.endTag(ns, Xconstants.ADAPTER);
 
-			serializer.text("");
-			serializer.endTag(ns, Xconstants.COM_ROOT);
-			serializer.endDocument();
+			endXml(serializer);
 
 			return writer.toString();
 		} catch (Exception e) {
@@ -467,17 +460,12 @@ public class XmlCreator {
 	 * @since 2.2
 	 */
 	public static String createGetLog(String bt, String aid, String did, String deviceType, String from, String to, String funcType, int interval) {
-		XmlSerializer serializer = Xml.newSerializer();
 		StringWriter writer = new StringWriter();
 		try {
-			serializer.setOutput(writer);
-			serializer.startDocument("UTF-8", null);
-
-			serializer.startTag(ns, Xconstants.COM_ROOT);
+			XmlSerializer serializer = beginXml(writer);
 
 			serializer.attribute(ns, Xconstants.BT, bt);
 			serializer.attribute(ns, Xconstants.STATE, GETLOG);
-			serializer.attribute(ns, Xconstants.VERSION, COM_VER);
 			serializer.attribute(ns, Xconstants.FROM, from);
 			serializer.attribute(ns, Xconstants.TO, to);
 			serializer.attribute(ns, Xconstants.FTYPE, funcType);
@@ -486,9 +474,7 @@ public class XmlCreator {
 			serializer.attribute(ns, Xconstants.DID, did);
 			serializer.attribute(ns, Xconstants.DTYPE, deviceType);
 
-			serializer.text("");
-			serializer.endTag(ns, Xconstants.COM_ROOT);
-			serializer.endDocument();
+			endXml(serializer);
 
 			return writer.toString();
 		} catch (Exception e) {
@@ -509,17 +495,12 @@ public class XmlCreator {
 	 * @since 2.2
 	 */
 	public static String createSetDevs(String bt, String aid, List<Facility> facilities, EnumSet<SaveDevice> toSave) {
-		XmlSerializer serializer = Xml.newSerializer();
 		StringWriter writer = new StringWriter();
 		try {
-			serializer.setOutput(writer);
-			serializer.startDocument("UTF-8", null);
-
-			serializer.startTag(ns, Xconstants.COM_ROOT);
+			XmlSerializer serializer = beginXml(writer);
 
 			serializer.attribute(ns, Xconstants.BT, bt);
 			serializer.attribute(ns, Xconstants.STATE, SETDEVS);
-			serializer.attribute(ns, Xconstants.VERSION, COM_VER);
 			serializer.attribute(ns, Xconstants.AID, aid);
 
 			for (Facility facility : facilities) {
@@ -549,9 +530,7 @@ public class XmlCreator {
 				serializer.endTag(ns, Xconstants.DEVICE);
 			}
 
-			serializer.text("");
-			serializer.endTag(ns, Xconstants.COM_ROOT);
-			serializer.endDocument();
+			endXml(serializer);
 
 			return writer.toString();
 		} catch (Exception e) {
@@ -574,19 +553,14 @@ public class XmlCreator {
 	 * @since 2.2
 	 */
 	public static String createSetDev(String bt, String aid, Device device, EnumSet<SaveDevice> toSave) {
-		XmlSerializer serializer = Xml.newSerializer();
 		StringWriter writer = new StringWriter();
 		try {
 			Facility facility = device.getFacility();
 
-			serializer.setOutput(writer);
-			serializer.startDocument("UTF-8", null);
-
-			serializer.startTag(ns, Xconstants.COM_ROOT);
+			XmlSerializer serializer = beginXml(writer);
 
 			serializer.attribute(ns, Xconstants.BT, bt);
 			serializer.attribute(ns, Xconstants.STATE, SETDEVS);
-			serializer.attribute(ns, Xconstants.VERSION, COM_VER);
 			serializer.attribute(ns, Xconstants.AID, aid);
 
 			serializer.startTag(ns, Xconstants.DEVICE);
@@ -616,9 +590,7 @@ public class XmlCreator {
 
 			serializer.endTag(ns, Xconstants.DEVICE);
 
-			serializer.text("");
-			serializer.endTag(ns, Xconstants.COM_ROOT);
-			serializer.endDocument();
+			endXml(serializer);
 
 			return writer.toString();
 		} catch (Exception e) {
@@ -691,17 +663,12 @@ public class XmlCreator {
 	 * @since 2.2
 	 */
 	public static String createSetRooms(String bt, String aid, List<Location> locations) {
-		XmlSerializer serializer = Xml.newSerializer();
 		StringWriter writer = new StringWriter();
 		try {
-			serializer.setOutput(writer);
-			serializer.startDocument("UTF-8", null);
-
-			serializer.startTag(ns, Xconstants.COM_ROOT);
+			XmlSerializer serializer = beginXml(writer);
 
 			serializer.attribute(ns, Xconstants.BT, bt);
 			serializer.attribute(ns, Xconstants.STATE, SETROOMS);
-			serializer.attribute(ns, Xconstants.VERSION, COM_VER);
 			serializer.attribute(ns, Xconstants.AID, aid);
 
 			for (Location location : locations) {
@@ -714,9 +681,7 @@ public class XmlCreator {
 				serializer.endTag(ns, Xconstants.LOCATION);
 			}
 
-			serializer.text("");
-			serializer.endTag(ns, Xconstants.COM_ROOT);
-			serializer.endDocument();
+			endXml(serializer);
 
 			return writer.toString();
 		} catch (Exception e) {
@@ -771,17 +736,12 @@ public class XmlCreator {
 	 * @since 2.2
 	 */
 	public static String createAddView(String bt, String viewName, int iconNum, List<Device> devices) {
-		XmlSerializer serializer = Xml.newSerializer();
 		StringWriter writer = new StringWriter();
 		try {
-			serializer.setOutput(writer);
-			serializer.startDocument("UTF-8", null);
-
-			serializer.startTag(ns, Xconstants.COM_ROOT);
+			XmlSerializer serializer = beginXml(writer);
 
 			serializer.attribute(ns, Xconstants.BT, bt);
 			serializer.attribute(ns, Xconstants.STATE, ADDVIEW);
-			serializer.attribute(ns, Xconstants.VERSION, COM_VER);
 			serializer.attribute(ns, Xconstants.NAME, viewName);
 			serializer.attribute(ns, Xconstants.ICON, Integer.toString(iconNum));
 
@@ -794,9 +754,7 @@ public class XmlCreator {
 				serializer.endTag(ns, Xconstants.DEVICE);
 			}
 
-			serializer.text("");
-			serializer.endTag(ns, Xconstants.COM_ROOT);
-			serializer.endDocument();
+			endXml(serializer);
 
 			return writer.toString();
 		} catch (Exception e) {
@@ -821,17 +779,12 @@ public class XmlCreator {
 	 * @since 2.2
 	 */
 	public static String createSetView(String bt, String viewName, int iconNum, Device device, NetworkAction action) {
-		XmlSerializer serializer = Xml.newSerializer();
 		StringWriter writer = new StringWriter();
 		try {
-			serializer.setOutput(writer);
-			serializer.startDocument("UTF-8", null);
-
-			serializer.startTag(ns, Xconstants.COM_ROOT);
+			XmlSerializer serializer = beginXml(writer);
 
 			serializer.attribute(ns, Xconstants.BT, bt);
 			serializer.attribute(ns, Xconstants.STATE, SETVIEW);
-			serializer.attribute(ns, Xconstants.VERSION, COM_VER);
 			serializer.attribute(ns, Xconstants.NAME, viewName);
 			serializer.attribute(ns, Xconstants.ICON, Integer.toString(iconNum));
 
@@ -841,9 +794,7 @@ public class XmlCreator {
 			serializer.attribute(ns, Xconstants.ACTION, action.getValue());
 			serializer.endTag(ns, Xconstants.DEVICE);
 
-			serializer.text("");
-			serializer.endTag(ns, Xconstants.COM_ROOT);
-			serializer.endDocument();
+			endXml(serializer);
 
 			return writer.toString();
 		} catch (Exception e) {
@@ -926,17 +877,12 @@ public class XmlCreator {
 	 * @since 2.2
 	 */
 	public static String createDelAccounts(String bt, String aid, List<User> users) {
-		XmlSerializer serializer = Xml.newSerializer();
 		StringWriter writer = new StringWriter();
 		try {
-			serializer.setOutput(writer);
-			serializer.startDocument("UTF-8", null);
-
-			serializer.startTag(ns, Xconstants.COM_ROOT);
+			XmlSerializer serializer = beginXml(writer);
 
 			serializer.attribute(ns, Xconstants.BT, bt);
 			serializer.attribute(ns, Xconstants.STATE, DELACCOUNTS);
-			serializer.attribute(ns, Xconstants.VERSION, COM_VER);
 			serializer.attribute(ns, Xconstants.AID, aid);
 
 			for (User user : users) {
@@ -945,9 +891,7 @@ public class XmlCreator {
 				serializer.endTag(ns, Xconstants.USER);
 			}
 
-			serializer.text("");
-			serializer.endTag(ns, Xconstants.COM_ROOT);
-			serializer.endDocument();
+			endXml(serializer);
 
 			return writer.toString();
 		} catch (Exception e) {
@@ -1248,16 +1192,12 @@ public class XmlCreator {
 	 * @since 2.2
 	 */
 	public static String createNotificaionRead(String bt, List<String> mids) {
-		XmlSerializer serializer = Xml.newSerializer();
 		StringWriter writer = new StringWriter();
 		try {
-			serializer.setOutput(writer);
-			serializer.startDocument("UTF-8", null);
+			XmlSerializer serializer = beginXml(writer);
 
-			serializer.startTag(ns, Xconstants.COM_ROOT);
 			serializer.attribute(ns, Xconstants.BT, bt);
 			serializer.attribute(ns, Xconstants.STATE, NOTIFICATIONREAD);
-			serializer.attribute(ns, Xconstants.VERSION, COM_VER);
 
 			for (String mid : mids) {
 				serializer.startTag(ns, Xconstants.NOTIFICAION);
@@ -1265,9 +1205,7 @@ public class XmlCreator {
 				serializer.endTag(ns, Xconstants.NOTIFICAION);
 			}
 
-			serializer.text("");
-			serializer.endTag(ns, Xconstants.COM_ROOT);
-			serializer.endDocument();
+			endXml(serializer);
 
 			return writer.toString();
 		} catch (Exception e) {
@@ -1288,15 +1226,11 @@ public class XmlCreator {
      * @return
      */
     public static String createAddSetAlgor(String bt, String name, String algId, String aid, int type, List<String> devices, List<String> params, String regionId, String geoType, Boolean state){
-        XmlSerializer serializer = Xml.newSerializer();
         StringWriter writer = new StringWriter();
         try {
-            serializer.setOutput(writer);
-            serializer.startDocument("UTF-8", null);
+			XmlSerializer serializer = beginXml(writer);
 
-            serializer.startTag(ns, Xconstants.COM_ROOT);
-
-            serializer.attribute(ns, Xconstants.BT, bt);
+			serializer.attribute(ns, Xconstants.BT, bt);
             if(state == null)
                 serializer.attribute(ns, Xconstants.STATE, ADDALG);
             else {
@@ -1305,7 +1239,6 @@ public class XmlCreator {
 				serializer.attribute(ns, Xconstants.ALGID, algId);
             }
 
-            serializer.attribute(ns, Xconstants.VERSION, COM_VER);
             serializer.attribute(ns, Xconstants.ALGNAME, name);
             serializer.attribute(ns, Xconstants.AID, aid);
             serializer.attribute(ns, Xconstants.ATYPE, Integer.toString(type));
@@ -1328,9 +1261,7 @@ public class XmlCreator {
                 serializer.endTag(ns, Xconstants.PARAM);
             }
 
-			serializer.text("");
-			serializer.endTag(ns, Xconstants.COM_ROOT);
-            serializer.endDocument();
+			endXml(serializer);
 
             return writer.toString();
         } catch (Exception e) {
@@ -1355,15 +1286,10 @@ public class XmlCreator {
      * @return
      */
     public static String createGetAlgs(String bt, String aid, ArrayList<String> algids){
-        XmlSerializer serializer = Xml.newSerializer();
         StringWriter writer = new StringWriter();
         try {
-            serializer.setOutput(writer);
-            serializer.startDocument("UTF-8", null);
+			XmlSerializer serializer = beginXml(writer);
 
-            serializer.startTag(ns, Xconstants.COM_ROOT);
-
-			serializer.attribute(ns, Xconstants.VERSION, COM_VER);
 			serializer.attribute(ns, Xconstants.BT, bt);
             serializer.attribute(ns, Xconstants.STATE, GETALGS);
 			serializer.attribute(ns, Xconstants.AID, aid);
@@ -1374,9 +1300,7 @@ public class XmlCreator {
                 serializer.endTag(ns, Xconstants.ALGORITHM);
             }
 
-			serializer.text("");
-			serializer.endTag(ns, Xconstants.COM_ROOT);
-            serializer.endDocument();
+			endXml(serializer);
 
             return writer.toString();
         } catch (Exception e) {
@@ -1421,22 +1345,15 @@ public class XmlCreator {
 			throw new RuntimeException("Bad params count");
 		}
 
-		XmlSerializer serializer = Xml.newSerializer();
 		StringWriter writer = new StringWriter();
 		try {
-			serializer.setOutput(writer);
-			serializer.startDocument("UTF-8", null);
-
-			serializer.startTag(ns, Xconstants.COM_ROOT);
-			serializer.attribute(ns, Xconstants.VERSION, COM_VER); // every time use version
+			XmlSerializer serializer = beginXml(writer);
 
 			for (int i = 0; i < args.length; i += 2) { // take pair of args
 				serializer.attribute(ns, args[i], args[i + 1]);
 			}
 
-			serializer.text("");
-			serializer.endTag(ns, Xconstants.COM_ROOT);
-			serializer.endDocument();
+			endXml(serializer);
 
 			return writer.toString();
 		} catch (Exception e) {
@@ -1445,17 +1362,12 @@ public class XmlCreator {
 	}
 
 	private static String createAddSeTAcc(String state, String bt, String aid, ArrayList<User> users) {
-		XmlSerializer serializer = Xml.newSerializer();
 		StringWriter writer = new StringWriter();
 		try {
-			serializer.setOutput(writer);
-			serializer.startDocument("UTF-8", null);
-
-			serializer.startTag(ns, Xconstants.COM_ROOT);
+			XmlSerializer serializer = beginXml(writer);
 
 			serializer.attribute(ns, Xconstants.BT, bt);
 			serializer.attribute(ns, Xconstants.STATE, state);
-			serializer.attribute(ns, Xconstants.VERSION, COM_VER);
 			serializer.attribute(ns, Xconstants.AID, aid);
 
 			for (User user : users) {
@@ -1466,9 +1378,7 @@ public class XmlCreator {
 				serializer.endTag(ns, Xconstants.USER);
 			}
 
-			serializer.text("");
-			serializer.endTag(ns, Xconstants.COM_ROOT);
-			serializer.endDocument();
+			endXml(serializer);
 
 			return writer.toString();
 		} catch (Exception e) {
@@ -1477,17 +1387,12 @@ public class XmlCreator {
 	}
 
 	private static String createAddSetCond(String state, String bt, String name, ConditionType type, ArrayList<ConditionFunction> condFuncs, String cid) {
-		XmlSerializer serializer = Xml.newSerializer();
 		StringWriter writer = new StringWriter();
 		try {
-			serializer.setOutput(writer);
-			serializer.startDocument("UTF-8", null);
-
-			serializer.startTag(ns, Xconstants.COM_ROOT);
+			XmlSerializer serializer = beginXml(writer);
 
 			serializer.attribute(ns, Xconstants.BT, bt);
 			serializer.attribute(ns, Xconstants.STATE, state);
-			serializer.attribute(ns, Xconstants.VERSION, COM_VER);
 			serializer.attribute(ns, Xconstants.CNAME, name);
 			serializer.attribute(ns, Xconstants.CTYPE, type.getValue());
 			if (state.equals(SETCONDITION))
@@ -1591,9 +1496,7 @@ public class XmlCreator {
 				serializer.endTag(ns, Xconstants.FUNC);
 			}
 
-			serializer.text("");
-			serializer.endTag(ns, Xconstants.COM_ROOT);
-			serializer.endDocument();
+			endXml(serializer);
 
 			return writer.toString();
 		} catch (Exception e) {
@@ -1602,17 +1505,12 @@ public class XmlCreator {
 	}
 
 	private static String createAddSetAct(String state, String bt, String name, String actid, List<Action> actions) {
-		XmlSerializer serializer = Xml.newSerializer();
 		StringWriter writer = new StringWriter();
 		try {
-			serializer.setOutput(writer);
-			serializer.startDocument("UTF-8", null);
-
-			serializer.startTag(ns, Xconstants.COM_ROOT);
+			XmlSerializer serializer = beginXml(writer);
 
 			serializer.attribute(ns, Xconstants.BT, bt);
 			serializer.attribute(ns, Xconstants.STATE, state);
-			serializer.attribute(ns, Xconstants.VERSION, COM_VER);
 			serializer.attribute(ns, Xconstants.ACNAME, name);
 			if (state.equals(SETACTION))
 				serializer.attribute(ns, Xconstants.ACID, actid);
@@ -1632,9 +1530,7 @@ public class XmlCreator {
 				serializer.endTag(ns, Xconstants.ACTION);
 			}
 
-			serializer.text("");
-			serializer.endTag(ns, Xconstants.COM_ROOT);
-			serializer.endDocument();
+			endXml(serializer);
 
 			return writer.toString();
 		} catch (Exception e) {
