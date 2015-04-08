@@ -394,7 +394,6 @@ public class XmlCreator {
 
 			serializer.attribute(ns, Xconstants.BT, bt);
 			serializer.attribute(ns, Xconstants.STATE, GETDEVICES);
-			serializer.attribute(ns, Xconstants.VERSION, COM_VER);
 
 			// sort by adapter address
 			Collections.sort(facilities, new Comparator<Facility>() {
