@@ -133,7 +133,7 @@ public class SensorEditActivity extends BaseApplicationActivity {
 				what.add(Device.SaveDevice.SAVE_LOCATION);
 				if(mFragment.isSetNewRoom()) {
 					// Create new room
-					Location location = new Location(Location.NEW_LOCATION_ID, mFragment.getNewLocName(),mFragment.getNewLocIcon().getId());
+					Location location = new Location(Location.NEW_LOCATION_ID, mFragment.getNewLocName(), adapter.getId(), mFragment.getNewLocIcon().getId());
 					// Send request for new loc ..
 					doSaveFacilityWithNewLocation(new SaveFacilityWithNewLocPair(facility,location,EnumSet.copyOf(what)));
 					return true;

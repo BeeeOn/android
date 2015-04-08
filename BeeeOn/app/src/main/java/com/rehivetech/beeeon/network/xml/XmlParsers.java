@@ -480,9 +480,8 @@ public class XmlParsers {
 			return result;
 
 		do {
-			Location location = new Location(getSecureAttrValue(Xconstants.ID), getSecureAttrValue(Xconstants.NAME),
+			Location location = new Location(getSecureAttrValue(Xconstants.ID), getSecureAttrValue(Xconstants.NAME), aid,
 					getSecureInt(getSecureAttrValue(Xconstants.TYPE)));
-			location.setAdapterId(aid);
 			result.add(location);
 
 			mParser.nextTag(); // loc end tag

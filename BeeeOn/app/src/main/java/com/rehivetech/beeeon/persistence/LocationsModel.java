@@ -67,7 +67,7 @@ public class LocationsModel {
 		Collections.sort(locations, new NameIdentifierComparator());
 
 		// Add "no location" for devices without location
-		Location noneLocation = new Location(Location.NO_LOCATION_ID, mContext.getString(R.string.loc_none), Location.NO_LOCATION_TYPE);
+		Location noneLocation = new Location(Location.NO_LOCATION_ID, mContext.getString(R.string.loc_none), adapterId, Location.NO_LOCATION_TYPE);
 		locations.add(noneLocation);
 
 		return locations;

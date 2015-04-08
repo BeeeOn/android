@@ -13,7 +13,7 @@ public class Location implements INameIdentifier {
 	/** Represents type (= icon) of "no location" */
 	public static final int NO_LOCATION_TYPE = 0;
 
-	protected String mAdapterId;
+	protected final String mAdapterId;
 	protected String mId = "";
 	protected String mName = "";
 	protected int mType;
@@ -82,13 +82,12 @@ public class Location implements INameIdentifier {
 		}
 	}
 
-	public Location() {
-	}
-
-	public Location(String id, String name, int type) {
+	public Location(String id, String name, String adapterId, int type) {
 		setId(id);
 		setName(name);
 		setType(type);
+
+		mAdapterId = adapterId;
 	}
 
 	/**
@@ -98,15 +97,6 @@ public class Location implements INameIdentifier {
 	 */
 	public String getAdapterId() {
 		return mAdapterId;
-	}
-
-	/**
-	 * Set adapter id of location
-	 * 
-	 * @param adapterId
-	 */
-	public void setAdapterId(String adapterId) {
-		mAdapterId = adapterId;
 	}
 
 	public String getId() {

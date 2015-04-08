@@ -178,7 +178,7 @@ public class SetupSensorFragmentDialog extends TrackDialogFragment {
 						return;
 					}
 
-					location = new Location(Location.NEW_LOCATION_ID, mNewLocation.getText().toString(), mNewIconSpinner.getSelectedItemPosition());
+					location = new Location(Location.NEW_LOCATION_ID, mNewLocation.getText().toString(), mAdapter.getId(), mNewIconSpinner.getSelectedItemPosition());
 
 				} else {
 					location = (Location) mSpinner.getSelectedItem();
@@ -313,7 +313,7 @@ public class SetupSensorFragmentDialog extends TrackDialogFragment {
 			}
 
 			if (!found) {
-				locations.add(new Location(Location.NEW_LOCATION_ID, name, room.getType()));
+				locations.add(new Location(Location.NEW_LOCATION_ID, name, adapter.getId(), room.getType()));
 			}
 		}
 
@@ -321,7 +321,7 @@ public class SetupSensorFragmentDialog extends TrackDialogFragment {
 		Collections.sort(locations, new NameIdentifierComparator());
 
 		// Add "New location" item
-		locations.add(new Location(Location.NEW_LOCATION_ID, getString(R.string.addsensor_new_location_spinner), 0));
+		locations.add(new Location(Location.NEW_LOCATION_ID, getString(R.string.addsensor_new_location_spinner), adapter.getId(), 0));
 
 		return locations;
 	}

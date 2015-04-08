@@ -157,7 +157,7 @@ public class SetupSensorActivity extends BaseApplicationActivity {
 						return;
 					}
 
-					location = new Location(Location.NEW_LOCATION_ID, mNewLocation.getText().toString(), ((Location.LocationIcon)mNewIconSpinner.getAdapter().getItem(mNewIconSpinner.getSelectedItemPosition())).getId());
+					location = new Location(Location.NEW_LOCATION_ID, mNewLocation.getText().toString(), mPairAdapter.getId(), ((Location.LocationIcon)mNewIconSpinner.getAdapter().getItem(mNewIconSpinner.getSelectedItemPosition())).getId());
 
 				} else {
 					location = (Location) mSpinner.getSelectedItem();
