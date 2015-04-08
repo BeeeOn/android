@@ -7,8 +7,8 @@ public class Location implements INameIdentifier {
 	/** Represents id of newly created location (not saved on server yet) */
 	public static final String NEW_LOCATION_ID = "-NEW-";
 
-	/** Represents id of "no location" (on server it is represented as empty id) */
-	public static final String NO_LOCATION_ID = "";
+	/** Represents id of "no location" (server requires "null" string) */
+	public static final String NO_LOCATION_ID = "null";
 
 	/** Represents type (= icon) of "no location" */
 	public static final int NO_LOCATION_TYPE = 0;
