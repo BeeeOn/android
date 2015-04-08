@@ -108,14 +108,16 @@ public class LocationsModel {
 			return false;
 		}
 
-		// TODO: check if user is logged in
-		if (mNetwork.isAvailable()) {
+		// Don't check availability as we don't have cache working, so let Network notify connection error eventually
+		return loadFromServer(adapterId);
+
+		/*if (mNetwork.isAvailable()) {
 			return loadFromServer(adapterId);
 		} else if (forceReload) {
 			return loadFromCache(adapterId);
 		}
 
-		return false;
+		return false;*/
 	}
 
 	private boolean loadFromServer(String adapterId) throws AppException {
