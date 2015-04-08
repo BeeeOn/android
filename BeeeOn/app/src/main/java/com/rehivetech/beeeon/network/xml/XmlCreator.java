@@ -159,7 +159,7 @@ public class XmlCreator {
 		StringWriter writer = new StringWriter();
 		try {
 			serializer.setOutput(writer);
-			// serializer.startDocument("UTF-8", null);
+			serializer.startDocument("UTF-8", null);
 
 			serializer.startTag(ns, Xconstants.COM_ROOT);
 			serializer.attribute(ns, Xconstants.VERSION, COM_VER); // every time use version
@@ -200,7 +200,7 @@ public class XmlCreator {
 		StringWriter writer = new StringWriter();
 		try {
 			serializer.setOutput(writer);
-			// serializer.startDocument("UTF-8", null);
+			serializer.startDocument("UTF-8", null);
 
 			serializer.startTag(ns, Xconstants.COM_ROOT);
 			serializer.attribute(ns, Xconstants.VERSION, COM_VER); // every time use version
@@ -242,7 +242,7 @@ public class XmlCreator {
 		StringWriter writer = new StringWriter();
 		try {
 			serializer.setOutput(writer);
-			// serializer.startDocument("UTF-8", null);
+			serializer.startDocument("UTF-8", null);
 
 			serializer.startTag(ns, Xconstants.COM_ROOT);
 			serializer.attribute(ns, Xconstants.VERSION, COM_VER); // every time use version
@@ -391,7 +391,7 @@ public class XmlCreator {
 		StringWriter writer = new StringWriter();
 		try {
 			serializer.setOutput(writer);
-//			serializer.startDocument("UTF-8", null);
+			serializer.startDocument("UTF-8", null);
 
 			serializer.startTag(ns, Xconstants.COM_ROOT);
 			serializer.attribute(ns, Xconstants.BT, bt);
@@ -466,7 +466,7 @@ public class XmlCreator {
 		StringWriter writer = new StringWriter();
 		try {
 			serializer.setOutput(writer);
-//			serializer.startDocument("UTF-8", null);
+			serializer.startDocument("UTF-8", null);
 
 			serializer.startTag(ns, Xconstants.COM_ROOT);
 
@@ -1408,7 +1408,7 @@ public class XmlCreator {
 		StringWriter writer = new StringWriter();
 		try {
 			serializer.setOutput(writer);
-			// serializer.startDocument("UTF-8", null);
+			serializer.startDocument("UTF-8", null);
 
 			serializer.startTag(ns, Xconstants.COM_ROOT);
 			serializer.attribute(ns, Xconstants.VERSION, COM_VER); // every time use version
