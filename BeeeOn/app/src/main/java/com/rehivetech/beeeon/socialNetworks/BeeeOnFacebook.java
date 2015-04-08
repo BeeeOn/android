@@ -3,7 +3,6 @@ package com.rehivetech.beeeon.socialNetworks;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.net.Uri;
-import android.os.SystemClock;
 import android.support.v4.app.FragmentActivity;
 import android.widget.Toast;
 
@@ -29,10 +28,10 @@ import java.util.Observable;
  * Design pattern Observer
  * @author Jan Lamacz
  */
-public class Facebook extends Observable {
-	private static final String TAG = Facebook.class.getSimpleName();
+public class BeeeOnFacebook extends Observable {
+	private static final String TAG = BeeeOnFacebook.class.getSimpleName();
 
-	private static Facebook mInstance;
+	private static BeeeOnFacebook mInstance;
 	private Context mContext;
 	private SharedPreferences mPrefs;
 
@@ -40,15 +39,15 @@ public class Facebook extends Observable {
 	private String mUserName;
 	private String mAccessToken;
 
-	private Facebook(Context context) {
+	private BeeeOnFacebook(Context context) {
 		mContext = context;
 		mPrefs = Controller.getInstance(mContext).getUserSettings();
 		mAccessToken = mPrefs.getString(Constants.PERSISTANCE_PREF_LOGIN_FACEBOOK, null);
 	}
 
-	public static Facebook getInstance(Context context) {
+	public static BeeeOnFacebook getInstance(Context context) {
 		if(mInstance == null) {
-			mInstance = new Facebook(context);
+			mInstance = new BeeeOnFacebook(context);
 		}
 		return mInstance;
 	}

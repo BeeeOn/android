@@ -8,9 +8,6 @@ import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -24,8 +21,7 @@ import com.rehivetech.beeeon.achievements.FbShareAchievement;
 import com.rehivetech.beeeon.arrayadapter.AchievementListAdapter;
 import com.rehivetech.beeeon.base.BaseApplicationActivity;
 import com.rehivetech.beeeon.gamification.AchievementList;
-import com.rehivetech.beeeon.gamification.AchievementListItem;
-import com.rehivetech.beeeon.socialNetworks.Facebook;
+import com.rehivetech.beeeon.socialNetworks.BeeeOnFacebook;
 import com.rehivetech.beeeon.util.Log;
 
 import java.util.ArrayList;
@@ -46,7 +42,7 @@ public class AchievementOverviewActivity extends BaseApplicationActivity {
 	private String mCategoryId;
 
 	//facebook
-	private Facebook mFb;
+	private BeeeOnFacebook mFb;
 	private CallbackManager mCallbackManager;
 	private ShareDialog mShareDialog;
 
@@ -55,7 +51,7 @@ public class AchievementOverviewActivity extends BaseApplicationActivity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_achievement_overview);
-		mFb = Facebook.getInstance(getApplicationContext());
+		mFb = BeeeOnFacebook.getInstance(getApplicationContext());
 
 		Bundle bundle = getIntent().getExtras();
 		if(bundle != null){

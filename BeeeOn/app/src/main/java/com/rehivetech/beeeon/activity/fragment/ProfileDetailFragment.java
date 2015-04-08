@@ -18,7 +18,6 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.melnykov.fab.FloatingActionButton;
 import com.rehivetech.beeeon.R;
@@ -28,8 +27,8 @@ import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.gamification.AchievementList;
 import com.rehivetech.beeeon.gamification.GamificationCategory;
 import com.rehivetech.beeeon.household.user.User;
-import com.rehivetech.beeeon.socialNetworks.Facebook;
-import com.rehivetech.beeeon.socialNetworks.Twitter;
+import com.rehivetech.beeeon.socialNetworks.BeeeOnFacebook;
+import com.rehivetech.beeeon.socialNetworks.BeeeOnTwitter;
 import com.rehivetech.beeeon.util.Log;
 
 import java.util.ArrayList;
@@ -63,20 +62,23 @@ public class ProfileDetailFragment extends Fragment implements Observer {
 	private boolean showMoreAccounts = false;
 	private final int totalNetworks = 2;
 	private ArrayList<CharSequence> socialNetworks = new ArrayList<>();
-	private Facebook mFb;
-	private Twitter mTw;
+	private BeeeOnFacebook mFb;
+	private BeeeOnTwitter mTw;
 	private TextView mFbName;
+	private TextView mTwName;
+
+//	TwitterAuthClient twitter;
 
 	public ProfileDetailFragment() {
 		Controller controller = Controller.getInstance(getActivity());
 	    actUser = controller.getActualUser();
   	}
 
-  	@Override
-  	public void onCreate(Bundle savedInstanceState){
-	    super.onCreate(savedInstanceState);
-	    Log.d(TAG, "onCreate()");
-	}
+//  	@Override
+//  	public void onCreate(Bundle savedInstanceState){
+//	    super.onCreate(savedInstanceState);
+//	    Log.d(TAG, "onCreate()");
+//	}
 
   	@Override
   	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -190,7 +192,7 @@ public class ProfileDetailFragment extends Fragment implements Observer {
 		}
 		else {	//at least one network is connected, allow to show the profile
 			if (showMoreAccounts) { // SHOW info
-				mMoreLayout.getLayoutParams().height = (mDisplayPixel*60)+((totalNetworks-socialNetworks.size())*(mDisplayPixel*55));
+				mMoreLayout.getLayoutParams().height = (mDisplayPixel*60)+((totalNetworks-socialNetworks.size())*(mDisplayPixel*65));
 				mMoreLayout.requestLayout();
 				mMoreVisible.setVisibility(View.VISIBLE);
 				rotate(90);
@@ -228,6 +230,8 @@ public class ProfileDetailFragment extends Fragment implements Observer {
 			socialNetworks.add("Twitter");
 		}
 		else {
+			mTwName = (TextView) mView.findViewById(R.id.profile_twitter_name);
+			if(mTw.getUserName() != null) mTwName.setText(mTw.getUserName());
 			twLayout.setVisibility(View.VISIBLE);
 			twPar.height = 60*mDisplayPixel;
 		}

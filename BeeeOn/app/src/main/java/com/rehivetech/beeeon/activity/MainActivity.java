@@ -50,6 +50,7 @@ import com.rehivetech.beeeon.menu.NavDrawerMenu;
 import com.rehivetech.beeeon.network.authentication.FacebookAuthProvider;
 import com.rehivetech.beeeon.persistence.Persistence;
 import com.rehivetech.beeeon.util.Log;
+import com.twitter.sdk.android.core.identity.TwitterAuthClient;
 
 
 /**
@@ -181,6 +182,7 @@ public class MainActivity extends BaseApplicationActivity implements IListDialog
 			@Override
 			public void onError(FacebookException exception) {}
 		});
+		mTwitterCallbackManager = new TwitterAuthClient();
 		
 		// Init tutorial 
 		if(mFirstUseApp) {
@@ -238,6 +240,7 @@ public class MainActivity extends BaseApplicationActivity implements IListDialog
 		super.onActivityResult(requestCode, resultCode, data);
 
 		mFacebookCallbackManager.onActivityResult(requestCode, resultCode, data);
+		mTwitterCallbackManager.onActivityResult(requestCode, resultCode, data);
 		Log.d(TAG, "Request code "+requestCode);
 		if(requestCode == Constants.ADD_ADAPTER_REQUEST_CODE ) {
 			Log.d(TAG, "Return from add adapter activity");
