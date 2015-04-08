@@ -107,8 +107,7 @@ public class Network implements INetwork {
 	private SSLSocket permaSocket = null;
 	private PrintWriter permaWriter = null;
 	private BufferedReader permaReader = null;
-	private static final String EOF = "</com>"; //FIXME: temporary solution (new version)
-	private static final String SERVER_EOF = "<com></com>";
+	private static final String EOF = "</com>";
 	private boolean mIsMulti = false;
 
 	/**
@@ -419,8 +418,6 @@ public class Network implements INetwork {
 		// Debug.startMethodTracing("Support_231");
 		// long ltime = new Date().getTime();
 		try {
-			if(!messageToSend.contains("</com>"))
-				messageToSend += SERVER_EOF;
 			Log.d(TAG + " fromApp >>", messageToSend);
 			String result = startCommunication(messageToSend);
 			Log.i(TAG + " << fromSrv", result);

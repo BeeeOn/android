@@ -179,6 +179,7 @@ public class XmlCreator {
 			}
 			serializer.endTag(ns, Xconstants.PARAM);
 
+			serializer.text("");
 			serializer.endTag(ns, Xconstants.COM_ROOT);
 			serializer.endDocument();
 
@@ -222,6 +223,7 @@ public class XmlCreator {
 			}
 			serializer.endTag(ns, Xconstants.PARAM);
 
+			serializer.text("");
 			serializer.endTag(ns, Xconstants.COM_ROOT);
 			serializer.endDocument();
 
@@ -261,6 +263,7 @@ public class XmlCreator {
 			}
 			serializer.endTag(ns, Xconstants.PARAM);
 
+			serializer.text("");
 			serializer.endTag(ns, Xconstants.COM_ROOT);
 			serializer.endDocument();
 
@@ -430,6 +433,8 @@ public class XmlCreator {
 				serializer.endTag(ns, Xconstants.DEVICE);
 			}
 			serializer.endTag(ns, Xconstants.ADAPTER);
+
+			serializer.text("");
 			serializer.endTag(ns, Xconstants.COM_ROOT);
 			serializer.endDocument();
 
@@ -481,6 +486,7 @@ public class XmlCreator {
 			serializer.attribute(ns, Xconstants.DID, did);
 			serializer.attribute(ns, Xconstants.DTYPE, deviceType);
 
+			serializer.text("");
 			serializer.endTag(ns, Xconstants.COM_ROOT);
 			serializer.endDocument();
 
@@ -543,6 +549,7 @@ public class XmlCreator {
 				serializer.endTag(ns, Xconstants.DEVICE);
 			}
 
+			serializer.text("");
 			serializer.endTag(ns, Xconstants.COM_ROOT);
 			serializer.endDocument();
 
@@ -609,6 +616,7 @@ public class XmlCreator {
 
 			serializer.endTag(ns, Xconstants.DEVICE);
 
+			serializer.text("");
 			serializer.endTag(ns, Xconstants.COM_ROOT);
 			serializer.endDocument();
 
@@ -705,6 +713,8 @@ public class XmlCreator {
 
 				serializer.endTag(ns, Xconstants.LOCATION);
 			}
+
+			serializer.text("");
 			serializer.endTag(ns, Xconstants.COM_ROOT);
 			serializer.endDocument();
 
@@ -784,6 +794,7 @@ public class XmlCreator {
 				serializer.endTag(ns, Xconstants.DEVICE);
 			}
 
+			serializer.text("");
 			serializer.endTag(ns, Xconstants.COM_ROOT);
 			serializer.endDocument();
 
@@ -830,6 +841,7 @@ public class XmlCreator {
 			serializer.attribute(ns, Xconstants.ACTION, action.getValue());
 			serializer.endTag(ns, Xconstants.DEVICE);
 
+			serializer.text("");
 			serializer.endTag(ns, Xconstants.COM_ROOT);
 			serializer.endDocument();
 
@@ -933,6 +945,7 @@ public class XmlCreator {
 				serializer.endTag(ns, Xconstants.USER);
 			}
 
+			serializer.text("");
 			serializer.endTag(ns, Xconstants.COM_ROOT);
 			serializer.endDocument();
 
@@ -1251,6 +1264,8 @@ public class XmlCreator {
 				serializer.attribute(ns, Xconstants.MSGID, mid);
 				serializer.endTag(ns, Xconstants.NOTIFICAION);
 			}
+
+			serializer.text("");
 			serializer.endTag(ns, Xconstants.COM_ROOT);
 			serializer.endDocument();
 
@@ -1313,7 +1328,8 @@ public class XmlCreator {
                 serializer.endTag(ns, Xconstants.PARAM);
             }
 
-            serializer.endTag(ns, Xconstants.COM_ROOT);
+			serializer.text("");
+			serializer.endTag(ns, Xconstants.COM_ROOT);
             serializer.endDocument();
 
             return writer.toString();
@@ -1358,7 +1374,8 @@ public class XmlCreator {
                 serializer.endTag(ns, Xconstants.ALGORITHM);
             }
 
-            serializer.endTag(ns, Xconstants.COM_ROOT);
+			serializer.text("");
+			serializer.endTag(ns, Xconstants.COM_ROOT);
             serializer.endDocument();
 
             return writer.toString();
@@ -1417,6 +1434,7 @@ public class XmlCreator {
 				serializer.attribute(ns, args[i], args[i + 1]);
 			}
 
+			serializer.text("");
 			serializer.endTag(ns, Xconstants.COM_ROOT);
 			serializer.endDocument();
 
@@ -1448,6 +1466,7 @@ public class XmlCreator {
 				serializer.endTag(ns, Xconstants.USER);
 			}
 
+			serializer.text("");
 			serializer.endTag(ns, Xconstants.COM_ROOT);
 			serializer.endDocument();
 
@@ -1572,6 +1591,7 @@ public class XmlCreator {
 				serializer.endTag(ns, Xconstants.FUNC);
 			}
 
+			serializer.text("");
 			serializer.endTag(ns, Xconstants.COM_ROOT);
 			serializer.endDocument();
 
@@ -1611,6 +1631,8 @@ public class XmlCreator {
 				}
 				serializer.endTag(ns, Xconstants.ACTION);
 			}
+
+			serializer.text("");
 			serializer.endTag(ns, Xconstants.COM_ROOT);
 			serializer.endDocument();
 
