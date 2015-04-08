@@ -132,8 +132,14 @@ public class SensorEditActivity extends BaseApplicationActivity {
 			if(!mFragment.getLocationId().equals(facility.getLocationId())) {
 				what.add(Device.SaveDevice.SAVE_LOCATION);
 				if(mFragment.isSetNewRoom()) {
-					// Create new room
-					Location location = new Location(Location.NEW_LOCATION_ID, mFragment.getNewLocName(), adapter.getId(), mFragment.getNewLocIcon().getId());
+					Location location;
+					if(mFragment.isSetNewCustomRoom()) {
+						// Create new custom room
+						location = new Location(Location.NEW_LOCATION_ID, mFragment.getNewLocName(), adapter.getId(), mFragment.getNewLocIcon().getId());
+					}
+					else {
+						location = mFragment.getLocation();
+					}
 					// Send request for new loc ..
 					doSaveFacilityWithNewLocation(new SaveFacilityWithNewLocPair(facility,location,EnumSet.copyOf(what)));
 					return true;
@@ -141,6 +147,12 @@ public class SensorEditActivity extends BaseApplicationActivity {
 					facility.setLocationId(mFragment.getLocationId());
 				}
 			}
+			if(what.isEmpty()) { // nothing change
+				setResult(Constants.EDIT_SENSOR_SUCCESS);
+				finish();
+				return true;
+			}
+
 			if(!mFragment.isSetNewRoom())
 				doSaveFacilityTask(new SaveFacilityPair(facility,EnumSet.copyOf(what)));
 
@@ -420,8 +432,16 @@ public class SensorEditActivity extends BaseApplicationActivity {
 			return (Location.LocationIcon)mNewIconSpinner.getAdapter().getItem(mNewIconSpinner.getSelectedItemPosition());
 		}
 
+		public Location getLocation() {
+			return (Location)mSpinner.getAdapter().getItem(mSpinner.getSelectedItemPosition());
+		}
+
 		public boolean isSetNewRoom() {
 			return ((Location)mSpinner.getAdapter().getItem(mSpinner.getSelectedItemPosition())).getId().equals(Location.NEW_LOCATION_ID);
+		}
+
+		public boolean isSetNewCustomRoom() {
+			return (mSpinner.getSelectedItemPosition() == mSpinner.getAdapter().getCount()-1);
 		}
 	}
 }
