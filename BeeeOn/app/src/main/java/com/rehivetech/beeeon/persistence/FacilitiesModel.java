@@ -158,16 +158,10 @@ public class FacilitiesModel {
 			return false;
 		}
 
-		// Don't check availability as we don't have cache working, so let Network notify connection error eventually
-		return loadFromServer(adapterId);
+		setFacilitiesByAdapter(adapterId, mNetwork.initAdapter(adapterId));
+		setLastUpdate(adapterId, DateTime.now());
 
-		/*if (mNetwork.isAvailable()) {
-			return loadFromServer(adapterId);
-		} else if (forceReload) {
-			return loadFromCache(adapterId);
-		}
-
-		return false;*/
+		return true;
 	}
 
 	/**
@@ -193,26 +187,6 @@ public class FacilitiesModel {
 		}
 
 		return true;
-	}
-
-	private boolean loadFromServer(String adapterId) throws AppException {
-		setFacilitiesByAdapter(adapterId, mNetwork.initAdapter(adapterId));
-		setLastUpdate(adapterId, DateTime.now());
-		saveToCache(adapterId);
-
-		return true;
-	}
-
-	private boolean loadFromCache(String adapterId) {
-		// TODO: implement this
-		return false;
-
-		// setFacilitiesByAdapter(facilitiesFromCache);
-		// setLastUpdate(adapterId, lastUpdateFromCache);
-	}
-
-	private void saveToCache(String adapterId) {
-		// TODO: implement this
 	}
 
 	private void updateFacilityInMap(Facility facility) {

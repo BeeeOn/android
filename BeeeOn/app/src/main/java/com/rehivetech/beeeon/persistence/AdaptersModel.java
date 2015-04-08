@@ -135,35 +135,10 @@ public class AdaptersModel {
 			return false;
 		}
 
-		// Don't check availability as we don't have cache working, so let Network notify connection error eventually
-		return loadFromServer();
-
-		/*if (mNetwork.isAvailable()) {
-			return loadFromServer();
-		} else if (forceReload) {
-			return loadFromCache();
-		}
-
-		return false;*/
-	}
-
-	private boolean loadFromServer() throws AppException {
 		setAdapters(mNetwork.getAdapters());
 		setLastUpdate(DateTime.now());
-		saveToCache();
+
 		return true;
-	}
-
-	private boolean loadFromCache() {
-		// TODO: implement this
-		return false;
-
-		// setAdapters(adaptersFromCache);
-		// setLastUpdate(lastUpdateFromCache);
-	}
-
-	private void saveToCache() {
-		// TODO: implement this
 	}
 
 }

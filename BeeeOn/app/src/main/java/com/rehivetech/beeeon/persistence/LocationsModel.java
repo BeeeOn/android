@@ -108,36 +108,10 @@ public class LocationsModel {
 			return false;
 		}
 
-		// Don't check availability as we don't have cache working, so let Network notify connection error eventually
-		return loadFromServer(adapterId);
-
-		/*if (mNetwork.isAvailable()) {
-			return loadFromServer(adapterId);
-		} else if (forceReload) {
-			return loadFromCache(adapterId);
-		}
-
-		return false;*/
-	}
-
-	private boolean loadFromServer(String adapterId) throws AppException {
 		setLocationsByAdapter(adapterId, mNetwork.getLocations(adapterId));
 		setLastUpdate(adapterId, DateTime.now());
-		saveToCache(adapterId);
 
 		return true;
-	}
-
-	private boolean loadFromCache(String adapterId) {
-		// TODO: implement this
-		return false;
-
-		// setLocationsByAdapter(locationsFromCache);
-		// setLastUpdate(adapterId, lastUpdateFromCache);
-	}
-
-	private void saveToCache(String adapterId) {
-		// TODO: implement this
 	}
 
 	private void updateLocationInMap(Location location) {
