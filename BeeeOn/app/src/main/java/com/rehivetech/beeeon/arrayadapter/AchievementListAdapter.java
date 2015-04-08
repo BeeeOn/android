@@ -1,6 +1,5 @@
 package com.rehivetech.beeeon.arrayadapter;
 
-import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,12 +9,12 @@ import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.rehivetech.beeeon.R;
-import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.gamification.AchievementList;
+import com.rehivetech.beeeon.gamification.AchievementListClickListener;
 import com.rehivetech.beeeon.gamification.AchievementListItem;
+import com.rehivetech.beeeon.gamification.AchievementListOnClickListener;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -25,24 +24,17 @@ import java.util.List;
  * @author Jan Lamacz
  */
 public class AchievementListAdapter extends BaseAdapter implements Filterable{
-	private static final String TAG = AchievementListAdapter.class.getSimpleName();
-
-	Context mContext;
-	Controller mController;
-	LayoutInflater mInflater;
-
-	private String mCategoryId;
+	private LayoutInflater mInflater;
 	private ItemFilter mFilter = new ItemFilter();
 
-	List<AchievementListItem> mAchievementList;
-	List<AchievementListItem> mFilteredList;
+	private List<AchievementListItem> mAchievementList;
+	private List<AchievementListItem> mFilteredList;
+	private AchievementListOnClickListener mCallback;
 
-	public AchievementListAdapter(Context context, LayoutInflater inflater, String categoryId, AchievementList achievementList){
-		mContext = context;
-		mController = Controller.getInstance(mContext);
+	public AchievementListAdapter(LayoutInflater inflater, String categoryId, AchievementListOnClickListener callback){
 		mInflater = inflater;
-		mCategoryId = categoryId;
-		mAchievementList = achievementList.getAchievements();
+		mCallback = callback;
+		mAchievementList = AchievementList.getInstance().getAchievements();
 		mFilteredList = mAchievementList;
 		mFilter.filter(categoryId);
 	}
@@ -81,12 +73,7 @@ public class AchievementListAdapter extends BaseAdapter implements Filterable{
 			holder.achievementDate.setVisibility(View.VISIBLE);
 			holder.achievementTick.setVisibility(View.VISIBLE);
 			holder.achievementShare.setVisibility(View.VISIBLE);
-			holder.achievementShare.setOnClickListener(new View.OnClickListener() {
-				@Override
-				public void onClick(View view) {
-					Toast.makeText(mContext, "Prepare to share!", Toast.LENGTH_LONG).show();
-				}
-			});
+			holder.achievementShare.setOnClickListener(new AchievementListClickListener(mCallback, position));
 		}
 		else {
 			setBg(holder.achievementPoints, convertView.getResources().getDrawable(R.drawable.hexagon_gray));

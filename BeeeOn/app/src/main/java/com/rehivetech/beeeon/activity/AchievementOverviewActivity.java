@@ -1,15 +1,11 @@
 package com.rehivetech.beeeon.activity;
 
-import android.app.AlertDialog;
-import android.app.Dialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.DialogFragment;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
@@ -20,20 +16,16 @@ import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.achievements.FbShareAchievement;
 import com.rehivetech.beeeon.arrayadapter.AchievementListAdapter;
 import com.rehivetech.beeeon.base.BaseApplicationActivity;
-import com.rehivetech.beeeon.gamification.AchievementList;
-import com.rehivetech.beeeon.socialNetworks.BeeeOnFacebook;
+import com.rehivetech.beeeon.gamification.AchievementListItem;
+import com.rehivetech.beeeon.gamification.AchievementListOnClickListener;
+import com.rehivetech.beeeon.activity.dialog.ShareFragmentDialog;
 import com.rehivetech.beeeon.util.Log;
-
-import java.util.ArrayList;
 
 /**
  * @author Jan Lamacz
  */
-public class AchievementOverviewActivity extends BaseApplicationActivity {
+public class AchievementOverviewActivity extends BaseApplicationActivity implements AchievementListOnClickListener {
 	private static final String TAG = AchievementOverviewActivity.class.getSimpleName();
-//	private static final String PARCEL_ACHIEVEMENT = "achievementList";
-
-	private ArrayList<CharSequence> socialNetworks = new ArrayList<>();
 
 	// extras
 	public static final String EXTRA_CATEGORY_NAME = "category_name";
@@ -42,7 +34,6 @@ public class AchievementOverviewActivity extends BaseApplicationActivity {
 	private String mCategoryId;
 
 	//facebook
-	private BeeeOnFacebook mFb;
 	private CallbackManager mCallbackManager;
 	private ShareDialog mShareDialog;
 
@@ -51,20 +42,17 @@ public class AchievementOverviewActivity extends BaseApplicationActivity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_achievement_overview);
-		mFb = BeeeOnFacebook.getInstance(getApplicationContext());
 
 		Bundle bundle = getIntent().getExtras();
 		if(bundle != null){
 			mCategoryName = bundle.getString(EXTRA_CATEGORY_NAME);
 			mCategoryId = bundle.getString(EXTRA_CATEGORY_ID);
-//			mAchievements = bundle.getParcelable(PARCEL_ACHIEVEMENT);
 		}
 		else{
 			bundle = savedInstanceState;
 			if (bundle != null) {
 				mCategoryName = bundle.getString(EXTRA_CATEGORY_NAME);
 				mCategoryId = bundle.getString(EXTRA_CATEGORY_ID);
-//				mAchievements = bundle.getParcelable(PARCEL_ACHIEVEMENT);
 			}
 		}
 
@@ -76,8 +64,6 @@ public class AchievementOverviewActivity extends BaseApplicationActivity {
 			getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 		}
 
-		socialNetworks.add("Google Plus");
-		socialNetworks.add("Facebook");
 		setFbShareCallback();
 		setOnClickListeners();
 	}
@@ -92,13 +78,19 @@ public class AchievementOverviewActivity extends BaseApplicationActivity {
 		mShareDialog.registerCallback(mCallbackManager, new FacebookCallback<Sharer.Result>() {
 			@Override
 			public void onSuccess(Sharer.Result shareResult) {
-				if(shareResult.getPostId() != null) // null is if 'cancel' is hit
+				if (shareResult.getPostId() != null) // null is if 'cancel' is hit
 					new FbShareAchievement(getApplicationContext());
 			}
+
 			@Override
-			public void onCancel() {Log.d(TAG, "FB: canceled");}
+			public void onCancel() {
+				Log.d(TAG, "FB: canceled");
+			}
+
 			@Override
-			public void onError(FacebookException exception) {Log.d(TAG, "FB error: " + exception.getMessage());}
+			public void onError(FacebookException exception) {
+				Log.d(TAG, "FB error: " + exception.getMessage());
+			}
 		});
 	}
 
@@ -108,26 +100,21 @@ public class AchievementOverviewActivity extends BaseApplicationActivity {
 	 * share activity.
 	 */
 	private void setOnClickListeners() {
-		AchievementList mAchievements = AchievementList.getInstance();
 		ListView achievementList = (ListView) findViewById(R.id.achievement_list);
 
-		mAchievementListAdapter = new AchievementListAdapter(this, this.getLayoutInflater(), mCategoryId, mAchievements);
+		mAchievementListAdapter = new AchievementListAdapter(this.getLayoutInflater(), mCategoryId, this);
 		achievementList.setAdapter(mAchievementListAdapter);
-		achievementList.setClickable(false);
-		achievementList.setFocusable(false);
 		achievementList.setSelector(android.R.color.transparent);
-//		achievementList.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-//			@Override
-//			public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-//				AchievementListItem achievementItem = mAchievementListAdapter.getItem(position);
-//				if(achievementItem.isDone()) {
-//					new NetworkChooseDialog(achievementItem.getName(), achievementItem.getDate()).show(getSupportFragmentManager(), TAG);
-//					return true;
-//				}
-//				else
-//					return false;
-//			}
-//		});
+	}
+
+	/**
+	 * Implements Interface, shows alert dialog for choosing network to
+	 * share an achievement via.
+	 */
+	@Override
+	public void OnAchievementClick(View aView, int position) {
+		AchievementListItem achievementItem = mAchievementListAdapter.getItem(position);
+		new ShareFragmentDialog(achievementItem, mShareDialog).show(getSupportFragmentManager(), TAG);
 	}
 
 	/**
@@ -137,14 +124,6 @@ public class AchievementOverviewActivity extends BaseApplicationActivity {
 	protected void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
 		mCallbackManager.onActivityResult(requestCode, resultCode, data);
-	}
-
-	@Override
-	public void onSaveInstanceState(Bundle savedInstanceState) {
-		Log.d(TAG, "onSaveInstanceState");
-		savedInstanceState.putString(EXTRA_CATEGORY_NAME, mCategoryName);
-		savedInstanceState.putString(EXTRA_CATEGORY_ID, mCategoryId);
-		super.onSaveInstanceState(savedInstanceState);
 	}
 
 	@Override

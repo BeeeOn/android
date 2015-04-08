@@ -1,12 +1,9 @@
 package com.rehivetech.beeeon.activity.fragment;
 
-import android.app.AlertDialog;
-import android.app.Dialog;
-import android.content.DialogInterface;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
@@ -22,6 +19,7 @@ import android.widget.TextView;
 import com.melnykov.fab.FloatingActionButton;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.activity.AchievementOverviewActivity;
+import com.rehivetech.beeeon.activity.dialog.PairNetworkFragmentDialog;
 import com.rehivetech.beeeon.arrayadapter.GamCategoryListAdapter;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.gamification.AchievementList;
@@ -45,7 +43,8 @@ public class ProfileDetailFragment extends Fragment implements Observer {
   	private User actUser;
   	private GamCategoryListAdapter mCategoryListAdapter;
 	private View mView;
-	int mDisplayPixel;
+	private Context mContext;
+	private int mDisplayPixel;
 
 	// GUI
 	private TextView userName;
@@ -61,24 +60,17 @@ public class ProfileDetailFragment extends Fragment implements Observer {
 	// SocialNetworks
 	private boolean showMoreAccounts = false;
 	private final int totalNetworks = 2;
-	private ArrayList<CharSequence> socialNetworks = new ArrayList<>();
+	private int unconnectedNetworks = 0;
 	private BeeeOnFacebook mFb;
 	private BeeeOnTwitter mTw;
 	private TextView mFbName;
 	private TextView mTwName;
 
-//	TwitterAuthClient twitter;
-
 	public ProfileDetailFragment() {
-		Controller controller = Controller.getInstance(getActivity());
+		mContext = getActivity();
+		Controller controller = Controller.getInstance(mContext);
 	    actUser = controller.getActualUser();
   	}
-
-//  	@Override
-//  	public void onCreate(Bundle savedInstanceState){
-//	    super.onCreate(savedInstanceState);
-//	    Log.d(TAG, "onCreate()");
-//	}
 
   	@Override
   	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -160,7 +152,7 @@ public class ProfileDetailFragment extends Fragment implements Observer {
 		rulesList.add(new GamificationCategory("1", getString(R.string.profile_category_friends)));
 		rulesList.add(new GamificationCategory("2", getString(R.string.profile_category_senzors)));
 
-		mCategoryListAdapter = new GamCategoryListAdapter(getActivity(), rulesList, getActivity().getLayoutInflater(), achievementList);
+		mCategoryListAdapter = new GamCategoryListAdapter(mContext, rulesList, getActivity().getLayoutInflater(), achievementList);
 
 		mCategoryList.setAdapter(mCategoryListAdapter);
 		mCategoryList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -192,7 +184,7 @@ public class ProfileDetailFragment extends Fragment implements Observer {
 		}
 		else {	//at least one network is connected, allow to show the profile
 			if (showMoreAccounts) { // SHOW info
-				mMoreLayout.getLayoutParams().height = (mDisplayPixel*60)+((totalNetworks-socialNetworks.size())*(mDisplayPixel*65));
+				mMoreLayout.getLayoutParams().height = (mDisplayPixel*60)+((totalNetworks-unconnectedNetworks)*(mDisplayPixel*65));
 				mMoreLayout.requestLayout();
 				mMoreVisible.setVisibility(View.VISIBLE);
 				rotate(90);
@@ -214,7 +206,7 @@ public class ProfileDetailFragment extends Fragment implements Observer {
 		if(!mFb.isPaired()) {
 			fbLayout.setVisibility(View.INVISIBLE);
 			fbPar.height = 0;
-			socialNetworks.add("Facebook");
+			unconnectedNetworks++;
 		}
 		else {
 			mFbName = (TextView) mView.findViewById(R.id.profile_facebook_name);
@@ -227,7 +219,7 @@ public class ProfileDetailFragment extends Fragment implements Observer {
 		if(!mTw.isPaired()) {
 			twLayout.setVisibility(View.INVISIBLE);
 			twPar.height = 0;
-			socialNetworks.add("Twitter");
+			unconnectedNetworks++;
 		}
 		else {
 			mTwName = (TextView) mView.findViewById(R.id.profile_twitter_name);
