@@ -8,12 +8,11 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.rehivetech.beeeon.R;
-import com.rehivetech.beeeon.adapter.Adapter;
-import com.rehivetech.beeeon.adapter.device.RefreshInterval;
 import com.rehivetech.beeeon.asynctask.ReloadFacilitiesTask;
 import com.rehivetech.beeeon.controller.Controller;
+import com.rehivetech.beeeon.household.adapter.Adapter;
+import com.rehivetech.beeeon.household.device.RefreshInterval;
 import com.rehivetech.beeeon.util.Log;
-import com.rehivetech.beeeon.widget.old.WidgetUpdateService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -60,7 +59,7 @@ abstract public class WidgetConfiguration {
      */
     public void controllerConstructor() {
         mController = Controller.getInstance(mActivity);
-        mAdapters = mController.getAdapters();
+        mAdapters = mController.getAdaptersModel().getAdapters();
         mActiveAdapter = mController.getActiveAdapter();
 
         // sets adapter onclicklistener

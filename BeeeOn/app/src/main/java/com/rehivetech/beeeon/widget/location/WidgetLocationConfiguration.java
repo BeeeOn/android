@@ -7,9 +7,9 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.rehivetech.beeeon.R;
-import com.rehivetech.beeeon.adapter.Adapter;
-import com.rehivetech.beeeon.adapter.device.RefreshInterval;
-import com.rehivetech.beeeon.adapter.location.Location;
+import com.rehivetech.beeeon.household.adapter.Adapter;
+import com.rehivetech.beeeon.household.device.RefreshInterval;
+import com.rehivetech.beeeon.household.location.Location;
 import com.rehivetech.beeeon.arrayadapter.LocationArrayAdapter;
 import com.rehivetech.beeeon.asynctask.CallbackTask;
 import com.rehivetech.beeeon.asynctask.ReloadLocationsTask;
@@ -74,7 +74,7 @@ public class WidgetLocationConfiguration extends WidgetConfiguration {
                 if (mAdapters.get(i).getId().equals(adapterId)) {
                     mAdapterSpinner.setSelection(i);
 
-                    List<Location> locations = mController.getLocations(adapterId);
+                    List<Location> locations = mController.getLocationsModel().getLocationsByAdapter(adapterId);
                     mLocations = locations;
 
                     // Set locations to spinner
@@ -130,7 +130,7 @@ public class WidgetLocationConfiguration extends WidgetConfiguration {
         mReloadLocationsTask.setListener(new CallbackTask.CallbackTaskListener() {
             @Override
             public void onExecute(boolean success){
-                List<Location> locations = mController.getLocations(adapterId);
+                List<Location> locations = mController.getLocationsModel().getLocationsByAdapter(adapterId);
                 mLocations.clear();
                 mLocations.addAll(locations);
 

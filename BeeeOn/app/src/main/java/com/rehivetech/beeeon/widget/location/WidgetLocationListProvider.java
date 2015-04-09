@@ -13,7 +13,7 @@ import android.widget.Toast;
 
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.activity.SensorDetailActivity;
-import com.rehivetech.beeeon.adapter.location.Location;
+import com.rehivetech.beeeon.household.location.Location;
 import com.rehivetech.beeeon.util.Log;
 import com.rehivetech.beeeon.util.Utils;
 import com.rehivetech.beeeon.widget.WidgetListService;
@@ -28,6 +28,9 @@ public class WidgetLocationListProvider extends WidgetProvider {
     public static final String OPEN_DETAIL_ACTION = "com.rehivetech.beeeon.widget.locationlist.OPEN_DETAIL_ACTION";
     public static final String EXTRA_ITEM_DEV_ID = "com.rehivetech.beeeon.widget.locationlist.ITEM_DEV_ID";
     public static final String EXTRA_ITEM_ADAPTER_ID = "com.rehivetech.beeeon.widget.locationlist.ITEM_ADAPTER_ID";
+
+    public static final String EXTRA_LOCATION_ID = "com.rehivetech.beeeon.widget.locationlist.LOCATON_ID";
+    public static final String EXTRA_LOCATION_ADAPTER_ID = "com.rehivetech.beeeon.widget.locationlist.LOCATON_ADAPTER_ID";
 
     protected WidgetLocationData mWidgetData;
     protected Location mLocation;
@@ -68,6 +71,9 @@ public class WidgetLocationListProvider extends WidgetProvider {
         mRemoteViewsFactoryIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, mWidgetId);
         mRemoteViewsFactoryIntent.setData(Uri.parse(mRemoteViewsFactoryIntent.toUri(Intent.URI_INTENT_SCHEME)));
 
+        mRemoteViewsFactoryIntent.putExtra(EXTRA_LOCATION_ID, mWidgetData.locationId);
+        mRemoteViewsFactoryIntent.putExtra(EXTRA_LOCATION_ADAPTER_ID, mWidgetData.adapterId);
+
         // OnCLickListener
         Intent clickIntent = new Intent(mContext, WidgetLocationListProvider.class);
         clickIntent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
@@ -94,11 +100,9 @@ public class WidgetLocationListProvider extends WidgetProvider {
             //location = new Location();
             // TODO change in service
             // TODO need to probably reloadLocations or something!
-            mLocation = mController.getLocation(mWidgetData.adapterId, mWidgetData.locationId);
+            mLocation = mController.getLocationsModel().getLocation(mWidgetData.adapterId, mWidgetData.locationId);
             if(mLocation == null) return false;
             // TODO what if location not found ??? because of not logged in user
-            mLocation.setAdapterId(mWidgetData.adapterId);
-            mLocation.setId(mWidgetData.locationId);
 
             WidgetService.usedLocations.add(mLocation);
         }

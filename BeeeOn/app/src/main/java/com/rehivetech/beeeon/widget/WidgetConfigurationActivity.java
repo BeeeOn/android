@@ -16,9 +16,9 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.rehivetech.beeeon.R;
-import com.rehivetech.beeeon.adapter.Adapter;
 import com.rehivetech.beeeon.base.BaseApplicationActivity;
 import com.rehivetech.beeeon.controller.Controller;
+import com.rehivetech.beeeon.household.adapter.Adapter;
 import com.rehivetech.beeeon.util.Log;
 import com.rehivetech.beeeon.widget.clock.WidgetClockConfiguration;
 import com.rehivetech.beeeon.widget.clock.WidgetClockData;
@@ -142,7 +142,7 @@ public class WidgetConfigurationActivity extends ActionBarActivity {
 
         mController = Controller.getInstance(mContext);
         // controls that we have any adapter, if not tries to login or finish()
-        mAdapters = mController.getAdapters();
+        mAdapters = mController.getAdaptersModel().getAdapters();
         if (mAdapters.isEmpty()) {
             if (!mController.isLoggedIn() && !triedLoginAlready) {
                 // If user is not logged in we redirect to LoginActivity
@@ -162,9 +162,6 @@ public class WidgetConfigurationActivity extends ActionBarActivity {
 
         if (!isInitialized) {
             isInitialized = true;
-
-            // add widgetData to service
-            WidgetService.awailableWidgets.put(mWidgetData.getWidgetId(), mWidgetData);
             initGeneralLayout();
             mWidgetConfiguration.controllerConstructor();
             mWidgetConfiguration.initLayout();

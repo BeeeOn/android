@@ -13,11 +13,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.rehivetech.beeeon.R;
-import com.rehivetech.beeeon.adapter.Adapter;
-import com.rehivetech.beeeon.adapter.device.Device;
-import com.rehivetech.beeeon.adapter.device.Facility;
-import com.rehivetech.beeeon.adapter.device.RefreshInterval;
-import com.rehivetech.beeeon.adapter.location.Location;
+import com.rehivetech.beeeon.household.adapter.Adapter;
+import com.rehivetech.beeeon.household.device.Device;
+import com.rehivetech.beeeon.household.device.Facility;
+import com.rehivetech.beeeon.household.device.RefreshInterval;
+import com.rehivetech.beeeon.household.location.Location;
 import com.rehivetech.beeeon.arrayadapter.DeviceArrayAdapter;
 import com.rehivetech.beeeon.asynctask.CallbackTask;
 import com.rehivetech.beeeon.asynctask.ReloadFacilitiesTask;
@@ -89,13 +89,13 @@ public class WidgetClockConfiguration extends WidgetConfiguration{
                 if (mAdapters.get(i).getId().equals(adapterId)) {
                     mAdapterSpinner.setSelection(i);
 
-                    List<Location> locations = mController.getLocations(adapterId);
+                    List<Location> locations = mController.getLocationsModel().getLocationsByAdapter(adapterId);
                     mLocations = locations;
 
                     mDevices.clear();
                     // get all devices by locations (avoiding facility without location)
                     for(Location loc : mLocations){
-                        List<Facility> tempFac = mController.getFacilitiesByLocation(adapterId, loc.getId());
+                        List<Facility> tempFac = mController.getFacilitiesModel().getFacilitiesByLocation(adapterId, loc.getId());
                         for (Facility facility : tempFac) {
                             mDevices.addAll(facility.getDevices());
                         }
@@ -160,16 +160,16 @@ public class WidgetClockConfiguration extends WidgetConfiguration{
             @Override
             public void onExecute(boolean success) {
                 // check if new locations are awailable
-                mController.reloadLocations(adapterId, false);
+                mController.getLocationsModel().reloadLocationsByAdapter(adapterId, false);
                 // get all locations
                 mLocations.clear();
-                List<Location> locations = mController.getLocations(adapterId);
+                List<Location> locations = mController.getLocationsModel().getLocationsByAdapter(adapterId);
                 mLocations.addAll(locations);
 
                 mDevices.clear();
                 // get all devices by locations (avoiding facility without location)
                 for(Location loc : mLocations){
-                    List<Facility> tempFac = mController.getFacilitiesByLocation(adapterId, loc.getId());
+                    List<Facility> tempFac = mController.getFacilitiesModel().getFacilitiesByLocation(adapterId, loc.getId());
                     for (Facility facility : tempFac) {
                         mDevices.addAll(facility.getDevices());
                     }

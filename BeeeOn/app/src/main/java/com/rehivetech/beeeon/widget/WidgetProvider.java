@@ -67,14 +67,8 @@ abstract public class WidgetProvider extends AppWidgetProvider {
         Log.d(TAG, "onDeleted()");
         super.onDeleted(context, appWidgetIds);
 
-        // delete removed widgets settings
-        for (int widgetId : appWidgetIds) {
-            WidgetData widgetData = WidgetService.getWidgetData(widgetId, context);
-            if(widgetData == null) continue;
-
-            widgetData.deleteData(context);
-            WidgetService.deleteWidgetData(widgetData);
-        }
+        // delete widget from service
+        context.startService(WidgetService.getWidgetDeleteIntent(context, appWidgetIds));
     }
 
     @Override

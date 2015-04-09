@@ -14,9 +14,9 @@ import android.widget.RemoteViews;
 import android.widget.RemoteViewsService;
 
 import com.rehivetech.beeeon.R;
-import com.rehivetech.beeeon.adapter.Adapter;
-import com.rehivetech.beeeon.adapter.device.Device;
-import com.rehivetech.beeeon.adapter.device.Facility;
+import com.rehivetech.beeeon.household.adapter.Adapter;
+import com.rehivetech.beeeon.household.device.Device;
+import com.rehivetech.beeeon.household.device.Facility;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.util.Log;
 import com.rehivetech.beeeon.util.TimeHelper;
@@ -55,11 +55,17 @@ class ListRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory {
     private Controller mController;
     private int mWidgetId;
 
+    private String mLocationId;
+    private String mLocationAdapterId;
+
     public ListRemoteViewsFactory(Context context, Intent intent) {
         mContext = context;
         mController = Controller.getInstance(context);
         mWidgetId = intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, AppWidgetManager.INVALID_APPWIDGET_ID);
         mDevices = new ArrayList<>();
+
+        mLocationId = intent.getStringExtra(WidgetLocationListProvider.EXTRA_LOCATION_ID);
+        mLocationAdapterId = intent.getStringExtra(WidgetLocationListProvider.EXTRA_ITEM_ADAPTER_ID);
 
         SharedPreferences userSettings = mController.getUserSettings();
 
@@ -97,7 +103,7 @@ class ListRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory {
             return rv;
         }
 
-        Adapter adapter = mController.getAdapter(dev.getFacility().getAdapterId());
+        Adapter adapter = mController.getAdaptersModel().getAdapter(dev.getFacility().getAdapterId());
 
         rv.setTextViewText(R.id.widget_loc_item_name, dev.getName());
         rv.setImageViewResource(R.id.widget_loc_item_icon, dev.getIconResource());
@@ -154,9 +160,9 @@ class ListRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory {
         // TODO problem when changed room
         // TODO checking if new data not all the time refresh
 
-        WidgetLocationData widgetData = (WidgetLocationData) WidgetService.getWidgetData(mWidgetId, mContext);
+;
 
-        mFacilities = mController.getFacilitiesByLocation(widgetData.adapterId, widgetData.locationId);
+        mFacilities = mController.getFacilitiesModel().getFacilitiesByLocation(mLocationAdapterId, mLocationId);
         for(Facility fac : mFacilities){
             if(fac == null) continue;
 

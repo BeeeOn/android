@@ -13,9 +13,9 @@ import android.os.IBinder;
 import android.os.SystemClock;
 import android.util.SparseArray;
 
-import com.rehivetech.beeeon.adapter.device.Device;
-import com.rehivetech.beeeon.adapter.device.Facility;
-import com.rehivetech.beeeon.adapter.location.Location;
+import com.rehivetech.beeeon.household.device.Device;
+import com.rehivetech.beeeon.household.device.Facility;
+import com.rehivetech.beeeon.household.location.Location;
 import com.rehivetech.beeeon.asynctask.ActorActionTask;
 import com.rehivetech.beeeon.asynctask.CallbackTask;
 import com.rehivetech.beeeon.controller.Controller;
@@ -35,13 +35,14 @@ import java.util.List;
 public class WidgetService extends Service {
     private final static String TAG = WidgetService.class.getSimpleName();
 
-    private static final String EXTRA_FORCE_UPDATE = "com.rehivetech.beeeon.forceUpdate";
-    private static final String EXTRA_STANDBY = "com.rehivetech.beeeon.standby";
-
-    private static final String EXTRA_ACTOR_CHANGE = "com.rehivetech.beeeon.actor_change";
-
     public static final int UPDATE_INTERVAL_DEFAULT = 10; // in seconds
     public static final int UPDATE_INTERVAL_MIN = 5; // in seconds
+
+    private static final String EXTRA_FORCE_UPDATE = "com.rehivetech.beeeon.forceUpdate";
+    private static final String EXTRA_STANDBY = "com.rehivetech.beeeon.standby";
+    private static final String EXTRA_ACTOR_CHANGE = "com.rehivetech.beeeon.actor_change";
+    private static final String EXTRA_DELETE_WIDGET = "com.rehivetech.beeeon.delete_widget";
+    private static final String EXTRA_DELETE_WIDGET_IDS = "com.rehivetech.beeeon.delete_widget_id";
 
     private Context mContext;
     private Controller mController;
@@ -49,7 +50,7 @@ public class WidgetService extends Service {
     private BroadcastReceiver mBroadcastBridge;
 
     // list of available widgets
-    public static SparseArray<WidgetData> awailableWidgets = new SparseArray<WidgetData>();
+    private static SparseArray<WidgetData> availableWidgets = new SparseArray<WidgetData>();
     // list of actually used facilities (some widgets use these facilities)
     public static List<Facility> usedFacilities = new ArrayList<Facility>();
     public static List<Location> usedLocations = new ArrayList<Location>();
@@ -79,13 +80,6 @@ public class WidgetService extends Service {
         Log.d(TAG, "stopUpdating()");
 
         stopAlarm(context);
-
-        // removes all widgets in list
-        WidgetService.awailableWidgets.clear();
-        // removes all used facilities
-        WidgetService.usedFacilities.clear();
-        // removes all used locations
-        WidgetService.usedLocations.clear();
 
         // stop this service
         final Intent intent =  getUpdateIntent(context);
@@ -175,16 +169,20 @@ public class WidgetService extends Service {
     public static Intent getActorChangeIntent(Context context, int widgetId){
         Intent intent = new Intent(context, WidgetService.class);
         intent.putExtra(WidgetService.EXTRA_ACTOR_CHANGE, true);
-        intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, new int[]{
-                widgetId
-        });
-
+        intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, new int[]{ widgetId });
         return intent;
     }
 
     public static PendingIntent getActorChangePendingIntent(Context context, int widgetId) {
         final Intent intent = getActorChangeIntent(context, widgetId);
         return PendingIntent.getService(context, widgetId, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+    }
+
+    public static Intent getWidgetDeleteIntent(Context context, int[] widgetIds) {
+        Intent intent = new Intent(context, WidgetService.class);
+        intent.putExtra(WidgetService.EXTRA_DELETE_WIDGET, true);
+        intent.putExtra(WidgetService.EXTRA_DELETE_WIDGET_IDS, widgetIds);
+        return intent;
     }
 
     @Override
@@ -217,6 +215,14 @@ public class WidgetService extends Service {
                 return START_STICKY;
             }
 
+            // widget deletion
+            boolean isDeleteWidget = intent.getBooleanExtra(EXTRA_DELETE_WIDGET, false);
+            if(isDeleteWidget){
+                int[] widgetIds = intent.getIntArrayExtra(EXTRA_DELETE_WIDGET_IDS);
+                widgetsDelete(widgetIds);
+            }
+
+            // force update
             isForceUpdate = intent.getBooleanExtra(EXTRA_FORCE_UPDATE, false);
         }
 
@@ -231,7 +237,6 @@ public class WidgetService extends Service {
                 setAlarm(nextUpdate);
             } else {
                 Log.d(TAG, "No planned next update");
-                //stopSelf();
                 WidgetService.stopUpdating(mContext);
                 return START_STICKY;
             }
@@ -249,6 +254,24 @@ public class WidgetService extends Service {
 
         // TODO should be start_sticky or start_not_sticky (was)
         return START_STICKY;
+    }
+
+    /**
+     * Deletes widgets data by Ids
+     * @param widgetIds
+     */
+    private void widgetsDelete(int[] widgetIds) {
+        for(int widgetId : widgetIds){
+            if(widgetId == AppWidgetManager.INVALID_APPWIDGET_ID) continue;
+
+            WidgetData data = getWidgetData(widgetId);
+            if(data == null) continue;
+
+            Log.v(TAG, String.format("delete widgetData(%d)", widgetId));
+
+            data.deleteData(mContext);
+            availableWidgets.delete(widgetId);
+        }
     }
 
     /**
@@ -273,6 +296,13 @@ public class WidgetService extends Service {
     @Override
     public void onDestroy(){
         super.onDestroy();
+
+        // removes all widgets in list
+        availableWidgets.clear();
+        // removes all used facilities
+        usedFacilities.clear();
+        // removes all used locations
+        usedLocations.clear();
 
         if(mBroadcastBridge != null){
             Log.d(TAG, "UNregistering");
@@ -304,7 +334,7 @@ public class WidgetService extends Service {
         for(int widgetId : allWidgetIds){
             // TODO toto je spatne
             final WidgetSensorData widgetData = (WidgetSensorData) getWidgetData(widgetId);
-            final Device dev = mController.getDevice(widgetData.adapterId, widgetData.deviceId);
+            final Device dev = mController.getFacilitiesModel().getDevice(widgetData.adapterId, widgetData.deviceId);
 
             ActorActionTask mActorActionTask = new ActorActionTask(mContext.getApplicationContext());
             mActorActionTask.setListener(new CallbackTask.CallbackTaskListener() {
@@ -331,7 +361,7 @@ public class WidgetService extends Service {
 
         // check login state and for one cycle set flag
         if((mController.isLoggedIn() && !isLoggedInLast) || (!mController.isLoggedIn() && isLoggedInLast)){
-            Log.d(TAG, "change state!");
+            Log.d(TAG, "changed login state!");
             isLoginStateChanged = true;
             isLoggedInLast = mController.isLoggedIn();
         }
@@ -355,7 +385,7 @@ public class WidgetService extends Service {
         SparseArray<WidgetData> widgetsToUpdate = new SparseArray<>();
 
         // Reload adapters to have data about Timezone offset
-        mController.reloadAdapters(false);
+        mController.getAdaptersModel().reloadAdapters(false);
         //mController.reloadLocations()
 
         // update all widgets
@@ -417,7 +447,7 @@ public class WidgetService extends Service {
 		}
 
         if (!WidgetService.usedFacilities.isEmpty()) {
-            mController.updateFacilities(WidgetService.usedFacilities, isForceUpdate);
+            mController.getFacilitiesModel().refreshFacilities(WidgetService.usedFacilities, isForceUpdate);
         }
 
         for (int i = 0; i < widgetsToUpdate.size(); i++) {
@@ -451,7 +481,7 @@ public class WidgetService extends Service {
      * @return widget data class
      */
     public static WidgetData getWidgetData(int widgetId, Context context){
-        WidgetData widgetData = awailableWidgets.get(widgetId);
+        WidgetData widgetData = availableWidgets.get(widgetId);
         if (widgetData == null) {
             String widgetClassName = WidgetData.getSettingClassName(context, widgetId);
             // TODO mozna nejaka chyba??
@@ -462,7 +492,8 @@ public class WidgetService extends Service {
                 // instantiate class from string
                 widgetData = (WidgetData) Class.forName(widgetClassName).getConstructor(int.class).newInstance(widgetId);
                 widgetData.loadData(context);
-                awailableWidgets.put(widgetId, widgetData);
+                availableWidgets.put(widgetId, widgetData);
+                Log.v(TAG, String.format("finished creation of WidgetData(%d)", widgetId));
             } catch (ClassNotFoundException e) {
                 e.printStackTrace();
                 return null;
@@ -483,15 +514,6 @@ public class WidgetService extends Service {
 
         return widgetData;
     }
-
-    /**
-     * Deletes widget data from list of widget datas
-     * @param widgetData object of WidgetData
-     */
-    public static void deleteWidgetData(WidgetData widgetData){
-        WidgetService.awailableWidgets.delete(widgetData.getWidgetId());
-    }
-
 
     /**
      * Get next time to update widgets
@@ -570,4 +592,6 @@ public class WidgetService extends Service {
     public IBinder onBind(Intent intent) {
         return null;
     }
+
+
 }

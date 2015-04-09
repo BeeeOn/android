@@ -11,13 +11,13 @@ import android.view.View;
 import android.widget.RemoteViews;
 
 import com.rehivetech.beeeon.R;
-import com.rehivetech.beeeon.adapter.Adapter;
-import com.rehivetech.beeeon.adapter.device.Device;
-import com.rehivetech.beeeon.adapter.device.Facility;
-import com.rehivetech.beeeon.adapter.device.RefreshInterval;
-import com.rehivetech.beeeon.adapter.device.values.BaseValue;
-import com.rehivetech.beeeon.adapter.device.values.OnOffValue;
-import com.rehivetech.beeeon.adapter.device.values.OpenClosedValue;
+import com.rehivetech.beeeon.household.adapter.Adapter;
+import com.rehivetech.beeeon.household.device.Device;
+import com.rehivetech.beeeon.household.device.Facility;
+import com.rehivetech.beeeon.household.device.RefreshInterval;
+import com.rehivetech.beeeon.household.device.values.BaseValue;
+import com.rehivetech.beeeon.household.device.values.OnOffValue;
+import com.rehivetech.beeeon.household.device.values.OpenClosedValue;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.util.Log;
 import com.rehivetech.beeeon.util.UnitsHelper;
@@ -118,6 +118,7 @@ public class WidgetSensorProvider extends WidgetProvider{
 
                 if(value instanceof OnOffValue || value instanceof OpenClosedValue){
                     mRemoteViews.setViewVisibility(R.id.widget_viewstub_on_off, View.VISIBLE);
+                    // TODO pridat hodnotu, kterou chci
                     mRemoteViews.setOnClickPendingIntent(R.id.widget_switchcompat, WidgetService.getActorChangePendingIntent(mContext, mWidgetId));
                 }
             }
@@ -131,8 +132,8 @@ public class WidgetSensorProvider extends WidgetProvider{
     public void changeData() {
         long timeNow = SystemClock.elapsedRealtime();
 
-        Adapter adapter = mController.getAdapter(mWidgetData.adapterId);
-        Device device = mController.getDevice(mWidgetData.adapterId, mWidgetData.deviceId);
+        Adapter adapter = mController.getAdaptersModel().getAdapter(mWidgetData.adapterId);
+        Device device = mController.getFacilitiesModel().getDevice(mWidgetData.adapterId, mWidgetData.deviceId);
 
         if (device != null) {
             // Get fresh data from device
@@ -238,11 +239,11 @@ public class WidgetSensorProvider extends WidgetProvider{
 
         Log.d(TAG, String.format("[%d-%d] x [%d-%d] -> %s", min_width, max_width, min_height, max_height, name));
 
-        WidgetSensorData mWidgetData = (WidgetSensorData) WidgetService.getWidgetData(appWidgetId, context);
-        if(mWidgetData == null) return;
+        WidgetSensorData widgetData = (WidgetSensorData) WidgetService.getWidgetData(appWidgetId, context);
+        if(widgetData == null) return;
 
-        mWidgetData.saveLayout(context, layout);
-        mWidgetData.saveData(context);
+        widgetData.saveLayout(context, layout);
+        widgetData.saveData(context);
 
         // force update widget
         context.startService(WidgetService.getForceUpdateIntent(context, appWidgetId));

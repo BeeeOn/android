@@ -19,6 +19,7 @@ import android.widget.Toast;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.rehivetech.beeeon.IIdentifier;
+import com.rehivetech.beeeon.INameIdentifier;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
