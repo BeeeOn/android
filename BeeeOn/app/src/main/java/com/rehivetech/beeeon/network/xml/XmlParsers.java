@@ -136,7 +136,7 @@ public class XmlParsers {
 		String version = getSecureAttrValue(Xconstants.VERSION);
 
 		if (!version.equals(COM_VER)) {
-			throw new AppException(NetworkError.COM_VER_MISMATCH)
+			throw new AppException(NetworkError.SRV_COM_VER_MISMATCH)
 				.set("Expected", COM_VER)
 				.set("Real", version);
 		}
@@ -439,7 +439,7 @@ public class XmlParsers {
 				String[] parts = row.split(Xconstants.ROW_DATA_SEPARATOR);
 				if (parts.length != 2) {
 					Log.e(TAG, String.format("Wrong number of parts (%d) of data: %s", parts.length, row));
-					throw new AppException(NetworkError.XML).set("parts", parts);
+					throw new AppException(NetworkError.CL_XML).set("parts", parts);
 				}
 
 				// Parse values
@@ -452,7 +452,7 @@ public class XmlParsers {
 					log.addValue(dateMillis, value);
 				}
 			} catch (NumberFormatException e) {
-				throw AppException.wrap(e, NetworkError.XML);
+				throw AppException.wrap(e, NetworkError.CL_XML);
 			}
 		} while (mParser.nextTag() != XmlPullParser.END_TAG && !mParser.getName().equals(Xconstants.COM_ROOT));
 
@@ -1080,7 +1080,7 @@ public class XmlParsers {
 
 			String version = getSecureAttrValue(Xconstants.VERSION);
 			if (!version.equals(COM_VER)) {
-				throw new AppException(NetworkError.COM_VER_MISMATCH)
+				throw new AppException(NetworkError.SRV_COM_VER_MISMATCH)
 					.set("Expected", COM_VER)
 					.set("Real", version);
 			}
@@ -1119,7 +1119,7 @@ public class XmlParsers {
 
 			String version = getSecureAttrValue(Xconstants.VERSION);
 			if (!version.equals(COM_VER)) {
-				throw new AppException(NetworkError.COM_VER_MISMATCH)
+				throw new AppException(NetworkError.SRV_COM_VER_MISMATCH)
 					.set("Expected", COM_VER)
 					.set("Real", version);
 			}
@@ -1158,7 +1158,7 @@ public class XmlParsers {
 
 			String version = getSecureAttrValue(Xconstants.VERSION);
 			if (!version.equals(COM_VER)) {
-				throw new AppException(NetworkError.COM_VER_MISMATCH)
+				throw new AppException(NetworkError.SRV_COM_VER_MISMATCH)
 					.set("Expected", COM_VER)
 					.set("Real", version);
 			}
@@ -1190,7 +1190,7 @@ public class XmlParsers {
 
 			String version = getSecureAttrValue(Xconstants.VERSION);
 			if (!version.equals(COM_VER)) {
-				throw new AppException(NetworkError.COM_VER_MISMATCH)
+				throw new AppException(NetworkError.SRV_COM_VER_MISMATCH)
 						.set("Expected", COM_VER)
 						.set("Real", version);
 			}

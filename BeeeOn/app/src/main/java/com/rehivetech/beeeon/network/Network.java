@@ -128,7 +128,7 @@ public class Network implements INetwork {
 	 * @param w
 	 * @param closeWriter
 	 * @param request
-	 * @throws AppException with error NetworkError.SOCKET_PROBLEM
+	 * @throws AppException with error NetworkError.CL_SOCKET
 	 */
 	public void sendRequest(final Writer w, final String request, final boolean closeWriter) throws AppException {
 		// Send request
@@ -136,7 +136,7 @@ public class Network implements INetwork {
 			w.write(request, 0, request.length());
 			w.flush();
 		} catch (IOException e) {
-			throw AppException.wrap(e, NetworkError.SOCKET_PROBLEM);
+			throw AppException.wrap(e, NetworkError.CL_SOCKET);
 		} finally {
 			if (closeWriter) {
 				try {
@@ -154,7 +154,7 @@ public class Network implements INetwork {
 	 * @param r
 	 * @param closeReader
 	 * @return response
-	 * @throws AppException with error NetworkError.SOCKET_PROBLEM
+	 * @throws AppException with error NetworkError.CL_SOCKET
 	 */
 	public String receiveResponse(final BufferedReader r, final boolean closeReader) throws AppException {
 		// Receive response
@@ -167,7 +167,7 @@ public class Network implements INetwork {
 					break;
 			}
 		} catch (IOException e) {
-			throw AppException.wrap(e, NetworkError.SOCKET_PROBLEM);
+			throw AppException.wrap(e, NetworkError.CL_SOCKET);
 		} finally {
 			// If we use persistent connection, don't close the socket and objects
 			if (closeReader) {
@@ -187,7 +187,7 @@ public class Network implements INetwork {
 	 *
 	 * @param request
 	 * @return
-	 * @throws AppException with error NetworkError.UNKNOWN_HOST, NetworkError.INVALID_CERTIFICATE or NetworkError.SOCKET_PROBLEM
+	 * @throws AppException with error NetworkError.CL_UNKNOWN_HOST, NetworkError.CL_CERTIFICATE or NetworkError.CL_SOCKET
 	 */
 	private String startCommunication(String request) throws AppException {
 		// Init socket
@@ -213,7 +213,7 @@ public class Network implements INetwork {
 				r = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 			} catch (IOException e) {
 				// Error when getting socket's output/input stream
-				throw AppException.wrap(e, NetworkError.SOCKET_PROBLEM);
+				throw AppException.wrap(e, NetworkError.CL_SOCKET);
 			}
 		}
 		// Send request (and close writer if not multi session)
@@ -250,7 +250,7 @@ public class Network implements INetwork {
 	 * certificates. CA certificated must be located in assets folder.
 	 *
 	 * @return Initialized socket or throws exception
-	 * @throws AppException with error NetworkError.UNKNOWN_HOST, NetworkError.INVALID_CERTIFICATE or NetworkError.SOCKET_PROBLEM
+	 * @throws AppException with error NetworkError.CL_UNKNOWN_HOST, NetworkError.CL_CERTIFICATE or NetworkError.CL_SOCKET
 	 */
 	private SSLSocket initSocket() {
 		try {
@@ -293,35 +293,35 @@ public class Network implements INetwork {
 			// Verify that the certificate hostName
 			// This is due to lack of SNI support in the current SSLSocket.
 			if (!hv.verify(SERVER_CN_CERTIFICATE, s)) {
-				throw new AppException("Certificate is not verified!", NetworkError.INVALID_CERTIFICATE)
+				throw new AppException("Certificate is not verified!", NetworkError.CL_CERTIFICATE)
 						.set("Expected CN", SERVER_CN_CERTIFICATE)
 						.set("Found CN", s.getPeerPrincipal());
 			}
 			return socket;
 		} catch (UnknownHostException e) {
 			// UnknownHostException - Server address or hostName wasn't not found
-			throw AppException.wrap(e, NetworkError.UNKNOWN_HOST);
+			throw AppException.wrap(e, NetworkError.CL_UNKNOWN_HOST);
 		} catch (ConnectException e) {
 			// ConnectException - Connection refused, timeout, etc.
-			throw AppException.wrap(e, NetworkError.SERVER_CONNECTION);
+			throw AppException.wrap(e, NetworkError.CL_SERVER_CONNECTION);
 		} catch (KeyManagementException | NoSuchAlgorithmException | KeyStoreException | CertificateException | IOException e) {
 			// IOException - Can't read CA certificate from assets or can't create new socket
 			// CertificateException - Unknown certificate format (default X.509), can't generate CA certificate (it shouldn't occur)
 			// KeyStoreException - Bad type of KeyStore, can't set CA certificate to KeyStore
 			// NoSuchAlgorithmException - Unknown SSL/TLS protocol or unknown TrustManager algorithm (it shouldn't occur)
 			// KeyManagementException - general exception, thrown to indicate an exception during processing an operation concerning key management
-			throw AppException.wrap(e, NetworkError.SOCKET_PROBLEM);
+			throw AppException.wrap(e, NetworkError.CL_SOCKET);
 		}
 	}
 
 	/**
 	 * Method initialize perma-Socket/Reader/Writer for doing more requests to server with this single connection
 	 * On success set mIsMulti = true, on failure call MultiSessionEnd and throw AppException
-	 * @throws AppException with error NetworkError.INTERNET_CONNECTION or NetworkError.SOCKET_PROBLEM
+	 * @throws AppException with error NetworkError.CL_INTERNET_CONNECTION or NetworkError.CL_SOCKET
 	 */
 	public synchronized void multiSessionBegin() throws AppException {
 		if (!isAvailable())
-			throw new AppException(NetworkError.INTERNET_CONNECTION);
+			throw new AppException(NetworkError.CL_INTERNET_CONNECTION);
 
 		if (mIsMulti)
 			return;
@@ -339,7 +339,7 @@ public class Network implements INetwork {
 			// Close any opened socket/writer/reader
 			multiSessionEnd();
 
-			throw AppException.wrap(e, NetworkError.SOCKET_PROBLEM);
+			throw AppException.wrap(e, NetworkError.CL_SOCKET);
 		}
 	}
 
@@ -404,19 +404,19 @@ public class Network implements INetwork {
 	 * Send request to server and return parsedMessage or throw exception on error.
 	 *
 	 * @param messageToSend
-	 * @param checkBT - when true and BT is not present in Network, then throws AppException with NetworkError.BAD_BT
+	 * @param checkBT - when true and BT is not present in Network, then throws AppException with NetworkError.SRV_BAD_BT
 	 *                - this logically must be false for requests like register or login, which doesn't require BT for working
 	 * @return
-	 * @throws AppException with error NetworkError.INTERNET_CONNECTION, NetworkError.BAD_BT, NetworkError.XML, NetworkError.UNKNOWN_HOST, NetworkError.INVALID_CERTIFICATE or NetworkError.SOCKET_PROBLEM
+	 * @throws AppException with error NetworkError.CL_INTERNET_CONNECTION, NetworkError.SRV_BAD_BT, NetworkError.CL_XML, NetworkError.CL_UNKNOWN_HOST, NetworkError.CL_CERTIFICATE or NetworkError.CL_SOCKET
 	 */
 	private synchronized ParsedMessage doRequest(String messageToSend, boolean checkBT) throws AppException {
 		// Check internet connection
 		if (!isAvailable())
-			throw new AppException(NetworkError.INTERNET_CONNECTION);
+			throw new AppException(NetworkError.CL_INTERNET_CONNECTION);
 
 		// Check existence of BT
 		if (checkBT && !hasBT())
-			throw new AppException(NetworkError.BAD_BT);
+			throw new AppException(NetworkError.SRV_BAD_BT);
 
 		// ParsedMessage msg = null;
 		// Debug.startMethodTracing("Support_231");
@@ -428,7 +428,7 @@ public class Network implements INetwork {
 
 			return new XmlParsers().parseCommunication(result, false);
 		} catch (IOException | XmlPullParserException | ParseException e) {
-			throw AppException.wrap(e, NetworkError.XML);
+			throw AppException.wrap(e, NetworkError.CL_XML);
 		} finally {
 			// Debug.stopMethodTracing();
 			// ltime = new Date().getTime() - ltime;
@@ -452,7 +452,7 @@ public class Network implements INetwork {
 		FalseAnswer fa = (FalseAnswer) msg.data;
 
 		// Delete BT when we receive error saying that it is invalid
-		if (fa.getErrCode() == NetworkError.BAD_BT.getNumber())
+		if (fa.getErrCode() == NetworkError.SRV_BAD_BT.getNumber())
 			mBT = "";
 
 		// Throw AppException for the caller

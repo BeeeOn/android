@@ -326,13 +326,10 @@
     <string name="users_pending_header">Žádost o přidání</string>
     <string name="title_activity_location_detail_screen">Detail umístění</string>
 	<string name="sensor_name_label">Name of sensor</string>
-	<string name="dialog_register_new_account_title">Nezaregistrováno</string>
+	<string name="dialog_register_new_account_title">Nemáte účet</string>
 	<string name="dialog_register_new_account_message">Ještě nemáte vytvořený BeeeOn účet, přejete si jej vytvořit nyní?</string>
 
     <string name="actor_required">Je potřeba vybrat aktor</string>
-	<string name="NetworkError___INVALID_CERTIFICATE">Neplatný certifikát</string>
-	<string name="NetworkError___SOCKET_PROBLEM">Nelze vytvořit soket</string>
-	<string name="NetworkError___UNKNOWN_HOST">Neznámý uživatel</string>
 	<string name="add_new_geofence_area">Přidat novou oblast</string>
 	<string name="delete_geofence">Odstranit oblast</string>
 	<string name="devices">Zařízení</string>

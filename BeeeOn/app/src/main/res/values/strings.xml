@@ -324,7 +324,7 @@
 	<string name="title_activity_sensor_edit">Device Edit</string>
 	<string name="sensor_name_label">Name of sensor</string>
 
-	<string name="dialog_register_new_account_title">Not registered</string>
+	<string name="dialog_register_new_account_title">No account</string>
 	<string name="dialog_register_new_account_message">You don\'t have a BeeeOn account yet, do you want to create it now?</string>
 	<string name="name">Name</string>
 	<string name="add_new_geofence_area">Add new geofence area</string>
@@ -334,7 +334,7 @@
 	<string name="unit_meter_short" translatable="false">m</string>
 	<string name="tutorial_go_to_app">START</string>
 
-    <string name="devices">Remove geofence</string>
+    <string name="devices">Devices</string>
 	<string name="rule_delete_dialog">Please confirm rule removal</string>
 	<string name="toast_delete_fail">Unable to remove</string>
 	<string name="toast_delete_success">Successfully removed</string>
