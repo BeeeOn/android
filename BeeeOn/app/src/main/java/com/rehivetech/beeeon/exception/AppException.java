@@ -87,7 +87,7 @@ public class AppException extends RuntimeException {
 			s.println(this);
 			s.println("\t-------------------------------");
 			if (mErrorCode != null) {
-				s.println("\t" + mErrorCode + ":" + mErrorCode.getClass().getName());
+				s.println("\t" + mErrorCode + "(" + mErrorCode.getNumber() + "):" + mErrorCode.getClass().getName());
 			}
 			for (String key : mProperties.keySet()) {
 				s.println("\t" + key + "=[" + mProperties.get(key) + "]");
