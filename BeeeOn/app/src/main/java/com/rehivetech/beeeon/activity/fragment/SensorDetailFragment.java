@@ -74,6 +74,7 @@ public class SensorDetailFragment extends Fragment {
 	// GUI elements
 	private TextView mName;
 	private TextView mLocation;
+	private ImageView mLocationIcon;
 	private TextView mValue;
 	private SwitchCompat mValueSwitch;
 	private TextView mTime;
@@ -198,6 +199,7 @@ public class SensorDetailFragment extends Fragment {
 		mName = (TextView) mView.findViewById(R.id.sen_detail_name);
 		// Get View for sensor location
 		mLocation = (TextView) mView.findViewById(R.id.sen_detail_loc_name);
+		mLocationIcon = (ImageView) mView.findViewById(R.id.sen_detail_loc_icon);
 		// Get View for sensor value
 		mValue = (TextView) mView.findViewById(R.id.sen_detail_value);
 		mValueSwitch = (SwitchCompat) mView.findViewById(R.id.sen_detail_value_switch);
@@ -264,6 +266,7 @@ public class SensorDetailFragment extends Fragment {
 
 			if (location != null) {
 				mLocation.setText(location.getName());
+				mLocationIcon.setImageResource(location.getIconResource());
 			}
 			if(mController.isUserAllowed(mAdapter.getRole())) {
 

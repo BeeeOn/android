@@ -5,6 +5,7 @@ package com.rehivetech.beeeon.household.device;
 
 import com.rehivetech.beeeon.IIdentifier;
 import com.rehivetech.beeeon.NameIdentifierComparator;
+import com.rehivetech.beeeon.household.location.Location;
 
 import org.joda.time.DateTime;
 
@@ -117,6 +118,10 @@ public class Facility implements IIdentifier {
 	 * @param locationId
 	 */
 	public void setLocationId(String locationId) {
+		// From server we've got "", but internally we need to use Location.NO_LOCATION_ID
+		if (locationId.isEmpty())
+			locationId = Location.NO_LOCATION_ID;
+
 		mLocationId = locationId;
 	}
 

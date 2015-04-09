@@ -124,7 +124,7 @@
 					android:layout_height="40dp"
 					android:layout_gravity="center"
 					android:layout_marginRight="16dp"
-					android:src="@drawable/loc_bath_room"/>
+					android:id="@+id/sen_detail_loc_icon"/>
 				<LinearLayout
 					android:layout_width="match_parent"
 					android:layout_height="match_parent"
@@ -136,7 +136,6 @@
 						android:layout_height="wrap_content"
 						android:textColor="@color/beeeon_text_color"
 						android:textSize="16sp"
-						android:text="Bathroom"
 						android:id="@+id/sen_detail_loc_name"/>
 					<TextView
 						android:layout_width="fill_parent"

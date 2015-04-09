@@ -33,6 +33,10 @@ public class LocationsModel {
 		mContext = context;
 	}
 
+	private Location createNoLocation(String adapterId) {
+		return new Location(Location.NO_LOCATION_ID, mContext.getString(R.string.loc_none), adapterId, Location.NO_LOCATION_TYPE);
+	}
+
 	/**
 	 * Return location from active adapter by id.
 	 *
@@ -40,6 +44,11 @@ public class LocationsModel {
 	 * @return Location if found, null otherwise.
 	 */
 	public Location getLocation(String adapterId, String id) {
+		// Support "no location"
+		if (id.equals(Location.NO_LOCATION_ID)) {
+			return createNoLocation(adapterId);
+		}
+
 		Map<String, Location> adapterLocations = mLocations.get(adapterId);
 		if (adapterLocations == null) {
 			return null;
@@ -67,8 +76,7 @@ public class LocationsModel {
 		Collections.sort(locations, new NameIdentifierComparator());
 
 		// Add "no location" for devices without location
-		Location noneLocation = new Location(Location.NO_LOCATION_ID, mContext.getString(R.string.loc_none), adapterId, Location.NO_LOCATION_TYPE);
-		locations.add(noneLocation);
+		locations.add(createNoLocation(adapterId));
 
 		return locations;
 	}
