@@ -22,6 +22,7 @@ import com.rehivetech.beeeon.exception.AppException;
 import com.rehivetech.beeeon.exception.ErrorCode;
 import com.rehivetech.beeeon.exception.NetworkError;
 import com.rehivetech.beeeon.network.authentication.DemoAuthProvider;
+import com.rehivetech.beeeon.network.authentication.FacebookAuthProvider;
 import com.rehivetech.beeeon.network.authentication.GoogleAuthProvider;
 import com.rehivetech.beeeon.network.authentication.IAuthProvider;
 import com.rehivetech.beeeon.util.BetterProgressDialog;
@@ -96,8 +97,25 @@ public class LoginActivity extends BaseActivity {
 		btnMojeID.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				Toast.makeText(v.getContext(), "Not Implemented yet", Toast.LENGTH_LONG).show();
-				// prepareLogin(new MojeIdAuthProvider());
+				// FIXME: use MojeId correctly or rework the button image and this selection dialog
+
+				// Show choose dialog for other providers
+				AlertDialog.Builder builder = new AlertDialog.Builder(LoginActivity.this);
+				builder.setTitle(R.string.dialog_choose_provider_title);
+				builder.setItems(new String[] { "Facebook", "MojeID" }, new DialogInterface.OnClickListener() {
+							@Override
+							public void onClick(DialogInterface dialog, int which) {
+								if (which == 0) {
+									// Facebook
+									prepareLogin(new FacebookAuthProvider());
+								} else {
+									// MojeID
+									Toast.makeText(LoginActivity.this, "Not implemented yet.", Toast.LENGTH_SHORT).show();
+									// prepareLogin(new MojeIdAuthProvider());
+								}
+							}
+						});
+				builder.show();
 			}
 		});
 
@@ -144,8 +162,19 @@ public class LoginActivity extends BaseActivity {
 				authProvider = new DemoAuthProvider();
 				break;
 			}
+			case FacebookAuthProvider.PROVIDER_ID: {
+				authProvider = new FacebookAuthProvider();
+				break;
+			}
 			default: {
-				Log.e(TAG, String.format("Unknown requestCode (%d)", requestCode));
+				if (FacebookAuthProvider.isFacebookRequestCode(requestCode)) {
+					authProvider = new FacebookAuthProvider();
+					((FacebookAuthProvider) authProvider).processResult(this, requestCode, resultCode, data);
+				} else {
+					Log.e(TAG, String.format("Unknown requestCode (%d)", requestCode));
+					mLoginCancel = true;
+					mProgress.dismiss();
+				}
 				return;
 			}
 		}

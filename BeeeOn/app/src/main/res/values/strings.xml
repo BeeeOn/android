@@ -326,6 +326,8 @@
 
 	<string name="dialog_register_new_account_title">No account</string>
 	<string name="dialog_register_new_account_message">You don\'t have a BeeeOn account yet, do you want to create it now?</string>
+	<string name="dialog_choose_provider_title">Choose login provider</string>
+
 	<string name="name">Name</string>
 	<string name="add_new_geofence_area">Add new geofence area</string>
 
