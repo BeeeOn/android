@@ -287,7 +287,7 @@ public class LoginActivity extends BaseActivity {
 
 					if (errorCode instanceof NetworkError) {
 						switch ((NetworkError) errorCode) {
-							case USER_NOT_EXISTS: {
+							case SRV_USER_NOT_EXISTS: {
 								// User is not registered on server yet, show registration question dialog
 								runOnUiThread(new Runnable() {
 									@Override
@@ -297,7 +297,7 @@ public class LoginActivity extends BaseActivity {
 								});
 								return;
 							}
-							case NOT_VALID_USER: {
+							case SRV_NOT_VALID_USER: {
 								// Server denied our credentials (e.g. Google token, or email+password)
 								if (authProvider instanceof GoogleAuthProvider) {
 									// Probably wrong Google token so invalidate the token and then try it again

@@ -1,12 +1,13 @@
 package com.rehivetech.beeeon.exception;
 
+import android.content.Context;
+
+import com.rehivetech.beeeon.R;
+
 import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.util.Map;
 import java.util.TreeMap;
-
-import android.content.Context;
-import com.rehivetech.beeeon.R;
 
 public class AppException extends RuntimeException {
 
@@ -101,6 +102,31 @@ public class AppException extends RuntimeException {
 			}
 			s.flush();
 		}
+	}
+
+	public String getSimpleErrorMessage() {
+		StringBuilder builder = new StringBuilder();
+
+		// ErrorCode type, number and class simple name (if present)
+		if (mErrorCode != null) {
+			builder.append(mErrorCode + "(" + mErrorCode.getNumber() + "):" + mErrorCode.getClass().getSimpleName() + ":");
+		}
+
+		// Exception class simple name
+		builder.append(getClass().getSimpleName());
+
+		// Error message (if present)
+		String msg = getLocalizedMessage();
+		if (msg != null) {
+			builder.append(": " + msg);
+		}
+
+		// Own set properties (if present)
+		for (String key : mProperties.keySet()) {
+			builder.append("\t" + key + "=[" + mProperties.get(key) + "]\n");
+		}
+
+		return builder.toString();
 	}
 
 	public String getTranslatedErrorMessage(Context context) {

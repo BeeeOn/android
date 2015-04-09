@@ -4,8 +4,8 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.widget.Toast;
 
-import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.exception.AppException;
+import com.rehivetech.beeeon.util.Log;
 
 public abstract class CallbackTask<Params> extends AsyncTask<Params, Void, Boolean> {
 
@@ -36,7 +36,10 @@ public abstract class CallbackTask<Params> extends AsyncTask<Params, Void, Boole
 		try {
 			success = doInBackground(params.length > 0 ? params[0] : null);
 		} catch (AppException e) {
+			// Remember exception so caller can get it via calling getException()
 			mException = e;
+			// And print it to log, so we know that something happened
+			Log.e(CallbackTask.this.getClass().getSimpleName(), e.getSimpleErrorMessage());
 		}
 		return success;
 	}

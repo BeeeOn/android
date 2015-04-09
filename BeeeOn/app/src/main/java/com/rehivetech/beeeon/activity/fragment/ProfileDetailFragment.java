@@ -269,7 +269,7 @@ public class ProfileDetailFragment extends Fragment implements Observer {
 		if(o.toString().equals("userName"))
 			fbSetOnClickLogout();
 		else if(o.toString().equals("connect_error")) {
-			if(isAdded()) mFbName.setText(getResources().getString(R.string.NetworkError___SHORT_NO_CONNECTION));
+			if(isAdded()) mFbName.setText(getResources().getString(R.string.social_no_connection));
 			else mFbName.setText("No connection"); // falls when trying to get resources
 		}
 		else if(o.toString().equals("not_logged"))
