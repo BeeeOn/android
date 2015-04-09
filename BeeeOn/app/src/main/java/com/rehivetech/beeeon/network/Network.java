@@ -39,6 +39,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.io.Writer;
+import java.net.ConnectException;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.security.KeyManagementException;
@@ -300,6 +301,9 @@ public class Network implements INetwork {
 		} catch (UnknownHostException e) {
 			// UnknownHostException - Server address or hostName wasn't not found
 			throw AppException.wrap(e, NetworkError.UNKNOWN_HOST);
+		} catch (ConnectException e) {
+			// ConnectException - Connection refused, timeout, etc.
+			throw AppException.wrap(e, NetworkError.SERVER_CONNECTION);
 		} catch (KeyManagementException | NoSuchAlgorithmException | KeyStoreException | CertificateException | IOException e) {
 			// IOException - Can't read CA certificate from assets or can't create new socket
 			// CertificateException - Unknown certificate format (default X.509), can't generate CA certificate (it shouldn't occur)
@@ -313,18 +317,18 @@ public class Network implements INetwork {
 	/**
 	 * Method initialize perma-Socket/Reader/Writer for doing more requests to server with this single connection
 	 * On success set mIsMulti = true, on failure call MultiSessionEnd and throw AppException
-	 * @throws AppException with error NetworkError.NO_CONNECTION or NetworkError.SOCKET_PROBLEM
+	 * @throws AppException with error NetworkError.INTERNET_CONNECTION or NetworkError.SOCKET_PROBLEM
 	 */
 	public synchronized void multiSessionBegin() throws AppException {
 		if (!isAvailable())
-			throw new AppException(NetworkError.NO_CONNECTION);
+			throw new AppException(NetworkError.INTERNET_CONNECTION);
 
 		if (mIsMulti)
 			return;
 
-		try {
-			permaSocket = initSocket();
+		permaSocket = initSocket();
 
+		try {
 			// At this point SSLSocket performed certificate verification and
 			// we have performed hostName verification, so it is safe to proceed.
 			permaWriter = new PrintWriter(permaSocket.getOutputStream());
@@ -403,12 +407,12 @@ public class Network implements INetwork {
 	 * @param checkBT - when true and BT is not present in Network, then throws AppException with NetworkError.BAD_BT
 	 *                - this logically must be false for requests like register or login, which doesn't require BT for working
 	 * @return
-	 * @throws AppException with error NetworkError.NO_CONNECTION, NetworkError.BAD_BT, NetworkError.XML, NetworkError.UNKNOWN_HOST, NetworkError.INVALID_CERTIFICATE or NetworkError.SOCKET_PROBLEM
+	 * @throws AppException with error NetworkError.INTERNET_CONNECTION, NetworkError.BAD_BT, NetworkError.XML, NetworkError.UNKNOWN_HOST, NetworkError.INVALID_CERTIFICATE or NetworkError.SOCKET_PROBLEM
 	 */
 	private synchronized ParsedMessage doRequest(String messageToSend, boolean checkBT) throws AppException {
 		// Check internet connection
 		if (!isAvailable())
-			throw new AppException(NetworkError.NO_CONNECTION);
+			throw new AppException(NetworkError.INTERNET_CONNECTION);
 
 		// Check existence of BT
 		if (checkBT && !hasBT())

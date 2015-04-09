@@ -3,9 +3,8 @@ package com.rehivetech.beeeon.exception;
 public enum NetworkError implements ErrorCode {
 
 	// FROM CLIENT
-	NO_CONNECTION(-1),
-	SERVER_NOT_RESPONDING(-2),
-	COM_PROBLEMS(-3),
+	INTERNET_CONNECTION(-1),
+	SERVER_CONNECTION(-2),
 	XML(-4),
 	SOCKET_PROBLEM(-5),
 	INVALID_CERTIFICATE(-6),

@@ -3,7 +3,7 @@
     <string name="NetworkError___XML">Problém s XML</string>
     <string name="NetworkError___SERVER_NOT_RESPONDING">Server neodpovedá</string>
     <string name="NetworkError___NO_SUCH_ENTITY">Neexistuje entita k zmene (zmenené pok rukami)</string>
-    <string name="NetworkError___NO_CONNECTION">Nie je dostupné pripojenie k Internetu</string>
+    <string name="NetworkError___INTERNET_CONNECTION">Nie je dostupné pripojenie k Internetu</string>
     <string name="NetworkError___NOT_VALID_USER">Zlý token alebo email</string>
     <string name="NetworkError___NOT_CONSISTENT_SENSOR_ADDR">Zlý ID/TYP -> errMessage obsahuje hlavičku s ID a TYPom</string>
     <string name="NetworkError___LOW_RIGHTS">Zlé práva (užívateľ nemá práva)</string>

@@ -3,6 +3,8 @@
 	<string name="unknown_error">Neznámá chyba</string>
 	<string name="error_message">Chyba č.%1$d: %2$s</string>
 
+	<string name="social_no_connection">Nelze se připojit</string>
+
 	<string name="NetworkError___COM_VER_MISMATCH">Verze vaší aplikace již není podporována.\n\nStáhněte si prosím novou verzi aplikace.</string>
 	<string name="NetworkError___NOT_VALID_USER">Byl zadán neplatný token nebo e-mail.</string>
 	<string name="NetworkError___ADAPTER_NOT_EXISTS">Adaptér s tímto číslem není na serveru znám.\n\nZkontrolujte, zda je správně připojen k internetové síti.</string>
@@ -32,9 +34,7 @@
 	<string name="NetworkError___INVALID_PROVIDER">Tento poskytovatel není k dispozici.</string>
 	<string name="NetworkError___INVALID_REQUEST">Tento typ požadavku není na serveru podporován.</string>
 
-	<string name="NetworkError___NO_CONNECTION">Není dostupné připojení k Internetu.\n\nZkontrolujte vaše nastavení.</string>
-	<string name="NetworkError___SHORT_NO_CONNECTION">Nelze se připojit</string>
+	<string name="NetworkError___INTERNET_CONNECTION">Není dostupné připojení k Internetu.\n\nZkontrolujte vaše nastavení.</string>
 	<string name="NetworkError___SERVER_NOT_RESPONDING">Server neodpovídá.\n\nZkuste to prosím znovu.</string>
-	<string name="NetworkError___COM_PROBLEMS">Nastal neznámý komunikační problém.\n\nZkuste to prosím později.</string>
 	<string name="NetworkError___XML">Nastal problém během parsování XML.\n\nZkuste to prosím znovu.</string>
 </resources>

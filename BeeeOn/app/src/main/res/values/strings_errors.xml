@@ -3,6 +3,8 @@
 	<string name="unknown_error">Unknown error</string>
 	<string name="error_message">Error #%1$d: %2$s</string>
 
+	<string name="social_no_connection">No connection</string>
+
 	<string name="NetworkError___ADAPTER_HAVE_YET">You have already registered this adapter.</string>
 	<string name="NetworkError___ADAPTER_NOT_EXISTS">This adapter has not connected to cloud yet.\n\nPlease check its Internet connection.</string>
 	<string name="NetworkError___ADAPTER_NOT_FREE">This adapter has already been registered by another user.\n\nHe can share adapter with you.</string>
@@ -32,12 +34,10 @@
 	<string name="NetworkError___INVALID_PROVIDER">This provider is not available.</string>
 	<string name="NetworkError___INVALID_REQUEST">This request is not supported by server.</string>
 
-	<string name="NetworkError___NO_CONNECTION">Internet connection is not available.\n\nPlease check Internet connection.</string>
-	<string name="NetworkError___SERVER_NOT_RESPONDING">Server does not respond.\n\nPlease try again.</string>
-	<string name="NetworkError___COM_PROBLEMS">Communication issue occured.\n\nTry again later.</string>
-	<string name="NetworkError___XML">XML parsing issue occured.\n\nPlease try again.</string>
-	<string name="NetworkError___SHORT_NO_CONNECTION">No connection</string>
-	<string name="NetworkError___SOCKET_PROBLEM">Cannot create socket</string>
+	<string name="NetworkError___INTERNET_CONNECTION">Internet connection is not available.\n\nPlease check your settings.</string>
+	<string name="NetworkError___SERVER_CONNECTION">Cannot connect to server.\n\nPlease try again later.</string>
+	<string name="NetworkError___XML">XML parsing issue occured.\n\nPlease try again later.</string>
+	<string name="NetworkError___SOCKET_PROBLEM">Cannot create or use socket.\n\nPlease try again later.</string>
 	<string name="NetworkError___INVALID_CERTIFICATE">Invalid certificate.</string>
-	<string name="NetworkError___UNKNOWN_HOST">Unknow host.</string>
+	<string name="NetworkError___UNKNOWN_HOST">Unknown host.</string>
 </resources>
