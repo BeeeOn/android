@@ -4,12 +4,9 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.ResolveInfo;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
-import android.util.Log;
 import android.widget.Toast;
 
 import com.facebook.share.widget.ShareDialog;
@@ -19,25 +16,14 @@ import com.rehivetech.beeeon.achievements.FbShareAchievement;
 import com.rehivetech.beeeon.gamification.AchievementListItem;
 import com.rehivetech.beeeon.socialNetworks.BeeeOnFacebook;
 import com.rehivetech.beeeon.socialNetworks.BeeeOnTwitter;
-import com.twitter.sdk.android.core.Callback;
-import com.twitter.sdk.android.core.Result;
-import com.twitter.sdk.android.core.TwitterApiClient;
-import com.twitter.sdk.android.core.TwitterCore;
-import com.twitter.sdk.android.core.TwitterException;
-import com.twitter.sdk.android.core.models.Tweet;
-import com.twitter.sdk.android.core.services.StatusesService;
-import com.twitter.sdk.android.tweetcomposer.TweetComposer;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * @author Jan Lamacz
  */
 public class ShareFragmentDialog extends DialogFragment {
-	private static final String TAG = ShareFragmentDialog.class.getSimpleName();
+//	private static final String TAG = ShareFragmentDialog.class.getSimpleName();
 
 	private ShareDialog mShareDialog;
 
@@ -72,14 +58,14 @@ public class ShareFragmentDialog extends DialogFragment {
 								if (which == 0)
 									Toast.makeText(getActivity(), "Google", Toast.LENGTH_LONG).show();
 								if (which == 1 && mFb.isPaired())
-									mShareDialog.show(mFb.shareAchievement(getActivity(), name, date));
+									mShareDialog.show(mFb.shareAchievement(name, date));
 								if (which == 2 && mTw.isPaired() ||
 										which == 1 && !mFb.isPaired()) {
 //									Intent in = new TweetComposer.Builder(getActivity())
 //											.text(name + " @beeeonapp")
 //											.createIntent();
 //									startActivityForResult(in, Constants.SHARE_TWITTER);
-									startActivityForResult(mTw.shareNetwork(name), Constants.SHARE_TWITTER);
+									startActivityForResult(mTw.shareAchievement(name), Constants.SHARE_TWITTER);
 								}
 							}
 						})

@@ -26,6 +26,7 @@ import com.rehivetech.beeeon.gamification.AchievementList;
 import com.rehivetech.beeeon.gamification.GamificationCategory;
 import com.rehivetech.beeeon.household.user.User;
 import com.rehivetech.beeeon.socialNetworks.BeeeOnFacebook;
+import com.rehivetech.beeeon.socialNetworks.BeeeOnSocialNetwork;
 import com.rehivetech.beeeon.socialNetworks.BeeeOnTwitter;
 import com.rehivetech.beeeon.util.Log;
 
@@ -99,7 +100,7 @@ public class ProfileDetailFragment extends Fragment implements Observer {
 
 //		setMoreButtonVisibility();
     	redrawCategories();
-		fbSetOnClickLogout();
+		setOnClickLogout(mFb, mFbName);
 
     	return mView;
   	}
@@ -210,7 +211,7 @@ public class ProfileDetailFragment extends Fragment implements Observer {
 		}
 		else {
 			mFbName = (TextView) mView.findViewById(R.id.profile_facebook_name);
-			if(mFb.getUserName() != null) mFbName.setText(mFb.getUserName());
+			setOnClickLogout(mFb, mFbName);
 			fbLayout.setVisibility(View.VISIBLE);
 			fbPar.height = 60*mDisplayPixel;
 			mFb.addObserver(this);
@@ -223,9 +224,11 @@ public class ProfileDetailFragment extends Fragment implements Observer {
 		}
 		else {
 			mTwName = (TextView) mView.findViewById(R.id.profile_twitter_name);
-			if(mTw.getUserName() != null) mTwName.setText(mTw.getUserName());
 			twLayout.setVisibility(View.VISIBLE);
 			twPar.height = 60*mDisplayPixel;
+			mTw.downloadUserData();
+			if(mTw.getUserName() != null ) setOnClickLogout(mTw, mTwName);
+			else setOnClickLogin(mTw, mTwName);
 		}
 	}
 
@@ -270,35 +273,35 @@ public class ProfileDetailFragment extends Fragment implements Observer {
 	public void update(Observable observable, Object o) {
 		Log.d(TAG, "Facebook new data: "+o.toString());
 		if(o.toString().equals("userName"))
-			fbSetOnClickLogout();
+			setOnClickLogout(mFb, mFbName);
 		else if(o.toString().equals("connect_error")) {
 			if(isAdded()) mFbName.setText(getResources().getString(R.string.social_no_connection));
 			else mFbName.setText("No connection"); // falls when trying to get resources
 		}
 		else if(o.toString().equals("not_logged"))
-			fbSetOnClickLogin();
+			setOnClickLogin(mFb, mFbName);
 	}
 
-	private void fbSetOnClickLogout() {
-		if(!mFb.isPaired() || mFb.getUserName() == null) return;
-		mFbName.setText(mFb.getUserName());
-		mFbName.setOnLongClickListener(new View.OnLongClickListener() {
+	private void setOnClickLogout(final BeeeOnSocialNetwork network, final TextView textView) {
+		if(!network.isPaired() || network.getUserName() == null) return;
+		textView.setText(network.getUserName());
+		textView.setOnLongClickListener(new View.OnLongClickListener() {
 			@Override
 			public boolean onLongClick(View view) {
-				mFb.logOut();
-				fbSetOnClickLogin();
+				network.logOut();
+				setOnClickLogin(network, textView);
 				return true;
 			}
 		});
 	}
 
-	private void fbSetOnClickLogin() {
-		if(isAdded()) mFbName.setText(getResources().getString(R.string.login_login));
-		else mFbName.setText("Login"); // workaround against exceptions
-		mFbName.setOnClickListener(new View.OnClickListener() {
+	private void setOnClickLogin(final BeeeOnSocialNetwork network, TextView textView) {
+		if(isAdded()) textView.setText(getResources().getString(R.string.login_login));
+		else textView.setText("Login"); // workaround against exceptions
+		textView.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
-				mFb.logIn(getActivity());
+				network.logIn(getActivity());
 			}
 		});
 	}

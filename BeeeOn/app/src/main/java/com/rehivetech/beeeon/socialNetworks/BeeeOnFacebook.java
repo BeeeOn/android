@@ -33,7 +33,6 @@ public class BeeeOnFacebook extends Observable implements BeeeOnSocialNetwork{
 
 	private static BeeeOnFacebook mInstance;
 	private Context mContext;
-	private SharedPreferences mPrefs;
 
 	// Facebook user variables
 	private String mUserName;
@@ -41,8 +40,8 @@ public class BeeeOnFacebook extends Observable implements BeeeOnSocialNetwork{
 
 	private BeeeOnFacebook(Context context) {
 		mContext = context;
-		mPrefs = Controller.getInstance(mContext).getUserSettings();
-		mAccessToken = mPrefs.getString(Constants.PERSISTANCE_PREF_LOGIN_FACEBOOK, null);
+		SharedPreferences prefs = Controller.getInstance(mContext).getUserSettings();
+		mAccessToken = prefs.getString(Constants.PERSISTANCE_PREF_LOGIN_FACEBOOK, null);
 	}
 
 	public static BeeeOnFacebook getInstance(Context context) {
@@ -70,14 +69,6 @@ public class BeeeOnFacebook extends Observable implements BeeeOnSocialNetwork{
 	@Override
 	public void logIn(FragmentActivity activity) {
 		LoginManager.getInstance().logInWithReadPermissions(activity, Arrays.asList("public_profile"));
-	}
-
-	// just for testing
-	public void forget() {
-		//TODO remove this function
-		mPrefs.edit().putString(Constants.PERSISTANCE_PREF_LOGIN_FACEBOOK, null).apply();
-		mUserName = null;
-		mAccessToken = null;
 	}
 
 	public void downloadUserData() {
@@ -113,13 +104,13 @@ public class BeeeOnFacebook extends Observable implements BeeeOnSocialNetwork{
 		request.executeAsync();
 	}
 
-	public ShareLinkContent shareAchievement(Context context, String title, String date) {
+	public ShareLinkContent shareAchievement(String title, String date) {
 		if (ShareDialog.canShow(ShareLinkContent.class)) {
 			return new ShareLinkContent.Builder()
 					.setContentTitle(title)
-					.setContentDescription(date + " " + context.getString(R.string.achievement_share_msg))
-					.setContentUrl(Uri.parse(context.getString(R.string.achievement_share_url)))
-					.setImageUrl(Uri.parse(context.getString(R.string.achievement_share_img)))
+					.setContentDescription(date + " " + mContext.getString(R.string.achievement_share_msg))
+					.setContentUrl(Uri.parse(mContext.getString(R.string.achievement_share_url)))
+					.setImageUrl(Uri.parse(mContext.getString(R.string.achievement_share_img)))
 					.build();
 		}
 		return null;

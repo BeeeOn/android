@@ -3,14 +3,11 @@ package com.rehivetech.beeeon.socialNetworks;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.ResolveInfo;
-import android.net.Uri;
 import android.support.v4.app.FragmentActivity;
 import android.widget.Toast;
 
 import com.rehivetech.beeeon.Constants;
 import com.rehivetech.beeeon.R;
-import com.rehivetech.beeeon.achievements.FbShareAchievement;
 import com.rehivetech.beeeon.achievements.TwLoginAchievement;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.util.Log;
@@ -18,14 +15,12 @@ import com.twitter.sdk.android.Twitter;
 import com.twitter.sdk.android.core.Callback;
 import com.twitter.sdk.android.core.Result;
 import com.twitter.sdk.android.core.TwitterApiException;
+import com.twitter.sdk.android.core.TwitterAuthConfig;
 import com.twitter.sdk.android.core.TwitterAuthException;
+import com.twitter.sdk.android.core.TwitterCore;
 import com.twitter.sdk.android.core.TwitterException;
 import com.twitter.sdk.android.core.TwitterSession;
 import com.twitter.sdk.android.tweetcomposer.TweetComposer;
-
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
-import java.util.List;
 
 import io.fabric.sdk.android.Fabric;
 
@@ -40,6 +35,7 @@ public class BeeeOnTwitter implements BeeeOnSocialNetwork{
 	private SharedPreferences mPrefs;
 	private Context mContext;
 	private Twitter mTwitter;
+	TwitterCore mCore;
 
 	// Facebook user variables
 	private String mUserName;
@@ -49,12 +45,12 @@ public class BeeeOnTwitter implements BeeeOnSocialNetwork{
 		mContext = context;
 		mPrefs = Controller.getInstance(mContext).getUserSettings();
 		mAccessToken = mPrefs.getString(Constants.PERSISTANCE_PREF_LOGIN_TWITTER, null);
-//		mAccessToken = mPrefs.getString(Constants.PERSISTANCE_PREF_LOGIN_TWITTER, null);
-//		TwitterAuthConfig twConfig =
-//				new TwitterAuthConfig(mContext.getString(R.string.twitter_app_id),
-//						mContext.getString(R.string.twitter_app_secret));
-//		mTwitter = new Twitter(twConfig);
-//		Fabric.with(mContext, mTwitter);
+		TwitterAuthConfig twConfig =
+				new TwitterAuthConfig(mContext.getString(R.string.twitter_app_id),
+						mContext.getString(R.string.twitter_app_secret));
+		mTwitter = new Twitter(twConfig);
+		Fabric.with(mContext, mTwitter);
+		mCore = mTwitter.core;
 	}
 
 	public static BeeeOnTwitter getInstance(Context context) {
@@ -66,10 +62,10 @@ public class BeeeOnTwitter implements BeeeOnSocialNetwork{
 
 	@Override
 	public void logIn(final FragmentActivity activity) {
-		Twitter.logIn(activity, new Callback<TwitterSession>() {
+		mCore.logIn(activity, new Callback<TwitterSession>() {
 			@Override
 			public void success(Result<TwitterSession> twitterSessionResult) {
-				downloadUserData(twitterSessionResult);
+				parseResult(twitterSessionResult);
 				new TwLoginAchievement(activity.getApplicationContext());
 			}
 			@Override
@@ -85,7 +81,10 @@ public class BeeeOnTwitter implements BeeeOnSocialNetwork{
 
 	@Override
 	public void logOut() {
-
+		if(mUserName != null)
+			Toast.makeText(mContext, mContext.getString(R.string.logout_success), Toast.LENGTH_LONG).show();
+		mUserName = null;
+//		Twitter.logOut();
 	}
 
 	@Override
@@ -93,24 +92,28 @@ public class BeeeOnTwitter implements BeeeOnSocialNetwork{
 	@Override
 	public boolean isPaired() {return mAccessToken != null;}
 
-	public void downloadUserData(Result<TwitterSession> result) {
-		mUserName = result.data.getUserName();
-		mAccessToken = result.data.getAuthToken().token;
-		Log.d(TAG,  "Twitter token: "+ mAccessToken);
-		mPrefs.edit().putString(Constants.PERSISTANCE_PREF_LOGIN_TWITTER, mAccessToken).apply();
+	public void downloadUserData() {
 	}
 
 	/**
-	 * Should be called startActivity(mTw.shareNetwork(--text--));
+	 * Should be called startActivity(mTw.shareAchievement(--text--));
 	 * Sharing text via twitter without need to have Twitter API, be logged on etc...
 	 * If the Twitter app is installed, shares with this app, otherwise shares via web browser
 	 * Downsides:
 	 *   cant check if tweet is truly done (etc for achievements)
 	 *   cant return back to app and stays in browser
 	 */
-	public Intent shareNetwork(String text) {
+	public Intent shareAchievement(String text) {
 		return new TweetComposer.Builder(mContext)
 				.text(text + " @beeeonapp")
 				.createIntent();
 	}
+
+	private void parseResult(Result<TwitterSession> result) {
+		mUserName = result.data.getUserName();
+		mAccessToken = result.data.getAuthToken().token;
+		Log.d(TAG,  "Twitter token: "+ mAccessToken);
+		mPrefs.edit().putString(Constants.PERSISTANCE_PREF_LOGIN_TWITTER, mAccessToken).apply();
+	}
+
 }
