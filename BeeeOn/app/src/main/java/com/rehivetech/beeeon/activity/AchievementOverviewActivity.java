@@ -6,6 +6,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
@@ -89,8 +90,9 @@ public class AchievementOverviewActivity extends BaseApplicationActivity impleme
 			}
 
 			@Override
-			public void onError(FacebookException exception) {
-				Log.d(TAG, "FB error: " + exception.getMessage());
+			public void onError(FacebookException e) {
+				Log.d(TAG, "FB error: " + e.getMessage());
+				Toast.makeText(getApplicationContext(), getString(R.string.NetworkError___CL_INTERNET_CONNECTION), Toast.LENGTH_LONG).show();
 			}
 		});
 	}

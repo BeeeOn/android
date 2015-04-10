@@ -22,13 +22,15 @@ import com.twitter.sdk.android.core.TwitterException;
 import com.twitter.sdk.android.core.TwitterSession;
 import com.twitter.sdk.android.tweetcomposer.TweetComposer;
 
+import java.util.Observable;
+
 import io.fabric.sdk.android.Fabric;
 
 /**
  * Design pattern Singleton
  * @author Jan Lamacz
  */
-public class BeeeOnTwitter implements BeeeOnSocialNetwork{
+public class BeeeOnTwitter  extends Observable implements BeeeOnSocialNetwork{
 	private static final String TAG = BeeeOnTwitter.class.getSimpleName();
 
 	private static BeeeOnTwitter mInstance;
@@ -70,8 +72,13 @@ public class BeeeOnTwitter implements BeeeOnSocialNetwork{
 			}
 			@Override
 			public void failure(TwitterException e) {
-				if(e instanceof TwitterAuthException)
-					Toast.makeText(mContext, mContext.getString(R.string.NetworkError___NO_CONNECTION), Toast.LENGTH_LONG).show();
+				if(e instanceof TwitterAuthException) {
+					if (!e.getMessage().toLowerCase().contains("cancel")) {
+						Toast.makeText(mContext, mContext.getString(R.string.NetworkError___CL_INTERNET_CONNECTION), Toast.LENGTH_LONG).show();
+						setChanged();
+						notifyObservers("connect_error");
+					}
+				}
 				else if(e instanceof TwitterApiException)
 					Toast.makeText(mContext, "SSL is required", Toast.LENGTH_LONG).show();
 				Log.e(TAG, "Login failed");

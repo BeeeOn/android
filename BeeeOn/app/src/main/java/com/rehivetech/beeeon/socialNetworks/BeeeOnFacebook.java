@@ -83,7 +83,7 @@ public class BeeeOnFacebook extends Observable implements BeeeOnSocialNetwork{
 				if(response.getError() != null) {
 					setChanged();
 					if(response.getError().getErrorCode() == -1) {
-						Toast.makeText(mContext, mContext.getString(R.string.NetworkError___NO_CONNECTION), Toast.LENGTH_SHORT).show();
+//						Toast.makeText(mContext, mContext.getString(R.string.NetworkError___CL_INTERNET_CONNECTION), Toast.LENGTH_SHORT).show();
 						notifyObservers("connect_error");
 					}
 					else

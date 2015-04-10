@@ -226,6 +226,7 @@ public class ProfileDetailFragment extends Fragment implements Observer {
 			mTwName = (TextView) mView.findViewById(R.id.profile_twitter_name);
 			twLayout.setVisibility(View.VISIBLE);
 			twPar.height = 60*mDisplayPixel;
+			mTw.addObserver(this);
 			mTw.downloadUserData();
 			if(mTw.getUserName() != null ) setOnClickLogout(mTw, mTwName);
 			else setOnClickLogin(mTw, mTwName);
@@ -274,12 +275,18 @@ public class ProfileDetailFragment extends Fragment implements Observer {
 		Log.d(TAG, "Facebook new data: "+o.toString());
 		if(o.toString().equals("userName"))
 			setOnClickLogout(mFb, mFbName);
-		else if(o.toString().equals("connect_error")) {
-			if(isAdded()) mFbName.setText(getResources().getString(R.string.social_no_connection));
-			else mFbName.setText("No connection"); // falls when trying to get resources
-		}
 		else if(o.toString().equals("not_logged"))
 			setOnClickLogin(mFb, mFbName);
+		else if(o.toString().equals("connect_error")) {
+			if(isAdded()) {
+				if(mFb.isPaired()) mFbName.setText(getResources().getString(R.string.social_no_connection));
+				if(mTw.isPaired()) mTwName.setText(getResources().getString(R.string.social_no_connection));
+			}
+			else { // sometimes (?!) crashes when trying to get resources
+				if(mFb.isPaired()) mFbName.setText("No connection");
+				if(mTw.isPaired()) mTwName.setText("No connection");
+			}
+		}
 	}
 
 	private void setOnClickLogout(final BeeeOnSocialNetwork network, final TextView textView) {
