@@ -99,7 +99,7 @@ public class ProfileDetailFragment extends Fragment implements Observer {
 
 //		setMoreButtonVisibility();
     	redrawCategories();
-		mMoreLayout.getLayoutParams().height = (mDisplayPixel*60);
+		fbSetOnClickLogout();
 
     	return mView;
   	}
@@ -280,6 +280,7 @@ public class ProfileDetailFragment extends Fragment implements Observer {
 	}
 
 	private void fbSetOnClickLogout() {
+		if(!mFb.isPaired() || mFb.getUserName() == null) return;
 		mFbName.setText(mFb.getUserName());
 		mFbName.setOnLongClickListener(new View.OnLongClickListener() {
 			@Override

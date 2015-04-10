@@ -28,7 +28,7 @@ import java.util.Observable;
  * Design pattern Observer
  * @author Jan Lamacz
  */
-public class BeeeOnFacebook extends Observable {
+public class BeeeOnFacebook extends Observable implements BeeeOnSocialNetwork{
 	private static final String TAG = BeeeOnFacebook.class.getSimpleName();
 
 	private static BeeeOnFacebook mInstance;
@@ -52,10 +52,14 @@ public class BeeeOnFacebook extends Observable {
 		return mInstance;
 	}
 
-	public String getUserName() {return mUserName;}
 	public void setToken(String token) {this.mAccessToken = token;}
+
+	@Override
+	public String getUserName() {return mUserName;}
+	@Override
 	public boolean isPaired() {return mAccessToken != null;}
 
+	@Override
 	public void logOut() {
 		if(mUserName != null)
 		  Toast.makeText(mContext, mContext.getString(R.string.logout_success), Toast.LENGTH_LONG).show();
@@ -63,6 +67,7 @@ public class BeeeOnFacebook extends Observable {
 		mUserName = null;
 	}
 
+	@Override
 	public void logIn(FragmentActivity activity) {
 		LoginManager.getInstance().logInWithReadPermissions(activity, Arrays.asList("public_profile"));
 	}
@@ -86,8 +91,10 @@ public class BeeeOnFacebook extends Observable {
 			public void onCompleted(JSONObject object, GraphResponse response) {
 				if(response.getError() != null) {
 					setChanged();
-					if(response.getError().getErrorCode() == -1)
+					if(response.getError().getErrorCode() == -1) {
+						Toast.makeText(mContext, mContext.getString(R.string.NetworkError___NO_CONNECTION), Toast.LENGTH_SHORT).show();
 						notifyObservers("connect_error");
+					}
 					else
 						notifyObservers("not_logged");
 				}

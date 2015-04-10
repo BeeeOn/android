@@ -1,25 +1,31 @@
 package com.rehivetech.beeeon.socialNetworks;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.ResolveInfo;
+import android.net.Uri;
 import android.support.v4.app.FragmentActivity;
 import android.widget.Toast;
 
 import com.rehivetech.beeeon.Constants;
 import com.rehivetech.beeeon.R;
-import com.rehivetech.beeeon.achievements.FbLoginAchievement;
+import com.rehivetech.beeeon.achievements.FbShareAchievement;
 import com.rehivetech.beeeon.achievements.TwLoginAchievement;
-import com.rehivetech.beeeon.activity.fragment.ProfileDetailFragment;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.util.Log;
 import com.twitter.sdk.android.Twitter;
 import com.twitter.sdk.android.core.Callback;
 import com.twitter.sdk.android.core.Result;
 import com.twitter.sdk.android.core.TwitterApiException;
-import com.twitter.sdk.android.core.TwitterAuthConfig;
 import com.twitter.sdk.android.core.TwitterAuthException;
 import com.twitter.sdk.android.core.TwitterException;
 import com.twitter.sdk.android.core.TwitterSession;
+import com.twitter.sdk.android.tweetcomposer.TweetComposer;
+
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.util.List;
 
 import io.fabric.sdk.android.Fabric;
 
@@ -27,7 +33,7 @@ import io.fabric.sdk.android.Fabric;
  * Design pattern Singleton
  * @author Jan Lamacz
  */
-public class BeeeOnTwitter {
+public class BeeeOnTwitter implements BeeeOnSocialNetwork{
 	private static final String TAG = BeeeOnTwitter.class.getSimpleName();
 
 	private static BeeeOnTwitter mInstance;
@@ -42,6 +48,7 @@ public class BeeeOnTwitter {
 	private BeeeOnTwitter(Context context) {
 		mContext = context;
 		mPrefs = Controller.getInstance(mContext).getUserSettings();
+		mAccessToken = mPrefs.getString(Constants.PERSISTANCE_PREF_LOGIN_TWITTER, null);
 //		mAccessToken = mPrefs.getString(Constants.PERSISTANCE_PREF_LOGIN_TWITTER, null);
 //		TwitterAuthConfig twConfig =
 //				new TwitterAuthConfig(mContext.getString(R.string.twitter_app_id),
@@ -57,6 +64,7 @@ public class BeeeOnTwitter {
 		return mInstance;
 	}
 
+	@Override
 	public void logIn(final FragmentActivity activity) {
 		Twitter.logIn(activity, new Callback<TwitterSession>() {
 			@Override
@@ -68,17 +76,41 @@ public class BeeeOnTwitter {
 			public void failure(TwitterException e) {
 				if(e instanceof TwitterAuthException)
 					Toast.makeText(mContext, mContext.getString(R.string.NetworkError___NO_CONNECTION), Toast.LENGTH_LONG).show();
+				else if(e instanceof TwitterApiException)
+					Toast.makeText(mContext, "SSL is required", Toast.LENGTH_LONG).show();
 				Log.e(TAG, "Login failed");
 			}
 		});
 	}
 
+	@Override
+	public void logOut() {
+
+	}
+
+	@Override
+	public String getUserName() {return mUserName;}
+	@Override
+	public boolean isPaired() {return mAccessToken != null;}
+
 	public void downloadUserData(Result<TwitterSession> result) {
 		mUserName = result.data.getUserName();
 		mAccessToken = result.data.getAuthToken().token;
-		mPrefs.edit().putString(Constants.PERSISTANCE_PREF_LOGIN_TWITTER, mAccessToken);
+		Log.d(TAG,  "Twitter token: "+ mAccessToken);
+		mPrefs.edit().putString(Constants.PERSISTANCE_PREF_LOGIN_TWITTER, mAccessToken).apply();
 	}
 
-	public String getUserName() {return mUserName;}
-	public boolean isPaired() {return mAccessToken != null;}
+	/**
+	 * Should be called startActivity(mTw.shareNetwork(--text--));
+	 * Sharing text via twitter without need to have Twitter API, be logged on etc...
+	 * If the Twitter app is installed, shares with this app, otherwise shares via web browser
+	 * Downsides:
+	 *   cant check if tweet is truly done (etc for achievements)
+	 *   cant return back to app and stays in browser
+	 */
+	public Intent shareNetwork(String text) {
+		return new TweetComposer.Builder(mContext)
+				.text(text + " @beeeonapp")
+				.createIntent();
+	}
 }
