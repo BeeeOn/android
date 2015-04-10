@@ -123,9 +123,15 @@ public class AchievementOverviewActivity extends BaseApplicationActivity impleme
 	 */
 	@Override
 	protected void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
+		// Sharing with Twitter
 		// if user has twitter native app - can control if sharing was successful
 		if(requestCode == 66586 && // TODO Fix MAGIC!!
 			resultCode == RESULT_OK) {
+			new FbShareAchievement(getApplicationContext());
+		}
+		// Sharing with Google Plus
+		if(requestCode == 66587 && // TODO Fix MAGIC!!
+				resultCode == RESULT_OK) {
 			new FbShareAchievement(getApplicationContext());
 		}
 		mCallbackManager.onActivityResult(requestCode, resultCode, data);

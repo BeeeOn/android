@@ -97,6 +97,7 @@ public final class Constants {
 	public static final int EDIT_SENSOR_CANCELED = 1043;
 
 	public static final int SHARE_TWITTER = 1050;
+	public static final int SHARE_GOOGLE = 1051;
 
 	public static final String SETUP_SENSOR_ACT_LOC = "SETUP_SENSOR_ACT_LOC";
 
