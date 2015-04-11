@@ -5,6 +5,8 @@
 	<string name="facebook_app_id" translatable="false">868028889921254</string>
 	<string name="twitter_app_id" translatable="false">WuuLjLlhpAM4U7ex50wWECO2x</string>
 	<string name="twitter_app_secret" translatable="false">DhvEzUtURDqVGxVoxIaAXEKE6FxT7AfPYVmTDhcy4oXqPfDFlP</string>
+	<string name="vkontakte_app_id" translatable="false">4871815 </string>
+	<string name="vkontakte_app_secret" translatable="false">fyHIwUDHWQUJboI8pW8R</string>
     
     <!-- Titles -->
     <string name="title_activity_location_screen">BeeeOn</string>

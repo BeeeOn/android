@@ -32,6 +32,7 @@ import io.fabric.sdk.android.Fabric;
  */
 public class BeeeOnTwitter  extends Observable implements BeeeOnSocialNetwork{
 	private static final String TAG = BeeeOnTwitter.class.getSimpleName();
+	private static final String NAME = "Twitter";
 
 	private static BeeeOnTwitter mInstance;
 	private SharedPreferences mPrefs;
@@ -46,7 +47,7 @@ public class BeeeOnTwitter  extends Observable implements BeeeOnSocialNetwork{
 	private BeeeOnTwitter(Context context) {
 		mContext = context;
 		mPrefs = Controller.getInstance(mContext).getUserSettings();
-		mAccessToken = mPrefs.getString(Constants.PERSISTANCE_PREF_LOGIN_TWITTER, null);
+		mAccessToken = mPrefs.getString(Constants.PERSISTENCE_PREF_LOGIN_TWITTER, null);
 		TwitterAuthConfig twConfig =
 				new TwitterAuthConfig(mContext.getString(R.string.twitter_app_id),
 						mContext.getString(R.string.twitter_app_secret));
@@ -95,6 +96,8 @@ public class BeeeOnTwitter  extends Observable implements BeeeOnSocialNetwork{
 	}
 
 	@Override
+	public String getName() {return NAME;}
+	@Override
 	public String getUserName() {return mUserName;}
 	@Override
 	public boolean isPaired() {return mAccessToken != null;}
@@ -120,7 +123,7 @@ public class BeeeOnTwitter  extends Observable implements BeeeOnSocialNetwork{
 		mUserName = result.data.getUserName();
 		mAccessToken = result.data.getAuthToken().token;
 		Log.d(TAG,  "Twitter token: "+ mAccessToken);
-		mPrefs.edit().putString(Constants.PERSISTANCE_PREF_LOGIN_TWITTER, mAccessToken).apply();
+		mPrefs.edit().putString(Constants.PERSISTENCE_PREF_LOGIN_TWITTER, mAccessToken).apply();
 	}
 
 }

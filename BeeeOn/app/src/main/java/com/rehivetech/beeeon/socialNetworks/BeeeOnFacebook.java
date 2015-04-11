@@ -7,13 +7,17 @@ import android.support.v4.app.FragmentActivity;
 import android.widget.Toast;
 
 import com.facebook.AccessToken;
+import com.facebook.FacebookCallback;
+import com.facebook.FacebookException;
 import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
 import com.facebook.login.LoginManager;
+import com.facebook.login.LoginResult;
 import com.facebook.share.model.ShareLinkContent;
 import com.facebook.share.widget.ShareDialog;
 import com.rehivetech.beeeon.Constants;
 import com.rehivetech.beeeon.R;
+import com.rehivetech.beeeon.achievements.FbLoginAchievement;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.util.Log;
 
@@ -30,6 +34,7 @@ import java.util.Observable;
  */
 public class BeeeOnFacebook extends Observable implements BeeeOnSocialNetwork{
 	private static final String TAG = BeeeOnFacebook.class.getSimpleName();
+	private static final String NAME = "Facebook";
 
 	private static BeeeOnFacebook mInstance;
 	private Context mContext;
@@ -41,7 +46,7 @@ public class BeeeOnFacebook extends Observable implements BeeeOnSocialNetwork{
 	private BeeeOnFacebook(Context context) {
 		mContext = context;
 		SharedPreferences prefs = Controller.getInstance(mContext).getUserSettings();
-		mAccessToken = prefs.getString(Constants.PERSISTANCE_PREF_LOGIN_FACEBOOK, null);
+		mAccessToken = prefs.getString(Constants.PERSISTENCE_PREF_LOGIN_FACEBOOK, null);
 	}
 
 	public static BeeeOnFacebook getInstance(Context context) {
@@ -54,21 +59,52 @@ public class BeeeOnFacebook extends Observable implements BeeeOnSocialNetwork{
 	public void setToken(String token) {this.mAccessToken = token;}
 
 	@Override
+	public String getName() {return NAME;}
+	@Override
 	public String getUserName() {return mUserName;}
 	@Override
 	public boolean isPaired() {return mAccessToken != null;}
 
 	@Override
 	public void logOut() {
-		if(mUserName != null)
-		  Toast.makeText(mContext, mContext.getString(R.string.logout_success), Toast.LENGTH_LONG).show();
-		LoginManager.getInstance().logOut();
+		if(mUserName != null) {
+			Toast.makeText(mContext, mContext.getString(R.string.logout_success), Toast.LENGTH_LONG).show();
+			LoginManager.getInstance().logOut();
+		}
 		mUserName = null;
 	}
 
 	@Override
 	public void logIn(FragmentActivity activity) {
 		LoginManager.getInstance().logInWithReadPermissions(activity, Arrays.asList("public_profile"));
+	}
+
+	public ShareLinkContent shareAchievement(String title, String date) {
+		if (ShareDialog.canShow(ShareLinkContent.class)) {
+			return new ShareLinkContent.Builder()
+					.setContentTitle(title)
+					.setContentDescription(date + " " + mContext.getString(R.string.achievement_share_msg))
+					.setContentUrl(Uri.parse(mContext.getString(R.string.achievement_share_url)))
+					.setImageUrl(Uri.parse(mContext.getString(R.string.achievement_share_img)))
+					.build();
+		}
+		return null;
+	}
+
+	public FacebookCallback getListener() {
+		return new FacebookCallback<LoginResult>() {
+			@Override
+			public void onSuccess(LoginResult loginResult) {
+				new FbLoginAchievement(mContext,loginResult);
+				setChanged();
+				notifyObservers("facebook login");
+//				mProfileFrag.updateFacebookLoginView();
+			}
+			@Override
+			public void onCancel() {}
+			@Override
+			public void onError(FacebookException exception) {}
+		};
 	}
 
 	public void downloadUserData() {
@@ -93,7 +129,7 @@ public class BeeeOnFacebook extends Observable implements BeeeOnSocialNetwork{
 					try {
 						mUserName = object.getString("name");
 						setChanged();
-						notifyObservers("userName");
+						notifyObservers("facebook");
 					}
 					catch(JSONException e) {
 						Log.e(TAG, "FB JSON parse error: "+e.getMessage());
@@ -103,37 +139,4 @@ public class BeeeOnFacebook extends Observable implements BeeeOnSocialNetwork{
 		});
 		request.executeAsync();
 	}
-
-	public ShareLinkContent shareAchievement(String title, String date) {
-		if (ShareDialog.canShow(ShareLinkContent.class)) {
-			return new ShareLinkContent.Builder()
-					.setContentTitle(title)
-					.setContentDescription(date + " " + mContext.getString(R.string.achievement_share_msg))
-					.setContentUrl(Uri.parse(mContext.getString(R.string.achievement_share_url)))
-					.setImageUrl(Uri.parse(mContext.getString(R.string.achievement_share_img)))
-					.build();
-		}
-		return null;
-	}
-
-	// TODO Download users profile picture from Facebook
-//	private class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
-//		public DownloadImageTask() {}
-//		protected Bitmap doInBackground(String... urls) {
-//			String urldisplay = urls[0];
-//			Bitmap mIcon11 = null;
-//			try {
-//				InputStream in = new java.net.URL(urldisplay).openStream();
-//				mIcon11 = BitmapFactory.decodeStream(in);
-//			} catch (Exception e) {
-//				Log.e("Error", e.getMessage());
-//				e.printStackTrace();
-//			}
-//			return mIcon11;
-//		}
-//		protected void onPostExecute(Bitmap result) {
-//			setChanged();
-//			notifyObservers("profilePicture");
-//		}
-//	}
 }

@@ -49,8 +49,16 @@ import com.rehivetech.beeeon.household.adapter.Adapter;
 import com.rehivetech.beeeon.menu.NavDrawerMenu;
 import com.rehivetech.beeeon.network.authentication.FacebookAuthProvider;
 import com.rehivetech.beeeon.persistence.Persistence;
+import com.rehivetech.beeeon.socialNetworks.BeeeOnFacebook;
+import com.rehivetech.beeeon.socialNetworks.BeeeOnVKontakte;
 import com.rehivetech.beeeon.util.Log;
 import com.twitter.sdk.android.core.identity.TwitterAuthClient;
+import com.vk.sdk.VKAccessToken;
+import com.vk.sdk.VKScope;
+import com.vk.sdk.VKSdk;
+import com.vk.sdk.VKSdkListener;
+import com.vk.sdk.VKUIHelper;
+import com.vk.sdk.api.VKError;
 
 
 /**
@@ -171,17 +179,14 @@ public class MainActivity extends BaseApplicationActivity implements IListDialog
 		if (!FacebookSdk.isInitialized())
 			FacebookSdk.sdkInitialize(this, FacebookAuthProvider.FACEBOOK_REQUEST_CODE_OFFSET);
 		mFacebookCallbackManager = CallbackManager.Factory.create();
-		LoginManager.getInstance().registerCallback(mFacebookCallbackManager,new FacebookCallback<LoginResult>() {
-			@Override
-			public void onSuccess(LoginResult loginResult) {
-				new FbLoginAchievement(getApplicationContext(),loginResult);
-				mProfileFrag.updateFacebookLoginView();
-			}
-			@Override
-			public void onCancel() {}
-			@Override
-			public void onError(FacebookException exception) {}
-		});
+		LoginManager.getInstance().registerCallback(
+				mFacebookCallbackManager,
+				BeeeOnFacebook.getInstance(getApplicationContext()).getListener());
+		VKSdk.initialize(
+				BeeeOnVKontakte.getInstance(getApplicationContext()).getListener(),
+				getString(R.string.vkontakte_app_id),
+				VKAccessToken.tokenFromSharedPreferences(getApplicationContext(), Constants.PERSISTENCE_PREF_LOGIN_VKONTAKTE)
+		);
 		mTwitterCallbackManager = new TwitterAuthClient();
 		
 		// Init tutorial 
@@ -239,6 +244,7 @@ public class MainActivity extends BaseApplicationActivity implements IListDialog
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
 
+		VKUIHelper.onActivityResult(requestCode, resultCode, data);
 		mFacebookCallbackManager.onActivityResult(requestCode, resultCode, data);
 		mTwitterCallbackManager.onActivityResult(requestCode, resultCode, data);
 		Log.d(TAG, "Request code "+requestCode);
@@ -267,6 +273,7 @@ public class MainActivity extends BaseApplicationActivity implements IListDialog
 
 	public void onAppResume() {
 		Log.d(TAG, "onAppResume()");
+		VKUIHelper.onResume(this);
 
 		backPressed = false;
 		setBeeeOnProgressBarVisibility(true);
@@ -321,6 +328,7 @@ public class MainActivity extends BaseApplicationActivity implements IListDialog
 	@Override
 	public void onDestroy() {
 		super.onDestroy();
+		VKUIHelper.onDestroy(this);
 		Log.d(TAG, "onDestroy");
 
 		this.setSupportProgressBarIndeterminateVisibility(false);

@@ -17,7 +17,7 @@ import com.rehivetech.beeeon.gamification.AchievementListItem;
 import com.rehivetech.beeeon.socialNetworks.BeeeOnFacebook;
 import com.rehivetech.beeeon.socialNetworks.BeeeOnGooglePlus;
 import com.rehivetech.beeeon.socialNetworks.BeeeOnTwitter;
-import com.rehivetech.beeeon.util.Log;
+import com.rehivetech.beeeon.socialNetworks.BeeeOnVKontakte;
 
 import java.util.ArrayList;
 
@@ -25,7 +25,7 @@ import java.util.ArrayList;
  * @author Jan Lamacz
  */
 public class ShareFragmentDialog extends DialogFragment {
-	private static final String TAG = ShareFragmentDialog.class.getSimpleName();
+//	private static final String TAG = ShareFragmentDialog.class.getSimpleName();
 
 	private ShareDialog mShareDialog;
 
@@ -35,6 +35,7 @@ public class ShareFragmentDialog extends DialogFragment {
 	private BeeeOnFacebook mFb;
 	private BeeeOnTwitter mTw;
 	private BeeeOnGooglePlus mGp;
+	private BeeeOnVKontakte mVk;
 	private ArrayList<CharSequence> socialNetworks = new ArrayList<>();
 
 	public ShareFragmentDialog(AchievementListItem item, ShareDialog shareDialog) {
@@ -46,9 +47,11 @@ public class ShareFragmentDialog extends DialogFragment {
 		mFb = BeeeOnFacebook.getInstance(getActivity());
 		mTw = BeeeOnTwitter.getInstance(getActivity());
 		mGp = BeeeOnGooglePlus.getInstance(getActivity());
-		socialNetworks.add("Google Plus");
-		if(mFb.isPaired()) socialNetworks.add("Facebook");
-		if(mTw.isPaired()) socialNetworks.add("Twitter");
+		mVk = BeeeOnVKontakte.getInstance(getActivity());
+		socialNetworks.add(mGp.getName());
+		if(mFb.isPaired()) socialNetworks.add(mFb.getName());
+		if(mTw.isPaired()) socialNetworks.add(mTw.getName());
+		if(mVk.isPaired()) socialNetworks.add(mVk.getName());
 	}
 
 	@Override
@@ -61,12 +64,12 @@ public class ShareFragmentDialog extends DialogFragment {
 							public void onClick(DialogInterface dialog, int which) {
 								if (which == 0)
 									startActivityForResult(mGp.shareAchievement(name), Constants.SHARE_GOOGLE);
-								if (which == 1 && mFb.isPaired())
+								else if (mFb.isPaired() && which == 1)
 									mShareDialog.show(mFb.shareAchievement(name, date));
-								if (which == 2 && mTw.isPaired() ||
-										which == 1 && !mFb.isPaired()) {
+								else if (mTw.isPaired() && (which == 1 || which == 2))
 									startActivityForResult(mTw.shareAchievement(name), Constants.SHARE_TWITTER);
-								}
+								else if(mVk.isPaired() && (which == 1 || which == 2 || which == 3))
+									Toast.makeText(getActivity(), "vkontakte", Toast.LENGTH_LONG).show();
 							}
 						})
 				.setNegativeButton(R.string.action_close, new DialogInterface.OnClickListener() {

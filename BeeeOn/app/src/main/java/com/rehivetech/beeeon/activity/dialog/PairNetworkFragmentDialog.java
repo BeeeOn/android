@@ -10,6 +10,7 @@ import android.support.v4.app.DialogFragment;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.socialNetworks.BeeeOnFacebook;
 import com.rehivetech.beeeon.socialNetworks.BeeeOnTwitter;
+import com.rehivetech.beeeon.socialNetworks.BeeeOnVKontakte;
 
 import java.util.ArrayList;
 
@@ -23,13 +24,16 @@ public class PairNetworkFragmentDialog extends DialogFragment {
 
 	private BeeeOnFacebook mFb;
 	private BeeeOnTwitter mTw;
+	private BeeeOnVKontakte mVk;
 
 	public PairNetworkFragmentDialog() {
 		mFb = BeeeOnFacebook.getInstance(getActivity());
 		mTw = BeeeOnTwitter.getInstance(getActivity());
+		mVk = BeeeOnVKontakte.getInstance(getActivity());
 
-		if(!mFb.isPaired()) mSocialNetworks.add("Facebook");
-		if(!mTw.isPaired()) mSocialNetworks.add("Twitter");
+		if(!mFb.isPaired()) mSocialNetworks.add(mFb.getName());
+		if(!mTw.isPaired()) mSocialNetworks.add(mTw.getName());
+		if(!mVk.isPaired()) mSocialNetworks.add(mVk.getName());
 	}
 
 	@Override
@@ -42,9 +46,12 @@ public class PairNetworkFragmentDialog extends DialogFragment {
 						public void onClick(DialogInterface dialog, int which) {
 							if (which == 0 && !mFb.isPaired())
 								mFb.logIn(getActivity());
-							if (which == 1 && !mFb.isPaired() ||
-									which == 0 && mFb.isPaired())
+							else if (which == 1 && !mFb.isPaired() ||
+									which == 0 && !mTw.isPaired())
 								mTw.logIn(getActivity());
+							else if((which == 2 && !mFb.isPaired() && !mTw.isPaired()) ||
+								which == 1 || which == 0 )
+								mVk.logIn(getActivity());
 						}
 					})
 			.setNegativeButton(R.string.action_close, new DialogInterface.OnClickListener() {

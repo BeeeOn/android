@@ -13,6 +13,7 @@ import com.rehivetech.beeeon.controller.Controller;
  */
 public class BeeeOnGooglePlus implements BeeeOnSocialNetwork {
 	private static final String TAG = BeeeOnGooglePlus.class.getSimpleName();
+	private static final String NAME = "Google Plus";
 
 	private static BeeeOnGooglePlus mInstance;
 	private Context mContext;
@@ -44,6 +45,8 @@ public class BeeeOnGooglePlus implements BeeeOnSocialNetwork {
 	}
 	@Override
 	public boolean isPaired() {return true;}
+	@Override
+	public String getName() {return NAME;}
 	@Override
 	public String getUserName() {return Controller.getInstance(mContext).getActualUser().getName();}
 }

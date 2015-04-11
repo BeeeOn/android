@@ -165,13 +165,17 @@
 		<activity
 			android:name=".activity.IntroActivity"
 			android:label="@string/app_name" />
+		<!-- Facebook login screen -->
 		<activity
 			android:name="com.facebook.FacebookActivity"
 			android:configChanges=
 				  "keyboard|keyboardHidden|screenLayout|screenSize|orientation"
 			android:theme="@android:style/Theme.Translucent.NoTitleBar"
 			android:label="@string/app_name">
-		</activity> <!-- Facebook login screen -->
+		</activity>
+		<!-- VKontakte login screen -->
+		<activity
+			android:name="com.vk.sdk.VKOpenAuthActivity" />
 
 		<!-- Provider for sharing with Facebook -->
         <provider android:authorities="com.facebook.app.FacebookContentProvider868028889921254"

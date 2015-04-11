@@ -28,6 +28,7 @@ import com.rehivetech.beeeon.household.user.User;
 import com.rehivetech.beeeon.socialNetworks.BeeeOnFacebook;
 import com.rehivetech.beeeon.socialNetworks.BeeeOnSocialNetwork;
 import com.rehivetech.beeeon.socialNetworks.BeeeOnTwitter;
+import com.rehivetech.beeeon.socialNetworks.BeeeOnVKontakte;
 import com.rehivetech.beeeon.util.Log;
 
 import java.util.ArrayList;
@@ -60,12 +61,14 @@ public class ProfileDetailFragment extends Fragment implements Observer {
 
 	// SocialNetworks
 	private boolean showMoreAccounts = false;
-	private final int totalNetworks = 2;
+	private final int totalNetworks = 3;
 	private int unconnectedNetworks = 0;
 	private BeeeOnFacebook mFb;
 	private BeeeOnTwitter mTw;
+	private BeeeOnVKontakte mVk;
 	private TextView mFbName;
 	private TextView mTwName;
+	private TextView mVkName;
 
 	public ProfileDetailFragment() {
 		mContext = getActivity();
@@ -201,20 +204,26 @@ public class ProfileDetailFragment extends Fragment implements Observer {
 	private void setNetworksView() {
 		RelativeLayout fbLayout = (RelativeLayout) mView.findViewById(R.id.profile_facebook);
 		RelativeLayout twLayout = (RelativeLayout) mView.findViewById(R.id.profile_twitter);
+		RelativeLayout vkLayout = (RelativeLayout) mView.findViewById(R.id.profile_vkontakte);
+		mFbName = (TextView) mView.findViewById(R.id.profile_facebook_name);
+		mTwName = (TextView) mView.findViewById(R.id.profile_twitter_name);
+		mVkName = (TextView) mView.findViewById(R.id.profile_vkontakte_name);
 		ViewGroup.LayoutParams fbPar = fbLayout.getLayoutParams();
 		ViewGroup.LayoutParams twPar = twLayout.getLayoutParams();
+		ViewGroup.LayoutParams vkPar = vkLayout.getLayoutParams();
 
+		mFb.addObserver(this);
+		mTw.addObserver(this);
+		mVk.addObserver(this);
 		if(!mFb.isPaired()) {
 			fbLayout.setVisibility(View.INVISIBLE);
 			fbPar.height = 0;
 			unconnectedNetworks++;
 		}
 		else {
-			mFbName = (TextView) mView.findViewById(R.id.profile_facebook_name);
 			setOnClickLogout(mFb, mFbName);
 			fbLayout.setVisibility(View.VISIBLE);
 			fbPar.height = 60*mDisplayPixel;
-			mFb.addObserver(this);
 			mFb.downloadUserData();
 		}
 		if(!mTw.isPaired()) {
@@ -223,13 +232,22 @@ public class ProfileDetailFragment extends Fragment implements Observer {
 			unconnectedNetworks++;
 		}
 		else {
-			mTwName = (TextView) mView.findViewById(R.id.profile_twitter_name);
 			twLayout.setVisibility(View.VISIBLE);
 			twPar.height = 60*mDisplayPixel;
-			mTw.addObserver(this);
 			mTw.downloadUserData();
 			if(mTw.getUserName() != null ) setOnClickLogout(mTw, mTwName);
 			else setOnClickLogin(mTw, mTwName);
+		}
+		if(!mVk.isPaired()) {
+			vkLayout.setVisibility(View.INVISIBLE);
+			vkPar.height = 0;
+			unconnectedNetworks++;
+		}
+		else {
+			setOnClickLogout(mVk, mVkName);
+			vkLayout.setVisibility(View.VISIBLE);
+			vkPar.height = 60*mDisplayPixel;
+			mVk.downloadUserData();
 		}
 	}
 
@@ -247,24 +265,17 @@ public class ProfileDetailFragment extends Fragment implements Observer {
 		mMoreArrow.startAnimation(rotateAnim);
 	}
 
+	@Override
   	public void onPause() {
 		super.onPause();
 	    Log.d(TAG, "onPause()");
   	}
 
+	@Override
   	public void onDestroy(){
 	    super.onDestroy();
-	    Log.d(TAG, "onDestroy()");
+		Log.d(TAG, "onDestroy()");
   	}
-
-	/**
-	 * Redraws Facebook icons after user has logged in,
-	 * so it is visible immediately
-	 */
-	public void updateFacebookLoginView() {
-		setNetworksView();
-		setMoreButtonVisibility();
-	}
 
 	/** Observer.
 	 * Waits until *Facebook* downloads data about user
@@ -272,19 +283,27 @@ public class ProfileDetailFragment extends Fragment implements Observer {
 	 */
 	@Override
 	public void update(Observable observable, Object o) {
-		Log.d(TAG, "Facebook new data: "+o.toString());
-		if(o.toString().equals("userName"))
+		Log.d(TAG, "Newly downloaded data: "+o.toString());
+		if(o.toString().equals("facebook"))
 			setOnClickLogout(mFb, mFbName);
+		else if(o.toString().equals("vkontakte"))
+			setOnClickLogout(mVk, mVkName);
+		else if(o.toString().equals("facebook login")) {
+			setNetworksView();
+			setMoreButtonVisibility();
+		}
 		else if(o.toString().equals("not_logged"))
 			setOnClickLogin(mFb, mFbName);
 		else if(o.toString().equals("connect_error")) {
 			if(isAdded()) {
 				if(mFb.isPaired()) mFbName.setText(getResources().getString(R.string.social_no_connection));
 				if(mTw.isPaired()) mTwName.setText(getResources().getString(R.string.social_no_connection));
+				if(mVk.isPaired()) mVkName.setText(getResources().getString(R.string.social_no_connection));
 			}
 			else { // sometimes (?!) crashes when trying to get resources
 				if(mFb.isPaired()) mFbName.setText("No connection");
 				if(mTw.isPaired()) mTwName.setText("No connection");
+				if(mVk.isPaired()) mVkName.setText("No connection");
 			}
 		}
 	}

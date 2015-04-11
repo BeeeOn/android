@@ -1,10 +1,10 @@
 buildscript {
     repositories {
-        maven { url 'https://maven.fabric.io/public' }
+        maven { url 'https://maven.fabric.io/public' } // twitter
     }
 
     dependencies {
-        classpath 'io.fabric.tools:gradle:1.+'
+        classpath 'io.fabric.tools:gradle:1.+' // twitter
     }
 }
 apply plugin: 'com.android.application'
@@ -102,4 +102,5 @@ dependencies {
    	compile('com.jjoe64:graphview:4.1.+') { exclude module: 'appcompat-v7' }
 	compile 'com.facebook.android:facebook-android-sdk:4.0.0'
 	compile('com.twitter.sdk.android:twitter:1.4.0@aar') {transitive = true}
+	compile 'com.vk:androidsdk:1.3.1' // vkontakte
 }

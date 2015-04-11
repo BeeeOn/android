@@ -54,8 +54,9 @@ public final class Constants {
 	public static final String PERSISTENCE_PREF_USER_GENDER = "user_gender";
 	public static final String PERSISTENCE_PREF_USER_PICTURE = "user_picture";
 
-	public static final String PERSISTANCE_PREF_LOGIN_FACEBOOK = "login_facebook";
-	public static final String PERSISTANCE_PREF_LOGIN_TWITTER = "login_twitter";
+	public static final String PERSISTENCE_PREF_LOGIN_FACEBOOK = "login_facebook";
+	public static final String PERSISTENCE_PREF_LOGIN_TWITTER = "login_twitter";
+	public static final String PERSISTENCE_PREF_LOGIN_VKONTAKTE = "login_vkontakte";
 
 	public static final String KEY_UNITS = "key_units";
 	public static final String KEY_GEOFENCE = "key_geofence";

@@ -21,7 +21,7 @@ public class FbLoginAchievement extends Achievement {
 			SharedPreferences prefs = controller.getUserSettings();
 			String token = loginResult.getAccessToken().toString();
 			BeeeOnFacebook.getInstance(context).setToken(token);
-			prefs.edit().putString(Constants.PERSISTANCE_PREF_LOGIN_FACEBOOK,token).apply();
+			prefs.edit().putString(Constants.PERSISTENCE_PREF_LOGIN_FACEBOOK,token).apply();
 			//TODO network
 			show();
 		}

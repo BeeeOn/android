@@ -10,4 +10,5 @@ public interface BeeeOnSocialNetwork {
 	public void logOut();
 	public boolean isPaired();
 	public String getUserName();
+	public String getName();
 }
