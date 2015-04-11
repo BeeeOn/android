@@ -910,11 +910,13 @@ public class XmlParsers {
 					tDevices.put(position, device);
 
 					mParser.nextTag();
-				}else if(mParser.getName().equals(Xconstants.PARAM)){
-					tParams.put(position, readText(Xconstants.PARAM));
-				}else{
+				}
+				else if(mParser.getName().equals(Xconstants.GEOFENCE)){
 					watchDog.setGeoRegionId(getSecureAttrValue(Xconstants.RID));
-					watchDog.setGeoDirectionType(getSecureAttrValue(Xconstants.TYPE));
+					mParser.nextTag();
+				}
+				else{
+					tParams.put(position, readText(Xconstants.PARAM));
 				}
 
 			}while(mParser.nextTag() != XmlPullParser.END_TAG && !mParser.getName().equals(Xconstants.ALGORITHM));

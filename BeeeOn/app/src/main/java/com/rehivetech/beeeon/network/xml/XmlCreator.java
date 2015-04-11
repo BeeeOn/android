@@ -1225,7 +1225,7 @@ public class XmlCreator {
 	 *          list of strings with additional params for new rule
 	 * @return
 	 */
-	public static String createAddSetAlgor(String bt, String name, String algId, String aid, int type, List<String> devices, List<String> params, String regionId, String geoType, Boolean state){
+	public static String createAddSetAlgor(String bt, String name, String algId, String aid, int type, List<String> devices, List<String> params, String regionId, Boolean state){
 		StringWriter writer = new StringWriter();
 		try {
 			XmlSerializer serializer = beginXml(writer);
@@ -1244,6 +1244,15 @@ public class XmlCreator {
 			serializer.attribute(ns, Xconstants.ATYPE, Integer.toString(type));
 
 			int i = 1;
+			if(regionId != null && !regionId.isEmpty()){
+				serializer.startTag(ns, Xconstants.GEOFENCE);
+				serializer.attribute(ns, Xconstants.ID, regionId);
+				serializer.attribute(ns, Xconstants.POSITION, Integer.toString(i++));
+				serializer.endTag(ns, Xconstants.GEOFENCE);
+			}
+
+			i = 1;
+
 			for(String device : devices){
 				serializer.startTag(ns, Xconstants.DEVICE);
 				String[] id_type = device.split(Device.ID_SEPARATOR);
@@ -1252,7 +1261,7 @@ public class XmlCreator {
 				serializer.attribute(ns, Xconstants.POSITION, Integer.toString(i++));
 				serializer.endTag(ns, Xconstants.DEVICE);
 			}
-			i=1;
+			i = 1;
 
 			for(String param : params) {
 				serializer.startTag(ns, Xconstants.PARAM);
@@ -1270,12 +1279,12 @@ public class XmlCreator {
 	}
 
 
-	public static String createAddAlgor(String bt, String name, String aid, int type, List<String> devices, List<String> params, String regionId, String geoType){
-		return createAddSetAlgor(bt, name, null, aid, type, devices, params, regionId, geoType, null);
+	public static String createAddAlgor(String bt, String name, String aid, int type, List<String> devices, List<String> params, String regionId){
+		return createAddSetAlgor(bt, name, null, aid, type, devices, params, regionId, null);
 	}
 
-	public static String createSetAlgor(String bt, String name, String algId, String aid, int type, boolean enable, List<String> devices, List<String>params, String regionId, String geoType){
-		return createAddSetAlgor(bt, name, algId, aid, type, devices, params, regionId, geoType, enable);
+	public static String createSetAlgor(String bt, String name, String algId, String aid, int type, boolean enable, List<String> devices, List<String>params, String regionId){
+		return createAddSetAlgor(bt, name, algId, aid, type, devices, params, regionId, enable);
 	}
 
 	/**

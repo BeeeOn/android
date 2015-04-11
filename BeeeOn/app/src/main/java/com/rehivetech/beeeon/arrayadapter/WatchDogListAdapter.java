@@ -11,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.rehivetech.beeeon.R;
+import com.rehivetech.beeeon.geofence.SimpleGeofence;
 import com.rehivetech.beeeon.household.watchdog.WatchDog;
 import com.rehivetech.beeeon.household.device.Device;
 import com.rehivetech.beeeon.household.device.values.BaseValue;
@@ -126,7 +127,12 @@ public class WatchDogListAdapter extends BaseAdapter {
             case WatchDog.TYPE_GEOFENCE:
                 holder.ItemIcon.setImageResource(R.drawable.dev_geofence);
 
-                //holder.ItemSubLabel.setText(deviceFirst.getName());
+                String geoId = rule.getGeoRegionId();
+                if(!geoId.isEmpty()){
+                    SimpleGeofence geoArea = mController.getGeofenceModel().getGeofence(mController.getActualUser().getId(), geoId);
+                    if(geoArea == null) return convertView;
+                    holder.ItemSubLabel.setText(geoArea.getName());
+                }
                 break;
         }
 
