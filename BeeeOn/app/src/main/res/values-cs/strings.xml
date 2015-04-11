@@ -323,7 +323,8 @@
 	<string name="share_title">Sdílet tuto událost</string>
 	<string name="downloading_data">Stahuji data &#8230;</string>
 	<string name="logout_success">Odhlášení proběhlo úspěšně</string>
-	<string name="achievement_share_msg"> Odemknul jsem tento nový achievement!</string>
+	<string name="achievement_share_url_name"> BeeeOn Inteligentní domáctnost</string>
+	<string name="achievement_share_msg"> jsem odemknul tento nový achievement!</string>
 
     <!-- WatchDog -->
     <string name="action_watchdog">Hlídač</string>

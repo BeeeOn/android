@@ -338,6 +338,7 @@
 	<string name="downloading_data">Downloading data &#8230;</string>
 	<string name="logout_success">Successfully logged out</string>
 	<string name="achievement_share_msg"> I just unlocked this new achievement!</string>
+	<string name="achievement_share_url_name"> BeeeOn Smart home</string>
 	<string name="achievement_share_url" translatable="false">http://www.beeeon.com</string>
 	<string name="achievement_share_img" translatable="false">http://www.fit.vutbr.cz/images/logo_fit.png</string>
 

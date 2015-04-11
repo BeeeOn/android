@@ -7,6 +7,7 @@ import android.widget.Toast;
 
 import com.rehivetech.beeeon.Constants;
 import com.rehivetech.beeeon.R;
+import com.rehivetech.beeeon.achievements.FbShareAchievement;
 import com.rehivetech.beeeon.achievements.TwLoginAchievement;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.util.Log;
@@ -19,6 +20,7 @@ import com.vk.sdk.api.VKRequest;
 import com.vk.sdk.api.VKResponse;
 import com.vk.sdk.api.model.VKApiUser;
 import com.vk.sdk.api.model.VKList;
+import com.vk.sdk.dialogs.VKShareDialog;
 
 import java.util.Observable;
 
@@ -71,14 +73,32 @@ public class BeeeOnVKontakte extends Observable implements BeeeOnSocialNetwork{
 		mUserName = null;
 	}
 
+	public VKShareDialog shareAchievement(String title, String date) {
+		return new VKShareDialog()
+			.setText(date + " " + mContext.getString(R.string.achievement_share_msg) + " #beeeon")
+			.setAttachmentLink(mContext.getString(R.string.achievement_share_url_name),
+					mContext.getString(R.string.achievement_share_url))
+			.setShareDialogListener(new VKShareDialog.VKShareDialogListener() {
+				public void onVkShareComplete(int postId) {
+					new FbShareAchievement(mContext);
+				}
+				public void onVkShareCancel() {
+					Log.d(TAG, "sharing canceled");
+				}
+			});
+	}
+
 	public void downloadUserData() {
+		if(mUserName != null) {
+			Log.d(TAG, "Not downloading data, already done before");
+			return;
+		}
 		VKApi.users().get().executeWithListener(new VKRequest.VKRequestListener() {
 			@Override
 			public void onComplete(VKResponse response) {
 				VKApiUser user = ((VKList<VKApiUser>) response.parsedModel).get(0);
 				mUserName = user.first_name + " " + user.last_name;
 				setChanged();
-				Log.d(TAG, "V kontakte user name " + mUserName);
 				notifyObservers("vkontakte");
 			}
 			@Override

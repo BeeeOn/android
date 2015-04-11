@@ -7,7 +7,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
-import android.widget.Toast;
+import com.vk.sdk.dialogs.VKShareDialog;
 
 import com.facebook.share.widget.ShareDialog;
 import com.rehivetech.beeeon.Constants;
@@ -69,7 +69,7 @@ public class ShareFragmentDialog extends DialogFragment {
 								else if (mTw.isPaired() && (which == 1 || which == 2))
 									startActivityForResult(mTw.shareAchievement(name), Constants.SHARE_TWITTER);
 								else if(mVk.isPaired() && (which == 1 || which == 2 || which == 3))
-									Toast.makeText(getActivity(), "vkontakte", Toast.LENGTH_LONG).show();
+									mVk.shareAchievement(name, date).show(getFragmentManager(), "string");
 							}
 						})
 				.setNegativeButton(R.string.action_close, new DialogInterface.OnClickListener() {

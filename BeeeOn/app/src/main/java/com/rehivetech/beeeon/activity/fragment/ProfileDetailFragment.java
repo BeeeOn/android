@@ -188,6 +188,10 @@ public class ProfileDetailFragment extends Fragment implements Observer {
 		}
 		else {	//at least one network is connected, allow to show the profile
 			if (showMoreAccounts) { // SHOW info
+				// DOWNLOAD data
+				if(mFb.isPaired()) mFb.downloadUserData();
+				if(mTw.isPaired()) mTw.downloadUserData();
+				if(mVk.isPaired()) mVk.downloadUserData();
 				mMoreLayout.getLayoutParams().height = (mDisplayPixel*60)+((totalNetworks-unconnectedNetworks)*(mDisplayPixel*65));
 				mMoreLayout.requestLayout();
 				mMoreVisible.setVisibility(View.VISIBLE);
@@ -216,38 +220,35 @@ public class ProfileDetailFragment extends Fragment implements Observer {
 		mTw.addObserver(this);
 		mVk.addObserver(this);
 		if(!mFb.isPaired()) {
-			fbLayout.setVisibility(View.INVISIBLE);
+			fbLayout.setVisibility(View.GONE);
 			fbPar.height = 0;
 			unconnectedNetworks++;
 		}
 		else {
-			setOnClickLogout(mFb, mFbName);
 			fbLayout.setVisibility(View.VISIBLE);
 			fbPar.height = 60*mDisplayPixel;
-			mFb.downloadUserData();
+			setOnClickLogout(mFb, mFbName);
 		}
 		if(!mTw.isPaired()) {
-			twLayout.setVisibility(View.INVISIBLE);
+			twLayout.setVisibility(View.GONE);
 			twPar.height = 0;
 			unconnectedNetworks++;
 		}
 		else {
 			twLayout.setVisibility(View.VISIBLE);
 			twPar.height = 60*mDisplayPixel;
-			mTw.downloadUserData();
 			if(mTw.getUserName() != null ) setOnClickLogout(mTw, mTwName);
 			else setOnClickLogin(mTw, mTwName);
 		}
 		if(!mVk.isPaired()) {
-			vkLayout.setVisibility(View.INVISIBLE);
+			vkLayout.setVisibility(View.GONE);
 			vkPar.height = 0;
 			unconnectedNetworks++;
 		}
 		else {
-			setOnClickLogout(mVk, mVkName);
 			vkLayout.setVisibility(View.VISIBLE);
 			vkPar.height = 60*mDisplayPixel;
-			mVk.downloadUserData();
+			setOnClickLogout(mVk, mVkName);
 		}
 	}
 
