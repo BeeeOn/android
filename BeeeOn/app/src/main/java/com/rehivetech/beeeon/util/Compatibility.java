@@ -8,7 +8,11 @@ import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.TypedValue;
 import android.view.View;
+import android.widget.RemoteViews;
+
+import com.rehivetech.beeeon.R;
 
 /**
  * @brief Methods for fixing various compatibility issues
@@ -60,6 +64,42 @@ public class Compatibility {
 					widgetProvider.onAppWidgetOptionsChanged(context, appWidgetManager, appWidgetId, newOptions);
 				}
 			}
+		}
+	}
+
+	/**
+	 * Sets remoteAdapter with correct API method
+	 * @param rv
+	 * @param widgetId
+	 * @param intent
+	 * @param viewId
+	 */
+	@SuppressWarnings("deprecation")
+	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
+	public static void setRemoteAdapter(RemoteViews rv, int widgetId, Intent intent, int viewId){
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
+			rv.setRemoteAdapter(viewId, intent);
+		}
+		else{
+			rv.setRemoteAdapter(widgetId, viewId, intent);
+		}
+	}
+
+	/**
+	 * Depending on system version sets TextView text size
+	 * @param context
+	 * @param rv
+	 * @param viewId
+	 * @param unit
+	 * @param size
+	 */
+	@SuppressWarnings("deprecation")
+	public static void setTextViewTextSize(Context context, RemoteViews rv, int viewId, int unit, float size){
+		if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN){
+			rv.setTextViewTextSize(viewId, unit, size);
+		}
+		else{
+			rv.setFloat(viewId, "setTextSize", TypedValue.applyDimension(unit, size, context.getResources().getDisplayMetrics()));
 		}
 	}
 

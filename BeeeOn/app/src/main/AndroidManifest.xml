@@ -183,7 +183,7 @@
 
             <meta-data
                 android:name="android.appwidget.provider"
-                android:resource="@xml/widget_location_provider_info" />
+                android:resource="@xml/widget_location_info" />
         </receiver>
 
         <service android:name=".widget.WidgetService" />
@@ -205,7 +205,7 @@
 
             <meta-data
                 android:name="android.appwidget.provider"
-                android:resource="@xml/widget_clock_provider_info" />
+                android:resource="@xml/widget_clock_info" />
         </receiver>
 
         <receiver
@@ -218,7 +218,7 @@
 
             <meta-data
                 android:name="android.appwidget.provider"
-                android:resource="@xml/widget_small_provider_info" />
+                android:resource="@xml/widget_sensor_1x1_info" />
         </receiver>
         <receiver
             android:name=".widget.sensor.WidgetSensorProviderMedium"
@@ -230,7 +230,7 @@
 
             <meta-data
                 android:name="android.appwidget.provider"
-                android:resource="@xml/widget_medium_provider_info" />
+                android:resource="@xml/widget_sensor_2x1_info" />
         </receiver>
         <receiver
             android:name=".widget.sensor.WidgetSensorProviderLarge"
@@ -242,14 +242,9 @@
 
             <meta-data
                 android:name="android.appwidget.provider"
-                android:resource="@xml/widget_large_provider_info" />
+                android:resource="@xml/widget_sensor_3x1_info" />
         </receiver>
 
-        <service
-            android:name=".widget.old.WidgetUpdateService"
-            android:enabled="true"
-            android:exported="false" >
-        </service>
         <service android:name=".extension.watches.smartwatch2.SW2ExtensionService" />
         <service android:name=".geofence.GeofenceIntentService" />
         <!-- GOOGLE CLOUD MESSAGING -->

@@ -16,10 +16,12 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.rehivetech.beeeon.R;
+import com.rehivetech.beeeon.asynctask.FullReloadTask;
 import com.rehivetech.beeeon.base.BaseApplicationActivity;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.household.adapter.Adapter;
 import com.rehivetech.beeeon.util.Log;
+import com.rehivetech.beeeon.util.UnitsHelper;
 import com.rehivetech.beeeon.widget.clock.WidgetClockConfiguration;
 import com.rehivetech.beeeon.widget.clock.WidgetClockData;
 import com.rehivetech.beeeon.widget.location.WidgetLocationConfiguration;
@@ -45,9 +47,11 @@ public class WidgetConfigurationActivity extends ActionBarActivity {
     private AppWidgetManager mAppWidgetManager;
 
     // widget specific variables
-    private String mWidgetShortClassName;
+    private String mWidgetProviderShortClassName;
     private WidgetData mWidgetData;
     private WidgetConfiguration mWidgetConfiguration;
+
+    private FullReloadTask mFullReloadTask;
 
     private List<Adapter> mAdapters = new ArrayList<>();
 
@@ -76,33 +80,33 @@ public class WidgetConfigurationActivity extends ActionBarActivity {
 
         // get informations about widget
         int appWidgetId = extras.getInt(AppWidgetManager.EXTRA_APPWIDGET_ID, AppWidgetManager.INVALID_APPWIDGET_ID);
-        String widgetClassName = mAppWidgetManager.getAppWidgetInfo(appWidgetId).provider.getClassName();
+        String widgetProviderClassName = mAppWidgetManager.getAppWidgetInfo(appWidgetId).provider.getClassName();
 
         // need to check this ways cause debug version has whole namespace in className
-        int lastDot = widgetClassName.lastIndexOf('.');
-        mWidgetShortClassName = widgetClassName.substring(lastDot);
+        int lastDot = widgetProviderClassName.lastIndexOf('.');
+        mWidgetProviderShortClassName = widgetProviderClassName.substring(lastDot);
 
         // ------------ add here awailable widgets
-        switch(mWidgetShortClassName){
+        switch(mWidgetProviderShortClassName){
             case ".WidgetClockProvider":
-                mWidgetData = new WidgetClockData(appWidgetId);
+                mWidgetData = new WidgetClockData(appWidgetId, mContext);
                 mWidgetConfiguration = new WidgetClockConfiguration(mWidgetData, this);
                 break;
 
             case ".WidgetLocationListProvider":
-                mWidgetData = new WidgetLocationData(appWidgetId);
+                mWidgetData = new WidgetLocationData(appWidgetId, mContext);
                 mWidgetConfiguration = new WidgetLocationConfiguration(mWidgetData, this);
                 break;
 
             case ".WidgetSensorProvider":
             case ".WidgetSensorProviderMedium":
             case ".WidgetSensorProviderLarge":
-                mWidgetData = new WidgetSensorData(appWidgetId);
+                mWidgetData = new WidgetSensorData(appWidgetId, mContext);
                 mWidgetConfiguration = new WidgetSensorConfiguration(mWidgetData, this);
                 break;
 
             default:
-                Log.d(TAG, "No widget with class: " + mWidgetShortClassName);
+                Log.d(TAG, "No widget with class: " + mWidgetProviderShortClassName);
                 finishMinimize();
                 break;
         }
@@ -124,12 +128,13 @@ public class WidgetConfigurationActivity extends ActionBarActivity {
             setSupportActionBar(mToolbar);
         }
 
+        WidgetService.addWidgetData(mWidgetData);
         // every widget has different layout, so inflate it here
         mWidgetConfiguration.inflationConstructor();
     }
 
     private void finishMinimize(){
-        moveTaskToBack(true);
+        //moveTaskToBack(true);
         finish();
     }
 
@@ -141,6 +146,7 @@ public class WidgetConfigurationActivity extends ActionBarActivity {
         super.onResume();
 
         mController = Controller.getInstance(mContext);
+
         // controls that we have any adapter, if not tries to login or finish()
         mAdapters = mController.getAdaptersModel().getAdapters();
         if (mAdapters.isEmpty()) {

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
 	android:layout_width="match_parent"
-	android:layout_height="@dimen/widget_height"
+	android:layout_height="150dp"
 	android:background="@drawable/widget_bg"
 	android:id="@+id/layout"
 	>
@@ -72,37 +72,16 @@
 		android:layout_below="@id/widget_header"
 		/>
 
-	<LinearLayout
+	<!-- value layout - inflated programmatically -->
+	<RelativeLayout
+		android:id="@+id/value_container"
 		android:layout_below="@id/widget_header"
-		android:orientation="horizontal"
 		android:layout_width="wrap_content"
 		android:layout_height="match_parent"
 		android:gravity="center_vertical"
 		android:paddingLeft="8dp"
 		android:paddingRight="8dp"
-		>
-		<TextView
-			android:id="@+id/value"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:textSize="@dimen/widget_value_size"
-			android:singleLine="true"
-			android:textColor="@color/beeeon_secundary_pink"
-			android:textStyle="bold"
-			android:text="@string/placeholder_none"
-			/>
-
-		<TextView
-			android:id="@+id/unit"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:textSize="20sp"
-			android:layout_marginLeft="2dp"
-			android:layout_marginStart="2dp"
-			android:textColor="@color/beeeon_secundary_pink"
-			/>
-	</LinearLayout>
-
+		/>
 
 	<TextView
 		android:paddingRight="8dp"

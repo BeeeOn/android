@@ -1,8 +1,4 @@
 <resources>
-
-	<!--  Widget margins -->
+	<!-- because on API >= 14 is provided automatically -->
 	<dimen name="widget_margin">0dp</dimen>
-	<!-- widget dimensions -->
-	<dimen name="widget_value_size">24sp</dimen>
-	<dimen name="widget_height">100dp</dimen>
 </resources>

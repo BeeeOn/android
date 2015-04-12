@@ -1,72 +1,69 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="@dimen/widget_height"
-    android:background="@drawable/widget_bg"
-    android:id="@+id/layout"
-    android:orientation="vertical"
+    android:layout_height="match_parent"
+    android:padding="@dimen/widget_margin"
     >
     <LinearLayout
+        android:layout_width="@dimen/widget_width_cells_1"
+        android:layout_height="@dimen/widget_height_cells_1"
+        android:background="@drawable/widget_bg"
+        android:id="@+id/layout"
         android:orientation="vertical"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="0.7"
-        android:gravity="center_horizontal"
-        android:paddingTop="4dp"
-        android:paddingLeft="8dp"
-        android:paddingRight="8dp"
-        android:background="@drawable/widget_inside_bg"
+        android:layout_gravity="center"
         >
-
-        <TextView
-            android:id="@+id/name"
+        <LinearLayout
+            android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:textSize="12sp"
-            android:singleLine="true"
-            android:ellipsize="marquee"
-            android:textColor="@color/white"
-            android:text="@string/placeholder_none"
+            android:layout_height="0dp"
+            android:layout_weight="0.6"
+            android:gravity="center_horizontal"
+            android:paddingTop="4dp"
+            android:paddingLeft="8dp"
+            android:paddingRight="8dp"
+            android:background="@drawable/widget_inside_bg"
+            >
+
+            <TextView
+                android:id="@+id/name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:textSize="12sp"
+                android:singleLine="true"
+                android:ellipsize="marquee"
+                android:textColor="@color/white"
+                android:text="@string/placeholder_none"
+                />
+
+            <ImageView
+                android:id="@+id/icon"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:scaleType="fitCenter"
+                android:layout_gravity="center"
+                android:src="@drawable/dev_unknown"
+                android:contentDescription="@string/placeholder_icon"
+                />
+
+        </LinearLayout>
+
+        <!-- shadow -->
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="6dp"
+            android:src="@drawable/toolbar_dropshadow"
             />
 
-        <ImageView
-            android:id="@+id/icon"
+        <!-- value layout - inflated programmatically -->
+        <RelativeLayout
+            android:id="@+id/value_container"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:scaleType="fitCenter"
-            android:layout_gravity="center"
-            android:paddingTop="4dp"
-            android:paddingBottom="4dp"
-            android:src="@drawable/dev_unknown"
-            android:contentDescription="@string/placeholder_icon"
+            android:layout_height="0dp"
+            android:layout_weight="0.4"
+            android:gravity="center"
             />
 
     </LinearLayout>
-
-    <!-- shadow -->
-    <ImageView
-        android:layout_width="match_parent"
-        android:layout_height="6dp"
-        android:src="@drawable/toolbar_dropshadow"
-        />
-
-    <!-- invisible layouts for value or actor .. inflated programatically -->
-    <ViewStub
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="0.3"
-        android:gravity="center"
-        android:id="@+id/widget_viewstub_value"
-        android:layout="@layout/widget_value_unit"
-    />
-
-    <ViewStub
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="0.3"
-        android:gravity="center"
-        android:id="@+id/widget_viewstub_on_off"
-        android:layout="@layout/widget_switchcompat"
-        />
-</LinearLayout>
+</FrameLayout>

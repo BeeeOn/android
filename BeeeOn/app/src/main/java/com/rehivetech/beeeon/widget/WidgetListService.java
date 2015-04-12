@@ -64,8 +64,8 @@ class ListRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory {
         mWidgetId = intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, AppWidgetManager.INVALID_APPWIDGET_ID);
         mDevices = new ArrayList<>();
 
-        mLocationId = intent.getStringExtra(WidgetLocationListProvider.EXTRA_LOCATION_ID);
-        mLocationAdapterId = intent.getStringExtra(WidgetLocationListProvider.EXTRA_ITEM_ADAPTER_ID);
+        mLocationId = intent.getStringExtra(WidgetLocationData.EXTRA_LOCATION_ID);
+        mLocationAdapterId = intent.getStringExtra(WidgetLocationData.EXTRA_LOCATION_ADAPTER_ID);
 
         SharedPreferences userSettings = mController.getUserSettings();
 
@@ -113,8 +113,8 @@ class ListRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory {
 
         // send broadcast to widgetprovider with information about clicked item
         Bundle extras = new Bundle();
-        extras.putString(WidgetLocationListProvider.EXTRA_ITEM_DEV_ID, dev.getId());
-        extras.putString(WidgetLocationListProvider.EXTRA_ITEM_ADAPTER_ID, dev.getFacility().getAdapterId());
+        extras.putString(WidgetLocationData.EXTRA_ITEM_DEV_ID, dev.getId());
+        extras.putString(WidgetLocationData.EXTRA_ITEM_ADAPTER_ID, dev.getFacility().getAdapterId());
         Intent fillInIntent = new Intent();
         fillInIntent.putExtras(extras);
         rv.setOnClickFillInIntent(R.id.widget_loc_item, fillInIntent);
@@ -159,8 +159,6 @@ class ListRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory {
         // TODO problem if logged out
         // TODO problem when changed room
         // TODO checking if new data not all the time refresh
-
-;
 
         mFacilities = mController.getFacilitiesModel().getFacilitiesByLocation(mLocationAdapterId, mLocationId);
         for(Facility fac : mFacilities){

@@ -119,6 +119,7 @@ public class WidgetLocationConfiguration extends WidgetConfiguration {
         ((WidgetLocationData) mWidgetData).locationName = location.getName();
         ((WidgetLocationData) mWidgetData).locationIcon = location.getIconResource();
 
+        // TODO misto toho pouzit changeData()
         mWidgetData.saveData(mActivity);
 
         return true;

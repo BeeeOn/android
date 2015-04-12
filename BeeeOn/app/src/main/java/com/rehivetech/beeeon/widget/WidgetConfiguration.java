@@ -50,7 +50,7 @@ abstract public class WidgetConfiguration {
         mWidgetUpdateSeekBar = (SeekBar) mActivity.findViewById(R.id.widgetConfIntervalWidget);
 
         // loads data if editing widget otherwise default data
-        mWidgetData.loadData(mActivity);
+        //mWidgetData.loadData(mActivity);
         initWidgetUpdateIntervalLayout();
     }
 
