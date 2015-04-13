@@ -1,7 +1,6 @@
-package com.rehivetech.beeeon.widget.sensor;
+package com.rehivetech.beeeon.widget.device;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.SystemClock;
 import android.util.TypedValue;
 import android.widget.RemoteViews;
@@ -16,6 +15,8 @@ import com.rehivetech.beeeon.household.device.values.OnOffValue;
 import com.rehivetech.beeeon.household.device.values.OpenClosedValue;
 import com.rehivetech.beeeon.util.Compatibility;
 import com.rehivetech.beeeon.util.Log;
+import com.rehivetech.beeeon.util.TimeHelper;
+import com.rehivetech.beeeon.util.UnitsHelper;
 import com.rehivetech.beeeon.widget.WidgetData;
 import com.rehivetech.beeeon.widget.WidgetService;
 
@@ -25,8 +26,8 @@ import org.joda.time.DateTimeZone;
 /**
  * Class for sensor app widget (1x1, 2x1, 3x1)
  */
-public class WidgetSensorData extends WidgetData {
-    private static final String TAG = WidgetSensorData.class.getSimpleName();
+public class WidgetDeviceData extends WidgetData {
+    private static final String TAG = WidgetDeviceData.class.getSimpleName();
 
     private static final String PREF_DEVICE_ID = "device";
     private static final String PREF_DEVICE_NAME = "device_name";
@@ -51,12 +52,14 @@ public class WidgetSensorData extends WidgetData {
 
     private RemoteViews mValueRemoteViews;
 
-    public WidgetSensorData(int widgetId, Context context) {
+    public WidgetDeviceData(int widgetId, Context context) {
         super(widgetId, context);
+        mClassName = WidgetDeviceData.class.getName();
+    }
 
-        widgetProvider = new WidgetSensorProvider();
-        mClassName = WidgetSensorData.class.getName();
-
+    @Override
+    public Facility getReferredObj() {
+        return mFacility;
     }
 
     @Override
@@ -78,7 +81,10 @@ public class WidgetSensorData extends WidgetData {
 
         String[] ids = deviceId.split(Device.ID_SEPARATOR, 2);
 
-        mFacility = new Facility();
+        if(mFacility == null) {
+            mFacility = new Facility();
+        }
+
         mFacility.setAdapterId(adapterId);
         mFacility.setAddress(ids[0]);
 
@@ -101,19 +107,11 @@ public class WidgetSensorData extends WidgetData {
             mValueRemoteViews = new RemoteViews(mContext.getPackageName(), R.layout.widget_value_unit);
         }
 
-
         mRemoteViews.removeAllViews(R.id.value_container);
 
         if(mValueRemoteViews != null) {
             mRemoteViews.addView(R.id.value_container, mValueRemoteViews);
         }
-    }
-
-    @Override
-    public boolean prepare() {
-        Log.d(TAG, String.format("prepare(%d)", mWidgetId));
-
-        return true;
     }
 
     @Override
@@ -226,15 +224,14 @@ public class WidgetSensorData extends WidgetData {
     public void loadData(Context context){
         super.loadData(context);
 
-        SharedPreferences prefs = getSettings(context);
-        deviceId = prefs.getString(PREF_DEVICE_ID, "");
-        deviceName = prefs.getString(PREF_DEVICE_NAME, context.getString(R.string.placeholder_not_exists));
-        deviceIcon = prefs.getInt(PREF_DEVICE_ICON, 0);
-        deviceValue = prefs.getString(PREF_DEVICE_VALUE, "");
-        deviceUnit = prefs.getString(PREF_DEVICE_UNIT, "");
-        deviceLastUpdateText = prefs.getString(PREF_DEVICE_LAST_UPDATE_TEXT, "");
-        deviceLastUpdateTime = prefs.getLong(PREF_DEVICE_LAST_UPDATE_TIME, 0);
-        deviceRefresh = prefs.getInt(PREF_DEVICE_REFRESH, 0);
+        deviceId = mPrefs.getString(PREF_DEVICE_ID, "");
+        deviceName = mPrefs.getString(PREF_DEVICE_NAME, context.getString(R.string.placeholder_not_exists));
+        deviceIcon = mPrefs.getInt(PREF_DEVICE_ICON, 0);
+        deviceValue = mPrefs.getString(PREF_DEVICE_VALUE, "");
+        deviceUnit = mPrefs.getString(PREF_DEVICE_UNIT, "");
+        deviceLastUpdateText = mPrefs.getString(PREF_DEVICE_LAST_UPDATE_TEXT, "");
+        deviceLastUpdateTime = mPrefs.getLong(PREF_DEVICE_LAST_UPDATE_TIME, 0);
+        deviceRefresh = mPrefs.getInt(PREF_DEVICE_REFRESH, 0);
     }
 
     @Override

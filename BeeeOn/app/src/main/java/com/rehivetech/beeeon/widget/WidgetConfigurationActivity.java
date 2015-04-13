@@ -4,6 +4,8 @@ import android.appwidget.AppWidgetManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
@@ -21,13 +23,13 @@ import com.rehivetech.beeeon.base.BaseApplicationActivity;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.household.adapter.Adapter;
 import com.rehivetech.beeeon.util.Log;
-import com.rehivetech.beeeon.util.UnitsHelper;
 import com.rehivetech.beeeon.widget.clock.WidgetClockConfiguration;
 import com.rehivetech.beeeon.widget.clock.WidgetClockData;
+import com.rehivetech.beeeon.widget.clock.WidgetClockFragment;
 import com.rehivetech.beeeon.widget.location.WidgetLocationConfiguration;
 import com.rehivetech.beeeon.widget.location.WidgetLocationData;
-import com.rehivetech.beeeon.widget.sensor.WidgetSensorConfiguration;
-import com.rehivetech.beeeon.widget.sensor.WidgetSensorData;
+import com.rehivetech.beeeon.widget.device.WidgetDeviceConfiguration;
+import com.rehivetech.beeeon.widget.device.WidgetDeviceData;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -51,6 +53,8 @@ public class WidgetConfigurationActivity extends ActionBarActivity {
     private WidgetData mWidgetData;
     private WidgetConfiguration mWidgetConfiguration;
 
+    private Fragment mCfgFragment;
+
     private FullReloadTask mFullReloadTask;
 
     private List<Adapter> mAdapters = new ArrayList<>();
@@ -58,6 +62,7 @@ public class WidgetConfigurationActivity extends ActionBarActivity {
     // user logged in system variables
     private boolean isInitialized = false;
     private boolean triedLoginAlready = false;
+    private boolean mReturnResult = false;
 
     /**
      * Creates activity, created class for widgetData and inflate widget-specific configuration layout
@@ -74,7 +79,7 @@ public class WidgetConfigurationActivity extends ActionBarActivity {
         // if no extras, there's no widget id -> exit
         if(extras == null) {
             Log.d(TAG, "No widget Id => finish()");
-            finishMinimize();
+            finishActivity();
             return;
         }
 
@@ -91,6 +96,14 @@ public class WidgetConfigurationActivity extends ActionBarActivity {
             case ".WidgetClockProvider":
                 mWidgetData = new WidgetClockData(appWidgetId, mContext);
                 mWidgetConfiguration = new WidgetClockConfiguration(mWidgetData, this);
+
+                /*
+                mCfgFragment = new WidgetClockFragment();
+                FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+                ft.replace(R.id.widget_config_fragment, mCfgFragment);
+                ft.commit();
+                //*/
+
                 break;
 
             case ".WidgetLocationListProvider":
@@ -98,22 +111,22 @@ public class WidgetConfigurationActivity extends ActionBarActivity {
                 mWidgetConfiguration = new WidgetLocationConfiguration(mWidgetData, this);
                 break;
 
-            case ".WidgetSensorProvider":
-            case ".WidgetSensorProviderMedium":
-            case ".WidgetSensorProviderLarge":
-                mWidgetData = new WidgetSensorData(appWidgetId, mContext);
-                mWidgetConfiguration = new WidgetSensorConfiguration(mWidgetData, this);
+            case ".WidgetDeviceProvider":
+            case ".WidgetDeviceProviderMedium":
+            case ".WidgetDeviceProviderLarge":
+                mWidgetData = new WidgetDeviceData(appWidgetId, mContext);
+                mWidgetConfiguration = new WidgetDeviceConfiguration(mWidgetData, this);
                 break;
 
             default:
                 Log.d(TAG, "No widget with class: " + mWidgetProviderShortClassName);
-                finishMinimize();
+                finishActivity();
                 break;
         }
 
         // no valid ID, so bail out
         if (mWidgetData == null || mWidgetData.getWidgetId() == AppWidgetManager.INVALID_APPWIDGET_ID) {
-            finishMinimize();
+            finishActivity();
             return;
         }
 
@@ -128,13 +141,23 @@ public class WidgetConfigurationActivity extends ActionBarActivity {
             setSupportActionBar(mToolbar);
         }
 
-        WidgetService.addWidgetData(mWidgetData);
         // every widget has different layout, so inflate it here
         mWidgetConfiguration.inflationConstructor();
     }
 
-    private void finishMinimize(){
-        //moveTaskToBack(true);
+    /**
+     * Specified to start or delete widget
+     */
+    private void finishActivity(){
+        // pred ukoncenim aktivity zavolame konec konfigurace widgetu
+        if(mWidgetConfiguration != null) {
+            if (mReturnResult) {
+                mWidgetConfiguration.startWidgetOk();
+            } else {
+                mWidgetConfiguration.startWidgetCancel();
+            }
+        }
+
         finish();
     }
 
@@ -158,7 +181,7 @@ public class WidgetConfigurationActivity extends ActionBarActivity {
             } else if (mController.isLoggedIn()) {
                 // Otherwise he is logged in but has no sensors, we quit completely
                 Toast.makeText(this, R.string.widget_configuration_no_adapters, Toast.LENGTH_LONG).show();
-                finishMinimize();
+                finishActivity();
             }
 
             return;
@@ -182,15 +205,9 @@ public class WidgetConfigurationActivity extends ActionBarActivity {
         // return the original widget ID, found in onCreate()
         Intent resultValue = new Intent();
         resultValue.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, mWidgetData.getWidgetId());
-
-        if(success){
-            mWidgetConfiguration.startWidgetOk();
-            setResult(RESULT_OK, resultValue);
-        }
-        else{
-            mWidgetConfiguration.startWidgetCancel();
-            setResult(RESULT_CANCELED, resultValue);
-        }
+        // prepare result of configuration widget
+        setResult(success ? RESULT_OK : RESULT_CANCELED, resultValue);
+        mReturnResult = success;
     }
 
     /**
@@ -228,7 +245,7 @@ public class WidgetConfigurationActivity extends ActionBarActivity {
                         if(!mWidgetConfiguration.saveSettings()) return;
 
                         returnIntent(true);
-                        finishMinimize();
+                        finishActivity();
                     }
                 });
         customActionBarView.findViewById(R.id.actionbar_cancel).setOnClickListener(
@@ -238,7 +255,7 @@ public class WidgetConfigurationActivity extends ActionBarActivity {
                         // "Cancel"
                         Log.d(TAG, "CANCEL clicked");
                         returnIntent(false);
-                        finishMinimize();
+                        finishActivity();
                     }
                 });
 

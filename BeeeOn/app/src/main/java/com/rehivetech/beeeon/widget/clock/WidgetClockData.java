@@ -2,12 +2,10 @@ package com.rehivetech.beeeon.widget.clock;
 
 import android.appwidget.AppWidgetManager;
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.SystemClock;
 import android.widget.RemoteViews;
 
 import com.rehivetech.beeeon.R;
-import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.household.adapter.Adapter;
 import com.rehivetech.beeeon.household.device.Device;
 import com.rehivetech.beeeon.household.device.Facility;
@@ -15,9 +13,7 @@ import com.rehivetech.beeeon.household.device.RefreshInterval;
 import com.rehivetech.beeeon.util.Log;
 import com.rehivetech.beeeon.util.TimeHelper;
 import com.rehivetech.beeeon.util.UnitsHelper;
-import com.rehivetech.beeeon.util.Utils;
 import com.rehivetech.beeeon.widget.WidgetData;
-import com.rehivetech.beeeon.widget.WidgetService;
 
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
@@ -54,80 +50,40 @@ public class WidgetClockData extends WidgetData {
     public String deviceLastUpdateText;
     public int deviceRefresh;
 
+    private Facility mFacility;
+
     public WidgetClockData(int widgetId, Context context) {
         super(widgetId, context);
-        widgetProvider = new WidgetClockProvider();
         mClassName = WidgetClockData.class.getName();
-
-        // updates clock
-        onUpdateClock(mContext, mRemoteViews, new int[]{mWidgetId});
-
-        if(adapterId.length() > 0 && deviceId.length() > 0){
-            mRemoteViews.setOnClickPendingIntent(R.id.widget_clock_temperature_in, startDetailActivityPendingIntent(mContext, mWidgetId, adapterId, deviceId));
-        }
-    }
-
-    public static String[] reloadWeekDays(){
-        return new DateFormatSymbols().getShortWeekdays();
-    }
-
-    /**
-     * Updates widget's time asynchroningly to sensor updates
-     * Updates always on time broadcasts
-     * @param context
-     */
-    public static void onUpdateClock(Context context, RemoteViews rv, int[] appWidgetIds) {
-        AppWidgetManager widgetManager = AppWidgetManager.getInstance(context);
-        Calendar cal = Calendar.getInstance(context.getResources().getConfiguration().locale);
-        cal.setTime(new Date());
-
-        if(appWidgetIds == null) return;
-
-        for(int widgetId : appWidgetIds) {
-            Log.d(TAG, String.format("onUpdateClock(%d)", widgetId));
-
-            // tries to get initialized first
-            if(rv == null){
-                rv = new RemoteViews(context.getPackageName(), R.layout.widget_clock);
-            }
-
-            rv.setTextViewText(R.id.widget_clock_hours, String.format("%02d", cal.get(Calendar.HOUR_OF_DAY)));
-            rv.setTextViewText(R.id.widget_clock_minutes, String.format("%02d", cal.get(Calendar.MINUTE)));
-
-            rv.setTextViewText(R.id.widget_clock_date, DateTimeFormat.shortDate().print(cal.getTimeInMillis()));
-            rv.setTextViewText(R.id.widget_clock_day_of_week, weekDays[cal.get(Calendar.DAY_OF_WEEK)]);
-
-            // request widget redraw
-            widgetManager.updateAppWidget(widgetId, rv);
-        }
     }
 
     @Override
-    public boolean prepare(){
-        Log.d(TAG, String.format("prepare(%d)", mWidgetId));
-        // Prepare list of facilities for network request
-        if (deviceId.isEmpty() || adapterId.isEmpty()) return false;
+    public Facility getReferredObj() {
+        return mFacility;
+    }
 
-        String[] ids = deviceId.split(Device.ID_SEPARATOR, 2);
+    @Override
+    public void initLayout() {
+        super.initLayout();
 
-        // TODO toto urcite bude treba prekopat
-        Facility facility = Utils.getFromList(ids[0], WidgetService.usedFacilities);
-        if(facility == null){
-            Log.d(TAG, String.format("Need to create fac from widgetData(%d)", getWidgetId()));
-
-            facility = new Facility();
-            facility.setAdapterId(adapterId);
-            facility.setAddress(ids[0]);
-            facility.setLastUpdate(new DateTime(deviceLastUpdateTime, DateTimeZone.UTC));
-            facility.setRefresh(RefreshInterval.fromInterval(deviceRefresh));
-
-            facility.addDevice(Device.createFromDeviceTypeId(ids[1]));
-
-            //WidgetService.usedFacilities.put(facility.getId(), facility);
-            WidgetService.usedFacilities.add(facility);
+        // configuration
+        mRemoteViews.setOnClickPendingIntent(R.id.widget_clock_time_layout, mConfigurationPendingIntent);
+        // detail activity inside temp
+        if(adapterId.length() > 0 && deviceId.length() > 0){
+            mRemoteViews.setOnClickPendingIntent(R.id.widget_clock_temperature_in, startDetailActivityPendingIntent(mContext, mWidgetId, adapterId, deviceId));
         }
 
-        return true;
+        String[] ids = deviceId.split(Device.ID_SEPARATOR, 2);
+        if(mFacility == null) {
+            mFacility = new Facility();
+        }
+
+        mFacility.setAdapterId(adapterId);
+        mFacility.setAddress(ids[0]);
+        mFacility.setLastUpdate(new DateTime(deviceLastUpdateTime, DateTimeZone.UTC));
+        mFacility.setRefresh(RefreshInterval.fromInterval(deviceRefresh));
+
+        mFacility.addDevice(Device.createFromDeviceTypeId(ids[1]));
     }
 
     @Override
@@ -135,7 +91,6 @@ public class WidgetClockData extends WidgetData {
         long timeNow = SystemClock.elapsedRealtime();
 
         Adapter adapter = mController.getAdaptersModel().getAdapter(adapterId);
-
         Device device = mController.getFacilitiesModel().getDevice(adapterId, deviceId);
 
         if (device != null) {
@@ -212,5 +167,46 @@ public class WidgetClockData extends WidgetData {
                 .putLong(PREF_DEVICE_LAST_UPDATE_TIME, deviceLastUpdateTime)
                 .putInt(PREF_DEVICE_REFRESH, deviceRefresh)
                 .commit();
+    }
+
+
+    /**
+     * Updates widget's time asynchroningly to sensor updates
+     * Updates always on time broadcasts
+     * @param context
+     */
+    public static void onUpdateClock(Context context, RemoteViews rv, int[] appWidgetIds) {
+        AppWidgetManager widgetManager = AppWidgetManager.getInstance(context);
+        Calendar cal = Calendar.getInstance(context.getResources().getConfiguration().locale);
+        cal.setTime(new Date());
+
+        if(appWidgetIds == null) return;
+
+        for(int widgetId : appWidgetIds) {
+            Log.d(TAG, String.format("onUpdateClock(%d)", widgetId));
+
+            // tries to get initialized first
+            if(rv == null){
+                rv = new RemoteViews(context.getPackageName(), R.layout.widget_clock);
+            }
+
+            rv.setTextViewText(R.id.widget_clock_hours, String.format("%02d", cal.get(Calendar.HOUR_OF_DAY)));
+            rv.setTextViewText(R.id.widget_clock_minutes, String.format("%02d", cal.get(Calendar.MINUTE)));
+
+            rv.setTextViewText(R.id.widget_clock_date, DateTimeFormat.shortDate().print(cal.getTimeInMillis()));
+            rv.setTextViewText(R.id.widget_clock_day_of_week, weekDays[cal.get(Calendar.DAY_OF_WEEK)]);
+
+            // request widget redraw
+            widgetManager.updateAppWidget(widgetId, rv);
+        }
+    }
+
+    /**
+     * When changed locale, change statically week day names
+     * @return array of weekday names
+     */
+    public static String[] reloadWeekDays(){
+        weekDays = new DateFormatSymbols().getShortWeekdays();
+        return weekDays;
     }
 }

@@ -18,6 +18,8 @@ import com.rehivetech.beeeon.util.Log;
 import com.rehivetech.beeeon.util.TimeHelper;
 import com.rehivetech.beeeon.util.UnitsHelper;
 
+import java.util.Objects;
+
 /**
  * @author mlyko
  */
@@ -31,21 +33,21 @@ abstract public class WidgetData {
     protected static final String PREF_LAST_UPDATE = "lastUpdate";
     protected static final String PREF_INITIALIZED = "initialized";
     protected static final String PREF_ADAPTER_ID = "adapter_id";
+    private static final String PREF_USER_ID = "user_id";
 
+    private String mUserId;
     protected final int mWidgetId;
+
     public int layout;
     public int interval;
     public long lastUpdate;
     public boolean initialized;
     public String adapterId;
 
-    public WidgetProvider widgetProvider;
-
     protected String mClassName;
     protected Context mContext;
     protected Controller mController;
     protected AppWidgetManager mWidgetManager;
-    protected AppWidgetProviderInfo mWidgetProviderInfo;
     protected RemoteViews mRemoteViews;
     protected SharedPreferences mPrefs;
     protected SharedPreferences mUserSettings;
@@ -60,7 +62,6 @@ abstract public class WidgetData {
         mContext = context.getApplicationContext();
         mController = Controller.getInstance(mContext);
         mWidgetManager = AppWidgetManager.getInstance(mContext.getApplicationContext());
-        mWidgetProviderInfo = mWidgetManager.getAppWidgetInfo(widgetId);
 
         // TODO nevytvaret pro kazdy widget, ale ziskat z rodice
         mPrefs = getSettings(mContext);
@@ -71,7 +72,13 @@ abstract public class WidgetData {
         // TODO zrusit loadData?
         loadData(mContext);
 
+        // TODO do initLayout nebo neceho takoveho
         mRemoteViews = new RemoteViews(context.getPackageName(), this.layout);
+    }
+
+    // TODO udelat abstract
+    public Object getReferredObj(){
+        return new Object();
     }
 
     public void initLayout(){
@@ -86,10 +93,16 @@ abstract public class WidgetData {
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, mWidgetId);
         mConfigurationPendingIntent = PendingIntent.getActivity(mContext, mWidgetId, intent, PendingIntent.FLAG_CANCEL_CURRENT);
+
+        Log.v(TAG, String.format("WidgetData userId(%s)", mUserId));
     }
 
+    // TODO delete
     // methods for managing widgets
-    public abstract boolean prepare();
+    public boolean prepare(){
+        Log.d(TAG, String.format("prepare(%d)", mWidgetId));
+        return true;
+    }
 
     public abstract void changeData();
 
@@ -122,25 +135,28 @@ abstract public class WidgetData {
      */
     public void loadData(Context context) {
         // set default widget data
-        layout = mPrefs.getInt(PREF_LAYOUT, mWidgetProviderInfo != null ? mWidgetProviderInfo.initialLayout : 0);
+        AppWidgetProviderInfo widgetProviderInfo = mWidgetManager.getAppWidgetInfo(mWidgetId);
+        layout = mPrefs.getInt(PREF_LAYOUT, widgetProviderInfo != null ? widgetProviderInfo.initialLayout : 0);
         interval = mPrefs.getInt(PREF_INTERVAL, WidgetService.UPDATE_INTERVAL_DEFAULT);
         lastUpdate = mPrefs.getLong(PREF_LAST_UPDATE, 0);
         initialized = mPrefs.getBoolean(PREF_INITIALIZED, false);
-        // all widgets has adapterId
+        // all widgets has these params
         adapterId = mPrefs.getString(PREF_ADAPTER_ID, "");
+        mUserId = mPrefs.getString(PREF_USER_ID, mController.getActualUser().getId());
     }
 
     /**
      * Save all data of this widget
      */
     public void saveData(Context context) {
-        getSettings(context).edit()
+        mPrefs.edit()
             .putString(PREF_CLASS_NAME, mClassName)
             .putInt(PREF_LAYOUT, layout)
             .putInt(PREF_INTERVAL, interval)
             .putLong(PREF_LAST_UPDATE, lastUpdate)
             .putBoolean(PREF_INITIALIZED, initialized)
             .putString(PREF_ADAPTER_ID, adapterId)
+            .putString(PREF_USER_ID, mUserId)
             .commit();
 
         initLayout();
@@ -237,8 +253,7 @@ abstract public class WidgetData {
     /**
      * Checks if widget is expired and should be redrawn
      *
-     * @param now
-     *            Actual SystemClock.elapsedRealtime() value to compare
+     * @param now Actual SystemClock.elapsedRealtime() value to compare
      * @return true if next update time is in the past (or <1000ms in future from now)
      */
     public boolean isExpired(long now) {

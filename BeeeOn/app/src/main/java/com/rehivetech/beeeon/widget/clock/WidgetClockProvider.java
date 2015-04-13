@@ -18,7 +18,7 @@ public class WidgetClockProvider extends WidgetProvider {
 			WidgetClockData.onUpdateClock(context, null, getAllIds(context));
 		}
 		else if(action.equals(WidgetBridgeBroadcastReceiver.ACTION_LOCALE_CHANGED)){
-			WidgetClockData.weekDays = WidgetClockData.reloadWeekDays();
+			WidgetClockData.reloadWeekDays();
 		}
 
 		super.onReceive(context, intent);

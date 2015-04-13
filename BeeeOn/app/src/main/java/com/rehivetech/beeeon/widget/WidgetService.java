@@ -9,6 +9,7 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.os.IBinder;
 import android.os.SystemClock;
 import android.util.SparseArray;
@@ -16,21 +17,25 @@ import android.util.SparseArray;
 import com.rehivetech.beeeon.exception.AppException;
 import com.rehivetech.beeeon.household.device.Device;
 import com.rehivetech.beeeon.household.device.Facility;
-import com.rehivetech.beeeon.household.location.Location;
 import com.rehivetech.beeeon.asynctask.ActorActionTask;
 import com.rehivetech.beeeon.asynctask.CallbackTask;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.util.Log;
+import com.rehivetech.beeeon.util.TimeHelper;
+import com.rehivetech.beeeon.util.UnitsHelper;
+import com.rehivetech.beeeon.util.Utils;
 import com.rehivetech.beeeon.widget.clock.WidgetClockProvider;
 import com.rehivetech.beeeon.widget.location.WidgetLocationListProvider;
-import com.rehivetech.beeeon.widget.sensor.WidgetSensorData;
-import com.rehivetech.beeeon.widget.sensor.WidgetSensorProvider;
-import com.rehivetech.beeeon.widget.sensor.WidgetSensorProviderLarge;
-import com.rehivetech.beeeon.widget.sensor.WidgetSensorProviderMedium;
+import com.rehivetech.beeeon.widget.device.WidgetDeviceData;
+import com.rehivetech.beeeon.widget.device.WidgetDeviceProvider;
+import com.rehivetech.beeeon.widget.device.WidgetDeviceProviderLarge;
+import com.rehivetech.beeeon.widget.device.WidgetDeviceProviderMedium;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author mlyko
@@ -48,15 +53,17 @@ public class WidgetService extends Service {
     private static final String EXTRA_CHANGE_LAYOUT = "com.rehivetech.beeeon.change_layout";
     private static final String EXTRA_CHANGE_LAYOUT_RESOURCE = "com.rehivetech.beeeon.change_layout_resource";
 
-    // list of actually used facilities (some widgets use these facilities)
-    public static List<Facility> usedFacilities = new ArrayList<Facility>();
-    public static List<Location> usedLocations = new ArrayList<Location>();
     // list of available widgets
     private static SparseArray<WidgetData> availableWidgets = new SparseArray<WidgetData>();
+
     private Context mContext;
     private Controller mController;
     private AppWidgetManager mAppWidgetManager;
     private BroadcastReceiver mBroadcastBridge;
+    // helpers
+    private UnitsHelper mUnitsHelper;
+    private TimeHelper mTimeHelper;
+
     // variables for checking if user go logged out / in
     private boolean isLoggedInLast = false;
     private boolean isLoginStateChanged = true;
@@ -89,6 +96,16 @@ public class WidgetService extends Service {
     }
 
     /**
+     * Set repeating to parameter
+     * @param triggerAtMillis
+     */
+    private void setAlarm(long triggerAtMillis){
+        // Set new alarm time
+        AlarmManager m = (AlarmManager) mContext.getSystemService(Context.ALARM_SERVICE);
+        m.set(AlarmManager.ELAPSED_REALTIME, triggerAtMillis, getUpdatePendingIntent(mContext));
+    }
+
+    /**
      * Stops repeating
      * @param context
      */
@@ -96,6 +113,42 @@ public class WidgetService extends Service {
         // cancel frequently refreshing
         AlarmManager m = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         m.cancel(getUpdatePendingIntent(context));
+    }
+
+    /**
+     * Insert widgetData to list of used widgets
+     * @param widgetData
+     */
+    public static void addWidgetData(WidgetData widgetData) {
+        // add widgetData to service
+        availableWidgets.put(widgetData.getWidgetId(), widgetData);
+    }
+
+    /**
+     * Deletes widgets data by Ids
+     * @param widgetIds
+     */
+    private void widgetsDelete(int[] widgetIds) {
+        for(int widgetId : widgetIds){
+            if(widgetId == AppWidgetManager.INVALID_APPWIDGET_ID) continue;
+
+            WidgetData data = getWidgetData(widgetId);
+            widgetDelete(mContext, data);
+        }
+    }
+
+    /**
+     * For deleting widgetData outside of service
+     * @param context
+     * @param data
+     */
+    public static void widgetDelete(Context context, WidgetData data){
+        if(data == null) return;
+        int widgetId = data.getWidgetId();
+        Log.v(TAG, String.format("delete widgetData(%d)", widgetId));
+
+        data.deleteData(context);
+        availableWidgets.delete(widgetId);
     }
 
     /**
@@ -114,7 +167,6 @@ public class WidgetService extends Service {
             try {
                 // instantiate class from string
                 widgetData = (WidgetData) Class.forName(widgetClassName).getConstructor(int.class, Context.class).newInstance(widgetId, mContext);
-                widgetData.loadData(mContext);
                 availableWidgets.put(widgetId, widgetData);
                 Log.v(TAG, String.format("finished creation of WidgetData(%d)", widgetId));
             } catch (ClassNotFoundException e) {
@@ -138,30 +190,6 @@ public class WidgetService extends Service {
         return widgetData;
     }
 
-    public static void addWidgetData(WidgetData widgetData) {
-        // add widgetData to service
-        availableWidgets.put(widgetData.getWidgetId(), widgetData);
-    }
-
-    /**
-     * Set repeating to parameter
-     * @param triggerAtMillis
-     */
-    private void setAlarm(long triggerAtMillis){
-        // Set new alarm time
-        AlarmManager m = (AlarmManager) mContext.getSystemService(Context.ALARM_SERVICE);
-        m.set(AlarmManager.ELAPSED_REALTIME, triggerAtMillis, getUpdatePendingIntent(mContext));
-    }
-
-    @Override
-    public void onCreate() {
-        super.onCreate();
-
-        mContext = getApplicationContext();
-        mAppWidgetManager = AppWidgetManager.getInstance(mContext);
-        mController = Controller.getInstance(mContext);
-    }
-
     /**
      * Creates broadcast receiver which bridges broadcasts to appwidgets for handling time and screen
      * No operation if already initialized
@@ -181,25 +209,48 @@ public class WidgetService extends Service {
         }
     }
 
+    /**
+     * Initializes things only first time service is started
+     */
+    @Override
+    public void onCreate() {
+        Log.d(TAG, "onCreate()");
+        super.onCreate();
+
+        mContext = getApplicationContext();
+        mAppWidgetManager = AppWidgetManager.getInstance(mContext);
+        mController = Controller.getInstance(mContext);
+
+        // TODO inicializovat helpery kontrolovat ale, jestli se nekdo neodhlasil
+        SharedPreferences userSettings = mController.getUserSettings();
+        mUnitsHelper = (userSettings == null) ? null : new UnitsHelper(userSettings, mContext);
+        mTimeHelper = (userSettings == null) ? null : new TimeHelper(userSettings);
+    }
+
+    /**
+     * Cleaning up cause service is stopped
+     */
     @Override
     public void onDestroy(){
         super.onDestroy();
 
         // removes all widgets in list
         availableWidgets.clear();
-        // removes all used facilities
-        usedFacilities.clear();
-        // removes all used locations
-        usedLocations.clear();
 
         if(mBroadcastBridge != null){
-            Log.d(TAG, "UNregistering");
+            Log.v(TAG, "Unregistering broadcast bridge");
             unregisterReceiver(mBroadcastBridge);
             mBroadcastBridge = null;
         }
     }
 
-
+    /**
+     * Entry point of service .. widgets can sent Intent with specific data and pass them to service
+     * @param intent Intent which can specify what action should service do now
+     * @param flags      
+     * @param startId
+     * @return
+     */
     @Override
     public int onStartCommand(final Intent intent, int flags, int startId) {
         super.onStartCommand(intent, flags, startId);
@@ -302,72 +353,99 @@ public class WidgetService extends Service {
             allWidgetIds = getAllIds();
         }
 
+        try {
+            // Reload adapters to have data about Timezone offset
+            mController.getAdaptersModel().reloadAdapters(false);
+        } catch(AppException e) {
+            // TODO !!!!
+            Log.e(TAG, e.getSimpleErrorMessage());
+        }
+
         Log.d(TAG, "Widgets length = " + String.valueOf(allWidgetIds.length));
 
         long timeNow = SystemClock.elapsedRealtime();
         SparseArray<WidgetData> widgetsToUpdate = new SparseArray<>();
+        List<Object> widgetReferredObjects = new ArrayList<>();
 
-        try {
-            mController.beginPersistentConnection();
+        Map<String, List<Object>> usedObjects = new HashMap<>();
 
-            // Reload adapters to have data about Timezone offset
-            mController.getAdaptersModel().reloadAdapters(false);
-
-            // update all widgets
-            for(int widgetId : allWidgetIds) {
-                if(WidgetData.getSettings(mContext, widgetId) == null){
-                    Log.d(TAG, String.format("Widget %d without data (probably configurating)", widgetId));
-                    continue;
-                }
-
-                WidgetData widgetData = getWidgetData(widgetId);
-                if(widgetData == null){
-                    Log.d(TAG, "NotExistingWidgetData");
-                    continue;
-                }
-
-                // Ignore uninitialized widgets
-                if (!widgetData.initialized) {
-                    Log.v(TAG, String.format("Ignoring widget %d (not initialized)", widgetId));
-                    continue;
-                }
-
-                // Don't update widgets until their interval elapsed or we have force update
-                if (!isForceUpdate && !widgetData.isExpired(timeNow)) {
-                    Log.v(TAG, String.format("Ignoring widget %d (not expired nor forced)", widgetId));
-                    continue;
-                }
-
-                // if user state changes, calls so that there is visible change when neseccery (no operation by default)
-                if(isLoginStateChanged){
-                    if(isLoggedInLast)
-                        widgetData.whenUserLogin();
-                    else
-                        widgetData.whenUserLogout();
-                }
-
-                // if preparation of widget is successfull, remember this widget
-                if(widgetData.prepare()){
-                    widgetsToUpdate.put(widgetId, widgetData);
-                }
+        // update all widgets
+        // TODO must not have any network request !!
+        for(int widgetId : allWidgetIds) {
+            // ziska bud z pole pouzitych dat nebo instanciuje z disku
+            WidgetData widgetData = getWidgetData(widgetId);
+            if(widgetData == null){
+                Log.w(TAG, String.format("WidgetData(%d) doesn't exist & couldn't be created", widgetId));
+                continue;
             }
 
-            if(!WidgetService.usedLocations.isEmpty()){
-                // ziskat vsechny facilities z mistnosti
-                // nejak je priradit podle toho seznamu facilities
-                // tak aby tam byly vzdy fresh data, aby se nemusely ostatni widgety dotazovat na fresh data
+            // Ignore uninitialized widgets
+            if (!widgetData.initialized) {
+                Log.v(TAG, String.format("Ignoring widget %d (not initialized)", widgetId));
+                continue;
+            }
 
-    //            mController.reloadLocations("64206", forceUpdate);
+            // Don't update widgets until their interval elapsed or we have force update
+            if (!isForceUpdate && !widgetData.isExpired(timeNow)) {
+                Log.v(TAG, String.format("Ignoring widget %d (not expired nor forced)", widgetId));
+                continue;
+            }
+
+            // if user state changes, calls so that there is visible change when neseccery (no operation by default)
+            if(isLoginStateChanged){
+                if(isLoggedInLast)
+                    widgetData.whenUserLogin();
+                else
+                    widgetData.whenUserLogout();
+            }
+
+            // if preparation of widget is successfull, remember this widget
+            if(widgetData.prepare()){
+                widgetsToUpdate.put(widgetId, widgetData);
+
+                // TODO udelat jako addAll (aby lokace mohla pridat vsechny facilities)
+                widgetReferredObjects.add(widgetData.getReferredObj());
 
                 /*
-                for(Location loc : WidgetService.usedLocations){
-                    loc = mController.getLocation(widgetd)
+                Object refObj = widgetData.getReferredObj();
+                String simpleClassName = refObj.getClass().getSimpleName();
+                List<? extends IIdentifier> xxx;
+                if(usedObjects.get(simpleClassName) == null){
+                    xxx = new ArrayList<>();
+                    usedObjects.put(simpleClassName, xxx);
                 }
+                else{
+                    xxx = usedObjects.get(simpleClassName);
+                }
+
+                if(xxx == null || Utils.getFromList(refObj.getId(), xxx) != null) continue;
+                xxx.add(refObj);
                 //*/
             }
+        }
 
-            if (!WidgetService.usedFacilities.isEmpty()) {
-                mController.getFacilitiesModel().refreshFacilities(WidgetService.usedFacilities, isForceUpdate);
+        try{
+            mController.beginPersistentConnection();
+
+            List<Facility> usedFacilities = new ArrayList<>();
+
+            if(!widgetReferredObjects.isEmpty()){
+                for(Object refObj : widgetReferredObjects){
+                    if(refObj instanceof Facility){
+                        Facility fac = (Facility) refObj;
+                        // already there, skip
+                        // TODO predava se do Utils NULL
+                        if(usedFacilities == null || Utils.getFromList(fac.getId(), usedFacilities) != null) continue;
+                        usedFacilities.add((Facility) refObj);
+                    }
+
+                    // TODO pridat napr lokaci
+                }
+            }
+
+            if(!usedFacilities.isEmpty()){
+                Log.v(TAG, "refreshing facilities...");
+                mController.getFacilitiesModel().refreshFacilities(usedFacilities, isForceUpdate);
             }
 
             for (int i = 0; i < widgetsToUpdate.size(); i++) {
@@ -388,25 +466,6 @@ public class WidgetService extends Service {
 
         // put back information about changed login
         isLoginStateChanged = false;
-    }
-
-
-    /**
-     * Deletes widgets data by Ids
-     * @param widgetIds
-     */
-    private void widgetsDelete(int[] widgetIds) {
-        for(int widgetId : widgetIds){
-            if(widgetId == AppWidgetManager.INVALID_APPWIDGET_ID) continue;
-
-            WidgetData data = getWidgetData(widgetId);
-            if(data == null) continue;
-
-            Log.v(TAG, String.format("delete widgetData(%d)", widgetId));
-
-            data.deleteData(mContext);
-            availableWidgets.delete(widgetId);
-        }
     }
 
     private void widgetsChangeLayout(int[] widgetIds, int layoutResource){
@@ -445,7 +504,7 @@ public class WidgetService extends Service {
 
         for(int widgetId : allWidgetIds){
             // TODO toto je spatne
-            final WidgetSensorData widgetData = (WidgetSensorData) getWidgetData(widgetId);
+            final WidgetDeviceData widgetData = (WidgetDeviceData) getWidgetData(widgetId);
             final Device dev = mController.getFacilitiesModel().getDevice(widgetData.adapterId, widgetData.deviceId);
 
             ActorActionTask mActorActionTask = new ActorActionTask(mContext.getApplicationContext());
@@ -528,9 +587,9 @@ public class WidgetService extends Service {
         ids.addAll(getWidgetIds(WidgetClockProvider.class));
         ids.addAll(getWidgetIds(WidgetLocationListProvider.class));
         // sensor widget
-        ids.addAll(getWidgetIds(WidgetSensorProvider.class));
-        ids.addAll(getWidgetIds(WidgetSensorProviderMedium.class));
-        ids.addAll(getWidgetIds(WidgetSensorProviderLarge.class));
+        ids.addAll(getWidgetIds(WidgetDeviceProvider.class));
+        ids.addAll(getWidgetIds(WidgetDeviceProviderMedium.class));
+        ids.addAll(getWidgetIds(WidgetDeviceProviderLarge.class));
 
         int[] arr = new int[ids.size()];
         for (int i = 0; i < ids.size(); i++) {

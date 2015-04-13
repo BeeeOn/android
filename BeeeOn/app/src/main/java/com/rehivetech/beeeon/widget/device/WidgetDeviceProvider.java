@@ -1,13 +1,10 @@
-package com.rehivetech.beeeon.widget.sensor;
+package com.rehivetech.beeeon.widget.device;
 
 import android.annotation.TargetApi;
 import android.appwidget.AppWidgetManager;
 import android.content.Context;
-import android.content.res.Resources;
 import android.os.Build;
 import android.os.Bundle;
-import android.util.DisplayMetrics;
-import android.util.TypedValue;
 
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.util.Log;
@@ -17,8 +14,8 @@ import com.rehivetech.beeeon.widget.WidgetService;
 /**
  * @author mlyko
  */
-public class WidgetSensorProvider extends WidgetProvider{
-    private static final String TAG = WidgetSensorProvider.class.getSimpleName();
+public class WidgetDeviceProvider extends WidgetProvider{
+    private static final String TAG = WidgetDeviceProvider.class.getSimpleName();
 
     @Override
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)

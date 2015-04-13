@@ -5,7 +5,6 @@ import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Build;
 import android.os.SystemClock;
@@ -14,47 +13,48 @@ import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.household.location.Location;
 import com.rehivetech.beeeon.util.Compatibility;
 import com.rehivetech.beeeon.util.Log;
-import com.rehivetech.beeeon.util.Utils;
+import com.rehivetech.beeeon.util.TimeHelper;
+import com.rehivetech.beeeon.util.UnitsHelper;
 import com.rehivetech.beeeon.widget.WidgetData;
 import com.rehivetech.beeeon.widget.WidgetListService;
-import com.rehivetech.beeeon.widget.WidgetService;
 
 /**
  * Class for location list app widget (3x2)
  */
 @TargetApi(Build.VERSION_CODES.HONEYCOMB)
 public class WidgetLocationData extends WidgetData {
-    // TODO je to aj v widgetprovider
+    private static final String TAG = WidgetLocationData.class.getSimpleName();
+
+    private static final String PREF_LOCATION_ID = "location_id";
+    private static final String PREF_LOCATION_NAME = "location_name";
+    private static final String PREF_LOCATION_TYPE = "location_type";
+
     public static final String OPEN_DETAIL_ACTION = "com.rehivetech.beeeon.widget.locationlist.OPEN_DETAIL_ACTION";
     public static final String EXTRA_ITEM_DEV_ID = "com.rehivetech.beeeon.widget.locationlist.ITEM_DEV_ID";
     public static final String EXTRA_ITEM_ADAPTER_ID = "com.rehivetech.beeeon.widget.locationlist.ITEM_ADAPTER_ID";
     public static final String EXTRA_LOCATION_ID = "com.rehivetech.beeeon.widget.locationlist.LOCATON_ID";
     public static final String EXTRA_LOCATION_ADAPTER_ID = "com.rehivetech.beeeon.widget.locationlist.LOCATON_ADAPTER_ID";
-    private static final String TAG = WidgetLocationData.class.getSimpleName();
-    private static final String PREF_LOCATION_ID = "location";
-    private static final String PREF_LOCATION_NAME = "device_name";
-    private static final String PREF_LOCATION_ICON = "device_icon";
+
     
     // publicly accessible properties of widget
     public String locationId;
     public String locationName;
-    public int locationIcon;
+    public int locationType;
     protected Location mLocation;
     protected Intent mRemoteViewsFactoryIntent;
 
     public WidgetLocationData(int widgetId, Context context) {
         super(widgetId, context);
-        widgetProvider = new WidgetLocationListProvider();
         mClassName = WidgetLocationData.class.getName();
-        
-        // sets onclick "listeners"
-        mRemoteViews.setOnClickPendingIntent(R.id.refresh, mRefreshPendingIntent);
-        mRemoteViews.setOnClickPendingIntent(R.id.options, mConfigurationPendingIntent);
     }
 
     @Override
     public void initLayout() {
         super.initLayout();
+
+        // sets onclick "listeners"
+        mRemoteViews.setOnClickPendingIntent(R.id.refresh, mRefreshPendingIntent);
+        mRemoteViews.setOnClickPendingIntent(R.id.options, mConfigurationPendingIntent);
 
         // Here we setup the intent which points to the StackViewService which will
         // provide the views for this collection.
@@ -70,53 +70,22 @@ public class WidgetLocationData extends WidgetData {
         clickIntent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
         // TODO
         clickIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, new int[] { mWidgetId });
-        //clickIntent.putExtra(mWidgetManager.EXTRA_APPWIDGET_IDS, getAllIds(mContext)); // TODO -> allWidgetIds
+
 
         PendingIntent pendingIntent = PendingIntent.getBroadcast(mContext, 0, clickIntent, PendingIntent.FLAG_UPDATE_CURRENT);
         mRemoteViews.setOnClickPendingIntent(R.id.name, pendingIntent);
 
         Compatibility.setRemoteAdapter(mRemoteViews, mWidgetId, mRemoteViewsFactoryIntent, R.id.widget_sensor_list_view);
         mRemoteViews.setEmptyView(R.id.widget_sensor_list_view, R.id.empty_view);
-    }
 
-    @Override
-    public void loadData(Context context) {
-        super.loadData(context);
-
-        locationId = mPrefs.getString(PREF_LOCATION_ID, "");
-        locationName = mPrefs.getString(PREF_LOCATION_NAME, context.getString(R.string.placeholder_not_exists));
-        locationIcon = mPrefs.getInt(PREF_LOCATION_ICON, 0);
-    }
-
-    @Override
-    public void saveData(Context context) {
-        super.saveData(context);
-
-        getSettings(context).edit()
-                .putString(PREF_LOCATION_ID, locationId)
-                .putString(PREF_LOCATION_NAME, locationName)
-                .putInt(PREF_LOCATION_ICON, locationIcon)
-                .commit();
-    }
-
-    @Override
-    public boolean prepare() {
-        Log.d(TAG, String.format("prepare(%d)", mWidgetId));
-        if(locationId.isEmpty() || adapterId.isEmpty()) return false;
-
-        mLocation = Utils.getFromList(locationId, WidgetService.usedLocations);
         if(mLocation == null){
-            //location = new Location();
             // TODO change in service
             // TODO need to probably reloadLocations or something!
             mLocation = mController.getLocationsModel().getLocation(adapterId, locationId);
-            if(mLocation == null) return false;
+            if(mLocation == null) mLocation = new Location(locationId, locationName, adapterId, locationType);
             // TODO what if location not found ??? because of not logged in user
-
-            WidgetService.usedLocations.add(mLocation);
         }
 
-        return true;
     }
 
     @Override
@@ -141,10 +110,12 @@ public class WidgetLocationData extends WidgetData {
 
         if(locationId.isEmpty() || adapterId.isEmpty()) return;
 
-        locationIcon = mLocation.getIconResource();
+        locationType = mLocation.getType();
         locationName = mLocation.getName();
         adapterId = mLocation.getAdapterId();
         lastUpdate = SystemClock.elapsedRealtime();
+
+        // TODO tady by melo byt notifyappwidgetviewdatachanged
 
         saveData(mContext);
 
@@ -156,7 +127,7 @@ public class WidgetLocationData extends WidgetData {
         Log.d(TAG, String.format("setLayoutValues(%d)", mWidgetId));
 
         mRemoteViews.setTextViewText(R.id.name, locationName);
-        mRemoteViews.setImageViewResource(R.id.icon, locationIcon);
+        mRemoteViews.setImageViewResource(R.id.icon, Location.LocationIcon.fromValue(locationType).getIconResource());
 
         // Here we setup the a pending intent template. Individuals items of a collection
         // cannot setup their own pending intents, instead, the collection as a whole can
@@ -172,5 +143,25 @@ public class WidgetLocationData extends WidgetData {
 
         mWidgetManager.notifyAppWidgetViewDataChanged(mWidgetId, R.id.layout);
         updateLayout();
+    }
+
+    @Override
+    public void loadData(Context context) {
+        super.loadData(context);
+
+        locationId = mPrefs.getString(PREF_LOCATION_ID, "");
+        locationName = mPrefs.getString(PREF_LOCATION_NAME, context.getString(R.string.placeholder_not_exists));
+        locationType = mPrefs.getInt(PREF_LOCATION_TYPE, 0);
+    }
+
+    @Override
+    public void saveData(Context context) {
+        super.saveData(context);
+
+        getSettings(context).edit()
+                .putString(PREF_LOCATION_ID, locationId)
+                .putString(PREF_LOCATION_NAME, locationName)
+                .putInt(PREF_LOCATION_TYPE, locationType)
+                .commit();
     }
 }

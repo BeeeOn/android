@@ -1,4 +1,4 @@
-package com.rehivetech.beeeon.widget.sensor;
+package com.rehivetech.beeeon.widget.device;
 
 
 import android.app.Activity;
@@ -26,14 +26,14 @@ import com.rehivetech.beeeon.widget.WidgetService;
 import java.util.ArrayList;
 import java.util.List;
 
-public class WidgetSensorConfiguration extends WidgetConfiguration{
-    private static final String TAG = WidgetSensorConfiguration.class.getSimpleName();
+public class WidgetDeviceConfiguration extends WidgetConfiguration{
+    private static final String TAG = WidgetDeviceConfiguration.class.getSimpleName();
 
     private List<Device> mDevices = new ArrayList<Device>();
     private List<Location> mLocations = new ArrayList<Location>();
     private Spinner mSensorSpinner;
 
-    public WidgetSensorConfiguration(WidgetData data, Activity activity) {
+    public WidgetDeviceConfiguration(WidgetData data, Activity activity) {
         super(data, activity);
     }
 
@@ -76,7 +76,7 @@ public class WidgetSensorConfiguration extends WidgetConfiguration{
     @Override
     public void loadSettings() {
         String adapterId = mWidgetData.adapterId;
-        String deviceId = ((WidgetSensorData) mWidgetData).deviceId;
+        String deviceId = ((WidgetDeviceData) mWidgetData).deviceId;
 
         if (!adapterId.isEmpty()) {
             for (int i = 0; i < mAdapters.size(); i++) {
@@ -111,8 +111,6 @@ public class WidgetSensorConfiguration extends WidgetConfiguration{
 
             doChangeAdapter(adapterId, deviceId);
         }
-
-        // TODO tady v OldConfig byl jeste seekbar
     }
 
     @Override
@@ -135,9 +133,9 @@ public class WidgetSensorConfiguration extends WidgetConfiguration{
         // TODO je potreba, kdyz to inicializuji?
         mWidgetData.lastUpdate = 0;         // nastavi, ze jeste nebylo updatovano
         mWidgetData.initialized = true;
-        ((WidgetSensorData) mWidgetData).deviceId = device.getId();
-        ((WidgetSensorData) mWidgetData).deviceName = device.getName();
-        ((WidgetSensorData) mWidgetData).deviceIcon = device.getIconResource();
+        ((WidgetDeviceData) mWidgetData).deviceId = device.getId();
+        ((WidgetDeviceData) mWidgetData).deviceName = device.getName();
+        ((WidgetDeviceData) mWidgetData).deviceIcon = device.getIconResource();
 
         mWidgetData.saveData(mActivity);
 

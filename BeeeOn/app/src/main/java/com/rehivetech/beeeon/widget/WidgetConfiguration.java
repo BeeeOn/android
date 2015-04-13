@@ -149,13 +149,17 @@ abstract public class WidgetConfiguration {
      * !!! Starts the service !!!
      */
     public void startWidgetOk(){
+        WidgetService.addWidgetData(mWidgetData);
         WidgetService.startUpdating(mActivity, new int[] { mWidgetData.getWidgetId() });
     }
 
     /**
      * Runs when clicked "cancel" to cancel creation of widget
      */
-    public void startWidgetCancel(){}
+    public void startWidgetCancel(){
+        // TODO maybe redundant cause method onDeleted() in widgetProvider is called
+        WidgetService.widgetDelete(mActivity, mWidgetData);
+    }
 
     /**
      * Sets widget interval text

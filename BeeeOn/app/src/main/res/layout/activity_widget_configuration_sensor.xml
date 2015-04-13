@@ -62,7 +62,11 @@
         android:layout_marginBottom="8dp"
         />
 
-
+    <FrameLayout
+        android:id="@+id/widget_config_fragment"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+    </FrameLayout>
 
     </LinearLayout>
 </LinearLayout>

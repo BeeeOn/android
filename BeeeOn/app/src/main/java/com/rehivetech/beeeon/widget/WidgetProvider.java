@@ -32,12 +32,15 @@ abstract public class WidgetProvider extends AppWidgetProvider {
     @Override
     public void onEnabled(Context context){
         Log.d(TAG, "onEnabled()");
+        context.startService(new Intent(context, WidgetService.class));
     }
 
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds){
         Log.d(TAG, "onUpdate()");
-        WidgetService.startUpdating(context, appWidgetIds);
+        // TODO have it old way?
+        //WidgetService.startUpdating(context, appWidgetIds);
+
     }
 
     @Override
