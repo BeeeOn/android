@@ -11,6 +11,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
+import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.RelativeLayout;
@@ -169,6 +170,8 @@ public class MainActivity extends BaseApplicationActivity {
 		}
 		ft.commit();
 
+		// Set progressbar visible
+		setBeeeOnProgressBarVisibility(true);
 
 
 
@@ -192,6 +195,10 @@ public class MainActivity extends BaseApplicationActivity {
 		if(mFirstUseApp) {
 			//showTutorial();
 		}
+	}
+
+	public void setBeeeOnProgressBarVisibility(boolean b) {
+		findViewById(R.id.toolbar_progress).setVisibility((b)? View.VISIBLE:View.GONE);
 	}
 
 	private void showTutorial() {
@@ -268,7 +275,7 @@ public class MainActivity extends BaseApplicationActivity {
 		Log.d(TAG, "onAppResume()");
 
 		backPressed = false;
-
+		setBeeeOnProgressBarVisibility(true);
 		// ASYN TASK - Reload all data, if wasnt download in login activity
 		mFullReloadTask = new ReloadAdapterDataTask(this,false,ReloadAdapterDataTask.ReloadWhat.ADAPTERS_AND_ACTIVE_ADAPTER);
 		mFullReloadTask.setNotifyErrors(false);
@@ -288,6 +295,7 @@ public class MainActivity extends BaseApplicationActivity {
 						Toast.makeText(MainActivity.this, e.getTranslatedErrorMessage(MainActivity.this), Toast.LENGTH_LONG).show();
 					}
 				}
+				setBeeeOnProgressBarVisibility(false);
 				// Redraw Activity - probably list of sensors
 				Log.d(TAG,"After reload task - go to redraw mainActivity");
 				setActiveAdapterAndMenu();

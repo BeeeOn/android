@@ -352,7 +352,7 @@ public class SensorListFragment extends Fragment {
 				@Override
 				public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                     Device device = mSensorAdapter.getDevice(position);
-
+					mActivity.setBeeeOnProgressBarVisibility(true);
 					Bundle bundle = new Bundle();
 					bundle.putString(SensorDetailActivity.EXTRA_ADAPTER_ID, device.getFacility().getAdapterId());
 					bundle.putString(SensorDetailActivity.EXTRA_DEVICE_ID, device.getId());
@@ -436,13 +436,13 @@ public class SensorListFragment extends Fragment {
 
 	private void doFullReloadTask(boolean forceRefresh) {
 		mFullReloadTask = new ReloadAdapterDataTask(getActivity().getApplicationContext(), forceRefresh, ReloadAdapterDataTask.ReloadWhat.ADAPTERS_AND_ACTIVE_ADAPTER);
-
+		mActivity.setBeeeOnProgressBarVisibility(true);
 		mFullReloadTask.setListener(new CallbackTaskListener() {
 			@Override
 			public void onExecute(boolean success) {
 				if (!success)
 					return;
-
+				mActivity.setBeeeOnProgressBarVisibility(false);
 				mActivity.setActiveAdapterAndMenu();
 				mActivity.redraw();
 			}
