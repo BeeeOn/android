@@ -321,7 +321,7 @@ public class SensorDetailFragment extends Fragment {
 		mSignal.setText(facility.getNetworkQuality()+"%");
 
 		// Add Graph
-		if (mUnitsHelper != null && mTimeHelper != null) {
+		if (mUnitsHelper != null && mTimeHelper != null && mGraphView.getSeries().size() == 0) {
 			DateTimeFormatter fmt = mTimeHelper.getFormatter(GRAPH_DATE_TIME_FORMAT, adapter);
 			addGraphView(fmt, mUnitsHelper);
 		}
@@ -400,7 +400,7 @@ public class SensorDetailFragment extends Fragment {
 		mGraphSeries.setTitle("Graph");
 
 		// Add data series
-//		mGraphView.addSeries(mGraphSeries);
+		mGraphView.addSeries(mGraphSeries);
 /*
 		mGraphInfo.setOnTouchListener(new OnTouchListener() {
 
@@ -455,9 +455,7 @@ public class SensorDetailFragment extends Fragment {
 
 		Log.d(TAG, "Filling graph finished");
 
-		mGraphView.removeAllSeries();
 		mGraphSeries.resetData(data);
-		mGraphView.addSeries(mGraphSeries);
 		mGraphView.getViewport().setXAxisBoundsManual(true);
 		if (values.size() > 100 && mGraphSeries instanceof BarGraphSeries) {
 			mGraphView.getViewport().setMaxX(mGraphSeries.getHighestValueX());
