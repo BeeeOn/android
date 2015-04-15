@@ -568,7 +568,7 @@ public class SensorDetailFragment extends Fragment {
 				mDevice, // device
 				new Interval(start, end), // interval from-to
 				DataType.AVERAGE, // type
-				(mDevice.getValue() instanceof BaseEnumValue )?DataInterval.RAW:DataInterval.HOUR); // interval
+				(mDevice.getValue() instanceof BaseEnumValue )?DataInterval.RAW:DataInterval.MINUTE); // interval
 		mGetDeviceLogTask.setListener(new GetDeviceLogTask.CallbackLogTaskListener() {
 			@Override
 			public void onExecute(DeviceLog result) {

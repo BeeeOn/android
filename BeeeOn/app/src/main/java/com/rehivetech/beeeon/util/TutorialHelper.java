@@ -109,12 +109,14 @@ public class TutorialHelper {
 
 	public static void showAddSensorTutorial(MainActivity activity, View layout) {
 		final RelativeLayout.LayoutParams lps = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-		int marginPixel = 15;
+		int marginPixel = 25;
+		int marginPixelBottom = 55;
 		lps.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
 		lps.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
 
 		int margin = ((Number) (activity.getResources().getDisplayMetrics().density * marginPixel)).intValue();
-		lps.setMargins(margin, margin, margin, margin);
+		int bottomMargin = ((Number) (activity.getResources().getDisplayMetrics().density * marginPixelBottom)).intValue();
+		lps.setMargins(margin, margin, margin, bottomMargin);
 		ViewTarget target = new ViewTarget(layout.findViewById(R.id.fab));
 
 		OnShowcaseEventListener	listener = new OnShowcaseEventListener() {
@@ -159,12 +161,14 @@ public class TutorialHelper {
 
 	public static void showAddAdapterTutorial(MainActivity activity, View layout) {
 		final RelativeLayout.LayoutParams lps = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-		int marginPixel = 15;
+		int marginPixel = 25;
+		int marginPixelBottom = 55;
 		lps.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
 		lps.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
 
 		int margin = ((Number) (activity.getResources().getDisplayMetrics().density * marginPixel)).intValue();
-		lps.setMargins(margin, margin, margin, margin);
+		int bottomMargin = ((Number) (activity.getResources().getDisplayMetrics().density * marginPixelBottom)).intValue();
+		lps.setMargins(margin, margin, margin, bottomMargin);
 		ViewTarget target = new ViewTarget(layout.findViewById(R.id.fab));
 
 		OnShowcaseEventListener	listener = new OnShowcaseEventListener() {

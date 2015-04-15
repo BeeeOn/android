@@ -127,53 +127,24 @@ public class MainActivity extends BaseApplicationActivity {
 		mNavDrawerMenu.openMenu();
 		mNavDrawerMenu.setIsDrawerOpen(mIsDrawerOpen);
 
-		mListDevices = new SensorListFragment();
-        mCustomView = new CustomViewFragment();
-        mWatchDogApp = new WatchDogListFragment();
-		mProfileFrag = new ProfileDetailFragment();
-
 		if (savedInstanceState != null) {
 			mIsDrawerOpen = savedInstanceState.getBoolean(IS_DRAWER_OPEN);
 			mNavDrawerMenu.setIsDrawerOpen(mIsDrawerOpen);
 
 			mActiveMenuId = savedInstanceState.getString(LAST_MENU_ID);
 			mActiveAdapterId = savedInstanceState.getString(ADAPTER_ID);
-			mListDevices.setMenuID(mActiveMenuId);
-			mListDevices.setAdapterID(mActiveAdapterId);
 			mNavDrawerMenu.setActiveMenuID(mActiveMenuId);
 			mNavDrawerMenu.setAdapterID(mActiveAdapterId);
 
 		} else {
 			setActiveAdapterAndMenu();
-			mListDevices.setMenuID(mActiveMenuId);
-			mListDevices.setAdapterID(mActiveAdapterId);
 			mNavDrawerMenu.setActiveMenuID(mActiveMenuId);
 			mNavDrawerMenu.setAdapterID(mActiveAdapterId);
 			mNavDrawerMenu.redrawMenu();
 		}
 
-		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        if(mActiveMenuId == null) { // Default screen
-            ft.replace(R.id.content_frame, mListDevices, FRG_TAG_LOC);
-        }
-		else if(mActiveMenuId.equals(Constants.GUI_MENU_CONTROL)){
-			ft.replace(R.id.content_frame, mListDevices, FRG_TAG_LOC);
-		}
-        else if(mActiveMenuId.equals(Constants.GUI_MENU_DASHBOARD)) {
-            ft.replace(R.id.content_frame, mCustomView, FRG_TAG_CUS);
-        }
-        else if(mActiveMenuId.equals(Constants.GUI_MENU_WATCHDOG)) {
-            ft.replace(R.id.content_frame, mWatchDogApp, FRG_TAG_WAT);
-        }
-		else if (mActiveMenuId.equals(Constants.GUI_MENU_PROFILE)){
-			ft.replace(R.id.content_frame, mProfileFrag, FRG_TAG_PRF);
-		}
-		ft.commit();
-
 		// Set progressbar visible
 		setBeeeOnProgressBarVisibility(true);
-
-
 
 		// Facebook sdk needs to be initialised in Activity, but its used in Profile Fragment
 		// Registering callback for facebook log in
@@ -299,8 +270,12 @@ public class MainActivity extends BaseApplicationActivity {
 				// Redraw Activity - probably list of sensors
 				Log.d(TAG,"After reload task - go to redraw mainActivity");
 				setActiveAdapterAndMenu();
-				redraw();
-				checkNoAdapters();
+				if (mController.getActiveAdapter() == null) {
+					checkNoAdapters();
+				}
+				else {
+					redraw();
+				}
 			}
 		});
 		mFullReloadTask.execute();
@@ -491,14 +466,15 @@ public class MainActivity extends BaseApplicationActivity {
 	public void setActiveAdapterID(String adapterId) {
 		mActiveAdapterId = adapterId;
 		mNavDrawerMenu.setAdapterID(adapterId);
-		mListDevices.setAdapterID(adapterId);
-
+		if(mListDevices != null)
+			mListDevices.setAdapterID(adapterId);
 	}
 
 	public void setActiveMenuID(String id) {
 		mActiveMenuId = id;
 		mNavDrawerMenu.setActiveMenuID(id);
-		mListDevices.setMenuID(id);
+		if(mListDevices != null)
+			mListDevices.setMenuID(id);
 	}
 
     public void logout() {

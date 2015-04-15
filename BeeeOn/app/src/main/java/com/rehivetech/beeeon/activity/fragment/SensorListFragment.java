@@ -117,8 +117,9 @@ public class SensorListFragment extends Fragment {
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+		Log.d(TAG,"OnCreateView");
 		mView = inflater.inflate(R.layout.listofsensors, container, false);
-		redrawDevices();
+
 		return mView;
 	}
 
@@ -128,7 +129,7 @@ public class SensorListFragment extends Fragment {
 		Log.d(TAG, "onActivityCreated()");
 		ready = true;
 
-		// mActivity = (MainActivity) getActivity();
+		redrawDevices();
 
 		// Init swipe-refreshig layout
 		mSwipeLayout = (SwipeRefreshLayout) mActivity.findViewById(R.id.swipe_container);
@@ -195,7 +196,7 @@ public class SensorListFragment extends Fragment {
 
 		Log.d(TAG, "LifeCycle: redraw devices list start");
 
-
+		mView = getView();
 		// get UI elements
 		mSwipeLayout = (SwipeRefreshLayout) mView.findViewById(R.id.swipe_container);
 		mSensorList = (StickyListHeadersListView) mView.findViewById(R.id.listviewofsensors);
