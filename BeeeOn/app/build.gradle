@@ -15,17 +15,6 @@ android {
         signingConfig signingConfigs.debug
     }
 
-/**
- * Uncoment if you want to suppress translation control during exporting signed APK
- */
-	lintOptions {
-		checkReleaseBuilds false
-		// Or, if you prefer, you can continue to check for errors in release builds,
-		// but continue the build even when errors are found:
-		abortOnError false
-	}
-
-
     signingConfigs {
         debug {
             storeFile file('../keystores/debug.keystore')
