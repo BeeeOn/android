@@ -99,5 +99,9 @@
 		<item name="cpb_subtitleColor">@color/beeeon_primary_cyan</item>
 	</style>
 
+	<style name="numberPicker" parent="@style/NPWidget.Material.NumberPicker">
+
+	</style>
+
 
 </resources>
