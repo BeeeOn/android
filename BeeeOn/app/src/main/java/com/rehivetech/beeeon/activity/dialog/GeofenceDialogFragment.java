@@ -7,6 +7,9 @@ import android.app.Dialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -34,6 +37,7 @@ public class GeofenceDialogFragment extends DialogFragment {
 	private TextView mRadiusTitle;
 	private double mLong, mLat;
 	private GeofenceCrateCallback mCallback;
+	private Button mPositiveButton;
 
 	public GeofenceDialogFragment() {
 		// Empty constructor required for DialogFragment
@@ -89,6 +93,7 @@ public class GeofenceDialogFragment extends DialogFragment {
 				try {
 					radius = Integer.valueOf(mRadius.getText().toString());
 				} catch (NumberFormatException e) {
+					mPositiveButton.setEnabled(false);
 					return;
 				}
 				if (radius >= MIN_RADIUS + BUTTON_STEP) {
@@ -105,10 +110,61 @@ public class GeofenceDialogFragment extends DialogFragment {
 				try {
 					radius = Integer.valueOf(mRadius.getText().toString());
 				} catch (NumberFormatException e) {
+					mPositiveButton.setEnabled(false);
 					return;
 				}
 				radius = radius + BUTTON_STEP;
 				mRadius.setText(String.valueOf(radius));
+			}
+		});
+
+		mName.addTextChangedListener(new TextWatcher() {
+			@Override
+			public void beforeTextChanged(CharSequence charSequence, int i, int i2, int i3) {
+
+			}
+
+			@Override
+			public void onTextChanged(CharSequence charSequence, int i, int i2, int i3) {
+				if(charSequence.length() > 0) {
+					mPositiveButton.setEnabled(true);
+				} else {
+					mPositiveButton.setEnabled(false);
+				}
+			}
+
+			@Override
+			public void afterTextChanged(Editable editable) {
+
+			}
+		});
+
+		mRadius.addTextChangedListener(new TextWatcher() {
+			@Override
+			public void beforeTextChanged(CharSequence charSequence, int i, int i2, int i3) {
+
+			}
+
+			@Override
+			public void onTextChanged(CharSequence charSequence, int i, int i2, int i3) {
+				int number;
+				try {
+					number = Integer.valueOf(charSequence.toString());
+				} catch (NumberFormatException e) {
+					mPositiveButton.setEnabled(false);
+					return;
+				}
+
+				if (number >= MIN_RADIUS) {
+					mPositiveButton.setEnabled(true);
+				} else {
+					mPositiveButton.setEnabled(false);
+				}
+			}
+
+			@Override
+			public void afterTextChanged(Editable editable) {
+
 			}
 		});
 
@@ -126,8 +182,6 @@ public class GeofenceDialogFragment extends DialogFragment {
 								}
 								String name = mName.getText().toString();
 
-								//TODO zkontrolovat validnost vstupu
-
 								mCallback.onCreateGeofence(name, radius, mLat, mLong);
 							}
 						}
@@ -140,6 +194,17 @@ public class GeofenceDialogFragment extends DialogFragment {
 						}
 				)
 				.create();
+	}
+
+	@Override
+	public void onStart() {
+		super.onStart();
+		AlertDialog dialog = (AlertDialog) getDialog();
+		if (dialog != null) {
+			mPositiveButton = dialog.getButton(Dialog.BUTTON_POSITIVE);
+			mPositiveButton.setEnabled(false);
+		}
+
 	}
 
 	public interface GeofenceCrateCallback {
