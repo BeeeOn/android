@@ -8,6 +8,8 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.lylc.widget.circularprogressbar.CircularProgressBar;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.activity.AddSensorActivity;
 import com.rehivetech.beeeon.household.adapter.Adapter;
@@ -24,6 +26,7 @@ public class AddSensorFragment extends TrackFragment {
 	// GUI elements
 	private LinearLayout mLayout;
 	private TextView mTimeText;
+	private CircularProgressBar mTime;
 	
 
 	private CountDownTimer mCountDownTimer;
@@ -32,6 +35,8 @@ public class AddSensorFragment extends TrackFragment {
 	private int mTimerButtonSec = 30;
 	private int mIntervalToCheckUninitSensor = 2;
 	private int mTimerValue = 0;
+	private int mTimeOldValProgress = 100;
+	private int mTimeNewValProgress = 0;
 
 	private Adapter mAdapter;
 
@@ -78,12 +83,17 @@ public class AddSensorFragment extends TrackFragment {
 	public void setUserVisibleHint(boolean isVisibleToUser) {
 	    super.setUserVisibleHint(isVisibleToUser);
 	    if (isVisibleToUser) {
-	    	Log.d(TAG, "ADD ADAPTER fragment is visible");
+	    	Log.d(TAG, "ADD Sensor fragment is visible");
 	    	mActivity.setBtnLastPage();
 	    	mActivity.setFragment(this);
-	    	mTimeText = (TextView) mView.findViewById(R.id.add_sensor_time);
+	    	//mTimeText = (TextView) mView.findViewById(R.id.add_sensor_time);
 	    	//startTimer();
 	    	mActivity.checkUnInitSensor();
+
+			mTime = (CircularProgressBar) mView.findViewById(R.id.circularprogressbar1);
+			mTime.setTitle(getString(R.string.addsensor_sending_request));
+			mTime.setSubTitle("");
+			mTime.setProgress(0);
 	    }
 	    else {
 	    	stopTimer();
@@ -94,6 +104,7 @@ public class AddSensorFragment extends TrackFragment {
 	public void onResume() {
 		super.onResume();
 		Log.d(TAG, "OnResume AddSensorDialog !!");
+
 	}
 
 	@Override
@@ -103,6 +114,7 @@ public class AddSensorFragment extends TrackFragment {
 		mTimerDone = true;
 		if (mCountDownTimer != null)
 			mCountDownTimer.cancel();
+		//resetPairButton();
 	}
 
 	@Override
@@ -120,12 +132,16 @@ public class AddSensorFragment extends TrackFragment {
 	
 
 	public void resetPairButton() {
-		mTimeText.setText("Time is out");
+		//mTimeText.setText("Time is out");
+		mTime.setTitle(" ");
+		mTime.setSubTitle("Time is out");
 		mActivity.resetBtnPair();
 	}
 
 	public void startTimer() {
 		mTimerDone = false;
+		mTime.setTitle(String.valueOf(mTimerButtonSec));
+		mTime.setSubTitle("seconds");
 		mCountDownTimer = new CountDownTimer(mTimerButtonSec * 1000, 1000) {
 
 			public void onTick(long millisUntilFinished) {
@@ -134,7 +150,13 @@ public class AddSensorFragment extends TrackFragment {
 
 				mTimerValue = (int) (millisUntilFinished / 1000);
 
-				mTimeText.setText(getResources().getString(R.string.addsensor_active_pair) + " 0:" + ((mTimerValue < 10) ? "0" : "") + mTimerValue);
+				//mTimeText.setText(getResources().getString(R.string.addsensor_active_pair) + " 0:" + ((mTimerValue < 10) ? "0" : "") + mTimerValue);
+				mTime.setTitle(String.valueOf(mTimerValue));
+				mTimeNewValProgress = mTimerValue*100/mTimerButtonSec;
+				Log.d(TAG,"actual progress: "+mTimeNewValProgress);
+				mTime.setProgress(mTimeNewValProgress);
+				//mTime.animateProgressTo(mTimeOldValProgress,mTimeNewValProgress,null);
+				//mTimeOldValProgress = mTimeNewValProgress;
 				if ((millisUntilFinished / 1000) % mIntervalToCheckUninitSensor == 0) {
 					// check if are new uninit sensor
 					Log.d(TAG, "PAIR - check if some uninit sensor");
@@ -144,6 +166,7 @@ public class AddSensorFragment extends TrackFragment {
 
 			public void onFinish() {
 				// mButton.setText("done!");
+				mTime.setProgress(0);
 				resetPairButton();
 			}
 		}.start();

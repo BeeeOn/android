@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+			  xmlns:circular="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
@@ -8,12 +9,22 @@
     android:background="@color/light_gray"
     >
 
-    <TextView
+    <!--TextView
         android:id="@+id/add_sensor_time"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:text="@string/addsensor_sending_request"
         android:gravity="center_vertical|center_horizontal"
-        android:textSize="20dp"/>
+        android:textSize="20dp"/-->
+
+	<com.lylc.widget.circularprogressbar.CircularProgressBar
+		android:id="@+id/circularprogressbar1"
+		style="@style/timer"
+		android:layout_width="fill_parent"
+		android:layout_height="fill_parent"
+		android:layout_gravity="center"
+		android:layout_margin="40dp"
+		circular:subtitle="subtitle"
+		circular:title="@string/addsensor_sending_request" />
 
 </LinearLayout>

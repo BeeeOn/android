@@ -91,5 +91,13 @@
 		<item name="fab_type">mini</item>
 	</style>
 
+	<style name="timer" parent="Widget.ProgressBar.CircularProgressBar">
+		<item name="cpb_progressColor">@color/beeeon_secundary_pink</item>
+		<item name="cpb_hasShadow">false</item>
+		<item name="cpb_strokeWidth">30</item>
+		<item name="cpb_titleColor">@color/beeeon_secundary_pink</item>
+		<item name="cpb_subtitleColor">@color/beeeon_primary_cyan</item>
+	</style>
+
 
 </resources>
