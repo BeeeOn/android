@@ -16,6 +16,7 @@ import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.persistence.Persistence;
 import com.rehivetech.beeeon.util.Timezone;
+import com.rehivetech.beeeon.util.Utils;
 
 /**
  * The control preference activity handles the preferences for the control extension.
@@ -79,8 +80,14 @@ public class SettingsMainActivity extends ActionBarPreferenceActivity implements
 		// mLocationListPref.setOnPreferenceChangeListener(this);
 
 		mPrefGeofence = findPreference(Constants.KEY_GEOFENCE);
-		Intent intentGeofence = new Intent(this, MapGeofenceActivity.class);
-		mPrefGeofence.setIntent(intentGeofence);
+		if (Utils.isGooglePlayServicesAvailable(this)) {
+			Intent intentGeofence = new Intent(this, MapGeofenceActivity.class);
+			mPrefGeofence.setIntent(intentGeofence);
+		} else {
+			mPrefGeofence.setEnabled(false);
+		}
+
+
 	}
 
 	@Override
