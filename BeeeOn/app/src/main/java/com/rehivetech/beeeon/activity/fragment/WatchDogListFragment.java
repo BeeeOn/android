@@ -13,6 +13,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -49,6 +50,7 @@ public class WatchDogListFragment extends Fragment{
     private Controller mController;
     private ListView mWatchDogListView;
     private WatchDogListAdapter mWatchDogAdapter;
+    private Button mRefreshBtn;
 
     List<WatchDog> mWatchDogs;
 
@@ -125,13 +127,7 @@ public class WatchDogListFragment extends Fragment{
 
             @Override
             public void onRefresh() {
-
-                Adapter adapter = mController.getActiveAdapter();
-                if (adapter == null) {
-                    mSwipeLayout.setRefreshing(false);
-                    return;
-                }
-                doReloadWatchDogsTask(adapter.getId(), true);
+                refreshListListener();
             }
         });
 
@@ -139,6 +135,15 @@ public class WatchDogListFragment extends Fragment{
 
         // if we don't have any data first time, try to reload
         doReloadWatchDogsTask(mActiveAdapterId, false);
+    }
+
+    private void refreshListListener() {
+        Adapter adapter = mController.getActiveAdapter();
+        if (adapter == null) {
+            mSwipeLayout.setRefreshing(false);
+            return;
+        }
+        doReloadWatchDogsTask(adapter.getId(), true);
     }
 
     /**
@@ -196,10 +201,10 @@ public class WatchDogListFragment extends Fragment{
             public void onClick(View v) {
                 int objPosition = (int) v.getTag();
                 WatchDog watchDog = (WatchDog) mWatchDogAdapter.getItem(objPosition);
-                if(watchDog == null) return;
+                if (watchDog == null) return;
 
                 // so that progress bar can be seen
-                if(mMode != null) mMode.finish();
+                if (mMode != null) mMode.finish();
 
                 SwitchCompat sw = (SwitchCompat) v;
                 doSaveWatchDogTask(watchDog, sw);
@@ -209,6 +214,15 @@ public class WatchDogListFragment extends Fragment{
         // when listview is empty
         TextView emptyView = (TextView) mView.findViewById(R.id.watchdog_list_empty);
         mWatchDogListView.setEmptyView(emptyView);
+
+        // refresh button
+        mRefreshBtn = (Button) mView.findViewById(R.id.watchdog_list_refresh_btn);
+        mRefreshBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                refreshListListener();
+            }
+        });
 
         // add new watchdog rule
         FloatingActionButton fab = (FloatingActionButton) mView.findViewById(R.id.fab);
@@ -257,6 +271,25 @@ public class WatchDogListFragment extends Fragment{
      */
     private void redrawRules() {
         mWatchDogs = mController.getWatchDogsModel().getWatchDogsByAdapter(mActiveAdapterId);
+
+        boolean haveWatchDogs = mWatchDogs.size() > 0;
+
+        if(!haveWatchDogs) {
+            mRefreshBtn.setVisibility(View.VISIBLE);
+
+            mWatchDogListView.setVisibility(View.GONE);
+            if(mSwipeLayout != null){
+                mSwipeLayout.setVisibility(View.GONE);
+            }
+        }
+        else{
+            mRefreshBtn.setVisibility(View.VISIBLE);
+            mWatchDogListView.setVisibility(View.VISIBLE);
+            if (mSwipeLayout != null) {
+                mSwipeLayout.setVisibility(View.VISIBLE);
+            }
+        }
+
         mWatchDogAdapter.updateData(mWatchDogs);
     }
 
@@ -292,6 +325,8 @@ public class WatchDogListFragment extends Fragment{
      * @param adapterId
      */
     public void doReloadWatchDogsTask(String adapterId, boolean forceReload){
+        Log.d(TAG, "reloadWatchDogsTask()");
+
         mReloadWatchDogTask = new ReloadAdapterDataTask(mActivity, forceReload, ReloadAdapterDataTask.ReloadWhat.WATCHDOGS);
 
         mReloadWatchDogTask.setListener(new CallbackTask.CallbackTaskListener() {
