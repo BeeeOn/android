@@ -127,7 +127,6 @@ public class CustomViewFragment extends TrackFragment {
 		} else {
 			graphSeries = new LineGraphSeries<>(new DataPoint[]{new DataPoint(0, 0),});
 			((LineGraphSeries)graphSeries).setThickness(4);
-			((LineGraphSeries)graphSeries).setDrawCubicLine(true);
 		}
 		graphSeries.setTitle(device.getName());
 		graphSeries.setColor(color);
