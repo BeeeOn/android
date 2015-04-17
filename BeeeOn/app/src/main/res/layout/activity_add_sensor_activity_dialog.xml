@@ -17,15 +17,20 @@
         android:gravity="center_vertical|center_horizontal"
         android:textSize="20dp"/-->
 
-	<com.lylc.widget.circularprogressbar.CircularProgressBar
-		android:id="@+id/circularprogressbar1"
-		style="@style/timer"
-		android:layout_width="fill_parent"
-		android:layout_height="fill_parent"
-		android:layout_gravity="center"
+	<com.github.lzyzsd.circleprogress.DonutProgress
+		android:id="@+id/progress"
 		android:layout_margin="40dp"
-		circular:subtitle="subtitle"
-		circular:title="@string/addsensor_sending_request" />
+		android:layout_width="250dp"
+		android:layout_height="250dp"
+		android:layout_gravity="center"
+		circular:donut_progress="30"
+		circular:donut_text_color="@color/beeeon_secundary_pink"
+		circular:donut_text_size="40sp"
+		circular:donut_prefix_text=" "
+		circular:donut_suffix_text=" "
+		circular:donut_finished_color="@color/beeeon_primary_cyan"
+		circular:donut_unfinished_color="@color/beeeon_text_hint"
+		/>
 
 	<!--LinearLayout
 				  android:layout_width="match_parent"

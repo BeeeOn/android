@@ -343,5 +343,6 @@
 	<string name="addadapter_fill_name">Please fill gateway name</string>
 	<string name="addadapter_fill_code">Please fill gateway code</string>
 	<string name="addsensor_stoped">stopped</string>
+	<string name="add_action_dialog_title">What do you want add ?</string>
 
 </resources>

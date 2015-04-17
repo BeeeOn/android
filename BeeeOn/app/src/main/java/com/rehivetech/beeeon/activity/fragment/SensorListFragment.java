@@ -2,6 +2,7 @@ package com.rehivetech.beeeon.activity.fragment;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -15,6 +16,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.Button;
@@ -22,6 +24,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.melnykov.fab.FloatingActionButton;
+import com.melnykov.fab.ScrollDirectionListener;
 import com.rehivetech.beeeon.Constants;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.activity.AddAdapterActivity;
@@ -48,12 +51,13 @@ import java.util.List;
 
 import se.emilsjolander.stickylistheaders.StickyListHeadersListView;
 
-public class SensorListFragment extends Fragment {
+public class SensorListFragment extends Fragment  {
 
 	private static final String TAG = SensorListFragment.class.getSimpleName();
 
 	private static final String LCTN = "lastlocation";
 	private static final String ADAPTER_ID = "lastAdapterId";
+
 
 	public static boolean ready = false;
 	private SwipeRefreshLayout mSwipeLayout;
@@ -334,18 +338,59 @@ public class SensorListFragment extends Fragment {
 			}
 		};
 
-		mFAM.setMenuItems(convertToInt(mFABMenuIcon), mFABMenuLabels.toArray(new String[mFABMenuLabels.size()]),
-				R.style.fab_item_menu,fabMenuListener, getResources().getDrawable(R.drawable.ic_action_cancel));
-		mFAM.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				Log.d(TAG,"FAB BTN HER");
-				mFAM.triggerMenu(90);
-			}
-		});
-
 		mSensorList.setAdapter(mSensorAdapter);
-		mFAM.attachToListView(mSensorList.getWrappedList());
+
+		int currentapiVersion = android.os.Build.VERSION.SDK_INT;
+		if (currentapiVersion >= Build.VERSION_CODES.ICE_CREAM_SANDWICH){ // API 14 +
+			mFAM.setMenuItems(convertToInt(mFABMenuIcon), mFABMenuLabels.toArray(new String[mFABMenuLabels.size()]),
+					R.style.fab_item_menu,fabMenuListener, getResources().getDrawable(R.drawable.ic_action_cancel));
+			mFAM.setOnClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					Log.d(TAG,"FAB BTN HER");
+					mFAM.triggerMenu(90);
+				}
+			});
+		} else{
+			// API 10 to 13
+			// Show dialof to select Add Adapter or Add sensor
+
+			mFAM.setOnClickListener( new OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					String[] mStringArray = new String[mFABMenuLabels.size()];
+					mStringArray = mFABMenuLabels.toArray(mStringArray);
+					mActivity.showOldAddDialog(mStringArray);
+				}
+			});
+
+		}
+
+		AbsListView.OnScrollListener ListListener = new AbsListView.OnScrollListener() {
+			@Override
+			public void onScrollStateChanged(AbsListView view, int scrollState) {
+			}
+
+			@Override
+			public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+				int topRowVerticalPosition = (mSensorList == null || mSensorList.getListChildCount() == 0) ?
+						0 : mSensorList.getListChildAt(0).getTop();
+				mSwipeLayout.setEnabled((topRowVerticalPosition >= 0));
+			}
+		};
+
+		mFAM.attachToListView(mSensorList.getWrappedList(),new ScrollDirectionListener() {
+			@Override
+			public void onScrollDown() {
+
+			}
+
+			@Override
+			public void onScrollUp() {
+
+			}
+		},ListListener);
+
 
 		if (haveDevices) {
 			// Capture listview menu item click
@@ -393,13 +438,13 @@ public class SensorListFragment extends Fragment {
 		return  intArray;
 	}
 
-	protected void showAddAdapterDialog() {
+	public void showAddAdapterDialog() {
 		Log.d(TAG, "HERE ADD ADAPTER +");
 		Intent intent = new Intent(mActivity, AddAdapterActivity.class);
 		mActivity.startActivityForResult(intent, Constants.ADD_ADAPTER_REQUEST_CODE);
 	}
 	
-	protected void showAddSensorDialog() {
+	public void showAddSensorDialog() {
 		Log.d(TAG, "HERE ADD SENSOR +");
 		Intent intent = new Intent(mActivity, AddSensorActivity.class);
 		mActivity.startActivityForResult(intent, Constants.ADD_SENSOR_REQUEST_CODE);
@@ -470,6 +515,8 @@ public class SensorListFragment extends Fragment {
         });
         mRemoveFacilityTask.execute(pair);
     }
+
+
 
 	class ActionModeEditSensors implements ActionMode.Callback {
 

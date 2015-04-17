@@ -356,5 +356,6 @@
 	<string name="NetworkError___CL_SERVER_CONNECTION">Nelze se připojit k serveru.\n\nZkuste to prosím znovu.</string>
 	<string name="logout_success">Odhlášení proběhlo úspěšně</string>
 	<string name="addsensor_stoped">stopped</string>
+	<string name="add_action_dialog_title">What do you want add ?</string>
 
 </resources>

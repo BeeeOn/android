@@ -14,9 +14,12 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.widget.AbsListView;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
+import com.avast.android.dialogs.fragment.ListDialogFragment;
+import com.avast.android.dialogs.iface.IListDialogListener;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
@@ -53,7 +56,7 @@ import com.rehivetech.beeeon.util.Log;
  * 
  * 
  */
-public class MainActivity extends BaseApplicationActivity {
+public class MainActivity extends BaseApplicationActivity implements IListDialogListener {
 	private static final String TAG = MainActivity.class.getSimpleName();
 
 	private Controller mController;
@@ -64,6 +67,7 @@ public class MainActivity extends BaseApplicationActivity {
     public static final String FRG_TAG_CUS = "Cus";
     public static final String FRG_TAG_WAT = "WAT";
 	private static final String FRG_TAG_PRF = "PRF";
+	private static final int ADD_ACTION_CODE = 987654;
 	private NavDrawerMenu mNavDrawerMenu;
 	private SensorListFragment mListDevices;
 	private CustomViewFragment mCustomView;
@@ -333,6 +337,21 @@ public class MainActivity extends BaseApplicationActivity {
 		}
 	}
 
+	@Override
+	public void onListItemSelected(CharSequence val, int i, int code) {
+		if(code == ADD_ACTION_CODE){
+			Log.d(TAG,"Add dialog selected: "+val);
+			if(getString(R.string.action_addadapter).equals(val)) {
+				// ADD ADAPTER
+				mListDevices.showAddAdapterDialog();
+			}
+			else {
+				// ADD SENSOR
+				mListDevices.showAddSensorDialog();
+			}
+		}
+	}
+
 	public boolean getBackPressed() {
 		return backPressed;
 	}
@@ -486,5 +505,19 @@ public class MainActivity extends BaseApplicationActivity {
 	
 	public NavDrawerMenu getMenu() {
 		return mNavDrawerMenu;
+	}
+
+	public void showOldAddDialog(String[] mStringArray) {
+
+		ListDialogFragment
+				.createBuilder(this, getSupportFragmentManager())
+				.setTitle(getString(R.string.add_action_dialog_title))
+				.setItems(mStringArray)
+				.setChoiceMode(AbsListView.CHOICE_MODE_SINGLE)
+				.setConfirmButtonText(getString(R.string.notification_add))
+				.setCancelButtonText(getString(R.string.notification_cancel))
+				.setRequestCode(ADD_ACTION_CODE)
+				.show();
+
 	}
 }

@@ -9,7 +9,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.lylc.widget.circularprogressbar.CircularProgressBar;
+import com.github.lzyzsd.circleprogress.ArcProgress;
+import com.github.lzyzsd.circleprogress.DonutProgress;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.activity.AddSensorActivity;
 import com.rehivetech.beeeon.household.adapter.Adapter;
@@ -17,7 +18,6 @@ import com.rehivetech.beeeon.base.TrackFragment;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.util.Log;
 
-import net.simonvt.numberpicker.NumberPicker;
 
 public class AddSensorFragment extends TrackFragment {
 
@@ -28,7 +28,7 @@ public class AddSensorFragment extends TrackFragment {
 	// GUI elements
 	private LinearLayout mLayout;
 	private TextView mTimeText;
-	private CircularProgressBar mTime;
+	private DonutProgress mTime;
 	
 
 	private CountDownTimer mCountDownTimer;
@@ -90,8 +90,10 @@ public class AddSensorFragment extends TrackFragment {
 	    	//startTimer();
 	    	mActivity.checkUnInitSensor();
 
-			mTime = (CircularProgressBar) mView.findViewById(R.id.circularprogressbar1);
-			//mTime.setSubTitle(getString(R.string.addsensor_sending_request));
+			mTime = (DonutProgress) mView.findViewById(R.id.progress);
+			mTime.setMax(mTimerButtonSec);
+			mTime.setInnerBottomText(getString(R.string.addsensor_sending_request));
+			mTime.setInnerBottomTextColor(getResources().getColor(R.color.beeeon_secundary_pink));
 			//mTime.setTitle(" ");
 			/*
 			NumberPicker np = (NumberPicker) mView.findViewById(R.id.numberPicker);
@@ -120,8 +122,8 @@ public class AddSensorFragment extends TrackFragment {
 		mTimerDone = true;
 		if (mCountDownTimer != null)
 			mCountDownTimer.cancel();
-		mTime.setSubTitle(getString(R.string.addsensor_stoped));
-		mTime.setTitle(" ");
+		mTime.setInnerBottomText(getString(R.string.addsensor_stoped));
+		//mTime.setTitle(" ");
 	}
 
 	@Override
@@ -140,15 +142,15 @@ public class AddSensorFragment extends TrackFragment {
 
 	public void resetPairButton() {
 		//mTimeText.setText("Time is out");
-		mTime.setTitle(" ");
-		mTime.setSubTitle("Time is out");
+		//mTime.setTitle(" ");
+		mTime.setInnerBottomText("Time is out");
 		mActivity.resetBtnPair();
 	}
 
 	public void startTimer() {
 		mTimerDone = false;
-		mTime.setTitle(String.valueOf(mTimerButtonSec));
-		mTime.setSubTitle("seconds");
+		//mTime.setTitle(String.valueOf(mTimerButtonSec));
+		mTime.setInnerBottomText("seconds");
 		mCountDownTimer = new CountDownTimer(mTimerButtonSec * 1000, 1000) {
 
 			public void onTick(long millisUntilFinished) {
@@ -158,10 +160,10 @@ public class AddSensorFragment extends TrackFragment {
 				mTimerValue = (int) (millisUntilFinished / 1000);
 
 				//mTimeText.setText(getResources().getString(R.string.addsensor_active_pair) + " 0:" + ((mTimerValue < 10) ? "0" : "") + mTimerValue);
-				mTime.setTitle(String.valueOf(mTimerValue));
-				mTimeNewValProgress = mTimerValue*100/mTimerButtonSec;
+				//mTime.setTitle(String.valueOf(mTimerValue));
+				//mTimeNewValProgress = mTimerValue*100/mTimerButtonSec;
 				Log.d(TAG,"actual progress: "+mTimeNewValProgress);
-				mTime.setProgress(mTimeNewValProgress);
+				mTime.setProgress(mTimerValue);
 				//mTime.animateProgressTo(mTimeOldValProgress,mTimeNewValProgress,null);
 				//mTimeOldValProgress = mTimeNewValProgress;
 				if ((millisUntilFinished / 1000) % mIntervalToCheckUninitSensor == 0) {
@@ -189,12 +191,8 @@ public class AddSensorFragment extends TrackFragment {
 		if (mCountDownTimer != null)
 			mCountDownTimer.cancel();
 		if (mTime != null) {
-			mTime.setSubTitle(getString(R.string.addsensor_stoped));
-			mTime.setTitle(" ");
+			//mTime.setSubTitle(getString(R.string.addsensor_stoped));
+			//mTime.setTitle(" ");
 		}
-
 	}
-
-	
-
 }

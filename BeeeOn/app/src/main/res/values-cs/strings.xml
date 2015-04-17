@@ -348,6 +348,7 @@
 	<string name="radius">Rádius</string>
 	<string name="dialog_choose_provider_title">Vyberte poskytovatele účtu</string>
 	<string name="addsensor_stoped">stopped</string>
+	<string name="add_action_dialog_title">What do you want add ?</string>
 
 
 </resources>
