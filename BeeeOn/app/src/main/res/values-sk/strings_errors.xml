@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 	<string name="NetworkError___CL_INTERNET_CONNECTION">Nie je dostupné pripojenie k Internetu</string>
-	<string name="NetworkError___SRV_ADAPTER_HAVE_YET">Zlé sériové číslo adaptéru</string>
-	<string name="NetworkError___SRV_ADAPTER_NOT_EXISTS">Zlé sériové číslo adaptéru</string>
-	<string name="NetworkError___SRV_ADAPTER_NOT_FREE">Zlé sériové číslo adaptéru</string>
+	<string name="NetworkError___SRV_ADAPTER_HAVE_YET">Zlé sériové číslo brany</string>
+	<string name="NetworkError___SRV_ADAPTER_NOT_EXISTS">Zlé sériové číslo brany</string>
+	<string name="NetworkError___SRV_ADAPTER_NOT_FREE">Zlé sériové číslo brany</string>
 	<string name="NetworkError___SRV_ADA_SERVER_PROBLEM">Problém na strane ada_servera</string>
 	<string name="NetworkError___SRV_BAD_ACTION">Zlá akcia</string>
 	<string name="NetworkError___SRV_BAD_ACTOR_VALUE">Zlá hodnota aktora</string>

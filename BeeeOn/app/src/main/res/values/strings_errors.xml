@@ -9,11 +9,11 @@
 	<string name="NetworkError___CL_SERVER_CONNECTION">Cannot connect to server.\n\nPlease try again later.</string>
 	<string name="NetworkError___CL_SOCKET">Cannot create or use socket.\n\nPlease try again later.</string>
 	<string name="NetworkError___CL_UNKNOWN_HOST">Unknown host.</string>
-	<string name="NetworkError___CL_XML">XML parsing issue occured.\n\nPlease try again later.</string>
+	<string name="NetworkError___CL_XML">Processing of message failed.\n\nPlease try again later.</string>
 
-	<string name="NetworkError___SRV_ADAPTER_HAVE_YET">You have already registered this adapter.</string>
-	<string name="NetworkError___SRV_ADAPTER_NOT_EXISTS">This adapter has not connected to cloud yet.\n\nPlease check its Internet connection.</string>
-	<string name="NetworkError___SRV_ADAPTER_NOT_FREE">This adapter has already been registered by another user.\n\nHe can share adapter with you.</string>
+	<string name="NetworkError___SRV_ADAPTER_HAVE_YET">You have already registered this gateway.</string>
+	<string name="NetworkError___SRV_ADAPTER_NOT_EXISTS">This gateway has not connected to cloud yet.\n\nPlease check its Internet connection.</string>
+	<string name="NetworkError___SRV_ADAPTER_NOT_FREE">This gateway has already been registered by another user.\n\nHe can share gateway with you.</string>
 	<string name="NetworkError___SRV_ADA_SERVER_PROBLEM">Server experienced some issues.\n\nTry to connect later.</string>
 	<string name="NetworkError___SRV_BAD_ACTION">Invalid action was inserted.</string>
 	<string name="NetworkError___SRV_BAD_ACTOR_VALUE">Invalid actor value was inserted.</string>
