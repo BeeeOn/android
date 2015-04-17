@@ -17,6 +17,8 @@ import com.rehivetech.beeeon.base.TrackFragment;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.util.Log;
 
+import net.simonvt.numberpicker.NumberPicker;
+
 public class AddSensorFragment extends TrackFragment {
 
 	public AddSensorActivity mActivity;
@@ -72,9 +74,7 @@ public class AddSensorFragment extends TrackFragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		mView = inflater.inflate(R.layout.activity_add_sensor_activity_dialog, container, false);
-
 		mLayout = (LinearLayout) mView.findViewById(R.id.container);
-		
 		return mView;
 	}
 
@@ -91,9 +91,15 @@ public class AddSensorFragment extends TrackFragment {
 	    	mActivity.checkUnInitSensor();
 
 			mTime = (CircularProgressBar) mView.findViewById(R.id.circularprogressbar1);
-			mTime.setTitle(getString(R.string.addsensor_sending_request));
-			mTime.setSubTitle("");
-			mTime.setProgress(0);
+			//mTime.setSubTitle(getString(R.string.addsensor_sending_request));
+			//mTime.setTitle(" ");
+			/*
+			NumberPicker np = (NumberPicker) mView.findViewById(R.id.numberPicker);
+			np.setMaxValue(20);
+			np.setMinValue(0);
+			np.setFocusable(true);
+			np.setFocusableInTouchMode(true);
+			*/
 	    }
 	    else {
 	    	stopTimer();
@@ -114,7 +120,8 @@ public class AddSensorFragment extends TrackFragment {
 		mTimerDone = true;
 		if (mCountDownTimer != null)
 			mCountDownTimer.cancel();
-		//resetPairButton();
+		mTime.setSubTitle(getString(R.string.addsensor_stoped));
+		mTime.setTitle(" ");
 	}
 
 	@Override
@@ -181,6 +188,11 @@ public class AddSensorFragment extends TrackFragment {
 		mTimerDone = true;
 		if (mCountDownTimer != null)
 			mCountDownTimer.cancel();
+		if (mTime != null) {
+			mTime.setSubTitle(getString(R.string.addsensor_stoped));
+			mTime.setTitle(" ");
+		}
+
 	}
 
 	

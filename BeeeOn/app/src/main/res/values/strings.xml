@@ -342,5 +342,6 @@
 	<string name="toast_delete_success">Successfully removed</string>
 	<string name="addadapter_fill_name">Please fill gateway name</string>
 	<string name="addadapter_fill_code">Please fill gateway code</string>
+	<string name="addsensor_stoped">stopped</string>
 
 </resources>
