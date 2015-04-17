@@ -28,11 +28,11 @@
     <string name="alert_positive">OK</string>
 
     <!-- New sensor dialog -->
-    <string name="notification_title">New sensor</string>
+    <string name="notification_title">New device</string>
 
     <plurals name="notification_new_sensors">
-        <item quantity="one">One uninitialized sensor found at your home</item>
-        <item quantity="other">%d uninitialized sensors found at your home</item>
+        <item quantity="one">One uninitialized device found at your home</item>
+        <item quantity="other">%d uninitialized devices found at your home</item>
     </plurals>
 
     <string name="notification_ingore">Ignore</string>
@@ -54,8 +54,8 @@
     <string name="update_needed">Please update application</string>
     <string name="addsensor_type">Type of device: </string>
     <string name="setup_sensor_info_text">Please, setup your new device which was activated at </string>
-    <string name="setup_sensor_header_names">Sensor names</string>
-    <string name="setup_sensor_set_name">Set name of sensor</string>
+    <string name="setup_sensor_header_names">Device names</string>
+    <string name="setup_sensor_set_name">Set name of device</string>
     <string name="setup_sensor_header_location">Location</string>
     <string name="addadapter_add_adapter">Add gateway</string>
     <string name="registration_label">New account</string>
@@ -74,7 +74,7 @@
 
     <!-- Hints -->
     <string name="login_user_name_hint">Login/email</string>
-    <string name="addsensor_sensor_name_hint">Name of new sensor</string>
+    <string name="addsensor_sensor_name_hint">Name of new device</string>
     <string name="addsensor_new_location_hint">New location name</string>
     <string name="addadapter_ser_num_hint">Serial number</string>
 
@@ -82,7 +82,7 @@
     <string name="toast_changeto">\u0020changed to: \u0020</string>
     <string name="toast_new_sensor_added">New device was added</string>
     <string name="toast_new_sensor_not_added">Error when adding device</string>
-    <string name="toast_need_sensor_name">Write name of sensor please</string>
+    <string name="toast_need_sensor_name">Write name of device please</string>
     <string name="toast_need_sensor_location_name">Write name of new location please</string>
     <string name="toast_bad_password">Wrong name or password</string>
     <string name="toast_connecting_to_server">Connecting to server &#8230;</string>
@@ -104,7 +104,7 @@
     <string name="toast_adapter_removed">Gateway has been removed</string>
     <string name="toast_no_adapter">You have no registered gateway</string>
     <string name="toast_ignore_uninitialized_info">You can add these devices later by clicking on (+)</string>
-    <string name="toast_empty_sensor_name">Please fill names of all sensors</string>
+    <string name="toast_empty_sensor_name">Please fill names of all devices</string>
     <string name="toast_wrong_or_no_device">Wrong or no device selected</string>
     <string name="toast_no_uninitialized_devices">There are no uninitialized devices</string>
     <string name="toast_success_save_data">Data saved successfully</string>
@@ -152,9 +152,9 @@
     <string name="action_search">Search</string>
     <string name="action_refreshlist">Refresh list</string>
     <string name="action_addadapter">Add gateway</string>
-    <string name="action_addsensor">Add sensor</string>
+    <string name="action_addsensor">Add device</string>
     <string name="action_logout">Logout</string>
-    <string name="action_hide_sensor">Hide sensor</string>
+    <string name="action_hide_sensor">Hide device</string>
     <string name="action_unregist_facility">Remove device</string>
     <string name="action_hide_facility">Hide device</string>
     <string name="action_close">Cancel</string>
@@ -167,7 +167,7 @@
     <string name="no_sensor_cap">NO DEVICE</string>
     <string name="no_adapter_cap">NO GATEWAY</string>
     <string name="no_rules_cap">NO RULE</string>
-    <string name="profile_category_senzors">Senzors</string>
+    <string name="profile_category_senzors">Devices</string>
     <string name="profile_category_friends">Friends</string>
     <string name="profile_category_app">Application</string>
     <string name="profile_level">Level</string>
@@ -280,8 +280,8 @@
     <string name="tut_add_sensor_header">ADD DEVICE</string>
     <string name="tut_add_sensor_text">To add your new device, please click on plus</string>
 	<string name="tut_intro_text_1">Welcome to BeeeOn intelligent home control. The tutorial will explain you BeeeOn components and this application.</string>
-	<string name="tut_intro_text_2">BeeeOn components include wireless devices (e.g. sensors) and gateway.</string>
-	<string name="tut_intro_text_3">Sensor measures values such as temperature, actor controls devices such as ON/OFF switch.</string>
+	<string name="tut_intro_text_2">BeeeOn components include wireless devices (e.g. sensor) and gateway.</string>
+	<string name="tut_intro_text_3">Sensor measures values such as temperature, actuator controls device such as ON/OFF switch.</string>
 	<string name="tut_intro_text_4">Gateway collects data from wireless devices.</string>
 	<string name="tut_intro_text_5">Mobile app provides monitoring and control from anywhere, anytime.</string>
     
@@ -296,7 +296,7 @@
     <string name="tut_add_adapter_text_2">Please connect your gateway to the AC power</string>
     <string name="tut_add_adapter_text_3">In the next step, please give name to your gateway and scan QR code</string>
     <string name="tut_add_sensor_text_1">Please pull out battery stripe</string>
-    <string name="tut_add_sensor_text_2">Please shake with new sensor shortly while countdown is running or push pair button on actor</string>
+    <string name="tut_add_sensor_text_2">Please shake with new sensor shortly while countdown is running or push pair button on actuator</string>
 
 	<!-- Achievements -->
 	<string name="share_title">Share this event</string>
@@ -322,7 +322,7 @@
     <string name="rule_menu_del">Remove</string>
 
 	<string name="title_activity_sensor_edit">Device Edit</string>
-	<string name="sensor_name_label">Name of sensor</string>
+	<string name="sensor_name_label">Name of device</string>
 
 	<string name="dialog_register_new_account_title">No account</string>
 	<string name="dialog_register_new_account_message">You don\'t have a BeeeOn account yet, do you want to create it now?</string>

@@ -35,11 +35,11 @@
     <string name="dev_noise_type">Sound meter</string>
     <string name="dev_emission_type">Emission meter</string>
     <!-- Actors -->
-    <string name="dev_actor_on_off_type">On/Off actor</string>
-    <string name="dev_actor_push_type">Push actor</string>
-    <string name="dev_actor_toggle_type">Toggle actor</string>
-    <string name="dev_actor_range_type">Range actor</string>
-    <string name="dev_actor_rgb_type">RGB actor</string>
+    <string name="dev_actor_on_off_type">On/Off actuator</string>
+    <string name="dev_actor_push_type">Push actuator</string>
+    <string name="dev_actor_toggle_type">Toggle actuator</string>
+    <string name="dev_actor_range_type">Range actuator</string>
+    <string name="dev_actor_rgb_type">RGB actuator</string>
 
     <!-- Special values of devices -->
     <string name="dev_enum_value_open">Open</string>

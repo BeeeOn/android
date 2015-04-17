@@ -32,7 +32,7 @@
 	<string name="NetworkError___SRV_INVALID_PROVIDER">This provider is not available.</string>
 	<string name="NetworkError___SRV_INVALID_REQUEST">This request is not supported by server.</string>
 	<string name="NetworkError___SRV_LOW_RIGHTS">You have low rights to perform this action.\n\nAsk owner to grant you higher rights.</string>
-	<string name="NetworkError___SRV_NOT_CONSISTENT_SENSOR_ADDR">Bad sensor ID or type was inserted.</string>
+	<string name="NetworkError___SRV_NOT_CONSISTENT_SENSOR_ADDR">Bad device ID or type was inserted.</string>
 	<string name="NetworkError___SRV_NOT_VALID_USER">Bad token or email was inserted.</string>
 	<string name="NetworkError___SRV_NO_SUCH_ENTITY">Requested object was not found.\n\nPlease try again.</string>
 	<string name="NetworkError___SRV_PENDING_USER">Please activate your account.</string>

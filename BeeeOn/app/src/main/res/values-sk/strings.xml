@@ -23,11 +23,11 @@
     <string name="alert_positive">OK</string>
 
     <!-- New sensor dialog -->
-    <string name="notification_title">Nový senzor</string>
+    <string name="notification_title">Nové zaradenie</string>
 
     <plurals name="notification_new_sensors">
-        <item quantity="one">Nájdený jeden neinicializovaný senzor ve Vašej domácnosti</item>
-        <item quantity="other">Nájdených viacero (%d) neinicializovaných senzorov vo Vašej domácnosti</item>
+        <item quantity="one">Nájdený jedno neinicializované zaradenie ve Vašej domácnosti</item>
+        <item quantity="other">Nájdených viacero (%d) neinicializovaných zaradenie vo Vašej domácnosti</item>
     </plurals>
 
     <string name="notification_ingore">Ignorovať</string>
@@ -37,17 +37,17 @@
     <!-- Labels -->
     <string name="login_app_name">BeeeOn</string>
     <string name="login_or_use">alebo použite</string>
-    <string name="addsensor_add_sensor">Pridajte senzor</string>
-    <string name="addsensor_setup_sensor">Nastavte senzor</string>
+    <string name="addsensor_add_sensor">Pridajte zaradenie</string>
+    <string name="addsensor_setup_sensor">Nastavte zaradenie</string>
     <string name="addsensor_or">alebo</string>
     <string name="sensordetail_last_value">Posledná hodnota: \u0020</string>
     <string name="sensordetail_refresh_time">Interval obnovy</string>
 	<string name="sensordetail_battery_label">Stav batérie</string>
 	<string name="update_needed">Prosím aktualizujte aplikáciu</string>
-    <string name="addsensor_type">Typ senzoru: </string>
-    <string name="setup_sensor_info_text">Prosím, nastavte senzor inicializovaný v </string>
-    <string name="setup_sensor_header_names">Názov senzoru</string>
-    <string name="setup_sensor_set_name">Nastavte názov senzoru</string>
+    <string name="addsensor_type">Typ zaradenie: </string>
+    <string name="setup_sensor_info_text">Prosím, nastavte zaradenie inicializované v </string>
+    <string name="setup_sensor_header_names">Názov zaradenie</string>
+    <string name="setup_sensor_set_name">Nastavte názov zaradenie</string>
     <string name="setup_sensor_header_location">Umiestnenie</string>
     <string name="addadapter_add_adapter">Pridajte bránu</string>
     <string name="registration_label">Nový účet</string>
@@ -64,7 +64,7 @@
 
     <!-- Hints -->
     <string name="login_user_name_hint">Login/email</string>
-    <string name="addsensor_sensor_name_hint">Názov nového senzoru</string>
+    <string name="addsensor_sensor_name_hint">Názov nového zaradenie</string>
     <string name="addsensor_new_location_hint">Názov nového umiestnenia</string>
     <string name="addadapter_ser_num_hint">Sériové číslo brány</string>
 
@@ -72,7 +72,7 @@
     <string name="toast_changeto">\u0020zmenené na: \u0020</string>
     <string name="toast_new_sensor_added">Nové zariadenie bolo pridané</string>
     <string name="toast_new_sensor_not_added">Chyba při pridávaní zariadenia</string>
-    <string name="toast_need_sensor_name">Napíšte názov senzoru</string>
+    <string name="toast_need_sensor_name">Napíšte názov zaradenie</string>
     <string name="toast_need_sensor_location_name">Napíšte názov umiestnenia</string>
     <string name="toast_bad_password">Nesprávne meno alebo heslo</string>
     <string name="toast_connecting_to_server">Pripájam sa na server &#8230;</string>
@@ -92,7 +92,7 @@
     <string name="toast_adapter_removed">Brána bola odstránená</string>
     <string name="toast_no_adapter">Nemáte žiadnou registrovanou bránu</string>
     <string name="toast_ignore_uninitialized_info">Neskôr môžete pridať ďalšie zariadenie ťuknutím na (+)</string>
-    <string name="toast_empty_sensor_name">Vyplňte názvy všetkých senzorov</string>
+    <string name="toast_empty_sensor_name">Vyplňte názvy všetkých zaradeni</string>
     <string name="toast_wrong_or_no_device">Vybrali ste nesprávne alebo žiadne zariadenie</string>
     <string name="toast_no_uninitialized_devices">K dispozicií nie sú žiadne neinicializované zariadenia</string>
     <string name="toast_success_save_data">Údaje boli úspešne uložené</string>
@@ -139,9 +139,9 @@
     <string name="action_search">Hľadanie</string>
     <string name="action_refreshlist">Obnov zoznam</string>
     <string name="action_addadapter">Pridanie brány</string>
-    <string name="action_addsensor">Pridanie senzoru</string>
+    <string name="action_addsensor">Pridanie zaradenie</string>
     <string name="action_logout">Odhlásenie</string>
-    <string name="action_hide_sensor">Skryť senzor</string>
+    <string name="action_hide_sensor">Skryť zaradenie</string>
     <string name="action_unregist_facility">Odstráňiť zariadenie</string>
     <string name="action_hide_facility">Skryť zariadenie</string>
     <string name="action_close">Zrušiť</string>
@@ -151,7 +151,7 @@
     <string name="addsensor_new_location_spinner">Nové umiestnenie</string>
     <string name="sen_detail_graph_info">Aktivujte dotykom</string>
     <string name="loading_data">Nahrávam dáta&#8230;</string>
-    <string name="no_sensor_cap">ŽIADNY SENZOR</string>
+    <string name="no_sensor_cap">ŽIADNÉ ZARADENIE</string>
     <string name="no_adapter_cap">ŽIADNA BRÁNA</string>
     <string name="no_rules_cap">ŽIADNE PRAVIDLO</string>
 
@@ -274,7 +274,7 @@
     <!-- WatchDog -->
     <string name="action_watchdog">Sledovač</string>
     <string name="watchdog_rule">Pravidlo sledovača</string>
-    <string name="sensor_text">Senzor</string>
+    <string name="sensor_text">Zaradenie</string>
     <string name="treshold_value">Prahová hodnota</string>
     <string name="watchdog_actor_change_state">Zmeniť stav aktoru</string>
     <string name="watchdog_notification_send">Pošlať notifikáciu</string>
@@ -288,12 +288,12 @@
     <string name="preference_set_default_adapter">Nastaviť predvolenou bránu</string>
     <string name="preference_activity_title">Nastavenia</string>
     <string name="please_log_in">Prosím prihláste sa</string>
-    <string name="no_sensor_available">Nie je dostupný žiadny senzor</string>
+    <string name="no_sensor_available">Nie je dostupné žiadné zaradenie</string>
     <string name="no_location_available_def_adapter">Nie je k dispozícií umiestnenie predvolené brány.</string>
     <string name="no_location_available">Nie je k dispozícií umiestenie.</string>
     <string name="no_adapter_available">Nie je k dispozícií žiadna brana</string>
     <string name="loc_cellar">Pivnica</string>
-    <string name="choose_sensor">Zvoľte senzor:</string>
+    <string name="choose_sensor">Zvoľte zaradenie:</string>
     <string name="choose_location">Zvoľte umiestnenie:</string>
     <string name="choose_adapter">Zvoľte branu:</string>
     <string name="adausr_menu_edit">Editovať užívateľa</string>
@@ -333,7 +333,7 @@
 	<string name="sensordetail_last_update_label">Poslední aktualizacia</string>
 	<string name="profile_category_app">Aplikace</string>
 	<string name="profile_category_friends">Přátelé</string>
-	<string name="profile_category_senzors">Senzory</string>
+	<string name="profile_category_senzors">Zaradenie</string>
 	<string name="profile_level">Úroveň</string>
 	<string name="profile_more_accounts">Další účty</string>
 	<string name="profile_new_account">Propojit s vybranou sítí</string>

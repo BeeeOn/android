@@ -24,11 +24,11 @@
     <string name="alert_positive">OK</string>
 
     <!-- New sensor dialog -->
-    <string name="notification_title">Nový senzor</string>
+    <string name="notification_title">Nové zařízení</string>
 
     <plurals name="notification_new_sensors">
         <item quantity="one">Nalezen jeden neinicializovaný sensor v domácnosti</item>
-        <item quantity="other">Nalezeno vícero (%d) neinicializovaných senzorů v domácnosti</item>
+        <item quantity="other">Nalezeno vícero (%d) neinicializovaných zařízení v domácnosti</item>
     </plurals>
 
     <string name="notification_ingore">Ignorovat</string>
@@ -38,7 +38,7 @@
     <!-- Labels -->
     <string name="login_app_name">BeeeOn</string>
     <string name="login_or_use">nebo použijte</string>
-    <string name="addsensor_add_sensor">Přidat senzor</string>
+    <string name="addsensor_add_sensor">Přidat zařízení</string>
     <string name="addsensor_setup_sensor">Nastavte zařízení</string>
     <string name="addsensor_or">nebo</string>
     <string name="sensordetail_last_value">Poslední hodnota: \u0020</string>
@@ -49,9 +49,9 @@
 	<string name="sensordetail_signal_label">Stav signálu</string>
     <string name="update_needed">Prosím aktualizujte aplikaci</string>
     <string name="addsensor_type">Typ zařízení:</string>
-    <string name="setup_sensor_info_text">Prosím, nastavte senzor inicializován v</string>
-    <string name="setup_sensor_header_names">Název senzoru</string>
-    <string name="setup_sensor_set_name">Nastavte název senzoru</string>
+    <string name="setup_sensor_info_text">Prosím, nastavte zařízení inicializován v</string>
+    <string name="setup_sensor_header_names">Název zařízení</string>
+    <string name="setup_sensor_set_name">Nastavte název zařízení</string>
     <string name="setup_sensor_header_location">Umístění</string>
     <string name="addadapter_add_adapter">Přidat bránu</string>
     <string name="registration_label">Nový účet</string>
@@ -69,7 +69,7 @@
 
     <!-- Hints -->
     <string name="login_user_name_hint">Login/email</string>
-    <string name="addsensor_sensor_name_hint">Název nového senzoru</string>
+    <string name="addsensor_sensor_name_hint">Název nového </string>
     <string name="addsensor_new_location_hint">Název nového umístění</string>
     <string name="addadapter_ser_num_hint">Sériové číslo brány</string>
 
@@ -77,7 +77,7 @@
     <string name="toast_changeto">\u0020změněno na: \u0020</string>
     <string name="toast_new_sensor_added">Nové zařízení bylo přidáno</string>
     <string name="toast_new_sensor_not_added">Chyba při přidávání zařízení</string>
-    <string name="toast_need_sensor_name">Zadejte název senzoru</string>
+    <string name="toast_need_sensor_name">Zadejte název zařízení</string>
     <string name="toast_need_sensor_location_name">Zadejte název umístění</string>
     <string name="toast_bad_password">Nesprávné jméno nebo heslo</string>
     <string name="toast_connecting_to_server">Připojuji se na server &#8230;</string>
@@ -99,7 +99,7 @@
     <string name="toast_adapter_removed">Brána byla odstraněna</string>
     <string name="toast_no_adapter">Nemáte žádnou registrovanou bránu</string>
     <string name="toast_ignore_uninitialized_info">Později můžete přidat další zařízení klepnutím na (+)</string>
-    <string name="toast_empty_sensor_name">Vyplňte názvy všech senzorů</string>
+    <string name="toast_empty_sensor_name">Vyplňte názvy všech zařízení</string>
     <string name="toast_wrong_or_no_device">Nebylo zadáno žádné zařízení nebo je zvolené zařízení nesprávné</string>
     <string name="toast_no_uninitialized_devices">Nejsou k dispozici žádné neinicializované zařízení</string>
     <string name="toast_success_save_data">Údaje byly úspěšně uloženy</string>
@@ -149,9 +149,9 @@
     <string name="action_search">Hledání</string>
     <string name="action_refreshlist">Obnovit seznam</string>
     <string name="action_addadapter">Přidání brány</string>
-    <string name="action_addsensor">Přidání senzoru</string>
+    <string name="action_addsensor">Přidání zařízení</string>
     <string name="action_logout">Odhlášení</string>
-    <string name="action_hide_sensor">Skrýt senzor</string>
+    <string name="action_hide_sensor">Skrýt zařízení</string>
     <string name="action_unregist_facility">Odstranit zařízení</string>
     <string name="action_hide_facility">Skrýt zařízení</string>
     <string name="action_close">Zrušit</string>
@@ -164,7 +164,7 @@
     <string name="no_sensor_cap">ŽÁDNÉ ZAŘÍZENÍ</string>
     <string name="no_adapter_cap">ŽÁDNÁ BRÁNA</string>
     <string name="no_rules_cap">ŽÁDNÉ PRAVIDLO</string>
-	<string name="profile_category_senzors">Senzory</string>
+	<string name="profile_category_senzors">Zařízení</string>
 	<string name="profile_category_friends">Přátelé</string>
 	<string name="profile_category_app">Aplikace</string>
 	<string name="profile_level">Úroveň</string>
@@ -276,7 +276,7 @@
     <!-- Tutorial -->
     <string name="tut_add_adapter_header">PŘIDAT BRÁNU</string>
     <string name="tut_add_adapter_text">Pro přidání brány klepněte na plus (+)</string>
-    <string name="tut_add_sensor_header">PŘIDAT SENZOR</string>
+    <string name="tut_add_sensor_header">PŘIDAT ZAŘÍZENÍ</string>
     <string name="tut_add_sensor_text">Pro přidání zařízení klepněte na plus (+)</string>
 
     <string name="tutorial_next">DALŠÍ</string>
@@ -288,8 +288,8 @@
     <string name="tut_add_adapter_text_1">Připojte bránu k internetové síti</string>
     <string name="tut_add_adapter_text_2">Zapojte bránu do elektrické sítě</string>
     <string name="tut_add_adapter_text_3">V následujícím kroku zadejte název brány a naskenujte QR kód</string>
-    <string name="tut_add_sensor_text_1">Vytáhněte izolační proužek baterií ze senzoru nebo zapojte aktor do elektrické sítě</string>
-    <string name="tut_add_sensor_text_2">Během odpočítávání krátce zatřeste se senzorem nebo stiskněte párovací tlačítko na aktoru</string>
+    <string name="tut_add_sensor_text_1">Vytáhněte izolační proužek baterií ze zařízení nebo zapojte aktor do elektrické sítě</string>
+    <string name="tut_add_sensor_text_2">Během odpočítávání krátce zatřeste se zařízení nebo stiskněte párovací tlačítko na aktoru</string>
 
 	<!-- Achievements -->
 	<string name="share_title">Sdílet tuto událost</string>
@@ -300,7 +300,7 @@
     <!-- WatchDog -->
     <string name="action_watchdog">Hlídač</string>
     <string name="watchdog_rule">Pravidlo hlídače</string>
-    <string name="sensor_text">Senzor</string>
+    <string name="sensor_text">Zařízení</string>
     <string name="treshold_value">Hodnota</string>
     <string name="watchdog_actor_change_state">Změnit stav aktoru</string>
     <string name="watchdog_notification_send">Poslat notifikaci</string>
@@ -314,14 +314,14 @@
     <string name="adapter_doest_exist">Výchozí brána neexistuje. Nastavte nový výchozí bránu.</string>
     <string name="choose_adapter">Vyberte bránu:</string>
     <string name="choose_location">Vyberte umístění:</string>
-    <string name="choose_sensor">Vyberte senzor:</string>
+    <string name="choose_sensor">Vyberte zařízení:</string>
     <string name="no_adapter_available">Žádná dostupná brána</string>
     <string name="no_location_available">Žádné dostupné umístění</string>
     <string name="preference_set_default_location">Nastavit výchozí umístění</string>
     <string name="preference_set_default_adapter">Nastavit výchozí bránu</string>
     <string name="preference_activity_title">Nastavení</string>
     <string name="please_log_in">Přihlašte se prosím</string>
-    <string name="no_sensor_available">Žádný dostupný senzor</string>
+    <string name="no_sensor_available">Žádné dostupné zařízení</string>
     <string name="no_location_available_def_adapter">Žádné dostupné umístění pro výchozí bránu</string>
     <string name="users_pending_header">Žádost o přidání</string>
     <string name="title_activity_location_detail_screen">Detail umístění</string>

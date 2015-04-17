@@ -32,7 +32,7 @@
 	<string name="NetworkError___SRV_INVALID_PROVIDER">Tento poskytovatel není k dispozici.</string>
 	<string name="NetworkError___SRV_INVALID_REQUEST">Tento typ požadavku není na serveru podporován.</string>
 	<string name="NetworkError___SRV_LOW_RIGHTS">Nemáte dostatečná práva pro tuto akci.\n\nPožádejte vlastníka brány o jejich navýšení.</string>
-	<string name="NetworkError___SRV_NOT_CONSISTENT_SENSOR_ADDR">Bylo zadáno neplatné ID nebo typ senzoru.</string>
+	<string name="NetworkError___SRV_NOT_CONSISTENT_SENSOR_ADDR">Bylo zadáno neplatné ID nebo typ zařízení.</string>
 	<string name="NetworkError___SRV_NOT_VALID_USER">Byl zadán neplatný token nebo e-mail.</string>
 	<string name="NetworkError___SRV_NO_SUCH_ENTITY">Požadovaný objekt nebyl nalezen.\n\nZkuste to prosím znovu.</string>
 	<string name="NetworkError___SRV_PENDING_USER">Aktivujte prosím svůj účet.</string>
