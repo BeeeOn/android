@@ -93,6 +93,7 @@ public class BeeeOnVKontakte extends Observable implements BeeeOnSocialNetwork{
 			Log.d(TAG, "Not downloading data, already done before");
 			return;
 		}
+		Log.d(TAG, "Trying to download user data");
 		VKApi.users().get().executeWithListener(new VKRequest.VKRequestListener() {
 			@Override
 			public void onComplete(VKResponse response) {
