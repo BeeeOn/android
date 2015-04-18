@@ -1,5 +1,6 @@
 package com.rehivetech.beeeon.util;
 
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,9 +9,11 @@ import android.widget.RelativeLayout;
 import com.github.amlcurran.showcaseview.OnShowcaseEventListener;
 import com.github.amlcurran.showcaseview.ShowcaseView;
 import com.github.amlcurran.showcaseview.targets.ViewTarget;
+import com.rehivetech.beeeon.Constants;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.activity.LoginActivity;
 import com.rehivetech.beeeon.activity.MainActivity;
+import com.rehivetech.beeeon.controller.Controller;
 
 public class TutorialHelper {
 	private static final String TAG = TutorialHelper.class.getSimpleName();
@@ -107,7 +110,7 @@ public class TutorialHelper {
 		});
 	}
 
-	public static void showAddSensorTutorial(MainActivity activity, View layout) {
+	public static void showAddSensorTutorial(final MainActivity activity, View layout) {
 		final RelativeLayout.LayoutParams lps = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
 		int marginPixel = 25;
 		int marginPixelBottom = 55;
@@ -123,7 +126,7 @@ public class TutorialHelper {
 
 			@Override
 			public void onShowcaseViewShow(ShowcaseView showcaseView) {
-				Log.d(TAG, "OnShowCase show");
+				Log.d(TAG, "OnShowCase show ADD SENSOR");
 
 			}
 
@@ -159,7 +162,7 @@ public class TutorialHelper {
 
 	}
 
-	public static void showAddAdapterTutorial(MainActivity activity, View layout) {
+	public static void showAddAdapterTutorial(final MainActivity activity, View layout) {
 		final RelativeLayout.LayoutParams lps = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
 		int marginPixel = 25;
 		int marginPixelBottom = 55;
@@ -175,7 +178,7 @@ public class TutorialHelper {
 
 			@Override
 			public void onShowcaseViewShow(ShowcaseView showcaseView) {
-				Log.d(TAG, "OnShowCase show");
+				Log.d(TAG, "OnShowCase show ADD ADAPTER");
 
 			}
 

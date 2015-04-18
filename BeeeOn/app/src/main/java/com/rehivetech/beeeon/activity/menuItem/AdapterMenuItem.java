@@ -7,13 +7,13 @@ import com.rehivetech.beeeon.R;
 
 public class AdapterMenuItem extends AbstractMenuItem {
 	private String mName;
-	private String mRole;
+	private int mRole;
 	private boolean mIsChosen;
 
-	public AdapterMenuItem(String name, String role, boolean isChosen, String id) {
+	public AdapterMenuItem(String name, int resRole, boolean isChosen, String id) {
 		super(id, MenuItemType.ADAPTER);
 		mName = name;
-		mRole = role;
+		mRole = resRole;
 		mIsChosen = isChosen;
 	}
 

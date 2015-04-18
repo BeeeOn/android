@@ -107,7 +107,8 @@ public class AddAdapterUserActivity extends BaseApplicationActivity {
 					Log.d(TAG, "non valid email");
 					return;
 				}
-				mProgress.show();
+				if (mProgress != null)
+					mProgress.show();
 				User newUser = new User();
 				newUser.setEmail(mEmail.getText().toString());
 				newUser.setRole(User.Role.values()[mRole.getSelectedItemPosition()]);

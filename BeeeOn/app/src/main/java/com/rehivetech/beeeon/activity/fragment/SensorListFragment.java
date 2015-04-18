@@ -290,6 +290,7 @@ public class SensorListFragment extends Fragment  {
 		else if (!haveDevices) { // Have Adapter but any Devices
 			// Set right visibility
 			noItem.setVisibility(View.VISIBLE);
+			noItem.setText(R.string.no_sensor_cap);
 			refreshBtn.setVisibility(View.VISIBLE);
 			mSensorList.setVisibility(View.GONE);
 			if (mSwipeLayout != null)

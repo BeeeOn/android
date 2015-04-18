@@ -97,7 +97,9 @@ public class User implements INameIdentifier {
 	}
 
 	public String getId() {
-		return mId;
+		if(!mId.isEmpty())
+			return mId;
+		return getEmail();
 	}
 
 	public void setId(String id) {

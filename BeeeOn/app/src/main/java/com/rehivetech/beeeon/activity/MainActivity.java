@@ -107,6 +107,7 @@ public class MainActivity extends BaseApplicationActivity implements IListDialog
 
 	public CallbackManager mFacebookCallbackManager;
 	private ReloadAdapterDataTask mFullReloadTask;
+	private boolean doRedraw = true;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -232,7 +233,7 @@ public class MainActivity extends BaseApplicationActivity implements IListDialog
 				// Succes of add adapter -> setActive adapter a redraw ALL
 				Log.d(TAG, "Add adapter succes");
 				setActiveAdapterAndMenu();
-				redraw();
+				doRedraw = false;
 			}
 		}
 		else if (requestCode == Constants.ADD_SENSOR_REQUEST_CODE) {
@@ -287,9 +288,12 @@ public class MainActivity extends BaseApplicationActivity implements IListDialog
 		mNavDrawerMenu.redrawMenu();
 		mNavDrawerMenu.finishActinMode();
 		// Redraw Main Fragment
-        redraw();
-
-
+		if(doRedraw) {
+			redraw();
+		}
+		else {
+			doRedraw = true;
+		}
 	}
 
 	public void onAppPause() {
