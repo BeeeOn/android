@@ -116,6 +116,9 @@ public class XmlCreator {
 	public static final String SETALG = "setalg";
 	public static final String DELALG = "delalg";
 
+	public static final String GETALLACHIEVEMENTS = "getallachievements";
+	public static final String SETPROGRESSLVL = "setprogresslvl";
+
 	// end of states
 
 	/**
@@ -1333,6 +1336,27 @@ public class XmlCreator {
 	 */
 	public static String createPassBorder(String bt, String rid, String type){
 		return  createComAttribsVariant(Xconstants.STATE, PASSBORDER, Xconstants.BT, bt, Xconstants.RID, rid, Xconstants.TYPE, type);
+	}
+
+	/**
+	 * Method create message for GetAllAchievements request
+	 * @param bt
+	 * @param aid
+	 * @return
+	 */
+	public static String createGetAllAchievements(String bt, String aid){
+		return createComAttribsVariant(Xconstants.STATE, GETALLACHIEVEMENTS, Xconstants.BT, bt, Xconstants.AID, aid);
+	}
+
+	/**
+	 * Method crete message for incrementing progress level of achievement
+	 * @param bt
+	 * @param aid
+	 * @param achId
+	 * @return
+	 */
+	public static String createSetProgressLvl(String bt, String aid, String achId){
+		return createComAttribsVariant(Xconstants.STATE, SETPROGRESSLVL, Xconstants.BT, bt, Xconstants.AID, aid, Xconstants.ID, achId);
 	}
 
 	/************************************* PRIVATE METHODS *********************************************/

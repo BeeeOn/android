@@ -7,6 +7,7 @@ import android.net.NetworkInfo;
 import com.rehivetech.beeeon.BuildConfig;
 import com.rehivetech.beeeon.exception.AppException;
 import com.rehivetech.beeeon.exception.NetworkError;
+import com.rehivetech.beeeon.gamification.AchievementListItem;
 import com.rehivetech.beeeon.household.adapter.Adapter;
 import com.rehivetech.beeeon.household.device.Device;
 import com.rehivetech.beeeon.household.device.Device.SaveDevice;
@@ -1370,6 +1371,17 @@ public class Network implements INetwork {
 
 		if(msg.getState() == State.TRUE)
 			return true;
+
+		throw processFalse(msg);
+	}
+
+	@Override
+	public ArrayList<AchievementListItem> getAllAchievements(String adapterID){
+		ParsedMessage msg = doRequest(XmlCreator.createGetAllAchievements(mBT, adapterID));
+
+		if(msg.getState() == State.ACHIEVEMENTS){
+			return (ArrayList<AchievementListItem>) msg.data;
+		}
 
 		throw processFalse(msg);
 	}

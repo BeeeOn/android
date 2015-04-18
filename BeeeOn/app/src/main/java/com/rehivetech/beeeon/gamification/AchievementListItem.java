@@ -5,7 +5,6 @@ import android.os.Parcelable;
 import android.support.annotation.NonNull;
 
 import com.rehivetech.beeeon.IIdentifier;
-import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.util.Log;
 
 import java.text.ParseException;
@@ -21,11 +20,15 @@ public class AchievementListItem implements IIdentifier, Comparable<AchievementL
 	private static final String TAG = AchievementListItem.class.getSimpleName();
 
 	private String id;
+	private String mPid;
+	private String mAid;
 	private String mCategory;
 	private String mName;
 	private String mDescription;
 	private String mDate;
 	private int mPoints;
+	private int mTotalProgress;
+	private int mCurrentProgress;
 
 	private SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy", Locale.getDefault());
 
@@ -38,8 +41,51 @@ public class AchievementListItem implements IIdentifier, Comparable<AchievementL
 		setDate(date);
 	}
 
+	public AchievementListItem(String id, String pid, String categoryId, int points, int totalProgrss, int currentProgress, String date) {
+		setId(id);
+		setCategory(categoryId);
+		setPoints(points);
+		setDate(date);
+		mPid = pid;
+		mTotalProgress = totalProgrss;
+		mCurrentProgress = currentProgress;
+	}
+
 	private AchievementListItem(Parcel in) {
 		readFromParcel(in);
+	}
+
+
+	public String getAid() {
+		return mAid;
+	}
+
+	public void setAid(String aid) {
+		mAid = aid;
+	}
+
+	public String getPid() {
+		return mPid;
+	}
+
+	public void setPid(String pid) {
+		mPid = pid;
+	}
+
+	public int getTotalProgress() {
+		return mTotalProgress;
+	}
+
+	public void setTotalProgress(int totalProgress) {
+		mTotalProgress = totalProgress;
+	}
+
+	public int getCurrentProgress() {
+		return mCurrentProgress;
+	}
+
+	public void setCurrentProgress(int currentProgress) {
+		mCurrentProgress = currentProgress;
 	}
 
 	public String getCategory() {return mCategory;}
