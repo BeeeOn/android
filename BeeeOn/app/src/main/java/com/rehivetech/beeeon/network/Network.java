@@ -1386,4 +1386,14 @@ public class Network implements INetwork {
 		throw processFalse(msg);
 	}
 
+	@Override
+	public boolean setProgressLvl(String adapterId, String achievementId){
+		ParsedMessage msg = doRequest(XmlCreator.createSetProgressLvl(mBT, adapterId, achievementId));
+
+		if(msg.getState() == State.TRUE)
+			return true;
+
+		throw processFalse(msg);
+	}
+
 }

@@ -453,4 +453,6 @@ public interface INetwork {
 	public boolean passBorder(String regionId, String type);
 
 	public ArrayList<AchievementListItem> getAllAchievements(String adapterID);
+
+	public boolean setProgressLvl(String adapterId, String achievementId);
 }
