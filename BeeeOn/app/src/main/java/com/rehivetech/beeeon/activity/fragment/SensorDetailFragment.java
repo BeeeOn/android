@@ -8,6 +8,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.SwitchCompat;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -135,7 +136,7 @@ public class SensorDetailFragment extends Fragment {
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		Log.d(TAG,"OnCreateView");
+		Log.d(TAG, "OnCreateView");
 		mView = inflater.inflate(R.layout.activity_sensor_detail_screen, container, false);
 		Log.d(TAG, String.format("this position: %s , selected item: %s ", mCurPageNumber, mSelPageNumber));
 		return mView;
@@ -153,7 +154,7 @@ public class SensorDetailFragment extends Fragment {
 			mAdapter = mController.getAdaptersModel().getAdapter(mAdapterId);
 			mActivity = (SensorDetailActivity) getActivity();
 		}
-		Log.d(TAG,"OnActivityCreated");
+		Log.d(TAG, "OnActivityCreated");
 		mDevice = mController.getFacilitiesModel().getDevice(mAdapterId, mDeviceID);
 		if (mDevice != null) {
 			Log.d(TAG, String.format("ID: %s, Name: %s", mDevice.getId(), mDevice.getName()));
@@ -382,10 +383,6 @@ public class SensorDetailFragment extends Fragment {
 		// Create and set graphView
 		GraphViewHelper.prepareGraphView(mGraphView, getView().getContext(), mDevice, fmt, unitsHelper); // empty heading
 
-		//mGraphView.setVisibility(View.GONE);
-		mGraphView.getViewport().setScrollable(false);
-		mGraphView.getViewport().setScalable(false);
-
 		if (mDevice.getValue() instanceof BaseEnumValue) {
 			mGraphSeries = new BarGraphSeries<>(new DataPoint[]{new DataPoint(0, 0), new DataPoint(1,1)});
 			((BarGraphSeries) mGraphSeries).setSpacing(30);
@@ -394,13 +391,31 @@ public class SensorDetailFragment extends Fragment {
 			((LineGraphSeries)mGraphSeries).setBackgroundColor(getResources().getColor(R.color.alpha_blue));
 			((LineGraphSeries)mGraphSeries).setDrawBackground(true);
 			((LineGraphSeries) mGraphSeries).setThickness(2);
-//			((LineGraphSeries) mGraphSeries).setDrawCubicLine(true);
 		}
 		mGraphSeries.setColor(getResources().getColor(R.color.beeeon_primary_cyan));
 		mGraphSeries.setTitle("Graph");
 
 		// Add data series
 		mGraphView.addSeries(mGraphSeries);
+
+		// touch listener to disable swipe and refresh trough graph
+		mGraphView.setOnTouchListener(new View.OnTouchListener() {
+			@Override
+			public boolean onTouch(View view, MotionEvent motionEvent) {
+				int i = motionEvent.getAction();
+
+				if (i == MotionEvent.ACTION_DOWN) {
+					mActivity.setEnableSwipe(false);
+					mSwipeLayout.setEnabled(false);
+				}
+
+				else if (i == MotionEvent.ACTION_UP) {
+					mActivity.setEnableSwipe(true);
+					mSwipeLayout.setEnabled(true);
+				}
+				return false;
+			}
+		});
 /*
 		mGraphInfo.setOnTouchListener(new OnTouchListener() {
 
