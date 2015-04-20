@@ -1,6 +1,5 @@
-package com.rehivetech.beeeon.widget.location;
+package com.rehivetech.beeeon.widget.configuration;
 
-import android.app.Activity;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Spinner;
@@ -15,9 +14,10 @@ import com.rehivetech.beeeon.asynctask.CallbackTask;
 import com.rehivetech.beeeon.asynctask.ReloadLocationsTask;
 import com.rehivetech.beeeon.util.Log;
 import com.rehivetech.beeeon.util.Utils;
-import com.rehivetech.beeeon.widget.WidgetConfiguration;
-import com.rehivetech.beeeon.widget.WidgetData;
-import com.rehivetech.beeeon.widget.WidgetService;
+import com.rehivetech.beeeon.widget.data.WidgetData;
+import com.rehivetech.beeeon.widget.persistence.WidgetLocation;
+import com.rehivetech.beeeon.widget.data.WidgetLocationData;
+import com.rehivetech.beeeon.widget.service.WidgetService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,10 +27,13 @@ public class WidgetLocationConfiguration extends WidgetConfiguration {
 
     private List<Location> mLocations = new ArrayList<Location>();
     private Spinner mLocationSpinner;
-    private ReloadLocationsTask mReloadLocationsTask;
 
-    public WidgetLocationConfiguration(WidgetData data, Activity activity) {
-        super(data, activity);
+    private ReloadLocationsTask mReloadLocationsTask;
+    private WidgetLocation mWidgetLocation;
+
+    public WidgetLocationConfiguration(WidgetData data, WidgetConfigurationActivity activity, boolean widgetEditing) {
+        super(data, activity, widgetEditing);
+        mWidgetLocation = ((WidgetLocationData) mWidgetData).widgetLocation;
     }
 
     @Override
@@ -41,6 +44,27 @@ public class WidgetLocationConfiguration extends WidgetConfiguration {
         super.inflationConstructor();
 
         mLocationSpinner = (Spinner) mActivity.findViewById(R.id.widgetConfLocation);
+    }
+
+    @Override
+    public void controllerConstructor() {
+        super.controllerConstructor();
+
+        // sets adapter onclicklistener
+        mAdapterSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                Adapter adapter = mAdapters.get(position);
+                Log.d(TAG, String.format("Selected adapter %s", adapter.getName()));
+                doChangeAdapter(adapter.getId(), "");
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                Log.d(TAG, "Selected no adapter");
+                mLocations.clear();
+            }
+        });
     }
 
     @Override
@@ -67,7 +91,6 @@ public class WidgetLocationConfiguration extends WidgetConfiguration {
     @Override
     public void loadSettings() {
         String adapterId = mWidgetData.adapterId;
-        String locationId = ((WidgetLocationData) mWidgetData).locationId;
 
         if (!adapterId.isEmpty()) {
             for (int i = 0; i < mAdapters.size(); i++) {
@@ -83,14 +106,14 @@ public class WidgetLocationConfiguration extends WidgetConfiguration {
                     mLocationSpinner.setAdapter(dataAdapter);
 
                     // set selection
-                    int foundIndex = Utils.getObjectIndexFromList(locationId, mLocations);
+                    int foundIndex = Utils.getObjectIndexFromList(mWidgetLocation.id, mLocations);
                     if(foundIndex != -1) mLocationSpinner.setSelection(foundIndex);
 
                     break;
                 }
             }
 
-           doChangeAdapter(adapterId, locationId);
+           doChangeAdapter(adapterId, mWidgetLocation.id);
         }
 
     }
@@ -109,23 +132,18 @@ public class WidgetLocationConfiguration extends WidgetConfiguration {
             return false;
         }
 
-        RefreshInterval refresh = RefreshInterval.values()[mWidgetUpdateSeekBar.getProgress()];
-        mWidgetData.interval = Math.max(refresh.getInterval(), WidgetService.UPDATE_INTERVAL_MIN);
-        mWidgetData.adapterId = adapter.getId();
-        mWidgetData.lastUpdate = 0;         // nastavi, ze jeste nebylo updatovano
-        mWidgetData.initialized = true;
-        ((WidgetLocationData) mWidgetData).locationId = location.getId();
-        // TODO toto asi pryc
-        ((WidgetLocationData) mWidgetData).locationName = location.getName();
-        ((WidgetLocationData) mWidgetData).locationType = location.getType();
+        mWidgetLocation.id = location.getId();
+        mWidgetLocation.name = location.getName();
+        mWidgetLocation.type = location.getType();
+        mWidgetLocation.adapterId = adapter.getId();
 
-        // TODO misto toho pouzit changeData()
-        mWidgetData.saveData(mActivity);
+        RefreshInterval refresh = RefreshInterval.values()[mWidgetUpdateSeekBar.getProgress()];
+        // sets widgetdata
+        mWidgetData.configure(isWidgetEditing, Math.max(refresh.getInterval(), WidgetService.UPDATE_INTERVAL_MIN), adapter.getId());
 
         return true;
     }
 
-    @Override
     protected void doChangeAdapter(final String adapterId, final String activeLocationId) {
         mReloadLocationsTask = new ReloadLocationsTask(mActivity, false);
         mReloadLocationsTask.setListener(new CallbackTask.CallbackTaskListener() {
@@ -141,20 +159,22 @@ public class WidgetLocationConfiguration extends WidgetConfiguration {
                 mLocationSpinner.setEnabled(true);
                 mLocationSpinner.setAdapter(dataAdapter);
 
-                if (!activeLocationId.isEmpty()) {
-                    int index = Utils.getObjectIndexFromList(activeLocationId, mLocations);
+                String locId = (activeLocationId.isEmpty() && mWidgetLocation.adapterId.equals(adapterId)) ? mWidgetLocation.id : activeLocationId;
+
+                if (!locId.isEmpty()) {
+                    int index = Utils.getObjectIndexFromList(locId, mLocations);
                     if (index != -1) mLocationSpinner.setSelection(index);
                 }
+
+                mActivity.getDialog().dismiss();
             }
         });
 
         mLocationSpinner.setEnabled(false);
+        mActivity.getDialog().setMessage(mActivity.getString(R.string.progress_loading_locations));
+        mActivity.getDialog().show();
         mReloadLocationsTask.execute(adapterId);
     }
 
-    @Override
-    protected void onNoAdapterSelected(){
-        mLocations.clear();
-    }
 
 }

@@ -5,6 +5,6 @@
     android:minWidth="280dp"
     android:resizeMode="horizontal|vertical"
     android:updatePeriodMillis="0"
-    android:configure="com.rehivetech.beeeon.widget.WidgetConfigurationActivity"
+    android:configure="com.rehivetech.beeeon.widget.configuration.WidgetConfigurationActivity"
 />
 

@@ -1,4 +1,4 @@
-package com.rehivetech.beeeon.widget;
+package com.rehivetech.beeeon.widget.service;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,6 +14,7 @@ import android.widget.RemoteViews;
 import android.widget.RemoteViewsService;
 
 import com.rehivetech.beeeon.R;
+import com.rehivetech.beeeon.exception.AppException;
 import com.rehivetech.beeeon.household.adapter.Adapter;
 import com.rehivetech.beeeon.household.device.Device;
 import com.rehivetech.beeeon.household.device.Facility;
@@ -21,8 +22,7 @@ import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.util.Log;
 import com.rehivetech.beeeon.util.TimeHelper;
 import com.rehivetech.beeeon.util.UnitsHelper;
-import com.rehivetech.beeeon.widget.location.WidgetLocationData;
-import com.rehivetech.beeeon.widget.location.WidgetLocationListProvider;
+import com.rehivetech.beeeon.widget.data.WidgetLocationData;
 
 @TargetApi(Build.VERSION_CODES.HONEYCOMB)
 public class WidgetListService extends RemoteViewsService {
@@ -42,15 +42,6 @@ class ListRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory {
     private TimeHelper mTimeHelper;
     private UnitsHelper mUnitsHelper;
 
-    public class WidgetListItem {
-        public String text;
-        public WidgetListItem(String text) {
-            this.text = text;
-        }
-    }
-
-    private List<WidgetListItem> mWidgetListItems = new ArrayList<WidgetListItem>();
-
     private Context mContext;
     private Controller mController;
     private int mWidgetId;
@@ -59,31 +50,29 @@ class ListRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory {
     private String mLocationAdapterId;
 
     public ListRemoteViewsFactory(Context context, Intent intent) {
-        mContext = context;
-        mController = Controller.getInstance(context);
+        mContext = context.getApplicationContext();
         mWidgetId = intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, AppWidgetManager.INVALID_APPWIDGET_ID);
         mDevices = new ArrayList<>();
 
         mLocationId = intent.getStringExtra(WidgetLocationData.EXTRA_LOCATION_ID);
         mLocationAdapterId = intent.getStringExtra(WidgetLocationData.EXTRA_LOCATION_ADAPTER_ID);
+    }
 
+    public void onCreate() {
+        Log.d(TAG, "onCreate()");
+        // In onCreate() you setup any connections / cursors to your data source. Heavy lifting,
+        // for example downloading or creating content etc, should be deferred to onDataSetChanged()
+        // or getViewAt(). Taking more than 20 seconds in this call will result in an ANR.
+        mController = Controller.getInstance(mContext);
         SharedPreferences userSettings = mController.getUserSettings();
-
         // UserSettings can be null when user is not logged in!
         mUnitsHelper = (userSettings == null) ? null : new UnitsHelper(userSettings, mContext);
         mTimeHelper = (userSettings == null) ? null : new TimeHelper(userSettings);
     }
 
-    public void onCreate() {
-        // In onCreate() you setup any connections / cursors to your data source. Heavy lifting,
-        // for example downloading or creating content etc, should be deferred to onDataSetChanged()
-        // or getViewAt(). Taking more than 20 seconds in this call will result in an ANR.
-    }
-
     public void onDestroy() {
         // In onDestroy() you should tear down anything that was setup for your data source,
         // eg. cursors, connections, etc.
-        mWidgetListItems.clear();
     }
 
     public int getCount() {
@@ -93,8 +82,7 @@ class ListRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory {
     public RemoteViews getViewAt(int position) {
         // position will always range from 0 to getCount() - 1.
 
-        // We construct a remote views item based on our widget item xml file, and set the
-        // text based on the position.
+        // We construct a remote views item based on our widget item xml file, and set the  text based on the position.
         RemoteViews rv = new RemoteViews(mContext.getPackageName(), R.layout.widget_location_list_item);
 
         Device dev = mDevices.get(position);
@@ -115,14 +103,11 @@ class ListRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory {
         Bundle extras = new Bundle();
         extras.putString(WidgetLocationData.EXTRA_ITEM_DEV_ID, dev.getId());
         extras.putString(WidgetLocationData.EXTRA_ITEM_ADAPTER_ID, dev.getFacility().getAdapterId());
+        extras.putInt(WidgetLocationData.EXTRA_WIDGET_ID, mWidgetId);
         Intent fillInIntent = new Intent();
         fillInIntent.putExtras(extras);
         rv.setOnClickFillInIntent(R.id.widget_loc_item, fillInIntent);
 
-        // You can do heaving lifting in here, synchronously. For example, if you need to
-        // process an image, fetch something from the network, etc., it is ok to do it here,
-        // synchronously. A loading view will show up in lieu of the actual contents in the
-        // interim.
 
         // Return the remote views object.
         return rv;
@@ -139,28 +124,34 @@ class ListRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory {
     }
 
     public long getItemId(int position) {
+        // TODO dev.hashcode() ?
         return position;
     }
 
+    // TODO nevim co by melo byt (bylo true)
     public boolean hasStableIds() {
-        return true;
+        return false;
     }
 
     public void onDataSetChanged() {
-        Log.d(TAG, String.format("onDataSetChanged(%d)", mWidgetId));
-
-        // This is triggered when you call AppWidgetManager notifyAppWidgetViewDataChanged
-        // on the collection view corresponding to this factory. You can do heaving lifting in
-        // here, synchronously. For example, if you need to process an image, fetch something
-        // from the network, etc., it is ok to do it here, synchronously. The widget will remain
-        // in its current state while work is being done here, so you don't need to worry about
-        // locking up the widget.
+        Log.d(TAG, String.format("onDataSetChanged(%d), locId=%s, adId=%s", mWidgetId, mLocationId, mLocationAdapterId));
 
         // TODO problem if logged out
         // TODO problem when changed room
         // TODO checking if new data not all the time refresh
 
-        mFacilities = mController.getFacilitiesModel().getFacilitiesByLocation(mLocationAdapterId, mLocationId);
+        mController = Controller.getInstance(mContext);
+        try {
+            mController.getLocationsModel().reloadLocationsByAdapter(mLocationAdapterId, false);
+            mFacilities = mController.getFacilitiesModel().getFacilitiesByLocation(mLocationAdapterId, mLocationId);
+        }
+        catch(AppException e){
+            e.printStackTrace();
+        }
+
+
+        Log.d(TAG, String.format("mfacit length = %d", mFacilities.size()));
+        mDevices.clear();
         for(Facility fac : mFacilities){
             if(fac == null) continue;
 

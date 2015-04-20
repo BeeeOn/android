@@ -1,11 +1,6 @@
-package com.rehivetech.beeeon.widget.clock;
+package com.rehivetech.beeeon.widget.configuration;
 
 
-import android.app.Activity;
-import android.app.AlarmManager;
-import android.app.PendingIntent;
-import android.content.Context;
-import android.content.Intent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Spinner;
@@ -23,12 +18,12 @@ import com.rehivetech.beeeon.asynctask.CallbackTask;
 import com.rehivetech.beeeon.asynctask.ReloadFacilitiesTask;
 import com.rehivetech.beeeon.util.Log;
 import com.rehivetech.beeeon.util.Utils;
-import com.rehivetech.beeeon.widget.WidgetConfiguration;
-import com.rehivetech.beeeon.widget.WidgetData;
-import com.rehivetech.beeeon.widget.WidgetService;
+import com.rehivetech.beeeon.widget.data.WidgetClockData;
+import com.rehivetech.beeeon.widget.data.WidgetData;
+import com.rehivetech.beeeon.widget.persistence.WidgetDevice;
+import com.rehivetech.beeeon.widget.service.WidgetService;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 
 public class WidgetClockConfiguration extends WidgetConfiguration{
@@ -37,19 +32,49 @@ public class WidgetClockConfiguration extends WidgetConfiguration{
     private List<Device> mDevices = new ArrayList<Device>();
     private List<Location> mLocations = new ArrayList<Location>();
     private Spinner mSensorSpinner;
+    private Spinner mSensorSpinner2;
 
-    public WidgetClockConfiguration(WidgetData data, Activity activity) {
-        super(data, activity);
+    private WidgetDevice mWidgetDevice;
+    private WidgetDevice mWidgetDevice2;
+
+    public WidgetClockConfiguration(WidgetData data, WidgetConfigurationActivity activity, boolean widgetEditing) {
+        super(data, activity, widgetEditing);
+
+        mWidgetDevice = ((WidgetClockData) mWidgetData).widgetDevices.get(0);
+        mWidgetDevice2 = ((WidgetClockData) mWidgetData).widgetDevices.get(1);
     }
 
     @Override
-    public int getConfigLayout(){ return R.layout.activity_widget_configuration_sensor; }
+    public int getConfigLayout(){ return R.layout.activity_widget_configuration_clock; }
 
     @Override
     public void inflationConstructor() {
         super.inflationConstructor();
 
         mSensorSpinner = (Spinner) mActivity.findViewById(R.id.widgetConfSensor);
+        mSensorSpinner2 = (Spinner) mActivity.findViewById(R.id.widgetConfSensor2);
+    }
+
+    @Override
+    public void controllerConstructor() {
+        super.controllerConstructor();
+
+        // sets adapter onclicklistener
+        mAdapterSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                Adapter adapter = mAdapters.get(position);
+                Log.d(TAG, String.format("Selected adapter %s", adapter.getName()));
+                doChangeAdapter(adapter.getId(), "", "");
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                Log.d(TAG, "Selected no adapter");
+                mDevices.clear();
+                mLocations.clear();
+            }
+        });
     }
 
     @Override
@@ -74,15 +99,33 @@ public class WidgetClockConfiguration extends WidgetConfiguration{
             }
         });
 
-        // loads data after initializing layout
+        // sensor spinner selection
+        mSensorSpinner2.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                Device device = (Device) parent.getSelectedItem();
+                TextView intervalText = (TextView) mActivity.findViewById(R.id.widgetConfIntervalSensor2);
+                intervalText.setText(device.getFacility().getRefresh().getStringInterval(mActivity));
+
+                Log.d(TAG, String.format("Selected device %s", device.getName()));
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                TextView interval = (TextView) mActivity.findViewById(R.id.widgetConfIntervalSensor);
+                interval.setText("");
+
+                Log.d(TAG, "Selected no device");
+            }
+        });
+
+        // loads data after initializing widgetLayout
         this.loadSettings();
     }
 
     @Override
     public void loadSettings() {
         String adapterId = mWidgetData.adapterId;
-
-        String deviceId = ((WidgetClockData) mWidgetData).deviceId;
 
         if (!adapterId.isEmpty()) {
             for (int i = 0; i < mAdapters.size(); i++) {
@@ -105,17 +148,22 @@ public class WidgetClockConfiguration extends WidgetConfiguration{
                     DeviceArrayAdapter dataAdapter = new DeviceArrayAdapter(mActivity, R.layout.custom_spinner2_item, mDevices, mLocations);
                     dataAdapter.setLayoutInflater(mActivity.getLayoutInflater());
                     dataAdapter.setDropDownViewResource(R.layout.custom_spinner2_dropdown_item);
-                    mSensorSpinner.setAdapter(dataAdapter);
-
                     // select spinner
-                    int foundIndex = Utils.getObjectIndexFromList(deviceId, mDevices);
+                    int foundIndex;
+
+                    mSensorSpinner.setAdapter(dataAdapter);
+                    foundIndex = Utils.getObjectIndexFromList(mWidgetDevice.id, mDevices);
                     if(foundIndex != -1) mSensorSpinner.setSelection(foundIndex);
+
+                    mSensorSpinner2.setAdapter(dataAdapter);
+                    foundIndex = Utils.getObjectIndexFromList(mWidgetDevice2.id, mDevices);
+                    if(foundIndex != -1) mSensorSpinner2.setSelection(foundIndex);
 
                     break;
                 }
             }
 
-            doChangeAdapter(adapterId, deviceId);
+            doChangeAdapter(adapterId, mWidgetDevice.id, mWidgetDevice2.id);
         }
     }
 
@@ -127,33 +175,29 @@ public class WidgetClockConfiguration extends WidgetConfiguration{
             return false;
         }
 
-        Device device = (Device) mSensorSpinner.getSelectedItem();
-        if (device == null) {
-            Toast.makeText(mActivity, R.string.widget_configuration_select_device, Toast.LENGTH_LONG).show();
-            return false;
+        WidgetClockData data = (WidgetClockData) mWidgetData;
+        Spinner tempSpinner = mSensorSpinner;
+        for(WidgetDevice dev : data.widgetDevices){
+            Device device = (Device) tempSpinner.getSelectedItem();
+            if (device == null) {
+                Toast.makeText(mActivity, R.string.widget_configuration_select_device, Toast.LENGTH_LONG).show();
+                return false;
+            }
+
+            dev.configure(device, adapter);
+
+            // TODO udelat jinak nez takto retardovane
+            tempSpinner = mSensorSpinner2;
         }
 
         RefreshInterval refresh = RefreshInterval.values()[mWidgetUpdateSeekBar.getProgress()];
-        //mWidgetData.interval = RefreshInterval.MIN_1.getInterval();
-        mWidgetData.interval = Math.max(refresh.getInterval(), WidgetService.UPDATE_INTERVAL_MIN);
-        mWidgetData.adapterId = adapter.getId();
-        // TODO je potreba, kdyz to inicializuji?
-        mWidgetData.lastUpdate = 0;         // nastavi, ze jeste nebylo updatovano
-        mWidgetData.initialized = true;
-
-        ((WidgetClockData) mWidgetData).deviceId = device.getId();
-        ((WidgetClockData) mWidgetData).deviceName = device.getName();
-        ((WidgetClockData) mWidgetData).deviceIcon = device.getIconResource();
-        mWidgetData.saveData(mActivity);
-
-        // TODO pridat device do WidgetService
-        //WidgetService.usedFacilities
+        //sets widgetdata
+        mWidgetData.configure(isWidgetEditing, Math.max(refresh.getInterval(), WidgetService.UPDATE_INTERVAL_MIN), adapter.getId());
 
         return true;
     }
 
-    @Override
-    protected void doChangeAdapter(final String adapterId, final String activeDeviceId) {
+    protected void doChangeAdapter(final String adapterId, final String activeDeviceId, final String activeDevice2Id) {
         mReloadFacilitiesTask = new ReloadFacilitiesTask(mActivity, false);
         mReloadFacilitiesTask.setListener(new CallbackTask.CallbackTaskListener() {
 
@@ -168,7 +212,7 @@ public class WidgetClockConfiguration extends WidgetConfiguration{
 
                 mDevices.clear();
                 // get all devices by locations (avoiding facility without location)
-                for(Location loc : mLocations){
+                for (Location loc : mLocations) {
                     List<Facility> tempFac = mController.getFacilitiesModel().getFacilitiesByLocation(adapterId, loc.getId());
                     for (Facility facility : tempFac) {
                         mDevices.addAll(facility.getDevices());
@@ -182,25 +226,31 @@ public class WidgetClockConfiguration extends WidgetConfiguration{
                 mSensorSpinner.setEnabled(true);
                 mSensorSpinner.setAdapter(dataAdapter);
 
-                if (!activeDeviceId.isEmpty()) {
-                    int index = Utils.getObjectIndexFromList(activeDeviceId, mDevices);
-                    if(index != -1) mSensorSpinner.setSelection(index);
+                mSensorSpinner2.setEnabled(true);
+                mSensorSpinner2.setAdapter(dataAdapter);
+
+                String devId = (activeDeviceId.isEmpty() && mWidgetDevice.adapterId.equals(adapterId)) ? mWidgetDevice.id : activeDeviceId;
+                String dev2Id = (activeDevice2Id.isEmpty() && mWidgetDevice2.adapterId.equals(adapterId)) ? mWidgetDevice2.id : activeDevice2Id;
+
+                if (!devId.isEmpty()) {
+                    int index = Utils.getObjectIndexFromList(devId, mDevices);
+                    if (index != -1) mSensorSpinner.setSelection(index);
                 }
 
-                // TODO asi ten swipetorefresh
-                //setProgressBarIndeterminateVisibility(false);
+                if (!dev2Id.isEmpty()) {
+                    int index = Utils.getObjectIndexFromList(dev2Id, mDevices);
+                    if (index != -1) mSensorSpinner2.setSelection(index);
+                }
+
+                mActivity.getDialog().dismiss();
             }
         });
 
         mSensorSpinner.setEnabled(false);
+        mSensorSpinner2.setEnabled(false);
 
-        //setProgressBarIndeterminateVisibility(true);
+        mActivity.getDialog().setMessage(mActivity.getString(R.string.progress_loading_facilities));
+        mActivity.getDialog().show();
         mReloadFacilitiesTask.execute(adapterId);
-    }
-
-    @Override
-    protected void onNoAdapterSelected(){
-        mDevices.clear();
-        mLocations.clear();
     }
 }

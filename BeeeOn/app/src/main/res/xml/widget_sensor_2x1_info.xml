@@ -10,7 +10,7 @@
     android:minResizeWidth="70dp"
     android:resizeMode="horizontal|vertical"
     android:widgetCategory="home_screen"
-    android:configure="com.rehivetech.beeeon.widget.WidgetConfigurationActivity"
+    android:configure="com.rehivetech.beeeon.widget.configuration.WidgetConfigurationActivity"
     android:updatePeriodMillis="0"
     />
 

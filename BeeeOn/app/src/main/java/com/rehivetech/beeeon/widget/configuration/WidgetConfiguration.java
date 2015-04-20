@@ -1,4 +1,4 @@
-package com.rehivetech.beeeon.widget;
+package com.rehivetech.beeeon.widget.configuration;
 
 import android.app.Activity;
 import android.view.View;
@@ -13,6 +13,8 @@ import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.household.adapter.Adapter;
 import com.rehivetech.beeeon.household.device.RefreshInterval;
 import com.rehivetech.beeeon.util.Log;
+import com.rehivetech.beeeon.widget.data.WidgetData;
+import com.rehivetech.beeeon.widget.service.WidgetService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,7 +22,7 @@ import java.util.List;
 abstract public class WidgetConfiguration {
     private static final String TAG = WidgetConfiguration.class.getSimpleName();
 
-    protected Activity mActivity;
+    protected WidgetConfigurationActivity mActivity;
     protected WidgetData mWidgetData;
     protected Controller mController;
     protected List<Adapter> mAdapters = new ArrayList<>();
@@ -28,6 +30,8 @@ abstract public class WidgetConfiguration {
     protected Spinner mAdapterSpinner;
     protected SeekBar mWidgetUpdateSeekBar;
     protected Adapter mActiveAdapter;
+
+    protected boolean isWidgetEditing = false;
 
     /**
      * Constructor initializes helper variables
@@ -37,9 +41,10 @@ abstract public class WidgetConfiguration {
      * @param data widgetData
      * @param activity context
      */
-    public WidgetConfiguration(WidgetData data, Activity activity){
+    public WidgetConfiguration(WidgetData data, WidgetConfigurationActivity activity, boolean widgetEditing){
         mWidgetData = data;
         mActivity = activity;
+        isWidgetEditing = widgetEditing;
     }
 
     /**
@@ -48,9 +53,6 @@ abstract public class WidgetConfiguration {
     public void inflationConstructor(){
         mAdapterSpinner = (Spinner) mActivity.findViewById(R.id.widgetConfAdapter);
         mWidgetUpdateSeekBar = (SeekBar) mActivity.findViewById(R.id.widgetConfIntervalWidget);
-
-        // loads data if editing widget otherwise default data
-        //mWidgetData.loadData(mActivity);
         initWidgetUpdateIntervalLayout();
     }
 
@@ -61,35 +63,7 @@ abstract public class WidgetConfiguration {
         mController = Controller.getInstance(mActivity);
         mAdapters = mController.getAdaptersModel().getAdapters();
         mActiveAdapter = mController.getActiveAdapter();
-
-        // sets adapter onclicklistener
-        mAdapterSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                Adapter adapter = mAdapters.get(position);
-                Log.d(TAG, String.format("Selected adapter %s", adapter.getName()));
-                doChangeAdapter(adapter.getId(), "");
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-                Log.d(TAG, "Selected no adapter");
-                onNoAdapterSelected();
-            }
-        });
     }
-
-    /**
-     * When adapter was selected, need to reload data
-     * @param adapterId
-     * @param activeItemId
-     */
-    protected abstract void doChangeAdapter(String adapterId, String activeItemId);
-
-    /**
-     * When no adapter was selected
-     */
-    protected abstract void onNoAdapterSelected();
 
     /**
      * Initializes widget update interval seekbar and text
@@ -115,7 +89,7 @@ abstract public class WidgetConfiguration {
             }
         });
 
-        int interval = Math.max(mWidgetData.interval, WidgetService.UPDATE_INTERVAL_MIN);
+        int interval = Math.max(mWidgetData.widgetInterval, WidgetService.UPDATE_INTERVAL_MIN);
         int intervalIndex = RefreshInterval.fromInterval(interval).getIntervalIndex();
         mWidgetUpdateSeekBar.setProgress(intervalIndex);
         // set text of seekbar
@@ -123,18 +97,18 @@ abstract public class WidgetConfiguration {
     }
 
     /**
-     * Returns layout xml which will be used in configuration activity
-     * @return xml layout
+     * Returns widgetLayout xml which will be used in configuration activity
+     * @return xml widgetLayout
      */
     public abstract int getConfigLayout();
 
     /**
-     * Initializes layout and behaving
+     * Initializes widgetLayout and behaving
      */
     public abstract void initLayout();
 
     /**
-     * Loads data and fill layout with them
+     * Loads data and fill widgetLayout with them
      */
     public abstract void loadSettings();
 
@@ -149,16 +123,13 @@ abstract public class WidgetConfiguration {
      * !!! Starts the service !!!
      */
     public void startWidgetOk(){
-        WidgetService.addWidgetData(mWidgetData);
-        WidgetService.startUpdating(mActivity, new int[] { mWidgetData.getWidgetId() });
+        WidgetService.startUpdating(mActivity, new int[] { mWidgetData.getWidgetId() }, isWidgetEditing);
     }
 
     /**
      * Runs when clicked "cancel" to cancel creation of widget
      */
     public void startWidgetCancel(){
-        // TODO maybe redundant cause method onDeleted() in widgetProvider is called
-        WidgetService.widgetDelete(mActivity, mWidgetData);
     }
 
     /**

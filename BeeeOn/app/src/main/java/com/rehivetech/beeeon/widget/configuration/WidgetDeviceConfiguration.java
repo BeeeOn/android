@@ -1,4 +1,4 @@
-package com.rehivetech.beeeon.widget.device;
+package com.rehivetech.beeeon.widget.configuration;
 
 
 import android.app.Activity;
@@ -19,9 +19,10 @@ import com.rehivetech.beeeon.household.device.RefreshInterval;
 import com.rehivetech.beeeon.household.location.Location;
 import com.rehivetech.beeeon.util.Log;
 import com.rehivetech.beeeon.util.Utils;
-import com.rehivetech.beeeon.widget.WidgetConfiguration;
-import com.rehivetech.beeeon.widget.WidgetData;
-import com.rehivetech.beeeon.widget.WidgetService;
+import com.rehivetech.beeeon.widget.data.WidgetData;
+import com.rehivetech.beeeon.widget.data.WidgetDeviceData;
+import com.rehivetech.beeeon.widget.persistence.WidgetDevice;
+import com.rehivetech.beeeon.widget.service.WidgetService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,8 +34,11 @@ public class WidgetDeviceConfiguration extends WidgetConfiguration{
     private List<Location> mLocations = new ArrayList<Location>();
     private Spinner mSensorSpinner;
 
-    public WidgetDeviceConfiguration(WidgetData data, Activity activity) {
-        super(data, activity);
+    private WidgetDevice mWidgetDevice;
+
+    public WidgetDeviceConfiguration(WidgetData data, WidgetConfigurationActivity activity, boolean widgetEditing) {
+        super(data, activity, widgetEditing);
+        mWidgetDevice = ((WidgetDeviceData) mWidgetData).widgetDevice;
     }
 
     @Override
@@ -45,6 +49,28 @@ public class WidgetDeviceConfiguration extends WidgetConfiguration{
         super.inflationConstructor();
 
         mSensorSpinner = (Spinner) mActivity.findViewById(R.id.widgetConfSensor);
+    }
+
+    @Override
+    public void controllerConstructor() {
+        super.controllerConstructor();
+
+        // sets adapter onclicklistener
+        mAdapterSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                Adapter adapter = mAdapters.get(position);
+                Log.d(TAG, String.format("Selected adapter %s", adapter.getName()));
+                doChangeAdapter(adapter.getId(), "");
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                Log.d(TAG, "Selected no adapter");
+                mDevices.clear();
+                mLocations.clear();
+            }
+        });
     }
 
     @Override
@@ -76,7 +102,6 @@ public class WidgetDeviceConfiguration extends WidgetConfiguration{
     @Override
     public void loadSettings() {
         String adapterId = mWidgetData.adapterId;
-        String deviceId = ((WidgetDeviceData) mWidgetData).deviceId;
 
         if (!adapterId.isEmpty()) {
             for (int i = 0; i < mAdapters.size(); i++) {
@@ -102,14 +127,14 @@ public class WidgetDeviceConfiguration extends WidgetConfiguration{
                     mSensorSpinner.setAdapter(dataAdapter);
 
                     // select spinner
-                    int foundIndex = Utils.getObjectIndexFromList(deviceId, mDevices);
+                    int foundIndex = Utils.getObjectIndexFromList(mWidgetDevice.id, mDevices);
                     if(foundIndex != -1) mSensorSpinner.setSelection(foundIndex);
 
                     break;
                 }
             }
 
-            doChangeAdapter(adapterId, deviceId);
+            doChangeAdapter(adapterId, mWidgetDevice.id);
         }
     }
 
@@ -127,26 +152,16 @@ public class WidgetDeviceConfiguration extends WidgetConfiguration{
             return false;
         }
 
+        // sets widgetDevice
+        mWidgetDevice.configure(device, adapter);
+        // sets widgetdata
         RefreshInterval refresh = RefreshInterval.values()[mWidgetUpdateSeekBar.getProgress()];
-        mWidgetData.interval = Math.max(refresh.getInterval(), WidgetService.UPDATE_INTERVAL_MIN);
-        mWidgetData.adapterId = adapter.getId();
-        // TODO je potreba, kdyz to inicializuji?
-        mWidgetData.lastUpdate = 0;         // nastavi, ze jeste nebylo updatovano
-        mWidgetData.initialized = true;
-        ((WidgetDeviceData) mWidgetData).deviceId = device.getId();
-        ((WidgetDeviceData) mWidgetData).deviceName = device.getName();
-        ((WidgetDeviceData) mWidgetData).deviceIcon = device.getIconResource();
-
-        mWidgetData.saveData(mActivity);
-
-        // TODO pridat device do WidgetService
-        //WidgetService.usedFacilities
+        mWidgetData.configure(isWidgetEditing, Math.max(refresh.getInterval(), WidgetService.UPDATE_INTERVAL_MIN), adapter.getId());
 
         return true;
     }
 
-    @Override
-    protected void doChangeAdapter(final String adapterId, final String activeDeviceId) {
+    protected void doChangeAdapter(final String adapterId, final String activeId) {
         mReloadFacilitiesTask = new ReloadFacilitiesTask(mActivity, false);
         mReloadFacilitiesTask.setListener(new CallbackTask.CallbackTaskListener() {
 
@@ -175,25 +190,20 @@ public class WidgetDeviceConfiguration extends WidgetConfiguration{
                 mSensorSpinner.setEnabled(true);
                 mSensorSpinner.setAdapter(dataAdapter);
 
-                if (!activeDeviceId.isEmpty()) {
-                    int index = Utils.getObjectIndexFromList(activeDeviceId, mDevices);
+                String devId = (activeId.isEmpty() && mWidgetDevice.adapterId.equals(adapterId)) ? mWidgetDevice.id : activeId;
+
+                if (!devId.isEmpty()) {
+                    int index = Utils.getObjectIndexFromList(devId, mDevices);
                     if(index != -1) mSensorSpinner.setSelection(index);
                 }
 
-                // TODO asi ten swipetorefresh
-                //setProgressBarIndeterminateVisibility(false);
+                mActivity.getDialog().dismiss();
             }
         });
 
         mSensorSpinner.setEnabled(false);
-
-        //setProgressBarIndeterminateVisibility(true);
+        mActivity.getDialog().setMessage(mActivity.getString(R.string.progress_loading_facilities));
+        mActivity.getDialog().show();
         mReloadFacilitiesTask.execute(adapterId);
-    }
-
-    @Override
-    protected void onNoAdapterSelected(){
-        mDevices.clear();
-        mLocations.clear();
     }
 }

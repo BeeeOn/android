@@ -7,5 +7,5 @@
 	android:resizeMode="horizontal|vertical"
 	android:widgetCategory="home_screen"
 	android:initialKeyguardLayout="@layout/widget_clock"
-	android:configure="com.rehivetech.beeeon.widget.WidgetConfigurationActivity"
+	android:configure="com.rehivetech.beeeon.widget.configuration.WidgetConfigurationActivity"
 />

@@ -120,6 +120,8 @@
     <string name="progress_loading_adapter">Loading gateway data&#8230;</string>
     <string name="progress_loading_demo">Loading demo data&#8230;</string>
     <string name="progress_saving_data">Saving data&#8230;</string>
+    <string name="progress_loading_facilities">Loading your devices&#8230;</string>
+    <string name="progress_loading_locations">Loading your locations&#8230;</string>
 
     <!-- NavDrawer -->
     <string name="drawer_open">OPEN</string>
@@ -351,4 +353,6 @@
 	<string name="add_action_dialog_title">What do you want add ?</string>
 	<string name="toast_need_sensor_location_icon">Please choose icon of your new location</string>
 
+    <string name="location_inside">Doma</string>
+    
 </resources>

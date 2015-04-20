@@ -1,4 +1,4 @@
-package com.rehivetech.beeeon.widget.clock;
+package com.rehivetech.beeeon.widget;
 
 
 import android.os.Bundle;
@@ -8,8 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.rehivetech.beeeon.R;
-import com.rehivetech.beeeon.activity.MainActivity;
-import com.rehivetech.beeeon.widget.WidgetConfigurationActivity;
+import com.rehivetech.beeeon.widget.configuration.WidgetConfigurationActivity;
 
 /**
  * Created by Tomáš on 13. 4. 2015.
@@ -33,7 +32,7 @@ public class WidgetClockFragment extends Fragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		mView = inflater.inflate(R.layout.fragment_widget_clock, container, false);
-
 		return mView;
+
 	}
 }

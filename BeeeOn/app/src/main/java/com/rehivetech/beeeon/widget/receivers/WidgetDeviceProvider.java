@@ -1,4 +1,4 @@
-package com.rehivetech.beeeon.widget.device;
+package com.rehivetech.beeeon.widget.receivers;
 
 import android.annotation.TargetApi;
 import android.appwidget.AppWidgetManager;
@@ -8,8 +8,7 @@ import android.os.Bundle;
 
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.util.Log;
-import com.rehivetech.beeeon.widget.WidgetProvider;
-import com.rehivetech.beeeon.widget.WidgetService;
+import com.rehivetech.beeeon.widget.service.WidgetService;
 
 /**
  * @author mlyko

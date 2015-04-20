@@ -15,6 +15,10 @@
 
 	<dimen name="widget_height_cells_1">80dp</dimen>
 
+	<dimen name="widget_textsize_caption">12sp</dimen>
+	<dimen name="widget_textsize_body">14sp</dimen>
+	<dimen name="widget_textsize_title">20sp</dimen>
+
 	<dimen name="custom_spinner_icon_size">35dp</dimen>
 	<dimen name="custom_spinner_icon_size_smaller">30dp</dimen>
 	

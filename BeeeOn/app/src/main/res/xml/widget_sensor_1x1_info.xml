@@ -9,6 +9,6 @@
     android:initialLayout="@layout/widget_sensor_1x1"
     android:resizeMode="horizontal|vertical"
     android:widgetCategory="home_screen"
-    android:configure="com.rehivetech.beeeon.widget.WidgetConfigurationActivity"
+    android:configure="com.rehivetech.beeeon.widget.configuration.WidgetConfigurationActivity"
     android:previewImage="@drawable/preview_sensor_1x1"
 />

@@ -110,7 +110,7 @@
             android:label="@string/title_activity_add_adapter" >
         </activity>
         <activity
-            android:name=".widget.WidgetConfigurationActivity"
+            android:name=".widget.configuration.WidgetConfigurationActivity"
             android:label="@string/title_activity_widget_configuration" >
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
@@ -173,7 +173,7 @@
 
         <!-- list widget -->
         <receiver
-            android:name=".widget.location.WidgetLocationListProvider"
+            android:name=".widget.receivers.WidgetLocationListProvider"
             android:enabled="@bool/is_api_11"
             android:label="@string/widget_location_list_title" >
             <intent-filter>
@@ -185,19 +185,19 @@
                 android:resource="@xml/widget_location_info" />
         </receiver>
 
-        <service android:name=".widget.WidgetService" />
+        <service android:name=".widget.service.WidgetService" />
 
         <!-- TODO bude v service taky enabled?? -->
         <service
-            android:name=".widget.WidgetListService"
+            android:name=".widget.service.WidgetListService"
             android:enabled="@bool/is_api_11"
             android:exported="false"
             android:permission="android.permission.BIND_REMOTEVIEWS" />
 
-        <receiver android:name=".widget.clock.WidgetClockProvider" >
+        <receiver android:name=".widget.receivers.WidgetClockProvider" >
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
-                <action android:name="com.rehivetech.beeeon.ACTION_TIME_CHANGED" />
+                <action android:name="com.rehivetech.beeeon.ACTION_TIME_UPDATED" />
                 <action android:name="com.rehivetech.beeeon.ACTION_SCREEN_ON" />
                 <action android:name="com.rehivetech.beeeon.ACTION_LOCALE_CHANGED" />
             </intent-filter>
@@ -208,7 +208,7 @@
         </receiver>
 
         <receiver
-            android:name=".widget.device.WidgetDeviceProvider"
+            android:name=".widget.receivers.WidgetDeviceProvider"
             android:label="@string/widget_sensor_title_small" >
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
@@ -219,7 +219,7 @@
                 android:resource="@xml/widget_sensor_1x1_info" />
         </receiver>
         <receiver
-            android:name=".widget.device.WidgetDeviceProviderMedium"
+            android:name=".widget.receivers.WidgetDeviceProviderMedium"
             android:label="@string/widget_sensor_title_medium" >
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
@@ -230,7 +230,7 @@
                 android:resource="@xml/widget_sensor_2x1_info" />
         </receiver>
         <receiver
-            android:name=".widget.device.WidgetDeviceProviderLarge"
+            android:name=".widget.receivers.WidgetDeviceProviderLarge"
             android:label="@string/widget_sensor_title_large" >
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
