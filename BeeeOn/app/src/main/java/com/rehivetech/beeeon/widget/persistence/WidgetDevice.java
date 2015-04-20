@@ -217,7 +217,7 @@ public class WidgetDevice {
 
 		if(getType().isActor() && (deviceValue instanceof OnOffValue || deviceValue instanceof OpenClosedValue)){
 			mValueRemoteViews = new RemoteViews(mContext.getPackageName(), R.layout.widget_switchcompat);
-			mValueRemoteViews.setOnClickPendingIntent(R.id.widget_switchcompat, WidgetService.getActorChangePendingIntent(mContext, mWidgetId, getId(), adapterId));
+			mValueRemoteViews.setOnClickPendingIntent(R.id.widget_switchcompat, WidgetService.getPendingIntentActorChangeRequest(mContext, mWidgetId, getId(), adapterId));
 		}
 		else {
 			mValueRemoteViews = new RemoteViews(mContext.getPackageName(), R.layout.widget_value_unit);
@@ -286,11 +286,11 @@ public class WidgetDevice {
 
 		if(disabled == true){
 			mValueRemoteViews.setImageViewResource(R.id.widget_switchcompat, isOn == true ? R.drawable.switch_on_disabled : R.drawable.switch_off_disabled);
-			WidgetService.cancelActorChangePendingIntent(mContext, mWidgetId, getId(), adapterId);
+			WidgetService.cancelPendingIntentActorChangeRequest(mContext, mWidgetId, getId(), adapterId);
 		}
 		else{
 			setSwitchChecked(isOn);
-			mValueRemoteViews.setOnClickPendingIntent(R.id.widget_switchcompat, WidgetService.getActorChangePendingIntent(mContext, mWidgetId, getId(), adapterId));
+			mValueRemoteViews.setOnClickPendingIntent(R.id.widget_switchcompat, WidgetService.getPendingIntentActorChangeRequest(mContext, mWidgetId, getId(), adapterId));
 		}
 
 		// prevent from getting updated the value

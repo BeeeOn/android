@@ -46,7 +46,7 @@ public class WidgetDeviceProvider extends WidgetProvider{
         Log.d(TAG, String.format("[%d-%d] x [%d-%d] -> %s", min_width, max_width, min_height, max_height, name));
 
         // service changes layout
-        context.startService(WidgetService.getWidgetChangeLayoutIntent(context, appWidgetId, layout));
+        context.startService(WidgetService.getIntentWidgetChangeLayout(context, appWidgetId, layout));
     }
 
 }

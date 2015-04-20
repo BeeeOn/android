@@ -9,7 +9,6 @@ import android.content.SharedPreferences;
 import android.os.SystemClock;
 import android.widget.RemoteViews;
 
-import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.activity.SensorDetailActivity;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.util.Log;
@@ -177,7 +176,7 @@ abstract public class WidgetData {
         mRemoteViews = new RemoteViews(mContext.getPackageName(), this.widgetLayout);
 
         // refresh onclick
-        mRefreshPendingIntent = WidgetService.getForceUpdatePendingIntent(mContext, mWidgetId);
+        mRefreshPendingIntent = WidgetService.getPendingIntentForceUpdate(mContext, mWidgetId);
 
         // configuration onclick
         mConfigurationPendingIntent = startConfigurationActivityPendingIntent(mContext, mWidgetId);

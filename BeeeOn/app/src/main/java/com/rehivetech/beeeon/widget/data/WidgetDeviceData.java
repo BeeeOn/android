@@ -74,6 +74,7 @@ public class WidgetDeviceData extends WidgetData {
         if(!adapterId.isEmpty() && !widgetDevice.id.isEmpty()){
             // detail activity
             mRemoteViews.setOnClickPendingIntent(R.id.icon, startDetailActivityPendingIntent(mContext, mWidgetId, adapterId, widgetDevice.id));
+            mRemoteViews.setOnClickPendingIntent(R.id.name, startDetailActivityPendingIntent(mContext, mWidgetId, adapterId, widgetDevice.id));
         }
 
         String[] ids = widgetDevice.id.split(Device.ID_SEPARATOR, 2);

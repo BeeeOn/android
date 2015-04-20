@@ -44,7 +44,7 @@ abstract public class WidgetProvider extends AppWidgetProvider {
         super.onDeleted(context, appWidgetIds);
 
         // delete widget from service
-        context.startService(WidgetService.getWidgetDeleteIntent(context, appWidgetIds));
+        context.startService(WidgetService.getIntentWidgetDelete(context, appWidgetIds));
     }
 
     @Override

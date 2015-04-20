@@ -52,16 +52,17 @@ public class WidgetService extends Service {
     public static final int UPDATE_INTERVAL_DEFAULT = 10; // in seconds
     public static final int UPDATE_INTERVAL_MIN = 5; // in seconds
 
-    private static final String EXTRA_START_UPDATING = "com.rehivetech.beeeon.start_updating";
-    private static final String EXTRA_FORCE_UPDATE = "com.rehivetech.beeeon.force_update";
-    private static final String EXTRA_STANDBY = "com.rehivetech.beeeon.standby";
-    private static final String EXTRA_ACTOR_CHANGE = "com.rehivetech.beeeon.actor_change";
-    private static final String EXTRA_ACTOR_ID = "com.rehivetech.beeeon.actor_ids";
-    private static final String EXTRA_DELETE_WIDGET = "com.rehivetech.beeeon.delete_widget";
-    private static final String EXTRA_CHANGE_LAYOUT = "com.rehivetech.beeeon.change_layout";
-    private static final String EXTRA_CHANGE_LAYOUT_RESOURCE = "com.rehivetech.beeeon.change_layout_resource";
-    private static final String EXTRA_WIDGETS_SHOULD_RELOAD = "com.rehivetech.beeeon.widget_should_reload";
-    private static final String EXTRA_ACTOR_ADAPTER_ID = "com.rehivetech.beeeon.actor_adapter_id";
+    private static final String EXTRA_START_UPDATING =          "com.rehivetech.beeeon.start_updating";
+    private static final String EXTRA_FORCE_UPDATE =            "com.rehivetech.beeeon.force_update";
+    private static final String EXTRA_STANDBY =                 "com.rehivetech.beeeon.standby";
+    private static final String EXTRA_ACTOR_CHANGE_REQUEST =    "com.rehivetech.beeeon.actor_change_request";
+    private static final String EXTRA_ACTOR_CHANGE_RESULT =     "com.rehivetech.beeeon.actor_change_result";
+    private static final String EXTRA_ACTOR_ID =                "com.rehivetech.beeeon.actor_ids";
+    private static final String EXTRA_DELETE_WIDGET =           "com.rehivetech.beeeon.delete_widget";
+    private static final String EXTRA_CHANGE_LAYOUT =           "com.rehivetech.beeeon.change_layout";
+    private static final String EXTRA_CHANGE_LAYOUT_RESOURCE =  "com.rehivetech.beeeon.change_layout_resource";
+    private static final String EXTRA_WIDGETS_SHOULD_RELOAD =   "com.rehivetech.beeeon.widget_should_reload";
+    private static final String EXTRA_ACTOR_ADAPTER_ID =        "com.rehivetech.beeeon.actor_adapter_id";
 
     // list of available widgets
     private SparseArray<WidgetData> mAvailableWidgets = new SparseArray<>();
@@ -77,10 +78,19 @@ public class WidgetService extends Service {
     // for checking if user is logged in (we presume that for the first time he is)
     private boolean isLoggedIn = true;
 
+    // -------------------------------------------------------------------- //
+    // --------------- Main methods (entry points) of service ------------- //
+    // -------------------------------------------------------------------- //
+
+    /**
+     * When startin updating widgets, we can tell that these widgets should be reloaded
+     * @param context
+     * @param appWidgetIds
+     * @param widgetShouldReload
+     */
     public static void startUpdating(Context context, int[] appWidgetIds, boolean widgetShouldReload){
         Log.d(TAG, "startUpdating()");
-
-        final Intent intent =  getUpdateIntent(context);
+        final Intent intent =  getIntentUpdate(context);
         intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, appWidgetIds);
         intent.putExtra(EXTRA_START_UPDATING, true);
         intent.putExtra(EXTRA_WIDGETS_SHOULD_RELOAD, widgetShouldReload);
@@ -106,102 +116,8 @@ public class WidgetService extends Service {
         stopAlarm(context);
 
         // stop this service
-        final Intent intent =  getUpdateIntent(context);
+        final Intent intent =  getIntentUpdate(context);
         context.stopService(intent);
-    }
-
-    /**
-     * Set repeating to parameter
-     * @param triggerAtMillis
-     */
-    private void setAlarm(long triggerAtMillis){
-        // Set new alarm time
-        AlarmManager m = (AlarmManager) mContext.getSystemService(Context.ALARM_SERVICE);
-        m.set(AlarmManager.ELAPSED_REALTIME, triggerAtMillis, getUpdatePendingIntent(mContext));
-    }
-
-    /**
-     * Stops repeating
-     * @param context
-     */
-    private static void stopAlarm(Context context){
-        // cancel frequently refreshing
-        AlarmManager m = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-        m.cancel(getUpdatePendingIntent(context));
-    }
-
-    /**
-     * Insert widgetData to list of used widgets
-     * @param widgetData
-     */
-    private void widgetAdd(WidgetData widgetData) {
-        // add widgetData to service
-        mAvailableWidgets.put(widgetData.getWidgetId(), widgetData);
-    }
-
-    /**
-     * Deletes widgets data by Ids
-     * @param widgetIds
-     */
-    private void widgetsDelete(int[] widgetIds) {
-        for(int widgetId : widgetIds){
-            if(widgetId == AppWidgetManager.INVALID_APPWIDGET_ID) continue;
-
-            WidgetData data = getWidgetData(widgetId);
-            widgetDelete(mContext, data);
-        }
-    }
-
-    /**
-     * For deleting widgetData outside of service
-     * @param context
-     * @param data
-     */
-    private void widgetDelete(Context context, WidgetData data){
-        if(data == null) return;
-        int widgetId = data.getWidgetId();
-        Log.v(TAG, String.format("delete widgetData(%d)", widgetId));
-
-        data.delete(context);
-        mAvailableWidgets.delete(widgetId);
-    }
-
-    /**
-     * Gets widget data either from list of widgets or instantiating and loading from settings (when OS restarted)
-     * @param widgetId id of widget to load
-     * @return
-     */
-    public WidgetData getWidgetData(int widgetId){
-        WidgetData widgetData = mAvailableWidgets.get(widgetId);
-        if (widgetData == null) {
-            String widgetClassName = WidgetData.getSettingClassName(mContext, widgetId);
-            if (widgetClassName == null || widgetClassName.isEmpty()) return null;
-
-            // TODO osetrit
-            try {
-                // instantiate class from string
-                widgetData = (WidgetData) Class.forName(widgetClassName).getConstructor(int.class, Context.class, UnitsHelper.class, TimeHelper.class).newInstance(widgetId, mContext, mUnitsHelper, mTimeHelper);
-                widgetData.init();
-                widgetAdd(widgetData);
-                Log.v(TAG, String.format("finished creation of WidgetData(%d)", widgetId));
-            } catch (ClassNotFoundException e) {
-                e.printStackTrace();
-                return null;
-            } catch (NoSuchMethodException e) {
-                e.printStackTrace();
-                return null;
-            } catch (InvocationTargetException e) {
-                e.printStackTrace();
-                return null;
-            } catch (InstantiationException e) {
-                e.printStackTrace();
-                return null;
-            } catch (IllegalAccessException e) {
-                e.printStackTrace();
-                return null;
-            }
-        }
-        return widgetData;
     }
 
     /**
@@ -224,6 +140,7 @@ public class WidgetService extends Service {
         filter.addAction(Intent.ACTION_TIMEZONE_CHANGED);
         filter.addAction(Intent.ACTION_TIME_CHANGED);
         filter.addAction(Intent.ACTION_LOCALE_CHANGED);
+        filter.addAction(ActorActionTask.ACTION_ACTOR_CHANGED);
 
         mBroadcastBridge = new WidgetBridgeBroadcastReceiver();
         registerReceiver(mBroadcastBridge, filter);
@@ -243,23 +160,6 @@ public class WidgetService extends Service {
         unregisterReceiver(mBroadcastBridge);
     }
 
-    private void initHelpers(Context context, Controller controller){
-        if(!controller.isLoggedIn()) return;
-
-        SharedPreferences userSettings = controller.getUserSettings();
-        if(userSettings == null){
-            mUnitsHelper = null;
-            mTimeHelper = null;
-            return;
-        }
-
-        // if it is not initialized
-        if(mUnitsHelper == null || mTimeHelper == null) {
-            mUnitsHelper = new UnitsHelper(userSettings, context);
-            mTimeHelper = new TimeHelper(userSettings);
-        }
-    }
-
     /**
      * Entry point of service .. widgets can sent Intent with specific data and pass them to service
      * @param intent Intent which can specify what action should service do now
@@ -275,7 +175,13 @@ public class WidgetService extends Service {
         mController = Controller.getInstance(mContext);
         initHelpers(mContext, mController);
 
-        boolean isWidgetReload = false, isStartUpdating = false, isActorChange = false, isStandBy = false, isForceUpdate = false, isChangeLayout = false;
+        boolean isWidgetReload = false,
+                isStartUpdating = false,
+                isActorChangeRequest = false,
+                isActorChangeResult = false,
+                isStandBy = false,
+                isForceUpdate = false,
+                isChangeLayout = false;
         int[] appWidgetIds = new int[]{};
 
         if(intent != null) {
@@ -291,15 +197,29 @@ public class WidgetService extends Service {
             // get widget Ids
             appWidgetIds  = intent.getIntArrayExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS);
 
-            // async task for changing widget actor
-            isActorChange = intent.getBooleanExtra(EXTRA_ACTOR_CHANGE, false);
-            if (isActorChange) {
+            // -------------- async task for changing widget actor
+            isActorChangeRequest = intent.getBooleanExtra(EXTRA_ACTOR_CHANGE_REQUEST, false);
+            if (isActorChangeRequest) {
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
                         String adapterId = intent.getStringExtra(EXTRA_ACTOR_ADAPTER_ID);
                         String actorId = intent.getStringExtra(EXTRA_ACTOR_ID);
-                        changeWidgetActor(adapterId, actorId);
+                        changeWidgetActorRequest(adapterId, actorId);
+                    }
+                }).start();
+                return START_STICKY;
+            }
+
+            // -------------- result of async task (called by broadcast)
+            isActorChangeResult = intent.getBooleanExtra(EXTRA_ACTOR_CHANGE_RESULT, false);
+            if(isActorChangeResult){
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        String adapterId = intent.getStringExtra(EXTRA_ACTOR_ADAPTER_ID);
+                        String actorId = intent.getStringExtra(EXTRA_ACTOR_ID);
+                        changeWidgetActorResult(adapterId, actorId);
                     }
                 }).start();
                 return START_STICKY;
@@ -332,7 +252,7 @@ public class WidgetService extends Service {
             isWidgetReload = intent.getBooleanExtra(EXTRA_WIDGETS_SHOULD_RELOAD, false);
         }
 
-        Log.v(TAG, String.format("onStartCommand(intent = %b), startUpdating = %b, standby = %b, actorchange = %b, forceUpdate = %b, changeLayout = %b", (intent == null), isStartUpdating, isStandBy, isActorChange, isForceUpdate, isChangeLayout));
+        Log.v(TAG, String.format("onStartCommand(intent = %b), startUpdating = %b, standby = %b, isActorWantsChange = %b, forceUpdate = %b, changeLayout = %b", (intent == null), isStartUpdating, isStandBy, isActorChangeRequest, isForceUpdate, isChangeLayout));
 
         // calculate it first time always or only when force update
         if (isStartUpdating || !isForceUpdate) {
@@ -362,6 +282,10 @@ public class WidgetService extends Service {
 
         return START_STICKY;
     }
+
+    // -------------------------------------------------------------------- //
+    // ------------------------ Running in own threads -------------------- //
+    // -------------------------------------------------------------------- //
 
     /**
      * Method calls all widgets which needs to be updated
@@ -490,13 +414,14 @@ public class WidgetService extends Service {
     }
 
     /**
-     * Actor task
+     * Actor task request (disables all widgets)
+     * @param adapterId
+     * @param actorId
      */
-    private void changeWidgetActor(String adapterId, String actorId) {
-        Log.d(TAG, String.format("changeWidgetActor(%s, %s)", adapterId, actorId));
+    private void changeWidgetActorRequest(String adapterId, String actorId) {
+        Log.d(TAG, String.format("changeWidgetActorRequest(%s, %s)", adapterId, actorId));
         if(actorId == null || adapterId == null || actorId.isEmpty() || adapterId.isEmpty()) return;
 
-        final List<WidgetData> changedWidgets = new ArrayList<>();
         // ----- first we need to check what widgets have this actor
         for (int i = 0; i < mAvailableWidgets.size(); i++) {
             WidgetData data = mAvailableWidgets.valueAt(i);
@@ -510,8 +435,6 @@ public class WidgetService extends Service {
             // first disables so that nobody can change it anymore
             widgetData.widgetDevice.setSwitchDisabled(true);
             widgetData.updateAppWidget();
-            // this widgets we will be updating
-            changedWidgets.add(widgetData);
         }
 
         // ----- then get the device, change value and run asyncTask
@@ -530,18 +453,134 @@ public class WidgetService extends Service {
         mActorActionTask.setListener(new CallbackTask.CallbackTaskListener() {
             @Override
             public void onExecute(boolean success) {
-                if(success){
-                    for(WidgetData wData : changedWidgets){
-                        Log.d(TAG, String.format("updating widget = %d", wData.getWidgetId()));
-                        //((WidgetDeviceData) wData).widgetDevice.deviceValueDisabled = false;
-                        ((WidgetDeviceData) wData).widgetDevice.setSwitchDisabled(false);
-                        wData.update();
-                    }
-                }
+                Log.v(TAG, "Actor's async task end with " + String.valueOf(success));
+                // we don't have any response here, cause that manages received broadcast
             }
         });
 
         mActorActionTask.execute(device);
+    }
+
+    /**
+     * Actor task result (this is called by broadcast receiver) -> goes through all widgets
+     * @param adapterId
+     * @param actorId
+     */
+    private void changeWidgetActorResult(String adapterId, String actorId){
+        Log.d(TAG, String.format("changeWidgetActorResult(%s, %s)", adapterId, actorId));
+        if(actorId == null || adapterId == null || actorId.isEmpty() || adapterId.isEmpty()) return;
+
+        for (int i = 0; i < mAvailableWidgets.size(); i++) {
+            WidgetData data = mAvailableWidgets.valueAt(i);
+            // for now there are only possible widget devices
+            if(!(data instanceof WidgetDeviceData)) continue;
+
+            WidgetDeviceData widgetData = (WidgetDeviceData) data;
+            WidgetDevice wDev = widgetData.widgetDevice;
+            if(!adapterId.equals(wDev.adapterId) || !actorId.equals(wDev.getId())) continue;
+
+            // first disables so that nobody can change it anymore
+            wDev.setSwitchDisabled(false);
+            widgetData.update();
+        }
+    }
+
+    // -------------------------------------------------------------------- //
+    // ------------------------- Managing methods ------------------------- //
+    // -------------------------------------------------------------------- //
+
+    /**
+     * Set repeating to parameter
+     * @param triggerAtMillis
+     */
+    private void setAlarm(long triggerAtMillis){
+        // Set new alarm time
+        AlarmManager m = (AlarmManager) mContext.getSystemService(Context.ALARM_SERVICE);
+        m.set(AlarmManager.ELAPSED_REALTIME, triggerAtMillis, getPendingIntentUpdate(mContext));
+    }
+
+    /**
+     * Stops repeating
+     * @param context
+     */
+    private static void stopAlarm(Context context){
+        // cancel frequently refreshing
+        AlarmManager m = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+        m.cancel(getPendingIntentUpdate(context));
+    }
+
+    /**
+     * Insert widgetData to list of used widgets
+     * @param widgetData
+     */
+    private void widgetAdd(WidgetData widgetData) {
+        // add widgetData to service
+        mAvailableWidgets.put(widgetData.getWidgetId(), widgetData);
+    }
+
+    /**
+     * Deletes widgets data by Ids
+     * @param widgetIds
+     */
+    private void widgetsDelete(int[] widgetIds) {
+        for(int widgetId : widgetIds){
+            if(widgetId == AppWidgetManager.INVALID_APPWIDGET_ID) continue;
+
+            WidgetData data = getWidgetData(widgetId);
+            widgetDelete(mContext, data);
+        }
+    }
+
+    /**
+     * For deleting widgetData outside of service
+     * @param context
+     * @param data
+     */
+    private void widgetDelete(Context context, WidgetData data){
+        if(data == null) return;
+        int widgetId = data.getWidgetId();
+        Log.v(TAG, String.format("delete widgetData(%d)", widgetId));
+
+        data.delete(context);
+        mAvailableWidgets.delete(widgetId);
+    }
+
+    /**
+     * Gets widget data either from list of widgets or instantiating and loading from settings (when OS restarted)
+     * @param widgetId id of widget to load
+     * @return
+     */
+    public WidgetData getWidgetData(int widgetId){
+        WidgetData widgetData = mAvailableWidgets.get(widgetId);
+        if (widgetData == null) {
+            String widgetClassName = WidgetData.getSettingClassName(mContext, widgetId);
+            if (widgetClassName == null || widgetClassName.isEmpty()) return null;
+
+            // TODO osetrit
+            try {
+                // instantiate class from string
+                widgetData = (WidgetData) Class.forName(widgetClassName).getConstructor(int.class, Context.class, UnitsHelper.class, TimeHelper.class).newInstance(widgetId, mContext, mUnitsHelper, mTimeHelper);
+                widgetData.init();
+                widgetAdd(widgetData);
+                Log.v(TAG, String.format("finished creation of WidgetData(%d)", widgetId));
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+                return null;
+            } catch (NoSuchMethodException e) {
+                e.printStackTrace();
+                return null;
+            } catch (InvocationTargetException e) {
+                e.printStackTrace();
+                return null;
+            } catch (InstantiationException e) {
+                e.printStackTrace();
+                return null;
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+                return null;
+            }
+        }
+        return widgetData;
     }
 
     /**
@@ -582,21 +621,6 @@ public class WidgetService extends Service {
     }
 
     /**
-     * Gets ids of one widget provider
-     * @param cls class of widget provider
-     * @return widget ids list
-     */
-    private List<Integer> getWidgetIds(Class<?> cls) {
-        ComponentName thisWidget = new ComponentName(mContext, cls);
-
-        List<Integer> arr = new ArrayList<Integer>();
-        for (int i : mAppWidgetManager.getAppWidgetIds(thisWidget)) {
-            arr.add(i);
-        }
-        return arr;
-    }
-
-    /**
      * !!! If we have any new widget, we need to add it here so that it keeps updating. !!!
      * @return array of widget ids
      */
@@ -620,19 +644,62 @@ public class WidgetService extends Service {
         return arr;
     }
 
+    // -------------------------------------------------------------------- //
+    // -------------------------- Helpers methods ------------------------- //
+    // -------------------------------------------------------------------- //
+
+    /**
+     * Initializes helpers classes when necessary (and unitialize them after not available)
+     * @param context
+     * @param controller
+     */
+    private void initHelpers(Context context, Controller controller){
+        if(!controller.isLoggedIn()) return;
+
+        SharedPreferences userSettings = controller.getUserSettings();
+        if(userSettings == null){
+            mUnitsHelper = null;
+            mTimeHelper = null;
+            return;
+        }
+
+        // if it is not initialized
+        if(mUnitsHelper == null || mTimeHelper == null) {
+            mUnitsHelper = new UnitsHelper(userSettings, context);
+            mTimeHelper = new TimeHelper(userSettings);
+        }
+    }
+
+    /**
+     * Gets ids of one widget provider
+     * @param cls class of widget provider
+     * @return widget ids list
+     */
+    private List<Integer> getWidgetIds(Class<?> cls) {
+        ComponentName thisWidget = new ComponentName(mContext, cls);
+
+        List<Integer> arr = new ArrayList<Integer>();
+        for (int i : mAppWidgetManager.getAppWidgetIds(thisWidget)) {
+            arr.add(i);
+        }
+        return arr;
+    }
+
     @Override
     public IBinder onBind(Intent intent) {
         return null;
     }
 
-    // -------- Intent factories
+    // -------------------------------------------------------------------- //
+    // ------------------------- Intent factories ------------------------- //
+    // -------------------------------------------------------------------- //
 
     /**
      * Get intent of this class
      * @param context
      * @return
      */
-    private static Intent getUpdateIntent(Context context) {
+    private static Intent getIntentUpdate(Context context) {
         return new Intent(context, WidgetService.class);
     }
 
@@ -641,8 +708,8 @@ public class WidgetService extends Service {
      * @param context
      * @return
      */
-    private static PendingIntent getUpdatePendingIntent(Context context){
-        final Intent intent = getUpdateIntent(context);
+    private static PendingIntent getPendingIntentUpdate(Context context){
+        final Intent intent = getIntentUpdate(context);
         return PendingIntent.getService(context, 0, intent, PendingIntent.FLAG_CANCEL_CURRENT);
     }
 
@@ -652,11 +719,10 @@ public class WidgetService extends Service {
      * @param widgetId
      * @return
      */
-    public static Intent getForceUpdateIntent(Context context, int widgetId) {
+    public static Intent getIntentForceUpdate(Context context, int widgetId) {
         Intent intent = new Intent(context, WidgetService.class);
         intent.putExtra(WidgetService.EXTRA_FORCE_UPDATE, true);
         intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, new int[]{ widgetId });
-
         return intent;
     }
 
@@ -666,8 +732,8 @@ public class WidgetService extends Service {
      * @param widgetId
      * @return
      */
-    public static PendingIntent getForceUpdatePendingIntent(Context context, int widgetId) {
-        final Intent intent = getForceUpdateIntent(context, widgetId);
+    public static PendingIntent getPendingIntentForceUpdate(Context context, int widgetId) {
+        final Intent intent = getIntentForceUpdate(context, widgetId);
         return PendingIntent.getService(context, widgetId, intent, PendingIntent.FLAG_CANCEL_CURRENT);
     }
 
@@ -677,10 +743,9 @@ public class WidgetService extends Service {
      * @param standby
      * @return
      */
-    public static Intent getStandByIntent(Context context, boolean standby){
+    public static Intent getIntentStandBy(Context context, boolean standby){
         Intent intent = new Intent(context, WidgetService.class);
         intent.putExtra(WidgetService.EXTRA_STANDBY, standby);
-
         return intent;
     }
 
@@ -690,9 +755,9 @@ public class WidgetService extends Service {
      * @param actorId
      * @return
      */
-    public static Intent getActorChangeIntent(Context context, String actorId, String adapterId){
+    public static Intent getIntentActorChangeRequest(Context context, String actorId, String adapterId){
         Intent intent = new Intent(context, WidgetService.class);
-        intent.putExtra(WidgetService.EXTRA_ACTOR_CHANGE, true);
+        intent.putExtra(WidgetService.EXTRA_ACTOR_CHANGE_REQUEST, true);
         intent.putExtra(EXTRA_ACTOR_ID, actorId);
         intent.putExtra(EXTRA_ACTOR_ADAPTER_ID, adapterId);
         return intent;
@@ -705,36 +770,78 @@ public class WidgetService extends Service {
      * @param actorId
      * @return
      */
-    public static PendingIntent getActorChangePendingIntent(Context context, int widgetId, String actorId, String adapterId) {
-        return getActorPendingIntent(context, widgetId, actorId, adapterId, PendingIntent.FLAG_UPDATE_CURRENT);
+    public static PendingIntent getPendingIntentActorChangeRequest(Context context, int widgetId, String actorId, String adapterId) {
+        return getPendingIntentActor(context, widgetId, actorId, adapterId, PendingIntent.FLAG_UPDATE_CURRENT);
     }
 
-    public static PendingIntent cancelActorChangePendingIntent(Context context, int widgetId, String actorId, String adapterId) {
-        return getActorPendingIntent(context, widgetId, actorId, adapterId, PendingIntent.FLAG_CANCEL_CURRENT);
+    /**
+     * Cancels pendingIntent (that means, that actor cannot be clicked)
+     * @param context
+     * @param widgetId
+     * @param actorId
+     * @param adapterId
+     * @return
+     */
+    public static PendingIntent cancelPendingIntentActorChangeRequest(Context context, int widgetId, String actorId, String adapterId) {
+        return getPendingIntentActor(context, widgetId, actorId, adapterId, PendingIntent.FLAG_CANCEL_CURRENT);
     }
 
-
-    private static PendingIntent getActorPendingIntent(Context context, int widgetId, String actorId, String adapterId, int flag){
-        final Intent intent = getActorChangeIntent(context, actorId, adapterId);
+    /**
+     * General factory for when actor is changed
+     * @param context
+     * @param widgetId
+     * @param actorId
+     * @param adapterId
+     * @param flag
+     * @return
+     */
+    private static PendingIntent getPendingIntentActor(Context context, int widgetId, String actorId, String adapterId, int flag){
+        Intent intent = getIntentActorChangeRequest(context, actorId, adapterId);
         // requestNum guarantees that PendingIntent is unique
         int requestNum = widgetId + adapterId.hashCode() + actorId.hashCode();
         return PendingIntent.getService(context, requestNum, intent, flag);
     }
 
-    public static Intent getWidgetDeleteIntent(Context context, int[] widgetIds) {
+    /**
+     * Intent for running result of actor change
+     * @param context
+     * @param adapterId
+     * @param actorId
+     * @return
+     */
+    public static Intent getIntentActorChangeResult(Context context, String adapterId, String actorId){
+        Intent intent = new Intent(context, WidgetService.class);
+        intent.putExtra(WidgetService.EXTRA_ACTOR_CHANGE_RESULT, true);
+        intent.putExtra(EXTRA_ACTOR_ID, actorId);
+        intent.putExtra(EXTRA_ACTOR_ADAPTER_ID, adapterId);
+        return intent;
+    }
+
+    /**
+     * When widget is being deleted, calls service to clear data after it's deleted
+     * @param context
+     * @param widgetIds  is possible to delete more widgets at once
+     * @return
+     */
+    public static Intent getIntentWidgetDelete(Context context, int[] widgetIds) {
         Intent intent = new Intent(context, WidgetService.class);
         intent.putExtra(WidgetService.EXTRA_DELETE_WIDGET, true);
         intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, widgetIds);
         return intent;
     }
 
-    public static Intent getWidgetChangeLayoutIntent(Context context, int widgetId,  int layout){
+    /**
+     * When widget changes its size, calls service to refresh that widget's layout
+     * @param context
+     * @param widgetId
+     * @param layout  new widget layout
+     * @return
+     */
+    public static Intent getIntentWidgetChangeLayout(Context context, int widgetId, int layout){
         Intent intent = new Intent(context, WidgetService.class);
         intent.putExtra(EXTRA_CHANGE_LAYOUT, true);
         intent.putExtra(EXTRA_CHANGE_LAYOUT_RESOURCE, layout);
         intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, new int[]{ widgetId });
         return intent;
     }
-
-
 }
