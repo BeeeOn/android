@@ -61,4 +61,34 @@ final public class GraphViewHelper {
 
 	}
 
+
+	public static void prepareWidgetGraphView(final GraphView graphView, final Context context, final Device device, final DateTimeFormatter fmt, final UnitsHelper unitsHelper) {
+		boolean isEnumValue = device.getValue() instanceof BaseEnumValue;
+
+		graphView.setTitleTextSize(20);
+		graphView.getGridLabelRenderer().setTextSize(20);
+		graphView.getGridLabelRenderer().setVerticalLabelsColor(context.getResources().getColor(R.color.beeeon_text_hint));
+		graphView.getGridLabelRenderer().setHorizontalLabelsColor(context.getResources().getColor(R.color.beeeon_text_hint));
+		graphView.getGridLabelRenderer().setGridColor(context.getResources().getColor(R.color.beeeon_text_hint));
+
+		if (isEnumValue) {
+			graphView.getViewport().setYAxisBoundsManual(true);
+			graphView.getViewport().setMaxY(1.1d);
+			BaseEnumValue value = (BaseEnumValue) device.getValue();
+			List<BaseEnumValue.Item> enumItems = value.getEnumItems();
+			String[] verlabels = new String[enumItems.size()];
+			int i = 0;
+			for (BaseEnumValue.Item item : enumItems) {
+				verlabels[i++] = context.getString(item.getStringResource());
+			}
+			DateAsXAxisLabelFormatter labelFormatter = new DateAsXAxisLabelFormatter(context,"HH:mm","dd.MM.yy");
+			StaticLabelsFormatter staticLabelsFormatter = new StaticLabelsFormatter(graphView,labelFormatter);
+			staticLabelsFormatter.setVerticalLabels(verlabels);
+			graphView.getGridLabelRenderer().setLabelFormatter(staticLabelsFormatter);
+		} else {
+			final String unit = " "+unitsHelper.getStringUnit(device.getValue());
+			graphView.getGridLabelRenderer().setLabelFormatter(new DateAsXAxisLabelFormatter(context, "HH:mm","dd.MM.yy",unit));
+		}
+	}
+
 }

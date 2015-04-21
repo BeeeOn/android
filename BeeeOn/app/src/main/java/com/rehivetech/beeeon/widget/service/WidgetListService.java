@@ -1,8 +1,5 @@
 package com.rehivetech.beeeon.widget.service;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import android.annotation.TargetApi;
 import android.appwidget.AppWidgetManager;
 import android.content.Context;
@@ -14,15 +11,18 @@ import android.widget.RemoteViews;
 import android.widget.RemoteViewsService;
 
 import com.rehivetech.beeeon.R;
+import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.exception.AppException;
 import com.rehivetech.beeeon.household.adapter.Adapter;
 import com.rehivetech.beeeon.household.device.Device;
 import com.rehivetech.beeeon.household.device.Facility;
-import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.util.Log;
 import com.rehivetech.beeeon.util.TimeHelper;
 import com.rehivetech.beeeon.util.UnitsHelper;
 import com.rehivetech.beeeon.widget.data.WidgetLocationData;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @TargetApi(Build.VERSION_CODES.HONEYCOMB)
 public class WidgetListService extends RemoteViewsService {

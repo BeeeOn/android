@@ -191,7 +191,9 @@
     <string name="widget_sensor_title_medium">BeeeOn zariadenie 2x1</string>
     <string name="widget_sensor_title_large">BeeeOn zariadenie 3x1</string>
     <string name="widget_cached">(cached)</string>
-
+    <string name="widget_graph_title">BeeeOn zariadenie s grafom</string>
+    <string name="widget_location_list_empty">Prázdná lokácia</string
+    
     <!-- WidgetConfigurationActivity -->
     <string name="widget_configuration_adapter">Brána:</string>
     <string name="widget_configuration_sensor">Zariadenie pre zobrazenie:</string>

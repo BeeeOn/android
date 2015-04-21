@@ -13,7 +13,7 @@ import com.rehivetech.beeeon.util.UnitsHelper;
 import com.rehivetech.beeeon.widget.configuration.WidgetConfiguration;
 import com.rehivetech.beeeon.widget.configuration.WidgetConfigurationActivity;
 import com.rehivetech.beeeon.widget.configuration.WidgetDeviceConfiguration;
-import com.rehivetech.beeeon.widget.persistence.WidgetDevice;
+import com.rehivetech.beeeon.widget.persistence.WidgetDevicePersistence;
 
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
@@ -27,14 +27,31 @@ import java.util.List;
 public class WidgetDeviceData extends WidgetData {
     private static final String TAG = WidgetDeviceData.class.getSimpleName();
 
-    public WidgetDevice widgetDevice;
-    private List<Facility> mFacilities;
+    public WidgetDevicePersistence widgetDevice;
+    protected List<Facility> mFacilities;
 
     public WidgetDeviceData(int widgetId, Context context, UnitsHelper unitsHelper, TimeHelper timeHelper){
         super(widgetId, context, unitsHelper, timeHelper);
-        widgetDevice = new WidgetDevice(mContext, mWidgetId, 0, R.id.value_container, unitsHelper, timeHelper);
+        widgetDevice = new WidgetDevicePersistence(mContext, mWidgetId, 0, R.id.value_container, unitsHelper, timeHelper);
         mFacilities = new ArrayList<>();
         load();
+    }
+
+    @Override
+    public void init() {
+        String[] ids = widgetDevice.getId().split(Device.ID_SEPARATOR, 2);
+        // TODO  zde nekdy je deviceId prazdne ci tak neco a nevytvori se objekt
+        Facility facility = new Facility();
+        facility.setAdapterId(adapterId);
+        facility.setAddress(ids[0]);
+        facility.setLastUpdate(new DateTime(widgetDevice.lastUpdateTime, DateTimeZone.UTC));
+        facility.setRefresh(RefreshInterval.fromInterval(widgetDevice.refresh));
+
+        Device dev = Device.createFromDeviceTypeId(ids[1]);
+        facility.addDevice(dev);
+
+        mFacilities.clear();
+        mFacilities.add(facility);
     }
 
     @Override
@@ -61,7 +78,7 @@ public class WidgetDeviceData extends WidgetData {
     }
 
     @Override
-    protected void initLayout() {
+    public void initLayout() {
         super.initLayout();
         // configuration
         mRemoteViews.setOnClickPendingIntent(R.id.options, mConfigurationPendingIntent);
@@ -71,46 +88,32 @@ public class WidgetDeviceData extends WidgetData {
         mRemoteViews.setOnClickPendingIntent(R.id.last_update, mRefreshPendingIntent);
         mRemoteViews.setOnClickPendingIntent(R.id.refresh, mRefreshPendingIntent);
 
-        if(!adapterId.isEmpty() && !widgetDevice.id.isEmpty()){
+        if(!adapterId.isEmpty() && !widgetDevice.getId().isEmpty()){
             // detail activity
-            mRemoteViews.setOnClickPendingIntent(R.id.icon, startDetailActivityPendingIntent(mContext, mWidgetId, adapterId, widgetDevice.id));
-            mRemoteViews.setOnClickPendingIntent(R.id.name, startDetailActivityPendingIntent(mContext, mWidgetId, adapterId, widgetDevice.id));
+            mRemoteViews.setOnClickPendingIntent(R.id.icon, startDetailActivityPendingIntent(mContext, mWidgetId, adapterId, widgetDevice.getId()));
+            mRemoteViews.setOnClickPendingIntent(R.id.name, startDetailActivityPendingIntent(mContext, mWidgetId, adapterId, widgetDevice.getId()));
         }
-
-        String[] ids = widgetDevice.id.split(Device.ID_SEPARATOR, 2);
-        // TODO  zde nekdy je deviceId prazdne ci tak neco a nevytvori se objekt
-        Facility facility = new Facility();
-        facility.setAdapterId(adapterId);
-        facility.setAddress(ids[0]);
-        facility.setLastUpdate(new DateTime(widgetDevice.lastUpdateTime, DateTimeZone.UTC));
-        facility.setRefresh(RefreshInterval.fromInterval(widgetDevice.refresh));
-
-        Device dev = Device.createFromDeviceTypeId(ids[1]);
-        facility.addDevice(dev);
-
-        mFacilities.clear();
-        mFacilities.add(facility);
 
         widgetDevice.initValueView(mRemoteViews);
     }
 
     @Override
     protected boolean updateData() {
-        Device device = mController.getFacilitiesModel().getDevice(adapterId, widgetDevice.id);
-        if(device != null){
-            Adapter adapter = mController.getAdaptersModel().getAdapter(adapterId);
-            widgetDevice.change(device, adapter);
-
-            widgetLastUpdate = getTimeNow();
-            adapterId = adapter.getId();
-
-            this.save();
-            Log.v(TAG, String.format("Updating widget (%d) with fresh data", getWidgetId()));
-            return true;
+        Device device = mController.getFacilitiesModel().getDevice(adapterId, widgetDevice.getId());
+        if(device == null) {
+            Log.v(TAG, String.format("Updating widget (%d) with cached data", getWidgetId()));
+            return false;
         }
 
-        Log.v(TAG, String.format("Updating widget (%d) with cached data", getWidgetId()));
-        return false;
+        Adapter adapter = mController.getAdaptersModel().getAdapter(adapterId);
+        widgetDevice.change(device, adapter);
+
+        widgetLastUpdate = getTimeNow();
+        adapterId = adapter.getId();
+
+        this.save();
+        Log.v(TAG, String.format("Updating widget (%d) with fresh data", getWidgetId()));
+        return true;
     }
 
     @Override

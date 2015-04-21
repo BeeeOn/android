@@ -30,6 +30,7 @@ import com.rehivetech.beeeon.util.Log;
 import com.rehivetech.beeeon.widget.data.WidgetClockData;
 import com.rehivetech.beeeon.widget.data.WidgetData;
 import com.rehivetech.beeeon.widget.data.WidgetDeviceData;
+import com.rehivetech.beeeon.widget.data.WidgetGraphData;
 import com.rehivetech.beeeon.widget.data.WidgetLocationData;
 
 import java.util.ArrayList;
@@ -128,6 +129,9 @@ public class WidgetConfigurationActivity extends ActionBarActivity {
                 mWidgetData = new WidgetDeviceData(appWidgetId, mContext, null, null);
                 break;
 
+            case ".WidgetGraphProvider":
+                mWidgetData = new WidgetGraphData(appWidgetId, mContext, null, null);
+                break;
 
             default:
                 Log.d(TAG, "No widget with class: " + mWidgetProviderShortClassName);

@@ -1,0 +1,212 @@
+package com.rehivetech.beeeon.widget.data;
+
+import android.content.Context;
+import android.graphics.Bitmap;
+
+import com.jjoe64.graphview.GraphView;
+import com.jjoe64.graphview.helper.DateAsXAxisLabelFormatter;
+import com.jjoe64.graphview.series.BarGraphSeries;
+import com.jjoe64.graphview.series.BaseSeries;
+import com.jjoe64.graphview.series.DataPoint;
+import com.jjoe64.graphview.series.LineGraphSeries;
+import com.rehivetech.beeeon.R;
+import com.rehivetech.beeeon.asynctask.GetDeviceLogTask;
+import com.rehivetech.beeeon.household.adapter.Adapter;
+import com.rehivetech.beeeon.household.device.Device;
+import com.rehivetech.beeeon.household.device.DeviceLog;
+import com.rehivetech.beeeon.household.device.Facility;
+import com.rehivetech.beeeon.household.device.RefreshInterval;
+import com.rehivetech.beeeon.household.device.values.BaseEnumValue;
+import com.rehivetech.beeeon.pair.LogDataPair;
+import com.rehivetech.beeeon.util.GraphViewHelper;
+import com.rehivetech.beeeon.util.Log;
+import com.rehivetech.beeeon.util.TimeHelper;
+import com.rehivetech.beeeon.util.UnitsHelper;
+import com.rehivetech.beeeon.util.Utils;
+import com.rehivetech.beeeon.widget.configuration.WidgetConfiguration;
+import com.rehivetech.beeeon.widget.configuration.WidgetConfigurationActivity;
+import com.rehivetech.beeeon.widget.configuration.WidgetGraphConfiguration;
+
+import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
+import org.joda.time.Interval;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
+
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Map;
+import java.util.Random;
+import java.util.SortedMap;
+import java.util.concurrent.TimeUnit;
+
+
+public class WidgetGraphData extends WidgetDeviceData {
+    private static final String TAG = WidgetGraphData.class.getSimpleName();
+
+    private String mGraphDateTimeFormat = "dd.MM. kk:mm";
+    private GraphView mGraph;
+    private BaseSeries mGraphSeries;
+    private Bitmap mGraphBitmap;
+
+    private int mGraphWidth = (int) Utils.dpToPx(mContext, 450);
+    private int mGraphHeight = (int) Utils.dpToPx(mContext, 250);
+
+    public WidgetGraphData(int widgetId, Context context, UnitsHelper unitsHelper, TimeHelper timeHelper){
+        super(widgetId, context, unitsHelper, timeHelper);
+
+        mGraph = new GraphView(mContext);
+    }
+
+    @Override
+    public String getClassName() {
+        return WidgetGraphData.class.getName();
+    }
+
+    public DataPoint[] generateRandomDayData() {
+        DataPoint[] data = new DataPoint[10];
+        Calendar calendar = Calendar.getInstance();
+        Random r = new Random();
+        for(int i = 0; i < data.length; i++) {
+            Date date = calendar.getTime();
+            data[i] = new DataPoint(date,r.nextInt(20) - 10);
+            calendar.add(Calendar.SECOND, 5);
+        }
+        return data;
+    }
+
+    @Override
+    public void init() {
+        String[] ids = widgetDevice.getId().split(Device.ID_SEPARATOR, 2);
+        // TODO  zde nekdy je deviceId prazdne ci tak neco a nevytvori se objekt
+        Facility facility = new Facility();
+        facility.setAdapterId(adapterId);
+        facility.setAddress(ids[0]);
+        facility.setLastUpdate(new DateTime(widgetDevice.lastUpdateTime, DateTimeZone.UTC));
+        facility.setRefresh(RefreshInterval.fromInterval(widgetDevice.refresh));
+
+        Device dev = Device.createFromDeviceTypeId(ids[1]);
+        facility.addDevice(dev);
+
+        mFacilities.clear();
+        mFacilities.add(facility);
+
+        if(mTimeHelper != null && mUnitsHelper != null){
+            Log.d(TAG, "prepareWidgetGraphView");
+
+            Adapter adapter = mController.getAdaptersModel().getAdapter(adapterId);
+            final DateTimeFormatter fmt = mTimeHelper.getFormatter(mGraphDateTimeFormat, adapter);
+            GraphViewHelper.prepareWidgetGraphView(mGraph, mContext, mFacilities.get(0).getDevices().get(0), fmt, mUnitsHelper);
+            mGraph.getGridLabelRenderer().setLabelFormatter(new DateAsXAxisLabelFormatter(mContext, "HH:mm", "dd.MM"));
+
+            // clears series if reinitializes
+            if(mGraph.getSeries() != null && mGraph.getSeries().size() > 0){
+                mGraph.removeAllSeries();
+            }
+
+            if (dev.getValue() instanceof BaseEnumValue) {
+                mGraphSeries = new BarGraphSeries<>(new DataPoint[]{new DataPoint(0, 0), new DataPoint(1,1)});
+                ((BarGraphSeries) mGraphSeries).setSpacing(30);
+            } else {
+                mGraphSeries =  new LineGraphSeries<>(new DataPoint[]{new DataPoint(0, 0), new DataPoint(1,1)});
+                ((LineGraphSeries)mGraphSeries).setBackgroundColor(mContext.getResources().getColor(R.color.alpha_blue));
+                ((LineGraphSeries)mGraphSeries).setDrawBackground(true);
+                ((LineGraphSeries) mGraphSeries).setThickness(2);
+            }
+
+            mGraphSeries.setTitle("History");
+            mGraph.addSeries(mGraphSeries);
+        }
+    }
+
+    @Override
+    protected boolean updateData() {
+        Device device = mController.getFacilitiesModel().getDevice(adapterId, widgetDevice.getId());
+        if(device == null){
+            Log.v(TAG, String.format("Updating widget (%d) with cached data", getWidgetId()));
+            return false;
+        }
+
+        Adapter adapter = mController.getAdaptersModel().getAdapter(adapterId);
+        widgetDevice.change(device, adapter);
+
+        widgetLastUpdate = getTimeNow();
+        adapterId = adapter.getId();
+
+        //mGraphSeries.resetData(generateRandomDayData());
+        doLoadGraphData(device);
+
+
+        this.save();
+        Log.v(TAG, String.format("Updating widget (%d) with fresh data", getWidgetId()));
+        return true;
+    }
+
+    @Override
+    protected void updateLayout() {
+        super.updateLayout();
+
+        Log.d(TAG, String.format("Graph: %d %d, is NUll = %b", mGraphWidth, mGraphHeight, mGraphBitmap == null));
+
+        if(mGraphBitmap != null) mRemoteViews.setImageViewBitmap(R.id.widget_graph, mGraphBitmap);
+    }
+
+    private static final String LOG_DATE_TIME_FORMAT = "yyyy-MM-dd HH:mm:ss";
+    private GetDeviceLogTask mGetDeviceLogTask;
+
+    private void doLoadGraphData(Device device) {
+        DateTime end = DateTime.now(DateTimeZone.UTC);
+        DateTime start = end.minusWeeks(1);
+        DateTimeFormatter fmt = DateTimeFormat.forPattern(LOG_DATE_TIME_FORMAT).withZoneUTC();
+        Log.d(TAG, String.format("Loading graph data from %s to %s.", fmt.print(start), fmt.print(end)));
+
+        mGetDeviceLogTask = new GetDeviceLogTask(mContext);
+        LogDataPair pair = new LogDataPair(device, new Interval(start, end), DeviceLog.DataType.AVERAGE, (device.getValue() instanceof BaseEnumValue)? DeviceLog.DataInterval.RAW: DeviceLog.DataInterval.HOUR);
+
+        mGetDeviceLogTask.setListener(new GetDeviceLogTask.CallbackLogTaskListener() {
+            @Override
+            public void onExecute(DeviceLog result) {
+                fillGraph(result);
+                mGraphBitmap = mGraph.drawBitmap(mGraphWidth, mGraphHeight);
+            }
+        });
+        mGetDeviceLogTask.execute(new LogDataPair[]{pair});
+    }
+
+    private void fillGraph(DeviceLog log) {
+        if(mGraph == null) return;
+        Log.d(TAG, "fillGraph");
+
+        SortedMap<Long, Float> values = log.getValues();
+        int size = values.size();
+        DataPoint[] data = new DataPoint[size];
+
+        Log.d(TAG, String.format("Filling graph with %d values. Min: %.1f, Max: %.1f", size, log.getMinimum(), log.getMaximum()));
+
+        int i = 0;
+        for (Map.Entry<Long, Float> entry : values.entrySet()) {
+            Long dateMillis = entry.getKey();
+            float value = Float.isNaN(entry.getValue()) ? log.getMinimum() : entry.getValue();
+
+            data[i++] = new DataPoint(dateMillis, value);
+
+            // This shouldn't happen, only when some other thread changes this values object - can it happen?
+            if (i >= size)
+                break;
+        }
+
+        Log.d(TAG, "Filling graph finished");
+
+        mGraphSeries.resetData(data);
+        mGraph.getViewport().setXAxisBoundsManual(true);
+        if (values.size() > 100 && mGraphSeries instanceof BarGraphSeries) {
+            mGraph.getViewport().setMaxX(mGraphSeries.getHighestValueX());
+            mGraph.getViewport().setMinX(mGraphSeries.getHighestValueX() - TimeUnit.HOURS.toMillis(1));
+        }
+    }
+
+    @Override
+    public WidgetConfiguration createConfiguration(WidgetConfigurationActivity activity, boolean isWidgetEditing) {
+        return new WidgetGraphConfiguration(this, activity, isWidgetEditing);
+    }
+}

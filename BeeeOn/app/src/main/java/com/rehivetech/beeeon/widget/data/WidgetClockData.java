@@ -15,7 +15,7 @@ import com.rehivetech.beeeon.util.UnitsHelper;
 import com.rehivetech.beeeon.widget.configuration.WidgetClockConfiguration;
 import com.rehivetech.beeeon.widget.configuration.WidgetConfiguration;
 import com.rehivetech.beeeon.widget.configuration.WidgetConfigurationActivity;
-import com.rehivetech.beeeon.widget.persistence.WidgetDevice;
+import com.rehivetech.beeeon.widget.persistence.WidgetDevicePersistence;
 
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
@@ -35,7 +35,7 @@ public class WidgetClockData extends WidgetData {
 
     public static String weekDays[] = reloadWeekDays();
 
-    public List<WidgetDevice> widgetDevices;
+    public List<WidgetDevicePersistence> widgetDevices;
     private List<Facility> mFacilities;
 
     public WidgetClockData(int widgetId, Context context, UnitsHelper unitsHelper, TimeHelper timeHelper){
@@ -43,51 +43,18 @@ public class WidgetClockData extends WidgetData {
 
         // inside devices
         widgetDevices = new ArrayList<>();
-        widgetDevices.add(new WidgetDevice(mContext, mWidgetId, 0, R.id.value_container_inside_temp, unitsHelper, timeHelper));
-        widgetDevices.add(new WidgetDevice(mContext, mWidgetId, 1, R.id.value_container_inside_humid, unitsHelper, timeHelper));
+        widgetDevices.add(new WidgetDevicePersistence(mContext, mWidgetId, 0, R.id.value_container_inside_temp, unitsHelper, timeHelper));
+        widgetDevices.add(new WidgetDevicePersistence(mContext, mWidgetId, 1, R.id.value_container_inside_humid, unitsHelper, timeHelper));
 
         mFacilities = new ArrayList<>();
         load();
     }
 
     @Override
-    protected void load() {
-        super.load();
-        WidgetDevice.loadAll(widgetDevices);
-    }
-
-    @Override
-    public void save() {
-        super.save();
-        WidgetDevice.saveAll(widgetDevices);
-    }
-
-    @Override
-    public void delete(Context context) {
-        super.delete(context);
-        WidgetDevice.deleteAll(widgetDevices);
-    }
-
-    @Override
-    public List<Facility> getReferredObj() {
-        return mFacilities;
-    }
-
-    @Override
-    protected void initLayout() {
-        super.initLayout();
-
-        // configuration
-        mRemoteViews.setOnClickPendingIntent(R.id.widget_clock_time_layout, mConfigurationPendingIntent);
-
+    public void init() {
         mFacilities.clear();
-        for(WidgetDevice dev : widgetDevices){
-            if(!adapterId.isEmpty()){
-                // detail activity
-                mRemoteViews.setOnClickPendingIntent(dev.boundView, startDetailActivityPendingIntent(mContext, mWidgetId + dev.offset, adapterId, dev.id));
-            }
-
-            String[] ids = dev.id.split(Device.ID_SEPARATOR, 2);
+        for(WidgetDevicePersistence dev : widgetDevices){
+            String[] ids = dev.getId().split(Device.ID_SEPARATOR, 2);
             // TODO  zde nekdy je deviceId prazdne ci tak neco a nevytvori se objekt
             Facility facility = new Facility();
             facility.setAdapterId(adapterId);
@@ -97,19 +64,57 @@ public class WidgetClockData extends WidgetData {
             facility.addDevice(Device.createFromDeviceTypeId(ids[1]));
 
             mFacilities.add(facility);
-
-            dev.initValueView(mRemoteViews);
         }
 
         onUpdateClock(mContext, null, new int[]{mWidgetId});
     }
 
     @Override
+    protected void load() {
+        super.load();
+        WidgetDevicePersistence.loadAll(widgetDevices);
+    }
+
+    @Override
+    public void save() {
+        super.save();
+        WidgetDevicePersistence.saveAll(widgetDevices);
+    }
+
+    @Override
+    public void delete(Context context) {
+        super.delete(context);
+        WidgetDevicePersistence.deleteAll(widgetDevices);
+    }
+
+    @Override
+    public List<Facility> getReferredObj() {
+        return mFacilities;
+    }
+
+    @Override
+    public void initLayout() {
+        super.initLayout();
+
+        // configuration
+        mRemoteViews.setOnClickPendingIntent(R.id.widget_clock_time_layout, mConfigurationPendingIntent);
+
+        for(WidgetDevicePersistence dev : widgetDevices){
+            if(!adapterId.isEmpty()){
+                // detail activity
+                mRemoteViews.setOnClickPendingIntent(dev.getBoundView(), startDetailActivityPendingIntent(mContext, mWidgetId + dev.getOffset(), adapterId, dev.getId()));
+            }
+
+            dev.initValueView(mRemoteViews);
+        }
+    }
+
+    @Override
     protected boolean updateData() {
         int updated = 0;
         Adapter adapter = mController.getAdaptersModel().getAdapter(adapterId);
-        for(WidgetDevice dev : widgetDevices) {
-            Device device = mController.getFacilitiesModel().getDevice(adapterId, dev.id);
+        for(WidgetDevicePersistence dev : widgetDevices) {
+            Device device = mController.getFacilitiesModel().getDevice(adapterId, dev.getId());
             if (device != null) {
                 dev.change(device, adapter);
                 updated++;
@@ -136,7 +141,7 @@ public class WidgetClockData extends WidgetData {
     @Override
     public void updateLayout() {
         // updates all inside devices
-        for(WidgetDevice dev : widgetDevices){
+        for(WidgetDevicePersistence dev : widgetDevices){
             dev.updateValueView();
         }
 
@@ -149,7 +154,7 @@ public class WidgetClockData extends WidgetData {
     public void handleUserLogout() {
         super.handleUserLogout();
         // updates all inside devices
-        for(WidgetDevice dev : widgetDevices){
+        for(WidgetDevicePersistence dev : widgetDevices){
             dev.updateValueView("%s (cached)");
         }
         updateAppWidget();

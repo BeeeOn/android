@@ -6,17 +6,17 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.rehivetech.beeeon.R;
-import com.rehivetech.beeeon.household.adapter.Adapter;
-import com.rehivetech.beeeon.household.device.RefreshInterval;
-import com.rehivetech.beeeon.household.location.Location;
 import com.rehivetech.beeeon.arrayadapter.LocationArrayAdapter;
 import com.rehivetech.beeeon.asynctask.CallbackTask;
 import com.rehivetech.beeeon.asynctask.ReloadLocationsTask;
+import com.rehivetech.beeeon.household.adapter.Adapter;
+import com.rehivetech.beeeon.household.device.RefreshInterval;
+import com.rehivetech.beeeon.household.location.Location;
 import com.rehivetech.beeeon.util.Log;
 import com.rehivetech.beeeon.util.Utils;
 import com.rehivetech.beeeon.widget.data.WidgetData;
-import com.rehivetech.beeeon.widget.persistence.WidgetLocation;
 import com.rehivetech.beeeon.widget.data.WidgetLocationData;
+import com.rehivetech.beeeon.widget.persistence.WidgetLocation;
 import com.rehivetech.beeeon.widget.service.WidgetService;
 
 import java.util.ArrayList;

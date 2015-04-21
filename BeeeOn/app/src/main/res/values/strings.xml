@@ -214,7 +214,9 @@
     <string name="widget_sensor_title_large">BeeeOn device 3x1</string>
     <string name="widget_cached">(cached)</string>
     <string name="widget_location_list_empty">Empty location</string>
+    <string name="widget_graph_title">BeeeOn device with graph</string>
 
+    
     <!-- WidgetConfigurationActivity -->
     <string name="widget_configuration_adapter">Gateway: </string>
     <string name="widget_configuration_sensor">Device to be shown: </string>

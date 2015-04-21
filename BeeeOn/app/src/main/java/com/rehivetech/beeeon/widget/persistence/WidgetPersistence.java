@@ -15,17 +15,18 @@ import java.util.List;
  */
 public abstract class WidgetPersistence {
 
-	private int mWidgetId;
-
 	// helpers
 	protected UnitsHelper mUnitsHelper;
 	protected TimeHelper mTimeHelper;
 
 	// persistence data
+	protected int mWidgetId;
 	protected final int mOffset;
 	protected int mBoundView;
 
 	protected Context mContext;
+	protected RemoteViews mParentRemoteViews;
+	protected RemoteViews mValueRemoteViews;
 
 	public WidgetPersistence(Context context, int widgetId, int offset, int view, UnitsHelper unitsHelper, TimeHelper timeHelper) {
 		mContext = context.getApplicationContext();
@@ -66,6 +67,11 @@ public abstract class WidgetPersistence {
 	 */
 	public abstract void updateValueView(String cachedFormat);
 
+	public RemoteViews getValueViews(){
+		return mValueRemoteViews;
+	}
+
+
 	public void delete(){
 		getSettings().edit().clear().commit();
 	}
@@ -75,23 +81,22 @@ public abstract class WidgetPersistence {
 	}
 
 
-
 	// ------ METHODS FOR WORKING WITH MORE OBJECTS AT ONCE ------ //
-	public static void loadAll(List<WidgetPersistence> widgetPersistences){
+	public static <T extends WidgetPersistence> void loadAll(List<T> widgetPersistences){
 		if(widgetPersistences == null) return;
 		for(WidgetPersistence per : widgetPersistences){
 			per.load();
 		}
 	}
 
-	public static void saveAll(List<WidgetPersistence> widgetPersistences){
+	public static <T extends WidgetPersistence> void saveAll(List<T> widgetPersistences){
 		if(widgetPersistences == null) return;
 		for(WidgetPersistence per : widgetPersistences){
 			per.save();
 		}
 	}
 
-	public static void deleteAll(List<WidgetPersistence> widgetPersistences){
+	public static <T extends WidgetPersistence> void deleteAll(List<T> widgetPersistences){
 		if(widgetPersistences == null) return;
 		for(WidgetPersistence per : widgetPersistences){
 			per.delete();

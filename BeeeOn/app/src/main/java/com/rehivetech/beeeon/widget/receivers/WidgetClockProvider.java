@@ -2,6 +2,7 @@ package com.rehivetech.beeeon.widget.receivers;
 
 import android.content.Context;
 import android.content.Intent;
+
 import com.rehivetech.beeeon.util.Log;
 import com.rehivetech.beeeon.widget.data.WidgetClockData;
 

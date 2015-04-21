@@ -1,8 +1,5 @@
 package com.rehivetech.beeeon.widget.configuration;
 
-import android.app.Activity;
-import android.view.View;
-import android.widget.AdapterView;
 import android.widget.SeekBar;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -12,7 +9,6 @@ import com.rehivetech.beeeon.asynctask.ReloadFacilitiesTask;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.household.adapter.Adapter;
 import com.rehivetech.beeeon.household.device.RefreshInterval;
-import com.rehivetech.beeeon.util.Log;
 import com.rehivetech.beeeon.widget.data.WidgetData;
 import com.rehivetech.beeeon.widget.service.WidgetService;
 

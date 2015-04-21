@@ -16,12 +16,12 @@ import android.util.SparseArray;
 
 import com.rehivetech.beeeon.asynctask.ActorActionTask;
 import com.rehivetech.beeeon.asynctask.CallbackTask;
+import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.exception.AppException;
 import com.rehivetech.beeeon.exception.ErrorCode;
 import com.rehivetech.beeeon.exception.NetworkError;
 import com.rehivetech.beeeon.household.device.Device;
 import com.rehivetech.beeeon.household.device.Facility;
-import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.household.device.values.BaseEnumValue;
 import com.rehivetech.beeeon.household.device.values.BaseValue;
 import com.rehivetech.beeeon.household.location.Location;
@@ -29,14 +29,15 @@ import com.rehivetech.beeeon.util.Log;
 import com.rehivetech.beeeon.util.TimeHelper;
 import com.rehivetech.beeeon.util.UnitsHelper;
 import com.rehivetech.beeeon.util.Utils;
-import com.rehivetech.beeeon.widget.data.WidgetDeviceData;
-import com.rehivetech.beeeon.widget.persistence.WidgetDevice;
-import com.rehivetech.beeeon.widget.receivers.WidgetBridgeBroadcastReceiver;
 import com.rehivetech.beeeon.widget.data.WidgetData;
+import com.rehivetech.beeeon.widget.data.WidgetDeviceData;
+import com.rehivetech.beeeon.widget.persistence.WidgetDevicePersistence;
+import com.rehivetech.beeeon.widget.receivers.WidgetBridgeBroadcastReceiver;
 import com.rehivetech.beeeon.widget.receivers.WidgetClockProvider;
 import com.rehivetech.beeeon.widget.receivers.WidgetDeviceProvider;
 import com.rehivetech.beeeon.widget.receivers.WidgetDeviceProviderLarge;
 import com.rehivetech.beeeon.widget.receivers.WidgetDeviceProviderMedium;
+import com.rehivetech.beeeon.widget.receivers.WidgetGraphProvider;
 import com.rehivetech.beeeon.widget.receivers.WidgetLocationListProvider;
 
 import java.lang.reflect.InvocationTargetException;
@@ -298,21 +299,12 @@ public class WidgetService extends Service {
         // if there are no widgets passed by intent, try to get all widgets
         if(allWidgetIds == null || allWidgetIds.length == 0) allWidgetIds = getAllIds();
 
-        try {
-            // TODO presunout nize ke zbytku pozadavkum?
-            // Reload adapters to have data about Timezone offset
-            mController.getAdaptersModel().reloadAdapters(false);
-        } catch(AppException e) {
-            // TODO probably do nothing cause we need to update widgets !!!!
-            Log.e(TAG, e.getSimpleErrorMessage());
-        }
-
         long timeNow = SystemClock.elapsedRealtime();
         SparseArray<WidgetData> widgetsToUpdate = new SparseArray<>();
         List<Object> widgetReferredObjects = new ArrayList<>();
 
         // update all widgets
-        // TODO must not have any network request !!
+        // NOTE: can't contain any network request !
         for(int widgetId : allWidgetIds) {
             // ziska bud z pole pouzitych dat nebo instanciuje z disku
             WidgetData widgetData = getWidgetData(widgetId);
@@ -320,6 +312,9 @@ public class WidgetService extends Service {
                 Log.w(TAG, String.format("WidgetData(%d) doesn't exist & couldn't be created", widgetId));
                 continue;
             }
+
+            // creates new RemoteViews and sets every pendingIntents etc
+            widgetData.initLayout();
 
             // reload data (after configuration and if objects already exists)
             if(widgetsShouldReload) widgetData.reload();
@@ -343,6 +338,9 @@ public class WidgetService extends Service {
 
         try{
             mController.beginPersistentConnection();
+
+            // Reload adapters to have data about Timezone offset
+            mController.getAdaptersModel().reloadAdapters(false);
 
             List<Facility> usedFacilities = new ArrayList<>();
             // check if any objects need to refresh
@@ -429,7 +427,7 @@ public class WidgetService extends Service {
             if(!(data instanceof WidgetDeviceData)) continue;
 
             WidgetDeviceData widgetData = (WidgetDeviceData) data;
-            WidgetDevice wDev = widgetData.widgetDevice;
+            WidgetDevicePersistence wDev = widgetData.widgetDevice;
             if(!adapterId.equals(wDev.adapterId) || !actorId.equals(wDev.getId())) continue;
 
             // first disables so that nobody can change it anymore
@@ -476,7 +474,7 @@ public class WidgetService extends Service {
             if(!(data instanceof WidgetDeviceData)) continue;
 
             WidgetDeviceData widgetData = (WidgetDeviceData) data;
-            WidgetDevice wDev = widgetData.widgetDevice;
+            WidgetDevicePersistence wDev = widgetData.widgetDevice;
             if(!adapterId.equals(wDev.adapterId) || !actorId.equals(wDev.getId())) continue;
 
             // first disables so that nobody can change it anymore
@@ -635,6 +633,8 @@ public class WidgetService extends Service {
         ids.addAll(getWidgetIds(WidgetDeviceProvider.class));
         ids.addAll(getWidgetIds(WidgetDeviceProviderMedium.class));
         ids.addAll(getWidgetIds(WidgetDeviceProviderLarge.class));
+        // graph widget
+        ids.addAll(getWidgetIds(WidgetGraphProvider.class));
 
         int[] arr = new int[ids.size()];
         for (int i = 0; i < ids.size(); i++) {

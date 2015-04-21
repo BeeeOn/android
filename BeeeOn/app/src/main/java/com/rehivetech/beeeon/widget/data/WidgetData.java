@@ -80,10 +80,7 @@ abstract public class WidgetData {
      * Initialize method called after constructor in service
      * NOTE: created this way because of complicated constructor calls
      */
-    public void init(){
-        Log.d(TAG, "init()");
-        initLayout();
-    }
+    public abstract void init();
 
     /**
      * Configuration activity calls this when finished
@@ -109,7 +106,7 @@ abstract public class WidgetData {
     public void reload(){
         Log.d(TAG, "reload()");
         this.load();
-        initLayout();
+        init();
     }
 
     /**
@@ -118,6 +115,7 @@ abstract public class WidgetData {
     public void update() {
         Log.d(TAG, "update()");
         isCached = false;
+
         // change actual widget's data
         if(!updateData()){
             isCached = true;
@@ -171,7 +169,7 @@ abstract public class WidgetData {
     /**
      * Initializes remoteViews, click listeners, etc
      */
-    protected void initLayout(){
+    public void initLayout(){
         Log.d(TAG, "initLayout()");
         mRemoteViews = new RemoteViews(mContext.getPackageName(), this.widgetLayout);
 
@@ -189,7 +187,7 @@ abstract public class WidgetData {
     public void changeLayout(int layout) {
         this.widgetLayout = layout;
         save();
-        initLayout();
+        init();
     }
 
     /**

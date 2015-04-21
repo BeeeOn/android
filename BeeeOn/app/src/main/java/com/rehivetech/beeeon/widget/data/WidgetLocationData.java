@@ -15,12 +15,12 @@ import com.rehivetech.beeeon.util.Compatibility;
 import com.rehivetech.beeeon.util.Log;
 import com.rehivetech.beeeon.util.TimeHelper;
 import com.rehivetech.beeeon.util.UnitsHelper;
-import com.rehivetech.beeeon.widget.persistence.WidgetLocation;
-import com.rehivetech.beeeon.widget.receivers.WidgetLocationListProvider;
-import com.rehivetech.beeeon.widget.service.WidgetListService;
 import com.rehivetech.beeeon.widget.configuration.WidgetConfiguration;
 import com.rehivetech.beeeon.widget.configuration.WidgetConfigurationActivity;
 import com.rehivetech.beeeon.widget.configuration.WidgetLocationConfiguration;
+import com.rehivetech.beeeon.widget.persistence.WidgetLocation;
+import com.rehivetech.beeeon.widget.receivers.WidgetLocationListProvider;
+import com.rehivetech.beeeon.widget.service.WidgetListService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -53,6 +53,12 @@ public class WidgetLocationData extends WidgetData {
     }
 
     @Override
+    public void init() {
+        mLocations.clear();
+        mLocations.add(new Location(widgetLocation.id, widgetLocation.name, adapterId, widgetLocation.type));
+    }
+
+    @Override
     protected void load() {
         super.load();
         widgetLocation.load();
@@ -76,7 +82,7 @@ public class WidgetLocationData extends WidgetData {
     }
 
     @Override
-    protected void initLayout() {
+    public void initLayout() {
         super.initLayout();
 
         // sets onclick "listeners"
@@ -101,9 +107,6 @@ public class WidgetLocationData extends WidgetData {
 
         Compatibility.setRemoteAdapter(mRemoteViews, mWidgetId, mRemoteViewsFactoryIntent, R.id.widget_sensor_list_view);
         mRemoteViews.setEmptyView(R.id.widget_sensor_list_view, R.id.empty_view);
-
-        mLocations.clear();
-        mLocations.add(new Location(widgetLocation.id, widgetLocation.name, adapterId, widgetLocation.type));
     }
 
     @Override

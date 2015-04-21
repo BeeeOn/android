@@ -19,8 +19,6 @@ public class ActorActionTask extends CallbackTask<Device> {
 	@Override
 	protected Boolean doInBackground(Device device) {
 		Controller controller = Controller.getInstance(mContext);
-
-		SystemClock.sleep(4000);
 		boolean success = controller.getFacilitiesModel().switchActor(device);
 		sendActorChangedBroadcast(device);
 		return success;

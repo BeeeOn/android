@@ -164,12 +164,23 @@
 		</activity> <!-- Facebook login screen -->
 
 		<!-- Provider for sharing with Facebook -->
-		<provider android:authorities="com.facebook.app.FacebookContentProvider868028889921254"
+        <provider android:authorities="com.facebook.app.FacebookContentProvider868028889921254"
 				  android:name="com.facebook.FacebookContentProvider"
 				  android:exported="true"/>
 
 
-		<!-- WIDGETS -->
+        <!-- WIDGETS -->
+        <service
+            android:name=".widget.service.WidgetService"
+            android:exported="false"
+            />
+
+        <service
+            android:name=".widget.service.WidgetListService"
+            android:enabled="@bool/is_api_11"
+            android:exported="false"
+            android:permission="android.permission.BIND_REMOTEVIEWS"
+            />
 
         <!-- list widget -->
         <receiver
@@ -185,15 +196,23 @@
                 android:resource="@xml/widget_location_info" />
         </receiver>
 
-        <service android:name=".widget.service.WidgetService" />
+        <!-- graph widget -->
+        <receiver
+            android:name=".widget.receivers.WidgetGraphProvider"
+            android:icon="@mipmap/ic_launcher"
+            android:label="@string/widget_graph_title"
+            >
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
 
-        <!-- TODO bude v service taky enabled?? -->
-        <service
-            android:name=".widget.service.WidgetListService"
-            android:enabled="@bool/is_api_11"
-            android:exported="false"
-            android:permission="android.permission.BIND_REMOTEVIEWS" />
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/widget_sensor_3x2_info"
+                />
+        </receiver>
 
+        <!-- clock widget -->
         <receiver android:name=".widget.receivers.WidgetClockProvider" >
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
@@ -207,6 +226,7 @@
                 android:resource="@xml/widget_clock_info" />
         </receiver>
 
+        <!-- sensor widget -->
         <receiver
             android:name=".widget.receivers.WidgetDeviceProvider"
             android:label="@string/widget_sensor_title_small" >

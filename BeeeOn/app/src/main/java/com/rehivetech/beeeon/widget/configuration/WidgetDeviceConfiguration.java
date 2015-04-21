@@ -1,7 +1,6 @@
 package com.rehivetech.beeeon.widget.configuration;
 
 
-import android.app.Activity;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Spinner;
@@ -21,7 +20,7 @@ import com.rehivetech.beeeon.util.Log;
 import com.rehivetech.beeeon.util.Utils;
 import com.rehivetech.beeeon.widget.data.WidgetData;
 import com.rehivetech.beeeon.widget.data.WidgetDeviceData;
-import com.rehivetech.beeeon.widget.persistence.WidgetDevice;
+import com.rehivetech.beeeon.widget.persistence.WidgetDevicePersistence;
 import com.rehivetech.beeeon.widget.service.WidgetService;
 
 import java.util.ArrayList;
@@ -34,7 +33,7 @@ public class WidgetDeviceConfiguration extends WidgetConfiguration{
     private List<Location> mLocations = new ArrayList<Location>();
     private Spinner mSensorSpinner;
 
-    private WidgetDevice mWidgetDevice;
+    private WidgetDevicePersistence mWidgetDevice;
 
     public WidgetDeviceConfiguration(WidgetData data, WidgetConfigurationActivity activity, boolean widgetEditing) {
         super(data, activity, widgetEditing);
@@ -127,14 +126,14 @@ public class WidgetDeviceConfiguration extends WidgetConfiguration{
                     mSensorSpinner.setAdapter(dataAdapter);
 
                     // select spinner
-                    int foundIndex = Utils.getObjectIndexFromList(mWidgetDevice.id, mDevices);
+                    int foundIndex = Utils.getObjectIndexFromList(mWidgetDevice.getId(), mDevices);
                     if(foundIndex != -1) mSensorSpinner.setSelection(foundIndex);
 
                     break;
                 }
             }
 
-            doChangeAdapter(adapterId, mWidgetDevice.id);
+            doChangeAdapter(adapterId, mWidgetDevice.getId());
         }
     }
 
@@ -190,7 +189,7 @@ public class WidgetDeviceConfiguration extends WidgetConfiguration{
                 mSensorSpinner.setEnabled(true);
                 mSensorSpinner.setAdapter(dataAdapter);
 
-                String devId = (activeId.isEmpty() && mWidgetDevice.adapterId.equals(adapterId)) ? mWidgetDevice.id : activeId;
+                String devId = (activeId.isEmpty() && mWidgetDevice.adapterId.equals(adapterId)) ? mWidgetDevice.getId() : activeId;
 
                 if (!devId.isEmpty()) {
                     int index = Utils.getObjectIndexFromList(devId, mDevices);

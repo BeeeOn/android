@@ -14,6 +14,8 @@ import android.net.NetworkInfo;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.telephony.TelephonyManager;
+import android.util.DisplayMetrics;
+import android.util.TypedValue;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -340,4 +342,9 @@ final public class Utils {
 		return null;
 	}
 
+
+	public static float dpToPx(Context context, float dpValue) {
+		DisplayMetrics metrics = context.getResources().getDisplayMetrics();
+		return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dpValue, metrics);
+	}
 }
