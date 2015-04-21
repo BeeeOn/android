@@ -5,7 +5,7 @@
     tools:ignore="UnusedAttribute"
     android:initialLayout="@layout/widget_device_3x2"
     android:minWidth="240dp"
-    android:minHeight="170dp"
+    android:minHeight="180dp"
     android:resizeMode="horizontal|vertical"
     android:widgetCategory="home_screen"
     android:configure="com.rehivetech.beeeon.widget.configuration.WidgetConfigurationActivity"

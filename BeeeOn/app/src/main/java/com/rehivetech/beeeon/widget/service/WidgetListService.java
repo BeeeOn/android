@@ -103,7 +103,6 @@ class ListRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory {
         Bundle extras = new Bundle();
         extras.putString(WidgetLocationData.EXTRA_ITEM_DEV_ID, dev.getId());
         extras.putString(WidgetLocationData.EXTRA_ITEM_ADAPTER_ID, dev.getFacility().getAdapterId());
-        extras.putInt(WidgetLocationData.EXTRA_WIDGET_ID, mWidgetId);
         Intent fillInIntent = new Intent();
         fillInIntent.putExtras(extras);
         rv.setOnClickFillInIntent(R.id.widget_loc_item, fillInIntent);

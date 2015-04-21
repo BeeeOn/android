@@ -3,7 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     tools:ignore="UnusedAttribute"   
-    android:initialLayout="@layout/widget_sensor_2x1"
+    android:initialLayout="@layout/widget_device_2x1"
     android:minWidth="@dimen/widget_width_cells_2"
     android:minHeight="70dp"
     android:minResizeHeight="@dimen/widget_width_cells_1"

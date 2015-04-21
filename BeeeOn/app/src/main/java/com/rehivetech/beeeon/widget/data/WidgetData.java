@@ -9,6 +9,7 @@ import android.content.SharedPreferences;
 import android.os.SystemClock;
 import android.widget.RemoteViews;
 
+import com.rehivetech.beeeon.activity.MainActivity;
 import com.rehivetech.beeeon.activity.SensorDetailActivity;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.util.Log;
@@ -16,6 +17,7 @@ import com.rehivetech.beeeon.util.TimeHelper;
 import com.rehivetech.beeeon.util.UnitsHelper;
 import com.rehivetech.beeeon.widget.configuration.WidgetConfiguration;
 import com.rehivetech.beeeon.widget.configuration.WidgetConfigurationActivity;
+import com.rehivetech.beeeon.widget.persistence.WidgetDevicePersistence;
 import com.rehivetech.beeeon.widget.service.WidgetService;
 
 import java.util.List;
@@ -39,6 +41,7 @@ abstract public class WidgetData {
 
     private String mUserId;
     protected final int mWidgetId;
+    public List<WidgetDevicePersistence> widgetDevices;
 
     public int widgetLayout;
     public int widgetInterval;
@@ -111,14 +114,14 @@ abstract public class WidgetData {
 
     /**
      * Gets new data and updates widget
+     * CALLED ONLY WHEN CONNECTION TO THE SERVER AVAILABLE
      */
     public void update() {
         Log.d(TAG, "update()");
-        isCached = false;
 
         // change actual widget's data
         if(!updateData()){
-            isCached = true;
+            // TODO
         }
 
         // Update widget
@@ -138,7 +141,7 @@ abstract public class WidgetData {
     /**
      * Load all data of this widget
      */
-    protected void load() {
+    public void load() {
         Log.d(TAG, "load()");
         // set default widget data
         widgetLayout = mPrefs.getInt(PREF_LAYOUT, mWidgetProviderInfo != null ? mWidgetProviderInfo.initialLayout : 0); // TODO sometimes providerInfo is null
@@ -211,13 +214,11 @@ abstract public class WidgetData {
 
     protected abstract void updateLayout();
 
-    public void asyncTask(Object obj){
-    }
-
     /**
      * Handle when user goes online
      */
     public void handleUserLogin() {
+        isCached = false;
     }
 
     /**
@@ -225,6 +226,7 @@ abstract public class WidgetData {
      * e.g. Load cached data
      */
     public void handleUserLogout() {
+        isCached = true;
     }
 
     /**
@@ -245,17 +247,43 @@ abstract public class WidgetData {
     /**
      * PendingIntent for opening detail of device
      * @param context
-     * @param requestCode must be unique if want to open different detail activity
+     * @param widgetId
      * @param adapterId
      * @param deviceId
      * @return
      */
-    public static PendingIntent startDetailActivityPendingIntent(Context context, int requestCode, String adapterId, String deviceId) {
+    public static PendingIntent startDetailActivityPendingIntent(Context context, int widgetId, String adapterId, String deviceId) {
+        Intent intent = startDetailActivityIntent(context, adapterId, deviceId);
+        int requestNum = widgetId + adapterId.hashCode() + deviceId.hashCode();
+        return PendingIntent.getActivity(context, requestNum, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+    }
+
+    public static Intent startDetailActivityIntent(Context context, String adapterId, String deviceId){
         Intent intent = new Intent(context, SensorDetailActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.putExtra(SensorDetailActivity.EXTRA_DEVICE_ID, deviceId);
         intent.putExtra(SensorDetailActivity.EXTRA_ADAPTER_ID, adapterId);
-        return PendingIntent.getActivity(context, requestCode, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        return intent;
+    }
+
+    /**
+     * Starts main activity of the application
+     * @param context
+     * @return
+     */
+    public static PendingIntent startMainActivityPendingIntent(Context context){
+        Intent intent = new Intent(context, MainActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        //*/
+
+        //PackageManager pm = context.getPackageManager();
+        //Intent intent = pm.getLaunchIntentForPackage(context.getPackageName());
+        /*
+        Intent intent = new Intent(Intent.ACTION_MAIN);
+        intent.addCategory(Intent.CATEGORY_LAUNCHER);
+        intent.setComponent(new ComponentName(context, MainActivity.class));
+        //*/
+        return PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
     }
 
     /**

@@ -49,7 +49,8 @@ abstract public class WidgetProvider extends AppWidgetProvider {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        Log.d(TAG, "onReceive()");
+        String action = intent.getAction();
+        Log.d(TAG, String.format("onReceive(%s)", action));
         super.onReceive(context, intent);
 
         // handle TouchWiz resizing

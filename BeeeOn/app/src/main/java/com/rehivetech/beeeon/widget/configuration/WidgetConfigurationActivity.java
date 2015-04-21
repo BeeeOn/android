@@ -36,8 +36,6 @@ import com.rehivetech.beeeon.widget.data.WidgetLocationData;
 import java.util.ArrayList;
 import java.util.List;
 
-//TODO asi pridat loading dialog protoze v actionbaru jsou buttony
-
 /**
  * If adding new widget, needs to be added to the switch in onCreate() and initialize() methods
  */
@@ -144,7 +142,7 @@ public class WidgetConfigurationActivity extends ActionBarActivity {
             finishActivity();
             return;
         }
-
+        mWidgetData.load();
         mWidgetConfiguration = mWidgetData.createConfiguration(this, isAppWidgetEditing);
 
         // if the user press BACK, do not add any widget

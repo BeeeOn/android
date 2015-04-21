@@ -24,10 +24,7 @@ import com.rehivetech.beeeon.widget.service.WidgetService;
 public class WidgetDevicePersistence extends WidgetPersistence{
 	private static final String TAG = WidgetDevicePersistence.class.getSimpleName();
 
-	private static final String PREF_ID = "id";
-	private static final String PREF_NAME = "name";
 	private static final String PREF_ICON = "icon";
-
 	private static final String PREF_TYPE = "type";
 	private static final String PREF_RAW_VALUE = "raw_value";
 	private static final String PREF_CACHED_VALUE = "cached_value";
@@ -37,21 +34,19 @@ public class WidgetDevicePersistence extends WidgetPersistence{
 	private static final String PREF_REFRESH = "refresh";
 	private static final String PREF_ADAPTER_ID = "adapter_id";
 
-	private String id;
-	public String name;
 	public int typeId;
 	public int icon;
 	public long lastUpdateTime;
 	public String lastUpdateText;
 	public int refresh;
-	public String adapterId;
 
 	private String rawValue;
 	private String cachedValue;
 	private String cachedUnit;
-	private boolean deviceValueDisabled = false;
 	private DeviceType deviceType;
 	private BaseValue deviceValue;
+	private boolean deviceValueDisabled = false;
+	private boolean deviceValueChecked;
 
 	public WidgetDevicePersistence(Context context, int widgetId, int offset, int view, UnitsHelper unitsHelper, TimeHelper timeHelper) {
 		super(context, widgetId, offset, view, unitsHelper, timeHelper);
@@ -69,6 +64,7 @@ public class WidgetDevicePersistence extends WidgetPersistence{
 		id = prefs.getString(PREF_ID, "");
 		name = prefs.getString(PREF_NAME, mContext.getString(R.string.placeholder_not_exists));
 		icon = prefs.getInt(PREF_ICON, 0);
+		adapterId = prefs.getString(PREF_ADAPTER_ID, "");
 		typeId = prefs.getInt(PREF_TYPE, DeviceType.TYPE_UNKNOWN.getTypeId());
 
 		rawValue = prefs.getString(PREF_RAW_VALUE, "");
@@ -78,7 +74,6 @@ public class WidgetDevicePersistence extends WidgetPersistence{
 		lastUpdateText = prefs.getString(PREF_LAST_UPDATE_TEXT, "");
 		lastUpdateTime = prefs.getLong(PREF_LAST_UPDATE_TIME, 0);
 		refresh = prefs.getInt(PREF_REFRESH, 0);
-		adapterId = prefs.getString(PREF_ADAPTER_ID, "");
 
 		deviceType = DeviceType.fromTypeId(typeId);
 		deviceValue = BaseValue.createFromDeviceType(deviceType);
@@ -154,15 +149,16 @@ public class WidgetDevicePersistence extends WidgetPersistence{
 
 	@Override
 	public void initValueView(RemoteViews parentRV) {
-		Log.d(TAG, "initValueView()");
-		mParentRemoteViews = parentRV;
+		super.initValueView(parentRV);
+		if(mBoundView == 0) return;
 
 		if(getType().isActor() && (deviceValue instanceof OnOffValue || deviceValue instanceof OpenClosedValue)){
-			mValueRemoteViews = new RemoteViews(mContext.getPackageName(), R.layout.widget_switchcompat);
+			mValueRemoteViews = new RemoteViews(mContext.getPackageName(), R.layout.widget_include_switchcompat);
 			mValueRemoteViews.setOnClickPendingIntent(R.id.widget_switchcompat, WidgetService.getPendingIntentActorChangeRequest(mContext, mWidgetId, getId(), adapterId));
+			deviceValueChecked = ((OnOffValue) deviceValue).isActiveValue(OnOffValue.ON);
 		}
 		else {
-			mValueRemoteViews = new RemoteViews(mContext.getPackageName(), R.layout.widget_value_unit);
+			mValueRemoteViews = new RemoteViews(mContext.getPackageName(), R.layout.widget_include_value_unit);
 		}
 
 		mParentRemoteViews.removeAllViews(mBoundView);
@@ -170,22 +166,26 @@ public class WidgetDevicePersistence extends WidgetPersistence{
 	}
 
 	@Override
-	public void updateValueView(String cachedFormat) {
-		Log.d(TAG, "updateValueView()");
-		boolean isCached = !cachedFormat.isEmpty();
+	public void updateValueView(boolean isCached, String cachedFormat) {
+		super.updateValueView(isCached, cachedFormat);
+		if(mBoundView == 0) return;
 
 		if(deviceValue instanceof OnOffValue || deviceValue instanceof OpenClosedValue){
-			// TODO when cached -> disable?
-			if(deviceValueDisabled) {
-				setSwitchDisabled(true);
+			if(mIsCached){
+				setSwitchDisabled(true, false);
 			}
 			else {
-				boolean isOn = ((OnOffValue) deviceValue).isActiveValue(OnOffValue.ON);
-				setSwitchChecked(isOn);
+				if (deviceValueDisabled) {
+					setSwitchDisabled(true);
+				} else {
+					setSwitchDisabled(false);
+					boolean isOn = ((OnOffValue) deviceValue).isActiveValue(OnOffValue.ON);
+					setSwitchChecked(isOn);
+				}
 			}
 		}
 		else {
-			if(isCached) {
+			if(mIsCached) {
 				getValueViews().setTextViewText(R.id.value, getValue());
 				getValueViews().setTextViewText(R.id.unit, String.format(cachedFormat, getUnit()));
 			}
@@ -194,10 +194,6 @@ public class WidgetDevicePersistence extends WidgetPersistence{
 				getValueViews().setTextViewText(R.id.unit, getUnit());
 			}
 		}
-	}
-
-	public String getId() {
-		return id;
 	}
 
 	public DeviceType getType(){
@@ -249,31 +245,35 @@ public class WidgetDevicePersistence extends WidgetPersistence{
 		if(!(deviceValue instanceof OnOffValue)) return;
 
 		mValueRemoteViews.setImageViewResource(R.id.widget_switchcompat, state ? R.drawable.switch_on : R.drawable.switch_off);
+		deviceValueChecked = state;
 	}
 
 	/**
 	 * Sets widget switchcompat (imageview) to disable or fallback state
 	 * @param disabled
+	 * @param prevent   is set - prevents getting changed before calling setSwitchDisabled(false)
 	 */
-	public void setSwitchDisabled(boolean disabled){
+	public void setSwitchDisabled(boolean disabled, boolean prevent){
 		// if this cannot be switched
 		if(!(deviceValue instanceof OnOffValue)) return;
 
 		Log.d(TAG, "setting switch disabled = " + String.valueOf(disabled));
 
-		boolean isOn = ((OnOffValue) deviceValue).isActiveValue(OnOffValue.ON);
-
 		if(disabled == true){
-			mValueRemoteViews.setImageViewResource(R.id.widget_switchcompat, isOn == true ? R.drawable.switch_on_disabled : R.drawable.switch_off_disabled);
+			mValueRemoteViews.setImageViewResource(R.id.widget_switchcompat, deviceValueChecked == true ? R.drawable.switch_on_disabled : R.drawable.switch_off_disabled);
 			WidgetService.cancelPendingIntentActorChangeRequest(mContext, mWidgetId, getId(), adapterId);
 		}
 		else{
-			setSwitchChecked(isOn);
+			mValueRemoteViews.setImageViewResource(R.id.widget_switchcompat, deviceValueChecked == true ? R.drawable.switch_on : R.drawable.switch_off);
 			mValueRemoteViews.setOnClickPendingIntent(R.id.widget_switchcompat, WidgetService.getPendingIntentActorChangeRequest(mContext, mWidgetId, getId(), adapterId));
 		}
 
 		// prevent from getting updated the value
-		deviceValueDisabled = disabled;
+		if(prevent) deviceValueDisabled = disabled;
+	}
+
+	public void setSwitchDisabled(boolean disabled){
+		setSwitchDisabled(disabled, true);
 	}
 
 	/**
@@ -281,7 +281,7 @@ public class WidgetDevicePersistence extends WidgetPersistence{
 	 * @param sizeInSp
 	 */
 	public void setValueUnitSize(int sizeInSp){
-		Compatibility.setTextViewTextSize(mContext, getValueViews(), R.id.value, TypedValue.COMPLEX_UNIT_SP, sizeInSp);
-		Compatibility.setTextViewTextSize(mContext, getValueViews(), R.id.unit, TypedValue.COMPLEX_UNIT_SP, sizeInSp);
+		setTextSize(R.id.value, sizeInSp);
+		setTextSize(R.id.unit, sizeInSp);
 	}
 }

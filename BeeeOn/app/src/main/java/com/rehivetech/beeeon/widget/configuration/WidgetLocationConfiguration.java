@@ -16,7 +16,7 @@ import com.rehivetech.beeeon.util.Log;
 import com.rehivetech.beeeon.util.Utils;
 import com.rehivetech.beeeon.widget.data.WidgetData;
 import com.rehivetech.beeeon.widget.data.WidgetLocationData;
-import com.rehivetech.beeeon.widget.persistence.WidgetLocation;
+import com.rehivetech.beeeon.widget.persistence.WidgetLocationPersistence;
 import com.rehivetech.beeeon.widget.service.WidgetService;
 
 import java.util.ArrayList;
@@ -29,7 +29,7 @@ public class WidgetLocationConfiguration extends WidgetConfiguration {
     private Spinner mLocationSpinner;
 
     private ReloadLocationsTask mReloadLocationsTask;
-    private WidgetLocation mWidgetLocation;
+    private WidgetLocationPersistence mWidgetLocation;
 
     public WidgetLocationConfiguration(WidgetData data, WidgetConfigurationActivity activity, boolean widgetEditing) {
         super(data, activity, widgetEditing);
@@ -106,14 +106,14 @@ public class WidgetLocationConfiguration extends WidgetConfiguration {
                     mLocationSpinner.setAdapter(dataAdapter);
 
                     // set selection
-                    int foundIndex = Utils.getObjectIndexFromList(mWidgetLocation.id, mLocations);
+                    int foundIndex = Utils.getObjectIndexFromList(mWidgetLocation.getId(), mLocations);
                     if(foundIndex != -1) mLocationSpinner.setSelection(foundIndex);
 
                     break;
                 }
             }
 
-           doChangeAdapter(adapterId, mWidgetLocation.id);
+           doChangeAdapter(adapterId, mWidgetLocation.getId());
         }
 
     }
@@ -132,13 +132,10 @@ public class WidgetLocationConfiguration extends WidgetConfiguration {
             return false;
         }
 
-        mWidgetLocation.id = location.getId();
-        mWidgetLocation.name = location.getName();
-        mWidgetLocation.type = location.getType();
-        mWidgetLocation.adapterId = adapter.getId();
-
-        RefreshInterval refresh = RefreshInterval.values()[mWidgetUpdateSeekBar.getProgress()];
+        // sets widgetpersistence
+        mWidgetLocation.configure(location, adapter);
         // sets widgetdata
+        RefreshInterval refresh = RefreshInterval.values()[mWidgetUpdateSeekBar.getProgress()];
         mWidgetData.configure(isWidgetEditing, Math.max(refresh.getInterval(), WidgetService.UPDATE_INTERVAL_MIN), adapter.getId());
 
         return true;
@@ -159,7 +156,7 @@ public class WidgetLocationConfiguration extends WidgetConfiguration {
                 mLocationSpinner.setEnabled(true);
                 mLocationSpinner.setAdapter(dataAdapter);
 
-                String locId = (activeLocationId.isEmpty() && mWidgetLocation.adapterId.equals(adapterId)) ? mWidgetLocation.id : activeLocationId;
+                String locId = (activeLocationId.isEmpty() && mWidgetLocation.getAdapterId().equals(adapterId)) ? mWidgetLocation.getId() : activeLocationId;
 
                 if (!locId.isEmpty()) {
                     int index = Utils.getObjectIndexFromList(locId, mLocations);

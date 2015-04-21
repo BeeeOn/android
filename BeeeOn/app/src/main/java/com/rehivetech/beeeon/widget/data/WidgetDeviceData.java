@@ -33,8 +33,11 @@ public class WidgetDeviceData extends WidgetData {
     public WidgetDeviceData(int widgetId, Context context, UnitsHelper unitsHelper, TimeHelper timeHelper){
         super(widgetId, context, unitsHelper, timeHelper);
         widgetDevice = new WidgetDevicePersistence(mContext, mWidgetId, 0, R.id.value_container, unitsHelper, timeHelper);
+
+        widgetDevices = new ArrayList<>();
+        widgetDevices.add(widgetDevice);
+
         mFacilities = new ArrayList<>();
-        load();
     }
 
     @Override
@@ -55,7 +58,7 @@ public class WidgetDeviceData extends WidgetData {
     }
 
     @Override
-    protected void load() {
+    public void load() {
         super.load();
         widgetDevice.load();
     }
@@ -119,14 +122,15 @@ public class WidgetDeviceData extends WidgetData {
     @Override
     protected void updateLayout() {
         mRemoteViews.setImageViewResource(R.id.icon, widgetDevice.icon == 0 ? R.drawable.dev_unknown : widgetDevice.icon);
-        mRemoteViews.setTextViewText(R.id.name, widgetDevice.name);
+        mRemoteViews.setTextViewText(R.id.name, widgetDevice.getName());
         mRemoteViews.setTextViewText(R.id.last_update, widgetDevice.lastUpdateText);
 
-        widgetDevice.updateValueView();
+        widgetDevice.updateValueView(false);
 
         switch(widgetLayout){
-            case R.layout.widget_sensor_3x1:
-            case R.layout.widget_sensor_2x1:
+            case R.layout.widget_device_3x2:
+            case R.layout.widget_device_3x1:
+            case R.layout.widget_device_2x1:
                 widgetDevice.setValueUnitSize(16);
                 break;
 
@@ -139,6 +143,9 @@ public class WidgetDeviceData extends WidgetData {
     @Override
     public void handleUserLogout() {
         super.handleUserLogout();
+        widgetDevice.updateValueView(true);
+        mRemoteViews.setImageViewResource(R.id.icon, widgetDevice.icon == 0 ? R.drawable.dev_unknown : widgetDevice.icon);
+        mRemoteViews.setTextViewText(R.id.name, widgetDevice.getName());
         mRemoteViews.setTextViewText(R.id.last_update, String.format("%s (cached)", widgetDevice.lastUpdateText));
         updateAppWidget();
     }

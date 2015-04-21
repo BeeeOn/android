@@ -17,6 +17,7 @@ import com.rehivetech.beeeon.household.device.DeviceLog;
 import com.rehivetech.beeeon.household.device.Facility;
 import com.rehivetech.beeeon.household.device.RefreshInterval;
 import com.rehivetech.beeeon.household.device.values.BaseEnumValue;
+import com.rehivetech.beeeon.household.location.Location;
 import com.rehivetech.beeeon.pair.LogDataPair;
 import com.rehivetech.beeeon.util.GraphViewHelper;
 import com.rehivetech.beeeon.util.Log;
@@ -26,6 +27,7 @@ import com.rehivetech.beeeon.util.Utils;
 import com.rehivetech.beeeon.widget.configuration.WidgetConfiguration;
 import com.rehivetech.beeeon.widget.configuration.WidgetConfigurationActivity;
 import com.rehivetech.beeeon.widget.configuration.WidgetGraphConfiguration;
+import com.rehivetech.beeeon.widget.persistence.WidgetLocationPersistence;
 
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
@@ -33,10 +35,7 @@ import org.joda.time.Interval;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
-import java.util.Calendar;
-import java.util.Date;
 import java.util.Map;
-import java.util.Random;
 import java.util.SortedMap;
 import java.util.concurrent.TimeUnit;
 
@@ -45,34 +44,33 @@ public class WidgetGraphData extends WidgetDeviceData {
     private static final String TAG = WidgetGraphData.class.getSimpleName();
 
     private String mGraphDateTimeFormat = "dd.MM. kk:mm";
+    private static final String LOG_DATE_TIME_FORMAT = "yyyy-MM-dd HH:mm:ss";
+    private GetDeviceLogTask mGetDeviceLogTask;
+
     private GraphView mGraph;
     private BaseSeries mGraphSeries;
     private Bitmap mGraphBitmap;
 
-    private int mGraphWidth = (int) Utils.dpToPx(mContext, 450);
-    private int mGraphHeight = (int) Utils.dpToPx(mContext, 250);
+    //private int mGraphWidth = (int) Utils.dpToPx(mContext, 450);
+    //private int mGraphHeight = (int) Utils.dpToPx(mContext, 250);
+
+    private int mGraphWidth;
+    private int mGraphHeight;
+
+    public WidgetLocationPersistence widgetLocation;
 
     public WidgetGraphData(int widgetId, Context context, UnitsHelper unitsHelper, TimeHelper timeHelper){
         super(widgetId, context, unitsHelper, timeHelper);
+        mGraphWidth = (int) mContext.getResources().getDimension(R.dimen.widget_graph_width);
+        mGraphHeight = (int) mContext.getResources().getDimension(R.dimen.widget_graph_height);
 
         mGraph = new GraphView(mContext);
+        widgetLocation = new WidgetLocationPersistence(mContext, mWidgetId, 0, R.id.location_container, mUnitsHelper, mTimeHelper);
     }
 
     @Override
     public String getClassName() {
         return WidgetGraphData.class.getName();
-    }
-
-    public DataPoint[] generateRandomDayData() {
-        DataPoint[] data = new DataPoint[10];
-        Calendar calendar = Calendar.getInstance();
-        Random r = new Random();
-        for(int i = 0; i < data.length; i++) {
-            Date date = calendar.getTime();
-            data[i] = new DataPoint(date,r.nextInt(20) - 10);
-            calendar.add(Calendar.SECOND, 5);
-        }
-        return data;
     }
 
     @Override
@@ -91,32 +89,58 @@ public class WidgetGraphData extends WidgetDeviceData {
         mFacilities.clear();
         mFacilities.add(facility);
 
-        if(mTimeHelper != null && mUnitsHelper != null){
-            Log.d(TAG, "prepareWidgetGraphView");
+        initGraph(dev);
+    }
 
-            Adapter adapter = mController.getAdaptersModel().getAdapter(adapterId);
-            final DateTimeFormatter fmt = mTimeHelper.getFormatter(mGraphDateTimeFormat, adapter);
-            GraphViewHelper.prepareWidgetGraphView(mGraph, mContext, mFacilities.get(0).getDevices().get(0), fmt, mUnitsHelper);
-            mGraph.getGridLabelRenderer().setLabelFormatter(new DateAsXAxisLabelFormatter(mContext, "HH:mm", "dd.MM"));
+    @Override
+    public void load(){
+        super.load();
+        widgetLocation.load();
+    }
 
-            // clears series if reinitializes
-            if(mGraph.getSeries() != null && mGraph.getSeries().size() > 0){
-                mGraph.removeAllSeries();
-            }
+    @Override
+    protected void save() {
+        super.save();
+        widgetLocation.save();
+    }
 
-            if (dev.getValue() instanceof BaseEnumValue) {
-                mGraphSeries = new BarGraphSeries<>(new DataPoint[]{new DataPoint(0, 0), new DataPoint(1,1)});
-                ((BarGraphSeries) mGraphSeries).setSpacing(30);
-            } else {
-                mGraphSeries =  new LineGraphSeries<>(new DataPoint[]{new DataPoint(0, 0), new DataPoint(1,1)});
-                ((LineGraphSeries)mGraphSeries).setBackgroundColor(mContext.getResources().getColor(R.color.alpha_blue));
-                ((LineGraphSeries)mGraphSeries).setDrawBackground(true);
-                ((LineGraphSeries) mGraphSeries).setThickness(2);
-            }
+    @Override
+    public void delete(Context context) {
+        super.delete(context);
+        widgetLocation.delete();
+    }
 
-            mGraphSeries.setTitle("History");
-            mGraph.addSeries(mGraphSeries);
+    private void initGraph(Device device) {
+        if(mTimeHelper == null || mUnitsHelper == null) return;
+
+        Log.d(TAG, "prepareWidgetGraphView");
+
+        Adapter adapter = mController.getAdaptersModel().getAdapter(adapterId);
+        final DateTimeFormatter fmt = mTimeHelper.getFormatter(mGraphDateTimeFormat, adapter);
+        GraphViewHelper.prepareWidgetGraphView(mGraph, mContext, mFacilities.get(0).getDevices().get(0), fmt, mUnitsHelper);
+
+        // clears series if reinitializes
+        if(mGraph.getSeries() != null && mGraph.getSeries().size() > 0){
+            mGraph.removeAllSeries();
         }
+
+        if (device.getValue() instanceof BaseEnumValue) {
+            mGraphSeries = new BarGraphSeries<>(new DataPoint[]{new DataPoint(0, 0), new DataPoint(1,1)});
+            ((BarGraphSeries) mGraphSeries).setSpacing(30);
+        } else {
+            mGraphSeries =  new LineGraphSeries<>(new DataPoint[]{new DataPoint(0, 0), new DataPoint(1,1)});
+            ((LineGraphSeries) mGraphSeries).setBackgroundColor(mContext.getResources().getColor(R.color.alpha_blue));
+            ((LineGraphSeries) mGraphSeries).setDrawBackground(true);
+            ((LineGraphSeries) mGraphSeries).setThickness(2);
+        }
+
+        mGraph.addSeries(mGraphSeries);
+    }
+
+    @Override
+    public void initLayout() {
+        super.initLayout();
+        widgetLocation.initValueView(mRemoteViews);
     }
 
     @Override
@@ -130,12 +154,16 @@ public class WidgetGraphData extends WidgetDeviceData {
         Adapter adapter = mController.getAdaptersModel().getAdapter(adapterId);
         widgetDevice.change(device, adapter);
 
+
+        Location location = mController.getLocationsModel().getLocation(adapterId, device.getFacility().getLocationId());
+        if(location != null){
+            widgetLocation.change(location, adapter);
+        }
+
         widgetLastUpdate = getTimeNow();
         adapterId = adapter.getId();
 
-        //mGraphSeries.resetData(generateRandomDayData());
         doLoadGraphData(device);
-
 
         this.save();
         Log.v(TAG, String.format("Updating widget (%d) with fresh data", getWidgetId()));
@@ -146,13 +174,10 @@ public class WidgetGraphData extends WidgetDeviceData {
     protected void updateLayout() {
         super.updateLayout();
 
+        widgetLocation.updateValueView(false);
         Log.d(TAG, String.format("Graph: %d %d, is NUll = %b", mGraphWidth, mGraphHeight, mGraphBitmap == null));
-
         if(mGraphBitmap != null) mRemoteViews.setImageViewBitmap(R.id.widget_graph, mGraphBitmap);
     }
-
-    private static final String LOG_DATE_TIME_FORMAT = "yyyy-MM-dd HH:mm:ss";
-    private GetDeviceLogTask mGetDeviceLogTask;
 
     private void doLoadGraphData(Device device) {
         DateTime end = DateTime.now(DateTimeZone.UTC);

@@ -35,11 +35,11 @@ public class WidgetDeviceProvider extends WidgetProvider{
             name = "widget_sensor_1x1.xml";
         }
         else if(min_width >= WIDGET_MIN_CELLS_2 && min_width < WIDGET_MIN_CELLS_3){
-            layout = R.layout.widget_sensor_2x1;
+            layout = R.layout.widget_device_2x1;
             name = "widget_sensor_2x1.xml";
         }
         else{
-            layout = R.layout.widget_sensor_3x1;
+            layout = R.layout.widget_device_3x1;
             name = "widget_sensor_3x1.xml";
         }
 

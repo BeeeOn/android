@@ -9,7 +9,7 @@
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		android:minWidth="240dp"
-		android:minHeight="170dp"
+		android:minHeight="140dp"
 		android:background="@drawable/widget_bg"
 		android:id="@+id/layout"
 		android:layout_gravity="center"
@@ -74,57 +74,48 @@
 
 		<!-- shadow -->
 		<ImageView
+			android:id="@+id/toolbar_shadow"
 			android:layout_width="match_parent"
 			android:layout_height="6dp"
 			android:layout_below="@id/widget_header"
 			android:src="@drawable/toolbar_dropshadow" />
 
-		<TextView
-			android:id="@+id/widget_location"
-			android:layout_below="@+id/widget_header"
+
+		<RelativeLayout
+			android:id="@+id/location_container"
+			android:layout_below="@id/toolbar_shadow"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
-			android:text="@string/placeholder_none"
-			android:paddingLeft="8dp"
-			android:paddingTop="8dp"
-			android:layout_toLeftOf="@+id/last_update"
-			/>
+			android:layout_marginLeft="8dp"
+			android:layout_marginStart="8dp"
+			android:layout_toLeftOf="@+id/value_container"
+			android:layout_toStartOf="@+id/value_container"
+			>
+			<include layout="@layout/widget_include_location" />
+		</RelativeLayout>
 
 		<!-- value inflated programmatically -->
 		<RelativeLayout
 			android:id="@+id/value_container"
-			android:layout_below="@id/widget_location"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:layout_margin="8dp"
-			>
-			<include layout="@layout/widget_value_unit" />
-		</RelativeLayout>
-
-		<TextView
-			android:id="@+id/last_update"
+			android:layout_below="@id/toolbar_shadow"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:layout_alignParentRight="true"
-			android:layout_below="@+id/widget_header"
-			android:lines="1"
-			android:text="@string/placeholder_none"
-			android:textColor="@color/darkgray"
-			android:textSize="12sp"
-			android:padding="8dp"
-			/>
+			android:layout_alignParentEnd="true"
+			android:paddingRight="8dp"
+			>
+			<include layout="@layout/widget_include_value_unit" />
+			</RelativeLayout>
 
 		<ImageView
 			android:id="@+id/widget_graph"
-			android:layout_width="match_parent"
+			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:layout_below="@id/value_container"
 			android:layout_alignParentBottom="true"
-			android:paddingLeft="8dp"
-			android:paddingRight="8dp"
-			android:paddingBottom="8dp"
+			android:layout_alignParentRight="true"
+			android:layout_alignParentEnd="true"
 			android:scaleType="fitCenter"
-			android:src="@drawable/dev_unknown"
 			/>
 
 	</RelativeLayout>

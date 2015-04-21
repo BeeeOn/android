@@ -189,7 +189,7 @@ public class WidgetDeviceConfiguration extends WidgetConfiguration{
                 mSensorSpinner.setEnabled(true);
                 mSensorSpinner.setAdapter(dataAdapter);
 
-                String devId = (activeId.isEmpty() && mWidgetDevice.adapterId.equals(adapterId)) ? mWidgetDevice.getId() : activeId;
+                String devId = (activeId.isEmpty() && mWidgetDevice.getAdapterId().equals(adapterId)) ? mWidgetDevice.getId() : activeId;
 
                 if (!devId.isEmpty()) {
                     int index = Utils.getObjectIndexFromList(devId, mDevices);

@@ -10,6 +10,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
 import android.os.IBinder;
 import android.os.SystemClock;
 import android.util.SparseArray;
@@ -24,13 +25,13 @@ import com.rehivetech.beeeon.household.device.Device;
 import com.rehivetech.beeeon.household.device.Facility;
 import com.rehivetech.beeeon.household.device.values.BaseEnumValue;
 import com.rehivetech.beeeon.household.device.values.BaseValue;
+import com.rehivetech.beeeon.household.device.values.OnOffValue;
 import com.rehivetech.beeeon.household.location.Location;
 import com.rehivetech.beeeon.util.Log;
 import com.rehivetech.beeeon.util.TimeHelper;
 import com.rehivetech.beeeon.util.UnitsHelper;
 import com.rehivetech.beeeon.util.Utils;
 import com.rehivetech.beeeon.widget.data.WidgetData;
-import com.rehivetech.beeeon.widget.data.WidgetDeviceData;
 import com.rehivetech.beeeon.widget.persistence.WidgetDevicePersistence;
 import com.rehivetech.beeeon.widget.receivers.WidgetBridgeBroadcastReceiver;
 import com.rehivetech.beeeon.widget.receivers.WidgetClockProvider;
@@ -141,6 +142,8 @@ public class WidgetService extends Service {
         filter.addAction(Intent.ACTION_TIMEZONE_CHANGED);
         filter.addAction(Intent.ACTION_TIME_CHANGED);
         filter.addAction(Intent.ACTION_LOCALE_CHANGED);
+        filter.addAction(ConnectivityManager.CONNECTIVITY_ACTION);
+        // --- beeeOn broadcasts
         filter.addAction(ActorActionTask.ACTION_ACTOR_CHANGED);
 
         mBroadcastBridge = new WidgetBridgeBroadcastReceiver();
@@ -186,8 +189,8 @@ public class WidgetService extends Service {
         int[] appWidgetIds = new int[]{};
 
         if(intent != null) {
-            // if standby, stop alarm (leaves service running though)
-            // better if first, so that less code is running
+            // -------------- if standby, stop alarm (leaves service running though)
+            // NOTE: better if first, so that less code is running
             isStandBy = intent.getBooleanExtra(EXTRA_STANDBY, false);
             if (isStandBy) {
                 Log.d(TAG, "is standby...");
@@ -195,7 +198,7 @@ public class WidgetService extends Service {
                 return START_STICKY;
             }
 
-            // get widget Ids
+            // -------------- get widget Ids
             appWidgetIds  = intent.getIntArrayExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS);
 
             // -------------- async task for changing widget actor
@@ -226,16 +229,16 @@ public class WidgetService extends Service {
                 return START_STICKY;
             }
 
-            // widget deletion
+            // -------------- widget deletion
             boolean isDeleteWidget = intent.getBooleanExtra(EXTRA_DELETE_WIDGET, false);
             if(isDeleteWidget){
                 widgetsDelete(appWidgetIds);
             }
 
-            // force update
+            // -------------- force update
             isForceUpdate = intent.getBooleanExtra(EXTRA_FORCE_UPDATE, false);
 
-            // onAppWidgetOptionsChanged (changing widgetLayout)
+            // -------------- onAppWidgetOptionsChanged (changing widgetLayout)
             isChangeLayout = intent.getBooleanExtra(EXTRA_CHANGE_LAYOUT, false);
             if(isChangeLayout){
                 // TODO doresit jestli by nebylo lepsi primo v updateWidgets()
@@ -244,12 +247,13 @@ public class WidgetService extends Service {
                 isForceUpdate = true;
             }
 
-            // start updating
+            // -------------- start updating
             isStartUpdating = intent.getBooleanExtra(EXTRA_START_UPDATING, false);
             if(isStartUpdating){
                 isForceUpdate = true;
             }
 
+            // -------------- reload widget if necessary
             isWidgetReload = intent.getBooleanExtra(EXTRA_WIDGETS_SHOULD_RELOAD, false);
         }
 
@@ -272,12 +276,12 @@ public class WidgetService extends Service {
 
         final boolean widgetsShouldReload = isWidgetReload;
         final boolean foceUpdating = isForceUpdate;
-        final int[] updatingWidgets = appWidgetIds;
+        final int[] updatingWidgetIds = appWidgetIds;
 
         new Thread(new Runnable() {
             @Override
             public void run() {
-                updateWidgets(widgetsShouldReload, foceUpdating, updatingWidgets);
+                updateWidgets(widgetsShouldReload, foceUpdating, updatingWidgetIds);
             }
         }).start();
 
@@ -313,11 +317,11 @@ public class WidgetService extends Service {
                 continue;
             }
 
-            // creates new RemoteViews and sets every pendingIntents etc
-            widgetData.initLayout();
-
             // reload data (after configuration and if objects already exists)
             if(widgetsShouldReload) widgetData.reload();
+
+            // creates new RemoteViews and sets every pendingIntents etc
+            widgetData.initLayout();
 
             // Ignore uninitialized widgets
             if (!widgetData.widgetInitialized) {
@@ -420,39 +424,52 @@ public class WidgetService extends Service {
         Log.d(TAG, String.format("changeWidgetActorRequest(%s, %s)", adapterId, actorId));
         if(actorId == null || adapterId == null || actorId.isEmpty() || adapterId.isEmpty()) return;
 
-        // ----- first we need to check what widgets have this actor
-        for (int i = 0; i < mAvailableWidgets.size(); i++) {
-            WidgetData data = mAvailableWidgets.valueAt(i);
-            // for now there are only possible widget devices
-            if(!(data instanceof WidgetDeviceData)) continue;
-
-            WidgetDeviceData widgetData = (WidgetDeviceData) data;
-            WidgetDevicePersistence wDev = widgetData.widgetDevice;
-            if(!adapterId.equals(wDev.adapterId) || !actorId.equals(wDev.getId())) continue;
-
-            // first disables so that nobody can change it anymore
-            widgetData.widgetDevice.setSwitchDisabled(true);
-            widgetData.updateAppWidget();
+        // ----- first get the device and change value
+        final Device device = mController.getFacilitiesModel().getDevice(adapterId, actorId);
+        if(device == null){
+            Log.e(TAG, "not fount device --> probably need to refresh controller");
+            return;
         }
 
-        // ----- then get the device, change value and run asyncTask
-        final Device device = mController.getFacilitiesModel().getDevice(adapterId, actorId);
-
-        // SET NEW VALUE
+        // ----- then temporary set new value
+        boolean isValueOn;
         BaseValue value = device.getValue();
         if (value instanceof BaseEnumValue) {
             ((BaseEnumValue)value).setNextValue();
+            isValueOn = ((OnOffValue) value).isActiveValue(OnOffValue.ON);
         } else {
             Log.e(TAG, "We can't switch actor, which value isn't inherited from BaseEnumValue, yet");
             return;
         }
 
+        // ----- then we need to check what widgets have this actor
+        for (int i = 0; i < mAvailableWidgets.size(); i++) {
+            WidgetData data = mAvailableWidgets.valueAt(i);
+            // skips not compatible widgets
+            if(data.widgetDevices == null || data.widgetDevices.isEmpty()) continue;
+
+            int updatedActors = 0;
+            // go through all devices in that widget
+            for(WidgetDevicePersistence wDev : data.widgetDevices){
+                if(!adapterId.equals(wDev.getAdapterId()) || !actorId.equals(wDev.getId())) continue;
+
+                // first disables so that nobody can change it anymore
+                wDev.setSwitchChecked(isValueOn);
+                wDev.setSwitchDisabled(true);
+                updatedActors++;
+            }
+
+            // if any actor found, update whole widget
+            if(updatedActors > 0) data.updateAppWidget();
+        }
+
+        // ----- and finally run asyncTask
         ActorActionTask mActorActionTask = new ActorActionTask(mContext);
         mActorActionTask.setListener(new CallbackTask.CallbackTaskListener() {
             @Override
             public void onExecute(boolean success) {
                 Log.v(TAG, "Actor's async task end with " + String.valueOf(success));
-                // we don't have any response here, cause that manages received broadcast
+                // NOTE: we don't have any response here, cause that manages received broadcast
             }
         });
 
@@ -470,16 +487,21 @@ public class WidgetService extends Service {
 
         for (int i = 0; i < mAvailableWidgets.size(); i++) {
             WidgetData data = mAvailableWidgets.valueAt(i);
-            // for now there are only possible widget devices
-            if(!(data instanceof WidgetDeviceData)) continue;
+            // skips not compatible widgets
+            if(data.widgetDevices == null || data.widgetDevices.isEmpty()) continue;
 
-            WidgetDeviceData widgetData = (WidgetDeviceData) data;
-            WidgetDevicePersistence wDev = widgetData.widgetDevice;
-            if(!adapterId.equals(wDev.adapterId) || !actorId.equals(wDev.getId())) continue;
+            int updatedActors = 0;
+            // go through all devices in that widget
+            for(WidgetDevicePersistence wDev : data.widgetDevices){
+                if(!adapterId.equals(wDev.getAdapterId()) || !actorId.equals(wDev.getId())) continue;
 
-            // first disables so that nobody can change it anymore
-            wDev.setSwitchDisabled(false);
-            widgetData.update();
+                // put back disable
+                wDev.setSwitchDisabled(false);
+                updatedActors++;
+            }
+
+            // if any actor found, update whole widget
+            if(updatedActors > 0) data.update();
         }
     }
 
@@ -553,11 +575,10 @@ public class WidgetService extends Service {
         if (widgetData == null) {
             String widgetClassName = WidgetData.getSettingClassName(mContext, widgetId);
             if (widgetClassName == null || widgetClassName.isEmpty()) return null;
-
-            // TODO osetrit
             try {
                 // instantiate class from string
                 widgetData = (WidgetData) Class.forName(widgetClassName).getConstructor(int.class, Context.class, UnitsHelper.class, TimeHelper.class).newInstance(widgetId, mContext, mUnitsHelper, mTimeHelper);
+                widgetData.load();
                 widgetData.init();
                 widgetAdd(widgetData);
                 Log.v(TAG, String.format("finished creation of WidgetData(%d)", widgetId));

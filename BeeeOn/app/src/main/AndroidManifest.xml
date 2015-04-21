@@ -87,7 +87,8 @@
         </activity>
         <activity
             android:name=".activity.MainActivity"
-            android:label="@string/title_activity_location_screen" >
+            android:label="@string/title_activity_location_screen"
+            android:launchMode="singleTop">
         </activity>
         <activity
             android:name=".activity.LocationDetailActivity"
@@ -216,9 +217,6 @@
         <receiver android:name=".widget.receivers.WidgetClockProvider" >
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
-                <action android:name="com.rehivetech.beeeon.ACTION_TIME_UPDATED" />
-                <action android:name="com.rehivetech.beeeon.ACTION_SCREEN_ON" />
-                <action android:name="com.rehivetech.beeeon.ACTION_LOCALE_CHANGED" />
             </intent-filter>
 
             <meta-data

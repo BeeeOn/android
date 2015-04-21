@@ -18,7 +18,7 @@ import com.rehivetech.beeeon.util.UnitsHelper;
 import com.rehivetech.beeeon.widget.configuration.WidgetConfiguration;
 import com.rehivetech.beeeon.widget.configuration.WidgetConfigurationActivity;
 import com.rehivetech.beeeon.widget.configuration.WidgetLocationConfiguration;
-import com.rehivetech.beeeon.widget.persistence.WidgetLocation;
+import com.rehivetech.beeeon.widget.persistence.WidgetLocationPersistence;
 import com.rehivetech.beeeon.widget.receivers.WidgetLocationListProvider;
 import com.rehivetech.beeeon.widget.service.WidgetListService;
 
@@ -42,24 +42,23 @@ public class WidgetLocationData extends WidgetData {
 
     protected Intent mRemoteViewsFactoryIntent;
 
-    public WidgetLocation widgetLocation;
+    public WidgetLocationPersistence widgetLocation;
     private List<Location> mLocations;
 
     public WidgetLocationData(int widgetId, Context context, UnitsHelper unitsHelper, TimeHelper timeHelper){
         super(widgetId, context, unitsHelper, timeHelper);
-        widgetLocation = new WidgetLocation(mContext, mWidgetId, 0, 0); // TODO add view;
+        widgetLocation = new WidgetLocationPersistence(mContext, mWidgetId, 0, 0, mUnitsHelper, mTimeHelper);
         mLocations = new ArrayList<>();
-        load();
     }
 
     @Override
     public void init() {
         mLocations.clear();
-        mLocations.add(new Location(widgetLocation.id, widgetLocation.name, adapterId, widgetLocation.type));
+        mLocations.add(new Location(widgetLocation.getId(), widgetLocation.getName(), adapterId, widgetLocation.type));
     }
 
     @Override
-    protected void load() {
+    public void load() {
         super.load();
         widgetLocation.load();
     }
@@ -86,24 +85,19 @@ public class WidgetLocationData extends WidgetData {
         super.initLayout();
 
         // sets onclick "listeners"
-        mRemoteViews.setOnClickPendingIntent(R.id.refresh, mRefreshPendingIntent);
         mRemoteViews.setOnClickPendingIntent(R.id.options, mConfigurationPendingIntent);
+        mRemoteViews.setOnClickPendingIntent(R.id.refresh, mRefreshPendingIntent);
 
+        // TODO scroll to location?
+        mRemoteViews.setOnClickPendingIntent(R.id.icon, startMainActivityPendingIntent(mContext));
+        mRemoteViews.setOnClickPendingIntent(R.id.name, startMainActivityPendingIntent(mContext));
+
+        // onclick listener when clicked on item
         mRemoteViewsFactoryIntent = new Intent(mContext, WidgetListService.class);
         mRemoteViewsFactoryIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, mWidgetId);
         mRemoteViewsFactoryIntent.setData(Uri.parse(mRemoteViewsFactoryIntent.toUri(Intent.URI_INTENT_SCHEME)));
-        mRemoteViewsFactoryIntent.putExtra(EXTRA_LOCATION_ID, widgetLocation.id);
+        mRemoteViewsFactoryIntent.putExtra(EXTRA_LOCATION_ID, widgetLocation.getId());
         mRemoteViewsFactoryIntent.putExtra(EXTRA_LOCATION_ADAPTER_ID, adapterId);
-
-        // TODO pridat click listener pro otevreni lokace
-
-        // OnCLickListener
-        Intent clickIntent = new Intent(mContext, WidgetLocationListProvider.class);
-        clickIntent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
-        clickIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, new int[]{mWidgetId});
-
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(mContext, 0, clickIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-        mRemoteViews.setOnClickPendingIntent(R.id.name, pendingIntent);
 
         Compatibility.setRemoteAdapter(mRemoteViews, mWidgetId, mRemoteViewsFactoryIntent, R.id.widget_sensor_list_view);
         mRemoteViews.setEmptyView(R.id.widget_sensor_list_view, R.id.empty_view);
@@ -111,41 +105,38 @@ public class WidgetLocationData extends WidgetData {
 
     @Override
     protected boolean updateData() {
-        Location location = mController.getLocationsModel().getLocation(adapterId, widgetLocation.id);
-        if(location != null){
-            Adapter adapter = mController.getAdaptersModel().getAdapter(adapterId);
-            widgetLocation.change(location, adapter, mUnitsHelper, mTimeHelper);
-
-            widgetLastUpdate = getTimeNow();
-            adapterId = adapter.getId();
-
-            mWidgetManager.notifyAppWidgetViewDataChanged(mWidgetId, R.id.layout);
-
-            this.save();
-            Log.v(TAG, String.format("Updating widget (%d) with fresh data", getWidgetId()));
-            return true;
+        Location location = mController.getLocationsModel().getLocation(adapterId, widgetLocation.getId());
+        if(location == null) {
+            Log.v(TAG, String.format("Updating widget (%d) with cached data", getWidgetId()));
+            return false;
         }
 
-        Log.v(TAG, String.format("Updating widget (%d) with cached data", getWidgetId()));
-        return false;
+        Adapter adapter = mController.getAdaptersModel().getAdapter(adapterId);
+        widgetLocation.change(location, adapter);
+
+        widgetLastUpdate = getTimeNow();
+        adapterId = adapter.getId();
+
+        mWidgetManager.notifyAppWidgetViewDataChanged(mWidgetId, R.id.layout);
+
+        this.save();
+        Log.v(TAG, String.format("Updating widget (%d) with fresh data", getWidgetId()));
+        return true;
     }
 
     @Override
     protected void updateLayout() {
-        mRemoteViews.setTextViewText(R.id.name, widgetLocation.name);
+        mRemoteViews.setTextViewText(R.id.name, widgetLocation.getName());
         mRemoteViews.setImageViewResource(R.id.icon, Location.LocationIcon.fromValue(widgetLocation.type).getIconResource());
 
-        // Here we setup the a pending intent template. Individuals items of a collection
-        // cannot setup their own pending intents, instead, the collection as a whole can
-        // setup a pending intent template, and the individual items can set a fillInIntent
-        // to create unique before on an item to item basis.
-        Intent toastIntent = new Intent(mContext, WidgetLocationListProvider.class);
-        toastIntent.setAction(WidgetLocationData.OPEN_DETAIL_ACTION);
-        toastIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, mWidgetId);
+        // intent open detail by item
+        Intent openDetailIntent = new Intent(mContext, WidgetLocationListProvider.class);
+        openDetailIntent.setAction(WidgetLocationData.OPEN_DETAIL_ACTION);
+        openDetailIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, mWidgetId);
 
         mRemoteViewsFactoryIntent.setData(Uri.parse(mRemoteViewsFactoryIntent.toUri(Intent.URI_INTENT_SCHEME)));
-        PendingIntent toastPendingIntent = PendingIntent.getBroadcast(mContext, 0, toastIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-        mRemoteViews.setPendingIntentTemplate(R.id.widget_sensor_list_view, toastPendingIntent);
+        PendingIntent openDetailPendingIntent = PendingIntent.getBroadcast(mContext, 0, openDetailIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        mRemoteViews.setPendingIntentTemplate(R.id.widget_sensor_list_view, openDetailPendingIntent);
     }
 
     @Override

@@ -2,9 +2,12 @@ package com.rehivetech.beeeon.widget.persistence;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.util.TypedValue;
 import android.widget.RemoteViews;
 
 import com.rehivetech.beeeon.household.adapter.Adapter;
+import com.rehivetech.beeeon.util.Compatibility;
+import com.rehivetech.beeeon.util.Log;
 import com.rehivetech.beeeon.util.TimeHelper;
 import com.rehivetech.beeeon.util.UnitsHelper;
 
@@ -14,6 +17,15 @@ import java.util.List;
  * @author mlyko
  */
 public abstract class WidgetPersistence {
+	private static final String TAG = WidgetPersistence.class.getSimpleName();
+
+	protected static final String PREF_ID = "id";
+	protected static final String PREF_NAME = "name";
+	protected static final String PREF_ADAPTER_ID = "adapter_id";
+
+	protected String id;
+	protected String name;
+	protected String adapterId;
 
 	// helpers
 	protected UnitsHelper mUnitsHelper;
@@ -23,6 +35,7 @@ public abstract class WidgetPersistence {
 	protected int mWidgetId;
 	protected final int mOffset;
 	protected int mBoundView;
+	protected boolean mIsCached = false;
 
 	protected Context mContext;
 	protected RemoteViews mParentRemoteViews;
@@ -35,6 +48,10 @@ public abstract class WidgetPersistence {
 		mBoundView = view;
 		mUnitsHelper = unitsHelper;
 		mTimeHelper = timeHelper;
+	}
+
+	public void setCached(boolean isCached){
+		mIsCached = isCached;
 	}
 
 	public int getOffset() {
@@ -52,25 +69,40 @@ public abstract class WidgetPersistence {
 	public abstract void save();
 	public abstract void change(Object obj, Adapter adapter);
 
-	public abstract void initValueView(RemoteViews parentRV);
+	public void initValueView(RemoteViews parentRV){
+		Log.d(TAG, "initValueView()");
+		mParentRemoteViews = parentRV;
+	}
 
 	/**
 	 * Updates value layout when logged in
 	 */
-	public void updateValueView(){
-		updateValueView("");
+	public void updateValueView(boolean isCached){
+		updateValueView(isCached, "");
 	}
 
 	/**
 	 * Updates value layout with gotten data (either cached or from UnitsHelper)
 	 * @param cachedFormat	Format for specifying what looks like when cached data -> available only %s
 	 */
-	public abstract void updateValueView(String cachedFormat);
+	public void updateValueView(boolean isCached, String cachedFormat){
+		Log.d(TAG, "updateValueView()");
+		this.setCached(isCached);
+	}
 
 	public RemoteViews getValueViews(){
 		return mValueRemoteViews;
 	}
 
+	public String getId() {
+		return id;
+	}
+	public String getName() {
+		return name;
+	}
+	public String getAdapterId(){
+		return adapterId;
+	}
 
 	public void delete(){
 		getSettings().edit().clear().commit();
@@ -80,6 +112,9 @@ public abstract class WidgetPersistence {
 		return mContext.getSharedPreferences(String.format(getPrefFileName(), mWidgetId, mOffset), Context.MODE_PRIVATE);
 	}
 
+	public void setTextSize(int view, int sizeInSp){
+		Compatibility.setTextViewTextSize(mContext, getValueViews(), view, TypedValue.COMPLEX_UNIT_SP, sizeInSp);
+	}
 
 	// ------ METHODS FOR WORKING WITH MORE OBJECTS AT ONCE ------ //
 	public static <T extends WidgetPersistence> void loadAll(List<T> widgetPersistences){

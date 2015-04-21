@@ -16,6 +16,8 @@ import com.rehivetech.beeeon.widget.configuration.WidgetClockConfiguration;
 import com.rehivetech.beeeon.widget.configuration.WidgetConfiguration;
 import com.rehivetech.beeeon.widget.configuration.WidgetConfigurationActivity;
 import com.rehivetech.beeeon.widget.persistence.WidgetDevicePersistence;
+import com.rehivetech.beeeon.widget.receivers.WidgetClockProvider;
+import com.rehivetech.beeeon.widget.receivers.WidgetProvider;
 
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
@@ -35,7 +37,6 @@ public class WidgetClockData extends WidgetData {
 
     public static String weekDays[] = reloadWeekDays();
 
-    public List<WidgetDevicePersistence> widgetDevices;
     private List<Facility> mFacilities;
 
     public WidgetClockData(int widgetId, Context context, UnitsHelper unitsHelper, TimeHelper timeHelper){
@@ -47,7 +48,6 @@ public class WidgetClockData extends WidgetData {
         widgetDevices.add(new WidgetDevicePersistence(mContext, mWidgetId, 1, R.id.value_container_inside_humid, unitsHelper, timeHelper));
 
         mFacilities = new ArrayList<>();
-        load();
     }
 
     @Override
@@ -70,7 +70,7 @@ public class WidgetClockData extends WidgetData {
     }
 
     @Override
-    protected void load() {
+    public void load() {
         super.load();
         WidgetDevicePersistence.loadAll(widgetDevices);
     }
@@ -142,20 +142,19 @@ public class WidgetClockData extends WidgetData {
     public void updateLayout() {
         // updates all inside devices
         for(WidgetDevicePersistence dev : widgetDevices){
-            dev.updateValueView();
+            dev.updateValueView(false);
         }
 
         // TODO temporary solution
         onUpdateClock(mContext, mRemoteViews, new int[]{ mWidgetId });
     }
 
-
     @Override
     public void handleUserLogout() {
         super.handleUserLogout();
         // updates all inside devices
         for(WidgetDevicePersistence dev : widgetDevices){
-            dev.updateValueView("%s (cached)");
+            dev.updateValueView(true, "%s (cached)");
         }
         updateAppWidget();
     }
@@ -200,6 +199,10 @@ public class WidgetClockData extends WidgetData {
             // request widget redraw
             widgetManager.updateAppWidget(widgetId, rv);
         }
+    }
+
+    public static void onUpdateAllClocks(Context context){
+        onUpdateClock(context, null, WidgetProvider.getAllIdsByClass(context, WidgetClockProvider.class));
     }
 
     /**

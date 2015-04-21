@@ -229,8 +229,8 @@ public class WidgetClockConfiguration extends WidgetConfiguration{
                 mSensorSpinner2.setEnabled(true);
                 mSensorSpinner2.setAdapter(dataAdapter);
 
-                String devId = (activeDeviceId.isEmpty() && mWidgetDevice.adapterId.equals(adapterId)) ? mWidgetDevice.getId() : activeDeviceId;
-                String dev2Id = (activeDevice2Id.isEmpty() && mWidgetDevice2.adapterId.equals(adapterId)) ? mWidgetDevice2.getId() : activeDevice2Id;
+                String devId = (activeDeviceId.isEmpty() && mWidgetDevice.getAdapterId().equals(adapterId)) ? mWidgetDevice.getId() : activeDeviceId;
+                String dev2Id = (activeDevice2Id.isEmpty() && mWidgetDevice2.getAdapterId().equals(adapterId)) ? mWidgetDevice2.getId() : activeDevice2Id;
 
                 if (!devId.isEmpty()) {
                     int index = Utils.getObjectIndexFromList(devId, mDevices);
