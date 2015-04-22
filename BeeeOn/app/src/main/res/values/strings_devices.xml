@@ -40,12 +40,25 @@
     <string name="dev_actor_toggle_type">Toggle actuator</string>
     <string name="dev_actor_range_type">Range actuator</string>
     <string name="dev_actor_rgb_type">RGB actuator</string>
+	<string name="dev_actor_temperature">Temperature actuator</string>
+	<string name="dev_actor_boiler_operation_type">Boiler operation type</string>
+	<string name="dev_actor_boiler_operation_mode">Boiler operation mode</string>
 
     <!-- Special values of devices -->
     <string name="dev_enum_value_open">Open</string>
     <string name="dev_enum_value_closed">Closed</string>
     <string name="dev_enum_value_on">On</string>
     <string name="dev_enum_value_off">Off</string>
+
+	<string name="dev_boiler_operation_type_value_off">Off</string>
+	<string name="dev_boiler_operation_type_value_room">Room regulator</string>
+	<string name="dev_boiler_operation_type_value_equiterm">Equiterm regulation</string>
+	<string name="dev_boiler_operation_type_value_stable">Regulation to stable water temperature</string>
+	<string name="dev_boiler_operation_type_value_tuv">TUV heating</string>
+
+	<string name="dev_boiler_operation_mode_value_automatic">Automatic</string>
+	<string name="dev_boiler_operation_mode_value_manual">Manual</string>
+	<string name="dev_boiler_operation_mode_value_vacation">Vacation</string>
 
     <!-- Names of default locations -->
 	<string name="loc_none">- None -</string>

@@ -2,6 +2,8 @@ package com.rehivetech.beeeon.household.device;
 
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.household.device.values.BaseValue;
+import com.rehivetech.beeeon.household.device.values.BoilerOperationModeValue;
+import com.rehivetech.beeeon.household.device.values.BoilerOperationTypeValue;
 import com.rehivetech.beeeon.household.device.values.EmissionValue;
 import com.rehivetech.beeeon.household.device.values.HumidityValue;
 import com.rehivetech.beeeon.household.device.values.IlluminationValue;
@@ -36,7 +38,10 @@ public enum DeviceType {
 	TYPE_ACTOR_PUSH(0xA1, R.string.dev_actor_push_type, true, UnknownValue.class /*PushValue.class*/), // push (on-only) actor
 	TYPE_ACTOR_TOGGLE(0xA2, R.string.dev_actor_toggle_type, true, UnknownValue.class /*ToggleValue.class*/), // toggle actor
 	TYPE_ACTOR_RANGE(0xA3, R.string.dev_actor_range_type, true, UnknownValue.class /*RangeValue.class*/), // range actor
-	TYPE_ACTOR_RGB(0xA4, R.string.dev_actor_rgb_type, true, UnknownValue.class /*RGBValue.class*/); // RGB actor
+	TYPE_ACTOR_RGB(0xA4, R.string.dev_actor_rgb_type, true, UnknownValue.class /*RGBValue.class*/), // RGB actor
+	TYPE_ACTOR_TEMPERATURE(0xA5, R.string.dev_actor_temperature, true, TemperatureValue.class), // temperature actor
+	TYPE_ACTOR_BOILER_OPERATION_TYPE(0xA6, R.string.dev_actor_boiler_operation_type, true, BoilerOperationTypeValue.class), // boiler operation type
+	TYPE_ACTOR_BOILER_OPERATION_MODE(0xA7, R.string.dev_actor_boiler_operation_mode, true, BoilerOperationModeValue.class); // boiler operation mode
 
 	private final int mTypeId;
 	private final int mNameRes;
