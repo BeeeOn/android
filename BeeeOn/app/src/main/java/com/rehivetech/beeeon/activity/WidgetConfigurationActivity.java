@@ -1,8 +1,5 @@
 package com.rehivetech.beeeon.activity;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import android.appwidget.AppWidgetManager;
 import android.content.Intent;
 import android.os.Bundle;
@@ -19,20 +16,22 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-
 import com.rehivetech.beeeon.R;
+import com.rehivetech.beeeon.asynctask.CallbackTask.CallbackTaskListener;
+import com.rehivetech.beeeon.asynctask.ReloadAdapterDataTask;
+import com.rehivetech.beeeon.base.BaseActivity;
+import com.rehivetech.beeeon.base.BaseApplicationActivity;
+import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.household.adapter.Adapter;
 import com.rehivetech.beeeon.household.device.Device;
 import com.rehivetech.beeeon.household.device.Facility;
 import com.rehivetech.beeeon.household.device.RefreshInterval;
-import com.rehivetech.beeeon.asynctask.CallbackTask.CallbackTaskListener;
-import com.rehivetech.beeeon.asynctask.ReloadFacilitiesTask;
-import com.rehivetech.beeeon.base.BaseActivity;
-import com.rehivetech.beeeon.base.BaseApplicationActivity;
-import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.util.Log;
 import com.rehivetech.beeeon.widget.WidgetData;
 import com.rehivetech.beeeon.widget.WidgetUpdateService;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class WidgetConfigurationActivity extends BaseActivity {
 
@@ -50,7 +49,7 @@ public class WidgetConfigurationActivity extends BaseActivity {
 	
 	private Controller mController;
 
-	private ReloadFacilitiesTask mReloadFacilitiesTask;
+	private ReloadAdapterDataTask mReloadFacilitiesTask;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -320,7 +319,7 @@ public class WidgetConfigurationActivity extends BaseActivity {
 	}
 
 	private void doChangeAdapter(final String adapterId, final String activeDeviceId) {
-		mReloadFacilitiesTask = new ReloadFacilitiesTask(getApplicationContext(), false);
+		mReloadFacilitiesTask = new ReloadAdapterDataTask(getApplicationContext(), false, ReloadAdapterDataTask.ReloadWhat.FACILITIES);
 
 		mReloadFacilitiesTask.setListener(new CallbackTaskListener() {
 

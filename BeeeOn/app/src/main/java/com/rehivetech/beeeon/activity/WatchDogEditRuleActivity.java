@@ -26,23 +26,23 @@ import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.activity.spinnerItem.DeviceSpinnerItem;
 import com.rehivetech.beeeon.activity.spinnerItem.GeofenceSpinnerItem;
 import com.rehivetech.beeeon.activity.spinnerItem.SpinnerItem;
-import com.rehivetech.beeeon.household.adapter.Adapter;
-import com.rehivetech.beeeon.household.watchdog.WatchDog;
-import com.rehivetech.beeeon.household.device.Device;
-import com.rehivetech.beeeon.household.device.Facility;
-import com.rehivetech.beeeon.household.location.Location;
-import com.rehivetech.beeeon.household.watchdog.WatchDogBaseType;
-import com.rehivetech.beeeon.household.watchdog.WatchDogGeofenceType;
-import com.rehivetech.beeeon.household.watchdog.WatchDogSensorType;
 import com.rehivetech.beeeon.arrayadapter.DeviceArrayAdapter;
 import com.rehivetech.beeeon.arrayadapter.SpinnerMultiAdapter;
 import com.rehivetech.beeeon.asynctask.CallbackTask;
-import com.rehivetech.beeeon.asynctask.ReloadFacilitiesTask;
+import com.rehivetech.beeeon.asynctask.ReloadAdapterDataTask;
 import com.rehivetech.beeeon.asynctask.RemoveWatchDogTask;
 import com.rehivetech.beeeon.asynctask.SaveWatchDogTask;
 import com.rehivetech.beeeon.base.BaseApplicationActivity;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.geofence.SimpleGeofence;
+import com.rehivetech.beeeon.household.adapter.Adapter;
+import com.rehivetech.beeeon.household.device.Device;
+import com.rehivetech.beeeon.household.device.Facility;
+import com.rehivetech.beeeon.household.location.Location;
+import com.rehivetech.beeeon.household.watchdog.WatchDog;
+import com.rehivetech.beeeon.household.watchdog.WatchDogBaseType;
+import com.rehivetech.beeeon.household.watchdog.WatchDogGeofenceType;
+import com.rehivetech.beeeon.household.watchdog.WatchDogSensorType;
 import com.rehivetech.beeeon.pair.DelWatchDogPair;
 import com.rehivetech.beeeon.util.Log;
 import com.rehivetech.beeeon.util.UnitsHelper;
@@ -97,7 +97,7 @@ public class WatchDogEditRuleActivity extends BaseApplicationActivity {
     private WatchDogBaseType mWatchDogOperator;
 
     // async tasks
-    private ReloadFacilitiesTask mReloadFacilitiesTask;
+    private ReloadAdapterDataTask mReloadFacilitiesTask;
     private SaveWatchDogTask mSaveWatchDogTask;
     private RemoveWatchDogTask mRemoveWatchDogTask;
 

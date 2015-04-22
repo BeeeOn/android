@@ -1,7 +1,5 @@
 package com.rehivetech.beeeon.activity;
 
-import java.util.List;
-
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -14,20 +12,21 @@ import android.view.View.OnClickListener;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 
-import com.viewpagerindicator.CirclePageIndicator;
-
 import com.rehivetech.beeeon.AddSensorFragmentAdapter;
 import com.rehivetech.beeeon.Constants;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.activity.fragment.AddSensorFragment;
-import com.rehivetech.beeeon.household.adapter.Adapter;
-import com.rehivetech.beeeon.household.device.Facility;
 import com.rehivetech.beeeon.asynctask.CallbackTask.CallbackTaskListener;
 import com.rehivetech.beeeon.asynctask.PairRequestTask;
-import com.rehivetech.beeeon.asynctask.ReloadUninitializedFacilitiesTask;
+import com.rehivetech.beeeon.asynctask.ReloadAdapterDataTask;
 import com.rehivetech.beeeon.base.BaseApplicationActivity;
 import com.rehivetech.beeeon.controller.Controller;
+import com.rehivetech.beeeon.household.adapter.Adapter;
+import com.rehivetech.beeeon.household.device.Facility;
 import com.rehivetech.beeeon.util.Log;
+import com.viewpagerindicator.CirclePageIndicator;
+
+import java.util.List;
 
 public class AddSensorActivity extends BaseApplicationActivity {
 	private static final String TAG = AddSensorActivity.class.getSimpleName();
@@ -42,7 +41,7 @@ public class AddSensorActivity extends BaseApplicationActivity {
 	private AddSensorFragment mFragment;
 	
 
-	private ReloadUninitializedFacilitiesTask mReloadUninitializedFacilitiesTask;
+	private ReloadAdapterDataTask mReloadUninitializedFacilitiesTask;
 
 	private PairRequestTask mPairRequestTask;
 	
@@ -194,7 +193,7 @@ public class AddSensorActivity extends BaseApplicationActivity {
 	}
 	
 	public void doReloadUninitializedFacilitiesTask(String adapterId, boolean forceReload) {
-		mReloadUninitializedFacilitiesTask = new ReloadUninitializedFacilitiesTask(mActivity.getApplicationContext(), forceReload);
+		mReloadUninitializedFacilitiesTask = new ReloadAdapterDataTask(mActivity.getApplicationContext(), forceReload, ReloadAdapterDataTask.ReloadWhat.UNINITIALIZED_FACILITIES);
 
 		mReloadUninitializedFacilitiesTask.setListener(new CallbackTaskListener() {
 

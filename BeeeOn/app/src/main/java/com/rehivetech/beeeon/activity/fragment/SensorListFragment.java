@@ -1,8 +1,5 @@
 package com.rehivetech.beeeon.activity.fragment;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -25,7 +22,6 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.melnykov.fab.FloatingActionButton;
-
 import com.rehivetech.beeeon.Constants;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.activity.AddAdapterActivity;
@@ -34,21 +30,21 @@ import com.rehivetech.beeeon.activity.MainActivity;
 import com.rehivetech.beeeon.activity.SensorDetailActivity;
 import com.rehivetech.beeeon.activity.listItem.LocationListItem;
 import com.rehivetech.beeeon.activity.listItem.SensorListItem;
+import com.rehivetech.beeeon.arrayadapter.SenListAdapter;
+import com.rehivetech.beeeon.asynctask.CallbackTask.CallbackTaskListener;
+import com.rehivetech.beeeon.asynctask.ReloadAdapterDataTask;
+import com.rehivetech.beeeon.asynctask.RemoveFacilityTask;
+import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.household.adapter.Adapter;
 import com.rehivetech.beeeon.household.device.Device;
 import com.rehivetech.beeeon.household.device.Facility;
 import com.rehivetech.beeeon.household.location.Location;
-import com.rehivetech.beeeon.arrayadapter.SenListAdapter;
-import com.rehivetech.beeeon.asynctask.CallbackTask.CallbackTaskListener;
-import com.rehivetech.beeeon.asynctask.FullReloadTask;
-import com.rehivetech.beeeon.asynctask.ReloadFacilitiesTask;
-import com.rehivetech.beeeon.asynctask.RemoveFacilityTask;
-import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.pair.DelFacilityPair;
 import com.rehivetech.beeeon.util.Log;
 import com.rehivetech.beeeon.util.TutorialHelper;
 
-
+import java.util.ArrayList;
+import java.util.List;
 
 import se.emilsjolander.stickylistheaders.StickyListHeadersListView;
 
@@ -63,7 +59,7 @@ public class SensorListFragment extends Fragment {
 	private SwipeRefreshLayout mSwipeLayout;
 	private MainActivity mActivity;
 	private Controller mController;
-	private ReloadFacilitiesTask mReloadFacilitiesTask;
+	private ReloadAdapterDataTask mReloadFacilitiesTask;
 
 	private SenListAdapter mSensorAdapter;
 	private StickyListHeadersListView mSensorList;
@@ -88,7 +84,7 @@ public class SensorListFragment extends Fragment {
     private Device mSelectedItem;
     private int mSelectedItemPos;
     private RemoveFacilityTask mRemoveFacilityTask;
-	private FullReloadTask mFullReloadTask;
+	private ReloadAdapterDataTask mFullReloadTask;
 
 	public SensorListFragment() {
 	}
@@ -421,7 +417,7 @@ public class SensorListFragment extends Fragment {
 	}
 
     private void doReloadFacilitiesTask(String adapterId, boolean forceRefresh) {
-        mReloadFacilitiesTask = new ReloadFacilitiesTask(getActivity().getApplicationContext(), forceRefresh);
+        mReloadFacilitiesTask = new ReloadAdapterDataTask(getActivity().getApplicationContext(), forceRefresh, ReloadAdapterDataTask.ReloadWhat.FACILITIES);
 
         mReloadFacilitiesTask.setListener(new CallbackTaskListener() {
 
@@ -439,7 +435,7 @@ public class SensorListFragment extends Fragment {
     }
 
 	private void doFullReloadTask(boolean forceRefresh) {
-		mFullReloadTask = new FullReloadTask(getActivity().getApplicationContext(), forceRefresh);
+		mFullReloadTask = new ReloadAdapterDataTask(getActivity().getApplicationContext(), forceRefresh, ReloadAdapterDataTask.ReloadWhat.ADAPTERS_AND_ACTIVE_ADAPTER);
 
 		mFullReloadTask.setListener(new CallbackTaskListener() {
 			@Override

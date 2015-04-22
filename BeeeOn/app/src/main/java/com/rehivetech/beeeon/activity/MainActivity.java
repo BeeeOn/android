@@ -16,13 +16,6 @@ import android.view.Window;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
-/*
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuInflater;
-import com.actionbarsherlock.view.MenuItem;
-import com.actionbarsherlock.view.Window;
-*/
-
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
@@ -32,7 +25,6 @@ import com.facebook.login.LoginResult;
 import com.github.amlcurran.showcaseview.OnShowcaseEventListener;
 import com.github.amlcurran.showcaseview.ShowcaseView;
 import com.github.amlcurran.showcaseview.targets.ViewTarget;
-
 import com.rehivetech.beeeon.Constants;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.achievements.FbLoginAchievement;
@@ -42,14 +34,14 @@ import com.rehivetech.beeeon.activity.fragment.CustomViewFragment;
 import com.rehivetech.beeeon.activity.fragment.ProfileDetailFragment;
 import com.rehivetech.beeeon.activity.fragment.SensorListFragment;
 import com.rehivetech.beeeon.activity.fragment.WatchDogListFragment;
-import com.rehivetech.beeeon.household.adapter.Adapter;
 import com.rehivetech.beeeon.asynctask.CallbackTask;
-import com.rehivetech.beeeon.asynctask.FullReloadTask;
+import com.rehivetech.beeeon.asynctask.ReloadAdapterDataTask;
 import com.rehivetech.beeeon.base.BaseApplicationActivity;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.exception.AppException;
 import com.rehivetech.beeeon.exception.ErrorCode;
 import com.rehivetech.beeeon.exception.NetworkError;
+import com.rehivetech.beeeon.household.adapter.Adapter;
 import com.rehivetech.beeeon.menu.NavDrawerMenu;
 import com.rehivetech.beeeon.persistence.Persistence;
 import com.rehivetech.beeeon.util.Log;
@@ -109,7 +101,7 @@ public class MainActivity extends BaseApplicationActivity {
 	private boolean backPressed = false;
 
 	public CallbackManager mFacebookCallbackManager;
-	private FullReloadTask mFullReloadTask;
+	private ReloadAdapterDataTask mFullReloadTask;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -278,7 +270,7 @@ public class MainActivity extends BaseApplicationActivity {
 		backPressed = false;
 
 		// ASYN TASK - Reload all data, if wasnt download in login activity
-		mFullReloadTask = new FullReloadTask(this,false);
+		mFullReloadTask = new ReloadAdapterDataTask(this,false,ReloadAdapterDataTask.ReloadWhat.ADAPTERS_AND_ACTIVE_ADAPTER);
 		mFullReloadTask.setNotifyErrors(false);
 		mFullReloadTask.setListener(new CallbackTask.CallbackTaskListener() {
 			@Override

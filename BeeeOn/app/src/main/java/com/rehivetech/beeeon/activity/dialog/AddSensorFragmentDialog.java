@@ -1,7 +1,5 @@
 package com.rehivetech.beeeon.activity.dialog;
 
-import java.util.List;
-
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
@@ -14,16 +12,19 @@ import android.view.View.OnClickListener;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.Toast;
+
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.activity.MainActivity;
-import com.rehivetech.beeeon.household.adapter.Adapter;
-import com.rehivetech.beeeon.household.device.Facility;
 import com.rehivetech.beeeon.asynctask.CallbackTask.CallbackTaskListener;
 import com.rehivetech.beeeon.asynctask.PairRequestTask;
-import com.rehivetech.beeeon.asynctask.ReloadUninitializedFacilitiesTask;
+import com.rehivetech.beeeon.asynctask.ReloadAdapterDataTask;
 import com.rehivetech.beeeon.base.TrackDialogFragment;
 import com.rehivetech.beeeon.controller.Controller;
+import com.rehivetech.beeeon.household.adapter.Adapter;
+import com.rehivetech.beeeon.household.device.Facility;
 import com.rehivetech.beeeon.util.Log;
+
+import java.util.List;
 
 public class AddSensorFragmentDialog extends TrackDialogFragment {
 
@@ -46,7 +47,7 @@ public class AddSensorFragmentDialog extends TrackDialogFragment {
 	private Adapter mAdapter;
 
 	private PairRequestTask mPairRequestTask;
-	private ReloadUninitializedFacilitiesTask mReloadUninitializedFacilitiesTask;
+	private ReloadAdapterDataTask mReloadUninitializedFacilitiesTask;
 
 	private static final String TAG = MainActivity.class.getSimpleName();
 
@@ -234,7 +235,7 @@ public class AddSensorFragmentDialog extends TrackDialogFragment {
 	}
 
 	public void doReloadUninitializedFacilitiesTask(String adapterId, boolean forceReload) {
-		mReloadUninitializedFacilitiesTask = new ReloadUninitializedFacilitiesTask(getActivity().getApplicationContext(), forceReload);
+		mReloadUninitializedFacilitiesTask = new ReloadAdapterDataTask(getActivity().getApplicationContext(), forceReload, ReloadAdapterDataTask.ReloadWhat.UNINITIALIZED_FACILITIES);
 
 		mReloadUninitializedFacilitiesTask.setListener(new CallbackTaskListener() {
 

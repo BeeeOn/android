@@ -1,8 +1,5 @@
 package com.rehivetech.beeeon.activity;
 
-import java.util.List;
-
-
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -17,26 +14,28 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ListView;
 import android.widget.LinearLayout.LayoutParams;
+import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.ScrollView;
 
 import com.rehivetech.beeeon.Constants;
 import com.rehivetech.beeeon.R;
-import com.rehivetech.beeeon.household.adapter.Adapter;
 import com.rehivetech.beeeon.arrayadapter.UsersListAdapter;
-import com.rehivetech.beeeon.asynctask.EditUserTask;
-import com.rehivetech.beeeon.asynctask.ReloadUsersTask;
 import com.rehivetech.beeeon.asynctask.CallbackTask.CallbackTaskListener;
+import com.rehivetech.beeeon.asynctask.EditUserTask;
+import com.rehivetech.beeeon.asynctask.ReloadAdapterDataTask;
 import com.rehivetech.beeeon.asynctask.RemoveUserTask;
 import com.rehivetech.beeeon.base.BaseApplicationActivity;
 import com.rehivetech.beeeon.controller.Controller;
+import com.rehivetech.beeeon.household.adapter.Adapter;
 import com.rehivetech.beeeon.household.user.User;
 import com.rehivetech.beeeon.pair.UserPair;
 
 import net.i2p.android.ext.floatingactionbutton.FloatingActionButton;
+
+import java.util.List;
 
 public class AdapterUsersActivity extends BaseApplicationActivity {
 	
@@ -51,7 +50,7 @@ public class AdapterUsersActivity extends BaseApplicationActivity {
 	private ListView mListActUsers;
 	private ListView mListPenUsers;
 
-	private ReloadUsersTask mReloadUsersTask;
+	private ReloadAdapterDataTask mReloadUsersTask;
 	
 	private static final int NAME_ITEM_HEIGHT = 74;
     private Toolbar mToolbar;
@@ -174,7 +173,7 @@ public class AdapterUsersActivity extends BaseApplicationActivity {
     }
 	
 	private void doReloadAdapterUsersTask(final String adapterId, boolean forceReload) {
-		mReloadUsersTask = new ReloadUsersTask(this, forceReload);
+		mReloadUsersTask = new ReloadAdapterDataTask(this, forceReload, ReloadAdapterDataTask.ReloadWhat.USERS);
 
 		mReloadUsersTask.setListener(new CallbackTaskListener() {
 

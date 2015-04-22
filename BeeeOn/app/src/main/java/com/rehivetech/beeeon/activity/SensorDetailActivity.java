@@ -1,8 +1,5 @@
 package com.rehivetech.beeeon.activity;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
@@ -15,18 +12,20 @@ import android.view.MenuItem;
 import android.view.Window;
 import android.widget.Toast;
 
-
 import com.rehivetech.beeeon.Constants;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.activity.fragment.SensorDetailFragment;
-import com.rehivetech.beeeon.household.device.Device;
-import com.rehivetech.beeeon.household.device.Facility;
 import com.rehivetech.beeeon.asynctask.CallbackTask.CallbackTaskListener;
-import com.rehivetech.beeeon.asynctask.ReloadFacilitiesTask;
+import com.rehivetech.beeeon.asynctask.ReloadAdapterDataTask;
 import com.rehivetech.beeeon.base.BaseApplicationActivity;
 import com.rehivetech.beeeon.controller.Controller;
+import com.rehivetech.beeeon.household.device.Device;
+import com.rehivetech.beeeon.household.device.Facility;
 import com.rehivetech.beeeon.util.Log;
 import com.rehivetech.beeeon.view.CustomViewPager;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Class that handle screen with detail of some sensor
@@ -54,7 +53,7 @@ public class SensorDetailActivity extends BaseApplicationActivity {
 
 	private ProgressDialog mProgress;
 
-	private ReloadFacilitiesTask mReloadFacilitiesTask;
+	private ReloadAdapterDataTask mReloadFacilitiesTask;
 
     private Toolbar mToolbar;
 
@@ -153,7 +152,7 @@ public class SensorDetailActivity extends BaseApplicationActivity {
 	}
 
 	private void doReloadFacilitiesTask(final String adapterId, final boolean forceReload) {
-		mReloadFacilitiesTask = new ReloadFacilitiesTask(this, forceReload);
+		mReloadFacilitiesTask = new ReloadAdapterDataTask(this, forceReload, ReloadAdapterDataTask.ReloadWhat.FACILITIES);
 
 		mReloadFacilitiesTask.setListener(new CallbackTaskListener() {
 

@@ -1,8 +1,8 @@
 package com.rehivetech.beeeon.activity.fragment;
 
-import android.support.v4.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.view.ActionMode;
 import android.support.v7.widget.SwitchCompat;
@@ -22,14 +22,14 @@ import com.melnykov.fab.FloatingActionButton;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.activity.MainActivity;
 import com.rehivetech.beeeon.activity.WatchDogEditRuleActivity;
-import com.rehivetech.beeeon.household.adapter.Adapter;
-import com.rehivetech.beeeon.household.watchdog.WatchDog;
 import com.rehivetech.beeeon.arrayadapter.WatchDogListAdapter;
 import com.rehivetech.beeeon.asynctask.CallbackTask;
-import com.rehivetech.beeeon.asynctask.ReloadWatchDogsTask;
+import com.rehivetech.beeeon.asynctask.ReloadAdapterDataTask;
 import com.rehivetech.beeeon.asynctask.RemoveWatchDogTask;
 import com.rehivetech.beeeon.asynctask.SaveWatchDogTask;
 import com.rehivetech.beeeon.controller.Controller;
+import com.rehivetech.beeeon.household.adapter.Adapter;
+import com.rehivetech.beeeon.household.watchdog.WatchDog;
 import com.rehivetech.beeeon.pair.DelWatchDogPair;
 import com.rehivetech.beeeon.util.Log;
 
@@ -58,7 +58,7 @@ public class WatchDogListFragment extends Fragment{
     private ActionMode mMode;
     ProgressBar mProgressBar;
 
-    private ReloadWatchDogsTask mReloadWatchDogTask;
+    private ReloadAdapterDataTask mReloadWatchDogTask;
     private RemoveWatchDogTask mRemoveWatchDogTask;
     private SaveWatchDogTask mSaveWatchDogTask;
 
@@ -292,7 +292,7 @@ public class WatchDogListFragment extends Fragment{
      * @param adapterId
      */
     public void doReloadWatchDogsTask(String adapterId, boolean forceReload){
-        mReloadWatchDogTask = new ReloadWatchDogsTask(mActivity, forceReload);
+        mReloadWatchDogTask = new ReloadAdapterDataTask(mActivity, forceReload, ReloadAdapterDataTask.ReloadWhat.WATCHDOGS);
 
         mReloadWatchDogTask.setListener(new CallbackTask.CallbackTaskListener() {
             @Override

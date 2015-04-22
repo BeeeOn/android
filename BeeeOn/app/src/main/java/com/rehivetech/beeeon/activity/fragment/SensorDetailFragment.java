@@ -25,6 +25,13 @@ import com.rehivetech.beeeon.Constants;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.activity.SensorDetailActivity;
 import com.rehivetech.beeeon.activity.SensorEditActivity;
+import com.rehivetech.beeeon.asynctask.ActorActionTask;
+import com.rehivetech.beeeon.asynctask.CallbackTask.CallbackTaskListener;
+import com.rehivetech.beeeon.asynctask.GetDeviceLogTask;
+import com.rehivetech.beeeon.asynctask.ReloadAdapterDataTask;
+import com.rehivetech.beeeon.asynctask.SaveDeviceTask;
+import com.rehivetech.beeeon.asynctask.SaveFacilityTask;
+import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.household.adapter.Adapter;
 import com.rehivetech.beeeon.household.device.Device;
 import com.rehivetech.beeeon.household.device.DeviceLog;
@@ -37,13 +44,6 @@ import com.rehivetech.beeeon.household.device.values.BooleanValue;
 import com.rehivetech.beeeon.household.device.values.OnOffValue;
 import com.rehivetech.beeeon.household.device.values.OpenClosedValue;
 import com.rehivetech.beeeon.household.location.Location;
-import com.rehivetech.beeeon.asynctask.ActorActionTask;
-import com.rehivetech.beeeon.asynctask.CallbackTask.CallbackTaskListener;
-import com.rehivetech.beeeon.asynctask.GetDeviceLogTask;
-import com.rehivetech.beeeon.asynctask.ReloadFacilitiesTask;
-import com.rehivetech.beeeon.asynctask.SaveDeviceTask;
-import com.rehivetech.beeeon.asynctask.SaveFacilityTask;
-import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.pair.LogDataPair;
 import com.rehivetech.beeeon.util.GraphViewHelper;
 import com.rehivetech.beeeon.util.Log;
@@ -118,7 +118,7 @@ public class SensorDetailFragment extends Fragment {
 	private SwipeRefreshLayout mSwipeLayout;
 	private View mView;
 	private SensorDetailActivity.ScreenSlidePagerAdapter mFragmentAdapter;
-	private ReloadFacilitiesTask mReloadFacilitiesTask;
+	private ReloadAdapterDataTask mReloadFacilitiesTask;
 
 
 	public SensorDetailFragment() {
@@ -531,7 +531,7 @@ public class SensorDetailFragment extends Fragment {
 	}
 
 	protected void doReloadFacilitiesTask(final String adapterId, final boolean forceRefresh) {
-		mReloadFacilitiesTask = new ReloadFacilitiesTask(mActivity, forceRefresh);
+		mReloadFacilitiesTask = new ReloadAdapterDataTask(mActivity, forceRefresh, ReloadAdapterDataTask.ReloadWhat.FACILITIES);
 
 		mReloadFacilitiesTask.setListener(new CallbackTaskListener() {
 
