@@ -2,17 +2,16 @@ package com.rehivetech.beeeon.widget.persistence;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.util.TypedValue;
 import android.widget.RemoteViews;
 
 import com.rehivetech.beeeon.R;
+import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.household.adapter.Adapter;
 import com.rehivetech.beeeon.household.device.Device;
 import com.rehivetech.beeeon.household.device.DeviceType;
 import com.rehivetech.beeeon.household.device.values.BaseValue;
-import com.rehivetech.beeeon.household.device.values.OnOffValue;
-import com.rehivetech.beeeon.household.device.values.OpenClosedValue;
-import com.rehivetech.beeeon.util.Compatibility;
+import com.rehivetech.beeeon.household.device.values.BooleanValue;
+import com.rehivetech.beeeon.household.user.User;
 import com.rehivetech.beeeon.util.Log;
 import com.rehivetech.beeeon.util.TimeHelper;
 import com.rehivetech.beeeon.util.UnitsHelper;
@@ -33,12 +32,15 @@ public class WidgetDevicePersistence extends WidgetPersistence{
 	private static final String PREF_LAST_UPDATE_TIME = "last_update_time";
 	private static final String PREF_REFRESH = "refresh";
 	private static final String PREF_ADAPTER_ID = "adapter_id";
+	private static final String PREF_ADAPTER_ROLE = "adapter_role";
 
 	public int typeId;
 	public int icon;
 	public long lastUpdateTime;
 	public String lastUpdateText;
 	public int refresh;
+
+	protected String adapterRole;
 
 	private String rawValue;
 	private String cachedValue;
@@ -65,6 +67,7 @@ public class WidgetDevicePersistence extends WidgetPersistence{
 		name = prefs.getString(PREF_NAME, mContext.getString(R.string.placeholder_not_exists));
 		icon = prefs.getInt(PREF_ICON, 0);
 		adapterId = prefs.getString(PREF_ADAPTER_ID, "");
+		adapterRole = prefs.getString(PREF_ADAPTER_ROLE, User.Role.Guest.getValue());
 		typeId = prefs.getInt(PREF_TYPE, DeviceType.TYPE_UNKNOWN.getTypeId());
 
 		rawValue = prefs.getString(PREF_RAW_VALUE, "");
@@ -93,6 +96,7 @@ public class WidgetDevicePersistence extends WidgetPersistence{
 		name = device.getName();
 		icon = device.getIconResource();
 		adapterId = adapter.getId();
+		adapterRole = adapter.getRole().getValue();
 		typeId = device.getType().getTypeId();
 	}
 
@@ -112,6 +116,7 @@ public class WidgetDevicePersistence extends WidgetPersistence{
 				.putLong(PREF_LAST_UPDATE_TIME, lastUpdateTime)
 				.putInt(PREF_REFRESH, refresh)
 				.putString(PREF_ADAPTER_ID, adapterId)
+				.putString(PREF_ADAPTER_ROLE, adapterRole)
 				.apply();
 	}
 
@@ -126,6 +131,8 @@ public class WidgetDevicePersistence extends WidgetPersistence{
 		name = device.getName();
 		id = device.getId();
 		adapterId = adapter.getId();
+		adapterRole = adapter.getRole().getValue();
+		Log.d(TAG, "change adapterRole = " + adapterRole);
 		lastUpdateTime = device.getFacility().getLastUpdate().getMillis();
 		refresh = device.getFacility().getRefresh().getInterval();
 
@@ -152,10 +159,15 @@ public class WidgetDevicePersistence extends WidgetPersistence{
 		super.initValueView(parentRV);
 		if(mBoundView == 0) return;
 
-		if(getType().isActor() && (deviceValue instanceof OnOffValue || deviceValue instanceof OpenClosedValue)){
+		Log.d(TAG, "AdapterRole = " + adapterRole);
+
+		User.Role role = User.Role.fromString(adapterRole);
+		Controller mController = Controller.getInstance(mContext);
+
+		if(getType().isActor() && mController.isUserAllowed(role) && deviceValue instanceof BooleanValue){
 			mValueRemoteViews = new RemoteViews(mContext.getPackageName(), R.layout.widget_include_switchcompat);
 			mValueRemoteViews.setOnClickPendingIntent(R.id.widget_switchcompat, WidgetService.getPendingIntentActorChangeRequest(mContext, mWidgetId, getId(), adapterId));
-			deviceValueChecked = ((OnOffValue) deviceValue).isActiveValue(OnOffValue.ON);
+			deviceValueChecked = ((BooleanValue) deviceValue).isActiveValue(BooleanValue.TRUE);
 		}
 		else {
 			mValueRemoteViews = new RemoteViews(mContext.getPackageName(), R.layout.widget_include_value_unit);
@@ -170,7 +182,10 @@ public class WidgetDevicePersistence extends WidgetPersistence{
 		super.updateValueView(isCached, cachedFormat);
 		if(mBoundView == 0) return;
 
-		if(deviceValue instanceof OnOffValue || deviceValue instanceof OpenClosedValue){
+		User.Role role = User.Role.fromString(adapterRole);
+		Controller mController = Controller.getInstance(mContext);
+
+		if(getType().isActor() && mController.isUserAllowed(role) && deviceValue instanceof BooleanValue){
 			if(mIsCached){
 				setSwitchDisabled(true, false);
 			}
@@ -179,7 +194,7 @@ public class WidgetDevicePersistence extends WidgetPersistence{
 					setSwitchDisabled(true);
 				} else {
 					setSwitchDisabled(false);
-					boolean isOn = ((OnOffValue) deviceValue).isActiveValue(OnOffValue.ON);
+					boolean isOn = ((BooleanValue) deviceValue).isActiveValue(BooleanValue.TRUE);
 					setSwitchChecked(isOn);
 				}
 			}
@@ -242,7 +257,7 @@ public class WidgetDevicePersistence extends WidgetPersistence{
 	 */
 	public void setSwitchChecked(boolean state){
 		// if this cannot be switched
-		if(!(deviceValue instanceof OnOffValue)) return;
+		if(!(deviceValue instanceof BooleanValue)) return;
 
 		mValueRemoteViews.setImageViewResource(R.id.widget_switchcompat, state ? R.drawable.switch_on : R.drawable.switch_off);
 		deviceValueChecked = state;
@@ -255,7 +270,7 @@ public class WidgetDevicePersistence extends WidgetPersistence{
 	 */
 	public void setSwitchDisabled(boolean disabled, boolean prevent){
 		// if this cannot be switched
-		if(!(deviceValue instanceof OnOffValue)) return;
+		if(!(deviceValue instanceof BooleanValue)) return;
 
 		Log.d(TAG, "setting switch disabled = " + String.valueOf(disabled));
 

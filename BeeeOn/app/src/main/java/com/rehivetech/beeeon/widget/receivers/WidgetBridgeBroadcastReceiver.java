@@ -1,6 +1,5 @@
 package com.rehivetech.beeeon.widget.receivers;
 
-import android.appwidget.AppWidgetManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;

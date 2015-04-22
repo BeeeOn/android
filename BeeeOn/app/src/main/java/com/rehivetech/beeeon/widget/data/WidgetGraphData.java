@@ -4,7 +4,6 @@ import android.content.Context;
 import android.graphics.Bitmap;
 
 import com.jjoe64.graphview.GraphView;
-import com.jjoe64.graphview.helper.DateAsXAxisLabelFormatter;
 import com.jjoe64.graphview.series.BarGraphSeries;
 import com.jjoe64.graphview.series.BaseSeries;
 import com.jjoe64.graphview.series.DataPoint;
@@ -23,7 +22,6 @@ import com.rehivetech.beeeon.util.GraphViewHelper;
 import com.rehivetech.beeeon.util.Log;
 import com.rehivetech.beeeon.util.TimeHelper;
 import com.rehivetech.beeeon.util.UnitsHelper;
-import com.rehivetech.beeeon.util.Utils;
 import com.rehivetech.beeeon.widget.configuration.WidgetConfiguration;
 import com.rehivetech.beeeon.widget.configuration.WidgetConfigurationActivity;
 import com.rehivetech.beeeon.widget.configuration.WidgetGraphConfiguration;
@@ -50,9 +48,6 @@ public class WidgetGraphData extends WidgetDeviceData {
     private GraphView mGraph;
     private BaseSeries mGraphSeries;
     private Bitmap mGraphBitmap;
-
-    //private int mGraphWidth = (int) Utils.dpToPx(mContext, 450);
-    //private int mGraphHeight = (int) Utils.dpToPx(mContext, 250);
 
     private int mGraphWidth;
     private int mGraphHeight;

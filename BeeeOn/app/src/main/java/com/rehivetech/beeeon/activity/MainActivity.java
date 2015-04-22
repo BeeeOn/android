@@ -79,9 +79,10 @@ public class MainActivity extends BaseApplicationActivity implements IListDialog
 	/**
 	 * Instance save state tags
 	 */
+	public static final String ADAPTER_ID = "lastAdapterId";
+
 	private static final String LAST_MENU_ID = "lastMenuId";
 	private static final String CSTVIEW = "lastcustomView";
-	private static final String ADAPTER_ID = "lastAdapterId";
 	private static final String IS_DRAWER_OPEN = "draweropen";
 
 
@@ -111,8 +112,20 @@ public class MainActivity extends BaseApplicationActivity implements IListDialog
 	private boolean doRedraw = true;
 
 	@Override
+	protected void onNewIntent(Intent intent) {
+		super.onNewIntent(intent);
+		Log.d(TAG, "onNewIntent()");
+
+		if(intent == null) return;
+		String adapterId = intent.getStringExtra(ADAPTER_ID);
+		Log.d(TAG, "chosen adapter = " + adapterId);
+		// TODO should perform change of adapter and show location (scroll to it?)
+	}
+
+	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		Log.d(TAG, "onCreate()");
 		supportRequestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
 		setContentView(R.layout.activity_location_screen);
 

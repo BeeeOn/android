@@ -192,7 +192,7 @@ public class WidgetClockConfiguration extends WidgetConfiguration{
 
         RefreshInterval refresh = RefreshInterval.values()[mWidgetUpdateSeekBar.getProgress()];
         //sets widgetdata
-        mWidgetData.configure(isWidgetEditing, Math.max(refresh.getInterval(), WidgetService.UPDATE_INTERVAL_MIN), adapter.getId());
+        mWidgetData.configure(isWidgetEditing, Math.max(refresh.getInterval(), WidgetService.UPDATE_INTERVAL_MIN), adapter);
 
         return true;
     }

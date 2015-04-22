@@ -12,6 +12,7 @@ import android.widget.RemoteViews;
 import com.rehivetech.beeeon.activity.MainActivity;
 import com.rehivetech.beeeon.activity.SensorDetailActivity;
 import com.rehivetech.beeeon.controller.Controller;
+import com.rehivetech.beeeon.household.adapter.Adapter;
 import com.rehivetech.beeeon.util.Log;
 import com.rehivetech.beeeon.util.TimeHelper;
 import com.rehivetech.beeeon.util.UnitsHelper;
@@ -88,17 +89,18 @@ abstract public class WidgetData {
     /**
      * Configuration activity calls this when finished
      * If any property is not save() it won't last cause object is destroyed after configuration activity
+     * @param adapter
      * @param isEditing
      * @param interval  updating interval
-     * @param aId   adapter id
+     * @param adapter
      */
-    public void configure(boolean isEditing, int interval, String aId){
+    public void configure(boolean isEditing, int interval, Adapter adapter){
         Log.d(TAG, String.format("configure(%b)", isEditing));
 
         widgetLastUpdate = 0;
         widgetInitialized = true;
         widgetInterval = interval;
-        adapterId = aId;
+        adapterId = adapter.getId();
 
         this.save();
     }
@@ -188,9 +190,11 @@ abstract public class WidgetData {
      * @param layout widgetLayout resource
      */
     public void changeLayout(int layout) {
+        Log.v(TAG, String.format("changeLayout(%d)", mWidgetId));
         this.widgetLayout = layout;
         save();
-        init();
+        //init();
+        initLayout();
     }
 
     /**
@@ -271,18 +275,11 @@ abstract public class WidgetData {
      * @param context
      * @return
      */
-    public static PendingIntent startMainActivityPendingIntent(Context context){
+    public static PendingIntent startMainActivityPendingIntent(Context context, String adapterId){
         Intent intent = new Intent(context, MainActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        //*/
+        intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        intent.putExtra(MainActivity.ADAPTER_ID, adapterId);
 
-        //PackageManager pm = context.getPackageManager();
-        //Intent intent = pm.getLaunchIntentForPackage(context.getPackageName());
-        /*
-        Intent intent = new Intent(Intent.ACTION_MAIN);
-        intent.addCategory(Intent.CATEGORY_LAUNCHER);
-        intent.setComponent(new ComponentName(context, MainActivity.class));
-        //*/
         return PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
     }
 

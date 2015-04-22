@@ -23,9 +23,8 @@ import com.rehivetech.beeeon.exception.ErrorCode;
 import com.rehivetech.beeeon.exception.NetworkError;
 import com.rehivetech.beeeon.household.device.Device;
 import com.rehivetech.beeeon.household.device.Facility;
-import com.rehivetech.beeeon.household.device.values.BaseEnumValue;
 import com.rehivetech.beeeon.household.device.values.BaseValue;
-import com.rehivetech.beeeon.household.device.values.OnOffValue;
+import com.rehivetech.beeeon.household.device.values.BooleanValue;
 import com.rehivetech.beeeon.household.location.Location;
 import com.rehivetech.beeeon.util.Log;
 import com.rehivetech.beeeon.util.TimeHelper;
@@ -62,9 +61,12 @@ public class WidgetService extends Service {
     private static final String EXTRA_ACTOR_ID =                "com.rehivetech.beeeon.actor_ids";
     private static final String EXTRA_DELETE_WIDGET =           "com.rehivetech.beeeon.delete_widget";
     private static final String EXTRA_CHANGE_LAYOUT =           "com.rehivetech.beeeon.change_layout";
-    private static final String EXTRA_CHANGE_LAYOUT_RESOURCE =  "com.rehivetech.beeeon.change_layout_resource";
     private static final String EXTRA_WIDGETS_SHOULD_RELOAD =   "com.rehivetech.beeeon.widget_should_reload";
     private static final String EXTRA_ACTOR_ADAPTER_ID =        "com.rehivetech.beeeon.actor_adapter_id";
+
+    // when finding all widgets with the same actor
+    private static final int UPDATE_LAYOUT = 0;
+    private static final int UPDATE_WHOLE = 1;
 
     // list of available widgets
     private SparseArray<WidgetData> mAvailableWidgets = new SparseArray<>();
@@ -179,13 +181,13 @@ public class WidgetService extends Service {
         mController = Controller.getInstance(mContext);
         initHelpers(mContext, mController);
 
-        boolean isWidgetReload = false,
-                isStartUpdating = false,
+        boolean isStartUpdating = false,
                 isActorChangeRequest = false,
                 isActorChangeResult = false,
                 isStandBy = false,
                 isForceUpdate = false,
                 isChangeLayout = false;
+
         int[] appWidgetIds = new int[]{};
 
         if(intent != null) {
@@ -238,23 +240,11 @@ public class WidgetService extends Service {
             // -------------- force update
             isForceUpdate = intent.getBooleanExtra(EXTRA_FORCE_UPDATE, false);
 
-            // -------------- onAppWidgetOptionsChanged (changing widgetLayout)
-            isChangeLayout = intent.getBooleanExtra(EXTRA_CHANGE_LAYOUT, false);
-            if(isChangeLayout){
-                // TODO doresit jestli by nebylo lepsi primo v updateWidgets()
-                int newWidgetLayout = intent.getIntExtra(EXTRA_CHANGE_LAYOUT_RESOURCE, 0);
-                widgetsChangeLayout(appWidgetIds, newWidgetLayout);
-                isForceUpdate = true;
-            }
-
             // -------------- start updating
             isStartUpdating = intent.getBooleanExtra(EXTRA_START_UPDATING, false);
             if(isStartUpdating){
                 isForceUpdate = true;
             }
-
-            // -------------- reload widget if necessary
-            isWidgetReload = intent.getBooleanExtra(EXTRA_WIDGETS_SHOULD_RELOAD, false);
         }
 
         Log.v(TAG, String.format("onStartCommand(intent = %b), startUpdating = %b, standby = %b, isActorWantsChange = %b, forceUpdate = %b, changeLayout = %b", (intent == null), isStartUpdating, isStandBy, isActorChangeRequest, isForceUpdate, isChangeLayout));
@@ -274,14 +264,13 @@ public class WidgetService extends Service {
             }
         }
 
-        final boolean widgetsShouldReload = isWidgetReload;
-        final boolean foceUpdating = isForceUpdate;
+        final boolean forceUpdating = isForceUpdate;
         final int[] updatingWidgetIds = appWidgetIds;
 
         new Thread(new Runnable() {
             @Override
             public void run() {
-                updateWidgets(widgetsShouldReload, foceUpdating, updatingWidgetIds);
+                updateWidgets(intent, forceUpdating, updatingWidgetIds);
             }
         }).start();
 
@@ -297,11 +286,21 @@ public class WidgetService extends Service {
      * @param isForceUpdate
      * @param allWidgetIds
      */
-    private void updateWidgets(boolean widgetsShouldReload, boolean isForceUpdate, int[] allWidgetIds) {
+    private void updateWidgets(Intent intent, boolean isForceUpdate, int[] allWidgetIds) {
         Log.d(TAG, "updateWidgets()");
 
         // if there are no widgets passed by intent, try to get all widgets
         if(allWidgetIds == null || allWidgetIds.length == 0) allWidgetIds = getAllIds();
+
+        boolean isShouldReload = false;
+        int changeLayout = 0;
+
+        if(intent != null){
+            // -------------- reload widget if necessary
+            isShouldReload = intent.getBooleanExtra(EXTRA_WIDGETS_SHOULD_RELOAD, false);
+            // -------------- onAppWidgetOptionsChanged (changing widgetLayout)
+            changeLayout = intent.getIntExtra(EXTRA_CHANGE_LAYOUT, 0);
+        }
 
         long timeNow = SystemClock.elapsedRealtime();
         SparseArray<WidgetData> widgetsToUpdate = new SparseArray<>();
@@ -318,10 +317,19 @@ public class WidgetService extends Service {
             }
 
             // reload data (after configuration and if objects already exists)
-            if(widgetsShouldReload) widgetData.reload();
+            if(isShouldReload){
+                widgetData.reload();
+            }
 
             // creates new RemoteViews and sets every pendingIntents etc
             widgetData.initLayout();
+
+            // updates layout for this widget
+            if(changeLayout > 0){
+                widgetData.changeLayout(changeLayout);
+                isForceUpdate = true;
+                widgetData.updateAppWidget();
+            }
 
             // Ignore uninitialized widgets
             if (!widgetData.widgetInitialized) {
@@ -398,82 +406,50 @@ public class WidgetService extends Service {
     }
 
     /**
-     * Handle when widget resizes
-     * @param widgetIds
-     * @param layoutResource
-     */
-    private void widgetsChangeLayout(int[] widgetIds, int layoutResource){
-        for(int widgetId : widgetIds){
-            if(widgetId == AppWidgetManager.INVALID_APPWIDGET_ID) continue;
-
-            WidgetData data = getWidgetData(widgetId);
-            if(data == null) continue;
-
-            Log.v(TAG, String.format("change widgetData widgetLayout(%d)", widgetId));
-            data.changeLayout(layoutResource);
-            data.update();
-        }
-    }
-
-    /**
      * Actor task request (disables all widgets)
      * @param adapterId
      * @param actorId
      */
-    private void changeWidgetActorRequest(String adapterId, String actorId) {
+    private void changeWidgetActorRequest(final String adapterId, final String actorId) {
         Log.d(TAG, String.format("changeWidgetActorRequest(%s, %s)", adapterId, actorId));
         if(actorId == null || adapterId == null || actorId.isEmpty() || adapterId.isEmpty()) return;
 
         // ----- first get the device and change value
         final Device device = mController.getFacilitiesModel().getDevice(adapterId, actorId);
-        if(device == null){
-            Log.e(TAG, "not fount device --> probably need to refresh controller");
+        if(device == null || !device.getType().isActor()){
+            Log.e(TAG, "DEVICE NOT actor OR NOT FOUND --> probably need to refresh controller");
             return;
         }
 
-        // ----- then temporary set new value
-        boolean isValueOn;
+        // ----- check if value is boolean
         BaseValue value = device.getValue();
-        if (value instanceof BaseEnumValue) {
-            ((BaseEnumValue)value).setNextValue();
-            isValueOn = ((OnOffValue) value).isActiveValue(OnOffValue.ON);
-        } else {
+        if (!(value instanceof BooleanValue)) {
             Log.e(TAG, "We can't switch actor, which value isn't inherited from BaseEnumValue, yet");
             return;
         }
 
+        BooleanValue boolVal = (BooleanValue) value;
+        final boolean oldValue = boolVal.isActiveValue(BooleanValue.TRUE);
+        // ----- then temporary set new value
+        boolVal.setNextValue();
+        final boolean newValue = boolVal.isActiveValue(BooleanValue.TRUE);
+
         // ----- then we need to check what widgets have this actor
-        for (int i = 0; i < mAvailableWidgets.size(); i++) {
-            WidgetData data = mAvailableWidgets.valueAt(i);
-            // skips not compatible widgets
-            if(data.widgetDevices == null || data.widgetDevices.isEmpty()) continue;
-
-            int updatedActors = 0;
-            // go through all devices in that widget
-            for(WidgetDevicePersistence wDev : data.widgetDevices){
-                if(!adapterId.equals(wDev.getAdapterId()) || !actorId.equals(wDev.getId())) continue;
-
-                // first disables so that nobody can change it anymore
-                wDev.setSwitchChecked(isValueOn);
-                wDev.setSwitchDisabled(true);
-                updatedActors++;
-            }
-
-            // if any actor found, update whole widget
-            if(updatedActors > 0) data.updateAppWidget();
-        }
+        performWidgetActorChange(UPDATE_LAYOUT, adapterId, actorId, true, newValue);
 
         // ----- and finally run asyncTask
-        ActorActionTask mActorActionTask = new ActorActionTask(mContext);
-        mActorActionTask.setListener(new CallbackTask.CallbackTaskListener() {
+        final ActorActionTask actorActionTask = new ActorActionTask(mContext);
+        actorActionTask.setListener(new CallbackTask.CallbackTaskListener() {
             @Override
             public void onExecute(boolean success) {
-                Log.v(TAG, "Actor's async task end with " + String.valueOf(success));
                 // NOTE: we don't have any response here, cause that manages received broadcast
+                if (!success) {
+                    // if not successfull, put back the state
+                    performWidgetActorChange(UPDATE_LAYOUT, adapterId, actorId, false, oldValue);
+                }
             }
         });
-
-        mActorActionTask.execute(device);
+        actorActionTask.execute(device);
     }
 
     /**
@@ -485,6 +461,27 @@ public class WidgetService extends Service {
         Log.d(TAG, String.format("changeWidgetActorResult(%s, %s)", adapterId, actorId));
         if(actorId == null || adapterId == null || actorId.isEmpty() || adapterId.isEmpty()) return;
 
+        // does not set value cause updates whole widget (and there asks for new value)
+        performWidgetActorChange(UPDATE_WHOLE, adapterId, actorId, false, false);
+    }
+
+
+    // -------------------------------------------------------------------- //
+    // ------------------------- Managing methods ------------------------- //
+    // -------------------------------------------------------------------- //
+
+    /**
+     * Goes through all widgets, find widgets with the specified actor
+     * and perform partial (only changes layout) or whole update
+     * @param perform       UPDATE_LAYOUT or UPDATE_WHOLE
+     * @param adapterId
+     * @param actorId
+     * @param isDisabled    if should be switch disabled
+     * @param isValueOn     when UPDATE_WHOLE this does nothing
+     */
+    private void performWidgetActorChange(int perform, String adapterId, String actorId, boolean isDisabled, boolean isValueOn){
+        if(actorId == null || adapterId == null || actorId.isEmpty() || adapterId.isEmpty()) return;
+
         for (int i = 0; i < mAvailableWidgets.size(); i++) {
             WidgetData data = mAvailableWidgets.valueAt(i);
             // skips not compatible widgets
@@ -495,19 +492,24 @@ public class WidgetService extends Service {
             for(WidgetDevicePersistence wDev : data.widgetDevices){
                 if(!adapterId.equals(wDev.getAdapterId()) || !actorId.equals(wDev.getId())) continue;
 
-                // put back disable
-                wDev.setSwitchDisabled(false);
+                if(perform == UPDATE_LAYOUT){
+                    wDev.setSwitchChecked(isValueOn);
+                }
+
+                // disables so that nobody can change it anymore
+                wDev.setSwitchDisabled(isDisabled);
                 updatedActors++;
             }
 
             // if any actor found, update whole widget
-            if(updatedActors > 0) data.update();
+            if(updatedActors > 0){
+                if(perform == UPDATE_LAYOUT)
+                    data.updateAppWidget();
+                else
+                    data.update();
+            }
         }
     }
-
-    // -------------------------------------------------------------------- //
-    // ------------------------- Managing methods ------------------------- //
-    // -------------------------------------------------------------------- //
 
     /**
      * Set repeating to parameter
@@ -860,8 +862,7 @@ public class WidgetService extends Service {
      */
     public static Intent getIntentWidgetChangeLayout(Context context, int widgetId, int layout){
         Intent intent = new Intent(context, WidgetService.class);
-        intent.putExtra(EXTRA_CHANGE_LAYOUT, true);
-        intent.putExtra(EXTRA_CHANGE_LAYOUT_RESOURCE, layout);
+        intent.putExtra(EXTRA_CHANGE_LAYOUT, layout);
         intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, new int[]{ widgetId });
         return intent;
     }

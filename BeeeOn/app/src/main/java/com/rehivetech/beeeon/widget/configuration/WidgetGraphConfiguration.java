@@ -164,7 +164,7 @@ public class WidgetGraphConfiguration extends WidgetConfiguration{
         mWidgetDevice.configure(device, adapter);
         // sets widgetdata
         RefreshInterval refresh = RefreshInterval.values()[mWidgetUpdateSeekBar.getProgress()];
-        mWidgetData.configure(isWidgetEditing, Math.max(refresh.getInterval(), WidgetService.UPDATE_INTERVAL_MIN), adapter.getId());
+        mWidgetData.configure(isWidgetEditing, Math.max(refresh.getInterval(), WidgetService.UPDATE_INTERVAL_MIN), adapter);
 
         return true;
     }

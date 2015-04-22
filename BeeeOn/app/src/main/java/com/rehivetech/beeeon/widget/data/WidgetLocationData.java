@@ -89,8 +89,8 @@ public class WidgetLocationData extends WidgetData {
         mRemoteViews.setOnClickPendingIntent(R.id.refresh, mRefreshPendingIntent);
 
         // TODO scroll to location?
-        mRemoteViews.setOnClickPendingIntent(R.id.icon, startMainActivityPendingIntent(mContext));
-        mRemoteViews.setOnClickPendingIntent(R.id.name, startMainActivityPendingIntent(mContext));
+        mRemoteViews.setOnClickPendingIntent(R.id.icon, startMainActivityPendingIntent(mContext, adapterId));
+        mRemoteViews.setOnClickPendingIntent(R.id.name, startMainActivityPendingIntent(mContext, adapterId));
 
         // onclick listener when clicked on item
         mRemoteViewsFactoryIntent = new Intent(mContext, WidgetListService.class);
