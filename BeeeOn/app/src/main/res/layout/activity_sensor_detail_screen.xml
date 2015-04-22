@@ -24,7 +24,7 @@
 			android:paddingLeft="16dp"
 			android:paddingRight="16dp"
 			android:orientation="vertical"
-			android:visibility="gone">
+			android:visibility="invisible">
 			<!-- ICON and VALUE -->
 			<RelativeLayout
 				android:layout_width="match_parent"
@@ -318,6 +318,22 @@
 				android:orientation="vertical"
 				android:visibility="visible"/>
 		</LinearLayout>
+		<!-- LOADING SECTION -->
+		<LinearLayout
+			android:id="@+id/sensor_progress"
+			android:layout_width="fill_parent"
+			android:layout_height="100dp"
+			android:layout_marginTop="100dp"
+			android:visibility="visible"
+			android:gravity="center">
+			<ProgressBar
+				style="?android:attr/android:progressBarStyleLarge"
+				android:layout_width="80dp"
+				android:layout_height="80dp"
+				android:indeterminate="true"
+				android:layout_gravity="center_horizontal"
+				/>
+			</LinearLayout>
 	</RelativeLayout>
 </ScrollView>
 </android.support.v4.widget.SwipeRefreshLayout>

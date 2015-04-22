@@ -108,8 +108,6 @@ public class SensorDetailFragment extends Fragment {
 	private int mSelPageNumber;
 	private String mAdapterId;
 
-	private boolean mWasTapGraph = false;
-	private int mEditMode = EDIT_NONE;
 
 	private BaseSeries<DataPoint>  mGraphSeries;
 	
@@ -197,6 +195,7 @@ public class SensorDetailFragment extends Fragment {
 	}
 
 	private void initLayout(Device device) {
+		Log.d(TAG,"INIT LAYOUT");
 		// Get View for sensor name
 		mName = (TextView) mView.findViewById(R.id.sen_detail_name);
 		// Get View for sensor location
@@ -284,7 +283,7 @@ public class SensorDetailFragment extends Fragment {
 		// UserSettings can be null when user is not logged in!
 		SharedPreferences prefs = mController.getUserSettings();
 
-		mUnitsHelper = (prefs == null) ? null : new UnitsHelper(prefs, getActivity().getApplicationContext());
+		mUnitsHelper = (prefs == null) ? null : new UnitsHelper(prefs, mActivity.getApplicationContext());
 		mTimeHelper = (prefs == null) ? null : new TimeHelper(prefs);
 
 		// Set value of sensor
@@ -331,10 +330,14 @@ public class SensorDetailFragment extends Fragment {
 		visibleAllElements();
 
 		// Disable progress bar
-		getActivity().setProgressBarIndeterminateVisibility(false);
+		mActivity.setBeeeOnProgressBarVisibility(false);
 	}
 
 	private void visibleAllElements() {
+		Log.d(TAG,"VISIBLE ALL ELEMENTS");
+		//HIDE progress
+		mView.findViewById(R.id.sensor_progress).setVisibility(View.GONE);
+		// VISIBLE other stuf
 		mView.findViewById(R.id.sen_header).setVisibility(View.VISIBLE);
 		mView.findViewById(R.id.sen_first_section).setVisibility(View.VISIBLE);
 		mView.findViewById(R.id.sen_second_section).setVisibility(View.VISIBLE);
@@ -364,7 +367,7 @@ public class SensorDetailFragment extends Fragment {
 			@Override
 			public void onRefresh() {
 				Log.d(TAG, "Refreshing list of sensors");
-				mSwipeLayout.setRefreshing(false);
+
 				doReloadFacilitiesTask(mAdapterId, true);
 				//mActivity.getPager().getAdapter().notifyDataSetChanged();
 			}
@@ -524,7 +527,7 @@ public class SensorDetailFragment extends Fragment {
 			return;
 		}
 
-		mActorActionTask = new ActorActionTask(getActivity().getApplicationContext());
+		mActorActionTask = new ActorActionTask(mActivity.getApplicationContext());
 		mActorActionTask.setListener(new CallbackTaskListener() {
 
 			@Override
@@ -544,12 +547,14 @@ public class SensorDetailFragment extends Fragment {
 	}
 
 	protected void doReloadFacilitiesTask(final String adapterId, final boolean forceRefresh) {
+		//mActivity.setBeeeOnProgressBarVisibility(true);
 		mReloadFacilitiesTask = new ReloadAdapterDataTask(mActivity, forceRefresh, ReloadAdapterDataTask.ReloadWhat.FACILITIES);
 
 		mReloadFacilitiesTask.setListener(new CallbackTaskListener() {
 
 			@Override
 			public void onExecute(boolean success) {
+				mSwipeLayout.setRefreshing(false);
 				if(!success){
 					Log.d(TAG,"Fragment - Reload failed");
 					return;
