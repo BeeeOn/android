@@ -33,6 +33,7 @@ import com.rehivetech.beeeon.household.device.DeviceLog.DataType;
 import com.rehivetech.beeeon.household.device.Facility;
 import com.rehivetech.beeeon.household.device.values.BaseEnumValue;
 import com.rehivetech.beeeon.household.device.values.BaseValue;
+import com.rehivetech.beeeon.household.device.values.BooleanValue;
 import com.rehivetech.beeeon.household.device.values.OnOffValue;
 import com.rehivetech.beeeon.household.device.values.OpenClosedValue;
 import com.rehivetech.beeeon.household.location.Location;
@@ -290,8 +291,7 @@ public class SensorDetailFragment extends Fragment {
 			mValue.setText(mUnitsHelper.getStringValueUnit(device.getValue()));
 			BaseValue val = mDevice.getValue();
 			if (val instanceof OnOffValue) {
-				boolean isOn = ((OnOffValue) val).isActiveValue(OnOffValue.ON);
-				mValueSwitch.setChecked(isOn);
+				mValueSwitch.setChecked(((BooleanValue) val).isActive());
 			}
 
 		}

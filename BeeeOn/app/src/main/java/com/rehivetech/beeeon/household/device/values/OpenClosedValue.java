@@ -1,12 +1,13 @@
 package com.rehivetech.beeeon.household.device.values;
 
 import android.graphics.Color;
+
 import com.rehivetech.beeeon.R;
 
-public class OpenClosedValue extends BaseEnumValue {
+public final class OpenClosedValue extends BooleanValue {
 
-	public static final String CLOSED = "0";
-	public static final String OPEN = "1";
+	public static final String CLOSED = BooleanValue.FALSE;
+	public static final String OPEN = BooleanValue.TRUE;
 
 	public OpenClosedValue() {
 		super();

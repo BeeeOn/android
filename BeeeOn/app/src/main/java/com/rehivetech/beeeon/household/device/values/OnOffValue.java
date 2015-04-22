@@ -1,12 +1,13 @@
 package com.rehivetech.beeeon.household.device.values;
 
 import android.graphics.Color;
+
 import com.rehivetech.beeeon.R;
 
-public class OnOffValue extends BaseEnumValue {
+public final class OnOffValue extends BooleanValue {
 
-	public static final String OFF = "0";
-	public static final String ON = "1";
+	public static final String OFF = BooleanValue.FALSE;
+	public static final String ON = BooleanValue.TRUE;
 
 	public OnOffValue() {
 		super();
