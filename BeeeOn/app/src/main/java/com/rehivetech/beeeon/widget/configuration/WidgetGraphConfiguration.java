@@ -10,7 +10,7 @@ import android.widget.Toast;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.arrayadapter.DeviceArrayAdapter;
 import com.rehivetech.beeeon.asynctask.CallbackTask;
-import com.rehivetech.beeeon.asynctask.ReloadFacilitiesTask;
+import com.rehivetech.beeeon.asynctask.ReloadAdapterDataTask;
 import com.rehivetech.beeeon.household.adapter.Adapter;
 import com.rehivetech.beeeon.household.device.Device;
 import com.rehivetech.beeeon.household.device.Facility;
@@ -170,7 +170,7 @@ public class WidgetGraphConfiguration extends WidgetConfiguration{
     }
 
     protected void doChangeAdapter(final String adapterId, final String activeId) {
-        mReloadFacilitiesTask = new ReloadFacilitiesTask(mActivity, false);
+        mReloadFacilitiesTask = new ReloadAdapterDataTask(mActivity, false, ReloadAdapterDataTask.ReloadWhat.FACILITIES);
         mReloadFacilitiesTask.setListener(new CallbackTask.CallbackTaskListener() {
 
             @Override

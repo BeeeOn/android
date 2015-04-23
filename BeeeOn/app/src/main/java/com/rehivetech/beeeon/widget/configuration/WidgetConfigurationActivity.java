@@ -19,7 +19,7 @@ import android.widget.Toast;
 
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.asynctask.CallbackTask;
-import com.rehivetech.beeeon.asynctask.FullReloadTask;
+import com.rehivetech.beeeon.asynctask.ReloadAdapterDataTask;
 import com.rehivetech.beeeon.base.BaseApplicationActivity;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.exception.AppException;
@@ -57,7 +57,7 @@ public class WidgetConfigurationActivity extends ActionBarActivity {
 
     private Fragment mCfgFragment;
 
-    private FullReloadTask mFullReloadTask;
+    private ReloadAdapterDataTask mFullReloadTask;
 
     private ProgressDialog mDialog;
 
@@ -169,7 +169,7 @@ public class WidgetConfigurationActivity extends ActionBarActivity {
         super.onResume();
         Log.d(TAG, "onResume()");
 
-        mFullReloadTask = new FullReloadTask(this, false);
+        mFullReloadTask = new ReloadAdapterDataTask(this, false, ReloadAdapterDataTask.ReloadWhat.ADAPTERS_AND_ACTIVE_ADAPTER);
         mFullReloadTask.setNotifyErrors(false);
         mFullReloadTask.setListener(new CallbackTask.CallbackTaskListener() {
             @Override

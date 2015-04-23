@@ -5,7 +5,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.rehivetech.beeeon.R;
-import com.rehivetech.beeeon.asynctask.ReloadFacilitiesTask;
+import com.rehivetech.beeeon.asynctask.ReloadAdapterDataTask;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.household.adapter.Adapter;
 import com.rehivetech.beeeon.household.device.RefreshInterval;
@@ -22,7 +22,7 @@ abstract public class WidgetConfiguration {
     protected WidgetData mWidgetData;
     protected Controller mController;
     protected List<Adapter> mAdapters = new ArrayList<>();
-    protected ReloadFacilitiesTask mReloadFacilitiesTask;
+    protected ReloadAdapterDataTask mReloadFacilitiesTask;
     protected Spinner mAdapterSpinner;
     protected SeekBar mWidgetUpdateSeekBar;
     protected Adapter mActiveAdapter;
