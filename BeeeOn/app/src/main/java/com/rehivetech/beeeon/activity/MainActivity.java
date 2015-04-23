@@ -11,11 +11,15 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
+import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.widget.AbsListView;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
+import com.avast.android.dialogs.fragment.ListDialogFragment;
+import com.avast.android.dialogs.iface.IListDialogListener;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
@@ -52,7 +56,7 @@ import com.rehivetech.beeeon.util.Log;
  * 
  * 
  */
-public class MainActivity extends BaseApplicationActivity {
+public class MainActivity extends BaseApplicationActivity implements IListDialogListener {
 	private static final String TAG = MainActivity.class.getSimpleName();
 
 	private Controller mController;
@@ -63,6 +67,7 @@ public class MainActivity extends BaseApplicationActivity {
     public static final String FRG_TAG_CUS = "Cus";
     public static final String FRG_TAG_WAT = "WAT";
 	private static final String FRG_TAG_PRF = "PRF";
+	private static final int ADD_ACTION_CODE = 987654;
 	private NavDrawerMenu mNavDrawerMenu;
 	private SensorListFragment mListDevices;
 	private CustomViewFragment mCustomView;
@@ -102,6 +107,7 @@ public class MainActivity extends BaseApplicationActivity {
 
 	public CallbackManager mFacebookCallbackManager;
 	private ReloadAdapterDataTask mFullReloadTask;
+	private boolean doRedraw = true;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -126,51 +132,24 @@ public class MainActivity extends BaseApplicationActivity {
 		mNavDrawerMenu.openMenu();
 		mNavDrawerMenu.setIsDrawerOpen(mIsDrawerOpen);
 
-		mListDevices = new SensorListFragment();
-        mCustomView = new CustomViewFragment();
-        mWatchDogApp = new WatchDogListFragment();
-		mProfileFrag = new ProfileDetailFragment();
-
 		if (savedInstanceState != null) {
 			mIsDrawerOpen = savedInstanceState.getBoolean(IS_DRAWER_OPEN);
 			mNavDrawerMenu.setIsDrawerOpen(mIsDrawerOpen);
 
 			mActiveMenuId = savedInstanceState.getString(LAST_MENU_ID);
 			mActiveAdapterId = savedInstanceState.getString(ADAPTER_ID);
-			mListDevices.setMenuID(mActiveMenuId);
-			mListDevices.setAdapterID(mActiveAdapterId);
 			mNavDrawerMenu.setActiveMenuID(mActiveMenuId);
 			mNavDrawerMenu.setAdapterID(mActiveAdapterId);
 
 		} else {
 			setActiveAdapterAndMenu();
-			mListDevices.setMenuID(mActiveMenuId);
-			mListDevices.setAdapterID(mActiveAdapterId);
 			mNavDrawerMenu.setActiveMenuID(mActiveMenuId);
 			mNavDrawerMenu.setAdapterID(mActiveAdapterId);
 			mNavDrawerMenu.redrawMenu();
 		}
 
-		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        if(mActiveMenuId == null) { // Default screen
-            ft.replace(R.id.content_frame, mListDevices, FRG_TAG_LOC);
-        }
-		else if(mActiveMenuId.equals(Constants.GUI_MENU_CONTROL)){
-			ft.replace(R.id.content_frame, mListDevices, FRG_TAG_LOC);
-		}
-        else if(mActiveMenuId.equals(Constants.GUI_MENU_DASHBOARD)) {
-            ft.replace(R.id.content_frame, mCustomView, FRG_TAG_CUS);
-        }
-        else if(mActiveMenuId.equals(Constants.GUI_MENU_WATCHDOG)) {
-            ft.replace(R.id.content_frame, mWatchDogApp, FRG_TAG_WAT);
-        }
-		else if (mActiveMenuId.equals(Constants.GUI_MENU_PROFILE)){
-			ft.replace(R.id.content_frame, mProfileFrag, FRG_TAG_PRF);
-		}
-		ft.commit();
-
-
-
+		// Set progressbar visible
+		setBeeeOnProgressBarVisibility(true);
 
 		// Facebook sdk needs to be initialised in Activity, but its used in Profile Fragment
 		// Registering callback for facebook log in
@@ -192,6 +171,10 @@ public class MainActivity extends BaseApplicationActivity {
 		if(mFirstUseApp) {
 			//showTutorial();
 		}
+	}
+
+	public void setBeeeOnProgressBarVisibility(boolean b) {
+		findViewById(R.id.toolbar_progress).setVisibility((b)? View.VISIBLE:View.GONE);
 	}
 
 	private void showTutorial() {
@@ -250,7 +233,7 @@ public class MainActivity extends BaseApplicationActivity {
 				// Succes of add adapter -> setActive adapter a redraw ALL
 				Log.d(TAG, "Add adapter succes");
 				setActiveAdapterAndMenu();
-				redraw();
+				doRedraw = false;
 			}
 		}
 		else if (requestCode == Constants.ADD_SENSOR_REQUEST_CODE) {
@@ -268,7 +251,7 @@ public class MainActivity extends BaseApplicationActivity {
 		Log.d(TAG, "onAppResume()");
 
 		backPressed = false;
-
+		setBeeeOnProgressBarVisibility(true);
 		// ASYN TASK - Reload all data, if wasnt download in login activity
 		mFullReloadTask = new ReloadAdapterDataTask(this,false,ReloadAdapterDataTask.ReloadWhat.ADAPTERS_AND_ACTIVE_ADAPTER);
 		mFullReloadTask.setNotifyErrors(false);
@@ -288,11 +271,16 @@ public class MainActivity extends BaseApplicationActivity {
 						Toast.makeText(MainActivity.this, e.getTranslatedErrorMessage(MainActivity.this), Toast.LENGTH_LONG).show();
 					}
 				}
+				setBeeeOnProgressBarVisibility(false);
 				// Redraw Activity - probably list of sensors
 				Log.d(TAG,"After reload task - go to redraw mainActivity");
 				setActiveAdapterAndMenu();
-				redraw();
-				checkNoAdapters();
+				if (mController.getActiveAdapter() == null) {
+					checkNoAdapters();
+				}
+				else {
+					redraw();
+				}
 			}
 		});
 		mFullReloadTask.execute();
@@ -300,9 +288,12 @@ public class MainActivity extends BaseApplicationActivity {
 		mNavDrawerMenu.redrawMenu();
 		mNavDrawerMenu.finishActinMode();
 		// Redraw Main Fragment
-        redraw();
-
-
+		if(doRedraw) {
+			redraw();
+		}
+		else {
+			doRedraw = true;
+		}
 	}
 
 	public void onAppPause() {
@@ -347,6 +338,21 @@ public class MainActivity extends BaseApplicationActivity {
 				backPressed = true;
 			}
 			mNavDrawerMenu.finishActinMode();
+		}
+	}
+
+	@Override
+	public void onListItemSelected(CharSequence val, int i, int code) {
+		if(code == ADD_ACTION_CODE){
+			Log.d(TAG,"Add dialog selected: "+val);
+			if(getString(R.string.action_addadapter).equals(val)) {
+				// ADD ADAPTER
+				mListDevices.showAddAdapterDialog();
+			}
+			else {
+				// ADD SENSOR
+				mListDevices.showAddSensorDialog();
+			}
 		}
 	}
 
@@ -483,14 +489,15 @@ public class MainActivity extends BaseApplicationActivity {
 	public void setActiveAdapterID(String adapterId) {
 		mActiveAdapterId = adapterId;
 		mNavDrawerMenu.setAdapterID(adapterId);
-		mListDevices.setAdapterID(adapterId);
-
+		if(mListDevices != null)
+			mListDevices.setAdapterID(adapterId);
 	}
 
 	public void setActiveMenuID(String id) {
 		mActiveMenuId = id;
 		mNavDrawerMenu.setActiveMenuID(id);
-		mListDevices.setMenuID(id);
+		if(mListDevices != null)
+			mListDevices.setMenuID(id);
 	}
 
     public void logout() {
@@ -502,5 +509,19 @@ public class MainActivity extends BaseApplicationActivity {
 	
 	public NavDrawerMenu getMenu() {
 		return mNavDrawerMenu;
+	}
+
+	public void showOldAddDialog(String[] mStringArray) {
+
+		ListDialogFragment
+				.createBuilder(this, getSupportFragmentManager())
+				.setTitle(getString(R.string.add_action_dialog_title))
+				.setItems(mStringArray)
+				.setChoiceMode(AbsListView.CHOICE_MODE_SINGLE)
+				.setConfirmButtonText(getString(R.string.notification_add))
+				.setCancelButtonText(getString(R.string.notification_cancel))
+				.setRequestCode(ADD_ACTION_CODE)
+				.show();
+
 	}
 }

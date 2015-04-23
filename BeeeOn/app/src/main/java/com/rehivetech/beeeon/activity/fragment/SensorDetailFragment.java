@@ -8,6 +8,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.SwitchCompat;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -107,8 +108,6 @@ public class SensorDetailFragment extends Fragment {
 	private int mSelPageNumber;
 	private String mAdapterId;
 
-	private boolean mWasTapGraph = false;
-	private int mEditMode = EDIT_NONE;
 
 	private BaseSeries<DataPoint>  mGraphSeries;
 	
@@ -135,7 +134,7 @@ public class SensorDetailFragment extends Fragment {
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		Log.d(TAG,"OnCreateView");
+		Log.d(TAG, "OnCreateView");
 		mView = inflater.inflate(R.layout.activity_sensor_detail_screen, container, false);
 		Log.d(TAG, String.format("this position: %s , selected item: %s ", mCurPageNumber, mSelPageNumber));
 		return mView;
@@ -153,7 +152,7 @@ public class SensorDetailFragment extends Fragment {
 			mAdapter = mController.getAdaptersModel().getAdapter(mAdapterId);
 			mActivity = (SensorDetailActivity) getActivity();
 		}
-		Log.d(TAG,"OnActivityCreated");
+		Log.d(TAG, "OnActivityCreated");
 		mDevice = mController.getFacilitiesModel().getDevice(mAdapterId, mDeviceID);
 		if (mDevice != null) {
 			Log.d(TAG, String.format("ID: %s, Name: %s", mDevice.getId(), mDevice.getName()));
@@ -196,6 +195,7 @@ public class SensorDetailFragment extends Fragment {
 	}
 
 	private void initLayout(Device device) {
+		Log.d(TAG,"INIT LAYOUT");
 		// Get View for sensor name
 		mName = (TextView) mView.findViewById(R.id.sen_detail_name);
 		// Get View for sensor location
@@ -283,7 +283,7 @@ public class SensorDetailFragment extends Fragment {
 		// UserSettings can be null when user is not logged in!
 		SharedPreferences prefs = mController.getUserSettings();
 
-		mUnitsHelper = (prefs == null) ? null : new UnitsHelper(prefs, getActivity().getApplicationContext());
+		mUnitsHelper = (prefs == null) ? null : new UnitsHelper(prefs, mActivity.getApplicationContext());
 		mTimeHelper = (prefs == null) ? null : new TimeHelper(prefs);
 
 		// Set value of sensor
@@ -321,7 +321,7 @@ public class SensorDetailFragment extends Fragment {
 		mSignal.setText(facility.getNetworkQuality()+"%");
 
 		// Add Graph
-		if (mUnitsHelper != null && mTimeHelper != null) {
+		if (mUnitsHelper != null && mTimeHelper != null && mGraphView.getSeries().size() == 0) {
 			DateTimeFormatter fmt = mTimeHelper.getFormatter(GRAPH_DATE_TIME_FORMAT, adapter);
 			addGraphView(fmt, mUnitsHelper);
 		}
@@ -330,10 +330,14 @@ public class SensorDetailFragment extends Fragment {
 		visibleAllElements();
 
 		// Disable progress bar
-		getActivity().setProgressBarIndeterminateVisibility(false);
+		mActivity.setBeeeOnProgressBarVisibility(false);
 	}
 
 	private void visibleAllElements() {
+		Log.d(TAG,"VISIBLE ALL ELEMENTS");
+		//HIDE progress
+		mView.findViewById(R.id.sensor_progress).setVisibility(View.GONE);
+		// VISIBLE other stuf
 		mView.findViewById(R.id.sen_header).setVisibility(View.VISIBLE);
 		mView.findViewById(R.id.sen_first_section).setVisibility(View.VISIBLE);
 		mView.findViewById(R.id.sen_second_section).setVisibility(View.VISIBLE);
@@ -363,7 +367,7 @@ public class SensorDetailFragment extends Fragment {
 			@Override
 			public void onRefresh() {
 				Log.d(TAG, "Refreshing list of sensors");
-				mSwipeLayout.setRefreshing(false);
+
 				doReloadFacilitiesTask(mAdapterId, true);
 				//mActivity.getPager().getAdapter().notifyDataSetChanged();
 			}
@@ -382,10 +386,6 @@ public class SensorDetailFragment extends Fragment {
 		// Create and set graphView
 		GraphViewHelper.prepareGraphView(mGraphView, getView().getContext(), mDevice, fmt, unitsHelper); // empty heading
 
-		//mGraphView.setVisibility(View.GONE);
-		mGraphView.getViewport().setScrollable(false);
-		mGraphView.getViewport().setScalable(false);
-
 		if (mDevice.getValue() instanceof BaseEnumValue) {
 			mGraphSeries = new BarGraphSeries<>(new DataPoint[]{new DataPoint(0, 0), new DataPoint(1,1)});
 			((BarGraphSeries) mGraphSeries).setSpacing(30);
@@ -394,13 +394,31 @@ public class SensorDetailFragment extends Fragment {
 			((LineGraphSeries)mGraphSeries).setBackgroundColor(getResources().getColor(R.color.alpha_blue));
 			((LineGraphSeries)mGraphSeries).setDrawBackground(true);
 			((LineGraphSeries) mGraphSeries).setThickness(2);
-//			((LineGraphSeries) mGraphSeries).setDrawCubicLine(true);
 		}
 		mGraphSeries.setColor(getResources().getColor(R.color.beeeon_primary_cyan));
 		mGraphSeries.setTitle("Graph");
 
 		// Add data series
-//		mGraphView.addSeries(mGraphSeries);
+		mGraphView.addSeries(mGraphSeries);
+
+		// touch listener to disable swipe and refresh trough graph
+		mGraphView.setOnTouchListener(new View.OnTouchListener() {
+			@Override
+			public boolean onTouch(View view, MotionEvent motionEvent) {
+				int i = motionEvent.getAction();
+
+				if (i == MotionEvent.ACTION_DOWN) {
+					mActivity.setEnableSwipe(false);
+					mSwipeLayout.setEnabled(false);
+				}
+
+				else if (i == MotionEvent.ACTION_UP) {
+					mActivity.setEnableSwipe(true);
+					mSwipeLayout.setEnabled(true);
+				}
+				return false;
+			}
+		});
 /*
 		mGraphInfo.setOnTouchListener(new OnTouchListener() {
 
@@ -455,9 +473,7 @@ public class SensorDetailFragment extends Fragment {
 
 		Log.d(TAG, "Filling graph finished");
 
-		mGraphView.removeAllSeries();
 		mGraphSeries.resetData(data);
-		mGraphView.addSeries(mGraphSeries);
 		mGraphView.getViewport().setXAxisBoundsManual(true);
 		if (values.size() > 100 && mGraphSeries instanceof BarGraphSeries) {
 			mGraphView.getViewport().setMaxX(mGraphSeries.getHighestValueX());
@@ -511,7 +527,7 @@ public class SensorDetailFragment extends Fragment {
 			return;
 		}
 
-		mActorActionTask = new ActorActionTask(getActivity().getApplicationContext());
+		mActorActionTask = new ActorActionTask(mActivity.getApplicationContext());
 		mActorActionTask.setListener(new CallbackTaskListener() {
 
 			@Override
@@ -531,12 +547,14 @@ public class SensorDetailFragment extends Fragment {
 	}
 
 	protected void doReloadFacilitiesTask(final String adapterId, final boolean forceRefresh) {
+		//mActivity.setBeeeOnProgressBarVisibility(true);
 		mReloadFacilitiesTask = new ReloadAdapterDataTask(mActivity, forceRefresh, ReloadAdapterDataTask.ReloadWhat.FACILITIES);
 
 		mReloadFacilitiesTask.setListener(new CallbackTaskListener() {
 
 			@Override
 			public void onExecute(boolean success) {
+				mSwipeLayout.setRefreshing(false);
 				if(!success){
 					Log.d(TAG,"Fragment - Reload failed");
 					return;
@@ -568,7 +586,7 @@ public class SensorDetailFragment extends Fragment {
 				mDevice, // device
 				new Interval(start, end), // interval from-to
 				DataType.AVERAGE, // type
-				(mDevice.getValue() instanceof BaseEnumValue )?DataInterval.RAW:DataInterval.HOUR); // interval
+				(mDevice.getValue() instanceof BaseEnumValue )?DataInterval.RAW:DataInterval.MINUTE); // interval
 		mGetDeviceLogTask.setListener(new GetDeviceLogTask.CallbackLogTaskListener() {
 			@Override
 			public void onExecute(DeviceLog result) {

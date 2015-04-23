@@ -128,6 +128,15 @@ public class Device implements INameIdentifier {
 	}
 
 	/**
+	 * Get name of device in raw form server (it is for third-part sensors)
+	 *
+	 * @return name
+	 */
+	public String getServerName() {
+		return mName.length() > 0 ? mName : "";
+	}
+
+	/**
 	 * Setting name of device
 	 * 
 	 * @param name

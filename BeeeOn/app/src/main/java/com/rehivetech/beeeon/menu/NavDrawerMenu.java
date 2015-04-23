@@ -376,7 +376,7 @@ public class NavDrawerMenu   {
 				return mMenuAdapter;
 			// Adding adapters
 			for (Adapter actAdapter : adapters) {
-				mMenuAdapter.addItem(new AdapterMenuItem(actAdapter.getName(), actAdapter.getRole().name(), activeAdapter.getId().equals(actAdapter.getId()), actAdapter.getId()));
+				mMenuAdapter.addItem(new AdapterMenuItem(actAdapter.getName(), actAdapter.getRole().getStringResource(), activeAdapter.getId().equals(actAdapter.getId()), actAdapter.getId()));
 			}
 
 			// Adding separator as item (we don't want to let it float as header)

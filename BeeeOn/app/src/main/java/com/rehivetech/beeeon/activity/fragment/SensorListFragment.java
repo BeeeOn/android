@@ -2,6 +2,7 @@ package com.rehivetech.beeeon.activity.fragment;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -15,6 +16,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.Button;
@@ -22,6 +24,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.melnykov.fab.FloatingActionButton;
+import com.melnykov.fab.ScrollDirectionListener;
 import com.rehivetech.beeeon.Constants;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.activity.AddAdapterActivity;
@@ -48,12 +51,13 @@ import java.util.List;
 
 import se.emilsjolander.stickylistheaders.StickyListHeadersListView;
 
-public class SensorListFragment extends Fragment {
+public class SensorListFragment extends Fragment  {
 
 	private static final String TAG = SensorListFragment.class.getSimpleName();
 
 	private static final String LCTN = "lastlocation";
 	private static final String ADAPTER_ID = "lastAdapterId";
+
 
 	public static boolean ready = false;
 	private SwipeRefreshLayout mSwipeLayout;
@@ -117,8 +121,9 @@ public class SensorListFragment extends Fragment {
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+		Log.d(TAG,"OnCreateView");
 		mView = inflater.inflate(R.layout.listofsensors, container, false);
-		redrawDevices();
+
 		return mView;
 	}
 
@@ -128,7 +133,7 @@ public class SensorListFragment extends Fragment {
 		Log.d(TAG, "onActivityCreated()");
 		ready = true;
 
-		// mActivity = (MainActivity) getActivity();
+		redrawDevices();
 
 		// Init swipe-refreshig layout
 		mSwipeLayout = (SwipeRefreshLayout) mActivity.findViewById(R.id.swipe_container);
@@ -195,7 +200,7 @@ public class SensorListFragment extends Fragment {
 
 		Log.d(TAG, "LifeCycle: redraw devices list start");
 
-
+		mView = getView();
 		// get UI elements
 		mSwipeLayout = (SwipeRefreshLayout) mView.findViewById(R.id.swipe_container);
 		mSensorList = (StickyListHeadersListView) mView.findViewById(R.id.listviewofsensors);
@@ -285,6 +290,7 @@ public class SensorListFragment extends Fragment {
 		else if (!haveDevices) { // Have Adapter but any Devices
 			// Set right visibility
 			noItem.setVisibility(View.VISIBLE);
+			noItem.setText(R.string.no_sensor_cap);
 			refreshBtn.setVisibility(View.VISIBLE);
 			mSensorList.setVisibility(View.GONE);
 			if (mSwipeLayout != null)
@@ -333,18 +339,59 @@ public class SensorListFragment extends Fragment {
 			}
 		};
 
-		mFAM.setMenuItems(convertToInt(mFABMenuIcon), mFABMenuLabels.toArray(new String[mFABMenuLabels.size()]),
-				R.style.fab_item_menu,fabMenuListener, getResources().getDrawable(R.drawable.ic_action_cancel));
-		mFAM.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				Log.d(TAG,"FAB BTN HER");
-				mFAM.triggerMenu(90);
-			}
-		});
-
 		mSensorList.setAdapter(mSensorAdapter);
-		mFAM.attachToListView(mSensorList.getWrappedList());
+
+		int currentapiVersion = android.os.Build.VERSION.SDK_INT;
+		if (currentapiVersion >= Build.VERSION_CODES.ICE_CREAM_SANDWICH){ // API 14 +
+			mFAM.setMenuItems(convertToInt(mFABMenuIcon), mFABMenuLabels.toArray(new String[mFABMenuLabels.size()]),
+					R.style.fab_item_menu,fabMenuListener, getResources().getDrawable(R.drawable.ic_action_cancel));
+			mFAM.setOnClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					Log.d(TAG,"FAB BTN HER");
+					mFAM.triggerMenu(90);
+				}
+			});
+		} else{
+			// API 10 to 13
+			// Show dialof to select Add Adapter or Add sensor
+
+			mFAM.setOnClickListener( new OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					String[] mStringArray = new String[mFABMenuLabels.size()];
+					mStringArray = mFABMenuLabels.toArray(mStringArray);
+					mActivity.showOldAddDialog(mStringArray);
+				}
+			});
+
+		}
+
+		AbsListView.OnScrollListener ListListener = new AbsListView.OnScrollListener() {
+			@Override
+			public void onScrollStateChanged(AbsListView view, int scrollState) {
+			}
+
+			@Override
+			public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+				int topRowVerticalPosition = (mSensorList == null || mSensorList.getListChildCount() == 0) ?
+						0 : mSensorList.getListChildAt(0).getTop();
+				mSwipeLayout.setEnabled((topRowVerticalPosition >= 0));
+			}
+		};
+
+		mFAM.attachToListView(mSensorList.getWrappedList(),new ScrollDirectionListener() {
+			@Override
+			public void onScrollDown() {
+
+			}
+
+			@Override
+			public void onScrollUp() {
+
+			}
+		},ListListener);
+
 
 		if (haveDevices) {
 			// Capture listview menu item click
@@ -352,7 +399,7 @@ public class SensorListFragment extends Fragment {
 				@Override
 				public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                     Device device = mSensorAdapter.getDevice(position);
-
+					mActivity.setBeeeOnProgressBarVisibility(true);
 					Bundle bundle = new Bundle();
 					bundle.putString(SensorDetailActivity.EXTRA_ADAPTER_ID, device.getFacility().getAdapterId());
 					bundle.putString(SensorDetailActivity.EXTRA_DEVICE_ID, device.getId());
@@ -392,13 +439,13 @@ public class SensorListFragment extends Fragment {
 		return  intArray;
 	}
 
-	protected void showAddAdapterDialog() {
+	public void showAddAdapterDialog() {
 		Log.d(TAG, "HERE ADD ADAPTER +");
 		Intent intent = new Intent(mActivity, AddAdapterActivity.class);
 		mActivity.startActivityForResult(intent, Constants.ADD_ADAPTER_REQUEST_CODE);
 	}
 	
-	protected void showAddSensorDialog() {
+	public void showAddSensorDialog() {
 		Log.d(TAG, "HERE ADD SENSOR +");
 		Intent intent = new Intent(mActivity, AddSensorActivity.class);
 		mActivity.startActivityForResult(intent, Constants.ADD_SENSOR_REQUEST_CODE);
@@ -418,7 +465,8 @@ public class SensorListFragment extends Fragment {
 
     private void doReloadFacilitiesTask(String adapterId, boolean forceRefresh) {
         mReloadFacilitiesTask = new ReloadAdapterDataTask(getActivity().getApplicationContext(), forceRefresh, ReloadAdapterDataTask.ReloadWhat.FACILITIES);
-
+		if(!mSwipeLayout.isRefreshing())
+			mActivity.setBeeeOnProgressBarVisibility(true);
         mReloadFacilitiesTask.setListener(new CallbackTaskListener() {
 
             @Override
@@ -428,6 +476,7 @@ public class SensorListFragment extends Fragment {
 
                 mActivity.redraw();
                 mSwipeLayout.setRefreshing(false);
+				mActivity.setBeeeOnProgressBarVisibility(false);
             }
         });
 
@@ -436,13 +485,14 @@ public class SensorListFragment extends Fragment {
 
 	private void doFullReloadTask(boolean forceRefresh) {
 		mFullReloadTask = new ReloadAdapterDataTask(getActivity().getApplicationContext(), forceRefresh, ReloadAdapterDataTask.ReloadWhat.ADAPTERS_AND_ACTIVE_ADAPTER);
-
+		if(!mSwipeLayout.isRefreshing())
+			mActivity.setBeeeOnProgressBarVisibility(true);
 		mFullReloadTask.setListener(new CallbackTaskListener() {
 			@Override
 			public void onExecute(boolean success) {
 				if (!success)
 					return;
-
+				mActivity.setBeeeOnProgressBarVisibility(false);
 				mActivity.setActiveAdapterAndMenu();
 				mActivity.redraw();
 			}
@@ -469,6 +519,8 @@ public class SensorListFragment extends Fragment {
         });
         mRemoveFacilityTask.execute(pair);
     }
+
+
 
 	class ActionModeEditSensors implements ActionMode.Callback {
 

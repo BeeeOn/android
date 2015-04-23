@@ -24,11 +24,11 @@
 			android:paddingLeft="16dp"
 			android:paddingRight="16dp"
 			android:orientation="vertical"
-			android:visibility="gone">
+			android:visibility="visible">
 			<!-- ICON and VALUE -->
 			<RelativeLayout
 				android:layout_width="match_parent"
-				android:layout_height="84dp"
+				android:layout_height="90dp"
 				android:orientation="horizontal">
 				<!-- ICON OF SENSOR -->
 				<ImageView
@@ -36,7 +36,7 @@
 					android:layout_width="84dp"
 					android:layout_height="84dp"
 					android:layout_alignParentLeft="true"
-					android:layout_alignParentTop="true"
+					android:layout_alignParentBottom="true"
 					android:src="@drawable/dev_unknown"
 					android:contentDescription="Icon of device"
 					/>
@@ -47,18 +47,24 @@
 					android:layout_height="wrap_content"
 					android:layout_alignParentBottom="true"
 					android:layout_alignParentRight="true"
+					android:layout_toRightOf="@+id/sen_detail_icon"
+					android:layout_marginLeft="8dp"
 					android:orientation="vertical"
 					>
 					<!-- VALUE -->
 					<TextView
 						android:id="@+id/sen_detail_value"
-						android:layout_width="wrap_content"
-						android:layout_height="wrap_content"
-						android:text="ValueSensor"
+						android:layout_width="fill_parent"
+						android:layout_height="match_parent"
+						android:text="ValueSensor regulace na stálou teplotu vody aaaaaaaa"
 						android:textColor="@color/white"
 						android:layout_gravity="right"
-						android:textSize="26sp"
+						android:gravity="right"
+						android:ellipsize="end"
+						android:maxLines="2"
+						android:textSize="24sp"
 						/>
+					<!-- SWITCH ACTOR -->
 					<android.support.v7.widget.SwitchCompat
 						android:id="@+id/sen_detail_value_switch"
 						android:layout_width="wrap_content"
@@ -70,6 +76,17 @@
 						android:focusableInTouchMode="false"
 						android:visibility="gone"
 						/>
+					<!-- SET ACTOR -->
+					<Button
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:layout_gravity="right|bottom"
+						android:text="set"
+						style="@style/Base.Widget.AppCompat.Button.Small"
+						android:background="@color/beeeon_secundary_pink"
+						android:textColor="@color/white"
+						android:visibility="gone"/>
+
 				</LinearLayout>
 			</RelativeLayout>
 			<!-- NAME of SENSOR -->
@@ -85,7 +102,7 @@
 				android:singleLine="true"
 				android:text="NameSensor"
 				android:textColor="@color/white"
-				android:textSize="28sp"
+				android:textSize="24sp"
 				android:textStyle="bold"/>
 
 		</LinearLayout>
@@ -318,6 +335,22 @@
 				android:orientation="vertical"
 				android:visibility="visible"/>
 		</LinearLayout>
+		<!-- LOADING SECTION -->
+		<LinearLayout
+			android:id="@+id/sensor_progress"
+			android:layout_width="fill_parent"
+			android:layout_height="100dp"
+			android:layout_marginTop="100dp"
+			android:visibility="visible"
+			android:gravity="center">
+			<ProgressBar
+				style="?android:attr/android:progressBarStyleLarge"
+				android:layout_width="80dp"
+				android:layout_height="80dp"
+				android:indeterminate="true"
+				android:layout_gravity="center_horizontal"
+				/>
+			</LinearLayout>
 	</RelativeLayout>
 </ScrollView>
 </android.support.v4.widget.SwipeRefreshLayout>

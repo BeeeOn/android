@@ -9,6 +9,7 @@ import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.Window;
 import android.widget.Toast;
 
@@ -60,7 +61,6 @@ public class SensorDetailActivity extends BaseApplicationActivity {
     @Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-        supportRequestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
 		setContentView(R.layout.activity_sensor_detail_wraper);
 
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -68,9 +68,8 @@ public class SensorDetailActivity extends BaseApplicationActivity {
             mToolbar.setTitle(R.string.title_activity_sensor_detail);
             setSupportActionBar(mToolbar);
         }
-        
-		setSupportProgressBarIndeterminate(true);
-		setProgressBarIndeterminateVisibility(true);
+
+		//setBeeeOnProgressBarVisibility(true);
 		getSupportActionBar().setHomeButtonEnabled(true);
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
@@ -100,6 +99,10 @@ public class SensorDetailActivity extends BaseApplicationActivity {
 			finish();
 			return;
 		}
+	}
+
+	public void setBeeeOnProgressBarVisibility(boolean b) {
+		findViewById(R.id.toolbar_progress).setVisibility((b)? View.VISIBLE:View.INVISIBLE);
 	}
 
 	@Override
@@ -244,6 +247,15 @@ public class SensorDetailActivity extends BaseApplicationActivity {
 		((CustomViewPager) mPager).setPagingEnabled(true);
 		mPager.setOffscreenPageLimit(mDevices.size());
 		mPager.setCurrentItem(mActiveDevicePosition);
+		//setBeeeOnProgressBarVisibility(false);
+		visibleAllElements();
+	}
+
+	private void visibleAllElements() {
+		//HIDE progress
+		findViewById(R.id.sensor_progress_wraper).setVisibility(View.INVISIBLE);
+		// SHOW details
+		mPager.setVisibility(View.VISIBLE);
 	}
 
 	public void setEnableSwipe(boolean state) {

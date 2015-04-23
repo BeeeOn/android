@@ -287,13 +287,14 @@ public class SensorEditActivity extends BaseApplicationActivity {
 			// Get activity
 			mActivity = (SensorEditActivity) getActivity();
 			mController = Controller.getInstance(mActivity);
-			Adapter adapter = mController.getActiveAdapter();
-			if(adapter == null)
+			mAdapter = mController.getActiveAdapter();
+			if(mAdapter == null)
 				return;
-			mDevice = mController.getFacilitiesModel().getDevice(adapter.getId(), mDeviceID);
+			mDevice = mController.getFacilitiesModel().getDevice(mAdapter.getId(), mDeviceID);
+			if(mDevice == null)
+				return;
 			mFacility = mDevice.getFacility();
 			mLocationId = mFacility.getLocationId();
-			mAdapter = mController.getAdaptersModel().getAdapter(mFacility.getAdapterId());
 			initLayout();
 			if(savedInstanceState != null) {
 				mName.setText(savedInstanceState.getString(EXTRA_ACT_NAME));

@@ -82,7 +82,7 @@ public class UsersListAdapter extends BaseAdapter {
 		
 		txtNameUser.setText(user.getFullName());
 		txtEmailUser.setText(user.getEmail());
-		txtRoleUser.setText(user.getRole().toString());
+		txtRoleUser.setText(user.getRole().getStringResource());
 
 		return itemView;
 	}

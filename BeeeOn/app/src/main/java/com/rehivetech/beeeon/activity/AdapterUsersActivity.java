@@ -87,7 +87,7 @@ public class AdapterUsersActivity extends BaseApplicationActivity {
 		mAdapter = mController.getAdaptersModel().getAdapter(getIntent().getStringExtra(Constants.GUI_SELECTED_ADAPTER_ID));
 		
 		// Get all users for adapter
-		doReloadAdapterUsersTask(mAdapter.getId(), false);
+		doReloadAdapterUsersTask(mAdapter.getId(), true);
 	}
 
 	private void initLayouts() {
@@ -129,7 +129,7 @@ public class AdapterUsersActivity extends BaseApplicationActivity {
 	@Override
 	protected void onAppResume() {
 		if(mAdapter != null)
-			doReloadAdapterUsersTask(mAdapter.getId(), false);
+			doReloadAdapterUsersTask(mAdapter.getId(), true);
 	}
 
 	@Override
@@ -293,8 +293,10 @@ public class AdapterUsersActivity extends BaseApplicationActivity {
         builder.setPositiveButton(R.string.save, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
                 // User clicked OK button
+				//mSelectedItem.setRole(User.Role.fromString(((RadioButton)mLayoutDialog.findViewById(mGroup.getCheckedRadioButtonId())).getText().toString()));
+
 				for (User.Role role : User.Role.values()) {
-                    if (role == (User.Role) mLayoutDialog.findViewById(mGroup.getCheckedRadioButtonId()).getTag())
+                    if (getString(role.getStringResource()).equals(((RadioButton)mLayoutDialog.findViewById(mGroup.getCheckedRadioButtonId())).getText().toString()) )
                         mSelectedItem.setRole(role);
                 }
                 doEditUserTask(mSelectedItem);

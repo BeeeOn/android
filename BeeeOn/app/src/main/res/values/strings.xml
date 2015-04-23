@@ -138,7 +138,7 @@
     <string name="menu_profile">Account info</string>
 
     <!-- Add sensor dialog -->
-    <string name="addsensor_sending_request">Sending pair request </string>
+    <string name="addsensor_sending_request">Sending ... </string>
     <string name="addsensor_send_request">Send pair request  </string>
     <string name="addsensor_active_pair">Active pair mode </string>
     <string name="addadapter_textview_name">Name</string>
@@ -342,5 +342,8 @@
 	<string name="toast_delete_success">Successfully removed</string>
 	<string name="addadapter_fill_name">Please fill gateway name</string>
 	<string name="addadapter_fill_code">Please fill gateway code</string>
+	<string name="addsensor_stoped">stopped</string>
+	<string name="add_action_dialog_title">What do you want add ?</string>
+	<string name="toast_need_sensor_location_icon">Please choose icon of your new location</string>
 
 </resources>

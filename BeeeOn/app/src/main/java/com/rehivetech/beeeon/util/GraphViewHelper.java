@@ -30,7 +30,11 @@ final public class GraphViewHelper {
 		graphView.getGridLabelRenderer().setVerticalLabelsColor(context.getResources().getColor(R.color.beeeon_text_hint));
 		graphView.getGridLabelRenderer().setHorizontalLabelsColor(context.getResources().getColor(R.color.beeeon_text_hint));
 		graphView.getGridLabelRenderer().setGridColor(context.getResources().getColor(R.color.beeeon_text_hint));
+		graphView.getPointer().setColor(context.getResources().getColor(R.color.beeeon_secundary_pink));
+		graphView.getPointer().setTextColor(context.getResources().getColor(R.color.white));
+
 		graphView.setLoading(true);
+		graphView.setDrawPointer(true);
 
 		graphView.getViewport().setScalable(true);
 		graphView.getViewport().setScrollable(true);

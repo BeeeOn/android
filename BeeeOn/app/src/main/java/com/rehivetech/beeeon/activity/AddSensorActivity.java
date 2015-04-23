@@ -185,6 +185,7 @@ public class AddSensorActivity extends BaseApplicationActivity {
 	public void resetBtn() {
 		mSkip.setVisibility(View.VISIBLE);
 		mNext.setText(mActivity.getString(R.string.tutorial_next));
+		mNext.setEnabled(true);
 	}
 
 

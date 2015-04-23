@@ -92,4 +92,10 @@
 	</style>
 
 
+
+	<style name="numberPicker" parent="@style/NPWidget.Material.NumberPicker">
+
+	</style>
+
+
 </resources>

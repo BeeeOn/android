@@ -13,6 +13,7 @@ import android.widget.LinearLayout.LayoutParams;
 import android.widget.TextView;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.activity.AddAdapterActivity;
+import com.rehivetech.beeeon.activity.AddSensorActivity;
 import com.rehivetech.beeeon.activity.IntroActivity;
 
 public final class IntroImageFragment extends Fragment {
@@ -74,6 +75,9 @@ public final class IntroImageFragment extends Fragment {
 	    	if(mActivity instanceof AddAdapterActivity) {
 	    		((AddAdapterActivity)mActivity).resetBtn();
 	    	}
+			if(mActivity instanceof AddSensorActivity) {
+				((AddSensorActivity)mActivity).resetBtn();
+			}
 			else if (mActivity instanceof IntroActivity) {
 				if(((IntroActivity)mActivity).isLastFragment())
 				{
