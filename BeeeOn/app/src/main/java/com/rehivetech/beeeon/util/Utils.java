@@ -13,8 +13,10 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
+import android.support.annotation.Nullable;
 import android.telephony.TelephonyManager;
 import android.util.DisplayMetrics;
+import android.util.Pair;
 import android.util.TypedValue;
 import android.widget.Toast;
 
@@ -47,6 +49,7 @@ import java.util.Locale;
 import java.util.Map;
 
 final public class Utils {
+	private static final String TAG = Utils.class.getSimpleName();
 
 	/**
 	 * Private constructor to avoid instantiation.
@@ -335,13 +338,39 @@ final public class Utils {
 	 * @param <T>
 	 * @return
 	 */
-	public static <T extends IIdentifier> T getFromList(String id, List<T> objects){
+	@Nullable public static <T extends IIdentifier> T getFromList(String id, List<T> objects){
+		if(id == null){
+			Log.i(TAG, "getFromList given NULL id");
+			return null;
+		}
+
 		for(T tempObj : objects){
 			if(tempObj.getId().equals(id)) return tempObj;
 		}
 		return null;
 	}
 
+	/**
+	 * Gets index and object from list of objects
+	 * @param id
+	 * @param objects
+	 * @param <T>
+	 * @return
+	 */
+	@Nullable public static <T extends IIdentifier> Pair<Integer, T> getIndexAndObjectFromList(String id, List<T> objects){
+		if(id == null){
+			Log.i(TAG, "getIndexAndObjectFromList given NULL id");
+			return null;
+		}
+		int index = 0;
+		for(T tempObj : objects){
+			if(tempObj.getId().equals(id)){
+				return new Pair<>(index, tempObj);
+			}
+			index++;
+		}
+		return null;
+	}
 
 	public static float dpToPx(Context context, float dpValue) {
 		DisplayMetrics metrics = context.getResources().getDisplayMetrics();

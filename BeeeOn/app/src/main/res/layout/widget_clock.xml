@@ -39,7 +39,6 @@
 			android:text="00"
 			android:textColor="@color/beeeon_primary_cyan"
 			/>
-
 	</LinearLayout>
 
 	<LinearLayout

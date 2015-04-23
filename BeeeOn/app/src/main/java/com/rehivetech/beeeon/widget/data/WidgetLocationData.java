@@ -15,9 +15,6 @@ import com.rehivetech.beeeon.util.Compatibility;
 import com.rehivetech.beeeon.util.Log;
 import com.rehivetech.beeeon.util.TimeHelper;
 import com.rehivetech.beeeon.util.UnitsHelper;
-import com.rehivetech.beeeon.widget.configuration.WidgetConfiguration;
-import com.rehivetech.beeeon.widget.configuration.WidgetConfigurationActivity;
-import com.rehivetech.beeeon.widget.configuration.WidgetLocationConfiguration;
 import com.rehivetech.beeeon.widget.persistence.WidgetLocationPersistence;
 import com.rehivetech.beeeon.widget.receivers.WidgetLocationListProvider;
 import com.rehivetech.beeeon.widget.service.WidgetListService;
@@ -137,12 +134,6 @@ public class WidgetLocationData extends WidgetData {
         mRemoteViewsFactoryIntent.setData(Uri.parse(mRemoteViewsFactoryIntent.toUri(Intent.URI_INTENT_SCHEME)));
         PendingIntent openDetailPendingIntent = PendingIntent.getBroadcast(mContext, 0, openDetailIntent, PendingIntent.FLAG_UPDATE_CURRENT);
         mRemoteViews.setPendingIntentTemplate(R.id.widget_sensor_list_view, openDetailPendingIntent);
-    }
-
-    @Override
-    public WidgetConfiguration createConfiguration(WidgetConfigurationActivity activity, boolean isWidgetEditing) {
-        return new WidgetLocationConfiguration(this, activity, isWidgetEditing);
-
     }
 
     @Override

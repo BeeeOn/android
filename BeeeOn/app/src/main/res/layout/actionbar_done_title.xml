@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="56dp"
+    android:orientation="horizontal"
+    android:divider="?android:attr/dividerVertical"
+    android:showDividers="middle"
+    android:dividerPadding="12dp">
+
+    <ImageView
+        android:id="@+id/actionbar_done"
+        style="@style/Widget.AppCompat.ActionButton.CloseMode"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:src="@drawable/ic_action_accept"
+        android:layout_gravity="center"
+        android:gravity="center_vertical"
+        android:scaleType="fitCenter"
+    />
+
+    <TextView
+        style="@style/Widget.AppCompat.ActionBar.TabText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:gravity="center_vertical"
+        android:text="@string/action_close"
+        android:textColor="@color/white"
+        />
+
+</LinearLayout>

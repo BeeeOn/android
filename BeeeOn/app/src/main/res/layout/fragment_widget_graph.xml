@@ -41,59 +41,6 @@
 		android:layout_marginBottom="8dp"
 		/>
 
-	<RelativeLayout
-		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
-		android:layout_marginRight="16dp"
-		android:layout_marginEnd="16dp"
-		>
-		<TextView
-			style="@style/LinearRow.Item.OneLine"
-			android:text="@string/widget_configuration_color_scheme"
-			android:layout_alignParentLeft="true"
-			android:layout_alignParentStart="true"
-			android:layout_toLeftOf="@+id/widget_configuration_scheme"
-			android:layout_toStartOf="@+id/widget_configuration_scheme"
-			/>
-
-		<RadioGroup
-			android:id="@+id/widget_configuration_scheme"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:orientation="horizontal"
-			android:layout_centerVertical="true"
-			android:layout_alignParentRight="true"
-			android:layout_alignParentEnd="true">
-
-			<RadioButton
-				android:id="@+id/scheme_pink_cyan"
-				android:layout_width="32dp"
-				android:layout_height="32dp"
-				android:button="@drawable/oval_pink_cyan_selector"
-				android:checked="true"
-				android:layout_marginRight="4dp"
-				android:layout_marginEnd="4dp"
-				/>
-
-
-			<RadioButton
-				android:id="@+id/scheme_black_white"
-				android:layout_width="32dp"
-				android:layout_height="32dp"
-				android:button="@drawable/oval_white_black_selector"
-				/>
-		</RadioGroup>
-	</RelativeLayout>
-
-	<!-- separator -->
-	<ImageView
-		android:layout_width="match_parent"
-		android:layout_height="1px"
-		android:src="@color/beeeon_separator"
-		android:layout_marginTop="8dp"
-		android:layout_marginBottom="8dp"
-		/>
-
 	<!-- ********* HOUSEHOLD SETTINGS ******** -->
 
 	<TextView
@@ -128,13 +75,11 @@
 		android:text="@string/widget_configuration_sensor"
 		/>
 
-	<LinearLayout
-		android:id="@+id/widget_config_devices"
-		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
+	<Spinner
+		android:id="@+id/widget_config_device"
 		style="@style/LinearRow.Row"
-		android:orientation="vertical">
-		<!-- spinners are inflated programmatically -->
-	</LinearLayout>
+		android:layout_width="match_parent"
+		android:layout_height="40dp"
+		/>
 
 </LinearLayout>

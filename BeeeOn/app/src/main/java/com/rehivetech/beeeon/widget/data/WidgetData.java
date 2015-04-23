@@ -16,7 +16,6 @@ import com.rehivetech.beeeon.household.adapter.Adapter;
 import com.rehivetech.beeeon.util.Log;
 import com.rehivetech.beeeon.util.TimeHelper;
 import com.rehivetech.beeeon.util.UnitsHelper;
-import com.rehivetech.beeeon.widget.configuration.WidgetConfiguration;
 import com.rehivetech.beeeon.widget.configuration.WidgetConfigurationActivity;
 import com.rehivetech.beeeon.widget.persistence.WidgetDevicePersistence;
 import com.rehivetech.beeeon.widget.service.WidgetService;
@@ -355,6 +354,4 @@ abstract public class WidgetData {
     }
 
     public abstract String getClassName();
-
-    public abstract WidgetConfiguration createConfiguration(WidgetConfigurationActivity activity, boolean isWidgetEditing);
 }

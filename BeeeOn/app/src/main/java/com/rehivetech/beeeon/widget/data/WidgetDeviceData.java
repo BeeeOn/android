@@ -10,9 +10,6 @@ import com.rehivetech.beeeon.household.device.RefreshInterval;
 import com.rehivetech.beeeon.util.Log;
 import com.rehivetech.beeeon.util.TimeHelper;
 import com.rehivetech.beeeon.util.UnitsHelper;
-import com.rehivetech.beeeon.widget.configuration.WidgetConfiguration;
-import com.rehivetech.beeeon.widget.configuration.WidgetConfigurationActivity;
-import com.rehivetech.beeeon.widget.configuration.WidgetDeviceConfiguration;
 import com.rehivetech.beeeon.widget.persistence.WidgetDevicePersistence;
 
 import org.joda.time.DateTime;
@@ -42,8 +39,12 @@ public class WidgetDeviceData extends WidgetData {
 
     @Override
     public void init() {
+        if(widgetDevice.getId().isEmpty()){
+            Log.i(TAG, "Could not retrieve device from widget " + String.valueOf(mWidgetId));
+            return;
+        }
+
         String[] ids = widgetDevice.getId().split(Device.ID_SEPARATOR, 2);
-        // TODO  zde nekdy je deviceId prazdne ci tak neco a nevytvori se objekt
         Facility facility = new Facility();
         facility.setAdapterId(adapterId);
         facility.setAddress(ids[0]);
@@ -153,10 +154,5 @@ public class WidgetDeviceData extends WidgetData {
     @Override
     public String getClassName() {
         return WidgetDeviceData.class.getName();
-    }
-
-    @Override
-    public WidgetConfiguration createConfiguration(WidgetConfigurationActivity activity, boolean isWidgetEditing) {
-        return new WidgetDeviceConfiguration(this, activity, isWidgetEditing);
     }
 }

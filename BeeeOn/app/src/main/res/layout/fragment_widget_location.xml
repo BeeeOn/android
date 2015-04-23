@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:orientation="vertical"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	android:paddingLeft="8dp"
+	android:paddingRight="8dp"
+	>
+
+	<!-- ********* WIDGET SETTINGS ******** -->
+
+	<TextView
+		android:id="@+id/widget_config_widget_label"
+		android:text="@string/widget"
+		style="@style/LinearRow.Caption"
+		/>
+
+	<TextView
+		android:text="@string/widget_configuration_interval_widget"
+		style="@style/LinearRow.Item"
+		/>
+
+	<TextView
+		android:id="@+id/widget_config_interval_text"
+		style="@style/LinearRow.Row"
+		/>
+
+	<SeekBar
+		android:id="@+id/widget_config_interval"
+		style="@style/LinearRow.Row"
+		android:layout_height="wrap_content"
+		/>
+
+	<!-- separator -->
+	<ImageView
+		android:layout_width="match_parent"
+		android:layout_height="1px"
+		android:src="@color/beeeon_separator"
+		android:layout_marginTop="8dp"
+		android:layout_marginBottom="8dp"
+		/>
+
+	<!-- ********* HOUSEHOLD SETTINGS ******** -->
+
+	<TextView
+		android:id="@+id/widget_config_gateway_label"
+		android:text="@string/household"
+		style="@style/LinearRow.Caption"
+		/>
+
+	<TextView
+		style="@style/LinearRow.Item"
+		android:text="@string/widget_configuration_adapter"
+		/>
+
+	<Spinner
+		android:id="@+id/widget_config_gateway"
+		android:layout_width="match_parent"
+		android:layout_height="40dp"
+		style="@style/LinearRow.Row"
+		/>
+
+	<!-- separator -->
+	<ImageView
+		android:layout_width="match_parent"
+		android:layout_height="1px"
+		android:src="@color/beeeon_separator"
+		android:layout_marginTop="8dp"
+		android:layout_marginBottom="8dp"
+		/>
+
+	<TextView
+		style="@style/LinearRow.Item"
+		android:text="@string/widget_configuration_location"
+		/>
+
+	<Spinner
+		android:id="@+id/widget_config_location"
+		style="@style/LinearRow.Row"
+		android:layout_width="match_parent"
+		android:layout_height="40dp"
+		/>
+
+</LinearLayout>

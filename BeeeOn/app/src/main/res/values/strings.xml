@@ -228,6 +228,15 @@
     <string name="widget_configuration_select_device">Select device from list</string>
     <string name="widget_configuration_select_location">Select location from list</string>
 
+    <string name="widget_configuration_widget_clock">Configuration clock widget</string>
+    <string name="widget_configuration_widget_device">Configuration device widget</string>
+    <string name="widget_configuration_widget_graph">Configuration graph widget</string>
+    <string name="widget_configuration_widget_location">Configuration location widget</string>
+
+    <string name="widget_configuration_color_scheme">Color scheme</string>
+    <string name="widget">Widget</string>
+    <string name="household">Household</string>
+
     <!-- About -->
     <string name="play_link" translatable="false">market://details?id=com.rehivetech.beeeon</string>
     <string name="company_email">info@BeeeOn.com</string>
