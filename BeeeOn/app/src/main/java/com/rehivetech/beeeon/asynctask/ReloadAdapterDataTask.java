@@ -12,7 +12,7 @@ public class ReloadAdapterDataTask extends CallbackTask<String> {
 
 	private final boolean mForceReload;
 
-	private final ReloadWhat mWhat;
+	private ReloadWhat mWhat;
 
 	public enum ReloadWhat {
 		ADAPTERS_AND_ACTIVE_ADAPTER,
@@ -38,11 +38,12 @@ public class ReloadAdapterDataTask extends CallbackTask<String> {
 			controller.getAdaptersModel().reloadAdapters(mForceReload);
 
 			Adapter active = controller.getActiveAdapter();
-			if (active != null) {
-				adapterId = active.getId();
-			} else {
+			if (active == null)
 				return true;
-			}
+
+			// We need to update also facilities
+			adapterId = active.getId();
+			mWhat = ReloadWhat.FACILITIES;
 		}
 
 		if (mWhat == ReloadWhat.LOCATIONS || mWhat == ReloadWhat.FACILITIES) {
