@@ -12,10 +12,14 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.avast.android.dialogs.fragment.ListDialogFragment;
+import com.avast.android.dialogs.iface.IListDialogListener;
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.series.BarGraphSeries;
 import com.jjoe64.graphview.series.BaseSeries;
@@ -41,9 +45,12 @@ import com.rehivetech.beeeon.household.device.DeviceLog.DataType;
 import com.rehivetech.beeeon.household.device.Facility;
 import com.rehivetech.beeeon.household.device.values.BaseEnumValue;
 import com.rehivetech.beeeon.household.device.values.BaseValue;
+import com.rehivetech.beeeon.household.device.values.BoilerOperationModeValue;
+import com.rehivetech.beeeon.household.device.values.BoilerOperationTypeValue;
 import com.rehivetech.beeeon.household.device.values.BooleanValue;
 import com.rehivetech.beeeon.household.device.values.OnOffValue;
 import com.rehivetech.beeeon.household.device.values.OpenClosedValue;
+import com.rehivetech.beeeon.household.device.values.TemperatureValue;
 import com.rehivetech.beeeon.household.location.Location;
 import com.rehivetech.beeeon.pair.LogDataPair;
 import com.rehivetech.beeeon.util.GraphViewHelper;
@@ -61,8 +68,10 @@ import java.util.Map.Entry;
 import java.util.SortedMap;
 import java.util.concurrent.TimeUnit;
 
-public class SensorDetailFragment extends Fragment {
+public class SensorDetailFragment extends Fragment implements IListDialogListener{
 
+	private static final int REQUEST_BOILER_TYPE = 7894;
+	private static final int REQUEST_BOILER_MODE = 1236;
 	private Controller mController;
 	private static final String TAG = SensorDetailFragment.class.getSimpleName();
 	private static final int EDIT_NONE = 0;
@@ -118,6 +127,7 @@ public class SensorDetailFragment extends Fragment {
 	private View mView;
 	private SensorDetailActivity.ScreenSlidePagerAdapter mFragmentAdapter;
 	private ReloadAdapterDataTask mReloadFacilitiesTask;
+	private Button mValueSet;
 
 
 	public SensorDetailFragment() {
@@ -204,6 +214,7 @@ public class SensorDetailFragment extends Fragment {
 		// Get View for sensor value
 		mValue = (TextView) mView.findViewById(R.id.sen_detail_value);
 		mValueSwitch = (SwitchCompat) mView.findViewById(R.id.sen_detail_value_switch);
+		mValueSet = (Button) mView.findViewById(R.id.sen_detail_value_set);
 		// Get FAB for edit
 		mFABedit = (FloatingActionButton) mView.findViewById(R.id.sen_detail_edit_fab);
 		// Get View for sensor time
@@ -254,8 +265,74 @@ public class SensorDetailFragment extends Fragment {
 					doActorAction(mDevice);
 				}
 			});
+			final Fragment frg = this;
+			if(mDevice.getValue() instanceof TemperatureValue) {
+				// Set listner for dialog with NumberPicker
+				mValueSet.setOnClickListener(new OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						Log.d(TAG,"SET TEMPERATURE");
+
+					}
+				});
+			}
+			else if(mDevice.getValue() instanceof BoilerOperationTypeValue){
+				// Set dialog for set Type of  BOILER
+				mValueSet.setOnClickListener(new OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						Log.d(TAG,"SET BOILER TYPE");
+						String[] tmp = new String[] {
+								getString(R.string.dev_boiler_operation_type_value_off),
+								getString(R.string.dev_boiler_operation_type_value_room),
+								getString(R.string.dev_boiler_operation_type_value_equiterm),
+								getString(R.string.dev_boiler_operation_type_value_stable),
+								getString(R.string.dev_boiler_operation_type_value_tuv),
+						};
+
+						ListDialogFragment
+								.createBuilder(mActivity, mActivity.getSupportFragmentManager())
+								.setTitle(getString(R.string.dialog_title_set_bioler_type))
+								.setItems(tmp)
+								.setSelectedItem(((BoilerOperationTypeValue) mDevice.getValue()).getActive().getId())
+								.setRequestCode(REQUEST_BOILER_TYPE)
+								.setChoiceMode(AbsListView.CHOICE_MODE_SINGLE)
+								.setConfirmButtonText(R.string.dialog_set_boiler_setaction)
+								.setCancelButtonText(R.string.notification_cancel)
+								.setTargetFragment(frg,REQUEST_BOILER_TYPE)
+								.show();
+					}
+				});
+			}
+			else if (mDevice.getValue() instanceof  BoilerOperationModeValue) {
+				// Set dialog for set Mode of Boiler
+				mValueSet.setOnClickListener(new OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						Log.d(TAG,"SET BOILER MODE");
+						String[] tmp = new String[] {
+								getString(R.string.dev_boiler_operation_mode_value_automatic),
+								getString(R.string.dev_boiler_operation_mode_value_manual),
+								getString(R.string.dev_boiler_operation_mode_value_vacation)
+						};
+
+						ListDialogFragment
+								.createBuilder(mActivity, mActivity.getSupportFragmentManager())
+								.setTitle(getString(R.string.dialog_title_set_bioler_mode))
+								.setItems(tmp)
+								.setSelectedItem(((BoilerOperationModeValue) mDevice.getValue()).getActive().getId())
+								.setRequestCode(REQUEST_BOILER_MODE)
+								.setChoiceMode(AbsListView.CHOICE_MODE_SINGLE)
+								.setConfirmButtonText(R.string.dialog_set_boiler_setaction)
+								.setCancelButtonText(R.string.notification_cancel)
+								.setTargetFragment(frg, REQUEST_BOILER_MODE)
+								.show();
+					}
+				});
+			}
 
 		}
+
 		// Set name of location
 		if (mController != null) {
 			Location location = null;
@@ -293,7 +370,6 @@ public class SensorDetailFragment extends Fragment {
 			if (val instanceof OnOffValue) {
 				mValueSwitch.setChecked(((BooleanValue) val).isActive());
 			}
-
 		}
 
 		// Set icon of sensor
@@ -306,13 +382,6 @@ public class SensorDetailFragment extends Fragment {
 
 		// Set refresh time Text
 		mRefreshTimeText.setText(facility.getRefresh().getStringInterval(mActivity));
-
-
-		// Add Graph with history data
-		if (mUnitsHelper != null && mTimeHelper != null) {
-			DateTimeFormatter fmt = mTimeHelper.getFormatter(GRAPH_DATE_TIME_FORMAT, adapter);
-			//addGraphView(fmt, mUnitsHelper);
-		}
 
 		// Set battery
 		mBattery.setText(facility.getBattery() + "%");
@@ -351,8 +420,11 @@ public class SensorDetailFragment extends Fragment {
 			BaseValue value = mDevice.getValue();
 			
 			// For actor values of type on/off, open/closed we show switch button
-			if (value instanceof OnOffValue || value instanceof OpenClosedValue) {
+			if (value instanceof OnOffValue || value instanceof OpenClosedValue ) {
 				mValueSwitch.setVisibility(View.VISIBLE);
+			}
+			else if (value instanceof TemperatureValue || value instanceof BoilerOperationModeValue || value instanceof  BoilerOperationTypeValue) {
+				mValueSet.setVisibility(View.VISIBLE);
 			}
 		}
 
@@ -363,23 +435,13 @@ public class SensorDetailFragment extends Fragment {
 		// Init swipe-refreshig layout
 		mSwipeLayout = (SwipeRefreshLayout) mView.findViewById(R.id.swipe_container);
 		mSwipeLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-
 			@Override
 			public void onRefresh() {
 				Log.d(TAG, "Refreshing list of sensors");
-
 				doReloadFacilitiesTask(mAdapterId, true);
-				//mActivity.getPager().getAdapter().notifyDataSetChanged();
 			}
 		});
 		mSwipeLayout.setColorSchemeColors(  R.color.beeeon_primary_cyan, R.color.beeeon_text_color,R.color.beeeon_secundary_pink);
-
-		// mSpinnerLoc;
-		/*if (mGraphView != null) {
-			mGraphView.setVisibility(View.VISIBLE);
-			mGraphInfo.setVisibility(View.VISIBLE);
-		}*/
-
 	}
 
 	private void addGraphView(final DateTimeFormatter fmt, final UnitsHelper unitsHelper) {
@@ -419,31 +481,7 @@ public class SensorDetailFragment extends Fragment {
 				return false;
 			}
 		});
-/*
-		mGraphInfo.setOnTouchListener(new OnTouchListener() {
 
-			@Override
-			public boolean onTouch(View v, MotionEvent event) {
-				// Disable graph if in edit Mode
-				if (mEditMode != EDIT_NONE)
-					return false;
-
-				if (mWasTapGraph)
-					return true;
-
-				mWasTapLayout = false;
-				mWasTapGraph = true;
-
-				Log.d(TAG, "onTouch layout");
-				mGraphView.getViewport().setScrollable(true);
-				mGraphView.getViewport().setScalable(true);
-				mActivity.setEnableSwipe(false);
-				mGraphInfo.setVisibility(View.GONE);
-//				mGraphView.animateY(2000);
-				onTouch(v, event);
-				return true;
-			}
-		});*/
 	}
 
 
@@ -596,4 +634,13 @@ public class SensorDetailFragment extends Fragment {
 		mGetDeviceLogTask.execute(new LogDataPair[] { pair });
 	}
 
+	@Override
+	public void onListItemSelected(CharSequence value, int number, int requestCode) {
+		if(requestCode == REQUEST_BOILER_MODE) {
+			Log.d(TAG,"RESULT - SET BOILDER MODE ");
+		}
+		else if(requestCode == REQUEST_BOILER_TYPE) {
+			Log.d(TAG,"RESULT - SET BOILDER TYPE ");
+		}
+	}
 }

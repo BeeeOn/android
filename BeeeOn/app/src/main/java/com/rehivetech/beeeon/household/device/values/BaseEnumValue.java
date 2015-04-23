@@ -157,4 +157,6 @@ public abstract class BaseEnumValue extends BaseValue {
 		return mValue.getValue().equalsIgnoreCase(value);
 	}
 
+	public Item getActive() { return mValue; }
+
 }
