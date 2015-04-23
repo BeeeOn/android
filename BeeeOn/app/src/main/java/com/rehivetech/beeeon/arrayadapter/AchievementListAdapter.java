@@ -1,5 +1,6 @@
 package com.rehivetech.beeeon.arrayadapter;
 
+import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -31,10 +32,10 @@ public class AchievementListAdapter extends BaseAdapter implements Filterable{
 	private List<AchievementListItem> mFilteredList;
 	private AchievementListOnClickListener mCallback;
 
-	public AchievementListAdapter(LayoutInflater inflater, String categoryId, AchievementListOnClickListener callback){
+	public AchievementListAdapter(LayoutInflater inflater, String categoryId, AchievementListOnClickListener callback, Context context){
 		mInflater = inflater;
 		mCallback = callback;
-		mAchievementList = AchievementList.getInstance().getAchievements();
+		mAchievementList = AchievementList.getInstance(context).getAchievements();
 		mFilteredList = mAchievementList;
 		mFilter.filter(categoryId);
 	}

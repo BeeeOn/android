@@ -1,8 +1,12 @@
 package com.rehivetech.beeeon.gamification;
 
+import android.content.Context;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.rehivetech.beeeon.controller.Controller;
+import com.rehivetech.beeeon.network.DemoNetwork;
+import com.rehivetech.beeeon.network.Network;
 import com.rehivetech.beeeon.util.Log;
 
 import java.util.ArrayList;
@@ -23,17 +27,21 @@ public class AchievementList implements Parcelable {
 	private AchievementListItem listItem;
 	private static AchievementList mInstance;
 
-	private AchievementList() {
+	private AchievementList(Context context) {
 		Log.d(TAG, "constructor");
-		if(mAchievementList == null)
-		  mAchievementList = loadAllAchievements();
+		if(mAchievementList == null) {
+			Network network = new Network(context, false);
+			String adapterId = Controller.getInstance(context).getActiveAdapter().getId();
+			mAchievementList = network.getAllAchievements(adapterId);
+			Log.d(TAG, "downloading data " + adapterId);
+		}
 		recountValues();
 	}
 
-	public static AchievementList getInstance() {
+	public static AchievementList getInstance(Context context) {
 		Log.d(TAG, "new instance");
 		if(mInstance == null) {
-			mInstance = new AchievementList();
+			mInstance = new AchievementList(context);
 		}
 		return mInstance;
 	}

@@ -105,7 +105,7 @@ public class AchievementOverviewActivity extends BaseApplicationActivity impleme
 	private void setOnClickListeners() {
 		ListView achievementList = (ListView) findViewById(R.id.achievement_list);
 
-		mAchievementListAdapter = new AchievementListAdapter(this.getLayoutInflater(), mCategoryId, this);
+		mAchievementListAdapter = new AchievementListAdapter(this.getLayoutInflater(), mCategoryId, this, getApplicationContext());
 		achievementList.setAdapter(mAchievementListAdapter);
 		achievementList.setSelector(android.R.color.transparent);
 	}

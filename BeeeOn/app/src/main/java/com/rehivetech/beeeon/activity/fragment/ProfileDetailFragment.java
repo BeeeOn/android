@@ -74,6 +74,7 @@ public class ProfileDetailFragment extends Fragment implements Observer {
 		mContext = getActivity();
 		Controller controller = Controller.getInstance(mContext);
 	    actUser = controller.getActualUser();
+		controller.getActiveAdapter().getId();
   	}
 
   	@Override
@@ -146,7 +147,7 @@ public class ProfileDetailFragment extends Fragment implements Observer {
   	}
 
   	private void redrawCategories() {
-		final AchievementList achievementList = AchievementList.getInstance();
+		final AchievementList achievementList = AchievementList.getInstance(mContext);
 
 		userLevel.setText(getString(R.string.profile_level) + " " + achievementList.getLevel());
 		mPoints.setText(String.valueOf(achievementList.getTotalPoints()));
