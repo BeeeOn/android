@@ -344,5 +344,6 @@
 	<string name="addadapter_fill_code">Please fill gateway code</string>
 	<string name="addsensor_stoped">stopped</string>
 	<string name="add_action_dialog_title">What do you want add ?</string>
+	<string name="toast_need_sensor_location_icon">Please choose icon of your new location</string>
 
 </resources>

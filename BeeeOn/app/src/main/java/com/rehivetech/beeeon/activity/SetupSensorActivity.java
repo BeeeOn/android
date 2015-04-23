@@ -156,6 +156,10 @@ public class SetupSensorActivity extends BaseApplicationActivity {
 						Toast.makeText(mActivity, getString(R.string.toast_need_sensor_location_name), Toast.LENGTH_LONG).show();
 						return;
 					}
+					if((mNewIconSpinner.getAdapter().getItem(mNewIconSpinner.getSelectedItemPosition())).equals(Location.LocationIcon.UNKNOWN)) {
+						Toast.makeText(mActivity, getString(R.string.toast_need_sensor_location_icon), Toast.LENGTH_LONG).show();
+						return;
+					}
 
 					location = new Location(Location.NEW_LOCATION_ID, mNewLocation.getText().toString(), mPairAdapter.getId(), ((Location.LocationIcon)mNewIconSpinner.getAdapter().getItem(mNewIconSpinner.getSelectedItemPosition())).getId());
 
