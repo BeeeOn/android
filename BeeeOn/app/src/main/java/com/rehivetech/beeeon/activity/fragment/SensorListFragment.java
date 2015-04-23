@@ -465,7 +465,8 @@ public class SensorListFragment extends Fragment  {
 
     private void doReloadFacilitiesTask(String adapterId, boolean forceRefresh) {
         mReloadFacilitiesTask = new ReloadAdapterDataTask(getActivity().getApplicationContext(), forceRefresh, ReloadAdapterDataTask.ReloadWhat.FACILITIES);
-
+		if(!mSwipeLayout.isRefreshing())
+			mActivity.setBeeeOnProgressBarVisibility(true);
         mReloadFacilitiesTask.setListener(new CallbackTaskListener() {
 
             @Override
@@ -475,6 +476,7 @@ public class SensorListFragment extends Fragment  {
 
                 mActivity.redraw();
                 mSwipeLayout.setRefreshing(false);
+				mActivity.setBeeeOnProgressBarVisibility(false);
             }
         });
 
@@ -483,7 +485,8 @@ public class SensorListFragment extends Fragment  {
 
 	private void doFullReloadTask(boolean forceRefresh) {
 		mFullReloadTask = new ReloadAdapterDataTask(getActivity().getApplicationContext(), forceRefresh, ReloadAdapterDataTask.ReloadWhat.ADAPTERS_AND_ACTIVE_ADAPTER);
-		mActivity.setBeeeOnProgressBarVisibility(true);
+		if(!mSwipeLayout.isRefreshing())
+			mActivity.setBeeeOnProgressBarVisibility(true);
 		mFullReloadTask.setListener(new CallbackTaskListener() {
 			@Override
 			public void onExecute(boolean success) {
