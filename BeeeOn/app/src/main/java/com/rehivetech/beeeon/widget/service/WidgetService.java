@@ -79,6 +79,8 @@ public class WidgetService extends Service {
     private UnitsHelper mUnitsHelper;
     private TimeHelper mTimeHelper;
 
+    private boolean isServiceRunning = false;
+
     // for checking if user is logged in (we presume that for the first time he is)
     private boolean isLoggedIn = true;
 

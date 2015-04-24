@@ -9,6 +9,7 @@ import com.rehivetech.beeeon.household.adapter.Adapter;
 import com.rehivetech.beeeon.household.location.Location;
 import com.rehivetech.beeeon.util.TimeHelper;
 import com.rehivetech.beeeon.util.UnitsHelper;
+import com.rehivetech.beeeon.widget.WidgetSettings;
 
 /**
  * @author mlyko
@@ -20,8 +21,8 @@ public class WidgetLocationPersistence extends WidgetPersistence{
 
 	public int type;
 
-	public WidgetLocationPersistence(Context context, int widgetId, int offset, int boundView, UnitsHelper unitsHelper, TimeHelper timeHelper) {
-		super(context, widgetId, offset, boundView, unitsHelper, timeHelper);
+	public WidgetLocationPersistence(Context context, int widgetId, int offset, int boundView, UnitsHelper unitsHelper, TimeHelper timeHelper, WidgetSettings settings) {
+		super(context, widgetId, offset, boundView, unitsHelper, timeHelper, settings);
 	}
 
 	@Override
@@ -40,9 +41,10 @@ public class WidgetLocationPersistence extends WidgetPersistence{
 	}
 
 	@Override
-	public void configure(Object obj, Adapter adapter) {
+	public void configure(Object obj, Object obj2) {
 		Location location = (Location) obj;
-		if (location == null) return;
+		Adapter adapter = (Adapter) obj2;
+		if (location == null || adapter == null) return;
 
 		id = location.getId();
 		name = location.getName();

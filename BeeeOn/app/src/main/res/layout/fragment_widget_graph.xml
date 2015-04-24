@@ -82,4 +82,30 @@
 		android:layout_height="40dp"
 		/>
 
+	<!-- separator -->
+	<ImageView
+		android:layout_width="match_parent"
+		android:layout_height="1px"
+		android:src="@color/beeeon_separator"
+		android:layout_marginTop="8dp"
+		android:layout_marginBottom="8dp"
+		/>
+
+	<TextView
+		style="@style/LinearRow.Item"
+		android:text="Interval dat grafu"
+		/>
+
+	<TextView
+		android:id="@+id/widget_config_graph_interval_label"
+		style="@style/LinearRow.Row"
+		android:text="Týden"
+		/>
+
+	<SeekBar
+		android:id="@+id/widget_config_graph_interval"
+		style="@style/LinearRow.Row"
+		android:layout_height="wrap_content"
+		/>
+
 </LinearLayout>

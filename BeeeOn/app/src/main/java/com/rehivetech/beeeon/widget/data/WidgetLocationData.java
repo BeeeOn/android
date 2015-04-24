@@ -44,7 +44,7 @@ public class WidgetLocationData extends WidgetData {
 
     public WidgetLocationData(int widgetId, Context context, UnitsHelper unitsHelper, TimeHelper timeHelper){
         super(widgetId, context, unitsHelper, timeHelper);
-        widgetLocation = new WidgetLocationPersistence(mContext, mWidgetId, 0, 0, mUnitsHelper, mTimeHelper);
+        widgetLocation = new WidgetLocationPersistence(mContext, mWidgetId, 0, 0, mUnitsHelper, mTimeHelper, settings);
         mLocations = new ArrayList<>();
     }
 

@@ -8,6 +8,51 @@
 	android:paddingRight="8dp"
 	>
 
+	<!-- ********* HOUSEHOLD SETTINGS ******** -->
+
+	<TextView
+		android:id="@+id/widget_config_gateway_label"
+		android:text="@string/household"
+		style="@style/LinearRow.Caption"
+		/>
+
+	<TextView
+		style="@style/LinearRow.Item"
+		android:text="@string/widget_configuration_adapter"
+		/>
+
+	<Spinner
+		android:id="@+id/widget_config_gateway"
+		android:layout_width="match_parent"
+		android:layout_height="40dp"
+		style="@style/LinearRow.Row"
+		/>
+
+	<!-- separator -->
+	<ImageView
+		android:layout_width="match_parent"
+		android:layout_height="1px"
+		android:src="@color/beeeon_separator"
+		android:layout_marginTop="8dp"
+		android:layout_marginBottom="8dp"
+		/>
+
+	<TextView
+		style="@style/LinearRow.Item"
+		android:text="@string/widget_configuration_sensor"
+		/>
+
+	<LinearLayout
+		android:id="@+id/widget_config_devices"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		style="@style/LinearRow.Row"
+		android:layout_marginTop="8dp"
+		android:minHeight="40dp"
+		android:orientation="vertical">
+		<!-- spinners are inflated programmatically -->
+	</LinearLayout>
+
 	<!-- ********* WIDGET SETTINGS ******** -->
 
 	<TextView
@@ -94,47 +139,7 @@
 		android:layout_marginBottom="8dp"
 		/>
 
-	<!-- ********* HOUSEHOLD SETTINGS ******** -->
+	<!-- ********* WEATHER SETTINGS ******** -->
 
-	<TextView
-		android:id="@+id/widget_config_gateway_label"
-		android:text="@string/household"
-		style="@style/LinearRow.Caption"
-		/>
-
-	<TextView
-		style="@style/LinearRow.Item"
-		android:text="@string/widget_configuration_adapter"
-		/>
-
-	<Spinner
-		android:id="@+id/widget_config_gateway"
-		android:layout_width="match_parent"
-		android:layout_height="40dp"
-		style="@style/LinearRow.Row"
-		/>
-
-	<!-- separator -->
-	<ImageView
-		android:layout_width="match_parent"
-		android:layout_height="1px"
-		android:src="@color/beeeon_separator"
-		android:layout_marginTop="8dp"
-		android:layout_marginBottom="8dp"
-		/>
-
-	<TextView
-		style="@style/LinearRow.Item"
-		android:text="@string/widget_configuration_sensor"
-		/>
-
-	<LinearLayout
-		android:id="@+id/widget_config_devices"
-		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
-		style="@style/LinearRow.Row"
-		android:orientation="vertical">
-		<!-- spinners are inflated programmatically -->
-	</LinearLayout>
 
 </LinearLayout>

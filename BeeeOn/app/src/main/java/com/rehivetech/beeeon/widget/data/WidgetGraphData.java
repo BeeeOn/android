@@ -57,7 +57,7 @@ public class WidgetGraphData extends WidgetDeviceData {
         mGraphHeight = (int) mContext.getResources().getDimension(R.dimen.widget_graph_height);
 
         mGraph = new GraphView(mContext);
-        widgetLocation = new WidgetLocationPersistence(mContext, mWidgetId, 0, R.id.location_container, mUnitsHelper, mTimeHelper);
+        widgetLocation = new WidgetLocationPersistence(mContext, mWidgetId, 0, R.id.location_container, mUnitsHelper, mTimeHelper, settings);
     }
 
     @Override

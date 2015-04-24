@@ -10,6 +10,7 @@ import com.rehivetech.beeeon.util.Compatibility;
 import com.rehivetech.beeeon.util.Log;
 import com.rehivetech.beeeon.util.TimeHelper;
 import com.rehivetech.beeeon.util.UnitsHelper;
+import com.rehivetech.beeeon.widget.WidgetSettings;
 
 import java.util.List;
 
@@ -41,13 +42,16 @@ public abstract class WidgetPersistence {
 	protected RemoteViews mParentRemoteViews;
 	protected RemoteViews mValueRemoteViews;
 
-	public WidgetPersistence(Context context, int widgetId, int offset, int view, UnitsHelper unitsHelper, TimeHelper timeHelper) {
+	protected WidgetSettings mWidgetSettings;
+
+	public WidgetPersistence(Context context, int widgetId, int offset, int view, UnitsHelper unitsHelper, TimeHelper timeHelper, WidgetSettings settings) {
 		mContext = context.getApplicationContext();
 		mWidgetId = widgetId;
 		mOffset = offset;
 		mBoundView = view;
 		mUnitsHelper = unitsHelper;
 		mTimeHelper = timeHelper;
+		mWidgetSettings = settings;
 	}
 
 	public void setCached(boolean isCached){
@@ -65,7 +69,7 @@ public abstract class WidgetPersistence {
 	public abstract String getPrefFileName();
 
 	public abstract void load();
-	public abstract void configure(Object obj, Adapter adapter);
+	public abstract void configure(Object obj, Object obj2);
 	public abstract void save();
 	public abstract void change(Object obj, Adapter adapter);
 

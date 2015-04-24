@@ -29,7 +29,7 @@ public class WidgetDeviceData extends WidgetData {
 
     public WidgetDeviceData(int widgetId, Context context, UnitsHelper unitsHelper, TimeHelper timeHelper){
         super(widgetId, context, unitsHelper, timeHelper);
-        widgetDevice = new WidgetDevicePersistence(mContext, mWidgetId, 0, R.id.value_container, unitsHelper, timeHelper);
+        widgetDevice = new WidgetDevicePersistence(mContext, mWidgetId, 0, R.id.value_container, unitsHelper, timeHelper, settings);
 
         widgetDevices = new ArrayList<>();
         widgetDevices.add(widgetDevice);

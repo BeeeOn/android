@@ -6,6 +6,8 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.SeekBar;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -18,6 +20,7 @@ import com.rehivetech.beeeon.household.adapter.Adapter;
 import com.rehivetech.beeeon.household.device.Device;
 import com.rehivetech.beeeon.household.device.RefreshInterval;
 import com.rehivetech.beeeon.util.Utils;
+import com.rehivetech.beeeon.widget.WidgetSettings;
 import com.rehivetech.beeeon.widget.data.WidgetClockData;
 import com.rehivetech.beeeon.widget.persistence.WidgetDevicePersistence;
 import com.rehivetech.beeeon.widget.service.WidgetService;
@@ -39,6 +42,8 @@ public class WidgetClockFragment extends WidgetConfigurationFragment {
 	protected List<WidgetDevicePersistence> mWidgetDevices;
 	protected List<Spinner> mDeviceSpinners;
 	private LinearLayout mDeviceSpinnersWrapper;
+
+	private RadioGroup mColorSchemeGroup;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -88,6 +93,23 @@ public class WidgetClockFragment extends WidgetConfigurationFragment {
 
 			}
 		});
+
+		mColorSchemeGroup = (RadioGroup) mActivity.findViewById(R.id.widget_configuration_scheme);
+		mColorSchemeGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+			@Override
+			public void onCheckedChanged(RadioGroup group, int checkedId) {
+				switch (checkedId) {
+					case R.id.scheme_black_white:
+						mWidgetData.settings.setColorScheme(R.color.white, R.color.white);
+						break;
+
+					case R.id.scheme_pink_cyan:
+					default:
+						mWidgetData.settings.setColorScheme(R.color.beeeon_primary_cyan, R.color.beeeon_secundary_pink);
+						break;
+				}
+			}
+		});
 	}
 
 	@Override
@@ -101,8 +123,25 @@ public class WidgetClockFragment extends WidgetConfigurationFragment {
 	@Override
 	protected void onFragmentResume() {
 		super.onFragmentResume();
-		mAdapterSpinner.setSelection(selectAdapter(mWidgetData.adapterId));
+		int selectedAdapterIndex = selectAdapter(mWidgetData.adapterId);
+		if(selectedAdapterIndex == mAdapterSpinner.getSelectedItemPosition()){
+			doChangeAdapter(mActiveAdapter.getId(), ReloadAdapterDataTask.ReloadWhat.FACILITIES);
+		}
+		else {
+			mAdapterSpinner.setSelection(selectedAdapterIndex);
+		}
+
 		updateIntervalLayout();
+
+		RadioButton schemeRadio;
+		if(mWidgetData.settings.isColorSchemeEqual(R.color.white, R.color.white)){
+			schemeRadio = (RadioButton) mActivity.findViewById(R.id.scheme_black_white);
+			schemeRadio.setChecked(true);
+		}
+		else if(mWidgetData.settings.isColorSchemeEqual(R.color.white, R.color.white)){
+			schemeRadio = (RadioButton) mActivity.findViewById(R.id.scheme_pink_cyan);
+			schemeRadio.setChecked(true);
+		}
 	}
 
 	/**
@@ -197,4 +236,5 @@ public class WidgetClockFragment extends WidgetConfigurationFragment {
 
 		return true;
 	}
+
 }

@@ -6,6 +6,7 @@ import android.appwidget.AppWidgetProviderInfo;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.os.SystemClock;
 import android.widget.RemoteViews;
 
@@ -13,9 +14,11 @@ import com.rehivetech.beeeon.activity.MainActivity;
 import com.rehivetech.beeeon.activity.SensorDetailActivity;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.household.adapter.Adapter;
+import com.rehivetech.beeeon.util.Compatibility;
 import com.rehivetech.beeeon.util.Log;
 import com.rehivetech.beeeon.util.TimeHelper;
 import com.rehivetech.beeeon.util.UnitsHelper;
+import com.rehivetech.beeeon.widget.WidgetSettings;
 import com.rehivetech.beeeon.widget.configuration.WidgetConfigurationActivity;
 import com.rehivetech.beeeon.widget.persistence.WidgetDevicePersistence;
 import com.rehivetech.beeeon.widget.service.WidgetService;
@@ -62,6 +65,9 @@ abstract public class WidgetData {
 
     protected PendingIntent mRefreshPendingIntent;
     protected PendingIntent mConfigurationPendingIntent;
+    protected ViewsBuilder mBuilder;
+
+    public WidgetSettings settings;
 
     /**
      * Constructor for configuration activity
@@ -77,6 +83,9 @@ abstract public class WidgetData {
         mPrefs = getSettings(mContext, mWidgetId);
         mUnitsHelper = unitsHelper;
         mTimeHelper = timeHelper;
+
+        mBuilder = new ViewsBuilder(mContext);
+        settings = WidgetSettings.getSettings(mContext, mWidgetId);
     }
 
     /**
@@ -137,6 +146,7 @@ abstract public class WidgetData {
      */
     public void delete(Context context){
         mPrefs.edit().clear().apply();
+        settings.delete();
     }
 
     /**
@@ -152,6 +162,8 @@ abstract public class WidgetData {
         // all widgets has these params
         adapterId = mPrefs.getString(PREF_ADAPTER_ID, "");
         mUserId = mPrefs.getString(PREF_USER_ID, mController.getActualUser().getId());
+        // color schemes of widgets (not all widgets use this, but could in the future)
+        settings.load();
     }
 
     /**
@@ -168,6 +180,8 @@ abstract public class WidgetData {
                 .putString(PREF_USER_ID, mUserId)
                 .putBoolean(PREF_INITIALIZED, widgetInitialized)
                 .apply();
+
+        settings.save();
     }
 
     /**
@@ -176,6 +190,8 @@ abstract public class WidgetData {
     public void initLayout(){
         Log.d(TAG, "initLayout()");
         mRemoteViews = new RemoteViews(mContext.getPackageName(), this.widgetLayout);
+
+        mBuilder.loadRootView(this.widgetLayout);
 
         // refresh onclick
         mRefreshPendingIntent = WidgetService.getPendingIntentForceUpdate(mContext, mWidgetId);
@@ -354,4 +370,117 @@ abstract public class WidgetData {
     }
 
     public abstract String getClassName();
+
+    public static RemoteViews buildView(Context context, RemoteViews parentView, int boundView, int layout){
+        RemoteViews rv = new RemoteViews(context.getPackageName(), layout);
+        parentView.removeAllViews(boundView);
+        parentView.addView(boundView, rv);
+
+        return rv;
+    }
+
+    /**
+     * Known packages for clock applications
+     * Got from http://stackoverflow.com/questions/4115649/
+     */
+    public static String[] CLOCK_PACKAGES = {
+            // HTC
+            "com.htc.android.worldclock.TimerAlert",//
+            "com.htc.android.worldclock.AlarmAlert",//
+
+            // Samsung
+            "com.sec.android.app.clockpackage.ClockPackage",//
+            "com.sec.android.app.clockpackage.alarm.AlarmAlert",//
+
+            // Motorola
+            "com.motorola.blur.alarmclock.AlarmAlert",//
+            "com.motorola.blur.alarmclock.AlarmClock",//
+            "com.motorola.blur.alarmclock.AlarmTimerAlert",
+
+            // Stock Android Clock
+            "com.android.alarmclock.AlarmClock",// 1.5 / 1.6
+            "com.android.deskclock.DeskClock",//
+
+            // Sony Ericsson XPERIA X10 Mini Pro, Android 2.1:
+            "com.sonyericsson.alarm",
+            "com.sonyericsson.alarm.Alarm",
+
+            // Samsung Galaxy S Vibrant, Android 2.2:
+            "com.sec.android.app.clockpackage",
+            "com.sec.android.app.clockpackage.ClockPackage",
+
+            // Stock Clock, Android 2.1:
+            "com.android.alarmclock.AlarmClock",
+
+            // Stock Clock, Android 2.2:
+            "com.android.alarmclock.AlarmClock",
+
+            // Stock Clock, Android 2.3 (2.3.1):
+            "com.android.deskclock.DeskClock",
+
+            // Stock Clock, Android 2.3.3:
+            "com.android.deskclock.DeskClock"
+    };
+
+    public static Intent getDefaultClockIntent(Context context) {
+        PackageManager pm = context.getPackageManager();
+        for (String packageName : CLOCK_PACKAGES) {
+            try {
+                pm.getPackageInfo(packageName, 0);
+                return pm.getLaunchIntentForPackage(packageName);
+            } catch (PackageManager.NameNotFoundException ignored) {
+            }
+        }
+        return null;
+    }
+}
+
+class ViewsBuilder{
+    private Context mContext;
+    private RemoteViews mRemoteViews;
+
+    ViewsBuilder(Context context){
+        mContext = context;
+    }
+
+    ViewsBuilder(Context context, int layoutResource){
+        this(context);
+        loadRootView(layoutResource);
+    }
+
+    public void loadRootView(int layoutResource){
+        mRemoteViews = new RemoteViews(mContext.getPackageName(), layoutResource);
+    }
+
+    public void loadRootView(RemoteViews rootViews){
+        mRemoteViews = rootViews;
+    }
+
+    public RemoteViews getRoot(){
+        return mRemoteViews;
+    }
+
+    public void addView(int viewId, RemoteViews child){
+        mRemoteViews.addView(viewId, child);
+    }
+
+    public void removeAllViews(int viewId){
+        mRemoteViews.removeAllViews(viewId);
+    }
+
+    public void setTextViewText(int viewId, String text){
+        mRemoteViews.setTextViewText(viewId, text);
+    }
+
+    public void setTextViewColor(int viewId, int colorResource){
+        mRemoteViews.setTextColor(viewId, mContext.getResources().getColor(colorResource));
+    }
+
+    public void setTextViewTextSize(int viewId, int unit, float size){
+        Compatibility.setTextViewTextSize(mContext, mRemoteViews, viewId, unit, size);
+    }
+
+    public void setOnClickListener(int viewId, PendingIntent listener){
+        mRemoteViews.setOnClickPendingIntent(viewId, listener);
+    }
 }

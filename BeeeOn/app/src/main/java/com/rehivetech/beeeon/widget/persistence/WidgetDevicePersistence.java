@@ -15,6 +15,7 @@ import com.rehivetech.beeeon.household.user.User;
 import com.rehivetech.beeeon.util.Log;
 import com.rehivetech.beeeon.util.TimeHelper;
 import com.rehivetech.beeeon.util.UnitsHelper;
+import com.rehivetech.beeeon.widget.WidgetSettings;
 import com.rehivetech.beeeon.widget.service.WidgetService;
 
 /**
@@ -50,8 +51,8 @@ public class WidgetDevicePersistence extends WidgetPersistence{
 	private boolean deviceValueDisabled = false;
 	private boolean deviceValueChecked;
 
-	public WidgetDevicePersistence(Context context, int widgetId, int offset, int view, UnitsHelper unitsHelper, TimeHelper timeHelper) {
-		super(context, widgetId, offset, view, unitsHelper, timeHelper);
+	public WidgetDevicePersistence(Context context, int widgetId, int offset, int view, UnitsHelper unitsHelper, TimeHelper timeHelper, WidgetSettings settings) {
+		super(context, widgetId, offset, view, unitsHelper, timeHelper, settings);
 	}
 
 	@Override
@@ -88,9 +89,10 @@ public class WidgetDevicePersistence extends WidgetPersistence{
 	}
 
 	@Override
-	public void configure(Object obj, Adapter adapter) {
+	public void configure(Object obj, Object obj2) {
 		Device device = (Device) obj;
-		if (device == null) return;
+		Adapter adapter = (Adapter) obj2;
+		if (device == null || adapter == null) return;
 
 		id = device.getId();
 		name = device.getName();
@@ -208,6 +210,12 @@ public class WidgetDevicePersistence extends WidgetPersistence{
 				getValueViews().setTextViewText(R.id.value, getValue());
 				getValueViews().setTextViewText(R.id.unit, getUnit());
 			}
+
+			if(mWidgetSettings.isColorScheme){
+				getValueViews().setTextColor(R.id.value, mContext.getResources().getColor(mWidgetSettings.colorSecondary));
+				getValueViews().setTextColor(R.id.unit, mContext.getResources().getColor(mWidgetSettings.colorSecondary));
+			}
+
 		}
 	}
 

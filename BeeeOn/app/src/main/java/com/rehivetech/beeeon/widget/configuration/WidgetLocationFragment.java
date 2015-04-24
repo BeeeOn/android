@@ -90,7 +90,14 @@ public class WidgetLocationFragment extends WidgetConfigurationFragment {
 	@Override
 	protected void onFragmentResume() {
 		super.onFragmentResume();
-		mAdapterSpinner.setSelection(selectAdapter(mWidgetData.adapterId));
+		int selectedAdapterIndex = selectAdapter(mWidgetData.adapterId);
+		if(selectedAdapterIndex == mAdapterSpinner.getSelectedItemPosition()){
+			doChangeAdapter(mActiveAdapter.getId(), ReloadAdapterDataTask.ReloadWhat.FACILITIES);
+		}
+		else {
+			mAdapterSpinner.setSelection(selectedAdapterIndex);
+		}
+
 		updateIntervalLayout();
 	}
 

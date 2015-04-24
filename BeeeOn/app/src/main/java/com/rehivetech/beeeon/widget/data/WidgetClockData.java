@@ -12,6 +12,7 @@ import com.rehivetech.beeeon.household.device.RefreshInterval;
 import com.rehivetech.beeeon.util.Log;
 import com.rehivetech.beeeon.util.TimeHelper;
 import com.rehivetech.beeeon.util.UnitsHelper;
+import com.rehivetech.beeeon.widget.WidgetSettings;
 import com.rehivetech.beeeon.widget.persistence.WidgetDevicePersistence;
 import com.rehivetech.beeeon.widget.receivers.WidgetClockProvider;
 import com.rehivetech.beeeon.widget.receivers.WidgetProvider;
@@ -41,8 +42,8 @@ public class WidgetClockData extends WidgetData {
 
         // inside devices
         widgetDevices = new ArrayList<>();
-        widgetDevices.add(new WidgetDevicePersistence(mContext, mWidgetId, 0, R.id.value_container_inside_temp, unitsHelper, timeHelper));
-        widgetDevices.add(new WidgetDevicePersistence(mContext, mWidgetId, 1, R.id.value_container_inside_humid, unitsHelper, timeHelper));
+        widgetDevices.add(new WidgetDevicePersistence(mContext, mWidgetId, 0, R.id.value_container_inside_temp, unitsHelper, timeHelper, settings));
+        widgetDevices.add(new WidgetDevicePersistence(mContext, mWidgetId, 1, R.id.value_container_inside_humid, unitsHelper, timeHelper, settings));
 
         mFacilities = new ArrayList<>();
     }
@@ -98,15 +99,19 @@ public class WidgetClockData extends WidgetData {
         super.initLayout();
 
         // configuration
-        mRemoteViews.setOnClickPendingIntent(R.id.widget_clock_time_layout, mConfigurationPendingIntent);
+        mBuilder.setOnClickListener(R.id.clock_container, mConfigurationPendingIntent);
+
+        mBuilder.setTextViewColor(R.id.widget_clock_household_label, settings.colorPrimary);
+        mBuilder.setTextViewColor(R.id.widget_clock_day_of_week, settings.colorSecondary);
+        mBuilder.setTextViewColor(R.id.widget_clock_date, settings.colorSecondary);
 
         for(WidgetDevicePersistence dev : widgetDevices){
             if(!adapterId.isEmpty()){
                 // detail activity
-                mRemoteViews.setOnClickPendingIntent(dev.getBoundView(), startDetailActivityPendingIntent(mContext, mWidgetId + dev.getOffset(), adapterId, dev.getId()));
+                mBuilder.setOnClickListener(dev.getBoundView(), startDetailActivityPendingIntent(mContext, mWidgetId + dev.getOffset(), adapterId, dev.getId()));
             }
 
-            dev.initValueView(mRemoteViews);
+            dev.initValueView(mBuilder.getRoot());
         }
     }
 
@@ -147,7 +152,7 @@ public class WidgetClockData extends WidgetData {
         }
 
         // TODO temporary solution
-        onUpdateClock(mContext, mRemoteViews, new int[]{mWidgetId});
+        onUpdateClock(mContext, mBuilder, new int[]{mWidgetId});
     }
 
     @Override
@@ -160,12 +165,17 @@ public class WidgetClockData extends WidgetData {
         updateAppWidget();
     }
 
+    @Override
+    public void updateAppWidget() {
+        mWidgetManager.updateAppWidget(mWidgetId, mBuilder.getRoot());
+    }
+
     /**
      * Updates widget's time asynchroningly to sensor updates
      * Updates always on time broadcasts
      * @param context
      */
-    public static void onUpdateClock(Context context, RemoteViews rv, int[] appWidgetIds) {
+    private static void onUpdateClock(Context context, ViewsBuilder parentBuilder, int[] appWidgetIds) {
         // TODO have comparing to old time and skip if the same
         //lastKnownTime = cal.getTime();
         if(appWidgetIds == null || appWidgetIds.length == 0) return;
@@ -177,16 +187,33 @@ public class WidgetClockData extends WidgetData {
         for(int widgetId : appWidgetIds) {
             Log.d(TAG, String.format("onUpdateClock(%d)", widgetId));
 
+            WidgetSettings settings = WidgetSettings.getSettings(context, widgetId);
+
             // tries to get widgetInitialized first
-            if(rv == null){
-                rv = new RemoteViews(context.getPackageName(), R.layout.widget_clock);
+            if(parentBuilder == null){
+                parentBuilder = new ViewsBuilder(context);
+                parentBuilder.loadRootView(R.layout.widget_clock);
+            }
+            else{
+                parentBuilder.removeAllViews(R.id.clock_container);
             }
 
-            rv.setTextViewText(R.id.widget_clock_hours, String.format("%02d", cal.get(Calendar.HOUR_OF_DAY)));
-            rv.setTextViewText(R.id.widget_clock_minutes, String.format("%02d", cal.get(Calendar.MINUTE)));
+            ViewsBuilder clockBuilder = new ViewsBuilder(context, R.layout.widget_include_clock);
+            parentBuilder.addView(R.id.clock_container, clockBuilder.getRoot());
 
-            rv.setTextViewText(R.id.widget_clock_day_of_week, weekDays[cal.get(Calendar.DAY_OF_WEEK)]);
-            rv.setTextViewText(R.id.widget_clock_date, DateTimeFormat.shortDate().print(cal.getTimeInMillis()));
+            clockBuilder.setTextViewText(R.id.widget_clock_hours, String.format("%02d", cal.get(Calendar.HOUR_OF_DAY)));
+            clockBuilder.setTextViewColor(R.id.widget_clock_hours, settings.colorPrimary);
+
+            clockBuilder.setTextViewText(R.id.widget_clock_minutes, String.format("%02d", cal.get(Calendar.MINUTE)));
+            clockBuilder.setTextViewColor(R.id.widget_clock_minutes, settings.colorPrimary);
+
+            parentBuilder.setTextViewText(R.id.widget_clock_day_of_week, weekDays[cal.get(Calendar.DAY_OF_WEEK)]);
+            clockBuilder.setTextViewColor(R.id.widget_clock_day_of_week, settings.colorSecondary);
+
+            parentBuilder.setTextViewText(R.id.widget_clock_date, DateTimeFormat.shortDate().print(cal.getTimeInMillis()));
+            clockBuilder.setTextViewColor(R.id.widget_clock_date, settings.colorSecondary);
+
+            clockBuilder.setTextViewColor(R.id.widget_clock_doubledots, settings.colorPrimary);
 
             // TODO format without year http://stackoverflow.com/questions/3790918/format-date-without-year
             /*
@@ -198,7 +225,7 @@ public class WidgetClockData extends WidgetData {
             */
 
             // request widget redraw
-            widgetManager.updateAppWidget(widgetId, rv);
+            widgetManager.updateAppWidget(widgetId, parentBuilder.getRoot());
         }
     }
 
