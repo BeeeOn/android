@@ -473,7 +473,7 @@ public class SensorListFragment extends Fragment  {
             public void onExecute(boolean success) {
 				if (!success)
 					return;
-
+				Log.d(TAG,"Success -> refresh GUI");
                 mActivity.redraw();
                 mSwipeLayout.setRefreshing(false);
 				mActivity.setBeeeOnProgressBarVisibility(false);
@@ -504,7 +504,8 @@ public class SensorListFragment extends Fragment  {
     private void doRemoveFacilityTask(Facility facility) {
         mRemoveFacilityTask = new RemoveFacilityTask(getActivity().getApplicationContext());
         DelFacilityPair pair = new DelFacilityPair(facility.getId(), facility.getAdapterId());
-
+		if(!mSwipeLayout.isRefreshing())
+			mActivity.setBeeeOnProgressBarVisibility(true);
         mRemoveFacilityTask.setListener(new CallbackTaskListener() {
             @Override
             public void onExecute(boolean success) {
@@ -515,6 +516,7 @@ public class SensorListFragment extends Fragment  {
                 else {
                     // Hlaska o neuspechu
                 }
+				doFullReloadTask(true);
             }
         });
         mRemoveFacilityTask.execute(pair);

@@ -18,7 +18,9 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.avast.android.dialogs.core.BaseDialogFragment;
 import com.avast.android.dialogs.fragment.ListDialogFragment;
+import com.avast.android.dialogs.fragment.SimpleDialogFragment;
 import com.avast.android.dialogs.iface.IListDialogListener;
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.series.BarGraphSeries;
@@ -30,6 +32,7 @@ import com.rehivetech.beeeon.Constants;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.activity.SensorDetailActivity;
 import com.rehivetech.beeeon.activity.SensorEditActivity;
+import com.rehivetech.beeeon.activity.dialog.NumberPickerDialogFragment;
 import com.rehivetech.beeeon.asynctask.ActorActionTask;
 import com.rehivetech.beeeon.asynctask.CallbackTask.CallbackTaskListener;
 import com.rehivetech.beeeon.asynctask.GetDeviceLogTask;
@@ -271,10 +274,11 @@ public class SensorDetailFragment extends Fragment implements IListDialogListene
 				mValueSet.setOnClickListener(new OnClickListener() {
 					@Override
 					public void onClick(View v) {
-						Log.d(TAG,"SET TEMPERATURE");
-
+						Log.d(TAG, "SET TEMPERATURE");
+						NumberPickerDialogFragment.show(mActivity,mDevice,frg);
 					}
 				});
+
 			}
 			else if(mDevice.getValue() instanceof BoilerOperationTypeValue){
 				// Set dialog for set Type of  BOILER
@@ -642,5 +646,9 @@ public class SensorDetailFragment extends Fragment implements IListDialogListene
 		else if(requestCode == REQUEST_BOILER_TYPE) {
 			Log.d(TAG,"RESULT - SET BOILDER TYPE ");
 		}
+	}
+
+	public void onSetTemperatureClick(Double value) {
+		Log.d(TAG, "SET TEMPERATURE DO TASK");
 	}
 }
