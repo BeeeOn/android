@@ -56,6 +56,7 @@ import com.rehivetech.beeeon.household.device.values.OpenClosedValue;
 import com.rehivetech.beeeon.household.device.values.TemperatureValue;
 import com.rehivetech.beeeon.household.location.Location;
 import com.rehivetech.beeeon.pair.LogDataPair;
+import com.rehivetech.beeeon.pair.SaveDevicePair;
 import com.rehivetech.beeeon.util.GraphViewHelper;
 import com.rehivetech.beeeon.util.Log;
 import com.rehivetech.beeeon.util.TimeHelper;
@@ -67,6 +68,7 @@ import org.joda.time.Interval;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
+import java.util.EnumSet;
 import java.util.Map.Entry;
 import java.util.SortedMap;
 import java.util.concurrent.TimeUnit;
@@ -131,6 +133,7 @@ public class SensorDetailFragment extends Fragment implements IListDialogListene
 	private SensorDetailActivity.ScreenSlidePagerAdapter mFragmentAdapter;
 	private ReloadAdapterDataTask mReloadFacilitiesTask;
 	private Button mValueSet;
+	private SaveDeviceTask mChangeStateDeviceTask;
 
 
 	public SensorDetailFragment() {
@@ -638,17 +641,34 @@ public class SensorDetailFragment extends Fragment implements IListDialogListene
 		mGetDeviceLogTask.execute(new LogDataPair[] { pair });
 	}
 
+	protected void doChangeStateDeviceTask(final SaveDevicePair pair) {
+		mActivity.setBeeeOnProgressBarVisibility(true);
+		mChangeStateDeviceTask = new SaveDeviceTask(mActivity);
+		mChangeStateDeviceTask.setListener(new CallbackTaskListener() {
+			@Override
+			public void onExecute(boolean success) {
+
+				mActivity.setBeeeOnProgressBarVisibility(false);
+				doReloadFacilitiesTask(pair.device.getFacility().getAdapterId(),true);
+			}
+		});
+		mChangeStateDeviceTask.execute(pair);
+	}
+
 	@Override
 	public void onListItemSelected(CharSequence value, int number, int requestCode) {
-		if(requestCode == REQUEST_BOILER_MODE) {
-			Log.d(TAG,"RESULT - SET BOILDER MODE ");
-		}
-		else if(requestCode == REQUEST_BOILER_TYPE) {
-			Log.d(TAG,"RESULT - SET BOILDER TYPE ");
+		if(requestCode == REQUEST_BOILER_MODE || requestCode == REQUEST_BOILER_TYPE) {
+			Log.d(TAG,"RESULT - SET BOILDER MODE or TYPE val:"+value+" number:"+number);
+			mDevice.setValue(String.valueOf(number));
+			SaveDevicePair pair = new SaveDevicePair(mDevice, EnumSet.of(Device.SaveDevice.SAVE_VALUE));
+			doChangeStateDeviceTask(pair);
 		}
 	}
 
 	public void onSetTemperatureClick(Double value) {
 		Log.d(TAG, "SET TEMPERATURE DO TASK");
+		mDevice.setValue(String.valueOf(value));
+		SaveDevicePair pair = new SaveDevicePair(mDevice, EnumSet.of(Device.SaveDevice.SAVE_VALUE));
+		doChangeStateDeviceTask(pair);
 	}
 }
