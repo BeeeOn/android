@@ -109,6 +109,6 @@ public class FacebookAuthProvider implements IAuthProvider {
 			FacebookSdk.sdkInitialize(activity, FACEBOOK_REQUEST_CODE_OFFSET);
 
 		// Do login, it will open Facebook's activity and then send result to our LoginActivity
-		LoginManager.getInstance().logInWithReadPermissions(activity, Arrays.asList("public_profile"));
+		LoginManager.getInstance().logInWithReadPermissions(activity, Arrays.asList("public_profile", "email"));
 	}
 }

@@ -47,6 +47,7 @@ import com.rehivetech.beeeon.exception.ErrorCode;
 import com.rehivetech.beeeon.exception.NetworkError;
 import com.rehivetech.beeeon.household.adapter.Adapter;
 import com.rehivetech.beeeon.menu.NavDrawerMenu;
+import com.rehivetech.beeeon.network.authentication.FacebookAuthProvider;
 import com.rehivetech.beeeon.persistence.Persistence;
 import com.rehivetech.beeeon.util.Log;
 
@@ -153,7 +154,8 @@ public class MainActivity extends BaseApplicationActivity implements IListDialog
 
 		// Facebook sdk needs to be initialised in Activity, but its used in Profile Fragment
 		// Registering callback for facebook log in
-		FacebookSdk.sdkInitialize(this);
+		if (!FacebookSdk.isInitialized())
+			FacebookSdk.sdkInitialize(this, FacebookAuthProvider.FACEBOOK_REQUEST_CODE_OFFSET);
 		mFacebookCallbackManager = CallbackManager.Factory.create();
 		LoginManager.getInstance().registerCallback(mFacebookCallbackManager,new FacebookCallback<LoginResult>() {
 			@Override
