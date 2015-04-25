@@ -90,9 +90,4 @@ dependencies {
 	compile 'net.simonvt.numberpicker:number-picker@aar'
 	compile 'com.avast:android-styled-dialogs:2.2.0'
    	compile('com.jjoe64:graphview:4.1.+') { exclude module: 'appcompat-v7' }
-    // Libraries for testing
-    androidTestCompile 'com.jayway.android.robotium:robotium-solo:5.3.1'
-    compile files('libs/uiautomator.jar')
-    compile files('libs/junit-4.11.jar')
-    compile files('libs/android.jar')
 }
