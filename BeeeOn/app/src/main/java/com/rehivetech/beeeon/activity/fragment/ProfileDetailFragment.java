@@ -101,10 +101,11 @@ public class ProfileDetailFragment extends Fragment implements Observer {
 
 		mFb = Facebook.getInstance(getActivity());
 		mTw = Twitter.getInstance(getActivity());
-		setNetworksView();
+//		setNetworksView();
 
-		setMoreButtonVisibility();
+//		setMoreButtonVisibility();
     	redrawCategories();
+		mMoreLayout.getLayoutParams().height = (mDisplayPixel*60);
 
     	return mView;
   	}
@@ -121,28 +122,28 @@ public class ProfileDetailFragment extends Fragment implements Observer {
 	    userImage.setImageBitmap(picture);
 
 		//GUI components for social networks accounts
-		if(socialNetworks.size() > 0) {// more known networks to by added
-			mMoreAdd.setOnClickListener(new View.OnClickListener() {
-				@Override
-				public void onClick(View v) {
-					new NetworkChooseDialog().show(getFragmentManager(), TAG);
-				}
-			});
-			mMoreAdd.setVisibility(View.VISIBLE);
-		}
-		else
-			mMoreAdd.setVisibility(View.INVISIBLE);
-		if(socialNetworks.size() != totalNetworks) { //at least one network is added
-			mMoreArrow.setOnClickListener(new View.OnClickListener() {
-				@Override
-				public void onClick(View v) {
-					showMoreAccounts = !showMoreAccounts;
-					setMoreButtonVisibility();
-				}
-			});
-			mMoreArrow.setVisibility(View.VISIBLE);
-		}
-		else
+//		if(socialNetworks.size() > 0) {// more known networks to by added
+//			mMoreAdd.setOnClickListener(new View.OnClickListener() {
+//				@Override
+//				public void onClick(View v) {
+//					new NetworkChooseDialog().show(getFragmentManager(), TAG);
+//				}
+//			});
+//			mMoreAdd.setVisibility(View.VISIBLE);
+//		}
+//		else
+//			mMoreAdd.setVisibility(View.INVISIBLE);
+//		if(socialNetworks.size() != totalNetworks) { //at least one network is added
+//			mMoreArrow.setOnClickListener(new View.OnClickListener() {
+//				@Override
+//				public void onClick(View v) {
+//					showMoreAccounts = !showMoreAccounts;
+//					setMoreButtonVisibility();
+//				}
+//			});
+//			mMoreArrow.setVisibility(View.VISIBLE);
+//		}
+//		else
 			mMoreArrow.setVisibility(View.INVISIBLE);
   	}
 
@@ -177,6 +178,12 @@ public class ProfileDetailFragment extends Fragment implements Observer {
   	}
 
 	private void setMoreButtonVisibility() {
+		// just for offic release, will be changed soon
+		{
+			mMoreArrow.setVisibility(View.INVISIBLE);
+			mMoreVisible.setVisibility(View.INVISIBLE);
+		}
+
 		if(socialNetworks.size() == totalNetworks) { //none social network is paired
 			mMoreArrow.setVisibility(View.INVISIBLE);
 			mMoreVisible.setVisibility(View.INVISIBLE);

@@ -167,32 +167,32 @@ public class AchievementOverviewActivity extends BaseApplicationActivity {
 		}
 	}
 
-	public class NetworkChooseDialog extends DialogFragment {
-		private String name;
-		private String date;
-		public NetworkChooseDialog(String name, String date) {
-			this.name = name;
-			this.date = date;
-		}
-		@Override
-		public Dialog onCreateDialog(Bundle savedInstanceState) {
-			AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-			builder.setTitle(R.string.share_title)
-					.setItems(socialNetworks.toArray(new CharSequence[socialNetworks.size()]),
-							new DialogInterface.OnClickListener() {
-								public void onClick(DialogInterface dialog, int which) {
-									if (which == 0)
-										Toast.makeText(getActivity(), "Not implemented yet", Toast.LENGTH_LONG).show();
-									if (which == 1)
-										mShareDialog
-												.show(mFb.shareAchievement(getApplicationContext(), name, date));
-								}
-							})
-					.setNegativeButton(R.string.action_close, new DialogInterface.OnClickListener() {
-						public void onClick(DialogInterface dialog, int id) {
-						}
-					});
-			return builder.create();
-		}
-	}
+//	public class NetworkChooseDialog extends DialogFragment {
+//		private String name;
+//		private String date;
+//		public NetworkChooseDialog(String name, String date) {
+//			this.name = name;
+//			this.date = date;
+//		}
+//		@Override
+//		public Dialog onCreateDialog(Bundle savedInstanceState) {
+//			AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+//			builder.setTitle(R.string.share_title)
+//					.setItems(socialNetworks.toArray(new CharSequence[socialNetworks.size()]),
+//							new DialogInterface.OnClickListener() {
+//								public void onClick(DialogInterface dialog, int which) {
+//									if (which == 0)
+//										Toast.makeText(getActivity(), "Not implemented yet", Toast.LENGTH_LONG).show();
+//									if (which == 1)
+//										mShareDialog
+//												.show(mFb.shareAchievement(getApplicationContext(), name, date));
+//								}
+//							})
+//					.setNegativeButton(R.string.action_close, new DialogInterface.OnClickListener() {
+//						public void onClick(DialogInterface dialog, int id) {
+//						}
+//					});
+//			return builder.create();
+//		}
+//	}
 }
