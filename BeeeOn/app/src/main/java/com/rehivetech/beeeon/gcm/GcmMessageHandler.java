@@ -17,6 +17,7 @@ import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.activity.LoginActivity;
 import com.rehivetech.beeeon.controller.Controller;
+import com.rehivetech.beeeon.gcm.notification.Notification;
 import com.rehivetech.beeeon.util.Log;
 
 public class GcmMessageHandler extends IntentService {
@@ -77,19 +78,19 @@ public class GcmMessageHandler extends IntentService {
 				mController.getGcmModel().deleteGCM(notification.getUserId(), null);
 			} else {
 				// EVERYTHING VERIFIED SUCCESSFULLY, MAKE ACTION HERE
-				Log.i(TAG, GcmHelper.TAG_GCM + "Received : (" + messageType + ")  " + notification.getMessage());
+				Log.i(TAG, GcmHelper.TAG_GCM + "Received : (" + messageType + ")  " + notification.getId());
 
 				// pass notification to controller
-				int notifRec = mController.getGcmModel().receiveNotification(notification);
-				Log.i(TAG, GcmHelper.TAG_GCM + "Controller passed notification to " + notifRec + " reciever(s).");
-
-				handleNotification(notification);
+//				int notifRec = mController.getGcmModel().receiveNotification(notification);
+//				Log.i(TAG, GcmHelper.TAG_GCM + "Controller passed notification to " + notifRec + " reciever(s).");
+//
+//				handleNotification(notification);
 			}
 		}
 
 		GcmBroadcastReceiver.completeWakefulIntent(intent);
 	}
-
+/*
 	private void handleNotification(final Notification notification) {
 
 		NotificationCompat.Builder builder = new NotificationCompat.Builder(this)
@@ -126,10 +127,11 @@ public class GcmMessageHandler extends IntentService {
 		NotificationManager mNotifyMgr = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
 
 		// Builds the notification and issues it.
-		mNotifyMgr.notify(Integer.valueOf(notification.getMsgid()), builder.build());
+		mNotifyMgr.notify(Integer.valueOf(notification.getId()), builder.build());
 
 		// showToast(notification.getMessage());
 	}
+	*/
 
 //BACKDOOR, AFTER DEMONIGHT DELETE THIS METHOD
 //	private void createXmasNotification(String msg) {

@@ -25,6 +25,7 @@ public class Xconstants {
 	public static final String MSGID = "mid";
 	public static final String GID = "gid";
 	public static final String UID = "uid";
+	public static final String NOTIFICATION_NAME = "name";
 	public static final String ALGID = "algid";
 	public static final String RID = "rid";
 	public static final String ZERO = "0";
@@ -45,7 +46,6 @@ public class Xconstants {
 	public static final String LOCALE = "loc";
 	public static final String ERRCODE = "errcode";
 	public static final String INTERVAL = "interval";
-	public static final String NOTIFICAION = "notif";
 	public static final String FUNC = "func";
 	public static final String PART = "part";
 	public static final String DEVICE = "dev";

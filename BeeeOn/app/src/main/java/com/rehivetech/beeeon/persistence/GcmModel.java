@@ -6,7 +6,7 @@ import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.exception.AppException;
 import com.rehivetech.beeeon.gcm.GcmHelper;
 import com.rehivetech.beeeon.gcm.INotificationReceiver;
-import com.rehivetech.beeeon.gcm.Notification;
+import com.rehivetech.beeeon.gcm.notification.Notification;
 import com.rehivetech.beeeon.household.user.User;
 import com.rehivetech.beeeon.network.INetwork;
 import com.rehivetech.beeeon.network.Network;

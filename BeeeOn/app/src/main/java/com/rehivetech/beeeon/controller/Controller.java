@@ -1,12 +1,14 @@
 package com.rehivetech.beeeon.controller;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 
 import com.rehivetech.beeeon.Constants;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.exception.AppException;
+import com.rehivetech.beeeon.geofence.ManageGeofenceService;
 import com.rehivetech.beeeon.household.adapter.Adapter;
 import com.rehivetech.beeeon.household.user.User;
 import com.rehivetech.beeeon.household.user.User.Role;
@@ -309,6 +311,10 @@ public final class Controller {
 			mGcmModel.registerGCM();
 		}
 
+		// Register geofence areas asynchronously
+		Log.i(TAG, "Geofence: Starting registering Geofence");
+		manageGeofence(true);
+
 		return true;
 	}
 
@@ -330,6 +336,9 @@ public final class Controller {
 	public void logout() {
 		// TODO: Request to logout from server (discard actual BT)
 
+		// unregister geofences asynchronously
+		manageGeofence(false);
+
 		// Delete GCM id on server side
 		mGcmModel.deleteGCM(mUser.getId(), null);
 
@@ -344,6 +353,13 @@ public final class Controller {
 		// Forgot info about last user
 		mPersistence.saveLastAuthProvider(null);
 		mPersistence.saveLastUserId(null);
+	}
+
+	private void manageGeofence(boolean isRegisterMode) {
+		Intent intent = new Intent(mContext, ManageGeofenceService.class);
+		intent.putExtra(ManageGeofenceService.EXTRA_REGISTER, isRegisterMode);
+		intent.putExtra(ManageGeofenceService.EXTRA_USER_ID, getActualUser().getId());
+		mContext.startService(intent);
 	}
 
 	/**

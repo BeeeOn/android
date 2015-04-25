@@ -1,5 +1,7 @@
 package com.rehivetech.beeeon.gcm;
 
+import com.rehivetech.beeeon.gcm.notification.Notification;
+
 public abstract interface INotificationReceiver {
 
 	/**

@@ -7,7 +7,7 @@ import android.widget.Toast;
 import com.rehivetech.beeeon.activity.LoginActivity;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.gcm.INotificationReceiver;
-import com.rehivetech.beeeon.gcm.Notification;
+import com.rehivetech.beeeon.gcm.notification.Notification;
 import com.rehivetech.beeeon.util.Log;
 
 /**

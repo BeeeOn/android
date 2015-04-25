@@ -46,6 +46,7 @@ import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.activity.dialog.GeofenceDialogFragment;
 import com.rehivetech.beeeon.base.BaseApplicationActivity;
 import com.rehivetech.beeeon.controller.Controller;
+import com.rehivetech.beeeon.geofence.GeofenceHelper;
 import com.rehivetech.beeeon.geofence.GeofenceIntentService;
 import com.rehivetech.beeeon.geofence.SimpleGeofence;
 import com.rehivetech.beeeon.util.Log;
@@ -60,9 +61,10 @@ public class MapGeofenceActivity extends BaseApplicationActivity implements Resu
 
 	private static final String TAG = MapGeofenceActivity.class.getSimpleName();
 
+	private static final String TAG_DIALOG_ADD_GEOFENCE = "geofenceDialog";
+
 	private static final float MAP_ZOOM = 17.5F;
 	private static final int MAXIMUM_RET_ADDRESS = 3;
-	private static final String TAG_DIALOG_ADD_GEOFENCE = "geofenceDialog";
 	private static final int GEOFENCE_BOUND_PADDING = 50;
 	private GoogleApiClient mGoogleApiClient;
 	private GoogleMap mMap;
@@ -107,7 +109,6 @@ public class MapGeofenceActivity extends BaseApplicationActivity implements Resu
 
 	@Override
 	public void onMapReady(GoogleMap map) {
-		// it needs permission in manifest
 		this.mMap = map;
 		mMap.setMyLocationEnabled(true);
 
@@ -117,7 +118,6 @@ public class MapGeofenceActivity extends BaseApplicationActivity implements Resu
 
 		// Sets the map type to be "hybrid"
 		mMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
-//		mMap.setOnMarkerDragListener(this);
 
 		mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
 			@Override
@@ -274,11 +274,11 @@ public class MapGeofenceActivity extends BaseApplicationActivity implements Resu
 			LocationServices.GeofencingApi.addGeofences(
 					mGoogleApiClient,
 					// The GeofenceRequest object.
-					getGeofencingRequest(geofence),
+					GeofenceHelper.getGeofencingRequest(geofence),
 					// A pending intent that that is reused when calling removeGeofences(). This
 					// pending intent is used to generate an intent when a matched geofence
 					// transition is observed.
-					getGeofencePendingIntent()
+					GeofenceHelper.getGeofencePendingIntent(mGeofencePendingIntent,this)
 			).setResultCallback(this); // Result processed in onResult().
 		} catch (SecurityException securityException) {
 			// Catch exception generated if the app does not use ACCESS_FINE_LOCATION permission.
@@ -304,35 +304,6 @@ public class MapGeofenceActivity extends BaseApplicationActivity implements Resu
 		holder.getCircle().setVisible(false);
 	}
 
-	/**
-	 * Builds and returns a GeofencingRequest. Specifies the list of geofences to be monitored.
-	 * Also specifies how the geofence notifications are initially triggered.
-	 */
-	private GeofencingRequest getGeofencingRequest(SimpleGeofence geofence) {
-		List<Geofence> geofenceList = new ArrayList<>();
-		geofenceList.add(geofence.toGeofence());
-
-		GeofencingRequest.Builder builder = new GeofencingRequest.Builder();
-
-		// Add the geofences to be monitored by geofencing service.
-		builder.addGeofences(geofenceList);
-
-		// Return a GeofencingRequest.
-		return builder.build();
-	}
-
-	private PendingIntent getGeofencePendingIntent() {
-		// Reuse the PendingIntent if we already have it.
-		if (mGeofencePendingIntent != null) {
-			return mGeofencePendingIntent;
-		}
-		Intent intent = new Intent(this, GeofenceIntentService.class);
-		// We use FLAG_UPDATE_CURRENT so that we get the same pending intent back when
-		// calling addGeofences() and removeGeofences().
-		return PendingIntent.getService(this, 0, intent, PendingIntent.
-				FLAG_UPDATE_CURRENT);
-	}
-
 	private void drawAllGeofences() {
 		Controller controller = Controller.getInstance(this);
 
@@ -355,8 +326,6 @@ public class MapGeofenceActivity extends BaseApplicationActivity implements Resu
 						.title(fence.getName())
 						.snippet(getString(R.string.radius) + ": " + fence.getRadius() + " " + getString(R.string.unit_meter_short))
 						.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_CYAN)));
-
-
 
 		// Instantiates a new CircleOptions object + center/radius
 		CircleOptions circleOptions = new CircleOptions().center(new LatLng(fence.getLatitude(), fence.getLongitude()))
@@ -414,24 +383,6 @@ public class MapGeofenceActivity extends BaseApplicationActivity implements Resu
 		newFragment.show(getSupportFragmentManager(), TAG_DIALOG_ADD_GEOFENCE);
 	}
 
-//	@Override
-//	public void onMarkerDrag(Marker arg0) {
-//		// TODO Auto-generated method stub
-//
-//	}
-//
-//	@Override
-//	public void onMarkerDragEnd(Marker arg0) {
-//		// TODO Auto-generated method stub
-//
-//	}
-//
-//	@Override
-//	public void onMarkerDragStart(Marker arg0) {
-//		// TODO Auto-generated method stub
-//
-//	}
-
 	@Override
 	public void onResult(Status status) {
 		if (status.isSuccess()) {
@@ -443,26 +394,8 @@ public class MapGeofenceActivity extends BaseApplicationActivity implements Resu
 			controller.getGeofenceModel().addGeofence(userId, mAddGeofence);
 			mAddGeofence = null;
 
-			// Update state and save in shared preferences.
-//			mGeofencesAdded = !mGeofencesAdded;
-//			SharedPreferences.Editor editor = mSharedPreferences.edit();
-//			editor.putBoolean(Constants.GEOFENCES_ADDED_KEY, mGeofencesAdded);
-//			editor.commit();
-//
-//			// Update the UI. Adding geofences enables the Remove Geofences button, and removing
-//			// geofences enables the Add Geofences button.
-//			setButtonsEnabledState();
-//
-//			Toast.makeText(
-//					this,
-//					getString(mGeofencesAdded ? R.string.geofences_added :
-//							R.string.geofences_removed),
-//					Toast.LENGTH_SHORT
-//			).show();
+
 		} else {
-//			// Get the status code for the error and log it using a user-friendly message.
-//			String errorMessage = GeofenceErrorMessages.getErrorString(this,
-//					status.getStatusCode());
 			mAddGeofence = null;
 			Log.e(TAG, "Geofence wasn't registered. No listening for geofence!");
 		}
