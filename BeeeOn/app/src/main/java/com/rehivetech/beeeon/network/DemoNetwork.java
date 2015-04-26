@@ -51,6 +51,7 @@ public class DemoNetwork implements INetwork {
 	private Context mContext;
 	private User mUser;
 	private String mBT;
+	private boolean mInitialized;
 
 	private class AdapterHolder {
 		public final Adapter adapter;
@@ -67,6 +68,12 @@ public class DemoNetwork implements INetwork {
 
 	public DemoNetwork(Context context) {
 		mContext = context;
+
+		// Set user
+		mUser = new User(DEMO_USER_ID, "John", "Doe", "john@doe.com", Gender.Male, Role.Superuser);
+
+		// Set session token
+		mBT = DEMO_USER_BT;
 	}
 
 	private boolean isAdapterAllowed(String adapterId) {
@@ -106,16 +113,13 @@ public class DemoNetwork implements INetwork {
 			device.setValue(String.valueOf((int)lastValue));
 		}
 	}
-	
+
 	public void initDemoData() throws AppException {
+		if (mInitialized)
+			return;
+
 		// Erase previous data if exists
 		mAdapters.clear();
-		
-		// Set user
-		mUser = new User(DEMO_USER_ID, "John", "Doe", "john@doe.com", Gender.Male, Role.Superuser);
-
-		// Set session token
-		mBT = DEMO_USER_BT;
 
 		// Parse and set initial demo data
 		XmlParsers parser = new XmlParsers();
@@ -147,6 +151,8 @@ public class DemoNetwork implements INetwork {
 				facility.setLastUpdate(DateTime.now(DateTimeZone.UTC).minusSeconds(new Random().nextInt(60 * 60 * 26)));
 			}
 		}
+
+		mInitialized = true;
 	}
 
 	@Override
@@ -219,6 +225,9 @@ public class DemoNetwork implements INetwork {
 
 	@Override
 	public List<Adapter> getAdapters() {
+		// Init demo data, if not initialized yet
+		initDemoData();
+
 		List<Adapter> adapters = new ArrayList<Adapter>();
 
 		for (AdapterHolder holder : mAdapters.values()) {
