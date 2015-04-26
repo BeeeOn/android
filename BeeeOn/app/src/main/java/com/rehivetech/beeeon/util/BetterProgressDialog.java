@@ -42,7 +42,13 @@ public class BetterProgressDialog extends ProgressDialog {
 	 */
 	@Override
 	public void dismiss() {
-		super.dismiss();
+		// For older versions of Android we must call it on UI thread, newer devices probably handles that itself
+		mActivity.runOnUiThread(new Runnable() {
+			@Override
+			public void run() {
+				BetterProgressDialog.super.dismiss();
+			}
+		});
 
 		// Enable orientation change again
 		mActivity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR);
