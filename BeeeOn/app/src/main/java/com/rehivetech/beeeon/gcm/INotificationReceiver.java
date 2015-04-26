@@ -1,5 +1,6 @@
 package com.rehivetech.beeeon.gcm;
 
+import com.rehivetech.beeeon.gcm.notification.BaseNotification;
 import com.rehivetech.beeeon.gcm.notification.Notification;
 
 public abstract interface INotificationReceiver {
@@ -9,6 +10,6 @@ public abstract interface INotificationReceiver {
 	 *
 	 * @param notification
 	 */
-	public void receiveNotification(Notification notification);
+	public boolean receiveNotification(Notification notification);
 
 }

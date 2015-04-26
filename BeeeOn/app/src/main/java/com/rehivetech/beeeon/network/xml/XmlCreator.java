@@ -1194,9 +1194,9 @@ public class XmlCreator {
 			serializer.attribute(ns, Xconstants.STATE, NOTIFICATIONREAD);
 
 			for (String mid : mids) {
-				serializer.startTag(ns, Xconstants.NOTIFICAION);
+				serializer.startTag(ns, Xconstants.NOTIFICATION);
 				serializer.attribute(ns, Xconstants.MSGID, mid);
-				serializer.endTag(ns, Xconstants.NOTIFICAION);
+				serializer.endTag(ns, Xconstants.NOTIFICATION);
 			}
 
 			endXml(serializer);

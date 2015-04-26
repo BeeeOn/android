@@ -191,7 +191,7 @@ public class ManageGeofenceService extends Service implements GoogleApiClient.Co
 	public void onDestroy() {
 		Toast.makeText(this, "service done", Toast.LENGTH_SHORT).show();
 
-		if (mGoogleApiClient.isConnected()) {
+		if (mGoogleApiClient != null && mGoogleApiClient.isConnected()) {
 			mGoogleApiClient.disconnect();
 		}
 	}

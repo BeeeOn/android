@@ -6,6 +6,7 @@ import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.exception.AppException;
 import com.rehivetech.beeeon.gcm.GcmHelper;
 import com.rehivetech.beeeon.gcm.INotificationReceiver;
+import com.rehivetech.beeeon.gcm.notification.BaseNotification;
 import com.rehivetech.beeeon.gcm.notification.Notification;
 import com.rehivetech.beeeon.household.user.User;
 import com.rehivetech.beeeon.network.INetwork;
@@ -192,14 +193,17 @@ public class GcmModel {
 	 * Controller should "redirect" (un)registering for calling it there too.
 	 *
 	 * @param notification
-	 * @return
+	 * @return True if notification was handled by any of listener.
 	 */
-	public int receiveNotification(Notification notification) {
+	public boolean receiveNotification(Notification notification) {
+		boolean isHandled = false;
 		for (INotificationReceiver receiver : mNotificationReceivers.keySet()) {
-			receiver.receiveNotification(notification);
+			if (receiver.receiveNotification(notification)) {
+				isHandled = true;
+			}
 		}
 
-		return mNotificationReceivers.size();
+		return isHandled;
 	}
 
 	/**

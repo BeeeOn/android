@@ -7,6 +7,7 @@ import android.widget.Toast;
 import com.rehivetech.beeeon.activity.LoginActivity;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.gcm.INotificationReceiver;
+import com.rehivetech.beeeon.gcm.notification.BaseNotification;
 import com.rehivetech.beeeon.gcm.notification.Notification;
 import com.rehivetech.beeeon.util.Log;
 
@@ -79,13 +80,9 @@ public abstract class BaseApplicationActivity extends BaseActivity implements IN
 	/**
 	 * Method that receives Notifications.
 	 */
-	public void receiveNotification(final Notification notification) {
+	public boolean receiveNotification(final Notification notification) {
 		// FIXME: Leo (or someone else?) should implement correct handling of notifications (showing somewhere in activity or something like that?)
-		runOnUiThread(new Runnable() {
-			@Override
-			public void run() {
-				Toast.makeText(BaseApplicationActivity.this, notification.getMessage(), Toast.LENGTH_LONG).show();
-			}
-		});
+
+		return false;
 	}
 }

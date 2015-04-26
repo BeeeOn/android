@@ -1,22 +1,15 @@
 package com.rehivetech.beeeon.gcm;
 
 import android.app.IntentService;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.content.Intent;
-import android.graphics.BitmapFactory;
-import android.graphics.Color;
-import android.media.RingtoneManager;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.NotificationCompat;
 import android.widget.Toast;
 
 import com.google.android.gms.gcm.GoogleCloudMessaging;
-import com.rehivetech.beeeon.R;
-import com.rehivetech.beeeon.activity.LoginActivity;
 import com.rehivetech.beeeon.controller.Controller;
+import com.rehivetech.beeeon.gcm.notification.BaseNotification;
 import com.rehivetech.beeeon.gcm.notification.Notification;
 import com.rehivetech.beeeon.util.Log;
 
@@ -60,78 +53,24 @@ public class GcmMessageHandler extends IntentService {
 			Log.w(TAG, GcmHelper.TAG_GCM + "Deleted messages on server: " + extras.toString());
 			// If it's a regular GCM message, do some work.
 		} else if (GoogleCloudMessaging.MESSAGE_TYPE_MESSAGE.equals(messageType)) {
-			final Notification notification = Notification.parseBundle(extras);
-
-			// control if message was valid
-			if (notification == null) {
-				Log.e(TAG, GcmHelper.TAG_GCM + "Invalid message. Some of compulsory values was missing.");
-				GcmBroadcastReceiver.completeWakefulIntent(intent);
-				return;
-			}
-
-			// control userId if it equals with actual user
-			String userId = mController.getActualUser().getId();
-			if (!notification.getUserId().equals(userId)) {
-				Log.w(TAG, GcmHelper.TAG_GCM + notification.getUserId() + " != " + userId);
-				Log.w(TAG, GcmHelper.TAG_GCM + "Notification user ID wasn't verified. Server GCM ID will be deleted.");
-
-				mController.getGcmModel().deleteGCM(notification.getUserId(), null);
-			} else {
-				// EVERYTHING VERIFIED SUCCESSFULLY, MAKE ACTION HERE
-				Log.i(TAG, GcmHelper.TAG_GCM + "Received : (" + messageType + ")  " + notification.getId());
-
-				// pass notification to controller
-//				int notifRec = mController.getGcmModel().receiveNotification(notification);
-//				Log.i(TAG, GcmHelper.TAG_GCM + "Controller passed notification to " + notifRec + " reciever(s).");
-//
-//				handleNotification(notification);
-			}
+			handleNotification(intent);
 		}
 
 		GcmBroadcastReceiver.completeWakefulIntent(intent);
 	}
-/*
-	private void handleNotification(final Notification notification) {
 
-		NotificationCompat.Builder builder = new NotificationCompat.Builder(this)
-				.setSmallIcon(R.drawable.beeeon_logo_white)
-				.setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.beeeon_logo_white_icons))
-						// .setWhen(notification.getDate().getTimeInMillis())
-				.setWhen(System.currentTimeMillis()).setContentTitle(getText(R.string.app_name))
-				.setContentText(notification.getMessage()).setAutoCancel(true);
+	private void handleNotification(Intent intent) {
+		final Notification notification = BaseNotification.parseBundle(mController, intent.getExtras());
 
-		// vibration
-		builder.setVibrate(new long[]{
-				500
-		});
+		// control if message was valid
+		if (notification == null) {
+			Log.e(TAG, GcmHelper.TAG_GCM + "Invalid message.");
+			GcmBroadcastReceiver.completeWakefulIntent(intent);
+			return;
+		}
 
-		// LED
-		builder.setLights(Color.RED, 3000, 3000);
-
-		// sound
-		Uri uri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-		builder.setSound(uri);
-
-		// define notification action
-		Intent resultIntent = new Intent(this, LoginActivity.class);
-
-		// Because clicking the notification opens a new ("special") activity, there's
-		// no need to create an artificial back stack.
-		PendingIntent resultPendingIntent = PendingIntent.getActivity(this, 0, resultIntent,
-				PendingIntent.FLAG_UPDATE_CURRENT);
-
-		// Set the Notification's Click Behavior
-		builder.setContentIntent(resultPendingIntent);
-
-		// Gets an instance of the NotificationManager service
-		NotificationManager mNotifyMgr = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-
-		// Builds the notification and issues it.
-		mNotifyMgr.notify(Integer.valueOf(notification.getId()), builder.build());
-
-		// showToast(notification.getMessage());
+		notification.handle(this, mController);
 	}
-	*/
 
 //BACKDOOR, AFTER DEMONIGHT DELETE THIS METHOD
 //	private void createXmasNotification(String msg) {
@@ -178,13 +117,4 @@ public class GcmMessageHandler extends IntentService {
 //
 //		// showToast(notification.getMessage());
 //	}
-
-	public void showToast(final String message) {
-		mHandler.post(new Runnable() {
-			public void run() {
-				Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
-			}
-		});
-
-	}
 }
