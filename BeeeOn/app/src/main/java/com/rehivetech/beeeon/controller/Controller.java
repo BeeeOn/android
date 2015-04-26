@@ -100,6 +100,11 @@ public final class Controller {
 		mPersistence = new Persistence(mContext);
 		mUser = new User();
 
+		// In demo mode immediately load user data
+		if (sDemoMode) {
+			loadUserData(DemoNetwork.DEMO_USER_ID);
+		}
+
 		// Create models
 		mAdaptersModel = new AdaptersModel(mNetwork);
 		mLocationsModel = new LocationsModel(mNetwork, mContext);
@@ -289,16 +294,16 @@ public final class Controller {
 			return false;
 		}
 
-		// Save our new BT
-		String bt = mNetwork.getBT();
-		Log.i(TAG, String.format("Loaded for user '%s' fresh new BT: %s", userId, bt));
-		mPersistence.saveLastBT(userId, bt);
-
-		// Then remember this user
+		// Then initialize default settings
 		mPersistence.initializeDefaultSettings(userId);
 
-		// Remember this email to use with auto login (but not in demoMode)
 		if (!(mNetwork instanceof DemoNetwork)) {
+			// Save our new BT
+			String bt = mNetwork.getBT();
+			Log.i(TAG, String.format("Loaded for user '%s' fresh new BT: %s", userId, bt));
+			mPersistence.saveLastBT(userId, bt);
+
+			// Remember this email to use with auto login
 			mPersistence.saveLastUserId(mUser.getId());
 			mPersistence.saveLastAuthProvider(authProvider);
 

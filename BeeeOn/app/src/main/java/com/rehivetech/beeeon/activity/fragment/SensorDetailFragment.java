@@ -582,17 +582,19 @@ public class SensorDetailFragment extends Fragment {
 		Log.d(TAG, String.format("Loading graph data from %s to %s.", fmt.print(start), fmt.print(end)));
 
 		mGetDeviceLogTask = new GetDeviceLogTask(mActivity);
-		LogDataPair pair = new LogDataPair( //
+		final LogDataPair pair = new LogDataPair( //
 				mDevice, // device
 				new Interval(start, end), // interval from-to
 				DataType.AVERAGE, // type
-				(mDevice.getValue() instanceof BaseEnumValue )?DataInterval.RAW:DataInterval.MINUTE); // interval
-		mGetDeviceLogTask.setListener(new GetDeviceLogTask.CallbackLogTaskListener() {
+				(mDevice.getValue() instanceof BaseEnumValue) ? DataInterval.RAW : DataInterval.MINUTE); // interval
+
+		mGetDeviceLogTask.setListener(new CallbackTaskListener() {
 			@Override
-			public void onExecute(DeviceLog result) {
-				fillGraph(result);
+			public void onExecute(boolean success) {
+				fillGraph(mController.getDeviceLogsModel().getDeviceLog(pair));
 			}
 		});
+
 		mGetDeviceLogTask.execute(new LogDataPair[] { pair });
 	}
 

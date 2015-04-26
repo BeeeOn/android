@@ -109,7 +109,7 @@ public class Network implements INetwork {
 	private PrintWriter permaWriter = null;
 	private BufferedReader permaReader = null;
 	private static final String EOF = "</com>";
-	private boolean mIsMulti = false;
+	private int mMultiSessions = 0;
 
 	/**
 	 * Constructor.
@@ -192,7 +192,7 @@ public class Network implements INetwork {
 	private String startCommunication(String request) throws AppException {
 		// Init socket
 		Socket socket;
-		if (mIsMulti) {
+		if (mMultiSessions > 0) {
 			socket = permaSocket; // Reuse existing socket
 		} else {
 			socket = initSocket(); // Init new socket for this request
@@ -202,7 +202,7 @@ public class Network implements INetwork {
 		// we have performed hostName verification, so it is safe to proceed.
 		Writer w;
 		BufferedReader r;
-		if (mIsMulti) {
+		if (mMultiSessions > 0) {
 			// Reuse existing objects
 			w = permaWriter;
 			r = permaReader;
@@ -217,13 +217,13 @@ public class Network implements INetwork {
 			}
 		}
 		// Send request (and close writer if not multi session)
-		sendRequest(w, request, !mIsMulti);
+		sendRequest(w, request, mMultiSessions == 0);
 
 		// Receive response (and close reader if not multi session)
-		String response = receiveResponse(r, !mIsMulti);
+		String response = receiveResponse(r, mMultiSessions == 0);
 
 		// Close socket if not multi session
-		if (!mIsMulti) {
+		if (mMultiSessions == 0) {
 			try {
 				socket.close();
 			} catch (IOException e) {
@@ -316,14 +316,15 @@ public class Network implements INetwork {
 
 	/**
 	 * Method initialize perma-Socket/Reader/Writer for doing more requests to server with this single connection
-	 * On success set mIsMulti = true, on failure call MultiSessionEnd and throw AppException
+	 * On success increment mMultiSessions, on failure call MultiSessionEnd and throw AppException
 	 * @throws AppException with error NetworkError.CL_INTERNET_CONNECTION or NetworkError.CL_SOCKET
 	 */
 	public synchronized void multiSessionBegin() throws AppException {
 		if (!isAvailable())
 			throw new AppException(NetworkError.CL_INTERNET_CONNECTION);
 
-		if (mIsMulti)
+		// If some session already existed, just return
+		if (++mMultiSessions > 1)
 			return;
 
 		permaSocket = initSocket();
@@ -333,8 +334,6 @@ public class Network implements INetwork {
 			// we have performed hostName verification, so it is safe to proceed.
 			permaWriter = new PrintWriter(permaSocket.getOutputStream());
 			permaReader = new BufferedReader(new InputStreamReader(permaSocket.getInputStream()));
-
-			mIsMulti = true;
 		} catch (IOException e) {
 			// Close any opened socket/writer/reader
 			multiSessionEnd();
@@ -345,10 +344,16 @@ public class Network implements INetwork {
 
 	/**
 	 * Method close any opened perma-Socket/Reader/Writer if it was opened by multiSessionBegin() before
-	 * Also set mIsMulti = false
+	 * Also decrement mMultiSessions
 	 */
 	public synchronized void multiSessionEnd() {
-		mIsMulti = false;
+		// If there is no active session, just return
+		if (mMultiSessions == 0)
+			return;
+
+		// If there is still some active session, just return
+		if (--mMultiSessions > 0)
+			return;
 
 		// Securely close socket
 		if (permaSocket != null) {

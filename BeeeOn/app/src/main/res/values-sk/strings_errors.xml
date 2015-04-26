@@ -15,7 +15,7 @@
 	<string name="NetworkError___SRV_BAD_LOCATION_TYPE">Zlý typ miestnosti</string>
 	<string name="NetworkError___SRV_BAD_PSWD">Zadané heslo nie je správne.</string>
 	<string name="NetworkError___SRV_BAD_UTC">Zlé utc</string>
-	<string name="NetworkError___SRV_COM_VER_MISMATCH">Zlá verzia komunikačného protokolu</string>
+	<string name="NetworkError___SRV_COM_VER_MISMATCH">Zlá verzia komunikačného protokolu.\n(aplikace: %1$s, server: %2$s)</string>
 	<string name="NetworkError___SRV_DAMAGED_XML">Poškodené xml (partial)</string>
 	<string name="NetworkError___SRV_IMPROPER_NAME_OR_EMAIL">Zadané meno alebo email nie je vhodný.</string>
 	<string name="NetworkError___SRV_IMPROPER_PSWD">Zadané heslo nie je dostatočně bezpečné.</string>

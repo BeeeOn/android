@@ -9,6 +9,8 @@ import com.rehivetech.beeeon.INameIdentifier;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.util.Utils;
 
+import java.lang.ref.SoftReference;
+
 /**
  * Represents single person.
  */
@@ -30,7 +32,7 @@ public class User implements INameIdentifier {
 
 	private String mPictureUrl = "";
 
-	private boolean mDefaultPicture = true;
+	private SoftReference<Bitmap> mDefaultPicture = new SoftReference<Bitmap>(null);
 
 	public User() {}
 
@@ -170,7 +172,10 @@ public class User implements INameIdentifier {
 	 * @return bitmap with default silhouette
 	 */
 	public Bitmap getDefaultPicture(Context context) {
-		return BitmapFactory.decodeResource(context.getResources(), R.drawable.person_silhouette);
+		if (mDefaultPicture.get() == null)
+			mDefaultPicture = new SoftReference<>(BitmapFactory.decodeResource(context.getResources(), R.drawable.person_silhouette));
+
+		return mDefaultPicture.get();
 	}
 
 	/**

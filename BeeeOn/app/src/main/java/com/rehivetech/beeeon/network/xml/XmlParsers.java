@@ -137,8 +137,8 @@ public class XmlParsers {
 
 		if (!version.equals(COM_VER)) {
 			throw new AppException(NetworkError.SRV_COM_VER_MISMATCH)
-				.set("Expected", COM_VER)
-				.set("Real", version);
+				.set(NetworkError.PARAM_COM_VER_LOCAL, COM_VER)
+				.set(NetworkError.PARAM_COM_VER_SERVER, version);
 		}
 
 		ParsedMessage result = new ParsedMessage(state);
@@ -1081,8 +1081,8 @@ public class XmlParsers {
 			String version = getSecureAttrValue(Xconstants.VERSION);
 			if (!version.equals(COM_VER)) {
 				throw new AppException(NetworkError.SRV_COM_VER_MISMATCH)
-					.set("Expected", COM_VER)
-					.set("Real", version);
+					.set(NetworkError.PARAM_COM_VER_LOCAL, COM_VER)
+					.set(NetworkError.PARAM_COM_VER_SERVER, version);
 			}
 
 			result = parseAllFacilities();
@@ -1120,8 +1120,8 @@ public class XmlParsers {
 			String version = getSecureAttrValue(Xconstants.VERSION);
 			if (!version.equals(COM_VER)) {
 				throw new AppException(NetworkError.SRV_COM_VER_MISMATCH)
-					.set("Expected", COM_VER)
-					.set("Real", version);
+					.set(NetworkError.PARAM_COM_VER_LOCAL, COM_VER)
+					.set(NetworkError.PARAM_COM_VER_SERVER, version);
 			}
 
 			locations = parseRooms();
@@ -1159,8 +1159,8 @@ public class XmlParsers {
 			String version = getSecureAttrValue(Xconstants.VERSION);
 			if (!version.equals(COM_VER)) {
 				throw new AppException(NetworkError.SRV_COM_VER_MISMATCH)
-					.set("Expected", COM_VER)
-					.set("Real", version);
+					.set(NetworkError.PARAM_COM_VER_LOCAL, COM_VER)
+					.set(NetworkError.PARAM_COM_VER_SERVER, version);
 			}
 
 			adapters = parseAdaptersReady();
@@ -1191,8 +1191,8 @@ public class XmlParsers {
 			String version = getSecureAttrValue(Xconstants.VERSION);
 			if (!version.equals(COM_VER)) {
 				throw new AppException(NetworkError.SRV_COM_VER_MISMATCH)
-						.set("Expected", COM_VER)
-						.set("Real", version);
+					.set(NetworkError.PARAM_COM_VER_LOCAL, COM_VER)
+					.set(NetworkError.PARAM_COM_VER_SERVER, version);
 			}
 
 			watchdogs = parseWatchDog();
