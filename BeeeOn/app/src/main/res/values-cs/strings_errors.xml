@@ -25,7 +25,7 @@
 	<string name="NetworkError___SRV_BAD_LOCATION_TYPE">Byl zadán neplatný typ místnosti.</string>
 	<string name="NetworkError___SRV_BAD_PSWD">Zadané heslo není správné.</string>
 	<string name="NetworkError___SRV_BAD_UTC">Byla zadána neplatná časová zóna.</string>
-	<string name="NetworkError___SRV_COM_VER_MISMATCH">Verze vaší aplikace již není podporována.\n\nStáhněte si prosím novou verzi aplikace.</string>
+	<string name="NetworkError___SRV_COM_VER_MISMATCH">Verze komunikačního protokolu již není podporována.\n(aplikace: %1$s, server: %2$s)\n\nAktualizujte si prosím vaši aplikaci.</string>
 	<string name="NetworkError___SRV_DAMAGED_XML">Bylo přijato poškozené XML.\n\nZkuste to prosím znovu.</string>
 	<string name="NetworkError___SRV_IMPROPER_NAME_OR_EMAIL">Zadané jméno nebo email není vhodný.</string>
 	<string name="NetworkError___SRV_IMPROPER_PSWD">Zadané heslo není dostatečně bezpečné.</string>

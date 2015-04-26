@@ -43,6 +43,9 @@ public enum NetworkError implements ErrorCode {
 	SRV_ADA_SERVER_PROBLEM(100),
 	SRV_INVALID_REQUEST(999);
 
+	public static final String PARAM_COM_VER_LOCAL = "Local version";
+	public static final String PARAM_COM_VER_SERVER = "Server version";
+
 	private final int mNumber;
 
 	private NetworkError(int number) {
