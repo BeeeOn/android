@@ -31,7 +31,10 @@ public class AchievementList implements Parcelable {
 		Log.d(TAG, "constructor");
 		if(mAchievementList == null) {
 			Network network = new Network(context, false);
-			String adapterId = Controller.getInstance(context).getActiveAdapter().getId();
+			Controller controller = Controller.getInstance(context);
+			String adapterId = "null";
+			if(controller.getActiveAdapter() != null)
+			  adapterId = controller.getActiveAdapter().getId();
 			mAchievementList = network.getAllAchievements(adapterId);
 			Log.d(TAG, "downloading data " + adapterId);
 		}
