@@ -310,26 +310,26 @@ public class ProfileDetailFragment extends Fragment implements Observer {
 	 * Dialog shows social networks (Facebook and Twitter for now), that are not
 	 * already paired and opens their own GUI to connect.
 	 */
-	public class NetworkChooseDialog extends DialogFragment {
-		@Override
-		public Dialog onCreateDialog(Bundle savedInstanceState) {
-			AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-			builder.setTitle(R.string.profile_new_account)
-				.setItems(socialNetworks.toArray(new CharSequence[socialNetworks.size()]),
-						new DialogInterface.OnClickListener() {
-							public void onClick(DialogInterface dialog, int which) {
-								if (which == 0 && !mFb.isPaired())
-									mFb.logIn(getActivity());
-								if (which == 1 && !mFb.isPaired() ||
-										which == 0 && mFb.isPaired())
-									Toast.makeText(getActivity(), "Not implemented yet", Toast.LENGTH_LONG).show();
-							}
-						})
-				.setNegativeButton(R.string.action_close, new DialogInterface.OnClickListener() {
-					public void onClick(DialogInterface dialog, int id) {
-					}
-				});
-			return builder.create();
-		}
-	}
+//	public class NetworkChooseDialog extends DialogFragment {
+//		@Override
+//		public Dialog onCreateDialog(Bundle savedInstanceState) {
+//			AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+//			builder.setTitle(R.string.profile_new_account)
+//				.setItems(socialNetworks.toArray(new CharSequence[socialNetworks.size()]),
+//						new DialogInterface.OnClickListener() {
+//							public void onClick(DialogInterface dialog, int which) {
+//								if (which == 0 && !mFb.isPaired())
+//									mFb.logIn(getActivity());
+//								if (which == 1 && !mFb.isPaired() ||
+//										which == 0 && mFb.isPaired())
+//									Toast.makeText(getActivity(), "Not implemented yet", Toast.LENGTH_LONG).show();
+//							}
+//						})
+//				.setNegativeButton(R.string.action_close, new DialogInterface.OnClickListener() {
+//					public void onClick(DialogInterface dialog, int id) {
+//					}
+//				});
+//			return builder.create();
+//		}
+//	}
 }
