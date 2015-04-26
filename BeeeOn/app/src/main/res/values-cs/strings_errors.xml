@@ -22,13 +22,16 @@
 	<string name="NetworkError___SRV_BAD_EMAIL_OR_ROLE">Byl zadán neplatný e-mail nebo role.</string>
 	<string name="NetworkError___SRV_BAD_ICON">Byla zadána neplatná ikona.</string>
 	<string name="NetworkError___SRV_BAD_INTERVAL">Byl zadán neplatný interval.</string>
-	<string name="NetworkError___SRV_BAD_LOCATION_TYPE">Byl zadán neplatný typ místnosti.</string>
+	<string name="NetworkError___SRV_BAD_LOCATION_TYPE">Byl zadán neplatný typ umístění.</string>
 	<string name="NetworkError___SRV_BAD_PSWD">Zadané heslo není správné.</string>
 	<string name="NetworkError___SRV_BAD_UTC">Byla zadána neplatná časová zóna.</string>
 	<string name="NetworkError___SRV_COM_VER_MISMATCH">Verze komunikačního protokolu již není podporována.\n(aplikace: %1$s, server: %2$s)\n\nAktualizujte si prosím vaši aplikaci.</string>
+	<string name="NetworkError___SRV_COM_FW_ALGORITHMS_ERROR">Chyba při komunikaci s firmware/algoritmy.</string>
 	<string name="NetworkError___SRV_DAMAGED_XML">Bylo přijato poškozené XML.\n\nZkuste to prosím znovu.</string>
+	<string name="NetworkError___SRV_GENERATE_BTOKEN_ERROR">Chyba při generování přístupového tokenu.</string>
 	<string name="NetworkError___SRV_IMPROPER_NAME_OR_EMAIL">Zadané jméno nebo email není vhodný.</string>
 	<string name="NetworkError___SRV_IMPROPER_PSWD">Zadané heslo není dostatečně bezpečné.</string>
+	<string name="NetworkError___SRV_INVALID_LOCATION_TYPE">Byl zadán neplatný typ umístění.</string>
 	<string name="NetworkError___SRV_INVALID_PROVIDER">Tento poskytovatel není k dispozici.</string>
 	<string name="NetworkError___SRV_INVALID_REQUEST">Tento typ požadavku není na serveru podporován.</string>
 	<string name="NetworkError___SRV_LOW_RIGHTS">Nemáte dostatečná práva pro tuto akci.\n\nPožádejte vlastníka brány o jejich navýšení.</string>

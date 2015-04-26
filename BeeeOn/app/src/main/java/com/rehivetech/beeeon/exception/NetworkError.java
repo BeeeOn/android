@@ -41,6 +41,11 @@ public enum NetworkError implements ErrorCode {
 	SRV_SUSPECT_USER(26),
 	SRV_INVALID_PROVIDER(27),
 	SRV_ADA_SERVER_PROBLEM(100),
+
+	// Errors from UI server
+	SRV_INVALID_LOCATION_TYPE(50),
+	SRV_COM_FW_ALGORITHMS_ERROR(200),
+	SRV_GENERATE_BTOKEN_ERROR(997),
 	SRV_INVALID_REQUEST(999);
 
 	public static final String PARAM_COM_VER_LOCAL = "Local version";

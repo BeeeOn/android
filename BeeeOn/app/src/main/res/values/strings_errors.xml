@@ -26,9 +26,12 @@
 	<string name="NetworkError___SRV_BAD_PSWD">Wrong password.</string>
 	<string name="NetworkError___SRV_BAD_UTC">Invalid time zone was inserted.</string>
 	<string name="NetworkError___SRV_COM_VER_MISMATCH">This version of communication protocol is no longer supported.\n(application: %1$s, server: %2$s)\n\nPlease update your application.</string>
+	<string name="NetworkError___SRV_COM_FW_ALGORITHMS_ERROR">Error when communication with firmware/algorithms.</string>
 	<string name="NetworkError___SRV_DAMAGED_XML">Damaged XML message received.\n\nPlease try again.</string>
+	<string name="NetworkError___SRV_GENERATE_BTOKEN_ERROR">Error when generating access token.</string>
 	<string name="NetworkError___SRV_IMPROPER_NAME_OR_EMAIL">This name or email cannot be utilized.</string>
 	<string name="NetworkError___SRV_IMPROPER_PSWD">This password is not safe.</string>
+	<string name="NetworkError___SRV_INVALID_LOCATION_TYPE">Invalid location type was inserted.</string>
 	<string name="NetworkError___SRV_INVALID_PROVIDER">This provider is not available.</string>
 	<string name="NetworkError___SRV_INVALID_REQUEST">This request is not supported by server.</string>
 	<string name="NetworkError___SRV_LOW_RIGHTS">You have low rights to perform this action.\n\nAsk owner to grant you higher rights.</string>
