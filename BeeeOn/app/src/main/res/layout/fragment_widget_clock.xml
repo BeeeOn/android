@@ -53,6 +53,70 @@
 		<!-- spinners are inflated programmatically -->
 	</LinearLayout>
 
+	<!-- separator -->
+	<ImageView
+		android:layout_width="match_parent"
+		android:layout_height="1px"
+		android:src="@color/beeeon_separator"
+		android:layout_marginTop="8dp"
+		android:layout_marginBottom="8dp"
+		/>
+
+	<!-- ********* WEATHER SETTINGS ******** -->
+
+	<TextView
+		android:id="@+id/widget_config_gateway_label"
+		android:text="Počasí"
+		style="@style/LinearRow.Caption"
+		android:layout_marginBottom="8dp"
+		/>
+
+	<RelativeLayout
+		android:id="@+id/widget_config_location"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:minHeight="48dp"
+		android:gravity="center_vertical"
+		android:clickable="true"
+		android:background="@drawable/selectable_background_beeeon"
+		>
+		<TextView
+			style="@style/LinearRow.Item"
+			android:text="Lokace"
+			android:layout_alignParentLeft="true"
+			android:layout_alignParentStart="true"
+			android:layout_toLeftOf="@+id/widget_configuration_scheme"
+			android:layout_toStartOf="@+id/widget_configuration_scheme"
+			/>
+
+		<TextView
+			android:id="@+id/widget_config_location_label"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:orientation="horizontal"
+			android:layout_alignParentRight="true"
+			android:layout_alignParentEnd="true"
+			/>
+
+	</RelativeLayout>
+
+	<EditText
+		style="@style/LinearRow.Item.OneLine"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:hint="Město"
+		android:id="@+id/city_name_test"
+		/>
+
+	<!-- separator -->
+	<ImageView
+		android:layout_width="match_parent"
+		android:layout_height="1px"
+		android:src="@color/beeeon_separator"
+		android:layout_marginTop="8dp"
+		android:layout_marginBottom="8dp"
+		/>
+
 	<!-- ********* WIDGET SETTINGS ******** -->
 
 	<TextView
@@ -120,12 +184,20 @@
 				android:layout_marginEnd="4dp"
 				/>
 
-
 			<RadioButton
-				android:id="@+id/scheme_black_white"
+				android:id="@+id/scheme_white"
 				android:layout_width="32dp"
 				android:layout_height="32dp"
-				android:button="@drawable/oval_white_black_selector"
+				android:button="@drawable/oval_white_selector"
+				android:layout_marginRight="4dp"
+				android:layout_marginEnd="4dp"
+				/>
+
+			<RadioButton
+				android:id="@+id/scheme_black"
+				android:layout_width="32dp"
+				android:layout_height="32dp"
+				android:button="@drawable/oval_black_selector"
 				/>
 		</RadioGroup>
 	</RelativeLayout>
@@ -138,8 +210,6 @@
 		android:layout_marginTop="8dp"
 		android:layout_marginBottom="8dp"
 		/>
-
-	<!-- ********* WEATHER SETTINGS ******** -->
 
 
 </LinearLayout>

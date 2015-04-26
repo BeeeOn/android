@@ -100,12 +100,6 @@ public class WidgetGraphData extends WidgetDeviceData {
         widgetLocation.save();
     }
 
-    @Override
-    public void delete(Context context) {
-        super.delete(context);
-        widgetLocation.delete();
-    }
-
     private void initGraph(Device device) {
         if(mTimeHelper == null || mUnitsHelper == null) return;
 
@@ -136,7 +130,7 @@ public class WidgetGraphData extends WidgetDeviceData {
     @Override
     public void initLayout() {
         super.initLayout();
-        widgetLocation.initValueView(mRemoteViews);
+        widgetLocation.initView();
     }
 
     @Override
@@ -148,12 +142,11 @@ public class WidgetGraphData extends WidgetDeviceData {
         }
 
         Adapter adapter = mController.getAdaptersModel().getAdapter(adapterId);
-        widgetDevice.change(device, adapter);
-
+        widgetDevice.configure(device, adapter);
 
         Location location = mController.getLocationsModel().getLocation(adapterId, device.getFacility().getLocationId());
         if(location != null){
-            widgetLocation.change(location, adapter);
+            widgetLocation.configure(location, adapter);
         }
 
         widgetLastUpdate = getTimeNow();
@@ -167,12 +160,13 @@ public class WidgetGraphData extends WidgetDeviceData {
     }
 
     @Override
-    protected void updateLayout() {
-        super.updateLayout();
+    protected void renderLayout() {
+        super.renderLayout();
 
-        widgetLocation.updateValueView(false);
+        widgetLocation.renderView(mBuilder);
+
         Log.d(TAG, String.format("Graph: %d %d, is NUll = %b", mGraphWidth, mGraphHeight, mGraphBitmap == null));
-        if(mGraphBitmap != null) mRemoteViews.setImageViewBitmap(R.id.widget_graph, mGraphBitmap);
+        if(mGraphBitmap != null) mBuilder.setImage(R.id.widget_graph, mGraphBitmap);
     }
 
     private void doLoadGraphData(Device device) {
@@ -225,5 +219,4 @@ public class WidgetGraphData extends WidgetDeviceData {
             mGraph.getViewport().setMinX(mGraphSeries.getHighestValueX() - TimeUnit.HOURS.toMillis(1));
         }
     }
-
 }

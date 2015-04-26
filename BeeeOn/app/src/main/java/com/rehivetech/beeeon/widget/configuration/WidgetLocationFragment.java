@@ -27,7 +27,6 @@ import com.rehivetech.beeeon.widget.service.WidgetService;
 public class WidgetLocationFragment extends WidgetConfigurationFragment {
 	private static final String TAG = WidgetLocationFragment.class.getSimpleName();
 
-	protected Spinner mAdapterSpinner;
 	protected SeekBar mWidgetUpdateSeekBar;
 
 	protected WidgetLocationData mWidgetData;
@@ -56,47 +55,16 @@ public class WidgetLocationFragment extends WidgetConfigurationFragment {
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 
-		mAdapterSpinner = (Spinner) mActivity.findViewById(R.id.widget_config_gateway);
 		mWidgetUpdateSeekBar = (SeekBar) mActivity.findViewById(R.id.widget_config_interval);
 		initWidgetUpdateIntervalLayout();
 
 		mLocationSpinner = (Spinner) mActivity.findViewById(R.id.widget_config_location);
 
-		mAdapterSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-			@Override
-			public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-				Adapter adapter = mAdapters.get(position);
-				if (adapter == null) return;
-
-				// TODO change to load only LOCATIONS
-				doChangeAdapter(adapter.getId(), ReloadAdapterDataTask.ReloadWhat.FACILITIES);
-			}
-
-			@Override
-			public void onNothingSelected(AdapterView<?> parent) {
-
-			}
-		});
-	}
-
-	@Override
-	protected void onAllAdaptersReload() {
-		super.onAllAdaptersReload();
-		// adapter spinner
-		ArrayAdapter<?> arrayAdapter = new ArrayAdapter<>(mActivity, android.R.layout.simple_spinner_dropdown_item, mAdapters);
-		mAdapterSpinner.setAdapter(arrayAdapter);
 	}
 
 	@Override
 	protected void onFragmentResume() {
 		super.onFragmentResume();
-		int selectedAdapterIndex = selectAdapter(mWidgetData.adapterId);
-		if(selectedAdapterIndex == mAdapterSpinner.getSelectedItemPosition()){
-			doChangeAdapter(mActiveAdapter.getId(), ReloadAdapterDataTask.ReloadWhat.FACILITIES);
-		}
-		else {
-			mAdapterSpinner.setSelection(selectedAdapterIndex);
-		}
 
 		updateIntervalLayout();
 	}

@@ -3,24 +3,23 @@ package com.rehivetech.beeeon.widget.configuration;
 
 import android.os.Bundle;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.avast.android.dialogs.fragment.SimpleDialogFragment;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.arrayadapter.DeviceArrayAdapter;
-import com.rehivetech.beeeon.asynctask.ReloadAdapterDataTask;
 import com.rehivetech.beeeon.household.adapter.Adapter;
 import com.rehivetech.beeeon.household.device.Device;
 import com.rehivetech.beeeon.household.device.RefreshInterval;
 import com.rehivetech.beeeon.util.Utils;
-import com.rehivetech.beeeon.widget.WidgetSettings;
 import com.rehivetech.beeeon.widget.data.WidgetClockData;
 import com.rehivetech.beeeon.widget.persistence.WidgetDevicePersistence;
 import com.rehivetech.beeeon.widget.service.WidgetService;
@@ -34,7 +33,6 @@ import java.util.List;
 public class WidgetClockFragment extends WidgetConfigurationFragment {
 	private static final String TAG = WidgetClockFragment.class.getSimpleName();
 
-	protected Spinner mAdapterSpinner;
 	protected SeekBar mWidgetUpdateSeekBar;
 
 	protected WidgetClockData mWidgetData;
@@ -59,6 +57,7 @@ public class WidgetClockFragment extends WidgetConfigurationFragment {
 	protected int getFragmentLayoutResource(){
 		return R.layout.fragment_widget_clock;
 	}
+
 	protected int getFragmentTitle(){
 		return R.string.widget_configuration_widget_clock;
 	}
@@ -67,40 +66,30 @@ public class WidgetClockFragment extends WidgetConfigurationFragment {
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 
-		mAdapterSpinner = (Spinner) mActivity.findViewById(R.id.widget_config_gateway);
 		mWidgetUpdateSeekBar = (SeekBar) mActivity.findViewById(R.id.widget_config_interval);
-		initWidgetUpdateIntervalLayout();
+		initWidgetUpdateIntervalLayout(mWidgetUpdateSeekBar);
 
 		mDeviceSpinnersWrapper = (LinearLayout) mActivity.findViewById(R.id.widget_config_devices);
+		LinearLayout.LayoutParams spinnerLayoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+		spinnerLayoutParams.setMargins(0, 0, 0, (int) mActivity.getResources().getDimension(R.dimen.widget_margin));
 
 		for(WidgetDevicePersistence wDev : mWidgetDevices){
 			Spinner deviceSpinner = new Spinner(mActivity);
-			mDeviceSpinnersWrapper.addView(deviceSpinner);
+			mDeviceSpinnersWrapper.addView(deviceSpinner, spinnerLayoutParams);
 			mDeviceSpinners.add(deviceSpinner);
 		}
-
-		mAdapterSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-			@Override
-			public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-				Adapter adapter = mAdapters.get(position);
-				if (adapter == null) return;
-
-				doChangeAdapter(adapter.getId(), ReloadAdapterDataTask.ReloadWhat.FACILITIES);
-			}
-
-			@Override
-			public void onNothingSelected(AdapterView<?> parent) {
-
-			}
-		});
 
 		mColorSchemeGroup = (RadioGroup) mActivity.findViewById(R.id.widget_configuration_scheme);
 		mColorSchemeGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
 			@Override
 			public void onCheckedChanged(RadioGroup group, int checkedId) {
 				switch (checkedId) {
-					case R.id.scheme_black_white:
+					case R.id.scheme_white:
 						mWidgetData.settings.setColorScheme(R.color.white, R.color.white);
+						break;
+
+					case R.id.scheme_black:
+						mWidgetData.settings.setColorScheme(R.color.black, R.color.black);
 						break;
 
 					case R.id.scheme_pink_cyan:
@@ -110,36 +99,50 @@ public class WidgetClockFragment extends WidgetConfigurationFragment {
 				}
 			}
 		});
+
+		RelativeLayout locationChooseLine = (RelativeLayout) mActivity.findViewById(R.id.widget_config_location);
+		locationChooseLine.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				showLocationDialog();
+			}
+		});
 	}
 
-	@Override
-	protected void onAllAdaptersReload() {
-		super.onAllAdaptersReload();
-		// adapter spinner
-		ArrayAdapter<?> arrayAdapter = new ArrayAdapter<>(mActivity, android.R.layout.simple_spinner_dropdown_item, mAdapters);
-		mAdapterSpinner.setAdapter(arrayAdapter);
+	private void showLocationDialog() {
+		// TODO
+		SimpleDialogFragment.createBuilder(mActivity, mActivity.getSupportFragmentManager())
+			.setTitle("Vyberte lokaci")
+			.setMessage("Bude použito Brno!")
+			.setPositiveButtonText("Ok")
+			.show();
+		//*/
+
+		//LocationPickerDialogFragment.show(mActivity);
 	}
 
 	@Override
 	protected void onFragmentResume() {
 		super.onFragmentResume();
-		int selectedAdapterIndex = selectAdapter(mWidgetData.adapterId);
-		if(selectedAdapterIndex == mAdapterSpinner.getSelectedItemPosition()){
-			doChangeAdapter(mActiveAdapter.getId(), ReloadAdapterDataTask.ReloadWhat.FACILITIES);
-		}
-		else {
-			mAdapterSpinner.setSelection(selectedAdapterIndex);
-		}
+		updateIntervalLayout(mWidgetUpdateSeekBar);
 
-		updateIntervalLayout();
+		EditText cityName = (EditText) mActivity.findViewById(R.id.city_name_test);
+		cityName.setText(mWidgetData.weather.cityName);
+
+		TextView cityLabel = (TextView) mActivity.findViewById(R.id.widget_config_location_label);
+		cityLabel.setText(mWidgetData.weather.cityName);
 
 		RadioButton schemeRadio;
 		if(mWidgetData.settings.isColorSchemeEqual(R.color.white, R.color.white)){
-			schemeRadio = (RadioButton) mActivity.findViewById(R.id.scheme_black_white);
+			schemeRadio = (RadioButton) mActivity.findViewById(R.id.scheme_white);
 			schemeRadio.setChecked(true);
 		}
 		else if(mWidgetData.settings.isColorSchemeEqual(R.color.white, R.color.white)){
 			schemeRadio = (RadioButton) mActivity.findViewById(R.id.scheme_pink_cyan);
+			schemeRadio.setChecked(true);
+		}
+		else if(mWidgetData.settings.isColorSchemeEqual(R.color.black, R.color.black)){
+			schemeRadio = (RadioButton) mActivity.findViewById(R.id.scheme_black);
 			schemeRadio.setChecked(true);
 		}
 	}
@@ -165,49 +168,6 @@ public class WidgetClockFragment extends WidgetConfigurationFragment {
 		}
 	}
 
-	/**
-	 * Initializes widget update interval seekbar and text
-	 */
-	protected void initWidgetUpdateIntervalLayout() {
-		// Set Max value by length of array with values
-		mWidgetUpdateSeekBar.setMax(RefreshInterval.values().length - 1);
-		// set interval
-		mWidgetUpdateSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-			@Override
-			public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-				setIntervalWidgetText(progress);
-			}
-
-			@Override
-			public void onStartTrackingTouch(SeekBar seekBar) {
-				// Nothing to do here
-			}
-
-			@Override
-			public void onStopTrackingTouch(SeekBar seekBar) {
-				// Nothing to do here
-			}
-		});
-	}
-
-	protected void updateIntervalLayout(){
-		int interval = Math.max(mWidgetData.widgetInterval, WidgetService.UPDATE_INTERVAL_MIN);
-		int intervalIndex = RefreshInterval.fromInterval(interval).getIntervalIndex();
-		mWidgetUpdateSeekBar.setProgress(intervalIndex);
-		// set text of seekbar
-		setIntervalWidgetText(intervalIndex);
-	}
-
-	/**
-	 * Sets widget interval text
-	 * @param intervalIndex index in seekbar
-	 */
-	protected void setIntervalWidgetText(int intervalIndex) {
-		TextView intervalText = (TextView) mActivity.findViewById(R.id.widget_config_interval_text);
-		String interval = RefreshInterval.values()[intervalIndex].getStringInterval(mActivity);
-		intervalText.setText(interval);
-	}
-
 	@Override
 	protected boolean saveSettings() {
 		Adapter adapter = (Adapter) mAdapterSpinner.getSelectedItem();
@@ -230,11 +190,13 @@ public class WidgetClockFragment extends WidgetConfigurationFragment {
 			index++;
 		}
 
+		EditText cityName = (EditText) mActivity.findViewById(R.id.city_name_test);
+		mWidgetData.weather.cityName = cityName.getText().toString();
+
 		//sets widgetdata
 		RefreshInterval refresh = RefreshInterval.values()[mWidgetUpdateSeekBar.getProgress()];
 		mWidgetData.configure(mActivity.isAppWidgetEditing(), Math.max(refresh.getInterval(), WidgetService.UPDATE_INTERVAL_MIN), adapter);
 
 		return true;
 	}
-
 }

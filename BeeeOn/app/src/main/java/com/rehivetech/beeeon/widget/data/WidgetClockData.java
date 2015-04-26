@@ -1,8 +1,6 @@
 package com.rehivetech.beeeon.widget.data;
 
-import android.appwidget.AppWidgetManager;
 import android.content.Context;
-import android.widget.RemoteViews;
 
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.household.adapter.Adapter;
@@ -12,14 +10,14 @@ import com.rehivetech.beeeon.household.device.RefreshInterval;
 import com.rehivetech.beeeon.util.Log;
 import com.rehivetech.beeeon.util.TimeHelper;
 import com.rehivetech.beeeon.util.UnitsHelper;
-import com.rehivetech.beeeon.widget.WidgetSettings;
+import com.rehivetech.beeeon.widget.ViewsBuilder;
 import com.rehivetech.beeeon.widget.persistence.WidgetDevicePersistence;
-import com.rehivetech.beeeon.widget.receivers.WidgetClockProvider;
-import com.rehivetech.beeeon.widget.receivers.WidgetProvider;
+import com.rehivetech.beeeon.widget.persistence.WidgetWeatherPersistence;
 
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 import org.joda.time.format.DateTimeFormat;
+import org.json.JSONObject;
 
 import java.text.DateFormatSymbols;
 import java.util.ArrayList;
@@ -28,7 +26,7 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * Class for clock widget (2x2)
+ * Class for clock widget
  */
 public class WidgetClockData extends WidgetData {
     private static final String TAG = WidgetClockData.class.getSimpleName();
@@ -36,6 +34,11 @@ public class WidgetClockData extends WidgetData {
     public static String weekDays[] = reloadWeekDays();
 
     private List<Facility> mFacilities;
+
+    public WidgetWeatherPersistence weather;
+    private Calendar mCalendar;
+
+    boolean weatherCheckedThisHour = false; // TODO
 
     public WidgetClockData(int widgetId, Context context, UnitsHelper unitsHelper, TimeHelper timeHelper){
         super(widgetId, context, unitsHelper, timeHelper);
@@ -46,6 +49,8 @@ public class WidgetClockData extends WidgetData {
         widgetDevices.add(new WidgetDevicePersistence(mContext, mWidgetId, 1, R.id.value_container_inside_humid, unitsHelper, timeHelper, settings));
 
         mFacilities = new ArrayList<>();
+
+        weather = new WidgetWeatherPersistence(mContext, mWidgetId, mUnitsHelper, mTimeHelper, settings);
     }
 
     @Override
@@ -67,26 +72,20 @@ public class WidgetClockData extends WidgetData {
 
             mFacilities.add(facility);
         }
-
-        onUpdateClock(mContext, null, new int[]{mWidgetId});
     }
 
     @Override
     public void load() {
         super.load();
+        weather.load();
         WidgetDevicePersistence.loadAll(widgetDevices);
     }
 
     @Override
     public void save() {
         super.save();
+        weather.save();
         WidgetDevicePersistence.saveAll(widgetDevices);
-    }
-
-    @Override
-    public void delete(Context context) {
-        super.delete(context);
-        WidgetDevicePersistence.deleteAll(widgetDevices);
     }
 
     @Override
@@ -111,7 +110,7 @@ public class WidgetClockData extends WidgetData {
                 mBuilder.setOnClickListener(dev.getBoundView(), startDetailActivityPendingIntent(mContext, mWidgetId + dev.getOffset(), adapterId, dev.getId()));
             }
 
-            dev.initValueView(mBuilder.getRoot());
+            dev.initView();
         }
     }
 
@@ -122,7 +121,7 @@ public class WidgetClockData extends WidgetData {
         for(WidgetDevicePersistence dev : widgetDevices) {
             Device device = mController.getFacilitiesModel().getDevice(adapterId, dev.getId());
             if (device != null) {
-                dev.change(device, adapter);
+                dev.configure(device, adapter);
                 updated++;
             }
         }
@@ -145,14 +144,14 @@ public class WidgetClockData extends WidgetData {
     }
 
     @Override
-    public void updateLayout() {
+    public void renderLayout() {
         // updates all inside devices
         for(WidgetDevicePersistence dev : widgetDevices){
-            dev.updateValueView(false);
+            dev.renderView(mBuilder);
         }
 
         // TODO temporary solution
-        onUpdateClock(mContext, mBuilder, new int[]{mWidgetId});
+        onUpdateClock(mCalendar);
     }
 
     @Override
@@ -160,77 +159,62 @@ public class WidgetClockData extends WidgetData {
         super.handleUserLogout();
         // updates all inside devices
         for(WidgetDevicePersistence dev : widgetDevices){
-            dev.updateValueView(true, "%s (cached)");
+            dev.renderView(mBuilder, true, "%s " + mContext.getString(R.string.widget_cached));
         }
-        updateAppWidget();
+        renderAppWidget();
     }
 
-    @Override
-    public void updateAppWidget() {
-        mWidgetManager.updateAppWidget(mWidgetId, mBuilder.getRoot());
-    }
+    // -------------------------------------------------------------------- //
+    // ---------------------------- Clock methods ------------------------- //
+    // -------------------------------------------------------------------- //
 
     /**
      * Updates widget's time asynchroningly to sensor updates
      * Updates always on time broadcasts
-     * @param context
+     * @param cal Calendar holding fresh time
      */
-    private static void onUpdateClock(Context context, ViewsBuilder parentBuilder, int[] appWidgetIds) {
-        // TODO have comparing to old time and skip if the same
-        //lastKnownTime = cal.getTime();
-        if(appWidgetIds == null || appWidgetIds.length == 0) return;
+    public void onUpdateClock(Calendar cal){
+        Log.d(TAG, String.format("onUpdateClock(%d)", mWidgetId));
 
-        AppWidgetManager widgetManager = AppWidgetManager.getInstance(context);
-        Calendar cal = Calendar.getInstance(context.getResources().getConfiguration().locale);
-        cal.setTime(new Date());
-
-        for(int widgetId : appWidgetIds) {
-            Log.d(TAG, String.format("onUpdateClock(%d)", widgetId));
-
-            WidgetSettings settings = WidgetSettings.getSettings(context, widgetId);
-
-            // tries to get widgetInitialized first
-            if(parentBuilder == null){
-                parentBuilder = new ViewsBuilder(context);
-                parentBuilder.loadRootView(R.layout.widget_clock);
-            }
-            else{
-                parentBuilder.removeAllViews(R.id.clock_container);
-            }
-
-            ViewsBuilder clockBuilder = new ViewsBuilder(context, R.layout.widget_include_clock);
-            parentBuilder.addView(R.id.clock_container, clockBuilder.getRoot());
-
-            clockBuilder.setTextViewText(R.id.widget_clock_hours, String.format("%02d", cal.get(Calendar.HOUR_OF_DAY)));
-            clockBuilder.setTextViewColor(R.id.widget_clock_hours, settings.colorPrimary);
-
-            clockBuilder.setTextViewText(R.id.widget_clock_minutes, String.format("%02d", cal.get(Calendar.MINUTE)));
-            clockBuilder.setTextViewColor(R.id.widget_clock_minutes, settings.colorPrimary);
-
-            parentBuilder.setTextViewText(R.id.widget_clock_day_of_week, weekDays[cal.get(Calendar.DAY_OF_WEEK)]);
-            clockBuilder.setTextViewColor(R.id.widget_clock_day_of_week, settings.colorSecondary);
-
-            parentBuilder.setTextViewText(R.id.widget_clock_date, DateTimeFormat.shortDate().print(cal.getTimeInMillis()));
-            clockBuilder.setTextViewColor(R.id.widget_clock_date, settings.colorSecondary);
-
-            clockBuilder.setTextViewColor(R.id.widget_clock_doubledots, settings.colorPrimary);
-
-            // TODO format without year http://stackoverflow.com/questions/3790918/format-date-without-year
-            /*
-            Log.d(TAG, "Locale: " + Locale.getDefault().toString());
-            Log.d(TAG, "JODA: " + DateTimeFormat.shortDate().print(cal.getTimeInMillis()));
-            SimpleDateFormat sdf = (SimpleDateFormat) DateFormat.getDateInstance(DateFormat.SHORT, Locale.getDefault());
-            Log.d(TAG, "XXX: " + sdf.toPattern());
-
-            */
-
-            // request widget redraw
-            widgetManager.updateAppWidget(widgetId, parentBuilder.getRoot());
+        // NOTE: we need to be sure, that time will always update, so we add here in case that reference is lost
+        if(cal == null){
+            cal = Calendar.getInstance(mContext.getResources().getConfiguration().locale);
+            cal.setTime(new Date());
         }
+
+        ViewsBuilder clockBuilder = new ViewsBuilder(mContext, R.layout.widget_include_clock);
+        // clear old sub views
+        mBuilder.removeAllViews(R.id.clock_container);
+        mBuilder.addView(R.id.clock_container, clockBuilder.getRoot());
+
+        int hours_format = is24HourMode(mContext) ? Calendar.HOUR_OF_DAY : Calendar.HOUR;
+        clockBuilder.setTextViewText(R.id.widget_clock_hours, String.format("%02d", cal.get(hours_format)));
+        clockBuilder.setTextViewColor(R.id.widget_clock_hours, settings.colorPrimary);
+
+        // shows minutes
+        clockBuilder.setTextViewText(R.id.widget_clock_minutes, String.format("%02d", cal.get(Calendar.MINUTE)));
+        clockBuilder.setTextViewColor(R.id.widget_clock_minutes, settings.colorPrimary);
+
+        mBuilder.setTextViewText(R.id.widget_clock_day_of_week, weekDays[cal.get(Calendar.DAY_OF_WEEK)]);
+        clockBuilder.setTextViewColor(R.id.widget_clock_day_of_week, settings.colorSecondary);
+
+        mBuilder.setTextViewText(R.id.widget_clock_date, DateTimeFormat.shortDate().print(cal.getTimeInMillis()));
+        clockBuilder.setTextViewColor(R.id.widget_clock_date, settings.colorSecondary);
+
+        clockBuilder.setTextViewColor(R.id.widget_clock_doubledots, settings.colorPrimary);
+
+        renderAppWidget();
+
+        // TODO format without year http://stackoverflow.com/questions/3790918/format-date-without-year
     }
 
-    public static void onUpdateAllClocks(Context context){
-        onUpdateClock(context, null, WidgetProvider.getAllIdsByClass(context, WidgetClockProvider.class));
+    /**
+     * Checs if user uses 24 hour format or not
+     * @param context
+     * @return
+     */
+    private static boolean is24HourMode(final Context context) {
+        return android.text.format.DateFormat.is24HourFormat(context);
     }
 
     /**
@@ -242,8 +226,44 @@ public class WidgetClockData extends WidgetData {
         return weekDays;
     }
 
+    // -------------------------------------------------------------------- //
+    // ---------------------------- Weather methods ----------------------- //
+    // -------------------------------------------------------------------- //
+
+    /**
+     * Updates and stores date from the server
+     * @param json
+     */
+    public void updateWeather(JSONObject json){
+        weather.configure(json, null);
+    }
+
+    /**
+     * Renders new weather data based on data saved in preferences
+     */
+    public void renderWeather() {
+        Log.v(TAG, "rendering weather widget !!!!!");
+
+        /*
+        detailsField.setText(
+                details.getString("description").toUpperCase(Locale.US) +
+                        "\n" + "Humidity: " + main.getString("humidity") + "%" +
+                        "\n" + "Pressure: " + main.getString("pressure") + " hPa");
+       //*/
+        //updatedField.setText("Last update: " + updatedOn);
+
+
+        weather.renderView(mBuilder);
+
+        renderAppWidget();
+    }
+
     @Override
     public String getClassName() {
         return WidgetClockData.class.getName();
+    }
+
+    public void injectObject(Calendar calendar) {
+        mCalendar = calendar;
     }
 }

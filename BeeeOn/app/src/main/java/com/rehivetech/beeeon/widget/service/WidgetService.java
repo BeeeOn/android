@@ -15,6 +15,7 @@ import android.os.IBinder;
 import android.os.SystemClock;
 import android.util.SparseArray;
 
+import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.asynctask.ActorActionTask;
 import com.rehivetech.beeeon.asynctask.CallbackTask;
 import com.rehivetech.beeeon.controller.Controller;
@@ -30,9 +31,9 @@ import com.rehivetech.beeeon.util.Log;
 import com.rehivetech.beeeon.util.TimeHelper;
 import com.rehivetech.beeeon.util.UnitsHelper;
 import com.rehivetech.beeeon.util.Utils;
+import com.rehivetech.beeeon.widget.data.WidgetClockData;
 import com.rehivetech.beeeon.widget.data.WidgetData;
 import com.rehivetech.beeeon.widget.persistence.WidgetDevicePersistence;
-import com.rehivetech.beeeon.widget.receivers.WidgetBridgeBroadcastReceiver;
 import com.rehivetech.beeeon.widget.receivers.WidgetClockProvider;
 import com.rehivetech.beeeon.widget.receivers.WidgetDeviceProvider;
 import com.rehivetech.beeeon.widget.receivers.WidgetDeviceProviderLarge;
@@ -40,8 +41,12 @@ import com.rehivetech.beeeon.widget.receivers.WidgetDeviceProviderMedium;
 import com.rehivetech.beeeon.widget.receivers.WidgetGraphProvider;
 import com.rehivetech.beeeon.widget.receivers.WidgetLocationListProvider;
 
+import org.json.JSONObject;
+
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -55,7 +60,6 @@ public class WidgetService extends Service {
 
     private static final String EXTRA_START_UPDATING =          "com.rehivetech.beeeon.start_updating";
     private static final String EXTRA_FORCE_UPDATE =            "com.rehivetech.beeeon.force_update";
-    private static final String EXTRA_STANDBY =                 "com.rehivetech.beeeon.standby";
     private static final String EXTRA_ACTOR_CHANGE_REQUEST =    "com.rehivetech.beeeon.actor_change_request";
     private static final String EXTRA_ACTOR_CHANGE_RESULT =     "com.rehivetech.beeeon.actor_change_result";
     private static final String EXTRA_ACTOR_ID =                "com.rehivetech.beeeon.actor_ids";
@@ -74,10 +78,11 @@ public class WidgetService extends Service {
     private Context mContext;
     private Controller mController;
     private AppWidgetManager mAppWidgetManager;
-    private BroadcastReceiver mBroadcastBridge;
     // helpers
     private UnitsHelper mUnitsHelper;
     private TimeHelper mTimeHelper;
+
+    private Calendar mCalendar;
 
     private boolean isServiceRunning = false;
 
@@ -126,6 +131,20 @@ public class WidgetService extends Service {
         context.stopService(intent);
     }
 
+    private final static IntentFilter sIntentFilter;
+    static{
+        sIntentFilter = new IntentFilter();
+        sIntentFilter.addAction(Intent.ACTION_SCREEN_ON);
+        sIntentFilter.addAction(Intent.ACTION_SCREEN_OFF);
+        sIntentFilter.addAction(Intent.ACTION_TIME_TICK);
+        sIntentFilter.addAction(Intent.ACTION_TIMEZONE_CHANGED);
+        sIntentFilter.addAction(Intent.ACTION_TIME_CHANGED);
+        sIntentFilter.addAction(Intent.ACTION_LOCALE_CHANGED);
+        sIntentFilter.addAction(ConnectivityManager.CONNECTIVITY_ACTION);
+        // --- beeeOn broadcasts
+        sIntentFilter.addAction(ActorActionTask.ACTION_ACTOR_CHANGED);
+    }
+
     /**
      * Initializes things only first time service is started
      */
@@ -136,22 +155,12 @@ public class WidgetService extends Service {
 
         mContext = getApplicationContext();
         mAppWidgetManager = AppWidgetManager.getInstance(mContext);
+        mCalendar = Calendar.getInstance(mContext.getResources().getConfiguration().locale);
 
         // Creates broadcast receiver which bridges broadcasts to appwidgets for handling time and screen
         Log.v(TAG, "registeringBroadcastReceiver()");
-        IntentFilter filter = new IntentFilter();
-        filter.addAction(Intent.ACTION_SCREEN_ON);
-        filter.addAction(Intent.ACTION_SCREEN_OFF);
-        filter.addAction(Intent.ACTION_TIME_TICK);
-        filter.addAction(Intent.ACTION_TIMEZONE_CHANGED);
-        filter.addAction(Intent.ACTION_TIME_CHANGED);
-        filter.addAction(Intent.ACTION_LOCALE_CHANGED);
-        filter.addAction(ConnectivityManager.CONNECTIVITY_ACTION);
-        // --- beeeOn broadcasts
-        filter.addAction(ActorActionTask.ACTION_ACTOR_CHANGED);
 
-        mBroadcastBridge = new WidgetBridgeBroadcastReceiver();
-        registerReceiver(mBroadcastBridge, filter);
+        registerReceiver(mServiceReceiver, sIntentFilter);
     }
 
     /**
@@ -165,7 +174,7 @@ public class WidgetService extends Service {
         mAvailableWidgets.clear();
 
         Log.v(TAG, "Unregistering broadcast bridge");
-        unregisterReceiver(mBroadcastBridge);
+        unregisterReceiver(mServiceReceiver);
     }
 
     /**
@@ -186,22 +195,12 @@ public class WidgetService extends Service {
         boolean isStartUpdating = false,
                 isActorChangeRequest = false,
                 isActorChangeResult = false,
-                isStandBy = false,
                 isForceUpdate = false,
                 isChangeLayout = false;
 
         int[] appWidgetIds = new int[]{};
 
         if(intent != null) {
-            // -------------- if standby, stop alarm (leaves service running though)
-            // NOTE: better if first, so that less code is running
-            isStandBy = intent.getBooleanExtra(EXTRA_STANDBY, false);
-            if (isStandBy) {
-                Log.d(TAG, "is standby...");
-                stopAlarm(mContext);
-                return START_STICKY;
-            }
-
             // -------------- get widget Ids
             appWidgetIds  = intent.getIntArrayExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS);
 
@@ -249,7 +248,7 @@ public class WidgetService extends Service {
             }
         }
 
-        Log.v(TAG, String.format("onStartCommand(intent = %b), startUpdating = %b, standby = %b, isActorWantsChange = %b, forceUpdate = %b, changeLayout = %b", (intent == null), isStartUpdating, isStandBy, isActorChangeRequest, isForceUpdate, isChangeLayout));
+        Log.v(TAG, String.format("onStartCommand(intent = %b), startUpdating = %b, isActorWantsChange = %b, forceUpdate = %b, changeLayout = %b", (intent == null), isStartUpdating, isActorChangeRequest, isForceUpdate, isChangeLayout));
 
         // calculate it first time always or only when force update
         if (isStartUpdating || !isForceUpdate) {
@@ -330,7 +329,7 @@ public class WidgetService extends Service {
             if(changeLayout > 0){
                 widgetData.changeLayout(changeLayout);
                 isForceUpdate = true;
-                widgetData.updateAppWidget();
+                widgetData.renderAppWidget();
             }
 
             // Ignore uninitialized widgets
@@ -348,6 +347,11 @@ public class WidgetService extends Service {
             // if preparation of widget is successfull, remember this widget
             widgetsToUpdate.put(widgetId, widgetData);
             widgetReferredObjects.addAll(widgetData.getReferredObj());
+
+            // TODO group it
+            if(widgetData instanceof WidgetClockData){
+                this.updateWeatherData((WidgetClockData) widgetData);
+            }
         }
 
         try{
@@ -405,6 +409,24 @@ public class WidgetService extends Service {
                 }
             }
         }
+    }
+
+    private void updateWeatherData(final WidgetClockData widgetData){
+        Log.v(TAG, "updating clock weather....");
+
+        if(widgetData.weather.cityName.isEmpty()) return;
+
+        new Thread(){
+            public void run(){
+                final JSONObject json = RemoteWeatherFetch.getJSON(mContext, widgetData.weather.cityName);
+                if(json == null){
+                    Log.i(TAG, mContext.getString(R.string.place_not_found));
+                } else {
+                    widgetData.updateWeather(json);
+                    widgetData.renderWeather();
+                }
+            }
+        }.start();
     }
 
     /**
@@ -506,7 +528,7 @@ public class WidgetService extends Service {
             // if any actor found, update whole widget
             if(updatedActors > 0){
                 if(perform == UPDATE_LAYOUT)
-                    data.updateAppWidget();
+                    data.renderAppWidget();
                 else
                     data.update();
             }
@@ -583,6 +605,10 @@ public class WidgetService extends Service {
                 // instantiate class from string
                 widgetData = (WidgetData) Class.forName(widgetClassName).getConstructor(int.class, Context.class, UnitsHelper.class, TimeHelper.class).newInstance(widgetId, mContext, mUnitsHelper, mTimeHelper);
                 widgetData.load();
+                // TODO nejak zobecnit?
+                if(widgetData instanceof WidgetClockData){
+                    ((WidgetClockData) widgetData).injectObject(mCalendar);
+                }
                 widgetData.init();
                 widgetAdd(widgetData);
                 Log.v(TAG, String.format("finished creation of WidgetData(%d)", widgetId));
@@ -667,6 +693,20 @@ public class WidgetService extends Service {
         }
 
         return arr;
+    }
+
+    /**
+     * Gets all active clock widgets and update their time
+     * Also sets time in calendar to current
+     */
+    private void updateClockWidgets(){
+        List<Integer> clockIds = getWidgetIds(WidgetClockProvider.class);
+        mCalendar.setTime(new Date());
+        for(Integer clockId : clockIds){
+            WidgetData data = mAvailableWidgets.get(clockId);
+            if(data == null || !(data instanceof WidgetClockData)) continue;
+            ((WidgetClockData) data).onUpdateClock(mCalendar);
+        }
     }
 
     // -------------------------------------------------------------------- //
@@ -763,18 +803,6 @@ public class WidgetService extends Service {
     }
 
     /**
-     * Intent for putting service asleep
-     * @param context
-     * @param standby
-     * @return
-     */
-    public static Intent getIntentStandBy(Context context, boolean standby){
-        Intent intent = new Intent(context, WidgetService.class);
-        intent.putExtra(WidgetService.EXTRA_STANDBY, standby);
-        return intent;
-    }
-
-    /**
      * Intent for changing actor's state
      * @param context
      * @param actorId
@@ -868,4 +896,67 @@ public class WidgetService extends Service {
         intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, new int[]{ widgetId });
         return intent;
     }
+
+    // -------------------------------------------------------------------- //
+    // ------------------------- Broadcast receiver ----------------------- //
+    // -------------------------------------------------------------------- //
+
+    private final BroadcastReceiver mServiceReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String receivedAction = intent.getAction();
+            Log.d(TAG, "broadcastReceived: " + receivedAction);
+
+            // if time was changed (any way), update clock widgets
+            if (receivedAction.equals(Intent.ACTION_TIME_TICK) ||
+                receivedAction.equals(Intent.ACTION_TIME_CHANGED) ||
+                receivedAction.equals(Intent.ACTION_TIMEZONE_CHANGED)){
+                updateClockWidgets();
+            }
+            else if(receivedAction.equals(Intent.ACTION_LOCALE_CHANGED)){
+                mCalendar = Calendar.getInstance(mContext.getResources().getConfiguration().locale);
+                WidgetClockData.reloadWeekDays();
+                // TODO update clocks?
+            }
+            // if screen went on, update clocks + tell the service
+            else if(receivedAction.equals(Intent.ACTION_SCREEN_ON)){
+                updateClockWidgets();
+                context.startService(WidgetService.getIntentUpdate(context));
+            }
+            // if screen went off, tell the service
+            else if(receivedAction.equals(Intent.ACTION_SCREEN_OFF)){
+                Log.d(TAG, "service getting standby...");
+                stopAlarm(context);
+            }
+            // if any actor value was changed, tell the service to refresh widget with that device
+            else if(receivedAction.equals(ActorActionTask.ACTION_ACTOR_CHANGED)){
+                // TODO prepsat s kontextem...
+                String adapterId = intent.getStringExtra(ActorActionTask.EXTRA_ACTOR_CHANGED_ADAPTER_ID);
+                String actorId = intent.getStringExtra(ActorActionTask.EXTRA_ACTOR_CHANGED_ID);
+
+                if(adapterId == null || adapterId.isEmpty() || actorId == null || actorId.isEmpty()) return;
+                context.startService(WidgetService.getIntentActorChangeResult(context, adapterId, actorId));
+
+			/*
+			// update location widget if exists
+			int[] locationWidgetsIds = WidgetProvider.getAllIdsByClass(context, WidgetLocationListProvider.class);
+			if(locationWidgetsIds != null && locationWidgetsIds.length > 0){
+				AppWidgetManager widgetManager = AppWidgetManager.getInstance(context);
+				// TODO
+				//widgetManager.notifyAppWidgetViewDataChanged();
+			}
+			//*/
+            }
+		/*
+		// TODO somehow not getting isNoConnectivity
+		else if(receivedAction.equals(ConnectivityManager.CONNECTIVITY_ACTION)){
+			boolean isNoConnectivity = intent.getBooleanExtra(ConnectivityManager.EXTRA_NO_CONNECTIVITY, false);
+			boolean isFailover = intent.getBooleanExtra(ConnectivityManager.EXTRA_IS_FAILOVER, false);
+			Log.d(TAG, String.format("IS Connectivity = %b, isFailover = %b", isNoConnectivity, isFailover));
+		}
+		//*/
+
+            // TODO mit zmenu stavu prihlaseni jako broadcast?
+        }
+    };
 }

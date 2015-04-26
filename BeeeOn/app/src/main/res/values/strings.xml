@@ -212,15 +212,13 @@
     <string name="widget_sensor_title_small">BeeeOn device 1x1</string>
     <string name="widget_sensor_title_medium">BeeeOn device 2x1</string>
     <string name="widget_sensor_title_large">BeeeOn device 3x1</string>
-    <string name="widget_cached">(cached)</string>
-    <string name="widget_location_list_empty">Empty location</string>
+    <string name="widget_location_list_title">BeeeOn location </string>
     <string name="widget_graph_title">BeeeOn device with graph</string>
 
-    
     <!-- WidgetConfigurationActivity -->
-    <string name="widget_configuration_adapter">Gateway: </string>
+    <string name="widget_configuration_adapter">Gateway</string>
     <string name="widget_configuration_sensor">Device to be shown: </string>
-    <string name="widget_configuration_interval_sensor">Device update interval: </string>
+    <string name="widget_configuration_interval_sensor">Household update interval</string>
     <string name="widget_configuration_interval_widget">Widget update interval: </string>
     <string name="widget_configuration_login_first">You must be logged in first</string>
     <string name="widget_configuration_no_adapters">You have no gateways and thus no device to show in widget</string>
@@ -234,8 +232,16 @@
     <string name="widget_configuration_widget_location">Configuration location widget</string>
 
     <string name="widget_configuration_color_scheme">Color scheme</string>
+
+    <!-- Widgets other -->
+    <string name="widget_location_list_empty">Empty location</string>
+    <string name="widget_cached">(cached)</string>
+    <string name="change_city">Change city</string>
+    <string name="place_not_found">Sorry, no weather data found.</string>
     <string name="widget">Widget</string>
     <string name="household">Household</string>
+    <string name="widget_configuration_location">Location</string>
+
 
     <!-- About -->
     <string name="play_link" translatable="false">market://details?id=com.rehivetech.beeeon</string>
@@ -354,8 +360,6 @@
 
     <string name="devices">Devices</string>
 	<string name="rule_delete_dialog">Please confirm rule removal</string>
-	<string name="widget_configuration_location">Location</string>
-	<string name="widget_location_list_title">BeeeOn location </string>
 	<string name="toast_delete_fail">Unable to remove</string>
 	<string name="toast_delete_success">Successfully removed</string>
 	<string name="addadapter_fill_name">Please fill gateway name</string>
@@ -364,6 +368,4 @@
 	<string name="add_action_dialog_title">What do you want add ?</string>
 	<string name="toast_need_sensor_location_icon">Please choose icon of your new location</string>
 
-    <string name="location_inside">Doma</string>
-    
 </resources>

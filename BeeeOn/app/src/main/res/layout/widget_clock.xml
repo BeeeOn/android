@@ -86,4 +86,32 @@
 				 android:layout_below="@+id/xxx" />
 		</RelativeLayout>
 
+	<TextView
+		android:id="@+id/widget_weather_city"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:text="CITY"
+		android:layout_below="@+id/value_container_inside_humid"
+		android:layout_alignLeft="@+id/clock_container"
+		android:layout_alignStart="@+id/clock_container"/>
+
+	<TextView
+		android:id="@+id/widget_weather_temperature"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:text="TEMPERATURE"
+		android:textStyle="bold"
+		android:layout_below="@+id/widget_weather_city"
+		android:layout_alignLeft="@+id/clock_container"
+		android:layout_alignStart="@+id/clock_container"/>
+
+	<ImageView
+		android:id="@+id/widget_weather_icon"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_alignTop="@+id/widget_clock_household_label"
+		android:layout_alignRight="@+id/clock_container"
+		android:layout_alignEnd="@+id/clock_container"
+		/>
+
 </RelativeLayout>

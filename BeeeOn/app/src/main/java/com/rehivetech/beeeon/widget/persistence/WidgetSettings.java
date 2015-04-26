@@ -1,8 +1,7 @@
-package com.rehivetech.beeeon.widget;
+package com.rehivetech.beeeon.widget.persistence;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.graphics.Color;
 
 import com.rehivetech.beeeon.R;
 
@@ -13,7 +12,7 @@ public class WidgetSettings{
 	private static final String TAG = WidgetSettings.class.getSimpleName();
 
 	protected static final String PREF_FILENAME = "widget_%d_settings";
-	private static final String PREF_IS_COLOR_SCHEME = "is_color_scheme";
+	protected static final String PREF_IS_COLOR_SCHEME = "is_color_scheme";
 	protected static final String PREF_COLOR_PRIMARY = "color_primary";
 	protected static final String PREF_COLOR_SECONDARY = "color_secondary";
 

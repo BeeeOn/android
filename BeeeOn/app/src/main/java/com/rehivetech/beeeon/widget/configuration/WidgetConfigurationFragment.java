@@ -7,8 +7,14 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.SeekBar;
+import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.asynctask.CallbackTask;
 import com.rehivetech.beeeon.asynctask.ReloadAdapterDataTask;
 import com.rehivetech.beeeon.base.BaseApplicationActivity;
@@ -19,6 +25,7 @@ import com.rehivetech.beeeon.exception.NetworkError;
 import com.rehivetech.beeeon.household.adapter.Adapter;
 import com.rehivetech.beeeon.household.device.Device;
 import com.rehivetech.beeeon.household.device.Facility;
+import com.rehivetech.beeeon.household.device.RefreshInterval;
 import com.rehivetech.beeeon.household.location.Location;
 import com.rehivetech.beeeon.util.Log;
 import com.rehivetech.beeeon.util.Utils;
@@ -47,6 +54,7 @@ public abstract class WidgetConfigurationFragment extends Fragment {
 	protected List<Adapter> mAdapters;
 	protected Adapter mActiveAdapter;
 	protected boolean mAdapterNeedsToReload;
+	protected Spinner mAdapterSpinner;
 
 	/**
 	 * Gets reference to configuration activity so that can communicate with it
@@ -75,13 +83,28 @@ public abstract class WidgetConfigurationFragment extends Fragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		mView = inflater.inflate(getFragmentLayoutResource(), container, false);
+		mActivity.getToolbar().setTitle(getFragmentTitle());
 		return mView;
 	}
 
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
-		mActivity.getToolbar().setTitle(getFragmentTitle());
+		mAdapterSpinner = (Spinner) mActivity.findViewById(R.id.widget_config_gateway);
+		mAdapterSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+			@Override
+			public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+				Adapter adapter = mAdapters.get(position);
+				if (adapter == null) return;
+
+				doChangeAdapter(adapter.getId(), ReloadAdapterDataTask.ReloadWhat.FACILITIES);
+			}
+
+			@Override
+			public void onNothingSelected(AdapterView<?> parent) {
+
+			}
+		});
 	}
 
 	/**
@@ -141,6 +164,10 @@ public abstract class WidgetConfigurationFragment extends Fragment {
 	protected void onAllAdaptersReload(){
 		mAdapters = mController.getAdaptersModel().getAdapters();
 		mAdapterNeedsToReload = false;
+		// adapter spinner refresh
+		ArrayAdapter<?> arrayAdapter = new ArrayAdapter<>(mActivity, android.R.layout.simple_spinner_item, mAdapters);
+		arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+		mAdapterSpinner.setAdapter(arrayAdapter);
 	}
 
 	/**
@@ -149,6 +176,14 @@ public abstract class WidgetConfigurationFragment extends Fragment {
 	 */
 	protected void onFragmentResume(){
 		mGeneralWidgetdata.load();
+
+		int selectedAdapterIndex = selectAdapter(mGeneralWidgetdata.adapterId);
+		if(selectedAdapterIndex == mAdapterSpinner.getSelectedItemPosition()){
+			doChangeAdapter(mActiveAdapter.getId(), ReloadAdapterDataTask.ReloadWhat.FACILITIES);
+		}
+		else {
+			mAdapterSpinner.setSelection(selectedAdapterIndex);
+		}
 	}
 
 	protected abstract void updateLayout();
@@ -276,12 +311,65 @@ public abstract class WidgetConfigurationFragment extends Fragment {
 	 * !!! Starts the service !!!
 	 */
 	protected void startWidgetOk(){
-		WidgetService.startUpdating(mActivity, new int[]{ mActivity.getWidgetId() }, mActivity.isAppWidgetEditing());
+		WidgetService.startUpdating(mActivity, new int[]{mActivity.getWidgetId()}, mActivity.isAppWidgetEditing());
 	}
 
 	/**
 	 * When configuration does not finish with success calls this
 	 */
 	protected void startWidgetCancel() {
+	}
+
+	// -------------------------------------------------------------------- //
+	// ---------------------- Widget interval methods --------------------- //
+	// -------------------------------------------------------------------- //
+
+	/**
+	 * Initializes widget update interval seekbar and text
+	 */
+	protected void initWidgetUpdateIntervalLayout(SeekBar updateIntervalSeekbar) {
+		// Set Max value by length of array with values
+		updateIntervalSeekbar.setMax(RefreshInterval.values().length - 1);
+		// set interval
+		updateIntervalSeekbar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+			@Override
+			public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+				setIntervalWidgetText(progress);
+			}
+
+			@Override
+			public void onStartTrackingTouch(SeekBar seekBar) {
+				// Nothing to do here
+			}
+
+			@Override
+			public void onStopTrackingTouch(SeekBar seekBar) {
+				// Nothing to do here
+			}
+		});
+	}
+
+	/**
+	 * Updates the seekbar and text
+	 * @param updateIntervalSeekbar
+	 */
+	protected void updateIntervalLayout(SeekBar updateIntervalSeekbar){
+		int interval = Math.max(mGeneralWidgetdata.widgetInterval, WidgetService.UPDATE_INTERVAL_MIN);
+		int intervalIndex = RefreshInterval.fromInterval(interval).getIntervalIndex();
+		updateIntervalSeekbar.setProgress(intervalIndex);
+		// set text of seekbar
+		setIntervalWidgetText(intervalIndex);
+	}
+
+	/**
+	 * Sets widget interval text
+	 * @param intervalIndex index in seekbar
+	 */
+	protected void setIntervalWidgetText(int intervalIndex) {
+		TextView intervalText = (TextView) mActivity.findViewById(R.id.widget_config_interval_text);
+		if(intervalText == null) return;
+
+		String interval = RefreshInterval.values()[intervalIndex].getStringInterval(mActivity);
+		intervalText.setText(interval);
 	}
 }

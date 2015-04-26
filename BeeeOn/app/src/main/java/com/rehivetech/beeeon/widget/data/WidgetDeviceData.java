@@ -71,12 +71,6 @@ public class WidgetDeviceData extends WidgetData {
     }
 
     @Override
-    public void delete(Context context) {
-        super.delete(context);
-        widgetDevice.delete();
-    }
-
-    @Override
     public List<Facility> getReferredObj() {
         return mFacilities;
     }
@@ -85,20 +79,20 @@ public class WidgetDeviceData extends WidgetData {
     public void initLayout() {
         super.initLayout();
         // configuration
-        mRemoteViews.setOnClickPendingIntent(R.id.options, mConfigurationPendingIntent);
+        mBuilder.setOnClickListener(R.id.options, mConfigurationPendingIntent);
 
         // sets onclick "listeners"
-        mRemoteViews.setOnClickPendingIntent(R.id.value, mRefreshPendingIntent);
-        mRemoteViews.setOnClickPendingIntent(R.id.last_update, mRefreshPendingIntent);
-        mRemoteViews.setOnClickPendingIntent(R.id.refresh, mRefreshPendingIntent);
+        mBuilder.setOnClickListener(R.id.value, mRefreshPendingIntent);
+        mBuilder.setOnClickListener(R.id.last_update, mRefreshPendingIntent);
+        mBuilder.setOnClickListener(R.id.refresh, mRefreshPendingIntent);
 
         if(!adapterId.isEmpty() && !widgetDevice.getId().isEmpty()){
             // detail activity
-            mRemoteViews.setOnClickPendingIntent(R.id.icon, startDetailActivityPendingIntent(mContext, mWidgetId, adapterId, widgetDevice.getId()));
-            mRemoteViews.setOnClickPendingIntent(R.id.name, startDetailActivityPendingIntent(mContext, mWidgetId, adapterId, widgetDevice.getId()));
+            mBuilder.setOnClickListener(R.id.icon, startDetailActivityPendingIntent(mContext, mWidgetId, adapterId, widgetDevice.getId()));
+            mBuilder.setOnClickListener(R.id.name, startDetailActivityPendingIntent(mContext, mWidgetId, adapterId, widgetDevice.getId()));
         }
 
-        widgetDevice.initValueView(mRemoteViews);
+        widgetDevice.initView();
     }
 
     @Override
@@ -110,7 +104,7 @@ public class WidgetDeviceData extends WidgetData {
         }
 
         Adapter adapter = mController.getAdaptersModel().getAdapter(adapterId);
-        widgetDevice.change(device, adapter);
+        widgetDevice.configure(device, adapter);
 
         widgetLastUpdate = getTimeNow();
         adapterId = adapter.getId();
@@ -121,12 +115,12 @@ public class WidgetDeviceData extends WidgetData {
     }
 
     @Override
-    protected void updateLayout() {
-        mRemoteViews.setImageViewResource(R.id.icon, widgetDevice.icon == 0 ? R.drawable.dev_unknown : widgetDevice.icon);
-        mRemoteViews.setTextViewText(R.id.name, widgetDevice.getName());
-        mRemoteViews.setTextViewText(R.id.last_update, widgetDevice.lastUpdateText);
+    protected void renderLayout() {
+        mBuilder.setImage(R.id.icon, widgetDevice.icon == 0 ? R.drawable.dev_unknown : widgetDevice.icon);
+        mBuilder.setTextViewText(R.id.name, widgetDevice.getName());
+        mBuilder.setTextViewText(R.id.last_update, widgetDevice.lastUpdateText);
 
-        widgetDevice.updateValueView(false);
+        widgetDevice.renderView(mBuilder);
 
         switch(widgetLayout){
             case R.layout.widget_device_3x2:
@@ -144,11 +138,11 @@ public class WidgetDeviceData extends WidgetData {
     @Override
     public void handleUserLogout() {
         super.handleUserLogout();
-        widgetDevice.updateValueView(true);
-        mRemoteViews.setImageViewResource(R.id.icon, widgetDevice.icon == 0 ? R.drawable.dev_unknown : widgetDevice.icon);
-        mRemoteViews.setTextViewText(R.id.name, widgetDevice.getName());
-        mRemoteViews.setTextViewText(R.id.last_update, String.format("%s (cached)", widgetDevice.lastUpdateText));
-        updateAppWidget();
+        widgetDevice.renderView(mBuilder, true, "");
+        mBuilder.setImage(R.id.icon, widgetDevice.icon == 0 ? R.drawable.dev_unknown : widgetDevice.icon);
+        mBuilder.setTextViewText(R.id.name, widgetDevice.getName());
+        mBuilder.setTextViewText(R.id.last_update, String.format("%s " + mContext.getString(R.string.widget_cached), widgetDevice.lastUpdateText));
+        renderAppWidget();
     }
 
     @Override

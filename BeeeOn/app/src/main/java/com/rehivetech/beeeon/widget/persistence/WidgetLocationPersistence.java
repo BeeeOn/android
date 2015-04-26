@@ -1,20 +1,18 @@
 package com.rehivetech.beeeon.widget.persistence;
 
 import android.content.Context;
-import android.content.SharedPreferences;
-import android.widget.RemoteViews;
 
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.household.adapter.Adapter;
 import com.rehivetech.beeeon.household.location.Location;
 import com.rehivetech.beeeon.util.TimeHelper;
 import com.rehivetech.beeeon.util.UnitsHelper;
-import com.rehivetech.beeeon.widget.WidgetSettings;
+import com.rehivetech.beeeon.widget.ViewsBuilder;
 
 /**
  * @author mlyko
  */
-public class WidgetLocationPersistence extends WidgetPersistence{
+public class WidgetLocationPersistence extends WidgetBeeeOnPersistence {
 	private static final String TAG = WidgetLocationPersistence.class.getSimpleName();
 
 	private static final String PREF_TYPE = "type";
@@ -26,22 +24,15 @@ public class WidgetLocationPersistence extends WidgetPersistence{
 	}
 
 	@Override
-	public String getPrefFileName() {
-		return "widget_%d_loc_%d";
-	}
-
-	@Override
 	public void load() {
-		SharedPreferences prefs = getSettings();
-
-		id = prefs.getString(PREF_ID, "");
-		name = prefs.getString(PREF_NAME, mContext.getString(R.string.placeholder_not_exists));
-		type = prefs.getInt(PREF_TYPE, 0);
-		adapterId = prefs.getString(PREF_ADAPTER_ID, "");
+		super.load();
+		type = mPrefs.getInt(getProperty(PREF_TYPE), 0);		// TODO should be unknown location
 	}
 
 	@Override
 	public void configure(Object obj, Object obj2) {
+		super.configure(obj, obj2);
+
 		Location location = (Location) obj;
 		Adapter adapter = (Adapter) obj2;
 		if (location == null || adapter == null) return;
@@ -54,41 +45,49 @@ public class WidgetLocationPersistence extends WidgetPersistence{
 
 	@Override
 	public void save() {
-		getSettings().edit()
-				.putString(PREF_ID, id)
-				.putString(PREF_NAME, name)
-				.putInt(PREF_TYPE, type)
-				.putString(PREF_ADAPTER_ID, adapterId)
+		super.save();
+		mPrefs.edit()
+				.putInt(getProperty(PREF_TYPE), type)
 				.apply();
 	}
 
 	@Override
-	public void change(Object obj, Adapter adapter) {
-		Location location = (Location) obj;
-		if (location == null) return;
-
-		id = location.getId();
-		name = location.getName();
-		type = location.getType();
-		adapterId = adapter.getId();
+	public void delete() {
+		super.delete();
+		mPrefs.edit()
+				.remove(getProperty(PREF_TYPE))
+				.apply();
 	}
 
 	@Override
-	public void initValueView(RemoteViews parentRV) {
-		super.initValueView(parentRV);
-		if(mBoundView == 0) return;
-
-		mValueRemoteViews = new RemoteViews(mContext.getPackageName(), R.layout.widget_include_location);
-		mParentRemoteViews.removeAllViews(mBoundView);
-		mParentRemoteViews.addView(mBoundView, mValueRemoteViews);
+	public String getPropertyPrefix() {
+		return "location";
 	}
 
 	@Override
-	public void updateValueView(boolean isCached, String cachedFormat) {
-		super.updateValueView(isCached, cachedFormat);
+	public void initView() {
 		if(mBoundView == 0) return;
 
-		getValueViews().setTextViewText(R.id.name, getName());
-		getValueViews().setImageViewResource(R.id.icon, Location.LocationIcon.fromValue(type).getIconResource());
+		mBuilder.loadRootView(R.layout.widget_include_location);
 	}
+
+	@Override
+	public void renderView(ViewsBuilder parentBuilder) {
+		super.renderView(parentBuilder);
+		if(mBoundView == 0){
+			parentBuilder.setTextViewText(R.id.name, name);
+			parentBuilder.setImage(R.id.icon, Location.LocationIcon.fromValue(type).getIconResource());
+		}
+		else {
+			mBuilder.setTextViewText(R.id.name, name);
+			mBuilder.setImage(R.id.icon, Location.LocationIcon.fromValue(type).getIconResource());
+			parentBuilder.removeAllViews(mBoundView);
+			parentBuilder.addView(mBoundView, mBuilder.getRoot());
+		}
+	}
+
+	public int getType() {
+		return type;
+	}
+
 }

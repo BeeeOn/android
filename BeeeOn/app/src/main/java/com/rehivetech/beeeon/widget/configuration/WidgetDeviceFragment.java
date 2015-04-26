@@ -2,9 +2,6 @@ package com.rehivetech.beeeon.widget.configuration;
 
 
 import android.os.Bundle;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.SeekBar;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -12,13 +9,11 @@ import android.widget.Toast;
 
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.arrayadapter.DeviceArrayAdapter;
-import com.rehivetech.beeeon.asynctask.ReloadAdapterDataTask;
 import com.rehivetech.beeeon.household.adapter.Adapter;
 import com.rehivetech.beeeon.household.device.Device;
 import com.rehivetech.beeeon.household.device.RefreshInterval;
 import com.rehivetech.beeeon.util.Utils;
 import com.rehivetech.beeeon.widget.data.WidgetDeviceData;
-import com.rehivetech.beeeon.widget.data.WidgetGraphData;
 import com.rehivetech.beeeon.widget.persistence.WidgetDevicePersistence;
 import com.rehivetech.beeeon.widget.service.WidgetService;
 
@@ -28,7 +23,6 @@ import com.rehivetech.beeeon.widget.service.WidgetService;
 public class WidgetDeviceFragment extends WidgetConfigurationFragment {
 	private static final String TAG = WidgetDeviceFragment.class.getSimpleName();
 
-	protected Spinner mAdapterSpinner;
 	protected SeekBar mWidgetUpdateSeekBar;
 
 	protected WidgetDeviceData mWidgetData;
@@ -41,62 +35,31 @@ public class WidgetDeviceFragment extends WidgetConfigurationFragment {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		mGeneralWidgetdata = new WidgetGraphData(mActivity.getWidgetId(), mActivity, null, null);
-		mWidgetData = (WidgetGraphData) mGeneralWidgetdata;
+		mGeneralWidgetdata = new WidgetDeviceData(mActivity.getWidgetId(), mActivity, null, null);
+		mWidgetData = (WidgetDeviceData) mGeneralWidgetdata;
 		mWidgetDevice = mWidgetData.widgetDevice;
 	}
 
 	protected int getFragmentLayoutResource(){
-		return R.layout.fragment_widget_graph;
+		return R.layout.fragment_widget_device;
 	}
 	protected int getFragmentTitle(){
-		return R.string.widget_configuration_widget_graph;
+		return R.string.widget_configuration_widget_device;
 	}
 
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 
-		mAdapterSpinner = (Spinner) mActivity.findViewById(R.id.widget_config_gateway);
 		mWidgetUpdateSeekBar = (SeekBar) mActivity.findViewById(R.id.widget_config_interval);
 		initWidgetUpdateIntervalLayout();
 
 		mDeviceSpinner = (Spinner) mActivity.findViewById(R.id.widget_config_device);
-
-		mAdapterSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-			@Override
-			public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-				Adapter adapter = mAdapters.get(position);
-				if (adapter == null) return;
-
-				doChangeAdapter(adapter.getId(), ReloadAdapterDataTask.ReloadWhat.FACILITIES);
-			}
-
-			@Override
-			public void onNothingSelected(AdapterView<?> parent) {
-
-			}
-		});
-	}
-
-	@Override
-	protected void onAllAdaptersReload() {
-		super.onAllAdaptersReload();
-		// adapter spinner
-		ArrayAdapter<?> arrayAdapter = new ArrayAdapter<>(mActivity, android.R.layout.simple_spinner_dropdown_item, mAdapters);
-		mAdapterSpinner.setAdapter(arrayAdapter);
 	}
 
 	@Override
 	protected void onFragmentResume() {
 		super.onFragmentResume();
-		int selectedAdapterIndex = selectAdapter(mWidgetData.adapterId);
-		if(selectedAdapterIndex == mAdapterSpinner.getSelectedItemPosition()){
-			doChangeAdapter(mActiveAdapter.getId(), ReloadAdapterDataTask.ReloadWhat.FACILITIES);
-		}
-		else {
-			mAdapterSpinner.setSelection(selectedAdapterIndex);
-		}
 
 		updateIntervalLayout();
 	}

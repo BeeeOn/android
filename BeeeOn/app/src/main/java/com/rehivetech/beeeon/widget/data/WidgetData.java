@@ -14,13 +14,13 @@ import com.rehivetech.beeeon.activity.MainActivity;
 import com.rehivetech.beeeon.activity.SensorDetailActivity;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.household.adapter.Adapter;
-import com.rehivetech.beeeon.util.Compatibility;
 import com.rehivetech.beeeon.util.Log;
 import com.rehivetech.beeeon.util.TimeHelper;
 import com.rehivetech.beeeon.util.UnitsHelper;
-import com.rehivetech.beeeon.widget.WidgetSettings;
+import com.rehivetech.beeeon.widget.ViewsBuilder;
 import com.rehivetech.beeeon.widget.configuration.WidgetConfigurationActivity;
 import com.rehivetech.beeeon.widget.persistence.WidgetDevicePersistence;
+import com.rehivetech.beeeon.widget.persistence.WidgetSettings;
 import com.rehivetech.beeeon.widget.service.WidgetService;
 
 import java.util.List;
@@ -33,7 +33,7 @@ abstract public class WidgetData {
 
     public static final String EXTRA_WIDGET_ID = "com.rehivetech.beeeon.widget.widget_id";
 
-    protected static final String PREF_FILENAME = "widget_%d";
+    public static final String PREF_FILENAME = "widget_%d";
     protected static final String PREF_CLASS_NAME = "widget_class_name";
     protected static final String PREF_LAYOUT = "widget_layout";
     protected static final String PREF_INTERVAL = "widget_interval";
@@ -58,7 +58,6 @@ abstract public class WidgetData {
     protected Controller mController;
     protected AppWidgetManager mWidgetManager;
     protected AppWidgetProviderInfo mWidgetProviderInfo;
-    protected RemoteViews mRemoteViews;
     protected SharedPreferences mPrefs;
     protected UnitsHelper mUnitsHelper;
     protected TimeHelper mTimeHelper;
@@ -135,10 +134,10 @@ abstract public class WidgetData {
         }
 
         // Update widget
-        updateLayout();
+        renderLayout();
 
         // request widget redraw
-        updateAppWidget();
+        renderAppWidget();
     }
 
     /**
@@ -189,7 +188,6 @@ abstract public class WidgetData {
      */
     public void initLayout(){
         Log.d(TAG, "initLayout()");
-        mRemoteViews = new RemoteViews(mContext.getPackageName(), this.widgetLayout);
 
         mBuilder.loadRootView(this.widgetLayout);
 
@@ -215,8 +213,8 @@ abstract public class WidgetData {
     /**
      * Request widget redraw
      */
-    public void updateAppWidget(){
-        mWidgetManager.updateAppWidget(mWidgetId, mRemoteViews);
+    public void renderAppWidget(){
+        mWidgetManager.updateAppWidget(mWidgetId, mBuilder.getRoot());
     }
 
     /**
@@ -231,7 +229,7 @@ abstract public class WidgetData {
      */
     protected abstract boolean updateData();
 
-    protected abstract void updateLayout();
+    protected abstract void renderLayout();
 
     /**
      * Handle when user goes online
@@ -432,55 +430,5 @@ abstract public class WidgetData {
             }
         }
         return null;
-    }
-}
-
-class ViewsBuilder{
-    private Context mContext;
-    private RemoteViews mRemoteViews;
-
-    ViewsBuilder(Context context){
-        mContext = context;
-    }
-
-    ViewsBuilder(Context context, int layoutResource){
-        this(context);
-        loadRootView(layoutResource);
-    }
-
-    public void loadRootView(int layoutResource){
-        mRemoteViews = new RemoteViews(mContext.getPackageName(), layoutResource);
-    }
-
-    public void loadRootView(RemoteViews rootViews){
-        mRemoteViews = rootViews;
-    }
-
-    public RemoteViews getRoot(){
-        return mRemoteViews;
-    }
-
-    public void addView(int viewId, RemoteViews child){
-        mRemoteViews.addView(viewId, child);
-    }
-
-    public void removeAllViews(int viewId){
-        mRemoteViews.removeAllViews(viewId);
-    }
-
-    public void setTextViewText(int viewId, String text){
-        mRemoteViews.setTextViewText(viewId, text);
-    }
-
-    public void setTextViewColor(int viewId, int colorResource){
-        mRemoteViews.setTextColor(viewId, mContext.getResources().getColor(colorResource));
-    }
-
-    public void setTextViewTextSize(int viewId, int unit, float size){
-        Compatibility.setTextViewTextSize(mContext, mRemoteViews, viewId, unit, size);
-    }
-
-    public void setOnClickListener(int viewId, PendingIntent listener){
-        mRemoteViews.setOnClickPendingIntent(viewId, listener);
     }
 }

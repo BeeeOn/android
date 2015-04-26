@@ -340,7 +340,7 @@
 
     <string name="action_done">Hotovo</string>
     <string name="widget_location_list_empty">Prázdná lokace</string>
-	
+
 	<string name="delete_geofence">Odstranit oblast</string>
 	<string name="devices">Zařízení</string>
 	<string name="name">Název</string>

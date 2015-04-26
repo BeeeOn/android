@@ -32,12 +32,6 @@ abstract public class WidgetProvider extends AppWidgetProvider {
     }
 
     @Override
-    public void onDisabled(Context context){
-        Log.d(TAG, "onDisabled()");
-        //WidgetService.stopUpdating(context);
-    }
-
-    @Override
     public void onDeleted(Context context, int[] appWidgetIds) {
         // some widget is deleted
         Log.d(TAG, "onDeleted()");
@@ -45,6 +39,12 @@ abstract public class WidgetProvider extends AppWidgetProvider {
 
         // delete widget from service
         context.startService(WidgetService.getIntentWidgetDelete(context, appWidgetIds));
+    }
+
+    @Override
+    public void onDisabled(Context context){
+        Log.d(TAG, "onDisabled()");
+        //WidgetService.stopUpdating(context);
     }
 
     @Override

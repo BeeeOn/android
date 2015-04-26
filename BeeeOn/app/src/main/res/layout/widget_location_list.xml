@@ -26,7 +26,7 @@
             android:paddingEnd="8dp"
             android:scaleType="fitCenter"
             android:layout_gravity="center"
-            android:src="@drawable/loc_bath_room"
+            android:src="@drawable/loc_unknown"
             android:contentDescription="@string/placeholder_icon"
             />
 
