@@ -149,6 +149,27 @@ public class WidgetDeviceData extends WidgetData {
     }
 
     @Override
+    public void handleResize(int minWidth, int minHeight) {
+        super.handleResize(minWidth, minHeight);
+
+        int layout;
+        // 1 cell
+        if(minWidth < WIDGET_MIN_CELLS_2){
+            layout = R.layout.widget_device_1x1;
+        }
+        // 2 cells
+        else if(minWidth >= WIDGET_MIN_CELLS_2 && minWidth < WIDGET_MIN_CELLS_3){
+            layout = R.layout.widget_device_2x1;
+        }
+        // 3 cells
+        else{
+            layout = R.layout.widget_device_3x1;
+        }
+
+       changeLayout(layout);
+    }
+
+    @Override
     public String getClassName() {
         return WidgetDeviceData.class.getName();
     }

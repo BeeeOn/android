@@ -5,7 +5,6 @@ import android.app.PendingIntent;
 import android.app.Service;
 import android.appwidget.AppWidgetManager;
 import android.content.BroadcastReceiver;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -41,6 +40,7 @@ import com.rehivetech.beeeon.widget.receivers.WidgetDeviceProviderLarge;
 import com.rehivetech.beeeon.widget.receivers.WidgetDeviceProviderMedium;
 import com.rehivetech.beeeon.widget.receivers.WidgetGraphProvider;
 import com.rehivetech.beeeon.widget.receivers.WidgetLocationListProvider;
+import com.rehivetech.beeeon.widget.receivers.WidgetProvider;
 
 import org.json.JSONObject;
 
@@ -60,15 +60,17 @@ public class WidgetService extends Service {
     public static final RefreshInterval UPDATE_INTERVAL_MIN = RefreshInterval.SEC_10;
     public static final RefreshInterval UPDATE_INTERVAL_WEATHER_MIN = RefreshInterval.MIN_30;
 
-    private static final String EXTRA_START_UPDATING =          "com.rehivetech.beeeon.start_updating";
-    private static final String EXTRA_FORCE_UPDATE =            "com.rehivetech.beeeon.force_update";
-    private static final String EXTRA_ACTOR_CHANGE_REQUEST =    "com.rehivetech.beeeon.actor_change_request";
-    private static final String EXTRA_ACTOR_CHANGE_RESULT =     "com.rehivetech.beeeon.actor_change_result";
-    private static final String EXTRA_ACTOR_ID =                "com.rehivetech.beeeon.actor_ids";
-    private static final String EXTRA_DELETE_WIDGET =           "com.rehivetech.beeeon.delete_widget";
-    private static final String EXTRA_CHANGE_LAYOUT =           "com.rehivetech.beeeon.change_layout";
-    private static final String EXTRA_WIDGETS_SHOULD_RELOAD =   "com.rehivetech.beeeon.widget_should_reload";
-    private static final String EXTRA_ACTOR_ADAPTER_ID =        "com.rehivetech.beeeon.actor_adapter_id";
+    private static final String EXTRA_START_UPDATING =              "com.rehivetech.beeeon.start_updating";
+    private static final String EXTRA_FORCE_UPDATE =                "com.rehivetech.beeeon.force_update";
+    private static final String EXTRA_ACTOR_CHANGE_REQUEST =        "com.rehivetech.beeeon.actor_change_request";
+    private static final String EXTRA_ACTOR_CHANGE_RESULT =         "com.rehivetech.beeeon.actor_change_result";
+    private static final String EXTRA_ACTOR_ID =                    "com.rehivetech.beeeon.actor_ids";
+    private static final String EXTRA_DELETE_WIDGET =               "com.rehivetech.beeeon.delete_widget";
+    private static final String EXTRA_CHANGE_LAYOUT =               "com.rehivetech.beeeon.change_layout";
+    private static final String EXTRA_CHANGE_LAYOUT_MIN_WIDTH =     "com.rehivetech.beeeon.change_layout_min_width";
+    private static final String EXTRA_CHANGE_LAYOUT_MIN_HEIGHT =    "com.rehivetech.beeeon.change_layout_min_height";
+    private static final String EXTRA_WIDGETS_SHOULD_RELOAD =       "com.rehivetech.beeeon.widget_should_reload";
+    private static final String EXTRA_ACTOR_ADAPTER_ID =            "com.rehivetech.beeeon.actor_adapter_id";
 
     // when finding all widgets with the same actor
     private static final int UPDATE_LAYOUT = 0;
@@ -289,14 +291,16 @@ public class WidgetService extends Service {
         // if there are no widgets passed by intent, try to get all widgets
         if(allWidgetIds == null || allWidgetIds.length == 0) allWidgetIds = getAllIds();
 
-        boolean isShouldReload = false;
-        int changeLayout = 0;
+        boolean isShouldReload = false, isChangeLayout = false;
+        int layoutMinWidth = 0, layoutMinHeight = 0;
 
         if(intent != null){
             // -------------- reload widget if necessary
             isShouldReload = intent.getBooleanExtra(EXTRA_WIDGETS_SHOULD_RELOAD, false);
             // -------------- onAppWidgetOptionsChanged (changing widgetLayout)
-            changeLayout = intent.getIntExtra(EXTRA_CHANGE_LAYOUT, 0);
+            isChangeLayout = intent.getBooleanExtra(EXTRA_CHANGE_LAYOUT, false);
+            layoutMinWidth = intent.getIntExtra(EXTRA_CHANGE_LAYOUT_MIN_WIDTH, 0);
+            layoutMinHeight = intent.getIntExtra(EXTRA_CHANGE_LAYOUT_MIN_HEIGHT, 0);
         }
 
         long timeNow = SystemClock.elapsedRealtime();
@@ -322,8 +326,8 @@ public class WidgetService extends Service {
             widgetData.initLayout();
 
             // updates layout for this widget
-            if(changeLayout > 0){
-                widgetData.changeLayout(changeLayout);
+            if(isChangeLayout){
+                widgetData.handleResize(layoutMinWidth, layoutMinHeight);
                 isForceUpdate = true;
                 widgetData.renderAppWidget();
             }
@@ -739,12 +743,11 @@ public class WidgetService extends Service {
      * @return widget ids list
      */
     private List<Integer> getWidgetIds(Class<?> cls) {
-        ComponentName thisWidget = new ComponentName(mContext, cls);
-
-        List<Integer> arr = new ArrayList<Integer>();
-        for (int i : mAppWidgetManager.getAppWidgetIds(thisWidget)) {
+        List<Integer> arr = new ArrayList<>();
+        for(int i : WidgetProvider.getWidgetIdsByClass(mContext, cls)){
             arr.add(i);
         }
+
         return arr;
     }
 
@@ -885,12 +888,13 @@ public class WidgetService extends Service {
      * When widget changes its size, calls service to refresh that widget's layout
      * @param context
      * @param widgetId
-     * @param layout  new widget layout
      * @return
      */
-    public static Intent getIntentWidgetChangeLayout(Context context, int widgetId, int layout){
+    public static Intent getIntentWidgetChangeLayout(Context context, int widgetId, int minWidth, int minHeight){
         Intent intent = new Intent(context, WidgetService.class);
-        intent.putExtra(EXTRA_CHANGE_LAYOUT, layout);
+        intent.putExtra(EXTRA_CHANGE_LAYOUT, true);
+        intent.putExtra(EXTRA_CHANGE_LAYOUT_MIN_WIDTH, minWidth);
+        intent.putExtra(EXTRA_CHANGE_LAYOUT_MIN_HEIGHT, minHeight);
         intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, new int[]{ widgetId });
         return intent;
     }
@@ -937,7 +941,7 @@ public class WidgetService extends Service {
 
 			/*
 			// update location widget if exists
-			int[] locationWidgetsIds = WidgetProvider.getAllIdsByClass(context, WidgetLocationListProvider.class);
+			int[] locationWidgetsIds = WidgetProvider.getWidgetIdsByClass(context, WidgetLocationListProvider.class);
 			if(locationWidgetsIds != null && locationWidgetsIds.length > 0){
 				AppWidgetManager widgetManager = AppWidgetManager.getInstance(context);
 				// TODO

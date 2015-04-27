@@ -35,9 +35,12 @@ public class WidgetWeatherPersistence extends WidgetPersistence {
 	private static Typeface sWeatherFont;
 	private Resources mResources;
 
+	// persistent data
 	public String cityName;
 	public String temperature;
 	public int iconResource = DEFAULT_WEATHER_ICON;
+
+	// object data
 	public Bitmap generatedIcon;
 	private int oldIconResource;
 	private final Rect mIconBounds = new Rect();
@@ -94,41 +97,45 @@ public class WidgetWeatherPersistence extends WidgetPersistence {
 	 * @return string icon resource
 	 */
 	public static int parseWeatherIconResource(int actualId, long sunrise, long sunset){
-		int id = actualId / 100;
 		int iconRes;
+
+		// if its exactly 800, its clear sky
 		if(actualId == 800){
 			long currentTime = new Date().getTime();
-			if(currentTime >= sunrise && currentTime<sunset) {
+			if(currentTime >= sunrise && currentTime < sunset) {
 				iconRes = R.string.weather_sunny;
 			} else {
 				iconRes = R.string.weather_clear_night;
 			}
-		} else {
-			switch(id) {
-				case 2 :
-					iconRes = R.string.weather_thunder;
-					break;
-				case 3 :
-					iconRes = R.string.weather_drizzle;
-					break;
-				case 7 :
-					iconRes = R.string.weather_foggy;
-					break;
-				case 8 :
-					iconRes = R.string.weather_cloudy;
-					break;
-				case 6 :
-					iconRes = R.string.weather_snowy;
-					break;
-				case 5 :
-					iconRes = R.string.weather_rainy;
-					break;
 
-				// default is nice day
-				default:
-					iconRes = WidgetWeatherPersistence.DEFAULT_WEATHER_ICON;
-					break;
-			}
+			return iconRes;
+		}
+		// else we simplify that to some groups
+		int id = actualId / 100;
+		switch(id) {
+			case 2 :
+				iconRes = R.string.weather_thunder;
+				break;
+			case 3 :
+				iconRes = R.string.weather_drizzle;
+				break;
+			case 5 :
+				iconRes = R.string.weather_rainy;
+				break;
+			case 6 :
+				iconRes = R.string.weather_snowy;
+				break;
+			case 7 :
+				iconRes = R.string.weather_foggy;
+				break;
+			case 8 :
+				iconRes = R.string.weather_cloudy;
+				break;
+
+			// default is nice day
+			default:
+				iconRes = WidgetWeatherPersistence.DEFAULT_WEATHER_ICON;
+				break;
 		}
 
 		return iconRes;

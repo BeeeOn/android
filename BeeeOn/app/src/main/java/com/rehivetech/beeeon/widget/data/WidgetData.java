@@ -35,7 +35,11 @@ import java.util.List;
 abstract public class WidgetData {
     private static final String TAG = WidgetData.class.getSimpleName();
 
-    public static final String EXTRA_WIDGET_ID = "com.rehivetech.beeeon.widget.widget_id";
+    // according to android this should be widget cell boundaries (this makes 70dp for cell)
+    public static final int WIDGET_MIN_CELLS_1 = 40;
+    public static final int WIDGET_MIN_CELLS_2 = 110;
+    public static final int WIDGET_MIN_CELLS_3 = 180;
+    public static final int WIDGET_MIN_CELLS_4 = 250;
 
     public static final String PREF_FILENAME = "widget_%d";
     protected static final String PREF_CLASS_NAME = "widget_class_name";
@@ -209,14 +213,14 @@ abstract public class WidgetData {
 
     /**
      * Changes widgetLayout of this widget and initializes it again
-     * @param layout widgetLayout resource
+     * @param minWidth
+     * @param minHeight
      */
-    public void changeLayout(int layout) {
-        Log.v(TAG, String.format("changeLayout(%d)", mWidgetId));
-        this.widgetLayout = layout;
-        save();
-        //init();
-        initLayout();
+    public void handleResize(int minWidth, int minHeight) {
+        Log.v(TAG, String.format("handleResize(%d) [%d | %d]", mWidgetId, minWidth, minHeight));
+        //this.widgetLayout = layout;
+        //save();
+        //initLayout();
     }
 
     /**
@@ -379,6 +383,16 @@ abstract public class WidgetData {
     }
 
     public abstract String getClassName();
+
+    public void changeLayout(int layoutResource){
+        // if not found, dont change anything
+        if(layoutResource == 0) return;
+
+        this.widgetLayout = layoutResource;
+        save();
+        initLayout();
+        renderLayout();
+    }
 
 
     /**

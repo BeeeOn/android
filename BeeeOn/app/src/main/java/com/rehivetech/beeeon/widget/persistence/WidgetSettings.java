@@ -1,14 +1,12 @@
 package com.rehivetech.beeeon.widget.persistence;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 
 import com.rehivetech.beeeon.R;
-import com.rehivetech.beeeon.util.TimeHelper;
-import com.rehivetech.beeeon.util.UnitsHelper;
 
 /**
- * Created by Tomáš on 24. 4. 2015.
+ * @author mlyko
+ * Class for saving widget settings
  */
 public class WidgetSettings extends WidgetPersistence{
 
@@ -20,14 +18,49 @@ public class WidgetSettings extends WidgetPersistence{
 	public int colorPrimary;
 	public int colorSecondary;
 
+	/**
+	 * Private constructor so that we have always loaded data
+	 * @param context
+	 * @param widgetId
+	 */
 	private WidgetSettings(Context context, int widgetId) {
 		super(context, widgetId);
 	}
 
+	/**
+	 * Instead of constructor - we always have to load data first
+	 * @param context
+	 * @param widgetId
+	 * @return
+	 */
 	public static WidgetSettings getSettings(Context context, int widgetId){
 		WidgetSettings settings = new WidgetSettings(context, widgetId);
 		settings.load();
 		return settings;
+	}
+
+	/**
+	 * Sets and saves the colors
+	 * @param primary
+	 * @param secondary
+	 */
+	public void setColorScheme(int primary, int secondary){
+		isColorScheme = true;
+		colorPrimary = primary;
+		colorSecondary = secondary;
+		save();
+	}
+
+	/**
+	 * Compares all colors
+	 * @param col1
+	 * @param col2
+	 * @return
+	 */
+	public boolean isColorSchemeEqual(int col1, int col2){
+		if(colorPrimary == col1 && colorSecondary == col2) return true;
+
+		return false;
 	}
 
 	@Override
@@ -53,19 +86,6 @@ public class WidgetSettings extends WidgetPersistence{
 				.remove(getProperty(PREF_COLOR_PRIMARY))
 				.remove(getProperty(PREF_COLOR_SECONDARY))
 				.apply();
-	}
-
-	public void setColorScheme(int primary, int secondary){
-		isColorScheme = true;
-		colorPrimary = primary;
-		colorSecondary = secondary;
-		save();
-	}
-
-	public boolean isColorSchemeEqual(int col1, int col2){
-		if(colorPrimary == col1 && colorSecondary == col2) return true;
-
-		return false;
 	}
 
 	@Override

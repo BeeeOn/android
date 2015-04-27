@@ -234,7 +234,7 @@
 
             <meta-data
                 android:name="android.appwidget.provider"
-                android:resource="@xml/widget_sensor_1x1_info" />
+                android:resource="@xml/widget_device_1x1_info" />
         </receiver>
         <receiver
             android:name=".widget.receivers.WidgetDeviceProviderMedium"

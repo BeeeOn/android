@@ -28,6 +28,7 @@
 
 	<dimen name="widget_textsize_weather_icon">50dp</dimen>
 	<dimen name="widget_weather_icon">60dp</dimen>
+	<dimen name="widget_weather_icon_small">24dp</dimen>
 
 	<dimen name="widget_graph_width">300dp</dimen>
 	<dimen name="widget_graph_height">200dp</dimen>

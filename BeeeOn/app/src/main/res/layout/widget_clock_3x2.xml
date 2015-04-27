@@ -1,11 +1,12 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-				android:layout_width="match_parent"
-				android:layout_height="wrap_content"
-				android:minWidth="220dp"
-				android:minHeight="140dp"
-				android:padding="@dimen/widget_margin"
-				android:layout_gravity="center"
-				>
+<RelativeLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="match_parent"
+	android:layout_height="wrap_content"
+	android:minWidth="220dp"
+	android:minHeight="150dp"
+	android:padding="@dimen/widget_margin"
+	android:layout_gravity="center"
+	>
 
 	<!-- clock -->
 	<RelativeLayout
@@ -86,6 +87,7 @@
 			android:layout_marginStart="4dp"
 			android:layout_marginRight="4dp"
 			android:layout_marginEnd="4dp"
+			android:scaleType="fitCenter"
 			/>
 
 		<!-- weather city -->
@@ -94,8 +96,7 @@
 			android:layout_height="wrap_content"
 			android:layout_alignTop="@+id/widget_weather_icon"
 			android:layout_toRightOf="@+id/widget_weather_icon"
-			android:layout_toEndOf="@+id/widget_weather_icon"
-			android:id="@+id/relativeLayout">
+			android:layout_toEndOf="@+id/widget_weather_icon">
 
 			<TextView
 				android:id="@+id/widget_clock_weather_city"
@@ -105,21 +106,20 @@
 				android:ellipsize="end"
 				android:textSize="@dimen/textsize_body"
 				android:textColor="@color/beeeon_primary_cyan"
+				android:text="České Budějovice"
 				/>
 
+			<TextView
+				android:id="@+id/widget_clock_weather_temperature"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:text="30°C"
+				android:textStyle="bold"
+				android:textSize="@dimen/textsize_headline"
+				android:layout_marginTop="-4dp"
+				android:textColor="@color/beeeon_secundary_pink"
+				android:layout_below="@+id/widget_clock_weather_city"
+				/>
 		</RelativeLayout>
-
-		<TextView
-			android:id="@+id/widget_clock_weather_temperature"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:text="30°C"
-			android:textStyle="bold"
-			android:textSize="@dimen/textsize_headline"
-			android:layout_marginTop="-4dp"
-			android:textColor="@color/beeeon_secundary_pink"
-			android:layout_below="@+id/relativeLayout"
-			android:layout_toRightOf="@+id/widget_weather_icon"
-			android:layout_toEndOf="@+id/widget_weather_icon"/>
 	</RelativeLayout>
 </RelativeLayout>

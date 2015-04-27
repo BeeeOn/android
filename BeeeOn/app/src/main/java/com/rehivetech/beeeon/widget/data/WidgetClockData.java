@@ -44,6 +44,7 @@ public class WidgetClockData extends WidgetData {
     boolean weatherCheckedThisHour = false; // TODO
 
     private int mClockFontSizeDimension = R.dimen.widget_textsize_clock;
+    private int mClockFontSize;
 
     public WidgetClockData(int widgetId, Context context, UnitsHelper unitsHelper, TimeHelper timeHelper){
         super(widgetId, context, unitsHelper, timeHelper);
@@ -156,14 +157,6 @@ public class WidgetClockData extends WidgetData {
 
     @Override
     public void renderLayout() {
-        // updates all inside devices
-        for(WidgetDevicePersistence dev : widgetDevices){
-            dev.renderView(mBuilder);
-            dev.setValueUnitColor(settings.colorSecondary);
-            // TODO check if the layout is shown
-            dev.getBuilder().setViewVisibility(R.id.icon, View.VISIBLE);
-        }
-
         // NOTE: we need to be sure, that time will always update, so we add here in case that reference is lost
         if(mCalendar == null){
             mCalendar = Calendar.getInstance(mContext.getResources().getConfiguration().locale);
@@ -179,9 +172,27 @@ public class WidgetClockData extends WidgetData {
             case R.layout.widget_clock_3x2:
                 mClockFontSizeDimension = R.dimen.widget_textsize_clock_large;
                 break;
-            case R.layout.widget_clock:
+
+            case R.layout.widget_clock_2x2:
+                mBuilder.setImage(R.id.widget_clock_separator_1, settings.colorPrimary);
+                mBuilder.setImage(R.id.widget_clock_separator_2, settings.colorPrimary);
+                mBuilder.setImage(R.id.widget_clock_separator_3, settings.colorPrimary);
+            default:
                 mClockFontSizeDimension = R.dimen.widget_textsize_clock;
                 break;
+        }
+
+        // updates all inside devices
+        for(WidgetDevicePersistence dev : widgetDevices){
+            dev.renderView(mBuilder);
+            dev.setValueUnitColor(settings.colorSecondary);
+
+            if(this.widgetLayout == R.layout.widget_clock_3x2) {
+                dev.getBuilder().setViewVisibility(R.id.icon, View.VISIBLE); // TODO check if the layout is shown
+            }
+            else if(this.widgetLayout == R.layout.widget_clock_2x2){
+                dev.setValueUnitSize(R.dimen.textsize_caption);
+            }
         }
 
         renderClock();
@@ -272,6 +283,38 @@ public class WidgetClockData extends WidgetData {
         renderWidget();
     }
 
+    @Override
+    public void handleResize(int minWidth, int minHeight) {
+        super.handleResize(minWidth, minHeight);
+
+        int layout;
+        String debugName;
+
+        if(minWidth < 220){
+            if(minHeight < 150){
+                layout = R.layout.widget_clock_2x1;
+                debugName = "2x1";
+            }
+            else{
+                layout = R.layout.widget_clock_2x2;
+                debugName = "2x2";
+            }
+        }
+        else{
+            if(minHeight < 150){
+                layout = R.layout.widget_clock_2x1;
+                debugName = "2x1";
+            }
+            else {
+                layout = R.layout.widget_clock_3x2;
+                debugName = "3x2";
+            }
+        }
+
+        Log.d(TAG, "changed to layout: " + debugName);
+        changeLayout(layout);
+    }
+
     // -------------------------------------------------------------------- //
     // ---------------------------- Clock methods ------------------------- //
     // -------------------------------------------------------------------- //
@@ -337,7 +380,7 @@ public class WidgetClockData extends WidgetData {
 
 
         switch (this.widgetLayout){
-            case R.layout.widget_clock:
+            case R.layout.widget_clock_2x2:
             case R.layout.widget_clock_3x2:
 
                 mBuilder.setTextView(

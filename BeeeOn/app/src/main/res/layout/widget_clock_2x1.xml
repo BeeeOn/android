@@ -1,23 +1,18 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:minWidth="110dp"
-				android:minHeight="60dp"
-				android:padding="@dimen/widget_margin"
-				android:layout_gravity="center"
+<RelativeLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="wrap_content"
+	android:layout_height="wrap_content"
+	android:minWidth="110dp"
+	android:minHeight="60dp"
+	android:padding="@dimen/widget_margin"
+	android:layout_gravity="center"
 	>
-
 	<RelativeLayout
 		android:id="@+id/widget_clock_container"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
-		android:layout_centerHorizontal="true"
-		>
-		<include
-			layout="@layout/widget_include_clock"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			/>
+		android:layout_centerHorizontal="true">
+			<include layout="@layout/widget_include_clock"/>
 	</RelativeLayout>
 
 	<RelativeLayout
@@ -26,9 +21,8 @@
 		android:layout_height="wrap_content"
 		android:layout_below="@+id/widget_clock_container"
 		android:layout_marginTop="-10dp"
-		android:layout_centerHorizontal="true"
-		>
-		<include layout="@layout/widget_include_date" />
+		android:layout_centerHorizontal="true">
+			<include layout="@layout/widget_include_date" />
 	</RelativeLayout>
 </RelativeLayout>
 
