@@ -87,7 +87,7 @@
 			android:paddingRight="8dp"
 			android:paddingEnd="8dp"
 			android:layout_below="@+id/widget_header"
-			android:id="@+id/last_update"
+			android:id="@+id/widget_last_update"
 			android:layout_width="wrap_content"
 			android:layout_height="match_parent"
 			android:gravity="center_vertical"

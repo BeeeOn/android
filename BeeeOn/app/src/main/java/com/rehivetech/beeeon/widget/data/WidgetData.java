@@ -1,5 +1,6 @@
 package com.rehivetech.beeeon.widget.data;
 
+import android.annotation.TargetApi;
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProviderInfo;
@@ -7,9 +8,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.content.res.Resources;
+import android.os.Build;
+import android.os.Bundle;
 import android.os.SystemClock;
-import android.widget.RemoteViews;
 
+import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.activity.MainActivity;
 import com.rehivetech.beeeon.activity.SensorDetailActivity;
 import com.rehivetech.beeeon.controller.Controller;
@@ -52,7 +56,7 @@ abstract public class WidgetData {
     public boolean widgetInitialized;
     public String adapterId;
 
-    public boolean isCached = true;
+    public boolean mIsCached = false;
 
     protected Context mContext;
     protected Controller mController;
@@ -133,6 +137,11 @@ abstract public class WidgetData {
             // TODO
         }
 
+        renderWidget();
+    }
+
+
+    public void renderWidget(){
         // Update widget
         renderLayout();
 
@@ -155,7 +164,7 @@ abstract public class WidgetData {
         Log.d(TAG, "load()");
         // set default widget data
         widgetLayout = mPrefs.getInt(PREF_LAYOUT, mWidgetProviderInfo != null ? mWidgetProviderInfo.initialLayout : 0); // TODO sometimes providerInfo is null
-        widgetInterval = mPrefs.getInt(PREF_INTERVAL, WidgetService.UPDATE_INTERVAL_DEFAULT);
+        widgetInterval = mPrefs.getInt(PREF_INTERVAL, WidgetService.UPDATE_INTERVAL_DEFAULT.getInterval());
         widgetLastUpdate = mPrefs.getLong(PREF_LAST_UPDATE, 0);
         widgetInitialized = mPrefs.getBoolean(PREF_INITIALIZED, false);
         // all widgets has these params
@@ -235,7 +244,8 @@ abstract public class WidgetData {
      * Handle when user goes online
      */
     public void handleUserLogin() {
-        isCached = false;
+        Log.v(TAG, "handleUserLogin()");
+        mIsCached = false;
     }
 
     /**
@@ -243,7 +253,8 @@ abstract public class WidgetData {
      * e.g. Load cached data
      */
     public void handleUserLogout() {
-        isCached = true;
+        Log.v(TAG, String.format("handleUserLogout(%d)", mWidgetId));
+        mIsCached = true;
     }
 
     /**
@@ -369,13 +380,29 @@ abstract public class WidgetData {
 
     public abstract String getClassName();
 
-    public static RemoteViews buildView(Context context, RemoteViews parentView, int boundView, int layout){
-        RemoteViews rv = new RemoteViews(context.getPackageName(), layout);
-        parentView.removeAllViews(boundView);
-        parentView.addView(boundView, rv);
 
-        return rv;
+    /**
+     *  Calculate the scale factor of the fonts in the widget
+     */
+    @SuppressWarnings("deprecation")
+    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
+    public static float getScaleRatio(Context context, int id) {
+        if(Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) return 1f;
+
+        Bundle options = AppWidgetManager.getInstance(context).getAppWidgetOptions(id);
+        if (options != null) {
+            int minWidth = options.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_WIDTH);
+            if (minWidth == 0) {
+                // No data , do no scaling
+                return 1f;
+            }
+            Resources res = context.getResources();
+            float ratio = minWidth / res.getDimension(R.dimen.widget_clock_width);
+            return (ratio > 1) ? 1f : ratio;
+        }
+        return 1f;
     }
+
 
     /**
      * Known packages for clock applications

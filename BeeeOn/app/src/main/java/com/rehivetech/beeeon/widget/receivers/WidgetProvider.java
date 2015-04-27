@@ -5,6 +5,7 @@ import android.appwidget.AppWidgetProvider;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.util.SparseArray;
 
 import com.rehivetech.beeeon.util.Compatibility;
 import com.rehivetech.beeeon.util.Log;
@@ -18,6 +19,14 @@ abstract public class WidgetProvider extends AppWidgetProvider {
     public static final int WIDGET_MIN_CELLS_2 = 110;
     public static final int WIDGET_MIN_CELLS_3 = 180;
     public static final int WIDGET_MIN_CELLS_4 = 250;
+
+    public static final int cell_1_1 = 0;
+    public static final int cell_1_2 = 1;
+    public static final int cell_1_3 = 2;
+    public static final int cell_1_4 = 3;
+
+    SparseArray<Integer> pole = new SparseArray<>(16);
+
 
     @Override
     public void onEnabled(Context context){
@@ -55,6 +64,24 @@ abstract public class WidgetProvider extends AppWidgetProvider {
 
         // handle TouchWiz resizing
         Compatibility.handleTouchWizResizing(this, context, intent);
+    }
+
+    public int existLayout(int w, int h){
+        return 1;
+    }
+
+    public int howManyCells(int size) {
+        if (size < WIDGET_MIN_CELLS_2) {
+            return 1;
+        } else if (size >= WIDGET_MIN_CELLS_2 && size < WIDGET_MIN_CELLS_3) {
+            return 2;
+        }
+        else if(size >= WIDGET_MIN_CELLS_3 && size < WIDGET_MIN_CELLS_4){
+            return 3;
+        }
+        else {
+            return 4;
+        }
     }
 
     /**

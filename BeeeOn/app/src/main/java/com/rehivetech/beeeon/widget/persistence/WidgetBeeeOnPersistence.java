@@ -22,6 +22,8 @@ public abstract class WidgetBeeeOnPersistence extends WidgetPersistence {
 	public String adapterId;
 	protected String adapterRole;
 
+	protected User.Role mUserRole;
+
 	WidgetBeeeOnPersistence(Context context, int widgetId, int offset, int boundView, UnitsHelper unitsHelper, TimeHelper timeHelper, WidgetSettings settings) {
 		super(context, widgetId, offset, boundView, unitsHelper, timeHelper, settings);
 	}
@@ -32,6 +34,8 @@ public abstract class WidgetBeeeOnPersistence extends WidgetPersistence {
 		name = mPrefs.getString(getProperty(PREF_NAME), mContext.getString(R.string.placeholder_not_exists));
 		adapterId = mPrefs.getString(getProperty(PREF_ADAPTER_ID), "");
 		adapterRole = mPrefs.getString(getProperty(PREF_ADAPTER_ROLE), User.Role.Guest.getValue());
+
+		mUserRole = User.Role.fromString(adapterRole);
 	}
 
 	@Override

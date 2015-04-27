@@ -247,7 +247,7 @@
     </plurals>
     <plurals name="interval_hours">
         <item quantity="one">1 hodina</item>
-		<item quantity="few">1 hodiny</item>
+		<item quantity="few">%d hodiny</item>
         <item quantity="other">%d hodin</item>
     </plurals>
 

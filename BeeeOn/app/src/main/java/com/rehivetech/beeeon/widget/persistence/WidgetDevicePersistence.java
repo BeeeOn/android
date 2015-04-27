@@ -10,6 +10,7 @@ import com.rehivetech.beeeon.household.device.Device;
 import com.rehivetech.beeeon.household.device.DeviceType;
 import com.rehivetech.beeeon.household.device.values.BaseValue;
 import com.rehivetech.beeeon.household.device.values.BooleanValue;
+import com.rehivetech.beeeon.household.location.Location;
 import com.rehivetech.beeeon.household.user.User;
 import com.rehivetech.beeeon.util.TimeHelper;
 import com.rehivetech.beeeon.util.UnitsHelper;
@@ -29,12 +30,22 @@ public class WidgetDevicePersistence extends WidgetBeeeOnPersistence {
 	private static final String PREF_LAST_UPDATE_TIME = "last_update_time";
 	private static final String PREF_REFRESH = "refresh";
 
+	public static final String PREF_LOCATION_ICON = "location_icon";
+	public static final String PREF_LOCATION_ID = "location_id";
+
+	public static final int VALUE_UNIT = 1;
+	public static final int SWITCHCOMPAT = 2;
+
 	// persistence data
 	public int type;
 	public int icon;
 	public long lastUpdateTime;
 	public String lastUpdateText;
 	public int refresh;
+	// location data (not all the time available)
+	public String locationId;
+	public int locationIcon;
+
 	private String rawValue;
 	private String cachedValue;
 	private String cachedUnit;
@@ -45,6 +56,8 @@ public class WidgetDevicePersistence extends WidgetBeeeOnPersistence {
 	private boolean deviceValueDisabled = false;
 	private boolean deviceValueChecked;
 
+	public int containerType;
+
 	public WidgetDevicePersistence(Context context, int widgetId, int offset, int boundView, UnitsHelper unitsHelper, TimeHelper timeHelper, WidgetSettings settings) {
 		super(context, widgetId, offset, boundView, unitsHelper, timeHelper, settings);
 	}
@@ -54,6 +67,10 @@ public class WidgetDevicePersistence extends WidgetBeeeOnPersistence {
 		super.load();
 
 		icon = mPrefs.getInt(getProperty(PREF_ICON), 0);
+
+		locationId = mPrefs.getString(getProperty(PREF_LOCATION_ID), "");
+		locationIcon = mPrefs.getInt(getProperty(PREF_LOCATION_ICON), 0);
+
 		type = mPrefs.getInt(getProperty(PREF_TYPE), DeviceType.TYPE_UNKNOWN.getTypeId());
 
 		rawValue = mPrefs.getString(getProperty(PREF_RAW_VALUE), "");
@@ -77,9 +94,9 @@ public class WidgetDevicePersistence extends WidgetBeeeOnPersistence {
 	public void configure(Object obj1, Object obj2) {
 		super.configure(obj1, obj2);
 
+		if (!(obj1 instanceof Device) || !(obj2 instanceof Adapter) || obj1 == null || obj2 == null) return;
 		Device device = (Device) obj1;
 		Adapter adapter = (Adapter) obj2;
-		if (device == null || adapter == null) return;
 
 		id = device.getId();
 		name = device.getName();
@@ -88,6 +105,7 @@ public class WidgetDevicePersistence extends WidgetBeeeOnPersistence {
 		adapterRole = adapter.getRole().getValue();
 		type = device.getType().getTypeId();
 
+		mUserRole = User.Role.fromString(adapterRole);
 		lastUpdateTime = device.getFacility().getLastUpdate().getMillis();
 		refresh = device.getFacility().getRefresh().getInterval();
 
@@ -110,12 +128,25 @@ public class WidgetDevicePersistence extends WidgetBeeeOnPersistence {
 	}
 
 	@Override
+	public void configure(Object obj1, Object obj2, Object obj3) {
+		configure(obj1, obj2);
+
+		if(!(obj3 instanceof Location)) return;
+		Location location = (Location) obj3;
+
+		locationId = location.getId();
+		locationIcon = location.getIconResource();
+	}
+
+	@Override
 	public void save() {
 		super.save();
 
 		mPrefs.edit()
 				.putInt(getProperty(PREF_ICON), icon)
 				.putInt(getProperty(PREF_TYPE), type)
+				.putString(getProperty(PREF_LOCATION_ID), locationId)
+				.putInt(getProperty(PREF_LOCATION_ICON), locationIcon)
 
 				.putString(getProperty(PREF_RAW_VALUE), rawValue)
 				.putString(getProperty(PREF_CACHED_VALUE), cachedValue)
@@ -134,6 +165,8 @@ public class WidgetDevicePersistence extends WidgetBeeeOnPersistence {
 		mPrefs.edit()
 				.remove(getProperty(PREF_ICON))
 				.remove(getProperty(PREF_TYPE))
+				.remove(getProperty(PREF_LOCATION_ID))
+				.remove(getProperty(PREF_LOCATION_ICON))
 
 				.remove(getProperty(PREF_RAW_VALUE))
 				.remove(getProperty(PREF_CACHED_VALUE))
@@ -149,28 +182,29 @@ public class WidgetDevicePersistence extends WidgetBeeeOnPersistence {
 	public void initView() {
 		if(mBoundView == 0) return;
 
-		User.Role role = User.Role.fromString(adapterRole);
 		Controller mController = Controller.getInstance(mContext);
 
-		if(getType().isActor() && mController.isUserAllowed(role) && deviceValue instanceof BooleanValue){
+		if(getType().isActor() && mController.isUserAllowed(mUserRole) && deviceValue instanceof BooleanValue){
+			containerType = SWITCHCOMPAT;
+
 			mBuilder.loadRootView(R.layout.widget_include_switchcompat);
 			mBuilder.setOnClickListener(R.id.widget_switchcompat, WidgetService.getPendingIntentActorChangeRequest(mContext, mWidgetId, getId(), adapterId));
 			deviceValueChecked = ((BooleanValue) deviceValue).isActiveValue(BooleanValue.TRUE);
 		}
 		else {
+			containerType = VALUE_UNIT;
 			mBuilder.loadRootView(R.layout.widget_include_value_unit);
 		}
 	}
 
 	@Override
-	public void renderView(ViewsBuilder parentBuilder, boolean isCached, String cachedFormat) {
-		super.renderView(parentBuilder, isCached, cachedFormat);
-		if(mBoundView == 0) return;	// TODO mozna pres super() ?
+	public void renderView(ViewsBuilder parentBuilder, boolean isCached, String cachedString) {
+		super.renderView(parentBuilder, isCached, cachedString);
+		if(mBoundView == 0) return;
 
-		User.Role role = User.Role.fromString(adapterRole);
 		Controller mController = Controller.getInstance(mContext);
 
-		if(getType().isActor() && mController.isUserAllowed(role) && deviceValue instanceof BooleanValue){
+		if(getType().isActor() && mController.isUserAllowed(mUserRole) && deviceValue instanceof BooleanValue){
 			if(mIsCached){
 				setSwitchDisabled(true, false);
 			}
@@ -185,18 +219,16 @@ public class WidgetDevicePersistence extends WidgetBeeeOnPersistence {
 			}
 		}
 		else {
+			// if location set, show the icon
+			if(locationIcon > 0) mBuilder.setImage(R.id.icon, locationIcon);
+
 			if(mIsCached) {
 				mBuilder.setTextViewText(R.id.value, getValue());
-				mBuilder.setTextViewText(R.id.unit, String.format(cachedFormat, getUnit()));
+				mBuilder.setTextViewText(R.id.unit, getUnit() + cachedString);
 			}
 			else {
 				mBuilder.setTextViewText(R.id.value, getValue());
 				mBuilder.setTextViewText(R.id.unit, getUnit());
-			}
-
-			if(mWidgetSettings.isColorScheme){
-				mBuilder.setTextViewColor(R.id.value, mWidgetSettings.colorSecondary);
-				mBuilder.setTextViewColor(R.id.unit, mWidgetSettings.colorSecondary);
 			}
 		}
 
@@ -214,11 +246,20 @@ public class WidgetDevicePersistence extends WidgetBeeeOnPersistence {
 	// ----------------------------------------------------------- //
 	/**
 	 * Setup size for value and unit id SP units
-	 * @param sizeInSp
+	 * @param dimensionResource
 	 */
-	public void setValueUnitSize(int sizeInSp){
-		mBuilder.setTextViewTextSize(R.id.value, TypedValue.COMPLEX_UNIT_SP, sizeInSp);
-		mBuilder.setTextViewTextSize(R.id.unit, TypedValue.COMPLEX_UNIT_SP, sizeInSp);
+	public void setValueUnitSize(int dimensionResource){
+		if(containerType != VALUE_UNIT) return;
+
+		mBuilder.setTextViewTextSize(R.id.value, dimensionResource);
+		mBuilder.setTextViewTextSize(R.id.unit, dimensionResource);
+	}
+
+	public void setValueUnitColor(int colorResource){
+		if(containerType != VALUE_UNIT) return;
+
+		mBuilder.setTextViewColor(R.id.value, colorResource);
+		mBuilder.setTextViewColor(R.id.unit, colorResource);
 	}
 
 	/**
@@ -227,7 +268,7 @@ public class WidgetDevicePersistence extends WidgetBeeeOnPersistence {
 	 */
 	public void setSwitchChecked(boolean state){
 		// if this cannot be switched
-		if(!(deviceValue instanceof BooleanValue)) return;
+		if(containerType != SWITCHCOMPAT || !(deviceValue instanceof BooleanValue)) return;
 
 		mBuilder.setSwitchChecked(state);
 		deviceValueChecked = state;
@@ -240,7 +281,7 @@ public class WidgetDevicePersistence extends WidgetBeeeOnPersistence {
 	 */
 	public void setSwitchDisabled(boolean disabled, boolean prevent) {
 		// if this cannot be switched
-		if(!(deviceValue instanceof BooleanValue)) return;
+		if(containerType != SWITCHCOMPAT || !(deviceValue instanceof BooleanValue)) return;
 
 		if(disabled == true){
 			mBuilder.setSwitchDisabled(true, deviceValueChecked);

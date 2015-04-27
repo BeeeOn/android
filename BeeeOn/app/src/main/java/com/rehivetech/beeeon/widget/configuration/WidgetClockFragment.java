@@ -18,7 +18,7 @@ import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.arrayadapter.DeviceArrayAdapter;
 import com.rehivetech.beeeon.household.adapter.Adapter;
 import com.rehivetech.beeeon.household.device.Device;
-import com.rehivetech.beeeon.household.device.RefreshInterval;
+import com.rehivetech.beeeon.household.location.Location;
 import com.rehivetech.beeeon.util.Utils;
 import com.rehivetech.beeeon.widget.data.WidgetClockData;
 import com.rehivetech.beeeon.widget.persistence.WidgetDevicePersistence;
@@ -43,6 +43,7 @@ public class WidgetClockFragment extends WidgetConfigurationFragment {
 
 	private RadioGroup mColorSchemeGroup;
 
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -52,6 +53,8 @@ public class WidgetClockFragment extends WidgetConfigurationFragment {
 
 		mWidgetDevices = mWidgetData.widgetDevices;
 		mDeviceSpinners = new ArrayList<>();
+
+		setRefreshBounds(WidgetService.UPDATE_INTERVAL_WEATHER_MIN);
 	}
 
 	protected int getFragmentLayoutResource(){
@@ -186,17 +189,28 @@ public class WidgetClockFragment extends WidgetConfigurationFragment {
 				return false;
 			}
 
-			wDev.configure(device, adapter);
+			Location location = Utils.getFromList(device.getFacility().getLocationId(), mLocations);
+			if(location != null) {
+				wDev.configure(device, adapter, location);
+			}
+			else{
+				wDev.configure(device, adapter);
+			}
+
 			index++;
 		}
 
 		EditText cityName = (EditText) mActivity.findViewById(R.id.city_name_test);
 		mWidgetData.weather.cityName = cityName.getText().toString();
 
-		//sets widgetdata
-		RefreshInterval refresh = RefreshInterval.values()[mWidgetUpdateSeekBar.getProgress()];
-		mWidgetData.configure(mActivity.isAppWidgetEditing(), Math.max(refresh.getInterval(), WidgetService.UPDATE_INTERVAL_MIN), adapter);
+		mWidgetData.weather.getBitmapIcon(true);
+
+		// TODO ZISKAT DATA ZE SERVERU a zavolat mWidgetData.weather.configure();
+
+		mWidgetData.configure(mActivity.isAppWidgetEditing(), getRefreshSeconds(mWidgetUpdateSeekBar.getProgress()), adapter);
 
 		return true;
 	}
 }
+
+

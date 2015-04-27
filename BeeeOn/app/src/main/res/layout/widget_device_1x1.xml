@@ -62,7 +62,16 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="0.4"
-            android:gravity="center"
+            android:gravity="center">
+                <include layout="@layout/widget_include_value_unit" />
+        </RelativeLayout>
+
+        <!-- hidden views cause on old api causing problems -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/widget_last_update"
+            android:visibility="gone"
             />
 
     </LinearLayout>

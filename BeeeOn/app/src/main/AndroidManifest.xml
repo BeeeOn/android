@@ -209,7 +209,7 @@
 
             <meta-data
                 android:name="android.appwidget.provider"
-                android:resource="@xml/widget_sensor_3x2_info"
+                android:resource="@xml/widget_device_3x2_info"
                 />
         </receiver>
 
@@ -245,7 +245,7 @@
 
             <meta-data
                 android:name="android.appwidget.provider"
-                android:resource="@xml/widget_sensor_2x1_info" />
+                android:resource="@xml/widget_device_2x1_info" />
         </receiver>
         <receiver
             android:name=".widget.receivers.WidgetDeviceProviderLarge"
@@ -256,7 +256,7 @@
 
             <meta-data
                 android:name="android.appwidget.provider"
-                android:resource="@xml/widget_sensor_3x1_info" />
+                android:resource="@xml/widget_device_3x1_info" />
         </receiver>
 
         <service android:name=".extension.watches.smartwatch2.SW2ExtensionService" />

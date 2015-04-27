@@ -24,6 +24,7 @@ import com.rehivetech.beeeon.exception.ErrorCode;
 import com.rehivetech.beeeon.exception.NetworkError;
 import com.rehivetech.beeeon.household.device.Device;
 import com.rehivetech.beeeon.household.device.Facility;
+import com.rehivetech.beeeon.household.device.RefreshInterval;
 import com.rehivetech.beeeon.household.device.values.BaseValue;
 import com.rehivetech.beeeon.household.device.values.BooleanValue;
 import com.rehivetech.beeeon.household.location.Location;
@@ -55,8 +56,9 @@ import java.util.List;
 public class WidgetService extends Service {
     private final static String TAG = WidgetService.class.getSimpleName();
 
-    public static final int UPDATE_INTERVAL_DEFAULT = 10; // in seconds
-    public static final int UPDATE_INTERVAL_MIN = 5; // in seconds
+    public static final RefreshInterval UPDATE_INTERVAL_DEFAULT = RefreshInterval.SEC_30;
+    public static final RefreshInterval UPDATE_INTERVAL_MIN = RefreshInterval.SEC_10;
+    public static final RefreshInterval UPDATE_INTERVAL_WEATHER_MIN = RefreshInterval.MIN_30;
 
     private static final String EXTRA_START_UPDATING =          "com.rehivetech.beeeon.start_updating";
     private static final String EXTRA_FORCE_UPDATE =            "com.rehivetech.beeeon.force_update";
@@ -73,6 +75,7 @@ public class WidgetService extends Service {
     private static final int UPDATE_WHOLE = 1;
 
     // list of available widgets
+    // TODO maybe make as static and public method for getting only "now" available widgets
     private SparseArray<WidgetData> mAvailableWidgets = new SparseArray<>();
 
     private Context mContext;
@@ -192,12 +195,7 @@ public class WidgetService extends Service {
         mController = Controller.getInstance(mContext);
         initHelpers(mContext, mController);
 
-        boolean isStartUpdating = false,
-                isActorChangeRequest = false,
-                isActorChangeResult = false,
-                isForceUpdate = false,
-                isChangeLayout = false;
-
+        boolean isStartUpdating = false, isForceUpdate = false;
         int[] appWidgetIds = new int[]{};
 
         if(intent != null) {
@@ -205,7 +203,7 @@ public class WidgetService extends Service {
             appWidgetIds  = intent.getIntArrayExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS);
 
             // -------------- async task for changing widget actor
-            isActorChangeRequest = intent.getBooleanExtra(EXTRA_ACTOR_CHANGE_REQUEST, false);
+            boolean isActorChangeRequest = intent.getBooleanExtra(EXTRA_ACTOR_CHANGE_REQUEST, false);
             if (isActorChangeRequest) {
                 new Thread(new Runnable() {
                     @Override
@@ -219,7 +217,7 @@ public class WidgetService extends Service {
             }
 
             // -------------- result of async task (called by broadcast)
-            isActorChangeResult = intent.getBooleanExtra(EXTRA_ACTOR_CHANGE_RESULT, false);
+            boolean isActorChangeResult = intent.getBooleanExtra(EXTRA_ACTOR_CHANGE_RESULT, false);
             if(isActorChangeResult){
                 new Thread(new Runnable() {
                     @Override
@@ -247,8 +245,6 @@ public class WidgetService extends Service {
                 isForceUpdate = true;
             }
         }
-
-        Log.v(TAG, String.format("onStartCommand(intent = %b), startUpdating = %b, isActorWantsChange = %b, forceUpdate = %b, changeLayout = %b", (intent == null), isStartUpdating, isActorChangeRequest, isForceUpdate, isChangeLayout));
 
         // calculate it first time always or only when force update
         if (isStartUpdating || !isForceUpdate) {
@@ -413,6 +409,7 @@ public class WidgetService extends Service {
 
     private void updateWeatherData(final WidgetClockData widgetData){
         Log.v(TAG, "updating clock weather....");
+        // TODO should check if city changed
 
         if(widgetData.weather.cityName.isEmpty()) return;
 
@@ -424,6 +421,7 @@ public class WidgetService extends Service {
                 } else {
                     widgetData.updateWeather(json);
                     widgetData.renderWeather();
+                    widgetData.renderAppWidget();
                 }
             }
         }.start();
@@ -665,7 +663,7 @@ public class WidgetService extends Service {
             }
         }
 
-        minInterval = Math.max(minInterval, UPDATE_INTERVAL_MIN);
+        minInterval = Math.max(minInterval, UPDATE_INTERVAL_MIN.getInterval());
         return first ? 0 : Math.max(nextUpdate, SystemClock.elapsedRealtime() + minInterval * 1000);
     }
 
@@ -799,7 +797,7 @@ public class WidgetService extends Service {
      */
     public static PendingIntent getPendingIntentForceUpdate(Context context, int widgetId) {
         final Intent intent = getIntentForceUpdate(context, widgetId);
-        return PendingIntent.getService(context, widgetId, intent, PendingIntent.FLAG_CANCEL_CURRENT);
+        return PendingIntent.getService(context, widgetId, intent, PendingIntent.FLAG_UPDATE_CURRENT);
     }
 
     /**

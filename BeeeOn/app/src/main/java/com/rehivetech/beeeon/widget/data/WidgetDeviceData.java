@@ -82,8 +82,8 @@ public class WidgetDeviceData extends WidgetData {
         mBuilder.setOnClickListener(R.id.options, mConfigurationPendingIntent);
 
         // sets onclick "listeners"
-        mBuilder.setOnClickListener(R.id.value, mRefreshPendingIntent);
-        mBuilder.setOnClickListener(R.id.last_update, mRefreshPendingIntent);
+        // mBuilder.setOnClickListener(R.id.value, mRefreshPendingIntent);
+        mBuilder.setOnClickListener(R.id.widget_last_update, mRefreshPendingIntent);
         mBuilder.setOnClickListener(R.id.refresh, mRefreshPendingIntent);
 
         if(!adapterId.isEmpty() && !widgetDevice.getId().isEmpty()){
@@ -118,19 +118,25 @@ public class WidgetDeviceData extends WidgetData {
     protected void renderLayout() {
         mBuilder.setImage(R.id.icon, widgetDevice.icon == 0 ? R.drawable.dev_unknown : widgetDevice.icon);
         mBuilder.setTextViewText(R.id.name, widgetDevice.getName());
-        mBuilder.setTextViewText(R.id.last_update, widgetDevice.lastUpdateText);
 
-        widgetDevice.renderView(mBuilder);
+        if(mIsCached){
+            widgetDevice.renderView(mBuilder, true, "");
+            mBuilder.setTextViewText(R.id.widget_last_update, String.format("%s " + mContext.getString(R.string.widget_cached), widgetDevice.lastUpdateText));
+        }
+        else {
+            widgetDevice.renderView(mBuilder);
+        }
 
         switch(widgetLayout){
-            case R.layout.widget_device_3x2:
             case R.layout.widget_device_3x1:
             case R.layout.widget_device_2x1:
-                widgetDevice.setValueUnitSize(16);
+                mBuilder.setTextViewText(R.id.widget_last_update, widgetDevice.lastUpdateText);
+            case R.layout.widget_device_3x2:
+                widgetDevice.setValueUnitSize(R.dimen.textsize_subhead);
                 break;
 
-            case R.layout.widget_sensor_1x1:
-                widgetDevice.setValueUnitSize(12);
+            case R.layout.widget_device_1x1:
+                widgetDevice.setValueUnitSize(R.dimen.textsize_caption);
                 break;
         }
     }
@@ -138,11 +144,8 @@ public class WidgetDeviceData extends WidgetData {
     @Override
     public void handleUserLogout() {
         super.handleUserLogout();
-        widgetDevice.renderView(mBuilder, true, "");
-        mBuilder.setImage(R.id.icon, widgetDevice.icon == 0 ? R.drawable.dev_unknown : widgetDevice.icon);
-        mBuilder.setTextViewText(R.id.name, widgetDevice.getName());
-        mBuilder.setTextViewText(R.id.last_update, String.format("%s " + mContext.getString(R.string.widget_cached), widgetDevice.lastUpdateText));
-        renderAppWidget();
+
+        renderWidget();
     }
 
     @Override

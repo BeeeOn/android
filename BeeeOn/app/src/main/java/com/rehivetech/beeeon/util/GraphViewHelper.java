@@ -63,7 +63,7 @@ final public class GraphViewHelper {
 
 
 	public static void prepareWidgetGraphView(final GraphView graphView, final Context context, final Device device, final DateTimeFormatter fmt, final UnitsHelper unitsHelper) {
-		float textSize = context.getResources().getDimension(R.dimen.widget_textsize_caption);
+		float textSize = context.getResources().getDimension(R.dimen.textsize_caption);
 
 		graphView.getGridLabelRenderer().setTextSize(textSize);
 		graphView.getGridLabelRenderer().setVerticalLabelsColor(context.getResources().getColor(R.color.beeeon_text_hint));

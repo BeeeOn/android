@@ -52,7 +52,7 @@ public class WidgetDeviceFragment extends WidgetConfigurationFragment {
 		super.onActivityCreated(savedInstanceState);
 
 		mWidgetUpdateSeekBar = (SeekBar) mActivity.findViewById(R.id.widget_config_interval);
-		initWidgetUpdateIntervalLayout();
+		initWidgetUpdateIntervalLayout(mWidgetUpdateSeekBar);
 
 		mDeviceSpinner = (Spinner) mActivity.findViewById(R.id.widget_config_device);
 	}
@@ -61,7 +61,7 @@ public class WidgetDeviceFragment extends WidgetConfigurationFragment {
 	protected void onFragmentResume() {
 		super.onFragmentResume();
 
-		updateIntervalLayout();
+		updateIntervalLayout(mWidgetUpdateSeekBar);
 	}
 
 	/**
@@ -76,49 +76,6 @@ public class WidgetDeviceFragment extends WidgetConfigurationFragment {
 		mDeviceSpinner.setAdapter(dataAdapter);
 		int foundIndex = Utils.getObjectIndexFromList(mWidgetDevice.getId(), mDevices);
 		if(foundIndex != -1) mDeviceSpinner.setSelection(foundIndex);
-	}
-
-	/**
-	 * Initializes widget update interval seekbar and text
-	 */
-	protected void initWidgetUpdateIntervalLayout() {
-		// Set Max value by length of array with values
-		mWidgetUpdateSeekBar.setMax(RefreshInterval.values().length - 1);
-		// set interval
-		mWidgetUpdateSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-			@Override
-			public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-				setIntervalWidgetText(progress);
-			}
-
-			@Override
-			public void onStartTrackingTouch(SeekBar seekBar) {
-				// Nothing to do here
-			}
-
-			@Override
-			public void onStopTrackingTouch(SeekBar seekBar) {
-				// Nothing to do here
-			}
-		});
-	}
-
-	protected void updateIntervalLayout(){
-		int interval = Math.max(mWidgetData.widgetInterval, WidgetService.UPDATE_INTERVAL_MIN);
-		int intervalIndex = RefreshInterval.fromInterval(interval).getIntervalIndex();
-		mWidgetUpdateSeekBar.setProgress(intervalIndex);
-		// set text of seekbar
-		setIntervalWidgetText(intervalIndex);
-	}
-
-	/**
-	 * Sets widget interval text
-	 * @param intervalIndex index in seekbar
-	 */
-	protected void setIntervalWidgetText(int intervalIndex) {
-		TextView intervalText = (TextView) mActivity.findViewById(R.id.widget_config_interval_text);
-		String interval = RefreshInterval.values()[intervalIndex].getStringInterval(mActivity);
-		intervalText.setText(interval);
 	}
 
 	@Override
@@ -137,10 +94,8 @@ public class WidgetDeviceFragment extends WidgetConfigurationFragment {
 		}
 
 		mWidgetDevice.configure(device, adapter);
-
 		//sets widgetdata
-		RefreshInterval refresh = RefreshInterval.values()[mWidgetUpdateSeekBar.getProgress()];
-		mWidgetData.configure(mActivity.isAppWidgetEditing(), Math.max(refresh.getInterval(), WidgetService.UPDATE_INTERVAL_MIN), adapter);
+		mWidgetData.configure(mActivity.isAppWidgetEditing(), getRefreshSeconds(mWidgetUpdateSeekBar.getProgress()), adapter);
 
 		return true;
 	}

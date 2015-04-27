@@ -6,7 +6,7 @@
     android:minWidth="@dimen/widget_width_cells_1"
     android:minHeight="70dp"
     android:updatePeriodMillis="0"
-    android:initialLayout="@layout/widget_sensor_1x1"
+    android:initialLayout="@layout/widget_device_1x1"
     android:resizeMode="horizontal|vertical"
     android:widgetCategory="home_screen"
     android:configure="com.rehivetech.beeeon.widget.configuration.WidgetConfigurationActivity"

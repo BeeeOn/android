@@ -1,0 +1,125 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:minWidth="220dp"
+				android:minHeight="140dp"
+				android:padding="@dimen/widget_margin"
+				android:layout_gravity="center"
+				>
+
+	<!-- clock -->
+	<RelativeLayout
+		android:id="@+id/widget_clock_container"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_centerHorizontal="true"
+		>
+		<include layout="@layout/widget_include_clock" />
+	</RelativeLayout>
+
+	<!-- date -->
+	<RelativeLayout
+		android:id="@+id/widget_date_container"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_below="@+id/widget_clock_container"
+		android:layout_marginTop="-10dp"
+		android:layout_centerHorizontal="true"
+		>
+		<include layout="@layout/widget_include_date" />
+	</RelativeLayout>
+
+	<RelativeLayout
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_below="@+id/widget_date_container"
+		android:layout_centerHorizontal="true"
+		>
+		<!-- household box -->
+		<LinearLayout
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_toLeftOf="@+id/widget_weather_icon"
+			android:layout_toStartOf="@+id/widget_weather_icon"
+			android:orientation="vertical"
+			android:id="@+id/linearLayout">
+
+			<TextView
+				android:id="@+id/widget_clock_household_label"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:text="@string/household"
+				android:textSize="@dimen/textsize_body"
+				android:singleLine="true"
+				android:ellipsize="end"
+				android:textColor="@color/beeeon_primary_cyan"
+				/>
+
+			<!-- value layout - inflated programmatically -->
+			<RelativeLayout
+				android:id="@+id/value_container_inside_temp"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:gravity="center"
+				android:layout_marginTop="2dp">
+					<include layout="@layout/widget_include_value_unit" />
+			</RelativeLayout>
+
+			<RelativeLayout
+				android:id="@+id/value_container_inside_humid"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:gravity="center"
+				android:layout_marginTop="2dp">
+					<include layout="@layout/widget_include_value_unit" />
+				</RelativeLayout>
+		</LinearLayout>
+
+		<!-- weather icon -->
+		<ImageView
+			android:id="@+id/widget_weather_icon"
+			android:layout_width="@dimen/widget_weather_icon"
+			android:layout_height="@dimen/widget_weather_icon"
+			android:src="@drawable/weather"
+			android:layout_centerHorizontal="true"
+			android:layout_marginLeft="4dp"
+			android:layout_marginStart="4dp"
+			android:layout_marginRight="4dp"
+			android:layout_marginEnd="4dp"
+			/>
+
+		<!-- weather city -->
+		<RelativeLayout
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_alignTop="@+id/widget_weather_icon"
+			android:layout_toRightOf="@+id/widget_weather_icon"
+			android:layout_toEndOf="@+id/widget_weather_icon"
+			android:id="@+id/relativeLayout">
+
+			<TextView
+				android:id="@+id/widget_clock_weather_city"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:singleLine="true"
+				android:ellipsize="end"
+				android:textSize="@dimen/textsize_body"
+				android:textColor="@color/beeeon_primary_cyan"
+				/>
+
+		</RelativeLayout>
+
+		<TextView
+			android:id="@+id/widget_clock_weather_temperature"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:text="30°C"
+			android:textStyle="bold"
+			android:textSize="@dimen/textsize_headline"
+			android:layout_marginTop="-4dp"
+			android:textColor="@color/beeeon_secundary_pink"
+			android:layout_below="@+id/relativeLayout"
+			android:layout_toRightOf="@+id/widget_weather_icon"
+			android:layout_toEndOf="@+id/widget_weather_icon"/>
+	</RelativeLayout>
+</RelativeLayout>

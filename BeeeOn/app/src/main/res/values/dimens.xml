@@ -15,12 +15,23 @@
 
 	<dimen name="widget_height_cells_1">80dp</dimen>
 
-	<dimen name="widget_textsize_caption">12sp</dimen>
-	<dimen name="widget_textsize_body">14sp</dimen>
-	<dimen name="widget_textsize_title">20sp</dimen>
+	<dimen name="textsize_caption">12sp</dimen>
+	<dimen name="textsize_body">14sp</dimen>
+	<dimen name="textsize_subhead">16sp</dimen>
+	<dimen name="textsize_title">20sp</dimen>
+	<dimen name="textsize_headline">24sp</dimen>
+
+	<dimen name="widget_clock_width">160dp</dimen>
+
+	<dimen name="widget_textsize_clock">40sp</dimen>
+	<dimen name="widget_textsize_clock_large">70sp</dimen>
+
+	<dimen name="widget_textsize_weather_icon">50dp</dimen>
+	<dimen name="widget_weather_icon">60dp</dimen>
 
 	<dimen name="widget_graph_width">300dp</dimen>
 	<dimen name="widget_graph_height">200dp</dimen>
+
 
 	<dimen name="custom_spinner_icon_size">35dp</dimen>
 	<dimen name="custom_spinner_icon_size_smaller">30dp</dimen>

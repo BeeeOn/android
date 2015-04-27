@@ -29,16 +29,28 @@ public abstract class WidgetPersistence {
 
 	protected boolean mIsCached = false;
 
+	/**
+	 * If used this constructor, not available manipulating with GUI
+	 * @param context
+	 * @param widgetId
+	 */
+	WidgetPersistence(Context context, int widgetId){
+		mContext = context.getApplicationContext();
+		mWidgetId = widgetId;
+		mPrefs = getWidgetPreferences();
+		mOffset = 0;
+	}
+
 	WidgetPersistence(Context context, int widgetId, int offset, int boundView, UnitsHelper unitsHelper, TimeHelper timeHelper, WidgetSettings settings){
 		mContext = context.getApplicationContext();
 		mWidgetId = widgetId;
+		mPrefs = getWidgetPreferences();
 		mOffset = offset;
 		mBoundView = boundView;
 		mBuilder = new ViewsBuilder(mContext);
 		mUnitsHelper = unitsHelper;
 		mTimeHelper = timeHelper;
 		mWidgetSettings = settings;
-		mPrefs = getWidgetPreferences();
 	}
 
 	public abstract void load();
@@ -46,16 +58,17 @@ public abstract class WidgetPersistence {
 	public abstract void delete();
 	public abstract String getPropertyPrefix();
 
-	public void configure(Object obj1, Object obj2){}
 	public void configure(){}
+	public void configure(Object obj1, Object obj2){}
+	public void configure(Object obj1, Object obj2, Object obj3){}
 
-	public abstract void initView();
+	public void initView(){}
 
 	public void renderView(ViewsBuilder parentBuilder){
 		renderView(parentBuilder, false, "");
 	}
 
-	public void renderView(ViewsBuilder parentBuilder, boolean isCached, String cachedFormat){
+	public void renderView(ViewsBuilder parentBuilder, boolean isCached, String cachedString){
 		mIsCached = isCached;
 	}
 
@@ -79,6 +92,10 @@ public abstract class WidgetPersistence {
 	// ----------------------------------------------------------- //
 	// ---------------------- GETTERS ---------------------------- //
 	// ----------------------------------------------------------- //
+
+	public ViewsBuilder getBuilder() {
+		return mBuilder;
+	}
 
 	public int getOffset() {
 		return mOffset;

@@ -7,8 +7,9 @@
 				android:layout_gravity="center"
 				>
 
+	<!-- clock -->
 	<RelativeLayout
-		android:id="@+id/clock_container"
+		android:id="@+id/widget_clock_container"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		android:layout_centerHorizontal="true"
@@ -16,37 +17,17 @@
 		<include layout="@layout/widget_include_clock" />
 	</RelativeLayout>
 
-	<LinearLayout
+	<!-- date -->
+	<RelativeLayout
+		android:id="@+id/widget_date_container"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
-		android:layout_below="@+id/clock_container"
-		android:layout_centerHorizontal="true"
-		android:orientation="horizontal"
+		android:layout_below="@+id/widget_clock_container"
 		android:layout_marginTop="-10dp"
-		android:id="@+id/widget_clock_date_layout"
+		android:layout_centerHorizontal="true"
 		>
-		<TextView
-			android:id="@+id/widget_clock_day_of_week"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:text="PO"
-			android:textAllCaps="true"
-			android:textColor="@color/beeeon_secundary_pink"
-			android:textSize="14sp"
-			/>
-
-		<TextView
-			android:id="@+id/widget_clock_date"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:textSize="16sp"
-			android:text="3.2"
-			android:textStyle="bold"
-			android:textColor="@color/beeeon_secundary_pink"
-			android:layout_marginLeft="4dp"
-			android:layout_marginStart="4dp"
-			/>
-	</LinearLayout>
+		<include layout="@layout/widget_include_date" />
+	</RelativeLayout>
 
 	<TextView
 		android:id="@+id/widget_clock_household_label"
@@ -55,9 +36,9 @@
 		android:text="@string/household"
 		android:textSize="14sp"
 		android:textColor="@color/beeeon_primary_cyan"
-		android:layout_below="@+id/widget_clock_date_layout"
-		android:layout_alignLeft="@+id/clock_container"
-		android:layout_alignStart="@+id/clock_container"/>
+		android:layout_below="@+id/widget_date_container"
+		android:layout_alignLeft="@+id/widget_clock_container"
+		android:layout_alignStart="@+id/widget_clock_container"/>
 
 	<!-- value layout - inflated programmatically -->
 	<RelativeLayout
@@ -87,31 +68,31 @@
 		</RelativeLayout>
 
 	<TextView
-		android:id="@+id/widget_weather_city"
+		android:id="@+id/widget_clock_weather_city"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		android:text="CITY"
 		android:layout_below="@+id/value_container_inside_humid"
-		android:layout_alignLeft="@+id/clock_container"
-		android:layout_alignStart="@+id/clock_container"/>
+		android:layout_alignLeft="@+id/widget_clock_container"
+		android:layout_alignStart="@+id/widget_clock_container"/>
 
 	<TextView
-		android:id="@+id/widget_weather_temperature"
+		android:id="@+id/widget_clock_weather_temperature"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		android:text="TEMPERATURE"
 		android:textStyle="bold"
-		android:layout_below="@+id/widget_weather_city"
-		android:layout_alignLeft="@+id/clock_container"
-		android:layout_alignStart="@+id/clock_container"/>
+		android:layout_below="@+id/widget_clock_weather_city"
+		android:layout_alignLeft="@+id/widget_clock_container"
+		android:layout_alignStart="@+id/widget_clock_container"/>
 
 	<ImageView
 		android:id="@+id/widget_weather_icon"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
+		android:layout_width="60dp"
+		android:layout_height="60dp"
 		android:layout_alignTop="@+id/widget_clock_household_label"
-		android:layout_alignRight="@+id/clock_container"
-		android:layout_alignEnd="@+id/clock_container"
+		android:layout_alignParentRight="true"
+		android:src="@drawable/weather"
 		/>
 
 </RelativeLayout>

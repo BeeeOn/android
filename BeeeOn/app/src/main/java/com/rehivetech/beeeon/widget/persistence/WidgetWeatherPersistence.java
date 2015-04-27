@@ -1,10 +1,11 @@
 package com.rehivetech.beeeon.widget.persistence;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Rect;
 import android.graphics.Typeface;
 
 import com.rehivetech.beeeon.R;
@@ -32,12 +33,15 @@ public class WidgetWeatherPersistence extends WidgetPersistence {
 	private static final String PREF_ICON_RESOURCE = "icon_resource";
 
 	private static Typeface sWeatherFont;
+	private Resources mResources;
 
 	public String cityName;
 	public String temperature;
 	public int iconResource = DEFAULT_WEATHER_ICON;
 	public Bitmap generatedIcon;
 	private int oldIconResource;
+	private final Rect mIconBounds = new Rect();
+
 
 	public WidgetWeatherPersistence(Context context, int widgetId, UnitsHelper unitsHelper, TimeHelper timeHelper, WidgetSettings settings) {
 		super(context, widgetId, 0, 0, unitsHelper, timeHelper, settings);
@@ -46,30 +50,40 @@ public class WidgetWeatherPersistence extends WidgetPersistence {
 			sWeatherFont = Typeface.createFromAsset(context.getAssets(), "weather_icons.ttf");
 		}
 
-		generateBitmapIcon();
+		mResources = mContext.getResources();
+		getBitmapIcon(false);
 	}
+
 
 	/**
 	 * If needed, creates new bitmap of weather
 	 */
-	public void generateBitmapIcon(){
-		if(generatedIcon != null && oldIconResource == iconResource) return;
-		Log.v(TAG, "Generating new weather icon");
+	public Bitmap getBitmapIcon(boolean forceReload){
+		if(generatedIcon == null || forceReload || oldIconResource != iconResource) {
+			Log.v(TAG, "Generating new weather icon");
 
-		Bitmap iconBitmap = Bitmap.createBitmap(160, 84, Bitmap.Config.ARGB_4444);
-		Canvas myCanvas = new Canvas(iconBitmap);
-		Paint paint = new Paint();
-		paint.setAntiAlias(true);
-		paint.setSubpixelText(true);
-		paint.setTypeface(sWeatherFont);
-		paint.setStyle(Paint.Style.FILL);
-		paint.setColor(Color.WHITE);
-		paint.setTextSize(65);
-		paint.setTextAlign(Paint.Align.CENTER);
-		myCanvas.drawText(mContext.getString(iconResource), 80, 60, paint);
+			int size = (int) mResources.getDimension(R.dimen.widget_weather_icon);
 
-		generatedIcon = iconBitmap;
-		oldIconResource = iconResource;
+			Bitmap iconBitmap = Bitmap.createBitmap(size, size, Bitmap.Config.ARGB_4444);
+			Canvas myCanvas = new Canvas(iconBitmap);
+			Paint paint = new Paint();
+			paint.setAntiAlias(true);
+			paint.setSubpixelText(true);
+			paint.setTypeface(sWeatherFont);
+			paint.setStyle(Paint.Style.FILL);
+			paint.setTextSize(mResources.getDimension(R.dimen.widget_textsize_weather_icon));
+			paint.setTextAlign(Paint.Align.CENTER);
+			paint.setColor(mResources.getColor(mWidgetSettings.colorPrimary));
+
+			String iconText = mContext.getString(iconResource);
+			paint.getTextBounds(iconText, 0, iconText.length(), mIconBounds);
+			myCanvas.drawText(iconText, (size / 2), (size / 2) - mIconBounds.exactCenterY(), paint);
+
+			generatedIcon = iconBitmap;
+			oldIconResource = iconResource;
+		}
+
+		return generatedIcon;
 	}
 
 	/**
@@ -167,25 +181,12 @@ public class WidgetWeatherPersistence extends WidgetPersistence {
 					json.getJSONObject("sys").getLong("sunset") * 1000);
 
 			// TODO ziskat a vypsat hodnotu podle unitshelperu
-			temperature = main.getDouble("temp") + " ℃";
+			temperature = String.format("%d %s", (long) main.getDouble("temp"), "℃");
 
 			// generates new bitmap but only IF NEEDED
-			generateBitmapIcon();
+			getBitmapIcon(false);
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
-	}
-
-	@Override
-	public void initView() {
-		return;
-	}
-
-	@Override
-	public void renderView(ViewsBuilder parentBuilder) {
-		super.renderView(parentBuilder);
-		parentBuilder.setTextViewText(R.id.widget_weather_city, cityName);
-		parentBuilder.setTextViewText(R.id.widget_weather_temperature, temperature);
-		parentBuilder.setImage(R.id.widget_weather_icon, generatedIcon);
 	}
 }

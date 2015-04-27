@@ -56,11 +56,19 @@ public abstract class WidgetConfigurationFragment extends Fragment {
 	protected boolean mAdapterNeedsToReload;
 	protected Spinner mAdapterSpinner;
 
+	// if seekbar should have fewer intervals
+	private RefreshInterval mRefreshIntervalMin = WidgetService.UPDATE_INTERVAL_MIN;
+	private int mRefreshIntervalLength = RefreshInterval.values().length - mRefreshIntervalMin.getIntervalIndex();
+
 	/**
-	 * Gets reference to configuration activity so that can communicate with it
-	 * @param savedInstanceState
+	 * Set what intervals can be in configuration
+	 * @param minRefresh
 	 */
-	@Override
+	protected void setRefreshBounds(RefreshInterval minRefresh){
+		mRefreshIntervalMin = minRefresh;
+		mRefreshIntervalLength = RefreshInterval.values().length - minRefresh.getIntervalIndex();
+	}
+
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setHasOptionsMenu(true);
@@ -144,6 +152,14 @@ public abstract class WidgetConfigurationFragment extends Fragment {
 
 		if(mActivity.getDialog() != null) mActivity.getDialog().show();
 		mReloadTask.execute();
+	}
+
+	@Override
+	public void onPause() {
+		super.onPause();
+		Log.d(TAG, "onPause()");
+
+		finishConfiguration();
 	}
 
 	/**
@@ -329,12 +345,14 @@ public abstract class WidgetConfigurationFragment extends Fragment {
 	 */
 	protected void initWidgetUpdateIntervalLayout(SeekBar updateIntervalSeekbar) {
 		// Set Max value by length of array with values
-		updateIntervalSeekbar.setMax(RefreshInterval.values().length - 1);
+
+		updateIntervalSeekbar.setMax(mRefreshIntervalLength - 1);
+
 		// set interval
 		updateIntervalSeekbar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
 			@Override
 			public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-				setIntervalWidgetText(progress);
+				setIntervalWidgetText(progress + mRefreshIntervalMin.getIntervalIndex());
 			}
 
 			@Override
@@ -354,9 +372,9 @@ public abstract class WidgetConfigurationFragment extends Fragment {
 	 * @param updateIntervalSeekbar
 	 */
 	protected void updateIntervalLayout(SeekBar updateIntervalSeekbar){
-		int interval = Math.max(mGeneralWidgetdata.widgetInterval, WidgetService.UPDATE_INTERVAL_MIN);
+		int interval = Math.max(mGeneralWidgetdata.widgetInterval, mRefreshIntervalMin.getInterval());
 		int intervalIndex = RefreshInterval.fromInterval(interval).getIntervalIndex();
-		updateIntervalSeekbar.setProgress(intervalIndex);
+		updateIntervalSeekbar.setProgress(intervalIndex - mRefreshIntervalMin.getIntervalIndex());
 		// set text of seekbar
 		setIntervalWidgetText(intervalIndex);
 	}
@@ -371,5 +389,15 @@ public abstract class WidgetConfigurationFragment extends Fragment {
 
 		String interval = RefreshInterval.values()[intervalIndex].getStringInterval(mActivity);
 		intervalText.setText(interval);
+	}
+
+	/**
+	 * Get refresh seconds based on custom seekbar interval
+	 * @param progressIndex
+	 * @return number of seconds
+	 */
+	protected int getRefreshSeconds(int progressIndex){
+		RefreshInterval refreshInterval = RefreshInterval.values()[progressIndex + mRefreshIntervalMin.getIntervalIndex()];
+		return Math.max(refreshInterval.getInterval(), mRefreshIntervalMin.getInterval());
 	}
 }

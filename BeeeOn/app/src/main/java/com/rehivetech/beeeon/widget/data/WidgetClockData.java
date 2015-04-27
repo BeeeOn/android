@@ -1,12 +1,15 @@
 package com.rehivetech.beeeon.widget.data;
 
 import android.content.Context;
+import android.text.format.DateFormat;
+import android.view.View;
 
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.household.adapter.Adapter;
 import com.rehivetech.beeeon.household.device.Device;
 import com.rehivetech.beeeon.household.device.Facility;
 import com.rehivetech.beeeon.household.device.RefreshInterval;
+import com.rehivetech.beeeon.household.location.Location;
 import com.rehivetech.beeeon.util.Log;
 import com.rehivetech.beeeon.util.TimeHelper;
 import com.rehivetech.beeeon.util.UnitsHelper;
@@ -39,6 +42,8 @@ public class WidgetClockData extends WidgetData {
     private Calendar mCalendar;
 
     boolean weatherCheckedThisHour = false; // TODO
+
+    private int mClockFontSizeDimension = R.dimen.widget_textsize_clock;
 
     public WidgetClockData(int widgetId, Context context, UnitsHelper unitsHelper, TimeHelper timeHelper){
         super(widgetId, context, unitsHelper, timeHelper);
@@ -98,21 +103,21 @@ public class WidgetClockData extends WidgetData {
         super.initLayout();
 
         // configuration
-        mBuilder.setOnClickListener(R.id.clock_container, mConfigurationPendingIntent);
+        mBuilder.setOnClickListener(R.id.widget_clock_container, mConfigurationPendingIntent);
 
-        mBuilder.setTextViewColor(R.id.widget_clock_household_label, settings.colorPrimary);
-        mBuilder.setTextViewColor(R.id.widget_clock_day_of_week, settings.colorSecondary);
-        mBuilder.setTextViewColor(R.id.widget_clock_date, settings.colorSecondary);
+        mBuilder.setOnClickListener(R.id.widget_clock_household_label, mRefreshPendingIntent);
 
-        for(WidgetDevicePersistence dev : widgetDevices){
-            if(!adapterId.isEmpty()){
+        if(!adapterId.isEmpty()){
+            for(WidgetDevicePersistence dev : widgetDevices) {
                 // detail activity
                 mBuilder.setOnClickListener(dev.getBoundView(), startDetailActivityPendingIntent(mContext, mWidgetId + dev.getOffset(), adapterId, dev.getId()));
-            }
 
-            dev.initView();
+                dev.initView();
+            }
         }
     }
+
+
 
     @Override
     protected boolean updateData() {
@@ -121,7 +126,13 @@ public class WidgetClockData extends WidgetData {
         for(WidgetDevicePersistence dev : widgetDevices) {
             Device device = mController.getFacilitiesModel().getDevice(adapterId, dev.getId());
             if (device != null) {
-                dev.configure(device, adapter);
+                if(!dev.locationId.isEmpty()){
+                    Location location = mController.getLocationsModel().getLocation(adapterId, dev.locationId);
+                    dev.configure(device, adapter, location);
+                }
+                else {
+                    dev.configure(device, adapter);
+                }
                 updated++;
             }
         }
@@ -148,10 +159,106 @@ public class WidgetClockData extends WidgetData {
         // updates all inside devices
         for(WidgetDevicePersistence dev : widgetDevices){
             dev.renderView(mBuilder);
+            dev.setValueUnitColor(settings.colorSecondary);
+            // TODO check if the layout is shown
+            dev.getBuilder().setViewVisibility(R.id.icon, View.VISIBLE);
         }
 
-        // TODO temporary solution
-        onUpdateClock(mCalendar);
+        // NOTE: we need to be sure, that time will always update, so we add here in case that reference is lost
+        if(mCalendar == null){
+            mCalendar = Calendar.getInstance(mContext.getResources().getConfiguration().locale);
+            mCalendar.setTime(new Date());
+        }
+
+        // TODO takto?
+        if(mBuilder.getRoot() == null){
+            mBuilder.loadRootView(this.widgetLayout);
+        }
+
+        switch (this.widgetLayout){
+            case R.layout.widget_clock_3x2:
+                mClockFontSizeDimension = R.dimen.widget_textsize_clock_large;
+                break;
+            case R.layout.widget_clock:
+                mClockFontSizeDimension = R.dimen.widget_textsize_clock;
+                break;
+        }
+
+        renderClock();
+        renderDate();
+        renderWeather();
+
+        // TODO format without year http://stackoverflow.com/questions/3790918/format-date-without-year
+    }
+
+    /**
+     * Renders digital clock and sets its color and font size
+     */
+    public void renderClock(){
+        ViewsBuilder clockBuilder = new ViewsBuilder(mContext, R.layout.widget_include_clock);
+
+        boolean is24hMode = is24HourMode(mContext);
+
+        // set hours
+        clockBuilder.setTextView(
+                R.id.widget_clock_hours,
+                String.format("%02d", mCalendar.get(is24hMode ? Calendar.HOUR_OF_DAY : Calendar.HOUR)),
+                settings.colorPrimary,
+                mClockFontSizeDimension
+        );
+
+        // set minutes
+        clockBuilder.setTextView(
+                R.id.widget_clock_minutes,
+                String.format("%02d", mCalendar.get(Calendar.MINUTE)),
+                settings.colorPrimary,
+                mClockFontSizeDimension
+        );
+
+        // show pm / am
+        if(is24hMode){
+            clockBuilder.setViewVisibility(R.id.widget_clock_ampm, View.GONE);
+        }
+        else {
+            clockBuilder.setViewVisibility(R.id.widget_clock_ampm, View.VISIBLE);
+            clockBuilder.setTextViewText(R.id.widget_clock_ampm, DateFormat.format("aa", mCalendar.getTime()).toString());
+            clockBuilder.setTextViewColor(R.id.widget_clock_ampm, settings.colorPrimary);
+        }
+
+        // double dots
+        clockBuilder.setTextViewColor(R.id.widget_clock_doubledots, settings.colorPrimary);
+        clockBuilder.setTextViewTextSize(R.id.widget_clock_doubledots, mClockFontSizeDimension);
+
+        // clear old sub views
+        mBuilder.removeAllViews(R.id.widget_clock_container);
+        mBuilder.addView(R.id.widget_clock_container, clockBuilder.getRoot());
+    }
+
+    /**
+     * Renders date with color
+     */
+    public void renderDate(){
+        ViewsBuilder builder = new ViewsBuilder(mContext, R.layout.widget_include_date);
+
+        // set day of week
+        builder.setTextView(
+                R.id.day_of_week,
+                weekDays[mCalendar.get(Calendar.DAY_OF_WEEK)],
+                settings.colorSecondary,
+                R.dimen.textsize_body
+        );
+
+        // set date
+        builder.setTextView(
+                R.id.date,
+                DateTimeFormat.shortDate().print(mCalendar.getTimeInMillis()),
+                settings.colorSecondary,
+                R.dimen.textsize_body
+        );
+
+        // clear old sub views
+        mBuilder.removeAllViews(R.id.widget_date_container);
+        mBuilder.addView(R.id.widget_date_container, builder.getRoot());
     }
 
     @Override
@@ -159,9 +266,10 @@ public class WidgetClockData extends WidgetData {
         super.handleUserLogout();
         // updates all inside devices
         for(WidgetDevicePersistence dev : widgetDevices){
-            dev.renderView(mBuilder, true, "%s " + mContext.getString(R.string.widget_cached));
+            dev.renderView(mBuilder, true, mContext.getString(R.string.widget_cached));
         }
-        renderAppWidget();
+
+        renderWidget();
     }
 
     // -------------------------------------------------------------------- //
@@ -176,36 +284,8 @@ public class WidgetClockData extends WidgetData {
     public void onUpdateClock(Calendar cal){
         Log.d(TAG, String.format("onUpdateClock(%d)", mWidgetId));
 
-        // NOTE: we need to be sure, that time will always update, so we add here in case that reference is lost
-        if(cal == null){
-            cal = Calendar.getInstance(mContext.getResources().getConfiguration().locale);
-            cal.setTime(new Date());
-        }
-
-        ViewsBuilder clockBuilder = new ViewsBuilder(mContext, R.layout.widget_include_clock);
-        // clear old sub views
-        mBuilder.removeAllViews(R.id.clock_container);
-        mBuilder.addView(R.id.clock_container, clockBuilder.getRoot());
-
-        int hours_format = is24HourMode(mContext) ? Calendar.HOUR_OF_DAY : Calendar.HOUR;
-        clockBuilder.setTextViewText(R.id.widget_clock_hours, String.format("%02d", cal.get(hours_format)));
-        clockBuilder.setTextViewColor(R.id.widget_clock_hours, settings.colorPrimary);
-
-        // shows minutes
-        clockBuilder.setTextViewText(R.id.widget_clock_minutes, String.format("%02d", cal.get(Calendar.MINUTE)));
-        clockBuilder.setTextViewColor(R.id.widget_clock_minutes, settings.colorPrimary);
-
-        mBuilder.setTextViewText(R.id.widget_clock_day_of_week, weekDays[cal.get(Calendar.DAY_OF_WEEK)]);
-        clockBuilder.setTextViewColor(R.id.widget_clock_day_of_week, settings.colorSecondary);
-
-        mBuilder.setTextViewText(R.id.widget_clock_date, DateTimeFormat.shortDate().print(cal.getTimeInMillis()));
-        clockBuilder.setTextViewColor(R.id.widget_clock_date, settings.colorSecondary);
-
-        clockBuilder.setTextViewColor(R.id.widget_clock_doubledots, settings.colorPrimary);
-
-        renderAppWidget();
-
-        // TODO format without year http://stackoverflow.com/questions/3790918/format-date-without-year
+        mCalendar = cal;
+        renderWidget();
     }
 
     /**
@@ -235,6 +315,8 @@ public class WidgetClockData extends WidgetData {
      * @param json
      */
     public void updateWeather(JSONObject json){
+        Log.v(TAG, "updating weather widget !!!!!");
+
         weather.configure(json, null);
     }
 
@@ -242,8 +324,6 @@ public class WidgetClockData extends WidgetData {
      * Renders new weather data based on data saved in preferences
      */
     public void renderWeather() {
-        Log.v(TAG, "rendering weather widget !!!!!");
-
         /*
         detailsField.setText(
                 details.getString("description").toUpperCase(Locale.US) +
@@ -253,9 +333,32 @@ public class WidgetClockData extends WidgetData {
         //updatedField.setText("Last update: " + updatedOn);
 
 
-        weather.renderView(mBuilder);
+        //weather.renderView(mBuilder);
 
-        renderAppWidget();
+
+        switch (this.widgetLayout){
+            case R.layout.widget_clock:
+            case R.layout.widget_clock_3x2:
+
+                mBuilder.setTextView(
+                        R.id.widget_clock_weather_city,
+                        weather.cityName,
+                        settings.colorPrimary,
+                        R.dimen.textsize_body
+                );
+
+                mBuilder.setTextView(
+                        R.id.widget_clock_weather_temperature,
+                        weather.temperature,
+                        settings.colorSecondary,
+                        R.dimen.textsize_headline
+                );
+
+                mBuilder.setTextViewColor(R.id.widget_clock_household_label, settings.colorPrimary);
+
+                mBuilder.setImage(R.id.widget_weather_icon, weather.getBitmapIcon(false));
+                break;
+        }
     }
 
     @Override
