@@ -78,6 +78,7 @@ public class Xconstants {
 	public static final String RSSI = "rssi";
 	public static final String READ = "read";
 	public static final String URL = "url";
+	public static final String URI = "uri";
 	public static final String MESSAGE = "msg";
 	public static final String SETTINGS = "sett";
 	public static final String CONDITION = "cond";

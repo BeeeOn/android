@@ -34,6 +34,8 @@ public abstract class BaseNotification implements Notification {
 	private boolean mRead = false;
 	private String mUserId = null;
 
+	private Bundle mBundle;
+
 	/**
 	 * Constructor
 	 */
@@ -55,7 +57,7 @@ public abstract class BaseNotification implements Notification {
 		}
 
 		Log.d(TAG, bundle.toString());
-		Notification notification = null;
+		BaseNotification notification = null;
 		try {
 			NotificationName name = NotificationName.fromValue(bundle.getString(Xconstants.NOTIFICATION_NAME));
 			Integer msgId = Integer.valueOf(bundle.getString(Xconstants.MSGID));
@@ -84,13 +86,19 @@ public abstract class BaseNotification implements Notification {
 
 			return null;
 		}
-
+		if (notification != null) {
+			notification.setBundle(bundle);
+		}
 		return notification;
 	}
 
-	private static Notification getInstance(NotificationName name, Integer msgId, String userId, Long time,
+	protected void setBundle(Bundle bundle) {
+		mBundle = bundle;
+	}
+
+	private static BaseNotification getInstance(NotificationName name, Integer msgId, String userId, Long time,
 											NotificationType type, Bundle bundle) throws NullPointerException, IllegalArgumentException {
-		Notification notification = null;
+		BaseNotification notification = null;
 
 		switch (name) {
 			case WATCHDOG:
