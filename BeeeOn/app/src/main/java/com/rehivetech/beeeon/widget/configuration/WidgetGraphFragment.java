@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.RadioGroup;
 import android.widget.SeekBar;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -15,12 +16,17 @@ import com.rehivetech.beeeon.arrayadapter.DeviceArrayAdapter;
 import com.rehivetech.beeeon.asynctask.ReloadAdapterDataTask;
 import com.rehivetech.beeeon.household.adapter.Adapter;
 import com.rehivetech.beeeon.household.device.Device;
+import com.rehivetech.beeeon.household.device.DeviceLog;
 import com.rehivetech.beeeon.household.device.RefreshInterval;
+import com.rehivetech.beeeon.pair.LogDataPair;
 import com.rehivetech.beeeon.util.Utils;
 import com.rehivetech.beeeon.widget.data.WidgetDeviceData;
 import com.rehivetech.beeeon.widget.data.WidgetGraphData;
 import com.rehivetech.beeeon.widget.persistence.WidgetDevicePersistence;
 import com.rehivetech.beeeon.widget.service.WidgetService;
+
+import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
 
 /**
  * @author mlyko
@@ -28,13 +34,14 @@ import com.rehivetech.beeeon.widget.service.WidgetService;
 public class WidgetGraphFragment extends WidgetConfigurationFragment {
 	private static final String TAG = WidgetGraphFragment.class.getSimpleName();
 
-	protected SeekBar mWidgetUpdateSeekBar;
 
-	protected WidgetDeviceData mWidgetData;
+	protected WidgetGraphData mWidgetData;
 
 	private WidgetDevicePersistence mWidgetDevice;
 
 	private Spinner mDeviceSpinner;
+	private RadioGroup mGapGroup;
+	private RefreshInterval mWidgetRefreshInterval;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -56,17 +63,42 @@ public class WidgetGraphFragment extends WidgetConfigurationFragment {
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 
-		mWidgetUpdateSeekBar = (SeekBar) mActivity.findViewById(R.id.widget_config_interval);
-		initWidgetUpdateIntervalLayout(mWidgetUpdateSeekBar);
-
 		mDeviceSpinner = (Spinner) mActivity.findViewById(R.id.widget_config_device);
+		mGapGroup = (RadioGroup) mActivity.findViewById(R.id.widget_config_graph_gap);
+		mGapGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+			@Override
+			public void onCheckedChanged(RadioGroup group, int checkedId) {
+				switch (checkedId){
+					case R.id.widget_gap_daily:
+						mWidgetData.widgetLogData.gap = DeviceLog.DataInterval.HOUR.getValue();
+						mWidgetData.widgetLogData.intervalStart = DateTime.now(DateTimeZone.UTC).minusDays(1).getMillis();
+						mWidgetRefreshInterval = RefreshInterval.MIN_30;
+						break;
+
+					case R.id.widget_gap_monthly:
+						mWidgetData.widgetLogData.gap = DeviceLog.DataInterval.DAY.getValue();
+						mWidgetData.widgetLogData.intervalStart = DateTime.now(DateTimeZone.UTC).minusMonths(1).getMillis();
+						mWidgetRefreshInterval = RefreshInterval.HOUR_24;	 // TODO maybe could be longer
+						break;
+
+					default:
+					case R.id.widget_gap_weekly:
+						mWidgetData.widgetLogData.gap = DeviceLog.DataInterval.HOUR.getValue();
+						mWidgetData.widgetLogData.intervalStart = DateTime.now(DateTimeZone.UTC).minusWeeks(1).getMillis();
+						mWidgetRefreshInterval = RefreshInterval.HOUR_12;
+						break;
+				}
+
+				mWidgetData.widgetLogData.gapRadioId = checkedId;
+			}
+		});
 	}
 
 	@Override
 	protected void onFragmentResume() {
 		super.onFragmentResume();
 
-		updateIntervalLayout(mWidgetUpdateSeekBar);
+		mGapGroup.check(mWidgetData.widgetLogData.gapRadioId);
 	}
 
 	/**
@@ -91,7 +123,6 @@ public class WidgetGraphFragment extends WidgetConfigurationFragment {
 			return false;
 		}
 
-
 		Device device = (Device) mDeviceSpinner.getSelectedItem();
 		if (device == null) {
 			Toast.makeText(mActivity, R.string.widget_configuration_select_device, Toast.LENGTH_LONG).show();
@@ -101,7 +132,7 @@ public class WidgetGraphFragment extends WidgetConfigurationFragment {
 		mWidgetDevice.configure(device, adapter);
 
 		//sets widgetdata
-		mWidgetData.configure(mActivity.isAppWidgetEditing(), getRefreshSeconds(mWidgetUpdateSeekBar.getProgress()), adapter);
+		mWidgetData.configure(mActivity.isAppWidgetEditing(), mWidgetRefreshInterval.getInterval(), adapter);
 		return true;
 	}
 }

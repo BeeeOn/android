@@ -16,6 +16,7 @@ import com.rehivetech.beeeon.household.device.DeviceLog;
 import com.rehivetech.beeeon.household.device.Facility;
 import com.rehivetech.beeeon.household.device.RefreshInterval;
 import com.rehivetech.beeeon.household.device.values.BaseEnumValue;
+import com.rehivetech.beeeon.household.device.values.BaseValue;
 import com.rehivetech.beeeon.household.location.Location;
 import com.rehivetech.beeeon.pair.LogDataPair;
 import com.rehivetech.beeeon.util.GraphViewHelper;
@@ -23,6 +24,7 @@ import com.rehivetech.beeeon.util.Log;
 import com.rehivetech.beeeon.util.TimeHelper;
 import com.rehivetech.beeeon.util.UnitsHelper;
 import com.rehivetech.beeeon.widget.persistence.WidgetLocationPersistence;
+import com.rehivetech.beeeon.widget.persistence.WidgetLogDataPersistence;
 
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
@@ -30,7 +32,10 @@ import org.joda.time.Interval;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.SortedMap;
 import java.util.concurrent.TimeUnit;
 
@@ -49,6 +54,10 @@ public class WidgetGraphData extends WidgetDeviceData {
     private int mGraphWidth;
     private int mGraphHeight;
 
+    public WidgetLogDataPersistence widgetLogData;
+
+    private LogDataPair mLogDataPair;
+
     public WidgetLocationPersistence widgetLocation;
 
     public WidgetGraphData(int widgetId, Context context, UnitsHelper unitsHelper, TimeHelper timeHelper){
@@ -58,6 +67,7 @@ public class WidgetGraphData extends WidgetDeviceData {
 
         mGraph = new GraphView(mContext);
         widgetLocation = new WidgetLocationPersistence(mContext, mWidgetId, 0, R.id.location_container, mUnitsHelper, mTimeHelper, settings);
+        widgetLogData = new WidgetLogDataPersistence(mContext, mWidgetId);
     }
 
     @Override
@@ -67,6 +77,8 @@ public class WidgetGraphData extends WidgetDeviceData {
 
     @Override
     public void init() {
+        Log.d(TAG, "init()");
+
         if(widgetDevice.getId().isEmpty()){
             Log.i(TAG, "Could not retrieve device from widget " + String.valueOf(mWidgetId));
             return;
@@ -79,42 +91,47 @@ public class WidgetGraphData extends WidgetDeviceData {
         facility.setLastUpdate(new DateTime(widgetDevice.lastUpdateTime, DateTimeZone.UTC));
         facility.setRefresh(RefreshInterval.fromInterval(widgetDevice.refresh));
 
-        Device dev = Device.createFromDeviceTypeId(ids[1]);
-        facility.addDevice(dev);
+        Device device = Device.createFromDeviceTypeId(ids[1]);
+        facility.addDevice(device);
 
         mFacilities.clear();
         mFacilities.add(facility);
 
-        initGraph(dev);
+        initGraph(device.getValue());
     }
 
     @Override
     public void load(){
         super.load();
         widgetLocation.load();
+        widgetLogData.load();
     }
 
     @Override
     protected void save() {
         super.save();
         widgetLocation.save();
+        widgetLogData.save();
     }
 
-    private void initGraph(Device device) {
+    /**
+     * Initialize graph and series which will be used base ond device type
+     * @param baseValue
+     */
+    private void initGraph(BaseValue baseValue) {
         if(mTimeHelper == null || mUnitsHelper == null) return;
-
         Log.d(TAG, "prepareWidgetGraphView");
 
         Adapter adapter = mController.getAdaptersModel().getAdapter(adapterId);
         final DateTimeFormatter fmt = mTimeHelper.getFormatter(mGraphDateTimeFormat, adapter);
-        GraphViewHelper.prepareWidgetGraphView(mGraph, mContext, mFacilities.get(0).getDevices().get(0), fmt, mUnitsHelper);
+        GraphViewHelper.prepareWidgetGraphView(mGraph, mContext, baseValue, fmt, mUnitsHelper);
 
         // clears series if reinitializes
         if(mGraph.getSeries() != null && mGraph.getSeries().size() > 0){
             mGraph.removeAllSeries();
         }
 
-        if (device.getValue() instanceof BaseEnumValue) {
+        if (baseValue instanceof BaseEnumValue) {
             mGraphSeries = new BarGraphSeries<>(new DataPoint[]{new DataPoint(0, 0), new DataPoint(1,1)});
             ((BarGraphSeries) mGraphSeries).setSpacing(30);
         } else {
@@ -128,9 +145,39 @@ public class WidgetGraphData extends WidgetDeviceData {
     }
 
     @Override
+    public List<Object> getReferredObj() {
+        List<Object> resultObj = new ArrayList<>();
+
+        // first add parent objects (facilities)
+        resultObj.addAll(super.getReferredObj());
+
+        // then from this widget
+        resultObj.add(mLogDataPair);
+
+        return resultObj;
+    }
+
+    @Override
     public void initLayout() {
         super.initLayout();
         widgetLocation.initView();
+
+        createLogDataPair();
+    }
+
+    /**
+     * Creates new log pair from data saved last time when was updated
+     */
+    private void createLogDataPair() {
+        Facility fac = (Facility) mFacilities.get(0);
+        if(fac == null) return;
+
+        mLogDataPair = new LogDataPair(
+                fac.getDevices().get(0),
+                new Interval(widgetLogData.intervalStart, DateTime.now(DateTimeZone.UTC).getMillis()),
+                DeviceLog.DataType.fromValue(widgetLogData.type),
+                DeviceLog.DataInterval.fromValue(widgetLogData.gap)
+        );
     }
 
     @Override
@@ -152,7 +199,12 @@ public class WidgetGraphData extends WidgetDeviceData {
         widgetLastUpdate = getTimeNow();
         adapterId = adapter.getId();
 
-        doLoadGraphData(device);
+        DeviceLog log = mController.getDeviceLogsModel().getDeviceLog(mLogDataPair);
+        if(log != null) {
+            mGraphBitmap = mGraph.drawBitmap(mGraphWidth, mGraphHeight);
+            fillGraph(log);
+            widgetLogData.intervalStart = DateTime.now(DateTimeZone.UTC).minusWeeks(1).getMillis();
+        }
 
         this.save();
         Log.v(TAG, String.format("Updating widget (%d) with fresh data", getWidgetId()));
@@ -169,25 +221,10 @@ public class WidgetGraphData extends WidgetDeviceData {
         if(mGraphBitmap != null) mBuilder.setImage(R.id.widget_graph, mGraphBitmap);
     }
 
-    private void doLoadGraphData(Device device) {
-        DateTime end = DateTime.now(DateTimeZone.UTC);
-        DateTime start = end.minusWeeks(1);
-        DateTimeFormatter fmt = DateTimeFormat.forPattern(LOG_DATE_TIME_FORMAT).withZoneUTC();
-        Log.d(TAG, String.format("Loading graph data from %s to %s.", fmt.print(start), fmt.print(end)));
-
-        mGetDeviceLogTask = new GetDeviceLogTask(mContext);
-        LogDataPair pair = new LogDataPair(device, new Interval(start, end), DeviceLog.DataType.AVERAGE, (device.getValue() instanceof BaseEnumValue)? DeviceLog.DataInterval.RAW: DeviceLog.DataInterval.HOUR);
-
-        mGetDeviceLogTask.setListener(new GetDeviceLogTask.CallbackLogTaskListener() {
-            @Override
-            public void onExecute(DeviceLog result) {
-                fillGraph(result);
-                mGraphBitmap = mGraph.drawBitmap(mGraphWidth, mGraphHeight);
-            }
-        });
-        mGetDeviceLogTask.execute(new LogDataPair[]{pair});
-    }
-
+    /**
+     * Fills graph with received data
+     * @param log
+     */
     private void fillGraph(DeviceLog log) {
         if(mGraph == null) return;
         Log.d(TAG, "fillGraph");
@@ -218,5 +255,11 @@ public class WidgetGraphData extends WidgetDeviceData {
             mGraph.getViewport().setMaxX(mGraphSeries.getHighestValueX());
             mGraph.getViewport().setMinX(mGraphSeries.getHighestValueX() - TimeUnit.HOURS.toMillis(1));
         }
+    }
+
+    @Override
+    public void handleResize(int minWidth, int minHeight) {
+        // NO Operation -> just to override devices resizing
+        // TODO make graph bigger based on minWidth ?
     }
 }

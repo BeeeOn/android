@@ -86,7 +86,6 @@ public class WidgetDeviceFragment extends WidgetConfigurationFragment {
 			return false;
 		}
 
-
 		Device device = (Device) mDeviceSpinner.getSelectedItem();
 		if (device == null) {
 			Toast.makeText(mActivity, R.string.widget_configuration_select_device, Toast.LENGTH_LONG).show();

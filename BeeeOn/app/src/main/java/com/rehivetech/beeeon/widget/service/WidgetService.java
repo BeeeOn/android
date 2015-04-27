@@ -27,12 +27,14 @@ import com.rehivetech.beeeon.household.device.RefreshInterval;
 import com.rehivetech.beeeon.household.device.values.BaseValue;
 import com.rehivetech.beeeon.household.device.values.BooleanValue;
 import com.rehivetech.beeeon.household.location.Location;
+import com.rehivetech.beeeon.pair.LogDataPair;
 import com.rehivetech.beeeon.util.Log;
 import com.rehivetech.beeeon.util.TimeHelper;
 import com.rehivetech.beeeon.util.UnitsHelper;
 import com.rehivetech.beeeon.util.Utils;
 import com.rehivetech.beeeon.widget.data.WidgetClockData;
 import com.rehivetech.beeeon.widget.data.WidgetData;
+import com.rehivetech.beeeon.widget.data.WidgetGraphData;
 import com.rehivetech.beeeon.widget.persistence.WidgetDevicePersistence;
 import com.rehivetech.beeeon.widget.receivers.WidgetClockProvider;
 import com.rehivetech.beeeon.widget.receivers.WidgetDeviceProvider;
@@ -373,6 +375,10 @@ public class WidgetService extends Service {
                     else if(refObj instanceof Location){
                          // TODO
                     }
+                    else if(refObj instanceof LogDataPair){
+                        LogDataPair logPair = (LogDataPair) refObj;
+                        mController.getDeviceLogsModel().reloadDeviceLog(logPair);
+                    }
                 }
             }
 
@@ -429,6 +435,14 @@ public class WidgetService extends Service {
                 }
             }
         }.start();
+    }
+
+    private void updateWidgetsGraphData(WidgetData data){
+        if(!(data instanceof WidgetGraphData)) return;
+            /*
+        WidgetGraphData widgetData = (WidgetGraphData) data;
+        data.getReferredObj()
+                */
     }
 
     /**

@@ -135,18 +135,14 @@ public class WidgetClockFragment extends WidgetConfigurationFragment {
 		TextView cityLabel = (TextView) mActivity.findViewById(R.id.widget_config_location_label);
 		cityLabel.setText(mWidgetData.weather.cityName);
 
-		RadioButton schemeRadio;
 		if(mWidgetData.settings.isColorSchemeEqual(R.color.white, R.color.white)){
-			schemeRadio = (RadioButton) mActivity.findViewById(R.id.scheme_white);
-			schemeRadio.setChecked(true);
+			mColorSchemeGroup.check(R.id.scheme_white);
 		}
 		else if(mWidgetData.settings.isColorSchemeEqual(R.color.white, R.color.white)){
-			schemeRadio = (RadioButton) mActivity.findViewById(R.id.scheme_pink_cyan);
-			schemeRadio.setChecked(true);
+			mColorSchemeGroup.check(R.id.scheme_pink_cyan);
 		}
 		else if(mWidgetData.settings.isColorSchemeEqual(R.color.black, R.color.black)){
-			schemeRadio = (RadioButton) mActivity.findViewById(R.id.scheme_black);
-			schemeRadio.setChecked(true);
+			mColorSchemeGroup.check(R.id.scheme_black);
 		}
 	}
 

@@ -25,7 +25,7 @@ public class WidgetDeviceData extends WidgetData {
     private static final String TAG = WidgetDeviceData.class.getSimpleName();
 
     public WidgetDevicePersistence widgetDevice;
-    protected List<Facility> mFacilities;
+    protected List<Object> mFacilities;
 
     public WidgetDeviceData(int widgetId, Context context, UnitsHelper unitsHelper, TimeHelper timeHelper){
         super(widgetId, context, unitsHelper, timeHelper);
@@ -71,7 +71,7 @@ public class WidgetDeviceData extends WidgetData {
     }
 
     @Override
-    public List<Facility> getReferredObj() {
+    public List<Object> getReferredObj() {
         return mFacilities;
     }
 
