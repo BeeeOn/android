@@ -137,8 +137,7 @@ abstract public class WidgetData {
         Log.d(TAG, "update()");
 
         // change actual widget's data
-        if(!updateData()){
-            // TODO
+        if(!updateData()){            // TODO
         }
 
         renderWidget();
@@ -156,7 +155,7 @@ abstract public class WidgetData {
     /**
      * Deletes all settings (even childrens)
      */
-    public void delete(Context context){
+    public void delete(){
         mPrefs.edit().clear().apply();
         settings.delete();
     }
@@ -218,15 +217,13 @@ abstract public class WidgetData {
      */
     public void handleResize(int minWidth, int minHeight) {
         Log.v(TAG, String.format("handleResize(%d) [%d | %d]", mWidgetId, minWidth, minHeight));
-        //this.widgetLayout = layout;
-        //save();
-        //initLayout();
     }
 
     /**
      * Request widget redraw
      */
     public void renderAppWidget(){
+        Log.d(TAG, "updateAppWidget()");
         mWidgetManager.updateAppWidget(mWidgetId, mBuilder.getRoot());
     }
 

@@ -43,8 +43,8 @@ public class WidgetClockData extends WidgetData {
 
     boolean weatherCheckedThisHour = false; // TODO
 
-    private int mClockFontSizeDimension = R.dimen.widget_textsize_clock;
-    private int mClockFontSize;
+    private int mClockFont = R.dimen.widget_textsize_clock;
+    private int mWeatherFont = R.dimen.textsize_headline;
 
     public WidgetClockData(int widgetId, Context context, UnitsHelper unitsHelper, TimeHelper timeHelper){
         super(widgetId, context, unitsHelper, timeHelper);
@@ -118,8 +118,6 @@ public class WidgetClockData extends WidgetData {
         }
     }
 
-
-
     @Override
     protected boolean updateData() {
         int updated = 0;
@@ -170,7 +168,8 @@ public class WidgetClockData extends WidgetData {
 
         switch (this.widgetLayout){
             case R.layout.widget_clock_3x2:
-                mClockFontSizeDimension = R.dimen.widget_textsize_clock_large;
+                mClockFont = R.dimen.widget_textsize_clock_large;
+                mWeatherFont = R.dimen.textsize_headline;
                 break;
 
             case R.layout.widget_clock_2x2:
@@ -178,7 +177,8 @@ public class WidgetClockData extends WidgetData {
                 mBuilder.setImage(R.id.widget_clock_separator_2, settings.colorPrimary);
                 mBuilder.setImage(R.id.widget_clock_separator_3, settings.colorPrimary);
             default:
-                mClockFontSizeDimension = R.dimen.widget_textsize_clock;
+                mClockFont = R.dimen.widget_textsize_clock;
+                mWeatherFont = R.dimen.textsize_body;
                 break;
         }
 
@@ -215,7 +215,7 @@ public class WidgetClockData extends WidgetData {
                 R.id.widget_clock_hours,
                 String.format("%02d", mCalendar.get(is24hMode ? Calendar.HOUR_OF_DAY : Calendar.HOUR)),
                 settings.colorPrimary,
-                mClockFontSizeDimension
+                mClockFont
         );
 
         // set minutes
@@ -223,7 +223,7 @@ public class WidgetClockData extends WidgetData {
                 R.id.widget_clock_minutes,
                 String.format("%02d", mCalendar.get(Calendar.MINUTE)),
                 settings.colorPrimary,
-                mClockFontSizeDimension
+                mClockFont
         );
 
         // show pm / am
@@ -238,7 +238,7 @@ public class WidgetClockData extends WidgetData {
 
         // double dots
         clockBuilder.setTextViewColor(R.id.widget_clock_doubledots, settings.colorPrimary);
-        clockBuilder.setTextViewTextSize(R.id.widget_clock_doubledots, mClockFontSizeDimension);
+        clockBuilder.setTextViewTextSize(R.id.widget_clock_doubledots, mClockFont);
 
         // clear old sub views
         mBuilder.removeAllViews(R.id.widget_clock_container);
@@ -291,7 +291,7 @@ public class WidgetClockData extends WidgetData {
         String debugName;
 
         if(minWidth < 220){
-            if(minHeight < 150){
+            if(minHeight < 140){
                 layout = R.layout.widget_clock_2x1;
                 debugName = "2x1";
             }
@@ -301,7 +301,7 @@ public class WidgetClockData extends WidgetData {
             }
         }
         else{
-            if(minHeight < 150){
+            if(minHeight < 140){
                 layout = R.layout.widget_clock_2x1;
                 debugName = "2x1";
             }
@@ -394,7 +394,7 @@ public class WidgetClockData extends WidgetData {
                         R.id.widget_clock_weather_temperature,
                         weather.temperature,
                         settings.colorSecondary,
-                        R.dimen.textsize_headline
+                        mWeatherFont
                 );
 
                 mBuilder.setTextViewColor(R.id.widget_clock_household_label, settings.colorPrimary);

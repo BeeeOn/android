@@ -589,21 +589,20 @@ public class WidgetService extends Service {
             if(widgetId == AppWidgetManager.INVALID_APPWIDGET_ID) continue;
 
             WidgetData data = getWidgetData(widgetId);
-            widgetDelete(mContext, data);
+            widgetDelete(data);
         }
     }
 
     /**
      * For deleting widgetData outside of service
-     * @param context
      * @param data
      */
-    private void widgetDelete(Context context, WidgetData data){
+    private void widgetDelete(WidgetData data){
         if(data == null) return;
         int widgetId = data.getWidgetId();
         Log.v(TAG, String.format("delete widgetData(%d)", widgetId));
 
-        data.delete(context);
+        data.delete();
         mAvailableWidgets.delete(widgetId);
     }
 
