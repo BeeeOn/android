@@ -619,15 +619,13 @@ public class XmlCreator {
 	 *
 	 * @param bt
 	 *            userID of user
-	 * @param aid
-	 *            adapterID of actual adapter
 	 * @param facility
 	 *            to be removed
 	 * @return XML of DelDevice message
 	 * @since 2.2
 	 */
-	public static String createDeleteDevice(String bt, String aid, Facility facility) {
-		return createComAttribsVariant(Xconstants.STATE, DELDEVICE, Xconstants.BT, bt, Xconstants.AID, aid, Xconstants.DID, facility.getAddress());
+	public static String createDeleteDevice(String bt, Facility facility) {
+		return createComAttribsVariant(Xconstants.STATE, DELDEVICE, Xconstants.BT, bt, Xconstants.AID, facility.getAdapterId(), Xconstants.DID, facility.getAddress());
 	}
 
 	// ////////////////////////////////////////////////////////////////////////////////////////////////

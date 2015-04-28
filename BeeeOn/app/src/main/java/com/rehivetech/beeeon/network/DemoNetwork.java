@@ -301,8 +301,8 @@ public class DemoNetwork implements INetwork {
 	}
 
 	@Override
-	public boolean deleteFacility(String adapterId, Facility facility) {
-		AdapterHolder holder = mAdapters.get(adapterId);
+	public boolean deleteFacility(Facility facility) {
+		AdapterHolder holder = mAdapters.get(facility.getAdapterId());
 		if (holder == null) {
 			return false;
 		}

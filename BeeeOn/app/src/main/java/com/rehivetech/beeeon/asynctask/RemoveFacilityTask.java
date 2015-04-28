@@ -3,6 +3,7 @@ package com.rehivetech.beeeon.asynctask;
 import android.content.Context;
 
 import com.rehivetech.beeeon.controller.Controller;
+import com.rehivetech.beeeon.household.device.Facility;
 import com.rehivetech.beeeon.pair.DelFacilityPair;
 
 public class RemoveFacilityTask extends CallbackTask<DelFacilityPair> {
@@ -15,7 +16,11 @@ public class RemoveFacilityTask extends CallbackTask<DelFacilityPair> {
 	protected Boolean doInBackground(DelFacilityPair pair) {
 		Controller controller = Controller.getInstance(mContext);
 
-		return controller.getFacilitiesModel().deleteFacility(controller.getFacilitiesModel().getFacility(pair.adapterID, pair.facilityID));
+		Facility facility = controller.getFacilitiesModel().getFacility(pair.adapterID, pair.facilityID);
+		if (facility == null)
+			return false;
+
+		return controller.getFacilitiesModel().deleteFacility(facility);
 	}
 
 }

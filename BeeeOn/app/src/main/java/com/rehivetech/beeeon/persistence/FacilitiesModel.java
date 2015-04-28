@@ -1,11 +1,11 @@
 package com.rehivetech.beeeon.persistence;
 
 import com.rehivetech.beeeon.IdentifierComparator;
+import com.rehivetech.beeeon.exception.AppException;
 import com.rehivetech.beeeon.household.device.Device;
 import com.rehivetech.beeeon.household.device.Device.SaveDevice;
 import com.rehivetech.beeeon.household.device.DeviceType;
 import com.rehivetech.beeeon.household.device.Facility;
-import com.rehivetech.beeeon.exception.AppException;
 import com.rehivetech.beeeon.network.INetwork;
 import com.rehivetech.beeeon.util.Log;
 
@@ -240,16 +240,20 @@ public class FacilitiesModel {
 	}
 
 	/**
-	 * Delete facility
+	 * Delete facility from server.
 	 *
 	 * This CAN'T be called on UI thread!
 	 */
 	public boolean deleteFacility(Facility facility) throws AppException {
-        String adapterId = facility.getAdapterId();
-		mNetwork.deleteFacility(adapterId,facility);
-        refreshFacilities(getFacilitiesByAdapter(adapterId), true);
+		if (mNetwork.deleteFacility(facility)) {
+			// Facility was deleted on server, remove it from map too
+			Map<String, Facility> adapterFacilities = mFacilities.get(facility.getAdapterId());
+			if (adapterFacilities != null)
+				adapterFacilities.remove(facility.getId());
+			return true;
+		}
 
-        return true;
+		return false;
     }
 
 	/**

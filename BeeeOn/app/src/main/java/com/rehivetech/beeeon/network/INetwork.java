@@ -206,12 +206,11 @@ public interface INetwork {
 	/**
 	 * Method delete facility from server
 	 *
-	 * @param adapterID
 	 * @param facility
 	 *            to be deleted
 	 * @return true if is deleted, false otherwise
 	 */
-	public boolean deleteFacility(String adapterID, Facility facility);
+	public boolean deleteFacility(Facility facility);
 
 	/**
 	 * Method ask for actual data of facilities

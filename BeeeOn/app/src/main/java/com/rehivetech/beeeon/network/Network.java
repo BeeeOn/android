@@ -5,16 +5,16 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 
 import com.rehivetech.beeeon.BuildConfig;
+import com.rehivetech.beeeon.exception.AppException;
+import com.rehivetech.beeeon.exception.NetworkError;
 import com.rehivetech.beeeon.household.adapter.Adapter;
 import com.rehivetech.beeeon.household.device.Device;
 import com.rehivetech.beeeon.household.device.Device.SaveDevice;
 import com.rehivetech.beeeon.household.device.DeviceLog;
 import com.rehivetech.beeeon.household.device.Facility;
 import com.rehivetech.beeeon.household.location.Location;
-import com.rehivetech.beeeon.household.watchdog.WatchDog;
-import com.rehivetech.beeeon.exception.AppException;
-import com.rehivetech.beeeon.exception.NetworkError;
 import com.rehivetech.beeeon.household.user.User;
+import com.rehivetech.beeeon.household.watchdog.WatchDog;
 import com.rehivetech.beeeon.network.authentication.IAuthProvider;
 import com.rehivetech.beeeon.network.xml.CustomViewPair;
 import com.rehivetech.beeeon.network.xml.FalseAnswer;
@@ -709,14 +709,13 @@ public class Network implements INetwork {
 	/**
 	 * Method delete facility from server
 	 *
-	 * @param adapterID
 	 * @param facility
 	 *            to be deleted
 	 * @return true if is deleted, false otherwise
 	 */
 	@Override
-	public boolean deleteFacility(String adapterID, Facility facility){
-		ParsedMessage msg = doRequest(XmlCreator.createDeleteDevice(mBT, adapterID, facility));
+	public boolean deleteFacility(Facility facility){
+		ParsedMessage msg = doRequest(XmlCreator.createDeleteDevice(mBT, facility));
 
 		if (msg.getState() == State.TRUE)
 			return true;
