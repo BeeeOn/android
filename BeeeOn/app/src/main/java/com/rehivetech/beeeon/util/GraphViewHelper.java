@@ -9,6 +9,7 @@ import com.jjoe64.graphview.helper.StaticLabelsFormatter;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.household.device.Device;
 import com.rehivetech.beeeon.household.device.values.BaseEnumValue;
+import com.rehivetech.beeeon.household.device.values.BaseValue;
 
 import org.joda.time.format.DateTimeFormatter;
 
@@ -59,6 +60,44 @@ final public class GraphViewHelper {
 			graphView.getGridLabelRenderer().setLabelFormatter(new DateAsXAxisLabelFormatter(context, "HH:mm","dd.MM.yy",unit));
 		}
 
+	}
+
+
+	/**
+	 * Preparation of skin for widget graph
+	 * @param graphView
+	 * @param context
+	 * @param baseValue
+	 * @param fmt
+	 * @param unitsHelper
+	 */
+	public static void prepareWidgetGraphView(final GraphView graphView, final Context context, final BaseValue baseValue, final DateTimeFormatter fmt, final UnitsHelper unitsHelper) {
+		float textSize = context.getResources().getDimension(R.dimen.textsize_caption);
+
+		graphView.getGridLabelRenderer().setTextSize(textSize);
+		graphView.getGridLabelRenderer().setVerticalLabelsColor(context.getResources().getColor(R.color.beeeon_text_hint));
+		graphView.getGridLabelRenderer().setHorizontalLabelsColor(context.getResources().getColor(R.color.beeeon_text_hint));
+		graphView.getGridLabelRenderer().setGridColor(context.getResources().getColor(R.color.beeeon_text_hint));
+
+		boolean isEnumValue = baseValue instanceof BaseEnumValue;
+		if (isEnumValue) {
+			graphView.getViewport().setYAxisBoundsManual(true);
+			graphView.getViewport().setMaxY(1.1d);
+			BaseEnumValue value = (BaseEnumValue) baseValue;
+			List<BaseEnumValue.Item> enumItems = value.getEnumItems();
+			String[] verlabels = new String[enumItems.size()];
+			int i = 0;
+			for (BaseEnumValue.Item item : enumItems) {
+				verlabels[i++] = context.getString(item.getStringResource());
+			}
+			DateAsXAxisLabelFormatter labelFormatter = new DateAsXAxisLabelFormatter(context,"HH:mm","dd.MM");
+			StaticLabelsFormatter staticLabelsFormatter = new StaticLabelsFormatter(graphView,labelFormatter);
+			staticLabelsFormatter.setVerticalLabels(verlabels);
+			graphView.getGridLabelRenderer().setLabelFormatter(staticLabelsFormatter);
+		} else {
+			final String unit = " " + unitsHelper.getStringUnit(baseValue);
+			graphView.getGridLabelRenderer().setLabelFormatter(new DateAsXAxisLabelFormatter(context, "HH:mm","dd.MM" ,unit));
+		}
 	}
 
 }

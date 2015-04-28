@@ -1,107 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:padding="12dip" >
+    >
 
+    <!-- toolbar -->
+    <include
+        android:id="@+id/toolbar"
+        layout="@layout/include_toolbar"
+        android:layout_alignParentTop="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        />
+
+    <!-- shadow -->
+    <View
+        android:layout_below="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="6dp"
+        android:background="@drawable/toolbar_dropshadow"
+        />
 
     <ScrollView
+        android:layout_below="@+id/toolbar"
         android:layout_width="match_parent"
-    	android:layout_height="0dp"
-    	android:layout_weight="1" >
-    	
-        <LinearLayout
-	        android:orientation="vertical"
-	        android:layout_width="match_parent"
-	        android:layout_height="wrap_content" >
-	        
-		    <TextView
-		        android:id="@+id/adapter_label"
-		        android:layout_width="match_parent"
-		        android:layout_height="wrap_content"
-		        android:textAppearance="?android:attr/textAppearanceLarge"
-		       	android:text="@string/widget_configuration_adapter" />
-		    
-		    <Spinner
-		        android:id="@+id/adapter"
-		        android:layout_marginLeft="15dp"
-		        android:layout_width="match_parent"
-		        android:layout_height="50dp" />
-		    
-		    <TextView
-		        android:layout_width="match_parent"
-		        android:layout_height="wrap_content"
-		        android:textAppearance="?android:attr/textAppearanceLarge"
-		       	android:text="@string/widget_configuration_sensor" />
-		    
-		    <Spinner
-		        android:id="@+id/sensor"
-		        android:layout_width="match_parent"
-		        android:layout_height="50dp"
-		        android:layout_gravity="center_vertical"
-		        android:layout_marginLeft="15dp"
-		        android:gravity="center_vertical" />
-		    
-		    <TextView
-		        android:layout_width="match_parent"
-		        android:layout_height="wrap_content"
-		        android:textAppearance="?android:attr/textAppearanceLarge"
-		       	android:text="@string/widget_configuration_interval_sensor" />
-		    
-		    <TextView
-		        android:id="@+id/interval_sensor"
-		        android:layout_marginLeft="15dp"
-		        android:layout_width="match_parent"
-		        android:layout_height="50dp"
-		        android:gravity="center_vertical"
-		        android:textAppearance="?android:attr/textAppearanceMedium" />
-		    
-		    <TextView
-		        android:layout_width="match_parent"
-		        android:layout_height="wrap_content"
-		        android:textAppearance="?android:attr/textAppearanceLarge"
-		       	android:text="@string/widget_configuration_interval_widget" />
-		    
-		    <TextView
-		        android:id="@+id/interval_widget"
-		        android:layout_marginLeft="15dp"
-		        android:layout_width="match_parent"
-		        android:layout_height="50dp"
-		        android:gravity="center_vertical"
-		        android:textAppearance="?android:attr/textAppearanceMedium" />
-		    
-		    <SeekBar
-		        android:id="@+id/interval_widget_seekbar"
-		        android:layout_marginLeft="15dp"
-		        android:layout_width="match_parent"
-		        android:layout_height="wrap_content"
-		        android:layout_marginTop="5dp" />
+        android:layout_height="match_parent"
+        >
 
-		</LinearLayout>
+        <FrameLayout
+            android:id="@+id/widget_config_fragment"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+        </FrameLayout>
 
-	</ScrollView>
-    
-	<LinearLayout
-	    android:orientation="horizontal"
-	    android:layout_width="match_parent"
-	    android:layout_height="wrap_content"
-	    android:layout_gravity="center_horizontal">
-
-	    <Button
-	        android:id="@+id/btn_cancel"
-	        android:layout_width="0dp"
-	        android:layout_height="wrap_content"
-	        android:layout_weight="1"
-	        android:text="@android:string/cancel" />
-	    
-	   	<Button
-	        android:id="@+id/btn_add"
-	        android:layout_width="0dp"
-	        android:layout_height="wrap_content"
-	        android:layout_weight="1"
-	        android:text="@android:string/ok" />
-	    
-	</LinearLayout>
-	
-</LinearLayout>
+    </ScrollView>
+</RelativeLayout>

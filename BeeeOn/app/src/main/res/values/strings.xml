@@ -120,6 +120,8 @@
     <string name="progress_loading_adapter">Loading gateway data&#8230;</string>
     <string name="progress_loading_demo">Loading demo data&#8230;</string>
     <string name="progress_saving_data">Saving data&#8230;</string>
+    <string name="progress_loading_facilities">Loading your devices&#8230;</string>
+    <string name="progress_loading_locations">Loading your locations&#8230;</string>
 
     <!-- NavDrawer -->
     <string name="drawer_open">OPEN</string>
@@ -158,6 +160,7 @@
     <string name="action_unregist_facility">Remove device</string>
     <string name="action_hide_facility">Hide device</string>
     <string name="action_close">Cancel</string>
+    <string name="action_done">Done</string>
     <string name="action_intro">Intro</string>
     <string name="action_intro_dialog">Intro dialog</string>
     <string name="addadapter_qrcode_desc">Get QR code</string>
@@ -209,17 +212,36 @@
     <string name="widget_sensor_title_small">BeeeOn device 1x1</string>
     <string name="widget_sensor_title_medium">BeeeOn device 2x1</string>
     <string name="widget_sensor_title_large">BeeeOn device 3x1</string>
-    <string name="widget_cached">(cached)</string>
+    <string name="widget_location_list_title">BeeeOn location </string>
+    <string name="widget_graph_title">BeeeOn device with graph</string>
 
     <!-- WidgetConfigurationActivity -->
-    <string name="widget_configuration_adapter">Gateway: </string>
+    <string name="widget_configuration_adapter">Gateway</string>
     <string name="widget_configuration_sensor">Device to be shown: </string>
-    <string name="widget_configuration_interval_sensor">Device update interval: </string>
+    <string name="widget_configuration_interval_sensor">Household update interval</string>
     <string name="widget_configuration_interval_widget">Widget update interval: </string>
     <string name="widget_configuration_login_first">You must be logged in first</string>
     <string name="widget_configuration_no_adapters">You have no gateways and thus no device to show in widget</string>
     <string name="widget_configuration_select_adapter">Select gateway from list</string>
     <string name="widget_configuration_select_device">Select device from list</string>
+    <string name="widget_configuration_select_location">Select location from list</string>
+
+    <string name="widget_configuration_widget_clock">Configuration clock widget</string>
+    <string name="widget_configuration_widget_device">Configuration device widget</string>
+    <string name="widget_configuration_widget_graph">Configuration graph widget</string>
+    <string name="widget_configuration_widget_location">Configuration location widget</string>
+
+    <string name="widget_configuration_color_scheme">Color scheme</string>
+
+    <!-- Widgets other -->
+    <string name="widget_location_list_empty">Empty location</string>
+    <string name="widget_cached">(cached)</string>
+    <string name="change_city">Change city</string>
+    <string name="place_not_found">Sorry, no weather data found.</string>
+    <string name="widget">Widget</string>
+    <string name="household">Household</string>
+    <string name="widget_configuration_location">Location</string>
+
 
     <!-- About -->
     <string name="play_link" translatable="false">market://details?id=com.rehivetech.beeeon</string>

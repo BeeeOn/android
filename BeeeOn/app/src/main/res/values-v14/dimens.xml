@@ -1,6 +1,4 @@
 <resources>
-
-	<!--  Widget margins -->
-	<dimen name="widget_margin">8dp</dimen>
-
+	<!-- because on API >= 14 is provided automatically -->
+	<dimen name="widget_margin">0dp</dimen>
 </resources>

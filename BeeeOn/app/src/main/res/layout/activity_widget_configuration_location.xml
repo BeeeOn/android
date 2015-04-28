@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/widgetConfLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="vertical"
+    >
+
+    <!-- toolbar -->
+    <include layout="@layout/include_toolbar" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="8dp"
+        >
+
+    <!-- default spinner for adapter -->
+    <include layout="@layout/include_widget_configuration_general" />
+
+    <!-- sensor to be shown -->
+    <TextView
+        android:text="@string/widget_configuration_location"
+        style="@style/MyLinearRowTitle"
+        />
+
+    <Spinner
+        android:id="@+id/widgetConfLocation"
+        style="@style/MyLinearRow"
+        />
+
+    <!-- separator -->
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:src="@color/beeeon_separator"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        />
+    </LinearLayout>
+</LinearLayout>

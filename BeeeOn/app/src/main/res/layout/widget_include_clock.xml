@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:id="@+id/widget_clock_time_layout"
+	android:orientation="horizontal"
+	android:layout_width="wrap_content"
+	android:layout_height="wrap_content"
+	>
+
+	<TextView
+		android:id="@+id/widget_clock_hours"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:textSize="@dimen/widget_textsize_clock"
+		android:textStyle="bold"
+		android:text="00"
+		android:textColor="@color/beeeon_primary_cyan"
+		/>
+
+	<TextView
+		android:id="@+id/widget_clock_doubledots"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:textSize="@dimen/widget_textsize_clock"
+		android:textStyle="bold"
+		android:text=":"
+		android:layout_marginTop="-4dp"
+		android:textColor="@color/beeeon_primary_cyan"
+		/>
+
+	<TextView
+		android:id="@+id/widget_clock_minutes"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:textSize="@dimen/widget_textsize_clock"
+		android:textStyle="bold"
+		android:text="00"
+		android:textColor="@color/beeeon_primary_cyan"
+		/>
+
+	<TextView
+		android:id="@+id/widget_clock_ampm"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:textColor="@color/beeeon_primary_cyan"
+		android:textSize="@dimen/textsize_subhead"
+		android:text="AM"
+		android:visibility="gone"
+		/>
+</LinearLayout>

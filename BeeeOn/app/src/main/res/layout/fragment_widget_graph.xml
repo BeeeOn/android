@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:orientation="vertical"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	android:paddingLeft="8dp"
+	android:paddingRight="8dp"
+	>
+
+	<!-- ********* HOUSEHOLD SETTINGS ******** -->
+
+	<TextView
+		android:id="@+id/widget_config_gateway_label"
+		android:text="@string/household"
+		style="@style/LinearRow.Caption"
+		/>
+
+	<TextView
+		style="@style/LinearRow.Item"
+		android:text="@string/widget_configuration_adapter"
+		/>
+
+	<Spinner
+		android:id="@+id/widget_config_gateway"
+		android:layout_width="match_parent"
+		android:layout_height="40dp"
+		style="@style/LinearRow.Row"
+		/>
+
+	<!-- separator -->
+	<ImageView
+		android:layout_width="match_parent"
+		android:layout_height="1px"
+		android:src="@color/beeeon_separator"
+		android:layout_marginTop="8dp"
+		android:layout_marginBottom="8dp"
+		/>
+
+	<TextView
+		style="@style/LinearRow.Item"
+		android:text="@string/widget_configuration_sensor"
+		/>
+
+	<Spinner
+		android:id="@+id/widget_config_device"
+		style="@style/LinearRow.Row"
+		android:layout_width="match_parent"
+		android:layout_height="40dp"
+		/>
+
+	<!-- separator -->
+	<ImageView
+		android:layout_width="match_parent"
+		android:layout_height="1px"
+		android:src="@color/beeeon_separator"
+		android:layout_marginTop="8dp"
+		android:layout_marginBottom="8dp"
+		/>
+
+	<TextView
+		style="@style/LinearRow.Item"
+		android:text="Interval hodnot grafu"
+		/>
+
+	<RadioGroup
+		android:id="@+id/widget_config_graph_gap"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		style="@style/LinearRow.Row"
+		>
+
+		<RadioButton
+			android:id="@+id/widget_gap_daily"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:text="Denně"
+			/>
+
+		<RadioButton
+			android:id="@+id/widget_gap_weekly"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:text="Týdně"
+			/>
+
+		<RadioButton
+			android:id="@+id/widget_gap_monthly"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:text="Měsíčně"
+			/>
+	</RadioGroup>
+
+	<!-- separator -->
+	<ImageView
+		android:layout_width="match_parent"
+		android:layout_height="1px"
+		android:src="@color/beeeon_separator"
+		android:layout_marginTop="8dp"
+		android:layout_marginBottom="8dp"
+		/>
+	
+</LinearLayout>
