@@ -74,7 +74,6 @@ public class ProfileDetailFragment extends Fragment implements Observer {
 		mContext = getActivity();
 		Controller controller = Controller.getInstance(mContext);
 	    actUser = controller.getActualUser();
-//		controller.getActiveAdapter().getId();
   	}
 
   	@Override

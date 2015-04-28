@@ -160,6 +160,10 @@
 			android:label="@string/title_activity_achievement_overview" >
 		</activity>
 		<activity
+			android:name=".activity.ProfileDetailActivity"
+			android:label="@string/title_activity_profile_detail">
+		</activity>
+		<activity
 			android:name=".activity.SensorEditActivity"
 			android:label="@string/title_activity_sensor_edit" />
 		<activity

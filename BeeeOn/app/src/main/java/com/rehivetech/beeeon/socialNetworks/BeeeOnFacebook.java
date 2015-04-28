@@ -1,9 +1,9 @@
 package com.rehivetech.beeeon.socialNetworks;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.net.Uri;
-import android.support.v4.app.FragmentActivity;
 import android.widget.Toast;
 
 import com.facebook.AccessToken;
@@ -75,7 +75,7 @@ public class BeeeOnFacebook extends Observable implements BeeeOnSocialNetwork{
 	}
 
 	@Override
-	public void logIn(FragmentActivity activity) {
+	public void logIn(Activity activity) {
 		LoginManager.getInstance().logInWithReadPermissions(activity, Arrays.asList("public_profile"));
 	}
 

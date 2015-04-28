@@ -23,6 +23,7 @@
     <string name="title_activity_add_adapter_user">Add New User</string>
     <string name="title_activity_setup_sensor">Device Setup</string>
 	<string name="title_activity_achievement_overview">Achievement overview</string>
+	<string name="title_activity_profile_detail">Account info</string>
 
     <!-- Buttons -->
     <string name="login_login">Login</string>
@@ -143,7 +144,6 @@
     <string name="menu_dashboard">Graphs</string>
     <string name="menu_applications">Applications</string>
     <string name="menu_watchdog">Watchdog</string>
-    <string name="menu_profile">Account info</string>
 
     <!-- Add sensor dialog -->
     <string name="addsensor_sending_request">Sending ... </string>

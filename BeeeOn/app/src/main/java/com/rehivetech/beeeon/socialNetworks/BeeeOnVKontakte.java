@@ -1,8 +1,8 @@
 package com.rehivetech.beeeon.socialNetworks;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.support.v4.app.FragmentActivity;
 import android.widget.Toast;
 
 import com.rehivetech.beeeon.Constants;
@@ -60,7 +60,7 @@ public class BeeeOnVKontakte extends Observable implements BeeeOnSocialNetwork{
 	public String getUserName() {return mUserName;}
 
 	@Override
-	public void logIn(FragmentActivity activity) {
+	public void logIn(Activity activity) {
 		VKSdk.authorize(null, true, false);
 		downloadUserData();
 	}

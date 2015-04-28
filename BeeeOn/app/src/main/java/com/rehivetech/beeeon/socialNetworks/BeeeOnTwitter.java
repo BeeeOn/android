@@ -1,9 +1,9 @@
 package com.rehivetech.beeeon.socialNetworks;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.support.v4.app.FragmentActivity;
 import android.widget.Toast;
 
 import com.rehivetech.beeeon.Constants;
@@ -64,7 +64,7 @@ public class BeeeOnTwitter  extends Observable implements BeeeOnSocialNetwork{
 	}
 
 	@Override
-	public void logIn(final FragmentActivity activity) {
+	public void logIn(final Activity activity) {
 		mCore.logIn(activity, new Callback<TwitterSession>() {
 			@Override
 			public void success(Result<TwitterSession> twitterSessionResult) {

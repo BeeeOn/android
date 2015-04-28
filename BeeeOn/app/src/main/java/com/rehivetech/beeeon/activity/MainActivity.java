@@ -18,20 +18,11 @@ import android.widget.AbsListView;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
-import com.avast.android.dialogs.fragment.ListDialogFragment;
-import com.avast.android.dialogs.iface.IListDialogListener;
-import com.facebook.CallbackManager;
-import com.facebook.FacebookCallback;
-import com.facebook.FacebookException;
-import com.facebook.FacebookSdk;
-import com.facebook.login.LoginManager;
-import com.facebook.login.LoginResult;
 import com.github.amlcurran.showcaseview.OnShowcaseEventListener;
 import com.github.amlcurran.showcaseview.ShowcaseView;
 import com.github.amlcurran.showcaseview.targets.ViewTarget;
 import com.rehivetech.beeeon.Constants;
 import com.rehivetech.beeeon.R;
-import com.rehivetech.beeeon.achievements.FbLoginAchievement;
 import com.rehivetech.beeeon.activity.dialog.AddSensorFragmentDialog;
 import com.rehivetech.beeeon.activity.dialog.CustomAlertDialog;
 import com.rehivetech.beeeon.activity.fragment.CustomViewFragment;
@@ -49,16 +40,7 @@ import com.rehivetech.beeeon.household.adapter.Adapter;
 import com.rehivetech.beeeon.menu.NavDrawerMenu;
 import com.rehivetech.beeeon.network.authentication.FacebookAuthProvider;
 import com.rehivetech.beeeon.persistence.Persistence;
-import com.rehivetech.beeeon.socialNetworks.BeeeOnFacebook;
-import com.rehivetech.beeeon.socialNetworks.BeeeOnVKontakte;
 import com.rehivetech.beeeon.util.Log;
-import com.twitter.sdk.android.core.identity.TwitterAuthClient;
-import com.vk.sdk.VKAccessToken;
-import com.vk.sdk.VKScope;
-import com.vk.sdk.VKSdk;
-import com.vk.sdk.VKSdkListener;
-import com.vk.sdk.VKUIHelper;
-import com.vk.sdk.api.VKError;
 
 
 /**
@@ -116,7 +98,6 @@ public class MainActivity extends BaseApplicationActivity implements IListDialog
 
 	private boolean backPressed = false;
 
-	public CallbackManager mFacebookCallbackManager;
 	private ReloadAdapterDataTask mFullReloadTask;
 	private boolean doRedraw = true;
 
@@ -171,24 +152,26 @@ public class MainActivity extends BaseApplicationActivity implements IListDialog
 			mNavDrawerMenu.redrawMenu();
 		}
 
-		// Set progressbar visible
-		setBeeeOnProgressBarVisibility(true);
+		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        if(mActiveMenuId == null) { // Default screen
+            ft.replace(R.id.content_frame, mListDevices, FRG_TAG_LOC);
+        }
+		else if(mActiveMenuId.equals(Constants.GUI_MENU_CONTROL)){
+			ft.replace(R.id.content_frame, mListDevices, FRG_TAG_LOC);
+		}
+        else if(mActiveMenuId.equals(Constants.GUI_MENU_DASHBOARD)) {
+            ft.replace(R.id.content_frame, mCustomView, FRG_TAG_CUS);
+        }
+        else if(mActiveMenuId.equals(Constants.GUI_MENU_WATCHDOG)) {
+            ft.replace(R.id.content_frame, mWatchDogApp, FRG_TAG_WAT);
+        }
+		else if (mActiveMenuId.equals(Constants.GUI_MENU_PROFILE)){
+			Intent intent = new Intent(this, ProfileDetailActivity.class);
+			mActiveMenuId = null;
+			startActivity(intent);
+		}
+		ft.commit();
 
-		// Facebook sdk needs to be initialised in Activity, but its used in Profile Fragment
-		// Registering callback for facebook log in
-		if (!FacebookSdk.isInitialized())
-			FacebookSdk.sdkInitialize(this, FacebookAuthProvider.FACEBOOK_REQUEST_CODE_OFFSET);
-		mFacebookCallbackManager = CallbackManager.Factory.create();
-		LoginManager.getInstance().registerCallback(
-				mFacebookCallbackManager,
-				BeeeOnFacebook.getInstance(getApplicationContext()).getListener());
-		VKSdk.initialize(
-				BeeeOnVKontakte.getInstance(getApplicationContext()).getListener(),
-				getString(R.string.vkontakte_app_id),
-				VKAccessToken.tokenFromSharedPreferences(getApplicationContext(), Constants.PERSISTENCE_PREF_LOGIN_VKONTAKTE)
-		);
-		mTwitterCallbackManager = new TwitterAuthClient();
-		
 		// Init tutorial 
 		if(mFirstUseApp) {
 			//showTutorial();
@@ -244,9 +227,6 @@ public class MainActivity extends BaseApplicationActivity implements IListDialog
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
 
-		VKUIHelper.onActivityResult(requestCode, resultCode, data);
-		mFacebookCallbackManager.onActivityResult(requestCode, resultCode, data);
-		mTwitterCallbackManager.onActivityResult(requestCode, resultCode, data);
 		Log.d(TAG, "Request code "+requestCode);
 		if(requestCode == Constants.ADD_ADAPTER_REQUEST_CODE ) {
 			Log.d(TAG, "Return from add adapter activity");
@@ -273,8 +253,6 @@ public class MainActivity extends BaseApplicationActivity implements IListDialog
 
 	public void onAppResume() {
 		Log.d(TAG, "onAppResume()");
-		VKUIHelper.onResume(this);
-
 		backPressed = false;
 		setBeeeOnProgressBarVisibility(true);
 		// ASYN TASK - Reload all data, if wasnt download in login activity
@@ -328,7 +306,6 @@ public class MainActivity extends BaseApplicationActivity implements IListDialog
 	@Override
 	public void onDestroy() {
 		super.onDestroy();
-		VKUIHelper.onDestroy(this);
 		Log.d(TAG, "onDestroy");
 
 		this.setSupportProgressBarIndeterminateVisibility(false);
@@ -450,8 +427,9 @@ public class MainActivity extends BaseApplicationActivity implements IListDialog
             ft.replace(R.id.content_frame, mWatchDogApp, FRG_TAG_WAT);
         }
 		else if (mActiveMenuId.equals(Constants.GUI_MENU_PROFILE)){
-			mProfileFrag = new ProfileDetailFragment();
-			ft.replace(R.id.content_frame, mProfileFrag, FRG_TAG_PRF);
+			Intent intent = new Intent(this, ProfileDetailActivity.class);
+			mActiveMenuId = null;
+			startActivity(intent);
 		}
 		ft.commitAllowingStateLoss();
 

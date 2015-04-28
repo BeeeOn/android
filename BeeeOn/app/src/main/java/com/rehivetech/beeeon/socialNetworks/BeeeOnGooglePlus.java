@@ -1,9 +1,9 @@
 package com.rehivetech.beeeon.socialNetworks;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
-import android.support.v4.app.FragmentActivity;
 
 import com.google.android.gms.plus.PlusShare;
 import com.rehivetech.beeeon.controller.Controller;
@@ -38,7 +38,7 @@ public class BeeeOnGooglePlus implements BeeeOnSocialNetwork {
 	}
 
 	@Override
-	public void logIn(FragmentActivity activity) {
+	public void logIn(Activity activity) {
 	}
 	@Override
 	public void logOut() {
