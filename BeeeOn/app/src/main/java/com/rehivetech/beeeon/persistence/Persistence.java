@@ -110,14 +110,26 @@ public class Persistence {
 
 		settings.apply();
 	}
-	
+
+	/**
+	 * Tries to get external cache dir and if it fails, then returns internal cache dir.
+	 * @return File representing cache dir
+	 */
+	private File getCacheDir() {
+		File dir = mContext.getExternalCacheDir();
+		if (dir == null) {
+			// If there is not present external sdcard, use internal one
+			dir = mContext.getCacheDir();
+		}
+		return dir;
+	}
+
 	private void saveBitmap(Bitmap picture, String filename) {
-		File file = new File(mContext.getExternalCacheDir(), filename + ".jpg");
-		
 		OutputStream os = null;
 		try {
+			File file = new File(getCacheDir(), filename + ".jpg");
 			os = new FileOutputStream(file);
-			picture.compress(Bitmap.CompressFormat.JPEG, 95, os);
+			picture.compress(Bitmap.CompressFormat.JPEG, 90, os);
 			os.flush();
 			os.close();
 		} catch (IOException e) {
@@ -131,7 +143,7 @@ public class Persistence {
 	}
 	
 	private Bitmap loadBitmap(String filename) {
-		File file = new File(mContext.getExternalCacheDir(), filename + ".jpg");
+		File file = new File(getCacheDir(), filename + ".jpg");
 		return BitmapFactory.decodeFile(file.getAbsolutePath());
 	}
 
