@@ -4,7 +4,7 @@
 package com.rehivetech.beeeon.household.device;
 
 import com.rehivetech.beeeon.IIdentifier;
-import com.rehivetech.beeeon.NameIdentifierComparator;
+import com.rehivetech.beeeon.IdentifierComparator;
 import com.rehivetech.beeeon.household.location.Location;
 
 import org.joda.time.DateTime;
@@ -261,8 +261,8 @@ public class Facility implements IIdentifier {
 	public List<Device> getDevices() {
 		if (!mSorted) {
 			mSorted = true;
-			// Sort devices by id (= by type)
-			Collections.sort(mDevices, new NameIdentifierComparator());
+			// Sort devices by offset (= by id, which is combined from mac address + raw type, where type is type id + offset)
+			Collections.sort(mDevices, new IdentifierComparator());
 		}
 
 		return mDevices;
