@@ -749,6 +749,6 @@ public class DemoNetwork implements INetwork {
 
 	@Override
 	public boolean deleteGate(String gateId) {
-		return true;
+		return mGates.removeObject(gateId) != null;
 	}
 }

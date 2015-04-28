@@ -87,17 +87,14 @@ public class GatesModel extends BaseModel {
 	}
 
 	/**
-	 * FIXME: debug implementation Unregisters gate from server -> rework it when implemented in Network correctly.
-	 * <p/>
 	 * This CAN'T be called on UI thread!
 	 *
-	 * @param id
+	 * @param gateId
 	 * @return true on success, false otherwise
 	 */
-	public boolean unregisterGate(String id, User user) {
-		// FIXME: This debug implementation unregisters actual user from gate, not gate itself
-		if (mNetwork.deleteAccount(id, user)) {
-			reloadGates(true); // TODO: do this somehow better? Like load data only for this registered gate as answer from server?
+	public boolean unregisterGate(String gateId) {
+		if (mNetwork.deleteGate(gateId)) {
+			reloadGates(true); // TODO: do this somehow better? Like load data only for this registered adapter as answer from server?
 			return true;
 		}
 
