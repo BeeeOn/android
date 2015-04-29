@@ -80,37 +80,20 @@ public class WatchDogListFragment extends Fragment{
         if (!(mActivity instanceof MainActivity)) {
             throw new IllegalStateException("Activity holding SensorListFragment must be MainActivity");
         }
-        mController = Controller.getInstance(mActivity);
 
         if (savedInstanceState != null) {
             mActiveAdapterId = savedInstanceState.getString(ADAPTER_ID);
         }
-        else{
-			Adapter adapter = mController.getActiveAdapter();
-			if(adapter == null)
-				return;
-            mActiveAdapterId = adapter.getId();
-        }
     }
 
-    /**
-     * When view created, get rules, redraw gui
-     * @param inflater
-     * @param container
-     * @param savedInstanceState
-     * @return View
-     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
         mView = inflater.inflate(R.layout.fragment_watchdog, container, false);
-        mProgressBar = (ProgressBar) mActivity.findViewById(R.id.toolbar_progress);
-        initLayout();
-        redrawRules();
         return mView;
     }
 
     /**
-     * Init swipe-refreshing
+     * Init layout
      * @param savedInstanceState
      */
     @Override
@@ -118,8 +101,12 @@ public class WatchDogListFragment extends Fragment{
         super.onActivityCreated(savedInstanceState);
         Log.d(TAG, "onActivityCreated()");
 
-        // Init swipe-refreshig layout
+        mProgressBar = (ProgressBar) mActivity.findViewById(R.id.toolbar_progress);
         mSwipeLayout = (SwipeRefreshLayout) mActivity.findViewById(R.id.swipe_container);
+
+        initLayout();
+
+        // Init swipe-refreshig layout
         if (mSwipeLayout == null) {
             return;
         }
@@ -132,9 +119,6 @@ public class WatchDogListFragment extends Fragment{
         });
 
         mSwipeLayout.setColorSchemeColors(R.color.beeeon_primary_cyan, R.color.beeeon_text_color, R.color.beeeon_secundary_pink);
-
-        // if we don't have any data first time, try to reload
-        doReloadWatchDogsTask(mActiveAdapterId, false);
     }
 
     private void refreshListListener() {
@@ -143,7 +127,25 @@ public class WatchDogListFragment extends Fragment{
             mSwipeLayout.setRefreshing(false);
             return;
         }
-        doReloadWatchDogsTask(adapter.getId(), true);
+        doReloadWatchDogsTask(adapter.getId(), true, true);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        mController = Controller.getInstance(mActivity);
+
+        if(mActiveAdapterId == null){
+            Adapter adapter = mController.getActiveAdapter();
+            if(adapter == null)
+                return;
+            mActiveAdapterId = adapter.getId();
+        }
+
+        // if we don't have any data first time shows button to refresh
+        redrawRules();
+        // try to reload data
+        doReloadWatchDogsTask(mActiveAdapterId, false, false);
     }
 
     /**
@@ -283,7 +285,7 @@ public class WatchDogListFragment extends Fragment{
             }
         }
         else{
-            mRefreshBtn.setVisibility(View.VISIBLE);
+            mRefreshBtn.setVisibility(View.GONE);
             mWatchDogListView.setVisibility(View.VISIBLE);
             if (mSwipeLayout != null) {
                 mSwipeLayout.setVisibility(View.VISIBLE);
@@ -324,7 +326,7 @@ public class WatchDogListFragment extends Fragment{
      * Async task for reloading fresh watchdog data
      * @param adapterId
      */
-    public void doReloadWatchDogsTask(String adapterId, boolean forceReload){
+    public void doReloadWatchDogsTask(String adapterId, boolean forceReload, final boolean isSwipeRefresh){
         Log.d(TAG, "reloadWatchDogsTask()");
 
         mReloadWatchDogTask = new ReloadAdapterDataTask(mActivity, forceReload, ReloadAdapterDataTask.ReloadWhat.WATCHDOGS);
@@ -333,10 +335,16 @@ public class WatchDogListFragment extends Fragment{
             @Override
             public void onExecute(boolean success) {
                 redrawRules();
-                mSwipeLayout.setRefreshing(false);
+                if(isSwipeRefresh)
+                    mSwipeLayout.setRefreshing(false);
+                else
+                    mActivity.setBeeeOnProgressBarVisibility(false);
             }
         });
 
+        if(!isSwipeRefresh) {
+            mActivity.setBeeeOnProgressBarVisibility(true);
+        }
         mReloadWatchDogTask.execute(adapterId);
     }
 

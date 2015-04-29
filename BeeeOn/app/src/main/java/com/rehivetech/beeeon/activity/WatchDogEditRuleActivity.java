@@ -242,9 +242,11 @@ public class WatchDogEditRuleActivity extends BaseApplicationActivity {
         }
 
         // geofence areas
-        mSpinnerMultiAdapter.addHeader(getString(R.string.title_activity_map_geofence));
-        for(SimpleGeofence geo : mGeofences){
-            mSpinnerMultiAdapter.addItem(new GeofenceSpinnerItem(geo, geo.getId(), this));
+        if (Utils.isGooglePlayServicesAvailable(this)) {
+            mSpinnerMultiAdapter.addHeader(getString(R.string.title_activity_map_geofence));
+            for (SimpleGeofence geo : mGeofences) {
+                mSpinnerMultiAdapter.addItem(new GeofenceSpinnerItem(geo, geo.getId(), this));
+            }
         }
 
         mIfItemSpinner.setAdapter(mSpinnerMultiAdapter);
@@ -514,7 +516,7 @@ public class WatchDogEditRuleActivity extends BaseApplicationActivity {
                 Toast.makeText(WatchDogEditRuleActivity.this, getResources().getString(success ? R.string.toast_success_save_data : R.string.toast_fail_save_data), Toast.LENGTH_LONG).show();
 
                 // when new rule, close after done
-                if(success && mIsNew) finish();
+                if(success) finish();
             }
         });
 

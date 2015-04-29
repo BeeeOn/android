@@ -128,11 +128,12 @@ public class WatchDogListAdapter extends BaseAdapter {
                 holder.ItemIcon.setImageResource(R.drawable.dev_geofence);
 
                 String geoId = rule.getGeoRegionId();
-                if(!geoId.isEmpty()){
+                if(geoId != null && !geoId.isEmpty()){
                     SimpleGeofence geoArea = mController.getGeofenceModel().getGeofence(mController.getActualUser().getId(), geoId);
                     if(geoArea == null) return convertView;
                     holder.ItemSubLabel.setText(geoArea.getName());
                 }
+
                 break;
         }
 
