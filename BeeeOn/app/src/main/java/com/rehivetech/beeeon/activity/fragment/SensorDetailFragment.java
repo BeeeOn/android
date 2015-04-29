@@ -25,7 +25,7 @@ import com.avast.android.dialogs.iface.IListDialogListener;
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.series.BarGraphSeries;
 import com.jjoe64.graphview.series.BaseSeries;
-import com.jjoe64.graphview.series.DataPoint;
+import com.jjoe64.graphview.series.point.DataPoint;
 import com.jjoe64.graphview.series.LineGraphSeries;
 import com.melnykov.fab.FloatingActionButton;
 import com.rehivetech.beeeon.Constants;
@@ -458,6 +458,7 @@ public class SensorDetailFragment extends Fragment implements IListDialogListene
 		if (mDevice.getValue() instanceof BaseEnumValue) {
 			mGraphSeries = new BarGraphSeries<>(new DataPoint[]{new DataPoint(0, 0), new DataPoint(1,1)});
 			((BarGraphSeries) mGraphSeries).setSpacing(30);
+			mGraphView.setDrawPointer(false);
 		} else {
 			mGraphSeries =  new LineGraphSeries<>(new DataPoint[]{new DataPoint(0, 0), new DataPoint(1,1)});
 			((LineGraphSeries)mGraphSeries).setBackgroundColor(getResources().getColor(R.color.alpha_blue));
