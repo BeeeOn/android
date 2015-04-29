@@ -12,7 +12,6 @@ import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.util.Log;
 import com.rehivetech.beeeon.util.TimeHelper;
 import com.rehivetech.beeeon.util.UnitsHelper;
-import com.rehivetech.beeeon.widget.ViewsBuilder;
 
 import org.json.JSONException;
 import org.json.JSONObject;

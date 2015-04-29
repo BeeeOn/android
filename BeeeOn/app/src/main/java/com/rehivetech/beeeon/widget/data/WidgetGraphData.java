@@ -23,6 +23,7 @@ import com.rehivetech.beeeon.util.GraphViewHelper;
 import com.rehivetech.beeeon.util.Log;
 import com.rehivetech.beeeon.util.TimeHelper;
 import com.rehivetech.beeeon.util.UnitsHelper;
+import com.rehivetech.beeeon.widget.persistence.WidgetDevicePersistence;
 import com.rehivetech.beeeon.widget.persistence.WidgetLocationPersistence;
 import com.rehivetech.beeeon.widget.persistence.WidgetLogDataPersistence;
 
@@ -60,8 +61,17 @@ public class WidgetGraphData extends WidgetDeviceData {
 
     public WidgetLocationPersistence widgetLocation;
 
-    public WidgetGraphData(int widgetId, Context context, UnitsHelper unitsHelper, TimeHelper timeHelper){
+    /**
+     * Constructing object holding information about widget (instantiating in config activity and then in service)
+     *
+     * @param widgetId
+     * @param context
+     * @param unitsHelper
+     * @param timeHelper
+     */
+    public WidgetGraphData(int widgetId, Context context, UnitsHelper unitsHelper, TimeHelper timeHelper) {
         super(widgetId, context, unitsHelper, timeHelper);
+
         mGraphWidth = (int) mContext.getResources().getDimension(R.dimen.widget_graph_width);
         mGraphHeight = (int) mContext.getResources().getDimension(R.dimen.widget_graph_height);
 
@@ -70,50 +80,55 @@ public class WidgetGraphData extends WidgetDeviceData {
         widgetLogData = new WidgetLogDataPersistence(mContext, mWidgetId);
     }
 
-    @Override
-    public String getClassName() {
-        return WidgetGraphData.class.getName();
-    }
+    // ----------------------------------------------------------- //
+    // ---------------- MANIPULATING PERSISTENCE ----------------- //
+    // ----------------------------------------------------------- //
 
     @Override
-    public void init() {
-        Log.d(TAG, "init()");
-
-        if(widgetDevice.getId().isEmpty()){
-            Log.i(TAG, "Could not retrieve device from widget " + String.valueOf(mWidgetId));
-            return;
-        }
-
-        String[] ids = widgetDevice.getId().split(Device.ID_SEPARATOR, 2);
-        Facility facility = new Facility();
-        facility.setAdapterId(adapterId);
-        facility.setAddress(ids[0]);
-        facility.setLastUpdate(new DateTime(widgetDevice.lastUpdateTime, DateTimeZone.UTC));
-        facility.setRefresh(RefreshInterval.fromInterval(widgetDevice.refresh));
-
-        Device device = Device.createFromDeviceTypeId(ids[1]);
-        facility.addDevice(device);
-
-        mFacilities.clear();
-        mFacilities.add(facility);
-
-        initGraph(device.getValue());
-    }
-
-    @Override
-    public void load(){
+    public void load() {
         super.load();
         widgetLocation.load();
         widgetLogData.load();
     }
 
     @Override
-    protected void save() {
+    public void init() {
+        Log.d(TAG, "init()");
+
+        mFacilities.clear();
+        for(WidgetDevicePersistence dev : widgetDevices){
+            if(dev.getId().isEmpty()){
+                Log.i(TAG, "Could not retrieve device from widget " + String.valueOf(mWidgetId));
+                continue;
+            }
+
+            String[] ids = dev.getId().split(Device.ID_SEPARATOR, 2);
+            Facility facility = new Facility();
+            facility.setAdapterId(widgetAdapterId);
+            facility.setAddress(ids[0]);
+            facility.setLastUpdate(new DateTime(dev.lastUpdateTime, DateTimeZone.UTC));
+            facility.setRefresh(RefreshInterval.fromInterval(dev.refresh));
+
+            Device device = Device.createFromDeviceTypeId(ids[1]);
+            facility.addDevice(device);
+
+            mFacilities.add(facility);
+            initGraph(device.getValue());
+            createLogDataPair();
+            break;          // only one device possible
+        }
+    }
+
+    @Override
+    public void save() {
         super.save();
         widgetLocation.save();
         widgetLogData.save();
     }
 
+    // ----------------------------------------------------------- //
+    // ------------------------ RENDERING ------------------------ //
+    // ----------------------------------------------------------- //
     /**
      * Initialize graph and series which will be used base ond device type
      * @param baseValue
@@ -122,7 +137,7 @@ public class WidgetGraphData extends WidgetDeviceData {
         if(mTimeHelper == null || mUnitsHelper == null) return;
         Log.d(TAG, "prepareWidgetGraphView");
 
-        Adapter adapter = mController.getAdaptersModel().getAdapter(adapterId);
+        Adapter adapter = mController.getAdaptersModel().getAdapter(widgetAdapterId);
         final DateTimeFormatter fmt = mTimeHelper.getFormatter(mGraphDateTimeFormat, adapter);
         GraphViewHelper.prepareWidgetGraphView(mGraph, mContext, baseValue, fmt, mUnitsHelper);
 
@@ -145,24 +160,14 @@ public class WidgetGraphData extends WidgetDeviceData {
     }
 
     @Override
-    public List<Object> getReferredObj() {
-        List<Object> resultObj = new ArrayList<>();
+    protected void renderLayout() {
+        super.renderLayout();
 
-        // first add parent objects (facilities)
-        resultObj.addAll(super.getReferredObj());
-
-        // then from this widget
-        resultObj.add(mLogDataPair);
-
-        return resultObj;
-    }
-
-    @Override
-    public void initLayout() {
-        super.initLayout();
         widgetLocation.initView();
+        widgetLocation.renderView(mBuilder);
 
-        createLogDataPair();
+        Log.d(TAG, String.format("Graph: %d %d, is NUll = %b", mGraphWidth, mGraphHeight, mGraphBitmap == null));
+        if(mGraphBitmap != null) mBuilder.setImage(R.id.widget_graph, mGraphBitmap);
     }
 
     /**
@@ -173,52 +178,11 @@ public class WidgetGraphData extends WidgetDeviceData {
         if(fac == null) return;
 
         mLogDataPair = new LogDataPair(
-                fac.getDevices().get(0),
-                new Interval(widgetLogData.intervalStart, DateTime.now(DateTimeZone.UTC).getMillis()),
-                DeviceLog.DataType.fromValue(widgetLogData.type),
-                DeviceLog.DataInterval.fromValue(widgetLogData.gap)
+            fac.getDevices().get(0),
+            new Interval(widgetLogData.intervalStart, DateTime.now(DateTimeZone.UTC).getMillis()),
+            DeviceLog.DataType.fromValue(widgetLogData.type),
+            DeviceLog.DataInterval.fromValue(widgetLogData.gap)
         );
-    }
-
-    @Override
-    protected boolean updateData() {
-        Device device = mController.getFacilitiesModel().getDevice(adapterId, widgetDevice.getId());
-        if(device == null){
-            Log.v(TAG, String.format("Updating widget (%d) with cached data", getWidgetId()));
-            return false;
-        }
-
-        Adapter adapter = mController.getAdaptersModel().getAdapter(adapterId);
-        widgetDevice.configure(device, adapter);
-
-        Location location = mController.getLocationsModel().getLocation(adapterId, device.getFacility().getLocationId());
-        if(location != null){
-            widgetLocation.configure(location, adapter);
-        }
-
-        widgetLastUpdate = getTimeNow();
-        adapterId = adapter.getId();
-
-        DeviceLog log = mController.getDeviceLogsModel().getDeviceLog(mLogDataPair);
-        if(log != null) {
-            mGraphBitmap = mGraph.drawBitmap(mGraphWidth, mGraphHeight);
-            fillGraph(log);
-            widgetLogData.intervalStart = DateTime.now(DateTimeZone.UTC).minusWeeks(1).getMillis();
-        }
-
-        this.save();
-        Log.v(TAG, String.format("Updating widget (%d) with fresh data", getWidgetId()));
-        return true;
-    }
-
-    @Override
-    protected void renderLayout() {
-        super.renderLayout();
-
-        widgetLocation.renderView(mBuilder);
-
-        Log.d(TAG, String.format("Graph: %d %d, is NUll = %b", mGraphWidth, mGraphHeight, mGraphBitmap == null));
-        if(mGraphBitmap != null) mBuilder.setImage(R.id.widget_graph, mGraphBitmap);
     }
 
     /**
@@ -257,9 +221,78 @@ public class WidgetGraphData extends WidgetDeviceData {
         }
     }
 
+    // ----------------------------------------------------------- //
+    // ---------------------- FAKE HANDLERS ---------------------- //
+    // ----------------------------------------------------------- //
+
+    @Override
+    public boolean handleUpdateData() {
+        int updated = 0;
+        Adapter adapter = mController.getAdaptersModel().getAdapter(widgetAdapterId);
+        if(adapter == null) return false;
+
+        for(WidgetDevicePersistence dev : widgetDevices) {
+            Device device = mController.getFacilitiesModel().getDevice(widgetAdapterId, dev.getId());
+            if(device == null) continue;
+
+            Location location = mController.getLocationsModel().getLocation(dev.adapterId, device.getFacility().getLocationId());
+            if(location != null){
+                widgetLocation.configure(location, adapter);
+            }
+
+            dev.configure(device, adapter);
+            updated++;
+        }
+
+        if(updated > 0) {
+            // update last update to "now"
+            widgetLastUpdate = getTimeNow();
+            widgetAdapterId = adapter.getId();
+
+            DeviceLog log = mController.getDeviceLogsModel().getDeviceLog(mLogDataPair);
+            if(log != null) {
+                mGraphBitmap = mGraph.drawBitmap(mGraphWidth, mGraphHeight);
+                fillGraph(log);
+                widgetLogData.intervalStart = DateTime.now(DateTimeZone.UTC).minusWeeks(1).getMillis();
+            }
+
+            createLogDataPair();
+            // Save fresh data
+            this.save();
+            Log.v(TAG, String.format("Updating widget (%d) with fresh data", getWidgetId()));
+        }
+        else {
+            // TODO show some kind of icon
+            Log.v(TAG, String.format("Updating widget (%d) with cached data", getWidgetId()));
+        }
+
+        return updated > 0;
+    }
+
     @Override
     public void handleResize(int minWidth, int minHeight) {
         // NO Operation -> just to override devices resizing
         // TODO make graph bigger based on minWidth ?
+    }
+
+    // ----------------------------------------------------------- //
+    // ------------------------- GETTERS ------------------------- //
+    // ----------------------------------------------------------- //
+    @Override
+    public List<Object> getObjectsToReload() {
+        List<Object> resultObj = new ArrayList<>();
+
+        // first add parent objects (facilities)
+        resultObj.addAll(super.getObjectsToReload());
+
+        // then from this widget
+        resultObj.add(mLogDataPair);
+
+        return resultObj;
+    }
+
+    @Override
+    public String getClassName() {
+        return WidgetGraphData.class.getName();
     }
 }

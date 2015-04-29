@@ -193,7 +193,7 @@ public abstract class WidgetConfigurationFragment extends Fragment {
 	protected void onFragmentResume(){
 		mGeneralWidgetdata.load();
 
-		int selectedAdapterIndex = selectAdapter(mGeneralWidgetdata.adapterId);
+		int selectedAdapterIndex = selectAdapter(mGeneralWidgetdata.widgetAdapterId);
 		if(selectedAdapterIndex == mAdapterSpinner.getSelectedItemPosition()){
 			doChangeAdapter(mActiveAdapter.getId(), ReloadAdapterDataTask.ReloadWhat.FACILITIES);
 		}

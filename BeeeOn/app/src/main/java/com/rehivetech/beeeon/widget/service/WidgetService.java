@@ -20,7 +20,6 @@ import com.rehivetech.beeeon.asynctask.CallbackTask;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.exception.AppException;
 import com.rehivetech.beeeon.exception.ErrorCode;
-import com.rehivetech.beeeon.exception.NetworkError;
 import com.rehivetech.beeeon.household.device.Device;
 import com.rehivetech.beeeon.household.device.Facility;
 import com.rehivetech.beeeon.household.device.RefreshInterval;
@@ -34,14 +33,13 @@ import com.rehivetech.beeeon.util.UnitsHelper;
 import com.rehivetech.beeeon.util.Utils;
 import com.rehivetech.beeeon.widget.data.WidgetClockData;
 import com.rehivetech.beeeon.widget.data.WidgetData;
-import com.rehivetech.beeeon.widget.data.WidgetGraphData;
 import com.rehivetech.beeeon.widget.persistence.WidgetDevicePersistence;
+import com.rehivetech.beeeon.widget.persistence.WidgetWeatherPersistence;
 import com.rehivetech.beeeon.widget.receivers.WidgetClockProvider;
 import com.rehivetech.beeeon.widget.receivers.WidgetDeviceProvider;
 import com.rehivetech.beeeon.widget.receivers.WidgetDeviceProviderLarge;
 import com.rehivetech.beeeon.widget.receivers.WidgetDeviceProviderMedium;
 import com.rehivetech.beeeon.widget.receivers.WidgetGraphProvider;
-import com.rehivetech.beeeon.widget.receivers.WidgetLocationListProvider;
 import com.rehivetech.beeeon.widget.receivers.WidgetProvider;
 
 import org.json.JSONObject;
@@ -82,19 +80,16 @@ public class WidgetService extends Service {
     // TODO maybe make as static and public method for getting only "now" available widgets
     private SparseArray<WidgetData> mAvailableWidgets = new SparseArray<>();
 
+    // managing variables
+    private UnitsHelper mUnitsHelper;
     private Context mContext;
     private Controller mController;
-    private AppWidgetManager mAppWidgetManager;
-    // helpers
-    private UnitsHelper mUnitsHelper;
     private TimeHelper mTimeHelper;
-
     private Calendar mCalendar;
 
-    private boolean isServiceRunning = false;
 
     // for checking if user is logged in (we presume that for the first time he is)
-    private boolean isLoggedIn = true;
+    private boolean isCached = false;
 
     // -------------------------------------------------------------------- //
     // --------------- Main methods (entry points) of service ------------- //
@@ -161,7 +156,6 @@ public class WidgetService extends Service {
         super.onCreate();
 
         mContext = getApplicationContext();
-        mAppWidgetManager = AppWidgetManager.getInstance(mContext);
         mCalendar = Calendar.getInstance(mContext.getResources().getConfiguration().locale);
 
         // Creates broadcast receiver which bridges broadcasts to appwidgets for handling time and screen
@@ -204,7 +198,7 @@ public class WidgetService extends Service {
 
         if(intent != null) {
             // -------------- get widget Ids
-            appWidgetIds  = intent.getIntArrayExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS);
+            appWidgetIds = intent.getIntArrayExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS);
 
             // -------------- async task for changing widget actor
             boolean isActorChangeRequest = intent.getBooleanExtra(EXTRA_ACTOR_CHANGE_REQUEST, false);
@@ -234,10 +228,27 @@ public class WidgetService extends Service {
                 return START_STICKY;
             }
 
+            // -------------- onAppWidgetOptionsChanged (changing widgetLayout)
+            boolean isChangeLayout = intent.getBooleanExtra(EXTRA_CHANGE_LAYOUT, false);
+            if(isChangeLayout){
+                final int[] widgetIds = appWidgetIds;
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        int layoutMinWidth = intent.getIntExtra(EXTRA_CHANGE_LAYOUT_MIN_WIDTH, 0);
+                        int layoutMinHeight = intent.getIntExtra(EXTRA_CHANGE_LAYOUT_MIN_HEIGHT, 0);
+                        resizeWidget(widgetIds, layoutMinWidth, layoutMinHeight);
+                    }
+                }).start();
+
+                return START_STICKY;
+            }
+
             // -------------- widget deletion
             boolean isDeleteWidget = intent.getBooleanExtra(EXTRA_DELETE_WIDGET, false);
             if(isDeleteWidget){
                 widgetsDelete(appWidgetIds);
+                return START_STICKY;
             }
 
             // -------------- force update
@@ -293,25 +304,19 @@ public class WidgetService extends Service {
         // if there are no widgets passed by intent, try to get all widgets
         if(allWidgetIds == null || allWidgetIds.length == 0) allWidgetIds = getAllIds();
 
-        boolean isShouldReload = false, isChangeLayout = false;
-        int layoutMinWidth = 0, layoutMinHeight = 0;
-
+        boolean isShouldReload = false;
         if(intent != null){
             // -------------- reload widget if necessary
             isShouldReload = intent.getBooleanExtra(EXTRA_WIDGETS_SHOULD_RELOAD, false);
-            // -------------- onAppWidgetOptionsChanged (changing widgetLayout)
-            isChangeLayout = intent.getBooleanExtra(EXTRA_CHANGE_LAYOUT, false);
-            layoutMinWidth = intent.getIntExtra(EXTRA_CHANGE_LAYOUT_MIN_WIDTH, 0);
-            layoutMinHeight = intent.getIntExtra(EXTRA_CHANGE_LAYOUT_MIN_HEIGHT, 0);
         }
 
         long timeNow = SystemClock.elapsedRealtime();
         SparseArray<WidgetData> widgetsToUpdate = new SparseArray<>();
-        List<Object> widgetReferredObjects = new ArrayList<>();
+        List<Object> widgetsObjectsToReload = new ArrayList<>();
 
         // update all widgets
         // NOTE: can't contain any network request !
-        for(int widgetId : allWidgetIds) {
+        for (int widgetId : allWidgetIds) {
             // ziska bud z pole pouzitych dat nebo instanciuje z disku
             WidgetData widgetData = getWidgetData(widgetId);
             if(widgetData == null){
@@ -320,19 +325,7 @@ public class WidgetService extends Service {
             }
 
             // reload data (after configuration and if objects already exists)
-            if(isShouldReload){
-                widgetData.reload();
-            }
-
-            // creates new RemoteViews and sets every pendingIntents etc
-            widgetData.initLayout();
-
-            // updates layout for this widget
-            if(isChangeLayout){
-                widgetData.handleResize(layoutMinWidth, layoutMinHeight);
-                isForceUpdate = true;
-                widgetData.renderAppWidget();
-            }
+            if(isShouldReload) widgetData.reload();
 
             // Ignore uninitialized widgets
             if (!widgetData.widgetInitialized) {
@@ -348,12 +341,7 @@ public class WidgetService extends Service {
 
             // if preparation of widget is successfull, remember this widget
             widgetsToUpdate.put(widgetId, widgetData);
-            widgetReferredObjects.addAll(widgetData.getReferredObj());
-
-            // TODO group it
-            if(widgetData instanceof WidgetClockData){
-                this.updateWeatherData((WidgetClockData) widgetData);
-            }
+            widgetsObjectsToReload.addAll(widgetData.getObjectsToReload());
         }
 
         try{
@@ -363,21 +351,27 @@ public class WidgetService extends Service {
             mController.getAdaptersModel().reloadAdapters(false);
 
             List<Facility> usedFacilities = new ArrayList<>();
+            List<WidgetWeatherPersistence> usedWeatherData = new ArrayList<>();
+
             // check if any objects need to refresh
-            if(!widgetReferredObjects.isEmpty()){
-                for(Object refObj : widgetReferredObjects){
+            if(!widgetsObjectsToReload.isEmpty()){
+                for(Object refObj : widgetsObjectsToReload){
                     if(refObj instanceof Facility){
                         Facility fac = (Facility) refObj;
                         // already there, skip
-                        if(usedFacilities == null || Utils.getFromList(fac.getId(), usedFacilities) != null) continue;
+                        if(Utils.getFromList(fac.getId(), usedFacilities) != null) continue;
                         usedFacilities.add((Facility) refObj);
                     }
                     else if(refObj instanceof Location){
-                         // TODO
+                        Location loc = (Location) refObj;
+                        mController.getLocationsModel().reloadLocationsByAdapter(loc.getAdapterId(), false); // TODO load only necessary locations
                     }
                     else if(refObj instanceof LogDataPair){
                         LogDataPair logPair = (LogDataPair) refObj;
                         mController.getDeviceLogsModel().reloadDeviceLog(logPair);
+                    }
+                    else if(refObj instanceof WidgetWeatherPersistence){
+                        usedWeatherData.add((WidgetWeatherPersistence) refObj);
                     }
                 }
             }
@@ -387,62 +381,80 @@ public class WidgetService extends Service {
                 mController.getFacilitiesModel().refreshFacilities(usedFacilities, isForceUpdate);
             }
 
+            if(!usedWeatherData.isEmpty()){
+                this.updateWeatherData(usedWeatherData);
+            }
+
             for (int i = 0; i < widgetsToUpdate.size(); i++) {
                 WidgetData widgetData = widgetsToUpdate.valueAt(i);
                 // if previous state was logged out
-                if(isLoggedIn == false) widgetData.handleUserLogin();
-                widgetData.update();
+                if(isCached) widgetData.handleUpdateOk();
+                widgetData.handleUpdateData();
             }
 
-            isLoggedIn = true;
+            isCached = false;
 
             mController.endPersistentConnection();
         } catch(AppException e){
             ErrorCode errCode = e.getErrorCode();
             if(errCode != null){
                 Log.e(TAG, e.getSimpleErrorMessage());
-                if(errCode instanceof NetworkError && errCode == NetworkError.SRV_BAD_BT || errCode == NetworkError.CL_INTERNET_CONNECTION){
-                    // TODO rozsirit aj na jine chyby
-                    if(isLoggedIn == true){
-                        // for all widgets put to "logout" state
-                        for(int i = 0; i < mAvailableWidgets.size(); i++) {
-                            WidgetData widgetData = mAvailableWidgets.valueAt(i);
-                            widgetData.handleUserLogout();
-                        }
+                if(!isCached){
+                    // for all widgets put to "logout" state
+                    for(int i = 0; i < mAvailableWidgets.size(); i++) {
+                        WidgetData widgetData = mAvailableWidgets.valueAt(i);
+                        widgetData.handleUpdateFail();
                     }
-
-                    isLoggedIn = false;
                 }
+
+                isCached = true;
+            }
+        }
+        finally {
+            // we always will render widget -> if not succesfully updated, can show flag or something
+            for(int i = 0; i < mAvailableWidgets.size(); i++) {
+                WidgetData widgetData = mAvailableWidgets.valueAt(i);
+                widgetData.renderWidget();
             }
         }
     }
 
-    private void updateWeatherData(final WidgetClockData widgetData){
-        Log.v(TAG, "updating clock weather....");
-        // TODO should check if city changed
+    /**
+     * Updates all weather persistences
+     * @param weatherDatas
+     */
+    private void updateWeatherData(List<WidgetWeatherPersistence> weatherDatas){
+        for(WidgetWeatherPersistence weather : weatherDatas) {
+            Log.v(TAG, "updating clock weather....");
+            // TODO should check if city changed
+            if (weather.cityName.isEmpty()) continue;
 
-        if(widgetData.weather.cityName.isEmpty()) return;
-
-        new Thread(){
-            public void run(){
-                final JSONObject json = RemoteWeatherFetch.getJSON(mContext, widgetData.weather.cityName);
-                if(json == null){
-                    Log.i(TAG, mContext.getString(R.string.place_not_found));
-                } else {
-                    widgetData.updateWeather(json);
-                    widgetData.renderWeather();
-                    widgetData.renderAppWidget();
-                }
+            JSONObject json = RemoteWeatherFetch.getJSON(mContext, weather.cityName);
+            if (json == null) {
+                Log.i(TAG, mContext.getString(R.string.place_not_found));
+            } else {
+                weather.configure(json, null);
             }
-        }.start();
+        }
     }
 
-    private void updateWidgetsGraphData(WidgetData data){
-        if(!(data instanceof WidgetGraphData)) return;
-            /*
-        WidgetGraphData widgetData = (WidgetGraphData) data;
-        data.getReferredObj()
-                */
+    /**
+     * Handle resizing widget (called from onAppWidgetOptionsChanged)
+     * @param widgetIds         widget Ids which were changed (mostly only 1 widget)
+     * @param layoutMinWidth    new widget width
+     * @param layoutMinHeight   new widget height
+     */
+    private void resizeWidget(int[] widgetIds, int layoutMinWidth, int layoutMinHeight) {
+        // if there are no widgets passed by intent, does nothing
+        if(widgetIds == null || widgetIds.length == 0) return;
+        Log.d(TAG, "resizeWidget()");
+
+        for(int widgetId : widgetIds) {
+            WidgetData widgetData = getWidgetData(widgetId);
+            if (widgetData == null) continue;
+            widgetData.handleResize(layoutMinWidth, layoutMinHeight);
+            widgetData.renderWidget();
+        }
     }
 
     /**
@@ -543,10 +555,11 @@ public class WidgetService extends Service {
 
             // if any actor found, update whole widget
             if(updatedActors > 0){
-                if(perform == UPDATE_LAYOUT)
-                    data.renderAppWidget();
-                else
-                    data.update();
+                if(perform == UPDATE_WHOLE) {
+                    data.handleUpdateData();
+                }
+
+                data.renderWidget();
             }
         }
     }
@@ -620,11 +633,13 @@ public class WidgetService extends Service {
                 // instantiate class from string
                 widgetData = (WidgetData) Class.forName(widgetClassName).getConstructor(int.class, Context.class, UnitsHelper.class, TimeHelper.class).newInstance(widgetId, mContext, mUnitsHelper, mTimeHelper);
                 widgetData.load();
-                // TODO nejak zobecnit?
+                // if its clock widget -> we put instance of calendar inside
                 if(widgetData instanceof WidgetClockData){
-                    ((WidgetClockData) widgetData).injectObject(mCalendar);
+                    widgetData.initAdvanced(mCalendar);
                 }
-                widgetData.init();
+                else {
+                    widgetData.init();
+                }
                 widgetAdd(widgetData);
                 Log.v(TAG, String.format("finished creation of WidgetData(%d)", widgetId));
             } catch (ClassNotFoundException e) {
@@ -694,7 +709,7 @@ public class WidgetService extends Service {
         // clock widget
         ids.addAll(getWidgetIds(WidgetClockProvider.class));
         // location list
-        ids.addAll(getWidgetIds(WidgetLocationListProvider.class));
+        //ids.addAll(getWidgetIds(WidgetLocationListProvider.class));
         // device widget
         ids.addAll(getWidgetIds(WidgetDeviceProvider.class));
         ids.addAll(getWidgetIds(WidgetDeviceProviderMedium.class));
@@ -720,7 +735,7 @@ public class WidgetService extends Service {
         for(Integer clockId : clockIds){
             WidgetData data = mAvailableWidgets.get(clockId);
             if(data == null || !(data instanceof WidgetClockData)) continue;
-            ((WidgetClockData) data).onUpdateClock(mCalendar);
+            ((WidgetClockData) data).handleClockUpdate();
         }
     }
 
@@ -923,9 +938,7 @@ public class WidgetService extends Service {
             Log.d(TAG, "broadcastReceived: " + receivedAction);
 
             // if time was changed (any way), update clock widgets
-            if (receivedAction.equals(Intent.ACTION_TIME_TICK) ||
-                receivedAction.equals(Intent.ACTION_TIME_CHANGED) ||
-                receivedAction.equals(Intent.ACTION_TIMEZONE_CHANGED)){
+            if (receivedAction.equals(Intent.ACTION_TIME_TICK) || receivedAction.equals(Intent.ACTION_TIME_CHANGED) || receivedAction.equals(Intent.ACTION_TIMEZONE_CHANGED)){
                 updateClockWidgets();
             }
             else if(receivedAction.equals(Intent.ACTION_LOCALE_CHANGED)){
