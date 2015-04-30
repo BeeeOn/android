@@ -1,9 +1,6 @@
 package com.rehivetech.beeeon.persistence;
 
-import android.content.Context;
-
 import com.rehivetech.beeeon.NameIdentifierComparator;
-import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.household.location.Location;
 import com.rehivetech.beeeon.network.INetwork;
 import com.rehivetech.beeeon.util.MultipleDataHolder;
@@ -18,17 +15,17 @@ public class LocationsModel {
 	private static final int RELOAD_EVERY_SECONDS = 10 * 60;
 
 	private final INetwork mNetwork;
-	private final Context mContext;
+	private final String mNoLocationName;
 
 	private final MultipleDataHolder<Location> mLocations = new MultipleDataHolder<>(); // adapterId => location dataHolder
 
-	public LocationsModel(INetwork network, Context context) {
+	public LocationsModel(INetwork network, String noLocationName) {
 		mNetwork = network;
-		mContext = context;
+		mNoLocationName = noLocationName;
 	}
 
 	private Location createNoLocation(String adapterId) {
-		return new Location(Location.NO_LOCATION_ID, mContext.getString(R.string.loc_none), adapterId, Location.NO_LOCATION_TYPE);
+		return new Location(Location.NO_LOCATION_ID, mNoLocationName, adapterId, Location.NO_LOCATION_TYPE);
 	}
 
 	/**

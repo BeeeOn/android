@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 
 import com.rehivetech.beeeon.Constants;
+import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.exception.AppException;
 import com.rehivetech.beeeon.household.adapter.Adapter;
 import com.rehivetech.beeeon.household.user.User;
@@ -25,8 +26,6 @@ import com.rehivetech.beeeon.persistence.UsersModel;
 import com.rehivetech.beeeon.persistence.WatchDogsModel;
 import com.rehivetech.beeeon.util.Log;
 import com.rehivetech.beeeon.util.Utils;
-
-import java.util.Map;
 
 /**
  * Core of application (used as singleton), provides methods and access to all data and household.
@@ -107,7 +106,7 @@ public final class Controller {
 
 		// Create models
 		mAdaptersModel = new AdaptersModel(mNetwork);
-		mLocationsModel = new LocationsModel(mNetwork, mContext);
+		mLocationsModel = new LocationsModel(mNetwork, mContext.getString(R.string.loc_none));
 		mFacilitiesModel = new FacilitiesModel(mNetwork);
 		mUninitializedFacilitiesModel = new UninitializedFacilitiesModel(mNetwork);
 		mDeviceLogsModel = new DeviceLogsModel(mNetwork);
