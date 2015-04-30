@@ -372,25 +372,35 @@ public class DemoNetwork implements INetwork {
 			RefreshInterval[] refresh = RefreshInterval.values();
 			facility.setRefresh(refresh[rand.nextInt(refresh.length)]);
 
-			// add device
+			// add random number of devices (max. 5)
 			int count = rand.nextInt(5);
 			do {
-				// Create unique device type
+				// Get random device type
 				DeviceType[] types = DeviceType.values();
-				String typeId = "0";
-				do {
-					// FIXME: cleanup/rework this after demo
-					typeId = String.valueOf(rand.nextInt(types.length));
-				} while (facility.getDeviceByType(DeviceType.fromValue(typeId), 0) != null);
+				DeviceType randType = types[rand.nextInt(types.length)];
+
+				// Determine offset (number of existing devices with this type in the facility)
+				int offset = 0;
+				for (Device device : facility.getDevices()) {
+					if (device.getType() == randType) {
+						offset++;
+					}
+				}
+
+				// Create combined device type
+				String typeId = String.valueOf(offset * 256 + randType.getTypeId());
+
+				// Create default name
+				String defaultName = String.format("%s %d", mContext.getString(randType.getStringResource()), offset + 1);
 
 				Device device = Device.createFromDeviceTypeId(typeId);
 				device.setFacility(facility);
-				// device.setName(name); // uninitialized device has no name
-				setNewValue(device);
+				device.setName(defaultName);
 				device.setVisibility(true);
+				setNewValue(device);
 
 				facility.addDevice(device);
-			} while (--count > 0);
+			} while (--count >= 0);
 
 			// Add new facility to global holder
 			mFacilities.addObject(adapterId, facility);
