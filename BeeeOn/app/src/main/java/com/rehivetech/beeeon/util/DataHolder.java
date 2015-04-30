@@ -94,6 +94,16 @@ public class DataHolder<O extends IIdentifier> {
 	}
 
 	/**
+	 * Checks if map is object with specified id.
+	 *
+	 * @param id
+	 * @return true if object with this id in map exists, or false otherwise.
+	 */
+	public boolean hasObject(String id) {
+		return mObjects.containsKey(id);
+	}
+
+	/**
 	 * Set time of last update of this data.
 	 *
 	 * @param lastUpdate

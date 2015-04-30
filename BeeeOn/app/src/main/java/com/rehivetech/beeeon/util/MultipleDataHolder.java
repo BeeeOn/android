@@ -107,6 +107,21 @@ public class MultipleDataHolder<O extends IIdentifier> {
 	}
 
 	/**
+	 * Checks if underlaying holder has object with specified id.
+	 *
+	 * @param id
+	 * @return true if object with this id in map exists, or false otherwise.
+	 */
+	public boolean hasObject(String holderId, String id) {
+		DataHolder<O> holder = mHolders.get(holderId);
+		if (holder == null) {
+			return false;
+		}
+
+		return holder.hasObject(id);
+	}
+
+	/**
 	 * Set last update of underlaying holder.
 	 *
 	 * @see DataHolder#setLastUpdate(org.joda.time.DateTime)
