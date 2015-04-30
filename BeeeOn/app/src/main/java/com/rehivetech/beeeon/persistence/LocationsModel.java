@@ -4,10 +4,7 @@ import android.content.Context;
 
 import com.rehivetech.beeeon.NameIdentifierComparator;
 import com.rehivetech.beeeon.R;
-import com.rehivetech.beeeon.household.adapter.Adapter;
-import com.rehivetech.beeeon.household.device.Facility;
 import com.rehivetech.beeeon.household.location.Location;
-import com.rehivetech.beeeon.exception.AppException;
 import com.rehivetech.beeeon.network.INetwork;
 
 import org.joda.time.DateTime;
@@ -20,13 +17,12 @@ import java.util.Map;
 
 public class LocationsModel {
 
+	private static final int RELOAD_EVERY_SECONDS = 10 * 60;
+
 	private final INetwork mNetwork;
 	private final Context mContext;
 
-	private final Map<String, Map<String, Location>> mLocations = new HashMap<String, Map<String, Location>>(); // adapterId => (locationId => location)
-	private final Map<String, DateTime> mLastUpdates = new HashMap<String, DateTime>(); // adapterId => lastUpdate of location
-
-	private static final int RELOAD_EVERY_SECONDS = 10 * 60;
+	private final Map<String, DataHolder<Location>> mLocations = new HashMap<>(); // adapterId => location dataHolder
 
 	public LocationsModel(INetwork network, Context context) {
 		mNetwork = network;
@@ -49,12 +45,12 @@ public class LocationsModel {
 			return createNoLocation(adapterId);
 		}
 
-		Map<String, Location> adapterLocations = mLocations.get(adapterId);
+		DataHolder<Location> adapterLocations = mLocations.get(adapterId);
 		if (adapterLocations == null) {
 			return null;
 		}
 
-		return adapterLocations.get(id);
+		return adapterLocations.getObject(id);
 	}
 
 	/**
@@ -63,45 +59,20 @@ public class LocationsModel {
 	 * @return List of locations (or empty list)
 	 */
 	public List<Location> getLocationsByAdapter(String adapterId) {
-		List<Location> locations = new ArrayList<Location>();
-
-		Map<String, Location> adapterLocations = mLocations.get(adapterId);
-		if (adapterLocations != null) {
-			for (Location location : adapterLocations.values()) {
-				locations.add(location);
-			}
+		DataHolder<Location> adapterLocations = mLocations.get(adapterId);
+		if (adapterLocations == null) {
+			return new ArrayList<Location>();
 		}
 
-		// Sort result locations by id
+		List<Location> locations = adapterLocations.getObjects();
+
+		// Sort result locations by name, id
 		Collections.sort(locations, new NameIdentifierComparator());
 
 		// Add "no location" for devices without location
 		locations.add(createNoLocation(adapterId));
 
 		return locations;
-	}
-
-	private void setLocationsByAdapter(String adapterId, List<Location> locations) {
-		Map<String, Location> adapterLocations = mLocations.get(adapterId);
-		if (adapterLocations != null) {
-			adapterLocations.clear();
-		} else {
-			adapterLocations = new HashMap<String, Location>();
-			mLocations.put(adapterId, adapterLocations);
-		}
-
-		for (Location location : locations) {
-			adapterLocations.put(location.getId(), location);
-		}
-	}
-
-	private void setLastUpdate(String adapterId, DateTime lastUpdate) {
-		mLastUpdates.put(adapterId, lastUpdate);
-	}
-
-	private boolean isExpired(String adapterId) {
-		DateTime lastUpdate = mLastUpdates.get(adapterId);
-		return lastUpdate == null || lastUpdate.plusSeconds(RELOAD_EVERY_SECONDS).isBeforeNow();
 	}
 
 	/**
@@ -112,12 +83,19 @@ public class LocationsModel {
 	 * @return
 	 */
 	public synchronized boolean reloadLocationsByAdapter(String adapterId, boolean forceReload) {
-		if (!forceReload && !isExpired(adapterId)) {
+		DataHolder<Location> adapterLocations = mLocations.get(adapterId);
+
+		if (adapterLocations == null) {
+			adapterLocations = new DataHolder<>();
+			mLocations.put(adapterId, adapterLocations);
+		}
+
+		if (!forceReload && !adapterLocations.isExpired(RELOAD_EVERY_SECONDS)) {
 			return false;
 		}
 
-		setLocationsByAdapter(adapterId, mNetwork.getLocations(adapterId));
-		setLastUpdate(adapterId, DateTime.now());
+		adapterLocations.setObjects(mNetwork.getLocations(adapterId));
+		adapterLocations.setLastUpdate(DateTime.now());
 
 		return true;
 	}
@@ -125,13 +103,14 @@ public class LocationsModel {
 	private void updateLocationInMap(Location location) {
 		String adapterId = location.getAdapterId();
 
-		Map<String, Location> adapterLocations = mLocations.get(adapterId);
+		DataHolder<Location> adapterLocations = mLocations.get(adapterId);
+
 		if (adapterLocations == null) {
-			adapterLocations = new HashMap<String, Location>();
+			adapterLocations = new DataHolder<>();
 			mLocations.put(adapterId, adapterLocations);
 		}
 
-		adapterLocations.put(location.getId(), location);
+		adapterLocations.addObject(location);
 	}
 
 	/**
@@ -161,9 +140,9 @@ public class LocationsModel {
 	public boolean deleteLocation(Location location) {
 		if (mNetwork.deleteLocation(location)) {
 			// Location was deleted on server, remove it from map too
-			Map<String, Location> adapterLocations = mLocations.get(location.getAdapterId());
+			DataHolder<Location> adapterLocations = mLocations.get(location.getAdapterId());
 			if (adapterLocations != null)
-				adapterLocations.remove(location.getId());
+				adapterLocations.removeObject(location.getId());
 			return true;
 		}
 

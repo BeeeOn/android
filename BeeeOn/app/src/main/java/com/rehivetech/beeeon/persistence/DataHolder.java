@@ -74,6 +74,26 @@ public class DataHolder<O extends IIdentifier> {
 	}
 
 	/**
+	 * Add object to the map (identified by id).
+	 *
+	 * @param obj
+	 * @return previous object in map with this id, or null if no object existed
+	 */
+	public O addObject(O obj) {
+		return mObjects.put(obj.getId(), obj);
+	}
+
+	/**
+	 * Remove object from the map.
+	 *
+	 * @param id
+	 * @return previous object in map with this id, or null if no object existed
+	 */
+	public O removeObject(String id) {
+		return mObjects.remove(id);
+	}
+
+	/**
 	 * Set time of last update of this data.
 	 *
 	 * @param lastUpdate
