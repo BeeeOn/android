@@ -14,9 +14,7 @@ import org.joda.time.DateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.EnumSet;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class FacilitiesModel {
 
@@ -26,7 +24,7 @@ public class FacilitiesModel {
 	
 	private final INetwork mNetwork;
 
-	private final Map<String, DataHolder<Facility>> mFacilities = new HashMap<>(); // adapterId => facility dataHolder
+	private final MultipleDataHolder<Facility> mFacilities = new MultipleDataHolder<>(); // adapterId => facility dataHolder
 
 	public FacilitiesModel(INetwork network) {
 		mNetwork = network;
@@ -39,12 +37,7 @@ public class FacilitiesModel {
 	 * @return facility or null if no facility is found
 	 */
 	public Facility getFacility(String adapterId, String id) {
-		DataHolder<Facility> adapterFacilities = mFacilities.get(adapterId);
-		if (adapterFacilities == null) {
-			return null;
-		}
-
-		return adapterFacilities.getObject(id);
+		return mFacilities.getObject(adapterId, id);
 	}
 
 	/**
@@ -87,12 +80,7 @@ public class FacilitiesModel {
 	 * @return List of facilities (or empty list)
 	 */
 	public List<Facility> getFacilitiesByAdapter(String adapterId) {
-		DataHolder<Facility> adapterFacilities = mFacilities.get(adapterId);
-		if (adapterFacilities == null) {
-			return new ArrayList<>();
-		}
-
-		List<Facility> facilities = adapterFacilities.getObjects();
+		List<Facility> facilities = mFacilities.getObjects(adapterId);
 
 		// Sort result facilities by id
 		Collections.sort(facilities, new IdentifierComparator());
@@ -126,19 +114,12 @@ public class FacilitiesModel {
 	 * @return
 	 */
 	public synchronized boolean reloadFacilitiesByAdapter(String adapterId, boolean forceReload) throws AppException {
-		DataHolder<Facility> adapterFacilities = mFacilities.get(adapterId);
-
-		if (adapterFacilities == null) {
-			adapterFacilities = new DataHolder<>();
-			mFacilities.put(adapterId, adapterFacilities);
-		}
-
-		if (!forceReload && !adapterFacilities.isExpired(RELOAD_EVERY_SECONDS)) {
+		if (!forceReload && !mFacilities.isExpired(adapterId, RELOAD_EVERY_SECONDS)) {
 			return false;
 		}
 
-		adapterFacilities.setObjects(mNetwork.initAdapter(adapterId));
-		adapterFacilities.setLastUpdate(DateTime.now());
+		mFacilities.setObjects(adapterId, mNetwork.initAdapter(adapterId));
+		mFacilities.setLastUpdate(adapterId, DateTime.now());
 
 		return true;
 	}
@@ -162,23 +143,10 @@ public class FacilitiesModel {
 			return false;
 
 		for (Facility newFacility : newFacilities) {
-			updateFacilityInMap(newFacility);
+			mFacilities.addObject(newFacility.getAdapterId(), newFacility);
 		}
 
 		return true;
-	}
-
-	private void updateFacilityInMap(Facility facility) {
-		String adapterId = facility.getAdapterId();
-
-		DataHolder<Facility> adapterFacilities = mFacilities.get(adapterId);
-
-		if (adapterFacilities == null) {
-			adapterFacilities = new DataHolder<>();
-			mFacilities.put(adapterId, adapterFacilities);
-		}
-
-		adapterFacilities.addObject(facility);
 	}
 
 	/**
@@ -197,7 +165,7 @@ public class FacilitiesModel {
 		if (newFacility == null)
 			return false;
 
-		updateFacilityInMap(facility);
+		mFacilities.addObject(facility.getAdapterId(), facility);
 
 		return true;
 	}
@@ -227,9 +195,7 @@ public class FacilitiesModel {
 	public boolean deleteFacility(Facility facility) throws AppException {
 		if (mNetwork.deleteFacility(facility)) {
 			// Facility was deleted on server, remove it from map too
-			DataHolder<Facility> adapterFacilities = mFacilities.get(facility.getAdapterId());
-			if (adapterFacilities != null)
-				adapterFacilities.removeObject(facility.getId());
+			mFacilities.removeObject(facility.getAdapterId(), facility.getId());
 			return true;
 		}
 
