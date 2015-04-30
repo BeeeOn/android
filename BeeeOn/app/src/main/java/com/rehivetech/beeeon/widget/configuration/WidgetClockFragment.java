@@ -197,9 +197,6 @@ public class WidgetClockFragment extends WidgetConfigurationFragment {
 
 		EditText cityName = (EditText) mActivity.findViewById(R.id.city_name_test);
 		mWidgetData.weather.cityName = cityName.getText().toString();
-
-		mWidgetData.weather.getBitmapIcon(true);
-
 		// TODO ZISKAT DATA ZE SERVERU a zavolat mWidgetData.weather.configure();
 
 		mWidgetData.configure(mActivity.isAppWidgetEditing(), getRefreshSeconds(mWidgetUpdateSeekBar.getProgress()), adapter);

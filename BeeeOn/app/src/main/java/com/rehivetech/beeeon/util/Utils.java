@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -372,7 +373,13 @@ final public class Utils {
 		return null;
 	}
 
-	public static float dpToPx(Context context, float dpValue) {
+	/**
+	 * Converts density independent point to pixel
+	 * @param context
+	 * @param dpValue
+	 * @return
+	 */
+	public static float convertDpToPixel(Context context, float dpValue) {
 		DisplayMetrics metrics = context.getResources().getDisplayMetrics();
 		return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dpValue, metrics);
 	}

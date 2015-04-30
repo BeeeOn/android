@@ -11,11 +11,14 @@ import android.widget.RemoteViews;
 
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.util.Compatibility;
+import com.rehivetech.beeeon.util.Log;
 
 /**
  * Created by Tomáš on 25. 4. 2015.
  */
 public class ViewsBuilder{
+	private static final String TAG = ViewsBuilder.class.getSimpleName();
+
 	private Context mContext;
 	private RemoteViews mRemoteViews;
 
@@ -83,17 +86,13 @@ public class ViewsBuilder{
 		setTextViewTextSize(viewId, dimension);
 	}
 
-	/*
-	public void setTextViewTextSize(int viewId, int dimenResource){
-		//Compatibility.setTextViewTextSize(mContext, mRemoteViews, viewId, unit, size);
-	}
-	//*/
-
 	public void setImage(int viewId, int resourceId){
 		mRemoteViews.setImageViewResource(viewId, resourceId);
 	}
 
 	public void setImage(int viewId, Bitmap bitmap){
+		Log.e(TAG, "bitmap size " + String.valueOf(Compatibility.bitmapGetByteCount(bitmap)) + " bytes");
+
 		mRemoteViews.setImageViewBitmap(viewId, bitmap);
 	}
 

@@ -12,6 +12,7 @@ import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.util.Log;
 import com.rehivetech.beeeon.util.TimeHelper;
 import com.rehivetech.beeeon.util.UnitsHelper;
+import com.rehivetech.beeeon.util.Utils;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -43,7 +44,7 @@ public class WidgetWeatherPersistence extends WidgetPersistence {
 	public Bitmap generatedIcon;
 	private int oldIconResource;
 	private final Rect mIconBounds = new Rect();
-
+	private int oldIconSize;
 
 	public WidgetWeatherPersistence(Context context, int widgetId, UnitsHelper unitsHelper, TimeHelper timeHelper, WidgetSettings settings) {
 		super(context, widgetId, 0, 0, unitsHelper, timeHelper, settings);
@@ -53,18 +54,15 @@ public class WidgetWeatherPersistence extends WidgetPersistence {
 		}
 
 		mResources = mContext.getResources();
-		getBitmapIcon(false);
 	}
 
 
 	/**
 	 * If needed, creates new bitmap of weather
 	 */
-	public Bitmap getBitmapIcon(boolean forceReload){
-		if(generatedIcon == null || forceReload || oldIconResource != iconResource) {
+	public Bitmap getBitmapIcon(boolean forceReload, int size){
+		if(generatedIcon == null || forceReload || oldIconResource != iconResource || oldIconSize != size) {
 			Log.v(TAG, "Generating new weather icon");
-
-			int size = (int) mResources.getDimension(R.dimen.widget_weather_icon);
 
 			Bitmap iconBitmap = Bitmap.createBitmap(size, size, Bitmap.Config.ARGB_4444);
 			Canvas myCanvas = new Canvas(iconBitmap);
@@ -73,7 +71,8 @@ public class WidgetWeatherPersistence extends WidgetPersistence {
 			paint.setSubpixelText(true);
 			paint.setTypeface(sWeatherFont);
 			paint.setStyle(Paint.Style.FILL);
-			paint.setTextSize(mResources.getDimension(R.dimen.widget_textsize_weather_icon));
+			// makes text size little bit smaller then size of the canvas
+			paint.setTextSize(size - ((float) 0.17 * size));
 			paint.setTextAlign(Paint.Align.CENTER);
 			paint.setColor(mResources.getColor(mWidgetSettings.colorPrimary));
 
@@ -84,7 +83,6 @@ public class WidgetWeatherPersistence extends WidgetPersistence {
 			generatedIcon = iconBitmap;
 			oldIconResource = iconResource;
 		}
-
 		return generatedIcon;
 	}
 
@@ -190,7 +188,7 @@ public class WidgetWeatherPersistence extends WidgetPersistence {
 			temperature = String.format("%d %s", (long) main.getDouble("temp"), "℃");
 
 			// generates new bitmap but only IF NEEDED
-			getBitmapIcon(false);
+			getBitmapIcon(false, (int) mContext.getResources().getDimension(R.dimen.widget_weather_icon));
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}

@@ -194,12 +194,11 @@ public class WidgetService extends Service {
         initHelpers(mContext, mController);
 
         boolean isStartUpdating = false, isForceUpdate = false;
-        int[] appWidgetIds = new int[]{};
+
+        // -------------- get widget Ids
+        final int[] appWidgetIds = intent != null ? intent.getIntArrayExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS) : new int[]{};
 
         if(intent != null) {
-            // -------------- get widget Ids
-            appWidgetIds = intent.getIntArrayExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS);
-
             // -------------- async task for changing widget actor
             boolean isActorChangeRequest = intent.getBooleanExtra(EXTRA_ACTOR_CHANGE_REQUEST, false);
             if (isActorChangeRequest) {
@@ -231,13 +230,12 @@ public class WidgetService extends Service {
             // -------------- onAppWidgetOptionsChanged (changing widgetLayout)
             boolean isChangeLayout = intent.getBooleanExtra(EXTRA_CHANGE_LAYOUT, false);
             if(isChangeLayout){
-                final int[] widgetIds = appWidgetIds;
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
                         int layoutMinWidth = intent.getIntExtra(EXTRA_CHANGE_LAYOUT_MIN_WIDTH, 0);
                         int layoutMinHeight = intent.getIntExtra(EXTRA_CHANGE_LAYOUT_MIN_HEIGHT, 0);
-                        resizeWidget(widgetIds, layoutMinWidth, layoutMinHeight);
+                        resizeWidget(appWidgetIds, layoutMinWidth, layoutMinHeight);
                     }
                 }).start();
 
@@ -277,15 +275,14 @@ public class WidgetService extends Service {
         }
 
         final boolean forceUpdating = isForceUpdate;
-        final int[] updatingWidgetIds = appWidgetIds;
 
+        // update widgets
         new Thread(new Runnable() {
             @Override
             public void run() {
-                updateWidgets(intent, forceUpdating, updatingWidgetIds);
+                updateWidgets(intent, forceUpdating, appWidgetIds);
             }
         }).start();
-
         return START_STICKY;
     }
 
@@ -304,18 +301,16 @@ public class WidgetService extends Service {
         // if there are no widgets passed by intent, try to get all widgets
         if(allWidgetIds == null || allWidgetIds.length == 0) allWidgetIds = getAllIds();
 
-        boolean isShouldReload = false;
-        if(intent != null){
-            // -------------- reload widget if necessary
-            isShouldReload = intent.getBooleanExtra(EXTRA_WIDGETS_SHOULD_RELOAD, false);
-        }
+        Log.d(TAG, "WidgetsToUpdate = " + allWidgetIds.length);
+
+        // -------------- reload widget if necessary
+        boolean isShouldReload = intent != null ? intent.getBooleanExtra(EXTRA_WIDGETS_SHOULD_RELOAD, false) : false;
 
         long timeNow = SystemClock.elapsedRealtime();
         SparseArray<WidgetData> widgetsToUpdate = new SparseArray<>();
         List<Object> widgetsObjectsToReload = new ArrayList<>();
 
-        // update all widgets
-        // NOTE: can't contain any network request !
+        // update all widgets ... NOTE: can't contain any network request !
         for (int widgetId : allWidgetIds) {
             // ziska bud z pole pouzitych dat nebo instanciuje z disku
             WidgetData widgetData = getWidgetData(widgetId);

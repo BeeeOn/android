@@ -13,6 +13,7 @@ import com.rehivetech.beeeon.household.location.Location;
 import com.rehivetech.beeeon.util.Log;
 import com.rehivetech.beeeon.util.TimeHelper;
 import com.rehivetech.beeeon.util.UnitsHelper;
+import com.rehivetech.beeeon.util.Utils;
 import com.rehivetech.beeeon.widget.ViewsBuilder;
 import com.rehivetech.beeeon.widget.persistence.WidgetDevicePersistence;
 import com.rehivetech.beeeon.widget.persistence.WidgetWeatherPersistence;
@@ -25,6 +26,7 @@ import org.json.JSONObject;
 import java.text.DateFormatSymbols;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -40,6 +42,9 @@ public class WidgetClockData extends WidgetData {
 
 	private int mClockFont = R.dimen.widget_textsize_clock;
 	private int mWeatherFont = R.dimen.textsize_headline;
+
+	private int mWeatherIconDimension = R.dimen.widget_weather_icon;
+	private boolean mForceReloadWeatherIcon = true;
 
 	/**
 	 * Constructing object holding information about widget (instantiating in config activity and then in service)
@@ -80,6 +85,13 @@ public class WidgetClockData extends WidgetData {
 
 	@Override
 	public void init() {
+
+		// NOTE: if in any case someone calls this instead of initAdvanced()
+		if(mCalendar == null){
+			mCalendar = Calendar.getInstance(mContext.getResources().getConfiguration().locale);
+			mCalendar.setTime(new Date());
+		}
+
 		mFacilities.clear();
 		for(WidgetDevicePersistence dev : widgetDevices){
 			if(dev.getId().isEmpty()){
@@ -97,6 +109,9 @@ public class WidgetClockData extends WidgetData {
 
 			mFacilities.add(facility);
 		}
+
+		// sets icon of weather (even default)
+		weather.getBitmapIcon(mForceReloadWeatherIcon, (int) mContext.getResources().getDimension(mWeatherIconDimension));
 	}
 
 	@Override
@@ -129,9 +144,11 @@ public class WidgetClockData extends WidgetData {
 			case R.layout.widget_clock_3x2:
 				mClockFont = R.dimen.widget_textsize_clock_large;
 				mWeatherFont = R.dimen.textsize_headline;
+				mWeatherIconDimension = R.dimen.widget_weather_icon;
 				break;
 
 			case R.layout.widget_clock_2x2:
+				mWeatherIconDimension = R.dimen.widget_weather_icon_small;
 				mBuilder.setImage(R.id.widget_clock_separator_1, settings.colorPrimary);
 				mBuilder.setImage(R.id.widget_clock_separator_2, settings.colorPrimary);
 				mBuilder.setImage(R.id.widget_clock_separator_3, settings.colorPrimary);
@@ -238,7 +255,6 @@ public class WidgetClockData extends WidgetData {
 		switch (this.widgetLayout){
 			case R.layout.widget_clock_2x2:
 			case R.layout.widget_clock_3x2:
-
 				mBuilder.setTextView(
 						R.id.widget_clock_weather_city,
 						weather.cityName,
@@ -255,7 +271,7 @@ public class WidgetClockData extends WidgetData {
 
 				mBuilder.setTextViewColor(R.id.widget_clock_household_label, settings.colorPrimary);
 
-				mBuilder.setImage(R.id.widget_weather_icon, weather.getBitmapIcon(false));
+				mBuilder.setImage(R.id.widget_weather_icon, weather.getBitmapIcon(false, (int) mContext.getResources().getDimension(mWeatherIconDimension)));
 				break;
 		}
 	}
