@@ -77,7 +77,7 @@ public class DataHolder<O extends IIdentifier> {
 	 * Add object to the map (identified by id).
 	 *
 	 * @param obj
-	 * @return previous object in map with this id, or null if no object existed
+	 * @return previous object in map with this id, or {@code null} if no object existed.
 	 */
 	public O addObject(O obj) {
 		return mObjects.put(obj.getId(), obj);
@@ -87,7 +87,7 @@ public class DataHolder<O extends IIdentifier> {
 	 * Remove object from the map.
 	 *
 	 * @param id
-	 * @return previous object in map with this id, or null if no object existed
+	 * @return previous object in map with this id, or {@code null} if no object existed.
 	 */
 	public O removeObject(String id) {
 		return mObjects.remove(id);
@@ -105,7 +105,7 @@ public class DataHolder<O extends IIdentifier> {
 	/**
 	 * Check if this data was updated at least once.
 	 *
-	 * @return true if time of last update is not null, false otherwise.
+	 * @return true if time of last update is not {@code null}, false otherwise.
 	 */
 	public boolean wasUpdated() {
 		return mLastUpdate != null;
@@ -115,7 +115,7 @@ public class DataHolder<O extends IIdentifier> {
 	 * Check if this data are expired, depending on reload interval.
 	 *
 	 * @param reloadIntervalSeconds
-	 * @return true if time of last update is null or more than specified number of seconds in past, false otherwise.
+	 * @return true if time of last update is {@code null} or more than specified number of seconds in past, false otherwise.
 	 */
 	public boolean isExpired(int reloadIntervalSeconds) {
 		return mLastUpdate == null || mLastUpdate.plusSeconds(reloadIntervalSeconds).isBeforeNow();
