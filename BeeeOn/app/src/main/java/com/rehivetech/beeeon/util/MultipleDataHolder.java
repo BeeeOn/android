@@ -14,6 +14,23 @@ public class MultipleDataHolder<O extends IIdentifier> {
 	private final Map<String, DataHolder<O>> mHolders = new HashMap<>(); // holderId => (objectId => object)
 
 	/**
+	 * Clear underlaying holders.
+	 */
+	public void clear() {
+		mHolders.clear();
+	}
+
+	/**
+	 * Remove underlaying holder by id.
+	 *
+	 * @param holderId
+	 * @return true when holder existed, false otherwise.
+	 */
+	public boolean removeHolder(String holderId) {
+		return mHolders.remove(holderId) != null;
+	}
+
+	/**
 	 * Helper method for returning holder by id, and if not exists, create new holder, put it to map and then return it.
 	 *
 	 * @param holderId

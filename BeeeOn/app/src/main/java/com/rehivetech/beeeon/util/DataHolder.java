@@ -16,6 +16,14 @@ public class DataHolder<O extends IIdentifier> {
 	private DateTime mLastUpdate;
 
 	/**
+	 * Clear internal objects and set last update to null.
+	 */
+	public void clear() {
+		mObjects.clear();
+		mLastUpdate = null;
+	}
+
+	/**
 	 * Return list with all objects.
 	 *
 	 * @return new List (ArrayList used here) with all objects added.
