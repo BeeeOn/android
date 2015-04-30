@@ -695,7 +695,7 @@ public class DemoNetwork implements INetwork {
 	}
 
     @Override
-    public ArrayList<WatchDog> getAllWatchDogs(String adapterID){
+    public List<WatchDog> getAllWatchDogs(String adapterID) {
 		ArrayList<WatchDog> watchdogs = new ArrayList<WatchDog>();
 
 		AdapterHolder holder = mAdapters.get(adapterID);
@@ -709,7 +709,7 @@ public class DemoNetwork implements INetwork {
 	}
 
     @Override
-    public ArrayList<WatchDog> getWatchDogs(ArrayList<String> watchDogIds, String adapterId) {
+    public List<WatchDog> getWatchDogs(ArrayList<String> watchDogIds, String adapterId) {
 		return null;
 	}
 

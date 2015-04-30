@@ -1323,7 +1323,7 @@ public class Network implements INetwork {
 	}
 
 	@Override
-	public ArrayList<WatchDog> getWatchDogs(ArrayList<String> watchDogIds, String adapterId){
+	public List<WatchDog> getWatchDogs(ArrayList<String> watchDogIds, String adapterId){
 		ParsedMessage msg = doRequest(XmlCreator.createGetAlgs(mBT, adapterId, watchDogIds));
 
 		if(msg.getState() == State.ALGORITHMS){
@@ -1334,7 +1334,7 @@ public class Network implements INetwork {
 	}
 
 	@Override
-	public ArrayList<WatchDog> getAllWatchDogs(String adapterID){
+	public List<WatchDog> getAllWatchDogs(String adapterID){
 		ParsedMessage msg = doRequest(XmlCreator.createGetAllAlgs(mBT, adapterID));
 
 		if(msg.getState() == State.ALGORITHMS){
