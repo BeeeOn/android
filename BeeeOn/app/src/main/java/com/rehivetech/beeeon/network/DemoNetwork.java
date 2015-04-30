@@ -34,8 +34,10 @@ import org.joda.time.DateTimeZone;
 
 import java.util.ArrayList;
 import java.util.EnumSet;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 
 /**
@@ -53,6 +55,7 @@ public class DemoNetwork implements INetwork {
 	private User mUser;
 	private String mBT;
 	private boolean mInitialized;
+	private Map<String, Random> mRandoms = new HashMap<>();
 
 	public final DataHolder<Adapter> mAdapters = new DataHolder<>();
 	public final MultipleDataHolder<Location> mLocations = new MultipleDataHolder<>();
@@ -74,12 +77,19 @@ public class DemoNetwork implements INetwork {
 	}
 
 	private Random getRandomForAdapter(String adapterId) {
-		try {
-			int id = Integer.parseInt(adapterId);
-			return new Random(id);
-		} catch (NumberFormatException e) {
-			return new Random();
+		Random random = mRandoms.get(adapterId);
+
+		if (random == null) {
+			try {
+				int id = Integer.parseInt(adapterId);
+				random = new Random(id);
+			} catch (NumberFormatException e) {
+				random = new Random();
+			}
+			mRandoms.put(adapterId, random);
 		}
+
+		return random;
 	}
 
 	private void setNewValue(Device device) {
