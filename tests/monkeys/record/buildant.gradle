@@ -1,0 +1,24 @@
+ant.properties['sdk.dir']="$System.env.ANDROID_HOME"
+ant.properties['target']='android-22'
+ant.properties['out.filename']=project.name+'_tests.jar'
+ant.properties['out.dir']=project.projectDir.toString()+'/bin/'
+ant.properties['source.dir']=project.projectDir.toString()+'/scr/' // Or wherever your tests are
+
+
+
+task uiBuild() << {
+    ant.project.executeTarget('build')
+}
+
+task uiInstall(dependsOn: ['uiBuild']) << {
+    ant.project.executeTarget('install')
+}
+
+task uiRun(dependsOn: ['uiInstall']) << {
+    Process proc = ["adb", "shell", "uiautomator", "runtest", project.name+"_tests.jar", "-e because broken"].execute()
+    proc.consumeProcessErrorStream(System.err)
+    proc.consumeProcessOutputStream(System.out)
+    if (proc.waitFor() != 0) {
+    throw new RuntimeException('exec failed')
+    }
+}
