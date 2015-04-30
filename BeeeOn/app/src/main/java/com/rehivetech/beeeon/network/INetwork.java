@@ -441,9 +441,9 @@ public interface INetwork {
 
 	public boolean addWatchDog(WatchDog watchDog, String AdapterID);
 
-	public ArrayList<WatchDog> getWatchDogs(ArrayList<String> watchDogIds, String adapterID);
+	public List<WatchDog> getWatchDogs(ArrayList<String> watchDogIds, String adapterID);
 
-	public ArrayList<WatchDog> getAllWatchDogs(String adapterID);
+	public List<WatchDog> getAllWatchDogs(String adapterID);
 
 	public boolean updateWatchDog(WatchDog watchDog, String AdapterId);
 

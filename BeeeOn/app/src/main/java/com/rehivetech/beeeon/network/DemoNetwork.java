@@ -3,6 +3,7 @@ package com.rehivetech.beeeon.network;
 import android.content.Context;
 
 import com.rehivetech.beeeon.Constants;
+import com.rehivetech.beeeon.exception.AppException;
 import com.rehivetech.beeeon.household.adapter.Adapter;
 import com.rehivetech.beeeon.household.device.Device;
 import com.rehivetech.beeeon.household.device.Device.SaveDevice;
@@ -15,17 +16,18 @@ import com.rehivetech.beeeon.household.device.RefreshInterval;
 import com.rehivetech.beeeon.household.device.values.BaseEnumValue;
 import com.rehivetech.beeeon.household.device.values.BaseEnumValue.Item;
 import com.rehivetech.beeeon.household.location.Location;
-import com.rehivetech.beeeon.exception.AppException;
 import com.rehivetech.beeeon.household.user.User;
 import com.rehivetech.beeeon.household.user.User.Gender;
 import com.rehivetech.beeeon.household.user.User.Role;
+import com.rehivetech.beeeon.household.watchdog.WatchDog;
 import com.rehivetech.beeeon.network.authentication.IAuthProvider;
 import com.rehivetech.beeeon.network.xml.CustomViewPair;
-import com.rehivetech.beeeon.household.watchdog.WatchDog;
 import com.rehivetech.beeeon.network.xml.XmlParsers;
 import com.rehivetech.beeeon.network.xml.action.ComplexAction;
 import com.rehivetech.beeeon.network.xml.condition.Condition;
 import com.rehivetech.beeeon.pair.LogDataPair;
+import com.rehivetech.beeeon.util.DataHolder;
+import com.rehivetech.beeeon.util.MultipleDataHolder;
 
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
@@ -33,6 +35,7 @@ import org.joda.time.DateTimeZone;
 import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
@@ -52,19 +55,12 @@ public class DemoNetwork implements INetwork {
 	private User mUser;
 	private String mBT;
 	private boolean mInitialized;
+	private Map<String, Random> mRandoms = new HashMap<>();
 
-	private class AdapterHolder {
-		public final Adapter adapter;
-		public final Map<String, Location> locations = new HashMap<String, Location>();
-		public final Map<String, Facility> facilities = new HashMap<String, Facility>();
-		public final Map<String, WatchDog> watchdogs = new HashMap<String, WatchDog>();
-
-		public AdapterHolder(Adapter adapter) {
-			this.adapter = adapter;
-		}
-	}
-
-	Map<String, AdapterHolder> mAdapters = new HashMap<String, AdapterHolder>();
+	public final DataHolder<Adapter> mAdapters = new DataHolder<>();
+	public final MultipleDataHolder<Location> mLocations = new MultipleDataHolder<>();
+	public final MultipleDataHolder<Facility> mFacilities = new MultipleDataHolder<>();
+	public final MultipleDataHolder<WatchDog> mWatchdogs = new MultipleDataHolder<>();
 
 	public DemoNetwork(Context context) {
 		mContext = context;
@@ -81,12 +77,19 @@ public class DemoNetwork implements INetwork {
 	}
 
 	private Random getRandomForAdapter(String adapterId) {
-		try {
-			int id = Integer.parseInt(adapterId);
-			return new Random(id);
-		} catch (NumberFormatException e) {
-			return new Random();
+		Random random = mRandoms.get(adapterId);
+
+		if (random == null) {
+			try {
+				int id = Integer.parseInt(adapterId);
+				random = new Random(id);
+			} catch (NumberFormatException e) {
+				random = new Random();
+			}
+			mRandoms.put(adapterId, random);
 		}
+
+		return random;
 	}
 
 	private void setNewValue(Device device) {
@@ -120,34 +123,34 @@ public class DemoNetwork implements INetwork {
 
 		// Erase previous data if exists
 		mAdapters.clear();
+		mLocations.clear();
+		mFacilities.clear();
+		mWatchdogs.clear();
 
 		// Parse and set initial demo data
 		XmlParsers parser = new XmlParsers();
 
 		String assetName = Constants.ASSET_ADAPTERS_FILENAME;
-		for (Adapter adapter : parser.getDemoAdaptersFromAsset(mContext, assetName)) {
-			mAdapters.put(adapter.getId(), new AdapterHolder(adapter));
-		}
+		mAdapters.setObjects(parser.getDemoAdaptersFromAsset(mContext, assetName));
 
-		for (AdapterHolder holder : mAdapters.values()) {
-			assetName = String.format(Constants.ASSET_LOCATIONS_FILENAME, holder.adapter.getId());
+		for (Adapter adapter : mAdapters.getObjects()) {
+			String adapterId = adapter.getId();
 
-			for (Location location : parser.getDemoLocationsFromAsset(mContext, assetName)) {
-				holder.locations.put(location.getId(), location);
-			}
+			assetName = String.format(Constants.ASSET_LOCATIONS_FILENAME, adapter.getId());
+			mLocations.setObjects(adapterId, parser.getDemoLocationsFromAsset(mContext, assetName));
+			mLocations.setLastUpdate(adapterId, DateTime.now());
 
-			assetName = String.format(Constants.ASSET_WATCHDOGS_FILENAME, holder.adapter.getId());
-			for (WatchDog watchdog : parser.getDemoWatchDogsFromAsset(mContext, assetName)) {
-				holder.watchdogs.put(watchdog.getId(), watchdog);
-			}
+			assetName = String.format(Constants.ASSET_WATCHDOGS_FILENAME, adapter.getId());
+			mWatchdogs.setObjects(adapterId, parser.getDemoWatchDogsFromAsset(mContext, assetName));
+			mWatchdogs.setLastUpdate(adapterId, DateTime.now());
 
-			assetName = String.format(Constants.ASSET_ADAPTER_DATA_FILENAME, holder.adapter.getId());
-			for (Facility facility : parser.getDemoFacilitiesFromAsset(mContext, assetName)) {
-				holder.facilities.put(facility.getId(), facility);
-			}
+			assetName = String.format(Constants.ASSET_ADAPTER_DATA_FILENAME, adapter.getId());
+			mFacilities.setObjects(adapterId, parser.getDemoFacilitiesFromAsset(mContext, assetName));
+			mFacilities.setLastUpdate(adapterId, DateTime.now());
 
 			// Set last update time to time between (-26 hours, now>
-			for (Facility facility : holder.facilities.values()) {
+			for (Facility facility : mFacilities.getObjects(adapterId)) {
+				// FIXME: is using getObjects() ok? It creates new list. But it should be ok, because inner objects are still only references. Needs test!
 				facility.setLastUpdate(DateTime.now(DateTimeZone.UTC).minusSeconds(new Random().nextInt(60 * 60 * 26)));
 			}
 		}
@@ -191,13 +194,19 @@ public class DemoNetwork implements INetwork {
 	}
 
 	@Override
-	public boolean addProvider(IAuthProvider authProvider){return true;}
+	public boolean addProvider(IAuthProvider authProvider) {
+		return true;
+	}
 
 	@Override
-	public boolean removeProvider(String providerName){return true;}
+	public boolean removeProvider(String providerName) {
+		return true;
+	}
 
 	@Override
-	public boolean deleteMyAccount(){return true;}
+	public boolean deleteMyAccount() {
+		return true;
+	}
 
 	@Override
 	public boolean addAdapter(String adapterId, String adapterName) {
@@ -218,7 +227,7 @@ public class DemoNetwork implements INetwork {
 		// Use random offset
 		adapter.setUtcOffset(rand.nextInt(24 * 60) - 12 * 60);
 
-		mAdapters.put(adapter.getId(), new AdapterHolder(adapter));
+		mAdapters.addObject(adapter);
 
 		return true;
 	}
@@ -228,39 +237,34 @@ public class DemoNetwork implements INetwork {
 		// Init demo data, if not initialized yet
 		initDemoData();
 
-		List<Adapter> adapters = new ArrayList<Adapter>();
-
-		for (AdapterHolder holder : mAdapters.values()) {
-			adapters.add(holder.adapter);
-		}
-
-		return adapters;
+		return mAdapters.getObjects();
 	}
 
 	@Override
 	public List<Facility> initAdapter(String adapterId) {
-		List<Facility> facilities = new ArrayList<Facility>();
+		List<Facility> facilities = mFacilities.getObjects(adapterId);
 
-		AdapterHolder holder = mAdapters.get(adapterId);
-		if (holder != null) {
-			Random rand = new Random();
+		Random rand = new Random();
 
-			for (Facility facility : holder.facilities.values()) {
-				if (!facility.isInitialized())
-					continue;
-				
-				if (facility.isExpired()) {
-					// Set new random values
-					facility.setBattery(rand.nextInt(101));
-					facility.setLastUpdate(DateTime.now(DateTimeZone.UTC));
-					facility.setNetworkQuality(rand.nextInt(101));
+		// Update value of expired facilities
+		for (Facility facility : facilities) {
+			if (facility.isExpired()) {
+				// Set new random values
+				facility.setBattery(rand.nextInt(101));
+				facility.setLastUpdate(DateTime.now(DateTimeZone.UTC));
+				facility.setNetworkQuality(rand.nextInt(101));
 
-					for (Device device : facility.getDevices()) {
-						setNewValue(device);
-					}
+				for (Device device : facility.getDevices()) {
+					setNewValue(device);
 				}
+			}
+		}
 
-				facilities.add(facility);
+		// TODO: I think this is not necessary
+		// Remove uninitialized facilities from this list
+		for (Iterator<Facility> it = facilities.iterator(); it.hasNext(); ) {
+			if (!it.next().isInitialized()) {
+				it.remove();
 			}
 		}
 
@@ -302,12 +306,7 @@ public class DemoNetwork implements INetwork {
 
 	@Override
 	public boolean deleteFacility(Facility facility) {
-		AdapterHolder holder = mAdapters.get(facility.getAdapterId());
-		if (holder == null) {
-			return false;
-		}
-
-		return holder.facilities.remove(facility.getId()) != null;
+		return mFacilities.removeObject(facility.getAdapterId(), facility.getId()) != null;
 	}
 
 	@Override
@@ -326,16 +325,11 @@ public class DemoNetwork implements INetwork {
 
 	@Override
 	public Facility getFacility(Facility facility) {
-		AdapterHolder holder = mAdapters.get(facility.getAdapterId());
-		if (holder == null) {
-			return null;
-		}
-		
 		Random rand = new Random();
 
-		Facility newFacility = holder.facilities.get(facility.getId());
+		Facility newFacility = mFacilities.getObject(facility.getAdapterId(), facility.getId());
 
-		if (newFacility.isExpired()) {
+		if (newFacility != null && newFacility.isExpired()) {
 			// Set new random values
 			newFacility.setBattery(rand.nextInt(101));
 			newFacility.setLastUpdate(DateTime.now(DateTimeZone.UTC));
@@ -351,23 +345,17 @@ public class DemoNetwork implements INetwork {
 
 	@Override
 	public boolean updateFacility(String adapterId, Facility facility, EnumSet<SaveDevice> toSave) {
-		AdapterHolder holder = mAdapters.get(adapterId);
-		if (holder == null) {
-			return false;
-		}
-
 		// NOTE: this replaces (or add, in case of initializing new facility) whole facility, not only fields marked as toSave
-		holder.facilities.put(facility.getId(), facility);
+		mFacilities.addObject(adapterId, facility);
 		return true;
 	}
 
 	@Override
 	public List<Facility> getNewFacilities(String adapterId) {
-		List<Facility> facilities = new ArrayList<Facility>();
+		List<Facility> newFacilities = new ArrayList<>();
 
-		AdapterHolder holder = mAdapters.get(adapterId);
-		if (holder == null) {
-			return facilities;
+		if (!mAdapters.hasObject(adapterId)) {
+			return newFacilities;
 		}
 
 		Random rand = new Random();
@@ -381,7 +369,7 @@ public class DemoNetwork implements INetwork {
 			int i = 0;
 			do {
 				address = "10.0.0." + String.valueOf(i++);
-			} while (holder.facilities.containsKey(address));
+			} while (mFacilities.hasObject(adapterId, address));
 
 			facility.setAddress(address);
 			facility.setBattery(rand.nextInt(101));
@@ -394,30 +382,44 @@ public class DemoNetwork implements INetwork {
 			RefreshInterval[] refresh = RefreshInterval.values();
 			facility.setRefresh(refresh[rand.nextInt(refresh.length)]);
 
-			// add device
+			// add random number of devices (max. 5)
 			int count = rand.nextInt(5);
 			do {
-				// Create unique device type
+				// Get random device type
 				DeviceType[] types = DeviceType.values();
-				String typeId = "0";
-				do {
-					// FIXME: cleanup/rework this after demo
-					typeId = String.valueOf(rand.nextInt(types.length));
-				} while (facility.getDeviceByType(DeviceType.fromValue(typeId), 0) != null);
+				DeviceType randType = types[rand.nextInt(types.length)];
+
+				// Determine offset (number of existing devices with this type in the facility)
+				int offset = 0;
+				for (Device device : facility.getDevices()) {
+					if (device.getType() == randType) {
+						offset++;
+					}
+				}
+
+				// Create combined device type
+				String typeId = String.valueOf(offset * 256 + randType.getTypeId());
+
+				// Create default name
+				String defaultName = String.format("%s %d", mContext.getString(randType.getStringResource()), offset + 1);
 
 				Device device = Device.createFromDeviceTypeId(typeId);
 				device.setFacility(facility);
-				// device.setName(name); // uninitialized device has no name
-				setNewValue(device);
+				device.setName(defaultName);
 				device.setVisibility(true);
+				setNewValue(device);
 
 				facility.addDevice(device);
-			} while (--count > 0);
+			} while (--count >= 0);
 
-			facilities.add(facility);
+			// Add new facility to global holder
+			mFacilities.addObject(adapterId, facility);
+
+			// Add to list that we return
+			newFacilities.add(facility);
 		}
 
-		return facilities;
+		return newFacilities;
 	}
 
 	@Override
@@ -471,16 +473,7 @@ public class DemoNetwork implements INetwork {
 
 	@Override
 	public List<Location> getLocations(String adapterId) {
-		List<Location> locations = new ArrayList<Location>();
-
-		AdapterHolder holder = mAdapters.get(adapterId);
-		if (holder != null) {
-			for (Location location : holder.locations.values()) {
-				locations.add(location);
-			}
-		}
-
-		return locations;
+		return mLocations.getObjects(adapterId);
 	}
 
 	@Override
@@ -496,34 +489,27 @@ public class DemoNetwork implements INetwork {
 
 	@Override
 	public boolean updateLocation(Location location) {
-		AdapterHolder holder = mAdapters.get(location.getAdapterId());
-		if (holder == null) {
+		String adapterId = location.getAdapterId();
+
+		if (!mAdapters.hasObject(adapterId)) {
 			return false;
 		}
 
-		if (!holder.locations.containsKey(location.getId())) {
-			return false;
-		}
-
-		// NOTE: this replaces (or add) whole facility, not only fields marked as toSave
-		holder.locations.put(location.getId(), location);
+		// NOTE: this replaces (or add) whole location
+		mLocations.addObject(adapterId, location);
 		return true;
 	}
 
 	@Override
 	public boolean deleteLocation(Location location) {
-		AdapterHolder holder = mAdapters.get(location.getAdapterId());
-		if (holder == null) {
-			return false;
-		}
-
-		return holder.locations.remove(location.getId()) != null;
+		return mLocations.removeObject(location.getAdapterId(), location.getId()) != null;
 	}
 
 	@Override
 	public Location createLocation(Location location) {
-		AdapterHolder holder = mAdapters.get(location.getAdapterId());
-		if (holder == null) {
+		String adapterId = location.getAdapterId();
+
+		if (!mAdapters.hasObject(adapterId)) {
 			return null;
 		}
 
@@ -532,7 +518,7 @@ public class DemoNetwork implements INetwork {
 		int i = 0;
 		do {
 			locationId = String.valueOf(i++);
-		} while (holder.locations.containsKey(locationId));
+		} while (mLocations.hasObject(adapterId, locationId));
 
 		// Set new location id
 		location.setId(locationId);
@@ -585,7 +571,10 @@ public class DemoNetwork implements INetwork {
 	@Override
 	public boolean deleteAccount(String adapterId, User user) {
 		// TODO: Actual implementation deletes adapter, not account...
-		return mAdapters.remove(adapterId) != null;
+		mLocations.removeHolder(adapterId);
+		mFacilities.removeHolder(adapterId);
+		mWatchdogs.removeHolder(adapterId);
+		return mAdapters.removeObject(adapterId) != null;
 	}
 
 	@Override
@@ -614,12 +603,13 @@ public class DemoNetwork implements INetwork {
 
 	@Override
 	public int getTimeZone(String adapterId) {
-		AdapterHolder holder = mAdapters.get(adapterId);
-		if (holder == null) {
+		Adapter adapter = mAdapters.getObject(adapterId);
+
+		if (adapter == null) {
 			return 0;
 		}
 
-		return holder.adapter.getUtcOffsetMillis() / (60 * 1000);
+		return adapter.getUtcOffsetMillis() / (60 * 1000);
 	}
 
 	@Override
@@ -695,54 +685,34 @@ public class DemoNetwork implements INetwork {
 	}
 
     @Override
-    public ArrayList<WatchDog> getAllWatchDogs(String adapterID){
-		ArrayList<WatchDog> watchdogs = new ArrayList<WatchDog>();
-
-		AdapterHolder holder = mAdapters.get(adapterID);
-		if (holder != null) {
-			for (WatchDog watchdog : holder.watchdogs.values()) {
-				watchdogs.add(watchdog);
-			}
-		}
-
-		return watchdogs;
+    public List<WatchDog> getAllWatchDogs(String adapterId) {
+		return mWatchdogs.getObjects(adapterId);
 	}
 
     @Override
-    public ArrayList<WatchDog> getWatchDogs(ArrayList<String> watchDogIds, String adapterId) {
+    public List<WatchDog> getWatchDogs(ArrayList<String> watchDogIds, String adapterId) {
 		return null;
 	}
 
     @Override
-    public boolean updateWatchDog(WatchDog watchDog, String AdapterId){
-		AdapterHolder holder = mAdapters.get(AdapterId);
-		if (holder == null) {
+    public boolean updateWatchDog(WatchDog watchDog, String adapterId) {
+		if (!mAdapters.hasObject(adapterId)) {
 			return false;
 		}
 
-		if (!holder.watchdogs.containsKey(watchDog.getId())) {
-			return false;
-		}
-
-		// NOTE: this replaces (or add) whole watchdog, not only fields marked as toSave
-		holder.watchdogs.put(watchDog.getId(), watchDog);
+		// NOTE: this replaces (or add) whole watchdog
+		mWatchdogs.addObject(adapterId, watchDog);
 		return true;
 	}
 
     @Override
     public boolean deleteWatchDog(WatchDog watchDog){
-		AdapterHolder holder = mAdapters.get(watchDog.getAdapterId());
-		if (holder == null) {
-			return false;
-		}
-
-		return holder.watchdogs.remove(watchDog.getId()) != null;
+		return mWatchdogs.removeObject(watchDog.getAdapterId(), watchDog.getId()) != null;
 	}
 
     @Override
-    public boolean addWatchDog(WatchDog watchDog, String AdapterID){
-		AdapterHolder holder = mAdapters.get(AdapterID);
-		if (holder == null) {
+    public boolean addWatchDog(WatchDog watchDog, String adapterId){
+		if (!mAdapters.hasObject(adapterId)) {
 			return false;
 		}
 
@@ -751,11 +721,11 @@ public class DemoNetwork implements INetwork {
 		int i = 0;
 		do {
 			watchdogId = String.valueOf(i++);
-		} while (holder.watchdogs.containsKey(watchdogId));
+		} while (mWatchdogs.hasObject(adapterId, watchdogId));
 
-		// Set new location id
+		// Set new watchdog id
 		watchDog.setId(watchdogId);
-		holder.watchdogs.put(watchdogId, watchDog);
+		mWatchdogs.addObject(adapterId, watchDog);
 		return true;
 	}
 
@@ -763,4 +733,5 @@ public class DemoNetwork implements INetwork {
     public boolean passBorder(String regionId, String type) {
 		return true;
 	}
+
 }

@@ -8,26 +8,24 @@ import com.rehivetech.beeeon.household.device.DeviceType;
 import com.rehivetech.beeeon.household.device.Facility;
 import com.rehivetech.beeeon.network.INetwork;
 import com.rehivetech.beeeon.util.Log;
+import com.rehivetech.beeeon.util.MultipleDataHolder;
 
 import org.joda.time.DateTime;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.EnumSet;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class FacilitiesModel {
 
 	private static final String TAG = FacilitiesModel.class.getSimpleName();
+
+	private static final int RELOAD_EVERY_SECONDS = 10 * 60;
 	
 	private final INetwork mNetwork;
 
-	private final Map<String, Map<String, Facility>> mFacilities = new HashMap<String, Map<String, Facility>>(); // adapterId => (facilityId => facility)
-	private final Map<String, DateTime> mLastUpdates = new HashMap<String, DateTime>(); // adapterId => lastUpdate of facilities
-
-	private static final int RELOAD_EVERY_SECONDS = 10 * 60;
+	private final MultipleDataHolder<Facility> mFacilities = new MultipleDataHolder<>(); // adapterId => facility dataHolder
 
 	public FacilitiesModel(INetwork network) {
 		mNetwork = network;
@@ -40,12 +38,7 @@ public class FacilitiesModel {
 	 * @return facility or null if no facility is found
 	 */
 	public Facility getFacility(String adapterId, String id) {
-		Map<String, Facility> adapterFacilities = mFacilities.get(adapterId);
-		if (adapterFacilities == null) {
-			return null;
-		}
-
-		return adapterFacilities.get(id);
+		return mFacilities.getObject(adapterId, id);
 	}
 
 	/**
@@ -88,35 +81,12 @@ public class FacilitiesModel {
 	 * @return List of facilities (or empty list)
 	 */
 	public List<Facility> getFacilitiesByAdapter(String adapterId) {
-		List<Facility> facilities = new ArrayList<Facility>();
-
-		Map<String, Facility> adapterFacilities = mFacilities.get(adapterId);
-		if (adapterFacilities != null) {
-			for (Facility facility : adapterFacilities.values()) {
-				if (facility.getAdapterId().equals(adapterId)) {
-					facilities.add(facility);
-				}
-			}
-		}
+		List<Facility> facilities = mFacilities.getObjects(adapterId);
 
 		// Sort result facilities by id
 		Collections.sort(facilities, new IdentifierComparator());
 
 		return facilities;
-	}
-
-	private void setFacilitiesByAdapter(String adapterId, List<Facility> facilities) {
-		Map<String, Facility> adapterFacilities = mFacilities.get(adapterId);
-		if (adapterFacilities != null) {
-			adapterFacilities.clear();
-		} else {
-			adapterFacilities = new HashMap<String, Facility>();
-			mFacilities.put(adapterId, adapterFacilities);
-		}
-
-		for (Facility facility : facilities) {
-			adapterFacilities.put(facility.getId(), facility);
-		}
 	}
 
 	/**
@@ -126,7 +96,7 @@ public class FacilitiesModel {
 	 * @return List of facilities (or empty list)
 	 */
 	public List<Facility> getFacilitiesByLocation(String adapterId, String locationId) {
-		List<Facility> facilities = new ArrayList<Facility>();
+		List<Facility> facilities = new ArrayList<>();
 
 		for (Facility facility : getFacilitiesByAdapter(adapterId)) {
 			if (facility.getLocationId().equals(locationId)) {
@@ -137,15 +107,6 @@ public class FacilitiesModel {
 		return facilities;
 	}
 
-	private void setLastUpdate(String adapterId, DateTime lastUpdate) {
-		mLastUpdates.put(adapterId, lastUpdate);
-	}
-
-	private boolean isExpired(String adapterId) {
-		DateTime lastUpdate = mLastUpdates.get(adapterId);
-		return lastUpdate == null || lastUpdate.plusSeconds(RELOAD_EVERY_SECONDS).isBeforeNow();
-	}
-
 	/**
 	 * This CAN'T be called on UI thread!
 	 *
@@ -154,12 +115,12 @@ public class FacilitiesModel {
 	 * @return
 	 */
 	public synchronized boolean reloadFacilitiesByAdapter(String adapterId, boolean forceReload) throws AppException {
-		if (!forceReload && !isExpired(adapterId)) {
+		if (!forceReload && !mFacilities.isExpired(adapterId, RELOAD_EVERY_SECONDS)) {
 			return false;
 		}
 
-		setFacilitiesByAdapter(adapterId, mNetwork.initAdapter(adapterId));
-		setLastUpdate(adapterId, DateTime.now());
+		mFacilities.setObjects(adapterId, mNetwork.initAdapter(adapterId));
+		mFacilities.setLastUpdate(adapterId, DateTime.now());
 
 		return true;
 	}
@@ -183,22 +144,10 @@ public class FacilitiesModel {
 			return false;
 
 		for (Facility newFacility : newFacilities) {
-			updateFacilityInMap(newFacility);
+			mFacilities.addObject(newFacility.getAdapterId(), newFacility);
 		}
 
 		return true;
-	}
-
-	private void updateFacilityInMap(Facility facility) {
-		String adapterId = facility.getAdapterId();
-
-		Map<String, Facility> adapterFacilities = mFacilities.get(adapterId);
-		if (adapterFacilities == null) {
-			adapterFacilities = new HashMap<String, Facility>();
-			mFacilities.put(adapterId, adapterFacilities);
-		}
-
-		adapterFacilities.put(facility.getId(), facility);
 	}
 
 	/**
@@ -217,7 +166,7 @@ public class FacilitiesModel {
 		if (newFacility == null)
 			return false;
 
-		updateFacilityInMap(facility);
+		mFacilities.addObject(facility.getAdapterId(), facility);
 
 		return true;
 	}
@@ -247,9 +196,7 @@ public class FacilitiesModel {
 	public boolean deleteFacility(Facility facility) throws AppException {
 		if (mNetwork.deleteFacility(facility)) {
 			// Facility was deleted on server, remove it from map too
-			Map<String, Facility> adapterFacilities = mFacilities.get(facility.getAdapterId());
-			if (adapterFacilities != null)
-				adapterFacilities.remove(facility.getId());
+			mFacilities.removeObject(facility.getAdapterId(), facility.getId());
 			return true;
 		}
 

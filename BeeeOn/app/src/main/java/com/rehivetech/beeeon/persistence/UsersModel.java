@@ -1,26 +1,22 @@
 package com.rehivetech.beeeon.persistence;
 
 import com.rehivetech.beeeon.NameIdentifierComparator;
-import com.rehivetech.beeeon.exception.AppException;
 import com.rehivetech.beeeon.household.user.User;
 import com.rehivetech.beeeon.network.INetwork;
+import com.rehivetech.beeeon.util.MultipleDataHolder;
 
 import org.joda.time.DateTime;
 
-import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class UsersModel {
 
+	private static final int RELOAD_EVERY_SECONDS = 10 * 60;
+
 	private final INetwork mNetwork;
 
-	private final Map<String, Map<String, User>> mUsers = new HashMap<String, Map<String, User>>(); // adapterId => (userId => user)
-	private final Map<String, DateTime> mLastUpdates = new HashMap<String, DateTime>(); // adapterId => lastUpdate of users
-
-	private static final int RELOAD_EVERY_SECONDS = 10 * 60;
+	private final MultipleDataHolder<User> mUsers = new MultipleDataHolder<>(); // adapterId => user dataHolder
 
 	public UsersModel(INetwork network) {
 		mNetwork = network;
@@ -33,12 +29,7 @@ public class UsersModel {
 	 * @return User if found, null otherwise.
 	 */
 	public User getUser(String adapterId, String id) {
-		Map<String, User> adapterUsers = mUsers.get(adapterId);
-		if (adapterUsers == null) {
-			return null;
-		}
-
-		return adapterUsers.get(id);
+		return mUsers.getObject(adapterId, id);
 	}
 
 	/**
@@ -47,42 +38,12 @@ public class UsersModel {
 	 * @return List of users (or empty list)
 	 */
 	public List<User> getUsersByAdapter(String adapterId) {
-		List<User> users = new ArrayList<User>();
+		List<User> users = mUsers.getObjects(adapterId);
 
-		Map<String, User> adapterUsers = mUsers.get(adapterId);
-		if (adapterUsers != null) {
-			for (User user : adapterUsers.values()) {
-				users.add(user);
-			}
-		}
-
-		// Sort result users by name+id
+		// Sort result users by name, id
 		Collections.sort(users, new NameIdentifierComparator());
 
 		return users;
-	}
-
-	private void setUsersByAdapter(String adapterId, List<User> users) {
-		Map<String, User> adapterUsers = mUsers.get(adapterId);
-		if (adapterUsers != null) {
-			adapterUsers.clear();
-		} else {
-			adapterUsers = new HashMap<String, User>();
-			mUsers.put(adapterId, adapterUsers);
-		}
-
-		for (User user : users) {
-			adapterUsers.put(user.getId(), user);
-		}
-	}
-
-	private void setLastUpdate(String adapterId, DateTime lastUpdate) {
-		mLastUpdates.put(adapterId, lastUpdate);
-	}
-
-	private boolean isExpired(String adapterId) {
-		DateTime lastUpdate = mLastUpdates.get(adapterId);
-		return lastUpdate == null || lastUpdate.plusSeconds(RELOAD_EVERY_SECONDS).isBeforeNow();
 	}
 
 	/**
@@ -93,24 +54,14 @@ public class UsersModel {
 	 * @return
 	 */
 	public synchronized boolean reloadUsersByAdapter(String adapterId, boolean forceReload) {
-		if (!forceReload && !isExpired(adapterId)) {
+		if (!forceReload && !mUsers.isExpired(adapterId, RELOAD_EVERY_SECONDS)) {
 			return false;
 		}
 
-		setUsersByAdapter(adapterId, mNetwork.getAccounts(adapterId));
-		setLastUpdate(adapterId, DateTime.now());
+		mUsers.setObjects(adapterId, mNetwork.getAccounts(adapterId));
+		mUsers.setLastUpdate(adapterId, DateTime.now());
 
 		return true;
-	}
-
-	private void updateUserInMap(String adapterId, User user) {
-		Map<String, User> adapterUsers = mUsers.get(adapterId);
-		if (adapterUsers == null) {
-			adapterUsers = new HashMap<String, User>();
-			mUsers.put(adapterId, adapterUsers);
-		}
-
-		adapterUsers.put(adapterId, user);
 	}
 
 	/**
@@ -123,7 +74,7 @@ public class UsersModel {
 	public boolean updateUser(String adapterId, User user) {
 		if (mNetwork.updateAccount(adapterId, user)) {
 			// User was updated on server, update it in map too
-			updateUserInMap(adapterId, user);
+			mUsers.addObject(adapterId, user);
 			return true;
 		}
 
@@ -142,9 +93,7 @@ public class UsersModel {
 	public boolean deleteUser(String adapterId, User user) {
 		if (mNetwork.deleteAccount(adapterId, user)) {
 			// Location was deleted on server, remove it from map too
-			Map<String, User> adapterUsers = mUsers.get(adapterId);
-			if (adapterUsers != null)
-				adapterUsers.remove(user.getId());
+			mUsers.removeObject(adapterId, user.getId());
 			return true;
 		}
 
@@ -163,7 +112,7 @@ public class UsersModel {
 	public boolean addUser(String adapterId, User user) {
 		if (mNetwork.addAccount(adapterId, user)) {
 			// User was added to server, update it in map too
-			updateUserInMap(adapterId, user);
+			mUsers.addObject(adapterId, user);
 			return true;
 		}
 
