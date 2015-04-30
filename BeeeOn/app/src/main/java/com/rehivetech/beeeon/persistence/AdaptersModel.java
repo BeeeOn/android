@@ -1,35 +1,36 @@
 package com.rehivetech.beeeon.persistence;
 
 import com.rehivetech.beeeon.NameIdentifierComparator;
-import com.rehivetech.beeeon.household.adapter.Adapter;
 import com.rehivetech.beeeon.exception.AppException;
+import com.rehivetech.beeeon.household.adapter.Adapter;
 import com.rehivetech.beeeon.household.user.User;
 import com.rehivetech.beeeon.network.INetwork;
 
 import org.joda.time.DateTime;
 
-import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class AdaptersModel {
 
+	private static final int RELOAD_EVERY_SECONDS = 10 * 60;
+
 	private final INetwork mNetwork;
 
-	private final Map<String, Adapter> mAdapters = new HashMap<String, Adapter>();
-
-	private DateTime mLastUpdate;
-
-	private static final int RELOAD_EVERY_SECONDS = 10 * 60;
+	private final DataHolder<Adapter> mAdaptersHolder = new DataHolder<>();
 
 	public AdaptersModel(INetwork network) {
 		mNetwork = network;
 	}
 
-	public Map<String, Adapter> getAdaptersMap() {
-		return mAdapters;
+	/**
+	 * Return adapter with specified id or first adapter, if specified one doesn't exists.
+	 *
+	 * @param id
+	 * @return Adapter if found, null otherwise.
+	 */
+	public Adapter getAdapterOrFirst(String id) {
+		return mAdaptersHolder.getObjectOrFirst(id);
 	}
 
 	/**
@@ -38,24 +39,12 @@ public class AdaptersModel {
 	 * @return List of adapters
 	 */
 	public List<Adapter> getAdapters() {
-		List<Adapter> adapters = new ArrayList<Adapter>();
+		List<Adapter> adapters = mAdaptersHolder.getObjects();
 
-		for (Adapter adapter : mAdapters.values()) {
-			adapters.add(adapter);
-		}
-
-		// Sort result adapters by id
+		// Sort result adapters by name, id
 		Collections.sort(adapters, new NameIdentifierComparator());
 
 		return adapters;
-	}
-
-	private void setAdapters(List<Adapter> adapters) {
-		mAdapters.clear();
-
-		for (Adapter adapter : adapters) {
-			mAdapters.put(adapter.getId(), adapter);
-		}
 	}
 
 	/**
@@ -65,15 +54,7 @@ public class AdaptersModel {
 	 * @return Adapter if found, null otherwise
 	 */
 	public Adapter getAdapter(String id) {
-		return mAdapters.get(id);
-	}
-
-	private void setLastUpdate(DateTime lastUpdate) {
-		mLastUpdate = lastUpdate;
-	}
-
-	private boolean isExpired() {
-		return mLastUpdate == null || mLastUpdate.plusSeconds(RELOAD_EVERY_SECONDS).isBeforeNow();
+		return mAdaptersHolder.getObject(id);
 	}
 
 	/**
@@ -131,12 +112,12 @@ public class AdaptersModel {
 	 * @return
 	 */
 	public synchronized boolean reloadAdapters(boolean forceReload) throws AppException {
-		if (!forceReload && !isExpired()) {
+		if (!forceReload && !mAdaptersHolder.isExpired(RELOAD_EVERY_SECONDS)) {
 			return false;
 		}
 
-		setAdapters(mNetwork.getAdapters());
-		setLastUpdate(DateTime.now());
+		mAdaptersHolder.setObjects(mNetwork.getAdapters());
+		mAdaptersHolder.setLastUpdate(DateTime.now());
 
 		return true;
 	}

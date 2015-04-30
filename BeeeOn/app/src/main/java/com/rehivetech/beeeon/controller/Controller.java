@@ -378,15 +378,7 @@ public final class Controller {
 
 			String lastId = (prefs == null) ? "" : prefs.getString(Constants.PERSISTENCE_PREF_ACTIVE_ADAPTER, "");
 
-			Map<String, Adapter> adapters = mAdaptersModel.getAdaptersMap();
-			if (!lastId.isEmpty() && adapters.containsKey(lastId)) {
-				mActiveAdapter = adapters.get(lastId);
-			} else {
-				for (Adapter adapter : adapters.values()) {
-					mActiveAdapter = adapter;
-					break;
-				}
-			}
+			mActiveAdapter = mAdaptersModel.getAdapterOrFirst(lastId);
 
 			if (mActiveAdapter != null && prefs != null)
 				prefs.edit().putString(Constants.PERSISTENCE_PREF_ACTIVE_ADAPTER, mActiveAdapter.getId()).apply();
@@ -413,8 +405,7 @@ public final class Controller {
 		}
 
 		// Find specified adapter
-		Map<String, Adapter> adapters = mAdaptersModel.getAdaptersMap();
-		mActiveAdapter = adapters.get(id);
+		mActiveAdapter = mAdaptersModel.getAdapter(id);
 
 		if (mActiveAdapter == null) {
 			Log.d(TAG, String.format("Can't set active adapter to '%s'", id));
