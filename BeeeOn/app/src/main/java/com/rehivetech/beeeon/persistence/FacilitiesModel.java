@@ -293,7 +293,6 @@ public class FacilitiesModel {
 		Facility facility = device.getFacility();
 
 		mNetwork.switchState(device.getFacility().getAdapterId(), device);
-		mNetwork.updateFacility(facility.getAdapterId(), facility, EnumSet.allOf(SaveDevice.class));
 		refreshFacility(facility, true);
 
 		return true;
