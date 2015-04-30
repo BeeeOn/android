@@ -8,6 +8,7 @@ import com.rehivetech.beeeon.household.device.DeviceType;
 import com.rehivetech.beeeon.household.device.Facility;
 import com.rehivetech.beeeon.network.INetwork;
 import com.rehivetech.beeeon.util.Log;
+import com.rehivetech.beeeon.util.MultipleDataHolder;
 
 import org.joda.time.DateTime;
 

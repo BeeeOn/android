@@ -5,6 +5,7 @@ import com.rehivetech.beeeon.exception.AppException;
 import com.rehivetech.beeeon.household.adapter.Adapter;
 import com.rehivetech.beeeon.household.user.User;
 import com.rehivetech.beeeon.network.INetwork;
+import com.rehivetech.beeeon.util.DataHolder;
 
 import org.joda.time.DateTime;
 
