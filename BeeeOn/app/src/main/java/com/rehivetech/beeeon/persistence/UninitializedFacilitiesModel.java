@@ -1,26 +1,23 @@
 package com.rehivetech.beeeon.persistence;
 
 import com.rehivetech.beeeon.IdentifierComparator;
-import com.rehivetech.beeeon.household.device.Facility;
 import com.rehivetech.beeeon.exception.AppException;
+import com.rehivetech.beeeon.household.device.Facility;
 import com.rehivetech.beeeon.network.INetwork;
+import com.rehivetech.beeeon.util.MultipleDataHolder;
 
 import org.joda.time.DateTime;
 
-import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class UninitializedFacilitiesModel {
 
+	private static final int RELOAD_EVERY_SECONDS = 10 * 60;
+
 	private final INetwork mNetwork;
 
-	private final Map<String, Map<String, Facility>> mFacilities = new HashMap<String, Map<String, Facility>>(); // adapterId => (facilityId => facility)
-	private final Map<String, DateTime> mLastUpdates = new HashMap<String, DateTime>(); // adapterId => lastUpdate of facilities
-
-	private static final int RELOAD_EVERY_SECONDS = 10 * 60;
+	private final MultipleDataHolder<Facility> mUninitializedFacilities = new MultipleDataHolder<>(); // adapterId => facility dataHolder
 
 	public UninitializedFacilitiesModel(INetwork network) {
 		mNetwork = network;
@@ -33,44 +30,12 @@ public class UninitializedFacilitiesModel {
 	 * @return List of uninitialized facilities (or empty list)
 	 */
 	public List<Facility> getUninitializedFacilitiesByAdapter(String adapterId) {
-		List<Facility> facilities = new ArrayList<Facility>();
-
-		Map<String, Facility> adapterFacilities = mFacilities.get(adapterId);
-		if (adapterFacilities != null) {
-			for (Facility facility : adapterFacilities.values()) {
-				if (facility.getAdapterId().equals(adapterId)) {
-					facilities.add(facility);
-				}
-			}
-		}
+		List<Facility> facilities = mUninitializedFacilities.getObjects(adapterId);
 
 		// Sort result facilities by id
 		Collections.sort(facilities, new IdentifierComparator());
 
 		return facilities;
-	}
-
-	private void setUninitializedFacilitiesByAdapter(String adapterId, List<Facility> facilities) {
-		Map<String, Facility> adapterFacilities = mFacilities.get(adapterId);
-		if (adapterFacilities != null) {
-			adapterFacilities.clear();
-		} else {
-			adapterFacilities = new HashMap<String, Facility>();
-			mFacilities.put(adapterId, adapterFacilities);
-		}
-
-		for (Facility facility : facilities) {
-			adapterFacilities.put(facility.getId(), facility);
-		}
-	}
-
-	private void setLastUpdate(String adapterId, DateTime lastUpdate) {
-		mLastUpdates.put(adapterId, lastUpdate);
-	}
-
-	private boolean isExpired(String adapterId) {
-		DateTime lastUpdate = mLastUpdates.get(adapterId);
-		return lastUpdate == null || lastUpdate.plusSeconds(RELOAD_EVERY_SECONDS).isBeforeNow();
 	}
 
 	/**
@@ -81,12 +46,12 @@ public class UninitializedFacilitiesModel {
 	 * @return
 	 */
 	public synchronized boolean reloadUninitializedFacilitiesByAdapter(String adapterId, boolean forceReload) throws AppException {
-		if (!forceReload && !isExpired(adapterId)) {
+		if (!forceReload && !mUninitializedFacilities.isExpired(adapterId, RELOAD_EVERY_SECONDS)) {
 			return false;
 		}
 
-		setUninitializedFacilitiesByAdapter(adapterId, mNetwork.getNewFacilities(adapterId));
-		setLastUpdate(adapterId, DateTime.now());
+		mUninitializedFacilities.setObjects(adapterId, mNetwork.getNewFacilities(adapterId));
+		mUninitializedFacilities.setLastUpdate(adapterId, DateTime.now());
 
 		return true;
 	}
