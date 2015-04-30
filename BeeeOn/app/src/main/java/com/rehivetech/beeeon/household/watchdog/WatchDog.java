@@ -1,6 +1,6 @@
 package com.rehivetech.beeeon.household.watchdog;
 
-import com.rehivetech.beeeon.IIdentifier;
+import com.rehivetech.beeeon.INameIdentifier;
 import com.rehivetech.beeeon.R;
 
 import java.util.ArrayList;
@@ -8,7 +8,7 @@ import java.util.ArrayList;
 /**
  * Created by ThinkDeep on 8.3.2015.
  */
-public class WatchDog implements IIdentifier {
+public class WatchDog implements INameIdentifier {
     public static final int TYPE_SENSOR = 1;
     public static final int TYPE_QUALITY_OF_LIFE = 2; // TODO not sure if usable here (specified on page)
     public static final int TYPE_GEOFENCE = 3;

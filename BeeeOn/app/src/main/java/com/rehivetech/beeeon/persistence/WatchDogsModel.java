@@ -1,28 +1,22 @@
 package com.rehivetech.beeeon.persistence;
 
-import com.rehivetech.beeeon.IdentifierComparator;
-import com.rehivetech.beeeon.exception.AppException;
+import com.rehivetech.beeeon.NameIdentifierComparator;
 import com.rehivetech.beeeon.household.watchdog.WatchDog;
 import com.rehivetech.beeeon.network.INetwork;
+import com.rehivetech.beeeon.util.MultipleDataHolder;
 
 import org.joda.time.DateTime;
 
-import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class WatchDogsModel {
 
-	private static final String TAG = WatchDogsModel.class.getSimpleName();
+	private static final int RELOAD_EVERY_SECONDS = 10 * 60;
 
 	private final INetwork mNetwork;
 
-	private final Map<String, Map<String, WatchDog>> mWatchDogs = new HashMap<String, Map<String, WatchDog>>(); // adapterId => (watchdogId => watchdog)
-	private final Map<String, DateTime> mLastUpdates = new HashMap<String, DateTime>(); // adapterId => lastUpdate of facilities
-
-	private static final int RELOAD_EVERY_SECONDS = 10 * 60;
+	private final MultipleDataHolder<WatchDog> mWatchDogs = new MultipleDataHolder<>(); // adapterId => watchDog dataHolder
 
 	public WatchDogsModel(INetwork network) {
 		mNetwork = network;
@@ -35,12 +29,7 @@ public class WatchDogsModel {
 	 * @return
 	 */
 	public WatchDog getWatchDog(String adapterId, String id) {
-		Map<String, WatchDog> adapterWatchDogs = mWatchDogs.get(adapterId);
-		if (adapterWatchDogs == null) {
-			return null;
-		}
-
-		return adapterWatchDogs.get(id);
+		return mWatchDogs.getObject(adapterId, id);
 	}
 
 	/**
@@ -49,44 +38,12 @@ public class WatchDogsModel {
 	 * @return
 	 */
 	public List<WatchDog> getWatchDogsByAdapter(String adapterId) {
-		List<WatchDog> watchdogs = new ArrayList<WatchDog>();
+		List<WatchDog> watchdogs = mWatchDogs.getObjects(adapterId);
 
-		Map<String, WatchDog> adapterWatchDogs = mWatchDogs.get(adapterId);
-		if (adapterWatchDogs != null) {
-			for (WatchDog watchdog : adapterWatchDogs.values()) {
-				if (watchdog.getAdapterId().equals(adapterId)) {
-					watchdogs.add(watchdog);
-				}
-			}
-		}
-
-		// Sort result facilities by id
-		Collections.sort(watchdogs, new IdentifierComparator());
+		// Sort result facilities by name, id
+		Collections.sort(watchdogs, new NameIdentifierComparator());
 
 		return watchdogs;
-	}
-
-	private void setWatchDogsByAdapter(String adapterId, List<WatchDog> watchdogs) {
-		Map<String, WatchDog> adapterWatchDogs = mWatchDogs.get(adapterId);
-		if (adapterWatchDogs != null) {
-			adapterWatchDogs.clear();
-		} else {
-			adapterWatchDogs = new HashMap<String, WatchDog>();
-			mWatchDogs.put(adapterId, adapterWatchDogs);
-		}
-
-		for (WatchDog watchdog : watchdogs) {
-			adapterWatchDogs.put(watchdog.getId(), watchdog);
-		}
-	}
-
-	private void setLastUpdate(String adapterId, DateTime lastUpdate) {
-		mLastUpdates.put(adapterId, lastUpdate);
-	}
-
-	private boolean isExpired(String adapterId) {
-		DateTime lastUpdate = mLastUpdates.get(adapterId);
-		return lastUpdate == null || lastUpdate.plusSeconds(RELOAD_EVERY_SECONDS).isBeforeNow();
 	}
 
 	/**
@@ -99,26 +56,14 @@ public class WatchDogsModel {
 	 * @return
 	 */
 	public boolean reloadWatchDogsByAdapter(String adapterId, boolean forceReload) {
-		if (!forceReload && !isExpired(adapterId)) {
+		if (!forceReload && !mWatchDogs.isExpired(adapterId, RELOAD_EVERY_SECONDS)) {
 			return false;
 		}
 
-		setWatchDogsByAdapter(adapterId, mNetwork.getAllWatchDogs(adapterId));
-		setLastUpdate(adapterId, DateTime.now());
+		mWatchDogs.setObjects(adapterId, mNetwork.getAllWatchDogs(adapterId));
+		mWatchDogs.setLastUpdate(adapterId, DateTime.now());
 
 		return true;
-	}
-
-	private void updateWatchDogInMap(WatchDog watchdog) {
-		String adapterId = watchdog.getAdapterId();
-
-		Map<String, WatchDog> adapterWatchDogs = mWatchDogs.get(adapterId);
-		if (adapterWatchDogs == null) {
-			adapterWatchDogs = new HashMap<String, WatchDog>();
-			mWatchDogs.put(adapterId, adapterWatchDogs);
-		}
-
-		adapterWatchDogs.put(watchdog.getId(), watchdog);
 	}
 
 	/**
@@ -130,7 +75,7 @@ public class WatchDogsModel {
 	public boolean updateWatchDog(WatchDog watchdog) {
 		if (mNetwork.updateWatchDog(watchdog, watchdog.getAdapterId())) {
 			// Location was updated on server, update it in map too
-			updateWatchDogInMap(watchdog);
+			mWatchDogs.addObject(watchdog.getAdapterId(), watchdog);
 			return true;
 		}
 
@@ -149,10 +94,7 @@ public class WatchDogsModel {
 		// delete from server
 		if (mNetwork.deleteWatchDog(watchdog)) {
 			// watchdog was deleted on server, remove it from adapter too
-			Map<String, WatchDog> adapterWatchDogs = mWatchDogs.get(watchdog.getAdapterId());
-			if (adapterWatchDogs != null)
-				adapterWatchDogs.remove(watchdog.getId());
-
+			mWatchDogs.removeObject(watchdog.getAdapterId(), watchdog.getId());
 			return true;
 		}
 
@@ -166,9 +108,11 @@ public class WatchDogsModel {
 	 * @return
 	 */
 	public boolean addWatchDog(WatchDog watchdog) {
-		if (mNetwork.addWatchDog(watchdog, watchdog.getAdapterId())) {
+		String adapterId = watchdog.getAdapterId();
+
+		if (mNetwork.addWatchDog(watchdog, adapterId)) {
 			// WatchDog was updated on server, update it in map too
-			updateWatchDogInMap(watchdog);
+			mWatchDogs.addObject(adapterId, watchdog);
 			return true;
 		}
 
