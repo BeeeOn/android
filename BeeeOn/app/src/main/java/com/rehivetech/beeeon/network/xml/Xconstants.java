@@ -25,6 +25,7 @@ public class Xconstants {
 	public static final String MSGID = "mid";
 	public static final String GID = "gid";
 	public static final String UID = "uid";
+	public static final String MID = "mid";
 	public static final String NOTIFICATION_NAME = "name";
 	public static final String ALGID = "algid";
 	public static final String RID = "rid";
