@@ -397,6 +397,11 @@ public class XmlParsers {
 
 			mParser.nextTag(); // part tag
 
+			if (!mParser.getName().equals(Xconstants.PART)) { // if there is no device in facility -> error in DB on server
+				Log.e(TAG,"Missing device in facility: " + facility.getId());
+				continue;
+			}
+
 			do { // go through parts (devices)
 				Device device = Device.createFromDeviceTypeId(getSecureAttrValue(Xconstants.TYPE));
 				device.setVisibility(getSecureAttrValue(Xconstants.VISIBILITY).equals(Xconstants.ZERO) ? false : true);
