@@ -6,8 +6,7 @@ import android.content.SharedPreferences;
 import com.facebook.login.LoginResult;
 import com.rehivetech.beeeon.Constants;
 import com.rehivetech.beeeon.controller.Controller;
-import com.rehivetech.beeeon.socialNetworks.Facebook;
-import com.rehivetech.beeeon.util.Log;
+import com.rehivetech.beeeon.socialNetworks.BeeeOnFacebook;
 
 /**
  * @author Jan Lamacz
@@ -21,8 +20,8 @@ public class FbLoginAchievement extends Achievement {
 			Controller controller = Controller.getInstance(context);
 			SharedPreferences prefs = controller.getUserSettings();
 			String token = loginResult.getAccessToken().toString();
-			Facebook.getInstance(context).setToken(token);
-			prefs.edit().putString(Constants.PERSISTANCE_PREF_LOGIN_FACEBOOK,token).apply();
+			BeeeOnFacebook.getInstance(context).setToken(token);
+			prefs.edit().putString(Constants.PERSISTENCE_PREF_LOGIN_FACEBOOK,token).apply();
 			//TODO network
 			show();
 		}

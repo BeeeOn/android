@@ -1,5 +1,6 @@
 package com.rehivetech.beeeon.network;
 
+import com.rehivetech.beeeon.gamification.AchievementListItem;
 import com.rehivetech.beeeon.household.adapter.Adapter;
 import com.rehivetech.beeeon.household.device.Device;
 import com.rehivetech.beeeon.household.device.Device.SaveDevice;
@@ -450,4 +451,8 @@ public interface INetwork {
 	public boolean deleteWatchDog(WatchDog watchDog);
 
 	public boolean passBorder(String regionId, String type);
+
+	public ArrayList<AchievementListItem> getAllAchievements(String adapterID);
+
+	public boolean setProgressLvl(String adapterId, String achievementId);
 }

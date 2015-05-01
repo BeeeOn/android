@@ -15,6 +15,7 @@
     <string name="title_activity_add_adapter_user">Přidat nového uživatele</string>
     <string name="title_activity_setup_sensor">Nastavení zařízení</string>
     <string name="title_activity_achievement_overview">Přehled achievementů</string>
+	<string name="title_activity_profile_detail">Detaily účtu</string>
 
     <!-- Buttons -->
     <string name="login_login">Přihlášení</string>
@@ -133,7 +134,6 @@
     <string name="menu_dashboard">Grafy</string>
     <string name="menu_applications">Aplikace</string>
     <string name="menu_watchdog">Hlídač</string>
-	<string name="menu_profile">Detaily účtu</string>
 
     <!-- Add sensor dialog -->
     <string name="addsensor_sending_request">Posílám párovací požadavek </string>
@@ -323,7 +323,8 @@
 	<string name="share_title">Sdílet tuto událost</string>
 	<string name="downloading_data">Stahuji data &#8230;</string>
 	<string name="logout_success">Odhlášení proběhlo úspěšně</string>
-	<string name="achievement_share_msg"> Odemknul jsem tento nový achievement!</string>
+	<string name="achievement_share_url_name"> BeeeOn Inteligentní domáctnost</string>
+	<string name="achievement_share_msg"> jsem odemknul tento nový achievement!</string>
 
     <!-- WatchDog -->
     <string name="action_watchdog">Hlídač</string>

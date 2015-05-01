@@ -3,6 +3,10 @@
     <string name="blank" translatable="false"></string>
 
 	<string name="facebook_app_id" translatable="false">868028889921254</string>
+	<string name="twitter_app_id" translatable="false">WuuLjLlhpAM4U7ex50wWECO2x</string>
+	<string name="twitter_app_secret" translatable="false">DhvEzUtURDqVGxVoxIaAXEKE6FxT7AfPYVmTDhcy4oXqPfDFlP</string>
+	<string name="vkontakte_app_id" translatable="false">4871815 </string>
+	<string name="vkontakte_app_secret" translatable="false">fyHIwUDHWQUJboI8pW8R</string>
     
     <!-- Titles -->
     <string name="title_activity_location_screen">BeeeOn</string>
@@ -19,6 +23,7 @@
     <string name="title_activity_add_adapter_user">Add New User</string>
     <string name="title_activity_setup_sensor">Device Setup</string>
 	<string name="title_activity_achievement_overview">Achievement overview</string>
+	<string name="title_activity_profile_detail">Account info</string>
 
     <!-- Buttons -->
     <string name="login_login">Login</string>
@@ -139,7 +144,6 @@
     <string name="menu_dashboard">Graphs</string>
     <string name="menu_applications">Applications</string>
     <string name="menu_watchdog">Watchdog</string>
-    <string name="menu_profile">Account info</string>
 
     <!-- Add sensor dialog -->
     <string name="addsensor_sending_request">Sending ... </string>
@@ -334,6 +338,7 @@
 	<string name="downloading_data">Downloading data &#8230;</string>
 	<string name="logout_success">Successfully logged out</string>
 	<string name="achievement_share_msg"> I just unlocked this new achievement!</string>
+	<string name="achievement_share_url_name"> BeeeOn Smart home</string>
 	<string name="achievement_share_url" translatable="false">http://www.beeeon.com</string>
 	<string name="achievement_share_img" translatable="false">http://www.fit.vutbr.cz/images/logo_fit.png</string>
 

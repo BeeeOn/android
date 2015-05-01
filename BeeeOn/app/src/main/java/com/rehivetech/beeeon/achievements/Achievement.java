@@ -7,8 +7,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.rehivetech.beeeon.R;
+import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.gamification.AchievementList;
 import com.rehivetech.beeeon.gamification.AchievementListItem;
+
+import java.util.ResourceBundle;
 
 /**
  * @author Jan Lamacz
@@ -18,12 +21,15 @@ public abstract class Achievement  {
 
 	protected AchievementListItem mData;
 	protected Context mContext;
-	protected String mID;
+	protected String mAchievementId;
+	protected String mAdapterId;
 
-	public Achievement(String id, Context context) {
-		setmID(id);
+	public Achievement(String achievement_id, Context context) {
+		setAchievementId(achievement_id);
+
 		mContext = context;
-		mData = AchievementList.getInstance().getItem(Integer.parseInt(mID));
+		mAdapterId = Controller.getInstance(mContext).getActiveAdapter().getId();
+		mData = AchievementList.getInstance(mContext).getItem(Integer.parseInt(mAchievementId));
 	}
 
 	public void show() {
@@ -41,7 +47,7 @@ public abstract class Achievement  {
 		toast.show();
 	}
 
-	public void setmID(String mID) {this.mID = mID;}
+	public void setAchievementId(String mID) {this.mAchievementId = mID;}
 
 //	public AchievementListItem getAchievementData() {return mData;}
 }

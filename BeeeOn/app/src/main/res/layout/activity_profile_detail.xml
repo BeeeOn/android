@@ -1,64 +1,69 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="vertical"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent">
+			  android:orientation="vertical"
+			  android:layout_width="match_parent"
+			  android:layout_height="match_parent">
 
-  <RelativeLayout
-	  android:id="@+id/profile_user_info"
-    android:layout_width="fill_parent"
-    android:layout_height="50dp"
-	android:layout_margin="10dp">
+	<include
+		android:id="@+id/toolbar"
+		layout="@layout/beeeon_toolbar"/>
 
-    <ImageView
-      android:id="@+id/profile_image"
-      android:layout_alignParentStart="true"
-      android:layout_alignParentLeft="true"
-      android:layout_width="40dp"
-      android:layout_height="40dp"
-      />
+	<RelativeLayout
+		android:id="@+id/profile_user_info"
+		android:layout_below="@+id/toolbar"
+		android:layout_width="fill_parent"
+		android:layout_height="50dp"
+		android:layout_margin="10dp">
 
-    <TextView
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:id="@+id/profile_name"
-      android:textSize="16sp"
-      android:gravity="top"
-      android:textColor="@color/beeeon_text_color"
-      android:layout_alignParentTop="true"
-      android:layout_toRightOf="@+id/profile_image"
-      android:layout_toEndOf="@+id/profile_image"
-      android:layout_marginLeft="10dp"
-      android:layout_marginStart="10dp"
-      />
+		<ImageView
+			android:id="@+id/profile_image"
+			android:layout_alignParentStart="true"
+			android:layout_alignParentLeft="true"
+			android:layout_width="40dp"
+			android:layout_height="40dp"
+			/>
 
-    <TextView
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:id="@+id/profile_detail"
-      android:textSize="14sp"
-      android:textColor="@color/beeeon_text_hint"
-      android:layout_below="@+id/profile_name"
-      android:layout_alignStart="@+id/profile_name"
-      android:layout_alignLeft="@+id/profile_name"
-      />
-	  
-	  <TextView
-		  android:id="@+id/profile_points"
-		  android:layout_width="46dp"
-		  android:layout_height="40dp"
-		  android:textColor="@color/white"
-		  android:textSize="20sp"
-		  android:textStyle="bold"
-		  android:gravity="center"
-		  android:layout_centerHorizontal="true"
-		  android:layout_alignParentRight="true"
-		  android:layout_alignParentEnd="true"
-		  android:layout_marginRight="5dp"
-		  android:layout_marginEnd="5dp"
-		  android:background="@drawable/hexagon_pink"
-		  />
-    </RelativeLayout>
+		<TextView
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:id="@+id/profile_name"
+			android:textSize="16sp"
+			android:gravity="top"
+			android:textColor="@color/beeeon_text_color"
+			android:layout_alignParentTop="true"
+			android:layout_toRightOf="@+id/profile_image"
+			android:layout_toEndOf="@+id/profile_image"
+			android:layout_marginLeft="10dp"
+			android:layout_marginStart="10dp"
+			/>
+
+		<TextView
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:id="@+id/profile_detail"
+			android:textSize="14sp"
+			android:textColor="@color/beeeon_text_hint"
+			android:layout_below="@+id/profile_name"
+			android:layout_alignStart="@+id/profile_name"
+			android:layout_alignLeft="@+id/profile_name"
+			/>
+
+		<TextView
+			android:id="@+id/profile_points"
+			android:layout_width="46dp"
+			android:layout_height="40dp"
+			android:textColor="@color/white"
+			android:textSize="20sp"
+			android:textStyle="bold"
+			android:gravity="center"
+			android:layout_centerHorizontal="true"
+			android:layout_alignParentRight="true"
+			android:layout_alignParentEnd="true"
+			android:layout_marginRight="5dp"
+			android:layout_marginEnd="5dp"
+			android:background="@drawable/hexagon_pink"
+			/>
+	</RelativeLayout>
 
 	<RelativeLayout
 		android:id="@+id/profile_more"
@@ -152,7 +157,7 @@
 					android:layout_centerVertical="true"
 					android:layout_toRightOf="@+id/profile_facebook_image"
 					android:layout_toEndOf="@+id/profile_facebook_image"/>
-				</RelativeLayout>
+			</RelativeLayout>
 
 			<RelativeLayout
 				android:id="@+id/profile_vkontakte"
@@ -216,11 +221,12 @@
 	</RelativeLayout>
 
 	<ListView
-    android:id="@+id/gam_category_list"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-	android:layout_below="@id/profile_more"
-    android:divider="@null"
-    android:dividerHeight="0dp"
-    />
+		android:id="@+id/gam_category_list"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:layout_below="@id/profile_more"
+		android:divider="@null"
+		android:dividerHeight="0dp"
+		/>
+
 </RelativeLayout>

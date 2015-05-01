@@ -7,6 +7,7 @@ import android.content.Context;
 import android.util.Xml;
 
 import com.rehivetech.beeeon.Constants;
+import com.rehivetech.beeeon.gamification.AchievementListItem;
 import com.rehivetech.beeeon.household.adapter.Adapter;
 import com.rehivetech.beeeon.household.watchdog.WatchDog;
 import com.rehivetech.beeeon.household.device.Device;
@@ -87,7 +88,8 @@ public class XmlParsers {
 		BT("bt"),
 		ALGCREATED("algcreated"),
 		USERINFO("userinfo"),
-		ALGORITHMS("algs");
+		ALGORITHMS("algs"),
+		ACHIEVEMENTS("achievements");
 
 		private final String mValue;
 
@@ -256,6 +258,10 @@ public class XmlParsers {
 		case NOTIFICATIONS:
 			// List<Notification>
 			result.data = parseNotifications();
+			break;
+		case ACHIEVEMENTS:
+			// List<AchievementListItem>
+			result.data = parseAchievements();
 			break;
 		default:
 			break;
@@ -922,6 +928,37 @@ public class XmlParsers {
 
 		return result;
 	}
+
+	private ArrayList<AchievementListItem> parseAchievements() throws XmlPullParserException, IOException{
+		String aid = getSecureAttrValue(Xconstants.AID);
+		mParser.nextTag();
+
+		ArrayList<AchievementListItem> result = new ArrayList<>();
+
+		if(!mParser.getName().equals(Xconstants.ACHIEVEMENT))
+			return result;
+
+		do{
+			AchievementListItem item = new AchievementListItem(
+					getSecureAttrValue(Xconstants.ID),
+					getSecureAttrValue(Xconstants.PID),
+					getSecureAttrValue(Xconstants.CATEGORY),
+					getSecureInt(getSecureAttrValue(Xconstants.POINTS)),
+					getSecureInt(getSecureAttrValue(Xconstants.TOTAL_PROGRESS)),
+					getSecureInt(getSecureAttrValue(Xconstants.CURRENT_PROGRESS)),
+					getSecureAttrValue(Xconstants.RANGE));
+
+			item.setAid(aid);
+			result.add(item);
+
+			mParser.nextTag();
+
+		}while(mParser.nextTag() != XmlPullParser.END_TAG && !mParser.getName().equals(Xconstants.COM_ROOT));
+
+		return result;
+	}
+
+
 
 	// ///////////////////////////////// OTHER
 

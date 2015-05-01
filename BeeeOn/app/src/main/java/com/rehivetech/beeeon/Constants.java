@@ -14,7 +14,7 @@ public final class Constants {
 	/**
 	 * Network layer version
 	 */
-	public static final String COM_VER = "2.4";
+	public static final String COM_VER = "2.5";
 
 	/**
 	 * Assets with prepared devices and locations for demo mode
@@ -54,8 +54,9 @@ public final class Constants {
 	public static final String PERSISTENCE_PREF_USER_GENDER = "user_gender";
 	public static final String PERSISTENCE_PREF_USER_PICTURE = "user_picture";
 
-	public static final String PERSISTANCE_PREF_LOGIN_FACEBOOK = "login_facebook";
-	public static final String PERSISTANCE_PREF_LOGIN_TWITTER = "login_twitter";
+	public static final String PERSISTENCE_PREF_LOGIN_FACEBOOK = "login_facebook";
+	public static final String PERSISTENCE_PREF_LOGIN_TWITTER = "login_twitter";
+	public static final String PERSISTENCE_PREF_LOGIN_VKONTAKTE = "login_vkontakte";
 
 	public static final String KEY_UNITS = "key_units";
 	public static final String KEY_GEOFENCE = "key_geofence";
@@ -95,6 +96,10 @@ public final class Constants {
 	public static final int ADD_SENSOR_CANCELED = 1041;
 	public static final int SETUP_SENSOR_CANCELED = 1042;
 	public static final int EDIT_SENSOR_CANCELED = 1043;
+
+	public static final int SHARE_TWITTER = 1050;
+	public static final int SHARE_GOOGLE = 1051;
+	public static final int SHARE_VKONTAKTE = 1052;
 
 	public static final String SETUP_SENSOR_ACT_LOC = "SETUP_SENSOR_ACT_LOC";
 

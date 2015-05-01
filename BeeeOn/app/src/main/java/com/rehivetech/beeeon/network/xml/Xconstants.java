@@ -92,5 +92,12 @@ public class Xconstants {
 	public static final String IMGURL = "imgurl";
 	public static final String GEOFENCE = "geo";
 
+	public static final String ACHIEVEMENT = "ach";
+	public static final String CATEGORY = "cat";
+	public static final String POINTS = "points";
+	public static final String TOTAL_PROGRESS = "tprogress";
+	public static final String CURRENT_PROGRESS = "cprogress";
+	public static final String RANGE = "range";
+
 	public static final String ROW_DATA_SEPARATOR = "\\s+";
 }

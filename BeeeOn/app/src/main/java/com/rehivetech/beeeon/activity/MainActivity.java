@@ -20,18 +20,11 @@ import android.widget.Toast;
 
 import com.avast.android.dialogs.fragment.ListDialogFragment;
 import com.avast.android.dialogs.iface.IListDialogListener;
-import com.facebook.CallbackManager;
-import com.facebook.FacebookCallback;
-import com.facebook.FacebookException;
-import com.facebook.FacebookSdk;
-import com.facebook.login.LoginManager;
-import com.facebook.login.LoginResult;
 import com.github.amlcurran.showcaseview.OnShowcaseEventListener;
 import com.github.amlcurran.showcaseview.ShowcaseView;
 import com.github.amlcurran.showcaseview.targets.ViewTarget;
 import com.rehivetech.beeeon.Constants;
 import com.rehivetech.beeeon.R;
-import com.rehivetech.beeeon.achievements.FbLoginAchievement;
 import com.rehivetech.beeeon.activity.dialog.AddSensorFragmentDialog;
 import com.rehivetech.beeeon.activity.dialog.CustomAlertDialog;
 import com.rehivetech.beeeon.activity.fragment.CustomViewFragment;
@@ -107,7 +100,6 @@ public class MainActivity extends BaseApplicationActivity implements IListDialog
 
 	private boolean backPressed = false;
 
-	public CallbackManager mFacebookCallbackManager;
 	private ReloadAdapterDataTask mFullReloadTask;
 	private boolean doRedraw = true;
 
@@ -162,26 +154,26 @@ public class MainActivity extends BaseApplicationActivity implements IListDialog
 			mNavDrawerMenu.redrawMenu();
 		}
 
-		// Set progressbar visible
-		setBeeeOnProgressBarVisibility(true);
+		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        if(mActiveMenuId == null) { // Default screen
+            ft.replace(R.id.content_frame, mListDevices, FRG_TAG_LOC);
+        }
+		else if(mActiveMenuId.equals(Constants.GUI_MENU_CONTROL)){
+			ft.replace(R.id.content_frame, mListDevices, FRG_TAG_LOC);
+		}
+        else if(mActiveMenuId.equals(Constants.GUI_MENU_DASHBOARD)) {
+            ft.replace(R.id.content_frame, mCustomView, FRG_TAG_CUS);
+        }
+        else if(mActiveMenuId.equals(Constants.GUI_MENU_WATCHDOG)) {
+            ft.replace(R.id.content_frame, mWatchDogApp, FRG_TAG_WAT);
+        }
+		else if (mActiveMenuId.equals(Constants.GUI_MENU_PROFILE)){
+			Intent intent = new Intent(this, ProfileDetailActivity.class);
+			mActiveMenuId = null;
+			startActivity(intent);
+		}
+		ft.commit();
 
-		// Facebook sdk needs to be initialised in Activity, but its used in Profile Fragment
-		// Registering callback for facebook log in
-		if (!FacebookSdk.isInitialized())
-			FacebookSdk.sdkInitialize(this, FacebookAuthProvider.FACEBOOK_REQUEST_CODE_OFFSET);
-		mFacebookCallbackManager = CallbackManager.Factory.create();
-		LoginManager.getInstance().registerCallback(mFacebookCallbackManager,new FacebookCallback<LoginResult>() {
-			@Override
-			public void onSuccess(LoginResult loginResult) {
-				new FbLoginAchievement(getApplicationContext(),loginResult);
-				mProfileFrag.updateFacebookLoginView();
-			}
-			@Override
-			public void onCancel() {}
-			@Override
-			public void onError(FacebookException exception) {}
-		});
-		
 		// Init tutorial 
 		if(mFirstUseApp) {
 			//showTutorial();
@@ -237,7 +229,6 @@ public class MainActivity extends BaseApplicationActivity implements IListDialog
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
 
-		mFacebookCallbackManager.onActivityResult(requestCode, resultCode, data);
 		Log.d(TAG, "Request code "+requestCode);
 		if(requestCode == Constants.ADD_ADAPTER_REQUEST_CODE ) {
 			Log.d(TAG, "Return from add adapter activity");
@@ -264,7 +255,6 @@ public class MainActivity extends BaseApplicationActivity implements IListDialog
 
 	public void onAppResume() {
 		Log.d(TAG, "onAppResume()");
-
 		backPressed = false;
 		setBeeeOnProgressBarVisibility(true);
 		// ASYN TASK - Reload all data, if wasnt download in login activity
@@ -439,8 +429,9 @@ public class MainActivity extends BaseApplicationActivity implements IListDialog
             ft.replace(R.id.content_frame, mWatchDogApp, FRG_TAG_WAT);
         }
 		else if (mActiveMenuId.equals(Constants.GUI_MENU_PROFILE)){
-			mProfileFrag = new ProfileDetailFragment();
-			ft.replace(R.id.content_frame, mProfileFrag, FRG_TAG_PRF);
+			Intent intent = new Intent(this, ProfileDetailActivity.class);
+			mActiveMenuId = null;
+			startActivity(intent);
 		}
 		ft.commitAllowingStateLoss();
 

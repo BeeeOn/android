@@ -4,6 +4,7 @@ import android.content.Context;
 
 import com.rehivetech.beeeon.Constants;
 import com.rehivetech.beeeon.exception.AppException;
+import com.rehivetech.beeeon.gamification.AchievementListItem;
 import com.rehivetech.beeeon.household.adapter.Adapter;
 import com.rehivetech.beeeon.household.device.Device;
 import com.rehivetech.beeeon.household.device.Device.SaveDevice;
@@ -734,4 +735,9 @@ public class DemoNetwork implements INetwork {
 		return true;
 	}
 
+	@Override
+	public ArrayList<AchievementListItem> getAllAchievements(String adapterID){ return null; }
+
+	@Override
+	public boolean setProgressLvl(String adapterId, String achievementId){ return true; }
 }

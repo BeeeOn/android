@@ -219,9 +219,6 @@ public class NavDrawerMenu   {
                     else if(mActiveItem.equals(Constants.GUI_MENU_WATCHDOG)) {
                         mActivity.getSupportActionBar().setTitle(mActivity.getString(R.string.menu_watchdog));
                     }
-                    else if(mActiveItem.equals(Constants.GUI_MENU_PROFILE)) {
-                      mActivity.getSupportActionBar().setTitle(mActivity.getString(R.string.menu_profile));
-                    }
 				} else {
 					setDefaultTitle();
 				}
@@ -276,9 +273,6 @@ public class NavDrawerMenu   {
             }
             else if(mActiveItem.equals(Constants.GUI_MENU_WATCHDOG)) {
                 mActivity.getSupportActionBar().setTitle(mActivity.getString(R.string.menu_watchdog));
-            }
-            else if(mActiveItem.equals(Constants.GUI_MENU_PROFILE)) {
-              mActivity.getSupportActionBar().setTitle(mActivity.getString(R.string.menu_profile));
             }
 		} else {
 			setDefaultTitle();
