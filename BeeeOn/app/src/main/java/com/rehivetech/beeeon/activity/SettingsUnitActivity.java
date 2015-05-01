@@ -3,6 +3,7 @@ package com.rehivetech.beeeon.activity;
 import java.util.HashMap;
 import java.util.Map;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.os.Bundle;
@@ -12,6 +13,7 @@ import android.view.MenuItem;
 
 
 import com.rehivetech.beeeon.ActionBarPreferenceActivity;
+import com.rehivetech.beeeon.Constants;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.household.device.units.BaseUnit;
 import com.rehivetech.beeeon.household.device.units.NoiseUnit;
@@ -115,6 +117,10 @@ public class SettingsUnitActivity extends ActionBarPreferenceActivity implements
 		if (pref != null && unit != null) {
 			String summary = unit.fromSettings(sharedPreferences).getSettingsName(this);
 			pref.setSummary(summary);
+
+			// inform about settings being changed
+			Intent broadcastIntent = new Intent(Constants.BROADCAST_PREFERENCE_CHANGED);
+			sendBroadcast(broadcastIntent);
 		}
 	}
 

@@ -214,7 +214,10 @@
         </receiver>
 
         <!-- clock widget -->
-        <receiver android:name=".widget.receivers.WidgetClockProvider" >
+        <receiver
+            android:name=".widget.receivers.WidgetClockProvider"
+            android:label="@string/widget_clock_title"
+            >
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
             </intent-filter>

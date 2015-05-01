@@ -17,6 +17,9 @@ import java.util.Collections;
 import java.util.EnumSet;
 import java.util.List;
 
+import java.util.Iterator;
+
+
 public class FacilitiesModel {
 
 	private static final String TAG = FacilitiesModel.class.getSimpleName();
@@ -133,9 +136,13 @@ public class FacilitiesModel {
 	 */
 	public boolean refreshFacilities(List<Facility> facilities, boolean forceReload) throws AppException {
 		// Remove not expired facilities
-		for (Facility facility : facilities) {
+
+		// NOTE: changed from foreach version to this -> http://stackoverflow.com/questions/1196586/calling-remove-in-foreach-loop-in-java
+		Iterator<Facility> facIterator = facilities.iterator();
+		while (facIterator.hasNext()) {
+			Facility facility = facIterator.next();
 			if (!forceReload && !facility.isExpired()) {
-				facilities.remove(facility);
+				facIterator.remove();
 			}
 		}
 

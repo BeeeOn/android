@@ -135,9 +135,14 @@ public abstract class WidgetConfigurationFragment extends Fragment {
 					if (errCode != null) {
 						if (errCode instanceof NetworkError && errCode == NetworkError.SRV_BAD_BT) {
 							BaseApplicationActivity.redirectToLogin(mActivity);
+							Toast.makeText(mActivity, e.getTranslatedErrorMessage(mActivity), Toast.LENGTH_LONG).show();
 							return;
 						}
-						Toast.makeText(mActivity, e.getTranslatedErrorMessage(mActivity), Toast.LENGTH_LONG).show();
+						else{
+							Toast.makeText(mActivity, e.getTranslatedErrorMessage(mActivity), Toast.LENGTH_LONG).show();
+							finishConfiguration();
+							return;
+						}
 					}
 				}
 
@@ -158,8 +163,6 @@ public abstract class WidgetConfigurationFragment extends Fragment {
 	public void onPause() {
 		super.onPause();
 		Log.d(TAG, "onPause()");
-
-		finishConfiguration();
 	}
 
 	/**
@@ -172,6 +175,8 @@ public abstract class WidgetConfigurationFragment extends Fragment {
 		if(mActivity.getDialog() != null) mActivity.getDialog().dismiss();
 
 		if(mReloadTask != null) mReloadTask.cancel(true);
+
+		finishConfiguration();
 	}
 
 	/**
@@ -193,7 +198,7 @@ public abstract class WidgetConfigurationFragment extends Fragment {
 	protected void onFragmentResume(){
 		mGeneralWidgetdata.load();
 
-		int selectedAdapterIndex = selectAdapter(mGeneralWidgetdata.adapterId);
+		int selectedAdapterIndex = selectAdapter(mGeneralWidgetdata.widgetAdapterId);
 		if(selectedAdapterIndex == mAdapterSpinner.getSelectedItemPosition()){
 			doChangeAdapter(mActiveAdapter.getId(), ReloadAdapterDataTask.ReloadWhat.FACILITIES);
 		}

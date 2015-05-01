@@ -1,6 +1,7 @@
 package com.rehivetech.beeeon.widget.data;
 
 import android.content.Context;
+import android.view.View;
 
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.household.adapter.Adapter;
@@ -24,128 +25,149 @@ import java.util.List;
 public class WidgetDeviceData extends WidgetData {
     private static final String TAG = WidgetDeviceData.class.getSimpleName();
 
-    public WidgetDevicePersistence widgetDevice;
     protected List<Object> mFacilities;
 
-    public WidgetDeviceData(int widgetId, Context context, UnitsHelper unitsHelper, TimeHelper timeHelper){
+    /**
+     * Constructing object holding information about widget (instantiating in config activity and then in service)
+     *
+     * @param widgetId
+     * @param context
+     * @param unitsHelper
+     * @param timeHelper
+     */
+    public WidgetDeviceData(int widgetId, Context context, UnitsHelper unitsHelper, TimeHelper timeHelper) {
         super(widgetId, context, unitsHelper, timeHelper);
-        widgetDevice = new WidgetDevicePersistence(mContext, mWidgetId, 0, R.id.value_container, unitsHelper, timeHelper, settings);
 
         widgetDevices = new ArrayList<>();
-        widgetDevices.add(widgetDevice);
+        widgetDevices.add(new WidgetDevicePersistence(mContext, mWidgetId, 0, R.id.value_container, unitsHelper, timeHelper, settings));
 
         mFacilities = new ArrayList<>();
     }
 
-    @Override
-    public void init() {
-        if(widgetDevice.getId().isEmpty()){
-            Log.i(TAG, "Could not retrieve device from widget " + String.valueOf(mWidgetId));
-            return;
-        }
-
-        String[] ids = widgetDevice.getId().split(Device.ID_SEPARATOR, 2);
-        Facility facility = new Facility();
-        facility.setAdapterId(adapterId);
-        facility.setAddress(ids[0]);
-        facility.setLastUpdate(new DateTime(widgetDevice.lastUpdateTime, DateTimeZone.UTC));
-        facility.setRefresh(RefreshInterval.fromInterval(widgetDevice.refresh));
-
-        Device dev = Device.createFromDeviceTypeId(ids[1]);
-        facility.addDevice(dev);
-
-        mFacilities.clear();
-        mFacilities.add(facility);
-    }
+    // ----------------------------------------------------------- //
+    // ---------------- MANIPULATING PERSISTENCE ----------------- //
+    // ----------------------------------------------------------- //
 
     @Override
     public void load() {
         super.load();
-        widgetDevice.load();
+        WidgetDevicePersistence.loadAll(widgetDevices);
     }
 
     @Override
-    protected void save() {
+    public void init() {
+        mFacilities.clear();
+        for(WidgetDevicePersistence dev : widgetDevices){
+            if(dev.getId().isEmpty()){
+                Log.i(TAG, "Could not retrieve device from widget " + String.valueOf(mWidgetId));
+                continue;
+            }
+
+            String[] ids = dev.getId().split(Device.ID_SEPARATOR, 2);
+            Facility facility = new Facility();
+            facility.setAdapterId(widgetAdapterId);
+            facility.setAddress(ids[0]);
+            facility.setLastUpdate(new DateTime(dev.lastUpdateTime, DateTimeZone.UTC));
+            facility.setRefresh(RefreshInterval.fromInterval(dev.refresh));
+            facility.addDevice(Device.createFromDeviceTypeId(ids[1]));
+
+            mFacilities.add(facility);
+        }
+    }
+
+    @Override
+    public void save() {
         super.save();
-        widgetDevice.save();
+        WidgetDevicePersistence.saveAll(widgetDevices);
     }
 
-    @Override
-    public List<Object> getReferredObj() {
-        return mFacilities;
-    }
-
-    @Override
-    public void initLayout() {
-        super.initLayout();
-        // configuration
-        mBuilder.setOnClickListener(R.id.options, mConfigurationPendingIntent);
-
-        // sets onclick "listeners"
-        // mBuilder.setOnClickListener(R.id.value, mRefreshPendingIntent);
-        mBuilder.setOnClickListener(R.id.widget_last_update, mRefreshPendingIntent);
-        mBuilder.setOnClickListener(R.id.refresh, mRefreshPendingIntent);
-
-        if(!adapterId.isEmpty() && !widgetDevice.getId().isEmpty()){
-            // detail activity
-            mBuilder.setOnClickListener(R.id.icon, startDetailActivityPendingIntent(mContext, mWidgetId, adapterId, widgetDevice.getId()));
-            mBuilder.setOnClickListener(R.id.name, startDetailActivityPendingIntent(mContext, mWidgetId, adapterId, widgetDevice.getId()));
-        }
-
-        widgetDevice.initView();
-    }
-
-    @Override
-    protected boolean updateData() {
-        Device device = mController.getFacilitiesModel().getDevice(adapterId, widgetDevice.getId());
-        if(device == null) {
-            Log.v(TAG, String.format("Updating widget (%d) with cached data", getWidgetId()));
-            return false;
-        }
-
-        Adapter adapter = mController.getAdaptersModel().getAdapter(adapterId);
-        widgetDevice.configure(device, adapter);
-
-        widgetLastUpdate = getTimeNow();
-        adapterId = adapter.getId();
-
-        this.save();
-        Log.v(TAG, String.format("Updating widget (%d) with fresh data", getWidgetId()));
-        return true;
-    }
+    // ----------------------------------------------------------- //
+    // ------------------------ RENDERING ------------------------ //
+    // ----------------------------------------------------------- //
 
     @Override
     protected void renderLayout() {
-        mBuilder.setImage(R.id.icon, widgetDevice.icon == 0 ? R.drawable.dev_unknown : widgetDevice.icon);
-        mBuilder.setTextViewText(R.id.name, widgetDevice.getName());
+        // -------------------- initialize layout
+        mBuilder.setOnClickListener(R.id.options, mConfigurationPendingIntent);
+        mBuilder.setOnClickListener(R.id.widget_last_update, mRefreshPendingIntent);
+        mBuilder.setOnClickListener(R.id.refresh, mRefreshPendingIntent);
 
-        if(mIsCached){
-            widgetDevice.renderView(mBuilder, true, "");
-            mBuilder.setTextViewText(R.id.widget_last_update, String.format("%s " + mContext.getString(R.string.widget_cached), widgetDevice.lastUpdateText));
+        if(widgetAdapterId.isEmpty()) return;
+
+        for(WidgetDevicePersistence dev : widgetDevices) {
+            // detail activity
+            mBuilder.setOnClickListener(R.id.icon, startDetailActivityPendingIntent(mContext, mWidgetId + dev.getOffset(), widgetAdapterId, dev.getId()));
+            mBuilder.setOnClickListener(R.id.name, startDetailActivityPendingIntent(mContext, mWidgetId + dev.getOffset(), widgetAdapterId, dev.getId()));
+            dev.initView();
         }
-        else {
-            widgetDevice.renderView(mBuilder);
-        }
 
-        switch(widgetLayout){
-            case R.layout.widget_device_3x1:
-            case R.layout.widget_device_2x1:
-                mBuilder.setTextViewText(R.id.widget_last_update, widgetDevice.lastUpdateText);
-            case R.layout.widget_device_3x2:
-                widgetDevice.setValueUnitSize(R.dimen.textsize_subhead);
-                break;
+        // -------------------- render layout
+        // updates all inside devices
+        boolean isFirst = true;
+        for(WidgetDevicePersistence dev : widgetDevices){
+            if(isFirst){
+                mBuilder.setImage(R.id.icon, dev.icon == 0 ? R.drawable.dev_unknown : dev.icon);
+                mBuilder.setTextViewText(R.id.name, dev.getName());
 
-            case R.layout.widget_device_1x1:
-                widgetDevice.setValueUnitSize(R.dimen.textsize_caption);
-                break;
+                isFirst = false;
+            }
+
+            if(getIsCached()){
+                dev.renderView(mBuilder, true, "");
+                mBuilder.setTextViewText(R.id.widget_last_update, String.format("%s " + mContext.getString(R.string.widget_cached), dev.lastUpdateText));
+            }
+            else {
+                dev.renderView(mBuilder);
+            }
+
+            switch(widgetLayout){
+                case R.layout.widget_device_3x1:
+                case R.layout.widget_device_2x1:
+                    mBuilder.setTextViewText(R.id.widget_last_update, dev.lastUpdateText);
+                case R.layout.widget_device_3x2:
+                    dev.setValueUnitSize(R.dimen.textsize_subhead);
+                    break;
+
+                case R.layout.widget_device_1x1:
+                    dev.setValueUnitSize(R.dimen.textsize_caption);
+                    break;
+            }
         }
     }
 
-    @Override
-    public void handleUserLogout() {
-        super.handleUserLogout();
+    // ----------------------------------------------------------- //
+    // ---------------------- FAKE HANDLERS ---------------------- //
+    // ----------------------------------------------------------- //
 
-        renderWidget();
+    @Override
+    public boolean handleUpdateData() {
+        int updated = 0;
+        Adapter adapter = mController.getAdaptersModel().getAdapter(widgetAdapterId);
+        if(adapter == null) return false;
+
+        for(WidgetDevicePersistence dev : widgetDevices) {
+            Device device = mController.getFacilitiesModel().getDevice(widgetAdapterId, dev.getId());
+            if(device != null) {
+                dev.configure(device, adapter);
+            }
+            updated++;
+        }
+
+        if(updated > 0) {
+            // update last update to "now"
+            widgetLastUpdate = getTimeNow();
+            widgetAdapterId = adapter.getId();
+
+            // Save fresh data
+            this.save();
+            Log.v(TAG, String.format("Updating widget (%d) with fresh data", getWidgetId()));
+        }
+        else {
+            // TODO show some kind of icon
+            Log.v(TAG, String.format("Updating widget (%d) with cached data", getWidgetId()));
+        }
+
+        return updated > 0;
     }
 
     @Override
@@ -166,11 +188,21 @@ public class WidgetDeviceData extends WidgetData {
             layout = R.layout.widget_device_3x1;
         }
 
-       changeLayout(layout);
+        changeLayout(layout);
+    }
+
+    // ----------------------------------------------------------- //
+    // ------------------------- GETTERS ------------------------- //
+    // ----------------------------------------------------------- //
+
+    @Override
+    public List<Object> getObjectsToReload() {
+        return mFacilities;
     }
 
     @Override
     public String getClassName() {
         return WidgetDeviceData.class.getName();
     }
+
 }

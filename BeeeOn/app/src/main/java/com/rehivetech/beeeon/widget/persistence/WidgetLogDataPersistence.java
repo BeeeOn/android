@@ -4,14 +4,9 @@ import android.content.Context;
 
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.household.device.DeviceLog;
-import com.rehivetech.beeeon.household.device.values.BaseEnumValue;
-import com.rehivetech.beeeon.util.Log;
 
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
-import org.joda.time.Interval;
-import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
 
 /**
  * Created by Tomáš on 27. 4. 2015.

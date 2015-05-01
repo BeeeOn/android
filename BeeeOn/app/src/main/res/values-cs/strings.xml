@@ -117,6 +117,7 @@
     <string name="progress_loading_adapter">Nahrávám data bran&#8230;</string>
     <string name="progress_loading_demo">Nahrávám demo data&#8230;</string>
     <string name="progress_saving_data">Ukládám data&#8230;</string>
+    <string name="progress_checking_location">Ověřuji polohu&#8230;</string>
 
     <!-- NavDrawer -->
     <string name="drawer_open">OTEVŘÍT</string>
@@ -206,23 +207,44 @@
     <string name="widget_sensor_title_small">BeeeOn zařízení 1x1</string>
     <string name="widget_sensor_title_medium">BeeeOn zařízení 2x1</string>
     <string name="widget_sensor_title_large">BeeeOn zařízení 3x1</string>
-    <string name="widget_cached">(cached)</string>
     <string name="widget_location_list_title">BeeeOn lokace</string>
     <string name="widget_graph_title">BeeeOn zařízení s grafem</string>
+    <string name="widget_clock_title">BeeeOn-Time</string>
 
 
     <!-- WidgetConfigurationActivity -->
-    <string name="widget_configuration_adapter">Brána:</string>
-    <string name="widget_configuration_sensor">Zařízení pro zobrazení:</string>
-    <string name="widget_configuration_interval_sensor">Interval aktualizace zařízení:</string>
-    <string name="widget_configuration_interval_widget">Interval aktualizace widgetu:</string>
+    <string name="widget_configuration_adapter">Brána</string>
+    <string name="widget_configuration_sensor">Zařízení pro zobrazení</string>
+    <string name="widget_configuration_interval_sensor">Interval aktualizace zařízení</string>
+    <string name="widget_configuration_interval_widget">Interval aktualizace widgetu</string>
     <string name="widget_configuration_login_first">Je třeba se nejprve přihlásit</string>
     <string name="widget_configuration_no_adapters">K nastavení widgetu je nutné být uživatelem brány</string>
     <string name="widget_configuration_select_adapter">Vyberte bránu ze seznamu</string>
     <string name="widget_configuration_select_device">Vyberte zařízení ze seznamu</string>
+    <string name="widget_configuration_select_location">Vyberte umístění ze seznamu</string>
 
-    <!-- location widget -->
+    <string name="widget_configuration_widget_clock">Nastavení widgetu BeeeOn-Time</string>
+    <string name="widget_configuration_widget_device">Nastavení widgetu zařízení</string>
+    <string name="widget_configuration_widget_graph">Nastavení widgetu s grafem</string>
+    <string name="widget_configuration_widget_location">Nastavení widgetu umístění</string>
+
+    <!-- Widgets other -->
+    <string name="widget_location_list_empty">Prázdná lokace</string>
+    <string name="widget_cached">(cached)</string>
+    <string name="widget">Widget</string>
+    <string name="household">Domácnost</string>
     <string name="widget_configuration_location">Umístění</string>
+
+    <!-- Widget Clock -->
+    <string name="weather">Počasí</string>
+    <string name="weather_place">Poloha</string>
+    <string name="weather_place_not_found">Místo nenalezeno</string>
+    <string name="color_scheme">Barevné schéma</string>
+
+    <string name="place_must_be_filled">Místo musí být vyplněno</string>
+    <string name="dialog_location_select">Vyberte místo</string>
+    <string name="dialog_location_country">Město, stát</string>
+
 
     <!-- About -->
     <string name="company_email">info@BeeeOn.com</string>
@@ -339,7 +361,6 @@
 	<string name="add_new_geofence_area">Přidat novou oblast</string>
 
     <string name="action_done">Hotovo</string>
-    <string name="widget_location_list_empty">Prázdná lokace</string>
 
 	<string name="delete_geofence">Odstranit oblast</string>
 	<string name="devices">Zařízení</string>

@@ -9,8 +9,8 @@
 
 	<ImageView
 		android:id="@+id/icon"
-		android:layout_width="24dp"
-		android:layout_height="24dp"
+		android:layout_width="20dp"
+		android:layout_height="20dp"
 		android:src="@drawable/loc_unknown"
 		android:scaleType="fitCenter"
 		/>
@@ -19,7 +19,7 @@
 		android:id="@+id/name"
 		android:layout_width="wrap_content"
 		android:layout_height="match_parent"
-		android:textSize="@dimen/textsize_body"
+		android:textSize="@dimen/textsize_caption"
 		android:singleLine="true"
 		android:textColor="@color/beeeon_text_color"
 		android:gravity="center_vertical"

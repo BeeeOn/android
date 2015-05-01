@@ -5,8 +5,15 @@
     <dimen name="activity_vertical_margin">16dp</dimen>
 	<dimen name="textsize">15sp</dimen>
 	<dimen name="textsizesmaller">11sp</dimen>
-	
-	<!--  Widget margins -->
+
+	<!-- text sizes according to material design spec -->
+	<dimen name="textsize_caption">12sp</dimen>
+	<dimen name="textsize_body">14sp</dimen>
+	<dimen name="textsize_subhead">16sp</dimen>
+	<dimen name="textsize_title">20sp</dimen>
+	<dimen name="textsize_headline">24sp</dimen>
+
+	<!--  Widgets -->
 	<dimen name="widget_margin">8dp</dimen>
 
 	<dimen name="widget_width_cells_1">70dp</dimen>
@@ -15,11 +22,8 @@
 
 	<dimen name="widget_height_cells_1">80dp</dimen>
 
-	<dimen name="textsize_caption">12sp</dimen>
-	<dimen name="textsize_body">14sp</dimen>
-	<dimen name="textsize_subhead">16sp</dimen>
-	<dimen name="textsize_title">20sp</dimen>
-	<dimen name="textsize_headline">24sp</dimen>
+	<dimen name="widget_header_height">38dp</dimen>
+	<dimen name="widget_header_icon">32dp</dimen>
 
 	<dimen name="widget_clock_width">160dp</dimen>
 
@@ -30,8 +34,8 @@
 	<dimen name="widget_weather_icon">60dp</dimen>
 	<dimen name="widget_weather_icon_small">24dp</dimen>
 
-	<dimen name="widget_graph_width">300dp</dimen>
-	<dimen name="widget_graph_height">200dp</dimen>
+	<dimen name="widget_graph_width">320dp</dimen>
+	<dimen name="widget_graph_height">180dp</dimen>
 
 
 	<dimen name="custom_spinner_icon_size">35dp</dimen>

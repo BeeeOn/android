@@ -18,7 +18,7 @@
 			android:id="@+id/widget_header"
 			android:orientation="horizontal"
 			android:layout_width="match_parent"
-			android:layout_height="48dp"
+			android:layout_height="@dimen/widget_header_height"
 			android:gravity="center_horizontal|left"
 			android:background="@drawable/widget_inside_bg"
 			android:layout_alignParentTop="true"

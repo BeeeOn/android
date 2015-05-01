@@ -3,7 +3,7 @@
 	android:layout_width="wrap_content"
 	android:layout_height="wrap_content"
 	android:minWidth="110dp"
-	android:minHeight="140dp"
+	android:minHeight="130dp"
 	android:padding="@dimen/widget_margin"
 	android:layout_gravity="center"
 	android:orientation="vertical"
@@ -36,8 +36,8 @@
 		android:layout_width="30dp"
 		android:layout_height="1px"
 		android:src="@color/beeeon_primary_cyan"
-		android:layout_marginTop="4dp"
-		android:layout_marginBottom="4dp"
+		android:layout_marginTop="2dp"
+		android:layout_marginBottom="2dp"
 		/>
 
 	<!-- weather city -->
@@ -49,7 +49,7 @@
 		android:ellipsize="end"
 		android:textSize="@dimen/textsize_body"
 		android:textColor="@color/beeeon_primary_cyan"
-		android:text="České Budějovice"
+		android:text="@string/placeholder_none"
 		/>
 
 	<!-- weather value -->
@@ -64,7 +64,6 @@
 			android:id="@+id/widget_clock_weather_temperature"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:text="30°C"
 			android:textStyle="bold"
 			android:textSize="@dimen/textsize_body"
 			android:textColor="@color/beeeon_secundary_pink"
@@ -88,7 +87,7 @@
 		android:layout_width="30dp"
 		android:layout_height="1px"
 		android:src="@color/beeeon_primary_cyan"
-		android:layout_marginBottom="4dp"
+		android:layout_marginTop="2dp"
 		/>
 
 	<!-- household -->
@@ -123,8 +122,8 @@
 		<!-- separator -->
 		<ImageView
 			android:id="@+id/widget_clock_separator_3"
-			android:layout_width="1dp"
-			android:layout_height="20dp"
+			android:layout_width="1px"
+			android:layout_height="16dp"
 			android:src="@color/beeeon_primary_cyan"
 			android:layout_marginLeft="4dp"
 			android:layout_marginStart="4dp"

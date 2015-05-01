@@ -1,7 +1,6 @@
 package com.rehivetech.beeeon.widget.persistence;
 
 import android.content.Context;
-import android.util.TypedValue;
 
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.controller.Controller;

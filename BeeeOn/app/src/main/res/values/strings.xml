@@ -122,6 +122,8 @@
     <string name="progress_saving_data">Saving data&#8230;</string>
     <string name="progress_loading_facilities">Loading your devices&#8230;</string>
     <string name="progress_loading_locations">Loading your locations&#8230;</string>
+    <string name="progress_checking_location">Checking location&#8230;</string>
+
 
     <!-- NavDrawer -->
     <string name="drawer_open">OPEN</string>
@@ -214,33 +216,40 @@
     <string name="widget_sensor_title_large">BeeeOn device 3x1</string>
     <string name="widget_location_list_title">BeeeOn location </string>
     <string name="widget_graph_title">BeeeOn device with graph</string>
+    <string name="widget_clock_title">BeeeOn-Time</string>
 
     <!-- WidgetConfigurationActivity -->
     <string name="widget_configuration_adapter">Gateway</string>
-    <string name="widget_configuration_sensor">Device to be shown: </string>
+    <string name="widget_configuration_sensor">Device to be shown</string>
     <string name="widget_configuration_interval_sensor">Household update interval</string>
-    <string name="widget_configuration_interval_widget">Widget update interval: </string>
+    <string name="widget_configuration_interval_widget">Widget update interval</string>
     <string name="widget_configuration_login_first">You must be logged in first</string>
     <string name="widget_configuration_no_adapters">You have no gateways and thus no device to show in widget</string>
     <string name="widget_configuration_select_adapter">Select gateway from list</string>
     <string name="widget_configuration_select_device">Select device from list</string>
     <string name="widget_configuration_select_location">Select location from list</string>
 
-    <string name="widget_configuration_widget_clock">Configuration clock widget</string>
+    <string name="widget_configuration_widget_clock">Configuration BeeeOn-Time</string>
     <string name="widget_configuration_widget_device">Configuration device widget</string>
     <string name="widget_configuration_widget_graph">Configuration graph widget</string>
     <string name="widget_configuration_widget_location">Configuration location widget</string>
 
-    <string name="widget_configuration_color_scheme">Color scheme</string>
-
     <!-- Widgets other -->
     <string name="widget_location_list_empty">Empty location</string>
     <string name="widget_cached">(cached)</string>
-    <string name="change_city">Change city</string>
-    <string name="place_not_found">Sorry, no weather data found.</string>
     <string name="widget">Widget</string>
     <string name="household">Household</string>
     <string name="widget_configuration_location">Location</string>
+
+    <!-- Widget Clock -->
+    <string name="weather">Weather</string>
+    <string name="weather_place">Place</string>
+    <string name="weather_place_not_found">Place not found</string>
+    <string name="color_scheme">Color scheme</string>
+
+    <string name="place_must_be_filled">Place must be filled</string>
+    <string name="dialog_location_select">Select your place</string>
+    <string name="dialog_location_country">City name, country</string>
 
 
     <!-- About -->
