@@ -97,8 +97,6 @@ public class ProfileDetailFragment extends Fragment implements Observer {
 		mMoreVisible = (RelativeLayout) mView.findViewById(R.id.profile_more_accounts);
 		mMoreLayout = (RelativeLayout) mView.findViewById(R.id.profile_more);
 
-		mFb = Facebook.getInstance(getActivity());
-		mTw = Twitter.getInstance(getActivity());
 //		setNetworksView();
 
 //		setMoreButtonVisibility();
@@ -182,27 +180,8 @@ public class ProfileDetailFragment extends Fragment implements Observer {
 			mMoreVisible.setVisibility(View.INVISIBLE);
 		}
 
-		if(socialNetworks.size() == totalNetworks) { //none social network is paired
 			mMoreArrow.setVisibility(View.INVISIBLE);
 			mMoreVisible.setVisibility(View.INVISIBLE);
-		}
-		else {	//at least one network is connected, allow to show the profile
-			if (showMoreAccounts) { // SHOW info
-				// DOWNLOAD data
-				if(mFb.isPaired()) mFb.downloadUserData();
-				if(mTw.isPaired()) mTw.downloadUserData();
-				if(mVk.isPaired()) mVk.downloadUserData();
-				mMoreLayout.getLayoutParams().height = (mDisplayPixel*60)+((totalNetworks-unconnectedNetworks)*(mDisplayPixel*65));
-				mMoreLayout.requestLayout();
-				mMoreVisible.setVisibility(View.VISIBLE);
-				rotate(90);
-			} else { // HIDE info
-				mMoreLayout.getLayoutParams().height = 60*mDisplayPixel;
-				mMoreLayout.requestLayout();
-				mMoreVisible.setVisibility(View.INVISIBLE);
-				rotate(0);
-			}
-		}
 	}
 
 	private void setNetworksView() {
