@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.NotificationCompat;
+import android.widget.Toast;
 
 import com.rehivetech.beeeon.activity.LoginActivity;
 import com.rehivetech.beeeon.controller.Controller;
@@ -65,23 +66,17 @@ public class WatchdogNotification extends VisibleNotification {
 	}
 
 	@Override
-	protected void onHandle(Context context, Controller controller) {
+	protected void onGcmHandle(Context context, Controller controller) {
 		NotificationCompat.Builder builder = getBaseNotificationBuilder(context);
 
-		// define notification action
-		Intent resultIntent = new Intent(context, LoginActivity.class);
-
-		builder.setContentText(getMessage());
-
-		// Because clicking the notification opens a new ("special") activity, there's
-		// no need to create an artificial back stack.
-		PendingIntent resultPendingIntent = PendingIntent.getActivity(context, 0, resultIntent,
-				PendingIntent.FLAG_UPDATE_CURRENT);
-
-		// Set the Notification's Click Behavior
-		builder.setContentIntent(resultPendingIntent);
 
 		showNotification(context, builder);
+	}
+
+	@Override
+	protected void onClickHandle(Context context, Controller controller) {
+		// TODO
+		Toast.makeText(context, "on click", Toast.LENGTH_LONG).show();
 	}
 
 	@Override

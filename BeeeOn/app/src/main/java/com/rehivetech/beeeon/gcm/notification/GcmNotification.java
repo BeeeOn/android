@@ -9,18 +9,23 @@ import com.rehivetech.beeeon.network.xml.Xconstants;
 /**
  * Created by Martin on 26. 4. 2015.
  */
-public interface Notification {
+public interface GcmNotification {
 
-	public String getUserId();
-	public int getId();
-	public void handle(Context context, Controller controller);
-
+	String getUserId();
+	int getId();
+	void onGcmRecieve(Context context);
+	void onClick(Context context);
 
 	/**
 	 * Enum mapping string name of notification to end class for instantiation
 	 */
 	public enum NotificationName {
-		WATCHDOG("watchdog");
+		WATCHDOG("watchdog"),
+		DELETE_NOTIF("delete_not"),
+		URI("uri"),
+		SENSOR_ADDED("sensor_add"),
+		ADAPTER_ADDED("adapter_add");
+
 
 		private String mName;
 

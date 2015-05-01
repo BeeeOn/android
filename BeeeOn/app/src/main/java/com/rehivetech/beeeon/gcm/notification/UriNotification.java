@@ -47,7 +47,7 @@ public class UriNotification extends VisibleNotification {
 	}
 
 	@Override
-	protected void onHandle(Context context, Controller controller) {
+	protected void onGcmHandle(Context context, Controller controller) {
 		NotificationCompat.Builder builder = getBaseNotificationBuilder(context);
 
 		// define notification action
@@ -64,6 +64,12 @@ public class UriNotification extends VisibleNotification {
 		builder.setContentIntent(resultPendingIntent);
 
 		showNotification(context, builder);
+	}
+
+	@Override
+	protected void onClickHandle(Context context, Controller controller) {
+		Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(mUri));
+		context.startActivity(intent);
 	}
 
 	@Override

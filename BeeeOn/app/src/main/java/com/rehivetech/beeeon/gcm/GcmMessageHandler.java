@@ -4,13 +4,11 @@ import android.app.IntentService;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v4.app.NotificationCompat;
-import android.widget.Toast;
 
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.gcm.notification.BaseNotification;
-import com.rehivetech.beeeon.gcm.notification.Notification;
+import com.rehivetech.beeeon.gcm.notification.GcmNotification;
 import com.rehivetech.beeeon.util.Log;
 
 public class GcmMessageHandler extends IntentService {
@@ -18,7 +16,6 @@ public class GcmMessageHandler extends IntentService {
 	public static final String TAG = GcmMessageHandler.class.getSimpleName();
 
 	private Handler mHandler;
-	private Controller mController;
 
 	public GcmMessageHandler() {
 		super("GcmMessageHandler");
@@ -28,7 +25,6 @@ public class GcmMessageHandler extends IntentService {
 	public void onCreate() {
 		super.onCreate();
 		mHandler = new Handler();
-		mController = Controller.getInstance(this);
 	}
 
 	@Override
@@ -60,7 +56,7 @@ public class GcmMessageHandler extends IntentService {
 	}
 
 	private void handleNotification(Intent intent) {
-		final Notification notification = BaseNotification.parseBundle(mController, intent.getExtras());
+		final GcmNotification notification = BaseNotification.parseBundle(this, intent.getExtras());
 
 		// control if message was valid
 		if (notification == null) {
@@ -69,7 +65,7 @@ public class GcmMessageHandler extends IntentService {
 			return;
 		}
 
-		notification.handle(this, mController);
+		notification.onGcmRecieve(this);
 	}
 
 //BACKDOOR, AFTER DEMONIGHT DELETE THIS METHOD

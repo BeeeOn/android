@@ -1,5 +1,6 @@
 package com.rehivetech.beeeon.controller;
 
+import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -335,6 +336,10 @@ public final class Controller {
 	 */
 	public void logout() {
 		// TODO: Request to logout from server (discard actual BT)
+
+		// delete all visible notification
+		NotificationManager notifMgr = (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
+		notifMgr.cancelAll();
 
 		// unregister geofences asynchronously
 		manageGeofence(false);

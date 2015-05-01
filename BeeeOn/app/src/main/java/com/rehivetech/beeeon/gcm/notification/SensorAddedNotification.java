@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.NotificationCompat;
+import android.widget.Toast;
 
 import com.rehivetech.beeeon.activity.LoginActivity;
 import com.rehivetech.beeeon.controller.Controller;
@@ -47,7 +48,7 @@ public class SensorAddedNotification extends VisibleNotification {
 	}
 
 	@Override
-	protected void onHandle(Context context, Controller controller) {
+	protected void onGcmHandle(Context context, Controller controller) {
 		// TODO notifikovat controller aby si stahl nove data, zobrzit notiifkaci a po kliknuti odkazazt na datail senzort
 //		NotificationCompat.Builder builder = getBaseNotificationBuilder(context);
 //
@@ -65,6 +66,12 @@ public class SensorAddedNotification extends VisibleNotification {
 //		builder.setContentIntent(resultPendingIntent);
 //
 //		showNotification(context, builder);
+	}
+
+	@Override
+	protected void onClickHandle(Context context, Controller controller) {
+		// TODO
+		Toast.makeText(context, "on click", Toast.LENGTH_LONG).show();
 	}
 
 	@Override

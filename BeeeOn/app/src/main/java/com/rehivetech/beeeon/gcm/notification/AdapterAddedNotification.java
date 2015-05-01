@@ -2,6 +2,7 @@ package com.rehivetech.beeeon.gcm.notification;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.widget.Toast;
 
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.network.xml.Xconstants;
@@ -40,29 +41,21 @@ public class AdapterAddedNotification extends VisibleNotification {
 	}
 
 	@Override
-	protected void onHandle(Context context, Controller controller) {
-		// TODO notifikovat controller aby si stahl nove data, zobrzit notiifkaci a po kliknuti odkazazt na datail senzort
-//		NotificationCompat.Builder builder = getBaseNotificationBuilder(context);
-//
-//		// define notification action
-//		Intent resultIntent = new Intent(context, LoginActivity.class);
-//
-//		builder.setContentText(getMessage());
-//
-//		// Because clicking the notification opens a new ("special") activity, there's
-//		// no need to create an artificial back stack.
-//		PendingIntent resultPendingIntent = PendingIntent.getActivity(context, 0, resultIntent,
-//				PendingIntent.FLAG_UPDATE_CURRENT);
-//
-//		// Set the Notification's Click Behavior
-//		builder.setContentIntent(resultPendingIntent);
-//
-//		showNotification(context, builder);
+	protected void onGcmHandle(Context context, Controller controller) {
+
 	}
+
+	@Override
+	protected void onClickHandle(Context context, Controller controller) {
+		// 	TODO
+		Toast.makeText(context, "on click", Toast.LENGTH_LONG).show();
+	}
+
 
 	@Override
 	protected String getMessage() {
 		// TODO pridat lokalizovany string
 		return "";
 	}
+
 }

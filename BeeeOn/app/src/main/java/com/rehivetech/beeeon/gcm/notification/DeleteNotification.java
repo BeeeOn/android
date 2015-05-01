@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.NotificationCompat;
+import android.widget.Toast;
 
 import com.rehivetech.beeeon.activity.LoginActivity;
 import com.rehivetech.beeeon.controller.Controller;
@@ -55,8 +56,14 @@ public class DeleteNotification extends BaseNotification {
 	}
 
 	@Override
-	protected void onHandle(Context context, Controller controller) {
+	protected void onGcmHandle(Context context, Controller controller) {
 		NotificationManager mNotifyMgr = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
 		mNotifyMgr.cancel(mDeleteNotificationId);
+	}
+
+	@Override
+	protected void onClickHandle(Context context, Controller controller) {
+		// TODO
+		Toast.makeText(context, "on click", Toast.LENGTH_LONG).show();
 	}
 }
