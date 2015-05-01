@@ -11,7 +11,7 @@
     android:resizeMode="horizontal|vertical"
     android:widgetCategory="home_screen"
     android:configure="com.rehivetech.beeeon.widget.configuration.WidgetConfigurationActivity"
-    android:updatePeriodMillis="0"
+    android:updatePeriodMillis="1800000"
+    android:previewImage="@drawable/preview_device_3x1"
     />
 
-    <!--android:previewImage="@drawable/preview_sensor_2x1"-->

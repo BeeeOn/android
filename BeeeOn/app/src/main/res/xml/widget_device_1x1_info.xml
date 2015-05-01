@@ -5,10 +5,10 @@
     tools:ignore="UnusedAttribute"
     android:minWidth="@dimen/widget_width_cells_1"
     android:minHeight="70dp"
-    android:updatePeriodMillis="0"
+    android:updatePeriodMillis="1800000"
     android:initialLayout="@layout/widget_device_1x1"
     android:resizeMode="horizontal|vertical"
     android:widgetCategory="home_screen"
     android:configure="com.rehivetech.beeeon.widget.configuration.WidgetConfigurationActivity"
-    android:previewImage="@drawable/preview_sensor_1x1"
+    android:previewImage="@drawable/preview_device_1x1"
 />
