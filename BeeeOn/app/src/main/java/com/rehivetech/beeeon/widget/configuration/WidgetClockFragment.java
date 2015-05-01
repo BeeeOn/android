@@ -2,6 +2,7 @@ package com.rehivetech.beeeon.widget.configuration;
 
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -12,8 +13,9 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.avast.android.dialogs.fragment.SimpleDialogFragment;
 import com.rehivetech.beeeon.R;
+import com.rehivetech.beeeon.activity.dialog.ILocationPickerDialogListener;
+import com.rehivetech.beeeon.activity.dialog.LocationPickerDialogFragment;
 import com.rehivetech.beeeon.arrayadapter.DeviceArrayAdapter;
 import com.rehivetech.beeeon.household.adapter.Adapter;
 import com.rehivetech.beeeon.household.device.Device;
@@ -21,7 +23,10 @@ import com.rehivetech.beeeon.household.location.Location;
 import com.rehivetech.beeeon.util.Utils;
 import com.rehivetech.beeeon.widget.data.WidgetClockData;
 import com.rehivetech.beeeon.widget.persistence.WidgetDevicePersistence;
+import com.rehivetech.beeeon.widget.service.WeatherProvider;
 import com.rehivetech.beeeon.widget.service.WidgetService;
+
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,8 +34,9 @@ import java.util.List;
 /**
  * @author mlyko
  */
-public class WidgetClockFragment extends WidgetConfigurationFragment {
+public class WidgetClockFragment extends WidgetConfigurationFragment implements ILocationPickerDialogListener{
 	private static final String TAG = WidgetClockFragment.class.getSimpleName();
+	private static final int REQUEST_LOCATION_DIALOG = 1;
 
 	protected SeekBar mWidgetUpdateSeekBar;
 
@@ -41,7 +47,13 @@ public class WidgetClockFragment extends WidgetConfigurationFragment {
 	private LinearLayout mDeviceSpinnersWrapper;
 
 	private RadioGroup mColorSchemeGroup;
+	private TextView mCityLabel;
+	private WeatherProvider mWeatherProvider;
+	private Handler mHandler;
 
+	public WidgetClockFragment(){
+		mHandler = new Handler();
+	}
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -54,6 +66,8 @@ public class WidgetClockFragment extends WidgetConfigurationFragment {
 		mDeviceSpinners = new ArrayList<>();
 
 		setRefreshBounds(WidgetService.UPDATE_INTERVAL_WEATHER_MIN);
+
+		mWeatherProvider = new WeatherProvider(mActivity);
 	}
 
 	protected int getFragmentLayoutResource(){
@@ -102,25 +116,91 @@ public class WidgetClockFragment extends WidgetConfigurationFragment {
 			}
 		});
 
+		mCityLabel = (TextView) mActivity.findViewById(R.id.widget_config_location_label);
+
 		RelativeLayout locationChooseLine = (RelativeLayout) mActivity.findViewById(R.id.widget_config_location);
 		locationChooseLine.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				showLocationDialog();
+				showLocationPickerDialog();
 			}
 		});
 	}
 
-	private void showLocationDialog() {
-		// TODO
-		SimpleDialogFragment.createBuilder(mActivity, mActivity.getSupportFragmentManager())
-			.setTitle("Vyberte lokaci")
-			.setMessage("Bude použito Brno!")
-			.setPositiveButtonText("Ok")
-			.show();
-		//*/
+	private void showLocationPickerDialog() {
+		LocationPickerDialogFragment
+				.createBuilder(mActivity, mActivity.getSupportFragmentManager())
+				.setTitle(mActivity.getString(R.string.dialog_location_select))
+				.setCityName(mWidgetData.weather.cityName)
+				.setPositiveButtonText(mActivity.getString(R.string.ok))
+				.setNegativeButtonText(mActivity.getString(R.string.action_close))
+				.setTargetFragment(this, REQUEST_LOCATION_DIALOG)
+				.show();
+	}
 
-		//LocationPickerDialogFragment.show(mActivity);
+	@Override
+	public void onPositiveButtonClicked(int var1, EditText city, final LocationPickerDialogFragment dialog) {
+		if(city.getText().length() == 0){
+			city.setError(mActivity.getString(R.string.place_must_be_filled));
+			return;
+		}
+
+		// show dialog of loading
+		if(mActivity.getDialog() != null) mActivity.getDialog(mActivity.getString(R.string.progress_checking_location)).show();
+
+		final String cityInput = city.getText().toString();
+		// load city data in background
+		new Thread(){
+			public void run(){
+				final JSONObject data = mWeatherProvider.getLocations(cityInput);
+				if(data == null){
+					mHandler.post(new Runnable(){
+						public void run(){
+							loadingCityFail();
+						}
+					});
+				}
+				else{
+					final List<WeatherProvider.City> foundCities = mWeatherProvider.parseCities(data);
+					mHandler.post(new Runnable(){
+						public void run(){
+							WeatherProvider.City city = foundCities.get(0);
+							if(city == null){
+								loadingCityFail();
+								return;
+							}
+							loadingCitySuccess(city, dialog);
+						}
+					});
+				}
+			}
+		}.start();
+	}
+
+	private void loadingCityFail(){
+		Toast.makeText(mActivity, mActivity.getString(R.string.weather_place_not_found), Toast.LENGTH_LONG).show();
+		if(mActivity.getDialog() != null) mActivity.getDialog().dismiss();
+	}
+
+	private void loadingCitySuccess(WeatherProvider.City city, LocationPickerDialogFragment dialog){
+		// setup weather persistence
+		mWidgetData.weather.id = city.id;
+		mWidgetData.weather.cityName = city.name;
+		mWidgetData.weather.country = city.countryId;
+
+		//mWidgetData.weather.configure(city.json, null);
+		// setup city label
+		mCityLabel.setText(city.name);
+
+		// hide location picker dialog
+		if(dialog != null) dialog.dismiss();
+		// hide progress dialog
+		if(mActivity.getDialog() != null) mActivity.getDialog().dismiss();
+	}
+
+	@Override
+	public void onNegativeButtonClicked(int var1, EditText city, LocationPickerDialogFragment dialog) {
+		dialog.dismiss();
 	}
 
 	@Override
@@ -128,11 +208,8 @@ public class WidgetClockFragment extends WidgetConfigurationFragment {
 		super.onFragmentResume();
 		updateIntervalLayout(mWidgetUpdateSeekBar);
 
-		EditText cityName = (EditText) mActivity.findViewById(R.id.city_name_test);
-		cityName.setText(mWidgetData.weather.cityName);
-
-		TextView cityLabel = (TextView) mActivity.findViewById(R.id.widget_config_location_label);
-		cityLabel.setText(mWidgetData.weather.cityName);
+		// setup weather location if provided
+		if(!mWidgetData.weather.cityName.isEmpty()) mCityLabel.setText(mWidgetData.weather.cityName);
 
 		if(mWidgetData.settings.isColorSchemeEqual(R.color.white, R.color.white)){
 			mColorSchemeGroup.check(R.id.scheme_white);
@@ -195,12 +272,8 @@ public class WidgetClockFragment extends WidgetConfigurationFragment {
 			index++;
 		}
 
-		EditText cityName = (EditText) mActivity.findViewById(R.id.city_name_test);
-		mWidgetData.weather.cityName = cityName.getText().toString();
-		// TODO ZISKAT DATA ZE SERVERU a zavolat mWidgetData.weather.configure();
-
+		// setup widget
 		mWidgetData.configure(mActivity.isAppWidgetEditing(), getRefreshSeconds(mWidgetUpdateSeekBar.getProgress()), adapter);
-
 		return true;
 	}
 }

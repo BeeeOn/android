@@ -25,6 +25,7 @@ public class WidgetConfigurationActivity extends ActionBarActivity{
 	private ProgressDialog mDialog;
 	private Fragment mConfigFragment;
 
+
 	private boolean mAppWidgetEditing = false;
 	private int mWidgetId;
 	private boolean mReturnResult = false;
@@ -60,7 +61,6 @@ public class WidgetConfigurationActivity extends ActionBarActivity{
 
 		// do we edit or create widget
 		mAppWidgetEditing = extras.getBoolean(EXTRA_WIDGET_EDITING, false);
-
 		mAppWidgetManager = AppWidgetManager.getInstance(getApplicationContext());
 
 		// get informations about widget
@@ -127,6 +127,11 @@ public class WidgetConfigurationActivity extends ActionBarActivity{
 	}
 
 	public ProgressDialog getDialog() {
+		return mDialog;
+	}
+
+	public ProgressDialog getDialog(String title){
+		if(mDialog != null) mDialog.setMessage(title);
 		return mDialog;
 	}
 

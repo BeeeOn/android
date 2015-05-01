@@ -128,6 +128,7 @@ public class WidgetLocationData extends WidgetData {
         }
 
         Adapter adapter = mController.getAdaptersModel().getAdapter(widgetAdapterId);
+        if(adapter == null) return false;
         widgetLocation.configure(location, adapter);
 
         widgetLastUpdate = getTimeNow();

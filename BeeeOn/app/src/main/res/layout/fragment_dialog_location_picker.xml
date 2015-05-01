@@ -5,9 +5,13 @@
 			  android:layout_height="match_parent">
 
 	<EditText
+		android:id="@+id/dialog_location_city_name"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
-		android:hint="Název města, CZ"
+		android:hint="@string/dialog_location_country"
+		android:layout_marginLeft="20dp"
+		android:layout_marginRight="20dp"
+		android:singleLine="true"
 		/>
 
 </LinearLayout>

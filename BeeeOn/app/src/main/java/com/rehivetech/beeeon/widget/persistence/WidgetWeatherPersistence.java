@@ -8,43 +8,54 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.Typeface;
 
+import com.rehivetech.beeeon.IIdentifier;
 import com.rehivetech.beeeon.R;
+import com.rehivetech.beeeon.household.device.values.TemperatureValue;
 import com.rehivetech.beeeon.util.Log;
 import com.rehivetech.beeeon.util.TimeHelper;
 import com.rehivetech.beeeon.util.UnitsHelper;
-import com.rehivetech.beeeon.util.Utils;
+import com.rehivetech.beeeon.widget.service.WeatherProvider;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.Date;
-import java.util.Locale;
-
 /**
  * Created by Tomáš on 26. 4. 2015.
  */
-public class WidgetWeatherPersistence extends WidgetPersistence {
+public class WidgetWeatherPersistence extends WidgetPersistence implements IIdentifier {
 
 	public static final int DEFAULT_WEATHER_ICON = R.string.weather_sunny;
 	public static final String TAG = WidgetWeatherPersistence.class.getSimpleName();
 
+	private static final String PREF_ID = "id";
+	private static final String PREF_HUMIDITY = "humidity";
+	private static final String PREF_TIMESTAMP = "timestamp";
 	private static final String PREF_CITY_NAME = "city_name";
+	private static final String PREF_COUNTRY = "country";
 	private static final String PREF_TEMPERATURE = "temperature";
+	private static final String PREF_TEMPERATURE_UNIT = "temperature_unit";
 	private static final String PREF_ICON_RESOURCE = "icon_resource";
+	private static final String DEFAULT_TEMPERATURE_UNIT = "°C";
 
 	private static Typeface sWeatherFont;
 	private Resources mResources;
 
 	// persistent data
+	public String id;
 	public String cityName;
-	public String temperature;
+	public String country;
 	public int iconResource = DEFAULT_WEATHER_ICON;
+	public long temperature;
+	public String temperatureUnit;
+	public float humidity;
+	private long timestamp;
 
 	// object data
 	public Bitmap generatedIcon;
 	private int oldIconResource;
 	private final Rect mIconBounds = new Rect();
 	private int oldIconSize;
+	private TemperatureValue mTemperatureValue;
 
 	public WidgetWeatherPersistence(Context context, int widgetId, UnitsHelper unitsHelper, TimeHelper timeHelper, WidgetSettings settings) {
 		super(context, widgetId, 0, 0, unitsHelper, timeHelper, settings);
@@ -53,9 +64,87 @@ public class WidgetWeatherPersistence extends WidgetPersistence {
 			sWeatherFont = Typeface.createFromAsset(context.getAssets(), "weather_icons.ttf");
 		}
 
+		mTemperatureValue = new TemperatureValue();
 		mResources = mContext.getResources();
 	}
 
+	@Override
+	public void load() {
+		id = mPrefs.getString(getProperty(PREF_ID), "");
+		cityName = mPrefs.getString(getProperty(PREF_CITY_NAME), "");
+		iconResource = mPrefs.getInt(getProperty(PREF_ICON_RESOURCE), DEFAULT_WEATHER_ICON);
+		country = mPrefs.getString(getProperty(PREF_COUNTRY), "");
+
+		// loads persist temperature + set object temperatur
+		temperature = mPrefs.getLong(getProperty(PREF_TEMPERATURE), 0);
+		temperatureUnit = mPrefs.getString(getProperty(PREF_TEMPERATURE_UNIT), mUnitsHelper != null ? mUnitsHelper.getStringUnit(mTemperatureValue) : DEFAULT_TEMPERATURE_UNIT);
+		mTemperatureValue.setValue(String.valueOf(temperature));
+
+		humidity = mPrefs.getFloat(getProperty(PREF_HUMIDITY), 0);
+		timestamp = mPrefs.getLong(getProperty(PREF_TIMESTAMP), 0);
+	}
+
+	@Override
+	public void save() {
+		mPrefs.edit()
+				.putString(getProperty(PREF_ID), id)
+				.putString(getProperty(PREF_CITY_NAME), cityName)
+				.putString(getProperty(PREF_COUNTRY), country)
+				.putLong(getProperty(PREF_TEMPERATURE), temperature)
+				.putInt(getProperty(PREF_ICON_RESOURCE), iconResource)
+				.putString(getProperty(PREF_TEMPERATURE_UNIT), temperatureUnit)
+				.putFloat(getProperty(PREF_HUMIDITY), humidity)
+				.putLong(getProperty(PREF_TIMESTAMP), timestamp)
+				.apply();
+	}
+
+	@Override
+	public void delete() {
+		mPrefs.edit()
+				.remove(getProperty(PREF_ID))
+				.remove(getProperty(PREF_CITY_NAME))
+				.remove(getProperty(PREF_COUNTRY))
+				.remove(getProperty(PREF_TEMPERATURE))
+				.remove(getProperty(PREF_ICON_RESOURCE))
+				.remove(getProperty(PREF_TEMPERATURE_UNIT))
+				.remove(getProperty(PREF_HUMIDITY))
+				.remove(getProperty(PREF_TIMESTAMP))
+				.apply();
+	}
+
+	@Override
+	public void configure(Object obj1, Object obj2){
+		JSONObject json = (JSONObject) obj1;
+		if(json == null) return;
+		try {
+			JSONObject jsonWeather = json.getJSONArray("weather").getJSONObject(0);
+			JSONObject main = json.getJSONObject("main");
+
+			id = json.getString("id");
+			cityName = json.getString("name") + ", " + json.getJSONObject("sys").getString("country");
+
+			iconResource = WeatherProvider.parseWeatherIconResource(
+					jsonWeather.getInt("id"),
+					json.getJSONObject("sys").getLong("sunrise") * 1000,
+					json.getJSONObject("sys").getLong("sunset") * 1000);
+
+			temperature = (long) main.getDouble("temp");
+			temperatureUnit = DEFAULT_TEMPERATURE_UNIT;
+			mTemperatureValue.setValue(String.valueOf(temperature));
+			
+			humidity = (float) main.getDouble("humidity");
+			timestamp = json.getLong("dt");
+
+			// generates new bitmap but only IF NEEDED
+			getBitmapIcon(false, (int) mContext.getResources().getDimension(R.dimen.widget_weather_icon));
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+	}
+
+	// ----------------------------------------------------------- //
+	// ---------------------- GETTERS ---------------------------- //
+	// ----------------------------------------------------------- //
 
 	/**
 	 * If needed, creates new bitmap of weather
@@ -82,115 +171,28 @@ public class WidgetWeatherPersistence extends WidgetPersistence {
 
 			generatedIcon = iconBitmap;
 			oldIconResource = iconResource;
+			oldIconSize = size;
 		}
 		return generatedIcon;
 	}
 
-	/**
-	 * Parse widget icon based on id which were get from the server
-	 * @param actualId
-	 * @param sunrise
-	 * @param sunset
-	 * @return string icon resource
-	 */
-	public static int parseWeatherIconResource(int actualId, long sunrise, long sunset){
-		int iconRes;
 
-		// if its exactly 800, its clear sky
-		if(actualId == 800){
-			long currentTime = new Date().getTime();
-			if(currentTime >= sunrise && currentTime < sunset) {
-				iconRes = R.string.weather_sunny;
-			} else {
-				iconRes = R.string.weather_clear_night;
-			}
-
-			return iconRes;
+	public String getTemperature(){
+		if(mUnitsHelper != null){
+			return  mUnitsHelper.getStringValueUnit(mTemperatureValue);
 		}
-		// else we simplify that to some groups
-		int id = actualId / 100;
-		switch(id) {
-			case 2 :
-				iconRes = R.string.weather_thunder;
-				break;
-			case 3 :
-				iconRes = R.string.weather_drizzle;
-				break;
-			case 5 :
-				iconRes = R.string.weather_rainy;
-				break;
-			case 6 :
-				iconRes = R.string.weather_snowy;
-				break;
-			case 7 :
-				iconRes = R.string.weather_foggy;
-				break;
-			case 8 :
-				iconRes = R.string.weather_cloudy;
-				break;
-
-			// default is nice day
-			default:
-				iconRes = WidgetWeatherPersistence.DEFAULT_WEATHER_ICON;
-				break;
+		else{
+			return String.format("%d %s", temperature, temperatureUnit);
 		}
+	}
 
-		return iconRes;
+	@Override
+	public String getId() {
+		return id;
 	}
 
 	@Override
 	public String getPropertyPrefix() {
 		return "weather";
-	}
-
-	@Override
-	public void load() {
-		cityName = mPrefs.getString(getProperty(PREF_CITY_NAME), "");
-		temperature = mPrefs.getString(getProperty(PREF_TEMPERATURE), "");
-		iconResource = mPrefs.getInt(getProperty(PREF_ICON_RESOURCE), DEFAULT_WEATHER_ICON);
-	}
-
-	@Override
-	public void save() {
-		mPrefs.edit()
-				.putString(getProperty(PREF_CITY_NAME), cityName)
-				.putString(getProperty(PREF_TEMPERATURE), temperature)
-				.putInt(getProperty(PREF_ICON_RESOURCE), iconResource)
-				.apply();
-	}
-
-	@Override
-	public void delete() {
-		mPrefs.edit()
-				.remove(getProperty(PREF_CITY_NAME))
-				.remove(getProperty(PREF_TEMPERATURE))
-				.remove(getProperty(PREF_ICON_RESOURCE))
-				.apply();
-	}
-
-	@Override
-	public void configure(Object obj1, Object obj2){
-		JSONObject json = (JSONObject) obj1;
-		if(json == null) return;
-		try {
-			JSONObject details = json.getJSONArray("weather").getJSONObject(0);
-			JSONObject main = json.getJSONObject("main");
-
-			//DateFormat df = DateFormat.getDateTimeInstance();
-			//String updatedOn = df.format(new Date(json.getLong("dt") * 1000));
-			cityName = json.getString("name").toUpperCase(Locale.US) + ", " + json.getJSONObject("sys").getString("country");
-
-			iconResource = WidgetWeatherPersistence.parseWeatherIconResource(details.getInt("id"),
-					json.getJSONObject("sys").getLong("sunrise") * 1000,
-					json.getJSONObject("sys").getLong("sunset") * 1000);
-
-			// TODO ziskat a vypsat hodnotu podle unitshelperu
-			temperature = String.format("%d %s", (long) main.getDouble("temp"), "℃");
-
-			// generates new bitmap but only IF NEEDED
-			getBitmapIcon(false, (int) mContext.getResources().getDimension(R.dimen.widget_weather_icon));
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}
 	}
 }

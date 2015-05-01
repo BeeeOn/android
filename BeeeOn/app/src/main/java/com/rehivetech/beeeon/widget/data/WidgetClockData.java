@@ -143,7 +143,7 @@ public class WidgetClockData extends WidgetData {
 		switch (this.widgetLayout){
 			case R.layout.widget_clock_3x2:
 				mClockFont = R.dimen.widget_textsize_clock_large;
-				mWeatherFont = R.dimen.textsize_headline;
+				mWeatherFont = R.dimen.textsize_title;
 				mWeatherIconDimension = R.dimen.widget_weather_icon;
 				break;
 
@@ -164,7 +164,7 @@ public class WidgetClockData extends WidgetData {
 			dev.setValueUnitColor(settings.colorSecondary);
 
 			if(this.widgetLayout == R.layout.widget_clock_3x2) {
-				dev.getBuilder().setViewVisibility(R.id.icon, View.VISIBLE); // TODO check if the layout is shown
+				if(dev.containerType == dev.VALUE_UNIT) dev.getBuilder().setViewVisibility(R.id.icon, View.VISIBLE);
 			}
 			else if(this.widgetLayout == R.layout.widget_clock_2x2){
 				dev.setValueUnitSize(R.dimen.textsize_caption);
@@ -264,7 +264,8 @@ public class WidgetClockData extends WidgetData {
 
 				mBuilder.setTextView(
 						R.id.widget_clock_weather_temperature,
-						weather.temperature,
+						weather.getTemperature(),
+						//String.format("%d %s", weather.temperature, weather.temperatureUnit),
 						settings.colorSecondary,
 						mWeatherFont
 				);
@@ -293,6 +294,8 @@ public class WidgetClockData extends WidgetData {
 	public boolean handleUpdateData() {
 		int updated = 0;
 		Adapter adapter = mController.getAdaptersModel().getAdapter(widgetAdapterId);
+		if(adapter == null) return false;
+
 		for(WidgetDevicePersistence dev : widgetDevices) {
 			Device device = mController.getFacilitiesModel().getDevice(widgetAdapterId, dev.getId());
 			if (device != null) {
@@ -341,7 +344,7 @@ public class WidgetClockData extends WidgetData {
 		String debugName;
 
 		if (minWidth < 220) {
-			if (minHeight < 140) {
+			if (minHeight < 130) {
 				layout = R.layout.widget_clock_2x1;
 				debugName = "2x1";
 			} else {
@@ -349,7 +352,7 @@ public class WidgetClockData extends WidgetData {
 				debugName = "2x2";
 			}
 		} else {
-			if (minHeight < 140) {
+			if (minHeight < 130) {
 				layout = R.layout.widget_clock_2x1;
 				debugName = "2x1";
 			} else {

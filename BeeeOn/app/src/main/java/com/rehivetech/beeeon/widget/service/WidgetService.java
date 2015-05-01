@@ -14,6 +14,7 @@ import android.os.IBinder;
 import android.os.SystemClock;
 import android.util.SparseArray;
 
+import com.rehivetech.beeeon.Constants;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.asynctask.ActorActionTask;
 import com.rehivetech.beeeon.asynctask.CallbackTask;
@@ -86,6 +87,7 @@ public class WidgetService extends Service {
     private Controller mController;
     private TimeHelper mTimeHelper;
     private Calendar mCalendar;
+    private WeatherProvider mWeatherProvider;
 
 
     // for checking if user is logged in (we presume that for the first time he is)
@@ -144,7 +146,8 @@ public class WidgetService extends Service {
         sIntentFilter.addAction(Intent.ACTION_LOCALE_CHANGED);
         sIntentFilter.addAction(ConnectivityManager.CONNECTIVITY_ACTION);
         // --- beeeOn broadcasts
-        sIntentFilter.addAction(ActorActionTask.ACTION_ACTOR_CHANGED);
+        sIntentFilter.addAction(Constants.BROADCAST_ACTOR_CHANGED);
+        sIntentFilter.addAction(Constants.BROADCAST_PREFERENCE_CHANGED);
     }
 
     /**
@@ -157,6 +160,12 @@ public class WidgetService extends Service {
 
         mContext = getApplicationContext();
         mCalendar = Calendar.getInstance(mContext.getResources().getConfiguration().locale);
+        mController = Controller.getInstance(mContext);
+
+        SharedPreferences userSettings = mController.getUserSettings();
+        mUnitsHelper = new UnitsHelper(userSettings, mContext);
+        mTimeHelper = new TimeHelper(userSettings);
+        mWeatherProvider = new WeatherProvider(mContext);
 
         // Creates broadcast receiver which bridges broadcasts to appwidgets for handling time and screen
         Log.v(TAG, "registeringBroadcastReceiver()");
@@ -191,7 +200,7 @@ public class WidgetService extends Service {
 
         // TODO zoptimalizovat aby se to volalo jenom tehdy, kdy je potreba (tzn kdyz se prihlasi / odhlasi / etc)
         mController = Controller.getInstance(mContext);
-        initHelpers(mContext, mController);
+        //initHelpers(mContext, mController);
 
         boolean isStartUpdating = false, isForceUpdate = false;
 
@@ -366,6 +375,8 @@ public class WidgetService extends Service {
                         mController.getDeviceLogsModel().reloadDeviceLog(logPair);
                     }
                     else if(refObj instanceof WidgetWeatherPersistence){
+                        // skips city with id which is already in used data
+                        if(Utils.getFromList(((WidgetWeatherPersistence) refObj).getId(), usedWeatherData) != null) continue;
                         usedWeatherData.add((WidgetWeatherPersistence) refObj);
                     }
                 }
@@ -424,9 +435,9 @@ public class WidgetService extends Service {
             // TODO should check if city changed
             if (weather.cityName.isEmpty()) continue;
 
-            JSONObject json = RemoteWeatherFetch.getJSON(mContext, weather.cityName);
+            JSONObject json = mWeatherProvider.getWeatherByCityId(weather.id);
             if (json == null) {
-                Log.i(TAG, mContext.getString(R.string.place_not_found));
+                Log.i(TAG, mContext.getString(R.string.weather_place_not_found));
             } else {
                 weather.configure(json, null);
             }
@@ -805,13 +816,13 @@ public class WidgetService extends Service {
     /**
      * Force intent
      * @param context
-     * @param widgetId
+     * @param widgetIds
      * @return
      */
-    public static Intent getIntentForceUpdate(Context context, int widgetId) {
+    public static Intent getIntentForceUpdate(Context context, int[] widgetIds) {
         Intent intent = new Intent(context, WidgetService.class);
         intent.putExtra(WidgetService.EXTRA_FORCE_UPDATE, true);
-        intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, new int[]{ widgetId });
+        intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, widgetIds);
         return intent;
     }
 
@@ -822,7 +833,7 @@ public class WidgetService extends Service {
      * @return
      */
     public static PendingIntent getPendingIntentForceUpdate(Context context, int widgetId) {
-        final Intent intent = getIntentForceUpdate(context, widgetId);
+        final Intent intent = getIntentForceUpdate(context, new int[]{widgetId});
         return PendingIntent.getService(context, widgetId, intent, PendingIntent.FLAG_UPDATE_CURRENT);
     }
 
@@ -952,10 +963,10 @@ public class WidgetService extends Service {
                 stopAlarm(context);
             }
             // if any actor value was changed, tell the service to refresh widget with that device
-            else if(receivedAction.equals(ActorActionTask.ACTION_ACTOR_CHANGED)){
+            else if(receivedAction.equals(Constants.BROADCAST_ACTOR_CHANGED)){
                 // TODO prepsat s kontextem...
-                String adapterId = intent.getStringExtra(ActorActionTask.EXTRA_ACTOR_CHANGED_ADAPTER_ID);
-                String actorId = intent.getStringExtra(ActorActionTask.EXTRA_ACTOR_CHANGED_ID);
+                String adapterId = intent.getStringExtra(Constants.BROADCAST_EXTRA_ACTOR_CHANGED_ADAPTER_ID);
+                String actorId = intent.getStringExtra(Constants.BROADCAST_EXTRA_ACTOR_CHANGED_ID);
 
                 if(adapterId == null || adapterId.isEmpty() || actorId == null || actorId.isEmpty()) return;
                 context.startService(WidgetService.getIntentActorChangeResult(context, adapterId, actorId));
@@ -969,6 +980,10 @@ public class WidgetService extends Service {
 				//widgetManager.notifyAppWidgetViewDataChanged();
 			}
 			//*/
+            }
+            else if(receivedAction.equals(Constants.BROADCAST_PREFERENCE_CHANGED)){
+                // update widgets to show different units
+                context.startService(getIntentForceUpdate(context, new int[]{}));
             }
 		/*
 		// TODO somehow not getting isNoConnectivity

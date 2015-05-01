@@ -143,6 +143,8 @@ public class WidgetDeviceData extends WidgetData {
     public boolean handleUpdateData() {
         int updated = 0;
         Adapter adapter = mController.getAdaptersModel().getAdapter(widgetAdapterId);
+        if(adapter == null) return false;
+
         for(WidgetDevicePersistence dev : widgetDevices) {
             Device device = mController.getFacilitiesModel().getDevice(widgetAdapterId, dev.getId());
             if(device != null) {

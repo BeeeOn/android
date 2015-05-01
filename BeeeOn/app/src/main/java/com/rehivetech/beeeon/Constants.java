@@ -121,4 +121,15 @@ public final class Constants {
 	public static final String GUI_EDIT_SENSOR_ID = "GUI_EDIT_SENSOR_ID";
 
 	public static final String GUI_INTRO_PLAY = "GUI_INTRO_PLAY" ;
+
+	/**
+	 * Broadcasts
+	 */
+
+	public static final String BROADCAST_PREFERENCE_CHANGED = "com.rehivetech.beeeon.BROADCAST_PREFERENCE_CHANGED";
+
+	// actor change
+	public static final String BROADCAST_ACTOR_CHANGED = "com.rehivetech.beeeon.BROADCAST_ACTOR_CHANGED";
+	public static final String BROADCAST_EXTRA_ACTOR_CHANGED_ID = "com.rehivetech.beeeon.EXTRA_ACTION_CHANGED_ID";
+	public static final String BROADCAST_EXTRA_ACTOR_CHANGED_ADAPTER_ID = "com.rehivetech.beeeon.BROADCAST_EXTRA_ACTOR_CHANGED_ADAPTER_ID";
 }
