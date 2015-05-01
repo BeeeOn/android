@@ -44,8 +44,10 @@ public abstract class VisibleNotification extends BaseNotification {
 		stackBuilder.addNextIntent(resultIntent);
 
 		// Create pending intent
-		PendingIntent resultPendingIntent = stackBuilder.getActivity(context, 0, resultIntent,
-				PendingIntent.FLAG_UPDATE_CURRENT);
+		PendingIntent resultPendingIntent = stackBuilder.getPendingIntent(
+				0,
+				PendingIntent.FLAG_UPDATE_CURRENT
+		);
 
 		NotificationCompat.Builder builder = new NotificationCompat.Builder(context)
 				.setSmallIcon(R.drawable.beeeon_logo_white)
