@@ -1,0 +1,80 @@
+<project name="TestNGTest" default="test" basedir=".">
+
+	<property file="local.properties" />
+ <property file="ant.properties" />
+    <property environment="env" />
+    <condition property="sdk.dir" value="${env.ANDROID_HOME}">
+        <isset property="env.ANDROID_HOME" />
+    </condition>
+<loadproperties srcFile="project.properties" />
+	<fail
+            message="sdk.dir is missing. Make sure to generate local.properties using 'android update project' or to inject it through the ANDROID_HOME environment variable."
+            unless="sdk.dir"
+    />
+    <import file="custom_rules.xml" optional="true" />
+    <import file="${sdk.dir}/tools/ant/uibuild.xml" />
+
+   <!-- Define <testng> task -->
+
+   <taskdef name="testng" classname="org.testng.TestNGAntTask">
+      <classpath>
+         <pathelement location="lib/testng-6.8.jar"/>
+      </classpath>
+   </taskdef>
+
+   <property name="testdir" location="test" />
+   <property name="srcdir" location="src" />
+   <property name="libdir" location="lib" />
+   <property name="full-compile" value="true" />
+   
+   <path id="classpath.base"/>
+   <path id="classpath.test">
+   
+   <fileset dir="${libdir}">
+      <include name="**/*.jar" />
+   </fileset>
+   
+   <pathelement location="${testdir}" />
+   <pathelement location="${srcdir}" />
+   
+   <path refid="classpath.base" />
+   </path>
+   
+   <target name="clean" >
+      <delete verbose="${full-compile}">
+         <fileset dir="${testdir}" includes="**/*.class" />
+      </delete>
+   </target>
+   
+   <target name="compile" depends="clean">
+      <javac srcdir="${srcdir}" destdir="${testdir}" verbose="${full-compile}">
+         <classpath refid="classpath.test"/>
+      </javac>
+   </target>
+
+<target name="run" depends="compile">
+    <exec executable="adb">
+	<arg value="push"/>
+	<arg value="bin/test.jar"/>
+	<arg value="/data/local/tmp/"/>
+
+<!--
+	<arg value="shell"/>
+	<arg value="am"/>
+	<arg value="start"/>
+	<arg value="-a"/>
+	<arg value="android.intent.action.MAIN"/>
+	<arg value="-n"/>
+	<arg value="com.rehivetech.beeeon/com.rehivetech.beeeon.TestDemo"/>
+-->
+    </exec>
+</target>
+   
+   <target name="test" depends="compile">
+      <testng outputdir="${testdir}" classpathref="classpath.test"> 
+         <xmlfileset dir="${srcdir}" includes="testng.xml"/> 
+      </testng>
+   </target>
+   
+    
+</project>

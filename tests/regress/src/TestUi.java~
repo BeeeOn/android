@@ -1,0 +1,201 @@
+package com.rehivetech.beeeon;
+import android.os.RemoteException;
+
+import com.android.uiautomator.core.UiDevice;
+import com.android.uiautomator.core.UiObject;
+import com.android.uiautomator.core.UiObjectNotFoundException;
+import com.android.uiautomator.core.UiScrollable;
+import com.android.uiautomator.core.UiSelector;
+import com.android.uiautomator.testrunner.UiAutomatorTestCase;
+
+//import org.junit.After;
+//import org.junit.Before;
+
+public class TestUi extends UiAutomatorTestCase {
+
+        // ----------------Global variables------------------------------
+
+        // Get the device properties
+        UiDevice myDevice = getUiDevice();
+        // All App Tray Button
+        UiObject AppTrayButton = new UiObject(new UiSelector().description("Apps"));
+
+        // Get AppTray container
+        UiScrollable appView = new UiScrollable(new UiSelector().className(
+                "android.view.View").scrollable(true));
+        // Apps Tab
+        UiObject AppsTab = new UiObject(new UiSelector().className(
+                "android.widget.TextView").description("Apps"));
+        // Verify the launched application by it's Package name
+        UiObject beeeonValidation = new UiObject(
+                new UiSelector().packageName("com.rehivetech.beeeon"));
+        // Add Note menu button
+        UiObject demoImageButton = new UiObject(new UiSelector().className(
+                android.widget.ImageButton.class.getName())
+                .index(2));
+
+        UiObject deviceNameText =  new UiObject(new UiSelector()
+                .className(android.widget.TextView.class.getName())
+                .text("Televizor"));
+        /*
+        // Edit field to enter new Text
+        UiObject addNoteText = new UiObject(new UiSelector().className(
+                android.widget.EditText.class.getName()).index(0));
+        // Get the list of added Notes
+        UiObject notesList = new UiObject(new UiSelector().className(
+                android.widget.ListView.class.getName()).index(0));
+        // Save menu button
+        UiObject saveNoteButton = new UiObject(new UiSelector().className(
+                android.widget.TextView.class.getName()).text("Save"));
+        // Long press menu
+        UiObject longPressNoteMenu = new UiObject(new UiSelector().className(
+                android.widget.LinearLayout.class.getName()).index(0));
+        // Delete button in LongPress menu
+        UiObject deleteButton = new UiObject(new UiSelector().className(
+                android.widget.TextView.class.getName()).text("Delete"));
+*/
+        // Actual Tests starts here
+
+        /*@Before
+        public void verifyBeeeonApp() {
+            assertTrue("BeeeOn App not launched", beeeonValidation.exists());
+        }*/
+
+        // Launch BeeeOn Application
+        /*public void test_01_LaunchTestApp() throws RemoteException,
+                UiObjectNotFoundException {
+
+            // wakeup the device if the screen is Off
+            if (!myDevice.isScreenOn())
+                myDevice.wakeUp();
+            // Press Home button
+            //myDevice.pressHome();
+
+            // Launch BeeeOn Application
+            assertTrue("AppTray Button not found", AppTrayButton.exists());
+            AppTrayButton.clickAndWaitForNewWindow();
+
+            assertTrue("All Apps Tab not found", AppsTab.exists());
+            // Set the swiping mode to horizontal (the default is vertical)
+            appView.setAsHorizontalList();
+
+            // Look for the BeeeOn application
+            UiObject beeeOnApp = appView.getChildByText(new UiSelector()
+                            .className(android.widget.TextView.class.getName()), "BeeeOn",
+                    true);
+
+            // Validate Notebook App by it's package name
+            assertTrue("BeeeON App not launched", beeeonValidation.exists());
+
+            beeeOnApp.clickAndWaitForNewWindow();
+
+        }*/
+
+        // Change device location
+        public void test_02_ChangeDeviceLocation() throws UiObjectNotFoundException {
+
+            // Click on Menu button
+            //myDevice.pressMenu();
+
+            assertTrue("Add Note Button not found", demoImageButton.exists());
+            // click on 'DEMO' button
+            demoImageButton.clickAndWaitForNewWindow();
+
+            // Add note button in menu
+            assertTrue("Sporak Text field is not found", deviceNameText.exists());
+            deviceNameText.clickAndWaitForNewWindow();
+
+            /*
+            // Read the text enetered in Text box
+            assertEquals("Note 1", addNoteText.getText());
+
+            // Click on Menu button
+            myDevice.pressMenu();
+
+            // Save button in the menu
+            assertTrue("Save Button not found", saveNoteButton.exists());
+            saveNoteButton.clickAndWaitForNewWindow();
+         */
+        }
+/*
+        // Add Note2
+        public void testAddNote2() throws UiObjectNotFoundException {
+            // ------Add Note 2--------
+
+            // Click on Menu button
+            myDevice.pressMenu();
+
+            assertTrue("Add note Button not found", addNoteButton.exists());
+            addNoteButton.click();
+
+            // Add note button in menu
+            assertTrue("Add note Text field not found", addNoteText.exists());
+            addNoteText.setText("Note 2");
+
+            // Read the Text entered
+            assertEquals("Note 2", addNoteText.getText());
+
+            // Save button in the menu
+            myDevice.pressMenu();
+
+            assertTrue("Save Button not found", saveNoteButton.exists());
+            saveNoteButton.clickAndWaitForNewWindow();
+        }
+
+        // Delete Note 1
+        public void testDeleteNote1() throws UiObjectNotFoundException {
+            // Select Note 2 and long press on it
+            UiObject noteListItem = notesList.getChild(new UiSelector()
+                    .className(android.widget.TextView.class.getName())
+                    .text("Note 1").longClickable(true));
+
+            // Check if Note 1 exists in the list
+            assertEquals("Note 1", noteListItem.getText());
+
+            // Long press the menu item
+            noteListItem.longClick();
+
+            UiObject note1Text = longPressNoteMenu.getChild(new UiSelector()
+                    .className(android.widget.TextView.class.getName()).index(0));
+
+            // Check if Note 1 menu is opened
+            assertEquals("Note 1", note1Text.getText());
+            assertTrue("Delete Button not found", deleteButton.exists());
+
+            deleteButton.clickAndWaitForNewWindow();
+        }
+*/
+        /*@After
+        public void closeBeeeOnApp() {
+            getUiDevice().pressBack();
+        }*/
+
+    /*public void testHome() throws RemoteException,
+            UiObjectNotFoundException {
+
+        // press Home
+        UiDevice mydevice = getUiDevice();
+        if (!mydevice.isScreenOn()) {
+            mydevice.wakeUp();
+        }
+        mydevice.pressHome();
+
+        // Script path
+        String filePath = "/mnt/sdcard_ext/command.sh";
+        File command = new File(filePath);
+        command.setExecutable(true);
+
+        // Run command
+        Process p = null;
+        try {
+            Runtime.getRuntime().exec(
+                    "/system/bin/sh /mnt/sdcard_ext/command.sh");
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            if (p != null)
+                p.destroy();
+        }
+
+    }*/
+}
