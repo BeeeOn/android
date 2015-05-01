@@ -100,7 +100,7 @@
     <string name="toast_adapter_removed">Brána byla odstraněna</string>
     <string name="toast_no_adapter">Nemáte žádnou registrovanou bránu</string>
     <string name="toast_ignore_uninitialized_info">Později můžete přidat další zařízení klepnutím na (+)</string>
-    <string name="toast_empty_sensor_name">Vyplňte názvy všech zařízení</string>
+    <string name="toast_empty_sensor_name">Vypl�?te názvy všech zařízení</string>
     <string name="toast_wrong_or_no_device">Nebylo zadáno žádné zařízení nebo je zvolené zařízení nesprávné</string>
     <string name="toast_no_uninitialized_devices">Nejsou k dispozici žádné neinicializované zařízení</string>
     <string name="toast_success_save_data">Údaje byly úspěšně uloženy</string>
@@ -122,8 +122,8 @@
     <string name="progress_checking_location">Ověřuji polohu&#8230;</string>
 
     <!-- NavDrawer -->
-    <string name="drawer_open">OTEVŘÍT</string>
-    <string name="drawer_close">ZAVŘÍT</string>
+    <string name="drawer_open">OTEV�?ÍT</string>
+    <string name="drawer_close">ZAV�?ÍT</string>
     <string name="location">Umístění</string>
     <string name="custom_view">Uživatelský pohled</string>
     <string name="adapter">Brány</string>
@@ -143,7 +143,7 @@
     <string name="addadapter_textview_name">Název</string>
     <string name="addadapter_view_setname">Nastavte název brány, např. Doma</string>
     <string name="addadapter_textview_code">QR kód</string>
-    <string name="addsensor_send_pair">ZAHÁJIT PÁROVÁNÍ</string>
+    <string name="addsensor_send_pair">ZAH�?JIT P�?ROV�?NÍ</string>
 
     <!-- Others -->
     <string name="action_settings">Nastavení aplikace</string>
@@ -163,13 +163,13 @@
     <string name="addsensor_new_location_spinner">Nové umístění</string>
     <string name="sen_detail_graph_info">Aktivujte dotykem</string>
     <string name="loading_data">Nahrávám data&#8230;</string>
-    <string name="no_sensor_cap">ŽÁDNÉ ZAŘÍZENÍ</string>
-    <string name="no_adapter_cap">ŽÁDNÁ BRÁNA</string>
-    <string name="no_rules_cap">ŽÁDNÉ PRAVIDLO</string>
+    <string name="no_sensor_cap">Ž�?DNÉ ZA�?ÍZENÍ</string>
+    <string name="no_adapter_cap">Ž�?DN�? BR�?NA</string>
+    <string name="no_rules_cap">Ž�?DNÉ PRAVIDLO</string>
 	<string name="profile_category_senzors">Zařízení</string>
 	<string name="profile_category_friends">Přátelé</string>
 	<string name="profile_category_app">Aplikace</string>
-	<string name="profile_level">Úroveň</string>
+	<string name="profile_level">Úrove�?</string>
 	<string name="profile_more_accounts">Další účty</string>
 	<string name="profile_new_account">Propojit s vybranou sítí</string>
 
@@ -303,13 +303,13 @@
 
 
     <!-- Tutorial -->
-    <string name="tut_add_adapter_header">PŘIDAT BRÁNU</string>
+    <string name="tut_add_adapter_header">P�?IDAT BR�?NU</string>
     <string name="tut_add_adapter_text">Pro přidání brány klepněte na plus (+)</string>
-    <string name="tut_add_sensor_header">PŘIDAT ZAŘÍZENÍ</string>
+    <string name="tut_add_sensor_header">P�?IDAT ZA�?ÍZENÍ</string>
     <string name="tut_add_sensor_text">Pro přidání zařízení klepněte na plus (+)</string>
 
     <string name="tutorial_next">DALŠÍ</string>
-    <string name="tutorial_add">PŘIDAT</string>
+    <string name="tutorial_add">P�?IDAT</string>
 
     <string name="tutorial_open_menu">Otevřte nabídku</string>
     <string name="tutorial_open_menu_text">Klepnutím na ikonu zobrazíte nabídku umístění</string>
@@ -369,15 +369,15 @@
 	<string name="name">Název</string>
 	<string name="rule_delete_dialog">Prosím potvrďte odstranění pravidla</string>
 	<string name="title_activity_sensor_edit">Editace zařízení</string>
-	<string name="addadapter_fill_name">Vyplňte název brány</string>
-	<string name="addadapter_fill_code">Vyplňte kód</string>
+	<string name="addadapter_fill_name">Vypl�?te název brány</string>
+	<string name="addadapter_fill_code">Vypl�?te kód</string>
 	<string name="tut_intro_text_1">Vítejte v BeeeOn inteligentní domácnosti. Tutorial Vám představí BeeeOn komponenty a aplikaci.</string>
 	<string name="tut_intro_text_2">BeeeOn komponenty jsou bezdrátová zařízení (např. senzor) a brána.</string>
 	<string name="tut_intro_text_3">Senzory měří hodnoty (např. teplotu), aktory nastavují požadované hodnoty.</string>
 	<string name="tut_intro_text_4">Brána sbírá data z bezdrátových zařízení.</string>
 	<string name="tut_intro_text_5">Mobilní aplikace poskytuje sledování a konfiguraci domácnosti odkukoliv a kdykoliv.</string>
 	<string name="tutorial_go_to_app">START</string>
-	<string name="tutorial_skip">PŘESKOČIT</string>
+	<string name="tutorial_skip">P�?ESKOČIT</string>
 	<string name="radius">Rádius</string>
 	<string name="dialog_choose_provider_title">Vyberte poskytovatele účtu</string>
 	<string name="addsensor_stoped">stopped</string>

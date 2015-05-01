@@ -4,4 +4,6 @@
 			 android:layout_width="match_parent"
 			 android:layout_height="match_parent"
 			 tools:context="com.rehivetech.beeeon.activity.NotificationActivity"
-			 tools:ignore="MergeRootFrame"/>
+			 tools:ignore="MergeRootFrame">
+	<include layout="@layout/beeeon_toolbar" />
+</FrameLayout>

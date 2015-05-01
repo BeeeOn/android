@@ -92,7 +92,7 @@
     <string name="toast_adapter_removed">Brána bola odstránená</string>
     <string name="toast_no_adapter">Nemáte žiadnou registrovanou bránu</string>
     <string name="toast_ignore_uninitialized_info">Neskôr môžete pridať ďalšie zariadenie ťuknutím na (+)</string>
-    <string name="toast_empty_sensor_name">Vyplňte názvy všetkých zaradeni</string>
+    <string name="toast_empty_sensor_name">Vypl�?te názvy všetkých zaradeni</string>
     <string name="toast_wrong_or_no_device">Vybrali ste nesprávne alebo žiadne zariadenie</string>
     <string name="toast_no_uninitialized_devices">K dispozicií nie sú žiadne neinicializované zariadenia</string>
     <string name="toast_success_save_data">Údaje boli úspešne uložené</string>
@@ -131,7 +131,7 @@
     <string name="addadapter_textview_name">Názov</string>
     <string name="addadapter_view_setname">Nastavte názov brány, napr. Doma</string>
     <string name="addadapter_textview_code">QR kód</string>
-    <string name="addsensor_send_pair">SPUSŤITE PÁROVÁNIE</string>
+    <string name="addsensor_send_pair">SPUSŤITE P�?ROV�?NIE</string>
 
     <!-- Others -->
     <string name="action_settings">Nastavenie</string>
@@ -142,7 +142,7 @@
     <string name="action_addsensor">Pridanie zaradenie</string>
     <string name="action_logout">Odhlásenie</string>
     <string name="action_hide_sensor">Skryť zaradenie</string>
-    <string name="action_unregist_facility">Odstráňiť zariadenie</string>
+    <string name="action_unregist_facility">Odstrá�?iť zariadenie</string>
     <string name="action_hide_facility">Skryť zariadenie</string>
     <string name="action_close">Zrušiť</string>
     <string name="action_intro">Prednastavenie</string>
@@ -152,7 +152,7 @@
     <string name="sen_detail_graph_info">Aktivujte dotykom</string>
     <string name="loading_data">Nahrávam dáta&#8230;</string>
     <string name="no_sensor_cap">ŽIADNÉ ZARADENIE</string>
-    <string name="no_adapter_cap">ŽIADNA BRÁNA</string>
+    <string name="no_adapter_cap">ŽIADNA BR�?NA</string>
     <string name="no_rules_cap">ŽIADNE PRAVIDLO</string>
 
     <!-- Arrays -->
@@ -255,7 +255,7 @@
 
 
     <!-- Tutorial -->
-    <string name="tut_add_adapter_header">PRIDAJTE BRÁNU</string>
+    <string name="tut_add_adapter_header">PRIDAJTE BR�?NU</string>
     <string name="tut_add_adapter_text">Dotknite sa plus (+) pre pridanie brány</string>
     <string name="tut_add_sensor_header">PRIDAJTE SENSOR</string>
     <string name="tut_add_sensor_text">Dotknite sa plus (+) pre pridanie zariadenia</string>
@@ -336,7 +336,7 @@
 	<string name="profile_category_app">Aplikace</string>
 	<string name="profile_category_friends">Přátelé</string>
 	<string name="profile_category_senzors">Zaradenie</string>
-	<string name="profile_level">Úroveň</string>
+	<string name="profile_level">Úrove�?</string>
 	<string name="profile_more_accounts">Další účty</string>
 	<string name="profile_new_account">Propojit s vybranou sítí</string>
 	<string name="name">Název</string>
