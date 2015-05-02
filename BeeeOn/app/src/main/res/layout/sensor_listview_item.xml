@@ -35,6 +35,11 @@
                  android:layout_height="wrap_content"
                  android:layout_below="@+id/titleofsensor"
                  android:layout_toLeftOf="@+id/unitofsensor"
+				 android:layout_toRightOf="@+id/timeofsensor"
+				 android:gravity="right"
+				 android:ellipsize="end"
+				 android:scrollHorizontally="true"
+				 android:singleLine="true"
                  android:text="200"
                  android:textColor="@color/beeeon_secundary_pink"
                  android:textSize="20sp"
@@ -56,9 +61,12 @@
                  android:layout_width="wrap_content"
                  android:layout_height="wrap_content"
                  android:layout_below="@+id/titleofsensor"
+				 android:layout_alignParentBottom="true"
+				 android:gravity="bottom"
+				 android:layout_marginBottom="8dp"
                  android:text="Last sync: 00:00"
                  android:textColor="@color/beeeon_text_hint"
-                 android:textSize="12sp" />
+                 android:textSize="10sp" />
 
              <TextView
                  android:id="@+id/titleofsensor"
@@ -66,7 +74,8 @@
                  android:layout_height="wrap_content"
                  android:layout_alignParentLeft="true"
                  android:layout_alignParentTop="true"
-                 android:layout_toLeftOf="@+id/valueofsensor"
+                 android:layout_toLeftOf="@+id/unitofsensor"
+				 android:layout_marginRight="8dp"
                  android:ellipsize="marquee" 
                  android:marqueeRepeatLimit="marquee_forever"
                  android:scrollHorizontally="true"

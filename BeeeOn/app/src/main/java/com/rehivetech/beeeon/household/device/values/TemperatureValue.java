@@ -20,6 +20,11 @@ public final class TemperatureValue extends BaseValue {
 		return R.drawable.dev_temperature;
 	}
 
+	@Override
+	public int getActorIconResource() {
+		return R.drawable.dev_tem_actor;
+	}
+
 	public double getValue() {
 		return mValue;
 	}

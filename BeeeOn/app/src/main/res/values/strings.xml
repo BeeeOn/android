@@ -382,6 +382,10 @@
 	<string name="addsensor_stoped">stopped</string>
 	<string name="add_action_dialog_title">What do you want add ?</string>
 	<string name="toast_need_sensor_location_icon">Please choose icon of your new location</string>
+	<string name="dialog_title_set_bioler_type">Choose boiler type</string>
+	<string name="dialog_set_boiler_setaction">set</string>
+	<string name="dialog_title_set_bioler_mode">Choose boiler mode</string>
+	<string name="dialog_title_set_temperature">Choose temperature</string>
 
 
 

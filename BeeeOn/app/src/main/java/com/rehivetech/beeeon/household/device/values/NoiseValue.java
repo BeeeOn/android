@@ -21,6 +21,12 @@ public final class NoiseValue extends BaseValue {
 	}
 
 	@Override
+	public int getActorIconResource() {
+		// FIXME: Use real resource when we will have real actor icon
+		return getIconResource();
+	}
+
+	@Override
 	public NoiseUnit getUnit() {
 		return mUnit;
 	}

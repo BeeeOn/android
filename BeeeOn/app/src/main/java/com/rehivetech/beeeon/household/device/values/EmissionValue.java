@@ -21,6 +21,12 @@ public final class EmissionValue extends BaseValue {
 	}
 
 	@Override
+	public int getActorIconResource() {
+		// FIXME: Use real resource when we will have real actor icon
+		return getIconResource();
+	}
+
+	@Override
 	public EmissionUnit getUnit() {
 		return mUnit;
 	}

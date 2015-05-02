@@ -5,7 +5,6 @@ import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -465,15 +464,6 @@ public class MainActivity extends BaseApplicationActivity implements IListDialog
 		}
 	}
 
-	public void checkNoDevices() {
-		Adapter adapter = mController.getActiveAdapter();
-		if (adapter != null && mController.getFacilitiesModel().getFacilitiesByAdapter(adapter.getId()).isEmpty()) {
-			// Show activity for adding new sensor, when this adapter doesn't have any yet
-			Log.i(TAG, String.format("%s is empty", adapter.getName()));
-			DialogFragment newFragment = new AddSensorFragmentDialog();
-			newFragment.show(getSupportFragmentManager(), ADD_SENSOR_TAG);
-		}
-	}
 
 	@Override
 	public void onConfigurationChanged(Configuration newConfig) {

@@ -11,6 +11,8 @@ public abstract class BaseValue {
 
 	public abstract int getIconResource();
 
+	public abstract int getActorIconResource();
+
 	public abstract double getDoubleValue();
 
 	/**

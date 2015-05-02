@@ -47,6 +47,16 @@
     <string name="dev_enum_value_on">Zapnuto</string>
     <string name="dev_enum_value_off">Vypnuto</string>
 
+	<string name="dev_boiler_operation_type_value_off">Vypnuto</string>
+	<string name="dev_boiler_operation_type_value_room">Pokojový regulátor</string>
+	<string name="dev_boiler_operation_type_value_equiterm">Ekvitermní regulace</string>
+	<string name="dev_boiler_operation_type_value_stable">Regulace na stálou teplotu vody</string>
+	<string name="dev_boiler_operation_type_value_tuv">Ohřev TUV</string>
+
+	<string name="dev_boiler_operation_mode_value_automatic">Automaticky</string>
+	<string name="dev_boiler_operation_mode_value_manual">Ručně</string>
+	<string name="dev_boiler_operation_mode_value_vacation">Dovolená</string>
+
     <!-- Names of default locations -->
 	<string name="loc_none">- Nezařazené -</string>
     <string name="loc_bathroom">Koupelna</string>
