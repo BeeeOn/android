@@ -30,7 +30,7 @@ public class DeleteNotification extends BaseNotification {
 		mDeleteNotificationId = deleteNotificaitonId;
 	}
 
-	public static DeleteNotification getInstance(NotificationName name, Integer msgId, String userId, Long time, NotificationType type, Bundle bundle) throws NullPointerException, IllegalArgumentException{
+	protected static DeleteNotification getInstance(NotificationName name, Integer msgId, String userId, Long time, NotificationType type, Bundle bundle) throws NullPointerException, IllegalArgumentException{
 		DeleteNotification instance = null;
 
 		try {

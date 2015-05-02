@@ -27,7 +27,7 @@ public class AdapterAddedNotification extends VisibleNotification {
 		mAdapterId = adapterId;
 	}
 
-	public static AdapterAddedNotification getInstance(NotificationName name, Integer msgId, String userId, Long time, NotificationType type, Bundle bundle) throws NullPointerException, IllegalArgumentException {
+	protected static AdapterAddedNotification getInstance(NotificationName name, Integer msgId, String userId, Long time, NotificationType type, Bundle bundle) throws NullPointerException, IllegalArgumentException {
 		AdapterAddedNotification instance = null;
 
 		try {

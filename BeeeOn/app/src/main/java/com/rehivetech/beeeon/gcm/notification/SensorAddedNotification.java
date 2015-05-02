@@ -27,7 +27,7 @@ public class SensorAddedNotification extends VisibleNotification {
 		mSensorId = sensorId;
 	}
 
-	public static SensorAddedNotification getInstance(NotificationName name, Integer msgId, String userId, Long time, NotificationType type, Bundle bundle) throws NullPointerException, IllegalArgumentException {
+	protected static SensorAddedNotification getInstance(NotificationName name, Integer msgId, String userId, Long time, NotificationType type, Bundle bundle) throws NullPointerException, IllegalArgumentException {
 		SensorAddedNotification instance = null;
 
 		try {

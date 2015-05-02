@@ -43,7 +43,7 @@ public class WatchdogNotification extends VisibleNotification {
 		mMsg = message;
 	}
 
-	public static WatchdogNotification getInstance(NotificationName name, Integer msgId, String userId, Long time, NotificationType type, Bundle bundle) throws NullPointerException, IllegalArgumentException {
+	protected static WatchdogNotification getInstance(NotificationName name, Integer msgId, String userId, Long time, NotificationType type, Bundle bundle) throws NullPointerException, IllegalArgumentException {
 		WatchdogNotification instance = null;
 
 		try {

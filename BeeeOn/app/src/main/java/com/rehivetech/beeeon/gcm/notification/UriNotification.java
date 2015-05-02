@@ -32,7 +32,7 @@ public class UriNotification extends VisibleNotification {
 		mUri = uri;
 	}
 
-	public static UriNotification getInstance(NotificationName name, Integer msgId, String userId, Long time, NotificationType type, Bundle bundle) throws NullPointerException, IllegalArgumentException {
+	protected static UriNotification getInstance(NotificationName name, Integer msgId, String userId, Long time, NotificationType type, Bundle bundle) throws NullPointerException, IllegalArgumentException {
 		UriNotification instance = null;
 
 		try {
