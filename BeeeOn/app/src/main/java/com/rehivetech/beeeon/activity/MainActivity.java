@@ -40,7 +40,6 @@ import com.rehivetech.beeeon.exception.ErrorCode;
 import com.rehivetech.beeeon.exception.NetworkError;
 import com.rehivetech.beeeon.household.adapter.Adapter;
 import com.rehivetech.beeeon.menu.NavDrawerMenu;
-import com.rehivetech.beeeon.network.authentication.FacebookAuthProvider;
 import com.rehivetech.beeeon.persistence.Persistence;
 import com.rehivetech.beeeon.util.Log;
 
@@ -137,6 +136,12 @@ public class MainActivity extends BaseApplicationActivity implements IListDialog
 		mNavDrawerMenu = new NavDrawerMenu(this,mToolbar);
 		mNavDrawerMenu.openMenu();
 		mNavDrawerMenu.setIsDrawerOpen(mIsDrawerOpen);
+
+		// creates fragments
+		mListDevices = new SensorListFragment();
+		mCustomView = new CustomViewFragment();
+		mWatchDogApp = new WatchDogListFragment();
+		mProfileFrag = new ProfileDetailFragment();
 
 		if (savedInstanceState != null) {
 			mIsDrawerOpen = savedInstanceState.getBoolean(IS_DRAWER_OPEN);
