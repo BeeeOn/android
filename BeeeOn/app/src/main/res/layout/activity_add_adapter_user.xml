@@ -54,7 +54,7 @@
 	            android:layout_gravity="right|bottom"
 	            android:layout_width="wrap_content"
 	            android:layout_height="50dp"
-	            android:text="add user"
+	            android:text="@string/add_users_adapter"
 	            android:id="@+id/add_user_adapter_save"
 	            />
         </LinearLayout>
