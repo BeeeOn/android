@@ -41,16 +41,25 @@ public abstract class VisibleNotification extends BaseNotification {
 		VisibleNotification notification = null;
 		switch (name) {
 			case WATCHDOG:
-				notification = WatchdogNotification.getInstance(name, msgId, time, type, isRead, parser);
+				notification = WatchdogNotification.getInstance(msgId, time, type, isRead, parser);
 				break;
 			case ADAPTER_ADDED:
-				notification = AdapterAddedNotification.getInstance(name, msgId, time, type, isRead, parser);
+				notification = AdapterAddedNotification.getInstance(msgId, time, type, isRead, parser);
 				break;
 			case SENSOR_ADDED:
-				notification = SensorAddedNotification.getInstance(name, msgId, time, type, isRead, parser);
+				notification = SensorAddedNotification.getInstance(msgId, time, type, isRead, parser);
 				break;
 			case URI:
-				notification = UriNotification.getInstance(name, msgId, time, type, isRead, parser);
+				notification = UriNotification.getInstance(msgId, time, type, isRead, parser);
+				break;
+			case SENSOR_LOW_BATTERY:
+				notification = SensorLowBatteryNotification.getInstance(msgId, time, type, isRead, parser);
+				break;
+			case SENSOR_LOW_SIGNAL:
+				notification = SensorLowSignalNotification.getInstance(msgId, time, type, isRead, parser);
+				break;
+			case ADAPTER_OFFLINE:
+				notification = AdapterOfflineNotification.getInstance(msgId, time, type, isRead, parser);
 				break;
 		}
 		return notification;

@@ -20,17 +20,16 @@ public class DeleteNotification extends BaseNotification {
 	/**
 	 * Constructor
 	 *
-	 * @param userId
 	 * @param msgid
 	 * @param time
 	 * @param type
 	 */
-	private DeleteNotification(String userId, int msgid, long time, NotificationType type, int deleteNotificaitonId) {
+	private DeleteNotification(int msgid, long time, NotificationType type, int deleteNotificaitonId) {
 		super(msgid, time, type, true);
 		mDeleteNotificationId = deleteNotificaitonId;
 	}
 
-	protected static DeleteNotification getInstance(NotificationName name, Integer msgId, String userId, Long time, NotificationType type, Bundle bundle) throws NullPointerException, IllegalArgumentException{
+	protected static DeleteNotification getInstance( Integer msgId, Long time, NotificationType type, Bundle bundle) throws NullPointerException, IllegalArgumentException{
 		DeleteNotification instance = null;
 
 		try {
@@ -41,7 +40,7 @@ public class DeleteNotification extends BaseNotification {
 				return null;
 			}
 
-			instance = new DeleteNotification(userId, msgId, time, type, delNotificationId);
+			instance = new DeleteNotification(msgId, time, type, delNotificationId);
 		} catch (IllegalArgumentException | NullPointerException e) {
 			return instance;
 		}

@@ -16,19 +16,19 @@ import java.io.IOException;
 /**
  * Created by Martin on 22. 4. 2015.
  */
-public class AdapterAddedNotification extends VisibleNotification {
+public class AdapterOfflineNotification extends VisibleNotification {
 
-	public static final String TAG = AdapterAddedNotification.class.getSimpleName();
+	public static final String TAG = AdapterOfflineNotification.class.getSimpleName();
 
 	private int mAdapterId;
 
-	private AdapterAddedNotification(int msgid, long time, NotificationType type, boolean read, int adapterId) {
+	private AdapterOfflineNotification(int msgid, long time, NotificationType type, boolean read, int adapterId) {
 		super(msgid, time, type, read);
 		mAdapterId = adapterId;
 	}
 
-	protected static AdapterAddedNotification getInstance(Integer msgId, Long time, NotificationType type, Bundle bundle) throws NullPointerException, IllegalArgumentException {
-		AdapterAddedNotification instance = null;
+	protected static AdapterOfflineNotification getInstance(Integer msgId, Long time, NotificationType type, Bundle bundle) throws NullPointerException, IllegalArgumentException {
+		AdapterOfflineNotification instance = null;
 
 		try {
 			Integer adapterId = Integer.valueOf(bundle.getString(Xconstants.AID));
@@ -38,7 +38,7 @@ public class AdapterAddedNotification extends VisibleNotification {
 				return null;
 			}
 
-			instance = new AdapterAddedNotification(msgId, time, type, false, adapterId);
+			instance = new AdapterOfflineNotification(msgId, time, type, false, adapterId);
 		} catch (IllegalArgumentException | NullPointerException e) {
 			return instance;
 		}
@@ -78,13 +78,13 @@ public class AdapterAddedNotification extends VisibleNotification {
 			return null;
 		}
 
-		return new AdapterAddedNotification(msgId, time, type, false, adapterId);
+		return new AdapterOfflineNotification(msgId, time, type, false, adapterId);
 
 	}
 
 	@Override
 	protected void onGcmHandle(Context context) {
-		// TODO notifikvoat controler aby si stahl nova data
+		// TODO
 	}
 
 	@Override
@@ -100,7 +100,8 @@ public class AdapterAddedNotification extends VisibleNotification {
 	}
 
 	@Override
-	protected String getName(Context context) {
-		return context.getString(R.string.notification_name_new_adapter);
+	protected String getName(Context context){
+		// TODO
+		return "ahoj";
 	}
 }

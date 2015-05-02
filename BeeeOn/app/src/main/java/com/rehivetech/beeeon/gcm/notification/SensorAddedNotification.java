@@ -27,7 +27,7 @@ public class SensorAddedNotification extends VisibleNotification {
 		mSensorId = sensorId;
 	}
 
-	protected static SensorAddedNotification getInstance(NotificationName name, Integer msgId, String userId, Long time, NotificationType type, Bundle bundle) throws NullPointerException, IllegalArgumentException {
+	protected static SensorAddedNotification getInstance(Integer msgId, Long time, NotificationType type, Bundle bundle) throws NullPointerException, IllegalArgumentException {
 		SensorAddedNotification instance = null;
 
 		try {
@@ -47,7 +47,7 @@ public class SensorAddedNotification extends VisibleNotification {
 		return instance;
 	}
 
-	protected static VisibleNotification getInstance(NotificationName name, Integer msgId, Long time, NotificationType type, boolean isRead, XmlPullParser parser) throws IOException, XmlPullParserException, NumberFormatException {
+	protected static VisibleNotification getInstance(Integer msgId, Long time, NotificationType type, boolean isRead, XmlPullParser parser) throws IOException, XmlPullParserException, NumberFormatException {
 		Integer adapterId = null;
 		String deviceId = null;
 

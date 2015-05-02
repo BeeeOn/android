@@ -43,7 +43,7 @@ public class WatchdogNotification extends VisibleNotification {
 		mMsg = message;
 	}
 
-	protected static WatchdogNotification getInstance(NotificationName name, Integer msgId, String userId, Long time, NotificationType type, Bundle bundle) throws NullPointerException, IllegalArgumentException {
+	protected static WatchdogNotification getInstance(Integer msgId, Long time, NotificationType type, Bundle bundle) throws NullPointerException, IllegalArgumentException {
 		WatchdogNotification instance = null;
 
 		try {
@@ -65,7 +65,7 @@ public class WatchdogNotification extends VisibleNotification {
 		return instance;
 	}
 
-	protected static VisibleNotification getInstance(NotificationName name, Integer msgId, Long time, NotificationType type, boolean isRead, XmlPullParser parser) throws IOException, XmlPullParserException, NumberFormatException {
+	protected static VisibleNotification getInstance(Integer msgId, Long time, NotificationType type, boolean isRead, XmlPullParser parser) throws IOException, XmlPullParserException, NumberFormatException {
 		String message = null;
 		Integer adapterId = null;
 		String deviceId = null;

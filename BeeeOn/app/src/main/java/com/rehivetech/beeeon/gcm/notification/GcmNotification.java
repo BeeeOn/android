@@ -24,7 +24,10 @@ public interface GcmNotification {
 		DELETE_NOTIF("delete_not"),
 		URI("uri"),
 		SENSOR_ADDED("sensor_add"),
-		ADAPTER_ADDED("adapter_add");
+		SENSOR_LOW_BATTERY("sensor_bat"),
+		SENSOR_LOW_SIGNAL("sensor_sig"),
+		ADAPTER_ADDED("adapter_add"),
+		ADAPTER_OFFLINE("adapter_off");
 
 
 		private String mName;
