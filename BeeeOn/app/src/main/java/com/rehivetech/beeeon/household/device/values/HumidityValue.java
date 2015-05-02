@@ -21,6 +21,12 @@ public final class HumidityValue extends BaseValue {
 	}
 
 	@Override
+	public int getActorIconResource() {
+		// FIXME: Use real resource when we will have real actor icon
+		return getIconResource();
+	}
+
+	@Override
 	public HumidityUnit getUnit() {
 		return mUnit;
 	}

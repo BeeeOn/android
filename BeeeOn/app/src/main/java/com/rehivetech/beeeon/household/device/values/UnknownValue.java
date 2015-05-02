@@ -21,6 +21,12 @@ public final class UnknownValue extends BaseValue {
 	}
 
 	@Override
+	public int getActorIconResource() {
+		// FIXME: Use real resource when we will have real actor icon
+		return getIconResource();
+	}
+
+	@Override
 	public UnknownUnit getUnit() {
 		return mUnit;
 	}

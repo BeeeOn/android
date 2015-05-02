@@ -20,6 +20,12 @@ public final class TemperatureValue extends BaseValue {
 		return R.drawable.dev_temperature;
 	}
 
+	@Override
+	public int getActorIconResource() {
+		// FIXME: Use real resource when we will have real actor icon
+		return getIconResource();
+	}
+
 	public double getValue() {
 		return mValue;
 	}

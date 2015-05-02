@@ -87,7 +87,7 @@ public class Device implements INameIdentifier {
 	}
 
 	public int getIconResource() {
-		return mValue.getIconResource();
+		return getType().isActor() ? mValue.getActorIconResource() : mValue.getIconResource();
 	}
 
 	public void setFacility(Facility facility) {

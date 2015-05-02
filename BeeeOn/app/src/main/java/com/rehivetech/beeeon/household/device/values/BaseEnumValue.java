@@ -73,6 +73,12 @@ public abstract class BaseEnumValue extends BaseValue {
 	}
 
 	@Override
+	public int getActorIconResource() {
+		// BaseEnumValues probably won't have special icon for actors
+		return mValue.getIconResource();
+	}
+
+	@Override
 	public BlankUnit getUnit() {
 		return mUnit;
 	}
