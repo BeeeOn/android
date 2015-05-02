@@ -24,7 +24,6 @@ import com.github.amlcurran.showcaseview.ShowcaseView;
 import com.github.amlcurran.showcaseview.targets.ViewTarget;
 import com.rehivetech.beeeon.Constants;
 import com.rehivetech.beeeon.R;
-import com.rehivetech.beeeon.activity.dialog.AddSensorFragmentDialog;
 import com.rehivetech.beeeon.activity.dialog.CustomAlertDialog;
 import com.rehivetech.beeeon.activity.fragment.CustomViewFragment;
 import com.rehivetech.beeeon.activity.fragment.ProfileDetailFragment;
