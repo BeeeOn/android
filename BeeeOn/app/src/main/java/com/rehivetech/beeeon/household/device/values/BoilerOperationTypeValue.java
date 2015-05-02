@@ -16,11 +16,11 @@ public final class BoilerOperationTypeValue extends BaseEnumValue {
 		super();
 
 		// FIXME: Fix drawables and colors
-		mItems.add(this.new Item(0, OFF, R.drawable.dev_unknown, R.string.dev_boiler_operation_type_value_off, Color.BLACK));
-		mItems.add(this.new Item(1, ROOM, R.drawable.dev_unknown, R.string.dev_boiler_operation_type_value_room, Color.BLACK));
-		mItems.add(this.new Item(2, EQUITERM, R.drawable.dev_unknown, R.string.dev_boiler_operation_type_value_equiterm, Color.BLACK));
-		mItems.add(this.new Item(3, STABLE, R.drawable.dev_unknown, R.string.dev_boiler_operation_type_value_stable, Color.BLACK));
-		mItems.add(this.new Item(4, TUV, R.drawable.dev_unknown, R.string.dev_boiler_operation_type_value_tuv, Color.BLACK));
+		mItems.add(this.new Item(0, OFF, R.drawable.dev_thermostat, R.string.dev_boiler_operation_type_value_off, Color.BLACK));
+		mItems.add(this.new Item(1, ROOM, R.drawable.dev_thermostat, R.string.dev_boiler_operation_type_value_room, Color.BLACK));
+		mItems.add(this.new Item(2, EQUITERM, R.drawable.dev_thermostat, R.string.dev_boiler_operation_type_value_equiterm, Color.BLACK));
+		mItems.add(this.new Item(3, STABLE, R.drawable.dev_thermostat, R.string.dev_boiler_operation_type_value_stable, Color.BLACK));
+		mItems.add(this.new Item(4, TUV, R.drawable.dev_thermostat, R.string.dev_boiler_operation_type_value_tuv, Color.BLACK));
 	}
 
 }
