@@ -1,16 +1,9 @@
 package com.rehivetech.beeeon.gcm.notification;
 
 import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.NotificationCompat;
-import android.widget.Toast;
 
-import com.rehivetech.beeeon.activity.LoginActivity;
-import com.rehivetech.beeeon.controller.Controller;
-import com.rehivetech.beeeon.network.xml.Xconstants;
 import com.rehivetech.beeeon.util.Log;
 
 /**
@@ -18,7 +11,9 @@ import com.rehivetech.beeeon.util.Log;
  */
 public class DeleteNotification extends BaseNotification {
 
-	public static final String TAG_DEL_NOTIFICATION_ID = "delete_not";
+	public static final String TAG = DeleteNotification.class.getSimpleName();
+
+	public static final String JSON_TAG_DEL_NOTIFICATION_ID = "delete_not";
 
 	private int mDeleteNotificationId;
 
@@ -31,7 +26,7 @@ public class DeleteNotification extends BaseNotification {
 	 * @param type
 	 */
 	private DeleteNotification(String userId, int msgid, long time, NotificationType type, int deleteNotificaitonId) {
-		super(userId, msgid, time, type, true);
+		super(msgid, time, type, true);
 		mDeleteNotificationId = deleteNotificaitonId;
 	}
 
@@ -39,7 +34,7 @@ public class DeleteNotification extends BaseNotification {
 		DeleteNotification instance = null;
 
 		try {
-			Integer delNotificationId = Integer.valueOf(bundle.getString(TAG_DEL_NOTIFICATION_ID));
+			Integer delNotificationId = Integer.valueOf(bundle.getString(JSON_TAG_DEL_NOTIFICATION_ID));
 
 			if (delNotificationId == null ) {
 				Log.d(TAG, "DeleteNotification: some compulsory value is missing.");

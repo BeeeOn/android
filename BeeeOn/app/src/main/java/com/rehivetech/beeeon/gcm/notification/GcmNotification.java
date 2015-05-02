@@ -2,6 +2,7 @@ package com.rehivetech.beeeon.gcm.notification;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.network.xml.Xconstants;
@@ -11,8 +12,8 @@ import com.rehivetech.beeeon.network.xml.Xconstants;
  */
 public interface GcmNotification {
 
-	String getUserId();
 	int getId();
+
 	void onGcmRecieve(Context context);
 
 	/**
@@ -57,7 +58,7 @@ public interface GcmNotification {
 			mValue = value;
 		}
 
-		public static NotificationType fromValue(String value) {
+		public static NotificationType fromValue(String value) throws IllegalArgumentException{
 			for (NotificationType item : values()) {
 				if (value.equalsIgnoreCase(item.getValue()))
 					return item;

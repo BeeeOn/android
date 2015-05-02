@@ -19,20 +19,19 @@ import java.util.TimeZone;
 public abstract class BaseNotification implements GcmNotification {
 
 	public static final String TAG = BaseNotification.class.getSimpleName();
-//	public static final String DATEFORMAT = "yyyy-MM-dd HH:mm:ss";
+
 	private static final String SEPARATOR = "\\s+";
 	private final Calendar mDate;
 	private final int mId;
 	private final NotificationType mType;
 	private boolean mRead = false;
-	private String mUserId = null;
 
 	private Bundle mBundle;
 
 	/**
 	 * Constructor
 	 */
-	public BaseNotification(String userId, int msgid, long timestamp, NotificationType type, boolean read) {
+	public BaseNotification(int msgid, long timestamp, NotificationType type, boolean read) {
 		mId = msgid;
 
 		/**
@@ -43,7 +42,6 @@ public abstract class BaseNotification implements GcmNotification {
 		mDate.setTimeInMillis(timestamp);
 		mDate.add(Calendar.MILLISECOND, tz.getOffset(mDate.getTimeInMillis()));
 
-		mUserId = userId;
 		mType = type;
 		mRead = read;
 	}
@@ -72,7 +70,7 @@ public abstract class BaseNotification implements GcmNotification {
 			// control if actual user ID is the same
 			if (!userId.equals(controller.getActualUser().getId())) {
 				Log.w(TAG, "GCM: Sent user ID is different from actaul user ID. Deleting GCM on server.");
-				controller.getGcmModel().deleteGCM(notification.getUserId(), null);
+				controller.getGcmModel().deleteGCM(userId, null);
 				return null;
 			}
 
@@ -152,13 +150,6 @@ public abstract class BaseNotification implements GcmNotification {
 	 */
 	protected boolean passToController(Controller controller) {
 		return controller.getGcmModel().receiveNotification(this);
-	}
-
-	/**
-	 * @return Email if notification was received by GCM. Null otherwise.
-	 */
-	public String getUserId() {
-		return mUserId;
 	}
 
 	/**

@@ -605,7 +605,9 @@ public class XmlParsers {
 			// something like
 			// ntfc = method(mParser, name, id, time, type, read);
 
-			result.add(ntfc);
+			if (ntfc != null) {
+				result.add(ntfc);
+			}
 
 		} while (mParser.nextTag() != XmlPullParser.END_TAG && !mParser.getName().equals(Xconstants.COM_ROOT));
 
