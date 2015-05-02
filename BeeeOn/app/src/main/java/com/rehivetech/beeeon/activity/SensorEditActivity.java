@@ -134,6 +134,10 @@ public class SensorEditActivity extends BaseApplicationActivity {
 				if(mFragment.isSetNewRoom()) {
 					Location location;
 					if(mFragment.isSetNewCustomRoom()) {
+						if(mFragment.getNewLocIcon().equals(Location.LocationIcon.UNKNOWN)) {
+							Toast.makeText(mActivity, getString(R.string.toast_need_sensor_location_icon), Toast.LENGTH_LONG).show();
+							return false;
+						}
 						// Create new custom room
 						location = new Location(Location.NEW_LOCATION_ID, mFragment.getNewLocName(), adapter.getId(), mFragment.getNewLocIcon().getId());
 					}

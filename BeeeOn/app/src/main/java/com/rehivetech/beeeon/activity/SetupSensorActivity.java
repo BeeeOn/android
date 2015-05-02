@@ -122,7 +122,7 @@ public class SetupSensorActivity extends BaseApplicationActivity {
 				finish();
 			}
 		});
-		mNext.setText("SAVE");
+		mNext.setText(getString(R.string.save));
 		mNext.setOnClickListener(new OnClickListener() {
 			
 			@Override
