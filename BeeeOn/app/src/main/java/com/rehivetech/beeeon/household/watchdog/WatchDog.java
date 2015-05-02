@@ -39,7 +39,6 @@ public class WatchDog implements INameIdentifier {
     private String mAdapterId;
 
 	private String mGeoRegionId;
-	private String mGeoDirectionType;
 
     private ArrayList<String> mDevices;
     private ArrayList<String> mParams;
@@ -137,13 +136,6 @@ public class WatchDog implements INameIdentifier {
         return this.getParams().get(pos);
     }
 
-	public String getGeoDirectionType() {
-		return mGeoDirectionType;
-	}
-
-	public void setGeoDirectionType(String GeoDirectionType) {
-		this.mGeoDirectionType = GeoDirectionType;
-	}
 
 	public String getGeoRegionId() {
 		return mGeoRegionId;

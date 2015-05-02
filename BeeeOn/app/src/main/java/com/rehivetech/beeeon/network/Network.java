@@ -1313,7 +1313,7 @@ public class Network implements INetwork {
 
 	@Override
 	public boolean addWatchDog(WatchDog watchDog, String adapterId){
-		ParsedMessage msg = doRequest(XmlCreator.createAddAlgor(mBT, watchDog.getName(), adapterId, watchDog.getType(), watchDog.getDevices(), watchDog.getParams(), watchDog.getGeoRegionId(), watchDog.getGeoDirectionType()));
+		ParsedMessage msg = doRequest(XmlCreator.createAddAlgor(mBT, watchDog.getName(), adapterId, watchDog.getType(), watchDog.getDevices(), watchDog.getParams(), watchDog.getGeoRegionId()));
 
 		if (msg.getState() == State.ALGCREATED) {
 			watchDog.setId((String) msg.data);
@@ -1347,7 +1347,7 @@ public class Network implements INetwork {
 
 	@Override
 	public boolean updateWatchDog(WatchDog watchDog, String AdapterId){
-		ParsedMessage msg = doRequest(XmlCreator.createSetAlgor(mBT, watchDog.getName(), watchDog.getId(), AdapterId, watchDog.getType(), watchDog.isEnabled(), watchDog.getDevices(), watchDog.getParams(), watchDog.getGeoRegionId(), watchDog.getGeoDirectionType()));
+		ParsedMessage msg = doRequest(XmlCreator.createSetAlgor(mBT, watchDog.getName(), watchDog.getId(), AdapterId, watchDog.getType(), watchDog.isEnabled(), watchDog.getDevices(), watchDog.getParams(), watchDog.getGeoRegionId()));
 
 		if(msg.getState() == State.TRUE)
 			return true;

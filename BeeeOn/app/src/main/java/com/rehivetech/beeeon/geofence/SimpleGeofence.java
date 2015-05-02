@@ -19,12 +19,13 @@ package com.rehivetech.beeeon.geofence;
 import android.content.Context;
 
 import com.google.android.gms.location.Geofence;
+import com.rehivetech.beeeon.IIdentifier;
 import com.rehivetech.beeeon.util.Utils;
 
 /**
  * A single Geofence object, defined by its center (latitude and longitude position) and radius.
  */
-public class SimpleGeofence {
+public class SimpleGeofence implements IIdentifier {
 	// Instance variables
 	private final String mId;
 	private final double mLatitude;

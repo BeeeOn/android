@@ -98,7 +98,7 @@
     <string name="toast_success_save_data">Údaje boli úspešne uložené</string>
     <string name="toast_fail_save_data">Uloženie údajov zlyhalo</string>
     <string name="toast_wrong_or_no_watchdog_rule">Vybrali ste nesprávne alebo žiadne pravidlo</string>
-
+    <string name="toast_field_must_be_filled">Je potrebné vyplniť toto pole!</string>
 
     <!-- Progress -->
     <string name="progress_signing">Prihlásuji&#8230;</string>

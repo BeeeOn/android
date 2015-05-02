@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.Spinner;
 
 import com.rehivetech.beeeon.activity.spinnerItem.HeaderSpinnerItem;
 import com.rehivetech.beeeon.activity.spinnerItem.SpinnerItem;
@@ -23,38 +24,38 @@ public class SpinnerMultiAdapter extends BaseAdapter{
 
 	private final Context mContext;
 	private LayoutInflater mInflater;
-	private List<SpinnerItem> mSpinnerItem;
+	private List<SpinnerItem> mSpinnerItems;
 	private TreeSet<Integer> mHeaderSet = new TreeSet<Integer>();
 
 
 	public SpinnerMultiAdapter(Context context) {
 		mContext = context;
 		mInflater = LayoutInflater.from(context);
-		mSpinnerItem = new ArrayList<>();
+		mSpinnerItems = new ArrayList<>();
 	}
 
 	public void addItem(SpinnerItem item) {
-		mSpinnerItem.add(item);
+		mSpinnerItems.add(item);
 	}
 
 	public void addHeader(String name) {
 		addItem(new HeaderSpinnerItem(name));
-		mHeaderSet.add(mSpinnerItem.size() -1);
+		mHeaderSet.add(mSpinnerItems.size() -1);
 	}
 	
 	@Override
 	public int getCount() {
-		return mSpinnerItem.size();
+		return mSpinnerItems.size();
 	}
 
 	@Override
 	public SpinnerItem getItem(int position) {
 		if (position < 0) {
 			position = 0;
-		} else if (position > mSpinnerItem.size() - 1) {
-			position = mSpinnerItem.size() - 1;
+		} else if (position > mSpinnerItems.size() - 1) {
+			position = mSpinnerItems.size() - 1;
 		}
-		return mSpinnerItem.get(position);
+		return mSpinnerItems.get(position);
 	}
 
 	@Override
@@ -65,16 +66,16 @@ public class SpinnerMultiAdapter extends BaseAdapter{
 
 	public View getDropDownView(int position, View convertView, ViewGroup parent){
 		// TODO optimalizovat s pouzitim recaklovanych convertview?
-		convertView = mInflater.inflate(mSpinnerItem.get(position).getDropDownLayout(), parent, false);
-		mSpinnerItem.get(position).setDropDownView(convertView);
+		convertView = mInflater.inflate(mSpinnerItems.get(position).getDropDownLayout(), parent, false);
+		mSpinnerItems.get(position).setDropDownView(convertView);
 		return convertView;
 	}
 
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 		// TODO recycle convertView
-		convertView = mInflater.inflate(mSpinnerItem.get(position).getLayout(), parent, false);
-		mSpinnerItem.get(position).setView(convertView);
+		convertView = mInflater.inflate(mSpinnerItems.get(position).getLayout(), parent, false);
+		mSpinnerItems.get(position).setView(convertView);
 		return convertView;
 	}
 
@@ -83,12 +84,34 @@ public class SpinnerMultiAdapter extends BaseAdapter{
 	 * @param position
 	 * @return real item position
 	 */
-	public int getRealPosition(int position){
-		int tempPos = position;
-		for(int i = 0; i <= position; i++){
-			if(mHeaderSet.contains(i)) tempPos++;
+	public int getRealPosition(int position, SpinnerItem.SpinnerItemType itemType){
+		int tempPos = 0, resultPos;
+		for(resultPos = 0; resultPos < mSpinnerItems.size(); resultPos++){
+			SpinnerItem.SpinnerItemType tempType = getItem(resultPos).getType();
+
+			// if type (is ANY and is header) or does not match
+			if(itemType == null && tempType == SpinnerItem.SpinnerItemType.HEADER)
+				continue;
+			else if(itemType != null && tempType != itemType)
+				continue;
+
+			// if we found, end cycling
+			if(tempPos == position){
+				break;
+			}
+
+			tempPos++;
 		}
 
-		return tempPos;
+		return resultPos;
+	}
+
+	/**
+	 * Overloaded method for getting any item except header
+	 * @param position
+	 * @return
+	 */
+	public int getRealPosition(int position){
+		return getRealPosition(position, null);
 	}
 }

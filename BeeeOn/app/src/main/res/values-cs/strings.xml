@@ -109,6 +109,7 @@
 	<string name="toast_achievement_title">Achievement odemknut!</string>
     <string name="toast_delete_fail">Nepodařilo se odstranit</string>
     <string name="toast_delete_success">Smazáno</string>
+    <string name="toast_field_must_be_filled">Je třeba vyplnit toto pole!</string>
 	
     <!-- Progress -->
     <string name="progress_signing">Přihlašuji&#8230;</string>
