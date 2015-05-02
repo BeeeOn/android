@@ -138,20 +138,29 @@ public class XmlParsers {
 		String version = getSecureAttrValue(Xconstants.VERSION);
 
 		if (!version.equals(COM_VER)) {
-			String srv[] = version.split(".");
-			String app[] = COM_VER.split(".");
+			String srv[] = version.split("\\.");
+			String app[] = COM_VER.split("\\.");
 
-			int srv_major = Integer.parseInt(srv[0]);
-			int srv_minor = Integer.parseInt(srv[1]);
-			int app_major = Integer.parseInt(app[0]);
-			int app_minor = Integer.parseInt(app[1]);
-
-			if (srv_major != app_major || srv_minor < app_minor) {
+			if(srv.length != 0 && app.length!=0) {
+				int srv_major = Integer.parseInt(srv[0]);
+				int srv_minor = Integer.parseInt(srv[1]);
+				int app_major = Integer.parseInt(app[0]);
+				int app_minor = Integer.parseInt(app[1]);
+				if (srv_major != app_major || srv_minor < app_minor) {
+					// Server must have same major version as app and same or greater minor version than app
+					throw new AppException(NetworkError.SRV_COM_VER_MISMATCH)
+							.set(NetworkError.PARAM_COM_VER_LOCAL, COM_VER)
+							.set(NetworkError.PARAM_COM_VER_SERVER, version);
+				}
+			}
+			else  {
 				// Server must have same major version as app and same or greater minor version than app
 				throw new AppException(NetworkError.SRV_COM_VER_MISMATCH)
-					.set(NetworkError.PARAM_COM_VER_LOCAL, COM_VER)
-					.set(NetworkError.PARAM_COM_VER_SERVER, version);
+						.set(NetworkError.PARAM_COM_VER_LOCAL, COM_VER)
+						.set(NetworkError.PARAM_COM_VER_SERVER, version);
 			}
+
+
 		}
 
 		ParsedMessage result = new ParsedMessage(state);
