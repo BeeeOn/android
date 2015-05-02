@@ -29,10 +29,9 @@ public class DeleteNotification extends BaseNotification {
 	 * @param msgid
 	 * @param time
 	 * @param type
-	 * @param read
 	 */
-	private DeleteNotification(String userId, int msgid, long time, NotificationType type, boolean read, int deleteNotificaitonId) {
-		super(userId, msgid, time, type, read);
+	private DeleteNotification(String userId, int msgid, long time, NotificationType type, int deleteNotificaitonId) {
+		super(userId, msgid, time, type, true);
 		mDeleteNotificationId = deleteNotificaitonId;
 	}
 
@@ -47,7 +46,7 @@ public class DeleteNotification extends BaseNotification {
 				return null;
 			}
 
-			instance = new DeleteNotification(userId, msgId, time, type, false, delNotificationId);
+			instance = new DeleteNotification(userId, msgId, time, type, delNotificationId);
 		} catch (IllegalArgumentException | NullPointerException e) {
 			return instance;
 		}
@@ -56,14 +55,8 @@ public class DeleteNotification extends BaseNotification {
 	}
 
 	@Override
-	protected void onGcmHandle(Context context, Controller controller) {
+	protected void onGcmHandle(Context context) {
 		NotificationManager mNotifyMgr = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
 		mNotifyMgr.cancel(mDeleteNotificationId);
-	}
-
-	@Override
-	protected void onClickHandle(Context context, Controller controller) {
-		// TODO
-		Toast.makeText(context, "on click", Toast.LENGTH_LONG).show();
 	}
 }

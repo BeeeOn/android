@@ -387,6 +387,9 @@
 	<string name="dialog_title_set_bioler_mode">Choose boiler mode</string>
 	<string name="dialog_title_set_temperature">Choose temperature</string>
 	<string name="action_notification">Notifications</string>
+    <string name="notification_name_new_adapter">New adapter added</string>
+    <string name="notification_name_new_sensor">New sensor added</string>
+    <string name="notification_name_link">Link</string>
 
 
 </resources>

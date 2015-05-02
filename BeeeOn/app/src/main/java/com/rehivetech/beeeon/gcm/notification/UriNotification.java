@@ -7,6 +7,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.NotificationCompat;
 
+import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.activity.LoginActivity;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.network.xml.Xconstants;
@@ -47,13 +48,12 @@ public class UriNotification extends VisibleNotification {
 	}
 
 	@Override
-	protected void onGcmHandle(Context context, Controller controller) {
+	protected void onGcmHandle(Context context) {
 		NotificationCompat.Builder builder = getBaseNotificationBuilder(context);
 
 		// define notification action
 		Intent resultIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(mUri));
 
-		builder.setContentText(getMessage());
 
 		// Because clicking the notification opens a new ("special") activity, there's
 		// no need to create an artificial back stack.
@@ -67,13 +67,18 @@ public class UriNotification extends VisibleNotification {
 	}
 
 	@Override
-	protected void onClickHandle(Context context, Controller controller) {
+	protected void onClickHandle(Context context) {
 		Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(mUri));
 		context.startActivity(intent);
 	}
 
 	@Override
-	protected String getMessage() {
+	protected String getMessage(Context context) {
 		return mMsg;
+	}
+
+	@Override
+	protected String getName(Context context) {
+		return context.getString(R.string.notification_name_link);
 	}
 }

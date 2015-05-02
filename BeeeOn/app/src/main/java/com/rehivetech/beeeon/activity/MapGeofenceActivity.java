@@ -86,7 +86,7 @@ public class MapGeofenceActivity extends BaseApplicationActivity implements Resu
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		supportRequestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
+//		supportRequestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
 		setContentView(R.layout.activity_map_geofence);
 
 		mToolbar = (Toolbar) findViewById(R.id.toolbar);

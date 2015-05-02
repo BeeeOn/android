@@ -48,35 +48,27 @@ public class SensorAddedNotification extends VisibleNotification {
 	}
 
 	@Override
-	protected void onGcmHandle(Context context, Controller controller) {
+	protected void onGcmHandle(Context context) {
 		// TODO notifikovat controller aby si stahl nove data, zobrzit notiifkaci a po kliknuti odkazazt na datail senzort
 //		NotificationCompat.Builder builder = getBaseNotificationBuilder(context);
-//
-//		// define notification action
-//		Intent resultIntent = new Intent(context, LoginActivity.class);
-//
-//		builder.setContentText(getMessage());
-//
-//		// Because clicking the notification opens a new ("special") activity, there's
-//		// no need to create an artificial back stack.
-//		PendingIntent resultPendingIntent = PendingIntent.getActivity(context, 0, resultIntent,
-//				PendingIntent.FLAG_UPDATE_CURRENT);
-//
-//		// Set the Notification's Click Behavior
-//		builder.setContentIntent(resultPendingIntent);
 //
 //		showNotification(context, builder);
 	}
 
 	@Override
-	protected void onClickHandle(Context context, Controller controller) {
+	protected void onClickHandle(Context context) {
 		// TODO
 		Toast.makeText(context, "on click", Toast.LENGTH_LONG).show();
 	}
 
 	@Override
-	protected String getMessage() {
+	protected String getMessage(Context context) {
 		// TODO pridat lokalizovany string
-		return "";
+		return "ahoj";
+	}
+
+	@Override
+	protected String getName(Context context) {
+		return context.getString(com.rehivetech.beeeon.R.string.notification_name_new_sensor);
 	}
 }

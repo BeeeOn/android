@@ -2,11 +2,31 @@
 				xmlns:tools="http://schemas.android.com/tools"
 				android:layout_width="match_parent"
 				android:layout_height="match_parent"
-				tools:context="com.rehivetech.beeeon.activity.NotificationActivity$PlaceholderFragment">
+				tools:context="com.rehivetech.beeeon.activity.NotificationActivity">
 
 	<ListView
 		android:id="@+id/notification_list"
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"/>
+
+	<ProgressBar
+		android:id="@+id/notification_progress_bar"
+		style="?android:attr/android:progressBarStyleLarge"
+		android:layout_width="80dp"
+		android:layout_height="80dp"
+		android:indeterminate="true"
+		android:layout_centerInParent="true"
+		/>
+
+	<TextView
+		android:id="@+id/notification_text"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:text="No notifications"
+		android:textAllCaps="true"
+		android:textSize="24sp"
+		android:layout_centerInParent="true"
+		android:textColor="@color/darkgray"
+		/>
 
 </RelativeLayout>

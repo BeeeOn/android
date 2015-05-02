@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.widget.Toast;
 
+import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.network.xml.Xconstants;
 import com.rehivetech.beeeon.util.Log;
@@ -41,21 +42,26 @@ public class AdapterAddedNotification extends VisibleNotification {
 	}
 
 	@Override
-	protected void onGcmHandle(Context context, Controller controller) {
-
+	protected void onGcmHandle(Context context) {
+		// TODO notifikvoat controler aby si stahl nova data
 	}
 
 	@Override
-	protected void onClickHandle(Context context, Controller controller) {
+	protected void onClickHandle(Context context) {
 		// 	TODO
 		Toast.makeText(context, "on click", Toast.LENGTH_LONG).show();
 	}
 
 
 	@Override
-	protected String getMessage() {
+	protected String getMessage(Context context) {
 		// TODO pridat lokalizovany string
-		return "";
+		return "ahoj";
+	}
+
+	@Override
+	protected String getName(Context context) {
+		return context.getString(R.string.notification_name_new_adapter);
 	}
 
 }

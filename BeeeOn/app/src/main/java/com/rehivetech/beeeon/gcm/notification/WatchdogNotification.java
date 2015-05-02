@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.v4.app.NotificationCompat;
 import android.widget.Toast;
 
+import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.activity.LoginActivity;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.network.xml.Xconstants;
@@ -66,7 +67,7 @@ public class WatchdogNotification extends VisibleNotification {
 	}
 
 	@Override
-	protected void onGcmHandle(Context context, Controller controller) {
+	protected void onGcmHandle(Context context) {
 		NotificationCompat.Builder builder = getBaseNotificationBuilder(context);
 
 
@@ -74,13 +75,18 @@ public class WatchdogNotification extends VisibleNotification {
 	}
 
 	@Override
-	protected void onClickHandle(Context context, Controller controller) {
+	protected void onClickHandle(Context context) {
 		// TODO
 		Toast.makeText(context, "on click", Toast.LENGTH_LONG).show();
 	}
 
 	@Override
-	protected String getMessage() {
+	protected String getMessage(Context context) {
 		return mMsg;
+	}
+
+	@Override
+	protected String getName(Context context) {
+		return context.getString(R.string.menu_watchdog);
 	}
 }

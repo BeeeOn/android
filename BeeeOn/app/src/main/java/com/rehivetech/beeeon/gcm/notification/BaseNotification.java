@@ -125,21 +125,8 @@ public abstract class BaseNotification implements GcmNotification {
 		return mBundle;
 	}
 
-	abstract protected void onGcmHandle(Context context, Controller controller);
-	abstract protected void onClickHandle(Context context, Controller controller);
+	abstract protected void onGcmHandle(Context context);
 
-	public void onClick(final Context context) {
-		final Controller controller = Controller.getInstance(context);
-
-		Thread t = new Thread() {
-			public void run() {
-				controller.getGcmModel().setNotificationRead(String.valueOf(getId()));
-			}
-		};
-		t.start();
-
-		onClickHandle(context, controller);
-	}
 
 	public void onGcmRecieve(final Context context) {
 		final Controller controller = Controller.getInstance(context);
@@ -154,7 +141,7 @@ public abstract class BaseNotification implements GcmNotification {
 			return;
 		}
 
-		onGcmHandle(context, controller);
+		onGcmHandle(context);
 	}
 
 	/**

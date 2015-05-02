@@ -14,7 +14,6 @@ public interface GcmNotification {
 	String getUserId();
 	int getId();
 	void onGcmRecieve(Context context);
-	void onClick(Context context);
 
 	/**
 	 * Enum mapping string name of notification to end class for instantiation
