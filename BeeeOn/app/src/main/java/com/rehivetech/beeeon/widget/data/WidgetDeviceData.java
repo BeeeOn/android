@@ -112,18 +112,14 @@ public class WidgetDeviceData extends WidgetData {
                 isFirst = false;
             }
 
-            if(getIsCached()){
-                dev.renderView(mBuilder, true, "");
-                mBuilder.setTextViewText(R.id.widget_last_update, String.format("%s " + mContext.getString(R.string.widget_cached), dev.lastUpdateText));
-            }
-            else {
-                dev.renderView(mBuilder);
-            }
+            // render view based on if is cached information
+            dev.renderView(mBuilder, getIsCached(), "");
 
             switch(widgetLayout){
                 case R.layout.widget_device_3x1:
                 case R.layout.widget_device_2x1:
-                    mBuilder.setTextViewText(R.id.widget_last_update, dev.lastUpdateText);
+                    mBuilder.setTextViewText(R.id.widget_last_update, getIsCached() ? String.format("%s " + mContext.getString(R.string.widget_cached), dev.lastUpdateText) : dev.lastUpdateText);
+
                 case R.layout.widget_device_3x2:
                     dev.setValueUnitSize(R.dimen.textsize_subhead);
                     break;

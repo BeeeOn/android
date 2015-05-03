@@ -181,7 +181,7 @@ public class WidgetService extends Service {
         super.onDestroy();
 
         // removes all widgets in list
-        mAvailableWidgets.clear();
+        getAvailableWidgets().clear();
 
         Log.v(TAG, "Unregistering broadcast bridge");
         unregisterReceiver(mServiceReceiver);
@@ -255,6 +255,11 @@ public class WidgetService extends Service {
             boolean isDeleteWidget = intent.getBooleanExtra(EXTRA_DELETE_WIDGET, false);
             if(isDeleteWidget){
                 widgetsDelete(appWidgetIds);
+                // sets new alarm manager after calculation
+                boolean isServiceNeeded = setNewAlarm(new int[] {});
+                if(!isServiceNeeded){
+                    WidgetService.stopUpdating(mContext);
+                }
                 return START_STICKY;
             }
 
@@ -270,14 +275,9 @@ public class WidgetService extends Service {
 
         // calculate it first time always or only when force update
         if (isStartUpdating || !isForceUpdate) {
-            // set alarm for next update
-            long nextUpdate = calcNextUpdate(appWidgetIds);
-
-            if (nextUpdate > 0) {
-                Log.d(TAG, String.format("Next update in %d seconds", (int) (nextUpdate - SystemClock.elapsedRealtime()) / 1000));
-                setAlarm(nextUpdate);
-            } else {
-                Log.d(TAG, "No planned next update");
+            // sets new alarm manager after calculation
+            boolean isServiceNeeded = setNewAlarm(appWidgetIds);
+            if(!isServiceNeeded){
                 WidgetService.stopUpdating(mContext);
                 return START_STICKY;
             }
@@ -396,6 +396,7 @@ public class WidgetService extends Service {
                 // if previous state was logged out
                 if(isCached) widgetData.handleUpdateOk();
                 widgetData.handleUpdateData();
+                widgetData.renderWidget();
             }
 
             isCached = false;
@@ -407,22 +408,18 @@ public class WidgetService extends Service {
                 Log.e(TAG, e.getSimpleErrorMessage());
                 if(!isCached){
                     // for all widgets put to "logout" state
-                    for(int i = 0; i < mAvailableWidgets.size(); i++) {
-                        WidgetData widgetData = mAvailableWidgets.valueAt(i);
+                    for(int i = 0; i < getAvailableWidgets().size(); i++) {
+                        WidgetData widgetData = getAvailableWidgets().valueAt(i);
                         widgetData.handleUpdateFail();
+                        widgetData.renderWidget();
                     }
                 }
 
                 isCached = true;
             }
         }
-        finally {
-            // we always will render widget -> if not succesfully updated, can show flag or something
-            for(int i = 0; i < mAvailableWidgets.size(); i++) {
-                WidgetData widgetData = mAvailableWidgets.valueAt(i);
-                widgetData.renderWidget();
-            }
-        }
+
+        // NOTE: we always have to render widgets if anything changes (even if not updated but connection changed or sth) !!!
     }
 
     /**
@@ -538,10 +535,10 @@ public class WidgetService extends Service {
      * @param isValueOn     when UPDATE_WHOLE this does nothing
      */
     private void performWidgetActorChange(int perform, String adapterId, String actorId, boolean isDisabled, boolean isValueOn){
-        if(actorId == null || adapterId == null || actorId.isEmpty() || adapterId.isEmpty()) return;
+        if(getAvailableWidgets() == null || actorId == null || adapterId == null || actorId.isEmpty() || adapterId.isEmpty()) return;
 
-        for (int i = 0; i < mAvailableWidgets.size(); i++) {
-            WidgetData data = mAvailableWidgets.valueAt(i);
+        for (int i = 0; i < getAvailableWidgets().size(); i++) {
+            WidgetData data = getAvailableWidgets().valueAt(i);
             // skips not compatible widgets
             if(data.widgetDevices == null || data.widgetDevices.isEmpty()) continue;
 
@@ -571,32 +568,12 @@ public class WidgetService extends Service {
     }
 
     /**
-     * Set repeating to parameter
-     * @param triggerAtMillis
-     */
-    private void setAlarm(long triggerAtMillis){
-        // Set new alarm time
-        AlarmManager m = (AlarmManager) mContext.getSystemService(Context.ALARM_SERVICE);
-        m.set(AlarmManager.ELAPSED_REALTIME, triggerAtMillis, getPendingIntentUpdate(mContext));
-    }
-
-    /**
-     * Stops repeating
-     * @param context
-     */
-    private static void stopAlarm(Context context){
-        // cancel frequently refreshing
-        AlarmManager m = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-        m.cancel(getPendingIntentUpdate(context));
-    }
-
-    /**
      * Insert widgetData to list of used widgets
      * @param widgetData
      */
     private void widgetAdd(WidgetData widgetData) {
         // add widgetData to service
-        mAvailableWidgets.put(widgetData.getWidgetId(), widgetData);
+        getAvailableWidgets().put(widgetData.getWidgetId(), widgetData);
     }
 
     /**
@@ -622,7 +599,7 @@ public class WidgetService extends Service {
         Log.v(TAG, String.format("delete widgetData(%d)", widgetId));
 
         data.delete();
-        mAvailableWidgets.delete(widgetId);
+        getAvailableWidgets().delete(widgetId);
     }
 
     /**
@@ -631,7 +608,7 @@ public class WidgetService extends Service {
      * @return
      */
     public WidgetData getWidgetData(int widgetId){
-        WidgetData widgetData = mAvailableWidgets.get(widgetId);
+        WidgetData widgetData = getAvailableWidgets().get(widgetId);
         if (widgetData == null) {
             String widgetClassName = WidgetData.getSettingClassName(mContext, widgetId);
             if (widgetClassName == null || widgetClassName.isEmpty()) return null;
@@ -666,6 +643,54 @@ public class WidgetService extends Service {
             }
         }
         return widgetData;
+    }
+
+
+    /**
+     * Encapsulates usage of sparse array of widget data
+     * @return
+     */
+    public SparseArray<WidgetData> getAvailableWidgets(){
+        return mAvailableWidgets;
+    }
+
+    /**
+     * Set repeating to parameter
+     * @param triggerAtMillis
+     */
+    private void setAlarm(long triggerAtMillis){
+        // Set new alarm time
+        AlarmManager m = (AlarmManager) mContext.getSystemService(Context.ALARM_SERVICE);
+        m.set(AlarmManager.ELAPSED_REALTIME, triggerAtMillis, getPendingIntentUpdate(mContext));
+    }
+
+    /**
+     * Stops repeating
+     * @param context
+     */
+    private static void stopAlarm(Context context){
+        // cancel frequently refreshing
+        AlarmManager m = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+        m.cancel(getPendingIntentUpdate(context));
+    }
+
+    /**
+     * Sets new alarm after calculations of widgets
+     * @param appWidgetIds  array of widget ids -> if NULL - check all widgets
+     * @return if service is still required
+     */
+    public boolean setNewAlarm(int[] appWidgetIds){
+        // set alarm for next update
+        long nextUpdate = calcNextUpdate(appWidgetIds);
+
+        if (nextUpdate > 0) {
+            Log.d(TAG, String.format("Next update in %d seconds", (int) (nextUpdate - SystemClock.elapsedRealtime()) / 1000));
+            setAlarm(nextUpdate);
+            return true;
+        } else {
+            Log.d(TAG, "No planned next update");
+            return false;
+        }
     }
 
     /**
@@ -739,7 +764,7 @@ public class WidgetService extends Service {
         List<Integer> clockIds = getWidgetIds(WidgetClockProvider.class);
         mCalendar.setTime(new Date());
         for(Integer clockId : clockIds){
-            WidgetData data = mAvailableWidgets.get(clockId);
+            WidgetData data = getWidgetData(clockId);
             if(data == null || !(data instanceof WidgetClockData)) continue;
             ((WidgetClockData) data).handleClockUpdate();
         }
@@ -964,7 +989,6 @@ public class WidgetService extends Service {
             }
             // if any actor value was changed, tell the service to refresh widget with that device
             else if(receivedAction.equals(Constants.BROADCAST_ACTOR_CHANGED)){
-                // TODO prepsat s kontextem...
                 String adapterId = intent.getStringExtra(Constants.BROADCAST_EXTRA_ACTOR_CHANGED_ADAPTER_ID);
                 String actorId = intent.getStringExtra(Constants.BROADCAST_EXTRA_ACTOR_CHANGED_ID);
 
@@ -981,18 +1005,25 @@ public class WidgetService extends Service {
 			}
 			//*/
             }
+            // update widgets to show different units
             else if(receivedAction.equals(Constants.BROADCAST_PREFERENCE_CHANGED)){
-                // update widgets to show different units
                 context.startService(getIntentForceUpdate(context, new int[]{}));
             }
-		/*
-		// TODO somehow not getting isNoConnectivity
-		else if(receivedAction.equals(ConnectivityManager.CONNECTIVITY_ACTION)){
-			boolean isNoConnectivity = intent.getBooleanExtra(ConnectivityManager.EXTRA_NO_CONNECTIVITY, false);
-			boolean isFailover = intent.getBooleanExtra(ConnectivityManager.EXTRA_IS_FAILOVER, false);
-			Log.d(TAG, String.format("IS Connectivity = %b, isFailover = %b", isNoConnectivity, isFailover));
-		}
-		//*/
+            // connection got lost, we stop updating
+            else if(receivedAction.equals(ConnectivityManager.CONNECTIVITY_ACTION)) {
+                boolean isInternetConnection = Utils.isInternetAvailable(context);
+
+                if(!isInternetConnection){
+                    // THIS provides that force update skips calculation of new alarm and stop alarm finishes it
+                    context.startService(getIntentForceUpdate(context, new int[]{}));
+                    stopAlarm(context);
+                    Log.i(TAG, "stopped update service...");
+                }
+                else{
+                    context.startService(getIntentForceUpdate(context, new int[]{}));
+                }
+            }
+
 
             // TODO mit zmenu stavu prihlaseni jako broadcast?
         }
