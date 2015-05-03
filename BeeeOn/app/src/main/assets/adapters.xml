@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<com ver="2.4" state="adapters">
+<com ver="2.5" state="adapters">
 	<adapter id="64206" name="Doma" role="admin" utc="-60"/>
 	<adapter id="65260" name="Chalupa" role="superuser" utc="60"/>
 </com>
