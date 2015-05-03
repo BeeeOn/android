@@ -3,6 +3,7 @@
  */
 package com.rehivetech.beeeon.network.xml.action;
 
+import com.rehivetech.beeeon.IIdentifier;
 import com.rehivetech.beeeon.household.device.Device;
 
 /**
@@ -11,27 +12,19 @@ import com.rehivetech.beeeon.household.device.Device;
  */
 public class Action {
 
-	public enum ActionType {
+	public enum ActionType implements IIdentifier {
 		ACTOR("actor"), //
 		NOTIFICATION("notification"), //
 		UNKNOWN("");
 
 		private final String mValue;
 
-		private ActionType(String value) {
+		ActionType(String value) {
 			mValue = value;
 		}
 
-		public String getValue() {
+		public String getId() {
 			return mValue;
-		}
-
-		public static ActionType fromValue(String value) {
-			for (ActionType item : values()) {
-				if (value.equalsIgnoreCase(item.getValue()))
-					return item;
-			}
-			throw new IllegalArgumentException("Invalid FunctionType value");
 		}
 	}
 

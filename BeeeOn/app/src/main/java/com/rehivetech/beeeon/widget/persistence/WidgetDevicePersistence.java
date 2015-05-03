@@ -13,6 +13,7 @@ import com.rehivetech.beeeon.household.location.Location;
 import com.rehivetech.beeeon.household.user.User;
 import com.rehivetech.beeeon.util.TimeHelper;
 import com.rehivetech.beeeon.util.UnitsHelper;
+import com.rehivetech.beeeon.util.Utils;
 import com.rehivetech.beeeon.widget.ViewsBuilder;
 import com.rehivetech.beeeon.widget.service.WidgetService;
 
@@ -101,10 +102,10 @@ public class WidgetDevicePersistence extends WidgetBeeeOnPersistence {
 		name = device.getName();
 		icon = device.getIconResource();
 		adapterId = adapter.getId();
-		adapterRole = adapter.getRole().getValue();
+		adapterRole = adapter.getRole().getId();
 		type = device.getType().getTypeId();
 
-		mUserRole = User.Role.fromString(adapterRole);
+		mUserRole = Utils.getEnumFromId(User.Role.class, adapterRole, User.Role.Guest);
 		lastUpdateTime = device.getFacility().getLastUpdate().getMillis();
 		refresh = device.getFacility().getRefresh().getInterval();
 

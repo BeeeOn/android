@@ -5,7 +5,9 @@ package com.rehivetech.beeeon.gcm;
 
 import android.os.Bundle;
 
+import com.rehivetech.beeeon.IIdentifier;
 import com.rehivetech.beeeon.network.xml.Xconstants;
+import com.rehivetech.beeeon.util.Utils;
 
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
@@ -50,7 +52,7 @@ public class Notification {
 			throw new IllegalArgumentException();
 		}
 
-		mType = NotificationType.fromValue(type);
+		mType = Utils.getEnumFromId(NotificationType.class, type);
 		mRead = read;
 	}
 
@@ -151,7 +153,7 @@ public class Notification {
 		this.mMessage = Message;
 	}
 
-	public enum ActionType {
+	public enum ActionType implements IIdentifier {
 		WEB("web"), //
 		APP("app"), //
 		NONE("none"), //
@@ -170,20 +172,12 @@ public class Notification {
 			mValue = value;
 		}
 
-		public static ActionType fromValue(String value) {
-			for (ActionType item : values()) {
-				if (value.equalsIgnoreCase(item.getValue()))
-					return item;
-			}
-			throw new IllegalArgumentException("Invalid State value");
-		}
-
-		public String getValue() {
+		public String getId() {
 			return mValue;
 		}
 	}
 
-	public enum NotificationType {
+	public enum NotificationType implements IIdentifier {
 		INFO("info"),
 		ADVERT("advert"),
 		ALERT("alert"),
@@ -195,15 +189,7 @@ public class Notification {
 			mValue = value;
 		}
 
-		public static NotificationType fromValue(String value) {
-			for (NotificationType item : values()) {
-				if (value.equalsIgnoreCase(item.getValue()))
-					return item;
-			}
-			throw new IllegalArgumentException("Invalid State value");
-		}
-
-		public String getValue() {
+		public String getId() {
 			return mValue;
 		}
 	}
@@ -223,7 +209,7 @@ public class Notification {
 		private String mDeviceId;
 
 		public Action(String masterType) {
-			mMasterType = ActionType.fromValue(masterType);
+			mMasterType = Utils.getEnumFromId(ActionType.class, masterType);
 		}
 
 		/**

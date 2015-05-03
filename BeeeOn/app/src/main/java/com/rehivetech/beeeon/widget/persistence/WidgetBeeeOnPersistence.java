@@ -6,6 +6,7 @@ import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.household.user.User;
 import com.rehivetech.beeeon.util.TimeHelper;
 import com.rehivetech.beeeon.util.UnitsHelper;
+import com.rehivetech.beeeon.util.Utils;
 
 /**
  * Created by Tomáš on 26. 4. 2015.
@@ -33,9 +34,9 @@ public abstract class WidgetBeeeOnPersistence extends WidgetPersistence {
 		id = mPrefs.getString(getProperty(PREF_ID), "");
 		name = mPrefs.getString(getProperty(PREF_NAME), mContext.getString(R.string.placeholder_not_exists));
 		adapterId = mPrefs.getString(getProperty(PREF_ADAPTER_ID), "");
-		adapterRole = mPrefs.getString(getProperty(PREF_ADAPTER_ROLE), User.Role.Guest.getValue());
+		adapterRole = mPrefs.getString(getProperty(PREF_ADAPTER_ROLE), User.Role.Guest.getId());
 
-		mUserRole = User.Role.fromString(adapterRole);
+		mUserRole = Utils.getEnumFromId(User.Role.class, adapterRole, User.Role.Guest);
 	}
 
 	@Override

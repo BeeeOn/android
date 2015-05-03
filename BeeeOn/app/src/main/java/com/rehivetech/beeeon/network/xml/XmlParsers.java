@@ -8,6 +8,7 @@ import android.util.Xml;
 
 import com.rehivetech.beeeon.Constants;
 import com.rehivetech.beeeon.gamification.AchievementListItem;
+import com.rehivetech.beeeon.IIdentifier;
 import com.rehivetech.beeeon.household.adapter.Adapter;
 import com.rehivetech.beeeon.household.watchdog.WatchDog;
 import com.rehivetech.beeeon.household.device.Device;
@@ -34,6 +35,7 @@ import com.rehivetech.beeeon.network.xml.condition.GreaterThanFunc;
 import com.rehivetech.beeeon.network.xml.condition.LesserEqualFunc;
 import com.rehivetech.beeeon.network.xml.condition.LesserThanFunc;
 import com.rehivetech.beeeon.util.Log;
+import com.rehivetech.beeeon.util.Utils;
 
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
@@ -66,7 +68,7 @@ public class XmlParsers {
 	 *
 	 * @author ThinkDeep
 	 */
-	public enum State {
+	public enum State implements IIdentifier {
 		ADAPTERS("adapters"),
 		ALLDEVICES("alldevs"),
 		DEVICES("devs"),
@@ -93,20 +95,12 @@ public class XmlParsers {
 
 		private final String mValue;
 
-		private State(String value) {
+		State(String value) {
 			mValue = value;
 		}
 
-		public String getValue() {
+		public String getId() {
 			return mValue;
-		}
-
-		public static State fromValue(String value) {
-			for (State item : values()) {
-				if (value.equalsIgnoreCase(item.getValue()))
-					return item;
-			}
-			throw new IllegalArgumentException("Invalid State value");
 		}
 	}
 
@@ -134,7 +128,7 @@ public class XmlParsers {
 
 		mParser.require(XmlPullParser.START_TAG, ns, Xconstants.COM_ROOT);
 
-		State state = State.fromValue(getSecureAttrValue(Xconstants.STATE));
+		State state = Utils.getEnumFromId(State.class, getSecureAttrValue(Xconstants.STATE));
 		String version = getSecureAttrValue(Xconstants.VERSION);
 
 		if (!version.equals(COM_VER)) {
@@ -173,7 +167,7 @@ public class XmlParsers {
 			user.setName(getSecureAttrValue(Xconstants.NAME));
 			user.setSurname(getSecureAttrValue(Xconstants.SURNAME));
 			user.setEmail(getSecureAttrValue(Xconstants.EMAIL));
-			user.setGender(User.Gender.fromString(getSecureAttrValue(Xconstants.GENDER)));
+			user.setGender(Utils.getEnumFromId(User.Gender.class, getSecureAttrValue(Xconstants.GENDER), User.Gender.UNKNOWN));
 			user.setPictureUrl(getSecureAttrValue(Xconstants.IMGURL));
 
 			result.data = user;
@@ -302,7 +296,7 @@ public class XmlParsers {
 			Adapter adapter = new Adapter();
 			adapter.setId(getSecureAttrValue(Xconstants.ID));
 			adapter.setName(getSecureAttrValue(Xconstants.NAME));
-			adapter.setRole(User.Role.fromString(getSecureAttrValue(Xconstants.ROLE)));
+			adapter.setRole(Utils.getEnumFromId(User.Role.class, getSecureAttrValue(Xconstants.ROLE), User.Role.Guest));
 			adapter.setUtcOffset(getSecureInt(getSecureAttrValue(Xconstants.UTC)));
 			result.add(adapter);
 
@@ -511,8 +505,8 @@ public class XmlParsers {
 			return result;
 
 		do {
-			Location location = new Location(getSecureAttrValue(Xconstants.ID), getSecureAttrValue(Xconstants.NAME), aid,
-					getSecureInt(getSecureAttrValue(Xconstants.TYPE)));
+			String type = getSecureAttrValue(Xconstants.TYPE);
+			Location location = new Location(getSecureAttrValue(Xconstants.ID), getSecureAttrValue(Xconstants.NAME), aid, type.isEmpty() ? "0" : type);
 			result.add(location);
 
 			mParser.nextTag(); // loc end tag
@@ -570,8 +564,8 @@ public class XmlParsers {
 			user.setEmail(getSecureAttrValue(Xconstants.EMAIL));
 			user.setName(getSecureAttrValue(Xconstants.NAME));
 			user.setSurname(getSecureAttrValue(Xconstants.SURNAME));
-			user.setRole(User.Role.fromString(getSecureAttrValue(Xconstants.ROLE)));
-			user.setGender(getSecureAttrValue(Xconstants.GENDER).equals(Xconstants.ZERO) ? User.Gender.Female : User.Gender.Male);
+			user.setRole(Utils.getEnumFromId(User.Role.class, getSecureAttrValue(Xconstants.ROLE), User.Role.Guest));
+			user.setGender(getSecureAttrValue(Xconstants.GENDER).equals(Xconstants.ZERO) ? User.Gender.FEMALE : User.Gender.MALE);
 			user.setPictureUrl(getSecureAttrValue(Xconstants.IMGURL));
 
 			result.add(user);
@@ -618,13 +612,13 @@ public class XmlParsers {
 				if (action.getMasterType() == ActionType.APP) { // open some aktivity in app
 					mParser.nextTag();
 
-					ActionType tagName = ActionType.fromValue(mParser.getName());
+					ActionType tagName = Utils.getEnumFromId(ActionType.class, mParser.getName());
 					action.setSlaveType(tagName);
 					switch (tagName) {
 					case SETTINGS: // open settings {main, account, adapter, location}
-						ActionType settings = ActionType.fromValue(Xconstants.SETTINGS + getSecureAttrValue(Xconstants.TYPE));
+						ActionType settings = Utils.getEnumFromId(ActionType.class, Xconstants.SETTINGS + getSecureAttrValue(Xconstants.TYPE));
 						action.setSlaveType(settings);
-						String stngs = settings.getValue();
+						String stngs = settings.getId();
 						if (stngs.equals(Xconstants.ADAPTER) || stngs.equals(Xconstants.LOCATION)) { // open adapter or
 																										// location
 																										// settings
@@ -685,7 +679,7 @@ public class XmlParsers {
 
 		do {
 			ConditionFunction func = null;
-			ConditionFunction.FunctionType type = ConditionFunction.FunctionType.fromValue(getSecureAttrValue(Xconstants.TYPE));
+			ConditionFunction.FunctionType type = Utils.getEnumFromId(ConditionFunction.FunctionType.class, getSecureAttrValue(Xconstants.TYPE));
 			switch (type) {
 			case BTW:
 				mParser.nextTag(); // device or value tag
@@ -849,7 +843,7 @@ public class XmlParsers {
 			return result;
 
 		do {
-			Action.ActionType type = Action.ActionType.fromValue(getSecureAttrValue(Xconstants.TYPE));
+			Action.ActionType type = Utils.getEnumFromId(Action.ActionType.class, getSecureAttrValue(Xconstants.TYPE));
 
 			if (type == Action.ActionType.ACTOR) {
 				mParser.nextTag(); // dev tag
@@ -1040,8 +1034,8 @@ public class XmlParsers {
 			user.setEmail(getSecureAttrValue(Xconstants.EMAIL));
 			user.setName(getSecureAttrValue(Xconstants.NAME));
 			user.setSurname(getSecureAttrValue(Xconstants.SURNAME));
-			user.setRole(User.Role.fromString(getSecureAttrValue(Xconstants.ROLE)));
-			user.setGender(getSecureAttrValue(Xconstants.GENDER).equals(Xconstants.ZERO) ? User.Gender.Female : User.Gender.Male);
+			user.setRole(Utils.getEnumFromId(User.Role.class, getSecureAttrValue(Xconstants.ROLE), User.Role.Guest));
+			user.setGender(getSecureAttrValue(Xconstants.GENDER).equals(Xconstants.ZERO) ? User.Gender.FEMALE : User.Gender.MALE);
 			user.setPictureUrl(getSecureAttrValue(Xconstants.IMGURL));
 
 			result.add(user);

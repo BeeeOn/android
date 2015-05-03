@@ -1,11 +1,12 @@
 package com.rehivetech.beeeon.geofence;
 
 import com.google.android.gms.location.Geofence;
+import com.rehivetech.beeeon.INameIdentifier;
 
 /**
  * Created by Martin on 31. 3. 2015.
  */
-public enum TransitionType {
+public enum TransitionType implements INameIdentifier {
 	IN("in",  Geofence.GEOFENCE_TRANSITION_ENTER), OUT("out", Geofence.GEOFENCE_TRANSITION_EXIT);
 
 	private String mNetworkString;
@@ -16,20 +17,12 @@ public enum TransitionType {
 		mIntType = intType;
 	}
 
-	public String getString() {
+	public String getName() {
 		return mNetworkString;
 	}
 
-	public int getInt() {
-		return mIntType;
+	public String getId() {
+		return String.valueOf(mIntType);
 	}
 
-	public static TransitionType fromInt(int intType) {
-		for (TransitionType actTrans : TransitionType.values()) {
-			if (actTrans.mIntType == intType) {
-				return actTrans;
-			}
-		}
-		throw new IllegalStateException();
-	}
 }

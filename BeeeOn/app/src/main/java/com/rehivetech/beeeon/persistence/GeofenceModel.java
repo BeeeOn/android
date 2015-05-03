@@ -167,7 +167,7 @@ public class GeofenceModel {
 	 */
 	public void setPassBorder(String geofenceId, TransitionType type) {
 		Log.i(TAG, "Passing geofence and seding to server");
-		mNetwork.passBorder(geofenceId, type.getString());
+		mNetwork.passBorder(geofenceId, type.getName());
 	}
 
 }

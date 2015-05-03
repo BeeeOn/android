@@ -1,6 +1,7 @@
 package com.rehivetech.beeeon.network;
 
 import com.rehivetech.beeeon.gamification.AchievementListItem;
+import com.rehivetech.beeeon.IIdentifier;
 import com.rehivetech.beeeon.household.adapter.Adapter;
 import com.rehivetech.beeeon.household.device.Device;
 import com.rehivetech.beeeon.household.device.Device.SaveDevice;
@@ -27,26 +28,18 @@ public interface INetwork {
 	 * @author ThinkDeep
 	 *
 	 */
-	public enum NetworkAction {
+	public enum NetworkAction implements IIdentifier {
 		REMOVE("0"), //
 		ADD("1");
 
 		private final String mAction;
 
-		private NetworkAction(String action) {
+		NetworkAction(String action) {
 			mAction = action;
 		}
 
-		public String getValue() {
+		public String getId() {
 			return mAction;
-		}
-
-		public static NetworkAction fromValue(String value) {
-			for (NetworkAction item : values()) {
-				if (value.equalsIgnoreCase(item.getValue()))
-					return item;
-			}
-			throw new IllegalArgumentException("Invalid NetworkAction value");
 		}
 	}
 

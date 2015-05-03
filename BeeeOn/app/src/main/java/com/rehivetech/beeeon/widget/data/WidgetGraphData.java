@@ -23,6 +23,7 @@ import com.rehivetech.beeeon.util.GraphViewHelper;
 import com.rehivetech.beeeon.util.Log;
 import com.rehivetech.beeeon.util.TimeHelper;
 import com.rehivetech.beeeon.util.UnitsHelper;
+import com.rehivetech.beeeon.util.Utils;
 import com.rehivetech.beeeon.widget.persistence.WidgetDevicePersistence;
 import com.rehivetech.beeeon.widget.persistence.WidgetLocationPersistence;
 import com.rehivetech.beeeon.widget.persistence.WidgetLogDataPersistence;
@@ -30,13 +31,11 @@ import com.rehivetech.beeeon.widget.persistence.WidgetLogDataPersistence;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 import org.joda.time.Interval;
-import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.SortedMap;
 import java.util.concurrent.TimeUnit;
 
@@ -180,9 +179,8 @@ public class WidgetGraphData extends WidgetDeviceData {
         mLogDataPair = new LogDataPair(
             fac.getDevices().get(0),
             new Interval(widgetLogData.intervalStart, DateTime.now(DateTimeZone.UTC).getMillis()),
-            DeviceLog.DataType.fromValue(widgetLogData.type),
-            DeviceLog.DataInterval.fromValue(widgetLogData.gap)
-        );
+                    Utils.getEnumFromId(DeviceLog.DataType.class, widgetLogData.type),
+                    DeviceLog.DataInterval.fromSeconds(widgetLogData.gap));
     }
 
     /**

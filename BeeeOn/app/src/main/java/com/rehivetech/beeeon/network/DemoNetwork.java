@@ -67,7 +67,7 @@ public class DemoNetwork implements INetwork {
 		mContext = context;
 
 		// Set user
-		mUser = new User(DEMO_USER_ID, "John", "Doe", "john@doe.com", Gender.Male, Role.Superuser);
+		mUser = new User(DEMO_USER_ID, "John", "Doe", "john@doe.com", Gender.MALE, Role.Superuser);
 
 		// Set session token
 		mBT = DEMO_USER_BT;
@@ -440,7 +440,7 @@ public class DemoNetwork implements INetwork {
 			lastValue = random.nextDouble() * 1000;
 		}
 
-		int everyMsecs = Math.max(pair.gap.getValue(), device.getFacility().getRefresh().getInterval()) * 1000;
+		int everyMsecs = Math.max(pair.gap.getSeconds(), device.getFacility().getRefresh().getInterval()) * 1000;
 
 		boolean isEnum = (device.getValue() instanceof BaseEnumValue);
 

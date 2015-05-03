@@ -7,6 +7,7 @@ import com.rehivetech.beeeon.household.adapter.Adapter;
 import com.rehivetech.beeeon.household.location.Location;
 import com.rehivetech.beeeon.util.TimeHelper;
 import com.rehivetech.beeeon.util.UnitsHelper;
+import com.rehivetech.beeeon.util.Utils;
 import com.rehivetech.beeeon.widget.ViewsBuilder;
 
 /**
@@ -17,7 +18,7 @@ public class WidgetLocationPersistence extends WidgetBeeeOnPersistence {
 
 	private static final String PREF_TYPE = "type";
 
-	public int type;
+	public String type;
 
 	public WidgetLocationPersistence(Context context, int widgetId, int offset, int boundView, UnitsHelper unitsHelper, TimeHelper timeHelper, WidgetSettings settings) {
 		super(context, widgetId, offset, boundView, unitsHelper, timeHelper, settings);
@@ -26,7 +27,7 @@ public class WidgetLocationPersistence extends WidgetBeeeOnPersistence {
 	@Override
 	public void load() {
 		super.load();
-		type = mPrefs.getInt(getProperty(PREF_TYPE), 0);		// TODO should be unknown location
+		type = mPrefs.getString(getProperty(PREF_TYPE), "0");		// TODO should be unknown location
 	}
 
 	@Override
@@ -47,7 +48,7 @@ public class WidgetLocationPersistence extends WidgetBeeeOnPersistence {
 	public void save() {
 		super.save();
 		mPrefs.edit()
-				.putInt(getProperty(PREF_TYPE), type)
+				.putString(getProperty(PREF_TYPE), type)
 				.apply();
 	}
 
@@ -76,17 +77,17 @@ public class WidgetLocationPersistence extends WidgetBeeeOnPersistence {
 		super.renderView(parentBuilder);
 		if(mBoundView == 0){
 			parentBuilder.setTextViewText(R.id.name, name);
-			parentBuilder.setImage(R.id.icon, Location.LocationIcon.fromValue(type).getIconResource());
+			parentBuilder.setImage(R.id.icon, Utils.getEnumFromId(Location.LocationIcon.class, type, Location.LocationIcon.UNKNOWN).getIconResource());
 		}
 		else {
 			mBuilder.setTextViewText(R.id.name, name);
-			mBuilder.setImage(R.id.icon, Location.LocationIcon.fromValue(type).getIconResource());
+			mBuilder.setImage(R.id.icon, Utils.getEnumFromId(Location.LocationIcon.class, type, Location.LocationIcon.UNKNOWN).getIconResource());
 			parentBuilder.removeAllViews(mBoundView);
 			parentBuilder.addView(mBoundView, mBuilder.getRoot());
 		}
 	}
 
-	public int getType() {
+	public String getType() {
 		return type;
 	}
 

@@ -383,4 +383,36 @@ final public class Utils {
 		DisplayMetrics metrics = context.getResources().getDisplayMetrics();
 		return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dpValue, metrics);
 	}
+
+	public static <T extends Enum<T> & IIdentifier> T getEnumFromId(Class<T> enumClass, String id, T defaultItem) {
+		T item;
+		try {
+			item = getEnumFromId(enumClass, id);
+		} catch (IllegalStateException e) {
+			item = defaultItem;
+		}
+
+		return item;
+	}
+
+	public static <T extends Enum<T> & IIdentifier> T getEnumFromId(Class<T> enumClass, String id) {
+		for (T item : enumClass.getEnumConstants()) {
+			if (item.getId().equalsIgnoreCase(id)) {
+				return item;
+			}
+		}
+
+		throw new IllegalArgumentException("Invalid value");
+	}
+
+	public static <T extends Enum<T> & INameIdentifier> T getEnumFromValue(Class<T> enumClass, String value, T defaultItem) {
+		for (T item : enumClass.getEnumConstants()) {
+			if (item.getName().equalsIgnoreCase(value)) {
+				return item;
+			}
+		}
+
+		return defaultItem;
+	}
+
 }

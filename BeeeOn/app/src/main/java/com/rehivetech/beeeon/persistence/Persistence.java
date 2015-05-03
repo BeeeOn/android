@@ -15,6 +15,7 @@ import com.rehivetech.beeeon.network.authentication.IAuthProvider;
 import com.rehivetech.beeeon.util.Log;
 import com.rehivetech.beeeon.util.SettingsItem;
 import com.rehivetech.beeeon.util.Timezone;
+import com.rehivetech.beeeon.util.Utils;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -219,7 +220,7 @@ public class Persistence {
 		user.setEmail(prefs.getString(Constants.PERSISTENCE_PREF_USER_EMAIL, user.getEmail()));
 		user.setName(prefs.getString(Constants.PERSISTENCE_PREF_USER_NAME, user.getName()));
 		user.setSurname(prefs.getString(Constants.PERSISTENCE_PREF_USER_SURNAME, user.getSurname()));
-		user.setGender(Gender.fromString(prefs.getString(Constants.PERSISTENCE_PREF_USER_GENDER, user.getGender().toString())));
+		user.setGender(Utils.getEnumFromId(Gender.class, prefs.getString(Constants.PERSISTENCE_PREF_USER_GENDER, user.getGender().toString()), Gender.UNKNOWN));
 		user.setPictureUrl(prefs.getString(Constants.PERSISTENCE_PREF_USER_PICTURE, user.getPictureUrl()));
 		
 		user.setPicture(loadBitmap(userId));

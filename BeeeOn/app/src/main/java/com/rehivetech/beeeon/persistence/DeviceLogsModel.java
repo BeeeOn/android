@@ -71,7 +71,7 @@ public class DeviceLogsModel {
 				downloadIntervals.add(interval);
 			} else {
 				// Use pair gap to make sure we won't make useless request when there won't be no new value anyway
-				int gap = pair.gap.getValue() * 1000;
+				int gap = pair.gap.getSeconds() * 1000;
 
 				// Determine missing interval
 				long first = rows.firstKey();

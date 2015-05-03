@@ -1,7 +1,9 @@
 package com.rehivetech.beeeon.household.location;
 
+import com.rehivetech.beeeon.IIdentifier;
 import com.rehivetech.beeeon.INameIdentifier;
 import com.rehivetech.beeeon.R;
+import com.rehivetech.beeeon.util.Utils;
 
 public class Location implements INameIdentifier {
 	/** Represents id of newly created location (not saved on server yet) */
@@ -11,16 +13,16 @@ public class Location implements INameIdentifier {
 	public static final String NO_LOCATION_ID = "null";
 
 	/** Represents type (= icon) of "no location" */
-	public static final int NO_LOCATION_TYPE = 0;
+	public static final String NO_LOCATION_TYPE = "0";
 
 	protected final String mAdapterId;
 	protected String mId = "";
 	protected String mName = "";
-	protected int mType;
+	protected String mType;
 	protected LocationIcon mIcon = LocationIcon.UNKNOWN;
 
 	/** Represents location icon. */
-	public static enum LocationIcon {
+	public enum LocationIcon implements IIdentifier {
 		UNKNOWN(0, R.drawable.loc_unknown),
 		BATHROOM(1, R.drawable.loc_bath_room),
 		BEDROOM(2, R.drawable.loc_bed_room),
@@ -29,35 +31,27 @@ public class Location implements INameIdentifier {
 		LIVING_ROOM(5, R.drawable.loc_living_room),
 		WC(6, R.drawable.loc_wc);
 
-		private final int mId;
+		private final String mId;
 		private final int mIconRes;
 
-		private LocationIcon(final int id, final int iconRes) {
-			mId = id;
+		LocationIcon(final int id, final int iconRes) {
+			mId = String.valueOf(id);
 			mIconRes = iconRes;
 		}
 
-		public int getId() {
+		public String getId() {
 			return mId;
 		}
 
 		public int getIconResource() {
 			return mIconRes;
 		}
-
-		public static LocationIcon fromValue(int value) {
-			for (LocationIcon item : values()) {
-				if (value == item.getId())
-					return item;
-			}
-			return LocationIcon.UNKNOWN;
-		}
 	}
 
 	/**
 	 * Represents default location.
 	 */
-	public static enum DefaultLocation {
+	public enum DefaultLocation implements IIdentifier {
 		BATHROOM(1, R.string.loc_bathroom),
 		BEDROOM(2, R.string.loc_bedroom),
 		GARDEN(3, R.string.loc_garden),
@@ -65,15 +59,15 @@ public class Location implements INameIdentifier {
 		LIVING_ROOM(5, R.string.loc_living_room),
 		WC(6, R.string.loc_wc);
 
-		private final int mType;
+		private final String mType;
 		private final int mTitleRes;
 
-		private DefaultLocation(final int type, final int titleRes) {
-			mType = type;
+		DefaultLocation(final int type, final int titleRes) {
+			mType = String.valueOf(type);
 			mTitleRes = titleRes;
 		}
 
-		public int getType() {
+		public String getId() {
 			return mType;
 		}
 
@@ -82,7 +76,7 @@ public class Location implements INameIdentifier {
 		}
 	}
 
-	public Location(String id, String name, String adapterId, int type) {
+	public Location(String id, String name, String adapterId, String type) {
 		setId(id);
 		setName(name);
 		setType(type);
@@ -115,13 +109,13 @@ public class Location implements INameIdentifier {
 		mName = name;
 	}
 
-	public int getType() {
+	public String getType() {
 		return mType;
 	}
 
-	public void setType(int type) {
+	public void setType(String type) {
 		mType = type;
-		mIcon = LocationIcon.fromValue(type);
+		mIcon = Utils.getEnumFromId(LocationIcon.class, String.valueOf(type), LocationIcon.UNKNOWN);
 	}
 
 	public int getIconResource() {

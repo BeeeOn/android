@@ -462,7 +462,7 @@ public class Network implements INetwork {
 			mBT = "";
 
 		// Throw AppException for the caller
-		return new AppException(fa.getErrMessage(), NetworkError.fromValue(fa.getErrCode()));
+		return new AppException(fa.getErrMessage(), Utils.getEnumFromId(NetworkError.class, String.valueOf(fa.getErrCode())));
 	}
 
 	// /////////////////////////////////////////////////////////////////////////////////
@@ -799,7 +799,7 @@ public class Network implements INetwork {
 	public DeviceLog getLog(String adapterID, Device device, LogDataPair pair){
 		String msgToSend = XmlCreator.createGetLog(mBT, adapterID, device.getFacility().getAddress(), device.getRawTypeId(),
 				String.valueOf(pair.interval.getStartMillis() / 1000), String.valueOf(pair.interval.getEndMillis() / 1000),
-				pair.type.getValue(), pair.gap.getValue());
+				pair.type.getId(), pair.gap.getSeconds());
 
 		ParsedMessage msg = doRequest(msgToSend);
 
@@ -1185,7 +1185,7 @@ public class Network implements INetwork {
 	@Override
 	public Condition setCondition(Condition condition) {
 		String messageToSend = XmlCreator.createAddCondition(mBT, condition.getName(),
-				XmlCreator.ConditionType.fromValue(condition.getType()), condition.getFuncs());
+				Utils.getEnumFromId(XmlCreator.ConditionType.class, condition.getType()), condition.getFuncs());
 		ParsedMessage msg = doRequest(messageToSend);
 
 		if (msg.getState() == State.CONDITIONCREATED) {
@@ -1235,7 +1235,7 @@ public class Network implements INetwork {
 	@Override
 	public boolean updateCondition(Condition condition) {
 		String messageToSend = XmlCreator.createSetCondition(mBT, condition.getName(),
-				XmlCreator.ConditionType.fromValue(condition.getType()), condition.getId(), condition.getFuncs());
+				Utils.getEnumFromId(XmlCreator.ConditionType.class, condition.getType()), condition.getId(), condition.getFuncs());
 		ParsedMessage msg = doRequest(messageToSend);
 
 		if (msg.getState() == State.TRUE)

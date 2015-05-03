@@ -2,28 +2,19 @@ package com.rehivetech.beeeon.widget.configuration;
 
 
 import android.os.Bundle;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.RadioGroup;
-import android.widget.SeekBar;
 import android.widget.Spinner;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.arrayadapter.DeviceArrayAdapter;
-import com.rehivetech.beeeon.asynctask.ReloadAdapterDataTask;
 import com.rehivetech.beeeon.household.adapter.Adapter;
 import com.rehivetech.beeeon.household.device.Device;
 import com.rehivetech.beeeon.household.device.DeviceLog;
 import com.rehivetech.beeeon.household.device.RefreshInterval;
-import com.rehivetech.beeeon.pair.LogDataPair;
 import com.rehivetech.beeeon.util.Utils;
-import com.rehivetech.beeeon.widget.data.WidgetDeviceData;
 import com.rehivetech.beeeon.widget.data.WidgetGraphData;
 import com.rehivetech.beeeon.widget.persistence.WidgetDevicePersistence;
-import com.rehivetech.beeeon.widget.service.WidgetService;
 
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
@@ -70,20 +61,20 @@ public class WidgetGraphFragment extends WidgetConfigurationFragment {
 			public void onCheckedChanged(RadioGroup group, int checkedId) {
 				switch (checkedId){
 					case R.id.widget_gap_daily:
-						mWidgetData.widgetLogData.gap = DeviceLog.DataInterval.HOUR.getValue();
+						mWidgetData.widgetLogData.gap = DeviceLog.DataInterval.HOUR.getSeconds();
 						mWidgetData.widgetLogData.intervalStart = DateTime.now(DateTimeZone.UTC).minusDays(1).getMillis();
 						mWidgetRefreshInterval = RefreshInterval.MIN_30;
 						break;
 
 					case R.id.widget_gap_monthly:
-						mWidgetData.widgetLogData.gap = DeviceLog.DataInterval.DAY.getValue();
+						mWidgetData.widgetLogData.gap = DeviceLog.DataInterval.DAY.getSeconds();
 						mWidgetData.widgetLogData.intervalStart = DateTime.now(DateTimeZone.UTC).minusMonths(1).getMillis();
 						mWidgetRefreshInterval = RefreshInterval.HOUR_24;	 // TODO maybe could be longer
 						break;
 
 					default:
 					case R.id.widget_gap_weekly:
-						mWidgetData.widgetLogData.gap = DeviceLog.DataInterval.HOUR.getValue();
+						mWidgetData.widgetLogData.gap = DeviceLog.DataInterval.HOUR.getSeconds();
 						mWidgetData.widgetLogData.intervalStart = DateTime.now(DateTimeZone.UTC).minusWeeks(1).getMillis();
 						mWidgetRefreshInterval = RefreshInterval.HOUR_12;
 						break;

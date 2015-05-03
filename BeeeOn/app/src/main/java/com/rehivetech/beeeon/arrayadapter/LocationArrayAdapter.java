@@ -113,7 +113,7 @@ public class LocationArrayAdapter extends ArrayAdapter<Location> {
 			}
 
 			if (!found) {
-				locations.add(new Location(Location.NEW_LOCATION_ID, name, adapter.getId(), room.getType()));
+				locations.add(new Location(Location.NEW_LOCATION_ID, name, adapter.getId(), room.getId()));
 			}
 		}
 
@@ -121,7 +121,7 @@ public class LocationArrayAdapter extends ArrayAdapter<Location> {
 		Collections.sort(locations, new NameIdentifierComparator());
 
 		// Add "New location" item
-		locations.add(new Location(Location.NEW_LOCATION_ID, mActivity.getString(R.string.addsensor_new_location_spinner), adapter.getId(), 0));
+		locations.add(new Location(Location.NEW_LOCATION_ID, mActivity.getString(R.string.addsensor_new_location_spinner), adapter.getId(), "0"));
 
 		return locations;
 	}

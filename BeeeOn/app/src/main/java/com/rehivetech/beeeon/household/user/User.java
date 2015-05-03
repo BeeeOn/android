@@ -26,7 +26,7 @@ public class User implements INameIdentifier {
 
 	private Role mRole = Role.Guest;
 
-	private Gender mGender = Gender.Unknown;
+	private Gender mGender = Gender.UNKNOWN;
 
 	private Bitmap mPicture = null;
 
@@ -51,7 +51,7 @@ public class User implements INameIdentifier {
 		mRole = role;
 	}
 
-	public enum Role {
+	public enum Role implements IIdentifier {
 		Guest("guest", R.string.user_role_guest), // can only read adapter and devices' data
 		User("user", R.string.user_role_user), // = guest + can switch state of switch devices
 		Admin("admin", R.string.user_role_admin), // = user + can change devices' settings (rename, logging, refresh,...)
@@ -60,41 +60,31 @@ public class User implements INameIdentifier {
 		private final String mRole;
 		private final int mStringRes;
 
-		private Role(String role, int stringRes) {
+		Role(String role, int stringRes) {
 			mRole = role;
 			mStringRes = stringRes;
 		}
 
-		public String getValue() {
+		public String getId() {
 			return mRole;
 		}
 
 		public int getStringResource() { return mStringRes; }
-
-		public static Role fromString(final String role) {
-			if (role.equalsIgnoreCase("superuser")) {
-				return Superuser;
-			}
-			if (role.equalsIgnoreCase("admin")) {
-				return Admin;
-			}
-			if (role.equalsIgnoreCase("user")) {
-				return User;
-			}
-			return Guest;
-		}
 	}
 
-	public enum Gender {
-		Unknown, Male, Female;
-		
-		public static Gender fromString(String value) {
-			if (value.equalsIgnoreCase("male"))
-				return Male;
-			else if (value.equalsIgnoreCase("female"))
-				return Female;
-			else
-				return Unknown;
+	public enum Gender implements IIdentifier {
+		UNKNOWN("unknown"),
+		MALE("male"),
+		FEMALE("female");
+
+		String mValue;
+
+		Gender(String value) {
+			mValue = value;
+		}
+
+		public String getId() {
+			return mValue;
 		}
 	}
 

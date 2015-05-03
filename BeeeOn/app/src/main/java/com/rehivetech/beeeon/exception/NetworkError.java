@@ -1,6 +1,8 @@
 package com.rehivetech.beeeon.exception;
 
-public enum NetworkError implements ErrorCode {
+import com.rehivetech.beeeon.IIdentifier;
+
+public enum NetworkError implements ErrorCode, IIdentifier {
 
 	// FROM CLIENT (use CL_ prefix)
 	CL_INTERNET_CONNECTION(-1),
@@ -61,13 +63,9 @@ public enum NetworkError implements ErrorCode {
 	public int getNumber() {
 		return mNumber;
 	}
-	
-	public static NetworkError fromValue(int value) {
-		for (NetworkError item : values()) {
-			if (value == item.getNumber())
-				return item;
-		}
-		return UNKNOWN;
+
+	public String getId() {
+		return String.valueOf(mNumber);
 	}
 
 }

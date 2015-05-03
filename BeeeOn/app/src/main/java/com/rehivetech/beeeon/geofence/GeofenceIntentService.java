@@ -8,6 +8,7 @@ import com.google.android.gms.location.Geofence;
 import com.google.android.gms.location.GeofencingEvent;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.util.Log;
+import com.rehivetech.beeeon.util.Utils;
 
 import java.util.List;
 
@@ -46,7 +47,7 @@ public class GeofenceIntentService extends IntentService {
 				geofenceTransition == Geofence.GEOFENCE_TRANSITION_EXIT) {
 			List<Geofence> triggeringGeofences = geofencingEvent.getTriggeringGeofences();
 
-			TransitionType type = TransitionType.fromInt(geofenceTransition);
+			TransitionType type = Utils.getEnumFromId(TransitionType.class, String.valueOf(geofenceTransition));
 			sendGeofencesToServer(triggeringGeofences, type);
 		} else {
 			// Log the error.

@@ -1,5 +1,7 @@
 package com.rehivetech.beeeon.household.device;
 
+import com.rehivetech.beeeon.IIdentifier;
+
 import java.util.Map.Entry;
 import java.util.SortedMap;
 import java.util.TreeMap;
@@ -17,7 +19,31 @@ public class DeviceLog {
 	private float mMinValue;
 	private float mMaxValue;
 
-	public enum DataType {
+	/*public static class EnumWrapper<E extends Enum<E> & IIdentifier> {
+
+		private Class<E> mEnumClass;
+
+		private E mValue;
+
+		public EnumWrapper(Class<E> enumClass) {
+			mEnumClass = enumClass;
+		}
+
+		public E[] values() {
+			return mEnumClass.getEnumConstants();
+		}
+
+		public void setValue(String value) {
+			for (E item : mEnumClass.getEnumConstants()) {
+				if (item.getId().equalsIgnoreCase(value))
+					mValue = item;
+			}
+
+			mValue = null;
+		}
+	}*/
+
+	public enum DataType implements IIdentifier {
 		MINIMUM("min"), //
 		AVERAGE("avg"), //
 		MEDIAN("med"), //
@@ -26,21 +52,12 @@ public class DeviceLog {
 
 		private final String mValue;
 
-		private DataType(String value) {
+		DataType(String value) {
 			mValue = value;
 		}
 
-		public String getValue() {
+		public String getId() {
 			return mValue;
-		}
-
-		public static DataType fromValue(String value) {
-			for (DataType item : values()) {
-				if (value.equalsIgnoreCase(item.getValue())) {
-					return item;
-				}
-			}
-			throw new IllegalArgumentException("Invalid DataType value");
 		}
 	}
 
@@ -54,17 +71,17 @@ public class DeviceLog {
 
 		private final int mValue;
 
-		private DataInterval(int value) {
+		DataInterval(int value) {
 			mValue = value;
 		}
 
-		public int getValue() {
+		public int getSeconds() {
 			return mValue;
 		}
 
-		public static DataInterval fromValue(int value) {
+		public static DataInterval fromSeconds(int value) {
 			for (DataInterval item : values()) {
-				if (value <= item.getValue()) {
+				if (value <= item.getSeconds()) {
 					return item;
 				}
 			}

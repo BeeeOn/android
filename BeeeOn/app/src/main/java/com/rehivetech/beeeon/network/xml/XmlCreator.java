@@ -7,6 +7,7 @@ package com.rehivetech.beeeon.network.xml;
 import android.util.Xml;
 
 import com.rehivetech.beeeon.Constants;
+import com.rehivetech.beeeon.IIdentifier;
 import com.rehivetech.beeeon.exception.AppException;
 import com.rehivetech.beeeon.exception.NetworkError;
 import com.rehivetech.beeeon.household.device.Device;
@@ -127,25 +128,18 @@ public class XmlCreator {
 	 * @author ThinkDeep
 	 *
 	 */
-	public enum ConditionType {
-		AND("and"), OR("or");
+	public enum ConditionType implements IIdentifier {
+		AND("and"),
+		OR("or");
 
 		private final String mValue;
 
-		private ConditionType(String value) {
+		ConditionType(String value) {
 			mValue = value;
 		}
 
-		public String getValue() {
+		public String getId() {
 			return mValue;
-		}
-
-		public static ConditionType fromValue(String value) {
-			for (ConditionType item : values()) {
-				if (value.equalsIgnoreCase(item.getValue()))
-					return item;
-			}
-			throw new IllegalArgumentException("Invalid ConditionType value");
 		}
 	}
 
@@ -525,7 +519,7 @@ public class XmlCreator {
 					if (toSave.contains(SaveDevice.SAVE_NAME))
 						serializer.attribute(ns, Xconstants.NAME, device.getName());
 					// if (toSave.contains(SaveDevice.SAVE_VALUE))
-					// serializer.attribute(ns, Xconstants.VALUE, String.valueOf(device.getValue().getDoubleValue()));
+					// serializer.attribute(ns, Xconstants.VALUE, String.valueOf(device.getId().getDoubleValue()));
 
 					serializer.endTag(ns, Xconstants.PART);
 				}
@@ -646,7 +640,7 @@ public class XmlCreator {
 	 * @since 2.2
 	 */
 	public static String createAddRoom(String bt, Location location) {
-		return createComAttribsVariant(Xconstants.STATE, ADDROOM, Xconstants.BT, bt, Xconstants.AID, location.getAdapterId(), Xconstants.LTYPE, Integer.toString(location.getType()), Xconstants.LNAME,
+		return createComAttribsVariant(Xconstants.STATE, ADDROOM, Xconstants.BT, bt, Xconstants.AID, location.getAdapterId(), Xconstants.LTYPE, location.getType(), Xconstants.LNAME,
 				location.getName());
 	}
 
@@ -675,7 +669,7 @@ public class XmlCreator {
 				serializer.startTag(ns, Xconstants.LOCATION);
 
 				serializer.attribute(ns, Xconstants.ID, location.getId());
-				serializer.attribute(ns, Xconstants.TYPE, Integer.toString(location.getType()));
+				serializer.attribute(ns, Xconstants.TYPE, location.getType());
 				serializer.attribute(ns, Xconstants.NAME, location.getName());
 
 				serializer.endTag(ns, Xconstants.LOCATION);
@@ -791,7 +785,7 @@ public class XmlCreator {
 			serializer.startTag(ns, Xconstants.DEVICE);
 			serializer.attribute(ns, Xconstants.AID, device.getFacility().getAdapterId());
 			serializer.attribute(ns, Xconstants.DID, device.getId());
-			serializer.attribute(ns, Xconstants.ACTION, action.getValue());
+			serializer.attribute(ns, Xconstants.ACTION, action.getId());
 			serializer.endTag(ns, Xconstants.DEVICE);
 
 			endXml(serializer);
@@ -1404,7 +1398,7 @@ public class XmlCreator {
 				serializer.startTag(ns, Xconstants.USER);
 
 				serializer.attribute(ns, Xconstants.EMAIL, user.getEmail());
-				serializer.attribute(ns, Xconstants.ROLE, user.getRole().getValue());
+				serializer.attribute(ns, Xconstants.ROLE, user.getRole().getId());
 				serializer.endTag(ns, Xconstants.USER);
 			}
 
@@ -1424,13 +1418,13 @@ public class XmlCreator {
 			serializer.attribute(ns, Xconstants.BT, bt);
 			serializer.attribute(ns, Xconstants.STATE, state);
 			serializer.attribute(ns, Xconstants.CNAME, name);
-			serializer.attribute(ns, Xconstants.CTYPE, type.getValue());
+			serializer.attribute(ns, Xconstants.CTYPE, type.getId());
 			if (state.equals(SETCONDITION))
 				serializer.attribute(ns, Xconstants.ID, cid);
 
 			for (ConditionFunction func : condFuncs) {
 				serializer.startTag(ns, Xconstants.FUNC);
-				serializer.attribute(ns, Xconstants.TYPE, func.getFuncType().getValue());
+				serializer.attribute(ns, Xconstants.TYPE, func.getFuncType().getId());
 
 				switch (func.getFuncType()) {
 				case EQ:
@@ -1547,7 +1541,7 @@ public class XmlCreator {
 
 			for (Action action : actions) {
 				serializer.startTag(ns, Xconstants.ACTION);
-				serializer.attribute(ns, Xconstants.TYPE, action.getType().getValue());
+				serializer.attribute(ns, Xconstants.TYPE, action.getType().getId());
 
 				if (action.getType() == Action.ActionType.ACTOR) {
 					serializer.startTag(ns, Xconstants.DEVICE);

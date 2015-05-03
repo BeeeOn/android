@@ -34,8 +34,8 @@ public class WidgetLogDataPersistence extends WidgetPersistence {
 	public void load() {
 		gapRadioId = mPrefs.getInt(getProperty(PREF_GAP_RADIO_ID), R.id.widget_gap_weekly);
 		intervalStart = mPrefs.getLong(getProperty(PREF_INTERVAL_START), DateTime.now(DateTimeZone.UTC).minusWeeks(1).getMillis());
-		type = mPrefs.getString(getProperty(PREF_TYPE), DeviceLog.DataType.AVERAGE.getValue());
-		gap = mPrefs.getInt(getProperty(PREF_GAP), DeviceLog.DataInterval.HOUR.getValue());
+		type = mPrefs.getString(getProperty(PREF_TYPE), DeviceLog.DataType.AVERAGE.getId());
+		gap = mPrefs.getInt(getProperty(PREF_GAP), DeviceLog.DataInterval.HOUR.getSeconds());
 	}
 
 	@Override

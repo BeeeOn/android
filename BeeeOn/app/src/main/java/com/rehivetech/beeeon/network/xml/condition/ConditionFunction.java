@@ -1,9 +1,11 @@
 package com.rehivetech.beeeon.network.xml.condition;
 
+import com.rehivetech.beeeon.IIdentifier;
+
 //new drop
 public abstract class ConditionFunction {
 
-	public enum FunctionType {
+	public enum FunctionType implements IIdentifier {
 		EQ("eq"), // equal
 		GT("gt"), // greater than
 		GE("ge"), // greater or equal
@@ -18,20 +20,12 @@ public abstract class ConditionFunction {
 
 		private final String mValue;
 
-		private FunctionType(String value) {
+		FunctionType(String value) {
 			mValue = value;
 		}
 
-		public String getValue() {
+		public String getId() {
 			return mValue;
-		}
-
-		public static FunctionType fromValue(String value) {
-			for (FunctionType item : values()) {
-				if (value.equalsIgnoreCase(item.getValue()))
-					return item;
-			}
-			throw new IllegalArgumentException("Invalid FunctionType value");
 		}
 	}
 
