@@ -631,7 +631,7 @@ public class SensorDetailFragment extends Fragment implements IListDialogListene
 				mDevice, // device
 				new Interval(start, end), // interval from-to
 				DataType.AVERAGE, // type
-				(mDevice.getValue() instanceof BaseEnumValue) ? DataInterval.RAW : DataInterval.MINUTE); // interval
+				(mDevice.getValue() instanceof BaseEnumValue) ? DataInterval.RAW : DataInterval.TEN_MINUTES); // interval
 
 		mGetDeviceLogTask.setListener(new CallbackTaskListener() {
 			@Override
