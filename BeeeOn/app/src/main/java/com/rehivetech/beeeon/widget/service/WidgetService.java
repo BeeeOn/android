@@ -41,6 +41,7 @@ import com.rehivetech.beeeon.widget.receivers.WidgetDeviceProvider;
 import com.rehivetech.beeeon.widget.receivers.WidgetDeviceProviderLarge;
 import com.rehivetech.beeeon.widget.receivers.WidgetDeviceProviderMedium;
 import com.rehivetech.beeeon.widget.receivers.WidgetGraphProvider;
+import com.rehivetech.beeeon.widget.receivers.WidgetLocationListProvider;
 import com.rehivetech.beeeon.widget.receivers.WidgetProvider;
 
 import org.json.JSONObject;
@@ -96,6 +97,11 @@ public class WidgetService extends Service {
     // -------------------------------------------------------------------- //
     // --------------- Main methods (entry points) of service ------------- //
     // -------------------------------------------------------------------- //
+    @Override
+    public void onTrimMemory(int level) {
+        super.onTrimMemory(level);
+        Log.d(TAG, "onTrimMemory => " + level);
+    }
 
     /**
      * When startin updating widgets, we can tell that these widgets should be reloaded
@@ -181,7 +187,7 @@ public class WidgetService extends Service {
         super.onDestroy();
 
         // removes all widgets in list
-        getAvailableWidgets().clear();
+        mAvailableWidgets.clear();
 
         Log.v(TAG, "Unregistering broadcast bridge");
         unregisterReceiver(mServiceReceiver);
@@ -308,7 +314,7 @@ public class WidgetService extends Service {
         Log.d(TAG, "updateWidgets()");
 
         // if there are no widgets passed by intent, try to get all widgets
-        if(allWidgetIds == null || allWidgetIds.length == 0) allWidgetIds = getAllIds();
+        if(allWidgetIds == null || allWidgetIds.length == 0) allWidgetIds = getAllWidgetIds();
 
         Log.d(TAG, "WidgetsToUpdate = " + allWidgetIds.length);
 
@@ -408,8 +414,9 @@ public class WidgetService extends Service {
                 Log.e(TAG, e.getSimpleErrorMessage());
                 if(!isCached){
                     // for all widgets put to "logout" state
-                    for(int i = 0; i < getAvailableWidgets().size(); i++) {
-                        WidgetData widgetData = getAvailableWidgets().valueAt(i);
+                    for(int widgetId : getAllWidgetIds()){
+                        WidgetData widgetData = getWidgetData(widgetId);
+                        if(widgetData == null) continue;
                         widgetData.handleUpdateFail();
                         widgetData.renderWidget();
                     }
@@ -535,12 +542,12 @@ public class WidgetService extends Service {
      * @param isValueOn     when UPDATE_WHOLE this does nothing
      */
     private void performWidgetActorChange(int perform, String adapterId, String actorId, boolean isDisabled, boolean isValueOn){
-        if(getAvailableWidgets() == null || actorId == null || adapterId == null || actorId.isEmpty() || adapterId.isEmpty()) return;
-
-        for (int i = 0; i < getAvailableWidgets().size(); i++) {
-            WidgetData data = getAvailableWidgets().valueAt(i);
+        int[] allWidgetIds = getAllWidgetIds();
+        if(allWidgetIds.length == 0 || actorId == null || adapterId == null || actorId.isEmpty() || adapterId.isEmpty()) return;
+        for(int widgetId : allWidgetIds){
+            WidgetData data = getWidgetData(widgetId);
             // skips not compatible widgets
-            if(data.widgetDevices == null || data.widgetDevices.isEmpty()) continue;
+            if(data == null || data.widgetDevices == null || data.widgetDevices.isEmpty()) continue;
 
             int updatedActors = 0;
             // go through all devices in that widget
@@ -573,7 +580,7 @@ public class WidgetService extends Service {
      */
     private void widgetAdd(WidgetData widgetData) {
         // add widgetData to service
-        getAvailableWidgets().put(widgetData.getWidgetId(), widgetData);
+        mAvailableWidgets.put(widgetData.getWidgetId(), widgetData);
     }
 
     /**
@@ -583,23 +590,13 @@ public class WidgetService extends Service {
     private void widgetsDelete(int[] widgetIds) {
         for(int widgetId : widgetIds){
             if(widgetId == AppWidgetManager.INVALID_APPWIDGET_ID) continue;
-
             WidgetData data = getWidgetData(widgetId);
-            widgetDelete(data);
+            if(data == null) continue;
+            Log.v(TAG, String.format("delete widgetData(%d)", widgetId));
+
+            data.delete();
+            mAvailableWidgets.delete(widgetId);
         }
-    }
-
-    /**
-     * For deleting widgetData outside of service
-     * @param data
-     */
-    private void widgetDelete(WidgetData data){
-        if(data == null) return;
-        int widgetId = data.getWidgetId();
-        Log.v(TAG, String.format("delete widgetData(%d)", widgetId));
-
-        data.delete();
-        getAvailableWidgets().delete(widgetId);
     }
 
     /**
@@ -608,7 +605,7 @@ public class WidgetService extends Service {
      * @return
      */
     public WidgetData getWidgetData(int widgetId){
-        WidgetData widgetData = getAvailableWidgets().get(widgetId);
+        WidgetData widgetData = mAvailableWidgets.get(widgetId);
         if (widgetData == null) {
             String widgetClassName = WidgetData.getSettingClassName(mContext, widgetId);
             if (widgetClassName == null || widgetClassName.isEmpty()) return null;
@@ -643,15 +640,6 @@ public class WidgetService extends Service {
             }
         }
         return widgetData;
-    }
-
-
-    /**
-     * Encapsulates usage of sparse array of widget data
-     * @return
-     */
-    public SparseArray<WidgetData> getAvailableWidgets(){
-        return mAvailableWidgets;
     }
 
     /**
@@ -704,7 +692,7 @@ public class WidgetService extends Service {
         boolean first = true;
 
         // first gets IDs of all widgets
-        int[] widgetIds = getAllIds();
+        int[] widgetIds = getAllWidgetIds();
 
         // if none, tries the passed ids
         if(widgetIds == null || widgetIds.length == 0){
@@ -734,13 +722,13 @@ public class WidgetService extends Service {
      * !!! If we have any new widget, we need to add it here so that it keeps updating. !!!
      * @return array of widget ids
      */
-    private int[] getAllIds() {
+    private int[] getAllWidgetIds() {
         List<Integer> ids = new ArrayList<>();
 
         // clock widget
         ids.addAll(getWidgetIds(WidgetClockProvider.class));
         // location list
-        //ids.addAll(getWidgetIds(WidgetLocationListProvider.class));
+        ids.addAll(getWidgetIds(WidgetLocationListProvider.class));
         // device widget
         ids.addAll(getWidgetIds(WidgetDeviceProvider.class));
         ids.addAll(getWidgetIds(WidgetDeviceProviderMedium.class));
@@ -748,12 +736,7 @@ public class WidgetService extends Service {
         // graph widget
         ids.addAll(getWidgetIds(WidgetGraphProvider.class));
 
-        int[] arr = new int[ids.size()];
-        for (int i = 0; i < ids.size(); i++) {
-            arr[i] = ids.get(i);
-        }
-
-        return arr;
+        return Utils.convertIntegers(ids);
     }
 
     /**
