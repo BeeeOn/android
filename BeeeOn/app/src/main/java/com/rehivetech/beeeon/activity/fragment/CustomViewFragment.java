@@ -247,7 +247,7 @@ public class CustomViewFragment extends TrackFragment {
 			// Hide loading label for this graph
 			GraphView graphView = mGraphs.get(mTypeId);
 			graphView.setLoading(false);
-			graphView.animateY(2000);
+			//graphView.animateY(2000);
 		}
 
 	}

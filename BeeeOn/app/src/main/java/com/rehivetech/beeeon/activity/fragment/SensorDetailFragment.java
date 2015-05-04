@@ -526,7 +526,7 @@ public class SensorDetailFragment extends Fragment implements IListDialogListene
 		}
 
 		mGraphView.setLoading(false);
-		mGraphView.animateY(2000);
+		//mGraphView.animateY(2000);
 		//mGraphInfo.setText(getView().getResources().getString(R.string.sen_detail_graph_info));
 	}
 
