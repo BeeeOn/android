@@ -388,7 +388,7 @@ final public class Utils {
 		T item;
 		try {
 			item = getEnumFromId(enumClass, id);
-		} catch (IllegalStateException e) {
+		} catch (IllegalArgumentException e) {
 			item = defaultItem;
 		}
 
