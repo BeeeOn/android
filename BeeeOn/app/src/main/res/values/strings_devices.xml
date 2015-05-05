@@ -34,6 +34,7 @@
     <string name="dev_illumination_type">Photometer</string>
     <string name="dev_noise_type">Sound meter</string>
     <string name="dev_emission_type">Emission meter</string>
+    <string name="dev_boiler_status_type">Boiler status</string>
     <!-- Actors -->
     <string name="dev_actor_on_off_type">On/Off actuator</string>
     <string name="dev_actor_push_type">Push actuator</string>
@@ -59,6 +60,12 @@
 	<string name="dev_boiler_operation_mode_value_automatic">Automatic</string>
 	<string name="dev_boiler_operation_mode_value_manual">Manual</string>
 	<string name="dev_boiler_operation_mode_value_vacation">Vacation</string>
+
+    <string name="dev_boiler_status_undefined">Undefined</string>
+    <string name="dev_boiler_status_heating">Heating</string>
+    <string name="dev_boiler_status_hot_water">Hot water</string>
+    <string name="dev_boiler_status_failure">Failure</string>
+    <string name="dev_boiler_status_shutdown">Shutdown</string>
 
     <!-- Names of default locations -->
 	<string name="loc_none">- None -</string>
