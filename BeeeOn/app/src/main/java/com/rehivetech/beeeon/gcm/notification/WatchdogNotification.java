@@ -25,22 +25,23 @@ public class WatchdogNotification extends VisibleNotification {
 	private String mSensorId;
 	private int mSensorType;
 	private String mMsg;
+	private int mAlgId;
 
 	/**
 	 * Constructor
 	 *
-	 * @param userId
 	 * @param msgid
 	 * @param time
 	 * @param type
 	 * @param read
 	 */
-	private WatchdogNotification(int msgid, long time, NotificationType type, boolean read, String message, int adapterId, String sensorId, int sensorType) {
+	private WatchdogNotification(int msgid, long time, NotificationType type, boolean read, String message, int adapterId, String sensorId, int sensorType, int algId) {
 		super(msgid, time, type, read);
 		mAdapterId = adapterId;
 		mSensorId = sensorId;
 		mSensorType = sensorType;
 		mMsg = message;
+		mAlgId = algId;
 	}
 
 	protected static WatchdogNotification getInstance(Integer msgId, Long time, NotificationType type, Bundle bundle) throws NullPointerException, IllegalArgumentException {
@@ -51,13 +52,14 @@ public class WatchdogNotification extends VisibleNotification {
 			Integer adapterId = Integer.valueOf(bundle.getString(Xconstants.AID));
 			String deviceId = bundle.getString(Xconstants.DID);
 			Integer deviceType = Integer.valueOf(bundle.getString(Xconstants.DTYPE));
+			Integer algId = Integer.valueOf(bundle.getString(Xconstants.ALGID));
 
-			if (message == null || adapterId == null || deviceId == null || deviceType == null) {
+			if (message == null || adapterId == null || deviceId == null || deviceType == null || algId == null) {
 				Log.d(TAG, "Json: Some compulsory value is missing.");
 				return null;
 			}
 
-			instance = new WatchdogNotification(msgId, time, type, false, message, adapterId, deviceId, deviceType);
+			instance = new WatchdogNotification(msgId, time, type, false, message, adapterId, deviceId, deviceType, algId);
 		} catch (IllegalArgumentException | NullPointerException e) {
 			return instance;
 		}
@@ -70,6 +72,7 @@ public class WatchdogNotification extends VisibleNotification {
 		Integer adapterId = null;
 		String deviceId = null;
 		Integer deviceType = null;
+		Integer algId = null;
 
 		String text = null;
 		int eventType = parser.getEventType();
@@ -93,6 +96,8 @@ public class WatchdogNotification extends VisibleNotification {
 						deviceId = text;
 					} else if (tagname.equalsIgnoreCase(Xconstants.DTYPE)) {
 						deviceType = Integer.valueOf(text);
+					} else if (tagname.equalsIgnoreCase(Xconstants.ALGID)) {
+						deviceType = Integer.valueOf(text);
 					}
 					break;
 				default:
@@ -106,15 +111,12 @@ public class WatchdogNotification extends VisibleNotification {
 			return null;
 		}
 
-		return new WatchdogNotification(msgId, time, type, isRead, message, adapterId, deviceId, deviceType);
-
-
+		return new WatchdogNotification(msgId, time, type, isRead, message, adapterId, deviceId, deviceType, algId);
 	}
 
 	@Override
 	protected void onGcmHandle(Context context) {
 		NotificationCompat.Builder builder = getBaseNotificationBuilder(context);
-
 
 		showNotification(context, builder);
 	}
