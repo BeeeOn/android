@@ -4,6 +4,7 @@ import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.household.device.values.BaseValue;
 import com.rehivetech.beeeon.household.device.values.BoilerOperationModeValue;
 import com.rehivetech.beeeon.household.device.values.BoilerOperationTypeValue;
+import com.rehivetech.beeeon.household.device.values.BoilerStatusValue;
 import com.rehivetech.beeeon.household.device.values.EmissionValue;
 import com.rehivetech.beeeon.household.device.values.HumidityValue;
 import com.rehivetech.beeeon.household.device.values.IlluminationValue;
@@ -32,6 +33,7 @@ public enum DeviceType {
 	// TYPE_POSITION(0x08, R.string.dev_position_type, false, BitArrayValue.class), // position meter
 	// 9 is missing, it's racism! :(
 	TYPE_TEMPERATURE(0x0A, R.string.dev_temperature_type, false, TemperatureValue.class), // temperature meter
+	TYPE_BOILER_STATUS(0x0B, R.string.dev_boiler_status_type, false, BoilerStatusValue.class), // boiler status
 
 	// =============== Actors ================
 	TYPE_ACTOR_ON_OFF(0xA0, R.string.dev_actor_on_off_type, true, OnOffValue.class), // on/off actor
