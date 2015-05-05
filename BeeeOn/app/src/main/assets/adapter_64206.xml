@@ -18,30 +18,6 @@
 			val="28" />
 	</dev>
 	<dev
-		init="1"
-		did="100:00:FF:020:FF0"
-		lid="5555"
-		refresh="5"
-		batt="100"
-		time="1377684610"
-		rssi="52" >
-		<part
-			type="165"
-			vis="1"
-			name="Teplota v kotli"
-			val="28" />
-		<part
-			type="166"
-			vis="1"
-			name="Stav  kotle"
-			val="3" />
-		<part
-			type="167"
-			vis="1"
-			name="Mód  kotle"
-			val="1" />
-	</dev>
-	<dev 
 		init="1" 
 		did="100:00:FF:000:FF1" 
 		lid="5555"
