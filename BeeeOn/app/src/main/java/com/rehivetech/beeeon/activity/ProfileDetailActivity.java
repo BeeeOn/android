@@ -3,11 +3,14 @@ package com.rehivetech.beeeon.activity;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.content.pm.Signature;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Base64;
 import android.util.DisplayMetrics;
-import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -41,6 +44,8 @@ import com.vk.sdk.VKAccessToken;
 import com.vk.sdk.VKSdk;
 import com.vk.sdk.VKUIHelper;
 
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Observable;
@@ -52,17 +57,13 @@ import java.util.Observer;
 public class ProfileDetailActivity extends BaseApplicationActivity implements Observer {
 	private static final String TAG = ProfileDetailActivity.class.getSimpleName();
 
-	private User actUser;
 	private GamCategoryListAdapter mCategoryListAdapter;
 	private Context mContext;
 	private Activity mActivity;
 	private AchievementList mAchievementList;
 	private int mDisplayPixel;
 
-	// GUI
-	private TextView userName;
 	private TextView userLevel;
-	private ImageView userImage;
 	private ListView mCategoryList;
 	private TextView mPoints;
 	private FloatingActionButton mMoreArrow;
@@ -90,7 +91,7 @@ public class ProfileDetailActivity extends BaseApplicationActivity implements Ob
 		mContext = this;
 		mActivity = this;
 		Controller controller = Controller.getInstance(mContext);
-		actUser = controller.getActualUser();
+		User actUser = controller.getActualUser();
 
 		Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 		if (toolbar != null) {
@@ -108,9 +109,9 @@ public class ProfileDetailActivity extends BaseApplicationActivity implements Ob
 		mDisplayPixel = (int) metrics.density;
 
 		// Inflate the layout for this fragment
-		userName = (TextView) findViewById(R.id.profile_name);
+		TextView userName = (TextView) findViewById(R.id.profile_name);
 		userLevel = (TextView) findViewById(R.id.profile_detail);
-		userImage = (ImageView) findViewById(R.id.profile_image);
+		ImageView userImage = (ImageView) findViewById(R.id.profile_image);
 		mCategoryList = (ListView) findViewById(R.id.gam_category_list);
 		mPoints = (TextView) findViewById(R.id.profile_points);
 		mMoreArrow = (FloatingActionButton) findViewById(R.id.profile_more_arrow);

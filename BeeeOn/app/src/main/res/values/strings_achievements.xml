@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<string name="name_1">Connected</string>
+	<string name="desc_1">Log into application for 10 times.</string>
+	<string name="desc_2">Log into application for 100 times.</string>
+	<string name="desc_3">Log into application for 1000 times.</string>
+	<string name="desc_4">Add one new room.</string>
+	<string name="desc_5">Add five different rooms.</string>
+	<string name="desc_6">See all help windows.</string>
+	<string name="desc_7">Add a clock widget to your desktop.</string>
+	<string name="desc_8">Add any widget to your desktop.</string>
+	<string name="desc_9">Add a geofence location.</string>
+	<string name="desc_10">Add five geofence locations.</string>
+	<string name="desc_31">Pair application with Facebook</string>
+	<string name="desc_32">Share any message via Facebook.</string>
+	<string name="desc_33">Share five messages via Facebook.</string>
+	<string name="desc_34">Pair application with Twitter.</string>
+	<string name="desc_35">Share any message via Twitter.</string>
+	<string name="desc_36">Share five messages via Twitter.</string>
+	<string name="desc_37">Pair application with Vkontakte.</string>
+	<string name="desc_38">Share any message via Vkontakte.</string>
+	<string name="desc_39">Share five messages via Vkontakte.</string>
+	<string name="desc_40">Share any message via Google Plus.</string>
+	<string name="desc_41">Share five messages via Google Plus.</string>
+	<string name="desc_42">Share ten messages via any social network.</string>
+	<string name="desc_43">Share twenty messages via any social network.</string>
+	<string name="desc_44">Pair application via any two social networks.</string>
+	<string name="desc_50">Add user with admin rights to your gateway.</string>
+	<string name="desc_51">Add user with user rights to your gateway.</string>
+	<string name="desc_52">Add user with guest rights to your gateway.</string>
+	<string name="desc_53">Add five users to your gateway.</string>
+	<string name="desc_61">Connect a gateway.</string>
+	<string name="desc_62">Connect two different gateways.</string>
+	<string name="desc_63">Connect five different gateways.</string>
+	<string name="desc_64">Add a new sensor.</string>
+	<string name="desc_65">Add five sensors.</string>
+	<string name="desc_66">Add ten sensors.</string>
+	<string name="desc_67">Add fifteen sensors.</string>
+</resources>

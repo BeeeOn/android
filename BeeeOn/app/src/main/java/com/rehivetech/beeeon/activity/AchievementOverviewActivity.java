@@ -23,7 +23,6 @@ import com.rehivetech.beeeon.gamification.AchievementListOnClickListener;
 import com.rehivetech.beeeon.activity.dialog.ShareFragmentDialog;
 import com.rehivetech.beeeon.util.Log;
 
-import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -78,6 +77,19 @@ public class AchievementOverviewActivity extends BaseApplicationActivity impleme
 	}
 
 	/**
+	 * Sets OnClick and OnLongClick listeners on all achievements in view.
+	 * OnLongClick, if achievement is already completed, display facebook
+	 * share activity.
+	 */
+	private void setListAdapter() {
+		ListView achievementList = (ListView) findViewById(R.id.achievement_list);
+
+		mAchievementListAdapter = new AchievementListAdapter(this.getLayoutInflater(), mCategoryId, this, mAchievementListHolder.getAchievements());
+		achievementList.setAdapter(mAchievementListAdapter);
+		achievementList.setSelector(android.R.color.transparent);
+	}
+
+	/**
 	 * Callback listening to result of Facebook share activity.
 	 * On success logs sharing-achievement, else logs an error.
 	 */
@@ -102,19 +114,6 @@ public class AchievementOverviewActivity extends BaseApplicationActivity impleme
 				Toast.makeText(getApplicationContext(), getString(R.string.NetworkError___CL_INTERNET_CONNECTION), Toast.LENGTH_LONG).show();
 			}
 		});
-	}
-
-	/**
-	 * Sets OnClick and OnLongClick listeners on all achievements in view.
-	 * OnLongClick, if achievement is already completed, display facebook
-	 * share activity.
-	 */
-	private void setOnClickListeners(List<AchievementListItem> achievements) {
-		ListView achievementList = (ListView) findViewById(R.id.achievement_list);
-
-		mAchievementListAdapter = new AchievementListAdapter(this.getLayoutInflater(), mCategoryId, this, achievements);
-		achievementList.setAdapter(mAchievementListAdapter);
-		achievementList.setSelector(android.R.color.transparent);
 	}
 
 	/**
@@ -160,7 +159,7 @@ public class AchievementOverviewActivity extends BaseApplicationActivity impleme
 	@Override
 	public void update(Observable observable, Object o) {
 		if(o.toString().equals("achievements")) {
-			setOnClickListeners(mAchievementListHolder.getAchievements());
+			setListAdapter();
 		}
 	}
 }

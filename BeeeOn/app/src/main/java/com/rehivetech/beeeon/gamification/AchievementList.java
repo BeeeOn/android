@@ -7,6 +7,7 @@ import com.rehivetech.beeeon.asynctask.ReloadAdapterDataTask;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.util.Log;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Observable;
 
@@ -18,7 +19,7 @@ public class AchievementList extends Observable {
 	private Context mContext;
 	private Controller mController;
 
-	private List<AchievementListItem> mAchievementList;
+	private ArrayList<AchievementListItem> mAchievementList = new ArrayList<AchievementListItem>();
 	private int[] mComplete = new int[] {0,0,0}; // number of completed achievements in 3 categories
 	private int[] mTotal = new int[] {0,0,0};	// number of all achievements in 3 categories
 	private int mTotalPoints = 0;
@@ -27,7 +28,7 @@ public class AchievementList extends Observable {
 		mContext = context;
 		Log.d(TAG, "constructor");
 		mController = Controller.getInstance(mContext);
-		String adapter = "4321";
+		String adapter = "0";
 		if(mController.getActiveAdapter() != null)
 			adapter = mController.getActiveAdapter().getId();
 		doReloadAchievementsTask(adapter, false);
@@ -39,7 +40,22 @@ public class AchievementList extends Observable {
 		reloadAchievementsTask.setListener(new CallbackTask.CallbackTaskListener() {
 			@Override
 			public void onExecute(boolean success) {
-				mAchievementList = mController.getAchievementsModel().getAchievements();
+				List<AchievementListItem> list = mController.getAchievementsModel().getAchievements();
+				for(int i = 0; i < list.size(); i++) {
+					AchievementListItem son = null, parent = null, item = list.get(i);
+					for (int y = 0; y < list.size(); y++) {
+						if (list.get(y).getId().equals(item.getParent()))
+							parent = list.get(y);
+						else if (list.get(y).getParent().equals(item.getId()))
+							son = list.get(y);
+					}
+					Log.d(TAG, item.getId() + ", " + item.getParent() + ", son: " + son + ", parent: " + parent);
+					if ((item.isDone() && (son == null || !son.isDone())) ||
+						(!item.isDone() && (parent == null || parent.isDone()))) {
+						item.setContext(mContext);
+						mAchievementList.add(item);
+					}
+				}
 				recountValues();
 				setChanged();
 				notifyObservers("achievements");
@@ -106,7 +122,6 @@ public class AchievementList extends Observable {
 	 */
 	private void recountValues() {
 		AchievementListItem achievement;
-		Log.d(TAG, "--------" + mAchievementList.size());
 		for (int i = 0; i < mAchievementList.size(); i++) {
 			achievement = mAchievementList.get(i);
 			mTotal[Integer.parseInt(achievement.getCategory())]++;

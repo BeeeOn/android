@@ -17,7 +17,7 @@ import java.util.List;
  */
 public class AchievementsModel {
 	private static final String TAG = AchievementsModel.class.getSimpleName();
-	private static final int RELOAD_EVERY_SECONDS = 10 * 60;
+	private static final int RELOAD_EVERY_SECONDS = 15 * 60;
 	private final INetwork mNetwork;
 
 	private final DataHolder<AchievementListItem> mAchievementsHolder = new DataHolder<>();
@@ -27,8 +27,7 @@ public class AchievementsModel {
 	}
 
 	public List<AchievementListItem> getAchievements() {
-		List<AchievementListItem> achievements = mAchievementsHolder.getObjects();
-		return achievements;
+		return mAchievementsHolder.getObjects();
 	}
 
 	public synchronized boolean reloadAchievementsByAdapter(String adapterId, boolean forceReload) throws AppException {
@@ -36,10 +35,7 @@ public class AchievementsModel {
 			return false;
 		}
 
-		ArrayList<AchievementListItem> list = mNetwork.getAllAchievements(adapterId);
-		Log.d(TAG, "Velikost pred: " + list.size());
-		mAchievementsHolder.setObjects(list);
-		Log.d(TAG, "Velikost po: " + mAchievementsHolder.getObjects().size());
+		mAchievementsHolder.setObjects(mNetwork.getAllAchievements(adapterId));
 		mAchievementsHolder.setLastUpdate(DateTime.now());
 
 		return true;

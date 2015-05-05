@@ -1,10 +1,12 @@
 package com.rehivetech.beeeon.gamification;
 
+import android.content.Context;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
 
 import com.rehivetech.beeeon.IIdentifier;
+import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.util.Log;
 
 import java.text.ParseException;
@@ -19,8 +21,13 @@ import java.util.Locale;
 public class AchievementListItem implements IIdentifier, Comparable<AchievementListItem>, Parcelable {
 	private static final String TAG = AchievementListItem.class.getSimpleName();
 
+	private Context mContext;
+
+	private String mAdapter;
 	private String mPid;
 	private String mAid;
+	private String mName;
+	private String mDescription;
 	private String mCategory;
 	private String mDateOther;
 	private String mDate;
@@ -29,9 +36,6 @@ public class AchievementListItem implements IIdentifier, Comparable<AchievementL
 	private int mCurrentProgress;
 
 	private SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy", Locale.getDefault());
-
-	public AchievementListItem(String id, String categoryId, String name, String description, int points, String date) {
-	}
 
 	public AchievementListItem(String id, String pid, String categoryId, int points, int totalProgress, int currentProgress, String date, String dateOther) {
 		mAid = id;
@@ -48,18 +52,24 @@ public class AchievementListItem implements IIdentifier, Comparable<AchievementL
 		readFromParcel(in);
 	}
 
-	public void setAid(String aid) {
-		mAid = aid;
-	}
-
+	@Override
+	public String getId() {return mAid;}
+	public int getPoints() {return mPoints;}
+	public String getParent() {return mPid;}
 	public String getCategory() {return mCategory;}
-
-	public String getName() {return mAid;}
-	public String getDescription() {return mPoints + ", " + mTotalProgress;}
+	public String getName() { return mContext == null ? "" : mName; }
+	public String getDescription() { return mContext == null ? "" : mDescription; }
 
 	public boolean isDone() {return mCurrentProgress >= mTotalProgress;}
 
 	public void setDate(String date) {this.mDate = date;}
+	public void setAid(String aid) { mAdapter = aid; }
+	public void setContext(Context c) {
+		mContext = c;
+		mName = mContext.getString(R.string.name_1);
+		mDescription = mContext.getString(mContext.getResources().getIdentifier("desc_" + mAid, "string", mContext.getPackageName()));
+	}
+
 	public Date getTime() {
 		try{return dateFormat.parse(this.mDate);}
 		catch (ParseException e) {Log.e(TAG, "Date parse Exception!");return null;}
@@ -78,12 +88,6 @@ public class AchievementListItem implements IIdentifier, Comparable<AchievementL
 		}
 		return mDate;
 	}
-
-	public int getPoints() {return mPoints;}
-
-	@Override
-	public String getId() {return mAid;}
-	public void setId(String id) {mAid = id;}
 
 	/** Sorts achievements by date.
 	 * Sorts list of achievements by date from oldest to newest

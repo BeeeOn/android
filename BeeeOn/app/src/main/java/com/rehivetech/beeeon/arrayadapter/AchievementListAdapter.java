@@ -14,6 +14,7 @@ import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.gamification.AchievementListClickListener;
 import com.rehivetech.beeeon.gamification.AchievementListItem;
 import com.rehivetech.beeeon.gamification.AchievementListOnClickListener;
+import com.rehivetech.beeeon.util.Log;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -133,9 +134,8 @@ public class AchievementListAdapter extends BaseAdapter implements Filterable{
 
 			for (int i = 0; i < count; i++) {
 				achievement = list.get(i);
-				if (achievement.getCategory().contains(categoryId)) {
+				if (achievement.getCategory().contains(categoryId))
 					nlist.add(achievement);
-				}
 			}
 			Collections.sort(nlist);
 			results.values = nlist;

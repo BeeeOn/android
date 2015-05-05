@@ -66,7 +66,10 @@ public class GamCategoryListAdapter extends BaseAdapter {
     	holder.categoryName.setText(category.getName());
     	holder.categoryDone.setText(mAchievementList.getCompletedAchievements(category.getId()) + " / " +
 									mAchievementList.getTotalAchievements(category.getId()));
-    	holder.catalogProgress.setProgress(1);
+    	holder.catalogProgress.setProgress(0);
+//		holder.catalogProgress.setProgress((mAchievementList.getCompletedAchievements(category.getId()) * 100) /
+//				mAchievementList.getTotalAchievements(category.getId()));
+		Log.d(TAG, "x: " + category.getId() + ", " + mAchievementList.getTotalAchievements(category.getId()));
 
 		// colors stars with pink gained in concrete category (0-3)
 		for(int i = 1; i <= mAchievementList.getStarsCount(category.getId()); i++)
