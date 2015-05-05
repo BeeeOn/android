@@ -294,7 +294,6 @@
 
         <service android:name=".extension.watches.smartwatch2.SW2ExtensionService" />
         <service android:name=".geofence.GeofenceIntentService" />
-        <service android:name=".geofence.ManageGeofenceService" />
         <!-- GOOGLE CLOUD MESSAGING -->
         <receiver
             android:name=".gcm.GcmBroadcastReceiver"
