@@ -449,7 +449,8 @@ public class WatchDogEditRuleActivity extends BaseApplicationActivity {
         ArrayList<String> devsIds = new ArrayList<>();
         ArrayList<String> newParams = new ArrayList<>();
 
-        String tresholdValue = "";
+        // FIXME: must be because network sends short tag if empty
+        String tresholdValue = "_";
 
         SpinnerItem selected = mSpinnerMultiAdapter.getItem(mIfItemSpinner.getSelectedItemPosition());
         switch(selected.getType()){
