@@ -1,5 +1,6 @@
 package com.rehivetech.beeeon.activity.fragment;
 
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -13,9 +14,11 @@ import android.widget.TextView;
 
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.arrayadapter.NotificationAdapter;
+import com.rehivetech.beeeon.controller.Controller;
+import com.rehivetech.beeeon.exception.AppException;
 import com.rehivetech.beeeon.gcm.notification.BaseNotification;
-import com.rehivetech.beeeon.gcm.notification.GcmNotification;
 import com.rehivetech.beeeon.gcm.notification.VisibleNotification;
+import com.rehivetech.beeeon.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,6 +27,8 @@ import java.util.List;
  * Created by Martin on 1. 5. 2015.
  */
 public class NotificationFragment extends Fragment {
+
+	public static final String TAG = NotificationFragment.class.getSimpleName();
 
 	private ListView mListView;
 	private TextView mTextNoNotif;
@@ -41,7 +46,9 @@ public class NotificationFragment extends Fragment {
 		mTextNoNotif = (TextView) view.findViewById(R.id.notification_text);
 		mProgressBar = (ProgressBar) view.findViewById(R.id.notification_progress_bar);
 
-//		setProgressBarVisible();
+		setProgressBarVisible();
+
+		createNotifRequest();
 
 		if (bundle != null) {
 			VisibleNotification notification = (VisibleNotification) BaseNotification.parseBundle(getActivity(), bundle);
@@ -49,7 +56,7 @@ public class NotificationFragment extends Fragment {
 
 			List<VisibleNotification> list = new ArrayList<>();
 			list.add(notification);
-			setListVIewVisible(list);
+			setListViewVisible(list);
 		}
 
 		return view;
@@ -67,26 +74,56 @@ public class NotificationFragment extends Fragment {
 		mTextNoNotif.setVisibility(View.VISIBLE);
 	}
 
-	private void setListVIewVisible(List<VisibleNotification> notifications) {
-		mListView.setVisibility(View.VISIBLE);
-		mProgressBar.setVisibility(View.GONE);
-		mTextNoNotif.setVisibility(View.GONE);
-
-		if (notifications.size() < 1) {
+	private void setListViewVisible(List<VisibleNotification> notifications) {
+		if (notifications == null || notifications.size() < 1) {
 			// empty list
 			setTextVisible();
 			return;
 		}
+
+		mListView.setVisibility(View.VISIBLE);
+		mProgressBar.setVisibility(View.GONE);
+		mTextNoNotif.setVisibility(View.GONE);
 
 		mAdapter = new NotificationAdapter(this, notifications);
 		mListView.setAdapter(mAdapter);
 		mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-				((VisibleNotification)mAdapter.getItem(i)).onClick(getActivity());
+				((VisibleNotification) mAdapter.getItem(i)).onClick(getActivity());
 				mAdapter.notifyDataSetChanged();
 			}
 		});
 	}
 
+
+
+	private void createNotifRequest() {
+
+		Thread thred = new Thread() {
+			public void run() {
+				try {
+					final Controller controller = Controller.getInstance(getActivity());
+					final List<VisibleNotification> notifications = controller.getGcmModel().getNotificationHistory();
+					getActivity().runOnUiThread(new Runnable() {
+
+						@Override
+						public void run() {
+							setListViewVisible(notifications);
+						}
+					});
+				} catch (AppException e) {
+					Log.e(TAG, "Cannot get notification history, error: " + e.getLocalizedMessage());
+					getActivity().runOnUiThread(new Runnable() {
+
+						@Override
+						public void run() {
+							setTextVisible();
+						}
+					});
+				}
+			}
+		};
+		thred.start();
+	}
 }

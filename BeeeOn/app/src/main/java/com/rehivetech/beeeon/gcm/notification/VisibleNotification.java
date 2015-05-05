@@ -72,7 +72,7 @@ public abstract class VisibleNotification extends BaseNotification {
 	abstract protected void onClickHandle(Context context);
 
 	@Nullable
-	public VisibleNotification parseXml(String nameStr, String typeStr, String idStr, String timeStr, boolean isRead, XmlPullParser parser) throws IOException, XmlPullParserException {
+	public static VisibleNotification parseXml(String nameStr, String typeStr, String idStr, String timeStr, boolean isRead, XmlPullParser parser) throws IOException, XmlPullParserException {
 		try {
 			NotificationName name = NotificationName.fromValue(nameStr);
 			NotificationType type = NotificationType.fromValue(typeStr);
@@ -144,16 +144,17 @@ public abstract class VisibleNotification extends BaseNotification {
 
 		if (isRead()) {
 			holder.text.setTypeface(null, Typeface.NORMAL);
-			holder.text.setTypeface(null, Typeface.NORMAL);
+			holder.name.setTypeface(null, Typeface.NORMAL);
 		} else {
 			holder.text.setTypeface(null, Typeface.BOLD);
-			holder.text.setTypeface(null, Typeface.BOLD);
+			holder.name.setTypeface(null, Typeface.BOLD);
 		}
 	}
 
 	public void onClick(final Context context) {
-		if (isRead()) {
+		if (!isRead()) {
 			setRead(true);
+
 			final Controller controller = Controller.getInstance(context);
 			Thread t = new Thread() {
 				public void run() {

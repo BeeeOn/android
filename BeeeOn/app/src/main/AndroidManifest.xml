@@ -150,6 +150,10 @@
 			android:label="@string/action_watchdog">
 		</activity>
 		<activity
+			android:name=".activity.NotificationActivity"
+			android:label="@string/action_notification">
+		</activity>
+		<activity
 			android:name=".activity.AchievementOverviewActivity"
 			android:label="@string/title_activity_achievement_overview">
 		</activity>

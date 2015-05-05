@@ -9,6 +9,7 @@ import android.util.Xml;
 import com.rehivetech.beeeon.Constants;
 import com.rehivetech.beeeon.gamification.AchievementListItem;
 import com.rehivetech.beeeon.IIdentifier;
+import com.rehivetech.beeeon.gcm.notification.VisibleNotification;
 import com.rehivetech.beeeon.household.adapter.Adapter;
 import com.rehivetech.beeeon.household.watchdog.WatchDog;
 import com.rehivetech.beeeon.household.device.Device;
@@ -579,18 +580,17 @@ public class XmlParsers {
 	// /////////////////////////////////NOTIFICATIONS//////////////////////////////////////////////////////////
 	// ////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	private List<BaseNotification> parseNotifications() throws XmlPullParserException, IOException {
+	private List<VisibleNotification> parseNotifications() throws XmlPullParserException, IOException {
 		mParser.nextTag();
 		// mParser.require(XmlPullParser.START_TAG, ns, NOTIFICATION); // strict solution
 
-		List<BaseNotification> result = new ArrayList<BaseNotification>();
+		List<VisibleNotification> result = new ArrayList<>();
 
 		if (!mParser.getName().equals(Xconstants.NOTIFICATION))
 			return result;
 
 		do {
-			//FIXME Doudo
-			BaseNotification ntfc = null;
+			VisibleNotification ntfc = null;
 
 			String name = getSecureAttrValue(Xconstants.NAME); // name
 			String id = getSecureAttrValue(Xconstants.MID); // message id
@@ -604,6 +604,8 @@ public class XmlParsers {
 			// the mParser should be at the ends element </notif>, because after call nextTag I need to get <notif> or </com>
 			// something like
 			// ntfc = method(mParser, name, id, time, type, read);
+
+			ntfc = VisibleNotification.parseXml(name, id, time, type, read, mParser);
 
 			if (ntfc != null) {
 				result.add(ntfc);

@@ -2,6 +2,8 @@ package com.rehivetech.beeeon.network;
 
 import com.rehivetech.beeeon.gamification.AchievementListItem;
 import com.rehivetech.beeeon.IIdentifier;
+import com.rehivetech.beeeon.gcm.notification.BaseNotification;
+import com.rehivetech.beeeon.gcm.notification.VisibleNotification;
 import com.rehivetech.beeeon.household.adapter.Adapter;
 import com.rehivetech.beeeon.household.device.Device;
 import com.rehivetech.beeeon.household.device.Device.SaveDevice;
@@ -402,6 +404,8 @@ public interface INetwork {
 	 * @return true if server took flag, false otherwise
 	 */
 	public boolean NotificationsRead(ArrayList<String> msgID);
+
+	public List<VisibleNotification> getNotifications();
 
 	// /////////////////////////////////////////////////////////////////////////////////
 	// /////////////////////////////////////CONDITIONS,ACTIONS//////////////////////////

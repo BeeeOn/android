@@ -10,6 +10,7 @@ import com.rehivetech.beeeon.exception.AppException;
 import com.rehivetech.beeeon.exception.NetworkError;
 import com.rehivetech.beeeon.gamification.AchievementListItem;
 import com.rehivetech.beeeon.gcm.notification.BaseNotification;
+import com.rehivetech.beeeon.gcm.notification.VisibleNotification;
 import com.rehivetech.beeeon.household.adapter.Adapter;
 import com.rehivetech.beeeon.household.device.Device;
 import com.rehivetech.beeeon.household.device.Device.SaveDevice;
@@ -1242,11 +1243,11 @@ public class Network implements INetwork {
 	 * TODO: method need to be checked online
 	 * @return
 	 */
-	public List<BaseNotification> getNotifications(){
+	public List<VisibleNotification> getNotifications(){
 		ParsedMessage msg = doRequest(XmlCreator.createGetNotifications(mBT));
 
 		if (msg.getState() == State.NOTIFICATIONS)
-			return (List<BaseNotification>) msg.data;
+			return (List<VisibleNotification>) msg.data;
 
 		throw processFalse(msg);
 	}
