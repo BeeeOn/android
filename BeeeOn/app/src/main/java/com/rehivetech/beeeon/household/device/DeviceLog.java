@@ -64,6 +64,9 @@ public class DeviceLog {
 	public enum DataInterval {
 		RAW(0), //
 		MINUTE(60), //
+		FIVE_MINUTES(5 * 60), //
+		TEN_MINUTES(10 * 60), //
+		HALF_HOUR(30 * 60), //
 		HOUR(60 * 60), //
 		DAY(60 * 60 * 24), //
 		WEEK(60 * 60 * 24 * 7), //
