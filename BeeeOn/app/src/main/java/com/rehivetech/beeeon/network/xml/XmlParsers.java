@@ -910,6 +910,7 @@ public class XmlParsers {
 					getSecureInt(getSecureAttrValue(Xconstants.POINTS)),
 					getSecureInt(getSecureAttrValue(Xconstants.TOTAL_PROGRESS)),
 					getSecureInt(getSecureAttrValue(Xconstants.CURRENT_PROGRESS)),
+					getSecureAttrValue(Xconstants.ACH_DATE),
 					getSecureAttrValue(Xconstants.RANGE));
 
 			item.setAid(aid);

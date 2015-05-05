@@ -29,7 +29,7 @@ public abstract class Achievement  {
 
 		mContext = context;
 		mAdapterId = Controller.getInstance(mContext).getActiveAdapter().getId();
-		mData = AchievementList.getInstance(mContext).getItem(Integer.parseInt(mAchievementId));
+//		mData = AchievementList.getInstance(mContext).getItem(Integer.parseInt(mAchievementId));
 	}
 
 	public void show() {

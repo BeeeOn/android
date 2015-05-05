@@ -1,6 +1,5 @@
 package com.rehivetech.beeeon.arrayadapter;
 
-import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,7 +11,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.rehivetech.beeeon.R;
-import com.rehivetech.beeeon.gamification.AchievementList;
 import com.rehivetech.beeeon.gamification.AchievementListClickListener;
 import com.rehivetech.beeeon.gamification.AchievementListItem;
 import com.rehivetech.beeeon.gamification.AchievementListOnClickListener;
@@ -32,10 +30,10 @@ public class AchievementListAdapter extends BaseAdapter implements Filterable{
 	private List<AchievementListItem> mFilteredList;
 	private AchievementListOnClickListener mCallback;
 
-	public AchievementListAdapter(LayoutInflater inflater, String categoryId, AchievementListOnClickListener callback, Context context){
+	public AchievementListAdapter(LayoutInflater inflater, String categoryId, AchievementListOnClickListener callback,  List<AchievementListItem>  achievements){
 		mInflater = inflater;
 		mCallback = callback;
-		mAchievementList = AchievementList.getInstance(context).getAchievements();
+		mAchievementList = achievements;
 		mFilteredList = mAchievementList;
 		mFilter.filter(categoryId);
 	}

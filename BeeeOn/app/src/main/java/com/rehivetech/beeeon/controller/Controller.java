@@ -16,6 +16,7 @@ import com.rehivetech.beeeon.network.DemoNetwork;
 import com.rehivetech.beeeon.network.INetwork;
 import com.rehivetech.beeeon.network.Network;
 import com.rehivetech.beeeon.network.authentication.IAuthProvider;
+import com.rehivetech.beeeon.persistence.AchievementsModel;
 import com.rehivetech.beeeon.persistence.AdaptersModel;
 import com.rehivetech.beeeon.persistence.DeviceLogsModel;
 import com.rehivetech.beeeon.persistence.FacilitiesModel;
@@ -61,6 +62,7 @@ public final class Controller {
 
 	/** Models for keeping and handling data */
 	private final AdaptersModel mAdaptersModel;
+	private final AchievementsModel mAchievementsModel;
 	private final LocationsModel mLocationsModel;
 	private final FacilitiesModel mFacilitiesModel;
 	private final UninitializedFacilitiesModel mUninitializedFacilitiesModel;
@@ -108,6 +110,7 @@ public final class Controller {
 
 		// Create models
 		mAdaptersModel = new AdaptersModel(mNetwork);
+		mAchievementsModel = new AchievementsModel(mNetwork);
 		mLocationsModel = new LocationsModel(mNetwork, mContext.getString(R.string.loc_none));
 		mFacilitiesModel = new FacilitiesModel(mNetwork);
 		mUninitializedFacilitiesModel = new UninitializedFacilitiesModel(mNetwork);
@@ -154,6 +157,8 @@ public final class Controller {
 	public AdaptersModel getAdaptersModel() {
 		return mAdaptersModel;
 	}
+
+	public AchievementsModel getAchievementsModel() { return mAchievementsModel; }
 
 	public LocationsModel getLocationsModel() {
 		return mLocationsModel;

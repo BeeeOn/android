@@ -1315,7 +1315,8 @@ public class Network implements INetwork {
 		ParsedMessage msg = doRequest(XmlCreator.createGetAllAchievements(mBT, adapterID));
 
 		if(msg.getState() == State.ACHIEVEMENTS){
-			return (ArrayList<AchievementListItem>) msg.data;
+			ArrayList<AchievementListItem> x= (ArrayList<AchievementListItem>) msg.data;
+			return x;
 		}
 
 		throw processFalse(msg);

@@ -56,6 +56,7 @@ public class ProfileDetailActivity extends BaseApplicationActivity implements Ob
 	private GamCategoryListAdapter mCategoryListAdapter;
 	private Context mContext;
 	private Activity mActivity;
+	private AchievementList mAchievementList;
 	private int mDisplayPixel;
 
 	// GUI
@@ -98,6 +99,9 @@ public class ProfileDetailActivity extends BaseApplicationActivity implements Ob
 			getSupportActionBar().setHomeButtonEnabled(true);
 			getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 		}
+
+		mAchievementList = new AchievementList(mContext);
+		mAchievementList.addObserver(this);
 
 		DisplayMetrics metrics = new DisplayMetrics();
 		getWindowManager().getDefaultDisplay().getMetrics(metrics);
@@ -177,7 +181,6 @@ public class ProfileDetailActivity extends BaseApplicationActivity implements Ob
 		mFacebookCallbackManager.onActivityResult(requestCode, resultCode, data);
 		mTwitterCallbackManager.onActivityResult(requestCode, resultCode, data);
 	}
-
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
@@ -298,33 +301,31 @@ public class ProfileDetailActivity extends BaseApplicationActivity implements Ob
 	}
 
 	private void redrawCategories() {
-//		final AchievementList achievementList = AchievementList.getInstance(mContext);
-//
-//		userLevel.setText(getString(R.string.profile_level) + " " + achievementList.getLevel());
-//		mPoints.setText(String.valueOf(achievementList.getTotalPoints()));
-//
-//		List<GamificationCategory> rulesList = new ArrayList<>();
-//		rulesList.add(new GamificationCategory("0", getString(R.string.profile_category_app)));
-//		rulesList.add(new GamificationCategory("1", getString(R.string.profile_category_friends)));
-//		rulesList.add(new GamificationCategory("2", getString(R.string.profile_category_senzors)));
-//
-//		mCategoryListAdapter = new GamCategoryListAdapter(mContext, rulesList, getLayoutInflater(), achievementList);
-//
-//		mCategoryList.setAdapter(mCategoryListAdapter);
-//		mCategoryList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//			@Override
-//			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//				GamificationCategory category = mCategoryListAdapter.getItem(position);
-//
-//				Bundle bundle = new Bundle();
-//				bundle.putString(AchievementOverviewActivity.EXTRA_CATEGORY_ID, category.getId());
-//				bundle.putString(AchievementOverviewActivity.EXTRA_CATEGORY_NAME, category.getName());
-//
-//				Intent intent = new Intent(mContext, AchievementOverviewActivity.class);
-//				intent.putExtras(bundle);
-//				startActivity(intent);
-//			}
-//		});
+		userLevel.setText(getString(R.string.profile_level) + " " + mAchievementList.getLevel());
+		mPoints.setText(String.valueOf(mAchievementList.getTotalPoints()));
+
+		List<GamificationCategory> rulesList = new ArrayList<>();
+		rulesList.add(new GamificationCategory("0", getString(R.string.profile_category_app)));
+		rulesList.add(new GamificationCategory("1", getString(R.string.profile_category_friends)));
+		rulesList.add(new GamificationCategory("2", getString(R.string.profile_category_senzors)));
+
+		mCategoryListAdapter = new GamCategoryListAdapter(mContext, rulesList, getLayoutInflater(), mAchievementList);
+
+		mCategoryList.setAdapter(mCategoryListAdapter);
+		mCategoryList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+				GamificationCategory category = mCategoryListAdapter.getItem(position);
+
+				Bundle bundle = new Bundle();
+				bundle.putString(AchievementOverviewActivity.EXTRA_CATEGORY_ID, category.getId());
+				bundle.putString(AchievementOverviewActivity.EXTRA_CATEGORY_NAME, category.getName());
+
+				Intent intent = new Intent(mContext, AchievementOverviewActivity.class);
+				intent.putExtras(bundle);
+				startActivity(intent);
+			}
+		});
 	}
 
 	@Override
@@ -356,5 +357,7 @@ public class ProfileDetailActivity extends BaseApplicationActivity implements Ob
 			if(mTw.isPaired()) mTwName.setText(getResources().getString(R.string.social_no_connection));
 			if(mVk.isPaired()) mVkName.setText(getResources().getString(R.string.social_no_connection));
 		}
+		else if(o.toString().equals("achievements"))
+			redrawCategories();
 	}
 }

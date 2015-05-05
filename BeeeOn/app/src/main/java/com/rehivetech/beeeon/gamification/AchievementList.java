@@ -1,59 +1,51 @@
 package com.rehivetech.beeeon.gamification;
 
 import android.content.Context;
-import android.os.Parcel;
-import android.os.Parcelable;
 
+import com.rehivetech.beeeon.asynctask.CallbackTask;
+import com.rehivetech.beeeon.asynctask.ReloadAdapterDataTask;
 import com.rehivetech.beeeon.controller.Controller;
-import com.rehivetech.beeeon.network.DemoNetwork;
-import com.rehivetech.beeeon.network.Network;
 import com.rehivetech.beeeon.util.Log;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Observable;
 
 /**
- * Design pattern Singleton
  * @author Jan Lamacz
  */
-public class AchievementList implements Parcelable {
+public class AchievementList extends Observable {
 	private static final String TAG = AchievementList.class.getSimpleName();
+	private Context mContext;
+	private Controller mController;
 
 	private List<AchievementListItem> mAchievementList;
 	private int[] mComplete = new int[] {0,0,0}; // number of completed achievements in 3 categories
 	private int[] mTotal = new int[] {0,0,0};	// number of all achievements in 3 categories
 	private int mTotalPoints = 0;
 
-	private AchievementListItem listItem;
-	private static AchievementList mInstance;
-
-	private AchievementList(Context context) {
+	public AchievementList(Context context) {
+		mContext = context;
 		Log.d(TAG, "constructor");
-		if(mAchievementList == null) {
-			Network network = new Network(context, false);
-			Controller controller = Controller.getInstance(context);
-			String adapterId = "null";
-			if(controller.getActiveAdapter() != null)
-			  adapterId = controller.getActiveAdapter().getId();
-			mAchievementList = network.getAllAchievements(adapterId);
-			Log.d(TAG, "downloading data " + adapterId);
-		}
-		recountValues();
+		mController = Controller.getInstance(mContext);
+		String adapter = "4321";
+		if(mController.getActiveAdapter() != null)
+			adapter = mController.getActiveAdapter().getId();
+		doReloadAchievementsTask(adapter, false);
 	}
 
-	public static AchievementList getInstance(Context context) {
-		Log.d(TAG, "new instance");
-		if(mInstance == null) {
-			mInstance = new AchievementList(context);
-		}
-		return mInstance;
-	}
+	public void doReloadAchievementsTask(String adapterId, boolean forceReload){
+		ReloadAdapterDataTask reloadAchievementsTask = new ReloadAdapterDataTask(mContext, forceReload, ReloadAdapterDataTask.ReloadWhat.ACHIEVEMENTS);
 
-	// Parcel constructor called when passing this object over activities
-	private AchievementList(Parcel in) {
-		Log.d(TAG, "ParcelConstructor");
-		readFromParcel(in);
-		recountValues();
+		reloadAchievementsTask.setListener(new CallbackTask.CallbackTaskListener() {
+			@Override
+			public void onExecute(boolean success) {
+				mAchievementList = mController.getAchievementsModel().getAchievements();
+				recountValues();
+				setChanged();
+				notifyObservers("achievements");
+			}
+		});
+		reloadAchievementsTask.execute(adapterId);
 	}
 
 	public List<AchievementListItem> getAchievements() {
@@ -114,6 +106,7 @@ public class AchievementList implements Parcelable {
 	 */
 	private void recountValues() {
 		AchievementListItem achievement;
+		Log.d(TAG, "--------" + mAchievementList.size());
 		for (int i = 0; i < mAchievementList.size(); i++) {
 			achievement = mAchievementList.get(i);
 			mTotal[Integer.parseInt(achievement.getCategory())]++;
@@ -123,64 +116,4 @@ public class AchievementList implements Parcelable {
 			}
 		}
 	}
-
-	private List<AchievementListItem> loadAllAchievements() {
-		Log.d(TAG, "AchievementListInit()");
-
-		// TODO Download this list from server
-		List<AchievementListItem> rulesList = new ArrayList<>();
-		rulesList.add(new AchievementListItem("0", "1", "Unknown", "Out of ideas.", 0, "29.3.2015"));
-		rulesList.add(new AchievementListItem("1", "2", "Getting started", "Activate your first adapter.", 10, "20.3.2015"));
-		rulesList.add(new AchievementListItem("2", "2", "It's hot in there!", "Activate your first temperature sensor.", 20, null));
-		rulesList.add(new AchievementListItem("3", "1", "Connected", "Pair your account with Facebook.", 0, null));
-		rulesList.add(new AchievementListItem("4", "1", "Share with the world", "Share status via BeeeOn.", 10, null));
-		rulesList.add(new AchievementListItem("5", "1", "Twice more fun", "Invite your friends to household.", 5, null));
-		rulesList.add(new AchievementListItem("6", "1", "One big family", "Have 5 or more people in your household.", 15, null));
-		rulesList.add(new AchievementListItem("7", "0", "Guarding the household", "Set your first watchdog.", 25, "12.3.2015"));
-		rulesList.add(new AchievementListItem("8", "0", "It's my choice", "Set your own custom view.", 0, null));
-		rulesList.add(new AchievementListItem("9", "0", "Leader of the pack", "Set 5 or more watchdogs.", 15, "14.3.2015"));
-		rulesList.add(new AchievementListItem("10", "0", "Explorer", "Explore all options in BeeeOn application.", 10, null));
-		rulesList.add(new AchievementListItem("11", "0", "Achievement", "Get an achievement.", 5, null));
-		rulesList.add(new AchievementListItem("12", "0", "Master of BeeeOn", "Get all achievements.", 30, null));
-		rulesList.add(new AchievementListItem("13", "0", "All the nice statistics", "Look at my balls. Look!", 15, "1.1.2014"));
-		rulesList.add(new AchievementListItem("14", "0", "Always at your hand", "Set your own widget.", 10, "27.3.2015"));
-		rulesList.add(new AchievementListItem("15", "0", "Level up!", "Reach level 2.", 10, "28.3.2015"));
-		rulesList.add(new AchievementListItem("16", "0", "Level 10", "Reach level 10.", 20, null));
-		rulesList.add(new AchievementListItem("17", "2", "Getting bigger", "Activate your second adapter.", 10, "11.3.2015"));
-		rulesList.add(new AchievementListItem("18", "2", "Measure them all!", "Activate your fifth temperature sensor.", 20, "12.3.2015"));
-
-		return rulesList;
-	}
-
-	// Parcel for passing this object through different activities and fragments.
-
-	@Override
-	public int describeContents() {
-		return 0;
-	}
-
-	@Override
-	public void writeToParcel(Parcel out, int flags) {
-		Log.d(TAG, "writeToParcel()");
-		out.writeParcelable(listItem, flags);
-		out.writeTypedList(mAchievementList);
-	}
-
-	public void readFromParcel(Parcel in) {
-		listItem = in.readParcelable(AchievementListItem.class.getClassLoader());
-		if (mAchievementList == null) {
-			mAchievementList = loadAllAchievements();
-		}
-		in.readTypedList(mAchievementList, AchievementListItem.CREATOR);
-	}
-
-	public static final Parcelable.Creator<AchievementList> CREATOR = new Parcelable.Creator<AchievementList>() {
-		public AchievementList createFromParcel(Parcel in) {
-			return new AchievementList(in);
-		}
-
-		public AchievementList[] newArray(int size) {
-			return new AchievementList[size];
-		}
-	};
 }
