@@ -45,4 +45,7 @@
 	<string name="NetworkError___SUSPECT_USER">Tento používateľský účet je dočasne zablokovaný.</string>
 	<string name="NetworkError___USER_EXISTS">Zadané prihlasovacie meno je už obsadené.</string>
 	<string name="NetworkError___USER_NOT_EXISTS">Zadané používateľské meno neexistuje.</string>
+	<string name="NetworkError___EMAIL_PROVIDER_MISMATCH">Tento email je používán jiným providerem, použijte prosím správného providera. Aktuálního providera můžete poté přidat v nastavení.</string>
+	<string name="NetworkError___LOGOUT_FAILED">Odhlásenie zlyhalo, skúste to prosím neskôr.</string>
+	<string name="NetworkError___ΝΟ_ΕΜΑΙL">Poskytovatelia prihlasovaním nám nedodal email.</string>
 </resources>
