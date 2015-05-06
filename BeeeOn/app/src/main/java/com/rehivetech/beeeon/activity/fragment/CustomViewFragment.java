@@ -14,9 +14,11 @@ import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.LegendView;
 import com.jjoe64.graphview.series.BarGraphSeries;
 import com.jjoe64.graphview.series.BaseSeries;
-import com.jjoe64.graphview.series.DataPoint;
 import com.jjoe64.graphview.series.LineGraphSeries;
+import com.jjoe64.graphview.series.point.DataPoint;
 import com.rehivetech.beeeon.R;
+import com.rehivetech.beeeon.base.TrackFragment;
+import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.household.adapter.Adapter;
 import com.rehivetech.beeeon.household.device.Device;
 import com.rehivetech.beeeon.household.device.DeviceLog;
@@ -24,8 +26,6 @@ import com.rehivetech.beeeon.household.device.DeviceLog.DataInterval;
 import com.rehivetech.beeeon.household.device.DeviceLog.DataType;
 import com.rehivetech.beeeon.household.device.Facility;
 import com.rehivetech.beeeon.household.device.values.BaseEnumValue;
-import com.rehivetech.beeeon.base.TrackFragment;
-import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.pair.LogDataPair;
 import com.rehivetech.beeeon.util.GraphViewHelper;
 import com.rehivetech.beeeon.util.Log;
@@ -124,6 +124,7 @@ public class CustomViewFragment extends TrackFragment {
 		BaseSeries<DataPoint> graphSeries;
 		if (device.getValue() instanceof BaseEnumValue) {
 			graphSeries = new BarGraphSeries<>(new DataPoint[]{new DataPoint(0, 0),});
+			graphView.setDrawPointer(false);
 		} else {
 			graphSeries = new LineGraphSeries<>(new DataPoint[]{new DataPoint(0, 0),});
 			((LineGraphSeries)graphSeries).setThickness(4);
