@@ -75,6 +75,11 @@ public class Network implements INetwork {
 	private static final String TAG = Network.class.getSimpleName();
 
 	/**
+	 * Number of retries when we receive no response from server (e.g. because persistent connection expires from server side).
+	 */
+	private static final int RETRIES_COUNT = 2;
+
+	/**
 	 * Name of CA certificate located in assets
 	 */
 	private static final String ASSEST_CA_CERT = "cacert.crt";
@@ -230,6 +235,16 @@ public class Network implements INetwork {
 			} catch (IOException e) {
 				e.printStackTrace(); // Nothing we can do here
 			}
+			try {
+				w.close();
+			} catch (IOException e) {
+				e.printStackTrace(); // Nothing we can do here
+			}
+			try {
+				r.close();
+			} catch (IOException e) {
+				e.printStackTrace(); // Nothing we can do here
+			}
 		}
 
 		// Return server response
@@ -315,18 +330,11 @@ public class Network implements INetwork {
 		}
 	}
 
-	/**
-	 * Method initialize perma-Socket/Reader/Writer for doing more requests to server with this single connection
-	 * On success increment mMultiSessions, on failure call MultiSessionEnd and throw AppException
-	 * @throws AppException with error NetworkError.CL_INTERNET_CONNECTION or NetworkError.CL_SOCKET
-	 */
-	public synchronized void multiSessionBegin() throws AppException {
-		if (!isAvailable())
-			throw new AppException(NetworkError.CL_INTERNET_CONNECTION);
-
-		// If some session already existed, just return
-		if (++mMultiSessions > 1)
-			return;
+	private synchronized void initPermaSocket() throws AppException {
+		// If there is existing socket, close it first
+		if (permaSocket != null) {
+			closePermaSocket();
+		}
 
 		permaSocket = initSocket();
 
@@ -336,26 +344,12 @@ public class Network implements INetwork {
 			permaWriter = new PrintWriter(permaSocket.getOutputStream());
 			permaReader = new BufferedReader(new InputStreamReader(permaSocket.getInputStream()));
 		} catch (IOException e) {
-			// Close any opened socket/writer/reader
-			multiSessionEnd();
-
+			closePermaSocket();
 			throw AppException.wrap(e, NetworkError.CL_SOCKET);
 		}
 	}
 
-	/**
-	 * Method close any opened perma-Socket/Reader/Writer if it was opened by multiSessionBegin() before
-	 * Also decrement mMultiSessions
-	 */
-	public synchronized void multiSessionEnd() {
-		// If there is no active session, just return
-		if (mMultiSessions == 0)
-			return;
-
-		// If there is still some active session, just return
-		if (--mMultiSessions > 0)
-			return;
-
+	private synchronized void closePermaSocket() {
 		// Securely close socket
 		if (permaSocket != null) {
 			try {
@@ -386,6 +380,41 @@ public class Network implements INetwork {
 	}
 
 	/**
+	 * Method initialize perma-Socket/Reader/Writer for doing more requests to server with this single connection
+	 * On success increment mMultiSessions, on failure call MultiSessionEnd and throw AppException
+	 * @throws AppException with error NetworkError.CL_INTERNET_CONNECTION or NetworkError.CL_SOCKET
+	 */
+	public synchronized void multiSessionBegin() throws AppException {
+		// Increment counter
+		++mMultiSessions;
+
+		if (!isAvailable())
+			throw new AppException(NetworkError.CL_INTERNET_CONNECTION);
+
+		// If some session already existed, just return
+		if (mMultiSessions > 1)
+			return;
+
+		initPermaSocket();
+	}
+
+	/**
+	 * Method close any opened perma-Socket/Reader/Writer if it was opened by multiSessionBegin() before
+	 * Also decrement mMultiSessions
+	 */
+	public synchronized void multiSessionEnd() {
+		// If there is no active session, just return
+		if (mMultiSessions == 0)
+			return;
+
+		// If there is still some active session, just return
+		if (--mMultiSessions > 0)
+			return;
+
+		closePermaSocket();
+	}
+
+	/**
 	 * Checks if Internet connection is available.
 	 *
 	 * @return true if available, false otherwise
@@ -407,15 +436,26 @@ public class Network implements INetwork {
 	}
 
 	/**
+	 * Just call's {@link #doRequest(String, boolean, int)} with retrues = RETRIES_COUNT
+	 *
+	 * @see {#doRequest}
+	 */
+	private ParsedMessage doRequest(String messageToSend, boolean checkBT) throws AppException {
+		return doRequest(messageToSend, checkBT, RETRIES_COUNT);
+	}
+
+	/**
 	 * Send request to server and return parsedMessage or throw exception on error.
 	 *
 	 * @param messageToSend
 	 * @param checkBT - when true and BT is not present in Network, then throws AppException with NetworkError.SRV_BAD_BT
 	 *                - this logically must be false for requests like register or login, which doesn't require BT for working
+	 * @param retries - number of retries to do the request and receive response
 	 * @return
-	 * @throws AppException with error NetworkError.CL_INTERNET_CONNECTION, NetworkError.SRV_BAD_BT, NetworkError.CL_XML, NetworkError.CL_UNKNOWN_HOST, NetworkError.CL_CERTIFICATE or NetworkError.CL_SOCKET
+	 * @throws AppException with error NetworkError.CL_INTERNET_CONNECTION, NetworkError.SRV_BAD_BT, NetworkError.CL_XML,
+	 * 			NetworkError.CL_UNKNOWN_HOST, NetworkError.CL_CERTIFICATE, NetworkError.CL_SOCKET or NetworkError.CL_NO_RESPONSE
 	 */
-	private synchronized ParsedMessage doRequest(String messageToSend, boolean checkBT) throws AppException {
+	private synchronized ParsedMessage doRequest(String messageToSend, boolean checkBT, int retries) throws AppException {
 		// Check internet connection
 		if (!isAvailable())
 			throw new AppException(NetworkError.CL_INTERNET_CONNECTION);
@@ -430,7 +470,25 @@ public class Network implements INetwork {
 		try {
 			Log.d(TAG + " fromApp >>", messageToSend);
 			String result = startCommunication(messageToSend);
-			Log.i(TAG + " << fromSrv", result);
+			Log.i(TAG + " << fromSrv", result.isEmpty() ? "- no response -" : result);
+
+			// Check if we received no response and try it again eventually
+			if (result.isEmpty()) {
+				if (retries <= 0) {
+					// We can't try again anymore, just throw error
+					throw new AppException("No response from server.", NetworkError.CL_NO_RESPONSE);
+				}
+
+				if (mMultiSessions > 0) {
+					// If we are using multi session, perhaps server already closed connection, so reinit it
+					Log.d(TAG, "Try to reinit permanent socket.");
+					initPermaSocket();
+				}
+
+				// Try to do this request again (with decremented retries)
+				Log.d(TAG, String.format("Try to repeat request (retries remaining: %d)", retries - 1));
+				return doRequest(messageToSend, checkBT, retries - 1);
+			}
 
 			return new XmlParsers().parseCommunication(result, false);
 		} catch (IOException | XmlPullParserException | ParseException e) {

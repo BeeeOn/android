@@ -5,7 +5,9 @@
 
 	<string name="social_no_connection">Nelze se připojit</string>
 
+	<string name="NetworkError___CL_CERTIFICATE">Certifikát serveru je neplatný.</string>
 	<string name="NetworkError___CL_INTERNET_CONNECTION">Není dostupné připojení k Internetu.\n\nZkontrolujte vaše nastavení.</string>
+	<string name="NetworkError___CL_NO_RESPONSE">Ze serveru nebyla přijata žádná odpověď.\n\nZkuste to prosím znovu.</string>
 	<string name="NetworkError___CL_SERVER_CONNECTION">Nelze se připojit k serveru.\n\nZkuste to prosím znovu.</string>
 	<string name="NetworkError___CL_SOCKET">Nelze vytvořit nebo použít socket.\n\nZkuste to prosím znovu.</string>
 	<string name="NetworkError___CL_UNKNOWN_HOST">Neznámý hostitel.</string>
