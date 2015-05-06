@@ -346,6 +346,7 @@
     <string name="action_watchdog">WatchDog</string>
     <string name="watchdog_rule">WatchDog Rule</string>
     <string name="sensor_text">Device</string>
+    <string name="watchdog_create">Create watchdog</string>
     <string name="treshold_value">Treshold value</string>
     <string name="watchdog_actor_change_state">Change actor\'s state</string>
     <string name="watchdog_notification_send">Send notification</string>
