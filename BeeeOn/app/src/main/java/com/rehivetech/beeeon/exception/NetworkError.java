@@ -11,6 +11,7 @@ public enum NetworkError implements ErrorCode, IIdentifier {
 	CL_XML(-4),
 	CL_SOCKET(-5),
 	CL_CERTIFICATE(-6),
+	CL_NO_RESPONSE(-7),
 	
 	// UNKNOWN ERROR
 	UNKNOWN(0),

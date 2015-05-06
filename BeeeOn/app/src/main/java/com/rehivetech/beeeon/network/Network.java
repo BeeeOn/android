@@ -430,7 +430,12 @@ public class Network implements INetwork {
 		try {
 			Log.d(TAG + " fromApp >>", messageToSend);
 			String result = startCommunication(messageToSend);
-			Log.i(TAG + " << fromSrv", result);
+			Log.i(TAG + " << fromSrv", result.isEmpty() ? "- no response -" : result);
+
+			if (result.isEmpty()) {
+				// If we received nothing, just throw no response error
+				throw new AppException("No response from server.", NetworkError.CL_NO_RESPONSE);
+			}
 
 			return new XmlParsers().parseCommunication(result, false);
 		} catch (IOException | XmlPullParserException | ParseException e) {

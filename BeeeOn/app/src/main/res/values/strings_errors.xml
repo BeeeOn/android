@@ -5,7 +5,9 @@
 
 	<string name="social_no_connection">No connection</string>
 
+	<string name="NetworkError___CL_CERTIFICATE">Server certificate is invalid.</string>
 	<string name="NetworkError___CL_INTERNET_CONNECTION">Internet connection is not available.\n\nPlease check your settings.</string>
+	<string name="NetworkError___CL_NO_RESPONSE">No response was received from server.\n\nPlease try again later.</string>
 	<string name="NetworkError___CL_SERVER_CONNECTION">Cannot connect to server.\n\nPlease try again later.</string>
 	<string name="NetworkError___CL_SOCKET">Cannot create or use socket.\n\nPlease try again later.</string>
 	<string name="NetworkError___CL_UNKNOWN_HOST">Unknown host.</string>
