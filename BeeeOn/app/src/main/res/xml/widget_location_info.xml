@@ -6,5 +6,6 @@
     android:resizeMode="horizontal|vertical"
     android:updatePeriodMillis="0"
     android:configure="com.rehivetech.beeeon.widget.configuration.WidgetConfigurationActivity"
-/>
+    android:previewImage="@drawable/preview_location_3x2"
+    />
 

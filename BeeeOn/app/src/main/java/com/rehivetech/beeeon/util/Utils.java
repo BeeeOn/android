@@ -45,6 +45,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -382,6 +383,22 @@ final public class Utils {
 	public static float convertDpToPixel(Context context, float dpValue) {
 		DisplayMetrics metrics = context.getResources().getDisplayMetrics();
 		return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dpValue, metrics);
+	}
+
+	/**
+	 * Converting array of Integer to array of primitive ints
+	 * @param integers
+	 * @return
+	 */
+	public static int[] convertIntegers(List<Integer> integers)
+	{
+		int[] ret = new int[integers.size()];
+		Iterator<Integer> iterator = integers.iterator();
+		for (int i = 0; i < ret.length; i++)
+		{
+			ret[i] = iterator.next();
+		}
+		return ret;
 	}
 
 	public static <T extends Enum<T> & IIdentifier> T getEnumFromId(Class<T> enumClass, String id, T defaultItem) {
