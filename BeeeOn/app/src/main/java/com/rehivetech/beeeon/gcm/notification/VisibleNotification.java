@@ -61,6 +61,9 @@ public abstract class VisibleNotification extends BaseNotification {
 			case ADAPTER_OFFLINE:
 				notification = AdapterOfflineNotification.getInstance(msgId, time, type, isRead, parser);
 				break;
+			case ACHIEVEMENT:
+				notification = AchievementNotification.getInstance(msgId, time, type, isRead, parser);
+				break;
 		}
 		return notification;
 	}
@@ -118,6 +121,8 @@ public abstract class VisibleNotification extends BaseNotification {
 					new Intent[]{backIntent, resultIntent}, PendingIntent.FLAG_ONE_SHOT);
 		}
 
+
+
 		NotificationCompat.Builder builder = new NotificationCompat.Builder(context)
 				.setSmallIcon(R.drawable.beeeon_logo_white)
 				.setLargeIcon(BitmapFactory.decodeResource(context.getResources(), R.drawable.beeeon_logo_white_icons))
@@ -167,15 +172,14 @@ public abstract class VisibleNotification extends BaseNotification {
 	}
 
 	private int getImageRes() {
-		// FIXME spravne obrazky
 		switch (getType()) {
 			case ADVERT:
-				return R.drawable.dev_unknown;
+				return R.drawable.notif_pr;
 			case ALERT:
-				return R.drawable.dev_unknown;
+				return R.drawable.notif_alert;
 			// INFO
 			default:
-				return R.drawable.dev_unknown;
+				return R.drawable.notif_info;
 		}
 	}
 }

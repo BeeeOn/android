@@ -66,7 +66,7 @@ public abstract class BaseNotification implements GcmNotification {
 				Log.w(TAG, "Some of compulsory values is missing");
 				return null;
 			}
-			// control if actual user ID is the same
+			// control if actual user ID is the samesdsdas
 			if (!userId.equals(controller.getActualUser().getId())) {
 				Log.w(TAG, "GCM: Sent user ID is different from actual user ID. Deleting GCM on server. Actual ID: "+ controller.getActualUser().getId()+ ", recieved ID: " + userId);
 				controller.getGcmModel().deleteGCM(userId, null);
@@ -117,6 +117,9 @@ public abstract class BaseNotification implements GcmNotification {
 				break;
 			case ADAPTER_OFFLINE:
 				notification = AdapterOfflineNotification.getInstance(msgId, time, type, bundle);
+				break;
+			case ACHIEVEMENT:
+				notification = AchievementNotification.getInstance(msgId, time, type, bundle);
 				break;
 		}
 

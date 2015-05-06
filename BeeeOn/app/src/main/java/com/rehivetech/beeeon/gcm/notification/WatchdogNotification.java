@@ -1,11 +1,14 @@
 package com.rehivetech.beeeon.gcm.notification;
 
+import android.app.PendingIntent;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.NotificationCompat;
 import android.widget.Toast;
 
 import com.rehivetech.beeeon.R;
+import com.rehivetech.beeeon.gcm.Action;
 import com.rehivetech.beeeon.network.xml.Xconstants;
 import com.rehivetech.beeeon.util.Log;
 
@@ -42,6 +45,7 @@ public class WatchdogNotification extends VisibleNotification {
 		mSensorType = sensorType;
 		mMsg = message;
 		mAlgId = algId;
+
 	}
 
 	protected static WatchdogNotification getInstance(Integer msgId, Long time, NotificationType type, Bundle bundle) throws NullPointerException, IllegalArgumentException {
@@ -118,13 +122,35 @@ public class WatchdogNotification extends VisibleNotification {
 	protected void onGcmHandle(Context context) {
 		NotificationCompat.Builder builder = getBaseNotificationBuilder(context);
 
+		/*
+         * Sets the big view "big text" style and supplies the
+         * text (the user's reminder message) that will be displayed
+         * in the detail area of the expanded notification.
+         * These calls are ignored by the support library for
+         * pre-4.1 devices.
+         */
+//		Intent dismissIntent = new Intent(this, PingService.class);
+//		dismissIntent.setAction(CommonConstants.ACTION_DISMISS);
+//		PendingIntent piDismiss = PendingIntent.getService(this, 0, dismissIntent, 0);
+//
+//		Intent snoozeIntent = new Intent(this, PingService.class);
+//		snoozeIntent.setAction(CommonConstants.ACTION_SNOOZE);
+//		PendingIntent piSnooze = PendingIntent.getService(this, 0, snoozeIntent, 0);
+//
+//		builder
+//				.setStyle(new NotificationCompat.BigTextStyle()
+//						.bigText(getMessage(context)))
+//				.addAction (R.drawable.ic_stat_dismiss,
+//						context.getString(R.string.action_watchdog), piDismiss)
+//				.addAction (R.drawable.ic_stat_snooze,
+//						, piSnooze);
+
 		showNotification(context, builder);
 	}
 
 	@Override
 	protected void onClickHandle(Context context) {
-		// TODO
-		Toast.makeText(context, "on click", Toast.LENGTH_LONG).show();
+		Action.getSensorDetailIntent(context, mAdapterId, mSensorId, mSensorType);
 	}
 
 	@Override

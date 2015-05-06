@@ -220,8 +220,6 @@ public class SensorDetailActivity extends BaseApplicationActivity {
 		public int getCount() {
 			return mDevices.size();
 		}
-
-
 	}
 
 	public void initLayouts() {
@@ -266,8 +264,6 @@ public class SensorDetailActivity extends BaseApplicationActivity {
 		mPager.setCurrentItem(mActiveDevicePosition);
 	}
 
-
-
 	public ViewPager getPager() {
 		return mPager;
 	}
@@ -281,5 +277,4 @@ public class SensorDetailActivity extends BaseApplicationActivity {
 		// Always call the superclass so it can save the view hierarchy state
 		super.onSaveInstanceState(savedInstanceState);
 	}
-
 }

@@ -347,7 +347,7 @@
     <string name="watchdog_rule">WatchDog Rule</string>
     <string name="sensor_text">Device</string>
     <string name="watchdog_create">Create watchdog</string>
-    <string name="treshold_value">Treshold value</string>
+    <string name="treshold_value">Threshold value</string>
     <string name="watchdog_actor_change_state">Change actor\'s state</string>
     <string name="watchdog_notification_send">Send notification</string>
     <string name="watchdog_activate_rule">Set this rule active</string>
@@ -391,6 +391,7 @@
     <string name="notification_name_new_sensor">New device added</string>
     <string name="notification_name_link">Link</string>
     <string name="widget_location_list_title">BeeeOn location</string>
+    <string name="toast_device_not_available">Device is not available</string>
 
 
 </resources>

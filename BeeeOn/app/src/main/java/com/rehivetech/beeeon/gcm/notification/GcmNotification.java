@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 
 import com.rehivetech.beeeon.controller.Controller;
+import com.rehivetech.beeeon.household.device.values.BaseValue;
 import com.rehivetech.beeeon.network.xml.Xconstants;
 
 /**
@@ -19,25 +20,31 @@ public interface GcmNotification {
 	/**
 	 * Enum mapping string name of notification to end class for instantiation
 	 */
-	public enum NotificationName {
-		WATCHDOG("watchdog"),
-		DELETE_NOTIF("delete_not"),
-		URI("uri"),
-		SENSOR_ADDED("sensor_add"),
-		SENSOR_LOW_BATTERY("sensor_bat"),
-		SENSOR_LOW_SIGNAL("sensor_sig"),
-		ADAPTER_ADDED("adapter_add"),
-		ADAPTER_OFFLINE("adapter_off");
+	enum NotificationName {
+		WATCHDOG("watchdog", WatchdogNotification.class),
+		DELETE_NOTIF("delete_not", DeleteNotification.class),
+		URI("uri",UriNotification.class),
+		SENSOR_ADDED("sensor_add", SensorAddedNotification.class),
+		SENSOR_LOW_BATTERY("sensor_bat", SensorLowBatteryNotification.class),
+		SENSOR_LOW_SIGNAL("sensor_sig", SensorLowSignalNotification.class),
+		ADAPTER_ADDED("adapter_add", AdapterAddedNotification.class),
+		ADAPTER_OFFLINE("adapter_off", AdapterOfflineNotification.class),
+		ACHIEVEMENT("achievement", AchievementNotification.class);
 
+		private final String mName;
+		private final Class<? extends BaseNotification> mClass;
 
-		private String mName;
-
-		NotificationName(String name) {
+		NotificationName(String name, Class<? extends BaseNotification> baseClass) {
 			mName = name;
+			mClass = baseClass;
 		}
 
 		public String getName() {
 			return mName;
+		}
+
+		public Class<? extends BaseNotification> getBaseClass() {
+			return mClass;
 		}
 
 		public static NotificationName fromValue(String value) {
@@ -49,7 +56,7 @@ public interface GcmNotification {
 		}
 	}
 
-	public enum NotificationType {
+	enum NotificationType {
 		INFO("info"),
 		ADVERT("advert"),
 		ALERT("alert"),
