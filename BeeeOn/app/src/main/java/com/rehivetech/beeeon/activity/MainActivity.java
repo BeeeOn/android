@@ -8,6 +8,7 @@ import android.os.Handler;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
@@ -473,7 +474,10 @@ public class MainActivity extends BaseApplicationActivity implements IListDialog
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		return true;
+		// Inflate the menu items for use in the action bar
+		MenuInflater inflater = getMenuInflater();
+		inflater.inflate(R.menu.main_activity_menu, menu);
+		return super.onCreateOptionsMenu(menu);
 	}
 
 	@Override
@@ -481,6 +485,11 @@ public class MainActivity extends BaseApplicationActivity implements IListDialog
 		switch (item.getItemId()) {
 		case android.R.id.home:
 			mNavDrawerMenu.clickOnHome();
+			break;
+		case R.id.action_notification:
+			// Notification
+			Intent intent = new Intent(MainActivity.this, NotificationActivity.class);
+			startActivity(intent);
 			break;
 		}
 		return super.onOptionsItemSelected(item);

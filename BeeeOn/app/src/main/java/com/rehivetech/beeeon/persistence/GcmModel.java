@@ -6,7 +6,9 @@ import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.exception.AppException;
 import com.rehivetech.beeeon.gcm.GcmHelper;
 import com.rehivetech.beeeon.gcm.INotificationReceiver;
-import com.rehivetech.beeeon.gcm.Notification;
+import com.rehivetech.beeeon.gcm.notification.BaseNotification;
+import com.rehivetech.beeeon.gcm.notification.GcmNotification;
+import com.rehivetech.beeeon.gcm.notification.VisibleNotification;
 import com.rehivetech.beeeon.household.user.User;
 import com.rehivetech.beeeon.network.INetwork;
 import com.rehivetech.beeeon.network.Network;
@@ -14,6 +16,7 @@ import com.rehivetech.beeeon.util.Log;
 import com.rehivetech.beeeon.util.Utils;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.WeakHashMap;
 
 public class GcmModel {
@@ -192,14 +195,17 @@ public class GcmModel {
 	 * Controller should "redirect" (un)registering for calling it there too.
 	 *
 	 * @param notification
-	 * @return
+	 * @return True if notification was handled by any of listener.
 	 */
-	public int receiveNotification(Notification notification) {
+	public boolean receiveNotification(GcmNotification notification) {
+		boolean isHandled = false;
 		for (INotificationReceiver receiver : mNotificationReceivers.keySet()) {
-			receiver.receiveNotification(notification);
+			if (receiver.receiveNotification(notification)) {
+				isHandled = true;
+			}
 		}
 
-		return mNotificationReceivers.size();
+		return isHandled;
 	}
 
 	/**
@@ -207,7 +213,7 @@ public class GcmModel {
 	 *
 	 * This CAN'T be called on UI thread!
 	 *
-	 * @param msgId
+	 * @param msgId Notifiaction ID
 	 */
 	public void setNotificationRead(String msgId) {
 		ArrayList<String> list = new ArrayList<String>();
@@ -227,4 +233,13 @@ public class GcmModel {
 		mNetwork.NotificationsRead(msgIds);
 	}
 
+
+	/**
+	 * Get notification history
+	 *
+	 * This CAN'T be called on UI thread!
+	 */
+	public List<VisibleNotification> getNotificationHistory() {
+		return mNetwork.getNotifications();
+	}
 }

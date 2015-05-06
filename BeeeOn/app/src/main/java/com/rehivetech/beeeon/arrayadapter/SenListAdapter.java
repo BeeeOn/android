@@ -91,7 +91,6 @@ public class SenListAdapter extends BaseAdapter implements StickyListHeadersAdap
 		convertView = mInflater.inflate(mListHeader.get(getSectionForPosition(position)).getLayout(), parent, false);
 		mListHeader.get(getSectionForPosition(position)).setView(convertView);
 		return convertView;
-
 	}
 
 	@Override
@@ -121,7 +120,6 @@ public class SenListAdapter extends BaseAdapter implements StickyListHeadersAdap
 			}
 		}
 		return mListHeaderPos.size() - 1;
-
 	}
 
 	public void log() {

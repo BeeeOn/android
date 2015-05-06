@@ -5,6 +5,7 @@ import android.content.Context;
 import com.rehivetech.beeeon.Constants;
 import com.rehivetech.beeeon.exception.AppException;
 import com.rehivetech.beeeon.gamification.AchievementListItem;
+import com.rehivetech.beeeon.gcm.notification.VisibleNotification;
 import com.rehivetech.beeeon.household.adapter.Adapter;
 import com.rehivetech.beeeon.household.device.Device;
 import com.rehivetech.beeeon.household.device.Device.SaveDevice;
@@ -617,6 +618,11 @@ public class DemoNetwork implements INetwork {
 	public boolean NotificationsRead(ArrayList<String> msgID) {
 		// TODO Auto-generated method stub
 		return false;
+	}
+
+	@Override
+	public List<VisibleNotification> getNotifications() {
+		return new ArrayList<>();
 	}
 
 	@Override
