@@ -6,7 +6,7 @@
 
     <!-- Menu option shown in preferences -->
     <string name="preference_set_default_location">Set default location</string>
-    <string name="preference_set_default_adapter">Set default adapter</string>
+    <string name="preference_set_default_adapter">Set default gateway</string>
 
     <string name="choose_adapter">Choose gateway:</string>
     <string name="choose_location">Choose location:</string>
