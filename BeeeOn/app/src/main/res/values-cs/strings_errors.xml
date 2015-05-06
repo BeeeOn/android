@@ -13,8 +13,8 @@
 	<string name="NetworkError___CL_UNKNOWN_HOST">Neznámý hostitel.</string>
 	<string name="NetworkError___CL_XML">Nastal problém při zpracování zprávy.\n\nZkuste to prosím znovu.</string>
 
-	<string name="NetworkError___SRV_ADAPTER_HAVE_YET">Brána s tímto číslem již máte zaregistrován.</string>
-	<string name="NetworkError___SRV_ADAPTER_NOT_EXISTS">Brána s tímto číslem není na serveru znám.\n\nZkontrolujte, zda je správně připojen k internetové síti.</string>
+	<string name="NetworkError___SRV_ADAPTER_HAVE_YET">Bránu s tímto číslem již máte zaregistrovanou.</string>
+	<string name="NetworkError___SRV_ADAPTER_NOT_EXISTS">Brána s tímto číslem není na serveru známa.\n\nZkontrolujte, zda je správně připojená k internetové síti.</string>
 	<string name="NetworkError___SRV_ADAPTER_NOT_FREE">Brána s tímto číslem má již registrovaný jiný uživatel.\n\nPokud ho znáte, můžete jej požádat o přístup.</string>
 	<string name="NetworkError___SRV_ADA_SERVER_PROBLEM">Nastal problém na straně serveru.\n\nZkuste to prosím později.</string>
 	<string name="NetworkError___SRV_BAD_ACTION">Byla zadána neplatná akce.</string>
@@ -31,7 +31,7 @@
 	<string name="NetworkError___SRV_COM_FW_ALGORITHMS_ERROR">Chyba při komunikaci s firmware/algoritmy.</string>
 	<string name="NetworkError___SRV_DAMAGED_XML">Bylo přijato poškozené XML.\n\nZkuste to prosím znovu.</string>
 	<string name="NetworkError___SRV_GENERATE_BTOKEN_ERROR">Chyba při generování přístupového tokenu.</string>
-	<string name="NetworkError___SRV_IMPROPER_NAME_OR_EMAIL">Zadané jméno nebo email není vhodný.</string>
+	<string name="NetworkError___SRV_IMPROPER_NAME_OR_EMAIL">Zadané jméno nebo e-mail není vhodný.</string>
 	<string name="NetworkError___SRV_IMPROPER_PSWD">Zadané heslo není dostatečně bezpečné.</string>
 	<string name="NetworkError___SRV_INVALID_LOCATION_TYPE">Byl zadán neplatný typ umístění.</string>
 	<string name="NetworkError___SRV_INVALID_PROVIDER">Tento poskytovatel není k dispozici.</string>

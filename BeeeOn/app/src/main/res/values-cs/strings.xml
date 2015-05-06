@@ -64,13 +64,13 @@
     <string name="sen_graph_label">Graf hodnot</string>
     <string name="users_header">Uživatelé</string>
     <string name="add_users_adapter">Přidat uživatele</string>
-    <string name="add_user_email_header">Email</string>
+    <string name="add_user_email_header">E-mail</string>
     <string name="add_user_role_header">Role</string>
     <string name="adapter_user_title_change_role">Změnit roli uživatele</string>
 
     <!-- Hints -->
     <string name="login_user_name_hint">Login/email</string>
-    <string name="addsensor_sensor_name_hint">Název nového </string>
+    <string name="addsensor_sensor_name_hint">Název nového zařízení</string>
     <string name="addsensor_new_location_hint">Název nového umístění</string>
     <string name="addadapter_ser_num_hint">Sériové číslo brány</string>
 
@@ -248,8 +248,6 @@
 
 
     <!-- About -->
-    <string name="company_email">info@BeeeOn.com</string>
-    <string name="company_web">http://rehivetech.com/</string>
     <string name="copyright">\u00A9 2014-15 RehiveTech. Všechna práva vyhrazena.</string>
     <string name="version">Verze</string>
     <string name="logo">Logo</string>
@@ -325,13 +323,13 @@
     <string name="downloading_data">Stahuji data &#8230;</string>
     <string name="logout_success">Odhlášení proběhlo úspěšně</string>
     <string name="achievement_share_url_name"> BeeeOn Inteligentní domáctnost</string>
-    <string name="achievement_share_msg"> jsem odemknul tento nový achievement!</string>
+    <string name="achievement_share_msg">Jsem odemknul tento nový achievement!</string>
 
     <!-- WatchDog -->
     <string name="action_watchdog">Hlídač</string>
     <string name="watchdog_rule">Pravidlo hlídače</string>
     <string name="sensor_text">Zařízení</string>
-    <string name="treshold_value">Hodnota</string>
+    <string name="treshold_value">Prahová Hodnota</string>
     <string name="watchdog_actor_change_state">Změnit stav aktoru</string>
     <string name="watchdog_notification_send">Poslat notifikaci</string>
     <string name="watchdog_activate_rule">Aktivovat pravidlo</string>
@@ -355,7 +353,6 @@
     <string name="no_location_available_def_adapter">Žádné dostupné umístění pro výchozí bránu</string>
     <string name="users_pending_header">Žádost o přidání</string>
     <string name="title_activity_location_detail_screen">Detail umístění</string>
-    <string name="sensor_name_label">Name of sensor</string>
     <string name="dialog_register_new_account_title">Nemáte účet</string>
     <string name="dialog_register_new_account_message">Ještě nemáte vytvořený BeeeOn účet, přejete si jej vytvořit nyní?</string>
 
@@ -380,9 +377,9 @@
 	<string name="tutorial_skip">PŘESKOČIT</string>
 	<string name="radius">Rádius</string>
 	<string name="dialog_choose_provider_title">Vyběr poskytovatele účtu</string>
-	<string name="addsensor_stoped">stopped</string>
-	<string name="add_action_dialog_title">What do you want add ?</string>
-	<string name="toast_need_sensor_location_icon">Please choose icon of your new location</string>
+	<string name="addsensor_stoped">zastaveno</string>
+	<string name="add_action_dialog_title">Co byste chtěli přidat?</string>
+	<string name="toast_need_sensor_location_icon">Prosím vyberte ikonu nového umístění</string>
 	<string name="dialog_title_set_bioler_type">Volba typu provozu okruhu</string>
 	<string name="dialog_set_boiler_setaction">nastavit</string>
 	<string name="dialog_title_set_bioler_mode">Volba režimu okruhu</string>
@@ -402,5 +399,6 @@
 	<string name="notification_name_new_adapter">Přidána nová brána</string>
 	<string name="notification_name_new_sensor">Přidáno nové zařízení</string>
 	<string name="notification_name_link">Spoj</string>
+    <string name="sensor_name_label">Meno zařízení</string>
 
 </resources>

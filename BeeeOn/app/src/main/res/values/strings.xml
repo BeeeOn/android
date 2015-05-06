@@ -73,7 +73,7 @@
     <string name="users_header">Users</string>
     <string name="users_pending_header">Pending request</string>
     <string name="add_users_adapter">Add user</string> 
-    <string name="add_user_email_header">Email</string>
+    <string name="add_user_email_header">E-mail</string>
     <string name="add_user_role_header">Role</string>
     <string name="adapter_user_title_change_role">Change user role</string>
 
@@ -219,7 +219,6 @@
     <string name="widget_sensor_title_small">BeeeOn device 1x1</string>
     <string name="widget_sensor_title_medium">BeeeOn device 2x1</string>
     <string name="widget_sensor_title_large">BeeeOn device 3x1</string>
-    <string name="widget_location_list_title">BeeeOn location </string>
     <string name="widget_graph_title">BeeeOn device with graph</string>
     <string name="widget_clock_title">BeeeOn-Time</string>
 
@@ -259,8 +258,8 @@
 
     <!-- About -->
     <string name="play_link" translatable="false">market://details?id=com.rehivetech.beeeon</string>
-    <string name="company_email">info@BeeeOn.com</string>
-    <string name="company_web">http://rehivetech.com/</string>
+    <string name="company_email" translatable="false">info@BeeeOn.com</string>
+    <string name="company_web" translatable="false">http://rehivetech.com/</string>
     <string name="copyright">\u00A9 2014-15 RehiveTech. All rights reserved.</string>
     <string name="version">Version</string>
     <string name="logo">Logo</string>
@@ -380,7 +379,7 @@
 	<string name="addadapter_fill_name">Please fill gateway name</string>
 	<string name="addadapter_fill_code">Please fill gateway code</string>
 	<string name="addsensor_stoped">stopped</string>
-	<string name="add_action_dialog_title">What do you want add ?</string>
+	<string name="add_action_dialog_title">What would you like to add?</string>
 	<string name="toast_need_sensor_location_icon">Please choose icon of your new location</string>
 	<string name="dialog_title_set_bioler_type">Choose boiler type</string>
 	<string name="dialog_set_boiler_setaction">set</string>
@@ -390,6 +389,7 @@
     <string name="notification_name_new_adapter">New gateway added</string>
     <string name="notification_name_new_sensor">New device added</string>
     <string name="notification_name_link">Link</string>
+    <string name="widget_location_list_title">BeeeOn location</string>
 
 
 </resources>

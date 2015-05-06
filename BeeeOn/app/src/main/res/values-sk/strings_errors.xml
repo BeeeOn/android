@@ -1,32 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-	<string name="NetworkError___CL_INTERNET_CONNECTION">Nie je dostupné pripojenie k Internetu</string>
-	<string name="NetworkError___SRV_ADAPTER_HAVE_YET">Zlé sériové číslo brany</string>
-	<string name="NetworkError___SRV_ADAPTER_NOT_EXISTS">Zlé sériové číslo brany</string>
-	<string name="NetworkError___SRV_ADAPTER_NOT_FREE">Zlé sériové číslo brany</string>
-	<string name="NetworkError___SRV_ADA_SERVER_PROBLEM">Problém na strane ada_servera</string>
-	<string name="NetworkError___SRV_BAD_ACTION">Zlá akcia</string>
-	<string name="NetworkError___SRV_BAD_ACTOR_VALUE">Zlá hodnota aktora</string>
-	<string name="NetworkError___SRV_BAD_AGREG_FUNC">Zlý typ agregačnej funkcie</string>
-	<string name="NetworkError___SRV_BAD_BT">Zlé sessionID náhrada za ReSign</string>
-	<string name="NetworkError___SRV_BAD_EMAIL_OR_ROLE">Zlý EMAIL/ÚLOHA -> errMessage obsahuje hlavičku EMAIL a ULOHA</string>
-	<string name="NetworkError___SRV_BAD_ICON">Zlá ikona</string>
-	<string name="NetworkError___SRV_BAD_INTERVAL">Zlý interval</string>
-	<string name="NetworkError___SRV_BAD_LOCATION_TYPE">Zlý typ miestnosti</string>
+	<string name="NetworkError___CL_INTERNET_CONNECTION">Nie je dostupné pripojenie k Internetu\n\nSkontrolujte prosím vaše nastavenie.</string>
+	<string name="NetworkError___SRV_ADAPTER_NOT_FREE">Bránu s týmto číslom má už zaregistrovaný iný používateľ.\n\nAk ho poznáte, môžete ho požiadať o prístup.</string>
 	<string name="NetworkError___SRV_BAD_PSWD">Zadané heslo nie je správne.</string>
-	<string name="NetworkError___SRV_BAD_UTC">Zlé utc</string>
-	<string name="NetworkError___SRV_COM_VER_MISMATCH">Zlá verzia komunikačného protokolu.\n(aplikace: %1$s, server: %2$s)</string>
-	<string name="NetworkError___SRV_DAMAGED_XML">Poškodené xml (partial)</string>
-	<string name="NetworkError___SRV_IMPROPER_NAME_OR_EMAIL">Zadané meno alebo email nie je vhodný.</string>
-	<string name="NetworkError___SRV_IMPROPER_PSWD">Zadané heslo nie je dostatočně bezpečné.</string>
+	<string name="NetworkError___SRV_BAD_UTC">Bola zadaná neplatná časová zóna.</string>
+	<string name="NetworkError___SRV_COM_VER_MISMATCH">Verzia komunikačného protokolu už nie je podporovaná.\n(aplikácia: %1$s, server: %2$s)\n\nAktualizujte si prosím vašu aplikáciu.</string>
+	<string name="NetworkError___SRV_IMPROPER_NAME_OR_EMAIL">Zadané meno alebo e-mail nie je vhodné.</string>
+	<string name="NetworkError___SRV_IMPROPER_PSWD">Zadané heslo nie je dostatočne bezpečné.</string>
 	<string name="NetworkError___SRV_INVALID_PROVIDER">Tento poskytovateľ nie je k dispozícii.</string>
-	<string name="NetworkError___SRV_LOW_RIGHTS">Zlé práva (užívateľ nemá práva)</string>
-	<string name="NetworkError___SRV_NOT_CONSISTENT_SENSOR_ADDR">Zlý ID/TYP -> errMessage obsahuje hlavičku s ID a TYPom</string>
-	<string name="NetworkError___SRV_NOT_VALID_USER">Zlý token alebo email</string>
-	<string name="NetworkError___SRV_NO_SUCH_ENTITY">Neexistuje entita k zmene (zmenené pok rukami)</string>
-	<string name="NetworkError___SRV_PENDING_USER">Aktivujte prosím Vás svôj účet.</string>
-	<string name="NetworkError___SRV_SUSPECT_USER">Tento uživateľský účet je dočasne zablokovaný.</string>
+	<string name="NetworkError___SRV_PENDING_USER">Aktivujte prosím svoj účet.</string>
 	<string name="NetworkError___SRV_USER_EXISTS">Zadané prihlasovacie meno je už obsadené.</string>
-	<string name="NetworkError___SRV_USER_NOT_EXISTS">Zadané uživateľské meno neexistuje.</string>
+	<string name="NetworkError___SRV_USER_NOT_EXISTS">Zadané používateľské meno neexistuje.</string>
 
 </resources>
