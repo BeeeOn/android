@@ -64,6 +64,7 @@ public class WatchDogEditRuleActivity extends BaseApplicationActivity {
     public static final String EXTRA_ADAPTER_ID = "adapter_id";
     public static final String EXTRA_RULE_ID = "rule_id";
     public static final String EXTRA_IS_NEW ="rule_is_new";
+    public static final String EXTRA_GEOFENCE_ID_PICKED = "geofence_id_picked";
 
     // helper variables for getting devices from list
     private static final int DEVICES_ALL = 0;
@@ -73,6 +74,7 @@ public class WatchDogEditRuleActivity extends BaseApplicationActivity {
     // extras
     private String mActiveAdapterId;
     private String mActiveRuleId;
+	private String mActiveGeoId;
 
     private Controller mController;
     private Toolbar mToolbar;
@@ -141,6 +143,7 @@ public class WatchDogEditRuleActivity extends BaseApplicationActivity {
         if(bundle != null){
             mActiveAdapterId = bundle.getString(EXTRA_ADAPTER_ID);
             mActiveRuleId = bundle.getString(EXTRA_RULE_ID);
+            mActiveGeoId = bundle.getString(EXTRA_GEOFENCE_ID_PICKED);
             mIsNew = false;
         }
         else{
@@ -148,6 +151,7 @@ public class WatchDogEditRuleActivity extends BaseApplicationActivity {
             if (bundle != null) {
                 mActiveAdapterId = bundle.getString(EXTRA_ADAPTER_ID);
                 mActiveRuleId = bundle.getString(EXTRA_RULE_ID);
+                mActiveGeoId = bundle.getString(EXTRA_GEOFENCE_ID_PICKED);
                 mIsNew = bundle.getBoolean(EXTRA_IS_NEW);
             }
             else{
@@ -331,9 +335,17 @@ public class WatchDogEditRuleActivity extends BaseApplicationActivity {
         mRuleEnabled.setChecked(mWatchDog.isEnabled());
         mRuleTreshold.setText(mWatchDog.getParams().get(WatchDog.PAR_TRESHOLD));
 
-        // set spinner in the "IF" section
-        if(mWatchDog.getGeoRegionId() != null && !mWatchDog.getGeoRegionId().isEmpty()){
-            int index = Utils.getObjectIndexFromList(mWatchDog.getGeoRegionId(), mGeofences);
+		// check first if sent geofence id as extra, then if watchdog already has it
+		String geoId = "";
+		if(mActiveGeoId != null && !mActiveGeoId.isEmpty())
+			geoId = mActiveGeoId;
+		else if (mWatchDog.getGeoRegionId() != null && !mWatchDog.getGeoRegionId().isEmpty())
+			geoId = mWatchDog.getGeoRegionId();
+
+
+		// set spinner in the "IF" section
+        if(!geoId.isEmpty()){
+			int index = Utils.getObjectIndexFromList(geoId, mGeofences);
             if(index > -1) mIfItemSpinner.setSelection(mSpinnerMultiAdapter.getRealPosition(index, SpinnerItem.SpinnerItemType.GEOFENCE));
         }
         else if(mWatchDog.getDevices().size() > 0) {
