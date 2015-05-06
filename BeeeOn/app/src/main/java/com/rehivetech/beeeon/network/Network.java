@@ -75,6 +75,11 @@ public class Network implements INetwork {
 	private static final String TAG = Network.class.getSimpleName();
 
 	/**
+	 * Number of retries when we receive no response from server (e.g. because persistent connection expires from server side).
+	 */
+	private static final int RETRIES_COUNT = 2;
+
+	/**
 	 * Name of CA certificate located in assets
 	 */
 	private static final String ASSEST_CA_CERT = "cacert.crt";
@@ -431,15 +436,26 @@ public class Network implements INetwork {
 	}
 
 	/**
+	 * Just call's {@link #doRequest(String, boolean, int)} with retrues = RETRIES_COUNT
+	 *
+	 * @see {#doRequest}
+	 */
+	private ParsedMessage doRequest(String messageToSend, boolean checkBT) throws AppException {
+		return doRequest(messageToSend, checkBT, RETRIES_COUNT);
+	}
+
+	/**
 	 * Send request to server and return parsedMessage or throw exception on error.
 	 *
 	 * @param messageToSend
 	 * @param checkBT - when true and BT is not present in Network, then throws AppException with NetworkError.SRV_BAD_BT
 	 *                - this logically must be false for requests like register or login, which doesn't require BT for working
+	 * @param retries - number of retries to do the request and receive response
 	 * @return
-	 * @throws AppException with error NetworkError.CL_INTERNET_CONNECTION, NetworkError.SRV_BAD_BT, NetworkError.CL_XML, NetworkError.CL_UNKNOWN_HOST, NetworkError.CL_CERTIFICATE or NetworkError.CL_SOCKET
+	 * @throws AppException with error NetworkError.CL_INTERNET_CONNECTION, NetworkError.SRV_BAD_BT, NetworkError.CL_XML,
+	 * 			NetworkError.CL_UNKNOWN_HOST, NetworkError.CL_CERTIFICATE, NetworkError.CL_SOCKET or NetworkError.CL_NO_RESPONSE
 	 */
-	private synchronized ParsedMessage doRequest(String messageToSend, boolean checkBT) throws AppException {
+	private synchronized ParsedMessage doRequest(String messageToSend, boolean checkBT, int retries) throws AppException {
 		// Check internet connection
 		if (!isAvailable())
 			throw new AppException(NetworkError.CL_INTERNET_CONNECTION);
@@ -456,18 +472,22 @@ public class Network implements INetwork {
 			String result = startCommunication(messageToSend);
 			Log.i(TAG + " << fromSrv", result.isEmpty() ? "- no response -" : result);
 
+			// Check if we received no response and try it again eventually
 			if (result.isEmpty()) {
-				// If we are using multi session, perhaps server already closed connection
-				if (mMultiSessions > 0) {
-					// Try to reinit persistent socket
-					initPermaSocket();
-
-					// And try to do this request again
-					return doRequest(messageToSend, checkBT);
+				if (retries <= 0) {
+					// We can't try again anymore, just throw error
+					throw new AppException("No response from server.", NetworkError.CL_NO_RESPONSE);
 				}
 
-				// If this isn't multi session, just throw no response error
-				throw new AppException("No response from server.", NetworkError.CL_NO_RESPONSE);
+				if (mMultiSessions > 0) {
+					// If we are using multi session, perhaps server already closed connection, so reinit it
+					Log.d(TAG, "Try to reinit permanent socket.");
+					initPermaSocket();
+				}
+
+				// Try to do this request again (with decremented retries)
+				Log.d(TAG, String.format("Try to repeat request (retries remaining: %d)", retries - 1));
+				return doRequest(messageToSend, checkBT, retries - 1);
 			}
 
 			return new XmlParsers().parseCommunication(result, false);
