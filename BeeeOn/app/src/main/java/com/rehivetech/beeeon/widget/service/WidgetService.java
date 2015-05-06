@@ -97,11 +97,6 @@ public class WidgetService extends Service {
     // -------------------------------------------------------------------- //
     // --------------- Main methods (entry points) of service ------------- //
     // -------------------------------------------------------------------- //
-    @Override
-    public void onTrimMemory(int level) {
-        super.onTrimMemory(level);
-        Log.d(TAG, "onTrimMemory => " + level);
-    }
 
     /**
      * When startin updating widgets, we can tell that these widgets should be reloaded
@@ -531,6 +526,15 @@ public class WidgetService extends Service {
     // -------------------------------------------------------------------- //
     // ------------------------- Managing methods ------------------------- //
     // -------------------------------------------------------------------- //
+	/**
+	 * When system has low memory - delete saved widget data (they will be restored from persistence when needed)
+	 */
+	@Override
+	public void onLowMemory(){
+		super.onLowMemory();
+		Log.i(TAG,"onLowMemor()");
+		mAvailableWidgets.clear();
+	}
 
     /**
      * Goes through all widgets, find widgets with the specified actor
