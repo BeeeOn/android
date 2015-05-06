@@ -24,8 +24,8 @@ import com.rehivetech.beeeon.util.Log;
 
 import java.util.ArrayList;
 import java.util.IllegalFormatException;
+import java.util.LinkedList;
 import java.util.List;
-import java.util.Queue;
 
 /**
  * Created by Martin on 24. 3. 2015.
@@ -36,13 +36,9 @@ public class GeofenceModel implements GoogleApiClient.ConnectionCallbacks, Googl
 
 	private GoogleApiClient mGoogleApiClient;
 
-	private boolean mIsRegister;
-
-	private List<SimpleGeofence> mGeofenceList;
-
 	private PendingIntent mGeofencePendingIntent = null;
 
-	private Queue<ManageGeofenceHolder> mQueue;
+	private LinkedList<ManageGeofenceHolder> mQueue;
 
 	INetwork mNetwork;
 	Context mContext;
@@ -50,16 +46,17 @@ public class GeofenceModel implements GoogleApiClient.ConnectionCallbacks, Googl
 	public GeofenceModel(INetwork network, Context context) {
 		mNetwork = network;
 		mContext = context;
-//		mQueue = new Queue<ManageGeofenceHolder>();
+		mQueue = new LinkedList<>();
 	}
 
 	private synchronized void buildGoogleApiClient() {
+		Log.i(TAG, "Request to build Google API client");
 		mGoogleApiClient = new GoogleApiClient.Builder(mContext)
 				.addConnectionCallbacks(this)
 				.addOnConnectionFailedListener(this)
 				.addApi(LocationServices.API)
 				.build();
-		buildGoogleApiClient();
+		mGoogleApiClient.connect();
 	}
 
 
@@ -70,10 +67,42 @@ public class GeofenceModel implements GoogleApiClient.ConnectionCallbacks, Googl
 	public void onConnected(Bundle connectionHint) {
 		Log.i(TAG, "Connected to GoogleApiClient");
 
-//		if (mIsRegister) {
-//			register();
-//		} else {
-//			unregister();
+		requestNextCall();
+	}
+
+	private void requestNextCall() {
+		ManageGeofenceHolder holder = mQueue.pollLast();
+		if (holder == null) {
+			mGoogleApiClient.disconnect();
+		} else if (holder.isRegisterMode) {
+			registerGeofences(holder.userId);
+		} else {
+			unregisterGeofences(holder.userId);
+		}
+	}
+
+	public void registerAllUserGeofence(String userId) {
+		if (getAllGeofences(userId).size() < 1) {
+			return;
+		}
+
+		mQueue.add(new ManageGeofenceHolder(true, userId));
+
+//		if (mGoogleApiClient != null || !mGoogleApiClient.isConnected() || !mGoogleApiClient.isConnecting()) {
+			buildGoogleApiClient();
+//		}
+	}
+
+
+	public void unregisterAllUserGeofence(String userId) {
+		if (getAllGeofences(userId).size() < 1) {
+			return;
+		}
+
+		mQueue.add(new ManageGeofenceHolder(false, userId));
+
+//		if (mGoogleApiClient == null || !mGoogleApiClient.isConnected() || !mGoogleApiClient.isConnecting()) {
+			buildGoogleApiClient();
 //		}
 	}
 
@@ -95,11 +124,12 @@ public class GeofenceModel implements GoogleApiClient.ConnectionCallbacks, Googl
 	@Override
 	public void onResult(Status status) {
 		if (status.isSuccess()) {
-			Log.i(TAG, "All geofences successfully " + (mIsRegister ? "registered" : "unregistered"));
-
+			Log.i(TAG, "All geofences successfully egistered unregistered: "+status.getStatusMessage());
+			requestNextCall();
 		} else {
-			Log.e(TAG, "Geofences WEREN'T  " + (mIsRegister ? "registered" : "unregistered"));
+			Log.e(TAG, "Geofences WEREN'T  unregistered: " + status.getStatusMessage());
 		}
+
 	}
 
 	protected static SimpleGeofence cursorToGeofence(Cursor cursor) throws IllegalFormatException {
@@ -214,10 +244,10 @@ public class GeofenceModel implements GoogleApiClient.ConnectionCallbacks, Googl
 		ContentValues values = new ContentValues();
 
 		values.put(GeofenceEntry.COLUMN_USER_ID, userId);
-		values.put(GeofenceEntry.COLUMN_GEO_ID,geofence.getId());
-		values.put(GeofenceEntry.COLUMN_LAT,geofence.getLatitude());
-		values.put(GeofenceEntry.COLUMN_LONG,geofence.getLongitude());
-		values.put(GeofenceEntry.COLUMN_RADIUS,geofence.getRadius());
+		values.put(GeofenceEntry.COLUMN_GEO_ID, geofence.getId());
+		values.put(GeofenceEntry.COLUMN_LAT, geofence.getLatitude());
+		values.put(GeofenceEntry.COLUMN_LONG, geofence.getLongitude());
+		values.put(GeofenceEntry.COLUMN_RADIUS, geofence.getRadius());
 		values.put(GeofenceEntry.COLUMN_NAME, geofence.getName());
 
 		SQLiteDatabase db = DatabaseHelper.getInstance(mContext).getWritableDatabase();
@@ -239,24 +269,29 @@ public class GeofenceModel implements GoogleApiClient.ConnectionCallbacks, Googl
 		mNetwork.passBorder(geofenceId, type.getName());
 	}
 
-	private void unregisterAllGeofence(String userId) {
-		List<String> geofenceIds = new ArrayList<>();
-		for (SimpleGeofence geofence : getAllGeofences(userId)) {
-			Log.i(TAG, "Unregistering geofence: " + geofence.getName()+"-"+geofence.getId());
-			geofenceIds.add(geofence.getId());
-		}
-		LocationServices.GeofencingApi.removeGeofences(mGoogleApiClient, geofenceIds).
+	private void unregisterGeofences(String userId) {
+
+		LocationServices.GeofencingApi.removeGeofences(mGoogleApiClient, getAllGeofenceId(userId)).
 				setResultCallback(this);
 
 	}
 
+	private List<String> getAllGeofenceId (String userId) {
+		List<String> geofenceIds = new ArrayList<>();
+		for (SimpleGeofence geofence : getAllGeofences(userId)) {
+			Log.i(TAG, "Unregistering geofence: " + geofence.getName() + "-" + geofence.getId());
+			geofenceIds.add(geofence.getId());
+		}
+		return geofenceIds;
+	}
 
-	private void register(String userId) {
+
+	private void registerGeofences(String userId) {
 		Log.i(TAG, "Registering geofences");
 		LocationServices.GeofencingApi.addGeofences(
 				mGoogleApiClient,
 				// The GeofenceRequest object.
-				GeofenceHelper.getGeofencingRequest(mGeofenceList),
+				GeofenceHelper.getGeofencingRequest(getAllGeofences(userId)),
 				// A pending intent that that is reused when calling removeGeofences(). This
 				// pending intent is used to generate an intent when a matched geofence
 				// transition is observed.
@@ -268,5 +303,10 @@ public class GeofenceModel implements GoogleApiClient.ConnectionCallbacks, Googl
 	private class ManageGeofenceHolder {
 		public boolean isRegisterMode;
 		public String userId;
+
+		public ManageGeofenceHolder(boolean isRegisterMode, String userId) {
+			this.isRegisterMode = isRegisterMode;
+			this.userId = userId;
+		}
 	}
 }
