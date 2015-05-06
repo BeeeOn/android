@@ -8,18 +8,18 @@
     <string name="preference_set_default_location">Set default location</string>
     <string name="preference_set_default_adapter">Set default adapter</string>
 
-    <string name="choose_adapter">Choose adapter:</string>
+    <string name="choose_adapter">Choose gateway:</string>
     <string name="choose_location">Choose location:</string>
-    <string name="choose_sensor">Choose sensor:</string>
+    <string name="choose_sensor">Choose device:</string>
     
     
-    <string name="adapter_isnt_set">Set default adapter</string>
-    <string name="adapter_doest_exist">Default adapter no longer exists. Set new default adapter.</string>
-    <string name="no_location_available_def_adapter">No location available in default adapter.</string>
+    <string name="adapter_isnt_set">Set default gateway</string>
+    <string name="adapter_doest_exist">Default gateway no longer exists. Set new default gateway.</string>
+    <string name="no_location_available_def_adapter">No location available in default gateway.</string>
     
     <string name="please_log_in">Please Log In</string>
-    <string name="no_adapter_available">No adapter available</string>
-    <string name="no_sensor_available">No sensor available</string>
+    <string name="no_adapter_available">No gateway available</string>
+    <string name="no_sensor_available">No device available</string>
     <string name="no_location_available">No location available</string>
 	
 </resources>

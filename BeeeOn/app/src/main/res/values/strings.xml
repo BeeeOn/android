@@ -248,11 +248,11 @@
 
     <!-- Widget Clock -->
     <string name="weather">Weather</string>
-    <string name="weather_place">Place</string>
-    <string name="weather_place_not_found">Place not found</string>
+    <string name="weather_place">Location</string>
+    <string name="weather_place_not_found">Location not found</string>
     <string name="color_scheme">Color scheme</string>
 
-    <string name="place_must_be_filled">Place must be filled</string>
+    <string name="place_must_be_filled">Location must be filled</string>
     <string name="dialog_location_select">Select your place</string>
     <string name="dialog_location_country">City name, country</string>
 

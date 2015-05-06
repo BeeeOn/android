@@ -43,7 +43,7 @@
     <string name="addsensor_setup_sensor">Nastavte zařízení</string>
     <string name="addsensor_or">nebo</string>
     <string name="sensordetail_last_value">Poslední hodnota: \u0020</string>
-    <string name="sensordetail_refresh_time">Interval aktualizace</string>
+    <string name="sensordetail_refresh_time">Interval probuzení</string>
     <string name="sensordetail_battery_label">Stav baterie</string>
     <string name="sensordetail_location_label">Umístění</string>
 	<string name="sensordetail_last_update_label">Poslední aktualizace</string>
@@ -59,7 +59,7 @@
     <string name="registration_serial_number">Pro bránu se seriovým číslem: </string>
     <string name="alert_title">Název</string>
     <string name="alert_message">Zpráva</string>
-    <string name="refresh_time">Interval aktualizace:</string>
+    <string name="refresh_time">Interval probuzení:</string>
     <string name="last_update">Aktualizováno: </string>
     <string name="sen_graph_label">Graf hodnot</string>
     <string name="users_header">Uživatelé</string>
@@ -208,7 +208,7 @@
     <string name="widget_sensor_title_small">BeeeOn zařízení 1x1</string>
     <string name="widget_sensor_title_medium">BeeeOn zařízení 2x1</string>
     <string name="widget_sensor_title_large">BeeeOn zařízení 3x1</string>
-    <string name="widget_location_list_title">BeeeOn lokace</string>
+    <string name="widget_location_list_title">BeeeOn poloha</string>
     <string name="widget_graph_title">BeeeOn zařízení s grafem</string>
     <string name="widget_clock_title">BeeeOn-Time</string>
 
@@ -216,7 +216,7 @@
     <!-- WidgetConfigurationActivity -->
     <string name="widget_configuration_adapter">Brána</string>
     <string name="widget_configuration_sensor">Zařízení pro zobrazení</string>
-    <string name="widget_configuration_interval_sensor">Interval aktualizace zařízení</string>
+    <string name="widget_configuration_interval_sensor">Interval probuzení zařízení</string>
     <string name="widget_configuration_interval_widget">Interval aktualizace widgetu</string>
     <string name="widget_configuration_login_first">Je třeba se nejprve přihlásit</string>
     <string name="widget_configuration_no_adapters">K nastavení widgetu je nutné být uživatelem brány</string>
@@ -230,11 +230,11 @@
     <string name="widget_configuration_widget_location">Nastavení widgetu umístění</string>
 
     <!-- Widgets other -->
-    <string name="widget_location_list_empty">Prázdná lokace</string>
+    <string name="widget_location_list_empty">Prázdná poloha</string>
     <string name="widget_cached">(cached)</string>
     <string name="widget">Widget</string>
     <string name="household">Domácnost</string>
-    <string name="widget_configuration_location">Umístění</string>
+    <string name="widget_configuration_location">Poloha</string>
 
     <!-- Widget Clock -->
     <string name="weather">Počasí</string>
@@ -242,7 +242,7 @@
     <string name="weather_place_not_found">Místo nenalezeno</string>
     <string name="color_scheme">Barevné schéma</string>
 
-    <string name="place_must_be_filled">Místo musí být vyplněno</string>
+    <string name="place_must_be_filled">Poloha musí být vyplněna</string>
     <string name="dialog_location_select">Vyberte místo</string>
     <string name="dialog_location_country">Město, stát</string>
 
@@ -341,7 +341,7 @@
     
     <string name="rule_menu_del">Odstranit</string>
     <string name="adapter_isnt_set">Nastavit výchozí bránu</string>
-    <string name="adapter_doest_exist">Výchozí brána neexistuje. Nastavte nový výchozí bránu.</string>
+    <string name="adapter_doest_exist">Výchozí brána již neexistuje. Nastavte novou výchozí bránu.</string>
     <string name="choose_adapter">Vyberte bránu:</string>
     <string name="choose_location">Vyberte umístění:</string>
     <string name="choose_sensor">Vyberte zařízení:</string>
@@ -375,7 +375,7 @@
 	<string name="tut_intro_text_2">BeeeOn komponenty jsou bezdrátová zařízení (např. senzor) a brána.</string>
 	<string name="tut_intro_text_3">Senzory měří hodnoty (např. teplotu), aktory nastavují požadované hodnoty.</string>
 	<string name="tut_intro_text_4">Brána sbírá data z bezdrátových zařízení.</string>
-	<string name="tut_intro_text_5">Mobilní aplikace poskytuje sledování a konfiguraci domácnosti odkukoliv a kdykoliv.</string>
+	<string name="tut_intro_text_5">Mobilní aplikace poskytuje sledování a ovládání domácnosti odkukoliv a kdykoliv.</string>
 	<string name="tutorial_go_to_app">START</string>
 	<string name="tutorial_skip">PŘESKOČIT</string>
 	<string name="radius">Rádius</string>
@@ -383,10 +383,19 @@
 	<string name="addsensor_stoped">stopped</string>
 	<string name="add_action_dialog_title">What do you want add ?</string>
 	<string name="toast_need_sensor_location_icon">Please choose icon of your new location</string>
-	<string name="dialog_title_set_bioler_type">Choose boiler type</string>
-	<string name="dialog_set_boiler_setaction">set</string>
-	<string name="dialog_title_set_bioler_mode">Choose boiler mode</string>
-	<string name="dialog_title_set_temperature">Choose temperature</string>
+	<string name="dialog_title_set_bioler_type">Volba typu provozu okruhu</string>
+	<string name="dialog_set_boiler_setaction">nastavit</string>
+	<string name="dialog_title_set_bioler_mode">Volba režimu okruhu</string>
+	<string name="dialog_title_set_temperature">Volba teploty</string>
+	<string name="dev_actor_temperature">Regulátor teploty</string>
+	<string name="dev_boiler_status_failure">Selhání</string>
+	<string name="dev_boiler_status_heating">Vytápění</string>
+	<string name="dev_boiler_status_hot_water">Ohřev vody</string>
+	<string name="dev_boiler_status_shutdown">Vypnuto</string>
+	<string name="dev_boiler_status_type">Stav kotle</string>
+	<string name="dev_boiler_status_undefined">Nedefinováno</string>
+	<string name="progress_loading_facilities">Nahrávám data ze zařízení&#8230;</string>
+	<string name="progress_loading_locations">Nahrávám umístění&#8230;</string>
 
 
 </resources>

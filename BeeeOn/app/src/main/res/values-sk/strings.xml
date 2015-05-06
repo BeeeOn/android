@@ -141,7 +141,7 @@
     <string name="action_addadapter">Pridanie brány</string>
     <string name="action_addsensor">Pridanie zaradenie</string>
     <string name="action_logout">Odhlásenie</string>
-    <string name="action_hide_sensor">Skryť zaradenie</string>
+    <string name="action_hide_sensor">Skryť zariadenie</string>
     <string name="action_unregist_facility">Odstráňiť zariadenie</string>
     <string name="action_hide_facility">Skryť zariadenie</string>
     <string name="action_close">Zrušiť</string>
@@ -309,8 +309,8 @@
 	<string name="title_activity_location_detail_screen">Detail umiestnenia</string>
 	<string name="sensor_name_label">Name of sensor</string>
     <string name="actor_required">Je potrebné vybrať aktor</string>
-	<string name="addadapter_fill_name">Please fill adaper name</string>
-	<string name="addadapter_fill_code">Please fill adapter code</string>
+	<string name="addadapter_fill_name">Vyplňte název brány</string>
+	<string name="addadapter_fill_code">Vyplňte kód</string>
 	<string name="tutorial_skip">PRESKOČIT</string>
 	<string name="unknown_error">Neznámá chyba</string>
 	<string name="tutorial_go_to_app">START</string>
@@ -359,9 +359,9 @@
 	<string name="addsensor_stoped">stopped</string>
 	<string name="add_action_dialog_title">What do you want add ?</string>
 	<string name="toast_need_sensor_location_icon">Please choose icon of your new location</string>
-	<string name="dialog_title_set_bioler_type">Choose boiler type</string>
-	<string name="dialog_set_boiler_setaction">set</string>
-	<string name="dialog_title_set_bioler_mode">Choose boiler mode</string>
-	<string name="dialog_title_set_temperature">Choose temperature</string>
+	<string name="dialog_title_set_bioler_type">Volba typu provozu okruhu</string>
+	<string name="dialog_set_boiler_setaction">nastavit</string>
+	<string name="dialog_title_set_bioler_mode">Volba režimu okruhu</string>
+	<string name="dialog_title_set_temperature">Volba teploty</string>
 
 </resources>
