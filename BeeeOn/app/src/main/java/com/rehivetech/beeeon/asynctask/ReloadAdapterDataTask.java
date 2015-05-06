@@ -34,8 +34,6 @@ public class ReloadAdapterDataTask extends CallbackTask<String> {
 	protected Boolean doInBackground(String adapterId) {
 		Controller controller = Controller.getInstance(mContext);
 
-		controller.beginPersistentConnection();
-
 		if (mWhat == ReloadWhat.ADAPTERS_AND_ACTIVE_ADAPTER) {
 			controller.getAdaptersModel().reloadAdapters(mForceReload);
 
@@ -67,8 +65,6 @@ public class ReloadAdapterDataTask extends CallbackTask<String> {
 		if (mWhat == ReloadWhat.WATCHDOGS) {
 			controller.getWatchDogsModel().reloadWatchDogsByAdapter(adapterId, mForceReload);
 		}
-
-		controller.endPersistentConnection();
 
 		return true;
 	}

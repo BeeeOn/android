@@ -150,10 +150,6 @@ public class DeviceLogsModel {
 
 		boolean isDemoNetwork = mNetwork instanceof DemoNetwork;
 		try {
-			if (!isDemoNetwork) {
-				((Network) mNetwork).multiSessionBegin();
-			}
-			
 			for (Interval downloadInterval : downloadIntervals) {
 				// Download selected partial log
 				LogDataPair downPair = new LogDataPair(pair.device, downloadInterval, pair.type, pair.gap);	 
@@ -164,10 +160,6 @@ public class DeviceLogsModel {
 			}
 		} catch (AppException e) {
 			throw AppException.wrap(e);
-		} finally {
-			if (!isDemoNetwork) {
-				((Network) mNetwork).multiSessionEnd();
-			}
 		}
 
 		return true;

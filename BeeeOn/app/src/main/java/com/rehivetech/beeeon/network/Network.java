@@ -5,11 +5,9 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 
 import com.rehivetech.beeeon.BuildConfig;
-
 import com.rehivetech.beeeon.exception.AppException;
 import com.rehivetech.beeeon.exception.NetworkError;
 import com.rehivetech.beeeon.gamification.AchievementListItem;
-import com.rehivetech.beeeon.gcm.notification.BaseNotification;
 import com.rehivetech.beeeon.gcm.notification.VisibleNotification;
 import com.rehivetech.beeeon.household.adapter.Adapter;
 import com.rehivetech.beeeon.household.device.Device;
@@ -36,15 +34,11 @@ import org.xmlpull.v1.XmlPullParserException;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
-import java.io.Writer;
 import java.net.ConnectException;
-import java.net.Socket;
 import java.net.UnknownHostException;
 import java.security.KeyManagementException;
 import java.security.KeyStore;
@@ -109,16 +103,19 @@ public class Network implements INetwork {
 	 */
 	private static final String SERVER_CN_CERTIFICATE = "ant-2.fit.vutbr.cz";
 
+	/**
+	 * Marks end of communication messages
+	 */
+	private static final String EOF = "</com>";
+
 	private final Context mContext;
 	private String mBT = "";
 	private final boolean mUseDebugServer;
 	private static final int SSLTIMEOUT = 35000;
 
-	private SSLSocket permaSocket = null;
-	private PrintWriter permaWriter = null;
-	private BufferedReader permaReader = null;
-	private static final String EOF = "</com>";
-	private int mMultiSessions = 0;
+	private SSLSocket mSocket = null;
+	private PrintWriter mSocketWriter = null;
+	private BufferedReader mSocketReader = null;
 
 	/**
 	 * Constructor.
@@ -132,66 +129,6 @@ public class Network implements INetwork {
 	}
 
 	/**
-	 * Send request to server.
-	 *
-	 * @param w
-	 * @param closeWriter
-	 * @param request
-	 * @throws AppException with error NetworkError.CL_SOCKET
-	 */
-	public void sendRequest(final Writer w, final String request, final boolean closeWriter) throws AppException {
-		// Send request
-		try {
-			w.write(request, 0, request.length());
-			w.flush();
-		} catch (IOException e) {
-			throw AppException.wrap(e, NetworkError.CL_SOCKET);
-		} finally {
-			if (closeWriter) {
-				try {
-					w.close();
-				} catch (IOException e) {
-					e.printStackTrace(); // Nothing we can do here
-				}
-			}
-		}
-	}
-
-	/**
-	 * Recive response from server.
-	 *
-	 * @param r
-	 * @param closeReader
-	 * @return response
-	 * @throws AppException with error NetworkError.CL_SOCKET
-	 */
-	public String receiveResponse(final BufferedReader r, final boolean closeReader) throws AppException {
-		// Receive response
-		StringBuilder response = new StringBuilder();
-		try {
-			String actRecieved = null;
-			while ((actRecieved = r.readLine()) != null) {
-				response.append(actRecieved);
-				if (actRecieved.endsWith(EOF))
-					break;
-			}
-		} catch (IOException e) {
-			throw AppException.wrap(e, NetworkError.CL_SOCKET);
-		} finally {
-			// If we use persistent connection, don't close the socket and objects
-			if (closeReader) {
-				try {
-					r.close();
-				} catch (IOException e) {
-					e.printStackTrace(); // Nothing we can do here
-				}
-			}
-		}
-
-		return response.toString();
-	}
-
-	/**
 	 * Method for communicating with server.
 	 *
 	 * @param request
@@ -199,59 +136,40 @@ public class Network implements INetwork {
 	 * @throws AppException with error NetworkError.CL_UNKNOWN_HOST, NetworkError.CL_CERTIFICATE or NetworkError.CL_SOCKET
 	 */
 	private String startCommunication(String request) throws AppException {
-		// Init socket
-		Socket socket;
-		if (mMultiSessions > 0) {
-			socket = permaSocket; // Reuse existing socket
-		} else {
-			socket = initSocket(); // Init new socket for this request
-		}
+		// Init socket objects if not exists
+		if (mSocket == null || mSocketReader == null || mSocketWriter == null) {
+			mSocket = initSocket();
 
-		// At this point SSLSocket performed certificate verification and
-		// we have performed hostName verification, so it is safe to proceed.
-		Writer w;
-		BufferedReader r;
-		if (mMultiSessions > 0) {
-			// Reuse existing objects
-			w = permaWriter;
-			r = permaReader;
-		} else {
-			// Init new writer/reader for this request
 			try {
-				w = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
-				r = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+				// At this point SSLSocket performed certificate verification and
+				// we have performed hostName verification, so it is safe to proceed.
+				mSocketWriter = new PrintWriter(mSocket.getOutputStream());
+				mSocketReader = new BufferedReader(new InputStreamReader(mSocket.getInputStream()));
 			} catch (IOException e) {
-				// Error when getting socket's output/input stream
+				closeCommunicationSocket();
 				throw AppException.wrap(e, NetworkError.CL_SOCKET);
 			}
 		}
-		// Send request (and close writer if not multi session)
-		sendRequest(w, request, mMultiSessions == 0);
 
-		// Receive response (and close reader if not multi session)
-		String response = receiveResponse(r, mMultiSessions == 0);
+		// Send request
+		mSocketWriter.write(request, 0, request.length());
+		mSocketWriter.flush();
 
-		// Close socket if not multi session
-		if (mMultiSessions == 0) {
-			try {
-				socket.close();
-			} catch (IOException e) {
-				e.printStackTrace(); // Nothing we can do here
+		// Receive response
+		StringBuilder response = new StringBuilder();
+		try {
+			String actRecieved = null;
+			while ((actRecieved = mSocketReader.readLine()) != null) {
+				response.append(actRecieved);
+				if (actRecieved.endsWith(EOF))
+					break;
 			}
-			try {
-				w.close();
-			} catch (IOException e) {
-				e.printStackTrace(); // Nothing we can do here
-			}
-			try {
-				r.close();
-			} catch (IOException e) {
-				e.printStackTrace(); // Nothing we can do here
-			}
+		} catch (IOException e) {
+			throw AppException.wrap(e, NetworkError.CL_SOCKET);
 		}
 
 		// Return server response
-		return response;
+		return response.toString();
 	}
 
 	private SSLSocket createSocket(SSLContext sslContext) throws IOException {
@@ -333,88 +251,34 @@ public class Network implements INetwork {
 		}
 	}
 
-	private synchronized void initPermaSocket() throws AppException {
-		// If there is existing socket, close it first
-		if (permaSocket != null) {
-			closePermaSocket();
-		}
-
-		permaSocket = initSocket();
-
-		try {
-			// At this point SSLSocket performed certificate verification and
-			// we have performed hostName verification, so it is safe to proceed.
-			permaWriter = new PrintWriter(permaSocket.getOutputStream());
-			permaReader = new BufferedReader(new InputStreamReader(permaSocket.getInputStream()));
-		} catch (IOException e) {
-			closePermaSocket();
-			throw AppException.wrap(e, NetworkError.CL_SOCKET);
-		}
-	}
-
-	private synchronized void closePermaSocket() {
+	private synchronized void closeCommunicationSocket() {
 		// Securely close socket
-		if (permaSocket != null) {
+		if (mSocket != null) {
 			try {
-				permaSocket.close();
+				mSocket.close();
 			} catch (IOException e) {
 				e.printStackTrace(); // Nothing we can do here
 			} finally {
-				permaSocket = null;
+				mSocket = null;
 			}
 		}
 
 		// Close writer
-		if (permaWriter != null) {
-			permaWriter.close();
-			permaWriter = null;
+		if (mSocketWriter != null) {
+			mSocketWriter.close();
+			mSocketWriter = null;
 		}
 
 		// Securely close reader
-		if (permaReader != null) {
+		if (mSocketReader != null) {
 			try {
-				permaReader.close();
+				mSocketReader.close();
 			} catch (IOException e) {
 				e.printStackTrace(); // Nothing we can do here
 			} finally {
-				permaReader = null;
+				mSocketReader = null;
 			}
 		}
-	}
-
-	/**
-	 * Method initialize perma-Socket/Reader/Writer for doing more requests to server with this single connection
-	 * On success increment mMultiSessions, on failure call MultiSessionEnd and throw AppException
-	 * @throws AppException with error NetworkError.CL_INTERNET_CONNECTION or NetworkError.CL_SOCKET
-	 */
-	public synchronized void multiSessionBegin() throws AppException {
-		// Increment counter
-		++mMultiSessions;
-
-		if (!isAvailable())
-			throw new AppException(NetworkError.CL_INTERNET_CONNECTION);
-
-		// If some session already existed, just return
-		if (mMultiSessions > 1)
-			return;
-
-		initPermaSocket();
-	}
-
-	/**
-	 * Method close any opened perma-Socket/Reader/Writer if it was opened by multiSessionBegin() before
-	 * Also decrement mMultiSessions
-	 */
-	public synchronized void multiSessionEnd() {
-		// If there is no active session, just return
-		if (mMultiSessions == 0)
-			return;
-
-		// If there is still some active session, just return
-		if (--mMultiSessions > 0)
-			return;
-
-		closePermaSocket();
 	}
 
 	/**
@@ -482,11 +346,8 @@ public class Network implements INetwork {
 					throw new AppException("No response from server.", NetworkError.CL_NO_RESPONSE);
 				}
 
-				if (mMultiSessions > 0) {
-					// If we are using multi session, perhaps server already closed connection, so reinit it
-					Log.d(TAG, "Try to reinit permanent socket.");
-					initPermaSocket();
-				}
+				// Probably connection is lost so we need to reinit socket at next call of doRequest
+				closeCommunicationSocket();
 
 				// Try to do this request again (with decremented retries)
 				Log.d(TAG, String.format("Try to repeat request (retries remaining: %d)", retries - 1));

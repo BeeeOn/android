@@ -368,16 +368,6 @@ public final class Controller {
 		return mNetwork.hasBT();
 	}
 
-	public void beginPersistentConnection() {
-		if (mNetwork instanceof Network)
-			((Network) mNetwork).multiSessionBegin();
-	}
-
-	public void endPersistentConnection() {
-		if (mNetwork instanceof Network)
-			((Network) mNetwork).multiSessionEnd();
-	}
-
 	/**
 	 * Return active adapter.
 	 *

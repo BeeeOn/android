@@ -290,7 +290,6 @@ public class LoginActivity extends BaseActivity {
 				boolean errFlag = true;
 
 				try {
-					mController.beginPersistentConnection();
 					Log.i(TAG, "Login started");
 
 					// Here is authProvider already filled with needed parameters so we can send them to the server
@@ -356,8 +355,6 @@ public class LoginActivity extends BaseActivity {
 					errMessage = e.getTranslatedErrorMessage(getApplicationContext());
 				} catch (Exception e) {
 					e.printStackTrace();
-				} finally {
-					mController.endPersistentConnection();
 				}
 
 				if (errFlag) {

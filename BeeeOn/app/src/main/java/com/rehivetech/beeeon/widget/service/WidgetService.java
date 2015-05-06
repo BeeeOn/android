@@ -350,8 +350,6 @@ public class WidgetService extends Service {
         }
 
         try{
-            mController.beginPersistentConnection();
-
             // Reload adapters to have data about Timezone offset
             mController.getAdaptersModel().reloadAdapters(false);
 
@@ -401,8 +399,6 @@ public class WidgetService extends Service {
             }
 
             isCached = false;
-
-            mController.endPersistentConnection();
         } catch(AppException e){
             ErrorCode errCode = e.getErrorCode();
             if(errCode != null){
