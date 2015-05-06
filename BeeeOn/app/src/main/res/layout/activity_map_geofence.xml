@@ -1,15 +1,15 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent" >
+				android:layout_width="match_parent"
+				android:layout_height="match_parent">
 
-    <include layout="@layout/beeeon_toolbar" />
+	<include layout="@layout/beeeon_toolbar"/>
 
-    <fragment
-        android:id="@+id/map"
-        android:layout_width="match_parent"
-        android:layout_below="@+id/toolbar"
-        android:layout_height="match_parent"
-        android:layout_alignParentLeft="true"
-        class="com.google.android.gms.maps.SupportMapFragment" />
+	<fragment
+		android:id="@+id/map"
+		android:layout_width="match_parent"
+		android:layout_below="@+id/toolbar"
+		android:layout_height="match_parent"
+		android:layout_alignParentLeft="true"
+		class="com.google.android.gms.maps.SupportMapFragment"/>
 
 </RelativeLayout> 

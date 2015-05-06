@@ -1,6 +1,8 @@
 package com.rehivetech.beeeon.controller;
 
+import android.app.NotificationManager;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 
@@ -309,6 +311,10 @@ public final class Controller {
 			mGcmModel.registerGCM();
 		}
 
+		// Register geofence areas asynchronously
+		Log.i(TAG, "Geofence: Starting registering Geofence");
+		getGeofenceModel().registerAllUserGeofence(userId);
+
 		return true;
 	}
 
@@ -329,6 +335,13 @@ public final class Controller {
 	 */
 	public void logout() {
 		// TODO: Request to logout from server (discard actual BT)
+
+		// delete geofences
+		getGeofenceModel().unregisterAllUserGeofence(getActualUser().getId());
+
+		// delete all visible notification
+		NotificationManager notifMgr = (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
+		notifMgr.cancelAll();
 
 		// Delete GCM id on server side
 		mGcmModel.deleteGCM(mUser.getId(), null);

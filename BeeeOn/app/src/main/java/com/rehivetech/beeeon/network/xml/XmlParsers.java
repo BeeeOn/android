@@ -9,6 +9,7 @@ import android.util.Xml;
 import com.rehivetech.beeeon.Constants;
 import com.rehivetech.beeeon.gamification.AchievementListItem;
 import com.rehivetech.beeeon.IIdentifier;
+import com.rehivetech.beeeon.gcm.notification.VisibleNotification;
 import com.rehivetech.beeeon.household.adapter.Adapter;
 import com.rehivetech.beeeon.household.watchdog.WatchDog;
 import com.rehivetech.beeeon.household.device.Device;
@@ -19,8 +20,7 @@ import com.rehivetech.beeeon.household.device.RefreshInterval;
 import com.rehivetech.beeeon.household.location.Location;
 import com.rehivetech.beeeon.exception.AppException;
 import com.rehivetech.beeeon.exception.NetworkError;
-import com.rehivetech.beeeon.gcm.Notification;
-import com.rehivetech.beeeon.gcm.Notification.ActionType;
+import com.rehivetech.beeeon.gcm.notification.BaseNotification;
 import com.rehivetech.beeeon.household.user.User;
 import com.rehivetech.beeeon.network.xml.action.Action;
 import com.rehivetech.beeeon.network.xml.action.ComplexAction;
@@ -579,83 +579,37 @@ public class XmlParsers {
 	// ////////////////////////////////////////////////////////////////////////////////////////////////////////
 	// /////////////////////////////////NOTIFICATIONS//////////////////////////////////////////////////////////
 	// ////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-	// TODO: need to check
-	private List<Notification> parseNotifications() throws XmlPullParserException, IOException {
+	
+	private List<VisibleNotification> parseNotifications() throws XmlPullParserException, IOException {
 		mParser.nextTag();
 		// mParser.require(XmlPullParser.START_TAG, ns, NOTIFICATION); // strict solution
 
-		List<Notification> result = new ArrayList<Notification>();
+		List<VisibleNotification> result = new ArrayList<>();
 
 		if (!mParser.getName().equals(Xconstants.NOTIFICATION))
 			return result;
 
 		do {
-			Notification ntfc = new Notification(getSecureAttrValue(Xconstants.MSGID), getSecureAttrValue(Xconstants.TIME),
-					getSecureAttrValue(Xconstants.TYPE), (getSecureAttrValue(Xconstants.READ).equals(Xconstants.ZERO)) ? false : true);
+			VisibleNotification ntfc = null;
 
-			mParser.nextTag();
+			String name = getSecureAttrValue(Xconstants.NAME); // name
+			String id = getSecureAttrValue(Xconstants.MID); // message id
+			String time = getSecureAttrValue(Xconstants.TIME); // time
+			String type = getSecureAttrValue(Xconstants.TYPE); // type
+			boolean read = (getSecureInt(getSecureAttrValue(Xconstants.READ)) == 0)?false:true; // read
 
-			if (mParser.getName().equals(Xconstants.MESSAGE)) { // get text from notification if is first tag
-				ntfc.setMessage(readText(Xconstants.MESSAGE));
-				mParser.nextTag();
+			//TODO
+			// call here some method from gcm/notification part
+			// method should parse inner elements of notif tag and return notification
+			// the mParser should be at the ends element </notif>, because after call nextTag I need to get <notif> or </com>
+			// something like
+			// ntfc = method(mParser, name, id, time, type, read);
+
+			ntfc = VisibleNotification.parseXml(name, id, time, type, read, mParser);
+
+			if (ntfc != null) {
+				result.add(ntfc);
 			}
-
-			if (mParser.getName().equals(Xconstants.ACTION)) { // get action from notification
-				Notification.Action action = ntfc.new Action(getSecureAttrValue(Xconstants.TYPE));
-
-				if (action.getMasterType() == ActionType.WEB) { // get url and should open web or play
-					action.setURL(getSecureAttrValue(Xconstants.URL));
-					ntfc.setAction(action);
-				}
-
-				if (action.getMasterType() == ActionType.APP) { // open some aktivity in app
-					mParser.nextTag();
-
-					ActionType tagName = Utils.getEnumFromId(ActionType.class, mParser.getName());
-					action.setSlaveType(tagName);
-					switch (tagName) {
-					case SETTINGS: // open settings {main, account, adapter, location}
-						ActionType settings = Utils.getEnumFromId(ActionType.class, Xconstants.SETTINGS + getSecureAttrValue(Xconstants.TYPE));
-						action.setSlaveType(settings);
-						String stngs = settings.getId();
-						if (stngs.equals(Xconstants.ADAPTER) || stngs.equals(Xconstants.LOCATION)) { // open adapter or
-																										// location
-																										// settings
-							action.setAdapterId(getSecureAttrValue(Xconstants.AID));
-							if (stngs.equals(Xconstants.LOCATION)) // open location settings
-								action.setLocationId(getSecureAttrValue(Xconstants.LID));
-						}
-						break;
-					case OPENADAPTER: // switch adapter
-						action.setAdapterId(getSecureAttrValue(Xconstants.AID));
-						break;
-					case OPENLOCATION: // open specific location in specific adapter
-						action.setAdapterId(getSecureAttrValue(Xconstants.AID));
-						action.setLocationId(getSecureAttrValue(Xconstants.LID));
-						break;
-					case OPENDEVICE: // open detail of specific device in specific adapter
-						action.setAdapterId(getSecureAttrValue(Xconstants.AID));
-						action.setDeviceId(getSecureAttrValue(Xconstants.DID));
-						break;
-					default:
-						break;
-					}
-					ntfc.setAction(action);
-					mParser.nextTag(); // end of settings or adapter or location or device
-				}
-				mParser.nextTag(); // action end tag
-			}
-
-			if (ntfc.getMessage() == null) { // get text from notification if is second tag
-				mParser.nextTag(); // notification end tag or message start tag
-				if (mParser.getName().equals(Xconstants.MESSAGE)) {
-					ntfc.setMessage(readText(Xconstants.MESSAGE));
-					mParser.nextTag(); // notification end tag
-				}
-			}
-
-			result.add(ntfc);
 
 		} while (mParser.nextTag() != XmlPullParser.END_TAG && !mParser.getName().equals(Xconstants.COM_ROOT));
 
