@@ -75,6 +75,7 @@ public class WatchDogEditRuleActivity extends BaseApplicationActivity {
     private String mActiveAdapterId;
     private String mActiveRuleId;
 	private String mActiveGeoId;
+	private boolean mIsNew = false;
 
     private Controller mController;
     private Toolbar mToolbar;
@@ -92,14 +93,11 @@ public class WatchDogEditRuleActivity extends BaseApplicationActivity {
     private List<Device> _sensors;
     private List<Device> _actors;
 
-    private boolean mIsValueLess = false;        // value for View FAB
-    private boolean mIsNew = false;
     private WatchDog mWatchDog;
     private String mWatchDogAction;
     private WatchDogBaseType mWatchDogOperator;
 
     // async tasks
-    private ReloadAdapterDataTask mReloadFacilitiesTask;
     private SaveWatchDogTask mSaveWatchDogTask;
     private RemoveWatchDogTask mRemoveWatchDogTask;
 
@@ -140,39 +138,38 @@ public class WatchDogEditRuleActivity extends BaseApplicationActivity {
         mProgress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
 
         Bundle bundle = getIntent().getExtras();
-        if(bundle != null){
-            mActiveAdapterId = bundle.getString(EXTRA_ADAPTER_ID);
-            mActiveRuleId = bundle.getString(EXTRA_RULE_ID);
-            mActiveGeoId = bundle.getString(EXTRA_GEOFENCE_ID_PICKED);
-            mIsNew = false;
-        }
-        else{
-            bundle = savedInstanceState;
-            if (bundle != null) {
-                mActiveAdapterId = bundle.getString(EXTRA_ADAPTER_ID);
-                mActiveRuleId = bundle.getString(EXTRA_RULE_ID);
-                mActiveGeoId = bundle.getString(EXTRA_GEOFENCE_ID_PICKED);
-                mIsNew = bundle.getBoolean(EXTRA_IS_NEW);
-            }
-            else{
-                mIsNew = true;
-            }
-        }
+		// if not regular bundle, try to saved instance bundle
+		if(bundle == null){
+			bundle = savedInstanceState;
+		}
 
-        // if we want detail of some rule, we need id and adapter
-        if (!mIsNew && (mActiveAdapterId == null || mActiveRuleId == null)) {
-            Toast.makeText(this, R.string.toast_wrong_or_no_watchdog_rule, Toast.LENGTH_LONG).show();
-            finish();
-            return;
-        }
+		if(bundle != null){
+			mActiveAdapterId = bundle.getString(EXTRA_ADAPTER_ID);
+			mActiveRuleId = bundle.getString(EXTRA_RULE_ID);
+			mActiveGeoId = bundle.getString(EXTRA_GEOFENCE_ID_PICKED);
+			mIsNew = bundle.getBoolean(EXTRA_IS_NEW);
+		}
+		else{
+			mActiveAdapterId = "";
+			mActiveRuleId = "";
+			mActiveGeoId = "";
+			mIsNew = true;
+		}
 
-        // get controllern
+		// it's existing rule
+		if(!mIsNew && (mActiveAdapterId == null || mActiveAdapterId.isEmpty() || mActiveRuleId == null || mActiveRuleId.isEmpty())){
+			Toast.makeText(this, R.string.toast_wrong_or_no_watchdog_rule, Toast.LENGTH_LONG).show();
+			finish();
+			return;
+		}
+
+        // get controller
         mController = Controller.getInstance(this);
         // get adapter
-        mAdapter = mActiveAdapterId == null ? mController.getActiveAdapter() : mController.getAdaptersModel().getAdapter(mActiveAdapterId);
-
+        mAdapter = (mActiveAdapterId == null || mActiveAdapterId.isEmpty()) ? mController.getActiveAdapter() : mController.getAdaptersModel().getAdapter(mActiveAdapterId);
 		if(mAdapter == null ) {
-			//TODO: neocekova chyba
+			Toast.makeText(this, R.string.toast_something_wrong, Toast.LENGTH_LONG).show();
+			finish();
 			return;
 		}
 
@@ -328,13 +325,6 @@ public class WatchDogEditRuleActivity extends BaseApplicationActivity {
      * Fills gui elements with values
      */
     private void setValues(){
-        // if this is new watchdog, we don't set anything
-        if(mWatchDog.getId() == null) return;
-
-        mRuleName.setText(mWatchDog.getName());
-        mRuleEnabled.setChecked(mWatchDog.isEnabled());
-        mRuleTreshold.setText(mWatchDog.getParams().get(WatchDog.PAR_TRESHOLD));
-
 		// check first if sent geofence id as extra, then if watchdog already has it
 		String geoId = "";
 		if(mActiveGeoId != null && !mActiveGeoId.isEmpty())
@@ -342,16 +332,22 @@ public class WatchDogEditRuleActivity extends BaseApplicationActivity {
 		else if (mWatchDog.getGeoRegionId() != null && !mWatchDog.getGeoRegionId().isEmpty())
 			geoId = mWatchDog.getGeoRegionId();
 
-
 		// set spinner in the "IF" section
-        if(!geoId.isEmpty()){
+		if(!geoId.isEmpty()){
 			int index = Utils.getObjectIndexFromList(geoId, mGeofences);
-            if(index > -1) mIfItemSpinner.setSelection(mSpinnerMultiAdapter.getRealPosition(index, SpinnerItem.SpinnerItemType.GEOFENCE));
-        }
-        else if(mWatchDog.getDevices().size() > 0) {
-            int index = Utils.getObjectIndexFromList(mWatchDog.getDevices().get(0), getDevicesArray(DEVICES_SENSORS));
-            if(index > -1) mIfItemSpinner.setSelection(mSpinnerMultiAdapter.getRealPosition(index, SpinnerItem.SpinnerItemType.DEVICE));
-        }
+			if(index > -1) mIfItemSpinner.setSelection(mSpinnerMultiAdapter.getRealPosition(index, SpinnerItem.SpinnerItemType.GEOFENCE));
+		}
+		else if(mWatchDog.getDevices() != null && mWatchDog.getDevices().size() > 0) {
+			int index = Utils.getObjectIndexFromList(mWatchDog.getDevices().get(0), getDevicesArray(DEVICES_SENSORS));
+			if(index > -1) mIfItemSpinner.setSelection(mSpinnerMultiAdapter.getRealPosition(index, SpinnerItem.SpinnerItemType.DEVICE));
+		}
+
+        // if this is new watchdog, we don't set anything
+        if(mWatchDog.getId() == null) return;
+
+        mRuleName.setText(mWatchDog.getName());
+        mRuleEnabled.setChecked(mWatchDog.isEnabled());
+        mRuleTreshold.setText(mWatchDog.getParams().get(WatchDog.PAR_TRESHOLD));
 
         // get parameter action value
         String par_action_value = mWatchDog.getParam(WatchDog.PAR_ACTION_VALUE);
@@ -381,7 +377,8 @@ public class WatchDogEditRuleActivity extends BaseApplicationActivity {
     public void onSaveInstanceState(Bundle savedInstanceState) {
         savedInstanceState.putString(EXTRA_ADAPTER_ID, mActiveAdapterId);
         savedInstanceState.putString(EXTRA_RULE_ID, mActiveRuleId);
-        savedInstanceState.putBoolean(EXTRA_IS_NEW, mIsNew);
+		savedInstanceState.putBoolean(EXTRA_IS_NEW, mIsNew);
+		savedInstanceState.putString(EXTRA_GEOFENCE_ID_PICKED, mActiveGeoId);
 
         // Always call the superclass so it can save the view hierarchy state
         super.onSaveInstanceState(savedInstanceState);
