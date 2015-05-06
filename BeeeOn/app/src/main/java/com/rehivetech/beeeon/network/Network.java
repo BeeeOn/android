@@ -230,6 +230,16 @@ public class Network implements INetwork {
 			} catch (IOException e) {
 				e.printStackTrace(); // Nothing we can do here
 			}
+			try {
+				w.close();
+			} catch (IOException e) {
+				e.printStackTrace(); // Nothing we can do here
+			}
+			try {
+				r.close();
+			} catch (IOException e) {
+				e.printStackTrace(); // Nothing we can do here
+			}
 		}
 
 		// Return server response
@@ -315,18 +325,11 @@ public class Network implements INetwork {
 		}
 	}
 
-	/**
-	 * Method initialize perma-Socket/Reader/Writer for doing more requests to server with this single connection
-	 * On success increment mMultiSessions, on failure call MultiSessionEnd and throw AppException
-	 * @throws AppException with error NetworkError.CL_INTERNET_CONNECTION or NetworkError.CL_SOCKET
-	 */
-	public synchronized void multiSessionBegin() throws AppException {
-		if (!isAvailable())
-			throw new AppException(NetworkError.CL_INTERNET_CONNECTION);
-
-		// If some session already existed, just return
-		if (++mMultiSessions > 1)
-			return;
+	private synchronized void initPermaSocket() throws AppException {
+		// If there is existing socket, close it first
+		if (permaSocket != null) {
+			closePermaSocket();
+		}
 
 		permaSocket = initSocket();
 
@@ -336,26 +339,12 @@ public class Network implements INetwork {
 			permaWriter = new PrintWriter(permaSocket.getOutputStream());
 			permaReader = new BufferedReader(new InputStreamReader(permaSocket.getInputStream()));
 		} catch (IOException e) {
-			// Close any opened socket/writer/reader
-			multiSessionEnd();
-
+			closePermaSocket();
 			throw AppException.wrap(e, NetworkError.CL_SOCKET);
 		}
 	}
 
-	/**
-	 * Method close any opened perma-Socket/Reader/Writer if it was opened by multiSessionBegin() before
-	 * Also decrement mMultiSessions
-	 */
-	public synchronized void multiSessionEnd() {
-		// If there is no active session, just return
-		if (mMultiSessions == 0)
-			return;
-
-		// If there is still some active session, just return
-		if (--mMultiSessions > 0)
-			return;
-
+	private synchronized void closePermaSocket() {
 		// Securely close socket
 		if (permaSocket != null) {
 			try {
@@ -383,6 +372,41 @@ public class Network implements INetwork {
 				permaReader = null;
 			}
 		}
+	}
+
+	/**
+	 * Method initialize perma-Socket/Reader/Writer for doing more requests to server with this single connection
+	 * On success increment mMultiSessions, on failure call MultiSessionEnd and throw AppException
+	 * @throws AppException with error NetworkError.CL_INTERNET_CONNECTION or NetworkError.CL_SOCKET
+	 */
+	public synchronized void multiSessionBegin() throws AppException {
+		// Increment counter
+		++mMultiSessions;
+
+		if (!isAvailable())
+			throw new AppException(NetworkError.CL_INTERNET_CONNECTION);
+
+		// If some session already existed, just return
+		if (mMultiSessions > 1)
+			return;
+
+		initPermaSocket();
+	}
+
+	/**
+	 * Method close any opened perma-Socket/Reader/Writer if it was opened by multiSessionBegin() before
+	 * Also decrement mMultiSessions
+	 */
+	public synchronized void multiSessionEnd() {
+		// If there is no active session, just return
+		if (mMultiSessions == 0)
+			return;
+
+		// If there is still some active session, just return
+		if (--mMultiSessions > 0)
+			return;
+
+		closePermaSocket();
 	}
 
 	/**
@@ -433,7 +457,16 @@ public class Network implements INetwork {
 			Log.i(TAG + " << fromSrv", result.isEmpty() ? "- no response -" : result);
 
 			if (result.isEmpty()) {
-				// If we received nothing, just throw no response error
+				// If we are using multi session, perhaps server already closed connection
+				if (mMultiSessions > 0) {
+					// Try to reinit persistent socket
+					initPermaSocket();
+
+					// And try to do this request again
+					return doRequest(messageToSend, checkBT);
+				}
+
+				// If this isn't multi session, just throw no response error
 				throw new AppException("No response from server.", NetworkError.CL_NO_RESPONSE);
 			}
 
