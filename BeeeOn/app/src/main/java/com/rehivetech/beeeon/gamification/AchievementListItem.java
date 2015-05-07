@@ -53,6 +53,15 @@ public class AchievementListItem implements IIdentifier, Comparable<AchievementL
 		readFromParcel(in);
 	}
 
+	public boolean updateProgress() {
+		mCurrentProgress++;
+		if(mCurrentProgress == mTotalProgress) {
+			mDate = System.currentTimeMillis();
+			return true;
+		}
+		return false;
+	}
+
 	@Override
 	public String getId() {return mAid;}
 	public int getPoints() {return mPoints;}

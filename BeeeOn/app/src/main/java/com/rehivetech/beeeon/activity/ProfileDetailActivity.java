@@ -1,15 +1,13 @@
 package com.rehivetech.beeeon.activity;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
-import android.content.pm.Signature;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.util.Base64;
 import android.util.DisplayMetrics;
 import android.view.MenuItem;
 import android.view.View;
@@ -38,14 +36,13 @@ import com.rehivetech.beeeon.socialNetworks.BeeeOnFacebook;
 import com.rehivetech.beeeon.socialNetworks.BeeeOnSocialNetwork;
 import com.rehivetech.beeeon.socialNetworks.BeeeOnTwitter;
 import com.rehivetech.beeeon.socialNetworks.BeeeOnVKontakte;
+import com.rehivetech.beeeon.util.BetterProgressDialog;
 import com.rehivetech.beeeon.util.Log;
 import com.twitter.sdk.android.core.identity.TwitterAuthClient;
 import com.vk.sdk.VKAccessToken;
 import com.vk.sdk.VKSdk;
 import com.vk.sdk.VKUIHelper;
 
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Observable;
@@ -70,6 +67,7 @@ public class ProfileDetailActivity extends BaseApplicationActivity implements Ob
 	private FloatingActionButton mMoreAdd;
 	private RelativeLayout mMoreVisible;
 	private RelativeLayout mMoreLayout;
+	private BetterProgressDialog mProgress;
 
 	// SocialNetworks
 	public CallbackManager mFacebookCallbackManager;
@@ -101,9 +99,6 @@ public class ProfileDetailActivity extends BaseApplicationActivity implements Ob
 			getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 		}
 
-		mAchievementList = new AchievementList(mContext);
-		mAchievementList.addObserver(this);
-
 		DisplayMetrics metrics = new DisplayMetrics();
 		getWindowManager().getDefaultDisplay().getMetrics(metrics);
 		mDisplayPixel = (int) metrics.density;
@@ -118,6 +113,19 @@ public class ProfileDetailActivity extends BaseApplicationActivity implements Ob
 		mMoreAdd = (FloatingActionButton) findViewById(R.id.profile_more_add);
 		mMoreVisible = (RelativeLayout) findViewById(R.id.profile_more_accounts);
 		mMoreLayout = (RelativeLayout) findViewById(R.id.profile_more);
+
+		// Prepare progressDialog
+		mProgress = new BetterProgressDialog(this);
+		mProgress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+
+		mAchievementList = AchievementList.getInstance(mContext);
+		if(mAchievementList.isDownloaded())
+			redrawCategories();
+		else {
+			mProgress.setMessageResource(R.string.progress_loading_achievement);
+			mProgress.show();
+			mAchievementList.addObserver(this);
+		}
 
 		mFb = BeeeOnFacebook.getInstance(mContext);
 		mTw = BeeeOnTwitter.getInstance(mContext);
@@ -139,7 +147,6 @@ public class ProfileDetailActivity extends BaseApplicationActivity implements Ob
 
 		setNetworksView();
 		setMoreButtonVisibility();
-		redrawCategories();
 		setOnClickLogout(mFb, mFbName);
 
 		Bitmap picture = actUser.getPicture();
@@ -302,7 +309,7 @@ public class ProfileDetailActivity extends BaseApplicationActivity implements Ob
 	}
 
 	private void redrawCategories() {
-		userLevel.setText(getString(R.string.profile_level) + " " + mAchievementList.getLevel());
+		userLevel.setText(getString(R.string.profile_level) + " " + mAchievementList.getUserLevel());
 		mPoints.setText(String.valueOf(mAchievementList.getTotalPoints()));
 
 		List<GamificationCategory> rulesList = new ArrayList<>();
@@ -310,6 +317,7 @@ public class ProfileDetailActivity extends BaseApplicationActivity implements Ob
 		rulesList.add(new GamificationCategory("1", getString(R.string.profile_category_friends)));
 		rulesList.add(new GamificationCategory("2", getString(R.string.profile_category_senzors)));
 
+		Log.d(TAG, "creating category");
 		mCategoryListAdapter = new GamCategoryListAdapter(mContext, rulesList, getLayoutInflater(), mAchievementList);
 
 		mCategoryList.setAdapter(mCategoryListAdapter);
@@ -358,7 +366,9 @@ public class ProfileDetailActivity extends BaseApplicationActivity implements Ob
 			if(mTw.isPaired()) mTwName.setText(getResources().getString(R.string.social_no_connection));
 			if(mVk.isPaired()) mVkName.setText(getResources().getString(R.string.social_no_connection));
 		}
-		else if(o.toString().equals("achievements"))
+		else if(o.toString().equals("achievements")) {
+			mProgress.dismiss();
 			redrawCategories();
+		}
 	}
 }

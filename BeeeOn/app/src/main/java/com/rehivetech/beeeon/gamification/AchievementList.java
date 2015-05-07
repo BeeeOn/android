@@ -16,22 +16,31 @@ import java.util.Observable;
  */
 public class AchievementList extends Observable {
 	private static final String TAG = AchievementList.class.getSimpleName();
+	private static AchievementList mInstance = null;
 	private Context mContext;
 	private Controller mController;
 
+	private boolean allDataDownloaded;
+	private List<AchievementListItem> allAchievementList;
 	private ArrayList<AchievementListItem> mAchievementList = new ArrayList<AchievementListItem>();
 	private int[] mComplete = new int[] {0,0,0}; // number of completed achievements in 3 categories
 	private int[] mTotal = new int[] {0,0,0};	// number of all achievements in 3 categories
 	private int mTotalPoints = 0;
 
-	public AchievementList(Context context) {
+	private AchievementList(Context context) {
 		mContext = context;
-		Log.d(TAG, "constructor");
+		allDataDownloaded = false;
 		mController = Controller.getInstance(mContext);
-		String adapter = "999";
+		String adapter = "0";
 		if(mController.getActiveAdapter() != null)
 			adapter = mController.getActiveAdapter().getId();
 		doReloadAchievementsTask(adapter, false);
+	}
+
+	public static AchievementList getInstance(Context context) {
+		if(mInstance == null)
+			mInstance = new AchievementList(context);
+		return mInstance;
 	}
 
 	public void doReloadAchievementsTask(String adapterId, boolean forceReload){
@@ -40,14 +49,14 @@ public class AchievementList extends Observable {
 		reloadAchievementsTask.setListener(new CallbackTask.CallbackTaskListener() {
 			@Override
 			public void onExecute(boolean success) {
-				List<AchievementListItem> list = mController.getAchievementsModel().getAchievements();
-				for(int i = 0; i < list.size(); i++) {
-					AchievementListItem son = null, parent = null, item = list.get(i);
-					for (int y = 0; y < list.size(); y++) {
-						if (list.get(y).getId().equals(item.getParent()))
-							parent = list.get(y);
-						else if (list.get(y).getParent().equals(item.getId()))
-							son = list.get(y);
+				allAchievementList = mController.getAchievementsModel().getAchievements();
+				for(int i = 0; i < allAchievementList.size(); i++) {
+					AchievementListItem son = null, parent = null, item = allAchievementList.get(i);
+					for (int y = 0; y < allAchievementList.size(); y++) {
+						if (allAchievementList.get(y).getId().equals(item.getParent()))
+							parent = allAchievementList.get(y);
+						else if (allAchievementList.get(y).getParent().equals(item.getId()))
+							son = allAchievementList.get(y);
 					}
 					if ((item.isDone() && (son == null || !son.isDone())) ||
 						(!item.isDone() && (parent == null || parent.isDone()))) {
@@ -56,6 +65,7 @@ public class AchievementList extends Observable {
 					}
 				}
 				recountValues();
+				allDataDownloaded = true;
 				setChanged();
 				notifyObservers("achievements");
 			}
@@ -63,12 +73,14 @@ public class AchievementList extends Observable {
 		reloadAchievementsTask.execute(adapterId);
 	}
 
-	public List<AchievementListItem> getAchievements() {
-		return  mAchievementList;
-	}
+	public boolean isDownloaded() { return allDataDownloaded; }
+	public List<AchievementListItem> getAllAchievements() { return  mAchievementList; }
 
-	public AchievementListItem getItem(int id) {
-		return mAchievementList.get(id);
+	public AchievementListItem getItem(String id) {
+		for(int i = 0; i <allAchievementList.size(); i++)
+			if (allAchievementList.get(i).getId().equals(id))
+				return allAchievementList.get(i);
+		return null;
 	}
 
 	public int getTotalAchievements(String category) {
@@ -108,7 +120,7 @@ public class AchievementList extends Observable {
 	 *
 	 * @return int level
 	 */
-	public int getLevel() {
+	public int getUserLevel() {
 		int level = 1;
 		for(int i = 0; i < mTotal.length; i++)
 			level += getStarsCount(String.valueOf(i));

@@ -758,5 +758,5 @@ public class DemoNetwork implements INetwork {
 	public ArrayList<AchievementListItem> getAllAchievements(String adapterID){ return null; }
 
 	@Override
-	public boolean setProgressLvl(String adapterId, String achievementId){ return true; }
+	public String setProgressLvl(String adapterId, String achievementId){ return "1"; }
 }

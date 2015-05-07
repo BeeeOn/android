@@ -91,7 +91,8 @@ public class XmlParsers {
 		ALGCREATED("algcreated"),
 		USERINFO("userinfo"),
 		ALGORITHMS("algs"),
-		ACHIEVEMENTS("achievements");
+		ACHIEVEMENTS("achievements"),
+		PROGRESS("confirmprogresslvl");
 
 		private final String mValue;
 
@@ -265,6 +266,9 @@ public class XmlParsers {
 		case ACHIEVEMENTS:
 			// List<AchievementListItem>
 			result.data = parseAchievements();
+			break;
+		case PROGRESS:
+			result.data = parseProgress();
 			break;
 		default:
 			break;
@@ -923,7 +927,9 @@ public class XmlParsers {
 		return result;
 	}
 
-
+	private String parseProgress() throws XmlPullParserException, IOException{
+		return getSecureAttrValue(Xconstants.ID);
+	}
 
 	// ///////////////////////////////// OTHER
 

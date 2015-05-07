@@ -41,7 +41,7 @@ public class AchievementsModel {
 		return true;
 	}
 
-	public boolean updateAchievement(String adapterId, String achievementId) {
+	public String updateAchievement(String adapterId, String achievementId) {
 		return mNetwork.setProgressLvl(adapterId, achievementId);
 	}
 }

@@ -13,8 +13,9 @@ import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
 import com.facebook.share.Sharer;
 import com.facebook.share.widget.ShareDialog;
+import com.rehivetech.beeeon.Constants;
 import com.rehivetech.beeeon.R;
-import com.rehivetech.beeeon.achievements.FbShareAchievement;
+import com.rehivetech.beeeon.achievements.GeneralAchievement;
 import com.rehivetech.beeeon.arrayadapter.AchievementListAdapter;
 import com.rehivetech.beeeon.base.BaseApplicationActivity;
 import com.rehivetech.beeeon.gamification.AchievementList;
@@ -70,8 +71,11 @@ public class AchievementOverviewActivity extends BaseApplicationActivity impleme
 			getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 		}
 
-		mAchievementListHolder = new AchievementList(getApplicationContext());
-		mAchievementListHolder.addObserver(this);
+		mAchievementListHolder = AchievementList.getInstance(getApplicationContext());
+		if(mAchievementListHolder.isDownloaded())
+			setListAdapter();
+		else
+			mAchievementListHolder.addObserver(this);
 
 		setFbShareCallback();
 	}
@@ -84,7 +88,7 @@ public class AchievementOverviewActivity extends BaseApplicationActivity impleme
 	private void setListAdapter() {
 		ListView achievementList = (ListView) findViewById(R.id.achievement_list);
 
-		mAchievementListAdapter = new AchievementListAdapter(this.getLayoutInflater(), mCategoryId, this, mAchievementListHolder.getAchievements());
+		mAchievementListAdapter = new AchievementListAdapter(this.getLayoutInflater(), mCategoryId, this, mAchievementListHolder.getAllAchievements());
 		achievementList.setAdapter(mAchievementListAdapter);
 		achievementList.setSelector(android.R.color.transparent);
 	}
@@ -100,7 +104,7 @@ public class AchievementOverviewActivity extends BaseApplicationActivity impleme
 			@Override
 			public void onSuccess(Sharer.Result shareResult) {
 				if (shareResult.getPostId() != null) // null is if 'cancel' is hit
-					new FbShareAchievement(getApplicationContext());
+					new GeneralAchievement(Constants.ACHIEVEMENT_FACEBOOK_SHARE, getApplicationContext());
 			}
 
 			@Override
@@ -135,12 +139,12 @@ public class AchievementOverviewActivity extends BaseApplicationActivity impleme
 		// if user has twitter native app - can control if sharing was successful
 		if(requestCode == 66586 && // TODO Fix MAGIC!!
 			resultCode == RESULT_OK) {
-			new FbShareAchievement(getApplicationContext());
+			new GeneralAchievement(Constants.ACHIEVEMENT_TWITTER_SHARE, getApplicationContext());
 		}
 		// Sharing with Google Plus
 		if(requestCode == 66587 && // TODO Fix MAGIC!!
 				resultCode == RESULT_OK) {
-			new FbShareAchievement(getApplicationContext());
+			new GeneralAchievement(Constants.ACHIEVEMENT_GPLUS_SHARE, getApplicationContext());
 		}
 		mCallbackManager.onActivityResult(requestCode, resultCode, data);
 		super.onActivityResult(requestCode, resultCode, data);

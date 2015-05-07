@@ -1315,19 +1315,19 @@ public class Network implements INetwork {
 		ParsedMessage msg = doRequest(XmlCreator.createGetAllAchievements(mBT, adapterID));
 
 		if(msg.getState() == State.ACHIEVEMENTS){
-			ArrayList<AchievementListItem> x= (ArrayList<AchievementListItem>) msg.data;
-			return x;
+			return (ArrayList<AchievementListItem>) msg.data;
 		}
 
 		throw processFalse(msg);
 	}
 
 	@Override
-	public boolean setProgressLvl(String adapterId, String achievementId){
+	public String setProgressLvl(String adapterId, String achievementId){
 		ParsedMessage msg = doRequest(XmlCreator.createSetProgressLvl(mBT, adapterId, achievementId));
 
-		if(msg.getState() == State.TRUE)
-			return true;
+		if(msg.getState() == State.PROGRESS) {
+			return msg.data.toString();
+		}
 
 		throw processFalse(msg);
 	}

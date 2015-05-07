@@ -10,6 +10,7 @@ import android.support.v4.app.DialogFragment;
 import com.rehivetech.beeeon.Constants;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.achievements.Achievement;
+import com.rehivetech.beeeon.achievements.GeneralAchievement;
 import com.rehivetech.beeeon.socialNetworks.BeeeOnFacebook;
 import com.rehivetech.beeeon.socialNetworks.BeeeOnTwitter;
 import com.rehivetech.beeeon.socialNetworks.BeeeOnVKontakte;
@@ -56,7 +57,7 @@ public class PairNetworkFragmentDialog extends DialogFragment {
 								which == 1 || which == 0 )
 								mVk.logIn(getActivity());
 							else if(which == 3)
-								new Achievement(Constants.ACHIEVEMENT_LOGIN, getActivity());
+								new GeneralAchievement(Constants.ACHIEVEMENT_LOGIN, getActivity());
 						}
 					})
 			.setNegativeButton(R.string.action_close, new DialogInterface.OnClickListener() {

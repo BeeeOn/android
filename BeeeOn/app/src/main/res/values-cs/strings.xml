@@ -120,6 +120,7 @@
     <string name="progress_loading_demo">Nahrávám demo data&#8230;</string>
     <string name="progress_saving_data">Ukládám data&#8230;</string>
     <string name="progress_checking_location">Ověřuji polohu&#8230;</string>
+	<string name="progress_loading_achievement">Nahrávám data achievementů&#8230;</string>
 
     <!-- NavDrawer -->
     <string name="drawer_open">OTEVŘÍT</string>

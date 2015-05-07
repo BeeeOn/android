@@ -129,6 +129,7 @@
     <string name="progress_loading_facilities">Loading your devices&#8230;</string>
     <string name="progress_loading_locations">Loading your locations&#8230;</string>
     <string name="progress_checking_location">Checking location&#8230;</string>
+	<string name="progress_loading_achievement">Loading achievement data&#8230;</string>
 
 
     <!-- NavDrawer -->

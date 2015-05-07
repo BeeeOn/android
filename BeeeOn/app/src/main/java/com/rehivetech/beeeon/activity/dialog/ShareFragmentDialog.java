@@ -7,12 +7,13 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
+
+import com.rehivetech.beeeon.achievements.GeneralAchievement;
 import com.vk.sdk.dialogs.VKShareDialog;
 
 import com.facebook.share.widget.ShareDialog;
 import com.rehivetech.beeeon.Constants;
 import com.rehivetech.beeeon.R;
-import com.rehivetech.beeeon.achievements.FbShareAchievement;
 import com.rehivetech.beeeon.gamification.AchievementListItem;
 import com.rehivetech.beeeon.socialNetworks.BeeeOnFacebook;
 import com.rehivetech.beeeon.socialNetworks.BeeeOnGooglePlus;
@@ -84,7 +85,7 @@ public class ShareFragmentDialog extends DialogFragment {
 		super.onActivityResult(requestCode, resultCode, data);
 		// works when user haven't twitter native app - cant control, if sharing was successful
 		if(requestCode == Constants.SHARE_TWITTER) {
-			new FbShareAchievement(getActivity());
+			new GeneralAchievement(Constants.ACHIEVEMENT_TWITTER_SHARE, getActivity());
 		}
 	}
 }

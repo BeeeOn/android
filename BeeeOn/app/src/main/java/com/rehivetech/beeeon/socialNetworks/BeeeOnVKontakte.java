@@ -7,7 +7,7 @@ import android.widget.Toast;
 
 import com.rehivetech.beeeon.Constants;
 import com.rehivetech.beeeon.R;
-import com.rehivetech.beeeon.achievements.FbShareAchievement;
+import com.rehivetech.beeeon.achievements.GeneralAchievement;
 import com.rehivetech.beeeon.achievements.TwLoginAchievement;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.util.Log;
@@ -80,7 +80,7 @@ public class BeeeOnVKontakte extends Observable implements BeeeOnSocialNetwork{
 					mContext.getString(R.string.achievement_share_url))
 			.setShareDialogListener(new VKShareDialog.VKShareDialogListener() {
 				public void onVkShareComplete(int postId) {
-					new FbShareAchievement(mContext);
+					new GeneralAchievement(Constants.ACHIEVEMENT_VKONTAKTE_SHARE, mContext);
 				}
 				public void onVkShareCancel() {
 					Log.d(TAG, "sharing canceled");

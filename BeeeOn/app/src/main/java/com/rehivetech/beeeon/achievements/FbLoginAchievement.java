@@ -15,15 +15,13 @@ public class FbLoginAchievement extends Achievement {
 	private static final String TAG = FbLoginAchievement.class.getSimpleName();
 
 	public FbLoginAchievement(Context context, LoginResult loginResult) {
-		super("3", context);
+		super(Constants.ACHIEVEMENT_FACEBOOK_LOGIN, context);
 		if(!mData.isDone()) {
 			Controller controller = Controller.getInstance(context);
 			SharedPreferences prefs = controller.getUserSettings();
 			String token = loginResult.getAccessToken().toString();
 			BeeeOnFacebook.getInstance(context).setToken(token);
 			prefs.edit().putString(Constants.PERSISTENCE_PREF_LOGIN_FACEBOOK,token).apply();
-			//TODO network
-			show();
 		}
 	}
 }
