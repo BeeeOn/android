@@ -8,6 +8,8 @@ import android.widget.BaseAdapter;
 import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.rehivetech.beeeon.R;
@@ -46,12 +48,16 @@ public class AchievementListAdapter extends BaseAdapter implements Filterable{
 		if(convertView == null){
 			convertView = mInflater.inflate(R.layout.achievement_listview_item, parent, false);
 			holder = new ViewHolder();
+			holder.achievementLayout = (RelativeLayout) convertView.findViewById(R.id.achievement_item_layout);
+			holder.achievementProgressLayout = (RelativeLayout) convertView.findViewById(R.id.achievement_progress_layout);
 			holder.achievementName = (TextView) convertView.findViewById(R.id.achievement_list_name);
 			holder.achievementDescription = (TextView) convertView.findViewById(R.id.achievement_list_description);
 			holder.achievementPoints = (TextView) convertView.findViewById(R.id.achievement_list_points);
 			holder.achievementDate = (TextView) convertView.findViewById(R.id.achievement_list_date);
 			holder.achievementTick = (ImageView) convertView.findViewById(R.id.achievement_list_tick);
 			holder.achievementShare = (ImageView) convertView.findViewById(R.id.achievement_list_share);
+			holder.achievementProgress = (ProgressBar) convertView.findViewById(R.id.achievement_progress);
+			holder.achievementProgressText = (TextView) convertView.findViewById(R.id.achievement_progress_text);
 			convertView.setTag(holder);
 		}
 		else{
@@ -82,6 +88,13 @@ public class AchievementListAdapter extends BaseAdapter implements Filterable{
 			holder.achievementDate.setVisibility(View.INVISIBLE);
 			holder.achievementTick.setVisibility(View.GONE);
 			holder.achievementShare.setVisibility(View.GONE);
+			if(achievement.getTotalProgress() > 1) {
+				holder.achievementLayout.getLayoutParams().height += 30;
+				holder.achievementProgressLayout.setVisibility(View.VISIBLE);
+				holder.achievementProgress.setMax(achievement.getTotalProgress());
+				holder.achievementProgress.setProgress(achievement.getCurrentProgress());
+				holder.achievementProgressText.setText(achievement.getProgressString());
+			}
 		}
 
 		return convertView;
@@ -153,11 +166,15 @@ public class AchievementListAdapter extends BaseAdapter implements Filterable{
 	}
 
 	private static class ViewHolder{
+		public RelativeLayout achievementLayout;
+		public RelativeLayout achievementProgressLayout;
 		public TextView achievementName;
 		public TextView achievementDescription;
 		public TextView achievementPoints;
 		public TextView achievementDate;
 		public ImageView achievementTick;
 		public ImageView achievementShare;
+		public ProgressBar achievementProgress;
+		public TextView achievementProgressText;
 	}
 }

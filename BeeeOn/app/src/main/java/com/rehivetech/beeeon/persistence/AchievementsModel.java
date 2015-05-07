@@ -40,4 +40,8 @@ public class AchievementsModel {
 
 		return true;
 	}
+
+	public boolean updateAchievement(String adapterId, String achievementId) {
+		return mNetwork.setProgressLvl(adapterId, achievementId);
+	}
 }

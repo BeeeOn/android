@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
+import android.text.format.DateFormat;
 
 import com.rehivetech.beeeon.IIdentifier;
 import com.rehivetech.beeeon.R;
@@ -30,7 +31,7 @@ public class AchievementListItem implements IIdentifier, Comparable<AchievementL
 	private String mDescription;
 	private String mCategory;
 	private String mDateOther;
-	private String mDate;
+	private Long mDate;
 	private int mPoints;
 	private int mTotalProgress;
 	private int mCurrentProgress;
@@ -44,8 +45,8 @@ public class AchievementListItem implements IIdentifier, Comparable<AchievementL
 		mCategory = categoryId;
 		mTotalProgress = totalProgress;
 		mCurrentProgress = currentProgress;
-		mDate = date;
 		mDateOther = dateOther;
+		mDate = date.length() > 0 ? Long.parseLong(date)*1000 : 0;
 	}
 
 	private AchievementListItem(Parcel in) {
@@ -59,26 +60,30 @@ public class AchievementListItem implements IIdentifier, Comparable<AchievementL
 	public String getCategory() {return mCategory;}
 	public String getName() { return mContext == null ? "" : mName; }
 	public String getDescription() { return mContext == null ? "" : mDescription; }
+	public String getProgressString() {
+		if(mTotalProgress == 1) return "";
+		return mCurrentProgress + "/" + mTotalProgress;
+	}
+	public int getTotalProgress() { return mTotalProgress; }
+	public int getCurrentProgress() { return mCurrentProgress; }
 
 	public boolean isDone() {return mCurrentProgress >= mTotalProgress;}
 
-	public void setDate(String date) {this.mDate = date;}
 	public void setAid(String aid) { mAdapter = aid; }
 	public void setContext(Context c) {
 		mContext = c;
-		mName = mContext.getString(R.string.name_1);
+		mName = mContext.getString(mContext.getResources().getIdentifier("name_" + mAid, "string", mContext.getPackageName()));
 		mDescription = mContext.getString(mContext.getResources().getIdentifier("desc_" + mAid, "string", mContext.getPackageName()));
 	}
 
-	public Date getTime() {
-		try{return dateFormat.parse(this.mDate);}
-		catch (ParseException e) {Log.e(TAG, "Date parse Exception!");return null;}
+	public String getTime() {
+		return dateFormat.format(new Date(mDate));
 	}
 
 	public String getDate() {
 		Calendar today = Calendar.getInstance();
 		Calendar compare = Calendar.getInstance();
-		compare.setTime(getTime());
+		compare.setTimeInMillis(mDate);
 		if(today.get(Calendar.YEAR) == compare.get(Calendar.YEAR)) {
 			if(today.get(Calendar.DAY_OF_YEAR) == compare.get(Calendar.DAY_OF_YEAR))
 				return "Today";
@@ -86,7 +91,7 @@ public class AchievementListItem implements IIdentifier, Comparable<AchievementL
 			if(today.get(Calendar.DAY_OF_YEAR) == compare.get(Calendar.DAY_OF_YEAR))
 				return "Yesterday";
 		}
-		return mDate;
+		return getDate();
 	}
 
 	/** Sorts achievements by date.
@@ -113,7 +118,7 @@ public class AchievementListItem implements IIdentifier, Comparable<AchievementL
 		dest.writeString(mAid);
 		dest.writeString(mPid);
 		dest.writeString(mCategory);
-		dest.writeString(mDate);
+		dest.writeLong(mDate);
 		dest.writeString(mDateOther);
 		dest.writeInt(mPoints);
 		dest.writeInt(mTotalProgress);
@@ -124,7 +129,7 @@ public class AchievementListItem implements IIdentifier, Comparable<AchievementL
 		mAid = in.readString();
 		mPid = in.readString();
 		mCategory = in.readString();
-		mDate = in.readString();
+		mDate = in.readLong();
 		mDateOther = in.readString();
 		mPoints = in.readInt();
 		mTotalProgress = in.readInt();

@@ -28,7 +28,7 @@ public class AchievementList extends Observable {
 		mContext = context;
 		Log.d(TAG, "constructor");
 		mController = Controller.getInstance(mContext);
-		String adapter = "0";
+		String adapter = "999";
 		if(mController.getActiveAdapter() != null)
 			adapter = mController.getActiveAdapter().getId();
 		doReloadAchievementsTask(adapter, false);
@@ -49,7 +49,6 @@ public class AchievementList extends Observable {
 						else if (list.get(y).getParent().equals(item.getId()))
 							son = list.get(y);
 					}
-					Log.d(TAG, item.getId() + ", " + item.getParent() + ", son: " + son + ", parent: " + parent);
 					if ((item.isDone() && (son == null || !son.isDone())) ||
 						(!item.isDone() && (parent == null || parent.isDone()))) {
 						item.setContext(mContext);

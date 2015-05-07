@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+				android:id="@+id/achievement_item_layout"
 			  android:orientation="vertical"
 			  android:layout_width="fill_parent"
-			  android:layout_height="70dp">
+			  android:layout_height="65dp">
 
 	<RelativeLayout
 		android:id="@+id/achievement_list_point_layout"
@@ -75,6 +76,40 @@
 		android:layout_toEndOf="@+id/achievement_list_tick"
 		android:layout_below="@+id/achievement_list_name"
 		android:textColor="@color/beeeon_text_hint"/>
+
+	<RelativeLayout
+		android:id="@+id/achievement_progress_layout"
+		android:visibility="gone"
+		android:paddingRight="60dp"
+		android:paddingEnd="60dp"
+		android:paddingLeft="4dp"
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
+		android:layout_below="@+id/achievement_list_description"
+		android:layout_toRightOf="@+id/achievement_list_point_layout"
+		android:layout_toEndOf="@+id/achievement_list_point_layout">
+
+		<TextView
+			android:id="@+id/achievement_progress_text"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_alignParentTop="true"
+			android:layout_alignParentRight="true"
+			android:layout_alignParentEnd="true"/>
+
+		<ProgressBar
+			android:id="@+id/achievement_progress"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:paddingRight="65dp"
+			android:paddingEnd="65dp"
+			android:paddingLeft="0dp"
+			android:paddingStart="0dp"
+			style="@android:style/Widget.ProgressBar.Horizontal"
+			android:progressDrawable="@drawable/customholotheme_scrubber_progress_horizontal_holo_light"
+			/>
+
+		</RelativeLayout>
 
 	<ImageView
 		android:id="@+id/achievement_list_share"

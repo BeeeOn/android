@@ -135,6 +135,28 @@ public final class Constants {
 
 	public static final String BROADCAST_PREFERENCE_CHANGED = "com.rehivetech.beeeon.BROADCAST_PREFERENCE_CHANGED";
 
+	/**
+	 * Achievements ID
+	 */
+	public static final String ACHIEVEMENT_LOGIN = "1";
+	public static final String ACHIEVEMENT_ROOM = "4";
+	public static final String ACHIEVEMENT_TUTORIAL = "6";
+	public static final String ACHIEVEMENT_WIDGET_CLOCK = "7";
+	public static final String ACHIEVEMENT_WIDGET_ANY = "8";
+	public static final String ACHIEVEMENT_GEOFENCE = "9";
+	public static final String ACHIEVEMENT_FACEBOOK_LOGIN = "31";
+	public static final String ACHIEVEMENT_FACEBOOK_SHARE = "32";
+	public static final String ACHIEVEMENT_TWITTER_LOGIN = "34";
+	public static final String ACHIEVEMENT_TWITTER_SHARE = "35";
+	public static final String ACHIEVEMENT_VKONTAKTE_LOGIN = "37";
+	public static final String ACHIEVEMENT_VKONTAKTE_SHARE = "38";
+	public static final String ACHIEVEMENT_GPLUS_SHARE = "40";
+	public static final String ACHIEVEMENT_USER_ADMIN = "50";
+	public static final String ACHIEVEMENT_USER_NORMAL = "51";
+	public static final String ACHIEVEMENT_USER_GUEST = "52";
+	public static final String ACHIEVEMENT_ADD_GATEWAY = "61";
+	public static final String ACHIEVEMENT_ADD_SENSOR = "64";
+
 	// actor change
 	public static final String BROADCAST_ACTOR_CHANGED = "com.rehivetech.beeeon.BROADCAST_ACTOR_CHANGED";
 	public static final String BROADCAST_EXTRA_ACTOR_CHANGED_ID = "com.rehivetech.beeeon.EXTRA_ACTION_CHANGED_ID";
