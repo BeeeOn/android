@@ -65,7 +65,6 @@ public class WidgetService extends Service {
     private static final String EXTRA_START_UPDATING =              "com.rehivetech.beeeon.start_updating";
     private static final String EXTRA_FORCE_UPDATE =                "com.rehivetech.beeeon.force_update";
     private static final String EXTRA_ACTOR_CHANGE_REQUEST =        "com.rehivetech.beeeon.actor_change_request";
-    private static final String EXTRA_ACTOR_CHANGE_RESULT =         "com.rehivetech.beeeon.actor_change_result";
     private static final String EXTRA_ACTOR_ID =                    "com.rehivetech.beeeon.actor_ids";
     private static final String EXTRA_DELETE_WIDGET =               "com.rehivetech.beeeon.delete_widget";
     private static final String EXTRA_CHANGE_LAYOUT =               "com.rehivetech.beeeon.change_layout";
@@ -218,20 +217,6 @@ public class WidgetService extends Service {
                         String adapterId = intent.getStringExtra(EXTRA_ACTOR_ADAPTER_ID);
                         String actorId = intent.getStringExtra(EXTRA_ACTOR_ID);
                         changeWidgetActorRequest(adapterId, actorId);
-                    }
-                }).start();
-                return START_STICKY;
-            }
-
-            // -------------- result of async task (called by broadcast)
-            boolean isActorChangeResult = intent.getBooleanExtra(EXTRA_ACTOR_CHANGE_RESULT, false);
-            if(isActorChangeResult){
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        String adapterId = intent.getStringExtra(EXTRA_ACTOR_ADAPTER_ID);
-                        String actorId = intent.getStringExtra(EXTRA_ACTOR_ID);
-                        changeWidgetActorResult(adapterId, actorId);
                     }
                 }).start();
                 return START_STICKY;
@@ -899,21 +884,6 @@ public class WidgetService extends Service {
     }
 
     /**
-     * Intent for running result of actor change
-     * @param context
-     * @param adapterId
-     * @param actorId
-     * @return
-     */
-    public static Intent getIntentActorChangeResult(Context context, String adapterId, String actorId){
-        Intent intent = new Intent(context, WidgetService.class);
-        intent.putExtra(WidgetService.EXTRA_ACTOR_CHANGE_RESULT, true);
-        intent.putExtra(EXTRA_ACTOR_ID, actorId);
-        intent.putExtra(EXTRA_ACTOR_ADAPTER_ID, adapterId);
-        return intent;
-    }
-
-    /**
      * When widget is being deleted, calls service to clear data after it's deleted
      * @param context
      * @param widgetIds  is possible to delete more widgets at once
@@ -972,21 +942,21 @@ public class WidgetService extends Service {
             }
             // if any actor value was changed, tell the service to refresh widget with that device
             else if(receivedAction.equals(Constants.BROADCAST_ACTOR_CHANGED)){
-                String adapterId = intent.getStringExtra(Constants.BROADCAST_EXTRA_ACTOR_CHANGED_ADAPTER_ID);
-                String actorId = intent.getStringExtra(Constants.BROADCAST_EXTRA_ACTOR_CHANGED_ID);
+                final String adapterId = intent.getStringExtra(Constants.BROADCAST_EXTRA_ACTOR_CHANGED_ADAPTER_ID);
+                final String actorId = intent.getStringExtra(Constants.BROADCAST_EXTRA_ACTOR_CHANGED_ID);
 
-                if(adapterId == null || adapterId.isEmpty() || actorId == null || actorId.isEmpty()) return;
-                context.startService(WidgetService.getIntentActorChangeResult(context, adapterId, actorId));
+                if(adapterId == null || adapterId.isEmpty() || actorId == null || actorId.isEmpty()){
+					Log.e(TAG, "Not all data received from actor change broadcast");
+					return;
+				}
 
-			/*
-			// update location widget if exists
-			int[] locationWidgetsIds = WidgetProvider.getWidgetIdsByClass(context, WidgetLocationListProvider.class);
-			if(locationWidgetsIds != null && locationWidgetsIds.length > 0){
-				AppWidgetManager widgetManager = AppWidgetManager.getInstance(context);
-				// TODO
-				//widgetManager.notifyAppWidgetViewDataChanged();
-			}
-			//*/
+				// redrawing all actors in widgets asynchronously
+				new Thread(new Runnable() {
+					@Override
+					public void run() {
+						changeWidgetActorResult(adapterId, actorId);
+					}
+				}).start();
             }
             // update widgets to show different units
             else if(receivedAction.equals(Constants.BROADCAST_PREFERENCE_CHANGED)){
