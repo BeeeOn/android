@@ -5,11 +5,9 @@ import com.rehivetech.beeeon.gamification.AchievementListItem;
 import com.rehivetech.beeeon.network.INetwork;
 import com.rehivetech.beeeon.util.DataHolder;
 import com.rehivetech.beeeon.util.Log;
-import com.rehivetech.beeeon.util.MultipleDataHolder;
 
 import org.joda.time.DateTime;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -23,6 +21,8 @@ public class AchievementsModel {
 	private final DataHolder<AchievementListItem> mAchievementsHolder = new DataHolder<>();
 
 	public AchievementsModel(INetwork network) {
+		Log.d(TAG, "CREATING ------------");
+		mAchievementsHolder.clear();
 		mNetwork = network;
 	}
 
@@ -41,7 +41,7 @@ public class AchievementsModel {
 		return true;
 	}
 
-	public String updateAchievement(String adapterId, String achievementId) {
+	public List<String> updateAchievement(String adapterId, String achievementId) {
 		return mNetwork.setProgressLvl(adapterId, achievementId);
 	}
 }

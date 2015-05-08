@@ -31,6 +31,7 @@ public class AchievementListItem implements IIdentifier, Comparable<AchievementL
 	private String mDescription;
 	private String mCategory;
 	private String mDateOther;
+	private boolean mVisible;
 	private Long mDate;
 	private int mPoints;
 	private int mTotalProgress;
@@ -38,7 +39,7 @@ public class AchievementListItem implements IIdentifier, Comparable<AchievementL
 
 	private SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy", Locale.getDefault());
 
-	public AchievementListItem(String id, String pid, String categoryId, int points, int totalProgress, int currentProgress, String date, String dateOther) {
+	public AchievementListItem(String id, String pid, String categoryId, int points, int totalProgress, int currentProgress, String visible, String date, String dateOther) {
 		mAid = id;
 		mPid = pid;
 		mPoints = points;
@@ -47,6 +48,7 @@ public class AchievementListItem implements IIdentifier, Comparable<AchievementL
 		mCurrentProgress = currentProgress;
 		mDateOther = dateOther;
 		mDate = date.length() > 0 ? Long.parseLong(date)*1000 : 0;
+		mVisible = visible.equals("t");
 	}
 
 	private AchievementListItem(Parcel in) {
@@ -76,6 +78,7 @@ public class AchievementListItem implements IIdentifier, Comparable<AchievementL
 	public int getTotalProgress() { return mTotalProgress; }
 	public int getCurrentProgress() { return mCurrentProgress; }
 
+	public boolean isVisible() { return mVisible; }
 	public boolean isDone() {return mCurrentProgress >= mTotalProgress;}
 
 	public void setAid(String aid) { mAdapter = aid; }

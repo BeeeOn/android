@@ -22,10 +22,10 @@ public class AchievementList extends Observable {
 
 	private boolean allDataDownloaded;
 	private List<AchievementListItem> allAchievementList;
-	private ArrayList<AchievementListItem> mAchievementList = new ArrayList<AchievementListItem>();
-	private int[] mComplete = new int[] {0,0,0}; // number of completed achievements in 3 categories
-	private int[] mTotal = new int[] {0,0,0};	// number of all achievements in 3 categories
-	private int mTotalPoints = 0;
+	private ArrayList<AchievementListItem> mAchievementList;
+	private int[] mComplete; // number of completed achievements in 3 categories
+	private int[] mTotal;	// number of all achievements in 3 categories
+	private int mTotalPoints;
 
 	private AchievementList(Context context) {
 		mContext = context;
@@ -50,20 +50,7 @@ public class AchievementList extends Observable {
 			@Override
 			public void onExecute(boolean success) {
 				allAchievementList = mController.getAchievementsModel().getAchievements();
-				for(int i = 0; i < allAchievementList.size(); i++) {
-					AchievementListItem son = null, parent = null, item = allAchievementList.get(i);
-					for (int y = 0; y < allAchievementList.size(); y++) {
-						if (allAchievementList.get(y).getId().equals(item.getParent()))
-							parent = allAchievementList.get(y);
-						else if (allAchievementList.get(y).getParent().equals(item.getId()))
-							son = allAchievementList.get(y);
-					}
-					if ((item.isDone() && (son == null || !son.isDone())) ||
-						(!item.isDone() && (parent == null || parent.isDone()))) {
-						item.setContext(mContext);
-						mAchievementList.add(item);
-					}
-				}
+				filterAchievements();
 				recountValues();
 				allDataDownloaded = true;
 				setChanged();
@@ -127,11 +114,33 @@ public class AchievementList extends Observable {
 		return level;
 	}
 
+	public void filterAchievements() {
+		mAchievementList = new ArrayList<AchievementListItem>();
+		for(int i = 0; i < allAchievementList.size(); i++) {
+			AchievementListItem son = null, parent = null, item = allAchievementList.get(i);
+			if(!item.isVisible() && !item.isDone()) continue;
+			for (int y = 0; y < allAchievementList.size(); y++) {
+				if (allAchievementList.get(y).getId().equals(item.getParent()))
+					parent = allAchievementList.get(y);
+				else if (allAchievementList.get(y).getParent().equals(item.getId()))
+					son = allAchievementList.get(y);
+			}
+			if ((item.isDone() && (son == null || !son.isDone())) ||
+					(!item.isDone() && (parent == null || parent.isDone()))) {
+				item.setContext(mContext);
+				mAchievementList.add(item);
+			}
+		}
+	}
+
 	/** Calculates number of achievements in all categories.
 	 * Counts number of total and completed achievements in all (3) categories
 	 * and number of totally earned points.
 	 */
-	private void recountValues() {
+	public void recountValues() {
+		mComplete = new int[] {0,0,0}; // number of completed achievements in 3 categories
+		mTotal = new int[] {0,0,0};	// number of all achievements in 3 categories
+		mTotalPoints = 0;
 		AchievementListItem achievement;
 		for (int i = 0; i < mAchievementList.size(); i++) {
 			achievement = mAchievementList.get(i);

@@ -8,7 +8,6 @@ import android.widget.Toast;
 
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.asynctask.CallbackTask;
-import com.rehivetech.beeeon.asynctask.ReloadAdapterDataTask;
 import com.rehivetech.beeeon.asynctask.UpdateAchievementTask;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.gamification.AchievementList;
@@ -30,13 +29,19 @@ public abstract class Achievement  implements Observer {
 	protected AchievementListItem mData = null;
 	protected Context mContext = null;
 	protected Controller mController;
-	protected String mAchievementId;
-	protected String mAdapterId;
+	private String mAchievementId;
+	private String mAdapterId;
+	private boolean mSendUpdate;
 	protected UpdateAchievementTask mUpdateAchievementTask;
 
 	protected Achievement(String achievement_id, Context context) {
+		this(achievement_id, context, true);
+	}
+
+	protected Achievement(String achievement_id, Context context, boolean sendUpdate) {
 		mContext = context;
 		mAchievementId = achievement_id;
+		mSendUpdate = sendUpdate;
 
 		mAdapterId = "0";
 		mController = Controller.getInstance(mContext);
@@ -52,39 +57,46 @@ public abstract class Achievement  implements Observer {
 	}
 
 	protected void doAddUpdateAchievementTask(AchievementPair pair) {
-		mUpdateAchievementTask = new UpdateAchievementTask(mContext);
+		if(!mSendUpdate && mData.isDone()) return; // if is done and should not be send, skip it
 
+		mUpdateAchievementTask = new UpdateAchievementTask(mContext);
 		mUpdateAchievementTask.setListener(new CallbackTask.CallbackTaskListener() {
 			@Override
 			public void onExecute(boolean success) {
-				if(!success)
-					showError();
-				else if(mAchievementList.getItem(mUpdateAchievementTask.getAchievementId()).updateProgress())
-					showSuccess();
-				Log.d(TAG, "Updated achievement " + mUpdateAchievementTask.getAchievementId() + "? "+success);
+				List<String> idList = mUpdateAchievementTask.getAchievementId();
+				if(!success) showError();
+				else if (idList == null) return; // DEMO, don`t update anything
+				for(int i = 0; i < idList.size(); i++) {
+					AchievementListItem item = mAchievementList.getItem(idList.get(i));
+					if(item == null) continue;
+					else if(item.updateProgress())
+						showSuccess(item);
+					Log.d(TAG, "Updated achievement " + idList.get(i));
+				}
+				mAchievementList.filterAchievements();
+				mAchievementList.recountValues();
 			}
 		});
 		mUpdateAchievementTask.execute(pair);
 	}
 
+	public void showError() {
+		Toast.makeText(mContext, mContext.getString(R.string.NetworkError___CL_XML), Toast.LENGTH_LONG).show();
+	}
 
-	public void showSuccess() {
+	public void showSuccess(AchievementListItem item) {
 		LayoutInflater i = LayoutInflater.from(mContext);
 		View layout = i.inflate(R.layout.achievement_toast,null);
 
 		TextView name = (TextView) layout.findViewById(R.id.achievement_toast_name);
 		TextView points = (TextView) layout.findViewById(R.id.achievement_toast_points);
-		name.setText(mData.getName());
-		points.setText(String.valueOf(mData.getPoints()));
+		name.setText(item.getName());
+		points.setText(String.valueOf(item.getPoints()));
 
 		Toast toast = new Toast(mContext);
 		toast.setDuration(Toast.LENGTH_LONG);
 		toast.setView(layout);
 		toast.show();
-	}
-
-	public void showError() {
-		Toast.makeText(mContext, "Neporadilo se", Toast.LENGTH_LONG).show();
 	}
 
 	@Override

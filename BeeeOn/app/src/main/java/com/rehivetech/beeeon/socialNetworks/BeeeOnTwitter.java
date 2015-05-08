@@ -70,6 +70,8 @@ public class BeeeOnTwitter  extends Observable implements BeeeOnSocialNetwork{
 			public void success(Result<TwitterSession> twitterSessionResult) {
 				parseResult(twitterSessionResult);
 				new TwLoginAchievement(activity.getApplicationContext());
+				setChanged();
+				notifyObservers("login");
 			}
 			@Override
 			public void failure(TwitterException e) {

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<com ver="2.5" state="achievements" aid="64206">
+	<ach id="1" pid="" cat="0" points="10" tprogress="10" cprogress="10" date="1430937064" range="" />
+	<ach id="2" pid="1" cat="0" points="30" tprogress="90" cprogress="90" date="1430937064" range="" />
+	<ach id="3" pid="2" cat="0" points="80" tprogress="900" cprogress="900" date="1430937064" range="" />
+	<ach id="4" pid="" cat="0" points="10" tprogress="1" cprogress="1" date="1430937064" range="" />
+	<ach id="5" pid="4" cat="0" points="20" tprogress="4" cprogress="4" date="1430937064" range="" />
+	<ach id="6" pid="" cat="0" points="15" tprogress="1" cprogress="0" date="" range="" />
+	<ach id="7" pid="" cat="0" points="15" tprogress="1" cprogress="0" date="" range="" />
+	<ach id="9" pid="" cat="0" points="10" tprogress="1" cprogress="0" date="" range="" />
+	<ach id="10" pid="9" cat="0" points="20" tprogress="4" cprogress="0" date="" range="" />
+	<ach id="31" pid="" cat="1" points="5" tprogress="1" cprogress="0" date="" range="" />
+	<ach id="32" pid="31" cat="1" points="5" tprogress="1" cprogress="0" date="" range="" />
+	<ach id="33" pid="32" cat="1" points="10" tprogress="5" cprogress="0" date="" range="" />
+	<ach id="34" pid="" cat="1" points="5" tprogress="1" cprogress="0" date="" range="" />
+	<ach id="35" pid="34" cat="1" points="5" tprogress="1" cprogress="0" date="" range="" />
+	<ach id="36" pid="35" cat="1" points="10" tprogress="5" cprogress="0" date="" range="" />
+	<ach id="37" pid="" cat="1" points="5" tprogress="1" cprogress="0" date="" range="" />
+	<ach id="38" pid="37" cat="1" points="5" tprogress="1" cprogress="0" date="" range="" />
+	<ach id="39" pid="38" cat="1" points="10" tprogress="5" cprogress="0" date="" range="" />
+	<ach id="40" pid="" cat="1" points="5" tprogress="1" cprogress="0" date="" range="" />
+	<ach id="41" pid="40" cat="1" points="10" tprogress="5" cprogress="0" date="" range="" />
+	<ach id="61" pid="" cat="2" points="40" tprogress="1" cprogress="0" date="" range="" />
+	<ach id="62" pid="61" cat="2" points="50" tprogress="1" cprogress="0" date="" range="" />
+	<ach id="63" pid="62" cat="2" points="60" tprogress="3" cprogress="0" date="" range="" />
+	<ach id="64" pid="" cat="2" points="20" tprogress="1" cprogress="0" date="" range="" />
+	<ach id="65" pid="64" cat="2" points="30" tprogress="4" cprogress="0" date="" range="" />
+	<ach id="66" pid="65" cat="2" points="40" tprogress="5" cprogress="0" date="" range="" />
+	<ach id="67" pid="66" cat="2" points="50" tprogress="5" cprogress="0" date="" range="" />
+</com>

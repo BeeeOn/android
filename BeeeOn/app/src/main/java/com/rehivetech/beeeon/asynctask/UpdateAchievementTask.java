@@ -4,12 +4,15 @@ import android.content.Context;
 
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.pair.AchievementPair;
+import com.rehivetech.beeeon.util.Log;
+
+import java.util.List;
 
 /**
  * @author Jan Lamacz
  */
 public class UpdateAchievementTask  extends CallbackTask<AchievementPair>  {
-	private String mAchievementId;
+	private List<String> mAchievementId;
 
 	public UpdateAchievementTask(Context context) {
 		super(context);
@@ -20,10 +23,8 @@ public class UpdateAchievementTask  extends CallbackTask<AchievementPair>  {
 		Controller controller = Controller.getInstance(mContext);
 
 		mAchievementId = controller.getAchievementsModel().updateAchievement(pair.adapter, pair.achievement);
-		return mAchievementId.length() > 0;
+		return mAchievementId.size() > 0;
 	}
 
-	public String getAchievementId() {
-		return mAchievementId;
-	}
+	public List<String> getAchievementId() { return mAchievementId; }
 }

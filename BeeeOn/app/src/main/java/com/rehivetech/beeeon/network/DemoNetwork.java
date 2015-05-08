@@ -65,6 +65,7 @@ public class DemoNetwork implements INetwork {
 	public final MultipleDataHolder<Location> mLocations = new MultipleDataHolder<>();
 	public final MultipleDataHolder<Facility> mFacilities = new MultipleDataHolder<>();
 	public final MultipleDataHolder<WatchDog> mWatchdogs = new MultipleDataHolder<>();
+	public final DataHolder<AchievementListItem> mAchievements = new DataHolder<>();
 
 	public DemoNetwork(Context context) {
 		mContext = context;
@@ -134,6 +135,7 @@ public class DemoNetwork implements INetwork {
 		mLocations.clear();
 		mFacilities.clear();
 		mWatchdogs.clear();
+		mAchievements.clear();
 
 		// Parse and set initial demo data
 		XmlParsers parser = new XmlParsers();
@@ -156,6 +158,10 @@ public class DemoNetwork implements INetwork {
 			mFacilities.setObjects(adapterId, parser.getDemoFacilitiesFromAsset(mContext, assetName));
 			mFacilities.setLastUpdate(adapterId, DateTime.now());
 
+			assetName = String.format(Constants.ASSET_ACHIEVEMENTS_FILENAME, adapter.getId());
+			mAchievements.setObjects(parser.getDemoAchievementsFromAsset(mContext, assetName));
+			mAchievements.setLastUpdate(DateTime.now());
+			
 			Random rand = getRandomForAdapter(adapter.getId());
 
 			// Set last update time to time between (-26 hours, now>
@@ -589,6 +595,7 @@ public class DemoNetwork implements INetwork {
 		mLocations.removeHolder(adapterId);
 		mFacilities.removeHolder(adapterId);
 		mWatchdogs.removeHolder(adapterId);
+		mAchievements.removeObject(adapterId);
 		return mAdapters.removeObject(adapterId) != null;
 	}
 
@@ -755,8 +762,8 @@ public class DemoNetwork implements INetwork {
 	}
 
 	@Override
-	public ArrayList<AchievementListItem> getAllAchievements(String adapterID){ return null; }
+	public ArrayList<AchievementListItem> getAllAchievements(String adapterID){ return (ArrayList<AchievementListItem>) mAchievements.getObjects(); }
 
 	@Override
-	public String setProgressLvl(String adapterId, String achievementId){ return "1"; }
+	public List<String> setProgressLvl(String adapterId, String achievementId){ return null; }
 }

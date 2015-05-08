@@ -5,6 +5,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -114,6 +115,20 @@ public class ProfileDetailActivity extends BaseApplicationActivity implements Ob
 		mMoreVisible = (RelativeLayout) findViewById(R.id.profile_more_accounts);
 		mMoreLayout = (RelativeLayout) findViewById(R.id.profile_more);
 
+		userImage.setOnLongClickListener(new View.OnLongClickListener() {
+			@Override
+			public boolean onLongClick(View view) {
+				Controller controller = Controller.getInstance(mContext);
+				SharedPreferences prefs = controller.getUserSettings();
+				prefs.edit().remove(Constants.PERSISTENCE_PREF_LOGIN_VKONTAKTE).apply();
+				prefs.edit().remove(Constants.PERSISTENCE_PREF_LOGIN_FACEBOOK).apply();
+				prefs.edit().remove(Constants.PERSISTENCE_PREF_LOGIN_TWITTER).apply();
+				redrawCategories();
+				Log.d(TAG, "deleted");
+				return true;
+			}
+		});
+
 		// Prepare progressDialog
 		mProgress = new BetterProgressDialog(this);
 		mProgress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
@@ -168,17 +183,17 @@ public class ProfileDetailActivity extends BaseApplicationActivity implements Ob
 		else
 			mMoreAdd.setVisibility(View.INVISIBLE);
 		if(unconnectedNetworks != totalNetworks) { //at least one network is added
-			mMoreArrow.setOnClickListener(new View.OnClickListener() {
-				@Override
-				public void onClick(View v) {
-					showMoreAccounts = !showMoreAccounts;
-					setMoreButtonVisibility();
-				}
-			});
 			mMoreArrow.setVisibility(View.VISIBLE);
 		}
 		else
 			mMoreArrow.setVisibility(View.INVISIBLE);
+		mMoreArrow.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				showMoreAccounts = !showMoreAccounts;
+				setMoreButtonVisibility();
+			}
+		});
 	}
 
 	@Override
@@ -317,7 +332,6 @@ public class ProfileDetailActivity extends BaseApplicationActivity implements Ob
 		rulesList.add(new GamificationCategory("1", getString(R.string.profile_category_friends)));
 		rulesList.add(new GamificationCategory("2", getString(R.string.profile_category_senzors)));
 
-		Log.d(TAG, "creating category");
 		mCategoryListAdapter = new GamCategoryListAdapter(mContext, rulesList, getLayoutInflater(), mAchievementList);
 
 		mCategoryList.setAdapter(mCategoryListAdapter);
@@ -355,9 +369,11 @@ public class ProfileDetailActivity extends BaseApplicationActivity implements Ob
 			setOnClickLogout(mFb, mFbName);
 		else if(o.toString().equals("vkontakte"))
 			setOnClickLogout(mVk, mVkName);
-		else if(o.toString().equals("facebook login")) {
+		else if(o.toString().equals("login")) {
 			setNetworksView();
 			setMoreButtonVisibility();
+			Log.d(TAG, "login");
+			redrawCategories();
 		}
 		else if(o.toString().equals("not_logged"))
 			setOnClickLogin(mFb, mFbName);
