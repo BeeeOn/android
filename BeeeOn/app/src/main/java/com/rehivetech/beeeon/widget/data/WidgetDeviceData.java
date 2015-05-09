@@ -1,7 +1,6 @@
 package com.rehivetech.beeeon.widget.data;
 
 import android.content.Context;
-import android.view.View;
 
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.household.adapter.Adapter;

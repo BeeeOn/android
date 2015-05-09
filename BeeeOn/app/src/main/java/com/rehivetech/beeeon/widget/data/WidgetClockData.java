@@ -13,7 +13,6 @@ import com.rehivetech.beeeon.household.location.Location;
 import com.rehivetech.beeeon.util.Log;
 import com.rehivetech.beeeon.util.TimeHelper;
 import com.rehivetech.beeeon.util.UnitsHelper;
-import com.rehivetech.beeeon.util.Utils;
 import com.rehivetech.beeeon.widget.ViewsBuilder;
 import com.rehivetech.beeeon.widget.persistence.WidgetDevicePersistence;
 import com.rehivetech.beeeon.widget.persistence.WidgetWeatherPersistence;
@@ -21,7 +20,6 @@ import com.rehivetech.beeeon.widget.persistence.WidgetWeatherPersistence;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 import org.joda.time.format.DateTimeFormat;
-import org.json.JSONObject;
 
 import java.text.DateFormatSymbols;
 import java.util.ArrayList;
@@ -325,15 +323,6 @@ public class WidgetClockData extends WidgetData {
 		}
 
 		return updated > 0;
-	}
-
-	/**
-	 * Updates and stores date from the server
-	 * @param json
-	 */
-	public void handleUpdateWeather(JSONObject json){
-		Log.v(TAG, String.format("Updating widget(%d) weather", mWidgetId));
-		weather.configure(json, null);
 	}
 
 	@Override

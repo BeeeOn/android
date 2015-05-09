@@ -439,7 +439,11 @@ public class WidgetService extends Service {
             WidgetData widgetData = getWidgetData(widgetId);
             if (widgetData == null) continue;
             widgetData.handleResize(layoutMinWidth, layoutMinHeight);
-            widgetData.renderWidget();
+			// if widget changed its layout, render again
+            if(widgetData.widgetLayoutChanged){
+                widgetData.renderWidget();
+				widgetData.widgetLayoutChanged = false;
+            }
         }
     }
 

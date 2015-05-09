@@ -48,6 +48,7 @@ public abstract class WidgetData {
 
 	// public properties
 	public int widgetLayout;
+	public boolean widgetLayoutChanged = false;
 	public int widgetInterval;
 	public long widgetLastUpdate;
 	public boolean widgetInitialized;
@@ -156,10 +157,14 @@ public abstract class WidgetData {
 		this.save();
 	}
 
+	/**
+	 * Manages change of layout and indicating flag about it so that service can render widget
+	 * @param layoutResource
+	 */
 	public final void changeLayout(int layoutResource){
 		// if not found, dont change anything
-		if(layoutResource == 0) return;
-
+		if(layoutResource == 0 || layoutResource == this.widgetLayout) return;
+		this.widgetLayoutChanged = true;
 		this.widgetLayout = layoutResource;
 		save();
 	}
