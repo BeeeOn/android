@@ -53,6 +53,8 @@ public class DemoNetwork implements INetwork {
 	public static final String DEMO_USER_ID = "demo";
 	private static final String DEMO_USER_BT = "12345";
 
+	private static final int RAW_ENUM_VALUES_COUNT_IN_LOG = 100;
+
 	private Context mContext;
 	private User mUser;
 	private String mBT;
@@ -450,6 +452,11 @@ public class DemoNetwork implements INetwork {
 		int everyMsecs = Math.max(pair.gap.getSeconds(), device.getFacility().getRefresh().getInterval()) * 1000;
 
 		boolean isEnum = (device.getValue() instanceof BaseEnumValue);
+
+		if (isEnum) {
+			// For enums we want fixed number of steps (because application surely wants raw values)
+			everyMsecs = (int)(end - start) / RAW_ENUM_VALUES_COUNT_IN_LOG;
+		}
 
 		while (start < end) {
 			if (isEnum) {
