@@ -79,28 +79,32 @@ public class DemoNetwork implements INetwork {
 	}
 
 	private Random getRandomForAdapter(String adapterId) {
-		Random random = mRandoms.get(adapterId);
+		Random rand = mRandoms.get(adapterId);
 
-		if (random == null) {
+		if (rand == null) {
 			try {
 				int id = Integer.parseInt(adapterId);
-				random = new Random(id);
+				rand = new Random(id);
 			} catch (NumberFormatException e) {
-				random = new Random();
+				rand = new Random();
 			}
-			mRandoms.put(adapterId, random);
+			mRandoms.put(adapterId, rand);
 		}
 
-		return random;
+		return rand;
 	}
 
 	private void setNewValue(Device device) {
-		Random random = new Random();
+		// Don't set new values for actors
+		if (device.getType().isActor())
+			return;
+
+		Random rand = getRandomForAdapter(device.getFacility().getAdapterId());
 		
 		if (device.getValue() instanceof BaseEnumValue) {
 			BaseEnumValue value = (BaseEnumValue)device.getValue();
 			List<Item> items = value.getEnumItems();
-			Item item = items.get(random.nextInt(items.size()));
+			Item item = items.get(rand.nextInt(items.size()));
 			
 			device.setValue(item.getValue());
 		} else {
@@ -108,11 +112,11 @@ public class DemoNetwork implements INetwork {
 			double range = 2 + Math.log(device.getFacility().getRefresh().getInterval());
 
 			if (Double.isNaN(lastValue)) {
-				lastValue = random.nextDouble() * 1000;
+				lastValue = rand.nextDouble() * 1000;
 			}
 			
-			double addvalue = random.nextInt((int) range * 1000) / 1000;
-			boolean plus = random.nextBoolean();
+			double addvalue = rand.nextInt((int) range * 1000) / 1000;
+			boolean plus = rand.nextBoolean();
 			lastValue = lastValue + addvalue * (plus ? 1 : -1);
 			
 			device.setValue(String.valueOf((int)lastValue));
@@ -150,10 +154,12 @@ public class DemoNetwork implements INetwork {
 			mFacilities.setObjects(adapterId, parser.getDemoFacilitiesFromAsset(mContext, assetName));
 			mFacilities.setLastUpdate(adapterId, DateTime.now());
 
+			Random rand = getRandomForAdapter(adapter.getId());
+
 			// Set last update time to time between (-26 hours, now>
 			for (Facility facility : mFacilities.getObjects(adapterId)) {
 				// FIXME: is using getObjects() ok? It creates new list. But it should be ok, because inner objects are still only references. Needs test!
-				facility.setLastUpdate(DateTime.now(DateTimeZone.UTC).minusSeconds(new Random().nextInt(60 * 60 * 26)));
+				facility.setLastUpdate(DateTime.now(DateTimeZone.UTC).minusSeconds(rand.nextInt(60 * 60 * 26)));
 			}
 		}
 
@@ -246,7 +252,7 @@ public class DemoNetwork implements INetwork {
 	public List<Facility> initAdapter(String adapterId) {
 		List<Facility> facilities = mFacilities.getObjects(adapterId);
 
-		Random rand = new Random();
+		Random rand = getRandomForAdapter(adapterId);
 
 		// Update value of expired facilities
 		for (Facility facility : facilities) {
@@ -327,7 +333,7 @@ public class DemoNetwork implements INetwork {
 
 	@Override
 	public Facility getFacility(Facility facility) {
-		Random rand = new Random();
+		Random rand = getRandomForAdapter(facility.getAdapterId());
 
 		Facility newFacility = mFacilities.getObject(facility.getAdapterId(), facility.getId());
 
@@ -360,7 +366,7 @@ public class DemoNetwork implements INetwork {
 			return newFacilities;
 		}
 
-		Random rand = new Random();
+		Random rand = getRandomForAdapter(adapterId);
 		if (rand.nextInt(4) == 0) {
 			Facility facility = new Facility();
 
@@ -435,10 +441,10 @@ public class DemoNetwork implements INetwork {
 		long start = pair.interval.getStartMillis();
 		long end = pair.interval.getEndMillis();
 
-		Random random = new Random();
+		Random rand = getRandomForAdapter(adapterId);
 
 		if (Double.isNaN(lastValue)) {
-			lastValue = random.nextDouble() * 1000;
+			lastValue = rand.nextDouble() * 1000;
 		}
 
 		int everyMsecs = Math.max(pair.gap.getSeconds(), device.getFacility().getRefresh().getInterval()) * 1000;
@@ -458,11 +464,11 @@ public class DemoNetwork implements INetwork {
 					pos++;
 				}
 				// (size + pos + <-1,1>) % size  - first size is because it could end up to "-1"
-				pos = (items.size() + pos + (random.nextInt(3) - 1)) % items.size();
+				pos = (items.size() + pos + (rand.nextInt(3) - 1)) % items.size();
 				lastValue = items.get(pos).getId();
 			} else {
-				double addvalue = random.nextInt((int) range * 1000) / 1000;
-				boolean plus = random.nextBoolean();
+				double addvalue = rand.nextInt((int) range * 1000) / 1000;
+				boolean plus = rand.nextBoolean();
 				lastValue = lastValue + addvalue * (plus ? 1 : -1);
 			}
 
