@@ -93,6 +93,8 @@ public class GcmRegisterRunnable implements Runnable {
 			mController.getGcmModel().setGCMIdServer(mNewGcmId);
 
 		} else {
+			// save it just locally to update app version
+			mController.getGcmModel().setGCMIdLocal(mNewGcmId);
 			Log.i(TAG, GcmHelper.TAG_GCM + "New GCM ID is the same, no need to change");
 		}
 	}
