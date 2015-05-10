@@ -189,20 +189,6 @@ public class SetupSensorActivity extends BaseApplicationActivity {
 		mNext.setText(mActivity.getString(R.string.addsensor_send_pair));
 	}
 
-
-	@Override
-	protected void onAppResume() {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	protected void onAppPause() {
-		// TODO Auto-generated method stub
-
-	}
-
-
 	public void resetBtn() {
 		mSkip.setVisibility(View.VISIBLE);
 		mNext.setText("NEXT");

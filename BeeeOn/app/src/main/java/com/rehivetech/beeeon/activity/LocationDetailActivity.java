@@ -32,14 +32,6 @@ public class LocationDetailActivity extends BaseApplicationActivity {
 	}
 
 	@Override
-	protected void onAppResume() {
-	}
-
-	@Override
-	protected void onAppPause() {
-	}
-
-	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case android.R.id.home:

@@ -171,11 +171,6 @@ public class SensorEditActivity extends BaseApplicationActivity {
 	}
 
 	@Override
-	protected void onAppResume() {
-
-	}
-
-	@Override
 	protected void onAppPause() {
 		if(mProgress != null)
 			mProgress.dismiss();

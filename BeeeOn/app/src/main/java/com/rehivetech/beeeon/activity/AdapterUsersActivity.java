@@ -133,12 +133,6 @@ public class AdapterUsersActivity extends BaseApplicationActivity {
 	}
 
 	@Override
-	protected void onAppPause() {
-		// TODO Auto-generated method stub
-
-	}
-	
-	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 
 		switch (item.getItemId()) {

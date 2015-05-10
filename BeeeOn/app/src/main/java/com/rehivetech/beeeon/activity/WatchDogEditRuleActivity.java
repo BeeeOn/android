@@ -603,14 +603,5 @@ public class WatchDogEditRuleActivity extends BaseApplicationActivity {
         return true;
     }
 
-    @Override
-    protected void onAppResume() {
-
-    }
-
-    @Override
-    protected void onAppPause() {
-
-    }
 }
 

@@ -156,18 +156,6 @@ public class AddSensorActivity extends BaseApplicationActivity {
 		mNext.setText(mActivity.getString(R.string.addsensor_send_pair));
 	}
 
-
-	@Override
-	protected void onAppResume() {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	protected void onAppPause() {
-		// TODO Auto-generated method stub
-
-	}
 	
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {

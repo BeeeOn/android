@@ -152,19 +152,6 @@ public class AddAdapterActivity extends BaseApplicationActivity {
 		mNext.setText(mActivity.getString(R.string.tutorial_add));
 	}
 
-
-	@Override
-	protected void onAppResume() {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	protected void onAppPause() {
-		// TODO Auto-generated method stub
-
-	}
-	
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 

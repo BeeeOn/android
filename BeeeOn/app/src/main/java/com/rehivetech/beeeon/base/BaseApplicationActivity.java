@@ -68,12 +68,16 @@ public abstract class BaseApplicationActivity extends BaseActivity implements IN
 	/**
 	 * This is called after onResume(), but only when user is correctly logged in
 	 */
-	protected abstract void onAppResume();
+	protected void onAppResume() {
+		// Empty default method
+	}
 
 	/**
 	 * This is called after onPause()
 	 */
-	protected abstract void onAppPause();
+	protected void onAppPause() {
+		// Empty default method
+	}
 
 	/**
 	 * Method that receives Notifications.

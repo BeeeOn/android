@@ -258,7 +258,6 @@ public class MainActivity extends BaseApplicationActivity implements IListDialog
 	}
 
 	public void onAppResume() {
-		Log.d(TAG, "onAppResume()");
 		backPressed = false;
 		setBeeeOnProgressBarVisibility(true);
 		// ASYN TASK - Reload all data, if wasnt download in login activity
@@ -312,7 +311,6 @@ public class MainActivity extends BaseApplicationActivity implements IListDialog
 	@Override
 	public void onDestroy() {
 		super.onDestroy();
-		Log.d(TAG, "onDestroy");
 
 		this.setSupportProgressBarIndeterminateVisibility(false);
 

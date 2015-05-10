@@ -155,16 +155,4 @@ public class AddAdapterUserActivity extends BaseApplicationActivity {
 		return super.onOptionsItemSelected(item);
 	}
 
-	@Override
-	protected void onAppResume() {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	protected void onAppPause() {
-		// TODO Auto-generated method stub
-
-	}
-
 }

@@ -140,12 +140,6 @@ public class AchievementOverviewActivity extends BaseApplicationActivity impleme
 	}
 
 	@Override
-	protected void onAppResume() {Log.d(TAG, "onAppResume()");}
-
-	@Override
-	protected void onAppPause() {Log.d(TAG, "onAppPause()");}
-
-	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 			case android.R.id.home:

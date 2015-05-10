@@ -329,19 +329,12 @@ public class ProfileDetailActivity extends BaseApplicationActivity implements Ob
 
 	@Override
 	protected void onAppResume() {
-		Log.d(TAG, "onAppResume");
 		VKUIHelper.onResume(this);
-	}
-
-	@Override
-	protected void onAppPause() {
-		Log.d(TAG, "onAppPause");
 	}
 
 	@Override
 	public void onDestroy() {
 		super.onDestroy();
-		Log.d(TAG, "onDestroy");
 		VKUIHelper.onDestroy(this);
 	}
 

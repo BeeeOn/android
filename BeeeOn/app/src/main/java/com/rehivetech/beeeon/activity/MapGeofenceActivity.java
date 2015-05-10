@@ -339,16 +339,6 @@ public class MapGeofenceActivity extends BaseApplicationActivity implements Resu
 		mMarkers.put(marker, fenceHolder);
 	}
 
-	@Override
-	protected void onAppResume() {
-
-	}
-
-	@Override
-	protected void onAppPause() {
-
-	}
-
 	/**
 	 * Runs when a GoogleApiClient object successfully connects.
 	 */

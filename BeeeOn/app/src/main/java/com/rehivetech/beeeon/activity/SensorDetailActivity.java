@@ -122,8 +122,6 @@ public class SensorDetailActivity extends BaseApplicationActivity {
 
 	@Override
 	protected void onAppResume() {
-		Log.d(TAG, "onAppResume()");
-
 		if (mReloadFacilitiesTask == null) {
 			doReloadFacilitiesTask(mActiveAdapterId, false);
 		}
