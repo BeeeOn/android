@@ -143,6 +143,7 @@ public class WidgetClockData extends WidgetData {
 				mClockFont = R.dimen.widget_textsize_clock_large;
 				mWeatherFont = R.dimen.textsize_title;
 				mWeatherIconDimension = R.dimen.widget_weather_icon;
+				mBuilder.setImage(R.id.widget_clock_separator_1, settings.colorSecondary);
 				break;
 
 			case R.layout.widget_clock_2x2:
@@ -251,8 +252,22 @@ public class WidgetClockData extends WidgetData {
 	 */
 	private void renderWeather() {
 		switch (this.widgetLayout){
-			case R.layout.widget_clock_2x2:
 			case R.layout.widget_clock_3x2:
+				mBuilder.setTextView(
+						R.id.widget_clock_weather_humidity,
+						weather.getHumidity(),
+						settings.colorPrimary,
+						R.dimen.textsize_caption
+				);
+
+				mBuilder.setTextView(
+						R.id.widget_clock_weather_pressure,
+						weather.getPressure(),
+						settings.colorPrimary,
+						R.dimen.textsize_caption
+				);
+
+			case R.layout.widget_clock_2x2:
 				mBuilder.setTextView(
 						R.id.widget_clock_weather_city,
 						weather.cityName,
@@ -263,7 +278,6 @@ public class WidgetClockData extends WidgetData {
 				mBuilder.setTextView(
 						R.id.widget_clock_weather_temperature,
 						weather.getTemperature(),
-						//String.format("%d %s", weather.temperature, weather.temperatureUnit),
 						settings.colorSecondary,
 						mWeatherFont
 				);

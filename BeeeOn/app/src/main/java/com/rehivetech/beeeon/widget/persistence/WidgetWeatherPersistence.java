@@ -10,6 +10,8 @@ import android.graphics.Typeface;
 
 import com.rehivetech.beeeon.IIdentifier;
 import com.rehivetech.beeeon.R;
+import com.rehivetech.beeeon.household.device.values.HumidityValue;
+import com.rehivetech.beeeon.household.device.values.PressureValue;
 import com.rehivetech.beeeon.household.device.values.TemperatureValue;
 import com.rehivetech.beeeon.util.Log;
 import com.rehivetech.beeeon.util.TimeHelper;
@@ -28,14 +30,18 @@ public class WidgetWeatherPersistence extends WidgetPersistence implements IIden
 	public static final String TAG = WidgetWeatherPersistence.class.getSimpleName();
 
 	private static final String PREF_ID = "id";
-	private static final String PREF_HUMIDITY = "humidity";
 	private static final String PREF_TIMESTAMP = "timestamp";
 	private static final String PREF_CITY_NAME = "city_name";
 	private static final String PREF_COUNTRY = "country";
 	private static final String PREF_TEMPERATURE = "temperature";
 	private static final String PREF_TEMPERATURE_UNIT = "temperature_unit";
 	private static final String PREF_ICON_RESOURCE = "icon_resource";
+	private static final String PREF_HUMIDITY = "w_humidity";
+	private static final String PREF_PRESSURE = "w_pressure";
+
 	private static final String DEFAULT_TEMPERATURE_UNIT = "°C";
+	private static final String DEFAULT_HUMIDITY_UNIT = "%";
+	private static final String DEFAULT_PRESSURE_UNIT = "hPa";
 
 	private static Typeface sWeatherFont;
 	private Resources mResources;
@@ -47,8 +53,9 @@ public class WidgetWeatherPersistence extends WidgetPersistence implements IIden
 	public int iconResource = DEFAULT_WEATHER_ICON;
 	public long temperature;
 	public String temperatureUnit;
-	public float humidity;
 	private long timestamp;
+	private int humidity;
+	private int pressure;
 
 	// object data
 	public Bitmap generatedIcon;
@@ -56,6 +63,8 @@ public class WidgetWeatherPersistence extends WidgetPersistence implements IIden
 	private final Rect mIconBounds = new Rect();
 	private int oldIconSize;
 	private TemperatureValue mTemperatureValue;
+	private HumidityValue mHumidityValue;
+	private PressureValue mPressureValue;
 
 	public WidgetWeatherPersistence(Context context, int widgetId, UnitsHelper unitsHelper, TimeHelper timeHelper, WidgetSettings settings) {
 		super(context, widgetId, 0, 0, unitsHelper, timeHelper, settings);
@@ -65,6 +74,9 @@ public class WidgetWeatherPersistence extends WidgetPersistence implements IIden
 		}
 
 		mTemperatureValue = new TemperatureValue();
+		mHumidityValue = new HumidityValue();
+		mPressureValue = new PressureValue();
+
 		mResources = mContext.getResources();
 	}
 
@@ -80,7 +92,13 @@ public class WidgetWeatherPersistence extends WidgetPersistence implements IIden
 		temperatureUnit = mPrefs.getString(getProperty(PREF_TEMPERATURE_UNIT), mUnitsHelper != null ? mUnitsHelper.getStringUnit(mTemperatureValue) : DEFAULT_TEMPERATURE_UNIT);
 		mTemperatureValue.setValue(String.valueOf(temperature));
 
-		humidity = mPrefs.getFloat(getProperty(PREF_HUMIDITY), 0);
+		// loads persist humidity + set object humidity
+		humidity = mPrefs.getInt(getProperty(PREF_HUMIDITY), 0);
+		mHumidityValue.setValue(String.valueOf(humidity));
+
+		pressure = mPrefs.getInt(getProperty(PREF_PRESSURE), 0);
+		mPressureValue.setValue(String.valueOf(pressure));
+
 		timestamp = mPrefs.getLong(getProperty(PREF_TIMESTAMP), 0);
 	}
 
@@ -93,7 +111,8 @@ public class WidgetWeatherPersistence extends WidgetPersistence implements IIden
 				.putLong(getProperty(PREF_TEMPERATURE), temperature)
 				.putInt(getProperty(PREF_ICON_RESOURCE), iconResource)
 				.putString(getProperty(PREF_TEMPERATURE_UNIT), temperatureUnit)
-				.putFloat(getProperty(PREF_HUMIDITY), humidity)
+				.putInt(getProperty(PREF_HUMIDITY), humidity)
+				.putInt(getProperty(PREF_PRESSURE), pressure)
 				.putLong(getProperty(PREF_TIMESTAMP), timestamp)
 				.apply();
 	}
@@ -108,6 +127,7 @@ public class WidgetWeatherPersistence extends WidgetPersistence implements IIden
 				.remove(getProperty(PREF_ICON_RESOURCE))
 				.remove(getProperty(PREF_TEMPERATURE_UNIT))
 				.remove(getProperty(PREF_HUMIDITY))
+				.remove(getProperty(PREF_PRESSURE))
 				.remove(getProperty(PREF_TIMESTAMP))
 				.apply();
 	}
@@ -132,7 +152,8 @@ public class WidgetWeatherPersistence extends WidgetPersistence implements IIden
 			temperatureUnit = DEFAULT_TEMPERATURE_UNIT;
 			mTemperatureValue.setValue(String.valueOf(temperature));
 			
-			humidity = (float) main.getDouble("humidity");
+			humidity = main.getInt("humidity");
+			pressure = (int) main.getDouble("pressure");
 			timestamp = json.getLong("dt");
 
 			// generates new bitmap but only IF NEEDED
@@ -182,7 +203,25 @@ public class WidgetWeatherPersistence extends WidgetPersistence implements IIden
 			return  mUnitsHelper.getStringValueUnit(mTemperatureValue);
 		}
 		else{
-			return String.format("%d %s", temperature, temperatureUnit);
+			return String.format("%d%s", temperature, temperatureUnit);
+		}
+	}
+
+	public String getHumidity(){
+		if(mUnitsHelper != null){
+			return  mUnitsHelper.getStringValueUnit(mHumidityValue);
+		}
+		else{
+			return String.format("%d%s", humidity, DEFAULT_HUMIDITY_UNIT);
+		}
+	}
+
+	public String getPressure() {
+		if(mUnitsHelper != null){
+			return  mUnitsHelper.getStringValueUnit(mPressureValue);
+		}
+		else{
+			return String.format("%d%s", pressure, DEFAULT_PRESSURE_UNIT);
 		}
 	}
 
