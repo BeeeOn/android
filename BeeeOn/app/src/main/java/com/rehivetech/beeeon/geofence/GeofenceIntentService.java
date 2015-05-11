@@ -15,7 +15,7 @@ import java.util.List;
 /**
  * Created by Martin on 17. 3. 2015.
  */
-public class GeofenceIntentService extends IntentService {
+	public class GeofenceIntentService extends IntentService {
 
 	public final String TAG = GeofenceIntentService.this.getClass().getSimpleName();
 	private Handler handler;

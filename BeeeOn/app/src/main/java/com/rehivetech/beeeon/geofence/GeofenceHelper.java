@@ -18,7 +18,10 @@ public final class GeofenceHelper {
 	/**
 	 * Private constructor to avoid instantiation
 	 */
-	private GeofenceHelper(){};
+	private GeofenceHelper() {
+	}
+
+	;
 
 	/**
 	 * Builds and returns a GeofencingRequest. Specifies one geofence to be monitored.

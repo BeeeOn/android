@@ -18,7 +18,6 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.Window;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
@@ -26,8 +25,6 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
-import com.google.android.gms.location.Geofence;
-import com.google.android.gms.location.GeofencingRequest;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -47,7 +44,6 @@ import com.rehivetech.beeeon.activity.dialog.GeofenceDialogFragment;
 import com.rehivetech.beeeon.base.BaseApplicationActivity;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.geofence.GeofenceHelper;
-import com.rehivetech.beeeon.geofence.GeofenceIntentService;
 import com.rehivetech.beeeon.geofence.SimpleGeofence;
 import com.rehivetech.beeeon.util.Log;
 
@@ -64,7 +60,7 @@ public class MapGeofenceActivity extends BaseApplicationActivity implements Resu
 	private static final String TAG_DIALOG_ADD_GEOFENCE = "geofenceDialog";
 
 	private static final float MAP_ZOOM = 17.5F;
-	private static final int MAXIMUM_RET_ADDRESS = 3;
+	private static final int MAXIMUM_RET_ADDRESS = 1;
 	private static final int GEOFENCE_BOUND_PADDING = 50;
 	private GoogleApiClient mGoogleApiClient;
 	private GoogleMap mMap;
@@ -162,8 +158,7 @@ public class MapGeofenceActivity extends BaseApplicationActivity implements Resu
 				mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(actHolder.getMarker().getPosition(), MAP_ZOOM));
 			}
 
-		}
-		else if (mMarkers.size() > 1) {
+		} else if (mMarkers.size() > 1) {
 			Log.i(TAG, "Markers found, zooming to it.");
 			zoomActualGeofences();
 		}
@@ -278,7 +273,7 @@ public class MapGeofenceActivity extends BaseApplicationActivity implements Resu
 					// A pending intent that that is reused when calling removeGeofences(). This
 					// pending intent is used to generate an intent when a matched geofence
 					// transition is observed.
-					GeofenceHelper.getGeofencePendingIntent(mGeofencePendingIntent,this)
+					GeofenceHelper.getGeofencePendingIntent(mGeofencePendingIntent, this)
 			).setResultCallback(this); // Result processed in onResult().
 		} catch (SecurityException securityException) {
 			// Catch exception generated if the app does not use ACCESS_FINE_LOCATION permission.
@@ -337,6 +332,16 @@ public class MapGeofenceActivity extends BaseApplicationActivity implements Resu
 
 		GeofenceHolder fenceHolder = new GeofenceHolder(circle, marker, fence);
 		mMarkers.put(marker, fenceHolder);
+	}
+
+	@Override
+	protected void onAppResume() {
+
+	}
+
+	@Override
+	protected void onAppPause() {
+
 	}
 
 	/**
@@ -421,7 +426,7 @@ public class MapGeofenceActivity extends BaseApplicationActivity implements Resu
 			Log.d(TAG, "Start searching:" + locationName);
 
 			try {
-				// Getting a maximum of 3 Address that matches the input text
+				// Getting a maximum of 1 Address that matches the input text (best match)
 				addresses = geocoder.getFromLocationName(locationName[0], MAXIMUM_RET_ADDRESS);
 			} catch (IOException e) {
 				e.printStackTrace();

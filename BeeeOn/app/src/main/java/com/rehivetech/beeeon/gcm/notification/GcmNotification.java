@@ -1,12 +1,6 @@
 package com.rehivetech.beeeon.gcm.notification;
 
 import android.content.Context;
-import android.os.Bundle;
-import android.support.annotation.Nullable;
-
-import com.rehivetech.beeeon.controller.Controller;
-import com.rehivetech.beeeon.household.device.values.BaseValue;
-import com.rehivetech.beeeon.network.xml.Xconstants;
 
 /**
  * Created by Martin on 26. 4. 2015.
@@ -23,7 +17,7 @@ public interface GcmNotification {
 	enum NotificationName {
 		WATCHDOG("watchdog", WatchdogNotification.class),
 		DELETE_NOTIF("delete_not", DeleteNotification.class),
-		URI("uri",UriNotification.class),
+		URI("uri", UriNotification.class),
 		SENSOR_ADDED("sensor_add", SensorAddedNotification.class),
 		SENSOR_LOW_BATTERY("sensor_bat", SensorLowBatteryNotification.class),
 		SENSOR_LOW_SIGNAL("sensor_sig", SensorLowSignalNotification.class),
@@ -39,20 +33,20 @@ public interface GcmNotification {
 			mClass = baseClass;
 		}
 
-		public String getName() {
-			return mName;
-		}
-
-		public Class<? extends BaseNotification> getBaseClass() {
-			return mClass;
-		}
-
 		public static NotificationName fromValue(String value) {
 			for (NotificationName item : values()) {
 				if (value.equalsIgnoreCase(item.getName()))
 					return item;
 			}
 			throw new IllegalArgumentException("Invalid State value");
+		}
+
+		public String getName() {
+			return mName;
+		}
+
+		public Class<? extends BaseNotification> getBaseClass() {
+			return mClass;
 		}
 	}
 
@@ -68,7 +62,7 @@ public interface GcmNotification {
 			mValue = value;
 		}
 
-		public static NotificationType fromValue(String value) throws IllegalArgumentException{
+		public static NotificationType fromValue(String value) throws IllegalArgumentException {
 			for (NotificationType item : values()) {
 				if (value.equalsIgnoreCase(item.getValue()))
 					return item;

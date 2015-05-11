@@ -4,7 +4,6 @@ import android.content.Context;
 import android.os.Bundle;
 import android.widget.Toast;
 
-import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.network.xml.Xconstants;
 import com.rehivetech.beeeon.util.Log;
 
@@ -100,7 +99,7 @@ public class AdapterOfflineNotification extends VisibleNotification {
 	}
 
 	@Override
-	protected String getName(Context context){
+	protected String getName(Context context) {
 		// TODO
 		return "ahoj";
 	}

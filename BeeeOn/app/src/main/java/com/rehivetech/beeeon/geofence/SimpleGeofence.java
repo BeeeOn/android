@@ -206,6 +206,7 @@ public class SimpleGeofence implements IIdentifier {
 						getLongitude(),
 						getRadius())
 				.setExpirationDuration(mExpirationDuration)
+						//				.setLoiteringDelay()
 				.build();
 	}
 

@@ -68,12 +68,6 @@ public abstract class VisibleNotification extends BaseNotification {
 		return notification;
 	}
 
-	abstract protected String getMessage(Context context);
-
-	protected abstract String getName(Context context);
-
-	abstract protected void onClickHandle(Context context);
-
 	@Nullable
 	public static VisibleNotification parseXml(String nameStr, String typeStr, String idStr, String timeStr, boolean isRead, XmlPullParser parser) throws IOException, XmlPullParserException {
 		try {
@@ -88,6 +82,12 @@ public abstract class VisibleNotification extends BaseNotification {
 			return null;
 		}
 	}
+
+	abstract protected String getMessage(Context context);
+
+	abstract protected String getName(Context context);
+
+	abstract protected void onClickHandle(Context context);
 
 	@SuppressLint("NewApi")
 	protected NotificationCompat.Builder getBaseNotificationBuilder(Context context) {
@@ -120,7 +120,6 @@ public abstract class VisibleNotification extends BaseNotification {
 			resultPendingIntent = PendingIntent.getActivities(context, 0,
 					new Intent[]{backIntent, resultIntent}, PendingIntent.FLAG_ONE_SHOT);
 		}
-
 
 
 		NotificationCompat.Builder builder = new NotificationCompat.Builder(context)

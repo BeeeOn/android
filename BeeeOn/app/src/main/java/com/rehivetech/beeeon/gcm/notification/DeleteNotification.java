@@ -29,13 +29,13 @@ public class DeleteNotification extends BaseNotification {
 		mDeleteNotificationId = deleteNotificaitonId;
 	}
 
-	protected static DeleteNotification getInstance( Integer msgId, Long time, NotificationType type, Bundle bundle) throws NullPointerException, IllegalArgumentException{
+	protected static DeleteNotification getInstance(Integer msgId, Long time, NotificationType type, Bundle bundle) throws NullPointerException, IllegalArgumentException {
 		DeleteNotification instance = null;
 
 		try {
 			Integer delNotificationId = Integer.valueOf(bundle.getString(JSON_TAG_DEL_NOTIFICATION_ID));
 
-			if (delNotificationId == null ) {
+			if (delNotificationId == null) {
 				Log.d(TAG, "DeleteNotification: some compulsory value is missing.");
 				return null;
 			}

@@ -73,7 +73,7 @@ public abstract class BaseNotification implements GcmNotification {
 				return null;
 			}
 
-			notification = getInstance(name, msgId, userId, time, type, bundle);
+			notification = getInstance(name, msgId, time, type, bundle);
 		}
 		// catch nullpointer if some of bundle values doesn't exist
 		// catch IllegalArgumentException if cannot cast
@@ -89,7 +89,7 @@ public abstract class BaseNotification implements GcmNotification {
 	}
 
 	@Nullable
-	private static BaseNotification getInstance(NotificationName name, Integer msgId, String userId, Long time,
+	private static BaseNotification getInstance(NotificationName name, Integer msgId, Long time,
 												NotificationType type, Bundle bundle) throws NullPointerException, IllegalArgumentException {
 		BaseNotification notification = null;
 

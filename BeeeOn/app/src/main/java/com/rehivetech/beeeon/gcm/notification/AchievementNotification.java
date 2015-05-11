@@ -1,13 +1,10 @@
 package com.rehivetech.beeeon.gcm.notification;
 
-import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.NotificationCompat;
 
-import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.activity.ProfileDetailActivity;
 import com.rehivetech.beeeon.network.xml.Xconstants;
 import com.rehivetech.beeeon.util.Log;

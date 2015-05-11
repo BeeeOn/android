@@ -1,11 +1,8 @@
 package com.rehivetech.beeeon.gcm.notification;
 
-import android.app.PendingIntent;
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.NotificationCompat;
-import android.widget.Toast;
 
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.gcm.Action;
@@ -123,7 +120,7 @@ public class WatchdogNotification extends VisibleNotification {
 		NotificationCompat.Builder builder = getBaseNotificationBuilder(context);
 
 		/*
-         * Sets the big view "big text" style and supplies the
+		 * Sets the big view "big text" style and supplies the
          * text (the user's reminder message) that will be displayed
          * in the detail area of the expanded notification.
          * These calls are ignored by the support library for

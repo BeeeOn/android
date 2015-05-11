@@ -9,7 +9,6 @@ import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -132,7 +131,7 @@ public class GeofenceDialogFragment extends DialogFragment {
 
 			@Override
 			public void onTextChanged(CharSequence charSequence, int i, int i2, int i3) {
-				if(charSequence.length() > 0) {
+				if (charSequence.length() > 0) {
 					mPositiveButton.setEnabled(true);
 				} else {
 					mPositiveButton.setEnabled(false);
@@ -145,6 +144,7 @@ public class GeofenceDialogFragment extends DialogFragment {
 			}
 		});
 
+		mRadius.setText(String.valueOf(DEFAULT_RADIUS));
 		mRadius.addTextChangedListener(new TextWatcher() {
 			@Override
 			public void beforeTextChanged(CharSequence charSequence, int i, int i2, int i3) {
