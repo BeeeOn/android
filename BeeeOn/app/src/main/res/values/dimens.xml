@@ -16,7 +16,6 @@
 	<!--  Widgets -->
 	<dimen name="widget_margin">8dp</dimen>
 
-	<dimen name="widget_width_cells_1">70dp</dimen>
 	<dimen name="widget_width_cells_2">170dp</dimen>
 	<dimen name="widget_width_cells_3">240dp</dimen>
 

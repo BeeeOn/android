@@ -171,11 +171,11 @@ public class WidgetDeviceData extends WidgetData {
 
         int layout;
         // 1 cell
-        if(minWidth < WIDGET_MIN_CELLS_2){
+        if(minWidth < 170){
             layout = R.layout.widget_device_1x1;
         }
         // 2 cells
-        else if(minWidth >= WIDGET_MIN_CELLS_2 && minWidth < WIDGET_MIN_CELLS_3){
+        else if(minWidth < 200){
             layout = R.layout.widget_device_2x1;
         }
         // 3 cells

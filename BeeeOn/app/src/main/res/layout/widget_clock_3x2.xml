@@ -96,7 +96,8 @@
 			android:layout_height="wrap_content"
 			android:layout_alignTop="@+id/widget_weather_icon"
 			android:layout_toRightOf="@+id/widget_weather_icon"
-			android:layout_toEndOf="@+id/widget_weather_icon">
+			android:layout_toEndOf="@+id/widget_weather_icon"
+			>
 
 			<TextView
 				android:id="@+id/widget_clock_weather_city"

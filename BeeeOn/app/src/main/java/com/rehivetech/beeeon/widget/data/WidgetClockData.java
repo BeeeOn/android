@@ -150,7 +150,6 @@ public class WidgetClockData extends WidgetData {
 				mWeatherIconDimension = R.dimen.widget_weather_icon_small;
 				mBuilder.setImage(R.id.widget_clock_separator_1, settings.colorPrimary);
 				mBuilder.setImage(R.id.widget_clock_separator_2, settings.colorPrimary);
-				mBuilder.setImage(R.id.widget_clock_separator_3, settings.colorPrimary);
 			default:
 				mClockFont = R.dimen.widget_textsize_clock;
 				mWeatherFont = R.dimen.textsize_body;
@@ -347,7 +346,7 @@ public class WidgetClockData extends WidgetData {
 		String debugName;
 
 		if (minWidth < 220) {
-			if (minHeight < 130) {
+			if (minHeight < 120) {
 				layout = R.layout.widget_clock_2x1;
 				debugName = "2x1";
 			} else {
@@ -355,7 +354,7 @@ public class WidgetClockData extends WidgetData {
 				debugName = "2x2";
 			}
 		} else {
-			if (minHeight < 130) {
+			if (minHeight < 120) {
 				layout = R.layout.widget_clock_2x1;
 				debugName = "2x1";
 			} else {
