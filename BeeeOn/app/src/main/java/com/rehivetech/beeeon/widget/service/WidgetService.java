@@ -104,7 +104,7 @@ public class WidgetService extends Service {
      * @param widgetShouldReload
      */
     public static void startUpdating(Context context, int[] appWidgetIds, boolean widgetShouldReload){
-        Log.d(TAG, "startUpdating()");
+        Log.d(TAG, String.format("startUpdating(%b)", widgetShouldReload));
         final Intent intent =  getIntentUpdate(context);
         intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, appWidgetIds);
         intent.putExtra(EXTRA_START_UPDATING, true);
@@ -299,7 +299,7 @@ public class WidgetService extends Service {
         Log.d(TAG, "WidgetsToUpdate = " + allWidgetIds.length);
 
         // -------------- reload widget if necessary
-        boolean isShouldReload = intent != null ? intent.getBooleanExtra(EXTRA_WIDGETS_SHOULD_RELOAD, false) : false;
+        boolean isShouldReload = intent != null && intent.getBooleanExtra(EXTRA_WIDGETS_SHOULD_RELOAD, false);
 
         long timeNow = SystemClock.elapsedRealtime();
         SparseArray<WidgetData> widgetsToUpdate = new SparseArray<>();
@@ -366,11 +366,13 @@ public class WidgetService extends Service {
                 }
             }
 
+			// updates all facilities in once
             if(!usedFacilities.isEmpty()){
                 Log.v(TAG, "refreshing facilities...");
                 mController.getFacilitiesModel().refreshFacilities(usedFacilities, isForceUpdate);
             }
 
+			// updates all weather data
             if(!usedWeatherData.isEmpty()){
                 this.updateWeatherData(usedWeatherData);
             }
@@ -417,6 +419,8 @@ public class WidgetService extends Service {
 
             JSONObject json = mWeatherProvider.getWeatherByCityId(weather.id);
             if (json == null) {
+				//weather.failedUpdate = true;
+				// TODO should check if failed update and then update it again in 10minutes, otherwise according to interval
                 Log.i(TAG, mContext.getString(R.string.weather_place_not_found));
             } else {
                 weather.configure(json, null);
@@ -601,7 +605,8 @@ public class WidgetService extends Service {
             try {
                 // instantiate class from string
                 widgetData = (WidgetData) Class.forName(widgetClassName).getConstructor(int.class, Context.class, UnitsHelper.class, TimeHelper.class).newInstance(widgetId, mContext, mUnitsHelper, mTimeHelper);
-                widgetData.load();
+                Log.v(TAG, "instantiated new widgetData " + widgetId);
+				widgetData.load();
                 // if its clock widget -> we put instance of calendar inside
                 if(widgetData instanceof WidgetClockData){
                     widgetData.initAdvanced(mCalendar);
@@ -675,6 +680,7 @@ public class WidgetService extends Service {
      * @return
      */
     private long calcNextUpdate(int[] appWidgetIds) {
+		Log.v(TAG, "calculating next update...");
         int minInterval = 0;
         long nextUpdate = 0;
         long timeNow = SystemClock.elapsedRealtime();

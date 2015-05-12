@@ -14,6 +14,7 @@
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		android:layout_centerHorizontal="true"
+		android:layout_marginTop="-16dp"
 		>
 		<include layout="@layout/widget_include_clock" />
 	</RelativeLayout>
@@ -62,7 +63,7 @@
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
 				android:gravity="center"
-				android:layout_marginTop="2dp">
+				android:layout_marginTop="-4dp">
 					<include layout="@layout/widget_include_value_unit" />
 			</RelativeLayout>
 

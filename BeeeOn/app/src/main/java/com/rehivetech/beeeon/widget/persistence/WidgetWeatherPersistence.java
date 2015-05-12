@@ -139,25 +139,31 @@ public class WidgetWeatherPersistence extends WidgetPersistence implements IIden
 		try {
 			JSONObject jsonWeather = json.getJSONArray("weather").getJSONObject(0);
 			JSONObject main = json.getJSONObject("main");
+			JSONObject sys = json.getJSONObject("sys");
 
 			id = json.getString("id");
-			cityName = json.getString("name") + ", " + json.getJSONObject("sys").getString("country");
+			cityName = json.getString("name") + ", " + sys.getString("country");
 
-			iconResource = WeatherProvider.parseWeatherIconResource(
-					jsonWeather.getInt("id"),
-					json.getJSONObject("sys").getLong("sunrise") * 1000,
-					json.getJSONObject("sys").getLong("sunset") * 1000);
+			long sunrise = sys.has("sunrise") ? sys.getLong("sunrise") * 1000 : -1;
+			long sunset = sys.has("sunset") ? sys.getLong("sunset") * 1000 : -1;
+
+			iconResource = WeatherProvider.parseWeatherIconResource(jsonWeather.getInt("id"), sunrise, sunset);
 
 			temperature = (long) main.getDouble("temp");
 			temperatureUnit = DEFAULT_TEMPERATURE_UNIT;
 			mTemperatureValue.setValue(String.valueOf(temperature));
 			
 			humidity = main.getInt("humidity");
+			mHumidityValue.setValue(String.valueOf(humidity));
+
 			pressure = (int) main.getDouble("pressure");
+			mPressureValue.setValue(String.valueOf(pressure));
+
 			timestamp = json.getLong("dt");
 
 			// generates new bitmap but only IF NEEDED
 			getBitmapIcon(false, (int) mContext.getResources().getDimension(R.dimen.widget_weather_icon));
+			this.save();
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
@@ -202,27 +208,24 @@ public class WidgetWeatherPersistence extends WidgetPersistence implements IIden
 		if(mUnitsHelper != null){
 			return  mUnitsHelper.getStringValueUnit(mTemperatureValue);
 		}
-		else{
-			return String.format("%d%s", temperature, temperatureUnit);
-		}
+
+		return String.format("%d%s", temperature, temperatureUnit);
 	}
 
 	public String getHumidity(){
 		if(mUnitsHelper != null){
-			return  mUnitsHelper.getStringValueUnit(mHumidityValue);
+			return mUnitsHelper.getStringValueUnit(mHumidityValue);
 		}
-		else{
-			return String.format("%d%s", humidity, DEFAULT_HUMIDITY_UNIT);
-		}
+
+		return String.format("%d%s", humidity, DEFAULT_HUMIDITY_UNIT);
 	}
 
 	public String getPressure() {
 		if(mUnitsHelper != null){
 			return  mUnitsHelper.getStringValueUnit(mPressureValue);
 		}
-		else{
-			return String.format("%d%s", pressure, DEFAULT_PRESSURE_UNIT);
-		}
+
+		return String.format("%d%s", pressure, DEFAULT_PRESSURE_UNIT);
 	}
 
 	@Override

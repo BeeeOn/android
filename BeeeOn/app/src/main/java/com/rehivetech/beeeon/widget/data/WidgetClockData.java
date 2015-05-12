@@ -330,10 +330,6 @@ public class WidgetClockData extends WidgetData {
 			this.save();
 			Log.v(TAG, String.format("Updating widget (%d) with fresh data", getWidgetId()));
 		}
-		else {
-			// TODO show some kind of icon
-			Log.v(TAG, String.format("Updating widget (%d) with cached data", getWidgetId()));
-		}
 
 		return updated > 0;
 	}

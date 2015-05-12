@@ -176,7 +176,7 @@ public abstract class WidgetConfigurationFragment extends Fragment {
 
 		if(mReloadTask != null) mReloadTask.cancel(true);
 
-		finishConfiguration();
+		//finishConfiguration();
 	}
 
 	/**
