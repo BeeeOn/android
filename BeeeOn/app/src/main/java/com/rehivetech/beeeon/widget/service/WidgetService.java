@@ -89,6 +89,9 @@ public class WidgetService extends Service {
     private Calendar mCalendar;
     private WeatherProvider mWeatherProvider;
 
+	// broadcast intents
+	private IntentFilter mIntentFilter = recreateIntentFilter();
+	private boolean mClockFilterReg = false;
 
     // for checking if user is logged in (we presume that for the first time he is)
     private boolean isCached = false;
@@ -135,20 +138,44 @@ public class WidgetService extends Service {
         context.stopService(intent);
     }
 
-    private final static IntentFilter sIntentFilter;
-    static{
-        sIntentFilter = new IntentFilter();
-        sIntentFilter.addAction(Intent.ACTION_SCREEN_ON);
-        sIntentFilter.addAction(Intent.ACTION_SCREEN_OFF);
-        sIntentFilter.addAction(Intent.ACTION_TIME_TICK);
-        sIntentFilter.addAction(Intent.ACTION_TIMEZONE_CHANGED);
-        sIntentFilter.addAction(Intent.ACTION_TIME_CHANGED);
-        sIntentFilter.addAction(Intent.ACTION_LOCALE_CHANGED);
-        sIntentFilter.addAction(ConnectivityManager.CONNECTIVITY_ACTION);
-        // --- beeeOn broadcasts
-        sIntentFilter.addAction(Constants.BROADCAST_ACTOR_CHANGED);
-        sIntentFilter.addAction(Constants.BROADCAST_PREFERENCE_CHANGED);
-    }
+
+	/**
+	 * Recreates intent filter and add default actions
+	 * @return IntentFilter
+	 */
+	private IntentFilter recreateIntentFilter(){
+		Log.v(TAG, "recreateIntentFilter()");
+		mClockFilterReg = false;
+		mIntentFilter = new IntentFilter();
+		addDefaultFilters();
+		return mIntentFilter;
+	}
+
+	/**
+	 * Default intents getting by broadcasts
+	 */
+	private void addDefaultFilters(){
+		// --- maintaing broadcasts
+		mIntentFilter.addAction(Intent.ACTION_SCREEN_ON);
+		mIntentFilter.addAction(Intent.ACTION_SCREEN_OFF);
+		mIntentFilter.addAction(Intent.ACTION_LOCALE_CHANGED);
+		mIntentFilter.addAction(ConnectivityManager.CONNECTIVITY_ACTION);
+		// --- beeeOn broadcasts
+		mIntentFilter.addAction(Constants.BROADCAST_ACTOR_CHANGED);
+		mIntentFilter.addAction(Constants.BROADCAST_PREFERENCE_CHANGED);
+	}
+
+	/**
+	 * Intents for updating time
+	 */
+	private void addTimeFilters(){
+		Log.v(TAG, "addTimeFilters()");
+		mClockFilterReg = true;
+		// --- time broadcasts
+		mIntentFilter.addAction(Intent.ACTION_TIME_TICK);
+		mIntentFilter.addAction(Intent.ACTION_TIMEZONE_CHANGED);
+		mIntentFilter.addAction(Intent.ACTION_TIME_CHANGED);
+	}
 
     /**
      * Initializes things only first time service is started
@@ -170,7 +197,7 @@ public class WidgetService extends Service {
         // Creates broadcast receiver which bridges broadcasts to appwidgets for handling time and screen
         Log.v(TAG, "registeringBroadcastReceiver()");
 
-        registerReceiver(mServiceReceiver, sIntentFilter);
+        registerReceiver(mServiceReceiver, mIntentFilter);
     }
 
     /**
@@ -186,6 +213,16 @@ public class WidgetService extends Service {
         Log.v(TAG, "Unregistering broadcast bridge");
         unregisterReceiver(mServiceReceiver);
     }
+
+	/**
+	 * When system has low memory - delete saved widget data (they will be restored from persistence when needed)
+	 */
+	@Override
+	public void onLowMemory(){
+		super.onLowMemory();
+		Log.i(TAG, "onLowMemor()");
+		mAvailableWidgets.clear();
+	}
 
     /**
      * Entry point of service .. widgets can sent Intent with specific data and pass them to service
@@ -515,16 +552,6 @@ public class WidgetService extends Service {
     // -------------------------------------------------------------------- //
     // ------------------------- Managing methods ------------------------- //
     // -------------------------------------------------------------------- //
-	/**
-	 * When system has low memory - delete saved widget data (they will be restored from persistence when needed)
-	 */
-	@Override
-	public void onLowMemory(){
-		super.onLowMemory();
-		Log.i(TAG,"onLowMemor()");
-		mAvailableWidgets.clear();
-	}
-
     /**
      * Goes through all widgets, find widgets with the specified actor
      * and perform partial (only changes layout) or whole update
@@ -694,10 +721,16 @@ public class WidgetService extends Service {
             widgetIds = appWidgetIds;
         }
 
+		boolean existsClockWidget = false;
+
         if(widgetIds != null) for (int widgetId : widgetIds) {
             WidgetData widgetData = getWidgetData(widgetId);
             // widget is not added yet (probably only configuration activity is showed)
             if (widgetData == null || !widgetData.widgetInitialized) continue;
+
+			if(widgetData instanceof WidgetClockData){
+				existsClockWidget = true;
+			}
 
             if (first) {
                 minInterval = widgetData.widgetInterval;
@@ -709,6 +742,24 @@ public class WidgetService extends Service {
             }
         }
 
+		boolean receiverChanged = false;
+		// if found any clock widget and not receiving time broadcasts
+		if(existsClockWidget && !mClockFilterReg){
+			mCalendar.setTime(new Date());
+			addTimeFilters();
+			receiverChanged = true;
+		}
+		// if not found any clock widget and receiving time broadcasts
+		// if no more widgets -> unregister when destroying service
+		else if(!existsClockWidget && mClockFilterReg && !first){
+			recreateIntentFilter();
+			receiverChanged = true;
+		}
+
+		// if receiver changed, register it again
+		if(receiverChanged)	restartReceiver();
+
+		// count next update
         minInterval = Math.max(minInterval, UPDATE_INTERVAL_MIN.getInterval());
         return first ? 0 : Math.max(nextUpdate, SystemClock.elapsedRealtime() + minInterval * 1000);
     }
@@ -925,6 +976,14 @@ public class WidgetService extends Service {
     // ------------------------- Broadcast receiver ----------------------- //
     // -------------------------------------------------------------------- //
 
+	/**
+	 * Restarts the receiver with actual mIntentFilter
+	 */
+	private void restartReceiver(){
+		unregisterReceiver(mServiceReceiver);
+		registerReceiver(mServiceReceiver, mIntentFilter);
+	}
+
     private final BroadcastReceiver mServiceReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -948,6 +1007,8 @@ public class WidgetService extends Service {
             // if screen went off, tell the service
             else if(receivedAction.equals(Intent.ACTION_SCREEN_OFF)){
                 Log.d(TAG, "service getting standby...");
+				recreateIntentFilter();
+				restartReceiver();
                 stopAlarm(context);
             }
             // if any actor value was changed, tell the service to refresh widget with that device
