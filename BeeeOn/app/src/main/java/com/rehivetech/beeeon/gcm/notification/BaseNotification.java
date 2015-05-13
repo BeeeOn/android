@@ -16,7 +16,7 @@ import com.rehivetech.beeeon.util.Log;
 import java.util.Calendar;
 import java.util.TimeZone;
 
-public abstract class BaseNotification implements GcmNotification {
+public abstract class BaseNotification implements GcmNotification, Comparable<BaseNotification> {
 
 	public static final String TAG = BaseNotification.class.getSimpleName();
 
@@ -212,5 +212,16 @@ public abstract class BaseNotification implements GcmNotification {
 
 		// Builds the notification and issues it.
 		mNotifyMgr.notify(getId(), builder.build());
+	}
+
+	@Override
+	public int compareTo(BaseNotification notification) {
+		if (getDate().after(notification.getDate())) {
+			return -1;
+		} else if (getDate().before(notification.getDate())) {
+			return 1;
+		} else {
+			return 0;
+		}
 	}
 }

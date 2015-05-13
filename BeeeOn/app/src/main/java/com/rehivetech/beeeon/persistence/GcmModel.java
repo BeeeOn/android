@@ -16,6 +16,7 @@ import com.rehivetech.beeeon.util.Log;
 import com.rehivetech.beeeon.util.Utils;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.WeakHashMap;
 
@@ -240,6 +241,8 @@ public class GcmModel {
 	 * This CAN'T be called on UI thread!
 	 */
 	public List<VisibleNotification> getNotificationHistory() {
-		return mNetwork.getNotifications();
+		List<VisibleNotification> list =  mNetwork.getNotifications();
+		Collections.sort(list);
+		return list;
 	}
 }
