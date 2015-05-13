@@ -3,6 +3,7 @@ package com.rehivetech.beeeon.gcm.notification;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
 
 import com.rehivetech.beeeon.activity.ProfileDetailActivity;
@@ -45,12 +46,27 @@ public class AchievementNotification extends VisibleNotification {
 		return instance;
 	}
 
+	@Nullable
 	protected static VisibleNotification getInstance(Integer msgId, Long time, NotificationType type, boolean isRead, XmlPullParser parser) throws IOException, XmlPullParserException, NumberFormatException {
 		Integer achievementId = null;
 
+		if (parser == null) {
+			Log.e(TAG, "Parser is NULL");
+			return null;
+		}
+
+		if (parser.getName() == null) {
+			Log.e(TAG, "Parser.getName() is NULL");
+			return null;
+		}
+
 		String text = null;
 		int eventType = parser.getEventType();
-		while ((eventType != XmlPullParser.END_TAG && !parser.getName().equals(Xconstants.NOTIFICATION)) || eventType != XmlPullParser.END_DOCUMENT) {
+		while (eventType != XmlPullParser.END_DOCUMENT) {
+			if (eventType == XmlPullParser.END_TAG &&
+					parser.getName().equals(Xconstants.NOTIFICATION)) {
+				break;
+			}
 			String tagname = parser.getName();
 			switch (eventType) {
 				case XmlPullParser.START_TAG:
@@ -109,7 +125,7 @@ public class AchievementNotification extends VisibleNotification {
 	@Override
 	protected String getMessage(Context context) {
 		// FIXME az bude rnum, tak zisakt text z toho
-		return "";
+		return "ba bla";
 	}
 
 	@Override

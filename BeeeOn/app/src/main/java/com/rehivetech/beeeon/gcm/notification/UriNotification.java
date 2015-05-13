@@ -58,7 +58,11 @@ public class UriNotification extends VisibleNotification {
 
 		String text = null;
 		int eventType = parser.getEventType();
-		while ((eventType != XmlPullParser.END_TAG && !parser.getName().equals(Xconstants.NOTIFICATION)) || eventType != XmlPullParser.END_DOCUMENT) {
+		while (eventType != XmlPullParser.END_DOCUMENT) {
+			if (eventType == XmlPullParser.END_TAG &&
+					parser.getName().equals(Xconstants.NOTIFICATION)) {
+				break;
+			}
 			String tagname = parser.getName();
 			switch (eventType) {
 				case XmlPullParser.START_TAG:

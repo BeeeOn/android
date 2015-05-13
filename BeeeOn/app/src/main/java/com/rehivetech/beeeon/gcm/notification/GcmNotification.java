@@ -51,27 +51,41 @@ public interface GcmNotification {
 	}
 
 	enum NotificationType {
-		INFO("info"),
-		ADVERT("advert"),
-		ALERT("alert"),
-		CONTROL("control");
+		INFO("info", 300),
+		ADVERT("advert", 200),
+		ALERT("alert", 400),
+		CONTROL("control", 100);
 
 		private final String mValue;
+		private final int mLevel;
 
-		NotificationType(String value) {
+		NotificationType(String value, int level) {
 			mValue = value;
+			mLevel = level;
 		}
 
 		public static NotificationType fromValue(String value) throws IllegalArgumentException {
 			for (NotificationType item : values()) {
-				if (value.equalsIgnoreCase(item.getValue()))
+				if (value.equalsIgnoreCase(item.getName()))
 					return item;
 			}
 			throw new IllegalArgumentException("Invalid State value");
 		}
 
-		public String getValue() {
+		public static NotificationType fromValue(int value) throws IllegalArgumentException {
+			for (NotificationType item : values()) {
+				if (value == item.getLevel())
+					return item;
+			}
+			throw new IllegalArgumentException("Invalid State value");
+		}
+
+		public String getName() {
 			return mValue;
+		}
+
+		public int getLevel() {
+			return mLevel;
 		}
 	}
 }
