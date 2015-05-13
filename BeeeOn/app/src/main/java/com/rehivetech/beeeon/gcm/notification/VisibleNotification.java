@@ -162,7 +162,7 @@ public abstract class VisibleNotification extends BaseNotification {
 			final Controller controller = Controller.getInstance(context);
 			Thread t = new Thread() {
 				public void run() {
-					controller.getGcmModel().setNotificationRead(String.valueOf(getId()));
+					controller.getGcmModel().setNotificationRead(String.valueOf(VisibleNotification.this.getId()));
 				}
 			};
 			t.start();
