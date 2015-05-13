@@ -30,55 +30,63 @@
 		<include layout="@layout/widget_include_date" />
 	</RelativeLayout>
 
-	<!-- weather city -->
-	<TextView
-		android:id="@+id/widget_clock_weather_city"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:singleLine="true"
-		android:ellipsize="end"
-		android:textSize="@dimen/textsize_body"
-		android:layout_marginTop="-4dp"
-		android:textColor="@color/beeeon_primary_cyan"
-		android:text="@string/placeholder_none"
-		/>
-
-	<!-- weather value -->
 	<LinearLayout
+		android:id="@+id/widget_weather_container"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
-		android:orientation="horizontal"
-		android:gravity="center_vertical"
+		android:orientation="vertical"
+		android:gravity="center"
 		>
+		<!-- weather city -->
 		<TextView
-			android:id="@+id/widget_clock_weather_temperature"
+			android:id="@+id/widget_clock_weather_city"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:textStyle="bold"
+			android:singleLine="true"
+			android:ellipsize="end"
 			android:textSize="@dimen/textsize_body"
-			android:textColor="@color/beeeon_secundary_pink"
+			android:layout_marginTop="-4dp"
+			android:textColor="@color/beeeon_primary_cyan"
+			android:text="@string/placeholder_none"
 			/>
 
-		<!-- weather icon -->
+		<!-- weather value -->
+		<LinearLayout
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:orientation="horizontal"
+			android:gravity="center_vertical"
+			>
+			<TextView
+				android:id="@+id/widget_clock_weather_temperature"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:textStyle="bold"
+				android:textSize="@dimen/textsize_body"
+				android:textColor="@color/beeeon_secundary_pink"
+				/>
+
+			<!-- weather icon -->
+			<ImageView
+				android:id="@+id/widget_weather_icon"
+				android:layout_width="@dimen/widget_weather_icon_small"
+				android:layout_height="@dimen/widget_weather_icon_small"
+				android:src="@drawable/weather"
+				android:layout_marginLeft="4dp"
+				android:layout_marginStart="4dp"
+				android:scaleType="fitCenter"
+				/>
+		</LinearLayout>
+
+		<!-- separator -->
 		<ImageView
-			android:id="@+id/widget_weather_icon"
-			android:layout_width="@dimen/widget_weather_icon_small"
-			android:layout_height="@dimen/widget_weather_icon_small"
-			android:src="@drawable/weather"
-			android:layout_marginLeft="4dp"
-			android:layout_marginStart="4dp"
-			android:scaleType="fitCenter"
+			android:id="@+id/widget_clock_separator_1"
+			android:layout_width="30dp"
+			android:layout_height="1px"
+			android:src="@color/beeeon_primary_cyan"
+			android:layout_marginTop="2dp"
 			/>
 	</LinearLayout>
-
-	<!-- separator -->
-	<ImageView
-		android:id="@+id/widget_clock_separator_1"
-		android:layout_width="30dp"
-		android:layout_height="1px"
-		android:src="@color/beeeon_primary_cyan"
-		android:layout_marginTop="2dp"
-		/>
 
 	<!-- household -->
 	<TextView

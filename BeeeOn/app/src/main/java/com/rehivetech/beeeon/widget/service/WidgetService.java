@@ -456,12 +456,12 @@ public class WidgetService extends Service {
 
             JSONObject json = mWeatherProvider.getWeatherByCityId(weather.id);
             if (json == null) {
-				//weather.failedUpdate = true;
-				// TODO should check if failed update and then update it again in 10minutes, otherwise according to interval
-                Log.i(TAG, mContext.getString(R.string.weather_place_not_found));
-            } else {
-                weather.configure(json, null);
-            }
+				weather.handleFailedUpdate();
+				continue;
+			}
+
+			// setup weather
+			weather.configure(json, null);
         }
     }
 

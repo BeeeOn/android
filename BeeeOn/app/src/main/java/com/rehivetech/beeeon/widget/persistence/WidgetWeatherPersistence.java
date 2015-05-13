@@ -58,6 +58,7 @@ public class WidgetWeatherPersistence extends WidgetPersistence implements IIden
 	private int pressure;
 
 	// object data
+	public boolean failedUpdate;
 	public Bitmap generatedIcon;
 	private int oldIconResource;
 	private final Rect mIconBounds = new Rect();
@@ -163,10 +164,16 @@ public class WidgetWeatherPersistence extends WidgetPersistence implements IIden
 
 			// generates new bitmap but only IF NEEDED
 			getBitmapIcon(false, (int) mContext.getResources().getDimension(R.dimen.widget_weather_icon));
+			this.failedUpdate = false;
 			this.save();
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
+	}
+
+	public void handleFailedUpdate() {
+		Log.i(TAG, "Failed to update weather");
+		this.failedUpdate = true;
 	}
 
 	// ----------------------------------------------------------- //
@@ -203,7 +210,10 @@ public class WidgetWeatherPersistence extends WidgetPersistence implements IIden
 		return generatedIcon;
 	}
 
-
+	/**
+	 * Returns temperature either from units helper or cached
+	 * @return
+	 */
 	public String getTemperature(){
 		if(mUnitsHelper != null){
 			return  mUnitsHelper.getStringValueUnit(mTemperatureValue);

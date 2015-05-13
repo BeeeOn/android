@@ -138,12 +138,14 @@ public class WidgetClockData extends WidgetData {
 				mWeatherFont = R.dimen.textsize_title;
 				mWeatherIconDimension = R.dimen.widget_weather_icon;
 				mBuilder.setImage(R.id.widget_clock_separator_1, settings.colorSecondary);
+				mBuilder.setTextViewColor(R.id.widget_clock_household_label, settings.colorPrimary);
 				break;
 
 			case R.layout.widget_clock_2x2:
 				mWeatherIconDimension = R.dimen.widget_weather_icon_small;
 				mBuilder.setImage(R.id.widget_clock_separator_1, settings.colorPrimary);
 				mBuilder.setImage(R.id.widget_clock_separator_2, settings.colorPrimary);
+				mBuilder.setTextViewColor(R.id.widget_clock_household_label, settings.colorPrimary);
 			default:
 				mClockFont = R.dimen.widget_textsize_clock;
 				mWeatherFont = R.dimen.textsize_body;
@@ -158,7 +160,7 @@ public class WidgetClockData extends WidgetData {
 			dev.setValueUnitColor(settings.colorSecondary);
 
 			if(this.widgetLayout == R.layout.widget_clock_3x2) {
-				if(dev.containerType == dev.VALUE_UNIT) dev.getBuilder().setViewVisibility(R.id.icon, View.VISIBLE);
+				if(dev.containerType == WidgetDevicePersistence.VALUE_UNIT) dev.getBuilder().setViewVisibility(R.id.icon, View.VISIBLE);
 			}
 			else if(this.widgetLayout == R.layout.widget_clock_2x2){
 				dev.setValueUnitSize(R.dimen.textsize_caption);
@@ -167,9 +169,13 @@ public class WidgetClockData extends WidgetData {
 
 		renderClock();
 		renderDate();
-		renderWeather();
-
-		// TODO format without year http://stackoverflow.com/questions/3790918/format-date-without-year
+		// render weather data
+		if(weather.cityName == null || weather.cityName.isEmpty()){
+			renderFailedWeatherData();
+		}
+		else{
+			renderOkWeatherData();
+		}
 	}
 
 	/**
@@ -245,7 +251,9 @@ public class WidgetClockData extends WidgetData {
 	/**
 	 * Renders new weather data based on data saved in preferences
 	 */
-	private void renderWeather() {
+	private void renderOkWeatherData() {
+		Log.v(TAG, "renderOkWeatherData");
+
 		switch (this.widgetLayout){
 			case R.layout.widget_clock_3x2:
 				mBuilder.setTextView(
@@ -277,8 +285,21 @@ public class WidgetClockData extends WidgetData {
 						mWeatherFont
 				);
 
-				mBuilder.setTextViewColor(R.id.widget_clock_household_label, settings.colorPrimary);
+				mBuilder.setViewVisibility(R.id.widget_weather_container, View.VISIBLE);
+				mBuilder.setImage(R.id.widget_weather_icon, weather.getBitmapIcon(false, (int) mContext.getResources().getDimension(mWeatherIconDimension)));
+				break;
+		}
+	}
 
+	/**
+	 * Hides weather data
+	 */
+	private void renderFailedWeatherData(){
+		Log.v(TAG, "renderFailedWeatherData");
+		switch (this.widgetLayout){
+			case R.layout.widget_clock_3x2:
+			case R.layout.widget_clock_2x2:
+				mBuilder.setViewVisibility(R.id.widget_weather_container, View.GONE);
 				mBuilder.setImage(R.id.widget_weather_icon, weather.getBitmapIcon(false, (int) mContext.getResources().getDimension(mWeatherIconDimension)));
 				break;
 		}
