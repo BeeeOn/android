@@ -65,7 +65,7 @@ public class DemoNetwork implements INetwork {
 	public final MultipleDataHolder<Location> mLocations = new MultipleDataHolder<>();
 	public final MultipleDataHolder<Facility> mFacilities = new MultipleDataHolder<>();
 	public final MultipleDataHolder<WatchDog> mWatchdogs = new MultipleDataHolder<>();
-	public final DataHolder<AchievementListItem> mAchievements = new DataHolder<>();
+	public final MultipleDataHolder<AchievementListItem> mAchievements = new MultipleDataHolder<>();
 
 	public DemoNetwork(Context context) {
 		mContext = context;
@@ -159,9 +159,9 @@ public class DemoNetwork implements INetwork {
 			mFacilities.setLastUpdate(adapterId, DateTime.now());
 
 			assetName = String.format(Constants.ASSET_ACHIEVEMENTS_FILENAME, adapter.getId());
-			mAchievements.setObjects(parser.getDemoAchievementsFromAsset(mContext, assetName));
-			mAchievements.setLastUpdate(DateTime.now());
-			
+			mAchievements.setObjects(adapterId, parser.getDemoAchievementsFromAsset(mContext, assetName));
+			mAchievements.setLastUpdate(adapterId, DateTime.now());
+
 			Random rand = getRandomForAdapter(adapter.getId());
 
 			// Set last update time to time between (-26 hours, now>
@@ -595,7 +595,7 @@ public class DemoNetwork implements INetwork {
 		mLocations.removeHolder(adapterId);
 		mFacilities.removeHolder(adapterId);
 		mWatchdogs.removeHolder(adapterId);
-		mAchievements.removeObject(adapterId);
+		mAchievements.removeHolder(adapterId);
 		return mAdapters.removeObject(adapterId) != null;
 	}
 
@@ -762,7 +762,7 @@ public class DemoNetwork implements INetwork {
 	}
 
 	@Override
-	public ArrayList<AchievementListItem> getAllAchievements(String adapterID){ return (ArrayList<AchievementListItem>) mAchievements.getObjects(); }
+	public ArrayList<AchievementListItem> getAllAchievements(String adapterID){ return (ArrayList<AchievementListItem>) mAchievements.getObjects(adapterID); }
 
 	@Override
 	public List<String> setProgressLvl(String adapterId, String achievementId){ return null; }

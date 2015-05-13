@@ -4,13 +4,9 @@ import android.content.Context;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
-import android.text.format.DateFormat;
 
 import com.rehivetech.beeeon.IIdentifier;
-import com.rehivetech.beeeon.R;
-import com.rehivetech.beeeon.util.Log;
 
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -33,9 +29,11 @@ public class AchievementListItem implements IIdentifier, Comparable<AchievementL
 	private String mDateOther;
 	private boolean mVisible;
 	private Long mDate;
+	private int mLevel;
 	private int mPoints;
 	private int mTotalProgress;
 	private int mCurrentProgress;
+	private AchievementListItem mParent = null;
 
 	private SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy", Locale.getDefault());
 
@@ -64,13 +62,25 @@ public class AchievementListItem implements IIdentifier, Comparable<AchievementL
 		return false;
 	}
 
+	public void recountParentValues() {
+		mLevel = 1;
+		AchievementListItem parent = mParent;
+		while(parent != null) {
+			mLevel++;
+			parent = parent.getParentItem();
+		}
+	}
+
 	@Override
 	public String getId() {return mAid;}
 	public int getPoints() {return mPoints;}
+	public int getLevel() { return mLevel; }
 	public String getParent() {return mPid;}
 	public String getCategory() {return mCategory;}
+	public int getLevelCount() { return isDone() ? mLevel : 1; }
 	public String getName() { return mContext == null ? "" : mName; }
 	public String getDescription() { return mContext == null ? "" : mDescription; }
+	public AchievementListItem getParentItem() { return mParent; }
 	public String getProgressString() {
 		if(mTotalProgress == 1) return "";
 		return mCurrentProgress + "/" + mTotalProgress;
@@ -81,6 +91,7 @@ public class AchievementListItem implements IIdentifier, Comparable<AchievementL
 	public boolean isVisible() { return mVisible; }
 	public boolean isDone() {return mCurrentProgress >= mTotalProgress;}
 
+	public void setParent(AchievementListItem parent) { mParent = parent; }
 	public void setAid(String aid) { mAdapter = aid; }
 	public void setContext(Context c) {
 		mContext = c;
@@ -103,7 +114,7 @@ public class AchievementListItem implements IIdentifier, Comparable<AchievementL
 			if(today.get(Calendar.DAY_OF_YEAR) == compare.get(Calendar.DAY_OF_YEAR))
 				return "Yesterday";
 		}
-		return getDate();
+		return getTime();
 	}
 
 	/** Sorts achievements by date.
@@ -112,12 +123,17 @@ public class AchievementListItem implements IIdentifier, Comparable<AchievementL
 	 */
 	@Override
 	public int compareTo(@NonNull AchievementListItem another) {
-		if (!isDone())	// Not completed -> to end
-			return 1;
-		else if(!another.isDone())	// Another isn't complete -> to start
-			return -1;
-		else
-			return another.getTime().compareTo(getTime());
+		if(isDone()) {
+			if(!another.isDone())	// Another isn't complete -> to top
+				return -1;
+			else
+				return another.getTime().compareTo(getTime());
+		}
+		else {
+			if(another.isDone()) return 1;
+			else return isVisible() ? -1 : 1;
+		}
+
 	}
 
 	@Override

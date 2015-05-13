@@ -9,6 +9,7 @@ import android.graphics.Bitmap;
 import com.rehivetech.beeeon.Constants;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.exception.AppException;
+import com.rehivetech.beeeon.gamification.AchievementList;
 import com.rehivetech.beeeon.household.adapter.Adapter;
 import com.rehivetech.beeeon.household.user.User;
 import com.rehivetech.beeeon.household.user.User.Role;
@@ -347,6 +348,9 @@ public final class Controller {
 		// delete all visible notification
 		NotificationManager notifMgr = (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
 		notifMgr.cancelAll();
+
+		// delete all achievements
+		AchievementList.cleanAll();
 
 		// Delete GCM id on server side
 		mGcmModel.deleteGCM(mUser.getId(), null);

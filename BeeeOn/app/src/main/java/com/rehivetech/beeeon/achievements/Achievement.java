@@ -64,7 +64,10 @@ public abstract class Achievement  implements Observer {
 			@Override
 			public void onExecute(boolean success) {
 				List<String> idList = mUpdateAchievementTask.getAchievementId();
-				if(!success) showError();
+				if(!success) {
+					showError();
+					return;
+				}
 				else if (idList == null) return; // DEMO, don`t update anything
 				for(int i = 0; i < idList.size(); i++) {
 					AchievementListItem item = mAchievementList.getItem(idList.get(i));

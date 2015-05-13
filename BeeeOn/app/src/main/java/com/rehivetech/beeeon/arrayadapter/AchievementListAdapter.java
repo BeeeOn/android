@@ -1,6 +1,8 @@
 package com.rehivetech.beeeon.arrayadapter;
 
+import android.content.Context;
 import android.graphics.drawable.Drawable;
+import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,18 +29,22 @@ import java.util.List;
  */
 public class AchievementListAdapter extends BaseAdapter implements Filterable{
 	private LayoutInflater mInflater;
+	private int mDisplayPixel;
 	private ItemFilter mFilter = new ItemFilter();
 
 	private List<AchievementListItem> mAchievementList;
 	private List<AchievementListItem> mFilteredList;
 	private AchievementListOnClickListener mCallback;
 
-	public AchievementListAdapter(LayoutInflater inflater, String categoryId, AchievementListOnClickListener callback,  List<AchievementListItem>  achievements){
+	public AchievementListAdapter(LayoutInflater inflater, String categoryId, AchievementListOnClickListener callback, List<AchievementListItem>  achievements, Context context){
 		mInflater = inflater;
 		mCallback = callback;
 		mAchievementList = achievements;
 		mFilteredList = mAchievementList;
 		mFilter.filter(categoryId);
+
+		DisplayMetrics metrics = context.getResources().getDisplayMetrics();
+		mDisplayPixel = (int) metrics.density;
 	}
 
 	@Override
@@ -72,29 +78,59 @@ public class AchievementListAdapter extends BaseAdapter implements Filterable{
 		holder.achievementDescription.setText(achievement.getDescription());
 		holder.achievementPoints.setText(String.valueOf(achievement.getPoints()));
 		if(achievement.isDone()) {
-			setBg(holder.achievementPoints, convertView.getResources().getDrawable(R.drawable.hexagon_cyan));
+			if(achievement.getLevel() >= 3)
+				setBg(holder.achievementPoints, convertView.getResources().getDrawable(R.drawable.hexagon_cyan3));
+			else if(achievement.getLevel() == 2)
+				setBg(holder.achievementPoints, convertView.getResources().getDrawable(R.drawable.hexagon_cyan2));
+			else
+				setBg(holder.achievementPoints, convertView.getResources().getDrawable(R.drawable.hexagon_cyan1));
 			holder.achievementName.setTextColor(convertView.getResources().getColor(R.color.beeeon_primary_cyan));
 			holder.achievementDescription.setTextColor(convertView.getResources().getColor(R.color.beeeon_secundary_pink));
 			holder.achievementDate.setText(achievement.getDate());
 			holder.achievementDate.setVisibility(View.VISIBLE);
 			holder.achievementTick.setVisibility(View.VISIBLE);
 			holder.achievementShare.setVisibility(View.VISIBLE);
+			holder.achievementDescription.setVisibility(View.VISIBLE);
+			holder.achievementShare.setImageResource(R.drawable.share);
+			holder.achievementProgressText.setVisibility(View.GONE);
+			holder.achievementProgressLayout.setVisibility(View.GONE);
+			holder.achievementLayout.getLayoutParams().height = 100*mDisplayPixel;
 			holder.achievementShare.setOnClickListener(new AchievementListClickListener(mCallback, position));
 		}
-		else {
+		else if(achievement.isVisible()) {
 			setBg(holder.achievementPoints, convertView.getResources().getDrawable(R.drawable.hexagon_gray));
 			holder.achievementName.setTextColor(convertView.getResources().getColor(R.color.beeeon_text_color));
 			holder.achievementDescription.setTextColor(convertView.getResources().getColor(R.color.beeeon_text_hint));
 			holder.achievementDate.setVisibility(View.INVISIBLE);
 			holder.achievementTick.setVisibility(View.GONE);
 			holder.achievementShare.setVisibility(View.GONE);
+			holder.achievementDescription.setVisibility(View.VISIBLE);
 			if(achievement.getTotalProgress() > 1) {
-				holder.achievementLayout.getLayoutParams().height += 30;
+				holder.achievementLayout.getLayoutParams().height = 125*mDisplayPixel;
 				holder.achievementProgressLayout.setVisibility(View.VISIBLE);
 				holder.achievementProgress.setMax(achievement.getTotalProgress());
 				holder.achievementProgress.setProgress(achievement.getCurrentProgress());
+				holder.achievementProgressText.setVisibility(View.VISIBLE);
 				holder.achievementProgressText.setText(achievement.getProgressString());
 			}
+			else {
+				holder.achievementLayout.getLayoutParams().height = 100*mDisplayPixel;
+				holder.achievementProgressLayout.setVisibility(View.GONE);
+				holder.achievementProgressText.setVisibility(View.GONE);
+			}
+		}
+		else {
+			setBg(holder.achievementPoints, convertView.getResources().getDrawable(R.drawable.hexagon_lightgray));
+			holder.achievementName.setTextColor(convertView.getResources().getColor(R.color.beeeon_separator));
+			holder.achievementShare.setOnClickListener(null);
+			holder.achievementLayout.getLayoutParams().height = 75*mDisplayPixel;
+			holder.achievementShare.setVisibility(View.VISIBLE);
+			holder.achievementShare.setImageResource(R.drawable.question);
+			holder.achievementDescription.setVisibility(View.GONE);
+			holder.achievementDate.setVisibility(View.GONE);
+			holder.achievementTick.setVisibility(View.GONE);
+			holder.achievementProgressLayout.setVisibility(View.GONE);
+			holder.achievementProgressText.setVisibility(View.GONE);
 		}
 
 		return convertView;
