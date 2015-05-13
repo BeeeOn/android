@@ -50,6 +50,7 @@ public class WidgetClockFragment extends WidgetConfigurationFragment implements 
 	private TextView mCityLabel;
 	private WeatherProvider mWeatherProvider;
 	private Handler mHandler;
+	private WeatherProvider.City mWeatherCity;
 
 	public WidgetClockFragment(){
 		mHandler = new Handler();
@@ -183,12 +184,7 @@ public class WidgetClockFragment extends WidgetConfigurationFragment implements 
 	}
 
 	private void loadingCitySuccess(WeatherProvider.City city, LocationPickerDialogFragment dialog){
-		// setup weather persistence
-		mWidgetData.weather.id = city.id;
-		mWidgetData.weather.cityName = city.name;
-		mWidgetData.weather.country = city.countryId;
-
-		//mWidgetData.weather.configure(city.json, null);
+		mWeatherCity = city;
 		// setup city label
 		mCityLabel.setText(city.name);
 
@@ -270,6 +266,14 @@ public class WidgetClockFragment extends WidgetConfigurationFragment implements 
 			}
 
 			index++;
+		}
+
+		if(mWeatherCity != null){
+			// setup weather persistence
+			mWidgetData.weather.id = mWeatherCity.id;
+			mWidgetData.weather.cityName = mWeatherCity.name;
+			mWidgetData.weather.country = mWeatherCity.countryId;
+			mWidgetData.weather.configure(mWeatherCity.json, null);
 		}
 
 		// setup widget

@@ -28,7 +28,7 @@ public class WeatherProvider {
 	private static final int SUCCESSFULL_CODE = 200;
 	// always using metric units -> UnitsHelper will transform it
 	private static final String UNITS = "metric";
-	private static final String URL_LOCATION = "http://api.openweathermap.org/data/2.5/find?q=%s&mode=json&lang=%s";
+	private static final String URL_LOCATION = "http://api.openweathermap.org/data/2.5/find?q=%s&mode=json&units=%s&lang=%s";
 	private static final String URL_WEATHER_BY_ID = "http://api.openweathermap.org/data/2.5/weather?id=%s&units=%s&lang=%s";
 
 	private static int BUFFER_SIZE = 1024;
@@ -102,7 +102,7 @@ public class WeatherProvider {
 	// ------------------------------------------------------ //
 
 	private HttpURLConnection requestLocation(String cityName, String lang) throws IOException {
-		URL url = new URL(String.format(URL_LOCATION, Uri.encode(cityName), lang));
+		URL url = new URL(String.format(URL_LOCATION, Uri.encode(cityName), UNITS, lang));
 
 		HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 		connection.addRequestProperty("x-api-key", mContext.getString(R.string.open_weather_maps_app_id));
@@ -157,10 +157,15 @@ public class WeatherProvider {
 		// if its exactly 800, its clear sky
 		if(actualId == 800){
 			long currentTime = new Date().getTime();
-			if(currentTime >= sunrise && currentTime < sunset) {
+			if(sunrise != -1 && sunset != -1) {
+				if (currentTime >= sunrise && currentTime < sunset) {
+					iconRes = R.string.weather_sunny;
+				} else {
+					iconRes = R.string.weather_clear_night;
+				}
+			}
+			else{
 				iconRes = R.string.weather_sunny;
-			} else {
-				iconRes = R.string.weather_clear_night;
 			}
 
 			return iconRes;

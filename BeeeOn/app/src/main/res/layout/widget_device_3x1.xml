@@ -7,14 +7,15 @@
     >
     <RelativeLayout
         android:layout_width="wrap_content"
-        android:layout_height="@dimen/widget_height_cells_1"
+        android:minWidth="200dp"
+        android:layout_height="80dp"
         android:background="@drawable/widget_bg"
         android:id="@+id/layout"
         android:layout_gravity="center"
         >
 
         <LinearLayout
-            android:minWidth="240dp"
+            android:minWidth="200dp"
             android:id="@+id/widget_header"
             android:orientation="horizontal"
             android:layout_width="wrap_content"

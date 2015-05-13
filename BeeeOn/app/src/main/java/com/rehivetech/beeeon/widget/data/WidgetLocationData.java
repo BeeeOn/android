@@ -83,7 +83,6 @@ public class WidgetLocationData extends WidgetData {
     @Override
     protected void renderLayout() {
         // -------------------- initialize layout
-        widgetLocation.initView();
         // sets onclick "listeners"
         mBuilder.setOnClickListener(R.id.options, mConfigurationPendingIntent);
         mBuilder.setOnClickListener(R.id.refresh, mRefreshPendingIntent);

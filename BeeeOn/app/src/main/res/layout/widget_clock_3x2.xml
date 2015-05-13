@@ -14,6 +14,7 @@
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		android:layout_centerHorizontal="true"
+		android:layout_marginTop="-16dp"
 		>
 		<include layout="@layout/widget_include_clock" />
 	</RelativeLayout>
@@ -24,7 +25,7 @@
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		android:layout_below="@+id/widget_clock_container"
-		android:layout_marginTop="-10dp"
+		android:layout_marginTop="-16dp"
 		android:layout_centerHorizontal="true"
 		>
 		<include layout="@layout/widget_include_date" />
@@ -62,7 +63,7 @@
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
 				android:gravity="center"
-				android:layout_marginTop="2dp">
+				android:layout_marginTop="-4dp">
 					<include layout="@layout/widget_include_value_unit" />
 			</RelativeLayout>
 
@@ -96,7 +97,8 @@
 			android:layout_height="wrap_content"
 			android:layout_alignTop="@+id/widget_weather_icon"
 			android:layout_toRightOf="@+id/widget_weather_icon"
-			android:layout_toEndOf="@+id/widget_weather_icon">
+			android:layout_toEndOf="@+id/widget_weather_icon"
+			>
 
 			<TextView
 				android:id="@+id/widget_clock_weather_city"
@@ -119,6 +121,45 @@
 				android:textColor="@color/beeeon_secundary_pink"
 				android:layout_below="@+id/widget_clock_weather_city"
 				/>
+
+			<LinearLayout
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:orientation="horizontal"
+				android:layout_marginTop="-4dp"
+				android:layout_below="@id/widget_clock_weather_temperature">
+
+
+				<TextView
+					android:id="@+id/widget_clock_weather_humidity"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:textColor="@color/beeeon_primary_cyan"
+					android:textSize="@dimen/textsize_caption"
+					/>
+
+				<ImageView
+					android:id="@+id/widget_clock_separator_1"
+					android:layout_width="1px"
+					android:layout_height="16dp"
+					android:src="@color/beeeon_secundary_pink"
+					android:scaleType="center"
+					android:layout_marginLeft="4dp"
+					android:layout_marginStart="4dp"
+					android:layout_marginRight="4dp"
+					android:layout_marginEnd="4dp"
+					/>
+
+				<TextView
+					android:id="@+id/widget_clock_weather_pressure"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:textColor="@color/beeeon_primary_cyan"
+					android:textSize="@dimen/textsize_caption"
+					/>
+			</LinearLayout>
+
+
 		</RelativeLayout>
 	</RelativeLayout>
 </RelativeLayout>

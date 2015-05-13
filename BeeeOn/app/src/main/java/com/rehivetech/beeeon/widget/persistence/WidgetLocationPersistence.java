@@ -66,13 +66,6 @@ public class WidgetLocationPersistence extends WidgetBeeeOnPersistence {
 	}
 
 	@Override
-	public void initView() {
-		if(mBoundView == 0) return;
-
-		mBuilder.loadRootView(R.layout.widget_include_location);
-	}
-
-	@Override
 	public void renderView(ViewsBuilder parentBuilder) {
 		super.renderView(parentBuilder);
 		if(mBoundView == 0){
@@ -80,6 +73,7 @@ public class WidgetLocationPersistence extends WidgetBeeeOnPersistence {
 			parentBuilder.setImage(R.id.icon, Utils.getEnumFromId(Location.LocationIcon.class, type, Location.LocationIcon.UNKNOWN).getIconResource());
 		}
 		else {
+			mBuilder.loadRootView(R.layout.widget_include_location);
 			mBuilder.setTextViewText(R.id.name, name);
 			mBuilder.setImage(R.id.icon, Utils.getEnumFromId(Location.LocationIcon.class, type, Location.LocationIcon.UNKNOWN).getIconResource());
 			parentBuilder.removeAllViews(mBoundView);

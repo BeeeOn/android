@@ -13,7 +13,6 @@ import com.rehivetech.beeeon.household.location.Location;
 import com.rehivetech.beeeon.util.Log;
 import com.rehivetech.beeeon.util.TimeHelper;
 import com.rehivetech.beeeon.util.UnitsHelper;
-import com.rehivetech.beeeon.util.Utils;
 import com.rehivetech.beeeon.widget.ViewsBuilder;
 import com.rehivetech.beeeon.widget.persistence.WidgetDevicePersistence;
 import com.rehivetech.beeeon.widget.persistence.WidgetWeatherPersistence;
@@ -21,7 +20,6 @@ import com.rehivetech.beeeon.widget.persistence.WidgetWeatherPersistence;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 import org.joda.time.format.DateTimeFormat;
-import org.json.JSONObject;
 
 import java.text.DateFormatSymbols;
 import java.util.ArrayList;
@@ -133,25 +131,19 @@ public class WidgetClockData extends WidgetData {
 
 		if(widgetAdapterId.isEmpty()) return;
 
-		for(WidgetDevicePersistence dev : widgetDevices) {
-			// detail activity
-			mBuilder.setOnClickListener(dev.getBoundView(), startDetailActivityPendingIntent(mContext, mWidgetId + dev.getOffset(), widgetAdapterId, dev.getId()));
-			dev.initView();
-		}
-
 		// -------------------- render layout
 		switch (this.widgetLayout){
 			case R.layout.widget_clock_3x2:
 				mClockFont = R.dimen.widget_textsize_clock_large;
 				mWeatherFont = R.dimen.textsize_title;
 				mWeatherIconDimension = R.dimen.widget_weather_icon;
+				mBuilder.setImage(R.id.widget_clock_separator_1, settings.colorSecondary);
 				break;
 
 			case R.layout.widget_clock_2x2:
 				mWeatherIconDimension = R.dimen.widget_weather_icon_small;
 				mBuilder.setImage(R.id.widget_clock_separator_1, settings.colorPrimary);
 				mBuilder.setImage(R.id.widget_clock_separator_2, settings.colorPrimary);
-				mBuilder.setImage(R.id.widget_clock_separator_3, settings.colorPrimary);
 			default:
 				mClockFont = R.dimen.widget_textsize_clock;
 				mWeatherFont = R.dimen.textsize_body;
@@ -161,6 +153,8 @@ public class WidgetClockData extends WidgetData {
 		// updates all inside devices
 		for(WidgetDevicePersistence dev : widgetDevices){
 			dev.renderView(mBuilder);
+			// detail activity
+			mBuilder.setOnClickListener(dev.getBoundView(), startDetailActivityPendingIntent(mContext, mWidgetId + dev.getOffset(), widgetAdapterId, dev.getId()));
 			dev.setValueUnitColor(settings.colorSecondary);
 
 			if(this.widgetLayout == R.layout.widget_clock_3x2) {
@@ -253,8 +247,22 @@ public class WidgetClockData extends WidgetData {
 	 */
 	private void renderWeather() {
 		switch (this.widgetLayout){
-			case R.layout.widget_clock_2x2:
 			case R.layout.widget_clock_3x2:
+				mBuilder.setTextView(
+						R.id.widget_clock_weather_humidity,
+						weather.getHumidity(),
+						settings.colorPrimary,
+						R.dimen.textsize_caption
+				);
+
+				mBuilder.setTextView(
+						R.id.widget_clock_weather_pressure,
+						weather.getPressure(),
+						settings.colorPrimary,
+						R.dimen.textsize_caption
+				);
+
+			case R.layout.widget_clock_2x2:
 				mBuilder.setTextView(
 						R.id.widget_clock_weather_city,
 						weather.cityName,
@@ -265,7 +273,6 @@ public class WidgetClockData extends WidgetData {
 				mBuilder.setTextView(
 						R.id.widget_clock_weather_temperature,
 						weather.getTemperature(),
-						//String.format("%d %s", weather.temperature, weather.temperatureUnit),
 						settings.colorSecondary,
 						mWeatherFont
 				);
@@ -319,21 +326,8 @@ public class WidgetClockData extends WidgetData {
 			this.save();
 			Log.v(TAG, String.format("Updating widget (%d) with fresh data", getWidgetId()));
 		}
-		else {
-			// TODO show some kind of icon
-			Log.v(TAG, String.format("Updating widget (%d) with cached data", getWidgetId()));
-		}
 
 		return updated > 0;
-	}
-
-	/**
-	 * Updates and stores date from the server
-	 * @param json
-	 */
-	public void handleUpdateWeather(JSONObject json){
-		Log.v(TAG, String.format("Updating widget(%d) weather", mWidgetId));
-		weather.configure(json, null);
 	}
 
 	@Override
@@ -344,7 +338,7 @@ public class WidgetClockData extends WidgetData {
 		String debugName;
 
 		if (minWidth < 220) {
-			if (minHeight < 130) {
+			if (minHeight < 120) {
 				layout = R.layout.widget_clock_2x1;
 				debugName = "2x1";
 			} else {
@@ -352,7 +346,7 @@ public class WidgetClockData extends WidgetData {
 				debugName = "2x2";
 			}
 		} else {
-			if (minHeight < 130) {
+			if (minHeight < 120) {
 				layout = R.layout.widget_clock_2x1;
 				debugName = "2x1";
 			} else {

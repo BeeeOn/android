@@ -65,7 +65,6 @@ public class WidgetService extends Service {
     private static final String EXTRA_START_UPDATING =              "com.rehivetech.beeeon.start_updating";
     private static final String EXTRA_FORCE_UPDATE =                "com.rehivetech.beeeon.force_update";
     private static final String EXTRA_ACTOR_CHANGE_REQUEST =        "com.rehivetech.beeeon.actor_change_request";
-    private static final String EXTRA_ACTOR_CHANGE_RESULT =         "com.rehivetech.beeeon.actor_change_result";
     private static final String EXTRA_ACTOR_ID =                    "com.rehivetech.beeeon.actor_ids";
     private static final String EXTRA_DELETE_WIDGET =               "com.rehivetech.beeeon.delete_widget";
     private static final String EXTRA_CHANGE_LAYOUT =               "com.rehivetech.beeeon.change_layout";
@@ -90,6 +89,9 @@ public class WidgetService extends Service {
     private Calendar mCalendar;
     private WeatherProvider mWeatherProvider;
 
+	// broadcast intents
+	private IntentFilter mIntentFilter = recreateIntentFilter();
+	private boolean mClockFilterReg = false;
 
     // for checking if user is logged in (we presume that for the first time he is)
     private boolean isCached = false;
@@ -105,7 +107,7 @@ public class WidgetService extends Service {
      * @param widgetShouldReload
      */
     public static void startUpdating(Context context, int[] appWidgetIds, boolean widgetShouldReload){
-        Log.d(TAG, "startUpdating()");
+        Log.d(TAG, String.format("startUpdating(%b)", widgetShouldReload));
         final Intent intent =  getIntentUpdate(context);
         intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, appWidgetIds);
         intent.putExtra(EXTRA_START_UPDATING, true);
@@ -136,20 +138,44 @@ public class WidgetService extends Service {
         context.stopService(intent);
     }
 
-    private final static IntentFilter sIntentFilter;
-    static{
-        sIntentFilter = new IntentFilter();
-        sIntentFilter.addAction(Intent.ACTION_SCREEN_ON);
-        sIntentFilter.addAction(Intent.ACTION_SCREEN_OFF);
-        sIntentFilter.addAction(Intent.ACTION_TIME_TICK);
-        sIntentFilter.addAction(Intent.ACTION_TIMEZONE_CHANGED);
-        sIntentFilter.addAction(Intent.ACTION_TIME_CHANGED);
-        sIntentFilter.addAction(Intent.ACTION_LOCALE_CHANGED);
-        sIntentFilter.addAction(ConnectivityManager.CONNECTIVITY_ACTION);
-        // --- beeeOn broadcasts
-        sIntentFilter.addAction(Constants.BROADCAST_ACTOR_CHANGED);
-        sIntentFilter.addAction(Constants.BROADCAST_PREFERENCE_CHANGED);
-    }
+
+	/**
+	 * Recreates intent filter and add default actions
+	 * @return IntentFilter
+	 */
+	private IntentFilter recreateIntentFilter(){
+		Log.v(TAG, "recreateIntentFilter()");
+		mClockFilterReg = false;
+		mIntentFilter = new IntentFilter();
+		addDefaultFilters();
+		return mIntentFilter;
+	}
+
+	/**
+	 * Default intents getting by broadcasts
+	 */
+	private void addDefaultFilters(){
+		// --- maintaing broadcasts
+		mIntentFilter.addAction(Intent.ACTION_SCREEN_ON);
+		mIntentFilter.addAction(Intent.ACTION_SCREEN_OFF);
+		mIntentFilter.addAction(Intent.ACTION_LOCALE_CHANGED);
+		mIntentFilter.addAction(ConnectivityManager.CONNECTIVITY_ACTION);
+		// --- beeeOn broadcasts
+		mIntentFilter.addAction(Constants.BROADCAST_ACTOR_CHANGED);
+		mIntentFilter.addAction(Constants.BROADCAST_PREFERENCE_CHANGED);
+	}
+
+	/**
+	 * Intents for updating time
+	 */
+	private void addTimeFilters(){
+		Log.v(TAG, "addTimeFilters()");
+		mClockFilterReg = true;
+		// --- time broadcasts
+		mIntentFilter.addAction(Intent.ACTION_TIME_TICK);
+		mIntentFilter.addAction(Intent.ACTION_TIMEZONE_CHANGED);
+		mIntentFilter.addAction(Intent.ACTION_TIME_CHANGED);
+	}
 
     /**
      * Initializes things only first time service is started
@@ -171,7 +197,7 @@ public class WidgetService extends Service {
         // Creates broadcast receiver which bridges broadcasts to appwidgets for handling time and screen
         Log.v(TAG, "registeringBroadcastReceiver()");
 
-        registerReceiver(mServiceReceiver, sIntentFilter);
+        registerReceiver(mServiceReceiver, mIntentFilter);
     }
 
     /**
@@ -187,6 +213,16 @@ public class WidgetService extends Service {
         Log.v(TAG, "Unregistering broadcast bridge");
         unregisterReceiver(mServiceReceiver);
     }
+
+	/**
+	 * When system has low memory - delete saved widget data (they will be restored from persistence when needed)
+	 */
+	@Override
+	public void onLowMemory(){
+		super.onLowMemory();
+		Log.i(TAG, "onLowMemor()");
+		mAvailableWidgets.clear();
+	}
 
     /**
      * Entry point of service .. widgets can sent Intent with specific data and pass them to service
@@ -218,20 +254,6 @@ public class WidgetService extends Service {
                         String adapterId = intent.getStringExtra(EXTRA_ACTOR_ADAPTER_ID);
                         String actorId = intent.getStringExtra(EXTRA_ACTOR_ID);
                         changeWidgetActorRequest(adapterId, actorId);
-                    }
-                }).start();
-                return START_STICKY;
-            }
-
-            // -------------- result of async task (called by broadcast)
-            boolean isActorChangeResult = intent.getBooleanExtra(EXTRA_ACTOR_CHANGE_RESULT, false);
-            if(isActorChangeResult){
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        String adapterId = intent.getStringExtra(EXTRA_ACTOR_ADAPTER_ID);
-                        String actorId = intent.getStringExtra(EXTRA_ACTOR_ID);
-                        changeWidgetActorResult(adapterId, actorId);
                     }
                 }).start();
                 return START_STICKY;
@@ -314,7 +336,7 @@ public class WidgetService extends Service {
         Log.d(TAG, "WidgetsToUpdate = " + allWidgetIds.length);
 
         // -------------- reload widget if necessary
-        boolean isShouldReload = intent != null ? intent.getBooleanExtra(EXTRA_WIDGETS_SHOULD_RELOAD, false) : false;
+        boolean isShouldReload = intent != null && intent.getBooleanExtra(EXTRA_WIDGETS_SHOULD_RELOAD, false);
 
         long timeNow = SystemClock.elapsedRealtime();
         SparseArray<WidgetData> widgetsToUpdate = new SparseArray<>();
@@ -381,11 +403,13 @@ public class WidgetService extends Service {
                 }
             }
 
+			// updates all facilities in once
             if(!usedFacilities.isEmpty()){
                 Log.v(TAG, "refreshing facilities...");
                 mController.getFacilitiesModel().refreshFacilities(usedFacilities, isForceUpdate);
             }
 
+			// updates all weather data
             if(!usedWeatherData.isEmpty()){
                 this.updateWeatherData(usedWeatherData);
             }
@@ -432,6 +456,8 @@ public class WidgetService extends Service {
 
             JSONObject json = mWeatherProvider.getWeatherByCityId(weather.id);
             if (json == null) {
+				//weather.failedUpdate = true;
+				// TODO should check if failed update and then update it again in 10minutes, otherwise according to interval
                 Log.i(TAG, mContext.getString(R.string.weather_place_not_found));
             } else {
                 weather.configure(json, null);
@@ -454,7 +480,11 @@ public class WidgetService extends Service {
             WidgetData widgetData = getWidgetData(widgetId);
             if (widgetData == null) continue;
             widgetData.handleResize(layoutMinWidth, layoutMinHeight);
-            widgetData.renderWidget();
+			// if widget changed its layout, render again
+            if(widgetData.widgetLayoutChanged){
+                widgetData.renderWidget();
+				widgetData.widgetLayoutChanged = false;
+            }
         }
     }
 
@@ -522,16 +552,6 @@ public class WidgetService extends Service {
     // -------------------------------------------------------------------- //
     // ------------------------- Managing methods ------------------------- //
     // -------------------------------------------------------------------- //
-	/**
-	 * When system has low memory - delete saved widget data (they will be restored from persistence when needed)
-	 */
-	@Override
-	public void onLowMemory(){
-		super.onLowMemory();
-		Log.i(TAG,"onLowMemor()");
-		mAvailableWidgets.clear();
-	}
-
     /**
      * Goes through all widgets, find widgets with the specified actor
      * and perform partial (only changes layout) or whole update
@@ -612,7 +632,8 @@ public class WidgetService extends Service {
             try {
                 // instantiate class from string
                 widgetData = (WidgetData) Class.forName(widgetClassName).getConstructor(int.class, Context.class, UnitsHelper.class, TimeHelper.class).newInstance(widgetId, mContext, mUnitsHelper, mTimeHelper);
-                widgetData.load();
+                Log.v(TAG, "instantiated new widgetData " + widgetId);
+				widgetData.load();
                 // if its clock widget -> we put instance of calendar inside
                 if(widgetData instanceof WidgetClockData){
                     widgetData.initAdvanced(mCalendar);
@@ -686,6 +707,7 @@ public class WidgetService extends Service {
      * @return
      */
     private long calcNextUpdate(int[] appWidgetIds) {
+		Log.v(TAG, "calculating next update...");
         int minInterval = 0;
         long nextUpdate = 0;
         long timeNow = SystemClock.elapsedRealtime();
@@ -699,10 +721,16 @@ public class WidgetService extends Service {
             widgetIds = appWidgetIds;
         }
 
+		boolean existsClockWidget = false;
+
         if(widgetIds != null) for (int widgetId : widgetIds) {
             WidgetData widgetData = getWidgetData(widgetId);
             // widget is not added yet (probably only configuration activity is showed)
             if (widgetData == null || !widgetData.widgetInitialized) continue;
+
+			if(widgetData instanceof WidgetClockData){
+				existsClockWidget = true;
+			}
 
             if (first) {
                 minInterval = widgetData.widgetInterval;
@@ -714,6 +742,24 @@ public class WidgetService extends Service {
             }
         }
 
+		boolean receiverChanged = false;
+		// if found any clock widget and not receiving time broadcasts
+		if(existsClockWidget && !mClockFilterReg){
+			mCalendar.setTime(new Date());
+			addTimeFilters();
+			receiverChanged = true;
+		}
+		// if not found any clock widget and receiving time broadcasts
+		// if no more widgets -> unregister when destroying service
+		else if(!existsClockWidget && mClockFilterReg && !first){
+			recreateIntentFilter();
+			receiverChanged = true;
+		}
+
+		// if receiver changed, register it again
+		if(receiverChanged)	restartReceiver();
+
+		// count next update
         minInterval = Math.max(minInterval, UPDATE_INTERVAL_MIN.getInterval());
         return first ? 0 : Math.max(nextUpdate, SystemClock.elapsedRealtime() + minInterval * 1000);
     }
@@ -899,21 +945,6 @@ public class WidgetService extends Service {
     }
 
     /**
-     * Intent for running result of actor change
-     * @param context
-     * @param adapterId
-     * @param actorId
-     * @return
-     */
-    public static Intent getIntentActorChangeResult(Context context, String adapterId, String actorId){
-        Intent intent = new Intent(context, WidgetService.class);
-        intent.putExtra(WidgetService.EXTRA_ACTOR_CHANGE_RESULT, true);
-        intent.putExtra(EXTRA_ACTOR_ID, actorId);
-        intent.putExtra(EXTRA_ACTOR_ADAPTER_ID, adapterId);
-        return intent;
-    }
-
-    /**
      * When widget is being deleted, calls service to clear data after it's deleted
      * @param context
      * @param widgetIds  is possible to delete more widgets at once
@@ -945,6 +976,14 @@ public class WidgetService extends Service {
     // ------------------------- Broadcast receiver ----------------------- //
     // -------------------------------------------------------------------- //
 
+	/**
+	 * Restarts the receiver with actual mIntentFilter
+	 */
+	private void restartReceiver(){
+		unregisterReceiver(mServiceReceiver);
+		registerReceiver(mServiceReceiver, mIntentFilter);
+	}
+
     private final BroadcastReceiver mServiceReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -968,25 +1007,27 @@ public class WidgetService extends Service {
             // if screen went off, tell the service
             else if(receivedAction.equals(Intent.ACTION_SCREEN_OFF)){
                 Log.d(TAG, "service getting standby...");
+				recreateIntentFilter();
+				restartReceiver();
                 stopAlarm(context);
             }
             // if any actor value was changed, tell the service to refresh widget with that device
             else if(receivedAction.equals(Constants.BROADCAST_ACTOR_CHANGED)){
-                String adapterId = intent.getStringExtra(Constants.BROADCAST_EXTRA_ACTOR_CHANGED_ADAPTER_ID);
-                String actorId = intent.getStringExtra(Constants.BROADCAST_EXTRA_ACTOR_CHANGED_ID);
+                final String adapterId = intent.getStringExtra(Constants.BROADCAST_EXTRA_ACTOR_CHANGED_ADAPTER_ID);
+                final String actorId = intent.getStringExtra(Constants.BROADCAST_EXTRA_ACTOR_CHANGED_ID);
 
-                if(adapterId == null || adapterId.isEmpty() || actorId == null || actorId.isEmpty()) return;
-                context.startService(WidgetService.getIntentActorChangeResult(context, adapterId, actorId));
+                if(adapterId == null || adapterId.isEmpty() || actorId == null || actorId.isEmpty()){
+					Log.e(TAG, "Not all data received from actor change broadcast");
+					return;
+				}
 
-			/*
-			// update location widget if exists
-			int[] locationWidgetsIds = WidgetProvider.getWidgetIdsByClass(context, WidgetLocationListProvider.class);
-			if(locationWidgetsIds != null && locationWidgetsIds.length > 0){
-				AppWidgetManager widgetManager = AppWidgetManager.getInstance(context);
-				// TODO
-				//widgetManager.notifyAppWidgetViewDataChanged();
-			}
-			//*/
+				// redrawing all actors in widgets asynchronously
+				new Thread(new Runnable() {
+					@Override
+					public void run() {
+						changeWidgetActorResult(adapterId, actorId);
+					}
+				}).start();
             }
             // update widgets to show different units
             else if(receivedAction.equals(Constants.BROADCAST_PREFERENCE_CHANGED)){

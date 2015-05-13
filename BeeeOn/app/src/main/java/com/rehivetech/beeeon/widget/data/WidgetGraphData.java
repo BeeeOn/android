@@ -1,13 +1,16 @@
 package com.rehivetech.beeeon.widget.data;
 
 import android.content.Context;
+import android.content.ContextWrapper;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.series.BarGraphSeries;
 import com.jjoe64.graphview.series.BaseSeries;
 import com.jjoe64.graphview.series.LineGraphSeries;
 import com.jjoe64.graphview.series.point.DataPoint;
+import com.rehivetech.beeeon.Constants;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.asynctask.GetDeviceLogTask;
 import com.rehivetech.beeeon.household.adapter.Adapter;
@@ -33,6 +36,10 @@ import org.joda.time.DateTimeZone;
 import org.joda.time.Interval;
 import org.joda.time.format.DateTimeFormatter;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -43,11 +50,9 @@ import java.util.concurrent.TimeUnit;
 public class WidgetGraphData extends WidgetDeviceData {
     private static final String TAG = WidgetGraphData.class.getSimpleName();
 
-    private String mGraphDateTimeFormat = "dd.MM. kk:mm";
-    private static final String LOG_DATE_TIME_FORMAT = "yyyy-MM-dd HH:mm:ss";
-    private GetDeviceLogTask mGetDeviceLogTask;
+	private static final String GRAPH_FILE_NAME = "widget_%d_graph.png";
 
-    private GraphView mGraph;
+	private GraphView mGraph;
     private BaseSeries mGraphSeries;
     private Bitmap mGraphBitmap;
 
@@ -55,10 +60,9 @@ public class WidgetGraphData extends WidgetDeviceData {
     private int mGraphHeight;
 
     public WidgetLogDataPersistence widgetLogData;
+    public WidgetLocationPersistence widgetLocation;
 
     private LogDataPair mLogDataPair;
-
-    public WidgetLocationPersistence widgetLocation;
 
     /**
      * Constructing object holding information about widget (instantiating in config activity and then in service)
@@ -116,6 +120,12 @@ public class WidgetGraphData extends WidgetDeviceData {
             createLogDataPair();
             break;          // only one device possible
         }
+
+		// if initialized and no graph bitmap - tries to load it
+		if(mGraphBitmap == null){
+			Log.v(TAG, "Graph bitmap from internal memory");
+			mGraphBitmap = loadBitmapFromStorage();
+		}
     }
 
     @Override
@@ -123,9 +133,18 @@ public class WidgetGraphData extends WidgetDeviceData {
         super.save();
         widgetLocation.save();
         widgetLogData.save();
-    }
 
-    // ----------------------------------------------------------- //
+		if(mGraphBitmap != null) saveBitmapToInternalSorage(mGraphBitmap);
+	}
+
+	@Override
+	public void delete() {
+		super.delete();
+		File f = getGraphImageFile();
+		boolean deleted = f.delete();
+	}
+
+	// ----------------------------------------------------------- //
     // ------------------------ RENDERING ------------------------ //
     // ----------------------------------------------------------- //
     /**
@@ -137,7 +156,8 @@ public class WidgetGraphData extends WidgetDeviceData {
         Log.d(TAG, "prepareWidgetGraphView");
 
         Adapter adapter = mController.getAdaptersModel().getAdapter(widgetAdapterId);
-        final DateTimeFormatter fmt = mTimeHelper.getFormatter(mGraphDateTimeFormat, adapter);
+        String graphDateTimeFormat = "dd.MM. kk:mm";
+        final DateTimeFormatter fmt = mTimeHelper.getFormatter(graphDateTimeFormat, adapter);
         GraphViewHelper.prepareWidgetGraphView(mGraph, mContext, baseValue, fmt, mUnitsHelper);
 
         // clears series if reinitializes
@@ -162,7 +182,6 @@ public class WidgetGraphData extends WidgetDeviceData {
     protected void renderLayout() {
         super.renderLayout();
 
-        widgetLocation.initView();
         widgetLocation.renderView(mBuilder);
 
         Log.d(TAG, String.format("Graph: %d %d, is NUll = %b", mGraphWidth, mGraphHeight, mGraphBitmap == null));
@@ -249,19 +268,14 @@ public class WidgetGraphData extends WidgetDeviceData {
 
             DeviceLog log = mController.getDeviceLogsModel().getDeviceLog(mLogDataPair);
             if(log != null) {
-                mGraphBitmap = mGraph.drawBitmap(mGraphWidth, mGraphHeight);
-                fillGraph(log);
-                widgetLogData.intervalStart = DateTime.now(DateTimeZone.UTC).minusWeeks(1).getMillis();
-            }
+				mGraphBitmap = mGraph.drawBitmap(mGraphWidth, mGraphHeight);
+				fillGraph(log);
+				widgetLogData.intervalStart = DateTime.now(DateTimeZone.UTC).minusWeeks(1).getMillis();
+			}
 
             createLogDataPair();
-            // Save fresh data
+			// Save fresh data
             this.save();
-            Log.v(TAG, String.format("Updating widget (%d) with fresh data", getWidgetId()));
-        }
-        else {
-            // TODO show some kind of icon
-            Log.v(TAG, String.format("Updating widget (%d) with cached data", getWidgetId()));
         }
 
         return updated > 0;
@@ -292,5 +306,53 @@ public class WidgetGraphData extends WidgetDeviceData {
     @Override
     public String getClassName() {
         return WidgetGraphData.class.getName();
+    }
+
+    // ----------------------------------------------------------- //
+    // ---------------------- BITMAP CACHING --------------------- //
+    // ----------------------------------------------------------- //
+
+	/**
+	 * Get file of the widget cached graph image
+	 * @return
+	 */
+	private File getGraphImageFile(){
+		// path to /data/data/yourapp/app_data/imageDir (creates if not exist)
+		File directory = mContext.getDir(Constants.PERSISTENCE_APP_IMAGE_DIR, Context.MODE_PRIVATE);
+		return new File(directory, String.format(GRAPH_FILE_NAME, mWidgetId));
+	}
+
+    /**
+     * Saves bitmap into internal storage
+     * @param bitmapImage bitmap to save
+     */
+    private void saveBitmapToInternalSorage(Bitmap bitmapImage){
+        try {
+            File f = getGraphImageFile();
+			FileOutputStream fos = new FileOutputStream(f);
+
+            // Use the compress method on the BitMap object to write image to the OutputStream
+            bitmapImage.compress(Bitmap.CompressFormat.PNG, 100, fos);
+            fos.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+	/**
+	 * Load bitmap from internal storage and creates bitmap from it
+	 * @return decoded bitmap
+	 */
+    private Bitmap loadBitmapFromStorage()
+    {
+        try {
+			File f = getGraphImageFile();
+            return BitmapFactory.decodeStream(new FileInputStream(f));
+        }
+        catch (FileNotFoundException e)
+        {
+			// NOTE: If not found we just want to return null
+        }
+        return null;
     }
 }

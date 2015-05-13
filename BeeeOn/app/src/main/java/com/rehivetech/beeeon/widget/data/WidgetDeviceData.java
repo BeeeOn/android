@@ -1,7 +1,6 @@
 package com.rehivetech.beeeon.widget.data;
 
 import android.content.Context;
-import android.view.View;
 
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.household.adapter.Adapter;
@@ -94,21 +93,17 @@ public class WidgetDeviceData extends WidgetData {
 
         if(widgetAdapterId.isEmpty()) return;
 
-        for(WidgetDevicePersistence dev : widgetDevices) {
-            // detail activity
-            mBuilder.setOnClickListener(R.id.icon, startDetailActivityPendingIntent(mContext, mWidgetId + dev.getOffset(), widgetAdapterId, dev.getId()));
-            mBuilder.setOnClickListener(R.id.name, startDetailActivityPendingIntent(mContext, mWidgetId + dev.getOffset(), widgetAdapterId, dev.getId()));
-            dev.initView();
-        }
-
         // -------------------- render layout
         // updates all inside devices
         boolean isFirst = true;
         for(WidgetDevicePersistence dev : widgetDevices){
+            // detail activity
+            mBuilder.setOnClickListener(R.id.icon, startDetailActivityPendingIntent(mContext, mWidgetId + dev.getOffset(), widgetAdapterId, dev.getId()));
+            mBuilder.setOnClickListener(R.id.name, startDetailActivityPendingIntent(mContext, mWidgetId + dev.getOffset(), widgetAdapterId, dev.getId()));
+
             if(isFirst){
                 mBuilder.setImage(R.id.icon, dev.icon == 0 ? R.drawable.dev_unknown : dev.icon);
                 mBuilder.setTextViewText(R.id.name, dev.getName());
-
                 isFirst = false;
             }
 
@@ -172,11 +167,11 @@ public class WidgetDeviceData extends WidgetData {
 
         int layout;
         // 1 cell
-        if(minWidth < WIDGET_MIN_CELLS_2){
+        if(minWidth < 170){
             layout = R.layout.widget_device_1x1;
         }
         // 2 cells
-        else if(minWidth >= WIDGET_MIN_CELLS_2 && minWidth < WIDGET_MIN_CELLS_3){
+        else if(minWidth < 200){
             layout = R.layout.widget_device_2x1;
         }
         // 3 cells

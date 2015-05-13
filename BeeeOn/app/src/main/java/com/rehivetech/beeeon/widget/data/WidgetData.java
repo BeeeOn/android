@@ -29,12 +29,6 @@ import java.util.List;
 public abstract class WidgetData {
 	private static final String TAG = WidgetData.class.getSimpleName();
 
-	// according to android this should be widget cell boundaries (this makes 70dp for cell)
-	public static final int WIDGET_MIN_CELLS_1 = 40;
-	public static final int WIDGET_MIN_CELLS_2 = 110;
-	public static final int WIDGET_MIN_CELLS_3 = 180;
-	public static final int WIDGET_MIN_CELLS_4 = 250;
-
 	// preference file name
 	public static final String PREF_FILENAME = "widget_%d";
 	// preference keys of widget object
@@ -48,6 +42,7 @@ public abstract class WidgetData {
 
 	// public properties
 	public int widgetLayout;
+	public boolean widgetLayoutChanged = false;
 	public int widgetInterval;
 	public long widgetLastUpdate;
 	public boolean widgetInitialized;
@@ -156,10 +151,14 @@ public abstract class WidgetData {
 		this.save();
 	}
 
+	/**
+	 * Manages change of layout and indicating flag about it so that service can render widget
+	 * @param layoutResource
+	 */
 	public final void changeLayout(int layoutResource){
 		// if not found, dont change anything
-		if(layoutResource == 0) return;
-
+		if(layoutResource == 0 || layoutResource == this.widgetLayout) return;
+		this.widgetLayoutChanged = true;
 		this.widgetLayout = layoutResource;
 		save();
 	}
