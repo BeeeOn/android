@@ -131,12 +131,6 @@ public class WidgetClockData extends WidgetData {
 
 		if(widgetAdapterId.isEmpty()) return;
 
-		for(WidgetDevicePersistence dev : widgetDevices) {
-			// detail activity
-			mBuilder.setOnClickListener(dev.getBoundView(), startDetailActivityPendingIntent(mContext, mWidgetId + dev.getOffset(), widgetAdapterId, dev.getId()));
-			dev.initView();
-		}
-
 		// -------------------- render layout
 		switch (this.widgetLayout){
 			case R.layout.widget_clock_3x2:
@@ -159,6 +153,8 @@ public class WidgetClockData extends WidgetData {
 		// updates all inside devices
 		for(WidgetDevicePersistence dev : widgetDevices){
 			dev.renderView(mBuilder);
+			// detail activity
+			mBuilder.setOnClickListener(dev.getBoundView(), startDetailActivityPendingIntent(mContext, mWidgetId + dev.getOffset(), widgetAdapterId, dev.getId()));
 			dev.setValueUnitColor(settings.colorSecondary);
 
 			if(this.widgetLayout == R.layout.widget_clock_3x2) {

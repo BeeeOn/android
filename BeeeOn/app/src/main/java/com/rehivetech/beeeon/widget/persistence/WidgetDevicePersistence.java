@@ -179,32 +179,19 @@ public class WidgetDevicePersistence extends WidgetBeeeOnPersistence {
 	}
 
 	@Override
-	public void initView() {
+	public void renderView(ViewsBuilder parentBuilder, boolean isCached, String cachedString) {
+		super.renderView(parentBuilder, isCached, cachedString);
 		if(mBoundView == 0) return;
 
-		Controller mController = Controller.getInstance(mContext);
+		Controller controller = Controller.getInstance(mContext);
 
-		if(getType().isActor() && mController.isUserAllowed(mUserRole) && deviceValue instanceof BooleanValue){
+		if(getType().isActor() && controller.isUserAllowed(mUserRole) && deviceValue instanceof BooleanValue){
 			containerType = SWITCHCOMPAT;
 
 			mBuilder.loadRootView(R.layout.widget_include_switchcompat);
 			mBuilder.setOnClickListener(R.id.widget_switchcompat, WidgetService.getPendingIntentActorChangeRequest(mContext, mWidgetId, getId(), adapterId));
 			deviceValueChecked = ((BooleanValue) deviceValue).isActiveValue(BooleanValue.TRUE);
-		}
-		else {
-			containerType = VALUE_UNIT;
-			mBuilder.loadRootView(R.layout.widget_include_value_unit);
-		}
-	}
 
-	@Override
-	public void renderView(ViewsBuilder parentBuilder, boolean isCached, String cachedString) {
-		super.renderView(parentBuilder, isCached, cachedString);
-		if(mBoundView == 0) return;
-
-		Controller mController = Controller.getInstance(mContext);
-
-		if(getType().isActor() && mController.isUserAllowed(mUserRole) && deviceValue instanceof BooleanValue){
 			if(mIsCached){
 				setSwitchDisabled(true, false);
 			}
@@ -219,6 +206,9 @@ public class WidgetDevicePersistence extends WidgetBeeeOnPersistence {
 			}
 		}
 		else {
+			containerType = VALUE_UNIT;
+			mBuilder.loadRootView(R.layout.widget_include_value_unit);
+
 			// if location set, show the icon
 			if(locationIcon > 0) mBuilder.setImage(R.id.icon, locationIcon);
 

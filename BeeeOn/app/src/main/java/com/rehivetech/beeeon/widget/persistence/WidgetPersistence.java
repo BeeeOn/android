@@ -62,8 +62,6 @@ public abstract class WidgetPersistence {
 	public void configure(Object obj1, Object obj2){}
 	public void configure(Object obj1, Object obj2, Object obj3){}
 
-	public void initView(){}
-
 	public void renderView(ViewsBuilder parentBuilder){
 		renderView(parentBuilder, false, "");
 	}

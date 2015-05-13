@@ -182,7 +182,6 @@ public class WidgetGraphData extends WidgetDeviceData {
     protected void renderLayout() {
         super.renderLayout();
 
-        widgetLocation.initView();
         widgetLocation.renderView(mBuilder);
 
         Log.d(TAG, String.format("Graph: %d %d, is NUll = %b", mGraphWidth, mGraphHeight, mGraphBitmap == null));

@@ -93,21 +93,17 @@ public class WidgetDeviceData extends WidgetData {
 
         if(widgetAdapterId.isEmpty()) return;
 
-        for(WidgetDevicePersistence dev : widgetDevices) {
-            // detail activity
-            mBuilder.setOnClickListener(R.id.icon, startDetailActivityPendingIntent(mContext, mWidgetId + dev.getOffset(), widgetAdapterId, dev.getId()));
-            mBuilder.setOnClickListener(R.id.name, startDetailActivityPendingIntent(mContext, mWidgetId + dev.getOffset(), widgetAdapterId, dev.getId()));
-            dev.initView();
-        }
-
         // -------------------- render layout
         // updates all inside devices
         boolean isFirst = true;
         for(WidgetDevicePersistence dev : widgetDevices){
+            // detail activity
+            mBuilder.setOnClickListener(R.id.icon, startDetailActivityPendingIntent(mContext, mWidgetId + dev.getOffset(), widgetAdapterId, dev.getId()));
+            mBuilder.setOnClickListener(R.id.name, startDetailActivityPendingIntent(mContext, mWidgetId + dev.getOffset(), widgetAdapterId, dev.getId()));
+
             if(isFirst){
                 mBuilder.setImage(R.id.icon, dev.icon == 0 ? R.drawable.dev_unknown : dev.icon);
                 mBuilder.setTextViewText(R.id.name, dev.getName());
-
                 isFirst = false;
             }
 
