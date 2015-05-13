@@ -13,7 +13,7 @@ public class DeleteNotification extends BaseNotification {
 
 	public static final String TAG = DeleteNotification.class.getSimpleName();
 
-	public static final String JSON_TAG_DEL_NOTIFICATION_ID = "delete_not";
+	public static final String JSON_TAG_DEL_NOTIFICATION_ID = "mid_del";
 
 	private int mDeleteNotificationId;
 
