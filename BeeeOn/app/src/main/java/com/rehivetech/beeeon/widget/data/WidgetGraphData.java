@@ -97,6 +97,7 @@ public class WidgetGraphData extends WidgetDeviceData {
     @Override
     public void init() {
         Log.d(TAG, "init()");
+		// NOTE: we don't override base method here cause it would need to do similar work twice
 
         mFacilities.clear();
         for(WidgetDevicePersistence dev : widgetDevices){
@@ -268,8 +269,8 @@ public class WidgetGraphData extends WidgetDeviceData {
 
             DeviceLog log = mController.getDeviceLogsModel().getDeviceLog(mLogDataPair);
             if(log != null) {
-				mGraphBitmap = mGraph.drawBitmap(mGraphWidth, mGraphHeight);
 				fillGraph(log);
+				mGraphBitmap = mGraph.drawBitmap(mGraphWidth, mGraphHeight);
 				widgetLogData.intervalStart = DateTime.now(DateTimeZone.UTC).minusWeeks(1).getMillis();
 			}
 
