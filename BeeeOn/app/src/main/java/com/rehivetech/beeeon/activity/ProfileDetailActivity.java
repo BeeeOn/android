@@ -45,7 +45,9 @@ import com.vk.sdk.VKSdk;
 import com.vk.sdk.VKUIHelper;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -342,7 +344,6 @@ public class ProfileDetailActivity extends BaseApplicationActivity implements Ob
 
 				Bundle bundle = new Bundle();
 				bundle.putString(AchievementOverviewActivity.EXTRA_CATEGORY_ID, category.getId());
-				bundle.putString(AchievementOverviewActivity.EXTRA_CATEGORY_NAME, category.getName());
 
 				Intent intent = new Intent(mContext, AchievementOverviewActivity.class);
 				intent.putExtras(bundle);

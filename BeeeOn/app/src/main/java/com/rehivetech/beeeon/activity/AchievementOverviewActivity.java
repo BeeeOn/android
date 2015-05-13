@@ -52,15 +52,26 @@ public class AchievementOverviewActivity extends BaseApplicationActivity impleme
 
 		Bundle bundle = getIntent().getExtras();
 		if(bundle != null){
-			mCategoryName = bundle.getString(EXTRA_CATEGORY_NAME);
 			mCategoryId = bundle.getString(EXTRA_CATEGORY_ID);
 		}
 		else{
 			bundle = savedInstanceState;
-			if (bundle != null) {
-				mCategoryName = bundle.getString(EXTRA_CATEGORY_NAME);
+			if (bundle != null)
 				mCategoryId = bundle.getString(EXTRA_CATEGORY_ID);
-			}
+		}
+
+		switch (mCategoryId) {
+			case "0":
+				mCategoryName = getString(R.string.profile_category_app);
+				break;
+			case "1":
+				mCategoryName = getString(R.string.profile_category_friends);
+				break;
+			case "2":
+				mCategoryName = getString(R.string.profile_category_senzors);
+				break;
+			default:
+				mCategoryName = getString(R.string.title_activity_achievement_overview);
 		}
 
 		Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);

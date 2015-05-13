@@ -6,6 +6,7 @@ import android.os.Parcelable;
 import android.support.annotation.NonNull;
 
 import com.rehivetech.beeeon.IIdentifier;
+import com.rehivetech.beeeon.R;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -109,10 +110,10 @@ public class AchievementListItem implements IIdentifier, Comparable<AchievementL
 		compare.setTimeInMillis(mDate);
 		if(today.get(Calendar.YEAR) == compare.get(Calendar.YEAR)) {
 			if(today.get(Calendar.DAY_OF_YEAR) == compare.get(Calendar.DAY_OF_YEAR))
-				return "Today";
+				return mContext.getString(R.string.date_today);
 			compare.add(Calendar.DAY_OF_YEAR, 1);
 			if(today.get(Calendar.DAY_OF_YEAR) == compare.get(Calendar.DAY_OF_YEAR))
-				return "Yesterday";
+				return mContext.getString(R.string.date_yesterday);
 		}
 		return getTime();
 	}

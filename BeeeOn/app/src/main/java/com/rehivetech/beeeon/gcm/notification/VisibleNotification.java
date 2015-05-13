@@ -71,7 +71,6 @@ public abstract class VisibleNotification extends BaseNotification {
 	@Nullable
 	public static VisibleNotification parseXml(String nameStr, String idStr, String timeStr, String typeStr, boolean isRead, XmlPullParser parser) throws IOException, XmlPullParserException {
 		try {
-			Log.d(TAG, nameStr + ", " + typeStr + ", " + idStr + ", " + timeStr + "!!!!!!!!!!!!!!!!!!!!");
 			NotificationName name = NotificationName.fromValue(nameStr);
 			NotificationType type = NotificationType.fromValue(Integer.valueOf(typeStr));
 			Integer id = Integer.valueOf(idStr);

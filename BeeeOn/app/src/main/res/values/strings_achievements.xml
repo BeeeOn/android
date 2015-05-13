@@ -4,7 +4,7 @@
 	<string name="desc_1">Log into the application for 10 times.</string>
 	<string name="name_2">Boomerang</string>
 	<string name="desc_2">Log into the application for 100 times.</string>
-	<string name="name_3">Old Faithful</string>
+	<string name="name_3" translatable="false">Old Faithful</string>
 	<string name="desc_3">Log into the application for 1000 times.</string>
 	<string name="name_4">Small but ours</string>
 	<string name="desc_4">Add one new room.</string>
@@ -22,19 +22,19 @@
 	<string name="desc_10">Add a geo-fence location.</string>
 	<string name="name_11">This is my territory</string>
 	<string name="desc_11">Add three geo-fence locations.</string>
-	<string name="name_31">Facebook</string>
+	<string name="name_31" translatable="false">Facebook</string>
 	<string name="desc_31">Pair application with Facebook</string>
 	<string name="name_32">What\'s on your mind?</string>
 	<string name="desc_32">Share any message via Facebook.</string>
 	<string name="name_33">Lion\'s share</string>
 	<string name="desc_33">Share five messages via Facebook.</string>
-	<string name="name_34">Twitter</string>
+	<string name="name_34" translatable="false">Twitter</string>
 	<string name="desc_34">Pair application with Twitter.</string>
 	<string name="name_35">What\'s happening?</string>
 	<string name="desc_35">Tweet any message via Twitter.</string>
 	<string name="name_36">Sharing is caring</string>
 	<string name="desc_36">Tweet five messages via Twitter.</string>
-	<string name="name_37">Vkontakte</string>
+	<string name="name_37" translatable="false">Vkontakte</string>
 	<string name="desc_37">Pair application with Vkontakte.</string>
 	<string name="name_38">What\'s new?</string>
 	<string name="desc_38">Send any message via Vkontakte.</string>

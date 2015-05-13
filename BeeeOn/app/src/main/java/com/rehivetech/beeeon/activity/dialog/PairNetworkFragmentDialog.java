@@ -37,7 +37,6 @@ public class PairNetworkFragmentDialog extends DialogFragment {
 		if(!mFb.isPaired()) mSocialNetworks.add(mFb.getName());
 		if(!mTw.isPaired()) mSocialNetworks.add(mTw.getName());
 		if(!mVk.isPaired()) mSocialNetworks.add(mVk.getName());
-		mSocialNetworks.add("get achievement");
 	}
 
 	@Override
@@ -56,8 +55,6 @@ public class PairNetworkFragmentDialog extends DialogFragment {
 							else if((which == 2 && !mFb.isPaired() && !mTw.isPaired()) ||
 								which == 1 || which == 0 )
 								mVk.logIn(getActivity());
-							else if(which == 3)
-								new GeneralAchievement(Constants.ACHIEVEMENT_LOGIN, getActivity());
 						}
 					})
 			.setNegativeButton(R.string.action_close, new DialogInterface.OnClickListener() {

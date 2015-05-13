@@ -325,6 +325,8 @@
     <string name="logout_success">Odhlášení proběhlo úspěšně</string>
     <string name="achievement_share_url_name"> BeeeOn Inteligentní domáctnost</string>
     <string name="achievement_share_msg">Jsem odemknul tento nový achievement!</string>
+	<string name="date_today">Dnes</string>
+	<string name="date_yesterday">Včera</string>
 
     <!-- WatchDog -->
     <string name="action_watchdog">Hlídač</string>
