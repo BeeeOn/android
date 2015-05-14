@@ -62,7 +62,7 @@ public class WatchdogNotification extends VisibleNotification {
 
 			instance = new WatchdogNotification(msgId, time, type, false, message, adapterId, deviceId, deviceType, algId);
 		} catch (IllegalArgumentException | NullPointerException e) {
-			return instance;
+			return null;
 		}
 
 		return instance;
@@ -102,7 +102,7 @@ public class WatchdogNotification extends VisibleNotification {
 					} else if (tagname.equalsIgnoreCase(Xconstants.DTYPE)) {
 						deviceType = Integer.valueOf(text);
 					} else if (tagname.equalsIgnoreCase(Xconstants.ALGID)) {
-						deviceType = Integer.valueOf(text);
+						algId = Integer.valueOf(text);
 					}
 					break;
 				default:
@@ -111,7 +111,7 @@ public class WatchdogNotification extends VisibleNotification {
 			eventType = parser.next();
 		}
 
-		if (message == null || adapterId == null || deviceId == null || deviceType == null) {
+		if (message == null || adapterId == null || deviceId == null || deviceType == null || algId == null) {
 			Log.d(TAG, "Xml: Some compulsory value is missing.");
 			return null;
 		}
