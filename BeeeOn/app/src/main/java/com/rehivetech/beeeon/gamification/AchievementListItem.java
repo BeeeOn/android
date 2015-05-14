@@ -63,6 +63,13 @@ public class AchievementListItem implements IIdentifier, Comparable<AchievementL
 		return false;
 	}
 
+	public void setCompleted(long time) {
+		if(!isDone()) {
+			mDate = time;
+			mCurrentProgress = mTotalProgress;
+		}
+	}
+
 	public void recountParentValues() {
 		mLevel = 1;
 		AchievementListItem parent = mParent;

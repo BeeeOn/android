@@ -19,41 +19,36 @@ import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 
 import java.io.IOException;
-import java.util.Observable;
-import java.util.Observer;
 
 /**
  * Created by Martin on 22. 4. 2015.
  *
  */
-public class AchievementNotification extends VisibleNotification  implements Observer {
+public class AchievementNotification extends VisibleNotification {
 	public static final String TAG = AchievementNotification.class.getSimpleName();
 
+	private long mTime;
 	private String mAchievementID = null;
 	private AchievementList mList = null;
-	private AchievementListItem mAchievementItem = null;
-
-	private AchievementNotification(int msgid, long time, NotificationType type, boolean read) {
-		super(msgid, time, type, read);
-	}
 
 	private AchievementNotification(int msgid, long time, NotificationType type, boolean read, String achievementID) {
 		super(msgid, time, type, read);
 		mAchievementID = achievementID;
+		mTime = time;
 	}
 
 	protected static AchievementNotification getInstance(Integer msgId, Long time, NotificationType type, Bundle bundle) throws NullPointerException, IllegalArgumentException {
 		AchievementNotification instance;
 
 		try {
-			Integer achievementId = Integer.valueOf(bundle.getString(Xconstants.ID));
+			String achievementId = bundle.getString(Xconstants.ID);
 
 			if (achievementId == null) {
 				Log.d(TAG, "Achievement: some compulsory value is missing.");
 				return null;
 			}
 
-			instance = new AchievementNotification(msgId, time, type, false);
+			instance = new AchievementNotification(msgId, time, type, false, achievementId);
 		} catch (IllegalArgumentException | NullPointerException e) {
 			return null;
 		}
@@ -114,27 +109,36 @@ public class AchievementNotification extends VisibleNotification  implements Obs
 	@Override
 	protected void onGcmHandle(Context context) {
 		NotificationCompat.Builder builder = getBaseNotificationBuilder(context);
+
+		// Downloading data from server
+		mList = AchievementList.getInstance(context);
+
 		showNotification(context, builder);
 	}
 
 	@Override
 	protected void onClickHandle(Context context) {
 		Intent intent;
-		if(mAchievementID != null) {
-			mList = AchievementList.getInstance(context);
-			if(mList.isDownloaded()) {
-				mAchievementItem = mList.getItem(String.valueOf(mAchievementID));
+
+		mList = AchievementList.getInstance(context);
+		if(mList.isDownloaded() && mAchievementID != null) {
+			AchievementListItem achievementItem = mList.getItem(String.valueOf(mAchievementID));
+			if(achievementItem != null) {
+				achievementItem.setCompleted(mTime);
 				Bundle bundle = new Bundle();
-				bundle.putString(AchievementOverviewActivity.EXTRA_CATEGORY_ID, mAchievementItem.getCategory());
+				bundle.putString(AchievementOverviewActivity.EXTRA_CATEGORY_ID, achievementItem.getCategory());
 
 				intent = new Intent(context, AchievementOverviewActivity.class);
 				intent.putExtras(bundle);
 			}
-			else {
-//				mList.addObserver(this);
-				intent = new Intent(context, ProfileDetailActivity.class);
-			}
+			else
+				intent = new Intent(context, NotificationActivity.class);
 		}
+		// Known ID, but somehow couldnt download achievement data
+		else if(mAchievementID != null) {
+			intent = new Intent(context, ProfileDetailActivity.class);
+		}
+		// Unknown ID
 		else {
 			intent = new Intent(context, NotificationActivity.class);
 		}
@@ -151,11 +155,5 @@ public class AchievementNotification extends VisibleNotification  implements Obs
 		if(mAchievementID != null)
 			return context.getString(context.getResources().getIdentifier("name_" + mAchievementID, "string", context.getPackageName()));
 		return "New achievement";
-	}
-
-	@Override
-	public void update(Observable observable, Object o) {
-		if(o.toString().equals("achievements") && mList != null)
-			mAchievementItem = mList.getItem(mAchievementID);
 	}
 }

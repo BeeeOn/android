@@ -22,6 +22,7 @@ import com.rehivetech.beeeon.gamification.AchievementList;
 import com.rehivetech.beeeon.gamification.AchievementListItem;
 import com.rehivetech.beeeon.gamification.AchievementListOnClickListener;
 import com.rehivetech.beeeon.activity.dialog.ShareFragmentDialog;
+import com.rehivetech.beeeon.socialNetworks.BeeeOnFacebook;
 import com.rehivetech.beeeon.util.Log;
 
 import java.util.Observable;
@@ -34,9 +35,7 @@ public class AchievementOverviewActivity extends BaseApplicationActivity impleme
 	private static final String TAG = AchievementOverviewActivity.class.getSimpleName();
 
 	// extras
-	public static final String EXTRA_CATEGORY_NAME = "category_name";
 	public static final String EXTRA_CATEGORY_ID = "category_id";
-	private String mCategoryName;
 	private String mCategoryId;
 
 	//facebook
@@ -60,23 +59,24 @@ public class AchievementOverviewActivity extends BaseApplicationActivity impleme
 				mCategoryId = bundle.getString(EXTRA_CATEGORY_ID);
 		}
 
+		String categoryName;
 		switch (mCategoryId) {
 			case "0":
-				mCategoryName = getString(R.string.profile_category_app);
+				categoryName = getString(R.string.profile_category_app);
 				break;
 			case "1":
-				mCategoryName = getString(R.string.profile_category_friends);
+				categoryName = getString(R.string.profile_category_friends);
 				break;
 			case "2":
-				mCategoryName = getString(R.string.profile_category_senzors);
+				categoryName = getString(R.string.profile_category_senzors);
 				break;
 			default:
-				mCategoryName = getString(R.string.title_activity_achievement_overview);
+				categoryName = getString(R.string.title_activity_achievement_overview);
 		}
 
 		Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 		if (toolbar != null) {
-			toolbar.setTitle(mCategoryName);
+			toolbar.setTitle(categoryName);
 			setSupportActionBar(toolbar);
 			getSupportActionBar().setHomeButtonEnabled(true);
 			getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -109,26 +109,24 @@ public class AchievementOverviewActivity extends BaseApplicationActivity impleme
 	 * On success logs sharing-achievement, else logs an error.
 	 */
 	private void setFbShareCallback() {
-		mCallbackManager = CallbackManager.Factory.create();
-		mShareDialog = new ShareDialog(this);
-		mShareDialog.registerCallback(mCallbackManager, new FacebookCallback<Sharer.Result>() {
-			@Override
-			public void onSuccess(Sharer.Result shareResult) {
-				if (shareResult.getPostId() != null) // null is if 'cancel' is hit
-					new GeneralAchievement(Constants.ACHIEVEMENT_FACEBOOK_SHARE, getApplicationContext());
-			}
-
-			@Override
-			public void onCancel() {
-				Log.d(TAG, "FB: canceled");
-			}
-
-			@Override
-			public void onError(FacebookException e) {
-				Log.d(TAG, "FB error: " + e.getMessage());
-				Toast.makeText(getApplicationContext(), getString(R.string.NetworkError___CL_INTERNET_CONNECTION), Toast.LENGTH_LONG).show();
-			}
-		});
+//		mCallbackManager = CallbackManager.Factory.create();
+//		mShareDialog = new ShareDialog(this);
+//		mShareDialog.registerCallback(mCallbackManager, new FacebookCallback<Sharer.Result>() {
+//			@Override
+//			public void onSuccess(Sharer.Result shareResult) {
+//				if (shareResult.getPostId() != null) // null is if 'cancel' is hit
+//					new GeneralAchievement(Constants.ACHIEVEMENT_FACEBOOK_SHARE, getApplicationContext());
+//			}
+//			@Override
+//			public void onCancel() {
+//				Log.d(TAG, "FB: canceled");
+//			}
+//			@Override
+//			public void onError(FacebookException e) {
+//				Log.d(TAG, "FB error: " + e.getMessage());
+//				Toast.makeText(getApplicationContext(), getString(R.string.NetworkError___CL_INTERNET_CONNECTION), Toast.LENGTH_LONG).show();
+//			}
+//		});
 	}
 
 	/**
