@@ -26,16 +26,16 @@ public class GeofenceDialogFragment extends DialogFragment {
 	/**
 	 * Define how many meters is add/removed from geofence when tap on plus/minus button
 	 */
-	private static final int BUTTON_STEP = 20;
+	private static final int BUTTON_STEP = 10;
 	/**
 	 * Define minimum radius in meters
 	 */
-	private static final int MIN_RADIUS = 50;
+	private static final int MIN_RADIUS = 100;
 
 	/**
 	 * Define default radius in meters
 	 */
-	private static final int DEFAULT_RADIUS = 100;
+	private static final int DEFAULT_RADIUS = 150;
 
 	private Button mButtonMinus, mButtonPlus;
 	private EditText mName, mRadius;
