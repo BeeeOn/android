@@ -30,22 +30,27 @@ public final class Action {
 			return;
 		}
 
-		int pos = 0;
+
 		List<Device> devices = facility.getDevices();
 		if (devices.size() == 0) {
 			Toast.makeText(context, R.string.toast_device_not_available, Toast.LENGTH_SHORT).show();
 			return;
 		}
 
+		int pos = 0;
 		for (int i = 0; i < devices.size(); i++) {
 			if (devices.get(i).getRawTypeId().equals(String.valueOf(type))) {
+
 				pos = i;
 				break;
 			}
 		}
 
+		Device device = devices.get(pos);
+
+		// Sensor exists, we can open activity
 		Intent intent = new Intent(context, SensorDetailActivity.class);
-		intent.putExtra(SensorDetailActivity.EXTRA_DEVICE_ID, sensorId);
+		intent.putExtra(SensorDetailActivity.EXTRA_DEVICE_ID, device.getId());
 		intent.putExtra(SensorDetailActivity.EXTRA_ADAPTER_ID, String.valueOf(adapterId));
 		intent.putExtra(SensorDetailActivity.EXTRA_ACTIVE_POS, pos);
 

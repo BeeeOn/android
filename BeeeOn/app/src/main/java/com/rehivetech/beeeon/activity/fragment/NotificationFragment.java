@@ -100,7 +100,7 @@ public class NotificationFragment extends Fragment {
 
 	private void createNotifRequest() {
 
-		Thread thred = new Thread() {
+		Thread thread = new Thread() {
 			public void run() {
 				try {
 					final Controller controller = Controller.getInstance(getActivity());
@@ -124,6 +124,6 @@ public class NotificationFragment extends Fragment {
 				}
 			}
 		};
-		thred.start();
+		thread.start();
 	}
 }
