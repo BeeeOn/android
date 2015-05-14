@@ -375,17 +375,6 @@ final public class Utils {
 	}
 
 	/**
-	 * Converts density independent point to pixel
-	 * @param context
-	 * @param dpValue
-	 * @return
-	 */
-	public static float convertDpToPixel(Context context, float dpValue) {
-		DisplayMetrics metrics = context.getResources().getDisplayMetrics();
-		return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dpValue, metrics);
-	}
-
-	/**
 	 * Converting array of Integer to array of primitive ints
 	 * @param integers
 	 * @return

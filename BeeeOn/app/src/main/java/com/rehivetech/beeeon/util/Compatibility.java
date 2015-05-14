@@ -5,10 +5,12 @@ import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.util.TypedValue;
 import android.view.View;
 import android.widget.RemoteViews;
@@ -100,7 +102,9 @@ public class Compatibility {
 			rv.setTextViewTextSize(viewId, unit, size);
 		}
 		else{
-			rv.setFloat(viewId, "setTextSize", TypedValue.applyDimension(unit, size, context.getResources().getDisplayMetrics()));
+			DisplayMetrics metrics = context.getResources().getDisplayMetrics();
+			float valueInSp = TypedValue.applyDimension(unit, size, metrics) / metrics.scaledDensity;
+			rv.setFloat(viewId, "setTextSize", (int) valueInSp);
 		}
 	}
 
