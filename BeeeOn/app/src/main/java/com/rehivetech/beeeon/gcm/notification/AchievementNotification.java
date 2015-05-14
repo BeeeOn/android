@@ -125,6 +125,7 @@ public class AchievementNotification extends VisibleNotification {
 			AchievementListItem achievementItem = mList.getItem(String.valueOf(mAchievementID));
 			if(achievementItem != null) {
 				achievementItem.setCompleted(mTime);
+				mList.updateData();
 				Bundle bundle = new Bundle();
 				bundle.putString(AchievementOverviewActivity.EXTRA_CATEGORY_ID, achievementItem.getCategory());
 

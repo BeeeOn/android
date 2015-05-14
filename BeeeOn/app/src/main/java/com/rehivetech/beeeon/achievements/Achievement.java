@@ -76,8 +76,7 @@ public abstract class Achievement  implements Observer {
 						showSuccess(item);
 					Log.d(TAG, "Updated achievement " + idList.get(i));
 				}
-				mAchievementList.filterAchievements();
-				mAchievementList.recountValues();
+				mAchievementList.updateData();
 			}
 		});
 		mUpdateAchievementTask.execute(pair);

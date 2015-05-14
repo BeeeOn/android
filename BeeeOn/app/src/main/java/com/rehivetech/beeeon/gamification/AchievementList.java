@@ -61,8 +61,7 @@ public class AchievementList extends Observable {
 			public void onExecute(boolean success) {
 				Log.d(TAG, "successfully downloaded data");
 				allAchievementList = mController.getAchievementsModel().getAchievements(adapterId);
-				filterAchievements();
-				recountValues();
+				updateData();
 				allDataDownloaded = true;
 				setChanged();
 				notifyObservers("achievements");
@@ -125,7 +124,12 @@ public class AchievementList extends Observable {
 		return level;
 	}
 
-	public void filterAchievements() {
+	public void updateData() {
+		filterAchievements();
+		recountValues();
+	}
+
+	private void filterAchievements() {
 		mAchievementList = new ArrayList<>();
 		for(int i = 0; i < allAchievementList.size(); i++) {
 			AchievementListItem son = null, parent = null, item = allAchievementList.get(i);
@@ -149,7 +153,7 @@ public class AchievementList extends Observable {
 	 * Counts number of total and completed achievements in all (3) categories
 	 * and number of totally earned points.
 	 */
-	public void recountValues() {
+	private void recountValues() {
 		mComplete = new int[] {0,0,0}; // number of completed achievements in 3 categories
 		mTotal = new int[] {0,0,0};	// number of all achievements in 3 categories
 		mTotalPoints = 0;
