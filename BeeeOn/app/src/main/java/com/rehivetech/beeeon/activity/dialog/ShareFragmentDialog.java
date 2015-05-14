@@ -39,16 +39,17 @@ public class ShareFragmentDialog extends DialogFragment {
 	private BeeeOnVKontakte mVk;
 	private ArrayList<CharSequence> socialNetworks = new ArrayList<>();
 
-	public ShareFragmentDialog(AchievementListItem item, ShareDialog shareDialog) {
-		mShareDialog = shareDialog;
+	public ShareFragmentDialog() {
+//		mShareDialog = this;
 
-		this.name = item.getName();
-		this.date = item.getDate();
+//		this.name = item.getName();
+//		this.date = item.getDate();
 
 		mFb = BeeeOnFacebook.getInstance(getActivity());
 		mTw = BeeeOnTwitter.getInstance(getActivity());
 		mGp = BeeeOnGooglePlus.getInstance(getActivity());
 		mVk = BeeeOnVKontakte.getInstance(getActivity());
+
 		socialNetworks.add(mGp.getName());
 		if(mFb.isPaired()) socialNetworks.add(mFb.getName());
 		if(mTw.isPaired()) socialNetworks.add(mTw.getName());
@@ -65,11 +66,12 @@ public class ShareFragmentDialog extends DialogFragment {
 							public void onClick(DialogInterface dialog, int which) {
 								if (which == 0)
 									startActivityForResult(mGp.shareAchievement(name), Constants.SHARE_GOOGLE);
-								else if (mFb.isPaired() && which == 1)
-									mShareDialog.show(mFb.shareAchievement(name, date));
+								else if (mFb.isPaired() && which == 1) {
+//									this.show(mFb.shareAchievement(name, date));
+								}
 								else if (mTw.isPaired() && (which == 1 || which == 2))
 									startActivityForResult(mTw.shareAchievement(name), Constants.SHARE_TWITTER);
-								else if(mVk.isPaired() && (which == 1 || which == 2 || which == 3))
+								else if (mVk.isPaired() && (which == 1 || which == 2 || which == 3))
 									mVk.shareAchievement(name, date).show(getFragmentManager(), "string");
 							}
 						})

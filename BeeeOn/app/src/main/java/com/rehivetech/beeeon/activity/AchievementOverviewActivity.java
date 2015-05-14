@@ -135,8 +135,8 @@ public class AchievementOverviewActivity extends BaseApplicationActivity impleme
 	 */
 	@Override
 	public void OnAchievementClick(View aView, int position) {
-		AchievementListItem achievementItem = mAchievementListAdapter.getItem(position);
-		new ShareFragmentDialog(achievementItem, mShareDialog).show(getSupportFragmentManager(), TAG);
+//		AchievementListItem achievementItem = mAchievementListAdapter.getItem(position);
+		new ShareFragmentDialog().show(getSupportFragmentManager(), TAG);
 	}
 
 	/**
