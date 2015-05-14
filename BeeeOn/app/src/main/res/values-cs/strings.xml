@@ -209,7 +209,7 @@
     <string name="widget_sensor_title_small">BeeeOn zařízení 1x1</string>
     <string name="widget_sensor_title_medium">BeeeOn zařízení 2x1</string>
     <string name="widget_sensor_title_large">BeeeOn zařízení 3x1</string>
-    <string name="widget_location_list_title">BeeeOn poloha</string>
+    <string name="widget_location_list_title">BeeeOn umístění</string>
     <string name="widget_graph_title">BeeeOn zařízení s grafem</string>
     <string name="widget_clock_title">BeeeOn-Time</string>
 
@@ -225,13 +225,13 @@
     <string name="widget_configuration_select_device">Vyberte zařízení ze seznamu</string>
     <string name="widget_configuration_select_location">Vyberte umístění ze seznamu</string>
 
-    <string name="widget_configuration_widget_clock">Nastavení widgetu BeeeOn-Time</string>
+    <string name="widget_configuration_widget_clock">Nastavení widgetu hodin</string>
     <string name="widget_configuration_widget_device">Nastavení widgetu zařízení</string>
     <string name="widget_configuration_widget_graph">Nastavení widgetu s grafem</string>
     <string name="widget_configuration_widget_location">Nastavení widgetu umístění</string>
 
     <!-- Widgets other -->
-    <string name="widget_location_list_empty">Prázdná poloha</string>
+    <string name="widget_location_list_empty">Prázdné umístění</string>
     <string name="widget_cached">(cached)</string>
     <string name="widget">Widget</string>
     <string name="household">Domácnost</string>
@@ -324,20 +324,18 @@
     <string name="downloading_data">Stahuji data &#8230;</string>
     <string name="logout_success">Odhlášení proběhlo úspěšně</string>
     <string name="achievement_share_url_name"> BeeeOn Inteligentní domáctnost</string>
-    <string name="achievement_share_msg">Jsem odemknul tento nový achievement!</string>
+    <string name="achievement_share_msg">Odemknul jsem tento nový achievement!</string>
 	<string name="date_today">Dnes</string>
 	<string name="date_yesterday">Včera</string>
 
     <!-- WatchDog -->
     <string name="action_watchdog">Hlídač</string>
     <string name="watchdog_rule">Pravidlo hlídače</string>
-    <string name="sensor_text">Zařízení</string>
     <string name="treshold_value">Prahová Hodnota</string>
     <string name="watchdog_actor_change_state">Změnit stav aktoru</string>
     <string name="watchdog_notification_send">Poslat notifikaci</string>
     <string name="watchdog_activate_rule">Aktivovat pravidlo</string>
     <string name="watchdog_rule_name">Název pravidla</string>
-    <string name="watchdog_if">Když</string>
     <string name="notification_text">Text notifikace</string>
 
     <string name="rule_menu_del">Odstranit</string>
@@ -403,5 +401,10 @@
 	<string name="notification_name_new_sensor">Přidáno nové zařízení</string>
 	<string name="notification_name_link">Spoj</string>
     <string name="sensor_name_label">Meno zařízení</string>
+    <string name="toast_device_not_available">Zařízení není dostupné</string>
+    <string name="toast_field_must_be_number">Toto pole musí být číslo!</string>
+    <string name="watchdog_create">Vytvořit hlídače</string>
+    <string name="achievement_share_img" translatable="false"></string>
+    <string name="sensor_text"></string>
 
 </resources>

@@ -117,6 +117,7 @@
     <string name="toast_wrong_or_no_watchdog_rule">Wrong or no WatchDog rule selected</string>
 	<string name="toast_achievement_title">Achievement unlocked!</string>
     <string name="toast_field_must_be_filled">This field must be filled!</string>
+    <string name="toast_field_must_be_number">This field must be number!</string>
 
     <!-- Progress -->
 	<string name="progress_signing">Logging in&#8230;</string>
@@ -348,14 +349,12 @@
     <!-- WatchDog -->
     <string name="action_watchdog">WatchDog</string>
     <string name="watchdog_rule">WatchDog Rule</string>
-    <string name="sensor_text">Device</string>
     <string name="watchdog_create">Create watchdog</string>
     <string name="treshold_value">Threshold value</string>
     <string name="watchdog_actor_change_state">Change actor\'s state</string>
     <string name="watchdog_notification_send">Send notification</string>
     <string name="watchdog_activate_rule">Set this rule active</string>
     <string name="watchdog_rule_name">Rule name</string>
-    <string name="watchdog_if">If</string>
     <string name="notification_text">Notification text</string>
     <string name="actor_required">Please select actor</string>
     

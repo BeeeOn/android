@@ -191,7 +191,7 @@
     <string name="widget_sensor_title_large">BeeeOn zariadenie 3x1</string>
     <string name="widget_cached">(cached)</string>
     <string name="widget_graph_title">BeeeOn zariadenie s grafom</string>
-    <string name="widget_location_list_empty">Prázdná poloha</string>
+    <string name="widget_location_list_empty">Prázdné umiestnenie</string>
 
     <!-- WidgetConfigurationActivity -->
     <string name="widget_configuration_adapter">Brána</string>
@@ -272,13 +272,11 @@
     <!-- WatchDog -->
     <string name="action_watchdog">Sledovač</string>
     <string name="watchdog_rule">Pravidlo sledovača</string>
-    <string name="sensor_text">Zariadenie</string>
     <string name="treshold_value">Prahová hodnota</string>
     <string name="watchdog_actor_change_state">Zmeniť stav aktoru</string>
     <string name="watchdog_notification_send">Poslať notifikáciu</string>
     <string name="watchdog_activate_rule">Aktivovať pravidlo</string>
     <string name="watchdog_rule_name">Názov pravidla</string>
-    <string name="watchdog_if">Ak</string>
     <string name="notification_text">Text notifikácie</string>
 
     <string name="rule_menu_del">Odstrániť</string>
@@ -422,10 +420,11 @@
     <string name="widget_configuration_location">Poloha</string>
     <string name="widget_configuration_login_first">Je potrebné sa najskôr prihlásiť</string>
     <string name="widget_configuration_select_location">Vyberte umiestnenie zo zoznamu</string>
-    <string name="widget_configuration_widget_clock">Nastavenie widgetu BeeeOn-Time</string>
+    <string name="widget_configuration_widget_clock">Nastavenie widgetu hodin</string>
     <string name="widget_configuration_widget_device">Nastavenie widgetu zariadenia</string>
     <string name="widget_configuration_widget_graph">Nastavenie widgetu s grafom</string>
     <string name="widget_configuration_widget_location">Nastavenie widgetu umiestnenia</string>
-    <string name="widget_location_list_title">BeeeOn poloha</string>
+    <string name="widget_location_list_title">BeeeOn umiestnenie</string>
+    <string name="watchdog_create"></string>
 
 </resources>
