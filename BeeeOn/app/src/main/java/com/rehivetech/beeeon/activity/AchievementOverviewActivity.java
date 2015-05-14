@@ -13,19 +13,24 @@ import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
 import com.facebook.share.Sharer;
 import com.facebook.share.widget.ShareDialog;
+import com.rehivetech.beeeon.Constants;
 import com.rehivetech.beeeon.R;
-import com.rehivetech.beeeon.achievements.FbShareAchievement;
+import com.rehivetech.beeeon.achievements.GeneralAchievement;
 import com.rehivetech.beeeon.arrayadapter.AchievementListAdapter;
 import com.rehivetech.beeeon.base.BaseApplicationActivity;
+import com.rehivetech.beeeon.gamification.AchievementList;
 import com.rehivetech.beeeon.gamification.AchievementListItem;
 import com.rehivetech.beeeon.gamification.AchievementListOnClickListener;
 import com.rehivetech.beeeon.activity.dialog.ShareFragmentDialog;
 import com.rehivetech.beeeon.util.Log;
 
+import java.util.Observable;
+import java.util.Observer;
+
 /**
  * @author Jan Lamacz
  */
-public class AchievementOverviewActivity extends BaseApplicationActivity implements AchievementListOnClickListener {
+public class AchievementOverviewActivity extends BaseApplicationActivity implements AchievementListOnClickListener, Observer {
 	private static final String TAG = AchievementOverviewActivity.class.getSimpleName();
 
 	// extras
@@ -38,6 +43,7 @@ public class AchievementOverviewActivity extends BaseApplicationActivity impleme
 	private CallbackManager mCallbackManager;
 	private ShareDialog mShareDialog;
 
+	private AchievementList mAchievementListHolder;
 	private AchievementListAdapter mAchievementListAdapter;
 
 	public void onCreate(Bundle savedInstanceState) {
@@ -46,15 +52,26 @@ public class AchievementOverviewActivity extends BaseApplicationActivity impleme
 
 		Bundle bundle = getIntent().getExtras();
 		if(bundle != null){
-			mCategoryName = bundle.getString(EXTRA_CATEGORY_NAME);
 			mCategoryId = bundle.getString(EXTRA_CATEGORY_ID);
 		}
 		else{
 			bundle = savedInstanceState;
-			if (bundle != null) {
-				mCategoryName = bundle.getString(EXTRA_CATEGORY_NAME);
+			if (bundle != null)
 				mCategoryId = bundle.getString(EXTRA_CATEGORY_ID);
-			}
+		}
+
+		switch (mCategoryId) {
+			case "0":
+				mCategoryName = getString(R.string.profile_category_app);
+				break;
+			case "1":
+				mCategoryName = getString(R.string.profile_category_friends);
+				break;
+			case "2":
+				mCategoryName = getString(R.string.profile_category_senzors);
+				break;
+			default:
+				mCategoryName = getString(R.string.title_activity_achievement_overview);
 		}
 
 		Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -65,8 +82,26 @@ public class AchievementOverviewActivity extends BaseApplicationActivity impleme
 			getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 		}
 
+		mAchievementListHolder = AchievementList.getInstance(getApplicationContext());
+		if(mAchievementListHolder.isDownloaded())
+			setListAdapter();
+		else
+			mAchievementListHolder.addObserver(this);
+
 		setFbShareCallback();
-		setOnClickListeners();
+	}
+
+	/**
+	 * Sets OnClick and OnLongClick listeners on all achievements in view.
+	 * OnLongClick, if achievement is already completed, display facebook
+	 * share activity.
+	 */
+	private void setListAdapter() {
+		ListView achievementList = (ListView) findViewById(R.id.achievement_list);
+
+		mAchievementListAdapter = new AchievementListAdapter(this.getLayoutInflater(), mCategoryId, this, mAchievementListHolder.getAllAchievements(), getApplicationContext());
+		achievementList.setAdapter(mAchievementListAdapter);
+		achievementList.setSelector(android.R.color.transparent);
 	}
 
 	/**
@@ -80,7 +115,7 @@ public class AchievementOverviewActivity extends BaseApplicationActivity impleme
 			@Override
 			public void onSuccess(Sharer.Result shareResult) {
 				if (shareResult.getPostId() != null) // null is if 'cancel' is hit
-					new FbShareAchievement(getApplicationContext());
+					new GeneralAchievement(Constants.ACHIEVEMENT_FACEBOOK_SHARE, getApplicationContext());
 			}
 
 			@Override
@@ -94,19 +129,6 @@ public class AchievementOverviewActivity extends BaseApplicationActivity impleme
 				Toast.makeText(getApplicationContext(), getString(R.string.NetworkError___CL_INTERNET_CONNECTION), Toast.LENGTH_LONG).show();
 			}
 		});
-	}
-
-	/**
-	 * Sets OnClick and OnLongClick listeners on all achievements in view.
-	 * OnLongClick, if achievement is already completed, display facebook
-	 * share activity.
-	 */
-	private void setOnClickListeners() {
-		ListView achievementList = (ListView) findViewById(R.id.achievement_list);
-
-		mAchievementListAdapter = new AchievementListAdapter(this.getLayoutInflater(), mCategoryId, this, getApplicationContext());
-		achievementList.setAdapter(mAchievementListAdapter);
-		achievementList.setSelector(android.R.color.transparent);
 	}
 
 	/**
@@ -128,12 +150,12 @@ public class AchievementOverviewActivity extends BaseApplicationActivity impleme
 		// if user has twitter native app - can control if sharing was successful
 		if(requestCode == 66586 && // TODO Fix MAGIC!!
 			resultCode == RESULT_OK) {
-			new FbShareAchievement(getApplicationContext());
+			new GeneralAchievement(Constants.ACHIEVEMENT_TWITTER_SHARE, getApplicationContext());
 		}
 		// Sharing with Google Plus
 		if(requestCode == 66587 && // TODO Fix MAGIC!!
 				resultCode == RESULT_OK) {
-			new FbShareAchievement(getApplicationContext());
+			new GeneralAchievement(Constants.ACHIEVEMENT_GPLUS_SHARE, getApplicationContext());
 		}
 		mCallbackManager.onActivityResult(requestCode, resultCode, data);
 		super.onActivityResult(requestCode, resultCode, data);
@@ -149,32 +171,10 @@ public class AchievementOverviewActivity extends BaseApplicationActivity impleme
 		}
 	}
 
-//	public class NetworkChooseDialog extends DialogFragment {
-//		private String name;
-//		private String date;
-//		public NetworkChooseDialog(String name, String date) {
-//			this.name = name;
-//			this.date = date;
-//		}
-//		@Override
-//		public Dialog onCreateDialog(Bundle savedInstanceState) {
-//			AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-//			builder.setTitle(R.string.share_title)
-//					.setItems(socialNetworks.toArray(new CharSequence[socialNetworks.size()]),
-//							new DialogInterface.OnClickListener() {
-//								public void onClick(DialogInterface dialog, int which) {
-//									if (which == 0)
-//										Toast.makeText(getActivity(), "Not implemented yet", Toast.LENGTH_LONG).show();
-//									if (which == 1)
-//										mShareDialog
-//												.show(mFb.shareAchievement(getApplicationContext(), name, date));
-//								}
-//							})
-//					.setNegativeButton(R.string.action_close, new DialogInterface.OnClickListener() {
-//						public void onClick(DialogInterface dialog, int id) {
-//						}
-//					});
-//			return builder.create();
-//		}
-//	}
+	@Override
+	public void update(Observable observable, Object o) {
+		if(o.toString().equals("achievements")) {
+			setListAdapter();
+		}
+	}
 }

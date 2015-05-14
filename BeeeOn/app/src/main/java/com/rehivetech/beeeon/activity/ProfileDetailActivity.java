@@ -1,13 +1,15 @@
 package com.rehivetech.beeeon.activity;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.DisplayMetrics;
-import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,6 +37,7 @@ import com.rehivetech.beeeon.socialNetworks.BeeeOnFacebook;
 import com.rehivetech.beeeon.socialNetworks.BeeeOnSocialNetwork;
 import com.rehivetech.beeeon.socialNetworks.BeeeOnTwitter;
 import com.rehivetech.beeeon.socialNetworks.BeeeOnVKontakte;
+import com.rehivetech.beeeon.util.BetterProgressDialog;
 import com.rehivetech.beeeon.util.Log;
 import com.twitter.sdk.android.core.identity.TwitterAuthClient;
 import com.vk.sdk.VKAccessToken;
@@ -42,7 +45,9 @@ import com.vk.sdk.VKSdk;
 import com.vk.sdk.VKUIHelper;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -52,22 +57,20 @@ import java.util.Observer;
 public class ProfileDetailActivity extends BaseApplicationActivity implements Observer {
 	private static final String TAG = ProfileDetailActivity.class.getSimpleName();
 
-	private User actUser;
 	private GamCategoryListAdapter mCategoryListAdapter;
 	private Context mContext;
 	private Activity mActivity;
+	private AchievementList mAchievementList;
 	private int mDisplayPixel;
 
-	// GUI
-	private TextView userName;
 	private TextView userLevel;
-	private ImageView userImage;
 	private ListView mCategoryList;
 	private TextView mPoints;
 	private FloatingActionButton mMoreArrow;
 	private FloatingActionButton mMoreAdd;
 	private RelativeLayout mMoreVisible;
 	private RelativeLayout mMoreLayout;
+	private BetterProgressDialog mProgress;
 
 	// SocialNetworks
 	public CallbackManager mFacebookCallbackManager;
@@ -89,7 +92,7 @@ public class ProfileDetailActivity extends BaseApplicationActivity implements Ob
 		mContext = this;
 		mActivity = this;
 		Controller controller = Controller.getInstance(mContext);
-		actUser = controller.getActualUser();
+		User actUser = controller.getActualUser();
 
 		Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 		if (toolbar != null) {
@@ -104,15 +107,42 @@ public class ProfileDetailActivity extends BaseApplicationActivity implements Ob
 		mDisplayPixel = (int) metrics.density;
 
 		// Inflate the layout for this fragment
-		userName = (TextView) findViewById(R.id.profile_name);
+		TextView userName = (TextView) findViewById(R.id.profile_name);
 		userLevel = (TextView) findViewById(R.id.profile_detail);
-		userImage = (ImageView) findViewById(R.id.profile_image);
+		ImageView userImage = (ImageView) findViewById(R.id.profile_image);
 		mCategoryList = (ListView) findViewById(R.id.gam_category_list);
 		mPoints = (TextView) findViewById(R.id.profile_points);
 		mMoreArrow = (FloatingActionButton) findViewById(R.id.profile_more_arrow);
 		mMoreAdd = (FloatingActionButton) findViewById(R.id.profile_more_add);
 		mMoreVisible = (RelativeLayout) findViewById(R.id.profile_more_accounts);
 		mMoreLayout = (RelativeLayout) findViewById(R.id.profile_more);
+
+		userImage.setOnLongClickListener(new View.OnLongClickListener() {
+			@Override
+			public boolean onLongClick(View view) {
+				Controller controller = Controller.getInstance(mContext);
+				SharedPreferences prefs = controller.getUserSettings();
+				prefs.edit().remove(Constants.PERSISTENCE_PREF_LOGIN_VKONTAKTE).apply();
+				prefs.edit().remove(Constants.PERSISTENCE_PREF_LOGIN_FACEBOOK).apply();
+				prefs.edit().remove(Constants.PERSISTENCE_PREF_LOGIN_TWITTER).apply();
+				redrawCategories();
+				Log.d(TAG, "deleted");
+				return true;
+			}
+		});
+
+		// Prepare progressDialog
+		mProgress = new BetterProgressDialog(this);
+		mProgress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+
+		mAchievementList = AchievementList.getInstance(mContext);
+		if(mAchievementList.isDownloaded())
+			redrawCategories();
+		else {
+			mProgress.setMessageResource(R.string.progress_loading_achievement);
+			mProgress.show();
+			mAchievementList.addObserver(this);
+		}
 
 		mFb = BeeeOnFacebook.getInstance(mContext);
 		mTw = BeeeOnTwitter.getInstance(mContext);
@@ -134,7 +164,6 @@ public class ProfileDetailActivity extends BaseApplicationActivity implements Ob
 
 		setNetworksView();
 		setMoreButtonVisibility();
-		redrawCategories();
 		setOnClickLogout(mFb, mFbName);
 
 		Bitmap picture = actUser.getPicture();
@@ -156,17 +185,17 @@ public class ProfileDetailActivity extends BaseApplicationActivity implements Ob
 		else
 			mMoreAdd.setVisibility(View.INVISIBLE);
 		if(unconnectedNetworks != totalNetworks) { //at least one network is added
-			mMoreArrow.setOnClickListener(new View.OnClickListener() {
-				@Override
-				public void onClick(View v) {
-					showMoreAccounts = !showMoreAccounts;
-					setMoreButtonVisibility();
-				}
-			});
 			mMoreArrow.setVisibility(View.VISIBLE);
 		}
 		else
 			mMoreArrow.setVisibility(View.INVISIBLE);
+		mMoreArrow.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				showMoreAccounts = !showMoreAccounts;
+				setMoreButtonVisibility();
+			}
+		});
 	}
 
 	@Override
@@ -177,7 +206,6 @@ public class ProfileDetailActivity extends BaseApplicationActivity implements Ob
 		mFacebookCallbackManager.onActivityResult(requestCode, resultCode, data);
 		mTwitterCallbackManager.onActivityResult(requestCode, resultCode, data);
 	}
-
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
@@ -298,33 +326,30 @@ public class ProfileDetailActivity extends BaseApplicationActivity implements Ob
 	}
 
 	private void redrawCategories() {
-//		final AchievementList achievementList = AchievementList.getInstance(mContext);
-//
-//		userLevel.setText(getString(R.string.profile_level) + " " + achievementList.getLevel());
-//		mPoints.setText(String.valueOf(achievementList.getTotalPoints()));
-//
-//		List<GamificationCategory> rulesList = new ArrayList<>();
-//		rulesList.add(new GamificationCategory("0", getString(R.string.profile_category_app)));
-//		rulesList.add(new GamificationCategory("1", getString(R.string.profile_category_friends)));
-//		rulesList.add(new GamificationCategory("2", getString(R.string.profile_category_senzors)));
-//
-//		mCategoryListAdapter = new GamCategoryListAdapter(mContext, rulesList, getLayoutInflater(), achievementList);
-//
-//		mCategoryList.setAdapter(mCategoryListAdapter);
-//		mCategoryList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//			@Override
-//			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//				GamificationCategory category = mCategoryListAdapter.getItem(position);
-//
-//				Bundle bundle = new Bundle();
-//				bundle.putString(AchievementOverviewActivity.EXTRA_CATEGORY_ID, category.getId());
-//				bundle.putString(AchievementOverviewActivity.EXTRA_CATEGORY_NAME, category.getName());
-//
-//				Intent intent = new Intent(mContext, AchievementOverviewActivity.class);
-//				intent.putExtras(bundle);
-//				startActivity(intent);
-//			}
-//		});
+		userLevel.setText(getString(R.string.profile_level) + " " + mAchievementList.getUserLevel());
+		mPoints.setText(String.valueOf(mAchievementList.getTotalPoints()));
+
+		List<GamificationCategory> rulesList = new ArrayList<>();
+		rulesList.add(new GamificationCategory("0", getString(R.string.profile_category_app)));
+		rulesList.add(new GamificationCategory("1", getString(R.string.profile_category_friends)));
+		rulesList.add(new GamificationCategory("2", getString(R.string.profile_category_senzors)));
+
+		mCategoryListAdapter = new GamCategoryListAdapter(mContext, rulesList, getLayoutInflater(), mAchievementList);
+
+		mCategoryList.setAdapter(mCategoryListAdapter);
+		mCategoryList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+				GamificationCategory category = mCategoryListAdapter.getItem(position);
+
+				Bundle bundle = new Bundle();
+				bundle.putString(AchievementOverviewActivity.EXTRA_CATEGORY_ID, category.getId());
+
+				Intent intent = new Intent(mContext, AchievementOverviewActivity.class);
+				intent.putExtras(bundle);
+				startActivity(intent);
+			}
+		});
 	}
 
 	@Override
@@ -345,9 +370,11 @@ public class ProfileDetailActivity extends BaseApplicationActivity implements Ob
 			setOnClickLogout(mFb, mFbName);
 		else if(o.toString().equals("vkontakte"))
 			setOnClickLogout(mVk, mVkName);
-		else if(o.toString().equals("facebook login")) {
+		else if(o.toString().equals("login")) {
 			setNetworksView();
 			setMoreButtonVisibility();
+			Log.d(TAG, "login");
+			redrawCategories();
 		}
 		else if(o.toString().equals("not_logged"))
 			setOnClickLogin(mFb, mFbName);
@@ -355,6 +382,10 @@ public class ProfileDetailActivity extends BaseApplicationActivity implements Ob
 			if(mFb.isPaired()) mFbName.setText(getResources().getString(R.string.social_no_connection));
 			if(mTw.isPaired()) mTwName.setText(getResources().getString(R.string.social_no_connection));
 			if(mVk.isPaired()) mVkName.setText(getResources().getString(R.string.social_no_connection));
+		}
+		else if(o.toString().equals("achievements")) {
+			mProgress.dismiss();
+			redrawCategories();
 		}
 	}
 }

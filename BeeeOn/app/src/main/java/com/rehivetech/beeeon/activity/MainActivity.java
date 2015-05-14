@@ -27,7 +27,6 @@ import com.rehivetech.beeeon.Constants;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.activity.dialog.CustomAlertDialog;
 import com.rehivetech.beeeon.activity.fragment.CustomViewFragment;
-import com.rehivetech.beeeon.activity.fragment.ProfileDetailFragment;
 import com.rehivetech.beeeon.activity.fragment.SensorListFragment;
 import com.rehivetech.beeeon.activity.fragment.WatchDogListFragment;
 import com.rehivetech.beeeon.asynctask.CallbackTask;
@@ -64,7 +63,6 @@ public class MainActivity extends BaseApplicationActivity implements IListDialog
 	private SensorListFragment mListDevices;
 	private CustomViewFragment mCustomView;
     private WatchDogListFragment mWatchDogApp;
-	private ProfileDetailFragment mProfileFrag;
     private Toolbar mToolbar;
 
 	/**
@@ -140,7 +138,6 @@ public class MainActivity extends BaseApplicationActivity implements IListDialog
 		mListDevices = new SensorListFragment();
 		mCustomView = new CustomViewFragment();
 		mWatchDogApp = new WatchDogListFragment();
-		mProfileFrag = new ProfileDetailFragment();
 
 		if (savedInstanceState != null) {
 			mIsDrawerOpen = savedInstanceState.getBoolean(IS_DRAWER_OPEN);

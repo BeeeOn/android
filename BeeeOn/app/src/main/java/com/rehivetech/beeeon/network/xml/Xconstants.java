@@ -99,6 +99,7 @@ public class Xconstants {
 	public static final String POINTS = "points";
 	public static final String TOTAL_PROGRESS = "tprogress";
 	public static final String CURRENT_PROGRESS = "cprogress";
+	public static final String ACH_DATE = "date";
 	public static final String RANGE = "range";
 
 	public static final String ROW_DATA_SEPARATOR = "\\s+";

@@ -451,5 +451,5 @@ public interface INetwork {
 
 	public ArrayList<AchievementListItem> getAllAchievements(String adapterID);
 
-	public boolean setProgressLvl(String adapterId, String achievementId);
+	public List<String> setProgressLvl(String adapterId, String achievementId);
 }

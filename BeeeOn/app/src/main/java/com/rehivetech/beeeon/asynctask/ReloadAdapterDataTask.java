@@ -21,6 +21,7 @@ public class ReloadAdapterDataTask extends CallbackTask<String> {
 		UNINITIALIZED_FACILITIES,
 		USERS,
 		WATCHDOGS,
+		ACHIEVEMENTS,
 	}
 
 	public ReloadAdapterDataTask(Context context, boolean forceReload, ReloadWhat what) {
@@ -64,6 +65,9 @@ public class ReloadAdapterDataTask extends CallbackTask<String> {
 
 		if (mWhat == ReloadWhat.WATCHDOGS) {
 			controller.getWatchDogsModel().reloadWatchDogsByAdapter(adapterId, mForceReload);
+		}
+		if (mWhat == ReloadWhat.ACHIEVEMENTS) {
+			controller.getAchievementsModel().reloadAchievementsByAdapter(adapterId, mForceReload);
 		}
 
 		return true;

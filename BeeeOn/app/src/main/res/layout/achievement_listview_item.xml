@@ -1,17 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+				android:id="@+id/achievement_item_layout"
 			  android:orientation="vertical"
 			  android:layout_width="fill_parent"
-			  android:layout_height="70dp">
+			  android:layout_height="65dp">
 
 	<RelativeLayout
 		android:id="@+id/achievement_list_point_layout"
-		android:layout_width="55dp"
+		android:layout_width="60dp"
 		android:layout_height="wrap_content"
 		android:layout_alignParentLeft="true"
 		android:layout_alignParentStart="true"
-		android:layout_marginLeft="5dp"
-		android:layout_marginStart="5dp"
+		android:layout_marginLeft="2dp"
+		android:layout_marginStart="2dp"
 		android:layout_marginTop="5dp">
 
 		<TextView
@@ -21,6 +22,10 @@
 			android:textColor="@color/white"
 			android:textSize="26sp"
 			android:textStyle="bold"
+			android:paddingRight="7dp"
+			android:paddingEnd="7dp"
+			android:paddingLeft="0dp"
+			android:paddingTop="4dp"
 			android:gravity="center"
 			android:layout_centerHorizontal="true"
 			android:background="@drawable/hexagon_gray"
@@ -76,17 +81,57 @@
 		android:layout_below="@+id/achievement_list_name"
 		android:textColor="@color/beeeon_text_hint"/>
 
+	<RelativeLayout
+		android:id="@+id/achievement_progress_layout"
+		android:visibility="gone"
+		android:paddingRight="60dp"
+		android:paddingEnd="60dp"
+		android:paddingLeft="4dp"
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
+		android:layout_alignParentBottom="true"
+		android:layout_below="@+id/achievement_list_description"
+		android:layout_toRightOf="@+id/achievement_list_point_layout"
+		android:layout_toEndOf="@+id/achievement_list_point_layout">
+
+		<ProgressBar
+			android:id="@+id/achievement_progress"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			style="@android:style/Widget.ProgressBar.Horizontal"
+			android:progressDrawable="@drawable/customholotheme_scrubber_progress_horizontal_holo_light"
+			/>
+
+		</RelativeLayout>
+
 	<ImageView
 		android:id="@+id/achievement_list_share"
 		android:layout_width="30dp"
 		android:layout_height="30dp"
-		android:background="@drawable/share"
 		android:layout_centerVertical="true"
 		android:layout_alignParentRight="true"
 		android:layout_alignParentEnd="true"
 		android:layout_marginRight="10dp"
 		android:layout_marginEnd="10dp"
 		android:visibility="gone"/>
+
+	<RelativeLayout
+		android:layout_width="60dp"
+		android:layout_height="fill_parent"
+		android:layout_alignParentRight="true"
+		android:layout_alignParentEnd="true">
+
+		<TextView
+			android:id="@+id/achievement_progress_text"
+			android:visibility="gone"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_marginBottom="2dp"
+			android:textSize="12dp"
+			android:layout_centerHorizontal="true"
+			android:layout_alignParentBottom="true"/>
+
+		</RelativeLayout>
 
 	<ImageView
 		android:layout_width="match_parent"

@@ -1322,11 +1322,12 @@ public class Network implements INetwork {
 	}
 
 	@Override
-	public boolean setProgressLvl(String adapterId, String achievementId){
+	public List<String> setProgressLvl(String adapterId, String achievementId){
 		ParsedMessage msg = doRequest(XmlCreator.createSetProgressLvl(mBT, adapterId, achievementId));
 
-		if(msg.getState() == State.TRUE)
-			return true;
+		if(msg.getState() == State.PROGRESS) {
+			return (List<String>) msg.data;
+		}
 
 		throw processFalse(msg);
 	}

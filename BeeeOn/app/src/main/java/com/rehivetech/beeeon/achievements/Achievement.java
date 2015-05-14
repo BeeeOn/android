@@ -7,39 +7,94 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.rehivetech.beeeon.R;
+import com.rehivetech.beeeon.asynctask.CallbackTask;
+import com.rehivetech.beeeon.asynctask.UpdateAchievementTask;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.gamification.AchievementList;
 import com.rehivetech.beeeon.gamification.AchievementListItem;
+import com.rehivetech.beeeon.pair.AchievementPair;
+import com.rehivetech.beeeon.util.Log;
 
-import java.util.ResourceBundle;
+import java.util.List;
+import java.util.Observable;
+import java.util.Observer;
 
 /**
  * @author Jan Lamacz
  */
-public abstract class Achievement  {
-//	private static final String TAG = Achievement.class.getSimpleName();
+public abstract class Achievement  implements Observer {
+	private static final String TAG = Achievement.class.getSimpleName();
 
-	protected AchievementListItem mData;
-	protected Context mContext;
-	protected String mAchievementId;
-	protected String mAdapterId;
+	protected AchievementList mAchievementList;
+	protected AchievementListItem mData = null;
+	protected Context mContext = null;
+	protected Controller mController;
+	private String mAchievementId;
+	private String mAdapterId;
+	private boolean mSendUpdate;
+	protected UpdateAchievementTask mUpdateAchievementTask;
 
-	public Achievement(String achievement_id, Context context) {
-		setAchievementId(achievement_id);
-
-		mContext = context;
-		mAdapterId = Controller.getInstance(mContext).getActiveAdapter().getId();
-		mData = AchievementList.getInstance(mContext).getItem(Integer.parseInt(mAchievementId));
+	protected Achievement(String achievement_id, Context context) {
+		this(achievement_id, context, true);
 	}
 
-	public void show() {
+	protected Achievement(String achievement_id, Context context, boolean sendUpdate) {
+		mContext = context;
+		mAchievementId = achievement_id;
+		mSendUpdate = sendUpdate;
+
+		mAdapterId = "0";
+		mController = Controller.getInstance(mContext);
+		if(mController.getActiveAdapter() != null)
+			mAdapterId = mController.getActiveAdapter().getId();
+		mAchievementList = AchievementList.getInstance(mContext);
+		if(mAchievementList.isDownloaded()) {
+			mData = mAchievementList.getItem(achievement_id);
+			doAddUpdateAchievementTask(new AchievementPair(mAdapterId, mAchievementId));
+		}
+		else
+			mAchievementList.addObserver(this);
+	}
+
+	protected void doAddUpdateAchievementTask(AchievementPair pair) {
+		if(!mSendUpdate && mData.isDone()) return; // if is done and should not be send, skip it
+
+		mUpdateAchievementTask = new UpdateAchievementTask(mContext);
+		mUpdateAchievementTask.setListener(new CallbackTask.CallbackTaskListener() {
+			@Override
+			public void onExecute(boolean success) {
+				List<String> idList = mUpdateAchievementTask.getAchievementId();
+				if(!success) {
+					showError();
+					return;
+				}
+				else if (idList == null) return; // DEMO, don`t update anything
+				for(int i = 0; i < idList.size(); i++) {
+					AchievementListItem item = mAchievementList.getItem(idList.get(i));
+					if(item == null) continue;
+					else if(item.updateProgress())
+						showSuccess(item);
+					Log.d(TAG, "Updated achievement " + idList.get(i));
+				}
+				mAchievementList.filterAchievements();
+				mAchievementList.recountValues();
+			}
+		});
+		mUpdateAchievementTask.execute(pair);
+	}
+
+	public void showError() {
+		Toast.makeText(mContext, mContext.getString(R.string.NetworkError___CL_XML), Toast.LENGTH_LONG).show();
+	}
+
+	public void showSuccess(AchievementListItem item) {
 		LayoutInflater i = LayoutInflater.from(mContext);
 		View layout = i.inflate(R.layout.achievement_toast,null);
 
 		TextView name = (TextView) layout.findViewById(R.id.achievement_toast_name);
 		TextView points = (TextView) layout.findViewById(R.id.achievement_toast_points);
-		name.setText(mData.getName());
-		points.setText(String.valueOf(mData.getPoints()));
+		name.setText(item.getName());
+		points.setText(String.valueOf(item.getPoints()));
 
 		Toast toast = new Toast(mContext);
 		toast.setDuration(Toast.LENGTH_LONG);
@@ -47,7 +102,9 @@ public abstract class Achievement  {
 		toast.show();
 	}
 
-	public void setAchievementId(String mID) {this.mAchievementId = mID;}
-
-//	public AchievementListItem getAchievementData() {return mData;}
+	@Override
+	public void update(Observable observable, Object o) {
+		if(o.toString().equals("achievements"))
+			doAddUpdateAchievementTask(new AchievementPair(mAdapterId, mAchievementId));
+	}
 }

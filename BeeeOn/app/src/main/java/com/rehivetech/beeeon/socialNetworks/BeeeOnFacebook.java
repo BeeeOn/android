@@ -95,9 +95,10 @@ public class BeeeOnFacebook extends Observable implements BeeeOnSocialNetwork{
 		return new FacebookCallback<LoginResult>() {
 			@Override
 			public void onSuccess(LoginResult loginResult) {
-				new FbLoginAchievement(mContext,loginResult);
+				mAccessToken = loginResult.getAccessToken().toString();
+				new FbLoginAchievement(mContext,mAccessToken);
 				setChanged();
-				notifyObservers("facebook login");
+				notifyObservers("login");
 //				mProfileFrag.updateFacebookLoginView();
 			}
 			@Override

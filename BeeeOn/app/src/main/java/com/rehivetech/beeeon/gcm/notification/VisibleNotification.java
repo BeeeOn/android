@@ -78,7 +78,8 @@ public abstract class VisibleNotification extends BaseNotification {
 
 			return getInstance(name, type, id, time, isRead, parser);
 		} catch (IllegalArgumentException e) {
-			Log.e(TAG, "Some value couldn't be parsed from String value. Returning null.");
+			Log.e(TAG, "Some value couldn't be parsed from String value. Returning null." + e.getMessage());
+			e.printStackTrace();
 			return null;
 		}
 	}
