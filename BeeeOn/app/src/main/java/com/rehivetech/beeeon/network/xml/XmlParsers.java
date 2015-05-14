@@ -884,7 +884,12 @@ public class XmlParsers {
 					mParser.nextTag();
 				}
 				else{
-					tParams.put(position, readText(Xconstants.PARAM));
+					String param = readText(Xconstants.PARAM);
+					tParams.put(position, param);
+					// FIXME: this is workaround cause server not returning <geo> tag .. when it's added, this will not be necessary
+					if(position.equals("1") && watchDog.getType() == WatchDog.TYPE_GEOFENCE && watchDog.getGeoRegionId() == null){
+						watchDog.setGeoRegionId(param);
+					}
 				}
 
 			}while(mParser.nextTag() != XmlPullParser.END_TAG && !mParser.getName().equals(Xconstants.ALGORITHM));

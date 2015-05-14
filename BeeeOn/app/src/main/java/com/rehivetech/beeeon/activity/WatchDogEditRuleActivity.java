@@ -29,7 +29,6 @@ import com.rehivetech.beeeon.activity.spinnerItem.SpinnerItem;
 import com.rehivetech.beeeon.arrayadapter.DeviceArrayAdapter;
 import com.rehivetech.beeeon.arrayadapter.SpinnerMultiAdapter;
 import com.rehivetech.beeeon.asynctask.CallbackTask;
-import com.rehivetech.beeeon.asynctask.ReloadAdapterDataTask;
 import com.rehivetech.beeeon.asynctask.RemoveWatchDogTask;
 import com.rehivetech.beeeon.asynctask.SaveWatchDogTask;
 import com.rehivetech.beeeon.base.BaseApplicationActivity;
@@ -451,7 +450,7 @@ public class WatchDogEditRuleActivity extends BaseApplicationActivity {
      * Async task for saving watchdog
      */
     private void doSaveWatchDogTask(){
-        if(!validateInput(mRuleName, getString(R.string.toast_field_must_be_filled))){
+        if(!validateInput(mRuleName)){
             return;
         }
 
@@ -464,7 +463,7 @@ public class WatchDogEditRuleActivity extends BaseApplicationActivity {
         SpinnerItem selected = mSpinnerMultiAdapter.getItem(mIfItemSpinner.getSelectedItemPosition());
         switch(selected.getType()){
             case DEVICE:
-                if(!validateInput(mRuleTreshold, getString(R.string.toast_field_must_be_filled))) return;
+                if(!validateInput(mRuleTreshold, "parseInt")) return;
 
                 Device selectedDevice = (Device) selected.getObject();
                 devsIds.add(selectedDevice.getId());
@@ -492,7 +491,7 @@ public class WatchDogEditRuleActivity extends BaseApplicationActivity {
         newParams.add(mWatchDogAction);
         switch(mWatchDogAction){
             case WatchDog.ACTION_NOTIFICATION:
-                if(!validateInput(mNotificationText, getString(R.string.toast_field_must_be_filled))) return;
+                if(!validateInput(mNotificationText)) return;
 
                 newParams.add(mNotificationText.getText().toString());
                 break;
@@ -592,14 +591,30 @@ public class WatchDogEditRuleActivity extends BaseApplicationActivity {
     /**
      * Helper function for validating EditText
      * @param eText
-     * @param msg
+	 * @param additional Array of additional rules to validate
      * @return
      */
-    private static boolean validateInput(EditText eText, String msg) {
-        if (eText.getText().toString().trim().length() == 0) {
-            eText.setError(msg);
+    private boolean validateInput(EditText eText, String... additional) {
+        String inputText = eText.getText().toString().trim();
+		if (inputText.length() == 0) {
+            eText.setError(getString(R.string.toast_field_must_be_filled));
             return false;
         }
+
+		for(String type : additional){
+			switch (type){
+				case "parseInt":
+					try {
+						int num = Integer.parseInt(inputText);
+					}
+					catch(NumberFormatException e){
+						eText.setError(getString(R.string.toast_field_must_be_number));
+						return false;
+					}
+					break;
+			}
+		}
+
         return true;
     }
 
