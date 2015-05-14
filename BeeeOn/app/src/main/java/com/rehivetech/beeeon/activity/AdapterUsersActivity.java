@@ -20,6 +20,7 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.ScrollView;
 
+import com.melnykov.fab.FloatingActionButton;
 import com.rehivetech.beeeon.Constants;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.arrayadapter.UsersListAdapter;
@@ -33,7 +34,6 @@ import com.rehivetech.beeeon.household.adapter.Adapter;
 import com.rehivetech.beeeon.household.user.User;
 import com.rehivetech.beeeon.pair.UserPair;
 
-import net.i2p.android.ext.floatingactionbutton.FloatingActionButton;
 
 import java.util.List;
 
