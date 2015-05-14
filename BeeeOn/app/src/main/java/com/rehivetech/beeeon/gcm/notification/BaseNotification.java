@@ -35,10 +35,8 @@ public abstract class BaseNotification implements GcmNotification, Comparable<Ba
 		/**
 		 * Convert UTC timezone to local timezone
 		 */
-		TimeZone tz = TimeZone.getDefault();
 		mDate = Calendar.getInstance();
 		mDate.setTimeInMillis(timestamp);
-		mDate.add(Calendar.MILLISECOND, tz.getOffset(mDate.getTimeInMillis()));
 
 		mType = type;
 		mRead = read;
