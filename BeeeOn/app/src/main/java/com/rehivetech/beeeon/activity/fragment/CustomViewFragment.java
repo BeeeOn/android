@@ -1,7 +1,6 @@
 package com.rehivetech.beeeon.activity.fragment;
 
 import android.graphics.Color;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
@@ -17,6 +16,8 @@ import com.jjoe64.graphview.series.BaseSeries;
 import com.jjoe64.graphview.series.LineGraphSeries;
 import com.jjoe64.graphview.series.point.DataPoint;
 import com.rehivetech.beeeon.R;
+import com.rehivetech.beeeon.asynctask.CallbackTask;
+import com.rehivetech.beeeon.asynctask.GetDevicesLogsTask;
 import com.rehivetech.beeeon.base.TrackFragment;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.household.adapter.Adapter;
@@ -38,9 +39,7 @@ import org.joda.time.Interval;
 import org.joda.time.format.DateTimeFormatter;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Random;
 import java.util.SortedMap;
@@ -59,6 +58,8 @@ public class CustomViewFragment extends TrackFragment {
 	private static final String TAG = CustomViewFragment.class.getSimpleName();
 
 	private Controller mController;
+
+	private List<GetDevicesLogsTask> mGetDevicesLogsTasks = new ArrayList<>();
 
 	public CustomViewFragment() {
 	}
@@ -80,6 +81,14 @@ public class CustomViewFragment extends TrackFragment {
 		loadData();
 
 		return view;
+	}
+
+	@Override
+	public void onStop() {
+		for (GetDevicesLogsTask task : mGetDevicesLogsTasks) {
+			task.cancel(true);
+		}
+		super.onStop();
 	}
 
 	private void addGraph(final Device device, final UnitsHelper unitsHelper, final TimeHelper timeHelper, final DateTimeFormatter fmt) {
@@ -198,59 +207,54 @@ public class CustomViewFragment extends TrackFragment {
 	}
 
 	private void loadData() {
+		DateTime end = DateTime.now(DateTimeZone.UTC);
+		DateTime start = end.minusDays(3);// end.minusWeeks(1);
+
 		for (int i = 0; i < mDevices.size(); i++) {
-			// Load data for this graph
-			List<Device> list = mDevices.valueAt(i);
+			// Prepare data for this graph
+			final List<LogDataPair> pairs = new ArrayList<>();
 
-			GetDeviceLogTask getDeviceLogTask = new GetDeviceLogTask();
-			getDeviceLogTask.execute(list.toArray(new Device[list.size()]));
-		}
-	}
-
-	private class GetDeviceLogTask extends AsyncTask<Device, Void, Map<Device, DeviceLog>> {
-
-		private int mTypeId = 0;
-
-		@Override
-		protected Map<Device, DeviceLog> doInBackground(Device... devices) {
-			Map<Device, DeviceLog> result = new HashMap<Device, DeviceLog>();
-
-			// Remember type of graph we're downloading data for
-			mTypeId = devices[0].getType().getTypeId();
-
-			for (Device device : devices) {
-				DateTime end = DateTime.now(DateTimeZone.UTC);
-				DateTime start = end.minusDays(3);// end.minusWeeks(1);
-
+			for (Device device : mDevices.valueAt(i)) {
 				LogDataPair pair = new LogDataPair( //
 						device, // device
 						new Interval(start, end), // interval from-to
 						DataType.AVERAGE, // type
 						DataInterval.TEN_MINUTES); // interval
 
-				// Load log data if needed
-				mController.getDeviceLogsModel().reloadDeviceLog(pair);
-
-				// Get loaded log data (TODO: this could be done in gui)
-				result.put(device, mController.getDeviceLogsModel().getDeviceLog(pair));
+				pairs.add(pair);
 			}
 
-			return result;
-		}
-
-		@Override
-		protected void onPostExecute(Map<Device, DeviceLog> logs) {
-			// Fill graph with data
-			for (Map.Entry<Device, DeviceLog> entry : logs.entrySet()) {
-				fillGraph(entry.getValue(), entry.getKey());
+			// If devices list is empty, just continue
+			if (pairs.isEmpty()) {
+				continue;
 			}
 
-			// Hide loading label for this graph
-			GraphView graphView = mGraphs.get(mTypeId);
-			graphView.setLoading(false);
-			//graphView.animateY(2000);
-		}
+			// Prepare and run the reload logs task
+			GetDevicesLogsTask getDevicesLogsTask = new GetDevicesLogsTask(getActivity());
 
+			getDevicesLogsTask.setListener(new CallbackTask.CallbackTaskListener() {
+				@Override
+				public void onExecute(boolean success) {
+					// Remember type of graph we're downloading data for
+					int typeId = pairs.get(0).device.getType().getTypeId();
+
+					for (LogDataPair pair : pairs) {
+						DeviceLog log = mController.getDeviceLogsModel().getDeviceLog(pair);
+						fillGraph(log, pair.device);
+					}
+
+					// Hide loading label for this graph
+					GraphView graphView = mGraphs.get(typeId);
+					graphView.setLoading(false);
+					//graphView.animateY(2000);
+				}
+			});
+
+			// Remember task so they can be stopped at onStop()
+			mGetDevicesLogsTasks.add(getDevicesLogsTask);
+
+			getDevicesLogsTask.execute(pairs);
+		}
 	}
 
 }
