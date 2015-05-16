@@ -967,7 +967,7 @@ public class Network implements INetwork {
 	@Override
 	// http://stackoverflow.com/a/509288/1642090
 	@SuppressWarnings("unchecked")
-	public ArrayList<User> getAccounts(String adapterID){
+	public List<User> getAccounts(String adapterID){
 		ParsedMessage msg = doRequest(XmlCreator.createGetAccounts(mBT, adapterID));
 
 		if (msg.getState() == State.ACCOUNTS)
@@ -1311,7 +1311,7 @@ public class Network implements INetwork {
 	}
 
 	@Override
-	public ArrayList<AchievementListItem> getAllAchievements(String adapterID){
+	public List<AchievementListItem> getAllAchievements(String adapterID){
 		ParsedMessage msg = doRequest(XmlCreator.createGetAllAchievements(mBT, adapterID));
 
 		if(msg.getState() == State.ACHIEVEMENTS){

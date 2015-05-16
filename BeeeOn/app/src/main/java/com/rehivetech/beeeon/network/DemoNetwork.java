@@ -36,6 +36,7 @@ import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -67,6 +68,7 @@ public class DemoNetwork implements INetwork {
 	public final MultipleDataHolder<Facility> mFacilities = new MultipleDataHolder<>();
 	public final MultipleDataHolder<WatchDog> mWatchdogs = new MultipleDataHolder<>();
 	public final MultipleDataHolder<AchievementListItem> mAchievements = new MultipleDataHolder<>();
+	public final MultipleDataHolder<User> mUsers = new MultipleDataHolder<>();
 
 	public DemoNetwork(Context context) {
 		mContext = context;
@@ -139,6 +141,7 @@ public class DemoNetwork implements INetwork {
 		mFacilities.clear();
 		mWatchdogs.clear();
 		mAchievements.clear();
+		mUsers.clear();
 
 		// Parse and set initial demo data
 		XmlParsers parser = new XmlParsers();
@@ -164,6 +167,9 @@ public class DemoNetwork implements INetwork {
 			assetName = String.format(Constants.ASSET_ACHIEVEMENTS_FILENAME, adapter.getId());
 			mAchievements.setObjects(adapterId, parser.getDemoAchievementsFromAsset(mContext, assetName));
 			mAchievements.setLastUpdate(adapterId, DateTime.now());
+
+			// Just one (self) user for now, anyone can create XML with more users and use it here like other items
+			mUsers.setObjects(adapterId, Arrays.asList(new User[]{ new User(mUser.getId(), "John", "Doe", "john@doe.com", Gender.MALE, Role.Superuser) }));
 
 			Random rand = getRandomForAdapter(adapter.getId());
 
@@ -576,48 +582,112 @@ public class DemoNetwork implements INetwork {
 
 	@Override
 	public boolean addAccounts(String adapterId, ArrayList<User> users) {
-		// TODO Auto-generated method stub
-		return false;
+		for (User user : users) {
+			if (!addAccount(adapterId, user)) {
+				return false;
+			}
+		}
+
+		return true;
 	}
 
 	@Override
 	public boolean addAccount(String adapterId, User user) {
-		// TODO Auto-generated method stub
-		return false;
+		if (!mAdapters.hasObject(adapterId)) {
+			return false;
+		}
+
+		// Create unique user id
+		String userId;
+		int i = 0;
+		do {
+			userId = String.valueOf(i++);
+		} while (mUsers.hasObject(adapterId, userId));
+
+		// Set new user id
+		user.setId(userId);
+
+		// Set user name to his e-mail, because names must provide server (and we don't have any users here)
+		user.setName(user.getEmail());
+
+		mUsers.addObject(adapterId, user);
+		return true;
 	}
 
 	@Override
 	public boolean deleteAccounts(String adapterId, List<User> users) {
-		// TODO Auto-generated method stub
-		return false;
+		for (User user : users) {
+			if (!deleteAccount(adapterId, user)) {
+				return false;
+			}
+		}
+
+		return true;
 	}
 
 	@Override
 	public boolean deleteAccount(String adapterId, User user) {
 		// TODO: Actual implementation deletes adapter, not account...
-		mLocations.removeHolder(adapterId);
-		mFacilities.removeHolder(adapterId);
-		mWatchdogs.removeHolder(adapterId);
-		mAchievements.removeHolder(adapterId);
-		return mAdapters.removeObject(adapterId) != null;
+		if (user.getId().equals(mUser.getId())) {
+			// If we're deleting ourselves, remove whole adapter
+			mLocations.removeHolder(adapterId);
+			mFacilities.removeHolder(adapterId);
+			mWatchdogs.removeHolder(adapterId);
+			mAchievements.removeHolder(adapterId);
+			return mAdapters.removeObject(adapterId) != null;
+		} else {
+			// TODO: This is correct implementation for future
+			return mUsers.removeObject(adapterId, user.getId()) != null;
+		}
 	}
 
 	@Override
-	public ArrayList<User> getAccounts(String adapterId) {
-		// TODO Auto-generated method stub
-		return new ArrayList<User>();
+	public List<User> getAccounts(String adapterId) {
+		return mUsers.getObjects(adapterId);
 	}
 
 	@Override
 	public boolean updateAccounts(String adapterId, ArrayList<User> users) {
-		// TODO Auto-generated method stub
-		return false;
+		for (User user : users) {
+			if (!updateAccount(adapterId, user)) {
+				return false;
+			}
+		}
+
+		return true;
 	}
 
 	@Override
 	public boolean updateAccount(String adapterId, User user) {
-		// TODO Auto-generated method stub
-		return false;
+		if (!mAdapters.hasObject(adapterId)) {
+			return false;
+		}
+
+		// NOTE: this replaces (or add) whole user
+		mUsers.addObject(adapterId, user);
+
+		// We can have only one superuser, so unset all other superusers of this adapter (this does classic server too)
+		if (user.getRole() == Role.Superuser) {
+			for (User otherUser : mUsers.getObjects(adapterId)) {
+				// Change only other users, except me
+				if (!otherUser.getId().equals(user.getId())) {
+					continue;
+				}
+
+				// If their role is superuser, switch them to just admin
+				if (otherUser.getRole() == Role.Superuser) {
+					otherUser.setRole(Role.Admin);
+				}
+			}
+		}
+
+		// If we change role of ourselves, we need to put such change to adapter itself too
+		if (user.getId().equals(mUser.getId())) {
+			Adapter adapter = mAdapters.getObject(adapterId);
+			adapter.setRole(user.getRole());
+		}
+
+		return true;
 	}
 
 	@Override
@@ -727,7 +797,7 @@ public class DemoNetwork implements INetwork {
 
     @Override
     public List<WatchDog> getWatchDogs(ArrayList<String> watchDogIds, String adapterId) {
-		return null;
+		return new ArrayList<>();
 	}
 
     @Override
@@ -771,8 +841,8 @@ public class DemoNetwork implements INetwork {
 	}
 
 	@Override
-	public ArrayList<AchievementListItem> getAllAchievements(String adapterID){ return (ArrayList<AchievementListItem>) mAchievements.getObjects(adapterID); }
+	public List<AchievementListItem> getAllAchievements(String adapterID){ return mAchievements.getObjects(adapterID); }
 
 	@Override
-	public List<String> setProgressLvl(String adapterId, String achievementId){ return null; }
+	public List<String> setProgressLvl(String adapterId, String achievementId){ return new ArrayList<>(); }
 }

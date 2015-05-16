@@ -352,7 +352,7 @@ public interface INetwork {
 	 *
 	 * @return Map of users where key is email and value is User object
 	 */
-	public ArrayList<User> getAccounts(String adapterID);
+	public List<User> getAccounts(String adapterID);
 
 	/**
 	 * Method update users roles on server on current adapter
@@ -449,7 +449,7 @@ public interface INetwork {
 
 	public boolean passBorder(String regionId, String type);
 
-	public ArrayList<AchievementListItem> getAllAchievements(String adapterID);
+	public List<AchievementListItem> getAllAchievements(String adapterID);
 
 	public List<String> setProgressLvl(String adapterId, String achievementId);
 }
