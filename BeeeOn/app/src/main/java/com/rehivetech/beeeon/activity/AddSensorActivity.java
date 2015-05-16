@@ -207,7 +207,7 @@ public class AddSensorActivity extends BaseApplicationActivity {
 		});
 
 		// Execute and remember task so it can be stopped automatically
-		executeTask(reloadUninitializedFacilitiesTask, adapterId);
+		callbackTaskManager.executeTask(reloadUninitializedFacilitiesTask, adapterId);
 	}
 	
 	private void doPairRequestTask(String adapterId) {
@@ -230,7 +230,7 @@ public class AddSensorActivity extends BaseApplicationActivity {
 		});
 
 		// Execute and remember task so it can be stopped automatically
-		executeTask(pairRequestTask, adapterId);
+		callbackTaskManager.executeTask(pairRequestTask, adapterId);
 	}
 	
 	public void checkUnInitSensor() {

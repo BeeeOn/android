@@ -170,7 +170,7 @@ public class SensorDetailActivity extends BaseApplicationActivity {
 		});
 
 		// Execute and remember task so it can be stopped automatically
-		executeTask(reloadFacilitiesTask, adapterId);
+		callbackTaskManager.executeTask(reloadFacilitiesTask, adapterId);
 	}
 
 	/**

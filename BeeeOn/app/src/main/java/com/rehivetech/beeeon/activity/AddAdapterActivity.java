@@ -196,7 +196,7 @@ public class AddAdapterActivity extends BaseApplicationActivity {
 		});
 
 		// Execute and remember task so it can be stopped automatically
-		executeTask(registerAdapterTask, pair);
+		callbackTaskManager.executeTask(registerAdapterTask, pair);
 	}
 	
 }

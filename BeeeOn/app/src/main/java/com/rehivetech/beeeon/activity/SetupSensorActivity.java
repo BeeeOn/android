@@ -222,7 +222,7 @@ public class SetupSensorActivity extends BaseApplicationActivity {
 		});
 
 		// Execute and remember task so it can be stopped automatically
-		executeTask(initializeFacilityTask, pair);
+		callbackTaskManager.executeTask(initializeFacilityTask, pair);
 	}
 
 

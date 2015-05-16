@@ -296,7 +296,7 @@ public class WatchDogListFragment extends BaseApplicationFragment {
 		});
 
 		// Execute and remember task so it can be stopped automatically
-		executeTask(saveWatchDogTask, watchDog);
+		callbackTaskManager.executeTask(saveWatchDogTask, watchDog);
     }
 
     /**
@@ -324,7 +324,7 @@ public class WatchDogListFragment extends BaseApplicationFragment {
         }
 
 		// Execute and remember task so it can be stopped automatically
-		executeTask(reloadWatchDogTask, adapterId);
+		callbackTaskManager.executeTask(reloadWatchDogTask, adapterId);
     }
 
     /**
@@ -346,7 +346,7 @@ public class WatchDogListFragment extends BaseApplicationFragment {
         });
 
 		// Execute and remember task so it can be stopped automatically
-		executeTask(removeWatchDogTask, pair);
+		callbackTaskManager.executeTask(removeWatchDogTask, pair);
     }
 
     // ----- HELPERS + ACTIONMODE ----- //

@@ -176,7 +176,7 @@ public class AdapterUsersActivity extends BaseApplicationActivity {
 		});
 
 		// Execute and remember task so it can be stopped automatically
-        executeTask(reloadUsersTask, adapterId);
+        callbackTaskManager.executeTask(reloadUsersTask, adapterId);
 	}
 
 
@@ -196,7 +196,7 @@ public class AdapterUsersActivity extends BaseApplicationActivity {
 		});
 
 		// Execute and remember task so it can be stopped automatically
-		executeTask(removeUserTask, pair);
+		callbackTaskManager.executeTask(removeUserTask, pair);
     }
 
     private void doEditUserTask(User user) {
@@ -217,7 +217,7 @@ public class AdapterUsersActivity extends BaseApplicationActivity {
 		});
 
 		// Execute and remember task so it can be stopped automatically
-		executeTask(editUserTask, pair);
+		callbackTaskManager.executeTask(editUserTask, pair);
     }
 
 

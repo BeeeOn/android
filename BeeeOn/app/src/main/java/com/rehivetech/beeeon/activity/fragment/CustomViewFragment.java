@@ -241,7 +241,7 @@ public class CustomViewFragment extends BaseApplicationFragment {
 			});
 
 			// Execute and remember task so it can be stopped automatically
-			executeTask(getDevicesLogsTask, pairs);
+			callbackTaskManager.executeTask(getDevicesLogsTask, pairs);
 		}
 	}
 

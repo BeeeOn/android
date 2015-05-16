@@ -564,7 +564,7 @@ public class SensorDetailFragment extends BaseApplicationFragment implements ILi
 		});
 
 		// Execute and remember task so it can be stopped automatically
-		executeTask(actorActionTask, device);
+		callbackTaskManager.executeTask(actorActionTask, device);
 	}
 
 	protected void doReloadFacilitiesTask(final String adapterId, final boolean forceRefresh) {
@@ -595,9 +595,7 @@ public class SensorDetailFragment extends BaseApplicationFragment implements ILi
 		});
 
 		// Remember task so it can be stopped automatically
-		executeTask(reloadFacilitiesTask);
-
-		reloadFacilitiesTask.execute(adapterId);
+		callbackTaskManager.executeTask(reloadFacilitiesTask, adapterId);
 	}
 
 	protected void doLoadGraphData() {
@@ -622,7 +620,7 @@ public class SensorDetailFragment extends BaseApplicationFragment implements ILi
 		});
 
 		// Execute and remember task so it can be stopped automatically
-		executeTask(getDeviceLogTask, pair);
+		callbackTaskManager.executeTask(getDeviceLogTask, pair);
 	}
 
 	protected void doChangeStateDeviceTask(final Device device) {
@@ -640,7 +638,7 @@ public class SensorDetailFragment extends BaseApplicationFragment implements ILi
 		});
 
 		// Execute and remember task so it can be stopped automatically
-		executeTask(changeStateDeviceTask, device);
+		callbackTaskManager.executeTask(changeStateDeviceTask, device);
 	}
 
 	@Override

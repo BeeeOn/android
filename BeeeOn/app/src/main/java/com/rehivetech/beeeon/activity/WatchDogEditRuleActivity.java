@@ -548,7 +548,7 @@ public class WatchDogEditRuleActivity extends BaseApplicationActivity {
 		});
 
 		// Execute and remember task so it can be stopped automatically
-		executeTask(saveWatchDogTask, mWatchDog);
+		callbackTaskManager.executeTask(saveWatchDogTask, mWatchDog);
     }
 
     /**
@@ -567,7 +567,7 @@ public class WatchDogEditRuleActivity extends BaseApplicationActivity {
 		});
 
 		// Execute and remember task so it can be stopped automatically
-		executeTask(removeWatchDogTask, pair);
+		callbackTaskManager.executeTask(removeWatchDogTask, pair);
     }
 
     // ---------- HELPER FUNCTIONS ---------- //

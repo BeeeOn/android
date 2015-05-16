@@ -4,28 +4,23 @@ import android.content.Context;
 import android.content.Intent;
 
 import com.rehivetech.beeeon.activity.LoginActivity;
-import com.rehivetech.beeeon.asynctask.CallbackTask;
 import com.rehivetech.beeeon.asynctask.CallbackTaskManager;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.gcm.INotificationReceiver;
 import com.rehivetech.beeeon.gcm.notification.GcmNotification;
 import com.rehivetech.beeeon.util.Log;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-
 /**
  * Abstract parent for activities that requires logged in user
  * 
  * When user is not logged in, it will switch to LoginActivity automatically.
  */
-public abstract class BaseApplicationActivity extends BaseActivity implements INotificationReceiver, CallbackTaskManager.ICallbackTaskManager {
+public abstract class BaseApplicationActivity extends BaseActivity implements INotificationReceiver {
 
 	private static String TAG = BaseApplicationActivity.class.getSimpleName();
 	private boolean triedLoginAlready = false;
 
-	private CallbackTaskManager mCallbackTaskManager = new CallbackTaskManager();
+	public final CallbackTaskManager callbackTaskManager = new CallbackTaskManager();
 
 	protected boolean isPaused = false;
 
@@ -69,7 +64,7 @@ public abstract class BaseApplicationActivity extends BaseActivity implements IN
 		super.onStop();
 
 		// Cancel and remove all remembered tasks
-		mCallbackTaskManager.cancelAndRemoveAll();
+		callbackTaskManager.cancelAndRemoveAll();
 	}
 
 	public static void redirectToLogin(Context context) {
@@ -93,18 +88,6 @@ public abstract class BaseApplicationActivity extends BaseActivity implements IN
 	 */
 	protected void onAppPause() {
 		// Empty default method
-	}
-
-	@Override
-	public <T> void executeTask(CallbackTask<T> task, T param) {
-		mCallbackTaskManager.addTask(task);
-		task.execute(param);
-	}
-
-	@Override
-	public void executeTask(CallbackTask task) {
-		mCallbackTaskManager.addTask(task);
-		task.execute();
 	}
 
 	/**

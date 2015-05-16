@@ -172,7 +172,7 @@ public abstract class WidgetConfigurationFragment extends BaseApplicationFragmen
 		if(mActivity.getDialog() != null) mActivity.getDialog().show();
 
 		// Execute and remember task so it can be stopped automatically
-		executeTask(reloadAdapterDataTask);
+		callbackTaskManager.executeTask(reloadAdapterDataTask);
 	}
 
 	@Override
@@ -275,7 +275,7 @@ public abstract class WidgetConfigurationFragment extends BaseApplicationFragmen
 		mActivity.getDialog().show();
 
 		// Execute and remember task so it can be stopped automatically
-		executeTask(reloadAdapterDataTask, adapterId);
+		callbackTaskManager.executeTask(reloadAdapterDataTask, adapterId);
 	}
 
 	/**

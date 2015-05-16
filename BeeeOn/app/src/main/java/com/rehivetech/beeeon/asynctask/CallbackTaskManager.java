@@ -25,25 +25,37 @@ public class CallbackTaskManager {
 	}
 
 	/**
-	 * Interface to use in Activity or Fragments who work with CallbackTask objects.
+	 * Add this task to internal list of tasks which will be automatically stopped and removed at activity's onStop() method.
+	 *
+	 * @param task
+	 * @param param
 	 */
-	public interface ICallbackTaskManager {
+	public <T> void executeTask(CallbackTask<T> task, T param) {
+		addTask(task);
+		task.execute(param);
+	}
 
-		/**
-		 * Add this task to internal list of tasks which will be automatically stopped and removed at activity's onStop() method.
-		 *
-		 * @param task
-		 * @param param
-		 */
-		<T> void executeTask(CallbackTask<T> task, T param);
+	/**
+	 * Add this task to internal list of tasks which will be automatically stopped and removed at activity's onStop() method.
+	 *
+	 * @param task
+	 */
+	public void executeTask(CallbackTask task) {
+		addTask(task);
+		task.execute();
+	}
 
-		/**
-		 * Add this task to internal list of tasks which will be automatically stopped and removed at activity's onStop() method.
-		 *
-		 * @param task
-		 */
-		void executeTask(CallbackTask task);
-
+	/**
+	 * Plan to execute this task periodically. It will be automatically stopped at
+	 *
+	 * @param task
+	 * @param param
+	 * @param id
+	 * @param everySecs
+	 * @param <T>
+	 */
+	<T> void executeTaskEvery(CallbackTask<T> task, T param, String id, int everySecs) {
+		// FIXME: implement this
 	}
 
 }
