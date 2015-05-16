@@ -95,14 +95,16 @@ public abstract class BaseApplicationActivity extends BaseActivity implements IN
 		// Empty default method
 	}
 
-	/**
-	 * Add this task to internal list of tasks which will be automatically stopped and removed at activity's onStop() method.
-	 *
-	 * @param task
-	 */
 	@Override
-	public void rememberTask(CallbackTask task) {
+	public <T> void executeTask(CallbackTask<T> task, T param) {
 		mCallbackTaskManager.addTask(task);
+		task.execute(param);
+	}
+
+	@Override
+	public void executeTask(CallbackTask task) {
+		mCallbackTaskManager.addTask(task);
+		task.execute();
 	}
 
 	/**

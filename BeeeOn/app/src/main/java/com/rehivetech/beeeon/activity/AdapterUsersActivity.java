@@ -166,19 +166,17 @@ public class AdapterUsersActivity extends BaseApplicationActivity {
 
 		reloadUsersTask.setListener(new CallbackTaskListener() {
 
-            @Override
-            public void onExecute(boolean success) {
-                mAdapterUsers = mController.getUsersModel().getUsersByAdapter(adapterId);
+			@Override
+			public void onExecute(boolean success) {
+				mAdapterUsers = mController.getUsersModel().getUsersByAdapter(adapterId);
 
-                initLayouts();
-            }
+				initLayouts();
+			}
 
-        });
+		});
 
-        // Remember task so it can be stopped automatically
-        rememberTask(reloadUsersTask);
-
-		reloadUsersTask.execute(adapterId);
+		// Execute and remember task so it can be stopped automatically
+        executeTask(reloadUsersTask, adapterId);
 	}
 
 
@@ -197,10 +195,8 @@ public class AdapterUsersActivity extends BaseApplicationActivity {
 			}
 		});
 
-		// Remember task so it can be stopped automatically
-		rememberTask(removeUserTask);
-
-        removeUserTask.execute(pair);
+		// Execute and remember task so it can be stopped automatically
+		executeTask(removeUserTask, pair);
     }
 
     private void doEditUserTask(User user) {
@@ -220,10 +216,8 @@ public class AdapterUsersActivity extends BaseApplicationActivity {
 			}
 		});
 
-		// Remember task so it can be stopped automatically
-		rememberTask(editUserTask);
-
-        editUserTask.execute(pair);
+		// Execute and remember task so it can be stopped automatically
+		executeTask(editUserTask, pair);
     }
 
 

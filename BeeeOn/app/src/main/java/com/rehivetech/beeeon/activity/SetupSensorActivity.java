@@ -221,10 +221,8 @@ public class SetupSensorActivity extends BaseApplicationActivity {
 
 		});
 
-		// Remember task so it can be stopped automatically
-		rememberTask(initializeFacilityTask);
-
-		initializeFacilityTask.execute(pair);
+		// Execute and remember task so it can be stopped automatically
+		executeTask(initializeFacilityTask, pair);
 	}
 
 

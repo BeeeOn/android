@@ -446,10 +446,8 @@ public class SensorListFragment extends BaseApplicationFragment {
 			}
 		});
 
-		// Remember task so it can be stopped automatically
-		rememberTask(reloadFacilitiesTask);
-
-        reloadFacilitiesTask.execute(adapterId);
+		// Execute and remember task so it can be stopped automatically
+		executeTask(reloadFacilitiesTask, adapterId);
     }
 
 	private void doFullReloadTask(boolean forceRefresh) {
@@ -469,10 +467,8 @@ public class SensorListFragment extends BaseApplicationFragment {
 			}
 		});
 
-		// Remember task so it can be stopped automatically
-		rememberTask(fullReloadTask);
-
-		fullReloadTask.execute();
+		// Execute and remember task so it can be stopped automatically
+		executeTask(fullReloadTask);
 	}
 
     private void doRemoveFacilityTask(Facility facility) {
@@ -495,10 +491,8 @@ public class SensorListFragment extends BaseApplicationFragment {
 			}
 		});
 
-		// Remember task so it can be stopped automatically
-		rememberTask(removeFacilityTask);
-
-        removeFacilityTask.execute(pair);
+		// Execute and remember task so it can be stopped automatically
+		executeTask(removeFacilityTask, pair);
     }
 
 

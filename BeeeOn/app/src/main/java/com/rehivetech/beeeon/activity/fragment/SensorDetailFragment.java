@@ -563,10 +563,8 @@ public class SensorDetailFragment extends BaseApplicationFragment implements ILi
 
 		});
 
-		// Remember task so it can be stopped automatically
-		rememberTask(actorActionTask);
-
-		actorActionTask.execute(device);
+		// Execute and remember task so it can be stopped automatically
+		executeTask(actorActionTask, device);
 	}
 
 	protected void doReloadFacilitiesTask(final String adapterId, final boolean forceRefresh) {
@@ -597,7 +595,7 @@ public class SensorDetailFragment extends BaseApplicationFragment implements ILi
 		});
 
 		// Remember task so it can be stopped automatically
-		rememberTask(reloadFacilitiesTask);
+		executeTask(reloadFacilitiesTask);
 
 		reloadFacilitiesTask.execute(adapterId);
 	}
@@ -623,10 +621,8 @@ public class SensorDetailFragment extends BaseApplicationFragment implements ILi
 			}
 		});
 
-		// Remember task so it can be stopped automatically
-		rememberTask(getDeviceLogTask);
-
-		getDeviceLogTask.execute(new LogDataPair[]{pair});
+		// Execute and remember task so it can be stopped automatically
+		executeTask(getDeviceLogTask, pair);
 	}
 
 	protected void doChangeStateDeviceTask(final Device device) {
@@ -643,10 +639,8 @@ public class SensorDetailFragment extends BaseApplicationFragment implements ILi
 			}
 		});
 
-		// Remember task so it can be stopped automatically
-		rememberTask(changeStateDeviceTask);
-
-		changeStateDeviceTask.execute(device);
+		// Execute and remember task so it can be stopped automatically
+		executeTask(changeStateDeviceTask, device);
 	}
 
 	@Override

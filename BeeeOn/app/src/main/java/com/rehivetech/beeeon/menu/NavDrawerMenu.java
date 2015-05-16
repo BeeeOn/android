@@ -267,10 +267,8 @@ public class NavDrawerMenu   {
 			}
 		});
 
-		// Remember task so it can be stopped automatically
-		mActivity.rememberTask(switchAdapterTask);
-
-		switchAdapterTask.execute(adapterId);
+		// Execute and remember task so it can be stopped automatically
+		mActivity.executeTask(switchAdapterTask, adapterId);
 	}
 
 	private void doUnregisterAdapterTask(String adapterId) {
@@ -288,10 +286,8 @@ public class NavDrawerMenu   {
 			}
 		});
 
-		// Remember task so it can be stopped automatically
-		mActivity.rememberTask(unregisterAdapterTask);
-
-		unregisterAdapterTask.execute(adapterId);
+		// Execute and remember task so it can be stopped automatically
+		mActivity.executeTask(unregisterAdapterTask, adapterId);
 	}
 
 	public MenuListAdapter getMenuAdapter() {

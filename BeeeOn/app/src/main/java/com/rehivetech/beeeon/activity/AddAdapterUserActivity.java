@@ -131,10 +131,8 @@ public class AddAdapterUserActivity extends BaseApplicationActivity {
 
 		});
 
-		// Remember task so it can be stopped automatically
-		rememberTask(addUserTask);
-
-		addUserTask.execute(pair);
+		// Execute and remember task so it can be stopped automatically
+		executeTask(addUserTask, pair);
 	}
 
 	/*

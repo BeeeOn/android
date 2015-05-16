@@ -201,11 +201,8 @@ public class SensorEditActivity extends BaseApplicationActivity {
 			}
 		});
 
-		// Remember task so it can be stopped automatically
-		rememberTask(saveFacilityWithNewLocTask);
-
-		saveFacilityWithNewLocTask.execute(pair);
-
+		// Execute and remember task so it can be stopped automatically
+		executeTask(saveFacilityWithNewLocTask, pair);
 	}
 
 	public void doSaveFacilityTask(SaveFacilityPair pair) {
@@ -229,10 +226,8 @@ public class SensorEditActivity extends BaseApplicationActivity {
 			}
 		});
 
-		// Remember task so it can be stopped automatically
-		rememberTask(saveFacilityTask);
-
-		saveFacilityTask.execute(pair);
+		// Execute and remember task so it can be stopped automatically
+		executeTask(saveFacilityTask, pair);
 	}
 
 	/**

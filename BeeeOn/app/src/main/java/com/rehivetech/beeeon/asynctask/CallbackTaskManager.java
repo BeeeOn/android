@@ -33,8 +33,16 @@ public class CallbackTaskManager {
 		 * Add this task to internal list of tasks which will be automatically stopped and removed at activity's onStop() method.
 		 *
 		 * @param task
+		 * @param param
 		 */
-		void rememberTask(CallbackTask task);
+		<T> void executeTask(CallbackTask<T> task, T param);
+
+		/**
+		 * Add this task to internal list of tasks which will be automatically stopped and removed at activity's onStop() method.
+		 *
+		 * @param task
+		 */
+		void executeTask(CallbackTask task);
 
 	}
 

@@ -1,7 +1,6 @@
 package com.rehivetech.beeeon.widget.configuration;
 
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -172,10 +171,8 @@ public abstract class WidgetConfigurationFragment extends BaseApplicationFragmen
 
 		if(mActivity.getDialog() != null) mActivity.getDialog().show();
 
-		// Remember task so it can be stopped automatically
-		rememberTask(reloadAdapterDataTask);
-
-		reloadAdapterDataTask.execute();
+		// Execute and remember task so it can be stopped automatically
+		executeTask(reloadAdapterDataTask);
 	}
 
 	@Override
@@ -277,10 +274,8 @@ public abstract class WidgetConfigurationFragment extends BaseApplicationFragmen
 
 		mActivity.getDialog().show();
 
-		// Remember task so it can be stopped automatically
-		rememberTask(reloadAdapterDataTask);
-
-		reloadAdapterDataTask.execute(adapterId);
+		// Execute and remember task so it can be stopped automatically
+		executeTask(reloadAdapterDataTask, adapterId);
 	}
 
 	/**

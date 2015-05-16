@@ -119,7 +119,7 @@ public class AddSensorActivity extends BaseApplicationActivity {
 		});
 		
 		mCancel.setOnClickListener(new OnClickListener() {
-			
+
 			@Override
 			public void onClick(View v) {
 				setResult(Constants.ADD_SENSOR_CANCELED);
@@ -130,13 +130,12 @@ public class AddSensorActivity extends BaseApplicationActivity {
 		});
 		
 		mNext.setOnClickListener(new OnClickListener() {
-			
+
 			@Override
 			public void onClick(View v) {
-				if(mNext.getText().equals(mActivity.getString(R.string.tutorial_next))){
-					mPager.setCurrentItem(mPager.getCurrentItem()+1);
-				}
-				else if (mNext.getText().equals(mActivity.getString(R.string.addsensor_send_pair))) {
+				if (mNext.getText().equals(mActivity.getString(R.string.tutorial_next))) {
+					mPager.setCurrentItem(mPager.getCurrentItem() + 1);
+				} else if (mNext.getText().equals(mActivity.getString(R.string.addsensor_send_pair))) {
 					doPairRequestTask(mPairAdapter.getId());
 					mNext.setEnabled(false);
 				}
@@ -207,10 +206,8 @@ public class AddSensorActivity extends BaseApplicationActivity {
 
 		});
 
-		// Remember task so it can be stopped automatically
-		rememberTask(reloadUninitializedFacilitiesTask);
-
-		reloadUninitializedFacilitiesTask.execute(adapterId);
+		// Execute and remember task so it can be stopped automatically
+		executeTask(reloadUninitializedFacilitiesTask, adapterId);
 	}
 	
 	private void doPairRequestTask(String adapterId) {
@@ -232,10 +229,8 @@ public class AddSensorActivity extends BaseApplicationActivity {
 
 		});
 
-		// Remember task so it can be stopped automatically
-		rememberTask(pairRequestTask);
-
-		pairRequestTask.execute(adapterId);
+		// Execute and remember task so it can be stopped automatically
+		executeTask(pairRequestTask, adapterId);
 	}
 	
 	public void checkUnInitSensor() {

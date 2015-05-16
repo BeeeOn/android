@@ -103,7 +103,7 @@ public class AddAdapterActivity extends BaseApplicationActivity {
 		});
 		
 		mCancel.setOnClickListener(new OnClickListener() {
-			
+
 			@Override
 			public void onClick(View v) {
 				SharedPreferences prefs = mController.getUserSettings();
@@ -118,22 +118,20 @@ public class AddAdapterActivity extends BaseApplicationActivity {
 		});
 		
 		mNext.setOnClickListener(new OnClickListener() {
-			
+
 			@Override
 			public void onClick(View v) {
-				if(mNext.getText().equals(mActivity.getString(R.string.tutorial_next))){
-					mPager.setCurrentItem(mPager.getCurrentItem()+1);
-				}
-				else if (mNext.getText().equals(mActivity.getString(R.string.tutorial_add))) {
+				if (mNext.getText().equals(mActivity.getString(R.string.tutorial_next))) {
+					mPager.setCurrentItem(mPager.getCurrentItem() + 1);
+				} else if (mNext.getText().equals(mActivity.getString(R.string.tutorial_add))) {
 					String adapterName = mFragment.getAdapterName();
 					String adapterCode = mFragment.getAdapterCode();
-					Log.d(TAG, "adaName: "+adapterName+" adaCode: "+adapterCode);
-					
-					if(adapterCode.isEmpty()){
+					Log.d(TAG, "adaName: " + adapterName + " adaCode: " + adapterCode);
+
+					if (adapterCode.isEmpty()) {
 						// TODO: Please fill AdapterCode
 						Toast.makeText(mActivity, R.string.addadapter_fill_code, Toast.LENGTH_LONG).show();
-					}
-					else {
+					} else {
 						// Show progress bar for saving
 						mProgress.show();
 						doRegisterAdapterTask(new RegisterAdapterPair(adapterCode, adapterName));
@@ -197,10 +195,8 @@ public class AddAdapterActivity extends BaseApplicationActivity {
 			}
 		});
 
-		// Remember task so it can be stopped automatically
-		rememberTask(registerAdapterTask);
-
-		registerAdapterTask.execute(pair);
+		// Execute and remember task so it can be stopped automatically
+		executeTask(registerAdapterTask, pair);
 	}
 	
 }

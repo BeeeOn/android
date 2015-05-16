@@ -268,10 +268,8 @@ public class MainActivity extends BaseApplicationActivity implements IListDialog
 			}
 		});
 
-		// Remember task so it can be stopped automatically
-		rememberTask(fullReloadTask);
-
-		fullReloadTask.execute();
+		// Execute and remember task so it can be stopped automatically
+		executeTask(fullReloadTask);
 
 		mNavDrawerMenu.redrawMenu();
 		// Redraw Main Fragment

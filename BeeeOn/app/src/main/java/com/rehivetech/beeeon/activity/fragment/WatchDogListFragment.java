@@ -284,21 +284,19 @@ public class WatchDogListFragment extends BaseApplicationFragment {
 
         SaveWatchDogTask saveWatchDogTask = new SaveWatchDogTask(mActivity);
         saveWatchDogTask.setListener(new CallbackTask.CallbackTaskListener() {
-            @Override
-            public void onExecute(boolean success) {
-                //Toast.makeText(mActivity, getResources().getString(success ? R.string.toast_success_save_data : R.string.toast_fail_save_data), Toast.LENGTH_LONG).show();
-                sw.setEnabled(true);
-                //Make progress bar disappear
-                mProgressBar.setVisibility(View.GONE);
-                // other option is to set Swipe refreshing
-                //mSwipeLayout.setRefreshing(false);
-            }
-        });
+			@Override
+			public void onExecute(boolean success) {
+				//Toast.makeText(mActivity, getResources().getString(success ? R.string.toast_success_save_data : R.string.toast_fail_save_data), Toast.LENGTH_LONG).show();
+				sw.setEnabled(true);
+				//Make progress bar disappear
+				mProgressBar.setVisibility(View.GONE);
+				// other option is to set Swipe refreshing
+				//mSwipeLayout.setRefreshing(false);
+			}
+		});
 
-        // Remember task so it can be stopped automatically
-        rememberTask(saveWatchDogTask);
-
-        saveWatchDogTask.execute(watchDog);
+		// Execute and remember task so it can be stopped automatically
+		executeTask(saveWatchDogTask, watchDog);
     }
 
     /**
@@ -325,10 +323,8 @@ public class WatchDogListFragment extends BaseApplicationFragment {
             mActivity.setBeeeOnProgressBarVisibility(true);
         }
 
-        // Remember task so it can be stopped automatically
-        rememberTask(reloadWatchDogTask);
-
-        reloadWatchDogTask.execute(adapterId);
+		// Execute and remember task so it can be stopped automatically
+		executeTask(reloadWatchDogTask, adapterId);
     }
 
     /**
@@ -340,19 +336,17 @@ public class WatchDogListFragment extends BaseApplicationFragment {
         DelWatchDogPair pair = new DelWatchDogPair(watchdog.getId(), watchdog.getAdapterId());
 
         removeWatchDogTask.setListener(new CallbackTask.CallbackTaskListener() {
-            @Override
-            public void onExecute(boolean success) {
-                Toast.makeText(mActivity, getResources().getString(success ? R.string.toast_delete_success : R.string.toast_delete_fail), Toast.LENGTH_SHORT).show();
-                if (success) {
-                    redrawRules();
-                }
-            }
+			@Override
+			public void onExecute(boolean success) {
+				Toast.makeText(mActivity, getResources().getString(success ? R.string.toast_delete_success : R.string.toast_delete_fail), Toast.LENGTH_SHORT).show();
+				if (success) {
+					redrawRules();
+				}
+			}
         });
 
-        // Remember task so it can be stopped automatically
-        rememberTask(removeWatchDogTask);
-
-        removeWatchDogTask.execute(pair);
+		// Execute and remember task so it can be stopped automatically
+		executeTask(removeWatchDogTask, pair);
     }
 
     // ----- HELPERS + ACTIONMODE ----- //
