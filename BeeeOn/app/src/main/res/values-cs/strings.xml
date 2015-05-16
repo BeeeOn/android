@@ -409,5 +409,6 @@
     <string name="sensor_text"></string>
     <string name="watchdog_no_valid_item">Žádná platná položka</string>
     <string name="multiadapter_no_item">- Nic k vybrání -</string>
+    <string name="update_over_wifi_only">Aktualizovat pouze přes Wi-Fi</string>
 
 </resources>

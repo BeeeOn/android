@@ -95,6 +95,8 @@ public class WidgetService extends Service {
     // for checking if user is logged in (we presume that for the first time he is)
     private boolean isCached = false;
 
+	private int mNetworkType;
+
     // -------------------------------------------------------------------- //
     // --------------- Main methods (entry points) of service ------------- //
     // -------------------------------------------------------------------- //
@@ -146,10 +148,10 @@ public class WidgetService extends Service {
         super.onCreate();
 
         mContext = getApplicationContext();
-        mCalendar = Calendar.getInstance(mContext.getResources().getConfiguration().locale);
-        mController = Controller.getInstance(mContext);
-
-        mWeatherProvider = new WeatherProvider(mContext);
+		mNetworkType = Utils.getNetworConnectionkType(mContext);
+		mCalendar = Calendar.getInstance(mContext.getResources().getConfiguration().locale);
+		mController = Controller.getInstance(mContext);
+		mWeatherProvider = new WeatherProvider(mContext); // TODO should be as model in controler in the future
 
         // Creates broadcast receiver which bridges broadcasts to appwidgets for handling time and screen
         Log.v(TAG, "registeringBroadcastReceiver()");
@@ -313,6 +315,12 @@ public class WidgetService extends Service {
                 Log.v(TAG, String.format("Ignoring widget %d (not widgetInitialized)", widgetId));
                 continue;
             }
+
+			// if widget has setting to update only on wifi - skip if not this
+			if(widgetData.widgetWifiOnly && mNetworkType != ConnectivityManager.TYPE_WIFI && !isForceUpdate){
+				Log.v(TAG, String.format("Ignoring widget %d - updates only on wifi", widgetId));
+				continue;
+			}
 
             // Don't update widgets until their interval elapsed or we have force update
             if (!isForceUpdate && !widgetData.isExpired(timeNow)) {
@@ -505,16 +513,22 @@ public class WidgetService extends Service {
 			Log.i(TAG, "already cached data, skipping...");
 			return;
 		}
+		setWidgetsCached(getAllWidgetIds());
+		isCached = true;
+	}
 
+	/**
+	 * Can set cached to widgets specified by id
+	 * @param widgetIds
+	 */
+	private void setWidgetsCached(int[] widgetIds){
 		// for all widgets put to "logout" state
-		for(int widgetId : getAllWidgetIds()){
+		for(int widgetId : widgetIds){
 			WidgetData widgetData = getWidgetData(widgetId);
 			if(widgetData == null) continue;
 			widgetData.handleUpdateFail();
 			widgetData.renderWidget();
 		}
-
-		isCached = true;
 	}
 
     /**
@@ -1068,6 +1082,9 @@ public class WidgetService extends Service {
 						serviceState = !isInternetConnection ? SERVICE_PAUSE : SERVICE_UPDATE_FORCED;
 						mIsInternetConnection = isInternetConnection;
 					}
+
+					// updates actual connection type
+					mNetworkType = Utils.getNetworConnectionkType(context);
 					break;
 			}
 

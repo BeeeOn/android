@@ -261,6 +261,17 @@ final public class Utils {
 	}
 
 	/**
+	 * Returns the type which actual network uses
+	 * @param context
+	 * @return ConnectivityManager#TYPE_xxxxxx
+	 */
+	public static int getNetworConnectionkType(Context context){
+		ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+		NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+		return activeNetworkInfo.getType();
+	}
+
+	/**
 	 * Method return Mac address of device
 	 * @return
 	 */

@@ -247,6 +247,7 @@
     <string name="widget">Widget</string>
     <string name="household">Household</string>
     <string name="widget_configuration_location">Location</string>
+    <string name="update_over_wifi_only">Update over Wi-Fi only</string>
 
     <!-- Widget Clock -->
     <string name="weather">Weather</string>

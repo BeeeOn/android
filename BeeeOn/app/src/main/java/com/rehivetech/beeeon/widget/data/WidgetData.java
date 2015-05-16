@@ -39,6 +39,7 @@ public abstract class WidgetData {
 	protected static final String PREF_INITIALIZED = "widget_initialized";
 	protected static final String PREF_ADAPTER_ID = "widget_adapter_id";
 	protected static final String PREF_USER_ID = "widget_user_id";
+	protected static final String PREF_WIFI_ONLY = "widget_wifi_only";
 
 	// public properties
 	public int widgetLayout;
@@ -47,6 +48,7 @@ public abstract class WidgetData {
 	public long widgetLastUpdate;
 	public boolean widgetInitialized;
 	public String widgetAdapterId;
+	public boolean widgetWifiOnly;
 	public WidgetSettings settings;
 
 	// if widget has any devices in layout, we can ensure that widget's layout is update across all widgets (e.g. actor)
@@ -107,6 +109,7 @@ public abstract class WidgetData {
 		widgetLastUpdate = mPrefs.getLong(PREF_LAST_UPDATE, 0);
 		widgetInitialized = mPrefs.getBoolean(PREF_INITIALIZED, false);
 		widgetAdapterId = mPrefs.getString(PREF_ADAPTER_ID, "");
+		widgetWifiOnly = mPrefs.getBoolean(PREF_WIFI_ONLY, false);
 		mUserId = mPrefs.getString(PREF_USER_ID, mController.getActualUser().getId());
 		// load widget's settings (color scheme e.g)
 		settings.load();
@@ -139,15 +142,17 @@ public abstract class WidgetData {
 	 * @param adapter
 	 * @param isEditing
 	 * @param interval  updating interval
+	 * @param isWifiOnly
 	 * @param adapter
 	 */
-	public void configure(boolean isEditing, int interval, Adapter adapter){
+	public void configure(boolean isEditing, int interval, boolean isWifiOnly, Adapter adapter){
 		Log.d(TAG, String.format("configure(%b)", isEditing));
 
 		widgetLastUpdate = 0;
 		widgetInitialized = true;
 		widgetInterval = interval;
 		widgetAdapterId = adapter.getId();
+		widgetWifiOnly = isWifiOnly;
 		this.save();
 	}
 
@@ -179,6 +184,7 @@ public abstract class WidgetData {
 				.putString(PREF_ADAPTER_ID, widgetAdapterId)
 				.putString(PREF_USER_ID, mUserId)
 				.putBoolean(PREF_INITIALIZED, widgetInitialized)
+				.putBoolean(PREF_WIFI_ONLY, widgetWifiOnly)
 				.apply();
 	}
 
@@ -297,6 +303,10 @@ public abstract class WidgetData {
 	// ----------------------------------------------------------- //
 	// ------------------------- GETTERS ------------------------- //
 	// ----------------------------------------------------------- //
+
+	public String getUserId() {
+		return mUserId;
+	}
 
 	/**
 	 * Used for passing objects to service so that it can refresh them (list because some widgets can have more of them)
