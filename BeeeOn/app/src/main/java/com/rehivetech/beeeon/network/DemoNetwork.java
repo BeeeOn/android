@@ -3,6 +3,7 @@ package com.rehivetech.beeeon.network;
 import android.content.Context;
 
 import com.rehivetech.beeeon.Constants;
+import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.exception.AppException;
 import com.rehivetech.beeeon.gamification.AchievementListItem;
 import com.rehivetech.beeeon.gcm.notification.VisibleNotification;
@@ -70,8 +71,10 @@ public class DemoNetwork implements INetwork {
 	public DemoNetwork(Context context) {
 		mContext = context;
 
+		String demoModeString = mContext.getString(R.string.demo_mode);
+
 		// Set user
-		mUser = new User(DEMO_USER_ID, "John", "Doe", "john@doe.com", Gender.MALE, Role.Superuser);
+		mUser = new User(DEMO_USER_ID, demoModeString, "", demoModeString, Gender.UNKNOWN, Role.Superuser);
 
 		// Set session token
 		mBT = DEMO_USER_BT;

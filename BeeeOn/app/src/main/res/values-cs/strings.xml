@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="demo_mode">DEMO REŽIM</string>
 
     <!-- Titles -->
     <string name="title_activity_location_screen">BeeeOn</string>

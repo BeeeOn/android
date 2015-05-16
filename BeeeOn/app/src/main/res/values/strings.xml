@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="blank" translatable="false"></string>
+    <string name="demo_mode">DEMO MODE</string>
 
 	<string name="facebook_app_id" translatable="false">868028889921254</string>
 	<string name="twitter_app_id" translatable="false">WuuLjLlhpAM4U7ex50wWECO2x</string>
