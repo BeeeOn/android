@@ -44,6 +44,7 @@ public class WatchDogGeofenceType extends WatchDogBaseType {
 		super.setupGUI(selected, operatorButton, ruleTreshold, ruleTresholdUnit);
 
 		// shows necessary gui elements
+		operatorButton.setVisibility(View.VISIBLE);
 		ruleTreshold.setVisibility(View.GONE);
 		ruleTresholdUnit.setVisibility(View.GONE);
 	}

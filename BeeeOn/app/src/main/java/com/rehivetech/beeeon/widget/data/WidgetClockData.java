@@ -252,8 +252,6 @@ public class WidgetClockData extends WidgetData {
 	 * Renders new weather data based on data saved in preferences
 	 */
 	private void renderOkWeatherData() {
-		Log.v(TAG, "renderOkWeatherData");
-
 		switch (this.widgetLayout){
 			case R.layout.widget_clock_3x2:
 				mBuilder.setTextView(
@@ -295,7 +293,6 @@ public class WidgetClockData extends WidgetData {
 	 * Hides weather data
 	 */
 	private void renderFailedWeatherData(){
-		Log.v(TAG, "renderFailedWeatherData");
 		switch (this.widgetLayout){
 			case R.layout.widget_clock_3x2:
 			case R.layout.widget_clock_2x2:

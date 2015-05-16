@@ -163,13 +163,16 @@ public class WidgetGraphData extends WidgetDeviceData {
 
         // clears series if reinitializes
         if(mGraph.getSeries() != null && mGraph.getSeries().size() > 0){
+            Log.v(TAG, "removeAllSeries");
             mGraph.removeAllSeries();
         }
 
         if (baseValue instanceof BaseEnumValue) {
+            Log.v(TAG, "baseEnumValue");
             mGraphSeries = new BarGraphSeries<>(new DataPoint[]{new DataPoint(0, 0), new DataPoint(1,1)});
             ((BarGraphSeries) mGraphSeries).setSpacing(30);
         } else {
+            Log.v(TAG, "other type of value");
             mGraphSeries =  new LineGraphSeries<>(new DataPoint[]{new DataPoint(0, 0), new DataPoint(1,1)});
             ((LineGraphSeries) mGraphSeries).setBackgroundColor(mContext.getResources().getColor(R.color.alpha_blue));
             ((LineGraphSeries) mGraphSeries).setDrawBackground(true);

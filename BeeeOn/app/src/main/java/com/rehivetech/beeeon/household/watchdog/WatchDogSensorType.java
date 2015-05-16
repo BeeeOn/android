@@ -46,6 +46,7 @@ public class WatchDogSensorType extends WatchDogBaseType {
 		super.setupGUI(selected, operatorButton, ruleTreshold, ruleTresholdUnit);
 
 		// shows necessary gui elements
+		operatorButton.setVisibility(View.VISIBLE);
 		ruleTreshold.setVisibility(View.VISIBLE);
 		ruleTresholdUnit.setVisibility(View.VISIBLE);
 

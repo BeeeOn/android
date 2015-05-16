@@ -90,4 +90,11 @@ public abstract class WatchDogBaseType {
 			}
 		});
 	}
+
+	public void clearGUI(FloatingActionButton operatorButton, EditText ruleTreshold, TextView ruleTresholdUnit){
+		// shows necessary gui elements
+		operatorButton.setVisibility(View.GONE);
+		ruleTreshold.setVisibility(View.GONE);
+		ruleTresholdUnit.setVisibility(View.GONE);
+	}
 }

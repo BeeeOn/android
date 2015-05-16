@@ -234,20 +234,32 @@ public class WatchDogEditRuleActivity extends BaseApplicationActivity {
 
         // ----- prepare list of available device & geofences
         mSpinnerMultiAdapter = new SpinnerMultiAdapter(this);
+		boolean isAnyIfInput = false;
         // devices
-        mSpinnerMultiAdapter.addHeader(getString(R.string.devices));
-        for(Device dev : getDevicesArray(DEVICES_SENSORS)){
-            Location loc = Utils.getFromList(dev.getFacility().getLocationId(), mLocations);
-            mSpinnerMultiAdapter.addItem(new DeviceSpinnerItem(dev, loc, dev.getId(), this));
-        }
+		List<Device> deviceSensors = getDevicesArray(DEVICES_SENSORS);
+        if(!deviceSensors.isEmpty()) {
+			mSpinnerMultiAdapter.addHeader(getString(R.string.devices));
+			for (Device dev : deviceSensors) {
+				Location loc = Utils.getFromList(dev.getFacility().getLocationId(), mLocations);
+				mSpinnerMultiAdapter.addItem(new DeviceSpinnerItem(dev, loc, dev.getId(), this));
+			}
+			isAnyIfInput = true;
+		}
 
         // geofence areas
-        if (Utils.isGooglePlayServicesAvailable(this)) {
+        if (Utils.isGooglePlayServicesAvailable(this) && !mGeofences.isEmpty()) {
             mSpinnerMultiAdapter.addHeader(getString(R.string.title_activity_map_geofence));
             for (SimpleGeofence geo : mGeofences) {
                 mSpinnerMultiAdapter.addItem(new GeofenceSpinnerItem(geo, geo.getId(), this));
             }
+			isAnyIfInput = true;
         }
+
+		// if nothing is to select, we show header with message
+		if(!isAnyIfInput){
+			mSpinnerMultiAdapter.addHeader(getString(R.string.multiadapter_no_item));
+			mIfItemSpinner.setEnabled(false);
+		}
 
         mIfItemSpinner.setAdapter(mSpinnerMultiAdapter);
         mIfItemSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -266,6 +278,11 @@ public class WatchDogEditRuleActivity extends BaseApplicationActivity {
                         mWatchDogOperator = new WatchDogGeofenceType(mWatchDogOperator.getIndex());
                         mWatchDog.setType(WatchDog.TYPE_GEOFENCE);
                         break;
+
+                    // if not any of mentioned types, do nothing
+                    default:
+						mWatchDogOperator.clearGUI(mOperatorButton, mRuleTreshold, mRuleTresholdUnit);
+                        return;
                 }
                 // we need to refresh UnitHelper cause setOperator destroys it
                 mWatchDogOperator.setUnitsHelper(mUnitsHelper);
@@ -477,6 +494,10 @@ public class WatchDogEditRuleActivity extends BaseApplicationActivity {
                 mWatchDog.setGeoRegionId(selectedGeofence.getId());
                 newParams.add(selectedGeofence.getId());
             break;
+
+			case HEADER:
+				Toast.makeText(this, getString(R.string.watchdog_no_valid_item), Toast.LENGTH_LONG).show();
+				return;
 
             default:
                 Toast.makeText(this, getString(R.string.toast_not_implemented), Toast.LENGTH_LONG).show();

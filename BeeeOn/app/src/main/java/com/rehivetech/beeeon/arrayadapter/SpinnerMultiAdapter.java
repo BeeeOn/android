@@ -103,7 +103,7 @@ public class SpinnerMultiAdapter extends BaseAdapter{
 			tempPos++;
 		}
 
-		return resultPos;
+		return (resultPos >= mSpinnerItems.size()) ? 0 : resultPos;
 	}
 
 	/**

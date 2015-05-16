@@ -13,6 +13,7 @@
 		android:layout_marginLeft="20dp"
 		android:layout_marginRight="20dp"
 		android:singleLine="true"
+		android:textColor="@color/beeeon_text_color"
 		/>
 
 </LinearLayout>

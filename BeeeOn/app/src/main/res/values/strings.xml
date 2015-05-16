@@ -358,7 +358,9 @@
     <string name="watchdog_rule_name">Rule name</string>
     <string name="notification_text">Notification text</string>
     <string name="actor_required">Please select actor</string>
-    
+	<string name="watchdog_no_valid_item">No valid item to check</string>
+    <string name="multiadapter_no_item">- Nothing to select -</string>
+
     <string name="rule_menu_del">Remove</string>
 
 	<string name="title_activity_sensor_edit">Device Edit</string>
