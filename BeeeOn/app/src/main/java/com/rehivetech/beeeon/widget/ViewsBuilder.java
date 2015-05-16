@@ -91,7 +91,6 @@ public class ViewsBuilder{
 	}
 
 	public void setImage(int viewId, Bitmap bitmap){
-		Log.v(TAG, "Bitmap size " + String.valueOf(Compatibility.bitmapGetByteCount(bitmap)) + " bytes");
 		mRemoteViews.setImageViewBitmap(viewId, bitmap);
 	}
 
