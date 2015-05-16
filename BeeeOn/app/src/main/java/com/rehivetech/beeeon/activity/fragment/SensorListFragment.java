@@ -276,7 +276,7 @@ public class SensorListFragment extends Fragment  {
 			SharedPreferences prefs = mController.getUserSettings();
 			if (!(prefs != null && !prefs.getBoolean(Constants.PERSISTENCE_PREF_IGNORE_NO_ADAPTER, false))) {
 				// TUTORIAL
-				if(mFirstUseAddAdapter && !Controller.isDemoMode()) {
+				if(mFirstUseAddAdapter && !mController.isDemoMode()) {
 					mFirstUseAddAdapter = false;
 					mActivity.getMenu().closeMenu();
 					TutorialHelper.showAddAdapterTutorial(mActivity, mView);
@@ -302,7 +302,7 @@ public class SensorListFragment extends Fragment  {
 			mFABMenuIcon.add(R.drawable.ic_add_white_24dp);
 			mFABMenuLabels.add(mActivity.getString(R.string.action_addadapter));
 			mFABMenuLabels.add(mActivity.getString(R.string.action_addsensor));
-			if(mFirstUseAddSensor && !Controller.isDemoMode()){
+			if(mFirstUseAddSensor && !mController.isDemoMode()){
 				mFirstUseAddSensor = false;
 				mActivity.getMenu().closeMenu();
 				TutorialHelper.showAddSensorTutorial(mActivity, mView);

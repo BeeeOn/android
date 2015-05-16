@@ -49,13 +49,13 @@ public class Persistence {
 		return String.format(Constants.PERSISTENCE_PREF_FILENAME, namespace);
 	}
 
-	public static String getPreferencesLastLocation(String adapterId) {
-		return String.format(Constants.PERSISTENCE_PREF_FILENAME, adapterId);
+	public static SharedPreferences getSettings(Context context, String namespace) {
+		String name = getPreferencesFilename(namespace);
+		return context.getSharedPreferences(name, 0);
 	}
 
 	public SharedPreferences getSettings(String namespace) {
-		String name = getPreferencesFilename(namespace);
-		return mContext.getSharedPreferences(name, 0);
+		return getSettings(mContext, namespace);
 	}
 
 	/** INITIALIZATION OF DEFAULT SETTINGS **/
@@ -149,6 +149,23 @@ public class Persistence {
 	}
 
 	/** DATA MANIPULATION **/
+
+	// Last demo mode
+
+	public static boolean loadLastDemoMode(Context context) {
+		return getSettings(context, GLOBAL).getBoolean(Constants.PERSISTENCE_PREF_LAST_DEMO_MODE, false);
+	}
+
+	public static void saveLastDemoMode(Context context, Boolean demoMode) {
+		SharedPreferences.Editor editor = getSettings(context, GLOBAL).edit();
+
+		if (demoMode == null)
+			editor.remove(Constants.PERSISTENCE_PREF_LAST_DEMO_MODE);
+		else
+			editor.putBoolean(Constants.PERSISTENCE_PREF_LAST_DEMO_MODE, demoMode);
+
+		editor.commit();
+	}
 
 	// Last user
 

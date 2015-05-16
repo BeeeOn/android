@@ -2,7 +2,6 @@ package com.rehivetech.beeeon.controller;
 
 import android.app.NotificationManager;
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 
@@ -44,7 +43,7 @@ public final class Controller {
 	private static Controller sController;
 
 	/** Switch for using demo mode (with example adapter, without server) */
-	private static boolean sDemoMode = false;
+	private final boolean mDemoMode;
 
 	/** Application context */
 	private final Context mContext;
@@ -83,7 +82,11 @@ public final class Controller {
 		if (sController == null) {
 			synchronized (Controller.class) {
 				if (sController == null) {
-					sController = new Controller(context.getApplicationContext());
+					// Load last used mode
+					boolean demoMode = Persistence.loadLastDemoMode(context);
+
+					// Create new singleton instance of controller
+					sController = new Controller(context.getApplicationContext(), demoMode);
 				}
 			}
 		}
@@ -96,16 +99,20 @@ public final class Controller {
 	 * 
 	 * @param context
 	 *            This must be the global application context.
+	 * @param demoMode
+	 *            Whether should be created Controller in demoMode
 	 */
-	private Controller(Context context) {
+	private Controller(Context context, boolean demoMode) {
 		mContext = context;
+		mDemoMode = demoMode;
 
-		mNetwork = sDemoMode ? new DemoNetwork(mContext) : new Network(mContext, Utils.isDebugVersion(mContext));
+		// Create basic objects
+		mNetwork = mDemoMode ? new DemoNetwork(mContext) : new Network(mContext, Utils.isDebugVersion(mContext));
 		mPersistence = new Persistence(mContext);
 		mUser = new User();
 
 		// In demo mode immediately load user data
-		if (sDemoMode) {
+		if (mDemoMode) {
 			loadUserData(DemoNetwork.DEMO_USER_ID);
 		}
 
@@ -140,13 +147,15 @@ public final class Controller {
 	 * @param demoMode
 	 */
 	public static synchronized void setDemoMode(Context context, boolean demoMode) {
+		// Remember last used mode
+		Persistence.saveLastDemoMode(context, demoMode);
+
 		// We always need to create a new Controller, due to account switch and first (not) loading of demo
-		sDemoMode = demoMode;
-		sController = new Controller(context);
+		sController = new Controller(context, demoMode);
 	}
 
-	public static boolean isDemoMode() {
-		return sDemoMode;
+	public boolean isDemoMode() {
+		return mDemoMode;
 	}
 
 	/** Model getters *******************************************************/
@@ -364,6 +373,7 @@ public final class Controller {
 			prefs.edit().remove(Constants.PERSISTENCE_PREF_USER_BT).apply();
 
 		// Forgot info about last user
+		Persistence.saveLastDemoMode(mContext, null);
 		mPersistence.saveLastAuthProvider(null);
 		mPersistence.saveLastUserId(null);
 	}

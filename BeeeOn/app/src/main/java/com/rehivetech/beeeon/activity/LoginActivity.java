@@ -139,8 +139,8 @@ public class LoginActivity extends BaseActivity {
 			return;
 		}
 
-		// Check already logged in user
-		if (mController.isLoggedIn()) {
+		// Check already logged in user (but ignore demo mode)
+		if (mController.isLoggedIn() && !mController.isDemoMode()) {
 			Log.d(TAG, "Already logged in, going to locations screen...");
 			onLoggedIn(); // finishes this activity
 			return;

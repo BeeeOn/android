@@ -2,14 +2,13 @@ package com.rehivetech.beeeon.persistence;
 
 import android.content.Context;
 
-import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.exception.AppException;
 import com.rehivetech.beeeon.gcm.GcmHelper;
 import com.rehivetech.beeeon.gcm.INotificationReceiver;
-import com.rehivetech.beeeon.gcm.notification.BaseNotification;
 import com.rehivetech.beeeon.gcm.notification.GcmNotification;
 import com.rehivetech.beeeon.gcm.notification.VisibleNotification;
 import com.rehivetech.beeeon.household.user.User;
+import com.rehivetech.beeeon.network.DemoNetwork;
 import com.rehivetech.beeeon.network.INetwork;
 import com.rehivetech.beeeon.network.Network;
 import com.rehivetech.beeeon.util.Log;
@@ -146,7 +145,7 @@ public class GcmModel {
 	 */
 	public void setGCMIdServer(String gcmID) {
 		Log.i(TAG, GcmHelper.TAG_GCM + "setGcmIdServer");
-		if (Controller.isDemoMode()) {
+		if (mNetwork instanceof DemoNetwork) {
 			Log.i(TAG, GcmHelper.TAG_GCM + "DemoMode -> return");
 			return;
 		}

@@ -35,7 +35,7 @@ import java.util.List;
 		}
 
 		// v demo modu neodesilat
-		if (Controller.isDemoMode()) {
+		if (Controller.getInstance(this).isDemoMode()) {
 			return;
 		}
 

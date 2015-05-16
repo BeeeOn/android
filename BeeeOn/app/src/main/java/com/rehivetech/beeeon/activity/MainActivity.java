@@ -382,8 +382,6 @@ public class MainActivity extends BaseApplicationActivity implements IListDialog
 		if (adapter != null) {
 			mActiveAdapterId = adapter.getId();
 			setActiveAdapterID(mActiveAdapterId);
-			SharedPreferences prefs = mController.getUserSettings();
-			String prefKey = Persistence.getPreferencesLastLocation(adapter.getId());
 
 			if (mActiveMenuId != null) {
 				setActiveMenuID(mActiveMenuId);

@@ -46,6 +46,7 @@ public final class Constants {
 	public static final String PERSISTENCE_PREF_LAST_USER_ID = "last_user_id";
 	public static final String PERSISTENCE_PREF_LAST_AUTH_PROVIDER = "last_auth_provider";
 	public static final String PERSISTENCE_PREF_LAST_AUTH_PARAMETER = "last_auth_parameter";
+	public static final String PERSISTENCE_PREF_LAST_DEMO_MODE = "last_demo_mode";
 
 	public static final String PERSISTENCE_PREF_USER_BT = "user_bt";
 	public static final String PERSISTENCE_PREF_USER_ID = "user_id";
