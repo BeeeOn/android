@@ -83,7 +83,6 @@ public class MainActivity extends BaseApplicationActivity implements IListDialog
 	 */
 	private CustomAlertDialog mDialog;
 
-	private ReloadAdapterDataTask mFullReloadTask;
 	private boolean doRedraw = true;
 
 	@Override
@@ -239,13 +238,13 @@ public class MainActivity extends BaseApplicationActivity implements IListDialog
 	public void onAppResume() {
 		setBeeeOnProgressBarVisibility(true);
 		// ASYN TASK - Reload all data, if wasnt download in login activity
-		mFullReloadTask = new ReloadAdapterDataTask(this,false,ReloadAdapterDataTask.ReloadWhat.ADAPTERS_AND_ACTIVE_ADAPTER);
-		mFullReloadTask.setNotifyErrors(false);
-		mFullReloadTask.setListener(new CallbackTask.CallbackTaskListener() {
+		final ReloadAdapterDataTask fullReloadTask = new ReloadAdapterDataTask(this,false,ReloadAdapterDataTask.ReloadWhat.ADAPTERS_AND_ACTIVE_ADAPTER);
+		fullReloadTask.setNotifyErrors(false);
+		fullReloadTask.setListener(new CallbackTask.CallbackTaskListener() {
 			@Override
 			public void onExecute(boolean success) {
 				if (!success) {
-					AppException e = mFullReloadTask.getException();
+					AppException e = fullReloadTask.getException();
 					ErrorCode errCode = e.getErrorCode();
 					if (errCode != null) {
 						if (errCode instanceof NetworkError && errCode == NetworkError.SRV_BAD_BT) {
@@ -268,7 +267,11 @@ public class MainActivity extends BaseApplicationActivity implements IListDialog
 				}
 			}
 		});
-		mFullReloadTask.execute();
+
+		// Remember task so it can be stopped automatically
+		rememberTask(fullReloadTask);
+
+		fullReloadTask.execute();
 
 		mNavDrawerMenu.redrawMenu();
 		// Redraw Main Fragment
@@ -287,11 +290,6 @@ public class MainActivity extends BaseApplicationActivity implements IListDialog
 		if (mDialog != null) {
 			mDialog.dismiss();
 		}
-		// Cancel all task if same is running from Menu
-		if (mNavDrawerMenu != null)
-			mNavDrawerMenu.cancelAllTasks();
-		if(mFullReloadTask != null)
-			mFullReloadTask.cancel(true);
 	}
 
 	@Override

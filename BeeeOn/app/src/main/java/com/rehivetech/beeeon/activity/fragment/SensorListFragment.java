@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
 import android.support.v7.app.ActionBarActivity;
@@ -37,6 +36,7 @@ import com.rehivetech.beeeon.arrayadapter.SenListAdapter;
 import com.rehivetech.beeeon.asynctask.CallbackTask.CallbackTaskListener;
 import com.rehivetech.beeeon.asynctask.ReloadAdapterDataTask;
 import com.rehivetech.beeeon.asynctask.RemoveFacilityTask;
+import com.rehivetech.beeeon.base.BaseApplicationFragment;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.household.adapter.Adapter;
 import com.rehivetech.beeeon.household.device.Device;
@@ -52,7 +52,7 @@ import java.util.List;
 
 import se.emilsjolander.stickylistheaders.StickyListHeadersListView;
 
-public class SensorListFragment extends Fragment  {
+public class SensorListFragment extends BaseApplicationFragment {
 
 	private static final String TAG = SensorListFragment.class.getSimpleName();
 
@@ -60,11 +60,9 @@ public class SensorListFragment extends Fragment  {
 	private static final String ADAPTER_ID = "lastAdapterId";
 
 
-	public static boolean ready = false;
 	private SwipeRefreshLayout mSwipeLayout;
 	private MainActivity mActivity;
 	private Controller mController;
-	private ReloadAdapterDataTask mReloadFacilitiesTask;
 
 	private SenListAdapter mSensorAdapter;
 	private StickyListHeadersListView mSensorList;
@@ -88,8 +86,6 @@ public class SensorListFragment extends Fragment  {
 
     private Device mSelectedItem;
     private int mSelectedItemPos;
-    private RemoveFacilityTask mRemoveFacilityTask;
-	private ReloadAdapterDataTask mFullReloadTask;
 
 	public SensorListFragment() {
 	}
@@ -98,7 +94,6 @@ public class SensorListFragment extends Fragment  {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		Log.d(TAG, "onCreate()");
-		ready = false;
 
 		if (!(getActivity() instanceof MainActivity)) {
 			throw new IllegalStateException("Activity holding SensorListFragment must be MainActivity");
@@ -122,7 +117,7 @@ public class SensorListFragment extends Fragment  {
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		Log.d(TAG,"OnCreateView");
+		Log.d(TAG, "OnCreateView");
 		mView = inflater.inflate(R.layout.listofsensors, container, false);
 
 		return mView;
@@ -132,7 +127,6 @@ public class SensorListFragment extends Fragment  {
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 		Log.d(TAG, "onActivityCreated()");
-		ready = true;
 
 		redrawDevices();
 
@@ -145,7 +139,7 @@ public class SensorListFragment extends Fragment  {
 
 			@Override
 			public void onRefresh() {
-				Log.d(TAG,"Refreshing list of sensors");
+				Log.d(TAG, "Refreshing list of sensors");
 				Adapter adapter = mController.getActiveAdapter();
 				if (adapter == null) {
 					mSwipeLayout.setRefreshing(false);
@@ -155,33 +149,14 @@ public class SensorListFragment extends Fragment  {
 				doReloadFacilitiesTask(adapter.getId(), true);
 			}
 		});
-		mSwipeLayout.setColorSchemeColors(  R.color.beeeon_primary_cyan, R.color.beeeon_text_color,R.color.beeeon_secundary_pink);
+		mSwipeLayout.setColorSchemeColors(R.color.beeeon_primary_cyan, R.color.beeeon_text_color, R.color.beeeon_secundary_pink);
 	}
 
 	public void onPause() {
 		super.onPause();
 		Log.d(TAG, "onPause()");
-		ready = false;
 		if(mMode != null)
 			mMode.finish();
-	}
-
-	public void onResume() {
-		super.onResume();
-		Log.d(TAG, "onResume()");
-		ready = true;
-	}
-
-	@Override
-	public void onDestroy() {
-		super.onDestroy();
-		Log.d(TAG, "onDestroy()");
-
-		ready = false;
-
-		if (mReloadFacilitiesTask != null) {
-			mReloadFacilitiesTask.cancel(true);
-		}
 	}
 
 	@Override
@@ -453,30 +428,37 @@ public class SensorListFragment extends Fragment  {
 	}
 
     private void doReloadFacilitiesTask(String adapterId, boolean forceRefresh) {
-        mReloadFacilitiesTask = new ReloadAdapterDataTask(getActivity().getApplicationContext(), forceRefresh, ReloadAdapterDataTask.ReloadWhat.FACILITIES);
+        ReloadAdapterDataTask reloadFacilitiesTask = new ReloadAdapterDataTask(getActivity().getApplicationContext(), forceRefresh, ReloadAdapterDataTask.ReloadWhat.FACILITIES);
+
 		if(!mSwipeLayout.isRefreshing())
 			mActivity.setBeeeOnProgressBarVisibility(true);
-        mReloadFacilitiesTask.setListener(new CallbackTaskListener() {
 
-            @Override
-            public void onExecute(boolean success) {
+		reloadFacilitiesTask.setListener(new CallbackTaskListener() {
+
+			@Override
+			public void onExecute(boolean success) {
 				if (!success)
 					return;
-				Log.d(TAG,"Success -> refresh GUI");
-                mActivity.redraw();
-                mSwipeLayout.setRefreshing(false);
+				Log.d(TAG, "Success -> refresh GUI");
+				mActivity.redraw();
+				mSwipeLayout.setRefreshing(false);
 				mActivity.setBeeeOnProgressBarVisibility(false);
-            }
-        });
+			}
+		});
 
-        mReloadFacilitiesTask.execute(adapterId);
+		// Remember task so it can be stopped automatically
+		rememberTask(reloadFacilitiesTask);
+
+        reloadFacilitiesTask.execute(adapterId);
     }
 
 	private void doFullReloadTask(boolean forceRefresh) {
-		mFullReloadTask = new ReloadAdapterDataTask(getActivity().getApplicationContext(), forceRefresh, ReloadAdapterDataTask.ReloadWhat.ADAPTERS_AND_ACTIVE_ADAPTER);
+		ReloadAdapterDataTask fullReloadTask = new ReloadAdapterDataTask(getActivity().getApplicationContext(), forceRefresh, ReloadAdapterDataTask.ReloadWhat.ADAPTERS_AND_ACTIVE_ADAPTER);
+
 		if(!mSwipeLayout.isRefreshing())
 			mActivity.setBeeeOnProgressBarVisibility(true);
-		mFullReloadTask.setListener(new CallbackTaskListener() {
+
+		fullReloadTask.setListener(new CallbackTaskListener() {
 			@Override
 			public void onExecute(boolean success) {
 				if (!success)
@@ -487,28 +469,36 @@ public class SensorListFragment extends Fragment  {
 			}
 		});
 
-		mFullReloadTask.execute();
+		// Remember task so it can be stopped automatically
+		rememberTask(fullReloadTask);
+
+		fullReloadTask.execute();
 	}
 
     private void doRemoveFacilityTask(Facility facility) {
-        mRemoveFacilityTask = new RemoveFacilityTask(getActivity().getApplicationContext());
+        RemoveFacilityTask removeFacilityTask = new RemoveFacilityTask(getActivity().getApplicationContext());
         DelFacilityPair pair = new DelFacilityPair(facility.getId(), facility.getAdapterId());
-		if(!mSwipeLayout.isRefreshing())
+
+		if (!mSwipeLayout.isRefreshing())
 			mActivity.setBeeeOnProgressBarVisibility(true);
-        mRemoveFacilityTask.setListener(new CallbackTaskListener() {
-            @Override
-            public void onExecute(boolean success) {
-                mActivity.redraw();
-                if (success) {
-                    // Hlaska o uspechu
-                }
-                else {
-                    // Hlaska o neuspechu
-                }
+
+        removeFacilityTask.setListener(new CallbackTaskListener() {
+			@Override
+			public void onExecute(boolean success) {
+				mActivity.redraw();
+				if (success) {
+					// Hlaska o uspechu
+				} else {
+					// Hlaska o neuspechu
+				}
 				doFullReloadTask(true);
-            }
-        });
-        mRemoveFacilityTask.execute(pair);
+			}
+		});
+
+		// Remember task so it can be stopped automatically
+		rememberTask(removeFacilityTask);
+
+        removeFacilityTask.execute(pair);
     }
 
 

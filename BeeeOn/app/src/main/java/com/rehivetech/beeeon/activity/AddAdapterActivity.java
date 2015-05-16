@@ -38,8 +38,6 @@ public class AddAdapterActivity extends BaseApplicationActivity {
 	
 	private AddAdapterFragment mFragment;
 	
-	private RegisterAdapterTask mRegisterAdapterTask;
-	
 	private Button mSkip;
 	private Button mCancel;
 	private Button mNext;
@@ -180,9 +178,9 @@ public class AddAdapterActivity extends BaseApplicationActivity {
 	}
 	
 	public void doRegisterAdapterTask(RegisterAdapterPair pair) {
-		mRegisterAdapterTask = new RegisterAdapterTask(this.getApplicationContext());
+		RegisterAdapterTask registerAdapterTask = new RegisterAdapterTask(this.getApplicationContext());
 
-		mRegisterAdapterTask.setListener(new CallbackTaskListener() {
+		registerAdapterTask.setListener(new CallbackTaskListener() {
 
 			@Override
 			public void onExecute(boolean success) {
@@ -192,23 +190,17 @@ public class AddAdapterActivity extends BaseApplicationActivity {
 					Toast.makeText(mActivity, R.string.toast_adapter_activated, Toast.LENGTH_LONG).show();
 
 					setResult(Constants.ADD_ADAPTER_SUCCESS);
-                    InputMethodManager imm = (InputMethodManager) mActivity.getSystemService(Context.INPUT_METHOD_SERVICE);
-                    imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
+					InputMethodManager imm = (InputMethodManager) mActivity.getSystemService(Context.INPUT_METHOD_SERVICE);
+					imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
 					finish();
 				}
 			}
 		});
 
-		mRegisterAdapterTask.execute(pair);
+		// Remember task so it can be stopped automatically
+		rememberTask(registerAdapterTask);
+
+		registerAdapterTask.execute(pair);
 	}
 	
-	@Override
-	public void onDestroy() {
-		super.onDestroy();
-
-		if (mRegisterAdapterTask != null) {
-			mRegisterAdapterTask.cancel(true);
-		}
-	}
-
 }

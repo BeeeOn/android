@@ -18,7 +18,7 @@ import com.jjoe64.graphview.series.point.DataPoint;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.asynctask.CallbackTask;
 import com.rehivetech.beeeon.asynctask.GetDevicesLogsTask;
-import com.rehivetech.beeeon.base.TrackFragment;
+import com.rehivetech.beeeon.base.BaseApplicationFragment;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.household.adapter.Adapter;
 import com.rehivetech.beeeon.household.device.Device;
@@ -44,7 +44,7 @@ import java.util.Map.Entry;
 import java.util.Random;
 import java.util.SortedMap;
 
-public class CustomViewFragment extends TrackFragment {
+public class CustomViewFragment extends BaseApplicationFragment {
 
 	private SparseArray<List<Device>> mDevices = new SparseArray<List<Device>>();
 	// private SparseArray<List<DeviceLog>> mLogs = new SparseArray<List<DeviceLog>>();
@@ -58,8 +58,6 @@ public class CustomViewFragment extends TrackFragment {
 	private static final String TAG = CustomViewFragment.class.getSimpleName();
 
 	private Controller mController;
-
-	private List<GetDevicesLogsTask> mGetDevicesLogsTasks = new ArrayList<>();
 
 	public CustomViewFragment() {
 	}
@@ -81,14 +79,6 @@ public class CustomViewFragment extends TrackFragment {
 		loadData();
 
 		return view;
-	}
-
-	@Override
-	public void onStop() {
-		for (GetDevicesLogsTask task : mGetDevicesLogsTasks) {
-			task.cancel(true);
-		}
-		super.onStop();
 	}
 
 	private void addGraph(final Device device, final UnitsHelper unitsHelper, final TimeHelper timeHelper, final DateTimeFormatter fmt) {
@@ -250,8 +240,8 @@ public class CustomViewFragment extends TrackFragment {
 				}
 			});
 
-			// Remember task so they can be stopped at onStop()
-			mGetDevicesLogsTasks.add(getDevicesLogsTask);
+			// Remember task so it can be stopped automatically
+			rememberTask(getDevicesLogsTask);
 
 			getDevicesLogsTask.execute(pairs);
 		}

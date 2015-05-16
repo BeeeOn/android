@@ -2,7 +2,6 @@ package com.rehivetech.beeeon.activity.fragment;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.view.ActionMode;
 import android.support.v7.widget.SwitchCompat;
@@ -28,6 +27,7 @@ import com.rehivetech.beeeon.asynctask.CallbackTask;
 import com.rehivetech.beeeon.asynctask.ReloadAdapterDataTask;
 import com.rehivetech.beeeon.asynctask.RemoveWatchDogTask;
 import com.rehivetech.beeeon.asynctask.SaveWatchDogTask;
+import com.rehivetech.beeeon.base.BaseApplicationFragment;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.household.adapter.Adapter;
 import com.rehivetech.beeeon.household.watchdog.WatchDog;
@@ -40,7 +40,7 @@ import java.util.List;
  * Fragment for list of rules for algorithm WatchDog
  * @author mlyko
  */
-public class WatchDogListFragment extends Fragment{
+public class WatchDogListFragment extends BaseApplicationFragment {
     private static final String TAG = WatchDogListFragment.class.getSimpleName();
 
     private static final String ADAPTER_ID = "lastAdapterId";
@@ -59,10 +59,6 @@ public class WatchDogListFragment extends Fragment{
     private View mView;
     private ActionMode mMode;
     ProgressBar mProgressBar;
-
-    private ReloadAdapterDataTask mReloadWatchDogTask;
-    private RemoveWatchDogTask mRemoveWatchDogTask;
-    private SaveWatchDogTask mSaveWatchDogTask;
 
     private WatchDog mSelectedItem;
     private int mSelectedItemPos;
@@ -161,26 +157,6 @@ public class WatchDogListFragment extends Fragment{
 
         // always hide progressbar
         mProgressBar.setVisibility(View.GONE);
-    }
-
-    /**
-     * Cancels async task before destroing fragment
-     */
-    public void onDestroy(){
-        super.onDestroy();
-        Log.d(TAG, "onDestroy()");
-
-        if (mReloadWatchDogTask != null) {
-            mReloadWatchDogTask.cancel(true);
-        }
-
-        if(mRemoveWatchDogTask != null){
-            mRemoveWatchDogTask.cancel(true);
-        }
-
-        if(mSaveWatchDogTask != null){
-            mSaveWatchDogTask.cancel(true);
-        }
     }
 
     @Override
@@ -306,8 +282,8 @@ public class WatchDogListFragment extends Fragment{
 
         watchDog.setEnabled(sw.isChecked());
 
-        mSaveWatchDogTask = new SaveWatchDogTask(mActivity);
-        mSaveWatchDogTask.setListener(new CallbackTask.CallbackTaskListener() {
+        SaveWatchDogTask saveWatchDogTask = new SaveWatchDogTask(mActivity);
+        saveWatchDogTask.setListener(new CallbackTask.CallbackTaskListener() {
             @Override
             public void onExecute(boolean success) {
                 //Toast.makeText(mActivity, getResources().getString(success ? R.string.toast_success_save_data : R.string.toast_fail_save_data), Toast.LENGTH_LONG).show();
@@ -319,7 +295,10 @@ public class WatchDogListFragment extends Fragment{
             }
         });
 
-        mSaveWatchDogTask.execute(watchDog);
+        // Remember task so it can be stopped automatically
+        rememberTask(saveWatchDogTask);
+
+        saveWatchDogTask.execute(watchDog);
     }
 
     /**
@@ -329,13 +308,13 @@ public class WatchDogListFragment extends Fragment{
     public void doReloadWatchDogsTask(String adapterId, boolean forceReload, final boolean isSwipeRefresh){
         Log.d(TAG, "reloadWatchDogsTask()");
 
-        mReloadWatchDogTask = new ReloadAdapterDataTask(mActivity, forceReload, ReloadAdapterDataTask.ReloadWhat.WATCHDOGS);
+        ReloadAdapterDataTask reloadWatchDogTask = new ReloadAdapterDataTask(mActivity, forceReload, ReloadAdapterDataTask.ReloadWhat.WATCHDOGS);
 
-        mReloadWatchDogTask.setListener(new CallbackTask.CallbackTaskListener() {
+        reloadWatchDogTask.setListener(new CallbackTask.CallbackTaskListener() {
             @Override
             public void onExecute(boolean success) {
                 redrawRules();
-                if(isSwipeRefresh)
+                if (isSwipeRefresh)
                     mSwipeLayout.setRefreshing(false);
                 else
                     mActivity.setBeeeOnProgressBarVisibility(false);
@@ -345,7 +324,11 @@ public class WatchDogListFragment extends Fragment{
         if(!isSwipeRefresh) {
             mActivity.setBeeeOnProgressBarVisibility(true);
         }
-        mReloadWatchDogTask.execute(adapterId);
+
+        // Remember task so it can be stopped automatically
+        rememberTask(reloadWatchDogTask);
+
+        reloadWatchDogTask.execute(adapterId);
     }
 
     /**
@@ -353,10 +336,10 @@ public class WatchDogListFragment extends Fragment{
      * @param watchdog
      */
     private void doRemoveWatchDogTask(WatchDog watchdog) {
-        mRemoveWatchDogTask = new RemoveWatchDogTask(mActivity, false);
+        RemoveWatchDogTask removeWatchDogTask = new RemoveWatchDogTask(mActivity, false);
         DelWatchDogPair pair = new DelWatchDogPair(watchdog.getId(), watchdog.getAdapterId());
 
-        mRemoveWatchDogTask.setListener(new CallbackTask.CallbackTaskListener() {
+        removeWatchDogTask.setListener(new CallbackTask.CallbackTaskListener() {
             @Override
             public void onExecute(boolean success) {
                 Toast.makeText(mActivity, getResources().getString(success ? R.string.toast_delete_success : R.string.toast_delete_fail), Toast.LENGTH_SHORT).show();
@@ -365,7 +348,11 @@ public class WatchDogListFragment extends Fragment{
                 }
             }
         });
-        mRemoveWatchDogTask.execute(pair);
+
+        // Remember task so it can be stopped automatically
+        rememberTask(removeWatchDogTask);
+
+        removeWatchDogTask.execute(pair);
     }
 
     // ----- HELPERS + ACTIONMODE ----- //

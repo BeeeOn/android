@@ -9,6 +9,8 @@ import com.rehivetech.beeeon.util.Log;
 
 public abstract class CallbackTask<Params> extends AsyncTask<Params, Void, Boolean> {
 
+	private static final String TAG = CallbackTask.class.getSimpleName();
+
 	private CallbackTaskListener mListener;
 
 	protected final Context mContext;
@@ -26,12 +28,20 @@ public abstract class CallbackTask<Params> extends AsyncTask<Params, Void, Boole
 	}
 
 	@SuppressWarnings("unchecked")
-	protected final void execute(Params param) {
+	public final void execute(Params param) {
 		super.execute(param);
+	}
+
+	public final void execute() {
+		super.execute();
 	}
 
 	@Override
 	protected final Boolean doInBackground(Params... params) {
+		if (params.length > 1) {
+			Log.w(TAG, "Given %d parameters, but CallbackTask can use only one.");
+		}
+
 		Boolean success = false;
 		try {
 			success = doInBackground(params.length > 0 ? params[0] : null);
@@ -64,7 +74,7 @@ public abstract class CallbackTask<Params> extends AsyncTask<Params, Void, Boole
 	}
 
 	public interface CallbackTaskListener {
-		public void onExecute(boolean success);
+		void onExecute(boolean success);
 	}
 
 }

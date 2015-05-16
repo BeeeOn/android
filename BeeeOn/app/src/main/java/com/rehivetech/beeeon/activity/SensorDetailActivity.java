@@ -10,7 +10,6 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.Window;
 import android.widget.Toast;
 
 import com.rehivetech.beeeon.Constants;
@@ -53,8 +52,6 @@ public class SensorDetailActivity extends BaseApplicationActivity {
 	private int mActiveDevicePosition;
 
 	private ProgressDialog mProgress;
-
-	private ReloadAdapterDataTask mReloadFacilitiesTask;
 
     private Toolbar mToolbar;
 
@@ -102,7 +99,7 @@ public class SensorDetailActivity extends BaseApplicationActivity {
 	}
 
 	public void setBeeeOnProgressBarVisibility(boolean b) {
-		findViewById(R.id.toolbar_progress).setVisibility((b)? View.VISIBLE:View.INVISIBLE);
+		findViewById(R.id.toolbar_progress).setVisibility((b) ? View.VISIBLE : View.INVISIBLE);
 	}
 
 	@Override
@@ -121,17 +118,9 @@ public class SensorDetailActivity extends BaseApplicationActivity {
 	}
 
 	@Override
-	protected void onAppResume() {
-		if (mReloadFacilitiesTask == null) {
-			doReloadFacilitiesTask(mActiveAdapterId, false);
-		}
-	}
-
-	@Override
-	protected void onAppPause() {
-		if (mReloadFacilitiesTask != null) {
-			mReloadFacilitiesTask.cancel(true);
-		}
+	public void onStart() {
+		super.onStart();
+		doReloadFacilitiesTask(mActiveAdapterId, false);
 	}
 
 	@Override
@@ -144,18 +133,10 @@ public class SensorDetailActivity extends BaseApplicationActivity {
 		return false;
 	}
 
-	@Override
-	public void onStop() {
-		if (mReloadFacilitiesTask != null) {
-			mReloadFacilitiesTask.cancel(true);
-		}
-		super.onStop();
-	}
-
 	private void doReloadFacilitiesTask(final String adapterId, final boolean forceReload) {
-		mReloadFacilitiesTask = new ReloadAdapterDataTask(this, forceReload, ReloadAdapterDataTask.ReloadWhat.FACILITIES);
+		ReloadAdapterDataTask reloadFacilitiesTask = new ReloadAdapterDataTask(this, forceReload, ReloadAdapterDataTask.ReloadWhat.FACILITIES);
 
-		mReloadFacilitiesTask.setListener(new CallbackTaskListener() {
+		reloadFacilitiesTask.setListener(new CallbackTaskListener() {
 
 			@Override
 			public void onExecute(boolean success) {
@@ -188,7 +169,10 @@ public class SensorDetailActivity extends BaseApplicationActivity {
 
 		});
 
-		mReloadFacilitiesTask.execute(adapterId);
+		// Remember task so it can be stopped automatically
+		rememberTask(reloadFacilitiesTask);
+
+		reloadFacilitiesTask.execute(adapterId);
 	}
 
 	/**

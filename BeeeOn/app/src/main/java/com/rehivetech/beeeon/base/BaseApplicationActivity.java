@@ -4,20 +4,28 @@ import android.content.Context;
 import android.content.Intent;
 
 import com.rehivetech.beeeon.activity.LoginActivity;
+import com.rehivetech.beeeon.asynctask.CallbackTask;
+import com.rehivetech.beeeon.asynctask.CallbackTaskManager;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.gcm.INotificationReceiver;
 import com.rehivetech.beeeon.gcm.notification.GcmNotification;
 import com.rehivetech.beeeon.util.Log;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 /**
  * Abstract parent for activities that requires logged in user
  * 
  * When user is not logged in, it will switch to LoginActivity automatically.
  */
-public abstract class BaseApplicationActivity extends BaseActivity implements INotificationReceiver {
+public abstract class BaseApplicationActivity extends BaseActivity implements INotificationReceiver, CallbackTaskManager.ICallbackTaskManager {
 
 	private static String TAG = BaseApplicationActivity.class.getSimpleName();
 	private boolean triedLoginAlready = false;
+
+	private CallbackTaskManager mCallbackTaskManager = new CallbackTaskManager();
 
 	protected boolean isPaused = false;
 
@@ -56,6 +64,14 @@ public abstract class BaseApplicationActivity extends BaseActivity implements IN
 		onAppPause();
 	}
 
+	@Override
+	public void onStop() {
+		super.onStop();
+
+		// Cancel and remove all remembered tasks
+		mCallbackTaskManager.cancelAndRemoveAll();
+	}
+
 	public static void redirectToLogin(Context context) {
 		Log.d(TAG,"Try to relogin");
 		Intent intent = new Intent(context, LoginActivity.class);
@@ -77,6 +93,16 @@ public abstract class BaseApplicationActivity extends BaseActivity implements IN
 	 */
 	protected void onAppPause() {
 		// Empty default method
+	}
+
+	/**
+	 * Add this task to internal list of tasks which will be automatically stopped and removed at activity's onStop() method.
+	 *
+	 * @param task
+	 */
+	@Override
+	public void rememberTask(CallbackTask task) {
+		mCallbackTaskManager.addTask(task);
 	}
 
 	/**

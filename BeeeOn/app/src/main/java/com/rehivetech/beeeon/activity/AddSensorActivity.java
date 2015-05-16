@@ -40,11 +40,6 @@ public class AddSensorActivity extends BaseApplicationActivity {
 	
 	private AddSensorFragment mFragment;
 	
-
-	private ReloadAdapterDataTask mReloadUninitializedFacilitiesTask;
-
-	private PairRequestTask mPairRequestTask;
-	
 	private Button mSkip;
 	private Button mCancel;
 	private Button mNext;
@@ -182,9 +177,9 @@ public class AddSensorActivity extends BaseApplicationActivity {
 	}
 	
 	public void doReloadUninitializedFacilitiesTask(String adapterId, boolean forceReload) {
-		mReloadUninitializedFacilitiesTask = new ReloadAdapterDataTask(mActivity.getApplicationContext(), forceReload, ReloadAdapterDataTask.ReloadWhat.UNINITIALIZED_FACILITIES);
+		ReloadAdapterDataTask reloadUninitializedFacilitiesTask = new ReloadAdapterDataTask(mActivity.getApplicationContext(), forceReload, ReloadAdapterDataTask.ReloadWhat.UNINITIALIZED_FACILITIES);
 
-		mReloadUninitializedFacilitiesTask.setListener(new CallbackTaskListener() {
+		reloadUninitializedFacilitiesTask.setListener(new CallbackTaskListener() {
 
 			@Override
 			public void onExecute(boolean success) {
@@ -199,10 +194,10 @@ public class AddSensorActivity extends BaseApplicationActivity {
 					Log.d(TAG, "Nasel jsem neinicializovane zarizeni !!!!");
 					mFragment.stopTimer();
 					// go to setup uninit sensor
-					 Intent intent = new Intent(mActivity, SetupSensorActivity.class);
-					 startActivityForResult(intent, Constants.SETUP_SENSOR_REQUEST_CODE);
-				} else{
-					if(mFirstUse) {
+					Intent intent = new Intent(mActivity, SetupSensorActivity.class);
+					startActivityForResult(intent, Constants.SETUP_SENSOR_REQUEST_CODE);
+				} else {
+					if (mFirstUse) {
 						mFirstUse = false;
 						doPairRequestTask(mPairAdapter.getId());
 						mNext.setEnabled(false);
@@ -212,13 +207,17 @@ public class AddSensorActivity extends BaseApplicationActivity {
 
 		});
 
-		mReloadUninitializedFacilitiesTask.execute(adapterId);
+		// Remember task so it can be stopped automatically
+		rememberTask(reloadUninitializedFacilitiesTask);
+
+		reloadUninitializedFacilitiesTask.execute(adapterId);
 	}
 	
 	private void doPairRequestTask(String adapterId) {
 		// Send First automatic pair request
-		mPairRequestTask = new PairRequestTask(mActivity.getApplicationContext());
-		mPairRequestTask.setListener(new CallbackTaskListener() {
+		PairRequestTask pairRequestTask = new PairRequestTask(mActivity.getApplicationContext());
+
+		pairRequestTask.setListener(new CallbackTaskListener() {
 
 			@Override
 			public void onExecute(boolean success) {
@@ -232,19 +231,13 @@ public class AddSensorActivity extends BaseApplicationActivity {
 			}
 
 		});
-		mPairRequestTask.execute(adapterId);
+
+		// Remember task so it can be stopped automatically
+		rememberTask(pairRequestTask);
+
+		pairRequestTask.execute(adapterId);
 	}
 	
-	@Override
-	public void onDestroy() {
-		super.onDestroy();
-
-		if (mReloadUninitializedFacilitiesTask != null) {
-			mReloadUninitializedFacilitiesTask.cancel(true);
-		}
-	}
-
-
 	public void checkUnInitSensor() {
 		Log.d(TAG, "Send if some uninit facility");
 		doReloadUninitializedFacilitiesTask(mPairAdapter.getId(), true);

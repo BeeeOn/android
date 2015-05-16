@@ -96,10 +96,6 @@ public class WatchDogEditRuleActivity extends BaseApplicationActivity {
     private String mWatchDogAction;
     private WatchDogBaseType mWatchDogOperator;
 
-    // async tasks
-    private SaveWatchDogTask mSaveWatchDogTask;
-    private RemoveWatchDogTask mRemoveWatchDogTask;
-
     // GUI elements
     private RadioGroup mActionType;
     private EditText mRuleName;
@@ -538,36 +534,44 @@ public class WatchDogEditRuleActivity extends BaseApplicationActivity {
         mProgress.show();
 
         // TODO check if data were changed ???
-        mSaveWatchDogTask = new SaveWatchDogTask(this);
-        mSaveWatchDogTask.setListener(new CallbackTask.CallbackTaskListener() {
-            @Override
-            public void onExecute(boolean success) {
-                if (mProgress != null) mProgress.dismiss();
-                Toast.makeText(WatchDogEditRuleActivity.this, getResources().getString(success ? R.string.toast_success_save_data : R.string.toast_fail_save_data), Toast.LENGTH_LONG).show();
+        SaveWatchDogTask saveWatchDogTask = new SaveWatchDogTask(this);
 
-                // when new rule, close after done
-                if(success) finish();
-            }
-        });
+        saveWatchDogTask.setListener(new CallbackTask.CallbackTaskListener() {
+			@Override
+			public void onExecute(boolean success) {
+				if (mProgress != null) mProgress.dismiss();
+				Toast.makeText(WatchDogEditRuleActivity.this, getResources().getString(success ? R.string.toast_success_save_data : R.string.toast_fail_save_data), Toast.LENGTH_LONG).show();
 
-        mSaveWatchDogTask.execute(mWatchDog);
+				// when new rule, close after done
+				if (success) finish();
+			}
+		});
+
+        // Remember task so it can be stopped automatically
+        rememberTask(saveWatchDogTask);
+
+        saveWatchDogTask.execute(mWatchDog);
     }
 
     /**
      * Async task for deleting watchDog
      */
     private void doRemoveWatchDogTask() {
-        mRemoveWatchDogTask = new RemoveWatchDogTask(this, false);
+        RemoveWatchDogTask removeWatchDogTask = new RemoveWatchDogTask(this, false);
         DelWatchDogPair pair = new DelWatchDogPair(mWatchDog.getId(), mWatchDog.getAdapterId());
 
-        mRemoveWatchDogTask.setListener(new CallbackTask.CallbackTaskListener() {
-            @Override
-            public void onExecute(boolean success) {
-                Toast.makeText(WatchDogEditRuleActivity.this, getResources().getString(success ? R.string.toast_delete_success : R.string.toast_delete_fail), Toast.LENGTH_SHORT).show();
-                finish();
-            }
-        });
-        mRemoveWatchDogTask.execute(pair);
+        removeWatchDogTask.setListener(new CallbackTask.CallbackTaskListener() {
+			@Override
+			public void onExecute(boolean success) {
+				Toast.makeText(WatchDogEditRuleActivity.this, getResources().getString(success ? R.string.toast_delete_success : R.string.toast_delete_fail), Toast.LENGTH_SHORT).show();
+				finish();
+			}
+		});
+
+		// Remember task so it can be stopped automatically
+		rememberTask(removeWatchDogTask);
+
+        removeWatchDogTask.execute(pair);
     }
 
     // ---------- HELPER FUNCTIONS ---------- //

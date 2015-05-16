@@ -20,6 +20,7 @@ import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.asynctask.CallbackTask;
 import com.rehivetech.beeeon.asynctask.ReloadAdapterDataTask;
 import com.rehivetech.beeeon.base.BaseApplicationActivity;
+import com.rehivetech.beeeon.base.BaseApplicationFragment;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.exception.AppException;
 import com.rehivetech.beeeon.exception.ErrorCode;
@@ -40,7 +41,7 @@ import java.util.List;
 /**
  * @author mlyko
  */
-public abstract class WidgetConfigurationFragment extends Fragment {
+public abstract class WidgetConfigurationFragment extends BaseApplicationFragment {
 	private static final String TAG = WidgetConfigurationFragment.class.getSimpleName();
 
 	protected List<Device> mDevices = new ArrayList<Device>();
@@ -51,7 +52,6 @@ public abstract class WidgetConfigurationFragment extends Fragment {
 	protected Controller mController;
 
 	protected WidgetData mGeneralWidgetdata;
-	protected ReloadAdapterDataTask mReloadTask;
 
 	protected List<Adapter> mAdapters;
 	protected Adapter mActiveAdapter;
@@ -140,13 +140,13 @@ public abstract class WidgetConfigurationFragment extends Fragment {
 		mController = Controller.getInstance(mActivity);
 
 		// reloads all gateways and actual one
-		mReloadTask = new ReloadAdapterDataTask(mActivity, false, ReloadAdapterDataTask.ReloadWhat.ADAPTERS_AND_ACTIVE_ADAPTER);
-		mReloadTask.setNotifyErrors(false);
-		mReloadTask.setListener(new CallbackTask.CallbackTaskListener() {
+		final ReloadAdapterDataTask reloadAdapterDataTask = new ReloadAdapterDataTask(mActivity, false, ReloadAdapterDataTask.ReloadWhat.ADAPTERS_AND_ACTIVE_ADAPTER);
+		reloadAdapterDataTask.setNotifyErrors(false);
+		reloadAdapterDataTask.setListener(new CallbackTask.CallbackTaskListener() {
 			@Override
 			public void onExecute(boolean success) {
 				if (!success) {
-					AppException e = mReloadTask.getException();
+					AppException e = reloadAdapterDataTask.getException();
 					ErrorCode errCode = e != null ? e.getErrorCode() : null;
 					if (errCode != null) {
 						if (errCode instanceof NetworkError && errCode == NetworkError.SRV_BAD_BT) {
@@ -171,7 +171,11 @@ public abstract class WidgetConfigurationFragment extends Fragment {
 		});
 
 		if(mActivity.getDialog() != null) mActivity.getDialog().show();
-		mReloadTask.execute();
+
+		// Remember task so it can be stopped automatically
+		rememberTask(reloadAdapterDataTask);
+
+		reloadAdapterDataTask.execute();
 	}
 
 	@Override
@@ -188,8 +192,6 @@ public abstract class WidgetConfigurationFragment extends Fragment {
 		super.onDestroy();
 
 		if(mActivity.getDialog() != null) mActivity.getDialog().dismiss();
-
-		if(mReloadTask != null) mReloadTask.cancel(true);
 
 		//finishConfiguration();
 	}
@@ -262,8 +264,8 @@ public abstract class WidgetConfigurationFragment extends Fragment {
 			return;
 		}
 
-		mReloadTask = new ReloadAdapterDataTask(mActivity, false, whatToReload);
-		mReloadTask.setListener(new CallbackTask.CallbackTaskListener() {
+		ReloadAdapterDataTask reloadAdapterDataTask = new ReloadAdapterDataTask(mActivity, false, whatToReload);
+		reloadAdapterDataTask.setListener(new CallbackTask.CallbackTaskListener() {
 			@Override
 			public void onExecute(boolean success) {
 				selectAdapter(adapterId);
@@ -274,7 +276,11 @@ public abstract class WidgetConfigurationFragment extends Fragment {
 		});
 
 		mActivity.getDialog().show();
-		mReloadTask.execute(adapterId);
+
+		// Remember task so it can be stopped automatically
+		rememberTask(reloadAdapterDataTask);
+
+		reloadAdapterDataTask.execute(adapterId);
 	}
 
 	/**

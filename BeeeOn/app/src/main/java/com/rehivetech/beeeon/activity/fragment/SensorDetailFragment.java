@@ -15,18 +15,15 @@ import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.avast.android.dialogs.core.BaseDialogFragment;
 import com.avast.android.dialogs.fragment.ListDialogFragment;
-import com.avast.android.dialogs.fragment.SimpleDialogFragment;
 import com.avast.android.dialogs.iface.IListDialogListener;
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.series.BarGraphSeries;
 import com.jjoe64.graphview.series.BaseSeries;
-import com.jjoe64.graphview.series.point.DataPoint;
 import com.jjoe64.graphview.series.LineGraphSeries;
+import com.jjoe64.graphview.series.point.DataPoint;
 import com.melnykov.fab.FloatingActionButton;
 import com.rehivetech.beeeon.Constants;
 import com.rehivetech.beeeon.R;
@@ -37,8 +34,7 @@ import com.rehivetech.beeeon.asynctask.ActorActionTask;
 import com.rehivetech.beeeon.asynctask.CallbackTask.CallbackTaskListener;
 import com.rehivetech.beeeon.asynctask.GetDeviceLogTask;
 import com.rehivetech.beeeon.asynctask.ReloadAdapterDataTask;
-import com.rehivetech.beeeon.asynctask.SaveDeviceTask;
-import com.rehivetech.beeeon.asynctask.SaveFacilityTask;
+import com.rehivetech.beeeon.base.BaseApplicationFragment;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.household.adapter.Adapter;
 import com.rehivetech.beeeon.household.device.Device;
@@ -56,7 +52,6 @@ import com.rehivetech.beeeon.household.device.values.OpenClosedValue;
 import com.rehivetech.beeeon.household.device.values.TemperatureValue;
 import com.rehivetech.beeeon.household.location.Location;
 import com.rehivetech.beeeon.pair.LogDataPair;
-import com.rehivetech.beeeon.pair.SaveDevicePair;
 import com.rehivetech.beeeon.util.GraphViewHelper;
 import com.rehivetech.beeeon.util.Log;
 import com.rehivetech.beeeon.util.TimeHelper;
@@ -68,18 +63,16 @@ import org.joda.time.Interval;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
-import java.util.EnumSet;
 import java.util.Map.Entry;
 import java.util.SortedMap;
 import java.util.concurrent.TimeUnit;
 
-public class SensorDetailFragment extends Fragment implements IListDialogListener{
+public class SensorDetailFragment extends BaseApplicationFragment implements IListDialogListener{
 
 	private static final int REQUEST_BOILER_TYPE = 7894;
 	private static final int REQUEST_BOILER_MODE = 1236;
 	private Controller mController;
 	private static final String TAG = SensorDetailFragment.class.getSimpleName();
-	private static final int EDIT_NONE = 0;
 
 	public static final String ARG_SEN_ID = "sensorid";
 	public static final String ARG_CUR_PAGE = "currentpage";
@@ -97,8 +90,6 @@ public class SensorDetailFragment extends Fragment implements IListDialogListene
 	private ImageView mIcon;
 	private TextView mRefreshTimeText;
 	private FloatingActionButton mFABedit;
-	private TextView mGraphLabel;
-	private LinearLayout mGraphLayout;
 	private GraphView mGraphView;
 	private TextView mBattery;
 	private TextView mSignal;
@@ -107,12 +98,7 @@ public class SensorDetailFragment extends Fragment implements IListDialogListene
 
 	private Device mDevice;
 	private Adapter mAdapter;
-	
-	private SaveDeviceTask mSaveDeviceTask;
-	private GetDeviceLogTask mGetDeviceLogTask;
-	private SaveFacilityTask mSaveFacilityTask;
-	private ActorActionTask mActorActionTask;
-	
+
 	private UnitsHelper mUnitsHelper;
 	private TimeHelper mTimeHelper;
 
@@ -131,10 +117,8 @@ public class SensorDetailFragment extends Fragment implements IListDialogListene
 	private SwipeRefreshLayout mSwipeLayout;
 	private View mView;
 	private SensorDetailActivity.ScreenSlidePagerAdapter mFragmentAdapter;
-	private ReloadAdapterDataTask mReloadFacilitiesTask;
-	private Button mValueSet;
-	private ActorActionTask mChangeStateDeviceTask;
 
+	private Button mValueSet;
 
 	public SensorDetailFragment() {
 	}
@@ -197,17 +181,6 @@ public class SensorDetailFragment extends Fragment implements IListDialogListene
 			doReloadFacilitiesTask(mAdapterId, false);
 		}
 
-	}
-
-	@Override
-	public void onStop() {
-		if (mSaveDeviceTask != null) {
-			mSaveDeviceTask.cancel(true);
-		}
-		if (mGetDeviceLogTask != null) {
-			mGetDeviceLogTask.cancel(true);
-		}
-		super.onStop();
 	}
 
 	private void initLayout(Device device) {
@@ -573,8 +546,8 @@ public class SensorDetailFragment extends Fragment implements IListDialogListene
 			return;
 		}
 
-		mActorActionTask = new ActorActionTask(mActivity.getApplicationContext());
-		mActorActionTask.setListener(new CallbackTaskListener() {
+		ActorActionTask actorActionTask = new ActorActionTask(mActivity.getApplicationContext());
+		actorActionTask.setListener(new CallbackTaskListener() {
 
 			@Override
 			public void onExecute(boolean success) {
@@ -589,22 +562,26 @@ public class SensorDetailFragment extends Fragment implements IListDialogListene
 			}
 
 		});
-		mActorActionTask.execute(device);
+
+		// Remember task so it can be stopped automatically
+		rememberTask(actorActionTask);
+
+		actorActionTask.execute(device);
 	}
 
 	protected void doReloadFacilitiesTask(final String adapterId, final boolean forceRefresh) {
 		//mActivity.setBeeeOnProgressBarVisibility(true);
-		mReloadFacilitiesTask = new ReloadAdapterDataTask(mActivity, forceRefresh, ReloadAdapterDataTask.ReloadWhat.FACILITIES);
+		ReloadAdapterDataTask reloadFacilitiesTask = new ReloadAdapterDataTask(mActivity, forceRefresh, ReloadAdapterDataTask.ReloadWhat.FACILITIES);
 
-		mReloadFacilitiesTask.setListener(new CallbackTaskListener() {
+		reloadFacilitiesTask.setListener(new CallbackTaskListener() {
 
 			@Override
 			public void onExecute(boolean success) {
 				if (mSwipeLayout != null) {
 					mSwipeLayout.setRefreshing(false);
 				}
-				if(!success){
-					Log.d(TAG,"Fragment - Reload failed");
+				if (!success) {
+					Log.d(TAG, "Fragment - Reload failed");
 					return;
 				}
 				Log.d(TAG, "Fragment - Start reload task");
@@ -619,7 +596,10 @@ public class SensorDetailFragment extends Fragment implements IListDialogListene
 
 		});
 
-		mReloadFacilitiesTask.execute(adapterId);
+		// Remember task so it can be stopped automatically
+		rememberTask(reloadFacilitiesTask);
+
+		reloadFacilitiesTask.execute(adapterId);
 	}
 
 	protected void doLoadGraphData() {
@@ -629,36 +609,44 @@ public class SensorDetailFragment extends Fragment implements IListDialogListene
 		DateTimeFormatter fmt = DateTimeFormat.forPattern(LOG_DATE_TIME_FORMAT).withZoneUTC();
 		Log.d(TAG, String.format("Loading graph data from %s to %s.", fmt.print(start), fmt.print(end)));
 
-		mGetDeviceLogTask = new GetDeviceLogTask(mActivity);
+		GetDeviceLogTask getDeviceLogTask = new GetDeviceLogTask(mActivity);
 		final LogDataPair pair = new LogDataPair( //
 				mDevice, // device
 				new Interval(start, end), // interval from-to
 				DataType.AVERAGE, // type
 				(mDevice.getValue() instanceof BaseEnumValue) ? DataInterval.RAW : DataInterval.TEN_MINUTES); // interval
 
-		mGetDeviceLogTask.setListener(new CallbackTaskListener() {
+		getDeviceLogTask.setListener(new CallbackTaskListener() {
 			@Override
 			public void onExecute(boolean success) {
 				fillGraph(mController.getDeviceLogsModel().getDeviceLog(pair));
 			}
 		});
 
-		mGetDeviceLogTask.execute(new LogDataPair[] { pair });
+		// Remember task so it can be stopped automatically
+		rememberTask(getDeviceLogTask);
+
+		getDeviceLogTask.execute(new LogDataPair[]{pair});
 	}
 
 	protected void doChangeStateDeviceTask(final Device device) {
 		mActivity.setBeeeOnProgressBarVisibility(true);
-		mChangeStateDeviceTask = new ActorActionTask(mActivity);
-		mChangeStateDeviceTask.setListener(new CallbackTaskListener() {
+
+		ActorActionTask changeStateDeviceTask = new ActorActionTask(mActivity);
+
+		changeStateDeviceTask.setListener(new CallbackTaskListener() {
 			@Override
 			public void onExecute(boolean success) {
-
 				mActivity.setBeeeOnProgressBarVisibility(false);
-				if(success)
+				if (success)
 					mValue.setText(mUnitsHelper.getStringValueUnit(mDevice.getValue()));
 			}
 		});
-		mChangeStateDeviceTask.execute(device);
+
+		// Remember task so it can be stopped automatically
+		rememberTask(changeStateDeviceTask);
+
+		changeStateDeviceTask.execute(device);
 	}
 
 	@Override

@@ -1,8 +1,8 @@
 package com.rehivetech.beeeon.activity;
 
 import android.app.ProgressDialog;
-import android.support.v4.app.Fragment;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -18,19 +18,18 @@ import android.widget.Toast;
 
 import com.rehivetech.beeeon.Constants;
 import com.rehivetech.beeeon.R;
+import com.rehivetech.beeeon.arrayadapter.LocationArrayAdapter;
+import com.rehivetech.beeeon.arrayadapter.LocationIconAdapter;
+import com.rehivetech.beeeon.asynctask.CallbackTask;
+import com.rehivetech.beeeon.asynctask.SaveFacilityTask;
+import com.rehivetech.beeeon.asynctask.SaveFacilityWithNewLocTask;
+import com.rehivetech.beeeon.base.BaseApplicationActivity;
+import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.household.adapter.Adapter;
 import com.rehivetech.beeeon.household.device.Device;
 import com.rehivetech.beeeon.household.device.Facility;
 import com.rehivetech.beeeon.household.device.RefreshInterval;
 import com.rehivetech.beeeon.household.location.Location;
-import com.rehivetech.beeeon.arrayadapter.LocationArrayAdapter;
-import com.rehivetech.beeeon.arrayadapter.LocationIconAdapter;
-import com.rehivetech.beeeon.asynctask.CallbackTask;
-import com.rehivetech.beeeon.asynctask.SaveDeviceTask;
-import com.rehivetech.beeeon.asynctask.SaveFacilityTask;
-import com.rehivetech.beeeon.asynctask.SaveFacilityWithNewLocTask;
-import com.rehivetech.beeeon.base.BaseApplicationActivity;
-import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.pair.SaveFacilityPair;
 import com.rehivetech.beeeon.pair.SaveFacilityWithNewLocPair;
 import com.rehivetech.beeeon.util.Log;
@@ -48,12 +47,9 @@ public class SensorEditActivity extends BaseApplicationActivity {
 	private Toolbar mToolbar;
 	private String mDeviceId;
 	private SensorEditActivity mActivity;
-	private SaveDeviceTask mSaveDeviceTask;
-	private SaveFacilityTask mSaveFacilityTask;
 	private ProgressDialog mProgress;
 	private Controller mController;
 	private PlaceholderFragment mFragment;
-	private SaveFacilityWithNewLocTask mSaveFacilityWithNewLocTask;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -176,15 +172,6 @@ public class SensorEditActivity extends BaseApplicationActivity {
 			mProgress.dismiss();
 	}
 
-	@Override
-	protected void onDestroy() {
-		super.onDestroy();
-		if(mSaveDeviceTask != null)
-			mSaveDeviceTask.cancel(true);
-		if(mSaveFacilityTask != null)
-			mSaveFacilityTask.cancel(true);
-	}
-
 	public ProgressDialog getProgressDialog() {
 		return mProgress;
 	}
@@ -195,8 +182,9 @@ public class SensorEditActivity extends BaseApplicationActivity {
 
 	private void doSaveFacilityWithNewLocation(SaveFacilityWithNewLocPair pair) {
 		mProgress.show();
-		mSaveFacilityWithNewLocTask = new SaveFacilityWithNewLocTask(mActivity);
-		mSaveFacilityWithNewLocTask.setListener(new CallbackTask.CallbackTaskListener() {
+		SaveFacilityWithNewLocTask saveFacilityWithNewLocTask = new SaveFacilityWithNewLocTask(mActivity);
+
+		saveFacilityWithNewLocTask.setListener(new CallbackTask.CallbackTaskListener() {
 			@Override
 			public void onExecute(boolean success) {
 				if (mActivity.getProgressDialog() != null)
@@ -212,14 +200,19 @@ public class SensorEditActivity extends BaseApplicationActivity {
 				}
 			}
 		});
-		mSaveFacilityWithNewLocTask.execute(pair);
+
+		// Remember task so it can be stopped automatically
+		rememberTask(saveFacilityWithNewLocTask);
+
+		saveFacilityWithNewLocTask.execute(pair);
 
 	}
 
 	public void doSaveFacilityTask(SaveFacilityPair pair) {
 		mProgress.show();
-		mSaveFacilityTask = new SaveFacilityTask(mActivity);
-		mSaveFacilityTask.setListener(new CallbackTask.CallbackTaskListener() {
+		SaveFacilityTask saveFacilityTask = new SaveFacilityTask(mActivity);
+
+		saveFacilityTask.setListener(new CallbackTask.CallbackTaskListener() {
 			@Override
 			public void onExecute(boolean success) {
 				if (mActivity.getProgressDialog() != null)
@@ -235,7 +228,11 @@ public class SensorEditActivity extends BaseApplicationActivity {
 				}
 			}
 		});
-		mSaveFacilityTask.execute(pair);
+
+		// Remember task so it can be stopped automatically
+		rememberTask(saveFacilityTask);
+
+		saveFacilityTask.execute(pair);
 	}
 
 	/**

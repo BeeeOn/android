@@ -62,9 +62,6 @@ public class NavDrawerMenu   {
 	private String mActiveItem;
 	private String mActiveAdapterId;
 
-	private SwitchAdapterTask mSwitchAdapterTask;
-	private UnregisterAdapterTask mUnregisterAdapterTask;
-
 	private MenuListAdapter mMenuAdapter;
 
 	//
@@ -256,9 +253,9 @@ public class NavDrawerMenu   {
 	}
 
 	private void doSwitchAdapterTask(String adapterId) {
-		mSwitchAdapterTask = new SwitchAdapterTask(mActivity, false);
+		SwitchAdapterTask switchAdapterTask = new SwitchAdapterTask(mActivity, false);
 
-		mSwitchAdapterTask.setListener(new CallbackTaskListener() {
+		switchAdapterTask.setListener(new CallbackTaskListener() {
 
 			@Override
 			public void onExecute(boolean success) {
@@ -270,13 +267,16 @@ public class NavDrawerMenu   {
 			}
 		});
 
-		mSwitchAdapterTask.execute(adapterId);
+		// Remember task so it can be stopped automatically
+		mActivity.rememberTask(switchAdapterTask);
+
+		switchAdapterTask.execute(adapterId);
 	}
 
 	private void doUnregisterAdapterTask(String adapterId) {
-		mUnregisterAdapterTask = new UnregisterAdapterTask(mActivity);
+		UnregisterAdapterTask unregisterAdapterTask = new UnregisterAdapterTask(mActivity);
 
-		mUnregisterAdapterTask.setListener(new CallbackTaskListener() {
+		unregisterAdapterTask.setListener(new CallbackTaskListener() {
 
 			@Override
 			public void onExecute(boolean success) {
@@ -287,7 +287,11 @@ public class NavDrawerMenu   {
 				}
 			}
 		});
-		mUnregisterAdapterTask.execute(adapterId);
+
+		// Remember task so it can be stopped automatically
+		mActivity.rememberTask(unregisterAdapterTask);
+
+		unregisterAdapterTask.execute(adapterId);
 	}
 
 	public MenuListAdapter getMenuAdapter() {
@@ -367,16 +371,6 @@ public class NavDrawerMenu   {
 
 	public void setAdapterID(String adaID) {
 		mActiveAdapterId = adaID;
-	}
-
-	public void cancelAllTasks() {
-		if (mSwitchAdapterTask != null) {
-			mSwitchAdapterTask.cancel(true);
-		}
-
-		if (mUnregisterAdapterTask != null) {
-			mUnregisterAdapterTask.cancel(true);
-		}
 	}
 
 	class ActionModeAdapters implements Callback {
