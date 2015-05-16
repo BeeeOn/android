@@ -918,13 +918,13 @@ public class XmlCreator {
 	 *            userID of user
 	 * @param aid
 	 *            adapterID of actual adapter
-	 * @param diffToGMT
+	 * @param offsetInMinutes
 	 *            difference to GMT (Xconstants.UTC+0)
 	 * @return SetTimeZone message
 	 * @since 2.2
 	 */
-	public static String createSetTimeZone(String bt, String aid, int diffToGMT) {
-		return createComAttribsVariant(Xconstants.STATE, SETTIMEZONE, Xconstants.BT, bt, Xconstants.AID, aid, Xconstants.UTC, Integer.toString(diffToGMT));
+	public static String createSetTimeZone(String bt, String aid, int offsetInMinutes) {
+		return createComAttribsVariant(Xconstants.STATE, SETTIMEZONE, Xconstants.BT, bt, Xconstants.AID, aid, Xconstants.UTC, Integer.toString(offsetInMinutes));
 	}
 
 	/**

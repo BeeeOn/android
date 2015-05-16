@@ -380,10 +380,10 @@ public interface INetwork {
 	 *
 	 * @NOTE using difference from GMT (UTC+0),
 	 *       https://merlin.fit.vutbr.cz/wiki-iot/index.php/Smarthome_cloud#SetTimeZone
-	 * @param differenceToGMT
+	 * @param offsetInMinutes
 	 * @return
 	 */
-	public boolean setTimeZone(String adapterID, int differenceToGMT);
+	public boolean setTimeZone(String adapterID, int offsetInMinutes);
 
 	/**
 	 * Method call to server to get actual time zone

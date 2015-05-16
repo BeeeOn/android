@@ -1018,12 +1018,12 @@ public class Network implements INetwork {
 	 *
 	 * @NOTE using difference from GMT (UTC+0),
 	 *       https://merlin.fit.vutbr.cz/wiki-iot/index.php/Smarthome_cloud#SetTimeZone
-	 * @param differenceToGMT
+	 * @param offsetInMinutes
 	 * @return
 	 */
 	@Override
-	public boolean setTimeZone(String adapterID, int differenceToGMT){
-		ParsedMessage msg = doRequest(XmlCreator.createSetTimeZone(mBT, adapterID, differenceToGMT));
+	public boolean setTimeZone(String adapterID, int offsetInMinutes){
+		ParsedMessage msg = doRequest(XmlCreator.createSetTimeZone(mBT, adapterID, offsetInMinutes));
 
 		if (msg.getState() == State.TRUE)
 			return true;

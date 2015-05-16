@@ -621,9 +621,15 @@ public class DemoNetwork implements INetwork {
 	}
 
 	@Override
-	public boolean setTimeZone(String adapterId, int differenceToGMT) {
-		// TODO Auto-generated method stub
-		return false;
+	public boolean setTimeZone(String adapterId, int offsetInMinutes) {
+		Adapter adapter = mAdapters.getObject(adapterId);
+
+		if (adapter == null) {
+			return false;
+		}
+
+		adapter.setUtcOffset(offsetInMinutes);
+		return true;
 	}
 
 	@Override
