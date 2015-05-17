@@ -268,6 +268,9 @@ final public class Utils {
 	public static int getNetworConnectionkType(Context context){
 		ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
 		NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+		if(activeNetworkInfo == null || !activeNetworkInfo.isConnected()){
+			return -1; // the same as ConnectivityManager.TYPE_NONE which can't be used;
+		}
 		return activeNetworkInfo.getType();
 	}
 

@@ -243,13 +243,13 @@ public abstract class WidgetData {
 	 */
 	public abstract boolean handleUpdateData();
 
-	public void handleUpdateOk(){
-		Log.v(TAG, String.format("handleUpdateOk(%d)", mWidgetId));
+	public void handleSetNotCached(){
+		Log.v(TAG, String.format("handleSetNotCached(%d)", mWidgetId));
 		mIsCached = false;
 	}
 
-	public void handleUpdateFail(){
-		Log.v(TAG, String.format("handleFailedUpdate(%d)", mWidgetId));
+	public void handleSetCached(){
+		Log.v(TAG, String.format("handleSetCached(%d)", mWidgetId));
 		mIsCached = true;
 	}
 
