@@ -8,15 +8,21 @@ import com.rehivetech.beeeon.base.BaseApplicationActivity;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class CallbackTaskManager {
+
+	private static final String TAG = CallbackTaskManager.class.getSimpleName();
 
 	/**
 	 * Holder for running tasks that we need to stop when activity is being stopped.
 	 */
-	private List<CallbackTask> mTasks = new ArrayList<>();
+	private final List<CallbackTask> mTasks = new ArrayList<>();
 
 	private final BaseApplicationActivity mActivity;
+
+	private Timer mTimer;
 
 	public CallbackTaskManager(@NonNull BaseApplicationActivity activity) {
 		mActivity = activity;
@@ -32,6 +38,13 @@ public class CallbackTaskManager {
 		while (iterator.hasNext()) {
 			iterator.next().cancel(true);
 			iterator.remove();
+		}
+
+		// Cancel timer and thus its scheduled tasks
+		if (mTimer != null) {
+			mTimer.cancel();
+			mTimer.purge();
+			mTimer = null;
 		}
 
 		// Hide progressbar when cancelling tasks
@@ -75,14 +88,33 @@ public class CallbackTaskManager {
 	/**
 	 * Plan to execute this task periodically. It will be automatically stopped at
 	 *
-	 * @param task
-	 * @param param
+	 * @param taskFactory
 	 * @param id
 	 * @param everySecs
-	 * @param <T>
 	 */
-	<T> void executeTaskEvery(CallbackTask<T> task, T param, String id, int everySecs) {
-		// FIXME: implement this
+	public <T> void executeTaskEvery(final CallbackTaskFactory taskFactory, final String id, final int everySecs) {
+		if (mTimer == null) {
+			mTimer = new Timer();
+		}
+
+		mTimer.scheduleAtFixedRate(new TimerTask() {
+			@Override
+			public void run() {
+				mActivity.runOnUiThread(new Runnable() {
+					@Override
+					public void run() {
+						CallbackTask task = taskFactory.createTask();
+						Object param = taskFactory.createParam();
+
+						if (param == null) {
+							executeTask(task);
+						} else {
+							executeTask(task, param);
+						}
+					}
+				});
+			}
+		}, 0, everySecs * 1000);
 	}
 
 	/**
