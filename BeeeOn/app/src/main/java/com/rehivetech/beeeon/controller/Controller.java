@@ -2,6 +2,7 @@ package com.rehivetech.beeeon.controller;
 
 import android.app.NotificationManager;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 
@@ -330,6 +331,9 @@ public final class Controller {
 		Log.i(TAG, "Geofence: Starting registering Geofence");
 		getGeofenceModel().registerAllUserGeofence(userId);
 
+		// send logout broadcast so widget can set cached
+		mContext.sendBroadcast(new Intent(Constants.BROADCAST_USER_LOGIN));
+
 		return true;
 	}
 
@@ -376,6 +380,9 @@ public final class Controller {
 		Persistence.saveLastDemoMode(mContext, null);
 		mPersistence.saveLastAuthProvider(null);
 		mPersistence.saveLastUserId(null);
+
+		// send logout broadcast so widget can set cached
+		mContext.sendBroadcast(new Intent(Constants.BROADCAST_USER_LOGOUT));
 	}
 
 	/**

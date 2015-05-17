@@ -2,24 +2,17 @@ package com.rehivetech.beeeon.widget.configuration;
 
 
 import android.os.Bundle;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.SeekBar;
 import android.widget.Spinner;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.arrayadapter.LocationArrayAdapter;
-import com.rehivetech.beeeon.asynctask.ReloadAdapterDataTask;
 import com.rehivetech.beeeon.household.adapter.Adapter;
-import com.rehivetech.beeeon.household.device.RefreshInterval;
 import com.rehivetech.beeeon.household.location.Location;
 import com.rehivetech.beeeon.util.Utils;
 import com.rehivetech.beeeon.widget.data.WidgetLocationData;
 import com.rehivetech.beeeon.widget.persistence.WidgetLocationPersistence;
-import com.rehivetech.beeeon.widget.service.WidgetService;
 
 /**
  * @author mlyko
@@ -100,7 +93,7 @@ public class WidgetLocationFragment extends WidgetConfigurationFragment {
 		mWidgetLocation.configure(location, adapter);
 
 		//sets widgetdata
-		mWidgetData.configure(mActivity.isAppWidgetEditing(), getRefreshSeconds(mWidgetUpdateSeekBar.getProgress()), adapter);
+		mWidgetData.configure(mActivity.isAppWidgetEditing(), getRefreshSeconds(mWidgetUpdateSeekBar.getProgress()), false, adapter);
 		return true;
 	}
 }

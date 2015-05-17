@@ -277,7 +277,7 @@ public class WidgetClockFragment extends WidgetConfigurationFragment implements 
 		}
 
 		// setup widget
-		mWidgetData.configure(mActivity.isAppWidgetEditing(), getRefreshSeconds(mWidgetUpdateSeekBar.getProgress()), adapter);
+		mWidgetData.configure(mActivity.isAppWidgetEditing(), getRefreshSeconds(mWidgetUpdateSeekBar.getProgress()), false, adapter);
 		return true;
 	}
 }

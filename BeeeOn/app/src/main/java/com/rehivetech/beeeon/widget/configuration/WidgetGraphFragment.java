@@ -123,7 +123,11 @@ public class WidgetGraphFragment extends WidgetConfigurationFragment {
 		mWidgetDevice.configure(device, adapter);
 
 		//sets widgetdata
-		mWidgetData.configure(mActivity.isAppWidgetEditing(), mWidgetRefreshInterval.getInterval(), adapter);
+		mWidgetData.configure(
+				mActivity.isAppWidgetEditing(),
+				mWidgetRefreshInterval.getInterval(),
+				mWidgetUpdateWiFiCheckBox.isChecked(),
+				adapter);
 		return true;
 	}
 }

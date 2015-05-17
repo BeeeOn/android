@@ -91,4 +91,41 @@
 		android:layout_marginBottom="8dp"
 		/>
 
+	<RelativeLayout
+		android:id="@+id/widget_config_wifi_wrapper"
+		android:clickable="true"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_marginRight="16dp"
+		android:layout_marginEnd="16dp"
+		>
+
+		<TextView
+			style="@style/LinearRow.Item.OneLine"
+			android:text="@string/update_over_wifi_only"
+			android:layout_alignParentStart="true"
+			android:layout_alignParentLeft="true"
+			android:layout_toLeftOf="@+id/widget_config_only_wifi"
+			android:layout_toStartOf="@+id/widget_config_only_wifi"
+			/>
+
+		<CheckBox
+			android:id="@+id/widget_config_only_wifi"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_centerVertical="true"
+			android:layout_alignParentRight="true"
+			android:layout_alignParentEnd="true"
+			/>
+	</RelativeLayout>
+
+	<!-- separator -->
+	<ImageView
+		android:layout_width="match_parent"
+		android:layout_height="1px"
+		android:src="@color/beeeon_separator"
+		android:layout_marginTop="8dp"
+		android:layout_marginBottom="8dp"
+		/>
+
 </LinearLayout>

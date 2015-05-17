@@ -95,16 +95,17 @@ public class WidgetDeviceData extends WidgetData {
 
         // -------------------- render layout
         // updates all inside devices
-        boolean isFirst = true;
+        boolean isOnlyOne = true;
         for(WidgetDevicePersistence dev : widgetDevices){
             // detail activity
             mBuilder.setOnClickListener(R.id.icon, startDetailActivityPendingIntent(mContext, mWidgetId + dev.getOffset(), widgetAdapterId, dev.getId()));
             mBuilder.setOnClickListener(R.id.name, startDetailActivityPendingIntent(mContext, mWidgetId + dev.getOffset(), widgetAdapterId, dev.getId()));
 
-            if(isFirst){
+            // when only 1 device is in the widget - we assume that we need icon and name
+            if(isOnlyOne){
                 mBuilder.setImage(R.id.icon, dev.icon == 0 ? R.drawable.dev_unknown : dev.icon);
                 mBuilder.setTextViewText(R.id.name, dev.getName());
-                isFirst = false;
+                isOnlyOne = false;
             }
 
             // render view based on if is cached information

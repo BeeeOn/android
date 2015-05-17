@@ -9,6 +9,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.CheckBox;
+import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -55,6 +57,8 @@ public abstract class WidgetConfigurationFragment extends Fragment {
 	protected Adapter mActiveAdapter;
 	protected boolean mAdapterNeedsToReload;
 	protected Spinner mAdapterSpinner;
+	protected RelativeLayout mWidgetWifiLayoutWrapper;
+	protected CheckBox mWidgetUpdateWiFiCheckBox;
 
 	// if seekbar should have fewer intervals
 	private RefreshInterval mRefreshIntervalMin = WidgetService.UPDATE_INTERVAL_MIN;
@@ -113,6 +117,18 @@ public abstract class WidgetConfigurationFragment extends Fragment {
 
 			}
 		});
+
+		mWidgetWifiLayoutWrapper = (RelativeLayout) mActivity.findViewById(R.id.widget_config_wifi_wrapper);
+		mWidgetUpdateWiFiCheckBox = (CheckBox) mActivity.findViewById(R.id.widget_config_only_wifi);
+
+		if(mWidgetWifiLayoutWrapper != null && mWidgetUpdateWiFiCheckBox != null){
+			mWidgetWifiLayoutWrapper.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					mWidgetUpdateWiFiCheckBox.setChecked(!mWidgetUpdateWiFiCheckBox.isChecked());
+				}
+			});
+		}
 	}
 
 	/**
@@ -137,8 +153,7 @@ public abstract class WidgetConfigurationFragment extends Fragment {
 							BaseApplicationActivity.redirectToLogin(mActivity);
 							Toast.makeText(mActivity, e.getTranslatedErrorMessage(mActivity), Toast.LENGTH_LONG).show();
 							return;
-						}
-						else{
+						} else {
 							Toast.makeText(mActivity, e.getTranslatedErrorMessage(mActivity), Toast.LENGTH_LONG).show();
 							finishConfiguration();
 							return;
@@ -204,6 +219,11 @@ public abstract class WidgetConfigurationFragment extends Fragment {
 		}
 		else {
 			mAdapterSpinner.setSelection(selectedAdapterIndex);
+		}
+
+		// we have to check it cause not every widget settings have it
+		if(mWidgetUpdateWiFiCheckBox != null){
+			mWidgetUpdateWiFiCheckBox.setChecked(mGeneralWidgetdata.widgetWifiOnly);
 		}
 	}
 

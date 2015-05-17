@@ -11,7 +11,6 @@ import android.widget.RemoteViews;
 
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.util.Compatibility;
-import com.rehivetech.beeeon.util.Log;
 
 /**
  * Created by Tomáš on 25. 4. 2015.
@@ -91,7 +90,6 @@ public class ViewsBuilder{
 	}
 
 	public void setImage(int viewId, Bitmap bitmap){
-		Log.v(TAG, "Bitmap size " + String.valueOf(Compatibility.bitmapGetByteCount(bitmap)) + " bytes");
 		mRemoteViews.setImageViewBitmap(viewId, bitmap);
 	}
 

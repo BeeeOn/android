@@ -4,18 +4,15 @@ package com.rehivetech.beeeon.widget.configuration;
 import android.os.Bundle;
 import android.widget.SeekBar;
 import android.widget.Spinner;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.arrayadapter.DeviceArrayAdapter;
 import com.rehivetech.beeeon.household.adapter.Adapter;
 import com.rehivetech.beeeon.household.device.Device;
-import com.rehivetech.beeeon.household.device.RefreshInterval;
 import com.rehivetech.beeeon.util.Utils;
 import com.rehivetech.beeeon.widget.data.WidgetDeviceData;
 import com.rehivetech.beeeon.widget.persistence.WidgetDevicePersistence;
-import com.rehivetech.beeeon.widget.service.WidgetService;
 
 /**
  * @author mlyko
@@ -94,7 +91,11 @@ public class WidgetDeviceFragment extends WidgetConfigurationFragment {
 
 		mWidgetDevice.configure(device, adapter);
 		//sets widgetdata
-		mWidgetData.configure(mActivity.isAppWidgetEditing(), getRefreshSeconds(mWidgetUpdateSeekBar.getProgress()), adapter);
+		mWidgetData.configure(
+				mActivity.isAppWidgetEditing(),
+				getRefreshSeconds(mWidgetUpdateSeekBar.getProgress()),
+				mWidgetUpdateWiFiCheckBox.isChecked(),
+				adapter);
 
 		return true;
 	}
