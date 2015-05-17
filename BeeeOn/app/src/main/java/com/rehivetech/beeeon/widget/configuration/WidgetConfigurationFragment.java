@@ -1,6 +1,7 @@
 package com.rehivetech.beeeon.widget.configuration;
 
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -19,7 +20,6 @@ import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.asynctask.CallbackTask;
 import com.rehivetech.beeeon.asynctask.ReloadAdapterDataTask;
 import com.rehivetech.beeeon.base.BaseApplicationActivity;
-import com.rehivetech.beeeon.base.BaseApplicationFragment;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.exception.AppException;
 import com.rehivetech.beeeon.exception.ErrorCode;
@@ -40,7 +40,7 @@ import java.util.List;
 /**
  * @author mlyko
  */
-public abstract class WidgetConfigurationFragment extends BaseApplicationFragment {
+public abstract class WidgetConfigurationFragment extends Fragment {
 	private static final String TAG = WidgetConfigurationFragment.class.getSimpleName();
 
 	protected List<Device> mDevices = new ArrayList<Device>();
@@ -51,6 +51,7 @@ public abstract class WidgetConfigurationFragment extends BaseApplicationFragmen
 	protected Controller mController;
 
 	protected WidgetData mGeneralWidgetdata;
+	protected ReloadAdapterDataTask mReloadTask;
 
 	protected List<Adapter> mAdapters;
 	protected Adapter mActiveAdapter;
@@ -139,20 +140,21 @@ public abstract class WidgetConfigurationFragment extends BaseApplicationFragmen
 		mController = Controller.getInstance(mActivity);
 
 		// reloads all gateways and actual one
-		final ReloadAdapterDataTask reloadAdapterDataTask = new ReloadAdapterDataTask(mActivity, false, ReloadAdapterDataTask.ReloadWhat.ADAPTERS_AND_ACTIVE_ADAPTER);
-		reloadAdapterDataTask.setNotifyErrors(false);
-		reloadAdapterDataTask.setListener(new CallbackTask.CallbackTaskListener() {
+		mReloadTask = new ReloadAdapterDataTask(mActivity, false, ReloadAdapterDataTask.ReloadWhat.ADAPTERS_AND_ACTIVE_ADAPTER);
+		mReloadTask.setNotifyErrors(false);
+		mReloadTask.setListener(new CallbackTask.CallbackTaskListener() {
 			@Override
 			public void onExecute(boolean success) {
 				if (!success) {
-					AppException e = reloadAdapterDataTask.getException();
+					AppException e = mReloadTask.getException();
 					ErrorCode errCode = e != null ? e.getErrorCode() : null;
 					if (errCode != null) {
 						if (errCode instanceof NetworkError && errCode == NetworkError.SRV_BAD_BT) {
 							BaseApplicationActivity.redirectToLogin(mActivity);
 							Toast.makeText(mActivity, e.getTranslatedErrorMessage(mActivity), Toast.LENGTH_LONG).show();
 							return;
-						} else {
+						}
+						else{
 							Toast.makeText(mActivity, e.getTranslatedErrorMessage(mActivity), Toast.LENGTH_LONG).show();
 							finishConfiguration();
 							return;
@@ -170,9 +172,7 @@ public abstract class WidgetConfigurationFragment extends BaseApplicationFragmen
 		});
 
 		if(mActivity.getDialog() != null) mActivity.getDialog().show();
-
-		// Execute and remember task so it can be stopped automatically
-		callbackTaskManager.executeTask(reloadAdapterDataTask);
+		mReloadTask.execute();
 	}
 
 	@Override
@@ -189,6 +189,8 @@ public abstract class WidgetConfigurationFragment extends BaseApplicationFragmen
 		super.onDestroy();
 
 		if(mActivity.getDialog() != null) mActivity.getDialog().dismiss();
+
+		if(mReloadTask != null) mReloadTask.cancel(true);
 
 		//finishConfiguration();
 	}
@@ -261,8 +263,8 @@ public abstract class WidgetConfigurationFragment extends BaseApplicationFragmen
 			return;
 		}
 
-		ReloadAdapterDataTask reloadAdapterDataTask = new ReloadAdapterDataTask(mActivity, false, whatToReload);
-		reloadAdapterDataTask.setListener(new CallbackTask.CallbackTaskListener() {
+		mReloadTask = new ReloadAdapterDataTask(mActivity, false, whatToReload);
+		mReloadTask.setListener(new CallbackTask.CallbackTaskListener() {
 			@Override
 			public void onExecute(boolean success) {
 				selectAdapter(adapterId);
@@ -273,9 +275,7 @@ public abstract class WidgetConfigurationFragment extends BaseApplicationFragmen
 		});
 
 		mActivity.getDialog().show();
-
-		// Execute and remember task so it can be stopped automatically
-		callbackTaskManager.executeTask(reloadAdapterDataTask, adapterId);
+		mReloadTask.execute(adapterId);
 	}
 
 	/**
