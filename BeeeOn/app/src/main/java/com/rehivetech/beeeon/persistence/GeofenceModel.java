@@ -13,6 +13,7 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.LocationServices;
+import com.rehivetech.beeeon.exception.AppException;
 import com.rehivetech.beeeon.geofence.GeofenceHelper;
 import com.rehivetech.beeeon.geofence.SimpleGeofence;
 import com.rehivetech.beeeon.geofence.TransitionType;
@@ -266,7 +267,11 @@ public class GeofenceModel implements GoogleApiClient.ConnectionCallbacks, Googl
 	 */
 	public void setPassBorder(String geofenceId, TransitionType type) {
 		Log.i(TAG, "Passing geofence and seding to server");
-		mNetwork.passBorder(geofenceId, type.getName());
+		try {
+			mNetwork.passBorder(geofenceId, type.getName());
+		} catch (AppException e) {
+			Log.e(TAG, "PassBorder network error: " + e.getLocalizedMessage());
+		}
 	}
 
 	private void unregisterGeofences(String userId) {
