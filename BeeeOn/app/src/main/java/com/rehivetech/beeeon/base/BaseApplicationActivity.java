@@ -35,8 +35,6 @@ public abstract class BaseApplicationActivity extends BaseActivity implements IN
 		super.onCreate(savedInstanceState);
 
 		callbackTaskManager = new CallbackTaskManager(this);
-
-		mProgressBar = findViewById(R.id.toolbar_progress);
 	}
 
 	@Override
@@ -61,6 +59,8 @@ public abstract class BaseApplicationActivity extends BaseActivity implements IN
 
 		isPaused = false;
 		onAppResume();
+
+		mProgressBar = findViewById(R.id.toolbar_progress);
 	}
 
 	@Override

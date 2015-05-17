@@ -89,7 +89,7 @@ public class CallbackTaskManager {
 	 * Prepare own listeners (and preserve original ones) for showing/hiding progress bar of activity.
 	 * @param task
 	 */
-	private void prepareTaskListeners(CallbackTask task) {
+	private void prepareTaskListeners(final CallbackTask task) {
 		final CallbackTask.CallbackTaskPreExecuteListener origPreListener = task.getPreExecuteListener();
 		task.setPreExecuteListener(new CallbackTask.CallbackTaskPreExecuteListener() {
 			@Override
@@ -113,8 +113,19 @@ public class CallbackTaskManager {
 					origListener.onExecute(success);
 				}
 
-				// Hide progress bar in activity
-				mActivity.setBeeeOnProgressBarVisibility(false);
+				// Remove task from remembered tasks
+				Iterator<CallbackTask> iterator = mTasks.iterator();
+				while (iterator.hasNext()) {
+					CallbackTask otherTask = iterator.next();
+					if (otherTask == task) {
+						iterator.remove();
+					}
+				}
+
+				// Hide progress bar in activity (only if it's last task)
+				if (mTasks.size() == 0) {
+					mActivity.setBeeeOnProgressBarVisibility(false);
+				}
 			}
 		});
 	}

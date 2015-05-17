@@ -381,7 +381,6 @@ public class SensorListFragment extends BaseApplicationFragment {
 				@Override
 				public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                     Device device = mSensorAdapter.getDevice(position);
-					mActivity.setBeeeOnProgressBarVisibility(true);
 					Bundle bundle = new Bundle();
 					bundle.putString(SensorDetailActivity.EXTRA_ADAPTER_ID, device.getFacility().getAdapterId());
 					bundle.putString(SensorDetailActivity.EXTRA_DEVICE_ID, device.getId());

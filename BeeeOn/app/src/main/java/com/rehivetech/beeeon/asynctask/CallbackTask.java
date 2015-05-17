@@ -55,11 +55,16 @@ public abstract class CallbackTask<Params> extends AsyncTask<Params, Void, Boole
 	}
 
 	@Override
-	protected final Boolean doInBackground(Params... params) {
+	protected void onPreExecute() {
+		super.onPreExecute();
+
 		if (mPreExecuteListener != null) {
 			mPreExecuteListener.onPreExecute();
 		}
+	}
 
+	@Override
+	protected final Boolean doInBackground(Params... params) {
 		if (params.length > 1) {
 			Log.w(TAG, "Given %d parameters, but CallbackTask can use only one.");
 		}

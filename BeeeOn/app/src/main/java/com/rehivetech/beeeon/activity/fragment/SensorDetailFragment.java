@@ -376,9 +376,6 @@ public class SensorDetailFragment extends BaseApplicationFragment implements ILi
 
 		// Visible all elements
 		visibleAllElements();
-
-		// Disable progress bar
-		mActivity.setBeeeOnProgressBarVisibility(false);
 	}
 
 	private void visibleAllElements() {
