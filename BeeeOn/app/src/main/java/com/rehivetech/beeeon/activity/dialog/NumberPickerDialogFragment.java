@@ -60,7 +60,7 @@ public class NumberPickerDialogFragment  extends SimpleDialogFragment{
 		// UserSettings can be null when user is not logged in!
 		SharedPreferences prefs = Controller.getInstance(mActivity).getUserSettings();
 
-		UnitsHelper mUnitsHelper = (prefs == null) ? null : new UnitsHelper(prefs, mActivity.getApplicationContext());
+		UnitsHelper mUnitsHelper = (prefs == null) ? null : new UnitsHelper(prefs, mActivity);
 		unitView.setText(mUnitsHelper.getStringUnit(mDevice.getValue()));
 
 		builder.setView(view);

@@ -198,7 +198,7 @@ public class SetupSensorActivity extends BaseApplicationActivity {
 	}
 
 	private void doInitializeFacilityTask(final InitializeFacilityPair pair) {
-		InitializeFacilityTask initializeFacilityTask = new InitializeFacilityTask(mActivity.getApplicationContext());
+		InitializeFacilityTask initializeFacilityTask = new InitializeFacilityTask(this);
 
 		initializeFacilityTask.setListener(new CallbackTaskListener() {
 

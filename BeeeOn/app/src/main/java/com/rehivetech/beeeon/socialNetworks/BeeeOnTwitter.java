@@ -69,7 +69,7 @@ public class BeeeOnTwitter  extends Observable implements BeeeOnSocialNetwork{
 			@Override
 			public void success(Result<TwitterSession> twitterSessionResult) {
 				parseResult(twitterSessionResult);
-				new TwLoginAchievement(activity.getApplicationContext());
+				new TwLoginAchievement(activity);
 				setChanged();
 				notifyObservers("login");
 			}

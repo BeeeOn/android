@@ -436,7 +436,7 @@ public class SensorListFragment extends BaseApplicationFragment {
 	}
 
     private void doReloadFacilitiesTask(String adapterId, boolean forceRefresh) {
-        ReloadAdapterDataTask reloadFacilitiesTask = new ReloadAdapterDataTask(mActivity.getApplicationContext(), forceRefresh, ReloadAdapterDataTask.ReloadWhat.FACILITIES);
+        ReloadAdapterDataTask reloadFacilitiesTask = new ReloadAdapterDataTask(mActivity, forceRefresh, ReloadAdapterDataTask.ReloadWhat.FACILITIES);
 
 		reloadFacilitiesTask.setListener(new CallbackTaskListener() {
 
@@ -455,7 +455,7 @@ public class SensorListFragment extends BaseApplicationFragment {
     }
 
 	private void doFullReloadTask(boolean forceRefresh) {
-		ReloadAdapterDataTask fullReloadTask = new ReloadAdapterDataTask(mActivity.getApplicationContext(), forceRefresh, ReloadAdapterDataTask.ReloadWhat.ADAPTERS_AND_ACTIVE_ADAPTER);
+		ReloadAdapterDataTask fullReloadTask = new ReloadAdapterDataTask(mActivity, forceRefresh, ReloadAdapterDataTask.ReloadWhat.ADAPTERS_AND_ACTIVE_ADAPTER);
 
 		fullReloadTask.setListener(new CallbackTaskListener() {
 			@Override
@@ -472,7 +472,7 @@ public class SensorListFragment extends BaseApplicationFragment {
 	}
 
     private void doRemoveFacilityTask(Facility facility) {
-        RemoveFacilityTask removeFacilityTask = new RemoveFacilityTask(mActivity.getApplicationContext());
+        RemoveFacilityTask removeFacilityTask = new RemoveFacilityTask(mActivity);
         DelFacilityPair pair = new DelFacilityPair(facility.getId(), facility.getAdapterId());
 
         removeFacilityTask.setListener(new CallbackTaskListener() {

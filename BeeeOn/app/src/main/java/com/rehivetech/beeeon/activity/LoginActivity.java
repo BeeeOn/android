@@ -251,7 +251,7 @@ public class LoginActivity extends BaseActivity {
 
 	protected void setDemoMode(boolean demoMode) {
 		// After changing demo mode must be controller reloaded
-		Controller.setDemoMode(getApplicationContext(), demoMode);
+		Controller.setDemoMode(this, demoMode);
 		mController = Controller.getInstance(this);
 	}
 
@@ -352,7 +352,7 @@ public class LoginActivity extends BaseActivity {
 					}
 
 					e.printStackTrace();
-					errMessage = e.getTranslatedErrorMessage(getApplicationContext());
+					errMessage = e.getTranslatedErrorMessage(LoginActivity.this);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -399,7 +399,7 @@ public class LoginActivity extends BaseActivity {
 					// TODO: handle some known exceptions
 
 					e.printStackTrace();
-					errMessage = e.getTranslatedErrorMessage(getApplicationContext());
+					errMessage = e.getTranslatedErrorMessage(LoginActivity.this);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}

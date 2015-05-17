@@ -39,7 +39,7 @@ public abstract class Achievement  implements Observer {
 	}
 
 	protected Achievement(String achievement_id, Context context, boolean sendUpdate) {
-		mContext = context;
+		mContext = context.getApplicationContext();
 		mAchievementId = achievement_id;
 		mSendUpdate = sendUpdate;
 

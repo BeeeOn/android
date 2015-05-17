@@ -181,7 +181,7 @@ public class AdapterUsersActivity extends BaseApplicationActivity {
 
 
     private void doRemoveUserTask(User user) {
-        RemoveUserTask removeUserTask = new RemoveUserTask(getApplicationContext());
+        RemoveUserTask removeUserTask = new RemoveUserTask(this);
         UserPair pair = new UserPair(user, mAdapter.getId());
 
         removeUserTask.setListener(new CallbackTaskListener() {
@@ -200,7 +200,7 @@ public class AdapterUsersActivity extends BaseApplicationActivity {
     }
 
     private void doEditUserTask(User user) {
-        EditUserTask editUserTask = new EditUserTask(getApplicationContext());
+        EditUserTask editUserTask = new EditUserTask(this);
         UserPair pair = new UserPair(user, mAdapter.getId());
 
         editUserTask.setListener(new CallbackTaskListener() {

@@ -44,7 +44,7 @@ public class BeeeOnFacebook extends Observable implements BeeeOnSocialNetwork{
 	private String mAccessToken;
 
 	private BeeeOnFacebook(Context context) {
-		mContext = context;
+		mContext = context.getApplicationContext();
 		SharedPreferences prefs = Controller.getInstance(mContext).getUserSettings();
 		mAccessToken = prefs.getString(Constants.PERSISTENCE_PREF_LOGIN_FACEBOOK, null);
 	}

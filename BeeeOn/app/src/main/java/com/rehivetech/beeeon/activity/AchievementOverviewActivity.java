@@ -82,7 +82,7 @@ public class AchievementOverviewActivity extends BaseApplicationActivity impleme
 			getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 		}
 
-		mAchievementListHolder = AchievementList.getInstance(getApplicationContext());
+		mAchievementListHolder = AchievementList.getInstance(this);
 		if(mAchievementListHolder.isDownloaded())
 			setListAdapter();
 		else
@@ -99,7 +99,7 @@ public class AchievementOverviewActivity extends BaseApplicationActivity impleme
 	private void setListAdapter() {
 		ListView achievementList = (ListView) findViewById(R.id.achievement_list);
 
-		mAchievementListAdapter = new AchievementListAdapter(this.getLayoutInflater(), mCategoryId, this, mAchievementListHolder.getAllAchievements(), getApplicationContext());
+		mAchievementListAdapter = new AchievementListAdapter(this.getLayoutInflater(), mCategoryId, this, mAchievementListHolder.getAllAchievements(), this);
 		achievementList.setAdapter(mAchievementListAdapter);
 		achievementList.setSelector(android.R.color.transparent);
 	}
@@ -148,12 +148,12 @@ public class AchievementOverviewActivity extends BaseApplicationActivity impleme
 		// if user has twitter native app - can control if sharing was successful
 		if(requestCode == 66586 && // TODO Fix MAGIC!!
 			resultCode == RESULT_OK) {
-			new GeneralAchievement(Constants.ACHIEVEMENT_TWITTER_SHARE, getApplicationContext());
+			new GeneralAchievement(Constants.ACHIEVEMENT_TWITTER_SHARE, this);
 		}
 		// Sharing with Google Plus
 		if(requestCode == 66587 && // TODO Fix MAGIC!!
 				resultCode == RESULT_OK) {
-			new GeneralAchievement(Constants.ACHIEVEMENT_GPLUS_SHARE, getApplicationContext());
+			new GeneralAchievement(Constants.ACHIEVEMENT_GPLUS_SHARE, this);
 		}
 		mCallbackManager.onActivityResult(requestCode, resultCode, data);
 		super.onActivityResult(requestCode, resultCode, data);

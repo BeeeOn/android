@@ -26,7 +26,7 @@ public class GcmRegisterRunnable implements Runnable {
 	 * @param maxAttempts Maximum attempts to get GCM ID, null for infinity
 	 */
 	public GcmRegisterRunnable(Context context, Integer maxAttempts) {
-		this.mContext = context;
+		this.mContext = context.getApplicationContext();
 		this.mMaxAttempts = maxAttempts;
 		this.mController = Controller.getInstance(context);
 		this.mOldGcmId = mController.getGcmModel().getGCMRegistrationId();

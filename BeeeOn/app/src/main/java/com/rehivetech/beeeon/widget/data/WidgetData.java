@@ -82,7 +82,7 @@ public abstract class WidgetData {
 	public WidgetData(final int widgetId, Context context, UnitsHelper unitsHelper, TimeHelper timeHelper){
 		mWidgetId = widgetId;
 		mContext = context.getApplicationContext();
-		mWidgetManager = AppWidgetManager.getInstance(mContext.getApplicationContext());
+		mWidgetManager = AppWidgetManager.getInstance(mContext);
 		mWidgetProviderInfo = mWidgetManager.getAppWidgetInfo(mWidgetId);
 		mController = Controller.getInstance(mContext);
 		mPrefs = getSettings(mContext, mWidgetId);

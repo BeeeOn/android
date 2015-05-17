@@ -176,7 +176,7 @@ public class AddAdapterActivity extends BaseApplicationActivity {
 	}
 	
 	public void doRegisterAdapterTask(RegisterAdapterPair pair) {
-		RegisterAdapterTask registerAdapterTask = new RegisterAdapterTask(this.getApplicationContext());
+		RegisterAdapterTask registerAdapterTask = new RegisterAdapterTask(this);
 
 		registerAdapterTask.setListener(new CallbackTaskListener() {
 

@@ -154,11 +154,11 @@ public class ProfileDetailActivity extends BaseApplicationActivity implements Ob
 		mFacebookCallbackManager = CallbackManager.Factory.create();
 		LoginManager.getInstance().registerCallback(
 				mFacebookCallbackManager,
-				BeeeOnFacebook.getInstance(getApplicationContext()).getListener());
+				BeeeOnFacebook.getInstance(this).getListener());
 		VKSdk.initialize(
-				BeeeOnVKontakte.getInstance(getApplicationContext()).getListener(),
+				BeeeOnVKontakte.getInstance(this).getListener(),
 				getString(R.string.vkontakte_app_id),
-				VKAccessToken.tokenFromSharedPreferences(getApplicationContext(), Constants.PERSISTENCE_PREF_LOGIN_VKONTAKTE)
+				VKAccessToken.tokenFromSharedPreferences(this, Constants.PERSISTENCE_PREF_LOGIN_VKONTAKTE)
 		);
 		mTwitterCallbackManager = new TwitterAuthClient();
 
