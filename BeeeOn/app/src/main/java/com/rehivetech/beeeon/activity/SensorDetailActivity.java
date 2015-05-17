@@ -98,10 +98,6 @@ public class SensorDetailActivity extends BaseApplicationActivity {
 		}
 	}
 
-	public void setBeeeOnProgressBarVisibility(boolean b) {
-		findViewById(R.id.toolbar_progress).setVisibility((b) ? View.VISIBLE : View.INVISIBLE);
-	}
-
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);

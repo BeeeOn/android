@@ -1,5 +1,6 @@
 package com.rehivetech.beeeon.activity.fragment;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
@@ -67,7 +68,7 @@ import java.util.Map.Entry;
 import java.util.SortedMap;
 import java.util.concurrent.TimeUnit;
 
-public class SensorDetailFragment extends BaseApplicationFragment implements IListDialogListener{
+public class SensorDetailFragment extends BaseApplicationFragment implements IListDialogListener {
 
 	private static final int REQUEST_BOILER_TYPE = 7894;
 	private static final int REQUEST_BOILER_MODE = 1236;
@@ -79,6 +80,8 @@ public class SensorDetailFragment extends BaseApplicationFragment implements ILi
 	public static final String ARG_SEL_PAGE = "selectedpage";
 	public static final String ARG_LOC_ID = "locationid";
 	public static final String ARG_ADAPTER_ID = "adapterid";
+
+	private SensorDetailActivity mActivity;
 
 	// GUI elements
 	private TextView mName;
@@ -93,8 +96,6 @@ public class SensorDetailFragment extends BaseApplicationFragment implements ILi
 	private GraphView mGraphView;
 	private TextView mBattery;
 	private TextView mSignal;
-
-	private SensorDetailActivity mActivity;
 
 	private Device mDevice;
 	private Adapter mAdapter;
@@ -127,7 +128,6 @@ public class SensorDetailFragment extends BaseApplicationFragment implements ILi
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		Log.d(TAG, "OnCreate - Here 1 " + mCurPageNumber);
-		mActivity = (SensorDetailActivity) getActivity();
 		mController = Controller.getInstance(mActivity);
 		mAdapter = mController.getAdaptersModel().getAdapter(mAdapterId);
 	}
@@ -150,7 +150,6 @@ public class SensorDetailFragment extends BaseApplicationFragment implements ILi
 			mSelPageNumber = savedInstanceState.getInt(ARG_SEL_PAGE);
 			mCurPageNumber = savedInstanceState.getInt(ARG_CUR_PAGE);
 			mAdapter = mController.getAdaptersModel().getAdapter(mAdapterId);
-			mActivity = (SensorDetailActivity) getActivity();
 		}
 		Log.d(TAG, "OnActivityCreated");
 		mDevice = mController.getFacilitiesModel().getDevice(mAdapterId, mDeviceID);
@@ -164,10 +163,10 @@ public class SensorDetailFragment extends BaseApplicationFragment implements ILi
 
 	@Override
 	public void onSaveInstanceState(Bundle savedInstanceState) {
-		savedInstanceState.putString(ARG_SEN_ID,mDeviceID);
+		savedInstanceState.putString(ARG_SEN_ID, mDeviceID);
 		savedInstanceState.putString(ARG_ADAPTER_ID,mAdapterId);
 		savedInstanceState.putString(ARG_LOC_ID,mLocationID);
-		savedInstanceState.putInt(ARG_CUR_PAGE,mCurPageNumber);
+		savedInstanceState.putInt(ARG_CUR_PAGE, mCurPageNumber);
 		savedInstanceState.putInt(ARG_SEL_PAGE,mSelPageNumber);
 		// Always call the superclass so it can save the view hierarchy state
 		super.onSaveInstanceState(savedInstanceState);
@@ -340,7 +339,7 @@ public class SensorDetailFragment extends BaseApplicationFragment implements ILi
 		// UserSettings can be null when user is not logged in!
 		SharedPreferences prefs = mController.getUserSettings();
 
-		mUnitsHelper = (prefs == null) ? null : new UnitsHelper(prefs, mActivity.getApplicationContext());
+		mUnitsHelper = (prefs == null) ? null : new UnitsHelper(prefs, mActivity);
 		mTimeHelper = (prefs == null) ? null : new TimeHelper(prefs);
 
 		// Set value of sensor
@@ -453,9 +452,7 @@ public class SensorDetailFragment extends BaseApplicationFragment implements ILi
 				if (i == MotionEvent.ACTION_DOWN) {
 					mActivity.setEnableSwipe(false);
 					mSwipeLayout.setEnabled(false);
-				}
-
-				else if (i == MotionEvent.ACTION_UP) {
+				} else if (i == MotionEvent.ACTION_UP) {
 					mActivity.setEnableSwipe(true);
 					mSwipeLayout.setEnabled(true);
 				}
@@ -465,7 +462,17 @@ public class SensorDetailFragment extends BaseApplicationFragment implements ILi
 
 	}
 
+	@Override
+	public void onAttach(Activity activity) {
+		super.onAttach(activity);
 
+		try {
+			mActivity = (SensorDetailActivity) activity;
+		} catch (ClassCastException e) {
+			throw new ClassCastException(activity.toString()
+					+ " must be subclass of SensorDetailActivity");
+		}
+	}
 
 	public void fillGraph(DeviceLog log) {
 		if (mGraphView == null) {
@@ -546,7 +553,7 @@ public class SensorDetailFragment extends BaseApplicationFragment implements ILi
 			return;
 		}
 
-		ActorActionTask actorActionTask = new ActorActionTask(mActivity.getApplicationContext());
+		ActorActionTask actorActionTask = new ActorActionTask(mActivity);
 		actorActionTask.setListener(new CallbackTaskListener() {
 
 			@Override
@@ -564,11 +571,10 @@ public class SensorDetailFragment extends BaseApplicationFragment implements ILi
 		});
 
 		// Execute and remember task so it can be stopped automatically
-		callbackTaskManager.executeTask(actorActionTask, device);
+		mActivity.callbackTaskManager.executeTask(actorActionTask, device);
 	}
 
 	protected void doReloadFacilitiesTask(final String adapterId, final boolean forceRefresh) {
-		//mActivity.setBeeeOnProgressBarVisibility(true);
 		ReloadAdapterDataTask reloadFacilitiesTask = new ReloadAdapterDataTask(mActivity, forceRefresh, ReloadAdapterDataTask.ReloadWhat.FACILITIES);
 
 		reloadFacilitiesTask.setListener(new CallbackTaskListener() {
@@ -595,7 +601,7 @@ public class SensorDetailFragment extends BaseApplicationFragment implements ILi
 		});
 
 		// Remember task so it can be stopped automatically
-		callbackTaskManager.executeTask(reloadFacilitiesTask, adapterId);
+		mActivity.callbackTaskManager.executeTask(reloadFacilitiesTask, adapterId);
 	}
 
 	protected void doLoadGraphData() {
@@ -620,25 +626,22 @@ public class SensorDetailFragment extends BaseApplicationFragment implements ILi
 		});
 
 		// Execute and remember task so it can be stopped automatically
-		callbackTaskManager.executeTask(getDeviceLogTask, pair);
+		mActivity.callbackTaskManager.executeTask(getDeviceLogTask, pair);
 	}
 
 	protected void doChangeStateDeviceTask(final Device device) {
-		mActivity.setBeeeOnProgressBarVisibility(true);
-
 		ActorActionTask changeStateDeviceTask = new ActorActionTask(mActivity);
 
 		changeStateDeviceTask.setListener(new CallbackTaskListener() {
 			@Override
 			public void onExecute(boolean success) {
-				mActivity.setBeeeOnProgressBarVisibility(false);
 				if (success)
 					mValue.setText(mUnitsHelper.getStringValueUnit(mDevice.getValue()));
 			}
 		});
 
 		// Execute and remember task so it can be stopped automatically
-		callbackTaskManager.executeTask(changeStateDeviceTask, device);
+		mActivity.callbackTaskManager.executeTask(changeStateDeviceTask, device);
 	}
 
 	@Override

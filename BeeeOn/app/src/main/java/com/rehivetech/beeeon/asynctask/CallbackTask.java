@@ -2,6 +2,8 @@ package com.rehivetech.beeeon.asynctask;
 
 import android.content.Context;
 import android.os.AsyncTask;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.widget.Toast;
 
 import com.rehivetech.beeeon.exception.AppException;
@@ -12,6 +14,7 @@ public abstract class CallbackTask<Params> extends AsyncTask<Params, Void, Boole
 	private static final String TAG = CallbackTask.class.getSimpleName();
 
 	private CallbackTaskListener mListener;
+	private CallbackTaskPreExecuteListener mPreExecuteListener;
 
 	protected final Context mContext;
 
@@ -19,13 +22,28 @@ public abstract class CallbackTask<Params> extends AsyncTask<Params, Void, Boole
 
 	private boolean mNotifyErrors = true; // TODO: keep it enabled by default?
 
-	public CallbackTask(Context context) {
-		mContext = context;
+	public CallbackTask(@NonNull Context context) {
+		mContext = context.getApplicationContext();
 	}
 
-	public final void setListener(CallbackTaskListener listener) {
+	public final void setListener(@Nullable CallbackTaskListener listener) {
 		mListener = listener;
 	}
+
+	@Nullable
+	public final CallbackTaskListener getListener() {
+		return mListener;
+	}
+
+	public final void setPreExecuteListener(@Nullable CallbackTaskPreExecuteListener listener) {
+		mPreExecuteListener = listener;
+	}
+
+	@Nullable
+	public final CallbackTaskPreExecuteListener getPreExecuteListener() {
+		return mPreExecuteListener;
+	}
+
 
 	@SuppressWarnings("unchecked")
 	public final void execute(Params param) {
@@ -38,6 +56,10 @@ public abstract class CallbackTask<Params> extends AsyncTask<Params, Void, Boole
 
 	@Override
 	protected final Boolean doInBackground(Params... params) {
+		if (mPreExecuteListener != null) {
+			mPreExecuteListener.onPreExecute();
+		}
+
 		if (params.length > 1) {
 			Log.w(TAG, "Given %d parameters, but CallbackTask can use only one.");
 		}
@@ -58,7 +80,9 @@ public abstract class CallbackTask<Params> extends AsyncTask<Params, Void, Boole
 
 	@Override
 	protected final void onPostExecute(Boolean success) {
-		mListener.onExecute(success);
+		if (mListener != null) {
+			mListener.onExecute(success);
+		}
 
 		if (mNotifyErrors && mException != null) {
 			Toast.makeText(mContext, mException.getTranslatedErrorMessage(mContext), Toast.LENGTH_LONG).show();
@@ -69,12 +93,25 @@ public abstract class CallbackTask<Params> extends AsyncTask<Params, Void, Boole
 		mNotifyErrors = notifyErrors;
 	}
 
+	@Nullable
 	public final AppException getException() {
 		return mException;
 	}
 
 	public interface CallbackTaskListener {
+		/**
+		 * This is executed on UI thread in onPostExecute method.
+		 *
+		 * @param success
+		 */
 		void onExecute(boolean success);
+	}
+
+	public interface CallbackTaskPreExecuteListener {
+		/**
+		 * This is executed on background thread in doInBackground method.
+		 */
+		void onPreExecute();
 	}
 
 }

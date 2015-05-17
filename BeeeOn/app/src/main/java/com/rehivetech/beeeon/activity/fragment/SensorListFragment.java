@@ -1,5 +1,6 @@
 package com.rehivetech.beeeon.activity.fragment;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
@@ -61,8 +62,8 @@ public class SensorListFragment extends BaseApplicationFragment {
 
 
 	private SwipeRefreshLayout mSwipeLayout;
-	private MainActivity mActivity;
 	private Controller mController;
+	private MainActivity mActivity;
 
 	private SenListAdapter mSensorAdapter;
 	private StickyListHeadersListView mSensorList;
@@ -91,15 +92,22 @@ public class SensorListFragment extends BaseApplicationFragment {
 	}
 
 	@Override
+	public void onAttach(Activity activity) {
+		super.onAttach(activity);
+
+		try {
+			mActivity = (MainActivity) activity;
+		} catch (ClassCastException e) {
+			throw new ClassCastException(activity.toString()
+					+ " must be subclass of MainActivity");
+		}
+	}
+
+	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		Log.d(TAG, "onCreate()");
 
-		if (!(getActivity() instanceof MainActivity)) {
-			throw new IllegalStateException("Activity holding SensorListFragment must be MainActivity");
-		}
-
-		mActivity = (MainActivity) getActivity();
 		mController = Controller.getInstance(mActivity);
 
 		if (savedInstanceState != null) {
@@ -253,7 +261,7 @@ public class SensorListFragment extends BaseApplicationFragment {
 				if(mFirstUseAddAdapter && !mController.isDemoMode()) {
 					mFirstUseAddAdapter = false;
 					mActivity.getMenu().closeMenu();
-					TutorialHelper.showAddAdapterTutorial(mActivity, mView);
+					TutorialHelper.showAddAdapterTutorial((MainActivity) mActivity, mView);
 					if (prefs != null) {
 						prefs.edit().putBoolean(Constants.TUTORIAL_ADD_ADAPTER_SHOWED, false).apply();
 					}
@@ -279,7 +287,7 @@ public class SensorListFragment extends BaseApplicationFragment {
 			if(mFirstUseAddSensor && !mController.isDemoMode()){
 				mFirstUseAddSensor = false;
 				mActivity.getMenu().closeMenu();
-				TutorialHelper.showAddSensorTutorial(mActivity, mView);
+				TutorialHelper.showAddSensorTutorial((MainActivity) mActivity, mView);
 				SharedPreferences prefs = mController.getUserSettings();
 				if (prefs != null) {
 					prefs.edit().putBoolean(Constants.TUTORIAL_ADD_SENSOR_SHOWED, false).apply();
@@ -388,7 +396,7 @@ public class SensorListFragment extends BaseApplicationFragment {
 					mSensorList.setOnItemLongClickListener(new OnItemLongClickListener() {
 						@Override
 						public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-							mMode =  ((ActionBarActivity) getActivity()).startSupportActionMode(new ActionModeEditSensors());
+							mMode =  mActivity.startSupportActionMode(new ActionModeEditSensors());
                             mSelectedItem = mSensorAdapter.getDevice(position);
                             mSelectedItemPos = position;
                             mSensorAdapter.getItem(mSelectedItemPos).setIsSelected();
@@ -428,10 +436,7 @@ public class SensorListFragment extends BaseApplicationFragment {
 	}
 
     private void doReloadFacilitiesTask(String adapterId, boolean forceRefresh) {
-        ReloadAdapterDataTask reloadFacilitiesTask = new ReloadAdapterDataTask(getActivity().getApplicationContext(), forceRefresh, ReloadAdapterDataTask.ReloadWhat.FACILITIES);
-
-		if(!mSwipeLayout.isRefreshing())
-			mActivity.setBeeeOnProgressBarVisibility(true);
+        ReloadAdapterDataTask reloadFacilitiesTask = new ReloadAdapterDataTask(mActivity.getApplicationContext(), forceRefresh, ReloadAdapterDataTask.ReloadWhat.FACILITIES);
 
 		reloadFacilitiesTask.setListener(new CallbackTaskListener() {
 
@@ -442,41 +447,33 @@ public class SensorListFragment extends BaseApplicationFragment {
 				Log.d(TAG, "Success -> refresh GUI");
 				mActivity.redraw();
 				mSwipeLayout.setRefreshing(false);
-				mActivity.setBeeeOnProgressBarVisibility(false);
 			}
 		});
 
 		// Execute and remember task so it can be stopped automatically
-		callbackTaskManager.executeTask(reloadFacilitiesTask, adapterId);
+		mActivity.callbackTaskManager.executeTask(reloadFacilitiesTask, adapterId);
     }
 
 	private void doFullReloadTask(boolean forceRefresh) {
-		ReloadAdapterDataTask fullReloadTask = new ReloadAdapterDataTask(getActivity().getApplicationContext(), forceRefresh, ReloadAdapterDataTask.ReloadWhat.ADAPTERS_AND_ACTIVE_ADAPTER);
-
-		if(!mSwipeLayout.isRefreshing())
-			mActivity.setBeeeOnProgressBarVisibility(true);
+		ReloadAdapterDataTask fullReloadTask = new ReloadAdapterDataTask(mActivity.getApplicationContext(), forceRefresh, ReloadAdapterDataTask.ReloadWhat.ADAPTERS_AND_ACTIVE_ADAPTER);
 
 		fullReloadTask.setListener(new CallbackTaskListener() {
 			@Override
 			public void onExecute(boolean success) {
 				if (!success)
 					return;
-				mActivity.setBeeeOnProgressBarVisibility(false);
 				mActivity.setActiveAdapterAndMenu();
 				mActivity.redraw();
 			}
 		});
 
 		// Execute and remember task so it can be stopped automatically
-		callbackTaskManager.executeTask(fullReloadTask);
+		mActivity.callbackTaskManager.executeTask(fullReloadTask);
 	}
 
     private void doRemoveFacilityTask(Facility facility) {
-        RemoveFacilityTask removeFacilityTask = new RemoveFacilityTask(getActivity().getApplicationContext());
+        RemoveFacilityTask removeFacilityTask = new RemoveFacilityTask(mActivity.getApplicationContext());
         DelFacilityPair pair = new DelFacilityPair(facility.getId(), facility.getAdapterId());
-
-		if (!mSwipeLayout.isRefreshing())
-			mActivity.setBeeeOnProgressBarVisibility(true);
 
         removeFacilityTask.setListener(new CallbackTaskListener() {
 			@Override
@@ -492,7 +489,7 @@ public class SensorListFragment extends BaseApplicationFragment {
 		});
 
 		// Execute and remember task so it can be stopped automatically
-		callbackTaskManager.executeTask(removeFacilityTask, pair);
+		mActivity.callbackTaskManager.executeTask(removeFacilityTask, pair);
     }
 
 

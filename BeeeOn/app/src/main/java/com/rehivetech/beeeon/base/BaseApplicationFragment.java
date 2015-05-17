@@ -1,17 +1,21 @@
 package com.rehivetech.beeeon.base;
 
-import com.rehivetech.beeeon.asynctask.CallbackTaskManager;
+import android.app.Activity;
 
 public abstract class BaseApplicationFragment extends TrackFragment {
 
-	public final CallbackTaskManager callbackTaskManager = new CallbackTaskManager();
+	protected BaseApplicationActivity mActivity;
 
 	@Override
-	public void onStop() {
-		super.onStop();
+	public void onAttach(Activity activity) {
+		super.onAttach(activity);
 
-		// Cancel and remove all remembered tasks
-		callbackTaskManager.cancelAndRemoveAll();
+		try {
+			mActivity = (BaseApplicationActivity) activity;
+		} catch (ClassCastException e) {
+			throw new ClassCastException(activity.toString()
+					+ " must be subclass of BaseApplicationActivity");
+		}
 	}
 
 }

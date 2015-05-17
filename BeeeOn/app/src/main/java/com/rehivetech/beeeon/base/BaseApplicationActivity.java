@@ -2,7 +2,10 @@ package com.rehivetech.beeeon.base;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
+import android.view.View;
 
+import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.activity.LoginActivity;
 import com.rehivetech.beeeon.asynctask.CallbackTaskManager;
 import com.rehivetech.beeeon.controller.Controller;
@@ -11,18 +14,30 @@ import com.rehivetech.beeeon.gcm.notification.GcmNotification;
 import com.rehivetech.beeeon.util.Log;
 
 /**
- * Abstract parent for activities that requires logged in user
+ * Abstract parent for application activities that requires logged in user and better using of tasks.
  * 
  * When user is not logged in, it will switch to LoginActivity automatically.
+ * Provides useful methods for using CallbackTasks.
  */
 public abstract class BaseApplicationActivity extends BaseActivity implements INotificationReceiver {
 
 	private static String TAG = BaseApplicationActivity.class.getSimpleName();
 	private boolean triedLoginAlready = false;
 
-	public final CallbackTaskManager callbackTaskManager = new CallbackTaskManager();
+	public CallbackTaskManager callbackTaskManager;
 
 	protected boolean isPaused = false;
+
+	private View mProgressBar;
+
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+
+		callbackTaskManager = new CallbackTaskManager(this);
+
+		mProgressBar = findViewById(R.id.toolbar_progress);
+	}
 
 	@Override
 	public void onResume() {
@@ -88,6 +103,15 @@ public abstract class BaseApplicationActivity extends BaseActivity implements IN
 	 */
 	protected void onAppPause() {
 		// Empty default method
+	}
+
+	public void setBeeeOnProgressBarVisibility(boolean visible) {
+		if (mProgressBar == null) {
+			// This activity probably doesn't have progressbar in layout
+			return;
+		}
+
+		mProgressBar.setVisibility(visible ? View.VISIBLE : View.INVISIBLE);
 	}
 
 	/**

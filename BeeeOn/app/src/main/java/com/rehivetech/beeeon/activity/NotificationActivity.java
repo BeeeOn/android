@@ -17,8 +17,9 @@ import android.os.Build;
 
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.activity.fragment.NotificationFragment;
+import com.rehivetech.beeeon.base.BaseApplicationActivity;
 
-public class NotificationActivity extends ActionBarActivity {
+public class NotificationActivity extends BaseApplicationActivity {
 
 	private Toolbar mToolbar;
 

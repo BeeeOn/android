@@ -66,7 +66,7 @@ public class CustomViewFragment extends BaseApplicationFragment {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		mController = Controller.getInstance(getActivity());
+		mController = Controller.getInstance(mActivity);
 	}
 
 	@Override
@@ -87,7 +87,7 @@ public class CustomViewFragment extends BaseApplicationFragment {
 		View row = inflater.inflate(R.layout.custom_graph_item, mLayout, false);
 		// Create and set graphView
 		GraphView graphView = (GraphView) row.findViewById(R.id.graph);
-		GraphViewHelper.prepareGraphView(graphView, getActivity(), device, fmt, unitsHelper); // empty heading
+		GraphViewHelper.prepareGraphView(graphView, mActivity, device, fmt, unitsHelper); // empty heading
 		LegendView legend = (LegendView) row.findViewById(R.id.legend);
 		legend.setDrawBackground(true);
 		legend.setIconRound(10f);
@@ -171,7 +171,7 @@ public class CustomViewFragment extends BaseApplicationFragment {
 			return;
 
 		// Prepare helpers
-		final UnitsHelper unitsHelper = new UnitsHelper(mController.getUserSettings(), getActivity());
+		final UnitsHelper unitsHelper = new UnitsHelper(mController.getUserSettings(), mActivity);
 		final TimeHelper timeHelper = new TimeHelper(mController.getUserSettings());
 		final DateTimeFormatter fmt = timeHelper.getFormatter(mGraphDateTimeFormat, adapter);
 
@@ -220,7 +220,7 @@ public class CustomViewFragment extends BaseApplicationFragment {
 			}
 
 			// Prepare and run the reload logs task
-			GetDevicesLogsTask getDevicesLogsTask = new GetDevicesLogsTask(getActivity());
+			GetDevicesLogsTask getDevicesLogsTask = new GetDevicesLogsTask(mActivity);
 
 			getDevicesLogsTask.setListener(new CallbackTask.CallbackTaskListener() {
 				@Override
@@ -241,7 +241,7 @@ public class CustomViewFragment extends BaseApplicationFragment {
 			});
 
 			// Execute and remember task so it can be stopped automatically
-			callbackTaskManager.executeTask(getDevicesLogsTask, pairs);
+			mActivity.callbackTaskManager.executeTask(getDevicesLogsTask, pairs);
 		}
 	}
 

@@ -162,10 +162,6 @@ public class MainActivity extends BaseApplicationActivity implements IListDialog
 		}
 	}
 
-	public void setBeeeOnProgressBarVisibility(boolean b) {
-		findViewById(R.id.toolbar_progress).setVisibility((b) ? View.VISIBLE : View.GONE);
-	}
-
 	private void showTutorial() {
 		// TODO Auto-generated method stub
 		RelativeLayout.LayoutParams lps = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -236,7 +232,6 @@ public class MainActivity extends BaseApplicationActivity implements IListDialog
 	}
 
 	public void onAppResume() {
-		setBeeeOnProgressBarVisibility(true);
 		// ASYN TASK - Reload all data, if wasnt download in login activity
 		final ReloadAdapterDataTask fullReloadTask = new ReloadAdapterDataTask(this,false,ReloadAdapterDataTask.ReloadWhat.ADAPTERS_AND_ACTIVE_ADAPTER);
 		fullReloadTask.setNotifyErrors(false);
@@ -256,7 +251,6 @@ public class MainActivity extends BaseApplicationActivity implements IListDialog
 						Toast.makeText(MainActivity.this, e.getTranslatedErrorMessage(MainActivity.this), Toast.LENGTH_LONG).show();
 					}
 				}
-				setBeeeOnProgressBarVisibility(false);
 				// Redraw Activity - probably list of sensors
 				Log.d(TAG, "After reload task - go to redraw mainActivity");
 				setActiveAdapterAndMenu();

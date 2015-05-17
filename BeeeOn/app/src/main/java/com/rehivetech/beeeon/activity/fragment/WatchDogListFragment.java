@@ -46,7 +46,6 @@ public class WatchDogListFragment extends BaseApplicationFragment {
     private static final String ADAPTER_ID = "lastAdapterId";
 
     private SwipeRefreshLayout mSwipeLayout;
-    private MainActivity mActivity;
     private Controller mController;
     private ListView mWatchDogListView;
     private WatchDogListAdapter mWatchDogAdapter;
@@ -58,7 +57,6 @@ public class WatchDogListFragment extends BaseApplicationFragment {
 
     private View mView;
     private ActionMode mMode;
-    ProgressBar mProgressBar;
 
     private WatchDog mSelectedItem;
     private int mSelectedItemPos;
@@ -71,11 +69,6 @@ public class WatchDogListFragment extends BaseApplicationFragment {
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         Log.d(TAG, "onCreate()");
-
-        mActivity = (MainActivity) getActivity();
-        if (!(mActivity instanceof MainActivity)) {
-            throw new IllegalStateException("Activity holding SensorListFragment must be MainActivity");
-        }
 
         if (savedInstanceState != null) {
             mActiveAdapterId = savedInstanceState.getString(ADAPTER_ID);
@@ -97,7 +90,6 @@ public class WatchDogListFragment extends BaseApplicationFragment {
         super.onActivityCreated(savedInstanceState);
         Log.d(TAG, "onActivityCreated()");
 
-        mProgressBar = (ProgressBar) mActivity.findViewById(R.id.toolbar_progress);
         mSwipeLayout = (SwipeRefreshLayout) mActivity.findViewById(R.id.swipe_container);
 
         initLayout();
@@ -149,14 +141,10 @@ public class WatchDogListFragment extends BaseApplicationFragment {
      */
     public void onPause() {
         super.onPause();
-        Log.d(TAG, "onPause()");
 
         if(mMode != null) {
             mMode.finish();
         }
-
-        // always hide progressbar
-        mProgressBar.setVisibility(View.GONE);
     }
 
     @Override
@@ -170,7 +158,7 @@ public class WatchDogListFragment extends BaseApplicationFragment {
      */
     private void initLayout() {
         mWatchDogListView = (ListView) mView.findViewById(R.id.watchdog_list);
-        mWatchDogAdapter = new WatchDogListAdapter(mActivity, getActivity().getLayoutInflater());
+        mWatchDogAdapter = new WatchDogListAdapter(mActivity, mActivity.getLayoutInflater());
         mWatchDogListView.setAdapter(mWatchDogAdapter);
 
         // onclicklistener for Switch button in one row
@@ -275,9 +263,7 @@ public class WatchDogListFragment extends BaseApplicationFragment {
     private void doSaveWatchDogTask(WatchDog watchDog, final SwitchCompat sw){
         // disable so that nobody can change it now
         sw.setEnabled(false);
-        //Make progress bar appear when you need it
-        mProgressBar.setVisibility(View.VISIBLE);
-        // other option is to set Swipe refreshing
+        // progress bar shows automatically; other option is to set Swipe refreshing
         //mSwipeLayout.setRefreshing(true);
 
         watchDog.setEnabled(sw.isChecked());
@@ -288,15 +274,13 @@ public class WatchDogListFragment extends BaseApplicationFragment {
 			public void onExecute(boolean success) {
 				//Toast.makeText(mActivity, getResources().getString(success ? R.string.toast_success_save_data : R.string.toast_fail_save_data), Toast.LENGTH_LONG).show();
 				sw.setEnabled(true);
-				//Make progress bar disappear
-				mProgressBar.setVisibility(View.GONE);
 				// other option is to set Swipe refreshing
 				//mSwipeLayout.setRefreshing(false);
 			}
 		});
 
 		// Execute and remember task so it can be stopped automatically
-		callbackTaskManager.executeTask(saveWatchDogTask, watchDog);
+		mActivity.callbackTaskManager.executeTask(saveWatchDogTask, watchDog);
     }
 
     /**
@@ -314,17 +298,11 @@ public class WatchDogListFragment extends BaseApplicationFragment {
                 redrawRules();
                 if (isSwipeRefresh)
                     mSwipeLayout.setRefreshing(false);
-                else
-                    mActivity.setBeeeOnProgressBarVisibility(false);
             }
         });
 
-        if(!isSwipeRefresh) {
-            mActivity.setBeeeOnProgressBarVisibility(true);
-        }
-
 		// Execute and remember task so it can be stopped automatically
-		callbackTaskManager.executeTask(reloadWatchDogTask, adapterId);
+		mActivity.callbackTaskManager.executeTask(reloadWatchDogTask, adapterId);
     }
 
     /**
@@ -346,7 +324,7 @@ public class WatchDogListFragment extends BaseApplicationFragment {
         });
 
 		// Execute and remember task so it can be stopped automatically
-		callbackTaskManager.executeTask(removeWatchDogTask, pair);
+		mActivity.callbackTaskManager.executeTask(removeWatchDogTask, pair);
     }
 
     // ----- HELPERS + ACTIONMODE ----- //
