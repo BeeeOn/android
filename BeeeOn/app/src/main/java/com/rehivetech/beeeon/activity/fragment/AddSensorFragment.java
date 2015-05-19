@@ -122,8 +122,10 @@ public class AddSensorFragment extends TrackFragment {
 		mTimerDone = true;
 		if (mCountDownTimer != null)
 			mCountDownTimer.cancel();
-		mTime.setInnerBottomText(getString(R.string.addsensor_stoped));
-		//mTime.setTitle(" ");
+		if (mTime != null) {
+			mTime.setInnerBottomText(getString(R.string.addsensor_stoped));
+			//mTime.setTitle(" ");
+		}
 	}
 
 	@Override
@@ -142,15 +144,19 @@ public class AddSensorFragment extends TrackFragment {
 
 	public void resetPairButton() {
 		//mTimeText.setText("Time is out");
-		//mTime.setTitle(" ");
-		mTime.setInnerBottomText("Time is out");
+		if (mTime != null) {
+			//mTime.setTitle(" ");
+			mTime.setInnerBottomText("Time is out");
+		}
 		mActivity.resetBtnPair();
 	}
 
 	public void startTimer() {
 		mTimerDone = false;
-		//mTime.setTitle(String.valueOf(mTimerButtonSec));
-		mTime.setInnerBottomText("seconds");
+		if (mTime != null) {
+			//mTime.setTitle(String.valueOf(mTimerButtonSec));
+			mTime.setInnerBottomText("seconds");
+		}
 		mCountDownTimer = new CountDownTimer(mTimerButtonSec * 1000, 1000) {
 
 			public void onTick(long millisUntilFinished) {
