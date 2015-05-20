@@ -448,7 +448,7 @@ public class SensorDetailFragment extends Fragment implements IListDialogListene
 				doReloadFacilitiesTask(mAdapterId, true);
 			}
 		});
-		mSwipeLayout.setColorSchemeColors(  R.color.beeeon_primary_cyan, R.color.beeeon_text_color,R.color.beeeon_secundary_pink);
+		mSwipeLayout.setColorSchemeColors(R.color.beeeon_primary_cyan, R.color.beeeon_text_color, R.color.beeeon_secundary_pink);
 	}
 
 	private void addGraphView(final DateTimeFormatter fmt, final UnitsHelper unitsHelper) {
@@ -600,7 +600,9 @@ public class SensorDetailFragment extends Fragment implements IListDialogListene
 
 			@Override
 			public void onExecute(boolean success) {
-				mSwipeLayout.setRefreshing(false);
+				if (mSwipeLayout != null) {
+					mSwipeLayout.setRefreshing(false);
+				}
 				if(!success){
 					Log.d(TAG,"Fragment - Reload failed");
 					return;
