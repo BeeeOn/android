@@ -159,6 +159,10 @@ public class GeofenceModel implements GoogleApiClient.ConnectionCallbacks, Googl
 			return null;
 		}
 
+		if (cursor.getCount() < 1) {
+			return null;
+		}
+
 		cursor.moveToFirst();
 
 		return cursorToGeofence(cursor);
