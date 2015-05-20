@@ -146,7 +146,7 @@ public class CustomViewFragment extends TrackFragment {
 		LegendView legend = mLegends.get(device.getType().getTypeId());
 		legend.initLegendSeries(graphView.getSeries());
 		legend.setDrawBackground(false);
-		legend.setSeriesPosition(LegendView.SeriesPosition.HORIZONTAL);
+		legend.setSeriesPosition(LegendView.SeriesPosition.VERTICAL);
 		legend.invalidate();
 
 
