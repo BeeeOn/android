@@ -298,7 +298,7 @@ public class Network implements INetwork {
 	 *
 	 * @see {#doRequest}
 	 */
-	private ParsedMessage doRequest(String messageToSend) throws AppException {
+	private synchronized ParsedMessage doRequest(String messageToSend) throws AppException {
 		return doRequest(messageToSend, true);
 	}
 
@@ -307,7 +307,7 @@ public class Network implements INetwork {
 	 *
 	 * @see {#doRequest}
 	 */
-	private ParsedMessage doRequest(String messageToSend, boolean checkBT) throws AppException {
+	private synchronized ParsedMessage doRequest(String messageToSend, boolean checkBT) throws AppException {
 		return doRequest(messageToSend, checkBT, RETRIES_COUNT);
 	}
 
