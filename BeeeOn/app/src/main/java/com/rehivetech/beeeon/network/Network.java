@@ -369,12 +369,14 @@ public class Network implements INetwork {
 	 *
 	 * @param msg must be message with getState() State.FALSE
 	 * @return AppException object with correct error code set
-	 * @throws IllegalStateException when message is not of State.FALSE
+	 * @throws AppException with NetworkError.UNEXPECTED_RESPONSE when message is not of State.FALSE
 	 */
 	private AppException processFalse(ParsedMessage msg) throws IllegalStateException {
 		// Check validity of this message
 		if (msg.getState() != State.FALSE)
-			throw new IllegalStateException("ParsedMessage is not State.FALSE");
+			throw new AppException("ParsedMessage is not State.FALSE", NetworkError.CL_UNEXPECTED_RESPONSE)
+					.set("State", msg.getState())
+					.set("Data", msg.data);
 
 		// Parse FalseAnswer data from this message
 		FalseAnswer fa = (FalseAnswer) msg.data;

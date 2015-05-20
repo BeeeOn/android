@@ -12,6 +12,7 @@
 	<string name="NetworkError___CL_SOCKET">Cannot create or use socket.\n\nPlease try again later.</string>
 	<string name="NetworkError___CL_UNKNOWN_HOST">Unknown host.</string>
 	<string name="NetworkError___CL_XML">Processing of message failed.\n\nPlease try again later.</string>
+	<string name="NetworkError___CL_UNEXPECTED_RESPONSE">Received unexpected response.</string>
 
 	<string name="NetworkError___SRV_ADAPTER_HAVE_YET">You have already registered this gateway.</string>
 	<string name="NetworkError___SRV_ADAPTER_NOT_EXISTS">This gateway has not connected to cloud yet.\n\nPlease check its Internet connection.</string>

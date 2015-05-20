@@ -12,6 +12,7 @@
 	<string name="NetworkError___CL_SOCKET">Nelze vytvořit nebo použít socket.\n\nZkuste to prosím znovu.</string>
 	<string name="NetworkError___CL_UNKNOWN_HOST">Neznámý hostitel.</string>
 	<string name="NetworkError___CL_XML">Nastal problém při zpracování zprávy.\n\nZkuste to prosím znovu.</string>
+	<string name="NetworkError___CL_UNEXPECTED_RESPONSE">Přijata neočekávaná odpověď.</string>
 
 	<string name="NetworkError___SRV_ADAPTER_HAVE_YET">Bránu s tímto číslem již máte zaregistrovanou.</string>
 	<string name="NetworkError___SRV_ADAPTER_NOT_EXISTS">Brána s tímto číslem není na serveru známa.\n\nZkontrolujte, zda je správně připojená k internetové síti.</string>
