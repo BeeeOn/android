@@ -425,7 +425,7 @@
     <string name="widget_configuration_widget_graph">Nastavenie widgetu s grafom</string>
     <string name="widget_configuration_widget_location">Nastavenie widgetu umiestnenia</string>
     <string name="widget_location_list_title">BeeeOn umiestnenie</string>
-    <string name="watchdog_create"></string>
+    <string name="watchdog_create">Vytvoriť strážnika</string>
     <string name="date_today">Dnes</string>
     <string name="date_yesterday">Včera</string>
     <string name="desc_1">Prihlás sa 10-krát do aplikácie.</string>
@@ -495,5 +495,10 @@
     <string name="progress_loading_achievement">Nahrávám dáta achievementov&#8230;</string>
     <string name="toast_device_not_available">Zariadenie nie je dostupné.</string>
     <string name="toast_field_must_be_number">Toto pole musí byť číslo!</string>
+    <string name="NetworkError___CL_UNEXPECTED_RESPONSE">Neočakávaná odpoveď.</string>
+    <string name="demo_mode">DEMO REŽIM</string>
+    <string name="multiadapter_no_item">- Nič pre výber -</string>
+    <string name="update_over_wifi_only">Aktualizovať iba cez Wi-Fi</string>
+    <string name="watchdog_no_valid_item">Žiadna platná položka</string>
 
 </resources>

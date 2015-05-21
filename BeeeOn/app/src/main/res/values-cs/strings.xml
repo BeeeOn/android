@@ -405,8 +405,6 @@
     <string name="toast_device_not_available">Zařízení není dostupné</string>
     <string name="toast_field_must_be_number">Toto pole musí být číslo!</string>
     <string name="watchdog_create">Vytvořit hlídače</string>
-    <string name="achievement_share_img" translatable="false"></string>
-    <string name="sensor_text"></string>
     <string name="watchdog_no_valid_item">Žádná platná položka</string>
     <string name="multiadapter_no_item">- Nic k vybrání -</string>
     <string name="update_over_wifi_only">Aktualizovat pouze přes Wi-Fi</string>

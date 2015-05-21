@@ -30,7 +30,7 @@
 	<string name="NetworkError___SRV_BAD_UTC">Byla zadána neplatná časová zóna.</string>
 	<string name="NetworkError___SRV_COM_VER_MISMATCH">Verze komunikačního protokolu již není podporována.\n(aplikace: %1$s, server: %2$s)\n\nAktualizujte si prosím vaši aplikaci.</string>
 	<string name="NetworkError___SRV_COM_FW_ALGORITHMS_ERROR">Chyba při komunikaci s firmware/algoritmy.</string>
-	<string name="NetworkError___SRV_DAMAGED_XML">Bylo přijato poškozené XML.\n\nZkuste to prosím znovu.</string>
+	<string name="NetworkError___SRV_DAMAGED_XML">Bylo odesláno poškozené XML.\n\nZkuste to prosím znovu.</string>
 	<string name="NetworkError___SRV_GENERATE_BTOKEN_ERROR">Chyba při generování přístupového tokenu.</string>
 	<string name="NetworkError___SRV_IMPROPER_NAME_OR_EMAIL">Zadané jméno nebo e-mail není vhodný.</string>
 	<string name="NetworkError___SRV_IMPROPER_PSWD">Zadané heslo není dostatečně bezpečné.</string>
