@@ -1,4 +1,4 @@
-package com.rehivetech.beeeon.persistence;
+package com.rehivetech.beeeon.model;
 
 import com.rehivetech.beeeon.NameIdentifierComparator;
 import com.rehivetech.beeeon.household.watchdog.WatchDog;
@@ -10,16 +10,14 @@ import org.joda.time.DateTime;
 import java.util.Collections;
 import java.util.List;
 
-public class WatchDogsModel {
+public class WatchDogsModel extends BaseModel {
 
 	private static final int RELOAD_EVERY_SECONDS = 10 * 60;
-
-	private final INetwork mNetwork;
 
 	private final MultipleDataHolder<WatchDog> mWatchDogs = new MultipleDataHolder<>(); // adapterId => watchDog dataHolder
 
 	public WatchDogsModel(INetwork network) {
-		mNetwork = network;
+		super(network);
 	}
 
 	/**

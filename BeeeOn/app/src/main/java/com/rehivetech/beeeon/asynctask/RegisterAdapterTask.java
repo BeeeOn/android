@@ -8,7 +8,6 @@ import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.household.adapter.Adapter;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.pair.RegisterAdapterPair;
-import com.rehivetech.beeeon.persistence.AdaptersModel;
 
 /**
  * Registers new adapter. It automatically reloads list of adapters and then we set this adapter as active which also load all its sensors.

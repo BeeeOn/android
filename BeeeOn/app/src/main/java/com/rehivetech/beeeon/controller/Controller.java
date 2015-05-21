@@ -7,29 +7,35 @@ import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 
 import com.rehivetech.beeeon.Constants;
-import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.exception.AppException;
 import com.rehivetech.beeeon.gamification.AchievementList;
 import com.rehivetech.beeeon.household.adapter.Adapter;
 import com.rehivetech.beeeon.household.user.User;
 import com.rehivetech.beeeon.household.user.User.Role;
+import com.rehivetech.beeeon.model.AchievementsModel;
+import com.rehivetech.beeeon.model.AdaptersModel;
+import com.rehivetech.beeeon.model.BaseModel;
+import com.rehivetech.beeeon.model.DeviceLogsModel;
+import com.rehivetech.beeeon.model.FacilitiesModel;
+import com.rehivetech.beeeon.model.GcmModel;
+import com.rehivetech.beeeon.model.GeofenceModel;
+import com.rehivetech.beeeon.model.LocationsModel;
+import com.rehivetech.beeeon.model.UninitializedFacilitiesModel;
+import com.rehivetech.beeeon.model.UsersModel;
+import com.rehivetech.beeeon.model.WatchDogsModel;
 import com.rehivetech.beeeon.network.DemoNetwork;
 import com.rehivetech.beeeon.network.INetwork;
 import com.rehivetech.beeeon.network.Network;
 import com.rehivetech.beeeon.network.authentication.IAuthProvider;
-import com.rehivetech.beeeon.persistence.AchievementsModel;
-import com.rehivetech.beeeon.persistence.AdaptersModel;
-import com.rehivetech.beeeon.persistence.DeviceLogsModel;
-import com.rehivetech.beeeon.persistence.FacilitiesModel;
-import com.rehivetech.beeeon.persistence.GcmModel;
-import com.rehivetech.beeeon.persistence.GeofenceModel;
-import com.rehivetech.beeeon.persistence.LocationsModel;
 import com.rehivetech.beeeon.persistence.Persistence;
-import com.rehivetech.beeeon.persistence.UninitializedFacilitiesModel;
-import com.rehivetech.beeeon.persistence.UsersModel;
-import com.rehivetech.beeeon.persistence.WatchDogsModel;
 import com.rehivetech.beeeon.util.Log;
 import com.rehivetech.beeeon.util.Utils;
+
+import java.lang.reflect.Constructor;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Core of application (used as singleton), provides methods and access to all data and household.
@@ -62,16 +68,7 @@ public final class Controller {
 	private Adapter mActiveAdapter;
 
 	/** Models for keeping and handling data */
-	private final AdaptersModel mAdaptersModel;
-	private final AchievementsModel mAchievementsModel;
-	private final LocationsModel mLocationsModel;
-	private final FacilitiesModel mFacilitiesModel;
-	private final UninitializedFacilitiesModel mUninitializedFacilitiesModel;
-	private final DeviceLogsModel mDeviceLogsModel;
-	private final WatchDogsModel mWatchDogsModel;
-	private final GeofenceModel mGeofenceModel;
-	private final GcmModel mGcmModel;
-	private final UsersModel mUsersModel;
+	private final Map<String, BaseModel> mModels = new HashMap<>();
 
 	/**
 	 * Return singleton instance of this Controller. This is thread-safe.
@@ -117,18 +114,6 @@ public final class Controller {
 			loadUserData(DemoNetwork.DEMO_USER_ID);
 		}
 
-		// Create models
-		mAdaptersModel = new AdaptersModel(mNetwork);
-		mAchievementsModel = new AchievementsModel(mNetwork);
-		mLocationsModel = new LocationsModel(mNetwork, mContext.getString(R.string.loc_none));
-		mFacilitiesModel = new FacilitiesModel(mNetwork);
-		mUninitializedFacilitiesModel = new UninitializedFacilitiesModel(mNetwork);
-		mDeviceLogsModel = new DeviceLogsModel(mNetwork);
-		mWatchDogsModel = new WatchDogsModel(mNetwork);
-		mGeofenceModel = new GeofenceModel(mNetwork, mContext);
-		mGcmModel = new GcmModel(mContext, mNetwork, mPersistence, mUser);
-		mUsersModel = new UsersModel(mNetwork);
-
 		// Load previous user
 		String userId = mPersistence.loadLastUserId();
 		if (!userId.isEmpty()) {
@@ -161,42 +146,99 @@ public final class Controller {
 
 	/** Model getters *******************************************************/
 
+	/**
+	 * Method return instance of given Model class.
+	 * Returns existing instance if already exists, otherwise tries to instantiate new instance, which remembers.
+	 * NOTE: Internal instantiation supports only few object as Model class constructor's parameters.
+	 *
+	 * @param modelClass
+	 * @return
+	 */
+	public BaseModel getModelInstance(Class<? extends BaseModel> modelClass) {
+		final String name = modelClass.getName();
+
+		if (!mModels.containsKey(name)) {
+			synchronized (mModels) {
+				if (!mModels.containsKey(name)) {
+					// Known parameters we can automatically give to model constructor
+					final Object[] supportedParams = { mNetwork, mContext, mPersistence, mUser };
+
+					// Create instance of the given model class
+					final Constructor constructor = modelClass.getConstructors()[0];
+					final List<Object> params = new ArrayList<>();
+					for (Class<?> pType : constructor.getParameterTypes())
+					{
+						Object param = null;
+						for (Object obj : supportedParams) {
+							if (pType.isInstance(obj)) {
+								param = obj;
+								break;
+							}
+						}
+
+						if (param == null) {
+							String error = String.format("Unsupported model parameter type (%s) for automatic model construction.", pType.getSimpleName());
+							throw new UnsupportedOperationException(error);
+						}
+
+						params.add(param);
+					}
+
+					try {
+						// Try to create new model instance
+						final BaseModel model = (BaseModel) constructor.newInstance(params.toArray());
+
+						// Put this created model to map
+						mModels.put(name, model);
+					} catch (Exception e) {
+						// NOTE: Catching base Exception because of Android's merging more exceptions into one, which is not supported before API 19
+						e.printStackTrace();
+					}
+				}
+			}
+		}
+
+		return mModels.get(name);
+	}
+
 	public GeofenceModel getGeofenceModel() {
-		return mGeofenceModel;
+		return (GeofenceModel) getModelInstance(GeofenceModel.class);
 	}
 
 	public AdaptersModel getAdaptersModel() {
-		return mAdaptersModel;
+		return (AdaptersModel) getModelInstance(AdaptersModel.class);
 	}
 
-	public AchievementsModel getAchievementsModel() { return mAchievementsModel; }
+	public AchievementsModel getAchievementsModel() {
+		return (AchievementsModel) getModelInstance(AchievementsModel.class);
+	}
 
 	public LocationsModel getLocationsModel() {
-		return mLocationsModel;
+		return (LocationsModel) getModelInstance(LocationsModel.class);
 	}
 
 	public FacilitiesModel getFacilitiesModel() {
-		return mFacilitiesModel;
+		return (FacilitiesModel) getModelInstance(FacilitiesModel.class);
 	}
 
 	public UninitializedFacilitiesModel getUninitializedFacilitiesModel() {
-		return mUninitializedFacilitiesModel;
+		return (UninitializedFacilitiesModel) getModelInstance(UninitializedFacilitiesModel.class);
 	}
 
 	public DeviceLogsModel getDeviceLogsModel() {
-		return mDeviceLogsModel;
+		return (DeviceLogsModel) getModelInstance(DeviceLogsModel.class);
 	}
 
 	public WatchDogsModel getWatchDogsModel() {
-		return mWatchDogsModel;
+		return (WatchDogsModel) getModelInstance(WatchDogsModel.class);
 	}
 
 	public GcmModel getGcmModel() {
-		return mGcmModel;
+		return (GcmModel) getModelInstance(GcmModel.class);
 	}
 
 	public UsersModel getUsersModel() {
-		return mUsersModel;
+		return (UsersModel) getModelInstance(UsersModel.class);
 	}
 
 	/** Persistence methods *************************************************/
@@ -289,7 +331,7 @@ public final class Controller {
 	public boolean login(IAuthProvider authProvider) throws AppException {
 		// In demo mode load some init data from sdcard
 		if (mNetwork instanceof DemoNetwork) {
-			mGeofenceModel.deleteDemoData();
+			getGeofenceModel().deleteDemoData();
 			((DemoNetwork) mNetwork).initDemoData();
 		}
 
@@ -324,7 +366,7 @@ public final class Controller {
 			mPersistence.saveLastUserId(mUser.getId());
 			mPersistence.saveLastAuthProvider(authProvider);
 
-			mGcmModel.registerGCM();
+			getGcmModel().registerGCM();
 		}
 
 		// Register geofence areas asynchronously
@@ -366,7 +408,7 @@ public final class Controller {
 		AchievementList.cleanAll();
 
 		// Delete GCM id on server side
-		mGcmModel.deleteGCM(mUser.getId(), null);
+		getGcmModel().deleteGCM(mUser.getId(), null);
 
 		// Destroy session
 		mNetwork.setBT("");
@@ -406,7 +448,7 @@ public final class Controller {
 
 			String lastId = (prefs == null) ? "" : prefs.getString(Constants.PERSISTENCE_PREF_ACTIVE_ADAPTER, "");
 
-			mActiveAdapter = mAdaptersModel.getAdapterOrFirst(lastId);
+			mActiveAdapter = getAdaptersModel().getAdapterOrFirst(lastId);
 
 			if (mActiveAdapter != null && prefs != null)
 				prefs.edit().putString(Constants.PERSISTENCE_PREF_ACTIVE_ADAPTER, mActiveAdapter.getId()).apply();
@@ -433,7 +475,7 @@ public final class Controller {
 		}
 
 		// Find specified adapter
-		mActiveAdapter = mAdaptersModel.getAdapter(id);
+		mActiveAdapter = getAdaptersModel().getAdapter(id);
 
 		if (mActiveAdapter == null) {
 			Log.d(TAG, String.format("Can't set active adapter to '%s'", id));
@@ -443,8 +485,8 @@ public final class Controller {
 		Log.d(TAG, String.format("Set active adapter to '%s'", mActiveAdapter.getName()));
 
 		// Load locations and facilities, if needed
-		mLocationsModel.reloadLocationsByAdapter(id, forceReload);
-		mFacilitiesModel.reloadFacilitiesByAdapter(id, forceReload);
+		getLocationsModel().reloadLocationsByAdapter(id, forceReload);
+		getFacilitiesModel().reloadFacilitiesByAdapter(id, forceReload);
 
 		return true;
 	}
