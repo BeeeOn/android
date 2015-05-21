@@ -191,6 +191,11 @@ public class DemoNetwork implements INetwork {
 	}
 
 	@Override
+	public boolean logout() {
+		return true;
+	}
+
+	@Override
 	public boolean loginMe(IAuthProvider authProvider) {
 		return true;
 	}

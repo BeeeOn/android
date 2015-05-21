@@ -28,6 +28,7 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.TreeMap;
 
@@ -132,15 +133,7 @@ public class XmlParsers {
 		switch (state) {
 			case USERINFO:
 				// User
-				User user = new User();
-				user.setId(getSecureAttrValue(Xconstants.UID));
-				user.setName(getSecureAttrValue(Xconstants.NAME));
-				user.setSurname(getSecureAttrValue(Xconstants.SURNAME));
-				user.setEmail(getSecureAttrValue(Xconstants.EMAIL));
-				user.setGender(Utils.getEnumFromId(User.Gender.class, getSecureAttrValue(Xconstants.GENDER), User.Gender.UNKNOWN));
-				user.setPictureUrl(getSecureAttrValue(Xconstants.IMGURL));
-
-				result.data = user;
+				result.data = parserUserInfo();
 				break;
 			case BT:
 				// String (BeeeonToken)
@@ -240,6 +233,36 @@ public class XmlParsers {
 		} while (mParser.nextTag() != XmlPullParser.END_TAG && !mParser.getName().equals(Xconstants.COM_ROOT));
 
 		return result;
+	}
+
+	/**
+	 * Method parse inner part of UserInfo message
+	 * @return User object
+	 * @throws XmlPullParserException
+	 * @throws IOException
+	 */
+	private User parserUserInfo() throws XmlPullParserException, IOException {
+		User user = new User();
+		user.setId(getSecureAttrValue(Xconstants.UID));
+		user.setName(getSecureAttrValue(Xconstants.NAME));
+		user.setSurname(getSecureAttrValue(Xconstants.SURNAME));
+		user.setEmail(getSecureAttrValue(Xconstants.EMAIL));
+		user.setGender(Utils.getEnumFromId(User.Gender.class, getSecureAttrValue(Xconstants.GENDER), User.Gender.UNKNOWN));
+		user.setPictureUrl(getSecureAttrValue(Xconstants.IMGURL));
+
+		mParser.nextTag(); // accounts
+
+		if (!mParser.getName().equals(Xconstants.ACCOUNTS))
+			return user;
+
+		HashMap<String, String> providers = user.getJoinedProviders();
+
+		while (mParser.nextTag() != XmlPullParser.END_TAG && !mParser.getName().equals(Xconstants.ACCOUNTS)) { //srv
+			providers.put(getSecureAttrValue(Xconstants.NAME), getSecureAttrValue(Xconstants.ID));
+			mParser.nextTag(); // end srv
+		}
+
+		return user;
 	}
 
 	/**
@@ -467,7 +490,7 @@ public class XmlParsers {
 			user.setName(getSecureAttrValue(Xconstants.NAME));
 			user.setSurname(getSecureAttrValue(Xconstants.SURNAME));
 			user.setRole(Utils.getEnumFromId(User.Role.class, getSecureAttrValue(Xconstants.ROLE), User.Role.Guest));
-			user.setGender(getSecureAttrValue(Xconstants.GENDER).equals(Xconstants.ZERO) ? User.Gender.FEMALE : User.Gender.MALE);
+			user.setGender(Utils.getEnumFromId(User.Gender.class, getSecureAttrValue(Xconstants.GENDER), User.Gender.UNKNOWN));
 			user.setPictureUrl(getSecureAttrValue(Xconstants.IMGURL));
 
 			result.add(user);
@@ -646,7 +669,7 @@ public class XmlParsers {
 			user.setName(getSecureAttrValue(Xconstants.NAME));
 			user.setSurname(getSecureAttrValue(Xconstants.SURNAME));
 			user.setRole(Utils.getEnumFromId(User.Role.class, getSecureAttrValue(Xconstants.ROLE), User.Role.Guest));
-			user.setGender(getSecureAttrValue(Xconstants.GENDER).equals(Xconstants.ZERO) ? User.Gender.FEMALE : User.Gender.MALE);
+			user.setGender(Utils.getEnumFromId(User.Gender.class, getSecureAttrValue(Xconstants.GENDER), User.Gender.UNKNOWN));
 			user.setPictureUrl(getSecureAttrValue(Xconstants.IMGURL));
 
 			result.add(user);

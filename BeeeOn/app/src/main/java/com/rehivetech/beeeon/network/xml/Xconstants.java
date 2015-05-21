@@ -77,6 +77,7 @@ public class Xconstants {
 	public static final String SERVICE = "srv";
 	public static final String IMGURL = "imgurl";
 	public static final String GEOFENCE = "geo";
+	public static final String ACCOUNTS = "accounts";
 
 	public static final String ACHIEVEMENT = "ach";
 	public static final String CATEGORY = "cat";

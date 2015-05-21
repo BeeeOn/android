@@ -402,6 +402,16 @@ public class Network implements INetwork {
 	}
 
 	@Override
+	public boolean logout() {
+		ParsedMessage msg = doRequest(XmlCreator.createLogout(mBT));
+
+		if (msg.getState() == State.TRUE)
+			return true;
+
+		throw processFalse(msg);
+	}
+
+	@Override
 	public boolean addProvider(IAuthProvider authProvider) {
 		ParsedMessage msg = doRequest(XmlCreator.createJoinAccount(mBT, authProvider));
 

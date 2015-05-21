@@ -41,6 +41,7 @@ public class XmlCreator {
 	public static final String GETUSERINFO = "getuserinfo";
 	public static final String JOINACCOUNT = "joinaccount";
 	public static final String CUTACCOUNT = "cutaccount";
+	public static final String LOGOUT = "logout";
 
 	public static final String ADDGATE = "addadapter";
 	public static final String REINITGATE = "reinitadapter";
@@ -225,6 +226,16 @@ public class XmlCreator {
 	}
 
 	/**
+	 * Method create message for loging out user
+	 * @param bt beeeon Token (session Id)
+	 * @return xml with logout message
+	 * @since 2.5
+	 */
+	public static String createLogout(String bt){
+		return createComAttribsVariant(Xconstants.STATE, LOGOUT, Xconstants.BT, bt);
+	}
+
+	/**
 	 * Method create message for obtain information about user
 	 *
 	 * @param bt beeeon Token (session Id)
@@ -272,10 +283,11 @@ public class XmlCreator {
 	}
 
 	/**
-	 * Method create message for removing actual user from gate
-	 * @param bt
-	 * @param aid
-	 * @return
+	 * Method create message for removing actual user from adapter
+	 * @param bt beeeon Token (session Id)
+	 * @param aid gate Id
+	 * @return xml with delAdapter message
+	 * @since 2.4
 	 */
 	public static String createDelGate(String bt, String aid){
 		return createComAttribsVariant(Xconstants.STATE, DELGATE, Xconstants.BT, bt, Xconstants.AID, aid);

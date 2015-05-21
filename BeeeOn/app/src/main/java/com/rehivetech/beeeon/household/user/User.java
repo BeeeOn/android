@@ -11,6 +11,7 @@ import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.util.Utils;
 
 import java.lang.ref.SoftReference;
+import java.util.HashMap;
 
 /**
  * Represents single person.
@@ -34,6 +35,8 @@ public class User implements INameIdentifier {
 	private String mPictureUrl = "";
 
 	private SoftReference<Bitmap> mDefaultPicture = new SoftReference<>(null);
+
+	private HashMap<String, String> mJoinedProviders = new HashMap<>();
 
 	public User() {
 	}
@@ -100,6 +103,14 @@ public class User implements INameIdentifier {
 
 	public void setId(String id) {
 		this.mId = id;
+	}
+
+	public HashMap<String, String> getJoinedProviders() {
+		return mJoinedProviders;
+	}
+
+	public void setJoinedProviders(HashMap<String, String> joinedProviders) {
+		mJoinedProviders = joinedProviders;
 	}
 
 	public String getFullName() {

@@ -70,6 +70,8 @@ public interface INetwork {
 	 */
 	boolean hasBT();
 
+	boolean logout();
+
 	/**
 	 * Download information about actual user from server
 	 *
