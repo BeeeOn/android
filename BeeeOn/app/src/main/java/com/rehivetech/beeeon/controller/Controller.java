@@ -505,4 +505,13 @@ public final class Controller {
 		return true;
 	}
 
+	/**
+	 * Interrupts actual connection (opened socket) of Network module.
+	 */
+	public void interruptConnection() {
+		if (mNetwork instanceof Network) {
+			((Network) mNetwork).interruptConnection();
+		}
+	}
+
 }

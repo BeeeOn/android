@@ -248,6 +248,17 @@ public class Network implements INetwork {
 		}
 	}
 
+	/**
+	 * Closes actual connection (opened socket).
+	 */
+	public void interruptConnection() {
+		Log.w(TAG, "Interrupting connection.");
+		closeCommunicationSocket();
+	}
+
+	/**
+	 * Method close socket, writer and reader
+	 */
 	private void closeCommunicationSocket() {
 		synchronized (mSocketLock) {
 			// Securely close socket
