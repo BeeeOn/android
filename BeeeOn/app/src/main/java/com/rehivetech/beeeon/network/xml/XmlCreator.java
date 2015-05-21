@@ -1,13 +1,8 @@
-/**
- * @brief Package for manipulation with XML and parsers
- */
-
 package com.rehivetech.beeeon.network.xml;
 
 import android.util.Xml;
 
 import com.rehivetech.beeeon.Constants;
-import com.rehivetech.beeeon.IIdentifier;
 import com.rehivetech.beeeon.exception.AppException;
 import com.rehivetech.beeeon.exception.NetworkError;
 import com.rehivetech.beeeon.household.device.Device;
@@ -15,18 +10,7 @@ import com.rehivetech.beeeon.household.device.Device.SaveDevice;
 import com.rehivetech.beeeon.household.device.Facility;
 import com.rehivetech.beeeon.household.location.Location;
 import com.rehivetech.beeeon.household.user.User;
-import com.rehivetech.beeeon.network.INetwork.NetworkAction;
 import com.rehivetech.beeeon.network.authentication.IAuthProvider;
-import com.rehivetech.beeeon.network.xml.action.Action;
-import com.rehivetech.beeeon.network.xml.condition.BetweenFunc;
-import com.rehivetech.beeeon.network.xml.condition.ConditionFunction;
-import com.rehivetech.beeeon.network.xml.condition.DewPointFunc;
-import com.rehivetech.beeeon.network.xml.condition.EqualFunc;
-import com.rehivetech.beeeon.network.xml.condition.GreaterEqualFunc;
-import com.rehivetech.beeeon.network.xml.condition.GreaterThanFunc;
-import com.rehivetech.beeeon.network.xml.condition.LesserEqualFunc;
-import com.rehivetech.beeeon.network.xml.condition.LesserThanFunc;
-import com.rehivetech.beeeon.network.xml.condition.TimeFunc;
 
 import org.xmlpull.v1.XmlSerializer;
 
@@ -53,7 +37,6 @@ public class XmlCreator {
 
 	// states
 
-	public static final String PASSBORDER = "passborder";
 	public static final String SIGNIN = "signin";
 	public static final String SIGNUP = "signup";
 	public static final String GETUSERINFO ="getuserinfo";
@@ -63,12 +46,12 @@ public class XmlCreator {
 	public static final String ADDADAPTER = "addadapter";
 	public static final String REINITADAPTER = "reinitadapter";
 	public static final String GETADAPTERS = "getadapters";
+	public static final String SCANMODE = "scanmode";
 
 	public static final String ADDACCOUNTS = "addaccs";
 	public static final String DELACCOUNTS = "delaccs";
 	public static final String GETACCOUNTS = "getaccs";
 	public static final String SETCCOUNTS = "setaccs";
-	public static final String SCANMODE = "scanmode";
 
 	public static final String SETDEVS = "setdevs";
 	public static final String GETDEVICES = "getdevs";
@@ -76,11 +59,6 @@ public class XmlCreator {
 	public static final String DELDEVICE = "deldev";
 	public static final String SWITCH = "switch";
 	public static final String GETLOG = "getlog";
-
-	public static final String ADDVIEW = "addview";
-	public static final String DELVIEW = "delview";
-	public static final String SETVIEW = "setview";
-	public static final String GETVIEWS = "getviews";
 	public static final String GETNEWDEVICES = "getnewdevs";
 
 	public static final String SETTIMEZONE = "settimezone";
@@ -96,20 +74,7 @@ public class XmlCreator {
 	public static final String GETNOTIFICATIONS = "getnotifs";
 	public static final String NOTIFICATIONREAD = "notifread";
 
-	public static final String SETCONDITION = "setcond";
 	public static final String SETLOCALE = "setlocale";
-
-	public static final String CONDITIONPLUSACTION = "condacition";
-	public static final String GETCONDITION = "getcond";
-	public static final String GETCONDITIONS = "getconds";
-	public static final String ADDCONDITION = "addcond";
-	public static final String DELCONDITION = "delcond";
-
-	public static final String SETACTION = "setact";
-	public static final String GETACTIONS = "getacts";
-	public static final String GETACTION = "getact";
-	public static final String ADDACTION = "addact";
-	public static final String DELACTION = "delact";
 
 	public static final String ADDALG = "addalg";
 	public static final String GETALLALGS = "getallalgs";
@@ -117,31 +82,11 @@ public class XmlCreator {
 	public static final String SETALG = "setalg";
 	public static final String DELALG = "delalg";
 
+	public static final String PASSBORDER = "passborder";
 	public static final String GETALLACHIEVEMENTS = "getallachievements";
 	public static final String SETPROGRESSLVL = "setprogresslvl";
 
 	// end of states
-
-	/**
-	 * Type of condition
-	 *
-	 * @author ThinkDeep
-	 *
-	 */
-	public enum ConditionType implements IIdentifier {
-		AND("and"),
-		OR("or");
-
-		private final String mValue;
-
-		ConditionType(String value) {
-			mValue = value;
-		}
-
-		public String getId() {
-			return mValue;
-		}
-	}
 
 	private static XmlSerializer beginXml(StringWriter writer) throws IOException {
 		XmlSerializer serializer = Xml.newSerializer();
@@ -161,14 +106,12 @@ public class XmlCreator {
 		serializer.endDocument();
 	}
 
-	// ////////////////////////////////////////////////////////////////////////////////////////////////
 	// /////////////////////////////////////SIGNIN,SIGNUP,ADAPTERS/////////////////////////////////////
-	// ////////////////////////////////////////////////////////////////////////////////////////////////
 
 	/**
 	 * Method create message for registration of new user
 	 * @param authProvider provider of authentication with parameters to send
-	 * @return
+	 * @return xml with signUp message
 	 */
 	public static String createSignUp(IAuthProvider authProvider) {
 		StringWriter writer = new StringWriter();
@@ -203,7 +146,7 @@ public class XmlCreator {
 	 * @param locale localization of phone
 	 * @param pid unique id of phone
 	 * @param authProvider provider of authentication with parameters to send
-	 * @return
+	 * @return xml with signIn message
 	 */
 	public static String createSignIn(String locale, String pid, IAuthProvider authProvider) {
 		StringWriter writer = new StringWriter();
@@ -238,8 +181,7 @@ public class XmlCreator {
 	/**
 	 * Method create message for joining new provider to actual user
 	 * @param authProvider provider of authentication with parameters to send
-	 *
-	 * @return
+	 * @return xml with joinAccount message
 	 */
 	public static String createJoinAccount(String bt, IAuthProvider authProvider) {
 		StringWriter writer = new StringWriter();
@@ -270,14 +212,19 @@ public class XmlCreator {
 
 	/**
 	 * Method create message for removing part of account (or whole account)
-	 * @param bt
+	 * @param bt beeeon Token (session Id)
 	 * @param providerName name of service (beeeon, google, facebook, ...)
-	 * @return
+	 * @return xml with cutAccount message
 	 */
 	public static String createCutAccount(String bt, String providerName){
 		return createComAttribsVariant(Xconstants.STATE, CUTACCOUNT, Xconstants.BT, bt, Xconstants.SERVICE, providerName);
 	}
 
+	/**
+	 * Method create message for obtain information about user
+	 * @param bt beeeon Token (session Id)
+	 * @return xml with getUserInfo message
+	 */
 	public static String createGetUserInfo(String bt){
 		return createComAttribsVariant(Xconstants.STATE, GETUSERINFO, Xconstants.BT, bt);
 	}
@@ -326,9 +273,7 @@ public class XmlCreator {
 		return createComAttribsVariant(Xconstants.STATE, REINITADAPTER, Xconstants.BT, bt, Xconstants.OLDID, adapterIdOld, Xconstants.NEWID, adapterIdNew);
 	}
 
-	// ////////////////////////////////////////////////////////////////////////////////////////////////
 	// /////////////////////////////////////DEVICES,LOGS///////////////////////////////////////////////
-	// ////////////////////////////////////////////////////////////////////////////////////////////////
 
 	/**
 	 * Method create XML for AdapterListen message
@@ -399,7 +344,6 @@ public class XmlCreator {
 				public int compare(Facility left, Facility right) {
 					return Integer.valueOf(left.getAdapterId()).compareTo(Integer.valueOf(right.getAdapterId()));
 				}
-
 			});
 
 			String aid = "";
@@ -574,8 +518,6 @@ public class XmlCreator {
 				serializer.startTag(ns, Xconstants.PART);
 				// send always if sensor changed
 				serializer.attribute(ns, Xconstants.TYPE, device.getRawTypeId());
-				// if (toSave.contains(SaveDevice.SAVE_VISIBILITY))
-				// serializer.attribute(ns, Xconstants.VISIBILITY, (device.getVisibility()) ? Xconstants.ONE : Xconstants.ZERO);
 				if (toSave.contains(SaveDevice.SAVE_NAME))
 					serializer.attribute(ns, Xconstants.NAME, device.getName());
 				if (toSave.contains(SaveDevice.SAVE_VALUE))
@@ -625,9 +567,7 @@ public class XmlCreator {
 		return createComAttribsVariant(Xconstants.STATE, DELDEVICE, Xconstants.BT, bt, Xconstants.AID, facility.getAdapterId(), Xconstants.DID, facility.getAddress());
 	}
 
-	// ////////////////////////////////////////////////////////////////////////////////////////////////
 	// /////////////////////////////////////ROOMS//////////////////////////////////////////////////////
-	// ////////////////////////////////////////////////////////////////////////////////////////////////
 
 	/**
 	 * Method create XML of AddRoom message
@@ -711,120 +651,7 @@ public class XmlCreator {
 		return createComAttribsVariant(Xconstants.STATE, GETROOMS, Xconstants.BT, bt, Xconstants.AID, aid);
 	}
 
-	// ////////////////////////////////////////////////////////////////////////////////////////////////
-	// /////////////////////////////////////VIEWS//////////////////////////////////////////////////////
-	// ////////////////////////////////////////////////////////////////////////////////////////////////
-
-	/**
-	 * Method create XML of AddView message
-	 *
-	 * @param bt
-	 *            userID of user
-	 * @param viewName
-	 *            name of custom view (also used as ID)
-	 * @param iconNum
-	 *            type of icon
-	 * @param devices
-	 *            list of devices in view
-	 * @return addView message
-	 * @since 2.2
-	 */
-	public static String createAddView(String bt, String viewName, int iconNum, List<Device> devices) {
-		StringWriter writer = new StringWriter();
-		try {
-			XmlSerializer serializer = beginXml(writer);
-
-			serializer.attribute(ns, Xconstants.BT, bt);
-			serializer.attribute(ns, Xconstants.STATE, ADDVIEW);
-			serializer.attribute(ns, Xconstants.NAME, viewName);
-			serializer.attribute(ns, Xconstants.ICON, Integer.toString(iconNum));
-
-			for (Device device : devices) {
-				serializer.startTag(ns, Xconstants.DEVICE);
-
-				serializer.attribute(ns, Xconstants.AID, device.getFacility().getAdapterId());
-				serializer.attribute(ns, Xconstants.DID, device.getId());
-				serializer.attribute(ns, Xconstants.TYPE, device.getRawTypeId());
-				serializer.endTag(ns, Xconstants.DEVICE);
-			}
-
-			endXml(serializer);
-
-			return writer.toString();
-		} catch (Exception e) {
-			throw AppException.wrap(e, NetworkError.CL_XML);
-		}
-	}
-
-	/**
-	 * Method create one view to update message
-	 *
-	 * @param bt
-	 *            userID of user
-	 * @param viewName
-	 *            name of view and also ID
-	 * @param iconNum
-	 *            type of icon
-	 * @param device
-	 *            device to be updated
-	 * @param action
-	 *            type of manipulation, add or remove
-	 * @return updateView message
-	 * @since 2.2
-	 */
-	public static String createSetView(String bt, String viewName, int iconNum, Device device, NetworkAction action) {
-		StringWriter writer = new StringWriter();
-		try {
-			XmlSerializer serializer = beginXml(writer);
-
-			serializer.attribute(ns, Xconstants.BT, bt);
-			serializer.attribute(ns, Xconstants.STATE, SETVIEW);
-			serializer.attribute(ns, Xconstants.NAME, viewName);
-			serializer.attribute(ns, Xconstants.ICON, Integer.toString(iconNum));
-
-			serializer.startTag(ns, Xconstants.DEVICE);
-			serializer.attribute(ns, Xconstants.AID, device.getFacility().getAdapterId());
-			serializer.attribute(ns, Xconstants.DID, device.getId());
-			serializer.attribute(ns, Xconstants.ACTION, action.getId());
-			serializer.endTag(ns, Xconstants.DEVICE);
-
-			endXml(serializer);
-
-			return writer.toString();
-		} catch (Exception e) {
-			throw AppException.wrap(e, NetworkError.CL_XML);
-		}
-	}
-
-	/**
-	 * Method create XML of DelVIew message
-	 *
-	 * @param bt
-	 *            userID of user
-	 * @param viewName
-	 *            name of view and also ID
-	 * @return DelVIew message
-	 * @since 2.2
-	 */
-	public static String createDelView(String bt, String viewName) {
-		return createComAttribsVariant(Xconstants.STATE, DELVIEW, Xconstants.BT, bt, Xconstants.NAME, viewName);
-	}
-
-	/**
-	 * Method create XML of GetViews message (method added in 1.6 version)
-	 *
-	 * @param bt
-	 *            userID of user
-	 * @return getViews message
-	 * @since 2.2
-	 */
-	public static String createGetViews(String bt) {
-		return createComAttribsVariant(Xconstants.STATE, GETVIEWS, Xconstants.BT, bt);
-	}
-
-	// ////////////////////////////////////////////////////////////////////////////////////////////////
 	// /////////////////////////////////////ACCOUNTS///////////////////////////////////////////////////
-	// ////////////////////////////////////////////////////////////////////////////////////////////////
 
 	/**
 	 * Method create XML for AddAcount message
@@ -907,9 +734,7 @@ public class XmlCreator {
 		return createComAttribsVariant(Xconstants.STATE, GETACCOUNTS, Xconstants.BT, bt, Xconstants.AID, aid);
 	}
 
-	// ////////////////////////////////////////////////////////////////////////////////////////////////
 	// /////////////////////////////////////TIME///////////////////////////////////////////////////////
-	// ////////////////////////////////////////////////////////////////////////////////////////////////
 
 	/**
 	 * Method create XML of SetTimeZone message
@@ -941,9 +766,7 @@ public class XmlCreator {
 		return createComAttribsVariant(Xconstants.STATE, GETTIMEZONE, Xconstants.BT, bt, Xconstants.AID, aid);
 	}
 
-	// ////////////////////////////////////////////////////////////////////////////////////////////////
-	// /////////////////////////////////////OTHERS/////////////////////////////////////////////////////
-	// ////////////////////////////////////////////////////////////////////////////////////////////////
+	// /////////////////////////////////////LOCALE/////////////////////////////////////////////////////
 
 	/**
 	 * Method create XML of SetLocale message
@@ -959,181 +782,7 @@ public class XmlCreator {
 		return createComAttribsVariant(Xconstants.STATE, SETLOCALE, Xconstants.BT, bt, Xconstants.LOCALE, locale);
 	}
 
-	// ////////////////////////////////////////////////////////////////////////////////////////////////
-	// /////////////////////////////////////CONDITIONS,ACTIONS/////////////////////////////////////////
-	// ////////////////////////////////////////////////////////////////////////////////////////////////
-
-	/**
-	 * Method create XML of AddCond message
-	 *
-	 * @param bt
-	 *            userID of actual user
-	 * @param name
-	 *            name of condition
-	 * @param type
-	 *            type of condition
-	 * @param condFuncs
-	 *            list of conditions
-	 * @return AddCond message
-	 * @since 2.2
-	 */
-	public static String createAddCondition(String bt, String name, ConditionType type, ArrayList<ConditionFunction> condFuncs) {
-		return createAddSetCond(ADDCONDITION, bt, name, type, condFuncs, "");
-	}
-
-	/**
-	 * Method crate XMl of SetCond message
-	 *
-	 * @param bt
-	 *            userID of actual user
-	 * @param name
-	 *            name of condition
-	 * @param type
-	 *            type of condition
-	 * @param cid
-	 *            conditionID to be update
-	 * @param condFuncs
-	 *            list of conditions
-	 * @return SetCond message
-	 * @since 2.2
-	 */
-	public static String createSetCondition(String bt, String name, ConditionType type, String cid, ArrayList<ConditionFunction> condFuncs) {
-		return createAddSetCond(SETCONDITION, bt, name, type, condFuncs, cid);
-	}
-
-	/**
-	 * Method create XML of DelCond message
-	 *
-	 * @param bt
-	 *            userID of actual user
-	 * @param cid
-	 *            conditionID to be delete
-	 * @return DelCond message
-	 * @since 2.2
-	 */
-	public static String createDelCondition(String bt, String cid) {
-		return createComAttribsVariant(Xconstants.STATE, DELCONDITION, Xconstants.BT, bt, Xconstants.CID, cid);
-	}
-
-	/**
-	 * Method create XML of GetCond message
-	 *
-	 * @param bt
-	 *            userID of actual user
-	 * @param cid
-	 *            conditionID
-	 * @return GetCond message
-	 * @since 2.2
-	 */
-	public static String createGetCondition(String bt, String cid) {
-		return createComAttribsVariant(Xconstants.STATE, GETCONDITION, Xconstants.BT, bt, Xconstants.CID, cid);
-	}
-
-	/**
-	 * Method create XML of GetConds message
-	 *
-	 * @param bt
-	 *            userID of actual user
-	 * @return GetConds message
-	 * @since 2.2
-	 */
-	public static String createGetConditions(String bt) {
-		return createComAttribsVariant(Xconstants.STATE, GETCONDITIONS, Xconstants.BT, bt);
-	}
-
-	/**
-	 * Method create XML of AddAct message
-	 *
-	 * @param bt
-	 *            userID of actual user
-	 * @param name
-	 *            name of new action
-	 * @param actions
-	 *            list of action to add
-	 * @return AddAct message
-	 * @since 2.2
-	 */
-	public static String createAddAction(String bt, String name, List<Action> actions) {
-		return createAddSetAct(ADDACTION, bt, name, "", actions);
-	}
-
-	/**
-	 * Method create XML of SetAct message
-	 *
-	 * @param bt
-	 *            userID of actual user
-	 * @param name
-	 *            name of new action
-	 * @param acid
-	 *            actionID to be updated
-	 * @param actions
-	 *            list of action to update
-	 * @return SetAct message
-	 * @since 2.2
-	 */
-	public static String createSetAction(String bt, String name, String acid, List<Action> actions) {
-		return createAddSetAct(SETACTION, bt, name, acid, actions);
-	}
-
-	/**
-	 * Method create XML of DelAct
-	 *
-	 * @param bt
-	 *            userID of actual user
-	 * @param acid
-	 *            actionID to be removed
-	 * @return DelAct message
-	 * @since 2.2
-	 */
-	public static String createDelAction(String bt, String acid) {
-		return createComAttribsVariant(Xconstants.STATE, DELACTION, Xconstants.BT, bt, Xconstants.ACID, acid);
-	}
-
-	/**
-	 * Method create XML of GetActs message
-	 *
-	 * @param bt
-	 *            userID of actual user
-	 * @return GetActs message
-	 * @since 2.2
-	 */
-	public static String createGetActions(String bt) {
-		return createComAttribsVariant(Xconstants.STATE, GETACTIONS, Xconstants.BT, bt);
-	}
-
-	/**
-	 * Method create XML of GetAct message
-	 *
-	 * @param bt
-	 *            userID of actual user
-	 * @param acid
-	 *            actionID
-	 * @return GetAct message
-	 * @since 2.2
-	 */
-	public static String createGetAction(String bt, String acid) {
-		return createComAttribsVariant(Xconstants.STATE, GETACTION, Xconstants.BT, bt, Xconstants.ACID, acid);
-	}
-
-	/**
-	 * Method create XML of CondAction message
-	 *
-	 * @param bt
-	 *            userID of user
-	 * @param cid
-	 *            conditionID
-	 * @param acid
-	 *            actionID
-	 * @return CondAction message
-	 * @since 2.2
-	 */
-	public static String createConditionPlusAction(String bt, String cid, String acid) {
-		return createComAttribsVariant(Xconstants.STATE, CONDITIONPLUSACTION, Xconstants.BT, bt, Xconstants.CID, cid, Xconstants.ACID, acid);
-	}
-
-	// ////////////////////////////////////////////////////////////////////////////////////////////////
 	// /////////////////////////////////////NOTIFICATIONS//////////////////////////////////////////////
-	// ////////////////////////////////////////////////////////////////////////////////////////////////
 
 	/**
 	 * Method create XML of DelXconstants.GCMID message (delete google cloud message id)
@@ -1142,7 +791,7 @@ public class XmlCreator {
 	 *            of last logged user
 	 * @param gcmid
 	 *            id of google messaging
-	 * @return message DelXconstants.GCMID
+	 * @return message GCMID
 	 * @since 2.2
 	 */
 	public static String createDeLGCMID(String userId, String gcmid) {
@@ -1207,17 +856,19 @@ public class XmlCreator {
 		}
 	}
 
+	// /////////////////////////////////////ALGORITHMS//////////////////////////////////////////////
+
 	/**
 	 * Method create message for creating new rule or editing the old one
-	 * @param bt
-	 * @param name
-	 * @param aid
-	 * @param type
+	 * @param bt beeeon Token (session Id)
+	 * @param name of algorithm
+	 * @param aid adapter id
+	 * @param type of algorithm
 	 * @param devices
 	 *          list of devices in right position for algorithm
 	 * @param params
 	 *          list of strings with additional params for new rule
-	 * @return
+	 * @return xml with add or set algorithm
 	 */
 	public static String createAddSetAlgor(String bt, String name, String algId, String aid, int type, List<String> devices, List<String> params, String regionId, Boolean state){
 		StringWriter writer = new StringWriter();
@@ -1229,7 +880,7 @@ public class XmlCreator {
 				serializer.attribute(ns, Xconstants.STATE, ADDALG);
 			else {
 				serializer.attribute(ns, Xconstants.STATE, SETALG);
-				serializer.attribute(ns, Xconstants.ENABLE, (state.booleanValue()) ? "1" : "0");
+				serializer.attribute(ns, Xconstants.ENABLE, state ? "1" : "0");
 				serializer.attribute(ns, Xconstants.ALGID, algId);
 			}
 
@@ -1264,6 +915,8 @@ public class XmlCreator {
 				serializer.endTag(ns, Xconstants.PARAM);
 			}
 
+			//TODO: GEO TAG!!
+
 			endXml(serializer);
 
 			return writer.toString();
@@ -1271,7 +924,6 @@ public class XmlCreator {
 			throw AppException.wrap(e, NetworkError.CL_XML);
 		}
 	}
-
 
 	public static String createAddAlgor(String bt, String name, String aid, int type, List<String> devices, List<String> params, String regionId){
 		return createAddSetAlgor(bt, name, null, aid, type, devices, params, regionId, null);
@@ -1283,10 +935,10 @@ public class XmlCreator {
 
 	/**
 	 * Method return message with demands for specific rules
-	 * @param bt
-	 * @param aid
-	 * @param algids
-	 * @return
+	 * @param bt beeeon Token (session Id)
+	 * @param aid adapter id
+	 * @param algids algorithm id
+	 * @return xml with getAlgs message
 	 */
 	public static String createGetAlgs(String bt, String aid, ArrayList<String> algids){
 		StringWriter writer = new StringWriter();
@@ -1313,8 +965,8 @@ public class XmlCreator {
 
 	/**
 	 * Method returns message with demands for all rules of user on specific adapter
-	 * @param bt
-	 * @return
+	 * @param bt beeeon Token (session Id)
+	 * @return xlm with getAllAlgs message
 	 */
 	public static String createGetAllAlgs(String bt, String aid){
 		return createComAttribsVariant(Xconstants.STATE, GETALLALGS, Xconstants.BT, bt, Xconstants.AID, aid);
@@ -1322,20 +974,22 @@ public class XmlCreator {
 
 	/**
 	 * Method returns message with demands for delete specific rule
-	 * @param bt
-	 * @param algid
-	 * @return
+	 * @param bt  beeeon Token (session Id)
+	 * @param algid adapter id
+	 * @return xml with delAlg message
 	 */
 	public static String createDelAlg(String bt, String algid){
 		return createComAttribsVariant(Xconstants.STATE, DELALG, Xconstants.BT, bt, Xconstants.ALGID, algid);
 	}
 
+	// /////////////////////////////////////GEOFENCING//////////////////////////////////////////////
+
 	/**
 	 * Method create message for PassBorder event
-	 * @param bt
-	 * @param rid
-	 * @param type
-	 * @return
+	 * @param bt  beeeon Token (session Id)
+	 * @param rid region id
+	 * @param type type of passing (in/out)
+	 * @return xml with passBorder message
 	 */
 	public static String createPassBorder(String bt, String rid, String type){
 		return  createComAttribsVariant(Xconstants.STATE, PASSBORDER, Xconstants.BT, bt, Xconstants.RID, rid, Xconstants.TYPE, type);
@@ -1362,7 +1016,7 @@ public class XmlCreator {
 		return createComAttribsVariant(Xconstants.STATE, SETPROGRESSLVL, Xconstants.BT, bt, Xconstants.AID, aid, Xconstants.ID, achId);
 	}
 
-	/************************************* PRIVATE METHODS *********************************************/
+	// /////////////////////////////////////PRIVATE METHODS//////////////////////////////////////////////
 
 	private static String createComAttribsVariant(String... args) {
 		if (0 != (args.length % 2)) { // odd
@@ -1400,158 +1054,6 @@ public class XmlCreator {
 				serializer.attribute(ns, Xconstants.EMAIL, user.getEmail());
 				serializer.attribute(ns, Xconstants.ROLE, user.getRole().getId());
 				serializer.endTag(ns, Xconstants.USER);
-			}
-
-			endXml(serializer);
-
-			return writer.toString();
-		} catch (Exception e) {
-			throw AppException.wrap(e, NetworkError.CL_XML);
-		}
-	}
-
-	private static String createAddSetCond(String state, String bt, String name, ConditionType type, ArrayList<ConditionFunction> condFuncs, String cid) {
-		StringWriter writer = new StringWriter();
-		try {
-			XmlSerializer serializer = beginXml(writer);
-
-			serializer.attribute(ns, Xconstants.BT, bt);
-			serializer.attribute(ns, Xconstants.STATE, state);
-			serializer.attribute(ns, Xconstants.CNAME, name);
-			serializer.attribute(ns, Xconstants.CTYPE, type.getId());
-			if (state.equals(SETCONDITION))
-				serializer.attribute(ns, Xconstants.ID, cid);
-
-			for (ConditionFunction func : condFuncs) {
-				serializer.startTag(ns, Xconstants.FUNC);
-				serializer.attribute(ns, Xconstants.TYPE, func.getFuncType().getId());
-
-				switch (func.getFuncType()) {
-				case EQ:
-					serializer.startTag(ns, Xconstants.DEVICE);
-					serializer.attribute(ns, Xconstants.ID, ((EqualFunc) func).getDevice().getId());
-					serializer.attribute(ns, Xconstants.TYPE, ((EqualFunc) func).getDevice().getRawTypeId());
-					serializer.endTag(ns, Xconstants.DEVICE);
-
-					serializer.startTag(ns, Xconstants.VALUE);
-					serializer.text(((EqualFunc) func).getValue());
-					serializer.endTag(ns, Xconstants.VALUE);
-					break;
-				case GT:
-					serializer.startTag(ns, Xconstants.DEVICE);
-					serializer.attribute(ns, Xconstants.ID, ((GreaterThanFunc) func).getDevice().getId());
-					serializer.attribute(ns, Xconstants.TYPE, ((GreaterThanFunc) func).getDevice().getRawTypeId());
-					serializer.endTag(ns, Xconstants.DEVICE);
-
-					serializer.startTag(ns, Xconstants.VALUE);
-					serializer.text(((GreaterThanFunc) func).getValue());
-					serializer.endTag(ns, Xconstants.VALUE);
-					break;
-				case GE:
-					serializer.startTag(ns, Xconstants.DEVICE);
-					serializer.attribute(ns, Xconstants.ID, ((GreaterEqualFunc) func).getDevice().getId());
-					serializer.attribute(ns, Xconstants.TYPE, ((GreaterEqualFunc) func).getDevice().getRawTypeId());
-					serializer.endTag(ns, Xconstants.DEVICE);
-
-					serializer.startTag(ns, Xconstants.VALUE);
-					serializer.text(((GreaterEqualFunc) func).getValue());
-					serializer.endTag(ns, Xconstants.VALUE);
-					break;
-				case LT:
-					serializer.startTag(ns, Xconstants.DEVICE);
-					serializer.attribute(ns, Xconstants.ID, ((LesserThanFunc) func).getDevice().getId());
-					serializer.attribute(ns, Xconstants.TYPE, ((LesserThanFunc) func).getDevice().getRawTypeId());
-					serializer.endTag(ns, Xconstants.DEVICE);
-
-					serializer.startTag(ns, Xconstants.VALUE);
-					serializer.text(((LesserThanFunc) func).getValue());
-					serializer.endTag(ns, Xconstants.VALUE);
-					break;
-				case LE:
-					serializer.startTag(ns, Xconstants.DEVICE);
-					serializer.attribute(ns, Xconstants.ID, ((LesserEqualFunc) func).getDevice().getId());
-					serializer.attribute(ns, Xconstants.TYPE, ((LesserEqualFunc) func).getDevice().getRawTypeId());
-					serializer.endTag(ns, Xconstants.DEVICE);
-
-					serializer.startTag(ns, Xconstants.VALUE);
-					serializer.text(((LesserEqualFunc) func).getValue());
-					serializer.endTag(ns, Xconstants.VALUE);
-					break;
-				case BTW:
-					serializer.startTag(ns, Xconstants.DEVICE);
-					serializer.attribute(ns, Xconstants.ID, ((BetweenFunc) func).getDevice().getId());
-					serializer.attribute(ns, Xconstants.TYPE, ((BetweenFunc) func).getDevice().getRawTypeId());
-					serializer.endTag(ns, Xconstants.DEVICE);
-
-					serializer.startTag(ns, Xconstants.VALUE);
-					serializer.text(((BetweenFunc) func).getMinValue());
-					serializer.endTag(ns, Xconstants.VALUE);
-
-					serializer.startTag(ns, Xconstants.VALUE);
-					serializer.text(((BetweenFunc) func).getMaxValue());
-					serializer.endTag(ns, Xconstants.VALUE);
-					break;
-				case DP:
-					serializer.startTag(ns, Xconstants.DEVICE);
-					serializer.attribute(ns, Xconstants.ID, ((DewPointFunc) func).getTempDevice().getId());
-					serializer.attribute(ns, Xconstants.TYPE, ((DewPointFunc) func).getTempDevice().getType() + "");
-					serializer.endTag(ns, Xconstants.DEVICE);
-
-					serializer.startTag(ns, Xconstants.DEVICE);
-					serializer.attribute(ns, Xconstants.ID, ((DewPointFunc) func).getHumiDevice().getId());
-					serializer.attribute(ns, Xconstants.TYPE, ((DewPointFunc) func).getHumiDevice().getRawTypeId());
-					serializer.endTag(ns, Xconstants.DEVICE);
-					break;
-				case TIME:
-					serializer.startTag(ns, Xconstants.VALUE);
-					serializer.text(((TimeFunc) func).getTime());
-					serializer.endTag(ns, Xconstants.VALUE);
-					break;
-				case GEO:
-					serializer.startTag(ns, Xconstants.VALUE);
-					// FIXME: wait for martin
-					serializer.text("TODO");
-					serializer.endTag(ns, Xconstants.VALUE);
-					break;
-				default:
-					break;
-				}
-
-				serializer.endTag(ns, Xconstants.FUNC);
-			}
-
-			endXml(serializer);
-
-			return writer.toString();
-		} catch (Exception e) {
-			throw AppException.wrap(e, NetworkError.CL_XML);
-		}
-	}
-
-	private static String createAddSetAct(String state, String bt, String name, String actid, List<Action> actions) {
-		StringWriter writer = new StringWriter();
-		try {
-			XmlSerializer serializer = beginXml(writer);
-
-			serializer.attribute(ns, Xconstants.BT, bt);
-			serializer.attribute(ns, Xconstants.STATE, state);
-			serializer.attribute(ns, Xconstants.ACNAME, name);
-			if (state.equals(SETACTION))
-				serializer.attribute(ns, Xconstants.ACID, actid);
-
-			for (Action action : actions) {
-				serializer.startTag(ns, Xconstants.ACTION);
-				serializer.attribute(ns, Xconstants.TYPE, action.getType().getId());
-
-				if (action.getType() == Action.ActionType.ACTOR) {
-					serializer.startTag(ns, Xconstants.DEVICE);
-
-					serializer.attribute(ns, Xconstants.ID, action.getDevice().getId());
-					serializer.attribute(ns, Xconstants.TYPE, action.getDevice().getRawTypeId());
-					serializer.attribute(ns, Xconstants.VALUE, action.getValue());
-					serializer.endTag(ns, Xconstants.DEVICE);
-				}
-				serializer.endTag(ns, Xconstants.ACTION);
 			}
 
 			endXml(serializer);

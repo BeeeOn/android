@@ -24,10 +24,7 @@ import com.rehivetech.beeeon.household.user.User.Gender;
 import com.rehivetech.beeeon.household.user.User.Role;
 import com.rehivetech.beeeon.household.watchdog.WatchDog;
 import com.rehivetech.beeeon.network.authentication.IAuthProvider;
-import com.rehivetech.beeeon.network.xml.CustomViewPair;
 import com.rehivetech.beeeon.network.xml.XmlParsers;
-import com.rehivetech.beeeon.network.xml.action.ComplexAction;
-import com.rehivetech.beeeon.network.xml.condition.Condition;
 import com.rehivetech.beeeon.pair.LogDataPair;
 import com.rehivetech.beeeon.util.DataHolder;
 import com.rehivetech.beeeon.util.MultipleDataHolder;
@@ -557,30 +554,6 @@ public class DemoNetwork implements INetwork {
 	}
 
 	@Override
-	public boolean addView(String viewName, int iconID, List<Device> devices) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public List<CustomViewPair> getViews() {
-		// TODO Auto-generated method stub
-		return new ArrayList<CustomViewPair>();
-	}
-
-	@Override
-	public boolean deleteView(String viewName) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public boolean updateView(String viewName, int iconId, Facility facility, NetworkAction action) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
 	public boolean addAccounts(String adapterId, ArrayList<User> users) {
 		for (User user : users) {
 			if (!addAccount(adapterId, user)) {
@@ -721,76 +694,11 @@ public class DemoNetwork implements INetwork {
 
 	@Override
 	public List<VisibleNotification> getNotifications() {
+		// TODO Auto-generated method stub
 		return new ArrayList<>();
 	}
 
 	@Override
-	public Condition setCondition(Condition condition) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public boolean connectConditionWithAction(String conditionID, String actionID) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public Condition getCondition(Condition condition) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public List<Condition> getConditions() {
-		// TODO Auto-generated method stub
-		return new ArrayList<Condition>();
-	}
-
-	@Override
-	public boolean updateCondition(Condition condition) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public boolean deleteCondition(Condition condition) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public ComplexAction setAction(ComplexAction action) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public List<ComplexAction> getActions() {
-		// TODO Auto-generated method stub
-		return new ArrayList<ComplexAction>();
-	}
-
-	@Override
-	public ComplexAction getAction(ComplexAction action) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public boolean updateAction(ComplexAction action) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public boolean deleteAction(ComplexAction action) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-    @Override
     public List<WatchDog> getAllWatchDogs(String adapterId) {
 		return mWatchdogs.getObjects(adapterId);
 	}

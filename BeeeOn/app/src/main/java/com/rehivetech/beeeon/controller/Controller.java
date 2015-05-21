@@ -105,7 +105,7 @@ public final class Controller {
 		mDemoMode = demoMode;
 
 		// Create basic objects
-		mNetwork = mDemoMode ? new DemoNetwork(mContext) : new Network(mContext, Utils.isDebugVersion(mContext));
+		mNetwork = mDemoMode ? new DemoNetwork(mContext) : new Network(mContext);
 		mPersistence = new Persistence(mContext);
 		mUser = new User();
 

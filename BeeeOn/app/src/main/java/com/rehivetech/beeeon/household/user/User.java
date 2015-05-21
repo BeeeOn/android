@@ -32,7 +32,7 @@ public class User implements INameIdentifier {
 
 	private String mPictureUrl = "";
 
-	private SoftReference<Bitmap> mDefaultPicture = new SoftReference<Bitmap>(null);
+	private SoftReference<Bitmap> mDefaultPicture = new SoftReference<>(null);
 
 	public User() {}
 

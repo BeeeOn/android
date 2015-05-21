@@ -18,14 +18,11 @@ import com.rehivetech.beeeon.household.location.Location;
 import com.rehivetech.beeeon.household.user.User;
 import com.rehivetech.beeeon.household.watchdog.WatchDog;
 import com.rehivetech.beeeon.network.authentication.IAuthProvider;
-import com.rehivetech.beeeon.network.xml.CustomViewPair;
 import com.rehivetech.beeeon.network.xml.FalseAnswer;
 import com.rehivetech.beeeon.network.xml.ParsedMessage;
 import com.rehivetech.beeeon.network.xml.XmlCreator;
 import com.rehivetech.beeeon.network.xml.XmlParsers;
 import com.rehivetech.beeeon.network.xml.XmlParsers.State;
-import com.rehivetech.beeeon.network.xml.action.ComplexAction;
-import com.rehivetech.beeeon.network.xml.condition.Condition;
 import com.rehivetech.beeeon.pair.LogDataPair;
 import com.rehivetech.beeeon.util.Log;
 import com.rehivetech.beeeon.util.Utils;
@@ -110,7 +107,6 @@ public class Network implements INetwork {
 
 	private final Context mContext;
 	private String mBT = "";
-	private final boolean mUseDebugServer;
 	private static final int SSLTIMEOUT = 35000;
 
 	private SSLSocket mSocket = null;
@@ -120,19 +116,17 @@ public class Network implements INetwork {
 	/**
 	 * Constructor.
 	 *
-	 * @param context
-	 * @param useDebugServer
+	 * @param context of app
 	 */
-	public Network(Context context, boolean useDebugServer) {
+	public Network(Context context) {
 		mContext = context;
-		mUseDebugServer = useDebugServer;
 	}
 
 	/**
 	 * Method for communicating with server.
 	 *
-	 * @param request
-	 * @return
+	 * @param request is message to send
+	 * @return response from server
 	 * @throws AppException with error NetworkError.CL_UNKNOWN_HOST, NetworkError.CL_CERTIFICATE or NetworkError.CL_SOCKET
 	 */
 	private String startCommunication(String request) throws AppException {
@@ -281,11 +275,6 @@ public class Network implements INetwork {
 		}
 	}
 
-	/**
-	 * Checks if Internet connection is available.
-	 *
-	 * @return true if available, false otherwise
-	 */
 	@Override
 	public boolean isAvailable() {
 		ConnectivityManager connectivityManager = (ConnectivityManager) mContext.getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -314,11 +303,11 @@ public class Network implements INetwork {
 	/**
 	 * Send request to server and return parsedMessage or throw exception on error.
 	 *
-	 * @param messageToSend
+	 * @param messageToSend message in xml
 	 * @param checkBT - when true and BT is not present in Network, then throws AppException with NetworkError.SRV_BAD_BT
 	 *                - this logically must be false for requests like register or login, which doesn't require BT for working
 	 * @param retries - number of retries to do the request and receive response
-	 * @return
+	 * @return object with parsed data
 	 * @throws AppException with error NetworkError.CL_INTERNET_CONNECTION, NetworkError.SRV_BAD_BT, NetworkError.CL_XML,
 	 * 			NetworkError.CL_UNKNOWN_HOST, NetworkError.CL_CERTIFICATE, NetworkError.CL_SOCKET or NetworkError.CL_NO_RESPONSE
 	 */
@@ -357,11 +346,11 @@ public class Network implements INetwork {
 			return new XmlParsers().parseCommunication(result, false);
 		} catch (IOException | XmlPullParserException | ParseException e) {
 			throw AppException.wrap(e, NetworkError.CL_XML);
-		} finally {
+		} /*finally {
 			// Debug.stopMethodTracing();
 			// ltime = new Date().getTime() - ltime;
 			// android.util.Log.d("Support_231", ltime+"");
-		}
+		}*/
 	}
 
 	/**
@@ -389,9 +378,7 @@ public class Network implements INetwork {
 		return new AppException(fa.getErrMessage(), Utils.getEnumFromId(NetworkError.class, String.valueOf(fa.getErrCode())));
 	}
 
-	// /////////////////////////////////////////////////////////////////////////////////
 	// /////////////////////////////////////SIGNIN,SIGNUP,ADAPTERS//////////////////////
-	// /////////////////////////////////////////////////////////////////////////////////
 
 	@Override
 	public String getBT() {
@@ -481,15 +468,6 @@ public class Network implements INetwork {
 		throw processFalse(msg);
 	}
 
-	/**
-	 * Method register adapter to server
-	 *
-	 * @param adapterID
-	 *            adapter id
-	 * @param adapterName
-	 *            adapter name
-	 * @return true if adapter has been registered, false otherwise
-	 */
 	@Override
 	public boolean addAdapter(String adapterID, String adapterName) {
 		ParsedMessage msg = doRequest(XmlCreator.createAddAdapter(mBT, adapterID, adapterName));
@@ -500,11 +478,6 @@ public class Network implements INetwork {
 		throw processFalse(msg);
 	}
 
-	/**
-	 * Method ask for list of adapters. User has to be sign in before
-	 *
-	 * @return list of adapters or empty list
-	 */
 	@Override
 	// http://stackoverflow.com/a/509288/1642090
 	@SuppressWarnings("unchecked")
@@ -517,13 +490,6 @@ public class Network implements INetwork {
 		throw processFalse(msg);
 	}
 
-	/**
-	 * Method ask for whole adapter data
-	 *
-	 * @param adapterID
-	 *            of wanted adapter
-	 * @return Adapter
-	 */
 	@Override
 	@SuppressWarnings("unchecked")
 	public List<Facility> initAdapter(String adapterID){
@@ -535,15 +501,6 @@ public class Network implements INetwork {
 		throw processFalse(msg);
 	}
 
-	/**
-	 * Method change adapter id
-	 *
-	 * @param oldId
-	 *            id to be changed
-	 * @param newId
-	 *            new id
-	 * @return true if change has been successfully
-	 */
 	@Override
 	public boolean reInitAdapter(String oldId, String newId){
 		ParsedMessage msg = doRequest(XmlCreator.createReInitAdapter(mBT, oldId, newId));
@@ -558,14 +515,6 @@ public class Network implements INetwork {
 	// /////////////////////////////////////DEVICES,LOGS////////////////////////////////
 	// /////////////////////////////////////////////////////////////////////////////////
 
-	/**
-	 * Method send updated fields of devices
-	 *
-	 * @param adapterID
-	 * @param facilities
-	 * @param toSave
-	 * @return true if everything goes well, false otherwise
-	 */
 	@Override
 	public boolean updateFacilities(String adapterID, List<Facility> facilities, EnumSet<SaveDevice> toSave){
 		ParsedMessage msg = doRequest(XmlCreator.createSetDevs(mBT, adapterID, facilities, toSave));
@@ -576,17 +525,6 @@ public class Network implements INetwork {
 		throw processFalse(msg);
 	}
 
-	/**
-	 * Method send wanted fields of device to server
-	 *
-	 * @param adapterID
-	 *            id of adapter
-	 * @param device
-	 *            to save
-	 * @param toSave
-	 *            ENUMSET specified fields to save
-	 * @return true if fields has been updated, false otherwise
-	 */
 	@Override
 	public boolean updateDevice(String adapterID, Device device, EnumSet<SaveDevice> toSave){
 		ParsedMessage msg = doRequest(XmlCreator.createSetDev(mBT, adapterID, device, toSave));
@@ -597,13 +535,6 @@ public class Network implements INetwork {
 		throw processFalse(msg);
 	}
 
-	/**
-	 * Method toggle or set actor to new value
-	 *
-	 * @param adapterID
-	 * @param device
-	 * @return
-	 */
 	@Override
 	public boolean switchState(String adapterID, Device device){
 		ParsedMessage msg = doRequest(XmlCreator.createSwitch(mBT, adapterID, device));
@@ -614,13 +545,6 @@ public class Network implements INetwork {
 		throw processFalse(msg);
 	}
 
-	/**
-	 * Method make adapter to special state, when listen for new sensors (e.g. 15s) and wait if some sensors has been
-	 * shaken to connect
-	 *
-	 * @param adapterID
-	 * @return
-	 */
 	@Override
 	public boolean prepareAdapterToListenNewSensors(String adapterID){
 		ParsedMessage msg = doRequest(XmlCreator.createAdapterScanMode(mBT, adapterID));
@@ -631,13 +555,6 @@ public class Network implements INetwork {
 		throw processFalse(msg);
 	}
 
-	/**
-	 * Method delete facility from server
-	 *
-	 * @param facility
-	 *            to be deleted
-	 * @return true if is deleted, false otherwise
-	 */
 	@Override
 	public boolean deleteFacility(Facility facility){
 		ParsedMessage msg = doRequest(XmlCreator.createDeleteDevice(mBT, facility));
@@ -648,13 +565,6 @@ public class Network implements INetwork {
 		throw processFalse(msg);
 	}
 
-	/**
-	 * Method ask for actual data of facilities
-	 *
-	 * @param facilities
-	 *            list of facilities to which needed actual data
-	 * @return list of updated facilities fields
-	 */
 	@Override
 	// http://stackoverflow.com/a/509288/1642090
 	@SuppressWarnings("unchecked")
@@ -667,16 +577,10 @@ public class Network implements INetwork {
 		throw processFalse(msg);
 	}
 
-	/**
-	 * Method ask server for actual data of one facility
-	 *
-	 * @param facility
-	 * @return
-	 */
 	@Override
 	public Facility getFacility(Facility facility){
 
-		ArrayList<Facility> list = new ArrayList<Facility>();
+		ArrayList<Facility> list = new ArrayList<>();
 		list.add(facility);
 
 		return getFacilities(list).get(0);
@@ -685,17 +589,12 @@ public class Network implements INetwork {
 	@Override
 	public boolean updateFacility(String adapterID, Facility facility, EnumSet<SaveDevice> toSave) {
 
-		ArrayList<Facility> list = new ArrayList<Facility>();
+		ArrayList<Facility> list = new ArrayList<>();
 		list.add(facility);
 
 		return updateFacilities(adapterID, list, toSave);
 	}
 
-	/**
-	 * Method get new devices
-	 * @param adapterID
-	 * @return
-	 */
 	@Override
 	@SuppressWarnings("unchecked")
 	public List<Facility> getNewFacilities(String adapterID) {
@@ -707,17 +606,6 @@ public class Network implements INetwork {
 		throw processFalse(msg);
 	}
 
-	/**
-	 * Method ask for data of logs
-	 *
-	 * @param adapterID
-	 *
-	 * @param device
-	 *            id of wanted device
-	 * @param pair
-	 *            data of log (from, to, type, interval)
-	 * @return list of rows with logged data
-	 */
 	// http://stackoverflow.com/a/509288/1642090
 	@Override
 	public DeviceLog getLog(String adapterID, Device device, LogDataPair pair){
@@ -737,15 +625,8 @@ public class Network implements INetwork {
 		throw processFalse(msg);
 	}
 
-	// /////////////////////////////////////////////////////////////////////////////////
 	// /////////////////////////////////////ROOMS///////////////////////////////////////
-	// /////////////////////////////////////////////////////////////////////////////////
 
-	/**
-	 * Method call to server for actual list of locations
-	 *
-	 * @return List with locations
-	 */
 	@Override
 	// http://stackoverflow.com/a/509288/1642090
 	@SuppressWarnings("unchecked")
@@ -758,13 +639,6 @@ public class Network implements INetwork {
 		throw processFalse(msg);
 	}
 
-	/**
-	 * Method call to server to update location
-	 *
-	 * @param locations
-	 *            to update
-	 * @return true if everything is OK, false otherwise
-	 */
 	@Override
 	public boolean updateLocations(String adapterID, List<Location> locations){
 		ParsedMessage msg = doRequest(XmlCreator.createSetRooms(mBT, adapterID, locations));
@@ -775,27 +649,15 @@ public class Network implements INetwork {
 		throw processFalse(msg);
 	}
 
-	/**
-	 * Method call to server to update location
-	 *
-	 * @param location
-	 * @return
-	 */
 	@Override
 	public boolean updateLocation(Location location){
 
-		List<Location> list = new ArrayList<Location>();
+		List<Location> list = new ArrayList<>();
 		list.add(location);
 
 		return updateLocations(location.getAdapterId(), list);
 	}
 
-	/**
-	 * Method call to server and delete location
-	 *
-	 * @param location
-	 * @return true room is deleted, false otherwise
-	 */
 	@Override
 	public boolean deleteLocation(Location location){
 		ParsedMessage msg = doRequest(XmlCreator.createDeleteRoom(mBT, location));
@@ -818,82 +680,10 @@ public class Network implements INetwork {
 		throw processFalse(msg);
 	}
 
-	// /////////////////////////////////////////////////////////////////////////////////
-	// /////////////////////////////////////VIEWS///////////////////////////////////////
-	// /////////////////////////////////////////////////////////////////////////////////
-
-	/**
-	 * Method send newly created custom view
-	 *
-	 * @param viewName
-	 *            name of new custom view
-	 * @param iconID
-	 *            icon that is assigned to the new view
-	 * @param devices
-	 *            list of devices that are assigned to new view
-	 * @return true if everything goes well, false otherwise
-	 */
-	@Override
-	public boolean addView(String viewName, int iconID, List<Device> devices){
-		ParsedMessage msg = doRequest(XmlCreator.createAddView(mBT, viewName, iconID, devices));
-
-		if (msg.getState() == State.TRUE)
-			return true;
-
-		throw processFalse(msg);
-	}
-
-	/**
-	 * Method ask for list of all custom views
-	 *
-	 * @return list of defined custom views
-	 */
-	@Override
-	// http://stackoverflow.com/a/509288/1642090
-	@SuppressWarnings("unchecked")
-	// FIXME: will be edited by ROB demands
-	public List<CustomViewPair> getViews(){
-		ParsedMessage msg = doRequest(XmlCreator.createGetViews(mBT));
-
-		if (msg.getState() == State.VIEWS)
-			return (List<CustomViewPair>) msg.data;
-
-		throw processFalse(msg);
-	}
-
-	/**
-	 * Method delete whole custom view from server
-	 *
-	 * @param viewName
-	 *            name of view to erase
-	 * @return true if view has been deleted, false otherwise
-	 */
-	@Override
-	public boolean deleteView(String viewName){
-		ParsedMessage msg = doRequest(XmlCreator.createDelView(mBT, viewName));
-
-		if (msg.getState() == State.TRUE)
-			return true;
-
-		throw processFalse(msg);
-	}
-
-	// FIXME: will be edited by ROB demands
-	@Override
-	public boolean updateView(String viewName, int iconId, Facility facility, NetworkAction action) {
-		ParsedMessage msg = doRequest(XmlCreator.createSetView(mBT, viewName, iconId, null, action));
-
-		if (msg.getState() == State.TRUE)
-			return true;
-
-		throw processFalse(msg);
-	}
-
-	// /////////////////////////////////////////////////////////////////////////////////
 	// /////////////////////////////////////ACCOUNTS////////////////////////////////////
-	// /////////////////////////////////////////////////////////////////////////////////
 
 	@Override
+	@SuppressWarnings("unchecked")
 	public boolean addAccounts(String adapterID, ArrayList<User> users){
 		ParsedMessage msg = doRequest(XmlCreator.createAddAccounts(mBT, adapterID, users));
 
@@ -902,7 +692,6 @@ public class Network implements INetwork {
 
 		AppException e = processFalse(msg);
 
-		// TODO: This should be made universal, but I don't understand how the troubleMakers work and on what it depends... (Robyer)
 		FalseAnswer fa = (FalseAnswer) msg.data;
 		String troubleUsers = "";
 		for (User u : (ArrayList<User>) fa.troubleMakers){
@@ -912,29 +701,15 @@ public class Network implements INetwork {
 		throw AppException.wrap(e).set("Trouble users", troubleUsers);
 	}
 
-	/**
-	 * Method add new user to adapter
-	 *
-	 * @param adapterID
-	 * @param user
-	 * @return
-	 */
 	@Override
 	public boolean addAccount(String adapterID, User user) {
 
-		ArrayList<User> list = new ArrayList<User>();
+		ArrayList<User> list = new ArrayList<>();
 		list.add(user);
 
 		return addAccounts(adapterID, list);
 	}
 
-	/**
-	 * Method delete users from actual adapter
-	 *
-	 * @param users
-	 *            email of user
-	 * @return true if all users has been deleted, false otherwise
-	 */
 	@Override
 	public boolean deleteAccounts(String adapterID, List<User> users){
 		ParsedMessage msg = doRequest(XmlCreator.createDelAccounts(mBT, adapterID, users));
@@ -945,27 +720,15 @@ public class Network implements INetwork {
 		throw processFalse(msg);
 	}
 
-	/**
-	 * Method delete on user from adapter
-	 *
-	 * @param adapterID
-	 * @param user
-	 * @return
-	 */
 	@Override
 	public boolean deleteAccount(String adapterID, User user){
 
-		ArrayList<User> list = new ArrayList<User>();
+		ArrayList<User> list = new ArrayList<>();
 		list.add(user);
 
 		return deleteAccounts(adapterID, list);
 	}
 
-	/**
-	 * Method ask for list of users of current adapter
-	 *
-	 * @return Map of users where key is email and value is User object
-	 */
 	@Override
 	// http://stackoverflow.com/a/509288/1642090
 	@SuppressWarnings("unchecked")
@@ -978,13 +741,6 @@ public class Network implements INetwork {
 		throw processFalse(msg);
 	}
 
-	/**
-	 * Method update users roles on server on current adapter
-	 *
-	 * @param adapterID
-	 * @param users
-	 * @return true if all accounts has been changed false otherwise
-	 */
 	@Override
 	public boolean updateAccounts(String adapterID, ArrayList<User> users){
 		ParsedMessage msg = doRequest(XmlCreator.createSetAccounts(mBT, adapterID, users));
@@ -995,35 +751,17 @@ public class Network implements INetwork {
 		throw processFalse(msg);
 	}
 
-	/**
-	 * Method update users role on adapter
-	 *
-	 * @param adapterID
-	 * @param user
-	 * @return
-	 */
 	@Override
 	public boolean updateAccount(String adapterID, User user){
 
-		ArrayList<User> list = new ArrayList<User>();
+		ArrayList<User> list = new ArrayList<>();
 		list.add(user);
 
 		return updateAccounts(adapterID, list);
 	}
 
-	// /////////////////////////////////////////////////////////////////////////////////
 	// /////////////////////////////////////TIME////////////////////////////////////////
-	// /////////////////////////////////////////////////////////////////////////////////
 
-	/**
-	 * Method set wanted time zone to server
-	 *
-	 * @NOTE using difference from GMT (UTC+0),
-	 *       https://merlin.fit.vutbr.cz/wiki-iot/index.php/Smarthome_cloud#SetTimeZone
-	 * @param offsetInMinutes
-	 * @return
-	 */
-	@Override
 	public boolean setTimeZone(String adapterID, int offsetInMinutes){
 		ParsedMessage msg = doRequest(XmlCreator.createSetTimeZone(mBT, adapterID, offsetInMinutes));
 
@@ -1033,11 +771,6 @@ public class Network implements INetwork {
 		throw processFalse(msg);
 	}
 
-	/**
-	 * Method call to server to get actual time zone
-	 *
-	 * @return integer in range <-12,12>
-	 */
 	@Override
 	public int getTimeZone(String adapterID){
 		ParsedMessage msg = doRequest(XmlCreator.createGetTimeZone(mBT, adapterID));
@@ -1048,9 +781,7 @@ public class Network implements INetwork {
 		throw processFalse(msg);
 	}
 
-	// /////////////////////////////////////////////////////////////////////////////////
 	// /////////////////////////////////////NOTIFICATIONS///////////////////////////////
-	// /////////////////////////////////////////////////////////////////////////////////
 
 	/**
 	 * Method delete old gcmid to avoid fake notifications
@@ -1070,13 +801,6 @@ public class Network implements INetwork {
 		throw processFalse(msg);
 	}
 
-	/**
-	 * Method set read flag to notification on server
-	 *
-	 * @param msgID
-	 *            id of notification
-	 * @return true if server took flag, false otherwise
-	 */
 	@Override
 	public boolean NotificationsRead(ArrayList<String> msgID){
 		ParsedMessage msg = doRequest(XmlCreator.createNotificaionRead(mBT, msgID));
@@ -1091,7 +815,6 @@ public class Network implements INetwork {
 	 * Method set gcmID to server
 	 * @param gcmID to be set
 	 * @return true if id has been updated, false otherwise
-	 * FIXME: after merge need to by rewrite
 	 */
 	public boolean setGCMID(String gcmID){
 		ParsedMessage msg = doRequest(XmlCreator.createSetGCMID(mBT, gcmID));
@@ -1106,144 +829,12 @@ public class Network implements INetwork {
 	 * TODO: method need to be checked online
 	 * @return
 	 */
+	 @SuppressWarnings("unchecked")
 	public List<VisibleNotification> getNotifications(){
 		ParsedMessage msg = doRequest(XmlCreator.createGetNotifications(mBT));
 
 		if (msg.getState() == State.NOTIFICATIONS)
 			return (List<VisibleNotification>) msg.data;
-
-		throw processFalse(msg);
-	}
-
-	// /////////////////////////////////////////////////////////////////////////////////
-	// /////////////////////////////////////CONDITIONS,ACTIONS//////////////////////////
-	// /////////////////////////////////////////////////////////////////////////////////
-
-	@Override
-	public Condition setCondition(Condition condition) {
-		String messageToSend = XmlCreator.createAddCondition(mBT, condition.getName(),
-				Utils.getEnumFromId(XmlCreator.ConditionType.class, condition.getType()), condition.getFuncs());
-		ParsedMessage msg = doRequest(messageToSend);
-
-		if (msg.getState() == State.CONDITIONCREATED) {
-			condition.setId((String) msg.data);
-			return condition;
-		}
-
-		throw processFalse(msg);
-	}
-
-	@Override
-	public boolean connectConditionWithAction(String conditionID, String actionID) {
-		ParsedMessage msg = doRequest(XmlCreator.createConditionPlusAction(mBT, conditionID, actionID));
-
-		if (msg.getState() == State.TRUE)
-			return true;
-
-		throw processFalse(msg);
-	}
-
-	@Override
-	public Condition getCondition(Condition condition) {
-		ParsedMessage msg = doRequest(XmlCreator.createGetCondition(mBT, condition.getId()));
-
-		if (msg.getState() == State.CONDITIONCREATED) {
-			Condition cond = (Condition) msg.data;
-
-			condition.setType(cond.getType());
-			condition.setFuncs(cond.getFuncs());
-			return condition;
-		}
-
-		throw processFalse(msg);
-	}
-
-	@Override
-	@SuppressWarnings("unchecked")
-	public List<Condition> getConditions() {
-		ParsedMessage msg = doRequest(XmlCreator.createGetConditions(mBT));
-
-		if (msg.getState() == State.CONDITIONS)
-			return (List<Condition>) msg.data;
-
-		throw processFalse(msg);
-	}
-
-	@Override
-	public boolean updateCondition(Condition condition) {
-		String messageToSend = XmlCreator.createSetCondition(mBT, condition.getName(),
-				Utils.getEnumFromId(XmlCreator.ConditionType.class, condition.getType()), condition.getId(), condition.getFuncs());
-		ParsedMessage msg = doRequest(messageToSend);
-
-		if (msg.getState() == State.TRUE)
-			return true;
-
-		throw processFalse(msg);
-	}
-
-	@Override
-	public boolean deleteCondition(Condition condition) {
-		ParsedMessage msg = doRequest(XmlCreator.createDelCondition(mBT, condition.getId()));
-
-		if (msg.getState() == State.TRUE)
-			return true;
-
-		throw processFalse(msg);
-	}
-
-	@Override
-	public ComplexAction setAction(ComplexAction action) {
-		ParsedMessage msg = doRequest(XmlCreator.createAddAction(mBT, action.getName(), action.getActions()));
-
-		if (msg.getState() == State.ACTIONCREATED) {
-			action.setId((String) msg.data);
-			return action;
-		}
-
-		throw processFalse(msg);
-	}
-
-	@Override
-	@SuppressWarnings("unchecked")
-	public List<ComplexAction> getActions() {
-		ParsedMessage msg = doRequest(XmlCreator.createGetActions(mBT));
-
-		if (msg.getState() == State.ACTIONS)
-			return (List<ComplexAction>) msg.data;
-
-		throw processFalse(msg);
-	}
-
-	@Override
-	public ComplexAction getAction(ComplexAction action) {
-		ParsedMessage msg = doRequest(XmlCreator.createGetCondition(mBT, action.getId()));
-
-		if (msg.getState() == State.ACTION) {
-			ComplexAction act = (ComplexAction) msg.data;
-			action.setActions(act.getActions());
-			return action;
-		}
-
-		throw processFalse(msg);
-	}
-
-	@Override
-	public boolean updateAction(ComplexAction action) {
-		String messageToSend = XmlCreator.createSetAction(mBT, action.getName(), action.getId(), action.getActions());
-		ParsedMessage msg = doRequest(messageToSend);
-
-		if (msg.getState() == State.TRUE)
-			return true;
-
-		throw processFalse(msg);
-	}
-
-	@Override
-	public boolean deleteAction(ComplexAction action) {
-		ParsedMessage msg = doRequest(XmlCreator.createDelAction(mBT, action.getId()));
-
-		if (msg.getState() == State.TRUE)
-			return true;
 
 		throw processFalse(msg);
 	}
@@ -1261,6 +852,7 @@ public class Network implements INetwork {
 	}
 
 	@Override
+	@SuppressWarnings("unchecked")
 	public List<WatchDog> getWatchDogs(ArrayList<String> watchDogIds, String adapterId){
 		ParsedMessage msg = doRequest(XmlCreator.createGetAlgs(mBT, adapterId, watchDogIds));
 
@@ -1272,6 +864,7 @@ public class Network implements INetwork {
 	}
 
 	@Override
+	@SuppressWarnings("unchecked")
 	public List<WatchDog> getAllWatchDogs(String adapterID){
 		ParsedMessage msg = doRequest(XmlCreator.createGetAllAlgs(mBT, adapterID));
 
@@ -1313,6 +906,7 @@ public class Network implements INetwork {
 	}
 
 	@Override
+	@SuppressWarnings("unchecked")
 	public List<AchievementListItem> getAllAchievements(String adapterID){
 		ParsedMessage msg = doRequest(XmlCreator.createGetAllAchievements(mBT, adapterID));
 
@@ -1324,6 +918,7 @@ public class Network implements INetwork {
 	}
 
 	@Override
+	@SuppressWarnings("unchecked")
 	public List<String> setProgressLvl(String adapterId, String achievementId){
 		ParsedMessage msg = doRequest(XmlCreator.createSetProgressLvl(mBT, adapterId, achievementId));
 
