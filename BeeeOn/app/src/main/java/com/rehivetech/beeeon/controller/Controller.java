@@ -120,7 +120,7 @@ public final class Controller {
 		// Create models
 		mAdaptersModel = new AdaptersModel(mNetwork);
 		mAchievementsModel = new AchievementsModel(mNetwork);
-		mLocationsModel = new LocationsModel(mNetwork, mContext.getString(R.string.loc_none));
+		mLocationsModel = new LocationsModel(mNetwork, mContext);
 		mFacilitiesModel = new FacilitiesModel(mNetwork);
 		mUninitializedFacilitiesModel = new UninitializedFacilitiesModel(mNetwork);
 		mDeviceLogsModel = new DeviceLogsModel(mNetwork);

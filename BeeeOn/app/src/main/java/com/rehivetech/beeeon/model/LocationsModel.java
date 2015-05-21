@@ -1,6 +1,9 @@
 package com.rehivetech.beeeon.model;
 
+import android.content.Context;
+
 import com.rehivetech.beeeon.NameIdentifierComparator;
+import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.household.location.Location;
 import com.rehivetech.beeeon.network.INetwork;
 import com.rehivetech.beeeon.util.MultipleDataHolder;
@@ -18,9 +21,9 @@ public class LocationsModel extends BaseModel {
 
 	private final MultipleDataHolder<Location> mLocations = new MultipleDataHolder<>(); // adapterId => location dataHolder
 
-	public LocationsModel(INetwork network, String noLocationName) {
+	public LocationsModel(INetwork network, Context context) {
 		super(network);
-		mNoLocationName = noLocationName;
+		mNoLocationName = context.getString(R.string.loc_none);
 	}
 
 	private Location createNoLocation(String adapterId) {
