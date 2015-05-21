@@ -12,10 +12,8 @@ import android.graphics.Path;
 import android.graphics.Rect;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.net.wifi.WifiInfo;
-import android.net.wifi.WifiManager;
+import android.os.Build;
 import android.support.annotation.Nullable;
-import android.telephony.TelephonyManager;
 import android.util.DisplayMetrics;
 import android.util.Pair;
 import android.util.TypedValue;
@@ -262,58 +260,54 @@ final public class Utils {
 
 	/**
 	 * Returns the type which actual network uses
+	 *
 	 * @param context
 	 * @return ConnectivityManager#TYPE_xxxxxx
 	 */
-	public static int getNetworConnectionkType(Context context){
+	public static int getNetworkConnectionType(Context context) {
 		ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
 		NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
-		if(activeNetworkInfo == null || !activeNetworkInfo.isConnected()){
+		if (activeNetworkInfo == null || !activeNetworkInfo.isConnected()) {
 			return -1; // the same as ConnectivityManager.TYPE_NONE which can't be used;
 		}
 		return activeNetworkInfo.getType();
 	}
 
 	/**
-	 * Method return Mac address of device
-	 * @return
+	 * Returns the consumer friendly device name.
+	 * Taken from https://stackoverflow.com/questions/1995439/get-android-phone-model-programmatically/26117427#26117427
 	 */
-	private static String getMAC(Context context){
-		WifiManager wifiManager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
-
-		if(wifiManager.isWifiEnabled()) {
-			// WIFI ALREADY ENABLED. GRAB THE MAC ADDRESS HERE
-			WifiInfo info = wifiManager.getConnectionInfo();
-			return info.getMacAddress();
-		} else {
-			// ENABLE THE WIFI FIRST
-			wifiManager.setWifiEnabled(true);
-
-			// WIFI IS NOW ENABLED. GRAB THE MAC ADDRESS HERE
-			WifiInfo info = wifiManager.getConnectionInfo();
-			String address = info.getMacAddress();
-
-			wifiManager.setWifiEnabled(false);
-
-			return address;
+	public static String getPhoneName() {
+		final String manufacturer = Build.MANUFACTURER;
+		final String model = Build.MODEL;
+		if (model.startsWith(manufacturer)) {
+			return capitalize(model);
 		}
+		if (manufacturer.equalsIgnoreCase("HTC")) {
+			// make sure "HTC" is fully capitalized.
+			return "HTC " + model;
+		}
+		return capitalize(manufacturer) + " " + model;
 	}
 
-
-	/**
-	 * Method returns DeviceId (phone is device) or Mac address
-	 * @return
-	 */
-	public static String getPhoneID(Context context){
-		TelephonyManager tm = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
-
-		String phoneId = tm.getDeviceId();
-		if (phoneId == null)
-			phoneId = getMAC(context);
-
-		Log.i(Utils.class.getSimpleName(), String.format("HW ID (IMEI or MAC): %s", phoneId));
-
-		return phoneId;
+	private static String capitalize(String str) {
+		if (str.isEmpty()) {
+			return str;
+		}
+		final char[] arr = str.toCharArray();
+		boolean capitalizeNext = true;
+		String phrase = "";
+		for (final char c : arr) {
+			if (capitalizeNext && Character.isLetter(c)) {
+				phrase += Character.toUpperCase(c);
+				capitalizeNext = false;
+				continue;
+			} else if (Character.isWhitespace(c)) {
+				capitalizeNext = true;
+			}
+			phrase += c;
+		}
+		return phrase;
 	}
 
 	/**

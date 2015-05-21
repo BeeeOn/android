@@ -419,7 +419,7 @@ public class Network implements INetwork {
 		if (parameters == null || parameters.isEmpty())
 			throw new IllegalArgumentException(String.format("IAuthProvider '%s' provided no parameters.", authProvider.getProviderName()));
 
-		ParsedMessage msg = doRequest(XmlCreator.createSignIn(Locale.getDefault().getLanguage(), Utils.getPhoneID(mContext), authProvider), false);
+		ParsedMessage msg = doRequest(XmlCreator.createSignIn(Locale.getDefault().getLanguage(), Utils.getPhoneName(), authProvider), false);
 
 		if (msg.getState() == State.BT) {
 			mBT = (String) msg.data;

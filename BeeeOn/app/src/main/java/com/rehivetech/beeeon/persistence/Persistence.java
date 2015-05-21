@@ -130,6 +130,7 @@ public class Persistence {
 		try {
 			File file = new File(getCacheDir(), filename + ".jpg");
 			os = new FileOutputStream(file);
+			//picture.reconfigure(150, 150, Bitmap.Config.ARGB_8888);
 			picture.compress(Bitmap.CompressFormat.JPEG, 90, os);
 			os.flush();
 			os.close();
