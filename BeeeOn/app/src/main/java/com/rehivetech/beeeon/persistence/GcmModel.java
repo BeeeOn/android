@@ -19,21 +19,20 @@ import java.util.Collections;
 import java.util.List;
 import java.util.WeakHashMap;
 
-public class GcmModel {
+public class GcmModel extends BaseModel {
 
 	private static final String TAG = GcmModel.class.getSimpleName();
 
 	private final Context mContext;
-	private final INetwork mNetwork;
 	private final Persistence mPersistence;
 	private final User mUser;
 
 	/** Weak map for holding registered notification receivers */
 	private final WeakHashMap<INotificationReceiver, Boolean> mNotificationReceivers = new WeakHashMap<INotificationReceiver, Boolean>();
 
-	public GcmModel(Context context, INetwork network, Persistence persistence, User user) {
+	public GcmModel(INetwork network, Context context, Persistence persistence, User user) {
+		super(network);
 		mContext = context;
-		mNetwork = network;
 		mPersistence = persistence;
 		mUser = user;
 	}

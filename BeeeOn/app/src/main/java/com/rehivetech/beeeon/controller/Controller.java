@@ -126,7 +126,7 @@ public final class Controller {
 		mDeviceLogsModel = new DeviceLogsModel(mNetwork);
 		mWatchDogsModel = new WatchDogsModel(mNetwork);
 		mGeofenceModel = new GeofenceModel(mNetwork, mContext);
-		mGcmModel = new GcmModel(mContext, mNetwork, mPersistence, mUser);
+		mGcmModel = new GcmModel(mNetwork, mContext, mPersistence, mUser);
 		mUsersModel = new UsersModel(mNetwork);
 
 		// Load previous user

@@ -10,17 +10,16 @@ import org.joda.time.DateTime;
 import java.util.Collections;
 import java.util.List;
 
-public class LocationsModel {
+public class LocationsModel extends BaseModel {
 
 	private static final int RELOAD_EVERY_SECONDS = 10 * 60;
 
-	private final INetwork mNetwork;
 	private final String mNoLocationName;
 
 	private final MultipleDataHolder<Location> mLocations = new MultipleDataHolder<>(); // adapterId => location dataHolder
 
 	public LocationsModel(INetwork network, String noLocationName) {
-		mNetwork = network;
+		super(network);
 		mNoLocationName = noLocationName;
 	}
 

@@ -31,7 +31,8 @@ import java.util.List;
 /**
  * Created by Martin on 24. 3. 2015.
  */
-public class GeofenceModel implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, ResultCallback<Status> {
+public class GeofenceModel extends BaseModel
+		implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, ResultCallback<Status> {
 
 	private static final String TAG = GeofenceModel.class.getSimpleName();
 
@@ -39,15 +40,13 @@ public class GeofenceModel implements GoogleApiClient.ConnectionCallbacks, Googl
 
 	private PendingIntent mGeofencePendingIntent = null;
 
-	private LinkedList<ManageGeofenceHolder> mQueue;
+	private final LinkedList<ManageGeofenceHolder> mQueue = new LinkedList<>();
 
-	INetwork mNetwork;
-	Context mContext;
+	private final Context mContext;
 
 	public GeofenceModel(INetwork network, Context context) {
-		mNetwork = network;
+		super(network);
 		mContext = context;
-		mQueue = new LinkedList<>();
 	}
 
 	private synchronized void buildGoogleApiClient() {

@@ -1,5 +1,18 @@
 package com.rehivetech.beeeon.persistence;
 
+import com.rehivetech.beeeon.exception.AppException;
+import com.rehivetech.beeeon.household.device.DeviceLog;
+import com.rehivetech.beeeon.household.device.DeviceLog.DataInterval;
+import com.rehivetech.beeeon.household.device.DeviceLog.DataType;
+import com.rehivetech.beeeon.network.DemoNetwork;
+import com.rehivetech.beeeon.network.INetwork;
+import com.rehivetech.beeeon.pair.LogDataPair;
+import com.rehivetech.beeeon.util.Log;
+
+import org.joda.time.Interval;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -7,32 +20,16 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.SortedMap;
 
-import org.joda.time.Interval;
-import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
-
-import com.rehivetech.beeeon.household.device.DeviceLog;
-import com.rehivetech.beeeon.household.device.DeviceLog.DataInterval;
-import com.rehivetech.beeeon.household.device.DeviceLog.DataType;
-import com.rehivetech.beeeon.exception.AppException;
-import com.rehivetech.beeeon.network.DemoNetwork;
-import com.rehivetech.beeeon.network.INetwork;
-import com.rehivetech.beeeon.network.Network;
-import com.rehivetech.beeeon.pair.LogDataPair;
-import com.rehivetech.beeeon.util.Log;
-
-public class DeviceLogsModel {
+public class DeviceLogsModel extends BaseModel {
 
 	private static final String TAG = DeviceLogsModel.class.getSimpleName();
 	
 	private DateTimeFormatter fmt = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss").withZoneUTC();
-	
-	private final INetwork mNetwork;
 
 	private final Map<String, DeviceLog> mDevicesLogs = new HashMap<String, DeviceLog>();
 
 	public DeviceLogsModel(INetwork network) {
-		mNetwork = network;
+		super(network);
 	}
 	
 	private void saveDeviceLog(String deviceId, DeviceLog log) {

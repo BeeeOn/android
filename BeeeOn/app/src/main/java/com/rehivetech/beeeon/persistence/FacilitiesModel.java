@@ -15,23 +15,20 @@ import org.joda.time.DateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.EnumSet;
+import java.util.Iterator;
 import java.util.List;
 
-import java.util.Iterator;
 
-
-public class FacilitiesModel {
+public class FacilitiesModel extends BaseModel {
 
 	private static final String TAG = FacilitiesModel.class.getSimpleName();
 
 	private static final int RELOAD_EVERY_SECONDS = 10 * 60;
-	
-	private final INetwork mNetwork;
 
 	private final MultipleDataHolder<Facility> mFacilities = new MultipleDataHolder<>(); // adapterId => facility dataHolder
 
 	public FacilitiesModel(INetwork network) {
-		mNetwork = network;
+		super(network);
 	}
 
 	/**
