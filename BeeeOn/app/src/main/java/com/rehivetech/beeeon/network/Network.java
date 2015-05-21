@@ -109,6 +109,7 @@ public class Network implements INetwork {
 	private String mBT = "";
 	private static final int SSLTIMEOUT = 35000;
 
+	private final Object mSocketLock = new Object();
 	private SSLSocket mSocket = null;
 	private PrintWriter mSocketWriter = null;
 	private BufferedReader mSocketReader = null;
@@ -131,17 +132,19 @@ public class Network implements INetwork {
 	 */
 	private String startCommunication(String request) throws AppException {
 		// Init socket objects if not exists
-		if (mSocket == null || mSocketReader == null || mSocketWriter == null) {
-			mSocket = initSocket();
+		synchronized (mSocketLock) {
+			if (mSocket == null || mSocketReader == null || mSocketWriter == null) {
+				mSocket = initSocket();
 
-			try {
-				// At this point SSLSocket performed certificate verification and
-				// we have performed hostName verification, so it is safe to proceed.
-				mSocketWriter = new PrintWriter(mSocket.getOutputStream());
-				mSocketReader = new BufferedReader(new InputStreamReader(mSocket.getInputStream()));
-			} catch (IOException e) {
-				closeCommunicationSocket();
-				throw AppException.wrap(e, NetworkError.CL_SOCKET);
+				try {
+					// At this point SSLSocket performed certificate verification and
+					// we have performed hostName verification, so it is safe to proceed.
+					mSocketWriter = new PrintWriter(mSocket.getOutputStream());
+					mSocketReader = new BufferedReader(new InputStreamReader(mSocket.getInputStream()));
+				} catch (IOException e) {
+					closeCommunicationSocket();
+					throw AppException.wrap(e, NetworkError.CL_SOCKET);
+				}
 			}
 		}
 
@@ -245,32 +248,34 @@ public class Network implements INetwork {
 		}
 	}
 
-	private synchronized void closeCommunicationSocket() {
-		// Securely close socket
-		if (mSocket != null) {
-			try {
-				mSocket.close();
-			} catch (IOException e) {
-				e.printStackTrace(); // Nothing we can do here
-			} finally {
-				mSocket = null;
+	private void closeCommunicationSocket() {
+		synchronized (mSocketLock) {
+			// Securely close socket
+			if (mSocket != null) {
+				try {
+					mSocket.close();
+				} catch (IOException e) {
+					e.printStackTrace(); // Nothing we can do here
+				} finally {
+					mSocket = null;
+				}
 			}
-		}
 
-		// Close writer
-		if (mSocketWriter != null) {
-			mSocketWriter.close();
-			mSocketWriter = null;
-		}
+			// Close writer
+			if (mSocketWriter != null) {
+				mSocketWriter.close();
+				mSocketWriter = null;
+			}
 
-		// Securely close reader
-		if (mSocketReader != null) {
-			try {
-				mSocketReader.close();
-			} catch (IOException e) {
-				e.printStackTrace(); // Nothing we can do here
-			} finally {
-				mSocketReader = null;
+			// Securely close reader
+			if (mSocketReader != null) {
+				try {
+					mSocketReader.close();
+				} catch (IOException e) {
+					e.printStackTrace(); // Nothing we can do here
+				} finally {
+					mSocketReader = null;
+				}
 			}
 		}
 	}
