@@ -1,4 +1,4 @@
-package com.rehivetech.beeeon.persistence;
+package com.rehivetech.beeeon.model;
 
 import android.app.PendingIntent;
 import android.content.ContentValues;

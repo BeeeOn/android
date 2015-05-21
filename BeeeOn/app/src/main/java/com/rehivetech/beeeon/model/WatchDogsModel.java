@@ -1,4 +1,4 @@
-package com.rehivetech.beeeon.persistence;
+package com.rehivetech.beeeon.model;
 
 import com.rehivetech.beeeon.NameIdentifierComparator;
 import com.rehivetech.beeeon.household.watchdog.WatchDog;
