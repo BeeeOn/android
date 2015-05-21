@@ -746,4 +746,9 @@ public class DemoNetwork implements INetwork {
 	public boolean passBorder(String regionId, String type) {
 		return true;
 	}
+
+	@Override
+	public boolean deleteGate(String gateId) {
+		return true;
+	}
 }

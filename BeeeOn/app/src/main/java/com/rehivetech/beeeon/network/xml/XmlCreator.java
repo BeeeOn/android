@@ -45,6 +45,7 @@ public class XmlCreator {
 	public static final String ADDGATE = "addadapter";
 	public static final String REINITGATE = "reinitadapter";
 	public static final String GETGATES = "getadapters";
+	public static final String DELGATE = "deladapter";
 	public static final String SCANMODE = "scanmode";
 
 	public static final String ADDACCOUNTS = "addaccs";
@@ -268,6 +269,16 @@ public class XmlCreator {
 	 */
 	public static String createReInitGate(String bt, String gateIdOld, String gateIdNew) {
 		return createComAttribsVariant(Xconstants.STATE, REINITGATE, Xconstants.BT, bt, Xconstants.OLDID, gateIdOld, Xconstants.NEWID, gateIdNew);
+	}
+
+	/**
+	 * Method create message for removing actual user from gate
+	 * @param bt
+	 * @param aid
+	 * @return
+	 */
+	public static String createDelGate(String bt, String aid){
+		return createComAttribsVariant(Xconstants.STATE, DELGATE, Xconstants.BT, bt, Xconstants.AID, aid);
 	}
 
 	// /////////////////////////////////////DEVICES,LOGS///////////////////////////////////////////////
