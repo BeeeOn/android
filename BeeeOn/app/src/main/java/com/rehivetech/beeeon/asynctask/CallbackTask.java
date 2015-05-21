@@ -6,6 +6,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.widget.Toast;
 
+import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.exception.AppException;
 import com.rehivetech.beeeon.util.Log;
 
@@ -21,6 +22,8 @@ public abstract class CallbackTask<Params> extends AsyncTask<Params, Void, Boole
 	private AppException mException;
 
 	private boolean mNotifyErrors = true; // TODO: keep it enabled by default?
+
+	private boolean mIsWorking = false;
 
 	public CallbackTask(@NonNull Context context) {
 		mContext = context.getApplicationContext();
@@ -69,6 +72,8 @@ public abstract class CallbackTask<Params> extends AsyncTask<Params, Void, Boole
 			Log.w(TAG, "Given %d parameters, but CallbackTask can use only one.");
 		}
 
+		mIsWorking = true;
+
 		Boolean success = false;
 		try {
 			success = doInBackground(params.length > 0 ? params[0] : null);
@@ -78,6 +83,8 @@ public abstract class CallbackTask<Params> extends AsyncTask<Params, Void, Boole
 			// And print it to log, so we know that something happened
 			Log.e(CallbackTask.this.getClass().getSimpleName(), e.getSimpleErrorMessage());
 		}
+
+		mIsWorking = false;
 		return success;
 	}
 
@@ -89,8 +96,18 @@ public abstract class CallbackTask<Params> extends AsyncTask<Params, Void, Boole
 			mListener.onExecute(success);
 		}
 
-		if (mNotifyErrors && mException != null) {
+		// TODO: uncomment this after checking functionality
+		if (mNotifyErrors && mException != null/* && !isCancelled()*/) {
 			Toast.makeText(mContext, mException.getTranslatedErrorMessage(mContext), Toast.LENGTH_LONG).show();
+		}
+	}
+
+	public final void cancelTask() {
+		this.cancel(true);
+
+		// If task is still working, then we will interrupt the network connection
+		if (mIsWorking) {
+			Controller.getInstance(mContext).interruptConnection();
 		}
 	}
 

@@ -36,7 +36,7 @@ public class CallbackTaskManager {
 		// Cancel and remove all tasks
 		Iterator<CallbackTask> iterator = mTasks.iterator();
 		while (iterator.hasNext()) {
-			iterator.next().cancel(true);
+			iterator.next().cancelTask();
 			iterator.remove();
 		}
 
