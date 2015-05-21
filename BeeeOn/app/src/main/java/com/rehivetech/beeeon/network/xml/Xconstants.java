@@ -37,7 +37,6 @@ public class Xconstants {
 	public static final String LOCALE = "loc";
 	public static final String ERRCODE = "errcode";
 	public static final String INTERVAL = "interval";
-	public static final String NOTIFICAION = "notif";
 	public static final String PART = "part";
 	public static final String MODULE = "dev";
 	public static final String INITIALIZED = "init";
@@ -86,6 +85,8 @@ public class Xconstants {
 	public static final String CURRENT_PROGRESS = "cprogress";
 	public static final String ACH_DATE = "date";
 	public static final String RANGE = "range";
+
+	public static final String DATE = "date";
 
 	public static final String ROW_DATA_SEPARATOR = "\\s+";
 }

@@ -30,9 +30,9 @@ import java.util.Map;
  */
 public class XmlCreator {
 
-	private static final String ns = null;
+	protected static final String ns = null;
 
-	private static final String COM_VER = Constants.COM_VER;
+	protected static final String COM_VER = Constants.COM_VER;
 
 	// states
 
@@ -89,7 +89,7 @@ public class XmlCreator {
 
 	// end of states
 
-	private static XmlSerializer beginXml(StringWriter writer) throws IOException {
+	protected static XmlSerializer beginXml(StringWriter writer) throws IOException {
 		XmlSerializer serializer = Xml.newSerializer();
 
 		serializer.setOutput(writer);
@@ -101,7 +101,7 @@ public class XmlCreator {
 		return serializer;
 	}
 
-	private static void endXml(XmlSerializer serializer) throws IOException {
+	protected static void endXml(XmlSerializer serializer) throws IOException {
 		serializer.text("");
 		serializer.endTag(ns, Xconstants.COM_ROOT);
 		serializer.endDocument();
@@ -981,7 +981,7 @@ public class XmlCreator {
 
 	// /////////////////////////////////////PRIVATE METHODS//////////////////////////////////////////////
 
-	private static String createComAttribsVariant(String... args) {
+	protected static String createComAttribsVariant(String... args) {
 		if (0 != (args.length % 2)) { // odd
 			throw new RuntimeException("Bad params count");
 		}
