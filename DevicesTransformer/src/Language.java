@@ -1,4 +1,5 @@
 import java.io.PrintStream;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -64,18 +65,18 @@ public class Language {
         }
     }
 
-    public void printAndroidXml(PrintStream stream) {
-        stream.println("<?xml version=\"1.0\" encoding=\"utf-8\"?>");
-        stream.println("<resources>");
+    public void printAndroidXml(PrintWriter writer) {
+        writer.println("<?xml version=\"1.0\" encoding=\"utf-8\"?>");
+        writer.println("<resources>");
 
         for (Language.Item item : mItems) {
             String name = item.key;
             String value = item.value;
 
-            stream.println(String.format("\t<string name=\"%s\">%s</string>", name, value));
+            writer.println(String.format("\t<string name=\"%s\">%s</string>", name, value));
         }
 
-        stream.println("</resources>");
+        writer.println("</resources>");
     }
     
 }

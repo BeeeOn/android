@@ -1,9 +1,7 @@
 import org.xml.sax.SAXException;
 
 import javax.xml.parsers.ParserConfigurationException;
-import java.io.File;
-import java.io.FilenameFilter;
-import java.io.IOException;
+import java.io.*;
 import java.net.URL;
 
 public class Main {
@@ -21,8 +19,20 @@ public class Main {
 
         for (File file : files) {
             try {
+                System.out.println(String.format("Loading translation from '%s'", file.getAbsolutePath()));
+
                 Language language = XmlParser.parseLanguage(file);
-                language.printLog(System.out);
+
+                File dir = new File(String.format("xml_exported/values-%s/", language.getCode()));
+                dir.mkdirs();
+
+                String name = "generated_strings_devices.xml";
+                File output = new File(dir, name);
+
+                System.out.println(String.format("Saving Android's strings XML to '%s'", output.getAbsolutePath()));
+                PrintWriter writer = new PrintWriter(output, "UTF-8");
+                language.printAndroidXml(writer);
+                writer.close();
             } catch (ParserConfigurationException e) {
                 e.printStackTrace();
             } catch (IOException e) {
