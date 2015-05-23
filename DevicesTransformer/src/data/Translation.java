@@ -6,11 +6,7 @@ package data;
 public class Translation {
     private static final String RESOURCE_STRING = "R.string." + Language.TRANSLATION_PREFIX + "%s";
 
-    private final String mTranslation;
-
     private final String[] mTranslationsIds;
-
-    private final String[] mResourcesIds;
 
     public Translation(String translation) {
         String[] parts = translation.split(":");
@@ -23,18 +19,14 @@ public class Translation {
             throw new IllegalArgumentException(String.format("data.Translation string must start with 'T:'. Given '%s'.", translation));
         }
 
-        mTranslation = translation;
         mTranslationsIds = new String[parts.length - 1];
-        mResourcesIds = new String[parts.length - 1];
-
         for (int i = 1; i < parts.length; i++) {
             mTranslationsIds[i - 1] = parts[i];
-            mResourcesIds[i - 1] = String.format(RESOURCE_STRING, parts[i].toLowerCase());
         }
     }
 
-    public String getTranslation() {
-        return mTranslation;
+    public Translation(String[] translationIds) {
+        mTranslationsIds = translationIds;
     }
 
     public String[] getTranslationIds() {
@@ -42,7 +34,14 @@ public class Translation {
     }
 
     public String[] getResourceIds() {
-        return mResourcesIds;
+        String[] resourceIds = new String[mTranslationsIds.length - 1];
+
+        for (int i = 1; i < mTranslationsIds.length; i++) {
+            mTranslationsIds[i - 1] = mTranslationsIds[i];
+            resourceIds[i - 1] = String.format(RESOURCE_STRING, mTranslationsIds[i].toLowerCase());
+        }
+
+        return resourceIds;
     }
 
 }

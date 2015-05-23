@@ -100,6 +100,28 @@ public class DevicesParser {
     private static List<Module> parseModules(Element element) {
         List<Module> modules = new ArrayList<>();
 
+        NodeList modulesNodes = element.getChildNodes();
+        for (int i = 0; i < modulesNodes.getLength(); i++) {
+            Node node = modulesNodes.item(i);
+
+            if (node instanceof Element) {
+                String tag = ((Element) node).getTagName();
+                if (tag.equals("module")) {
+                    // Parse module
+                    Module module = parseModule((Element) node);
+                    modules.add(module);
+                } else {
+                    throw new IllegalStateException(String.format("Unexpected element '%s' (expected 'module')", tag));
+                }
+            }
+        }
+
+        return modules;
+    }
+
+    private static Module parseModule(Element element) {
+        Module module = new Module(0,0,0,0); // FIXME: correct data
+
         /*String prefix = element.getAttribute("name").trim();
 
         NodeList itemsNodes = element.getChildNodes();
@@ -115,7 +137,7 @@ public class DevicesParser {
             }
         }*/
 
-        return modules;
+        return module;
     }
 
 }
