@@ -20,7 +20,7 @@ public class Main {
 
             Devices devices = DevicesParser.parse(file);
 
-            File dir = new File("xml_exported/objects/");
+            File dir = new File("export/objects/");
             dir.mkdirs();
 
             String name = "devices.java";
@@ -55,7 +55,7 @@ public class Main {
 
                 Language language = LanguageParser.parse(file);
 
-                File dir = new File(String.format("xml_exported/values-%s/", language.getCode()));
+                File dir = new File(String.format("export/values-%s/", language.getCode()));
                 dir.mkdirs();
 
                 String name = "generated_strings_devices.xml";
