@@ -7,12 +7,39 @@ import java.net.URL;
 public class Main {
 
     public static void main(String[] args) {
-        URL location = Main.class.getProtectionDomain().getCodeSource().getLocation();
-        System.out.println(location.getFile());
-
+        processDevices();
         processLanguages();
     }
 
+
+    private static void processDevices() {
+        File file = new File("xml/devices.xml");
+
+        try {
+            System.out.println(String.format("Loading devices specification from '%s'", file.getAbsolutePath()));
+
+            Devices devices = DevicesParser.parse(file);
+
+            File dir = new File("xml_exported/objects/");
+            dir.mkdirs();
+
+            String name = "devices.java";
+            File output = new File(dir, name);
+
+            System.out.println(String.format("Saving devices objects to '%s'", output.getAbsolutePath()));
+            PrintWriter writer = new PrintWriter(output, "UTF-8");
+
+            devices.printDevicesJava(writer);
+
+            writer.close();
+        } catch (ParserConfigurationException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (SAXException e) {
+            e.printStackTrace();
+        }
+    }
 
     private static void processLanguages() {
         File[] files = new File("xml/languages/").listFiles(new FilenameFilter() {
