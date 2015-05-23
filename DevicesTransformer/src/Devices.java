@@ -8,6 +8,22 @@ import java.util.List;
  */
 public class Devices {
 
+    private final String mVersion;
+
+    private final List<Device> mDevices = new ArrayList<>();
+
+    public Devices(String version) {
+        mVersion = version;
+    }
+
+    public String getVersion() {
+        return mVersion;
+    }
+
+    public void addDevice(Device device) {
+        mDevices.add(device);
+    }
+
     public void printLog(PrintStream stream) {
         /*stream.println("--- LISTING OF DEVICES ---");
 

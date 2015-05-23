@@ -1,7 +1,4 @@
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
+import org.w3c.dom.*;
 import org.xml.sax.SAXException;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -18,8 +15,6 @@ import java.util.List;
 public class DevicesParser {
 
     public static Devices parse(File file) throws ParserConfigurationException, IOException, SAXException {
-        Devices devices = new Devices();
-
         //Get the DOM Builder Factory
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 
@@ -31,34 +26,56 @@ public class DevicesParser {
         Document document = builder.parse(file);
 
         //Iterating through the nodes and extracting the data.
-        Node languageNode = document.getDocumentElement();
-        if (!(languageNode instanceof Element)) {
+        Node devicesNode = document.getDocumentElement();
+        if (!(devicesNode instanceof Element)) {
             return null;
         }
 
-        /*String code = ((Element) languageNode).getAttribute("code");
+        String version = ((Element) devicesNode).getAttribute("version");
 
-        NodeList itemsNodes = languageNode.getChildNodes();
+        Devices devices = new Devices(version);
+
+        NodeList itemsNodes = devicesNode.getChildNodes();
         for (int i = 0; i < itemsNodes.getLength(); i++) {
             Node node = itemsNodes.item(i);
 
             if (node instanceof Element) {
                 String tag = ((Element) node).getTagName();
-                if (tag.equals("string")) {
-                    // Single string translation
-                    Language.Item item = parseString((Element) node);
-                    language.addItem(item);
-                } else if (tag.equals("values")) {
-                    // Values translation
-                    List<Language.Item> items = parseValues(language, (Element) node);
-                    language.addItems(items);
+                if (tag.equals("device")) {
+                    // Parse device
+                    Device device = parseDevice((Element) node);
+                    devices.addDevice(device);
                 } else {
                     throw new IllegalStateException(String.format("Unsupported element '%s'", tag));
                 }
             }
-        }*/
+        }
 
         return devices;
+    }
+
+    private static Device parseDevice(Element element) {
+        String idType = element.getAttribute("idtype");
+        String nameType = element.getAttribute("name");
+
+        Device device = new Device(idType, nameType);
+
+        NamedNodeMap attributes = element.getAttributes();
+        Node nameNode = attributes.getNamedItem("name");
+        Node refreshNode = attributes.getNamedItem("refresh");
+        Node ledNode = attributes.getNamedItem("led");
+        Node batteryNode = attributes.getNamedItem("battery");
+        Node manufacturerNode = attributes.getNamedItem("manufacturer");
+
+        Node modulesNode = attributes.getNamedItem("modules");
+        if (modulesNode == null) {
+            throw new IllegalStateException(String.format("Missing 'modules' element in device '%s' ('%s')", nameType, idType));
+        }
+
+        Modules modules = parseModules((Element) modulesNode);
+        device.setModules(modules);
+
+        return device;
     }
 
     /*private static Language.Item parseString(Element element) {
