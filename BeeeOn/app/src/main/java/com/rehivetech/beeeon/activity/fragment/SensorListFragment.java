@@ -192,7 +192,6 @@ public class SensorListFragment extends Fragment  {
 
 	public boolean redrawDevices() {
 		if (isPaused) {
-			mActivity.setSupportProgressBarIndeterminateVisibility(false);
 			return false;
 		}
 		List<Facility> facilities;
@@ -248,7 +247,6 @@ public class SensorListFragment extends Fragment  {
 		}
 
 		if (mSensorList == null) {
-			mActivity.setSupportProgressBarIndeterminateVisibility(false);
 			Log.e(TAG, "LifeCycle: bad timing or what?");
 			return false; // TODO: this happens when we're in different activity
 							// (detail), fix that by changing that activity
@@ -425,7 +423,6 @@ public class SensorListFragment extends Fragment  {
 			}
 		}
 
-		mActivity.setSupportProgressBarIndeterminateVisibility(false);
 		Log.d(TAG, "LifeCycle: getsensors end");
 		return true;
 	}

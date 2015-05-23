@@ -114,7 +114,6 @@ public class MainActivity extends BaseApplicationActivity implements IListDialog
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		Log.d(TAG, "onCreate()");
-		supportRequestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
 		setContentView(R.layout.activity_location_screen);
 
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -125,9 +124,6 @@ public class MainActivity extends BaseApplicationActivity implements IListDialog
 
 		// Get controller
 		mController = Controller.getInstance(this);
-
-		setSupportProgressBarIndeterminate(true);
-		setSupportProgressBarIndeterminateVisibility(true);
 
 		// Create NavDrawerMenu
 		mNavDrawerMenu = new NavDrawerMenu(this,mToolbar);
@@ -308,8 +304,6 @@ public class MainActivity extends BaseApplicationActivity implements IListDialog
 	@Override
 	public void onDestroy() {
 		super.onDestroy();
-
-		this.setSupportProgressBarIndeterminateVisibility(false);
 
 		if (mDialog != null) {
 			mDialog.dismiss();
