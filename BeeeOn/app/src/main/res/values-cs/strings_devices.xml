@@ -21,7 +21,7 @@
     <string name="dev_illumination_unit">lux</string>
     <string name="dev_noise_unit">dB</string>
     <string name="dev_emission_unit">ppm</string>
-    <string name="dev_unknown_unit"></string>
+    <string name="dev_unknown_unit" />
 
     <!-- Types of devices -->
     <string name="dev_unknown_type">Neznámé zařízení</string>
