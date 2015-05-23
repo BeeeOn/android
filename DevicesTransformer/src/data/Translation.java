@@ -1,3 +1,5 @@
+package data;
+
 /**
  * Created by Robert on 23. 5. 2015.
  */
@@ -11,11 +13,11 @@ public class Translation {
         String[] parts = translation.split(":");
 
         if (parts.length < 2) {
-            throw new IllegalArgumentException(String.format("Translation string must have at least 2 parts. Given '%s'.", translation));
+            throw new IllegalArgumentException(String.format("data.Translation string must have at least 2 parts. Given '%s'.", translation));
         }
 
         if (!parts[0].equals("T")) {
-            throw new IllegalArgumentException(String.format("Translation string must start with 'T:'. Given '%s'.", translation));
+            throw new IllegalArgumentException(String.format("data.Translation string must start with 'T:'. Given '%s'.", translation));
         }
 
         mTranslationsIds = new String[parts.length - 1];

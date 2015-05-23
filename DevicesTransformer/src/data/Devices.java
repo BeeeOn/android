@@ -1,3 +1,5 @@
+package data;
+
 import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.util.ArrayList;
@@ -27,7 +29,7 @@ public class Devices {
     public void printLog(PrintStream stream) {
         /*stream.println("--- LISTING OF DEVICES ---");
 
-        for (Devices.Item item : mItems) {
+        for (data.Devices.Item item : mItems) {
             String name = item.key;
             String value = item.value;
 
@@ -39,7 +41,7 @@ public class Devices {
         /*writer.println("<?xml version=\"1.0\" encoding=\"utf-8\"?>");
         writer.println("<resources>");
 
-        for (Devices.Item item : mItems) {
+        for (data.Devices.Item item : mItems) {
             String name = item.key;
             String value = item.value;
 

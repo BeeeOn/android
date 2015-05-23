@@ -1,4 +1,13 @@
-import org.w3c.dom.*;
+package parser;
+
+import data.Device;
+import data.Devices;
+import data.Module;
+import data.Translation;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -101,7 +110,7 @@ public class DevicesParser {
                 String name = ((Element) node).getAttribute("name").trim();
                 String value = node.getTextContent();
 
-                Language.Item item = new Language.Item(prefix, name, value);
+                data.Language.Item item = new data.Language.Item(prefix, name, value);
                 items.add(item);
             }
         }*/
