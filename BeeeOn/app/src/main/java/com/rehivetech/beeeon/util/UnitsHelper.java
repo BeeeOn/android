@@ -33,7 +33,7 @@ public class UnitsHelper {
 			int resId = ((BaseEnumValue) item).getStateStringResource();
 			return mContext.getString(resId);
 		} else if (item instanceof UnknownValue) {
-			return ((UnknownValue) item).getRawValue();
+			return item.getRawValue();
 		}
 
 		return getStringValue(item, item.getDoubleValue());

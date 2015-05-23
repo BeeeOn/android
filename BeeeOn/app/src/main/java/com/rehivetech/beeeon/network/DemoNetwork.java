@@ -100,8 +100,8 @@ public class DemoNetwork implements INetwork {
 	}
 
 	private void setNewValue(Device device) {
-		// Don't set new values for actors
-		if (device.getType().isActor())
+		// Don't set new values for actors (unless it's the first value to be set during initialization)
+		if (device.getType().isActor() && device.getValue().hasValue())
 			return;
 
 		Random rand = getRandomForAdapter(device.getFacility().getAdapterId());

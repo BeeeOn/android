@@ -38,6 +38,10 @@ public abstract class BaseValue {
 		mRawValue = value;
 	}
 
+	public boolean hasValue() {
+		return mRawValue != null;
+	}
+
 	public static BaseValue createFromDeviceType(DeviceType type) {
 		try {
 			// Try to create and return new BaseValue object
