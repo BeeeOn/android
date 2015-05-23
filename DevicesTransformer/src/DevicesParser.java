@@ -55,38 +55,50 @@ public class DevicesParser {
     }
 
     private static Device parseDevice(Element element) {
-        String idType = element.getAttribute("idtype");
-        String nameType = element.getAttribute("name");
+        String typeId = element.getAttribute("idtype");
+        String typeName = element.getAttribute("name");
 
-        Device device = new Device(idType, nameType);
+        Device device = new Device(typeId, typeName);
 
         NamedNodeMap attributes = element.getAttributes();
         Node nameNode = attributes.getNamedItem("name");
-        Node refreshNode = attributes.getNamedItem("refresh");
-        Node ledNode = attributes.getNamedItem("led");
-        Node batteryNode = attributes.getNamedItem("battery");
+        if (nameNode != null) {
+            device.setName(new Translation(nameNode.getTextContent()));
+        }
+
         Node manufacturerNode = attributes.getNamedItem("manufacturer");
+        if (manufacturerNode != null) {
+            device.setManufacturer(new Translation(manufacturerNode.getTextContent()));
+        }
+
+        Node refreshNode = attributes.getNamedItem("refresh");
+        if (refreshNode != null) {
+            device.setRefresh(Integer.parseInt(refreshNode.getTextContent()));
+        }
+
+        Node ledNode = attributes.getNamedItem("led");
+        if (ledNode != null) {
+            device.setLed(Boolean.parseBoolean(ledNode.getTextContent()));
+        }
+
+        Node batteryNode = attributes.getNamedItem("battery");
+        if (batteryNode != null) {
+            device.setBattery(Boolean.parseBoolean(batteryNode.getTextContent()));
+        }
 
         Node modulesNode = attributes.getNamedItem("modules");
         if (modulesNode == null) {
-            throw new IllegalStateException(String.format("Missing 'modules' element in device '%s' ('%s')", nameType, idType));
+            throw new IllegalStateException(String.format("Missing 'modules' element in device '%s' ('%s')", typeName, typeId));
         }
 
-        Modules modules = parseModules((Element) modulesNode);
+        List<Module> modules = parseModules((Element) modulesNode);
         device.setModules(modules);
 
         return device;
     }
 
-    /*private static Language.Item parseString(Element element) {
-        String name = element.getAttribute("name").trim();
-        String value = element.getTextContent();
-
-        return new Language.Item(name, value);
-    }
-
-    private static List<Language.Item> parseValues(Language language, Element element) {
-        List<Language.Item> items = new ArrayList<Language.Item>();
+    private static List<Module> parseModules(Element element) {
+        /*List<Language.Item> items = new ArrayList<Language.Item>();
 
         String prefix = element.getAttribute("name").trim();
 
@@ -103,7 +115,7 @@ public class DevicesParser {
             }
         }
 
-        return items;
-    }*/
+        return items;*/
+    }
 
 }
