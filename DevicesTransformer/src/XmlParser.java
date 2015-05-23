@@ -57,18 +57,6 @@ public class XmlParser {
                 }
             }
         }
-        
-        String output = String.format("/values-%s/generated_strings_devices.xml", language.getCode());
-        System.out.println(String.format("Output: %s", output));
-
-        System.out.println("--- ITEMS ---");
-        for (Language.Item item : language.getItems()) {
-
-            String name = item.key;
-            String value = item.value;
-
-            System.out.println(String.format("<string name=\"%s\">%s</string>", name, value));
-        }
 
         return language;
     }

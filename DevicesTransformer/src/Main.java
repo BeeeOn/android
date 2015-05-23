@@ -14,7 +14,8 @@ public class Main {
         File file = new File("xml/language_cs.xml");
 
         try {
-            XmlParser.parseLanguage(file);
+            Language language = XmlParser.parseLanguage(file);
+            language.printLog();
         } catch (ParserConfigurationException e) {
             e.printStackTrace();
         } catch (IOException e) {
