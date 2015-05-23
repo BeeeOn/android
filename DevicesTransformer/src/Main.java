@@ -10,6 +10,11 @@ public class Main {
         URL location = Main.class.getProtectionDomain().getCodeSource().getLocation();
         System.out.println(location.getFile());
 
+        processLanguages();
+    }
+
+
+    private static void processLanguages() {
         File[] files = new File("xml/languages/").listFiles(new FilenameFilter() {
             @Override
             public boolean accept(File dir, String name) {
@@ -21,7 +26,7 @@ public class Main {
             try {
                 System.out.println(String.format("Loading translation from '%s'", file.getAbsolutePath()));
 
-                Language language = XmlParser.parseLanguage(file);
+                Language language = LanguageParser.parse(file);
 
                 File dir = new File(String.format("xml_exported/values-%s/", language.getCode()));
                 dir.mkdirs();

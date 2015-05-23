@@ -15,9 +15,9 @@ import java.util.List;
 /**
  * Created by Robert on 23. 5. 2015.
  */
-public class XmlParser {
+public class LanguageParser {
 
-    public static Language parseLanguage(File file) throws ParserConfigurationException, IOException, SAXException {
+    public static Language parse(File file) throws ParserConfigurationException, IOException, SAXException {
 
         //Get the DOM Builder Factory
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
