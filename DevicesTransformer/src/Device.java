@@ -1,7 +1,12 @@
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by Robert on 23. 5. 2015.
  */
 public class Device {
+
+    private final List<Module> mModules = new ArrayList<>();
 
     private final String mTypeId;
 
@@ -20,6 +25,15 @@ public class Device {
     public Device(String typeId, String typeName) {
         mTypeId = typeId;
         mTypeName = typeName;
+    }
+
+    public List<Module> getModules() {
+        return mModules;
+    }
+
+    public void setModules(List<Module> modules) {
+        mModules.clear();
+        mModules.addAll(modules);
     }
 
     public String getTypeId() {

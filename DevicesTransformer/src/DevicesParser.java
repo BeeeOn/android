@@ -60,47 +60,38 @@ public class DevicesParser {
 
         Device device = new Device(typeId, typeName);
 
-        NamedNodeMap attributes = element.getAttributes();
-        Node nameNode = attributes.getNamedItem("name");
-        if (nameNode != null) {
-            device.setName(new Translation(nameNode.getTextContent()));
-        }
+        NodeList nodes = element.getChildNodes();
+        for (int i = 0; i < nodes.getLength(); i++) {
+            Node node = nodes.item(i);
+            String name = node.getNodeName();
 
-        Node manufacturerNode = attributes.getNamedItem("manufacturer");
-        if (manufacturerNode != null) {
-            device.setManufacturer(new Translation(manufacturerNode.getTextContent()));
-        }
+            if (node instanceof Element) {
+                String content = node.getTextContent();
 
-        Node refreshNode = attributes.getNamedItem("refresh");
-        if (refreshNode != null) {
-            device.setRefresh(Integer.parseInt(refreshNode.getTextContent()));
+                if (name.equals("name")) {
+                    device.setName(new Translation(content));
+                } else if (name.equals("manufacturer")) {
+                    device.setManufacturer(new Translation(content));
+                } else if (name.equals("refresh")) {
+                    device.setRefresh(Integer.parseInt(content));
+                } else if (name.equals("led")) {
+                    device.setLed(Boolean.parseBoolean(content));
+                } else if (name.equals("battery")) {
+                    device.setBattery(Boolean.parseBoolean(content));
+                } else if (name.equals("modules")) {
+                    List<Module> modules = parseModules((Element) node);
+                    device.setModules(modules);
+                }
+            }
         }
-
-        Node ledNode = attributes.getNamedItem("led");
-        if (ledNode != null) {
-            device.setLed(Boolean.parseBoolean(ledNode.getTextContent()));
-        }
-
-        Node batteryNode = attributes.getNamedItem("battery");
-        if (batteryNode != null) {
-            device.setBattery(Boolean.parseBoolean(batteryNode.getTextContent()));
-        }
-
-        Node modulesNode = attributes.getNamedItem("modules");
-        if (modulesNode == null) {
-            throw new IllegalStateException(String.format("Missing 'modules' element in device '%s' ('%s')", typeName, typeId));
-        }
-
-        List<Module> modules = parseModules((Element) modulesNode);
-        device.setModules(modules);
 
         return device;
     }
 
     private static List<Module> parseModules(Element element) {
-        /*List<Language.Item> items = new ArrayList<Language.Item>();
+        List<Module> modules = new ArrayList<>();
 
-        String prefix = element.getAttribute("name").trim();
+        /*String prefix = element.getAttribute("name").trim();
 
         NodeList itemsNodes = element.getChildNodes();
         for (int i = 0; i < itemsNodes.getLength(); i++) {
@@ -113,9 +104,9 @@ public class DevicesParser {
                 Language.Item item = new Language.Item(prefix, name, value);
                 items.add(item);
             }
-        }
+        }*/
 
-        return items;*/
+        return modules;
     }
 
 }

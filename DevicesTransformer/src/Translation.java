@@ -23,7 +23,7 @@ public class Translation {
 
         for (int i = 1; i < parts.length; i++) {
             mTranslationsIds[i - 1] = parts[i];
-            mResourcesIds[i - 1] = String.format("R.string.%s", parts[i].toLowerCase())
+            mResourcesIds[i - 1] = String.format("R.string.%s", parts[i].toLowerCase());
         }
     }
 
