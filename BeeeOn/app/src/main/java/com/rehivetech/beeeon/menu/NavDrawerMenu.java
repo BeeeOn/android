@@ -240,8 +240,6 @@ public class NavDrawerMenu   {
 		mDrawerLayout.setDrawerListener(mDrawerToggle);
 		mDrawerToggle.syncState();
 
-		mActivity.setSupportProgressBarIndeterminateVisibility(false);
-
 		openMenu();
 	}
 
@@ -311,12 +309,9 @@ public class NavDrawerMenu   {
 					mActivity.redrawMainFragment();
 					redrawMenu();
 				}
-
-				mActivity.setSupportProgressBarIndeterminateVisibility(false);
 			}
 		});
 
-		mActivity.setSupportProgressBarIndeterminateVisibility(true);
 		mSwitchAdapterTask.execute(adapterId);
 	}
 
@@ -332,10 +327,8 @@ public class NavDrawerMenu   {
 					mActivity.setActiveAdapterAndMenu();
 					mActivity.redraw();
 				}
-				mActivity.setSupportProgressBarIndeterminateVisibility(false);
 			}
 		});
-		mActivity.setSupportProgressBarIndeterminateVisibility(true);
 		mUnregisterAdapterTask.execute(adapterId);
 	}
 
