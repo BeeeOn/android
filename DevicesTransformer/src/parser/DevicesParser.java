@@ -55,7 +55,7 @@ public class DevicesParser {
                     Device device = parseDevice((Element) node);
                     devices.addDevice(device);
                 } else {
-                    throw new IllegalStateException(String.format("Unsupported element '%s'", tag));
+                    throw new IllegalStateException(String.format("Unexpected element '%s' (expected 'device')", tag));
                 }
             }
         }
