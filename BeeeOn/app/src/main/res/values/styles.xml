@@ -1,6 +1,6 @@
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <style name="AppBaseTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="AppBaseTheme" parent="Theme.AppCompat.Light.NoActionBar">
 
         <!-- Style of toolbar's action mode -->
         <item name="windowActionModeOverlay">true</item>
@@ -57,7 +57,7 @@
     </style>
 
 
-    <style name="settingsTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="settingsTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="colorPrimary">@color/beeeon_primary_cyan</item>
         <!-- colorPrimaryDark is used for the status bar -->
         <item name="colorPrimaryDark">@color/beeeon_primary_cyan_dark</item>
