@@ -53,7 +53,7 @@ public class DevicesParser {
                     List<Language.Item> items = parseValues(language, (Element) node);
                     language.addItems(items);
                 } else {
-                    throw new IllegalStateException(String.format("Unsupported tag '%s'", tag));
+                    throw new IllegalStateException(String.format("Unsupported element '%s'", tag));
                 }
             }
         }*/
