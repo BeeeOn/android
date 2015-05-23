@@ -3,6 +3,7 @@ package data;
 import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -27,14 +28,26 @@ public class Devices {
     }
 
     public void printLog(PrintStream stream) {
-        /*stream.println("--- LISTING OF DEVICES ---");
+        stream.println(String.format("--- LISTING OF DEVICES (version %s) ---", mVersion));
 
-        for (data.Devices.Item item : mItems) {
-            String name = item.key;
-            String value = item.value;
+        for (Device device : mDevices) {
+            stream.println(String.format("[%s] %s",
+                    device.getTypeId(),
+                    device.getTypeName()));
 
-            System.out.println(String.format("%s = \"%s\"", name, value));
-        }*/
+            stream.println(String.format("\tManufacturer: %s\n\tName: %s\n\tRefresh: %s\n\tLed: %s\n\tBattery: %s",
+                    Arrays.toString(device.getManufacturer().getResourceIds()),
+                    Arrays.toString(device.getName().getResourceIds()),
+                    String.valueOf(device.getRefresh()),
+                    String.valueOf(device.isLed()),
+                    String.valueOf(device.isBattery())));
+
+            for (Module module : device.getModules()) {
+                // TODO
+            }
+
+            stream.println("------");
+        }
     }
 
     public void printDevicesJava(PrintWriter writer) {
