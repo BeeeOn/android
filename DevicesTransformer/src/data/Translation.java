@@ -4,6 +4,9 @@ package data;
  * Created by Robert on 23. 5. 2015.
  */
 public class Translation {
+    private static final String RESOURCE_STRING = "R.string." + Language.TRANSLATION_PREFIX + "%s";
+
+    private final String mTranslation;
 
     private final String[] mTranslationsIds;
 
@@ -20,13 +23,18 @@ public class Translation {
             throw new IllegalArgumentException(String.format("data.Translation string must start with 'T:'. Given '%s'.", translation));
         }
 
+        mTranslation = translation;
         mTranslationsIds = new String[parts.length - 1];
         mResourcesIds = new String[parts.length - 1];
 
         for (int i = 1; i < parts.length; i++) {
             mTranslationsIds[i - 1] = parts[i];
-            mResourcesIds[i - 1] = String.format("R.string.%s", parts[i].toLowerCase());
+            mResourcesIds[i - 1] = String.format(RESOURCE_STRING, parts[i].toLowerCase());
         }
+    }
+
+    public String getTranslation() {
+        return mTranslation;
     }
 
     public String[] getTranslationIds() {

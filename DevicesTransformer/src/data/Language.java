@@ -9,6 +9,7 @@ import java.util.List;
  * Created by Robert on 23. 5. 2015.
  */
 public class Language {
+    public static final String TRANSLATION_PREFIX = "devices__";
     public static final String VALUES_SEPARATOR = "_";
 
     private final String mCode;
@@ -24,7 +25,7 @@ public class Language {
         public final String value;
 
         public Item(String key, String value) {
-            this.key = key;
+            this.key = TRANSLATION_PREFIX + key;
             this.value = value;
         }
 
