@@ -22,7 +22,7 @@ public class Main {
         for (File file : files) {
             try {
                 Language language = XmlParser.parseLanguage(file);
-                language.printLog();
+                language.printLog(System.out);
             } catch (ParserConfigurationException e) {
                 e.printStackTrace();
             } catch (IOException e) {

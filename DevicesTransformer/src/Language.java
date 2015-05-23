@@ -1,3 +1,4 @@
+import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -52,11 +53,8 @@ public class Language {
         return mItems;
     }
 
-    public void printLog() {
-        System.out.println(String.format("--- LISTING OF LANGUAGE '%s' ---", mCode));
-
-        // String output = String.format("/values-%s/generated_strings_devices.xml", language.getCode());
-        // System.out.println(String.format("Output: %s", output));
+    public void printLog(PrintStream stream) {
+        stream.println(String.format("--- LISTING OF LANGUAGE '%s' ---", mCode));
 
         for (Language.Item item : mItems) {
             String name = item.key;
@@ -66,18 +64,18 @@ public class Language {
         }
     }
 
-    public void printAndroidXml() {
-        System.out.println("<?xml version=\"1.0\" encoding=\"utf-8\"?>");
-        System.out.println("<resources>");
+    public void printAndroidXml(PrintStream stream) {
+        stream.println("<?xml version=\"1.0\" encoding=\"utf-8\"?>");
+        stream.println("<resources>");
 
         for (Language.Item item : mItems) {
             String name = item.key;
             String value = item.value;
 
-            System.out.println(String.format("\t<string name=\"%s\">%s</string>", name, value));
+            stream.println(String.format("\t<string name=\"%s\">%s</string>", name, value));
         }
 
-        System.out.println("</resources>");
+        stream.println("</resources>");
     }
     
 }
