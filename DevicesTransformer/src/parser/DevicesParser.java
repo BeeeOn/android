@@ -64,7 +64,7 @@ public class DevicesParser {
     }
 
     private static Device parseDevice(Element element) {
-        String typeId = element.getAttribute("idtype");
+        int typeId = Integer.valueOf(element.getAttribute("idtype"));
         String typeName = element.getAttribute("name");
 
         Device device = new Device(typeId, typeName);

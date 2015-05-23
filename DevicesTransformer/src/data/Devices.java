@@ -31,7 +31,7 @@ public class Devices {
         stream.println(String.format("--- LISTING OF DEVICES (version %s) ---", mVersion));
 
         for (Device device : mDevices) {
-            stream.println(String.format("[%s] %s",
+            stream.println(String.format("[%d] %s",
                     device.getTypeId(),
                     device.getTypeName()));
 

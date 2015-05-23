@@ -10,7 +10,7 @@ public class Device {
 
     private final List<Module> mModules = new ArrayList<>();
 
-    private final String mTypeId;
+    private final int mTypeId;
 
     private final String mTypeName;
 
@@ -24,7 +24,7 @@ public class Device {
 
     private boolean mBattery;
 
-    public Device(String typeId, String typeName) {
+    public Device(int typeId, String typeName) {
         mTypeId = typeId;
         mTypeName = typeName;
     }
@@ -38,7 +38,7 @@ public class Device {
         mModules.addAll(modules);
     }
 
-    public String getTypeId() {
+    public int getTypeId() {
         return mTypeId;
     }
 
