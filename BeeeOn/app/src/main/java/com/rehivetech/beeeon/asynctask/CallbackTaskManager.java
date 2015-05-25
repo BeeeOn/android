@@ -1,9 +1,15 @@
 package com.rehivetech.beeeon.asynctask;
 
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.widget.Toast;
 
+import com.rehivetech.beeeon.activity.LoginActivity;
 import com.rehivetech.beeeon.base.BaseApplicationActivity;
+import com.rehivetech.beeeon.exception.AppException;
+import com.rehivetech.beeeon.exception.ErrorCode;
+import com.rehivetech.beeeon.exception.NetworkError;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -181,6 +187,33 @@ public class CallbackTaskManager {
 				// Hide progress bar in activity
 				if (showProgressBar) {
 					mActivity.setBeeeOnProgressBarVisibility(false);
+				}
+
+				// Handle eventual exceptions
+				AppException exception = task.getException();
+				if (exception != null && !task.isCancelled()) {
+
+					// Handle specific error codes
+					ErrorCode errCode = exception.getErrorCode();
+					if (errCode != null && errCode instanceof NetworkError) {
+						switch ((NetworkError) errCode) {
+							case SRV_BAD_BT:
+							{
+								Intent intent = new Intent(mActivity, LoginActivity.class);
+								mActivity.startActivity(intent);
+								return;
+							}
+							case CL_SOCKET:
+							case CL_INTERNET_CONNECTION:
+							{
+								// Stop scheduled tasks on client errors? -> Separate server and client errors into separate *Error classes? Probably
+							}
+						}
+					}
+
+					// TODO: For some errors show dialog instead of toast?
+					// Notify error to user
+					Toast.makeText(mActivity, exception.getTranslatedErrorMessage(mActivity), Toast.LENGTH_LONG).show();
 				}
 			}
 		});

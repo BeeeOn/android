@@ -141,7 +141,6 @@ public abstract class WidgetConfigurationFragment extends Fragment {
 
 		// reloads all gateways and actual one
 		mReloadTask = new ReloadAdapterDataTask(mActivity, false, ReloadAdapterDataTask.ReloadWhat.ADAPTERS_AND_ACTIVE_ADAPTER);
-		mReloadTask.setNotifyErrors(false);
 		mReloadTask.setListener(new CallbackTask.CallbackTaskListener() {
 			@Override
 			public void onExecute(boolean success) {

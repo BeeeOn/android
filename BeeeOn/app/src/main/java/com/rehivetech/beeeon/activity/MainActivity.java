@@ -234,30 +234,18 @@ public class MainActivity extends BaseApplicationActivity implements IListDialog
 	public void onAppResume() {
 		// ASYN TASK - Reload all data, if wasnt download in login activity
 		final ReloadAdapterDataTask fullReloadTask = new ReloadAdapterDataTask(this,false,ReloadAdapterDataTask.ReloadWhat.ADAPTERS_AND_ACTIVE_ADAPTER);
-		fullReloadTask.setNotifyErrors(false);
 		fullReloadTask.setListener(new CallbackTask.CallbackTaskListener() {
 			@Override
 			public void onExecute(boolean success) {
-				if (!success) {
-					AppException e = fullReloadTask.getException();
-					ErrorCode errCode = e.getErrorCode();
-					if (errCode != null) {
-						if (errCode instanceof NetworkError && errCode == NetworkError.SRV_BAD_BT) {
-							finish();
-							Intent intent = new Intent(MainActivity.this, LoginActivity.class);
-							startActivity(intent);
-							return;
-						}
-						Toast.makeText(MainActivity.this, e.getTranslatedErrorMessage(MainActivity.this), Toast.LENGTH_LONG).show();
+				if (success) {
+					// Redraw Activity - probably list of sensors
+					Log.d(TAG, "After reload task - go to redraw mainActivity");
+					setActiveAdapterAndMenu();
+					if (mController.getActiveAdapter() == null) {
+						checkNoAdapters();
+					} else {
+						redraw();
 					}
-				}
-				// Redraw Activity - probably list of sensors
-				Log.d(TAG, "After reload task - go to redraw mainActivity");
-				setActiveAdapterAndMenu();
-				if (mController.getActiveAdapter() == null) {
-					checkNoAdapters();
-				} else {
-					redraw();
 				}
 			}
 		});

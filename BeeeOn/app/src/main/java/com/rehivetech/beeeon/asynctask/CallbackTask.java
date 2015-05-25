@@ -4,7 +4,6 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.widget.Toast;
 
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.exception.AppException;
@@ -20,8 +19,6 @@ public abstract class CallbackTask<Params> extends AsyncTask<Params, Void, Boole
 	protected final Context mContext;
 
 	private AppException mException;
-
-	private boolean mNotifyErrors = true; // TODO: keep it enabled by default?
 
 	private boolean mIsWorking = false;
 
@@ -95,11 +92,6 @@ public abstract class CallbackTask<Params> extends AsyncTask<Params, Void, Boole
 		if (mListener != null) {
 			mListener.onExecute(success);
 		}
-
-		// TODO: uncomment this after checking functionality
-		if (mNotifyErrors && mException != null/* && !isCancelled()*/) {
-			Toast.makeText(mContext, mException.getTranslatedErrorMessage(mContext), Toast.LENGTH_LONG).show();
-		}
 	}
 
 	public final void cancelTask() {
@@ -114,10 +106,6 @@ public abstract class CallbackTask<Params> extends AsyncTask<Params, Void, Boole
 				}
 			}).start();
 		}
-	}
-
-	public final void setNotifyErrors(boolean notifyErrors) {
-		mNotifyErrors = notifyErrors;
 	}
 
 	@Nullable
