@@ -21,7 +21,7 @@
 	<string name="NetworkError___SRV_BAD_ACTION">Byla zadána neplatná akce.</string>
 	<string name="NetworkError___SRV_BAD_ACTOR_VALUE">Byla zadána neplatná hodnota aktoru.</string>
 	<string name="NetworkError___SRV_BAD_AGREG_FUNC">Byl zadán neplatný typ agregační funkce.</string>
-	<string name="NetworkError___SRV_BAD_BT">Vaše přihlášení vypršelo.\n\nPřihlaste se prosím znovu.</string>
+	<string name="NetworkError___SRV_BAD_BT">Vaše sezení vypršelo.\n\nPřihlaste se prosím znovu.</string>
 	<string name="NetworkError___SRV_BAD_EMAIL_OR_ROLE">Byl zadán neplatný e-mail nebo role.</string>
 	<string name="NetworkError___SRV_BAD_ICON">Byla zadána neplatná ikona.</string>
 	<string name="NetworkError___SRV_BAD_INTERVAL">Byl zadán neplatný interval.</string>

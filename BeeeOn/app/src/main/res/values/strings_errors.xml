@@ -21,7 +21,7 @@
 	<string name="NetworkError___SRV_BAD_ACTION">Invalid action was inserted.</string>
 	<string name="NetworkError___SRV_BAD_ACTOR_VALUE">Invalid actor value was inserted.</string>
 	<string name="NetworkError___SRV_BAD_AGREG_FUNC">Bad type of aggregation function was requested.</string>
-	<string name="NetworkError___SRV_BAD_BT">Your seesion has expired.\n\nPlease log in again.</string>
+	<string name="NetworkError___SRV_BAD_BT">Your session has expired.\n\nPlease log in again.</string>
 	<string name="NetworkError___SRV_BAD_EMAIL_OR_ROLE">Invalid email or role was inserted.</string>
 	<string name="NetworkError___SRV_BAD_ICON">Invalid icon was inserted.</string>
 	<string name="NetworkError___SRV_BAD_INTERVAL">Invalid interval was inserted.</string>
