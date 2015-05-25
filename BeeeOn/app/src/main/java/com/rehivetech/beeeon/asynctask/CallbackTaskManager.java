@@ -54,16 +54,24 @@ public class CallbackTaskManager {
 	/**
 	 * Add this task to internal list of tasks which will be automatically stopped and removed at activity's onStop() method.
 	 *
-	 * @param task
-	 * @param param
+	 * @param task task to be executed
+	 * @param param param for the task
+	 * @param showProgressBar whether this task should show progressbar in Activity during its running
 	 */
-	public <T> void executeTask(@NonNull CallbackTask<T> task, @Nullable T param) {
-		// Don't wait for task's preExecuteCallback for showing progressbar and show it immediatelly
+	public <T> void executeTask(@NonNull CallbackTask<T> task, @Nullable T param, boolean showProgressBar) {
+		// TODO: check if it makes sense to start the task (data are expired, etc.) - need implementation in each particular task
+		/*if (!task.needRun()) {
+			return;
+		}*/
+
+		// Don't wait for task's preExecuteCallback for showing progressbar and show it immediately
 		// because when switching activities there could be still running previous task which would postpone executing of this one
-		mActivity.setBeeeOnProgressBarVisibility(true);
+		if (showProgressBar) {
+			mActivity.setBeeeOnProgressBarVisibility(true);
+		}
 
 		// Prepare listeners for showing/hiding progress bar
-		prepareTaskListeners(task);
+		prepareTaskListeners(task, showProgressBar);
 
 		// Remember task
 		addTask(task);
@@ -78,8 +86,20 @@ public class CallbackTaskManager {
 
 	/**
 	 * Add this task to internal list of tasks which will be automatically stopped and removed at activity's onStop() method.
+	 * Shows progress bar in Activity automatically during its running.
 	 *
-	 * @param task
+	 * @param task task to be executed
+	 * @param param param for the task
+	 */
+	public <T> void executeTask(@NonNull CallbackTask task, @Nullable T param) {
+		executeTask(task, param, true);
+	}
+
+	/**
+	 * Add this task to internal list of tasks which will be automatically stopped and removed at activity's onStop() method.
+	 * Shows progress bar in Activity automatically during its running.
+	 *
+	 * @param task task to be executed
 	 */
 	public void executeTask(@NonNull CallbackTask task) {
 		executeTask(task, null);
@@ -119,15 +139,19 @@ public class CallbackTaskManager {
 
 	/**
 	 * Prepare own listeners (and preserve original ones) for showing/hiding progress bar of activity.
+	 *
 	 * @param task
+	 * @param showProgressBar whether this task should show progressbar during its running
 	 */
-	private void prepareTaskListeners(final CallbackTask task) {
+	private void prepareTaskListeners(final CallbackTask task, final boolean showProgressBar) {
 		final CallbackTask.CallbackTaskPreExecuteListener origPreListener = task.getPreExecuteListener();
 		task.setPreExecuteListener(new CallbackTask.CallbackTaskPreExecuteListener() {
 			@Override
 			public void onPreExecute() {
 				// Show progress bar in activity
-				mActivity.setBeeeOnProgressBarVisibility(true);
+				if (showProgressBar) {
+					mActivity.setBeeeOnProgressBarVisibility(true);
+				}
 
 				// Call original listener, if exists
 				if (origPreListener != null) {
@@ -154,8 +178,8 @@ public class CallbackTaskManager {
 					}
 				}
 
-				// Hide progress bar in activity (only if it's last task)
-				if (mTasks.size() == 0) {
+				// Hide progress bar in activity
+				if (showProgressBar) {
 					mActivity.setBeeeOnProgressBarVisibility(false);
 				}
 			}
