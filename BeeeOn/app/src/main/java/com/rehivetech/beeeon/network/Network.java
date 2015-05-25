@@ -392,7 +392,7 @@ public class Network implements INetwork {
 			mBT = "";
 
 		// Throw AppException for the caller
-		return new AppException(fa.getErrMessage(), Utils.getEnumFromId(NetworkError.class, String.valueOf(fa.getErrCode())));
+		return new AppException(fa.getErrMessage(), Utils.getEnumFromId(NetworkError.class, String.valueOf(fa.getErrCode()), NetworkError.UNKNOWN));
 	}
 
 	// /////////////////////////////////////SIGNIN,SIGNUP,ADAPTERS//////////////////////

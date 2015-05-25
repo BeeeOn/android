@@ -3,7 +3,6 @@ package com.rehivetech.beeeon.exception;
 import com.rehivetech.beeeon.IIdentifier;
 
 public enum NetworkError implements ErrorCode, IIdentifier {
-
 	UNKNOWN(0),
 	
 	COM_VER_MISMATCH(1),
@@ -45,7 +44,7 @@ public enum NetworkError implements ErrorCode, IIdentifier {
 
 	private final int mNumber;
 
-	private NetworkError(int number) {
+	NetworkError(int number) {
 		mNumber = number;
 	}
 
@@ -54,8 +53,13 @@ public enum NetworkError implements ErrorCode, IIdentifier {
 		return mNumber;
 	}
 
-	public String getId() {
+	@Override
+	public String getErrorCode() {
 		return String.format("S%d", mNumber);
 	}
 
+	@Override
+	public String getId() {
+		return String.valueOf(mNumber);
+	}
 }

@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
-import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -14,15 +13,15 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Build;
 import android.support.annotation.Nullable;
-import android.util.DisplayMetrics;
 import android.util.Pair;
-import android.util.TypedValue;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.rehivetech.beeeon.IIdentifier;
 import com.rehivetech.beeeon.INameIdentifier;
+import com.rehivetech.beeeon.exception.AppException;
+import com.rehivetech.beeeon.exception.ClientError;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
@@ -409,14 +408,14 @@ final public class Utils {
 		return item;
 	}
 
-	public static <T extends Enum<T> & IIdentifier> T getEnumFromId(Class<T> enumClass, String id) {
+	public static <T extends Enum<T> & IIdentifier> T getEnumFromId(Class<T> enumClass, String id) throws AppException {
 		for (T item : enumClass.getEnumConstants()) {
 			if (item.getId().equalsIgnoreCase(id)) {
 				return item;
 			}
 		}
 
-		throw new IllegalArgumentException("Invalid value");
+		throw new AppException(String.format("Unknown enum id '%s' for '%s'", id, enumClass.getSimpleName()), ClientError.UNEXPECTED_RESPONSE);
 	}
 
 	public static <T extends Enum<T> & INameIdentifier> T getEnumFromValue(Class<T> enumClass, String value, T defaultItem) {

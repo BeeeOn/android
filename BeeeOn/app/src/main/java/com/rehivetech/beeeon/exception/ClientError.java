@@ -3,7 +3,6 @@ package com.rehivetech.beeeon.exception;
 import com.rehivetech.beeeon.IIdentifier;
 
 public enum ClientError implements ErrorCode, IIdentifier {
-
 	UNKNOWN(0),
 
 	INTERNET_CONNECTION(1),
@@ -26,7 +25,13 @@ public enum ClientError implements ErrorCode, IIdentifier {
 		return mNumber;
 	}
 
-	public String getId() {
+	@Override
+	public String getErrorCode() {
 		return String.format("C%d", mNumber);
+	}
+
+	@Override
+	public String getId() {
+		return String.valueOf(mNumber);
 	}
 }
