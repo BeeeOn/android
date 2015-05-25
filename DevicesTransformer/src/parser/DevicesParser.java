@@ -120,22 +120,23 @@ public class DevicesParser {
     }
 
     private static Module parseModule(Element element) {
-        Module module = new Module(0,0,0,0); // FIXME: correct data
 
-        /*String prefix = element.getAttribute("name").trim();
+        int id = Integer.parseInt(element.getAttribute("id"));
+        String type = element.getAttribute("type");
+        int offset = Integer.parseInt(element.getAttribute("offset"));
+        int order = Integer.parseInt(element.getAttribute("order"));
+        double min = Double.parseDouble(element.getAttribute("min"));
+        double max = Double.parseDouble(element.getAttribute("max"));
+        double granularity = Double.parseDouble(element.getAttribute("granularity"));
+        boolean enumValues = Boolean.parseBoolean(element.getAttribute("vstrings"));
 
-        NodeList itemsNodes = element.getChildNodes();
-        for (int i = 0; i < itemsNodes.getLength(); i++) {
-            Node node = itemsNodes.item(i);
+        Module module = new Module(id, type, offset, order);
+        module.setMin(min);
+        module.setMax(max);
+        module.setGranularity(granularity);
+        module.setEnumValues(enumValues);
 
-            if (node instanceof Element) {
-                String name = ((Element) node).getAttribute("name").trim();
-                String value = node.getTextContent();
-
-                data.Language.Item item = new data.Language.Item(prefix, name, value);
-                items.add(item);
-            }
-        }*/
+        // TODO: rest of data
 
         return module;
     }

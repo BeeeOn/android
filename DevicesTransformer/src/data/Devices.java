@@ -42,8 +42,10 @@ public class Devices {
                     String.valueOf(device.isLed()),
                     String.valueOf(device.isBattery())));
 
+            stream.println("\tDevices:");
             for (Module module : device.getModules()) {
-                // TODO
+                stream.println(String.format("\t\t[%d] \tType: %s\tOffset: %d\tOrder: %d\tMin: %f\tMax: %f\tGranularity: %f\tEnumValue: %b",
+                        module.getId(), module.getType(), module.getOffset(), module.getOrder(), module.getMin(), module.getMax(), module.getGranularity(), module.isEnumValues()));
             }
 
             stream.println("------");

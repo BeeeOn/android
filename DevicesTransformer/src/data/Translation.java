@@ -34,11 +34,10 @@ public class Translation {
     }
 
     public String[] getResourceIds() {
-        String[] resourceIds = new String[mTranslationsIds.length - 1];
+        String[] resourceIds = new String[mTranslationsIds.length];
 
-        for (int i = 1; i < mTranslationsIds.length; i++) {
-            mTranslationsIds[i - 1] = mTranslationsIds[i];
-            resourceIds[i - 1] = String.format(RESOURCE_STRING, mTranslationsIds[i].toLowerCase());
+        for (int i = 0; i < mTranslationsIds.length; i++) {
+            resourceIds[i] = String.format(RESOURCE_STRING, mTranslationsIds[i].toLowerCase());
         }
 
         return resourceIds;

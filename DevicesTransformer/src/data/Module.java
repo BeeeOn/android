@@ -12,7 +12,7 @@ public class Module {
     public static final String PREFIX_VALUE_SEPARATOR = "_";
 
     private final int mId;
-    private final int mType;
+    private final String mType;
     private final int mOffset;
     private final int mOrder;
     private double mMin;
@@ -44,7 +44,7 @@ public class Module {
         }
     }
 
-    public Module(int id, int type, int offset, int order) {
+    public Module(int id, String type, int offset, int order) {
         mId = id;
         mType = type;
         mOffset = offset;
@@ -55,7 +55,7 @@ public class Module {
         return mId;
     }
 
-    public int getType() {
+    public String getType() {
         return mType;
     }
 
