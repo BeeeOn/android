@@ -4,16 +4,13 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.widget.AbsListView;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
@@ -38,15 +35,8 @@ import com.rehivetech.beeeon.exception.ErrorCode;
 import com.rehivetech.beeeon.exception.NetworkError;
 import com.rehivetech.beeeon.household.adapter.Adapter;
 import com.rehivetech.beeeon.menu.NavDrawerMenu;
-import com.rehivetech.beeeon.persistence.Persistence;
 import com.rehivetech.beeeon.util.Log;
 
-
-/**
- * Activity class for choosing location
- * 
- * 
- */
 public class MainActivity extends BaseApplicationActivity implements IListDialogListener {
 	private static final String TAG = MainActivity.class.getSimpleName();
 
@@ -65,6 +55,10 @@ public class MainActivity extends BaseApplicationActivity implements IListDialog
     private WatchDogListFragment mWatchDogApp;
     private Toolbar mToolbar;
 
+	private static final int BACK_TIME_INTERVAL = 2100;
+	private Toast mExitToast;
+	private long mBackPressed;
+
 	/**
 	 * Instance save state tags
 	 */
@@ -80,12 +74,7 @@ public class MainActivity extends BaseApplicationActivity implements IListDialog
 	 */
 	private String mActiveMenuId;
 	private String mActiveAdapterId;
-	private boolean mIsDrawerOpen = false;
-	
 
-	private Handler mTimeHandler = new Handler();
-	private Runnable mTimeRun;
-	
 	private boolean mFirstUseApp = true;
 	private ShowcaseView mSV;
 
@@ -93,8 +82,6 @@ public class MainActivity extends BaseApplicationActivity implements IListDialog
 	 * Tasks which can be running in this activity and after finishing can try to change GUI -> must be cancelled when activity stop
 	 */
 	private CustomAlertDialog mDialog;
-
-	private boolean backPressed = false;
 
 	private ReloadAdapterDataTask mFullReloadTask;
 	private boolean doRedraw = true;
@@ -127,8 +114,6 @@ public class MainActivity extends BaseApplicationActivity implements IListDialog
 
 		// Create NavDrawerMenu
 		mNavDrawerMenu = new NavDrawerMenu(this,mToolbar);
-		mNavDrawerMenu.openMenu();
-		mNavDrawerMenu.setIsDrawerOpen(mIsDrawerOpen);
 
 		// creates fragments
 		mListDevices = new SensorListFragment();
@@ -136,8 +121,8 @@ public class MainActivity extends BaseApplicationActivity implements IListDialog
 		mWatchDogApp = new WatchDogListFragment();
 
 		if (savedInstanceState != null) {
-			mIsDrawerOpen = savedInstanceState.getBoolean(IS_DRAWER_OPEN);
-			mNavDrawerMenu.setIsDrawerOpen(mIsDrawerOpen);
+			if (!savedInstanceState.getBoolean(IS_DRAWER_OPEN))
+				mNavDrawerMenu.closeMenu();
 
 			mActiveMenuId = savedInstanceState.getString(LAST_MENU_ID);
 			mActiveAdapterId = savedInstanceState.getString(ADAPTER_ID);
@@ -145,6 +130,7 @@ public class MainActivity extends BaseApplicationActivity implements IListDialog
 			mNavDrawerMenu.setAdapterID(mActiveAdapterId);
 
 		} else {
+			mNavDrawerMenu.closeMenu();
 			setActiveAdapterAndMenu();
 			mNavDrawerMenu.setActiveMenuID(mActiveMenuId);
 			mNavDrawerMenu.setAdapterID(mActiveAdapterId);
@@ -178,7 +164,7 @@ public class MainActivity extends BaseApplicationActivity implements IListDialog
 	}
 
 	public void setBeeeOnProgressBarVisibility(boolean b) {
-		findViewById(R.id.toolbar_progress).setVisibility((b)? View.VISIBLE:View.GONE);
+		findViewById(R.id.toolbar_progress).setVisibility((b) ? View.VISIBLE : View.GONE);
 	}
 
 	private void showTutorial() {
@@ -226,7 +212,7 @@ public class MainActivity extends BaseApplicationActivity implements IListDialog
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
 
-		Log.d(TAG, "Request code "+requestCode);
+		Log.d(TAG, "Request code " + requestCode);
 		if(requestCode == Constants.ADD_ADAPTER_REQUEST_CODE ) {
 			Log.d(TAG, "Return from add adapter activity");
 			if(resultCode == Constants.ADD_ADAPTER_CANCELED) {
@@ -251,7 +237,6 @@ public class MainActivity extends BaseApplicationActivity implements IListDialog
 	}
 
 	public void onAppResume() {
-		backPressed = false;
 		setBeeeOnProgressBarVisibility(true);
 		// ASYN TASK - Reload all data, if wasnt download in login activity
 		mFullReloadTask = new ReloadAdapterDataTask(this,false,ReloadAdapterDataTask.ReloadWhat.ADAPTERS_AND_ACTIVE_ADAPTER);
@@ -259,13 +244,13 @@ public class MainActivity extends BaseApplicationActivity implements IListDialog
 		mFullReloadTask.setListener(new CallbackTask.CallbackTaskListener() {
 			@Override
 			public void onExecute(boolean success) {
-				if(!success) {
+				if (!success) {
 					AppException e = mFullReloadTask.getException();
 					ErrorCode errCode = e.getErrorCode();
-					if(errCode != null) {
+					if (errCode != null) {
 						if (errCode instanceof NetworkError && errCode == NetworkError.SRV_BAD_BT) {
 							finish();
-							Intent intent = new Intent(MainActivity.this,LoginActivity.class);
+							Intent intent = new Intent(MainActivity.this, LoginActivity.class);
 							startActivity(intent);
 							return;
 						}
@@ -274,12 +259,11 @@ public class MainActivity extends BaseApplicationActivity implements IListDialog
 				}
 				setBeeeOnProgressBarVisibility(false);
 				// Redraw Activity - probably list of sensors
-				Log.d(TAG,"After reload task - go to redraw mainActivity");
+				Log.d(TAG, "After reload task - go to redraw mainActivity");
 				setActiveAdapterAndMenu();
 				if (mController.getActiveAdapter() == null) {
 					checkNoAdapters();
-				}
-				else {
+				} else {
 					redraw();
 				}
 			}
@@ -287,7 +271,6 @@ public class MainActivity extends BaseApplicationActivity implements IListDialog
 		mFullReloadTask.execute();
 
 		mNavDrawerMenu.redrawMenu();
-		mNavDrawerMenu.finishActinMode();
 		// Redraw Main Fragment
 		if(doRedraw) {
 			redraw();
@@ -295,10 +278,6 @@ public class MainActivity extends BaseApplicationActivity implements IListDialog
 		else {
 			doRedraw = true;
 		}
-	}
-
-	public void onAppPause() {
-		mTimeHandler.removeCallbacks(mTimeRun);
 	}
 
 	@Override
@@ -316,27 +295,22 @@ public class MainActivity extends BaseApplicationActivity implements IListDialog
 	}
 
 	@Override
-	public boolean dispatchTouchEvent(MotionEvent ev) {
-		if (backPressed) {
-			backPressed = false;
-		}
-		return super.dispatchTouchEvent(ev);
-	}
-
-	@Override
 	public void onBackPressed() {
-		Log.d(TAG, "BackPressed - onBackPressed " + String.valueOf(backPressed));
-		if (mNavDrawerMenu != null) {
-			if (backPressed) {
-				// second click
-				mNavDrawerMenu.secondTapBack();
-			} else {
-				// first click
-				mNavDrawerMenu.firstTapBack();
-				backPressed = true;
-			}
-			mNavDrawerMenu.finishActinMode();
+		if (mBackPressed + BACK_TIME_INTERVAL > System.currentTimeMillis()) {
+			if (mExitToast != null)
+				mExitToast.cancel();
+
+			super.onBackPressed();
+			return;
+		} else {
+			mExitToast = Toast.makeText(getBaseContext(), R.string.toast_tap_again_exit, Toast.LENGTH_SHORT);
+			mExitToast.show();
+
+			if (mNavDrawerMenu != null)
+				mNavDrawerMenu.openMenu();
 		}
+
+		mBackPressed = System.currentTimeMillis();
 	}
 
 	@Override
@@ -354,19 +328,11 @@ public class MainActivity extends BaseApplicationActivity implements IListDialog
 		}
 	}
 
-	public boolean getBackPressed() {
-		return backPressed;
-	}
-
-	public void setBackPressed(boolean val) {
-		backPressed = val;
-	}
-
 	@Override
 	public void onSaveInstanceState(Bundle savedInstanceState) {
 		savedInstanceState.putString(ADAPTER_ID, mActiveAdapterId);
 		savedInstanceState.putString(LAST_MENU_ID, mActiveMenuId);
-		savedInstanceState.putBoolean(IS_DRAWER_OPEN, mNavDrawerMenu.getIsDrawerOpen());
+		savedInstanceState.putBoolean(IS_DRAWER_OPEN, mNavDrawerMenu.isMenuOpened());
 		super.onSaveInstanceState(savedInstanceState);
 	}
 
@@ -471,7 +437,11 @@ public class MainActivity extends BaseApplicationActivity implements IListDialog
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case android.R.id.home:
-			mNavDrawerMenu.clickOnHome();
+			if (mNavDrawerMenu.isMenuOpened()) {
+				mNavDrawerMenu.closeMenu();
+			} else {
+				mNavDrawerMenu.openMenu();
+			}
 			break;
 		case R.id.action_notification:
 			// Notification

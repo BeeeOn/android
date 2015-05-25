@@ -3,22 +3,19 @@ package com.rehivetech.beeeon.menu;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
-import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.view.ActionMode;
 import android.support.v7.widget.Toolbar;
-import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.View.OnKeyListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
-
 
 import com.rehivetech.beeeon.Constants;
 import com.rehivetech.beeeon.R;
@@ -34,12 +31,12 @@ import com.rehivetech.beeeon.activity.menuItem.MenuItem;
 import com.rehivetech.beeeon.activity.menuItem.ProfileMenuItem;
 import com.rehivetech.beeeon.activity.menuItem.SeparatorMenuItem;
 import com.rehivetech.beeeon.activity.menuItem.SettingMenuItem;
-import com.rehivetech.beeeon.household.adapter.Adapter;
 import com.rehivetech.beeeon.arrayadapter.MenuListAdapter;
 import com.rehivetech.beeeon.asynctask.CallbackTask.CallbackTaskListener;
 import com.rehivetech.beeeon.asynctask.SwitchAdapterTask;
 import com.rehivetech.beeeon.asynctask.UnregisterAdapterTask;
 import com.rehivetech.beeeon.controller.Controller;
+import com.rehivetech.beeeon.household.adapter.Adapter;
 import com.rehivetech.beeeon.household.user.User;
 import com.rehivetech.beeeon.util.Log;
 
@@ -47,12 +44,11 @@ import java.util.List;
 
 import se.emilsjolander.stickylistheaders.StickyListHeadersListView;
 
-import static android.support.v7.view.ActionMode.*;
+import static android.support.v7.view.ActionMode.Callback;
 
 public class NavDrawerMenu   {
 	private static final String TAG = "NavDrawerMenu";
 	private final static String TAG_INFO = "tag_info";
-  public static final String FRG_TAG_PRO = "PRO";
     private final Toolbar mToolbar;
 
     private MainActivity mActivity;
@@ -65,11 +61,6 @@ public class NavDrawerMenu   {
 
 	private String mActiveItem;
 	private String mActiveAdapterId;
-	private String mAdaterIdUnregist;
-
-	private boolean mIsDrawerOpen;
-
-	private boolean backPressed = false;
 
 	private SwitchAdapterTask mSwitchAdapterTask;
 	private UnregisterAdapterTask mUnregisterAdapterTask;
@@ -86,7 +77,6 @@ public class NavDrawerMenu   {
 		mActivity = activity;
         mToolbar = toolbar;
 
-		backPressed = mActivity.getBackPressed();
 		// Get controller
 		mController = Controller.getInstance(mActivity);
 
@@ -106,27 +96,6 @@ public class NavDrawerMenu   {
 	}
 
 	private void settingsMenu() {
-		mDrawerLayout.setOnKeyListener(new OnKeyListener() {
-			@Override
-			public boolean onKey(View v, int keyCode, KeyEvent event) {
-				if (keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_UP) {
-					backPressed = ((MainActivity) mActivity).getBackPressed();
-					Log.d(TAG, "BackPressed = " + String.valueOf(backPressed));
-					if (mDrawerLayout == null) {
-						return false;
-					}
-					if (mDrawerLayout.isDrawerOpen(mDrawerRelLay) && !backPressed) {
-						firstTapBack();
-						return true;
-					} else if (mDrawerLayout.isDrawerOpen(mDrawerRelLay) && backPressed) {
-						secondTapBack();
-						return true;
-					}
-				}
-				return false;
-			}
-		});
-
 		// Capture listview menu item click
 		mDrawerList.setOnItemClickListener(new OnItemClickListener() {
 			@Override
@@ -203,9 +172,6 @@ public class NavDrawerMenu   {
         mDrawerToggle = new ActionBarDrawerToggle(mActivity,mDrawerLayout,mToolbar,R.string.drawer_open,R.string.drawer_close) {
 
 			public void onDrawerClosed(View view) {
-				backPressed = mActivity.getBackPressed();
-				if (backPressed)
-					mActivity.onBackPressed();
 				// Set the title on the action when drawer closed
 				Adapter adapter = mController.getActiveAdapter();
 
@@ -223,17 +189,14 @@ public class NavDrawerMenu   {
 					setDefaultTitle();
 				}
 				super.onDrawerClosed(view);
-				Log.d(TAG, "BackPressed - onDrawerClosed " + String.valueOf(backPressed));
-				mIsDrawerOpen = false;
-				finishActinMode();
+				if (mMode != null)
+					mMode.finish();
 			}
 
 			public void onDrawerOpened(View drawerView) {
 				// Set the title on the action when drawer open
 				mActivity.getSupportActionBar().setTitle(mDrawerTitle);
 				super.onDrawerOpened(drawerView);
-				mIsDrawerOpen = true;
-				// backPressed = true;
 			}
 		};
 
@@ -244,16 +207,15 @@ public class NavDrawerMenu   {
 	}
 
 	public void openMenu() {
-		mIsDrawerOpen = true;
 		mDrawerLayout.openDrawer(mDrawerRelLay);
 	}
 
 	public void closeMenu() {
-		mIsDrawerOpen = false;
 		mDrawerLayout.closeDrawer(mDrawerRelLay);
-		if (mMode != null) {
-			mMode.finish();
-		}
+	}
+
+	public boolean isMenuOpened() {
+		return mDrawerLayout.isDrawerVisible(mDrawerRelLay);
 	}
 
 	public void redrawMenu() {
@@ -276,15 +238,11 @@ public class NavDrawerMenu   {
 			setDefaultTitle();
 		}
 
-		if (!mIsDrawerOpen) {
-			// Close drawer
-			closeMenu();
-			Log.d(TAG, "LifeCycle: onOrientation");
-		}
+		if (mMode != null)
+			mMode.finish();
 	}
 
 	private void changeMenuItem(String ID, boolean closeDrawer) {
-
         mActiveItem = ID;
 		// TODO
 		mActivity.setActiveAdapterID(mActiveAdapterId);
@@ -395,48 +353,12 @@ public class NavDrawerMenu   {
 		return mMenuAdapter;
 	}
 
-	public void clickOnHome() {
-		if (mDrawerLayout.isDrawerOpen(mDrawerList)) {
-			closeMenu();
-		} else {
-			openMenu();
-		}
-
-	}
-
-	/**
-	 * Handling first tap back button
-	 */
-	public void firstTapBack() {
-		Log.d(TAG, "firtstTap");
-		Toast.makeText(mActivity, mActivity.getString(R.string.toast_tap_again_exit), Toast.LENGTH_SHORT).show();
-		// backPressed = true;
-		((MainActivity) mActivity).setBackPressed(true);
-		openMenu();
-	}
-
-	/**
-	 * Handling second tap back button - exiting
-	 */
-	public void secondTapBack() {
-		Log.d(TAG, "secondTap");
-		mActivity.finish();
-	}
-
 	public void onConfigurationChanged(Configuration newConfig) {
 		mDrawerToggle.onConfigurationChanged(newConfig);
 	}
 
 	public void setDefaultTitle() {
 		mDrawerTitle = "BeeeOn";
-	}
-
-	public void setIsDrawerOpen(boolean value) {
-		mIsDrawerOpen = value;
-	}
-
-	public boolean getIsDrawerOpen() {
-		return mIsDrawerOpen;
 	}
 
 	public void setActiveMenuID(String id) {
@@ -501,11 +423,5 @@ public class NavDrawerMenu   {
 			mSelectedMenuItem.setNotSelected();
 		}
 
-	}
-
-	public void finishActinMode() {
-		Log.d(TAG, "Close action mode");
-		if (mMode != null)
-			mMode.finish();
 	}
 }
