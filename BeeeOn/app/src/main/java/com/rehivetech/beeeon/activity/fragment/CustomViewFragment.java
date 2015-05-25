@@ -18,7 +18,7 @@ import com.jjoe64.graphview.series.point.DataPoint;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.asynctask.CallbackTask;
 import com.rehivetech.beeeon.asynctask.GetDevicesLogsTask;
-import com.rehivetech.beeeon.base.TrackFragment;
+import com.rehivetech.beeeon.base.BaseApplicationFragment;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.household.adapter.Adapter;
 import com.rehivetech.beeeon.household.device.Device;
@@ -44,7 +44,7 @@ import java.util.Map.Entry;
 import java.util.Random;
 import java.util.SortedMap;
 
-public class CustomViewFragment extends TrackFragment {
+public class CustomViewFragment extends BaseApplicationFragment {
 
 	private SparseArray<List<Device>> mDevices = new SparseArray<List<Device>>();
 	// private SparseArray<List<DeviceLog>> mLogs = new SparseArray<List<DeviceLog>>();
@@ -59,8 +59,6 @@ public class CustomViewFragment extends TrackFragment {
 
 	private Controller mController;
 
-	private List<GetDevicesLogsTask> mGetDevicesLogsTasks = new ArrayList<>();
-
 	public CustomViewFragment() {
 	}
 
@@ -68,7 +66,7 @@ public class CustomViewFragment extends TrackFragment {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		mController = Controller.getInstance(getActivity());
+		mController = Controller.getInstance(mActivity);
 	}
 
 	@Override
@@ -83,21 +81,13 @@ public class CustomViewFragment extends TrackFragment {
 		return view;
 	}
 
-	@Override
-	public void onStop() {
-		for (GetDevicesLogsTask task : mGetDevicesLogsTasks) {
-			task.cancel(true);
-		}
-		super.onStop();
-	}
-
 	private void addGraph(final Device device, final UnitsHelper unitsHelper, final TimeHelper timeHelper, final DateTimeFormatter fmt) {
 		// Inflate layout
 		LayoutInflater inflater = getLayoutInflater(null);
 		View row = inflater.inflate(R.layout.custom_graph_item, mLayout, false);
 		// Create and set graphView
 		GraphView graphView = (GraphView) row.findViewById(R.id.graph);
-		GraphViewHelper.prepareGraphView(graphView, getActivity(), device, fmt, unitsHelper); // empty heading
+		GraphViewHelper.prepareGraphView(graphView, mActivity, device, fmt, unitsHelper); // empty heading
 		LegendView legend = (LegendView) row.findViewById(R.id.legend);
 		legend.setDrawBackground(true);
 		legend.setIconRound(10f);
@@ -181,7 +171,7 @@ public class CustomViewFragment extends TrackFragment {
 			return;
 
 		// Prepare helpers
-		final UnitsHelper unitsHelper = new UnitsHelper(mController.getUserSettings(), getActivity());
+		final UnitsHelper unitsHelper = new UnitsHelper(mController.getUserSettings(), mActivity);
 		final TimeHelper timeHelper = new TimeHelper(mController.getUserSettings());
 		final DateTimeFormatter fmt = timeHelper.getFormatter(mGraphDateTimeFormat, adapter);
 
@@ -230,7 +220,7 @@ public class CustomViewFragment extends TrackFragment {
 			}
 
 			// Prepare and run the reload logs task
-			GetDevicesLogsTask getDevicesLogsTask = new GetDevicesLogsTask(getActivity());
+			GetDevicesLogsTask getDevicesLogsTask = new GetDevicesLogsTask(mActivity);
 
 			getDevicesLogsTask.setListener(new CallbackTask.CallbackTaskListener() {
 				@Override
@@ -250,10 +240,8 @@ public class CustomViewFragment extends TrackFragment {
 				}
 			});
 
-			// Remember task so they can be stopped at onStop()
-			mGetDevicesLogsTasks.add(getDevicesLogsTask);
-
-			getDevicesLogsTask.execute(pairs);
+			// Execute and remember task so it can be stopped automatically
+			mActivity.callbackTaskManager.executeTask(getDevicesLogsTask, pairs);
 		}
 	}
 

@@ -1,15 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-	<string name="NetworkError___CL_INTERNET_CONNECTION">Nie je dostupné pripojenie k Internetu\n\nSkontrolujte prosím vaše nastavenie.</string>
-	<string name="NetworkError___SRV_ADAPTER_NOT_FREE">Bránu s týmto číslom má už zaregistrovaný iný používateľ.\n\nAk ho poznáte, môžete ho požiadať o prístup.</string>
-	<string name="NetworkError___SRV_BAD_PSWD">Zadané heslo nie je správne.</string>
-	<string name="NetworkError___SRV_BAD_UTC">Bola zadaná neplatná časová zóna.</string>
-	<string name="NetworkError___SRV_COM_VER_MISMATCH">Verzia komunikačného protokolu už nie je podporovaná.\n(aplikácia: %1$s, server: %2$s)\n\nAktualizujte si prosím vašu aplikáciu.</string>
-	<string name="NetworkError___SRV_IMPROPER_NAME_OR_EMAIL">Zadané meno alebo e-mail nie je vhodné.</string>
-	<string name="NetworkError___SRV_IMPROPER_PSWD">Zadané heslo nie je dostatočne bezpečné.</string>
-	<string name="NetworkError___SRV_INVALID_PROVIDER">Tento poskytovateľ nie je k dispozícii.</string>
-	<string name="NetworkError___SRV_PENDING_USER">Aktivujte prosím svoj účet.</string>
-	<string name="NetworkError___SRV_USER_EXISTS">Zadané prihlasovacie meno je už obsadené.</string>
-	<string name="NetworkError___SRV_USER_NOT_EXISTS">Zadané používateľské meno neexistuje.</string>
+	<string name="unknown_error">Neznámá chyba</string>
+	<string name="error_message">%1$s (Chyba: %2$s)</string>
 
+	<string name="social_no_connection">Nedá sa pripojiť</string>
+
+	<string name="ClientError___CERTIFICATE">Certifikát servera je neplatný.</string>
+	<string name="ClientError___INTERNET_CONNECTION">Nie je dostupné pripojenie k Internetu\n\nSkontrolujte prosím vaše nastavenie.</string>
+	<string name="ClientError___NO_RESPONSE">Zo servera nebola prijatá žiadna odpoveď.\n\nSkúste to prosím znovu.</string>
+	<string name="ClientError___SERVER_CONNECTION">Nedá sa pripojiť k serveru.\n\nSkúste to prosím znovu.</string>
+	<string name="ClientError___SOCKET">Nedá sa vytvoriť alebo použiť socket.\n\nSkúste to prosím znovu.</string>
+	<string name="ClientError___UNEXPECTED_RESPONSE">Neočakávaná odpoveď.</string>
+	<string name="ClientError___UNKNOWN_HOST">Neznámý hostiteľ.</string>
+	<string name="ClientError___XML">Nastal problém pri spracovaní správy.\n\nSkúste to prosím znovu.</string>
+
+	<string name="NetworkError___ADAPTER_HAVE_YET">Bránu s týmto číslom už máte zaregistrovanú.</string>
+	<string name="NetworkError___ADAPTER_NOT_EXISTS">Brána s týmto číslom nie je zatiaľ pripojená k serveru.\n\nSkontrolujte, či je správne pripojená k serveru.</string>
+	<string name="NetworkError___ADAPTER_NOT_FREE">Bránu s týmto číslom má už zaregistrovaný iný používateľ.\n\nAk ho poznáte, môžete ho požiadať o prístup.</string>
+	<string name="NetworkError___ADA_SERVER_PROBLEM">Nastal problém na strane servera.\n\nSkúste to prosím neskôr.</string>
+	<string name="NetworkError___BAD_ACTION">Bola zadaná neplatná akcia.</string>
+	<string name="NetworkError___BAD_ACTOR_VALUE">Bola zadaná neplatná hodnota aktoru.</string>
+	<string name="NetworkError___BAD_AGREG_FUNC">Bol zadaný neplatný typ agregačnej funkcie.</string>
+	<string name="NetworkError___BAD_BT">Vaše prihlásenie vypršalo.\n\nPrihláste sa prosím znovu.</string>
+	<string name="NetworkError___BAD_EMAIL_OR_ROLE">Bol zadaný neplatný e-mail alebo úloha.</string>
+	<string name="NetworkError___BAD_ICON">Bola zadaná neplatná ikona.</string>
+	<string name="NetworkError___BAD_INTERVAL">Bol zadaný neplatný interval.</string>
+	<string name="NetworkError___BAD_LOCATION_TYPE">Bol zadaný neplatný typ umiestnenia.</string>
+	<string name="NetworkError___BAD_PSWD">Zadané heslo nie je správne.</string>
+	<string name="NetworkError___BAD_UTC">Bola zadaná neplatná časová zóna.</string>
+	<string name="NetworkError___COM_FW_ALGORITHMS_ERROR">Chyba pri komunikácii s firmware/algoritmamy.</string>
+	<string name="NetworkError___COM_VER_MISMATCH">Verzia komunikačného protokolu už nie je podporovaná.\n(aplikácia: %1$s, server: %2$s)\n\nAktualizujte si prosím vašu aplikáciu.</string>
+	<string name="NetworkError___DAMAGED_XML">Bolo prijaté poškodené XML.\n\nSkúste to prosím znovu.</string>
+	<string name="NetworkError___GENERATE_BTOKEN_ERROR">Chyba pri generovaní prístupového tokenu.</string>
+	<string name="NetworkError___IMPROPER_NAME_OR_EMAIL">Zadané meno alebo e-mail nie je vhodné.</string>
+	<string name="NetworkError___IMPROPER_PSWD">Zadané heslo nie je dostatočne bezpečné.</string>
+	<string name="NetworkError___INVALID_LOCATION_TYPE">Bol zadaný neplatný typ umiestnenia.</string>
+	<string name="NetworkError___INVALID_PROVIDER">Tento poskytovateľ nie je k dispozícii.</string>
+	<string name="NetworkError___INVALID_REQUEST">Tento typ požiadavku nie je na serveri podporovaný.</string>
+	<string name="NetworkError___LOW_RIGHTS">Nemáte dostatočné práva na túto akciu.\n\nPožiadajte vlastníka brány o ich navýšenie.</string>
+	<string name="NetworkError___NOT_CONSISTENT_SENSOR_ADDR">Bolo zadané neplatné ID alebo typ zariadenia.</string>
+	<string name="NetworkError___NOT_VALID_USER">Bol zadaný neplatný token alebo e-mail.</string>
+	<string name="NetworkError___NO_SUCH_ENTITY">Požadovaný objekt nebol nájdený.\n\nSkúste to prosím znovu.</string>
+	<string name="NetworkError___PENDING_USER">Aktivujte prosím svoj účet.</string>
+	<string name="NetworkError___SUSPECT_USER">Tento používateľský účet je dočasne zablokovaný.</string>
+	<string name="NetworkError___USER_EXISTS">Zadané prihlasovacie meno je už obsadené.</string>
+	<string name="NetworkError___USER_NOT_EXISTS">Zadané používateľské meno neexistuje.</string>
 </resources>

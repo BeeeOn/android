@@ -84,7 +84,7 @@ public final class Controller {
 					boolean demoMode = Persistence.loadLastDemoMode(context);
 
 					// Create new singleton instance of controller
-					sController = new Controller(context.getApplicationContext(), demoMode);
+					sController = new Controller(context, demoMode);
 				}
 			}
 		}
@@ -101,7 +101,7 @@ public final class Controller {
 	 *            Whether should be created Controller in demoMode
 	 */
 	private Controller(Context context, boolean demoMode) {
-		mContext = context;
+		mContext = context.getApplicationContext();
 		mDemoMode = demoMode;
 
 		// Create basic objects
@@ -507,6 +507,8 @@ public final class Controller {
 
 	/**
 	 * Interrupts actual connection (opened socket) of Network module.
+	 *
+	 * This CAN'T be called on UI thread!
 	 */
 	public void interruptConnection() {
 		if (mNetwork instanceof Network) {

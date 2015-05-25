@@ -140,14 +140,14 @@ public class AppException extends RuntimeException {
 		String errorMessage;
 
 		// Handling special error messages
-		if (resId > 0 && mErrorCode == NetworkError.SRV_COM_VER_MISMATCH) {
+		if (resId > 0 && mErrorCode == NetworkError.COM_VER_MISMATCH) {
 			// Append expected and real version of protocol
 			errorMessage = context.getString(resId, get(NetworkError.PARAM_COM_VER_LOCAL), get(NetworkError.PARAM_COM_VER_SERVER));
 		} else {
 			errorMessage = context.getString(resId > 0 ? resId : R.string.unknown_error);
 		}
 
-        return context.getString(R.string.error_message, mErrorCode.getNumber(), errorMessage);
+        return context.getString(R.string.error_message, errorMessage, mErrorCode.getId());
 	}
 
 }

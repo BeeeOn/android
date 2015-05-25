@@ -14,7 +14,7 @@ public class UnitsHelper {
 
 	public UnitsHelper(SharedPreferences prefs, Context context) {
 		mPrefs = prefs;
-		mContext = context;
+		mContext = context.getApplicationContext();
 	}
 
 	public String getStringValue(BaseValue item, double value) {

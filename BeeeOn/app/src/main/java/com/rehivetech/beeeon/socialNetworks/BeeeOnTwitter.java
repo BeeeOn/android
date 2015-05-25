@@ -69,7 +69,7 @@ public class BeeeOnTwitter  extends Observable implements BeeeOnSocialNetwork{
 			@Override
 			public void success(Result<TwitterSession> twitterSessionResult) {
 				parseResult(twitterSessionResult);
-				new TwLoginAchievement(activity.getApplicationContext());
+				new TwLoginAchievement(activity);
 				setChanged();
 				notifyObservers("login");
 			}
@@ -77,7 +77,7 @@ public class BeeeOnTwitter  extends Observable implements BeeeOnSocialNetwork{
 			public void failure(TwitterException e) {
 				if(e instanceof TwitterAuthException) {
 					if (!e.getMessage().toLowerCase().contains("cancel")) {
-						Toast.makeText(mContext, mContext.getString(R.string.NetworkError___CL_INTERNET_CONNECTION), Toast.LENGTH_LONG).show();
+						Toast.makeText(mContext, mContext.getString(R.string.social_no_connection), Toast.LENGTH_LONG).show();
 						setChanged();
 						notifyObservers("connect_error");
 					}

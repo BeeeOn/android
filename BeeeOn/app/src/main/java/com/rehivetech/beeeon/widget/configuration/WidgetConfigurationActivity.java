@@ -61,7 +61,7 @@ public class WidgetConfigurationActivity extends ActionBarActivity{
 
 		// do we edit or create widget
 		mAppWidgetEditing = extras.getBoolean(EXTRA_WIDGET_EDITING, false);
-		mAppWidgetManager = AppWidgetManager.getInstance(getApplicationContext());
+		mAppWidgetManager = AppWidgetManager.getInstance(this);
 
 		// get informations about widget
 		mWidgetId = extras.getInt(AppWidgetManager.EXTRA_APPWIDGET_ID, AppWidgetManager.INVALID_APPWIDGET_ID);

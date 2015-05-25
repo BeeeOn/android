@@ -4,7 +4,7 @@ import android.util.Xml;
 
 import com.rehivetech.beeeon.Constants;
 import com.rehivetech.beeeon.exception.AppException;
-import com.rehivetech.beeeon.exception.NetworkError;
+import com.rehivetech.beeeon.exception.ClientError;
 import com.rehivetech.beeeon.household.device.Device;
 import com.rehivetech.beeeon.household.device.Device.SaveDevice;
 import com.rehivetech.beeeon.household.device.Facility;
@@ -137,7 +137,7 @@ public class XmlCreator {
 
 			return writer.toString();
 		} catch (Exception e) {
-			throw AppException.wrap(e, NetworkError.CL_XML);
+			throw AppException.wrap(e, ClientError.XML);
 		}
 	}
 
@@ -174,7 +174,7 @@ public class XmlCreator {
 
 			return writer.toString();
 		} catch (Exception e) {
-			throw AppException.wrap(e, NetworkError.CL_XML);
+			throw AppException.wrap(e, ClientError.XML);
 		}
 	}
 
@@ -206,7 +206,7 @@ public class XmlCreator {
 
 			return writer.toString();
 		} catch (Exception e) {
-			throw AppException.wrap(e, NetworkError.CL_XML);
+			throw AppException.wrap(e, ClientError.XML);
 		}
 	}
 
@@ -373,7 +373,7 @@ public class XmlCreator {
 
 			return writer.toString();
 		} catch (Exception e) {
-			throw AppException.wrap(e, NetworkError.CL_XML);
+			throw AppException.wrap(e, ClientError.XML);
 		}
 	}
 
@@ -418,7 +418,7 @@ public class XmlCreator {
 
 			return writer.toString();
 		} catch (Exception e) {
-			throw AppException.wrap(e, NetworkError.CL_XML);
+			throw AppException.wrap(e, ClientError.XML);
 		}
 	}
 
@@ -474,7 +474,7 @@ public class XmlCreator {
 
 			return writer.toString();
 		} catch (Exception e) {
-			throw AppException.wrap(e, NetworkError.CL_XML);
+			throw AppException.wrap(e, ClientError.XML);
 		}
 	}
 
@@ -532,7 +532,7 @@ public class XmlCreator {
 
 			return writer.toString();
 		} catch (Exception e) {
-			throw AppException.wrap(e, NetworkError.CL_XML);
+			throw AppException.wrap(e, ClientError.XML);
 		}
 	}
 
@@ -619,7 +619,7 @@ public class XmlCreator {
 
 			return writer.toString();
 		} catch (Exception e) {
-			throw AppException.wrap(e, NetworkError.CL_XML);
+			throw AppException.wrap(e, ClientError.XML);
 		}
 	}
 
@@ -716,7 +716,7 @@ public class XmlCreator {
 
 			return writer.toString();
 		} catch (Exception e) {
-			throw AppException.wrap(e, NetworkError.CL_XML);
+			throw AppException.wrap(e, ClientError.XML);
 		}
 	}
 
@@ -852,7 +852,7 @@ public class XmlCreator {
 
 			return writer.toString();
 		} catch (Exception e) {
-			throw AppException.wrap(e, NetworkError.CL_XML);
+			throw AppException.wrap(e, ClientError.XML);
 		}
 	}
 
@@ -921,7 +921,7 @@ public class XmlCreator {
 
 			return writer.toString();
 		} catch (Exception e) {
-			throw AppException.wrap(e, NetworkError.CL_XML);
+			throw AppException.wrap(e, ClientError.XML);
 		}
 	}
 
@@ -959,7 +959,7 @@ public class XmlCreator {
 
 			return writer.toString();
 		} catch (Exception e) {
-			throw AppException.wrap(e, NetworkError.CL_XML);
+			throw AppException.wrap(e, ClientError.XML);
 		}
 	}
 
@@ -1035,7 +1035,7 @@ public class XmlCreator {
 
 			return writer.toString();
 		} catch (Exception e) {
-			throw AppException.wrap(e, NetworkError.CL_XML);
+			throw AppException.wrap(e, ClientError.XML);
 		}
 	}
 
@@ -1060,7 +1060,7 @@ public class XmlCreator {
 
 			return writer.toString();
 		} catch (Exception e) {
-			throw AppException.wrap(e, NetworkError.CL_XML);
+			throw AppException.wrap(e, ClientError.XML);
 		}
 	}
 }

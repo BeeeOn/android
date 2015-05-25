@@ -28,7 +28,7 @@ import java.util.List;
 public class WidgetListService extends RemoteViewsService {
     @Override
     public RemoteViewsFactory onGetViewFactory(Intent intent) {
-        return new ListRemoteViewsFactory(this.getApplicationContext(), intent);
+        return new ListRemoteViewsFactory(this, intent);
     }
 }
 

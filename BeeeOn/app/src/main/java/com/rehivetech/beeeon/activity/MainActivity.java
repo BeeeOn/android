@@ -83,7 +83,6 @@ public class MainActivity extends BaseApplicationActivity implements IListDialog
 	 */
 	private CustomAlertDialog mDialog;
 
-	private ReloadAdapterDataTask mFullReloadTask;
 	private boolean doRedraw = true;
 
 	@Override
@@ -163,10 +162,6 @@ public class MainActivity extends BaseApplicationActivity implements IListDialog
 		}
 	}
 
-	public void setBeeeOnProgressBarVisibility(boolean b) {
-		findViewById(R.id.toolbar_progress).setVisibility((b) ? View.VISIBLE : View.GONE);
-	}
-
 	private void showTutorial() {
 		// TODO Auto-generated method stub
 		RelativeLayout.LayoutParams lps = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -237,38 +232,26 @@ public class MainActivity extends BaseApplicationActivity implements IListDialog
 	}
 
 	public void onAppResume() {
-		setBeeeOnProgressBarVisibility(true);
 		// ASYN TASK - Reload all data, if wasnt download in login activity
-		mFullReloadTask = new ReloadAdapterDataTask(this,false,ReloadAdapterDataTask.ReloadWhat.ADAPTERS_AND_ACTIVE_ADAPTER);
-		mFullReloadTask.setNotifyErrors(false);
-		mFullReloadTask.setListener(new CallbackTask.CallbackTaskListener() {
+		final ReloadAdapterDataTask fullReloadTask = new ReloadAdapterDataTask(this,false,ReloadAdapterDataTask.ReloadWhat.ADAPTERS_AND_ACTIVE_ADAPTER);
+		fullReloadTask.setListener(new CallbackTask.CallbackTaskListener() {
 			@Override
 			public void onExecute(boolean success) {
-				if (!success) {
-					AppException e = mFullReloadTask.getException();
-					ErrorCode errCode = e.getErrorCode();
-					if (errCode != null) {
-						if (errCode instanceof NetworkError && errCode == NetworkError.SRV_BAD_BT) {
-							finish();
-							Intent intent = new Intent(MainActivity.this, LoginActivity.class);
-							startActivity(intent);
-							return;
-						}
-						Toast.makeText(MainActivity.this, e.getTranslatedErrorMessage(MainActivity.this), Toast.LENGTH_LONG).show();
+				if (success) {
+					// Redraw Activity - probably list of sensors
+					Log.d(TAG, "After reload task - go to redraw mainActivity");
+					setActiveAdapterAndMenu();
+					if (mController.getActiveAdapter() == null) {
+						checkNoAdapters();
+					} else {
+						redraw();
 					}
-				}
-				setBeeeOnProgressBarVisibility(false);
-				// Redraw Activity - probably list of sensors
-				Log.d(TAG, "After reload task - go to redraw mainActivity");
-				setActiveAdapterAndMenu();
-				if (mController.getActiveAdapter() == null) {
-					checkNoAdapters();
-				} else {
-					redraw();
 				}
 			}
 		});
-		mFullReloadTask.execute();
+
+		// Execute and remember task so it can be stopped automatically
+		callbackTaskManager.executeTask(fullReloadTask);
 
 		mNavDrawerMenu.redrawMenu();
 		// Redraw Main Fragment
@@ -287,11 +270,6 @@ public class MainActivity extends BaseApplicationActivity implements IListDialog
 		if (mDialog != null) {
 			mDialog.dismiss();
 		}
-		// Cancel all task if same is running from Menu
-		if (mNavDrawerMenu != null)
-			mNavDrawerMenu.cancelAllTasks();
-		if(mFullReloadTask != null)
-			mFullReloadTask.cancel(true);
 	}
 
 	@Override

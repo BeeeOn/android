@@ -38,8 +38,6 @@ public class AddAdapterActivity extends BaseApplicationActivity {
 	
 	private AddAdapterFragment mFragment;
 	
-	private RegisterAdapterTask mRegisterAdapterTask;
-	
 	private Button mSkip;
 	private Button mCancel;
 	private Button mNext;
@@ -105,7 +103,7 @@ public class AddAdapterActivity extends BaseApplicationActivity {
 		});
 		
 		mCancel.setOnClickListener(new OnClickListener() {
-			
+
 			@Override
 			public void onClick(View v) {
 				SharedPreferences prefs = mController.getUserSettings();
@@ -120,22 +118,20 @@ public class AddAdapterActivity extends BaseApplicationActivity {
 		});
 		
 		mNext.setOnClickListener(new OnClickListener() {
-			
+
 			@Override
 			public void onClick(View v) {
-				if(mNext.getText().equals(mActivity.getString(R.string.tutorial_next))){
-					mPager.setCurrentItem(mPager.getCurrentItem()+1);
-				}
-				else if (mNext.getText().equals(mActivity.getString(R.string.tutorial_add))) {
+				if (mNext.getText().equals(mActivity.getString(R.string.tutorial_next))) {
+					mPager.setCurrentItem(mPager.getCurrentItem() + 1);
+				} else if (mNext.getText().equals(mActivity.getString(R.string.tutorial_add))) {
 					String adapterName = mFragment.getAdapterName();
 					String adapterCode = mFragment.getAdapterCode();
-					Log.d(TAG, "adaName: "+adapterName+" adaCode: "+adapterCode);
-					
-					if(adapterCode.isEmpty()){
+					Log.d(TAG, "adaName: " + adapterName + " adaCode: " + adapterCode);
+
+					if (adapterCode.isEmpty()) {
 						// TODO: Please fill AdapterCode
 						Toast.makeText(mActivity, R.string.addadapter_fill_code, Toast.LENGTH_LONG).show();
-					}
-					else {
+					} else {
 						// Show progress bar for saving
 						mProgress.show();
 						doRegisterAdapterTask(new RegisterAdapterPair(adapterCode, adapterName));
@@ -180,9 +176,9 @@ public class AddAdapterActivity extends BaseApplicationActivity {
 	}
 	
 	public void doRegisterAdapterTask(RegisterAdapterPair pair) {
-		mRegisterAdapterTask = new RegisterAdapterTask(this.getApplicationContext());
+		RegisterAdapterTask registerAdapterTask = new RegisterAdapterTask(this);
 
-		mRegisterAdapterTask.setListener(new CallbackTaskListener() {
+		registerAdapterTask.setListener(new CallbackTaskListener() {
 
 			@Override
 			public void onExecute(boolean success) {
@@ -192,23 +188,15 @@ public class AddAdapterActivity extends BaseApplicationActivity {
 					Toast.makeText(mActivity, R.string.toast_adapter_activated, Toast.LENGTH_LONG).show();
 
 					setResult(Constants.ADD_ADAPTER_SUCCESS);
-                    InputMethodManager imm = (InputMethodManager) mActivity.getSystemService(Context.INPUT_METHOD_SERVICE);
-                    imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
+					InputMethodManager imm = (InputMethodManager) mActivity.getSystemService(Context.INPUT_METHOD_SERVICE);
+					imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
 					finish();
 				}
 			}
 		});
 
-		mRegisterAdapterTask.execute(pair);
+		// Execute and remember task so it can be stopped automatically
+		callbackTaskManager.executeTask(registerAdapterTask, pair);
 	}
 	
-	@Override
-	public void onDestroy() {
-		super.onDestroy();
-
-		if (mRegisterAdapterTask != null) {
-			mRegisterAdapterTask.cancel(true);
-		}
-	}
-
 }

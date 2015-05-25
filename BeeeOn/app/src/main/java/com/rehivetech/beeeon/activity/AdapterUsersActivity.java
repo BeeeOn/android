@@ -50,8 +50,6 @@ public class AdapterUsersActivity extends BaseApplicationActivity {
 	private ListView mListActUsers;
 	private ListView mListPenUsers;
 
-	private ReloadAdapterDataTask mReloadUsersTask;
-	
 	private static final int NAME_ITEM_HEIGHT = 74;
     private Toolbar mToolbar;
     private ActionMode mMode;
@@ -60,9 +58,6 @@ public class AdapterUsersActivity extends BaseApplicationActivity {
     private ScrollView mLayoutDialog;
     private User mSelectedItem;
     private int mSelectedItemPos;
-
-    private RemoveUserTask mRemoveUserTask;
-    private EditUserTask mEditUserTask;
 
     @Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -167,57 +162,62 @@ public class AdapterUsersActivity extends BaseApplicationActivity {
     }
 	
 	private void doReloadAdapterUsersTask(final String adapterId, boolean forceReload) {
-		mReloadUsersTask = new ReloadAdapterDataTask(this, forceReload, ReloadAdapterDataTask.ReloadWhat.USERS);
+		ReloadAdapterDataTask reloadUsersTask = new ReloadAdapterDataTask(this, forceReload, ReloadAdapterDataTask.ReloadWhat.USERS);
 
-		mReloadUsersTask.setListener(new CallbackTaskListener() {
+		reloadUsersTask.setListener(new CallbackTaskListener() {
 
 			@Override
 			public void onExecute(boolean success) {
 				mAdapterUsers = mController.getUsersModel().getUsersByAdapter(adapterId);
-				
+
 				initLayouts();
 			}
 
 		});
 
-		mReloadUsersTask.execute(adapterId);
+		// Execute and remember task so it can be stopped automatically
+        callbackTaskManager.executeTask(reloadUsersTask, adapterId);
 	}
 
 
     private void doRemoveUserTask(User user) {
-        mRemoveUserTask = new RemoveUserTask(getApplicationContext());
+        RemoveUserTask removeUserTask = new RemoveUserTask(this);
         UserPair pair = new UserPair(user, mAdapter.getId());
 
-        mRemoveUserTask.setListener(new CallbackTaskListener() {
-            @Override
-            public void onExecute(boolean success) {
-                // Get all users for adapter
-                doReloadAdapterUsersTask(mAdapter.getId(), true);
-                if(success) {
-                    // Hlaska o uspechu
-                }
-            }
-        });
-        mRemoveUserTask.execute(pair);
+        removeUserTask.setListener(new CallbackTaskListener() {
+			@Override
+			public void onExecute(boolean success) {
+				// Get all users for adapter
+				doReloadAdapterUsersTask(mAdapter.getId(), true);
+				if (success) {
+					// Hlaska o uspechu
+				}
+			}
+		});
+
+		// Execute and remember task so it can be stopped automatically
+		callbackTaskManager.executeTask(removeUserTask, pair);
     }
 
     private void doEditUserTask(User user) {
-        mEditUserTask = new EditUserTask(getApplicationContext());
+        EditUserTask editUserTask = new EditUserTask(this);
         UserPair pair = new UserPair(user, mAdapter.getId());
 
-        mEditUserTask.setListener(new CallbackTaskListener() {
-            @Override
-            public void onExecute(boolean success) {
-                // Get all users for adapter
-                doReloadAdapterUsersTask(mAdapter.getId(), true);
-                if(success) {
-                    // Hlaska o uspechu
-                }
-                mSelectedItem = null;
-                mSelectedItemPos = 0;
-            }
-        });
-        mEditUserTask.execute(pair);
+        editUserTask.setListener(new CallbackTaskListener() {
+			@Override
+			public void onExecute(boolean success) {
+				// Get all users for adapter
+				doReloadAdapterUsersTask(mAdapter.getId(), true);
+				if (success) {
+					// Hlaska o uspechu
+				}
+				mSelectedItem = null;
+				mSelectedItemPos = 0;
+			}
+		});
+
+		// Execute and remember task so it can be stopped automatically
+		callbackTaskManager.executeTask(editUserTask, pair);
     }
 
 

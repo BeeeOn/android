@@ -29,7 +29,7 @@ public class AchievementList extends Observable {
 	private int mTotalPoints;
 
 	private AchievementList(Context context, Controller controller) {
-		mContext = context;
+		mContext = context.getApplicationContext();
 		mController = controller;
 		allDataDownloaded = false;
 		allAchievementList = null;

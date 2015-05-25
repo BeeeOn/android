@@ -141,7 +141,6 @@ public abstract class WidgetConfigurationFragment extends Fragment {
 
 		// reloads all gateways and actual one
 		mReloadTask = new ReloadAdapterDataTask(mActivity, false, ReloadAdapterDataTask.ReloadWhat.ADAPTERS_AND_ACTIVE_ADAPTER);
-		mReloadTask.setNotifyErrors(false);
 		mReloadTask.setListener(new CallbackTask.CallbackTaskListener() {
 			@Override
 			public void onExecute(boolean success) {
@@ -149,11 +148,12 @@ public abstract class WidgetConfigurationFragment extends Fragment {
 					AppException e = mReloadTask.getException();
 					ErrorCode errCode = e != null ? e.getErrorCode() : null;
 					if (errCode != null) {
-						if (errCode instanceof NetworkError && errCode == NetworkError.SRV_BAD_BT) {
+						if (errCode instanceof NetworkError && errCode == NetworkError.BAD_BT) {
 							BaseApplicationActivity.redirectToLogin(mActivity);
 							Toast.makeText(mActivity, e.getTranslatedErrorMessage(mActivity), Toast.LENGTH_LONG).show();
 							return;
-						} else {
+						}
+						else{
 							Toast.makeText(mActivity, e.getTranslatedErrorMessage(mActivity), Toast.LENGTH_LONG).show();
 							finishConfiguration();
 							return;

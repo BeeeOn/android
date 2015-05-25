@@ -41,8 +41,6 @@ public class AddAdapterUserActivity extends BaseApplicationActivity {
 	private EditText mEmail;
 	private Button mBtn;
 
-	private AddUserTask mAddUserTask;
-	
 	private ProgressDialog mProgress;
     private Toolbar mToolbar;
 
@@ -121,9 +119,9 @@ public class AddAdapterUserActivity extends BaseApplicationActivity {
 	}
 	
 	protected void doAddAdapterUserTask(AddUserPair pair) {
-		mAddUserTask = new AddUserTask(mActivity);
+		AddUserTask addUserTask = new AddUserTask(mActivity);
 
-		mAddUserTask.setListener(new CallbackTaskListener() {
+		addUserTask.setListener(new CallbackTaskListener() {
 
 			@Override
 			public void onExecute(boolean success) {
@@ -133,7 +131,8 @@ public class AddAdapterUserActivity extends BaseApplicationActivity {
 
 		});
 
-		mAddUserTask.execute(pair);
+		// Execute and remember task so it can be stopped automatically
+		callbackTaskManager.executeTask(addUserTask, pair);
 	}
 
 	/*

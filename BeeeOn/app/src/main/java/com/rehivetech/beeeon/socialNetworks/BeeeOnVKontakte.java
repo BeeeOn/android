@@ -39,7 +39,7 @@ public class BeeeOnVKontakte extends Observable implements BeeeOnSocialNetwork{
 	private String mAccessToken;
 
 	private BeeeOnVKontakte(Context context) {
-		mContext = context;
+		mContext = context.getApplicationContext();
 		SharedPreferences prefs = Controller.getInstance(mContext).getUserSettings();
 		mAccessToken = prefs.getString(Constants.PERSISTENCE_PREF_LOGIN_VKONTAKTE, null);
 	}

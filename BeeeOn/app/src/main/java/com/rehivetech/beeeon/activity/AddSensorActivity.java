@@ -40,11 +40,6 @@ public class AddSensorActivity extends BaseApplicationActivity {
 	
 	private AddSensorFragment mFragment;
 	
-
-	private ReloadAdapterDataTask mReloadUninitializedFacilitiesTask;
-
-	private PairRequestTask mPairRequestTask;
-	
 	private Button mSkip;
 	private Button mCancel;
 	private Button mNext;
@@ -52,7 +47,6 @@ public class AddSensorActivity extends BaseApplicationActivity {
 
 	private boolean mFirstUse = true;
 	
-	private Activity mActivity;
     private Toolbar mToolbar;
 
     @Override
@@ -70,9 +64,7 @@ public class AddSensorActivity extends BaseApplicationActivity {
 		mController = Controller.getInstance(this);
 		mPairAdapter = mController.getActiveAdapter();
 		
-		mActivity = this;
-		
-		mAdapter = new AddSensorFragmentAdapter(getSupportFragmentManager(),mActivity);
+		mAdapter = new AddSensorFragmentAdapter(getSupportFragmentManager(), this);
 
 		getSupportActionBar().setHomeButtonEnabled(true);
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -124,24 +116,23 @@ public class AddSensorActivity extends BaseApplicationActivity {
 		});
 		
 		mCancel.setOnClickListener(new OnClickListener() {
-			
+
 			@Override
 			public void onClick(View v) {
 				setResult(Constants.ADD_SENSOR_CANCELED);
-				InputMethodManager imm = (InputMethodManager) mActivity.getSystemService(Context.INPUT_METHOD_SERVICE);
+				InputMethodManager imm = (InputMethodManager) AddSensorActivity.this.getSystemService(Context.INPUT_METHOD_SERVICE);
 				imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
 				finish();
 			}
 		});
 		
 		mNext.setOnClickListener(new OnClickListener() {
-			
+
 			@Override
 			public void onClick(View v) {
-				if(mNext.getText().equals(mActivity.getString(R.string.tutorial_next))){
-					mPager.setCurrentItem(mPager.getCurrentItem()+1);
-				}
-				else if (mNext.getText().equals(mActivity.getString(R.string.addsensor_send_pair))) {
+				if (mNext.getText().equals(AddSensorActivity.this.getString(R.string.tutorial_next))) {
+					mPager.setCurrentItem(mPager.getCurrentItem() + 1);
+				} else if (mNext.getText().equals(AddSensorActivity.this.getString(R.string.addsensor_send_pair))) {
 					doPairRequestTask(mPairAdapter.getId());
 					mNext.setEnabled(false);
 				}
@@ -153,7 +144,7 @@ public class AddSensorActivity extends BaseApplicationActivity {
 	
 	public void setBtnLastPage() {
 		mSkip.setVisibility(View.INVISIBLE);
-		mNext.setText(mActivity.getString(R.string.addsensor_send_pair));
+		mNext.setText(getString(R.string.addsensor_send_pair));
 	}
 
 	
@@ -172,7 +163,7 @@ public class AddSensorActivity extends BaseApplicationActivity {
 
 	public void resetBtn() {
 		mSkip.setVisibility(View.VISIBLE);
-		mNext.setText(mActivity.getString(R.string.tutorial_next));
+		mNext.setText(getString(R.string.tutorial_next));
 		mNext.setEnabled(true);
 	}
 
@@ -182,9 +173,9 @@ public class AddSensorActivity extends BaseApplicationActivity {
 	}
 	
 	public void doReloadUninitializedFacilitiesTask(String adapterId, boolean forceReload) {
-		mReloadUninitializedFacilitiesTask = new ReloadAdapterDataTask(mActivity.getApplicationContext(), forceReload, ReloadAdapterDataTask.ReloadWhat.UNINITIALIZED_FACILITIES);
+		ReloadAdapterDataTask reloadUninitializedFacilitiesTask = new ReloadAdapterDataTask(this, forceReload, ReloadAdapterDataTask.ReloadWhat.UNINITIALIZED_FACILITIES);
 
-		mReloadUninitializedFacilitiesTask.setListener(new CallbackTaskListener() {
+		reloadUninitializedFacilitiesTask.setListener(new CallbackTaskListener() {
 
 			@Override
 			public void onExecute(boolean success) {
@@ -199,10 +190,10 @@ public class AddSensorActivity extends BaseApplicationActivity {
 					Log.d(TAG, "Nasel jsem neinicializovane zarizeni !!!!");
 					mFragment.stopTimer();
 					// go to setup uninit sensor
-					 Intent intent = new Intent(mActivity, SetupSensorActivity.class);
-					 startActivityForResult(intent, Constants.SETUP_SENSOR_REQUEST_CODE);
-				} else{
-					if(mFirstUse) {
+					Intent intent = new Intent(AddSensorActivity.this, SetupSensorActivity.class);
+					startActivityForResult(intent, Constants.SETUP_SENSOR_REQUEST_CODE);
+				} else {
+					if (mFirstUse) {
 						mFirstUse = false;
 						doPairRequestTask(mPairAdapter.getId());
 						mNext.setEnabled(false);
@@ -212,13 +203,15 @@ public class AddSensorActivity extends BaseApplicationActivity {
 
 		});
 
-		mReloadUninitializedFacilitiesTask.execute(adapterId);
+		// Execute and remember task so it can be stopped automatically
+		callbackTaskManager.executeTask(reloadUninitializedFacilitiesTask, adapterId);
 	}
 	
 	private void doPairRequestTask(String adapterId) {
 		// Send First automatic pair request
-		mPairRequestTask = new PairRequestTask(mActivity.getApplicationContext());
-		mPairRequestTask.setListener(new CallbackTaskListener() {
+		PairRequestTask pairRequestTask = new PairRequestTask(this);
+
+		pairRequestTask.setListener(new CallbackTaskListener() {
 
 			@Override
 			public void onExecute(boolean success) {
@@ -232,19 +225,11 @@ public class AddSensorActivity extends BaseApplicationActivity {
 			}
 
 		});
-		mPairRequestTask.execute(adapterId);
+
+		// Execute and remember task so it can be stopped automatically
+		callbackTaskManager.executeTask(pairRequestTask, adapterId);
 	}
 	
-	@Override
-	public void onDestroy() {
-		super.onDestroy();
-
-		if (mReloadUninitializedFacilitiesTask != null) {
-			mReloadUninitializedFacilitiesTask.cancel(true);
-		}
-	}
-
-
 	public void checkUnInitSensor() {
 		Log.d(TAG, "Send if some uninit facility");
 		doReloadUninitializedFacilitiesTask(mPairAdapter.getId(), true);
@@ -252,7 +237,7 @@ public class AddSensorActivity extends BaseApplicationActivity {
 
 
 	public void resetBtnPair() {
-		mNext.setText(mActivity.getString(R.string.addsensor_send_pair));
+		mNext.setText(getString(R.string.addsensor_send_pair));
 		mNext.setEnabled(true);
 	}
 

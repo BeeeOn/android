@@ -19,8 +19,8 @@ import com.rehivetech.beeeon.asynctask.ActorActionTask;
 import com.rehivetech.beeeon.asynctask.CallbackTask;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.exception.AppException;
+import com.rehivetech.beeeon.exception.ClientError;
 import com.rehivetech.beeeon.exception.ErrorCode;
-import com.rehivetech.beeeon.exception.NetworkError;
 import com.rehivetech.beeeon.household.device.Device;
 import com.rehivetech.beeeon.household.device.Facility;
 import com.rehivetech.beeeon.household.device.RefreshInterval;
@@ -378,7 +378,7 @@ public class WidgetService extends Service {
                 Log.e(TAG, e.getSimpleErrorMessage());
 				setAllWidgetsCached();
 				// we know, that if internet connection changes, we start updating again
-				if(errCode instanceof NetworkError && e.getErrorCode() == NetworkError.CL_INTERNET_CONNECTION){
+				if (errCode instanceof ClientError && e.getErrorCode() == ClientError.INTERNET_CONNECTION) {
 					stopAlarm();
 				}
             }

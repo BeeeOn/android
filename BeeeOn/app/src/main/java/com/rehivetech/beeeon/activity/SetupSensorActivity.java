@@ -48,8 +48,6 @@ public class SetupSensorActivity extends BaseApplicationActivity {
 
 	private ProgressDialog mProgress;
 	
-	private InitializeFacilityTask mTask;
-
 	private Spinner mSpinner;
 	private ListView mListOfName;
 	private TextView mNewLocation;
@@ -124,7 +122,7 @@ public class SetupSensorActivity extends BaseApplicationActivity {
 		});
 		mNext.setText(getString(R.string.save));
 		mNext.setOnClickListener(new OnClickListener() {
-			
+
 			@Override
 			public void onClick(View v) {
 				mSpinner = mFragment.getSpinner();
@@ -156,12 +154,12 @@ public class SetupSensorActivity extends BaseApplicationActivity {
 						Toast.makeText(mActivity, getString(R.string.toast_need_sensor_location_name), Toast.LENGTH_LONG).show();
 						return;
 					}
-					if((mNewIconSpinner.getAdapter().getItem(mNewIconSpinner.getSelectedItemPosition())).equals(Location.LocationIcon.UNKNOWN)) {
+					if ((mNewIconSpinner.getAdapter().getItem(mNewIconSpinner.getSelectedItemPosition())).equals(Location.LocationIcon.UNKNOWN)) {
 						Toast.makeText(mActivity, getString(R.string.toast_need_sensor_location_icon), Toast.LENGTH_LONG).show();
 						return;
 					}
 
-					location = new Location(Location.NEW_LOCATION_ID, mNewLocation.getText().toString(), mPairAdapter.getId(), ((Location.LocationIcon)mNewIconSpinner.getAdapter().getItem(mNewIconSpinner.getSelectedItemPosition())).getId());
+					location = new Location(Location.NEW_LOCATION_ID, mNewLocation.getText().toString(), mPairAdapter.getId(), ((Location.LocationIcon) mNewIconSpinner.getAdapter().getItem(mNewIconSpinner.getSelectedItemPosition())).getId());
 
 				} else {
 					location = (Location) mSpinner.getSelectedItem();
@@ -198,42 +196,33 @@ public class SetupSensorActivity extends BaseApplicationActivity {
 	public void setFragment(SetupSensorFragment fragment) {
 		mFragment = fragment;
 	}
-	
-	
-	
-	@Override
-	public void onDestroy() {
-		super.onDestroy();
 
-		if (mTask != null) {
-			mTask.cancel(true);
-		}
-	}
-	
 	private void doInitializeFacilityTask(final InitializeFacilityPair pair) {
-		mTask = new InitializeFacilityTask(mActivity.getApplicationContext());
-		mTask.setListener(new CallbackTaskListener() {
+		InitializeFacilityTask initializeFacilityTask = new InitializeFacilityTask(this);
+
+		initializeFacilityTask.setListener(new CallbackTaskListener() {
 
 			@Override
 			public void onExecute(boolean success) {
 
-					mProgress.cancel();
-					if(success){
-						Toast.makeText(mActivity, R.string.toast_new_sensor_added, Toast.LENGTH_LONG).show();
+				mProgress.cancel();
+				if (success) {
+					Toast.makeText(mActivity, R.string.toast_new_sensor_added, Toast.LENGTH_LONG).show();
 
-						Intent intent = new Intent();
-						intent.putExtra(Constants.SETUP_SENSOR_ACT_LOC, pair.location.getId());
-						setResult(Constants.SETUP_SENSOR_SUCCESS,intent);
-                        //HIDE keyboard
-                        InputMethodManager imm = (InputMethodManager) mActivity.getSystemService(Context.INPUT_METHOD_SERVICE);
-                        imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
-						finish();
-					}
+					Intent intent = new Intent();
+					intent.putExtra(Constants.SETUP_SENSOR_ACT_LOC, pair.location.getId());
+					setResult(Constants.SETUP_SENSOR_SUCCESS, intent);
+					//HIDE keyboard
+					InputMethodManager imm = (InputMethodManager) mActivity.getSystemService(Context.INPUT_METHOD_SERVICE);
+					imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
+					finish();
+				}
 			}
 
 		});
 
-		mTask.execute(pair);
+		// Execute and remember task so it can be stopped automatically
+		callbackTaskManager.executeTask(initializeFacilityTask, pair);
 	}
 
 

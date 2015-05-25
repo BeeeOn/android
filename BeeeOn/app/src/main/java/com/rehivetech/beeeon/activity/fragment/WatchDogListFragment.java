@@ -2,7 +2,6 @@ package com.rehivetech.beeeon.activity.fragment;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.view.ActionMode;
 import android.support.v7.widget.SwitchCompat;
@@ -28,6 +27,7 @@ import com.rehivetech.beeeon.asynctask.CallbackTask;
 import com.rehivetech.beeeon.asynctask.ReloadAdapterDataTask;
 import com.rehivetech.beeeon.asynctask.RemoveWatchDogTask;
 import com.rehivetech.beeeon.asynctask.SaveWatchDogTask;
+import com.rehivetech.beeeon.base.BaseApplicationFragment;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.household.adapter.Adapter;
 import com.rehivetech.beeeon.household.watchdog.WatchDog;
@@ -40,13 +40,12 @@ import java.util.List;
  * Fragment for list of rules for algorithm WatchDog
  * @author mlyko
  */
-public class WatchDogListFragment extends Fragment{
+public class WatchDogListFragment extends BaseApplicationFragment {
     private static final String TAG = WatchDogListFragment.class.getSimpleName();
 
     private static final String ADAPTER_ID = "lastAdapterId";
 
     private SwipeRefreshLayout mSwipeLayout;
-    private MainActivity mActivity;
     private Controller mController;
     private ListView mWatchDogListView;
     private WatchDogListAdapter mWatchDogAdapter;
@@ -58,11 +57,6 @@ public class WatchDogListFragment extends Fragment{
 
     private View mView;
     private ActionMode mMode;
-    ProgressBar mProgressBar;
-
-    private ReloadAdapterDataTask mReloadWatchDogTask;
-    private RemoveWatchDogTask mRemoveWatchDogTask;
-    private SaveWatchDogTask mSaveWatchDogTask;
 
     private WatchDog mSelectedItem;
     private int mSelectedItemPos;
@@ -75,11 +69,6 @@ public class WatchDogListFragment extends Fragment{
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         Log.d(TAG, "onCreate()");
-
-        mActivity = (MainActivity) getActivity();
-        if (!(mActivity instanceof MainActivity)) {
-            throw new IllegalStateException("Activity holding SensorListFragment must be MainActivity");
-        }
 
         if (savedInstanceState != null) {
             mActiveAdapterId = savedInstanceState.getString(ADAPTER_ID);
@@ -101,7 +90,6 @@ public class WatchDogListFragment extends Fragment{
         super.onActivityCreated(savedInstanceState);
         Log.d(TAG, "onActivityCreated()");
 
-        mProgressBar = (ProgressBar) mActivity.findViewById(R.id.toolbar_progress);
         mSwipeLayout = (SwipeRefreshLayout) mActivity.findViewById(R.id.swipe_container);
 
         initLayout();
@@ -153,33 +141,9 @@ public class WatchDogListFragment extends Fragment{
      */
     public void onPause() {
         super.onPause();
-        Log.d(TAG, "onPause()");
 
         if(mMode != null) {
             mMode.finish();
-        }
-
-        // always hide progressbar
-        mProgressBar.setVisibility(View.GONE);
-    }
-
-    /**
-     * Cancels async task before destroing fragment
-     */
-    public void onDestroy(){
-        super.onDestroy();
-        Log.d(TAG, "onDestroy()");
-
-        if (mReloadWatchDogTask != null) {
-            mReloadWatchDogTask.cancel(true);
-        }
-
-        if(mRemoveWatchDogTask != null){
-            mRemoveWatchDogTask.cancel(true);
-        }
-
-        if(mSaveWatchDogTask != null){
-            mSaveWatchDogTask.cancel(true);
         }
     }
 
@@ -194,7 +158,7 @@ public class WatchDogListFragment extends Fragment{
      */
     private void initLayout() {
         mWatchDogListView = (ListView) mView.findViewById(R.id.watchdog_list);
-        mWatchDogAdapter = new WatchDogListAdapter(mActivity, getActivity().getLayoutInflater());
+        mWatchDogAdapter = new WatchDogListAdapter(mActivity, mActivity.getLayoutInflater());
         mWatchDogListView.setAdapter(mWatchDogAdapter);
 
         // onclicklistener for Switch button in one row
@@ -299,27 +263,24 @@ public class WatchDogListFragment extends Fragment{
     private void doSaveWatchDogTask(WatchDog watchDog, final SwitchCompat sw){
         // disable so that nobody can change it now
         sw.setEnabled(false);
-        //Make progress bar appear when you need it
-        mProgressBar.setVisibility(View.VISIBLE);
-        // other option is to set Swipe refreshing
+        // progress bar shows automatically; other option is to set Swipe refreshing
         //mSwipeLayout.setRefreshing(true);
 
         watchDog.setEnabled(sw.isChecked());
 
-        mSaveWatchDogTask = new SaveWatchDogTask(mActivity);
-        mSaveWatchDogTask.setListener(new CallbackTask.CallbackTaskListener() {
-            @Override
-            public void onExecute(boolean success) {
-                //Toast.makeText(mActivity, getResources().getString(success ? R.string.toast_success_save_data : R.string.toast_fail_save_data), Toast.LENGTH_LONG).show();
-                sw.setEnabled(true);
-                //Make progress bar disappear
-                mProgressBar.setVisibility(View.GONE);
-                // other option is to set Swipe refreshing
-                //mSwipeLayout.setRefreshing(false);
-            }
-        });
+        SaveWatchDogTask saveWatchDogTask = new SaveWatchDogTask(mActivity);
+        saveWatchDogTask.setListener(new CallbackTask.CallbackTaskListener() {
+			@Override
+			public void onExecute(boolean success) {
+				//Toast.makeText(mActivity, getResources().getString(success ? R.string.toast_success_save_data : R.string.toast_fail_save_data), Toast.LENGTH_LONG).show();
+				sw.setEnabled(true);
+				// other option is to set Swipe refreshing
+				//mSwipeLayout.setRefreshing(false);
+			}
+		});
 
-        mSaveWatchDogTask.execute(watchDog);
+		// Execute and remember task so it can be stopped automatically
+		mActivity.callbackTaskManager.executeTask(saveWatchDogTask, watchDog);
     }
 
     /**
@@ -329,23 +290,19 @@ public class WatchDogListFragment extends Fragment{
     public void doReloadWatchDogsTask(String adapterId, boolean forceReload, final boolean isSwipeRefresh){
         Log.d(TAG, "reloadWatchDogsTask()");
 
-        mReloadWatchDogTask = new ReloadAdapterDataTask(mActivity, forceReload, ReloadAdapterDataTask.ReloadWhat.WATCHDOGS);
+        ReloadAdapterDataTask reloadWatchDogTask = new ReloadAdapterDataTask(mActivity, forceReload, ReloadAdapterDataTask.ReloadWhat.WATCHDOGS);
 
-        mReloadWatchDogTask.setListener(new CallbackTask.CallbackTaskListener() {
+        reloadWatchDogTask.setListener(new CallbackTask.CallbackTaskListener() {
             @Override
             public void onExecute(boolean success) {
                 redrawRules();
-                if(isSwipeRefresh)
+                if (isSwipeRefresh)
                     mSwipeLayout.setRefreshing(false);
-                else
-                    mActivity.setBeeeOnProgressBarVisibility(false);
             }
         });
 
-        if(!isSwipeRefresh) {
-            mActivity.setBeeeOnProgressBarVisibility(true);
-        }
-        mReloadWatchDogTask.execute(adapterId);
+		// Execute and remember task so it can be stopped automatically
+		mActivity.callbackTaskManager.executeTask(reloadWatchDogTask, adapterId);
     }
 
     /**
@@ -353,19 +310,21 @@ public class WatchDogListFragment extends Fragment{
      * @param watchdog
      */
     private void doRemoveWatchDogTask(WatchDog watchdog) {
-        mRemoveWatchDogTask = new RemoveWatchDogTask(mActivity, false);
+        RemoveWatchDogTask removeWatchDogTask = new RemoveWatchDogTask(mActivity, false);
         DelWatchDogPair pair = new DelWatchDogPair(watchdog.getId(), watchdog.getAdapterId());
 
-        mRemoveWatchDogTask.setListener(new CallbackTask.CallbackTaskListener() {
-            @Override
-            public void onExecute(boolean success) {
-                Toast.makeText(mActivity, getResources().getString(success ? R.string.toast_delete_success : R.string.toast_delete_fail), Toast.LENGTH_SHORT).show();
-                if (success) {
-                    redrawRules();
-                }
-            }
+        removeWatchDogTask.setListener(new CallbackTask.CallbackTaskListener() {
+			@Override
+			public void onExecute(boolean success) {
+				Toast.makeText(mActivity, getResources().getString(success ? R.string.toast_delete_success : R.string.toast_delete_fail), Toast.LENGTH_SHORT).show();
+				if (success) {
+					redrawRules();
+				}
+			}
         });
-        mRemoveWatchDogTask.execute(pair);
+
+		// Execute and remember task so it can be stopped automatically
+		mActivity.callbackTaskManager.executeTask(removeWatchDogTask, pair);
     }
 
     // ----- HELPERS + ACTIONMODE ----- //
