@@ -169,11 +169,6 @@ public class CallbackTaskManager {
 		task.setListener(new CallbackTask.CallbackTaskListener() {
 			@Override
 			public void onExecute(boolean success) {
-				// Call original listener, if exists
-				if (origListener != null) {
-					origListener.onExecute(success);
-				}
-
 				// Remove task from remembered tasks
 				Iterator<CallbackTask> iterator = mTasks.iterator();
 				while (iterator.hasNext()) {
@@ -215,6 +210,13 @@ public class CallbackTaskManager {
 					// TODO: For some errors show dialog instead of toast?
 					// Notify error to user
 					Toast.makeText(mActivity, exception.getTranslatedErrorMessage(mActivity), Toast.LENGTH_LONG).show();
+				}
+
+				// Call original listener, if exists
+				// NOTE: We must call it here at the end, because sometimes activity starts new task inside the listener
+				// TODO: Do we need/want to call it always? Don't we want to behave differently when some error code happens? E.g. when we're redirecting to LoginActivity?
+				if (origListener != null) {
+					origListener.onExecute(success);
 				}
 			}
 		});
