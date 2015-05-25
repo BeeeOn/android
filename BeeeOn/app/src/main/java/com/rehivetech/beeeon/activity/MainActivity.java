@@ -4,13 +4,11 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
@@ -39,12 +37,6 @@ import com.rehivetech.beeeon.household.adapter.Adapter;
 import com.rehivetech.beeeon.menu.NavDrawerMenu;
 import com.rehivetech.beeeon.util.Log;
 
-
-/**
- * Activity class for choosing location
- * 
- * 
- */
 public class MainActivity extends BaseApplicationActivity implements IListDialogListener {
 	private static final String TAG = MainActivity.class.getSimpleName();
 
@@ -82,12 +74,7 @@ public class MainActivity extends BaseApplicationActivity implements IListDialog
 	 */
 	private String mActiveMenuId;
 	private String mActiveAdapterId;
-	private boolean mIsDrawerOpen = false;
-	
 
-	private Handler mTimeHandler = new Handler();
-	private Runnable mTimeRun;
-	
 	private boolean mFirstUseApp = true;
 	private ShowcaseView mSV;
 
@@ -127,8 +114,6 @@ public class MainActivity extends BaseApplicationActivity implements IListDialog
 
 		// Create NavDrawerMenu
 		mNavDrawerMenu = new NavDrawerMenu(this,mToolbar);
-		mNavDrawerMenu.openMenu();
-		mNavDrawerMenu.setIsDrawerOpen(mIsDrawerOpen);
 
 		// creates fragments
 		mListDevices = new SensorListFragment();
@@ -136,8 +121,8 @@ public class MainActivity extends BaseApplicationActivity implements IListDialog
 		mWatchDogApp = new WatchDogListFragment();
 
 		if (savedInstanceState != null) {
-			mIsDrawerOpen = savedInstanceState.getBoolean(IS_DRAWER_OPEN);
-			mNavDrawerMenu.setIsDrawerOpen(mIsDrawerOpen);
+			if (!savedInstanceState.getBoolean(IS_DRAWER_OPEN))
+				mNavDrawerMenu.closeMenu();
 
 			mActiveMenuId = savedInstanceState.getString(LAST_MENU_ID);
 			mActiveAdapterId = savedInstanceState.getString(ADAPTER_ID);
@@ -145,6 +130,7 @@ public class MainActivity extends BaseApplicationActivity implements IListDialog
 			mNavDrawerMenu.setAdapterID(mActiveAdapterId);
 
 		} else {
+			mNavDrawerMenu.closeMenu();
 			setActiveAdapterAndMenu();
 			mNavDrawerMenu.setActiveMenuID(mActiveMenuId);
 			mNavDrawerMenu.setAdapterID(mActiveAdapterId);
@@ -285,7 +271,6 @@ public class MainActivity extends BaseApplicationActivity implements IListDialog
 		mFullReloadTask.execute();
 
 		mNavDrawerMenu.redrawMenu();
-		mNavDrawerMenu.finishActinMode();
 		// Redraw Main Fragment
 		if(doRedraw) {
 			redraw();
@@ -293,10 +278,6 @@ public class MainActivity extends BaseApplicationActivity implements IListDialog
 		else {
 			doRedraw = true;
 		}
-	}
-
-	public void onAppPause() {
-		mTimeHandler.removeCallbacks(mTimeRun);
 	}
 
 	@Override
@@ -351,7 +332,7 @@ public class MainActivity extends BaseApplicationActivity implements IListDialog
 	public void onSaveInstanceState(Bundle savedInstanceState) {
 		savedInstanceState.putString(ADAPTER_ID, mActiveAdapterId);
 		savedInstanceState.putString(LAST_MENU_ID, mActiveMenuId);
-		savedInstanceState.putBoolean(IS_DRAWER_OPEN, mNavDrawerMenu.getIsDrawerOpen());
+		savedInstanceState.putBoolean(IS_DRAWER_OPEN, mNavDrawerMenu.isMenuOpened());
 		super.onSaveInstanceState(savedInstanceState);
 	}
 
@@ -456,7 +437,11 @@ public class MainActivity extends BaseApplicationActivity implements IListDialog
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case android.R.id.home:
-			mNavDrawerMenu.clickOnHome();
+			if (mNavDrawerMenu.isMenuOpened()) {
+				mNavDrawerMenu.closeMenu();
+			} else {
+				mNavDrawerMenu.openMenu();
+			}
 			break;
 		case R.id.action_notification:
 			// Notification

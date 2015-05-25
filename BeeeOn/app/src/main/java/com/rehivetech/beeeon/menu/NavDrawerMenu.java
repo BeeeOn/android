@@ -49,7 +49,6 @@ import static android.support.v7.view.ActionMode.Callback;
 public class NavDrawerMenu   {
 	private static final String TAG = "NavDrawerMenu";
 	private final static String TAG_INFO = "tag_info";
-  public static final String FRG_TAG_PRO = "PRO";
     private final Toolbar mToolbar;
 
     private MainActivity mActivity;
@@ -62,9 +61,6 @@ public class NavDrawerMenu   {
 
 	private String mActiveItem;
 	private String mActiveAdapterId;
-	private String mAdaterIdUnregist;
-
-	private boolean mIsDrawerOpen;
 
 	private SwitchAdapterTask mSwitchAdapterTask;
 	private UnregisterAdapterTask mUnregisterAdapterTask;
@@ -193,15 +189,14 @@ public class NavDrawerMenu   {
 					setDefaultTitle();
 				}
 				super.onDrawerClosed(view);
-				mIsDrawerOpen = false;
-				finishActinMode();
+				if (mMode != null)
+					mMode.finish();
 			}
 
 			public void onDrawerOpened(View drawerView) {
 				// Set the title on the action when drawer open
 				mActivity.getSupportActionBar().setTitle(mDrawerTitle);
 				super.onDrawerOpened(drawerView);
-				mIsDrawerOpen = true;
 			}
 		};
 
@@ -212,16 +207,15 @@ public class NavDrawerMenu   {
 	}
 
 	public void openMenu() {
-		mIsDrawerOpen = true;
 		mDrawerLayout.openDrawer(mDrawerRelLay);
 	}
 
 	public void closeMenu() {
-		mIsDrawerOpen = false;
 		mDrawerLayout.closeDrawer(mDrawerRelLay);
-		if (mMode != null) {
-			mMode.finish();
-		}
+	}
+
+	public boolean isMenuOpened() {
+		return mDrawerLayout.isDrawerVisible(mDrawerRelLay);
 	}
 
 	public void redrawMenu() {
@@ -244,15 +238,11 @@ public class NavDrawerMenu   {
 			setDefaultTitle();
 		}
 
-		if (!mIsDrawerOpen) {
-			// Close drawer
-			closeMenu();
-			Log.d(TAG, "LifeCycle: onOrientation");
-		}
+		if (mMode != null)
+			mMode.finish();
 	}
 
 	private void changeMenuItem(String ID, boolean closeDrawer) {
-
         mActiveItem = ID;
 		// TODO
 		mActivity.setActiveAdapterID(mActiveAdapterId);
@@ -363,29 +353,12 @@ public class NavDrawerMenu   {
 		return mMenuAdapter;
 	}
 
-	public void clickOnHome() {
-		if (mDrawerLayout.isDrawerOpen(mDrawerList)) {
-			closeMenu();
-		} else {
-			openMenu();
-		}
-
-	}
-
 	public void onConfigurationChanged(Configuration newConfig) {
 		mDrawerToggle.onConfigurationChanged(newConfig);
 	}
 
 	public void setDefaultTitle() {
 		mDrawerTitle = "BeeeOn";
-	}
-
-	public void setIsDrawerOpen(boolean value) {
-		mIsDrawerOpen = value;
-	}
-
-	public boolean getIsDrawerOpen() {
-		return mIsDrawerOpen;
 	}
 
 	public void setActiveMenuID(String id) {
@@ -450,11 +423,5 @@ public class NavDrawerMenu   {
 			mSelectedMenuItem.setNotSelected();
 		}
 
-	}
-
-	public void finishActinMode() {
-		Log.d(TAG, "Close action mode");
-		if (mMode != null)
-			mMode.finish();
 	}
 }
