@@ -80,7 +80,7 @@
     <string name="toast_internet_connection">Prosím aktivujte pripojenie k Internetu</string>
     <string name="toast_no_unregistered_adapter">K dispozicií nie je žiadná neregistrovaná brána</string>
     <string name="toast_communication_error">Nastal problém v komunikácií, skúste to neskôr</string>
-    <string name="toast_tap_again_exit">Stisknite späť dvakrát pre opustenie aplikácie</string>
+    <string name="toast_tap_again_exit">Pre ukončenie stlačte späť ešte raz</string>
     <string name="toast_google_auth">Google autentizácia</string>
     <string name="toast_something_wrong">Nastala neznámá chyba, skúste to neskôr</string>
     <string name="toast_check_your_connection_via_browser">Zkontrolujte pripojenie s použitím webového prehliadača</string>
@@ -266,7 +266,7 @@
     <string name="tut_add_adapter_text_2">Zapojte bránu do elektrickej siete</string>
     <string name="tut_add_adapter_text_3">V nasledujúcom kroku zadajte názov brány a naskenujte QR kód</string>
     <string name="tut_add_sensor_text_1">Vytiahnite izolačný prúžok batérií zo senzoru alebo zapojte aktor do el. siete</string>
-    <string name="tut_add_sensor_text_2">Počas odpočítavania zatraste krátko so senzorom alebo stisknite párovacie tlačidlo na aktore</string>
+    <string name="tut_add_sensor_text_2">Počas odpočítavania zatraste krátko so senzorom alebo stlačte párovacie tlačidlo na aktore</string>
 
 
     <!-- WatchDog -->

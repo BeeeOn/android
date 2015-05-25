@@ -88,7 +88,7 @@
     <string name="toast_internet_connection">Prosím aktivujte připojení k Internetu</string>
     <string name="toast_no_unregistered_adapter">K dispozici není žádný neregistrovanou bránu</string>
     <string name="toast_communication_error">Nastal problém v komunikaci, opakujte akci později</string>
-    <string name="toast_tap_again_exit">Pro opuštění aplikace stiskněte dvakrát tlačítko zpět</string>
+    <string name="toast_tap_again_exit">Pro ukončení stiskněte zpět ještě jednou</string>
     <string name="toast_google_auth">Google autentizace</string>
     <string name="toast_something_wrong">Nastala neznámá chyba, opakujte akci později</string>
     <string name="toast_check_your_connection_via_browser">Zkontrolujte připojení s použitím webového prohlížeče</string>
