@@ -1,13 +1,12 @@
 package com.rehivetech.beeeon.asynctask;
 
-import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.widget.Toast;
 
-import com.rehivetech.beeeon.activity.LoginActivity;
 import com.rehivetech.beeeon.base.BaseApplicationActivity;
 import com.rehivetech.beeeon.exception.AppException;
+import com.rehivetech.beeeon.exception.ClientError;
 import com.rehivetech.beeeon.exception.ErrorCode;
 import com.rehivetech.beeeon.exception.NetworkError;
 
@@ -195,18 +194,20 @@ public class CallbackTaskManager {
 
 					// Handle specific error codes
 					ErrorCode errCode = exception.getErrorCode();
-					if (errCode != null && errCode instanceof NetworkError) {
-						switch ((NetworkError) errCode) {
-							case SRV_BAD_BT:
-							{
-								Intent intent = new Intent(mActivity, LoginActivity.class);
-								mActivity.startActivity(intent);
-								return;
+					if (errCode != null) {
+						if (errCode instanceof NetworkError) {
+							switch ((NetworkError) errCode) {
+								case BAD_BT: {
+									BaseApplicationActivity.redirectToLogin(mActivity);
+									// Intentionally no return here to let show error toast below
+								}
 							}
-							case CL_SOCKET:
-							case CL_INTERNET_CONNECTION:
-							{
-								// Stop scheduled tasks on client errors? -> Separate server and client errors into separate *Error classes? Probably
+						} else if (errCode instanceof ClientError) {
+							switch ((ClientError) errCode) {
+								case SOCKET:
+								case INTERNET_CONNECTION: {
+									// Stop scheduled tasks on client errors? -> Separate server and client errors into separate *Error classes? Probably
+								}
 							}
 						}
 					}

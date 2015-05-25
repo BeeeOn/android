@@ -1,5 +1,7 @@
 package com.rehivetech.beeeon.exception;
 
-public interface ErrorCode {
+import com.rehivetech.beeeon.IIdentifier;
+
+public interface ErrorCode extends IIdentifier {
 	int getNumber();
 }

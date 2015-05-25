@@ -15,12 +15,12 @@ import android.widget.Toast;
 
 import com.rehivetech.beeeon.Constants;
 import com.rehivetech.beeeon.R;
-import com.rehivetech.beeeon.household.adapter.Adapter;
 import com.rehivetech.beeeon.base.BaseActivity;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.exception.AppException;
 import com.rehivetech.beeeon.exception.ErrorCode;
 import com.rehivetech.beeeon.exception.NetworkError;
+import com.rehivetech.beeeon.household.adapter.Adapter;
 import com.rehivetech.beeeon.network.authentication.DemoAuthProvider;
 import com.rehivetech.beeeon.network.authentication.FacebookAuthProvider;
 import com.rehivetech.beeeon.network.authentication.GoogleAuthProvider;
@@ -30,6 +30,7 @@ import com.rehivetech.beeeon.util.Log;
 import com.rehivetech.beeeon.util.Utils;
 import com.twitter.sdk.android.Twitter;
 import com.twitter.sdk.android.core.TwitterAuthConfig;
+
 import io.fabric.sdk.android.Fabric;
 
 /**
@@ -141,7 +142,7 @@ public class LoginActivity extends BaseActivity {
 
 		// Check already logged in user (but ignore demo mode)
 		if (mController.isLoggedIn() && !mController.isDemoMode()) {
-			Log.d(TAG, "Already logged in, going to locations screen...");
+			Log.d(TAG, "Already logged in, going to next activity...");
 			onLoggedIn(); // finishes this activity
 			return;
 		}
@@ -325,7 +326,7 @@ public class LoginActivity extends BaseActivity {
 
 					if (errorCode instanceof NetworkError) {
 						switch ((NetworkError) errorCode) {
-							case SRV_USER_NOT_EXISTS: {
+							case USER_NOT_EXISTS: {
 								// User is not registered on server yet, show registration question dialog
 								runOnUiThread(new Runnable() {
 									@Override
@@ -335,7 +336,7 @@ public class LoginActivity extends BaseActivity {
 								});
 								return;
 							}
-							case SRV_NOT_VALID_USER: {
+							case NOT_VALID_USER: {
 								// Server denied our credentials (e.g. Google token, or email+password)
 								if (authProvider instanceof GoogleAuthProvider) {
 									// Probably wrong Google token so invalidate the token and then try it again

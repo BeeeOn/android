@@ -6,6 +6,7 @@ import android.util.Xml;
 import com.rehivetech.beeeon.Constants;
 import com.rehivetech.beeeon.IIdentifier;
 import com.rehivetech.beeeon.exception.AppException;
+import com.rehivetech.beeeon.exception.ClientError;
 import com.rehivetech.beeeon.exception.NetworkError;
 import com.rehivetech.beeeon.gamification.AchievementListItem;
 import com.rehivetech.beeeon.gcm.notification.VisibleNotification;
@@ -120,14 +121,14 @@ public class XmlParsers {
 				int app_minor = Integer.parseInt(app[1]);
 				if (srv_major != app_major || srv_minor < app_minor) {
 					// Server must have same major version as app and same or greater minor version than app
-					throw new AppException(NetworkError.SRV_COM_VER_MISMATCH)
+					throw new AppException(NetworkError.COM_VER_MISMATCH)
 							.set(NetworkError.PARAM_COM_VER_LOCAL, COM_VER)
 							.set(NetworkError.PARAM_COM_VER_SERVER, version);
 				}
 			}
 			else  {
 				// Server must have same major version as app and same or greater minor version than app
-				throw new AppException(NetworkError.SRV_COM_VER_MISMATCH)
+				throw new AppException(NetworkError.COM_VER_MISMATCH)
 						.set(NetworkError.PARAM_COM_VER_LOCAL, COM_VER)
 						.set(NetworkError.PARAM_COM_VER_SERVER, version);
 			}
@@ -412,7 +413,7 @@ public class XmlParsers {
 				String[] parts = row.split(Xconstants.ROW_DATA_SEPARATOR);
 				if (parts.length != 2) {
 					Log.e(TAG, String.format("Wrong number of parts (%d) of data: %s", parts.length, row));
-					throw new AppException(NetworkError.CL_XML).set("parts", parts);
+					throw new AppException(ClientError.XML).set("parts", parts);
 				}
 
 				// Parse values
@@ -425,7 +426,7 @@ public class XmlParsers {
 					log.addValue(dateMillis, value);
 				}
 			} catch (NumberFormatException e) {
-				throw AppException.wrap(e, NetworkError.CL_XML);
+				throw AppException.wrap(e, ClientError.XML);
 			}
 		} while (mParser.nextTag() != XmlPullParser.END_TAG && !mParser.getName().equals(Xconstants.COM_ROOT));
 
@@ -813,7 +814,7 @@ public class XmlParsers {
 
 			String version = getSecureAttrValue(Xconstants.VERSION);
 			if (!version.equals(COM_VER)) {
-				throw new AppException(NetworkError.SRV_COM_VER_MISMATCH)
+				throw new AppException(NetworkError.COM_VER_MISMATCH)
 					.set(NetworkError.PARAM_COM_VER_LOCAL, COM_VER)
 					.set(NetworkError.PARAM_COM_VER_SERVER, version);
 			}
@@ -852,7 +853,7 @@ public class XmlParsers {
 
 			String version = getSecureAttrValue(Xconstants.VERSION);
 			if (!version.equals(COM_VER)) {
-				throw new AppException(NetworkError.SRV_COM_VER_MISMATCH)
+				throw new AppException(NetworkError.COM_VER_MISMATCH)
 					.set(NetworkError.PARAM_COM_VER_LOCAL, COM_VER)
 					.set(NetworkError.PARAM_COM_VER_SERVER, version);
 			}
@@ -891,7 +892,7 @@ public class XmlParsers {
 
 			String version = getSecureAttrValue(Xconstants.VERSION);
 			if (!version.equals(COM_VER)) {
-				throw new AppException(NetworkError.SRV_COM_VER_MISMATCH)
+				throw new AppException(NetworkError.COM_VER_MISMATCH)
 					.set(NetworkError.PARAM_COM_VER_LOCAL, COM_VER)
 					.set(NetworkError.PARAM_COM_VER_SERVER, version);
 			}
@@ -930,7 +931,7 @@ public class XmlParsers {
 
 			String version = getSecureAttrValue(Xconstants.VERSION);
 			if (!version.equals(COM_VER)) {
-				throw new AppException(NetworkError.SRV_COM_VER_MISMATCH)
+				throw new AppException(NetworkError.COM_VER_MISMATCH)
 					.set(NetworkError.PARAM_COM_VER_LOCAL, COM_VER)
 					.set(NetworkError.PARAM_COM_VER_SERVER, version);
 			}
@@ -963,7 +964,7 @@ public class XmlParsers {
 
 			String version = getSecureAttrValue(Xconstants.VERSION);
 			if (!version.equals(COM_VER)) {
-				throw new AppException(NetworkError.SRV_COM_VER_MISMATCH)
+				throw new AppException(NetworkError.COM_VER_MISMATCH)
 						.set(NetworkError.PARAM_COM_VER_LOCAL, COM_VER)
 						.set(NetworkError.PARAM_COM_VER_SERVER, version);
 			}

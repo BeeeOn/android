@@ -65,7 +65,7 @@ public abstract class Achievement  implements Observer {
 			public void onExecute(boolean success) {
 				List<String> idList = mUpdateAchievementTask.getAchievementId();
 				if(!success) {
-					showError();
+					Toast.makeText(mContext, mContext.getString(R.string.social_no_connection), Toast.LENGTH_LONG).show();
 					return;
 				}
 				else if (idList == null) return; // DEMO, don`t update anything
@@ -80,10 +80,6 @@ public abstract class Achievement  implements Observer {
 			}
 		});
 		mUpdateAchievementTask.execute(pair);
-	}
-
-	public void showError() {
-		Toast.makeText(mContext, mContext.getString(R.string.NetworkError___CL_XML), Toast.LENGTH_LONG).show();
 	}
 
 	public void showSuccess(AchievementListItem item) {
