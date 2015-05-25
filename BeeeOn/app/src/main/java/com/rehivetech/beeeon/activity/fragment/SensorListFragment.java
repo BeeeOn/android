@@ -45,6 +45,7 @@ import com.rehivetech.beeeon.household.location.Location;
 import com.rehivetech.beeeon.pair.DelFacilityPair;
 import com.rehivetech.beeeon.util.Log;
 import com.rehivetech.beeeon.util.TutorialHelper;
+import com.rehivetech.beeeon.util.Utils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -341,7 +342,7 @@ public class SensorListFragment extends Fragment  {
 
 		int currentapiVersion = android.os.Build.VERSION.SDK_INT;
 		if (currentapiVersion >= Build.VERSION_CODES.ICE_CREAM_SANDWICH){ // API 14 +
-			mFAM.setMenuItems(convertToInt(mFABMenuIcon), mFABMenuLabels.toArray(new String[mFABMenuLabels.size()]),
+			mFAM.setMenuItems(Utils.convertIntegers(mFABMenuIcon), mFABMenuLabels.toArray(new String[mFABMenuLabels.size()]),
 					R.style.fab_item_menu,fabMenuListener, getResources().getDrawable(R.drawable.ic_action_cancel));
 			mFAM.setOnClickListener(new OnClickListener() {
 				@Override
@@ -425,15 +426,6 @@ public class SensorListFragment extends Fragment  {
 
 		Log.d(TAG, "LifeCycle: getsensors end");
 		return true;
-	}
-
-	private int[] convertToInt(ArrayList<Integer> IntegerList) {
-		int s = IntegerList.size();
-		int[] intArray = new int[s];
-		for (int i = 0; i < s; i++) {
-			intArray[i] = IntegerList.get(i).intValue();
-		}
-		return  intArray;
 	}
 
 	public void showAddAdapterDialog() {
