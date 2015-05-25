@@ -107,7 +107,12 @@ public abstract class CallbackTask<Params> extends AsyncTask<Params, Void, Boole
 
 		// If task is still working, then we will interrupt the network connection
 		if (mIsWorking) {
-			Controller.getInstance(mContext).interruptConnection();
+			new Thread(new Runnable() {
+				@Override
+				public void run() {
+					Controller.getInstance(mContext).interruptConnection();
+				}
+			}).start();
 		}
 	}
 

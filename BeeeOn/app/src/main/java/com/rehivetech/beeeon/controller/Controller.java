@@ -507,6 +507,8 @@ public final class Controller {
 
 	/**
 	 * Interrupts actual connection (opened socket) of Network module.
+	 *
+	 * This CAN'T be called on UI thread!
 	 */
 	public void interruptConnection() {
 		if (mNetwork instanceof Network) {
