@@ -202,7 +202,8 @@ public class SensorEditActivity extends BaseApplicationActivity {
 		});
 
 		// Execute and remember task so it can be stopped automatically
-		callbackTaskManager.executeTask(saveFacilityWithNewLocTask, pair);
+		// And don't show progressbar because in this activity is showing progress dialog
+		callbackTaskManager.executeTask(saveFacilityWithNewLocTask, pair, false);
 	}
 
 	public void doSaveFacilityTask(SaveFacilityPair pair) {
@@ -227,7 +228,8 @@ public class SensorEditActivity extends BaseApplicationActivity {
 		});
 
 		// Execute and remember task so it can be stopped automatically
-		callbackTaskManager.executeTask(saveFacilityTask, pair);
+		// And don't show progressbar because in this activity is showing progress dialog
+		callbackTaskManager.executeTask(saveFacilityTask, pair, false);
 	}
 
 	/**
