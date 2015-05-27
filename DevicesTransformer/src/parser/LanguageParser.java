@@ -20,76 +20,76 @@ import java.util.List;
  */
 public class LanguageParser {
 
-    public static Language parse(File file) throws ParserConfigurationException, IOException, SAXException {
+	public static Language parse(File file) throws ParserConfigurationException, IOException, SAXException {
 
-        //Get the DOM Builder Factory
-        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+		//Get the DOM Builder Factory
+		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 
-        //Get the DOM Builder
-        DocumentBuilder builder = factory.newDocumentBuilder();
+		//Get the DOM Builder
+		DocumentBuilder builder = factory.newDocumentBuilder();
 
-        //Load and Parse the XML document
-        //document contains the complete XML as a Tree.
-        Document document = builder.parse(file);
+		//Load and Parse the XML document
+		//document contains the complete XML as a Tree.
+		Document document = builder.parse(file);
 
-        //Iterating through the nodes and extracting the data.
-        Node languageNode = document.getDocumentElement();
-        if (!(languageNode instanceof Element)) {
-            return null;
-        }
+		//Iterating through the nodes and extracting the data.
+		Node languageNode = document.getDocumentElement();
+		if (!(languageNode instanceof Element)) {
+			return null;
+		}
 
-        String code = ((Element) languageNode).getAttribute("code");
-        Language language = new Language(code);
+		String code = ((Element) languageNode).getAttribute("code");
+		Language language = new Language(code);
 
-        NodeList itemsNodes = languageNode.getChildNodes();
-        for (int i = 0; i < itemsNodes.getLength(); i++) {
-            Node node = itemsNodes.item(i);
+		NodeList itemsNodes = languageNode.getChildNodes();
+		for (int i = 0; i < itemsNodes.getLength(); i++) {
+			Node node = itemsNodes.item(i);
 
-            if (node instanceof Element) {
-                String tag = ((Element) node).getTagName();
-                if (tag.equals("string")) {
-                    // Single string translation
-                    Language.Item item = parseString((Element) node);
-                    language.addItem(item);
-                } else if (tag.equals("values")) {
-                    // Values translation
-                    List<Language.Item> items = parseValues(language, (Element) node);
-                    language.addItems(items);
-                } else {
-                    throw new IllegalStateException(String.format("Unexpected element '%s' (expected 'string' or 'values')", tag));
-                }
-            }
-        }
+			if (node instanceof Element) {
+				String tag = ((Element) node).getTagName();
+				if (tag.equals("string")) {
+					// Single string translation
+					Language.Item item = parseString((Element) node);
+					language.addItem(item);
+				} else if (tag.equals("values")) {
+					// Values translation
+					List<Language.Item> items = parseValues(language, (Element) node);
+					language.addItems(items);
+				} else {
+					throw new IllegalStateException(String.format("Unexpected element '%s' (expected 'string' or 'values')", tag));
+				}
+			}
+		}
 
-        return language;
-    }
+		return language;
+	}
 
-    private static Language.Item parseString(Element element) {
-        String name = element.getAttribute("name").trim();
-        String value = element.getTextContent();
+	private static Language.Item parseString(Element element) {
+		String name = element.getAttribute("name").trim();
+		String value = element.getTextContent();
 
-        return new Language.Item(name, value);
-    }
+		return new Language.Item(name, value);
+	}
 
-    private static List<Language.Item> parseValues(Language language, Element element) {
-        List<Language.Item> items = new ArrayList<Language.Item>();
+	private static List<Language.Item> parseValues(Language language, Element element) {
+		List<Language.Item> items = new ArrayList<Language.Item>();
 
-        String prefix = element.getAttribute("name").trim();
+		String prefix = element.getAttribute("name").trim();
 
-        NodeList itemsNodes = element.getChildNodes();
-        for (int i = 0; i < itemsNodes.getLength(); i++) {
-            Node node = itemsNodes.item(i);
+		NodeList itemsNodes = element.getChildNodes();
+		for (int i = 0; i < itemsNodes.getLength(); i++) {
+			Node node = itemsNodes.item(i);
 
-            if (node instanceof Element) {
-                String name = ((Element) node).getAttribute("name").trim();
-                String value = node.getTextContent();
+			if (node instanceof Element) {
+				String name = ((Element) node).getAttribute("name").trim();
+				String value = node.getTextContent();
 
-                Language.Item item = new Language.Item(prefix, name, value);
-                items.add(item);
-            }
-        }
+				Language.Item item = new Language.Item(prefix, name, value);
+				items.add(item);
+			}
+		}
 
-        return items;
-    }
+		return items;
+	}
 
 }
