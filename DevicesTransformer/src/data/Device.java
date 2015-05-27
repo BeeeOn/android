@@ -101,17 +101,5 @@ public class Device {
 		public void setLed(Boolean led) {
 			mLed = led;
 		}
-
-		@Override
-		public String toString() {
-			String res = "";
-			if (hasRefresh())
-				res += ", refresh(" + getDefaultRefresh() + ")";
-			if (hasBattery())
-				res += ", battery";
-			if (hasLed())
-				res += ", led";
-			return res.isEmpty() ? "-none-" : res.substring(2);
-		}
 	}
 }
