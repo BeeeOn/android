@@ -164,15 +164,15 @@ public class DevicesParser {
 				} else if (tag.equals("is-actuator")) {
 					module.setActuator(true);
 				} else if (tag.equals("constraints")) {
-					//Module.Constraints constraints = parseConstraints((Element) node);
-					//module.setConstraints(constraints);
+					Module.Constraints constraints = parseConstraints((Element) node);
+					module.setConstraints(constraints);
 				} else if (tag.equals("values")) {
 					Translation name = new Translation(((Element) node).getAttribute("name"));
-					//List<Module.Value> values = parseValues((Element) node);
-					//module.setValues(name, values);
+					List<Module.Value> values = parseValues((Element) node);
+					module.setValues(name, values);
 				} else if (tag.equals("rules")) {
-					//List<Module.Rule> rules = parseRules((Element) node);
-					//module.setRules(rules);
+					List<Module.Rule> rules = parseRules((Element) node);
+					module.setRules(rules);
 				} else {
 					throw new IllegalStateException(String.format("Unexpected element '%s' (expected 'module')", tag));
 				}
@@ -180,6 +180,86 @@ public class DevicesParser {
 		}
 
 		return module;
+	}
+
+	private static Module.Constraints parseConstraints(Element element) {
+		Module.Constraints constraints = new Module.Constraints();
+
+		NodeList constraintsNodes = element.getChildNodes();
+		for (int i = 0; i < constraintsNodes.getLength(); i++) {
+			Node node = constraintsNodes.item(i);
+
+			if (node instanceof Element) {
+				String tag = node.getNodeName();
+				if (tag.equals("min")) {
+					constraints.setMin(Double.parseDouble(node.getTextContent()));
+				} else if (tag.equals("max")) {
+					constraints.setMax(Double.parseDouble(node.getTextContent()));
+				} else if (tag.equals("granularity")) {
+					constraints.setGranularity(Double.parseDouble(node.getTextContent()));
+				} else {
+					throw new IllegalStateException(String.format("Unexpected element '%s' (expected 'min|max|granularity')", tag));
+				}
+			}
+		}
+
+		return constraints;
+	}
+
+	private static List<Module.Value> parseValues(Element element) {
+		List<Module.Value> values = new ArrayList<>();
+
+		NodeList valuesNodes = element.getChildNodes();
+		for (int i = 0; i < valuesNodes.getLength(); i++) {
+			Node node = valuesNodes.item(i);
+
+			if (node instanceof Element) {
+				String tag = node.getNodeName();
+				if (tag.equals("value")) {
+					int id = Integer.parseInt(((Element) node).getAttribute("id"));
+					Translation translation = new Translation(node.getTextContent());
+					Module.Value value = new Module.Value(id, translation);
+					values.add(value);
+				} else {
+					throw new IllegalStateException(String.format("Unexpected element '%s' (expected 'value')", tag));
+				}
+			}
+		}
+
+		return values;
+	}
+
+	private static List<Module.Rule> parseRules(Element element) {
+		List<Module.Rule> rules = new ArrayList<>();
+
+		NodeList rulesNodes = element.getChildNodes();
+		for (int i = 0; i < rulesNodes.getLength(); i++) {
+			Node node = rulesNodes.item(i);
+
+			if (node instanceof Element) {
+				String tag = node.getNodeName();
+				if (tag.equals("if")) {
+					int value = Integer.parseInt(((Element) node).getAttribute("value"));
+
+					List<Integer> hideModulesIdsList = new ArrayList<>();
+					NodeList hideModuleNodes = ((Element) node).getElementsByTagName("hide-module");
+					for (int j = 0; j < hideModuleNodes.getLength(); j++) {
+						Node hideModuleNode = hideModuleNodes.item(i);
+						if (hideModuleNode instanceof Element) {
+							Integer id = new Integer(((Element) hideModuleNode).getAttribute("id"));
+							hideModulesIdsList.add(id);
+						}
+					}
+
+					Module.Rule rule = new Module.Rule(value, hideModulesIdsList.toArray(new Integer[hideModulesIdsList.size()]));
+					rules.add(rule);
+				} else {
+					throw new IllegalStateException(String.format("Unexpected element '%s' (expected 'if')", tag));
+				}
+			}
+		}
+
+		return rules;
 	}
 
 }

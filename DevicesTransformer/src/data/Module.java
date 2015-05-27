@@ -82,7 +82,7 @@ public class Module {
 			}
 			Translation translation = new Translation(translationIds.toArray(new String[translationIds.size()]));
 
-			mValues.add(new Value(value.state, translation));
+			mValues.add(new Value(value.id, translation));
 		}
 	}
 
@@ -142,21 +142,21 @@ public class Module {
 	}
 
 	public static class Value {
-		public final int state;
+		public final int id;
 		public final Translation translation;
 
-		public Value(int state, Translation translation) {
-			this.state = state;
+		public Value(int id, Translation translation) {
+			this.id = id;
 			this.translation = translation;
 		}
 	}
 
 	public static class Rule {
-		public final int state;
-		public final int[] hideModulesIds;
+		public final int value;
+		public final Integer[] hideModulesIds;
 
-		public Rule(int state, int[] hideModulesIds) {
-			this.state = state;
+		public Rule(int value, Integer[] hideModulesIds) {
+			this.value = value;
 			this.hideModulesIds = hideModulesIds;
 		}
 	}
