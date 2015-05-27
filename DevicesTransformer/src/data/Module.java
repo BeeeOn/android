@@ -1,7 +1,6 @@
 package data;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -14,15 +13,45 @@ public class Module {
     private final int mId;
     private final String mType;
     private final int mOffset;
-    private final int mOrder;
-    private double mMin;
-    private double mMax;
-    private double mGranularity;
-    private boolean mEnumValues;
 
+    private int mOrder;
+    private Translation mGroup;
     private Translation mName;
+    private boolean mActuator;
+
+    private Constraints mConstraints;
     private final List<Value> mValues = new ArrayList<>();
-    private final List<Hide> mHides = new ArrayList<>();
+    private final List<Rule> mRules = new ArrayList<>();
+
+    public static class Constraints {
+        private double mMin;
+        private double mMax;
+        private double mGranularity;
+
+        public double getMin() {
+            return mMin;
+        }
+
+        public void setMin(double min) {
+            mMin = min;
+        }
+
+        public double getMax() {
+            return mMax;
+        }
+
+        public void setMax(double max) {
+            mMax = max;
+        }
+
+        public double getGranularity() {
+            return mGranularity;
+        }
+
+        public void setGranularity(double granularity) {
+            mGranularity = granularity;
+        }
+    }
 
     public static class Value {
         public final int state;
@@ -34,21 +63,20 @@ public class Module {
         }
     }
 
-    public static class Hide {
+    public static class Rule {
         public final int state;
         public final int[] hideModulesIds;
 
-        public Hide(int state, int[] hideModulesIds) {
+        public Rule(int state, int[] hideModulesIds) {
             this.state = state;
             this.hideModulesIds = hideModulesIds;
         }
     }
 
-    public Module(int id, String type, int offset, int order) {
+    public Module(int id, String type, int offset) {
         mId = id;
         mType = type;
         mOffset = offset;
-        mOrder = order;
     }
 
     public int getId() {
@@ -67,37 +95,16 @@ public class Module {
         return mOrder;
     }
 
-
-    public double getMin() {
-        return mMin;
+    public void setOrder(int order) {
+        mOrder = order;
     }
 
-    public void setMin(double min) {
-        mMin = min;
+    public Translation getGroup() {
+        return mGroup;
     }
 
-    public double getMax() {
-        return mMax;
-    }
-
-    public void setMax(double max) {
-        mMax = max;
-    }
-
-    public double getGranularity() {
-        return mGranularity;
-    }
-
-    public void setGranularity(double granularity) {
-        mGranularity = granularity;
-    }
-
-    public boolean isEnumValues() {
-        return mEnumValues;
-    }
-
-    public void setEnumValues(boolean enumValues) {
-        mEnumValues = enumValues;
+    public void setGroup(Translation group) {
+        mGroup = group;
     }
 
     public Translation getName() {
@@ -131,12 +138,28 @@ public class Module {
         }
     }
 
-    public List<Hide> getHides() {
-        return mHides;
+    public List<Rule> getRules() {
+        return mRules;
     }
 
-    public void setHides(List<Hide> hides) {
-        mHides.clear();
-        mHides.addAll(hides);
+    public void setRules(List<Rule> rules) {
+        mRules.clear();
+        mRules.addAll(rules);
+    }
+
+    public boolean isActuator() {
+        return mActuator;
+    }
+
+    public void setActuator(boolean actuator) {
+        mActuator = actuator;
+    }
+
+    public Constraints getConstraints() {
+        return mConstraints;
+    }
+
+    public void setConstraints(Constraints constraints) {
+        mConstraints = constraints;
     }
 }

@@ -1,5 +1,7 @@
 package data;
 
+import com.sun.istack.internal.Nullable;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,11 +20,7 @@ public class Device {
 
     private Translation mManufacturer;
 
-    private int mRefresh;
-
-    private boolean mLed;
-
-    private boolean mBattery;
+    private Features mFeatures;
 
     public Device(int typeId, String typeName) {
         mTypeId = typeId;
@@ -62,27 +60,58 @@ public class Device {
         mManufacturer = manufacturer;
     }
 
-    public int getRefresh() {
-        return mRefresh;
+    public Features getFeatures() {
+        return mFeatures;
     }
 
-    public void setRefresh(int refresh) {
-        mRefresh = refresh;
+    public void setFeatures(Features features) {
+        mFeatures = features;
     }
 
-    public boolean isLed() {
-        return mLed;
-    }
+    public static class Features {
+        private Integer mRefresh;
+        private Boolean mBattery;
+        private Boolean mLed;
 
-    public void setLed(boolean led) {
-        mLed = led;
-    }
+        public boolean hasRefresh() {
+            return mRefresh != null && mRefresh > 0;
+        }
 
-    public boolean isBattery() {
-        return mBattery;
-    }
+        @Nullable
+        public Integer getDefaultRefresh() {
+            return mRefresh;
+        }
 
-    public void setBattery(boolean battery) {
-        mBattery = battery;
+        public void setRefresh(Integer refresh) {
+            mRefresh = refresh;
+        }
+
+        public boolean hasBattery() {
+            return mBattery != null && mBattery;
+        }
+
+        public void setBattery(Boolean battery) {
+            mBattery = battery;
+        }
+
+        public boolean hasLed() {
+            return mLed != null && mLed;
+        }
+
+        public void setLed(Boolean led) {
+            mLed = led;
+        }
+
+        @Override
+        public String toString() {
+            String res = "";
+            if (hasRefresh())
+                res += ", refresh(" + getDefaultRefresh() + ")";
+            if (hasBattery())
+                res += ", battery";
+            if (hasLed())
+                res += ", led";
+            return res.isEmpty() ? "-none-" : res.substring(2);
+        }
     }
 }

@@ -35,21 +35,36 @@ public class Devices {
                     device.getTypeId(),
                     device.getTypeName()));
 
-            stream.println(String.format("\tManufacturer: %s\n\tName: %s\n\tRefresh: %s\n\tLed: %s\n\tBattery: %s",
+            stream.println(String.format("\tManufacturer: %s\n\tName: %s\n\tFeatures: %s",
                     Arrays.toString(device.getManufacturer().getResourceIds()),
                     Arrays.toString(device.getName().getResourceIds()),
-                    String.valueOf(device.getRefresh()),
-                    String.valueOf(device.isLed()),
-                    String.valueOf(device.isBattery())));
+                    getFeaturesString(device.getFeatures())));
 
             stream.println("\tDevices:");
             for (Module module : device.getModules()) {
-                stream.println(String.format("\t\t[%d] \tType: %s\tOffset: %d\tOrder: %d\tMin: %f\tMax: %f\tGranularity: %f\tEnumValue: %b",
-                        module.getId(), module.getType(), module.getOffset(), module.getOrder(), module.getMin(), module.getMax(), module.getGranularity(), module.isEnumValues()));
+                stream.println(String.format("\t\t[%d] \tType: %s\tOffset: %d",
+                        module.getId(),
+                        module.getType(),
+                        module.getOffset()));
             }
 
             stream.println("------");
         }
+    }
+
+    private String getFeaturesString(Device.Features features) {
+        String res = "";
+        if (features != null) {
+            if (features.hasRefresh())
+                res += ", refresh(" + features.getDefaultRefresh() + ")";
+            if (features.hasBattery())
+                res += ", battery";
+            if (features.hasLed())
+                res += ", led";
+            if (!res.isEmpty())
+                res = res.substring(2);
+        }
+        return String.format("[%s]", res);
     }
 
     public void printDevicesJava(PrintWriter writer) {

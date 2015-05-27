@@ -52,9 +52,8 @@ public class DevicesParser {
             Node node = itemsNodes.item(i);
 
             if (node instanceof Element) {
-                String tag = ((Element) node).getTagName();
+                String tag = node.getNodeName();
                 if (tag.equals("device")) {
-                    // Parse device
                     Device device = parseDevice((Element) node);
                     devices.addDevice(device);
                 } else {
@@ -67,7 +66,7 @@ public class DevicesParser {
     }
 
     private static Device parseDevice(Element element) {
-        int typeId = Integer.valueOf(element.getAttribute("idtype"));
+        int typeId = Integer.valueOf(element.getAttribute("id"));
         String typeName = element.getAttribute("name");
 
         Device device = new Device(typeId, typeName);
@@ -75,29 +74,51 @@ public class DevicesParser {
         NodeList nodes = element.getChildNodes();
         for (int i = 0; i < nodes.getLength(); i++) {
             Node node = nodes.item(i);
-            String name = node.getNodeName();
 
             if (node instanceof Element) {
-                String content = node.getTextContent();
-
-                if (name.equals("name")) {
-                    device.setName(new Translation(content));
-                } else if (name.equals("manufacturer")) {
-                    device.setManufacturer(new Translation(content));
-                } else if (name.equals("refresh")) {
-                    device.setRefresh(Integer.parseInt(content));
-                } else if (name.equals("led")) {
-                    device.setLed(Boolean.parseBoolean(content));
-                } else if (name.equals("battery")) {
-                    device.setBattery(Boolean.parseBoolean(content));
-                } else if (name.equals("modules")) {
+                String tag = node.getNodeName();
+                if (tag.equals("name")) {
+                    device.setName(new Translation(node.getTextContent()));
+                } else if (tag.equals("manufacturer")) {
+                    device.setManufacturer(new Translation(node.getTextContent()));
+                } else if (tag.equals("features")) {
+                    Device.Features features = parseFeatures((Element) node);
+                    device.setFeatures(features);
+                } else if (tag.equals("modules")) {
                     List<Module> modules = parseModules((Element) node);
                     device.setModules(modules);
+                } else {
+                    throw new IllegalStateException(String.format("Unexpected element '%s' (expected 'name|manufacturer|features|modules')", tag));
                 }
             }
         }
 
         return device;
+    }
+
+    private static Device.Features parseFeatures(Element element) {
+        Device.Features features = new Device.Features();
+
+        NodeList featuresNodes = element.getChildNodes();
+        for (int i = 0; i < featuresNodes.getLength(); i++) {
+            Node node = featuresNodes.item(i);
+
+            if (node instanceof Element) {
+                String tag = node.getNodeName();
+                if (tag.equals("refresh")) {
+                    String refresh = ((Element) node).getAttribute("default");
+                    features.setRefresh(Integer.parseInt(refresh));
+                } else if (tag.equals("battery")) {
+                    features.setBattery(Boolean.TRUE);
+                } else if (tag.equals("led")) {
+                    features.setLed(Boolean.TRUE);
+                } else {
+                    throw new IllegalStateException(String.format("Unexpected element '%s' (expected 'refresh|battery|led')", tag));
+                }
+            }
+        }
+
+        return features;
     }
 
     private static List<Module> parseModules(Element element) {
@@ -108,9 +129,8 @@ public class DevicesParser {
             Node node = modulesNodes.item(i);
 
             if (node instanceof Element) {
-                String tag = ((Element) node).getTagName();
+                String tag = node.getNodeName();
                 if (tag.equals("module")) {
-                    // Parse module
                     Module module = parseModule((Element) node);
                     modules.add(module);
                 } else {
@@ -123,23 +143,41 @@ public class DevicesParser {
     }
 
     private static Module parseModule(Element element) {
-
         int id = Integer.parseInt(element.getAttribute("id"));
         String type = element.getAttribute("type");
         int offset = Integer.parseInt(element.getAttribute("offset"));
-        int order = Integer.parseInt(element.getAttribute("order"));
-        double min = Double.parseDouble(element.getAttribute("min"));
-        double max = Double.parseDouble(element.getAttribute("max"));
-        double granularity = Double.parseDouble(element.getAttribute("granularity"));
-        boolean enumValues = Boolean.parseBoolean(element.getAttribute("vstrings"));
 
-        Module module = new Module(id, type, offset, order);
-        module.setMin(min);
-        module.setMax(max);
-        module.setGranularity(granularity);
-        module.setEnumValues(enumValues);
+        Module module = new Module(id, type, offset);
 
-        // TODO: rest of data
+        NodeList moduleNodes = element.getChildNodes();
+        for (int i = 0; i < moduleNodes.getLength(); i++) {
+            Node node = moduleNodes.item(i);
+
+            if (node instanceof Element) {
+                String tag = node.getNodeName();
+                if (tag.equals("order")) {
+                    module.setOrder(Integer.parseInt(node.getTextContent()));
+                } else if (tag.equals("group")) {
+                    module.setGroup(new Translation(node.getTextContent()));
+                } else if (tag.equals("name")) {
+                    module.setName(new Translation(node.getTextContent()));
+                } else if (tag.equals("is-actuator")) {
+                    module.setActuator(true);
+                } else if (tag.equals("constraints")) {
+                    //Module.Constraints constraints = parseConstraints((Element) node);
+                    //module.setConstraints(constraints);
+                } else if (tag.equals("values")) {
+                    Translation name = new Translation(((Element) node).getAttribute("name"));
+                    //List<Module.Value> values = parseValues((Element) node);
+                    //module.setValues(name, values);
+                } else if (tag.equals("rules")) {
+                    //List<Module.Rule> rules = parseRules((Element) node);
+                    //module.setRules(rules);
+                } else {
+                    throw new IllegalStateException(String.format("Unexpected element '%s' (expected 'module')", tag));
+                }
+            }
+        }
 
         return module;
     }
