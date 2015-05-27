@@ -36,16 +36,23 @@ public class Devices {
 					device.getTypeName()));
 
 			stream.println(String.format("\tManufacturer: %s\n\tName: %s\n\tFeatures: %s",
-					Arrays.toString(device.getManufacturer().getResourceIds()),
-					Arrays.toString(device.getName().getResourceIds()),
+					Arrays.toString(device.getManufacturer().getTranslationIds()),
+					Arrays.toString(device.getName().getTranslationIds()),
 					getFeaturesString(device.getFeatures())));
 
 			stream.println("\tDevices:");
 			for (Module module : device.getModules()) {
-				stream.println(String.format("\t\t[%d] \tType: %s\tOffset: %d",
+				stream.println(String.format("\t\t[%d] \tType: %s\tOffset: %d%s",
 						module.getId(),
 						module.getType(),
-						module.getOffset()));
+						module.getOffset(),
+						module.getOrder() != null ? "\tOrder: " + module.getOrder() : ""
+				));
+
+				stream.println(String.format("\t\t\t\tName: %s%s\t",
+						module.getGroup() != null ? Arrays.toString(module.getGroup().getTranslationIds()) : "",
+						Arrays.toString(module.getName().getTranslationIds())
+						));
 			}
 
 			stream.println("------");

@@ -1,5 +1,7 @@
 package data;
 
+import com.sun.istack.internal.Nullable;
+
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -15,7 +17,7 @@ public class Module {
 	private final int mOffset;
 	private final List<Value> mValues = new ArrayList<>();
 	private final List<Rule> mRules = new ArrayList<>();
-	private int mOrder;
+	private Integer mOrder;
 	private Translation mGroup;
 	private Translation mName;
 	private boolean mActuator;
@@ -39,11 +41,12 @@ public class Module {
 		return mOffset;
 	}
 
-	public int getOrder() {
+	@Nullable
+	public Integer getOrder() {
 		return mOrder;
 	}
 
-	public void setOrder(int order) {
+	public void setOrder(Integer order) {
 		mOrder = order;
 	}
 
