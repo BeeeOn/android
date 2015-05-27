@@ -1,5 +1,6 @@
 package parser;
 
+import com.sun.org.apache.xml.internal.utils.DefaultErrorHandler;
 import data.Device;
 import data.Devices;
 import data.Module;
@@ -26,9 +27,11 @@ public class DevicesParser {
     public static Devices parse(File file) throws ParserConfigurationException, IOException, SAXException {
         //Get the DOM Builder Factory
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+        factory.setValidating(true);
 
         //Get the DOM Builder
         DocumentBuilder builder = factory.newDocumentBuilder();
+        builder.setErrorHandler(new DefaultErrorHandler());
 
         //Load and Parse the XML document
         //document contains the complete XML as a Tree.
