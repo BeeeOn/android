@@ -22,12 +22,12 @@ import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.activity.WatchdogEditRuleActivity;
 import com.rehivetech.beeeon.arrayadapter.WatchdogListAdapter;
 import com.rehivetech.beeeon.asynctask.CallbackTask;
-import com.rehivetech.beeeon.asynctask.ReloadGateDataTask;
+import com.rehivetech.beeeon.asynctask.ReloadAdapterDataTask;
 import com.rehivetech.beeeon.asynctask.RemoveWatchdogTask;
 import com.rehivetech.beeeon.asynctask.SaveWatchdogTask;
 import com.rehivetech.beeeon.base.BaseApplicationFragment;
 import com.rehivetech.beeeon.controller.Controller;
-import com.rehivetech.beeeon.household.gate.Gate;
+import com.rehivetech.beeeon.household.adapter.Adapter;
 import com.rehivetech.beeeon.household.watchdog.Watchdog;
 import com.rehivetech.beeeon.pair.DelWatchdogPair;
 import com.rehivetech.beeeon.util.Log;
@@ -36,240 +36,238 @@ import java.util.List;
 
 /**
  * Fragment for list of rules for algorithm Watchdog
- *
  * @author mlyko
  */
 public class WatchdogListFragment extends BaseApplicationFragment {
-	private static final String TAG = WatchdogListFragment.class.getSimpleName();
+    private static final String TAG = WatchdogListFragment.class.getSimpleName();
 
-	private static final String GATE_ID = "lastGateId";
+    private static final String ADAPTER_ID = "lastAdapterId";
 
-	private SwipeRefreshLayout mSwipeLayout;
-	private Controller mController;
-	private ListView mWatchdogListView;
-	private WatchdogListAdapter mWatchdogAdapter;
-	private Button mRefreshBtn;
+    private SwipeRefreshLayout mSwipeLayout;
+    private Controller mController;
+    private ListView mWatchdogListView;
+    private WatchdogListAdapter mWatchdogAdapter;
+    private Button mRefreshBtn;
 
-	List<Watchdog> mWatchdogs;
+    List<Watchdog> mWatchdogs;
 
-	private String mActiveGateId;
+    private String mActiveAdapterId;
 
-	private View mView;
-	private ActionMode mMode;
+    private View mView;
+    private ActionMode mMode;
 
-	private Watchdog mSelectedItem;
-	private int mSelectedItemPos;
+    private Watchdog mSelectedItem;
+    private int mSelectedItemPos;
 
-	/**
-	 * Initialize variables
-	 *
-	 * @param savedInstanceState
-	 */
-	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		Log.d(TAG, "onCreate()");
+    /**
+     * Initialize variables
+     * @param savedInstanceState
+     */
+    @Override
+    public void onCreate(Bundle savedInstanceState){
+        super.onCreate(savedInstanceState);
+        Log.d(TAG, "onCreate()");
 
-		if (savedInstanceState != null) {
-			mActiveGateId = savedInstanceState.getString(GATE_ID);
-		}
-	}
+        if (savedInstanceState != null) {
+            mActiveAdapterId = savedInstanceState.getString(ADAPTER_ID);
+        }
+    }
 
-	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		mView = inflater.inflate(R.layout.fragment_watchdog, container, false);
-		return mView;
-	}
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
+        mView = inflater.inflate(R.layout.fragment_watchdog, container, false);
+        return mView;
+    }
 
-	/**
-	 * Init layout
-	 *
-	 * @param savedInstanceState
-	 */
-	@Override
-	public void onActivityCreated(Bundle savedInstanceState) {
-		super.onActivityCreated(savedInstanceState);
-		Log.d(TAG, "onActivityCreated()");
+    /**
+     * Init layout
+     * @param savedInstanceState
+     */
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState){
+        super.onActivityCreated(savedInstanceState);
+        Log.d(TAG, "onActivityCreated()");
 
-		mSwipeLayout = (SwipeRefreshLayout) mActivity.findViewById(R.id.swipe_container);
+        mSwipeLayout = (SwipeRefreshLayout) mActivity.findViewById(R.id.swipe_container);
 
-		initLayout();
+        initLayout();
 
-		// Init swipe-refreshig layout
-		if (mSwipeLayout == null) {
-			return;
-		}
-		mSwipeLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+        // Init swipe-refreshig layout
+        if (mSwipeLayout == null) {
+            return;
+        }
+        mSwipeLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
 
-			@Override
-			public void onRefresh() {
-				refreshListListener();
-			}
-		});
+            @Override
+            public void onRefresh() {
+                refreshListListener();
+            }
+        });
 
-		mSwipeLayout.setColorSchemeColors(R.color.beeeon_primary_cyan, R.color.beeeon_text_color, R.color.beeeon_secundary_pink);
-	}
+        mSwipeLayout.setColorSchemeColors(R.color.beeeon_primary_cyan, R.color.beeeon_text_color, R.color.beeeon_secundary_pink);
+    }
 
-	private void refreshListListener() {
-		Gate gate = mController.getActiveGate();
-		if (gate == null) {
-			mSwipeLayout.setRefreshing(false);
-			return;
-		}
-		doReloadWatchdogsTask(gate.getId(), true, true);
-	}
+    private void refreshListListener() {
+        Adapter adapter = mController.getActiveAdapter();
+        if (adapter == null) {
+            mSwipeLayout.setRefreshing(false);
+            return;
+        }
+        doReloadWatchdogsTask(adapter.getId(), true, true);
+    }
 
-	@Override
-	public void onResume() {
-		super.onResume();
-		mController = Controller.getInstance(mActivity);
+    @Override
+    public void onResume() {
+        super.onResume();
+        mController = Controller.getInstance(mActivity);
 
-		if (mActiveGateId == null) {
-			Gate gate = mController.getActiveGate();
-			if (gate == null)
-				return;
-			mActiveGateId = gate.getId();
-		}
+        if(mActiveAdapterId == null){
+            Adapter adapter = mController.getActiveAdapter();
+            if(adapter == null)
+                return;
+            mActiveAdapterId = adapter.getId();
+        }
 
-		// if we don't have any data first time shows button to refresh
-		redrawRules();
-		// try to reload data
-		doReloadWatchdogsTask(mActiveGateId, false, false);
-	}
+        // if we don't have any data first time shows button to refresh
+        redrawRules();
+        // try to reload data
+        doReloadWatchdogsTask(mActiveAdapterId, false, false);
+    }
 
-	/**
-	 * Finish actionMode
-	 */
-	public void onPause() {
-		super.onPause();
+    /**
+     * Finish actionMode
+     */
+    public void onPause() {
+        super.onPause();
 
-		if (mMode != null) {
-			mMode.finish();
-		}
-	}
+        if(mMode != null) {
+            mMode.finish();
+        }
+    }
 
-	@Override
-	public void onSaveInstanceState(Bundle savedInstanceState) {
-		savedInstanceState.putString(GATE_ID, mActiveGateId);
-		super.onSaveInstanceState(savedInstanceState);
-	}
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState){
+        savedInstanceState.putString(ADAPTER_ID, mActiveAdapterId);
+        super.onSaveInstanceState(savedInstanceState);
+    }
 
-	/**
-	 * Sets empty elements for design without filling with data
-	 */
-	private void initLayout() {
-		mWatchdogListView = (ListView) mView.findViewById(R.id.watchdog_list);
-		mWatchdogAdapter = new WatchdogListAdapter(mActivity, mActivity.getLayoutInflater());
-		mWatchdogListView.setAdapter(mWatchdogAdapter);
+    /**
+     * Sets empty elements for design without filling with data
+     */
+    private void initLayout() {
+        mWatchdogListView = (ListView) mView.findViewById(R.id.watchdog_list);
+        mWatchdogAdapter = new WatchdogListAdapter(mActivity, mActivity.getLayoutInflater());
+        mWatchdogListView.setAdapter(mWatchdogAdapter);
 
-		// onclicklistener for Switch button in one row
-		mWatchdogAdapter.setSwitchOnclickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				int objPosition = (int) v.getTag();
-				Watchdog watchdog = (Watchdog) mWatchdogAdapter.getItem(objPosition);
-				if (watchdog == null) return;
+        // onclicklistener for Switch button in one row
+        mWatchdogAdapter.setSwitchOnclickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int objPosition = (int) v.getTag();
+                Watchdog watchdog = (Watchdog) mWatchdogAdapter.getItem(objPosition);
+                if (watchdog == null) return;
 
-				// so that progress bar can be seen
-				if (mMode != null) mMode.finish();
+                // so that progress bar can be seen
+                if (mMode != null) mMode.finish();
 
-				SwitchCompat sw = (SwitchCompat) v;
-				doSaveWatchdogTask(watchdog, sw);
-			}
-		});
+                SwitchCompat sw = (SwitchCompat) v;
+                doSaveWatchdogTask(watchdog, sw);
+            }
+        });
 
-		// when listview is empty
-		TextView emptyView = (TextView) mView.findViewById(R.id.watchdog_list_empty);
-		mWatchdogListView.setEmptyView(emptyView);
+        // when listview is empty
+        TextView emptyView = (TextView) mView.findViewById(R.id.watchdog_list_empty);
+        mWatchdogListView.setEmptyView(emptyView);
 
-		// refresh button
-		mRefreshBtn = (Button) mView.findViewById(R.id.watchdog_list_refresh_btn);
-		mRefreshBtn.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				refreshListListener();
-			}
-		});
+        // refresh button
+        mRefreshBtn = (Button) mView.findViewById(R.id.watchdog_list_refresh_btn);
+        mRefreshBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                refreshListListener();
+            }
+        });
 
-		// add new watchdog rule
-		FloatingActionButton fab = (FloatingActionButton) mView.findViewById(R.id.fab);
-		fab.attachToListView(mWatchdogListView);
+        // add new watchdog rule
+        FloatingActionButton fab = (FloatingActionButton) mView.findViewById(R.id.fab);
+        fab.attachToListView(mWatchdogListView);
 
-		fab.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				Intent intent = new Intent(mActivity, WatchdogEditRuleActivity.class);
-				startActivity(intent);
-			}
-		});
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(mActivity, WatchdogEditRuleActivity.class);
+                startActivity(intent);
+            }
+        });
 
-		// switch activity to detail
-		mWatchdogListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-			@Override
-			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-				Watchdog rule = mWatchdogAdapter.getRule(position);
+        // switch activity to detail
+        mWatchdogListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Watchdog rule = mWatchdogAdapter.getRule(position);
 
-				Bundle bundle = new Bundle();
-				bundle.putString(WatchdogEditRuleActivity.EXTRA_GATE_ID, rule.getGateId());
-				bundle.putString(WatchdogEditRuleActivity.EXTRA_RULE_ID, rule.getId());
+                Bundle bundle = new Bundle();
+                bundle.putString(WatchdogEditRuleActivity.EXTRA_ADAPTER_ID, rule.getAdapterId());
+                bundle.putString(WatchdogEditRuleActivity.EXTRA_RULE_ID, rule.getId());
 
-				Intent intent = new Intent(mActivity, WatchdogEditRuleActivity.class);
-				intent.putExtras(bundle);
+                Intent intent = new Intent(mActivity, WatchdogEditRuleActivity.class);
+                intent.putExtras(bundle);
 
-				startActivity(intent);
-			}
-		});
+                startActivity(intent);
+            }
+        });
 
-		// shows actionMode with delete option
-		mWatchdogListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-			@Override
-			public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-				mMode = mActivity.startSupportActionMode(new ActionModeEditRules());
-				mSelectedItem = mWatchdogAdapter.getRule(position);
-				mSelectedItemPos = position;
-				setRuleSelected();
-				return true;
-			}
-		});
-	}
+        // shows actionMode with delete option
+        mWatchdogListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                mMode = mActivity.startSupportActionMode(new ActionModeEditRules());
+                mSelectedItem = mWatchdogAdapter.getRule(position);
+                mSelectedItemPos = position;
+                setRuleSelected();
+                return true;
+            }
+        });
+    }
 
-	/**
-	 * Redraw GUI rules, called asynchronously (callback) when new data available
-	 */
-	private void redrawRules() {
-		mWatchdogs = mController.getWatchdogsModel().getWatchdogsByGate(mActiveGateId);
+    /**
+     * Redraw GUI rules, called asynchronously (callback) when new data available
+     */
+    private void redrawRules() {
+        mWatchdogs = mController.getWatchdogsModel().getWatchdogsByAdapter(mActiveAdapterId);
 
-		boolean haveWatchdogs = mWatchdogs.size() > 0;
+        boolean haveWatchdogs = mWatchdogs.size() > 0;
 
-		if (!haveWatchdogs) {
-			mRefreshBtn.setVisibility(View.VISIBLE);
+        if(!haveWatchdogs) {
+            mRefreshBtn.setVisibility(View.VISIBLE);
 
-			mWatchdogListView.setVisibility(View.GONE);
-			if (mSwipeLayout != null) {
-				mSwipeLayout.setVisibility(View.GONE);
-			}
-		} else {
-			mRefreshBtn.setVisibility(View.GONE);
-			mWatchdogListView.setVisibility(View.VISIBLE);
-			if (mSwipeLayout != null) {
-				mSwipeLayout.setVisibility(View.VISIBLE);
-			}
-		}
+            mWatchdogListView.setVisibility(View.GONE);
+            if(mSwipeLayout != null){
+                mSwipeLayout.setVisibility(View.GONE);
+            }
+        }
+        else{
+            mRefreshBtn.setVisibility(View.GONE);
+            mWatchdogListView.setVisibility(View.VISIBLE);
+            if (mSwipeLayout != null) {
+                mSwipeLayout.setVisibility(View.VISIBLE);
+            }
+        }
 
-		mWatchdogAdapter.updateData(mWatchdogs);
-	}
+        mWatchdogAdapter.updateData(mWatchdogs);
+    }
 
-	// ----- ASYNC TASKS ----- //
-	private void doSaveWatchdogTask(Watchdog watchdog, final SwitchCompat sw) {
-		// disable so that nobody can change it now
-		sw.setEnabled(false);
-		// progress bar shows automatically; other option is to set Swipe refreshing
-		//mSwipeLayout.setRefreshing(true);
+    // ----- ASYNC TASKS ----- //
+    private void doSaveWatchdogTask(Watchdog watchdog, final SwitchCompat sw){
+        // disable so that nobody can change it now
+        sw.setEnabled(false);
+        // progress bar shows automatically; other option is to set Swipe refreshing
+        //mSwipeLayout.setRefreshing(true);
 
-		watchdog.setEnabled(sw.isChecked());
+        watchdog.setEnabled(sw.isChecked());
 
-		SaveWatchdogTask saveWatchdogTask = new SaveWatchdogTask(mActivity);
-		saveWatchdogTask.setListener(new CallbackTask.CallbackTaskListener() {
+        SaveWatchdogTask saveWatchdogTask = new SaveWatchdogTask(mActivity);
+        saveWatchdogTask.setListener(new CallbackTask.CallbackTaskListener() {
 			@Override
 			public void onExecute(boolean success) {
 				//Toast.makeText(mActivity, getResources().getString(success ? R.string.toast_success_save_data : R.string.toast_fail_save_data), Toast.LENGTH_LONG).show();
@@ -281,41 +279,39 @@ public class WatchdogListFragment extends BaseApplicationFragment {
 
 		// Execute and remember task so it can be stopped automatically
 		mActivity.callbackTaskManager.executeTask(saveWatchdogTask, watchdog);
-	}
+    }
 
-	/**
-	 * Async task for reloading fresh watchdog data
-	 *
-	 * @param gateId
-	 */
-	public void doReloadWatchdogsTask(String gateId, boolean forceReload, final boolean isSwipeRefresh) {
-		Log.d(TAG, "reloadWatchdogsTask()");
+    /**
+     * Async task for reloading fresh watchdog data
+     * @param adapterId
+     */
+    public void doReloadWatchdogsTask(String adapterId, boolean forceReload, final boolean isSwipeRefresh){
+        Log.d(TAG, "reloadWatchdogsTask()");
 
-		ReloadGateDataTask reloadWatchdogTask = new ReloadGateDataTask(mActivity, forceReload, ReloadGateDataTask.ReloadWhat.WATCHDOGS);
+        ReloadAdapterDataTask reloadWatchdogTask = new ReloadAdapterDataTask(mActivity, forceReload, ReloadAdapterDataTask.ReloadWhat.WATCHDOGS);
 
-		reloadWatchdogTask.setListener(new CallbackTask.CallbackTaskListener() {
-			@Override
-			public void onExecute(boolean success) {
-				redrawRules();
-				if (isSwipeRefresh)
-					mSwipeLayout.setRefreshing(false);
-			}
-		});
+        reloadWatchdogTask.setListener(new CallbackTask.CallbackTaskListener() {
+            @Override
+            public void onExecute(boolean success) {
+                redrawRules();
+                if (isSwipeRefresh)
+                    mSwipeLayout.setRefreshing(false);
+            }
+        });
 
 		// Execute and remember task so it can be stopped automatically
-		mActivity.callbackTaskManager.executeTask(reloadWatchdogTask, gateId);
-	}
+		mActivity.callbackTaskManager.executeTask(reloadWatchdogTask, adapterId);
+    }
 
-	/**
-	 * Async task for deleting watchdog
-	 *
-	 * @param watchdog
-	 */
-	private void doRemoveWatchdogTask(Watchdog watchdog) {
-		RemoveWatchdogTask removeWatchdogTask = new RemoveWatchdogTask(mActivity, false);
-		DelWatchdogPair pair = new DelWatchdogPair(watchdog.getId(), watchdog.getGateId());
+    /**
+     * Async task for deleting watchdog
+     * @param watchdog
+     */
+    private void doRemoveWatchdogTask(Watchdog watchdog) {
+        RemoveWatchdogTask removeWatchdogTask = new RemoveWatchdogTask(mActivity, false);
+        DelWatchdogPair pair = new DelWatchdogPair(watchdog.getId(), watchdog.getAdapterId());
 
-		removeWatchdogTask.setListener(new CallbackTask.CallbackTaskListener() {
+        removeWatchdogTask.setListener(new CallbackTask.CallbackTaskListener() {
 			@Override
 			public void onExecute(boolean success) {
 				Toast.makeText(mActivity, getResources().getString(success ? R.string.toast_delete_success : R.string.toast_delete_fail), Toast.LENGTH_SHORT).show();
@@ -323,76 +319,74 @@ public class WatchdogListFragment extends BaseApplicationFragment {
 					redrawRules();
 				}
 			}
-		});
+        });
 
 		// Execute and remember task so it can be stopped automatically
 		mActivity.callbackTaskManager.executeTask(removeWatchdogTask, pair);
-	}
+    }
 
-	// ----- HELPERS + ACTIONMODE ----- //
+    // ----- HELPERS + ACTIONMODE ----- //
 
-	/**
-	 * Changes color of selected item row
-	 */
-	private void setRuleSelected() {
-		getViewByPosition(mSelectedItemPos, mWatchdogListView).findViewById(R.id.watchdog_item_layout).setBackgroundColor(mActivity.getResources().getColor(R.color.light_gray));
-	}
+    /**
+     * Changes color of selected item row
+     */
+    private void setRuleSelected() {
+        getViewByPosition(mSelectedItemPos, mWatchdogListView).findViewById(R.id.watchdog_item_layout).setBackgroundColor(mActivity.getResources().getColor(R.color.light_gray));
+    }
+    private void setRuleUnselected() {
+        getViewByPosition(mSelectedItemPos, mWatchdogListView).findViewById(R.id.watchdog_item_layout).setBackgroundColor(mActivity.getResources().getColor(R.color.white));
+    }
 
-	private void setRuleUnselected() {
-		getViewByPosition(mSelectedItemPos, mWatchdogListView).findViewById(R.id.watchdog_item_layout).setBackgroundColor(mActivity.getResources().getColor(R.color.white));
-	}
+    /**
+     * Helper for getting item from listView
+     * @param pos
+     * @param listView
+     * @return
+     */
+    public View getViewByPosition(int pos, ListView listView) {
+        final int firstListItemPosition = listView.getFirstVisiblePosition();
+        final int lastListItemPosition = firstListItemPosition + listView.getChildCount() - 1;
 
-	/**
-	 * Helper for getting item from listView
-	 *
-	 * @param pos
-	 * @param listView
-	 * @return
-	 */
-	public View getViewByPosition(int pos, ListView listView) {
-		final int firstListItemPosition = listView.getFirstVisiblePosition();
-		final int lastListItemPosition = firstListItemPosition + listView.getChildCount() - 1;
+        if (pos < firstListItemPosition || pos > lastListItemPosition ) {
+            return listView.getAdapter().getView(pos, null, listView);
+        } else {
+            final int childIndex = pos - firstListItemPosition;
+            return listView.getChildAt(childIndex);
+        }
+    }
 
-		if (pos < firstListItemPosition || pos > lastListItemPosition) {
-			return listView.getAdapter().getView(pos, null, listView);
-		} else {
-			final int childIndex = pos - firstListItemPosition;
-			return listView.getChildAt(childIndex);
-		}
-	}
+    /**
+     * Class for managing when longclicked on item (ActionMode)
+     */
+    class ActionModeEditRules implements ActionMode.Callback {
+        @Override
+        public boolean onCreateActionMode(ActionMode actionMode, Menu menu) {
+            MenuInflater inflater = actionMode.getMenuInflater();
+            inflater.inflate(R.menu.watchdoglist_actionmode, menu);
+            return true;
+        }
 
-	/**
-	 * Class for managing when longclicked on item (ActionMode)
-	 */
-	class ActionModeEditRules implements ActionMode.Callback {
-		@Override
-		public boolean onCreateActionMode(ActionMode actionMode, Menu menu) {
-			MenuInflater inflater = actionMode.getMenuInflater();
-			inflater.inflate(R.menu.watchdoglist_actionmode, menu);
-			return true;
-		}
+        @Override
+        public boolean onPrepareActionMode(ActionMode actionMode, Menu menu) {
+            return false;
+        }
 
-		@Override
-		public boolean onPrepareActionMode(ActionMode actionMode, Menu menu) {
-			return false;
-		}
+        @Override
+        public boolean onActionItemClicked(ActionMode actionMode, MenuItem menuItem) {
+            if(menuItem.getItemId() == R.id.action_delete){
+                doRemoveWatchdogTask(mSelectedItem);
+            }
+            
+            actionMode.finish();
+            return true;
+        }
 
-		@Override
-		public boolean onActionItemClicked(ActionMode actionMode, MenuItem menuItem) {
-			if (menuItem.getItemId() == R.id.action_delete) {
-				doRemoveWatchdogTask(mSelectedItem);
-			}
-
-			actionMode.finish();
-			return true;
-		}
-
-		@Override
-		public void onDestroyActionMode(ActionMode actionMode) {
-			setRuleUnselected();
-			mSelectedItem = null;
-			mSelectedItemPos = 0;
-			mMode = null;
-		}
-	}
+        @Override
+        public void onDestroyActionMode(ActionMode actionMode) {
+            setRuleUnselected();
+            mSelectedItem = null;
+            mSelectedItemPos = 0;
+            mMode = null;
+        }
+    }
 }

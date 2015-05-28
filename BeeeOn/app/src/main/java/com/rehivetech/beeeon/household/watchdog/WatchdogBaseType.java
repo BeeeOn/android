@@ -17,7 +17,7 @@ import java.util.Arrays;
 public abstract class WatchdogBaseType {
 	protected UnitsHelper mUnitsHelper;
 
-	public enum WatchdogOperatorType {
+	public enum WatchdogOperatorType{
 		SENSOR,
 		GEOFENCE
 	}
@@ -25,43 +25,40 @@ public abstract class WatchdogBaseType {
 	public int mIndex;
 	private WatchdogOperatorType mType;
 
-	public WatchdogBaseType(WatchdogOperatorType type, int index) {
+	public WatchdogBaseType(WatchdogOperatorType type, int index){
 		mIndex = index;
 		mType = type;
 	}
 
-	public void setUnitsHelper(UnitsHelper uHelper) {
+	public void setUnitsHelper(UnitsHelper uHelper){
 		mUnitsHelper = uHelper;
 	}
-
-	public UnitsHelper getUnitsHelper() {
+	public UnitsHelper getUnitsHelper(){
 		return mUnitsHelper;
 	}
 
 	public abstract int[] getAllIcons();
-
 	public abstract String[] getAllCodes();
 
-	public WatchdogOperatorType getType() {
+	public WatchdogOperatorType getType(){
 		return mType;
 	}
 
-	public int getIndex() {
+	public int getIndex(){
 		return mIndex;
 	}
-
-	public void setIndex(int op) {
+	public void setIndex(int op){
 		mIndex = op;
 	}
 
-	public WatchdogBaseType next() {
+	public WatchdogBaseType next(){
 		mIndex++;
 		return this;
 	}
 
-	public int getIndexByType(String op) {
+	public int getIndexByType(String op){
 		int index = Arrays.asList(getAllCodes()).indexOf(op);
-		if (index == -1)
+		if(index == -1)
 			return 0;
 		else
 			return index;
@@ -72,16 +69,16 @@ public abstract class WatchdogBaseType {
 	}
 
 	// TODO nevim jestli modulo je nej reseni
-	public String getCode() {
+	public String getCode(){
 		return getAllCodes()[mIndex % getAllCodes().length];
 	}
 
-	public int getIconResource() {
+	public int getIconResource(){
 		int index = mIndex % getAllIcons().length;
 		return getAllIcons()[index];
 	}
 
-	public void setupGUI(SpinnerItem selected, FloatingActionButton operatorButton, EditText ruleTreshold, TextView ruleTresholdUnit) {
+	public void setupGUI(SpinnerItem selected, FloatingActionButton operatorButton, EditText ruleTreshold, TextView ruleTresholdUnit){
 		// sets default icon for this type
 		operatorButton.setImageResource(getIconResource());
 
@@ -94,7 +91,7 @@ public abstract class WatchdogBaseType {
 		});
 	}
 
-	public void clearGUI(FloatingActionButton operatorButton, EditText ruleTreshold, TextView ruleTresholdUnit) {
+	public void clearGUI(FloatingActionButton operatorButton, EditText ruleTreshold, TextView ruleTresholdUnit){
 		// shows necessary gui elements
 		operatorButton.setVisibility(View.GONE);
 		ruleTreshold.setVisibility(View.GONE);

@@ -3,11 +3,12 @@ package com.rehivetech.beeeon.asynctask;
 import android.content.Context;
 
 import com.rehivetech.beeeon.controller.Controller;
-import com.rehivetech.beeeon.household.gate.Gate;
+import com.rehivetech.beeeon.household.adapter.Adapter;
+import com.rehivetech.beeeon.pair.DelFacilityPair;
 import com.rehivetech.beeeon.pair.DelWatchdogPair;
 
 /**
- * Reloads devices by gate
+ * Reloads facilities by adapter
  */
 public class RemoveWatchdogTask extends CallbackTask<DelWatchdogPair> {
 
@@ -23,11 +24,11 @@ public class RemoveWatchdogTask extends CallbackTask<DelWatchdogPair> {
 	protected Boolean doInBackground(DelWatchdogPair pair) {
 		Controller controller = Controller.getInstance(mContext);
 
-		Gate gate = controller.getActiveGate();
-		if (gate == null) {
+		Adapter adapter = controller.getActiveAdapter();
+		if (adapter == null) {
 			return false;
 		}
 
-		return controller.getWatchdogsModel().deleteWatchdog(controller.getWatchdogsModel().getWatchdog(pair.gateId, pair.watchdogId));
+		return controller.getWatchdogsModel().deleteWatchdog(controller.getWatchdogsModel().getWatchdog(pair.adapterID, pair.watchdogID));
 	}
 }
