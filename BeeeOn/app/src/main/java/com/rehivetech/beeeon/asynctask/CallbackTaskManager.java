@@ -96,7 +96,7 @@ public class CallbackTaskManager {
 	 * @param task  task to be executed
 	 * @param param param for the task
 	 */
-	public <T> void executeTask(@NonNull CallbackTask task, @Nullable T param) {
+	public <T> void executeTask(@NonNull CallbackTask<T> task, @Nullable T param) {
 		executeTask(task, param, true);
 	}
 
@@ -117,7 +117,7 @@ public class CallbackTaskManager {
 	 * @param id
 	 * @param everySecs
 	 */
-	public <T> void executeTaskEvery(final CallbackTaskFactory taskFactory, final String id, final int everySecs) {
+	public <T> void executeTaskEvery(final CallbackTaskFactory<T> taskFactory, final String id, final int everySecs) {
 		if (mTimer == null) {
 			mTimer = new Timer();
 		}
