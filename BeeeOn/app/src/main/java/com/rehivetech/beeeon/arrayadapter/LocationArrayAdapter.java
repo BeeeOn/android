@@ -12,7 +12,7 @@ import android.widget.TextView;
 import com.rehivetech.beeeon.NameIdentifierComparator;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.controller.Controller;
-import com.rehivetech.beeeon.household.adapter.Adapter;
+import com.rehivetech.beeeon.household.gate.Gate;
 import com.rehivetech.beeeon.household.location.Location;
 
 import java.util.ArrayList;
@@ -89,14 +89,14 @@ public class LocationArrayAdapter extends ArrayAdapter<Location> {
 	}
 
 	public List<Location> getLocations() {
-		// Get locations from adapter
+		// Get locations from gate
 		List<Location> locations = new ArrayList<Location>();
 
-		Adapter adapter = mController.getActiveAdapter();
-		if (adapter != null) {
-			locations = mController.getLocationsModel().getLocationsByAdapter(adapter.getId());
+		Gate gate = mController.getActiveGate();
+		if (gate != null) {
+			locations = mController.getLocationsModel().getLocationsByAdapter(gate.getId());
 		} else {
-			// We need to have adapter to continue below
+			// We need to have gate to continue below
 			return locations;
 		}
 
@@ -113,7 +113,7 @@ public class LocationArrayAdapter extends ArrayAdapter<Location> {
 			}
 
 			if (!found) {
-				locations.add(new Location(Location.NEW_LOCATION_ID, name, adapter.getId(), room.getId()));
+				locations.add(new Location(Location.NEW_LOCATION_ID, name, gate.getId(), room.getId()));
 			}
 		}
 
@@ -121,7 +121,7 @@ public class LocationArrayAdapter extends ArrayAdapter<Location> {
 		Collections.sort(locations, new NameIdentifierComparator());
 
 		// Add "New location" item
-		locations.add(new Location(Location.NEW_LOCATION_ID, mActivity.getString(R.string.addsensor_new_location_spinner), adapter.getId(), "0"));
+		locations.add(new Location(Location.NEW_LOCATION_ID, mActivity.getString(R.string.addsensor_new_location_spinner), gate.getId(), "0"));
 
 		return locations;
 	}

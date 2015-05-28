@@ -13,7 +13,7 @@ import android.widget.RemoteViewsService;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.exception.AppException;
-import com.rehivetech.beeeon.household.adapter.Adapter;
+import com.rehivetech.beeeon.household.gate.Gate;
 import com.rehivetech.beeeon.household.device.Device;
 import com.rehivetech.beeeon.household.device.Module;
 import com.rehivetech.beeeon.util.Log;
@@ -91,12 +91,12 @@ class ListRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory {
 			return rv;
 		}
 
-		Adapter adapter = mController.getAdaptersModel().getAdapter(dev.getDevice().getAdapterId());
+		Gate gate = mController.getAdaptersModel().getAdapter(dev.getDevice().getAdapterId());
 
 		rv.setTextViewText(R.id.widget_loc_item_name, dev.getName());
 		rv.setImageViewResource(R.id.widget_loc_item_icon, dev.getIconResource());
 
-		rv.setTextViewText(R.id.widget_loc_item_update, mTimeHelper.formatLastUpdate(dev.getDevice().getLastUpdate(), adapter));
+		rv.setTextViewText(R.id.widget_loc_item_update, mTimeHelper.formatLastUpdate(dev.getDevice().getLastUpdate(), gate));
 		rv.setTextViewText(R.id.widget_loc_item_value, mUnitsHelper != null ? mUnitsHelper.getStringValueUnit(dev.getValue()) : dev.getValue().getRawValue());
 
 		// send broadcast to widgetprovider with information about clicked item

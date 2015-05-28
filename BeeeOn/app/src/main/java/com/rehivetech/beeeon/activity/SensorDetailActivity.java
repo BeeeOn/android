@@ -100,7 +100,7 @@ public class SensorDetailActivity extends BaseApplicationActivity {
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
 		if (requestCode == Constants.EDIT_SENSOR_REQUEST_CODE) {
-			Log.d(TAG, "Return from add adapter activity");
+			Log.d(TAG, "Return from add gate activity");
 			if (resultCode == Constants.EDIT_SENSOR_CANCELED) {
 				Log.d(TAG, "Activity was canceled");
 			} else if (resultCode == Constants.EDIT_SENSOR_SUCCESS) {
@@ -167,7 +167,7 @@ public class SensorDetailActivity extends BaseApplicationActivity {
 	}
 
 	/**
-	 * A simple pager adapter that represents 5 {@link SensorDetailFragment} objects, in sequence.
+	 * A simple pager gate that represents 5 {@link SensorDetailFragment} objects, in sequence.
 	 */
 	public class ScreenSlidePagerAdapter extends FragmentStatePagerAdapter {
 

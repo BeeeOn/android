@@ -5,7 +5,7 @@ import android.content.Context;
 import com.rehivetech.beeeon.controller.Controller;
 
 /**
- * Reloads locations by adapter
+ * Reloads locations by gate
  */
 public class ReloadLocationsTask extends CallbackTask<String> {
 

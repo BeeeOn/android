@@ -21,7 +21,7 @@ public class UsersModel extends BaseModel {
 	}
 
 	/**
-	 * Return user from active adapter by id.
+	 * Return user from active gate by id.
 	 *
 	 * @param id
 	 * @return User if found, null otherwise.
@@ -31,7 +31,7 @@ public class UsersModel extends BaseModel {
 	}
 
 	/**
-	 * Return list of users from adapter.
+	 * Return list of users from gate.
 	 *
 	 * @return List of users (or empty list)
 	 */
@@ -80,7 +80,7 @@ public class UsersModel extends BaseModel {
 	}
 
 	/**
-	 * Deletes user from adapter from server and from list of users.
+	 * Deletes user from gate from server and from list of users.
 	 * <p/>
 	 * This CAN'T be called on UI thread!
 	 *

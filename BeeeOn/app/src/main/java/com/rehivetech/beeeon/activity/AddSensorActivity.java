@@ -20,7 +20,7 @@ import com.rehivetech.beeeon.asynctask.PairRequestTask;
 import com.rehivetech.beeeon.asynctask.ReloadAdapterDataTask;
 import com.rehivetech.beeeon.base.BaseApplicationActivity;
 import com.rehivetech.beeeon.controller.Controller;
-import com.rehivetech.beeeon.household.adapter.Adapter;
+import com.rehivetech.beeeon.household.gate.Gate;
 import com.rehivetech.beeeon.household.device.Device;
 import com.rehivetech.beeeon.util.Log;
 import com.viewpagerindicator.CirclePageIndicator;
@@ -31,7 +31,7 @@ public class AddSensorActivity extends BaseApplicationActivity {
 	private static final String TAG = AddSensorActivity.class.getSimpleName();
 
 	private Controller mController;
-	private Adapter mPairAdapter;
+	private Gate mPairGate;
 
 	private AddSensorFragmentAdapter mAdapter;
 	private ViewPager mPager;
@@ -61,7 +61,7 @@ public class AddSensorActivity extends BaseApplicationActivity {
 
 		// Get controller
 		mController = Controller.getInstance(this);
-		mPairAdapter = mController.getActiveAdapter();
+		mPairGate = mController.getActiveGate();
 
 		mAdapter = new AddSensorFragmentAdapter(getSupportFragmentManager(), this);
 
@@ -91,7 +91,7 @@ public class AddSensorActivity extends BaseApplicationActivity {
 			if (resultCode == Constants.SETUP_SENSOR_CANCELED) {
 				Log.d(TAG, "Activity was canceled");
 			} else if (resultCode == Constants.SETUP_SENSOR_SUCCESS) {
-				// Succes of add adapter -> setActive adapter a redraw ALL
+				// Succes of add gate -> setActive gate a redraw ALL
 				Log.d(TAG, "Setup sensor success");
 				setResult(Constants.ADD_SENSOR_SUCCESS, data);
 				finish();
@@ -131,7 +131,7 @@ public class AddSensorActivity extends BaseApplicationActivity {
 				if (mNext.getText().equals(AddSensorActivity.this.getString(R.string.tutorial_next))) {
 					mPager.setCurrentItem(mPager.getCurrentItem() + 1);
 				} else if (mNext.getText().equals(AddSensorActivity.this.getString(R.string.addsensor_send_pair))) {
-					doPairRequestTask(mPairAdapter.getId());
+					doPairRequestTask(mPairGate.getId());
 					mNext.setEnabled(false);
 				}
 			}
@@ -181,7 +181,7 @@ public class AddSensorActivity extends BaseApplicationActivity {
 					return;
 				}
 
-				List<Device> devices = mController.getUninitializedDevicesModel().getUninitializedDevicesByAdapter(mPairAdapter.getId());
+				List<Device> devices = mController.getUninitializedDevicesModel().getUninitializedDevicesByAdapter(mPairGate.getId());
 
 				if (devices.size() > 0) {
 					mFragment.stopTimer();
@@ -193,7 +193,7 @@ public class AddSensorActivity extends BaseApplicationActivity {
 				} else {
 					if (mFirstUse) {
 						mFirstUse = false;
-						doPairRequestTask(mPairAdapter.getId());
+						doPairRequestTask(mPairGate.getId());
 						mNext.setEnabled(false);
 					}
 				}
@@ -230,7 +230,7 @@ public class AddSensorActivity extends BaseApplicationActivity {
 
 	public void checkUnInitSensor() {
 		Log.d(TAG, "Send if some uninit mDevice");
-		doReloadUninitializedDevicesTask(mPairAdapter.getId(), true);
+		doReloadUninitializedDevicesTask(mPairGate.getId(), true);
 	}
 
 

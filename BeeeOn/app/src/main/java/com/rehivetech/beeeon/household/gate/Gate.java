@@ -1,7 +1,7 @@
 /**
- * @brief Package for adapter manipulation
+ * @brief Package for gate manipulation
  */
-package com.rehivetech.beeeon.household.adapter;
+package com.rehivetech.beeeon.household.gate;
 
 import com.rehivetech.beeeon.INameIdentifier;
 import com.rehivetech.beeeon.household.user.User;
@@ -10,8 +10,8 @@ import com.rehivetech.beeeon.household.user.User;
  * @author ThinkDeep
  * @brief Class for parsed data from XML file of adapters
  */
-public class Adapter implements INameIdentifier {
-	public static final String TAG = Adapter.class.getSimpleName();
+public class Gate implements INameIdentifier {
+	public static final String TAG = Gate.class.getSimpleName();
 
 	private String mId = "";
 	private String mName = "";
@@ -31,7 +31,7 @@ public class Adapter implements INameIdentifier {
 	}
 
 	/**
-	 * Set name of adapter
+	 * Set name of gate
 	 *
 	 * @param name
 	 */
@@ -40,7 +40,7 @@ public class Adapter implements INameIdentifier {
 	}
 
 	/**
-	 * Get name of adapter
+	 * Get name of gate
 	 *
 	 * @return
 	 */
@@ -49,7 +49,7 @@ public class Adapter implements INameIdentifier {
 	}
 
 	/**
-	 * Set role of actual user of adapter
+	 * Set role of actual user of gate
 	 *
 	 * @param role
 	 */
@@ -58,7 +58,7 @@ public class Adapter implements INameIdentifier {
 	}
 
 	/**
-	 * Get role of actual user of adapter
+	 * Get role of actual user of gate
 	 *
 	 * @return
 	 */
@@ -67,7 +67,7 @@ public class Adapter implements INameIdentifier {
 	}
 
 	/**
-	 * Setting id of adapter
+	 * Setting id of gate
 	 *
 	 * @param id
 	 */
@@ -76,7 +76,7 @@ public class Adapter implements INameIdentifier {
 	}
 
 	/**
-	 * Returning id of adapter
+	 * Returning id of gate
 	 *
 	 * @return id
 	 */
@@ -85,7 +85,7 @@ public class Adapter implements INameIdentifier {
 	}
 
 	/**
-	 * Setting UTC offset of adapter
+	 * Setting UTC offset of gate
 	 *
 	 * @param utcOffsetInMinutes
 	 */
@@ -94,7 +94,7 @@ public class Adapter implements INameIdentifier {
 	}
 
 	/**
-	 * Returning UTC offset of adapter
+	 * Returning UTC offset of gate
 	 *
 	 * @return UTC offset in milliseconds
 	 */

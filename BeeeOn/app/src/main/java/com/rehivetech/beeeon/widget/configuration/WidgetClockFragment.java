@@ -17,7 +17,7 @@ import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.activity.dialog.ILocationPickerDialogListener;
 import com.rehivetech.beeeon.activity.dialog.LocationPickerDialogFragment;
 import com.rehivetech.beeeon.arrayadapter.ModuleArrayAdapter;
-import com.rehivetech.beeeon.household.adapter.Adapter;
+import com.rehivetech.beeeon.household.gate.Gate;
 import com.rehivetech.beeeon.household.device.Module;
 import com.rehivetech.beeeon.household.location.Location;
 import com.rehivetech.beeeon.util.Utils;
@@ -238,8 +238,8 @@ public class WidgetClockFragment extends WidgetConfigurationFragment implements 
 
 	@Override
 	protected boolean saveSettings() {
-		Adapter adapter = (Adapter) mAdapterSpinner.getSelectedItem();
-		if (adapter == null) {
+		Gate gate = (Gate) mAdapterSpinner.getSelectedItem();
+		if (gate == null) {
 			Toast.makeText(mActivity, R.string.widget_configuration_select_adapter, Toast.LENGTH_LONG).show();
 			return false;
 		}
@@ -256,9 +256,9 @@ public class WidgetClockFragment extends WidgetConfigurationFragment implements 
 
 			Location location = Utils.getFromList(module.getDevice().getLocationId(), mLocations);
 			if (location != null) {
-				wDev.configure(module, adapter, location);
+				wDev.configure(module, gate, location);
 			} else {
-				wDev.configure(module, adapter);
+				wDev.configure(module, gate);
 			}
 
 			index++;
@@ -273,7 +273,7 @@ public class WidgetClockFragment extends WidgetConfigurationFragment implements 
 		}
 
 		// setup widget
-		mWidgetData.configure(mActivity.isAppWidgetEditing(), getRefreshSeconds(mWidgetUpdateSeekBar.getProgress()), false, adapter);
+		mWidgetData.configure(mActivity.isAppWidgetEditing(), getRefreshSeconds(mWidgetUpdateSeekBar.getProgress()), false, gate);
 		return true;
 	}
 }

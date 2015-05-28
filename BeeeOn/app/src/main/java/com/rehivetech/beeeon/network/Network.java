@@ -10,7 +10,7 @@ import com.rehivetech.beeeon.exception.ClientError;
 import com.rehivetech.beeeon.exception.NetworkError;
 import com.rehivetech.beeeon.gamification.AchievementListItem;
 import com.rehivetech.beeeon.gcm.notification.VisibleNotification;
-import com.rehivetech.beeeon.household.adapter.Adapter;
+import com.rehivetech.beeeon.household.gate.Gate;
 import com.rehivetech.beeeon.household.device.Device;
 import com.rehivetech.beeeon.household.device.Module;
 import com.rehivetech.beeeon.household.device.Module.SaveModule;
@@ -498,11 +498,11 @@ public class Network implements INetwork {
 	@Override
 	// http://stackoverflow.com/a/509288/1642090
 	@SuppressWarnings("unchecked")
-	public List<Adapter> getAdapters() {
+	public List<Gate> getAdapters() {
 		ParsedMessage msg = doRequest(XmlCreator.createGetAdapters(mBT));
 
 		if (msg.getState() == State.ADAPTERS)
-			return (List<Adapter>) msg.data;
+			return (List<Gate>) msg.data;
 
 		throw processFalse(msg);
 	}

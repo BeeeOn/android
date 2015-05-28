@@ -8,7 +8,7 @@ import android.widget.Toast;
 
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.arrayadapter.LocationArrayAdapter;
-import com.rehivetech.beeeon.household.adapter.Adapter;
+import com.rehivetech.beeeon.household.gate.Gate;
 import com.rehivetech.beeeon.household.location.Location;
 import com.rehivetech.beeeon.util.Utils;
 import com.rehivetech.beeeon.widget.data.WidgetLocationData;
@@ -79,8 +79,8 @@ public class WidgetLocationFragment extends WidgetConfigurationFragment {
 
 	@Override
 	protected boolean saveSettings() {
-		Adapter adapter = (Adapter) mAdapterSpinner.getSelectedItem();
-		if (adapter == null) {
+		Gate gate = (Gate) mAdapterSpinner.getSelectedItem();
+		if (gate == null) {
 			Toast.makeText(mActivity, R.string.widget_configuration_select_adapter, Toast.LENGTH_LONG).show();
 			return false;
 		}
@@ -91,10 +91,10 @@ public class WidgetLocationFragment extends WidgetConfigurationFragment {
 			return false;
 		}
 
-		mWidgetLocation.configure(location, adapter);
+		mWidgetLocation.configure(location, gate);
 
 		//sets widgetdata
-		mWidgetData.configure(mActivity.isAppWidgetEditing(), getRefreshSeconds(mWidgetUpdateSeekBar.getProgress()), false, adapter);
+		mWidgetData.configure(mActivity.isAppWidgetEditing(), getRefreshSeconds(mWidgetUpdateSeekBar.getProgress()), false, gate);
 		return true;
 	}
 }

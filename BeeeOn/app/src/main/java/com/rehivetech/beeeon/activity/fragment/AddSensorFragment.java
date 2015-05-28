@@ -14,7 +14,7 @@ import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.activity.AddSensorActivity;
 import com.rehivetech.beeeon.base.TrackFragment;
 import com.rehivetech.beeeon.controller.Controller;
-import com.rehivetech.beeeon.household.adapter.Adapter;
+import com.rehivetech.beeeon.household.gate.Gate;
 import com.rehivetech.beeeon.util.Log;
 
 
@@ -39,7 +39,7 @@ public class AddSensorFragment extends TrackFragment {
 	private int mTimeOldValProgress = 100;
 	private int mTimeNewValProgress = 0;
 
-	private Adapter mAdapter;
+	private Gate mGate;
 
 
 	private static final String TAG = AddSensorFragment.class.getSimpleName();
@@ -58,8 +58,8 @@ public class AddSensorFragment extends TrackFragment {
 		mController = Controller.getInstance(mActivity);
 
 		// Send request
-		mAdapter = mController.getActiveAdapter();
-		if (mAdapter == null) {
+		mGate = mController.getActiveGate();
+		if (mGate == null) {
 			Toast.makeText(mActivity, getResources().getString(R.string.toast_no_adapter), Toast.LENGTH_LONG).show();
 			// TODO: Ukoncit dialog ?
 		}

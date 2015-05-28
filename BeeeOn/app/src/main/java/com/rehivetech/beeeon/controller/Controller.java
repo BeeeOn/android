@@ -9,7 +9,7 @@ import android.graphics.Bitmap;
 import com.rehivetech.beeeon.Constants;
 import com.rehivetech.beeeon.exception.AppException;
 import com.rehivetech.beeeon.gamification.AchievementList;
-import com.rehivetech.beeeon.household.adapter.Adapter;
+import com.rehivetech.beeeon.household.gate.Gate;
 import com.rehivetech.beeeon.household.user.User;
 import com.rehivetech.beeeon.household.user.User.Role;
 import com.rehivetech.beeeon.model.AchievementsModel;
@@ -52,7 +52,7 @@ public final class Controller {
 	private static Controller sController;
 
 	/**
-	 * Switch for using demo mode (with example adapter, without server)
+	 * Switch for using demo mode (with example gate, without server)
 	 */
 	private final boolean mDemoMode;
 
@@ -77,9 +77,9 @@ public final class Controller {
 	private final User mUser;
 
 	/**
-	 * Active adapter
+	 * Active gate
 	 */
-	private Adapter mActiveAdapter;
+	private Gate mActiveGate;
 
 	/**
 	 * Models for keeping and handling data
@@ -451,52 +451,52 @@ public final class Controller {
 	}
 
 	/**
-	 * Return active adapter.
+	 * Return active gate.
 	 *
-	 * @return active adapter, or first adapter, or null if there are no adapters
+	 * @return active gate, or first gate, or null if there are no adapters
 	 */
-	public synchronized Adapter getActiveAdapter() {
-		if (mActiveAdapter == null) {
+	public synchronized Gate getActiveGate() {
+		if (mActiveGate == null) {
 			// UserSettings can be null when user is not logged in!
 			SharedPreferences prefs = getUserSettings();
 
 			String lastId = (prefs == null) ? "" : prefs.getString(Constants.PERSISTENCE_PREF_ACTIVE_ADAPTER, "");
 
-			mActiveAdapter = getAdaptersModel().getAdapterOrFirst(lastId);
+			mActiveGate = getAdaptersModel().getAdapterOrFirst(lastId);
 
-			if (mActiveAdapter != null && prefs != null)
-				prefs.edit().putString(Constants.PERSISTENCE_PREF_ACTIVE_ADAPTER, mActiveAdapter.getId()).apply();
+			if (mActiveGate != null && prefs != null)
+				prefs.edit().putString(Constants.PERSISTENCE_PREF_ACTIVE_ADAPTER, mActiveGate.getId()).apply();
 		}
 
-		return mActiveAdapter;
+		return mActiveGate;
 	}
 
 	/**
-	 * Sets active adapter and load all locations and devices, if needed (or if forceReload = true)
+	 * Sets active gate and load all locations and devices, if needed (or if forceReload = true)
 	 * <p/>
 	 * This CAN'T be called on UI thread!
 	 *
 	 * @param id
 	 * @param forceReload
-	 * @return true on success, false if there is no adapter with this id
+	 * @return true on success, false if there is no gate with this id
 	 */
 	public synchronized boolean setActiveAdapter(String id, boolean forceReload) {
 		// UserSettings can be null when user is not logged in!
 		SharedPreferences prefs = getUserSettings();
 		if (prefs != null) {
-			// Save it whether adapter below will be loaded or not
+			// Save it whether gate below will be loaded or not
 			prefs.edit().putString(Constants.PERSISTENCE_PREF_ACTIVE_ADAPTER, id).apply();
 		}
 
-		// Find specified adapter
-		mActiveAdapter = getAdaptersModel().getAdapter(id);
+		// Find specified gate
+		mActiveGate = getAdaptersModel().getAdapter(id);
 
-		if (mActiveAdapter == null) {
-			Log.d(TAG, String.format("Can't set active adapter to '%s'", id));
+		if (mActiveGate == null) {
+			Log.d(TAG, String.format("Can't set active gate to '%s'", id));
 			return false;
 		}
 
-		Log.d(TAG, String.format("Set active adapter to '%s'", mActiveAdapter.getName()));
+		Log.d(TAG, String.format("Set active gate to '%s'", mActiveGate.getName()));
 
 		// Load locations and devices, if needed
 		getLocationsModel().reloadLocationsByAdapter(id, forceReload);

@@ -39,7 +39,7 @@ import android.os.Bundle;
 
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.extension.watches.smartwatch2.SW2ExtensionService;
-import com.rehivetech.beeeon.household.adapter.Adapter;
+import com.rehivetech.beeeon.household.gate.Gate;
 import com.rehivetech.beeeon.household.device.Device;
 import com.rehivetech.beeeon.household.device.Module;
 import com.rehivetech.beeeon.util.Log;
@@ -192,7 +192,7 @@ public class GalleryControlExtension extends ManagedControlExtension {
 
 		Module curModule = mModules.get(position);
 		Device curDevice = curModule.getDevice();
-		Adapter curAdapter = mController.getAdaptersModel().getAdapter(curDevice.getAdapterId());
+		Gate curGate = mController.getAdaptersModel().getAdapter(curDevice.getAdapterId());
 
 		// Title data
 		Bundle syncBundle = new Bundle();
@@ -204,7 +204,7 @@ public class GalleryControlExtension extends ManagedControlExtension {
 		// Last update data
 		TimeHelper timeHelper = (prefs == null) ? null : new TimeHelper(prefs);
 		if (timeHelper != null) {
-			String dateTime = timeHelper.formatLastUpdate(curDevice.getLastUpdate(), curAdapter);
+			String dateTime = timeHelper.formatLastUpdate(curDevice.getLastUpdate(), curGate);
 			syncBundle.putString(Control.Intents.EXTRA_TEXT, dateTime);
 		}
 

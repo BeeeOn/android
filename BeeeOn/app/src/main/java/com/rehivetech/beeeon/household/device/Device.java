@@ -126,16 +126,16 @@ public class Device implements IIdentifier {
 	}
 
 	/**
-	 * Get adapter id of mDevice
+	 * Get gate id of mDevice
 	 *
-	 * @return adapter id
+	 * @return gate id
 	 */
 	public String getAdapterId() {
 		return mAdapterId;
 	}
 
 	/**
-	 * Setting adapter id of mDevice
+	 * Setting gate id of mDevice
 	 *
 	 * @param adapterId
 	 */
@@ -244,7 +244,7 @@ public class Device implements IIdentifier {
 	 * @return
 	 */
 	public String toDebugString() {
-		return String.format("Id: %s\nAdapter: %s\nLocation: %s\nInitialized: %s\nBattery: %s\nRefresh: %s\nDevices: %s", getId(), mAdapterId, mLocationId, mInitialized, mBattery,
+		return String.format("Id: %s\nGate: %s\nLocation: %s\nInitialized: %s\nBattery: %s\nRefresh: %s\nDevices: %s", getId(), mAdapterId, mLocationId, mInitialized, mBattery,
 				mRefreshInterval.getInterval(), Integer.toString(mModules.size()));
 	}
 

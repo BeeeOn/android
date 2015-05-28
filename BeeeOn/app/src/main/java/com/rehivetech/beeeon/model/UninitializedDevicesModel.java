@@ -22,7 +22,7 @@ public class UninitializedDevicesModel extends BaseModel {
 	}
 
 	/**
-	 * Return list of all uninitialized devices from adapter
+	 * Return list of all uninitialized devices from gate
 	 *
 	 * @param adapterId
 	 * @return List of uninitialized devices (or empty list)

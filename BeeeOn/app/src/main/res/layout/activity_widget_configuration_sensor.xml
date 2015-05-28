@@ -18,7 +18,7 @@
         android:padding="8dp"
         >
 
-    <!-- default spinner for adapter -->
+    <!-- default spinner for gate -->
     <include layout="@layout/include_widget_configuration_general" />
 
     <!-- sensor to be shown -->

@@ -20,7 +20,7 @@ import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.exception.AppException;
 import com.rehivetech.beeeon.exception.ErrorCode;
 import com.rehivetech.beeeon.exception.NetworkError;
-import com.rehivetech.beeeon.household.adapter.Adapter;
+import com.rehivetech.beeeon.household.gate.Gate;
 import com.rehivetech.beeeon.network.authentication.DemoAuthProvider;
 import com.rehivetech.beeeon.network.authentication.FacebookAuthProvider;
 import com.rehivetech.beeeon.network.authentication.GoogleAuthProvider;
@@ -302,9 +302,9 @@ public class LoginActivity extends BaseActivity {
 						mProgress.setMessageResource(R.string.progress_loading_adapters);
 						mController.getAdaptersModel().reloadAdapters(true);
 
-						Adapter active = mController.getActiveAdapter();
+						Gate active = mController.getActiveGate();
 						if (active != null) {
-							// Load data for active adapter
+							// Load data for active gate
 							mProgress.setMessageResource(R.string.progress_loading_adapter);
 							mController.getLocationsModel().reloadLocationsByAdapter(active.getId(), true);
 							mController.getDevicesModel().reloadDevicesByAdapter(active.getId(), true);

@@ -4,7 +4,7 @@ import android.content.Context;
 
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.controller.Controller;
-import com.rehivetech.beeeon.household.adapter.Adapter;
+import com.rehivetech.beeeon.household.gate.Gate;
 import com.rehivetech.beeeon.household.device.Module;
 import com.rehivetech.beeeon.household.device.ModuleType;
 import com.rehivetech.beeeon.household.device.values.BaseValue;
@@ -94,15 +94,15 @@ public class WidgetModulePersistence extends WidgetBeeeOnPersistence {
 	public void configure(Object obj1, Object obj2) {
 		super.configure(obj1, obj2);
 
-		if (!(obj1 instanceof Module) || !(obj2 instanceof Adapter) || obj1 == null || obj2 == null) return;
+		if (!(obj1 instanceof Module) || !(obj2 instanceof Gate) || obj1 == null || obj2 == null) return;
 		Module module = (Module) obj1;
-		Adapter adapter = (Adapter) obj2;
+		Gate gate = (Gate) obj2;
 
 		id = module.getId();
 		name = module.getName();
 		icon = module.getIconResource();
-		adapterId = adapter.getId();
-		adapterRole = adapter.getRole().getId();
+		adapterId = gate.getId();
+		adapterRole = gate.getRole().getId();
 		type = module.getType().getTypeId();
 
 		mUserRole = Utils.getEnumFromId(User.Role.class, adapterRole, User.Role.Guest);
@@ -123,7 +123,7 @@ public class WidgetModulePersistence extends WidgetBeeeOnPersistence {
 		// Check if we can format module's last update (timeHelper is null when user is not logged in)
 		if (mTimeHelper != null) {
 			// NOTE: This should use always absolute time, because widgets aren't updated so often
-			lastUpdateText = mTimeHelper.formatLastUpdate(module.getDevice().getLastUpdate(), adapter);
+			lastUpdateText = mTimeHelper.formatLastUpdate(module.getDevice().getLastUpdate(), gate);
 		}
 	}
 

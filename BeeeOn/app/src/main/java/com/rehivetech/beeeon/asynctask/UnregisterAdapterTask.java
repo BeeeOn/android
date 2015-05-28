@@ -3,7 +3,7 @@ package com.rehivetech.beeeon.asynctask;
 import android.content.Context;
 
 import com.rehivetech.beeeon.controller.Controller;
-import com.rehivetech.beeeon.household.adapter.Adapter;
+import com.rehivetech.beeeon.household.gate.Gate;
 
 public class UnregisterAdapterTask extends CallbackTask<String> {
 
@@ -15,11 +15,11 @@ public class UnregisterAdapterTask extends CallbackTask<String> {
 	protected Boolean doInBackground(String adapterId) {
 		Controller controller = Controller.getInstance(mContext);
 
-		Adapter activeAdapter = controller.getActiveAdapter();
+		Gate activeGate = controller.getActiveGate();
 
-		// Unegister adapter and reset activeAdapter
+		// Unegister gate and reset activeGate
 		if (controller.getAdaptersModel().unregisterAdapter(adapterId, controller.getActualUser())) {
-			if (activeAdapter != null && activeAdapter.getId().equals(adapterId)) {
+			if (activeGate != null && activeGate.getId().equals(adapterId)) {
 				controller.setActiveAdapter("", false);
 			}
 			return true;

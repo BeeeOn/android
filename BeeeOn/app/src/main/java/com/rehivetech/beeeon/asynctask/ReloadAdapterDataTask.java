@@ -3,7 +3,7 @@ package com.rehivetech.beeeon.asynctask;
 import android.content.Context;
 
 import com.rehivetech.beeeon.controller.Controller;
-import com.rehivetech.beeeon.household.adapter.Adapter;
+import com.rehivetech.beeeon.household.gate.Gate;
 
 /**
  * Reloads specified data from server.
@@ -38,7 +38,7 @@ public class ReloadAdapterDataTask extends CallbackTask<String> {
 		if (mWhat == ReloadWhat.ADAPTERS_AND_ACTIVE_ADAPTER) {
 			controller.getAdaptersModel().reloadAdapters(mForceReload);
 
-			Adapter active = controller.getActiveAdapter();
+			Gate active = controller.getActiveGate();
 			if (active == null)
 				return true;
 

@@ -9,7 +9,7 @@ import android.net.Uri;
 import android.os.Build;
 
 import com.rehivetech.beeeon.R;
-import com.rehivetech.beeeon.household.adapter.Adapter;
+import com.rehivetech.beeeon.household.gate.Gate;
 import com.rehivetech.beeeon.household.location.Location;
 import com.rehivetech.beeeon.util.Log;
 import com.rehivetech.beeeon.util.TimeHelper;
@@ -125,12 +125,12 @@ public class WidgetLocationData extends WidgetData {
 			return false;
 		}
 
-		Adapter adapter = mController.getAdaptersModel().getAdapter(widgetAdapterId);
-		if (adapter == null) return false;
-		widgetLocation.configure(location, adapter);
+		Gate gate = mController.getAdaptersModel().getAdapter(widgetAdapterId);
+		if (gate == null) return false;
+		widgetLocation.configure(location, gate);
 
 		widgetLastUpdate = getTimeNow();
-		widgetAdapterId = adapter.getId();
+		widgetAdapterId = gate.getId();
 
 		mWidgetManager.notifyAppWidgetViewDataChanged(mWidgetId, R.id.layout);
 

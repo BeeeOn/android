@@ -24,7 +24,7 @@ import com.rehivetech.beeeon.arrayadapter.LocationIconAdapter;
 import com.rehivetech.beeeon.arrayadapter.SetupSensorListAdapter;
 import com.rehivetech.beeeon.base.TrackFragment;
 import com.rehivetech.beeeon.controller.Controller;
-import com.rehivetech.beeeon.household.adapter.Adapter;
+import com.rehivetech.beeeon.household.gate.Gate;
 import com.rehivetech.beeeon.household.device.Device;
 import com.rehivetech.beeeon.household.location.Location;
 import com.rehivetech.beeeon.util.Log;
@@ -42,7 +42,7 @@ public class SetupSensorFragment extends TrackFragment {
 	private static final String TAG = MainActivity.class.getSimpleName();
 	private static final int NAME_ITEM_HEIGHT = 56;
 
-	private Adapter mAdapter;
+	private Gate mGate;
 	private List<Device> mNewDevices;
 
 	private LinearLayout mLayout;
@@ -65,12 +65,12 @@ public class SetupSensorFragment extends TrackFragment {
 		mActivity = (SetupSensorActivity) getActivity();
 		mController = Controller.getInstance(mActivity);
 
-		mAdapter = mController.getActiveAdapter();
-		if (mAdapter == null) {
+		mGate = mController.getActiveGate();
+		if (mGate == null) {
 			// CHYBA
 			return;
 		}
-		mNewDevices = mController.getUninitializedDevicesModel().getUninitializedDevicesByAdapter(mAdapter.getId());
+		mNewDevices = mController.getUninitializedDevicesModel().getUninitializedDevicesByAdapter(mGate.getId());
 
 		// TODO: sent as parameter if we want first uninitialized module or some
 		// module with particular id
@@ -114,7 +114,7 @@ public class SetupSensorFragment extends TrackFragment {
 		mNewLocation = (EditText) mView.findViewById(R.id.addsensor_new_location_name);
 		TextView time = (TextView) mView.findViewById(R.id.setup_sensor_info_text);
 
-		// Create adapter for setting names of new sensors
+		// Create gate for setting names of new sensors
 		SetupSensorListAdapter listAdapter = new SetupSensorListAdapter(mActivity, mNewDevices.get(0));
 		LocationArrayAdapter dataAdapter = new LocationArrayAdapter(mActivity, R.layout.custom_spinner_item);
 
@@ -153,13 +153,13 @@ public class SetupSensorFragment extends TrackFragment {
 		// Set involved time of mDevice
 		if (timeHelper != null) {
 			Device device = mNewDevices.get(0);
-			Adapter adapter = mController.getAdaptersModel().getAdapter(device.getAdapterId());
-			time.setText(String.format("%s %s", time.getText(), timeHelper.formatLastUpdate(device.getInvolveTime(), adapter)));
+			Gate gate = mController.getAdaptersModel().getAdapter(device.getAdapterId());
+			time.setText(String.format("%s %s", time.getText(), timeHelper.formatLastUpdate(device.getInvolveTime(), gate)));
 		}
 
 		// Set involved time of mDevice
 
-		// Set adapter to ListView and to Spinner
+		// Set gate to ListView and to Spinner
 		mListOfName.setAdapter(listAdapter);
 		mSpinner.setAdapter(dataAdapter);
 		// Set listview height, for all 
@@ -187,7 +187,7 @@ public class SetupSensorFragment extends TrackFragment {
 				iconsList.add(icon.getIconResource());
 			}
 
-			// first call need to add adapter
+			// first call need to add gate
 			LocationIconAdapter iconAdapter = new LocationIconAdapter(mActivity, R.layout.custom_spinner_icon_item);
 			iconAdapter.setDropDownViewResource(R.layout.custom_spinner_icon_dropdown_item);
 			mNewIconSpinner.setAdapter(iconAdapter);

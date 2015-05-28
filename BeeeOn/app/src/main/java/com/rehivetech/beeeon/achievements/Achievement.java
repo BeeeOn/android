@@ -45,8 +45,8 @@ public abstract class Achievement implements Observer {
 
 		mAdapterId = "0";
 		mController = Controller.getInstance(mContext);
-		if (mController.getActiveAdapter() != null)
-			mAdapterId = mController.getActiveAdapter().getId();
+		if (mController.getActiveGate() != null)
+			mAdapterId = mController.getActiveGate().getId();
 		mAchievementList = AchievementList.getInstance(mContext);
 		if (mAchievementList.isDownloaded()) {
 			mData = mAchievementList.getItem(achievement_id);

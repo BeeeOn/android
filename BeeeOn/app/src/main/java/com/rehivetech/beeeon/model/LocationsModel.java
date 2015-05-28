@@ -31,7 +31,7 @@ public class LocationsModel extends BaseModel {
 	}
 
 	/**
-	 * Return location from active adapter by id.
+	 * Return location from active gate by id.
 	 *
 	 * @param id
 	 * @return Location if found, null otherwise.
@@ -46,7 +46,7 @@ public class LocationsModel extends BaseModel {
 	}
 
 	/**
-	 * Return list of locations from active adapter.
+	 * Return list of locations from active gate.
 	 *
 	 * @return List of locations (or empty list)
 	 */

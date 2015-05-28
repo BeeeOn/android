@@ -34,7 +34,7 @@ import com.rehivetech.beeeon.asynctask.SaveWatchdogTask;
 import com.rehivetech.beeeon.base.BaseApplicationActivity;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.geofence.SimpleGeofence;
-import com.rehivetech.beeeon.household.adapter.Adapter;
+import com.rehivetech.beeeon.household.gate.Gate;
 import com.rehivetech.beeeon.household.device.Device;
 import com.rehivetech.beeeon.household.device.Module;
 import com.rehivetech.beeeon.household.location.Location;
@@ -81,7 +81,7 @@ public class WatchdogEditRuleActivity extends BaseApplicationActivity {
 	private Toolbar mToolbar;
 	private Menu mOptionsMenu;
 	private ProgressDialog mProgress;
-	private Adapter mAdapter;
+	private Gate mGate;
 	private UnitsHelper mUnitsHelper;
 	private SharedPreferences mPrefs;
 
@@ -160,9 +160,9 @@ public class WatchdogEditRuleActivity extends BaseApplicationActivity {
 
 		// get controller
 		mController = Controller.getInstance(this);
-		// get adapter
-		mAdapter = (mActiveAdapterId == null || mActiveAdapterId.isEmpty()) ? mController.getActiveAdapter() : mController.getAdaptersModel().getAdapter(mActiveAdapterId);
-		if (mAdapter == null) {
+		// get gate
+		mGate = (mActiveAdapterId == null || mActiveAdapterId.isEmpty()) ? mController.getActiveGate() : mController.getAdaptersModel().getAdapter(mActiveAdapterId);
+		if (mGate == null) {
 			Toast.makeText(this, R.string.toast_something_wrong, Toast.LENGTH_LONG).show();
 			finish();
 			return;
@@ -173,7 +173,7 @@ public class WatchdogEditRuleActivity extends BaseApplicationActivity {
 		mUnitsHelper = (mPrefs == null) ? null : new UnitsHelper(mPrefs, this);
 
 		// get all locations for spinners
-		mLocations = mController.getLocationsModel().getLocationsByAdapter(mAdapter.getId());
+		mLocations = mController.getLocationsModel().getLocationsByAdapter(mGate.getId());
 		// get all geofence areas
 		String userId = mController.getActualUser().getId();
 		mGeofences = mController.getGeofenceModel().getAllGeofences(userId);
@@ -181,13 +181,13 @@ public class WatchdogEditRuleActivity extends BaseApplicationActivity {
 		// devices get by cycling through all locations
 		mDevices = new ArrayList<Device>();
 		for (Location loc : mLocations) {
-			List<Device> tempFac = mController.getDevicesModel().getDevicesByLocation(mAdapter.getId(), loc.getId());
+			List<Device> tempFac = mController.getDevicesModel().getDevicesByLocation(mGate.getId(), loc.getId());
 			mDevices.addAll(tempFac);
 		}
 
 		// get watchdog rule
 		if (!mIsNew) {
-			mWatchdog = mController.getWatchdogsModel().getWatchdog(mAdapter.getId(), mActiveRuleId);
+			mWatchdog = mController.getWatchdogsModel().getWatchdog(mGate.getId(), mActiveRuleId);
 			if (mWatchdog == null) {
 				Toast.makeText(this, R.string.toast_something_wrong, Toast.LENGTH_LONG).show();
 				finish();
@@ -195,7 +195,7 @@ public class WatchdogEditRuleActivity extends BaseApplicationActivity {
 			}
 		} else {
 			mWatchdog = new Watchdog(Watchdog.TYPE_SENSOR);
-			mWatchdog.setAdapterId(mAdapter.getId());
+			mWatchdog.setAdapterId(mGate.getId());
 		}
 
 		mWatchdogOperator = mWatchdog.getOperatorType();

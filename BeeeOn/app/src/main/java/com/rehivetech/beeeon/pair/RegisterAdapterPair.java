@@ -1,7 +1,7 @@
 package com.rehivetech.beeeon.pair;
 
 /**
- * Represents pair of adapter id and name for saving it to server
+ * Represents pair of gate id and name for saving it to server
  */
 public class RegisterAdapterPair {
 	public final String adapterId;

@@ -20,7 +20,7 @@ import com.rehivetech.beeeon.asynctask.AddUserTask;
 import com.rehivetech.beeeon.asynctask.CallbackTask.CallbackTaskListener;
 import com.rehivetech.beeeon.base.BaseApplicationActivity;
 import com.rehivetech.beeeon.controller.Controller;
-import com.rehivetech.beeeon.household.adapter.Adapter;
+import com.rehivetech.beeeon.household.gate.Gate;
 import com.rehivetech.beeeon.household.user.User;
 import com.rehivetech.beeeon.pair.AddUserPair;
 
@@ -35,7 +35,7 @@ public class AddAdapterUserActivity extends BaseApplicationActivity {
 
 	private Activity mActivity;
 
-	private Adapter mAdapter;
+	private Gate mGate;
 
 	/* GUI elements */
 	private Spinner mRole;
@@ -70,8 +70,8 @@ public class AddAdapterUserActivity extends BaseApplicationActivity {
 		mProgress.setCancelable(false);
 		mProgress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
 
-		// Get selected adapter
-		mAdapter = mController.getAdaptersModel().getAdapter(getIntent().getStringExtra(Constants.GUI_SELECTED_ADAPTER_ID));
+		// Get selected gate
+		mGate = mController.getAdaptersModel().getAdapter(getIntent().getStringExtra(Constants.GUI_SELECTED_ADAPTER_ID));
 
 		initLayout();
 	}
@@ -89,7 +89,7 @@ public class AddAdapterUserActivity extends BaseApplicationActivity {
 		ArrayAdapter<CharSequence> adapter = new ArrayAdapter(this, android.R.layout.simple_spinner_item, roles);
 		// Specify the layout to use when the list of choices appears
 		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-		// Apply the adapter to the spinner
+		// Apply the gate to the spinner
 		mRole.setAdapter(adapter);
 
 		mBtn.setOnClickListener(new OnClickListener() {
@@ -112,7 +112,7 @@ public class AddAdapterUserActivity extends BaseApplicationActivity {
 				newUser.setEmail(mEmail.getText().toString());
 				newUser.setRole(User.Role.values()[mRole.getSelectedItemPosition()]);
 
-				AddUserPair pair = new AddUserPair(mAdapter, newUser);
+				AddUserPair pair = new AddUserPair(mGate, newUser);
 
 				doAddAdapterUserTask(pair);
 			}

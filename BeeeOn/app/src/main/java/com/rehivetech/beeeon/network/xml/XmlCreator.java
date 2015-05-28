@@ -237,8 +237,8 @@ public class XmlCreator {
 	 * Method create XML for AddAdapter message
 	 *
 	 * @param bt          userID of user
-	 * @param aid         adapterID of actual adapter
-	 * @param adapterName name of adapter
+	 * @param aid         adapterID of actual gate
+	 * @param adapterName name of gate
 	 * @return AddAdapter message
 	 * @since 2.2
 	 */
@@ -261,8 +261,8 @@ public class XmlCreator {
 	 * Method create XML for ReInit message
 	 *
 	 * @param bt           userID of user
-	 * @param adapterIdOld old id of adapter
-	 * @param adapterIdNew new id of adapter
+	 * @param adapterIdOld old id of gate
+	 * @param adapterIdNew new id of gate
 	 * @return ReInit message
 	 * @since 2.2
 	 */
@@ -276,7 +276,7 @@ public class XmlCreator {
 	 * Method create XML for AdapterListen message
 	 *
 	 * @param bt  userID of user
-	 * @param aid adapterID of actual adapter
+	 * @param aid adapterID of actual gate
 	 * @return XML of AdapterListen message
 	 * @since 2.2
 	 */
@@ -288,7 +288,7 @@ public class XmlCreator {
 	 * Method create XML for GetAllDevices message
 	 *
 	 * @param bt  userID of user
-	 * @param aid adapterID of actual adapter
+	 * @param aid adapterID of actual gate
 	 * @return XML of GetAllDevices message
 	 * @since 2.2
 	 */
@@ -300,7 +300,7 @@ public class XmlCreator {
 	 * Method create XML for getting uninitialized devices
 	 *
 	 * @param bt  userID of user
-	 * @param aid adapterID of actual adapter
+	 * @param aid adapterID of actual gate
 	 * @return XML of GetNewDevices message
 	 * @since 2.2
 	 */
@@ -326,7 +326,7 @@ public class XmlCreator {
 			serializer.attribute(ns, Xconstants.BT, bt);
 			serializer.attribute(ns, Xconstants.STATE, GETDEVICES);
 
-			// sort by adapter address
+			// sort by gate address
 			Collections.sort(devices, new Comparator<Device>() {
 
 				@Override
@@ -339,7 +339,7 @@ public class XmlCreator {
 			for (Device device : devices) {
 
 				boolean isSameAdapter = aid.equals(device.getAdapterId());
-				if (!isSameAdapter) { // new adapter
+				if (!isSameAdapter) { // new gate
 					if (aid.length() > 0)
 						serializer.endTag(ns, Xconstants.ADAPTER);
 					aid = device.getAdapterId();
@@ -370,7 +370,7 @@ public class XmlCreator {
 	 * Method create XML for GetLog message
 	 *
 	 * @param bt         userID of user
-	 * @param aid        adapterID of actual adapter
+	 * @param aid        adapterID of actual gate
 	 * @param did        deviceID of wanted module
 	 * @param moduleType is type of sensor
 	 * @param from       date in unix timestamp
@@ -407,7 +407,7 @@ public class XmlCreator {
 	 * Method create XML of SetDevs message. Almost all fields are optional
 	 *
 	 * @param bt      userID of user
-	 * @param aid     adapterID of actual adapter
+	 * @param aid     adapterID of actual gate
 	 * @param devices with changed fields
 	 * @return Partial message
 	 * @since 2.2
@@ -460,7 +460,7 @@ public class XmlCreator {
 	 * New method create XML of SetDevs message with only one module in it. toSave parameter must by set properly.
 	 *
 	 * @param bt     userID of user
-	 * @param aid    adapterID of actual adapter
+	 * @param aid    adapterID of actual gate
 	 * @param module to save
 	 * @param toSave ECO mode to save only wanted fields
 	 * @return SetDevs message
@@ -514,7 +514,7 @@ public class XmlCreator {
 	 * Method create XML for Switch message
 	 *
 	 * @param bt     userID of user
-	 * @param aid    adapterID of actual adapter
+	 * @param aid    adapterID of actual gate
 	 * @param module to switch value
 	 * @return XML of Switch message
 	 * @since 2.2
@@ -555,7 +555,7 @@ public class XmlCreator {
 	 * Method create XML of SetRooms message
 	 *
 	 * @param bt        userID of user
-	 * @param aid       adapterID of actual adapter
+	 * @param aid       adapterID of actual gate
 	 * @param locations list of location object to update
 	 * @return message SetRooms
 	 * @since 2.2
@@ -603,7 +603,7 @@ public class XmlCreator {
 	 * Method create XML of GetRooms message
 	 *
 	 * @param bt  userID of user
-	 * @param aid adapterID of actual adapter
+	 * @param aid adapterID of actual gate
 	 * @return message GetRooms
 	 * @since 2.2
 	 */
@@ -617,7 +617,7 @@ public class XmlCreator {
 	 * Method create XML for AddAcount message
 	 *
 	 * @param bt    userID of user
-	 * @param aid   adapterID of actual adapter
+	 * @param aid   adapterID of actual gate
 	 * @param users map with User object and User.Role
 	 * @return AddAcc message
 	 * @since 2.2
@@ -630,7 +630,7 @@ public class XmlCreator {
 	 * Method create XML for SetAcount message
 	 *
 	 * @param bt    userID of user
-	 * @param aid   adapterID of actual adapter
+	 * @param aid   adapterID of actual gate
 	 * @param users map with User object and User.Role
 	 * @return SetAcc message
 	 * @since 2.2
@@ -643,7 +643,7 @@ public class XmlCreator {
 	 * Method create XML for DelAcc message
 	 *
 	 * @param bt    userID of user
-	 * @param aid   adapterID of actual adapter
+	 * @param aid   adapterID of actual gate
 	 * @param users list with Users
 	 * @return dellAcc message
 	 * @since 2.2
@@ -675,7 +675,7 @@ public class XmlCreator {
 	 * Method create XML for GetAccs message
 	 *
 	 * @param bt  userID of user
-	 * @param aid adapterID of actual adapter
+	 * @param aid adapterID of actual gate
 	 * @return GetAcc message
 	 * @since 2.2
 	 */
@@ -689,7 +689,7 @@ public class XmlCreator {
 	 * Method create XML of SetTimeZone message
 	 *
 	 * @param bt              userID of user
-	 * @param aid             adapterID of actual adapter
+	 * @param aid             adapterID of actual gate
 	 * @param offsetInMinutes difference to GMT (Xconstants.UTC+0)
 	 * @return SetTimeZone message
 	 * @since 2.2
@@ -702,7 +702,7 @@ public class XmlCreator {
 	 * Method create XML of GetTimeZone message
 	 *
 	 * @param bt  userID of user
-	 * @param aid adapterID of actual adapter
+	 * @param aid adapterID of actual gate
 	 * @return GetTimeZone message
 	 * @since 2.2
 	 */
@@ -798,7 +798,7 @@ public class XmlCreator {
 	 *
 	 * @param bt      beeeon Token (session Id)
 	 * @param name    of algorithm
-	 * @param aid     adapter id
+	 * @param aid     gate id
 	 * @param type    of algorithm
 	 * @param modules list of modules in right position for algorithm
 	 * @param params  list of strings with additional params for new rule
@@ -871,7 +871,7 @@ public class XmlCreator {
 	 * Method return message with demands for specific rules
 	 *
 	 * @param bt     beeeon Token (session Id)
-	 * @param aid    adapter id
+	 * @param aid    gate id
 	 * @param algids algorithm id
 	 * @return xml with getAlgs message
 	 */
@@ -899,7 +899,7 @@ public class XmlCreator {
 	}
 
 	/**
-	 * Method returns message with demands for all rules of user on specific adapter
+	 * Method returns message with demands for all rules of user on specific gate
 	 *
 	 * @param bt beeeon Token (session Id)
 	 * @return xlm with getAllAlgs message
@@ -912,7 +912,7 @@ public class XmlCreator {
 	 * Method returns message with demands for delete specific rule
 	 *
 	 * @param bt    beeeon Token (session Id)
-	 * @param algid adapter id
+	 * @param algid gate id
 	 * @return xml with delAlg message
 	 */
 	public static String createDelAlg(String bt, String algid) {

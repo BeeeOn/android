@@ -2,7 +2,7 @@ package com.rehivetech.beeeon.model;
 
 import com.rehivetech.beeeon.NameIdentifierComparator;
 import com.rehivetech.beeeon.exception.AppException;
-import com.rehivetech.beeeon.household.adapter.Adapter;
+import com.rehivetech.beeeon.household.gate.Gate;
 import com.rehivetech.beeeon.household.user.User;
 import com.rehivetech.beeeon.network.INetwork;
 import com.rehivetech.beeeon.util.DataHolder;
@@ -16,19 +16,19 @@ public class AdaptersModel extends BaseModel {
 
 	private static final int RELOAD_EVERY_SECONDS = 10 * 60;
 
-	private final DataHolder<Adapter> mAdaptersHolder = new DataHolder<>();
+	private final DataHolder<Gate> mAdaptersHolder = new DataHolder<>();
 
 	public AdaptersModel(INetwork network) {
 		super(network);
 	}
 
 	/**
-	 * Return adapter with specified id or first adapter, if specified one doesn't exists.
+	 * Return gate with specified id or first gate, if specified one doesn't exists.
 	 *
 	 * @param id
-	 * @return Adapter if found, null otherwise.
+	 * @return Gate if found, null otherwise.
 	 */
-	public Adapter getAdapterOrFirst(String id) {
+	public Gate getAdapterOrFirst(String id) {
 		return mAdaptersHolder.getObjectOrFirst(id);
 	}
 
@@ -37,22 +37,22 @@ public class AdaptersModel extends BaseModel {
 	 *
 	 * @return List of adapters
 	 */
-	public List<Adapter> getAdapters() {
-		List<Adapter> adapters = mAdaptersHolder.getObjects();
+	public List<Gate> getAdapters() {
+		List<Gate> gates = mAdaptersHolder.getObjects();
 
-		// Sort result adapters by name, id
-		Collections.sort(adapters, new NameIdentifierComparator());
+		// Sort result gates by name, id
+		Collections.sort(gates, new NameIdentifierComparator());
 
-		return adapters;
+		return gates;
 	}
 
 	/**
-	 * Return adapter by his ID.
+	 * Return gate by his ID.
 	 *
 	 * @param id
-	 * @return Adapter if found, null otherwise
+	 * @return Gate if found, null otherwise
 	 */
-	public Adapter getAdapter(String id) {
+	public Gate getAdapter(String id) {
 		return mAdaptersHolder.getObject(id);
 	}
 
@@ -69,7 +69,7 @@ public class AdaptersModel extends BaseModel {
 	}
 
 	/**
-	 * Registers new adapter. This automatically reloads list of adapters.
+	 * Registers new gate. This automatically reloads list of adapters.
 	 * <p/>
 	 * This CAN'T be called on UI thread!
 	 *
@@ -79,7 +79,7 @@ public class AdaptersModel extends BaseModel {
 	 */
 	public boolean registerAdapter(String id, String name) {
 		if (mNetwork.isAvailable() && mNetwork.addAdapter(id, name)) {
-			reloadAdapters(true); // TODO: do this somehow better? Like load data only for this registered adapter as answer from server?
+			reloadAdapters(true); // TODO: do this somehow better? Like load data only for this registered gate as answer from server?
 			return true;
 		}
 
@@ -87,7 +87,7 @@ public class AdaptersModel extends BaseModel {
 	}
 
 	/**
-	 * FIXME: debug implementation Unregisters adapter from server -> rework it when implemented in Network correctly.
+	 * FIXME: debug implementation Unregisters gate from server -> rework it when implemented in Network correctly.
 	 * <p/>
 	 * This CAN'T be called on UI thread!
 	 *
@@ -95,9 +95,9 @@ public class AdaptersModel extends BaseModel {
 	 * @return true on success, false otherwise
 	 */
 	public boolean unregisterAdapter(String id, User user) {
-		// FIXME: This debug implementation unregisters actual user from adapter, not adapter itself
+		// FIXME: This debug implementation unregisters actual user from gate, not gate itself
 		if (mNetwork.deleteAccount(id, user)) {
-			reloadAdapters(true); // TODO: do this somehow better? Like load data only for this registered adapter as answer from server?
+			reloadAdapters(true); // TODO: do this somehow better? Like load data only for this registered gate as answer from server?
 			return true;
 		}
 

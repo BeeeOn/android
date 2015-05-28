@@ -93,9 +93,9 @@ public class Location implements INameIdentifier {
 	}
 
 	/**
-	 * Get adapter id of location
+	 * Get gate id of location
 	 *
-	 * @return adapter id
+	 * @return gate id
 	 */
 	public String getAdapterId() {
 		return mAdapterId;

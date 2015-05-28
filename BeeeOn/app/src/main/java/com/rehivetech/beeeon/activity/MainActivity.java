@@ -29,7 +29,7 @@ import com.rehivetech.beeeon.asynctask.CallbackTask;
 import com.rehivetech.beeeon.asynctask.ReloadAdapterDataTask;
 import com.rehivetech.beeeon.base.BaseApplicationActivity;
 import com.rehivetech.beeeon.controller.Controller;
-import com.rehivetech.beeeon.household.adapter.Adapter;
+import com.rehivetech.beeeon.household.gate.Gate;
 import com.rehivetech.beeeon.menu.NavDrawerMenu;
 import com.rehivetech.beeeon.util.Log;
 
@@ -88,8 +88,8 @@ public class MainActivity extends BaseApplicationActivity implements IListDialog
 
 		if (intent == null) return;
 		String adapterId = intent.getStringExtra(ADAPTER_ID);
-		Log.d(TAG, "chosen adapter = " + adapterId);
-		// TODO should perform change of adapter and show location (scroll to it?)
+		Log.d(TAG, "chosen gate = " + adapterId);
+		// TODO should perform change of gate and show location (scroll to it?)
 	}
 
 	@Override
@@ -201,12 +201,12 @@ public class MainActivity extends BaseApplicationActivity implements IListDialog
 
 		Log.d(TAG, "Request code " + requestCode);
 		if (requestCode == Constants.ADD_ADAPTER_REQUEST_CODE) {
-			Log.d(TAG, "Return from add adapter activity");
+			Log.d(TAG, "Return from add gate activity");
 			if (resultCode == Constants.ADD_ADAPTER_CANCELED) {
 				Log.d(TAG, "Activity was canceled");
 			} else if (resultCode == Constants.ADD_ADAPTER_SUCCESS) {
-				// Succes of add adapter -> setActive adapter a redraw ALL
-				Log.d(TAG, "Add adapter succes");
+				// Succes of add gate -> setActive gate a redraw ALL
+				Log.d(TAG, "Add gate succes");
 				setActiveAdapterAndMenu();
 				doRedraw = false;
 			}
@@ -231,7 +231,7 @@ public class MainActivity extends BaseApplicationActivity implements IListDialog
 					// Redraw Activity - probably list of sensors
 					Log.d(TAG, "After reload task - go to redraw mainActivity");
 					setActiveAdapterAndMenu();
-					if (mController.getActiveAdapter() == null) {
+					if (mController.getActiveGate() == null) {
 						checkNoAdapters();
 					} else {
 						redraw();
@@ -303,10 +303,10 @@ public class MainActivity extends BaseApplicationActivity implements IListDialog
 	}
 
 	public void setActiveAdapterAndMenu() {
-		// Set active adapter and location
-		Adapter adapter = mController.getActiveAdapter();
-		if (adapter != null) {
-			mActiveAdapterId = adapter.getId();
+		// Set active gate and location
+		Gate gate = mController.getActiveGate();
+		if (gate != null) {
+			mActiveAdapterId = gate.getId();
 			setActiveAdapterID(mActiveAdapterId);
 
 			if (mActiveMenuId != null) {
@@ -367,7 +367,7 @@ public class MainActivity extends BaseApplicationActivity implements IListDialog
 
 
 	public void checkNoAdapters() {
-		if (mController.getActiveAdapter() == null) {
+		if (mController.getActiveGate() == null) {
 			// UserSettings can be null when user is not logged in!
 			Log.d(TAG, "CheckNoAdapter");
 			SharedPreferences prefs = mController.getUserSettings();

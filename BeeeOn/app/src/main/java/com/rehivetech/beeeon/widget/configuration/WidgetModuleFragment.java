@@ -8,7 +8,7 @@ import android.widget.Toast;
 
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.arrayadapter.ModuleArrayAdapter;
-import com.rehivetech.beeeon.household.adapter.Adapter;
+import com.rehivetech.beeeon.household.gate.Gate;
 import com.rehivetech.beeeon.household.device.Module;
 import com.rehivetech.beeeon.util.Utils;
 import com.rehivetech.beeeon.widget.data.WidgetModuleData;
@@ -78,8 +78,8 @@ public class WidgetModuleFragment extends WidgetConfigurationFragment {
 
 	@Override
 	protected boolean saveSettings() {
-		Adapter adapter = (Adapter) mAdapterSpinner.getSelectedItem();
-		if (adapter == null) {
+		Gate gate = (Gate) mAdapterSpinner.getSelectedItem();
+		if (gate == null) {
 			Toast.makeText(mActivity, R.string.widget_configuration_select_adapter, Toast.LENGTH_LONG).show();
 			return false;
 		}
@@ -90,13 +90,13 @@ public class WidgetModuleFragment extends WidgetConfigurationFragment {
 			return false;
 		}
 
-		mWidgetModule.configure(module, adapter);
+		mWidgetModule.configure(module, gate);
 		//sets widgetdata
 		mWidgetData.configure(
 				mActivity.isAppWidgetEditing(),
 				getRefreshSeconds(mWidgetUpdateSeekBar.getProgress()),
 				mWidgetUpdateWiFiCheckBox.isChecked(),
-				adapter);
+				gate);
 
 		return true;
 	}

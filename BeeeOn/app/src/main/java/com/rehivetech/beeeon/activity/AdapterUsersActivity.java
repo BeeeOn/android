@@ -30,7 +30,7 @@ import com.rehivetech.beeeon.asynctask.ReloadAdapterDataTask;
 import com.rehivetech.beeeon.asynctask.RemoveUserTask;
 import com.rehivetech.beeeon.base.BaseApplicationActivity;
 import com.rehivetech.beeeon.controller.Controller;
-import com.rehivetech.beeeon.household.adapter.Adapter;
+import com.rehivetech.beeeon.household.gate.Gate;
 import com.rehivetech.beeeon.household.user.User;
 import com.rehivetech.beeeon.pair.UserPair;
 
@@ -42,7 +42,7 @@ public class AdapterUsersActivity extends BaseApplicationActivity {
 
 	private AdapterUsersActivity mActivity;
 
-	private Adapter mAdapter;
+	private Gate mGate;
 
 	private List<User> mAdapterUsers;
 
@@ -77,11 +77,11 @@ public class AdapterUsersActivity extends BaseApplicationActivity {
 		getSupportActionBar().setHomeButtonEnabled(true);
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-		// Get selected adapter
-		mAdapter = mController.getAdaptersModel().getAdapter(getIntent().getStringExtra(Constants.GUI_SELECTED_ADAPTER_ID));
+		// Get selected gate
+		mGate = mController.getAdaptersModel().getAdapter(getIntent().getStringExtra(Constants.GUI_SELECTED_ADAPTER_ID));
 
-		// Get all users for adapter
-		doReloadAdapterUsersTask(mAdapter.getId(), true);
+		// Get all users for gate
+		doReloadAdapterUsersTask(mGate.getId(), true);
 	}
 
 	private void initLayouts() {
@@ -113,7 +113,7 @@ public class AdapterUsersActivity extends BaseApplicationActivity {
 			public void onClick(View v) {
 				// Go to add new user 
 				Intent intent = new Intent(mActivity, AddAdapterUserActivity.class);
-				intent.putExtra(Constants.GUI_SELECTED_ADAPTER_ID, mAdapter.getId());
+				intent.putExtra(Constants.GUI_SELECTED_ADAPTER_ID, mGate.getId());
 				mActivity.startActivity(intent);
 			}
 		});
@@ -122,8 +122,8 @@ public class AdapterUsersActivity extends BaseApplicationActivity {
 
 	@Override
 	protected void onAppResume() {
-		if (mAdapter != null)
-			doReloadAdapterUsersTask(mAdapter.getId(), true);
+		if (mGate != null)
+			doReloadAdapterUsersTask(mGate.getId(), true);
 	}
 
 	@Override
@@ -181,13 +181,13 @@ public class AdapterUsersActivity extends BaseApplicationActivity {
 
 	private void doRemoveUserTask(User user) {
 		RemoveUserTask removeUserTask = new RemoveUserTask(this);
-		UserPair pair = new UserPair(user, mAdapter.getId());
+		UserPair pair = new UserPair(user, mGate.getId());
 
 		removeUserTask.setListener(new CallbackTaskListener() {
 			@Override
 			public void onExecute(boolean success) {
-				// Get all users for adapter
-				doReloadAdapterUsersTask(mAdapter.getId(), true);
+				// Get all users for gate
+				doReloadAdapterUsersTask(mGate.getId(), true);
 				if (success) {
 					// Hlaska o uspechu
 				}
@@ -200,13 +200,13 @@ public class AdapterUsersActivity extends BaseApplicationActivity {
 
 	private void doEditUserTask(User user) {
 		EditUserTask editUserTask = new EditUserTask(this);
-		UserPair pair = new UserPair(user, mAdapter.getId());
+		UserPair pair = new UserPair(user, mGate.getId());
 
 		editUserTask.setListener(new CallbackTaskListener() {
 			@Override
 			public void onExecute(boolean success) {
-				// Get all users for adapter
-				doReloadAdapterUsersTask(mAdapter.getId(), true);
+				// Get all users for gate
+				doReloadAdapterUsersTask(mGate.getId(), true);
 				if (success) {
 					// Hlaska o uspechu
 				}

@@ -37,7 +37,7 @@ import com.rehivetech.beeeon.asynctask.GetModuleLogTask;
 import com.rehivetech.beeeon.asynctask.ReloadAdapterDataTask;
 import com.rehivetech.beeeon.base.BaseApplicationFragment;
 import com.rehivetech.beeeon.controller.Controller;
-import com.rehivetech.beeeon.household.adapter.Adapter;
+import com.rehivetech.beeeon.household.gate.Gate;
 import com.rehivetech.beeeon.household.device.Device;
 import com.rehivetech.beeeon.household.device.Module;
 import com.rehivetech.beeeon.household.device.ModuleLog;
@@ -98,7 +98,7 @@ public class SensorDetailFragment extends BaseApplicationFragment implements ILi
 	private TextView mSignal;
 
 	private Module mModule;
-	private Adapter mAdapter;
+	private Gate mGate;
 
 	private UnitsHelper mUnitsHelper;
 	private TimeHelper mTimeHelper;
@@ -129,7 +129,7 @@ public class SensorDetailFragment extends BaseApplicationFragment implements ILi
 		super.onCreate(savedInstanceState);
 		Log.d(TAG, "OnCreate - Here 1 " + mCurPageNumber);
 		mController = Controller.getInstance(mActivity);
-		mAdapter = mController.getAdaptersModel().getAdapter(mAdapterId);
+		mGate = mController.getAdaptersModel().getAdapter(mAdapterId);
 	}
 
 	@Override
@@ -149,7 +149,7 @@ public class SensorDetailFragment extends BaseApplicationFragment implements ILi
 			mLocationID = savedInstanceState.getString(ARG_LOC_ID);
 			mSelPageNumber = savedInstanceState.getInt(ARG_SEL_PAGE);
 			mCurPageNumber = savedInstanceState.getInt(ARG_CUR_PAGE);
-			mAdapter = mController.getAdaptersModel().getAdapter(mAdapterId);
+			mGate = mController.getAdaptersModel().getAdapter(mAdapterId);
 		}
 		Log.d(TAG, "OnActivityCreated");
 		mModule = mController.getDevicesModel().getModule(mAdapterId, mModuleID);
@@ -228,11 +228,11 @@ public class SensorDetailFragment extends BaseApplicationFragment implements ILi
 		// Set name of sensor
 		mName.setText(module.getName());
 		mName.setBackgroundColor(Color.TRANSPARENT);
-		if (mController.isUserAllowed(mAdapter.getRole())) {
+		if (mController.isUserAllowed(mGate.getRole())) {
 
 		}
 
-		if (mController.isUserAllowed(mAdapter.getRole())) {
+		if (mController.isUserAllowed(mGate.getRole())) {
 			// Set value for Actor
 			mValueSwitch.setOnClickListener(new OnClickListener() {
 
@@ -314,16 +314,16 @@ public class SensorDetailFragment extends BaseApplicationFragment implements ILi
 		if (mController != null) {
 			Location location = null;
 
-			Adapter adapter = mController.getAdaptersModel().getAdapter(mAdapterId);
-			if (adapter != null) {
-				location = mController.getLocationsModel().getLocation(adapter.getId(), module.getDevice().getLocationId());
+			Gate gate = mController.getAdaptersModel().getAdapter(mAdapterId);
+			if (gate != null) {
+				location = mController.getLocationsModel().getLocation(gate.getId(), module.getDevice().getLocationId());
 			}
 
 			if (location != null) {
 				mLocation.setText(location.getName());
 				mLocationIcon.setImageResource(location.getIconResource());
 			}
-			if (mController.isUserAllowed(mAdapter.getRole())) {
+			if (mController.isUserAllowed(mGate.getRole())) {
 
 			}
 		} else {
@@ -332,7 +332,7 @@ public class SensorDetailFragment extends BaseApplicationFragment implements ILi
 		}
 
 		Device device = module.getDevice();
-		Adapter adapter = mController.getAdaptersModel().getAdapter(device.getAdapterId());
+		Gate gate = mController.getAdaptersModel().getAdapter(device.getAdapterId());
 
 		// UserSettings can be null when user is not logged in!
 		SharedPreferences prefs = mController.getUserSettings();
@@ -354,7 +354,7 @@ public class SensorDetailFragment extends BaseApplicationFragment implements ILi
 
 		// Set time of sensor
 		if (mTimeHelper != null) {
-			mTime.setText(mTimeHelper.formatLastUpdate(device.getLastUpdate(), adapter));
+			mTime.setText(mTimeHelper.formatLastUpdate(device.getLastUpdate(), gate));
 		}
 
 		// Set refresh time Text
@@ -368,7 +368,7 @@ public class SensorDetailFragment extends BaseApplicationFragment implements ILi
 
 		// Add Graph
 		if (mUnitsHelper != null && mTimeHelper != null && mGraphView.getSeries().size() == 0) {
-			DateTimeFormatter fmt = mTimeHelper.getFormatter(GRAPH_DATE_TIME_FORMAT, adapter);
+			DateTimeFormatter fmt = mTimeHelper.getFormatter(GRAPH_DATE_TIME_FORMAT, gate);
 			addGraphView(fmt, mUnitsHelper);
 		}
 
@@ -390,7 +390,7 @@ public class SensorDetailFragment extends BaseApplicationFragment implements ILi
 
 
 		// Show some controls if this module is an actor
-		if (mModule.getType().isActor() && mController.isUserAllowed(mAdapter.getRole())) {
+		if (mModule.getType().isActor() && mController.isUserAllowed(mGate.getRole())) {
 			BaseValue value = mModule.getValue();
 
 			// For actor values of type on/off, open/closed we show switch button
@@ -401,7 +401,7 @@ public class SensorDetailFragment extends BaseApplicationFragment implements ILi
 			}
 		}
 
-		if (mController.isUserAllowed(mAdapter.getRole())) {
+		if (mController.isUserAllowed(mGate.getRole())) {
 			mFABedit.setVisibility(View.VISIBLE);
 		}
 

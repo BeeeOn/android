@@ -41,7 +41,7 @@ import com.rehivetech.beeeon.Constants;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.extension.watches.smartwatch2.SW2ExtensionService;
-import com.rehivetech.beeeon.household.adapter.Adapter;
+import com.rehivetech.beeeon.household.gate.Gate;
 import com.rehivetech.beeeon.household.device.Device;
 import com.rehivetech.beeeon.util.Log;
 import com.sonyericsson.extras.liveware.aef.control.Control;
@@ -99,7 +99,7 @@ public class ControlManagerSmartWatch2 extends ControlManagerBase {
 		String adapterId = (prefs == null) ? "" : prefs.getString(Constants.PERSISTENCE_PREF_SW2_ADAPTER, null);
 		String strLocation = (prefs == null) ? "" : prefs.getString(Constants.PERSISTENCE_PREF_SW2_LOCATION, null);
 
-		Log.v(SW2ExtensionService.LOG_TAG, "Default adapter ID: " + ((adapterId == null) ? "null" : adapterId));
+		Log.v(SW2ExtensionService.LOG_TAG, "Default gate ID: " + ((adapterId == null) ? "null" : adapterId));
 		Log.v(SW2ExtensionService.LOG_TAG, "Default location: " + ((strLocation == null) ? "null" : strLocation));
 
 		// TODO zkontrolovat jestli neni cil prazdny
@@ -107,36 +107,36 @@ public class ControlManagerSmartWatch2 extends ControlManagerBase {
 			Controller controller = Controller.getInstance(mContext);
 
 			controller.getAdaptersModel().reloadAdapters(false);
-			Adapter adapter = controller.getAdaptersModel().getAdapter(adapterId);
-			// if default adapter is defined
-			if (adapter != null) {
+			Gate gate = controller.getAdaptersModel().getAdapter(adapterId);
+			// if default gate is defined
+			if (gate != null) {
 				if (strLocation != null) {
-					controller.getDevicesModel().reloadDevicesByAdapter(adapter.getId(), false);
-					List<Device> sensors = controller.getDevicesModel().getDevicesByLocation(adapter.getId(), strLocation);
+					controller.getDevicesModel().reloadDevicesByAdapter(gate.getId(), false);
+					List<Device> sensors = controller.getDevicesModel().getDevicesByLocation(gate.getId(), strLocation);
 					if (sensors != null) {
 						Intent intent = new Intent(mContext, ListSensorControlExtension.class);
-						intent.putExtra(ListSensorControlExtension.EXTRA_ADAPTER_ID, adapter.getId());
+						intent.putExtra(ListSensorControlExtension.EXTRA_ADAPTER_ID, gate.getId());
 						intent.putExtra(ListSensorControlExtension.EXTRA_LOCATION_NAME, strLocation);
 						mCurrentControl = createControl(intent);
 						return;
 					}
 				}
 				Intent intent = new Intent(mContext, ListLocationControlExtension.class);
-				intent.putExtra(ListLocationControlExtension.EXTRA_ADAPTER_ID, adapter.getId());
+				intent.putExtra(ListLocationControlExtension.EXTRA_ADAPTER_ID, gate.getId());
 				mCurrentControl = createControl(intent);
 				return;
 			}
 		}
 
-		List<Adapter> adapters = mController.getAdaptersModel().getAdapters();
-		if (adapters.size() < 1) {
+		List<Gate> gates = mController.getAdaptersModel().getAdapters();
+		if (gates.size() < 1) {
 			initialControlIntent = new Intent(mContext, TextControl.class);
 			initialControlIntent.putExtra(TextControl.EXTRA_TEXT, mContext.getString(R.string.no_adapter_available));
 			mCurrentControl = createControl(initialControlIntent);
 			return;
-		} else if (adapters.size() < 2) {
+		} else if (gates.size() < 2) {
 			Intent intent = new Intent(mContext, ListLocationControlExtension.class);
-			intent.putExtra(ListLocationControlExtension.EXTRA_ADAPTER_ID, adapters.get(0).getId());
+			intent.putExtra(ListLocationControlExtension.EXTRA_ADAPTER_ID, gates.get(0).getId());
 			mCurrentControl = createControl(intent);
 			return;
 		}

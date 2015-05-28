@@ -3,7 +3,7 @@ package com.rehivetech.beeeon.widget.persistence;
 import android.content.Context;
 
 import com.rehivetech.beeeon.R;
-import com.rehivetech.beeeon.household.adapter.Adapter;
+import com.rehivetech.beeeon.household.gate.Gate;
 import com.rehivetech.beeeon.household.location.Location;
 import com.rehivetech.beeeon.util.TimeHelper;
 import com.rehivetech.beeeon.util.UnitsHelper;
@@ -35,13 +35,13 @@ public class WidgetLocationPersistence extends WidgetBeeeOnPersistence {
 		super.configure(obj, obj2);
 
 		Location location = (Location) obj;
-		Adapter adapter = (Adapter) obj2;
-		if (location == null || adapter == null) return;
+		Gate gate = (Gate) obj2;
+		if (location == null || gate == null) return;
 
 		id = location.getId();
 		name = location.getName();
 		type = location.getType();
-		adapterId = adapter.getId();
+		adapterId = gate.getId();
 	}
 
 	@Override

@@ -75,7 +75,7 @@ public class DevicesModel extends BaseModel {
 	}
 
 	/**
-	 * Return list of all devices from adapter
+	 * Return list of all devices from gate
 	 *
 	 * @param adapterId
 	 * @return List of devices (or empty list)
@@ -90,7 +90,7 @@ public class DevicesModel extends BaseModel {
 	}
 
 	/**
-	 * Return list of all devices by location from adapter
+	 * Return list of all devices by location from gate
 	 *
 	 * @param locationId
 	 * @return List of devices (or empty list)

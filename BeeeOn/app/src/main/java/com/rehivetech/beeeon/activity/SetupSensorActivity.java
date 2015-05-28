@@ -25,7 +25,7 @@ import com.rehivetech.beeeon.asynctask.CallbackTask.CallbackTaskListener;
 import com.rehivetech.beeeon.asynctask.InitializeFacilityTask;
 import com.rehivetech.beeeon.base.BaseApplicationActivity;
 import com.rehivetech.beeeon.controller.Controller;
-import com.rehivetech.beeeon.household.adapter.Adapter;
+import com.rehivetech.beeeon.household.gate.Gate;
 import com.rehivetech.beeeon.household.device.Device;
 import com.rehivetech.beeeon.household.location.Location;
 import com.rehivetech.beeeon.pair.InitializeFacilityPair;
@@ -36,7 +36,7 @@ public class SetupSensorActivity extends BaseApplicationActivity {
 	private static final String TAG = SetupSensorActivity.class.getSimpleName();
 
 	private Controller mController;
-	private Adapter mPairAdapter;
+	private Gate mPairGate;
 
 	private SetupSensorFragmentAdapter mAdapter;
 	private ViewPager mPager;
@@ -75,7 +75,7 @@ public class SetupSensorActivity extends BaseApplicationActivity {
 
 		// Get controller
 		mController = Controller.getInstance(this);
-		mPairAdapter = mController.getActiveAdapter();
+		mPairGate = mController.getActiveGate();
 
 		mActivity = this;
 
@@ -128,7 +128,7 @@ public class SetupSensorActivity extends BaseApplicationActivity {
 				mListOfName = mFragment.getListOfName();
 				mNewLocation = mFragment.getNewLocation();
 				mNewIconSpinner = mFragment.getNewIconSpinner();
-				Device newDevice = mController.getUninitializedDevicesModel().getUninitializedDevicesByAdapter(mPairAdapter.getId()).get(0);
+				Device newDevice = mController.getUninitializedDevicesModel().getUninitializedDevicesByAdapter(mPairGate.getId()).get(0);
 
 				// Controll if Names arent empty
 				for (int i = 0; i < newDevice.getModules().size(); i++) {
@@ -158,7 +158,7 @@ public class SetupSensorActivity extends BaseApplicationActivity {
 						return;
 					}
 
-					location = new Location(Location.NEW_LOCATION_ID, mNewLocation.getText().toString(), mPairAdapter.getId(), ((Location.LocationIcon) mNewIconSpinner.getAdapter().getItem(mNewIconSpinner.getSelectedItemPosition())).getId());
+					location = new Location(Location.NEW_LOCATION_ID, mNewLocation.getText().toString(), mPairGate.getId(), ((Location.LocationIcon) mNewIconSpinner.getAdapter().getItem(mNewIconSpinner.getSelectedItemPosition())).getId());
 
 				} else {
 					location = (Location) mSpinner.getSelectedItem();

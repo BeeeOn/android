@@ -3,7 +3,7 @@ package com.rehivetech.beeeon.asynctask;
 import android.content.Context;
 
 import com.rehivetech.beeeon.controller.Controller;
-import com.rehivetech.beeeon.household.adapter.Adapter;
+import com.rehivetech.beeeon.household.gate.Gate;
 import com.rehivetech.beeeon.household.watchdog.Watchdog;
 
 public class SaveWatchdogTask extends CallbackTask<Watchdog> {
@@ -16,8 +16,8 @@ public class SaveWatchdogTask extends CallbackTask<Watchdog> {
 	protected Boolean doInBackground(Watchdog data) {
 		Controller controller = Controller.getInstance(mContext);
 
-		Adapter adapter = controller.getActiveAdapter();
-		if (adapter == null) {
+		Gate gate = controller.getActiveGate();
+		if (gate == null) {
 			return false;
 		}
 

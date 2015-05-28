@@ -7,7 +7,7 @@ import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.exception.AppException;
 import com.rehivetech.beeeon.gamification.AchievementListItem;
 import com.rehivetech.beeeon.gcm.notification.VisibleNotification;
-import com.rehivetech.beeeon.household.adapter.Adapter;
+import com.rehivetech.beeeon.household.gate.Gate;
 import com.rehivetech.beeeon.household.device.Device;
 import com.rehivetech.beeeon.household.device.Module;
 import com.rehivetech.beeeon.household.device.Module.SaveModule;
@@ -60,7 +60,7 @@ public class DemoNetwork implements INetwork {
 	private boolean mInitialized;
 	private Map<String, Random> mRandoms = new HashMap<>();
 
-	public final DataHolder<Adapter> mAdapters = new DataHolder<>();
+	public final DataHolder<Gate> mAdapters = new DataHolder<>();
 	public final MultipleDataHolder<Location> mLocations = new MultipleDataHolder<>();
 	public final MultipleDataHolder<Device> mDevices = new MultipleDataHolder<>();
 	public final MultipleDataHolder<Watchdog> mWatchdogs = new MultipleDataHolder<>();
@@ -146,29 +146,29 @@ public class DemoNetwork implements INetwork {
 		String assetName = Constants.ASSET_ADAPTERS_FILENAME;
 		mAdapters.setObjects(parser.getDemoAdaptersFromAsset(mContext, assetName));
 
-		for (Adapter adapter : mAdapters.getObjects()) {
-			String adapterId = adapter.getId();
+		for (Gate gate : mAdapters.getObjects()) {
+			String adapterId = gate.getId();
 
-			assetName = String.format(Constants.ASSET_LOCATIONS_FILENAME, adapter.getId());
+			assetName = String.format(Constants.ASSET_LOCATIONS_FILENAME, gate.getId());
 			mLocations.setObjects(adapterId, parser.getDemoLocationsFromAsset(mContext, assetName));
 			mLocations.setLastUpdate(adapterId, DateTime.now());
 
-			assetName = String.format(Constants.ASSET_WATCHDOGS_FILENAME, adapter.getId());
+			assetName = String.format(Constants.ASSET_WATCHDOGS_FILENAME, gate.getId());
 			mWatchdogs.setObjects(adapterId, parser.getDemoWatchdogsFromAsset(mContext, assetName));
 			mWatchdogs.setLastUpdate(adapterId, DateTime.now());
 
-			assetName = String.format(Constants.ASSET_ADAPTER_DATA_FILENAME, adapter.getId());
+			assetName = String.format(Constants.ASSET_ADAPTER_DATA_FILENAME, gate.getId());
 			mDevices.setObjects(adapterId, parser.getDemoDevicesFromAsset(mContext, assetName));
 			mDevices.setLastUpdate(adapterId, DateTime.now());
 
-			assetName = String.format(Constants.ASSET_ACHIEVEMENTS_FILENAME, adapter.getId());
+			assetName = String.format(Constants.ASSET_ACHIEVEMENTS_FILENAME, gate.getId());
 			mAchievements.setObjects(adapterId, parser.getDemoAchievementsFromAsset(mContext, assetName));
 			mAchievements.setLastUpdate(adapterId, DateTime.now());
 
 			// Just one (self) user for now, anyone can create XML with more users and use it here like other items
 			mUsers.setObjects(adapterId, Arrays.asList(new User[]{new User(mUser.getId(), "John", "Doe", "john@doe.com", Gender.MALE, Role.Superuser)}));
 
-			Random rand = getRandomForAdapter(adapter.getId());
+			Random rand = getRandomForAdapter(gate.getId());
 
 			// Set last update time to time between (-26 hours, now>
 			for (Device device : mDevices.getObjects(adapterId)) {
@@ -238,24 +238,24 @@ public class DemoNetwork implements INetwork {
 
 		Random rand = getRandomForAdapter(adapterId);
 
-		Adapter adapter = new Adapter();
-		adapter.setId(adapterId);
-		adapter.setName(adapterName);
+		Gate gate = new Gate();
+		gate.setId(adapterId);
+		gate.setName(adapterName);
 
 		// Use random role
 		Role[] roles = Role.values();
-		adapter.setRole(roles[rand.nextInt(roles.length)]);
+		gate.setRole(roles[rand.nextInt(roles.length)]);
 
 		// Use random offset
-		adapter.setUtcOffset(rand.nextInt(24 * 60) - 12 * 60);
+		gate.setUtcOffset(rand.nextInt(24 * 60) - 12 * 60);
 
-		mAdapters.addObject(adapter);
+		mAdapters.addObject(gate);
 
 		return true;
 	}
 
 	@Override
-	public List<Adapter> getAdapters() {
+	public List<Gate> getAdapters() {
 		// Init demo data, if not initialized yet
 		initDemoData();
 
@@ -600,9 +600,9 @@ public class DemoNetwork implements INetwork {
 
 	@Override
 	public boolean deleteAccount(String adapterId, User user) {
-		// TODO: Actual implementation deletes adapter, not account...
+		// TODO: Actual implementation deletes gate, not account...
 		if (user.getId().equals(mUser.getId())) {
-			// If we're deleting ourselves, remove whole adapter
+			// If we're deleting ourselves, remove whole gate
 			mLocations.removeHolder(adapterId);
 			mDevices.removeHolder(adapterId);
 			mWatchdogs.removeHolder(adapterId);
@@ -639,7 +639,7 @@ public class DemoNetwork implements INetwork {
 		// NOTE: this replaces (or add) whole user
 		mUsers.addObject(adapterId, user);
 
-		// We can have only one superuser, so unset all other superusers of this adapter (this does classic server too)
+		// We can have only one superuser, so unset all other superusers of this gate (this does classic server too)
 		if (user.getRole() == Role.Superuser) {
 			for (User otherUser : mUsers.getObjects(adapterId)) {
 				// Change only other users, except me
@@ -654,10 +654,10 @@ public class DemoNetwork implements INetwork {
 			}
 		}
 
-		// If we change role of ourselves, we need to put such change to adapter itself too
+		// If we change role of ourselves, we need to put such change to gate itself too
 		if (user.getId().equals(mUser.getId())) {
-			Adapter adapter = mAdapters.getObject(adapterId);
-			adapter.setRole(user.getRole());
+			Gate gate = mAdapters.getObject(adapterId);
+			gate.setRole(user.getRole());
 		}
 
 		return true;
@@ -665,25 +665,25 @@ public class DemoNetwork implements INetwork {
 
 	@Override
 	public boolean setTimeZone(String adapterId, int offsetInMinutes) {
-		Adapter adapter = mAdapters.getObject(adapterId);
+		Gate gate = mAdapters.getObject(adapterId);
 
-		if (adapter == null) {
+		if (gate == null) {
 			return false;
 		}
 
-		adapter.setUtcOffset(offsetInMinutes);
+		gate.setUtcOffset(offsetInMinutes);
 		return true;
 	}
 
 	@Override
 	public int getTimeZone(String adapterId) {
-		Adapter adapter = mAdapters.getObject(adapterId);
+		Gate gate = mAdapters.getObject(adapterId);
 
-		if (adapter == null) {
+		if (gate == null) {
 			return 0;
 		}
 
-		return adapter.getUtcOffsetMillis() / (60 * 1000);
+		return gate.getUtcOffsetMillis() / (60 * 1000);
 	}
 
 	@Override

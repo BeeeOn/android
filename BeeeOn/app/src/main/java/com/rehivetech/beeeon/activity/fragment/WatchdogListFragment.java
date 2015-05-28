@@ -27,7 +27,7 @@ import com.rehivetech.beeeon.asynctask.RemoveWatchdogTask;
 import com.rehivetech.beeeon.asynctask.SaveWatchdogTask;
 import com.rehivetech.beeeon.base.BaseApplicationFragment;
 import com.rehivetech.beeeon.controller.Controller;
-import com.rehivetech.beeeon.household.adapter.Adapter;
+import com.rehivetech.beeeon.household.gate.Gate;
 import com.rehivetech.beeeon.household.watchdog.Watchdog;
 import com.rehivetech.beeeon.pair.DelWatchdogPair;
 import com.rehivetech.beeeon.util.Log;
@@ -111,12 +111,12 @@ public class WatchdogListFragment extends BaseApplicationFragment {
 	}
 
 	private void refreshListListener() {
-		Adapter adapter = mController.getActiveAdapter();
-		if (adapter == null) {
+		Gate gate = mController.getActiveGate();
+		if (gate == null) {
 			mSwipeLayout.setRefreshing(false);
 			return;
 		}
-		doReloadWatchdogsTask(adapter.getId(), true, true);
+		doReloadWatchdogsTask(gate.getId(), true, true);
 	}
 
 	@Override
@@ -125,10 +125,10 @@ public class WatchdogListFragment extends BaseApplicationFragment {
 		mController = Controller.getInstance(mActivity);
 
 		if (mActiveAdapterId == null) {
-			Adapter adapter = mController.getActiveAdapter();
-			if (adapter == null)
+			Gate gate = mController.getActiveGate();
+			if (gate == null)
 				return;
-			mActiveAdapterId = adapter.getId();
+			mActiveAdapterId = gate.getId();
 		}
 
 		// if we don't have any data first time shows button to refresh

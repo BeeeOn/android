@@ -8,7 +8,7 @@ import android.widget.TextView;
 
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.controller.Controller;
-import com.rehivetech.beeeon.household.adapter.Adapter;
+import com.rehivetech.beeeon.household.gate.Gate;
 import com.rehivetech.beeeon.household.device.Device;
 import com.rehivetech.beeeon.household.device.Module;
 import com.rehivetech.beeeon.util.TimeHelper;
@@ -59,10 +59,10 @@ public class SensorListItem extends AbstractListItem {
 		}
 
 		Device device = mModule.getDevice();
-		Adapter adapter = mController.getAdaptersModel().getAdapter(device.getAdapterId());
+		Gate gate = mController.getAdaptersModel().getAdapter(device.getAdapterId());
 
 		if (timeHelper != null) {
-			txtTime.setText(String.format("%s %s", mContext.getString(R.string.last_update), timeHelper.formatLastUpdate(device.getLastUpdate(), adapter)));
+			txtTime.setText(String.format("%s %s", mContext.getString(R.string.last_update), timeHelper.formatLastUpdate(device.getLastUpdate(), gate)));
 		}
 
 		// Set title selected for animation if is text long

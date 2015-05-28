@@ -36,7 +36,7 @@ import com.rehivetech.beeeon.asynctask.CallbackTask.CallbackTaskListener;
 import com.rehivetech.beeeon.asynctask.SwitchAdapterTask;
 import com.rehivetech.beeeon.asynctask.UnregisterAdapterTask;
 import com.rehivetech.beeeon.controller.Controller;
-import com.rehivetech.beeeon.household.adapter.Adapter;
+import com.rehivetech.beeeon.household.gate.Gate;
 import com.rehivetech.beeeon.household.user.User;
 import com.rehivetech.beeeon.util.Log;
 
@@ -98,19 +98,19 @@ public class NavDrawerMenu {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 				mSelectedMenuItem = (MenuItem) mMenuAdapter.getItem(position);
-				Adapter adapter = mController.getActiveAdapter();
+				Gate gate = mController.getActiveGate();
 				switch (mSelectedMenuItem.getType()) {
 					case ADAPTER:
-						if (adapter == null)
+						if (gate == null)
 							break;
-						// if it is not chosen, switch to selected adapter
-						if (!adapter.getId().equals(mSelectedMenuItem.getId())) {
+						// if it is not chosen, switch to selected gate
+						if (!gate.getId().equals(mSelectedMenuItem.getId())) {
 							doSwitchAdapterTask(mSelectedMenuItem.getId());
 						}
 						break;
 					case LOCATION:
 						// Get the title followed by the position
-						if (adapter != null) {
+						if (gate != null) {
 							changeMenuItem(mSelectedMenuItem.getId(), true);
 							redrawMenu();
 						}
@@ -151,7 +151,7 @@ public class NavDrawerMenu {
 
 						break;
 					case ADAPTER:
-						Log.i(TAG, "Long press - adapter");
+						Log.i(TAG, "Long press - gate");
 						mMode = mActivity.startSupportActionMode(new ActionModeAdapters());
 						mSelectedMenuItem.setIsSelected();
 						break;
@@ -170,9 +170,9 @@ public class NavDrawerMenu {
 
 			public void onDrawerClosed(View view) {
 				// Set the title on the action when drawer closed
-				Adapter adapter = mController.getActiveAdapter();
+				Gate gate = mController.getActiveGate();
 
-				if (adapter != null && mActiveItem != null) {
+				if (gate != null && mActiveItem != null) {
 					if (mActiveItem.equals(Constants.GUI_MENU_CONTROL)) {
 						mActivity.getSupportActionBar().setTitle(mActivity.getString(R.string.menu_control));
 					} else if (mActiveItem.equals(Constants.GUI_MENU_DASHBOARD)) {
@@ -217,9 +217,9 @@ public class NavDrawerMenu {
 		mMenuAdapter = getMenuAdapter();
 		mDrawerList.setAdapter(mMenuAdapter);
 
-		Adapter adapter = mController.getActiveAdapter();
+		Gate gate = mController.getActiveGate();
 
-		if (adapter != null && mActiveItem != null) {
+		if (gate != null && mActiveItem != null) {
 			if (mActiveItem.equals(Constants.GUI_MENU_CONTROL)) {
 				mActivity.getSupportActionBar().setTitle(mActivity.getString(R.string.menu_control));
 			} else if (mActiveItem.equals(Constants.GUI_MENU_DASHBOARD)) {
@@ -303,7 +303,7 @@ public class NavDrawerMenu {
 			}
 		}));
 
-		List<Adapter> adapters = mController.getAdaptersModel().getAdapters();
+		List<Gate> gates = mController.getAdaptersModel().getAdapters();
 
 
 		// Adding separator as item (we don't want to let it float as header)
@@ -311,13 +311,13 @@ public class NavDrawerMenu {
 
 		mMenuAdapter.addHeader(new GroupMenuItem(mActivity.getResources().getString(R.string.adapter)));
 
-		if (!adapters.isEmpty()) {
-			Adapter activeAdapter = mController.getActiveAdapter();
-			if (activeAdapter == null)
+		if (!gates.isEmpty()) {
+			Gate activeGate = mController.getActiveGate();
+			if (activeGate == null)
 				return mMenuAdapter;
-			// Adding adapters
-			for (Adapter actAdapter : adapters) {
-				mMenuAdapter.addItem(new AdapterMenuItem(actAdapter.getName(), actAdapter.getRole().getStringResource(), activeAdapter.getId().equals(actAdapter.getId()), actAdapter.getId()));
+			// Adding gates
+			for (Gate actGate : gates) {
+				mMenuAdapter.addItem(new AdapterMenuItem(actGate.getName(), actGate.getRole().getStringResource(), activeGate.getId().equals(actGate.getId()), actGate.getId()));
 			}
 
 			// Adding separator as item (we don't want to let it float as header)
@@ -387,7 +387,7 @@ public class NavDrawerMenu {
 
 		@Override
 		public boolean onActionItemClicked(ActionMode mode, android.view.MenuItem item) {
-			Log.d(TAG, "ActionMode Adapter - item id: " + item.getItemId());
+			Log.d(TAG, "ActionMode Gate - item id: " + item.getItemId());
 			if (item.getItemId() == R.id.ada_menu_del) { // UNREGIST ADAPTER
 				doUnregisterAdapterTask(mSelectedMenuItem.getId());
 			} else if (item.getItemId() == R.id.ada_menu_users) { // GO TO USERS OF ADAPTER

@@ -11,7 +11,7 @@ import android.os.SystemClock;
 import com.rehivetech.beeeon.activity.MainActivity;
 import com.rehivetech.beeeon.activity.SensorDetailActivity;
 import com.rehivetech.beeeon.controller.Controller;
-import com.rehivetech.beeeon.household.adapter.Adapter;
+import com.rehivetech.beeeon.household.gate.Gate;
 import com.rehivetech.beeeon.util.Log;
 import com.rehivetech.beeeon.util.TimeHelper;
 import com.rehivetech.beeeon.util.UnitsHelper;
@@ -143,19 +143,19 @@ public abstract class WidgetData {
 	 * Configuration activity calls this when finished
 	 * If any property is not save() it won't last cause object is destroyed after configuration activity
 	 *
-	 * @param adapter
+	 * @param gate
 	 * @param isEditing
 	 * @param interval   updating interval
 	 * @param isWifiOnly
-	 * @param adapter
+	 * @param gate
 	 */
-	public void configure(boolean isEditing, int interval, boolean isWifiOnly, Adapter adapter) {
+	public void configure(boolean isEditing, int interval, boolean isWifiOnly, Gate gate) {
 		Log.d(TAG, String.format("configure(%b)", isEditing));
 
 		widgetLastUpdate = 0;
 		widgetInitialized = true;
 		widgetInterval = interval;
-		widgetAdapterId = adapter.getId();
+		widgetAdapterId = gate.getId();
 		widgetWifiOnly = isWifiOnly;
 		this.save();
 	}
@@ -434,7 +434,7 @@ public abstract class WidgetData {
 
 	/**
 	 * Starts main activity of the application
-	 * TODO should open main activity with specified adapter and location to scroll on
+	 * TODO should open main activity with specified gate and location to scroll on
 	 *
 	 * @param context
 	 * @return

@@ -5,7 +5,7 @@ import android.text.format.DateFormat;
 import android.view.View;
 
 import com.rehivetech.beeeon.R;
-import com.rehivetech.beeeon.household.adapter.Adapter;
+import com.rehivetech.beeeon.household.gate.Gate;
 import com.rehivetech.beeeon.household.device.Device;
 import com.rehivetech.beeeon.household.device.Module;
 import com.rehivetech.beeeon.household.device.RefreshInterval;
@@ -315,17 +315,17 @@ public class WidgetClockData extends WidgetData {
 	@Override
 	public boolean handleUpdateData() {
 		int updated = 0;
-		Adapter adapter = mController.getAdaptersModel().getAdapter(widgetAdapterId);
-		if (adapter == null) return false;
+		Gate gate = mController.getAdaptersModel().getAdapter(widgetAdapterId);
+		if (gate == null) return false;
 
 		for (WidgetModulePersistence dev : widgetModules) {
 			Module module = mController.getDevicesModel().getModule(widgetAdapterId, dev.getId());
 			if (module != null) {
 				if (!dev.locationId.isEmpty()) {
 					Location location = mController.getLocationsModel().getLocation(widgetAdapterId, dev.locationId);
-					dev.configure(module, adapter, location);
+					dev.configure(module, gate, location);
 				} else {
-					dev.configure(module, adapter);
+					dev.configure(module, gate);
 				}
 				updated++;
 			}
@@ -334,7 +334,7 @@ public class WidgetClockData extends WidgetData {
 		if (updated > 0) {
 			// update last update to "now"
 			widgetLastUpdate = getTimeNow();
-			widgetAdapterId = adapter.getId();
+			widgetAdapterId = gate.getId();
 
 			// Save fresh data
 			this.save();

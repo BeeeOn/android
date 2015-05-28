@@ -10,7 +10,7 @@ import com.rehivetech.beeeon.exception.ClientError;
 import com.rehivetech.beeeon.exception.NetworkError;
 import com.rehivetech.beeeon.gamification.AchievementListItem;
 import com.rehivetech.beeeon.gcm.notification.VisibleNotification;
-import com.rehivetech.beeeon.household.adapter.Adapter;
+import com.rehivetech.beeeon.household.gate.Gate;
 import com.rehivetech.beeeon.household.device.Device;
 import com.rehivetech.beeeon.household.device.Module;
 import com.rehivetech.beeeon.household.device.ModuleLog;
@@ -160,7 +160,7 @@ public class XmlParsers {
 				result.data = parseFalse();
 				break;
 			case ADAPTERS:
-				// List<Adapter>
+				// List<Gate>
 				result.data = parseAdaptersReady();
 				break;
 			case LOGDATA:
@@ -234,20 +234,20 @@ public class XmlParsers {
 	 * @throws IOException
 	 * @since 2.2
 	 */
-	private List<Adapter> parseAdaptersReady() throws XmlPullParserException, IOException {
+	private List<Gate> parseAdaptersReady() throws XmlPullParserException, IOException {
 		mParser.nextTag();
-		List<Adapter> result = new ArrayList<>();
+		List<Gate> result = new ArrayList<>();
 
 		if (!mParser.getName().equals(Xconstants.ADAPTER))
 			return result;
 
 		do {
-			Adapter adapter = new Adapter();
-			adapter.setId(getSecureAttrValue(Xconstants.ID));
-			adapter.setName(getSecureAttrValue(Xconstants.NAME));
-			adapter.setRole(Utils.getEnumFromId(User.Role.class, getSecureAttrValue(Xconstants.ROLE), User.Role.Guest));
-			adapter.setUtcOffset(getSecureInt(getSecureAttrValue(Xconstants.UTC)));
-			result.add(adapter);
+			Gate gate = new Gate();
+			gate.setId(getSecureAttrValue(Xconstants.ID));
+			gate.setName(getSecureAttrValue(Xconstants.NAME));
+			gate.setRole(Utils.getEnumFromId(User.Role.class, getSecureAttrValue(Xconstants.ROLE), User.Role.Guest));
+			gate.setUtcOffset(getSecureInt(getSecureAttrValue(Xconstants.UTC)));
+			result.add(gate);
 
 			mParser.nextTag();
 
@@ -327,7 +327,7 @@ public class XmlParsers {
 	 * @throws ParseException
 	 */
 	private List<Device> parseDevices() throws XmlPullParserException, IOException, ParseException {
-		mParser.nextTag(); // adapter tag
+		mParser.nextTag(); // gate tag
 
 		List<Device> result = new ArrayList<>();
 
@@ -340,7 +340,7 @@ public class XmlParsers {
 
 			parseInnerDevs(result, aid, true);
 
-			mParser.nextTag(); // adapter endtag
+			mParser.nextTag(); // gate endtag
 		} while (!mParser.getName().equals(Xconstants.COM_ROOT) && mParser.nextTag() != XmlPullParser.END_TAG);
 
 		return result;
@@ -790,14 +790,14 @@ public class XmlParsers {
 	// /////////////////////////////// DEMO
 
 	/**
-	 * Factory for parsing adapter from asset.
+	 * Factory for parsing gate from asset.
 	 *
 	 * @param context  of app
 	 * @param filename of devices xml
-	 * @return Adapter or null
+	 * @return Gate or null
 	 */
 	public List<Device> getDemoDevicesFromAsset(Context context, String filename) throws AppException {
-		Log.i(TAG, String.format("Loading adapter from asset '%s'", filename));
+		Log.i(TAG, String.format("Loading gate from asset '%s'", filename));
 		List<Device> result = null;
 		InputStream stream = null;
 		try {
@@ -874,9 +874,9 @@ public class XmlParsers {
 	 * @param filename of adapters xml
 	 * @return list of adapters or empty list
 	 */
-	public List<Adapter> getDemoAdaptersFromAsset(Context context, String filename) throws AppException {
-		Log.i(TAG, String.format("Loading adapters from asset '%s'", filename));
-		List<Adapter> adapters = new ArrayList<>();
+	public List<Gate> getDemoAdaptersFromAsset(Context context, String filename) throws AppException {
+		Log.i(TAG, String.format("Loading gates from asset '%s'", filename));
+		List<Gate> gates = new ArrayList<>();
 		InputStream stream = null;
 		try {
 			stream = new BufferedInputStream(context.getAssets().open(filename));
@@ -892,7 +892,7 @@ public class XmlParsers {
 						.set(NetworkError.PARAM_COM_VER_SERVER, version);
 			}
 
-			adapters = parseAdaptersReady();
+			gates = parseAdaptersReady();
 		} catch (IOException | XmlPullParserException e) {
 			e.printStackTrace();
 		} finally {
@@ -903,7 +903,7 @@ public class XmlParsers {
 				Log.e(TAG, ioe.getMessage(), ioe);
 			}
 		}
-		return adapters;
+		return gates;
 	}
 
 	/**

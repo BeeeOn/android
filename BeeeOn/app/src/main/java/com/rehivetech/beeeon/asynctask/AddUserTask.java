@@ -15,7 +15,7 @@ public class AddUserTask extends CallbackTask<AddUserPair> {
 	protected Boolean doInBackground(AddUserPair pair) {
 		Controller controller = Controller.getInstance(mContext);
 
-		return controller.getUsersModel().addUser(pair.adapter.getId(), pair.user);
+		return controller.getUsersModel().addUser(pair.mGate.getId(), pair.user);
 	}
 
 }

@@ -34,7 +34,7 @@ public class AdapterAddedNotification extends VisibleNotification {
 			Integer adapterId = Integer.valueOf(bundle.getString(Xconstants.AID));
 
 			if (adapterId == null) {
-				Log.d(TAG, "Adapter added: some compulsory value is missing.");
+				Log.d(TAG, "Gate added: some compulsory value is missing.");
 				return null;
 			}
 

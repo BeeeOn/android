@@ -24,7 +24,7 @@ import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.exception.AppException;
 import com.rehivetech.beeeon.exception.ErrorCode;
 import com.rehivetech.beeeon.exception.NetworkError;
-import com.rehivetech.beeeon.household.adapter.Adapter;
+import com.rehivetech.beeeon.household.gate.Gate;
 import com.rehivetech.beeeon.household.device.Device;
 import com.rehivetech.beeeon.household.device.Module;
 import com.rehivetech.beeeon.household.device.RefreshInterval;
@@ -53,8 +53,8 @@ public abstract class WidgetConfigurationFragment extends Fragment {
 	protected WidgetData mGeneralWidgetdata;
 	protected ReloadAdapterDataTask mReloadTask;
 
-	protected List<Adapter> mAdapters;
-	protected Adapter mActiveAdapter;
+	protected List<Gate> mGates;
+	protected Gate mActiveGate;
 	protected boolean mAdapterNeedsToReload;
 	protected Spinner mAdapterSpinner;
 	protected RelativeLayout mWidgetWifiLayoutWrapper;
@@ -108,10 +108,10 @@ public abstract class WidgetConfigurationFragment extends Fragment {
 		mAdapterSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 			@Override
 			public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-				Adapter adapter = mAdapters.get(position);
-				if (adapter == null) return;
+				Gate gate = mGates.get(position);
+				if (gate == null) return;
 
-				doChangeAdapter(adapter.getId(), ReloadAdapterDataTask.ReloadWhat.FACILITIES);
+				doChangeAdapter(gate.getId(), ReloadAdapterDataTask.ReloadWhat.FACILITIES);
 			}
 
 			@Override
@@ -199,10 +199,10 @@ public abstract class WidgetConfigurationFragment extends Fragment {
 	 * When fragment is shown for the first time
 	 */
 	protected void onAllAdaptersReload() {
-		mAdapters = mController.getAdaptersModel().getAdapters();
+		mGates = mController.getAdaptersModel().getAdapters();
 		mAdapterNeedsToReload = false;
-		// adapter spinner refresh
-		ArrayAdapter<?> arrayAdapter = new ArrayAdapter<>(mActivity, android.R.layout.simple_spinner_item, mAdapters);
+		// gate spinner refresh
+		ArrayAdapter<?> arrayAdapter = new ArrayAdapter<>(mActivity, android.R.layout.simple_spinner_item, mGates);
 		arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 		mAdapterSpinner.setAdapter(arrayAdapter);
 	}
@@ -216,7 +216,7 @@ public abstract class WidgetConfigurationFragment extends Fragment {
 
 		int selectedAdapterIndex = selectAdapter(mGeneralWidgetdata.widgetAdapterId);
 		if (selectedAdapterIndex == mAdapterSpinner.getSelectedItemPosition()) {
-			doChangeAdapter(mActiveAdapter.getId(), ReloadAdapterDataTask.ReloadWhat.FACILITIES);
+			doChangeAdapter(mActiveGate.getId(), ReloadAdapterDataTask.ReloadWhat.FACILITIES);
 		} else {
 			mAdapterSpinner.setSelection(selectedAdapterIndex);
 		}
@@ -230,8 +230,8 @@ public abstract class WidgetConfigurationFragment extends Fragment {
 	protected abstract void updateLayout();
 
 	/**
-	 * After reload task we can get new devices and locations by adapter.
-	 * If no adapter set, it selects active adapter in the app
+	 * After reload task we can get new devices and locations by gate.
+	 * If no gate set, it selects active gate in the app
 	 *
 	 * @param adapterId
 	 */
@@ -251,7 +251,7 @@ public abstract class WidgetConfigurationFragment extends Fragment {
 	}
 
 	/**
-	 * Happens when change adapter in spinner, this reloads data to be from new selected adapter
+	 * Happens when change gate in spinner, this reloads data to be from new selected gate
 	 * !! NOTE: if mAdapterNeedsToReload == false Then it skips whole reload task
 	 *
 	 * @param adapterId
@@ -280,23 +280,23 @@ public abstract class WidgetConfigurationFragment extends Fragment {
 	}
 
 	/**
-	 * Selects adapter either from list of adapters or if not found as active adapter
+	 * Selects gate either from list of adapters or if not found as active gate
 	 *
 	 * @param adapterId
-	 * @return Pair of adapter index in list & Adapter
+	 * @return Pair of gate index in list & Gate
 	 */
 	protected int selectAdapter(String adapterId) {
 		int mActiveAdapterIndex = 0;
 		if (!adapterId.isEmpty()) {
-			Pair<Integer, Adapter> indexAdapter = Utils.getIndexAndObjectFromList(adapterId, mAdapters);
+			Pair<Integer, Gate> indexAdapter = Utils.getIndexAndObjectFromList(adapterId, mGates);
 			if (indexAdapter == null) {
-				mActiveAdapter = mController.getActiveAdapter();
+				mActiveGate = mController.getActiveGate();
 			} else {
 				mActiveAdapterIndex = indexAdapter.first;
-				mActiveAdapter = indexAdapter.second;
+				mActiveGate = indexAdapter.second;
 			}
 		} else {
-			mActiveAdapter = mController.getActiveAdapter();
+			mActiveGate = mController.getActiveGate();
 		}
 
 		return mActiveAdapterIndex;

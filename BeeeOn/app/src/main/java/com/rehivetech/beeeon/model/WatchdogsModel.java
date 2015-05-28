@@ -32,7 +32,7 @@ public class WatchdogsModel extends BaseModel {
 	}
 
 	/**
-	 * Return list of watchdogs from a adapter
+	 * Return list of watchdogs from a gate
 	 *
 	 * @param adapterId
 	 * @return
@@ -93,7 +93,7 @@ public class WatchdogsModel extends BaseModel {
 	public boolean deleteWatchdog(Watchdog watchdog) {
 		// delete from server
 		if (mNetwork.deleteWatchdog(watchdog)) {
-			// watchdog was deleted on server, remove it from adapter too
+			// watchdog was deleted on server, remove it from gate too
 			mWatchdogs.removeObject(watchdog.getAdapterId(), watchdog.getId());
 			return true;
 		}

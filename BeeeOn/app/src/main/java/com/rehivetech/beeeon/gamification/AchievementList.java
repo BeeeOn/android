@@ -39,8 +39,8 @@ public class AchievementList extends Observable {
 	public static AchievementList getInstance(Context context) {
 		Controller controller = Controller.getInstance(context);
 		String oldId = mAdapterId;
-		if (controller.getActiveAdapter() != null)
-			mAdapterId = controller.getActiveAdapter().getId();
+		if (controller.getActiveGate() != null)
+			mAdapterId = controller.getActiveGate().getId();
 
 		if (mInstance == null || !oldId.equals(mAdapterId)) {
 			mInstance = new AchievementList(context, controller);

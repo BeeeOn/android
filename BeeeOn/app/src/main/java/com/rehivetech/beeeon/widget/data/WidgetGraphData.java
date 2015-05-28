@@ -11,7 +11,7 @@ import com.jjoe64.graphview.series.LineGraphSeries;
 import com.jjoe64.graphview.series.point.DataPoint;
 import com.rehivetech.beeeon.Constants;
 import com.rehivetech.beeeon.R;
-import com.rehivetech.beeeon.household.adapter.Adapter;
+import com.rehivetech.beeeon.household.gate.Gate;
 import com.rehivetech.beeeon.household.device.Device;
 import com.rehivetech.beeeon.household.device.Module;
 import com.rehivetech.beeeon.household.device.ModuleLog;
@@ -156,9 +156,9 @@ public class WidgetGraphData extends WidgetModuleData {
 		if (mTimeHelper == null || mUnitsHelper == null) return;
 		Log.d(TAG, "prepareWidgetGraphView");
 
-		Adapter adapter = mController.getAdaptersModel().getAdapter(widgetAdapterId);
+		Gate gate = mController.getAdaptersModel().getAdapter(widgetAdapterId);
 		String graphDateTimeFormat = "dd.MM. kk:mm";
-		final DateTimeFormatter fmt = mTimeHelper.getFormatter(graphDateTimeFormat, adapter);
+		final DateTimeFormatter fmt = mTimeHelper.getFormatter(graphDateTimeFormat, gate);
 		GraphViewHelper.prepareWidgetGraphView(mGraph, mContext, baseValue, fmt, mUnitsHelper);
 
 		// clears series if reinitializes
@@ -250,8 +250,8 @@ public class WidgetGraphData extends WidgetModuleData {
 	@Override
 	public boolean handleUpdateData() {
 		int updated = 0;
-		Adapter adapter = mController.getAdaptersModel().getAdapter(widgetAdapterId);
-		if (adapter == null) return false;
+		Gate gate = mController.getAdaptersModel().getAdapter(widgetAdapterId);
+		if (gate == null) return false;
 
 		for (WidgetModulePersistence dev : widgetModules) {
 			Module module = mController.getDevicesModel().getModule(widgetAdapterId, dev.getId());
@@ -259,17 +259,17 @@ public class WidgetGraphData extends WidgetModuleData {
 
 			Location location = mController.getLocationsModel().getLocation(dev.adapterId, module.getDevice().getLocationId());
 			if (location != null) {
-				widgetLocation.configure(location, adapter);
+				widgetLocation.configure(location, gate);
 			}
 
-			dev.configure(module, adapter);
+			dev.configure(module, gate);
 			updated++;
 		}
 
 		if (updated > 0) {
 			// update last update to "now"
 			widgetLastUpdate = getTimeNow();
-			widgetAdapterId = adapter.getId();
+			widgetAdapterId = gate.getId();
 
 			ModuleLog log = mController.getModuleLogsModel().getModuleLog(mLogDataPair);
 			if (log != null) {

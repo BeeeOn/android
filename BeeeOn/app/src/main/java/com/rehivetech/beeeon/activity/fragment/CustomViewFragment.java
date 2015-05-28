@@ -20,7 +20,7 @@ import com.rehivetech.beeeon.asynctask.CallbackTask;
 import com.rehivetech.beeeon.asynctask.GetModulesLogsTask;
 import com.rehivetech.beeeon.base.BaseApplicationFragment;
 import com.rehivetech.beeeon.controller.Controller;
-import com.rehivetech.beeeon.household.adapter.Adapter;
+import com.rehivetech.beeeon.household.gate.Gate;
 import com.rehivetech.beeeon.household.device.Device;
 import com.rehivetech.beeeon.household.device.Module;
 import com.rehivetech.beeeon.household.device.ModuleLog;
@@ -166,19 +166,19 @@ public class CustomViewFragment extends BaseApplicationFragment {
 	}
 
 	private void prepareModules() {
-		Adapter adapter = mController.getActiveAdapter();
-		if (adapter == null)
+		Gate gate = mController.getActiveGate();
+		if (gate == null)
 			return;
 
 		// Prepare helpers
 		final UnitsHelper unitsHelper = new UnitsHelper(mController.getUserSettings(), mActivity);
 		final TimeHelper timeHelper = new TimeHelper(mController.getUserSettings());
-		final DateTimeFormatter fmt = timeHelper.getFormatter(mGraphDateTimeFormat, adapter);
+		final DateTimeFormatter fmt = timeHelper.getFormatter(mGraphDateTimeFormat, gate);
 
 		// Prepare data
-		Log.d(TAG, String.format("Preparing custom view for adapter %s", adapter.getId()));
+		Log.d(TAG, String.format("Preparing custom view for gate %s", gate.getId()));
 
-		for (Device device : mController.getDevicesModel().getDevicesByAdapter(adapter.getId())) {
+		for (Device device : mController.getDevicesModel().getDevicesByAdapter(gate.getId())) {
 			Log.d(TAG, String.format("Preparing mDevice with %d modules", device.getModules().size()));
 
 			for (Module module : device.getModules()) {

@@ -38,7 +38,7 @@ import com.rehivetech.beeeon.asynctask.ReloadAdapterDataTask;
 import com.rehivetech.beeeon.asynctask.RemoveFacilityTask;
 import com.rehivetech.beeeon.base.BaseApplicationFragment;
 import com.rehivetech.beeeon.controller.Controller;
-import com.rehivetech.beeeon.household.adapter.Adapter;
+import com.rehivetech.beeeon.household.gate.Gate;
 import com.rehivetech.beeeon.household.device.Device;
 import com.rehivetech.beeeon.household.device.Module;
 import com.rehivetech.beeeon.household.location.Location;
@@ -147,13 +147,13 @@ public class SensorListFragment extends BaseApplicationFragment {
 			@Override
 			public void onRefresh() {
 				Log.d(TAG, "Refreshing list of sensors");
-				Adapter adapter = mController.getActiveAdapter();
-				if (adapter == null) {
+				Gate gate = mController.getActiveGate();
+				if (gate == null) {
 					mSwipeLayout.setRefreshing(false);
 					return;
 				}
 				mActivity.redraw();
-				doReloadDevicesTask(adapter.getId(), true);
+				doReloadDevicesTask(gate.getId(), true);
 			}
 		});
 		mSwipeLayout.setColorSchemeColors(R.color.beeeon_primary_cyan, R.color.beeeon_text_color, R.color.beeeon_secundary_pink);
@@ -199,9 +199,9 @@ public class SensorListFragment extends BaseApplicationFragment {
 		OnClickListener refreshNoSensor = new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				Adapter adapter = mController.getActiveAdapter();
-				if (adapter != null) {
-					doReloadDevicesTask(adapter.getId(), true);
+				Gate gate = mController.getActiveGate();
+				if (gate != null) {
+					doReloadDevicesTask(gate.getId(), true);
 				} else {
 					doFullReloadTask(true);
 				}
@@ -212,7 +212,7 @@ public class SensorListFragment extends BaseApplicationFragment {
 
 		mFAM = (FloatingActionButton) mView.findViewById(R.id.fab);
 
-		// All locations on adapter
+		// All locations on gate
 		locations = mController.getLocationsModel().getLocationsByAdapter(mActiveAdapterId);
 
 		List<Module> modules = new ArrayList<Module>();
@@ -241,7 +241,7 @@ public class SensorListFragment extends BaseApplicationFragment {
 
 		// Buttons in floating menu
 
-		if (!haveAdapters) { // NO Adapter
+		if (!haveAdapters) { // NO Gate
 			// Set right visibility
 			noItem.setVisibility(View.VISIBLE);
 			noItem.setText(R.string.no_adapter_cap);
@@ -267,7 +267,7 @@ public class SensorListFragment extends BaseApplicationFragment {
 				}
 			}
 
-		} else if (!haveModules) { // Have Adapter but any Modules
+		} else if (!haveModules) { // Have Gate but any Modules
 			// Set right visibility
 			noItem.setVisibility(View.VISIBLE);
 			noItem.setText(R.string.no_sensor_cap);
@@ -291,7 +291,7 @@ public class SensorListFragment extends BaseApplicationFragment {
 					prefs.edit().putBoolean(Constants.TUTORIAL_ADD_SENSOR_SHOWED, false).apply();
 				}
 			}
-		} else { // Have adapter and modules
+		} else { // Have gate and modules
 			noItem.setVisibility(View.GONE);
 			refreshBtn.setVisibility(View.GONE);
 			mSensorList.setVisibility(View.VISIBLE);
@@ -332,7 +332,7 @@ public class SensorListFragment extends BaseApplicationFragment {
 			});
 		} else {
 			// API 10 to 13
-			// Show dialof to select Add Adapter or Add sensor
+			// Show dialof to select Add Gate or Add sensor
 
 			mFAM.setOnClickListener(new OnClickListener() {
 				@Override
@@ -385,7 +385,7 @@ public class SensorListFragment extends BaseApplicationFragment {
 					startActivity(intent);
 				}
 			});
-			Adapter tmpAda = mController.getAdaptersModel().getAdapter(mActiveAdapterId);
+			Gate tmpAda = mController.getAdaptersModel().getAdapter(mActiveAdapterId);
 			if (tmpAda != null) {
 				if (mController.isUserAllowed(tmpAda.getRole())) {
 					mSensorList.setOnItemLongClickListener(new OnItemLongClickListener() {

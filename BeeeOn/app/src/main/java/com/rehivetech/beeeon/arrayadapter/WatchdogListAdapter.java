@@ -93,7 +93,7 @@ public class WatchdogListAdapter extends BaseAdapter {
 			holder = (ViewHolder) convertView.getTag();
 		}
 
-		// sets position of Watchdog object to retrieve it outside from the adapter
+		// sets position of Watchdog object to retrieve it outside from the gate
 		holder.ItemSwitch.setTag(position);
 
 		final Watchdog rule = (Watchdog) this.getItem(position);

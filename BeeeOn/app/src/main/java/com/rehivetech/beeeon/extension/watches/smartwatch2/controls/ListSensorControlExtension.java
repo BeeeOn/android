@@ -39,7 +39,7 @@ import android.os.Bundle;
 
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.extension.watches.smartwatch2.SW2ExtensionService;
-import com.rehivetech.beeeon.household.adapter.Adapter;
+import com.rehivetech.beeeon.household.gate.Gate;
 import com.rehivetech.beeeon.household.device.Device;
 import com.rehivetech.beeeon.household.device.Module;
 import com.rehivetech.beeeon.util.Log;
@@ -61,7 +61,7 @@ public class ListSensorControlExtension extends ManagedControlExtension {
 
 	private List<Module> mModules;
 	private String mLocationStr;
-	private Adapter mAdapter;
+	private Gate mGate;
 	private String mAdapterId;
 
 	private Bundle[] mMenuItemsIcons = new Bundle[1];
@@ -163,7 +163,7 @@ public class ListSensorControlExtension extends ManagedControlExtension {
 	public void onSwipe(int direction) {
 		if (direction == Control.Intents.SWIPE_DIRECTION_RIGHT) {
 			Intent intent = new Intent(mContext, ListLocationControlExtension.class);
-			intent.putExtra(ListLocationControlExtension.EXTRA_ADAPTER_ID, mAdapter.getId());
+			intent.putExtra(ListLocationControlExtension.EXTRA_ADAPTER_ID, mGate.getId());
 			mControlManager.previousScreen(intent);
 		}
 	}
@@ -186,7 +186,7 @@ public class ListSensorControlExtension extends ManagedControlExtension {
 			// also be possible to put some unique item id in the listitem and
 			// pass listItem.listItemId here.
 			Intent intent = new Intent(mContext, GalleryControlExtension.class);
-			intent.putExtra(ListSensorControlExtension.EXTRA_ADAPTER_ID, mAdapter.getId());
+			intent.putExtra(ListSensorControlExtension.EXTRA_ADAPTER_ID, mGate.getId());
 			intent.putExtra(ListSensorControlExtension.EXTRA_LOCATION_NAME, mLocationStr);
 			intent.putExtra(GalleryControlExtension.EXTRA_INITIAL_POSITION, listItem.listItemPosition);
 			mControlManager.startControl(intent);
@@ -236,12 +236,12 @@ public class ListSensorControlExtension extends ManagedControlExtension {
 			public void run() {
 
 				mController.getAdaptersModel().reloadAdapters(true);
-				mAdapter = mController.getAdaptersModel().getAdapter(mAdapterId);
-				if (mAdapter != null) {
+				mGate = mController.getAdaptersModel().getAdapter(mAdapterId);
+				if (mGate != null) {
 					mModules = new ArrayList<Module>();
 
 					mController.getDevicesModel().reloadDevicesByAdapter(mAdapterId, true);
-					List<Device> devices = mController.getDevicesModel().getDevicesByLocation(mAdapter.getId(), mLocationStr);
+					List<Device> devices = mController.getDevicesModel().getDevicesByLocation(mGate.getId(), mLocationStr);
 					for (Device facility : devices) {
 						mModules.addAll(facility.getModules());
 					}

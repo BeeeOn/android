@@ -3,7 +3,7 @@ package com.rehivetech.beeeon.network;
 import com.rehivetech.beeeon.IIdentifier;
 import com.rehivetech.beeeon.gamification.AchievementListItem;
 import com.rehivetech.beeeon.gcm.notification.VisibleNotification;
-import com.rehivetech.beeeon.household.adapter.Adapter;
+import com.rehivetech.beeeon.household.gate.Gate;
 import com.rehivetech.beeeon.household.device.Device;
 import com.rehivetech.beeeon.household.device.Module;
 import com.rehivetech.beeeon.household.device.Module.SaveModule;
@@ -119,11 +119,11 @@ public interface INetwork {
 	boolean deleteMyAccount();
 
 	/**
-	 * Method register adapter to server
+	 * Method register gate to server
 	 *
-	 * @param adapterID   adapter id
-	 * @param adapterName adapter name
-	 * @return true if adapter has been registered, false otherwise
+	 * @param adapterID   gate id
+	 * @param adapterName gate name
+	 * @return true if gate has been registered, false otherwise
 	 */
 	boolean addAdapter(String adapterID, String adapterName);
 
@@ -132,18 +132,18 @@ public interface INetwork {
 	 *
 	 * @return list of adapters or empty list
 	 */
-	List<Adapter> getAdapters();
+	List<Gate> getAdapters();
 
 	/**
-	 * Method ask for whole adapter data
+	 * Method ask for whole gate data
 	 *
-	 * @param adapterID of wanted adapter
-	 * @return Adapter
+	 * @param adapterID of wanted gate
+	 * @return Gate
 	 */
 	List<Device> initAdapter(String adapterID);
 
 	/**
-	 * Method change adapter id
+	 * Method change gate id
 	 *
 	 * @param oldId id to be changed
 	 * @param newId new id
@@ -165,7 +165,7 @@ public interface INetwork {
 	/**
 	 * Method send wanted fields of module to server
 	 *
-	 * @param adapterID id of adapter
+	 * @param adapterID id of gate
 	 * @param module    to save
 	 * @param toSave    ENUMSET specified fields to save
 	 * @return true if fields has been updated, false otherwise
@@ -182,7 +182,7 @@ public interface INetwork {
 	boolean switchState(String adapterID, Module module);
 
 	/**
-	 * Method make adapter to special state, when listen for new sensors (e.g. 15s) and wait if some sensors has been
+	 * Method make gate to special state, when listen for new sensors (e.g. 15s) and wait if some sensors has been
 	 * shaken to connect
 	 *
 	 * @param adapterID
@@ -276,7 +276,7 @@ public interface INetwork {
 	boolean addAccounts(String adapterID, ArrayList<User> users);
 
 	/**
-	 * Method add new user to adapter
+	 * Method add new user to gate
 	 *
 	 * @param adapterID
 	 * @return
@@ -284,7 +284,7 @@ public interface INetwork {
 	boolean addAccount(String adapterID, User user);
 
 	/**
-	 * Method delete users from actual adapter
+	 * Method delete users from actual gate
 	 *
 	 * @param users email of user
 	 * @return true if all users has been deleted, false otherwise
@@ -292,7 +292,7 @@ public interface INetwork {
 	boolean deleteAccounts(String adapterID, List<User> users);
 
 	/**
-	 * Method delete on user from adapter
+	 * Method delete on user from gate
 	 *
 	 * @param adapterID
 	 * @param user
@@ -301,14 +301,14 @@ public interface INetwork {
 	boolean deleteAccount(String adapterID, User user);
 
 	/**
-	 * Method ask for list of users of current adapter
+	 * Method ask for list of users of current gate
 	 *
 	 * @return Map of users where key is email and value is User object
 	 */
 	List<User> getAccounts(String adapterID);
 
 	/**
-	 * Method update users roles on server on current adapter
+	 * Method update users roles on server on current gate
 	 * <p/>
 	 * map with email as key and role as value
 	 *
@@ -317,7 +317,7 @@ public interface INetwork {
 	boolean updateAccounts(String adapterID, ArrayList<User> users);
 
 	/**
-	 * Method update users role on adapter
+	 * Method update users role on gate
 	 *
 	 * @param adapterID
 	 * @param user

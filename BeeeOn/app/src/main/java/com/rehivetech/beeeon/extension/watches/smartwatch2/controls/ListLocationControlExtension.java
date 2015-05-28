@@ -38,7 +38,7 @@ import android.os.Bundle;
 
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.extension.watches.smartwatch2.SW2ExtensionService;
-import com.rehivetech.beeeon.household.adapter.Adapter;
+import com.rehivetech.beeeon.household.gate.Gate;
 import com.rehivetech.beeeon.household.device.Device;
 import com.rehivetech.beeeon.household.location.Location;
 import com.rehivetech.beeeon.model.LocationsModel;
@@ -57,7 +57,7 @@ public class ListLocationControlExtension extends ManagedControlExtension {
 
 	public static final String EXTRA_ADAPTER_ID = "ADAPTER_ID";
 
-	private Adapter mAdapter;
+	private Gate mGate;
 	private List<Location> mLocations;
 	private String mAdapterId;
 
@@ -182,14 +182,14 @@ public class ListLocationControlExtension extends ManagedControlExtension {
 			// intent.putExtra(GalleryTestControl.EXTRA_INITIAL_POSITION,
 			// listItem.listItemPosition);
 			// mControlManager.startControl(intent);
-			List<Device> devices = mController.getDevicesModel().getDevicesByLocation(mAdapter.getId(), mLocations.get(listItem.listItemPosition).getId());
+			List<Device> devices = mController.getDevicesModel().getDevicesByLocation(mGate.getId(), mLocations.get(listItem.listItemPosition).getId());
 			Intent intent;
 			if (devices.size() < 1) {
 				intent = new Intent(mContext, TextControl.class);
 				intent.putExtra(TextControl.EXTRA_TEXT, mContext.getString(R.string.no_sensor_available));
 			} else {
 				intent = new Intent(mContext, ListSensorControlExtension.class);
-				intent.putExtra(ListSensorControlExtension.EXTRA_ADAPTER_ID, mAdapter.getId());
+				intent.putExtra(ListSensorControlExtension.EXTRA_ADAPTER_ID, mGate.getId());
 				intent.putExtra(ListSensorControlExtension.EXTRA_LOCATION_NAME, mLocations.get(listItem.listItemPosition).getId());
 			}
 			mControlManager.startControl(intent);
@@ -229,7 +229,7 @@ public class ListLocationControlExtension extends ManagedControlExtension {
 			@Override
 			public void run() {
 
-				mAdapter = mController.getAdaptersModel().getAdapter(mAdapterId);
+				mGate = mController.getAdaptersModel().getAdapter(mAdapterId);
 
 				LocationsModel locationsModel = mController.getLocationsModel();
 				locationsModel.reloadLocationsByAdapter(mAdapterId, mForceUpdate);

@@ -25,7 +25,7 @@ import com.rehivetech.beeeon.asynctask.SaveFacilityTask;
 import com.rehivetech.beeeon.asynctask.SaveFacilityWithNewLocTask;
 import com.rehivetech.beeeon.base.BaseApplicationActivity;
 import com.rehivetech.beeeon.controller.Controller;
-import com.rehivetech.beeeon.household.adapter.Adapter;
+import com.rehivetech.beeeon.household.gate.Gate;
 import com.rehivetech.beeeon.household.device.Device;
 import com.rehivetech.beeeon.household.device.Module;
 import com.rehivetech.beeeon.household.device.RefreshInterval;
@@ -110,10 +110,10 @@ public class SensorEditActivity extends BaseApplicationActivity {
 		//noinspection SimplifiableIfStatement
 		if (id == R.id.action_save) {
 			Set<Module.SaveModule> what = new HashSet<>();
-			Adapter adapter = mController.getActiveAdapter();
-			if (adapter == null)
+			Gate gate = mController.getActiveGate();
+			if (gate == null)
 				return false;
-			Module module = mController.getDevicesModel().getModule(adapter.getId(), mModuleId);
+			Module module = mController.getDevicesModel().getModule(gate.getId(), mModuleId);
 			Device device = module.getDevice();
 
 			if (!mFragment.getName().equals(module.getName())) {
@@ -135,7 +135,7 @@ public class SensorEditActivity extends BaseApplicationActivity {
 							return false;
 						}
 						// Create new custom room
-						location = new Location(Location.NEW_LOCATION_ID, mFragment.getNewLocName(), adapter.getId(), mFragment.getNewLocIcon().getId());
+						location = new Location(Location.NEW_LOCATION_ID, mFragment.getNewLocName(), gate.getId(), mFragment.getNewLocIcon().getId());
 					} else {
 						location = mFragment.getLocation();
 					}
@@ -254,7 +254,7 @@ public class SensorEditActivity extends BaseApplicationActivity {
 		private Module mModule;
 		private TextView mRefreshTimeVal;
 		private Device mDevice;
-		private Adapter mAdapter;
+		private Gate mGate;
 		private String mLocationId;
 		private Spinner mNewIconSpinner;
 		private TextView mNewLocName;
@@ -278,10 +278,10 @@ public class SensorEditActivity extends BaseApplicationActivity {
 			// Get activity
 			mActivity = (SensorEditActivity) getActivity();
 			mController = Controller.getInstance(mActivity);
-			mAdapter = mController.getActiveAdapter();
-			if (mAdapter == null)
+			mGate = mController.getActiveGate();
+			if (mGate == null)
 				return;
-			mModule = mController.getDevicesModel().getModule(mAdapter.getId(), mModuleID);
+			mModule = mController.getDevicesModel().getModule(mGate.getId(), mModuleID);
 			if (mModule == null)
 				return;
 			mDevice = mModule.getDevice();
@@ -328,7 +328,7 @@ public class SensorEditActivity extends BaseApplicationActivity {
 			// Set layout to DataAdapter for locations
 			dataAdapter.setDropDownViewResource(R.layout.custom_spinner_dropdown_item);
 
-			// ICON adapter
+			// ICON gate
 			LocationIconAdapter iconAdapter = new LocationIconAdapter(mActivity, R.layout.custom_spinner_icon_item);
 			iconAdapter.setDropDownViewResource(R.layout.custom_spinner_icon_dropdown_item);
 
