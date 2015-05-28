@@ -22,7 +22,7 @@ import com.rehivetech.beeeon.base.BaseApplicationActivity;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.household.gate.Gate;
 import com.rehivetech.beeeon.household.user.User;
-import com.rehivetech.beeeon.pair.AddUserPair;
+import com.rehivetech.beeeon.pair.SaveUserPair;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -112,14 +112,14 @@ public class AddGateUserActivity extends BaseApplicationActivity {
 				newUser.setEmail(mEmail.getText().toString());
 				newUser.setRole(User.Role.values()[mRole.getSelectedItemPosition()]);
 
-				AddUserPair pair = new AddUserPair(mGate, newUser);
+				SaveUserPair pair = new SaveUserPair(newUser, mGate.getId());
 
 				doAddGateUserTask(pair);
 			}
 		});
 	}
 
-	protected void doAddGateUserTask(AddUserPair pair) {
+	protected void doAddGateUserTask(SaveUserPair pair) {
 		AddUserTask addUserTask = new AddUserTask(mActivity);
 
 		addUserTask.setListener(new CallbackTaskListener() {

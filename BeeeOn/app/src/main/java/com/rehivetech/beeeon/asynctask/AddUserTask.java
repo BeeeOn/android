@@ -3,19 +3,19 @@ package com.rehivetech.beeeon.asynctask;
 import android.content.Context;
 
 import com.rehivetech.beeeon.controller.Controller;
-import com.rehivetech.beeeon.pair.AddUserPair;
+import com.rehivetech.beeeon.pair.SaveUserPair;
 
-public class AddUserTask extends CallbackTask<AddUserPair> {
+public class AddUserTask extends CallbackTask<SaveUserPair> {
 
 	public AddUserTask(Context context) {
 		super(context);
 	}
 
 	@Override
-	protected Boolean doInBackground(AddUserPair pair) {
+	protected Boolean doInBackground(SaveUserPair pair) {
 		Controller controller = Controller.getInstance(mContext);
 
-		return controller.getUsersModel().addUser(pair.mGate.getId(), pair.user);
+		return controller.getUsersModel().addUser(pair.gateId, pair.user);
 	}
 
 }

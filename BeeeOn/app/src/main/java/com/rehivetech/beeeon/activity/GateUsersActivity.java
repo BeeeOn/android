@@ -32,7 +32,7 @@ import com.rehivetech.beeeon.base.BaseApplicationActivity;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.household.gate.Gate;
 import com.rehivetech.beeeon.household.user.User;
-import com.rehivetech.beeeon.pair.UserPair;
+import com.rehivetech.beeeon.pair.SaveUserPair;
 
 import java.util.List;
 
@@ -181,7 +181,7 @@ public class GateUsersActivity extends BaseApplicationActivity {
 
 	private void doRemoveUserTask(User user) {
 		RemoveUserTask removeUserTask = new RemoveUserTask(this);
-		UserPair pair = new UserPair(user, mGate.getId());
+		SaveUserPair pair = new SaveUserPair(user, mGate.getId());
 
 		removeUserTask.setListener(new CallbackTaskListener() {
 			@Override
@@ -200,7 +200,7 @@ public class GateUsersActivity extends BaseApplicationActivity {
 
 	private void doEditUserTask(User user) {
 		EditUserTask editUserTask = new EditUserTask(this);
-		UserPair pair = new UserPair(user, mGate.getId());
+		SaveUserPair pair = new SaveUserPair(user, mGate.getId());
 
 		editUserTask.setListener(new CallbackTaskListener() {
 			@Override
