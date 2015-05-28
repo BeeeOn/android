@@ -42,9 +42,9 @@ public class XmlCreator {
 	public static final String JOINACCOUNT = "joinaccount";
 	public static final String CUTACCOUNT = "cutaccount";
 
-	public static final String ADDADAPTER = "addadapter";
-	public static final String REINITADAPTER = "reinitadapter";
-	public static final String GETADAPTERS = "getadapters";
+	public static final String ADDGATE = "addadapter";
+	public static final String REINITGATE = "reinitadapter";
+	public static final String GETGATES = "getadapters";
 	public static final String SCANMODE = "scanmode";
 
 	public static final String ADDACCOUNTS = "addaccs";
@@ -105,7 +105,7 @@ public class XmlCreator {
 		serializer.endDocument();
 	}
 
-	// /////////////////////////////////////SIGNIN,SIGNUP,ADAPTERS/////////////////////////////////////
+	// /////////////////////////////////////SIGNIN,SIGNUP,GATES/////////////////////////////////////
 
 	/**
 	 * Method create message for registration of new user
@@ -234,53 +234,53 @@ public class XmlCreator {
 	}
 
 	/**
-	 * Method create XML for AddAdapter message
+	 * Method create XML for AddGate message
 	 *
 	 * @param bt          userID of user
 	 * @param aid         gateId of actual gate
-	 * @param adapterName name of gate
-	 * @return AddAdapter message
+	 * @param gateName name of gate
+	 * @return AddGate message
 	 * @since 2.2
 	 */
-	public static String createAddAdapter(String bt, String aid, String adapterName) {
-		return createComAttribsVariant(Xconstants.STATE, ADDADAPTER, Xconstants.BT, bt, Xconstants.AID, aid, Xconstants.ANAME, adapterName);
+	public static String createAddGate(String bt, String aid, String gateName) {
+		return createComAttribsVariant(Xconstants.STATE, ADDGATE, Xconstants.BT, bt, Xconstants.AID, aid, Xconstants.ANAME, gateName);
 	}
 
 	/**
-	 * Method create XML of GetAdapters message
+	 * Method create XML of GetGates message
 	 *
 	 * @param bt userID of user
-	 * @return GetAdapters message
+	 * @return GetGates message
 	 * @since 2.2
 	 */
-	public static String createGetAdapters(String bt) {
-		return createComAttribsVariant(Xconstants.STATE, GETADAPTERS, Xconstants.BT, bt);
+	public static String createGetGates(String bt) {
+		return createComAttribsVariant(Xconstants.STATE, GETGATES, Xconstants.BT, bt);
 	}
 
 	/**
 	 * Method create XML for ReInit message
 	 *
 	 * @param bt           userID of user
-	 * @param adapterIdOld old id of gate
-	 * @param adapterIdNew new id of gate
+	 * @param gateIdOld old id of gate
+	 * @param gateIdNew new id of gate
 	 * @return ReInit message
 	 * @since 2.2
 	 */
-	public static String createReInitAdapter(String bt, String adapterIdOld, String adapterIdNew) {
-		return createComAttribsVariant(Xconstants.STATE, REINITADAPTER, Xconstants.BT, bt, Xconstants.OLDID, adapterIdOld, Xconstants.NEWID, adapterIdNew);
+	public static String createReInitGate(String bt, String gateIdOld, String gateIdNew) {
+		return createComAttribsVariant(Xconstants.STATE, REINITGATE, Xconstants.BT, bt, Xconstants.OLDID, gateIdOld, Xconstants.NEWID, gateIdNew);
 	}
 
 	// /////////////////////////////////////DEVICES,LOGS///////////////////////////////////////////////
 
 	/**
-	 * Method create XML for AdapterListen message
+	 * Method create XML for GateListen message
 	 *
 	 * @param bt  userID of user
 	 * @param aid gateId of actual gate
-	 * @return XML of AdapterListen message
+	 * @return XML of GateListen message
 	 * @since 2.2
 	 */
-	public static String createAdapterScanMode(String bt, String aid) {
+	public static String createGateScanMode(String bt, String aid) {
 		return createComAttribsVariant(Xconstants.STATE, SCANMODE, Xconstants.BT, bt, Xconstants.AID, aid);
 	}
 
@@ -338,12 +338,12 @@ public class XmlCreator {
 			String aid = "";
 			for (Device device : devices) {
 
-				boolean isSameAdapter = aid.equals(device.getGateId());
-				if (!isSameAdapter) { // new gate
+				boolean isSameGate = aid.equals(device.getGateId());
+				if (!isSameGate) { // new gate
 					if (aid.length() > 0)
-						serializer.endTag(ns, Xconstants.ADAPTER);
+						serializer.endTag(ns, Xconstants.GATE);
 					aid = device.getGateId();
-					serializer.startTag(ns, Xconstants.ADAPTER);
+					serializer.startTag(ns, Xconstants.GATE);
 					serializer.attribute(ns, Xconstants.ID, aid);
 				}
 				serializer.startTag(ns, Xconstants.MODULE);
@@ -356,7 +356,7 @@ public class XmlCreator {
 				}
 				serializer.endTag(ns, Xconstants.MODULE);
 			}
-			serializer.endTag(ns, Xconstants.ADAPTER);
+			serializer.endTag(ns, Xconstants.GATE);
 
 			endXml(serializer);
 

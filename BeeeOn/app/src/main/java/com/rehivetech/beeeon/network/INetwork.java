@@ -48,7 +48,7 @@ public interface INetwork {
 	boolean isAvailable();
 
 	// /////////////////////////////////////////////////////////////////////////////////
-	// /////////////////////////////////////SIGNIN,SIGNUP,ADAPTERS//////////////////////
+	// /////////////////////////////////////SIGNIN,SIGNUP,GATES//////////////////////
 	// /////////////////////////////////////////////////////////////////////////////////
 
 	/**
@@ -121,26 +121,26 @@ public interface INetwork {
 	/**
 	 * Method register gate to server
 	 *
-	 * @param adapterID   gate id
-	 * @param adapterName gate name
+	 * @param gateID   gate id
+	 * @param gateName gate name
 	 * @return true if gate has been registered, false otherwise
 	 */
-	boolean addGate(String adapterID, String adapterName);
+	boolean addGate(String gateID, String gateName);
 
 	/**
-	 * Method ask for list of adapters. User has to be sign in before
+	 * Method ask for list of gates. User has to be sign in before
 	 *
-	 * @return list of adapters or empty list
+	 * @return list of gates or empty list
 	 */
 	List<Gate> getGates();
 
 	/**
 	 * Method ask for whole gate data
 	 *
-	 * @param adapterID of wanted gate
+	 * @param gateID of wanted gate
 	 * @return Gate
 	 */
-	List<Device> initGate(String adapterID);
+	List<Device> initGate(String gateID);
 
 	/**
 	 * Method change gate id
@@ -149,7 +149,7 @@ public interface INetwork {
 	 * @param newId new id
 	 * @return true if change has been successfully
 	 */
-	boolean reInitAdapter(String oldId, String newId);
+	boolean reInitGate(String oldId, String newId);
 
 	// /////////////////////////////////////////////////////////////////////////////////
 	// /////////////////////////////////////DEVICES,LOGS////////////////////////////////
@@ -160,35 +160,35 @@ public interface INetwork {
 	 *
 	 * @return true if everything goes well, false otherwise
 	 */
-	boolean updateDevices(String adapterID, List<Device> devices, EnumSet<SaveModule> toSave);
+	boolean updateDevices(String gateID, List<Device> devices, EnumSet<SaveModule> toSave);
 
 	/**
 	 * Method send wanted fields of module to server
 	 *
-	 * @param adapterID id of gate
+	 * @param gateID id of gate
 	 * @param module    to save
 	 * @param toSave    ENUMSET specified fields to save
 	 * @return true if fields has been updated, false otherwise
 	 */
-	boolean updateModule(String adapterID, Module module, EnumSet<SaveModule> toSave);
+	boolean updateModule(String gateID, Module module, EnumSet<SaveModule> toSave);
 
 	/**
 	 * Method toggle or set actor to new value
 	 *
-	 * @param adapterID
+	 * @param gateID
 	 * @param module
 	 * @return
 	 */
-	boolean switchState(String adapterID, Module module);
+	boolean switchState(String gateID, Module module);
 
 	/**
 	 * Method make gate to special state, when listen for new sensors (e.g. 15s) and wait if some sensors has been
 	 * shaken to connect
 	 *
-	 * @param adapterID
+	 * @param gateID
 	 * @return
 	 */
-	boolean prepareGateToListenNewSensors(String adapterID);
+	boolean prepareGateToListenNewSensors(String gateID);
 
 	/**
 	 * Method delete mDevice from server
@@ -214,15 +214,15 @@ public interface INetwork {
 	 */
 	Device getFacility(Device device);
 
-	boolean updateFacility(String adapterID, Device device, EnumSet<SaveModule> toSave);
+	boolean updateFacility(String gateID, Device device, EnumSet<SaveModule> toSave);
 
 	/**
 	 * TODO: need to test
 	 *
-	 * @param adapterID
+	 * @param gateID
 	 * @return
 	 */
-	List<Device> getNewDevices(String adapterID);
+	List<Device> getNewDevices(String gateID);
 
 	/**
 	 * Method ask for data of logs
@@ -230,7 +230,7 @@ public interface INetwork {
 	 * @param pair data of log (from, to, type, interval)
 	 * @return list of rows with logged data
 	 */
-	ModuleLog getLog(String adapterID, Module module, LogDataPair pair);
+	ModuleLog getLog(String gateID, Module module, LogDataPair pair);
 
 	// /////////////////////////////////////////////////////////////////////////////////
 	// /////////////////////////////////////ROOMS///////////////////////////////////////
@@ -241,7 +241,7 @@ public interface INetwork {
 	 *
 	 * @return List with locations
 	 */
-	List<Location> getLocations(String adapterID);
+	List<Location> getLocations(String gateID);
 
 	/**
 	 * Method call to server to update location
@@ -249,7 +249,7 @@ public interface INetwork {
 	 * @param locations to update
 	 * @return true if everything is OK, false otherwise
 	 */
-	boolean updateLocations(String adapterID, List<Location> locations);
+	boolean updateLocations(String gateID, List<Location> locations);
 
 	/**
 	 * Method call to server to update location
@@ -273,15 +273,15 @@ public interface INetwork {
 	// /////////////////////////////////////ACCOUNTS////////////////////////////////////
 	// /////////////////////////////////////////////////////////////////////////////////
 
-	boolean addAccounts(String adapterID, ArrayList<User> users);
+	boolean addAccounts(String gateID, ArrayList<User> users);
 
 	/**
 	 * Method add new user to gate
 	 *
-	 * @param adapterID
+	 * @param gateID
 	 * @return
 	 */
-	boolean addAccount(String adapterID, User user);
+	boolean addAccount(String gateID, User user);
 
 	/**
 	 * Method delete users from actual gate
@@ -289,23 +289,23 @@ public interface INetwork {
 	 * @param users email of user
 	 * @return true if all users has been deleted, false otherwise
 	 */
-	boolean deleteAccounts(String adapterID, List<User> users);
+	boolean deleteAccounts(String gateID, List<User> users);
 
 	/**
 	 * Method delete on user from gate
 	 *
-	 * @param adapterID
+	 * @param gateID
 	 * @param user
 	 * @return
 	 */
-	boolean deleteAccount(String adapterID, User user);
+	boolean deleteAccount(String gateID, User user);
 
 	/**
 	 * Method ask for list of users of current gate
 	 *
 	 * @return Map of users where key is email and value is User object
 	 */
-	List<User> getAccounts(String adapterID);
+	List<User> getAccounts(String gateID);
 
 	/**
 	 * Method update users roles on server on current gate
@@ -314,16 +314,16 @@ public interface INetwork {
 	 *
 	 * @return true if all accounts has been changed false otherwise
 	 */
-	boolean updateAccounts(String adapterID, ArrayList<User> users);
+	boolean updateAccounts(String gateID, ArrayList<User> users);
 
 	/**
 	 * Method update users role on gate
 	 *
-	 * @param adapterID
+	 * @param gateID
 	 * @param user
 	 * @return
 	 */
-	boolean updateAccount(String adapterID, User user);
+	boolean updateAccount(String gateID, User user);
 
 	// /////////////////////////////////////////////////////////////////////////////////
 	// /////////////////////////////////////TIME////////////////////////////////////////
@@ -335,14 +335,14 @@ public interface INetwork {
 	 * @param offsetInMinutes - difference from GMT (UTC+0)
 	 * @return
 	 */
-	boolean setTimeZone(String adapterID, int offsetInMinutes);
+	boolean setTimeZone(String gateID, int offsetInMinutes);
 
 	/**
 	 * Method call to server to get actual time zone
 	 *
 	 * @return integer in range <-12,12>
 	 */
-	int getTimeZone(String adapterID);
+	int getTimeZone(String gateID);
 
 	// /////////////////////////////////////////////////////////////////////////////////
 	// /////////////////////////////////////NOTIFICATIONS///////////////////////////////
@@ -362,19 +362,19 @@ public interface INetwork {
 	// /////////////////////////////////////ALGORITHMS//////////////////////////////////
 	// /////////////////////////////////////////////////////////////////////////////////
 
-	boolean addWatchdog(Watchdog watchdog, String AdapterID);
+	boolean addWatchdog(Watchdog watchdog, String gateId);
 
-	List<Watchdog> getWatchdogs(ArrayList<String> watchdogIds, String adapterID);
+	List<Watchdog> getWatchdogs(ArrayList<String> watchdogIds, String gateId);
 
-	List<Watchdog> getAllWatchdogs(String adapterID);
+	List<Watchdog> getAllWatchdogs(String gateId);
 
-	boolean updateWatchdog(Watchdog watchdog, String AdapterId);
+	boolean updateWatchdog(Watchdog watchdog, String gateId);
 
 	boolean deleteWatchdog(Watchdog watchdog);
 
 	boolean passBorder(String regionId, String type);
 
-	List<AchievementListItem> getAllAchievements(String adapterID);
+	List<AchievementListItem> getAllAchievements(String gateId);
 
-	List<String> setProgressLvl(String adapterId, String achievementId);
+	List<String> setProgressLvl(String gateId, String achievementId);
 }

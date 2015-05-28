@@ -52,7 +52,7 @@ public class XmlParsers {
 	 * @author ThinkDeep
 	 */
 	public enum State implements IIdentifier {
-		ADAPTERS("adapters"),
+		GATES("adapters"),
 		ALLDEVICES("alldevs"),
 		DEVICES("devs"),
 		LOGDATA("logdata"),
@@ -159,9 +159,9 @@ public class XmlParsers {
 				// FalseAnswer
 				result.data = parseFalse();
 				break;
-			case ADAPTERS:
+			case GATES:
 				// List<Gate>
-				result.data = parseAdaptersReady();
+				result.data = parseGatesReady();
 				break;
 			case LOGDATA:
 				// ModuleLog
@@ -224,21 +224,21 @@ public class XmlParsers {
 		return result;
 	}
 
-	// /////////////////////////////////FALSE, ADAPTERS, USERINFO////////////////////////////////////
+	// /////////////////////////////////FALSE, GATES, USERINFO////////////////////////////////////
 
 	/**
-	 * Method parse inner part of AdaptersReady message
+	 * Method parse inner part of GatesReady message
 	 *
-	 * @return List of adapters (contains only Id, name, and user role)
+	 * @return List of gates (contains only Id, name, and user role)
 	 * @throws XmlPullParserException
 	 * @throws IOException
 	 * @since 2.2
 	 */
-	private List<Gate> parseAdaptersReady() throws XmlPullParserException, IOException {
+	private List<Gate> parseGatesReady() throws XmlPullParserException, IOException {
 		mParser.nextTag();
 		List<Gate> result = new ArrayList<>();
 
-		if (!mParser.getName().equals(Xconstants.ADAPTER))
+		if (!mParser.getName().equals(Xconstants.GATE))
 			return result;
 
 		do {
@@ -331,10 +331,10 @@ public class XmlParsers {
 
 		List<Device> result = new ArrayList<>();
 
-		if (!mParser.getName().equals(Xconstants.ADAPTER))
+		if (!mParser.getName().equals(Xconstants.GATE))
 			return result;
 
-		do { // go through adapters
+		do { // go through gates
 			String aid = getSecureAttrValue(Xconstants.ID);
 			mParser.nextTag(); // dev tag
 
@@ -380,7 +380,7 @@ public class XmlParsers {
 			result.add(device);
 
 		} while (mParser.nextTag() != XmlPullParser.END_TAG
-				&& (!mParser.getName().equals(Xconstants.ADAPTER) || !mParser.getName().equals(Xconstants.COM_ROOT)));
+				&& (!mParser.getName().equals(Xconstants.GATE) || !mParser.getName().equals(Xconstants.COM_ROOT)));
 	}
 
 	/**
@@ -868,13 +868,13 @@ public class XmlParsers {
 	}
 
 	/**
-	 * Factory for parsing list of adapters from asset
+	 * Factory for parsing list of gates from asset
 	 *
 	 * @param context  of ap
-	 * @param filename of adapters xml
-	 * @return list of adapters or empty list
+	 * @param filename of gates xml
+	 * @return list of gates or empty list
 	 */
-	public List<Gate> getDemoAdaptersFromAsset(Context context, String filename) throws AppException {
+	public List<Gate> getDemoGatesFromAsset(Context context, String filename) throws AppException {
 		Log.i(TAG, String.format("Loading gates from asset '%s'", filename));
 		List<Gate> gates = new ArrayList<>();
 		InputStream stream = null;
@@ -892,7 +892,7 @@ public class XmlParsers {
 						.set(NetworkError.PARAM_COM_VER_SERVER, version);
 			}
 
-			gates = parseAdaptersReady();
+			gates = parseGatesReady();
 		} catch (IOException | XmlPullParserException e) {
 			e.printStackTrace();
 		} finally {

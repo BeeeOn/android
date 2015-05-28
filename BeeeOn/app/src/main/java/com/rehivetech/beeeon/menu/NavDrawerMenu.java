@@ -309,7 +309,7 @@ public class NavDrawerMenu {
 		// Adding separator as item (we don't want to let it float as header)
 		mMenuAdapter.addItem(new SeparatorMenuItem());
 
-		mMenuAdapter.addHeader(new GroupMenuItem(mActivity.getResources().getString(R.string.adapter)));
+		mMenuAdapter.addHeader(new GroupMenuItem(mActivity.getResources().getString(R.string.gate)));
 
 		if (!gates.isEmpty()) {
 			Gate activeGate = mController.getActiveGate();

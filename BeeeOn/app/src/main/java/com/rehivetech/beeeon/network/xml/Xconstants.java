@@ -27,7 +27,7 @@ public class Xconstants {
 	public static final String VERSION = "ver";
 	public static final String USER = "user";
 	public static final String EMAIL = "email";
-	public static final String ADAPTER = "gate";
+	public static final String GATE = "adapter";
 	public static final String ROLE = "role";
 	public static final String FROM = "from";
 	public static final String TO = "to";

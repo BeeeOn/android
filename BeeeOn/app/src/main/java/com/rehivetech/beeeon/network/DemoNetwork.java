@@ -60,7 +60,7 @@ public class DemoNetwork implements INetwork {
 	private boolean mInitialized;
 	private Map<String, Random> mRandoms = new HashMap<>();
 
-	public final DataHolder<Gate> mAdapters = new DataHolder<>();
+	public final DataHolder<Gate> mGates = new DataHolder<>();
 	public final MultipleDataHolder<Location> mLocations = new MultipleDataHolder<>();
 	public final MultipleDataHolder<Device> mDevices = new MultipleDataHolder<>();
 	public final MultipleDataHolder<Watchdog> mWatchdogs = new MultipleDataHolder<>();
@@ -79,21 +79,21 @@ public class DemoNetwork implements INetwork {
 		mBT = DEMO_USER_BT;
 	}
 
-	private boolean isAdapterAllowed(String adapterId) {
-		return getRandomForAdapter(adapterId).nextBoolean();
+	private boolean isGateAllowed(String gateId) {
+		return getRandomForGate(gateId).nextBoolean();
 	}
 
-	private Random getRandomForAdapter(String adapterId) {
-		Random rand = mRandoms.get(adapterId);
+	private Random getRandomForGate(String gateId) {
+		Random rand = mRandoms.get(gateId);
 
 		if (rand == null) {
 			try {
-				int id = Integer.parseInt(adapterId);
+				int id = Integer.parseInt(gateId);
 				rand = new Random(id);
 			} catch (NumberFormatException e) {
 				rand = new Random();
 			}
-			mRandoms.put(adapterId, rand);
+			mRandoms.put(gateId, rand);
 		}
 
 		return rand;
@@ -104,7 +104,7 @@ public class DemoNetwork implements INetwork {
 		if (module.getType().isActor() && module.getValue().hasValue())
 			return;
 
-		Random rand = getRandomForAdapter(module.getDevice().getGateId());
+		Random rand = getRandomForGate(module.getDevice().getGateId());
 
 		if (module.getValue() instanceof BaseEnumValue) {
 			BaseEnumValue value = (BaseEnumValue) module.getValue();
@@ -133,7 +133,7 @@ public class DemoNetwork implements INetwork {
 			return;
 
 		// Erase previous data if exists
-		mAdapters.clear();
+		mGates.clear();
 		mLocations.clear();
 		mDevices.clear();
 		mWatchdogs.clear();
@@ -143,35 +143,35 @@ public class DemoNetwork implements INetwork {
 		// Parse and set initial demo data
 		XmlParsers parser = new XmlParsers();
 
-		String assetName = Constants.ASSET_ADAPTERS_FILENAME;
-		mAdapters.setObjects(parser.getDemoAdaptersFromAsset(mContext, assetName));
+		String assetName = Constants.ASSET_GATES_FILENAME;
+		mGates.setObjects(parser.getDemoGatesFromAsset(mContext, assetName));
 
-		for (Gate gate : mAdapters.getObjects()) {
-			String adapterId = gate.getId();
+		for (Gate gate : mGates.getObjects()) {
+			String gateId = gate.getId();
 
 			assetName = String.format(Constants.ASSET_LOCATIONS_FILENAME, gate.getId());
-			mLocations.setObjects(adapterId, parser.getDemoLocationsFromAsset(mContext, assetName));
-			mLocations.setLastUpdate(adapterId, DateTime.now());
+			mLocations.setObjects(gateId, parser.getDemoLocationsFromAsset(mContext, assetName));
+			mLocations.setLastUpdate(gateId, DateTime.now());
 
 			assetName = String.format(Constants.ASSET_WATCHDOGS_FILENAME, gate.getId());
-			mWatchdogs.setObjects(adapterId, parser.getDemoWatchdogsFromAsset(mContext, assetName));
-			mWatchdogs.setLastUpdate(adapterId, DateTime.now());
+			mWatchdogs.setObjects(gateId, parser.getDemoWatchdogsFromAsset(mContext, assetName));
+			mWatchdogs.setLastUpdate(gateId, DateTime.now());
 
-			assetName = String.format(Constants.ASSET_ADAPTER_DATA_FILENAME, gate.getId());
-			mDevices.setObjects(adapterId, parser.getDemoDevicesFromAsset(mContext, assetName));
-			mDevices.setLastUpdate(adapterId, DateTime.now());
+			assetName = String.format(Constants.ASSET_GATE_DATA_FILENAME, gate.getId());
+			mDevices.setObjects(gateId, parser.getDemoDevicesFromAsset(mContext, assetName));
+			mDevices.setLastUpdate(gateId, DateTime.now());
 
 			assetName = String.format(Constants.ASSET_ACHIEVEMENTS_FILENAME, gate.getId());
-			mAchievements.setObjects(adapterId, parser.getDemoAchievementsFromAsset(mContext, assetName));
-			mAchievements.setLastUpdate(adapterId, DateTime.now());
+			mAchievements.setObjects(gateId, parser.getDemoAchievementsFromAsset(mContext, assetName));
+			mAchievements.setLastUpdate(gateId, DateTime.now());
 
 			// Just one (self) user for now, anyone can create XML with more users and use it here like other items
-			mUsers.setObjects(adapterId, Arrays.asList(new User[]{new User(mUser.getId(), "John", "Doe", "john@doe.com", Gender.MALE, Role.Superuser)}));
+			mUsers.setObjects(gateId, Arrays.asList(new User[]{new User(mUser.getId(), "John", "Doe", "john@doe.com", Gender.MALE, Role.Superuser)}));
 
-			Random rand = getRandomForAdapter(gate.getId());
+			Random rand = getRandomForGate(gate.getId());
 
 			// Set last update time to time between (-26 hours, now>
-			for (Device device : mDevices.getObjects(adapterId)) {
+			for (Device device : mDevices.getObjects(gateId)) {
 				// FIXME: is using getObjects() ok? It creates new list. But it should be ok, because inner objects are still only references. Needs test!
 				device.setLastUpdate(DateTime.now(DateTimeZone.UTC).minusSeconds(rand.nextInt(60 * 60 * 26)));
 			}
@@ -231,16 +231,16 @@ public class DemoNetwork implements INetwork {
 	}
 
 	@Override
-	public boolean addGate(String adapterId, String adapterName) {
-		if (!isAdapterAllowed(adapterId)) {
+	public boolean addGate(String gateId, String gateName) {
+		if (!isGateAllowed(gateId)) {
 			return false;
 		}
 
-		Random rand = getRandomForAdapter(adapterId);
+		Random rand = getRandomForGate(gateId);
 
 		Gate gate = new Gate();
-		gate.setId(adapterId);
-		gate.setName(adapterName);
+		gate.setId(gateId);
+		gate.setName(gateName);
 
 		// Use random role
 		Role[] roles = Role.values();
@@ -249,7 +249,7 @@ public class DemoNetwork implements INetwork {
 		// Use random offset
 		gate.setUtcOffset(rand.nextInt(24 * 60) - 12 * 60);
 
-		mAdapters.addObject(gate);
+		mGates.addObject(gate);
 
 		return true;
 	}
@@ -259,14 +259,14 @@ public class DemoNetwork implements INetwork {
 		// Init demo data, if not initialized yet
 		initDemoData();
 
-		return mAdapters.getObjects();
+		return mGates.getObjects();
 	}
 
 	@Override
-	public List<Device> initGate(String adapterId) {
-		List<Device> devices = mDevices.getObjects(adapterId);
+	public List<Device> initGate(String gateId) {
+		List<Device> devices = mDevices.getObjects(gateId);
 
-		Random rand = getRandomForAdapter(adapterId);
+		Random rand = getRandomForGate(gateId);
 
 		// Update value of expired devices
 		for (Device device : devices) {
@@ -294,15 +294,15 @@ public class DemoNetwork implements INetwork {
 	}
 
 	@Override
-	public boolean reInitAdapter(String oldId, String newId) {
+	public boolean reInitGate(String oldId, String newId) {
 		// TODO Auto-generated method stub
 		return false;
 	}
 
 	@Override
-	public boolean updateDevices(String adapterId, List<Device> devices, EnumSet<Module.SaveModule> toSave) {
+	public boolean updateDevices(String gateId, List<Device> devices, EnumSet<Module.SaveModule> toSave) {
 		for (Device device : devices) {
-			if (!updateFacility(adapterId, device, toSave)) {
+			if (!updateFacility(gateId, device, toSave)) {
 				return false;
 			}
 		}
@@ -311,19 +311,19 @@ public class DemoNetwork implements INetwork {
 	}
 
 	@Override
-	public boolean updateModule(String adapterId, Module module, EnumSet<SaveModule> toSave) {
+	public boolean updateModule(String gateId, Module module, EnumSet<SaveModule> toSave) {
 		// NOTE: this replaces (or add) whole mDevice, not only module's fields marked as toSave
-		return updateFacility(adapterId, module.getDevice(), toSave);
+		return updateFacility(gateId, module.getDevice(), toSave);
 	}
 
 	@Override
-	public boolean switchState(String adapterId, Module module) {
+	public boolean switchState(String gateId, Module module) {
 		return true;
 	}
 
 	@Override
-	public boolean prepareGateToListenNewSensors(String adapterId) {
-		return isAdapterAllowed(adapterId);
+	public boolean prepareGateToListenNewSensors(String gateId) {
+		return isGateAllowed(gateId);
 	}
 
 	@Override
@@ -347,7 +347,7 @@ public class DemoNetwork implements INetwork {
 
 	@Override
 	public Device getFacility(Device device) {
-		Random rand = getRandomForAdapter(device.getGateId());
+		Random rand = getRandomForGate(device.getGateId());
 
 		Device newDevice = mDevices.getObject(device.getGateId(), device.getId());
 
@@ -366,32 +366,32 @@ public class DemoNetwork implements INetwork {
 	}
 
 	@Override
-	public boolean updateFacility(String adapterId, Device device, EnumSet<Module.SaveModule> toSave) {
+	public boolean updateFacility(String gateId, Device device, EnumSet<Module.SaveModule> toSave) {
 		// NOTE: this replaces (or add, in case of initializing new mDevice) whole mDevice, not only fields marked as toSave
-		mDevices.addObject(adapterId, device);
+		mDevices.addObject(gateId, device);
 		return true;
 	}
 
 	@Override
-	public List<Device> getNewDevices(String adapterId) {
+	public List<Device> getNewDevices(String gateId) {
 		List<Device> newDevices = new ArrayList<>();
 
-		if (!mAdapters.hasObject(adapterId)) {
+		if (!mGates.hasObject(gateId)) {
 			return newDevices;
 		}
 
-		Random rand = getRandomForAdapter(adapterId);
+		Random rand = getRandomForGate(gateId);
 		if (rand.nextInt(4) == 0) {
 			Device device = new Device();
 
-			device.setGateId(adapterId);
+			device.setGateId(gateId);
 
 			// Create unique mDevice id
 			String address;
 			int i = 0;
 			do {
 				address = "10.0.0." + String.valueOf(i++);
-			} while (mDevices.hasObject(adapterId, address));
+			} while (mDevices.hasObject(gateId, address));
 
 			device.setAddress(address);
 			device.setBattery(rand.nextInt(101));
@@ -435,7 +435,7 @@ public class DemoNetwork implements INetwork {
 			} while (--count >= 0);
 
 			// Add new mDevice to global holder
-			mDevices.addObject(adapterId, device);
+			mDevices.addObject(gateId, device);
 
 			// Add to list that we return
 			newDevices.add(device);
@@ -445,7 +445,7 @@ public class DemoNetwork implements INetwork {
 	}
 
 	@Override
-	public ModuleLog getLog(String adapterId, Module module, LogDataPair pair) {
+	public ModuleLog getLog(String gateId, Module module, LogDataPair pair) {
 		// Generate random values for log in demo mode
 		ModuleLog log = new ModuleLog(DataType.AVERAGE, DataInterval.RAW);
 
@@ -455,7 +455,7 @@ public class DemoNetwork implements INetwork {
 		long start = pair.interval.getStartMillis();
 		long end = pair.interval.getEndMillis();
 
-		Random rand = getRandomForAdapter(adapterId);
+		Random rand = getRandomForGate(gateId);
 
 		if (Double.isNaN(lastValue)) {
 			lastValue = rand.nextDouble() * 1000;
@@ -499,12 +499,12 @@ public class DemoNetwork implements INetwork {
 	}
 
 	@Override
-	public List<Location> getLocations(String adapterId) {
-		return mLocations.getObjects(adapterId);
+	public List<Location> getLocations(String gateId) {
+		return mLocations.getObjects(gateId);
 	}
 
 	@Override
-	public boolean updateLocations(String adapterId, List<Location> locations) {
+	public boolean updateLocations(String gateId, List<Location> locations) {
 		for (Location location : locations) {
 			if (!updateLocation(location)) {
 				return false;
@@ -516,14 +516,14 @@ public class DemoNetwork implements INetwork {
 
 	@Override
 	public boolean updateLocation(Location location) {
-		String adapterId = location.getGateId();
+		String gateId = location.getGateId();
 
-		if (!mAdapters.hasObject(adapterId)) {
+		if (!mGates.hasObject(gateId)) {
 			return false;
 		}
 
 		// NOTE: this replaces (or add) whole location
-		mLocations.addObject(adapterId, location);
+		mLocations.addObject(gateId, location);
 		return true;
 	}
 
@@ -534,9 +534,9 @@ public class DemoNetwork implements INetwork {
 
 	@Override
 	public Location createLocation(Location location) {
-		String adapterId = location.getGateId();
+		String gateId = location.getGateId();
 
-		if (!mAdapters.hasObject(adapterId)) {
+		if (!mGates.hasObject(gateId)) {
 			return null;
 		}
 
@@ -545,7 +545,7 @@ public class DemoNetwork implements INetwork {
 		int i = 0;
 		do {
 			locationId = String.valueOf(i++);
-		} while (mLocations.hasObject(adapterId, locationId));
+		} while (mLocations.hasObject(gateId, locationId));
 
 		// Set new location id
 		location.setId(locationId);
@@ -554,9 +554,9 @@ public class DemoNetwork implements INetwork {
 	}
 
 	@Override
-	public boolean addAccounts(String adapterId, ArrayList<User> users) {
+	public boolean addAccounts(String gateId, ArrayList<User> users) {
 		for (User user : users) {
-			if (!addAccount(adapterId, user)) {
+			if (!addAccount(gateId, user)) {
 				return false;
 			}
 		}
@@ -565,8 +565,8 @@ public class DemoNetwork implements INetwork {
 	}
 
 	@Override
-	public boolean addAccount(String adapterId, User user) {
-		if (!mAdapters.hasObject(adapterId)) {
+	public boolean addAccount(String gateId, User user) {
+		if (!mGates.hasObject(gateId)) {
 			return false;
 		}
 
@@ -575,7 +575,7 @@ public class DemoNetwork implements INetwork {
 		int i = 0;
 		do {
 			userId = String.valueOf(i++);
-		} while (mUsers.hasObject(adapterId, userId));
+		} while (mUsers.hasObject(gateId, userId));
 
 		// Set new user id
 		user.setId(userId);
@@ -583,14 +583,14 @@ public class DemoNetwork implements INetwork {
 		// Set user name to his e-mail, because names must provide server (and we don't have any users here)
 		user.setName(user.getEmail());
 
-		mUsers.addObject(adapterId, user);
+		mUsers.addObject(gateId, user);
 		return true;
 	}
 
 	@Override
-	public boolean deleteAccounts(String adapterId, List<User> users) {
+	public boolean deleteAccounts(String gateId, List<User> users) {
 		for (User user : users) {
-			if (!deleteAccount(adapterId, user)) {
+			if (!deleteAccount(gateId, user)) {
 				return false;
 			}
 		}
@@ -599,30 +599,30 @@ public class DemoNetwork implements INetwork {
 	}
 
 	@Override
-	public boolean deleteAccount(String adapterId, User user) {
+	public boolean deleteAccount(String gateId, User user) {
 		// TODO: Actual implementation deletes gate, not account...
 		if (user.getId().equals(mUser.getId())) {
 			// If we're deleting ourselves, remove whole gate
-			mLocations.removeHolder(adapterId);
-			mDevices.removeHolder(adapterId);
-			mWatchdogs.removeHolder(adapterId);
-			mAchievements.removeHolder(adapterId);
-			return mAdapters.removeObject(adapterId) != null;
+			mLocations.removeHolder(gateId);
+			mDevices.removeHolder(gateId);
+			mWatchdogs.removeHolder(gateId);
+			mAchievements.removeHolder(gateId);
+			return mGates.removeObject(gateId) != null;
 		} else {
 			// TODO: This is correct implementation for future
-			return mUsers.removeObject(adapterId, user.getId()) != null;
+			return mUsers.removeObject(gateId, user.getId()) != null;
 		}
 	}
 
 	@Override
-	public List<User> getAccounts(String adapterId) {
-		return mUsers.getObjects(adapterId);
+	public List<User> getAccounts(String gateId) {
+		return mUsers.getObjects(gateId);
 	}
 
 	@Override
-	public boolean updateAccounts(String adapterId, ArrayList<User> users) {
+	public boolean updateAccounts(String gateId, ArrayList<User> users) {
 		for (User user : users) {
-			if (!updateAccount(adapterId, user)) {
+			if (!updateAccount(gateId, user)) {
 				return false;
 			}
 		}
@@ -631,17 +631,17 @@ public class DemoNetwork implements INetwork {
 	}
 
 	@Override
-	public boolean updateAccount(String adapterId, User user) {
-		if (!mAdapters.hasObject(adapterId)) {
+	public boolean updateAccount(String gateId, User user) {
+		if (!mGates.hasObject(gateId)) {
 			return false;
 		}
 
 		// NOTE: this replaces (or add) whole user
-		mUsers.addObject(adapterId, user);
+		mUsers.addObject(gateId, user);
 
 		// We can have only one superuser, so unset all other superusers of this gate (this does classic server too)
 		if (user.getRole() == Role.Superuser) {
-			for (User otherUser : mUsers.getObjects(adapterId)) {
+			for (User otherUser : mUsers.getObjects(gateId)) {
 				// Change only other users, except me
 				if (!otherUser.getId().equals(user.getId())) {
 					continue;
@@ -656,7 +656,7 @@ public class DemoNetwork implements INetwork {
 
 		// If we change role of ourselves, we need to put such change to gate itself too
 		if (user.getId().equals(mUser.getId())) {
-			Gate gate = mAdapters.getObject(adapterId);
+			Gate gate = mGates.getObject(gateId);
 			gate.setRole(user.getRole());
 		}
 
@@ -664,8 +664,8 @@ public class DemoNetwork implements INetwork {
 	}
 
 	@Override
-	public boolean setTimeZone(String adapterId, int offsetInMinutes) {
-		Gate gate = mAdapters.getObject(adapterId);
+	public boolean setTimeZone(String gateId, int offsetInMinutes) {
+		Gate gate = mGates.getObject(gateId);
 
 		if (gate == null) {
 			return false;
@@ -676,8 +676,8 @@ public class DemoNetwork implements INetwork {
 	}
 
 	@Override
-	public int getTimeZone(String adapterId) {
-		Gate gate = mAdapters.getObject(adapterId);
+	public int getTimeZone(String gateId) {
+		Gate gate = mGates.getObject(gateId);
 
 		if (gate == null) {
 			return 0;
@@ -699,23 +699,23 @@ public class DemoNetwork implements INetwork {
 	}
 
 	@Override
-	public List<Watchdog> getAllWatchdogs(String adapterId) {
-		return mWatchdogs.getObjects(adapterId);
+	public List<Watchdog> getAllWatchdogs(String gateId) {
+		return mWatchdogs.getObjects(gateId);
 	}
 
 	@Override
-	public List<Watchdog> getWatchdogs(ArrayList<String> watchdogIds, String adapterId) {
+	public List<Watchdog> getWatchdogs(ArrayList<String> watchdogIds, String gateId) {
 		return new ArrayList<>();
 	}
 
 	@Override
-	public boolean updateWatchdog(Watchdog watchdog, String adapterId) {
-		if (!mAdapters.hasObject(adapterId)) {
+	public boolean updateWatchdog(Watchdog watchdog, String gateId) {
+		if (!mGates.hasObject(gateId)) {
 			return false;
 		}
 
 		// NOTE: this replaces (or add) whole watchdog
-		mWatchdogs.addObject(adapterId, watchdog);
+		mWatchdogs.addObject(gateId, watchdog);
 		return true;
 	}
 
@@ -725,8 +725,8 @@ public class DemoNetwork implements INetwork {
 	}
 
 	@Override
-	public boolean addWatchdog(Watchdog watchdog, String adapterId) {
-		if (!mAdapters.hasObject(adapterId)) {
+	public boolean addWatchdog(Watchdog watchdog, String gateId) {
+		if (!mGates.hasObject(gateId)) {
 			return false;
 		}
 
@@ -735,11 +735,11 @@ public class DemoNetwork implements INetwork {
 		int i = 0;
 		do {
 			watchdogId = String.valueOf(i++);
-		} while (mWatchdogs.hasObject(adapterId, watchdogId));
+		} while (mWatchdogs.hasObject(gateId, watchdogId));
 
 		// Set new watchdog id
 		watchdog.setId(watchdogId);
-		mWatchdogs.addObject(adapterId, watchdog);
+		mWatchdogs.addObject(gateId, watchdog);
 		return true;
 	}
 
@@ -749,12 +749,12 @@ public class DemoNetwork implements INetwork {
 	}
 
 	@Override
-	public List<AchievementListItem> getAllAchievements(String adapterID) {
-		return mAchievements.getObjects(adapterID);
+	public List<AchievementListItem> getAllAchievements(String gateId) {
+		return mAchievements.getObjects(gateId);
 	}
 
 	@Override
-	public List<String> setProgressLvl(String adapterId, String achievementId) {
+	public List<String> setProgressLvl(String gateId, String achievementId) {
 		return new ArrayList<>();
 	}
 }
