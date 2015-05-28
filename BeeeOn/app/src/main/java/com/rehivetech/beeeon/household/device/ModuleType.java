@@ -18,7 +18,7 @@ import com.rehivetech.beeeon.household.device.values.UnknownValue;
 /**
  * Module's types
  */
-public enum DeviceType {
+public enum ModuleType {
 
 	TYPE_UNKNOWN(-1, R.string.dev_unknown_type, false, UnknownValue.class), // unknown module
 
@@ -50,7 +50,7 @@ public enum DeviceType {
 	private final Class<? extends BaseValue> mValueClass;
 	private final boolean mIsActor;
 
-	private DeviceType(int id, int nameRes, boolean isActor, Class<? extends BaseValue> valueClass) {
+	private ModuleType(int id, int nameRes, boolean isActor, Class<? extends BaseValue> valueClass) {
 		mTypeId = id;
 		mNameRes = nameRes;
 		mIsActor = isActor;
@@ -73,9 +73,9 @@ public enum DeviceType {
 		return mValueClass;
 	}
 
-	public static DeviceType fromTypeId(int typeId) {
-		// Get the DeviceType object based on type number
-		for (DeviceType item : values()) {
+	public static ModuleType fromTypeId(int typeId) {
+		// Get the ModuleType object based on type number
+		for (ModuleType item : values()) {
 			if (typeId == item.getTypeId()) {
 				return item;
 			}
@@ -84,7 +84,7 @@ public enum DeviceType {
 		return TYPE_UNKNOWN;
 	}
 
-	public static DeviceType fromValue(String value) {
+	public static ModuleType fromValue(String value) {
 		if (value.isEmpty())
 			return TYPE_UNKNOWN;
 

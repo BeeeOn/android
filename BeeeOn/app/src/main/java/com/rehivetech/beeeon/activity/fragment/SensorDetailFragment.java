@@ -39,9 +39,9 @@ import com.rehivetech.beeeon.base.BaseApplicationFragment;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.household.adapter.Adapter;
 import com.rehivetech.beeeon.household.device.Module;
-import com.rehivetech.beeeon.household.device.DeviceLog;
-import com.rehivetech.beeeon.household.device.DeviceLog.DataInterval;
-import com.rehivetech.beeeon.household.device.DeviceLog.DataType;
+import com.rehivetech.beeeon.household.device.ModuleLog;
+import com.rehivetech.beeeon.household.device.ModuleLog.DataInterval;
+import com.rehivetech.beeeon.household.device.ModuleLog.DataType;
 import com.rehivetech.beeeon.household.device.Facility;
 import com.rehivetech.beeeon.household.device.values.BaseEnumValue;
 import com.rehivetech.beeeon.household.device.values.BaseValue;
@@ -471,7 +471,7 @@ public class SensorDetailFragment extends BaseApplicationFragment implements ILi
 		}
 	}
 
-	public void fillGraph(DeviceLog log) {
+	public void fillGraph(ModuleLog log) {
 		if (mGraphView == null) {
 			return;
 		}

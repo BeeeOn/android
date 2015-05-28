@@ -19,14 +19,14 @@ public class Module implements INameIdentifier {
 
 	public final BaseValue mValue;
 
-	public final DeviceType mType;
+	public final ModuleType mType;
 	public final String mRawTypeId;
 	public final int mOffset;
 
 	/**
 	 * Class constructor
 	 */
-	public Module(DeviceType type, BaseValue value, String rawTypeId, int offset) {
+	public Module(ModuleType type, BaseValue value, String rawTypeId, int offset) {
 		mType = type;
 		mValue = value;
 		mRawTypeId = rawTypeId;
@@ -46,10 +46,10 @@ public class Module implements INameIdentifier {
 			offset = value / 256;
 		}
 
-		DeviceType type = DeviceType.fromTypeId(iType);
+		ModuleType type = ModuleType.fromTypeId(iType);
 		BaseValue value = BaseValue.createFromDeviceType(type);
 
-		// Create module object with DeviceType, BaseValue, original raw value of type, and offset
+		// Create module object with ModuleType, BaseValue, original raw value of type, and offset
 		return new Module(type, value, typeId, offset);
 	}
 
@@ -65,7 +65,7 @@ public class Module implements INameIdentifier {
 		SAVE_INITIALIZED,
 	}
 
-	public DeviceType getType() {
+	public ModuleType getType() {
 		return mType;
 	}
 

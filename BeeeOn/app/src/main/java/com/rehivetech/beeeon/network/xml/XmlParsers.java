@@ -12,7 +12,7 @@ import com.rehivetech.beeeon.gamification.AchievementListItem;
 import com.rehivetech.beeeon.gcm.notification.VisibleNotification;
 import com.rehivetech.beeeon.household.adapter.Adapter;
 import com.rehivetech.beeeon.household.device.Module;
-import com.rehivetech.beeeon.household.device.DeviceLog;
+import com.rehivetech.beeeon.household.device.ModuleLog;
 import com.rehivetech.beeeon.household.device.Facility;
 import com.rehivetech.beeeon.household.device.RefreshInterval;
 import com.rehivetech.beeeon.household.location.Location;
@@ -167,7 +167,7 @@ public class XmlParsers {
 			result.data = parseAdaptersReady();
 			break;
 		case LOGDATA:
-			// DeviceLog
+			// ModuleLog
 			result.data = parseLogData();
 			break;
 		case ROOMS:
@@ -393,11 +393,11 @@ public class XmlParsers {
 	 * @throws XmlPullParserException
 	 * @throws IOException
 	 */
-	private DeviceLog parseLogData() throws XmlPullParserException, IOException {
+	private ModuleLog parseLogData() throws XmlPullParserException, IOException {
 		mParser.nextTag();
 		// mParser.require(XmlPullParser.START_TAG, ns, Xconstants.ROW); // strict solution
 
-		DeviceLog log = new DeviceLog();
+		ModuleLog log = new ModuleLog();
 
 		if (!mParser.getName().equals(Xconstants.ROW))
 			return log;

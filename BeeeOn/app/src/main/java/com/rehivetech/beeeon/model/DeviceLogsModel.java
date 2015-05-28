@@ -1,9 +1,9 @@
 package com.rehivetech.beeeon.model;
 
 import com.rehivetech.beeeon.exception.AppException;
-import com.rehivetech.beeeon.household.device.DeviceLog;
-import com.rehivetech.beeeon.household.device.DeviceLog.DataInterval;
-import com.rehivetech.beeeon.household.device.DeviceLog.DataType;
+import com.rehivetech.beeeon.household.device.ModuleLog;
+import com.rehivetech.beeeon.household.device.ModuleLog.DataInterval;
+import com.rehivetech.beeeon.household.device.ModuleLog.DataType;
 import com.rehivetech.beeeon.network.DemoNetwork;
 import com.rehivetech.beeeon.network.INetwork;
 import com.rehivetech.beeeon.pair.LogDataPair;
@@ -26,14 +26,14 @@ public class DeviceLogsModel extends BaseModel {
 	
 	private DateTimeFormatter fmt = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss").withZoneUTC();
 
-	private final Map<String, DeviceLog> mDevicesLogs = new HashMap<String, DeviceLog>();
+	private final Map<String, ModuleLog> mDevicesLogs = new HashMap<String, ModuleLog>();
 
 	public DeviceLogsModel(INetwork network) {
 		super(network);
 	}
 	
-	private void saveDeviceLog(String deviceId, DeviceLog log) {
-		DeviceLog data = mDevicesLogs.get(deviceId);
+	private void saveDeviceLog(String deviceId, ModuleLog log) {
+		ModuleLog data = mDevicesLogs.get(deviceId);
 		if (data == null) {
 			// Just save new item
 			mDevicesLogs.put(deviceId, log);
@@ -57,8 +57,8 @@ public class DeviceLogsModel extends BaseModel {
 			Log.d(TAG, String.format("No cached log for module %s", deviceName));
 			downloadIntervals.add(interval);
 		} else {
-			// We have this DeviceLog with (not necessarily all) values
-			DeviceLog data = mDevicesLogs.get(pair.module.getId());
+			// We have this ModuleLog with (not necessarily all) values
+			ModuleLog data = mDevicesLogs.get(pair.module.getId());
 			
 			// Values are returned as sorted
 			SortedMap<Long, Float> rows = data.getValues();
@@ -117,12 +117,12 @@ public class DeviceLogsModel extends BaseModel {
 	 * @param pair
 	 * @return
 	 */
-	public DeviceLog getDeviceLog(LogDataPair pair) {
-		DeviceLog log = new DeviceLog(DataType.AVERAGE, DataInterval.RAW);
+	public ModuleLog getDeviceLog(LogDataPair pair) {
+		ModuleLog log = new ModuleLog(DataType.AVERAGE, DataInterval.RAW);
 		
 		if (mDevicesLogs.containsKey(pair.module.getId())) {
-			// We have this DeviceLog, lets load wanted values from it
-			DeviceLog data = mDevicesLogs.get(pair.module.getId());
+			// We have this ModuleLog, lets load wanted values from it
+			ModuleLog data = mDevicesLogs.get(pair.module.getId());
 			for (Entry<Long, Float> entry : data.getValues(pair.interval).entrySet()) {
 				log.addValue(entry.getKey(), entry.getValue());
 			}
@@ -150,7 +150,7 @@ public class DeviceLogsModel extends BaseModel {
 			for (Interval downloadInterval : downloadIntervals) {
 				// Download selected partial log
 				LogDataPair downPair = new LogDataPair(pair.module, downloadInterval, pair.type, pair.gap);
-				DeviceLog log = mNetwork.getLog(downPair.module.getFacility().getAdapterId(), downPair.module, downPair);
+				ModuleLog log = mNetwork.getLog(downPair.module.getFacility().getAdapterId(), downPair.module, downPair);
 				
 				// Save it
 				saveDeviceLog(downPair.module.getId(), log);

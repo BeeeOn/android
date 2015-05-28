@@ -4,7 +4,7 @@ import com.rehivetech.beeeon.IdentifierComparator;
 import com.rehivetech.beeeon.exception.AppException;
 import com.rehivetech.beeeon.household.device.Module;
 import com.rehivetech.beeeon.household.device.Module.SaveDevice;
-import com.rehivetech.beeeon.household.device.DeviceType;
+import com.rehivetech.beeeon.household.device.ModuleType;
 import com.rehivetech.beeeon.household.device.Facility;
 import com.rehivetech.beeeon.network.INetwork;
 import com.rehivetech.beeeon.util.Log;
@@ -69,7 +69,7 @@ public class FacilitiesModel extends BaseModel {
 			offset = value / 256;
 		}
 
-		DeviceType type = DeviceType.fromTypeId(iType);
+		ModuleType type = ModuleType.fromTypeId(iType);
 
 		return facility.getDeviceByType(type, offset);
 	}
@@ -232,7 +232,7 @@ public class FacilitiesModel extends BaseModel {
 	 * This CAN'T be called on UI thread!
 	 *
 	 * @param module
-	 *            DeviceType of this module must be actor, i.e., module.getType().isActor() must return true.
+	 *            ModuleType of this module must be actor, i.e., module.getType().isActor() must return true.
 	 * @return true on success, false otherwise
 	 */
 	public boolean switchActor(Module module) throws AppException {

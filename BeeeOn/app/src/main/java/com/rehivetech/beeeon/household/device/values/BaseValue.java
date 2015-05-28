@@ -1,6 +1,6 @@
 package com.rehivetech.beeeon.household.device.values;
 
-import com.rehivetech.beeeon.household.device.DeviceType;
+import com.rehivetech.beeeon.household.device.ModuleType;
 import com.rehivetech.beeeon.household.device.units.BaseUnit;
 
 public abstract class BaseValue {
@@ -42,7 +42,7 @@ public abstract class BaseValue {
 		return mRawValue != null;
 	}
 
-	public static BaseValue createFromDeviceType(DeviceType type) {
+	public static BaseValue createFromDeviceType(ModuleType type) {
 		try {
 			// Try to create and return new BaseValue object
 			return type.getValueClass().newInstance();

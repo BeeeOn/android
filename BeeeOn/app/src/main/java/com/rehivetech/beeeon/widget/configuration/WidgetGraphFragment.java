@@ -10,7 +10,7 @@ import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.arrayadapter.DeviceArrayAdapter;
 import com.rehivetech.beeeon.household.adapter.Adapter;
 import com.rehivetech.beeeon.household.device.Module;
-import com.rehivetech.beeeon.household.device.DeviceLog;
+import com.rehivetech.beeeon.household.device.ModuleLog;
 import com.rehivetech.beeeon.household.device.RefreshInterval;
 import com.rehivetech.beeeon.util.Utils;
 import com.rehivetech.beeeon.widget.data.WidgetGraphData;
@@ -61,20 +61,20 @@ public class WidgetGraphFragment extends WidgetConfigurationFragment {
 			public void onCheckedChanged(RadioGroup group, int checkedId) {
 				switch (checkedId){
 					case R.id.widget_gap_daily:
-						mWidgetData.widgetLogData.gap = DeviceLog.DataInterval.HOUR.getSeconds();
+						mWidgetData.widgetLogData.gap = ModuleLog.DataInterval.HOUR.getSeconds();
 						mWidgetData.widgetLogData.intervalStart = DateTime.now(DateTimeZone.UTC).minusDays(1).getMillis();
 						mWidgetRefreshInterval = RefreshInterval.MIN_30;
 						break;
 
 					case R.id.widget_gap_monthly:
-						mWidgetData.widgetLogData.gap = DeviceLog.DataInterval.DAY.getSeconds();
+						mWidgetData.widgetLogData.gap = ModuleLog.DataInterval.DAY.getSeconds();
 						mWidgetData.widgetLogData.intervalStart = DateTime.now(DateTimeZone.UTC).minusMonths(1).getMillis();
 						mWidgetRefreshInterval = RefreshInterval.HOUR_24;	 // TODO maybe could be longer
 						break;
 
 					default:
 					case R.id.widget_gap_weekly:
-						mWidgetData.widgetLogData.gap = DeviceLog.DataInterval.HOUR.getSeconds();
+						mWidgetData.widgetLogData.gap = ModuleLog.DataInterval.HOUR.getSeconds();
 						mWidgetData.widgetLogData.intervalStart = DateTime.now(DateTimeZone.UTC).minusWeeks(1).getMillis();
 						mWidgetRefreshInterval = RefreshInterval.HOUR_12;
 						break;

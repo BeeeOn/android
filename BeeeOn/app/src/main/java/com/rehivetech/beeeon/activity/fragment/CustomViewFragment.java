@@ -22,9 +22,9 @@ import com.rehivetech.beeeon.base.BaseApplicationFragment;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.household.adapter.Adapter;
 import com.rehivetech.beeeon.household.device.Module;
-import com.rehivetech.beeeon.household.device.DeviceLog;
-import com.rehivetech.beeeon.household.device.DeviceLog.DataInterval;
-import com.rehivetech.beeeon.household.device.DeviceLog.DataType;
+import com.rehivetech.beeeon.household.device.ModuleLog;
+import com.rehivetech.beeeon.household.device.ModuleLog.DataInterval;
+import com.rehivetech.beeeon.household.device.ModuleLog.DataType;
 import com.rehivetech.beeeon.household.device.Facility;
 import com.rehivetech.beeeon.household.device.values.BaseEnumValue;
 import com.rehivetech.beeeon.pair.LogDataPair;
@@ -47,7 +47,7 @@ import java.util.SortedMap;
 public class CustomViewFragment extends BaseApplicationFragment {
 
 	private SparseArray<List<Module>> mDevices = new SparseArray<List<Module>>();
-	// private SparseArray<List<DeviceLog>> mLogs = new SparseArray<List<DeviceLog>>();
+	// private SparseArray<List<ModuleLog>> mLogs = new SparseArray<List<ModuleLog>>();
 	private SparseArray<GraphView> mGraphs = new SparseArray<GraphView>();
 	private SparseArray<LegendView> mLegends = new SparseArray<>();
 
@@ -103,7 +103,7 @@ public class CustomViewFragment extends BaseApplicationFragment {
 		mLayout.addView(row);
 	}
 
-	private void fillGraph(DeviceLog log, Module module) {
+	private void fillGraph(ModuleLog log, Module module) {
 
 		GraphView graphView = mGraphs.get(module.getType().getTypeId());
 		if (graphView == null) {
@@ -113,7 +113,7 @@ public class CustomViewFragment extends BaseApplicationFragment {
 		Random random = new Random();
 		int color = Color.argb(255, random.nextInt(256), random.nextInt(256), random.nextInt(256));
 
-		// for (DeviceLog log : logs) {
+		// for (ModuleLog log : logs) {
 
 		// GraphViewSeriesStyle seriesStyleBlue = new
 		// GraphViewSeriesStyle(mContext.getResources().getColor(R.color.beeeon_primary_cyan), 2);
@@ -229,7 +229,7 @@ public class CustomViewFragment extends BaseApplicationFragment {
 					int typeId = pairs.get(0).module.getType().getTypeId();
 
 					for (LogDataPair pair : pairs) {
-						DeviceLog log = mController.getDeviceLogsModel().getDeviceLog(pair);
+						ModuleLog log = mController.getDeviceLogsModel().getDeviceLog(pair);
 						fillGraph(log, pair.module);
 					}
 

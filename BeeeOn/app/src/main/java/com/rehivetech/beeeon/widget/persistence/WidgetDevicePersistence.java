@@ -6,7 +6,7 @@ import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.household.adapter.Adapter;
 import com.rehivetech.beeeon.household.device.Module;
-import com.rehivetech.beeeon.household.device.DeviceType;
+import com.rehivetech.beeeon.household.device.ModuleType;
 import com.rehivetech.beeeon.household.device.values.BaseValue;
 import com.rehivetech.beeeon.household.device.values.BooleanValue;
 import com.rehivetech.beeeon.household.location.Location;
@@ -51,7 +51,7 @@ public class WidgetDevicePersistence extends WidgetBeeeOnPersistence {
 	private String cachedUnit;
 
 	// generated data
-	private DeviceType deviceType;
+	private ModuleType mModuleType;
 	private BaseValue deviceValue;
 	private boolean deviceValueDisabled = false;
 	private boolean deviceValueChecked;
@@ -71,7 +71,7 @@ public class WidgetDevicePersistence extends WidgetBeeeOnPersistence {
 		locationId = mPrefs.getString(getProperty(PREF_LOCATION_ID), "");
 		locationIcon = mPrefs.getInt(getProperty(PREF_LOCATION_ICON), 0);
 
-		type = mPrefs.getInt(getProperty(PREF_TYPE), DeviceType.TYPE_UNKNOWN.getTypeId());
+		type = mPrefs.getInt(getProperty(PREF_TYPE), ModuleType.TYPE_UNKNOWN.getTypeId());
 
 		rawValue = mPrefs.getString(getProperty(PREF_RAW_VALUE), "");
 		cachedValue = mPrefs.getString(getProperty(PREF_CACHED_VALUE), "");
@@ -81,8 +81,8 @@ public class WidgetDevicePersistence extends WidgetBeeeOnPersistence {
 		lastUpdateTime = mPrefs.getLong(getProperty(PREF_LAST_UPDATE_TIME), 0);
 		refresh = mPrefs.getInt(getProperty(PREF_REFRESH), 0);
 
-		deviceType = DeviceType.fromTypeId(type);
-		deviceValue = BaseValue.createFromDeviceType(deviceType);
+		mModuleType = ModuleType.fromTypeId(type);
+		deviceValue = BaseValue.createFromDeviceType(mModuleType);
 
 		// we don't set value when creating new widget
 		if(!rawValue.isEmpty()) {
@@ -109,7 +109,7 @@ public class WidgetDevicePersistence extends WidgetBeeeOnPersistence {
 		lastUpdateTime = module.getFacility().getLastUpdate().getMillis();
 		refresh = module.getFacility().getRefresh().getInterval();
 
-		deviceType = module.getType();
+		mModuleType = module.getType();
 		// value is saving as raw (for recreating) and cached (for when user is logged out)
 		rawValue = module.getValue().getRawValue();
 		deviceValue.setValue(module.getValue().getRawValue());
@@ -294,8 +294,8 @@ public class WidgetDevicePersistence extends WidgetBeeeOnPersistence {
 	// ----------------------------------------------------------- //
 	// ---------------------- GETTERS ---------------------------- //
 	// ----------------------------------------------------------- //
-	public DeviceType getType(){
-		return deviceType;
+	public ModuleType getType(){
+		return mModuleType;
 	}
 
 	/**

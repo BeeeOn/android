@@ -10,10 +10,10 @@ import com.rehivetech.beeeon.gcm.notification.VisibleNotification;
 import com.rehivetech.beeeon.household.adapter.Adapter;
 import com.rehivetech.beeeon.household.device.Module;
 import com.rehivetech.beeeon.household.device.Module.SaveDevice;
-import com.rehivetech.beeeon.household.device.DeviceLog;
-import com.rehivetech.beeeon.household.device.DeviceLog.DataInterval;
-import com.rehivetech.beeeon.household.device.DeviceLog.DataType;
-import com.rehivetech.beeeon.household.device.DeviceType;
+import com.rehivetech.beeeon.household.device.ModuleLog;
+import com.rehivetech.beeeon.household.device.ModuleLog.DataInterval;
+import com.rehivetech.beeeon.household.device.ModuleLog.DataType;
+import com.rehivetech.beeeon.household.device.ModuleType;
 import com.rehivetech.beeeon.household.device.Facility;
 import com.rehivetech.beeeon.household.device.RefreshInterval;
 import com.rehivetech.beeeon.household.device.values.BaseEnumValue;
@@ -408,8 +408,8 @@ public class DemoNetwork implements INetwork {
 			int count = rand.nextInt(5);
 			do {
 				// Get random module type
-				DeviceType[] types = DeviceType.values();
-				DeviceType randType = types[rand.nextInt(types.length)];
+				ModuleType[] types = ModuleType.values();
+				ModuleType randType = types[rand.nextInt(types.length)];
 
 				// Determine offset (number of existing devices with this type in the facility)
 				int offset = 0;
@@ -445,9 +445,9 @@ public class DemoNetwork implements INetwork {
 	}
 
 	@Override
-	public DeviceLog getLog(String adapterId, Module module, LogDataPair pair) {
+	public ModuleLog getLog(String adapterId, Module module, LogDataPair pair) {
 		// Generate random values for log in demo mode
-		DeviceLog log = new DeviceLog(DataType.AVERAGE, DataInterval.RAW);
+		ModuleLog log = new ModuleLog(DataType.AVERAGE, DataInterval.RAW);
 
 		double lastValue = pair.module.getValue().getDoubleValue();
 		double range = 2 + Math.log(module.getFacility().getRefresh().getInterval());

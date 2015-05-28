@@ -13,7 +13,7 @@ import com.rehivetech.beeeon.Constants;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.household.adapter.Adapter;
 import com.rehivetech.beeeon.household.device.Module;
-import com.rehivetech.beeeon.household.device.DeviceLog;
+import com.rehivetech.beeeon.household.device.ModuleLog;
 import com.rehivetech.beeeon.household.device.Facility;
 import com.rehivetech.beeeon.household.device.RefreshInterval;
 import com.rehivetech.beeeon.household.device.values.BaseEnumValue;
@@ -200,15 +200,15 @@ public class WidgetGraphData extends WidgetDeviceData {
         mLogDataPair = new LogDataPair(
             fac.getModules().get(0),
             new Interval(widgetLogData.intervalStart, DateTime.now(DateTimeZone.UTC).getMillis()),
-                    Utils.getEnumFromId(DeviceLog.DataType.class, widgetLogData.type),
-                    DeviceLog.DataInterval.fromSeconds(widgetLogData.gap));
+                    Utils.getEnumFromId(ModuleLog.DataType.class, widgetLogData.type),
+                    ModuleLog.DataInterval.fromSeconds(widgetLogData.gap));
     }
 
     /**
      * Fills graph with received data
      * @param log
      */
-    private void fillGraph(DeviceLog log) {
+    private void fillGraph(ModuleLog log) {
         if(mGraph == null) return;
         Log.d(TAG, "fillGraph");
 
@@ -268,7 +268,7 @@ public class WidgetGraphData extends WidgetDeviceData {
             widgetLastUpdate = getTimeNow();
             widgetAdapterId = adapter.getId();
 
-            DeviceLog log = mController.getDeviceLogsModel().getDeviceLog(mLogDataPair);
+            ModuleLog log = mController.getDeviceLogsModel().getDeviceLog(mLogDataPair);
             if(log != null) {
 				fillGraph(log);
 				mGraphBitmap = mGraph.drawBitmap(mGraphWidth, mGraphHeight);

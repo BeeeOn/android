@@ -3,8 +3,8 @@ package com.rehivetech.beeeon.pair;
 import org.joda.time.Interval;
 
 import com.rehivetech.beeeon.household.device.Module;
-import com.rehivetech.beeeon.household.device.DeviceLog.DataInterval;
-import com.rehivetech.beeeon.household.device.DeviceLog.DataType;
+import com.rehivetech.beeeon.household.device.ModuleLog.DataInterval;
+import com.rehivetech.beeeon.household.device.ModuleLog.DataType;
 
 /**
  * Represents "pair" of data required for get module log

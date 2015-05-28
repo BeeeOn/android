@@ -13,7 +13,7 @@ import com.rehivetech.beeeon.gcm.notification.VisibleNotification;
 import com.rehivetech.beeeon.household.adapter.Adapter;
 import com.rehivetech.beeeon.household.device.Module;
 import com.rehivetech.beeeon.household.device.Module.SaveDevice;
-import com.rehivetech.beeeon.household.device.DeviceLog;
+import com.rehivetech.beeeon.household.device.ModuleLog;
 import com.rehivetech.beeeon.household.device.Facility;
 import com.rehivetech.beeeon.household.location.Location;
 import com.rehivetech.beeeon.household.user.User;
@@ -625,7 +625,7 @@ public class Network implements INetwork {
 
 	// http://stackoverflow.com/a/509288/1642090
 	@Override
-	public DeviceLog getLog(String adapterID, Module module, LogDataPair pair){
+	public ModuleLog getLog(String adapterID, Module module, LogDataPair pair){
 		String msgToSend = XmlCreator.createGetLog(mBT, adapterID, module.getFacility().getAddress(), module.getRawTypeId(),
 				String.valueOf(pair.interval.getStartMillis() / 1000), String.valueOf(pair.interval.getEndMillis() / 1000),
 				pair.type.getId(), pair.gap.getSeconds());
@@ -633,7 +633,7 @@ public class Network implements INetwork {
 		ParsedMessage msg = doRequest(msgToSend);
 
 		if (msg.getState() == State.LOGDATA) {
-			DeviceLog result = (DeviceLog) msg.data;
+			ModuleLog result = (ModuleLog) msg.data;
 			result.setDataInterval(pair.gap);
 			result.setDataType(pair.type);
 			return result;

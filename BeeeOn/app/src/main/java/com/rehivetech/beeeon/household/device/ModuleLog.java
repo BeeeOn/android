@@ -11,7 +11,7 @@ import org.joda.time.Interval;
 /**
  * Represents history of values for module.
  */
-public class DeviceLog {
+public class ModuleLog {
 	private SortedMap<Long, Float> mValues = new TreeMap<Long, Float>();
 	private DataType mType;
 	private DataInterval mInterval;
@@ -95,7 +95,7 @@ public class DeviceLog {
 	/**
 	 * Constructor
 	 */
-	public DeviceLog() {
+	public ModuleLog() {
 		clearValues();
 	}
 
@@ -105,7 +105,7 @@ public class DeviceLog {
 	 * @param type
 	 * @param interval
 	 */
-	public DeviceLog(DataType type, DataInterval interval) {
+	public ModuleLog(DataType type, DataInterval interval) {
 		mType = type;
 		mInterval = interval;
 		clearValues(); // to reset min/max values
