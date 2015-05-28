@@ -28,7 +28,7 @@ public class AddSensorFragment extends TrackFragment {
 	private LinearLayout mLayout;
 	private TextView mTimeText;
 	private DonutProgress mTime;
-	
+
 
 	private CountDownTimer mCountDownTimer;
 	private boolean mTimerDone = false;
@@ -69,7 +69,7 @@ public class AddSensorFragment extends TrackFragment {
 			Log.d(TAG, "Timer value: " + mTimerButtonSec);
 		}
 	}
-	
+
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		mView = inflater.inflate(R.layout.activity_add_sensor_activity_dialog, container, false);
@@ -80,14 +80,14 @@ public class AddSensorFragment extends TrackFragment {
 
 	@Override
 	public void setUserVisibleHint(boolean isVisibleToUser) {
-	    super.setUserVisibleHint(isVisibleToUser);
-	    if (isVisibleToUser) {
-	    	Log.d(TAG, "ADD Sensor fragment is visible");
-	    	mActivity.setBtnLastPage();
-	    	mActivity.setFragment(this);
-	    	//mTimeText = (TextView) mView.findViewById(R.id.add_sensor_time);
-	    	//startTimer();
-	    	mActivity.checkUnInitSensor();
+		super.setUserVisibleHint(isVisibleToUser);
+		if (isVisibleToUser) {
+			Log.d(TAG, "ADD Sensor fragment is visible");
+			mActivity.setBtnLastPage();
+			mActivity.setFragment(this);
+			//mTimeText = (TextView) mView.findViewById(R.id.add_sensor_time);
+			//startTimer();
+			mActivity.checkUnInitSensor();
 
 			mTime = (DonutProgress) mView.findViewById(R.id.progress);
 			mTime.setMax(mTimerButtonSec);
@@ -101,10 +101,9 @@ public class AddSensorFragment extends TrackFragment {
 			np.setFocusable(true);
 			np.setFocusableInTouchMode(true);
 			*/
-	    }
-	    else {
-	    	stopTimer();
-	    }
+		} else {
+			stopTimer();
+		}
 	}
 
 	@Override
@@ -139,7 +138,6 @@ public class AddSensorFragment extends TrackFragment {
 		super.onStart();
 	}
 
-	
 
 	public void resetPairButton() {
 		//mTimeText.setText("Time is out");
@@ -167,7 +165,7 @@ public class AddSensorFragment extends TrackFragment {
 				//mTimeText.setText(getResources().getString(R.string.addsensor_active_pair) + " 0:" + ((mTimerValue < 10) ? "0" : "") + mTimerValue);
 				//mTime.setTitle(String.valueOf(mTimerValue));
 				//mTimeNewValProgress = mTimerValue*100/mTimerButtonSec;
-				Log.d(TAG,"actual progress: "+mTimeNewValProgress);
+				Log.d(TAG, "actual progress: " + mTimeNewValProgress);
 				mTime.setProgress(mTimerValue);
 				//mTime.animateProgressTo(mTimeOldValProgress,mTimeNewValProgress,null);
 				//mTimeOldValProgress = mTimeNewValProgress;

@@ -110,8 +110,8 @@ public class SensorDetailFragment extends BaseApplicationFragment implements ILi
 	private String mAdapterId;
 
 
-	private BaseSeries<DataPoint>  mGraphSeries;
-	
+	private BaseSeries<DataPoint> mGraphSeries;
+
 
 	private static final String GRAPH_DATE_TIME_FORMAT = "dd.MM. kk:mm";
 	private static final String LOG_DATE_TIME_FORMAT = "yyyy-MM-dd HH:mm:ss";
@@ -143,7 +143,7 @@ public class SensorDetailFragment extends BaseApplicationFragment implements ILi
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
-		if(savedInstanceState != null) {
+		if (savedInstanceState != null) {
 			mModuleID = savedInstanceState.getString(ARG_SEN_ID);
 			mAdapterId = savedInstanceState.getString(ARG_ADAPTER_ID);
 			mLocationID = savedInstanceState.getString(ARG_LOC_ID);
@@ -164,10 +164,10 @@ public class SensorDetailFragment extends BaseApplicationFragment implements ILi
 	@Override
 	public void onSaveInstanceState(Bundle savedInstanceState) {
 		savedInstanceState.putString(ARG_SEN_ID, mModuleID);
-		savedInstanceState.putString(ARG_ADAPTER_ID,mAdapterId);
-		savedInstanceState.putString(ARG_LOC_ID,mLocationID);
+		savedInstanceState.putString(ARG_ADAPTER_ID, mAdapterId);
+		savedInstanceState.putString(ARG_LOC_ID, mLocationID);
 		savedInstanceState.putInt(ARG_CUR_PAGE, mCurPageNumber);
-		savedInstanceState.putInt(ARG_SEL_PAGE,mSelPageNumber);
+		savedInstanceState.putInt(ARG_SEL_PAGE, mSelPageNumber);
 		// Always call the superclass so it can save the view hierarchy state
 		super.onSaveInstanceState(savedInstanceState);
 	}
@@ -176,14 +176,14 @@ public class SensorDetailFragment extends BaseApplicationFragment implements ILi
 	public void setUserVisibleHint(boolean isVisibleToUser) {
 		super.setUserVisibleHint(isVisibleToUser);
 		if (isVisibleToUser) {
-			Log.d(TAG,"This fragment is visible - dev "+ mModuleID);
+			Log.d(TAG, "This fragment is visible - dev " + mModuleID);
 			doReloadDevicesTask(mAdapterId, false);
 		}
 
 	}
 
 	private void initLayout(Module module) {
-		Log.d(TAG,"INIT LAYOUT");
+		Log.d(TAG, "INIT LAYOUT");
 		// Get View for sensor name
 		mName = (TextView) mView.findViewById(R.id.sen_detail_name);
 		// Get View for sensor location
@@ -217,7 +217,7 @@ public class SensorDetailFragment extends BaseApplicationFragment implements ILi
 			@Override
 			public void onClick(View v) {
 				// go to edit senzor
-				Log.d(TAG,"Click - edit senzor");
+				Log.d(TAG, "Click - edit senzor");
 				Intent intent = new Intent(mActivity, SensorEditActivity.class);
 				intent.putExtra(Constants.GUI_EDIT_SENSOR_ID, mModuleID);
 				mActivity.startActivityForResult(intent, Constants.EDIT_SENSOR_REQUEST_CODE);
@@ -228,14 +228,14 @@ public class SensorDetailFragment extends BaseApplicationFragment implements ILi
 		// Set name of sensor
 		mName.setText(module.getName());
 		mName.setBackgroundColor(Color.TRANSPARENT);
-		if(mController.isUserAllowed(mAdapter.getRole())) {
+		if (mController.isUserAllowed(mAdapter.getRole())) {
 
 		}
-		
-		if(mController.isUserAllowed(mAdapter.getRole())) {
+
+		if (mController.isUserAllowed(mAdapter.getRole())) {
 			// Set value for Actor
 			mValueSwitch.setOnClickListener(new OnClickListener() {
-				
+
 				@Override
 				public void onClick(View v) {
 					// Disable button
@@ -244,24 +244,23 @@ public class SensorDetailFragment extends BaseApplicationFragment implements ILi
 				}
 			});
 			final Fragment frg = this;
-			if(mModule.getValue() instanceof TemperatureValue) {
+			if (mModule.getValue() instanceof TemperatureValue) {
 				// Set listner for dialog with NumberPicker
 				mValueSet.setOnClickListener(new OnClickListener() {
 					@Override
 					public void onClick(View v) {
 						Log.d(TAG, "SET TEMPERATURE");
-						NumberPickerDialogFragment.show(mActivity, mModule,frg);
+						NumberPickerDialogFragment.show(mActivity, mModule, frg);
 					}
 				});
 
-			}
-			else if(mModule.getValue() instanceof BoilerOperationTypeValue){
+			} else if (mModule.getValue() instanceof BoilerOperationTypeValue) {
 				// Set dialog for set Type of  BOILER
 				mValueSet.setOnClickListener(new OnClickListener() {
 					@Override
 					public void onClick(View v) {
-						Log.d(TAG,"SET BOILER TYPE");
-						String[] tmp = new String[] {
+						Log.d(TAG, "SET BOILER TYPE");
+						String[] tmp = new String[]{
 								getString(R.string.dev_boiler_operation_type_value_off),
 								getString(R.string.dev_boiler_operation_type_value_room),
 								getString(R.string.dev_boiler_operation_type_value_equiterm),
@@ -278,18 +277,17 @@ public class SensorDetailFragment extends BaseApplicationFragment implements ILi
 								.setChoiceMode(AbsListView.CHOICE_MODE_SINGLE)
 								.setConfirmButtonText(R.string.dialog_set_boiler_setaction)
 								.setCancelButtonText(R.string.notification_cancel)
-								.setTargetFragment(frg,REQUEST_BOILER_TYPE)
+								.setTargetFragment(frg, REQUEST_BOILER_TYPE)
 								.show();
 					}
 				});
-			}
-			else if (mModule.getValue() instanceof  BoilerOperationModeValue) {
+			} else if (mModule.getValue() instanceof BoilerOperationModeValue) {
 				// Set dialog for set Mode of Boiler
 				mValueSet.setOnClickListener(new OnClickListener() {
 					@Override
 					public void onClick(View v) {
-						Log.d(TAG,"SET BOILER MODE");
-						String[] tmp = new String[] {
+						Log.d(TAG, "SET BOILER MODE");
+						String[] tmp = new String[]{
 								getString(R.string.dev_boiler_operation_mode_value_automatic),
 								getString(R.string.dev_boiler_operation_mode_value_manual),
 								getString(R.string.dev_boiler_operation_mode_value_vacation)
@@ -325,7 +323,7 @@ public class SensorDetailFragment extends BaseApplicationFragment implements ILi
 				mLocation.setText(location.getName());
 				mLocationIcon.setImageResource(location.getIconResource());
 			}
-			if(mController.isUserAllowed(mAdapter.getRole())) {
+			if (mController.isUserAllowed(mAdapter.getRole())) {
 
 			}
 		} else {
@@ -366,7 +364,7 @@ public class SensorDetailFragment extends BaseApplicationFragment implements ILi
 		mBattery.setText(device.getBattery() + "%");
 
 		// Set signal
-		mSignal.setText(device.getNetworkQuality()+"%");
+		mSignal.setText(device.getNetworkQuality() + "%");
 
 		// Add Graph
 		if (mUnitsHelper != null && mTimeHelper != null && mGraphView.getSeries().size() == 0) {
@@ -379,7 +377,7 @@ public class SensorDetailFragment extends BaseApplicationFragment implements ILi
 	}
 
 	private void visibleAllElements() {
-		Log.d(TAG,"VISIBLE ALL ELEMENTS");
+		Log.d(TAG, "VISIBLE ALL ELEMENTS");
 		//HIDE progress
 		mView.findViewById(R.id.sensor_progress).setVisibility(View.GONE);
 		// VISIBLE other stuf
@@ -394,17 +392,16 @@ public class SensorDetailFragment extends BaseApplicationFragment implements ILi
 		// Show some controls if this module is an actor
 		if (mModule.getType().isActor() && mController.isUserAllowed(mAdapter.getRole())) {
 			BaseValue value = mModule.getValue();
-			
+
 			// For actor values of type on/off, open/closed we show switch button
-			if (value instanceof OnOffValue || value instanceof OpenClosedValue ) {
+			if (value instanceof OnOffValue || value instanceof OpenClosedValue) {
 				mValueSwitch.setVisibility(View.VISIBLE);
-			}
-			else if (value instanceof TemperatureValue || value instanceof BoilerOperationModeValue || value instanceof  BoilerOperationTypeValue) {
+			} else if (value instanceof TemperatureValue || value instanceof BoilerOperationModeValue || value instanceof BoilerOperationTypeValue) {
 				mValueSet.setVisibility(View.VISIBLE);
 			}
 		}
 
-		if(mController.isUserAllowed(mAdapter.getRole())) {
+		if (mController.isUserAllowed(mAdapter.getRole())) {
 			mFABedit.setVisibility(View.VISIBLE);
 		}
 
@@ -425,13 +422,13 @@ public class SensorDetailFragment extends BaseApplicationFragment implements ILi
 		GraphViewHelper.prepareGraphView(mGraphView, getView().getContext(), mModule, fmt, unitsHelper); // empty heading
 
 		if (mModule.getValue() instanceof BaseEnumValue) {
-			mGraphSeries = new BarGraphSeries<>(new DataPoint[]{new DataPoint(0, 0), new DataPoint(1,1)});
+			mGraphSeries = new BarGraphSeries<>(new DataPoint[]{new DataPoint(0, 0), new DataPoint(1, 1)});
 			((BarGraphSeries) mGraphSeries).setSpacing(30);
 			mGraphView.setDrawPointer(false);
 		} else {
-			mGraphSeries =  new LineGraphSeries<>(new DataPoint[]{new DataPoint(0, 0), new DataPoint(1,1)});
-			((LineGraphSeries)mGraphSeries).setBackgroundColor(getResources().getColor(R.color.alpha_blue));
-			((LineGraphSeries)mGraphSeries).setDrawBackground(true);
+			mGraphSeries = new LineGraphSeries<>(new DataPoint[]{new DataPoint(0, 0), new DataPoint(1, 1)});
+			((LineGraphSeries) mGraphSeries).setBackgroundColor(getResources().getColor(R.color.alpha_blue));
+			((LineGraphSeries) mGraphSeries).setDrawBackground(true);
 			((LineGraphSeries) mGraphSeries).setThickness(2);
 		}
 		mGraphSeries.setColor(getResources().getColor(R.color.beeeon_primary_cyan));
@@ -544,7 +541,7 @@ public class SensorDetailFragment extends BaseApplicationFragment implements ILi
 		// SET NEW VALUE
 		BaseValue value = module.getValue();
 		if (value instanceof BaseEnumValue) {
-			((BaseEnumValue)value).setNextValue();
+			((BaseEnumValue) value).setNextValue();
 		} else {
 			Log.e(TAG, "We can't switch actor, which value isn't inherited from BaseEnumValue, yet");
 			return;
@@ -643,8 +640,8 @@ public class SensorDetailFragment extends BaseApplicationFragment implements ILi
 
 	@Override
 	public void onListItemSelected(CharSequence value, int number, int requestCode) {
-		if(requestCode == REQUEST_BOILER_MODE || requestCode == REQUEST_BOILER_TYPE) {
-			Log.d(TAG,"RESULT - SET BOILDER MODE or TYPE val:"+value+" number:"+number);
+		if (requestCode == REQUEST_BOILER_MODE || requestCode == REQUEST_BOILER_TYPE) {
+			Log.d(TAG, "RESULT - SET BOILDER MODE or TYPE val:" + value + " number:" + number);
 			mModule.setValue(String.valueOf(number));
 			doChangeStateModuleTask(mModule);
 		}

@@ -28,7 +28,7 @@ public class TutorialHelper {
 		} else {
 			lps.addRule(RelativeLayout.ALIGN_PARENT_TOP);
 			lps.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
-			marginPixel= 40;
+			marginPixel = 40;
 		}
 
 
@@ -49,7 +49,7 @@ public class TutorialHelper {
 				Log.d(TAG, "OnShowCase hide");
 				ShowcaseView mSV;
 
-				if (mLoginTutorialClick == 1){
+				if (mLoginTutorialClick == 1) {
 					ViewTarget target = new ViewTarget(R.id.login_btn_mojeid, activity);
 					mSV = new ShowcaseView.Builder(activity, true)
 							.setTarget(target)
@@ -62,8 +62,7 @@ public class TutorialHelper {
 					mLoginTutorialClick++;
 					// TODO: Save that Google account was clicked
 
-				}
-				else if (mLoginTutorialClick == 2){
+				} else if (mLoginTutorialClick == 2) {
 					ViewTarget target = new ViewTarget(R.id.login_btn_demo, activity);
 					mSV = new ShowcaseView.Builder(activity, true)
 							.setTarget(target)
@@ -75,8 +74,7 @@ public class TutorialHelper {
 					mSV.setButtonPosition(lps);
 					mLoginTutorialClick++;
 					// TODO: Save that MojeID account was clicked
-				}
-				else if (mLoginTutorialClick == 3) {
+				} else if (mLoginTutorialClick == 3) {
 					// TODO: Save that Demo mode was clicked
 
 				}
@@ -119,7 +117,7 @@ public class TutorialHelper {
 		lps.setMargins(margin, margin, margin, bottomMargin);
 		ViewTarget target = new ViewTarget(layout.findViewById(R.id.fab));
 
-		OnShowcaseEventListener	listener = new OnShowcaseEventListener() {
+		OnShowcaseEventListener listener = new OnShowcaseEventListener() {
 
 			@Override
 			public void onShowcaseViewShow(ShowcaseView showcaseView) {
@@ -171,7 +169,7 @@ public class TutorialHelper {
 		lps.setMargins(margin, margin, margin, bottomMargin);
 		ViewTarget target = new ViewTarget(layout.findViewById(R.id.fab));
 
-		OnShowcaseEventListener	listener = new OnShowcaseEventListener() {
+		OnShowcaseEventListener listener = new OnShowcaseEventListener() {
 
 			@Override
 			public void onShowcaseViewShow(ShowcaseView showcaseView) {

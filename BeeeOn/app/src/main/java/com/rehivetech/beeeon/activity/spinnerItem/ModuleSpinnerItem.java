@@ -34,7 +34,7 @@ public class ModuleSpinnerItem extends AbstractSpinnerItem {
 		// Set the results into TextViews
 		ItemLabel.setText(mModule.getName());
 
-		if(mLocation != null) {
+		if (mLocation != null) {
 			ItemSubLabel.setText(mLocation.getName());
 		}
 
@@ -48,7 +48,7 @@ public class ModuleSpinnerItem extends AbstractSpinnerItem {
 	}
 
 	@Override
-	public void setDropDownView(View convertView){
+	public void setDropDownView(View convertView) {
 		TextView ItemLabel = (TextView) convertView.findViewById(R.id.custom_spinner2_dropdown_label);
 		TextView ItemSubLabel = (TextView) convertView.findViewById(R.id.custom_spinner2_dropdown_sublabel);
 		ImageView ItemIcon = (ImageView) convertView.findViewById(R.id.custom_spinner2_dropdown_icon);
@@ -56,7 +56,7 @@ public class ModuleSpinnerItem extends AbstractSpinnerItem {
 		// Set the results into TextViews
 		ItemLabel.setText(mModule.getName());
 
-		if(mLocation != null) {
+		if (mLocation != null) {
 			ItemSubLabel.setText(mLocation.getName());
 		}
 
@@ -73,12 +73,12 @@ public class ModuleSpinnerItem extends AbstractSpinnerItem {
 
 	@Override
 	public void setIsSelected() {
-		getMView().setBackgroundColor( getMView().getResources().getColor(R.color.light_gray));
+		getMView().setBackgroundColor(getMView().getResources().getColor(R.color.light_gray));
 	}
 
 	@Override
 	public void setNotSelected() {
-		getMView().setBackgroundColor( getMView().getResources().getColor(R.color.beeeon_drawer_bg));
+		getMView().setBackgroundColor(getMView().getResources().getColor(R.color.beeeon_drawer_bg));
 	}
 
 }

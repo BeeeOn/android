@@ -41,15 +41,15 @@ public class MainActivity extends BaseApplicationActivity implements IListDialog
 	public static final String ADD_ADAPTER_TAG = "addAdapterDialog";
 	public static final String ADD_SENSOR_TAG = "addSensorDialog";
 	public static final String FRG_TAG_LOC = "Loc";
-    public static final String FRG_TAG_CUS = "Cus";
-    public static final String FRG_TAG_WAT = "WAT";
+	public static final String FRG_TAG_CUS = "Cus";
+	public static final String FRG_TAG_WAT = "WAT";
 	private static final String FRG_TAG_PRF = "PRF";
 	private static final int ADD_ACTION_CODE = 987654;
 	private NavDrawerMenu mNavDrawerMenu;
 	private SensorListFragment mListModules;
 	private CustomViewFragment mCustomView;
-    private WatchdogListFragment mWatchdogApp;
-    private Toolbar mToolbar;
+	private WatchdogListFragment mWatchdogApp;
+	private Toolbar mToolbar;
 
 	private static final int BACK_TIME_INTERVAL = 2100;
 	private Toast mExitToast;
@@ -86,7 +86,7 @@ public class MainActivity extends BaseApplicationActivity implements IListDialog
 		super.onNewIntent(intent);
 		Log.d(TAG, "onNewIntent()");
 
-		if(intent == null) return;
+		if (intent == null) return;
 		String adapterId = intent.getStringExtra(ADAPTER_ID);
 		Log.d(TAG, "chosen adapter = " + adapterId);
 		// TODO should perform change of adapter and show location (scroll to it?)
@@ -98,17 +98,17 @@ public class MainActivity extends BaseApplicationActivity implements IListDialog
 		Log.d(TAG, "onCreate()");
 		setContentView(R.layout.activity_location_screen);
 
-        mToolbar = (Toolbar) findViewById(R.id.toolbar);
-        if (mToolbar != null) {
-            mToolbar.setTitle(R.string.app_name);
-            setSupportActionBar(mToolbar);
-        }
+		mToolbar = (Toolbar) findViewById(R.id.toolbar);
+		if (mToolbar != null) {
+			mToolbar.setTitle(R.string.app_name);
+			setSupportActionBar(mToolbar);
+		}
 
 		// Get controller
 		mController = Controller.getInstance(this);
 
 		// Create NavDrawerMenu
-		mNavDrawerMenu = new NavDrawerMenu(this,mToolbar);
+		mNavDrawerMenu = new NavDrawerMenu(this, mToolbar);
 
 		// creates fragments
 		mListModules = new SensorListFragment();
@@ -133,19 +133,15 @@ public class MainActivity extends BaseApplicationActivity implements IListDialog
 		}
 
 		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        if(mActiveMenuId == null) { // Default screen
-            ft.replace(R.id.content_frame, mListModules, FRG_TAG_LOC);
-        }
-		else if(mActiveMenuId.equals(Constants.GUI_MENU_CONTROL)){
+		if (mActiveMenuId == null) { // Default screen
 			ft.replace(R.id.content_frame, mListModules, FRG_TAG_LOC);
-		}
-        else if(mActiveMenuId.equals(Constants.GUI_MENU_DASHBOARD)) {
-            ft.replace(R.id.content_frame, mCustomView, FRG_TAG_CUS);
-        }
-        else if(mActiveMenuId.equals(Constants.GUI_MENU_WATCHDOG)) {
-            ft.replace(R.id.content_frame, mWatchdogApp, FRG_TAG_WAT);
-        }
-		else if (mActiveMenuId.equals(Constants.GUI_MENU_PROFILE)){
+		} else if (mActiveMenuId.equals(Constants.GUI_MENU_CONTROL)) {
+			ft.replace(R.id.content_frame, mListModules, FRG_TAG_LOC);
+		} else if (mActiveMenuId.equals(Constants.GUI_MENU_DASHBOARD)) {
+			ft.replace(R.id.content_frame, mCustomView, FRG_TAG_CUS);
+		} else if (mActiveMenuId.equals(Constants.GUI_MENU_WATCHDOG)) {
+			ft.replace(R.id.content_frame, mWatchdogApp, FRG_TAG_WAT);
+		} else if (mActiveMenuId.equals(Constants.GUI_MENU_PROFILE)) {
 			Intent intent = new Intent(this, ProfileDetailActivity.class);
 			mActiveMenuId = null;
 			startActivity(intent);
@@ -153,7 +149,7 @@ public class MainActivity extends BaseApplicationActivity implements IListDialog
 		ft.commit();
 
 		// Init tutorial 
-		if(mFirstUseApp) {
+		if (mFirstUseApp) {
 			//showTutorial();
 		}
 	}
@@ -163,65 +159,63 @@ public class MainActivity extends BaseApplicationActivity implements IListDialog
 		RelativeLayout.LayoutParams lps = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
 		lps.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
 		lps.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
-		
+
 		int margin = ((Number) (getResources().getDisplayMetrics().density * 12)).intValue();
 		lps.setMargins(margin, margin, margin, margin);
 		ViewTarget target = new ViewTarget(android.R.id.home, this);
-		
-		OnShowcaseEventListener	listener = new OnShowcaseEventListener() {
-			
+
+		OnShowcaseEventListener listener = new OnShowcaseEventListener() {
+
 			@Override
 			public void onShowcaseViewShow(ShowcaseView showcaseView) {
 				// TODO Auto-generated method stub
-				
+
 			}
-			
+
 			@Override
 			public void onShowcaseViewHide(ShowcaseView showcaseView) {
 				// TODO Auto-generated method stub
-				
+
 			}
-			
+
 			@Override
 			public void onShowcaseViewDidHide(ShowcaseView showcaseView) {
 				// TODO Auto-generated method stub
-				
+
 			}
-		}; 
-		
+		};
+
 		mSV = new ShowcaseView.Builder(this, true)
-		.setTarget(target)
-		.setContentTitle(getString(R.string.tutorial_open_menu))
-		.setContentText(getString(R.string.tutorial_open_menu_text))
-		//.setStyle(R.style.CustomShowcaseTheme)
-		.setShowcaseEventListener(listener)
-		.build();
+				.setTarget(target)
+				.setContentTitle(getString(R.string.tutorial_open_menu))
+				.setContentText(getString(R.string.tutorial_open_menu_text))
+						//.setStyle(R.style.CustomShowcaseTheme)
+				.setShowcaseEventListener(listener)
+				.build();
 		mSV.setButtonPosition(lps);
 	}
-	
+
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
 
 		Log.d(TAG, "Request code " + requestCode);
-		if(requestCode == Constants.ADD_ADAPTER_REQUEST_CODE ) {
+		if (requestCode == Constants.ADD_ADAPTER_REQUEST_CODE) {
 			Log.d(TAG, "Return from add adapter activity");
-			if(resultCode == Constants.ADD_ADAPTER_CANCELED) {
+			if (resultCode == Constants.ADD_ADAPTER_CANCELED) {
 				Log.d(TAG, "Activity was canceled");
-			}
-			else if (resultCode == Constants.ADD_ADAPTER_SUCCESS) {
+			} else if (resultCode == Constants.ADD_ADAPTER_SUCCESS) {
 				// Succes of add adapter -> setActive adapter a redraw ALL
 				Log.d(TAG, "Add adapter succes");
 				setActiveAdapterAndMenu();
 				doRedraw = false;
 			}
-		}
-		else if (requestCode == Constants.ADD_SENSOR_REQUEST_CODE) {
+		} else if (requestCode == Constants.ADD_SENSOR_REQUEST_CODE) {
 			Log.d(TAG, "Return from add sensor activity");
-			if(resultCode == Constants.ADD_SENSOR_SUCCESS) {
+			if (resultCode == Constants.ADD_SENSOR_SUCCESS) {
 				// Set active location
 				String res = data.getExtras().getString(Constants.SETUP_SENSOR_ACT_LOC);
-				Log.d(TAG, "Active locID: "+res + " adapterID: "+mActiveAdapterId);
+				Log.d(TAG, "Active locID: " + res + " adapterID: " + mActiveAdapterId);
 				redraw();
 			}
 		}
@@ -229,7 +223,7 @@ public class MainActivity extends BaseApplicationActivity implements IListDialog
 
 	public void onAppResume() {
 		// ASYN TASK - Reload all data, if wasnt download in login activity
-		final ReloadAdapterDataTask fullReloadTask = new ReloadAdapterDataTask(this,false,ReloadAdapterDataTask.ReloadWhat.ADAPTERS_AND_ACTIVE_ADAPTER);
+		final ReloadAdapterDataTask fullReloadTask = new ReloadAdapterDataTask(this, false, ReloadAdapterDataTask.ReloadWhat.ADAPTERS_AND_ACTIVE_ADAPTER);
 		fullReloadTask.setListener(new CallbackTask.CallbackTaskListener() {
 			@Override
 			public void onExecute(boolean success) {
@@ -251,10 +245,9 @@ public class MainActivity extends BaseApplicationActivity implements IListDialog
 
 		mNavDrawerMenu.redrawMenu();
 		// Redraw Main Fragment
-		if(doRedraw) {
+		if (doRedraw) {
 			redraw();
-		}
-		else {
+		} else {
 			doRedraw = true;
 		}
 	}
@@ -289,13 +282,12 @@ public class MainActivity extends BaseApplicationActivity implements IListDialog
 
 	@Override
 	public void onListItemSelected(CharSequence val, int i, int code) {
-		if(code == ADD_ACTION_CODE){
-			Log.d(TAG,"Add dialog selected: "+val);
-			if(getString(R.string.action_addadapter).equals(val)) {
+		if (code == ADD_ACTION_CODE) {
+			Log.d(TAG, "Add dialog selected: " + val);
+			if (getString(R.string.action_addadapter).equals(val)) {
 				// ADD ADAPTER
 				mListModules.showAddAdapterDialog();
-			}
-			else {
+			} else {
 				// ADD SENSOR
 				mListModules.showAddSensorDialog();
 			}
@@ -322,44 +314,40 @@ public class MainActivity extends BaseApplicationActivity implements IListDialog
 			} else {
 				setActiveMenuID(Constants.GUI_MENU_CONTROL);
 			}
-		}
-		else {
+		} else {
 			mActiveAdapterId = null;
 			mActiveMenuId = null;
 		}
 	}
 
 	public boolean redrawMainFragment() {
-        // set location layout
+		// set location layout
 		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        if(mActiveMenuId == null) {
-            mListModules = new SensorListFragment();
-            mListModules.setIsPaused(isPaused);
-            mListModules.setMenuID(mActiveMenuId);
-            mListModules.setAdapterID(mActiveAdapterId);
-            mNavDrawerMenu.setActiveMenuID(mActiveMenuId);
-            mNavDrawerMenu.setAdapterID(mActiveAdapterId);
+		if (mActiveMenuId == null) {
+			mListModules = new SensorListFragment();
+			mListModules.setIsPaused(isPaused);
+			mListModules.setMenuID(mActiveMenuId);
+			mListModules.setAdapterID(mActiveAdapterId);
+			mNavDrawerMenu.setActiveMenuID(mActiveMenuId);
+			mNavDrawerMenu.setAdapterID(mActiveAdapterId);
 
-            ft.replace(R.id.content_frame, mListModules, FRG_TAG_LOC);
-        } else if(mActiveMenuId.equals(Constants.GUI_MENU_CONTROL)){
-            mListModules = new SensorListFragment();
-            mListModules.setIsPaused(isPaused);
-            mListModules.setMenuID(mActiveMenuId);
-            mListModules.setAdapterID(mActiveAdapterId);
-            mNavDrawerMenu.setActiveMenuID(mActiveMenuId);
-            mNavDrawerMenu.setAdapterID(mActiveAdapterId);
+			ft.replace(R.id.content_frame, mListModules, FRG_TAG_LOC);
+		} else if (mActiveMenuId.equals(Constants.GUI_MENU_CONTROL)) {
+			mListModules = new SensorListFragment();
+			mListModules.setIsPaused(isPaused);
+			mListModules.setMenuID(mActiveMenuId);
+			mListModules.setAdapterID(mActiveAdapterId);
+			mNavDrawerMenu.setActiveMenuID(mActiveMenuId);
+			mNavDrawerMenu.setAdapterID(mActiveAdapterId);
 
-            ft.replace(R.id.content_frame, mListModules, FRG_TAG_LOC);
-        }
-        else if(mActiveMenuId.equals(Constants.GUI_MENU_DASHBOARD)) {
-            mCustomView = new CustomViewFragment();
-            ft.replace(R.id.content_frame, mCustomView, FRG_TAG_CUS);
-        }
-        else if(mActiveMenuId.equals(Constants.GUI_MENU_WATCHDOG)){
-            mWatchdogApp = new WatchdogListFragment();
-            ft.replace(R.id.content_frame, mWatchdogApp, FRG_TAG_WAT);
-        }
-		else if (mActiveMenuId.equals(Constants.GUI_MENU_PROFILE)){
+			ft.replace(R.id.content_frame, mListModules, FRG_TAG_LOC);
+		} else if (mActiveMenuId.equals(Constants.GUI_MENU_DASHBOARD)) {
+			mCustomView = new CustomViewFragment();
+			ft.replace(R.id.content_frame, mCustomView, FRG_TAG_CUS);
+		} else if (mActiveMenuId.equals(Constants.GUI_MENU_WATCHDOG)) {
+			mWatchdogApp = new WatchdogListFragment();
+			ft.replace(R.id.content_frame, mWatchdogApp, FRG_TAG_WAT);
+		} else if (mActiveMenuId.equals(Constants.GUI_MENU_PROFILE)) {
 			Intent intent = new Intent(this, ProfileDetailActivity.class);
 			mActiveMenuId = null;
 			startActivity(intent);
@@ -370,7 +358,7 @@ public class MainActivity extends BaseApplicationActivity implements IListDialog
 	}
 
 	public void redraw() {
-		Log.d(TAG,"REDRAW - activeMenu: "+mActiveMenuId +" activeAdapter: "+mActiveAdapterId);
+		Log.d(TAG, "REDRAW - activeMenu: " + mActiveMenuId + " activeAdapter: " + mActiveAdapterId);
 		mNavDrawerMenu.setActiveMenuID(mActiveMenuId);
 		mNavDrawerMenu.setAdapterID(mActiveAdapterId);
 		mNavDrawerMenu.redrawMenu();
@@ -410,18 +398,18 @@ public class MainActivity extends BaseApplicationActivity implements IListDialog
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
-		case android.R.id.home:
-			if (mNavDrawerMenu.isMenuOpened()) {
-				mNavDrawerMenu.closeMenu();
-			} else {
-				mNavDrawerMenu.openMenu();
-			}
-			break;
-		case R.id.action_notification:
-			// Notification
-			Intent intent = new Intent(MainActivity.this, NotificationActivity.class);
-			startActivity(intent);
-			break;
+			case android.R.id.home:
+				if (mNavDrawerMenu.isMenuOpened()) {
+					mNavDrawerMenu.closeMenu();
+				} else {
+					mNavDrawerMenu.openMenu();
+				}
+				break;
+			case R.id.action_notification:
+				// Notification
+				Intent intent = new Intent(MainActivity.this, NotificationActivity.class);
+				startActivity(intent);
+				break;
 		}
 		return super.onOptionsItemSelected(item);
 	}
@@ -429,24 +417,24 @@ public class MainActivity extends BaseApplicationActivity implements IListDialog
 	public void setActiveAdapterID(String adapterId) {
 		mActiveAdapterId = adapterId;
 		mNavDrawerMenu.setAdapterID(adapterId);
-		if(mListModules != null)
+		if (mListModules != null)
 			mListModules.setAdapterID(adapterId);
 	}
 
 	public void setActiveMenuID(String id) {
 		mActiveMenuId = id;
 		mNavDrawerMenu.setActiveMenuID(id);
-		if(mListModules != null)
+		if (mListModules != null)
 			mListModules.setMenuID(id);
 	}
 
-    public void logout() {
-        mController.logout();
-        Intent intent = new Intent(MainActivity.this, LoginActivity.class);
-        startActivity(intent);
-        this.finish();
-    }
-	
+	public void logout() {
+		mController.logout();
+		Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+		startActivity(intent);
+		this.finish();
+	}
+
 	public NavDrawerMenu getMenu() {
 		return mNavDrawerMenu;
 	}

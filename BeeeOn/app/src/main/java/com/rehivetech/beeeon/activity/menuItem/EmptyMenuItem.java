@@ -30,13 +30,13 @@ public class EmptyMenuItem extends AbstractMenuItem {
 	@Override
 	public void setIsSelected() {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void setNotSelected() {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 }

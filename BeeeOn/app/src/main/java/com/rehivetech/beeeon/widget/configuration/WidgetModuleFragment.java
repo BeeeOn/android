@@ -37,10 +37,11 @@ public class WidgetModuleFragment extends WidgetConfigurationFragment {
 		mWidgetModule = mWidgetData.widgetModules.get(0);
 	}
 
-	protected int getFragmentLayoutResource(){
+	protected int getFragmentLayoutResource() {
 		return R.layout.fragment_widget_device;
 	}
-	protected int getFragmentTitle(){
+
+	protected int getFragmentTitle() {
 		return R.string.widget_configuration_widget_device;
 	}
 
@@ -72,7 +73,7 @@ public class WidgetModuleFragment extends WidgetConfigurationFragment {
 
 		mModuleSpinner.setAdapter(dataAdapter);
 		int foundIndex = Utils.getObjectIndexFromList(mWidgetModule.getId(), mModules);
-		if(foundIndex != -1) mModuleSpinner.setSelection(foundIndex);
+		if (foundIndex != -1) mModuleSpinner.setSelection(foundIndex);
 	}
 
 	@Override

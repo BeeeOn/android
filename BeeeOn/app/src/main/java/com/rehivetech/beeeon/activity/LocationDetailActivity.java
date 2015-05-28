@@ -33,9 +33,9 @@ public class LocationDetailActivity extends BaseApplicationActivity {
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
-		case android.R.id.home:
-			finish();
-			return true;
+			case android.R.id.home:
+				finish();
+				return true;
 		}
 		return false;
 	}

@@ -9,57 +9,57 @@ import com.rehivetech.beeeon.activity.fragment.AddAdapterFragment;
 import com.viewpagerindicator.IconPagerAdapter;
 
 public class TestFragmentAdapter extends FragmentPagerAdapter implements IconPagerAdapter {
-    protected static final String[] CONTENT = new String[] { "Welcome", "to", "BeeeOn", "Test", };
-    protected static final int[] ICONS = new int[] {
-            R.drawable.loc_bath_room,
-            R.drawable.loc_garden,
-            R.drawable.loc_wc,
-            R.drawable.loc_dinner_room
-    };
+	protected static final String[] CONTENT = new String[]{"Welcome", "to", "BeeeOn", "Test",};
+	protected static final int[] ICONS = new int[]{
+			R.drawable.loc_bath_room,
+			R.drawable.loc_garden,
+			R.drawable.loc_wc,
+			R.drawable.loc_dinner_room
+	};
 
-    private int mCount = CONTENT.length;
+	private int mCount = CONTENT.length;
 
-    public TestFragmentAdapter(FragmentManager fm) {
-        super(fm);
-    }
+	public TestFragmentAdapter(FragmentManager fm) {
+		super(fm);
+	}
 
-    @Override
-    public Fragment getItem(int position) {
-    	switch (position) {
-    	case 1:
-    		
-    		break;
-    	case 2:
-    		
-    		break;
-    	case 3:
-    		
-    		break;
-    	case 4:
-    		return new AddAdapterFragment();
-    	}
+	@Override
+	public Fragment getItem(int position) {
+		switch (position) {
+			case 1:
+
+				break;
+			case 2:
+
+				break;
+			case 3:
+
+				break;
+			case 4:
+				return new AddAdapterFragment();
+		}
 		return null;
-    }
+	}
 
-    @Override
-    public int getCount() {
-        return mCount;
-    }
+	@Override
+	public int getCount() {
+		return mCount;
+	}
 
-    @Override
-    public CharSequence getPageTitle(int position) {
-      return TestFragmentAdapter.CONTENT[position % CONTENT.length];
-    }
+	@Override
+	public CharSequence getPageTitle(int position) {
+		return TestFragmentAdapter.CONTENT[position % CONTENT.length];
+	}
 
-    @Override
-    public int getIconResId(int index) {
-      return ICONS[index % ICONS.length];
-    }
+	@Override
+	public int getIconResId(int index) {
+		return ICONS[index % ICONS.length];
+	}
 
-    public void setCount(int count) {
-        if (count > 0 && count <= 10) {
-            mCount = count;
-            notifyDataSetChanged();
-        }
-    }
+	public void setCount(int count) {
+		if (count > 0 && count <= 10) {
+			mCount = count;
+			notifyDataSetChanged();
+		}
+	}
 }

@@ -66,7 +66,7 @@ public class SensorListFragment extends BaseApplicationFragment {
 
 	private SenListAdapter mSensorAdapter;
 	private StickyListHeadersListView mSensorList;
-    private FloatingActionButton mFAM;
+	private FloatingActionButton mFAM;
 	private ArrayList<Integer> mFABMenuIcon = new ArrayList<>();
 	private ArrayList<String> mFABMenuLabels = new ArrayList<>();
 
@@ -79,13 +79,13 @@ public class SensorListFragment extends BaseApplicationFragment {
 
 	//
 	private ActionMode mMode;
-	
+
 	// For tutorial
 	private boolean mFirstUseAddAdapter = true;
 	private boolean mFirstUseAddSensor = true;
 
-    private Module mSelectedItem;
-    private int mSelectedItemPos;
+	private Module mSelectedItem;
+	private int mSelectedItemPos;
 
 	public SensorListFragment() {
 	}
@@ -119,7 +119,7 @@ public class SensorListFragment extends BaseApplicationFragment {
 			mFirstUseAddAdapter = prefs.getBoolean(Constants.TUTORIAL_ADD_ADAPTER_SHOWED, true);
 			mFirstUseAddSensor = prefs.getBoolean(Constants.TUTORIAL_ADD_SENSOR_SHOWED, true);
 		}
-		
+
 	}
 
 	@Override
@@ -162,7 +162,7 @@ public class SensorListFragment extends BaseApplicationFragment {
 	public void onPause() {
 		super.onPause();
 		Log.d(TAG, "onPause()");
-		if(mMode != null)
+		if (mMode != null)
 			mMode.finish();
 	}
 
@@ -178,7 +178,7 @@ public class SensorListFragment extends BaseApplicationFragment {
 			return false;
 		}
 		List<Device> devices;
-        List<Location> locations;
+		List<Location> locations;
 
 		Log.d(TAG, "LifeCycle: redraw modules list start");
 
@@ -200,7 +200,7 @@ public class SensorListFragment extends BaseApplicationFragment {
 			@Override
 			public void onClick(View v) {
 				Adapter adapter = mController.getActiveAdapter();
-				if(adapter != null) {
+				if (adapter != null) {
 					doReloadDevicesTask(adapter.getId(), true);
 				} else {
 					doFullReloadTask(true);
@@ -210,20 +210,20 @@ public class SensorListFragment extends BaseApplicationFragment {
 
 		mSensorAdapter = new SenListAdapter(mActivity);
 
-        mFAM = (FloatingActionButton) mView.findViewById(R.id.fab);
+		mFAM = (FloatingActionButton) mView.findViewById(R.id.fab);
 
-        // All locations on adapter
-        locations = mController.getLocationsModel().getLocationsByAdapter(mActiveAdapterId);
+		// All locations on adapter
+		locations = mController.getLocationsModel().getLocationsByAdapter(mActiveAdapterId);
 
-        List<Module> modules = new ArrayList<Module>();
+		List<Module> modules = new ArrayList<Module>();
 		for (Location loc : locations) {
-			mSensorAdapter.addHeader(new LocationListItem(loc.getName(),loc.getIconResource(),loc.getId()));
-            // all devices from actual location
-            devices = mController.getDevicesModel().getDevicesByLocation(mActiveAdapterId, loc.getId());
-            for(Device fac : devices) {
-				for(int x = 0; x < fac.getModules().size(); x++) {
+			mSensorAdapter.addHeader(new LocationListItem(loc.getName(), loc.getIconResource(), loc.getId()));
+			// all devices from actual location
+			devices = mController.getDevicesModel().getDevicesByLocation(mActiveAdapterId, loc.getId());
+			for (Device fac : devices) {
+				for (int x = 0; x < fac.getModules().size(); x++) {
 					Module dev = fac.getModules().get(x);
-					mSensorAdapter.addItem(new SensorListItem(dev,dev.getId(),mActivity,(x==(fac.getModules().size()-1))?true:false));
+					mSensorAdapter.addItem(new SensorListItem(dev, dev.getId(), mActivity, (x == (fac.getModules().size() - 1)) ? true : false));
 				}
 				modules.addAll(fac.getModules());
 			}
@@ -232,8 +232,8 @@ public class SensorListFragment extends BaseApplicationFragment {
 		if (mSensorList == null) {
 			Log.e(TAG, "LifeCycle: bad timing or what?");
 			return false; // TODO: this happens when we're in different activity
-							// (detail), fix that by changing that activity
-							// (fragment?) first?
+			// (detail), fix that by changing that activity
+			// (fragment?) first?
 		}
 
 		boolean haveModules = modules.size() > 0;
@@ -241,7 +241,7 @@ public class SensorListFragment extends BaseApplicationFragment {
 
 		// Buttons in floating menu
 
-		if(!haveAdapters) { // NO Adapter
+		if (!haveAdapters) { // NO Adapter
 			// Set right visibility
 			noItem.setVisibility(View.VISIBLE);
 			noItem.setText(R.string.no_adapter_cap);
@@ -257,7 +257,7 @@ public class SensorListFragment extends BaseApplicationFragment {
 			SharedPreferences prefs = mController.getUserSettings();
 			if (!(prefs != null && !prefs.getBoolean(Constants.PERSISTENCE_PREF_IGNORE_NO_ADAPTER, false))) {
 				// TUTORIAL
-				if(mFirstUseAddAdapter && !mController.isDemoMode()) {
+				if (mFirstUseAddAdapter && !mController.isDemoMode()) {
 					mFirstUseAddAdapter = false;
 					mActivity.getMenu().closeMenu();
 					TutorialHelper.showAddAdapterTutorial((MainActivity) mActivity, mView);
@@ -266,9 +266,8 @@ public class SensorListFragment extends BaseApplicationFragment {
 					}
 				}
 			}
-			
-		}
-		else if (!haveModules) { // Have Adapter but any Modules
+
+		} else if (!haveModules) { // Have Adapter but any Modules
 			// Set right visibility
 			noItem.setVisibility(View.VISIBLE);
 			noItem.setText(R.string.no_sensor_cap);
@@ -283,7 +282,7 @@ public class SensorListFragment extends BaseApplicationFragment {
 			mFABMenuIcon.add(R.drawable.ic_add_white_24dp);
 			mFABMenuLabels.add(mActivity.getString(R.string.action_addadapter));
 			mFABMenuLabels.add(mActivity.getString(R.string.action_addsensor));
-			if(mFirstUseAddSensor && !mController.isDemoMode()){
+			if (mFirstUseAddSensor && !mController.isDemoMode()) {
 				mFirstUseAddSensor = false;
 				mActivity.getMenu().closeMenu();
 				TutorialHelper.showAddSensorTutorial((MainActivity) mActivity, mView);
@@ -292,8 +291,7 @@ public class SensorListFragment extends BaseApplicationFragment {
 					prefs.edit().putBoolean(Constants.TUTORIAL_ADD_SENSOR_SHOWED, false).apply();
 				}
 			}
-		}
-		else { // Have adapter and modules
+		} else { // Have adapter and modules
 			noItem.setVisibility(View.GONE);
 			refreshBtn.setVisibility(View.GONE);
 			mSensorList.setVisibility(View.VISIBLE);
@@ -306,14 +304,13 @@ public class SensorListFragment extends BaseApplicationFragment {
 			mFABMenuLabels.add(mActivity.getString(R.string.action_addsensor));
 		}
 
-        // Listener for add dialogs
+		// Listener for add dialogs
 		OnClickListener fabMenuListener = new OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				if (mFABMenuLabels.get(v.getId()).equals(mActivity.getString(R.string.action_addsensor))) {
 					showAddSensorDialog();
-				}
-				else if (mFABMenuLabels.get(v.getId()).equals(mActivity.getString(R.string.action_addadapter))) {
+				} else if (mFABMenuLabels.get(v.getId()).equals(mActivity.getString(R.string.action_addadapter))) {
 					showAddAdapterDialog();
 				}
 				Log.d(TAG, "FAB MENU HERE " + v.getId());
@@ -323,21 +320,21 @@ public class SensorListFragment extends BaseApplicationFragment {
 		mSensorList.setAdapter(mSensorAdapter);
 
 		int currentapiVersion = android.os.Build.VERSION.SDK_INT;
-		if (currentapiVersion >= Build.VERSION_CODES.ICE_CREAM_SANDWICH){ // API 14 +
+		if (currentapiVersion >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) { // API 14 +
 			mFAM.setMenuItems(Utils.convertIntegers(mFABMenuIcon), mFABMenuLabels.toArray(new String[mFABMenuLabels.size()]),
-					R.style.fab_item_menu,fabMenuListener, getResources().getDrawable(R.drawable.ic_action_cancel));
+					R.style.fab_item_menu, fabMenuListener, getResources().getDrawable(R.drawable.ic_action_cancel));
 			mFAM.setOnClickListener(new OnClickListener() {
 				@Override
 				public void onClick(View v) {
-					Log.d(TAG,"FAB BTN HER");
+					Log.d(TAG, "FAB BTN HER");
 					mFAM.triggerMenu(90);
 				}
 			});
-		} else{
+		} else {
 			// API 10 to 13
 			// Show dialof to select Add Adapter or Add sensor
 
-			mFAM.setOnClickListener( new OnClickListener() {
+			mFAM.setOnClickListener(new OnClickListener() {
 				@Override
 				public void onClick(View v) {
 					String[] mStringArray = new String[mFABMenuLabels.size()];
@@ -361,7 +358,7 @@ public class SensorListFragment extends BaseApplicationFragment {
 			}
 		};
 
-		mFAM.attachToListView(mSensorList.getWrappedList(),new ScrollDirectionListener() {
+		mFAM.attachToListView(mSensorList.getWrappedList(), new ScrollDirectionListener() {
 			@Override
 			public void onScrollDown() {
 
@@ -371,7 +368,7 @@ public class SensorListFragment extends BaseApplicationFragment {
 			public void onScrollUp() {
 
 			}
-		},ListListener);
+		}, ListListener);
 
 
 		if (haveModules) {
@@ -379,7 +376,7 @@ public class SensorListFragment extends BaseApplicationFragment {
 			mSensorList.setOnItemClickListener(new ListView.OnItemClickListener() {
 				@Override
 				public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    Module module = mSensorAdapter.getModule(position);
+					Module module = mSensorAdapter.getModule(position);
 					Bundle bundle = new Bundle();
 					bundle.putString(SensorDetailActivity.EXTRA_ADAPTER_ID, module.getDevice().getAdapterId());
 					bundle.putString(SensorDetailActivity.EXTRA_MODULE_ID, module.getId());
@@ -389,15 +386,15 @@ public class SensorListFragment extends BaseApplicationFragment {
 				}
 			});
 			Adapter tmpAda = mController.getAdaptersModel().getAdapter(mActiveAdapterId);
-			if(tmpAda != null) {
-				if(mController.isUserAllowed(tmpAda.getRole())) {
+			if (tmpAda != null) {
+				if (mController.isUserAllowed(tmpAda.getRole())) {
 					mSensorList.setOnItemLongClickListener(new OnItemLongClickListener() {
 						@Override
 						public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-							mMode =  mActivity.startSupportActionMode(new ActionModeEditSensors());
-                            mSelectedItem = mSensorAdapter.getModule(position);
-                            mSelectedItemPos = position;
-                            mSensorAdapter.getItem(mSelectedItemPos).setIsSelected();
+							mMode = mActivity.startSupportActionMode(new ActionModeEditSensors());
+							mSelectedItem = mSensorAdapter.getModule(position);
+							mSelectedItemPos = position;
+							mSensorAdapter.getItem(mSelectedItemPos).setIsSelected();
 							return true;
 						}
 					});
@@ -414,7 +411,7 @@ public class SensorListFragment extends BaseApplicationFragment {
 		Intent intent = new Intent(mActivity, AddAdapterActivity.class);
 		mActivity.startActivityForResult(intent, Constants.ADD_ADAPTER_REQUEST_CODE);
 	}
-	
+
 	public void showAddSensorDialog() {
 		Log.d(TAG, "HERE ADD SENSOR +");
 		Intent intent = new Intent(mActivity, AddSensorActivity.class);
@@ -433,8 +430,8 @@ public class SensorListFragment extends BaseApplicationFragment {
 		isPaused = value;
 	}
 
-    private void doReloadDevicesTask(String adapterId, boolean forceRefresh) {
-        ReloadAdapterDataTask reloadDevicesTask = new ReloadAdapterDataTask(mActivity, forceRefresh, ReloadAdapterDataTask.ReloadWhat.FACILITIES);
+	private void doReloadDevicesTask(String adapterId, boolean forceRefresh) {
+		ReloadAdapterDataTask reloadDevicesTask = new ReloadAdapterDataTask(mActivity, forceRefresh, ReloadAdapterDataTask.ReloadWhat.FACILITIES);
 
 		reloadDevicesTask.setListener(new CallbackTaskListener() {
 
@@ -450,7 +447,7 @@ public class SensorListFragment extends BaseApplicationFragment {
 
 		// Execute and remember task so it can be stopped automatically
 		mActivity.callbackTaskManager.executeTask(reloadDevicesTask, adapterId);
-    }
+	}
 
 	private void doFullReloadTask(boolean forceRefresh) {
 		ReloadAdapterDataTask fullReloadTask = new ReloadAdapterDataTask(mActivity, forceRefresh, ReloadAdapterDataTask.ReloadWhat.ADAPTERS_AND_ACTIVE_ADAPTER);
@@ -469,11 +466,11 @@ public class SensorListFragment extends BaseApplicationFragment {
 		mActivity.callbackTaskManager.executeTask(fullReloadTask);
 	}
 
-    private void doRemoveFacilityTask(Device device) {
-        RemoveFacilityTask removeFacilityTask = new RemoveFacilityTask(mActivity);
-        DelFacilityPair pair = new DelFacilityPair(device.getId(), device.getAdapterId());
+	private void doRemoveFacilityTask(Device device) {
+		RemoveFacilityTask removeFacilityTask = new RemoveFacilityTask(mActivity);
+		DelFacilityPair pair = new DelFacilityPair(device.getId(), device.getAdapterId());
 
-        removeFacilityTask.setListener(new CallbackTaskListener() {
+		removeFacilityTask.setListener(new CallbackTaskListener() {
 			@Override
 			public void onExecute(boolean success) {
 				mActivity.redraw();
@@ -488,8 +485,7 @@ public class SensorListFragment extends BaseApplicationFragment {
 
 		// Execute and remember task so it can be stopped automatically
 		mActivity.callbackTaskManager.executeTask(removeFacilityTask, pair);
-    }
-
+	}
 
 
 	class ActionModeEditSensors implements ActionMode.Callback {
@@ -520,8 +516,8 @@ public class SensorListFragment extends BaseApplicationFragment {
 		@Override
 		public void onDestroyActionMode(ActionMode mode) {
 			mSensorAdapter.getItem(mSelectedItemPos).setNotSelected();
-            mSelectedItem = null;
-            mSelectedItemPos = 0;
+			mSelectedItem = null;
+			mSelectedItemPos = 0;
 			mMode = null;
 
 		}

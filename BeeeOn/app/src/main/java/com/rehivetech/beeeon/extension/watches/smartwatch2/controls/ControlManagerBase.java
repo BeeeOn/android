@@ -58,11 +58,9 @@ public class ControlManagerBase extends ControlExtension {
 
 	/**
 	 * Create phone control manager.
-	 * 
-	 * @param context
-	 *            The context to use.
-	 * @param packageName
-	 *            The package name of the host application.
+	 *
+	 * @param context     The context to use.
+	 * @param packageName The package name of the host application.
 	 */
 	public ControlManagerBase(final Context context, final String packageName) {
 		super(context, packageName);
@@ -156,9 +154,8 @@ public class ControlManagerBase extends ControlExtension {
 
 	/**
 	 * Start a new control. Any currently running control will be stopped.
-	 * 
-	 * @param newControlId
-	 *            The control to start.
+	 *
+	 * @param newControlId The control to start.
 	 */
 	protected void startControl(final ControlExtension newControl) {
 

@@ -37,10 +37,11 @@ public class WidgetLocationFragment extends WidgetConfigurationFragment {
 		mWidgetLocation = mWidgetData.widgetLocation;
 	}
 
-	protected int getFragmentLayoutResource(){
+	protected int getFragmentLayoutResource() {
 		return R.layout.fragment_widget_location;
 	}
-	protected int getFragmentTitle(){
+
+	protected int getFragmentTitle() {
 		return R.string.widget_configuration_widget_location;
 	}
 
@@ -73,7 +74,7 @@ public class WidgetLocationFragment extends WidgetConfigurationFragment {
 
 		// set selection
 		int foundIndex = Utils.getObjectIndexFromList(mWidgetLocation.getId(), mLocations);
-		if(foundIndex != -1) mLocationSpinner.setSelection(foundIndex);
+		if (foundIndex != -1) mLocationSpinner.setSelection(foundIndex);
 	}
 
 	@Override

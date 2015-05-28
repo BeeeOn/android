@@ -41,11 +41,11 @@ public class WidgetLogDataPersistence extends WidgetPersistence {
 	@Override
 	public void save() {
 		mPrefs.edit()
-			.putLong(getProperty(PREF_INTERVAL_START), intervalStart)
-			.putString(getProperty(PREF_TYPE), type)
-			.putInt(getProperty(PREF_GAP), gap)
-			.putInt(getProperty(PREF_GAP_RADIO_ID), gapRadioId)
-			.apply();
+				.putLong(getProperty(PREF_INTERVAL_START), intervalStart)
+				.putString(getProperty(PREF_TYPE), type)
+				.putInt(getProperty(PREF_GAP), gap)
+				.putInt(getProperty(PREF_GAP_RADIO_ID), gapRadioId)
+				.apply();
 	}
 
 	@Override

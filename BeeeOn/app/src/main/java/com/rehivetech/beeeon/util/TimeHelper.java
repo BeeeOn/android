@@ -45,10 +45,9 @@ public class TimeHelper {
 
 	/**
 	 * Return string with formatted time (if it is 23 hours ago, it show only date)
-	 * 
+	 *
 	 * @param lastUpdate
-	 * @param adapter
-	 *            If null, then it will use local timezone
+	 * @param adapter    If null, then it will use local timezone
 	 * @return
 	 */
 	public String formatLastUpdate(DateTime lastUpdate, Adapter adapter) {
@@ -61,10 +60,9 @@ public class TimeHelper {
 
 	/**
 	 * Return string with formatted date time
-	 * 
+	 *
 	 * @param time
-	 * @param adapter
-	 *            If null, then it will use local timezone
+	 * @param adapter If null, then it will use local timezone
 	 * @return
 	 */
 	public String formatTime(DateTime time, Adapter adapter) {

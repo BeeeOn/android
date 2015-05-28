@@ -26,136 +26,135 @@ import java.util.List;
 
 @TargetApi(Build.VERSION_CODES.HONEYCOMB)
 public class WidgetListService extends RemoteViewsService {
-    @Override
-    public RemoteViewsFactory onGetViewFactory(Intent intent) {
-        return new ListRemoteViewsFactory(this, intent);
-    }
+	@Override
+	public RemoteViewsFactory onGetViewFactory(Intent intent) {
+		return new ListRemoteViewsFactory(this, intent);
+	}
 }
 
 @TargetApi(Build.VERSION_CODES.HONEYCOMB)
 class ListRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory {
-    private static final String TAG = ListRemoteViewsFactory.class.getSimpleName();
+	private static final String TAG = ListRemoteViewsFactory.class.getSimpleName();
 
-    private List<Device> mDevices;
-    private List<Module> mModules;
+	private List<Device> mDevices;
+	private List<Module> mModules;
 
-    private TimeHelper mTimeHelper;
-    private UnitsHelper mUnitsHelper;
+	private TimeHelper mTimeHelper;
+	private UnitsHelper mUnitsHelper;
 
-    private Context mContext;
-    private Controller mController;
-    private int mWidgetId;
+	private Context mContext;
+	private Controller mController;
+	private int mWidgetId;
 
-    private String mLocationId;
-    private String mLocationAdapterId;
+	private String mLocationId;
+	private String mLocationAdapterId;
 
-    public ListRemoteViewsFactory(Context context, Intent intent) {
-        mContext = context.getApplicationContext();
-        mWidgetId = intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, AppWidgetManager.INVALID_APPWIDGET_ID);
-        mModules = new ArrayList<>();
+	public ListRemoteViewsFactory(Context context, Intent intent) {
+		mContext = context.getApplicationContext();
+		mWidgetId = intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, AppWidgetManager.INVALID_APPWIDGET_ID);
+		mModules = new ArrayList<>();
 
-        mLocationId = intent.getStringExtra(WidgetLocationData.EXTRA_LOCATION_ID);
-        mLocationAdapterId = intent.getStringExtra(WidgetLocationData.EXTRA_LOCATION_ADAPTER_ID);
-    }
+		mLocationId = intent.getStringExtra(WidgetLocationData.EXTRA_LOCATION_ID);
+		mLocationAdapterId = intent.getStringExtra(WidgetLocationData.EXTRA_LOCATION_ADAPTER_ID);
+	}
 
-    public void onCreate() {
-        Log.d(TAG, "onCreate()");
-        // In onCreate() you setup any connections / cursors to your data source. Heavy lifting,
-        // for example downloading or creating content etc, should be deferred to onDataSetChanged()
-        // or getViewAt(). Taking more than 20 seconds in this call will result in an ANR.
-        mController = Controller.getInstance(mContext);
-        SharedPreferences userSettings = mController.getUserSettings();
-        // UserSettings can be null when user is not logged in!
-        mUnitsHelper = (userSettings == null) ? null : new UnitsHelper(userSettings, mContext);
-        mTimeHelper = (userSettings == null) ? null : new TimeHelper(userSettings);
-    }
+	public void onCreate() {
+		Log.d(TAG, "onCreate()");
+		// In onCreate() you setup any connections / cursors to your data source. Heavy lifting,
+		// for example downloading or creating content etc, should be deferred to onDataSetChanged()
+		// or getViewAt(). Taking more than 20 seconds in this call will result in an ANR.
+		mController = Controller.getInstance(mContext);
+		SharedPreferences userSettings = mController.getUserSettings();
+		// UserSettings can be null when user is not logged in!
+		mUnitsHelper = (userSettings == null) ? null : new UnitsHelper(userSettings, mContext);
+		mTimeHelper = (userSettings == null) ? null : new TimeHelper(userSettings);
+	}
 
-    public void onDestroy() {
-        // In onDestroy() you should tear down anything that was setup for your data source,
-        // eg. cursors, connections, etc.
-    }
+	public void onDestroy() {
+		// In onDestroy() you should tear down anything that was setup for your data source,
+		// eg. cursors, connections, etc.
+	}
 
-    public int getCount() {
-        return mModules.size();
-    }
+	public int getCount() {
+		return mModules.size();
+	}
 
-    public RemoteViews getViewAt(int position) {
-        // position will always range from 0 to getCount() - 1.
+	public RemoteViews getViewAt(int position) {
+		// position will always range from 0 to getCount() - 1.
 
-        // We construct a remote views item based on our widget item xml file, and set the  text based on the position.
-        RemoteViews rv = new RemoteViews(mContext.getPackageName(), R.layout.widget_location_list_item);
+		// We construct a remote views item based on our widget item xml file, and set the  text based on the position.
+		RemoteViews rv = new RemoteViews(mContext.getPackageName(), R.layout.widget_location_list_item);
 
-        Module dev = mModules.get(position);
-        if(dev == null){
-            Log.d(TAG, "NOT FOUND MODULE BY POS");
-            return rv;
-        }
+		Module dev = mModules.get(position);
+		if (dev == null) {
+			Log.d(TAG, "NOT FOUND MODULE BY POS");
+			return rv;
+		}
 
-        Adapter adapter = mController.getAdaptersModel().getAdapter(dev.getDevice().getAdapterId());
+		Adapter adapter = mController.getAdaptersModel().getAdapter(dev.getDevice().getAdapterId());
 
-        rv.setTextViewText(R.id.widget_loc_item_name, dev.getName());
-        rv.setImageViewResource(R.id.widget_loc_item_icon, dev.getIconResource());
+		rv.setTextViewText(R.id.widget_loc_item_name, dev.getName());
+		rv.setImageViewResource(R.id.widget_loc_item_icon, dev.getIconResource());
 
-        rv.setTextViewText(R.id.widget_loc_item_update, mTimeHelper.formatLastUpdate(dev.getDevice().getLastUpdate(), adapter));
-        rv.setTextViewText(R.id.widget_loc_item_value, mUnitsHelper != null ? mUnitsHelper.getStringValueUnit(dev.getValue()) : dev.getValue().getRawValue());
+		rv.setTextViewText(R.id.widget_loc_item_update, mTimeHelper.formatLastUpdate(dev.getDevice().getLastUpdate(), adapter));
+		rv.setTextViewText(R.id.widget_loc_item_value, mUnitsHelper != null ? mUnitsHelper.getStringValueUnit(dev.getValue()) : dev.getValue().getRawValue());
 
-        // send broadcast to widgetprovider with information about clicked item
-        Bundle extras = new Bundle();
-        extras.putString(WidgetLocationData.EXTRA_ITEM_DEV_ID, dev.getId());
-        extras.putString(WidgetLocationData.EXTRA_ITEM_ADAPTER_ID, dev.getDevice().getAdapterId());
-        Intent fillInIntent = new Intent();
-        fillInIntent.putExtras(extras);
-        rv.setOnClickFillInIntent(R.id.widget_loc_item, fillInIntent);
-
-
-        // Return the remote views object.
-        return rv;
-    }
-
-    public RemoteViews getLoadingView() {
-        // You can create a custom loading view (for instance when getViewAt() is slow.) If you
-        // return null here, you will get the default loading view.
-        return null;
-    }
-
-    public int getViewTypeCount() {
-        return 1;
-    }
-
-    public long getItemId(int position) {
-        // TODO dev.hashcode() ?
-        return position;
-    }
-
-    // TODO nevim co by melo byt (bylo true)
-    public boolean hasStableIds() {
-        return false;
-    }
-
-    public void onDataSetChanged() {
-        Log.d(TAG, String.format("onDataSetChanged(%d), locId=%s, adId=%s", mWidgetId, mLocationId, mLocationAdapterId));
-
-        // TODO problem if logged out
-        // TODO problem when changed room
-        // TODO checking if new data not all the time refresh
-
-        mController = Controller.getInstance(mContext);
-        try {
-            mController.getLocationsModel().reloadLocationsByAdapter(mLocationAdapterId, false);
-            mDevices = mController.getDevicesModel().getDevicesByLocation(mLocationAdapterId, mLocationId);
-        }
-        catch(AppException e){
-            e.printStackTrace();
-        }
+		// send broadcast to widgetprovider with information about clicked item
+		Bundle extras = new Bundle();
+		extras.putString(WidgetLocationData.EXTRA_ITEM_DEV_ID, dev.getId());
+		extras.putString(WidgetLocationData.EXTRA_ITEM_ADAPTER_ID, dev.getDevice().getAdapterId());
+		Intent fillInIntent = new Intent();
+		fillInIntent.putExtras(extras);
+		rv.setOnClickFillInIntent(R.id.widget_loc_item, fillInIntent);
 
 
-        Log.d(TAG, String.format("mfacit length = %d", mDevices.size()));
-        mModules.clear();
-        for(Device fac : mDevices){
-            if(fac == null) continue;
+		// Return the remote views object.
+		return rv;
+	}
 
-            Log.d("FAC: ", fac.getModules().get(0).getName());
-            mModules.addAll(fac.getModules());
-        }
-    }
+	public RemoteViews getLoadingView() {
+		// You can create a custom loading view (for instance when getViewAt() is slow.) If you
+		// return null here, you will get the default loading view.
+		return null;
+	}
+
+	public int getViewTypeCount() {
+		return 1;
+	}
+
+	public long getItemId(int position) {
+		// TODO dev.hashcode() ?
+		return position;
+	}
+
+	// TODO nevim co by melo byt (bylo true)
+	public boolean hasStableIds() {
+		return false;
+	}
+
+	public void onDataSetChanged() {
+		Log.d(TAG, String.format("onDataSetChanged(%d), locId=%s, adId=%s", mWidgetId, mLocationId, mLocationAdapterId));
+
+		// TODO problem if logged out
+		// TODO problem when changed room
+		// TODO checking if new data not all the time refresh
+
+		mController = Controller.getInstance(mContext);
+		try {
+			mController.getLocationsModel().reloadLocationsByAdapter(mLocationAdapterId, false);
+			mDevices = mController.getDevicesModel().getDevicesByLocation(mLocationAdapterId, mLocationId);
+		} catch (AppException e) {
+			e.printStackTrace();
+		}
+
+
+		Log.d(TAG, String.format("mfacit length = %d", mDevices.size()));
+		mModules.clear();
+		for (Device fac : mDevices) {
+			if (fac == null) continue;
+
+			Log.d("FAC: ", fac.getModules().get(0).getName());
+			mModules.addAll(fac.getModules());
+		}
+	}
 }

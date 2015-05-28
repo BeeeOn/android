@@ -28,9 +28,10 @@ import io.fabric.sdk.android.Fabric;
 
 /**
  * Design pattern Singleton
+ *
  * @author Jan Lamacz
  */
-public class BeeeOnTwitter  extends Observable implements BeeeOnSocialNetwork{
+public class BeeeOnTwitter extends Observable implements BeeeOnSocialNetwork {
 	private static final String TAG = BeeeOnTwitter.class.getSimpleName();
 	private static final String NAME = "Twitter";
 
@@ -57,7 +58,7 @@ public class BeeeOnTwitter  extends Observable implements BeeeOnSocialNetwork{
 	}
 
 	public static BeeeOnTwitter getInstance(Context context) {
-		if(mInstance == null) {
+		if (mInstance == null) {
 			mInstance = new BeeeOnTwitter(context);
 		}
 		return mInstance;
@@ -73,16 +74,16 @@ public class BeeeOnTwitter  extends Observable implements BeeeOnSocialNetwork{
 				setChanged();
 				notifyObservers("login");
 			}
+
 			@Override
 			public void failure(TwitterException e) {
-				if(e instanceof TwitterAuthException) {
+				if (e instanceof TwitterAuthException) {
 					if (!e.getMessage().toLowerCase().contains("cancel")) {
 						Toast.makeText(mContext, mContext.getString(R.string.social_no_connection), Toast.LENGTH_LONG).show();
 						setChanged();
 						notifyObservers("connect_error");
 					}
-				}
-				else if(e instanceof TwitterApiException)
+				} else if (e instanceof TwitterApiException)
 					Toast.makeText(mContext, "SSL is required", Toast.LENGTH_LONG).show();
 				Log.e(TAG, "Login failed");
 			}
@@ -91,18 +92,26 @@ public class BeeeOnTwitter  extends Observable implements BeeeOnSocialNetwork{
 
 	@Override
 	public void logOut() {
-		if(mUserName != null)
+		if (mUserName != null)
 			Toast.makeText(mContext, mContext.getString(R.string.logout_success), Toast.LENGTH_LONG).show();
 		mUserName = null;
 //		Twitter.logOut();
 	}
 
 	@Override
-	public String getName() {return NAME;}
+	public String getName() {
+		return NAME;
+	}
+
 	@Override
-	public String getUserName() {return mUserName;}
+	public String getUserName() {
+		return mUserName;
+	}
+
 	@Override
-	public boolean isPaired() {return mAccessToken != null;}
+	public boolean isPaired() {
+		return mAccessToken != null;
+	}
 
 	public void downloadUserData() {
 	}
@@ -112,8 +121,8 @@ public class BeeeOnTwitter  extends Observable implements BeeeOnSocialNetwork{
 	 * Sharing text via twitter without need to have Twitter API, be logged on etc...
 	 * If the Twitter app is installed, shares with this app, otherwise shares via web browser
 	 * Downsides:
-	 *   cant check if tweet is truly done (etc for achievements)
-	 *   cant return back to app and stays in browser
+	 * cant check if tweet is truly done (etc for achievements)
+	 * cant return back to app and stays in browser
 	 */
 	public Intent shareAchievement(String text) {
 		return new TweetComposer.Builder(mContext)
@@ -124,7 +133,7 @@ public class BeeeOnTwitter  extends Observable implements BeeeOnSocialNetwork{
 	private void parseResult(Result<TwitterSession> result) {
 		mUserName = result.data.getUserName();
 		mAccessToken = result.data.getAuthToken().token;
-		Log.d(TAG,  "Twitter token: "+ mAccessToken);
+		Log.d(TAG, "Twitter token: " + mAccessToken);
 		mPrefs.edit().putString(Constants.PERSISTENCE_PREF_LOGIN_TWITTER, mAccessToken).apply();
 	}
 

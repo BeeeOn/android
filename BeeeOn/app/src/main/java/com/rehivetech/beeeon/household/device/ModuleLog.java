@@ -101,7 +101,7 @@ public class ModuleLog {
 
 	/**
 	 * Constructor.
-	 * 
+	 *
 	 * @param type
 	 * @param interval
 	 */
@@ -113,7 +113,7 @@ public class ModuleLog {
 
 	/**
 	 * Return type of values in this log.
-	 * 
+	 *
 	 * @return
 	 */
 	public DataType getType() {
@@ -122,7 +122,7 @@ public class ModuleLog {
 
 	/**
 	 * Return interval of values in this log.
-	 * 
+	 *
 	 * @return
 	 */
 	public DataInterval getInterval() {
@@ -131,7 +131,7 @@ public class ModuleLog {
 
 	/**
 	 * Return minimum value in this log
-	 * 
+	 *
 	 * @return
 	 */
 	public float getMinimum() {
@@ -140,7 +140,7 @@ public class ModuleLog {
 
 	/**
 	 * Return maximum value in this log
-	 * 
+	 *
 	 * @return
 	 */
 	public float getMaximum() {
@@ -149,7 +149,7 @@ public class ModuleLog {
 
 	/**
 	 * Return deviation between maximum and minimum value in this log
-	 * 
+	 *
 	 * @return
 	 */
 	public float getDeviation() {
@@ -158,13 +158,13 @@ public class ModuleLog {
 
 	/**
 	 * Return all values from log
-	 * 
+	 *
 	 * @return sorted map of rows
 	 */
 	public SortedMap<Long, Float> getValues() {
 		return mValues;
 	}
-	
+
 	/**
 	 * Return values between <start, end) date from log
 	 *
@@ -178,7 +178,7 @@ public class ModuleLog {
 
 	/**
 	 * Add single value.
-	 * 
+	 *
 	 * @param row
 	 */
 	public void addValue(Long dateMillis, Float value) {
@@ -193,13 +193,11 @@ public class ModuleLog {
 
 	/**
 	 * Add interval of same values.
-	 * 
+	 *
 	 * @param dateMillis
 	 * @param value
-	 * @param repeat
-	 *            number of rows
-	 * @param gap
-	 *            gap in seconds
+	 * @param repeat     number of rows
+	 * @param gap        gap in seconds
 	 */
 	public void addValueInterval(Long dateMillis, Float value, int repeat, int gap) {
 		for (int i = 0; i <= repeat; i++) {
@@ -209,12 +207,12 @@ public class ModuleLog {
 
 	/**
 	 * Clear all values and add all rows.
-	 * 
+	 *
 	 * @param rows
 	 */
 	public void setValues(SortedMap<Long, Float> rows) {
 		clearValues();
-		
+
 		for (Entry<Long, Float> entry : rows.entrySet()) {
 			addValue(entry.getKey(), entry.getValue());
 		}

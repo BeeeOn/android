@@ -1,7 +1,6 @@
 package com.rehivetech.beeeon.network.xml;
 
 /**
- * 
  * @author ThinkDeep
  * @see <a href="https://merlin.fit.vutbr.cz/wiki-iot/index.php/Smarthome_cloud#Info_-_tabulky">err cods</a>
  */
@@ -21,11 +20,9 @@ public class FalseAnswer {
 
 	/**
 	 * Constructor
-	 * 
-	 * @param additionalInfo
-	 *            previous state where exception appear
-	 * @param data
-	 *            of the error message
+	 *
+	 * @param additionalInfo previous state where exception appear
+	 * @param data           of the error message
 	 */
 	public FalseAnswer(String additionalInfo, int errCode, Object troubleMaker) {
 		mAdditionalInfo = additionalInfo;
@@ -35,7 +32,7 @@ public class FalseAnswer {
 
 	/**
 	 * Getter
-	 * 
+	 *
 	 * @return
 	 */
 	public String getInfo() {
@@ -50,8 +47,7 @@ public class FalseAnswer {
 	}
 
 	/**
-	 * @param mErrCode
-	 *            the mErrCode to set
+	 * @param mErrCode the mErrCode to set
 	 */
 	public void setErrCode(int mErrCode) {
 		this.mErrCode = mErrCode;

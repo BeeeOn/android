@@ -7,9 +7,8 @@ import com.rehivetech.beeeon.INameIdentifier;
 import com.rehivetech.beeeon.household.user.User;
 
 /**
- * @brief Class for parsed data from XML file of adapters
  * @author ThinkDeep
- * 
+ * @brief Class for parsed data from XML file of adapters
  */
 public class Adapter implements INameIdentifier {
 	public static final String TAG = Adapter.class.getSimpleName();
@@ -33,7 +32,7 @@ public class Adapter implements INameIdentifier {
 
 	/**
 	 * Set name of adapter
-	 * 
+	 *
 	 * @param name
 	 */
 	public void setName(String name) {
@@ -42,7 +41,7 @@ public class Adapter implements INameIdentifier {
 
 	/**
 	 * Get name of adapter
-	 * 
+	 *
 	 * @return
 	 */
 	public String getName() {
@@ -51,7 +50,7 @@ public class Adapter implements INameIdentifier {
 
 	/**
 	 * Set role of actual user of adapter
-	 * 
+	 *
 	 * @param role
 	 */
 	public void setRole(User.Role role) {
@@ -60,7 +59,7 @@ public class Adapter implements INameIdentifier {
 
 	/**
 	 * Get role of actual user of adapter
-	 * 
+	 *
 	 * @return
 	 */
 	public User.Role getRole() {
@@ -69,7 +68,7 @@ public class Adapter implements INameIdentifier {
 
 	/**
 	 * Setting id of adapter
-	 * 
+	 *
 	 * @param id
 	 */
 	public void setId(String id) {
@@ -78,7 +77,7 @@ public class Adapter implements INameIdentifier {
 
 	/**
 	 * Returning id of adapter
-	 * 
+	 *
 	 * @return id
 	 */
 	public String getId() {
@@ -87,7 +86,7 @@ public class Adapter implements INameIdentifier {
 
 	/**
 	 * Setting UTC offset of adapter
-	 * 
+	 *
 	 * @param utcOffsetInMinutes
 	 */
 	public void setUtcOffset(int offsetInMinutes) {
@@ -96,7 +95,7 @@ public class Adapter implements INameIdentifier {
 
 	/**
 	 * Returning UTC offset of adapter
-	 * 
+	 *
 	 * @return UTC offset in milliseconds
 	 */
 	public int getUtcOffsetMillis() {

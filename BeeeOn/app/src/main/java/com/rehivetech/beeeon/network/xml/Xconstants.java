@@ -2,12 +2,11 @@ package com.rehivetech.beeeon.network.xml;
 
 /**
  * @author ThinkDeep
- *
  */
 public class Xconstants {
 
 	public static final String COM_ROOT = "com";
-	public static final String BT =  "bt";
+	public static final String BT = "bt";
 	public static final String ID = "id";
 	public static final String AID = "aid";
 	public static final String LID = "lid";

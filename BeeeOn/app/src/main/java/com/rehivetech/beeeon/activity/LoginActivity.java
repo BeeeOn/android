@@ -35,22 +35,22 @@ import io.fabric.sdk.android.Fabric;
 
 /**
  * First sign in class, controls first activity
- * 
+ *
  * @author ThinkDeep
  * @author Leopold Podmolik
  * @author Robyer
  */
 public class LoginActivity extends BaseActivity {
 
-    // Note: Your consumer key and secret should be obfuscated in your source code before shipping.
-    private static final String TWITTER_KEY = "0eAUtsrgm0D2CUKG3xnvGwuZp";
-    private static final String TWITTER_SECRET = "bhs3kwihnSJLweYOlsQImP84DrUMPqcB0DO2UsbQE6FmGhHJpL";
+	// Note: Your consumer key and secret should be obfuscated in your source code before shipping.
+	private static final String TWITTER_KEY = "0eAUtsrgm0D2CUKG3xnvGwuZp";
+	private static final String TWITTER_SECRET = "bhs3kwihnSJLweYOlsQImP84DrUMPqcB0DO2UsbQE6FmGhHJpL";
 
 
 	public static final String BUNDLE_REDIRECT = "isRedirect";
-	
+
 	private static final String TAG = LoginActivity.class.getSimpleName();
-	
+
 	private Controller mController;
 	private BetterProgressDialog mProgress;
 
@@ -113,28 +113,28 @@ public class LoginActivity extends BaseActivity {
 				// Show choose dialog for other providers
 				AlertDialog.Builder builder = new AlertDialog.Builder(LoginActivity.this);
 				builder.setTitle(R.string.dialog_choose_provider_title);
-				builder.setItems(new String[] { "Facebook", "MojeID" }, new DialogInterface.OnClickListener() {
-							@Override
-							public void onClick(DialogInterface dialog, int which) {
-								if (which == 0) {
-									// Facebook
-									prepareLogin(new FacebookAuthProvider());
-								} else {
-									// MojeID
-									Toast.makeText(LoginActivity.this, "Not implemented yet.", Toast.LENGTH_SHORT).show();
-									// prepareLogin(new MojeIdAuthProvider());
-								}
-							}
-						});
+				builder.setItems(new String[]{"Facebook", "MojeID"}, new DialogInterface.OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						if (which == 0) {
+							// Facebook
+							prepareLogin(new FacebookAuthProvider());
+						} else {
+							// MojeID
+							Toast.makeText(LoginActivity.this, "Not implemented yet.", Toast.LENGTH_SHORT).show();
+							// prepareLogin(new MojeIdAuthProvider());
+						}
+					}
+				});
 				builder.show();
 			}
 		});
 
 		// Intro to app
-		SharedPreferences prefs = getPreferences( MODE_PRIVATE);
-		if(prefs != null && prefs.getBoolean(Constants.GUI_INTRO_PLAY,true)) {
-			Log.d(TAG,"Go to INTRO");
-			prefs.edit().putBoolean(Constants.GUI_INTRO_PLAY,false).apply();
+		SharedPreferences prefs = getPreferences(MODE_PRIVATE);
+		if (prefs != null && prefs.getBoolean(Constants.GUI_INTRO_PLAY, true)) {
+			Log.d(TAG, "Go to INTRO");
+			prefs.edit().putBoolean(Constants.GUI_INTRO_PLAY, false).apply();
 			Intent intent = new Intent(this, IntroActivity.class);
 			startActivity(intent);
 			return;
@@ -418,7 +418,7 @@ public class LoginActivity extends BaseActivity {
 		DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
-				switch (which){
+				switch (which) {
 					case DialogInterface.BUTTON_POSITIVE:
 						doRegister(authProvider);
 						break;

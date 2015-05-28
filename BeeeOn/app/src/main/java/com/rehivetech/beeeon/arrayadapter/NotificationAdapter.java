@@ -61,7 +61,7 @@ public class NotificationAdapter extends BaseAdapter {
 			holder = (ViewHolder) convertView.getTag();
 		}
 
-		if (pos == mList.size()-1) {
+		if (pos == mList.size() - 1) {
 			holder.separator.setVisibility(View.INVISIBLE);
 		} else {
 			holder.separator.setVisibility(View.VISIBLE);

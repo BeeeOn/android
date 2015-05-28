@@ -27,7 +27,7 @@ public class WidgetLocationPersistence extends WidgetBeeeOnPersistence {
 	@Override
 	public void load() {
 		super.load();
-		type = mPrefs.getString(getProperty(PREF_TYPE), "0");		// TODO should be unknown location
+		type = mPrefs.getString(getProperty(PREF_TYPE), "0");        // TODO should be unknown location
 	}
 
 	@Override
@@ -68,11 +68,10 @@ public class WidgetLocationPersistence extends WidgetBeeeOnPersistence {
 	@Override
 	public void renderView(ViewsBuilder parentBuilder) {
 		super.renderView(parentBuilder);
-		if(mBoundView == 0){
+		if (mBoundView == 0) {
 			parentBuilder.setTextViewText(R.id.name, name);
 			parentBuilder.setImage(R.id.icon, Utils.getEnumFromId(Location.LocationIcon.class, type, Location.LocationIcon.UNKNOWN).getIconResource());
-		}
-		else {
+		} else {
 			mBuilder.loadRootView(R.layout.widget_include_location);
 			mBuilder.setTextViewText(R.id.name, name);
 			mBuilder.setImage(R.id.icon, Utils.getEnumFromId(Location.LocationIcon.class, type, Location.LocationIcon.UNKNOWN).getIconResource());

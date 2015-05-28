@@ -21,22 +21,22 @@ public abstract class AbstractSpinnerItem implements SpinnerItem {
 	public SpinnerItemType getType() {
 		return mType;
 	}
-	
+
 	public void setMView(View view) {
 		mMView = view;
 	}
-	
-	public View getMView(){
+
+	public View getMView() {
 		return mMView;
 	}
 
 
 	// if not set these methods, use the same layout for dropdown and selected
-	public int getDropDownLayout(){
+	public int getDropDownLayout() {
 		return getLayout();
 	}
 
-	public void setDropDownView(View view){
+	public void setDropDownView(View view) {
 		setView(view);
 	}
 }

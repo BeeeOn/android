@@ -10,7 +10,7 @@ import java.util.List;
 /**
  * @author Jan Lamacz
  */
-public class UpdateAchievementTask  extends CallbackTask<AchievementPair>  {
+public class UpdateAchievementTask extends CallbackTask<AchievementPair> {
 	private List<String> mAchievementId;
 
 	public UpdateAchievementTask(Context context) {
@@ -25,5 +25,7 @@ public class UpdateAchievementTask  extends CallbackTask<AchievementPair>  {
 		return mAchievementId.size() > 0;
 	}
 
-	public List<String> getAchievementId() { return mAchievementId; }
+	public List<String> getAchievementId() {
+		return mAchievementId;
+	}
 }

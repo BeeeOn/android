@@ -64,7 +64,7 @@ public abstract class SettingsItem {
 
 	/**
 	 * Get Item by ID which will be saved in SharedPreferences.
-	 * 
+	 *
 	 * @return If the ID exists, it returns Item object. Otherwise it returns default Item.
 	 */
 	private BaseItem getItemById(int id) {

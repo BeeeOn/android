@@ -49,12 +49,12 @@ public class CustomViewMenuItem extends AbstractMenuItem {
 
 	@Override
 	public void setIsSelected() {
-		getMView().setBackgroundColor( getMView().getResources().getColor(R.color.light_gray));
+		getMView().setBackgroundColor(getMView().getResources().getColor(R.color.light_gray));
 	}
 
 	@Override
 	public void setNotSelected() {
-		getMView().setBackgroundColor( getMView().getResources().getColor(R.color.beeeon_drawer_bg));
+		getMView().setBackgroundColor(getMView().getResources().getColor(R.color.beeeon_drawer_bg));
 	}
 
 }

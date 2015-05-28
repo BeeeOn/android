@@ -65,7 +65,7 @@ public abstract class BaseNotification implements GcmNotification, Comparable<Ba
 			}
 			// control if actual user ID is the samesdsdas
 			if (!userId.equals(controller.getActualUser().getId())) {
-				Log.w(TAG, "GCM: Sent user ID is different from actual user ID. Deleting GCM on server. Actual ID: "+ controller.getActualUser().getId()+ ", recieved ID: " + userId);
+				Log.w(TAG, "GCM: Sent user ID is different from actual user ID. Deleting GCM on server. Actual ID: " + controller.getActualUser().getId() + ", recieved ID: " + userId);
 				controller.getGcmModel().deleteGCM(userId, null);
 				return null;
 			}

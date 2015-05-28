@@ -37,49 +37,49 @@ import com.rehivetech.beeeon.pair.UserPair;
 import java.util.List;
 
 public class AdapterUsersActivity extends BaseApplicationActivity {
-	
+
 	private Controller mController;
-	
+
 	private AdapterUsersActivity mActivity;
-	
+
 	private Adapter mAdapter;
-	
+
 	private List<User> mAdapterUsers;
-	
+
 	private ListView mListActUsers;
 	private ListView mListPenUsers;
 
 	private static final int NAME_ITEM_HEIGHT = 74;
-    private Toolbar mToolbar;
-    private ActionMode mMode;
+	private Toolbar mToolbar;
+	private ActionMode mMode;
 
-    private RadioGroup mGroup;
-    private ScrollView mLayoutDialog;
-    private User mSelectedItem;
-    private int mSelectedItemPos;
+	private RadioGroup mGroup;
+	private ScrollView mLayoutDialog;
+	private User mSelectedItem;
+	private int mSelectedItemPos;
 
-    @Override
+	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_adapter_users);
 
-        mToolbar = (Toolbar) findViewById(R.id.toolbar);
-        if (mToolbar != null) {
-            mToolbar.setTitle(R.string.title_activity_adapter_users);
-            setSupportActionBar(mToolbar);
-        }
-		
+		mToolbar = (Toolbar) findViewById(R.id.toolbar);
+		if (mToolbar != null) {
+			mToolbar.setTitle(R.string.title_activity_adapter_users);
+			setSupportActionBar(mToolbar);
+		}
+
 		// Get controller
 		mController = Controller.getInstance(this);
 		// Get actual activity
 		mActivity = this;
-		
+
 		getSupportActionBar().setHomeButtonEnabled(true);
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-		
+
 		// Get selected adapter
 		mAdapter = mController.getAdaptersModel().getAdapter(getIntent().getStringExtra(Constants.GUI_SELECTED_ADAPTER_ID));
-		
+
 		// Get all users for adapter
 		doReloadAdapterUsersTask(mAdapter.getId(), true);
 	}
@@ -88,27 +88,27 @@ public class AdapterUsersActivity extends BaseApplicationActivity {
 		// Get elements
 		mListActUsers = (ListView) findViewById(R.id.adapter_users_list);
 		//mListPenUsers = (ListView) findViewById(R.id.adapter_users_pending_list);
-		
-		mListActUsers.setAdapter(new UsersListAdapter(mActivity,mAdapterUsers,null));
 
-        mListActUsers.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-            @Override
-            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                mMode =  startSupportActionMode(new ActionModeEditSensors());
-                mSelectedItem = (User) mListActUsers.getAdapter().getItem(position);
-                mSelectedItemPos = position;
-                setUserSelected();
-                return true;
-            }
-        });
+		mListActUsers.setAdapter(new UsersListAdapter(mActivity, mAdapterUsers, null));
+
+		mListActUsers.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+			@Override
+			public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+				mMode = startSupportActionMode(new ActionModeEditSensors());
+				mSelectedItem = (User) mListActUsers.getAdapter().getItem(position);
+				mSelectedItemPos = position;
+				setUserSelected();
+				return true;
+			}
+		});
 
 		// Set listview height, for all 
 		float scale = mActivity.getResources().getDisplayMetrics().density;
-		mListActUsers.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, (int) (scale*NAME_ITEM_HEIGHT*mAdapterUsers.size())));
-		
+		mListActUsers.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, (int) (scale * NAME_ITEM_HEIGHT * mAdapterUsers.size())));
+
 		FloatingActionButton mButton = (FloatingActionButton) findViewById(R.id.fab_add_user);
 		mButton.setOnClickListener(new OnClickListener() {
-			
+
 			@Override
 			public void onClick(View v) {
 				// Go to add new user 
@@ -122,7 +122,7 @@ public class AdapterUsersActivity extends BaseApplicationActivity {
 
 	@Override
 	protected void onAppResume() {
-		if(mAdapter != null)
+		if (mAdapter != null)
 			doReloadAdapterUsersTask(mAdapter.getId(), true);
 	}
 
@@ -130,36 +130,36 @@ public class AdapterUsersActivity extends BaseApplicationActivity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 
 		switch (item.getItemId()) {
-		case android.R.id.home:
-			
-			finish();
-			break;
+			case android.R.id.home:
+
+				finish();
+				break;
 		}
 		return super.onOptionsItemSelected(item);
 	}
 
 
-    private void setUserSelected() {
-        getViewByPosition(mSelectedItemPos,mListActUsers).findViewById(R.id.layoutofsensor).setBackgroundColor(mActivity.getResources().getColor(R.color.light_gray));
-    }
+	private void setUserSelected() {
+		getViewByPosition(mSelectedItemPos, mListActUsers).findViewById(R.id.layoutofsensor).setBackgroundColor(mActivity.getResources().getColor(R.color.light_gray));
+	}
 
-    private void setUserUnselected() {
-        getViewByPosition(mSelectedItemPos,mListActUsers).findViewById(R.id.layoutofsensor).setBackgroundColor(mActivity.getResources().getColor(R.color.white));
-    }
+	private void setUserUnselected() {
+		getViewByPosition(mSelectedItemPos, mListActUsers).findViewById(R.id.layoutofsensor).setBackgroundColor(mActivity.getResources().getColor(R.color.white));
+	}
 
 
-    public View getViewByPosition(int pos, ListView listView) {
-        final int firstListItemPosition = listView.getFirstVisiblePosition();
-        final int lastListItemPosition = firstListItemPosition + listView.getChildCount() - 1;
+	public View getViewByPosition(int pos, ListView listView) {
+		final int firstListItemPosition = listView.getFirstVisiblePosition();
+		final int lastListItemPosition = firstListItemPosition + listView.getChildCount() - 1;
 
-        if (pos < firstListItemPosition || pos > lastListItemPosition ) {
-            return listView.getAdapter().getView(pos, null, listView);
-        } else {
-            final int childIndex = pos - firstListItemPosition;
-            return listView.getChildAt(childIndex);
-        }
-    }
-	
+		if (pos < firstListItemPosition || pos > lastListItemPosition) {
+			return listView.getAdapter().getView(pos, null, listView);
+		} else {
+			final int childIndex = pos - firstListItemPosition;
+			return listView.getChildAt(childIndex);
+		}
+	}
+
 	private void doReloadAdapterUsersTask(final String adapterId, boolean forceReload) {
 		ReloadAdapterDataTask reloadUsersTask = new ReloadAdapterDataTask(this, forceReload, ReloadAdapterDataTask.ReloadWhat.USERS);
 
@@ -175,15 +175,15 @@ public class AdapterUsersActivity extends BaseApplicationActivity {
 		});
 
 		// Execute and remember task so it can be stopped automatically
-        callbackTaskManager.executeTask(reloadUsersTask, adapterId);
+		callbackTaskManager.executeTask(reloadUsersTask, adapterId);
 	}
 
 
-    private void doRemoveUserTask(User user) {
-        RemoveUserTask removeUserTask = new RemoveUserTask(this);
-        UserPair pair = new UserPair(user, mAdapter.getId());
+	private void doRemoveUserTask(User user) {
+		RemoveUserTask removeUserTask = new RemoveUserTask(this);
+		UserPair pair = new UserPair(user, mAdapter.getId());
 
-        removeUserTask.setListener(new CallbackTaskListener() {
+		removeUserTask.setListener(new CallbackTaskListener() {
 			@Override
 			public void onExecute(boolean success) {
 				// Get all users for adapter
@@ -196,13 +196,13 @@ public class AdapterUsersActivity extends BaseApplicationActivity {
 
 		// Execute and remember task so it can be stopped automatically
 		callbackTaskManager.executeTask(removeUserTask, pair);
-    }
+	}
 
-    private void doEditUserTask(User user) {
-        EditUserTask editUserTask = new EditUserTask(this);
-        UserPair pair = new UserPair(user, mAdapter.getId());
+	private void doEditUserTask(User user) {
+		EditUserTask editUserTask = new EditUserTask(this);
+		UserPair pair = new UserPair(user, mAdapter.getId());
 
-        editUserTask.setListener(new CallbackTaskListener() {
+		editUserTask.setListener(new CallbackTaskListener() {
 			@Override
 			public void onExecute(boolean success) {
 				// Get all users for adapter
@@ -217,94 +217,93 @@ public class AdapterUsersActivity extends BaseApplicationActivity {
 
 		// Execute and remember task so it can be stopped automatically
 		callbackTaskManager.executeTask(editUserTask, pair);
-    }
+	}
 
 
-    class ActionModeEditSensors implements ActionMode.Callback {
+	class ActionModeEditSensors implements ActionMode.Callback {
 
-        @Override
-        public boolean onCreateActionMode(ActionMode mode, Menu menu) {
-            MenuInflater inflater = mode.getMenuInflater();
-            inflater.inflate(R.menu.adapteruser_menu, menu);
-            return true;
-        }
+		@Override
+		public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+			MenuInflater inflater = mode.getMenuInflater();
+			inflater.inflate(R.menu.adapteruser_menu, menu);
+			return true;
+		}
 
-        @Override
-        public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
-            // TODO Auto-generated method stub
-            return false;
-        }
+		@Override
+		public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+			// TODO Auto-generated method stub
+			return false;
+		}
 
-        @Override
-        public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
-            if (item.getItemId() == R.id.adausr_menu_del) {
-                doRemoveUserTask(mSelectedItem);
-            }
-            else if (item.getItemId() == R.id.adausr_menu_edit) {
-                changeUserRole();
-            }
+		@Override
+		public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+			if (item.getItemId() == R.id.adausr_menu_del) {
+				doRemoveUserTask(mSelectedItem);
+			} else if (item.getItemId() == R.id.adausr_menu_edit) {
+				changeUserRole();
+			}
 
-            mode.finish();
-            return true;
-        }
+			mode.finish();
+			return true;
+		}
 
-        @Override
-        public void onDestroyActionMode(ActionMode mode) {
-            setUserUnselected();
-            mMode = null;
-        }
-    }
+		@Override
+		public void onDestroyActionMode(ActionMode mode) {
+			setUserUnselected();
+			mMode = null;
+		}
+	}
 
-    private void changeUserRole() {
-        AlertDialog.Builder builder;
-        AlertDialog alertDialog;
+	private void changeUserRole() {
+		AlertDialog.Builder builder;
+		AlertDialog alertDialog;
 
-        LayoutInflater inflater = (LayoutInflater) mActivity.getSystemService(LAYOUT_INFLATER_SERVICE);
-        mLayoutDialog = (ScrollView) inflater.inflate(R.layout.beeeon_checkbox,null);
+		LayoutInflater inflater = (LayoutInflater) mActivity.getSystemService(LAYOUT_INFLATER_SERVICE);
+		mLayoutDialog = (ScrollView) inflater.inflate(R.layout.beeeon_checkbox, null);
 
-        ViewGroup checkboxContainer = (ViewGroup) mLayoutDialog.findViewById(R.id.checkbox_container);
+		ViewGroup checkboxContainer = (ViewGroup) mLayoutDialog.findViewById(R.id.checkbox_container);
 
-        mGroup = new RadioGroup(mActivity);
-        int margin = ((Number) (getResources().getDisplayMetrics().density * 16)).intValue();
+		mGroup = new RadioGroup(mActivity);
+		int margin = ((Number) (getResources().getDisplayMetrics().density * 16)).intValue();
 
 		for (User.Role role : User.Role.values()) {
 			RadioButton item = new RadioButton(this);
 			item.setText(getString(role.getStringResource()));
-			item.setPadding(margin,margin,margin,margin);
+			item.setPadding(margin, margin, margin, margin);
 
 			mGroup.addView(item);
 			if (role == mSelectedItem.getRole())
 				mGroup.check(item.getId());
 		}
-        checkboxContainer.addView(mGroup);
+		checkboxContainer.addView(mGroup);
 
 
-        builder = new AlertDialog.Builder(mActivity);
-        builder.setView(mLayoutDialog)
-                .setTitle(getString(R.string.adapter_user_title_change_role));
+		builder = new AlertDialog.Builder(mActivity);
+		builder.setView(mLayoutDialog)
+				.setTitle(getString(R.string.adapter_user_title_change_role));
 
-        builder.setPositiveButton(R.string.save, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-                // User clicked OK button
+		builder.setPositiveButton(R.string.save, new DialogInterface.OnClickListener() {
+			public void onClick(DialogInterface dialog, int id) {
+				// User clicked OK button
 				//mSelectedItem.setRole(User.Role.fromString(((RadioButton)mLayoutDialog.findViewById(mGroup.getCheckedRadioButtonId())).getText().toString()));
 
 				for (User.Role role : User.Role.values()) {
-                    if (getString(role.getStringResource()).equals(((RadioButton)mLayoutDialog.findViewById(mGroup.getCheckedRadioButtonId())).getText().toString()) )
-                        mSelectedItem.setRole(role);
-                }
-                doEditUserTask(mSelectedItem);
-            }
-        });
-        builder.setNegativeButton(R.string.notification_cancel, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-                // User cancelled the dialog
-                mSelectedItem = null;
-                mSelectedItemPos = 0;
-            }
-        });
+					if (getString(role.getStringResource()).equals(((RadioButton) mLayoutDialog.findViewById(mGroup.getCheckedRadioButtonId())).getText().toString()))
+						mSelectedItem.setRole(role);
+				}
+				doEditUserTask(mSelectedItem);
+			}
+		});
+		builder.setNegativeButton(R.string.notification_cancel, new DialogInterface.OnClickListener() {
+			public void onClick(DialogInterface dialog, int id) {
+				// User cancelled the dialog
+				mSelectedItem = null;
+				mSelectedItemPos = 0;
+			}
+		});
 
-        alertDialog = builder.create();
-        alertDialog.show();
-    }
+		alertDialog = builder.create();
+		alertDialog.show();
+	}
 
 }

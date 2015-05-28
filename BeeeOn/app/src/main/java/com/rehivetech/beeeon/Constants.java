@@ -5,7 +5,7 @@ package com.rehivetech.beeeon;
 
 /**
  * Class for all constants
- * 
+ *
  * @author ThinkDeep
  * @author Robyer
  */
@@ -129,7 +129,7 @@ public final class Constants {
 
 	public static final String GUI_EDIT_SENSOR_ID = "GUI_EDIT_SENSOR_ID";
 
-	public static final String GUI_INTRO_PLAY = "GUI_INTRO_PLAY" ;
+	public static final String GUI_INTRO_PLAY = "GUI_INTRO_PLAY";
 
 	/**
 	 * Broadcasts

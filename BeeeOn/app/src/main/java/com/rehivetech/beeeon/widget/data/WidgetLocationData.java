@@ -26,131 +26,131 @@ import java.util.List;
  */
 @TargetApi(Build.VERSION_CODES.HONEYCOMB)
 public class WidgetLocationData extends WidgetData {
-    private static final String TAG = WidgetLocationData.class.getSimpleName();
+	private static final String TAG = WidgetLocationData.class.getSimpleName();
 
-    public static final String OPEN_DETAIL_ACTION =         "com.rehivetech.beeeon.widget.locationlist.OPEN_DETAIL_ACTION";
-    public static final String EXTRA_ITEM_DEV_ID =          "com.rehivetech.beeeon.widget.locationlist.ITEM_DEV_ID";
-    public static final String EXTRA_ITEM_ADAPTER_ID =      "com.rehivetech.beeeon.widget.locationlist.ITEM_ADAPTER_ID";
-    public static final String EXTRA_LOCATION_ID =          "com.rehivetech.beeeon.widget.locationlist.LOCATON_ID";
-    public static final String EXTRA_LOCATION_ADAPTER_ID =  "com.rehivetech.beeeon.widget.locationlist.LOCATON_ADAPTER_ID";
+	public static final String OPEN_DETAIL_ACTION = "com.rehivetech.beeeon.widget.locationlist.OPEN_DETAIL_ACTION";
+	public static final String EXTRA_ITEM_DEV_ID = "com.rehivetech.beeeon.widget.locationlist.ITEM_DEV_ID";
+	public static final String EXTRA_ITEM_ADAPTER_ID = "com.rehivetech.beeeon.widget.locationlist.ITEM_ADAPTER_ID";
+	public static final String EXTRA_LOCATION_ID = "com.rehivetech.beeeon.widget.locationlist.LOCATON_ID";
+	public static final String EXTRA_LOCATION_ADAPTER_ID = "com.rehivetech.beeeon.widget.locationlist.LOCATON_ADAPTER_ID";
 
-    protected Intent mRemoteViewsFactoryIntent;
+	protected Intent mRemoteViewsFactoryIntent;
 
-    public WidgetLocationPersistence widgetLocation;
-    private List<Location> mLocations;
+	public WidgetLocationPersistence widgetLocation;
+	private List<Location> mLocations;
 
-    /**
-     * Constructing object holding information about widget (instantiating in config activity and then in service)
-     *
-     * @param widgetId
-     * @param context
-     * @param unitsHelper
-     * @param timeHelper
-     */
-    public WidgetLocationData(int widgetId, Context context, UnitsHelper unitsHelper, TimeHelper timeHelper) {
-        super(widgetId, context, unitsHelper, timeHelper);
-        widgetLocation = new WidgetLocationPersistence(mContext, mWidgetId, 0, 0, mUnitsHelper, mTimeHelper, settings);
-        mLocations = new ArrayList<>();
-    }
+	/**
+	 * Constructing object holding information about widget (instantiating in config activity and then in service)
+	 *
+	 * @param widgetId
+	 * @param context
+	 * @param unitsHelper
+	 * @param timeHelper
+	 */
+	public WidgetLocationData(int widgetId, Context context, UnitsHelper unitsHelper, TimeHelper timeHelper) {
+		super(widgetId, context, unitsHelper, timeHelper);
+		widgetLocation = new WidgetLocationPersistence(mContext, mWidgetId, 0, 0, mUnitsHelper, mTimeHelper, settings);
+		mLocations = new ArrayList<>();
+	}
 
-    // ----------------------------------------------------------- //
-    // ---------------- MANIPULATING PERSISTENCE ----------------- //
-    // ----------------------------------------------------------- //
+	// ----------------------------------------------------------- //
+	// ---------------- MANIPULATING PERSISTENCE ----------------- //
+	// ----------------------------------------------------------- //
 
-    @Override
-    public void load() {
-        super.load();
-        widgetLocation.load();
-    }
+	@Override
+	public void load() {
+		super.load();
+		widgetLocation.load();
+	}
 
-    @Override
-    public void init() {
-        mLocations.clear();
-        mLocations.add(new Location(widgetLocation.id, widgetLocation.name, widgetAdapterId, widgetLocation.type));
-    }
+	@Override
+	public void init() {
+		mLocations.clear();
+		mLocations.add(new Location(widgetLocation.id, widgetLocation.name, widgetAdapterId, widgetLocation.type));
+	}
 
-    @Override
-    public void save() {
-        super.save();
-        widgetLocation.save();
-    }
+	@Override
+	public void save() {
+		super.save();
+		widgetLocation.save();
+	}
 
-    // ----------------------------------------------------------- //
-    // ------------------------ RENDERING ------------------------ //
-    // ----------------------------------------------------------- //
+	// ----------------------------------------------------------- //
+	// ------------------------ RENDERING ------------------------ //
+	// ----------------------------------------------------------- //
 
-    @Override
-    protected void renderLayout() {
-        // -------------------- initialize layout
-        // sets onclick "listeners"
-        mBuilder.setOnClickListener(R.id.options, mConfigurationPendingIntent);
-        mBuilder.setOnClickListener(R.id.refresh, mRefreshPendingIntent);
+	@Override
+	protected void renderLayout() {
+		// -------------------- initialize layout
+		// sets onclick "listeners"
+		mBuilder.setOnClickListener(R.id.options, mConfigurationPendingIntent);
+		mBuilder.setOnClickListener(R.id.refresh, mRefreshPendingIntent);
 
-        // TODO scroll to location?
-        mBuilder.setOnClickListener(R.id.icon, startMainActivityPendingIntent(mContext, widgetAdapterId));
-        mBuilder.setOnClickListener(R.id.name, startMainActivityPendingIntent(mContext, widgetAdapterId));
+		// TODO scroll to location?
+		mBuilder.setOnClickListener(R.id.icon, startMainActivityPendingIntent(mContext, widgetAdapterId));
+		mBuilder.setOnClickListener(R.id.name, startMainActivityPendingIntent(mContext, widgetAdapterId));
 
-        // onclick listener when clicked on item
-        mRemoteViewsFactoryIntent = new Intent(mContext, WidgetListService.class);
-        mRemoteViewsFactoryIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, mWidgetId);
-        mRemoteViewsFactoryIntent.setData(Uri.parse(mRemoteViewsFactoryIntent.toUri(Intent.URI_INTENT_SCHEME)));
-        mRemoteViewsFactoryIntent.putExtra(EXTRA_LOCATION_ID, widgetLocation.id);
-        mRemoteViewsFactoryIntent.putExtra(EXTRA_LOCATION_ADAPTER_ID, widgetAdapterId);
+		// onclick listener when clicked on item
+		mRemoteViewsFactoryIntent = new Intent(mContext, WidgetListService.class);
+		mRemoteViewsFactoryIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, mWidgetId);
+		mRemoteViewsFactoryIntent.setData(Uri.parse(mRemoteViewsFactoryIntent.toUri(Intent.URI_INTENT_SCHEME)));
+		mRemoteViewsFactoryIntent.putExtra(EXTRA_LOCATION_ID, widgetLocation.id);
+		mRemoteViewsFactoryIntent.putExtra(EXTRA_LOCATION_ADAPTER_ID, widgetAdapterId);
 
-        mBuilder.setRemoteAdapter(R.id.widget_sensor_list_view, mWidgetId, mRemoteViewsFactoryIntent);
-        mBuilder.setEmptyView(R.id.widget_sensor_list_view, R.id.empty_view);
+		mBuilder.setRemoteAdapter(R.id.widget_sensor_list_view, mWidgetId, mRemoteViewsFactoryIntent);
+		mBuilder.setEmptyView(R.id.widget_sensor_list_view, R.id.empty_view);
 
-        // -------------------- render layout
-        widgetLocation.renderView(mBuilder);
+		// -------------------- render layout
+		widgetLocation.renderView(mBuilder);
 
-        // intent open detail by item
-        Intent openDetailIntent = new Intent(mContext, WidgetLocationListProvider.class);
-        openDetailIntent.setAction(WidgetLocationData.OPEN_DETAIL_ACTION);
-        openDetailIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, mWidgetId);
+		// intent open detail by item
+		Intent openDetailIntent = new Intent(mContext, WidgetLocationListProvider.class);
+		openDetailIntent.setAction(WidgetLocationData.OPEN_DETAIL_ACTION);
+		openDetailIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, mWidgetId);
 
-        mRemoteViewsFactoryIntent.setData(Uri.parse(mRemoteViewsFactoryIntent.toUri(Intent.URI_INTENT_SCHEME)));
-        PendingIntent openDetailPendingIntent = PendingIntent.getBroadcast(mContext, 0, openDetailIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-        mBuilder.getRoot().setPendingIntentTemplate(R.id.widget_sensor_list_view, openDetailPendingIntent);
-    }
+		mRemoteViewsFactoryIntent.setData(Uri.parse(mRemoteViewsFactoryIntent.toUri(Intent.URI_INTENT_SCHEME)));
+		PendingIntent openDetailPendingIntent = PendingIntent.getBroadcast(mContext, 0, openDetailIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+		mBuilder.getRoot().setPendingIntentTemplate(R.id.widget_sensor_list_view, openDetailPendingIntent);
+	}
 
-    // ----------------------------------------------------------- //
-    // ---------------------- FAKE HANDLERS ---------------------- //
-    // ----------------------------------------------------------- //
+	// ----------------------------------------------------------- //
+	// ---------------------- FAKE HANDLERS ---------------------- //
+	// ----------------------------------------------------------- //
 
-    @Override
-    public boolean handleUpdateData() {
-        Location location = mController.getLocationsModel().getLocation(widgetAdapterId, widgetLocation.id);
-        if(location == null) {
-            Log.v(TAG, String.format("Updating widget (%d) with cached data", getWidgetId()));
-            return false;
-        }
+	@Override
+	public boolean handleUpdateData() {
+		Location location = mController.getLocationsModel().getLocation(widgetAdapterId, widgetLocation.id);
+		if (location == null) {
+			Log.v(TAG, String.format("Updating widget (%d) with cached data", getWidgetId()));
+			return false;
+		}
 
-        Adapter adapter = mController.getAdaptersModel().getAdapter(widgetAdapterId);
-        if(adapter == null) return false;
-        widgetLocation.configure(location, adapter);
+		Adapter adapter = mController.getAdaptersModel().getAdapter(widgetAdapterId);
+		if (adapter == null) return false;
+		widgetLocation.configure(location, adapter);
 
-        widgetLastUpdate = getTimeNow();
-        widgetAdapterId = adapter.getId();
+		widgetLastUpdate = getTimeNow();
+		widgetAdapterId = adapter.getId();
 
-        mWidgetManager.notifyAppWidgetViewDataChanged(mWidgetId, R.id.layout);
+		mWidgetManager.notifyAppWidgetViewDataChanged(mWidgetId, R.id.layout);
 
-        this.save();
-        Log.v(TAG, String.format("Updating widget (%d) with fresh data", getWidgetId()));
-        return true;
-    }
+		this.save();
+		Log.v(TAG, String.format("Updating widget (%d) with fresh data", getWidgetId()));
+		return true;
+	}
 
-    // ----------------------------------------------------------- //
-    // ------------------------- GETTERS ------------------------- //
-    // ----------------------------------------------------------- //
+	// ----------------------------------------------------------- //
+	// ------------------------- GETTERS ------------------------- //
+	// ----------------------------------------------------------- //
 
-    @Override
-    public List<Location> getObjectsToReload() {
-        return mLocations;
-    }
+	@Override
+	public List<Location> getObjectsToReload() {
+		return mLocations;
+	}
 
-    @Override
-    public String getClassName() {
-        return WidgetLocationData.class.getName();
-    }
+	@Override
+	public String getClassName() {
+		return WidgetLocationData.class.getName();
+	}
 
 }

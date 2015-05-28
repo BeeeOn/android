@@ -23,7 +23,7 @@ import java.util.ArrayList;
 /**
  * Created by leo on 24.4.15.
  */
-public class NumberPickerDialogFragment  extends SimpleDialogFragment{
+public class NumberPickerDialogFragment extends SimpleDialogFragment {
 
 	public static String TAG = "jayne";
 
@@ -31,7 +31,7 @@ public class NumberPickerDialogFragment  extends SimpleDialogFragment{
 	private static FragmentActivity mActivity;
 	private static Fragment mFragment;
 
-	public static void show(FragmentActivity activity, Module module,Fragment frg) {
+	public static void show(FragmentActivity activity, Module module, Fragment frg) {
 		sMModule = module;
 		mActivity = activity;
 		mFragment = frg;
@@ -48,7 +48,7 @@ public class NumberPickerDialogFragment  extends SimpleDialogFragment{
 		TextView unitView = (TextView) view.findViewById(R.id.beeeon_numberpicker_unit);
 		double value = sMModule.getValue().getDoubleValue();
 		final ArrayList<String> tmp = new ArrayList<>();
-		for(double i = value-40.0; i < value+40.0; i+=0.5) {
+		for (double i = value - 40.0; i < value + 40.0; i += 0.5) {
 			tmp.add(String.valueOf(i));
 		}
 
@@ -68,8 +68,8 @@ public class NumberPickerDialogFragment  extends SimpleDialogFragment{
 			@Override
 			public void onClick(View v) {
 				//
-				Log.d(TAG, "NUMBER PICKER selected index" + numberPicker.getValue() + " value "+numberPicker.getDisplayedValues()[numberPicker.getValue()]);
-				((SensorDetailFragment)mFragment).onSetTemperatureClick(Double.parseDouble(numberPicker.getDisplayedValues()[numberPicker.getValue()]));
+				Log.d(TAG, "NUMBER PICKER selected index" + numberPicker.getValue() + " value " + numberPicker.getDisplayedValues()[numberPicker.getValue()]);
+				((SensorDetailFragment) mFragment).onSetTemperatureClick(Double.parseDouble(numberPicker.getDisplayedValues()[numberPicker.getValue()]));
 				dismiss();
 			}
 		});

@@ -39,40 +39,56 @@ import java.util.Map;
 
 /**
  * Core of application (used as singleton), provides methods and access to all data and household.
- * 
+ *
  * @author Robyer
  */
 public final class Controller {
 
 	public static final String TAG = Controller.class.getSimpleName();
 
-	/** This singleton instance. */
+	/**
+	 * This singleton instance.
+	 */
 	private static Controller sController;
 
-	/** Switch for using demo mode (with example adapter, without server) */
+	/**
+	 * Switch for using demo mode (with example adapter, without server)
+	 */
 	private final boolean mDemoMode;
 
-	/** Application context */
+	/**
+	 * Application context
+	 */
 	private final Context mContext;
 
-	/** Persistence service for caching purposes */
+	/**
+	 * Persistence service for caching purposes
+	 */
 	private final Persistence mPersistence;
 
-	/** Network service for communication with server */
+	/**
+	 * Network service for communication with server
+	 */
 	private final INetwork mNetwork;
 
-	/** Active user object */
+	/**
+	 * Active user object
+	 */
 	private final User mUser;
 
-	/** Active adapter */
+	/**
+	 * Active adapter
+	 */
 	private Adapter mActiveAdapter;
 
-	/** Models for keeping and handling data */
+	/**
+	 * Models for keeping and handling data
+	 */
 	private final Map<String, BaseModel> mModels = new HashMap<>();
 
 	/**
 	 * Return singleton instance of this Controller. This is thread-safe.
-	 * 
+	 *
 	 * @param context
 	 * @return singleton instance of controller
 	 */
@@ -94,11 +110,9 @@ public final class Controller {
 
 	/**
 	 * Private constructor.
-	 * 
-	 * @param context
-	 *            This must be the global application context.
-	 * @param demoMode
-	 *            Whether should be created Controller in demoMode
+	 *
+	 * @param context  This must be the global application context.
+	 * @param demoMode Whether should be created Controller in demoMode
 	 */
 	private Controller(Context context, boolean demoMode) {
 		mContext = context.getApplicationContext();
@@ -128,8 +142,7 @@ public final class Controller {
 	/**
 	 * Recreates the actual Controller object to use with different user or demo mode.
 	 *
-	 * @param context
-	 *            This must be the global Application context.
+	 * @param context  This must be the global Application context.
 	 * @param demoMode
 	 */
 	public static synchronized void setDemoMode(Context context, boolean demoMode) {
@@ -161,13 +174,12 @@ public final class Controller {
 			synchronized (mModels) {
 				if (!mModels.containsKey(name)) {
 					// Known parameters we can automatically give to model constructor
-					final Object[] supportedParams = { mNetwork, mContext, mPersistence, mUser };
+					final Object[] supportedParams = {mNetwork, mContext, mPersistence, mUser};
 
 					// Create instance of the given model class
 					final Constructor constructor = modelClass.getConstructors()[0];
 					final List<Object> params = new ArrayList<>();
-					for (Class<?> pType : constructor.getParameterTypes())
-					{
+					for (Class<?> pType : constructor.getParameterTypes()) {
 						Object param = null;
 						for (Object obj : supportedParams) {
 							if (pType.isInstance(obj)) {
@@ -241,7 +253,9 @@ public final class Controller {
 		return (UsersModel) getModelInstance(UsersModel.class);
 	}
 
-	/** Persistence methods *************************************************/
+	/**
+	 * Persistence methods ************************************************
+	 */
 
 	public IAuthProvider getLastAuthProvider() {
 		return mPersistence.loadLastAuthProvider();
@@ -459,7 +473,7 @@ public final class Controller {
 
 	/**
 	 * Sets active adapter and load all locations and devices, if needed (or if forceReload = true)
-	 *
+	 * <p/>
 	 * This CAN'T be called on UI thread!
 	 *
 	 * @param id
@@ -499,7 +513,7 @@ public final class Controller {
 	 * UCA
 	 */
 	public boolean isUserAllowed(Role role) {
-		if (role.equals(Role.User) ||role.equals(Role.Guest)) {
+		if (role.equals(Role.User) || role.equals(Role.Guest)) {
 			return false;
 		}
 		return true;
@@ -507,7 +521,7 @@ public final class Controller {
 
 	/**
 	 * Interrupts actual connection (opened socket) of Network module.
-	 *
+	 * <p/>
 	 * This CAN'T be called on UI thread!
 	 */
 	public void interruptConnection() {

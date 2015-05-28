@@ -23,15 +23,15 @@ public class ViewPagerAdapter extends FragmentPagerAdapter {
 	public Fragment getItem(int position) {
 		switch (position) {
 
-		// Open FragmentTab2.java
-		case 0:
-			SensorListFragment fragmenttab2 = new SensorListFragment();
-			return fragmenttab2;
+			// Open FragmentTab2.java
+			case 0:
+				SensorListFragment fragmenttab2 = new SensorListFragment();
+				return fragmenttab2;
 
 			// Open FragmentTab1.java
-		case 1:
-			CustomViewFragment fragmenttab1 = new CustomViewFragment();
-			return fragmenttab1;
+			case 1:
+				CustomViewFragment fragmenttab1 = new CustomViewFragment();
+				return fragmenttab1;
 
 		}
 		return null;

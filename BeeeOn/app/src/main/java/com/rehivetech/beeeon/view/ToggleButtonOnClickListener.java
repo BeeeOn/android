@@ -12,9 +12,8 @@ import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.household.device.Module;
 
 /**
- * @brief Class for listener of ToggleButtons
  * @author ThinkDeep
- * 
+ * @brief Class for listener of ToggleButtons
  */
 public class ToggleButtonOnClickListener implements OnClickListener {
 
@@ -22,7 +21,7 @@ public class ToggleButtonOnClickListener implements OnClickListener {
 
 	/**
 	 * Constructor
-	 * 
+	 *
 	 * @param module
 	 */
 	public ToggleButtonOnClickListener(Module module) {

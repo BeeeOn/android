@@ -66,9 +66,10 @@ public abstract class WidgetConfigurationFragment extends Fragment {
 
 	/**
 	 * Set what intervals can be in configuration
+	 *
 	 * @param minRefresh
 	 */
-	protected void setRefreshBounds(RefreshInterval minRefresh){
+	protected void setRefreshBounds(RefreshInterval minRefresh) {
 		mRefreshIntervalMin = minRefresh;
 		mRefreshIntervalLength = RefreshInterval.values().length - minRefresh.getIntervalIndex();
 	}
@@ -86,6 +87,7 @@ public abstract class WidgetConfigurationFragment extends Fragment {
 
 	/**
 	 * Every fragment configuration should have its own layout
+	 *
 	 * @return layout resource
 	 */
 	protected abstract int getFragmentLayoutResource();
@@ -121,7 +123,7 @@ public abstract class WidgetConfigurationFragment extends Fragment {
 		mWidgetWifiLayoutWrapper = (RelativeLayout) mActivity.findViewById(R.id.widget_config_wifi_wrapper);
 		mWidgetUpdateWiFiCheckBox = (CheckBox) mActivity.findViewById(R.id.widget_config_only_wifi);
 
-		if(mWidgetWifiLayoutWrapper != null && mWidgetUpdateWiFiCheckBox != null){
+		if (mWidgetWifiLayoutWrapper != null && mWidgetUpdateWiFiCheckBox != null) {
 			mWidgetWifiLayoutWrapper.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
@@ -152,8 +154,7 @@ public abstract class WidgetConfigurationFragment extends Fragment {
 							BaseApplicationActivity.redirectToLogin(mActivity);
 							Toast.makeText(mActivity, e.getTranslatedErrorMessage(mActivity), Toast.LENGTH_LONG).show();
 							return;
-						}
-						else{
+						} else {
 							Toast.makeText(mActivity, e.getTranslatedErrorMessage(mActivity), Toast.LENGTH_LONG).show();
 							finishConfiguration();
 							return;
@@ -170,7 +171,7 @@ public abstract class WidgetConfigurationFragment extends Fragment {
 			}
 		});
 
-		if(mActivity.getDialog() != null) mActivity.getDialog().show();
+		if (mActivity.getDialog() != null) mActivity.getDialog().show();
 		mReloadTask.execute();
 	}
 
@@ -187,9 +188,9 @@ public abstract class WidgetConfigurationFragment extends Fragment {
 	public void onDestroy() {
 		super.onDestroy();
 
-		if(mActivity.getDialog() != null) mActivity.getDialog().dismiss();
+		if (mActivity.getDialog() != null) mActivity.getDialog().dismiss();
 
-		if(mReloadTask != null) mReloadTask.cancel(true);
+		if (mReloadTask != null) mReloadTask.cancel(true);
 
 		//finishConfiguration();
 	}
@@ -197,7 +198,7 @@ public abstract class WidgetConfigurationFragment extends Fragment {
 	/**
 	 * When fragment is shown for the first time
 	 */
-	protected void onAllAdaptersReload(){
+	protected void onAllAdaptersReload() {
 		mAdapters = mController.getAdaptersModel().getAdapters();
 		mAdapterNeedsToReload = false;
 		// adapter spinner refresh
@@ -210,19 +211,18 @@ public abstract class WidgetConfigurationFragment extends Fragment {
 	 * Method for redrawing fragment after reload task
 	 * NOTE: layout is updated from reload task
 	 */
-	protected void onFragmentResume(){
+	protected void onFragmentResume() {
 		mGeneralWidgetdata.load();
 
 		int selectedAdapterIndex = selectAdapter(mGeneralWidgetdata.widgetAdapterId);
-		if(selectedAdapterIndex == mAdapterSpinner.getSelectedItemPosition()){
+		if (selectedAdapterIndex == mAdapterSpinner.getSelectedItemPosition()) {
 			doChangeAdapter(mActiveAdapter.getId(), ReloadAdapterDataTask.ReloadWhat.FACILITIES);
-		}
-		else {
+		} else {
 			mAdapterSpinner.setSelection(selectedAdapterIndex);
 		}
 
 		// we have to check it cause not every widget settings have it
-		if(mWidgetUpdateWiFiCheckBox != null){
+		if (mWidgetUpdateWiFiCheckBox != null) {
 			mWidgetUpdateWiFiCheckBox.setChecked(mGeneralWidgetdata.widgetWifiOnly);
 		}
 	}
@@ -232,16 +232,17 @@ public abstract class WidgetConfigurationFragment extends Fragment {
 	/**
 	 * After reload task we can get new devices and locations by adapter.
 	 * If no adapter set, it selects active adapter in the app
+	 *
 	 * @param adapterId
 	 */
-	protected void getAdapterData(String adapterId){
-		if(adapterId.isEmpty()) return;
+	protected void getAdapterData(String adapterId) {
+		if (adapterId.isEmpty()) return;
 
 		mLocations = mController.getLocationsModel().getLocationsByAdapter(adapterId);
 
 		// get all devices by locations (avoiding mDevice without location)
 		mModules.clear();
-		for(Location loc : mLocations){
+		for (Location loc : mLocations) {
 			List<Device> tempFac = mController.getDevicesModel().getDevicesByLocation(adapterId, loc.getId());
 			for (Device device : tempFac) {
 				mModules.addAll(device.getModules());
@@ -252,10 +253,11 @@ public abstract class WidgetConfigurationFragment extends Fragment {
 	/**
 	 * Happens when change adapter in spinner, this reloads data to be from new selected adapter
 	 * !! NOTE: if mAdapterNeedsToReload == false Then it skips whole reload task
+	 *
 	 * @param adapterId
 	 */
 	protected void doChangeAdapter(final String adapterId, ReloadAdapterDataTask.ReloadWhat whatToReload) {
-		if(!mAdapterNeedsToReload){
+		if (!mAdapterNeedsToReload) {
 			getAdapterData(adapterId);
 			updateLayout();
 			mAdapterNeedsToReload = true;
@@ -279,22 +281,21 @@ public abstract class WidgetConfigurationFragment extends Fragment {
 
 	/**
 	 * Selects adapter either from list of adapters or if not found as active adapter
+	 *
 	 * @param adapterId
 	 * @return Pair of adapter index in list & Adapter
 	 */
-	protected int selectAdapter(String adapterId){
+	protected int selectAdapter(String adapterId) {
 		int mActiveAdapterIndex = 0;
-		if(!adapterId.isEmpty()){
+		if (!adapterId.isEmpty()) {
 			Pair<Integer, Adapter> indexAdapter = Utils.getIndexAndObjectFromList(adapterId, mAdapters);
-			if(indexAdapter == null){
+			if (indexAdapter == null) {
 				mActiveAdapter = mController.getActiveAdapter();
-			}
-			else {
+			} else {
 				mActiveAdapterIndex = indexAdapter.first;
 				mActiveAdapter = indexAdapter.second;
 			}
-		}
-		else{
+		} else {
 			mActiveAdapter = mController.getActiveAdapter();
 		}
 
@@ -303,6 +304,7 @@ public abstract class WidgetConfigurationFragment extends Fragment {
 
 	/**
 	 * Clicked on actionbar button SAVE
+	 *
 	 * @param item
 	 * @return
 	 */
@@ -310,12 +312,12 @@ public abstract class WidgetConfigurationFragment extends Fragment {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 			case android.R.id.home:
-				if(mGeneralWidgetdata == null){
+				if (mGeneralWidgetdata == null) {
 					Log.e(TAG, "There should be widgetData !");
 					finishConfiguration();
 				}
 
-				if(!saveSettings()){
+				if (!saveSettings()) {
 					Log.e(TAG, "Could not save widget!");
 					finishConfiguration();
 				}
@@ -329,6 +331,7 @@ public abstract class WidgetConfigurationFragment extends Fragment {
 
 	/**
 	 * When clicked on save widget
+	 *
 	 * @return
 	 */
 	protected abstract boolean saveSettings();
@@ -336,11 +339,10 @@ public abstract class WidgetConfigurationFragment extends Fragment {
 	/**
 	 * When done configurating, calling this so whole fragment and activity finishes
 	 */
-	public void finishConfiguration(){
-		if(mActivity.isReturnResult()){
+	public void finishConfiguration() {
+		if (mActivity.isReturnResult()) {
 			startWidgetOk();
-		}
-		else{
+		} else {
 			startWidgetCancel();
 		}
 
@@ -351,7 +353,7 @@ public abstract class WidgetConfigurationFragment extends Fragment {
 	 * Runs when clicked "ok" to done creation of widget
 	 * !!! Starts the service !!!
 	 */
-	protected void startWidgetOk(){
+	protected void startWidgetOk() {
 		WidgetService.startUpdating(mActivity, new int[]{mActivity.getWidgetId()}, mActivity.isAppWidgetEditing());
 	}
 
@@ -394,9 +396,10 @@ public abstract class WidgetConfigurationFragment extends Fragment {
 
 	/**
 	 * Updates the seekbar and text
+	 *
 	 * @param updateIntervalSeekbar
 	 */
-	protected void updateIntervalLayout(SeekBar updateIntervalSeekbar){
+	protected void updateIntervalLayout(SeekBar updateIntervalSeekbar) {
 		int interval = Math.max(mGeneralWidgetdata.widgetInterval, mRefreshIntervalMin.getInterval());
 		int intervalIndex = RefreshInterval.fromInterval(interval).getIntervalIndex();
 		updateIntervalSeekbar.setProgress(intervalIndex - mRefreshIntervalMin.getIntervalIndex());
@@ -406,11 +409,12 @@ public abstract class WidgetConfigurationFragment extends Fragment {
 
 	/**
 	 * Sets widget interval text
+	 *
 	 * @param intervalIndex index in seekbar
 	 */
 	protected void setIntervalWidgetText(int intervalIndex) {
 		TextView intervalText = (TextView) mActivity.findViewById(R.id.widget_config_interval_text);
-		if(intervalText == null) return;
+		if (intervalText == null) return;
 
 		String interval = RefreshInterval.values()[intervalIndex].getStringInterval(mActivity);
 		intervalText.setText(interval);
@@ -418,10 +422,11 @@ public abstract class WidgetConfigurationFragment extends Fragment {
 
 	/**
 	 * Get refresh seconds based on custom seekbar interval
+	 *
 	 * @param progressIndex
 	 * @return number of seconds
 	 */
-	protected int getRefreshSeconds(int progressIndex){
+	protected int getRefreshSeconds(int progressIndex) {
 		RefreshInterval refreshInterval = RefreshInterval.values()[progressIndex + mRefreshIntervalMin.getIntervalIndex()];
 		return Math.max(refreshInterval.getInterval(), mRefreshIntervalMin.getInterval());
 	}

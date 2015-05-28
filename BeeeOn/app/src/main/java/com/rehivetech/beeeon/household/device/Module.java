@@ -7,8 +7,8 @@ import com.rehivetech.beeeon.INameIdentifier;
 import com.rehivetech.beeeon.household.device.values.BaseValue;
 
 /**
- * @brief Abstract class for all devices
  * @author Robyer
+ * @brief Abstract class for all devices
  */
 public class Module implements INameIdentifier {
 	public static final String ID_SEPARATOR = "---";
@@ -53,7 +53,7 @@ public class Module implements INameIdentifier {
 		return new Module(type, value, typeId, offset);
 	}
 
-    /**
+	/**
 	 * Represents settings of module which could be saved to server
 	 */
 	public enum SaveModule {
@@ -79,7 +79,7 @@ public class Module implements INameIdentifier {
 
 	/**
 	 * Get resource for human readable string representing type of this module
-	 * 
+	 *
 	 * @return
 	 */
 	public int getTypeStringResource() {
@@ -100,7 +100,7 @@ public class Module implements INameIdentifier {
 
 	/**
 	 * Get unique identifier of module (address of mDevice + raw type id containing offset)
-	 * 
+	 *
 	 * @return id
 	 */
 	public String getId() {
@@ -120,7 +120,7 @@ public class Module implements INameIdentifier {
 
 	/**
 	 * Get name of module
-	 * 
+	 *
 	 * @return name
 	 */
 	public String getName() {
@@ -138,7 +138,7 @@ public class Module implements INameIdentifier {
 
 	/**
 	 * Setting name of module
-	 * 
+	 *
 	 * @param name
 	 */
 	public void setName(String name) {
@@ -148,7 +148,7 @@ public class Module implements INameIdentifier {
 
 	/**
 	 * Get visibility of module
-	 * 
+	 *
 	 * @return true if visible
 	 */
 	public boolean isVisible() {
@@ -157,9 +157,8 @@ public class Module implements INameIdentifier {
 
 	/**
 	 * Setting visibility of module
-	 * 
-	 * @param visibility
-	 *            true if visible
+	 *
+	 * @param visibility true if visible
 	 */
 	public void setVisibility(boolean visibility) {
 		mVisibility = visibility;
@@ -172,7 +171,7 @@ public class Module implements INameIdentifier {
 
 	/**
 	 * Debug method
-	 * 
+	 *
 	 * @return
 	 */
 	public String toDebugString() {

@@ -52,9 +52,8 @@ public class SW2RegistrationInformation extends RegistrationInformation {
 
 	/**
 	 * Create control registration object
-	 * 
-	 * @param context
-	 *            The context
+	 *
+	 * @param context The context
 	 */
 	protected SW2RegistrationInformation(Context context) {
 		if (context == null) {
@@ -91,7 +90,7 @@ public class SW2RegistrationInformation extends RegistrationInformation {
 
 	/**
 	 * Get the extension registration information.
-	 * 
+	 *
 	 * @return The registration configuration.
 	 */
 	@Override

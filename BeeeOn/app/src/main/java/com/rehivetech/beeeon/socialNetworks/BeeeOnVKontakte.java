@@ -27,7 +27,7 @@ import java.util.Observable;
 /**
  * @author Jan Lamacz
  */
-public class BeeeOnVKontakte extends Observable implements BeeeOnSocialNetwork{
+public class BeeeOnVKontakte extends Observable implements BeeeOnSocialNetwork {
 	private static final String TAG = BeeeOnVKontakte.class.getSimpleName();
 	private static final String NAME = "Vkontakte";
 
@@ -45,27 +45,36 @@ public class BeeeOnVKontakte extends Observable implements BeeeOnSocialNetwork{
 	}
 
 	public static BeeeOnVKontakte getInstance(Context context) {
-		if(mInstance == null) {
+		if (mInstance == null) {
 			mInstance = new BeeeOnVKontakte(context);
 		}
 		return mInstance;
 	}
 
 	@Override
-	public boolean isPaired() {return mAccessToken != null;}
+	public boolean isPaired() {
+		return mAccessToken != null;
+	}
+
 	@Override
-	public String getName() {return NAME;}
+	public String getName() {
+		return NAME;
+	}
+
 	@Override
-	public String getUserName() {return mUserName;}
+	public String getUserName() {
+		return mUserName;
+	}
 
 	@Override
 	public void logIn(Activity activity) {
 		VKSdk.authorize(null, true, false);
 		downloadUserData();
 	}
+
 	@Override
 	public void logOut() {
-		if(mUserName != null) {
+		if (mUserName != null) {
 			Toast.makeText(mContext, mContext.getString(R.string.logout_success), Toast.LENGTH_LONG).show();
 			VKSdk.logout();
 		}
@@ -74,21 +83,22 @@ public class BeeeOnVKontakte extends Observable implements BeeeOnSocialNetwork{
 
 	public VKShareDialog shareAchievement(String title, String date) {
 		return new VKShareDialog()
-			.setText(date + " " + mContext.getString(R.string.achievement_share_msg) + " #beeeon")
-			.setAttachmentLink(mContext.getString(R.string.achievement_share_url_name),
-					mContext.getString(R.string.achievement_share_url))
-			.setShareDialogListener(new VKShareDialog.VKShareDialogListener() {
-				public void onVkShareComplete(int postId) {
-					new GeneralAchievement(Constants.ACHIEVEMENT_VKONTAKTE_SHARE, mContext);
-				}
-				public void onVkShareCancel() {
-					Log.d(TAG, "sharing canceled");
-				}
-			});
+				.setText(date + " " + mContext.getString(R.string.achievement_share_msg) + " #beeeon")
+				.setAttachmentLink(mContext.getString(R.string.achievement_share_url_name),
+						mContext.getString(R.string.achievement_share_url))
+				.setShareDialogListener(new VKShareDialog.VKShareDialogListener() {
+					public void onVkShareComplete(int postId) {
+						new GeneralAchievement(Constants.ACHIEVEMENT_VKONTAKTE_SHARE, mContext);
+					}
+
+					public void onVkShareCancel() {
+						Log.d(TAG, "sharing canceled");
+					}
+				});
 	}
 
 	public void downloadUserData() {
-		if(mUserName != null) {
+		if (mUserName != null) {
 			Log.d(TAG, "Not downloading data, already done before");
 			return;
 		}
@@ -101,17 +111,20 @@ public class BeeeOnVKontakte extends Observable implements BeeeOnSocialNetwork{
 				setChanged();
 				notifyObservers("vkontakte");
 			}
+
 			@Override
 			public void onError(VKError error) {
-				if(error.errorCode == -105) {
+				if (error.errorCode == -105) {
 					setChanged();
 					notifyObservers("connect_error");
 				}
 			}
+
 			@Override
 			public void onProgress(VKRequest.VKProgressType progressType, long bytesLoaded, long bytesTotal) {
 				Log.d(TAG, "progress");
 			}
+
 			@Override
 			public void attemptFailed(VKRequest request, int attemptNumber, int totalAttempts) {
 				Log.d(TAG, "fail");
@@ -125,14 +138,17 @@ public class BeeeOnVKontakte extends Observable implements BeeeOnSocialNetwork{
 			public void onCaptchaError(VKError vkError) {
 				Log.d(TAG, "error");
 			}
+
 			@Override
 			public void onTokenExpired(VKAccessToken vkAccessToken) {
 				Log.d(TAG, "token expired");
 			}
+
 			@Override
 			public void onAccessDenied(VKError vkError) {
 				Log.d(TAG, "access denied");
 			}
+
 			@Override
 			public void onReceiveNewToken(VKAccessToken newToken) {
 				mAccessToken = newToken.toString();
@@ -141,6 +157,7 @@ public class BeeeOnVKontakte extends Observable implements BeeeOnSocialNetwork{
 				setChanged();
 				notifyObservers("login");
 			}
+
 			@Override
 			public void onAcceptUserToken(VKAccessToken token) {
 				Log.d(TAG, "onacceptusertoken");

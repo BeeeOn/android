@@ -302,7 +302,7 @@ public class GoogleAuthProvider implements IAuthProvider {
 					JSONObject tokenJson = Utils.fetchJsonByPost(TOKEN_URL, params);
 					Log.d(TAG, String.format("received: %s", tokenJson.toString()));
 					token = tokenJson.getString("access_token");
-				}  catch (IOException | JSONException e) {
+				} catch (IOException | JSONException e) {
 					e.printStackTrace();
 				}
 				return token;

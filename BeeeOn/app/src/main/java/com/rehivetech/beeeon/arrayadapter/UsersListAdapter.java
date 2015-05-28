@@ -80,7 +80,7 @@ public class UsersListAdapter extends BaseAdapter {
 		ImageView imgIcon = (ImageView) itemView.findViewById(R.id.iconofsensor);
 
 		User user = mUsers.get(position);
-		
+
 		txtNameUser.setText(user.getFullName());
 		txtEmailUser.setText(user.getEmail());
 		txtRoleUser.setText(user.getRole().getStringResource());

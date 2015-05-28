@@ -43,7 +43,7 @@ import java.util.Random;
 
 /**
  * Network service that handles communication in demo mode.
- * 
+ *
  * @author Robyer
  */
 public class DemoNetwork implements INetwork {
@@ -105,12 +105,12 @@ public class DemoNetwork implements INetwork {
 			return;
 
 		Random rand = getRandomForAdapter(module.getDevice().getAdapterId());
-		
+
 		if (module.getValue() instanceof BaseEnumValue) {
 			BaseEnumValue value = (BaseEnumValue) module.getValue();
 			List<Item> items = value.getEnumItems();
 			Item item = items.get(rand.nextInt(items.size()));
-			
+
 			module.setValue(item.getValue());
 		} else {
 			double lastValue = module.getValue().getDoubleValue();
@@ -119,12 +119,12 @@ public class DemoNetwork implements INetwork {
 			if (Double.isNaN(lastValue)) {
 				lastValue = rand.nextDouble() * 1000;
 			}
-			
+
 			double addvalue = rand.nextInt((int) range * 1000) / 1000;
 			boolean plus = rand.nextBoolean();
 			lastValue = lastValue + addvalue * (plus ? 1 : -1);
-			
-			module.setValue(String.valueOf((int)lastValue));
+
+			module.setValue(String.valueOf((int) lastValue));
 		}
 	}
 
@@ -166,7 +166,7 @@ public class DemoNetwork implements INetwork {
 			mAchievements.setLastUpdate(adapterId, DateTime.now());
 
 			// Just one (self) user for now, anyone can create XML with more users and use it here like other items
-			mUsers.setObjects(adapterId, Arrays.asList(new User[]{ new User(mUser.getId(), "John", "Doe", "john@doe.com", Gender.MALE, Role.Superuser) }));
+			mUsers.setObjects(adapterId, Arrays.asList(new User[]{new User(mUser.getId(), "John", "Doe", "john@doe.com", Gender.MALE, Role.Superuser)}));
 
 			Random rand = getRandomForAdapter(adapter.getId());
 
@@ -185,8 +185,8 @@ public class DemoNetwork implements INetwork {
 		return true;
 	}
 
-    @Override
-    public String getBT() {
+	@Override
+	public String getBT() {
 		return mBT;
 	}
 
@@ -201,7 +201,7 @@ public class DemoNetwork implements INetwork {
 	}
 
 	@Override
-    public User loadUserInfo() {
+	public User loadUserInfo() {
 		return mUser;
 	}
 
@@ -467,17 +467,17 @@ public class DemoNetwork implements INetwork {
 
 		if (isEnum) {
 			// For enums we want fixed number of steps (because application surely wants raw values)
-			everyMsecs = (int)(end - start) / RAW_ENUM_VALUES_COUNT_IN_LOG;
+			everyMsecs = (int) (end - start) / RAW_ENUM_VALUES_COUNT_IN_LOG;
 		}
 
 		while (start < end) {
 			if (isEnum) {
 				BaseEnumValue value = (BaseEnumValue) module.getValue();
 				List<Item> items = value.getEnumItems();
-				
+
 				int pos = 0;
 				for (Item item : items) {
-					if (item.getId() == (int)lastValue) {
+					if (item.getId() == (int) lastValue) {
 						break;
 					}
 					pos++;
@@ -699,17 +699,17 @@ public class DemoNetwork implements INetwork {
 	}
 
 	@Override
-    public List<Watchdog> getAllWatchdogs(String adapterId) {
+	public List<Watchdog> getAllWatchdogs(String adapterId) {
 		return mWatchdogs.getObjects(adapterId);
 	}
 
-    @Override
-    public List<Watchdog> getWatchdogs(ArrayList<String> watchdogIds, String adapterId) {
+	@Override
+	public List<Watchdog> getWatchdogs(ArrayList<String> watchdogIds, String adapterId) {
 		return new ArrayList<>();
 	}
 
-    @Override
-    public boolean updateWatchdog(Watchdog watchdog, String adapterId) {
+	@Override
+	public boolean updateWatchdog(Watchdog watchdog, String adapterId) {
 		if (!mAdapters.hasObject(adapterId)) {
 			return false;
 		}
@@ -719,13 +719,13 @@ public class DemoNetwork implements INetwork {
 		return true;
 	}
 
-    @Override
-    public boolean deleteWatchdog(Watchdog watchdog){
+	@Override
+	public boolean deleteWatchdog(Watchdog watchdog) {
 		return mWatchdogs.removeObject(watchdog.getAdapterId(), watchdog.getId()) != null;
 	}
 
-    @Override
-    public boolean addWatchdog(Watchdog watchdog, String adapterId){
+	@Override
+	public boolean addWatchdog(Watchdog watchdog, String adapterId) {
 		if (!mAdapters.hasObject(adapterId)) {
 			return false;
 		}
@@ -743,14 +743,18 @@ public class DemoNetwork implements INetwork {
 		return true;
 	}
 
-    @Override
-    public boolean passBorder(String regionId, String type) {
+	@Override
+	public boolean passBorder(String regionId, String type) {
 		return true;
 	}
 
 	@Override
-	public List<AchievementListItem> getAllAchievements(String adapterID){ return mAchievements.getObjects(adapterID); }
+	public List<AchievementListItem> getAllAchievements(String adapterID) {
+		return mAchievements.getObjects(adapterID);
+	}
 
 	@Override
-	public List<String> setProgressLvl(String adapterId, String achievementId){ return new ArrayList<>(); }
+	public List<String> setProgressLvl(String adapterId, String achievementId) {
+		return new ArrayList<>();
+	}
 }

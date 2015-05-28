@@ -147,9 +147,8 @@ public class ControlManagerSmartWatch2 extends ControlManagerBase {
 
 	/**
 	 * Get supported control width.
-	 * 
-	 * @param context
-	 *            The context.
+	 *
+	 * @param context The context.
 	 * @return the width.
 	 */
 	public static int getSupportedControlWidth(Context context) {
@@ -158,9 +157,8 @@ public class ControlManagerSmartWatch2 extends ControlManagerBase {
 
 	/**
 	 * Get supported control height.
-	 * 
-	 * @param context
-	 *            The context.
+	 *
+	 * @param context The context.
 	 * @return the height.
 	 */
 	public static int getSupportedControlHeight(Context context) {
@@ -252,10 +250,9 @@ public class ControlManagerSmartWatch2 extends ControlManagerBase {
 
 	/**
 	 * Start a new control. Any currently running control will be stopped and put on the control extension stack.
-	 * 
-	 * @param intent
-	 *            the Intent used to create the ManagedControlExtension. The intent must have the requested ManagedControlExtension as component, e.g. Intent intent = new Intent(mContext,
-	 *            CallLogDetailsControl.class);
+	 *
+	 * @param intent the Intent used to create the ManagedControlExtension. The intent must have the requested ManagedControlExtension as component, e.g. Intent intent = new Intent(mContext,
+	 *               CallLogDetailsControl.class);
 	 */
 	public void startControl(Intent intent) {
 		addCurrentToControlStack();
@@ -289,7 +286,7 @@ public class ControlManagerSmartWatch2 extends ControlManagerBase {
 			if (ctor == null) {
 				return null;
 			}
-			Object object = ctor.newInstance(new Object[] { mContext, mHostAppPackageName, this, intent });
+			Object object = ctor.newInstance(new Object[]{mContext, mHostAppPackageName, this, intent});
 			if (object instanceof ManagedControlExtension) {
 				return (ManagedControlExtension) object;
 			} else {

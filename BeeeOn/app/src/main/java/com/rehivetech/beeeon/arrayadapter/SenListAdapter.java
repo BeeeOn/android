@@ -78,7 +78,7 @@ public class SenListAdapter extends BaseAdapter implements StickyListHeadersAdap
 	}
 
 	public Module getModule(int position) {
-		return ((SensorListItem)mListItem.get(position)).getModule();
+		return ((SensorListItem) mListItem.get(position)).getModule();
 	}
 
 	@Override

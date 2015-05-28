@@ -22,179 +22,178 @@ import java.util.List;
  * Class for sensor app widget (1x1, 2x1, 3x1)
  */
 public class WidgetModuleData extends WidgetData {
-    private static final String TAG = WidgetModuleData.class.getSimpleName();
+	private static final String TAG = WidgetModuleData.class.getSimpleName();
 
-    protected List<Object> mDevices;
+	protected List<Object> mDevices;
 
-    /**
-     * Constructing object holding information about widget (instantiating in config activity and then in service)
-     *
-     * @param widgetId
-     * @param context
-     * @param unitsHelper
-     * @param timeHelper
-     */
-    public WidgetModuleData(int widgetId, Context context, UnitsHelper unitsHelper, TimeHelper timeHelper) {
-        super(widgetId, context, unitsHelper, timeHelper);
+	/**
+	 * Constructing object holding information about widget (instantiating in config activity and then in service)
+	 *
+	 * @param widgetId
+	 * @param context
+	 * @param unitsHelper
+	 * @param timeHelper
+	 */
+	public WidgetModuleData(int widgetId, Context context, UnitsHelper unitsHelper, TimeHelper timeHelper) {
+		super(widgetId, context, unitsHelper, timeHelper);
 
-        widgetModules = new ArrayList<>();
-        widgetModules.add(new WidgetModulePersistence(mContext, mWidgetId, 0, R.id.value_container, unitsHelper, timeHelper, settings));
+		widgetModules = new ArrayList<>();
+		widgetModules.add(new WidgetModulePersistence(mContext, mWidgetId, 0, R.id.value_container, unitsHelper, timeHelper, settings));
 
-        mDevices = new ArrayList<>();
-    }
+		mDevices = new ArrayList<>();
+	}
 
-    // ----------------------------------------------------------- //
-    // ---------------- MANIPULATING PERSISTENCE ----------------- //
-    // ----------------------------------------------------------- //
+	// ----------------------------------------------------------- //
+	// ---------------- MANIPULATING PERSISTENCE ----------------- //
+	// ----------------------------------------------------------- //
 
-    @Override
-    public void load() {
-        super.load();
-        WidgetModulePersistence.loadAll(widgetModules);
-    }
+	@Override
+	public void load() {
+		super.load();
+		WidgetModulePersistence.loadAll(widgetModules);
+	}
 
-    @Override
-    public void init() {
-        mDevices.clear();
-        for(WidgetModulePersistence dev : widgetModules){
-            if(dev.getId().isEmpty()){
-                Log.i(TAG, "Could not retrieve module from widget " + String.valueOf(mWidgetId));
-                continue;
-            }
+	@Override
+	public void init() {
+		mDevices.clear();
+		for (WidgetModulePersistence dev : widgetModules) {
+			if (dev.getId().isEmpty()) {
+				Log.i(TAG, "Could not retrieve module from widget " + String.valueOf(mWidgetId));
+				continue;
+			}
 
-            String[] ids = dev.getId().split(Module.ID_SEPARATOR, 2);
-            Device device = new Device();
-            device.setAdapterId(widgetAdapterId);
-            device.setAddress(ids[0]);
-            device.setLastUpdate(new DateTime(dev.lastUpdateTime, DateTimeZone.UTC));
-            device.setRefresh(RefreshInterval.fromInterval(dev.refresh));
-            device.addModule(Module.createFromModuleTypeId(ids[1]));
+			String[] ids = dev.getId().split(Module.ID_SEPARATOR, 2);
+			Device device = new Device();
+			device.setAdapterId(widgetAdapterId);
+			device.setAddress(ids[0]);
+			device.setLastUpdate(new DateTime(dev.lastUpdateTime, DateTimeZone.UTC));
+			device.setRefresh(RefreshInterval.fromInterval(dev.refresh));
+			device.addModule(Module.createFromModuleTypeId(ids[1]));
 
-            mDevices.add(device);
-        }
-    }
+			mDevices.add(device);
+		}
+	}
 
-    @Override
-    public void save() {
-        super.save();
-        WidgetModulePersistence.saveAll(widgetModules);
-    }
+	@Override
+	public void save() {
+		super.save();
+		WidgetModulePersistence.saveAll(widgetModules);
+	}
 
-    // ----------------------------------------------------------- //
-    // ------------------------ RENDERING ------------------------ //
-    // ----------------------------------------------------------- //
+	// ----------------------------------------------------------- //
+	// ------------------------ RENDERING ------------------------ //
+	// ----------------------------------------------------------- //
 
-    @Override
-    protected void renderLayout() {
-        // -------------------- initialize layout
-        mBuilder.setOnClickListener(R.id.options, mConfigurationPendingIntent);
-        mBuilder.setOnClickListener(R.id.widget_last_update, mRefreshPendingIntent);
-        mBuilder.setOnClickListener(R.id.refresh, mRefreshPendingIntent);
+	@Override
+	protected void renderLayout() {
+		// -------------------- initialize layout
+		mBuilder.setOnClickListener(R.id.options, mConfigurationPendingIntent);
+		mBuilder.setOnClickListener(R.id.widget_last_update, mRefreshPendingIntent);
+		mBuilder.setOnClickListener(R.id.refresh, mRefreshPendingIntent);
 
-        if(widgetAdapterId.isEmpty()) return;
+		if (widgetAdapterId.isEmpty()) return;
 
-        // -------------------- render layout
-        // updates all inside devices
-        boolean isOnlyOne = true;
-        for(WidgetModulePersistence dev : widgetModules){
-            // detail activity
-            mBuilder.setOnClickListener(R.id.icon, startDetailActivityPendingIntent(mContext, mWidgetId + dev.getOffset(), widgetAdapterId, dev.getId()));
-            mBuilder.setOnClickListener(R.id.name, startDetailActivityPendingIntent(mContext, mWidgetId + dev.getOffset(), widgetAdapterId, dev.getId()));
+		// -------------------- render layout
+		// updates all inside devices
+		boolean isOnlyOne = true;
+		for (WidgetModulePersistence dev : widgetModules) {
+			// detail activity
+			mBuilder.setOnClickListener(R.id.icon, startDetailActivityPendingIntent(mContext, mWidgetId + dev.getOffset(), widgetAdapterId, dev.getId()));
+			mBuilder.setOnClickListener(R.id.name, startDetailActivityPendingIntent(mContext, mWidgetId + dev.getOffset(), widgetAdapterId, dev.getId()));
 
-            // when only 1 module is in the widget - we assume that we need icon and name
-            if(isOnlyOne){
-                mBuilder.setImage(R.id.icon, dev.icon == 0 ? R.drawable.dev_unknown : dev.icon);
-                mBuilder.setTextViewText(R.id.name, dev.getName());
-                isOnlyOne = false;
-            }
+			// when only 1 module is in the widget - we assume that we need icon and name
+			if (isOnlyOne) {
+				mBuilder.setImage(R.id.icon, dev.icon == 0 ? R.drawable.dev_unknown : dev.icon);
+				mBuilder.setTextViewText(R.id.name, dev.getName());
+				isOnlyOne = false;
+			}
 
-            // render view based on if is cached information
-            dev.renderView(mBuilder, getIsCached(), "");
+			// render view based on if is cached information
+			dev.renderView(mBuilder, getIsCached(), "");
 
-            switch(widgetLayout){
-                case R.layout.widget_device_3x1:
-                case R.layout.widget_device_2x1:
-                    mBuilder.setTextViewText(R.id.widget_last_update, getIsCached() ? String.format("%s " + mContext.getString(R.string.widget_cached), dev.lastUpdateText) : dev.lastUpdateText);
+			switch (widgetLayout) {
+				case R.layout.widget_device_3x1:
+				case R.layout.widget_device_2x1:
+					mBuilder.setTextViewText(R.id.widget_last_update, getIsCached() ? String.format("%s " + mContext.getString(R.string.widget_cached), dev.lastUpdateText) : dev.lastUpdateText);
 
-                case R.layout.widget_device_3x2:
-                    dev.setValueUnitSize(R.dimen.textsize_subhead);
-                    break;
+				case R.layout.widget_device_3x2:
+					dev.setValueUnitSize(R.dimen.textsize_subhead);
+					break;
 
-                case R.layout.widget_device_1x1:
-                    dev.setValueUnitSize(R.dimen.textsize_caption);
-                    break;
-            }
-        }
-    }
+				case R.layout.widget_device_1x1:
+					dev.setValueUnitSize(R.dimen.textsize_caption);
+					break;
+			}
+		}
+	}
 
-    // ----------------------------------------------------------- //
-    // ---------------------- FAKE HANDLERS ---------------------- //
-    // ----------------------------------------------------------- //
+	// ----------------------------------------------------------- //
+	// ---------------------- FAKE HANDLERS ---------------------- //
+	// ----------------------------------------------------------- //
 
-    @Override
-    public boolean handleUpdateData() {
-        int updated = 0;
-        Adapter adapter = mController.getAdaptersModel().getAdapter(widgetAdapterId);
-        if(adapter == null) return false;
+	@Override
+	public boolean handleUpdateData() {
+		int updated = 0;
+		Adapter adapter = mController.getAdaptersModel().getAdapter(widgetAdapterId);
+		if (adapter == null) return false;
 
-        for(WidgetModulePersistence dev : widgetModules) {
-            Module module = mController.getDevicesModel().getModule(widgetAdapterId, dev.getId());
-            if(module != null) {
-                dev.configure(module, adapter);
-            }
-            updated++;
-        }
+		for (WidgetModulePersistence dev : widgetModules) {
+			Module module = mController.getDevicesModel().getModule(widgetAdapterId, dev.getId());
+			if (module != null) {
+				dev.configure(module, adapter);
+			}
+			updated++;
+		}
 
-        if(updated > 0) {
-            // update last update to "now"
-            widgetLastUpdate = getTimeNow();
-            widgetAdapterId = adapter.getId();
+		if (updated > 0) {
+			// update last update to "now"
+			widgetLastUpdate = getTimeNow();
+			widgetAdapterId = adapter.getId();
 
-            // Save fresh data
-            this.save();
-            Log.v(TAG, String.format("Updating widget (%d) with fresh data", getWidgetId()));
-        }
-        else {
-            // TODO show some kind of icon
-            Log.v(TAG, String.format("Updating widget (%d) with cached data", getWidgetId()));
-        }
+			// Save fresh data
+			this.save();
+			Log.v(TAG, String.format("Updating widget (%d) with fresh data", getWidgetId()));
+		} else {
+			// TODO show some kind of icon
+			Log.v(TAG, String.format("Updating widget (%d) with cached data", getWidgetId()));
+		}
 
-        return updated > 0;
-    }
+		return updated > 0;
+	}
 
-    @Override
-    public void handleResize(int minWidth, int minHeight) {
-        super.handleResize(minWidth, minHeight);
+	@Override
+	public void handleResize(int minWidth, int minHeight) {
+		super.handleResize(minWidth, minHeight);
 
-        int layout;
-        // 1 cell
-        if(minWidth < 170){
-            layout = R.layout.widget_device_1x1;
-        }
-        // 2 cells
-        else if(minWidth < 200){
-            layout = R.layout.widget_device_2x1;
-        }
-        // 3 cells
-        else{
-            layout = R.layout.widget_device_3x1;
-        }
+		int layout;
+		// 1 cell
+		if (minWidth < 170) {
+			layout = R.layout.widget_device_1x1;
+		}
+		// 2 cells
+		else if (minWidth < 200) {
+			layout = R.layout.widget_device_2x1;
+		}
+		// 3 cells
+		else {
+			layout = R.layout.widget_device_3x1;
+		}
 
-        changeLayout(layout);
-    }
+		changeLayout(layout);
+	}
 
-    // ----------------------------------------------------------- //
-    // ------------------------- GETTERS ------------------------- //
-    // ----------------------------------------------------------- //
+	// ----------------------------------------------------------- //
+	// ------------------------- GETTERS ------------------------- //
+	// ----------------------------------------------------------- //
 
-    @Override
-    public List<Object> getObjectsToReload() {
-        return mDevices;
-    }
+	@Override
+	public List<Object> getObjectsToReload() {
+		return mDevices;
+	}
 
-    @Override
-    public String getClassName() {
-        return WidgetModuleData.class.getName();
-    }
+	@Override
+	public String getClassName() {
+		return WidgetModuleData.class.getName();
+	}
 
 }

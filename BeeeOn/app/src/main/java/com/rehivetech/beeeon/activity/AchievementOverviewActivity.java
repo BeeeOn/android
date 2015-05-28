@@ -43,10 +43,9 @@ public class AchievementOverviewActivity extends BaseApplicationActivity impleme
 		setContentView(R.layout.activity_achievement_overview);
 
 		Bundle bundle = getIntent().getExtras();
-		if(bundle != null){
+		if (bundle != null) {
 			mCategoryId = bundle.getString(EXTRA_CATEGORY_ID);
-		}
-		else{
+		} else {
 			bundle = savedInstanceState;
 			if (bundle != null)
 				mCategoryId = bundle.getString(EXTRA_CATEGORY_ID);
@@ -76,7 +75,7 @@ public class AchievementOverviewActivity extends BaseApplicationActivity impleme
 		}
 
 		mAchievementListHolder = AchievementList.getInstance(this);
-		if(mAchievementListHolder.isDownloaded())
+		if (mAchievementListHolder.isDownloaded())
 			setListAdapter();
 		else
 			mAchievementListHolder.addObserver(this);
@@ -139,12 +138,12 @@ public class AchievementOverviewActivity extends BaseApplicationActivity impleme
 	protected void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
 		// Sharing with Twitter
 		// if user has twitter native app - can control if sharing was successful
-		if(requestCode == 66586 && // TODO Fix MAGIC!!
-			resultCode == RESULT_OK) {
+		if (requestCode == 66586 && // TODO Fix MAGIC!!
+				resultCode == RESULT_OK) {
 			new GeneralAchievement(Constants.ACHIEVEMENT_TWITTER_SHARE, this);
 		}
 		// Sharing with Google Plus
-		if(requestCode == 66587 && // TODO Fix MAGIC!!
+		if (requestCode == 66587 && // TODO Fix MAGIC!!
 				resultCode == RESULT_OK) {
 			new GeneralAchievement(Constants.ACHIEVEMENT_GPLUS_SHARE, this);
 		}
@@ -158,13 +157,14 @@ public class AchievementOverviewActivity extends BaseApplicationActivity impleme
 			case android.R.id.home:
 				finish();
 				return true;
-			default: return super.onOptionsItemSelected(item);
+			default:
+				return super.onOptionsItemSelected(item);
 		}
 	}
 
 	@Override
 	public void update(Observable observable, Object o) {
-		if(o.toString().equals("achievements")) {
+		if (o.toString().equals("achievements")) {
 			setListAdapter();
 		}
 	}

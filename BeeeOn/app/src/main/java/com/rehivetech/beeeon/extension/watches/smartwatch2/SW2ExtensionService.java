@@ -54,7 +54,7 @@ public class SW2ExtensionService extends ExtensionService {
 
 	/**
 	 * {@inheritDoc}
-	 * 
+	 *
 	 * @see android.app.Service#onCreate()
 	 */
 	@Override

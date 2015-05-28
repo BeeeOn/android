@@ -26,7 +26,7 @@ import java.util.List;
 /**
  * @author Jan Lamacz
  */
-public class AchievementListAdapter extends BaseAdapter implements Filterable{
+public class AchievementListAdapter extends BaseAdapter implements Filterable {
 	private LayoutInflater mInflater;
 	private int mDisplayPixel;
 	private ItemFilter mFilter = new ItemFilter();
@@ -35,7 +35,7 @@ public class AchievementListAdapter extends BaseAdapter implements Filterable{
 	private List<AchievementListItem> mFilteredList;
 	private AchievementListOnClickListener mCallback;
 
-	public AchievementListAdapter(LayoutInflater inflater, String categoryId, AchievementListOnClickListener callback, List<AchievementListItem>  achievements, Context context){
+	public AchievementListAdapter(LayoutInflater inflater, String categoryId, AchievementListOnClickListener callback, List<AchievementListItem> achievements, Context context) {
 		mInflater = inflater;
 		mCallback = callback;
 		mAchievementList = achievements;
@@ -50,7 +50,7 @@ public class AchievementListAdapter extends BaseAdapter implements Filterable{
 	public View getView(int position, View convertView, ViewGroup parent) {
 		ViewHolder holder;
 
-		if(convertView == null){
+		if (convertView == null) {
 			convertView = mInflater.inflate(R.layout.achievement_listview_item, parent, false);
 			holder = new ViewHolder();
 			holder.achievementLayout = (RelativeLayout) convertView.findViewById(R.id.achievement_item_layout);
@@ -64,8 +64,7 @@ public class AchievementListAdapter extends BaseAdapter implements Filterable{
 			holder.achievementProgress = (ProgressBar) convertView.findViewById(R.id.achievement_progress);
 			holder.achievementProgressText = (TextView) convertView.findViewById(R.id.achievement_progress_text);
 			convertView.setTag(holder);
-		}
-		else{
+		} else {
 			// when we've inflated enough layouts, we just take them from memory
 			holder = (ViewHolder) convertView.getTag();
 		}
@@ -76,10 +75,10 @@ public class AchievementListAdapter extends BaseAdapter implements Filterable{
 		holder.achievementName.setText(achievement.getName());
 		holder.achievementDescription.setText(achievement.getDescription());
 		holder.achievementPoints.setText(String.valueOf(achievement.getPoints()));
-		if(achievement.isDone()) {
-			if(achievement.getLevel() >= 3)
+		if (achievement.isDone()) {
+			if (achievement.getLevel() >= 3)
 				setBg(holder.achievementPoints, convertView.getResources().getDrawable(R.drawable.hexagon_cyan3));
-			else if(achievement.getLevel() == 2)
+			else if (achievement.getLevel() == 2)
 				setBg(holder.achievementPoints, convertView.getResources().getDrawable(R.drawable.hexagon_cyan2));
 			else
 				setBg(holder.achievementPoints, convertView.getResources().getDrawable(R.drawable.hexagon_cyan1));
@@ -93,10 +92,9 @@ public class AchievementListAdapter extends BaseAdapter implements Filterable{
 			holder.achievementShare.setImageResource(R.drawable.share);
 			holder.achievementProgressText.setVisibility(View.GONE);
 			holder.achievementProgressLayout.setVisibility(View.GONE);
-			holder.achievementLayout.getLayoutParams().height = 100*mDisplayPixel;
+			holder.achievementLayout.getLayoutParams().height = 100 * mDisplayPixel;
 			holder.achievementShare.setOnClickListener(new AchievementListClickListener(mCallback, position));
-		}
-		else if(achievement.isVisible()) {
+		} else if (achievement.isVisible()) {
 			setBg(holder.achievementPoints, convertView.getResources().getDrawable(R.drawable.hexagon_gray));
 			holder.achievementName.setTextColor(convertView.getResources().getColor(R.color.beeeon_text_color));
 			holder.achievementDescription.setTextColor(convertView.getResources().getColor(R.color.beeeon_text_hint));
@@ -104,25 +102,23 @@ public class AchievementListAdapter extends BaseAdapter implements Filterable{
 			holder.achievementTick.setVisibility(View.GONE);
 			holder.achievementShare.setVisibility(View.GONE);
 			holder.achievementDescription.setVisibility(View.VISIBLE);
-			if(achievement.getTotalProgress() > 1) {
-				holder.achievementLayout.getLayoutParams().height = 125*mDisplayPixel;
+			if (achievement.getTotalProgress() > 1) {
+				holder.achievementLayout.getLayoutParams().height = 125 * mDisplayPixel;
 				holder.achievementProgressLayout.setVisibility(View.VISIBLE);
 				holder.achievementProgress.setMax(achievement.getTotalProgress());
 				holder.achievementProgress.setProgress(achievement.getCurrentProgress());
 				holder.achievementProgressText.setVisibility(View.VISIBLE);
 				holder.achievementProgressText.setText(achievement.getProgressString());
-			}
-			else {
-				holder.achievementLayout.getLayoutParams().height = 100*mDisplayPixel;
+			} else {
+				holder.achievementLayout.getLayoutParams().height = 100 * mDisplayPixel;
 				holder.achievementProgressLayout.setVisibility(View.GONE);
 				holder.achievementProgressText.setVisibility(View.GONE);
 			}
-		}
-		else {
+		} else {
 			setBg(holder.achievementPoints, convertView.getResources().getDrawable(R.drawable.hexagon_lightgray));
 			holder.achievementName.setTextColor(convertView.getResources().getColor(R.color.beeeon_separator));
 			holder.achievementShare.setOnClickListener(null);
-			holder.achievementLayout.getLayoutParams().height = 75*mDisplayPixel;
+			holder.achievementLayout.getLayoutParams().height = 75 * mDisplayPixel;
 			holder.achievementShare.setVisibility(View.VISIBLE);
 			holder.achievementShare.setImageResource(R.drawable.question);
 			holder.achievementDescription.setVisibility(View.GONE);
@@ -135,7 +131,8 @@ public class AchievementListAdapter extends BaseAdapter implements Filterable{
 		return convertView;
 	}
 
-	/** Sets background from Java.
+	/**
+	 * Sets background from Java.
 	 * Made bcs setBackground works from API 16 and higher
 	 * and setBackgroundDrawable is marked as deprecated.
 	 */
@@ -147,19 +144,28 @@ public class AchievementListAdapter extends BaseAdapter implements Filterable{
 			view.setBackground(image);
 	}
 
-		@Override
-	public int getCount() {return mFilteredList.size();}
+	@Override
+	public int getCount() {
+		return mFilteredList.size();
+	}
 
 	@Override
-	public AchievementListItem getItem(int position) {return mFilteredList.get(position);}
+	public AchievementListItem getItem(int position) {
+		return mFilteredList.get(position);
+	}
 
 	@Override
-	public long getItemId(int position) {return position;}
+	public long getItemId(int position) {
+		return position;
+	}
 
 	@Override
-	public Filter getFilter() {return mFilter;}
+	public Filter getFilter() {
+		return mFilter;
+	}
 
-	/** Filter for specific category.
+	/**
+	 * Filter for specific category.
 	 * Goes through all (downloaded) achievements and returns
 	 * the ones belonging to @param constraint (categoryId)
 	 * Filtered achievements are ordered by date they were obtained
@@ -200,7 +206,7 @@ public class AchievementListAdapter extends BaseAdapter implements Filterable{
 		}
 	}
 
-	private static class ViewHolder{
+	private static class ViewHolder {
 		public RelativeLayout achievementLayout;
 		public RelativeLayout achievementProgressLayout;
 		public TextView achievementName;

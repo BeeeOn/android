@@ -51,7 +51,7 @@ public class SetupSensorListAdapter extends BaseAdapter {
 		// Set image resource by sensor type
 		img.setImageResource(mDevice.getModules().get(position).getIconResource());
 		// Set name of sensor if isnt empty
-		if(!mDevice.getModules().get(position).getServerName().isEmpty())
+		if (!mDevice.getModules().get(position).getServerName().isEmpty())
 			mName.setText(mDevice.getModules().get(position).getServerName());
 
 

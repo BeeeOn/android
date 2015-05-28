@@ -56,13 +56,11 @@ public class ManagedControlExtension extends ControlExtension {
 
 	/**
 	 * Constructor for ManagedControlExtension. Should not be called directly, is called by ControlManager.
-	 * 
+	 *
 	 * @param context
 	 * @param hostAppPackageName
-	 * @param controlManager
-	 *            the ControlManager that handles this extension's lifecycle
-	 * @param intent
-	 *            The intent used to handle the state of the ManagedControlExtension
+	 * @param controlManager     the ControlManager that handles this extension's lifecycle
+	 * @param intent             The intent used to handle the state of the ManagedControlExtension
 	 */
 	public ManagedControlExtension(Context context, String hostAppPackageName, ControlManagerSmartWatch2 controlManager, Intent intent) {
 		super(context, hostAppPackageName);

@@ -24,10 +24,11 @@ public class WatchdogSensorType extends WatchdogBaseType {
 			"lt"
 	};
 
-	public WatchdogSensorType(){
+	public WatchdogSensorType() {
 		super(WatchdogOperatorType.SENSOR, 0);
 	}
-	public WatchdogSensorType(int index){
+
+	public WatchdogSensorType(int index) {
 		super(WatchdogOperatorType.SENSOR, index);
 	}
 
@@ -53,7 +54,7 @@ public class WatchdogSensorType extends WatchdogBaseType {
 		// senzors can have only numbers
 		ruleTreshold.setInputType(InputType.TYPE_CLASS_NUMBER);
 
-		if(mUnitsHelper != null){
+		if (mUnitsHelper != null) {
 			Module selectedModule = (Module) selected.getObject();
 			ruleTresholdUnit.setText(mUnitsHelper.getStringUnit(selectedModule.getValue()));
 		}

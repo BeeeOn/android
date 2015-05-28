@@ -23,7 +23,7 @@ import java.util.SortedMap;
 public class ModuleLogsModel extends BaseModel {
 
 	private static final String TAG = ModuleLogsModel.class.getSimpleName();
-	
+
 	private DateTimeFormatter fmt = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss").withZoneUTC();
 
 	private final Map<String, ModuleLog> mModulesLogs = new HashMap<String, ModuleLog>();
@@ -31,7 +31,7 @@ public class ModuleLogsModel extends BaseModel {
 	public ModuleLogsModel(INetwork network) {
 		super(network);
 	}
-	
+
 	private void saveModuleLog(String moduleId, ModuleLog log) {
 		ModuleLog data = mModulesLogs.get(moduleId);
 		if (data == null) {
@@ -49,9 +49,9 @@ public class ModuleLogsModel extends BaseModel {
 		List<Interval> downloadIntervals = new ArrayList<Interval>();
 		Interval interval = pair.interval;
 		String moduleName = pair.module.getName();
-		
+
 		Log.d(TAG, String.format("We want interval: %s -> %s", fmt.print(interval.getStart()), fmt.print(interval.getEnd())));
-		
+
 		if (!mModulesLogs.containsKey(pair.module.getId())) {
 			// No log for this module, download whole interval
 			Log.d(TAG, String.format("No cached log for module %s", moduleName));
@@ -59,7 +59,7 @@ public class ModuleLogsModel extends BaseModel {
 		} else {
 			// We have this ModuleLog with (not necessarily all) values
 			ModuleLog data = mModulesLogs.get(pair.module.getId());
-			
+
 			// Values are returned as sorted
 			SortedMap<Long, Float> rows = data.getValues();
 			if (rows.isEmpty()) {
@@ -73,12 +73,12 @@ public class ModuleLogsModel extends BaseModel {
 				// Determine missing interval
 				long first = rows.firstKey();
 				long last = rows.lastKey();
-				
+
 				Log.d(TAG, String.format("We have cached: %s -> %s for module %s", fmt.print(first), fmt.print(last), moduleName));
-				
+
 				Log.d(TAG, String.format("We have log and there are some values for module %s", moduleName));
 				Log.v(TAG, String.format("Gap: %d ms", gap));
-				
+
 				if (interval.isBefore(first) || interval.isAfter(last)) {
 					// Outside of values in this log, download whole interval
 					Log.d(TAG, String.format("Wanted interval is before or after cached interval for module %s", moduleName));
@@ -94,7 +94,7 @@ public class ModuleLogsModel extends BaseModel {
 						if (cutInterval.toDurationMillis() > gap)
 							downloadIntervals.add(cutInterval);
 					}
-					
+
 					if (interval.contains(last)) {
 						Log.d(TAG, String.format("Wanted interval contains LAST of cached interval for module %s", moduleName));
 						// <end of saved data, end of interval>
@@ -107,7 +107,7 @@ public class ModuleLogsModel extends BaseModel {
 				}
 			}
 		}
-		
+
 		return downloadIntervals;
 	}
 
@@ -119,7 +119,7 @@ public class ModuleLogsModel extends BaseModel {
 	 */
 	public ModuleLog getModuleLog(LogDataPair pair) {
 		ModuleLog log = new ModuleLog(DataType.AVERAGE, DataInterval.RAW);
-		
+
 		if (mModulesLogs.containsKey(pair.module.getId())) {
 			// We have this ModuleLog, lets load wanted values from it
 			ModuleLog data = mModulesLogs.get(pair.module.getId());
@@ -127,7 +127,7 @@ public class ModuleLogsModel extends BaseModel {
 				log.addValue(entry.getKey(), entry.getValue());
 			}
 		}
-		 
+
 		return log;
 	}
 
@@ -139,7 +139,7 @@ public class ModuleLogsModel extends BaseModel {
 	 */
 	public synchronized boolean reloadModuleLog(LogDataPair pair) throws AppException {
 		List<Interval> downloadIntervals = getMissingIntervals(pair);
-		
+
 		Log.i(TAG, String.format("%d missing intervals to download for module: %s", downloadIntervals.size(), pair.module.getName()));
 		for (Interval interval : downloadIntervals) {
 			Log.d(TAG, String.format("Missing interval: %s -> %s for module: %s", fmt.print(interval.getStart()), fmt.print(interval.getEnd()), pair.module.getName()));
@@ -151,7 +151,7 @@ public class ModuleLogsModel extends BaseModel {
 				// Download selected partial log
 				LogDataPair downPair = new LogDataPair(pair.module, downloadInterval, pair.type, pair.gap);
 				ModuleLog log = mNetwork.getLog(downPair.module.getDevice().getAdapterId(), downPair.module, downPair);
-				
+
 				// Save it
 				saveModuleLog(downPair.module.getId(), log);
 			}

@@ -29,9 +29,8 @@ import java.util.List;
 
 /**
  * Class that handle screen with detail of some sensor
- * 
+ *
  * @author ThinkDeep
- * 
  */
 public class SensorDetailActivity extends BaseApplicationActivity {
 
@@ -53,18 +52,18 @@ public class SensorDetailActivity extends BaseApplicationActivity {
 
 	private ProgressDialog mProgress;
 
-    private Toolbar mToolbar;
+	private Toolbar mToolbar;
 
-    @Override
+	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_sensor_detail_wraper);
 
-        mToolbar = (Toolbar) findViewById(R.id.toolbar);
-        if (mToolbar != null) {
-            mToolbar.setTitle(R.string.title_activity_sensor_detail);
-            setSupportActionBar(mToolbar);
-        }
+		mToolbar = (Toolbar) findViewById(R.id.toolbar);
+		if (mToolbar != null) {
+			mToolbar.setTitle(R.string.title_activity_sensor_detail);
+			setSupportActionBar(mToolbar);
+		}
 
 		//setBeeeOnProgressBarVisibility(true);
 		getSupportActionBar().setHomeButtonEnabled(true);
@@ -74,7 +73,6 @@ public class SensorDetailActivity extends BaseApplicationActivity {
 		mController = Controller.getInstance(this);
 
 
-
 		Log.d(TAG, "onCreate()");
 
 		Bundle bundle = getIntent().getExtras();
@@ -82,7 +80,7 @@ public class SensorDetailActivity extends BaseApplicationActivity {
 			mActiveAdapterId = bundle.getString(EXTRA_ADAPTER_ID);
 			mActiveModuleId = bundle.getString(EXTRA_MODULE_ID);
 		}
-		if(savedInstanceState != null ){
+		if (savedInstanceState != null) {
 			bundle = savedInstanceState;
 			if (bundle != null) {
 				mActiveAdapterId = bundle.getString(EXTRA_ADAPTER_ID);
@@ -101,12 +99,11 @@ public class SensorDetailActivity extends BaseApplicationActivity {
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
-		if(requestCode == Constants.EDIT_SENSOR_REQUEST_CODE ) {
+		if (requestCode == Constants.EDIT_SENSOR_REQUEST_CODE) {
 			Log.d(TAG, "Return from add adapter activity");
-			if(resultCode == Constants.EDIT_SENSOR_CANCELED) {
+			if (resultCode == Constants.EDIT_SENSOR_CANCELED) {
 				Log.d(TAG, "Activity was canceled");
-			}
-			else if (resultCode == Constants.EDIT_SENSOR_SUCCESS) {
+			} else if (resultCode == Constants.EDIT_SENSOR_SUCCESS) {
 				Log.d(TAG, "Edit sensor succes");
 				doReloadDevicesTask(mActiveAdapterId, false);
 			}
@@ -122,9 +119,9 @@ public class SensorDetailActivity extends BaseApplicationActivity {
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
-		case android.R.id.home:
-			finish();
-			return true;
+			case android.R.id.home:
+				finish();
+				return true;
 		}
 		return false;
 	}

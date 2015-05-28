@@ -70,7 +70,7 @@ public class WidgetWeatherPersistence extends WidgetPersistence implements IIden
 	public WidgetWeatherPersistence(Context context, int widgetId, UnitsHelper unitsHelper, TimeHelper timeHelper, WidgetSettings settings) {
 		super(context, widgetId, 0, 0, unitsHelper, timeHelper, settings);
 
-		if(sWeatherFont == null){
+		if (sWeatherFont == null) {
 			sWeatherFont = Typeface.createFromAsset(context.getAssets(), "weather_icons.ttf");
 		}
 
@@ -134,9 +134,9 @@ public class WidgetWeatherPersistence extends WidgetPersistence implements IIden
 	}
 
 	@Override
-	public void configure(Object obj1, Object obj2){
+	public void configure(Object obj1, Object obj2) {
 		JSONObject json = (JSONObject) obj1;
-		if(json == null) return;
+		if (json == null) return;
 		try {
 			JSONObject jsonWeather = json.getJSONArray("weather").getJSONObject(0);
 			JSONObject main = json.getJSONObject("main");
@@ -153,7 +153,7 @@ public class WidgetWeatherPersistence extends WidgetPersistence implements IIden
 			temperature = (long) main.getDouble("temp");
 			temperatureUnit = DEFAULT_TEMPERATURE_UNIT;
 			mTemperatureValue.setValue(String.valueOf(temperature));
-			
+
 			humidity = main.getInt("humidity");
 			mHumidityValue.setValue(String.valueOf(humidity));
 
@@ -183,8 +183,8 @@ public class WidgetWeatherPersistence extends WidgetPersistence implements IIden
 	/**
 	 * If needed, creates new bitmap of weather
 	 */
-	public Bitmap getBitmapIcon(boolean forceReload, int size){
-		if(generatedIcon == null || forceReload || oldIconResource != iconResource || oldIconSize != size) {
+	public Bitmap getBitmapIcon(boolean forceReload, int size) {
+		if (generatedIcon == null || forceReload || oldIconResource != iconResource || oldIconSize != size) {
 			Log.v(TAG, "Generating new weather icon");
 
 			Bitmap iconBitmap = Bitmap.createBitmap(size, size, Bitmap.Config.ARGB_4444);
@@ -212,18 +212,19 @@ public class WidgetWeatherPersistence extends WidgetPersistence implements IIden
 
 	/**
 	 * Returns temperature either from units helper or cached
+	 *
 	 * @return
 	 */
-	public String getTemperature(){
-		if(mUnitsHelper != null){
-			return  mUnitsHelper.getStringValueUnit(mTemperatureValue);
+	public String getTemperature() {
+		if (mUnitsHelper != null) {
+			return mUnitsHelper.getStringValueUnit(mTemperatureValue);
 		}
 
 		return String.format("%d%s", temperature, temperatureUnit);
 	}
 
-	public String getHumidity(){
-		if(mUnitsHelper != null){
+	public String getHumidity() {
+		if (mUnitsHelper != null) {
 			return mUnitsHelper.getStringValueUnit(mHumidityValue);
 		}
 
@@ -231,8 +232,8 @@ public class WidgetWeatherPersistence extends WidgetPersistence implements IIden
 	}
 
 	public String getPressure() {
-		if(mUnitsHelper != null){
-			return  mUnitsHelper.getStringValueUnit(mPressureValue);
+		if (mUnitsHelper != null) {
+			return mUnitsHelper.getStringValueUnit(mPressureValue);
 		}
 
 		return String.format("%d%s", pressure, DEFAULT_PRESSURE_UNIT);

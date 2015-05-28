@@ -89,7 +89,7 @@ public class GeofenceModel extends BaseModel
 		mQueue.add(new ManageGeofenceHolder(true, userId));
 
 //		if (mGoogleApiClient != null || !mGoogleApiClient.isConnected() || !mGoogleApiClient.isConnecting()) {
-			buildGoogleApiClient();
+		buildGoogleApiClient();
 //		}
 	}
 
@@ -102,7 +102,7 @@ public class GeofenceModel extends BaseModel
 		mQueue.add(new ManageGeofenceHolder(false, userId));
 
 //		if (mGoogleApiClient == null || !mGoogleApiClient.isConnected() || !mGoogleApiClient.isConnecting()) {
-			buildGoogleApiClient();
+		buildGoogleApiClient();
 //		}
 	}
 
@@ -124,7 +124,7 @@ public class GeofenceModel extends BaseModel
 	@Override
 	public void onResult(Status status) {
 		if (status.isSuccess()) {
-			Log.i(TAG, "All geofences successfully egistered unregistered: "+status.getStatusMessage());
+			Log.i(TAG, "All geofences successfully egistered unregistered: " + status.getStatusMessage());
 			requestNextCall();
 		} else {
 			Log.e(TAG, "Geofences WEREN'T  unregistered: " + status.getStatusMessage());
@@ -284,7 +284,7 @@ public class GeofenceModel extends BaseModel
 
 	}
 
-	private List<String> getAllGeofenceId (String userId) {
+	private List<String> getAllGeofenceId(String userId) {
 		List<String> geofenceIds = new ArrayList<>();
 		for (SimpleGeofence geofence : getAllGeofences(userId)) {
 			Log.i(TAG, "Unregistering geofence: " + geofence.getName() + "-" + geofence.getId());

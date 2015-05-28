@@ -34,7 +34,7 @@ public class WeatherProvider {
 	private static int BUFFER_SIZE = 1024;
 	private Context mContext;
 
-	public WeatherProvider(Context context){
+	public WeatherProvider(Context context) {
 		mContext = context.getApplicationContext();
 	}
 
@@ -42,14 +42,14 @@ public class WeatherProvider {
 	// -------------------- UPDATING METHODS ---------------- //
 	// ------------------------------------------------------ //
 
-	public JSONObject getLocations(String cityInput){
+	public JSONObject getLocations(String cityInput) {
 		try {
 			HttpURLConnection connection = requestLocation(cityInput, getLangLocaleCode());
 
 			BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
 			StringBuilder json = new StringBuilder(BUFFER_SIZE);
 			String tmp;
-			while((tmp = reader.readLine()) != null){
+			while ((tmp = reader.readLine()) != null) {
 				Log.d("getLocations", tmp);
 				json.append(tmp).append("\n");
 			}
@@ -57,7 +57,7 @@ public class WeatherProvider {
 			JSONObject data = new JSONObject(json.toString());
 
 			// This value will be 404 if the request was not successful
-			if(data.getInt("cod") != SUCCESSFULL_CODE){
+			if (data.getInt("cod") != SUCCESSFULL_CODE) {
 				return null;
 			}
 
@@ -69,15 +69,15 @@ public class WeatherProvider {
 		return null;
 	}
 
-	public JSONObject getWeatherByCityId(String cityId){
-		try{
+	public JSONObject getWeatherByCityId(String cityId) {
+		try {
 			HttpURLConnection connection = requestWeatherById(cityId, getLangLocaleCode());
 
 			BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
 
 			StringBuilder json = new StringBuilder(BUFFER_SIZE);
 			String tmp;
-			while((tmp = reader.readLine()) != null){
+			while ((tmp = reader.readLine()) != null) {
 				Log.d("getWeatherByCityId", tmp);
 				json.append(tmp).append("\n");
 			}
@@ -86,7 +86,7 @@ public class WeatherProvider {
 			JSONObject data = new JSONObject(json.toString());
 
 			// This value will be 404 if the request was not successful
-			if(data.getInt("cod") != SUCCESSFULL_CODE){
+			if (data.getInt("cod") != SUCCESSFULL_CODE) {
 				return null;
 			}
 
@@ -123,11 +123,11 @@ public class WeatherProvider {
 	// ----------------------- PARSERS ---------------------- //
 	// ------------------------------------------------------ //
 
-	public List<City> parseCities(JSONObject data){
+	public List<City> parseCities(JSONObject data) {
 		ArrayList<City> results = new ArrayList<>();
 		try {
 			JSONArray listOfCities = data.getJSONArray("list");
-			for(int i = 0; i < listOfCities.length(); i++){
+			for (int i = 0; i < listOfCities.length(); i++) {
 				JSONObject cityObj = listOfCities.getJSONObject(i);
 				City city = new City();
 				city.id = cityObj.getString("id");
@@ -146,25 +146,25 @@ public class WeatherProvider {
 
 	/**
 	 * Parse widget icon based on id which were get from the server
+	 *
 	 * @param actualId
 	 * @param sunrise
 	 * @param sunset
 	 * @return string icon resource
 	 */
-	public static int parseWeatherIconResource(int actualId, long sunrise, long sunset){
+	public static int parseWeatherIconResource(int actualId, long sunrise, long sunset) {
 		int iconRes;
 
 		// if its exactly 800, its clear sky
-		if(actualId == 800){
+		if (actualId == 800) {
 			long currentTime = new Date().getTime();
-			if(sunrise != -1 && sunset != -1) {
+			if (sunrise != -1 && sunset != -1) {
 				if (currentTime >= sunrise && currentTime < sunset) {
 					iconRes = R.string.weather_sunny;
 				} else {
 					iconRes = R.string.weather_clear_night;
 				}
-			}
-			else{
+			} else {
 				iconRes = R.string.weather_sunny;
 			}
 
@@ -172,23 +172,23 @@ public class WeatherProvider {
 		}
 		// else we simplify that to some groups
 		int id = actualId / 100;
-		switch(id) {
-			case 2 :
+		switch (id) {
+			case 2:
 				iconRes = R.string.weather_thunder;
 				break;
-			case 3 :
+			case 3:
 				iconRes = R.string.weather_drizzle;
 				break;
-			case 5 :
+			case 5:
 				iconRes = R.string.weather_rainy;
 				break;
-			case 6 :
+			case 6:
 				iconRes = R.string.weather_snowy;
 				break;
-			case 7 :
+			case 7:
 				iconRes = R.string.weather_foggy;
 				break;
-			case 8 :
+			case 8:
 				iconRes = R.string.weather_cloudy;
 				break;
 
@@ -202,7 +202,7 @@ public class WeatherProvider {
 	}
 
 
-	private String getLangLocaleCode(){
+	private String getLangLocaleCode() {
 		// TODO should change, cause e.g czech language returns CS and OWM needs CZ
 		//Locale locale = mContext.getResources().getConfiguration().locale;
 		//Log.v("WeatherProvider", "selected locale code: " + locale.getLanguage());
@@ -210,7 +210,7 @@ public class WeatherProvider {
 		return "en";
 	}
 
-	public class City{
+	public class City {
 		public String id;
 		public String name;
 		public String countryId;

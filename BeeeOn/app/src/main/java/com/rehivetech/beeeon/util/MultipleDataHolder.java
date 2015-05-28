@@ -49,9 +49,9 @@ public class MultipleDataHolder<O extends IIdentifier> {
 	/**
 	 * Return list with all objects from specified holder.
 	 *
-	 * @see DataHolder#getObjects()
 	 * @param holderId
 	 * @return new List (ArrayList used here) with all objects added, or empty list.
+	 * @see DataHolder#getObjects()
 	 */
 	public List<O> getObjects(String holderId) {
 		DataHolder<O> holder = mHolders.get(holderId);
@@ -65,9 +65,9 @@ public class MultipleDataHolder<O extends IIdentifier> {
 	/**
 	 * Set objects of underlaying holder.
 	 *
-	 * @see DataHolder#setObjects(java.util.List)
 	 * @param holderId
 	 * @param objects
+	 * @see DataHolder#setObjects(java.util.List)
 	 */
 	public void setObjects(String holderId, List<O> objects) {
 		DataHolder<O> holder = getOrCreateHolder(holderId);
@@ -78,10 +78,10 @@ public class MultipleDataHolder<O extends IIdentifier> {
 	/**
 	 * Get object from underlaying holder.
 	 *
-	 * @see DataHolder#getObject(String)
 	 * @param holderId
 	 * @param id
 	 * @return object with specified id or {@code null}, if no object was found.
+	 * @see DataHolder#getObject(String)
 	 */
 	public O getObject(String holderId, String id) {
 		DataHolder<O> holder = mHolders.get(holderId);
@@ -95,10 +95,10 @@ public class MultipleDataHolder<O extends IIdentifier> {
 	/**
 	 * Add object to underlaying holder.
 	 *
-	 * @see DataHolder#addObject(com.rehivetech.beeeon.IIdentifier)
 	 * @param holderId
 	 * @param obj
 	 * @return previous object in map with this id, or {@code null} if no object existed.
+	 * @see DataHolder#addObject(com.rehivetech.beeeon.IIdentifier)
 	 */
 	public O addObject(String holderId, O obj) {
 		DataHolder<O> holder = getOrCreateHolder(holderId);
@@ -109,10 +109,10 @@ public class MultipleDataHolder<O extends IIdentifier> {
 	/**
 	 * Remove object from underlaying holder.
 	 *
-	 * @see DataHolder#removeObject(String)
 	 * @param holderId
 	 * @param id
 	 * @return previous object in map with this id, or {@code null} if no object existed.
+	 * @see DataHolder#removeObject(String)
 	 */
 	public O removeObject(String holderId, String id) {
 		DataHolder<O> holder = mHolders.get(holderId);
@@ -141,9 +141,9 @@ public class MultipleDataHolder<O extends IIdentifier> {
 	/**
 	 * Set last update of underlaying holder.
 	 *
-	 * @see DataHolder#setLastUpdate(org.joda.time.DateTime)
 	 * @param holderId
 	 * @param lastUpdate
+	 * @see DataHolder#setLastUpdate(org.joda.time.DateTime)
 	 */
 	public void setLastUpdate(String holderId, DateTime lastUpdate) {
 		DataHolder<O> holder = mHolders.get(holderId);
@@ -157,9 +157,9 @@ public class MultipleDataHolder<O extends IIdentifier> {
 	/**
 	 * Check if underlaying holder was updated at least once.
 	 *
-	 * @see DataHolder#wasUpdated()
 	 * @param holderId
 	 * @return true if time of last update is not {@code null}, false otherwise.
+	 * @see DataHolder#wasUpdated()
 	 */
 	public boolean wasUpdated(String holderId) {
 		DataHolder<O> holder = mHolders.get(holderId);
@@ -173,10 +173,10 @@ public class MultipleDataHolder<O extends IIdentifier> {
 	/**
 	 * Check if underlaying holder is expired, depending on reload interval.
 	 *
-	 * @see DataHolder#isExpired(int)
 	 * @param holderId
 	 * @param reloadIntervalSeconds
 	 * @return true if time of last update is {@code null} or more than specified number of seconds in past, false otherwise.
+	 * @see DataHolder#isExpired(int)
 	 */
 	public boolean isExpired(String holderId, int reloadIntervalSeconds) {
 		DataHolder<O> holder = mHolders.get(holderId);

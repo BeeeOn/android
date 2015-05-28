@@ -96,7 +96,6 @@ public class NotificationFragment extends Fragment {
 	}
 
 
-
 	private void createNotifRequest() {
 
 		Thread thread = new Thread() {

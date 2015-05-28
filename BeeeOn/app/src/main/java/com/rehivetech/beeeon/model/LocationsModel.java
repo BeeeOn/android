@@ -100,7 +100,7 @@ public class LocationsModel extends BaseModel {
 
 	/**
 	 * Deletes location from server and from list of locations.
-	 *
+	 * <p/>
 	 * This CAN'T be called on UI thread!
 	 *
 	 * @param location
@@ -121,7 +121,7 @@ public class LocationsModel extends BaseModel {
 
 	/**
 	 * Create and add new location to server and to list of locations.
-	 *
+	 * <p/>
 	 * This CAN'T be called on UI thread!
 	 *
 	 * @param location

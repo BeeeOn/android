@@ -321,12 +321,12 @@ public class Network implements INetwork {
 	 * Send request to server and return parsedMessage or throw exception on error.
 	 *
 	 * @param messageToSend message in xml
-	 * @param checkBT - when true and BT is not present in Network, then throws AppException with NetworkError.BAD_BT
-	 *                - this logically must be false for requests like register or login, which doesn't require BT for working
-	 * @param retries - number of retries to do the request and receive response
+	 * @param checkBT       - when true and BT is not present in Network, then throws AppException with NetworkError.BAD_BT
+	 *                      - this logically must be false for requests like register or login, which doesn't require BT for working
+	 * @param retries       - number of retries to do the request and receive response
 	 * @return object with parsed data
 	 * @throws AppException with error ClientError.INTERNET_CONNECTION, NetworkError.BAD_BT, ClientError.XML,
-	 * 			ClientError.UNKNOWN_HOST, ClientError.CERTIFICATE, ClientError.SOCKET or ClientError.NO_RESPONSE
+	 *                      ClientError.UNKNOWN_HOST, ClientError.CERTIFICATE, ClientError.SOCKET or ClientError.NO_RESPONSE
 	 */
 	private synchronized ParsedMessage doRequest(String messageToSend, boolean checkBT, int retries) throws AppException {
 		// Check internet connection
@@ -446,7 +446,7 @@ public class Network implements INetwork {
 	}
 
 	@Override
-	public boolean addProvider(IAuthProvider authProvider){
+	public boolean addProvider(IAuthProvider authProvider) {
 		ParsedMessage msg = doRequest(XmlCreator.createJoinAccount(mBT, authProvider));
 
 		if (msg.getState() == State.TRUE)
@@ -456,7 +456,7 @@ public class Network implements INetwork {
 	}
 
 	@Override
-	public boolean removeProvider(String providerName){
+	public boolean removeProvider(String providerName) {
 		ParsedMessage msg = doRequest(XmlCreator.createCutAccount(mBT, providerName));
 
 		if (msg.getState() == State.TRUE)
@@ -466,7 +466,7 @@ public class Network implements INetwork {
 	}
 
 	@Override
-	public boolean deleteMyAccount(){
+	public boolean deleteMyAccount() {
 		ParsedMessage msg = doRequest(XmlCreator.createCutAccount(mBT, "all"));
 
 		if (msg.getState() == State.TRUE)
@@ -476,11 +476,11 @@ public class Network implements INetwork {
 	}
 
 	@Override
-	public User loadUserInfo(){
+	public User loadUserInfo() {
 		ParsedMessage msg = doRequest(XmlCreator.createGetUserInfo(mBT));
 
 		if (msg.getState() == State.USERINFO)
-			return (User)msg.data;
+			return (User) msg.data;
 
 		throw processFalse(msg);
 	}
@@ -509,7 +509,7 @@ public class Network implements INetwork {
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public List<Device> initAdapter(String adapterID){
+	public List<Device> initAdapter(String adapterID) {
 		ParsedMessage msg = doRequest(XmlCreator.createGetAllDevices(mBT, adapterID));
 
 		if (msg.getState() == State.ALLDEVICES)
@@ -519,7 +519,7 @@ public class Network implements INetwork {
 	}
 
 	@Override
-	public boolean reInitAdapter(String oldId, String newId){
+	public boolean reInitAdapter(String oldId, String newId) {
 		ParsedMessage msg = doRequest(XmlCreator.createReInitAdapter(mBT, oldId, newId));
 
 		if (msg.getState() == State.TRUE)
@@ -533,7 +533,7 @@ public class Network implements INetwork {
 	// /////////////////////////////////////////////////////////////////////////////////
 
 	@Override
-	public boolean updateDevices(String adapterID, List<Device> devices, EnumSet<SaveModule> toSave){
+	public boolean updateDevices(String adapterID, List<Device> devices, EnumSet<SaveModule> toSave) {
 		ParsedMessage msg = doRequest(XmlCreator.createSetDevs(mBT, adapterID, devices, toSave));
 
 		if (msg.getState() == State.TRUE)
@@ -543,7 +543,7 @@ public class Network implements INetwork {
 	}
 
 	@Override
-	public boolean updateModule(String adapterID, Module module, EnumSet<Module.SaveModule> toSave){
+	public boolean updateModule(String adapterID, Module module, EnumSet<Module.SaveModule> toSave) {
 		ParsedMessage msg = doRequest(XmlCreator.createSetDev(mBT, adapterID, module, toSave));
 
 		if (msg.getState() == State.TRUE)
@@ -553,7 +553,7 @@ public class Network implements INetwork {
 	}
 
 	@Override
-	public boolean switchState(String adapterID, Module module){
+	public boolean switchState(String adapterID, Module module) {
 		ParsedMessage msg = doRequest(XmlCreator.createSwitch(mBT, adapterID, module));
 
 		if (msg.getState() == State.TRUE)
@@ -563,7 +563,7 @@ public class Network implements INetwork {
 	}
 
 	@Override
-	public boolean prepareAdapterToListenNewSensors(String adapterID){
+	public boolean prepareAdapterToListenNewSensors(String adapterID) {
 		ParsedMessage msg = doRequest(XmlCreator.createAdapterScanMode(mBT, adapterID));
 
 		if (msg.getState() == State.TRUE)
@@ -573,7 +573,7 @@ public class Network implements INetwork {
 	}
 
 	@Override
-	public boolean deleteFacility(Device device){
+	public boolean deleteFacility(Device device) {
 		ParsedMessage msg = doRequest(XmlCreator.createDeleteDevice(mBT, device));
 
 		if (msg.getState() == State.TRUE)
@@ -585,7 +585,7 @@ public class Network implements INetwork {
 	@Override
 	// http://stackoverflow.com/a/509288/1642090
 	@SuppressWarnings("unchecked")
-	public List<Device> getDevices(List<Device> devices){
+	public List<Device> getDevices(List<Device> devices) {
 		ParsedMessage msg = doRequest(XmlCreator.createGetDevices(mBT, devices));
 
 		if (msg.getState() == State.DEVICES)
@@ -595,7 +595,7 @@ public class Network implements INetwork {
 	}
 
 	@Override
-	public Device getFacility(Device device){
+	public Device getFacility(Device device) {
 
 		ArrayList<Device> list = new ArrayList<>();
 		list.add(device);
@@ -625,7 +625,7 @@ public class Network implements INetwork {
 
 	// http://stackoverflow.com/a/509288/1642090
 	@Override
-	public ModuleLog getLog(String adapterID, Module module, LogDataPair pair){
+	public ModuleLog getLog(String adapterID, Module module, LogDataPair pair) {
 		String msgToSend = XmlCreator.createGetLog(mBT, adapterID, module.getDevice().getAddress(), module.getRawTypeId(),
 				String.valueOf(pair.interval.getStartMillis() / 1000), String.valueOf(pair.interval.getEndMillis() / 1000),
 				pair.type.getId(), pair.gap.getSeconds());
@@ -647,7 +647,7 @@ public class Network implements INetwork {
 	@Override
 	// http://stackoverflow.com/a/509288/1642090
 	@SuppressWarnings("unchecked")
-	public List<Location> getLocations(String adapterID){
+	public List<Location> getLocations(String adapterID) {
 		ParsedMessage msg = doRequest(XmlCreator.createGetRooms(mBT, adapterID));
 
 		if (msg.getState() == State.ROOMS)
@@ -657,7 +657,7 @@ public class Network implements INetwork {
 	}
 
 	@Override
-	public boolean updateLocations(String adapterID, List<Location> locations){
+	public boolean updateLocations(String adapterID, List<Location> locations) {
 		ParsedMessage msg = doRequest(XmlCreator.createSetRooms(mBT, adapterID, locations));
 
 		if (msg.getState() == State.TRUE)
@@ -667,7 +667,7 @@ public class Network implements INetwork {
 	}
 
 	@Override
-	public boolean updateLocation(Location location){
+	public boolean updateLocation(Location location) {
 
 		List<Location> list = new ArrayList<>();
 		list.add(location);
@@ -676,7 +676,7 @@ public class Network implements INetwork {
 	}
 
 	@Override
-	public boolean deleteLocation(Location location){
+	public boolean deleteLocation(Location location) {
 		ParsedMessage msg = doRequest(XmlCreator.createDeleteRoom(mBT, location));
 
 		if (msg.getState() == State.TRUE)
@@ -686,7 +686,7 @@ public class Network implements INetwork {
 	}
 
 	@Override
-	public Location createLocation(Location location){
+	public Location createLocation(Location location) {
 		ParsedMessage msg = doRequest(XmlCreator.createAddRoom(mBT, location));
 
 		if (msg.getState() == State.ROOMCREATED) {
@@ -701,7 +701,7 @@ public class Network implements INetwork {
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public boolean addAccounts(String adapterID, ArrayList<User> users){
+	public boolean addAccounts(String adapterID, ArrayList<User> users) {
 		ParsedMessage msg = doRequest(XmlCreator.createAddAccounts(mBT, adapterID, users));
 
 		if (msg.getState() == State.TRUE)
@@ -711,7 +711,7 @@ public class Network implements INetwork {
 
 		FalseAnswer fa = (FalseAnswer) msg.data;
 		String troubleUsers = "";
-		for (User u : (ArrayList<User>) fa.troubleMakers){
+		for (User u : (ArrayList<User>) fa.troubleMakers) {
 			troubleUsers += u.toDebugString() + "\n";
 		}
 
@@ -728,7 +728,7 @@ public class Network implements INetwork {
 	}
 
 	@Override
-	public boolean deleteAccounts(String adapterID, List<User> users){
+	public boolean deleteAccounts(String adapterID, List<User> users) {
 		ParsedMessage msg = doRequest(XmlCreator.createDelAccounts(mBT, adapterID, users));
 
 		if (msg.getState() == State.TRUE)
@@ -738,7 +738,7 @@ public class Network implements INetwork {
 	}
 
 	@Override
-	public boolean deleteAccount(String adapterID, User user){
+	public boolean deleteAccount(String adapterID, User user) {
 
 		ArrayList<User> list = new ArrayList<>();
 		list.add(user);
@@ -749,7 +749,7 @@ public class Network implements INetwork {
 	@Override
 	// http://stackoverflow.com/a/509288/1642090
 	@SuppressWarnings("unchecked")
-	public List<User> getAccounts(String adapterID){
+	public List<User> getAccounts(String adapterID) {
 		ParsedMessage msg = doRequest(XmlCreator.createGetAccounts(mBT, adapterID));
 
 		if (msg.getState() == State.ACCOUNTS)
@@ -759,7 +759,7 @@ public class Network implements INetwork {
 	}
 
 	@Override
-	public boolean updateAccounts(String adapterID, ArrayList<User> users){
+	public boolean updateAccounts(String adapterID, ArrayList<User> users) {
 		ParsedMessage msg = doRequest(XmlCreator.createSetAccounts(mBT, adapterID, users));
 
 		if (msg.getState() == State.TRUE)
@@ -769,7 +769,7 @@ public class Network implements INetwork {
 	}
 
 	@Override
-	public boolean updateAccount(String adapterID, User user){
+	public boolean updateAccount(String adapterID, User user) {
 
 		ArrayList<User> list = new ArrayList<>();
 		list.add(user);
@@ -779,7 +779,7 @@ public class Network implements INetwork {
 
 	// /////////////////////////////////////TIME////////////////////////////////////////
 
-	public boolean setTimeZone(String adapterID, int offsetInMinutes){
+	public boolean setTimeZone(String adapterID, int offsetInMinutes) {
 		ParsedMessage msg = doRequest(XmlCreator.createSetTimeZone(mBT, adapterID, offsetInMinutes));
 
 		if (msg.getState() == State.TRUE)
@@ -789,7 +789,7 @@ public class Network implements INetwork {
 	}
 
 	@Override
-	public int getTimeZone(String adapterID){
+	public int getTimeZone(String adapterID) {
 		ParsedMessage msg = doRequest(XmlCreator.createGetTimeZone(mBT, adapterID));
 
 		if (msg.getState() == State.TIMEZONE)
@@ -803,13 +803,11 @@ public class Network implements INetwork {
 	/**
 	 * Method delete old gcmid to avoid fake notifications
 	 *
-	 * @param userId
-	 *            of old/last user of gcmid (app+module id)
-	 * @param gcmID
-	 *            - google cloud message id
+	 * @param userId of old/last user of gcmid (app+module id)
+	 * @param gcmID  - google cloud message id
 	 * @return true if id has been deleted, false otherwise
 	 */
-	public boolean deleteGCMID(String userId, String gcmID){
+	public boolean deleteGCMID(String userId, String gcmID) {
 		ParsedMessage msg = doRequest(XmlCreator.createDeLGCMID(userId, gcmID));
 
 		if (msg.getState() == State.TRUE)
@@ -819,7 +817,7 @@ public class Network implements INetwork {
 	}
 
 	@Override
-	public boolean NotificationsRead(ArrayList<String> msgID){
+	public boolean NotificationsRead(ArrayList<String> msgID) {
 		ParsedMessage msg = doRequest(XmlCreator.createNotificaionRead(mBT, msgID));
 
 		if (msg.getState() == State.TRUE)
@@ -830,10 +828,11 @@ public class Network implements INetwork {
 
 	/**
 	 * Method set gcmID to server
+	 *
 	 * @param gcmID to be set
 	 * @return true if id has been updated, false otherwise
 	 */
-	public boolean setGCMID(String gcmID){
+	public boolean setGCMID(String gcmID) {
 		ParsedMessage msg = doRequest(XmlCreator.createSetGCMID(mBT, gcmID));
 
 		if (msg.getState() == State.TRUE)
@@ -844,10 +843,11 @@ public class Network implements INetwork {
 
 	/**
 	 * TODO: method need to be checked online
+	 *
 	 * @return
 	 */
-	 @SuppressWarnings("unchecked")
-	public List<VisibleNotification> getNotifications(){
+	@SuppressWarnings("unchecked")
+	public List<VisibleNotification> getNotifications() {
 		ParsedMessage msg = doRequest(XmlCreator.createGetNotifications(mBT));
 
 		if (msg.getState() == State.NOTIFICATIONS)
@@ -857,7 +857,7 @@ public class Network implements INetwork {
 	}
 
 	@Override
-	public boolean addWatchdog(Watchdog watchdog, String adapterId){
+	public boolean addWatchdog(Watchdog watchdog, String adapterId) {
 		ParsedMessage msg = doRequest(XmlCreator.createAddAlgor(mBT, watchdog.getName(), adapterId, watchdog.getType(), watchdog.getModules(), watchdog.getParams(), watchdog.getGeoRegionId()));
 
 		if (msg.getState() == State.ALGCREATED) {
@@ -870,10 +870,10 @@ public class Network implements INetwork {
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public List<Watchdog> getWatchdogs(ArrayList<String> watchdogIds, String adapterId){
+	public List<Watchdog> getWatchdogs(ArrayList<String> watchdogIds, String adapterId) {
 		ParsedMessage msg = doRequest(XmlCreator.createGetAlgs(mBT, adapterId, watchdogIds));
 
-		if(msg.getState() == State.ALGORITHMS){
+		if (msg.getState() == State.ALGORITHMS) {
 			return (ArrayList<Watchdog>) msg.data;
 		}
 
@@ -882,10 +882,10 @@ public class Network implements INetwork {
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public List<Watchdog> getAllWatchdogs(String adapterID){
+	public List<Watchdog> getAllWatchdogs(String adapterID) {
 		ParsedMessage msg = doRequest(XmlCreator.createGetAllAlgs(mBT, adapterID));
 
-		if(msg.getState() == State.ALGORITHMS){
+		if (msg.getState() == State.ALGORITHMS) {
 			return (ArrayList<Watchdog>) msg.data;
 		}
 
@@ -893,30 +893,30 @@ public class Network implements INetwork {
 	}
 
 	@Override
-	public boolean updateWatchdog(Watchdog watchdog, String AdapterId){
+	public boolean updateWatchdog(Watchdog watchdog, String AdapterId) {
 		ParsedMessage msg = doRequest(XmlCreator.createSetAlgor(mBT, watchdog.getName(), watchdog.getId(), AdapterId, watchdog.getType(), watchdog.isEnabled(), watchdog.getModules(), watchdog.getParams(), watchdog.getGeoRegionId()));
 
-		if(msg.getState() == State.TRUE)
+		if (msg.getState() == State.TRUE)
 			return true;
 
 		throw processFalse(msg);
 	}
 
 	@Override
-	public boolean deleteWatchdog(Watchdog watchdog){
+	public boolean deleteWatchdog(Watchdog watchdog) {
 		ParsedMessage msg = doRequest(XmlCreator.createDelAlg(mBT, watchdog.getId()));
 
-		if(msg.getState() == State.TRUE)
+		if (msg.getState() == State.TRUE)
 			return true;
 
 		throw processFalse(msg);
 	}
 
 	@Override
-	public boolean passBorder(String regionId, String type){
+	public boolean passBorder(String regionId, String type) {
 		ParsedMessage msg = doRequest(XmlCreator.createPassBorder(mBT, regionId, type));
 
-		if(msg.getState() == State.TRUE)
+		if (msg.getState() == State.TRUE)
 			return true;
 
 		throw processFalse(msg);
@@ -924,10 +924,10 @@ public class Network implements INetwork {
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public List<AchievementListItem> getAllAchievements(String adapterID){
+	public List<AchievementListItem> getAllAchievements(String adapterID) {
 		ParsedMessage msg = doRequest(XmlCreator.createGetAllAchievements(mBT, adapterID));
 
-		if(msg.getState() == State.ACHIEVEMENTS){
+		if (msg.getState() == State.ACHIEVEMENTS) {
 			return (ArrayList<AchievementListItem>) msg.data;
 		}
 
@@ -936,10 +936,10 @@ public class Network implements INetwork {
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public List<String> setProgressLvl(String adapterId, String achievementId){
+	public List<String> setProgressLvl(String adapterId, String achievementId) {
 		ParsedMessage msg = doRequest(XmlCreator.createSetProgressLvl(mBT, adapterId, achievementId));
 
-		if(msg.getState() == State.PROGRESS) {
+		if (msg.getState() == State.PROGRESS) {
 			return (List<String>) msg.data;
 		}
 

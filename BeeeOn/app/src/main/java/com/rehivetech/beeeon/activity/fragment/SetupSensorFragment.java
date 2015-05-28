@@ -44,7 +44,7 @@ public class SetupSensorFragment extends TrackFragment {
 
 	private Adapter mAdapter;
 	private List<Device> mNewDevices;
-	
+
 	private LinearLayout mLayout;
 
 
@@ -66,7 +66,7 @@ public class SetupSensorFragment extends TrackFragment {
 		mController = Controller.getInstance(mActivity);
 
 		mAdapter = mController.getActiveAdapter();
-		if(mAdapter == null) {
+		if (mAdapter == null) {
 			// CHYBA
 			return;
 		}
@@ -78,15 +78,15 @@ public class SetupSensorFragment extends TrackFragment {
 
 		// Create the AlertDialog object and return it
 	}
-	
+
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		mView = inflater.inflate(R.layout.activity_setup_sensor_activity_dialog, container, false);
 
 		mLayout = (LinearLayout) mView.findViewById(R.id.container);
-		
+
 		initViews();
-		
+
 		return mView;
 	}
 
@@ -95,18 +95,17 @@ public class SetupSensorFragment extends TrackFragment {
 		super.onStart();
 
 	}
-	
+
 
 	@Override
 	public void setUserVisibleHint(boolean isVisibleToUser) {
-	    super.setUserVisibleHint(isVisibleToUser);
-	    if (isVisibleToUser) {
-	    	Log.d(TAG, "SETUP SENSOR fragment is visible");
-	    	mActivity.setFragment(this);
-	    }
+		super.setUserVisibleHint(isVisibleToUser);
+		if (isVisibleToUser) {
+			Log.d(TAG, "SETUP SENSOR fragment is visible");
+			mActivity.setFragment(this);
+		}
 	}
 
-	
 
 	private void initViews() {
 		// Get GUI elements
@@ -165,14 +164,13 @@ public class SetupSensorFragment extends TrackFragment {
 		mSpinner.setAdapter(dataAdapter);
 		// Set listview height, for all 
 		float scale = mActivity.getResources().getDisplayMetrics().density;
-		mListOfName.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, (int) (scale*NAME_ITEM_HEIGHT* mNewDevices.get(0).getModules().size())));
+		mListOfName.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, (int) (scale * NAME_ITEM_HEIGHT * mNewDevices.get(0).getModules().size())));
 	}
 
 	/**
 	 * Method take needed inputs and switch visibility
-	 * 
-	 * @param hide
-	 *            items is hidden if true, visible otherwise
+	 *
+	 * @param hide items is hidden if true, visible otherwise
 	 * @return true if is item hidden
 	 */
 	private boolean hideInputForNewLocation(boolean hide) {

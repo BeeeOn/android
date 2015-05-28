@@ -46,12 +46,12 @@ public class SettingsUnitActivity extends ActionBarPreferenceActivity implements
 		mPreferences.put(unit.getPersistenceKey(), pref);
 	}
 
-    @Override
-    protected int getPreferencesXmlId() {
-        return R.xml.unit_preferences;
-    }
+	@Override
+	protected int getPreferencesXmlId() {
+		return R.xml.unit_preferences;
+	}
 
-    // added suppressWarnings because of support of lower version
+	// added suppressWarnings because of support of lower version
 	@SuppressWarnings("deprecation")
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -59,8 +59,8 @@ public class SettingsUnitActivity extends ActionBarPreferenceActivity implements
 
 		mController = Controller.getInstance(this);
 
-        final Toolbar toolbar=getToolbar();
-        toolbar.setTitle(R.string.units);
+		final Toolbar toolbar = getToolbar();
+		toolbar.setTitle(R.string.units);
 
 		// Use own name for sharedPreferences
 		getPreferenceManager().setSharedPreferencesName(Persistence.getPreferencesFilename(mController.getActualUser().getId()));
@@ -92,9 +92,9 @@ public class SettingsUnitActivity extends ActionBarPreferenceActivity implements
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
-		case android.R.id.home:
-			finish();
-			return true;
+			case android.R.id.home:
+				finish();
+				return true;
 		}
 		return false;
 	}

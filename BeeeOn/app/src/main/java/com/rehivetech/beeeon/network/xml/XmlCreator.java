@@ -27,7 +27,6 @@ import java.util.Map;
  * Class for creating XML messages
  *
  * @author ThinkDeep
- *
  */
 public class XmlCreator {
 
@@ -39,7 +38,7 @@ public class XmlCreator {
 
 	public static final String SIGNIN = "signin";
 	public static final String SIGNUP = "signup";
-	public static final String GETUSERINFO ="getuserinfo";
+	public static final String GETUSERINFO = "getuserinfo";
 	public static final String JOINACCOUNT = "joinaccount";
 	public static final String CUTACCOUNT = "cutaccount";
 
@@ -78,7 +77,7 @@ public class XmlCreator {
 
 	public static final String ADDALG = "addalg";
 	public static final String GETALLALGS = "getallalgs";
-	public static final String GETALGS =  "getlags";
+	public static final String GETALGS = "getlags";
 	public static final String SETALG = "setalg";
 	public static final String DELALG = "delalg";
 
@@ -110,6 +109,7 @@ public class XmlCreator {
 
 	/**
 	 * Method create message for registration of new user
+	 *
 	 * @param authProvider provider of authentication with parameters to send
 	 * @return xml with signUp message
 	 */
@@ -143,8 +143,9 @@ public class XmlCreator {
 
 	/**
 	 * Method create message for login
-	 * @param locale localization of phone
-	 * @param pid unique id of phone
+	 *
+	 * @param locale       localization of phone
+	 * @param pid          unique id of phone
 	 * @param authProvider provider of authentication with parameters to send
 	 * @return xml with signIn message
 	 */
@@ -180,6 +181,7 @@ public class XmlCreator {
 
 	/**
 	 * Method create message for joining new provider to actual user
+	 *
 	 * @param authProvider provider of authentication with parameters to send
 	 * @return xml with joinAccount message
 	 */
@@ -212,32 +214,31 @@ public class XmlCreator {
 
 	/**
 	 * Method create message for removing part of account (or whole account)
-	 * @param bt beeeon Token (session Id)
+	 *
+	 * @param bt           beeeon Token (session Id)
 	 * @param providerName name of service (beeeon, google, facebook, ...)
 	 * @return xml with cutAccount message
 	 */
-	public static String createCutAccount(String bt, String providerName){
+	public static String createCutAccount(String bt, String providerName) {
 		return createComAttribsVariant(Xconstants.STATE, CUTACCOUNT, Xconstants.BT, bt, Xconstants.SERVICE, providerName);
 	}
 
 	/**
 	 * Method create message for obtain information about user
+	 *
 	 * @param bt beeeon Token (session Id)
 	 * @return xml with getUserInfo message
 	 */
-	public static String createGetUserInfo(String bt){
+	public static String createGetUserInfo(String bt) {
 		return createComAttribsVariant(Xconstants.STATE, GETUSERINFO, Xconstants.BT, bt);
 	}
 
 	/**
 	 * Method create XML for AddAdapter message
 	 *
-	 * @param bt
-	 *            userID of user
-	 * @param aid
-	 *            adapterID of actual adapter
-	 * @param adapterName
-	 *            name of adapter
+	 * @param bt          userID of user
+	 * @param aid         adapterID of actual adapter
+	 * @param adapterName name of adapter
 	 * @return AddAdapter message
 	 * @since 2.2
 	 */
@@ -248,8 +249,7 @@ public class XmlCreator {
 	/**
 	 * Method create XML of GetAdapters message
 	 *
-	 * @param bt
-	 *            userID of user
+	 * @param bt userID of user
 	 * @return GetAdapters message
 	 * @since 2.2
 	 */
@@ -260,12 +260,9 @@ public class XmlCreator {
 	/**
 	 * Method create XML for ReInit message
 	 *
-	 * @param bt
-	 *            userID of user
-	 * @param adapterIdOld
-	 *            old id of adapter
-	 * @param adapterIdNew
-	 *            new id of adapter
+	 * @param bt           userID of user
+	 * @param adapterIdOld old id of adapter
+	 * @param adapterIdNew new id of adapter
 	 * @return ReInit message
 	 * @since 2.2
 	 */
@@ -278,10 +275,8 @@ public class XmlCreator {
 	/**
 	 * Method create XML for AdapterListen message
 	 *
-	 * @param bt
-	 *            userID of user
-	 * @param aid
-	 *            adapterID of actual adapter
+	 * @param bt  userID of user
+	 * @param aid adapterID of actual adapter
 	 * @return XML of AdapterListen message
 	 * @since 2.2
 	 */
@@ -292,10 +287,8 @@ public class XmlCreator {
 	/**
 	 * Method create XML for GetAllDevices message
 	 *
-	 * @param bt
-	 *            userID of user
-	 * @param aid
-	 *            adapterID of actual adapter
+	 * @param bt  userID of user
+	 * @param aid adapterID of actual adapter
 	 * @return XML of GetAllDevices message
 	 * @since 2.2
 	 */
@@ -306,10 +299,8 @@ public class XmlCreator {
 	/**
 	 * Method create XML for getting uninitialized devices
 	 *
-	 * @param bt
-	 *            userID of user
-	 * @param aid
-	 *            adapterID of actual adapter
+	 * @param bt  userID of user
+	 * @param aid adapterID of actual adapter
 	 * @return XML of GetNewDevices message
 	 * @since 2.2
 	 */
@@ -320,15 +311,13 @@ public class XmlCreator {
 	/**
 	 * Method create XML of GetDevices message
 	 *
-	 * @param bt
-	 *            userID of user
-	 * @param devices
-	 *            devices with devices to update
+	 * @param bt      userID of user
+	 * @param devices devices with devices to update
 	 * @return update message
 	 * @since 2.2
 	 */
 	public static String createGetDevices(String bt, List<Device> devices) {
-		if(devices.size() < 1)
+		if (devices.size() < 1)
 			throw new IllegalArgumentException("Expected more than zero devices");
 		StringWriter writer = new StringWriter();
 		try {
@@ -380,22 +369,14 @@ public class XmlCreator {
 	/**
 	 * Method create XML for GetLog message
 	 *
-	 * @param bt
-	 *            userID of user
-	 * @param aid
-	 *            adapterID of actual adapter
-	 * @param did
-	 *            deviceID of wanted module
-	 * @param moduleType
-	 *            is type of sensor
-	 * @param from
-	 *            date in unix timestamp
-	 * @param to
-	 *            date in unix timestamp
-	 * @param funcType
-	 *            is aggregation function type {avg, median, ...}
-	 * @param interval
-	 *            is time value in seconds that represents nicely e.g. month, week, day, 10 hours, 1 hour, ...
+	 * @param bt         userID of user
+	 * @param aid        adapterID of actual adapter
+	 * @param did        deviceID of wanted module
+	 * @param moduleType is type of sensor
+	 * @param from       date in unix timestamp
+	 * @param to         date in unix timestamp
+	 * @param funcType   is aggregation function type {avg, median, ...}
+	 * @param interval   is time value in seconds that represents nicely e.g. month, week, day, 10 hours, 1 hour, ...
 	 * @return GetLog message
 	 * @since 2.2
 	 */
@@ -425,12 +406,9 @@ public class XmlCreator {
 	/**
 	 * Method create XML of SetDevs message. Almost all fields are optional
 	 *
-	 * @param bt
-	 *            userID of user
-	 * @param aid
-	 *            adapterID of actual adapter
-	 * @param devices
-	 *            with changed fields
+	 * @param bt      userID of user
+	 * @param aid     adapterID of actual adapter
+	 * @param devices with changed fields
 	 * @return Partial message
 	 * @since 2.2
 	 */
@@ -481,14 +459,10 @@ public class XmlCreator {
 	/**
 	 * New method create XML of SetDevs message with only one module in it. toSave parameter must by set properly.
 	 *
-	 * @param bt
-	 *            userID of user
-	 * @param aid
-	 *            adapterID of actual adapter
-	 * @param module
-	 *            to save
-	 * @param toSave
-	 *            ECO mode to save only wanted fields
+	 * @param bt     userID of user
+	 * @param aid    adapterID of actual adapter
+	 * @param module to save
+	 * @param toSave ECO mode to save only wanted fields
 	 * @return SetDevs message
 	 * @since 2.2
 	 */
@@ -539,12 +513,9 @@ public class XmlCreator {
 	/**
 	 * Method create XML for Switch message
 	 *
-	 * @param bt
-	 *            userID of user
-	 * @param aid
-	 *            adapterID of actual adapter
-	 * @param module
-	 *            to switch value
+	 * @param bt     userID of user
+	 * @param aid    adapterID of actual adapter
+	 * @param module to switch value
 	 * @return XML of Switch message
 	 * @since 2.2
 	 */
@@ -556,10 +527,8 @@ public class XmlCreator {
 	/**
 	 * Method create XML of DelDevice message
 	 *
-	 * @param bt
-	 *            userID of user
-	 * @param device
-	 *            to be removed
+	 * @param bt     userID of user
+	 * @param device to be removed
 	 * @return XML of DelDevice message
 	 * @since 2.2
 	 */
@@ -572,10 +541,8 @@ public class XmlCreator {
 	/**
 	 * Method create XML of AddRoom message
 	 *
-	 * @param bt
-	 *            userID of user
-	 * @param location
-	 *            to create
+	 * @param bt       userID of user
+	 * @param location to create
 	 * @return created message
 	 * @since 2.2
 	 */
@@ -587,12 +554,9 @@ public class XmlCreator {
 	/**
 	 * Method create XML of SetRooms message
 	 *
-	 * @param bt
-	 *            userID of user
-	 * @param aid
-	 *            adapterID of actual adapter
-	 * @param locations
-	 *            list of location object to update
+	 * @param bt        userID of user
+	 * @param aid       adapterID of actual adapter
+	 * @param locations list of location object to update
 	 * @return message SetRooms
 	 * @since 2.2
 	 */
@@ -626,10 +590,8 @@ public class XmlCreator {
 	/**
 	 * Method create XML of DelRoom message
 	 *
-	 * @param bt
-	 *            userID of user
-	 * @param lid
-	 *            locationID of location to delete
+	 * @param bt  userID of user
+	 * @param lid locationID of location to delete
 	 * @return DelRoom message
 	 * @since 2.2
 	 */
@@ -640,10 +602,8 @@ public class XmlCreator {
 	/**
 	 * Method create XML of GetRooms message
 	 *
-	 * @param bt
-	 *            userID of user
-	 * @param aid
-	 *            adapterID of actual adapter
+	 * @param bt  userID of user
+	 * @param aid adapterID of actual adapter
 	 * @return message GetRooms
 	 * @since 2.2
 	 */
@@ -656,12 +616,9 @@ public class XmlCreator {
 	/**
 	 * Method create XML for AddAcount message
 	 *
-	 * @param bt
-	 *            userID of user
-	 * @param aid
-	 *            adapterID of actual adapter
-	 * @param users
-	 *            map with User object and User.Role
+	 * @param bt    userID of user
+	 * @param aid   adapterID of actual adapter
+	 * @param users map with User object and User.Role
 	 * @return AddAcc message
 	 * @since 2.2
 	 */
@@ -672,12 +629,9 @@ public class XmlCreator {
 	/**
 	 * Method create XML for SetAcount message
 	 *
-	 * @param bt
-	 *            userID of user
-	 * @param aid
-	 *            adapterID of actual adapter
-	 * @param users
-	 *            map with User object and User.Role
+	 * @param bt    userID of user
+	 * @param aid   adapterID of actual adapter
+	 * @param users map with User object and User.Role
 	 * @return SetAcc message
 	 * @since 2.2
 	 */
@@ -688,12 +642,9 @@ public class XmlCreator {
 	/**
 	 * Method create XML for DelAcc message
 	 *
-	 * @param bt
-	 *            userID of user
-	 * @param aid
-	 *            adapterID of actual adapter
-	 * @param users
-	 *            list with Users
+	 * @param bt    userID of user
+	 * @param aid   adapterID of actual adapter
+	 * @param users list with Users
 	 * @return dellAcc message
 	 * @since 2.2
 	 */
@@ -723,10 +674,8 @@ public class XmlCreator {
 	/**
 	 * Method create XML for GetAccs message
 	 *
-	 * @param bt
-	 *            userID of user
-	 * @param aid
-	 *            adapterID of actual adapter
+	 * @param bt  userID of user
+	 * @param aid adapterID of actual adapter
 	 * @return GetAcc message
 	 * @since 2.2
 	 */
@@ -739,12 +688,9 @@ public class XmlCreator {
 	/**
 	 * Method create XML of SetTimeZone message
 	 *
-	 * @param bt
-	 *            userID of user
-	 * @param aid
-	 *            adapterID of actual adapter
-	 * @param offsetInMinutes
-	 *            difference to GMT (Xconstants.UTC+0)
+	 * @param bt              userID of user
+	 * @param aid             adapterID of actual adapter
+	 * @param offsetInMinutes difference to GMT (Xconstants.UTC+0)
 	 * @return SetTimeZone message
 	 * @since 2.2
 	 */
@@ -755,10 +701,8 @@ public class XmlCreator {
 	/**
 	 * Method create XML of GetTimeZone message
 	 *
-	 * @param bt
-	 *            userID of user
-	 * @param aid
-	 *            adapterID of actual adapter
+	 * @param bt  userID of user
+	 * @param aid adapterID of actual adapter
 	 * @return GetTimeZone message
 	 * @since 2.2
 	 */
@@ -771,10 +715,8 @@ public class XmlCreator {
 	/**
 	 * Method create XML of SetLocale message
 	 *
-	 * @param bt
-	 *            userID of user
-	 * @param locale
-	 *            of phone
+	 * @param bt     userID of user
+	 * @param locale of phone
 	 * @return message SetLocale
 	 * @since 2.2
 	 */
@@ -787,10 +729,8 @@ public class XmlCreator {
 	/**
 	 * Method create XML of DelXconstants.GCMID message (delete google cloud message id)
 	 *
-	 * @param userId
-	 *            of last logged user
-	 * @param gcmid
-	 *            id of google messaging
+	 * @param userId of last logged user
+	 * @param gcmid  id of google messaging
 	 * @return message GCMID
 	 * @since 2.2
 	 */
@@ -801,10 +741,8 @@ public class XmlCreator {
 	/**
 	 * Method create XML of SetXconstants.GCMID message
 	 *
-	 * @param bt
-	 *            userID of user logged in now
-	 * @param gcmid
-	 *            id of google messaging
+	 * @param bt    userID of user logged in now
+	 * @param gcmid id of google messaging
 	 * @return message SetXconstants.GCMID
 	 * @since 2.2
 	 */
@@ -815,8 +753,7 @@ public class XmlCreator {
 	/**
 	 * Method create XML of GetNotifs message
 	 *
-	 * @param bt
-	 *            SessionID of user
+	 * @param bt SessionID of user
 	 * @return message GetNotifs
 	 * @since 2.2
 	 */
@@ -827,10 +764,8 @@ public class XmlCreator {
 	/**
 	 * Method create XML of NotifRead message
 	 *
-	 * @param bt
-	 *            userID of user
-	 * @param mids
-	 *            list of gcmID of read notification
+	 * @param bt   userID of user
+	 * @param mids list of gcmID of read notification
 	 * @return message NotifRead
 	 * @since 2.2
 	 */
@@ -860,23 +795,22 @@ public class XmlCreator {
 
 	/**
 	 * Method create message for creating new rule or editing the old one
-	 * @param bt beeeon Token (session Id)
-	 * @param name of algorithm
-	 * @param aid adapter id
-	 * @param type of algorithm
-	 * @param modules
-	 *          list of modules in right position for algorithm
-	 * @param params
-	 *          list of strings with additional params for new rule
+	 *
+	 * @param bt      beeeon Token (session Id)
+	 * @param name    of algorithm
+	 * @param aid     adapter id
+	 * @param type    of algorithm
+	 * @param modules list of modules in right position for algorithm
+	 * @param params  list of strings with additional params for new rule
 	 * @return xml with add or set algorithm
 	 */
-	public static String createAddSetAlgor(String bt, String name, String algId, String aid, int type, List<String> modules, List<String> params, String regionId, Boolean state){
+	public static String createAddSetAlgor(String bt, String name, String algId, String aid, int type, List<String> modules, List<String> params, String regionId, Boolean state) {
 		StringWriter writer = new StringWriter();
 		try {
 			XmlSerializer serializer = beginXml(writer);
 
 			serializer.attribute(ns, Xconstants.BT, bt);
-			if(state == null)
+			if (state == null)
 				serializer.attribute(ns, Xconstants.STATE, ADDALG);
 			else {
 				serializer.attribute(ns, Xconstants.STATE, SETALG);
@@ -889,7 +823,7 @@ public class XmlCreator {
 			serializer.attribute(ns, Xconstants.ATYPE, Integer.toString(type));
 
 			int i = 1;
-			if(regionId != null && !regionId.isEmpty()){
+			if (regionId != null && !regionId.isEmpty()) {
 				serializer.startTag(ns, Xconstants.GEOFENCE);
 				serializer.attribute(ns, Xconstants.ID, regionId);
 				serializer.attribute(ns, Xconstants.POSITION, Integer.toString(i++));
@@ -898,7 +832,7 @@ public class XmlCreator {
 
 			i = 1;
 
-			for(String module : modules){
+			for (String module : modules) {
 				serializer.startTag(ns, Xconstants.MODULE);
 				String[] id_type = module.split(Module.ID_SEPARATOR);
 				serializer.attribute(ns, Xconstants.ID, id_type[0]);
@@ -908,7 +842,7 @@ public class XmlCreator {
 			}
 			i = 1;
 
-			for(String param : params) {
+			for (String param : params) {
 				serializer.startTag(ns, Xconstants.PARAM);
 				serializer.attribute(ns, Xconstants.POSITION, Integer.toString(i++));
 				serializer.text(param);
@@ -925,22 +859,23 @@ public class XmlCreator {
 		}
 	}
 
-	public static String createAddAlgor(String bt, String name, String aid, int type, List<String> modules, List<String> params, String regionId){
+	public static String createAddAlgor(String bt, String name, String aid, int type, List<String> modules, List<String> params, String regionId) {
 		return createAddSetAlgor(bt, name, null, aid, type, modules, params, regionId, null);
 	}
 
-	public static String createSetAlgor(String bt, String name, String algId, String aid, int type, boolean enable, List<String> modules, List<String>params, String regionId){
+	public static String createSetAlgor(String bt, String name, String algId, String aid, int type, boolean enable, List<String> modules, List<String> params, String regionId) {
 		return createAddSetAlgor(bt, name, algId, aid, type, modules, params, regionId, enable);
 	}
 
 	/**
 	 * Method return message with demands for specific rules
-	 * @param bt beeeon Token (session Id)
-	 * @param aid adapter id
+	 *
+	 * @param bt     beeeon Token (session Id)
+	 * @param aid    adapter id
 	 * @param algids algorithm id
 	 * @return xml with getAlgs message
 	 */
-	public static String createGetAlgs(String bt, String aid, ArrayList<String> algids){
+	public static String createGetAlgs(String bt, String aid, ArrayList<String> algids) {
 		StringWriter writer = new StringWriter();
 		try {
 			XmlSerializer serializer = beginXml(writer);
@@ -949,7 +884,7 @@ public class XmlCreator {
 			serializer.attribute(ns, Xconstants.STATE, GETALGS);
 			serializer.attribute(ns, Xconstants.AID, aid);
 
-			for(String algId : algids){
+			for (String algId : algids) {
 				serializer.startTag(ns, Xconstants.ALGORITHM);
 				serializer.attribute(ns, Xconstants.ID, algId);
 				serializer.endTag(ns, Xconstants.ALGORITHM);
@@ -965,20 +900,22 @@ public class XmlCreator {
 
 	/**
 	 * Method returns message with demands for all rules of user on specific adapter
+	 *
 	 * @param bt beeeon Token (session Id)
 	 * @return xlm with getAllAlgs message
 	 */
-	public static String createGetAllAlgs(String bt, String aid){
+	public static String createGetAllAlgs(String bt, String aid) {
 		return createComAttribsVariant(Xconstants.STATE, GETALLALGS, Xconstants.BT, bt, Xconstants.AID, aid);
 	}
 
 	/**
 	 * Method returns message with demands for delete specific rule
-	 * @param bt  beeeon Token (session Id)
+	 *
+	 * @param bt    beeeon Token (session Id)
 	 * @param algid adapter id
 	 * @return xml with delAlg message
 	 */
-	public static String createDelAlg(String bt, String algid){
+	public static String createDelAlg(String bt, String algid) {
 		return createComAttribsVariant(Xconstants.STATE, DELALG, Xconstants.BT, bt, Xconstants.ALGID, algid);
 	}
 
@@ -986,33 +923,36 @@ public class XmlCreator {
 
 	/**
 	 * Method create message for PassBorder event
-	 * @param bt  beeeon Token (session Id)
-	 * @param rid region id
+	 *
+	 * @param bt   beeeon Token (session Id)
+	 * @param rid  region id
 	 * @param type type of passing (in/out)
 	 * @return xml with passBorder message
 	 */
-	public static String createPassBorder(String bt, String rid, String type){
-		return  createComAttribsVariant(Xconstants.STATE, PASSBORDER, Xconstants.BT, bt, Xconstants.RID, rid, Xconstants.TYPE, type);
+	public static String createPassBorder(String bt, String rid, String type) {
+		return createComAttribsVariant(Xconstants.STATE, PASSBORDER, Xconstants.BT, bt, Xconstants.RID, rid, Xconstants.TYPE, type);
 	}
 
 	/**
 	 * Method create message for GetAllAchievements request
+	 *
 	 * @param bt
 	 * @param aid
 	 * @return
 	 */
-	public static String createGetAllAchievements(String bt, String aid){
+	public static String createGetAllAchievements(String bt, String aid) {
 		return createComAttribsVariant(Xconstants.STATE, GETALLACHIEVEMENTS, Xconstants.BT, bt, Xconstants.AID, aid);
 	}
 
 	/**
 	 * Method crete message for incrementing progress level of achievement
+	 *
 	 * @param bt
 	 * @param aid
 	 * @param achId
 	 * @return
 	 */
-	public static String createSetProgressLvl(String bt, String aid, String achId){
+	public static String createSetProgressLvl(String bt, String aid, String achId) {
 		return createComAttribsVariant(Xconstants.STATE, SETPROGRESSLVL, Xconstants.BT, bt, Xconstants.AID, aid, Xconstants.ID, achId);
 	}
 

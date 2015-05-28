@@ -19,9 +19,8 @@ public abstract class BaseUnit extends SettingsItem {
 
 		/**
 		 * Get short form for unit. For example for celsius you will get "°C".
-		 * 
-		 * @param context
-		 *            It can be app context
+		 *
+		 * @param context It can be app context
 		 * @return Short form for unit
 		 */
 		public String getStringUnit(Context context) {
@@ -30,9 +29,8 @@ public abstract class BaseUnit extends SettingsItem {
 
 		/**
 		 * Get full name for unit. For example for celsius you will get "Celsius".
-		 * 
-		 * @param context
-		 *            It can be app context
+		 *
+		 * @param context It can be app context
 		 * @return String which
 		 */
 		public String getStringName(Context context) {
@@ -41,9 +39,8 @@ public abstract class BaseUnit extends SettingsItem {
 
 		/**
 		 * Get full name with short form for unit. For example for celsius you will get "Celsius (°C)".
-		 * 
-		 * @param context
-		 *            It can be app context
+		 *
+		 * @param context It can be app context
 		 * @return String which
 		 */
 		public String getStringNameUnit(Context context) {

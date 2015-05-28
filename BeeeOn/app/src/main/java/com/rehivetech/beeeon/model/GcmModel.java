@@ -28,7 +28,9 @@ public class GcmModel extends BaseModel {
 	private final Persistence mPersistence;
 	private final User mUser;
 
-	/** Weak map for holding registered notification receivers */
+	/**
+	 * Weak map for holding registered notification receivers
+	 */
 	private final WeakHashMap<INotificationReceiver, Boolean> mNotificationReceivers = new WeakHashMap<INotificationReceiver, Boolean>();
 
 	public GcmModel(INetwork network, Context context, Persistence persistence, User user) {
@@ -63,9 +65,9 @@ public class GcmModel extends BaseModel {
 
 	/**
 	 * Gets the current registration ID for application on GCM service.
-	 * <p>
+	 * <p/>
 	 * If result is empty, the app needs to register.
-	 *
+	 * <p/>
 	 * This CAN'T be called on UI thread!
 	 *
 	 * @return registration ID, or empty string if there is no existing registration ID.
@@ -93,11 +95,11 @@ public class GcmModel extends BaseModel {
 
 	/**
 	 * Delete GCM ID from user
-	 *
+	 * <p/>
 	 * This CAN'T be called on UI thread!
 	 *
 	 * @param userId
-	 * @param gcmId - if null, then it will be loaded automatically by calling getGCMRegistrationId()
+	 * @param gcmId  - if null, then it will be loaded automatically by calling getGCMRegistrationId()
 	 */
 	public void deleteGCM(final String userId, final String gcmId) {
 		if (mNetwork instanceof Network) {
@@ -124,8 +126,7 @@ public class GcmModel extends BaseModel {
 	/**
 	 * Stores the registration ID and app versionCode in the application's {@code SharedPreferences}.
 	 *
-	 * @param gcmId
-	 *            registration ID
+	 * @param gcmId registration ID
 	 */
 	public void setGCMIdLocal(String gcmId) {
 		int appVersion = Utils.getAppVersion(mContext);
@@ -137,11 +138,10 @@ public class GcmModel extends BaseModel {
 
 	/**
 	 * Method set gcmID to server (applied only if there is some user)
-	 *
+	 * <p/>
 	 * This CAN'T be called on UI thread!
 	 *
-	 * @param gcmID
-	 *            to be set
+	 * @param gcmID to be set
 	 */
 	public void setGCMIdServer(String gcmID) {
 		Log.i(TAG, GcmHelper.TAG_GCM + "setGcmIdServer");
@@ -189,7 +189,7 @@ public class GcmModel extends BaseModel {
 
 	/**
 	 * Sends Notification to all registered receivers.
-	 *
+	 * <p/>
 	 * <br>
 	 * NOTE: This should be called by some GcmHandler only. Or maybe this should be inside of that class directly and
 	 * Controller should "redirect" (un)registering for calling it there too.
@@ -210,7 +210,7 @@ public class GcmModel extends BaseModel {
 
 	/**
 	 * Set notification as read on server side
-	 *
+	 * <p/>
 	 * This CAN'T be called on UI thread!
 	 *
 	 * @param msgId Notifiaction ID
@@ -223,11 +223,10 @@ public class GcmModel extends BaseModel {
 
 	/**
 	 * Set notifications as read on server side
-	 *
+	 * <p/>
 	 * This CAN'T be called on UI thread!
 	 *
-	 * @param msgIds
-	 *            Array of message IDs which will be marked as read
+	 * @param msgIds Array of message IDs which will be marked as read
 	 */
 	public void setNotificationRead(ArrayList<String> msgIds) {
 		mNetwork.NotificationsRead(msgIds);
@@ -236,11 +235,11 @@ public class GcmModel extends BaseModel {
 
 	/**
 	 * Get notification history
-	 *
+	 * <p/>
 	 * This CAN'T be called on UI thread!
 	 */
 	public List<VisibleNotification> getNotificationHistory() {
-		List<VisibleNotification> list =  mNetwork.getNotifications();
+		List<VisibleNotification> list = mNetwork.getNotifications();
 		Collections.sort(list);
 		return list;
 	}

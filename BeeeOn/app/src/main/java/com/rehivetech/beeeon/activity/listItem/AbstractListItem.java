@@ -21,12 +21,12 @@ public abstract class AbstractListItem implements ListItem {
 	public ListItemType getType() {
 		return mType;
 	}
-	
+
 	public void setMView(View view) {
 		mMView = view;
 	}
-	
-	public View getMView(){
+
+	public View getMView() {
 		return mMView;
 	}
 }

@@ -28,7 +28,7 @@ public class AddAdapterFragment extends TrackFragment {
 	private LinearLayout mLayout;
 	private View mView;
 	private Controller mController;
-	
+
 	private EditText mAdapterCode;
 	private EditText mAdapterName;
 
@@ -37,10 +37,10 @@ public class AddAdapterFragment extends TrackFragment {
 		super.onCreate(savedInstanceState);
 
 		// Get activity and controller
-		mActivity =  (AddAdapterActivity) getActivity();
+		mActivity = (AddAdapterActivity) getActivity();
 		mController = Controller.getInstance(mActivity);
 	}
-	
+
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		mView = inflater.inflate(R.layout.activity_add_adapter_activity_dialog, container, false);
@@ -48,23 +48,23 @@ public class AddAdapterFragment extends TrackFragment {
 		mLayout = (LinearLayout) mView.findViewById(R.id.container);
 
 		initLayout();
-		
+
 		return mView;
 	}
-	
+
 	@Override
 	public void setUserVisibleHint(boolean isVisibleToUser) {
-	    super.setUserVisibleHint(isVisibleToUser);
-	    if (isVisibleToUser) {
-	    	Log.d(TAG, "ADD ADAPTER fragment is visible");
-	    	mActivity.setBtnLastPage();
-	    	mActivity.setFragment(this);
-	    	InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+		super.setUserVisibleHint(isVisibleToUser);
+		if (isVisibleToUser) {
+			Log.d(TAG, "ADD ADAPTER fragment is visible");
+			mActivity.setBtnLastPage();
+			mActivity.setFragment(this);
+			InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
 			imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
-	    }
+		}
 
 	}
-	
+
 	private void initLayout() {
 		((ImageButton) mView.findViewById(R.id.addadapter_qrcode_button)).setOnClickListener(new OnClickListener() {
 			@Override
@@ -80,7 +80,7 @@ public class AddAdapterFragment extends TrackFragment {
 				}
 			}
 		});
-		
+
 		mAdapterCode = (EditText) mView.findViewById(R.id.addadapter_ser_num);
 		mAdapterName = (EditText) mView.findViewById(R.id.addadapter_text_name);
 	}
@@ -98,7 +98,7 @@ public class AddAdapterFragment extends TrackFragment {
 			//TODO: And click positive button
 		}
 	}
-	
+
 	public String getAdapterName() {
 		return mAdapterName.getText().toString();
 	}

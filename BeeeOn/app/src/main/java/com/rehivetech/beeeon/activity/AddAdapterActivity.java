@@ -28,79 +28,79 @@ import com.viewpagerindicator.CirclePageIndicator;
 
 public class AddAdapterActivity extends BaseApplicationActivity {
 	private static final String TAG = AddAdapterActivity.class.getSimpleName();
-	
+
 	private Controller mController;
-	
+
 	private AddAdapterFragmentAdapter mAdapter;
 	private ViewPager mPager;
 	private CirclePageIndicator mIndicator;
-	
+
 	private AddAdapterFragment mFragment;
-	
+
 	private Button mSkip;
 	private Button mCancel;
 	private Button mNext;
-	
+
 
 	private ProgressDialog mProgress;
-	
-	private Activity mActivity;
-    private Toolbar mToolbar;
 
-    @Override
+	private Activity mActivity;
+	private Toolbar mToolbar;
+
+	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_intro);
 
-        mToolbar = (Toolbar) findViewById(R.id.toolbar);
-        if (mToolbar != null) {
-            mToolbar.setTitle(R.string.title_activity_add_adapter);
-            setSupportActionBar(mToolbar);
-        }
-        getSupportActionBar().setHomeButtonEnabled(true);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+		mToolbar = (Toolbar) findViewById(R.id.toolbar);
+		if (mToolbar != null) {
+			mToolbar.setTitle(R.string.title_activity_add_adapter);
+			setSupportActionBar(mToolbar);
+		}
+		getSupportActionBar().setHomeButtonEnabled(true);
+		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 		// Get controller
 		mController = Controller.getInstance(this);
-		
+
 		mActivity = this;
-		
-		mAdapter = new AddAdapterFragmentAdapter(getSupportFragmentManager(),mActivity);
+
+		mAdapter = new AddAdapterFragmentAdapter(getSupportFragmentManager(), mActivity);
 
 
-		mPager = (ViewPager)findViewById(R.id.intro_pager);
+		mPager = (ViewPager) findViewById(R.id.intro_pager);
 		mPager.setAdapter(mAdapter);
 		mPager.setOffscreenPageLimit(mAdapter.getCount());
-		
-		mIndicator = (CirclePageIndicator)findViewById(R.id.intro_indicator);
+
+		mIndicator = (CirclePageIndicator) findViewById(R.id.intro_indicator);
 		mIndicator.setViewPager(mPager);
-		
+
 		mIndicator.setPageColor(0x88FFFFFF);
 		mIndicator.setFillColor(0xFFFFFFFF);
 		mIndicator.setStrokeColor(0x88FFFFFF);
-		
+
 		initButtons();
-		
+
 		// Prepare progress dialog
 		mProgress = new ProgressDialog(mActivity);
 		mProgress.setMessage(getString(R.string.progress_saving_data));
 		mProgress.setCancelable(false);
 		mProgress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
 	}
-	
-	
+
+
 	private void initButtons() {
 		mSkip = (Button) findViewById(R.id.add_adapter_skip);
 		mCancel = (Button) findViewById(R.id.add_adapter_cancel);
 		mNext = (Button) findViewById(R.id.add_adapter_next);
-		
+
 		mSkip.setOnClickListener(new OnClickListener() {
-			
+
 			@Override
 			public void onClick(View v) {
-				mPager.setCurrentItem(mAdapter.getCount()-1);
+				mPager.setCurrentItem(mAdapter.getCount() - 1);
 			}
 		});
-		
+
 		mCancel.setOnClickListener(new OnClickListener() {
 
 			@Override
@@ -115,7 +115,7 @@ public class AddAdapterActivity extends BaseApplicationActivity {
 				finish();
 			}
 		});
-		
+
 		mNext.setOnClickListener(new OnClickListener() {
 
 			@Override
@@ -138,10 +138,10 @@ public class AddAdapterActivity extends BaseApplicationActivity {
 				}
 			}
 		});
-		
-		
+
+
 	}
-	
+
 	public void setBtnLastPage() {
 		mSkip.setVisibility(View.INVISIBLE);
 		mNext.setText(mActivity.getString(R.string.tutorial_add));
@@ -151,14 +151,14 @@ public class AddAdapterActivity extends BaseApplicationActivity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 
 		switch (item.getItemId()) {
-		case android.R.id.home:
-			SharedPreferences prefs = mController.getUserSettings();
-			if (prefs != null) {
-				prefs.edit().putBoolean(Constants.PERSISTENCE_PREF_IGNORE_NO_ADAPTER, true).apply();
-			}
-			setResult(Constants.ADD_ADAPTER_CANCELED);
-			finish();
-			break;
+			case android.R.id.home:
+				SharedPreferences prefs = mController.getUserSettings();
+				if (prefs != null) {
+					prefs.edit().putBoolean(Constants.PERSISTENCE_PREF_IGNORE_NO_ADAPTER, true).apply();
+				}
+				setResult(Constants.ADD_ADAPTER_CANCELED);
+				finish();
+				break;
 		}
 		return super.onOptionsItemSelected(item);
 	}
@@ -173,7 +173,7 @@ public class AddAdapterActivity extends BaseApplicationActivity {
 	public void setFragment(AddAdapterFragment addAdapterFragment) {
 		mFragment = addAdapterFragment;
 	}
-	
+
 	public void doRegisterAdapterTask(RegisterAdapterPair pair) {
 		RegisterAdapterTask registerAdapterTask = new RegisterAdapterTask(this);
 
@@ -197,5 +197,5 @@ public class AddAdapterActivity extends BaseApplicationActivity {
 		// Execute and remember task so it can be stopped automatically
 		callbackTaskManager.executeTask(registerAdapterTask, pair);
 	}
-	
+
 }

@@ -10,18 +10,20 @@ public interface SpinnerItem {
 	}
 
 	public void setDropDownView(View view);
+
 	public void setView(View view);
 
 	public Object getObject();
 
 	public int getDropDownLayout();
+
 	public int getLayout();
 
 	public String getId();
 
 	public SpinnerItemType getType();
-	
+
 	public void setIsSelected();
-	
+
 	public void setNotSelected();
 }

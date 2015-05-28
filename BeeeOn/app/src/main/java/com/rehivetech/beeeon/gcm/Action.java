@@ -18,7 +18,8 @@ import java.util.List;
  */
 public final class Action {
 
-	private Action(){};
+	private Action() {
+	}
 
 	@Nullable
 	static public void getSensorDetailIntent(Context context, int adapterId, String sensorId, int type) {

@@ -81,7 +81,7 @@ public class UsersModel extends BaseModel {
 
 	/**
 	 * Deletes user from adapter from server and from list of users.
-	 *
+	 * <p/>
 	 * This CAN'T be called on UI thread!
 	 *
 	 * @param adapterId
@@ -100,7 +100,7 @@ public class UsersModel extends BaseModel {
 
 	/**
 	 * Create and add new location to server and to list of locations.
-	 *
+	 * <p/>
 	 * This CAN'T be called on UI thread!
 	 *
 	 * @param adapterId

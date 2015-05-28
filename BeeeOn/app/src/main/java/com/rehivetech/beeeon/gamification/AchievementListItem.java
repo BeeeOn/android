@@ -46,7 +46,7 @@ public class AchievementListItem implements IIdentifier, Comparable<AchievementL
 		mTotalProgress = totalProgress;
 		mCurrentProgress = currentProgress;
 		mDateOther = dateOther;
-		mDate = date.length() > 0 ? Long.parseLong(date)*1000 : 0;
+		mDate = date.length() > 0 ? Long.parseLong(date) * 1000 : 0;
 		mVisible = visible.equals("t");
 	}
 
@@ -56,7 +56,7 @@ public class AchievementListItem implements IIdentifier, Comparable<AchievementL
 
 	public boolean updateProgress() {
 		mCurrentProgress++;
-		if(mCurrentProgress == mTotalProgress) {
+		if (mCurrentProgress == mTotalProgress) {
 			mDate = System.currentTimeMillis();
 			return true;
 		}
@@ -64,7 +64,7 @@ public class AchievementListItem implements IIdentifier, Comparable<AchievementL
 	}
 
 	public void setCompleted(long time) {
-		if(!isDone()) {
+		if (!isDone()) {
 			mDate = time;
 			mCurrentProgress = mTotalProgress;
 		}
@@ -73,34 +73,78 @@ public class AchievementListItem implements IIdentifier, Comparable<AchievementL
 	public void recountParentValues() {
 		mLevel = 1;
 		AchievementListItem parent = mParent;
-		while(parent != null) {
+		while (parent != null) {
 			mLevel++;
 			parent = parent.getParentItem();
 		}
 	}
 
 	@Override
-	public String getId() {return mAid;}
-	public int getPoints() {return mPoints;}
-	public int getLevel() { return mLevel; }
-	public String getParent() {return mPid;}
-	public String getCategory() {return mCategory;}
-	public int getLevelCount() { return isDone() ? mLevel : 1; }
-	public String getName() { return mContext == null ? "" : mName; }
-	public String getDescription() { return mContext == null ? "" : mDescription; }
-	public AchievementListItem getParentItem() { return mParent; }
+	public String getId() {
+		return mAid;
+	}
+
+	public int getPoints() {
+		return mPoints;
+	}
+
+	public int getLevel() {
+		return mLevel;
+	}
+
+	public String getParent() {
+		return mPid;
+	}
+
+	public String getCategory() {
+		return mCategory;
+	}
+
+	public int getLevelCount() {
+		return isDone() ? mLevel : 1;
+	}
+
+	public String getName() {
+		return mContext == null ? "" : mName;
+	}
+
+	public String getDescription() {
+		return mContext == null ? "" : mDescription;
+	}
+
+	public AchievementListItem getParentItem() {
+		return mParent;
+	}
+
 	public String getProgressString() {
-		if(mTotalProgress == 1) return "";
+		if (mTotalProgress == 1) return "";
 		return mCurrentProgress + "/" + mTotalProgress;
 	}
-	public int getTotalProgress() { return mTotalProgress; }
-	public int getCurrentProgress() { return mCurrentProgress; }
 
-	public boolean isVisible() { return mVisible; }
-	public boolean isDone() {return mCurrentProgress >= mTotalProgress;}
+	public int getTotalProgress() {
+		return mTotalProgress;
+	}
 
-	public void setParent(AchievementListItem parent) { mParent = parent; }
-	public void setAid(String aid) { mAdapter = aid; }
+	public int getCurrentProgress() {
+		return mCurrentProgress;
+	}
+
+	public boolean isVisible() {
+		return mVisible;
+	}
+
+	public boolean isDone() {
+		return mCurrentProgress >= mTotalProgress;
+	}
+
+	public void setParent(AchievementListItem parent) {
+		mParent = parent;
+	}
+
+	public void setAid(String aid) {
+		mAdapter = aid;
+	}
+
 	public void setContext(Context c) {
 		mContext = c;
 		mName = mContext.getString(mContext.getResources().getIdentifier("name_" + mAid, "string", mContext.getPackageName()));
@@ -115,30 +159,30 @@ public class AchievementListItem implements IIdentifier, Comparable<AchievementL
 		Calendar today = Calendar.getInstance();
 		Calendar compare = Calendar.getInstance();
 		compare.setTimeInMillis(mDate);
-		if(today.get(Calendar.YEAR) == compare.get(Calendar.YEAR)) {
-			if(today.get(Calendar.DAY_OF_YEAR) == compare.get(Calendar.DAY_OF_YEAR))
+		if (today.get(Calendar.YEAR) == compare.get(Calendar.YEAR)) {
+			if (today.get(Calendar.DAY_OF_YEAR) == compare.get(Calendar.DAY_OF_YEAR))
 				return mContext.getString(R.string.date_today);
 			compare.add(Calendar.DAY_OF_YEAR, 1);
-			if(today.get(Calendar.DAY_OF_YEAR) == compare.get(Calendar.DAY_OF_YEAR))
+			if (today.get(Calendar.DAY_OF_YEAR) == compare.get(Calendar.DAY_OF_YEAR))
 				return mContext.getString(R.string.date_yesterday);
 		}
 		return getTime();
 	}
 
-	/** Sorts achievements by date.
+	/**
+	 * Sorts achievements by date.
 	 * Sorts list of achievements by date from oldest to newest
 	 * and takes the not-completed ones to end of that list.
 	 */
 	@Override
 	public int compareTo(@NonNull AchievementListItem another) {
-		if(isDone()) {
-			if(!another.isDone())	// Another isn't complete -> to top
+		if (isDone()) {
+			if (!another.isDone())    // Another isn't complete -> to top
 				return -1;
 			else
 				return another.getTime().compareTo(getTime());
-		}
-		else {
-			if(another.isDone()) return 1;
+		} else {
+			if (another.isDone()) return 1;
 			else return isVisible() ? -1 : 1;
 		}
 
@@ -161,7 +205,7 @@ public class AchievementListItem implements IIdentifier, Comparable<AchievementL
 		dest.writeInt(mCurrentProgress);
 	}
 
-	public void readFromParcel(Parcel in){
+	public void readFromParcel(Parcel in) {
 		mAid = in.readString();
 		mPid = in.readString();
 		mCategory = in.readString();

@@ -34,7 +34,7 @@ import java.util.List;
 /**
  * @author mlyko
  */
-public class WidgetClockFragment extends WidgetConfigurationFragment implements ILocationPickerDialogListener{
+public class WidgetClockFragment extends WidgetConfigurationFragment implements ILocationPickerDialogListener {
 	private static final String TAG = WidgetClockFragment.class.getSimpleName();
 	private static final int REQUEST_LOCATION_DIALOG = 1;
 
@@ -52,7 +52,7 @@ public class WidgetClockFragment extends WidgetConfigurationFragment implements 
 	private Handler mHandler;
 	private WeatherProvider.City mWeatherCity;
 
-	public WidgetClockFragment(){
+	public WidgetClockFragment() {
 		mHandler = new Handler();
 	}
 
@@ -71,11 +71,11 @@ public class WidgetClockFragment extends WidgetConfigurationFragment implements 
 		mWeatherProvider = new WeatherProvider(mActivity);
 	}
 
-	protected int getFragmentLayoutResource(){
+	protected int getFragmentLayoutResource() {
 		return R.layout.fragment_widget_clock;
 	}
 
-	protected int getFragmentTitle(){
+	protected int getFragmentTitle() {
 		return R.string.widget_configuration_widget_clock;
 	}
 
@@ -90,7 +90,7 @@ public class WidgetClockFragment extends WidgetConfigurationFragment implements 
 		LinearLayout.LayoutParams spinnerLayoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
 		spinnerLayoutParams.setMargins(0, 0, 0, (int) mActivity.getResources().getDimension(R.dimen.widget_margin));
 
-		for(WidgetModulePersistence wDev : mWidgetModules){
+		for (WidgetModulePersistence wDev : mWidgetModules) {
 			Spinner moduleSpinner = new Spinner(mActivity);
 			mModuleSpinnersWrapper.addView(moduleSpinner, spinnerLayoutParams);
 			mModuleSpinners.add(moduleSpinner);
@@ -141,32 +141,31 @@ public class WidgetClockFragment extends WidgetConfigurationFragment implements 
 
 	@Override
 	public void onPositiveButtonClicked(int var1, EditText city, final LocationPickerDialogFragment dialog) {
-		if(city.getText().length() == 0){
+		if (city.getText().length() == 0) {
 			city.setError(mActivity.getString(R.string.place_must_be_filled));
 			return;
 		}
 
 		// show dialog of loading
-		if(mActivity.getDialog() != null) mActivity.getDialog(mActivity.getString(R.string.progress_checking_location)).show();
+		if (mActivity.getDialog() != null) mActivity.getDialog(mActivity.getString(R.string.progress_checking_location)).show();
 
 		final String cityInput = city.getText().toString();
 		// load city data in background
-		new Thread(){
-			public void run(){
+		new Thread() {
+			public void run() {
 				final JSONObject data = mWeatherProvider.getLocations(cityInput);
-				if(data == null){
-					mHandler.post(new Runnable(){
-						public void run(){
+				if (data == null) {
+					mHandler.post(new Runnable() {
+						public void run() {
 							loadingCityFail();
 						}
 					});
-				}
-				else{
+				} else {
 					final List<WeatherProvider.City> foundCities = mWeatherProvider.parseCities(data);
-					mHandler.post(new Runnable(){
-						public void run(){
+					mHandler.post(new Runnable() {
+						public void run() {
 							WeatherProvider.City city = foundCities.get(0);
-							if(city == null){
+							if (city == null) {
 								loadingCityFail();
 								return;
 							}
@@ -178,20 +177,20 @@ public class WidgetClockFragment extends WidgetConfigurationFragment implements 
 		}.start();
 	}
 
-	private void loadingCityFail(){
+	private void loadingCityFail() {
 		Toast.makeText(mActivity, mActivity.getString(R.string.weather_place_not_found), Toast.LENGTH_LONG).show();
-		if(mActivity.getDialog() != null) mActivity.getDialog().dismiss();
+		if (mActivity.getDialog() != null) mActivity.getDialog().dismiss();
 	}
 
-	private void loadingCitySuccess(WeatherProvider.City city, LocationPickerDialogFragment dialog){
+	private void loadingCitySuccess(WeatherProvider.City city, LocationPickerDialogFragment dialog) {
 		mWeatherCity = city;
 		// setup city label
 		mCityLabel.setText(city.name);
 
 		// hide location picker dialog
-		if(dialog != null) dialog.dismiss();
+		if (dialog != null) dialog.dismiss();
 		// hide progress dialog
-		if(mActivity.getDialog() != null) mActivity.getDialog().dismiss();
+		if (mActivity.getDialog() != null) mActivity.getDialog().dismiss();
 	}
 
 	@Override
@@ -205,15 +204,13 @@ public class WidgetClockFragment extends WidgetConfigurationFragment implements 
 		updateIntervalLayout(mWidgetUpdateSeekBar);
 
 		// setup weather location if provided
-		if(!mWidgetData.weather.cityName.isEmpty()) mCityLabel.setText(mWidgetData.weather.cityName);
+		if (!mWidgetData.weather.cityName.isEmpty()) mCityLabel.setText(mWidgetData.weather.cityName);
 
-		if(mWidgetData.settings.isColorSchemeEqual(R.color.white, R.color.white)){
+		if (mWidgetData.settings.isColorSchemeEqual(R.color.white, R.color.white)) {
 			mColorSchemeGroup.check(R.id.scheme_white);
-		}
-		else if(mWidgetData.settings.isColorSchemeEqual(R.color.white, R.color.white)){
+		} else if (mWidgetData.settings.isColorSchemeEqual(R.color.white, R.color.white)) {
 			mColorSchemeGroup.check(R.id.scheme_pink_cyan);
-		}
-		else if(mWidgetData.settings.isColorSchemeEqual(R.color.black, R.color.black)){
+		} else if (mWidgetData.settings.isColorSchemeEqual(R.color.black, R.color.black)) {
 			mColorSchemeGroup.check(R.id.scheme_black);
 		}
 	}
@@ -228,12 +225,12 @@ public class WidgetClockFragment extends WidgetConfigurationFragment implements 
 		dataAdapter.setDropDownViewResource(R.layout.custom_spinner2_dropdown_item);
 
 		int index = 0;
-		for(WidgetModulePersistence wDev : mWidgetModules){
+		for (WidgetModulePersistence wDev : mWidgetModules) {
 			Spinner spinner = mModuleSpinners.get(index);
 			spinner.setAdapter(dataAdapter);
 
 			int foundIndex = Utils.getObjectIndexFromList(wDev.getId(), mModules);
-			if(foundIndex != -1) spinner.setSelection(foundIndex);
+			if (foundIndex != -1) spinner.setSelection(foundIndex);
 
 			index++;
 		}
@@ -248,7 +245,7 @@ public class WidgetClockFragment extends WidgetConfigurationFragment implements 
 		}
 
 		int index = 0;
-		for(WidgetModulePersistence wDev : mWidgetModules) {
+		for (WidgetModulePersistence wDev : mWidgetModules) {
 			Spinner spinner = mModuleSpinners.get(index);
 
 			Module module = (Module) spinner.getSelectedItem();
@@ -258,17 +255,16 @@ public class WidgetClockFragment extends WidgetConfigurationFragment implements 
 			}
 
 			Location location = Utils.getFromList(module.getDevice().getLocationId(), mLocations);
-			if(location != null) {
+			if (location != null) {
 				wDev.configure(module, adapter, location);
-			}
-			else{
+			} else {
 				wDev.configure(module, adapter);
 			}
 
 			index++;
 		}
 
-		if(mWeatherCity != null){
+		if (mWeatherCity != null) {
 			// setup weather persistence
 			mWidgetData.weather.id = mWeatherCity.id;
 			mWidgetData.weather.cityName = mWeatherCity.name;

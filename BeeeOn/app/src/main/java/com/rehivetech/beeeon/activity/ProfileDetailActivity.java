@@ -133,7 +133,7 @@ public class ProfileDetailActivity extends BaseApplicationActivity implements Ob
 		mProgress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
 
 		mAchievementList = AchievementList.getInstance(mContext);
-		if(mAchievementList.isDownloaded())
+		if (mAchievementList.isDownloaded())
 			redrawCategories();
 		else {
 			mProgress.setMessageResource(R.string.progress_loading_achievement);
@@ -170,7 +170,7 @@ public class ProfileDetailActivity extends BaseApplicationActivity implements Ob
 		userImage.setImageBitmap(picture);
 
 		//GUI components for social networks accounts
-		if(unconnectedNetworks > 0) {// more known networks to by added
+		if (unconnectedNetworks > 0) {// more known networks to by added
 			mMoreAdd.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
@@ -178,13 +178,11 @@ public class ProfileDetailActivity extends BaseApplicationActivity implements Ob
 				}
 			});
 			mMoreAdd.setVisibility(View.VISIBLE);
-		}
-		else
+		} else
 			mMoreAdd.setVisibility(View.INVISIBLE);
-		if(unconnectedNetworks != totalNetworks) { //at least one network is added
+		if (unconnectedNetworks != totalNetworks) { //at least one network is added
 			mMoreArrow.setVisibility(View.VISIBLE);
-		}
-		else
+		} else
 			mMoreArrow.setVisibility(View.INVISIBLE);
 		mMoreArrow.setOnClickListener(new View.OnClickListener() {
 			@Override
@@ -210,27 +208,27 @@ public class ProfileDetailActivity extends BaseApplicationActivity implements Ob
 			case android.R.id.home:
 				finish();
 				return true;
-			default: return super.onOptionsItemSelected(item);
+			default:
+				return super.onOptionsItemSelected(item);
 		}
 	}
 
 	private void setMoreButtonVisibility() {
-		if(unconnectedNetworks == totalNetworks) { //none social network is paired
+		if (unconnectedNetworks == totalNetworks) { //none social network is paired
 			mMoreArrow.setVisibility(View.INVISIBLE);
 			mMoreVisible.setVisibility(View.INVISIBLE);
-		}
-		else {	//at least one network is connected, allow to show the profile
+		} else {    //at least one network is connected, allow to show the profile
 			if (showMoreAccounts) { // SHOW info
 				// DOWNLOAD data
-				if(mFb.isPaired()) mFb.downloadUserData();
-				if(mTw.isPaired()) mTw.downloadUserData();
-				if(mVk.isPaired()) mVk.downloadUserData();
-				mMoreLayout.getLayoutParams().height = (mDisplayPixel*60)+((totalNetworks-unconnectedNetworks)*(mDisplayPixel*65));
+				if (mFb.isPaired()) mFb.downloadUserData();
+				if (mTw.isPaired()) mTw.downloadUserData();
+				if (mVk.isPaired()) mVk.downloadUserData();
+				mMoreLayout.getLayoutParams().height = (mDisplayPixel * 60) + ((totalNetworks - unconnectedNetworks) * (mDisplayPixel * 65));
 				mMoreLayout.requestLayout();
 				mMoreVisible.setVisibility(View.VISIBLE);
 				rotate(90);
 			} else { // HIDE info
-				mMoreLayout.getLayoutParams().height = 60*mDisplayPixel;
+				mMoreLayout.getLayoutParams().height = 60 * mDisplayPixel;
 				mMoreLayout.requestLayout();
 				mMoreVisible.setVisibility(View.INVISIBLE);
 				rotate(0);
@@ -252,35 +250,32 @@ public class ProfileDetailActivity extends BaseApplicationActivity implements Ob
 		mFb.addObserver(this);
 		mTw.addObserver(this);
 		mVk.addObserver(this);
-		if(!mFb.isPaired()) {
+		if (!mFb.isPaired()) {
 			fbLayout.setVisibility(View.GONE);
 			fbPar.height = 0;
 			unconnectedNetworks++;
-		}
-		else {
+		} else {
 			fbLayout.setVisibility(View.VISIBLE);
-			fbPar.height = 60*mDisplayPixel;
+			fbPar.height = 60 * mDisplayPixel;
 			setOnClickLogout(mFb, mFbName);
 		}
-		if(!mTw.isPaired()) {
+		if (!mTw.isPaired()) {
 			twLayout.setVisibility(View.GONE);
 			twPar.height = 0;
 			unconnectedNetworks++;
-		}
-		else {
+		} else {
 			twLayout.setVisibility(View.VISIBLE);
-			twPar.height = 60*mDisplayPixel;
-			if(mTw.getUserName() != null ) setOnClickLogout(mTw, mTwName);
+			twPar.height = 60 * mDisplayPixel;
+			if (mTw.getUserName() != null) setOnClickLogout(mTw, mTwName);
 			else setOnClickLogin(mTw, mTwName);
 		}
-		if(!mVk.isPaired()) {
+		if (!mVk.isPaired()) {
 			vkLayout.setVisibility(View.GONE);
 			vkPar.height = 0;
 			unconnectedNetworks++;
-		}
-		else {
+		} else {
 			vkLayout.setVisibility(View.VISIBLE);
-			vkPar.height = 60*mDisplayPixel;
+			vkPar.height = 60 * mDisplayPixel;
 			setOnClickLogout(mVk, mVkName);
 		}
 	}
@@ -300,7 +295,7 @@ public class ProfileDetailActivity extends BaseApplicationActivity implements Ob
 	}
 
 	private void setOnClickLogout(final BeeeOnSocialNetwork network, final TextView textView) {
-		if(!network.isPaired() || network.getUserName() == null) return;
+		if (!network.isPaired() || network.getUserName() == null) return;
 		textView.setText(network.getUserName());
 		textView.setOnLongClickListener(new View.OnLongClickListener() {
 			@Override
@@ -362,25 +357,23 @@ public class ProfileDetailActivity extends BaseApplicationActivity implements Ob
 
 	@Override
 	public void update(Observable observable, Object o) {
-		Log.d(TAG, "Newly downloaded data: "+o.toString());
-		if(o.toString().equals("facebook"))
+		Log.d(TAG, "Newly downloaded data: " + o.toString());
+		if (o.toString().equals("facebook"))
 			setOnClickLogout(mFb, mFbName);
-		else if(o.toString().equals("vkontakte"))
+		else if (o.toString().equals("vkontakte"))
 			setOnClickLogout(mVk, mVkName);
-		else if(o.toString().equals("login")) {
+		else if (o.toString().equals("login")) {
 			setNetworksView();
 			setMoreButtonVisibility();
 			Log.d(TAG, "login");
 			redrawCategories();
-		}
-		else if(o.toString().equals("not_logged"))
+		} else if (o.toString().equals("not_logged"))
 			setOnClickLogin(mFb, mFbName);
-		else if(o.toString().equals("connect_error")) {
-			if(mFb.isPaired()) mFbName.setText(getResources().getString(R.string.social_no_connection));
-			if(mTw.isPaired()) mTwName.setText(getResources().getString(R.string.social_no_connection));
-			if(mVk.isPaired()) mVkName.setText(getResources().getString(R.string.social_no_connection));
-		}
-		else if(o.toString().equals("achievements")) {
+		else if (o.toString().equals("connect_error")) {
+			if (mFb.isPaired()) mFbName.setText(getResources().getString(R.string.social_no_connection));
+			if (mTw.isPaired()) mTwName.setText(getResources().getString(R.string.social_no_connection));
+			if (mVk.isPaired()) mVkName.setText(getResources().getString(R.string.social_no_connection));
+		} else if (o.toString().equals("achievements")) {
 			mProgress.dismiss();
 			redrawCategories();
 		}

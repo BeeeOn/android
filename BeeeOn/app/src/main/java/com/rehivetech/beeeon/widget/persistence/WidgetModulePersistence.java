@@ -85,7 +85,7 @@ public class WidgetModulePersistence extends WidgetBeeeOnPersistence {
 		moduleValue = BaseValue.createFromModuleType(mModuleType);
 
 		// we don't set value when creating new widget
-		if(!rawValue.isEmpty()) {
+		if (!rawValue.isEmpty()) {
 			moduleValue.setValue(rawValue);
 		}
 	}
@@ -115,7 +115,7 @@ public class WidgetModulePersistence extends WidgetBeeeOnPersistence {
 		moduleValue.setValue(module.getValue().getRawValue());
 
 		// when user is logged in, save last known value as cached value
-		if(mUnitsHelper != null){
+		if (mUnitsHelper != null) {
 			cachedValue = mUnitsHelper.getStringValue(module.getValue());
 			cachedUnit = mUnitsHelper.getStringUnit(module.getValue());
 		}
@@ -131,7 +131,7 @@ public class WidgetModulePersistence extends WidgetBeeeOnPersistence {
 	public void configure(Object obj1, Object obj2, Object obj3) {
 		configure(obj1, obj2);
 
-		if(!(obj3 instanceof Location)) return;
+		if (!(obj3 instanceof Location)) return;
 		Location location = (Location) obj3;
 
 		locationId = location.getId();
@@ -181,21 +181,20 @@ public class WidgetModulePersistence extends WidgetBeeeOnPersistence {
 	@Override
 	public void renderView(ViewsBuilder parentBuilder, boolean isCached, String cachedString) {
 		super.renderView(parentBuilder, isCached, cachedString);
-		if(mBoundView == 0) return;
+		if (mBoundView == 0) return;
 
 		Controller controller = Controller.getInstance(mContext);
 
-		if(getType().isActor() && controller.isUserAllowed(mUserRole) && moduleValue instanceof BooleanValue){
+		if (getType().isActor() && controller.isUserAllowed(mUserRole) && moduleValue instanceof BooleanValue) {
 			containerType = SWITCHCOMPAT;
 
 			mBuilder.loadRootView(R.layout.widget_include_switchcompat);
 			mBuilder.setOnClickListener(R.id.widget_switchcompat, WidgetService.getPendingIntentActorChangeRequest(mContext, mWidgetId, getId(), adapterId));
 			moduleValueChecked = ((BooleanValue) moduleValue).isActiveValue(BooleanValue.TRUE);
 
-			if(mIsCached){
+			if (mIsCached) {
 				setSwitchDisabled(true, false);
-			}
-			else {
+			} else {
 				if (moduleValueDisabled) {
 					setSwitchDisabled(true);
 				} else {
@@ -204,19 +203,17 @@ public class WidgetModulePersistence extends WidgetBeeeOnPersistence {
 					setSwitchChecked(isOn);
 				}
 			}
-		}
-		else {
+		} else {
 			containerType = VALUE_UNIT;
 			mBuilder.loadRootView(R.layout.widget_include_value_unit);
 
 			// if location set, show the icon
-			if(locationIcon > 0) mBuilder.setImage(R.id.icon, locationIcon);
+			if (locationIcon > 0) mBuilder.setImage(R.id.icon, locationIcon);
 
-			if(mIsCached) {
+			if (mIsCached) {
 				mBuilder.setTextViewText(R.id.value, getValue());
 				mBuilder.setTextViewText(R.id.unit, getUnit() + cachedString);
-			}
-			else {
+			} else {
 				mBuilder.setTextViewText(R.id.value, getValue());
 				mBuilder.setTextViewText(R.id.unit, getUnit());
 			}
@@ -234,19 +231,21 @@ public class WidgetModulePersistence extends WidgetBeeeOnPersistence {
 	// ----------------------------------------------------------- //
 	// ---------------------- GUI CHANGERS ----------------------- //
 	// ----------------------------------------------------------- //
+
 	/**
 	 * Setup size for value and unit id SP units
+	 *
 	 * @param dimensionResource
 	 */
-	public void setValueUnitSize(int dimensionResource){
-		if(containerType != VALUE_UNIT) return;
+	public void setValueUnitSize(int dimensionResource) {
+		if (containerType != VALUE_UNIT) return;
 
 		mBuilder.setTextViewTextSize(R.id.value, dimensionResource);
 		mBuilder.setTextViewTextSize(R.id.unit, dimensionResource);
 	}
 
-	public void setValueUnitColor(int colorResource){
-		if(containerType != VALUE_UNIT) return;
+	public void setValueUnitColor(int colorResource) {
+		if (containerType != VALUE_UNIT) return;
 
 		mBuilder.setTextViewColor(R.id.value, colorResource);
 		mBuilder.setTextViewColor(R.id.unit, colorResource);
@@ -254,11 +253,12 @@ public class WidgetModulePersistence extends WidgetBeeeOnPersistence {
 
 	/**
 	 * Sets widget switchcompat (imageview)
+	 *
 	 * @param state
 	 */
-	public void setSwitchChecked(boolean state){
+	public void setSwitchChecked(boolean state) {
 		// if this cannot be switched
-		if(containerType != SWITCHCOMPAT || !(moduleValue instanceof BooleanValue)) return;
+		if (containerType != SWITCHCOMPAT || !(moduleValue instanceof BooleanValue)) return;
 
 		mBuilder.setSwitchChecked(state);
 		moduleValueChecked = state;
@@ -266,27 +266,27 @@ public class WidgetModulePersistence extends WidgetBeeeOnPersistence {
 
 	/**
 	 * Sets widget switchcompat (imageview) to disable or fallback state
+	 *
 	 * @param disabled
-	 * @param prevent   is set - prevents getting changed before calling setSwitchDisabled(false)
+	 * @param prevent  is set - prevents getting changed before calling setSwitchDisabled(false)
 	 */
 	public void setSwitchDisabled(boolean disabled, boolean prevent) {
 		// if this cannot be switched
-		if(containerType != SWITCHCOMPAT || !(moduleValue instanceof BooleanValue)) return;
+		if (containerType != SWITCHCOMPAT || !(moduleValue instanceof BooleanValue)) return;
 
-		if(disabled == true){
+		if (disabled == true) {
 			mBuilder.setSwitchDisabled(true, moduleValueChecked);
 			WidgetService.cancelPendingIntentActorChangeRequest(mContext, mWidgetId, getId(), adapterId);
-		}
-		else{
+		} else {
 			mBuilder.setSwitchDisabled(false, moduleValueChecked);
 			mBuilder.setOnClickListener(R.id.widget_switchcompat, WidgetService.getPendingIntentActorChangeRequest(mContext, mWidgetId, getId(), adapterId));
 		}
 
 		// prevent from getting updated the value
-		if(prevent) moduleValueDisabled = disabled;
+		if (prevent) moduleValueDisabled = disabled;
 	}
 
-	public void setSwitchDisabled(boolean disabled){
+	public void setSwitchDisabled(boolean disabled) {
 		setSwitchDisabled(disabled, true);
 	}
 
@@ -294,16 +294,17 @@ public class WidgetModulePersistence extends WidgetBeeeOnPersistence {
 	// ----------------------------------------------------------- //
 	// ---------------------- GETTERS ---------------------------- //
 	// ----------------------------------------------------------- //
-	public ModuleType getType(){
+	public ModuleType getType() {
 		return mModuleType;
 	}
 
 	/**
 	 * If user logged in, gets valueUnit from UnitsHelper, otherwise cached valueUnit
+	 *
 	 * @return
 	 */
-	public String getValueUnit(){
-		if(mUnitsHelper != null){
+	public String getValueUnit() {
+		if (mUnitsHelper != null) {
 			return mUnitsHelper.getStringValueUnit(moduleValue);
 		}
 
@@ -312,10 +313,11 @@ public class WidgetModulePersistence extends WidgetBeeeOnPersistence {
 
 	/**
 	 * If user is logged in, gets value from UnitsHelper, otherwise cached value
+	 *
 	 * @return
 	 */
-	public String getValue(){
-		if(mUnitsHelper != null){
+	public String getValue() {
+		if (mUnitsHelper != null) {
 			return mUnitsHelper.getStringValue(moduleValue);
 		}
 
@@ -324,10 +326,11 @@ public class WidgetModulePersistence extends WidgetBeeeOnPersistence {
 
 	/**
 	 * If user is logged in, gets unit from UnitsHelper, otherwise cached unit
+	 *
 	 * @return
 	 */
-	public String getUnit(){
-		if(mUnitsHelper != null){
+	public String getUnit() {
+		if (mUnitsHelper != null) {
 			return mUnitsHelper.getStringUnit(moduleValue);
 		}
 

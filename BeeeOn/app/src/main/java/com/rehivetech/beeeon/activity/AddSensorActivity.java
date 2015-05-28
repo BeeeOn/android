@@ -29,69 +29,68 @@ import java.util.List;
 
 public class AddSensorActivity extends BaseApplicationActivity {
 	private static final String TAG = AddSensorActivity.class.getSimpleName();
-	
+
 	private Controller mController;
 	private Adapter mPairAdapter;
-	
+
 	private AddSensorFragmentAdapter mAdapter;
 	private ViewPager mPager;
 	private CirclePageIndicator mIndicator;
-	
+
 	private AddSensorFragment mFragment;
-	
+
 	private Button mSkip;
 	private Button mCancel;
 	private Button mNext;
-	
+
 
 	private boolean mFirstUse = true;
-	
-    private Toolbar mToolbar;
 
-    @Override
+	private Toolbar mToolbar;
+
+	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_intro);
 
-        mToolbar = (Toolbar) findViewById(R.id.toolbar);
-        if (mToolbar != null) {
-            mToolbar.setTitle(R.string.title_activity_add_sensor);
-            setSupportActionBar(mToolbar);
-        }
-		
+		mToolbar = (Toolbar) findViewById(R.id.toolbar);
+		if (mToolbar != null) {
+			mToolbar.setTitle(R.string.title_activity_add_sensor);
+			setSupportActionBar(mToolbar);
+		}
+
 		// Get controller
 		mController = Controller.getInstance(this);
 		mPairAdapter = mController.getActiveAdapter();
-		
+
 		mAdapter = new AddSensorFragmentAdapter(getSupportFragmentManager(), this);
 
 		getSupportActionBar().setHomeButtonEnabled(true);
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-		
-		mPager = (ViewPager)findViewById(R.id.intro_pager);
+
+		mPager = (ViewPager) findViewById(R.id.intro_pager);
 		mPager.setAdapter(mAdapter);
 		mPager.setOffscreenPageLimit(mAdapter.getCount());
-		
-		mIndicator = (CirclePageIndicator)findViewById(R.id.intro_indicator);
+
+		mIndicator = (CirclePageIndicator) findViewById(R.id.intro_indicator);
 		mIndicator.setViewPager(mPager);
-		
+
 		mIndicator.setPageColor(0x88FFFFFF);
 		mIndicator.setFillColor(0xFFFFFFFF);
 		mIndicator.setStrokeColor(0x88FFFFFF);
-		
+
 		initButtons();
 	}
-	
+
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
-		
-		if(requestCode == Constants.SETUP_SENSOR_REQUEST_CODE ) {
+
+		if (requestCode == Constants.SETUP_SENSOR_REQUEST_CODE) {
 			Log.d(TAG, "Return from setup sensor activity");
-			if(resultCode == Constants.SETUP_SENSOR_CANCELED) {
+			if (resultCode == Constants.SETUP_SENSOR_CANCELED) {
 				Log.d(TAG, "Activity was canceled");
-			}
-			else if (resultCode == Constants.SETUP_SENSOR_SUCCESS) {
+			} else if (resultCode == Constants.SETUP_SENSOR_SUCCESS) {
 				// Succes of add adapter -> setActive adapter a redraw ALL
 				Log.d(TAG, "Setup sensor success");
 				setResult(Constants.ADD_SENSOR_SUCCESS, data);
@@ -99,21 +98,21 @@ public class AddSensorActivity extends BaseApplicationActivity {
 			}
 		}
 	}
-	
-	
+
+
 	private void initButtons() {
 		mSkip = (Button) findViewById(R.id.add_adapter_skip);
 		mCancel = (Button) findViewById(R.id.add_adapter_cancel);
 		mNext = (Button) findViewById(R.id.add_adapter_next);
-		
+
 		mSkip.setOnClickListener(new OnClickListener() {
-			
+
 			@Override
 			public void onClick(View v) {
-				mPager.setCurrentItem(mAdapter.getCount()-1);
+				mPager.setCurrentItem(mAdapter.getCount() - 1);
 			}
 		});
-		
+
 		mCancel.setOnClickListener(new OnClickListener() {
 
 			@Override
@@ -124,7 +123,7 @@ public class AddSensorActivity extends BaseApplicationActivity {
 				finish();
 			}
 		});
-		
+
 		mNext.setOnClickListener(new OnClickListener() {
 
 			@Override
@@ -137,24 +136,24 @@ public class AddSensorActivity extends BaseApplicationActivity {
 				}
 			}
 		});
-		
-		
+
+
 	}
-	
+
 	public void setBtnLastPage() {
 		mSkip.setVisibility(View.INVISIBLE);
 		mNext.setText(getString(R.string.addsensor_send_pair));
 	}
 
-	
+
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 
 		switch (item.getItemId()) {
-		case android.R.id.home:
-			setResult(Constants.ADD_SENSOR_CANCELED);
-			finish();
-			break;
+			case android.R.id.home:
+				setResult(Constants.ADD_SENSOR_CANCELED);
+				finish();
+				break;
 		}
 		return super.onOptionsItemSelected(item);
 	}
@@ -170,7 +169,7 @@ public class AddSensorActivity extends BaseApplicationActivity {
 	public void setFragment(AddSensorFragment fragment) {
 		mFragment = fragment;
 	}
-	
+
 	public void doReloadUninitializedDevicesTask(String adapterId, boolean forceReload) {
 		ReloadAdapterDataTask reloadUninitializedDevicesTask = new ReloadAdapterDataTask(this, forceReload, ReloadAdapterDataTask.ReloadWhat.UNINITIALIZED_FACILITIES);
 
@@ -205,7 +204,7 @@ public class AddSensorActivity extends BaseApplicationActivity {
 		// Execute and remember task so it can be stopped automatically
 		callbackTaskManager.executeTask(reloadUninitializedDevicesTask, adapterId);
 	}
-	
+
 	private void doPairRequestTask(String adapterId) {
 		// Send First automatic pair request
 		PairRequestTask pairRequestTask = new PairRequestTask(this);
@@ -228,7 +227,7 @@ public class AddSensorActivity extends BaseApplicationActivity {
 		// Execute and remember task so it can be stopped automatically
 		callbackTaskManager.executeTask(pairRequestTask, adapterId);
 	}
-	
+
 	public void checkUnInitSensor() {
 		Log.d(TAG, "Send if some uninit mDevice");
 		doReloadUninitializedDevicesTask(mPairAdapter.getId(), true);

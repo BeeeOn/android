@@ -43,10 +43,11 @@ public class WidgetGraphFragment extends WidgetConfigurationFragment {
 		mWidgetModule = mWidgetData.widgetModules.get(0);
 	}
 
-	protected int getFragmentLayoutResource(){
+	protected int getFragmentLayoutResource() {
 		return R.layout.fragment_widget_graph;
 	}
-	protected int getFragmentTitle(){
+
+	protected int getFragmentTitle() {
 		return R.string.widget_configuration_widget_graph;
 	}
 
@@ -59,7 +60,7 @@ public class WidgetGraphFragment extends WidgetConfigurationFragment {
 		mGapGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
 			@Override
 			public void onCheckedChanged(RadioGroup group, int checkedId) {
-				switch (checkedId){
+				switch (checkedId) {
 					case R.id.widget_gap_daily:
 						mWidgetData.widgetLogData.gap = ModuleLog.DataInterval.HOUR.getSeconds();
 						mWidgetData.widgetLogData.intervalStart = DateTime.now(DateTimeZone.UTC).minusDays(1).getMillis();
@@ -69,7 +70,7 @@ public class WidgetGraphFragment extends WidgetConfigurationFragment {
 					case R.id.widget_gap_monthly:
 						mWidgetData.widgetLogData.gap = ModuleLog.DataInterval.DAY.getSeconds();
 						mWidgetData.widgetLogData.intervalStart = DateTime.now(DateTimeZone.UTC).minusMonths(1).getMillis();
-						mWidgetRefreshInterval = RefreshInterval.HOUR_24;	 // TODO maybe could be longer
+						mWidgetRefreshInterval = RefreshInterval.HOUR_24;     // TODO maybe could be longer
 						break;
 
 					default:
@@ -103,7 +104,7 @@ public class WidgetGraphFragment extends WidgetConfigurationFragment {
 
 		mModuleSpinner.setAdapter(dataAdapter);
 		int foundIndex = Utils.getObjectIndexFromList(mWidgetModule.getId(), mModules);
-		if(foundIndex != -1) mModuleSpinner.setSelection(foundIndex);
+		if (foundIndex != -1) mModuleSpinner.setSelection(foundIndex);
 	}
 
 	@Override

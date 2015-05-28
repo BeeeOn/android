@@ -57,6 +57,7 @@ public class BetterProgressDialog extends ProgressDialog {
 	/**
 	 * Change progress message to string from resources.
 	 * This method works on UI thread.
+	 *
 	 * @param resourceId
 	 */
 	public void setMessageResource(int resourceId) {
@@ -69,6 +70,7 @@ public class BetterProgressDialog extends ProgressDialog {
 	/**
 	 * Change progress message.
 	 * This method works on UI thread.
+	 *
 	 * @param message
 	 */
 	@Override

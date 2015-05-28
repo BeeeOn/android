@@ -75,12 +75,12 @@ final public class Utils {
 		canvas.drawBitmap(sourceBitmap, new Rect(0, 0, sourceBitmap.getWidth(), sourceBitmap.getHeight()), new Rect(0, 0, targetWidth, targetHeight), null);
 		return targetBitmap;
 	}
-	
+
 	/**
 	 * Downloads image from URL address
-	 * 
+	 * <p/>
 	 * This CAN'T be called on UI thread.
-	 * 
+	 *
 	 * @param requestUrl
 	 * @return Bitmap or null
 	 */
@@ -102,22 +102,21 @@ final public class Utils {
 
 		return bitmap;
 	}
-	
-	public static String getUtf8StringFromInputStream(InputStream stream) throws IOException
-	{
-	    int n = 0;
-	    char[] buffer = new char[1024 * 4];
-	    InputStreamReader reader = new InputStreamReader(stream, "UTF8");
-	    StringWriter writer = new StringWriter();
-	    while (-1 != (n = reader.read(buffer))) writer.write(buffer, 0, n);
-	    return writer.toString();
+
+	public static String getUtf8StringFromInputStream(InputStream stream) throws IOException {
+		int n = 0;
+		char[] buffer = new char[1024 * 4];
+		InputStreamReader reader = new InputStreamReader(stream, "UTF8");
+		StringWriter writer = new StringWriter();
+		while (-1 != (n = reader.read(buffer))) writer.write(buffer, 0, n);
+		return writer.toString();
 	}
-	
+
 	/**
 	 * Reads the response from the input stream and returns it as a string.
-	 * 
+	 * <p/>
 	 * This CAN'T be called on UI thread.
-	 * 
+	 *
 	 * @param requestUrl
 	 * @return content from url or empty string
 	 */
@@ -143,9 +142,9 @@ final public class Utils {
 	/**
 	 * Fetch JSON content by a HTTP POST request defined by the requestUrl and params given
 	 * as a map of (key, value) pairs. Encoding is solved internally.
-	 * 
+	 * <p/>
 	 * This CAN'T be called on UI thread.
-	 * 
+	 *
 	 * @param requestUrl
 	 * @param params
 	 * @return
@@ -157,7 +156,7 @@ final public class Utils {
 		final HttpPost post = new HttpPost(requestUrl);
 		final List<NameValuePair> pairs = new ArrayList<NameValuePair>();
 
-		for(String key : params.keySet())
+		for (String key : params.keySet())
 			pairs.add(new BasicNameValuePair(key, params.get(key)));
 
 		post.setEntity(new UrlEncodedFormEntity(pairs));
@@ -182,7 +181,7 @@ final public class Utils {
 
 	/**
 	 * Check if this is debug version of application.
-	 * 
+	 *
 	 * @return true if version in Manifest contains "debug", false otherwise
 	 */
 	public static boolean isDebugVersion(Context context) {
@@ -207,7 +206,7 @@ final public class Utils {
 
 	/**
 	 * Formats double value to String without trailing zeros
-	 * 
+	 *
 	 * @param d
 	 * @return
 	 */
@@ -326,15 +325,16 @@ final public class Utils {
 
 	/**
 	 * For getting index in array so that we can set selected object to spinner or etc.
-	 * @param id object Id
+	 *
+	 * @param id      object Id
 	 * @param objects list of objects with the same type
 	 * @param <T>
 	 * @return index or -1 if not found
 	 */
-	public static <T extends IIdentifier> int getObjectIndexFromList(String id, List<T> objects){
+	public static <T extends IIdentifier> int getObjectIndexFromList(String id, List<T> objects) {
 		int index = 0;
-		for(T tempObj : objects) {
-			if(tempObj.getId().equals(id)) return index;
+		for (T tempObj : objects) {
+			if (tempObj.getId().equals(id)) return index;
 			index++;
 		}
 		return -1;
@@ -342,38 +342,42 @@ final public class Utils {
 
 	/**
 	 * For getting objects from lists (Location / Device / etc)
+	 *
 	 * @param id
 	 * @param objects
 	 * @param <T>
 	 * @return
 	 */
-	@Nullable public static <T extends IIdentifier> T getFromList(String id, List<T> objects){
-		if(id == null){
+	@Nullable
+	public static <T extends IIdentifier> T getFromList(String id, List<T> objects) {
+		if (id == null) {
 			Log.i(TAG, "getFromList given NULL id");
 			return null;
 		}
 
-		for(T tempObj : objects){
-			if(tempObj.getId().equals(id)) return tempObj;
+		for (T tempObj : objects) {
+			if (tempObj.getId().equals(id)) return tempObj;
 		}
 		return null;
 	}
 
 	/**
 	 * Gets index and object from list of objects
+	 *
 	 * @param id
 	 * @param objects
 	 * @param <T>
 	 * @return
 	 */
-	@Nullable public static <T extends IIdentifier> Pair<Integer, T> getIndexAndObjectFromList(String id, List<T> objects){
-		if(id == null){
+	@Nullable
+	public static <T extends IIdentifier> Pair<Integer, T> getIndexAndObjectFromList(String id, List<T> objects) {
+		if (id == null) {
 			Log.i(TAG, "getIndexAndObjectFromList given NULL id");
 			return null;
 		}
 		int index = 0;
-		for(T tempObj : objects){
-			if(tempObj.getId().equals(id)){
+		for (T tempObj : objects) {
+			if (tempObj.getId().equals(id)) {
 				return new Pair<>(index, tempObj);
 			}
 			index++;
@@ -383,15 +387,14 @@ final public class Utils {
 
 	/**
 	 * Converting array of Integer to array of primitive ints
+	 *
 	 * @param integers
 	 * @return
 	 */
-	public static int[] convertIntegers(List<Integer> integers)
-	{
+	public static int[] convertIntegers(List<Integer> integers) {
 		int[] ret = new int[integers.size()];
 		Iterator<Integer> iterator = integers.iterator();
-		for (int i = 0; i < ret.length; i++)
-		{
+		for (int i = 0; i < ret.length; i++) {
 			ret[i] = iterator.next();
 		}
 		return ret;

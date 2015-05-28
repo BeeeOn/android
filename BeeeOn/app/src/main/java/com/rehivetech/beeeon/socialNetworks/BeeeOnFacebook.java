@@ -30,9 +30,10 @@ import java.util.Observable;
 /**
  * Design pattern Singleton
  * Design pattern Observer
+ *
  * @author Jan Lamacz
  */
-public class BeeeOnFacebook extends Observable implements BeeeOnSocialNetwork{
+public class BeeeOnFacebook extends Observable implements BeeeOnSocialNetwork {
 	private static final String TAG = BeeeOnFacebook.class.getSimpleName();
 	private static final String NAME = "Facebook";
 
@@ -50,24 +51,34 @@ public class BeeeOnFacebook extends Observable implements BeeeOnSocialNetwork{
 	}
 
 	public static BeeeOnFacebook getInstance(Context context) {
-		if(mInstance == null) {
+		if (mInstance == null) {
 			mInstance = new BeeeOnFacebook(context);
 		}
 		return mInstance;
 	}
 
-	public void setToken(String token) {this.mAccessToken = token;}
+	public void setToken(String token) {
+		this.mAccessToken = token;
+	}
 
 	@Override
-	public String getName() {return NAME;}
+	public String getName() {
+		return NAME;
+	}
+
 	@Override
-	public String getUserName() {return mUserName;}
+	public String getUserName() {
+		return mUserName;
+	}
+
 	@Override
-	public boolean isPaired() {return mAccessToken != null;}
+	public boolean isPaired() {
+		return mAccessToken != null;
+	}
 
 	@Override
 	public void logOut() {
-		if(mUserName != null) {
+		if (mUserName != null) {
 			Toast.makeText(mContext, mContext.getString(R.string.logout_success), Toast.LENGTH_LONG).show();
 			LoginManager.getInstance().logOut();
 		}
@@ -96,44 +107,45 @@ public class BeeeOnFacebook extends Observable implements BeeeOnSocialNetwork{
 			@Override
 			public void onSuccess(LoginResult loginResult) {
 				mAccessToken = loginResult.getAccessToken().toString();
-				new FbLoginAchievement(mContext,mAccessToken);
+				new FbLoginAchievement(mContext, mAccessToken);
 				setChanged();
 				notifyObservers("login");
 //				mProfileFrag.updateFacebookLoginView();
 			}
+
 			@Override
-			public void onCancel() {}
+			public void onCancel() {
+			}
+
 			@Override
-			public void onError(FacebookException exception) {}
+			public void onError(FacebookException exception) {
+			}
 		};
 	}
 
 	public void downloadUserData() {
-		if(mUserName != null) {
+		if (mUserName != null) {
 			Log.d(TAG, "Not downloading data, already done before");
 			return;
 		}
 		AccessToken token = AccessToken.getCurrentAccessToken();
-		GraphRequest request = GraphRequest.newMeRequest(token,new GraphRequest.GraphJSONObjectCallback() {
+		GraphRequest request = GraphRequest.newMeRequest(token, new GraphRequest.GraphJSONObjectCallback() {
 			@Override
 			public void onCompleted(JSONObject object, GraphResponse response) {
-				if(response.getError() != null) {
+				if (response.getError() != null) {
 					setChanged();
-					if(response.getError().getErrorCode() == -1) {
+					if (response.getError().getErrorCode() == -1) {
 //						Toast.makeText(mContext, mContext.getString(R.string.NetworkError___CL_INTERNET_CONNECTION), Toast.LENGTH_SHORT).show();
 						notifyObservers("connect_error");
-					}
-					else
+					} else
 						notifyObservers("not_logged");
-				}
-				else {
+				} else {
 					try {
 						mUserName = object.getString("name");
 						setChanged();
 						notifyObservers("facebook");
-					}
-					catch(JSONException e) {
-						Log.e(TAG, "FB JSON parse error: "+e.getMessage());
+					} catch (JSONException e) {
+						Log.e(TAG, "FB JSON parse error: " + e.getMessage());
 					}
 				}
 			}

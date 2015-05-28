@@ -165,7 +165,7 @@ public class DevicesModel extends BaseModel {
 		if (!forceReload && !device.isExpired()) {
 			return false;
 		}
-		
+
 		Device newDevice = mNetwork.getFacility(device);
 		if (newDevice == null)
 			return false;
@@ -177,12 +177,11 @@ public class DevicesModel extends BaseModel {
 
 	/**
 	 * Save specified settings of device to server.
-	 *
+	 * <p/>
 	 * This CAN'T be called on UI thread!
 	 *
 	 * @param device
-	 * @param what
-	 *            type of settings to save
+	 * @param what   type of settings to save
 	 * @return true on success, false otherwise
 	 */
 	public boolean saveFacility(Device device, EnumSet<SaveModule> what) throws AppException {
@@ -194,7 +193,7 @@ public class DevicesModel extends BaseModel {
 
 	/**
 	 * Delete device from server.
-	 *
+	 * <p/>
 	 * This CAN'T be called on UI thread!
 	 */
 	public boolean deleteFacility(Device device) throws AppException {
@@ -205,16 +204,15 @@ public class DevicesModel extends BaseModel {
 		}
 
 		return false;
-    }
+	}
 
 	/**
 	 * Save specified settings of module to server.
-	 *
+	 * <p/>
 	 * This CAN'T be called on UI thread!
 	 *
 	 * @param module
-	 * @param what
-	 *            type of settings to save
+	 * @param what   type of settings to save
 	 * @return true on success, false otherwise
 	 */
 	public boolean saveModule(Module module, EnumSet<SaveModule> what) throws AppException {
@@ -228,11 +226,10 @@ public class DevicesModel extends BaseModel {
 
 	/**
 	 * Send request to server to switch Actor value.
-	 *
+	 * <p/>
 	 * This CAN'T be called on UI thread!
 	 *
-	 * @param module
-	 *            ModuleType of this module must be actor, i.e., module.getType().isActor() must return true.
+	 * @param module ModuleType of this module must be actor, i.e., module.getType().isActor() must return true.
 	 * @return true on success, false otherwise
 	 */
 	public boolean switchActor(Module module) throws AppException {
@@ -240,7 +237,7 @@ public class DevicesModel extends BaseModel {
 			Log.e(TAG, String.format("Tried to switch NOT-actor module '%s'", module.getName()));
 			return false;
 		}
-		
+
 		Device device = module.getDevice();
 
 		mNetwork.switchState(module.getDevice().getAdapterId(), module);

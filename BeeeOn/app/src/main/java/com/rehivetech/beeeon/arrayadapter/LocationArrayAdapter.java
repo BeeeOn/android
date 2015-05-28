@@ -36,7 +36,7 @@ public class LocationArrayAdapter extends ArrayAdapter<Location> {
 	}
 
 	public LocationArrayAdapter(Context context, int resource) {
-		super(context,resource,new ArrayList<Location>());
+		super(context, resource, new ArrayList<Location>());
 		mViewLayoutResource = resource;
 		mActivity = context;
 		mController = Controller.getInstance(context);

@@ -126,7 +126,7 @@ public class CustomViewFragment extends BaseApplicationFragment {
 			graphView.setDrawPointer(false);
 		} else {
 			graphSeries = new LineGraphSeries<>(new DataPoint[]{new DataPoint(0, 0),});
-			((LineGraphSeries)graphSeries).setThickness(4);
+			((LineGraphSeries) graphSeries).setThickness(4);
 		}
 		graphSeries.setTitle(module.getName());
 		graphSeries.setColor(color);
@@ -143,7 +143,7 @@ public class CustomViewFragment extends BaseApplicationFragment {
 		SortedMap<Long, Float> values = log.getValues();
 		int size = values.size();
 		DataPoint[] data = new DataPoint[size];
-		
+
 		Log.d(TAG, String.format("Filling graph with %d values. Min: %.1f, Max: %.1f", size, log.getMinimum(), log.getMaximum()));
 
 		int i = 0;
@@ -152,12 +152,12 @@ public class CustomViewFragment extends BaseApplicationFragment {
 			float value = Float.isNaN(entry.getValue()) ? log.getMinimum() : entry.getValue();
 
 			data[i++] = new DataPoint(dateMillis, value);
-			
+
 			// This shouldn't happen, only when some other thread changes this values object - can it happen?
 			if (i >= size)
 				break;
 		}
-		
+
 		Log.d(TAG, "Filling graph finished");
 
 		graphSeries.resetData(data);

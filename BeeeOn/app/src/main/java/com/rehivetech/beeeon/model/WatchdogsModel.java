@@ -22,6 +22,7 @@ public class WatchdogsModel extends BaseModel {
 
 	/**
 	 * Returns a watchdog by parameters
+	 *
 	 * @param adapterId
 	 * @param id
 	 * @return
@@ -32,6 +33,7 @@ public class WatchdogsModel extends BaseModel {
 
 	/**
 	 * Return list of watchdogs from a adapter
+	 *
 	 * @param adapterId
 	 * @return
 	 */
@@ -46,7 +48,7 @@ public class WatchdogsModel extends BaseModel {
 
 	/**
 	 * Reloads watchdogs
-	 *
+	 * <p/>
 	 * This CAN'T be called on UI thread!
 	 *
 	 * @param adapterId
@@ -82,7 +84,7 @@ public class WatchdogsModel extends BaseModel {
 
 	/**
 	 * Delete a watchdog
-	 *
+	 * <p/>
 	 * This CAN'T be called on UI thread!
 	 *
 	 * @param watchdog

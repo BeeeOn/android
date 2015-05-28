@@ -85,14 +85,14 @@ public class WidgetClockData extends WidgetData {
 	public void init() {
 
 		// NOTE: if in any case someone calls this instead of initAdvanced()
-		if(mCalendar == null){
+		if (mCalendar == null) {
 			mCalendar = Calendar.getInstance(mContext.getResources().getConfiguration().locale);
 			mCalendar.setTime(new Date());
 		}
 
 		mDevices.clear();
-		for(WidgetModulePersistence dev : widgetModules){
-			if(dev.getId().isEmpty()){
+		for (WidgetModulePersistence dev : widgetModules) {
+			if (dev.getId().isEmpty()) {
 				Log.i(TAG, "Could not retrieve module from widget " + String.valueOf(mWidgetId));
 				continue;
 			}
@@ -129,10 +129,10 @@ public class WidgetClockData extends WidgetData {
 		mBuilder.setOnClickListener(R.id.widget_clock_container, mConfigurationPendingIntent);
 		mBuilder.setOnClickListener(R.id.widget_clock_household_label, mRefreshPendingIntent);
 
-		if(widgetAdapterId.isEmpty()) return;
+		if (widgetAdapterId.isEmpty()) return;
 
 		// -------------------- render layout
-		switch (this.widgetLayout){
+		switch (this.widgetLayout) {
 			case R.layout.widget_clock_3x2:
 				mClockFont = R.dimen.widget_textsize_clock_large;
 				mWeatherFont = R.dimen.textsize_title;
@@ -153,16 +153,15 @@ public class WidgetClockData extends WidgetData {
 		}
 
 		// updates all inside devices
-		for(WidgetModulePersistence dev : widgetModules){
+		for (WidgetModulePersistence dev : widgetModules) {
 			dev.renderView(mBuilder);
 			// detail activity
 			mBuilder.setOnClickListener(dev.getBoundView(), startDetailActivityPendingIntent(mContext, mWidgetId + dev.getOffset(), widgetAdapterId, dev.getId()));
 			dev.setValueUnitColor(settings.colorSecondary);
 
-			if(this.widgetLayout == R.layout.widget_clock_3x2) {
-				if(dev.containerType == WidgetModulePersistence.VALUE_UNIT) dev.getBuilder().setViewVisibility(R.id.icon, View.VISIBLE);
-			}
-			else if(this.widgetLayout == R.layout.widget_clock_2x2){
+			if (this.widgetLayout == R.layout.widget_clock_3x2) {
+				if (dev.containerType == WidgetModulePersistence.VALUE_UNIT) dev.getBuilder().setViewVisibility(R.id.icon, View.VISIBLE);
+			} else if (this.widgetLayout == R.layout.widget_clock_2x2) {
 				dev.setValueUnitSize(R.dimen.textsize_caption);
 			}
 		}
@@ -170,10 +169,9 @@ public class WidgetClockData extends WidgetData {
 		renderClock();
 		renderDate();
 		// render weather data
-		if(weather.cityName == null || weather.cityName.isEmpty()){
+		if (weather.cityName == null || weather.cityName.isEmpty()) {
 			renderFailedWeatherData();
-		}
-		else{
+		} else {
 			renderOkWeatherData();
 		}
 	}
@@ -181,7 +179,7 @@ public class WidgetClockData extends WidgetData {
 	/**
 	 * Renders digital clock and sets its color and font size
 	 */
-	private void renderClock(){
+	private void renderClock() {
 		ViewsBuilder clockBuilder = new ViewsBuilder(mContext, R.layout.widget_include_clock);
 
 		boolean is24hMode = is24HourMode(mContext);
@@ -203,10 +201,9 @@ public class WidgetClockData extends WidgetData {
 		);
 
 		// show pm / am
-		if(is24hMode){
+		if (is24hMode) {
 			clockBuilder.setViewVisibility(R.id.widget_clock_ampm, View.GONE);
-		}
-		else {
+		} else {
 			clockBuilder.setViewVisibility(R.id.widget_clock_ampm, View.VISIBLE);
 			clockBuilder.setTextViewText(R.id.widget_clock_ampm, DateFormat.format("aa", mCalendar.getTime()).toString());
 			clockBuilder.setTextViewColor(R.id.widget_clock_ampm, settings.colorPrimary);
@@ -224,7 +221,7 @@ public class WidgetClockData extends WidgetData {
 	/**
 	 * Renders date with color
 	 */
-	private void renderDate(){
+	private void renderDate() {
 		ViewsBuilder builder = new ViewsBuilder(mContext, R.layout.widget_include_date);
 
 		// set day of week
@@ -252,7 +249,7 @@ public class WidgetClockData extends WidgetData {
 	 * Renders new weather data based on data saved in preferences
 	 */
 	private void renderOkWeatherData() {
-		switch (this.widgetLayout){
+		switch (this.widgetLayout) {
 			case R.layout.widget_clock_3x2:
 				mBuilder.setTextView(
 						R.id.widget_clock_weather_humidity,
@@ -292,8 +289,8 @@ public class WidgetClockData extends WidgetData {
 	/**
 	 * Hides weather data
 	 */
-	private void renderFailedWeatherData(){
-		switch (this.widgetLayout){
+	private void renderFailedWeatherData() {
+		switch (this.widgetLayout) {
 			case R.layout.widget_clock_3x2:
 			case R.layout.widget_clock_2x2:
 				mBuilder.setViewVisibility(R.id.widget_weather_container, View.GONE);
@@ -310,7 +307,7 @@ public class WidgetClockData extends WidgetData {
 	 * Updates widget's time asynchroningly to sensor updates
 	 * Updates always on time broadcasts
 	 */
-	public void handleClockUpdate(){
+	public void handleClockUpdate() {
 		Log.d(TAG, String.format("handleClockUpdate(%d)", mWidgetId));
 		renderWidget();
 	}
@@ -319,23 +316,22 @@ public class WidgetClockData extends WidgetData {
 	public boolean handleUpdateData() {
 		int updated = 0;
 		Adapter adapter = mController.getAdaptersModel().getAdapter(widgetAdapterId);
-		if(adapter == null) return false;
+		if (adapter == null) return false;
 
-		for(WidgetModulePersistence dev : widgetModules) {
+		for (WidgetModulePersistence dev : widgetModules) {
 			Module module = mController.getDevicesModel().getModule(widgetAdapterId, dev.getId());
 			if (module != null) {
-				if(!dev.locationId.isEmpty()){
+				if (!dev.locationId.isEmpty()) {
 					Location location = mController.getLocationsModel().getLocation(widgetAdapterId, dev.locationId);
 					dev.configure(module, adapter, location);
-				}
-				else {
+				} else {
 					dev.configure(module, adapter);
 				}
 				updated++;
 			}
 		}
 
-		if(updated > 0) {
+		if (updated > 0) {
 			// update last update to "now"
 			widgetLastUpdate = getTimeNow();
 			widgetAdapterId = adapter.getId();
@@ -405,6 +401,7 @@ public class WidgetClockData extends WidgetData {
 
 	/**
 	 * Checs if user uses 24 hour format or not
+	 *
 	 * @param context
 	 * @return
 	 */
@@ -414,9 +411,10 @@ public class WidgetClockData extends WidgetData {
 
 	/**
 	 * When changed locale, change statically week day names
+	 *
 	 * @return array of weekday names
 	 */
-	public static String[] reloadWeekDays(){
+	public static String[] reloadWeekDays() {
 		weekDays = new DateFormatSymbols().getShortWeekdays();
 		return weekDays;
 	}

@@ -17,8 +17,7 @@ public abstract class BaseValue {
 
 	/**
 	 * @return "Raw" string value, which means value given in {@link #setValue(String)} method
-	 * @throws IllegalStateException
-	 *             When mRawValue is null (probably child object didn't call'd super.setValue())
+	 * @throws IllegalStateException When mRawValue is null (probably child object didn't call'd super.setValue())
 	 */
 	public final String getRawValue() {
 		if (mRawValue == null) {
@@ -31,7 +30,7 @@ public abstract class BaseValue {
 	/**
 	 * Remember given value as mRawValue. <br>
 	 * Child object should override this method, parse this value correctly and set it as own attribute to work with.
-	 * 
+	 *
 	 * @param value
 	 */
 	public void setValue(String value) {

@@ -14,8 +14,8 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * @brief Device class which contains own data and devices (sensors, actors)
  * @author Robyer
+ * @brief Device class which contains own data and devices (sensors, actors)
  */
 public class Device implements IIdentifier {
 	protected String mAddress;
@@ -51,7 +51,7 @@ public class Device implements IIdentifier {
 
 	/**
 	 * Get last update time
-	 * 
+	 *
 	 * @return
 	 */
 	public DateTime getLastUpdate() {
@@ -60,7 +60,7 @@ public class Device implements IIdentifier {
 
 	/**
 	 * Setting last update time
-	 * 
+	 *
 	 * @param lastUpdate
 	 */
 	public void setLastUpdate(DateTime lastUpdate) {
@@ -69,7 +69,7 @@ public class Device implements IIdentifier {
 
 	/**
 	 * Check if actual value of this sensor is expired
-	 * 
+	 *
 	 * @return true when refresh interval since last update expired
 	 */
 	public boolean isExpired() {
@@ -78,7 +78,7 @@ public class Device implements IIdentifier {
 
 	/**
 	 * Get refresh interval
-	 * 
+	 *
 	 * @return refresh interval
 	 */
 	public RefreshInterval getRefresh() {
@@ -87,7 +87,7 @@ public class Device implements IIdentifier {
 
 	/**
 	 * Setting refresh interval
-	 * 
+	 *
 	 * @param interval
 	 */
 	public void setRefresh(RefreshInterval interval) {
@@ -96,7 +96,7 @@ public class Device implements IIdentifier {
 
 	/**
 	 * Get unique identifier of mDevice
-	 * 
+	 *
 	 * @return id
 	 */
 	public String getId() {
@@ -105,7 +105,7 @@ public class Device implements IIdentifier {
 
 	/**
 	 * Get location of mDevice
-	 * 
+	 *
 	 * @return location
 	 */
 	public String getLocationId() {
@@ -114,7 +114,7 @@ public class Device implements IIdentifier {
 
 	/**
 	 * Setting location of mDevice
-	 * 
+	 *
 	 * @param locationId
 	 */
 	public void setLocationId(String locationId) {
@@ -127,7 +127,7 @@ public class Device implements IIdentifier {
 
 	/**
 	 * Get adapter id of mDevice
-	 * 
+	 *
 	 * @return adapter id
 	 */
 	public String getAdapterId() {
@@ -136,7 +136,7 @@ public class Device implements IIdentifier {
 
 	/**
 	 * Setting adapter id of mDevice
-	 * 
+	 *
 	 * @param adapterId
 	 */
 	public void setAdapterId(String adapterId) {
@@ -145,7 +145,7 @@ public class Device implements IIdentifier {
 
 	/**
 	 * Returning flag if mDevice has been initialized yet
-	 * 
+	 *
 	 * @return
 	 */
 	public boolean isInitialized() {
@@ -154,7 +154,7 @@ public class Device implements IIdentifier {
 
 	/**
 	 * Setting flag for mDevice initialization state
-	 * 
+	 *
 	 * @param initialized
 	 */
 	public void setInitialized(boolean initialized) {
@@ -163,7 +163,7 @@ public class Device implements IIdentifier {
 
 	/**
 	 * Get state of battery
-	 * 
+	 *
 	 * @return battery
 	 */
 	public int getBattery() {
@@ -172,7 +172,7 @@ public class Device implements IIdentifier {
 
 	/**
 	 * Setting state of battery
-	 * 
+	 *
 	 * @param battery
 	 */
 	public void setBattery(int battery) {
@@ -181,7 +181,7 @@ public class Device implements IIdentifier {
 
 	/**
 	 * Get time of setting of mDevice to system
-	 * 
+	 *
 	 * @return involve time
 	 */
 	public DateTime getInvolveTime() {
@@ -190,7 +190,7 @@ public class Device implements IIdentifier {
 
 	/**
 	 * Setting involve time
-	 * 
+	 *
 	 * @param involved
 	 */
 	public void setInvolveTime(DateTime involved) {
@@ -199,7 +199,7 @@ public class Device implements IIdentifier {
 
 	/**
 	 * Get MAC address of mDevice
-	 * 
+	 *
 	 * @return address
 	 */
 	public String getAddress() {
@@ -208,7 +208,7 @@ public class Device implements IIdentifier {
 
 	/**
 	 * Setting MAC address
-	 * 
+	 *
 	 * @param address
 	 */
 	public void setAddress(String address) {
@@ -217,7 +217,7 @@ public class Device implements IIdentifier {
 
 	/**
 	 * Get value of signal quality
-	 * 
+	 *
 	 * @return quality
 	 */
 	public int getNetworkQuality() {
@@ -226,7 +226,7 @@ public class Device implements IIdentifier {
 
 	/**
 	 * Setting quality
-	 * 
+	 *
 	 * @param networkQuality
 	 */
 	public void setNetworkQuality(int networkQuality) {
@@ -240,7 +240,7 @@ public class Device implements IIdentifier {
 
 	/**
 	 * Debug method
-	 * 
+	 *
 	 * @return
 	 */
 	public String toDebugString() {

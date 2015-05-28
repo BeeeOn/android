@@ -58,7 +58,7 @@ public class AdaptersModel extends BaseModel {
 
 	/**
 	 * Send pair request
-	 *
+	 * <p/>
 	 * This CAN'T be called on UI thread!
 	 *
 	 * @param adapterId
@@ -70,7 +70,7 @@ public class AdaptersModel extends BaseModel {
 
 	/**
 	 * Registers new adapter. This automatically reloads list of adapters.
-	 *
+	 * <p/>
 	 * This CAN'T be called on UI thread!
 	 *
 	 * @param id
@@ -88,7 +88,7 @@ public class AdaptersModel extends BaseModel {
 
 	/**
 	 * FIXME: debug implementation Unregisters adapter from server -> rework it when implemented in Network correctly.
-	 *
+	 * <p/>
 	 * This CAN'T be called on UI thread!
 	 *
 	 * @param id

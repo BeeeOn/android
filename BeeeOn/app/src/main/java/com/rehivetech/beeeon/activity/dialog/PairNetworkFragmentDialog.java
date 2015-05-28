@@ -17,6 +17,7 @@ import java.util.ArrayList;
 /**
  * Dialog shows social networks (Facebook and Twitter for now), that are not
  * already paired and opens their own GUI to connect.
+ *
  * @author Jan Lamacz
  */
 public class PairNetworkFragmentDialog extends DialogFragment {
@@ -31,9 +32,9 @@ public class PairNetworkFragmentDialog extends DialogFragment {
 		mTw = BeeeOnTwitter.getInstance(getActivity());
 		mVk = BeeeOnVKontakte.getInstance(getActivity());
 
-		if(!mFb.isPaired()) mSocialNetworks.add(mFb.getName());
-		if(!mTw.isPaired()) mSocialNetworks.add(mTw.getName());
-		if(!mVk.isPaired()) mSocialNetworks.add(mVk.getName());
+		if (!mFb.isPaired()) mSocialNetworks.add(mFb.getName());
+		if (!mTw.isPaired()) mSocialNetworks.add(mTw.getName());
+		if (!mVk.isPaired()) mSocialNetworks.add(mVk.getName());
 	}
 
 	@Override
@@ -41,23 +42,23 @@ public class PairNetworkFragmentDialog extends DialogFragment {
 	public Dialog onCreateDialog(Bundle savedInstanceState) {
 		AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 		builder.setTitle(R.string.profile_new_account)
-			.setItems(mSocialNetworks.toArray(new CharSequence[mSocialNetworks.size()]),
-					new DialogInterface.OnClickListener() {
-						public void onClick(DialogInterface dialog, int which) {
-							if (which == 0 && !mFb.isPaired())
-								mFb.logIn(getActivity());
-							else if (which == 1 && !mFb.isPaired() ||
-									which == 0 && !mTw.isPaired())
-								mTw.logIn(getActivity());
-							else if((which == 2 && !mFb.isPaired() && !mTw.isPaired()) ||
-								which == 1 || which == 0 )
-								mVk.logIn(getActivity());
-						}
-					})
-			.setNegativeButton(R.string.action_close, new DialogInterface.OnClickListener() {
-				public void onClick(DialogInterface dialog, int id) {
-				}
-			});
+				.setItems(mSocialNetworks.toArray(new CharSequence[mSocialNetworks.size()]),
+						new DialogInterface.OnClickListener() {
+							public void onClick(DialogInterface dialog, int which) {
+								if (which == 0 && !mFb.isPaired())
+									mFb.logIn(getActivity());
+								else if (which == 1 && !mFb.isPaired() ||
+										which == 0 && !mTw.isPaired())
+									mTw.logIn(getActivity());
+								else if ((which == 2 && !mFb.isPaired() && !mTw.isPaired()) ||
+										which == 1 || which == 0)
+									mVk.logIn(getActivity());
+							}
+						})
+				.setNegativeButton(R.string.action_close, new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int id) {
+					}
+				});
 		return builder.create();
 	}
 }

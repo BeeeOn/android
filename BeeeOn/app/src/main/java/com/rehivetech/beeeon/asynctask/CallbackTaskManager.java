@@ -59,8 +59,8 @@ public class CallbackTaskManager {
 	/**
 	 * Add this task to internal list of tasks which will be automatically stopped and removed at activity's onStop() method.
 	 *
-	 * @param task task to be executed
-	 * @param param param for the task
+	 * @param task            task to be executed
+	 * @param param           param for the task
 	 * @param showProgressBar whether this task should show progressbar in Activity during its running
 	 */
 	public <T> void executeTask(@NonNull CallbackTask<T> task, @Nullable T param, boolean showProgressBar) {
@@ -93,7 +93,7 @@ public class CallbackTaskManager {
 	 * Add this task to internal list of tasks which will be automatically stopped and removed at activity's onStop() method.
 	 * Shows progress bar in Activity automatically during its running.
 	 *
-	 * @param task task to be executed
+	 * @param task  task to be executed
 	 * @param param param for the task
 	 */
 	public <T> void executeTask(@NonNull CallbackTask task, @Nullable T param) {

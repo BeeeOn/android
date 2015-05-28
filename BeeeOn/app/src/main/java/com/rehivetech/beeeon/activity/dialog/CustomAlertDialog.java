@@ -13,9 +13,8 @@ import com.rehivetech.beeeon.R;
 
 /**
  * Class represents AlertDialog, precisely AlertDialog.Builder, for showing custom dialogs. To open dialog call show() method and for close has to be called dismiss().
- * 
+ *
  * @author ThinkDeep
- * 
  */
 public class CustomAlertDialog extends Builder {
 
@@ -64,9 +63,8 @@ public class CustomAlertDialog extends Builder {
 
 	/**
 	 * Method set name and action of left button
-	 * 
-	 * @param text
-	 *            of button
+	 *
+	 * @param text     of button
 	 * @param listener
 	 * @return instance of this object
 	 */
@@ -79,9 +77,8 @@ public class CustomAlertDialog extends Builder {
 
 	/**
 	 * Method set name and action of right button
-	 * 
-	 * @param text
-	 *            of button
+	 *
+	 * @param text     of button
 	 * @param listener
 	 * @return instance of this object
 	 */

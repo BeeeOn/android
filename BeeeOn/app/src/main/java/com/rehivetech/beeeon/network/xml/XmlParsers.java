@@ -37,7 +37,6 @@ import java.util.TreeMap;
 
 /**
  * @author ThinkDeep
- *
  */
 public class XmlParsers {
 
@@ -89,12 +88,11 @@ public class XmlParsers {
 	/**
 	 * Method parse message (XML) in communication version
 	 *
-	 * @param xmlInput raw string xml input
+	 * @param xmlInput  raw string xml input
 	 * @param namespace always false
 	 * @return object with parsed xml data inside
 	 * @throws XmlPullParserException
-	 * @throws IOException
-	 *             means Communication version mismatch exception
+	 * @throws IOException            means Communication version mismatch exception
 	 * @throws ParseException
 	 */
 	public ParsedMessage parseCommunication(String xmlInput, boolean namespace) throws XmlPullParserException, IOException,
@@ -114,7 +112,7 @@ public class XmlParsers {
 			String srv[] = version.split("\\.");
 			String app[] = COM_VER.split("\\.");
 
-			if(srv.length != 0 && app.length!=0) {
+			if (srv.length != 0 && app.length != 0) {
 				int srv_major = Integer.parseInt(srv[0]);
 				int srv_minor = Integer.parseInt(srv[1]);
 				int app_major = Integer.parseInt(app[0]);
@@ -125,8 +123,7 @@ public class XmlParsers {
 							.set(NetworkError.PARAM_COM_VER_LOCAL, COM_VER)
 							.set(NetworkError.PARAM_COM_VER_SERVER, version);
 				}
-			}
-			else  {
+			} else {
 				// Server must have same major version as app and same or greater minor version than app
 				throw new AppException(NetworkError.COM_VER_MISMATCH)
 						.set(NetworkError.PARAM_COM_VER_LOCAL, COM_VER)
@@ -139,89 +136,89 @@ public class XmlParsers {
 		ParsedMessage result = new ParsedMessage(state);
 
 		switch (state) {
-		case USERINFO:
-			// User
-			User user = new User();
-			user.setId(getSecureAttrValue(Xconstants.UID));
-			user.setName(getSecureAttrValue(Xconstants.NAME));
-			user.setSurname(getSecureAttrValue(Xconstants.SURNAME));
-			user.setEmail(getSecureAttrValue(Xconstants.EMAIL));
-			user.setGender(Utils.getEnumFromId(User.Gender.class, getSecureAttrValue(Xconstants.GENDER), User.Gender.UNKNOWN));
-			user.setPictureUrl(getSecureAttrValue(Xconstants.IMGURL));
+			case USERINFO:
+				// User
+				User user = new User();
+				user.setId(getSecureAttrValue(Xconstants.UID));
+				user.setName(getSecureAttrValue(Xconstants.NAME));
+				user.setSurname(getSecureAttrValue(Xconstants.SURNAME));
+				user.setEmail(getSecureAttrValue(Xconstants.EMAIL));
+				user.setGender(Utils.getEnumFromId(User.Gender.class, getSecureAttrValue(Xconstants.GENDER), User.Gender.UNKNOWN));
+				user.setPictureUrl(getSecureAttrValue(Xconstants.IMGURL));
 
-			result.data = user;
-			break;
-		case BT:
-			// String (BeeeonToken)
-			result.data = getSecureAttrValue(Xconstants.BT);
-			break;
-		case TRUE:
-			// nothing
-			break;
-		case FALSE:
-			// FalseAnswer
-			result.data = parseFalse();
-			break;
-		case ADAPTERS:
-			// List<Adapter>
-			result.data = parseAdaptersReady();
-			break;
-		case LOGDATA:
-			// ModuleLog
-			result.data = parseLogData();
-			break;
-		case ROOMS:
-			// List<Location>
-			result.data = parseRooms();
-			break;
-		case ROOMCREATED:
-			// String (locationID)
-			result.data = getSecureAttrValue(Xconstants.LID);
-			break;
-		case ALGCREATED:
-			// String (AlgorithmID)
-			result.data = getSecureAttrValue(Xconstants.ALGID);
-			break;
-		case ALGORITHMS:
-			getSecureAttrValue(Xconstants.ATYPE); // not used yet
-			// ArrayList<Watchdog>
-			result.data = parseWatchdog();
-			break;
-		case ACCOUNTS:
-			// List<User>
-			result.data = parseConAccountList();
-			break;
-		case TIMEZONE:
-			// integer
-			result.data = getSecureInt(getSecureAttrValue(Xconstants.UTC));
-			break;
-		case DEVICES:
-			String aid = getSecureAttrValue(Xconstants.AID);
-			if (aid.length() > 0) {
+				result.data = user;
+				break;
+			case BT:
+				// String (BeeeonToken)
+				result.data = getSecureAttrValue(Xconstants.BT);
+				break;
+			case TRUE:
+				// nothing
+				break;
+			case FALSE:
+				// FalseAnswer
+				result.data = parseFalse();
+				break;
+			case ADAPTERS:
+				// List<Adapter>
+				result.data = parseAdaptersReady();
+				break;
+			case LOGDATA:
+				// ModuleLog
+				result.data = parseLogData();
+				break;
+			case ROOMS:
+				// List<Location>
+				result.data = parseRooms();
+				break;
+			case ROOMCREATED:
+				// String (locationID)
+				result.data = getSecureAttrValue(Xconstants.LID);
+				break;
+			case ALGCREATED:
+				// String (AlgorithmID)
+				result.data = getSecureAttrValue(Xconstants.ALGID);
+				break;
+			case ALGORITHMS:
+				getSecureAttrValue(Xconstants.ATYPE); // not used yet
+				// ArrayList<Watchdog>
+				result.data = parseWatchdog();
+				break;
+			case ACCOUNTS:
+				// List<User>
+				result.data = parseConAccountList();
+				break;
+			case TIMEZONE:
+				// integer
+				result.data = getSecureInt(getSecureAttrValue(Xconstants.UTC));
+				break;
+			case DEVICES:
+				String aid = getSecureAttrValue(Xconstants.AID);
+				if (aid.length() > 0) {
+					// List<Device>
+					result.data = parseNewDevices(aid);
+				} else
+					// List<Device>
+					result.data = parseDevices();
+				break;
+			case ALLDEVICES:
 				// List<Device>
-				result.data = parseNewDevices(aid);
-			} else
-				// List<Device>
-				result.data = parseDevices();
-			break;
-		case ALLDEVICES:
-			// List<Device>
-			result.data = parseAllDevices();
-			break;
-		case NOTIFICATIONS:
-			// List<Notification>
-			result.data = parseNotifications();
-			break;
-		case ACHIEVEMENTS:
-			// List<AchievementListItem>
-			result.data = parseAchievements();
-			break;
-		case PROGRESS:
-			// List<String>
-			result.data = parseProgress();
-			break;
-		default:
-			break;
+				result.data = parseAllDevices();
+				break;
+			case NOTIFICATIONS:
+				// List<Notification>
+				result.data = parseNotifications();
+				break;
+			case ACHIEVEMENTS:
+				// List<AchievementListItem>
+				result.data = parseAchievements();
+				break;
+			case PROGRESS:
+				// List<String>
+				result.data = parseProgress();
+				break;
+			default:
+				break;
 		}
 		mParser = null;
 		return result;
@@ -276,10 +273,10 @@ public class XmlParsers {
 		if (err == 17) { // TODO: check this with pavel
 			trouble = getFalseMessage17();
 		}
-		if (err == 3){
+		if (err == 3) {
 			trouble = getFalseMessage17();
 		}
-		return new FalseAnswer((mParser.getEventType() == XmlPullParser.END_TAG)? "" : readText(Xconstants.COM_ROOT), err, trouble);
+		return new FalseAnswer((mParser.getEventType() == XmlPullParser.END_TAG) ? "" : readText(Xconstants.COM_ROOT), err, trouble);
 	}
 
 	// /////////////////////////////////DEVICES, LOGS/////////////////////////////////////////////////////////
@@ -367,7 +364,7 @@ public class XmlParsers {
 			mParser.nextTag(); // part tag
 
 			if (!mParser.getName().equals(Xconstants.PART)) { // if there is no module in mDevice -> error in DB on server
-				Log.e(TAG,"Missing module in mDevice: " + device.getId());
+				Log.e(TAG, "Missing module in mDevice: " + device.getId());
 				continue;
 			}
 
@@ -513,7 +510,7 @@ public class XmlParsers {
 			String id = getSecureAttrValue(Xconstants.MID); // message id
 			String time = getSecureAttrValue(Xconstants.TIME); // time
 			String type = getSecureAttrValue(Xconstants.TYPE); // type
-			boolean read = (getSecureInt(getSecureAttrValue(Xconstants.READ)) == 0)?false:true; // read
+			boolean read = (getSecureInt(getSecureAttrValue(Xconstants.READ)) == 0) ? false : true; // read
 
 			//TODO
 			// call here some method from gcm/notification part
@@ -537,20 +534,21 @@ public class XmlParsers {
 
 	/**
 	 * Method parse inner part of watchdog
+	 *
 	 * @return list of watchdog objects
 	 * @throws XmlPullParserException
 	 * @throws IOException
 	 */
-	private ArrayList<Watchdog> parseWatchdog() throws XmlPullParserException, IOException{
+	private ArrayList<Watchdog> parseWatchdog() throws XmlPullParserException, IOException {
 		String aid = getSecureAttrValue(Xconstants.AID);
 		mParser.nextTag();
 
 		ArrayList<Watchdog> result = new ArrayList<>();
 
-		if(!mParser.getName().equals(Xconstants.ALGORITHM))
+		if (!mParser.getName().equals(Xconstants.ALGORITHM))
 			return result;
 
-		do{
+		do {
 			Watchdog watchdog = new Watchdog(getSecureInt(getSecureAttrValue(Xconstants.ATYPE)));
 			watchdog.setId(getSecureAttrValue(Xconstants.ID));
 			watchdog.setAdapterId(aid);
@@ -562,53 +560,51 @@ public class XmlParsers {
 
 			mParser.nextTag();
 
-			if(!mParser.getName().equals(Xconstants.MODULE) && !mParser.getName().equals(Xconstants.PARAM) && !mParser.getName().equals(Xconstants.GEOFENCE))
+			if (!mParser.getName().equals(Xconstants.MODULE) && !mParser.getName().equals(Xconstants.PARAM) && !mParser.getName().equals(Xconstants.GEOFENCE))
 				Log.e(TAG, "someone send bad xml");//TODO do something
 
-			do{
+			do {
 				String position = getSecureAttrValue(Xconstants.POSITION);
 
-				if(mParser.getName().equals(Xconstants.MODULE)){
+				if (mParser.getName().equals(Xconstants.MODULE)) {
 					String module = getSecureAttrValue(Xconstants.ID) + Module.ID_SEPARATOR + getSecureAttrValue(Xconstants.TYPE);
 					tDevices.put(position, module);
 
 					mParser.nextTag();
-				}
-				else if(mParser.getName().equals(Xconstants.GEOFENCE)){
+				} else if (mParser.getName().equals(Xconstants.GEOFENCE)) {
 					watchdog.setGeoRegionId(getSecureAttrValue(Xconstants.RID));
 					mParser.nextTag();
-				}
-				else{
+				} else {
 					String param = readText(Xconstants.PARAM);
 					tParams.put(position, param);
 					// FIXME: this is workaround cause server not returning <geo> tag .. when it's added, this will not be necessary
-					if(position.equals("1") && watchdog.getType() == Watchdog.TYPE_GEOFENCE && watchdog.getGeoRegionId() == null){
+					if (position.equals("1") && watchdog.getType() == Watchdog.TYPE_GEOFENCE && watchdog.getGeoRegionId() == null) {
 						watchdog.setGeoRegionId(param);
 					}
 				}
 
-			}while(mParser.nextTag() != XmlPullParser.END_TAG && !mParser.getName().equals(Xconstants.ALGORITHM));
+			} while (mParser.nextTag() != XmlPullParser.END_TAG && !mParser.getName().equals(Xconstants.ALGORITHM));
 
 			watchdog.setModules(new ArrayList<>(tDevices.values()));
 			watchdog.setParams(new ArrayList<>(tParams.values()));
 
 			result.add(watchdog);
 
-		}while(mParser.nextTag() != XmlPullParser.END_TAG && !mParser.getName().equals(Xconstants.COM_ROOT));
+		} while (mParser.nextTag() != XmlPullParser.END_TAG && !mParser.getName().equals(Xconstants.COM_ROOT));
 
 		return result;
 	}
 
-	private ArrayList<AchievementListItem> parseAchievements() throws XmlPullParserException, IOException{
+	private ArrayList<AchievementListItem> parseAchievements() throws XmlPullParserException, IOException {
 		String aid = getSecureAttrValue(Xconstants.AID);
 		mParser.nextTag();
 
 		ArrayList<AchievementListItem> result = new ArrayList<>();
 
-		if(!mParser.getName().equals(Xconstants.ACHIEVEMENT))
+		if (!mParser.getName().equals(Xconstants.ACHIEVEMENT))
 			return result;
 
-		do{
+		do {
 			AchievementListItem item = new AchievementListItem(
 					getSecureAttrValue(Xconstants.ID),
 					getSecureAttrValue(Xconstants.PID),
@@ -625,23 +621,23 @@ public class XmlParsers {
 
 			mParser.nextTag();
 
-		}while(mParser.nextTag() != XmlPullParser.END_TAG && !mParser.getName().equals(Xconstants.COM_ROOT));
+		} while (mParser.nextTag() != XmlPullParser.END_TAG && !mParser.getName().equals(Xconstants.COM_ROOT));
 
 		return result;
 	}
 
-	private List<String> parseProgress() throws XmlPullParserException, IOException{
+	private List<String> parseProgress() throws XmlPullParserException, IOException {
 		mParser.nextTag();
 		List<String> result = new ArrayList<>();
 
-		if(!mParser.getName().equals(Xconstants.ACHIEVEMENT)) {
+		if (!mParser.getName().equals(Xconstants.ACHIEVEMENT)) {
 			return result;
 		}
 
-		do{
+		do {
 			result.add(getSecureAttrValue(Xconstants.ID));
 			mParser.nextTag();
-		}while(mParser.nextTag() != XmlPullParser.END_TAG && !mParser.getName().equals(Xconstants.COM_ROOT));
+		} while (mParser.nextTag() != XmlPullParser.END_TAG && !mParser.getName().equals(Xconstants.COM_ROOT));
 
 		return result;
 	}
@@ -739,12 +735,12 @@ public class XmlParsers {
 		int depth = 1;
 		while (depth != 0) {
 			switch (mParser.next()) {
-			case XmlPullParser.END_TAG:
-				depth--;
-				break;
-			case XmlPullParser.START_TAG:
-				depth++;
-				break;
+				case XmlPullParser.END_TAG:
+					depth--;
+					break;
+				case XmlPullParser.START_TAG:
+					depth++;
+					break;
 			}
 		}
 	}
@@ -773,8 +769,7 @@ public class XmlParsers {
 	/**
 	 * Method change null result value to empty string (mParser and namespace is included)
 	 *
-	 * @param name
-	 *            of the attribute
+	 * @param name of the attribute
 	 * @return parsed attribute or empty string
 	 */
 	private String getSecureAttrValue(String name) {
@@ -797,7 +792,7 @@ public class XmlParsers {
 	/**
 	 * Factory for parsing adapter from asset.
 	 *
-	 * @param context of app
+	 * @param context  of app
 	 * @param filename of devices xml
 	 * @return Adapter or null
 	 */
@@ -815,8 +810,8 @@ public class XmlParsers {
 			String version = getSecureAttrValue(Xconstants.VERSION);
 			if (!version.equals(COM_VER)) {
 				throw new AppException(NetworkError.COM_VER_MISMATCH)
-					.set(NetworkError.PARAM_COM_VER_LOCAL, COM_VER)
-					.set(NetworkError.PARAM_COM_VER_SERVER, version);
+						.set(NetworkError.PARAM_COM_VER_LOCAL, COM_VER)
+						.set(NetworkError.PARAM_COM_VER_SERVER, version);
 			}
 
 			result = parseAllDevices();
@@ -836,7 +831,7 @@ public class XmlParsers {
 	/**
 	 * Factory for parsing locations from asset.
 	 *
-	 * @param context of app
+	 * @param context  of app
 	 * @param filename of locations xml
 	 * @return list of locations or empty list
 	 */
@@ -854,8 +849,8 @@ public class XmlParsers {
 			String version = getSecureAttrValue(Xconstants.VERSION);
 			if (!version.equals(COM_VER)) {
 				throw new AppException(NetworkError.COM_VER_MISMATCH)
-					.set(NetworkError.PARAM_COM_VER_LOCAL, COM_VER)
-					.set(NetworkError.PARAM_COM_VER_SERVER, version);
+						.set(NetworkError.PARAM_COM_VER_LOCAL, COM_VER)
+						.set(NetworkError.PARAM_COM_VER_SERVER, version);
 			}
 
 			locations = parseRooms();
@@ -875,7 +870,7 @@ public class XmlParsers {
 	/**
 	 * Factory for parsing list of adapters from asset
 	 *
-	 * @param context of ap
+	 * @param context  of ap
 	 * @param filename of adapters xml
 	 * @return list of adapters or empty list
 	 */
@@ -893,8 +888,8 @@ public class XmlParsers {
 			String version = getSecureAttrValue(Xconstants.VERSION);
 			if (!version.equals(COM_VER)) {
 				throw new AppException(NetworkError.COM_VER_MISMATCH)
-					.set(NetworkError.PARAM_COM_VER_LOCAL, COM_VER)
-					.set(NetworkError.PARAM_COM_VER_SERVER, version);
+						.set(NetworkError.PARAM_COM_VER_LOCAL, COM_VER)
+						.set(NetworkError.PARAM_COM_VER_SERVER, version);
 			}
 
 			adapters = parseAdaptersReady();
@@ -913,7 +908,8 @@ public class XmlParsers {
 
 	/**
 	 * Factory for parsing list of watchdogs
-	 * @param context of app
+	 *
+	 * @param context  of app
 	 * @param filename of watchdogs xml
 	 * @return list of watchogs
 	 * @throws AppException
@@ -932,8 +928,8 @@ public class XmlParsers {
 			String version = getSecureAttrValue(Xconstants.VERSION);
 			if (!version.equals(COM_VER)) {
 				throw new AppException(NetworkError.COM_VER_MISMATCH)
-					.set(NetworkError.PARAM_COM_VER_LOCAL, COM_VER)
-					.set(NetworkError.PARAM_COM_VER_SERVER, version);
+						.set(NetworkError.PARAM_COM_VER_LOCAL, COM_VER)
+						.set(NetworkError.PARAM_COM_VER_SERVER, version);
 			}
 
 			watchdogs = parseWatchdog();

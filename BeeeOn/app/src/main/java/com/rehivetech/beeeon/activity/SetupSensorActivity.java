@@ -34,83 +34,83 @@ import com.viewpagerindicator.CirclePageIndicator;
 
 public class SetupSensorActivity extends BaseApplicationActivity {
 	private static final String TAG = SetupSensorActivity.class.getSimpleName();
-	
+
 	private Controller mController;
 	private Adapter mPairAdapter;
-	
+
 	private SetupSensorFragmentAdapter mAdapter;
 	private ViewPager mPager;
 	private CirclePageIndicator mIndicator;
-	
+
 	private SetupSensorFragment mFragment;
-	
+
 
 	private ProgressDialog mProgress;
-	
+
 	private Spinner mSpinner;
 	private ListView mListOfName;
 	private TextView mNewLocation;
 	private Spinner mNewIconSpinner;
-	
+
 	private Button mSkip;
 	private Button mCancel;
 	private Button mNext;
-	
+
 
 	private boolean mFirstUse = true;
-	
-	private Activity mActivity;
-    private Toolbar mToolbar;
 
-    @Override
+	private Activity mActivity;
+	private Toolbar mToolbar;
+
+	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_intro);
 
-        mToolbar = (Toolbar) findViewById(R.id.toolbar);
-        if (mToolbar != null) {
-            mToolbar.setTitle(R.string.title_activity_setup_sensor);
-            setSupportActionBar(mToolbar);
-        }
-		
+		mToolbar = (Toolbar) findViewById(R.id.toolbar);
+		if (mToolbar != null) {
+			mToolbar.setTitle(R.string.title_activity_setup_sensor);
+			setSupportActionBar(mToolbar);
+		}
+
 		// Get controller
 		mController = Controller.getInstance(this);
 		mPairAdapter = mController.getActiveAdapter();
-		
+
 		mActivity = this;
-		
+
 		mAdapter = new SetupSensorFragmentAdapter(getSupportFragmentManager());
 
 		getSupportActionBar().setHomeButtonEnabled(true);
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-		
-		mPager = (ViewPager)findViewById(R.id.intro_pager);
+
+		mPager = (ViewPager) findViewById(R.id.intro_pager);
 		mPager.setAdapter(mAdapter);
 		mPager.setOffscreenPageLimit(mAdapter.getCount());
-		
-		mIndicator = (CirclePageIndicator)findViewById(R.id.intro_indicator);
+
+		mIndicator = (CirclePageIndicator) findViewById(R.id.intro_indicator);
 		mIndicator.setViewPager(mPager);
 		mIndicator.setVisibility(View.GONE);
-		
+
 		// Prepare progress dialog
 		mProgress = new ProgressDialog(mActivity);
 		mProgress.setMessage(getString(R.string.progress_saving_data));
 		mProgress.setCancelable(false);
 		mProgress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-		
+
 		initButtons();
 	}
-	
-	
+
+
 	private void initButtons() {
 		mSkip = (Button) findViewById(R.id.add_adapter_skip);
 		mCancel = (Button) findViewById(R.id.add_adapter_cancel);
 		mNext = (Button) findViewById(R.id.add_adapter_next);
-		
+
 		mSkip.setVisibility(View.INVISIBLE);
-		
+
 		mCancel.setOnClickListener(new OnClickListener() {
-			
+
 			@Override
 			public void onClick(View v) {
 				InputMethodManager imm = (InputMethodManager) mActivity.getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -177,10 +177,10 @@ public class SetupSensorActivity extends BaseApplicationActivity {
 				doInitializeFacilityTask(new InitializeFacilityPair(newDevice, location));
 			}
 		});
-		
-		
+
+
 	}
-	
+
 	public void setBtnLastPage() {
 		mSkip.setVisibility(View.INVISIBLE);
 		mNext.setText(mActivity.getString(R.string.addsensor_send_pair));

@@ -31,17 +31,18 @@ public abstract class WidgetPersistence {
 
 	/**
 	 * If used this constructor, not available manipulating with GUI
+	 *
 	 * @param context
 	 * @param widgetId
 	 */
-	WidgetPersistence(Context context, int widgetId){
+	WidgetPersistence(Context context, int widgetId) {
 		mContext = context.getApplicationContext();
 		mWidgetId = widgetId;
 		mPrefs = getWidgetPreferences();
 		mOffset = 0;
 	}
 
-	WidgetPersistence(Context context, int widgetId, int offset, int boundView, UnitsHelper unitsHelper, TimeHelper timeHelper, WidgetSettings settings){
+	WidgetPersistence(Context context, int widgetId, int offset, int boundView, UnitsHelper unitsHelper, TimeHelper timeHelper, WidgetSettings settings) {
 		mContext = context.getApplicationContext();
 		mWidgetId = widgetId;
 		mPrefs = getWidgetPreferences();
@@ -54,24 +55,33 @@ public abstract class WidgetPersistence {
 	}
 
 	public abstract void load();
+
 	public abstract void save();
+
 	public abstract void delete();
+
 	public abstract String getPropertyPrefix();
 
-	public void configure(){}
-	public void configure(Object obj1, Object obj2){}
-	public void configure(Object obj1, Object obj2, Object obj3){}
+	public void configure() {
+	}
 
-	public void renderView(ViewsBuilder parentBuilder){
+	public void configure(Object obj1, Object obj2) {
+	}
+
+	public void configure(Object obj1, Object obj2, Object obj3) {
+	}
+
+	public void renderView(ViewsBuilder parentBuilder) {
 		renderView(parentBuilder, false, "");
 	}
 
-	public void renderView(ViewsBuilder parentBuilder, boolean isCached, String cachedString){
+	public void renderView(ViewsBuilder parentBuilder, boolean isCached, String cachedString) {
 		mIsCached = isCached;
 	}
 
 	/**
 	 * Gets shared preferences (the same as for widgetData)
+	 *
 	 * @return
 	 */
 	public SharedPreferences getWidgetPreferences() {
@@ -80,10 +90,11 @@ public abstract class WidgetPersistence {
 
 	/**
 	 * Parse property in sharedPreferences file
+	 *
 	 * @param key
 	 * @return
 	 */
-	public String getProperty(String key){
+	public String getProperty(String key) {
 		return String.format(getPropertyPrefix() + "_%d_%s", mOffset, key);
 	}
 
@@ -107,23 +118,23 @@ public abstract class WidgetPersistence {
 	// ------ METHODS FOR WORKING WITH MORE OBJECTS AT ONCE ------ //
 	// ----------------------------------------------------------- //
 
-	public static <T extends WidgetPersistence> void loadAll(List<T> widgetPersistences){
-		if(widgetPersistences == null) return;
-		for(WidgetPersistence per : widgetPersistences){
+	public static <T extends WidgetPersistence> void loadAll(List<T> widgetPersistences) {
+		if (widgetPersistences == null) return;
+		for (WidgetPersistence per : widgetPersistences) {
 			per.load();
 		}
 	}
 
-	public static <T extends WidgetPersistence> void saveAll(List<T> widgetPersistences){
-		if(widgetPersistences == null) return;
-		for(WidgetPersistence per : widgetPersistences){
+	public static <T extends WidgetPersistence> void saveAll(List<T> widgetPersistences) {
+		if (widgetPersistences == null) return;
+		for (WidgetPersistence per : widgetPersistences) {
 			per.save();
 		}
 	}
 
-	public static <T extends WidgetPersistence> void deleteAll(List<T> widgetPersistences){
-		if(widgetPersistences == null) return;
-		for(WidgetPersistence per : widgetPersistences){
+	public static <T extends WidgetPersistence> void deleteAll(List<T> widgetPersistences) {
+		if (widgetPersistences == null) return;
+		for (WidgetPersistence per : widgetPersistences) {
 			per.delete();
 		}
 	}

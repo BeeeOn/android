@@ -30,12 +30,12 @@ public class NoiseUnit extends BaseUnit {
 	@Override
 	public double convertValue(Item to, double value) {
 		switch (to.getId()) {
-		case BEL:
-			return value * 0.1;
-		case NEPER:
-			return value / (20 * Math.log10(Math.E));
-		default:
-			return value;
+			case BEL:
+				return value * 0.1;
+			case NEPER:
+				return value / (20 * Math.log10(Math.E));
+			default:
+				return value;
 		}
 	}
 

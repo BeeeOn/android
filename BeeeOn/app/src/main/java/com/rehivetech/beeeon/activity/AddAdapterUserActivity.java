@@ -28,51 +28,51 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class AddAdapterUserActivity extends BaseApplicationActivity {
-	
+
 	protected static final String TAG = "AddAdapterUserActivity";
 
 	private Controller mController;
-	
+
 	private Activity mActivity;
-	
+
 	private Adapter mAdapter;
-	
+
 	/* GUI elements */
 	private Spinner mRole;
 	private EditText mEmail;
 	private Button mBtn;
 
 	private ProgressDialog mProgress;
-    private Toolbar mToolbar;
+	private Toolbar mToolbar;
 
-    @Override
+	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_add_adapter_user);
 
-        mToolbar = (Toolbar) findViewById(R.id.toolbar);
-        if (mToolbar != null) {
-            mToolbar.setTitle(R.string.app_name);
-            setSupportActionBar(mToolbar);
-        }
-		
+		mToolbar = (Toolbar) findViewById(R.id.toolbar);
+		if (mToolbar != null) {
+			mToolbar.setTitle(R.string.app_name);
+			setSupportActionBar(mToolbar);
+		}
+
 		// Get controller
 		mController = Controller.getInstance(this);
 		// Get actual activity
 		mActivity = this;
-		
+
 		getSupportActionBar().setHomeButtonEnabled(true);
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-		
+
 		// Prepare progress dialog
 		mProgress = new ProgressDialog(this);
 		mProgress.setMessage(getString(R.string.progress_saving_data));
 		mProgress.setCancelable(false);
 		mProgress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-		
+
 		// Get selected adapter
 		mAdapter = mController.getAdaptersModel().getAdapter(getIntent().getStringExtra(Constants.GUI_SELECTED_ADAPTER_ID));
-		
+
 		initLayout();
 	}
 
@@ -91,17 +91,17 @@ public class AddAdapterUserActivity extends BaseApplicationActivity {
 		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 		// Apply the adapter to the spinner
 		mRole.setAdapter(adapter);
-		
+
 		mBtn.setOnClickListener(new OnClickListener() {
-			
+
 			@Override
 			public void onClick(View v) {
-				if(!(mEmail.getText().length()>0)) {
+				if (!(mEmail.getText().length() > 0)) {
 					// Please fill email
 					Log.d(TAG, "empty email");
 					return;
 				}
-				if(!isEmailValid(mEmail.getText())){
+				if (!isEmailValid(mEmail.getText())) {
 					// NON valid email 
 					Log.d(TAG, "non valid email");
 					return;
@@ -112,13 +112,13 @@ public class AddAdapterUserActivity extends BaseApplicationActivity {
 				newUser.setEmail(mEmail.getText().toString());
 				newUser.setRole(User.Role.values()[mRole.getSelectedItemPosition()]);
 
-				AddUserPair pair  = new AddUserPair(mAdapter, newUser);
-				
+				AddUserPair pair = new AddUserPair(mAdapter, newUser);
+
 				doAddAdapterUserTask(pair);
 			}
 		});
 	}
-	
+
 	protected void doAddAdapterUserTask(AddUserPair pair) {
 		AddUserTask addUserTask = new AddUserTask(mActivity);
 
@@ -142,15 +142,15 @@ public class AddAdapterUserActivity extends BaseApplicationActivity {
 	boolean isEmailValid(CharSequence email) {
 		return android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches();
 	}
-	
+
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 
 		switch (item.getItemId()) {
-		case android.R.id.home:
-			
-			finish();
-			break;
+			case android.R.id.home:
+
+				finish();
+				break;
 		}
 		return super.onOptionsItemSelected(item);
 	}

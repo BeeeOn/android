@@ -31,7 +31,7 @@ public enum RefreshInterval {
 
 	/**
 	 * Get interval as number of seconds
-	 * 
+	 *
 	 * @return
 	 */
 	public int getInterval() {
@@ -40,7 +40,7 @@ public enum RefreshInterval {
 
 	/**
 	 * Get interval as a string
-	 * 
+	 *
 	 * @return interval
 	 */
 	public String getStringInterval(Context context) {
@@ -61,7 +61,7 @@ public enum RefreshInterval {
 
 	/**
 	 * Return index of this interval
-	 * 
+	 *
 	 * @return
 	 */
 	public int getIntervalIndex() {
@@ -76,9 +76,8 @@ public enum RefreshInterval {
 
 	/**
 	 * Return enum object from interval
-	 * 
-	 * @param number
-	 *            of seconds
+	 *
+	 * @param number of seconds
 	 * @return
 	 */
 	public static RefreshInterval fromInterval(int secs) {
